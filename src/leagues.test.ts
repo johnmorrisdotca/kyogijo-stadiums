@@ -12,7 +12,7 @@ const away = { name: "Harbour City Gulls", abbr: "HCG", score: 3, color: "#1f5fa
 const home = { name: "Prairie Ridge Bison", abbr: "PRB", score: 2, color: "#b5452c" };
 
 /** Every league that is not its sport's own, with a sport that draws it. */
-const OTHER: { sport: Sport; league: League }[] = (["nba", "nhl", "nfl", "mlb", "curling"] as const).flatMap((sport) => LEAGUES[sport].filter((league) => league.builtIn !== true).map((league) => ({ sport, league })));
+const OTHER: { sport: Sport; league: League }[] = (["nba", "nhl", "nfl", "mlb", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis"] as const).flatMap((sport) => LEAGUES[sport].filter((league) => league.builtIn !== true).map((league) => ({ sport, league })));
 
 describe("the leagues", () => {
   it("are listed for every sport that has a family of surface, the sport's own first", () => {
@@ -26,7 +26,7 @@ describe("the leagues", () => {
   });
 
   it("have a unique id in their family, a name in English and in Japanese, and sources that are listed", () => {
-    for (const sport of ["nba", "nhl", "nfl", "mlb", "curling"] as const) {
+    for (const sport of ["nba", "nhl", "nfl", "mlb", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis"] as const) {
       const ids = leagueIds(sport);
       expect(new Set(ids).size, sport).toBe(ids.length);
       for (const league of LEAGUES[sport]) {
@@ -183,7 +183,7 @@ describe("the leagues' drawings", () => {
   });
 
   it("are within the budget, with the stylesheet in them", () => {
-    const budget = { basketball: 14_000, hockey: 14_000, football: 22_000, baseball: 17_000, curling: 17_500 };
+    const budget = { basketball: 14_000, hockey: 14_000, football: 22_000, baseball: 17_000, curling: 17_500, tennis: 17_500, volleyball: 17_500, badminton: 17_500, pickleball: 17_500, tabletennis: 17_500 };
     for (const { sport, league } of OTHER) expect(drawKyogijo({ sport, league: league.id, ...game }).length, league.id).toBeLessThan(budget[league.family]);
   });
 });

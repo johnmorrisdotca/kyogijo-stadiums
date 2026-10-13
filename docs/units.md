@@ -24,6 +24,11 @@ Each surface keeps the unit its rulebook states its figures in. The drawing itse
 | `mlb` | the sport's own | MLB | `ft` (feet) |
 | `soccer` | the sport's own | soccer | `m` (metres) |
 | `curling` | the sport's own | curling | `m` (metres) |
+| `tennis` | the sport's own | tennis | `ft` (feet) |
+| `volleyball` | the sport's own | volleyball | `m` (metres) |
+| `badminton` | the sport's own | badminton | `m` (metres) |
+| `pickleball` | the sport's own | pickleball | `ft` (feet) |
+| `tabletennis` | the sport's own | table tennis | `m` (metres) |
 | `nba` | `wnba` | WNBA basketball court | `ft` (feet) |
 | `nba` | `fiba` | FIBA basketball court | `m` (metres) |
 | `nba` | `ncaa-men` | NCAA men's basketball court | `ft` (feet) |
@@ -61,6 +66,7 @@ Each surface keeps the unit its rulebook states its figures in. The drawing itse
 | `mlb` | `slowpitch` | USA Softball slow-pitch field | `ft` (feet) |
 | `mlb` | `slowpitch-wbsc` | WBSC slow-pitch softball field | `ft` (feet) |
 | `curling` | `curling-canada` | Curling Canada sheet | `ft` (feet) |
+| `volleyball` | `fivb-beach` | FIVB beach volleyball court | `m` (metres) |
 <!-- /made:units -->
 
 The table is made from the code by `pnpm docs:make`, and a test holds it to it. The units are `ft`, `in`, `yd`, `m`, `cm` and `mm`; anything else is an error and not feet.

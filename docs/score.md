@@ -4,12 +4,12 @@ A game on a surface: each team's name and logo on its side, the score in the mid
 
 ## Score mode
 
-Pass `home` and `away`. Each team has a `name`, an optional `abbr`, `score`, `penalties` (a soccer shoot-out), `ends` and `hammer` (curling: the score of each end, and the last stone), `logo`, `color` and `textColor`.
+Pass `home` and `away`. Each team has a `name`, an optional `abbr`, `score`, `penalties` (a soccer shoot-out), `ends` and `hammer` (curling: the score of each end, and the last stone), `sets`, `tiebreaks`, `points` and `serving` (tennis, volleyball, badminton, pickleball and table tennis: the score in each set or game, a tie-break's points, the game in progress and the server, [Net sports](./courts.md#a-score)), `logo`, `color` and `textColor`.
 
 | Option | What it does |
 | --- | --- |
 | `size` | `full` (on the surface), `compact` (the surface with a strip under it) or `badge` (the strip alone). |
-| `status` | `final`, `final-ot`, `final-so`, `final-aet`, `final-pens`, `live`, `half`, `extra-time`, `extra-end`, `penalties`, `postponed` (translated), `end-6` (curling: "End 6"), or any text such as `2nd period` or `Bottom 9th`. |
+| `status` | `final`, `final-ot`, `final-so`, `final-aet`, `final-pens`, `live`, `half`, `extra-time`, `extra-end`, `penalties`, `postponed` (translated), `end-6` (curling: "End 6"), `set-3` and `game-2` (net sports: "Set 3", "Game 2"), `tiebreak`, `match-tiebreak`, `retired`, `walkover`, or any text such as `2nd period` or `Bottom 9th`. |
 | `competition`, `date` | The round and the day, as written. |
 | `label` | A line for the foot of the panel in place of the status and the date. |
 | `winner` | `auto` (the leader once the status is a final one), `leader`, `none`, `home` or `away`. |

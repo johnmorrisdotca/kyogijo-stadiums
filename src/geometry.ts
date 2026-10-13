@@ -4,6 +4,7 @@
 
 import { SURFACE_UNITS, convertLength, lengthsIn, type Scaled, type Unit } from "./units.ts";
 import { SOCCER, soccerSpec } from "./surfaces/soccer-spec.ts";
+import { BWF_BADMINTON, FIVB_BEACH, FIVB_INDOOR, ITF_TENNIS, ITTF_TABLE, USAP_PICKLEBALL, netInFeet } from "./leagues/courts.ts";
 import type { Sport } from "./types.ts";
 
 export const FEET_PER_YARD = 3;
@@ -150,6 +151,18 @@ export const CURLING = {
 /** The diameter of a curling stone drawn at the greatest circumference the rules allow (36 inches), in feet. */
 export const STONE_DIAMETER = CURLING.stoneCircumference / Math.PI;
 
+/**
+ * The net sports' courts, in feet, from the rulebooks' own figures (leagues/courts.ts, docs/sources.md): the ITF's tennis court (Rule 1), the FIVB's indoor and beach
+ * volleyball courts (Rules 1 and 2), the BWF's badminton court (Law 1), USA Pickleball's court (Section 3) and the ITTF's table (Laws 2.1 and 2.2). The lengths run
+ * along the court from the end line, the widths across it, each to the outside of the lines.
+ */
+export const TENNIS = netInFeet(ITF_TENNIS, "ft");
+export const VOLLEYBALL = netInFeet(FIVB_INDOOR, "m");
+export const BEACH_VOLLEYBALL = netInFeet(FIVB_BEACH, "m");
+export const BADMINTON = netInFeet(BWF_BADMINTON, "m");
+export const PICKLEBALL = netInFeet(USAP_PICKLEBALL, "ft");
+export const TABLE_TENNIS = netInFeet(ITTF_TABLE, "m");
+
 /** The baseball field, from rules 2.01 to 2.05 of the Official Baseball Rules. */
 export const MLB = {
   base: 90,
@@ -286,6 +299,26 @@ export function surfaceSize(sport: SizedSport, unit: Unit = SURFACE_UNITS[sport]
       length = CURLING.length;
       width = CURLING.width;
       break;
+    case "tennis":
+      length = TENNIS.length;
+      width = TENNIS.widthDoubles;
+      break;
+    case "volleyball":
+      length = VOLLEYBALL.length;
+      width = VOLLEYBALL.width;
+      break;
+    case "badminton":
+      length = BADMINTON.length;
+      width = BADMINTON.width;
+      break;
+    case "pickleball":
+      length = PICKLEBALL.length;
+      width = PICKLEBALL.width;
+      break;
+    case "tabletennis":
+      length = TABLE_TENNIS.length;
+      width = TABLE_TENNIS.width;
+      break;
     default:
       throw new Error(`No fixed size for "${String(sport)}": a ballpark's size is its fence`);
   }
@@ -302,6 +335,11 @@ export function dimensionsOf(sport: "mlb", unit?: Unit): Scaled<typeof MLB>;
 export function dimensionsOf(sport: "nfl" | "cfl" | "ifaf", unit?: Unit): Scaled<FootballSpec>;
 export function dimensionsOf(sport: "soccer", unit?: Unit): Scaled<typeof SOCCER>;
 export function dimensionsOf(sport: "curling", unit?: Unit): Scaled<typeof CURLING>;
+export function dimensionsOf(sport: "tennis", unit?: Unit): Scaled<typeof TENNIS>;
+export function dimensionsOf(sport: "volleyball", unit?: Unit): Scaled<typeof VOLLEYBALL>;
+export function dimensionsOf(sport: "badminton", unit?: Unit): Scaled<typeof BADMINTON>;
+export function dimensionsOf(sport: "pickleball", unit?: Unit): Scaled<typeof PICKLEBALL>;
+export function dimensionsOf(sport: "tabletennis", unit?: Unit): Scaled<typeof TABLE_TENNIS>;
 export function dimensionsOf(sport: Sport, unit?: Unit): unknown;
 export function dimensionsOf(sport: Sport, unit: Unit = SURFACE_UNITS[sport]): unknown {
   switch (sport) {
@@ -320,6 +358,16 @@ export function dimensionsOf(sport: Sport, unit: Unit = SURFACE_UNITS[sport]): u
       return lengthsIn(SOCCER, unit, "m");
     case "curling":
       return lengthsIn(CURLING, unit);
+    case "tennis":
+      return lengthsIn(TENNIS, unit);
+    case "volleyball":
+      return lengthsIn(VOLLEYBALL, unit);
+    case "badminton":
+      return lengthsIn(BADMINTON, unit);
+    case "pickleball":
+      return lengthsIn(PICKLEBALL, unit);
+    case "tabletennis":
+      return lengthsIn(TABLE_TENNIS, unit);
     default:
       throw new Error(`Unknown sport "${String(sport)}"`);
   }

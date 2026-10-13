@@ -12,9 +12,10 @@ import type { KyogijoWords } from "./strings.ts";
 import { fill } from "./strings.ts";
 import type { Sport, SurfaceOptions } from "./types.ts";
 import { lengthUnit } from "./common.ts";
+import { courtFor, courtSize } from "./court.ts";
 
 /** The zone sets. */
-export type ZoneSetId = "soccer-positional" | "soccer-thirds" | "soccer-channels" | "soccer-18" | "nba-shot" | "nhl-slot" | "nhl-home-plate" | "baseball-spray" | "baseball-retrosheet" | "football-pass" | "curling-house";
+export type ZoneSetId = "soccer-positional" | "soccer-thirds" | "soccer-channels" | "soccer-18" | "nba-shot" | "nhl-slot" | "nhl-home-plate" | "baseball-spray" | "baseball-retrosheet" | "football-pass" | "curling-house" | "net-court";
 
 type Pt = readonly [number, number];
 
@@ -46,7 +47,7 @@ export interface ZoneSet {
 
 /** What a zone set needs to know about the drawing and the layer. */
 export interface ZoneContext {
-  o: Pick<SurfaceOptions, "sport" | "pitch" | "units">;
+  o: Pick<SurfaceOptions, "sport" | "pitch" | "units"> & Partial<Pick<SurfaceOptions, "league" | "net">>;
   outline: Outline;
   /** The way the team attacks as the surface is drawn wide: names the sides and counts the bands from the team's own end. `right` by default. */
   direction: "left" | "right";
@@ -71,6 +72,7 @@ export const ZONE_SETS: Readonly<Record<ZoneSetId, { sports: readonly Sport[]; t
   "baseball-spray": { sports: ["mlb"], title: "Spray zones: pull, centre, opposite by infield and outfield", source: "docs/sources.md#zone-sets" },
   "baseball-retrosheet": { sports: ["mlb"], title: "Retrosheet hit locations as the nearest sector", source: "https://www.retrosheet.org/location.htm" },
   "curling-house": { sports: ["curling"], title: "The house: the button, the 4-, 8- and 12-foot rings, and the free guard zone", source: "docs/sources.md#zone-sets" },
+  "net-court": { sports: ["tennis", "volleyball", "badminton", "pickleball", "tabletennis"], title: "Each side of the net: the front court and the back court, split by the court's own line", source: "docs/sources.md#zone-sets" },
   "football-pass": { sports: ["nfl", "cfl", "ifaf"], title: "Pass grid: short and deep by left, middle and right", source: "https://nflreadr.nflverse.com/articles/dictionary_pbp.html" },
 });
 
@@ -413,6 +415,36 @@ function curlingZones(ctx: ZoneContext): ZoneShape[] {
   return out;
 }
 
+/**
+ * The court of a net sport on each side of the net: the front court, between the net and the line that the sport's own rules draw there, and the back court behind it.
+ * That line is tennis's service line (21 ft), volleyball's attack line (3 m), badminton's short service line (1.98 m) and pickleball's non-volley zone line (7 ft); beach
+ * volleyball and table tennis have none, so each side is one zone. The zones are ours: the rules name the lines, not the areas.
+ */
+function netZones(ctx: ZoneContext): ZoneShape[] {
+  const plan = courtFor({ sport: ctx.o.sport, league: ctx.o.league, net: ctx.o.net });
+  const { length: L, width: W } = courtSize(plan);
+  const w = ctx.words;
+  const front: number | null = plan.sport === "tennis" ? plan.figures.serviceLine : plan.sport === "volleyball" ? plan.figures.attackLine : plan.sport === "badminton" ? plan.figures.shortServiceLine : plan.sport === "pickleball" ? plan.figures.nonVolley : null;
+  const cx = L / 2;
+  const both = ctx.end === "both";
+  const ends: ("left" | "right")[] = ctx.end === "both" ? ["left", "right"] : [ctx.end];
+  const out: ZoneShape[] = [];
+  for (const end of ends) {
+    const left = end === "left";
+    const tag = (id: string): string => (both ? `${id}-${end}` : id);
+    const name = (n: string): string => (both ? fill(w.atEnd, { name: n, end: left ? w.endLeft : w.endRight }) : n);
+    // A zone from the net outward: `near` and `far` are distances from the net, to the end of this side.
+    const band = (near: number, far: number, id: string, text: string): ZoneShape => {
+      const x0 = left ? cx - far : cx + near;
+      const x1 = left ? cx - near : cx + far;
+      return { id: tag(id), name: name(text), d: `M${num(x0)} 0H${num(x1)}V${num(W)}H${num(x0)}Z`, label: [(x0 + x1) / 2, W / 2], room: [far - near, W], end, has: (x, y) => x >= x0 && x <= x1 && y >= 0 && y <= W };
+    };
+    if (front === null) out.push(band(0, cx, "half-court", w.halfCourt));
+    else out.push(band(0, front, "front-court", w.frontCourt), band(front, cx, "back-court", w.backCourt));
+  }
+  return out;
+}
+
 /** The zones of a set on the surface the context describes. Throws for a set that is not for the surface's sport. */
 export function buildZoneSet(id: ZoneSetId, ctx: ZoneContext): ZoneSet {
   if (!Object.prototype.hasOwnProperty.call(ZONE_SETS, id)) throw new RangeError(`Unknown zone set "${String(id)}": use one of ${ZONE_SET_IDS.join(", ")}`);
@@ -422,6 +454,6 @@ export function buildZoneSet(id: ZoneSetId, ctx: ZoneContext): ZoneSet {
     const { zones, which } = retrosheetZones(ctx);
     return { id, zones, which };
   }
-  const zones = id.startsWith("soccer") ? soccerZones(id, ctx) : id === "nba-shot" ? nbaZones(ctx) : id.startsWith("nhl") ? nhlZones(id, ctx) : id === "baseball-spray" ? baseballSpray(ctx) : id === "curling-house" ? curlingZones(ctx) : footballPass(ctx);
+  const zones = id.startsWith("soccer") ? soccerZones(id, ctx) : id === "nba-shot" ? nbaZones(ctx) : id.startsWith("nhl") ? nhlZones(id, ctx) : id === "baseball-spray" ? baseballSpray(ctx) : id === "curling-house" ? curlingZones(ctx) : id === "net-court" ? netZones(ctx) : footballPass(ctx);
   return { id, zones, which: lastWins(zones) };
 }

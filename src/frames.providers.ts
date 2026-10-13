@@ -2,8 +2,8 @@
 // frames.ts. Each is cited in docs/sources.md ("Coordinate frames"), which says what was read, where, and what is ours.
 // Soccer's providers are registered by src/surfaces/soccer-providers.ts. Facts only: no code of sportypy, sportyR or
 // hockey_rink is used.
-import { CURLING, FOOTBALL, NBA, NHL, footballLength } from "./geometry.ts";
-import { FRAMES, registerFrame, span, type Frame } from "./frames.ts";
+import { CURLING, FOOTBALL, NBA, NHL, footballLength, surfaceSize } from "./geometry.ts";
+import { FRAMES, registerFrame, span, type Frame, type FrameMap } from "./frames.ts";
 import type { Point } from "./units.ts";
 
 // The surfaces in feet, in the drawing's own landscape frame: x along the surface from the left end, y across it from the top.
@@ -144,7 +144,40 @@ const curling: Frame = {
   note: "Positive x is the thrower's right; positive y is away from the thrower, towards the back line. The frame is not a data provider's: it is the plain reading of the rules (a stone is scored by its distance from the tee).",
 };
 
-for (const frame of [nhlApi, hockeyTech, nbaStats, nflTracking, mlbam, retrosheet, curling]) if (!Object.prototype.hasOwnProperty.call(FRAMES, frame.name)) registerFrame(frame);
+/**
+ * A net sport's court in the plain frame of the net: the centre of the net, on the court, as the origin; x along the court, positive towards the end drawn at the
+ * right; y across it, positive towards the top as the court is drawn wide. The unit is the one the rulebook prints first (feet for tennis and pickleball, metres
+ * for volleyball, badminton and table tennis). Tennis, badminton, pickleball and table tennis have one size; a volleyball court is indoor or beach, so its frame fits the
+ * size of the court it is placed on. This package's own frame: no
+ * tracking provider's format was read (Hawk-Eye's and the others' are not published), and a rulebook measures a court from the net.
+ */
+function netFrame(sport: "tennis" | "volleyball" | "badminton" | "pickleball" | "tabletennis", title: string, unit: "ft" | "m", x: number, y: number, what: string): Frame {
+  const per = unit === "ft" ? 1 : 0.3048;
+  const map = (size: { length: number; width: number }): FrameMap => ({ x: span(-(size.length * per) / 2, (size.length * per) / 2, 0, size.length), y: span(-(size.width * per) / 2, (size.width * per) / 2, size.width, 0) });
+  return {
+    name: sport,
+    title,
+    sport,
+    unit,
+    x: [-x, x],
+    y: [-y, y],
+    origin: `the centre of the net, on ${what}`,
+    yDirection: "up",
+    size: sport === "volleyball" ? "variable" : "fixed",
+    ends: "fixed",
+    landmarks: sport === "volleyball" ? map : map(surfaceSize(sport, "ft")),
+    source: "this package's own frame: the centre of the net as the origin, as the rulebook measures the court from the net",
+    note: "Positive x is towards the end drawn at the right, positive y towards the top as the court is drawn wide. The frame is not a data provider's: it is the plain reading of the rules, which measure everything from the net.",
+  };
+}
+
+const tennisFrame = netFrame("tennis", "Tennis court, in feet from the centre of the net", "ft", 39, 18, "the court");
+const volleyballFrame = netFrame("volleyball", "Volleyball court, in metres from the centre of the net", "m", 9, 4.5, "the court");
+const badmintonFrame = netFrame("badminton", "Badminton court, in metres from the centre of the net", "m", 6.7, 3.05, "the court");
+const pickleballFrame = netFrame("pickleball", "Pickleball court, in feet from the centre of the net", "ft", 22, 10, "the court");
+const tableTennisFrame = netFrame("tabletennis", "Table tennis table, in metres from the centre of the net", "m", 1.37, 0.7625, "the table");
+
+for (const frame of [nhlApi, hockeyTech, nbaStats, nflTracking, mlbam, retrosheet, curling, tennisFrame, volleyballFrame, badmintonFrame, pickleballFrame, tableTennisFrame]) if (!Object.prototype.hasOwnProperty.call(FRAMES, frame.name)) registerFrame(frame);
 
 // Retrosheet's hit-location diagram (Project Scoresheet's) draws the field in sectors: columns of the outfield from the left field
 // line to the right (7L, 7, 78, 8, 89, 9, 9L), each cut into rings of about 50 feet by depth (S shallow, none medium, D deep, XD

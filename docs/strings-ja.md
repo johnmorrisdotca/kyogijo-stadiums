@@ -14,6 +14,11 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `surface.mlb` | Baseball field | 野球場 |
 | `surface.soccer` | Soccer pitch | サッカーのピッチ |
 | `surface.curling` | Curling sheet | カーリングのシート |
+| `surface.tennis` | Tennis court | テニスコート |
+| `surface.volleyball` | Volleyball court | バレーボールコート |
+| `surface.badminton` | Badminton court | バドミントンコート |
+| `surface.pickleball` | Pickleball court | ピックルボールコート |
+| `surface.tabletennis` | Table tennis table | 卓球台 |
 | `about.nfl` | an American football field, 120 by 53 and a third yards with its end zones, with a yard line every 5 yards, hash marks, numbers and goal posts | アメリカンフットボールのフィールド。エンドゾーンを含めて120ヤード×53⅓ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールポストがあります |
 | `about.cfl` | a Canadian football field, 150 by 65 yards with its 20-yard end zones, with a yard line every 5 yards, hash marks, numbers and goal posts on the goal lines | カナディアンフットボールのフィールド。20ヤードのエンドゾーンを含めて150ヤード×65ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールライン上のゴールポストがあります |
 | `about.ifaf` | an international (IFAF) football field, 120 by 53 and a third yards with its end zones, with a yard line every 5 yards, hash marks, numbers and goal posts | 国際アメリカンフットボール連盟（IFAF）規格のフィールド。エンドゾーンを含めて120ヤード×53⅓ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールポストがあります |
@@ -22,6 +27,11 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `about.mlb` | a baseball field, with a 90-foot infield, the mound, the foul lines and the outfield fence | 野球場。塁間90フィート（約27.4m）の内野、マウンド、ファウルライン、外野フェンスがあります |
 | `about.soccer` | a soccer pitch, {length} by {width} metres, with the halfway line, the centre circle, both penalty areas, goal areas, penalty marks and arcs, the corner arcs and the goals | サッカーのピッチ。{length}m×{width}mで、ハーフウェーライン、センターサークル、両側のペナルティエリアとゴールエリア、ペナルティマークとペナルティアーク、コーナーアーク、ゴールがあります |
 | `about.curling` | a curling sheet, {size}, with a house at each end (the 12-, 8- and 4-foot circles round the button), the tee, back, hog and centre lines and the hacks | カーリングのシート。{size}で、両端にハウス（ボタンを囲む12フィート・8フィート・4フィートの円）があり、ティーライン、バックライン、ホッグライン、センターライン、ハックがあります |
+| `about.tennis` | a tennis court, 78 by 36 feet, with its baselines, singles and doubles sidelines, service lines, centre service lines, centre marks and the net | テニスコート。78フィート（約23.8m）×36フィート（約11m）で、ベースライン、シングルスとダブルスのサイドライン、サービスライン、センターサービスライン、センターマーク、ネットがあります |
+| `about.volleyball` | a volleyball court, 18 by 9 metres, with its centre line, attack lines, the net and its antennae | バレーボールコート。18m×9mで、センターライン、アタックライン、ネットとアンテナがあります |
+| `about.badminton` | a badminton court, 13.4 by 6.1 metres, with its singles and doubles lines, short and long service lines, centre lines and the net | バドミントンコート。13.4m×6.1mで、シングルスとダブルスのライン、ショートサービスライン、ロングサービスライン、センターライン、ネットがあります |
+| `about.pickleball` | a pickleball court, 44 by 20 feet, with its non-volley zones, centre lines and the net | ピックルボールコート。44フィート（約13.4m）×20フィート（約6.1m）で、ノンボレーゾーン、センターライン、ネットがあります |
+| `about.tabletennis` | a table tennis table, 2.74 by 1.525 metres, with its side lines, end lines, centre line and the net | 卓球台。2.74m×1.525mで、サイドライン、エンドライン、センターライン、ネットがあります |
 | `status.final` | Final | 試合終了 |
 | `status.final-ot` | Final/OT | 試合終了（延長） |
 | `status.final-so` | Final/SO | 試合終了（SO） |
@@ -33,7 +43,13 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `status.extra-end` | Extra end | エキストラエンド |
 | `status.penalties` | Penalties | PK戦 |
 | `status.postponed` | Postponed | 延期 |
+| `status.tiebreak` | Tiebreak | タイブレーク |
+| `status.match-tiebreak` | Match tiebreak | マッチタイブレーク |
+| `status.retired` | Retired | 途中棄権 |
+| `status.walkover` | Walkover | 不戦勝 |
 | `endStatus` | End {n} | 第{n}エンド |
+| `setStatus` | Set {n} | 第{n}セット |
+| `gameStatus` | Game {n} | 第{n}ゲーム |
 | `soccer.futsal` | Futsal court | フットサルのコート |
 | `soccer.aboutFutsal` | a futsal court, {length} by {width} metres, with the halfway line, the centre circle, both penalty areas, the penalty marks and the goals | フットサルのコート。{length}m×{width}mで、ハーフウェーライン、センターサークル、両側のペナルティエリア、ペナルティマーク、ゴールがあります |
 | `soccer.half` | Half of it is shown. | 半面のみ表示しています。 |
@@ -43,10 +59,23 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `league.baseball` | a baseball field, with {base}-foot bases, the pitcher {pitch} feet from home plate, the foul lines and the outfield fence | 野球場。塁間{base}フィート、投手板は本塁から{pitch}フィートで、ファウルライン、外野フェンスがあります |
 | `league.softball` | a softball field, with {base}-foot bases, the pitcher {pitch} feet from home plate, the foul lines and the outfield fence | ソフトボール場。塁間{base}フィート、投手板は本塁から{pitch}フィートで、ファウルライン、外野フェンスがあります |
 | `league.curling` | a curling sheet, {size}, with a house at each end (the 12-, 8- and 4-foot circles round the button), the tee, back, hog and centre lines and the hacks | カーリングのシート。{size}で、両端にハウス（ボタンを囲む12フィート・8フィート・4フィートの円）があり、ティーライン、バックライン、ホッグライン、センターライン、ハックがあります |
+| `league.tennis` | a tennis court, {size}, with its baselines, singles and doubles sidelines, service lines, centre service lines, centre marks and the net | テニスコート。{size}で、ベースライン、シングルスとダブルスのサイドライン、サービスライン、センターサービスライン、センターマーク、ネットがあります |
+| `league.volleyball` | a volleyball court, {size}, with its centre line, attack lines, the net and its antennae | バレーボールコート。{size}で、センターライン、アタックライン、ネットとアンテナがあります |
+| `league.beachVolleyball` | a beach volleyball court, {size}, with its boundary lines, the net and its antennae, and no centre line | ビーチバレーボールコート。{size}で、サイドライン、エンドライン、ネット、アンテナがあります。センターラインはありません |
+| `league.badminton` | a badminton court, {size}, with its singles and doubles lines, short and long service lines, centre lines and the net | バドミントンコート。{size}で、シングルスとダブルスのライン、ショートサービスライン、ロングサービスライン、センターライン、ネットがあります |
+| `league.pickleball` | a pickleball court, {size}, with its non-volley zones, centre lines and the net | ピックルボールコート。{size}で、ノンボレーゾーン、センターライン、ネットがあります |
+| `league.tabletennis` | a table tennis table, {size}, with its side lines, end lines, centre line and the net | 卓球台。{size}で、サイドライン、エンドライン、センターライン、ネットがあります |
 | `league.size` | {length} by {width} {unit} | {length}{unit}×{width}{unit} |
 | `league.units.ft` | feet | フィート |
 | `league.units.yd` | yards | ヤード |
 | `league.units.m` | metres | m |
+| `net.serving` | {name} is serving. | {name}のサーブです。 |
+| `net.bySet` | By set, {name}: {list}. | {name}のセットごとのスコア：{list}。 |
+| `net.byGame` | By game, {name}: {list}. | {name}のゲームごとの得点：{list}。 |
+| `net.gamePoints` | In the current game, {name} has {points}. | 現在のゲームのポイントは、{name}が{points}です。 |
+| `net.sets` | Sets | セット |
+| `net.games` | Games | ゲーム |
+| `net.points` | Pts | ポイント |
 | `scoreTitle` | {away} {awayScore}, {home} {homeScore} | {away} {awayScore}、{home} {homeScore} |
 | `said.home` | home | ホーム |
 | `said.away` | away | アウェイ |
@@ -228,6 +257,9 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `layers.zones.houseEight` | 8-foot ring | 8フィートの円 |
 | `layers.zones.houseTwelve` | 12-foot ring | 12フィートの円 |
 | `layers.zones.guardZone` | Free guard zone | フリーガードゾーン |
+| `layers.zones.frontCourt` | Front court | フロントコート |
+| `layers.zones.backCourt` | Back court | バックコート |
+| `layers.zones.halfCourt` | Half court | ハーフコート |
 | `layers.zones.sideLeft` | left | 左 |
 | `layers.zones.sideMiddle` | middle | 中央 |
 | `layers.zones.sideRight` | right | 右 |
@@ -342,6 +374,11 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `sport_mlb` | Baseball | 野球 |
 | `sport_soccer` | Soccer | サッカー |
 | `sport_curling` | Curling | カーリング |
+| `sport_tennis` | Tennis | テニス |
+| `sport_volleyball` | Volleyball | バレーボール |
+| `sport_badminton` | Badminton | バドミントン |
+| `sport_pickleball` | Pickleball | ピックルボール |
+| `sport_tabletennis` | Table tennis | 卓球 |
 | `pitchLabel` | Pitch | ピッチ |
 | `pitch_fifa` | International, 105 × 68 m | 国際試合 105×68m |
 | `pitch_uefa` | UEFA, 105 × 68 m | UEFA 105×68m |
@@ -620,6 +657,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | group `places` | Sports and places | 競技と場所 |
 | page `soccer` | Soccer | サッカー |
 | page `curling` | Curling | カーリング |
+| page `courts` | Tennis, volleyball, badminton, pickleball and table tennis | ネット型競技のコート |
 | page `ballparks` | Ballparks | 球場 |
 | page `grounds` | The grounds | スタジアム |
 | page `variants` | League variants | リーグごとの違い |
@@ -641,6 +679,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `gallery-places` | Gallery: ballparks and grounds | ギャラリー：球場とスタジアム |
 | page `gallery-data` | Gallery: data on a surface | ギャラリー：競技場の上のデータ |
 | page `gallery-curling` | Gallery: curling | ギャラリー：カーリング |
+| page `gallery-courts` | Gallery: tennis, volleyball and other net sports | ギャラリー：ネット型競技のコート |
 | group `compare` | Compare | 比較 |
 | page `compare` | How it compares | 他のパッケージとの比較 |
 | group `reference` | Reference | リファレンス |
@@ -757,6 +796,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `slowpitch` | USA Softball slow-pitch field | USAソフトボール（スローピッチ）のソフトボール場 |
 | `slowpitch-wbsc` | WBSC slow-pitch softball field | WBSC（スローピッチ）のソフトボール場 |
 | `curling-canada` | Curling Canada sheet | カーリング・カナダのシート |
+| `fivb-beach` | FIVB beach volleyball court | FIVBのビーチバレーボールコート |
 
 ## The leagues' dated changes (`leagueChanges`)
 

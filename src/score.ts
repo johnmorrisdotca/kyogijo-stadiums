@@ -18,6 +18,11 @@ export interface TeamView {
   /** Curling: the score of each end, written; and whether the team has the hammer. */
   ends?: string[];
   hammer?: boolean;
+  /** The net sports: the score in each set, the tie-break points of each set, the points of the game in progress, and whether the team is serving. */
+  sets?: string[];
+  tiebreaks?: string[];
+  points?: string;
+  serving?: boolean;
 }
 
 const part = (on: boolean, names: string): string | undefined => (on ? names : undefined);
@@ -155,6 +160,21 @@ export function glyph(sport: Sport): string {
     case "curling":
       // A house: the 12-, 8- and 4-foot circles round the button, with the centre line through it.
       return "M-10 0A10 10 0 1 0 10 0A10 10 0 1 0 -10 0M-6.7 0A6.7 6.7 0 1 0 6.7 0A6.7 6.7 0 1 0 -6.7 0M-3.3 0A3.3 3.3 0 1 0 3.3 0A3.3 3.3 0 1 0 -3.3 0M-18 0H18";
+    case "tennis":
+      // A court: the net, the singles sidelines, the service lines and the centre service line.
+      return "M-18 -10H18V10H-18ZM0 -10V10M-18 -7.5H18M-18 7.5H18M-9.7 -7.5V7.5M9.7 -7.5V7.5M-9.7 0H9.7";
+    case "volleyball":
+      // A court: the centre line and the attack lines.
+      return "M-18 -10H18V10H-18ZM0 -10V10M-6 -10V10M6 -10V10";
+    case "badminton":
+      // A court: the net, the short service lines, the centre lines and the singles sidelines.
+      return "M-18 -10H18V10H-18ZM0 -10V10M-5.3 -10V10M5.3 -10V10M-18 0H-5.3M5.3 0H18M-18 -8.5H18M-18 8.5H18";
+    case "pickleball":
+      // A court: the net, the non-volley zone lines and the centrelines.
+      return "M-18 -10H18V10H-18ZM0 -10V10M-5.7 -10V10M5.7 -10V10M-18 0H-5.7M5.7 0H18";
+    case "tabletennis":
+      // A table: the net across it and the centre line.
+      return "M-16 -8H16V8H-16ZM0 -10V10M-16 0H16";
   }
 }
 
@@ -183,6 +203,8 @@ export function badgeMarkup(left: TeamView, right: TeamView, o: { sport: Sport; 
     const abbrSize = Math.max(8, Math.min(22, room / Math.max(1, textWidth(team.abbr))));
     // The hammer: a small stone in the corner of the team's block.
     if (team.hammer === true) out += el("g", { class: `ky-badge-hammer ky-badge-hammer-${team.side}`, transform: `translate(${isLeft ? block - 11 : W - block + 11} 11)` }, el("circle", { class: "ky-hammer", r: 6 }) + el("circle", { class: "ky-hammer-in", r: 2.6 }));
+    // The ball of the team that is serving, in the same corner.
+    if (team.serving === true) out += el("g", { transform: `translate(${isLeft ? block - 11 : W - block + 11} 11)` }, el("circle", { class: "ky-serve", r: 6 }) + el("path", { class: "ky-serve-seam", d: "M-4.7 -1.8Q0 1.8 4.7 -1.8", "stroke-width": 0.9 }));
     out += el("g", { class: `ky-badge-team ky-badge-${team.side} ky-${team.state}`, part: part(o.parts, `team ${team.role}`) },
       (team.logo === undefined ? "" : el("image", { class: "ky-logo", href: team.logo, x: logoX, y: 12, width: logoSize, height: logoSize, preserveAspectRatio: "xMidYMid meet" })) +
         el("text", { class: `ky-text ky-name ky-ink-${team.side}`, x: textStart, y: H / 2 + abbrSize * 0.36, "font-size": abbrSize, "text-anchor": isLeft ? undefined : "end" }, esc(team.abbr)) +

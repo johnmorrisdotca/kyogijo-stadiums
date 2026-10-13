@@ -189,8 +189,8 @@ test("every other gallery page has its pictures and its code", async ({ page }) 
 test("the frames page has a row for each frame and a drawing of the same spot in each, with a link to the demo's converter", async ({ page }) => {
   await docs(page, "frames.html");
   expect(await page.locator(`${at("docs-article")} .docs-table tbody tr`).first().count()).toBe(1);
-  await expect(page.locator(`${at("docs-article")} .docs-table`).first().locator("tbody tr")).toHaveCount(17);
-  await expect(page.locator(`${at("frames-gallery")} figure`)).toHaveCount(17);
+  await expect(page.locator(`${at("docs-article")} .docs-table`).first().locator("tbody tr")).toHaveCount(22);
+  await expect(page.locator(`${at("frames-gallery")} figure`)).toHaveCount(22);
   const header = await page.locator(`${at("docs-article")} .docs-table`).first().locator("th").allTextContents();
   for (const column of ["Frame", "Unit", "Range of x and y", "Origin", "y grows", "Size", "Source"]) expect(header).toContain(column);
   await expect(page.locator(`${at("docs-article")} a[href="../#providers"]`)).toBeAttached();

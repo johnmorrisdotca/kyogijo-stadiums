@@ -1,5 +1,6 @@
 // What every kind of data layer is drawn against: the drawing's id, its unit and outline, the words, and what a layer made. Kept apart
 // from layers.ts so that the heat maps, which are written in files of their own, can use it without importing the file that imports them.
+import { isNetSport } from "./court.ts";
 import { safeLogo } from "./colour.ts";
 import { drawingId, isPortrait, lengthUnit } from "./common.ts";
 import { fromSurface, toSurface } from "./frames.ts";
@@ -62,7 +63,7 @@ export const toArray = <T>(value: readonly T[] | undefined, what: string): reado
 };
 
 /** The size a provider's frame is fitted to: the drawn surface's, for a soccer pitch and a league's surface; none for a sport's own fixed one. */
-const fittedSize = (env: Env): { length: number; width: number; unit: "ft" } | undefined => (env.o.sport === "soccer" || env.o.sport === "curling" || chooseLeague(env.o).league !== undefined ? { length: env.outline.box.w, width: env.outline.box.h, unit: "ft" as const } : undefined);
+const fittedSize = (env: Env): { length: number; width: number; unit: "ft" } | undefined => (env.o.sport === "soccer" || env.o.sport === "curling" || isNetSport(env.o.sport) || chooseLeague(env.o).league !== undefined ? { length: env.outline.box.w, width: env.outline.box.h, unit: "ft" as const } : undefined);
 
 export function unitOfLayer(layer: LayerBase, env: Env): Unit {
   if (layer.units === "rulebook") return chooseLeague(env.o).league?.unit ?? SURFACE_UNITS[chooseLeague(env.o).sport] ?? "ft";

@@ -88,7 +88,7 @@ const game = ${JSON.stringify(game)};
 if (drawKyogijo(game) !== ${JSON.stringify(expected)}) throw new Error("the installed package drew another drawing");
 if (drawKyogijo({ ...game, sport: "mlb", park: "fenway-park", orientation: "portrait" }) !== ${JSON.stringify(expectedPortrait)}) throw new Error("the installed package drew another ballpark");
 if (VERSION !== ${JSON.stringify(pkg.version)}) throw new Error("VERSION is " + VERSION);
-if (SPORTS.length !== 8 || Object.keys(PARKS).length !== 94) throw new Error("the sports or the parks are wrong");
+if (SPORTS.length !== 13 || Object.keys(PARKS).length !== 94) throw new Error("the sports or the parks are wrong");
 const grounds = all[names.indexOf(${JSON.stringify(`${pkg.name}/grounds`)})];
 if (Object.keys(grounds.GROUNDS).length !== 64 || grounds.groundById("maracana").pitchSize !== "published") throw new Error("the grounds are wrong");
 const atlas = all[names.indexOf(${JSON.stringify(`${pkg.name}/atlas`)})];

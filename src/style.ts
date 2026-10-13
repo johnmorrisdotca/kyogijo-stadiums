@@ -1,3 +1,5 @@
+import { KYOGIJO_COURTS_STYLE } from "./courts.style.ts";
+
 /**
  * The drawing's stylesheet, without the heat layers' rules: custom properties for every colour, in light and dark, and the rule of each class. It is
  * written into every drawing (so that one saved as a file stands alone) unless `style: "none"` is passed, and the
@@ -135,4 +137,4 @@ export const KYOGIJO_TEAM_STYLE = `
 .kyogijo .ky-fm>.ky-e{fill:var(--ky-layer-hollow);stroke:var(--c,var(--ky-layer));stroke-width:calc(var(--w,.3)*2.2px)}`.trim();
 
 /** Every rule of the package, for a page that draws with `style: "none"` and supplies the stylesheet itself. */
-export const KYOGIJO_STYLE = `${KYOGIJO_BASE_STYLE}\n${KYOGIJO_HEAT_STYLE}\n${KYOGIJO_TEAM_STYLE}\n${KYOGIJO_CURLING_STYLE}`;
+export const KYOGIJO_STYLE = `${KYOGIJO_BASE_STYLE}\n${KYOGIJO_HEAT_STYLE}\n${KYOGIJO_TEAM_STYLE}\n${KYOGIJO_CURLING_STYLE}\n${KYOGIJO_COURTS_STYLE}`;

@@ -9,6 +9,7 @@ export type { Bandwidth, ContourLayer, HeatBase, HeatBins, HeatDatum, HeatLabels
 export type { ArrowsLayer, Comet, Layer, LayerBase, LayerKind, LayerTeam, LineDatum, LineStyle, LinesLayer, MarkDatum, MarkShape, OutcomeStyle, Paint, PointDatum, PointStyle, PointsLayer, Scale, TableOptions, TextDatum, TextLayer, TextStyle } from "./layers.types.ts";
 export { KYOGIJO_STRINGS } from "./strings.ts";
 export type { KyogijoWords } from "./strings.ts";
+export { KYOGIJO_COURTS_STYLE } from "./courts.style.ts";
 export { KYOGIJO_CURLING_STYLE, KYOGIJO_HEAT_STYLE, KYOGIJO_STYLE, KYOGIJO_TEAM_STYLE } from "./style.ts";
 export type { DelaunayLayer, FlowLayer, Formation, FormationLayer, FormationPlayer, FormationPosition, FormationSport, HullLayer, MoveDatum, NetworkLayer, NetworkNode, PassDatum, PlayerDatum, SonarLayer, VoronoiLayer } from "./team.types.ts";
 export { COURT_THEMES } from "./themes.ts";
@@ -37,6 +38,7 @@ export type {
   Fence,
   GoalStyle,
   Language,
+  NetStyle,
   Orientation,
   ScoreOptions,
   Side,

@@ -8,6 +8,9 @@ src/
 ├── draw.ts             drawKyogijo: options in, one string of SVG out
 ├── score.ts            the teams' places, the score's panel and the badge
 ├── curling.board.ts    the curling scoreboard: each end, the total and the hammer
+├── sets.board.ts       the net sports' scoreboard: each set or game, the points of the game, the sets won and the server's ball
+├── court.ts            the net sports' court a set of options asks for: the look, the free zone, the lines, areas and fixtures as rectangles
+├── courts.style.ts     the net sports' rules and the colours of each look, in light and dark
 ├── sheet.ts            the curling sheet a set of options asks for, held to the rules' range
 ├── surfaces/
 │   ├── surface.ts      what a surface is, and the quarter turn
@@ -17,6 +20,7 @@ src/
 │   ├── baseball.ts     the baseball field and its fence
 │   ├── soccer.ts       the soccer pitch
 │   ├── curling.ts      the curling sheet
+│   ├── net.ts          the court of tennis, volleyball, badminton, pickleball and table tennis
 │   ├── soccer-spec.ts  the Laws' figures, the presets, futsal and the small-sided pitches
 │   └── soccer-providers.ts  the data providers' coordinates, registered as frames, and rescale
 ├── layers.ts           data layers: drawLayers, layerTable and the marks
@@ -63,12 +67,13 @@ src/
 │   ├── basketball.ts   the courts
 │   ├── hockey.ts       the rinks
 │   ├── curling.ts      the sheets
+│   ├── courts.ts       the courts of the net sports
 │   ├── football.ts     the fields
 │   └── baseball.ts     the diamonds
 ├── geometry-entry.ts   the geometry's entry
 ├── units.ts            the units of length, each surface's own, and the converters
 ├── frames.ts           coordinate frames: the mapper, the registry, toSurface and fromSurface
-├── frames.providers.ts the NHL, HockeyTech, NBA, NFL, MLBAM, Retrosheet and curling frames
+├── frames.providers.ts the NHL, HockeyTech, NBA, NFL, MLBAM, Retrosheet, curling and net sports frames
 ├── frames-entry.ts     the frames' entry
 ├── parks.ts            the ballparks, their fences and their sources
 ├── parks.data.ts       made by scripts/build-parks.mjs from scripts/parks.data.json

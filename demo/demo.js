@@ -110,6 +110,17 @@ function curlingExtras(role, score) {
   return score === total ? { ends, ...(game.hammer === role ? { hammer: true } : {}) } : {};
 }
 
+/** A net sport's team's score in each set and the server, while the total is still the made-up game's: an edited score has no sets to show. */
+function netExtras(sport, role, score) {
+  const game = GAMES[sport];
+  if (score !== game[role]) return {};
+  const out = { sets: game[`${role}Sets`] };
+  if (game[`${role}Tiebreaks`] !== undefined) out.tiebreaks = game[`${role}Tiebreaks`];
+  if (game[`${role}Points`] !== undefined) out.points = game[`${role}Points`];
+  if (game.serving === role) out.serving = true;
+  return out;
+}
+
 /** What the state asks the package to draw. */
 function optionsFor(s, forCode = false) {
   const o = { sport: s.sport, orientation: s.orientation, language: language.lang };
@@ -140,6 +151,7 @@ function optionsFor(s, forCode = false) {
       const out = { name: t.name, abbr: t.abbr, score: /^-?\d+$/.test(t.score) ? Number(t.score) : t.score, color: t.color };
       if (s.sport === "soccer" && /^\d+$/.test(t.pens ?? "")) out.penalties = Number(t.pens);
       if (s.sport === "curling") Object.assign(out, curlingExtras(t === s.away ? "away" : "home", out.score));
+      if (GAMES[s.sport].awaySets !== undefined) Object.assign(out, netExtras(s.sport, t === s.away ? "away" : "home", out.score));
       if (t.logo === "emblem") out.logo = forCode ? placeholder : EMBLEMS[t.emblem];
       else if (t.logo === "url" && t.url) out.logo = t.url;
       return out;
@@ -540,7 +552,7 @@ $("embed-download").addEventListener("click", () => {
 // ----- The examples.
 const team = (sport, role, score) => {
   const base = TEAMS[FAMILIES[sport]][role];
-  return { name: language.lang === "ja" ? TEAMS_JA[FAMILIES[sport]][role] : base.name, abbr: base.abbr, color: base.color, logo: EMBLEMS[base.emblem], score, ...(sport === "curling" ? curlingExtras(role, score) : {}) };
+  return { name: language.lang === "ja" ? TEAMS_JA[FAMILIES[sport]][role] : base.name, abbr: base.abbr, color: base.color, logo: EMBLEMS[base.emblem], score, ...(sport === "curling" ? curlingExtras(role, score) : {}), ...(GAMES[sport].awaySets !== undefined ? netExtras(sport, role, score) : {}) };
 };
 const withPens = (t, pens) => (pens === undefined ? t : { ...t, penalties: pens });
 const gameOf = (sport, extra = {}) => ({ sport, away: withPens(team(sport, "away", GAMES[sport].away), GAMES[sport].awayPens), home: withPens(team(sport, "home", GAMES[sport].home), GAMES[sport].homePens), status: GAMES[sport].status, competition: GAMES[sport].competition, date: GAMES[sport].date, language: language.lang, style: "none", ...extra });

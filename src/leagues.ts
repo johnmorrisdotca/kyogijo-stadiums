@@ -8,6 +8,7 @@ import { BASKETBALL_LEAGUES, courtInFeet, type BasketballLeague, type CourtSpec 
 import { FOOTBALL_LEAGUES, type FootballLeague } from "./leagues/football.ts";
 import { HOCKEY_LEAGUES, rinkInFeet, type HockeyLeague, type RinkSpec } from "./leagues/hockey.ts";
 import { CURLING_LEAGUES, sheetInFeet, type CurlingLeague, type SheetSpec } from "./leagues/curling.ts";
+import { BADMINTON_LEAGUES, PICKLEBALL_LEAGUES, TABLE_TENNIS_LEAGUES, TENNIS_LEAGUES, VOLLEYBALL_LEAGUES, netInFeet, type NetLeague } from "./leagues/courts.ts";
 import { LEAGUE_SOURCES } from "./leagues/sources.ts";
 import type { Family, LeagueSpan } from "./leagues/types.ts";
 import { inFeet } from "./leagues/types.ts";
@@ -18,6 +19,7 @@ import { convertLength, type Unit } from "./units.ts";
 export { LEAGUE_SOURCES };
 export type { LeagueSource } from "./leagues/sources.ts";
 export type { BaseballLeague, BasketballLeague, CurlingLeague, FootballLeague, HockeyLeague };
+export type { BadmintonFigures, BadmintonLeague, FreeZone, FreeZones, NetFigures, NetLeague, NetSport, PickleballFigures, PickleballLeague, TableTennisFigures, TableTennisLeague, TennisFigures, TennisLeague, VolleyballFigures, VolleyballLeague } from "./leagues/courts.ts";
 export type { CourtFigures, CourtMarks } from "./leagues/basketball.ts";
 export type { RinkFigures } from "./leagues/hockey.ts";
 export type { SheetFigures } from "./leagues/curling.ts";
@@ -25,10 +27,10 @@ export type { DiamondFigures } from "./leagues/baseball.ts";
 export type { Family, LeagueSpan, Named } from "./leagues/types.ts";
 
 /** A league: a variant of a family of surface. */
-export type League = BasketballLeague | HockeyLeague | FootballLeague | BaseballLeague | CurlingLeague;
+export type League = BasketballLeague | HockeyLeague | FootballLeague | BaseballLeague | CurlingLeague | NetLeague;
 
 /** The family of surface each sport draws; soccer's variants are its pitches (`pitch`), not leagues. */
-export const FAMILY_OF: Readonly<Record<Sport, Family | undefined>> = Object.freeze({ nfl: "football", cfl: "football", ifaf: "football", nhl: "hockey", nba: "basketball", mlb: "baseball", soccer: undefined, curling: "curling" });
+export const FAMILY_OF: Readonly<Record<Sport, Family | undefined>> = Object.freeze({ nfl: "football", cfl: "football", ifaf: "football", nhl: "hockey", nba: "basketball", mlb: "baseball", soccer: undefined, curling: "curling", tennis: "tennis", volleyball: "volleyball", badminton: "badminton", pickleball: "pickleball", tabletennis: "tabletennis" });
 
 /**
  * The leagues each sport can draw, in the order a menu lists them, the sport's own first (the three football sports share their
@@ -43,10 +45,15 @@ export const LEAGUES: Readonly<Record<Sport, readonly League[]>> = Object.freeze
   mlb: BASEBALL_LEAGUES,
   soccer: [],
   curling: CURLING_LEAGUES,
+  tennis: TENNIS_LEAGUES,
+  volleyball: VOLLEYBALL_LEAGUES,
+  badminton: BADMINTON_LEAGUES,
+  pickleball: PICKLEBALL_LEAGUES,
+  tabletennis: TABLE_TENNIS_LEAGUES,
 });
 
 /** Every league of every family, once each. */
-export const VARIANTS: readonly League[] = Object.freeze([...BASKETBALL_LEAGUES, ...HOCKEY_LEAGUES, ...FOOTBALL_LEAGUES, ...BASEBALL_LEAGUES, ...CURLING_LEAGUES]);
+export const VARIANTS: readonly League[] = Object.freeze([...BASKETBALL_LEAGUES, ...HOCKEY_LEAGUES, ...FOOTBALL_LEAGUES, ...BASEBALL_LEAGUES, ...CURLING_LEAGUES, ...TENNIS_LEAGUES, ...VOLLEYBALL_LEAGUES, ...BADMINTON_LEAGUES, ...PICKLEBALL_LEAGUES, ...TABLE_TENNIS_LEAGUES]);
 
 /** The ids of a sport's leagues. */
 export const leagueIds = (sport: Sport): string[] => LEAGUES[sport].map((league) => league.id);
@@ -190,6 +197,8 @@ export const courtOf = (league: BasketballLeague, year?: number): CourtSpec => c
 export const rinkOf = (league: HockeyLeague, year?: number): RinkSpec => rinkInFeet(leagueAtOf(league, year).figures, figuresUnit(league));
 /** A curling sheet of a league, in feet. A sheet has no history; a year is ignored. */
 export const sheetOf = (league: CurlingLeague = CURLING_LEAGUES[0]): SheetSpec => sheetInFeet(league.dimensions, league.figuresUnit ?? league.unit);
+/** A net sport's court of a league (tennis, volleyball and beach volleyball, badminton, pickleball, table tennis), in feet. These courts have no history; a year is ignored. */
+export const netOf = <L extends NetLeague>(league: L): L["dimensions"] => netInFeet(league.dimensions, figuresUnit(league));
 /** A football field of a league in a season: the spec, in feet. */
 export const fieldOf = (league: FootballLeague, year?: number): FootballSpec => inFeet(leagueAtOf(league, year).figures, figuresUnit(league)) as unknown as FootballSpec;
 /** A diamond of a league in a season, in feet. */
@@ -219,6 +228,17 @@ export function leagueSize(sport: Sport, id: string, unit?: Unit): { length: num
       break;
     case "curling":
       feet = sheetOf(league);
+      break;
+    case "tennis": {
+      const t = netOf(league);
+      feet = { length: t.length, width: t.widthDoubles };
+      break;
+    }
+    case "volleyball":
+    case "badminton":
+    case "pickleball":
+    case "tabletennis":
+      feet = netOf(league);
       break;
     case "football": {
       const field = fieldOf(league);
@@ -288,6 +308,52 @@ export function leagueFigures(league: League): [string, string][] {
         ["hog line", `${w(s.hogLine)} from the tee`],
         ["house", `circles of ${w(twelve)}, ${w(eight)} and ${w(four)} radius, a button of ${w(button)}`],
         ["courtesy line", s.courtesy === null ? "none" : `${w(s.courtesy.outsideHog)} outside each hog line`],
+      ];
+    }
+    case "tennis": {
+      const t = netOf(league);
+      return [
+        ["court", `${w(t.length)} by ${w(t.widthDoubles)} (singles ${w(t.widthSingles)} wide)`],
+        ["service line", `${w(t.serviceLine)} from the net`],
+        ["net", `${w(t.net.heightPosts)} at the posts, ${w(t.net.heightCentre)} at the centre`],
+        ["net posts", `${w(t.net.postsOutside)} outside the doubles court`],
+        ["free zone", t.free.official === null ? "none" : `${w(t.free.official.end)} behind the baselines, ${w(t.free.official.side)} beside the sidelines`],
+      ];
+    }
+    case "volleyball": {
+      const v = netOf(league);
+      return [
+        ["court", `${w(v.length)} by ${w(v.width)}`],
+        ["attack line", v.attackLine === null ? "none" : `${w(v.attackLine)} from the centre line`],
+        ["net", `${w(v.net.length)} long, ${w(v.net.heightMen)} high (women's ${w(v.net.heightWomen)})`],
+        ["posts", `${w(v.net.postsOutside)} outside the side lines`],
+        ["free zone", v.free.official === null ? "none" : `${w(v.free.official.end)} behind the end lines, ${w(v.free.official.side)} beside the side lines`],
+      ];
+    }
+    case "badminton": {
+      const b = netOf(league);
+      return [
+        ["court", `${w(b.length)} by ${w(b.width)} (singles ${w(b.width - 2 * b.singlesInset)} wide)`],
+        ["short service line", `${w(b.shortServiceLine)} from the net`],
+        ["doubles long service line", `${w(b.doublesLongServiceInset)} inside the back boundary`],
+        ["net", `${w(b.net.heightCentre)} at the centre, ${w(b.net.heightSides)} over the side lines`],
+      ];
+    }
+    case "pickleball": {
+      const p = netOf(league);
+      return [
+        ["court", `${w(p.length)} by ${w(p.width)}`],
+        ["non-volley zone", `${w(p.nonVolley)} from the net`],
+        ["net", `${w(p.net.heightSides)} at the sidelines, ${w(p.net.heightCentre)} at the centre`],
+        ["playing surface", p.free.least === null ? "none" : `at least ${w(p.width + 2 * p.free.least.side)} by ${w(p.length + 2 * p.free.least.end)}`],
+      ];
+    }
+    case "tabletennis": {
+      const t = netOf(league);
+      return [
+        ["table", `${w(t.length)} by ${w(t.width)}, ${w(t.height)} high`],
+        ["net", `${w(t.net.height)} above the playing surface`],
+        ["lines", `${w(t.edgeLine)} at the edges, a ${w(t.centreLine)} centre line`],
       ];
     }
     case "football": {

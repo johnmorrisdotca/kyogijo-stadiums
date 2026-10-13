@@ -107,6 +107,99 @@ The MLB parks of the past are read the same way, from the English article of eac
 
 **Ours.** The stone's drawn size (a circle of 36 inches, the most the rules allow), the colours of the house (blue 12-foot band, white 8-foot band, red 4-foot band, white button, which neither book prints), the colour of the hog line, the place of the board, and the width of Curling Canada's hacks. The sheet's apron is not set by the rules. Both books print metres and feet; the feet are used to draw, and `wcf`'s figures are kept in the metres it prints first (so `45.72` and `4.75` m, which are 150 ft and 15.583 ft to the thousandth of a foot, and a tee line 17.375 m from the middle, which is 57.003 ft against Curling Canada's 57). The books say nothing of the colour of a stone's handle; red and yellow are the usual.
 
+## The net sports
+
+Tennis, volleyball and beach volleyball, badminton, pickleball and table tennis ([the page](./courts.md)). Each rulebook's figures are in `src/leagues/courts.ts` in the unit it prints first and are held by `src/courts.test.ts`, one test for each rule below. A court is measured, as each book measures it, to the outside edge of its lines. The documents, with the edition and the address read on 2026-10-13, are in `LEAGUE_SOURCES` (`itf-rules`, `fivb-volleyball`, `fivb-beach`, `bwf-laws`, `usap-rulebook`, `ittf-laws`).
+
+### Tennis
+
+*Rules of Tennis*, International Tennis Federation, 2026. The ITF's own server refused an automated download, so the text was read in Tennis Canada's *Rules of the Court 2026* (https://assets.tenniscanada.com/production/Rules-of-the-Court-2026.pdf), which prints the ITF's rules in full with its own notes marked "TC Note"; only the ITF's text was used.
+
+| Figure | Value | Source |
+| --- | --- | --- |
+| The court | a rectangle 78 ft (23.77 m) long, 27 ft (8.23 m) wide for singles and 36 ft (10.97 m) for doubles | Rule 1 |
+| The net | 3 ft 6 in (1.07 m) at the posts, 3 ft (0.914 m) at the centre, held down by a strap | Rule 1 |
+| The net posts | for doubles, their centres 3 ft (0.914 m) outside the doubles court; at most 6 in square or round | Rule 1 |
+| Singles sticks | with a doubles net used for singles, their centres 3 ft outside the singles court, at most 3 in square or round; Appendix X: 16 ft 6 in from the middle of the net, the posts 21 ft | Rule 1; Appendix X |
+| The service lines | between the singles sidelines, 21 ft (6.40 m) from the net; the centre service line half way between the singles sidelines | Rule 1 |
+| The centre mark | 4 in (10 cm) long, inside the court, 2 in (5 cm) wide; the centre service line 2 in wide | Rule 1 |
+| The other lines | 1 to 2 in (2.5 to 5 cm) wide, the baselines up to 4 in (10 cm); all court measurements to the outside of the lines | Rule 1 |
+| The ground round the court | as a guide for international competitions at least 21 ft (6.40 m) behind the baselines and 12 ft (3.66 m) beside the sidelines; for recreational and club play 18 ft (5.48 m) and 10 ft (3.05 m) | Appendix X, the note at its foot |
+| The score | a game: love, 15, 30, 40, deuce and advantage; a tie-break game to seven points with a margin of two; a set to six games with a margin of two, or a tie-break at six all; a match the best of 3 or 5 sets | Rules 5, 6 and 7 |
+| ATP and WTA | "the rules and regulations followed by the International Tennis Federation (ITF), the WTA Tour, and the ATP Tour" | the foreword of the Tennis Canada book that prints the rules |
+
+**Ours.** The colours of the four looks. The service line's place: the rule measures to the outside of the lines and the figure is taken to the edge nearer the baseline, so the service box is 21 ft deep to the outer edge of its line. The centre mark is drawn from the inside edge of the baseline. The lines are drawn 2 in wide, the greatest of the rule's 1 to 2 in. The sizes of the net's line, and of the singles sticks' and posts' marks (the posts at the greatest 6 in, the sticks 3 in). Rule 1's courts for 10-and-under play (Appendix VIII) are not drawn.
+
+### Volleyball and beach volleyball
+
+*Official Volleyball Rules 2025-2028* and *Official Beach Volleyball Rules 2025-2028*, FIVB, approved by the 39th FIVB World Congress 2024 and in force from 1 January 2025.
+
+| Figure | Value | Source |
+| --- | --- | --- |
+| The indoor court | 18 by 9 m, a free zone of at least 3 m on all sides; for FIVB, World and Official Competitions 5 m beside the side lines and 6.5 m behind the end lines | Rule 1.1 |
+| The lines | all 5 cm wide; boundary lines drawn inside the dimensions of the court | Rules 1.3.1, 1.3.2 |
+| The centre line | its axis divides the court into two of 9 by 9 m, and it runs beneath the net from side line to side line | Rule 1.3.3 |
+| The attack line | the rear edge 3 m from the axis of the centre line; for FIVB, World and Official Competitions extended by five 15 cm lines 5 cm wide, 20 cm from each other, to a total length of 1.75 m | Rule 1.3.4 |
+| The front zone | between the axis of the centre line and the rear edge of the attack line, and beyond the side lines to the end of the free zone | Rule 1.4.1 |
+| The service zone | 9 m wide behind each end line, limited by two 15 cm lines 20 cm behind the end line as extensions of the side lines | Rule 1.4.2 |
+| The net | 1 m (± 3 cm) wide, 9.50 to 10 m long with 25 to 50 cm on each side of the side bands; the top 2.43 m for men and 2.24 m for women | Rules 2.1.1, 2.2 |
+| The side bands and antennae | the side bands 5 cm wide and 1 m long directly above each side line; an antenna 1.80 m long and 10 mm across at the outer edge of each side band, the top 80 cm above the net | Rules 2.3, 2.4 |
+| The posts | 0.50 to 1.00 m outside the side lines, 2.55 m high; for FIVB, World and Official Competitions 1 m | Rule 2.5.1 |
+| The beach court | 16 by 8 m, a free zone of at least 3 m (at least 5 m and at most 6 m for the FIVB's competitions); lines 5 cm wide, inside the dimensions, no centre line; the service zone 8 m wide | Beach Rules 1.1.1, 1.1.2, 1.3.1, 1.3.2, 1.4.1 |
+| The beach net | 8.5 m long and 1 m wide (an 8.0 m net may be used in FIVB competitions), the same heights; side bands and antennae as indoors; the posts 0.70 to 1.00 m outside the side lines, 1 m for the FIVB's competitions | Beach Rules 2.1.1, 2.2 to 2.5.1 |
+| The score | a set to 25 with a lead of two, the deciding fifth to 15; beach: a set to 21, the deciding third to 15 | Rules 6.2, 6.3; Beach Rules 6.2, 6.3 |
+
+**Ours.** The colours; the front zone is painted a little apart from the back (Rule 1.2.2 allows a court of two colours for the front and back zones); the marks for the posts and antennae (the rules give a post no diameter and an antenna a diameter of 10 mm, too small to see at the scale of a court, so a mark of a least size is drawn at the figure's place). `official` draws the FIVB competitions' figures (the 5 m and 6.5 m free zone, the extension of the attack line, the posts 1 m out) and `least` the rules' least (3 m, no extension, the posts 0.5 m out, or 0.7 m on the beach). The net drawn is the 10 m one indoors and the 8.5 m one on the beach (the 8.0 m net the beach rules allow in FIVB competitions is not drawn). The NCAA's and USA Volleyball's own rule books were not read.
+
+### Badminton
+
+*Laws of Badminton*, Badminton World Federation, as amended and adopted by the BWF on 26 April 2025 (https://worldbadminton.com/laws/rules_2025.htm). The BWF's page says the 2026 amendments take effect on 4 January 2027 and that the 2025 Laws apply until then; the amended Laws could not be read (the page that should hold them answered "Not Found"), and Law 1 was not among the changes the page names. The figures of Diagram A are read from its picture (https://worldbadminton.com/laws/images/courtDiagram.png), in millimetres.
+
+| Figure | Value | Source |
+| --- | --- | --- |
+| The court | a rectangle marked with lines 40 mm wide; 13 400 by 6 100 mm overall | Law 1.1; Diagram A |
+| The lines | the lines easily distinguishable and preferably white or yellow; all the lines part of the area they define | Laws 1.2, 1.3 |
+| The singles side lines | 40 + 420 mm inside the doubles side lines (so the singles court is 5 180 mm wide outside to outside) | Diagram A |
+| The doubles long service lines | 40 + 720 mm inside the back boundary lines | Diagram A |
+| The short service lines | 1 980 mm from the net (to the line's edge nearer the net) | Diagram A |
+| The centre lines | from each short service line to the back boundary line, dividing the right and left service courts | Diagram A |
+| The posts | 1.55 m high from the surface, on the doubles side lines whether singles or doubles is played, not extending into the court beyond the side lines | Laws 1.4, 1.5 |
+| The net | 760 mm deep, at least 6.1 m wide; the top 1.524 m at the centre and 1.55 m over the side lines | Laws 1.7, 1.10 |
+| The score | a match the best of three games; a game to 21, at 20-all a two-point lead, at 29-all the 30th point | Laws 7.1, 7.2, 7.4, 7.5 |
+
+**Ours.** The colours; the sizes of the posts' marks; the figures of the net's depth and height are held and not drawn (a plan view). The BWF's Laws give no figure for the ground round the court, so none is drawn.
+
+### Pickleball
+
+*USA Pickleball Official Rulebook*, 2026, Section 3 Court and Equipment, as hosted by Pickleball Canada (https://pickleballcanada.org/wp-content/uploads/2026/03/2026-Official-Rulebook-EN.pdf).
+
+| Figure | Value | Source |
+| --- | --- | --- |
+| The court | a rectangle 20 ft (6.10 m) wide and 44 ft (13.41 m) long for singles and doubles; measured to the outside edge of the perimeter and non-volley zone lines | Rules 3.A.1, 3.A.2 |
+| The playing surface | at least 30 by 60 ft (9.14 by 18.29 m); recommended 34 by 64 ft (10.36 by 19.5 m) for new construction and tournament play | Rule 3.A.3 |
+| The non-volley zone | 7 ft (2.13 m) from the net on each side, between the two sidelines; its lines are part of it | Rule 3.A.4.c |
+| The centerline | down the middle of each end, from the non-volley zone line to the baseline | Rule 3.A.4.d |
+| The lines | 2 in (5.08 cm) wide, one colour contrasting with the surface | Rule 3.A.4.e |
+| The posts | 22 ft +/- 1 in (6.71 m) from the inside of one to the inside of the other, at most 3 in (7.62 cm) across | Rule 3.B.2 |
+| The net | at least 21 ft 9 in (6.63 m) long, at least 30 in high; 36 in +/- 0.25 at the outer edge of the sidelines and 34 in +/- 0.25 at the centre | Rules 3.B.3, 3.B.6, 3.B.7 |
+| The score | games to 11, 15 or 21; a match one game, best of 3 or best of 5 | Rule 15.C |
+
+**Ours.** The colours; the non-volley zone is painted a little apart from the rest of the court; the posts are drawn 1 ft outside each sideline (22 ft apart, inside to inside, less the court's 20 ft, halved) at their greatest diameter of 3 in.
+
+### Table tennis
+
+*Laws of Table Tennis*, International Table Tennis Federation, 2026 statutes, as reproduced by Table Tennis England in *The Laws of Table Tennis*, issue 1, July 2026 (https://www.tabletennisengland.co.uk/content/uploads/2026/07/Laws-of-Table-Tennis-2026-27.pdf). The ITTF Handbook itself was not read.
+
+| Figure | Value | Source |
+| --- | --- | --- |
+| The table | the playing surface 2.74 m long, 1.525 m wide, in a horizontal plane 76 cm above the floor | Law 2.1.1 |
+| The lines | a white side line 2 cm wide along each 2.74 m edge and a white end line 2 cm wide along each 1.525 m edge; for doubles a white centre line 3 mm wide, parallel with the side lines | Laws 2.1.4, 2.1.6 |
+| The net | divides the surface into two equal courts, parallel with the end lines; its top 15.25 cm above the playing surface | Laws 2.1.5, 2.2.3 |
+| The posts | 15.25 cm high, the outside limits of each 15.25 cm outside the side line | Law 2.2.2 |
+| The score | a game to 11 points unless both reach 10; a match the best of any odd number of games | Laws 2.11.1, 2.12.1 |
+
+**Ours.** The colours; the post's width (a mark of a least size). The playing area round a table is in the ITTF's regulations, not in the Laws, and was not read: no free zone is drawn.
+
 ## Surface units
 
 `SURFACE_UNITS` (`src/units.ts`) is the unit each rulebook states its principal figures in. The drawing is made in feet and a figure is one conversion from the rulebook's own.
@@ -118,6 +211,8 @@ The MLB parks of the past are read the same way, from the English article of eac
 | NHL, NBA | feet | NHL rulebook, Rule 1 and NBA rulebook, Rule 1 |
 | Baseball | feet | Official Baseball Rules, 2.01 to 2.05 |
 | Curling | metres for World Curling (the unit it prints first, with feet beside it), feet for Curling Canada (which prints feet first) | R1 of the World Curling rules; Rule 3 of Curling Canada's |
+| Tennis, pickleball | feet (each also gives metres beside it) | Rule 1 of the ITF's Rules of Tennis ("78 feet (23.77 m)"); Rule 3.A.1 of USA Pickleball's rulebook ("20 feet (6.10 m)") |
+| Volleyball, badminton, table tennis | metres | Rule 1.1 of the FIVB's rules; Law 1 and Diagram A of the BWF's (millimetres on the diagram); Law 2.1 of the ITTF's |
 | NPB parks | metres | the Japanese Wikipedia article of each park gives 両翼, 中堅 and 左右中間 in metres; they are converted once, at 0.3048 metres to the international foot (3.280839895 feet to the metre), rounded to a tenth of a foot |
 
 ## Soccer
@@ -212,6 +307,7 @@ The facts of the 64 grounds of `scripts/grounds.data.json` (listed in [grounds.m
 | `nfl-tracking` | nfl-football-ops/Big-Data-Bowl, `schema.md` (x "along the long axis of the field, 0 - 120 yards", y "along the short axis of the field, 0 - 53.3 yards") | x counts the end zones (the goal lines at 10 and 110 yards), y spans the field's width |
 | `mlbam` | Beanumber, "Analyzing Baseball Data with R", 3rd ed., Appendix C (`hc_x` and `hc_y` are "x location" and "y location of batted ball when it lands"; the spray angle is atan((hc_x - 125.42) / (198.27 - hc_y))); Baseball Savant, "Statcast Search CSV Documentation" (`hc_x`, `hc_y` "Hit coordinate X/Y of batted ball", no unit given); MLBAnalytic, "Build a Spray Chart from Statcast" (the origin is the top left of a pixel image; 125.42 and 198.27 are home plate's place; a unit is "roughly 2.5 feet", the ratio to `hit_distance_sc` clustering at 2.48); yasumorishima/baseball-field-viz README (the same transform with a scale of 2.5) | home plate at (125.42, 198.27), x growing to right field, y growing down the image |
 | `curling` | this package's own frame: the button of the house the stones are played to as the origin, feet, x across (positive to the thrower's right), y along (positive towards the back line) | the rules score a stone by its distance from the tee (World Curling R12(d), Curling Canada Rule 14), so the tee is the origin; no data provider's format was read |
+| `tennis`, `volleyball`, `badminton`, `pickleball`, `tabletennis` | this package's own frames: the centre of the net, on the court, as the origin; x along the court (positive towards the end drawn at the right), y across it (positive towards the top as the court is drawn wide); feet for tennis and pickleball, metres for the others | each rulebook measures its court from the net (the service line, the attack line, the short service line and the non-volley zone line from it); no tracking provider's format was read (Hawk-Eye's and the others' are not published) |
 | `retrosheet` | Retrosheet, "Hit Location Diagram" (retrosheet.org/location.htm and its diagram hitloc.jpg: the Project Scoresheet batted ball location codes, to scale for a park of 330 feet down each line and 405 to centre, outfield sectors about 50 feet deep, the infield sectors by the fielders' numbers) | the codes of the diagram, which `RETROSHEET_ZONES` places at the centre of each sector |
 
 **Ours.** Where the sources read do not settle a convention, the frame carries the common one and says so in its `note`:
@@ -283,6 +379,7 @@ The named zones that `zones` layers count into (`src/heat.zones.ts`). Each zone 
 | `baseball-spray` | Fair ground cut at 15 degrees either side of the line from home plate to centre field into three equal thirds (the foul lines are at 45); infield is within 95 feet of the pitcher's plate (the infield's dirt arc, Rule 2.01), outfield beyond. Pull is left field for a right-handed batter and right field for a left-handed one; `bats: "none"` calls the thirds left, centre and right field. Foul ground is in no zone. | Ours, on the figures of the Baseball section above. |
 | `baseball-retrosheet` | Retrosheet's 68 hit-location sectors, as the cells of the nearest-centre partition of the field: a point belongs to the sector whose centre is nearest, the same rule as `zoneAt` in the frames. The centres are our reading of the diagram (see the Retrosheet frame above). | Retrosheet, "Hit Location Diagram" (https://www.retrosheet.org/location.htm). The cell edges are ours. |
 | `curling-house` | At each end: the button (radius 6 in), the 4-foot ring (to a radius of 2 ft), the 8-foot ring (4 ft) and the 12-foot ring (6 ft), by the centre of the stone; and the free guard zone, between the tee line and the hog line (the hog line's inside edge, 21 ft), outside the 12-foot ring. | R1(d) and R6(a) of the World Curling rules; Rule 3(4) and Rule 12(1) of Curling Canada's. The zones are ours: the rules name the rings and the zone, and do not count stones into them. |
+| `net-court` | On each side of the net: the front court, between the net and the line the sport's own rules draw there, and the back court behind it. The line is tennis's service line (21 ft from the net), volleyball's attack line (3 m), badminton's short service line (1.98 m) and pickleball's non-volley zone line (7 ft); beach volleyball and table tennis have no such line, so each side is one half court. | Rule 1 of the ITF's rules; Rule 1.3.4 of the FIVB's; Diagram A of the BWF's; Rule 3.A.4.c of USA Pickleball's. The zones are ours: the rules name the lines and not the areas. |
 | `football-pass` | Short: up to 15 yards past the line of scrimmage, a pass thrown behind it included; deep: more than 15. Left, middle and right across the field: middle is between the hash marks; left and right are the passer's, facing the way the offence attacks. The line of scrimmage is the layer's `los`. | The field names are nflverse's `pass_length` (short or deep) and `pass_location` (left, middle or right) in the [nflreadr play-by-play dictionary](https://nflreadr.nflverse.com/articles/dictionary_pbp.html). That dictionary does not give the edges (nflverse takes them from the play's text, not from air yards), so the 15 yards and the hash marks are ours. |
 
 The colour ramps are Kyogijo's own: nine stops each, chosen by luminance and checked by a test against the surface colours and the ground a heat layer paints (see [data layers](./layers.md)); no palette of a plotting package is copied.

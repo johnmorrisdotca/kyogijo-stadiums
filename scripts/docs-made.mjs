@@ -7,7 +7,7 @@
 const MAIN = "@johnmorrisdotca/kyogijo";
 
 const UNIT_WORDS = { ft: "feet", yd: "yards", m: "metres", cm: "centimetres", in: "inches", mm: "millimetres", px: "pixels", "tenth-ft": "tenths of a foot", percent: "percent of the pitch", fraction: "fractions of the pitch" };
-const SPORT_NAMES = { nfl: "NFL", cfl: "CFL", ifaf: "IFAF", nhl: "NHL", nba: "NBA", mlb: "MLB", soccer: "soccer", curling: "curling" };
+const SPORT_NAMES = { nfl: "NFL", cfl: "CFL", ifaf: "IFAF", nhl: "NHL", nba: "NBA", mlb: "MLB", soccer: "soccer", curling: "curling", tennis: "tennis", volleyball: "volleyball", badminton: "badminton", pickleball: "pickleball", tabletennis: "table tennis" };
 const ENDS = { fixed: "fixed to the surface", shooter: "the basket or house attacked", none: "none" };
 const cell = (text) => String(text).replace(/\|/g, "\\|").replace(/\n/g, " ");
 const num = (n) => String(Math.round(n * 100) / 100);
@@ -39,7 +39,7 @@ export function unitsTable(lib) {
   const WORDS = { ft: "feet", yd: "yards", m: "metres", in: "inches", cm: "centimetres", mm: "millimetres" };
   const rows = SPORTS.map((sport) => [`\`${sport}\``, "the sport's own", SPORT_NAMES[sport], `\`${SURFACE_UNITS[sport]}\` (${WORDS[SURFACE_UNITS[sport]]})`]);
   // A football league serves the NFL's, the CFL's and the IFAF's field alike, so it is listed once, under all three.
-  const FAMILIES = { nba: "`nba`", nhl: "`nhl`", nfl: "`nfl`, `cfl`, `ifaf`", mlb: "`mlb`", curling: "`curling`" };
+  const FAMILIES = { nba: "`nba`", nhl: "`nhl`", nfl: "`nfl`, `cfl`, `ifaf`", mlb: "`mlb`", curling: "`curling`", volleyball: "`volleyball`" };
   for (const [sport, label] of Object.entries(FAMILIES)) for (const league of LEAGUES[sport]) if (!league.builtIn) rows.push([label, `\`${league.id}\``, league.name.en, `\`${league.unit}\` (${WORDS[league.unit]})`]);
   return table(["`sport`", "`league`", "Surface", "Rulebook unit"], rows);
 }
@@ -56,6 +56,7 @@ export function limitsTable(lib) {
   const count = (test) => parks.filter(test).length;
   const providers = Object.keys(SOCCER_PROVIDERS).length;
   const leagues = Object.values(LEAGUES).flat().filter((league) => !league.builtIn).length;
+  const families = new Set(Object.values(LEAGUES).flat().map((league) => league.family)).size;
   const registered = Object.keys(FRAMES);
   const soccer = registered.filter((name) => FRAMES[name].sport === "soccer").length;
   return table(
@@ -63,7 +64,7 @@ export function limitsTable(lib) {
     [
       ["Sports", String(SPORTS.length), "`SPORTS`"],
       ["Soccer pitches and providers", `${Object.keys(SOCCER_PITCHES).length} presets, ${providers} providers (${providers * (providers - 1)} maps between them, each landmark to its landmark)`, "`SOCCER_PITCHES`, `SOCCER_PROVIDERS`"],
-      ["League variants", `${leagues} leagues of 5 families, besides each sport's own`, "`LEAGUES`"],
+      ["League variants", `${leagues} leagues of ${families} families, besides each sport's own`, "`LEAGUES`"],
       ["Ballparks", `${PARK_IDS.length} (${count((p) => p.league === "MLB" && p.status !== "past")} current MLB, ${count((p) => p.league === "MLB" && p.status === "past")} past MLB, ${count((p) => p.league === "NPB" && p.status === "current")} NPB home parks, ${count((p) => p.league === "NPB" && p.status !== "current")} other NPB grounds)`, "`PARKS`"],
       ["Grounds", String(GROUND_IDS.length), "`GROUNDS`"],
       ["Places on the atlas", String(PLACES.length), "`PLACES`"],
@@ -75,7 +76,7 @@ export function limitsTable(lib) {
       ["Formations", `${Object.keys(FORMATIONS).length} named formations of 5 sports, ${Object.values(FORMATIONS).reduce((n, f) => n + f.positions.length, 0)} places in all`, "`FORMATIONS`"],
       ["The team layers", "a Voronoi diagram of 22 players adds under 12 kB; 1,000 points are triangulated in under 600 ms; a pass network of 600 passes adds under 16 kB", "`voronoi`, `delaunay`, `network`"],
       ["A layer's marks", "1,000 points add under 70 kB; 10,000 draw in under 250 ms", "`drawKyogijo`"],
-      ["A drawing's size", "under 22 kB for a football field, 15 kB for a soccer pitch with a score, 14 kB for a rink or a court, 17 kB for a ballpark, 17.5 kB for a curling sheet with its board, each with its 8 kB stylesheet (a test holds each)", "`drawKyogijo`"],
+      ["A drawing's size", "under 22 kB for a football field, 15 kB for a soccer pitch with a score, 14 kB for a rink or a court, 17 kB for a ballpark, 17.5 kB for a curling sheet or a net sport's court with its board, each with its 8 kB stylesheet (a test holds each)", "`drawKyogijo`"],
     ],
   );
 }

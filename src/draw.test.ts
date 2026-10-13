@@ -183,6 +183,8 @@ describe("the baseball field", () => {
   });
 });
 
+const NET_SPORTS: readonly string[] = ["tennis", "volleyball", "badminton", "pickleball", "tabletennis"];
+
 describe("a score", () => {
   it("writes both teams' names, the scores, the abbreviations and the status on the surface", () => {
     for (const sport of SPORTS) {
@@ -195,7 +197,8 @@ describe("a score", () => {
       expect(words, sport).toContain("BISON");
       expect(text, sport).toContain("3");
       expect(text, sport).toContain("2");
-      expect(text, sport).toContain("HCG");
+      // The board of a net sport names the teams in full and has the abbreviations on its strip (the badge), where there is room for only them.
+      if (!NET_SPORTS.includes(sport)) expect(text, sport).toContain("HCG");
       expect(text, sport).toContain("Cup Final, Game 7");
       expect(text, sport).toContain("Final · June 24");
     }

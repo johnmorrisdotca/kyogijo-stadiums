@@ -153,6 +153,13 @@ The links John has sent, and the ones the package's figures were read from: what
 - **Not used:** sporty's code, and sportypy's and sportyR's (GPL-3.0), which were not read for this.
 - **Ours:** the scoring of an end and the removal of the stones that are out of play (`curlingScore`), the zone set, the board, the frame, the colours of the house and of the stones.
 
+## Tennis, volleyball, badminton, pickleball and table tennis
+
+- **What was read:** the six rulebooks in [sources.md](./sources.md#the-net-sports): the ITF's *Rules of Tennis* 2026 (in Tennis Canada's reprint of them, because the ITF's server refused an automated download), the FIVB's *Official Volleyball Rules* and *Official Beach Volleyball Rules* 2025-2028, the BWF's *Laws of Badminton* as amended 26 April 2025 with its Diagram A, USA Pickleball's 2026 *Official Rulebook* and the ITTF's *Laws of Table Tennis* (the 2026 statutes, as Table Tennis England prints them). Only dimensions and rules are used, no text or diagram of any is copied.
+- **Checked against (MIT):** [`@sportsdataverse/sporty`](https://github.com/sportsdataverse/sdvplot-js) (item 10), whose generated table of surface dimensions (`packages/sporty/data/surface-dimensions.json`, read on 2026-10-13) has tennis and volleyball, read for its numbers only, after ours were written from the rulebooks. Where ours differ, and why, is in [Tennis, volleyball and the rest](./courts.md#where-it-differs-from-sportsdataversesporty). It has no pickleball, badminton, table tennis or beach volleyball.
+- **Not used:** sporty's code, and sportypy's and sportyR's (GPL-3.0), which were not read for this.
+- **Ours:** the zone set `net-court`, the board of sets and games, the frames, the colours of every look, and the sizes of the marks that stand for posts, antennae and the net.
+
 ## The soccer pitch and its providers
 
 - **What was read:** Law 1 of the IFAB Laws of the Game, the FIFA Futsal Laws, UEFA's Stadium Infrastructure Regulations, the MLS, NCAA and Premier League documents and the FA's, and each provider's own pages, all named in [sources.md](./sources.md#soccer): for facts only. No text, table or diagram of any is copied.

@@ -9,7 +9,7 @@ export interface Named {
 }
 
 /** The families of surface a league is a variant of. */
-export type Family = "basketball" | "hockey" | "football" | "baseball" | "curling";
+export type Family = "basketball" | "hockey" | "football" | "baseball" | "curling" | "tennis" | "volleyball" | "badminton" | "pickleball" | "tabletennis";
 
 /** The state of one marking from a season on, in a league's own history: the season it began, what it was, and its sources. */
 export interface LeagueSpan<T> {

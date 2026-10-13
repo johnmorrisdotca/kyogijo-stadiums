@@ -4,7 +4,9 @@ import { expect, test } from "@playwright/test";
 
 import { at, open, openGroups, svg } from "./demo.mjs";
 
-const SPORTS = ["nfl", "cfl", "ifaf", "nhl", "nba", "mlb", "soccer", "curling"];
+// A wide court is a strip on a phone, and a court has fewer parts than a ballpark or a pitch.
+const NET = ["tennis", "volleyball", "badminton", "pickleball", "tabletennis"];
+const SPORTS = ["nfl", "cfl", "ifaf", "nhl", "nba", "mlb", "soccer", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis"];
 
 test("opens on the rink with no complaint from the page, and says what it shows", async ({ page }) => {
   const errors = await open(page, "?sport=nhl&lang=en&help=off");
@@ -29,9 +31,9 @@ for (const sport of SPORTS) {
     expect(texts).toMatch(/VALLEY|HARBOUR|NORTHERN|SUMMIT/);
     expect(await page.locator(`${at("stage")} .ky-plate`).count()).toBe(1);
     // Not blank: the drawing has many parts and its picture is more than a flat colour.
-    expect(await page.locator(`${at("stage")} svg *`).count()).toBeGreaterThan(40);
+    expect(await page.locator(`${at("stage")} svg *`).count()).toBeGreaterThan(NET.includes(sport) ? 30 : 40);
     const shot = await page.locator(at("stage")).screenshot();
-    expect(shot.length).toBeGreaterThan(sport === "curling" ? 3000 : 8000);
+    expect(shot.length).toBeGreaterThan(sport === "curling" || NET.includes(sport) ? 3000 : 8000);
   });
 }
 
@@ -136,7 +138,7 @@ test("a live score moves when asked", async ({ page }) => {
 
 test("the examples are all there: every sport, wide and tall, badges, compact cards, courts and the parks on request", async ({ page }) => {
   await open(page, "?lang=en&help=off");
-  expect(await page.locator(`${at("gallery-cards")} svg.kyogijo`).count()).toBe(8);
+  expect(await page.locator(`${at("gallery-cards")} svg.kyogijo`).count()).toBe(13);
   expect(await page.locator(`${at("side-cards")} svg.kyogijo`).count()).toBe(4);
   expect(await page.locator(`${at("badge-list")} svg.kyogijo`).count()).toBe(8);
   expect(await page.locator(`${at("compact-cards")} svg.kyogijo`).count()).toBe(3);

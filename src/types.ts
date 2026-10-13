@@ -3,8 +3,8 @@ import type { Unit } from "./units.ts";
 import type { SoccerFrame, SoccerProviderId } from "./surfaces/soccer-providers.ts";
 import type { SoccerPitchId, SoccerSize } from "./surfaces/soccer-spec.ts";
 
-/** The surfaces: three football fields, a rink, a court, a ballpark, a soccer pitch and a curling sheet. */
-export type Sport = "nfl" | "cfl" | "ifaf" | "nhl" | "nba" | "mlb" | "soccer" | "curling";
+/** The surfaces: three football fields, a rink, a court, a ballpark, a soccer pitch, a curling sheet and five net sports (tennis, volleyball, badminton, pickleball and table tennis). */
+export type Sport = "nfl" | "cfl" | "ifaf" | "nhl" | "nba" | "mlb" | "soccer" | "curling" | "tennis" | "volleyball" | "badminton" | "pickleball" | "tabletennis";
 
 /** `auto` follows the device's light or dark setting (and `data-theme` on the page's root), the others force one. */
 export type Theme = "auto" | "light" | "dark";
@@ -154,6 +154,33 @@ export interface SheetStyle {
   end?: "left" | "right";
 }
 
+/** The named looks of a tennis court: the colour of its surface and of the ground round it. */
+export type TennisLook = "hard-blue" | "hard-green" | "clay" | "grass";
+/** The named looks of a volleyball court: a wooden floor, a floor painted blue, or the sand of the beach. */
+export type VolleyballLook = "wood" | "blue" | "sand";
+/** The named looks of a badminton court. */
+export type BadmintonLook = "green" | "blue" | "wood";
+/** The named looks of a pickleball court. */
+export type PickleballLook = "blue-green" | "green" | "red";
+/** The named looks of a table tennis table. */
+export type TableTennisLook = "blue" | "green";
+
+/**
+ * The look and the variants of a net sport's court (tennis, volleyball, badminton, pickleball, table tennis). Every part is optional.
+ * The lines and the sizes are the rulebook's whatever the look; a look is the colour of the ground and of the surface.
+ */
+export interface NetStyle {
+  /** A named look: for tennis `hard-blue` (the default), `hard-green`, `clay` or `grass`; volleyball `wood` (the default for indoors) or `blue`, and `sand` for the beach; badminton `green` (the default), `blue` or `wood`; pickleball `blue-green` (the default), `green` or `red`; table tennis `blue` (the default) or `green`. An unknown name is an error that lists them. */
+  look?: string;
+  /**
+   * The free zone drawn round the court: `official` (the default: the figure a rulebook gives for its own competitions, where it gives one), `least` (the least it allows
+   * or recommends) or `none`. Tennis (Appendix X), volleyball and beach volleyball (Rule 1.1) and pickleball (Rule 3.A.3) give figures; badminton and table tennis do not.
+   */
+  free?: "official" | "least" | "none";
+  /** Tennis: draw the two singles sticks that hold a doubles net up for a singles match, 3 feet outside the singles court (Rule 1). Off by default. */
+  sticks?: boolean;
+}
+
 /** One team of a score. */
 export interface Team {
   /** The name, as it is to be written: "Harbour City Gulls". */
@@ -170,6 +197,14 @@ export interface Team {
   ends?: readonly (number | string | null | undefined)[];
   /** Curling: the team has the hammer, the last stone of the end. A marker is drawn beside its name. */
   hammer?: boolean;
+  /** Tennis, volleyball, badminton, pickleball and table tennis: what it scored in each set (tennis: its games; pickleball and table tennis: each game's points), in order; `null` for one not played yet. The set in progress is the last one given. */
+  sets?: readonly (number | string | null | undefined)[];
+  /** Tennis: the points of a tie-break in each set (the same places as `sets`; `null` where the set had none), written small beside the games. */
+  tiebreaks?: readonly (number | string | null | undefined)[];
+  /** Tennis: the points of the game in progress: `0`, `15`, `30`, `40`, `Ad`, or the points of a tie-break. */
+  points?: number | string;
+  /** The team that is serving. A ball is drawn beside its name (and in the corner of its block on the badge). */
+  serving?: boolean;
   /** The team's colour, for its end, key or dugout. */
   color?: string;
   /** The colour of the words on that colour. Black or white by the colour's lightness when missing. */
@@ -245,6 +280,8 @@ export interface SurfaceOptions {
   court?: CourtStyle;
   /** The size and look of a curling sheet. */
   sheet?: SheetStyle;
+  /** The look and the variants of a tennis, volleyball, badminton, pickleball or table tennis court. */
+  net?: NetStyle;
   /** The soccer pitch: a preset (`fifa`, `uefa`, `mls`, `nwsl`, `ncaa`, `law-min`, `law-max`, `9-a-side`, `7-a-side`, `5-a-side`, `futsal`) or a size, `{ length, width, unit }`. The international 105 by 68 m by default. */
   pitch?: SoccerPitchId | SoccerSize;
   /** The soccer ground to draw: a key of `GROUNDS`. The pitch has the size its article publishes (the international 105 by 68 m where none is), and the drawing carries the ground's name for `year`. A `pitch` of your own wins over the ground's size. */
@@ -274,8 +311,8 @@ export interface SurfaceOptions {
   height?: number | string;
 }
 
-/** The standard words of a status. `end-6` (or "End 6") is a curling end. Any other text is written as it is. */
-export type StatusWord = "final" | "final-ot" | "final-so" | "final-aet" | "final-pens" | "live" | "half" | "extra-time" | "extra-end" | "penalties" | "postponed";
+/** The standard words of a status. `end-6` (or "End 6") is a curling end, `set-3` a set and `game-2` a game. Any other text is written as it is. */
+export type StatusWord = "final" | "final-ot" | "final-so" | "final-aet" | "final-pens" | "live" | "half" | "extra-time" | "extra-end" | "penalties" | "postponed" | "tiebreak" | "match-tiebreak" | "retired" | "walkover";
 
 /** What a score drawing takes beyond a surface. */
 export interface ScoreOptions extends SurfaceOptions {

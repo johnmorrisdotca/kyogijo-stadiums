@@ -1,8 +1,8 @@
 # League variants
 
-`league` in the options draws a surface as one league's rulebook marks it; `sport` names the family (`nba` for basketball, `nhl` for hockey, `nfl`, `cfl` or `ifaf` for football, `mlb` for baseball and softball, `curling` for a curling sheet). This page is made from `src/leagues/` by `pnpm docs:make`; a test holds it to them. Each figure is the rulebook's, in its own unit, and each league's sources, with the edition and the address read on 2026-10-13, are listed under its table. What a figure is and where it is ours is in [sources.md](./sources.md#league-variants); what could not be cited is in [references.md](./references.md#league-variants-not-drawn).
+`league` in the options draws a surface as one league's rulebook marks it; `sport` names the family (`nba` for basketball, `nhl` for hockey, `nfl`, `cfl` or `ifaf` for football, `mlb` for baseball and softball, `curling` for a curling sheet, `tennis`, `volleyball`, `badminton`, `pickleball` and `tabletennis` for the net sports). This page is made from `src/leagues/` by `pnpm docs:make`; a test holds it to them. Each figure is the rulebook's, in its own unit, and each league's sources, with the edition and the address read on 2026-10-13, are listed under its table. What a figure is and where it is ours is in [sources.md](./sources.md#league-variants); what could not be cited is in [references.md](./references.md#league-variants-not-drawn).
 
-A `year` draws a league's markings of that season only where a source dates a change (the history under each table); for any other league it is ignored, and the drawing is of the rulebook as it is now. The sport's own league (the NBA, the NHL, the NFL, the CFL, the IFAF, MLB, World Curling) keeps the history of [`year`](./eras.md).
+A `year` draws a league's markings of that season only where a source dates a change (the history under each table); for any other league it is ignored, and the drawing is of the rulebook as it is now. The sport's own league (the NBA, the NHL, the NFL, the CFL, the IFAF, MLB, World Curling, the ITF, the FIVB's indoor court, the BWF, USA Pickleball and the ITTF) keeps the history of [`year`](./eras.md).
 
 ## Basketball
 
@@ -169,4 +169,66 @@ Sources:
 
 - `wcf-rules`: The Rules of Curling and Rules of Competition, R1 Sheet, R2 Stones, R6 Free Guard Zone, R12 Scoring and the definitions, World Curling, 1 September 2026. <https://www.worldcurling.org/wp-content/uploads/2026/10/Rules-2026_Clean.pdf>
 - `curling-canada-rules`: Rules of Curling for General Play, Rule 3 Sheet of Ice, 4 Stones, 12 Free Guard Zone and 13 Stones in Play and Scoring, Curling Canada, September 2022 to August 2026. <https://apollocurling.com/docs/Rule-Book-2022_General-Play_ENG_CC.pdf>
+
+## Tennis
+
+`sport: "tennis"`
+
+| `league` | Name | 日本語 | Key figures |
+| --- | --- | --- | --- |
+| `itf` (the sport's own) | ITF tennis court | ITFのテニスコート | court 78 ft by 36 ft (singles 27 ft wide); service line 21 ft from the net; net 3 ft 6 in at the posts, 3 ft at the centre; net posts 3 ft outside the doubles court; free zone 21 ft behind the baselines, 12 ft beside the sidelines |
+
+Sources:
+
+- `itf-rules`: Rules of Tennis, Rule 1 The Court, Rule 5 Score in a Game, Rule 6 Score in a Set and Appendix X, International Tennis Federation, 2026. <https://www.itftennis.com/media/7221/2026-rules-of-tennis-english.pdf>
+
+## Volleyball and beach volleyball
+
+`sport: "volleyball"`
+
+| `league` | Name | 日本語 | Key figures |
+| --- | --- | --- | --- |
+| `fivb` (the sport's own) | FIVB volleyball court | FIVBのバレーボールコート | court 18 m by 9 m; attack line 3 m from the centre line; net 10 m long, 2.43 m high (women's 2.24 m); posts 1 m outside the side lines; free zone 6.5 m behind the end lines, 5 m beside the side lines |
+| `fivb-beach` | FIVB beach volleyball court | FIVBのビーチバレーボールコート | court 16 m by 8 m; attack line none; net 8.5 m long, 2.43 m high (women's 2.24 m); posts 1 m outside the side lines; free zone 5 m behind the end lines, 5 m beside the side lines |
+
+Sources:
+
+- `fivb-volleyball`: Official Volleyball Rules 2025-2028, Rules 1 Playing Area and 2 Net and Posts, and Diagram 2, FIVB, 2025-2028 (approved by the 39th FIVB World Congress 2024, in force from 1 January 2025). <https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf>
+- `fivb-beach`: Official Beach Volleyball Rules 2025-2028, Rules 1 Playing Area and 2 Net and Posts, and Diagram 2, FIVB, 2025-2028 (approved by the 39th FIVB World Congress 2024, in force from 1 January 2025). <https://www.fivb.com/wp-content/uploads/2025/02/FIVB-BeachVolleyball_Rules2025_2028-EN-v01.pdf>
+
+## Badminton
+
+`sport: "badminton"`
+
+| `league` | Name | 日本語 | Key figures |
+| --- | --- | --- | --- |
+| `bwf` (the sport's own) | BWF badminton court | BWFのバドミントンコート | court 13.4 m by 6.1 m (singles 5.18 m wide); short service line 1.98 m from the net; doubles long service line 0.76 m inside the back boundary; net 1.524 m at the centre, 1.55 m over the side lines |
+
+Sources:
+
+- `bwf-laws`: Laws of Badminton, Law 1 Court and Court Equipment and Diagram A, Law 7 Scoring System, Badminton World Federation, as amended and adopted by the BWF 26 April 2025 (the 2026 amendments take effect on 4 January 2027 and could not be read). <https://worldbadminton.com/laws/rules_2025.htm>
+
+## Pickleball
+
+`sport: "pickleball"`
+
+| `league` | Name | 日本語 | Key figures |
+| --- | --- | --- | --- |
+| `usap` (the sport's own) | USA Pickleball court | USA Pickleballのコート | court 44 ft by 20 ft; non-volley zone 7 ft from the net; net 3 ft at the sidelines, 2 ft 10 in at the centre; playing surface at least 30 ft by 60 ft |
+
+Sources:
+
+- `usap-rulebook`: USA Pickleball Official Rulebook, Section 3 Court and Equipment (3.A and 3.B), USA Pickleball, 2026. <https://pickleballcanada.org/wp-content/uploads/2026/03/2026-Official-Rulebook-EN.pdf>
+
+## Table tennis
+
+`sport: "tabletennis"`
+
+| `league` | Name | 日本語 | Key figures |
+| --- | --- | --- | --- |
+| `ittf` (the sport's own) | ITTF table | ITTFの卓球台 | table 2.74 m by 1.525 m, 0.76 m high; net 0.153 m above the playing surface; lines 0.02 m at the edges, a 0.003 m centre line |
+
+Sources:
+
+- `ittf-laws`: Laws of Table Tennis, 2.1 The Table, 2.2 The Net Assembly, 2.11 A Game and 2.12 A Match, International Table Tennis Federation, 2026 statutes, as reproduced by Table Tennis England (issue 1, July 2026). <https://www.tabletennisengland.co.uk/content/uploads/2026/07/Laws-of-Table-Tennis-2026-27.pdf>
 

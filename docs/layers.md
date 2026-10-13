@@ -100,6 +100,7 @@ How they were checked: a test reads the surface colours of all the sports and th
 | `baseball-spray` | MLB | Pull, centre, opposite (or left, centre, right with `bats: "none"`) by infield and outfield. |
 | `baseball-retrosheet` | MLB | Retrosheet's 68 hit-location sectors, each point in the sector with the nearest centre (the same as `zoneAt`). |
 | `curling-house` | curling | The button, the 4-, 8- and 12-foot rings and the free guard zone, at each end (`end`). |
+| `net-court` | tennis, volleyball, badminton, pickleball, table tennis | Each side of the net (`end`): the front court and the back court, split at the sport's own line (the service line, the attack line, the short service line, the non-volley zone line), or one half court where there is none. |
 | `football-pass` | NFL, CFL, IFAF | Short and deep (15 yards past the line of scrimmage, `los`) by left, middle (between the hash marks) and right. |
 
 `direction` is the way the team attacks as the surface is drawn wide (`right` by default): it names the sides of a soccer team's lanes, counts its bands from its own end and says which way a football pass goes. Left and right are the team's, or the passer's, or the shooter's facing the basket (the NBA's `LOC_X` is negative at his left, so a shot in `from: "nba-stats"` lands in the left corner when its `LOC_X` is under -220). `ZONE_SETS` lists the sets with their sports and their sources; `buildZoneSet(set, context)` gives the shapes and the classifier of one, from the `/layers` entry, for a caller who wants the counts without a drawing.
@@ -120,7 +121,7 @@ Each layer is a group with a `<title>` and a `<desc>`. Marks may carry a `title`
 
 1,000 points add about 60 kB to a drawing, and 10,000 points are drawn in about 20 ms on a laptop; tests hold the first under 70 kB and the second under 250 ms. A line with a comet costs about 400 bytes, with the gradient of its own.
 
-A heat map on a grid of 50 by 30 adds under 30 kB to a drawing on any of the eight sports (13 to 23 kB with the legend off, about 5 ms to draw), and under 100 kB with every cell labelled; a test holds both. A density of 10,000 marks takes about 25 ms on a laptop (a grid of 100 by 60 nodes; 40 ms at 200 by 100) and adds about 8 kB; the test holds it under 500 ms. Hexagons take 15 ms for 10,000 marks.
+A heat map on a grid of 50 by 30 adds under 30 kB to a drawing on any of the thirteen sports (13 to 23 kB with the legend off, about 5 ms to draw), and under 100 kB with every cell labelled; a test holds both. A density of 10,000 marks takes about 25 ms on a laptop (a grid of 100 by 60 nodes; 40 ms at 200 by 100) and adds about 8 kB; the test holds it under 500 ms. Hexagons take 15 ms for 10,000 marks.
 
 ## Ideas credited
 

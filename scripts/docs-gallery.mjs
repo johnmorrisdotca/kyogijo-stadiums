@@ -54,6 +54,17 @@ const STARS = { name: "Valley Stars", abbr: "VAL", score: 4, color: "#c8102e" };
 const PINES = { name: "Coastal Pines", abbr: "CPN", score: 6, color: "#1f6b3c" };
 const WOLVES = { name: "Harbour City Gulls", abbr: "HCG", score: 5, color: "#1d4f91", ends: [0, 1, 0, 2, 0, 0, 1, 0, 1, "X"] };
 const RIDGE = { name: "Prairie Ridge Bison", abbr: "PRB", score: 4, color: "#a8452c", hammer: true, ends: [1, 0, 2, 0, 1, 0, 0, 1, 0] };
+// The net sports: Harbour City is serving, a set in progress is the last column; in tennis a set's games and the points of the game.
+const GULLS_SETS = { name: "Harbour City Gulls", abbr: "HCG", score: 1, color: "#1d4f91", sets: [6, 6, 2], tiebreaks: [5, null, null], points: "40", serving: true };
+const BISON_SETS = { name: "Prairie Ridge Bison", abbr: "PRB", score: 1, color: "#a8452c", sets: [7, 3, 3], points: "30" };
+const GULLS_VOLLEY = { name: "Harbour City Gulls", abbr: "HCG", score: 2, color: "#1d4f91", sets: [25, 22, 25, 18], serving: true };
+const BISON_VOLLEY = { name: "Prairie Ridge Bison", abbr: "PRB", score: 1, color: "#a8452c", sets: [21, 25, 20, 20] };
+const GULLS_GAMES = { name: "Harbour City Gulls", abbr: "HCG", score: 1, color: "#1d4f91", sets: [21, 18, 11], serving: true };
+const BISON_GAMES = { name: "Prairie Ridge Bison", abbr: "PRB", score: 1, color: "#a8452c", sets: [17, 21, 9] };
+const GULLS_PICKLE = { name: "Harbour City Gulls", abbr: "HCG", score: 1, color: "#1d4f91", sets: [11, 8, 5], serving: true };
+const BISON_PICKLE = { name: "Prairie Ridge Bison", abbr: "PRB", score: 1, color: "#a8452c", sets: [7, 11, 4] };
+const GULLS_TABLE = { name: "Harbour City Gulls", abbr: "HCG", score: 3, color: "#1d4f91", sets: [11, 9, 11, 7, 11] };
+const BISON_TABLE = { name: "Prairie Ridge Bison", abbr: "PRB", score: 2, color: "#a8452c", sets: [7, 11, 8, 11, 6] };
 const SOCCER_AWAY = { name: "Northern Owls", abbr: "NOW", score: 2, penalties: 4, color: "#3a2d6b" };
 const SOCCER_HOME = { name: "Lakeshore Anchors", abbr: "LSA", score: 2, penalties: 2, color: "#0f7a7a" };
 
@@ -66,8 +77,13 @@ const GAMES = {
   soccer: { away: SOCCER_AWAY, home: SOCCER_HOME, status: "final-pens", competition: "Cup Final" },
   mlb: { away: STARS, home: PINES, status: "Bottom 9th", competition: "Game 5", park: "fenway-park" },
   curling: { away: WOLVES, home: RIDGE, status: "end-10", competition: "Final" },
+  tennis: { away: GULLS_SETS, home: BISON_SETS, status: "set-3", competition: "Final" },
+  volleyball: { away: GULLS_VOLLEY, home: BISON_VOLLEY, status: "set-4", competition: "Semifinal" },
+  badminton: { away: GULLS_GAMES, home: BISON_GAMES, status: "game-3", competition: "Final" },
+  pickleball: { away: GULLS_PICKLE, home: BISON_PICKLE, status: "game-3", competition: "Final" },
+  tabletennis: { away: GULLS_TABLE, home: BISON_TABLE, status: "final", competition: "Final" },
 };
-const SPORT_TITLES = { nfl: "NFL field", cfl: "CFL field", ifaf: "IFAF field", nhl: "NHL rink", nba: "NBA court", soccer: "Soccer pitch", mlb: "Baseball field", curling: "Curling sheet" };
+const SPORT_TITLES = { nfl: "NFL field", cfl: "CFL field", ifaf: "IFAF field", nhl: "NHL rink", nba: "NBA court", soccer: "Soccer pitch", mlb: "Baseball field", curling: "Curling sheet", tennis: "Tennis court", volleyball: "Volleyball court", badminton: "Badminton court", pickleball: "Pickleball court", tabletennis: "Table tennis table" };
 
 /** A repeatable list of points for the data snippets: no random numbers, so that the same code always draws the same marks. */
 const SPOTS = "Array.from({ length: 36 }, (_, i) => ({ x: 20 + ((i * 53) % 160), y: 8 + ((i * 29) % 70), team: i % 2 ? \"away\" : \"home\", outcome: i % 5 === 0 ? \"goal\" : \"shot\", value: 0.05 + (i % 7) / 20 }))";
@@ -84,13 +100,13 @@ const section = (id, title, intro, items) => ({ id, title, intro, items });
 // ---- The pages. Each is a list of sections, and each section a list of items. ----
 
 function surfacesPage(lib) {
-  const sports = ["nfl", "cfl", "ifaf", "nhl", "nba", "soccer", "mlb", "curling"];
+  const sports = ["nfl", "cfl", "ifaf", "nhl", "nba", "soccer", "mlb", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis"];
   const themes = lib[MAIN].COURT_THEMES;
   return {
     slug: "gallery-surfaces",
     title: "Gallery: surfaces and scores",
     ja: "競技場とスコア",
-    intro: "The eight surfaces bare, with a game on each, wide and tall, as a strip and as a compact card, and the court's looks. Every picture is drawn by the build from the code under it.",
+    intro: "The thirteen surfaces bare, with a game on each, wide and tall, as a strip and as a compact card, and the court's looks. Every picture is drawn by the build from the code under it.",
     sections: [
       section("bare", "Each surface, bare", "`drawKyogijo` with a `sport` and nothing else.", sports.map((sport) => item(`bare-${sport}`, SPORT_TITLES[sport], drawing({ sport })))),
       section("scores", "A game on each surface", "The teams on their sides and the score in the middle.", sports.map((sport) => item(`score-${sport}`, `${SPORT_TITLES[sport]}, with a score`, drawing({ sport, ...GAMES[sport] })))),
@@ -147,6 +163,7 @@ function leaguesPage(lib) {
     ["football", "Football fields", "nfl"],
     ["baseball", "Baseball and softball fields", "mlb"],
     ["curling", "Curling sheets", "curling"],
+    ["volleyball", "Volleyball courts", "volleyball"],
   ];
   return {
     slug: "gallery-leagues",
@@ -332,7 +349,60 @@ function curlingPage() {
   };
 }
 
-export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, dataPage, curlingPage];
+function courtsPage() {
+  const looks = (sport, names, extra = {}) => names.map((look) => item(`looks-${sport}-${look}`, `${SPORT_TITLES[sport]}: ${look}`, drawing({ sport, net: { look }, ...extra })));
+  const touches = (n) => `Array.from({ length: ${n} }, (_, i) => ({ x: ((i * 53) % 40) - 20, y: ((i * 29) % 16) - 8 }))`;
+  return {
+    slug: "gallery-courts",
+    title: "Gallery: tennis, volleyball, badminton, pickleball and table tennis",
+    ja: "テニス、バレーボール、バドミントン、ピックルボール、卓球",
+    intro: "Five net sports from their own rulebooks, wide and tall, in their named looks, with the free zone and the singles sticks, the board of sets and games with its serving ball, and the zones of each side of the net.",
+    sections: [
+      section("courts", "Each court", "`sport` is `tennis`, `volleyball`, `badminton`, `pickleball` or `tabletennis`; beach volleyball is `league: \"fivb-beach\"`. They lie wide unless `orientation` says tall.", [
+        item("court-tennis", "Tennis court (ITF)", drawing({ sport: "tennis" })),
+        item("court-volleyball", "Volleyball court (FIVB)", drawing({ sport: "volleyball" })),
+        item("court-beach", "Beach volleyball court (FIVB Beach)", drawing({ sport: "volleyball", league: "fivb-beach" }), "16 by 8 metres and no centre line or attack line."),
+        item("court-badminton", "Badminton court (BWF)", drawing({ sport: "badminton" })),
+        item("court-pickleball", "Pickleball court (USA Pickleball)", drawing({ sport: "pickleball" })),
+        item("court-table", "Table tennis table (ITTF)", drawing({ sport: "tabletennis" })),
+        item("court-tennis-tall", "Tennis court, tall", drawing({ sport: "tennis", orientation: "portrait" })),
+        item("court-pickleball-tall", "Pickleball court, tall", drawing({ sport: "pickleball", orientation: "portrait" })),
+        item("court-dark", "Tennis court, dark", drawing({ sport: "tennis", theme: "dark", net: { look: "clay" } })),
+      ]),
+      section("looks", "Named looks", "`net.look` is the colour of the court and of the ground round it. The lines and sizes are the rulebook's whatever the look.", [
+        ...looks("tennis", ["hard-blue", "hard-green", "clay", "grass"]),
+        ...looks("volleyball", ["wood", "blue", "sand"]),
+        ...looks("badminton", ["green", "blue", "wood"]),
+        ...looks("pickleball", ["blue-green", "green", "red"]),
+        ...looks("tabletennis", ["blue", "green"]),
+      ]),
+      section("details", "Free zone, posts and sticks", "`net.free` is `official` (the default), `least` or `none`; `net.sticks` draws the tennis singles sticks; `detail: \"simple\"` leaves out the small marks.", [
+        item("free-volleyball-official", "Volleyball: the FIVB's free zone and attack line extensions", drawing({ sport: "volleyball", net: { free: "official" } }), "5 metres beside the side lines, 6.5 behind the end lines, posts 1 metre out."),
+        item("free-volleyball-least", "Volleyball: the least the rules allow", drawing({ sport: "volleyball", net: { free: "least" } }), "A free zone of 3 metres, posts 0.5 metre out and no extension of the attack line."),
+        item("free-tennis-least", "Tennis: a club's run-back", drawing({ sport: "tennis", net: { free: "least" } }), "18 feet behind the baselines and 10 beside the sidelines (Appendix X)."),
+        item("free-none", "Tennis: no free zone", drawing({ sport: "tennis", net: { free: "none" } })),
+        item("sticks-tennis", "Tennis: singles sticks", drawing({ sport: "tennis", net: { sticks: true } }), "A doubles net held up for singles by two sticks 3 feet outside the singles court."),
+        item("simple-badminton", "Badminton: simple", drawing({ sport: "badminton", detail: "simple" })),
+      ]),
+      section("score", "The board and the badge", "Each team's score in each set (`sets`), the points of the game in progress (`points`) and a tie-break (`tiebreaks`) in tennis, the sets or games won, and a ball beside the team that is `serving`. A set or a game is the status: `set-3`, `game-2`, `tiebreak`.", [
+        item("board-tennis", "Tennis, in the third set", drawing({ sport: "tennis", ...GAMES.tennis }), "The first set went to a tie-break, 7-6 (5): the 5 is written small beside the games of the team that lost it."),
+        item("board-volleyball", "Volleyball, in the fourth set", drawing({ sport: "volleyball", ...GAMES.volleyball })),
+        item("board-beach", "Beach volleyball, two sets", drawing({ sport: "volleyball", league: "fivb-beach", away: { ...GULLS_VOLLEY, score: 2, sets: [21, 23] }, home: { ...BISON_VOLLEY, score: 0, sets: [18, 21], serving: false }, status: "final" })),
+        item("board-badminton", "Badminton, in the third game", drawing({ sport: "badminton", ...GAMES.badminton, orientation: "landscape" })),
+        item("board-pickleball-tall", "Pickleball, tall", drawing({ sport: "pickleball", ...GAMES.pickleball, orientation: "portrait" })),
+        item("board-table", "Table tennis, final", drawing({ sport: "tabletennis", ...GAMES.tabletennis })),
+        item("badge-tennis", "Badge, tennis", drawing({ sport: "tennis", ...GAMES.tennis, size: "badge" }), "The serving ball is in the corner of the team that is serving."),
+        item("compact-badminton", "Compact card, badminton", drawing({ sport: "badminton", ...GAMES.badminton, size: "compact" })),
+      ]),
+      section("zones", "Each side of the net", "The `net-court` zones split each side at the court's own line: tennis's service line, volleyball's attack line, badminton's short service line, pickleball's non-volley zone line.", [
+        item("zones-tennis", "Zones: tennis", `import { drawKyogijo } from "${MAIN}";\n\nconst balls = ${touches(80)};\nconst svg = drawKyogijo({ sport: "tennis", layers: [{ kind: "zones", name: "balls", zones: "net-court", from: "tennis", data: balls, labels: true, legend: true }] });`),
+        item("zones-pickleball", "Zones: pickleball", `import { drawKyogijo } from "${MAIN}";\n\nconst balls = ${touches(80)};\nconst svg = drawKyogijo({ sport: "pickleball", layers: [{ kind: "zones", name: "balls", zones: "net-court", from: "pickleball", data: balls, labels: true, legend: true }] });`),
+      ]),
+    ],
+  };
+}
+
+export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, dataPage, curlingPage, courtsPage];
 
 /** The sections of every page, with each item's picture made by running its code. */
 export function galleryData(lib) {
@@ -386,6 +456,11 @@ const REFERENCE = {
   mlb: { frame: "retrosheet", spot: [63.64, 63.64], what: "first base" },
   soccer: { frame: "international", spot: [94, 34], what: "the right penalty mark" },
   curling: { frame: "curling", spot: [0, 6], what: "the middle of the back line" },
+  tennis: { frame: "tennis", spot: [21, 0], what: "the T, where the centre service line meets the right service line" },
+  volleyball: { frame: "volleyball", spot: [3, 0], what: "the middle of the right attack line" },
+  badminton: { frame: "badminton", spot: [1.98, 0], what: "the middle of the right short service line" },
+  pickleball: { frame: "pickleball", spot: [7, 0], what: "the middle of the right non-volley zone line" },
+  tabletennis: { frame: "tabletennis", spot: [1.37, 0], what: "the middle of the right end line" },
 };
 const round2 = (n) => Math.round(n * 100) / 100;
 const UNIT_WORDS = { ft: "feet", yd: "yards", m: "metres", cm: "centimetres", in: "inches", mm: "millimetres", px: "pixels", "tenth-ft": "tenths of a foot", percent: "percent", fraction: "fractions" };
@@ -395,7 +470,7 @@ export function framesItems(lib) {
   const { FRAMES, convert } = lib[`${MAIN}/frames`];
   return Object.values(FRAMES).map((frame) => {
     const reference = REFERENCE[frame.sport];
-    const size = frame.size === "variable" ? (frame.sport === "curling" ? { length: 150, width: 15.58, unit: "ft" } : { length: 105, width: 68, unit: "m" }) : undefined;
+    const size = frame.size === "variable" ? (frame.sport === "curling" ? { length: 150, width: 15.58, unit: "ft" } : frame.sport === "volleyball" ? { length: 18, width: 9, unit: "m" } : { length: 105, width: 68, unit: "m" }) : undefined;
     const [spot] = convert(reference.frame, frame.name, size ? { size } : {})([reference.spot]);
     const x = round2(spot[0]);
     const y = round2(spot[1]);

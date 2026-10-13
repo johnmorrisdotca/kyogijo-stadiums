@@ -18,6 +18,11 @@ const AREA: Record<Sport, { x: [number, number]; y: [number, number] }> = {
   mlb: { x: [-200, 200], y: [-340, -20] },
   soccer: { x: [0, 345], y: [0, 223] },
   curling: { x: [0, 150], y: [0, 15.58] },
+  tennis: { x: [0, 78], y: [0, 36] },
+  volleyball: { x: [0, 59.06], y: [0, 29.53] },
+  badminton: { x: [0, 43.96], y: [0, 20.01] },
+  pickleball: { x: [0, 44], y: [0, 20] },
+  tabletennis: { x: [0, 8.99], y: [0, 5] },
 };
 
 /** Made-up marks spread over a surface: a cluster of normal deviates round its middle, from a fixed seed. */
@@ -49,6 +54,11 @@ const ZONE_FOR: Record<Sport, Layer> = {
   mlb: { kind: "zones", zones: "baseball-spray", data: cloud("mlb", 200) },
   soccer: { kind: "zones", zones: "soccer-positional", data: cloud("soccer", 200) },
   curling: { kind: "zones", zones: "curling-house", data: cloud("curling", 200) },
+  tennis: { kind: "zones", zones: "net-court", data: cloud("tennis", 200) },
+  volleyball: { kind: "zones", zones: "net-court", data: cloud("volleyball", 200) },
+  badminton: { kind: "zones", zones: "net-court", data: cloud("badminton", 200) },
+  pickleball: { kind: "zones", zones: "net-court", data: cloud("pickleball", 200) },
+  tabletennis: { kind: "zones", zones: "net-court", data: cloud("tabletennis", 200) },
 };
 
 describe("every heat layer on every surface", () => {

@@ -19,6 +19,7 @@ export const TEAMS = {
   basketball: { away: { name: "Summit Peaks", abbr: "SMT", color: "#14233f", emblem: "peak" }, home: { name: "Metro Bolts", abbr: "MTB", color: "#c2410c", emblem: "bolt" } },
   soccer: { away: { name: "Valley Rovers", abbr: "VRV", color: "#c8102e", emblem: "star" }, home: { name: "Summit Town", abbr: "SUM", color: "#14233f", emblem: "peak" } },
   curling: { away: { name: "Harbour City Gulls", abbr: "HCG", color: "#1f5fa8", emblem: "gull" }, home: { name: "Prairie Ridge Bison", abbr: "PRB", color: "#b5452c", emblem: "bison" } },
+  net: { away: { name: "Harbour City Gulls", abbr: "HCG", color: "#1f5fa8", emblem: "gull" }, home: { name: "Prairie Ridge Bison", abbr: "PRB", color: "#b5452c", emblem: "bison" } },
   baseball: { away: { name: "Valley Stars", abbr: "VLY", color: "#c8102e", emblem: "star" }, home: { name: "Coastal Pines", abbr: "CPN", color: "#1f6b3c", emblem: "pine" } },
 };
 
@@ -30,9 +31,10 @@ export const TEAMS_JA = {
   soccer: { away: "渓谷ローヴァーズ", home: "サミット・タウン" },
   baseball: { away: "渓谷スターズ", home: "海岸パインズ" },
   curling: { away: "港町ガルズ", home: "草原バイソンズ" },
+  net: { away: "港町ガルズ", home: "草原バイソンズ" },
 };
 
-export const FAMILIES = { nfl: "football", cfl: "football", ifaf: "football", nhl: "hockey", nba: "basketball", mlb: "baseball", soccer: "soccer", curling: "curling" };
+export const FAMILIES = { nfl: "football", cfl: "football", ifaf: "football", nhl: "hockey", nba: "basketball", mlb: "baseball", soccer: "soccer", curling: "curling", tennis: "net", volleyball: "net", badminton: "net", pickleball: "net", tabletennis: "net" };
 
 /** Typical scores and a competition line for each sport. */
 export const GAMES = {
@@ -44,4 +46,10 @@ export const GAMES = {
   soccer: { away: 2, home: 2, status: "final-pens", competition: "Cup Final", date: "May 24", awayPens: 4, homePens: 2 },
   mlb: { away: 4, home: 6, status: "Bottom 9th", competition: "Division Series", date: "Oct 9" },
   curling: { away: 5, home: 4, status: "end-10", competition: "Final", date: "Mar 8", awayEnds: [0, 1, 0, 2, 0, 0, 1, 0, 1, "X"], homeEnds: [1, 0, 2, 0, 1, 0, 0, 1, 0], hammer: "home" },
+  // The net sports: the score is the sets (or games) won, `sets` the score in each, the last the one in progress; in tennis the game's points and a tie-break.
+  tennis: { away: 1, home: 1, status: "set-3", competition: "Final", date: "Jun 14", awaySets: [6, 6, 2], homeSets: [7, 3, 3], awayTiebreaks: [5, null, null], awayPoints: "40", homePoints: "30", serving: "away" },
+  volleyball: { away: 2, home: 1, status: "set-4", competition: "Semifinal", date: "Aug 9", awaySets: [25, 22, 25, 18], homeSets: [21, 25, 20, 20], serving: "away" },
+  badminton: { away: 1, home: 1, status: "game-3", competition: "Final", date: "Aug 4", awaySets: [21, 18, 11], homeSets: [17, 21, 9], serving: "away" },
+  pickleball: { away: 1, home: 1, status: "game-3", competition: "Final", date: "Sep 7", awaySets: [11, 8, 5], homeSets: [7, 11, 4], serving: "away" },
+  tabletennis: { away: 3, home: 2, status: "final", competition: "Final", date: "Jul 21", awaySets: [11, 9, 11, 7, 11], homeSets: [7, 11, 8, 11, 6] },
 };

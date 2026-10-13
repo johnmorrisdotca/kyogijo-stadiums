@@ -10,6 +10,7 @@ import { soccerSpec } from "./surfaces/soccer-spec.ts";
 import { roundedRect } from "./surfaces/surface.ts";
 import { feetFence, lengthUnit } from "./common.ts";
 import { num } from "./format.ts";
+import { courtFor, courtSize } from "./court.ts";
 import { sheetFor } from "./sheet.ts";
 import type { SurfaceOptions } from "./types.ts";
 
@@ -41,7 +42,7 @@ function inPolygon(points: readonly (readonly [number, number])[], x: number, y:
 }
 
 /** The outline of the surface the options draw. */
-export function outlineOf(o: Pick<SurfaceOptions, "sport" | "park" | "fence" | "units" | "pitch" | "league" | "year" | "sheet">): Outline {
+export function outlineOf(o: Pick<SurfaceOptions, "sport" | "park" | "fence" | "units" | "pitch" | "league" | "year" | "sheet" | "net">): Outline {
   const { sport, league } = chooseLeague(o);
   switch (sport) {
     case "nfl":
@@ -91,6 +92,14 @@ export function outlineOf(o: Pick<SurfaceOptions, "sport" | "park" | "fence" | "
     case "curling": {
       const { spec } = sheetFor(o);
       return rect(spec.length, spec.width);
+    }
+    case "tennis":
+    case "volleyball":
+    case "badminton":
+    case "pickleball":
+    case "tabletennis": {
+      const { length, width } = courtSize(courtFor({ ...o, sport }));
+      return rect(length, width);
     }
     default: {
       // A surface added later with one size is a rectangle until it says otherwise.

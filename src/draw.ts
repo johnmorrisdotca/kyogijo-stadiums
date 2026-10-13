@@ -5,17 +5,21 @@ import { ERA_SPORTS, footballIn, rulesFor, seasonLabel, type EraSport } from "./
 import { FOOTBALL } from "./geometry.ts";
 import { renderLayers } from "./layers.ts";
 import { groundById, groundNameIn } from "./grounds.ts";
-import { chooseLeague, courtOf, diamondOf, fieldOf, hasHistory, leagueSeason, rinkOf, sheetOf, type League } from "./leagues.ts";
+import { courtFor, isNetSport, type CourtPlan } from "./court.ts";
+import { chooseLeague, courtOf, diamondOf, fieldOf, hasHistory, leagueSeason, netOf, rinkOf, sheetOf, type League } from "./leagues.ts";
 import { diamondFence } from "./leagues/baseball.ts";
 import { fenceFor, parkById } from "./parks.ts";
 import { boardMarkup, endText } from "./curling.board.ts";
 import { sheetFor } from "./sheet.ts";
 import { badgeMarkup, bannerMarkup, plateMarkup, stateOf, type TeamView } from "./score.ts";
+import { setsBoardMarkup } from "./sets.board.ts";
 import { KYOGIJO_STRINGS, fill } from "./strings.ts";
+import { courtStyle } from "./courts.style.ts";
 import { KYOGIJO_BASE_STYLE, KYOGIJO_CURLING_STYLE } from "./style.ts";
 import { convertLength, type Unit } from "./units.ts";
 import { baseball } from "./surfaces/baseball.ts";
 import { curling } from "./surfaces/curling.ts";
+import { netCourt } from "./surfaces/net.ts";
 import { basketball } from "./surfaces/basketball.ts";
 import { football } from "./surfaces/football.ts";
 import { hockey } from "./surfaces/hockey.ts";
@@ -30,7 +34,7 @@ import { VERSION } from "./version.ts";
 export { isPortrait };
 
 /** The sports that can be drawn, in the order a menu lists them. */
-export const SPORTS: readonly Sport[] = ["nfl", "cfl", "ifaf", "nhl", "nba", "mlb", "soccer", "curling"];
+export const SPORTS: readonly Sport[] = ["nfl", "cfl", "ifaf", "nhl", "nba", "mlb", "soccer", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis"];
 
 /** The CSS custom property each colour of `Colors` sets. */
 export const COLOR_PROPERTIES: Readonly<Record<keyof Colors, string>> = {
@@ -74,6 +78,12 @@ const SHEET_PROPERTIES: Readonly<Record<string, string>> = { outer: "--ky-rg-o",
 
 const isScore = (o: SurfaceOptions | ScoreOptions): o is ScoreOptions => (o as Partial<ScoreOptions>).home !== undefined && (o as Partial<ScoreOptions>).away !== undefined;
 
+/** How many set columns a net sport's board always has: the sets or games a match can run to (best of 3 or 5). */
+function minSets(sport: Sport, league: string | undefined): number {
+  if (sport === "volleyball") return league === "fivb-beach" ? 3 : 5;
+  return sport === "tabletennis" ? 5 : 3;
+}
+
 /** The standard statuses, spelled out. */
 const FINAL = /^(?:final|f\b|ft\b|試合終了|終了)/i;
 
@@ -85,6 +95,11 @@ export function statusLabel(status: string | undefined, language: Language = "en
   // A curling end: "end-6", "End 6" or "第6エンド".
   const end = /^(?:end-?(\d{1,2})|第(\d{1,2})エンド)$/.exec(key);
   if (end !== null) return fill(KYOGIJO_STRINGS[language].endStatus, { n: Number(end[1] ?? end[2]) });
+  // A set or a game of the net sports: "set-3", "Set 3", "第3セット", "game-2", "第2ゲーム".
+  const set = /^(?:set-?(\d{1,2})|第(\d{1,2})セット)$/.exec(key);
+  if (set !== null) return fill(KYOGIJO_STRINGS[language].setStatus, { n: Number(set[1] ?? set[2]) });
+  const game = /^(?:game-?(\d{1,2})|第(\d{1,2})ゲーム)$/.exec(key);
+  if (game !== null) return fill(KYOGIJO_STRINGS[language].gameStatus, { n: Number(game[1] ?? game[2]) });
   return Object.prototype.hasOwnProperty.call(words, key) ? words[key as keyof typeof words] : status.trim();
 }
 
@@ -213,6 +228,12 @@ function buildSurface(o: SurfaceOptions, portrait: boolean, id: string, score: b
       // A score always shows the whole sheet, for the board's sake.
       return curling(common, { pebble: plan.pebble, guardZone: plan.guardZone, show: scored ? "sheet" : plan.show, end: plan.end, figures: plan.spec });
     }
+    case "tennis":
+    case "volleyball":
+    case "badminton":
+    case "pickleball":
+    case "tabletennis":
+      return netCourt(common, courtFor({ ...o, sport }));
     default:
       throw new Error(`Unknown sport "${String(o.sport)}": use one of ${SPORTS.join(", ")}`);
   }
@@ -257,6 +278,10 @@ function teamView(team: Team, side: Side, role: "home" | "away", winner: "home" 
     state: stateOf(winner, role),
     ends: Array.isArray(team.ends) ? team.ends.map(endText) : undefined,
     hammer: team.hammer === true ? true : undefined,
+    sets: Array.isArray(team.sets) ? team.sets.map(endText) : undefined,
+    tiebreaks: Array.isArray(team.tiebreaks) ? team.tiebreaks.map(endText) : undefined,
+    points: team.points === undefined || team.points === null ? undefined : String(team.points).trim().slice(0, 3),
+    serving: team.serving === true ? true : undefined,
   };
 }
 
@@ -276,13 +301,18 @@ function leagueAbout(league: League, year: number | undefined, language: Languag
         ? rinkOf(league, year)
         : league.family === "curling"
           ? (sheet ?? sheetOf(league))
-          : (() => {
+          : league.family === "tennis" || league.family === "volleyball" || league.family === "badminton" || league.family === "pickleball" || league.family === "tabletennis"
+            ? (() => {
+                const f = netOf(league) as { length: number; width?: number; widthDoubles?: number };
+                return { length: f.length, width: f.widthDoubles ?? (f.width as number) };
+              })()
+            : (() => {
             const field = fieldOf(league, year);
             return { length: field.length + 2 * field.endZone, width: field.width };
           })();
   const to = league.unit;
   const text = fill(words.size, { length: trimmed(convertLength(size.length, "ft", to)), width: trimmed(convertLength(size.width, "ft", to)), unit: words.units[to === "m" || to === "yd" ? to : "ft"] });
-  return fill(words[league.family], { size: text });
+  return fill(league.family === "volleyball" && league.id === "fivb-beach" ? words.beachVolleyball : words[league.family], { size: text });
 }
 
 /** A drawing's title and description, in a language. */
@@ -345,9 +375,27 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
           .filter((part) => part !== "")
           .map((part) => `${gap}${part}`)
           .join("");
+  // The net sports: who is serving, the score in each set (or game), and the points of the game in progress, which the board shows.
+  const net = words.net;
+  const setList = (team: Team): string =>
+    (team.sets ?? []).map((value, i) => {
+      const tb = endText(team.tiebreaks?.[i]);
+      return `${endText(value) || "–"}${tb === "" ? "" : ` (${tb})`}`;
+    }).join(words.layers.listSep);
+  const netLine = !isNetSport(sport)
+    ? ""
+    : [o.away, o.home]
+        .flatMap((team) => [
+          team.serving === true ? fill(net.serving, { name: team.name }) : "",
+          Array.isArray(team.sets) && team.sets.length > 0 ? fill(sport === "badminton" || sport === "pickleball" || sport === "tabletennis" ? net.byGame : net.bySet, { name: team.name, list: setList(team) }) : "",
+          team.points !== undefined && team.points !== null && String(team.points).trim() !== "" ? fill(net.gamePoints, { name: team.name, points: String(team.points).trim() }) : "",
+        ])
+        .filter((part) => part !== "")
+        .map((part) => `${gap}${part}`)
+        .join("");
   return {
     title: o.title ?? (status === undefined ? line : `${line}${words.said.sep}${status}`),
-    description: o.description ?? `${extra === "" ? "" : `${sentence(extra)}${gap}`}${sentence(line)}${result}${tied}${curlingLine}${gap}${about}${parkLine}${eraLine}`.trim(),
+    description: o.description ?? `${extra === "" ? "" : `${sentence(extra)}${gap}`}${sentence(line)}${result}${tied}${curlingLine}${netLine}${gap}${about}${parkLine}${eraLine}`.trim(),
   };
 }
 
@@ -372,6 +420,9 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
   // The sport as drawn: a league that is a sport of its own (`league: "cfl"` on an `nfl`) is that sport.
   const { sport } = chooseLeague(o);
   const portrait = isPortrait(o);
+  // The court of a net sport: its look is the root's `data-look`, and its rules are written in beside the base rules.
+  const plan: CourtPlan | undefined = isNetSport(sport) ? courtFor({ ...o, sport }) : undefined;
+  const look = plan?.look;
   // A tall curling sheet is 30 feet wide on the page and a strip under it would be unreadable: its compact size is the board on the ice.
   const asked = isScore(o) ? (o.size === "compact" || o.size === "badge" ? o.size : "full") : "full";
   const sized = asked === "compact" && sport === "curling" && portrait ? "full" : asked;
@@ -418,8 +469,8 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
     let teams = "";
     if (isScore(o) && left !== undefined && right !== undefined && sized === "full") {
       const onColour = sport === "nfl" || sport === "cfl" || sport === "ifaf" || sport === "soccer";
-      // A curling sheet has no place for the names: the board names the teams.
-      if (sport !== "curling") {
+      // A curling sheet and the net sports' courts have no place for the names: the board names the teams.
+      if (sport !== "curling" && !isNetSport(sport)) {
         teams += bannerMarkup(surface.left, left, { turned: surface.turned, onColour, parts });
         teams += bannerMarkup(surface.right, right, { turned: surface.turned, onColour, parts });
       }
@@ -437,6 +488,9 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       const foot = o.label !== undefined && o.label !== "" ? o.label : [status, o.date].filter((part): part is string => part !== undefined && part !== "").join(" · ");
       if (sport === "curling") {
         const board = boardMarkup(surface.plate, left, right, { competition: o.competition, foot: foot === "" ? undefined : foot, total: KYOGIJO_STRINGS[language].said.total }, { turned: surface.turned, parts });
+        inner += el("g", { transform: `translate(${num(surface.plate.cx)} ${num(surface.plate.cy)})${surface.turned ? " rotate(-90)" : ""}` }, board);
+      } else if (isNetSport(sport)) {
+        const board = setsBoardMarkup(surface.plate, left, right, { competition: o.competition, foot: foot === "" ? undefined : foot, head: KYOGIJO_STRINGS[language].net[sport === "badminton" || sport === "pickleball" || sport === "tabletennis" ? "games" : "sets"], points: KYOGIJO_STRINGS[language].net.points }, { parts, least: minSets(sport, chooseLeague(o).league?.id) });
         inner += el("g", { transform: `translate(${num(surface.plate.cx)} ${num(surface.plate.cy)})${surface.turned ? " rotate(-90)" : ""}` }, board);
       } else inner += plateMarkup(surface.plate, left, right, { competition: o.competition, foot: foot === "" ? undefined : foot }, { turned: surface.turned, parts, surfaceSport: sport });
     }
@@ -464,6 +518,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       "aria-labelledby": `${titleId} ${descId}`,
       "data-sport": sport,
       "data-league": o.league === undefined || o.league === "" ? undefined : o.league,
+      "data-look": look,
       "data-size": sized,
       "data-orientation": portrait ? "portrait" : "landscape",
       "data-theme": theme,
@@ -475,7 +530,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       style: style === "" ? undefined : style,
     },
     `<title id="${titleId}">${esc(title)}</title><desc id="${descId}">${esc(description)}</desc>` +
-      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}</style>`) +
+      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}${plan === undefined ? "" : `\n${courtStyle(plan.sport, plan.look)}`}</style>`) +
       (defs === "" ? "" : `<defs>${defs}</defs>`) +
       body,
   );

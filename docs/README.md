@@ -5,7 +5,7 @@ Kyogijo draws sports surfaces as SVG, to scale, with the score on them. The READ
 ## Start here
 
 - [Getting started](./getting-started.md): install, the four ways in, the element and the frame.
-- [The surfaces](./surfaces.md): the eight surfaces and how a league's rules change one.
+- [The surfaces](./surfaces.md): the thirteen surfaces and how a league's rules change one.
 - [Score and layout](./score.md): the teams, the score, the strip for a list, wide and tall.
 - [Theming](./theming.md): every colour, light and dark, and the court's looks.
 - [Accessibility](./accessibility.md): what each drawing says to a screen reader.
@@ -14,6 +14,7 @@ Kyogijo draws sports surfaces as SVG, to scale, with the score on them. The READ
 
 - [Soccer](./soccer.md): sizes, mowing patterns, goals, shoot-outs and the providers' coordinates.
 - [Curling](./curling.md): the sheet from World Curling's and Curling Canada's rules, the board with the hammer, and the stones of an end scored by the rules.
+- [Tennis, volleyball and the other net sports](./courts.md): the courts of tennis, volleyball and beach volleyball, badminton, pickleball and table tennis from their rulebooks, their looks, the board of sets and games with the server's ball.
 - [Ballparks](./ballparks.md): 94 parks, each with its own fence, and the past ones by season.
 - [The grounds](./grounds.md): 64 soccer grounds, each pitch at its published size.
 - [League variants](./variants.md): the WNBA, FIBA, the NCAA, the IIHF, Little League and more, each from its rulebook.
