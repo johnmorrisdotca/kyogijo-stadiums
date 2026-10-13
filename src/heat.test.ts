@@ -17,6 +17,7 @@ const AREA: Record<Sport, { x: [number, number]; y: [number, number] }> = {
   nba: { x: [0, 94], y: [0, 50] },
   mlb: { x: [-200, 200], y: [-340, -20] },
   soccer: { x: [0, 345], y: [0, 223] },
+  curling: { x: [0, 150], y: [0, 15.58] },
 };
 
 /** Made-up marks spread over a surface: a cluster of normal deviates round its middle, from a fixed seed. */
@@ -47,6 +48,7 @@ const ZONE_FOR: Record<Sport, Layer> = {
   nba: { kind: "zones", zones: "nba-shot", data: cloud("nba", 200), statistic: "rate" },
   mlb: { kind: "zones", zones: "baseball-spray", data: cloud("mlb", 200) },
   soccer: { kind: "zones", zones: "soccer-positional", data: cloud("soccer", 200) },
+  curling: { kind: "zones", zones: "curling-house", data: cloud("curling", 200) },
 };
 
 describe("every heat layer on every surface", () => {

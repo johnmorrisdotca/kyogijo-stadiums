@@ -64,6 +64,62 @@ exports[`the drawings' structure > cfl: what a tall bare surface is made of 1`] 
 }
 `;
 
+exports[`the drawings' structure > curling: what a score drawing is made of 1`] = `
+{
+  "circle.ky-rg-b": 2,
+  "circle.ky-rg-i": 2,
+  "circle.ky-rg-m": 2,
+  "circle.ky-rg-o": 2,
+  "desc": 1,
+  "g": 1,
+  "g.ky-house": 2,
+  "g.ky-lose.ky-total": 1,
+  "g.ky-plate.ky-scoreboard": 1,
+  "g.ky-surface-group": 1,
+  "g.ky-total.ky-win": 1,
+  "path.ky-boards": 1,
+  "path.ky-grid": 1,
+  "path.ky-hack": 1,
+  "path.ky-hog": 1,
+  "path.ky-line": 5,
+  "rect.ky-apron": 1,
+  "rect.ky-panel-left": 1,
+  "rect.ky-panel-right": 1,
+  "rect.ky-plate-bg": 1,
+  "rect.ky-surface": 1,
+  "rect.ky-winbar.ky-winbar-left": 1,
+  "style": 1,
+  "svg.ky-curling.kyogijo": 1,
+  "text.ky-comp.ky-text": 1,
+  "text.ky-foot.ky-text": 2,
+  "text.ky-ink-left.ky-text": 3,
+  "text.ky-ink-right.ky-text": 3,
+  "text.ky-score.ky-text": 2,
+  "title": 1,
+}
+`;
+
+exports[`the drawings' structure > curling: what a tall bare surface is made of 1`] = `
+{
+  "circle.ky-rg-b": 2,
+  "circle.ky-rg-i": 2,
+  "circle.ky-rg-m": 2,
+  "circle.ky-rg-o": 2,
+  "desc": 1,
+  "g.ky-house": 2,
+  "g.ky-surface-group": 1,
+  "path.ky-boards": 1,
+  "path.ky-hack": 1,
+  "path.ky-hog": 1,
+  "path.ky-line": 5,
+  "rect.ky-apron": 1,
+  "rect.ky-surface": 1,
+  "style": 1,
+  "svg.ky-curling.kyogijo": 1,
+  "title": 1,
+}
+`;
+
 exports[`the drawings' structure > ifaf: what a score drawing is made of 1`] = `
 {
   "circle.ky-post-end": 4,
@@ -438,7 +494,7 @@ exports[`the drawings' structure > soccer: what a tall bare surface is made of 1
 }
 `;
 
-exports[`the drawings' structure > stays the same text unless a drawing was meant to change: one fingerprint for every sport 1`] = `"0soift6"`;
+exports[`the drawings' structure > stays the same text unless a drawing was meant to change: one fingerprint for every sport 1`] = `"1xwqety"`;
 
 exports[`the drawings' structure > the badge, written out 1`] = `"<svg xmlns="http://www.w3.org/2000/svg" class="kyogijo ky-nhl" viewBox="0 0 440 64" role="img" aria-labelledby="snap-t snap-d" data-sport="nhl" data-size="badge" data-orientation="landscape" data-winner="away" data-version="0.1.0" style="--ky-left:#1f5fa8;--ky-right:#b5452c;--ky-left-ink:#ffffff;--ky-right-ink:#ffffff"><title id="snap-t">Harbour City Gulls 3, Prairie Ridge Bison 2, Final/OT</title><desc id="snap-d">Cup Final, Game 7, Final/OT, June 24. Harbour City Gulls 3, Prairie Ridge Bison 2. Harbour City Gulls won. Drawn as: an ice hockey rink, 200 by 85 feet with rounded corners, with its red and blue lines, face-off circles, creases and goal nets.</desc><g class="ky-badge"><rect class="ky-badge-bg" x="0" y="0" width="440" height="64" rx="12"/><path class="ky-block ky-block-left" d="M12 0H182V64H12A12 12 0 0 1 0 52V12A12 12 0 0 1 12 0Z"/><path class="ky-block ky-block-right" d="M258 0H428A12 12 0 0 1 440 12V52A12 12 0 0 1 428 64H258Z"/><g class="ky-badge-team ky-badge-left ky-win"><text class="ky-text ky-name ky-ink-left" x="14" y="39.92" font-size="22">HCG</text><text class="ky-text ky-score ky-ink-left ky-win" x="168" y="43.52" font-size="32" text-anchor="end">3</text></g><g class="ky-badge-team ky-badge-right ky-lose"><text class="ky-text ky-name ky-ink-right" x="426" y="39.92" font-size="22" text-anchor="end">PRB</text><text class="ky-text ky-score ky-ink-right ky-lose" x="272" y="43.52" font-size="32" text-anchor="start">2</text></g><path class="ky-glyph" d="M-14 -10H14A4 4 0 0 1 18 -6V6A4 4 0 0 1 14 10H-14A4 4 0 0 1 -18 6V-6A4 4 0 0 1 -14 -10ZM0 -10V10M-5 0A5 5 0 1 0 5 0A5 5 0 1 0 -5 0M-9 -10V10M9 -10V10" transform="translate(220 22) scale(0.9)" fill="none"/><text class="ky-text ky-badge-status" x="220" y="54.3" font-size="11.5">Final/OT</text></g></svg>"`;
 

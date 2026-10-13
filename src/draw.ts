@@ -5,14 +5,17 @@ import { ERA_SPORTS, footballIn, rulesFor, seasonLabel, type EraSport } from "./
 import { FOOTBALL } from "./geometry.ts";
 import { renderLayers } from "./layers.ts";
 import { groundById, groundNameIn } from "./grounds.ts";
-import { chooseLeague, courtOf, diamondOf, fieldOf, hasHistory, leagueSeason, rinkOf, type League } from "./leagues.ts";
+import { chooseLeague, courtOf, diamondOf, fieldOf, hasHistory, leagueSeason, rinkOf, sheetOf, type League } from "./leagues.ts";
 import { diamondFence } from "./leagues/baseball.ts";
 import { fenceFor, parkById } from "./parks.ts";
+import { boardMarkup, endText } from "./curling.board.ts";
+import { sheetFor } from "./sheet.ts";
 import { badgeMarkup, bannerMarkup, plateMarkup, stateOf, type TeamView } from "./score.ts";
 import { KYOGIJO_STRINGS, fill } from "./strings.ts";
-import { KYOGIJO_BASE_STYLE } from "./style.ts";
+import { KYOGIJO_BASE_STYLE, KYOGIJO_CURLING_STYLE } from "./style.ts";
 import { convertLength, type Unit } from "./units.ts";
 import { baseball } from "./surfaces/baseball.ts";
+import { curling } from "./surfaces/curling.ts";
 import { basketball } from "./surfaces/basketball.ts";
 import { football } from "./surfaces/football.ts";
 import { hockey } from "./surfaces/hockey.ts";
@@ -27,7 +30,7 @@ import { VERSION } from "./version.ts";
 export { isPortrait };
 
 /** The sports that can be drawn, in the order a menu lists them. */
-export const SPORTS: readonly Sport[] = ["nfl", "cfl", "ifaf", "nhl", "nba", "mlb", "soccer"];
+export const SPORTS: readonly Sport[] = ["nfl", "cfl", "ifaf", "nhl", "nba", "mlb", "soccer", "curling"];
 
 /** The CSS custom property each colour of `Colors` sets. */
 export const COLOR_PROPERTIES: Readonly<Record<keyof Colors, string>> = {
@@ -67,6 +70,8 @@ const COURT_PROPERTIES: Readonly<Record<string, string>> = {
   baselineInk: "--ky-baseline",
 };
 
+const SHEET_PROPERTIES: Readonly<Record<string, string>> = { outer: "--ky-rg-o", middle: "--ky-rg-m", inner: "--ky-rg-i", button: "--ky-rg-b" };
+
 const isScore = (o: SurfaceOptions | ScoreOptions): o is ScoreOptions => (o as Partial<ScoreOptions>).home !== undefined && (o as Partial<ScoreOptions>).away !== undefined;
 
 /** The standard statuses, spelled out. */
@@ -77,6 +82,9 @@ export function statusLabel(status: string | undefined, language: Language = "en
   if (status === undefined || status.trim() === "") return undefined;
   const key = status.trim().toLowerCase().replace(/[\s/]+/g, "-");
   const words = KYOGIJO_STRINGS[language].status;
+  // A curling end: "end-6", "End 6" or "第6エンド".
+  const end = /^(?:end-?(\d{1,2})|第(\d{1,2})エンド)$/.exec(key);
+  if (end !== null) return fill(KYOGIJO_STRINGS[language].endStatus, { n: Number(end[1] ?? end[2]) });
   return Object.prototype.hasOwnProperty.call(words, key) ? words[key as keyof typeof words] : status.trim();
 }
 
@@ -200,6 +208,11 @@ function buildSurface(o: SurfaceOptions, portrait: boolean, id: string, score: b
     }
     case "soccer":
       return buildSoccer(o, common, scored, unit);
+    case "curling": {
+      const plan = sheetFor(o);
+      // A score always shows the whole sheet, for the board's sake.
+      return curling(common, { pebble: plan.pebble, guardZone: plan.guardZone, show: scored ? "sheet" : plan.show, end: plan.end, figures: plan.spec });
+    }
     default:
       throw new Error(`Unknown sport "${String(o.sport)}": use one of ${SPORTS.join(", ")}`);
   }
@@ -214,6 +227,7 @@ function colourStyle(o: SurfaceOptions, teams: { left?: Team; right?: Team; home
   };
   for (const [key, property] of Object.entries(COLOR_PROPERTIES)) set(property, o.colors?.[key as keyof Colors]);
   if (o.court !== undefined) for (const [key, property] of Object.entries(COURT_PROPERTIES)) set(property, (o.court as Record<string, unknown>)[key]);
+  if (o.sheet?.rings !== undefined) for (const [key, property] of Object.entries(SHEET_PROPERTIES)) set(property, (o.sheet.rings as Record<string, unknown>)[key]);
   // A data layer's team marks take the teams' own colours, unless the colours say otherwise.
   const homeMarks = o.layers === undefined || o.layers.length === 0 ? undefined : safeColour(teams.home?.color);
   const awayMarks = o.layers === undefined || o.layers.length === 0 ? undefined : safeColour(teams.away?.color);
@@ -241,13 +255,15 @@ function teamView(team: Team, side: Side, role: "home" | "away", winner: "home" 
     score,
     logo: safeLogo(team.logo),
     state: stateOf(winner, role),
+    ends: Array.isArray(team.ends) ? team.ends.map(endText) : undefined,
+    hammer: team.hammer === true ? true : undefined,
   };
 }
 
 const trimmed = (value: number): string => String(Math.round(value * 100) / 100);
 
 /** What a league's surface is, in a sentence fragment: its size or its bases, from the league's own figures in the unit its rulebook uses. */
-function leagueAbout(league: League, year: number | undefined, language: Language): string {
+function leagueAbout(league: League, year: number | undefined, language: Language, sheet?: { length: number; width: number }): string {
   const words = KYOGIJO_STRINGS[language].league;
   if (league.family === "baseball") {
     const diamond = diamondOf(league, year);
@@ -258,7 +274,9 @@ function leagueAbout(league: League, year: number | undefined, language: Languag
       ? courtOf(league, year)
       : league.family === "hockey"
         ? rinkOf(league, year)
-        : (() => {
+        : league.family === "curling"
+          ? (sheet ?? sheetOf(league))
+          : (() => {
             const field = fieldOf(league, year);
             return { length: field.length + 2 * field.endZone, width: field.width };
           })();
@@ -283,7 +301,8 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
   const { stop, colon, gap } = words.said;
   const sentence = (text: string): string => (/[.。]$/.test(text) ? text : `${text}${stop}`);
   const metres = (value: number): string => String(Math.round(value * 10) / 10);
-  const aboutText = league !== undefined ? leagueAbout(league, o.year, language) : pitch === undefined ? words.about[sport] : fill(pitch.format === "futsal" ? words.soccer.aboutFutsal : words.about.soccer, { length: metres(pitch.length), width: metres(pitch.width) });
+  const plan = sport === "curling" ? sheetFor(o) : undefined;
+  const aboutText = plan !== undefined ? leagueAbout(plan.league, o.year, language, plan.spec) : league !== undefined ? leagueAbout(league, o.year, language) : pitch === undefined ? words.about[sport] : fill(pitch.format === "futsal" ? words.soccer.aboutFutsal : words.about.soccer, { length: metres(pitch.length), width: metres(pitch.width) });
   const about = `${words.said.on}${colon}${aboutText}${stop}`;
   const halfLine = pitch !== undefined && !isScore(o) && (o.half === "left" || o.half === "right") ? `${gap}${words.soccer.half}` : "";
   // What the ground says about the size: that it is the published one, or that the ground has none and the international pitch is drawn.
@@ -314,9 +333,21 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
         ? `${gap}${fill(words.said.wonPens, { name: winner === "home" ? o.home.name : o.away.name, a: winner === "home" ? pens.home : pens.away, b: winner === "home" ? pens.away : pens.home })}`
         : `${gap}${fill(words.said.won, { name: winner === "home" ? o.home.name : o.away.name })}`;
   const tied = winner === "none" && level ? `${gap}${words.said.tied}` : "";
+  // Curling: who has the hammer, and the score of each end, which the board shows and a reader of the description would otherwise miss.
+  const curlingLine =
+    sport !== "curling"
+      ? ""
+      : [o.away, o.home]
+          .flatMap((team) => [
+            team.hammer === true ? fill(words.said.hammer, { name: team.name }) : "",
+            Array.isArray(team.ends) && team.ends.length > 0 ? fill(words.said.ends, { name: team.name, list: team.ends.map((value) => endText(value) || "–").join(words.layers.listSep) }) : "",
+          ])
+          .filter((part) => part !== "")
+          .map((part) => `${gap}${part}`)
+          .join("");
   return {
     title: o.title ?? (status === undefined ? line : `${line}${words.said.sep}${status}`),
-    description: o.description ?? `${extra === "" ? "" : `${sentence(extra)}${gap}`}${sentence(line)}${result}${tied}${gap}${about}${parkLine}${eraLine}`.trim(),
+    description: o.description ?? `${extra === "" ? "" : `${sentence(extra)}${gap}`}${sentence(line)}${result}${tied}${curlingLine}${gap}${about}${parkLine}${eraLine}`.trim(),
   };
 }
 
@@ -341,7 +372,9 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
   // The sport as drawn: a league that is a sport of its own (`league: "cfl"` on an `nfl`) is that sport.
   const { sport } = chooseLeague(o);
   const portrait = isPortrait(o);
-  const sized = isScore(o) ? (o.size === "compact" || o.size === "badge" ? o.size : "full") : "full";
+  // A tall curling sheet is 30 feet wide on the page and a strip under it would be unreadable: its compact size is the board on the ice.
+  const asked = isScore(o) ? (o.size === "compact" || o.size === "badge" ? o.size : "full") : "full";
+  const sized = asked === "compact" && sport === "curling" && portrait ? "full" : asked;
   const id = drawingId(o);
   const parts = o.parts === true;
   const homeSide: Side = isScore(o) && o.homeSide === "left" ? "left" : "right";
@@ -385,8 +418,11 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
     let teams = "";
     if (isScore(o) && left !== undefined && right !== undefined && sized === "full") {
       const onColour = sport === "nfl" || sport === "cfl" || sport === "ifaf" || sport === "soccer";
-      teams += bannerMarkup(surface.left, left, { turned: surface.turned, onColour, parts });
-      teams += bannerMarkup(surface.right, right, { turned: surface.turned, onColour, parts });
+      // A curling sheet has no place for the names: the board names the teams.
+      if (sport !== "curling") {
+        teams += bannerMarkup(surface.left, left, { turned: surface.turned, onColour, parts });
+        teams += bannerMarkup(surface.right, right, { turned: surface.turned, onColour, parts });
+      }
     }
     // The teams are painted under the lines, unless the surface asks for them over (a panel that must hide them).
     inner += surface.bannersOver === true ? surface.lines + teams : teams + surface.lines;
@@ -399,7 +435,10 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
     }
     if (isScore(o) && left !== undefined && right !== undefined && sized === "full") {
       const foot = o.label !== undefined && o.label !== "" ? o.label : [status, o.date].filter((part): part is string => part !== undefined && part !== "").join(" · ");
-      inner += plateMarkup(surface.plate, left, right, { competition: o.competition, foot: foot === "" ? undefined : foot }, { turned: surface.turned, parts, surfaceSport: sport });
+      if (sport === "curling") {
+        const board = boardMarkup(surface.plate, left, right, { competition: o.competition, foot: foot === "" ? undefined : foot, total: KYOGIJO_STRINGS[language].said.total }, { turned: surface.turned, parts });
+        inner += el("g", { transform: `translate(${num(surface.plate.cx)} ${num(surface.plate.cy)})${surface.turned ? " rotate(-90)" : ""}` }, board);
+      } else inner += plateMarkup(surface.plate, left, right, { competition: o.competition, foot: foot === "" ? undefined : foot }, { turned: surface.turned, parts, surfaceSport: sport });
     }
     const group = el("g", { class: "ky-surface-group", transform: surface.turn, part: parts ? "surface" : undefined }, inner);
     const v = surface.view;
@@ -436,7 +475,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       style: style === "" ? undefined : style,
     },
     `<title id="${titleId}">${esc(title)}</title><desc id="${descId}">${esc(description)}</desc>` +
-      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}</style>`) +
+      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}</style>`) +
       (defs === "" ? "" : `<defs>${defs}</defs>`) +
       body,
   );

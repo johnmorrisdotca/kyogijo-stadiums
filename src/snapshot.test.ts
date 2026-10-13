@@ -45,7 +45,7 @@ describe("the drawings' structure", () => {
 
 describe("the size of a drawing", () => {
   it("is within the budget, with the stylesheet in it", () => {
-    const budget: Record<string, number> = { nfl: 22_000, cfl: 21_000, ifaf: 22_000, nhl: 14_000, nba: 14_000, mlb: 17_000, soccer: 15_000 };
+    const budget: Record<string, number> = { nfl: 22_000, cfl: 21_000, ifaf: 22_000, nhl: 14_000, nba: 14_000, mlb: 17_000, soccer: 15_000, curling: 17_500 };
     for (const sport of SPORTS) expect(drawKyogijo({ sport, ...game }).length, sport).toBeLessThan(budget[sport]);
   });
 });

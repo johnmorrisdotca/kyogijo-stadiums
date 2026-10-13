@@ -3,8 +3,8 @@ import type { Unit } from "./units.ts";
 import type { SoccerFrame, SoccerProviderId } from "./surfaces/soccer-providers.ts";
 import type { SoccerPitchId, SoccerSize } from "./surfaces/soccer-spec.ts";
 
-/** The surfaces: three football fields, a rink, a court, a ballpark and a soccer pitch. */
-export type Sport = "nfl" | "cfl" | "ifaf" | "nhl" | "nba" | "mlb" | "soccer";
+/** The surfaces: three football fields, a rink, a court, a ballpark, a soccer pitch and a curling sheet. */
+export type Sport = "nfl" | "cfl" | "ifaf" | "nhl" | "nba" | "mlb" | "soccer" | "curling";
 
 /** `auto` follows the device's light or dark setting (and `data-theme` on the page's root), the others force one. */
 export type Theme = "auto" | "light" | "dark";
@@ -121,6 +121,39 @@ export interface CourtStyle {
   paintThreePoint?: boolean;
 }
 
+/** How much of a curling sheet is shown: all of it, the half from the hog line to the back line, or just the house. */
+export type SheetShow = "sheet" | "half" | "house";
+
+/** The colours of a curling house, each a CSS colour. The 12-foot ring is blue and the 4-foot ring red by default. */
+export interface HouseRings {
+  /** The band between the 12-foot and the 8-foot circles. */
+  outer?: string;
+  /** The band between the 8-foot and the 4-foot circles. */
+  middle?: string;
+  /** The band between the 4-foot circle and the button. */
+  inner?: string;
+  /** The button. */
+  button?: string;
+}
+
+/** The look and the size of a curling sheet. Every part is optional. */
+export interface SheetStyle {
+  /** The length of the sheet, backboard to backboard, in `units` (feet by default): within the league's range (146 to 150 feet). 150 feet by default. */
+  length?: number;
+  /** The width, sideline to sideline, in `units`: within the league's range. 15 feet 7 inches by default. */
+  width?: number;
+  /** The colours of the house. */
+  rings?: HouseRings;
+  /** Draw the ice's pebble: a fine texture of dots over the sheet. Off by default. */
+  pebble?: boolean;
+  /** Shade the free guard zone at both ends: the ground between the hog line and the tee line, outside the house. Off by default. */
+  guardZone?: boolean;
+  /** How much of the sheet to show. A bare sheet only; a score always shows all of it. `sheet` by default. */
+  show?: SheetShow;
+  /** Which end `show: "half"` and `show: "house"` show: the `left` one (the top house of a tall drawing, the default) or the `right`. */
+  end?: "left" | "right";
+}
+
 /** One team of a score. */
 export interface Team {
   /** The name, as it is to be written: "Harbour City Gulls". */
@@ -133,6 +166,10 @@ export interface Team {
   logo?: string;
   /** The goals it scored in a penalty shoot-out: shown with the status, and the winner of a level game. */
   penalties?: number | string;
+  /** Curling: the points it scored in each end, in order (`null` for an end not played yet; `"X"` for a conceded one). */
+  ends?: readonly (number | string | null | undefined)[];
+  /** Curling: the team has the hammer, the last stone of the end. A marker is drawn beside its name. */
+  hammer?: boolean;
   /** The team's colour, for its end, key or dugout. */
   color?: string;
   /** The colour of the words on that colour. Black or white by the colour's lightness when missing. */
@@ -206,6 +243,8 @@ export interface SurfaceOptions {
   fence?: Partial<Fence>;
   /** The look of an NBA court. */
   court?: CourtStyle;
+  /** The size and look of a curling sheet. */
+  sheet?: SheetStyle;
   /** The soccer pitch: a preset (`fifa`, `uefa`, `mls`, `nwsl`, `ncaa`, `law-min`, `law-max`, `9-a-side`, `7-a-side`, `5-a-side`, `futsal`) or a size, `{ length, width, unit }`. The international 105 by 68 m by default. */
   pitch?: SoccerPitchId | SoccerSize;
   /** The soccer ground to draw: a key of `GROUNDS`. The pitch has the size its article publishes (the international 105 by 68 m where none is), and the drawing carries the ground's name for `year`. A `pitch` of your own wins over the ground's size. */
@@ -235,8 +274,8 @@ export interface SurfaceOptions {
   height?: number | string;
 }
 
-/** The standard words of a status. Any other text is written as it is. */
-export type StatusWord = "final" | "final-ot" | "final-so" | "final-aet" | "final-pens" | "live" | "half" | "extra-time" | "penalties" | "postponed";
+/** The standard words of a status. `end-6` (or "End 6") is a curling end. Any other text is written as it is. */
+export type StatusWord = "final" | "final-ot" | "final-so" | "final-aet" | "final-pens" | "live" | "half" | "extra-time" | "extra-end" | "penalties" | "postponed";
 
 /** What a score drawing takes beyond a surface. */
 export interface ScoreOptions extends SurfaceOptions {

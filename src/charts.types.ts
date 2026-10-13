@@ -5,6 +5,7 @@ import type { HeatRamp } from "./heat.types.ts";
 import type { Layer, LayerTeam, MarkShape, TableOptions } from "./layers.types.ts";
 import type { SoccerProviderId } from "./surfaces/soccer-providers.ts";
 import type { Language, SurfaceOptions } from "./types.ts";
+import type { Unit } from "./units.ts";
 
 /** What every chart gives back: the layers and the drawing options to put them on, a sentence, the totals, and the ways to draw them. */
 export interface Chart<Totals = Record<string, never>> {
@@ -348,4 +349,72 @@ export interface GoalMouth {
 export interface SoccerChart extends Chart<SoccerTotals> {
   /** The goal-mouth view of the shots that have `goalY` and `goalZ`: a small drawing of the goal frame, seen from the front, with where each shot crossed the goal line. */
   goalMouth(options?: GoalMouthOptions): GoalMouth;
+}
+
+// ----- curling
+
+/** A stone at rest, as its place on the sheet: feet from the button of the house it was played to (the `curling` frame), x across the sheet (positive to the thrower's right) and y along it (positive towards the back line). */
+export interface CurlingStone {
+  x: number | null;
+  y: number | null;
+  /** The team that threw it: `home` or `away` take the two stone colours (red and yellow by default). */
+  team?: LayerTeam;
+  /** Its number among its team's eight, 1 to 8, written on the stone. */
+  number?: number;
+  /** The tooltip of the stone and its line in the table. Made from the team, the number and the distance when missing. */
+  title?: string;
+}
+
+/** What `curlingStones` takes. */
+export interface CurlingOptions extends ChartOptions {
+  /** The number of the end, for the title: `6` gives "End 6". */
+  end?: number;
+  /** The team that has the hammer, the last stone of the end. It is named in the summary. */
+  hammer?: "home" | "away";
+  /** The teams' names, for the summary and the stones' tooltips. */
+  names?: { home?: string; away?: string };
+  /** The house the stones are at: the `left` one (the top house of a tall drawing, the default) or the `right`. */
+  house?: "left" | "right";
+  /** The unit of the stones' places: feet by default. */
+  units?: Unit;
+  /** Write each stone's number on it. On by default, for the stones that have one. */
+  numbers?: boolean;
+}
+
+/** One stone as the chart judged it. */
+export interface CurlingStoneResult {
+  /** The place of the stone in the list given. */
+  index: number;
+  /** Its centre's distance from the button, in feet. */
+  distance: number;
+  /** In play: it did not touch a sideline, and it stands wholly beyond the hog line and not wholly beyond the back line. */
+  inPlay: boolean;
+  /** Any part of it is within 6 feet of the button (in or touching the house), so that it can score. */
+  inHouse: boolean;
+  /** It scores. */
+  counting: boolean;
+  /** It is the stone nearest the button of those that can score. */
+  shot: boolean;
+}
+
+/** The numbers behind a curling chart. */
+export interface CurlingTotals {
+  /** Stones with a place. */
+  stones: number;
+  /** In play, and out of play (removed, so not drawn). */
+  inPlay: number;
+  out: number;
+  /** The stones that score, and the points. */
+  counting: number;
+  points: number;
+  /** The team that scores, or `null` for a blank end. */
+  scoring: string | null;
+  /** The shot rock's place in the list given, or `null`. */
+  shot: number | null;
+  /** No one scores: no stone in the house, or the two nearest are as near. */
+  blank: boolean;
+  /** Rows left out for want of a place. */
+  skipped: number;
+  /** Every stone, as judged. */
+  results: CurlingStoneResult[];
 }

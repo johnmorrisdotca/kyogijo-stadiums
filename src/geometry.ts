@@ -114,6 +114,42 @@ export function threePointJoin(): number {
   return NBA.basket + Math.sqrt(radius * radius - corner * corner);
 }
 
+/**
+ * The curling sheet, from R1 of World Curling's Rules of Curling (1 September 2026) and Rule 3 of Curling Canada's Rules of Curling for General
+ * Play (September 2022 to August 2026), in feet as the second prints them and the first prints beside its metres. The sheet is drawn at the
+ * largest the rules allow: the length is 150 feet (R1(a) of World Curling: "minimum 150 feet"; Curling Canada allows 146 to 150), the width
+ * 15 feet 7 inches (4.750 m, the greatest of both). Lengths run along the sheet from the backboard, widths across it.
+ */
+export const CURLING = {
+  length: 150,
+  width: 15 + 7 / 12,
+  /** The least length and width the rules allow: 146 feet in an existing facility; 14 ft 6 in (World Curling) and 14 ft 2 in (Curling Canada). */
+  lengthMin: 146,
+  widthMin: { wcf: 14.5, curlingCanada: 14 + 2 / 12 },
+  /** Each tee line's centre is 57 feet from the middle of the sheet: 114 feet from tee to tee, 18 feet from the backboard on a 150-foot sheet. */
+  teeFromMiddle: 57,
+  /** The back line's outside edge is 6 feet from the tee line's centre; the hog line's inside edge is 21 feet from it. */
+  backLine: 6,
+  hogLine: 21,
+  /** The centre line runs 12 feet beyond each tee; the hacks stand there. */
+  centreBeyondTee: 12,
+  /** The radii of the 12-, 8- and 4-foot circles and the button (at least 6 inches). */
+  rings: { twelve: 6, eight: 4, four: 2, button: 0.5 },
+  /** The widths: tee, back and centre lines are at most half an inch; the hog line is 4 inches. */
+  lineWidth: 1 / 24,
+  hogLineWidth: 1 / 3,
+  /** A hack is at most 6 inches wide and 8 inches deep, its inside edge 3 inches from the centre line. */
+  hack: { insideFromCentre: 0.25, width: 0.5, depth: 8 / 12 },
+  /** World Curling's hack line, 1 ft 6 in long, and its courtesy lines, 6 in long and 4 feet outside each hog line. */
+  hackLine: 1.5,
+  courtesy: { length: 0.5, outsideHog: 4 },
+  /** A stone has a circumference of at most 36 inches. It is drawn at that, a little over 11 inches across. */
+  stoneCircumference: 3,
+} as const;
+
+/** The diameter of a curling stone drawn at the greatest circumference the rules allow (36 inches), in feet. */
+export const STONE_DIAMETER = CURLING.stoneCircumference / Math.PI;
+
 /** The baseball field, from rules 2.01 to 2.05 of the Official Baseball Rules. */
 export const MLB = {
   base: 90,
@@ -246,6 +282,10 @@ export function surfaceSize(sport: SizedSport, unit: Unit = SURFACE_UNITS[sport]
       width = convertLength(pitch.width, "m", "ft");
       break;
     }
+    case "curling":
+      length = CURLING.length;
+      width = CURLING.width;
+      break;
     default:
       throw new Error(`No fixed size for "${String(sport)}": a ballpark's size is its fence`);
   }
@@ -261,6 +301,7 @@ export function dimensionsOf(sport: "nba", unit?: Unit): Scaled<typeof NBA>;
 export function dimensionsOf(sport: "mlb", unit?: Unit): Scaled<typeof MLB>;
 export function dimensionsOf(sport: "nfl" | "cfl" | "ifaf", unit?: Unit): Scaled<FootballSpec>;
 export function dimensionsOf(sport: "soccer", unit?: Unit): Scaled<typeof SOCCER>;
+export function dimensionsOf(sport: "curling", unit?: Unit): Scaled<typeof CURLING>;
 export function dimensionsOf(sport: Sport, unit?: Unit): unknown;
 export function dimensionsOf(sport: Sport, unit: Unit = SURFACE_UNITS[sport]): unknown {
   switch (sport) {
@@ -277,6 +318,8 @@ export function dimensionsOf(sport: Sport, unit: Unit = SURFACE_UNITS[sport]): u
     case "soccer":
       // The Laws' figures are kept in metres.
       return lengthsIn(SOCCER, unit, "m");
+    case "curling":
+      return lengthsIn(CURLING, unit);
     default:
       throw new Error(`Unknown sport "${String(sport)}"`);
   }

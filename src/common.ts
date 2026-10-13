@@ -12,8 +12,10 @@ export const safeClass = (text: string | undefined): string => (text ?? "").repl
 export const drawingId = (o: SurfaceOptions): string => safeClass(o.id).replace(/ /g, "-") || `ky-${hash(JSON.stringify([o, VERSION]))}`;
 
 /** True when a drawing with these options lies in portrait. */
-export function isPortrait(o: Pick<SurfaceOptions, "orientation" | "aspect">): boolean {
+export function isPortrait(o: Pick<SurfaceOptions, "orientation" | "aspect"> & { sport?: SurfaceOptions["sport"] }): boolean {
   if (o.orientation === "portrait") return true;
+  // A curling sheet is 150 feet long and 15 wide: it lies tall unless it is asked to lie wide.
+  if (o.orientation === undefined && o.sport === "curling") return true;
   return o.orientation === "auto" && typeof o.aspect === "number" && Number.isFinite(o.aspect) && o.aspect > 0 && o.aspect < 1;
 }
 

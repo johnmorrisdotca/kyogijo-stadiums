@@ -52,6 +52,8 @@ const PEAKS = { name: "Summit Peaks", abbr: "SMT", score: 108, color: "#14233f" 
 const BOLTS = { name: "Metro Bolts", abbr: "MTB", score: 112, color: "#c2410c" };
 const STARS = { name: "Valley Stars", abbr: "VAL", score: 4, color: "#c8102e" };
 const PINES = { name: "Coastal Pines", abbr: "CPN", score: 6, color: "#1f6b3c" };
+const WOLVES = { name: "Harbour City Gulls", abbr: "HCG", score: 5, color: "#1d4f91", ends: [0, 1, 0, 2, 0, 0, 1, 0, 1, "X"] };
+const RIDGE = { name: "Prairie Ridge Bison", abbr: "PRB", score: 4, color: "#a8452c", hammer: true, ends: [1, 0, 2, 0, 1, 0, 0, 1, 0] };
 const SOCCER_AWAY = { name: "Northern Owls", abbr: "NOW", score: 2, penalties: 4, color: "#3a2d6b" };
 const SOCCER_HOME = { name: "Lakeshore Anchors", abbr: "LSA", score: 2, penalties: 2, color: "#0f7a7a" };
 
@@ -63,8 +65,9 @@ const GAMES = {
   nba: { away: PEAKS, home: BOLTS, status: "final", competition: "Finals, Game 6" },
   soccer: { away: SOCCER_AWAY, home: SOCCER_HOME, status: "final-pens", competition: "Cup Final" },
   mlb: { away: STARS, home: PINES, status: "Bottom 9th", competition: "Game 5", park: "fenway-park" },
+  curling: { away: WOLVES, home: RIDGE, status: "end-10", competition: "Final" },
 };
-const SPORT_TITLES = { nfl: "NFL field", cfl: "CFL field", ifaf: "IFAF field", nhl: "NHL rink", nba: "NBA court", soccer: "Soccer pitch", mlb: "Baseball field" };
+const SPORT_TITLES = { nfl: "NFL field", cfl: "CFL field", ifaf: "IFAF field", nhl: "NHL rink", nba: "NBA court", soccer: "Soccer pitch", mlb: "Baseball field", curling: "Curling sheet" };
 
 /** A repeatable list of points for the data snippets: no random numbers, so that the same code always draws the same marks. */
 const SPOTS = "Array.from({ length: 36 }, (_, i) => ({ x: 20 + ((i * 53) % 160), y: 8 + ((i * 29) % 70), team: i % 2 ? \"away\" : \"home\", outcome: i % 5 === 0 ? \"goal\" : \"shot\", value: 0.05 + (i % 7) / 20 }))";
@@ -76,13 +79,13 @@ const section = (id, title, intro, items) => ({ id, title, intro, items });
 // ---- The pages. Each is a list of sections, and each section a list of items. ----
 
 function surfacesPage(lib) {
-  const sports = ["nfl", "cfl", "ifaf", "nhl", "nba", "soccer", "mlb"];
+  const sports = ["nfl", "cfl", "ifaf", "nhl", "nba", "soccer", "mlb", "curling"];
   const themes = lib[MAIN].COURT_THEMES;
   return {
     slug: "gallery-surfaces",
     title: "Gallery: surfaces and scores",
     ja: "競技場とスコア",
-    intro: "The seven surfaces bare, with a game on each, wide and tall, as a strip and as a compact card, and the court's looks. Every picture is drawn by the build from the code under it.",
+    intro: "The eight surfaces bare, with a game on each, wide and tall, as a strip and as a compact card, and the court's looks. Every picture is drawn by the build from the code under it.",
     sections: [
       section("bare", "Each surface, bare", "`drawKyogijo` with a `sport` and nothing else.", sports.map((sport) => item(`bare-${sport}`, SPORT_TITLES[sport], drawing({ sport })))),
       section("scores", "A game on each surface", "The teams on their sides and the score in the middle.", sports.map((sport) => item(`score-${sport}`, `${SPORT_TITLES[sport]}, with a score`, drawing({ sport, ...GAMES[sport] })))),
@@ -92,12 +95,14 @@ function surfacesPage(lib) {
         item("tall-nba", "NBA court, tall", drawing({ sport: "nba", ...GAMES.nba, orientation: "portrait" })),
         item("tall-soccer", "Soccer pitch, tall", drawing({ sport: "soccer", ...GAMES.soccer, orientation: "portrait" })),
         item("tall-mlb", "Baseball field, tall", drawing({ sport: "mlb", ...GAMES.mlb, orientation: "portrait" }), "A ballpark is already upright, so the teams go in strips above and below it."),
+        item("wide-curling", "Curling sheet, wide", drawing({ sport: "curling", ...GAMES.curling, orientation: "landscape" }), "A curling sheet lies tall unless it is asked to lie wide."),
       ]),
       section("strips", "A strip for a list, and a compact card", "`size: \"badge\"` is the strip alone; `size: \"compact\"` is the surface with that strip under it.", [
         item("badge-nhl", "Badge, hockey", drawing({ sport: "nhl", ...GAMES.nhl, size: "badge" })),
         item("badge-nba", "Badge, basketball", drawing({ sport: "nba", ...GAMES.nba, size: "badge" })),
         item("badge-nfl", "Badge, football", drawing({ sport: "nfl", ...GAMES.nfl, size: "badge" })),
         item("badge-mlb", "Badge, baseball", drawing({ sport: "mlb", ...GAMES.mlb, size: "badge" })),
+        item("badge-curling", "Badge, curling", drawing({ sport: "curling", ...GAMES.curling, size: "badge" }), "The hammer is the small stone in the corner of the team that has it."),
         item("compact-nba", "Compact card, basketball", drawing({ sport: "nba", ...GAMES.nba, size: "compact" })),
         item("compact-nhl", "Compact card, hockey", drawing({ sport: "nhl", ...GAMES.nhl, size: "compact" })),
       ]),
@@ -136,6 +141,7 @@ function leaguesPage(lib) {
     ["hockey", "Ice hockey rinks", "nhl"],
     ["football", "Football fields", "nfl"],
     ["baseball", "Baseball and softball fields", "mlb"],
+    ["curling", "Curling sheets", "curling"],
   ];
   return {
     slug: "gallery-leagues",
@@ -253,7 +259,55 @@ function dataPage() {
   };
 }
 
-export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, dataPage];
+
+function curlingPage() {
+  const stones = `[
+  { x: 0.4, y: 0.3, team: "home", number: 8 },
+  { x: -1.2, y: -0.8, team: "home", number: 6 },
+  { x: 1.9, y: 1.1, team: "away", number: 7 },
+  { x: -2.6, y: 2.8, team: "away", number: 5 },
+  { x: 0.2, y: -9, team: "away", number: 3 },
+  { x: 0.1, y: -14, team: "home", number: 2 },
+]`;
+  return {
+    slug: "gallery-curling",
+    title: "Gallery: curling",
+    ja: "カーリング",
+    intro: "The sheet from World Curling's and Curling Canada's rules, its display ranges and house colours, the board and the badge, and the stones of an end with their score worked out.",
+    sections: [
+      section("sheets", "The sheet", "`sport: \"curling\"`: tall by default, with the far house at the top; `orientation: \"landscape\"` lays it wide.", [
+        item("curling-tall", "The sheet, tall", drawing({ sport: "curling" })),
+        item("curling-wide", "The sheet, wide", drawing({ sport: "curling", orientation: "landscape" })),
+        item("curling-wcf", "World Curling, with its hack and courtesy lines", drawing({ sport: "curling", orientation: "landscape", league: "wcf", detail: "full" })),
+        item("curling-canada", "Curling Canada's rules", drawing({ sport: "curling", orientation: "landscape", league: "curling-canada" }), "Its book prints no hack line and no courtesy line."),
+        item("curling-short", "The shortest sheet and the narrowest", drawing({ sport: "curling", orientation: "landscape", league: "curling-canada", sheet: { length: 146, width: 14 + 2 / 12 } }), "146 feet by 14 feet 2 inches, the least Curling Canada allows."),
+      ]),
+      section("looks", "Colours, ice and guard zone", "`sheet` sets the colours of the rings, the ice's pebble and the shading of the free guard zone.", [
+        item("curling-rings", "Rings in a club's colours", drawing({ sport: "curling", sheet: { rings: { outer: "#0b6e4f", middle: "#ffffff", inner: "#d4a017", button: "#ffffff" }, pebble: true } })),
+        item("curling-guard", "The free guard zone", drawing({ sport: "curling", orientation: "landscape", sheet: { guardZone: true } })),
+        item("curling-dark", "The sheet, dark", drawing({ sport: "curling", theme: "dark" })),
+      ]),
+      section("ranges", "Part of the sheet", "`sheet.show` is `half` (the hog line to the back line) or `house`, at the `left` end (the top of a tall drawing) or the `right`.", [
+        item("curling-half", "Hog line to back line", drawing({ sport: "curling", sheet: { show: "half", guardZone: true } })),
+        item("curling-house", "The house", drawing({ sport: "curling", sheet: { show: "house", pebble: true } })),
+        item("curling-house-right", "The house at the right end, wide", drawing({ sport: "curling", orientation: "landscape", sheet: { show: "house", end: "right" } })),
+      ]),
+      section("score", "The board and the badge", "Each team's score in each end (`ends`), the total, the hammer, and an end as the status.", [
+        item("curling-board-tall", "The board, tall", drawing({ sport: "curling", ...GAMES.curling })),
+        item("curling-board-wide", "The board, wide", drawing({ sport: "curling", ...GAMES.curling, orientation: "landscape" })),
+        item("curling-compact", "A compact card, wide", drawing({ sport: "curling", ...GAMES.curling, orientation: "landscape", size: "compact" })),
+        item("curling-extra", "An extra end", drawing({ sport: "curling", away: { ...WOLVES, score: 6, ends: [0, 1, 0, 2, 0, 0, 1, 0, 1, 0, 1] }, home: { ...RIDGE, score: 5, hammer: false, ends: [1, 0, 2, 0, 1, 0, 0, 1, 0, 0, 0] }, status: "extra-end", size: "badge" })),
+      ]),
+      section("stones", "The stones of an end", "`curlingStones` judges the stones by the rules and rings the ones that score: one ring for a counting stone, two for the shot rock.", [
+        item("chart-curling", "An end, the house at the top", `import { curlingStones } from "${MAIN}/charts";\n\nconst stones = ${stones};\nconst chart = curlingStones(stones, { end: 6, hammer: "home", names: { home: "Prairie Ridge", away: "Harbour City" } });\nconst svg = chart.draw();`, "Home scores 2: its two stones are nearer the button than every stone of the other team."),
+        item("chart-curling-wide", "The same end, wide, with its key", `import { curlingStones } from "${MAIN}/charts";\n\nconst stones = ${stones};\nconst chart = curlingStones(stones, { end: 6, hammer: "home" });\nconst svg = chart.draw({ orientation: "landscape" });`),
+        item("zones-curling", "Zones: the rings", `import { drawKyogijo } from "${MAIN}";\n\nconst stones = Array.from({ length: 80 }, (_, i) => ({ x: 8.5 * Math.cos(i * 2.4) * Math.sqrt((i % 40) / 40), y: 8 * Math.sin(i * 2.4) * Math.sqrt((i % 40) / 40) - 14 + (i % 3) * 3, outcome: i % 4 ? "stone" : "counting" }));\nconst svg = drawKyogijo({ sport: "curling", sheet: { show: "half", end: "left" }, layers: [{ kind: "zones", name: "stones", zones: "curling-house", from: "curling", attacking: "left", end: "left", data: stones, labels: { show: ["value"] }, legend: true }] });`),
+      ]),
+    ],
+  };
+}
+
+export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, dataPage, curlingPage];
 
 /** The sections of every page, with each item's picture made by running its code. */
 export function galleryData(lib) {
@@ -306,6 +360,7 @@ const REFERENCE = {
   nfl: { frame: "nfl-tracking", spot: [90, 26.67], what: "the middle of the right 20-yard line" },
   mlb: { frame: "retrosheet", spot: [63.64, 63.64], what: "first base" },
   soccer: { frame: "international", spot: [94, 34], what: "the right penalty mark" },
+  curling: { frame: "curling", spot: [0, 6], what: "the middle of the back line" },
 };
 const round2 = (n) => Math.round(n * 100) / 100;
 const UNIT_WORDS = { ft: "feet", yd: "yards", m: "metres", cm: "centimetres", in: "inches", mm: "millimetres", px: "pixels", "tenth-ft": "tenths of a foot", percent: "percent", fraction: "fractions" };
@@ -315,7 +370,7 @@ export function framesItems(lib) {
   const { FRAMES, convert } = lib[`${MAIN}/frames`];
   return Object.values(FRAMES).map((frame) => {
     const reference = REFERENCE[frame.sport];
-    const size = frame.size === "variable" ? { length: 105, width: 68, unit: "m" } : undefined;
+    const size = frame.size === "variable" ? (frame.sport === "curling" ? { length: 150, width: 15.58, unit: "ft" } : { length: 105, width: 68, unit: "m" }) : undefined;
     const [spot] = convert(reference.frame, frame.name, size ? { size } : {})([reference.spot]);
     const x = round2(spot[0]);
     const y = round2(spot[1]);

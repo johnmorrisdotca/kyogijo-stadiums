@@ -45,9 +45,9 @@ function stringsDocument() {
   lines.push("", "## The surfaces through the years (`eraChanges`)", "", "| Change | English | 日本語 |", "| --- | --- | --- |");
   for (const sport of ERA_SPORTS) for (const change of [...eraStates(sport), ...eraChanges(sport)]) lines.push(`| \`${change.id}\` | ${change.what.replace(/\|/g, "\\|")} | ${change.ja.replace(/\|/g, "\\|")} |`);
   lines.push("", "## The leagues (`LEAGUES`)", "", "| League | English | 日本語 |", "| --- | --- | --- |");
-  for (const sport of ["nba", "nhl", "nfl", "mlb"]) for (const league of LEAGUES[sport]) if (!league.builtIn) lines.push(`| \`${league.id}\` | ${league.name.en} | ${league.name.ja} |`);
+  for (const sport of ["nba", "nhl", "nfl", "mlb", "curling"]) for (const league of LEAGUES[sport]) if (!league.builtIn) lines.push(`| \`${league.id}\` | ${league.name.en} | ${league.name.ja} |`);
   lines.push("", "## The leagues' dated changes (`leagueChanges`)", "", "| Change | English | 日本語 |", "| --- | --- | --- |");
-  for (const sport of ["nba", "nhl", "nfl", "mlb"]) for (const league of LEAGUES[sport]) if (!league.builtIn) for (const change of leagueChanges(sport, league.id)) lines.push(`| \`${change.id}\` | ${change.what.replace(/\|/g, "\\|")} | ${change.ja.replace(/\|/g, "\\|")} |`);
+  for (const sport of ["nba", "nhl", "nfl", "mlb", "curling"]) for (const league of LEAGUES[sport]) if (!league.builtIn) for (const change of leagueChanges(sport, league.id)) lines.push(`| \`${change.id}\` | ${change.what.replace(/\|/g, "\\|")} | ${change.ja.replace(/\|/g, "\\|")} |`);
   lines.push("", "## The parks' Japanese names", "", "| Key | English | 日本語 | Team |", "| --- | --- | --- | --- |");
   for (const id of PARK_IDS) if (PARKS[id].nameJa) lines.push(`| \`${id}\` | ${PARKS[id].name} | ${PARKS[id].nameJa} | ${PARKS[id].teamJa ?? ""} |`);
   lines.push("", "## The grounds' Japanese names", "", "| Key | English | 日本語 | Name in the place's language |", "| --- | --- | --- | --- |");
@@ -55,16 +55,16 @@ function stringsDocument() {
   return `${lines.join("\n")}\n`;
 }
 
-const FAMILY_TITLES = { basketball: ["Basketball", "nba"], hockey: ["Ice hockey", "nhl"], football: ["Football", "nfl"], baseball: ["Baseball and softball", "mlb"] };
+const FAMILY_TITLES = { basketball: ["Basketball", "nba"], hockey: ["Ice hockey", "nhl"], football: ["Football", "nfl"], baseball: ["Baseball and softball", "mlb"], curling: ["Curling", "curling"] };
 
 /** docs/variants.md: every league, its figures and its sources, made from the source. */
 function variantsDocument() {
   const lines = [
     "# League variants",
     "",
-    "`league` in the options draws a surface as one league's rulebook marks it; `sport` names the family (`nba` for basketball, `nhl` for hockey, `nfl`, `cfl` or `ifaf` for football, `mlb` for baseball and softball). This page is made from `src/leagues/` by `pnpm docs:make`; a test holds it to them. Each figure is the rulebook's, in its own unit, and each league's sources, with the edition and the address read on 2026-10-13, are listed under its table. What a figure is and where it is ours is in [sources.md](./sources.md#league-variants); what could not be cited is in [references.md](./references.md#league-variants-not-drawn).",
+    "`league` in the options draws a surface as one league's rulebook marks it; `sport` names the family (`nba` for basketball, `nhl` for hockey, `nfl`, `cfl` or `ifaf` for football, `mlb` for baseball and softball, `curling` for a curling sheet). This page is made from `src/leagues/` by `pnpm docs:make`; a test holds it to them. Each figure is the rulebook's, in its own unit, and each league's sources, with the edition and the address read on 2026-10-13, are listed under its table. What a figure is and where it is ours is in [sources.md](./sources.md#league-variants); what could not be cited is in [references.md](./references.md#league-variants-not-drawn).",
     "",
-    "A `year` draws a league's markings of that season only where a source dates a change (the history under each table); for any other league it is ignored, and the drawing is of the rulebook as it is now. The sport's own league (the NBA, the NHL, the NFL, the CFL, the IFAF, MLB) keeps the history of [`year`](./eras.md).",
+    "A `year` draws a league's markings of that season only where a source dates a change (the history under each table); for any other league it is ignored, and the drawing is of the rulebook as it is now. The sport's own league (the NBA, the NHL, the NFL, the CFL, the IFAF, MLB, World Curling) keeps the history of [`year`](./eras.md).",
     "",
   ];
   for (const [title, sport] of Object.values(FAMILY_TITLES)) {

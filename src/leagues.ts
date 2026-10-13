@@ -7,6 +7,7 @@ import { BASEBALL_LEAGUES, diamondInFeet, type BaseballLeague, type DiamondSpec 
 import { BASKETBALL_LEAGUES, courtInFeet, type BasketballLeague, type CourtSpec } from "./leagues/basketball.ts";
 import { FOOTBALL_LEAGUES, type FootballLeague } from "./leagues/football.ts";
 import { HOCKEY_LEAGUES, rinkInFeet, type HockeyLeague, type RinkSpec } from "./leagues/hockey.ts";
+import { CURLING_LEAGUES, sheetInFeet, type CurlingLeague, type SheetSpec } from "./leagues/curling.ts";
 import { LEAGUE_SOURCES } from "./leagues/sources.ts";
 import type { Family, LeagueSpan } from "./leagues/types.ts";
 import { inFeet } from "./leagues/types.ts";
@@ -16,17 +17,18 @@ import { convertLength, type Unit } from "./units.ts";
 
 export { LEAGUE_SOURCES };
 export type { LeagueSource } from "./leagues/sources.ts";
-export type { BaseballLeague, BasketballLeague, FootballLeague, HockeyLeague };
+export type { BaseballLeague, BasketballLeague, CurlingLeague, FootballLeague, HockeyLeague };
 export type { CourtFigures, CourtMarks } from "./leagues/basketball.ts";
 export type { RinkFigures } from "./leagues/hockey.ts";
+export type { SheetFigures } from "./leagues/curling.ts";
 export type { DiamondFigures } from "./leagues/baseball.ts";
 export type { Family, LeagueSpan, Named } from "./leagues/types.ts";
 
 /** A league: a variant of a family of surface. */
-export type League = BasketballLeague | HockeyLeague | FootballLeague | BaseballLeague;
+export type League = BasketballLeague | HockeyLeague | FootballLeague | BaseballLeague | CurlingLeague;
 
 /** The family of surface each sport draws; soccer's variants are its pitches (`pitch`), not leagues. */
-export const FAMILY_OF: Readonly<Record<Sport, Family | undefined>> = Object.freeze({ nfl: "football", cfl: "football", ifaf: "football", nhl: "hockey", nba: "basketball", mlb: "baseball", soccer: undefined });
+export const FAMILY_OF: Readonly<Record<Sport, Family | undefined>> = Object.freeze({ nfl: "football", cfl: "football", ifaf: "football", nhl: "hockey", nba: "basketball", mlb: "baseball", soccer: undefined, curling: "curling" });
 
 /**
  * The leagues each sport can draw, in the order a menu lists them, the sport's own first (the three football sports share their
@@ -40,10 +42,11 @@ export const LEAGUES: Readonly<Record<Sport, readonly League[]>> = Object.freeze
   ifaf: FOOTBALL_LEAGUES,
   mlb: BASEBALL_LEAGUES,
   soccer: [],
+  curling: CURLING_LEAGUES,
 });
 
 /** Every league of every family, once each. */
-export const VARIANTS: readonly League[] = Object.freeze([...BASKETBALL_LEAGUES, ...HOCKEY_LEAGUES, ...FOOTBALL_LEAGUES, ...BASEBALL_LEAGUES]);
+export const VARIANTS: readonly League[] = Object.freeze([...BASKETBALL_LEAGUES, ...HOCKEY_LEAGUES, ...FOOTBALL_LEAGUES, ...BASEBALL_LEAGUES, ...CURLING_LEAGUES]);
 
 /** The ids of a sport's leagues. */
 export const leagueIds = (sport: Sport): string[] => LEAGUES[sport].map((league) => league.id);
@@ -185,6 +188,8 @@ export function leagueSeason(family: Family, year: number): string {
 export const courtOf = (league: BasketballLeague, year?: number): CourtSpec => courtInFeet(leagueAtOf(league, year).figures, figuresUnit(league));
 /** An ice rink of a league in a season, in feet. */
 export const rinkOf = (league: HockeyLeague, year?: number): RinkSpec => rinkInFeet(leagueAtOf(league, year).figures, figuresUnit(league));
+/** A curling sheet of a league, in feet. A sheet has no history; a year is ignored. */
+export const sheetOf = (league: CurlingLeague = CURLING_LEAGUES[0]): SheetSpec => sheetInFeet(league.dimensions, league.figuresUnit ?? league.unit);
 /** A football field of a league in a season: the spec, in feet. */
 export const fieldOf = (league: FootballLeague, year?: number): FootballSpec => inFeet(leagueAtOf(league, year).figures, figuresUnit(league)) as unknown as FootballSpec;
 /** A diamond of a league in a season, in feet. */
@@ -211,6 +216,9 @@ export function leagueSize(sport: Sport, id: string, unit?: Unit): { length: num
       break;
     case "hockey":
       feet = rinkOf(league);
+      break;
+    case "curling":
+      feet = sheetOf(league);
       break;
     case "football": {
       const field = fieldOf(league);
@@ -267,6 +275,19 @@ export function leagueFigures(league: League): [string, string][] {
         ["blue line", `${w(r.blueLine)} from the end boards`],
         ["face-off circle", `${w(r.circleRadius)} radius`],
         ["trapezoid", r.trapezoid === null ? "none" : `${w(r.trapezoid.atGoalLine)} at the goal line, ${w(r.trapezoid.atBoards)} at the boards`],
+      ];
+    }
+    case "curling": {
+      const s = sheetOf(league);
+      const [twelve, eight, four, button] = s.rings;
+      return [
+        ["sheet", `${w(s.length)} by ${w(s.width)}`],
+        ["least sheet", `${w(s.lengthMin)} by ${w(s.widthMin)}`],
+        ["tee to tee", `${w(2 * s.teeFromMiddle)}`],
+        ["back line", `${w(s.backLine)} from the tee`],
+        ["hog line", `${w(s.hogLine)} from the tee`],
+        ["house", `circles of ${w(twelve)}, ${w(eight)} and ${w(four)} radius, a button of ${w(button)}`],
+        ["courtesy line", s.courtesy === null ? "none" : `${w(s.courtesy.outsideHog)} outside each hog line`],
       ];
     }
     case "football": {

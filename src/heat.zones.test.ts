@@ -29,7 +29,7 @@ const points = (id: ZoneSetId, n = 1500, more: Partial<ZoneContext> = {}) => {
 
 describe("every zone set", () => {
   it("is listed with its sports and its source, and the registry matches the ids", () => {
-    expect(ZONE_SET_IDS).toHaveLength(10);
+    expect(ZONE_SET_IDS).toHaveLength(11);
     for (const id of ZONE_SET_IDS) {
       expect(ZONE_SETS[id].sports.length).toBeGreaterThan(0);
       expect(ZONE_SETS[id].title).not.toBe("");

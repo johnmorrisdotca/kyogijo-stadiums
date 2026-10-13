@@ -102,6 +102,14 @@ function loadGame(sport) {
 }
 loadGame(state.sport);
 
+/** A curling team's score in each end and the hammer, while the total is still the made-up game's: an edited score has no ends to show. */
+function curlingExtras(role, score) {
+  const game = GAMES.curling;
+  const ends = role === "away" ? game.awayEnds : game.homeEnds;
+  const total = ends.reduce((sum, value) => sum + (typeof value === "number" ? value : 0), 0);
+  return score === total ? { ends, ...(game.hammer === role ? { hammer: true } : {}) } : {};
+}
+
 /** What the state asks the package to draw. */
 function optionsFor(s, forCode = false) {
   const o = { sport: s.sport, orientation: s.orientation, language: language.lang };
@@ -131,6 +139,7 @@ function optionsFor(s, forCode = false) {
     const team = (t, placeholder) => {
       const out = { name: t.name, abbr: t.abbr, score: /^-?\d+$/.test(t.score) ? Number(t.score) : t.score, color: t.color };
       if (s.sport === "soccer" && /^\d+$/.test(t.pens ?? "")) out.penalties = Number(t.pens);
+      if (s.sport === "curling") Object.assign(out, curlingExtras(t === s.away ? "away" : "home", out.score));
       if (t.logo === "emblem") out.logo = forCode ? placeholder : EMBLEMS[t.emblem];
       else if (t.logo === "url" && t.url) out.logo = t.url;
       return out;
@@ -531,7 +540,7 @@ $("embed-download").addEventListener("click", () => {
 // ----- The examples.
 const team = (sport, role, score) => {
   const base = TEAMS[FAMILIES[sport]][role];
-  return { name: language.lang === "ja" ? TEAMS_JA[FAMILIES[sport]][role] : base.name, abbr: base.abbr, color: base.color, logo: EMBLEMS[base.emblem], score };
+  return { name: language.lang === "ja" ? TEAMS_JA[FAMILIES[sport]][role] : base.name, abbr: base.abbr, color: base.color, logo: EMBLEMS[base.emblem], score, ...(sport === "curling" ? curlingExtras(role, score) : {}) };
 };
 const withPens = (t, pens) => (pens === undefined ? t : { ...t, penalties: pens });
 const gameOf = (sport, extra = {}) => ({ sport, away: withPens(team(sport, "away", GAMES[sport].away), GAMES[sport].awayPens), home: withPens(team(sport, "home", GAMES[sport].home), GAMES[sport].homePens), status: GAMES[sport].status, competition: GAMES[sport].competition, date: GAMES[sport].date, language: language.lang, style: "none", ...extra });

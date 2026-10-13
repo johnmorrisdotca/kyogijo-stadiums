@@ -6,6 +6,13 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **Curling** (`sport: "curling"`, [docs/curling.md](./docs/curling.md)). A sheet to scale from R1 of World Curling's Rules of Curling (1 September 2026) and Rule 3 of Curling Canada's Rules of Curling for General Play (2022 to 2026): a house at each end, the tee, back, hog and centre lines, the hacks and, in World Curling's, the hack and courtesy lines; tall by default, with the far house at the top. `league` is `wcf` (the default, in metres) or `curling-canada` (feet); `sheet` sets the length and the width within the rules' range, the colours of the rings, the ice's pebble, the shaded free guard zone and a part of the sheet (`half`, `house`).
+- **A curling score**: each team's `ends` and `hammer`, a board on the ice (the ends down a tall sheet, across a wide one) and a badge with the hammer, the statuses `end-6` and `extra-end`, and the ends and the hammer in the description.
+- **`curlingStones` and `curlingScore`** (`@johnmorrisdotca/kyogijo/charts`): the stones of an end on the house, judged by the rules (out of play, in the house, counting, the shot rock, a blank end), with the zone set `curling-house`, the frame `curling` (feet from the button) and the stone's size (`STONE_DIAMETER`, from 36 inches round).
+- The league `curling-canada`, the sources `wcf-rules` and `curling-canada-rules`, English and Japanese words for all of it, and a gallery page.
+
 ### Fixed
 
 - **MLB bases are 18 inches square from 2023.** `MLB.baseSize` was 15 inches; Rule 2.03 of the Official Baseball Rules has 18 inches from the 2023 season. The size is now a marking in `rulesFor("mlb", year)` (`baseSize`, 15 inches before 2023, 18 from 2023, with `eraChanges("mlb")` listing it), so the field is drawn with 18-inch bases by default and 15-inch ones for a season before 2023.

@@ -2,7 +2,7 @@
 // NHL's slot and home plate, the baseball field's spray zones and Retrosheet's sectors, and the football pass grid. Each zone is a shape on the
 // surface (in the drawing's own frame, feet) and a test of whether a point lies in it. The definitions are written down in docs/sources.md; where
 // the sport has no single definition (the NHL's slot) the one used here is ours, built on the rink's markings, and says so.
-import { MLB, NBA, NHL, FEET_PER_METRE, threePointJoin } from "./geometry.ts";
+import { CURLING, MLB, NBA, NHL, FEET_PER_METRE, threePointJoin } from "./geometry.ts";
 import { RETROSHEET_ZONES } from "./frames.providers.ts";
 import { num } from "./format.ts";
 import type { Outline } from "./outline.ts";
@@ -14,7 +14,7 @@ import type { Sport, SurfaceOptions } from "./types.ts";
 import { lengthUnit } from "./common.ts";
 
 /** The zone sets. */
-export type ZoneSetId = "soccer-positional" | "soccer-thirds" | "soccer-channels" | "soccer-18" | "nba-shot" | "nhl-slot" | "nhl-home-plate" | "baseball-spray" | "baseball-retrosheet" | "football-pass";
+export type ZoneSetId = "soccer-positional" | "soccer-thirds" | "soccer-channels" | "soccer-18" | "nba-shot" | "nhl-slot" | "nhl-home-plate" | "baseball-spray" | "baseball-retrosheet" | "football-pass" | "curling-house";
 
 type Pt = readonly [number, number];
 
@@ -70,6 +70,7 @@ export const ZONE_SETS: Readonly<Record<ZoneSetId, { sports: readonly Sport[]; t
   "nhl-home-plate": { sports: ["nhl"], title: "Home plate and the rest of the offensive zone", source: "docs/sources.md#zone-sets" },
   "baseball-spray": { sports: ["mlb"], title: "Spray zones: pull, centre, opposite by infield and outfield", source: "docs/sources.md#zone-sets" },
   "baseball-retrosheet": { sports: ["mlb"], title: "Retrosheet hit locations as the nearest sector", source: "https://www.retrosheet.org/location.htm" },
+  "curling-house": { sports: ["curling"], title: "The house: the button, the 4-, 8- and 12-foot rings, and the free guard zone", source: "docs/sources.md#zone-sets" },
   "football-pass": { sports: ["nfl", "cfl", "ifaf"], title: "Pass grid: short and deep by left, middle and right", source: "https://nflreadr.nflverse.com/articles/dictionary_pbp.html" },
 });
 
@@ -374,6 +375,44 @@ function footballPass(ctx: ZoneContext): ZoneShape[] {
   return out;
 }
 
+/**
+ * A curling sheet's house at each end, from R1 of the rules: the button and the 4-, 8- and 12-foot circles round the tee, and the free guard zone
+ * (R6; Rule 12 of Curling Canada), the ground between the tee line and the hog line outside the house. The rings are the circles' radii, so a stone
+ * is in a ring by its centre. The zones do not overlap; a stone elsewhere is in none.
+ */
+function curlingZones(ctx: ZoneContext): ZoneShape[] {
+  const L = ctx.outline.box.w;
+  const W = ctx.outline.box.h;
+  const w = ctx.words;
+  const cy = W / 2;
+  const [twelve, eight, four, button] = [CURLING.rings.twelve, CURLING.rings.eight, CURLING.rings.four, CURLING.rings.button];
+  const both = ctx.end === "both";
+  const ends: ("left" | "right")[] = ctx.end === "both" ? ["left", "right"] : [ctx.end];
+  const out: ZoneShape[] = [];
+  for (const end of ends) {
+    const left = end === "left";
+    const tee = left ? L / 2 - CURLING.teeFromMiddle : L / 2 + CURLING.teeFromMiddle;
+    // The house is on the tee's far side from the middle of the sheet: a distance towards the middle is positive.
+    const towards = (x: number): number => (left ? x - tee : tee - x);
+    const sign = left ? 1 : -1;
+    const tag = (id: string): string => (both ? `${id}-${end}` : id);
+    const name = (n: string): string => (both ? fill(w.atEnd, { name: n, end: left ? w.endLeft : w.endRight }) : n);
+    const circle = (r: number): string => `M${num(tee - r)} ${num(cy)}a${num(r)} ${num(r)} 0 1 0 ${num(2 * r)} 0a${num(r)} ${num(r)} 0 1 0 ${num(-2 * r)} 0Z`;
+    const dist = (x: number, y: number): number => Math.hypot(x - tee, y - cy);
+    const hog = tee + sign * CURLING.hogLine;
+    // The guard zone: the rectangle from the tee line to the hog line, without the half of the 12-foot circle that lies in it.
+    const guardD = `M${num(tee)} 0H${num(hog)}V${num(W)}H${num(tee)}V${num(cy + twelve)}A${num(twelve)} ${num(twelve)} 0 0 ${left ? 0 : 1} ${num(tee)} ${num(cy - twelve)}Z`;
+    out.push(
+      { id: tag("guard-zone"), name: name(w.guardZone), d: guardD, label: [tee + (sign * (twelve + CURLING.hogLine)) / 2, cy], room: [CURLING.hogLine - twelve, 8], end, has: (x, y) => towards(x) >= 0 && towards(x) <= CURLING.hogLine && dist(x, y) > twelve },
+      { id: tag("twelve-foot"), name: name(w.houseTwelve), d: circle(twelve) + circle(eight), label: [tee, cy - (twelve + eight) / 2], room: [3, 1.6], end, has: (x, y) => dist(x, y) > eight && dist(x, y) <= twelve },
+      { id: tag("eight-foot"), name: name(w.houseEight), d: circle(eight) + circle(four), label: [tee, cy - (eight + four) / 2], room: [3, 1.6], end, has: (x, y) => dist(x, y) > four && dist(x, y) <= eight },
+      { id: tag("four-foot"), name: name(w.houseFour), d: circle(four) + circle(button), label: [tee, cy - (four + button) / 2], room: [3, 1.2], end, has: (x, y) => dist(x, y) > button && dist(x, y) <= four },
+      { id: tag("button"), name: name(w.houseButton), d: circle(button), label: [tee, cy], room: [1, 1], end, has: (x, y) => dist(x, y) <= button },
+    );
+  }
+  return out;
+}
+
 /** The zones of a set on the surface the context describes. Throws for a set that is not for the surface's sport. */
 export function buildZoneSet(id: ZoneSetId, ctx: ZoneContext): ZoneSet {
   if (!Object.prototype.hasOwnProperty.call(ZONE_SETS, id)) throw new RangeError(`Unknown zone set "${String(id)}": use one of ${ZONE_SET_IDS.join(", ")}`);
@@ -383,6 +422,6 @@ export function buildZoneSet(id: ZoneSetId, ctx: ZoneContext): ZoneSet {
     const { zones, which } = retrosheetZones(ctx);
     return { id, zones, which };
   }
-  const zones = id.startsWith("soccer") ? soccerZones(id, ctx) : id === "nba-shot" ? nbaZones(ctx) : id.startsWith("nhl") ? nhlZones(id, ctx) : id === "baseball-spray" ? baseballSpray(ctx) : footballPass(ctx);
+  const zones = id.startsWith("soccer") ? soccerZones(id, ctx) : id === "nba-shot" ? nbaZones(ctx) : id.startsWith("nhl") ? nhlZones(id, ctx) : id === "baseball-spray" ? baseballSpray(ctx) : id === "curling-house" ? curlingZones(ctx) : footballPass(ctx);
   return { id, zones, which: lastWins(zones) };
 }

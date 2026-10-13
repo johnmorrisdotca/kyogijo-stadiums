@@ -138,6 +138,13 @@ The links John has sent, and the ones the package's figures were read from: what
 - **Not used:** [sportypy](https://github.com/sportsdataverse/sportypy), [sportyR](https://github.com/sportsdataverse/sportyR) and [hockey_rink](https://github.com/the-bucketless/hockey_rink) (items 9 and 11, GPL-3.0) for the frames: none of their code or data files was read or copied. [bdilday/GeomMLBStadiums](https://github.com/bdilday/GeomMLBStadiums) was not used for the MLBAM frame: the figures come from the pages named in sources.md.
 - **Units:** the rulebook's own unit for each surface (`SURFACE_UNITS`) follows the sportypy and sportyR idea (item 9) that each surface keeps its rulebook's unit, written again from the rulebooks.
 
+## Curling
+
+- **What was read:** the two rule books in [sources.md](./sources.md#curling) (World Curling's *Rules of Curling and Rules of Competition* of 1 September 2026, and Curling Canada's *Rules of Curling for General Play*, 2022 to 2026), for every figure and every rule the code applies. Both are the federations' own documents; only dimensions and rules are used, no text or diagram of either is copied.
+- **Checked against (MIT):** [`@sportsdataverse/sporty`](https://github.com/sportsdataverse/sdvplot-js) (item 10), whose generated table of curling dimensions (`packages/sporty/src/specs/curling.ts`, commit 01df077c52a09b99cf0e830c5969cf5ddbdb458f, read on 2026-10-13) was read for its numbers only, after ours were written from the rule books. Where ours differ, and why, is in [Curling](./curling.md#where-it-differs-from-sportsdataversesporty).
+- **Not used:** sporty's code, and sportypy's and sportyR's (GPL-3.0), which were not read for this.
+- **Ours:** the scoring of an end and the removal of the stones that are out of play (`curlingScore`), the zone set, the board, the frame, the colours of the house and of the stones.
+
 ## The soccer pitch and its providers
 
 - **What was read:** Law 1 of the IFAB Laws of the Game, the FIFA Futsal Laws, UEFA's Stadium Infrastructure Regulations, the MLS, NCAA and Premier League documents and the FA's, and each provider's own pages, all named in [sources.md](./sources.md#soccer): for facts only. No text, table or diagram of any is copied.

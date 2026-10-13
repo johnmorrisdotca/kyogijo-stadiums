@@ -21,8 +21,8 @@ describe("units", () => {
     expect(() => lengthsIn({ a: 1 }, "furlong")).toThrow(/Unknown unit/);
   });
 
-  it("keep each surface's rulebook unit: NFL and CFL in yards, NHL, NBA and baseball in feet, soccer in metres", () => {
-    expect(SURFACE_UNITS).toEqual({ nfl: "yd", cfl: "yd", ifaf: "yd", nhl: "ft", nba: "ft", mlb: "ft", soccer: "m" });
+  it("keep each surface's rulebook unit: NFL and CFL in yards, NHL, NBA and baseball in feet, soccer and curling in metres", () => {
+    expect(SURFACE_UNITS).toEqual({ nfl: "yd", cfl: "yd", ifaf: "yd", nhl: "ft", nba: "ft", mlb: "ft", soccer: "m", curling: "m" });
     expect(FROM_MAIN).toBe(SURFACE_UNITS);
   });
 

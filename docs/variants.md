@@ -1,8 +1,8 @@
 # League variants
 
-`league` in the options draws a surface as one league's rulebook marks it; `sport` names the family (`nba` for basketball, `nhl` for hockey, `nfl`, `cfl` or `ifaf` for football, `mlb` for baseball and softball). This page is made from `src/leagues/` by `pnpm docs:make`; a test holds it to them. Each figure is the rulebook's, in its own unit, and each league's sources, with the edition and the address read on 2026-10-13, are listed under its table. What a figure is and where it is ours is in [sources.md](./sources.md#league-variants); what could not be cited is in [references.md](./references.md#league-variants-not-drawn).
+`league` in the options draws a surface as one league's rulebook marks it; `sport` names the family (`nba` for basketball, `nhl` for hockey, `nfl`, `cfl` or `ifaf` for football, `mlb` for baseball and softball, `curling` for a curling sheet). This page is made from `src/leagues/` by `pnpm docs:make`; a test holds it to them. Each figure is the rulebook's, in its own unit, and each league's sources, with the edition and the address read on 2026-10-13, are listed under its table. What a figure is and where it is ours is in [sources.md](./sources.md#league-variants); what could not be cited is in [references.md](./references.md#league-variants-not-drawn).
 
-A `year` draws a league's markings of that season only where a source dates a change (the history under each table); for any other league it is ignored, and the drawing is of the rulebook as it is now. The sport's own league (the NBA, the NHL, the NFL, the CFL, the IFAF, MLB) keeps the history of [`year`](./eras.md).
+A `year` draws a league's markings of that season only where a source dates a change (the history under each table); for any other league it is ignored, and the drawing is of the rulebook as it is now. The sport's own league (the NBA, the NHL, the NFL, the CFL, the IFAF, MLB, World Curling) keeps the history of [`year`](./eras.md).
 
 ## Basketball
 
@@ -155,4 +155,18 @@ Sources:
 - `nfhs-softball`: NFHS Softball Rules, Rule 1-1 field diagram, and the 2026 comparison of USA Softball, NCAA and NFHS rules, National Federation of State High School Associations, 2025 diagram; comparison revised 1 January 2026. <https://assets.nfhs.org/umbraco/media/881555/softball_field_diagram_24.pdf>
 - `usa-softball-2026`: Official Rules of Softball, Rule 2 Section 1 (Official Distance Table), Section 3 and the Dimension Table, USA Softball, 2026. <https://www.usasoftball.com/wp-content/uploads/sites/120/2026/01/USAS-2026-Rulebook_Digital.pdf>
 - `wbsc-slowpitch`: WBSC Slow Pitch Softball rules, Appendix 1 F Quick Reference Table, World Baseball Softball Confederation, 2026-2029 (released March 2026). <https://static.wbsc.org/uploads/federations/0/cms/documents/5f45c5e4-54ed-3659-8116-4d7cb5051f69.pdf>
+
+## Curling
+
+`sport: "curling"`
+
+| `league` | Name | 日本語 | Key figures |
+| --- | --- | --- | --- |
+| `wcf` (the sport's own) | World Curling sheet | ワールドカーリングのシート | sheet 45.72 m by 4.75 m; least sheet 44.501 m by 4.42 m; tee to tee 34.75 m; back line 1.829 m from the tee; hog line 6.401 m from the tee; house circles of 1.829 m, 1.219 m and 0.61 m radius, a button of 0.152 m; courtesy line 1.219 m outside each hog line |
+| `curling-canada` | Curling Canada sheet | カーリング・カナダのシート | sheet 150 ft by 15 ft 7 in; least sheet 146 ft by 14 ft 2 in; tee to tee 114 ft; back line 6 ft from the tee; hog line 21 ft from the tee; house circles of 6 ft, 4 ft and 2 ft radius, a button of 6 in; courtesy line none |
+
+Sources:
+
+- `wcf-rules`: The Rules of Curling and Rules of Competition, R1 Sheet, R2 Stones, R6 Free Guard Zone, R12 Scoring and the definitions, World Curling, 1 September 2026. <https://www.worldcurling.org/wp-content/uploads/2026/10/Rules-2026_Clean.pdf>
+- `curling-canada-rules`: Rules of Curling for General Play, Rule 3 Sheet of Ice, 4 Stones, 12 Free Guard Zone and 13 Stones in Play and Scoring, Curling Canada, September 2022 to August 2026. <https://apollocurling.com/docs/Rule-Book-2022_General-Play_ENG_CC.pdf>
 

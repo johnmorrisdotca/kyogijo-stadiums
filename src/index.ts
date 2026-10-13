@@ -9,7 +9,7 @@ export type { Bandwidth, ContourLayer, HeatBase, HeatBins, HeatDatum, HeatLabels
 export type { ArrowsLayer, Comet, Layer, LayerBase, LayerKind, LayerTeam, LineDatum, LineStyle, LinesLayer, MarkDatum, MarkShape, OutcomeStyle, Paint, PointDatum, PointStyle, PointsLayer, Scale, TableOptions, TextDatum, TextLayer, TextStyle } from "./layers.types.ts";
 export { KYOGIJO_STRINGS } from "./strings.ts";
 export type { KyogijoWords } from "./strings.ts";
-export { KYOGIJO_HEAT_STYLE, KYOGIJO_STYLE } from "./style.ts";
+export { KYOGIJO_CURLING_STYLE, KYOGIJO_HEAT_STYLE, KYOGIJO_STYLE } from "./style.ts";
 export { COURT_THEMES } from "./themes.ts";
 export { abbreviate, capitals, fitLines, textWidth } from "./text.ts";
 export type { FittedLines } from "./text.ts";

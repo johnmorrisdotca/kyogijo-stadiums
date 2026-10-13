@@ -10,6 +10,7 @@ import { soccerSpec } from "./surfaces/soccer-spec.ts";
 import { roundedRect } from "./surfaces/surface.ts";
 import { feetFence, lengthUnit } from "./common.ts";
 import { num } from "./format.ts";
+import { sheetFor } from "./sheet.ts";
 import type { SurfaceOptions } from "./types.ts";
 
 /** A surface's outline as a path, with the box round it. */
@@ -40,7 +41,7 @@ function inPolygon(points: readonly (readonly [number, number])[], x: number, y:
 }
 
 /** The outline of the surface the options draw. */
-export function outlineOf(o: Pick<SurfaceOptions, "sport" | "park" | "fence" | "units" | "pitch" | "league" | "year">): Outline {
+export function outlineOf(o: Pick<SurfaceOptions, "sport" | "park" | "fence" | "units" | "pitch" | "league" | "year" | "sheet">): Outline {
   const { sport, league } = chooseLeague(o);
   switch (sport) {
     case "nfl":
@@ -86,6 +87,10 @@ export function outlineOf(o: Pick<SurfaceOptions, "sport" | "park" | "fence" | "
     case "soccer": {
       const spec = soccerSpec(o.pitch, o.units === undefined ? "m" : lengthUnit(o));
       return rect(spec.length * FEET_PER_METRE, spec.width * FEET_PER_METRE);
+    }
+    case "curling": {
+      const { spec } = sheetFor(o);
+      return rect(spec.length, spec.width);
     }
     default: {
       // A surface added later with one size is a rectangle until it says otherwise.

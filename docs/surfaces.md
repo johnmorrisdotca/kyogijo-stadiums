@@ -1,6 +1,6 @@
 # The surfaces
 
-Seven surfaces, each drawn to scale from its rulebook. Every dimension is kept in feet in the code (`@johnmorrisdotca/kyogijo/geometry`) and can be had in any unit (see [Units](./units.md)), and each is cited in [docs/sources.md](./sources.md).
+Eight surfaces, each drawn to scale from its rulebook. Every dimension is kept in feet in the code (`@johnmorrisdotca/kyogijo/geometry`) and can be had in any unit (see [Units](./units.md)), and each is cited in [docs/sources.md](./sources.md).
 
 | `sport` | Surface | Size | Drawn |
 | --- | --- | --- | --- |
@@ -11,8 +11,9 @@ Seven surfaces, each drawn to scale from its rulebook. Every dimension is kept i
 | `nba` | NBA court | 94 by 50 feet | 16-foot keys, free-throw circles, three-point lines of 23 feet 9 inches and 22 feet in the corners, restricted areas, backboards and rims, the small marks |
 | `soccer` | Soccer pitch | 105 by 68 m, or any size, or a preset | the halfway line and centre circle, penalty areas, goal areas, marks, arcs, corner arcs and flags, the marks off the field, goals |
 | `mlb` | Baseball field | 90-foot bases, a fence from the park's distances | foul lines, the infield cut by a 95-foot arc round the mound, bases, the plate, batter's boxes, the running lane, warning track and fence |
+| `curling` | Curling sheet | 150 by 15 feet 7 inches (45.72 by 4.75 m), 146 to 150 feet long and 14 feet 2 inches to 15 feet 7 inches wide by the rules | a house at each end (the 12-, 8- and 4-foot circles and the button), the tee, back, hog and centre lines, the hacks, and World Curling's hack and courtesy lines; tall by default ([Curling](./curling.md)) |
 
-`league` draws a surface as one league's rulebook marks it, `sport` naming the family (`drawKyogijo({ sport: "nba", league: "fiba" })`): the WNBA, FIBA, the NCAA, the IIHF, the AHL, the CHL, high school, Little League, PONY and softball, in [docs/variants.md](./variants.md).
+`league` draws a surface as one league's rulebook marks it, `sport` naming the family (`drawKyogijo({ sport: "nba", league: "fiba" })`): the WNBA, FIBA, the NCAA, the IIHF, the AHL, the CHL, high school, Little League, PONY, softball and Curling Canada, in [docs/variants.md](./variants.md).
 
 Lines are drawn a little thicker than they are painted, as broadcast graphics do, so that they stay in view at a small size; `exactLines: true` draws them at their true widths.
 

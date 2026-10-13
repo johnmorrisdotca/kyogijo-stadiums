@@ -7,8 +7,8 @@
 const MAIN = "@johnmorrisdotca/kyogijo";
 
 const UNIT_WORDS = { ft: "feet", yd: "yards", m: "metres", cm: "centimetres", in: "inches", mm: "millimetres", px: "pixels", "tenth-ft": "tenths of a foot", percent: "percent of the pitch", fraction: "fractions of the pitch" };
-const SPORT_NAMES = { nfl: "NFL", cfl: "CFL", ifaf: "IFAF", nhl: "NHL", nba: "NBA", mlb: "MLB", soccer: "soccer" };
-const ENDS = { fixed: "fixed to the surface", shooter: "the basket attacked", none: "none" };
+const SPORT_NAMES = { nfl: "NFL", cfl: "CFL", ifaf: "IFAF", nhl: "NHL", nba: "NBA", mlb: "MLB", soccer: "soccer", curling: "curling" };
+const ENDS = { fixed: "fixed to the surface", shooter: "the basket or house attacked", none: "none" };
 const cell = (text) => String(text).replace(/\|/g, "\\|").replace(/\n/g, " ");
 const num = (n) => String(Math.round(n * 100) / 100);
 const table = (head, rows) => [`| ${head.join(" | ")} |`, `| ${head.map(() => "---").join(" | ")} |`, ...rows.map((row) => `| ${row.map(cell).join(" | ")} |`)].join("\n");
@@ -39,7 +39,7 @@ export function unitsTable(lib) {
   const WORDS = { ft: "feet", yd: "yards", m: "metres", in: "inches", cm: "centimetres", mm: "millimetres" };
   const rows = SPORTS.map((sport) => [`\`${sport}\``, "the sport's own", SPORT_NAMES[sport], `\`${SURFACE_UNITS[sport]}\` (${WORDS[SURFACE_UNITS[sport]]})`]);
   // A football league serves the NFL's, the CFL's and the IFAF's field alike, so it is listed once, under all three.
-  const FAMILIES = { nba: "`nba`", nhl: "`nhl`", nfl: "`nfl`, `cfl`, `ifaf`", mlb: "`mlb`" };
+  const FAMILIES = { nba: "`nba`", nhl: "`nhl`", nfl: "`nfl`, `cfl`, `ifaf`", mlb: "`mlb`", curling: "`curling`" };
   for (const [sport, label] of Object.entries(FAMILIES)) for (const league of LEAGUES[sport]) if (!league.builtIn) rows.push([label, `\`${league.id}\``, league.name.en, `\`${league.unit}\` (${WORDS[league.unit]})`]);
   return table(["`sport`", "`league`", "Surface", "Rulebook unit"], rows);
 }
@@ -62,7 +62,7 @@ export function limitsTable(lib) {
     [
       ["Sports", String(SPORTS.length), "`SPORTS`"],
       ["Soccer pitches and providers", `${Object.keys(SOCCER_PITCHES).length} presets, ${providers} providers (${providers * (providers - 1)} maps between them, each landmark to its landmark)`, "`SOCCER_PITCHES`, `SOCCER_PROVIDERS`"],
-      ["League variants", `${leagues} leagues of 4 families, besides each sport's own`, "`LEAGUES`"],
+      ["League variants", `${leagues} leagues of 5 families, besides each sport's own`, "`LEAGUES`"],
       ["Ballparks", `${PARK_IDS.length} (${count((p) => p.league === "MLB" && p.status !== "past")} current MLB, ${count((p) => p.league === "MLB" && p.status === "past")} past MLB, ${count((p) => p.league === "NPB" && p.status === "current")} NPB home parks, ${count((p) => p.league === "NPB" && p.status !== "current")} other NPB grounds)`, "`PARKS`"],
       ["Grounds", String(GROUND_IDS.length), "`GROUNDS`"],
       ["Places on the atlas", String(PLACES.length), "`PLACES`"],
@@ -72,7 +72,7 @@ export function limitsTable(lib) {
       ["A logo", "an https or relative address, an image data address, or SVG text up to 200,000 characters", "`safeLogo`"],
       ["A name", "any length: it is set on one line or two, in the biggest size that fits its place", "`fitLines`"],
       ["A layer's marks", "1,000 points add under 70 kB; 10,000 draw in under 250 ms", "`drawKyogijo`"],
-      ["A drawing's size", "under 22 kB for a football field, 15 kB for a soccer pitch with a score, 14 kB for a rink or a court, 17 kB for a ballpark, each with its 8 kB stylesheet (a test holds each)", "`drawKyogijo`"],
+      ["A drawing's size", "under 22 kB for a football field, 15 kB for a soccer pitch with a score, 14 kB for a rink or a court, 17 kB for a ballpark, 17.5 kB for a curling sheet with its board, each with its 8 kB stylesheet (a test holds each)", "`drawKyogijo`"],
     ],
   );
 }

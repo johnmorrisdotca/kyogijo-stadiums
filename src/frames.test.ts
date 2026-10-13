@@ -313,8 +313,8 @@ describe("the registry", () => {
       expect(frame.title.length, frame.name).toBeGreaterThan(5);
       expect(frame.origin.length, frame.name).toBeGreaterThan(3);
       expect(["up", "down"]).toContain(frame.yDirection);
-      // A soccer pitch has any size within the Laws, so its frames are variable; every other surface has one.
-      expect(frame.size).toBe(frame.sport === "soccer" ? "variable" : "fixed");
+      // A soccer pitch has any size within the Laws and a curling sheet 146 to 150 feet, so their frames are variable; every other surface has one.
+      expect(frame.size).toBe(frame.sport === "soccer" || frame.sport === "curling" ? "variable" : "fixed");
       expect(frame.x[0]).toBeLessThan(frame.x[1]);
       expect(frame.y[0]).toBeLessThan(frame.y[1]);
       expect(frame.source.length).toBeGreaterThan(3);
@@ -324,12 +324,12 @@ describe("the registry", () => {
   it("says which way y grows, and the landmarks agree", () => {
     for (const frame of Object.values(FRAMES)) {
       if (frame.name === "retrosheet" || frame.name === "mlbam") continue;
-      const size = frame.size === "variable" ? { length: 105, width: 68, unit: "m" as const } : undefined;
+      const size = frame.size === "variable" ? (frame.sport === "curling" ? { length: 150, width: 15.5, unit: "ft" as const } : { length: 105, width: 68, unit: "m" as const }) : undefined;
       const [a, b] = [frame.y[0], frame.y[1]].map((y) => toSurface([[frame.x[0], y]], { from: frame, size }));
-      const along = frame.landmarks as { swap?: boolean };
-      // On the surface, y down is the page's down: a frame whose y goes up has its larger y at a smaller surface y (or, swapped, at a smaller surface x).
+      const along = (typeof frame.landmarks === "function" ? frame.landmarks({ length: 105, width: 68 }) : frame.landmarks) as { swap?: boolean };
+      // On the surface, y down is the page's down: a frame whose y goes up has its larger y at a smaller surface y (or, swapped, at a smaller surface x), one whose y goes down at a larger.
       const index = along.swap === true ? 0 : 1;
-      expect(a[0][index] < b[0][index], frame.name).toBe(frame.yDirection === "down" ? along.swap !== true : false);
+      expect(a[0][index] < b[0][index], frame.name).toBe(frame.yDirection === "down");
     }
     expect(toSurface([[0, 0]], { from: "mlbam" })[0][1]).toBeLessThan(toSurface([[0, 100]], { from: "mlbam" })[0][1]);
   });

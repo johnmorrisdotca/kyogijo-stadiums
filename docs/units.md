@@ -8,6 +8,7 @@ Each surface keeps the unit its rulebook states its figures in. The drawing itse
 | `nhl`, `nba` | feet (`ft`) | the rulebooks give feet and inches |
 | `mlb` | feet (`ft`) | the Official Baseball Rules give feet |
 | `soccer` | metres (`m`) | the Laws of the Game give metres, with yards beside them |
+| `curling` | metres (`m`) | World Curling's rules give metres with feet beside them; Curling Canada's give feet first, so its league has feet |
 | NPB parks (`parkUnit`) | metres (`m`) | the parks of Japan publish their fence in metres; `PARKS` holds them in feet, converted once at 0.3048 metres to the foot |
 
 `SURFACE_UNITS` is that table, and each league keeps the unit of its own rulebook (a FIBA court in metres, an IIHF rink in metres):
@@ -22,6 +23,7 @@ Each surface keeps the unit its rulebook states its figures in. The drawing itse
 | `nba` | the sport's own | NBA | `ft` (feet) |
 | `mlb` | the sport's own | MLB | `ft` (feet) |
 | `soccer` | the sport's own | soccer | `m` (metres) |
+| `curling` | the sport's own | curling | `m` (metres) |
 | `nba` | `wnba` | WNBA basketball court | `ft` (feet) |
 | `nba` | `fiba` | FIBA basketball court | `m` (metres) |
 | `nba` | `ncaa-men` | NCAA men's basketball court | `ft` (feet) |
@@ -58,6 +60,7 @@ Each surface keeps the unit its rulebook states its figures in. The drawing itse
 | `mlb` | `fastpitch` | USA Softball fast-pitch field | `ft` (feet) |
 | `mlb` | `slowpitch` | USA Softball slow-pitch field | `ft` (feet) |
 | `mlb` | `slowpitch-wbsc` | WBSC slow-pitch softball field | `ft` (feet) |
+| `curling` | `curling-canada` | Curling Canada sheet | `ft` (feet) |
 <!-- /made:units -->
 
 The table is made from the code by `pnpm docs:make`, and a test holds it to it. The units are `ft`, `in`, `yd`, `m`, `cm` and `mm`; anything else is an error and not feet.

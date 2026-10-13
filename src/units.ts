@@ -21,7 +21,7 @@ export const FEET_PER: Readonly<Record<Unit, number>> = Object.freeze({
 
 /**
  * The unit each surface's rulebook states its dimensions in: the NFL's and the CFL's fields in yards (and the IFAF's, which
- * follows them), the NHL's rink, the NBA's court and the baseball field in feet, a soccer pitch in metres (the Laws'). A Japanese park's fence is measured in
+ * follows them), the NHL's rink, the NBA's court and the baseball field in feet, a soccer pitch in metres (the Laws'), a curling sheet in metres (World Curling's rules give metres with feet beside them; Curling Canada's give feet first, and its league `curling-canada` has feet). A Japanese park's fence is measured in
  * metres and converted once: see `parkUnit`.
  */
 export const SURFACE_UNITS: Readonly<Record<Sport, Unit>> = Object.freeze({
@@ -32,6 +32,7 @@ export const SURFACE_UNITS: Readonly<Record<Sport, Unit>> = Object.freeze({
   nba: "ft",
   mlb: "ft",
   soccer: "m",
+  curling: "m",
 });
 
 /** True when `unit` is one of the six. */

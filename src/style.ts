@@ -107,5 +107,20 @@ export const KYOGIJO_HEAT_STYLE = `
 .kyogijo .ky-lg-t{fill:var(--ky-plate-ink);font-family:var(--ky-font);font-weight:700}
 .kyogijo .ky-lg-k{stroke:var(--ky-plate-ink);fill:none}`.trim();
 
+
+/**
+ * The rules of a curling sheet and its board: the ice and the lines, the house in its colours (`--ky-rg-o`, `-m`, `-i` and `-b` for the 12-foot band, the 8-foot,
+ * the 4-foot and the button), the hacks, the free guard zone, the pebble, the hammer and the board's grid. Kept apart so that a drawing of another sport does not carry
+ * them: a curling drawing writes them in after the base rules, and `KYOGIJO_STYLE` has them for a page.
+ */
+export const KYOGIJO_CURLING_STYLE = `
+:where(.kyogijo[data-sport=curling]){--ky-surface:#eaf3f9;--ky-apron:#cfd8de;--ky-boards:#8d98a0;--ky-line:#23292d;--ky-rg-o:#2a5db0;--ky-rg-m:#fff;--ky-rg-i:#c8372d;--ky-rg-b:#fff;--ky-hog:#c8372d;--ky-hack:#3a4046;--ky-pebble:rgba(110,140,165,.4);--ky-fgz:rgba(42,93,176,.1)}
+@media (prefers-color-scheme:dark){:where(html:not([data-theme=light]) .kyogijo[data-sport=curling]:not([data-theme=light])){--ky-surface:#8fa6b7;--ky-apron:#1a2025;--ky-boards:#4b5156;--ky-line:#11171b;--ky-rg-o:#3f6cc0;--ky-rg-m:#dfe8ef;--ky-rg-i:#c9473e;--ky-rg-b:#dfe8ef;--ky-hog:#c9473e;--ky-hack:#161b1f;--ky-fgz:rgba(20,40,90,.18)}}
+:where(html[data-theme=dark] .kyogijo[data-sport=curling],.kyogijo[data-theme=dark][data-sport=curling]){--ky-surface:#8fa6b7;--ky-apron:#1a2025;--ky-boards:#4b5156;--ky-line:#11171b;--ky-rg-o:#3f6cc0;--ky-rg-m:#dfe8ef;--ky-rg-i:#c9473e;--ky-rg-b:#dfe8ef;--ky-hog:#c9473e;--ky-hack:#161b1f;--ky-fgz:rgba(20,40,90,.18)}
+.kyogijo .ky-rg-o{fill:var(--ky-rg-o)}.kyogijo .ky-rg-m{fill:var(--ky-rg-m)}.kyogijo .ky-rg-i{fill:var(--ky-rg-i)}.kyogijo .ky-rg-b{fill:var(--ky-rg-b)}
+.kyogijo .ky-hog{fill:var(--ky-hog)}.kyogijo .ky-hack{fill:var(--ky-hack)}.kyogijo .ky-fgz{fill:var(--ky-fgz)}.kyogijo pattern circle{fill:var(--ky-pebble)}
+.kyogijo .ky-hammer{fill:var(--ky-plate-ink)}.kyogijo .ky-hammer-in{fill:var(--ky-plate)}.kyogijo .ky-grid{stroke:var(--ky-plate-ink);opacity:.22}
+.kyogijo .ky-badge-hammer-left .ky-hammer{fill:var(--ky-left-ink)}.kyogijo .ky-badge-hammer-left .ky-hammer-in{fill:var(--ky-left)}.kyogijo .ky-badge-hammer-right .ky-hammer{fill:var(--ky-right-ink)}.kyogijo .ky-badge-hammer-right .ky-hammer-in{fill:var(--ky-right)}`.trim();
+
 /** Every rule of the package, for a page that draws with `style: "none"` and supplies the stylesheet itself. */
-export const KYOGIJO_STYLE = `${KYOGIJO_BASE_STYLE}\n${KYOGIJO_HEAT_STYLE}`;
+export const KYOGIJO_STYLE = `${KYOGIJO_BASE_STYLE}\n${KYOGIJO_HEAT_STYLE}\n${KYOGIJO_CURLING_STYLE}`;

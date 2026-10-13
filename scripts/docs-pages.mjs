@@ -43,6 +43,7 @@ export const NAV = [
     ja: "競技と場所",
     pages: [
       { slug: "soccer", ja: "サッカー" },
+      { slug: "curling", ja: "カーリング" },
       { slug: "ballparks", ja: "球場" },
       { slug: "grounds", ja: "スタジアム" },
       { slug: "variants", ja: "リーグごとの違い" },
@@ -74,6 +75,7 @@ export const NAV = [
       { slug: "gallery-years", en: "Gallery: surfaces through the years", ja: "ギャラリー：年ごとの競技場", site: true },
       { slug: "gallery-places", en: "Gallery: ballparks and grounds", ja: "ギャラリー：球場とスタジアム", site: true },
       { slug: "gallery-data", en: "Gallery: data on a surface", ja: "ギャラリー：競技場の上のデータ", site: true },
+      { slug: "gallery-curling", en: "Gallery: curling", ja: "ギャラリー：カーリング", site: true },
     ],
   },
   {

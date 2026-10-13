@@ -1,6 +1,6 @@
 # Ready-made charts
 
-`@johnmorrisdotca/kyogijo/charts` has one function for each of five charts. Each takes plain data and returns the [data layers](./layers.md) and the drawing options to lay them on, so one call gives a good chart and every layer can still be changed.
+`@johnmorrisdotca/kyogijo/charts` has one function for each of six charts. Each takes plain data and returns the [data layers](./layers.md) and the drawing options to lay them on, so one call gives a good chart and every layer can still be changed.
 
 | Function | Chart | Reads |
 | --- | --- | --- |
@@ -8,6 +8,7 @@
 | `nhlShotMap(shots, options)` | goals and shots sized by expected goals, with the ends folded to one, and optional slot zones or hexagons | the NHL API (`nhl-api`) or HockeyTech (`hockeytech`) |
 | `mlbSprayChart(balls, options)` | balls in play on the ballpark of their season, each hit type in its own mark, beyond-the-fence balls drawn beyond it, and spray zones by the side the batter bats from | Statcast's `hc_x` and `hc_y` (`mlbam`), feet from home plate or Retrosheet's codes (`retrosheet`) |
 | `nflPassChart(passes, options)` | where each pass came down, by outcome and air yards, on the line of scrimmage and the pass grid | NFL tracking data (`nfl-tracking`) |
+| `curlingStones(stones, options)` | the stones of a curling end on the house, with the stones that score ringed, the shot rock ringed twice and the end scored by the rules (`curlingScore`) | feet from the button (`curling`) |
 | `soccerShotMap(shots, options)` | shots on the pitch or the half it attacks, sized by expected goals, with the xG total, and `goalMouth()` for where they crossed the goal line | a soccer provider (`opta`, `statsbomb`, `wyscout` and the rest) |
 
 The charts are made from the layers of [Data layers](./layers.md) (`points`, `lines`, `text`, `zones`, `hexbin` and their legends), the frames of [sources.md](./sources.md#coordinate-frames) and the zone sets of [sources.md](./sources.md#zone-sets). The data is yours and nothing is read from a network.

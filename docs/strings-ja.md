@@ -13,6 +13,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `surface.nba` | NBA basketball court | NBAのバスケットボールコート |
 | `surface.mlb` | Baseball field | 野球場 |
 | `surface.soccer` | Soccer pitch | サッカーのピッチ |
+| `surface.curling` | Curling sheet | カーリングのシート |
 | `about.nfl` | an American football field, 120 by 53 and a third yards with its end zones, with a yard line every 5 yards, hash marks, numbers and goal posts | アメリカンフットボールのフィールド。エンドゾーンを含めて120ヤード×53⅓ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールポストがあります |
 | `about.cfl` | a Canadian football field, 150 by 65 yards with its 20-yard end zones, with a yard line every 5 yards, hash marks, numbers and goal posts on the goal lines | カナディアンフットボールのフィールド。20ヤードのエンドゾーンを含めて150ヤード×65ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールライン上のゴールポストがあります |
 | `about.ifaf` | an international (IFAF) football field, 120 by 53 and a third yards with its end zones, with a yard line every 5 yards, hash marks, numbers and goal posts | 国際アメリカンフットボール連盟（IFAF）規格のフィールド。エンドゾーンを含めて120ヤード×53⅓ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールポストがあります |
@@ -20,6 +21,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `about.nba` | a basketball court, 94 by 50 feet, with its keys, three-point lines, free-throw circles and the centre circle | バスケットボールのコート。94フィート（約28.7m）×50フィート（約15.2m）で、ペイントエリア、スリーポイントライン、フリースローサークル、センターサークルがあります |
 | `about.mlb` | a baseball field, with a 90-foot infield, the mound, the foul lines and the outfield fence | 野球場。塁間90フィート（約27.4m）の内野、マウンド、ファウルライン、外野フェンスがあります |
 | `about.soccer` | a soccer pitch, {length} by {width} metres, with the halfway line, the centre circle, both penalty areas, goal areas, penalty marks and arcs, the corner arcs and the goals | サッカーのピッチ。{length}m×{width}mで、ハーフウェーライン、センターサークル、両側のペナルティエリアとゴールエリア、ペナルティマークとペナルティアーク、コーナーアーク、ゴールがあります |
+| `about.curling` | a curling sheet, {size}, with a house at each end (the 12-, 8- and 4-foot circles round the button), the tee, back, hog and centre lines and the hacks | カーリングのシート。{size}で、両端にハウス（ボタンを囲む12フィート・8フィート・4フィートの円）があり、ティーライン、バックライン、ホッグライン、センターライン、ハックがあります |
 | `status.final` | Final | 試合終了 |
 | `status.final-ot` | Final/OT | 試合終了（延長） |
 | `status.final-so` | Final/SO | 試合終了（SO） |
@@ -28,8 +30,10 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `status.live` | Live | 試合中 |
 | `status.half` | Halftime | ハーフタイム |
 | `status.extra-time` | Extra time | 延長戦 |
+| `status.extra-end` | Extra end | エキストラエンド |
 | `status.penalties` | Penalties | PK戦 |
 | `status.postponed` | Postponed | 延期 |
+| `endStatus` | End {n} | 第{n}エンド |
 | `soccer.futsal` | Futsal court | フットサルのコート |
 | `soccer.aboutFutsal` | a futsal court, {length} by {width} metres, with the halfway line, the centre circle, both penalty areas, the penalty marks and the goals | フットサルのコート。{length}m×{width}mで、ハーフウェーライン、センターサークル、両側のペナルティエリア、ペナルティマーク、ゴールがあります |
 | `soccer.half` | Half of it is shown. | 半面のみ表示しています。 |
@@ -38,6 +42,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `league.football` | a football field, {size} with its end zones, with its yard lines, hash marks, numbers and goal posts | アメリカンフットボールのフィールド。エンドゾーンを含めて{size}で、ヤードライン、ハッシュマーク、ヤードナンバー、ゴールポストがあります |
 | `league.baseball` | a baseball field, with {base}-foot bases, the pitcher {pitch} feet from home plate, the foul lines and the outfield fence | 野球場。塁間{base}フィート、投手板は本塁から{pitch}フィートで、ファウルライン、外野フェンスがあります |
 | `league.softball` | a softball field, with {base}-foot bases, the pitcher {pitch} feet from home plate, the foul lines and the outfield fence | ソフトボール場。塁間{base}フィート、投手板は本塁から{pitch}フィートで、ファウルライン、外野フェンスがあります |
+| `league.curling` | a curling sheet, {size}, with a house at each end (the 12-, 8- and 4-foot circles round the button), the tee, back, hog and centre lines and the hacks | カーリングのシート。{size}で、両端にハウス（ボタンを囲む12フィート・8フィート・4フィートの円）があり、ティーライン、バックライン、ホッグライン、センターライン、ハックがあります |
 | `league.size` | {length} by {width} {unit} | {length}{unit}×{width}{unit} |
 | `league.units.ft` | feet | フィート |
 | `league.units.yd` | yards | ヤード |
@@ -51,6 +56,9 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `said.ground` | The pitch follows the size published for {ground}. | ピッチは、{ground}の公表されている広さをもとに描かれています。 |
 | `said.groundDefault` | No pitch size is published for {ground}, so the pitch has the international size of 105 by 68 metres. | {ground}のピッチの広さは公表されていないため、国際標準の105×68mで描かれています。 |
 | `said.era` | The markings are those of the {season} season. | ラインやマークは{season}シーズンのものです。 |
+| `said.hammer` | {name} has the hammer. | {name}がハンマー（最後の1投）を持っています。 |
+| `said.ends` | By end, {name}: {list}. | {name}のエンドごとの得点：{list}。 |
+| `said.total` | Total | 合計 |
 | `said.wonPens` | {name} won {a}-{b} on penalties. | {name}がPK戦を{a}-{b}で制しました。 |
 | `said.pens` | {a}-{b} pens | PK戦 {a}-{b} |
 | `said.on` | Drawn as | 図の内容 |
@@ -64,6 +72,17 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `charts.titleNfl` | NFL pass chart | NFLのパスチャート |
 | `charts.titleSoccer` | Soccer shot map | サッカーのシュートマップ |
 | `charts.titleGoal` | Goal mouth: where the shots crossed the goal line | ゴールマウス：シュートがゴールラインを通過した位置 |
+| `charts.titleCurling` | Curling stones | カーリングのストーンの位置 |
+| `charts.curlingEnd` | End {n} | 第{n}エンド |
+| `charts.curlingStone` | Stone | ストーン |
+| `charts.curlingCounting` | Counting stone | 得点になるストーン |
+| `charts.curlingShot` | Shot rock | ナンバーワンストーン（ボタンに最も近いストーン） |
+| `charts.curlingFrom` | {name}: {d} ft from the button | {name}：ボタンから{d}フィート |
+| `charts.curlingNoteCounting` | counting | 得点になるストーン |
+| `charts.curlingNoteShot` | the shot rock | ナンバーワンストーン |
+| `charts.sumCurling` | {n} stones in play. {team} scores {points}. | プレー中のストーンは{n}個です。{team}が{points}点を取ります。 |
+| `charts.sumCurlingBlank` | {n} stones in play. No one scores: the end is blanked. | プレー中のストーンは{n}個です。どちらも得点できず、ブランクエンドになります。 |
+| `charts.curlingOut` | {n} out of play. | {n}個はプレー外です。 |
 | `charts.shots` | shots | シュート |
 | `charts.passes` | passes | パス |
 | `charts.balls` | balls in play | インプレー打球 |
@@ -200,6 +219,11 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `layers.zones.outfield` | outfield | 外野 |
 | `layers.zones.lengthShort` | Short | ショートパス |
 | `layers.zones.lengthDeep` | Deep | ディープパス |
+| `layers.zones.houseButton` | Button | ボタン |
+| `layers.zones.houseFour` | 4-foot ring | 4フィートの円 |
+| `layers.zones.houseEight` | 8-foot ring | 8フィートの円 |
+| `layers.zones.houseTwelve` | 12-foot ring | 12フィートの円 |
+| `layers.zones.guardZone` | Free guard zone | フリーガードゾーン |
 | `layers.zones.sideLeft` | left | 左 |
 | `layers.zones.sideMiddle` | middle | 中央 |
 | `layers.zones.sideRight` | right | 右 |
@@ -263,6 +287,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `sport_nba` | NBA | NBA |
 | `sport_mlb` | Baseball | 野球 |
 | `sport_soccer` | Soccer | サッカー |
+| `sport_curling` | Curling | カーリング |
 | `pitchLabel` | Pitch | ピッチ |
 | `pitch_fifa` | International, 105 × 68 m | 国際試合 105×68m |
 | `pitch_uefa` | UEFA, 105 × 68 m | UEFA 105×68m |
@@ -540,6 +565,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `accessibility` | Accessibility | アクセシビリティ |
 | group `places` | Sports and places | 競技と場所 |
 | page `soccer` | Soccer | サッカー |
+| page `curling` | Curling | カーリング |
 | page `ballparks` | Ballparks | 球場 |
 | page `grounds` | The grounds | スタジアム |
 | page `variants` | League variants | リーグごとの違い |
@@ -559,6 +585,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `gallery-years` | Gallery: surfaces through the years | ギャラリー：年ごとの競技場 |
 | page `gallery-places` | Gallery: ballparks and grounds | ギャラリー：球場とスタジアム |
 | page `gallery-data` | Gallery: data on a surface | ギャラリー：競技場の上のデータ |
+| page `gallery-curling` | Gallery: curling | ギャラリー：カーリング |
 | group `compare` | Compare | 比較 |
 | page `compare` | How it compares | 他のパッケージとの比較 |
 | group `reference` | Reference | リファレンス |
@@ -674,6 +701,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `fastpitch` | USA Softball fast-pitch field | USAソフトボール（ファストピッチ）のソフトボール場 |
 | `slowpitch` | USA Softball slow-pitch field | USAソフトボール（スローピッチ）のソフトボール場 |
 | `slowpitch-wbsc` | WBSC slow-pitch softball field | WBSC（スローピッチ）のソフトボール場 |
+| `curling-canada` | Curling Canada sheet | カーリング・カナダのシート |
 
 ## The leagues' dated changes (`leagueChanges`)
 

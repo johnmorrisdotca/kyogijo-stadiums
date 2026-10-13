@@ -35,7 +35,8 @@ describe("every surface", () => {
     });
 
     it(`${sport} lies tall when portrait and wide when landscape`, () => {
-      const wide = box(parse(drawKyogijo({ sport })));
+      // A curling sheet, 150 feet by 15, lies tall unless it is asked to lie wide.
+      const wide = box(parse(drawKyogijo({ sport, orientation: "landscape" })));
       const tall = box(parse(drawKyogijo({ sport, orientation: "portrait" })));
       if (sport === "mlb") expect(tall[3] / tall[2]).toBeGreaterThan(0.9);
       else {
@@ -50,11 +51,12 @@ describe("every surface", () => {
       expect(parse(drawKyogijo({ sport, orientation: "auto", aspect: 0.6 })).attrs["data-orientation"]).toBe("portrait");
       expect(parse(drawKyogijo({ sport, orientation: "auto", aspect: 1.6 })).attrs["data-orientation"]).toBe("landscape");
       expect(parse(drawKyogijo({ sport, orientation: "auto" })).attrs["data-orientation"]).toBe("landscape");
+      expect(parse(drawKyogijo({ sport })).attrs["data-orientation"]).toBe(sport === "curling" ? "portrait" : "landscape");
     });
   }
 
   it("refuses a sport it does not know", () => {
-    expect(() => drawKyogijo({ sport: "curling" as Sport })).toThrow(/Unknown sport/);
+    expect(() => drawKyogijo({ sport: "cricket" as Sport })).toThrow(/Unknown sport/);
   });
 });
 

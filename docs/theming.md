@@ -43,6 +43,8 @@ Each property is listed with its light and dark value.
 | `--ky-boards` | the boards, a court's border, a ballpark's fence | by sport | by sport |
 | `--ky-key` | the paint of a court's keys | `#c25b3c` | `#8a3f2b` |
 | `--ky-court` | a futsal court's floor | `#3b79ad` | `#2a5478` |
+| `--ky-rg-o`, `--ky-rg-m`, `--ky-rg-i`, `--ky-rg-b` | a curling house: the 12-foot band, the 8-foot, the 4-foot and the button | `#2a5db0`, `#fff`, `#c8372d`, `#fff` | `#3f6cc0`, `#dfe8ef`, `#c9473e`, `#dfe8ef` |
+| `--ky-hog`, `--ky-hack`, `--ky-fgz`, `--ky-pebble` | a curling sheet's hog lines, hacks, free guard zone and ice pebble | `#c8372d`, `#3a4046`, a blue tint, a grey-blue speck | darker |
 | `--ky-dirt`, `--ky-foul`, `--ky-infield` | the baseball field | `#c28e5c`, `#3a8148`, `#58a05d` | `#8a6040`, `#275a31`, `#367a42` |
 | `--ky-left`, `--ky-right` | the teams' colours | `#2f6db0`, `#b5452c` | the same |
 | `--ky-left-ink`, `--ky-right-ink` | the words on those colours | `#ffffff` | the same |

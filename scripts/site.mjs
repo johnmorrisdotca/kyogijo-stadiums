@@ -41,7 +41,7 @@ const page = `<!doctype html>
     ${familyHead({
       id,
       title: "Kyogijo · sports fields, rinks, courts and ballparks drawn to scale, with the score on them",
-      description: "NFL, CFL and IFAF fields, an NHL rink, an NBA court, the soccer pitch and futsal court, and every MLB and NPB ballpark as SVG, drawn to scale from the rulebooks, with each team's name and logo and the score on them. Light and dark, tall or wide, with a compact badge for lists.",
+      description: "NFL, CFL and IFAF fields, an NHL rink, an NBA court, the soccer pitch and futsal court, a curling sheet, and every MLB and NPB ballpark as SVG, drawn to scale from the rulebooks, with each team's name and logo and the score on them. Light and dark, tall or wide, with a compact badge for lists.",
       ogTitle: "Kyogijo sports surfaces",
       ogDescription: "Fields, rinks, courts and ballparks drawn to scale as SVG, with the score on them: wide or tall, light or dark.",
     })}
@@ -65,8 +65,8 @@ const page = `<!doctype html>
           <div class="try-controls">
             <details class="fam-fold group" open>
               <summary data-say="groupSurface"></summary>
-              ${seg("sport", "sport", "Choose the surface: three football fields, a hockey rink, a basketball court, a baseball field or a soccer pitch.", "競技場を選びます。アメリカンフットボール場3種類（NFL・CFL・IFAF）、アイスホッケーのリンク、バスケットボールのコート、野球場、サッカーのピッチから選べます。")}
-              <div class="setup fam-row" id="league-row" hidden ${help("Choose the league whose rulebook marks the surface: FIBA, the WNBA or the NCAA for the court; the IIHF, the NCAA, the AHL or the CHL for the rink; the NCAA, the high schools or arena football for the field; Little League, PONY or softball for the diamond. Each is drawn from its own rulebook.", "どのリーグのルールブックに沿って描くかを選びます。コートならFIBA・WNBA・NCAA、リンクならIIHF・NCAA・AHL・CHL、フィールドならNCAA・全米高校連盟（NFHS）・インドアフットボール、野球場とソフトボール場ならリトルリーグ・PONY・USAソフトボールなど。どれもそのリーグ自身のルールブックに基づいて描きます。")}>
+              ${seg("sport", "sport", "Choose the surface: three football fields, a hockey rink, a basketball court, a baseball field, a soccer pitch or a curling sheet.", "競技場を選びます。アメリカンフットボール場3種類（NFL・CFL・IFAF）、アイスホッケーのリンク、バスケットボールのコート、野球場、サッカーのピッチ、カーリングのシートから選べます。")}
+              <div class="setup fam-row" id="league-row" hidden ${help("Choose the league whose rulebook marks the surface: FIBA, the WNBA or the NCAA for the court; the IIHF, the NCAA, the AHL or the CHL for the rink; the NCAA, the high schools or arena football for the field; Little League, PONY or softball for the diamond; World Curling or Curling Canada for the sheet. Each is drawn from its own rulebook.", "どのリーグのルールブックに沿って描くかを選びます。コートならFIBA・WNBA・NCAA、リンクならIIHF・NCAA・AHL・CHL、フィールドならNCAA・全米高校連盟（NFHS）・インドアフットボール、野球場とソフトボール場ならリトルリーグ・PONY・USAソフトボール、カーリングのシートならワールドカーリングやカーリング・カナダなど。どれもそのリーグ自身のルールブックに基づいて描きます。")}>
                 <span class="fam-label" data-say="leagueLabel"></span>
                 <select class="fam-field" id="league" data-testid="league" data-say-label="leagueLabel"></select>
               </div>

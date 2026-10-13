@@ -7,6 +7,8 @@ src/
 ├── index.ts            the main entry
 ├── draw.ts             drawKyogijo: options in, one string of SVG out
 ├── score.ts            the teams' places, the score's panel and the badge
+├── curling.board.ts    the curling scoreboard: each end, the total and the hammer
+├── sheet.ts            the curling sheet a set of options asks for, held to the rules' range
 ├── surfaces/
 │   ├── surface.ts      what a surface is, and the quarter turn
 │   ├── football.ts     the NFL, CFL and IFAF fields
@@ -14,6 +16,7 @@ src/
 │   ├── basketball.ts   the NBA court
 │   ├── baseball.ts     the baseball field and its fence
 │   ├── soccer.ts       the soccer pitch
+│   ├── curling.ts      the curling sheet
 │   ├── soccer-spec.ts  the Laws' figures, the presets, futsal and the small-sided pitches
 │   └── soccer-providers.ts  the data providers' coordinates, registered as frames, and rescale
 ├── layers.ts           data layers: drawLayers, layerTable and the marks
@@ -29,6 +32,7 @@ src/
 ├── charts.ts           ready-made charts and what they share
 ├── charts.baseball.ts  the spray chart
 ├── charts.soccer.ts    the soccer shot map and goal mouth
+├── charts.curling.ts   the curling stones chart and the score of an end
 ├── charts.types.ts     the charts' types
 ├── charts-entry.ts     the charts' entry
 ├── replay.ts           a replay's frame and its pure functions: interpolate, trails, possession, events, drawFrame
@@ -48,12 +52,13 @@ src/
 │   ├── sources.ts      the rulebooks read
 │   ├── basketball.ts   the courts
 │   ├── hockey.ts       the rinks
+│   ├── curling.ts      the sheets
 │   ├── football.ts     the fields
 │   └── baseball.ts     the diamonds
 ├── geometry-entry.ts   the geometry's entry
 ├── units.ts            the units of length, each surface's own, and the converters
 ├── frames.ts           coordinate frames: the mapper, the registry, toSurface and fromSurface
-├── frames.providers.ts the NHL, HockeyTech, NBA, NFL, MLBAM and Retrosheet frames
+├── frames.providers.ts the NHL, HockeyTech, NBA, NFL, MLBAM, Retrosheet and curling frames
 ├── frames-entry.ts     the frames' entry
 ├── parks.ts            the ballparks, their fences and their sources
 ├── parks.data.ts       made by scripts/build-parks.mjs from scripts/parks.data.json

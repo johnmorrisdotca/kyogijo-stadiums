@@ -2,7 +2,7 @@
 // frames.ts. Each is cited in docs/sources.md ("Coordinate frames"), which says what was read, where, and what is ours.
 // Soccer's providers are registered by src/surfaces/soccer-providers.ts. Facts only: no code of sportypy, sportyR or
 // hockey_rink is used.
-import { FOOTBALL, NBA, NHL, footballLength } from "./geometry.ts";
+import { CURLING, FOOTBALL, NBA, NHL, footballLength } from "./geometry.ts";
 import { FRAMES, registerFrame, span, type Frame } from "./frames.ts";
 import type { Point } from "./units.ts";
 
@@ -118,7 +118,33 @@ const retrosheet: Frame = {
   note: "Positive x is right field, positive y is out from home plate. A zone code stands for a place read off the diagram: `RETROSHEET_ZONES`, `zoneToPoint`, `zoneAt`.",
 };
 
-for (const frame of [nhlApi, hockeyTech, nbaStats, nflTracking, mlbam, retrosheet]) if (!Object.prototype.hasOwnProperty.call(FRAMES, frame.name)) registerFrame(frame);
+/**
+ * A curling stone's place in feet from the button of the house it is played to: x across the sheet, positive to the thrower's right; y along it,
+ * positive from the button towards the back line, negative towards the hog line. A sheet is 146 to 150 feet and its tee is always 57 feet from
+ * the middle, so the frame fits any size. It stands at the right (bottom, when the sheet is tall) house, as every frame faces right; give
+ * `attacking: "left"` for the house at the left (the top one, the far end of a tall drawing).
+ */
+const curling: Frame = {
+  name: "curling",
+  title: "Curling stones, in feet from the button",
+  sport: "curling",
+  unit: "ft",
+  x: [-7.8, 7.8],
+  y: [-132, 18],
+  origin: "the button of the house the stones are played to",
+  yDirection: "down",
+  size: "variable",
+  ends: "shooter",
+  landmarks: (size) => ({
+    swap: true,
+    x: span(-size.width / 2, size.width / 2, 0, size.width),
+    y: span(0, 1, size.length / 2 + CURLING.teeFromMiddle, size.length / 2 + CURLING.teeFromMiddle + 1),
+  }),
+  source: "this package's own frame: the button as the origin, as the rulebooks measure a stone's score from the tee",
+  note: "Positive x is the thrower's right; positive y is away from the thrower, towards the back line. The frame is not a data provider's: it is the plain reading of the rules (a stone is scored by its distance from the tee).",
+};
+
+for (const frame of [nhlApi, hockeyTech, nbaStats, nflTracking, mlbam, retrosheet, curling]) if (!Object.prototype.hasOwnProperty.call(FRAMES, frame.name)) registerFrame(frame);
 
 // Retrosheet's hit-location diagram (Project Scoresheet's) draws the field in sectors: columns of the outfield from the left field
 // line to the right (7L, 7, 78, 8, 89, 9, 9L), each cut into rings of about 50 feet by depth (S shallow, none medium, D deep, XD

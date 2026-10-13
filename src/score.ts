@@ -15,6 +15,9 @@ export interface TeamView {
   state: "win" | "lose" | "none";
   /** The role in the game, for part names. */
   role: "home" | "away";
+  /** Curling: the score of each end, written; and whether the team has the hammer. */
+  ends?: string[];
+  hammer?: boolean;
 }
 
 const part = (on: boolean, names: string): string | undefined => (on ? names : undefined);
@@ -149,6 +152,9 @@ export function glyph(sport: Sport): string {
       return "M0 9L9 0L0 -9L-9 0ZM-18 10L0 9L18 10M0 -9A12 12 0 0 1 12 0";
     case "soccer":
       return "M-18 -10H18V10H-18ZM0 -10V10M-5 0A5 5 0 1 0 5 0A5 5 0 1 0 -5 0M-18 -5H-12V5H-18M18 -5H12V5H18";
+    case "curling":
+      // A house: the 12-, 8- and 4-foot circles round the button, with the centre line through it.
+      return "M-10 0A10 10 0 1 0 10 0A10 10 0 1 0 -10 0M-6.7 0A6.7 6.7 0 1 0 6.7 0A6.7 6.7 0 1 0 -6.7 0M-3.3 0A3.3 3.3 0 1 0 3.3 0A3.3 3.3 0 1 0 -3.3 0M-18 0H18";
   }
 }
 
@@ -175,6 +181,8 @@ export function badgeMarkup(left: TeamView, right: TeamView, o: { sport: Sport; 
     const scoreSize = Math.min(32, (block * 0.42) / Math.max(1, textWidth(team.score)));
     const room = Math.abs(scoreEdge - textStart) - textWidth(team.score) * scoreSize - 8;
     const abbrSize = Math.max(8, Math.min(22, room / Math.max(1, textWidth(team.abbr))));
+    // The hammer: a small stone in the corner of the team's block.
+    if (team.hammer === true) out += el("g", { class: `ky-badge-hammer ky-badge-hammer-${team.side}`, transform: `translate(${isLeft ? block - 11 : W - block + 11} 11)` }, el("circle", { class: "ky-hammer", r: 6 }) + el("circle", { class: "ky-hammer-in", r: 2.6 }));
     out += el("g", { class: `ky-badge-team ky-badge-${team.side} ky-${team.state}`, part: part(o.parts, `team ${team.role}`) },
       (team.logo === undefined ? "" : el("image", { class: "ky-logo", href: team.logo, x: logoX, y: 12, width: logoSize, height: logoSize, preserveAspectRatio: "xMidYMid meet" })) +
         el("text", { class: `ky-text ky-name ky-ink-${team.side}`, x: textStart, y: H / 2 + abbrSize * 0.36, "font-size": abbrSize, "text-anchor": isLeft ? undefined : "end" }, esc(team.abbr)) +
