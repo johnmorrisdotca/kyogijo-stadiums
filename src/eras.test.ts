@@ -26,6 +26,12 @@ const probe = {
     const ys = [...d.matchAll(/M[\d.]+ ([\d.]+)/g)].map((m) => Number(m[1]));
     return ys[1] - ys[0];
   },
+  /** NHL: the gap between the two hash marks beside an end-zone circle, in inches (the first two marks share an x, one each side of the circle's spot). */
+  hashApart: (svg: Node) => {
+    const d = paths(svg, "ky-red").find((p) => (p.match(/M/g) ?? []).length >= 8);
+    const ys = [...(d ?? "").matchAll(/M[\d.]+ ([\d.]+)V/g)].map((m) => Number(m[1]));
+    return ys.length < 2 ? undefined : Math.round((ys[1] - ys[0]) * 12);
+  },
   /** NBA: the lane's height (its width across the court). */
   keyWidth: (svg: Node) => Number(withClass(svg, "ky-key-left")[0].attrs.height),
   /** NBA: the three-point arc's radius, or undefined. */
@@ -79,6 +85,8 @@ const CASES: Record<string, { before: number; after: number; sport: Sport; show:
   "nhl.blueLine.2005": { sport: "nhl", before: 2004, after: 2005, show: [73, 75] },
   "nhl.trapezoid.2005": { sport: "nhl", before: 2004, after: 2005, show: [undefined, 18] },
   "nhl.trapezoid.2014": { sport: "nhl", before: 2013, after: 2014, show: [18, 22] },
+  "nhl.hashApart.2012": { sport: "nhl", before: 2011, after: 2012, show: [36, 36] },
+  "nhl.hashApart.2014": { sport: "nhl", before: 2013, after: 2014, show: [36, 67] },
   "nba.keyWidth.1951": { sport: "nba", before: 1950, after: 1951, show: [6, 12] },
   "nba.keyWidth.1964": { sport: "nba", before: 1963, after: 1964, show: [12, 16] },
   "nba.threePoint.1979": { sport: "nba", before: 1978, after: 1979, show: [undefined, 23.75] },
@@ -160,7 +168,7 @@ describe("the history of the surfaces: the data", () => {
   });
 
   it("agrees, for today, with the dimensions in geometry.ts", () => {
-    expect(rulesFor("nhl").rules).toEqual({ centreLine: true, goalLine: NHL.goalLine, blueLine: NHL.blueLine, trapezoid: NHL.trapezoid });
+    expect(rulesFor("nhl").rules).toEqual({ centreLine: true, goalLine: NHL.goalLine, blueLine: NHL.blueLine, trapezoid: NHL.trapezoid, hashApart: NHL.hashApart });
     expect(rulesFor("nba").rules).toEqual({ keyWidth: NBA.lane, threePoint: { radius: NBA.threePoint.radius }, restrictedArea: true });
     for (const id of ["nfl", "cfl"] as const) expect(rulesFor(id).rules).toEqual({ length: FOOTBALL[id].length, endZone: FOOTBALL[id].endZone, hash: FOOTBALL[id].hash, posts: FOOTBALL[id].posts, postShape: "slingshot" });
     expect(rulesFor("mlb").rules.baseSize).toBe(MLB.baseSize);
@@ -269,11 +277,26 @@ describe("what a season leaves out, and what it says", () => {
     const nhl = rulesFor("nhl", 1980);
     expect(nhl.rules.goalLine).toBe(11);
     expect(nhl.rules.blueLine).toBe(73);
-    expect(nhl.gaps.sort()).toEqual(["blueLine", "goalLine"]);
-    expect(rulesFor("nhl", 2010).gaps).toEqual([]);
+    expect(nhl.gaps.sort()).toEqual(["blueLine", "goalLine", "hashApart"]);
+    expect(nhl.rules.hashApart).toBe(3);
+    expect(rulesFor("nhl", 2010).gaps).toEqual(["hashApart"]);
+    expect(rulesFor("nhl", 2012).gaps).toEqual([]);
     expect(rulesFor("mlb", 1860).gaps.sort()).toEqual(["moundHeight", "pitcher", "platePlacement"]);
     expect(rulesFor("cfl", 1990).gaps).toEqual(["hash"]);
     expect(rulesFor("nfl", 1919).gaps.sort()).toEqual(["postShape", "posts"]);
+  });
+
+  it("draws the NHL's hash marks 3 feet apart through 2013-14 and 5 feet 7 inches from 2014-15, and leaves the other hockey leagues' marks alone", () => {
+    expect(NHL.hashApart).toBeCloseTo(5 + 7 / 12, 6);
+    expect(rulesFor("nhl", 2013).rules.hashApart).toBe(3);
+    expect(rulesFor("nhl", 2014).rules.hashApart).toBe(NHL.hashApart);
+    expect(rulesFor("nhl").rules.hashApart).toBe(NHL.hashApart);
+    expect(rulesFor("nhl", 2013).differences.map((c) => c.id)).toContain("nhl.hashApart.2012");
+    expect(rulesFor("nhl", 2014).differences.map((c) => c.feature)).not.toContain("hashApart");
+    // The marks of the AHL, which shares the NHL's Rule 1, do not change with the year: no page read dates a change of theirs.
+    for (const id of ["ahl", "echl", "ohl", "whl", "pwhl"]) {
+      expect(probe.hashApart(draw("nhl", 2005, { league: id })), id).toBe(probe.hashApart(draw("nhl", 2026, { league: id })));
+    }
   });
 
   it("marks a state whose measure is not cited as approximate", () => {

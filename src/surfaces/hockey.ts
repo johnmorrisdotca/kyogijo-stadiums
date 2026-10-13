@@ -22,6 +22,7 @@ export function hockey(o: BuildOptions, era?: NhlRules, rink: RinkSpec = NHL_RIN
   const g = nhl?.goalLine ?? rink.goalLine;
   const blueLine = nhl?.blueLine ?? rink.blueLine;
   const trapezoid = nhl === undefined ? rink.trapezoid : nhl.trapezoid;
+  const hashApart = nhl?.hashApart ?? rink.hash?.apart ?? 0;
   const m = o.margin ?? 8;
   const view0 = { x: -m, y: -m, w: L + 2 * m, h: W + 2 * m };
   const cy = W / 2;
@@ -66,7 +67,7 @@ export function hockey(o: BuildOptions, era?: NhlRules, rink: RinkSpec = NHL_RIN
       for (const sx of [-1, 1]) {
         for (const sy of [-1, 1]) {
           const hx = x + sx * (rink.circleRadius + 0.2);
-          const y0 = y + sy * (rink.hash.apart / 2);
+          const y0 = y + sy * (hashApart / 2);
           hashes.push(`M${num(hx)} ${num(y0)}V${num(y0 + sy * rink.hash.length)}`);
         }
       }

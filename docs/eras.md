@@ -10,6 +10,7 @@ A season is named by the year it starts in: `1979` is the 1979–80 season of th
 | `nhl` | goal lines | 11 feet from the end boards in 1997–98, 13 from 1998–99, 11 again from 2005–06 |
 | `nhl` | blue lines | 73 feet from the end boards from 1998–99, 75 (a 50-foot neutral zone) from 2005–06 |
 | `nhl` | trapezoid | none before 2005–06; 18 feet at the goal line, 22 from 2014–15 |
+| `nhl` | hash marks | 3 feet apart (cited from 2012–13), 5 feet 7 inches from 2014–15 |
 | `nba` | lane | 6 feet wide, 12 from 1951–52, 16 from 1964–65 |
 | `nba` | three-point line | none before 1979–80; 22 feet all round from 1994–95 to 1996–97; 23 feet 9 inches again from 1997–98 |
 | `nba` | restricted area | none before 1997–98 |

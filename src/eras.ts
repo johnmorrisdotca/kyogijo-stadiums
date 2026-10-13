@@ -57,6 +57,27 @@ export const ERA_SOURCES: Readonly<Record<string, EraSource>> = Object.freeze(
       wikipedia("wp-rink", "Ice hockey rink", 1369579112, "the NHL's blue lines at 75 feet and goal lines at 11 feet; the trapezoid from 2005-06, 18 feet at the goal line, 22 feet from 2014-15"),
       wikipedia("wp-nhl-rules", "National Hockey League rules", 1379666522, "the trapezoid since 2005-06, lengthened by 2 feet each side in 2014"),
       {
+        id: "nhl-rules-2012",
+        title: "National Hockey League Official Rules 2012-2013, Rule 1.9 Face-off Spots and Circles",
+        by: "National Hockey League",
+        url: "https://www.nhl.com/nhl/en/v3/ext/pdfs/2012-13_RuleBook.pdf",
+        note: "'At the outer edge of both sides of each face-off circle and parallel to the goal line shall be marked two red lines, two inches (2'') wide and two feet (2') in length and three feet (3') apart'",
+      },
+      {
+        id: "nhl-hash-2014",
+        title: "NHL to adopt modification to face-off circle hash marks for 2014-15 season",
+        by: "NHL and NHLPA (joint release, as posted by the NHLPA), 6 October 2014",
+        url: "https://www.nhlpa.com/news/1-12488/nhl-to-adopt-modification-to-face-off-circle-hash-marks-for-2014-15-season",
+        note: "the modification to Rule 1.9 moves the end-zone hash marks from three feet apart to five feet seven inches apart, implemented for the commencement of the 2014-15 season after a preseason trial",
+      },
+      {
+        id: "cbs-hash-2014",
+        title: "NHL adopts modification to face-off circle hash marks for 2014-15",
+        by: "CBS Sports, 6 October 2014",
+        url: "https://www.cbssports.com/nhl/news/nhl-adopts-modification-to-face-off-circle-hash-marks-for-2014-15",
+        note: "the hash marks moved from 3 feet apart to 5 feet 7 inches for 2014-15, 'more in line with' the marks on international ice",
+      },
+      {
         id: "csm-1998",
         title: "Sports 101",
         by: "The Christian Science Monitor, 16 October 1998",
@@ -166,6 +187,8 @@ export interface NhlRules {
   blueLine: number;
   /** The goaltender's trapezoid behind the net, or none. */
   trapezoid: { atGoalLine: number; atBoards: number } | null;
+  /** The gap between the two hash marks beside an end-zone face-off circle (Rule 1.9). */
+  hashApart: number;
 }
 
 /** The NBA court's markings in a season. Lengths are feet. */
@@ -242,6 +265,10 @@ const NHL_SPANS: Spans<NhlRules> = {
     { from: 2005, value: { atGoalLine: 18, atBoards: 28 }, what: "The goaltender's trapezoid is marked behind each net: 18 feet at the goal line, 28 feet at the end boards.", ja: "各ゴールの裏に、ゴールキーパーがパックを扱える区域として台形（トラペゾイド）が引かれます。ゴールライン側が18フィート、エンドボード側が28フィートです。", sources: ["wp-rink", "wp-nhl-rules"] },
     { from: 2014, value: { atGoalLine: NHL.trapezoid.atGoalLine, atBoards: NHL.trapezoid.atBoards }, what: "The trapezoid is widened to 22 feet at the goal line (2 feet each side).", ja: "トラペゾイドのゴールライン側が左右2フィートずつ広がり、22フィートになります。", sources: ["wp-rink", "wp-nhl-rules"] },
   ],
+  hashApart: [
+    { from: 2012, value: 3, what: "The two hash marks beside each end-zone face-off circle are 3 feet apart (Rule 1.9 of 2012-13; no earlier season is cited).", ja: "エンドゾーンのフェイスオフサークルの両脇にある2本のハッシュマークは、間隔が3フィート（約91cm）です（2012-13シーズンのルール1.9。それ以前のシーズンを示す資料は見つかっていません）。", sources: ["nhl-rules-2012", "nhl-hash-2014", "cbs-hash-2014"] },
+    { from: 2014, value: NHL.hashApart, what: "The hash marks move apart to 5 feet 7 inches, more in line with the marks on international ice.", ja: "2本のハッシュマークの間隔が5フィート7インチ（約1.7m）に広がり、国際大会のリンクにあるマークに近づきます。", sources: ["nhl-hash-2014", "cbs-hash-2014"] },
+  ],
 };
 
 const NBA_SPANS: Spans<NbaRules> = {
@@ -308,8 +335,8 @@ const MLB_PITCHER_BOX = { kind: "box", width: 4, depth: 5.5 } as const;
 
 const MLB_SPANS: Spans<MlbRules> = {
   baseSize: [
-    { from: null, value: 15 / 12, what: "First, second and third bases are 15 inches square (the size for well over a century; no earlier size is cited).", ja: "一塁・二塁・三塁のベースは一辺15インチ（約38cm）の正方形です（1世紀以上変わらなかった大きさで、それ以前の大きさを示す資料は見つかっていません）。", sources: ["mlb-2023", "cbs-bases-2023"] },
-    { from: 2023, value: MLB.baseSize, what: "The bases grow to 18 inches square, which cuts the distance between first and second and between second and third by 4½ inches.", ja: "一塁・二塁・三塁のベースが一辺15インチから18インチ（約46cm）の正方形に大きくなり、一塁と二塁の間、二塁と三塁の間の距離が4.5インチ（約11cm）短くなります。", sources: ["mlb-2023", "obr-2024"] },
+    { from: null, value: 15 / 12, what: "First, second and third bases are 15 inches square (the size for well over a century; no earlier size is cited).", ja: "一塁・二塁・三塁のベースは一辺15インチ（約38cm）の正方形です（100年以上変わっていない大きさです。それ以前の大きさを示す資料は見つかっていません）。", sources: ["mlb-2023", "cbs-bases-2023"] },
+    { from: 2023, value: MLB.baseSize, what: "The bases grow to 18 inches square, which cuts the distance between first and second and between second and third by 4½ inches.", ja: "一塁・二塁・三塁のベースが一辺15インチから18インチ（約46cm）の正方形に大きくなり、一塁と二塁の間、二塁と三塁の間の距離がそれぞれ4.5インチ（約11cm）短くなります。", sources: ["mlb-2023", "obr-2024"] },
   ],
   pitcher: [
     { from: 1871, value: { ...MLB_PITCHER_BOX, distance: 45 }, approx: true, what: "The pitcher throws from a chalked box whose front edge is 45 feet from home plate (its size is not given; drawn as the 1887 box).", ja: "投手は、本塁側の辺が本塁から45フィート（約13.7m）の位置にある、チョークで描いたピッチャーズボックスの中から投げます（ボックスの大きさは不明のため、1887年のものと同じ大きさで描いています）。", sources: ["wp-baseball"] },
@@ -352,7 +379,7 @@ const SPANS: { [S in EraSport]: Partial<Spans<EraRulesOf[S]>> } = {
 function present(sport: EraSport): EraRulesOf[EraSport] {
   switch (sport) {
     case "nhl":
-      return { centreLine: true, goalLine: NHL.goalLine, blueLine: NHL.blueLine, trapezoid: { atGoalLine: NHL.trapezoid.atGoalLine, atBoards: NHL.trapezoid.atBoards } };
+      return { centreLine: true, goalLine: NHL.goalLine, blueLine: NHL.blueLine, trapezoid: { atGoalLine: NHL.trapezoid.atGoalLine, atBoards: NHL.trapezoid.atBoards }, hashApart: NHL.hashApart };
     case "nba":
       return { keyWidth: NBA.lane, threePoint: { radius: NBA.threePoint.radius }, restrictedArea: true };
     case "nfl":
@@ -412,7 +439,7 @@ const featuresOf = (sport: EraSport): [string, EraSpan<unknown>[]][] => Object.e
  * import { eraChanges } from "@johnmorrisdotca/kyogijo/eras";
  * const nhl = eraChanges("nhl");
  * console.log(nhl.length, nhl[0].id, nhl[0].from);
- * // 8 nhl.centreLine.1943 1943
+ * // 10 nhl.centreLine.1943 1943
  * ```
  */
 export function eraChanges(sport: EraSport): EraChange[] {

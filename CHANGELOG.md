@@ -10,6 +10,8 @@ All notable changes to this project are written here. The format follows
 
 - **MLB bases are 18 inches square from 2023.** `MLB.baseSize` was 15 inches; Rule 2.03 of the Official Baseball Rules has 18 inches from the 2023 season. The size is now a marking in `rulesFor("mlb", year)` (`baseSize`, 15 inches before 2023, 18 from 2023, with `eraChanges("mlb")` listing it), so the field is drawn with 18-inch bases by default and 15-inch ones for a season before 2023.
 - **NHL hash marks are 5 feet 7 inches apart.** The marks beside an end-zone circle were drawn 5 feet 11 inches apart, which added the lines' width to a gap it does not enter; Rule 1.9 says 5 feet 7 inches (`NHL.hashApart`). The AHL, ECHL, OHL, WHL and PWHL, which share the NHL's Rule 1, change with it. docs/sources.md also records where the NHL's Rule 1.8 (a 22-foot trapezoid at the goal line, drawn) and Rule 27.8 (18 feet) disagree.
+- **NHL hash marks were 3 feet apart before 2014-15.** The rulebook of 2012-13 (Rule 1.9) says "three feet (3') apart", and the NHL and NHLPA release of 6 October 2014 moves them to 5 feet 7 inches for 2014-15. `rulesFor("nhl", year).rules.hashApart` is 3 feet through 2013-14 and 5 feet 7 inches after, `eraChanges("nhl")` lists both (`nhl.hashApart.2012`, `nhl.hashApart.2014`) and a rink drawn for an earlier season has the marks 3 feet apart. Seasons before 2012-13 are cited by no rulebook read, so they keep 3 feet and `gaps` names `hashApart`. The AHL, ECHL, OHL, WHL and PWHL are unchanged: no page read dates a change of their marks.
+- **docs/sources.md cited the wrong baseball rule for home plate.** Home plate is Official Baseball Rules 2.02 (Home Base) in the 2024 edition; 2.03 is The Bases. The 90-foot square is 2.01, not 2.01 and 2.02.
 
 ### Added
 
