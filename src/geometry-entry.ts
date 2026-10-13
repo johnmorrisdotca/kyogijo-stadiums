@@ -4,3 +4,5 @@ export type { FencePoint, FootballSpec, SizedSport } from "./geometry.ts";
 export { boardsY } from "./surfaces/hockey.ts";
 export { FEET_PER, SURFACE_UNITS, UNITS, convertLength, convertPoint, isUnit, lengthsIn } from "./units.ts";
 export type { Point, Scaled, Unit } from "./units.ts";
+export { METRES_PER_FOOT, METRES_PER_YARD, SOCCER, SOCCER_PITCHES, SOCCER_PITCH_IDS, fullPitch, goalAreaWidth, penaltyAreaWidth, soccerPitchClass, soccerSpec } from "./surfaces/soccer-spec.ts";
+export type { SoccerArea, SoccerFormat, SoccerPitchClass, SoccerPitchId, SoccerSize, SoccerSpec } from "./surfaces/soccer-spec.ts";

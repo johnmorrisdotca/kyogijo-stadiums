@@ -147,6 +147,8 @@ export function glyph(sport: Sport): string {
       return "M-18 -10H18V10H-18ZM0 -10V10M-5 0A5 5 0 1 0 5 0A5 5 0 1 0 -5 0M-18 -4H-10V4H-18M18 -4H10V4H18";
     case "mlb":
       return "M0 9L9 0L0 -9L-9 0ZM-18 10L0 9L18 10M0 -9A12 12 0 0 1 12 0";
+    case "soccer":
+      return "M-18 -10H18V10H-18ZM0 -10V10M-5 0A5 5 0 1 0 5 0A5 5 0 1 0 -5 0M-18 -5H-12V5H-18M18 -5H12V5H18";
   }
 }
 

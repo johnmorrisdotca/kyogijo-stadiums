@@ -10,13 +10,16 @@ import { baseball } from "./surfaces/baseball.ts";
 import { basketball } from "./surfaces/basketball.ts";
 import { football } from "./surfaces/football.ts";
 import { hockey } from "./surfaces/hockey.ts";
+import { soccer } from "./surfaces/soccer.ts";
+import { frameMatrix, layoutFromFrame, resolveFrame } from "./surfaces/soccer-providers.ts";
+import { layoutOf, soccerSpec, type SoccerSpec } from "./surfaces/soccer-spec.ts";
 import type { BuildOptions, Surface } from "./surfaces/surface.ts";
 import { abbreviate, capitals } from "./text.ts";
-import type { Colors, CourtStyle, Language, ScoreOptions, Side, Sport, SurfaceOptions, Team } from "./types.ts";
+import type { Colors, CourtStyle, GoalStyle, Language, ScoreOptions, Side, Sport, StripePattern, SurfaceOptions, Team } from "./types.ts";
 import { VERSION } from "./version.ts";
 
 /** The sports that can be drawn, in the order a menu lists them. */
-export const SPORTS: readonly Sport[] = ["nfl", "cfl", "ifaf", "nhl", "nba", "mlb"];
+export const SPORTS: readonly Sport[] = ["nfl", "cfl", "ifaf", "nhl", "nba", "mlb", "soccer"];
 
 /** The CSS custom property each colour of `Colors` sets. */
 export const COLOR_PROPERTIES: Readonly<Record<keyof Colors, string>> = {
@@ -68,18 +71,45 @@ const numeric = (value: number | string | undefined): number | undefined => {
   return undefined;
 };
 
+/** The penalty shoot-out of a game, when both teams have a score in it. */
+function shootout(o: Pick<ScoreOptions, "home" | "away">): { home: number; away: number } | undefined {
+  const home = numeric(o.home.penalties);
+  const away = numeric(o.away.penalties);
+  return home === undefined || away === undefined ? undefined : { home, away };
+}
+
 /**
  * Who is ahead in a score drawing, as the drawing's emphasis. `auto` (the default) picks the leader once the status is
- * a final one; `leader` picks the leader of any game; a level game, or a score that is not a number, has none.
+ * a final one; `leader` picks the leader of any game; a level game has none unless both teams have a penalty shoot-out
+ * score (`penalties`) and the shoot-out was not level; a score that is not a number has none.
  */
 export function winnerOf(o: Pick<ScoreOptions, "home" | "away" | "status" | "winner">): "home" | "away" | "none" {
   const mode = o.winner ?? "auto";
   if (mode === "home" || mode === "away" || mode === "none") return mode;
   const h = numeric(o.home.score);
   const a = numeric(o.away.score);
-  if (h === undefined || a === undefined || h === a) return "none";
+  if (h === undefined || a === undefined) return "none";
   if (mode === "auto" && !(o.status !== undefined && FINAL.test(o.status.trim()))) return "none";
+  if (h === a) {
+    const pens = shootout(o);
+    return pens === undefined || pens.home === pens.away ? "none" : pens.home > pens.away ? "home" : "away";
+  }
   return h > a ? "home" : "away";
+}
+
+/**
+ * The words of a status, with the penalty shoot-out beside them when both teams have one: "Final/AET", or
+ * "Final · 4-2 pens" (the shoot-out score in the order of the drawing's sides, the away team's first unless `homeSide` is left).
+ */
+export function statusText(o: Pick<ScoreOptions, "home" | "away" | "status" | "homeSide">, language: Language = "en"): string | undefined {
+  const label = statusLabel(o.status, language);
+  const pens = shootout(o);
+  if (pens === undefined) return label;
+  const left = o.homeSide === "left" ? pens.home : pens.away;
+  const right = o.homeSide === "left" ? pens.away : pens.home;
+  const text = fill(KYOGIJO_STRINGS[language].said.pens, { a: left, b: right });
+  const base = (o.status ?? "").trim().toLowerCase() === "final-pens" ? statusLabel("final", language) : label;
+  return base === undefined ? text : `${base} · ${text}`;
 }
 
 const safeClass = (text: string | undefined): string => (text ?? "").replace(/[^\w -]/g, "").trim();
@@ -101,7 +131,30 @@ function feetFence(fence: SurfaceOptions["fence"], unit: Unit): SurfaceOptions["
   return Object.fromEntries(Object.entries(fence).map(([key, value]) => [key, typeof value === "number" ? convertLength(value, unit, "ft") : value]));
 }
 
-function buildSurface(o: SurfaceOptions, portrait: boolean, id: string, score: boolean): Surface {
+const PATTERNS: readonly StripePattern[] = ["bands", "wide", "narrow", "lengthwise", "checks", "diagonal", "none"];
+const GOALS: readonly GoalStyle[] = ["box", "line", "strip", "none"];
+
+function buildSoccer(o: SurfaceOptions, common: BuildOptions, scored: boolean, unit: Unit): Surface {
+  const spec: SoccerSpec = soccerSpec(o.pitch, o.units === undefined ? "m" : unit);
+  const frame = resolveFrame(o.pitchType, spec);
+  // A provider's own lines stand where it puts them, on a full pitch only: a small-sided pitch and futsal keep the markings of their own rules.
+  const own = frame !== undefined && spec.format === "11";
+  const detail = common.detail;
+  return soccer(
+    {
+      spec,
+      layout: own ? layoutFromFrame(frame, spec) : layoutOf(spec),
+      half: !scored && (o.half === "left" || o.half === "right") ? o.half : undefined,
+      pattern: PATTERNS.includes(o.stripePattern as StripePattern) ? (o.stripePattern as StripePattern) : "bands",
+      goals: GOALS.includes(o.goals as GoalStyle) ? (o.goals as GoalStyle) : "box",
+      flags: typeof o.cornerFlags === "boolean" ? o.cornerFlags : detail === "full",
+      frame: frame === undefined ? undefined : { id: frame.id, matrix: frameMatrix(frame, spec) },
+    },
+    common,
+  );
+}
+
+function buildSurface(o: SurfaceOptions, portrait: boolean, id: string, score: boolean, scored: boolean): Surface {
   const court: CourtStyle | undefined = o.court;
   const baselineText: [string, string] | undefined = court?.baselineText === undefined ? undefined : typeof court.baselineText === "string" ? [court.baselineText, court.baselineText] : court.baselineText;
   const unit: Unit = lengthUnit(o);
@@ -126,6 +179,8 @@ function buildSurface(o: SurfaceOptions, portrait: boolean, id: string, score: b
       return basketball(common);
     case "mlb":
       return baseball(fenceFor(parkById(o.park), feetFence(o.fence, unit), o.year), common);
+    case "soccer":
+      return buildSoccer(o, common, scored, unit);
     default:
       throw new Error(`Unknown sport "${String(o.sport)}": use one of ${SPORTS.join(", ")}`);
   }
@@ -171,19 +226,30 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
   const words = KYOGIJO_STRINGS[language];
   const park = o.sport === "mlb" ? parkById(o.park) : undefined;
   const parkName = park === undefined ? undefined : language === "ja" ? (park.nameJa ?? park.name) : park.name;
-  const surfaceName = parkName === undefined ? words.surface[o.sport] : language === "ja" ? `${parkName}のグラウンド` : `${parkName}, baseball field`;
+  const pitch = o.sport === "soccer" ? soccerSpec(o.pitch) : undefined;
+  const surfaceName = parkName === undefined ? (pitch?.format === "futsal" ? words.soccer.futsal : words.surface[o.sport]) : language === "ja" ? `${parkName}のグラウンド` : `${parkName}, baseball field`;
   const { stop, colon, gap } = words.said;
   const sentence = (text: string): string => (/[.。]$/.test(text) ? text : `${text}${stop}`);
-  const about = `${words.said.on}${colon}${words.about[o.sport]}${stop}`;
-  const parkLine = parkName === undefined ? "" : `${gap}${fill(words.said.park, { park: parkName })}`;
+  const metres = (value: number): string => String(Math.round(value * 10) / 10);
+  const aboutText = pitch === undefined ? words.about[o.sport] : fill(pitch.format === "futsal" ? words.soccer.aboutFutsal : words.about.soccer, { length: metres(pitch.length), width: metres(pitch.width) });
+  const about = `${words.said.on}${colon}${aboutText}${stop}`;
+  const halfLine = pitch !== undefined && !isScore(o) && (o.half === "left" || o.half === "right") ? `${gap}${words.soccer.half}` : "";
+  const parkLine = parkName === undefined ? halfLine : `${gap}${fill(words.said.park, { park: parkName })}`;
   if (!isScore(o)) return { title: o.title ?? surfaceName, description: o.description ?? `${about}${parkLine}` };
   const winner = winnerOf(o);
   const s = (t: Team): string => (t.score === undefined || String(t.score) === "" ? "–" : String(t.score));
   const line = fill(words.scoreTitle, { away: o.away.name, awayScore: s(o.away), home: o.home.name, homeScore: s(o.home) });
-  const status = statusLabel(o.status, language);
+  const status = statusText(o, language);
+  const pens = shootout(o);
   const extra = [o.competition, status, o.date].filter((part): part is string => part !== undefined && part !== "").join(words.said.sep);
-  const result = winner === "none" ? "" : `${gap}${fill(words.said.won, { name: winner === "home" ? o.home.name : o.away.name })}`;
-  const tied = winner === "none" && numeric(o.home.score) !== undefined && numeric(o.home.score) === numeric(o.away.score) ? `${gap}${words.said.tied}` : "";
+  const level = numeric(o.home.score) !== undefined && numeric(o.home.score) === numeric(o.away.score);
+  const result =
+    winner === "none"
+      ? ""
+      : level && pens !== undefined
+        ? `${gap}${fill(words.said.wonPens, { name: winner === "home" ? o.home.name : o.away.name, a: winner === "home" ? pens.home : pens.away, b: winner === "home" ? pens.away : pens.home })}`
+        : `${gap}${fill(words.said.won, { name: winner === "home" ? o.home.name : o.away.name })}`;
+  const tied = winner === "none" && level ? `${gap}${words.said.tied}` : "";
   return {
     title: o.title ?? (status === undefined ? line : `${line}${words.said.sep}${status}`),
     description: o.description ?? `${extra === "" ? "" : `${sentence(extra)}${gap}`}${sentence(line)}${result}${tied}${gap}${about}${parkLine}`.trim(),
@@ -230,7 +296,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
   let status: string | undefined;
   if (isScore(o)) {
     winner = winnerOf(o);
-    status = statusLabel(o.status, language);
+    status = statusText(o, language);
     const home = teamView(o.home, homeSide, "home", winner, uppercase);
     const away = teamView(o.away, awaySide, "away", winner, uppercase);
     left = homeSide === "left" ? home : away;
@@ -252,12 +318,12 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
     viewBox = `0 0 ${badge.w} ${badge.h}`;
     body = badge.markup;
   } else {
-    const surface = buildSurface(o, portrait, id, isScore(o) && sized === "full");
+    const surface = buildSurface(o, portrait, id, isScore(o) && sized === "full", isScore(o));
     defs = surface.defs;
     let inner = surface.base;
     let teams = "";
     if (isScore(o) && left !== undefined && right !== undefined && sized === "full") {
-      const onColour = o.sport === "nfl" || o.sport === "cfl" || o.sport === "ifaf";
+      const onColour = o.sport === "nfl" || o.sport === "cfl" || o.sport === "ifaf" || o.sport === "soccer";
       teams += bannerMarkup(surface.left, left, { turned: surface.turned, onColour, parts });
       teams += bannerMarkup(surface.right, right, { turned: surface.turned, onColour, parts });
     }

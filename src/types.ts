@@ -1,7 +1,9 @@
 import type { Unit } from "./units.ts";
+import type { SoccerFrame, SoccerProviderId } from "./surfaces/soccer-providers.ts";
+import type { SoccerPitchId, SoccerSize } from "./surfaces/soccer-spec.ts";
 
-/** The surfaces: three football fields, a rink, a court and a ballpark. */
-export type Sport = "nfl" | "cfl" | "ifaf" | "nhl" | "nba" | "mlb";
+/** The surfaces: three football fields, a rink, a court, a ballpark and a soccer pitch. */
+export type Sport = "nfl" | "cfl" | "ifaf" | "nhl" | "nba" | "mlb" | "soccer";
 
 /** `auto` follows the device's light or dark setting (and `data-theme` on the page's root), the others force one. */
 export type Theme = "auto" | "light" | "dark";
@@ -21,6 +23,12 @@ export type Side = "left" | "right";
 
 /** How much of the surface's markings are drawn. `simple` leaves out the small ones, such as hash marks. */
 export type Detail = "full" | "simple";
+
+/** How a soccer pitch is mown: bands across the pitch (the usual 19, or 9 wide, or 39 narrow), along it, in checks, or on the diagonal. */
+export type StripePattern = "bands" | "wide" | "narrow" | "lengthwise" | "checks" | "diagonal" | "none";
+
+/** How a soccer goal is drawn, seen from above: the net as a box behind the goal line, a line on it, a solid strip, or not at all. */
+export type GoalStyle = "box" | "line" | "strip" | "none";
 
 /** The size of a score drawing: the surface with the score on it, the surface with a strip under it, or one strip. */
 export type Size = "full" | "compact" | "badge";
@@ -108,6 +116,8 @@ export interface Team {
   score?: number | string;
   /** The logo: an `https:` or relative address, an image `data:` address, or an SVG document as text. */
   logo?: string;
+  /** The goals it scored in a penalty shoot-out: shown with the status, and the winner of a level game. */
+  penalties?: number | string;
   /** The team's colour, for its end, key or dugout. */
   color?: string;
   /** The colour of the words on that colour. Black or white by the colour's lightness when missing. */
@@ -153,7 +163,7 @@ export interface SurfaceOptions {
   detail?: Detail;
   /** Draw lines at their true widths. By default they are drawn thicker, as broadcast graphics do, so they stay in view when small. */
   exactLines?: boolean;
-  /** Mown stripes on a football field. On by default. */
+  /** Mown stripes on a football field or a soccer pitch. On by default. */
   stripes?: boolean;
   /** Colours of the drawing, over the theme's. */
   colors?: Colors;
@@ -169,6 +179,18 @@ export interface SurfaceOptions {
   fence?: Partial<Fence>;
   /** The look of an NBA court. */
   court?: CourtStyle;
+  /** The soccer pitch: a preset (`fifa`, `uefa`, `mls`, `nwsl`, `ncaa`, `law-min`, `law-max`, `9-a-side`, `7-a-side`, `5-a-side`, `futsal`) or a size, `{ length, width, unit }`. The international 105 by 68 m by default. */
+  pitch?: SoccerPitchId | SoccerSize;
+  /** Draw a soccer pitch in a data provider's own coordinates (`opta`, `statsbomb`, `wyscout`, `tracab`, `metrica`, `skillcorner`, `secondspectrum`, `impect`, `uefa`, `international`), or in a frame of your own: the lines stand where the provider puts them, and an empty `ky-data` group in its units is put in the drawing for raw data. */
+  pitchType?: SoccerProviderId | SoccerFrame;
+  /** Only half of a soccer pitch: the `left` half or the `right` one. Ignored when the drawing has teams. */
+  half?: "left" | "right";
+  /** How the grass of a soccer pitch is mown. `bands` (the usual) by default; `stripes: false` turns it off. */
+  stripePattern?: StripePattern;
+  /** How the goals of a soccer pitch are drawn. `box` by default. */
+  goals?: GoalStyle;
+  /** Corner flags on a soccer pitch. On by default in the `full` detail. */
+  cornerFlags?: boolean;
   /** `embed` (the default) writes the stylesheet into the drawing so that it stands alone; `none` leaves it to the page. */
   style?: "embed" | "none";
   /** An extra class on the `svg`. */
@@ -180,7 +202,7 @@ export interface SurfaceOptions {
 }
 
 /** The standard words of a status. Any other text is written as it is. */
-export type StatusWord = "final" | "final-ot" | "final-so" | "live" | "half" | "postponed";
+export type StatusWord = "final" | "final-ot" | "final-so" | "final-aet" | "final-pens" | "live" | "half" | "extra-time" | "penalties" | "postponed";
 
 /** What a score drawing takes beyond a surface. */
 export interface ScoreOptions extends SurfaceOptions {

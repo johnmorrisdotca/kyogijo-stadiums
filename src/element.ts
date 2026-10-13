@@ -8,7 +8,8 @@ export const KYOGIJO_TAG = "kyogijo-field";
 /** The attributes the element reads. */
 export const KYOGIJO_ATTRIBUTES = [
   "sport", "size", "theme", "language", "orientation", "park", "year", "detail", "margin", "stripes", "exact-lines", "uppercase",
-  "home", "away", "home-abbr", "away-abbr", "home-score", "away-score", "score", "home-logo", "away-logo", "home-color", "away-color",
+  "pitch", "pitch-type", "half", "goals", "stripe-pattern", "corner-flags",
+  "home", "away", "home-abbr", "away-abbr", "home-score", "away-score", "home-penalties", "away-penalties", "score", "home-logo", "away-logo", "home-color", "away-color",
   "status", "competition", "date", "label", "winner", "home-side", "description", "options",
 ] as const;
 
@@ -42,7 +43,7 @@ export function optionsFromAttributes(read: (name: string) => string | null, bas
     const value = read(name);
     if (value !== null && value !== "") o[key] = value;
   };
-  text("theme"); text("language"); text("orientation"); text("park"); text("detail"); text("competition"); text("date"); text("label"); text("winner"); text("description");
+  text("theme"); text("language"); text("orientation"); text("park"); text("detail"); text("pitch"); text("pitch-type"); text("half"); text("goals"); text("stripe-pattern"); text("competition"); text("date"); text("label"); text("winner"); text("description");
   const size = read("size");
   if (size !== null) o.size = size as Size;
   const status = read("status");
@@ -56,6 +57,7 @@ export function optionsFromAttributes(read: (name: string) => string | null, bas
   if (read("stripes") === "false") o.stripes = false;
   if (read("exact-lines") !== null) o.exactLines = read("exact-lines") !== "false";
   if (read("uppercase") === "false") o.uppercase = false;
+  if (read("corner-flags") !== null) o.cornerFlags = read("corner-flags") !== "false";
   const scores = parseScore(read("score"));
   const team = (role: "home" | "away", given: Team | undefined): Team | undefined => {
     const name = read(role) ?? given?.name;
@@ -65,6 +67,8 @@ export function optionsFromAttributes(read: (name: string) => string | null, bas
     if (abbr !== null) out.abbr = abbr;
     const score = asNumber(read(`${role}-score`)) ?? asNumber(scores === undefined ? null : scores[role === "home" ? 0 : 1]);
     if (score !== undefined) out.score = score;
+    const penalties = asNumber(read(`${role}-penalties`));
+    if (penalties !== undefined) out.penalties = penalties;
     const logo = read(`${role}-logo`);
     if (logo !== null) out.logo = logo;
     const color = read(`${role}-color`);

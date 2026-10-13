@@ -8,14 +8,17 @@ export const KYOGIJO_STYLE = `
 :where(.kyogijo[data-sport=nhl]){--ky-surface:#eef5fa;--ky-apron:#d3dbe1;--ky-boards:#9aa4ab;--ky-halo:rgba(255,255,255,.92)}
 :where(.kyogijo[data-sport=nba]){--ky-surface:#d9a766;--ky-surface-alt:#cf9c5b;--ky-apron:#c9c3b4;--ky-boards:#a97d46;--ky-baseline:#fff}
 :where(.kyogijo[data-sport=mlb]){--ky-surface:#4f9a55;--ky-surface-alt:#478f4e;--ky-apron:#bdb59f;--ky-boards:#2f4a36}
+:where(.kyogijo[data-sport=soccer]){--ky-surface:#4c9b56;--ky-surface-alt:#438f4d;--ky-apron:#c9d2bd;--ky-court:#3b79ad}
 @media (prefers-color-scheme:dark){:where(html:not([data-theme=light]) .kyogijo:not([data-theme=light])){--ky-ink:#ece8dc;--ky-line:#e9ece6;--ky-plate:rgba(0,0,0,.82);--ky-apron:#1b1f1c;--ky-surface:#2c6a3f;--ky-surface-alt:#296239;--ky-zone:#1f4a2d;--ky-boards:#4d5450;--ky-red:#d4574d;--ky-blue:#5584d4;--ky-dirt:#8a6040;--ky-foul:#275a31;--ky-infield:#367a42;--ky-crease:#8ea9cc;--ky-key:#8a3f2b}
 :where(html:not([data-theme=light]) .kyogijo[data-sport=nhl]:not([data-theme=light])){--ky-surface:#a9bccb;--ky-apron:#1a2025;--ky-boards:#4b5156}
 :where(html:not([data-theme=light]) .kyogijo[data-sport=nba]:not([data-theme=light])){--ky-surface:#8f6a3c;--ky-surface-alt:#876234;--ky-apron:#1a1c1b;--ky-boards:#5e4426}
-:where(html:not([data-theme=light]) .kyogijo[data-sport=mlb]:not([data-theme=light])){--ky-surface:#2f6b3a;--ky-surface-alt:#2b6336;--ky-apron:#1b1f1c;--ky-boards:#1c2b20}}
+:where(html:not([data-theme=light]) .kyogijo[data-sport=mlb]:not([data-theme=light])){--ky-surface:#2f6b3a;--ky-surface-alt:#2b6336;--ky-apron:#1b1f1c;--ky-boards:#1c2b20}
+:where(html:not([data-theme=light]) .kyogijo[data-sport=soccer]:not([data-theme=light])){--ky-surface:#2d6c3e;--ky-surface-alt:#276136;--ky-apron:#1b1f1c;--ky-court:#2a5478}}
 :where(html[data-theme=dark] .kyogijo,.kyogijo[data-theme=dark]){--ky-ink:#ece8dc;--ky-line:#e9ece6;--ky-plate:rgba(0,0,0,.82);--ky-apron:#1b1f1c;--ky-surface:#2c6a3f;--ky-surface-alt:#296239;--ky-zone:#1f4a2d;--ky-boards:#4d5450;--ky-red:#d4574d;--ky-blue:#5584d4;--ky-dirt:#8a6040;--ky-foul:#275a31;--ky-infield:#367a42;--ky-crease:#8ea9cc;--ky-key:#8a3f2b}
 :where(html[data-theme=dark] .kyogijo[data-sport=nhl],.kyogijo[data-theme=dark][data-sport=nhl]){--ky-surface:#a9bccb;--ky-apron:#1a2025;--ky-boards:#4b5156}
 :where(html[data-theme=dark] .kyogijo[data-sport=nba],.kyogijo[data-theme=dark][data-sport=nba]){--ky-surface:#8f6a3c;--ky-surface-alt:#876234;--ky-apron:#1a1c1b;--ky-boards:#5e4426}
 :where(html[data-theme=dark] .kyogijo[data-sport=mlb],.kyogijo[data-theme=dark][data-sport=mlb]){--ky-surface:#2f6b3a;--ky-surface-alt:#2b6336;--ky-apron:#1b1f1c;--ky-boards:#1c2b20}
+:where(html[data-theme=dark] .kyogijo[data-sport=soccer],.kyogijo[data-theme=dark][data-sport=soccer]){--ky-surface:#2d6c3e;--ky-surface-alt:#276136;--ky-apron:#1b1f1c;--ky-court:#2a5478}
 .kyogijo .ky-apron{fill:var(--ky-apron)}
 .kyogijo .ky-text{fill:var(--ky-ink);font-family:var(--ky-font);font-weight:800;letter-spacing:0;font-variant-numeric:tabular-nums}
 .kyogijo .ky-surface{fill:var(--ky-surface)}
@@ -29,6 +32,11 @@ export const KYOGIJO_STYLE = `
 .kyogijo .ky-fill-line{fill:var(--ky-line)}
 .kyogijo .ky-band{stroke:var(--ky-line)}
 .kyogijo .ky-num{fill:var(--ky-line);font-family:var(--ky-font);font-weight:700}
+.kyogijo .ky-pitch-futsal .ky-surface{fill:var(--ky-court)}
+.kyogijo .ky-goal{stroke:var(--ky-line);fill:none}
+.kyogijo .ky-goal-net{stroke:var(--ky-line);opacity:.55}
+.kyogijo .ky-goal-strip{fill:var(--ky-line)}
+.kyogijo .ky-flag{fill:var(--ky-pylon)}
 .kyogijo .ky-post{stroke:var(--ky-post)}
 .kyogijo .ky-post-end{fill:var(--ky-post)}
 .kyogijo .ky-pylon{fill:var(--ky-pylon)}
