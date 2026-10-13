@@ -60,6 +60,7 @@ export const NAV = [
       { slug: "frames", ja: "座標系" },
       { slug: "layers", ja: "データレイヤー" },
       { slug: "charts", ja: "すぐ使えるチャート" },
+      { slug: "team-shape", ja: "チームの形" },
       { slug: "replay", ja: "リプレイ" },
     ],
   },

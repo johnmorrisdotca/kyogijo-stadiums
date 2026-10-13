@@ -123,6 +123,10 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `charts.beyondNote` | Beyond the fence: {n}. | フェンスを越えた打球は{n}本です。 |
 | `charts.airYards` | Air yards from {min} to {max}. | エアヤード：{min}～{max}ヤード。 |
 | `charts.goalDesc` | The goal frame, {w} by {h} metres, seen from the front: the shooter's left is on the left. | ゴール枠（幅{w}m×高さ{h}m）を正面から見た図です。図の左側が、シュートを打つ選手の左手側です。 |
+| `charts.titlePassNetwork` | Pass network | パスネットワーク |
+| `charts.sizeTouches` | Node size: touches | 円の大きさ：タッチ数 |
+| `charts.widthPasses` | Link width: passes | 線の太さ：パス数 |
+| `charts.sumNetwork` | Passes {passes}, players {players}, links {links}. | パス{passes}本、選手{players}人、つながり{links}本。 |
 | `layers.pointOne` | point | データ点 |
 | `layers.pointMany` | points | データ点 |
 | `layers.lineOne` | line | 線 |
@@ -227,6 +231,56 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `layers.zones.sideLeft` | left | 左 |
 | `layers.zones.sideMiddle` | middle | 中央 |
 | `layers.zones.sideRight` | right | 右 |
+| `team.networkTitle` | Pass network: {players} players, {links} links from {passes} passes | パスネットワーク：選手{players}人、つながり{links}本（パス{passes}本） |
+| `team.networkNote` | Most touches: {name}, {touches}. Strongest link: {a} and {b}, {n} passes. | 最多タッチ：{name}（{touches}回）。パスが最も多いつながり：{a}と{b}、{n}本。 |
+| `team.networkNoteDirected` | Most touches: {name}, {touches}. Strongest link: {a} to {b}, {n} passes. | 最多タッチ：{name}（{touches}回）。パスが最も多いつながり：{a}から{b}へ、{n}本。 |
+| `team.networkMin` | Links of fewer than {n} passes are left out. | パスが{n}本未満のつながりは描かれていません。 |
+| `team.nodeTitle` | {name}: {touches} touches ({made} passes made, {received} received) | {name}：タッチ{touches}回（出したパス{made}本、受けたパス{received}本） |
+| `team.linkTitle` | {a} and {b}: {n} passes | {a}と{b}：パス{n}本 |
+| `team.linkTitleDirected` | {a} to {b}: {n} passes | {a}から{b}へ：パス{n}本 |
+| `team.formationTitle` | Formation {name}: {n} positions | フォーメーション{name}：{n}人分のポジション |
+| `team.formationNote` | Positions: {list}. | ポジション：{list}。 |
+| `team.formationPlayers` | Players: {list}. | 選手：{list}。 |
+| `team.formationItem` | {who} ({position}) | {who}（{position}） |
+| `team.voronoiTitle` | Space control of {n} players | 選手{n}人のスペース支配（ボロノイ図） |
+| `team.voronoiNote` | Share of the surface nearest each team's players: {list}. | 競技場のうち、各チームの選手が最も近い範囲の割合：{list}。 |
+| `team.shareItem` | {name} {pct}% | {name} {pct}％ |
+| `team.voronoiShared` | {n} players share a place with another and have no cell. | {n}人は他の選手と同じ位置にいるため、エリアがありません。 |
+| `team.delaunayTitle` | Delaunay triangulation of {n} players | 選手{n}人のドロネー三角形分割 |
+| `team.delaunayNote` | {triangles} triangles and {edges} edges. | 三角形{triangles}個、辺{edges}本。 |
+| `team.hullTitle` | Convex hull of {n} players | 選手{n}人の凸包 |
+| `team.hullItem` | {name}: {n} players, area {area} square {unit} | {name}：選手{n}人、面積{area}平方{unit} |
+| `team.hullAll` | all players | 全選手 |
+| `team.flowTitle` | Flow of {n} movements in {cells} cells | {n}件の移動の流れ（{cells}個のセル） |
+| `team.flowNote` | The mean movement of a cell is up to {len} {unit} long. | セルごとの平均的な移動の長さは最大で{len}{unit}です。 |
+| `team.sonarTitle` | Direction roses of {n} movements: {roses} roses of {angles} directions | {n}件の移動の方向別分布：ローズ図{roses}個（各{angles}方向） |
+| `team.sonarNote` | Most common direction: {deg} degrees, {n}. | 最も多い方向：{deg}度（{n}件）。 |
+| `team.sonarAngles` | 0 degrees points to the right end of the surface as drawn wide and 90 degrees to the top. | 競技場を横長に描いたとき、0度は右端の方向、90度は上辺の方向です。 |
+| `team.roseTitle` | {name}: {n} movements, most toward {deg} degrees | {name}：{n}件の移動、最も多いのは{deg}度方向 |
+| `team.barTitle` | {from} to {to} degrees: {value} | {from}度～{to}度：{value} |
+| `team.tablePlayer` | Player | 選手 |
+| `team.tableFrom` | From | 出し手 |
+| `team.tableTo` | To | 受け手 |
+| `team.tablePasses` | Passes | パス数 |
+| `team.tableMade` | Passes made | 出したパス |
+| `team.tableReceived` | Passes received | 受けたパス |
+| `team.tableTouches` | Touches | タッチ数 |
+| `team.tablePosition` | Position | ポジション |
+| `team.tableNumber` | Number | 背番号 |
+| `team.tableName` | Name | 名前 |
+| `team.tablePlayers` | Players | 選手数 |
+| `team.tableShare` | Share of the surface (%) | 競技場に占める割合（％） |
+| `team.tableArea` | Area | 面積 |
+| `team.tableCorners` | Corners | 頂点数 |
+| `team.tableTriangles` | Triangles | 三角形の数 |
+| `team.tableEdges` | Edges | 辺の数 |
+| `team.tableDirection` | Mean direction (degrees) | 平均の方向（度） |
+| `team.tableLength` | Mean length | 平均の長さ |
+| `team.tableSteady` | Steadiness (%) | 方向の揃い具合（％） |
+| `team.tableFromAngle` | From (degrees) | 開始角（度） |
+| `team.tableToAngle` | To (degrees) | 終了角（度） |
+| `team.tableRose` | Rose | ローズ図 |
+| `team.tableUnit` | Lengths in {unit}. | 長さの単位：{unit}。 |
 | `replay.title` | Replay, {time} | リプレイ（再生時間{time}） |
 | `replay.objects` | {n} tracked objects | 追跡対象は{n}個 |
 | `replay.objectsOne` | {n} tracked object | 追跡対象は{n}個 |
@@ -576,6 +630,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `frames` | Coordinate frames | 座標系 |
 | page `layers` | Data layers | データレイヤー |
 | page `charts` | Ready-made charts | すぐ使えるチャート |
+| page `team-shape` | Team shape | チームの形 |
 | page `replay` | Replay | リプレイ |
 | group `gallery` | Gallery | ギャラリー |
 | page `gallery` | Gallery | ギャラリーの案内 |
@@ -818,3 +873,106 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `allianz-stadium-turin` | Allianz Stadium | ユヴェントス・スタジアム | Allianz Stadium |
 | `japan-national-stadium` | Japan National Stadium | 国立競技場 | 国立競技場 |
 | `kashima-soccer-stadium` | Kashima Soccer Stadium | 茨城県立カシマサッカースタジアム | 茨城県立カシマサッカースタジアム |
+
+## The formations (`FORMATIONS`)
+
+| Formation | English | 日本語 |
+| --- | --- | --- |
+| `4-4-2` | 4-4-2. Four defenders, four midfielders in a flat line and two strikers. | 4-4-2。ディフェンダー4人、横一列のミッドフィルダー4人、ストライカー2人。 |
+| `4-3-3` | 4-3-3. Four defenders, three midfielders and a front three of two wingers and a striker. | 4-3-3。ディフェンダー4人、ミッドフィルダー3人、両ウイングとストライカーの3トップ。 |
+| `4-2-3-1` | 4-2-3-1. Four defenders, two holding midfielders, three behind a lone striker. | 4-2-3-1。ディフェンダー4人、ボランチ2人、攻撃的な3人、1トップ。 |
+| `4-1-4-1` | 4-1-4-1. Four defenders, one holding midfielder, a line of four midfielders and a lone striker. | 4-1-4-1。ディフェンダー4人、アンカー1人、横一列のミッドフィルダー4人、1トップ。 |
+| `3-5-2` | 3-5-2. Three centre-backs, wing-backs wide of three midfielders and two strikers. | 3-5-2。センターバック3人、両ウイングバックと中央のミッドフィルダー3人、ストライカー2人。 |
+| `3-4-3` | 3-4-3. Three centre-backs, four midfielders and a front three. | 3-4-3。センターバック3人、ミッドフィルダー4人、3トップ。 |
+| `5-3-2` | 5-3-2. Five at the back with wing-backs, three midfielders and two strikers. | 5-3-2。ウイングバックを含む5バック、ミッドフィルダー3人、ストライカー2人。 |
+| `5-4-1` | 5-4-1. Five at the back, a flat line of four midfielders and a lone striker: a deep, defensive shape. | 5-4-1。5バック、横一列のミッドフィルダー4人、1トップ。引いて守る形です。 |
+| `4-3-2-1` | 4-3-2-1. Four defenders, three midfielders and two attacking midfielders behind a lone striker (the "Christmas tree"). | 4-3-2-1。ディフェンダー4人、ミッドフィルダー3人、1トップの後ろに攻撃的ミッドフィルダー2人（クリスマスツリー型）。 |
+| `4-4-2-diamond` | 4-4-2 diamond. Four defenders, a diamond of midfielders (holding, two central, attacking) and two strikers. | 4-4-2（ダイヤモンド型）。ディフェンダー4人、ひし形に並ぶミッドフィルダー4人（守備的、中央2人、攻撃的）、ストライカー2人。 |
+| `hockey-5v5` | Hockey, five skaters and the goaltender. The six players on the ice at even strength: the goaltender, two defencemen and a line of centre and two wings. | アイスホッケー（スケーター5人とゴーリー）。5対5でプレーするときの氷上の6人。ゴーリー、ディフェンス2人、センターと両ウィングのライン。 |
+| `hockey-1-3-1` | Hockey, 1-3-1 power play. A power-play set in the attacking zone: one at the point, three across the middle and one low. Which player takes which place varies by team. | アイスホッケー（1-3-1のパワープレー）。攻撃ゾーンでのパワープレーの形。ブルーライン付近に1人、中ほどに3人、ゴール近くに1人。どの選手がどこに立つかはチームによって異なります。 |
+| `basketball-5-out` | Basketball, five out. All five on the three-point line: the point guard at the top, wings and both corners. | バスケットボール（ファイブアウト）。5人全員がスリーポイントライン付近に立つ形。トップにポイントガード、両ウィングと両コーナー。 |
+| `basketball-4-out-1-in` | Basketball, four out and one in. Four players on the three-point line and the centre on the block. | バスケットボール（フォーアウト・ワンイン）。4人がスリーポイントライン付近、センターがブロック（ゴール近く）に立つ形。 |
+| `basketball-high-post` | Basketball, 1-4 high. The point guard at the top, two forwards at the elbows of the free-throw line and a guard on each wing. | バスケットボール（1-4ハイ）。トップにポイントガード、フリースローラインの両端（エルボー）にフォワード2人、両ウィングにガード。 |
+| `football-i-formation` | Football, I formation. Offence: the quarterback under centre with the fullback and the halfback in a line behind him, a tight end and two wide receivers. | アメリカンフットボール（Iフォーメーション）。オフェンス。センターの真後ろにクォーターバック、その後ろにフルバックとハーフバックが縦一列、タイトエンド1人とワイドレシーバー2人。 |
+| `football-shotgun` | Football, shotgun. Offence: the quarterback a few yards behind the centre with a halfback beside him, a tight end and three wide receivers. | アメリカンフットボール（ショットガン）。オフェンス。クォーターバックはセンターの数ヤード後ろに下がり、隣にハーフバック、タイトエンド1人とワイドレシーバー3人。 |
+| `football-4-3` | Football, 4-3 defence. Defence against an offence going right: four linemen, three linebackers, two cornerbacks and two safeties. Left and right are the defenders' own. | アメリカンフットボール（4-3ディフェンス）。右へ進むオフェンスに対するディフェンス。ディフェンスライン4人、ラインバッカー3人、コーナーバック2人、セーフティ2人。左右はディフェンス側から見たものです。 |
+| `football-3-4` | Football, 3-4 defence. Defence against an offence going right: three linemen, four linebackers, two cornerbacks and two safeties. Left and right are the defenders' own. | アメリカンフットボール（3-4ディフェンス）。右へ進むオフェンスに対するディフェンス。ディフェンスライン3人、ラインバッカー4人、コーナーバック2人、セーフティ2人。左右はディフェンス側から見たものです。 |
+| `baseball-standard` | Baseball, standard defence. The nine fielders where they usually stand: a straight infield and the outfielders in their fields. | 野球（通常の守備位置）。9人の野手の定位置。内野はシフトなしで、外野手はそれぞれ自分の守備範囲に立ちます。 |
+| `baseball-shift` | Baseball, infield shift against a left-handed pull hitter. Three infielders on the right side of second base and the outfield turned the same way. Since 2023 MLB's Rule 5.02 requires two infielders on each side of second base, so this shift is not allowed there. | 野球（左打者の引っ張り対策の内野シフト）。二塁ベースの一塁側に内野手3人が寄り、外野手も同じ方向に寄った守備。2023年から、MLBの規則5.02は二塁ベースの一塁側と三塁側に内野手を2人ずつ置くことを求めているため、MLBではこのシフトは認められません。 |
+
+## The positions' names (`POSITION_NAMES`)
+
+| Position | English | 日本語 |
+| --- | --- | --- |
+| `soccer.GK` | Goalkeeper | ゴールキーパー |
+| `soccer.RB` | Right back | 右サイドバック |
+| `soccer.LB` | Left back | 左サイドバック |
+| `soccer.CB` | Centre-back | センターバック |
+| `soccer.RCB` | Right centre-back | 右センターバック |
+| `soccer.LCB` | Left centre-back | 左センターバック |
+| `soccer.RWB` | Right wing-back | 右ウイングバック |
+| `soccer.LWB` | Left wing-back | 左ウイングバック |
+| `soccer.CDM` | Defensive midfielder | アンカー |
+| `soccer.RDM` | Right defensive midfielder | 右ボランチ |
+| `soccer.LDM` | Left defensive midfielder | 左ボランチ |
+| `soccer.CM` | Central midfielder | センターハーフ |
+| `soccer.RCM` | Right central midfielder | 右センターハーフ |
+| `soccer.LCM` | Left central midfielder | 左センターハーフ |
+| `soccer.RM` | Right midfielder | 右サイドハーフ |
+| `soccer.LM` | Left midfielder | 左サイドハーフ |
+| `soccer.CAM` | Attacking midfielder | 攻撃的ミッドフィルダー |
+| `soccer.RAM` | Right attacking midfielder | 右の攻撃的ミッドフィルダー |
+| `soccer.LAM` | Left attacking midfielder | 左の攻撃的ミッドフィルダー |
+| `soccer.RW` | Right winger | 右ウイング |
+| `soccer.LW` | Left winger | 左ウイング |
+| `soccer.ST` | Striker | ストライカー |
+| `soccer.RS` | Right striker | 右ストライカー |
+| `soccer.LS` | Left striker | 左ストライカー |
+| `nhl.G` | Goaltender | ゴーリー |
+| `nhl.LD` | Left defenceman | 左ディフェンス |
+| `nhl.RD` | Right defenceman | 右ディフェンス |
+| `nhl.LW` | Left wing | レフトウィング |
+| `nhl.C` | Centre | センター |
+| `nhl.RW` | Right wing | ライトウィング |
+| `nba.PG` | Point guard | ポイントガード |
+| `nba.SG` | Shooting guard | シューティングガード |
+| `nba.SF` | Small forward | スモールフォワード |
+| `nba.PF` | Power forward | パワーフォワード |
+| `nba.C` | Centre | センター |
+| `nfl.QB` | Quarterback | クォーターバック |
+| `nfl.HB` | Halfback | ハーフバック |
+| `nfl.FB` | Fullback | フルバック |
+| `nfl.WR1` | Wide receiver 1 | ワイドレシーバー1 |
+| `nfl.WR2` | Wide receiver 2 | ワイドレシーバー2 |
+| `nfl.WR3` | Wide receiver 3 | ワイドレシーバー3 |
+| `nfl.TE` | Tight end | タイトエンド |
+| `nfl.C` | Centre | センター |
+| `nfl.LG` | Left guard | 左ガード |
+| `nfl.RG` | Right guard | 右ガード |
+| `nfl.LT` | Left tackle | 左タックル |
+| `nfl.RT` | Right tackle | 右タックル |
+| `nfl.LDE` | Left defensive end | 左ディフェンシブエンド |
+| `nfl.RDE` | Right defensive end | 右ディフェンシブエンド |
+| `nfl.LDT` | Left defensive tackle | 左ディフェンシブタックル |
+| `nfl.RDT` | Right defensive tackle | 右ディフェンシブタックル |
+| `nfl.NT` | Nose tackle | ノーズタックル |
+| `nfl.LLB` | Left linebacker | 左ラインバッカー |
+| `nfl.MLB` | Middle linebacker | ミドルラインバッカー |
+| `nfl.RLB` | Right linebacker | 右ラインバッカー |
+| `nfl.LOLB` | Left outside linebacker | 左アウトサイドラインバッカー |
+| `nfl.LILB` | Left inside linebacker | 左インサイドラインバッカー |
+| `nfl.RILB` | Right inside linebacker | 右インサイドラインバッカー |
+| `nfl.ROLB` | Right outside linebacker | 右アウトサイドラインバッカー |
+| `nfl.LCB` | Left cornerback | 左コーナーバック |
+| `nfl.RCB` | Right cornerback | 右コーナーバック |
+| `nfl.FS` | Free safety | フリーセーフティ |
+| `nfl.SS` | Strong safety | ストロングセーフティ |
+| `mlb.P` | Pitcher | ピッチャー |
+| `mlb.C` | Catcher | キャッチャー |
+| `mlb.1B` | First baseman | ファースト |
+| `mlb.2B` | Second baseman | セカンド |
+| `mlb.SS` | Shortstop | ショート |
+| `mlb.3B` | Third baseman | サード |
+| `mlb.LF` | Left fielder | レフト |
+| `mlb.CF` | Centre fielder | センター |
+| `mlb.RF` | Right fielder | ライト |

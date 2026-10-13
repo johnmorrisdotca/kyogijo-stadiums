@@ -63,6 +63,10 @@ A layer is `{ kind, data, style, ...places }`. The marks are plain SVG elements 
 - **Places.** Without `from`, coordinates are in the layer's `units` (the drawing's `units`, else feet; `"rulebook"` is the unit of the sport's rulebook). With `from` (a name in `FRAMES` or a `Frame`), they are the frame's numbers and go through `toSurface` with the layer's `attacking`, `surfaceSize` and `anchors`. `limits` holds a mark on the surface instead of cutting it. `clip: "none"` lets a layer run over the ground round the surface.
 
 
+## Team layers
+
+Seven more kinds read where a team's players stand and how they move: `network`, `formation`, `voronoi`, `delaunay`, `hull`, `flow` and `sonar`. They take the same places as the others and are on their own page: [Team shape](./team-shape.md).
+
 ## Heat layers
 
 Five more kinds count marks into cells, hexagons, named zones or a density, and read the result in a colour ramp. They take the same places as the others (`from`, `units`, `attacking`, `limits`, `clip`, `hidden`) and the same marks as `data`: `{ x, y }`, with a `value` (a number to sum or average: expected goals, a distance, points) and an `outcome` (`made`, `goal`: what a success is for the `rate` statistic). They are drawn over a pale or dark ground (`ground: "plate"`, the default) so that the ramp is read against one colour whatever the surface, and cut to its outline: the boards, the fence, the lines of the court.

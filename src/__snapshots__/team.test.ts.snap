@@ -1,0 +1,30 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`the same options always draw the same layers: fingerprints > are held for each kind on its own surface, in English and Japanese 1`] = `
+{
+  "delaunay en": "1vurmwd",
+  "delaunay ja": "0ww3pi3",
+  "flow en": "1ixe2pa",
+  "flow ja": "1z0ghci",
+  "formation en": "16u1iol",
+  "formation ja": "0fqi9o6",
+  "hull en": "18t5pru",
+  "hull ja": "1rurvza",
+  "network en": "1joesx2",
+  "network ja": "003fu7n",
+  "sonar en": "1sv84v9",
+  "sonar ja": "1t5qfry",
+  "voronoi en": "1v5bzki",
+  "voronoi ja": "0ht1nw4",
+}
+`;
+
+exports[`the same options always draw the same layers: fingerprints > are held for each kind on its own surface, in English and Japanese 2`] = `
+{
+  "baseball": "01p8f7s",
+  "basketball": "1f1y7mx",
+  "football": "13yybgi",
+  "hockey": "0uhh8al",
+  "rink": "0pfgzv1",
+}
+`;

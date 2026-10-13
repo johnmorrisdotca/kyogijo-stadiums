@@ -16,6 +16,8 @@ Each is held by a test, and the ones with a name are exported. The counts are ma
 | A colour | a hex colour, `rgb()`, `rgba()`, `hsl()`, `hsla()`, a name or `var(--name)`, 64 characters at most | `safeColour` |
 | A logo | an https or relative address, an image data address, or SVG text up to 200,000 characters | `safeLogo` |
 | A name | any length: it is set on one line or two, in the biggest size that fits its place | `fitLines` |
+| Formations | 21 named formations of 5 sports, 199 places in all | `FORMATIONS` |
+| The team layers | a Voronoi diagram of 22 players adds under 12 kB; 1,000 points are triangulated in under 600 ms; a pass network of 600 passes adds under 16 kB | `voronoi`, `delaunay`, `network` |
 | A layer's marks | 1,000 points add under 70 kB; 10,000 draw in under 250 ms | `drawKyogijo` |
 | A drawing's size | under 22 kB for a football field, 15 kB for a soccer pitch with a score, 14 kB for a rink or a court, 17 kB for a ballpark, 17.5 kB for a curling sheet with its board, each with its 8 kB stylesheet (a test holds each) | `drawKyogijo` |
 <!-- /made:limits -->

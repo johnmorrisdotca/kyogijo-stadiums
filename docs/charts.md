@@ -1,6 +1,6 @@
 # Ready-made charts
 
-`@johnmorrisdotca/kyogijo/charts` has one function for each of six charts. Each takes plain data and returns the [data layers](./layers.md) and the drawing options to lay them on, so one call gives a good chart and every layer can still be changed.
+`@johnmorrisdotca/kyogijo/charts` has one function for each of six charts, and `passNetwork` for a seventh, which [Team shape](./team-shape.md#pass-networks) describes. Each takes plain data and returns the [data layers](./layers.md) and the drawing options to lay them on, so one call gives a good chart and every layer can still be changed.
 
 | Function | Chart | Reads |
 | --- | --- | --- |

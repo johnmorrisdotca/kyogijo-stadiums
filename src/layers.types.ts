@@ -3,6 +3,7 @@
 import type { ScoreOptions, SurfaceOptions } from "./types.ts";
 import type { Frame, Attacking, Landmark, SurfaceSize } from "./frames.ts";
 import type { ContourLayer, HeatmapLayer, HexbinLayer, LegendLayer, ZonesLayer } from "./heat.types.ts";
+import type { DelaunayLayer, FlowLayer, FormationLayer, HullLayer, NetworkLayer, SonarLayer, VoronoiLayer } from "./team.types.ts";
 import type { Unit } from "./units.ts";
 
 /** The shapes a point can be drawn as. A team's logo is `logo`. */
@@ -209,7 +210,7 @@ export interface TextLayer extends LayerBase {
 }
 
 /** A layer of data on a surface. */
-export type Layer = PointsLayer | LinesLayer | ArrowsLayer | TextLayer | HeatmapLayer | HexbinLayer | ZonesLayer | ContourLayer | LegendLayer;
+export type Layer = PointsLayer | LinesLayer | ArrowsLayer | TextLayer | HeatmapLayer | HexbinLayer | ZonesLayer | ContourLayer | LegendLayer | NetworkLayer | FormationLayer | VoronoiLayer | DelaunayLayer | HullLayer | FlowLayer | SonarLayer;
 
 /** The kinds of layer. */
 export type LayerKind = Layer["kind"];

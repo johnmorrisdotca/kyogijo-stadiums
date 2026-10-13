@@ -28,11 +28,21 @@ src/
 ├── heat.colour.ts      the colour ramps
 ├── heat.zones.ts       the sports' zones
 ├── heat.types.ts       the heat layers' types
+├── team.layers.ts      the team layers: one function that draws any of the seven kinds and one that lists their tables
+├── team.network.ts     the pass network: nodes, links, touches
+├── team.shape.ts       Voronoi cells, Delaunay triangles and convex hulls of a team's players
+├── team.formation.ts   a formation drawn on a surface, with a lineup on it
+├── team.motion.ts      flow fields and sonars of movements
+├── team.common.ts      what the team layers share: teams, classes, tables, grouping
+├── team.geometry.ts    convex hull, Delaunay triangulation (Bowyer and Watson) and Voronoi cells, from the textbook
+├── team.types.ts       the team layers' types
+├── formations.ts       the named formations of five sports and the names of their positions
 ├── layers-entry.ts     the layers' entry
 ├── charts.ts           ready-made charts and what they share
 ├── charts.baseball.ts  the spray chart
 ├── charts.soccer.ts    the soccer shot map and goal mouth
 ├── charts.curling.ts   the curling stones chart and the score of an end
+├── charts.network.ts   the pass network chart
 ├── charts.types.ts     the charts' types
 ├── charts-entry.ts     the charts' entry
 ├── replay.ts           a replay's frame and its pure functions: interpolate, trails, possession, events, drawFrame

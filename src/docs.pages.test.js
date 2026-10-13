@@ -176,8 +176,8 @@ describe("the gallery", () => {
     for (const sport of lib[MAIN].SPORTS) expect(codes, sport).toContain(`sport: "${sport}"`);
     for (const sport of ["nba", "nhl", "nfl", "mlb"]) for (const league of lib[`${MAIN}/leagues`].LEAGUES[sport]) if (!league.builtIn) expect(items.some((entry) => entry.id === `league-${sport}-${league.id}`), `${sport} ${league.id}`).toBe(true);
     for (const sport of lib[`${MAIN}/eras`].ERA_SPORTS) expect(items.some((entry) => entry.id.startsWith(`year-${sport}-`)), sport).toBe(true);
-    for (const kind of ["points", "lines", "arrows", "text", "heatmap", "hexbin", "zones", "contour", "legend"]) expect(codes, kind).toContain(`kind: "${kind}"`);
-    for (const chart of ["nbaShotChart", "nhlShotMap", "mlbSprayChart", "nflPassChart", "soccerShotMap"]) expect(codes, chart).toContain(`${chart}(`);
+    for (const kind of ["points", "lines", "arrows", "text", "heatmap", "hexbin", "zones", "contour", "legend", "network", "formation", "voronoi", "delaunay", "hull", "flow", "sonar"]) expect(codes, kind).toContain(`kind: "${kind}"`);
+    for (const chart of ["nbaShotChart", "nhlShotMap", "mlbSprayChart", "nflPassChart", "soccerShotMap", "passNetwork"]) expect(codes, chart).toContain(`${chart}(`);
     for (const name of Object.keys(lib[MAIN].COURT_THEMES)) expect(codes, name).toContain(`COURT_THEMES.${name}`);
     for (const name of Object.keys(lib[MAIN].SOCCER_PITCHES)) expect(items.some((entry) => entry.id === `pitch-${name}`), name).toBe(true);
     expect(items.some((entry) => /park: "(polo-grounds|ebbets-field)"/.test(entry.code))).toBe(true);

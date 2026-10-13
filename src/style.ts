@@ -122,5 +122,17 @@ export const KYOGIJO_CURLING_STYLE = `
 .kyogijo .ky-hammer{fill:var(--ky-plate-ink)}.kyogijo .ky-hammer-in{fill:var(--ky-plate)}.kyogijo .ky-grid{stroke:var(--ky-plate-ink);opacity:.22}
 .kyogijo .ky-badge-hammer-left .ky-hammer{fill:var(--ky-left-ink)}.kyogijo .ky-badge-hammer-left .ky-hammer-in{fill:var(--ky-left)}.kyogijo .ky-badge-hammer-right .ky-hammer{fill:var(--ky-right-ink)}.kyogijo .ky-badge-hammer-right .ky-hammer-in{fill:var(--ky-right)}`.trim();
 
+/**
+ * The rules of the team layers (the cells, triangles and hulls, the roses of a sonar, the arrows of a flow field and the marks of a formation), kept apart
+ * like the heat layers' so that a drawing without one does not carry them: a drawing that has one writes them in beside the layer, and `KYOGIJO_STYLE` has them for a page.
+ */
+export const KYOGIJO_TEAM_STYLE = `
+.kyogijo .ky-sp{fill:var(--c,var(--ky-layer));fill-opacity:.22;stroke:var(--c,var(--ky-layer));stroke-width:calc(var(--w,.3)*1px);stroke-linejoin:round}
+.kyogijo .ky-sp-e{fill:none;stroke-opacity:.8}
+.kyogijo .ky-ro{fill:var(--c,var(--ky-layer));fill-opacity:.7;stroke:var(--ky-layer-edge);stroke-width:calc(var(--w,.3)*1px);stroke-linejoin:round}
+.kyogijo .ky-ro-r{fill:none;stroke:var(--c,var(--ky-layer));stroke-opacity:.45;stroke-dasharray:calc(var(--w,.3)*3px) calc(var(--w,.3)*3px);stroke-width:calc(var(--w,.3)*1px)}
+.kyogijo .ky-fm>*{fill:var(--c,var(--ky-layer));stroke:var(--ky-layer-edge);stroke-width:calc(var(--w,.3)*1px)}
+.kyogijo .ky-fm>.ky-e{fill:var(--ky-layer-hollow);stroke:var(--c,var(--ky-layer));stroke-width:calc(var(--w,.3)*2.2px)}`.trim();
+
 /** Every rule of the package, for a page that draws with `style: "none"` and supplies the stylesheet itself. */
-export const KYOGIJO_STYLE = `${KYOGIJO_BASE_STYLE}\n${KYOGIJO_HEAT_STYLE}\n${KYOGIJO_CURLING_STYLE}`;
+export const KYOGIJO_STYLE = `${KYOGIJO_BASE_STYLE}\n${KYOGIJO_HEAT_STYLE}\n${KYOGIJO_TEAM_STYLE}\n${KYOGIJO_CURLING_STYLE}`;

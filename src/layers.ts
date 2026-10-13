@@ -5,7 +5,8 @@
 // either is used.
 import { safeColour, safeLogo } from "./colour.ts";
 import { FRAMES } from "./frames.ts";
-import { KYOGIJO_HEAT_STYLE } from "./style.ts";
+import { KYOGIJO_HEAT_STYLE, KYOGIJO_TEAM_STYLE } from "./style.ts";
+import { drawTeam, isTeamLayer, teamTables } from "./team.layers.ts";
 import { drawHeat, drawLegend, heatTable, type LegendInfo } from "./heat.ts";
 import { clamp01, envFor, isNum, newMade, opacityOf, own, place, toArray, unitOfLayer, type Env, type Made } from "./layers.env.ts";
 import { safeClass } from "./common.ts";
@@ -412,12 +413,21 @@ export function renderLayers(o: SurfaceOptions | ScoreOptions, layers: readonly 
       case "contour":
         finish(drawHeat(layer, env, gid, known));
         return;
+      case "network":
+      case "formation":
+      case "voronoi":
+      case "delaunay":
+      case "hull":
+      case "flow":
+      case "sonar":
+        finish(drawTeam(layer, env));
+        return;
       case "legend":
         // A legend may be for a layer drawn after it, so it is drawn once the others are.
         slots[index] = () => finish(drawLegend(layer, env, gid, known));
         return;
       default:
-        throw new TypeError(`layer ${index} has the kind "${String((layer as { kind?: unknown }).kind)}": use points, lines, arrows, text, heatmap, hexbin, zones, contour or legend`);
+        throw new TypeError(`layer ${index} has the kind "${String((layer as { kind?: unknown }).kind)}": use points, lines, arrows, text, network, formation, voronoi, delaunay, hull, flow, sonar, heatmap, hexbin, zones, contour or legend`);
     }
   });
   slots.forEach((later) => later?.());
@@ -430,7 +440,8 @@ export function renderLayers(o: SurfaceOptions | ScoreOptions, layers: readonly 
   const defs = clipped ? `<defs><clipPath id="${clipId}"><path d="${env.outline.d}"/></clipPath></defs>` : "";
   // The heat layers' rules go beside them, unless the page supplies the stylesheet (KYOGIJO_STYLE has them); the dark set of a ramp is the layer's own and always comes.
   const heated = groups.some((g) => g.includes('class="ky-layer ky-hm') || g.includes('class="ky-lgw"'));
-  const sheet = `${env.o.style === "none" || !heated ? "" : KYOGIJO_HEAT_STYLE}${rules.join("")}`;
+  const teamed = groups.some((g) => g.includes('class="ky-layer ky-tm'));
+  const sheet = `${env.o.style === "none" || !heated ? "" : KYOGIJO_HEAT_STYLE}${env.o.style === "none" || !teamed ? "" : KYOGIJO_TEAM_STYLE}${rules.join("")}`;
   const style = sheet === "" ? "" : `<style>${sheet}</style>`;
   return { svg: `<g class="ky-layers" data-layers="${groups.length}">${defs}${style}${groups.join("")}</g>`, summaries };
 }
@@ -479,20 +490,30 @@ export function layerTable(layers: readonly Layer[], options: TableOptions = {})
   return layers
     .map((layer, index) => {
       if (layer.kind === "legend") return "";
-      if (surfaceEnv !== undefined && (layer.kind === "heatmap" || layer.kind === "hexbin" || layer.kind === "zones" || layer.kind === "contour")) {
-        const t = heatTable(layer, surfaceEnv);
+      const render = (t: { head: string[]; rows: (string | number | null)[][]; title: string; note: string }, kind: string): string => {
         const shown = t.rows.slice(0, maxRows);
         const more = t.rows.length > shown.length ? fill(w.tableMore, { shown: shown.length, total: t.rows.length }) : "";
         const note = [t.note, more].filter((part) => part !== "").join(words.said.gap);
         const body = shown.map((row) => `<tr><th scope="row">${cell(row[0])}</th>${row.slice(1).map((value) => `<td>${cell(value)}</td>`).join("")}</tr>`).join("");
-        return `<table class="${cls}" data-kind="${layer.kind}"><caption>${esc(t.title)}${note === "" ? "" : ` <small>${esc(note)}</small>`}</caption><thead><tr>${t.head.map((name, i) => `<th scope="col">${esc(i === 0 ? w.tableNo : name)}</th>`).join("")}</tr></thead><tbody>${body}</tbody></table>`;
-      }
-      const data = toArray(layer.data as readonly Record<string, unknown>[], `layer ${index}`);
+        return `<table class="${cls}" data-kind="${kind}"><caption>${esc(t.title)}${note === "" ? "" : ` <small>${esc(note)}</small>`}</caption><thead><tr>${t.head.map((name, i) => `<th scope="col">${esc(i === 0 ? w.tableNo : name)}</th>`).join("")}</tr></thead><tbody>${body}</tbody></table>`;
+      };
+      if (surfaceEnv !== undefined && (layer.kind === "heatmap" || layer.kind === "hexbin" || layer.kind === "zones" || layer.kind === "contour")) return render(heatTable(layer, surfaceEnv), layer.kind);
+      if (surfaceEnv !== undefined && isTeamLayer(layer)) return teamTables(layer, surfaceEnv).map((t) => render(t, layer.kind)).join("");
+      const data = layer.kind === "formation" ? ((layer.data ?? []) as readonly Record<string, unknown>[]) : toArray(layer.data as readonly Record<string, unknown>[], `layer ${index}`);
       const columns: [string, string, (d: Record<string, unknown>) => unknown][] = [];
       const has = (key: string): boolean => data.some((d) => typeof d === "object" && d !== null && d[key] !== undefined && d[key] !== null);
+      const t = words.team;
       if (layer.kind === "text") columns.push([w.tableText, "text", (d) => d.text]);
-      columns.push([w.tableX, "x", (d) => d.x]);
-      columns.push([w.tableY, "y", (d) => d.y]);
+      if (layer.kind === "network") columns.push([t.tableFrom, "from", (d) => d.from], [t.tableTo, "to", (d) => d.to]);
+      if (layer.kind === "formation") columns.push([t.tablePosition, "position", (d) => d.position], [t.tableNumber, "number", (d) => d.number], [t.tableName, "name", (d) => d.name]);
+      else {
+        columns.push([w.tableX, "x", (d) => d.x]);
+        columns.push([w.tableY, "y", (d) => d.y]);
+      }
+      if (layer.kind === "network" || layer.kind === "flow" || layer.kind === "sonar") {
+        columns.push([w.tableToX, "x2", (d) => d.x2]);
+        columns.push([w.tableToY, "y2", (d) => d.y2]);
+      }
       if (layer.kind === "lines" || layer.kind === "arrows") {
         columns.push([w.tableToX, "x2", (d) => d.x2]);
         columns.push([w.tableToY, "y2", (d) => d.y2]);

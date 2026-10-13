@@ -9,7 +9,7 @@ The gallery is made when the site is built (`pnpm site`), so its pages are on th
 - [Every league's surface](https://johnmorrisdotca.github.io/kyogijo/docs/gallery-leagues.html): each league that marks a court, rink, field or diamond its own way.
 - [Surfaces through the years](https://johnmorrisdotca.github.io/kyogijo/docs/gallery-years.html): each sport in the seasons before and after its markings changed.
 - [Ballparks and grounds](https://johnmorrisdotca.github.io/kyogijo/docs/gallery-places.html): a sample of the 94 parks and 64 grounds, a past park in two seasons.
-- [Data on a surface](https://johnmorrisdotca.github.io/kyogijo/docs/gallery-data.html): every kind of data layer, every heat layer, the five ready-made charts and a frame of a replay.
+- [Data on a surface](https://johnmorrisdotca.github.io/kyogijo/docs/gallery-data.html): every kind of data layer, every heat layer, the ready-made charts, the team-shape layers (networks, formations, Voronoi, triangulations, hulls, flow fields and sonars) and a frame of a replay.
 - [Curling](https://johnmorrisdotca.github.io/kyogijo/docs/gallery-curling.html): the sheet of each rule book, its display ranges and house colours, the board and the badge, and the stones of an end.
 
 The same site draws one surface in each of the seventeen [coordinate frames](./frames.md), side by side, and puts every ballpark and ground on [a map](./atlas.md).

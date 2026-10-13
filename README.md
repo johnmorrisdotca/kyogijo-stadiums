@@ -345,7 +345,7 @@ console.log(svg.includes("3 shots"), svg.includes("By outcome: goal 1, shot 1, b
 // true true
 ```
 
-Lines, arrows, text, heat maps, hexagons, zones and contours are in [data layers](./docs/layers.md); a shot chart, a shot map, a spray chart, a pass chart and a soccer shot map are one call each in [charts](./docs/charts.md). Every kind is drawn, with its code, in the [gallery](https://johnmorrisdotca.github.io/kyogijo/docs/gallery.html).
+Lines, arrows, text, heat maps, hexagons, zones and contours are in [data layers](./docs/layers.md); a shot chart, a shot map, a spray chart, a pass chart and a soccer shot map are one call each in [charts](./docs/charts.md). Pass networks, formations, Voronoi cells, Delaunay triangles, hulls, flow fields and sonars are layers too: [team shape](./docs/team-shape.md). Every kind is drawn, with its code, in the [gallery](https://johnmorrisdotca.github.io/kyogijo/docs/gallery.html).
 
 ### The element in a page
 
@@ -445,7 +445,7 @@ Not here yet, and each welcome as an [issue](https://github.com/johnmorrisdotca/
 - **More surfaces**: the FIBA and college courts, the international rink, rugby pitches, a stadium's seating, soccer's beach and street formats.
 - **Wall heights and quirks** in a ballpark: the Green Monster, Tal's Hill, the walls of Japan's parks.
 - **More parks of the past**: the grounds of the 19th century, and the parks whose articles give no distances yet (the Kingdome, Joe Robbie Stadium, the Los Angeles Coliseum), when they do.
-- **More charts on data layers**: pass networks.
+- **More charts on data layers**: a formation chart, a pass sonar chart and a Voronoi chart of their own (the layers exist; see [team shape](./docs/team-shape.md)).
 - **Football in a different standard**: the college and high-school hash marks.
 
 Left out on purpose: statistics, rosters and schedules. Kyogijo draws the place and the score it is given.

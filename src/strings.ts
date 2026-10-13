@@ -118,6 +118,11 @@ export interface KyogijoWords {
     airYards: string;
     /** The goal-mouth view's description: {w} and {h} in metres. */
     goalDesc: string;
+    /** The pass network: its title, the key's notes on the size of a node and the width of a link, and its sum: {passes}, {players}, {links}. */
+    titlePassNetwork: string;
+    sizeTouches: string;
+    widthPasses: string;
+    sumNetwork: string;
   };
   /** The words of a data layer's summary and of the table that stands for it. */
   layers: {
@@ -237,6 +242,72 @@ export interface KyogijoWords {
       sideRight: string;
     };
   };
+  /** The words of the team layers (pass networks, formations, Voronoi cells, triangulations, hulls, flow fields and sonars): their titles and sentences, and the heads of their tables. */
+  team: {
+    /** A pass network's title: {players}, {links} and {passes}. */
+    networkTitle: string;
+    /** Its sentence: the player with most touches {name} and {touches}, and the strongest link {a}, {b} and {n}. */
+    networkNote: string;
+    networkNoteDirected: string;
+    /** The sentence on the links left out: {n} is the least number of passes a link has. */
+    networkMin: string;
+    /** The tooltip of a node: {name}, {touches}, {made} and {received}. */
+    nodeTitle: string;
+    /** The tooltip of a link, undirected and directed: {a}, {b} and {n}. */
+    linkTitle: string;
+    linkTitleDirected: string;
+    /** A formation's title: {name} and {n} positions; the list of positions {list}; the list of players {list}, each as {who} and {position}. */
+    formationTitle: string;
+    formationNote: string;
+    formationPlayers: string;
+    formationItem: string;
+    /** Space control: the title ({n} players), the share of the surface nearest each team ({list}; each {name} and {pct}) and the players who share a place with another ({n}). */
+    voronoiTitle: string;
+    voronoiNote: string;
+    shareItem: string;
+    voronoiShared: string;
+    /** The triangulation: the title ({n} players) and the sentence ({triangles} and {edges}). */
+    delaunayTitle: string;
+    delaunayNote: string;
+    /** The hull: the title ({n} players), one team's sentence ({name}, {n}, {area}, {unit}) and the name of a hull of all the players. */
+    hullTitle: string;
+    hullItem: string;
+    hullAll: string;
+    /** The flow field: the title ({n} movements, {cells} cells) and the sentence ({len} and {unit}). */
+    flowTitle: string;
+    flowNote: string;
+    /** The sonar: the title ({n} movements, {roses} roses and {angles} directions), the sentence on the commonest direction ({deg} and {n}), the note on the angles, and the tooltips of a rose ({name}, {n}, {deg}) and of a bar ({from}, {to}, {value}). */
+    sonarTitle: string;
+    sonarNote: string;
+    sonarAngles: string;
+    roseTitle: string;
+    barTitle: string;
+    /** The heads of the tables. */
+    tablePlayer: string;
+    tableFrom: string;
+    tableTo: string;
+    tablePasses: string;
+    tableMade: string;
+    tableReceived: string;
+    tableTouches: string;
+    tablePosition: string;
+    tableNumber: string;
+    tableName: string;
+    tablePlayers: string;
+    tableShare: string;
+    tableArea: string;
+    tableCorners: string;
+    tableTriangles: string;
+    tableEdges: string;
+    tableDirection: string;
+    tableLength: string;
+    tableSteady: string;
+    tableFromAngle: string;
+    tableToAngle: string;
+    tableRose: string;
+    /** The caption's note on a table of areas and lengths: {unit}. */
+    tableUnit: string;
+  };
   /** The words of a replay: its summary, its marks, what is announced when something happens, and the controls under it. */
   replay: {
     /** The first sentence of the summary: {time} is the length. */
@@ -330,6 +401,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       sumMlb: "Balls in play {balls}: {list}.", sumNfl: "Passes {passes}, complete {complete} ({pct}%), touchdowns {td}, interceptions {int}.",
       beyondNote: "Beyond the fence: {n}.", airYards: "Air yards from {min} to {max}.",
       goalDesc: "The goal frame, {w} by {h} metres, seen from the front: the shooter's left is on the left.",
+      titlePassNetwork: "Pass network", sizeTouches: "Node size: touches", widthPasses: "Link width: passes", sumNetwork: "Passes {passes}, players {players}, links {links}.",
     },
     layers: {
       pointOne: "point", pointMany: "points", lineOne: "line", lineMany: "lines", arrowOne: "arrow", arrowMany: "arrows", textOne: "label", textMany: "labels",
@@ -350,6 +422,18 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
         pull: "Pull", opposite: "Opposite", sprayCentre: "Centre", leftField: "Left field", centreField: "Centre field", rightField: "Right field", infield: "infield", outfield: "outfield",
         lengthShort: "Short", lengthDeep: "Deep", houseButton: "Button", houseFour: "4-foot ring", houseEight: "8-foot ring", houseTwelve: "12-foot ring", guardZone: "Free guard zone", sideLeft: "left", sideMiddle: "middle", sideRight: "right",
       },
+    },
+    team: {
+      networkTitle: "Pass network: {players} players, {links} links from {passes} passes", networkNote: "Most touches: {name}, {touches}. Strongest link: {a} and {b}, {n} passes.", networkNoteDirected: "Most touches: {name}, {touches}. Strongest link: {a} to {b}, {n} passes.", networkMin: "Links of fewer than {n} passes are left out.",
+      nodeTitle: "{name}: {touches} touches ({made} passes made, {received} received)", linkTitle: "{a} and {b}: {n} passes", linkTitleDirected: "{a} to {b}: {n} passes",
+      formationTitle: "Formation {name}: {n} positions", formationNote: "Positions: {list}.", formationPlayers: "Players: {list}.", formationItem: "{who} ({position})",
+      voronoiTitle: "Space control of {n} players", voronoiNote: "Share of the surface nearest each team's players: {list}.", shareItem: "{name} {pct}%", voronoiShared: "{n} players share a place with another and have no cell.",
+      delaunayTitle: "Delaunay triangulation of {n} players", delaunayNote: "{triangles} triangles and {edges} edges.",
+      hullTitle: "Convex hull of {n} players", hullItem: "{name}: {n} players, area {area} square {unit}", hullAll: "all players",
+      flowTitle: "Flow of {n} movements in {cells} cells", flowNote: "The mean movement of a cell is up to {len} {unit} long.",
+      sonarTitle: "Direction roses of {n} movements: {roses} roses of {angles} directions", sonarNote: "Most common direction: {deg} degrees, {n}.", sonarAngles: "0 degrees points to the right end of the surface as drawn wide and 90 degrees to the top.", roseTitle: "{name}: {n} movements, most toward {deg} degrees", barTitle: "{from} to {to} degrees: {value}",
+      tablePlayer: "Player", tableFrom: "From", tableTo: "To", tablePasses: "Passes", tableMade: "Passes made", tableReceived: "Passes received", tableTouches: "Touches", tablePosition: "Position", tableNumber: "Number", tableName: "Name", tablePlayers: "Players", tableShare: "Share of the surface (%)", tableArea: "Area", tableCorners: "Corners", tableTriangles: "Triangles", tableEdges: "Edges", tableDirection: "Mean direction (degrees)", tableLength: "Mean length", tableSteady: "Steadiness (%)", tableFromAngle: "From (degrees)", tableToAngle: "To (degrees)", tableRose: "Rose",
+      tableUnit: "Lengths in {unit}.",
     },
     replay: {
       title: "Replay, {time}", objects: "{n} tracked objects", objectsOne: "{n} tracked object", events: "{n} events", eventsOne: "{n} event", players: "Players", others: "Ball, puck and officials", trail: "Trail of the last {s} seconds", numbers: "Shirt numbers", eventLines: "Passes and shots",
@@ -402,6 +486,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       sumMlb: "インプレー打球{balls}本：{list}。", sumNfl: "パス{passes}本、成功{complete}本（{pct}％）、タッチダウン{td}回、インターセプト{int}回。",
       beyondNote: "フェンスを越えた打球は{n}本です。", airYards: "エアヤード：{min}～{max}ヤード。",
       goalDesc: "ゴール枠（幅{w}m×高さ{h}m）を正面から見た図です。図の左側が、シュートを打つ選手の左手側です。",
+      titlePassNetwork: "パスネットワーク", sizeTouches: "円の大きさ：タッチ数", widthPasses: "線の太さ：パス数", sumNetwork: "パス{passes}本、選手{players}人、つながり{links}本。",
     },
     layers: {
       pointOne: "データ点", pointMany: "データ点", lineOne: "線", lineMany: "線", arrowOne: "矢印", arrowMany: "矢印", textOne: "ラベル", textMany: "ラベル",
@@ -422,6 +507,18 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
         pull: "引っ張り方向", opposite: "逆方向", sprayCentre: "センター方向", leftField: "レフト方向", centreField: "センター方向", rightField: "ライト方向", infield: "内野", outfield: "外野",
         lengthShort: "ショートパス", lengthDeep: "ディープパス", houseButton: "ボタン", houseFour: "4フィートの円", houseEight: "8フィートの円", houseTwelve: "12フィートの円", guardZone: "フリーガードゾーン", sideLeft: "左", sideMiddle: "中央", sideRight: "右",
       },
+    },
+    team: {
+      networkTitle: "パスネットワーク：選手{players}人、つながり{links}本（パス{passes}本）", networkNote: "最多タッチ：{name}（{touches}回）。パスが最も多いつながり：{a}と{b}、{n}本。", networkNoteDirected: "最多タッチ：{name}（{touches}回）。パスが最も多いつながり：{a}から{b}へ、{n}本。", networkMin: "パスが{n}本未満のつながりは描かれていません。",
+      nodeTitle: "{name}：タッチ{touches}回（出したパス{made}本、受けたパス{received}本）", linkTitle: "{a}と{b}：パス{n}本", linkTitleDirected: "{a}から{b}へ：パス{n}本",
+      formationTitle: "フォーメーション{name}：{n}人分のポジション", formationNote: "ポジション：{list}。", formationPlayers: "選手：{list}。", formationItem: "{who}（{position}）",
+      voronoiTitle: "選手{n}人のスペース支配（ボロノイ図）", voronoiNote: "競技場のうち、各チームの選手が最も近い範囲の割合：{list}。", shareItem: "{name} {pct}％", voronoiShared: "{n}人は他の選手と同じ位置にいるため、エリアがありません。",
+      delaunayTitle: "選手{n}人のドロネー三角形分割", delaunayNote: "三角形{triangles}個、辺{edges}本。",
+      hullTitle: "選手{n}人の凸包", hullItem: "{name}：選手{n}人、面積{area}平方{unit}", hullAll: "全選手",
+      flowTitle: "{n}件の移動の流れ（{cells}個のセル）", flowNote: "セルごとの平均的な移動の長さは最大で{len}{unit}です。",
+      sonarTitle: "{n}件の移動の方向別分布：ローズ図{roses}個（各{angles}方向）", sonarNote: "最も多い方向：{deg}度（{n}件）。", sonarAngles: "競技場を横長に描いたとき、0度は右端の方向、90度は上辺の方向です。", roseTitle: "{name}：{n}件の移動、最も多いのは{deg}度方向", barTitle: "{from}度～{to}度：{value}",
+      tablePlayer: "選手", tableFrom: "出し手", tableTo: "受け手", tablePasses: "パス数", tableMade: "出したパス", tableReceived: "受けたパス", tableTouches: "タッチ数", tablePosition: "ポジション", tableNumber: "背番号", tableName: "名前", tablePlayers: "選手数", tableShare: "競技場に占める割合（％）", tableArea: "面積", tableCorners: "頂点数", tableTriangles: "三角形の数", tableEdges: "辺の数", tableDirection: "平均の方向（度）", tableLength: "平均の長さ", tableSteady: "方向の揃い具合（％）", tableFromAngle: "開始角（度）", tableToAngle: "終了角（度）", tableRose: "ローズ図",
+      tableUnit: "長さの単位：{unit}。",
     },
     replay: {
       title: "リプレイ（再生時間{time}）", objects: "追跡対象は{n}個", objectsOne: "追跡対象は{n}個", events: "イベント{n}件", eventsOne: "イベント{n}件", players: "選手", others: "ボール・パック・審判", trail: "直近{s}秒の軌跡", numbers: "背番号", eventLines: "パスとシュート",
