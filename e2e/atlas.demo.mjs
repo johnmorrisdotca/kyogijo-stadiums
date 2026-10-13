@@ -181,7 +181,7 @@ test("the chosen place can be tried in the playground above", async ({ page }, t
 
 test("the atlas opens on the place the address names, and speaks Japanese", async ({ page }) => {
   await openAtlas(page, "?lang=ja&help=off&place=tokyo-dome");
-  await expect(page.locator("#atlas-title")).toHaveText("球場・競技場マップ");
+  await expect(page.locator("#atlas-title")).toHaveText("球場・スタジアムマップ");
   await expect(detailName(page)).toHaveText("東京ドーム");
   await expect(page.locator(at("atlas-count"))).toHaveText("158か所中158か所");
   await expect(page.locator(`${at("atlas-list")} .atlas-item[data-id="maracana"] .atlas-item-name`)).toHaveText("エスタジオ・ド・マラカナン");

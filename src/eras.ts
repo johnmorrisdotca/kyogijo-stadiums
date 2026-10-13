@@ -261,8 +261,8 @@ const NHL_SPANS: Spans<NhlRules> = {
     { from: 2005, value: NHL.blueLine, what: "Blue lines move out to 75 feet from the end boards, cutting the neutral zone to 50 feet.", ja: "ブルーラインがエンドボードから75フィート（約22.9m）に移り、ニュートラルゾーンが50フィート（約15.2m）に狭まります。", sources: ["nhl-records", "ahl-2005", "wp-rink"] },
   ],
   trapezoid: [
-    { from: null, value: null, what: "No trapezoid behind the net: the goaltender may play the puck anywhere.", ja: "ゴール裏にトラペゾイド（台形の区域）はなく、ゴールキーパーはどこでもパックを扱えます。", sources: ["wp-rink", "wp-nhl-rules"] },
-    { from: 2005, value: { atGoalLine: 18, atBoards: 28 }, what: "The goaltender's trapezoid is marked behind each net: 18 feet at the goal line, 28 feet at the end boards.", ja: "各ゴールの裏に、ゴールキーパーがパックを扱える区域として台形（トラペゾイド）が引かれます。ゴールライン側が18フィート、エンドボード側が28フィートです。", sources: ["wp-rink", "wp-nhl-rules"] },
+    { from: null, value: null, what: "No trapezoid behind the net: the goaltender may play the puck anywhere.", ja: "ゴール裏にトラペゾイド（台形の区域）はなく、ゴーリーはどこでもパックを扱えます。", sources: ["wp-rink", "wp-nhl-rules"] },
+    { from: 2005, value: { atGoalLine: 18, atBoards: 28 }, what: "The goaltender's trapezoid is marked behind each net: 18 feet at the goal line, 28 feet at the end boards.", ja: "各ゴールの裏に、ゴーリーがパックを扱える区域として台形（トラペゾイド）が引かれます。ゴールライン側が18フィート、エンドボード側が28フィートです。", sources: ["wp-rink", "wp-nhl-rules"] },
     { from: 2014, value: { atGoalLine: NHL.trapezoid.atGoalLine, atBoards: NHL.trapezoid.atBoards }, what: "The trapezoid is widened to 22 feet at the goal line (2 feet each side).", ja: "トラペゾイドのゴールライン側が左右2フィートずつ広がり、22フィートになります。", sources: ["wp-rink", "wp-nhl-rules"] },
   ],
   hashApart: [

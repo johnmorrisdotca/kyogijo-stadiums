@@ -36,6 +36,17 @@ export function replayClock(seconds: number): string {
   return m < 60 ? `${m}:${s}` : `${Math.floor(m / 60)}:${String(m % 60).padStart(2, "0")}:${s}`;
 }
 
+/** Seconds as it is said aloud, in the words of the language: `0:12` in English and `12秒` in Japanese, where a clock would be read as a time of day. */
+export function replaySpoken(seconds: number, w: KyogijoWords["replay"]): string {
+  const whole = Math.max(0, Math.floor(isNum(seconds) ? seconds : 0));
+  const h = Math.floor(whole / 3600);
+  const m = Math.floor(whole / 60) % 60;
+  const s = whole % 60;
+  const two = (n: number): string => String(n).padStart(2, "0");
+  const values = { h, m, s, mm: two(m), ss: two(s) };
+  return fill(h > 0 ? w.spokenHours : whole >= 60 ? w.spokenMinutes : w.spokenSeconds, values);
+}
+
 /** What a timeline is, checked once and kept for the next call. */
 interface Prepared {
   timeline: ReplayTimeline;
@@ -362,13 +373,13 @@ const kindWord = (w: KyogijoWords["replay"], kind: string): string => ((KINDS as
  * console.log(describeEvent({ t: 72, kind: "goal", team: "home" }));
  * console.log(describeEvent({ t: 72, kind: "goal", team: "home" }, "ja"));
  * // Goal, home, 1:12
- * // ホームのゴール、1:12
+ * // ホームのゴール、1分12秒
  * ```
  */
 export function describeEvent(event: ReplayEvent, language: Language = "en", start = 0): string {
   const w = wordsOf(language);
   const what = typeof event.label === "string" && event.label !== "" ? event.label : kindWord(w, event.kind);
-  const time = replayClock(event.t - start);
+  const time = replaySpoken(event.t - start, w);
   return event.team === "home" || event.team === "away" ? fill(w.announceTeam, { what, team: w[event.team], time }) : fill(w.announce, { what, time });
 }
 
@@ -542,7 +553,7 @@ export function replaySummary(timeline: ReplayTimeline, language: Language = "en
     .map((team) => fill(words.layers.item, { name: w[team], n: counts.get(team) as number }))
     .join(words.layers.listSep);
   const { stop, gap } = words.said;
-  const parts = [`${fill(w.title, { time: replayClock(p.end - p.start) })}${stop}`, `${fill(p.ids.length === 1 ? w.objectsOne : w.objects, { n: p.ids.length })}${stop}`, fill(words.layers.teams, { list })];
+  const parts = [`${fill(w.title, { time: replaySpoken(p.end - p.start, w) })}${stop}`, `${fill(p.ids.length === 1 ? w.objectsOne : w.objects, { n: p.ids.length })}${stop}`, fill(words.layers.teams, { list })];
   if (p.events.length > 0) parts.push(`${fill(p.events.length === 1 ? w.eventsOne : w.events, { n: p.events.length })}${stop}`);
   return parts.join(gap);
 }

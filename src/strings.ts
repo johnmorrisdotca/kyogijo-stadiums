@@ -335,6 +335,9 @@ export interface KyogijoWords {
     hullTitle: string;
     hullItem: string;
     hullAll: string;
+    /** The area unit of a hull, by the unit of the frame ({unit} for any other unit): "square metres". */
+    squareUnits: { ft: string; yd: string; m: string };
+    squareOther: string;
     /** The flow field: the title ({n} movements, {cells} cells) and the sentence ({len} and {unit}). */
     flowTitle: string;
     flowNote: string;
@@ -440,6 +443,13 @@ export interface KyogijoWords {
     /** The heads of the table of events. */
     time: string;
     event: string;
+    /**
+     * A length of time as it is said aloud (a clock such as `0:12` is read as a time of day in Japanese): under a minute, under an hour and an hour or more.
+     * `{h}`, `{m}` and `{s}` are the plain numbers and `{mm}` and `{ss}` the two-digit ones.
+     */
+    spokenSeconds: string;
+    spokenMinutes: string;
+    spokenHours: string;
     /** The value of the position slider: {t} of {total}. */
     positionValue: string;
     /** What the replay is and the keys it answers to, in smooth motion and in steps. */
@@ -591,7 +601,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       formationTitle: "Formation {name}: {n} positions", formationNote: "Positions: {list}.", formationPlayers: "Players: {list}.", formationItem: "{who} ({position})",
       voronoiTitle: "Space control of {n} players", voronoiNote: "Share of the surface nearest each team's players: {list}.", shareItem: "{name} {pct}%", voronoiShared: "{n} players share a place with another and have no cell.",
       delaunayTitle: "Delaunay triangulation of {n} players", delaunayNote: "{triangles} triangles and {edges} edges.",
-      hullTitle: "Convex hull of {n} players", hullItem: "{name}: {n} players, area {area} square {unit}", hullAll: "all players",
+      hullTitle: "Convex hull of {n} players", hullItem: "{name}: {n} players, area {area} {unit}", hullAll: "all players", squareUnits: { ft: "square feet", yd: "square yards", m: "square metres" }, squareOther: "square {unit}",
       flowTitle: "Flow of {n} movements in {cells} cells", flowNote: "The mean movement of a cell is up to {len} {unit} long.",
       sonarTitle: "Direction roses of {n} movements: {roses} roses of {angles} directions", sonarNote: "Most common direction: {deg} degrees, {n}.", sonarAngles: "0 degrees points to the right end of the surface as drawn wide and 90 degrees to the top.", roseTitle: "{name}: {n} movements, most toward {deg} degrees", barTitle: "{from} to {to} degrees: {value}",
       tablePlayer: "Player", tableFrom: "From", tableTo: "To", tablePasses: "Passes", tableMade: "Passes made", tableReceived: "Passes received", tableTouches: "Touches", tablePosition: "Position", tableNumber: "Number", tableName: "Name", tablePlayers: "Players", tableShare: "Share of the surface (%)", tableArea: "Area", tableCorners: "Corners", tableTriangles: "Triangles", tableEdges: "Edges", tableDirection: "Mean direction (degrees)", tableLength: "Mean length", tableSteady: "Steadiness (%)", tableFromAngle: "From (degrees)", tableToAngle: "To (degrees)", tableRose: "Rose",
@@ -637,7 +647,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       title: "Replay, {time}", objects: "{n} tracked objects", objectsOne: "{n} tracked object", events: "{n} events", eventsOne: "{n} event", players: "Players", others: "Ball, puck and officials", trail: "Trail of the last {s} seconds", numbers: "Shirt numbers", eventLines: "Passes and shots",
       home: "home", away: "away", ball: "ball", puck: "puck", official: "official", pass: "Pass", shot: "Shot", goal: "Goal", whistle: "Whistle",
       announce: "{what}, {time}", announceTeam: "{what}, {team}, {time}",
-      group: "Replay controls", play: "Play", pause: "Pause", back: "Previous frame", forward: "Next frame", stepBack: "Back", stepForward: "Forward", speed: "Speed", loop: "Loop", position: "Position", time: "Time", event: "Event", positionValue: "{t} of {total}",
+      group: "Replay controls", play: "Play", pause: "Pause", back: "Previous frame", forward: "Next frame", stepBack: "Back", stepForward: "Forward", speed: "Speed", loop: "Loop", position: "Position", time: "Time", event: "Event", spokenSeconds: "0:{ss}", spokenMinutes: "{m}:{ss}", spokenHours: "{h}:{mm}:{ss}", positionValue: "{t} of {total}",
       keys: "Replay of the play. Space plays or pauses, the left and right arrow keys step by a frame, Shift with an arrow key moves 5 seconds, and Home and End go to the ends.",
       keysStep: "Replay of the play, in steps. Space or the right arrow key moves on, the left arrow key goes back, and Home and End go to the ends.",
       region: "Replay",
@@ -646,32 +656,32 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
   ja: {
     surface: { nfl: "NFLのフィールド", cfl: "CFLのフィールド", ifaf: "IFAFのフィールド", nhl: "NHLのアイスホッケーリンク", nba: "NBAのバスケットボールコート", mlb: "野球場", soccer: "サッカーのピッチ", curling: "カーリングのシート", tennis: "テニスコート", volleyball: "バレーボールコート", badminton: "バドミントンコート", pickleball: "ピックルボールコート", tabletennis: "卓球台", lacrosse: "ラクロスのフィールド", rugby: "ラグビーユニオンのグラウンド", afl: "オーストラリアンフットボールのグラウンド", gaelic: "ゲーリック・フットボールのフィールド", cricket: "クリケットのグラウンド", fieldhockey: "フィールドホッケーのピッチ", handball: "ハンドボールのコート" },
     about: {
-      nfl: "アメリカンフットボールのフィールド。エンドゾーンを含めて120ヤード×53⅓ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールポストがあります",
-      cfl: "カナディアンフットボールのフィールド。20ヤードのエンドゾーンを含めて150ヤード×65ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールライン上のゴールポストがあります",
-      ifaf: "国際アメリカンフットボール連盟（IFAF）規格のフィールド。エンドゾーンを含めて120ヤード×53⅓ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールポストがあります",
+      nfl: "アメリカンフットボールのフィールド。エンドゾーンを含めて120×53⅓ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールポストがあります",
+      cfl: "カナディアンフットボールのフィールド。20ヤードのエンドゾーンを含めて150×65ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールライン上のゴールポストがあります",
+      ifaf: "国際アメリカンフットボール連盟（IFAF）規格のフィールド。エンドゾーンを含めて120×53⅓ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールポストがあります",
       nhl: "アイスホッケーのリンク。200フィート（約61m）×85フィート（約26m）で角が丸く、レッドライン、ブルーライン、フェイスオフサークル、クリース、ゴールがあります",
       nba: "バスケットボールのコート。94フィート（約28.7m）×50フィート（約15.2m）で、ペイントエリア、スリーポイントライン、フリースローサークル、センターサークルがあります",
       mlb: "野球場。塁間90フィート（約27.4m）の内野、マウンド、ファウルライン、外野フェンスがあります",
-      soccer: "サッカーのピッチ。{length}m×{width}mで、ハーフウェーライン、センターサークル、両側のペナルティエリアとゴールエリア、ペナルティマークとペナルティアーク、コーナーアーク、ゴールがあります",
+      soccer: "サッカーのピッチ。{length}×{width}mで、ハーフウェーライン、センターサークル、両側のペナルティーエリアとゴールエリア、ペナルティーマークとペナルティーアーク、コーナーアーク、ゴールがあります",
       curling: "カーリングのシート。{size}で、両端にハウス（ボタンを囲む12フィート・8フィート・4フィートの円）があり、ティーライン、バックライン、ホッグライン、センターライン、ハックがあります",
       tennis: "テニスコート。78フィート（約23.8m）×36フィート（約11m）で、ベースライン、シングルスとダブルスのサイドライン、サービスライン、センターサービスライン、センターマーク、ネットがあります",
-      volleyball: "バレーボールコート。18m×9mで、センターライン、アタックライン、ネットとアンテナがあります",
-      badminton: "バドミントンコート。13.4m×6.1mで、シングルスとダブルスのライン、ショートサービスライン、ロングサービスライン、センターライン、ネットがあります",
+      volleyball: "バレーボールコート。18×9mで、センターライン、アタックライン、ネットとアンテナがあります",
+      badminton: "バドミントンコート。13.4×6.1mで、シングルスとダブルスのライン、ショートサービスライン、ロングサービスライン、センターライン、ネットがあります",
       pickleball: "ピックルボールコート。44フィート（約13.4m）×20フィート（約6.1m）で、ノンボレーゾーン、センターライン、ネットがあります",
-      tabletennis: "卓球台。2.74m×1.525mで、サイドライン、エンドライン、センターライン、ネットがあります",
+      tabletennis: "卓球台。2.74×1.525mで、サイドライン、エンドライン、センターライン、ネットがあります",
       lacrosse: "ラクロスのフィールド。エンドライン、ゴール、クリース、リストレイニングライン、ウイングライン、センターラインがあります",
-      rugby: "ラグビーユニオンのグラウンド。トライライン間が94～100m、幅が68～70mで、インゴール、22メートルライン、ハーフウェイライン、破線、ゴールポストがあります",
-      afl: "オーストラリアンフットボールのグラウンド。長さ135～185m、幅110～155mの楕円形で、ゴールスクエア、センタースクエアとサークル、50メートルアーク、ゴールポストとビハインドポストがあります",
-      gaelic: "ゲーリック・フットボールとハーリング用のフィールド。130～145m×80～90mで、13m・20m・45mの横線、両端の2つの長方形、アーク、ゴールポストがあります",
+      rugby: "ラグビーユニオンのグラウンド。トライライン間が94〜100m、幅が68〜70mで、インゴール、22メートルライン、ハーフウェイライン、破線、ゴールポストがあります",
+      afl: "オーストラリアンフットボールのグラウンド。長さ135〜185m、幅110〜155mの楕円形で、ゴールスクエア、センタースクエアとサークル、50メートルアーク、ゴールポストとビハインドポストがあります",
+      gaelic: "ゲーリック・フットボールとハーリング用のフィールド。130〜145m×80〜90mで、13m・20m・45mの横線、両端の2つの長方形、アーク、ゴールポストがあります",
       cricket: "クリケットのグラウンド。バウンダリー、30ヤードのサークル、クリースとウィケットのある22ヤードのピッチがあります",
-      fieldhockey: "フィールドホッケーのピッチ。91.40m×55.00mで、センターライン、23メートルライン、サークル、ペナルティスポット、ゴールがあります",
-      handball: "ハンドボールのコート。40m×20mで、センターライン、ゴールエリア、6m・7m・9mのライン、4mのライン、ゴールがあります",
+      fieldhockey: "フィールドホッケーのピッチ。91.40×55.00mで、センターライン、23メートルライン、サークル、ペナルティースポット、ゴールがあります",
+      handball: "ハンドボールのコート。40×20mで、センターライン、ゴールエリア、6m・7m・9mのライン、4mのライン、ゴールがあります",
     },
     status: { final: "試合終了", "final-ot": "試合終了（延長）", "final-so": "試合終了（SO）", "final-aet": "試合終了（延長戦）", "final-pens": "試合終了（PK戦）", live: "試合中", half: "ハーフタイム", "extra-time": "延長戦", "extra-end": "エキストラエンド", penalties: "PK戦", postponed: "延期", tiebreak: "タイブレーク", "match-tiebreak": "マッチタイブレーク", retired: "途中棄権", walkover: "不戦勝" },
     endStatus: "第{n}エンド",
     setStatus: "第{n}セット",
     gameStatus: "第{n}ゲーム",
-    soccer: { futsal: "フットサルのコート", aboutFutsal: "フットサルのコート。{length}m×{width}mで、ハーフウェーライン、センターサークル、両側のペナルティエリア、ペナルティマーク、ゴールがあります", half: "半面のみ表示しています。" },
+    soccer: { futsal: "フットサルのコート", aboutFutsal: "フットサルのコート。{length}×{width}mで、ハーフウェーライン、センターサークル、両側のペナルティーエリア、ペナルティーマーク、ゴールがあります", half: "半面のみ表示しています。" },
     league: {
       basketball: "バスケットボールのコート。{size}で、ペイントエリア、スリーポイントライン、フリースローサークル、センターサークルがあります",
       hockey: "アイスホッケーのリンク。{size}で角が丸く、レッドライン、ブルーライン、フェイスオフサークル、クリース、ゴールがあります",
@@ -690,19 +700,19 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       rugby: "ラグビーユニオンのグラウンド。インゴールを含めて{size}で、22メートルライン、ハーフウェイライン、破線、ゴールポストがあります",
       rugbyLeague: "ラグビーリーグのグラウンド。インゴールを含めて{size}で、10mごとの横線とゴールポストがあります",
       afl: "オーストラリアンフットボールのグラウンド。{size}の楕円形で、ゴールスクエア、センタースクエアとサークル、50メートルアーク、ゴールポストとビハインドポストがあります",
-      gaelic: "ゲーリック・フットボールのフィールド。{size}で、横線、両端の2つの長方形、13mと40mのアーク、ペナルティポイント、ゴールポストがあります",
+      gaelic: "ゲーリック・フットボールのフィールド。{size}で、横線、両端の2つの長方形、13mと40mのアーク、ペナルティーマーク、ゴールポストがあります",
       hurling: "ハーリングのフィールド。{size}で、65mの線を含む横線、両端の2つの長方形、13mのアーク、ゴールポストがあります",
       cricket: "クリケットのグラウンド。{size}で、バウンダリー、クリースとウィケットのあるピッチ、規則によっては守備制限のサークルがあります",
-      fieldhockey: "フィールドホッケーのピッチ。{size}で、センターライン、23メートルライン、サークル、ペナルティスポット、ゴールがあります",
+      fieldhockey: "フィールドホッケーのピッチ。{size}で、センターライン、23メートルライン、サークル、ペナルティースポット、ゴールがあります",
       handball: "ハンドボールのコート。{size}で、センターライン、ゴールエリア、6m・7m・9mのライン、4mのライン、ゴールがあります",
-      size: "{length}{unit}×{width}{unit}",
+      size: "{length}×{width}{unit}",
       units: { ft: "フィート", yd: "ヤード", m: "m" },
     },
     ballpark: {
       heading: "フェンスの高さ",
-      sections: { outfield: "外野フェンス", left: "左翼", leftCenter: "左中間", center: "中堅", deadCenter: "中堅中央", rightCenter: "右中間", right: "右翼", leftToCenter: "左翼から中堅", centerToRight: "中堅から右翼", leftCorner: "左翼のポール際", rightCorner: "右翼のポール際" },
+      sections: { outfield: "外野フェンス", left: "左翼", leftCenter: "左中間", center: "中堅", deadCenter: "中堅正面", rightCenter: "右中間", right: "右翼", leftToCenter: "左翼から中堅", centerToRight: "中堅から右翼", leftCorner: "左翼のポール際", rightCorner: "右翼のポール際" },
       unit: { ft: "フィート", m: "m" },
-      tiers: { under: "{a}{unit}未満", between: "{a}～{b}{unit}", over: "{a}{unit}以上" },
+      tiers: { under: "{a}{unit}未満", between: "{a}〜{b}{unit}", over: "{a}{unit}以上" },
       height: "{name} {height}{unit}",
       walls: "フェンスの高さ：{list}。",
       quirks: "球場の特徴：{list}。",
@@ -716,7 +726,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
         dugoutHome: "ホームのダグアウト（{line}塁側）", dugoutVisitors: "ビジターのダグアウト（{line}塁側）", first: "一", third: "三",
       },
     },
-    net: { serving: "{name}のサーブです。", bySet: "{name}のセットごとのスコア：{list}。", byGame: "{name}のゲームごとの得点：{list}。", gamePoints: "現在のゲームのポイントは、{name}が{points}です。", sets: "セット", games: "ゲーム", points: "ポイント" },
+    net: { serving: "{name}のサーブです。", bySet: "{name}のセットごとのスコア：{list}。", byGame: "{name}のゲームごとのスコア：{list}。", gamePoints: "現在のゲームのポイントは、{name}が{points}です。", sets: "セット", games: "ゲーム", points: "ポイント" },
     field: { aflScore: "{name}は{goals}ゴール{behinds}ビハインドです。", gaelicScore: "{name}は{goals}ゴール{points}ポイントです。", cricketScore: "{name}：{overs}オーバーで{runs}ラン（{wickets}ウィケット喪失）。", cricketInnings: "{name}のイニングごとのスコア：{list}。", inningsStatus: "第{n}イニング", innings: "イニング", runs: "ラン", wickets: "ウィケット", overs: "オーバー", total: "合計" },
     scoreTitle: "{away} {awayScore}、{home} {homeScore}",
     said: { home: "ホーム", away: "アウェイ", won: "{name}の勝ちです。", tied: "同点です。", park: "外野フェンスは、{park}の公表されている距離をもとに描かれています。", ground: "ピッチは、{ground}の公表されている広さをもとに描かれています。", groundDefault: "{ground}のピッチの広さは公表されていないため、国際標準の105×68mで描かれています。", era: "ラインやマークは{season}シーズンのものです。", hammer: "{name}がハンマー（最後の1投）を持っています。", ends: "{name}のエンドごとの得点：{list}。", total: "合計", wonPens: "{name}がPK戦を{a}-{b}で制しました。", pens: "PK戦 {a}-{b}", on: "図の内容", sep: "、", stop: "。", colon: "：", gap: "" },
@@ -726,7 +736,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       game: "{event}、{date}。",
       inside: "{guest}全体が{host}の輪郭の内側に収まっています。",
       hangs: "{guest}の一部（面積の{pct}％）が{host}の輪郭の外にはみ出しています。",
-      foul: "球場の輪郭はフェンスの内側のフェア地域なので、内野の上に置いた競技面はファウル地域にかかります。",
+      foul: "球場の輪郭はフェンスの内側のフェアゾーンなので、内野の上にリンクやコートなどを置くと、ファウルゾーンにはみ出します。",
       unnamed: { field: "フットボールのフィールド", pitch: "ピッチ", deck: "甲板" },
       published: "置かれた位置は資料に基づいています：{note}",
       convention: "正確な位置を示す資料がないため、慣例に従って置いています：{rule}",
@@ -752,17 +762,17 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       leagueNote: "ゾーンの色は、リーグ平均{league}％との差を表します。",
       sumNba: "シュート{shots}本、成功{made}本（{pct}％）。", sumShots: "シュート{shots}本、{goals}ゴール。", sumShotsXg: "シュート{shots}本、{goals}ゴール、期待ゴール数（xG）{xg}。",
       sumMlb: "インプレー打球{balls}本：{list}。", sumNfl: "パス{passes}本、成功{complete}本（{pct}％）、タッチダウン{td}回、インターセプト{int}回。",
-      beyondNote: "フェンスを越えた打球は{n}本です。", airYards: "エアヤード：{min}～{max}ヤード。",
+      beyondNote: "フェンスを越えた打球は{n}本です。", airYards: "エアヤード：{min}〜{max}ヤード。",
       goalDesc: "ゴール枠（幅{w}m×高さ{h}m）を正面から見た図です。図の左側が、シュートを打つ選手の左手側です。",
       titlePassNetwork: "パスネットワーク", sizeTouches: "円の大きさ：タッチ数", widthPasses: "線の太さ：パス数", sumNetwork: "パス{passes}本、選手{players}人、つながり{links}本。",
     },
     layers: {
       pointOne: "データ点", pointMany: "データ点", lineOne: "線", lineMany: "線", arrowOne: "矢印", arrowMany: "矢印", textOne: "ラベル", textMany: "ラベル",
-      count: "{noun} {n}件", item: "{name} {n}件", listSep: "、", outcomes: "結果別：{list}。", teams: "チーム別：{list}。", values: "値の範囲：{min}～{max}。", skipped: "位置が不明なため{n}件は描かれていません。", data: "データ",
+      count: "{noun} {n}件", item: "{name} {n}件", listSep: "、", outcomes: "結果別：{list}。", teams: "チーム別：{list}。", values: "値の範囲：{min}〜{max}。", skipped: "位置が不明なため{n}件は描かれていません。", data: "データ",
       tableNo: "番号", tableX: "x", tableY: "y", tableToX: "終点のx", tableToY: "終点のy", tablePath: "経路", tableValue: "値", tableTeam: "チーム", tableOutcome: "結果", tableNote: "備考", tableText: "ラベル",
       tableFrame: "座標系：{frame}、単位：{unit}。", tableMore: "全{total}行のうち先頭の{shown}行を表示しています。",
       heatTitle: "{noun}のヒートマップ（{n}件）", hexTitle: "{noun}の六角形ビン図（{n}件）", zonesTitle: "{noun}のゾーン別集計（{n}件）", contourTitle: "{noun}の密度等高線（{n}件）", legendTitle: "凡例：{name}",
-      range: "{min}～{max}", heatNote: "{n}個のセルの{stat}は{min}～{max}です。", hexNote: "{n}個の六角形の{stat}は{min}～{max}です。", zoneNote: "{n}個のゾーンの{stat}は{min}～{max}です。", contourNote: "密度の等高線は{n}本です。ピークは({x}, {y})付近です。",
+      range: "{min}〜{max}", heatNote: "{n}個のセルの{stat}は{min}〜{max}です。", hexNote: "{n}個の六角形の{stat}は{min}〜{max}です。", zoneNote: "{n}個のゾーンの{stat}は{min}〜{max}です。", contourNote: "密度の等高線は{n}本です。ピークは({x}, {y})付近です。",
       top: "上位：{list}。", outside: "グリッドまたはゾーンの範囲外のデータが{n}件あります。",
       stat: { count: "件数", sum: "合計", mean: "平均", median: "中央値", percent: "全体に占める割合（％）", max: "最大", min: "最小", rate: "成功率（％）", custom: "値", density: "密度（ピークに対する割合、％）", mass: "内側に含まれるデータの割合（％）" },
       tableZone: "ゾーン", tableCount: "件数", tableShare: "割合（％）", tableLevel: "レベル", tableCell: "セル", tableCells: "{stat}。各セルの中心の位置です。座標系：{frame}、単位：{unit}。", tableCellsPlain: "{stat}。各セルの中心の位置です。単位：{unit}。", valueItem: "{name}（{n}）",
@@ -771,7 +781,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
         wingLeft: "左サイド", halfLeft: "左ハーフスペース", laneCentre: "中央", halfRight: "右ハーフスペース", wingRight: "右サイド",
         defensiveThird: "ディフェンディングサード", middleThird: "ミドルサード", attackingThird: "アタッキングサード",
         restricted: "リストリクテッドエリア", paint: "ペイント内（リストリクテッドエリア外）", midRange: "ミッドレンジ", cornerLeft: "左コーナー3", cornerRight: "右コーナー3", aboveBreak: "アバブ・ザ・ブレイク3",
-        innerSlot: "内側スロット", outerSlot: "外側スロット", offensiveZone: "アタッキングゾーン", behindGoalLine: "ゴールライン後方", homePlate: "ゴール前の五角形エリア", outsideHomePlate: "五角形エリアの外",
+        innerSlot: "内側スロット", outerSlot: "外側スロット", offensiveZone: "アタッキングゾーン", behindGoalLine: "ゴール裏", homePlate: "ゴール前の五角形エリア", outsideHomePlate: "五角形エリアの外",
         pull: "引っ張り方向", opposite: "逆方向", sprayCentre: "センター方向", leftField: "レフト方向", centreField: "センター方向", rightField: "ライト方向", infield: "内野", outfield: "外野",
         lengthShort: "ショートパス", lengthDeep: "ディープパス", houseButton: "ボタン", houseFour: "4フィートの円", houseEight: "8フィートの円", houseTwelve: "12フィートの円", guardZone: "フリーガードゾーン", frontCourt: "フロントコート", backCourt: "バックコート", halfCourt: "ハーフコート", sideLeft: "左", sideMiddle: "中央", sideRight: "右",
         pitchZone: "ピッチ", insideCircle: "サークルの内側", outfieldGround: "アウトフィールド",
@@ -783,9 +793,9 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       formationTitle: "フォーメーション{name}：{n}人分のポジション", formationNote: "ポジション：{list}。", formationPlayers: "選手：{list}。", formationItem: "{who}（{position}）",
       voronoiTitle: "選手{n}人のスペース支配（ボロノイ図）", voronoiNote: "競技場のうち、各チームの選手が最も近い範囲の割合：{list}。", shareItem: "{name} {pct}％", voronoiShared: "{n}人は他の選手と同じ位置にいるため、エリアがありません。",
       delaunayTitle: "選手{n}人のドロネー三角形分割", delaunayNote: "三角形{triangles}個、辺{edges}本。",
-      hullTitle: "選手{n}人の凸包", hullItem: "{name}：選手{n}人、面積{area}平方{unit}", hullAll: "全選手",
+      hullTitle: "選手{n}人の凸包", hullItem: "{name}：選手{n}人、面積{area}{unit}", hullAll: "全選手", squareUnits: { ft: "平方フィート", yd: "平方ヤード", m: "平方メートル" }, squareOther: "平方{unit}",
       flowTitle: "{n}件の移動の流れ（{cells}個のセル）", flowNote: "セルごとの平均的な移動の長さは最大で{len}{unit}です。",
-      sonarTitle: "{n}件の移動の方向別分布：ローズ図{roses}個（各{angles}方向）", sonarNote: "最も多い方向：{deg}度（{n}件）。", sonarAngles: "競技場を横長に描いたとき、0度は右端の方向、90度は上辺の方向です。", roseTitle: "{name}：{n}件の移動、最も多いのは{deg}度方向", barTitle: "{from}度～{to}度：{value}",
+      sonarTitle: "{n}件の移動の方向別分布：ローズ図{roses}個（各{angles}方向）", sonarNote: "最も多い方向：{deg}度（{n}件）。", sonarAngles: "競技場を横長に描いたとき、0度は右端の方向、90度は上辺の方向です。", roseTitle: "{name}：{n}件の移動、最も多いのは{deg}度方向", barTitle: "{from}度〜{to}度：{value}",
       tablePlayer: "選手", tableFrom: "出し手", tableTo: "受け手", tablePasses: "パス数", tableMade: "出したパス", tableReceived: "受けたパス", tableTouches: "タッチ数", tablePosition: "ポジション", tableNumber: "背番号", tableName: "名前", tablePlayers: "選手数", tableShare: "競技場に占める割合（％）", tableArea: "面積", tableCorners: "頂点数", tableTriangles: "三角形の数", tableEdges: "辺の数", tableDirection: "平均の方向（度）", tableLength: "平均の長さ", tableSteady: "方向の揃い具合（％）", tableFromAngle: "開始角（度）", tableToAngle: "終了角（度）", tableRose: "ローズ図",
       tableUnit: "長さの単位：{unit}。",
     },
@@ -799,15 +809,15 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
         "end-zone": "エンドゾーン", "goal-line": "ゴールライン", "yard-line": "ヤードライン", midfield: "ミッドフィールド", "end-line": "エンドライン", sideline: "サイドライン", "hash-marks": "ハッシュマーク", "yard-numbers": "ヤードナンバー", "goal-posts": "ゴールポスト", pylon: "パイロン",
         boards: "ボード", "blue-line": "ブルーライン", "face-off-circle": "フェイスオフサークル", crease: "クリース", net: "ゴールネット", "centre-circle": "センターサークル", "centre-red-line": "センターレッドライン", trapezoid: "トラペゾイド", "referee-crease": "レフェリークリース",
         baseline: "ベースライン", "halfway-line": "ハーフウェーライン", "half-court-line": "センターライン", key: "ペイントエリア", "free-throw-line": "フリースローライン", "free-throw-circle": "フリースローサークル", backboard: "バックボード", basket: "リング", "three-point-line": "スリーポイントライン", "restricted-area": "リストリクテッドエリア",
-        "home-plate": "ホームベース", "first-base": "一塁", "second-base": "二塁", "third-base": "三塁", "foul-line": "ファウルライン", "outfield-fence": "外野フェンス", "warning-track": "ウォーニングトラック", "pitchers-plate": "投手板", "batters-box": "バッターボックス",
-        touchline: "タッチライン", "penalty-area": "ペナルティエリア", "goal-area": "ゴールエリア", "penalty-mark": "ペナルティマーク", "penalty-arc": "ペナルティアーク", "corner-arc": "コーナーアーク", goal: "ゴール",
+        "home-plate": "本塁", "first-base": "一塁", "second-base": "二塁", "third-base": "三塁", "foul-line": "ファウルライン", "outfield-fence": "外野フェンス", "warning-track": "ウォーニングトラック", "pitchers-plate": "投手板", "batters-box": "バッターボックス",
+        touchline: "タッチライン", "penalty-area": "ペナルティーエリア", "goal-area": "ゴールエリア", "penalty-mark": "ペナルティーマーク", "penalty-arc": "ペナルティーアーク", "corner-arc": "コーナーアーク", goal: "ゴール",
         "service-line": "サービスライン", "centre-service-line": "センターサービスライン", "singles-sideline": "シングルスサイドライン", "centre-mark": "センターマーク", "attack-line": "アタックライン", antenna: "アンテナ", "long-service-line": "ロングサービスライン", "short-service-line": "ショートサービスライン", "non-volley-line": "ノンボレーライン", "non-volley-zone": "ノンボレーゾーン", "court-net": "ネット",
         "hog-line": "ホッグライン", "tee-line": "ティーライン", "back-line": "バックライン", house: "ハウス", button: "ボタン", "centre-line": "センターライン", hack: "ハック", "free-guard-zone": "フリーガードゾーン",
         "try-line": "トライライン", "dead-ball-line": "デッドボールライン", "twenty-two-line": "22メートルライン", "ten-metre-line": "10メートルライン", "forty-metre-line": "40メートルライン", "in-goal": "インゴール",
         "boundary-line": "バウンダリーライン", "behind-line": "ビハインドライン", "goal-square": "ゴールスクエア", "centre-square": "センタースクエア", "fifty-metre-arc": "50メートルアーク", "behind-posts": "ビハインドポスト",
-        "distance-line": "距離を示すライン", "large-rectangle": "大きい長方形", "small-rectangle": "小さい長方形", "thirteen-metre-arc": "13メートルアーク", "forty-metre-arc": "40メートルアーク", "penalty-point": "ペナルティポイント",
+        "distance-line": "距離を示すライン", "large-rectangle": "大きい長方形", "small-rectangle": "小さい長方形", "thirteen-metre-arc": "13メートルアーク", "forty-metre-arc": "40メートルアーク", "penalty-point": "ペナルティーマーク",
         boundary: "バウンダリー", pitch: "ピッチ", "bowling-crease": "ボウリングクリース", "popping-crease": "ポッピングクリース", "return-crease": "リターンクリース", wicket: "ウィケット", "thirty-yard-circle": "30ヤードサークル",
-        "twenty-three-line": "23メートルライン", "shooting-circle": "シューティングサークル", "penalty-spot": "ペナルティスポット", "broken-circle-line": "サークルを囲む破線", "goal-area-line": "ゴールエリアライン",
+        "twenty-three-line": "23メートルライン", "shooting-circle": "シューティングサークル", "penalty-spot": "ペナルティースポット", "broken-circle-line": "サークルを囲む破線", "goal-area-line": "ゴールエリアライン",
         "seven-metre-line": "7mスローライン", "four-metre-line": "4mライン", "throw-off-area": "スローオフエリア", "restraining-line": "リストレイニングライン", "wing-line": "ウイングライン", "marking-area": "マーキングエリア", "two-point-arc": "2ポイントアーク",
       },
     },
@@ -819,7 +829,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       names: {
         "red-zone": "レッドゾーン", "between-the-20s": "20ヤードライン間のフィールド", "end-zone": "エンドゾーン", "field-of-play": "ゴールライン間のフィールド", "own-half": "自陣の半面", "opponent-half": "敵陣の半面",
         "offensive-zone": "アタッキングゾーン", "defensive-zone": "ディフェンディングゾーン", "neutral-zone": "ニュートラルゾーン", half: "半面", "half-court": "ハーフコート", paint: "ペイントエリア",
-        "final-third": "アタッキングサード", "defensive-third": "ディフェンディングサード", "middle-third": "ミドルサード", "penalty-area": "ペナルティエリア", infield: "内野", outfield: "外野", sheet: "シート全体", house: "ハウス",
+        "final-third": "アタッキングサード", "defensive-third": "ディフェンディングサード", "middle-third": "ミドルサード", "penalty-area": "ペナルティーエリア", infield: "内野", outfield: "外野", sheet: "シート全体", house: "ハウス",
         "in-goal": "インゴール", "twenty-two": "トライラインから22メートルラインまでのエリア", twenty: "ゴールラインから20メートルラインまでのエリア", crease: "クリース", "forward-fifty": "50メートルアークの内側", "centre-square": "センタースクエア",
         "large-rectangle": "大きい長方形", pitch: "ピッチ", circle: "サークル", "twenty-three": "23メートルエリア", "goal-area": "ゴールエリア",
       },
@@ -829,7 +839,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       title: "リプレイ（再生時間{time}）", objects: "追跡対象は{n}個", objectsOne: "追跡対象は{n}個", events: "イベント{n}件", eventsOne: "イベント{n}件", players: "選手", others: "ボール・パック・審判", trail: "直近{s}秒の軌跡", numbers: "背番号", eventLines: "パスとシュート",
       home: "ホーム", away: "アウェイ", ball: "ボール", puck: "パック", official: "審判", pass: "パス", shot: "シュート", goal: "ゴール", whistle: "ホイッスル",
       announce: "{what}、{time}", announceTeam: "{team}の{what}、{time}",
-      group: "リプレイの操作", play: "再生", pause: "一時停止", back: "前のコマ", forward: "次のコマ", stepBack: "前へ", stepForward: "次へ", speed: "再生速度", loop: "繰り返し", position: "再生位置", time: "時間", event: "イベント", positionValue: "{total}中{t}",
+      group: "リプレイの操作", play: "再生", pause: "一時停止", back: "前のコマ", forward: "次のコマ", stepBack: "前へ", stepForward: "次へ", speed: "再生速度", loop: "繰り返し", position: "再生位置", time: "時間", event: "イベント", spokenSeconds: "{s}秒", spokenMinutes: "{m}分{s}秒", spokenHours: "{h}時間{m}分{s}秒", positionValue: "{total}中{t}",
       keys: "プレーのリプレイです。スペースキーで再生と一時停止、左右の矢印キーで1コマずつ前後に移動、Shiftキーを押しながら矢印キーで5秒ずつ移動、Homeキーで最初、Endキーで最後に移動します。",
       keysStep: "プレーのリプレイです。コマ送りで表示しています。スペースキーまたは右矢印キーで進み、左矢印キーで戻り、Homeキーで最初、Endキーで最後に移動します。",
       region: "リプレイ",

@@ -121,7 +121,7 @@ function surfacesPage(lib) {
   return {
     slug: "gallery-surfaces",
     title: "Gallery: surfaces and scores",
-    ja: "競技場とスコア",
+    ja: "競技場と得点",
     intro: "The twenty surfaces bare, with a game on each, wide and tall, as a strip and as a compact card, and the court's looks. Every picture is drawn by the build from the code under it.",
     sections: [
       section("bare", "Each surface, bare", "`drawKyogijo` with a `sport` and nothing else.", sports.map((sport) => item(`bare-${sport}`, SPORT_TITLES[sport], drawing({ sport })))),
@@ -650,7 +650,7 @@ function fieldsPage(lib) {
   return {
     slug: "gallery-fields",
     title: "Gallery: lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey and handball",
-    ja: "ラクロス、ラグビー、オーストラリアンフットボール、ゲーリックゲーム、クリケット、フィールドホッケー、ハンドボール",
+    ja: "ラクロス、ラグビー、オーストラリアンフットボール、ゲーリック・ゲームズ、クリケット、フィールドホッケー、ハンドボール",
     intro: "Seven field sports from their own rulebooks: each league's surface, the scores they write their own way (goals and behinds, goals and points, runs for wickets), a named ground, a boundary of your own and a part of the surface.",
     sections: [
       section("fields", "Each surface, each league", "`sport` is `lacrosse`, `rugby`, `afl`, `gaelic`, `cricket`, `fieldhockey` or `handball`; `league` picks the rulebook.", [

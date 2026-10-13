@@ -150,7 +150,7 @@ describe("events", () => {
 
   it("are said in English and in Japanese, and by their own label when they have one", () => {
     expect(describeEvent({ t: 72, kind: "goal", team: "home" })).toBe("Goal, home, 1:12");
-    expect(describeEvent({ t: 72, kind: "goal", team: "away" }, "ja")).toBe("アウェイのゴール、1:12");
+    expect(describeEvent({ t: 72, kind: "goal", team: "away" }, "ja")).toBe("アウェイのゴール、1分12秒");
     expect(describeEvent({ t: 5, kind: "whistle" })).toBe("Whistle, 0:05");
     expect(describeEvent({ t: 5, kind: "offside", team: "home" })).toBe("offside, home, 0:05");
     expect(describeEvent({ t: 65, kind: "goal", label: "Goal, Rivera" }, "en", 5)).toBe("Goal, Rivera, 1:00");
@@ -190,7 +190,7 @@ describe("a frame", () => {
 
   it("describes itself in Japanese when the drawing is Japanese", () => {
     const svg = drawFrame({ ...options, language: "ja" }, timeline, 2);
-    expect(svg).toContain("リプレイ（再生時間0:14）。");
+    expect(svg).toContain("リプレイ（再生時間14秒）。");
     expect(svg).toContain("追跡対象は14個。");
     expect(svg).toContain("背番号");
   });
@@ -249,7 +249,7 @@ describe("a frame", () => {
 describe("the summary and the table", () => {
   it("sum the replay up without the time in it", () => {
     expect(replaySummary(simple())).toBe("Replay, 0:04. 3 tracked objects. By team: home 1, away 1, ball 1. 2 events.");
-    expect(replaySummary(simple(), "ja")).toBe("リプレイ（再生時間0:04）。追跡対象は3個。チーム別：ホーム 1件、アウェイ 1件、ボール 1件。イベント2件。");
+    expect(replaySummary(simple(), "ja")).toBe("リプレイ（再生時間4秒）。追跡対象は3個。チーム別：ホーム 1件、アウェイ 1件、ボール 1件。イベント2件。");
   });
   it("list the events as a table for a reader who cannot see the drawing", () => {
     const html = replayTable(simple());
@@ -267,7 +267,8 @@ describe("the summary and the table", () => {
 
 describe("the strings of a replay", () => {
   it("are in both languages with every placeholder the English has", () => {
-    const holes = (text: string): string[] => [...text.matchAll(/\{(\w+)\}/g)].map((m) => m[1]).sort();
+    // The padded forms ({mm}, {ss}) and the plain ones ({m}, {s}) of the spoken lengths are each language's choice: 0:05 in English, 5秒 in Japanese.
+    const holes = (text: string): string[] => [...text.matchAll(/\{(\w+)\}/g)].map((m) => m[1].replace(/^(m|s)\1$/, "$1")).sort();
     for (const [key, text] of Object.entries(KYOGIJO_STRINGS.en.replay)) {
       const ja = (KYOGIJO_STRINGS.ja.replay as Record<string, string>)[key];
       expect(ja, key).toMatch(/\S/);

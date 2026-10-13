@@ -329,11 +329,11 @@ test.describe("with motion", () => {
     expect(await page.locator("#replay-title").textContent()).toBe("リプレイ");
     await expect(stage(page)).toHaveAccessibleName("リプレイ");
     for (const name of ["前のコマ", "再生", "次のコマ", "繰り返し"]) await expect(page.locator(RINK).getByRole("button", { name })).toBeVisible();
-    await expect(page.locator(RINK).getByRole("slider", { name: "再生位置" })).toHaveAttribute("aria-valuetext", "0:14中0:00");
-    expect(await page.locator(`${RINK} svg.kyogijo > desc`).textContent()).toContain("リプレイ（再生時間0:14）。");
+    await expect(page.locator(RINK).getByRole("slider", { name: "再生位置" })).toHaveAttribute("aria-valuetext", "14秒中0秒");
+    expect(await page.locator(`${RINK} svg.kyogijo > desc`).textContent()).toContain("リプレイ（再生時間14秒）。");
     await seek(page, Math.floor((goal.t - 0.6) * 25) / 25);
     await page.locator(RINK).getByRole("button", { name: "再生" }).click();
-    await expect.poll(() => live(page), { timeout: 5000 }).toMatch(/ホームのゴール、0:\d\d/);
+    await expect.poll(() => live(page), { timeout: 5000 }).toMatch(/ホームのゴール、\d+秒/);
   });
 
   test("autoplay plays at once, and controls=\"false\" leaves the bar out and keeps the keyboard", async ({ page }) => {

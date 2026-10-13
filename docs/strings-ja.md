@@ -26,26 +26,26 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `surface.cricket` | Cricket ground | クリケットのグラウンド |
 | `surface.fieldhockey` | Field hockey pitch | フィールドホッケーのピッチ |
 | `surface.handball` | Handball court | ハンドボールのコート |
-| `about.nfl` | an American football field, 120 by 53 and a third yards with its end zones, with a yard line every 5 yards, hash marks, numbers and goal posts | アメリカンフットボールのフィールド。エンドゾーンを含めて120ヤード×53⅓ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールポストがあります |
-| `about.cfl` | a Canadian football field, 150 by 65 yards with its 20-yard end zones, with a yard line every 5 yards, hash marks, numbers and goal posts on the goal lines | カナディアンフットボールのフィールド。20ヤードのエンドゾーンを含めて150ヤード×65ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールライン上のゴールポストがあります |
-| `about.ifaf` | an international (IFAF) football field, 120 by 53 and a third yards with its end zones, with a yard line every 5 yards, hash marks, numbers and goal posts | 国際アメリカンフットボール連盟（IFAF）規格のフィールド。エンドゾーンを含めて120ヤード×53⅓ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールポストがあります |
+| `about.nfl` | an American football field, 120 by 53 and a third yards with its end zones, with a yard line every 5 yards, hash marks, numbers and goal posts | アメリカンフットボールのフィールド。エンドゾーンを含めて120×53⅓ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールポストがあります |
+| `about.cfl` | a Canadian football field, 150 by 65 yards with its 20-yard end zones, with a yard line every 5 yards, hash marks, numbers and goal posts on the goal lines | カナディアンフットボールのフィールド。20ヤードのエンドゾーンを含めて150×65ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールライン上のゴールポストがあります |
+| `about.ifaf` | an international (IFAF) football field, 120 by 53 and a third yards with its end zones, with a yard line every 5 yards, hash marks, numbers and goal posts | 国際アメリカンフットボール連盟（IFAF）規格のフィールド。エンドゾーンを含めて120×53⅓ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールポストがあります |
 | `about.nhl` | an ice hockey rink, 200 by 85 feet with rounded corners, with its red and blue lines, face-off circles, creases and goal nets | アイスホッケーのリンク。200フィート（約61m）×85フィート（約26m）で角が丸く、レッドライン、ブルーライン、フェイスオフサークル、クリース、ゴールがあります |
 | `about.nba` | a basketball court, 94 by 50 feet, with its keys, three-point lines, free-throw circles and the centre circle | バスケットボールのコート。94フィート（約28.7m）×50フィート（約15.2m）で、ペイントエリア、スリーポイントライン、フリースローサークル、センターサークルがあります |
 | `about.mlb` | a baseball field, with a 90-foot infield, the mound, the foul lines and the outfield fence | 野球場。塁間90フィート（約27.4m）の内野、マウンド、ファウルライン、外野フェンスがあります |
-| `about.soccer` | a soccer pitch, {length} by {width} metres, with the halfway line, the centre circle, both penalty areas, goal areas, penalty marks and arcs, the corner arcs and the goals | サッカーのピッチ。{length}m×{width}mで、ハーフウェーライン、センターサークル、両側のペナルティエリアとゴールエリア、ペナルティマークとペナルティアーク、コーナーアーク、ゴールがあります |
+| `about.soccer` | a soccer pitch, {length} by {width} metres, with the halfway line, the centre circle, both penalty areas, goal areas, penalty marks and arcs, the corner arcs and the goals | サッカーのピッチ。{length}×{width}mで、ハーフウェーライン、センターサークル、両側のペナルティーエリアとゴールエリア、ペナルティーマークとペナルティーアーク、コーナーアーク、ゴールがあります |
 | `about.curling` | a curling sheet, {size}, with a house at each end (the 12-, 8- and 4-foot circles round the button), the tee, back, hog and centre lines and the hacks | カーリングのシート。{size}で、両端にハウス（ボタンを囲む12フィート・8フィート・4フィートの円）があり、ティーライン、バックライン、ホッグライン、センターライン、ハックがあります |
 | `about.tennis` | a tennis court, 78 by 36 feet, with its baselines, singles and doubles sidelines, service lines, centre service lines, centre marks and the net | テニスコート。78フィート（約23.8m）×36フィート（約11m）で、ベースライン、シングルスとダブルスのサイドライン、サービスライン、センターサービスライン、センターマーク、ネットがあります |
-| `about.volleyball` | a volleyball court, 18 by 9 metres, with its centre line, attack lines, the net and its antennae | バレーボールコート。18m×9mで、センターライン、アタックライン、ネットとアンテナがあります |
-| `about.badminton` | a badminton court, 13.4 by 6.1 metres, with its singles and doubles lines, short and long service lines, centre lines and the net | バドミントンコート。13.4m×6.1mで、シングルスとダブルスのライン、ショートサービスライン、ロングサービスライン、センターライン、ネットがあります |
+| `about.volleyball` | a volleyball court, 18 by 9 metres, with its centre line, attack lines, the net and its antennae | バレーボールコート。18×9mで、センターライン、アタックライン、ネットとアンテナがあります |
+| `about.badminton` | a badminton court, 13.4 by 6.1 metres, with its singles and doubles lines, short and long service lines, centre lines and the net | バドミントンコート。13.4×6.1mで、シングルスとダブルスのライン、ショートサービスライン、ロングサービスライン、センターライン、ネットがあります |
 | `about.pickleball` | a pickleball court, 44 by 20 feet, with its non-volley zones, centre lines and the net | ピックルボールコート。44フィート（約13.4m）×20フィート（約6.1m）で、ノンボレーゾーン、センターライン、ネットがあります |
-| `about.tabletennis` | a table tennis table, 2.74 by 1.525 metres, with its side lines, end lines, centre line and the net | 卓球台。2.74m×1.525mで、サイドライン、エンドライン、センターライン、ネットがあります |
+| `about.tabletennis` | a table tennis table, 2.74 by 1.525 metres, with its side lines, end lines, centre line and the net | 卓球台。2.74×1.525mで、サイドライン、エンドライン、センターライン、ネットがあります |
 | `about.lacrosse` | a lacrosse field, with its end lines, goals, creases, restraining lines, wing lines and the centre line | ラクロスのフィールド。エンドライン、ゴール、クリース、リストレイニングライン、ウイングライン、センターラインがあります |
-| `about.rugby` | a rugby union field, 94 to 100 metres between the try lines and 68 to 70 metres wide, with its in-goal areas, the 22-metre lines, the half-way line, the dash lines and the goal posts | ラグビーユニオンのグラウンド。トライライン間が94～100m、幅が68～70mで、インゴール、22メートルライン、ハーフウェイライン、破線、ゴールポストがあります |
-| `about.afl` | an Australian football ground, an oval 135 to 185 metres long and 110 to 155 metres wide, with the goal squares, the centre square and circles, the fifty metre arcs, and the goal posts and behind posts | オーストラリアンフットボールのグラウンド。長さ135～185m、幅110～155mの楕円形で、ゴールスクエア、センタースクエアとサークル、50メートルアーク、ゴールポストとビハインドポストがあります |
-| `about.gaelic` | a field for Gaelic football and hurling, 130 to 145 metres by 80 to 90 metres, with its lines across at 13, 20 and 45 metres, the two rectangles at each end, the arcs and the goalposts | ゲーリック・フットボールとハーリング用のフィールド。130～145m×80～90mで、13m・20m・45mの横線、両端の2つの長方形、アーク、ゴールポストがあります |
+| `about.rugby` | a rugby union field, 94 to 100 metres between the try lines and 68 to 70 metres wide, with its in-goal areas, the 22-metre lines, the half-way line, the dash lines and the goal posts | ラグビーユニオンのグラウンド。トライライン間が94〜100m、幅が68〜70mで、インゴール、22メートルライン、ハーフウェイライン、破線、ゴールポストがあります |
+| `about.afl` | an Australian football ground, an oval 135 to 185 metres long and 110 to 155 metres wide, with the goal squares, the centre square and circles, the fifty metre arcs, and the goal posts and behind posts | オーストラリアンフットボールのグラウンド。長さ135〜185m、幅110〜155mの楕円形で、ゴールスクエア、センタースクエアとサークル、50メートルアーク、ゴールポストとビハインドポストがあります |
+| `about.gaelic` | a field for Gaelic football and hurling, 130 to 145 metres by 80 to 90 metres, with its lines across at 13, 20 and 45 metres, the two rectangles at each end, the arcs and the goalposts | ゲーリック・フットボールとハーリング用のフィールド。130〜145m×80〜90mで、13m・20m・45mの横線、両端の2つの長方形、アーク、ゴールポストがあります |
 | `about.cricket` | a cricket ground, with its boundary, the 30-yard circle, and the 22-yard pitch with its creases and wickets | クリケットのグラウンド。バウンダリー、30ヤードのサークル、クリースとウィケットのある22ヤードのピッチがあります |
-| `about.fieldhockey` | a field hockey pitch, 91.40 by 55.00 metres, with the centre line, the 23-metre lines, the circles, the penalty spots and the goals | フィールドホッケーのピッチ。91.40m×55.00mで、センターライン、23メートルライン、サークル、ペナルティスポット、ゴールがあります |
-| `about.handball` | a handball court, 40 by 20 metres, with the centre line, the goal areas, the 6-, 7- and 9-metre lines, the 4-metre lines and the goals | ハンドボールのコート。40m×20mで、センターライン、ゴールエリア、6m・7m・9mのライン、4mのライン、ゴールがあります |
+| `about.fieldhockey` | a field hockey pitch, 91.40 by 55.00 metres, with the centre line, the 23-metre lines, the circles, the penalty spots and the goals | フィールドホッケーのピッチ。91.40×55.00mで、センターライン、23メートルライン、サークル、ペナルティースポット、ゴールがあります |
+| `about.handball` | a handball court, 40 by 20 metres, with the centre line, the goal areas, the 6-, 7- and 9-metre lines, the 4-metre lines and the goals | ハンドボールのコート。40×20mで、センターライン、ゴールエリア、6m・7m・9mのライン、4mのライン、ゴールがあります |
 | `status.final` | Final | 試合終了 |
 | `status.final-ot` | Final/OT | 試合終了（延長） |
 | `status.final-so` | Final/SO | 試合終了（SO） |
@@ -65,7 +65,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `setStatus` | Set {n} | 第{n}セット |
 | `gameStatus` | Game {n} | 第{n}ゲーム |
 | `soccer.futsal` | Futsal court | フットサルのコート |
-| `soccer.aboutFutsal` | a futsal court, {length} by {width} metres, with the halfway line, the centre circle, both penalty areas, the penalty marks and the goals | フットサルのコート。{length}m×{width}mで、ハーフウェーライン、センターサークル、両側のペナルティエリア、ペナルティマーク、ゴールがあります |
+| `soccer.aboutFutsal` | a futsal court, {length} by {width} metres, with the halfway line, the centre circle, both penalty areas, the penalty marks and the goals | フットサルのコート。{length}×{width}mで、ハーフウェーライン、センターサークル、両側のペナルティーエリア、ペナルティーマーク、ゴールがあります |
 | `soccer.half` | Half of it is shown. | 半面のみ表示しています。 |
 | `league.basketball` | a basketball court, {size}, with its keys, three-point lines, free-throw circles and the centre circle | バスケットボールのコート。{size}で、ペイントエリア、スリーポイントライン、フリースローサークル、センターサークルがあります |
 | `league.hockey` | an ice hockey rink, {size} with rounded corners, with its red and blue lines, face-off circles, creases and goal nets | アイスホッケーのリンク。{size}で角が丸く、レッドライン、ブルーライン、フェイスオフサークル、クリース、ゴールがあります |
@@ -84,12 +84,12 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `league.rugby` | a rugby union field, {size} with its in-goal areas, with the 22-metre lines, the half-way line, the dash lines and the goal posts | ラグビーユニオンのグラウンド。インゴールを含めて{size}で、22メートルライン、ハーフウェイライン、破線、ゴールポストがあります |
 | `league.rugbyLeague` | a rugby league field, {size} with its in-goal areas, with a line across the field every 10 metres and the goal posts | ラグビーリーグのグラウンド。インゴールを含めて{size}で、10mごとの横線とゴールポストがあります |
 | `league.afl` | an Australian football ground, {size}, an oval with the goal squares, the centre square and circles, the fifty metre arcs, and the goal posts and behind posts | オーストラリアンフットボールのグラウンド。{size}の楕円形で、ゴールスクエア、センタースクエアとサークル、50メートルアーク、ゴールポストとビハインドポストがあります |
-| `league.gaelic` | a field for Gaelic football, {size}, with its lines across, the two rectangles at each end, the 13 and 40 metre arcs, the penalty point and the goalposts | ゲーリック・フットボールのフィールド。{size}で、横線、両端の2つの長方形、13mと40mのアーク、ペナルティポイント、ゴールポストがあります |
+| `league.gaelic` | a field for Gaelic football, {size}, with its lines across, the two rectangles at each end, the 13 and 40 metre arcs, the penalty point and the goalposts | ゲーリック・フットボールのフィールド。{size}で、横線、両端の2つの長方形、13mと40mのアーク、ペナルティーマーク、ゴールポストがあります |
 | `league.hurling` | a field for hurling, {size}, with its lines across (the 65 metre lines too), the two rectangles at each end, the 13 metre arcs and the goalposts | ハーリングのフィールド。{size}で、65mの線を含む横線、両端の2つの長方形、13mのアーク、ゴールポストがあります |
 | `league.cricket` | a cricket ground, {size}, with its boundary, the pitch with its creases and wickets, and the fielding restriction's circle where the rules have one | クリケットのグラウンド。{size}で、バウンダリー、クリースとウィケットのあるピッチ、規則によっては守備制限のサークルがあります |
-| `league.fieldhockey` | a field hockey pitch, {size}, with the centre line, the 23-metre lines, the circles, the penalty spots and the goals | フィールドホッケーのピッチ。{size}で、センターライン、23メートルライン、サークル、ペナルティスポット、ゴールがあります |
+| `league.fieldhockey` | a field hockey pitch, {size}, with the centre line, the 23-metre lines, the circles, the penalty spots and the goals | フィールドホッケーのピッチ。{size}で、センターライン、23メートルライン、サークル、ペナルティースポット、ゴールがあります |
 | `league.handball` | a handball court, {size}, with the centre line, the goal areas, the 6-, 7- and 9-metre lines, the 4-metre lines and the goals | ハンドボールのコート。{size}で、センターライン、ゴールエリア、6m・7m・9mのライン、4mのライン、ゴールがあります |
-| `league.size` | {length} by {width} {unit} | {length}{unit}×{width}{unit} |
+| `league.size` | {length} by {width} {unit} | {length}×{width}{unit} |
 | `league.units.ft` | feet | フィート |
 | `league.units.yd` | yards | ヤード |
 | `league.units.m` | metres | m |
@@ -98,7 +98,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `ballpark.sections.left` | Left field | 左翼 |
 | `ballpark.sections.leftCenter` | Left-centre | 左中間 |
 | `ballpark.sections.center` | Centre field | 中堅 |
-| `ballpark.sections.deadCenter` | Dead centre | 中堅中央 |
+| `ballpark.sections.deadCenter` | Dead centre | 中堅正面 |
 | `ballpark.sections.rightCenter` | Right-centre | 右中間 |
 | `ballpark.sections.right` | Right field | 右翼 |
 | `ballpark.sections.leftToCenter` | Left to centre field | 左翼から中堅 |
@@ -108,7 +108,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `ballpark.unit.ft` | ft | フィート |
 | `ballpark.unit.m` | m | m |
 | `ballpark.tiers.under` | under {a} {unit} | {a}{unit}未満 |
-| `ballpark.tiers.between` | {a} to {b} {unit} | {a}～{b}{unit} |
+| `ballpark.tiers.between` | {a} to {b} {unit} | {a}〜{b}{unit} |
 | `ballpark.tiers.over` | {a} {unit} and over | {a}{unit}以上 |
 | `ballpark.height` | {name} {height} {unit} | {name} {height}{unit} |
 | `ballpark.walls` | Wall heights: {list}. | フェンスの高さ：{list}。 |
@@ -134,7 +134,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `ballpark.kinds.third` | third | 三 |
 | `net.serving` | {name} is serving. | {name}のサーブです。 |
 | `net.bySet` | By set, {name}: {list}. | {name}のセットごとのスコア：{list}。 |
-| `net.byGame` | By game, {name}: {list}. | {name}のゲームごとの得点：{list}。 |
+| `net.byGame` | By game, {name}: {list}. | {name}のゲームごとのスコア：{list}。 |
 | `net.gamePoints` | In the current game, {name} has {points}. | 現在のゲームのポイントは、{name}が{points}です。 |
 | `net.sets` | Sets | セット |
 | `net.games` | Games | ゲーム |
@@ -192,7 +192,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `special.game` | {event}, {date}. | {event}、{date}。 |
 | `special.inside` | The {guest} lies wholly inside the outline of {host}. | {guest}全体が{host}の輪郭の内側に収まっています。 |
 | `special.hangs` | Part of the {guest}, {pct} percent of its area, lies outside the outline of {host}. | {guest}の一部（面積の{pct}％）が{host}の輪郭の外にはみ出しています。 |
-| `special.foul` | A ballpark's outline is the fair ground inside the fence, so a surface over the infield reaches into foul ground. | 球場の輪郭はフェンスの内側のフェア地域なので、内野の上に置いた競技面はファウル地域にかかります。 |
+| `special.foul` | A ballpark's outline is the fair ground inside the fence, so a surface over the infield reaches into foul ground. | 球場の輪郭はフェンスの内側のフェアゾーンなので、内野の上にリンクやコートなどを置くと、ファウルゾーンにはみ出します。 |
 | `special.unnamed.field` | the football field | フットボールのフィールド |
 | `special.unnamed.pitch` | the pitch | ピッチ |
 | `special.unnamed.deck` | the deck | 甲板 |
@@ -260,7 +260,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `charts.sumMlb` | Balls in play {balls}: {list}. | インプレー打球{balls}本：{list}。 |
 | `charts.sumNfl` | Passes {passes}, complete {complete} ({pct}%), touchdowns {td}, interceptions {int}. | パス{passes}本、成功{complete}本（{pct}％）、タッチダウン{td}回、インターセプト{int}回。 |
 | `charts.beyondNote` | Beyond the fence: {n}. | フェンスを越えた打球は{n}本です。 |
-| `charts.airYards` | Air yards from {min} to {max}. | エアヤード：{min}～{max}ヤード。 |
+| `charts.airYards` | Air yards from {min} to {max}. | エアヤード：{min}〜{max}ヤード。 |
 | `charts.goalDesc` | The goal frame, {w} by {h} metres, seen from the front: the shooter's left is on the left. | ゴール枠（幅{w}m×高さ{h}m）を正面から見た図です。図の左側が、シュートを打つ選手の左手側です。 |
 | `charts.titlePassNetwork` | Pass network | パスネットワーク |
 | `charts.sizeTouches` | Node size: touches | 円の大きさ：タッチ数 |
@@ -279,7 +279,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `layers.listSep` | ,  | 、 |
 | `layers.outcomes` | By outcome: {list}. | 結果別：{list}。 |
 | `layers.teams` | By team: {list}. | チーム別：{list}。 |
-| `layers.values` | Values from {min} to {max}. | 値の範囲：{min}～{max}。 |
+| `layers.values` | Values from {min} to {max}. | 値の範囲：{min}〜{max}。 |
 | `layers.skipped` | {n} left out for want of a place. | 位置が不明なため{n}件は描かれていません。 |
 | `layers.data` | Data | データ |
 | `layers.tableNo` | No. | 番号 |
@@ -300,10 +300,10 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `layers.zonesTitle` | Zone chart of {n} {noun} | {noun}のゾーン別集計（{n}件） |
 | `layers.contourTitle` | Density contours of {n} {noun} | {noun}の密度等高線（{n}件） |
 | `layers.legendTitle` | Legend: {name} | 凡例：{name} |
-| `layers.range` | {min} to {max} | {min}～{max} |
-| `layers.heatNote` | {stat} in {n} cells, from {min} to {max}. | {n}個のセルの{stat}は{min}～{max}です。 |
-| `layers.hexNote` | {stat} in {n} hexagons, from {min} to {max}. | {n}個の六角形の{stat}は{min}～{max}です。 |
-| `layers.zoneNote` | {stat} in {n} zones, from {min} to {max}. | {n}個のゾーンの{stat}は{min}～{max}です。 |
+| `layers.range` | {min} to {max} | {min}〜{max} |
+| `layers.heatNote` | {stat} in {n} cells, from {min} to {max}. | {n}個のセルの{stat}は{min}〜{max}です。 |
+| `layers.hexNote` | {stat} in {n} hexagons, from {min} to {max}. | {n}個の六角形の{stat}は{min}〜{max}です。 |
+| `layers.zoneNote` | {stat} in {n} zones, from {min} to {max}. | {n}個のゾーンの{stat}は{min}〜{max}です。 |
 | `layers.contourNote` | {n} density contours; the peak is near {x}, {y}. | 密度の等高線は{n}本です。ピークは({x}, {y})付近です。 |
 | `layers.top` | Highest: {list}. | 上位：{list}。 |
 | `layers.outside` | {n} outside the grid or the zones. | グリッドまたはゾーンの範囲外のデータが{n}件あります。 |
@@ -349,7 +349,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `layers.zones.innerSlot` | Inner slot | 内側スロット |
 | `layers.zones.outerSlot` | Outer slot | 外側スロット |
 | `layers.zones.offensiveZone` | Offensive zone | アタッキングゾーン |
-| `layers.zones.behindGoalLine` | Behind the goal line | ゴールライン後方 |
+| `layers.zones.behindGoalLine` | Behind the goal line | ゴール裏 |
 | `layers.zones.homePlate` | Home plate | ゴール前の五角形エリア |
 | `layers.zones.outsideHomePlate` | Outside home plate | 五角形エリアの外 |
 | `layers.zones.pull` | Pull | 引っ張り方向 |
@@ -394,15 +394,19 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `team.delaunayTitle` | Delaunay triangulation of {n} players | 選手{n}人のドロネー三角形分割 |
 | `team.delaunayNote` | {triangles} triangles and {edges} edges. | 三角形{triangles}個、辺{edges}本。 |
 | `team.hullTitle` | Convex hull of {n} players | 選手{n}人の凸包 |
-| `team.hullItem` | {name}: {n} players, area {area} square {unit} | {name}：選手{n}人、面積{area}平方{unit} |
+| `team.hullItem` | {name}: {n} players, area {area} {unit} | {name}：選手{n}人、面積{area}{unit} |
 | `team.hullAll` | all players | 全選手 |
+| `team.squareUnits.ft` | square feet | 平方フィート |
+| `team.squareUnits.yd` | square yards | 平方ヤード |
+| `team.squareUnits.m` | square metres | 平方メートル |
+| `team.squareOther` | square {unit} | 平方{unit} |
 | `team.flowTitle` | Flow of {n} movements in {cells} cells | {n}件の移動の流れ（{cells}個のセル） |
 | `team.flowNote` | The mean movement of a cell is up to {len} {unit} long. | セルごとの平均的な移動の長さは最大で{len}{unit}です。 |
 | `team.sonarTitle` | Direction roses of {n} movements: {roses} roses of {angles} directions | {n}件の移動の方向別分布：ローズ図{roses}個（各{angles}方向） |
 | `team.sonarNote` | Most common direction: {deg} degrees, {n}. | 最も多い方向：{deg}度（{n}件）。 |
 | `team.sonarAngles` | 0 degrees points to the right end of the surface as drawn wide and 90 degrees to the top. | 競技場を横長に描いたとき、0度は右端の方向、90度は上辺の方向です。 |
 | `team.roseTitle` | {name}: {n} movements, most toward {deg} degrees | {name}：{n}件の移動、最も多いのは{deg}度方向 |
-| `team.barTitle` | {from} to {to} degrees: {value} | {from}度～{to}度：{value} |
+| `team.barTitle` | {from} to {to} degrees: {value} | {from}度〜{to}度：{value} |
 | `team.tablePlayer` | Player | 選手 |
 | `team.tableFrom` | From | 出し手 |
 | `team.tableTo` | To | 受け手 |
@@ -465,7 +469,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `notes.names.basket` | Basket | リング |
 | `notes.names.three-point-line` | Three-point line | スリーポイントライン |
 | `notes.names.restricted-area` | Restricted area | リストリクテッドエリア |
-| `notes.names.home-plate` | Home plate | ホームベース |
+| `notes.names.home-plate` | Home plate | 本塁 |
 | `notes.names.first-base` | First base | 一塁 |
 | `notes.names.second-base` | Second base | 二塁 |
 | `notes.names.third-base` | Third base | 三塁 |
@@ -475,10 +479,10 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `notes.names.pitchers-plate` | Pitcher's plate | 投手板 |
 | `notes.names.batters-box` | Batter's box | バッターボックス |
 | `notes.names.touchline` | Touchline | タッチライン |
-| `notes.names.penalty-area` | Penalty area | ペナルティエリア |
+| `notes.names.penalty-area` | Penalty area | ペナルティーエリア |
 | `notes.names.goal-area` | Goal area | ゴールエリア |
-| `notes.names.penalty-mark` | Penalty mark | ペナルティマーク |
-| `notes.names.penalty-arc` | Penalty arc | ペナルティアーク |
+| `notes.names.penalty-mark` | Penalty mark | ペナルティーマーク |
+| `notes.names.penalty-arc` | Penalty arc | ペナルティーアーク |
 | `notes.names.corner-arc` | Corner arc | コーナーアーク |
 | `notes.names.goal` | Goal | ゴール |
 | `notes.names.service-line` | Service line | サービスライン |
@@ -517,7 +521,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `notes.names.small-rectangle` | Small rectangle | 小さい長方形 |
 | `notes.names.thirteen-metre-arc` | 13 m arc | 13メートルアーク |
 | `notes.names.forty-metre-arc` | 40 m arc | 40メートルアーク |
-| `notes.names.penalty-point` | Penalty point | ペナルティポイント |
+| `notes.names.penalty-point` | Penalty point | ペナルティーマーク |
 | `notes.names.boundary` | Boundary | バウンダリー |
 | `notes.names.pitch` | Pitch | ピッチ |
 | `notes.names.bowling-crease` | Bowling crease | ボウリングクリース |
@@ -527,7 +531,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `notes.names.thirty-yard-circle` | 30-yard circle | 30ヤードサークル |
 | `notes.names.twenty-three-line` | 23-metre line | 23メートルライン |
 | `notes.names.shooting-circle` | Shooting circle | シューティングサークル |
-| `notes.names.penalty-spot` | Penalty spot | ペナルティスポット |
+| `notes.names.penalty-spot` | Penalty spot | ペナルティースポット |
 | `notes.names.broken-circle-line` | Broken line round the circle | サークルを囲む破線 |
 | `notes.names.goal-area-line` | Goal-area line | ゴールエリアライン |
 | `notes.names.seven-metre-line` | 7-metre line | 7mスローライン |
@@ -557,7 +561,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `ranges.names.final-third` | final third | アタッキングサード |
 | `ranges.names.defensive-third` | defensive third | ディフェンディングサード |
 | `ranges.names.middle-third` | middle third | ミドルサード |
-| `ranges.names.penalty-area` | penalty area | ペナルティエリア |
+| `ranges.names.penalty-area` | penalty area | ペナルティーエリア |
 | `ranges.names.infield` | infield | 内野 |
 | `ranges.names.outfield` | outfield | 外野 |
 | `ranges.names.sheet` | whole sheet | シート全体 |
@@ -611,6 +615,9 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `replay.position` | Position | 再生位置 |
 | `replay.time` | Time | 時間 |
 | `replay.event` | Event | イベント |
+| `replay.spokenSeconds` | 0:{ss} | {s}秒 |
+| `replay.spokenMinutes` | {m}:{ss} | {m}分{s}秒 |
+| `replay.spokenHours` | {h}:{mm}:{ss} | {h}時間{m}分{s}秒 |
 | `replay.positionValue` | {t} of {total} | {total}中{t} |
 | `replay.keys` | Replay of the play. Space plays or pauses, the left and right arrow keys step by a frame, Shift with an arrow key moves 5 seconds, and Home and End go to the ends. | プレーのリプレイです。スペースキーで再生と一時停止、左右の矢印キーで1コマずつ前後に移動、Shiftキーを押しながら矢印キーで5秒ずつ移動、Homeキーで最初、Endキーで最後に移動します。 |
 | `replay.keysStep` | Replay of the play, in steps. Space or the right arrow key moves on, the left arrow key goes back, and Home and End go to the ends. | プレーのリプレイです。コマ送りで表示しています。スペースキーまたは右矢印キーで進み、左矢印キーで戻り、Homeキーで最初、Endキーで最後に移動します。 |
@@ -624,7 +631,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `name` | 競技場 (kyōgijō) is Japanese for a sports ground. | 競技場（きょうぎじょう）は、スポーツの試合や競技を行う場所のことです。 |
 | `nameLink` | About the name | 名前の由来（英語） |
 | `foot` | Every dimension is from a rulebook or a published figure; the sources are in the repository. | 寸法はすべて、ルールブックまたは公表されている数値に基づいています。出典はリポジトリに載っています。 |
-| `pageApi` | API reference | API（英語） |
+| `pageApi` | API reference | APIリファレンス（英語） |
 | `pageDocs` | Docs | ドキュメント |
 | `groupSurface` | Surface | 競技場 |
 | `groupTeams` | Teams | チーム |
@@ -647,12 +654,12 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `sport_lacrosse` | Lacrosse | ラクロス |
 | `sport_rugby` | Rugby | ラグビー |
 | `sport_afl` | Australian football | オーストラリアンフットボール |
-| `sport_gaelic` | Gaelic games | ゲーリックゲーム |
+| `sport_gaelic` | Gaelic games | ゲーリック・ゲームズ |
 | `sport_cricket` | Cricket | クリケット |
 | `sport_fieldhockey` | Field hockey | フィールドホッケー |
 | `sport_handball` | Handball | ハンドボール |
 | `pitchLabel` | Pitch | ピッチ |
-| `pitch_fifa` | International, 105 × 68 m | 国際試合 105×68m |
+| `pitch_fifa` | International, 105 × 68 m | 国際標準 105×68m |
 | `pitch_uefa` | UEFA, 105 × 68 m | UEFA 105×68m |
 | `pitch_mls` | MLS least size, 110 × 70 yd | MLSの最小サイズ 110×70ヤード |
 | `pitch_ncaa` | NCAA best size, 120 × 75 yd | NCAAの推奨サイズ 120×75ヤード |
@@ -731,12 +738,12 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `game` | The game | 試合 |
 | `status` | Status | 状況 |
 | `status_final` | Final | 試合終了 |
-| `status_final_ot` | Final/OT | 延長で試合終了 |
-| `status_final_so` | Final/SO | シュートアウトで試合終了 |
+| `status_final_ot` | Final/OT | 試合終了（延長） |
+| `status_final_so` | Final/SO | 試合終了（SO） |
 | `status_live` | Live | 試合中 |
 | `status_half` | Halftime | ハーフタイム |
-| `status_final_aet` | Final/AET | 延長戦で試合終了 |
-| `status_final_pens` | Final/Pens | PK戦で試合終了 |
+| `status_final_aet` | Final/AET | 試合終了（延長戦） |
+| `status_final_pens` | Final/Pens | 試合終了（PK戦） |
 | `status_custom` | Your own | 自由入力 |
 | `statusCustom` | Status text | 状況のテキスト |
 | `competition` | Competition | 大会 |
@@ -762,8 +769,8 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `court_sunburst` | Sunburst | サンバースト |
 | `court_tournament` | Tournament | トーナメント |
 | `baseline` | Words on the baselines | ベースラインの文字 |
-| `centreLogo` | Logo at centre court | センターのロゴ |
-| `usesTitle` | Everything is one call | すべては1つの呼び出し |
+| `centreLogo` | Logo at centre court | コート中央のロゴ |
+| `usesTitle` | Everything is one call | どれも1回の呼び出し |
 | `embedTitle` | Put it in your page | ページに組み込む |
 | `embedText` | Four ways, from one line of HTML to a string of SVG. Each shows the call for what you have set above. | 1行のHTMLからSVG文字列まで、4つの方法があります。上の設定に合わせた呼び出しコードを、それぞれ表示します。 |
 | `embed_module` | Module | モジュール |
@@ -801,14 +808,14 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `chartsText` | A shot chart, a shot map, a spray chart and a pass chart, each made in one call from made-up data. A chart is a list of layers and some drawing options, so it can still be changed, and it comes with a key, a legend and a table. The marks differ in shape as well as in fill, so a result is never told by colour alone. | ショットチャート、シュートマップ、打球方向図、パスチャートを、架空のデータからそれぞれ1回の呼び出しで描けます。チャートはレイヤーの一覧と描画オプションなので、あとから変更でき、凡例と表も付いています。結果は色だけでなく形の違いでも区別できます。 |
 | `chart_nba` | An NBA shot chart: every shot, and the six zones coloured against a league figure of 46 percent | NBAのショットチャート：すべてのシュートと、リーグ平均46％を基準に色分けした6つのゾーン |
 | `chart_nhl` | An NHL shot map with both ends folded to one: marks sized by expected goals, the slot zones by goal rate | NHLのシュートマップ：左右両方のゴール前のシュートを片側に重ね、マークの大きさは期待ゴール数、スロットのゾーンはシュート決定率で表示 |
-| `chart_mlb` | A spray chart on the Polo Grounds of 1915: hit types, balls beyond its short fence, and the spray zones for a right-handed batter | 1915年のポロ・グラウンズの打球方向図：安打の種類、近いフェンスを越えた打球、右打者の打球方向ゾーン |
+| `chart_mlb` | A spray chart on the Polo Grounds of 1915: hit types, balls beyond its short fence, and the spray zones for a right-handed batter | 1915年のポロ・グラウンズの打球方向図：安打の種類、狭い外野のフェンスを越えた打球、右打者の打球方向ゾーン |
 | `chart_nfl` | An NFL pass chart: where each pass came down, and the pass grid's completion percentages | NFLのパスチャート：各パスの到達地点と、区画ごとのパス成功率 |
 | `chart_soccer` | A soccer shot map: marks sized by expected goals, with the total | サッカーのシュートマップ：マークの大きさは期待ゴール数で、合計も表示 |
 | `chart_goal` | The goal-mouth view of the same shots: where each crossed the goal line | 同じシュートのゴールマウス図：ゴールラインを通過した位置 |
 | `parksTitle` | Ballparks | 球場 |
 | `parksText` | Thirty current MLB parks and forty-four past ones, and the NPB's twelve home parks and eight other grounds, each fence drawn from the distances its article publishes. Press one to try it. | 現在のMLB30球場と過去の44球場、NPBの本拠地12球場とその他8球場。外野フェンスは、各球場の記事で公表されている距離をもとに描いています。球場を選ぶと試せます。 |
 | `parksShow` | Show the parks | 球場を表示する |
-| `atlasTitle` | Atlas | 球場・競技場マップ |
+| `atlasTitle` | Atlas | 球場・スタジアムマップ |
 | `atlasText` | Every ballpark and soccer ground in the package on one map: choose a place to see its surface drawn to scale. Filter by sport, league, country, today or the past, and pick a year to keep the places that were in use then. | このパッケージにある野球場とサッカー場をすべて1枚の地図に載せました。場所を選ぶと、その競技場を縮尺どおりに描きます。競技、リーグ、国、現在か過去かで絞り込めます。年を選ぶと、その年に使われていた場所だけが残ります。 |
 | `atlasSport` | Sport | 競技 |
 | `atlasAll` | All | すべて |
@@ -845,9 +852,9 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `atlasTeam` | Club | チーム |
 | `atlasLeagues` | Leagues | リーグ・大会 |
 | `atlasPitch` | Pitch | ピッチ |
-| `atlasPitchDefault` | no size published, drawn at the international size | 公表された寸法がないため、国際試合の標準寸法で描画 |
+| `atlasPitchDefault` | no size published, drawn at the international size | 公表された寸法がないため、国際標準の寸法で描画 |
 | `atlasCoordinates` | Coordinates | 座標 |
-| `atlasTry` | Try this place above | この場所を試す |
+| `atlasTry` | Try this place above | この場所を上で試す |
 | `atlasYears` | {from}–{to} | {from}年〜{to}年 |
 | `atlasSince` | since {from} | {from}年〜 |
 | `atlasUntil` | until {to} | 〜{to}年 |
@@ -867,10 +874,10 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `providerFixed` | fixed figures | 固定値 |
 | `providerSized` | follows the pitch | ピッチの大きさに連動 |
 | `convTitle` | Move a point between providers | 提供元どうしで点を変換する |
-| `convText` | A point on a line of the pitch stays on that line: the penalty line of one provider is the penalty line of the other. | ピッチのライン上の点は、変換しても同じライン上にあります。たとえば、一方の提供元のペナルティエリアのラインは、もう一方の提供元のペナルティエリアのラインに移ります。 |
+| `convText` | A point on a line of the pitch stays on that line: the penalty line of one provider is the penalty line of the other. | ピッチのライン上の点は、変換しても同じライン上にあります。たとえば、一方の提供元のペナルティーエリアのラインは、もう一方の提供元のペナルティーエリアのラインに移ります。 |
 | `convFrom` | From | 変換元 |
 | `convTo` | To | 変換先 |
-| `convSpot` | The penalty mark | ペナルティマーク |
+| `convSpot` | The penalty mark | ペナルティーマーク |
 | `convResult` | Becomes | 変換後 |
 | `convBad` | Two numbers, please | 数値を2つ入力してください |
 | `liveTitle` | A live score | 得点が動く例 |
@@ -882,7 +889,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `replayTitle` | Replay | リプレイ |
 | `replayText` | A made-up play on the rink and on the pitch, played back from tracking data: the players, the ball and its trail, and the passes, the shot and the goal as they happen. Play, pause, step, drag the position, change the speed or loop; the space bar and the arrow keys work too. Nothing plays by itself, only the marks that move are redrawn, and a reader who prefers reduced motion gets steps. | リンクとピッチの上で、架空のプレーをトラッキングデータから再生します。選手、ボールとその軌跡、パス、シュート、ゴールが、プレーの進行に合わせて表示されます。再生と一時停止、コマ送り、再生位置のドラッグ、速度の変更、繰り返し再生ができ、スペースキーと矢印キーでも操作できます。自動では再生されず、動く部分だけを描き直します。動きを減らす設定にしている場合は、なめらかに動かさず、コマ送りで表示します。 |
 | `replayRink` | A play on the rink, in the NHL API's frame: feet from centre ice | リンク上のプレー（NHL APIの座標系：センターアイスからの距離をフィートで表す） |
-| `replayPitch` | A play on the pitch, in Opta's frame: 0 to 100 each way | ピッチ上のプレー（Optaの座標系：縦横とも0～100） |
+| `replayPitch` | A play on the pitch, in Opta's frame: 0 to 100 each way | ピッチ上のプレー（Optaの座標系：縦横とも0〜100） |
 | `replayElement` | The same play as an element: loop and speed are attributes | 同じプレーを要素として表示（繰り返しと速度は属性で指定） |
 | `elementTitle` | As an element | 要素として |
 | `elementText` | Each of these is a <kyogijo-field> tag with attributes and no script of its own. | ここにあるのはどれも、属性だけを指定した <kyogijo-field> タグで、専用のスクリプトはありません。 |
@@ -893,16 +900,16 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 
 | Key | English | 日本語 |
 | --- | --- | --- |
-| `pitch` | Guides, the reference, a gallery of every picture it can draw, and how it compares: the pages are made from the package's own files when the site is built. | 使い方のガイド、リファレンス、描けるすべての図のギャラリー、他のパッケージとの比較。これらのページは、パッケージ自身のファイルから「pnpm site」で作っています。 |
+| `pitch` | Guides, the reference, a gallery of every picture it can draw, and how it compares: the pages are made from the package's own files when the site is built. | 使い方のガイド、リファレンス、描けるすべての図のギャラリー、他のパッケージとの比較。これらのページは、パッケージ内のファイルから「pnpm site」で作っています。 |
 | `nameLink` | About the name | 名前の由来（英語） |
-| `foot` | Made from the package's own docs folder. | パッケージ自身のdocsフォルダーから作っています。 |
+| `foot` | Made from the package's own docs folder. | パッケージのdocsフォルダーから作っています。 |
 | `pageBack` | Demo | デモ |
-| `pageApi` | API reference | API（英語） |
+| `pageApi` | API reference | APIリファレンス（英語） |
 | `pageDocs` | Docs | ドキュメント |
 | `docsSearchLabel` | Search the docs | ドキュメントを検索 |
 | `docsSearchPlaceholder` | Search titles and headings (press / to start) | タイトルと見出しを検索（「/」キーで入力開始） |
 | `docsMenu` | Contents | 目次 |
-| `docsNone` | No title or heading has all of: {q} | 「{q}」のすべての語を含むタイトルや見出しはありません |
+| `docsNone` | No title or heading has all of: {q} | 「{q}」のすべての語を含むタイトルや見出しはありません。 |
 | `docsCount` | {n} matches | {n}件見つかりました |
 | `docsCopy` | Copy | コピー |
 | `docsCopyCode` | Copy code | コードをコピー |
@@ -962,7 +969,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `gallery-data` | Gallery: data on a surface | ギャラリー：競技場の上のデータ |
 | page `gallery-curling` | Gallery: curling | ギャラリー：カーリング |
 | page `gallery-courts` | Gallery: tennis, volleyball and other net sports | ギャラリー：ネット型競技のコート |
-| page `gallery-fields` | Gallery: lacrosse, rugby, Australian football, Gaelic games, cricket, hockey and handball | ギャラリー：ラクロス、ラグビー、オーストラリアンフットボール、ゲーリックゲーム、クリケット、フィールドホッケー、ハンドボール |
+| page `gallery-fields` | Gallery: lacrosse, rugby, Australian football, Gaelic games, cricket, hockey and handball | ギャラリー：ラクロス、ラグビー、オーストラリアンフットボール、ゲーリック・ゲームズ、クリケット、フィールドホッケー、ハンドボール |
 | page `gallery-styling` | Gallery: looks and annotations | ギャラリー：スタイルと注釈 |
 | page `gallery-ranges` | Gallery: display ranges and zoom | ギャラリー：表示範囲とズーム |
 | page `gallery-layouts` | Gallery: layouts and backgrounds | ギャラリー：レイアウトと背景 |
@@ -1002,14 +1009,14 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `cfl.length.2027` | Planned: 100 yards between the goal lines. | 予定：ゴールライン間が100ヤードになります。 |
 | `cfl.posts.2027` | Planned: the goal posts move to the end line, the back of the end zone. | 予定：ゴールポストがエンドゾーンの奥、エンドラインの上に移ります。 |
 | `nhl.centreLine.start` | No centre red line: two blue lines divide the ice and nothing marks the middle. | センターレッドラインはなく、リンクを分けるのは2本のブルーラインだけで、中央に線はありません。 |
-| `nhl.trapezoid.start` | No trapezoid behind the net: the goaltender may play the puck anywhere. | ゴール裏にトラペゾイド（台形の区域）はなく、ゴールキーパーはどこでもパックを扱えます。 |
+| `nhl.trapezoid.start` | No trapezoid behind the net: the goaltender may play the puck anywhere. | ゴール裏にトラペゾイド（台形の区域）はなく、ゴーリーはどこでもパックを扱えます。 |
 | `nhl.centreLine.1943` | The centre red line is added, so that a team can pass out of its own zone up to it. | センターレッドラインが加わり、自陣ゾーンからこのラインまでのパスが認められるようになります。 |
 | `nhl.goalLine.1997` | Goal lines are 11 feet from the end boards. | ゴールラインはエンドボードから11フィート（約3.4m）です。 |
 | `nhl.blueLine.1998` | Blue lines are 73 feet from the end boards: a 54-foot neutral zone and 73-foot offensive zones. | ブルーラインはエンドボードから73フィート（約22.3m）で、ニュートラルゾーンは54フィート（約16.5m）です。 |
 | `nhl.goalLine.1998` | Goal lines move out to 13 feet from the end boards, for room behind the net. | ゴールラインがエンドボードから13フィート（約4.0m）の位置に移り、ゴール裏が広くなります。 |
 | `nhl.blueLine.2005` | Blue lines move out to 75 feet from the end boards, cutting the neutral zone to 50 feet. | ブルーラインがエンドボードから75フィート（約22.9m）に移り、ニュートラルゾーンが50フィート（約15.2m）に狭まります。 |
 | `nhl.goalLine.2005` | Goal lines move back to 11 feet from the end boards. | ゴールラインがエンドボードから11フィートの位置に戻ります。 |
-| `nhl.trapezoid.2005` | The goaltender's trapezoid is marked behind each net: 18 feet at the goal line, 28 feet at the end boards. | 各ゴールの裏に、ゴールキーパーがパックを扱える区域として台形（トラペゾイド）が引かれます。ゴールライン側が18フィート、エンドボード側が28フィートです。 |
+| `nhl.trapezoid.2005` | The goaltender's trapezoid is marked behind each net: 18 feet at the goal line, 28 feet at the end boards. | 各ゴールの裏に、ゴーリーがパックを扱える区域として台形（トラペゾイド）が引かれます。ゴールライン側が18フィート、エンドボード側が28フィートです。 |
 | `nhl.hashApart.2012` | The two hash marks beside each end-zone face-off circle are 3 feet apart (Rule 1.9 of 2012-13; no earlier season is cited). | エンドゾーンのフェイスオフサークルの両脇にある2本のハッシュマークは、間隔が3フィート（約91cm）です（2012-13シーズンのルール1.9。それ以前のシーズンを示す資料は見つかっていません）。 |
 | `nhl.hashApart.2014` | The hash marks move apart to 5 feet 7 inches, more in line with the marks on international ice. | 2本のハッシュマークの間隔が5フィート7インチ（約1.7m）に広がり、国際大会のリンクにあるマークに近づきます。 |
 | `nhl.trapezoid.2014` | The trapezoid is widened to 22 feet at the goal line (2 feet each side). | トラペゾイドのゴールライン側が左右2フィートずつ広がり、22フィートになります。 |
@@ -1211,7 +1218,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `carrier-classic-2011` | 2011 Carrier Classic | 2011年キャリアー・クラシック | USS Carl Vinson | 空母カール・ビンソン |
 | `stadium-series-2014-dodger` | 2014 NHL Stadium Series at Dodger Stadium | 2014年NHLスタジアム・シリーズ（ドジャー・スタジアム） | Dodger Stadium | ドジャー・スタジアム |
 | `stadium-series-2014-yankee` | 2014 NHL Stadium Series at Yankee Stadium | 2014年NHLスタジアム・シリーズ（ヤンキー・スタジアム） | Yankee Stadium | ヤンキー・スタジアム |
-| `heritage-classic-2014` | 2014 NHL Heritage Classic | 2014年NHLヘリテージ・クラシック | BC Place | BCプレース |
+| `heritage-classic-2014` | 2014 NHL Heritage Classic | 2014年NHLヘリテージ・クラシック | BC Place | BCプレイス |
 | `heritage-classic-2016` | 2016 NHL Heritage Classic | 2016年NHLヘリテージ・クラシック | Investors Group Field | インベスターズ・グループ・フィールド |
 | `winter-classic-2017` | 2017 NHL Winter Classic | 2017年NHLウィンター・クラシック | Busch Stadium | ブッシュ・スタジアム |
 | `winter-classic-2018` | 2018 NHL Winter Classic | 2018年NHLウィンター・クラシック | Citi Field | シティ・フィールド |
@@ -1229,11 +1236,11 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | --- | --- | --- |
 | `winter-classic-2009` | the rink ran from first base to third, 200 by 85 feet, and its edge toward center field was 112 feet from home plate and 288 feet from the 400-foot center-field wall, so that its middle was 69.5 feet out, within 9 feet of the pitching mound, where the man who built it says center ice was. | リンクは200×85フィートで、長辺は一塁と三塁を結ぶ向きでした。中堅側の縁は本塁から112フィート、400フィートの中堅フェンスから288フィートの位置にあり、そのため中心は本塁から69.5フィート、マウンドから9フィート以内にありました。リンクを造った人物は、センターアイスはこのマウンドのあたりだったと語っています。 |
 | `carrier-classic-2011` (note) | The deck is drawn as a plain rectangle of the Nimitz class's overall length and beam, 1,092 by 252 feet; the ship's flight deck is angled and narrower at its ends. | 甲板は、ニミッツ級の全長と最大幅（1,092×252フィート）の単純な長方形で描いています。実際の飛行甲板は斜めの部分があり、端に向かって細くなります。 |
-| `heritage-classic-2014` (note) | BC Place has a retractable roof, and it was closed for this game. | BCプレースには開閉式の屋根があり、この試合では閉じられていました。 |
+| `heritage-classic-2014` (note) | BC Place has a retractable roof, and it was closed for this game. | BCプレイスには開閉式の屋根があり、この試合では閉じられていました。 |
 | `winter-classic-2019` (note) | Notre Dame Stadium is a college football stadium, so its field is drawn as the NCAA marks it. | ノートルダム・スタジアムは大学アメリカンフットボールのスタジアムなので、フィールドはNCAAのラインの引き方に合わせて描いています。 |
 | `mlb-london-2019` (note) | The baseball field was laid over the stadium's running track and pitch, so most of it lies beyond the pitch. The fence is 330 feet to the foul poles, 382 to left center and right center and 385 to center field. | 野球のグラウンドはスタジアムの陸上トラックとピッチの上に敷かれたため、大部分がピッチの外にあります。フェンスまでの距離は、ポールまで330フィート、左中間と右中間まで382フィート、中堅まで385フィートです。 |
 | `winter-classic-2022` (note) | The game was planned for 2021 and played a year late, in January 2022. | この試合は2021年に予定されていましたが、1年遅れて2022年1月に行われました。 |
-| `winter-classic-2023` | the 200-foot rink is roughly centered length-wise across first and third bases and stretched along a second-to-third-base axis, so its middle is drawn halfway between first and third, with its length turned to run from third base toward second. | 200フィートのリンクは、一塁と三塁をまたぐように長さ方向のほぼ中央で置かれ、二塁と三塁を結ぶ軸に沿って伸びていました。そこで、中心を一塁と三塁の中間に置き、長辺を三塁から二塁に向けて描いています。 |
+| `winter-classic-2023` | the 200-foot rink is roughly centered length-wise across first and third bases and stretched along a second-to-third-base axis, so its middle is drawn halfway between first and third, with its length turned to run from third base toward second. | 200フィートのリンクは、長さ方向のほぼ中央が一塁と三塁にまたがるように置かれ、二塁と三塁を結ぶ軸に沿って伸びていました。そこで、中心を一塁と三塁の中間に置き、長辺を三塁から二塁に向けて描いています。 |
 | `mlb-london-2023` (note) | For 2023 the fence was moved out to 387 feet in the power alleys and 392 to center field; the 330 feet to the foul poles is that of 2019, which the source does not restate. | 2023年はフェンスが外側に移され、左中間・右中間は387フィート、中堅は392フィートになりました。ポールまでの330フィートは2019年の数字で、2023年について資料は改めて触れていません。 |
 
 ## The formations (`FORMATIONS`)
@@ -1250,11 +1257,11 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `5-4-1` | 5-4-1. Five at the back, a flat line of four midfielders and a lone striker: a deep, defensive shape. | 5-4-1。5バック、横一列のミッドフィルダー4人、1トップ。引いて守る形です。 |
 | `4-3-2-1` | 4-3-2-1. Four defenders, three midfielders and two attacking midfielders behind a lone striker (the "Christmas tree"). | 4-3-2-1。ディフェンダー4人、ミッドフィルダー3人、1トップの後ろに攻撃的ミッドフィルダー2人（クリスマスツリー型）。 |
 | `4-4-2-diamond` | 4-4-2 diamond. Four defenders, a diamond of midfielders (holding, two central, attacking) and two strikers. | 4-4-2（ダイヤモンド型）。ディフェンダー4人、ひし形に並ぶミッドフィルダー4人（守備的、中央2人、攻撃的）、ストライカー2人。 |
-| `hockey-5v5` | Hockey, five skaters and the goaltender. The six players on the ice at even strength: the goaltender, two defencemen and a line of centre and two wings. | アイスホッケー（スケーター5人とゴーリー）。5対5でプレーするときの氷上の6人。ゴーリー、ディフェンス2人、センターと両ウィングのライン。 |
+| `hockey-5v5` | Hockey, five skaters and the goaltender. The six players on the ice at even strength: the goaltender, two defencemen and a line of centre and two wings. | アイスホッケー（スケーター5人とゴーリー）。5対5でプレーするときの氷上の6人。ゴーリー、ディフェンス2人、センターと両ウイングのライン。 |
 | `hockey-1-3-1` | Hockey, 1-3-1 power play. A power-play set in the attacking zone: one at the point, three across the middle and one low. Which player takes which place varies by team. | アイスホッケー（1-3-1のパワープレー）。攻撃ゾーンでのパワープレーの形。ブルーライン付近に1人、中ほどに3人、ゴール近くに1人。どの選手がどこに立つかはチームによって異なります。 |
-| `basketball-5-out` | Basketball, five out. All five on the three-point line: the point guard at the top, wings and both corners. | バスケットボール（ファイブアウト）。5人全員がスリーポイントライン付近に立つ形。トップにポイントガード、両ウィングと両コーナー。 |
+| `basketball-5-out` | Basketball, five out. All five on the three-point line: the point guard at the top, wings and both corners. | バスケットボール（ファイブアウト）。5人全員がスリーポイントライン付近に立つ形。トップにポイントガード、両ウイングと両コーナー。 |
 | `basketball-4-out-1-in` | Basketball, four out and one in. Four players on the three-point line and the centre on the block. | バスケットボール（フォーアウト・ワンイン）。4人がスリーポイントライン付近、センターがブロック（ゴール近く）に立つ形。 |
-| `basketball-high-post` | Basketball, 1-4 high. The point guard at the top, two forwards at the elbows of the free-throw line and a guard on each wing. | バスケットボール（1-4ハイ）。トップにポイントガード、フリースローラインの両端（エルボー）にフォワード2人、両ウィングにガード。 |
+| `basketball-high-post` | Basketball, 1-4 high. The point guard at the top, two forwards at the elbows of the free-throw line and a guard on each wing. | バスケットボール（1-4ハイ）。トップにポイントガード、フリースローラインの両端（エルボー）にフォワード2人、両ウイングにガード。 |
 | `football-i-formation` | Football, I formation. Offence: the quarterback under centre with the fullback and the halfback in a line behind him, a tight end and two wide receivers. | アメリカンフットボール（Iフォーメーション）。オフェンス。センターの真後ろにクォーターバック、その後ろにフルバックとハーフバックが縦一列、タイトエンド1人とワイドレシーバー2人。 |
 | `football-shotgun` | Football, shotgun. Offence: the quarterback a few yards behind the centre with a halfback beside him, a tight end and three wide receivers. | アメリカンフットボール（ショットガン）。オフェンス。クォーターバックはセンターの数ヤード後ろに下がり、隣にハーフバック、タイトエンド1人とワイドレシーバー3人。 |
 | `football-4-3` | Football, 4-3 defence. Defence against an offence going right: four linemen, three linebackers, two cornerbacks and two safeties. Left and right are the defenders' own. | アメリカンフットボール（4-3ディフェンス）。右へ進むオフェンスに対するディフェンス。ディフェンスライン4人、ラインバッカー3人、コーナーバック2人、セーフティ2人。左右はディフェンス側から見たものです。 |
@@ -1293,9 +1300,9 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `nhl.G` | Goaltender | ゴーリー |
 | `nhl.LD` | Left defenceman | 左ディフェンス |
 | `nhl.RD` | Right defenceman | 右ディフェンス |
-| `nhl.LW` | Left wing | レフトウィング |
+| `nhl.LW` | Left wing | レフトウイング |
 | `nhl.C` | Centre | センター |
-| `nhl.RW` | Right wing | ライトウィング |
+| `nhl.RW` | Right wing | ライトウイング |
 | `nba.PG` | Point guard | ポイントガード |
 | `nba.SG` | Shooting guard | シューティングガード |
 | `nba.SF` | Small forward | スモールフォワード |

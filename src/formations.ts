@@ -45,9 +45,9 @@ export const POSITION_NAMES: Readonly<Record<FormationSport, Readonly<Record<str
     G: named("Goaltender", "ゴーリー"),
     LD: named("Left defenceman", "左ディフェンス"),
     RD: named("Right defenceman", "右ディフェンス"),
-    LW: named("Left wing", "レフトウィング"),
+    LW: named("Left wing", "レフトウイング"),
     C: named("Centre", "センター"),
-    RW: named("Right wing", "ライトウィング"),
+    RW: named("Right wing", "ライトウイング"),
   },
   nba: {
     PG: named("Point guard", "ポイントガード"),
@@ -132,7 +132,7 @@ export const FORMATIONS: Readonly<Record<string, Formation>> = Object.freeze(
           sport: "nhl",
           frame: "nhl-api",
           name: { en: "Hockey, five skaters and the goaltender", ja: "アイスホッケー（スケーター5人とゴーリー）" },
-          about: { en: "The six players on the ice at even strength: the goaltender, two defencemen and a line of centre and two wings.", ja: "5対5でプレーするときの氷上の6人。ゴーリー、ディフェンス2人、センターと両ウィングのライン。" },
+          about: { en: "The six players on the ice at even strength: the goaltender, two defencemen and a line of centre and two wings.", ja: "5対5でプレーするときの氷上の6人。ゴーリー、ディフェンス2人、センターと両ウイングのライン。" },
           positions: [at("G", -87, 0), at("LD", -60, 16), at("RD", -60, -16), at("LW", -30, 28), at("C", -30, 0), at("RW", -30, -28)],
         },
         {
@@ -148,7 +148,7 @@ export const FORMATIONS: Readonly<Record<string, Formation>> = Object.freeze(
           sport: "nba",
           frame: "nba-stats",
           name: { en: "Basketball, five out", ja: "バスケットボール（ファイブアウト）" },
-          about: { en: "All five on the three-point line: the point guard at the top, wings and both corners.", ja: "5人全員がスリーポイントライン付近に立つ形。トップにポイントガード、両ウィングと両コーナー。" },
+          about: { en: "All five on the three-point line: the point guard at the top, wings and both corners.", ja: "5人全員がスリーポイントライン付近に立つ形。トップにポイントガード、両ウイングと両コーナー。" },
           positions: [at("PG", 0, 262), at("SG", 173, 173), at("SF", -173, 173), at("PF", 222, 40), at("C", -222, 40)],
         },
         {
@@ -164,7 +164,7 @@ export const FORMATIONS: Readonly<Record<string, Formation>> = Object.freeze(
           sport: "nba",
           frame: "nba-stats",
           name: { en: "Basketball, 1-4 high", ja: "バスケットボール（1-4ハイ）" },
-          about: { en: "The point guard at the top, two forwards at the elbows of the free-throw line and a guard on each wing.", ja: "トップにポイントガード、フリースローラインの両端（エルボー）にフォワード2人、両ウィングにガード。" },
+          about: { en: "The point guard at the top, two forwards at the elbows of the free-throw line and a guard on each wing.", ja: "トップにポイントガード、フリースローラインの両端（エルボー）にフォワード2人、両ウイングにガード。" },
           positions: [at("PG", 0, 272), at("PF", -60, 190), at("C", 60, 190), at("SG", 190, 140), at("SF", -190, 140)],
         },
         {

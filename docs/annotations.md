@@ -51,7 +51,7 @@ Give `frame` the name of any registered frame of the sport (`FRAMES`, `registerF
 import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
 
 const svg = drawKyogijo({ sport: "soccer", landmarks: true, language: "ja" });
-console.log(svg.includes("ペナルティアーク"), svg.includes("コーナーアーク"));
+console.log(svg.includes("ペナルティーアーク"), svg.includes("コーナーアーク"));
 // true true
 ```
 

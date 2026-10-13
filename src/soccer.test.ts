@@ -424,7 +424,7 @@ describe("the words of a soccer pitch", () => {
     expect(en.description).toContain("a soccer pitch, 105 by 68 metres");
     const ja = describeDrawing({ sport: "soccer", language: "ja", pitch: { length: 100.55, width: 64, unit: "m" } });
     expect(ja.title).toBe("サッカーのピッチ");
-    expect(ja.description).toContain("100.6m×64m");
+    expect(ja.description).toContain("100.6×64m");
   });
 });
 

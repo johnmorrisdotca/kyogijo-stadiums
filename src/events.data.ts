@@ -205,12 +205,12 @@ export const EVENT_DATA: SpecialEventData[] = [
     id: "heritage-classic-2014",
     name: { en: "2014 NHL Heritage Classic", ja: "2014年NHLヘリテージ・クラシック" },
     dates: ["2014-03-02"],
-    venue: { en: "BC Place", ja: "BCプレース" },
+    venue: { en: "BC Place", ja: "BCプレイス" },
     guest: rink(2013),
     host: cfl(2014),
     placement: { x: 225, y: 97.5, angle: 0 },
     basis: midfield,
-    note: { en: "BC Place has a retractable roof, and it was closed for this game.", ja: "BCプレースには開閉式の屋根があり、この試合では閉じられていました。" },
+    note: { en: "BC Place has a retractable roof, and it was closed for this game.", ja: "BCプレイスには開閉式の屋根があり、この試合では閉じられていました。" },
     sources: ["hc-2014", "hc-list", "bc-place"],
   },
   {
@@ -293,7 +293,7 @@ export const EVENT_DATA: SpecialEventData[] = [
       kind: "published",
       note: {
         en: "the 200-foot rink is roughly centered length-wise across first and third bases and stretched along a second-to-third-base axis, so its middle is drawn halfway between first and third, with its length turned to run from third base toward second.",
-        ja: "200フィートのリンクは、一塁と三塁をまたぐように長さ方向のほぼ中央で置かれ、二塁と三塁を結ぶ軸に沿って伸びていました。そこで、中心を一塁と三塁の中間に置き、長辺を三塁から二塁に向けて描いています。",
+        ja: "200フィートのリンクは、長さ方向のほぼ中央が一塁と三塁にまたがるように置かれ、二塁と三塁を結ぶ軸に沿って伸びていました。そこで、中心を一塁と三塁の中間に置き、長辺を三塁から二塁に向けて描いています。",
       },
       sources: ["globe-2022"],
     },

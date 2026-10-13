@@ -4,7 +4,7 @@
 import { num } from "./format.ts";
 import { renderLayers } from "./layers.ts";
 import { REPLAY_SPEEDS, createReplay, type ReplayController } from "./replay.control.ts";
-import { describeEvent, drawFrame, replayClock, replayGroups, replayInfo, replayPlacer, replaySnapshot, type ReplayGroup } from "./replay.ts";
+import { describeEvent, drawFrame, replayClock, replayGroups, replaySpoken, replayInfo, replayPlacer, replaySnapshot, type ReplayGroup } from "./replay.ts";
 import type { ReplayChange, ReplaySettings, ReplayTimeline } from "./replay.types.ts";
 import { KYOGIJO_STRINGS, fill } from "./strings.ts";
 import type { Language, ScoreOptions, SurfaceOptions } from "./types.ts";
@@ -277,7 +277,7 @@ export function createReplayView(host: HTMLElement, timeline: ReplayTimeline, se
       if (text !== shown) {
         shown = text;
         clock.textContent = text;
-        range.setAttribute("aria-valuetext", fill(w.positionValue, { t: replayClock(s.t - info.start), total }));
+        range.setAttribute("aria-valuetext", fill(w.positionValue, { t: replaySpoken(s.t - info.start, w), total: replaySpoken(info.duration, w) }));
       }
       const at = String(s.t - info.start);
       if (range.value !== at) range.value = at;

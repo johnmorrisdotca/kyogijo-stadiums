@@ -4,7 +4,7 @@
 import { num } from "./format.ts";
 import { opacityOf, newMade, toArray, unitOfLayer, type Env, type Made } from "./layers.env.ts";
 import type { P } from "./layers.marks.ts";
-import { attrs, dots, frameNote, unitWord, groupByTeam, paintOf, placeAll, polygonPath, round, teamClass, teamKey, teamLabel, titled, labelOf, type Placed, type TeamTable } from "./team.common.ts";
+import { attrs, dots, frameNote, squareWord, unitWord, groupByTeam, paintOf, placeAll, polygonPath, round, teamClass, teamKey, teamLabel, titled, labelOf, type Placed, type TeamTable } from "./team.common.ts";
 import { convexHull, delaunay, polygonArea, polygonCentroid, triangulationEdges, voronoiCells } from "./team.geometry.ts";
 import type { DelaunayLayer, HullLayer, PlayerDatum, VoronoiLayer } from "./team.types.ts";
 import { fill } from "./strings.ts";
@@ -215,14 +215,14 @@ export function drawHull(layer: HullLayer, env: Env): Made {
   const out: string[] = [];
   for (const h of c.hulls) {
     const cls = teamClass(h.team);
-    const tip = fill(words.hullItem, { name: teamLabel(h.team, env), n: h.players.length, area: Math.round(h.area), unit: unitWord(c.unit, env) });
+    const tip = fill(words.hullItem, { name: teamLabel(h.team, env), n: h.players.length, area: Math.round(h.area), unit: squareWord(c.unit, env) });
     if (h.corners.length >= 3) out.push(titled("path", `${attrs(`ky-sp${cls === "" ? "" : ` ${cls}`}`, "")} d="${polygonPath(h.corners)}"`, tip));
     else if (h.corners.length === 2) out.push(titled("path", `${attrs(`ky-sp ky-sp-e${cls === "" ? "" : ` ${cls}`}`, "")} d="M${num(h.corners[0][0])} ${num(h.corners[0][1])}L${num(h.corners[1][0])} ${num(h.corners[1][1])}"`, tip));
   }
   if (layer.points !== false) out.push(dots(c.all, env.base * 0.55, () => undefined));
   made.marks = out.join("");
   made.title = fill(words.hullTitle, { n: c.all.length });
-  const parts = [c.hulls.map((h) => fill(words.hullItem, { name: teamLabel(h.team, env), n: h.players.length, area: Math.round(h.area), unit: unitWord(c.unit, env) })).join(env.words.layers.listSep) + env.words.said.stop];
+  const parts = [c.hulls.map((h) => fill(words.hullItem, { name: teamLabel(h.team, env), n: h.players.length, area: Math.round(h.area), unit: squareWord(c.unit, env) })).join(env.words.layers.listSep) + env.words.said.stop];
   if (c.skipped > 0) parts.push(fill(env.words.layers.skipped, { n: c.skipped }));
   made.text = c.all.length === 0 ? "" : parts.join(env.words.said.gap);
   return made;

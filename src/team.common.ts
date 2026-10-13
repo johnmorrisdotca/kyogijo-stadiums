@@ -112,6 +112,12 @@ export function frameNote(layer: LayerBase, env: Env): string {
   return fill(env.words.layers.tableFrame, { frame: name, unit: given?.unit ?? "ft" });
 }
 
+/** A unit of area as words in the drawing's language: square feet, square yards and square metres by name, any other unit as "square" and its symbol. */
+export function squareWord(unit: string, env: Env): string {
+  const names = env.words.team.squareUnits as Record<string, string>;
+  return Object.prototype.hasOwnProperty.call(names, unit) ? names[unit] : fill(env.words.team.squareOther, { unit });
+}
+
 /** A unit as a word in the drawing's language: feet, yards and metres by name, any other unit as its symbol. */
 export function unitWord(unit: string, env: Env): string {
   const names = env.words.league.units as Record<string, string>;

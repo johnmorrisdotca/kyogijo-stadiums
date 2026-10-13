@@ -123,7 +123,7 @@ const page = `<!doctype html>
               </div>
               <div id="soccer-group" hidden>
                 ${seg("pattern", "stripePattern", "How the grass is mown: bands across the pitch, wide or narrow, along it, in checks or on the diagonal.", "芝の刈り方です。ピッチを横切る縞（標準・太い・細い）、縦方向の縞、市松模様、斜めの縞から選べます。")}
-                ${seg("goals", "goalStyle", "How the goals are drawn from above: the net as a box, a line on the goal line, a solid strip or nothing.", "ゴールを真上から見た描き方です。ネットを四角で描く、ゴールライン上の線、塗りつぶした帯、描かないから選べます。")}
+                ${seg("goals", "goalStyle", "How the goals are drawn from above: the net as a box, a line on the goal line, a solid strip or nothing.", "ゴールを真上から見た描き方です。ネットを四角で描く、ゴールライン上の線にする、塗りつぶした帯にする、描かない、の4つから選べます。")}
                 ${seg("half", "half", "Show the whole pitch or one half. A drawing with teams always shows the whole pitch.", "ピッチ全体か、片側の半面を表示します。チームを載せた図では常にピッチ全体を表示します。")}
                 <div class="setup fam-row">${toggle("flags", "cornerFlags")}</div>
               </div>
