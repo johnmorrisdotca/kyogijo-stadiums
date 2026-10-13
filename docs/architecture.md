@@ -31,6 +31,11 @@ src/
 ├── charts.soccer.ts    the soccer shot map and goal mouth
 ├── charts.types.ts     the charts' types
 ├── charts-entry.ts     the charts' entry
+├── replay.ts           a replay's frame and its pure functions: interpolate, trails, possession, events, drawFrame
+├── replay.control.ts   the replay's clock as a state machine: play, seek, step, speed, loop, reduced motion
+├── replay.dom.ts       the replay's controls, keyboard, live region and the painter that moves only the marks that move
+├── replay.types.ts     the replay's types
+├── replay-entry.ts     the replay's entry
 ├── outline.ts          a surface's outline: where a layer is cut
 ├── common.ts           the drawing's id, the orientation and the unit, shared by the drawing and its layers
 ├── geometry.ts         every dimension, in feet, with the fence's curve

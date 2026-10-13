@@ -25,6 +25,7 @@ Kyogijo draws sports surfaces as SVG, to scale, with the score on them. The READ
 - [Coordinate frames](./frames.md): where each data provider puts a point, and how to move it onto a surface.
 - [Data layers](./layers.md): points, lines, arrows, text and the heat layers.
 - [Ready-made charts](./charts.md): a shot chart, a shot map, a spray chart, a pass chart and a soccer shot map.
+- [Replay](./replay.md): tracking data played on a surface, with controls, a keyboard, a live region and steps for reduced motion.
 
 ## Gallery and comparison
 

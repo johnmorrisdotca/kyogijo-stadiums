@@ -203,6 +203,43 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `layers.zones.sideLeft` | left | 左 |
 | `layers.zones.sideMiddle` | middle | 中央 |
 | `layers.zones.sideRight` | right | 右 |
+| `replay.title` | Replay, {time} | リプレイ（再生時間{time}） |
+| `replay.objects` | {n} tracked objects | 追跡対象は{n}個 |
+| `replay.objectsOne` | {n} tracked object | 追跡対象は{n}個 |
+| `replay.events` | {n} events | イベント{n}件 |
+| `replay.eventsOne` | {n} event | イベント{n}件 |
+| `replay.players` | Players | 選手 |
+| `replay.others` | Ball, puck and officials | ボール・パック・審判 |
+| `replay.trail` | Trail of the last {s} seconds | 直近{s}秒の軌跡 |
+| `replay.numbers` | Shirt numbers | 背番号 |
+| `replay.eventLines` | Passes and shots | パスとシュート |
+| `replay.home` | home | ホーム |
+| `replay.away` | away | アウェイ |
+| `replay.ball` | ball | ボール |
+| `replay.puck` | puck | パック |
+| `replay.official` | official | 審判 |
+| `replay.pass` | Pass | パス |
+| `replay.shot` | Shot | シュート |
+| `replay.goal` | Goal | ゴール |
+| `replay.whistle` | Whistle | ホイッスル |
+| `replay.announce` | {what}, {time} | {what}、{time} |
+| `replay.announceTeam` | {what}, {team}, {time} | {team}の{what}、{time} |
+| `replay.group` | Replay controls | リプレイの操作 |
+| `replay.play` | Play | 再生 |
+| `replay.pause` | Pause | 一時停止 |
+| `replay.back` | Previous frame | 前のコマ |
+| `replay.forward` | Next frame | 次のコマ |
+| `replay.stepBack` | Back | 前へ |
+| `replay.stepForward` | Forward | 次へ |
+| `replay.speed` | Speed | 再生速度 |
+| `replay.loop` | Loop | 繰り返し |
+| `replay.position` | Position | 再生位置 |
+| `replay.time` | Time | 時間 |
+| `replay.event` | Event | イベント |
+| `replay.positionValue` | {t} of {total} | {total}中{t} |
+| `replay.keys` | Replay of the play. Space plays or pauses, the left and right arrow keys step by a frame, Shift with an arrow key moves 5 seconds, and Home and End go to the ends. | プレーのリプレイです。スペースキーで再生と一時停止、左右の矢印キーで1コマずつ前後に移動、Shiftキーを押しながら矢印キーで5秒ずつ移動、Homeキーで最初、Endキーで最後に移動します。 |
+| `replay.keysStep` | Replay of the play, in steps. Space or the right arrow key moves on, the left arrow key goes back, and Home and End go to the ends. | プレーのリプレイです。コマ送りで表示しています。スペースキーまたは右矢印キーで進み、左矢印キーで戻り、Homeキーで最初、Endキーで最後に移動します。 |
+| `replay.region` | Replay | リプレイ |
 
 ## The demo's words (`WORDS`)
 
@@ -449,11 +486,16 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `convResult` | Becomes | 変換後 |
 | `convBad` | Two numbers, please | 数値を2つ入力してください |
 | `liveTitle` | A live score | 得点が動く例 |
-| `liveText` | The score moves and the drawing is drawn again. Nothing is fetched: it is a made-up game. | 得点が動くたびに図を描き直します。通信はしません。架空の試合です。 |
+| `liveText` | The score moves and the drawing is drawn again; a number that changes swells and settles (it only fades for a reader who prefers reduced motion). Nothing is fetched: it is a made-up game. | 得点が動くたびに図を描き直し、変わった数字は少し大きくなってから元に戻ります（動きを減らす設定の場合は、フェードインするだけです）。データは取得しません。架空の試合です。 |
 | `liveStep` | Next play | 次のプレー |
 | `livePlay` | Play | 再生 |
 | `livePause` | Pause | 一時停止 |
 | `liveNew` | New game | 新しい試合 |
+| `replayTitle` | Replay | リプレイ |
+| `replayText` | A made-up play on the rink and on the pitch, played back from tracking data: the players, the ball and its trail, and the passes, the shot and the goal as they happen. Play, pause, step, drag the position, change the speed or loop; the space bar and the arrow keys work too. Nothing plays by itself, only the marks that move are redrawn, and a reader who prefers reduced motion gets steps. | リンクとピッチの上で、架空のプレーをトラッキングデータから再生します。選手、ボールとその軌跡、パス、シュート、ゴールが、プレーの進行に合わせて表示されます。再生と一時停止、コマ送り、再生位置のドラッグ、速度の変更、繰り返し再生ができ、スペースキーと矢印キーでも操作できます。自動では再生されず、動く部分だけを描き直します。動きを減らす設定にしている場合は、なめらかに動かさず、コマ送りで表示します。 |
+| `replayRink` | A play on the rink, in the NHL API's frame: feet from centre ice | リンク上のプレー（NHL APIの座標系：センターアイスからの距離をフィートで表す） |
+| `replayPitch` | A play on the pitch, in Opta's frame: 0 to 100 each way | ピッチ上のプレー（Optaの座標系：縦横とも0～100） |
+| `replayElement` | The same play as an element: loop and speed are attributes | 同じプレーを要素として表示（繰り返しと速度は属性で指定） |
 | `elementTitle` | As an element | 要素として |
 | `elementText` | Each of these is a <kyogijo-field> tag with attributes and no script of its own. | ここにあるのはどれも、属性だけを指定した <kyogijo-field> タグで、専用のスクリプトはありません。 |
 | `moreText` | Everything here is a call of one function. | ここにあるものは、すべて1つの関数の呼び出しです。 |
@@ -508,6 +550,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `frames` | Coordinate frames | 座標系 |
 | page `layers` | Data layers | データレイヤー |
 | page `charts` | Ready-made charts | すぐ使えるチャート |
+| page `replay` | Replay | リプレイ |
 | group `gallery` | Gallery | ギャラリー |
 | page `gallery` | Gallery | ギャラリーの案内 |
 | page `gallery-surfaces` | Gallery: surfaces and scores | ギャラリー：競技場と得点 |

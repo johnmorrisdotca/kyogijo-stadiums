@@ -61,6 +61,8 @@ kyogijo-field::part(plate) { filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .25)); 
 .badge-list li { min-width: 0; }
 .badge-list svg { width: 100%; height: auto; }
 
+.replay-grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); }
+.replay-grid .card-stage { min-width: 0; }
 .live-grid { display: grid; gap: 10px; max-width: 720px; }
 .live-stage { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 8px; display: flex; justify-content: center; }
 .live-stage svg { max-width: 100%; }

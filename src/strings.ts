@@ -213,6 +213,54 @@ export interface KyogijoWords {
       sideRight: string;
     };
   };
+  /** The words of a replay: its summary, its marks, what is announced when something happens, and the controls under it. */
+  replay: {
+    /** The first sentence of the summary: {time} is the length. */
+    title: string;
+    objects: string;
+    objectsOne: string;
+    events: string;
+    eventsOne: string;
+    players: string;
+    others: string;
+    /** The title of a trail's layer: {s} seconds. */
+    trail: string;
+    numbers: string;
+    eventLines: string;
+    /** The names of the teams and the other things tracked. */
+    home: string;
+    away: string;
+    ball: string;
+    puck: string;
+    official: string;
+    /** The standard kinds of event. */
+    pass: string;
+    shot: string;
+    goal: string;
+    whistle: string;
+    /** What is said when an event goes by: {what}, {team} and {time}. */
+    announce: string;
+    announceTeam: string;
+    group: string;
+    play: string;
+    pause: string;
+    back: string;
+    forward: string;
+    stepBack: string;
+    stepForward: string;
+    speed: string;
+    loop: string;
+    position: string;
+    /** The heads of the table of events. */
+    time: string;
+    event: string;
+    /** The value of the position slider: {t} of {total}. */
+    positionValue: string;
+    /** What the replay is and the keys it answers to, in smooth motion and in steps. */
+    keys: string;
+    keysStep: string;
+    region: string;
+  };
 }
 
 /** The words of the package, by language. */
@@ -274,6 +322,15 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
         lengthShort: "Short", lengthDeep: "Deep", sideLeft: "left", sideMiddle: "middle", sideRight: "right",
       },
     },
+    replay: {
+      title: "Replay, {time}", objects: "{n} tracked objects", objectsOne: "{n} tracked object", events: "{n} events", eventsOne: "{n} event", players: "Players", others: "Ball, puck and officials", trail: "Trail of the last {s} seconds", numbers: "Shirt numbers", eventLines: "Passes and shots",
+      home: "home", away: "away", ball: "ball", puck: "puck", official: "official", pass: "Pass", shot: "Shot", goal: "Goal", whistle: "Whistle",
+      announce: "{what}, {time}", announceTeam: "{what}, {team}, {time}",
+      group: "Replay controls", play: "Play", pause: "Pause", back: "Previous frame", forward: "Next frame", stepBack: "Back", stepForward: "Forward", speed: "Speed", loop: "Loop", position: "Position", time: "Time", event: "Event", positionValue: "{t} of {total}",
+      keys: "Replay of the play. Space plays or pauses, the left and right arrow keys step by a frame, Shift with an arrow key moves 5 seconds, and Home and End go to the ends.",
+      keysStep: "Replay of the play, in steps. Space or the right arrow key moves on, the left arrow key goes back, and Home and End go to the ends.",
+      region: "Replay",
+    },
   },
   ja: {
     surface: { nfl: "NFLのフィールド", cfl: "CFLのフィールド", ifaf: "IFAFのフィールド", nhl: "NHLのアイスホッケーリンク", nba: "NBAのバスケットボールコート", mlb: "野球場", soccer: "サッカーのピッチ" },
@@ -331,6 +388,15 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
         pull: "引っ張り方向", opposite: "逆方向", sprayCentre: "センター方向", leftField: "レフト方向", centreField: "センター方向", rightField: "ライト方向", infield: "内野", outfield: "外野",
         lengthShort: "ショートパス", lengthDeep: "ディープパス", sideLeft: "左", sideMiddle: "中央", sideRight: "右",
       },
+    },
+    replay: {
+      title: "リプレイ（再生時間{time}）", objects: "追跡対象は{n}個", objectsOne: "追跡対象は{n}個", events: "イベント{n}件", eventsOne: "イベント{n}件", players: "選手", others: "ボール・パック・審判", trail: "直近{s}秒の軌跡", numbers: "背番号", eventLines: "パスとシュート",
+      home: "ホーム", away: "アウェイ", ball: "ボール", puck: "パック", official: "審判", pass: "パス", shot: "シュート", goal: "ゴール", whistle: "ホイッスル",
+      announce: "{what}、{time}", announceTeam: "{team}の{what}、{time}",
+      group: "リプレイの操作", play: "再生", pause: "一時停止", back: "前のコマ", forward: "次のコマ", stepBack: "前へ", stepForward: "次へ", speed: "再生速度", loop: "繰り返し", position: "再生位置", time: "時間", event: "イベント", positionValue: "{total}中{t}",
+      keys: "プレーのリプレイです。スペースキーで再生と一時停止、左右の矢印キーで1コマずつ前後に移動、Shiftキーを押しながら矢印キーで5秒ずつ移動、Homeキーで最初、Endキーで最後に移動します。",
+      keysStep: "プレーのリプレイです。コマ送りで表示しています。スペースキーまたは右矢印キーで進み、左矢印キーで戻り、Homeキーで最初、Endキーで最後に移動します。",
+      region: "リプレイ",
     },
   },
 };

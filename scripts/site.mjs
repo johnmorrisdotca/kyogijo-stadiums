@@ -270,6 +270,16 @@ const page = `<!doctype html>
         </div>
       </section>
 
+      <section class="more" id="replay" aria-labelledby="replay-title">
+        <h2 id="replay-title" data-say="replayTitle"></h2>
+        <p data-say="replayText"></p>
+        <div class="replay-grid" data-testid="replay-cards">
+          <figure class="card"><div class="card-stage" id="replay-rink" data-testid="replay-rink"></div><figcaption data-say="replayRink"></figcaption></figure>
+          <figure class="card"><div class="card-stage" id="replay-pitch" data-testid="replay-pitch"></div><figcaption data-say="replayPitch"></figcaption></figure>
+          <figure class="card"><kyogijo-field id="replay-element" data-testid="replay-element" sport="nhl" loop speed="2" language="en"></kyogijo-field><figcaption data-say="replayElement"></figcaption></figure>
+        </div>
+      </section>
+
       <section class="more" id="parks" aria-labelledby="parks-title">
         <h2 id="parks-title" data-say="parksTitle"></h2>
         <p data-say="parksText"></p>

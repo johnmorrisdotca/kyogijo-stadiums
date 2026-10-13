@@ -1,6 +1,7 @@
 import { SPORTS } from "./draw.ts";
 import { leagueIds } from "./leagues.ts";
-import { mountKyogijo, type KyogijoMount } from "./mount.ts";
+import { mountKyogijo, type KyogijoMount, type KyogijoReplay } from "./mount.ts";
+import type { ReplaySettings, ReplayTimeline } from "./replay.types.ts";
 import type { ScoreOptions, Side, Size, Sport, StatusWord, SurfaceOptions, Team } from "./types.ts";
 
 /** The tag of the element. */
@@ -12,7 +13,32 @@ export const KYOGIJO_ATTRIBUTES = [
   "pitch", "pitch-type", "half", "goals", "stripe-pattern", "corner-flags",
   "home", "away", "home-abbr", "away-abbr", "home-score", "away-score", "home-penalties", "away-penalties", "score", "home-logo", "away-logo", "home-color", "away-color",
   "status", "competition", "date", "label", "winner", "home-side", "description", "options",
+  "loop", "speed", "autoplay", "controls", "trail",
 ] as const;
+
+/** The attributes that are about a replay and not about the drawing. */
+const REPLAY_ATTRIBUTES: readonly string[] = ["loop", "speed", "autoplay", "controls", "trail"];
+
+/** The settings of a replay an element's attributes make: `loop`, `autoplay` and `controls="false"` are switches, `speed` and `trail` numbers. */
+export function replaySettingsFromAttributes(read: (name: string) => string | null, base: ReplaySettings = {}): ReplaySettings {
+  const out: ReplaySettings = { ...base };
+  const on = (name: string): boolean | undefined => (read(name) === null ? undefined : read(name) !== "false");
+  const number = (name: string): number | undefined => {
+    const text = read(name);
+    return text !== null && /^\s*\d+(?:\.\d+)?\s*$/.test(text) ? Number(text) : undefined;
+  };
+  const loop = on("loop");
+  if (loop !== undefined) out.loop = loop;
+  const autoplay = on("autoplay");
+  if (autoplay !== undefined) out.autoplay = autoplay;
+  const controls = on("controls");
+  if (controls !== undefined) out.controls = controls;
+  const speed = number("speed");
+  if (speed !== undefined) out.speed = speed;
+  const trail = number("trail");
+  if (trail !== undefined) out.trail = trail;
+  return out;
+}
 
 /** `3-2`, `3–2` or `3:2` as home and away. */
 function parseScore(text: string | null): [string, string] | undefined {
@@ -107,6 +133,10 @@ export class KyogijoField extends Base {
   #host: HTMLElement | undefined;
   #options: Partial<ScoreOptions> | undefined;
   #theme: MutationObserver | undefined;
+  #timeline: ReplayTimeline | undefined;
+  #replaySettings: ReplaySettings | undefined;
+  #replay: KyogijoReplay | undefined;
+  #replayOf: ReplayTimeline | undefined;
 
   /** The options given as a property: an object, laid under the attributes. */
   get options(): Partial<ScoreOptions> | undefined {
@@ -116,6 +146,31 @@ export class KyogijoField extends Base {
   set options(value: Partial<ScoreOptions> | undefined) {
     this.#options = value;
     this.#draw();
+  }
+
+  /** Tracking data to play on the surface, as a property (a timeline is too large for an attribute). Controls appear under the drawing. */
+  get timeline(): ReplayTimeline | undefined {
+    return this.#timeline;
+  }
+
+  set timeline(value: ReplayTimeline | undefined) {
+    this.#timeline = value;
+    this.#draw();
+  }
+
+  /** Settings of the replay beyond the attributes: `motion`, `hold`, `numbers`, `stepSeconds` and the rest of `ReplaySettings`. */
+  get replaySettings(): ReplaySettings | undefined {
+    return this.#replaySettings;
+  }
+
+  set replaySettings(value: ReplaySettings | undefined) {
+    this.#replaySettings = value;
+    this.#attach(true);
+  }
+
+  /** The controller of the replay while there is one: play, pause, seek, step, speed. */
+  get replay(): KyogijoReplay | undefined {
+    return this.#replay;
   }
 
   connectedCallback(): void {
@@ -134,10 +189,29 @@ export class KyogijoField extends Base {
     this.#theme?.disconnect();
     this.#mount?.destroy();
     this.#mount = undefined;
+    this.#replay = undefined;
+    this.#replayOf = undefined;
   }
 
-  attributeChangedCallback(): void {
-    if (this.isConnected) this.#draw();
+  attributeChangedCallback(name: string): void {
+    if (!this.isConnected) return;
+    if (REPLAY_ATTRIBUTES.includes(name) && this.#replay !== undefined) this.#attach(name !== "speed" && name !== "loop");
+    else this.#draw();
+  }
+
+  /** Put the replay on the mount: new when the timeline is new or `again` says its look changed (it goes on from where it was), else only the speed and the loop are changed. */
+  #attach(again: boolean): void {
+    if (this.#mount === undefined || this.#timeline === undefined) return;
+    const settings = replaySettingsFromAttributes((name) => this.getAttribute(name), this.#replaySettings);
+    if (this.#replay !== undefined && this.#replayOf === this.#timeline && !again) {
+      if (settings.speed !== undefined) this.#replay.setSpeed(settings.speed);
+      if (settings.loop !== undefined) this.#replay.setLoop(settings.loop);
+      return;
+    }
+    const from = this.#replay === undefined || this.#replayOf !== this.#timeline ? undefined : this.#replay.state();
+    this.#replay?.destroy();
+    this.#replayOf = this.#timeline;
+    this.#replay = this.#mount.replay(this.#timeline, from === undefined ? settings : { ...settings, start: from.t - from.start });
   }
 
   #draw(): void {
@@ -147,6 +221,11 @@ export class KyogijoField extends Base {
     if (options.theme === undefined && (page === "light" || page === "dark")) options.theme = page;
     if (this.#mount === undefined) this.#mount = mountKyogijo(this.#host, options);
     else this.#mount.update(options);
+    if (this.#timeline === undefined) {
+      this.#replay?.destroy();
+      this.#replay = undefined;
+      this.#replayOf = undefined;
+    } else if (this.#replayOf !== this.#timeline) this.#attach(true);
   }
 }
 

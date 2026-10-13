@@ -235,15 +235,20 @@ function dataPage() {
     item("chart-nfl", "NFL pass chart", `import { nflPassChart } from "${MAIN}/charts";\n\nconst outcomes = ["complete", "complete", "incomplete", "touchdown", "interception"];\nconst passes = Array.from({ length: 40 }, (_, i) => ({ x: 66 + ((i * 13) % 44), y: 8 + ((i * 17) % 40), outcome: outcomes[i % outcomes.length], fromX: 60, fromY: 26 }));\nconst svg = nflPassChart(passes, { los: 62, arrows: true }).draw();`),
     item("chart-soccer", "Soccer shot map", `import { soccerShotMap } from "${MAIN}/charts";\n\nconst outcomes = ["goal", "saved", "missed", "blocked"];\nconst shots = Array.from({ length: 24 }, (_, i) => ({ x: 84 + ((i * 7) % 30), y: 18 + ((i * 11) % 44), outcome: outcomes[i % 4], xg: 0.04 + (i % 8) / 20 }));\nconst svg = soccerShotMap(shots, { provider: "statsbomb", half: true }).draw();`),
   ];
+  const replay = [
+    item("replay-rink", "A frame of a replay: the rink", `import { drawFrame } from "${MAIN}/replay";\n\nconst skater = (id, team, number, x, y, t) => ({ id, team, number, x: x + 6 * Math.sin(t / 1.4 + number), y: y + 4 * Math.cos(t / 1.1 + number) });\nconst frames = Array.from({ length: 51 }, (_, i) => {\n  const t = i / 5;\n  const objects = [skater("h9", "home", 9, 30, 0, t), skater("h17", "home", 17, 48, 18, t), skater("h28", "home", 28, 48, -18, t), skater("a4", "away", 4, 62, 8, t), skater("a8", "away", 8, 62, -8, t), skater("a31", "away", 31, 89, 0, 0)];\n  const puck = objects[Math.min(2, Math.floor(t / 3.5))];\n  return { t, objects: [...objects, { id: "puck", team: "puck", x: puck.x, y: puck.y }] };\n});\nconst events = [\n  { t: 3.5, kind: "pass", team: "home", by: "h9", to: "h17", until: 4 },\n  { t: 7, kind: "shot", team: "home", by: "h28", x2: 89, y2: 2, until: 7.6 },\n];\nconst svg = drawFrame({ sport: "nhl" }, { from: "nhl-api", frames, events }, 7.8);`, "Tracking data in the NHL API's frame, played on the rink: the players with their numbers, the puck with its trail, and the events that are on the surface at 7.8 seconds (the pass has gone, the shot is on its way). Played, with controls, it is mountKyogijo(...).replay(...)."),
+    item("replay-pitch", "A frame of a replay: the pitch", `import { drawFrame } from "${MAIN}/replay";\n\nconst spot = (id, team, number, x, y, t) => ({ id, team, number, x: x + 4 * Math.sin(t / 1.7 + number), y: y + 5 * Math.cos(t / 1.3 + number) });\nconst frames = Array.from({ length: 41 }, (_, i) => {\n  const t = i / 5;\n  const objects = [spot("h1", "home", 1, 4, 50, t), spot("h4", "home", 4, 30, 35, t), spot("h8", "home", 8, 50, 55, t), spot("h9", "home", 9, 72, 45, t), spot("a5", "away", 5, 66, 60, t), spot("a1", "away", 1, 96, 50, 0)];\n  const ball = objects[Math.min(3, Math.floor(t / 2))];\n  return { t, possession: ball.id, objects: [...objects, { id: "ball", team: "ball", x: ball.x, y: ball.y }] };\n});\nconst events = [{ t: 2, kind: "pass", team: "home", by: "h4", to: "h8", until: 2.4 }, { t: 6, kind: "goal", team: "home", x: 100, y: 48 }];\nconst svg = drawFrame({ sport: "soccer" }, { from: "opta", frames, events }, 6.4, { trail: 3 });`, "The same on the pitch, in Opta's frame, with a trail of three seconds and the goal marked by a star."),
+  ];
   return {
     slug: "gallery-data",
     title: "Gallery: data on a surface",
     ja: "データ、ヒートマップ、チャート",
-    intro: "Every kind of data layer, every heat layer and the five ready-made charts, on made-up data that the code under each picture makes. The marks are in the surface's own frame, or a provider's.",
+    intro: "Every kind of data layer, every heat layer, the five ready-made charts and a frame of a replay, on made-up data that the code under each picture makes. The marks are in the surface's own frame, or a provider's.",
     sections: [
       section("layers", "Data layers", "`layers` in the options of `drawKyogijo`: points, lines, arrows and text.", points),
       section("heat", "Heat layers", "Counts in cells, hexagons, named zones or a density, in a colour ramp.", heat),
       section("charts", "Ready-made charts", "One call for a good chart: `@johnmorrisdotca/kyogijo/charts`.", charts),
+      section("replay", "Replay", "A frame of tracking data on a surface: `drawFrame` from `@johnmorrisdotca/kyogijo/replay`. The same frame, played, is `mountKyogijo(...).replay(...)`.", replay),
     ],
   };
 }
@@ -344,7 +349,7 @@ export function framesBlockHtml(lib, style) {
 
 /** The package's entry points as `runSnippet` wants them, read from a folder of built (`.js`) or source (`.ts`) files. */
 export async function libraryFrom(dir, ext, importer) {
-  const entries = { "": "index", "/charts": "charts-entry", "/frames": "frames-entry", "/layers": "layers-entry", "/leagues": "leagues-entry", "/eras": "eras-entry", "/grounds": "grounds-entry", "/parks": "parks-entry", "/atlas": "atlas-entry", "/geometry": "geometry-entry" };
+  const entries = { "": "index", "/charts": "charts-entry", "/frames": "frames-entry", "/layers": "layers-entry", "/leagues": "leagues-entry", "/eras": "eras-entry", "/grounds": "grounds-entry", "/parks": "parks-entry", "/atlas": "atlas-entry", "/geometry": "geometry-entry", "/replay": "replay-entry" };
   const lib = {};
   for (const [suffix, file] of Object.entries(entries)) lib[`${MAIN}${suffix}`] = await importer(`${dir}/${file}${ext}`);
   return lib;

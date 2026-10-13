@@ -23,6 +23,9 @@
     "stadium",
     "world-cup",
     "atlas",
+    "replay",
+    "animation",
+    "tracking-data",
     "shot-chart",
     "spray-chart",
     "visualization",
@@ -120,6 +123,11 @@
       "types": "./dist/charts-entry.d.ts",
       "import": "./dist/charts-entry.js",
       "default": "./dist/charts-entry.js"
+    },
+    "./replay": {
+      "types": "./dist/replay-entry.d.ts",
+      "import": "./dist/replay-entry.js",
+      "default": "./dist/replay-entry.js"
     },
     "./element/define": {
       "types": "./dist/element-define.d.ts",

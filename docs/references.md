@@ -120,6 +120,14 @@ The links John has sent, and the ones the package's figures were read from: what
 - **Ours:** a hit type told by shape and size as well as fill; the balls that cleared the fence drawn beyond it, by the fence the park had that season; the pass chart's air yards from the line of scrimmage and its grid of completions; the goal-mouth view (the goal frame of the Laws, seen from the front with the shooter's left on the left, a mark where each shot crossed the goal line, in the unit the data is in); a key drawn in the margin from the chart's own marks; the zones' table, and every word of a chart in English and Japanese.
 - **Data:** the demo's, the tests' and the docs' shots, balls and passes are made up from fixed seeds (`demo/charts-data.js`). No real game, player or team is in the package.
 
+## Replay
+
+- **What was read:** only what items 11 and 12 above say of themselves: [hockey_rink](https://github.com/the-bucketless/hockey_rink) (item 11) and [mplsoccer](https://github.com/andrewRowlinson/mplsoccer) (item 12) both animate tracking data on their surfaces. That one fact, that a timeline of positions played on a surface is a chart worth having, is all that was taken. Neither package's animation code or interface was opened.
+- **Ideas credited (mplsoccer is MIT, so ideas freely and code with credit; we wrote our own):** a replay of tracking data on a pitch as a set of frames of positions by time. The model of a timeline (frames of `{ t, objects }` with an `id`, a `team` and a place each, and events at times), the interpolation between frames (a straight line, or a Hermite curve through the frames with Catmull-Rom tangents, from their textbook definitions), the trail, the state machine of the clock and the painter that moves only the marks that move are written for this package.
+- **Not used:** hockey_rink's code (GPL-3.0). No code, data or palette of either package is in the replay.
+- **Ours:** a frame as a string that is the same every time, built on the data layers; a controller that needs no page; controls in English and Japanese; steps for a reader who prefers reduced motion, a pause when the page is hidden and a live region for the events; a table of the events.
+- **Data:** the demo's plays (a team brings the ball forward and scores, on the rink and on the pitch) are made up from a fixed seed (`demo/replay-data.js`). No real game, player or team is in the package.
+
 ## The coordinate frames and the units
 
 - **What was read:** the pages named in [sources.md](./sources.md#coordinate-frames), for facts only: ranges, units, origins and conventions of each provider's coordinates. No text or code of any is copied.

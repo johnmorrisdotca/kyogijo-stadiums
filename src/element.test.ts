@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { KYOGIJO_ATTRIBUTES, optionsFromAttributes } from "./element-entry.ts";
+import { KYOGIJO_ATTRIBUTES, optionsFromAttributes, replaySettingsFromAttributes } from "./element-entry.ts";
 import { drawKyogijo } from "./draw.ts";
 import type { ScoreOptions } from "./types.ts";
 
@@ -55,5 +55,16 @@ describe("the custom element's options", () => {
 
   it("list its attributes once each", () => {
     expect(new Set(KYOGIJO_ATTRIBUTES).size).toBe(KYOGIJO_ATTRIBUTES.length);
+  });
+
+  it("read a replay's switches and numbers from its attributes, and leave what they do not say to the settings given", () => {
+    expect(replaySettingsFromAttributes(read({ loop: "", speed: "2", trail: "1.5", controls: "false", autoplay: "" }))).toEqual({ loop: true, speed: 2, trail: 1.5, controls: false, autoplay: true });
+    expect(replaySettingsFromAttributes(read({ loop: "false" }), { loop: true, hold: 5 })).toEqual({ loop: false, hold: 5 });
+    expect(replaySettingsFromAttributes(read({ speed: "fast", trail: "-3" }), { speed: 1 })).toEqual({ speed: 1 });
+    expect(replaySettingsFromAttributes(read({}))).toEqual({});
+  });
+
+  it("list the replay's attributes among its own", () => {
+    for (const name of ["loop", "speed", "autoplay", "controls", "trail"]) expect(KYOGIJO_ATTRIBUTES).toContain(name);
   });
 });

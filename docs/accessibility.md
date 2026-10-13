@@ -5,5 +5,6 @@
 - **Words stay upright.** In a tall drawing the text is turned back, and a football field's numbers are upright on both sides.
 - **Colour is not the only sign.** The winner is marked by a bar under the score and the loser's side is lighter, as well as by the colours.
 - **Contrast.** The score sits on a dark panel with white words in both themes; a team's words on its colour are black or white by the colour's lightness, or the `textColor` you give.
-- **Motion.** Nothing in the package animates. The demo's live score moves only when pressed, or every few seconds when told to play and the page is in view.
+- **Motion.** A drawing is still. A [replay](./replay.md) moves only when told to play, never by itself unless `autoplay` is set (and not then for a reader who prefers reduced motion, who gets steps and no gliding), it pauses when the page is hidden, and each of its controls has a name, a size of at least 44 pixels and a visible focus. A score that changes through `update()` swells and settles once, or only fades in with reduced motion. The demo's live score moves only when pressed, or every few seconds when told to play and the page is in view.
+- **Events are spoken.** While a replay plays or steps, a polite live region says each goal, shot, pass and whistle with its time; `replayTable` lists them as text.
 - **Not yet: a spoken update.** A page that changes the score may announce it with its own live region; the drawing does not.

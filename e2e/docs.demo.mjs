@@ -203,7 +203,7 @@ test("the comparison has its table of projects and rows, wide inside its own scr
   expect(await table.locator("thead th").count()).toBe(11);
   expect(await table.locator("tbody tr").count()).toBeGreaterThanOrEqual(16);
   for (const project of ["sportypy", "sportyR", "hockey_rink", "mplsoccer", "ggsoccer", "GeomMLBStadiums", "thestadi.com"]) await expect(table.locator("thead a", { hasText: project })).toBeAttached();
-  await expect(table.locator("tbody tr", { hasText: "Animation" }).locator("td").nth(1)).toContainText("not yet");
+  await expect(table.locator("tbody tr", { hasText: "Animation" }).locator("td").nth(1)).toContainText("a replay of tracking data");
   const scrolls = await table.evaluate((el) => el.scrollWidth > el.clientWidth);
   expect(scrolls).toBe(true);
   await noSidewaysScroll(page);

@@ -9,6 +9,7 @@ import { toParams } from "./embed-params.js";
 import { EMBLEMS, FAMILIES, GAMES, TEAMS, TEAMS_JA } from "./examples.js";
 import { nbaZones, passMap, shotHeat, shotMap, sprayChart, sprayDensity, touchZones } from "./layers-data.js";
 import { mlbBalls, nbaShots, nflPasses, nhlShots, soccerShots } from "./charts-data.js";
+import { replayPlay } from "./replay-data.js";
 import { mlbSprayChart, nbaShotChart, nflPassChart, nhlShotMap, soccerShotMap } from "./dist/charts-entry.js";
 import { fenceAt } from "./dist/geometry-entry.js";
 import { WORDS } from "./words.js";
@@ -725,6 +726,24 @@ $("live-play").addEventListener("click", () => {
   drawLive();
 });
 
+// ----- Replay: a made-up play on the rink and on the pitch, from seeded tracking data. Nothing plays by itself; the language changes the words and the clock goes on from where it was.
+const REPLAY_PLAYS = { hockey: replayPlay("hockey", { seconds: 14 }), soccer: replayPlay("soccer", { seconds: 24 }) };
+const replays = new Map();
+function drawReplays() {
+  const lang = language.lang;
+  for (const [id, kind, sport] of [["replay-rink", "hockey", "nhl"], ["replay-pitch", "soccer", "soccer"]]) {
+    const before = replays.get(id);
+    const at = before?.handle.state();
+    before?.mount.destroy();
+    const mount = mountKyogijo($(id), { sport, orientation: "landscape", language: lang, style: "none", id: `replay-${kind}` });
+    const handle = mount.replay(REPLAY_PLAYS[kind], at === undefined ? {} : { start: at.t - at.start, speed: at.speed, loop: at.loop });
+    replays.set(id, { mount, handle });
+  }
+  const element = $("replay-element");
+  element.setAttribute("language", lang);
+  element.timeline = REPLAY_PLAYS.hockey;
+}
+
 // ----- The soccer providers: each pitch in its own frame, and a converter between any two.
 const NUMBER = /^\s*-?\d+(?:\.\d+)?\s*$/;
 function drawProviders() {
@@ -836,6 +855,7 @@ function onLanguage() {
   refreshSegs();
   buildExamples();
   drawLive();
+  drawReplays();
   if (parksDrawn) drawParks();
   render();
 }
@@ -851,6 +871,7 @@ refreshSegs();
 buildExamples();
 drawProviders();
 drawLive();
+drawReplays();
 render();
 document.documentElement.dataset.kyogijoVersion = VERSION;
 initAtlas({ say, lang: () => language.lang, onTry: tryPlace }).then((started) => { atlas = started; });

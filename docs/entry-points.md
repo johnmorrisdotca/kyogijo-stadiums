@@ -9,13 +9,14 @@ The [API reference](https://johnmorrisdotca.github.io/kyogijo/api.html) lists ev
 | `@johnmorrisdotca/kyogijo/frames` | `toSurface`, `fromSurface`, `convert`, `convertPoints`, `flipEnds`, `attackingIn`, `registerFrame`, `frameByName`, `framesOf`, `piecewise`, `span`, `FRAMES`, `RETROSHEET_ZONES`, `zoneToPoint`, `zoneAt`, `SOCCER_PROVIDERS`, `rescale` and the frame types |
 | `@johnmorrisdotca/kyogijo/layers` | `drawLayers`, `layerTable`, `renderLayers`, `outlineOf`, `OUTCOMES`, `rampColour`, the heat numbers (`binGrid`, `densityGrid`), `ZONE_SETS`, `HEAT_RAMPS` and the layer types |
 | `@johnmorrisdotca/kyogijo/charts` | `nbaShotChart`, `nhlShotMap`, `mlbSprayChart`, `nflPassChart`, `soccerShotMap`, `soccerGoalMouth` and the chart types |
+| `@johnmorrisdotca/kyogijo/replay` | `drawFrame`, `interpolate`, `trails`, `possession`, `activeEvents`, `eventsBetween`, `describeEvent`, `replayLayers`, `replaySnapshot`, `replaySummary`, `replayTable`, `replayInfo`, `replayTimes`, `replayEvents`, `replayClock`, `createReplay`, `REPLAY_SPEEDS` and the replay types |
 | `@johnmorrisdotca/kyogijo/parks` | `PARKS`, `PARK_IDS`, `parkById`, `parkByWikidata`, `parkPointsIn`, `parkSourceUrl`, `parkUnit`, `fenceFor` |
 | `@johnmorrisdotca/kyogijo/eras` | `rulesFor`, `eraChanges`, `eraStates`, `eraRange`, `seasonLabel`, `footballIn`, `ERA_SPORTS`, `ERA_CURRENT`, `ERA_SOURCES` and the rule types |
 | `@johnmorrisdotca/kyogijo/grounds` | `GROUNDS`, `GROUND_IDS`, `groundById`, `groundByWikidata`, `groundNameIn`, `groundsHosting`, `groundSourceUrl` |
 | `@johnmorrisdotca/kyogijo/atlas` | `PLACES`, `placeById`, `placesBy`, `atlasFacets`, `surfaceOf` |
-| `@johnmorrisdotca/kyogijo/mount` | `mountKyogijo`, `kyogijoElement`, `containerAspect` |
+| `@johnmorrisdotca/kyogijo/mount` | `mountKyogijo` (with its `replay` method), `kyogijoElement`, `containerAspect` |
 | `@johnmorrisdotca/kyogijo/react` | `kyogijoProps`, `kyogijoHtml`, `createKyogijo` |
-| `@johnmorrisdotca/kyogijo/element` | `KyogijoField`, `defineKyogijoField`, `optionsFromAttributes`, `KYOGIJO_TAG`, `KYOGIJO_ATTRIBUTES` |
+| `@johnmorrisdotca/kyogijo/element` | `KyogijoField` (with its `timeline`, `replaySettings` and `replay`), `defineKyogijoField`, `optionsFromAttributes`, `replaySettingsFromAttributes`, `KYOGIJO_TAG`, `KYOGIJO_ATTRIBUTES` |
 | `@johnmorrisdotca/kyogijo/element/define` | importing it registers `<kyogijo-field>` |
 
 Every function is pure: it returns new values and never changes what it was given.

@@ -17,7 +17,7 @@ How it was made: each project's README was read on 2026-10-13 through the GitHub
 | Data layers: points, lines, arrows, text | yes, as options, in a frame, with a table of the numbers for a screen reader | scatter and arrow methods | — (ggplot layers) | surfaces for Observable Plot and d3, which add the marks | wrappers for Matplotlib plotting methods | arrows, scatter and comet lines | passes and shots as ggplot layers | a spray-chart geom | — | — |
 | Heat maps, hexbins, zones, contours | heatmap, hexbin, zones (ten sets for five sports), contour and legends | heatmap and contour (a README example) | — | basketball shot zones | binned plots (an example notebook) | heatmaps and hexbins | — | — | — | — |
 | Ready-made charts | 5: an NBA shot chart, an NHL shot map, an MLB spray chart, an NFL pass chart, a soccer shot map with a goal mouth | — | — | — (a shot-charts guide in the sibling sdvplot package's docs) | — | radar, pizza and bumpy charts | — | a spray chart on a stadium | — | — |
-| Animation | not yet | — | — | — | yes (an example notebook) | yes (its docs gallery) | — | — | — | — |
+| Animation | yes: a replay of tracking data on any surface, with controls, a keyboard, steps for reduced motion and a live region (see [Replay](./replay.md)) | — | — | — | yes (an example notebook) | yes (its docs gallery) | — | — | — | — |
 | Score mode: the teams, their logos and the score on the surface | yes, wide or tall, and as a strip for a list | — (its README says logos may be shown in a future version) | — | — | — | — | — | — | — | — |
 | Languages of its words | English and Japanese | — | — | — | — | — | — | — | — | — |
 | Runtime dependencies | none | matplotlib, numpy, pandas, scipy | ggplot2, ggfittext, glue, grid, rlang | none for the core; optional peers: @observablehq/plot, d3, @napi-rs/canvas | matplotlib, numpy, pillow | matplotlib, numpy, pandas, Pillow, requests, scipy, seaborn | ggplot2 | ggplot2, grid | — | — |
@@ -28,7 +28,7 @@ How it was made: each project's README was read on 2026-10-13 through the GitHub
 
 - **More sports.** sportypy, sportyR and `@sportsdataverse/sporty` also draw tennis, volleyball and curling; sportyR and sporty draw lacrosse as well. Kyogijo draws five.
 - **More leagues.** sportyR and sporty hold 53 league surfaces against Kyogijo's 41 rule sets, 35 of them variants. Kyogijo's are the ones it has a rulebook to cite for (see [League variants](./variants.md)).
-- **A wider toolbox.** mplsoccer draws radar, pizza and bumpy charts and loads StatsBomb's open data; hockey_rink and mplsoccer animate; the sibling packages of `@sportsdataverse/sporty` do team marks and tables.
+- **A wider toolbox.** mplsoccer draws radar, pizza and bumpy charts and loads StatsBomb's open data; the sibling packages of `@sportsdataverse/sporty` do team marks and tables.
 - **The data tools beside them.** The R and Python packages sit in the ecosystems where the data is analysed. Kyogijo takes the data you give it and reads no network.
 - **Age.** ggsoccer's repository dates from 2017, mplsoccer's from 2019, sportyR's, sportypy's and hockey_rink's from 2021. Kyogijo is at version 0.1.0 and not yet on npm.
 
