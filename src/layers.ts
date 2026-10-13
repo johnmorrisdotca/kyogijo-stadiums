@@ -4,6 +4,7 @@
 // the same string. Written for this package; mplsoccer and hockey_rink were read for the list of charts to match, and nothing of
 // either is used.
 import { safeColour, safeLogo } from "./colour.ts";
+import { FRAMES } from "./frames.ts";
 import { KYOGIJO_HEAT_STYLE } from "./style.ts";
 import { drawHeat, drawLegend, heatTable, type LegendInfo } from "./heat.ts";
 import { clamp01, envFor, isNum, newMade, opacityOf, own, place, toArray, unitOfLayer, type Env, type Made } from "./layers.env.ts";
@@ -452,6 +453,9 @@ export function drawLayers(options: SurfaceOptions | ScoreOptions, layers: reado
   return renderLayers(options, layers).svg;
 }
 
+/** The unit of a frame's numbers, for a layer's `from` that names or is a frame. */
+const frameUnit = (from: LayerBase["from"]): string | undefined => (from === undefined ? undefined : typeof from === "string" ? FRAMES[from]?.unit : from.unit);
+
 const cell = (value: unknown): string => (isNum(value) ? String(Math.round(value * 1000) / 1000) : typeof value === "string" ? esc(value) : "");
 
 /**
@@ -499,7 +503,8 @@ export function layerTable(layers: readonly Layer[], options: TableOptions = {})
       const names = typeof layer.name === "string" && layer.name.trim() !== "" ? layer.name.trim() : plural(w, layer.kind, data.length);
       const title = typeof layer.title === "string" && layer.title !== "" ? layer.title : fill(w.count, { n: data.length, noun: names });
       const frame = layer.from === undefined ? undefined : typeof layer.from === "string" ? layer.from : layer.from.name;
-      const unit = layer.units === "rulebook" ? "rulebook" : layer.units ?? "ft";
+      // A frame's numbers are in the frame's own unit (tenths of a foot for the NBA's); without one they are in the layer's.
+      const unit = frameUnit(layer.from) ?? (layer.units === "rulebook" ? "rulebook" : layer.units ?? "ft");
       const note = [frame === undefined ? undefined : fill(w.tableFrame, { frame, unit }), data.length > rows.length ? fill(w.tableMore, { shown: rows.length, total: data.length }) : undefined].filter((part) => part !== undefined).join(words.said.gap);
       const head = `<tr><th scope="col">${esc(w.tableNo)}</th>${columns.map(([name]) => `<th scope="col">${esc(name)}</th>`).join("")}</tr>`;
       const body = rows.map((d, n) => `<tr><th scope="row">${n + 1}</th>${columns.map(([, , read]) => `<td>${typeof d === "object" && d !== null ? cell(read(d)) : ""}</td>`).join("")}</tr>`).join("");

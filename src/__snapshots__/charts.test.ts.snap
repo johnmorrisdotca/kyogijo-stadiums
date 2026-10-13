@@ -1,0 +1,150 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`every chart > mlb: the same input draws the same drawing, and a fingerprint of the chart's own marks holds it 1`] = `"0kb5q1x"`;
+
+exports[`every chart > mlb: what the chart's marks are made of 1`] = `
+{
+  "circle": 24,
+  "circle.ky-hol": 88,
+  "clipPath": 1,
+  "defs": 1,
+  "desc": 4,
+  "g.ky-hl": 1,
+  "g.ky-hm.ky-layer": 1,
+  "g.ky-layer.ky-pts": 3,
+  "g.ky-layer.ky-txt": 1,
+  "g.ky-layers": 1,
+  "g.ky-lg": 1,
+  "g.ky-lgw": 1,
+  "path": 44,
+  "path.ky-hg": 1,
+  "path.ky-lg-k": 3,
+  "path.ky-zn": 6,
+  "rect": 9,
+  "rect.ky-lg-p": 1,
+  "style": 1,
+  "text.ky-lg-t": 4,
+  "text.ky-lt": 11,
+  "title": 12,
+  "tspan": 6,
+}
+`;
+
+exports[`every chart > nba: the same input draws the same drawing, and a fingerprint of the chart's own marks holds it 1`] = `"05315lk"`;
+
+exports[`every chart > nba: what the chart's marks are made of 1`] = `
+{
+  "circle": 186,
+  "clipPath": 1,
+  "defs": 1,
+  "desc": 3,
+  "g.ky-hl": 1,
+  "g.ky-hm.ky-layer": 1,
+  "g.ky-layer.ky-pts": 2,
+  "g.ky-layer.ky-txt": 1,
+  "g.ky-layers": 1,
+  "g.ky-lg": 1,
+  "g.ky-lgw": 1,
+  "path": 1,
+  "path.ky-hg": 1,
+  "path.ky-hol": 236,
+  "path.ky-lg-k": 4,
+  "path.ky-zn": 6,
+  "rect": 9,
+  "rect.ky-lg-p": 1,
+  "style": 1,
+  "text.ky-lg-t": 5,
+  "text.ky-lt": 8,
+  "title": 11,
+  "tspan": 12,
+}
+`;
+
+exports[`every chart > nfl: the same input draws the same drawing, and a fingerprint of the chart's own marks holds it 1`] = `"1b0ydci"`;
+
+exports[`every chart > nfl: what the chart's marks are made of 1`] = `
+{
+  "circle": 30,
+  "circle.ky-hol": 18,
+  "clipPath": 1,
+  "defs": 1,
+  "desc": 3,
+  "g.ky-hl": 1,
+  "g.ky-hm.ky-layer": 1,
+  "g.ky-layer.ky-lns": 1,
+  "g.ky-layer.ky-pts": 2,
+  "g.ky-layer.ky-txt": 1,
+  "g.ky-layers": 1,
+  "g.ky-lg": 1,
+  "g.ky-lgw": 1,
+  "path": 4,
+  "path.ky-hg": 1,
+  "path.ky-lg-k": 3,
+  "path.ky-ln": 1,
+  "path.ky-zn": 6,
+  "rect": 9,
+  "rect.ky-lg-p": 1,
+  "style": 1,
+  "text.ky-lg-t": 4,
+  "text.ky-lt": 9,
+  "title": 12,
+  "tspan": 12,
+}
+`;
+
+exports[`every chart > nhl: the same input draws the same drawing, and a fingerprint of the chart's own marks holds it 1`] = `"1s6wq5o"`;
+
+exports[`every chart > nhl: what the chart's marks are made of 1`] = `
+{
+  "circle.ky-a.ky-hol": 19,
+  "circle.ky-h.ky-hol": 20,
+  "circle.ky-hol": 1,
+  "clipPath": 1,
+  "defs": 1,
+  "desc": 4,
+  "g.ky-hl": 1,
+  "g.ky-hm.ky-layer": 1,
+  "g.ky-layer.ky-pts": 2,
+  "g.ky-layer.ky-txt": 1,
+  "g.ky-layers": 1,
+  "g.ky-lg": 1,
+  "g.ky-lgw": 1,
+  "path": 2,
+  "path.ky-a": 8,
+  "path.ky-a.ky-hol": 18,
+  "path.ky-h": 5,
+  "path.ky-h.ky-hol": 20,
+  "path.ky-hg": 1,
+  "path.ky-hol": 2,
+  "path.ky-lg-k": 3,
+  "path.ky-zn": 4,
+  "rect": 9,
+  "rect.ky-lg-p": 1,
+  "style": 1,
+  "text.ky-lg-t": 4,
+  "text.ky-lt": 9,
+  "title": 99,
+  "tspan": 3,
+}
+`;
+
+exports[`every chart > soccer: the same input draws the same drawing, and a fingerprint of the chart's own marks holds it 1`] = `"17t94ih"`;
+
+exports[`every chart > soccer: what the chart's marks are made of 1`] = `
+{
+  "circle.ky-h.ky-hol": 11,
+  "circle.ky-hol": 1,
+  "clipPath": 1,
+  "defs": 1,
+  "desc": 3,
+  "g.ky-layer.ky-pts": 2,
+  "g.ky-layer.ky-txt": 1,
+  "g.ky-layers": 1,
+  "path": 2,
+  "path.ky-h": 1,
+  "path.ky-h.ky-hol": 16,
+  "path.ky-hol": 3,
+  "text.ky-lt": 7,
+  "title": 31,
+}
+`;

@@ -3,6 +3,7 @@
 // its numbers and a summary that names the hottest cells or zones. Written for this package; hockey_rink and mplsoccer were read for the list of
 // charts to match (their docs, not their code), and the zone sets are documented in docs/sources.md.
 import { esc, num } from "./format.ts";
+import { FRAMES } from "./frames.ts";
 import { resolveRamp, stepOf, type ResolvedRamp } from "./heat.colour.ts";
 import {
   binGrid,
@@ -613,6 +614,11 @@ export function drawHeat(layer: HeatLayer, env: Env, gid: string, known?: Map<st
   return made;
 }
 
+/** The marks counted into each zone of a zone chart, without drawing it: for each zone its id, its name (in the drawing's language), the marks in it, those whose outcome is a success and its value. */
+export function zoneCounts(layer: ZonesLayer, env: Env): { id: string; name: string; n: number; hits: number; value: number | null }[] {
+  return zoneCells(layer, env, unitOfLayer(layer, env)).items.map((it) => ({ id: it.id ?? "", name: it.name ?? "", n: it.n, hits: it.hits, value: it.value }));
+}
+
 /** What a legend takes from the layer it is for. */
 export interface LegendInfo {
   colours: Colours;
@@ -675,7 +681,9 @@ export function heatTable(layer: HeatLayer, env: Env): HeatTable {
   const ranked = c.items.map((it, order) => ({ it, order })).sort((a, b) => (b.it.value as number) - (a.it.value as number) || a.order - b.order);
   const where = placeBack(layer, env, ranked.map(({ it }): P => [it.cx, it.cy]), unit);
   const frame = layer.from === undefined ? undefined : typeof layer.from === "string" ? layer.from : layer.from.name;
-  const unit_ = layer.units === "rulebook" ? "rulebook" : layer.units ?? env.unit;
+  // A frame's numbers are in the frame's own unit; without one the cells are in the layer's.
+  const given = layer.from === undefined ? undefined : typeof layer.from === "string" ? FRAMES[layer.from] : layer.from;
+  const unit_ = given?.unit ?? (layer.units === "rulebook" ? "rulebook" : layer.units ?? env.unit);
   const note = frame === undefined ? fill(words.tableCellsPlain, { stat: c.stat, unit: unit_ }) : fill(words.tableCells, { stat: c.stat, frame, unit: unit_ });
   return {
     head: [words.tableNo, words.tableX, words.tableY, words.tableCount, words.tableValue],

@@ -108,6 +108,14 @@ The links John has sent, and the ones the package's figures were read from: what
 - **Ours:** the legend as a layer and an option, a ground that makes one ramp readable on every surface, the ramps' light and dark sets checked by a test, zone charts with a rate (a field-goal percentage) and the number of marks in each zone, a table of each layer's numbers and a description that names the hottest cells or zones.
 - **Zone definitions:** the soccer, NBA, NHL, baseball and football zone sets, with each source, are in [sources.md](./sources.md#zone-sets); the NHL slot and home plate and the football pass edges are ours.
 
+## The ready-made charts
+
+- **What the charts are for:** the shot charts, shot maps, spray charts and pass charts that the plotting packages show in their galleries and READMEs (the lists recorded above under items 10, 11 and 12). Each of ours is one function that returns data layers, so what is drawn is the layer system's, not a new renderer.
+- **Ideas credited (MIT, so ideas freely and code with credit; we wrote our own):** [mplsoccer](https://github.com/andrewRowlinson/mplsoccer) (item 12) draws shot maps with a mark sized by the expected goals of the shot and goals marked apart from the rest, and pass maps; [sporty](https://github.com/sportsdataverse/sdvplot-js) (item 10) draws an NBA shot chart with zones. Those are the ideas the NBA, NHL, football and soccer charts follow. No code of either is used.
+- **Not used:** [GeomMLBStadiums](https://github.com/bdilday/GeomMLBStadiums)'s spray-chart geom (item 7, no licence) was not read: ours puts balls on the park of their season, past parks included, which it does not, from the fence figures in [sources.md](./sources.md). hockey_rink, sportypy and sportyR (GPL-3.0) were not read for this either.
+- **Ours:** a hit type told by shape and size as well as fill; the balls that cleared the fence drawn beyond it, by the fence the park had that season; the pass chart's air yards from the line of scrimmage and its grid of completions; the goal-mouth view (the goal frame of the Laws, seen from the front with the shooter's left on the left, a mark where each shot crossed the goal line, in the unit the data is in); a key drawn in the margin from the chart's own marks; the zones' table, and every word of a chart in English and Japanese.
+- **Data:** the demo's, the tests' and the docs' shots, balls and passes are made up from fixed seeds (`demo/charts-data.js`). No real game, player or team is in the package.
+
 ## The coordinate frames and the units
 
 - **What was read:** the pages named in [sources.md](./sources.md#coordinate-frames), for facts only: ranges, units, origins and conventions of each provider's coordinates. No text or code of any is copied.

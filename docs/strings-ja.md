@@ -58,6 +58,52 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `said.stop` | . | 。 |
 | `said.colon` | :  | ： |
 | `said.gap` |   |  |
+| `charts.titleNba` | NBA shot chart | NBAのショットチャート |
+| `charts.titleNhl` | NHL shot map | NHLのシュートマップ |
+| `charts.titleMlb` | Baseball spray chart | 野球の打球方向図 |
+| `charts.titleNfl` | NFL pass chart | NFLのパスチャート |
+| `charts.titleSoccer` | Soccer shot map | サッカーのシュートマップ |
+| `charts.titleGoal` | Goal mouth: where the shots crossed the goal line | ゴールマウス：シュートがゴールラインを通過した位置 |
+| `charts.shots` | shots | シュート |
+| `charts.passes` | passes | パス |
+| `charts.balls` | balls in play | インプレー打球 |
+| `charts.ballsBeyond` | balls beyond the fence | フェンス越えの打球 |
+| `charts.lineOfScrimmage` | line of scrimmage | スクリメージライン |
+| `charts.key` | Key | 凡例 |
+| `charts.made` | Made | 成功 |
+| `charts.missed` | Missed | 失敗 |
+| `charts.missedNet` | Off target | 枠外 |
+| `charts.goal` | Goal | ゴール |
+| `charts.saved` | Saved | セーブ |
+| `charts.blocked` | Blocked | ブロック |
+| `charts.shot` | Shot | シュート |
+| `charts.post` | Hit the post | ポスト直撃 |
+| `charts.single` | Single | 単打 |
+| `charts.double` | Double | 二塁打 |
+| `charts.triple` | Triple | 三塁打 |
+| `charts.homeRun` | Home run | 本塁打 |
+| `charts.out` | Out | アウト |
+| `charts.complete` | Complete | パス成功 |
+| `charts.incomplete` | Incomplete | パス不成功 |
+| `charts.touchdown` | Touchdown | タッチダウン |
+| `charts.interception` | Interception | インターセプト |
+| `charts.sizeXg` | Size: xG | 大きさ：xG |
+| `charts.sizeNote` | The size of a mark shows its expected goals (xG). | マークの大きさは、そのシュートの期待ゴール数（xG）を表します。 |
+| `charts.xgTotal` | xG {n} | xG合計 {n} |
+| `charts.fgRate` | Field goals made, % | フィールドゴール成功率（％） |
+| `charts.completionRate` | Completions, % | パス成功率（％） |
+| `charts.goalRate` | Goals, % of shots | シュート決定率（％） |
+| `charts.xgStat` | Expected goals (xG) | 期待ゴール数（xG） |
+| `charts.hitRate` | Hits, % of balls in play | 安打の割合（インプレー打球に対する％） |
+| `charts.leagueNote` | The zones are coloured by how far they are above or below the league figure of {league} percent. | ゾーンの色は、リーグ平均{league}％との差を表します。 |
+| `charts.sumNba` | Shots {shots}, made {made} ({pct}%). | シュート{shots}本、成功{made}本（{pct}％）。 |
+| `charts.sumShots` | Shots {shots}, goals {goals}. | シュート{shots}本、{goals}ゴール。 |
+| `charts.sumShotsXg` | Shots {shots}, goals {goals}, expected goals (xG) {xg}. | シュート{shots}本、{goals}ゴール、期待ゴール数（xG）{xg}。 |
+| `charts.sumMlb` | Balls in play {balls}: {list}. | インプレー打球{balls}本：{list}。 |
+| `charts.sumNfl` | Passes {passes}, complete {complete} ({pct}%), touchdowns {td}, interceptions {int}. | パス{passes}本、成功{complete}本（{pct}％）、タッチダウン{td}回、インターセプト{int}回。 |
+| `charts.beyondNote` | Beyond the fence: {n}. | フェンスを越えた打球は{n}本です。 |
+| `charts.airYards` | Air yards from {min} to {max}. | エアヤード：{min}～{max}ヤード。 |
+| `charts.goalDesc` | The goal frame, {w} by {h} metres, seen from the front: the shooter's left is on the left. | ゴール枠（幅{w}m×高さ{h}m）を正面から見た図です。図の左側が、シュートを打つ選手の左手側です。 |
 | `layers.pointOne` | point | データ点 |
 | `layers.pointMany` | points | データ点 |
 | `layers.lineOne` | line | 線 |
@@ -325,6 +371,14 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `data_positional` | A positional heat map on the pitch | ピッチ上のヒートマップ（ポジショナルプレーのゾーン別） |
 | `data_density` | A density contour on a ballpark | 野球場の打球密度の等高線 |
 | `dataTable` | Show the data as a table | データを表で見る |
+| `chartsTitle` | Ready-made charts | すぐ使えるチャート |
+| `chartsText` | A shot chart, a shot map, a spray chart and a pass chart, each made in one call from made-up data. A chart is a list of layers and some drawing options, so it can still be changed, and it comes with a key, a legend and a table. The marks differ in shape as well as in fill, so a result is never told by colour alone. | ショットチャート、シュートマップ、打球方向図、パスチャートを、架空のデータからそれぞれ1回の呼び出しで描けます。チャートはレイヤーの一覧と描画オプションなので、あとから変更でき、凡例と表も付いています。結果は色だけでなく形の違いでも区別できます。 |
+| `chart_nba` | An NBA shot chart: every shot, and the six zones coloured against a league figure of 46 percent | NBAのショットチャート：すべてのシュートと、リーグ平均46％を基準に色分けした6つのゾーン |
+| `chart_nhl` | An NHL shot map with both ends folded to one: marks sized by expected goals, the slot zones by goal rate | NHLのシュートマップ：左右両方のゴール前のシュートを片側に重ね、マークの大きさは期待ゴール数、スロットのゾーンはシュート決定率で表示 |
+| `chart_mlb` | A spray chart on the Polo Grounds of 1915: hit types, balls beyond its short fence, and the spray zones for a right-handed batter | 1915年のポロ・グラウンズの打球方向図：安打の種類、近いフェンスを越えた打球、右打者の打球方向ゾーン |
+| `chart_nfl` | An NFL pass chart: where each pass came down, and the pass grid's completion percentages | NFLのパスチャート：各パスの到達地点と、区画ごとのパス成功率 |
+| `chart_soccer` | A soccer shot map: marks sized by expected goals, with the total | サッカーのシュートマップ：マークの大きさは期待ゴール数で、合計も表示 |
+| `chart_goal` | The goal-mouth view of the same shots: where each crossed the goal line | 同じシュートのゴールマウス図：ゴールラインを通過した位置 |
 | `parksTitle` | Ballparks | 球場 |
 | `parksText` | Thirty current MLB parks and forty-four past ones, and the NPB's twelve home parks and eight other grounds, each fence drawn from the distances its article publishes. Press one to try it. | 現在のMLB30球場と過去の44球場、NPBの本拠地12球場とその他8球場。外野フェンスは、各球場の記事で公表されている距離をもとに描いています。球場を選ぶと試せます。 |
 | `parksShow` | Show the parks | 球場を表示する |

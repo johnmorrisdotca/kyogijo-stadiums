@@ -1,13 +1,16 @@
 // The demo page's own script: a surface to try (the package's own `mountKyogijo`), the code that draws it in four ways,
 // and a page of examples: every sport, wide and tall, badges, compact cards, court looks, a live score, every ballpark,
 // and the custom element. The words are in words.js, the made-up teams in examples.js.
-import { COURT_THEMES, ERA_SPORTS, GROUNDS, GROUND_IDS, KYOGIJO_STYLE, LEAGUES, PARKS, PARK_IDS, SOCCER_PITCH_IDS, SOCCER_PROVIDERS, SOCCER_PROVIDER_IDS, SPORTS, VERSION, drawKyogijo, rescale, layerTable, eraRange, rulesFor, seasonLabel, hasHistory, leagueAt, leagueChanges, leagueSeason } from "./dist/index.js";
+import { COURT_THEMES, ERA_SPORTS, GROUNDS, GROUND_IDS, KYOGIJO_STYLE, LEAGUES, PARKS, PARK_IDS, SOCCER_PITCH_IDS, SOCCER_PROVIDERS, SOCCER_PROVIDER_IDS, SPORTS, VERSION, drawKyogijo, fenceFor, rescale, layerTable, eraRange, rulesFor, seasonLabel, hasHistory, leagueAt, leagueChanges, leagueSeason } from "./dist/index.js";
 import { mountKyogijo } from "./dist/mount-entry.js";
 import "./dist/element-define.js";
 import { initAtlas } from "./atlas.js";
 import { toParams } from "./embed-params.js";
 import { EMBLEMS, FAMILIES, GAMES, TEAMS, TEAMS_JA } from "./examples.js";
 import { nbaZones, passMap, shotHeat, shotMap, sprayChart, sprayDensity, touchZones } from "./layers-data.js";
+import { mlbBalls, nbaShots, nflPasses, nhlShots, soccerShots } from "./charts-data.js";
+import { mlbSprayChart, nbaShotChart, nflPassChart, nhlShotMap, soccerShotMap } from "./dist/charts-entry.js";
+import { fenceAt } from "./dist/geometry-entry.js";
 import { WORDS } from "./words.js";
 
 const $ = (id) => document.getElementById(id);
@@ -608,6 +611,53 @@ function buildData() {
   }
 }
 
+// The Charts section: a ready-made chart for each sport, from the made-up data of charts-data.js. A chart is drawn wide (its key runs along the top
+// edge), with the table that stands for it under it.
+const CHART_PARK = { park: "polo-grounds", year: 1915 };
+function charts() {
+  const lang = language.lang;
+  const fence = fenceFor(PARKS[CHART_PARK.park], undefined, CHART_PARK.year);
+  const soccer = soccerShotMap(soccerShots(), { provider: "statsbomb", half: true, goalUnit: "yd", language: lang });
+  return [
+    ["nba", nbaShotChart(nbaShots(260), { league: 46, language: lang })],
+    ["nhl", nhlShotMap(nhlShots(), { fold: true, zones: true, statistic: "goals", language: lang })],
+    ["mlb", mlbSprayChart(mlbBalls((angle) => fenceAt(fence, angle)), { ...CHART_PARK, bats: "R", zones: true, language: lang })],
+    ["nfl", nflPassChart(nflPasses(), { los: 62, language: lang })],
+    ["soccer", soccer],
+    ["goal", soccer.goalMouth({ style: "none" })],
+  ];
+}
+function buildCharts() {
+  const host = $("chart-cards");
+  host.replaceChildren();
+  for (const [key, chart] of charts()) {
+    let fig;
+    if (key === "goal") {
+      // The goal-mouth view is a drawing of its own, not a surface: written into its card as it is.
+      fig = document.createElement("figure");
+      fig.className = "card";
+      const box = document.createElement("div");
+      box.className = "card-stage";
+      box.innerHTML = chart.svg;
+      const text = document.createElement("figcaption");
+      text.textContent = say(`chart_${key}`);
+      fig.append(box, text);
+      host.append(fig);
+    } else fig = figure(host, { ...chart.options, orientation: "landscape", language: language.lang, style: "none" }, say(`chart_${key}`));
+    fig.dataset.chart = key;
+    const details = document.createElement("details");
+    details.className = "data-table";
+    details.dataset.testid = `chart-table-${key}`;
+    const summary = document.createElement("summary");
+    summary.textContent = say("dataTable");
+    const holder = document.createElement("div");
+    holder.className = "data-table-body";
+    holder.innerHTML = chart.table({ maxRows: 40 });
+    details.append(summary, holder);
+    fig.append(details);
+  }
+}
+
 function buildExamples() {
   for (const m of mounts) m.handle?.destroy();
   mounts.length = 0;
@@ -617,6 +667,7 @@ function buildExamples() {
     for (const [options, caption] of examples[key]()) figure(host, options, caption);
   }
   buildData();
+  buildCharts();
   for (const m of mounts) m.handle = m.make();
   buildBadges();
 }

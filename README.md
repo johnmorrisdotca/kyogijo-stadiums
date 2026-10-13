@@ -77,7 +77,7 @@ console.log(svg.startsWith("<svg"), svg.includes("NORTHERN OWLS"));
 - **Surfaces through the years.** `year: 1975` draws a surface as its league's rules marked it that season, each change cited.
 - **Score mode.** Each team's name and logo on its side (the end zones of a football field, the ends of the ice, the halves of the court, the dugouts of a ballpark) and the score large in the middle, with the competition, the status (Final, OT, SO, a period, an inning) and the date, and the winner emphasised.
 - **Wide, tall or fit the box.** Every surface lies wide or tall: tall turns it a quarter, keeps every word upright and puts the teams top and bottom. With `orientation: "auto"` the browser helpers follow the box.
-- **Data on the surface.** Points, lines, arrows, text, heat maps, hexagons, zone charts and density contours over any surface, in its feet or a provider's frame, cut to its outline, with a title, a description and a table for each layer.
+- **Data on the surface.** Points, lines, arrows, text, heat maps, hexagons, zone charts and density contours over any surface, in its feet or a provider's frame, cut to its outline, with a title, a description and a table for each layer, and ready-made shot and pass charts ([docs/charts.md](./docs/charts.md)).
 - **A compact badge and a compact card.** One strip for a list, or the surface with that strip under it.
 - **Light and dark**, by the device or the page, and every colour a custom property; a basketball court's paint, border, wood and baseline words are options, with five looks to start from.
 - **Accessible.** Each drawing is an `img` with a title and a description that say the surface and the result, in English or Japanese.
@@ -571,8 +571,6 @@ console.log(toSurface([[69, 22]], { from: "nhl-api", attacking: "left" }), conve
 - **Units, anchors and limits.** `units` is the unit of the surface's numbers (feet by default); `anchors` replace a frame's landmarks with your own for a venue whose markings differ, and `limits` keeps points on the surface (`"surface"`) or in a box. Anchors and limits are converted with `units`, not only the points.
 - **Ends.** `attacking: "left"` turns points a half turn about the middle of the surface. `attackingIn("nhl", period, "right")` says which end a team attacks in a period (hockey changes ends every period, football after the first and third quarters, basketball at the half); for a period no rule here settles, pass `changedAfter`. A baseball frame has no ends and refuses `attacking`.
 - **Your own frame.** `registerFrame(frame)` adds one to `FRAMES`, and `piecewise(landmarks)` is the mapper the frames use: straight between landmarks. A frame for a surface of any size takes its landmarks as a function of the surface's size, and `toSurface` is then given `size`.
-- **Retrosheet's zones.** `zoneToPoint("8D")` is the centre of a hit-location sector in feet from home plate and `zoneAt([x, y])` the zone nearest a point; good to a few feet.
-- **What is ours.** The NHL API's sign of y, the NFL tracking data's corner of origin and the MLBAM scale of 2.5 feet a unit are conventions the sources read do not settle; each is marked in `note` and in [docs/sources.md](./docs/sources.md). Check one known point against your data before trusting a frame.
 
 ## Data layers
 
@@ -674,6 +672,7 @@ The [API reference](https://johnmorrisdotca.github.io/kyogijo/api.html) lists ev
 | `@johnmorrisdotca/kyogijo/geometry` | `FOOTBALL`, `NHL`, `NBA`, `MLB`, `SOCCER`, `SOCCER_PITCHES`, `soccerSpec`, `soccerPitchClass`, `fenceAt`, `fencePoints`, `threePointJoin`, `skinJoin`, `boardsY` and the other dimensions; `SURFACE_UNITS`, `convertLength`, `convertPoint`, `lengthsIn`, `dimensionsOf`, `surfaceSize`, `fenceIn` |
 | `@johnmorrisdotca/kyogijo/frames` | `toSurface`, `fromSurface`, `convert`, `convertPoints`, `flipEnds`, `attackingIn`, `registerFrame`, `frameByName`, `framesOf`, `piecewise`, `span`, `FRAMES`, `RETROSHEET_ZONES`, `zoneToPoint`, `zoneAt`, `SOCCER_PROVIDERS`, `rescale` and the frame types |
 | `@johnmorrisdotca/kyogijo/layers` | `drawLayers`, `layerTable`, `renderLayers`, `outlineOf`, `OUTCOMES`, `rampColour`, the heat numbers (`binGrid`, `densityGrid`), `ZONE_SETS`, `HEAT_RAMPS` and the layer types |
+| `@johnmorrisdotca/kyogijo/charts` | `nbaShotChart`, `nhlShotMap`, `mlbSprayChart`, `nflPassChart`, `soccerShotMap`, `soccerGoalMouth` and the chart types |
 | `@johnmorrisdotca/kyogijo/parks` | `PARKS`, `PARK_IDS`, `parkById`, `parkByWikidata`, `parkPointsIn`, `parkSourceUrl`, `parkUnit`, `fenceFor` |
 | `@johnmorrisdotca/kyogijo/eras` | `rulesFor`, `eraChanges`, `eraStates`, `eraRange`, `seasonLabel`, `footballIn`, `ERA_SPORTS`, `ERA_CURRENT`, `ERA_SOURCES` and the rule types |
 | `@johnmorrisdotca/kyogijo/grounds` | `GROUNDS`, `GROUND_IDS`, `groundById`, `groundByWikidata`, `groundNameIn`, `groundsHosting`, `groundSourceUrl` |
@@ -771,6 +770,11 @@ src/
 ├── heat.zones.ts       the sports' zones
 ├── heat.types.ts       the heat layers' types
 ├── layers-entry.ts     the layers' entry
+├── charts.ts           ready-made charts and what they share
+├── charts.baseball.ts  the spray chart
+├── charts.soccer.ts    the soccer shot map and goal mouth
+├── charts.types.ts     the charts' types
+├── charts-entry.ts     the charts' entry
 ├── outline.ts          a surface's outline: where a layer is cut
 ├── common.ts           the drawing's id, the orientation and the unit, shared by the drawing and its layers
 ├── geometry.ts         every dimension, in feet, with the fence's curve

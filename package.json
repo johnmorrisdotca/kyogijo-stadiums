@@ -23,6 +23,8 @@
     "stadium",
     "world-cup",
     "atlas",
+    "shot-chart",
+    "spray-chart",
     "visualization",
     "custom-element",
     "web-component",
@@ -113,6 +115,11 @@
       "types": "./dist/atlas-entry.d.ts",
       "import": "./dist/atlas-entry.js",
       "default": "./dist/atlas-entry.js"
+    },
+    "./charts": {
+      "types": "./dist/charts-entry.d.ts",
+      "import": "./dist/charts-entry.js",
+      "default": "./dist/charts-entry.js"
     },
     "./element/define": {
       "types": "./dist/element-define.d.ts",

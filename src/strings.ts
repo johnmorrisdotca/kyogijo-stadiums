@@ -41,6 +41,65 @@ export interface KyogijoWords {
     colon: string;
     gap: string;
   };
+  /** The words of the ready-made charts (`nbaShotChart` and the rest): their titles, the names of their marks, the key and the sentences that sum them up. */
+  charts: {
+    titleNba: string;
+    titleNhl: string;
+    titleMlb: string;
+    titleNfl: string;
+    titleSoccer: string;
+    titleGoal: string;
+    /** What the marks of each chart are, as a plural noun for a layer's title: "24 shots". */
+    shots: string;
+    passes: string;
+    balls: string;
+    ballsBeyond: string;
+    lineOfScrimmage: string;
+    key: string;
+    /** The outcomes, as the key and the summaries name them. */
+    made: string;
+    missed: string;
+    missedNet: string;
+    goal: string;
+    saved: string;
+    blocked: string;
+    shot: string;
+    post: string;
+    single: string;
+    double: string;
+    triple: string;
+    homeRun: string;
+    out: string;
+    complete: string;
+    incomplete: string;
+    touchdown: string;
+    interception: string;
+    /** The key's note on the size of a mark, and the expected-goals total written beside the key: {n}. */
+    sizeXg: string;
+    /** The sentence on the size of the marks. */
+    sizeNote: string;
+    xgTotal: string;
+    /** What the statistics of the zones are called. */
+    fgRate: string;
+    completionRate: string;
+    goalRate: string;
+    xgStat: string;
+    hitRate: string;
+    /** The note on a diverging ramp: {league} is the league's percent. */
+    leagueNote: string;
+    /** The sums: {shots}, {made}, {pct}, {goals}, {xg}, {balls}, {list}, {passes}, {complete}, {td}, {int}. */
+    sumNba: string;
+    sumShots: string;
+    sumShotsXg: string;
+    sumMlb: string;
+    sumNfl: string;
+    /** The sentence on the balls that came down beyond the fence: {n}. */
+    beyondNote: string;
+    /** The air yards of a layer of passes: {min} and {max}. */
+    airYards: string;
+    /** The goal-mouth view's description: {w} and {h} in metres. */
+    goalDesc: string;
+  };
   /** The words of a data layer's summary and of the table that stands for it. */
   layers: {
     pointOne: string;
@@ -182,6 +241,19 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
     },
     scoreTitle: "{away} {awayScore}, {home} {homeScore}",
     said: { home: "home", away: "away", won: "{name} won.", tied: "The game is level.", park: "The outfield fence follows the figures published for {park}.", ground: "The pitch follows the size published for {ground}.", groundDefault: "No pitch size is published for {ground}, so the pitch has the international size of 105 by 68 metres.", era: "The markings are those of the {season} season.", wonPens: "{name} won {a}-{b} on penalties.", pens: "{a}-{b} pens", on: "Drawn as", sep: ", ", stop: ".", colon: ": ", gap: " " },
+    charts: {
+      titleNba: "NBA shot chart", titleNhl: "NHL shot map", titleMlb: "Baseball spray chart", titleNfl: "NFL pass chart", titleSoccer: "Soccer shot map", titleGoal: "Goal mouth: where the shots crossed the goal line",
+      shots: "shots", passes: "passes", balls: "balls in play", ballsBeyond: "balls beyond the fence", lineOfScrimmage: "line of scrimmage", key: "Key",
+      made: "Made", missed: "Missed", missedNet: "Off target", goal: "Goal", saved: "Saved", blocked: "Blocked", shot: "Shot", post: "Hit the post",
+      single: "Single", double: "Double", triple: "Triple", homeRun: "Home run", out: "Out", complete: "Complete", incomplete: "Incomplete", touchdown: "Touchdown", interception: "Interception",
+      sizeXg: "Size: xG", sizeNote: "The size of a mark shows its expected goals (xG).", xgTotal: "xG {n}",
+      fgRate: "Field goals made, %", completionRate: "Completions, %", goalRate: "Goals, % of shots", xgStat: "Expected goals (xG)", hitRate: "Hits, % of balls in play",
+      leagueNote: "The zones are coloured by how far they are above or below the league figure of {league} percent.",
+      sumNba: "Shots {shots}, made {made} ({pct}%).", sumShots: "Shots {shots}, goals {goals}.", sumShotsXg: "Shots {shots}, goals {goals}, expected goals (xG) {xg}.",
+      sumMlb: "Balls in play {balls}: {list}.", sumNfl: "Passes {passes}, complete {complete} ({pct}%), touchdowns {td}, interceptions {int}.",
+      beyondNote: "Beyond the fence: {n}.", airYards: "Air yards from {min} to {max}.",
+      goalDesc: "The goal frame, {w} by {h} metres, seen from the front: the shooter's left is on the left.",
+    },
     layers: {
       pointOne: "point", pointMany: "points", lineOne: "line", lineMany: "lines", arrowOne: "arrow", arrowMany: "arrows", textOne: "label", textMany: "labels",
       count: "{n} {noun}", item: "{name} {n}", listSep: ", ", outcomes: "By outcome: {list}.", teams: "By team: {list}.", values: "Values from {min} to {max}.", skipped: "{n} left out for want of a place.", data: "Data",
@@ -227,6 +299,19 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
     },
     scoreTitle: "{away} {awayScore}、{home} {homeScore}",
     said: { home: "ホーム", away: "アウェイ", won: "{name}の勝ちです。", tied: "同点です。", park: "外野フェンスは、{park}の公表されている距離をもとに描かれています。", ground: "ピッチは、{ground}の公表されている広さをもとに描かれています。", groundDefault: "{ground}のピッチの広さは公表されていないため、国際標準の105×68mで描かれています。", era: "ラインやマークは{season}シーズンのものです。", wonPens: "{name}がPK戦を{a}-{b}で制しました。", pens: "PK戦 {a}-{b}", on: "図の内容", sep: "、", stop: "。", colon: "：", gap: "" },
+    charts: {
+      titleNba: "NBAのショットチャート", titleNhl: "NHLのシュートマップ", titleMlb: "野球の打球方向図", titleNfl: "NFLのパスチャート", titleSoccer: "サッカーのシュートマップ", titleGoal: "ゴールマウス：シュートがゴールラインを通過した位置",
+      shots: "シュート", passes: "パス", balls: "インプレー打球", ballsBeyond: "フェンス越えの打球", lineOfScrimmage: "スクリメージライン", key: "凡例",
+      made: "成功", missed: "失敗", missedNet: "枠外", goal: "ゴール", saved: "セーブ", blocked: "ブロック", shot: "シュート", post: "ポスト直撃",
+      single: "単打", double: "二塁打", triple: "三塁打", homeRun: "本塁打", out: "アウト", complete: "パス成功", incomplete: "パス不成功", touchdown: "タッチダウン", interception: "インターセプト",
+      sizeXg: "大きさ：xG", sizeNote: "マークの大きさは、そのシュートの期待ゴール数（xG）を表します。", xgTotal: "xG合計 {n}",
+      fgRate: "フィールドゴール成功率（％）", completionRate: "パス成功率（％）", goalRate: "シュート決定率（％）", xgStat: "期待ゴール数（xG）", hitRate: "安打の割合（インプレー打球に対する％）",
+      leagueNote: "ゾーンの色は、リーグ平均{league}％との差を表します。",
+      sumNba: "シュート{shots}本、成功{made}本（{pct}％）。", sumShots: "シュート{shots}本、{goals}ゴール。", sumShotsXg: "シュート{shots}本、{goals}ゴール、期待ゴール数（xG）{xg}。",
+      sumMlb: "インプレー打球{balls}本：{list}。", sumNfl: "パス{passes}本、成功{complete}本（{pct}％）、タッチダウン{td}回、インターセプト{int}回。",
+      beyondNote: "フェンスを越えた打球は{n}本です。", airYards: "エアヤード：{min}～{max}ヤード。",
+      goalDesc: "ゴール枠（幅{w}m×高さ{h}m）を正面から見た図です。図の左側が、シュートを打つ選手の左手側です。",
+    },
     layers: {
       pointOne: "データ点", pointMany: "データ点", lineOne: "線", lineMany: "線", arrowOne: "矢印", arrowMany: "矢印", textOne: "ラベル", textMany: "ラベル",
       count: "{noun} {n}件", item: "{name} {n}件", listSep: "、", outcomes: "結果別：{list}。", teams: "チーム別：{list}。", values: "値の範囲：{min}～{max}。", skipped: "位置が不明なため{n}件は描かれていません。", data: "データ",
