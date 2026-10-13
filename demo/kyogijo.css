@@ -1,0 +1,80 @@
+/* Kyogijo's own look, after family.css: the stage, the controls, and the page of examples. Mobile first. */
+:root { --intro-room: 12rem; --intro-room-wide: 6.5rem; }
+.setup { margin-top: 10px; }
+.fam-field { max-width: 100%; }
+select.fam-field { min-width: min(100%, 20rem); }
+
+.try-head h2, .more h2 { margin: 0 0 4px; font-size: 1.15rem; }
+.try-head p { margin: 0 0 12px; color: var(--muted); font-size: .9rem; max-width: 70ch; }
+.try-grid { display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 980px) {
+  .try-grid { grid-template-columns: minmax(0, 1.55fr) minmax(310px, 1fr); align-items: start; }
+  .try-stage { position: sticky; top: 12px; }
+}
+
+/* The stage: the surface on the family's felt, as big as the box allows, and no taller than most of the screen when tall. */
+.stage-felt { padding: 12px 8px; }
+#stage { display: flex; justify-content: center; align-items: center; }
+#stage svg { max-width: 100%; }
+#stage[data-orientation="portrait"] svg { width: auto; height: min(78vh, 880px); }
+@media (min-width: 700px) { .stage-felt { padding: 18px 16px; } }
+
+.try-controls { display: grid; gap: 10px; min-width: 0; }
+details.group { border: 1px solid var(--rule); border-radius: var(--radius); background: var(--surface); padding: 0 12px 12px; min-width: 0; }
+details.group > summary { font-weight: 700; font-size: .95rem; }
+details.group > .setup:first-of-type { margin-top: 0; }
+.fam-seg { max-width: 100%; }
+.setup > .fam-label { min-width: 5.4rem; }
+.team { border-top: 1px solid var(--rule); margin-top: 12px; padding-top: 4px; }
+.team h3 { margin: 6px 0 0; font-size: .85rem; letter-spacing: .02em; }
+.team-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 10px; }
+.team-grid .setup { flex-wrap: nowrap; }
+.team-grid .fam-label { min-width: 3.4rem; }
+.team-grid .fam-field { width: 100%; min-width: 0; }
+.fam-colour { padding: 2px 4px; width: 100%; }
+.logo-url { width: 100%; margin-top: 8px; }
+.fam-chip { cursor: pointer; font: inherit; font-size: .85rem; font-weight: 600; color: inherit; }
+.fam-chip[aria-pressed="true"] { border-color: var(--ink); background: color-mix(in srgb, var(--accent) 18%, transparent); }
+
+/* The code. */
+.embed pre { max-height: 18rem; overflow: auto; white-space: pre; }
+.embed pre[data-kind="svg"] code { overflow-wrap: anywhere; white-space: pre-wrap; word-break: break-all; }
+.embed .fam-tabs button { font-size: .85rem; }
+#embed-status { font-size: .85rem; }
+
+/* The examples. */
+.cards { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); }
+.cards-pair { grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); }
+.cards-small { grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); }
+.card { margin: 0; min-width: 0; }
+.card-stage { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 8px; display: flex; justify-content: center; align-items: center; min-height: 80px; }
+.card-stage svg { max-width: 100%; }
+.card-stage svg[data-orientation="portrait"] { width: auto; height: min(64vh, 600px); }
+.card figcaption { margin: 6px 4px 0; font-size: .85rem; color: var(--muted); }
+kyogijo-field { display: block; background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 8px; min-width: 0; }
+kyogijo-field::part(plate) { filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .25)); }
+
+.badge-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); }
+.badge-list li { min-width: 0; }
+.badge-list svg { width: 100%; height: auto; }
+
+.live-grid { display: grid; gap: 10px; max-width: 720px; }
+.live-stage { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 8px; display: flex; justify-content: center; }
+.live-stage svg { max-width: 100%; }
+.live-stage svg[data-orientation="portrait"] { width: auto; height: min(64vh, 600px); }
+
+.parks { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); margin-top: 12px; }
+.park { text-align: left; font: inherit; color: inherit; border: 1px solid var(--rule); background: var(--surface); border-radius: 12px; padding: 8px; display: grid; gap: 2px; align-content: start; cursor: pointer; min-height: 44px; min-width: 0; }
+.park:hover { border-color: var(--ink); }
+.park svg { width: 100%; height: auto; margin-bottom: 4px; }
+.park-name { font-size: .78rem; font-weight: 700; line-height: 1.2; overflow-wrap: anywhere; }
+.park-sub { font-size: .7rem; color: var(--muted); }
+
+.uses { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+.uses code { font-family: var(--mono); font-size: .82rem; overflow-wrap: anywhere; }
+.more .uses { grid-template-columns: 1fr; }
+@media (max-width: 520px) {
+  .setup > .fam-label { min-width: 100%; }
+  .team-grid .fam-label { min-width: 100%; }
+  .team-grid .setup { flex-wrap: wrap; }
+}

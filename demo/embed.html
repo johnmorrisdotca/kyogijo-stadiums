@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Kyogijo embed</title>
+    <meta name="robots" content="noindex" />
+    <style>
+      html, body { margin: 0; height: 100%; background: transparent; }
+      body { display: flex; align-items: center; justify-content: center; }
+      #frame { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+      #frame svg { max-width: 100%; max-height: 100%; width: auto; height: auto; }
+    </style>
+  </head>
+  <body>
+    <div id="frame"></div>
+    <script type="module">
+      // A frame that draws what its address says: ?sport=nhl&away=Gulls&home=Bison&ascore=3&hscore=2&status=final.
+      // The address is read as text and the drawing sanitises every value; the frame fetches nothing but a logo the address names.
+      import { drawKyogijo, isPortrait } from "./dist/index.js";
+      import { fromParams } from "./embed-params.js";
+      const frame = document.getElementById("frame");
+      const options = fromParams(new URLSearchParams(location.search));
+      const draw = () => {
+        const aspect = frame.clientWidth / Math.max(1, frame.clientHeight);
+        const next = { ...options, aspect };
+        frame.innerHTML = drawKyogijo(next);
+        frame.dataset.orientation = isPortrait(next) ? "portrait" : "landscape";
+        frame.dataset.ready = "true";
+      };
+      draw();
+      let last = frame.clientWidth / Math.max(1, frame.clientHeight) < 1;
+      addEventListener("resize", () => {
+        const now = frame.clientWidth / Math.max(1, frame.clientHeight) < 1;
+        if (now !== last) { last = now; draw(); }
+      });
+    </script>
+  </body>
+</html>
