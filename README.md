@@ -73,6 +73,7 @@ console.log(svg.startsWith("<svg"), svg.includes("NORTHERN OWLS"));
 - **Seven surfaces, to scale.** The NFL field (360 by 160 feet with its end zones), the CFL field (450 by 195), the IFAF field, the NHL rink (200 by 85 with a 28-foot corner radius), the NBA court (94 by 50), the soccer pitch (105 by 68 metres, in ten sizes and variants) and the baseball field, with the lines, circles, keys, boxes and goals of each. Every figure is cited in [docs/sources.md](./docs/sources.md).
 - **Soccer, to the Laws.** A pitch from Law 1 of the IFAB Laws of the Game of any size, with presets (international, UEFA, MLS, NCAA, the FA's 9-, 7- and 5-a-side, FIFA's futsal), half pitches, five mowing patterns, four goal styles, penalties and extra time in a score, and the pitch drawn in the coordinates of Opta, StatsBomb, Wyscout, Tracab, Metrica, SkillCorner, Second Spectrum or Impect, with `rescale` between them. See [Soccer](#soccer).
 - **Every ballpark.** The 30 current MLB parks and 44 that MLB clubs have left (the Polo Grounds, Ebbets Field, the Astrodome and more), and the 12 home parks of Nippon Professional Baseball with eight other NPB grounds, each with its fence drawn from the distances published for it. A named park is one option (`park: "fenway-park"`), and a past park whose fence moved is drawn as it stood in a season (`year: 1915`); the 94 are in `PARKS`, each with its Wikidata item.
+- **A stadium atlas.** Every park and ground on a map, by sport, league, country and year: [docs/atlas.md](./docs/atlas.md).
 - **Surfaces through the years.** `year: 1975` draws a surface as its league's rules marked it that season, each change cited.
 - **Score mode.** Each team's name and logo on its side (the end zones of a football field, the ends of the ice, the halves of the court, the dugouts of a ballpark) and the score large in the middle, with the competition, the status (Final, OT, SO, a period, an inning) and the date, and the winner emphasised.
 - **Wide, tall or fit the box.** Every surface lies wide or tall. Tall turns it a quarter, keeps every word upright, and puts the teams top and bottom. With `orientation: "auto"` the browser helpers watch the box and lay it out again when its shape changes.
@@ -478,11 +479,11 @@ console.log(toSurface([[50, 50]], { from: "opta", size: { length: 105, width: 68
 | League | Parks |
 | --- | --- |
 | MLB, current | the 30 current parks, from `oriole-park-at-camden-yards` to `oracle-park` |
-| MLB, past | the 44 parks clubs have left, from `baker-bowl` (1887) to `turner-field` (2016), by their first season of MLB use; the keys are in [docs/parks.md](./docs/parks.md) |
-| NPB, home parks | the 12 home parks, from `tokyo-dome` to `mizuho-paypay-dome-fukuoka`; keys in [docs/parks.md](./docs/parks.md) |
-| NPB, other and past | the 8 other grounds, from `sapporo-dome` to `nagoya-stadium`; keys in [docs/parks.md](./docs/parks.md) |
+| MLB, past | the 44 parks clubs have left, from `baker-bowl` (1887) to `turner-field` (2016), by their first season of MLB use |
+| NPB, home parks | the 12 home parks, from `tokyo-dome` to `mizuho-paypay-dome-fukuoka` |
+| NPB, other and past | the 8 other grounds, from `sapporo-dome` to `nagoya-stadium` |
 
-Each park has its name (in Japanese too for the parks of Japan), team, city, `wikidata` (its Wikidata item, to join a park to other data; `parkByWikidata` finds a park by it) and the article and revision its figures were read from (`parkSourceUrl`). A past MLB park has `from` and `to`, the first and last season an MLB club played there, and where an article dates earlier fences they are in `periods`: `drawKyogijo({ sport: "mlb", park: "polo-grounds", year: 1915 })` draws the 277, 433 and 258 feet of 1911 to 1922. More on how the figures were read, and the parks left out, is in [docs/references.md](./docs/references.md) and [docs/parks.md](./docs/parks.md).
+Each park has its name (in Japanese too for the parks of Japan), team, city, coordinates, `wikidata` item and the article and revision its figures were read from; a past MLB park has `from` and `to`, and where an article dates earlier fences they are in `periods` (`year: 1915` draws the Polo Grounds' 277, 433 and 258 feet). All the keys and facts are in [docs/parks.md](./docs/parks.md) and [docs/references.md](./docs/references.md).
 
 ## Surfaces through the years
 
@@ -680,6 +681,7 @@ The [API reference](https://johnmorrisdotca.github.io/kyogijo/api.html) lists ev
 | `@johnmorrisdotca/kyogijo/parks` | `PARKS`, `PARK_IDS`, `parkById`, `parkByWikidata`, `parkPointsIn`, `parkSourceUrl`, `parkUnit`, `fenceFor` |
 | `@johnmorrisdotca/kyogijo/eras` | `rulesFor`, `eraChanges`, `eraStates`, `eraRange`, `seasonLabel`, `footballIn`, `ERA_SPORTS`, `ERA_CURRENT`, `ERA_SOURCES` and the rule types |
 | `@johnmorrisdotca/kyogijo/grounds` | `GROUNDS`, `GROUND_IDS`, `groundById`, `groundByWikidata`, `groundNameIn`, `groundsHosting`, `groundSourceUrl` |
+| `@johnmorrisdotca/kyogijo/atlas` | `PLACES`, `placeById`, `placesBy`, `atlasFacets`, `surfaceOf` |
 | `@johnmorrisdotca/kyogijo/mount` | `mountKyogijo`, `kyogijoElement`, `containerAspect` |
 | `@johnmorrisdotca/kyogijo/react` | `kyogijoProps`, `kyogijoHtml`, `createKyogijo` |
 | `@johnmorrisdotca/kyogijo/element` | `KyogijoField`, `defineKyogijoField`, `optionsFromAttributes`, `KYOGIJO_TAG`, `KYOGIJO_ATTRIBUTES` |
@@ -789,6 +791,8 @@ src/
 ├── grounds.ts          the soccer grounds
 ├── grounds.data.ts     made by scripts/build-grounds.mjs
 ├── grounds-entry.ts    the grounds' entry
+├── atlas.ts            every park and ground with its place, and the filters
+├── atlas-entry.ts      the atlas' entry
 ├── themes.ts           the court looks
 ├── style.ts            the stylesheet, light and dark
 ├── strings.ts          the words, in English and Japanese

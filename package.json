@@ -22,6 +22,7 @@
     "football-pitch",
     "stadium",
     "world-cup",
+    "atlas",
     "visualization",
     "custom-element",
     "web-component",
@@ -103,6 +104,11 @@
       "import": "./dist/grounds-entry.js",
       "default": "./dist/grounds-entry.js"
     },
+    "./atlas": {
+      "types": "./dist/atlas-entry.d.ts",
+      "import": "./dist/atlas-entry.js",
+      "default": "./dist/atlas-entry.js"
+    },
     "./element/define": {
       "types": "./dist/element-define.d.ts",
       "import": "./dist/element-define.js",
@@ -135,10 +141,13 @@
     "docs:make": "node scripts/docs.mjs",
     "parks": "node scripts/build-parks.mjs",
     "grounds": "node scripts/build-grounds.mjs",
-    "grounds:check": "node scripts/check-grounds.mjs"
+    "grounds:check": "node scripts/check-grounds.mjs",
+    "parks:coordinates": "node scripts/fetch-park-coordinates.mjs",
+    "parks:check": "node scripts/check-parks.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^9.0.0",
+    "@johnmorrisdotca/chizu": "1.4.0",
     "@playwright/test": "^1.63.0",
     "eslint": "^9.0.0",
     "typescript": "^5.9.0",

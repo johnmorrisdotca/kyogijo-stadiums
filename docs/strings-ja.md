@@ -318,6 +318,55 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `parksTitle` | Ballparks | 球場 |
 | `parksText` | Thirty current MLB parks and forty-four past ones, and the NPB's twelve home parks and eight other grounds, each fence drawn from the distances its article publishes. Press one to try it. | 現在のMLB30球場と過去の44球場、NPBの本拠地12球場とその他8球場。外野フェンスは、各球場の記事で公表されている距離をもとに描いています。球場を選ぶと試せます。 |
 | `parksShow` | Show the parks | 球場を表示する |
+| `atlasTitle` | Atlas | 球場・競技場マップ |
+| `atlasText` | Every ballpark and soccer ground in the package on one map: choose a place to see its surface drawn to scale. Filter by sport, league, country, today or the past, and pick a year to keep the places that were in use then. | このパッケージにある野球場とサッカー場をすべて1枚の地図に載せました。場所を選ぶと、その競技場を縮尺どおりに描きます。競技、リーグ、国、現在か過去かで絞り込めます。年を選ぶと、その年に使われていた場所だけが残ります。 |
+| `atlasSport` | Sport | 競技 |
+| `atlasAll` | All | すべて |
+| `atlasSport_baseball` | Baseball | 野球 |
+| `atlasSport_soccer` | Soccer | サッカー |
+| `atlasStatus` | In use | 使用状況 |
+| `atlasStatus_current` | Today | 現在 |
+| `atlasStatus_past` | Past | 過去 |
+| `atlasLeague` | League | リーグ |
+| `atlasLeagueAll` | All leagues | すべてのリーグ |
+| `atlasLeague_mlb` | MLB | MLB |
+| `atlasLeague_npb` | NPB | NPB |
+| `atlasLeague_wc` | FIFA World Cup | FIFAワールドカップ |
+| `atlasLeague_wwc` | FIFA Women's World Cup | FIFA女子ワールドカップ |
+| `atlasCountry` | Country | 国 |
+| `atlasCountryAll` | All countries | すべての国 |
+| `atlasSearch` | Search | 検索 |
+| `atlasSearchPlaceholder` | Name, city or club | 名前、都市、チーム |
+| `atlasYear` | Year | 年 |
+| `atlasYearOff` | Pick a year | 年を指定する |
+| `atlasYearOn` | In the year | 指定した年 |
+| `atlasReset` | Reset | リセット |
+| `atlasCount` | {n} of {total} places | {total}か所中{n}か所 |
+| `atlasNone` | No place matches. Loosen a filter. | 条件に合う場所がありません。絞り込みをゆるめてください。 |
+| `atlasPick` | Choose a place on the map or in the list to see its surface. | 地図かリストから場所を選ぶと、その競技場が描かれます。 |
+| `atlasListLabel` | Places | 場所の一覧 |
+| `atlasHint` | The markers are for pointing and touch; the list beside the map does the same by keyboard and for a screen reader. Drag the map, or zoom with its buttons or Ctrl and the wheel. | 地図上のマーカーは、マウスやタッチ操作用です。キーボードやスクリーンリーダーでは、地図の横のリストで同じ操作ができます。地図はドラッグで動かせます。拡大・縮小は、ボタンか、Ctrlキーを押しながらホイールで行います。 |
+| `atlasKeyBaseball` | Baseball park | 野球場 |
+| `atlasKeySoccer` | Soccer ground (dot in the middle) | サッカー場（中央に点） |
+| `atlasKeyCurrent` | In use today (circle) | 現在使用中（丸） |
+| `atlasKeyPast` | Of the past (diamond) | 過去に使用（ひし形） |
+| `atlasPlace` | Place | 所在地 |
+| `atlasInUse` | In use | 使用状況 |
+| `atlasTeam` | Club | チーム |
+| `atlasLeagues` | Leagues | リーグ・大会 |
+| `atlasPitch` | Pitch | ピッチ |
+| `atlasPitchDefault` | no size published, drawn at the international size | 公表された寸法がないため、国際試合の標準寸法で描画 |
+| `atlasCoordinates` | Coordinates | 座標 |
+| `atlasTry` | Try this place above | この場所を試す |
+| `atlasYears` | {from}–{to} | {from}年〜{to}年 |
+| `atlasSince` | since {from} | {from}年〜 |
+| `atlasUntil` | until {to} | 〜{to}年 |
+| `atlasCreditMap` | Map | 地図 |
+| `atlasCreditMapNote` | (public domain; MIT) | （パブリックドメイン、MIT） |
+| `atlasCreditPlaces` | Coordinates | 座標 |
+| `atlasCreditPlacesNote` | (CC0) | （CC0） |
+| `atlasCreditSurfaces` | Fences and pitches | フェンスとピッチ |
+| `atlasCreditSurfacesNote` | (published figures only) | （公表された数値のみ） |
 | `pitchesTitle` | The soccer pitch | サッカーのピッチ |
 | `pitchesText` | A pitch from the Laws of the Game at any size, with the presets of UEFA, the MLS, the NCAA, the FA and FIFA's futsal, the size of sixty-four famous grounds, half pitches, and a score that ends after extra time or on penalties. | 競技規則に基づくピッチを、好きな広さで描けます。UEFA、MLS、NCAA、FA、FIFAフットサルの規格、有名な64のスタジアムの広さ、半面表示に対応し、延長戦やPK戦で決着した試合の得点も表示できます。 |
 | `pitchCompact` | Compact card, after extra time | 延長戦後のコンパクトなカード |

@@ -96,3 +96,50 @@ kyogijo-field::part(plate) { filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .25)); 
 .data-table-body table { border-collapse: collapse; width: 100%; margin-bottom: 12px; }
 .data-table-body caption { text-align: left; font-weight: 600; padding: 4px 0; }
 .data-table-body th, .data-table-body td { border-bottom: 1px solid color-mix(in srgb, currentColor 18%, transparent); padding: 3px 8px; text-align: left; }
+
+/* The atlas: filters, the map with its markers, the list, and the chosen place's surface. Mobile first. */
+.atlas-text { margin: 0 0 12px; color: var(--muted); font-size: .9rem; max-width: 70ch; }
+.atlas-filters { display: grid; gap: 0 22px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 760px) { .atlas-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.atlas-filters .fam-field { min-width: 0; max-width: 100%; }
+.atlas-filters select.fam-field, .atlas-filters input[type="search"] { flex: 1 1 10rem; }
+.atlas-year-row { flex-wrap: wrap; }
+.atlas-count-row { justify-content: space-between; align-items: center; }
+.atlas-count { font-weight: 700; font-variant-numeric: tabular-nums; }
+.atlas-grid { display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr); margin-top: 12px; }
+@media (min-width: 980px) { .atlas-grid { grid-template-columns: minmax(0, 1.5fr) minmax(300px, 1fr); align-items: start; } }
+.atlas-map-col, .atlas-side { min-width: 0; }
+.atlas-map { position: relative; }
+.atlas-map .atlas-overlay { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.atlas-map .czm-controls, .atlas-map .czm-zoom { z-index: 2; }
+.atlas-tip { position: absolute; z-index: 3; pointer-events: none; padding: 2px 8px; border: 1px solid var(--rule); border-radius: 6px; background: var(--surface); font-size: .8rem; white-space: nowrap; box-shadow: 0 2px 6px rgba(0, 0, 0, .2); }
+.atlas-key { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: .8rem; }
+.atlas-key li { display: inline-flex; align-items: center; gap: 4px; }
+.atlas-icon { flex: none; overflow: visible; }
+.atlas-hint { margin: 6px 0 0; font-size: .8rem; color: var(--muted); }
+.atlas-detail { border: 1px solid var(--rule); border-radius: var(--radius); background: var(--surface); padding: 10px; min-width: 0; }
+.atlas-surface { padding: 10px; display: flex; justify-content: center; }
+.atlas-surface svg { max-width: 100%; max-height: 17rem; height: auto; }
+.atlas-map .czm-says { display: none; }
+.atlas-name { margin: 10px 0 4px; font-size: 1.05rem; overflow-wrap: anywhere; }
+.atlas-facts { margin: 0; display: grid; gap: 2px; font-size: .85rem; }
+.atlas-facts > div { display: grid; grid-template-columns: 6.4rem minmax(0, 1fr); gap: 8px; }
+.atlas-facts dt { color: var(--muted); }
+.atlas-facts dd { margin: 0; overflow-wrap: anywhere; }
+.atlas-detail .fam-actions { margin-top: 10px; align-items: center; }
+.atlas-link { font-size: .85rem; }
+.atlas-pick { margin: 0; color: var(--muted); }
+.atlas-list { list-style: none; margin: 10px 0 0; padding: 0; max-height: 22rem; overflow: auto; border: 1px solid var(--rule); border-radius: 12px; background: var(--surface); }
+.atlas-list li { min-width: 0; }
+.atlas-list li > .atlas-item { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 44px; padding: 6px 10px; border: 0; border-bottom: 1px solid var(--rule); border-left: 4px solid transparent; background: none; text-align: left; }
+.atlas-list li > .atlas-item:hover { background: color-mix(in srgb, var(--accent) 7%, transparent); }
+.atlas-list li > .atlas-item[aria-pressed="true"] { border-left-color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent); }
+.atlas-item:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+.atlas-list .atlas-item-text { display: grid; gap: 0; min-width: 0; }
+.atlas-list li .atlas-item-name { font-weight: 700; font-size: .9rem; color: var(--ink); overflow-wrap: anywhere; }
+.atlas-list li .atlas-item-sub { font-size: .78rem; color: var(--muted); overflow-wrap: anywhere; }
+.atlas-empty { padding: 14px 10px; color: var(--muted); }
+.atlas-credits { margin: 14px 0 0; display: grid; gap: 2px; font-size: .8rem; }
+.atlas-credits > div { display: flex; flex-wrap: wrap; gap: 0 8px; }
+.atlas-credits dt { color: var(--muted); min-width: 7rem; }
+.atlas-credits dd { margin: 0; }

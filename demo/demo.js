@@ -4,6 +4,7 @@
 import { COURT_THEMES, ERA_SPORTS, GROUNDS, GROUND_IDS, KYOGIJO_STYLE, PARKS, PARK_IDS, SOCCER_PITCH_IDS, SOCCER_PROVIDERS, SOCCER_PROVIDER_IDS, SPORTS, VERSION, drawKyogijo, rescale, layerTable, eraRange, rulesFor, seasonLabel } from "./dist/index.js";
 import { mountKyogijo } from "./dist/mount-entry.js";
 import "./dist/element-define.js";
+import { initAtlas } from "./atlas.js";
 import { toParams } from "./embed-params.js";
 import { EMBLEMS, FAMILIES, GAMES, TEAMS, TEAMS_JA } from "./examples.js";
 import { nbaZones, passMap, shotHeat, shotMap, sprayChart, sprayDensity, touchZones } from "./layers-data.js";
@@ -716,8 +717,28 @@ if (typeof IntersectionObserver !== "undefined") {
   }, { rootMargin: "300px" }).observe($("park-grid"));
 }
 
+// ----- The atlas: a map of every park and ground. Its places open in the playground above.
+function tryPlace(place) {
+  if (place.kind === "park") {
+    state.sport = "mlb";
+    state.park = place.id;
+  } else {
+    state.sport = "soccer";
+    state.ground = place.id;
+  }
+  loadGame(state.sport);
+  fillFields();
+  $("park").value = state.park;
+  $("ground").value = state.ground;
+  refreshSegs();
+  change();
+  $("try").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+let atlas = { relabel() {} };
+
 // ----- A change of language redraws the words that were drawn in it.
 function onLanguage() {
+  atlas.relabel();
   fillParks();
   fillGrounds();
   fillPitches();
@@ -746,3 +767,4 @@ drawProviders();
 drawLive();
 render();
 document.documentElement.dataset.kyogijoVersion = VERSION;
+initAtlas({ say, lang: () => language.lang, onTry: tryPlace }).then((started) => { atlas = started; });

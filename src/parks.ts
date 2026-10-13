@@ -30,6 +30,9 @@ export interface ParkData {
   teamJa?: string;
   city: string;
   country: "US" | "CA" | "JP";
+  /** Wikidata's coordinates of the ground (P625), in degrees. */
+  lat: number;
+  lon: number;
   league: "MLB" | "NPB";
   /** The unit of `points`: feet for MLB, metres for NPB. */
   unit: "ft" | "m";
@@ -38,6 +41,9 @@ export interface ParkData {
   /** For a past MLB park, the first and the last season an MLB club called it home. */
   from?: number;
   to?: number;
+  /** The year the ground opened and the year it closed, as Wikidata gives them where it does (a current park has no `closed`). */
+  opened?: number;
+  closed?: number;
   /** [angle from dead centre, distance in `unit`], from the left field line to the right: the last fence the park had. */
   points: [number, number][];
   /** Earlier fences, where the article dates them. A season in none of the periods has `points`. */

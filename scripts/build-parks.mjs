@@ -6,7 +6,8 @@
 // right) that our reading of the figure's label gives, and the distance at the unit the entry names. The articles give
 // distances, not directions, so the angles are ours. Every park carries its Wikidata item (`wikidata`), the key to join it
 // to other data; a past MLB park carries the first and last season an MLB club called it home (`from`, `to`), and the
-// fences an article dates as `periods`. See docs/references.md and NOTICE.md.
+// fences an article dates as `periods`. Its coordinates (`lat`, `lon`) and the years it opened and closed (`opened`, `closed`) are
+// Wikidata's (P625, P1619 or P571, P3999 or P576; CC0), written by scripts/fetch-park-coordinates.mjs. See docs/references.md and NOTICE.md.
 import { readFileSync, writeFileSync } from "node:fs";
 import { URL } from "node:url";
 
@@ -24,6 +25,9 @@ for (const park of parks) {
   if (!/^Q[1-9]\d*$/.test(park.wikidata ?? "")) throw new Error(`${park.id} needs its Wikidata item`);
   if (items.has(park.wikidata)) throw new Error(`${park.id}: ${park.wikidata} is another park's item`);
   items.add(park.wikidata);
+  if (!(typeof park.lat === "number" && park.lat >= -90 && park.lat <= 90 && typeof park.lon === "number" && park.lon >= -180 && park.lon <= 180)) throw new Error(`${park.id}: the coordinates are missing or out of range (pnpm parks:coordinates fetches them)`);
+  for (const key of ["opened", "closed"]) if (park[key] !== undefined && !(Number.isInteger(park[key]) && park[key] >= 1800 && park[key] <= 2100)) throw new Error(`${park.id}: ${key} is a year`);
+  if (park.opened !== undefined && park.closed !== undefined && park.opened > park.closed) throw new Error(`${park.id}: it closed before it opened`);
   if (!["current", "secondary", "past"].includes(park.status)) throw new Error(`${park.id}: status ${park.status}`);
   if (!(park.en || park.ja)) throw new Error(`${park.id} cites no source`);
   checkFence(park, park.points, "the fence");

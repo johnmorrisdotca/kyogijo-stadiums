@@ -2,8 +2,13 @@
 // footer, with the family's stylesheet, Kyogijo's own, the page's scripts, the embeddable frame, the API reference and
 // the compiled library beside them.
 import { cpSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { createRequire } from "node:module";
+import { dirname, join } from "node:path";
+import process from "node:process";
+import { pathToFileURL } from "node:url";
 
 import { API_CSS, apiPage } from "./api.mjs";
+import { atlasMapSvg } from "./atlas-map.mjs";
 import { FAMILY_SCRIPT, familyFooter, familyHead, familyHeader, familyUnreviewed } from "./family-template.mjs";
 
 const id = "kyogijo";
@@ -123,6 +128,44 @@ const page = `<!doctype html>
             </details>
           </div>
         </div>
+      </section>
+
+      <section class="more atlas" id="atlas" aria-labelledby="atlas-title" data-testid="atlas">
+        <h2 id="atlas-title" data-say="atlasTitle"></h2>
+        <p class="atlas-text" data-say="atlasText"></p>
+        <div class="atlas-filters">
+          <div class="setup fam-row"><span class="fam-label" data-say="atlasSport"></span><div class="fam-seg" role="group" data-say-label="atlasSport" id="atlas-sport" data-testid="atlas-sport"></div></div>
+          <div class="setup fam-row"><span class="fam-label" data-say="atlasStatus"></span><div class="fam-seg" role="group" data-say-label="atlasStatus" id="atlas-status" data-testid="atlas-status"></div></div>
+          <label class="setup fam-row"><span class="fam-label" data-say="atlasLeague"></span><select class="fam-field" id="atlas-league" data-testid="atlas-league" data-say-label="atlasLeague"></select></label>
+          <label class="setup fam-row"><span class="fam-label" data-say="atlasCountry"></span><select class="fam-field" id="atlas-country" data-testid="atlas-country" data-say-label="atlasCountry"></select></label>
+          <label class="setup fam-row"><span class="fam-label" data-say="atlasSearch"></span><input class="fam-field" type="search" id="atlas-search" data-testid="atlas-search" data-say-label="atlasSearch" autocomplete="off" maxlength="60" /></label>
+          <div class="setup fam-row atlas-year-row">
+            <span class="fam-label" data-say="atlasYear"></span>
+            <button type="button" class="fam-chip" id="atlas-year-on" data-testid="atlas-year-on" aria-pressed="false"></button>
+            <input type="range" class="fam-field era-range" id="atlas-year" data-testid="atlas-year" step="1" data-say-label="atlasYear" disabled />
+            <output class="era-season" id="atlas-year-out" data-testid="atlas-year-out" for="atlas-year"></output>
+          </div>
+          <div class="setup fam-row atlas-count-row">
+            <output class="atlas-count" id="atlas-count" data-testid="atlas-count" aria-live="polite"></output>
+            <button type="button" class="fam-button" id="atlas-reset" data-testid="atlas-reset" data-say="atlasReset"></button>
+          </div>
+        </div>
+        <div class="atlas-grid">
+          <div class="atlas-map-col">
+            <div class="atlas-map" id="atlas-map" data-testid="atlas-map"></div>
+            <ul class="atlas-key" id="atlas-key" data-testid="atlas-key"></ul>
+            <p class="atlas-hint" id="atlas-hint"></p>
+          </div>
+          <div class="atlas-side">
+            <div class="atlas-detail" id="atlas-detail" data-testid="atlas-detail" aria-live="polite"></div>
+            <ul class="atlas-list" id="atlas-list" data-testid="atlas-list" tabindex="-1"></ul>
+          </div>
+        </div>
+        <dl class="atlas-credits">
+          <div><dt data-say="atlasCreditMap"></dt><dd><a href="https://www.naturalearthdata.com/">Natural Earth</a> · <a href="https://github.com/johnmorrisdotca/chizu">chizu 地図</a> <span class="fam-muted" data-say="atlasCreditMapNote"></span></dd></div>
+          <div><dt data-say="atlasCreditPlaces"></dt><dd><a href="https://www.wikidata.org/">Wikidata</a> <span class="fam-muted" data-say="atlasCreditPlacesNote"></span></dd></div>
+          <div><dt data-say="atlasCreditSurfaces"></dt><dd><a href="https://en.wikipedia.org/">Wikipedia</a> <span class="fam-muted" data-say="atlasCreditSurfacesNote"></span></dd></div>
+        </dl>
       </section>
 
       <section class="more embed" id="embed" aria-labelledby="embed-title">
@@ -257,6 +300,18 @@ mkdirSync("site", { recursive: true });
 cpSync("demo", "site", { recursive: true });
 // The declarations are for editors, not for a browser.
 cpSync("dist", "site/dist", { recursive: true, filter: (from) => !/\.d\.ts$/.test(from) });
+// The map of the Atlas is chizu's: the few files of its build that the page loads (the world and the mounted map, not the
+// countries, regions or features it loads only on request), with its licence and notice, and the same world drawn as a
+// picture of every place for docs/atlas.md.
+const chizu = dirname(dirname(createRequire(import.meta.url).resolve("@johnmorrisdotca/chizu")));
+cpSync(join(chizu, "dist"), "site/chizu", { recursive: true, filter: (from) => !/\.d\.ts$/.test(from) && !/[\\/]data[\\/](countries|divisions|features)(?:[\\/]|$)/.test(from) && !/world-detail/.test(from) && !/loaders/.test(from) });
+cpSync(join(chizu, "LICENSE"), "site/chizu/LICENSE");
+cpSync(join(chizu, "NOTICE.md"), "site/chizu/NOTICE.md");
+const load = (path) => import(pathToFileURL(join(chizu, "dist", path)).href);
+const { PLACES } = await import(pathToFileURL(join(process.cwd(), "dist", "atlas-entry.js")).href);
+const picture = atlasMapSvg({ places: PLACES, world: (await load("world-entry.js")).default, drawChizu: (await load("draw-entry.js")).drawChizu, projectPoint: (await load("index.js")).projectPoint });
+writeFileSync("site/atlas-map.svg", picture);
+writeFileSync("docs/atlas-map.svg", picture);
 writeFileSync("site/index.html", page);
 writeFileSync("site/api.css", API_CSS);
 writeFileSync("site/api.html", apiPage({ id, name: "Kyogijo", icon: ICON }));

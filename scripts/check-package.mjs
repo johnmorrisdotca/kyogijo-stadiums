@@ -91,6 +91,8 @@ if (VERSION !== ${JSON.stringify(pkg.version)}) throw new Error("VERSION is " + 
 if (SPORTS.length !== 7 || Object.keys(PARKS).length !== 94) throw new Error("the sports or the parks are wrong");
 const grounds = all[names.indexOf(${JSON.stringify(`${pkg.name}/grounds`)})];
 if (Object.keys(grounds.GROUNDS).length !== 64 || grounds.groundById("maracana").pitchSize !== "published") throw new Error("the grounds are wrong");
+const atlas = all[names.indexOf(${JSON.stringify(`${pkg.name}/atlas`)})];
+if (atlas.PLACES.length !== 158 || atlas.placesBy({ sport: "baseball", country: "JP" }).length !== 20 || atlas.placeById("fenway-park").lat !== 42.34639) throw new Error("the atlas is wrong");
 const { NHL, fenceAt } = m1;
 if (NHL.length !== 200 || fenceAt([[-45, 300], [45, 300]], 0) !== 300) throw new Error("the geometry is wrong");
 const { kyogijoProps } = m4;
