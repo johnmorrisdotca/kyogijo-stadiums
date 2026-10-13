@@ -1,0 +1,1999 @@
+[
+ {
+  "id": "oriole-park-at-camden-yards",
+  "name": "Oriole Park at Camden Yards",
+  "team": "Baltimore Orioles",
+  "city": "Baltimore",
+  "country": "US",
+  "league": "MLB",
+  "unit": "ft",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    333
+   ],
+   [
+    -33,
+    373
+   ],
+   [
+    -22,
+    376
+   ],
+   [
+    -12,
+    410
+   ],
+   [
+    0,
+    400
+   ],
+   [
+    22.5,
+    373
+   ],
+   [
+    45,
+    318
+   ]
+  ],
+  "en": {
+   "title": "Oriole Park at Camden Yards",
+   "revision": 1377140400
+  }
+ },
+ {
+  "id": "fenway-park",
+  "name": "Fenway Park",
+  "team": "Boston Red Sox",
+  "city": "Boston",
+  "country": "US",
+  "league": "MLB",
+  "unit": "ft",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    310
+   ],
+   [
+    -24,
+    379
+   ],
+   [
+    0,
+    389.75
+   ],
+   [
+    18,
+    420
+   ],
+   [
+    28,
+    380
+   ],
+   [
+    45,
+    302
+   ]
+  ],
+  "en": {
+   "title": "Fenway Park",
+   "revision": 1376280796
+  }
+ },
+ {
+  "id": "yankee-stadium",
+  "name": "Yankee Stadium",
+  "team": "New York Yankees",
+  "city": "New York",
+  "country": "US",
+  "league": "MLB",
+  "unit": "ft",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    318
+   ],
+   [
+    -22.5,
+    399
+   ],
+   [
+    0,
+    408
+   ],
+   [
+    22.5,
+    385
+   ],
+   [
+    45,
+    314
+   ]
+  ],
+  "en": {
+   "title": "Yankee Stadium",
+   "revision": 1378222004
+  }
+ },
+ {
+  "id": "tropicana-field",
+  "name": "Tropicana Field",
+  "team": "Tampa Bay Rays",
+  "city": "St. Petersburg",
+  "country": "US",
+  "league": "MLB",
+  "unit": "ft",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    315
+   ],
+   [
+    -22.5,
+    370
+   ],
+   [
+    0,
+    404
+   ],
+   [
+    22.5,
+    370
+   ],
+   [
+    45,
+    322
+   ]
+  ],
+  "en": {
+   "title": "Tropicana Field",
+   "revision": 1379964475
+  }
+ },
+ {
+  "id": "rogers-centre",
+  "name": "Rogers Centre",
+  "team": "Toronto Blue Jays",
+  "city": "Toronto",
+  "country": "CA",
+  "league": "MLB",
+  "unit": "ft",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    328
+   ],
+   [
+    -33,
+    368
+   ],
+   [
+    -22.5,
+    381
+   ],
+   [
+    0,
+    400
+   ],
+   [
+    22.5,
+    372
+   ],
+   [
+    33,
+    359
+   ],
+   [
+    45,
+    328
+   ]
+  ],
+  "en": {
+   "title": "Rogers Centre",
+   "revision": 1379619269
+  }
+ },
+ {
+  "id": "rate-field",
+  "name": "Rate Field",
+  "team": "Chicago White Sox",
+  "city": "Chicago",
+  "country": "US",
+  "league": "MLB",
+  "unit": "ft",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    330
+   ],
+   [
+    -22.5,
+    375
+   ],
+   [
+    0,
+    400
+   ],
+   [
+    22.5,
+    375
+   ],
+   [
+    45,
+    335
+   ]
+  ],
+  "en": {
+   "title": "Rate Field",
+   "revision": 1379317170
+  }
+ },
+ {
+  "id": "progressive-field",
+  "name": "Progressive Field",
+  "team": "Cleveland Guardians",
+  "city": "Cleveland",
+  "country": "US",
+  "league": "MLB",
+  "unit": "ft",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    325
+   ],
+   [
+    -22.5,
+    370
+   ],
+   [
+    -9,
+    410
+   ],
+   [
+    0,
+    400
+   ],
+   [
+    22.5,
+    375
+   ],
+   [
+    45,
+    325
+   ]
+  ],
+  "en": {
+   "title": "Progressive Field",
+   "revision": 1378504146
+  }
+ },
+ {
+  "id": "comerica-park",
+  "name": "Comerica Park",
+  "team": "Detroit Tigers",
+  "city": "Detroit",
+  "country": "US",
+  "league": "MLB",
+  "unit": "ft",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    342
+   ],
+   [
+    -22.5,
+    370
+   ],
+   [
+    0,
+    412
+   ],
+   [
+    22.5,
+    365
+   ],
+   [
+    45,
+    330
+   ]
+  ],
+  "en": {
+   "title": "Comerica Park",
+   "revision": 1376178715
+  }
+ },
+ {
+  "id": "kauffman-stadium",
+  "name": "Kauffman Stadium",
+  "team": "Kansas City Royals",
+  "city": "Kansas City",
+  "country": "US",
+  "league": "MLB",
+  "unit": "ft",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    330
+   ],
+   [
+    -22.5,
+    379
+   ],
+   [
+    0,
+    410
+   ],
+   [
+    22.5,
+    379
+   ],
+   [
+    45,
+    330
+   ]
+  ],
+  "en": {
+   "title": "Kauffman Stadium",
+   "revision": 1376240550
+  },
+  "note": "Alleys as posted from 2026."
+ },
+ {
+  "id": "target-field",
+  "name": "Target Field",
+  "team": "Minnesota Twins",
+  "city": "Minneapolis",
+  "country": "US",
+  "league": "MLB",
+  "unit": "ft",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    339
+   ],
+   [
+    -22.5,
+    377
+   ],
+   [
+    -6,
+    411
+   ],
+   [
+    6,
+    403
+   ],
+   [
+    22.5,
+    367
+   ],
+   [
+    45,
+    328
+   ]
+  ],
+  "en": {
+   "title": "Target Field",
+   "revision": 1379001210
+  }
+ },
+ {
+  "id": "daikin-park",
+  "name": "Daikin Park",
+  "team": "Houston Astros",
+  "city": "Houston",
+  "country": "US",
+  "league": "MLB",
+  "unit": "ft",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    315
+   ],
+   [
+    -25,
+    366
+   ],
+   [
+    -12,
+    399
+   ],
+   [
+    0,
+    409
+   ],
+   [
+    12,
+    408
+   ],
+   [
+    25,
+    370
+   ],
+   [
+    45,
+    326
+   ]
+  ],
+  "en": {
+   "title": "Daikin Park",
+   "revision": 1377935430
+  },
+  "note": "Formerly Minute Maid Park."
+ },
+ {
+  "id": "angel-stadium",
+  "name": "Angel Stadium",
+  "team": "Los Angeles Angels",
+  "city": "Anaheim",
+  "country": "US",
+  "league": "MLB",
+  "unit": "ft",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    347
+   ],
+   [
+    -22.5,
+    390
+   ],
+   [
+    0,
+    396
+   ],
+   [
+    15,
+    370
+   ],
+   [
+    28,
+    365
+   ],
+   [
+    45,
+    350
+   ]
+  ],
+  "en": {
+   "title": "Angel Stadium",
+   "revision": 1379214381
+  }
+ },
+ {
+  "id": "sutter-health-park",
+  "name": "Sutter Health Park",
+  "team": "Athletics",
+  "city": "West Sacramento",
+  "country": "US",
+  "league": "MLB",
+  "unit": "ft",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    330
+   ],
+   [
+    0,
+    403
+   ],
+   [
+    45,
+    325
+   ]
+  ],
+  "en": {
+   "title": "Sutter Health Park",
+   "revision": 1379745688
+  },
+  "note": "Three published figures only."
+ },
+ {
+  "id": "t-mobile-park",
+  "name": "T-Mobile Park",
+  "team": "Seattle Mariners",
+  "city": "Seattle",
+  "country": "US",
+  "league": "MLB",
+  "unit": "ft",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    331
+   ],
+   [
+    -22.5,
+    378
+   ],
+   [
+    0,
+    401
+   ],
+   [
+    22.5,
+    381
+   ],
+   [
+    45,
+    326
+   ]
+  ],
+  "en": {
+   "title": "T-Mobile Park",
+   "revision": 1379419810
+  }
+ },
+ {
+  "id": "globe-life-field",
+  "name": "Globe Life Field",
+  "team": "Texas Rangers",
+  "city": "Arlington",
+  "country": "US",
+  "league": "MLB",
+  "unit": "ft",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    329
+   ],
+   [
+    -22.5,
+    372
+   ],
+   [
+    0,
+    407
+   ],
+   [
+    22.5,
+    374
+   ],
+   [
+    45,
+    326
+   ]
+  ],
+  "en": {
+   "title": "Globe Life Field",
+   "revision": 1377936073
+  }
+ },
+ {
+  "id": "truist-park",
+  "name": "Truist Park",
+  "team": "Atlanta Braves",
+  "city": "Cumberland",
+  "country": "US",
+  "league": "MLB",
+  "unit": "ft",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    335
+   ],
+   [
+    -22.5,
+    385
+   ],
+   [
+    0,
+    400
+   ],
+   [
+    22.5,
+    375
+   ],
+   [
+    45,
+    325
+   ]
+  ],
+  "en": {
+   "title": "Truist Park",
+   "revision": 1372245868
+  }
+ },
+ {
+  "id": "loandepot-park",
+  "name": "loanDepot Park",
+  "team": "Miami Marlins",
+  "city": "Miami",
+  "country": "US",
+  "league": "MLB",
+  "unit": "ft",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    344
+   ],
+   [
+    -22.5,
+    386
+   ],
+   [
+    0,
+    400
+   ],
+   [
+    22.5,
+    387
+   ],
+   [
+    45,
+    335
+   ]
+  ],
+  "en": {
+   "title": "LoanDepot Park",
+   "revision": 1376431410
+  }
+ },
+ {
+  "id": "citi-field",
+  "name": "Citi Field",
+  "team": "New York Mets",
+  "city": "New York",
+  "country": "US",
+  "league": "MLB",
+  "unit": "ft",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    335
+   ],
+   [
+    -30,
+    358
+   ],
+   [
+    -17,
+    385
+   ],
+   [
+    0,
+    408
+   ],
+   [
+    17,
+    398
+   ],
+   [
+    30,
+    375
+   ],
+   [
+    45,
+    330
+   ]
+  ],
+  "en": {
+   "title": "Citi Field",
+   "revision": 1377977619
+  }
+ },
+ {
+  "id": "citizens-bank-park",
+  "name": "Citizens Bank Park",
+  "team": "Philadelphia Phillies",
+  "city": "Philadelphia",
+  "country": "US",
+  "league": "MLB",
+  "unit": "ft",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    329
+   ],
+   [
+    -25,
+    374
+   ],
+   [
+    -18,
+    387
+   ],
+   [
+    -14,
+    381
+   ],
+   [
+    -9,
+    409
+   ],
+   [
+    0,
+    401
+   ],
+   [
+    25,
+    369
+   ],
+   [
+    45,
+    330
+   ]
+  ],
+  "en": {
+   "title": "Citizens Bank Park",
+   "revision": 1378696704
+  }
+ },
+ {
+  "id": "nationals-park",
+  "name": "Nationals Park",
+  "team": "Washington Nationals",
+  "city": "Washington",
+  "country": "US",
+  "league": "MLB",
+  "unit": "ft",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    337
+   ],
+   [
+    -22.5,
+    377
+   ],
+   [
+    0,
+    402
+   ],
+   [
+    22.5,
+    370
+   ],
+   [
+    45,
+    335
+   ]
+  ],
+  "en": {
+   "title": "Nationals Park",
+   "revision": 1379437509
+  }
+ },
+ {
+  "id": "wrigley-field",
+  "name": "Wrigley Field",
+  "team": "Chicago Cubs",
+  "city": "Chicago",
+  "country": "US",
+  "league": "MLB",
+  "unit": "ft",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    355
+   ],
+   [
+    -22.5,
+    368
+   ],
+   [
+    0,
+    400
+   ],
+   [
+    22.5,
+    368
+   ],
+   [
+    45,
+    353
+   ]
+  ],
+  "en": {
+   "title": "Wrigley Field",
+   "revision": 1377918987
+  }
+ },
+ {
+  "id": "great-american-ball-park",
+  "name": "Great American Ball Park",
+  "team": "Cincinnati Reds",
+  "city": "Cincinnati",
+  "country": "US",
+  "league": "MLB",
+  "unit": "ft",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    328
+   ],
+   [
+    -22.5,
+    379
+   ],
+   [
+    0,
+    404
+   ],
+   [
+    22.5,
+    370
+   ],
+   [
+    45,
+    325
+   ]
+  ],
+  "en": {
+   "title": "Great American Ball Park",
+   "revision": 1378720434
+  }
+ },
+ {
+  "id": "american-family-field",
+  "name": "American Family Field",
+  "team": "Milwaukee Brewers",
+  "city": "Milwaukee",
+  "country": "US",
+  "league": "MLB",
+  "unit": "ft",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    342
+   ],
+   [
+    -22.5,
+    371
+   ],
+   [
+    0,
+    400
+   ],
+   [
+    22.5,
+    374
+   ],
+   [
+    45,
+    337
+   ]
+  ],
+  "en": {
+   "title": "American Family Field",
+   "revision": 1379813094
+  }
+ },
+ {
+  "id": "pnc-park",
+  "name": "PNC Park",
+  "team": "Pittsburgh Pirates",
+  "city": "Pittsburgh",
+  "country": "US",
+  "league": "MLB",
+  "unit": "ft",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    325
+   ],
+   [
+    -27,
+    383
+   ],
+   [
+    -13,
+    410
+   ],
+   [
+    0,
+    399
+   ],
+   [
+    22.5,
+    375
+   ],
+   [
+    45,
+    320
+   ]
+  ],
+  "en": {
+   "title": "PNC Park",
+   "revision": 1379228702
+  }
+ },
+ {
+  "id": "busch-stadium",
+  "name": "Busch Stadium",
+  "team": "St. Louis Cardinals",
+  "city": "St. Louis",
+  "country": "US",
+  "league": "MLB",
+  "unit": "ft",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    336
+   ],
+   [
+    -22.5,
+    375
+   ],
+   [
+    0,
+    400
+   ],
+   [
+    22.5,
+    375
+   ],
+   [
+    45,
+    335
+   ]
+  ],
+  "en": {
+   "title": "Busch Stadium",
+   "revision": 1377977448
+  }
+ },
+ {
+  "id": "chase-field",
+  "name": "Chase Field",
+  "team": "Arizona Diamondbacks",
+  "city": "Phoenix",
+  "country": "US",
+  "league": "MLB",
+  "unit": "ft",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    330
+   ],
+   [
+    -28,
+    374
+   ],
+   [
+    -14,
+    413
+   ],
+   [
+    0,
+    407
+   ],
+   [
+    14,
+    413
+   ],
+   [
+    28,
+    374
+   ],
+   [
+    45,
+    334
+   ]
+  ],
+  "en": {
+   "title": "Chase Field",
+   "revision": 1378357458
+  }
+ },
+ {
+  "id": "coors-field",
+  "name": "Coors Field",
+  "team": "Colorado Rockies",
+  "city": "Denver",
+  "country": "US",
+  "league": "MLB",
+  "unit": "ft",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    347
+   ],
+   [
+    -22.5,
+    390
+   ],
+   [
+    0,
+    415
+   ],
+   [
+    22.5,
+    375
+   ],
+   [
+    45,
+    350
+   ]
+  ],
+  "en": {
+   "title": "Coors Field",
+   "revision": 1375299958
+  }
+ },
+ {
+  "id": "dodger-stadium",
+  "name": "Dodger Stadium",
+  "team": "Los Angeles Dodgers",
+  "city": "Los Angeles",
+  "country": "US",
+  "league": "MLB",
+  "unit": "ft",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    330
+   ],
+   [
+    -33,
+    360
+   ],
+   [
+    -22,
+    375
+   ],
+   [
+    -8,
+    395
+   ],
+   [
+    0,
+    400
+   ],
+   [
+    22,
+    375
+   ],
+   [
+    33,
+    360
+   ],
+   [
+    45,
+    330
+   ]
+  ],
+  "en": {
+   "title": "Dodger Stadium",
+   "revision": 1375093238
+  }
+ },
+ {
+  "id": "petco-park",
+  "name": "Petco Park",
+  "team": "San Diego Padres",
+  "city": "San Diego",
+  "country": "US",
+  "league": "MLB",
+  "unit": "ft",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    336
+   ],
+   [
+    -33,
+    343
+   ],
+   [
+    -20,
+    386
+   ],
+   [
+    0,
+    396
+   ],
+   [
+    20,
+    391
+   ],
+   [
+    33,
+    382
+   ],
+   [
+    45,
+    331
+   ]
+  ],
+  "en": {
+   "title": "Petco Park",
+   "revision": 1377977726
+  }
+ },
+ {
+  "id": "oracle-park",
+  "name": "Oracle Park",
+  "team": "San Francisco Giants",
+  "city": "San Francisco",
+  "country": "US",
+  "league": "MLB",
+  "unit": "ft",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    339
+   ],
+   [
+    -33,
+    354
+   ],
+   [
+    -20,
+    399
+   ],
+   [
+    0,
+    391
+   ],
+   [
+    20,
+    415
+   ],
+   [
+    33,
+    365
+   ],
+   [
+    45,
+    309
+   ]
+  ],
+  "en": {
+   "title": "Oracle Park",
+   "revision": 1372223272
+  }
+ },
+ {
+  "id": "tokyo-dome",
+  "name": "Tokyo Dome",
+  "nameJa": "東京ドーム",
+  "team": "Yomiuri Giants",
+  "teamJa": "読売ジャイアンツ",
+  "city": "Tokyo",
+  "country": "JP",
+  "league": "NPB",
+  "unit": "m",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    100
+   ],
+   [
+    -22.5,
+    110
+   ],
+   [
+    0,
+    122
+   ],
+   [
+    22.5,
+    110
+   ],
+   [
+    45,
+    100
+   ]
+  ],
+  "en": {
+   "title": "Tokyo Dome",
+   "revision": 1379232526
+  },
+  "ja": {
+   "title": "東京ドーム",
+   "revision": 111353030
+  }
+ },
+ {
+  "id": "hanshin-koshien-stadium",
+  "name": "Hanshin Koshien Stadium",
+  "nameJa": "阪神甲子園球場",
+  "team": "Hanshin Tigers",
+  "teamJa": "阪神タイガース",
+  "city": "Nishinomiya",
+  "country": "JP",
+  "league": "NPB",
+  "unit": "m",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    95
+   ],
+   [
+    -22.5,
+    118
+   ],
+   [
+    0,
+    118
+   ],
+   [
+    22.5,
+    118
+   ],
+   [
+    45,
+    95
+   ]
+  ],
+  "en": {
+   "title": "Koshien Stadium",
+   "revision": 1374217766
+  },
+  "ja": {
+   "title": "阪神甲子園球場",
+   "revision": 111237979
+  }
+ },
+ {
+  "id": "meiji-jingu-stadium",
+  "name": "Meiji Jingu Stadium",
+  "nameJa": "明治神宮野球場",
+  "team": "Tokyo Yakult Swallows",
+  "teamJa": "東京ヤクルトスワローズ",
+  "city": "Tokyo",
+  "country": "JP",
+  "league": "NPB",
+  "unit": "m",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    97.5
+   ],
+   [
+    -22.5,
+    112.3
+   ],
+   [
+    0,
+    120
+   ],
+   [
+    22.5,
+    112.3
+   ],
+   [
+    45,
+    97.5
+   ]
+  ],
+  "en": {
+   "title": "Meiji Jingu Stadium",
+   "revision": 1372085507
+  },
+  "ja": {
+   "title": "明治神宮野球場",
+   "revision": 111058989
+  }
+ },
+ {
+  "id": "yokohama-stadium",
+  "name": "Yokohama Stadium",
+  "nameJa": "横浜スタジアム",
+  "team": "Yokohama DeNA BayStars",
+  "teamJa": "横浜DeNAベイスターズ",
+  "city": "Yokohama",
+  "country": "JP",
+  "league": "NPB",
+  "unit": "m",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    94.2
+   ],
+   [
+    -22.5,
+    111.4
+   ],
+   [
+    0,
+    117.7
+   ],
+   [
+    22.5,
+    111.4
+   ],
+   [
+    45,
+    94.2
+   ]
+  ],
+  "en": {
+   "title": "Yokohama Stadium",
+   "revision": 1379493268
+  },
+  "ja": {
+   "title": "横浜スタジアム",
+   "revision": 111000229
+  }
+ },
+ {
+  "id": "vantelin-dome-nagoya",
+  "name": "Vantelin Dome Nagoya",
+  "nameJa": "バンテリンドーム ナゴヤ",
+  "team": "Chunichi Dragons",
+  "teamJa": "中日ドラゴンズ",
+  "city": "Nagoya",
+  "country": "JP",
+  "league": "NPB",
+  "unit": "m",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    100
+   ],
+   [
+    -22.5,
+    110
+   ],
+   [
+    0,
+    122
+   ],
+   [
+    22.5,
+    110
+   ],
+   [
+    45,
+    100
+   ]
+  ],
+  "en": {
+   "title": "Vantelin Dome Nagoya",
+   "revision": 1377205624
+  },
+  "ja": {
+   "title": "ナゴヤドーム",
+   "revision": 111136533
+  },
+  "note": "Left-center and right-center are 110 m from 2026, when the Home Run Wing was added (116 m before)."
+ },
+ {
+  "id": "mazda-stadium-hiroshima",
+  "name": "Mazda Zoom-Zoom Stadium Hiroshima",
+  "nameJa": "MAZDA Zoom-Zoom スタジアム広島",
+  "team": "Hiroshima Toyo Carp",
+  "teamJa": "広島東洋カープ",
+  "city": "Hiroshima",
+  "country": "JP",
+  "league": "NPB",
+  "unit": "m",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    101
+   ],
+   [
+    -22.5,
+    116
+   ],
+   [
+    0,
+    122
+   ],
+   [
+    22.5,
+    116
+   ],
+   [
+    45,
+    100
+   ]
+  ],
+  "en": {
+   "title": "Mazda Stadium",
+   "revision": 1358258868
+  },
+  "ja": {
+   "title": "MAZDA Zoom-Zoom スタジアム広島",
+   "revision": 110177362
+  }
+ },
+ {
+  "id": "es-con-field-hokkaido",
+  "name": "ES CON Field Hokkaido",
+  "nameJa": "エスコンフィールドHOKKAIDO",
+  "team": "Hokkaido Nippon-Ham Fighters",
+  "teamJa": "北海道日本ハムファイターズ",
+  "city": "Kitahiroshima",
+  "country": "JP",
+  "league": "NPB",
+  "unit": "m",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    97
+   ],
+   [
+    0,
+    121
+   ],
+   [
+    45,
+    99
+   ]
+  ],
+  "en": {
+   "title": "Es Con Field Hokkaido",
+   "revision": 1376475578
+  },
+  "ja": {
+   "title": "エスコンフィールドHOKKAIDO",
+   "revision": 110902270
+  },
+  "note": "Three published figures only."
+ },
+ {
+  "id": "rakuten-mobile-park-miyagi",
+  "name": "Rakuten Mobile Park Miyagi",
+  "nameJa": "楽天モバイルパーク宮城",
+  "team": "Tohoku Rakuten Golden Eagles",
+  "teamJa": "東北楽天ゴールデンイーグルス",
+  "city": "Sendai",
+  "country": "JP",
+  "league": "NPB",
+  "unit": "m",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    100.1
+   ],
+   [
+    -22.5,
+    110
+   ],
+   [
+    0,
+    122
+   ],
+   [
+    22.5,
+    112
+   ],
+   [
+    45,
+    100.1
+   ]
+  ],
+  "en": {
+   "title": "Rakuten Mobile Park Miyagi",
+   "revision": 1371540312
+  },
+  "ja": {
+   "title": "楽天モバイルパーク宮城",
+   "revision": 111313121
+  },
+  "note": "Sold under naming rights as Rakuten Mobile Saikyo Park Miyagi."
+ },
+ {
+  "id": "belluna-dome",
+  "name": "Belluna Dome",
+  "nameJa": "ベルーナドーム",
+  "team": "Saitama Seibu Lions",
+  "teamJa": "埼玉西武ライオンズ",
+  "city": "Tokorozawa",
+  "country": "JP",
+  "league": "NPB",
+  "unit": "m",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    100
+   ],
+   [
+    -22.5,
+    116
+   ],
+   [
+    0,
+    122
+   ],
+   [
+    22.5,
+    116
+   ],
+   [
+    45,
+    100
+   ]
+  ],
+  "en": {
+   "title": "Belluna Dome",
+   "revision": 1376434975
+  },
+  "ja": {
+   "title": "西武ドーム",
+   "revision": 111316508
+  }
+ },
+ {
+  "id": "zozo-marine-stadium",
+  "name": "ZOZO Marine Stadium",
+  "nameJa": "ZOZOマリンスタジアム",
+  "team": "Chiba Lotte Marines",
+  "teamJa": "千葉ロッテマリーンズ",
+  "city": "Chiba",
+  "country": "JP",
+  "league": "NPB",
+  "unit": "m",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    99.5
+   ],
+   [
+    -22.5,
+    112.3
+   ],
+   [
+    0,
+    122
+   ],
+   [
+    22.5,
+    112.3
+   ],
+   [
+    45,
+    99.5
+   ]
+  ],
+  "en": {
+   "title": "Zozo Marine Stadium",
+   "revision": 1374482006
+  },
+  "ja": {
+   "title": "千葉マリンスタジアム",
+   "revision": 111145226
+  }
+ },
+ {
+  "id": "kyocera-dome-osaka",
+  "name": "Kyocera Dome Osaka",
+  "nameJa": "京セラドーム大阪",
+  "team": "Orix Buffaloes",
+  "teamJa": "オリックス・バファローズ",
+  "city": "Osaka",
+  "country": "JP",
+  "league": "NPB",
+  "unit": "m",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    100
+   ],
+   [
+    -22.5,
+    116
+   ],
+   [
+    0,
+    122
+   ],
+   [
+    22.5,
+    116
+   ],
+   [
+    45,
+    100
+   ]
+  ],
+  "en": {
+   "title": "Kyocera Dome Osaka",
+   "revision": 1374181588
+  },
+  "ja": {
+   "title": "大阪ドーム",
+   "revision": 111044952
+  }
+ },
+ {
+  "id": "mizuho-paypay-dome-fukuoka",
+  "name": "Mizuho PayPay Dome Fukuoka",
+  "nameJa": "みずほPayPayドーム福岡",
+  "team": "Fukuoka SoftBank Hawks",
+  "teamJa": "福岡ソフトバンクホークス",
+  "city": "Fukuoka",
+  "country": "JP",
+  "league": "NPB",
+  "unit": "m",
+  "status": "current",
+  "points": [
+   [
+    -45,
+    100
+   ],
+   [
+    -22.5,
+    110
+   ],
+   [
+    0,
+    122
+   ],
+   [
+    22.5,
+    110
+   ],
+   [
+    45,
+    100
+   ]
+  ],
+  "en": {
+   "title": "Mizuho PayPay Dome Fukuoka",
+   "revision": 1379848632
+  },
+  "ja": {
+   "title": "福岡ドーム",
+   "revision": 111298622
+  }
+ },
+ {
+  "id": "sapporo-dome",
+  "name": "Sapporo Dome",
+  "nameJa": "札幌ドーム",
+  "team": "Hokkaido Nippon-Ham Fighters (2004-2022)",
+  "teamJa": "北海道日本ハムファイターズ（2004〜2022年）",
+  "city": "Sapporo",
+  "country": "JP",
+  "league": "NPB",
+  "unit": "m",
+  "status": "secondary",
+  "points": [
+   [
+    -45,
+    100
+   ],
+   [
+    -22.5,
+    116
+   ],
+   [
+    0,
+    122
+   ],
+   [
+    22.5,
+    116
+   ],
+   [
+    45,
+    100
+   ]
+  ],
+  "en": {
+   "title": "Sapporo Dome",
+   "revision": 1374174778
+  },
+  "ja": {
+   "title": "札幌ドーム",
+   "revision": 111367977
+  }
+ },
+ {
+  "id": "hotto-motto-field-kobe",
+  "name": "Hotto Motto Field Kobe",
+  "nameJa": "ほっともっとフィールド神戸",
+  "team": "Orix Buffaloes (second park)",
+  "teamJa": "オリックス・バファローズ（準本拠地）",
+  "city": "Kobe",
+  "country": "JP",
+  "league": "NPB",
+  "unit": "m",
+  "status": "secondary",
+  "points": [
+   [
+    -45,
+    99.1
+   ],
+   [
+    -22.5,
+    117
+   ],
+   [
+    0,
+    122
+   ],
+   [
+    22.5,
+    117
+   ],
+   [
+    45,
+    99.1
+   ]
+  ],
+  "en": {
+   "title": "Hotto Motto Field Kobe",
+   "revision": 1373207639
+  },
+  "ja": {
+   "title": "神戸総合運動公園野球場",
+   "revision": 111289486
+  }
+ },
+ {
+  "id": "hiroshima-municipal-stadium",
+  "name": "Hiroshima Municipal Stadium (original)",
+  "nameJa": "旧広島市民球場",
+  "team": "Hiroshima Toyo Carp (1957-2008)",
+  "teamJa": "広島東洋カープ（1957〜2008年）",
+  "city": "Hiroshima",
+  "country": "JP",
+  "league": "NPB",
+  "unit": "m",
+  "status": "historic",
+  "points": [
+   [
+    -45,
+    91.4
+   ],
+   [
+    -22.5,
+    109.7
+   ],
+   [
+    0,
+    115.8
+   ],
+   [
+    22.5,
+    109.7
+   ],
+   [
+    45,
+    91.4
+   ]
+  ],
+  "ja": {
+   "title": "広島市民球場 (初代)",
+   "revision": 111360293
+  }
+ },
+ {
+  "id": "korakuen-stadium",
+  "name": "Korakuen Stadium",
+  "nameJa": "後楽園球場",
+  "team": "Yomiuri Giants (1937-1987)",
+  "teamJa": "読売ジャイアンツ（1937〜1987年）",
+  "city": "Tokyo",
+  "country": "JP",
+  "league": "NPB",
+  "unit": "m",
+  "status": "historic",
+  "points": [
+   [
+    -45,
+    87.8
+   ],
+   [
+    -22.5,
+    110.1
+   ],
+   [
+    0,
+    120.8
+   ],
+   [
+    22.5,
+    110.1
+   ],
+   [
+    45,
+    87.8
+   ]
+  ],
+  "en": {
+   "title": "Korakuen Stadium",
+   "revision": 1372211321
+  },
+  "ja": {
+   "title": "後楽園球場",
+   "revision": 111347954
+  },
+  "note": "Measured distances, not the announced 90 m and 120 m."
+ },
+ {
+  "id": "osaka-stadium",
+  "name": "Osaka Stadium",
+  "nameJa": "大阪球場",
+  "team": "Nankai Hawks (1950-1988)",
+  "teamJa": "南海ホークス（1950〜1988年）",
+  "city": "Osaka",
+  "country": "JP",
+  "league": "NPB",
+  "unit": "m",
+  "status": "historic",
+  "points": [
+   [
+    -45,
+    91.5
+   ],
+   [
+    -22.5,
+    109.7
+   ],
+   [
+    0,
+    115.8
+   ],
+   [
+    22.5,
+    109.7
+   ],
+   [
+    45,
+    91.5
+   ]
+  ],
+  "en": {
+   "title": "Osaka Stadium",
+   "revision": 1372223620
+  },
+  "ja": {
+   "title": "大阪スタヂアム",
+   "revision": 111155388
+  }
+ },
+ {
+  "id": "heiwadai-stadium",
+  "name": "Heiwadai Stadium",
+  "nameJa": "平和台野球場",
+  "team": "Nishitetsu Lions and successors (to 1978)",
+  "teamJa": "西鉄ライオンズとその後身（〜1978年）",
+  "city": "Fukuoka",
+  "country": "JP",
+  "league": "NPB",
+  "unit": "m",
+  "status": "historic",
+  "points": [
+   [
+    -45,
+    92
+   ],
+   [
+    -22.5,
+    110
+   ],
+   [
+    0,
+    122
+   ],
+   [
+    22.5,
+    110
+   ],
+   [
+    45,
+    92
+   ]
+  ],
+  "en": {
+   "title": "Heiwadai Stadium",
+   "revision": 1372186109
+  },
+  "ja": {
+   "title": "平和台野球場",
+   "revision": 110987269
+  }
+ },
+ {
+  "id": "kawasaki-stadium",
+  "name": "Kawasaki Stadium",
+  "nameJa": "川崎球場",
+  "team": "Lotte Orions (1978-1991)",
+  "teamJa": "ロッテオリオンズ（1978〜1991年）",
+  "city": "Kawasaki",
+  "country": "JP",
+  "league": "NPB",
+  "unit": "m",
+  "status": "historic",
+  "points": [
+   [
+    -45,
+    89
+   ],
+   [
+    -22.5,
+    105
+   ],
+   [
+    0,
+    118
+   ],
+   [
+    22.5,
+    103
+   ],
+   [
+    45,
+    89
+   ]
+  ],
+  "ja": {
+   "title": "川崎球場",
+   "revision": 110987263
+  },
+  "note": "Measured distances, not the announced 90 m and 120 m."
+ },
+ {
+  "id": "nagoya-stadium",
+  "name": "Nagoya Stadium",
+  "nameJa": "ナゴヤ球場",
+  "team": "Chunichi Dragons (1948-1996)",
+  "teamJa": "中日ドラゴンズ（1948〜1996年）",
+  "city": "Nagoya",
+  "country": "JP",
+  "league": "NPB",
+  "unit": "m",
+  "status": "historic",
+  "points": [
+   [
+    -45,
+    100
+   ],
+   [
+    0,
+    122
+   ],
+   [
+    45,
+    100
+   ]
+  ],
+  "en": {
+   "title": "Nagoya Stadium",
+   "revision": 1377205638
+  },
+  "ja": {
+   "title": "ナゴヤ球場",
+   "revision": 111235188
+  },
+  "note": "As rebuilt after the 1998 season."
+ }
+]
