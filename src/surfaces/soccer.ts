@@ -2,7 +2,8 @@ import { el, num } from "../format.ts";
 import { FEET_PER_METRE } from "../geometry.ts";
 import type { GoalStyle, StripePattern } from "../types.ts";
 import { SOCCER, type SoccerLayout, type SoccerSpec } from "./soccer-spec.ts";
-import { quarterTurn, type BuildOptions, type Surface } from "./surface.ts";
+import { mowTurf } from "../mow.ts";
+import { ft, quarterTurn, type BuildOptions, type Mark, type Surface } from "./surface.ts";
 
 /** What the soccer builder is given besides the usual. */
 export interface SoccerBuild {
@@ -24,11 +25,16 @@ const n = num;
 const matrix = (m: readonly number[]): string => `matrix(${m.map((v) => String(Math.round(v * 1e6) / 1e6)).join(" ")})`;
 
 /** How many bands a pattern cuts the pitch into, along the length and across: odd, so that both ends are alike. */
-const BANDS: Record<Exclude<StripePattern, "none" | "diagonal" | "checks" | "lengthwise">, number> = { bands: 19, wide: 9, narrow: 39 };
+const BANDS: Record<"bands" | "wide" | "narrow", number> = { bands: 19, wide: 9, narrow: 39 };
 
 /** The stripes of mown grass, as one path of the lighter bands (or the darker, as you see it). */
-function stripes(pattern: StripePattern, L: number, W: number, id: string): { path: string; defs: string } {
+function stripes(pattern: StripePattern, L: number, W: number, id: string): { path: string; defs: string; evenodd?: boolean } {
   if (pattern === "none") return { path: "", defs: "" };
+  if (pattern === "circles") {
+    // Rings about the middle, as wide as a usual band, cut to the pitch.
+    const mown = mowTurf("circles", { x: 0, y: 0, w: L, h: W }, L / BANDS.bands);
+    return { path: mown.path, defs: `<clipPath id="${id}-turf"><rect x="0" y="0" width="${n(L)}" height="${n(W)}"/></clipPath>`, evenodd: true };
+  }
   const rect = (x: number, y: number, w: number, h: number): string => `M${n(x)} ${n(y)}h${n(w)}v${n(h)}h${n(-w)}z`;
   const parts: string[] = [];
   if (pattern === "lengthwise") {
@@ -44,29 +50,29 @@ function stripes(pattern: StripePattern, L: number, W: number, id: string): { pa
     for (let x = -W; x < L; x += 2 * across * Math.SQRT2) parts.push(`M${n(x)} ${n(W)}L${n(x + W)} 0L${n(x + W + across * Math.SQRT2)} 0L${n(x + across * Math.SQRT2)} ${n(W)}z`);
     return { path: parts.join(""), defs: `<clipPath id="${id}-turf"><rect x="0" y="0" width="${n(L)}" height="${n(W)}"/></clipPath>` };
   } else {
-    const count = BANDS[pattern];
+    const count = pattern === "wide" || pattern === "narrow" ? BANDS[pattern] : BANDS.bands;
     for (let i = 1; i < count; i += 2) parts.push(rect((L / count) * i, 0, L / count, W));
   }
   return { path: parts.join(""), defs: "" };
 }
 
 /** One goal at an end of the pitch, seen from above: the net lies beyond the goal line, at negative x at the left end and past `L` at the right. */
-function goal(style: GoalStyle, spec: SoccerSpec, L: number, W: number, end: 0 | 1, thick: number, exact: boolean): string {
+function goal(style: GoalStyle, spec: SoccerSpec, L: number, W: number, end: 0 | 1, thick: number, exact: boolean, o: BuildOptions): string {
   if (style === "none") return "";
   const half = spec.goalWidth / 2;
   const cy = W / 2;
   const x = end === 0 ? 0 : L;
   const out = end === 0 ? -1 : 1;
   const depth = spec.goalDepth;
-  if (style === "line") return el("path", { class: "ky-goal", d: `M${n(x)} ${n(cy - half)}V${n(cy + half)}`, "stroke-width": thick * 3, fill: "none" });
-  if (style === "strip") return el("path", { class: "ky-goal-strip", d: `M${n(x)} ${n(cy - half)}h${n(out * 0.6)}v${n(2 * half)}h${n(-out * 0.6)}z` });
+  if (style === "line") return el("path", { class: ft(o, "goals", "ky-goal"), d: `M${n(x)} ${n(cy - half)}V${n(cy + half)}`, "stroke-width": thick * 3, fill: "none" });
+  if (style === "strip") return el("path", { class: ft(o, "goals", "ky-goal-strip"), d: `M${n(x)} ${n(cy - half)}h${n(out * 0.6)}v${n(2 * half)}h${n(-out * 0.6)}z` });
   // The box: the net behind the goal line, with the posts at its mouth.
   const d = `M${n(x)} ${n(cy - half)}h${n(out * depth)}v${n(2 * half)}h${n(-out * depth)}`;
   const grid: string[] = [];
   const cells = Math.max(3, Math.round(half / 0.6));
   for (let i = 1; i < cells; i += 1) grid.push(`M${n(x)} ${n(cy - half + (2 * half * i) / cells)}h${n(out * depth)}`);
-  const posts = el("circle", { class: "ky-post-end", cx: x, cy: cy - half, r: exact ? 0.12 : 0.24 }) + el("circle", { class: "ky-post-end", cx: x, cy: cy + half, r: exact ? 0.12 : 0.24 });
-  return el("path", { class: "ky-goal", d, "stroke-width": thick * 1.4, fill: "none", "stroke-linejoin": "round" }) + el("path", { class: "ky-goal-net", d: grid.join(""), "stroke-width": thick * 0.5, fill: "none" }) + el("path", { class: "ky-goal", d: `M${n(x)} ${n(cy - half)}V${n(cy + half)}`, "stroke-width": thick * 1.4, fill: "none" }) + posts;
+  const posts = el("circle", { class: ft(o, "goal-posts", "ky-post-end"), cx: x, cy: cy - half, r: exact ? 0.12 : 0.24 }) + el("circle", { class: ft(o, "goal-posts", "ky-post-end"), cx: x, cy: cy + half, r: exact ? 0.12 : 0.24 });
+  return el("path", { class: ft(o, "goals", "ky-goal"), d, "stroke-width": thick * 1.4, fill: "none", "stroke-linejoin": "round" }) + el("path", { class: ft(o, "goals", "ky-goal-net"), d: grid.join(""), "stroke-width": thick * 0.5, fill: "none" }) + el("path", { class: ft(o, "goals", "ky-goal"), d: `M${n(x)} ${n(cy - half)}V${n(cy + half)}`, "stroke-width": thick * 1.4, fill: "none" }) + posts;
 }
 
 /** Futsal's penalty area: a quarter circle round each post, joined by a line across the front. */
@@ -81,7 +87,7 @@ function arcsArea(spec: SoccerSpec, L: number, W: number, side: 0 | 1): string {
 }
 
 /** The penalty area, goal area, mark, arc of one end, for a pitch that has them. */
-function end(spec: SoccerSpec, lay: SoccerLayout, L: number, W: number, side: 0 | 1, full: boolean): { path: string; marks: string } {
+function end(spec: SoccerSpec, lay: SoccerLayout, L: number, W: number, side: 0 | 1, full: boolean, o: BuildOptions): { path: string; marks: string } {
   const cy = W / 2;
   const sign = side === 0 ? 1 : -1;
   const gx = side === 0 ? 0 : L;
@@ -102,8 +108,8 @@ function end(spec: SoccerSpec, lay: SoccerLayout, L: number, W: number, side: 0 
       path += `M${n(at(lay.penaltyDepth))} ${n(cy - h)}A${n(spec.arcRadius)} ${n(spec.arcRadius)} 0 0 1 ${n(at(lay.penaltyDepth))} ${n(cy + h)}`;
     }
   }
-  if (lay.spot > 0) marks += el("circle", { class: "ky-fill-line", cx: at(lay.spot), cy, r: full ? 0.22 : 0.3 });
-  if (spec.secondSpot > 0) marks += el("circle", { class: "ky-fill-line", cx: at(spec.secondSpot), cy, r: full ? 0.22 : 0.3 });
+  if (lay.spot > 0) marks += el("circle", { class: ft(o, "penalty-marks", "ky-fill-line"), cx: at(lay.spot), cy, r: full ? 0.22 : 0.3 });
+  if (spec.secondSpot > 0) marks += el("circle", { class: ft(o, "penalty-marks", "ky-fill-line"), cx: at(spec.secondSpot), cy, r: full ? 0.22 : 0.3 });
   return { path, marks };
 }
 
@@ -132,8 +138,8 @@ export function soccer(b: SoccerBuild, o: BuildOptions): Surface {
 
   // Ground, turf and stripes.
   const turf = stripes(o.stripes ? b.pattern : "none", L, W, o.id);
-  let inside = el("rect", { class: "ky-surface", x: 0, y: 0, width: L, height: W });
-  if (turf.path !== "" && spec.format !== "futsal") inside += el("path", { class: "ky-stripe", d: turf.path, "clip-path": turf.defs === "" ? undefined : `url(#${o.id}-turf)` });
+  let inside = el("rect", { class: ft(o, "turf", "ky-surface"), x: 0, y: 0, width: L, height: W });
+  if (turf.path !== "" && spec.format !== "futsal") inside += el("path", { class: ft(o, "mowing", "ky-stripe"), d: turf.path, "fill-rule": turf.evenodd === true ? "evenodd" : undefined, "clip-path": turf.defs === "" ? undefined : `url(#${o.id}-turf)` });
   // The ends in the team's colour, in a score: the penalty area (or what a small pitch has in its place).
   const zoneDepth = Math.max(spec.penaltyDepth, L * 0.12);
   const zoneWidth = Math.max(spec.area === "arcs" ? spec.areaLine + 2 * spec.penaltyDepth : spec.area === "semicircle" ? 2 * spec.penaltyDepth : lay.penaltyHalfWidth * 2, W * 0.4);
@@ -141,24 +147,24 @@ export function soccer(b: SoccerBuild, o: BuildOptions): Surface {
     // A rectangle at each end: the penalty area on a full pitch, a box that holds the name on the others (their areas are curved).
     for (const side of [0, 1] as const) inside += el("rect", { class: `ky-zone ky-zone-${side === 0 ? "left" : "right"}`, x: side === 0 ? 0 : L - zoneDepth, y: cy - zoneWidth / 2, width: zoneDepth, height: zoneWidth });
   }
-  const base = el("rect", { class: "ky-apron", x: view0.x, y: view0.y, width: view0.w, height: view0.h }) + group(inside, `ky-pitch ky-pitch-${spec.format}`);
+  const base = el("rect", { class: ft(o, "apron", "ky-apron"), x: view0.x, y: view0.y, width: view0.w, height: view0.h }) + group(inside, `ky-pitch ky-pitch-${spec.format}`);
 
   // The lines.
-  let lines = el("rect", { class: "ky-line", x: 0, y: 0, width: L, height: W, "stroke-width": lw, fill: "none" });
-  lines += el("path", { class: "ky-line", d: `M${n(L / 2)} 0V${n(W)}`, "stroke-width": lw, fill: "none" });
-  lines += el("circle", { class: "ky-line", cx: L / 2, cy, r: spec.centreRadius, "stroke-width": lw, fill: "none" });
-  lines += el("circle", { class: "ky-fill-line", cx: L / 2, cy, r: full ? 0.22 : 0.3 });
+  let lines = el("rect", { class: ft(o, "touchlines", "ky-line"), x: 0, y: 0, width: L, height: W, "stroke-width": lw, fill: "none" });
+  lines += el("path", { class: ft(o, "halfway-line", "ky-line"), d: `M${n(L / 2)} 0V${n(W)}`, "stroke-width": lw, fill: "none" });
+  lines += el("circle", { class: ft(o, "centre-circle", "ky-line"), cx: L / 2, cy, r: spec.centreRadius, "stroke-width": lw, fill: "none" });
+  lines += el("circle", { class: ft(o, "centre-mark", "ky-fill-line"), cx: L / 2, cy, r: full ? 0.22 : 0.3 });
   let marks = "";
   for (const side of [0, 1] as const) {
-    const e = end(spec, lay, L, W, side, full);
-    lines += el("path", { class: "ky-line", d: e.path, "stroke-width": lw, fill: "none" });
+    const e = end(spec, lay, L, W, side, full, o);
+    lines += el("path", { class: ft(o, "penalty-areas", "ky-line"), d: e.path, "stroke-width": lw, fill: "none" });
     marks += e.marks;
   }
   lines += marks;
   // Corner arcs.
   const r = spec.cornerRadius;
   if (r > 0) {
-    lines += el("path", { class: "ky-line", d: `M${n(r)} 0A${n(r)} ${n(r)} 0 0 1 0 ${n(r)}M0 ${n(W - r)}A${n(r)} ${n(r)} 0 0 1 ${n(r)} ${n(W)}M${n(L - r)} ${n(W)}A${n(r)} ${n(r)} 0 0 1 ${n(L)} ${n(W - r)}M${n(L)} ${n(r)}A${n(r)} ${n(r)} 0 0 1 ${n(L - r)} 0`, "stroke-width": lw, fill: "none" });
+    lines += el("path", { class: ft(o, "corner-arcs", "ky-line"), d: `M${n(r)} 0A${n(r)} ${n(r)} 0 0 1 0 ${n(r)}M0 ${n(W - r)}A${n(r)} ${n(r)} 0 0 1 ${n(r)} ${n(W)}M${n(L - r)} ${n(W)}A${n(r)} ${n(r)} 0 0 1 ${n(L)} ${n(W - r)}M${n(L)} ${n(r)}A${n(r)} ${n(r)} 0 0 1 ${n(L - r)} 0`, "stroke-width": lw, fill: "none" });
   }
   // The corner-kick marks, outside the field, 9.15 m from the corner arc, at right angles to the lines (Law 1).
   if (full && spec.format === "11") {
@@ -174,7 +180,7 @@ export function soccer(b: SoccerBuild, o: BuildOptions): Surface {
         t.push(`M${n(cx + sx * d)} ${n(ty)}v${n(-sy * tick)}`);
       }
     }
-    lines += el("path", { class: "ky-line", d: t.join(""), "stroke-width": lw, fill: "none" });
+    lines += el("path", { class: ft(o, "corner-marks", "ky-line"), d: t.join(""), "stroke-width": lw, fill: "none" });
   }
   // Futsal (Law 1, sub-sections 6 and 2): the substitution zone is 5 m long, 5 m from the halfway line, closed by marks 80 cm long, half of
   // them off the pitch; the marks 5 m from each corner arc off the pitch show the distance of a corner kick, 5 cm from the end line.
@@ -182,11 +188,15 @@ export function soccer(b: SoccerBuild, o: BuildOptions): Surface {
     const t: string[] = [];
     for (const x of [L / 2 + 5, L / 2 + 10]) t.push(`M${n(x)} ${n(W - 0.4)}v0.8`);
     for (const x of [5 + r, L - 5 - r]) for (const y of [0, W]) t.push(`M${n(x)} ${n(y + (y === 0 ? -0.05 : 0.05))}v${y === 0 ? -0.4 : 0.4}`);
-    lines += el("path", { class: "ky-line", d: t.join(""), "stroke-width": lw, fill: "none" });
+    lines += el("path", { class: ft(o, "corner-marks", "ky-line"), d: t.join(""), "stroke-width": lw, fill: "none" });
   }
-  // Goals.
+  // Goals: the built-in ones, or the caller's, drawn in feet outside the group that scales metres.
   let goals = "";
-  for (const side of [0, 1] as const) goals += goal(b.goals, spec, L, W, side, lw, o.exact);
+  let custom = "";
+  for (const side of [0, 1] as const) {
+    if (o.goalMarkup === undefined) goals += goal(b.goals, spec, L, W, side, lw, o.exact, o);
+    else custom += o.goalMarkup({ sport: "soccer", end: side === 0 ? "left" : "right", x: side === 0 ? 0 : Lf, y: (W / 2) * K, width: spec.goalWidth * K, depth: spec.goalDepth * K, out: side === 0 ? -1 : 1, line: lw * K });
+  }
   // Corner flags.
   let flags = "";
   if (b.flags) {
@@ -194,8 +204,8 @@ export function soccer(b: SoccerBuild, o: BuildOptions): Surface {
     for (const [cx, ty] of [[0, 0], [L, 0], [0, W], [L, W]]) {
       const sx = cx === 0 ? 1 : -1;
       const sy = ty === 0 ? 1 : -1;
-      f.push(el("path", { class: "ky-flag", d: `M${n(cx)} ${n(ty)}l${n(sx * 0.9)} ${n(sy * 0.3)}l${n(-sx * 0.3)} ${n(sy * 0.9)}z` }));
-      f.push(el("circle", { class: "ky-post-end", cx, cy: ty, r: 0.2 }));
+      f.push(el("path", { class: ft(o, "corner-flags", "ky-flag"), d: `M${n(cx)} ${n(ty)}l${n(sx * 0.9)} ${n(sy * 0.3)}l${n(-sx * 0.3)} ${n(sy * 0.9)}z` }));
+      f.push(el("circle", { class: ft(o, "corner-flags", "ky-post-end"), cx, cy: ty, r: 0.2 }));
     }
     flags = f.join("");
   }
@@ -210,7 +220,7 @@ export function soccer(b: SoccerBuild, o: BuildOptions): Surface {
     sport: "soccer",
     view: view0,
     base,
-    lines: linesGroup,
+    lines: linesGroup + custom,
     defs: turf.defs,
     left: { cx: deep / 2, cy: Wf / 2, w: long * 0.94, h: zoneH, rot: -90 },
     right: { cx: Lf - deep / 2, cy: Wf / 2, w: long * 0.94, h: zoneH, rot: 90 },
@@ -218,6 +228,19 @@ export function soccer(b: SoccerBuild, o: BuildOptions): Surface {
     turned,
     bannersOver: true,
   };
+  surface.lineRef = { width: lw, feet: K };
+  surface.box = { x: 0, y: 0, w: Lf, h: Wf };
+  if (o.landmarks === true) {
+    const at = (x: number, y: number, id: string, side: Mark["side"]): Mark => ({ id, x: x * K, y: y * K, side });
+    const marks: Mark[] = [at(0, W * 0.25, "goal-line", "top"), at(L / 2, 0, "halfway-line", "top"), at(L * 0.7, W, "touchline", "bottom"), at(L / 2 + spec.centreRadius * 0.7, cy + spec.centreRadius * 0.7, "centre-circle", "bottom")];
+    if (lay.penaltyDepth > 0) marks.push(at(lay.penaltyDepth * 0.5, cy - lay.penaltyHalfWidth, "penalty-area", "top"));
+    if (spec.goalAreaDepth > 0) marks.push(at(lay.goalAreaDepth * 0.5, cy + lay.goalAreaHalfWidth, "goal-area", "bottom"));
+    if (lay.spot > 0) marks.push(at(lay.spot, cy, "penalty-mark", "bottom"));
+    if (spec.arcRadius > 0 && lay.spot > 0 && lay.penaltyDepth > lay.spot) marks.push(at(lay.spot + spec.arcRadius, cy, "penalty-arc", "top"));
+    if (r > 0) marks.push(at(r * 0.7071, r * 0.7071, "corner-arc", "top"));
+    if (b.goals !== "none" || o.goalMarkup !== undefined) marks.push(at(-spec.goalDepth / 2, cy - spec.goalWidth / 2, "goal", "top"));
+    surface.marks = marks;
+  }
   if (turned) {
     const t = quarterTurn(view0);
     surface.view = t.view;

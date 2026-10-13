@@ -28,6 +28,74 @@ console.log(svg.includes("--ky-key:#1e4f8f"), svg.includes("METRO BOLTS"));
 // true true
 ```
 
+## Named looks
+
+`look` paints a whole drawing in one palette, light and dark, for every sport: the surface, its lines, the ground round it and the words on that ground. Seven are built in (`LOOKS`, `LOOK_NAMES`), and each is a set of the properties below on `.kyogijo[data-palette="<name>"]`, at no weight, so your own rule and the options' `colors` still win.
+
+| `look` | What it is |
+| --- | --- |
+| `grass` | The natural colours of each sport (grass, ice, maple), tuned so that every painted line reads against what it is painted on. |
+| `night` | A floodlit evening: a deep ground, a dark apron and pale lines. |
+| `chalkboard` | Chalk on a slate board: white lines, pink and blue chalk for the red and blue ones. |
+| `blueprint` | White lines on blueprint blue. |
+| `print` | Black on white with greys, for a printer that has no colour; dark mode is white on black. |
+| `broadcast` | Television graphics: saturated turf and wood, a navy apron, bright red and blue lines. |
+| `high-contrast` | Black on white, or white on black, at the highest contrast the colours allow. |
+
+```ts
+import { LOOKS, contrastOf, drawKyogijo, lookPalette } from "@johnmorrisdotca/kyogijo";
+
+const svg = drawKyogijo({ sport: "nba", look: "chalkboard", theme: "dark" });
+const palette = lookPalette("chalkboard", "dark", "nba");
+console.log(svg.includes('data-palette="chalkboard"'), Object.keys(LOOKS).length, contrastOf(palette.line, palette.surface)! >= 3);
+// true 7 true
+```
+
+A test holds every look, in both modes and for every sport, to the contrast that WCAG 2.2 asks: every painted line is 3:1 against what it is painted on (the surface, and where the sport paints them under the line, the second tone of the mowing or planks, the key, the dirt, the infield and the foul ground), and the drawing's words are 4.5:1 against the apron. `LOOK_PAIRS` lists the pairs. A sport added later with no palette of its own takes the look's base. A court's own look (`court`, above), a net sport's `net.look` ([net sports](./courts.md)) and `colors` are over a look's colours, in that order; the attribute that says which look a drawing has is `data-palette`, since `data-look` is a net court's. The net sports (tennis, volleyball, badminton, pickleball, table tennis) take the look's surface, free zone, painted areas, lines and net.
+
+With `style: "none"` a page puts `KYOGIJO_STYLE` in once, which has every look; a drawing that embeds its stylesheet carries only its own look's.
+
+## Colours by feature
+
+`featureColors` colours a part of a surface by its name: `{ "blue-lines": "#1d4f8f" }`. `FEATURES[sport]` lists the names (the three football fields share theirs) and `FEATURE_INFO[sport]` says what each is and which custom properties its colour goes to. A name the sport does not have is an error that lists the ones it has, and a colour that is not a hex colour, `rgb()`, `hsl()`, a name or `var(--name)` is ignored.
+
+```ts
+import { FEATURES, drawKyogijo } from "@johnmorrisdotca/kyogijo";
+
+const svg = drawKyogijo({ sport: "nhl", featureColors: { "blue-lines": "#0a7d3b", "face-off-circles": "#e07b00", nets: "#1d4f8f" } });
+console.log(FEATURES.nhl.slice(0, 4).join(", "), svg.includes("--ky-f-blue-lines:#0a7d3b"));
+// apron, boards, ice, centre-line true
+```
+
+The colour is `--ky-f-<name>` on the drawing and the part carries the class `ky-f-<name>`, so a page can also set it from its own stylesheet; only a feature that is asked for has the class, and a drawing that colours none is the same text as before.
+
+## Lines
+
+| Option | What it does |
+| --- | --- |
+| `lineWidth` | A multiple of the width the lines are drawn at (`2`, or `{ scale: 2 }`), or an absolute width in `units` for the surface's ordinary line (`{ width: 0.5 }`). The others keep their proportion to it. |
+| `lineDash` | `dashed`, `dotted`, `dash-dot`, `solid`, or lengths of your own in `units` (`[2, 1]`). A line the rules dash already (a free-throw circle) keeps its own. |
+| `lineOpacity` | 0 to 1, for the lines, the spots on them and the yard numbers. |
+
+Fixtures keep their size (posts, rims, nets, the fence) and so do filled marks (plates, bases, a curling sheet's hog lines); the lines of a net sport's court are filled rectangles of the rulebook's width, so only `lineOpacity` changes them. A value that cannot be read is ignored.
+
+## Goals and mowing
+
+`goals` (`box`, `line`, `strip`, `none`) styles a soccer goal, a hockey net, a basketball basket (`box` is the backboard, its arm and the rim; `line` the backboard alone; `strip` a solid backboard and a filled rim) and a football field's posts. `goalMarkup` takes a function of your own that draws the goals: it is given where each stands (`GoalInfo`: the end, the middle of the mouth in feet, its width, its depth, which way it reaches, and the width of the drawing's ordinary line) and returns SVG in the drawing's wide frame, in feet. What it returns is written into the drawing as it is, so it must not come from a form.
+
+```ts
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+
+const svg = drawKyogijo({
+  sport: "nhl",
+  goalMarkup: ({ x, y, width, out }) => `<rect class="my-net" x="${out < 0 ? x - 4 : x}" y="${y - width / 2}" width="4" height="${width}" fill="#1d4f8f"/>`,
+});
+console.log(svg.split('class="my-net"').length - 1);
+// 2
+```
+
+`stripePattern` mows football fields, ballparks and soccer pitches: `bands` (the usual), `wide`, `narrow`, `lengthwise`, `checks`, `diagonal`, `circles` (rings about the middle) and `none`. A ballpark is mown in `rings` (arcs about home plate) by default, and also in a `fan` (wedges out from home plate). Ice and wood have no grass, so they ignore it. [Annotations](./annotations.md) label, measure and point the surface out.
+
 ## The colours
 
 Each property is listed with its light and dark value.

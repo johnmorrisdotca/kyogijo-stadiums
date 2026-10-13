@@ -84,6 +84,11 @@ src/
 ├── atlas.ts            every park and ground with its place, and the filters
 ├── atlas-entry.ts      the atlas' entry
 ├── themes.ts           the court looks
+├── look.ts             the named looks (grass, night, chalkboard, blueprint, print, broadcast, high-contrast), light and dark, and the pairs that must read
+├── features.ts         the named features of each surface and the rules that colour them
+├── restyle.ts          the width, dashes and opacity of the painted lines, laid over what a surface wrote
+├── mow.ts              the mowing patterns of a football field, a ballpark and a pitch
+├── annotate.ts         direction arrows, axes and the labels of a surface's parts
 ├── style.ts            the stylesheet, light and dark
 ├── strings.ts          the words, in English and Japanese
 ├── text.ts             measuring and fitting a name

@@ -1,5 +1,5 @@
 import { el, num } from "../format.ts";
-import type { Detail, Sport } from "../types.ts";
+import type { Detail, GoalInfo, GoalStyle, Sport, StripePattern } from "../types.ts";
 
 /** Where a team's name and logo go, and how its words lie. */
 export interface Zone {
@@ -43,6 +43,21 @@ export interface Surface {
   turned: boolean;
   /** The teams' places are drawn over the lines (panels that must hide them), not under. */
   bannersOver?: boolean;
+  /** The playing surface itself, without the ground round it, in the wide frame and in feet: where the margin starts, and what the axes and the labels are placed against. */
+  box?: { x: number; y: number; w: number; h: number };
+  /** The parts to label, when the drawing is asked for them (`landmarks`): where each is, in the wide frame, in feet. */
+  marks?: Mark[];
+  /** How wide the surface's ordinary line is drawn, in the units of the `lines` markup, and how many feet one of those units is: what `lineWidth` scales. */
+  lineRef?: { width: number; feet: number };
+}
+
+/** A part of a surface to label: its anchor on the surface in feet and the margin its label stands in (the top or the bottom as the surface lies wide). */
+export interface Mark {
+  /** The key of its words in `KYOGIJO_STRINGS[language].landmarks`. */
+  id: string;
+  x: number;
+  y: number;
+  side: "top" | "bottom";
 }
 
 /** What every builder is given. */
@@ -64,6 +79,27 @@ export interface BuildOptions {
   };
   /** True in a score drawing, so that panels are made room for. */
   score: boolean;
+  /** The names of the features that have a colour of their own, so that their elements carry the class that colour is given to. */
+  features?: ReadonlySet<string>;
+  /** How the grass is mown, when the options say (a football field and a ballpark have their own default). */
+  mow?: StripePattern;
+  /** How the goals are drawn, when the options say. */
+  goals?: GoalStyle;
+  /** A function that draws a goal, in place of the built-in one. */
+  goalMarkup?: (goal: GoalInfo) => string;
+  /** Collect the landmarks (`Surface.marks`). */
+  landmarks?: boolean;
+}
+
+/**
+ * The class of an element that is a named feature of the surface: `cls` and, for each feature name that has a colour of its own, `ky-f-<name>`.
+ * Without any, the class is just `cls`, so a drawing that colours no feature is the same text as it was.
+ */
+export function ft(o: Pick<BuildOptions, "features">, names: string | readonly string[], cls: string): string {
+  if (o.features === undefined) return cls;
+  let out = cls;
+  for (const name of typeof names === "string" ? [names] : names) if (o.features.has(name)) out += ` ky-f-${name}`;
+  return out;
 }
 
 /** How a word is set by a builder. */

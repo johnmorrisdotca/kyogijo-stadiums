@@ -84,7 +84,7 @@ console.log(svg.startsWith("<svg"), svg.includes("Northern Owls 3, Lakeshore Anc
 - **Replay.** Tracking data played on any surface: the players with their numbers, the ball and its trail, and the passes, shots and goals as they happen, with controls, the keyboard and a live region, steps for a reader who prefers reduced motion, and a pause when the page is hidden. [Replay](./docs/replay.md).
 - **Units and frames.** Each surface in its rulebook's unit and any other, and 22 coordinate frames (ten soccer providers, the NHL API, HockeyTech, NBA stats, NFL tracking, MLBAM, Retrosheet, a curling stone's place from the button, a place from the net in each net sport) to move a provider's points onto a surface. [Units](./docs/units.md), [coordinate frames](./docs/frames.md).
 - **A compact badge and a compact card.** One strip for a list, or the surface with that strip under it.
-- **Light and dark**, by the device or the page, and every colour a custom property; a basketball court has five looks to start from. [Theming](./docs/theming.md).
+- **Light and dark**, by the device or the page, and every colour a custom property; seven named looks, colours by feature, line widths and dashes, goal styles and mowing patterns, and arrows, axes and labels for teaching. [Theming](./docs/theming.md), [annotations](./docs/annotations.md).
 - **Accessible.** Each drawing is an `img` with a title and a description that say the surface and the result, in English or Japanese. [Accessibility](./docs/accessibility.md).
 - **Four ways in.** A function that returns SVG text; a helper that draws into a container; a standard custom element; a frame for pages that run no script. A React helper that does not import React.
 - **No dependencies**, no network requests, nothing stored. Text, colours and logo addresses that come from outside are made safe before they are drawn.
@@ -271,7 +271,7 @@ console.log(svg.includes("--ky-key:#1e4f8f"), svg.includes("METRO BOLTS"));
 <br><em>A court in a look of its own: the paint, the border and the words on the baselines are options.</em>
 </p>
 
-The five looks and every colour property are in [theming](./docs/theming.md).
+The five court looks, the seven looks of every sport and every colour property are in [theming](./docs/theming.md).
 
 ### A shoot-out, and a famous ground
 

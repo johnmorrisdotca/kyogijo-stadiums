@@ -402,7 +402,77 @@ function courtsPage() {
   };
 }
 
-export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, dataPage, curlingPage, courtsPage];
+function stylingPage(lib) {
+  const looks = lib[MAIN].LOOK_NAMES;
+  const features = lib[MAIN].FEATURES;
+  const landmarkSports = [["nhl", "NHL rink"], ["nba", "NBA court"], ["nfl", "NFL field"], ["soccer", "Soccer pitch"], ["mlb", "Baseball field"], ["curling", "Curling sheet"], ["tennis", "Tennis court"], ["volleyball", "Volleyball court"], ["pickleball", "Pickleball court"]];
+  const goalCode = [
+    `import { drawKyogijo } from "${MAIN}";`,
+    "",
+    "const svg = drawKyogijo({",
+    '  sport: "nhl",',
+    "  goalMarkup: ({ x, y, width, out }) => '<rect x=\"' + (out < 0 ? x - 4 : x) + '\" y=\"' + (y - width / 2) + '\" width=\"4\" height=\"' + width + '\" fill=\"#1d4f91\"/>',",
+    "});",
+  ].join("\n");
+  return {
+    slug: "gallery-styling",
+    title: "Gallery: looks and annotations",
+    ja: "スタイルと注釈",
+    intro: "The named looks on four sports, colours by feature, line widths and dashes, goal styles, mowing patterns, and the arrows, axes and labels that mark a surface for teaching. Every picture is drawn by the build from the code under it.",
+    sections: [
+      section("looks", "Named looks", "`look` paints the surface, its lines and the ground round it in one palette. Each look is shown on the rink, the court, the field and the ballpark; the page's `theme` makes them light or dark.", looks.flatMap((name) => ["nhl", "nba", "nfl", "mlb"].map((sport) => item(`look-${name}-${sport}`, `${name}: ${SPORT_TITLES[sport]}`, drawing({ sport, look: name }))))),
+      section("features", "Colours by feature", `\`featureColors\` colours a part by its name; \`FEATURES\` lists the names (the rink has ${features.nhl.length}, the court ${features.nba.length}, the pitch ${features.soccer.length}).`, [
+        item("feature-nhl", "Rink: blue lines, circles and nets", drawing({ sport: "nhl", featureColors: { "blue-lines": "#0a7d3b", "face-off-circles": "#e07b00", "face-off-dots": "#e07b00", nets: "#1d4f91", crease: "#ffd9a0" } })),
+        item("feature-soccer", "Pitch: areas, goals and the centre circle", drawing({ sport: "soccer", featureColors: { "penalty-areas": "#ffe600", goals: "#ff3df2", "centre-circle": "#00e5ff", mowing: "#2f8f4a" } })),
+        item("feature-nba", "Court: rims, backboards and the key", drawing({ sport: "nba", featureColors: { key: "#6a3d9a", rims: "#00a0ff", backboards: "#ffe600", "three-point-line": "#ffe600" } })),
+      ]),
+      section("lines", "Line widths, dashes and opacity", "`lineWidth` scales every painted line or sets the ordinary one to an absolute width; `lineDash` and `lineOpacity` do what they say.", [
+        item("lines-thick", "Court, lines twice as wide", drawing({ sport: "nba", lineWidth: 2 })),
+        item("lines-absolute", "Rink, the ordinary line 1 foot wide", drawing({ sport: "nhl", lineWidth: { width: 1 } })),
+        item("lines-dashed", "Pitch, dashed", drawing({ sport: "soccer", lineDash: "dashed", lineWidth: 2 })),
+        item("lines-dotted", "Court, dotted", drawing({ sport: "nba", lineDash: "dotted", lineWidth: { width: 0.7 } })),
+        item("lines-dashdot", "Rink, dash and dot", drawing({ sport: "nhl", lineDash: "dash-dot" })),
+        item("lines-faint", "Field, faint lines", drawing({ sport: "nfl", lineOpacity: 0.45 })),
+      ]),
+      section("goals", "Goals", "`goals` styles a hockey net, a basket and a field's posts as it does a soccer goal; `goalMarkup` draws them with a function of your own.", [
+        ...["box", "line", "strip", "none"].map((name) => item(`goals-nhl-${name}`, `Rink nets: ${name}`, drawing({ sport: "nhl", goals: name, exactLines: true }))),
+        ...["box", "line", "strip", "none"].map((name) => item(`goals-nba-${name}`, `Court baskets: ${name}`, drawing({ sport: "nba", goals: name }))),
+        ...["line", "strip", "none"].map((name) => item(`goals-nfl-${name}`, `Field posts: ${name}`, drawing({ sport: "nfl", goals: name }))),
+        item("goals-custom", "A function of your own", goalCode, "`goalMarkup` is given where each goal stands and returns SVG in feet."),
+      ]),
+      section("mowing", "Mowing patterns", "`stripePattern` on a football field and a ballpark, as on a soccer pitch.", [
+        ...["wide", "narrow", "lengthwise", "checks", "diagonal", "circles"].map((name) => item(`mow-nfl-${name}`, `Field: ${name}`, drawing({ sport: "nfl", stripePattern: name }))),
+        ...["bands", "lengthwise", "checks", "diagonal", "fan"].map((name) => item(`mow-mlb-${name}`, `Ballpark: ${name}`, drawing({ sport: "mlb", stripePattern: name }))),
+        item("mow-soccer-circles", "Pitch: circles", drawing({ sport: "soccer", stripePattern: "circles" })),
+      ]),
+      section("direction", "Direction of play", "`direction` draws an arrow for the end each team attacks, by the sport's rule for the periods.", [
+        item("direction-nhl", "Rink: home attacks the right", drawing({ sport: "nhl", direction: { home: "right", away: "left" } })),
+        item("direction-nhl-p2", "Rink, second period: the ends have changed", drawing({ sport: "nhl", direction: { home: "right", away: "left", period: 2 } })),
+        item("direction-nfl-tall", "Field, tall", drawing({ sport: "nfl", orientation: "portrait", direction: { home: "right", away: "left" } })),
+        item("direction-soccer", "Pitch, with a label of your own", drawing({ sport: "soccer", direction: { home: "left", label: "Attacking the south goal" } })),
+      ]),
+      section("axes", "Axes", "`axes` puts ticks and numbers along the edges, in the drawing's own numbers or any frame of the sport.", [
+        item("axes-nfl", "Field, in yards", drawing({ sport: "nfl", axes: { ticks: 10, labels: { x: "yards", y: "yards" } } })),
+        item("axes-nhl", "Rink, in the NHL API's numbers", drawing({ sport: "nhl", axes: { frame: "nhl-api", ticks: { x: 25, y: 10 } } })),
+        item("axes-nba", "Court, in the NBA stats frame", drawing({ sport: "nba", axes: { frame: "nba-stats", ticks: 100 } })),
+        item("axes-soccer", "Pitch, in Opta's 0 to 100", drawing({ sport: "soccer", pitchType: "opta", axes: { frame: "opta", ticks: 10 } })),
+        item("axes-mlb", "Ballpark, in feet from home plate", drawing({ sport: "mlb", axes: { ticks: 100 } })),
+      ]),
+      section("landmarks", "Landmarks", "`landmarks: true` names the parts of a surface, wide and tall.", [
+        ...landmarkSports.map(([sport, title]) => item(`landmarks-${sport}`, `${title}, labelled`, drawing({ sport, landmarks: true }))),
+        item("landmarks-tall-nhl", "Rink, tall", drawing({ sport: "nhl", landmarks: true, orientation: "portrait" })),
+        item("landmarks-tall-nfl", "Field, tall", drawing({ sport: "nfl", landmarks: true, orientation: "portrait" })),
+        item("landmarks-ja", "Pitch, in Japanese", drawing({ sport: "soccer", landmarks: true, language: "ja" })),
+      ]),
+      section("together", "All of it together", "A look, labels, a scale and the arrows, for a lesson.", [
+        item("together-nba", "Court on the chalkboard", drawing({ sport: "nba", look: "chalkboard", landmarks: true, direction: { home: "right" }, axes: { ticks: 10 } })),
+        item("together-nhl", "Rink as a blueprint", drawing({ sport: "nhl", look: "blueprint", landmarks: true, direction: { home: "right", away: "left" }, axes: { ticks: 20 } })),
+      ]),
+    ],
+  };
+}
+
+export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, dataPage, curlingPage, courtsPage, stylingPage];
 
 /** The sections of every page, with each item's picture made by running its code. */
 export function galleryData(lib) {

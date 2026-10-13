@@ -1,4 +1,6 @@
 import { KYOGIJO_COURTS_STYLE } from "./courts.style.ts";
+import { KYOGIJO_FEATURE_STYLE } from "./features.ts";
+import { KYOGIJO_LOOK_STYLE } from "./look.ts";
 
 /**
  * The drawing's stylesheet, without the heat layers' rules: custom properties for every colour, in light and dark, and the rule of each class. It is
@@ -136,5 +138,18 @@ export const KYOGIJO_TEAM_STYLE = `
 .kyogijo .ky-fm>*{fill:var(--c,var(--ky-layer));stroke:var(--ky-layer-edge);stroke-width:calc(var(--w,.3)*1px)}
 .kyogijo .ky-fm>.ky-e{fill:var(--ky-layer-hollow);stroke:var(--c,var(--ky-layer));stroke-width:calc(var(--w,.3)*2.2px)}`.trim();
 
+/**
+ * The rules of the annotations (the arrows of `direction`, the axes of `axes` and the labels and leaders of `landmarks`): words in the ink of the page with an outline in the
+ * apron's colour, thin leaders, and the arrows in the home and away colours. A drawing that has an annotation writes them in; `KYOGIJO_STYLE` has them for a page.
+ */
+export const KYOGIJO_NOTE_STYLE = `
+.kyogijo .ky-an-t{fill:var(--ky-ink);stroke:var(--ky-apron);stroke-width:.2em;paint-order:stroke;stroke-linejoin:round}
+.kyogijo .ky-an-l{stroke:var(--ky-ink);stroke-opacity:.75}
+.kyogijo .ky-an-d circle{fill:var(--ky-ink);stroke:var(--ky-apron)}
+.kyogijo .ky-an-h{--c:var(--ky-layer-home)}
+.kyogijo .ky-an-a{--c:var(--ky-layer-away)}
+.kyogijo .ky-an-ar{stroke:var(--c);fill:none}
+.kyogijo .ky-an-hd{fill:var(--c)}`.trim();
+
 /** Every rule of the package, for a page that draws with `style: "none"` and supplies the stylesheet itself. */
-export const KYOGIJO_STYLE = `${KYOGIJO_BASE_STYLE}\n${KYOGIJO_HEAT_STYLE}\n${KYOGIJO_TEAM_STYLE}\n${KYOGIJO_CURLING_STYLE}\n${KYOGIJO_COURTS_STYLE}`;
+export const KYOGIJO_STYLE = `${KYOGIJO_BASE_STYLE}\n${KYOGIJO_HEAT_STYLE}\n${KYOGIJO_TEAM_STYLE}\n${KYOGIJO_CURLING_STYLE}\n${KYOGIJO_COURTS_STYLE}\n${KYOGIJO_LOOK_STYLE}\n${KYOGIJO_FEATURE_STYLE}\n${KYOGIJO_NOTE_STYLE}`;

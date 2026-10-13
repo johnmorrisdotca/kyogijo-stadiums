@@ -34,6 +34,7 @@ export const NAV = [
       { slug: "surfaces", ja: "競技場" },
       { slug: "score", ja: "得点とレイアウト" },
       { slug: "theming", ja: "テーマと色" },
+      { slug: "annotations", ja: "攻撃方向・目盛り・部位名の注釈" },
       { slug: "accessibility", ja: "アクセシビリティ" },
     ],
   },
@@ -79,6 +80,7 @@ export const NAV = [
       { slug: "gallery-data", en: "Gallery: data on a surface", ja: "ギャラリー：競技場の上のデータ", site: true },
       { slug: "gallery-curling", en: "Gallery: curling", ja: "ギャラリー：カーリング", site: true },
       { slug: "gallery-courts", en: "Gallery: tennis, volleyball and other net sports", ja: "ギャラリー：ネット型競技のコート", site: true },
+      { slug: "gallery-styling", en: "Gallery: looks and annotations", ja: "ギャラリー：スタイルと注釈", site: true },
     ],
   },
   {

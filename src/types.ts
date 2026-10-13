@@ -2,6 +2,7 @@ import type { Layer } from "./layers.types.ts";
 import type { Unit } from "./units.ts";
 import type { SoccerFrame, SoccerProviderId } from "./surfaces/soccer-providers.ts";
 import type { SoccerPitchId, SoccerSize } from "./surfaces/soccer-spec.ts";
+import type { Frame } from "./frames.ts";
 
 /** The surfaces: three football fields, a rink, a court, a ballpark, a soccer pitch, a curling sheet and five net sports (tennis, volleyball, badminton, pickleball and table tennis). */
 export type Sport = "nfl" | "cfl" | "ifaf" | "nhl" | "nba" | "mlb" | "soccer" | "curling" | "tennis" | "volleyball" | "badminton" | "pickleball" | "tabletennis";
@@ -25,11 +26,77 @@ export type Side = "left" | "right";
 /** How much of the surface's markings are drawn. `simple` leaves out the small ones, such as hash marks. */
 export type Detail = "full" | "simple";
 
-/** How a soccer pitch is mown: bands across the pitch (the usual 19, or 9 wide, or 39 narrow), along it, in checks, or on the diagonal. */
-export type StripePattern = "bands" | "wide" | "narrow" | "lengthwise" | "checks" | "diagonal" | "none";
+/**
+ * How grass is mown: bands across the surface (the usual), wide ones or narrow ones, along it, in checks, on the diagonal, in rings round the
+ * middle (`circles`), or `none`. A ballpark is mown in `rings` by default (arcs about home plate) and may also be mown in a `fan` (wedges out from
+ * home plate). A football field and a ballpark take the same options as a soccer pitch; a surface that is not grass ignores them.
+ */
+export type StripePattern = "bands" | "wide" | "narrow" | "lengthwise" | "checks" | "diagonal" | "circles" | "rings" | "fan" | "none";
 
-/** How a soccer goal is drawn, seen from above: the net as a box behind the goal line, a line on it, a solid strip, or not at all. */
+/**
+ * How a goal is drawn, seen from above. A soccer goal: the net as a box behind the goal line, a line on it, a solid strip, or not at all.
+ * A hockey net: the same four (`box` is the open frame behind the goal line, `strip` a filled net). A basketball basket: `box` is the backboard,
+ * its arm and the rim, `line` the backboard only, `strip` a solid backboard and a filled rim, `none` neither. A football field's posts: `box`
+ * is the crossbar with its stem, `line` the crossbar alone, `strip` bolder posts, `none` no posts.
+ */
 export type GoalStyle = "box" | "line" | "strip" | "none";
+
+/**
+ * Where a goal stands, for a function of your own that draws it (`goalMarkup`) and for `goalMarkup`'s built-in styles. Every number is in feet, in the
+ * drawing's own wide frame (x along the surface from the left, y across it from the top), whatever `units` the options use.
+ */
+export interface GoalInfo {
+  sport: Sport;
+  /** The end the goal is at: `left` or `right`, as the surface is drawn wide. */
+  end: Side;
+  /** The middle of the goal's mouth on the goal line (the base of a basket's backboard). */
+  x: number;
+  y: number;
+  /** The width of the mouth, across the surface. */
+  width: number;
+  /** How far the goal reaches from `x` (a net's depth behind the goal line, a basket's arm and rim out from its backboard), and which way: +1 to the right, -1 to the left. */
+  depth: number;
+  out: 1 | -1;
+  /** The width at which this drawing draws its ordinary lines, so that a goal of your own can match them. */
+  line: number;
+}
+
+/** The looks a drawing can have, alongside `court` (a basketball court's own). See `LOOKS`. */
+export type LookName = "grass" | "night" | "chalkboard" | "blueprint" | "print" | "broadcast" | "high-contrast";
+
+/** The width of the lines: a multiple of the width they are drawn at (`2`, or `{ scale: 2 }`), or an absolute width in `units` (`{ width: 0.5 }`). */
+export type LineWidth = number | { scale: number } | { width: number };
+
+/** How lines are dashed: `solid`, `dashed`, `dotted`, `dash-dot`, or dash and gap lengths of your own, in `units`. */
+export type LineDash = "solid" | "dashed" | "dotted" | "dash-dot" | readonly number[];
+
+/** Which way a team attacks, and in which period, for the arrow of `direction`. */
+export interface DirectionOptions {
+  /** The end the home team attacks, as the surface is drawn wide: `left` or `right`. In the first period, unless `period` says another. */
+  home?: Side;
+  /** The end the away team attacks. */
+  away?: Side;
+  /**
+   * The period the arrows are for. The teams change ends by the sport's rule (hockey after every period, football after the first and the third quarters,
+   * basketball at the half), so `home: "right", period: 2` in hockey draws home attacking the left. For a sport with no rule here, or an overtime a rule does not
+   * settle, pass `changedAfter`.
+   */
+  period?: number;
+  /** The periods after which the teams change ends, for a sport (or a case) the rules in `attackingIn` do not settle. */
+  changedAfter?: readonly number[];
+  /** The words by the arrow: one text for both, or one for each team. The teams' names or "Home" and "Away" by default; `false` for none. */
+  label?: string | false | { home?: string; away?: string };
+}
+
+/** The axes of `axes`: a frame, where the ticks stand and whether they are numbered. */
+export interface AxesOptions {
+  /** A frame of `FRAMES` (or one of your own) for the sport: the ticks are its numbers. The surface's own (feet, or `units`) when missing. */
+  frame?: string | Frame;
+  /** The distance between ticks, or the values to put one at, for both axes or for `x` and `y` each. A round step that gives about eight ticks when missing. */
+  ticks?: number | readonly number[] | { x?: number | readonly number[]; y?: number | readonly number[] };
+  /** `false` for ticks with no numbers; or the titles of the axes, `{ x: "yards", y: "feet" }`. The frame's unit when missing. */
+  labels?: boolean | { x?: string; y?: string };
+}
 
 /** The size of a score drawing: the surface with the score on it, the surface with a strip under it, or one strip. */
 export type Size = "full" | "compact" | "badge";
@@ -296,6 +363,24 @@ export interface SurfaceOptions {
   goals?: GoalStyle;
   /** Corner flags on a soccer pitch. On by default in the `full` detail. */
   cornerFlags?: boolean;
+  /** A named look: the surface, the lines and the ground round it in one palette, light and dark. See `LOOKS`. Over the theme's colours, under `colors`. */
+  look?: LookName;
+  /** The width of the lines (see `LineWidth`): a multiple of the width they are drawn at, or an absolute width. */
+  lineWidth?: LineWidth;
+  /** Dash the painted lines (see `LineDash`). A line that is dashed by its rules (a free-throw circle) keeps its own dashes. */
+  lineDash?: LineDash;
+  /** The opacity of the painted lines, 0 to 1. */
+  lineOpacity?: number;
+  /** Colours by the name of a feature of the surface (`FEATURES[sport]`): `{ "blue-lines": "#1d4f91" }`. A name the sport does not have is an error that lists the names. */
+  featureColors?: Readonly<Record<string, string>>;
+  /** A function of your own that draws a goal: it is given where each goal stands (`GoalInfo`) and returns SVG markup in the drawing's wide frame, in place of the built-in goal. */
+  goalMarkup?: (goal: GoalInfo) => string;
+  /** An arrow for the end each team attacks, in the margin of the surface, with the teams' names or words of your own. */
+  direction?: DirectionOptions;
+  /** Axes with ticks along the surface's edges, in its own frame or a provider's. */
+  axes?: AxesOptions;
+  /** Label the parts of the surface in the margin (the blue lines, the three-point arc, the hog lines, the yard numbers...), for teaching. Words in `language`. */
+  landmarks?: boolean;
   /**
    * Data on the surface: points, lines, arrows and text, in the surface's frame or a provider's. They are drawn over the markings (and
    * under a score's panel), cut to the surface's outline, and described in the drawing's description. See `drawLayers` and `layerTable`.

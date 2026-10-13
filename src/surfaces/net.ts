@@ -1,6 +1,6 @@
 import { courtGeometry, courtSize, sideReach, type CourtPlan, type Fixture, type Rect } from "../court.ts";
 import { el, num } from "../format.ts";
-import { quarterTurn, type BuildOptions, type Surface } from "./surface.ts";
+import { ft, quarterTurn, type BuildOptions, type Mark, type Surface } from "./surface.ts";
 
 /** A rectangle as a closed sub-path. */
 const box = (r: Rect): string => `M${num(r[0])} ${num(r[1])}H${num(r[2])}V${num(r[3])}H${num(r[0])}Z`;
@@ -36,21 +36,21 @@ export function netCourt(o: BuildOptions, plan: CourtPlan): Surface {
     return w < h ? [(r[0] + r[2]) / 2 - least / 2, r[1], (r[0] + r[2]) / 2 + least / 2, r[3]] : [r[0], (r[1] + r[3]) / 2 - least / 2, r[2], (r[1] + r[3]) / 2 + least / 2];
   };
 
-  let base = el("rect", { class: "ky-apron", x: view0.x, y: view0.y, width: view0.w, height: view0.h });
-  if (zone !== null) base += el("rect", { class: "ky-free", x: -end, y: -side, width: L + 2 * end, height: W + 2 * side });
-  base += el("rect", { class: "ky-surface", x: 0, y: 0, width: L, height: W });
-  if (geometry.areas.length > 0) base += el("path", { class: "ky-area", d: geometry.areas.map(box).join("") });
+  let base = el("rect", { class: ft(o, "apron", "ky-apron"), x: view0.x, y: view0.y, width: view0.w, height: view0.h });
+  if (zone !== null) base += el("rect", { class: ft(o, "free-zone", "ky-free"), x: -end, y: -side, width: L + 2 * end, height: W + 2 * side });
+  base += el("rect", { class: ft(o, "court", "ky-surface"), x: 0, y: 0, width: L, height: W });
+  if (geometry.areas.length > 0) base += el("path", { class: ft(o, "areas", "ky-area"), d: geometry.areas.map(box).join("") });
 
   const lineRects = [...geometry.lines, ...(full ? geometry.small : [])].map(thick);
-  let lines = el("path", { class: "ky-fill-line", d: lineRects.map(box).join("") });
+  let lines = el("path", { class: ft(o, "lines", "ky-fill-line"), d: lineRects.map(box).join("") });
   // The net: a line across the court at its middle, from post to post; its posts and, in volleyball, the antennae at the side lines.
   const nw = Math.max(L * 0.004, 0.02);
   const net = geometry.net;
-  lines += el("rect", { class: "ky-nt-line", x: net.x - nw / 2, y: net.y0, width: nw, height: net.y1 - net.y0 });
-  for (const post of geometry.posts) lines += mark(post, "ky-nt-post");
+  lines += el("rect", { class: ft(o, "net", "ky-nt-line"), x: net.x - nw / 2, y: net.y0, width: nw, height: net.y1 - net.y0 });
+  for (const post of geometry.posts) lines += mark(post, ft(o, "posts", "ky-nt-post"));
   if (full) {
-    for (const stick of geometry.sticks) lines += mark(stick, "ky-nt-post");
-    for (const antenna of geometry.antennae) lines += mark(antenna, "ky-red-fill");
+    for (const stick of geometry.sticks) lines += mark(stick, ft(o, "posts", "ky-nt-post"));
+    for (const antenna of geometry.antennae) lines += mark(antenna, ft(o, "antennae", "ky-red-fill"));
   }
 
   // The teams' names are not painted on these courts: the board names the teams. The board lies over the net, between the lines it needs.
@@ -67,10 +67,83 @@ export function netCourt(o: BuildOptions, plan: CourtPlan): Surface {
     plate: spot,
     turned,
   };
+  surface.box = { x: 0, y: 0, w: L, h: W };
+  surface.lineRef = { width: plan.sport === "tabletennis" ? plan.figures.edgeLine : plan.figures.lineWidth, feet: 1 };
+  if (o.landmarks === true) surface.marks = netMarks(plan, L, W);
   if (turned) {
     const tt = quarterTurn(view0);
     surface.view = tt.view;
     surface.turn = tt.turn;
   }
   return surface;
+}
+
+/** The parts of a net sport's court to name, from the league's figures (feet): the lines across and along the court, the zones either side of the net and the net. */
+function netMarks(plan: CourtPlan, L: number, W: number): Mark[] {
+  const cx = L / 2;
+  const cy = W / 2;
+  const net: Mark = { id: "court-net", x: cx, y: 0, side: "top" };
+  switch (plan.sport) {
+    case "tennis": {
+      const f = plan.figures;
+      const inset = (W - f.widthSingles) / 2;
+      return [
+        { id: "baseline", x: f.lineWidth / 2, y: W * 0.8, side: "bottom" },
+        { id: "sideline", x: L * 0.12, y: 0, side: "top" },
+        { id: "singles-sideline", x: L * 0.12, y: W - inset, side: "bottom" },
+        { id: "service-line", x: cx - f.serviceLine + f.lineWidth / 2, y: inset + f.widthSingles * 0.2, side: "top" },
+        { id: "centre-service-line", x: cx - f.serviceLine / 2, y: cy, side: "bottom" },
+        { id: "centre-mark", x: f.lineWidth + f.centreMark.length / 2, y: cy, side: "top" },
+        net,
+      ];
+    }
+    case "volleyball": {
+      const f = plan.figures;
+      const marks: Mark[] = [
+        { id: "end-line", x: f.lineWidth / 2, y: W * 0.8, side: "bottom" },
+        { id: "sideline", x: L * 0.12, y: 0, side: "top" },
+        net,
+      ];
+      if (f.attackLine !== null) {
+        marks.push({ id: "attack-line", x: cx - f.attackLine + f.lineWidth / 2, y: W * 0.3, side: "top" });
+        marks.push({ id: "centre-line", x: cx, y: W * 0.8, side: "bottom" });
+      }
+      marks.push({ id: "antenna", x: cx, y: W, side: "bottom" });
+      return marks;
+    }
+    case "badminton": {
+      const f = plan.figures;
+      return [
+        { id: "end-line", x: f.lineWidth / 2, y: W * 0.8, side: "bottom" },
+        { id: "sideline", x: L * 0.12, y: 0, side: "top" },
+        { id: "singles-sideline", x: L * 0.12, y: W - f.singlesInset, side: "bottom" },
+        { id: "long-service-line", x: f.doublesLongServiceInset + f.lineWidth / 2, y: W * 0.2, side: "top" },
+        { id: "short-service-line", x: cx - f.shortServiceLine - f.lineWidth / 2, y: W * 0.3, side: "top" },
+        { id: "centre-line", x: L * 0.2, y: cy, side: "bottom" },
+        net,
+      ];
+    }
+    case "pickleball": {
+      const f = plan.figures;
+      return [
+        { id: "baseline", x: f.lineWidth / 2, y: W * 0.8, side: "bottom" },
+        { id: "sideline", x: L * 0.12, y: 0, side: "top" },
+        { id: "non-volley-line", x: cx - f.nonVolley + f.lineWidth / 2, y: W * 0.2, side: "top" },
+        { id: "non-volley-zone", x: cx - f.nonVolley / 2, y: W * 0.7, side: "bottom" },
+        { id: "centre-line", x: L * 0.15, y: cy, side: "bottom" },
+        net,
+      ];
+    }
+    default: {
+      const f = plan.figures;
+      return [
+        { id: "end-line", x: f.edgeLine / 2, y: W * 0.8, side: "bottom" },
+        { id: "end-line", x: L - f.edgeLine / 2, y: W * 0.2, side: "top" },
+        { id: "sideline", x: L * 0.12, y: 0, side: "top" },
+        { id: "sideline", x: L * 0.88, y: W, side: "bottom" },
+        { id: "centre-line", x: L * 0.2, y: cy, side: "bottom" },
+        net,
+      ];
+    }
+  }
 }

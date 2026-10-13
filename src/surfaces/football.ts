@@ -1,6 +1,7 @@
 import { el, num } from "../format.ts";
 import { GOALPOST_WIDTH, HASH_LENGTH, footballLength, type FootballSpec } from "../geometry.ts";
-import { quarterTurn, textOn, type BuildOptions, type Surface } from "./surface.ts";
+import { mowTurf } from "../mow.ts";
+import { ft, quarterTurn, textOn, type BuildOptions, type Mark, type Surface } from "./surface.ts";
 
 const DIGIT_HEIGHT = 6;
 /** A font size whose capital digits are six feet tall. */
@@ -34,22 +35,30 @@ export function football(spec: FootballSpec, o: BuildOptions, marks: FootballMar
   const full = o.detail === "full";
 
   // Base: the ground, the turf, the mown stripes, the end zones.
-  let base = el("rect", { class: "ky-apron", x: view0.x, y: view0.y, width: view0.w, height: view0.h });
-  base += el("rect", { class: "ky-surface", x: 0, y: 0, width: L, height: W });
-  if (o.stripes) {
+  let base = el("rect", { class: ft(o, "apron", "ky-apron"), x: view0.x, y: view0.y, width: view0.w, height: view0.h });
+  base += el("rect", { class: ft(o, "turf", "ky-surface"), x: 0, y: 0, width: L, height: W });
+  let defs = "";
+  if (o.stripes && (o.mow === undefined || o.mow === "bands" || o.mow === "rings" || o.mow === "fan")) {
     const stripes: string[] = [];
     for (let k = 1; k < yards; k += 2) stripes.push(`M${num(e + spec.yardLine * k)} 0h${num(spec.yardLine)}v${num(W)}h${num(-spec.yardLine)}z`);
-    base += el("path", { class: "ky-stripe", d: segments(stripes) });
+    base += el("path", { class: ft(o, "mowing", "ky-stripe"), d: segments(stripes) });
+  } else if (o.stripes && o.mow !== "none") {
+    // Another pattern, mown on the field of play between the goal lines; the end zones are mown as the field is.
+    const mown = mowTurf(o.mow as NonNullable<BuildOptions["mow"]>, { x: e, y: 0, w: spec.length, h: W }, spec.yardLine);
+    if (mown.path !== "") {
+      if (mown.clip) defs = `<clipPath id="${o.id}-turf"><rect x="${num(e)}" y="0" width="${num(spec.length)}" height="${num(W)}"/></clipPath>`;
+      base += el("path", { class: ft(o, "mowing", "ky-stripe"), d: mown.path, "fill-rule": mown.evenodd ? "evenodd" : undefined, "clip-path": mown.clip ? `url(#${o.id}-turf)` : undefined });
+    }
   }
-  base += el("rect", { class: "ky-zone ky-zone-left", x: 0, y: 0, width: e, height: W });
-  base += el("rect", { class: "ky-zone ky-zone-right", x: L - e, y: 0, width: e, height: W });
+  base += el("rect", { class: ft(o, "end-zone-left", "ky-zone ky-zone-left"), x: 0, y: 0, width: e, height: W });
+  base += el("rect", { class: ft(o, "end-zone-right", "ky-zone ky-zone-right"), x: L - e, y: 0, width: e, height: W });
 
   // Lines: the boundary band, the yard lines, the goal lines.
-  let lines = el("rect", { class: "ky-line ky-band", x: -band / 2, y: -band / 2, width: L + band, height: W + band, "stroke-width": band, fill: "none" });
+  let lines = el("rect", { class: ft(o, "boundary", "ky-line ky-band"), x: -band / 2, y: -band / 2, width: L + band, height: W + band, "stroke-width": band, fill: "none" });
   const yardPath: string[] = [];
   for (let i = 1; i < yards; i += 1) yardPath.push(`M${num(e + spec.yardLine * i)} 0V${num(W)}`);
-  lines += el("path", { class: "ky-line", d: segments(yardPath), "stroke-width": lw });
-  lines += el("path", { class: "ky-line", d: `M${num(e)} 0V${num(W)}M${num(L - e)} 0V${num(W)}`, "stroke-width": goal });
+  lines += el("path", { class: ft(o, "yard-lines", "ky-line"), d: segments(yardPath), "stroke-width": lw });
+  lines += el("path", { class: ft(o, "goal-lines", "ky-line"), d: `M${num(e)} 0V${num(W)}M${num(L - e)} 0V${num(W)}`, "stroke-width": goal });
 
   if (full) {
     // Hash marks at each yard, 2 feet long and the width of the hash-mark lines from each sideline, in the field of play only.
@@ -68,12 +77,13 @@ export function football(spec: FootballSpec, o: BuildOptions, marks: FootballMar
       const x = e + spec.yardLine * i;
       hashes.push(`M${num(x - 1)} ${num(spec.hash - 1)}h2M${num(x - 1)} ${num(W - spec.hash + 1)}h2`);
     }
-    if (hashes.length > 0) lines += el("path", { class: "ky-line", d: segments(hashes), "stroke-width": mark });
-    if (ticks.length > 0) lines += el("path", { class: "ky-line", d: segments(ticks), "stroke-width": mark });
+    if (hashes.length > 0) lines += el("path", { class: ft(o, "hash-marks", "ky-line"), d: segments(hashes), "stroke-width": mark });
+    if (ticks.length > 0) lines += el("path", { class: ft(o, "hash-marks", "ky-line"), d: segments(ticks), "stroke-width": mark });
   }
 
   // Numbers: each ten yards, upright on the near side and upside down on the far one, with an arrow to the nearest goal line.
   const size = DIGIT_FONT;
+  const numCls = ft(o, "numbers", "ky-num");
   const [near, far] = spec.numbers;
   const numbered = spec.noNumbers !== true;
   const centreY = (near + far) / 2;
@@ -93,23 +103,23 @@ export function football(spec: FootballSpec, o: BuildOptions, marks: FootballMar
       const centre = p.label === spec.centre || p.pos === yardsLong / 2;
       const digits = [...p.label];
       const flip = side === "far";
-      if (digits.length === 1) numbers += textOn(turned, p.x, y + DIGIT_HEIGHT / 2, p.label, { size, anchor: "middle", cls: "ky-num", flip, weight: 700 });
+      if (digits.length === 1) numbers += textOn(turned, p.x, y + DIGIT_HEIGHT / 2, p.label, { size, anchor: "middle", cls: numCls, flip, weight: 700 });
       else {
         const dx = 3.4;
         if (turned) {
           // Turned a quarter, the digits stand side by side on the screen, which is along the field's width.
-          numbers += textOn(turned, p.x, y + dx + DIGIT_HEIGHT / 2, digits[0], { size, anchor: "middle", cls: "ky-num", weight: 700 });
-          numbers += textOn(turned, p.x, y - dx + DIGIT_HEIGHT / 2, digits[1], { size, anchor: "middle", cls: "ky-num", weight: 700 });
+          numbers += textOn(turned, p.x, y + dx + DIGIT_HEIGHT / 2, digits[0], { size, anchor: "middle", cls: numCls, weight: 700 });
+          numbers += textOn(turned, p.x, y - dx + DIGIT_HEIGHT / 2, digits[1], { size, anchor: "middle", cls: numCls, weight: 700 });
         } else {
           // Seen from the far sideline a number reads the other way round along the field: its digits swap places.
-          numbers += textOn(turned, p.x - dx, y + DIGIT_HEIGHT / 2, flip ? digits[1] : digits[0], { size, anchor: "middle", cls: "ky-num", flip, weight: 700 });
-          numbers += textOn(turned, p.x + dx, y + DIGIT_HEIGHT / 2, flip ? digits[0] : digits[1], { size, anchor: "middle", cls: "ky-num", flip, weight: 700 });
+          numbers += textOn(turned, p.x - dx, y + DIGIT_HEIGHT / 2, flip ? digits[1] : digits[0], { size, anchor: "middle", cls: numCls, flip, weight: 700 });
+          numbers += textOn(turned, p.x + dx, y + DIGIT_HEIGHT / 2, flip ? digits[0] : digits[1], { size, anchor: "middle", cls: numCls, flip, weight: 700 });
         }
       }
       if (full && !centre && Number(p.label) < 50) {
         const ax = nearGoalLeft ? p.x - 8.4 : p.x + 8.4;
         const dir = nearGoalLeft ? -1 : 1;
-        numbers += el("path", { class: "ky-fill-line", d: `M${num(ax + dir * 1.5)} ${num(y)}L${num(ax - dir * 1.5)} ${num(y - 1.6)}V${num(y + 1.6)}Z` });
+        numbers += el("path", { class: ft(o, "numbers", "ky-fill-line"), d: `M${num(ax + dir * 1.5)} ${num(y)}L${num(ax - dir * 1.5)} ${num(y - 1.6)}V${num(y + 1.6)}Z` });
       }
     }
   }
@@ -123,16 +133,23 @@ export function football(spec: FootballSpec, o: BuildOptions, marks: FootballMar
     postX.forEach((x, i) => {
       const dir = outward[i];
       const h = (spec.postWidth ?? GOALPOST_WIDTH) / 2;
+      if (o.goalMarkup !== undefined) {
+        posts += o.goalMarkup({ sport: spec.id, end: i === 0 ? "left" : "right", x, y: W / 2, width: 2 * h, depth: marks.postShape === "slingshot" ? 4 : 0, out: dir as 1 | -1, line: lw });
+        return;
+      }
+      if (o.goals === "none") return;
       // A slingshot post has one support behind the crossbar, drawn as a stem; an H has two poles, which are the ends.
-      const stem = marks.postShape === "slingshot" ? `M${num(x)} ${num(W / 2)}h${num(dir * 4)}` : "";
-      posts += el("path", { class: "ky-post", d: `M${num(x)} ${num(W / 2 - h)}V${num(W / 2 + h)}${stem}`, fill: "none", "stroke-width": 0.9 });
-      posts += el("circle", { class: "ky-post-end", cx: x, cy: W / 2 - h, r: 1.1 });
-      posts += el("circle", { class: "ky-post-end", cx: x, cy: W / 2 + h, r: 1.1 });
+      const stem = marks.postShape === "slingshot" && o.goals !== "line" ? `M${num(x)} ${num(W / 2)}h${num(dir * 4)}` : "";
+      const bold = o.goals === "strip";
+      posts += el("path", { class: ft(o, "posts", "ky-post"), d: `M${num(x)} ${num(W / 2 - h)}V${num(W / 2 + h)}${stem}`, fill: "none", "stroke-width": bold ? 1.8 : 0.9 });
+      if (o.goals === "line") return;
+      posts += el("circle", { class: ft(o, "posts", "ky-post-end"), cx: x, cy: W / 2 - h, r: bold ? 1.6 : 1.1 });
+      posts += el("circle", { class: ft(o, "posts", "ky-post-end"), cx: x, cy: W / 2 + h, r: bold ? 1.6 : 1.1 });
     });
-    lines += el("g", { class: "ky-posts" }, posts);
+    if (posts !== "") lines += el("g", { class: "ky-posts" }, posts);
     // Pylons at the corners of the goal lines and the end lines.
     const corners = [[e, 0, 1, 1], [e, W, 1, -1], [L - e, 0, -1, 1], [L - e, W, -1, -1], [0, 0, 1, 1], [0, W, 1, -1], [L, 0, -1, 1], [L, W, -1, -1]];
-    if (spec.pylons !== false) lines += el("g", { class: "ky-pylons" }, corners.map(([x, y, sx, sy]) => el("rect", { class: "ky-pylon", x: x + (sx > 0 ? 0 : -1.6), y: y + (sy > 0 ? 0 : -1.6), width: 1.6, height: 1.6 })).join(""));
+    if (spec.pylons !== false) lines += el("g", { class: "ky-pylons" }, corners.map(([x, y, sx, sy]) => el("rect", { class: ft(o, "pylons", "ky-pylon"), x: x + (sx > 0 ? 0 : -1.6), y: y + (sy > 0 ? 0 : -1.6), width: 1.6, height: 1.6 })).join(""));
   }
 
   const long = Math.min(W * 0.86, 142);
@@ -142,12 +159,31 @@ export function football(spec: FootballSpec, o: BuildOptions, marks: FootballMar
     view: view0,
     base,
     lines,
-    defs: "",
+    defs,
     left: { cx: e / 2, cy: W / 2, w: long, h: short, rot: -90 },
     right: { cx: L - e / 2, cy: W / 2, w: long, h: short, rot: 90 },
     plate: { cx: L / 2, cy: W / 2, w: Math.min(L * 0.36, 150), h: 70 },
     turned,
   };
+  surface.lineRef = { width: lw, feet: 1 };
+  surface.box = { x: 0, y: 0, w: L, h: W };
+  if (o.landmarks === true) {
+    const marks: Mark[] = [
+      { id: "end-zone", x: e / 2, y: 0, side: "top" },
+      { id: "goal-line", x: e, y: 0, side: "top" },
+      { id: "yard-line", x: e + spec.yardLine * 2, y: 0, side: "top" },
+      { id: "midfield", x: L / 2, y: 0, side: "top" },
+      { id: "end-line", x: 0, y: W * 0.8, side: "bottom" },
+      { id: "sideline", x: L * 0.3, y: W, side: "bottom" },
+      { id: "hash-marks", x: e + spec.yardLine * 5.5, y: W - spec.hash, side: "bottom" },
+    ];
+    if (numbered) marks.push({ id: "yard-numbers", x: e + 30 * 3, y: centreY, side: "top" });
+    if (full) {
+      marks.push({ id: "goal-posts", x: spec.posts === "end-line" ? -band / 2 : e, y: W / 2 - (spec.postWidth ?? GOALPOST_WIDTH) / 2, side: "top" });
+      if (spec.pylons !== false) marks.push({ id: "pylon", x: L - e, y: W, side: "bottom" });
+    }
+    surface.marks = marks;
+  }
   if (turned) {
     const t = quarterTurn(view0);
     surface.view = t.view;

@@ -15,7 +15,11 @@ import { badgeMarkup, bannerMarkup, plateMarkup, stateOf, type TeamView } from "
 import { setsBoardMarkup } from "./sets.board.ts";
 import { KYOGIJO_STRINGS, fill } from "./strings.ts";
 import { courtStyle } from "./courts.style.ts";
-import { KYOGIJO_BASE_STYLE, KYOGIJO_CURLING_STYLE } from "./style.ts";
+import { annotate, annotated, wideView, type Notes } from "./annotate.ts";
+import { featureColours, featureStyle } from "./features.ts";
+import { isLook, lookStyle } from "./look.ts";
+import { lineLook, restyleLines } from "./restyle.ts";
+import { KYOGIJO_BASE_STYLE, KYOGIJO_CURLING_STYLE, KYOGIJO_NOTE_STYLE } from "./style.ts";
 import { convertLength, type Unit } from "./units.ts";
 import { baseball } from "./surfaces/baseball.ts";
 import { curling } from "./surfaces/curling.ts";
@@ -155,7 +159,7 @@ const safeLength = (value: number | string | undefined): string | undefined => {
   return typeof value === "string" && /^\d+(?:\.\d+)?(?:px|%|em|rem|vw|vh)?$/.test(value.trim()) ? value.trim() : undefined;
 };
 
-const PATTERNS: readonly StripePattern[] = ["bands", "wide", "narrow", "lengthwise", "checks", "diagonal", "none"];
+const PATTERNS: readonly StripePattern[] = ["bands", "wide", "narrow", "lengthwise", "checks", "diagonal", "circles", "rings", "fan", "none"];
 const GOALS: readonly GoalStyle[] = ["box", "line", "strip", "none"];
 
 /** The pitch the options ask for: a `pitch` of the caller's, else the size a `ground` publishes, else none (the international pitch). */
@@ -185,19 +189,30 @@ function buildSoccer(o: SurfaceOptions, common: BuildOptions, scored: boolean, u
   );
 }
 
-function buildSurface(o: SurfaceOptions, portrait: boolean, id: string, score: boolean, scored: boolean): Surface {
+/** What a drawing adds to what the builders are given: the features with a colour of their own, and a margin the annotations ask for. */
+interface Extra {
+  features: ReadonlySet<string> | undefined;
+  margin?: number;
+}
+
+function buildSurface(o: SurfaceOptions, portrait: boolean, id: string, score: boolean, scored: boolean, extra: Extra): Surface {
   const court: CourtStyle | undefined = o.court;
   const baselineText: [string, string] | undefined = court?.baselineText === undefined ? undefined : typeof court.baselineText === "string" ? [court.baselineText, court.baselineText] : court.baselineText;
   const unit: Unit = lengthUnit(o);
   const common: BuildOptions = {
     portrait,
-    margin: typeof o.margin === "number" && Number.isFinite(o.margin) && o.margin >= 0 ? convertLength(o.margin, unit, "ft") : undefined,
+    margin: typeof o.margin === "number" && Number.isFinite(o.margin) && o.margin >= 0 ? convertLength(o.margin, unit, "ft") : extra.margin,
     exact: o.exactLines === true,
     detail: o.detail === "simple" ? "simple" : "full",
     stripes: o.stripes !== false,
     id,
     score,
     court: { baselineText, centreLogo: safeLogo(court?.centreLogo), paintThreePoint: court?.paintThreePoint },
+    features: extra.features,
+    mow: PATTERNS.includes(o.stripePattern as StripePattern) ? (o.stripePattern as StripePattern) : undefined,
+    goals: GOALS.includes(o.goals as GoalStyle) ? (o.goals as GoalStyle) : undefined,
+    goalMarkup: typeof o.goalMarkup === "function" ? o.goalMarkup : undefined,
+    landmarks: o.landmarks === true,
   };
   // A league's rulebook (`league`), else the markings of the season asked for (`year`), today's without one.
   const { sport, league } = chooseLeague(o);
@@ -240,7 +255,7 @@ function buildSurface(o: SurfaceOptions, portrait: boolean, id: string, score: b
 }
 
 /** The custom properties a drawing sets on its root, from the options' colours. */
-function colourStyle(o: SurfaceOptions, teams: { left?: Team; right?: Team; home?: Team; away?: Team }): string {
+function colourStyle(o: SurfaceOptions, teams: { left?: Team; right?: Team; home?: Team; away?: Team }, features: readonly (readonly [string, string])[]): string {
   const props: string[] = [];
   const set = (name: string, value: unknown): void => {
     const colour = safeColour(value);
@@ -249,9 +264,11 @@ function colourStyle(o: SurfaceOptions, teams: { left?: Team; right?: Team; home
   for (const [key, property] of Object.entries(COLOR_PROPERTIES)) set(property, o.colors?.[key as keyof Colors]);
   if (o.court !== undefined) for (const [key, property] of Object.entries(COURT_PROPERTIES)) set(property, (o.court as Record<string, unknown>)[key]);
   if (o.sheet?.rings !== undefined) for (const [key, property] of Object.entries(SHEET_PROPERTIES)) set(property, (o.sheet.rings as Record<string, unknown>)[key]);
+  for (const [name, colour] of features) props.push(`--ky-f-${name}:${colour}`);
   // A data layer's team marks take the teams' own colours, unless the colours say otherwise.
-  const homeMarks = o.layers === undefined || o.layers.length === 0 ? undefined : safeColour(teams.home?.color);
-  const awayMarks = o.layers === undefined || o.layers.length === 0 ? undefined : safeColour(teams.away?.color);
+  const marked = (o.layers !== undefined && o.layers.length > 0) || o.direction !== undefined;
+  const homeMarks = marked ? safeColour(teams.home?.color) : undefined;
+  const awayMarks = marked ? safeColour(teams.away?.color) : undefined;
   if (homeMarks !== undefined && safeColour(o.colors?.layerHome) === undefined) props.push(`--ky-layer-home:${homeMarks}`);
   if (awayMarks !== undefined && safeColour(o.colors?.layerAway) === undefined) props.push(`--ky-layer-away:${awayMarks}`);
   const left = safeColour(teams.left?.color) ?? safeColour(o.leftColor);
@@ -452,7 +469,12 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
   let description = said;
   const titleId = `${id}-t`;
   const descId = `${id}-d`;
-  const style = colourStyle(o, { left: leftTeam, right: rightTeam, home: isScore(o) ? o.home : undefined, away: isScore(o) ? o.away : undefined });
+  // The features that have a colour of their own, for the sport as drawn (a `league` of another sport is that sport's).
+  const featured = featureColours(sport, o.featureColors);
+  const features = featured.length === 0 ? undefined : new Set(featured.map(([name]) => name));
+  const style = colourStyle(o, { left: leftTeam, right: rightTeam, home: isScore(o) ? o.home : undefined, away: isScore(o) ? o.away : undefined }, featured);
+  const palette = isLook(o.look) ? o.look : undefined;
+  let notes: Notes | undefined;
   const theme = o.theme === "light" || o.theme === "dark" ? o.theme : undefined;
 
   let viewBox: string;
@@ -463,7 +485,20 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
     viewBox = `0 0 ${badge.w} ${badge.h}`;
     body = badge.markup;
   } else {
-    const surface = buildSurface(o, portrait, id, isScore(o) && sized === "full", isScore(o));
+    let surface = buildSurface(o, portrait, id, isScore(o) && sized === "full", isScore(o), { features });
+    if (annotated(o)) {
+      const teams = { home: isScore(o) ? o.home.name : undefined, away: isScore(o) ? o.away.name : undefined };
+      notes = annotate({ o, surface, turned: surface.turned, words: KYOGIJO_STRINGS[language], teams });
+      // The annotations need room in the margin: unless the options fix it, the surface is drawn again with a margin that holds them.
+      const have = surface.box === undefined ? 0 : surface.box.y - wideView(surface).y;
+      if (o.margin === undefined && notes.need > have + 0.01) {
+        surface = buildSurface(o, portrait, id, isScore(o) && sized === "full", isScore(o), { features, margin: notes.need });
+        notes = annotate({ o, surface, turned: surface.turned, words: KYOGIJO_STRINGS[language], teams });
+      }
+    }
+    // The width, dashes and opacity of the lines are laid over what the surface wrote.
+    const lines = lineLook(o, surface.lineRef, lengthUnit(o));
+    if (lines !== undefined) surface.lines = restyleLines(surface.lines, lines);
     defs = surface.defs;
     let inner = surface.base;
     let teams = "";
@@ -483,6 +518,10 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
     if (layered.summaries.length > 0 && o.description === undefined) {
       const { colon, gap } = KYOGIJO_STRINGS[language].said;
       description = `${said}${gap}${KYOGIJO_STRINGS[language].layers.data}${colon}${layered.summaries.join(gap)}`;
+    }
+    if (notes !== undefined && notes.svg !== "") {
+      inner += notes.svg;
+      if (notes.summaries.length > 0 && o.description === undefined) description = `${description}${KYOGIJO_STRINGS[language].said.gap}${notes.summaries.join(KYOGIJO_STRINGS[language].said.gap)}`;
     }
     if (isScore(o) && left !== undefined && right !== undefined && sized === "full") {
       const foot = o.label !== undefined && o.label !== "" ? o.label : [status, o.date].filter((part): part is string => part !== undefined && part !== "").join(" · ");
@@ -522,6 +561,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       "data-size": sized,
       "data-orientation": portrait ? "portrait" : "landscape",
       "data-theme": theme,
+      "data-palette": palette,
       "data-winner": isScore(o) ? winner : undefined,
       "data-version": VERSION,
       width: safeLength(o.width),
@@ -530,7 +570,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       style: style === "" ? undefined : style,
     },
     `<title id="${titleId}">${esc(title)}</title><desc id="${descId}">${esc(description)}</desc>` +
-      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}${plan === undefined ? "" : `\n${courtStyle(plan.sport, plan.look)}`}</style>`) +
+      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}${plan === undefined ? "" : `\n${courtStyle(plan.sport, plan.look)}`}${palette === undefined ? "" : `\n${lookStyle(palette)}`}${features === undefined ? "" : `\n${featureStyle(sport, features)}`}${notes === undefined || notes.svg === "" ? "" : `\n${KYOGIJO_NOTE_STYLE}`}</style>`) +
       (defs === "" ? "" : `<defs>${defs}</defs>`) +
       body,
   );

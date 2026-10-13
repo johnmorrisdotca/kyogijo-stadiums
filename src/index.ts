@@ -10,7 +10,11 @@ export type { ArrowsLayer, Comet, Layer, LayerBase, LayerKind, LayerTeam, LineDa
 export { KYOGIJO_STRINGS } from "./strings.ts";
 export type { KyogijoWords } from "./strings.ts";
 export { KYOGIJO_COURTS_STYLE } from "./courts.style.ts";
-export { KYOGIJO_CURLING_STYLE, KYOGIJO_HEAT_STYLE, KYOGIJO_STYLE, KYOGIJO_TEAM_STYLE } from "./style.ts";
+export { KYOGIJO_CURLING_STYLE, KYOGIJO_HEAT_STYLE, KYOGIJO_NOTE_STYLE, KYOGIJO_STYLE, KYOGIJO_TEAM_STYLE } from "./style.ts";
+export { KYOGIJO_LOOK_STYLE, LOOKS, LOOK_NAMES, LOOK_PAIRS, contrastOf, groupOf, lookPalette, lookStyle } from "./look.ts";
+export type { Group as LookGroup, Look, Palette as LookPalette, PaletteKey as LookPaletteKey } from "./look.ts";
+export { FEATURES, FEATURE_INFO, KYOGIJO_FEATURE_STYLE } from "./features.ts";
+export type { Feature } from "./features.ts";
 export type { DelaunayLayer, FlowLayer, Formation, FormationLayer, FormationPlayer, FormationPosition, FormationSport, HullLayer, MoveDatum, NetworkLayer, NetworkNode, PassDatum, PlayerDatum, SonarLayer, VoronoiLayer } from "./team.types.ts";
 export { COURT_THEMES } from "./themes.ts";
 export { abbreviate, capitals, fitLines, textWidth } from "./text.ts";
@@ -31,14 +35,20 @@ export { SOCCER_PROVIDER_IDS, SOCCER_PROVIDERS, frameMatrix, rescale, soccerFram
 export type { Rescaler, SoccerFrame, SoccerProvider, SoccerProviderId } from "./surfaces/soccer-providers.ts";
 export { VERSION } from "./version.ts";
 export type {
+  AxesOptions,
   Box,
   Colors,
   CourtStyle,
   Detail,
+  DirectionOptions,
   Fence,
+  GoalInfo,
   GoalStyle,
   Language,
   NetStyle,
+  LineDash,
+  LineWidth,
+  LookName,
   Orientation,
   ScoreOptions,
   Side,

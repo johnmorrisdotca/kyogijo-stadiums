@@ -313,6 +313,80 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `team.tableToAngle` | To (degrees) | 終了角（度） |
 | `team.tableRose` | Rose | ローズ図 |
 | `team.tableUnit` | Lengths in {unit}. | 長さの単位：{unit}。 |
+| `notes.home` | Home | ホーム |
+| `notes.away` | Away | アウェイ |
+| `notes.attacking` | {team} attacking | {team}の攻撃方向 |
+| `notes.left` | left | 左 |
+| `notes.right` | right | 右 |
+| `notes.attacks` | {team} attacks the {side} end. | {team}は{side}方向へ攻めます。 |
+| `notes.attacksIn` | {team} attacks the {side} end in period {n}. | 第{n}ピリオド、{team}は{side}方向へ攻めます。 |
+| `notes.axesSurface` | Axes in the drawing's own numbers, in {unit}: x from {x0} to {x1}, y from {y0} to {y1}. | この図の座標軸です。単位は{unit}で、xは{x0}から{x1}、yは{y0}から{y1}です。 |
+| `notes.axesFrame` | Axes in the {frame} frame, in {unit}: x from {x0} to {x1}, y from {y0} to {y1}. | {frame}の座標系の軸です。単位は{unit}で、xは{x0}から{x1}、yは{y0}から{y1}です。 |
+| `notes.labelled` | Labelled parts: {list}. | 名称を表示している部分：{list}。 |
+| `notes.names.end-zone` | End zone | エンドゾーン |
+| `notes.names.goal-line` | Goal line | ゴールライン |
+| `notes.names.yard-line` | Yard line | ヤードライン |
+| `notes.names.midfield` | Midfield | ミッドフィールド |
+| `notes.names.end-line` | End line | エンドライン |
+| `notes.names.sideline` | Sideline | サイドライン |
+| `notes.names.hash-marks` | Hash marks | ハッシュマーク |
+| `notes.names.yard-numbers` | Yard numbers | ヤードナンバー |
+| `notes.names.goal-posts` | Goal posts | ゴールポスト |
+| `notes.names.pylon` | Pylon | パイロン |
+| `notes.names.boards` | Boards | ボード |
+| `notes.names.blue-line` | Blue line | ブルーライン |
+| `notes.names.face-off-circle` | Face-off circle | フェイスオフサークル |
+| `notes.names.crease` | Crease | クリース |
+| `notes.names.net` | Net | ゴールネット |
+| `notes.names.centre-circle` | Centre circle | センターサークル |
+| `notes.names.centre-red-line` | Centre red line | センターレッドライン |
+| `notes.names.trapezoid` | Trapezoid | トラペゾイド |
+| `notes.names.referee-crease` | Referee's crease | レフェリークリース |
+| `notes.names.baseline` | Baseline | ベースライン |
+| `notes.names.halfway-line` | Halfway line | ハーフウェーライン |
+| `notes.names.half-court-line` | Halfway line | センターライン |
+| `notes.names.key` | Key | ペイントエリア |
+| `notes.names.free-throw-line` | Free-throw line | フリースローライン |
+| `notes.names.free-throw-circle` | Free-throw circle | フリースローサークル |
+| `notes.names.backboard` | Backboard | バックボード |
+| `notes.names.basket` | Basket | リング |
+| `notes.names.three-point-line` | Three-point line | スリーポイントライン |
+| `notes.names.restricted-area` | Restricted area | リストリクテッドエリア |
+| `notes.names.home-plate` | Home plate | ホームベース |
+| `notes.names.first-base` | First base | 一塁 |
+| `notes.names.second-base` | Second base | 二塁 |
+| `notes.names.third-base` | Third base | 三塁 |
+| `notes.names.foul-line` | Foul line | ファウルライン |
+| `notes.names.outfield-fence` | Outfield fence | 外野フェンス |
+| `notes.names.warning-track` | Warning track | ウォーニングトラック |
+| `notes.names.pitchers-plate` | Pitcher's plate | 投手板 |
+| `notes.names.batters-box` | Batter's box | バッターボックス |
+| `notes.names.touchline` | Touchline | タッチライン |
+| `notes.names.penalty-area` | Penalty area | ペナルティエリア |
+| `notes.names.goal-area` | Goal area | ゴールエリア |
+| `notes.names.penalty-mark` | Penalty mark | ペナルティマーク |
+| `notes.names.penalty-arc` | Penalty arc | ペナルティアーク |
+| `notes.names.corner-arc` | Corner arc | コーナーアーク |
+| `notes.names.goal` | Goal | ゴール |
+| `notes.names.service-line` | Service line | サービスライン |
+| `notes.names.centre-service-line` | Centre service line | センターサービスライン |
+| `notes.names.singles-sideline` | Singles sideline | シングルスサイドライン |
+| `notes.names.centre-mark` | Centre mark | センターマーク |
+| `notes.names.attack-line` | Attack line | アタックライン |
+| `notes.names.antenna` | Antenna | アンテナ |
+| `notes.names.long-service-line` | Long service line | ロングサービスライン |
+| `notes.names.short-service-line` | Short service line | ショートサービスライン |
+| `notes.names.non-volley-line` | Non-volley line | ノンボレーライン |
+| `notes.names.non-volley-zone` | Non-volley zone | ノンボレーゾーン |
+| `notes.names.court-net` | Net | ネット |
+| `notes.names.hog-line` | Hog line | ホッグライン |
+| `notes.names.tee-line` | Tee line | ティーライン |
+| `notes.names.back-line` | Back line | バックライン |
+| `notes.names.house` | House | ハウス |
+| `notes.names.button` | Button | ボタン |
+| `notes.names.centre-line` | Centre line | センターライン |
+| `notes.names.hack` | Hack | ハック |
+| `notes.names.free-guard-zone` | Free guard zone | フリーガードゾーン |
 | `replay.title` | Replay, {time} | リプレイ（再生時間{time}） |
 | `replay.objects` | {n} tracked objects | 追跡対象は{n}個 |
 | `replay.objectsOne` | {n} tracked object | 追跡対象は{n}個 |
@@ -653,6 +727,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `surfaces` | The surfaces | 競技場 |
 | page `score` | Score and layout | 得点とレイアウト |
 | page `theming` | Theming | テーマと色 |
+| page `annotations` | Annotations | 攻撃方向・目盛り・部位名の注釈 |
 | page `accessibility` | Accessibility | アクセシビリティ |
 | group `places` | Sports and places | 競技と場所 |
 | page `soccer` | Soccer | サッカー |
@@ -680,6 +755,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `gallery-data` | Gallery: data on a surface | ギャラリー：競技場の上のデータ |
 | page `gallery-curling` | Gallery: curling | ギャラリー：カーリング |
 | page `gallery-courts` | Gallery: tennis, volleyball and other net sports | ギャラリー：ネット型競技のコート |
+| page `gallery-styling` | Gallery: looks and annotations | ギャラリー：スタイルと注釈 |
 | group `compare` | Compare | 比較 |
 | page `compare` | How it compares | 他のパッケージとの比較 |
 | group `reference` | Reference | リファレンス |

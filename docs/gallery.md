@@ -12,5 +12,6 @@ The gallery is made when the site is built (`pnpm site`), so its pages are on th
 - [Data on a surface](https://johnmorrisdotca.github.io/kyogijo/docs/gallery-data.html): every kind of data layer, every heat layer, the ready-made charts, the team-shape layers (networks, formations, Voronoi, triangulations, hulls, flow fields and sonars) and a frame of a replay.
 - [Curling](https://johnmorrisdotca.github.io/kyogijo/docs/gallery-curling.html): the sheet of each rule book, its display ranges and house colours, the board and the badge, and the stones of an end.
 - [Net sports](https://johnmorrisdotca.github.io/kyogijo/docs/gallery-courts.html): each court wide and tall, every look, the free zone, the singles sticks, the board of sets and games with its serving ball, and the zones of each side of the net.
+- [Looks and annotations](https://johnmorrisdotca.github.io/kyogijo/docs/gallery-styling.html): the seven named looks, colours by feature, line widths and dashes, goal styles, mowing patterns, and the arrows, axes and labels that mark a surface for teaching.
 
 The same site draws one surface in each of the twenty-two [coordinate frames](./frames.md), side by side, and puts every ballpark and ground on [a map](./atlas.md).

@@ -316,6 +316,25 @@ export interface KyogijoWords {
     /** The caption's note on a table of areas and lengths: {unit}. */
     tableUnit: string;
   };
+  /** The words of the annotations (`direction`, `axes` and `landmarks`): the teams, the sentences of the description and the name of each part of a surface. */
+  notes: {
+    home: string;
+    away: string;
+    /** By an attack arrow: {team}. */
+    attacking: string;
+    left: string;
+    right: string;
+    /** What the description says of an arrow: {team}, {side}, and for a period {n}. */
+    attacks: string;
+    attacksIn: string;
+    /** What it says of the axes: the frame's name or the surface's own, its unit and the range of each axis. */
+    axesSurface: string;
+    axesFrame: string;
+    /** The parts that are labelled: {list}. */
+    labelled: string;
+    /** The name of each part of a surface that can be labelled, by the key a builder gives it. */
+    names: Record<string, string>;
+  };
   /** The words of a replay: its summary, its marks, what is announced when something happens, and the controls under it. */
   replay: {
     /** The first sentence of the summary: {time} is the length. */
@@ -457,6 +476,22 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       tablePlayer: "Player", tableFrom: "From", tableTo: "To", tablePasses: "Passes", tableMade: "Passes made", tableReceived: "Passes received", tableTouches: "Touches", tablePosition: "Position", tableNumber: "Number", tableName: "Name", tablePlayers: "Players", tableShare: "Share of the surface (%)", tableArea: "Area", tableCorners: "Corners", tableTriangles: "Triangles", tableEdges: "Edges", tableDirection: "Mean direction (degrees)", tableLength: "Mean length", tableSteady: "Steadiness (%)", tableFromAngle: "From (degrees)", tableToAngle: "To (degrees)", tableRose: "Rose",
       tableUnit: "Lengths in {unit}.",
     },
+    notes: {
+      home: "Home", away: "Away", attacking: "{team} attacking", left: "left", right: "right",
+      attacks: "{team} attacks the {side} end.", attacksIn: "{team} attacks the {side} end in period {n}.",
+      axesSurface: "Axes in the drawing's own numbers, in {unit}: x from {x0} to {x1}, y from {y0} to {y1}.",
+      axesFrame: "Axes in the {frame} frame, in {unit}: x from {x0} to {x1}, y from {y0} to {y1}.",
+      labelled: "Labelled parts: {list}.",
+      names: {
+        "end-zone": "End zone", "goal-line": "Goal line", "yard-line": "Yard line", midfield: "Midfield", "end-line": "End line", sideline: "Sideline", "hash-marks": "Hash marks", "yard-numbers": "Yard numbers", "goal-posts": "Goal posts", pylon: "Pylon",
+        boards: "Boards", "blue-line": "Blue line", "face-off-circle": "Face-off circle", crease: "Crease", net: "Net", "centre-circle": "Centre circle", "centre-red-line": "Centre red line", trapezoid: "Trapezoid", "referee-crease": "Referee's crease",
+        baseline: "Baseline", "halfway-line": "Halfway line", "half-court-line": "Halfway line", key: "Key", "free-throw-line": "Free-throw line", "free-throw-circle": "Free-throw circle", backboard: "Backboard", basket: "Basket", "three-point-line": "Three-point line", "restricted-area": "Restricted area",
+        "home-plate": "Home plate", "first-base": "First base", "second-base": "Second base", "third-base": "Third base", "foul-line": "Foul line", "outfield-fence": "Outfield fence", "warning-track": "Warning track", "pitchers-plate": "Pitcher's plate", "batters-box": "Batter's box",
+        touchline: "Touchline", "penalty-area": "Penalty area", "goal-area": "Goal area", "penalty-mark": "Penalty mark", "penalty-arc": "Penalty arc", "corner-arc": "Corner arc", goal: "Goal",
+        "service-line": "Service line", "centre-service-line": "Centre service line", "singles-sideline": "Singles sideline", "centre-mark": "Centre mark", "attack-line": "Attack line", antenna: "Antenna", "long-service-line": "Long service line", "short-service-line": "Short service line", "non-volley-line": "Non-volley line", "non-volley-zone": "Non-volley zone", "court-net": "Net",
+        "hog-line": "Hog line", "tee-line": "Tee line", "back-line": "Back line", house: "House", button: "Button", "centre-line": "Centre line", hack: "Hack", "free-guard-zone": "Free guard zone",
+      },
+    },
     replay: {
       title: "Replay, {time}", objects: "{n} tracked objects", objectsOne: "{n} tracked object", events: "{n} events", eventsOne: "{n} event", players: "Players", others: "Ball, puck and officials", trail: "Trail of the last {s} seconds", numbers: "Shirt numbers", eventLines: "Passes and shots",
       home: "home", away: "away", ball: "ball", puck: "puck", official: "official", pass: "Pass", shot: "Shot", goal: "Goal", whistle: "Whistle",
@@ -555,6 +590,22 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       sonarTitle: "{n}件の移動の方向別分布：ローズ図{roses}個（各{angles}方向）", sonarNote: "最も多い方向：{deg}度（{n}件）。", sonarAngles: "競技場を横長に描いたとき、0度は右端の方向、90度は上辺の方向です。", roseTitle: "{name}：{n}件の移動、最も多いのは{deg}度方向", barTitle: "{from}度～{to}度：{value}",
       tablePlayer: "選手", tableFrom: "出し手", tableTo: "受け手", tablePasses: "パス数", tableMade: "出したパス", tableReceived: "受けたパス", tableTouches: "タッチ数", tablePosition: "ポジション", tableNumber: "背番号", tableName: "名前", tablePlayers: "選手数", tableShare: "競技場に占める割合（％）", tableArea: "面積", tableCorners: "頂点数", tableTriangles: "三角形の数", tableEdges: "辺の数", tableDirection: "平均の方向（度）", tableLength: "平均の長さ", tableSteady: "方向の揃い具合（％）", tableFromAngle: "開始角（度）", tableToAngle: "終了角（度）", tableRose: "ローズ図",
       tableUnit: "長さの単位：{unit}。",
+    },
+    notes: {
+      home: "ホーム", away: "アウェイ", attacking: "{team}の攻撃方向", left: "左", right: "右",
+      attacks: "{team}は{side}方向へ攻めます。", attacksIn: "第{n}ピリオド、{team}は{side}方向へ攻めます。",
+      axesSurface: "この図の座標軸です。単位は{unit}で、xは{x0}から{x1}、yは{y0}から{y1}です。",
+      axesFrame: "{frame}の座標系の軸です。単位は{unit}で、xは{x0}から{x1}、yは{y0}から{y1}です。",
+      labelled: "名称を表示している部分：{list}。",
+      names: {
+        "end-zone": "エンドゾーン", "goal-line": "ゴールライン", "yard-line": "ヤードライン", midfield: "ミッドフィールド", "end-line": "エンドライン", sideline: "サイドライン", "hash-marks": "ハッシュマーク", "yard-numbers": "ヤードナンバー", "goal-posts": "ゴールポスト", pylon: "パイロン",
+        boards: "ボード", "blue-line": "ブルーライン", "face-off-circle": "フェイスオフサークル", crease: "クリース", net: "ゴールネット", "centre-circle": "センターサークル", "centre-red-line": "センターレッドライン", trapezoid: "トラペゾイド", "referee-crease": "レフェリークリース",
+        baseline: "ベースライン", "halfway-line": "ハーフウェーライン", "half-court-line": "センターライン", key: "ペイントエリア", "free-throw-line": "フリースローライン", "free-throw-circle": "フリースローサークル", backboard: "バックボード", basket: "リング", "three-point-line": "スリーポイントライン", "restricted-area": "リストリクテッドエリア",
+        "home-plate": "ホームベース", "first-base": "一塁", "second-base": "二塁", "third-base": "三塁", "foul-line": "ファウルライン", "outfield-fence": "外野フェンス", "warning-track": "ウォーニングトラック", "pitchers-plate": "投手板", "batters-box": "バッターボックス",
+        touchline: "タッチライン", "penalty-area": "ペナルティエリア", "goal-area": "ゴールエリア", "penalty-mark": "ペナルティマーク", "penalty-arc": "ペナルティアーク", "corner-arc": "コーナーアーク", goal: "ゴール",
+        "service-line": "サービスライン", "centre-service-line": "センターサービスライン", "singles-sideline": "シングルスサイドライン", "centre-mark": "センターマーク", "attack-line": "アタックライン", antenna: "アンテナ", "long-service-line": "ロングサービスライン", "short-service-line": "ショートサービスライン", "non-volley-line": "ノンボレーライン", "non-volley-zone": "ノンボレーゾーン", "court-net": "ネット",
+        "hog-line": "ホッグライン", "tee-line": "ティーライン", "back-line": "バックライン", house: "ハウス", button: "ボタン", "centre-line": "センターライン", hack: "ハック", "free-guard-zone": "フリーガードゾーン",
+      },
     },
     replay: {
       title: "リプレイ（再生時間{time}）", objects: "追跡対象は{n}個", objectsOne: "追跡対象は{n}個", events: "イベント{n}件", eventsOne: "イベント{n}件", players: "選手", others: "ボール・パック・審判", trail: "直近{s}秒の軌跡", numbers: "背番号", eventLines: "パスとシュート",

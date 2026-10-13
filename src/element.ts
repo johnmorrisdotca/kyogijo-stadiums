@@ -10,7 +10,7 @@ export const KYOGIJO_TAG = "kyogijo-field";
 /** The attributes the element reads. */
 export const KYOGIJO_ATTRIBUTES = [
   "sport", "league", "size", "theme", "language", "orientation", "park", "ground", "year", "detail", "margin", "stripes", "exact-lines", "uppercase",
-  "pitch", "pitch-type", "half", "goals", "stripe-pattern", "corner-flags",
+  "pitch", "pitch-type", "half", "goals", "stripe-pattern", "corner-flags", "look", "line-width", "line-dash", "line-opacity", "landmarks",
   "home", "away", "home-abbr", "away-abbr", "home-score", "away-score", "home-penalties", "away-penalties", "score", "home-logo", "away-logo", "home-color", "away-color",
   "status", "competition", "date", "label", "winner", "home-side", "description", "options",
   "loop", "speed", "autoplay", "controls", "trail",
@@ -70,7 +70,7 @@ export function optionsFromAttributes(read: (name: string) => string | null, bas
     const value = read(name);
     if (value !== null && value !== "") o[key] = value;
   };
-  text("theme"); text("language"); text("orientation"); text("park"); text("ground"); text("detail"); text("pitch"); text("pitch-type"); text("half"); text("goals"); text("stripe-pattern"); text("competition"); text("date"); text("label"); text("winner"); text("description");
+  text("theme"); text("language"); text("orientation"); text("park"); text("ground"); text("detail"); text("pitch"); text("pitch-type"); text("half"); text("goals"); text("stripe-pattern"); text("look"); text("line-dash"); text("competition"); text("date"); text("label"); text("winner"); text("description");
   // A league the sport does not have is left out, not an error: attributes come from a page's markup.
   const league = read("league") ?? merged.league;
   if (typeof league === "string" && leagueIds(o.sport as Sport).includes(league)) o.league = league;
@@ -88,6 +88,11 @@ export function optionsFromAttributes(read: (name: string) => string | null, bas
   if (read("stripes") === "false") o.stripes = false;
   if (read("exact-lines") !== null) o.exactLines = read("exact-lines") !== "false";
   if (read("uppercase") === "false") o.uppercase = false;
+  const lineWidth = read("line-width");
+  if (lineWidth !== null && /^\s*\d+(?:\.\d+)?\s*$/.test(lineWidth)) o.lineWidth = Number(lineWidth);
+  const lineOpacity = read("line-opacity");
+  if (lineOpacity !== null && /^\s*\d*\.?\d+\s*$/.test(lineOpacity)) o.lineOpacity = Number(lineOpacity);
+  if (read("landmarks") !== null) o.landmarks = read("landmarks") !== "false";
   if (read("corner-flags") !== null) o.cornerFlags = read("corner-flags") !== "false";
   const scores = parseScore(read("score"));
   const team = (role: "home" | "away", given: Team | undefined): Team | undefined => {

@@ -63,7 +63,7 @@ export const toArray = <T>(value: readonly T[] | undefined, what: string): reado
 };
 
 /** The size a provider's frame is fitted to: the drawn surface's, for a soccer pitch and a league's surface; none for a sport's own fixed one. */
-const fittedSize = (env: Env): { length: number; width: number; unit: "ft" } | undefined => (env.o.sport === "soccer" || env.o.sport === "curling" || isNetSport(env.o.sport) || chooseLeague(env.o).league !== undefined ? { length: env.outline.box.w, width: env.outline.box.h, unit: "ft" as const } : undefined);
+export const fittedSize = (env: Env): { length: number; width: number; unit: "ft" } | undefined => (env.o.sport === "soccer" || env.o.sport === "curling" || isNetSport(env.o.sport) || chooseLeague(env.o).league !== undefined ? { length: env.outline.box.w, width: env.outline.box.h, unit: "ft" as const } : undefined);
 
 export function unitOfLayer(layer: LayerBase, env: Env): Unit {
   if (layer.units === "rulebook") return chooseLeague(env.o).league?.unit ?? SURFACE_UNITS[chooseLeague(env.o).sport] ?? "ft";
