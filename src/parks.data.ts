@@ -28,7 +28,29 @@ export const PARK_DATA: ParkData[] = [
     "en": {
       "title": "Oriole Park at Camden Yards",
       "revision": 1377140400
-    }
+    },
+    "walls": [
+      {
+        "from": -45,
+        "to": -22,
+        "height": 7,
+        "last": 2021,
+        "place": "left"
+      },
+      {
+        "from": -45,
+        "to": -22,
+        "height": 13,
+        "first": 2022,
+        "place": "left"
+      },
+      {
+        "from": 22.5,
+        "to": 45,
+        "height": 21,
+        "place": "right"
+      }
+    ]
   },
   {
     "id": "fenway-park",
@@ -54,7 +76,34 @@ export const PARK_DATA: ParkData[] = [
     "en": {
       "title": "Fenway Park",
       "revision": 1376280796
-    }
+    },
+    "backstop_ft": 60,
+    "walls": [
+      {
+        "from": -45,
+        "to": -24,
+        "height": 25,
+        "first": 1912,
+        "last": 1933,
+        "place": "left"
+      },
+      {
+        "from": -45,
+        "to": -24,
+        "height": 37.167,
+        "label": "Green Monster",
+        "first": 1934,
+        "place": "left"
+      }
+    ],
+    "quirks": [
+      {
+        "kind": "pole",
+        "label": "Pesky's Pole",
+        "angle": 45,
+        "feet": 302
+      }
+    ]
   },
   {
     "id": "yankee-stadium",
@@ -79,7 +128,22 @@ export const PARK_DATA: ParkData[] = [
     "en": {
       "title": "Yankee Stadium",
       "revision": 1378222004
-    }
+    },
+    "backstop_ft": 52.333,
+    "walls": [
+      {
+        "from": -45,
+        "to": 22.5,
+        "height": 8.417,
+        "place": "leftToCenter"
+      },
+      {
+        "from": 22.5,
+        "to": 45,
+        "height": 8,
+        "place": "right"
+      }
+    ]
   },
   {
     "id": "tropicana-field",
@@ -104,7 +168,8 @@ export const PARK_DATA: ParkData[] = [
     "en": {
       "title": "Tropicana Field",
       "revision": 1379964475
-    }
+    },
+    "backstop_ft": 50
   },
   {
     "id": "rogers-centre",
@@ -131,7 +196,8 @@ export const PARK_DATA: ParkData[] = [
     "en": {
       "title": "Rogers Centre",
       "revision": 1379619269
-    }
+    },
+    "backstop_ft": 60
   },
   {
     "id": "rate-field",
@@ -156,7 +222,16 @@ export const PARK_DATA: ParkData[] = [
     "en": {
       "title": "Rate Field",
       "revision": 1379317170
-    }
+    },
+    "backstop_ft": 60,
+    "walls": [
+      {
+        "from": -45,
+        "to": 45,
+        "height": 8,
+        "place": "outfield"
+      }
+    ]
   },
   {
     "id": "progressive-field",
@@ -182,7 +257,27 @@ export const PARK_DATA: ParkData[] = [
     "en": {
       "title": "Progressive Field",
       "revision": 1378504146
-    }
+    },
+    "backstop_ft": 60,
+    "dugouts": {
+      "home": "third",
+      "visitors": "first"
+    },
+    "walls": [
+      {
+        "from": -45,
+        "to": -22.5,
+        "height": 19,
+        "label": "Little Green Monster",
+        "place": "left"
+      },
+      {
+        "from": -22.5,
+        "to": 45,
+        "height": 9,
+        "place": "centerToRight"
+      }
+    ]
   },
   {
     "id": "comerica-park",
@@ -207,7 +302,16 @@ export const PARK_DATA: ParkData[] = [
     "en": {
       "title": "Comerica Park",
       "revision": 1376178715
-    }
+    },
+    "walls": [
+      {
+        "from": -22.5,
+        "to": 45,
+        "height": 7,
+        "first": 2023,
+        "place": "centerToRight"
+      }
+    ]
   },
   {
     "id": "kauffman-stadium",
@@ -233,7 +337,24 @@ export const PARK_DATA: ParkData[] = [
       "title": "Kauffman Stadium",
       "revision": 1376240550
     },
-    "note": "Alleys as posted from 2026."
+    "note": "Alleys as posted from 2026.",
+    "backstop_ft": 60,
+    "walls": [
+      {
+        "from": -45,
+        "to": 45,
+        "height": 12,
+        "last": 1994,
+        "place": "outfield"
+      },
+      {
+        "from": -45,
+        "to": 45,
+        "height": 9,
+        "first": 1995,
+        "place": "outfield"
+      }
+    ]
   },
   {
     "id": "target-field",
@@ -287,7 +408,29 @@ export const PARK_DATA: ParkData[] = [
       "title": "Daikin Park",
       "revision": 1377935430
     },
-    "note": "Formerly Minute Maid Park."
+    "note": "Formerly Minute Maid Park.",
+    "backstop_ft": 49,
+    "walls": [
+      {
+        "from": -45,
+        "to": -25,
+        "height": 19,
+        "label": "Crawford Boxes",
+        "place": "left"
+      }
+    ],
+    "quirks": [
+      {
+        "kind": "hill",
+        "label": "Tal's Hill",
+        "angle": 0,
+        "feet": 436,
+        "width_ft": 90,
+        "slope_deg": 30,
+        "first": 2000,
+        "last": 2016
+      }
+    ]
   },
   {
     "id": "angel-stadium",
@@ -313,7 +456,24 @@ export const PARK_DATA: ParkData[] = [
     "en": {
       "title": "Angel Stadium",
       "revision": 1379214381
-    }
+    },
+    "backstop_ft": 60.5,
+    "walls": [
+      {
+        "from": 15,
+        "to": 28,
+        "height": 8,
+        "last": 1997,
+        "place": "rightCenter"
+      },
+      {
+        "from": 15,
+        "to": 28,
+        "height": 19,
+        "first": 1998,
+        "place": "rightCenter"
+      }
+    ]
   },
   {
     "id": "sutter-health-park",
@@ -337,7 +497,8 @@ export const PARK_DATA: ParkData[] = [
       "title": "Sutter Health Park",
       "revision": 1379745688
     },
-    "note": "Three published figures only."
+    "note": "Three published figures only.",
+    "backstop_ft": 58
   },
   {
     "id": "t-mobile-park",
@@ -362,7 +523,8 @@ export const PARK_DATA: ParkData[] = [
     "en": {
       "title": "T-Mobile Park",
       "revision": 1379419810
-    }
+    },
+    "backstop_ft": 69
   },
   {
     "id": "globe-life-field",
@@ -387,7 +549,8 @@ export const PARK_DATA: ParkData[] = [
     "en": {
       "title": "Globe Life Field",
       "revision": 1377936073
-    }
+    },
+    "backstop_ft": 42
   },
   {
     "id": "truist-park",
@@ -437,6 +600,10 @@ export const PARK_DATA: ParkData[] = [
     "en": {
       "title": "LoanDepot Park",
       "revision": 1376431410
+    },
+    "backstop_ft": 47,
+    "dugouts": {
+      "home": "third"
     }
   },
   {
@@ -464,7 +631,24 @@ export const PARK_DATA: ParkData[] = [
     "en": {
       "title": "Citi Field",
       "revision": 1377977619
-    }
+    },
+    "walls": [
+      {
+        "from": -45,
+        "to": -22.5,
+        "height": 16,
+        "label": "Great Wall of Flushing",
+        "last": 2011,
+        "place": "left"
+      },
+      {
+        "from": -45,
+        "to": -22.5,
+        "height": 8,
+        "first": 2012,
+        "place": "left"
+      }
+    ]
   },
   {
     "id": "citizens-bank-park",
@@ -534,15 +718,103 @@ export const PARK_DATA: ParkData[] = [
     "opened": 1914,
     "points": [
       [-45, 355],
+      [-36, 357],
+      [-30, 360],
       [-22.5, 368],
       [0, 400],
       [22.5, 368],
+      [30, 363],
       [45, 353]
     ],
     "en": {
       "title": "Wrigley Field",
       "revision": 1377918987
-    }
+    },
+    "labels": [
+      [
+        -45,
+        "Left field line, the notch in the wall just beyond the foul pole"
+      ],
+      [
+        -36,
+        "Where the bleacher wall begins to curve inward in left-centre, the left well (unmarked)"
+      ],
+      [
+        -30,
+        "The front of the left-centre well (about 360)"
+      ],
+      [
+        -22.5,
+        "Left-centre (marked)"
+      ],
+      [
+        0,
+        "The centre field marker, the deepest point (true centre field is unmarked, about 390)"
+      ],
+      [
+        22.5,
+        "Right-centre"
+      ],
+      [
+        30,
+        "The notch of the right-centre well (unmarked)"
+      ],
+      [
+        45,
+        "Right field line"
+      ]
+    ],
+    "backstop_ft": 55,
+    "walls": [
+      {
+        "from": -45,
+        "to": -30,
+        "height": 15,
+        "last": 2014,
+        "place": "leftCorner"
+      },
+      {
+        "from": -45,
+        "to": -30,
+        "height": 11,
+        "first": 2015,
+        "place": "leftCorner"
+      },
+      {
+        "from": -30,
+        "to": 30,
+        "height": 11.5,
+        "place": "outfield"
+      },
+      {
+        "from": 30,
+        "to": 45,
+        "height": 15,
+        "last": 2014,
+        "place": "rightCorner"
+      },
+      {
+        "from": 30,
+        "to": 45,
+        "height": 11,
+        "first": 2015,
+        "place": "rightCorner"
+      }
+    ],
+    "quirks": [
+      {
+        "kind": "ivy",
+        "from": -45,
+        "to": 45,
+        "first": 1937
+      },
+      {
+        "kind": "basket",
+        "from": -45,
+        "to": 45,
+        "first": 1970
+      }
+    ]
   },
   {
     "id": "great-american-ball-park",
@@ -567,7 +839,8 @@ export const PARK_DATA: ParkData[] = [
     "en": {
       "title": "Great American Ball Park",
       "revision": 1378720434
-    }
+    },
+    "backstop_ft": 55
   },
   {
     "id": "american-family-field",
@@ -592,7 +865,8 @@ export const PARK_DATA: ParkData[] = [
     "en": {
       "title": "American Family Field",
       "revision": 1379813094
-    }
+    },
+    "backstop_ft": 56
   },
   {
     "id": "pnc-park",
@@ -618,7 +892,32 @@ export const PARK_DATA: ParkData[] = [
     "en": {
       "title": "PNC Park",
       "revision": 1379228702
-    }
+    },
+    "track_ft": 18,
+    "backstop_ft": 51,
+    "dugouts": {
+      "home": "third"
+    },
+    "walls": [
+      {
+        "from": -45,
+        "to": -22.5,
+        "height": 6,
+        "place": "left"
+      },
+      {
+        "from": -22.5,
+        "to": 22.5,
+        "height": 10,
+        "place": "center"
+      },
+      {
+        "from": 22.5,
+        "to": 45,
+        "height": 21,
+        "place": "right"
+      }
+    ]
   },
   {
     "id": "busch-stadium",
@@ -695,7 +994,24 @@ export const PARK_DATA: ParkData[] = [
     "en": {
       "title": "Coors Field",
       "revision": 1375299958
-    }
+    },
+    "backstop_ft": 56,
+    "walls": [
+      {
+        "from": -45,
+        "to": -33.75,
+        "height": 13,
+        "first": 2016,
+        "place": "leftCorner"
+      },
+      {
+        "from": -22.5,
+        "to": 45,
+        "height": 16.5,
+        "first": 2016,
+        "place": "centerToRight"
+      }
+    ]
   },
   {
     "id": "dodger-stadium",
@@ -723,7 +1039,8 @@ export const PARK_DATA: ParkData[] = [
     "en": {
       "title": "Dodger Stadium",
       "revision": 1375093238
-    }
+    },
+    "backstop_ft": 55
   },
   {
     "id": "petco-park",
@@ -750,7 +1067,23 @@ export const PARK_DATA: ParkData[] = [
     "en": {
       "title": "Petco Park",
       "revision": 1377977726
-    }
+    },
+    "walls": [
+      {
+        "from": 22.5,
+        "to": 45,
+        "height": 11,
+        "last": 2012,
+        "place": "right"
+      },
+      {
+        "from": 22.5,
+        "to": 45,
+        "height": 8,
+        "first": 2013,
+        "place": "right"
+      }
+    ]
   },
   {
     "id": "oracle-park",
@@ -777,7 +1110,40 @@ export const PARK_DATA: ParkData[] = [
     "en": {
       "title": "Oracle Park",
       "revision": 1372223272
-    }
+    },
+    "backstop_ft": 48,
+    "walls": [
+      {
+        "from": -45,
+        "to": -20,
+        "height": 8,
+        "place": "left"
+      },
+      {
+        "from": -20,
+        "to": -6,
+        "height": 7,
+        "place": "center"
+      },
+      {
+        "from": -6,
+        "to": 6,
+        "height": 10,
+        "place": "deadCenter"
+      },
+      {
+        "from": 6,
+        "to": 27,
+        "height": 20,
+        "place": "rightCenter"
+      },
+      {
+        "from": 27,
+        "to": 45,
+        "height": 24,
+        "place": "right"
+      }
+    ]
   },
   {
     "id": "baker-bowl",
@@ -804,7 +1170,16 @@ export const PARK_DATA: ParkData[] = [
     "en": {
       "title": "Baker Bowl",
       "revision": 1375146474
-    }
+    },
+    "walls": [
+      {
+        "from": 22.5,
+        "to": 45,
+        "height": 60,
+        "label": "Baker Wall",
+        "place": "right"
+      }
+    ]
   },
   {
     "id": "exposition-park-pittsburgh",
@@ -888,7 +1263,30 @@ export const PARK_DATA: ParkData[] = [
         ]
       }
     ],
-    "note": "The distances are those compiled in the article; 1923 to 1963 is the last fence. Center field is the posted 483 feet."
+    "note": "The distances are those compiled in the article; 1923 to 1963 is the last fence. Center field is the posted 483 feet.",
+    "quirks": [
+      {
+        "kind": "overhang",
+        "from": -45,
+        "to": -22.5,
+        "depth_ft": 21,
+        "first": 1923
+      },
+      {
+        "kind": "bullpen",
+        "side": "visitors",
+        "angle": -15,
+        "feet": 450,
+        "first": 1923
+      },
+      {
+        "kind": "bullpen",
+        "side": "home",
+        "angle": 15,
+        "feet": 450,
+        "first": 1923
+      }
+    ]
   },
   {
     "id": "south-end-grounds",
@@ -958,7 +1356,8 @@ export const PARK_DATA: ParkData[] = [
         ]
       }
     ],
-    "note": "The centre field fence was moved from 530 to 635 feet and right field from 280 to 320 for 1908. No right-center figure is published."
+    "note": "The centre field fence was moved from 530 to 635 feet and right field from 280 to 320 for 1908. No right-center figure is published.",
+    "backstop_ft": 60
   },
   {
     "id": "league-park-cleveland",
@@ -1006,17 +1405,74 @@ export const PARK_DATA: ParkData[] = [
     "to": 1966,
     "points": [
       [-45, 351],
+      [-37.5, 358],
       [-30, 379],
+      [-22.5, 400],
       [-15, 426],
+      [-7.5, 425],
       [0, 422],
-      [22.5, 354],
+      [9, 422],
+      [18, 405],
+      [27, 354],
+      [36, 322],
       [45, 310]
     ],
     "en": {
       "title": "Sportsman's Park",
       "revision": 1372232220
     },
-    "note": "The deepest corner to the left of center, 426 feet, is taken left of center field, 422."
+    "note": "The deepest corner to the left of center, 426 feet, is taken left of center field, 422.",
+    "labels": [
+      [
+        -45,
+        "Left field line"
+      ],
+      [
+        -37.5,
+        "Medium left-centre"
+      ],
+      [
+        -30,
+        "True left-centre"
+      ],
+      [
+        -22.5,
+        "Deep left-centre"
+      ],
+      [
+        -15,
+        "Deepest corner, just left of dead centre"
+      ],
+      [
+        -7.5,
+        "Just to the right of that corner"
+      ],
+      [
+        0,
+        "True centre field"
+      ],
+      [
+        9,
+        "Deepest corner, just right of dead centre"
+      ],
+      [
+        18,
+        "Deep right-centre"
+      ],
+      [
+        27,
+        "True right-centre"
+      ],
+      [
+        36,
+        "Medium right-centre"
+      ],
+      [
+        45,
+        "Right field line"
+      ]
+    ],
+    "backstop_ft": 68
   },
   {
     "id": "hilltop-park",
@@ -1044,7 +1500,8 @@ export const PARK_DATA: ParkData[] = [
     "en": {
       "title": "Hilltop Park",
       "revision": 1372186833
-    }
+    },
+    "backstop_ft": 91
   },
   {
     "id": "forbes-field",
@@ -1086,7 +1543,22 @@ export const PARK_DATA: ParkData[] = [
         ]
       }
     ],
-    "note": "The final posted distances. Straightaway center was never marked; 442 is the figure some sources give. The original fence of 1909 was 360, 462 and 376 feet."
+    "note": "The final posted distances. Straightaway center was never marked; 442 is the figure some sources give. The original fence of 1909 was 360, 462 and 376 feet.",
+    "walls": [
+      {
+        "from": -45,
+        "to": 22.5,
+        "height": 12,
+        "place": "leftToCenter"
+      },
+      {
+        "from": 22.5,
+        "to": 45,
+        "height": 9.5,
+        "first": 1925,
+        "place": "right"
+      }
+    ]
   },
   {
     "id": "shibe-park",
@@ -1146,7 +1618,23 @@ export const PARK_DATA: ParkData[] = [
         ]
       }
     ],
-    "note": "Also called Connie Mack Stadium. Opening day of 1909 had left field at 360 feet; center is the deepest corner (515 and 468 feet) in the first two periods."
+    "note": "Also called Connie Mack Stadium. Opening day of 1909 had left field at 360 feet; center is the deepest corner (515 and 468 feet) in the first two periods.",
+    "walls": [
+      {
+        "from": 22.5,
+        "to": 45,
+        "height": 12,
+        "last": 1934,
+        "place": "right"
+      },
+      {
+        "from": 22.5,
+        "to": 45,
+        "height": 34,
+        "first": 1935,
+        "place": "right"
+      }
+    ]
   },
   {
     "id": "comiskey-park",
@@ -1216,7 +1704,16 @@ export const PARK_DATA: ParkData[] = [
       "title": "Griffith Stadium",
       "revision": 1379220233
     },
-    "note": "The infobox's final figures."
+    "note": "The infobox's final figures.",
+    "backstop_ft": 61,
+    "walls": [
+      {
+        "from": 22.5,
+        "to": 45,
+        "height": 30,
+        "place": "right"
+      }
+    ]
   },
   {
     "id": "crosley-field",
@@ -1257,7 +1754,8 @@ export const PARK_DATA: ParkData[] = [
           [45, 360]
         ]
       }
-    ]
+    ],
+    "backstop_ft": 78
   },
   {
     "id": "tiger-stadium",
@@ -1286,7 +1784,23 @@ export const PARK_DATA: ParkData[] = [
       "title": "Tiger Stadium (Detroit)",
       "revision": 1379484942
     },
-    "note": "Called Navin Field and Briggs Stadium before."
+    "note": "Called Navin Field and Briggs Stadium before.",
+    "backstop_ft": 66,
+    "quirks": [
+      {
+        "kind": "overhang",
+        "from": 22.5,
+        "to": 45,
+        "depth_ft": 10,
+        "first": 1936
+      },
+      {
+        "kind": "flagpole",
+        "angle": -6,
+        "feet": 440,
+        "height_ft": 125
+      }
+    ]
   },
   {
     "id": "ebbets-field",
@@ -1386,7 +1900,8 @@ export const PARK_DATA: ParkData[] = [
       "title": "Yankee Stadium (1923)",
       "revision": 1377411197
     },
-    "note": "The figures after the rebuilding of 1974 and 1975; from 1924 to 1973 the article gives left field at 281 feet and the deepest center at 490."
+    "note": "The figures after the rebuilding of 1974 and 1975; from 1924 to 1973 the article gives left field at 281 feet and the deepest center at 490.",
+    "backstop_ft": 84
   },
   {
     "id": "cleveland-stadium",
@@ -1415,7 +1930,8 @@ export const PARK_DATA: ParkData[] = [
       "title": "Cleveland Stadium",
       "revision": 1372955954
     },
-    "note": "Also called Cleveland Municipal Stadium."
+    "note": "Also called Cleveland Municipal Stadium.",
+    "backstop_ft": 60
   },
   {
     "id": "milwaukee-county-stadium",
@@ -1435,18 +1951,59 @@ export const PARK_DATA: ParkData[] = [
     "to": 2000,
     "points": [
       [-45, 315],
-      [-30, 362],
-      [-15, 392],
+      [-33.75, 362],
+      [-22.5, 382],
+      [-11.25, 392],
       [0, 402],
-      [15, 392],
-      [30, 362],
+      [11.25, 392],
+      [22.5, 382],
+      [33.75, 362],
       [45, 315]
     ],
     "en": {
       "title": "Milwaukee County Stadium",
       "revision": 1373618962
     },
-    "note": "The White Sox also played some games here in 1968 and 1969."
+    "note": "The White Sox also played some games here in 1968 and 1969.",
+    "labels": [
+      [
+        -45,
+        "Left field line"
+      ],
+      [
+        -33.75,
+        "Shallow left-centre"
+      ],
+      [
+        -22.5,
+        "True left-centre (unposted)"
+      ],
+      [
+        -11.25,
+        "Deep left-centre"
+      ],
+      [
+        0,
+        "Centre field"
+      ],
+      [
+        11.25,
+        "Deep right-centre"
+      ],
+      [
+        22.5,
+        "True right-centre (unposted)"
+      ],
+      [
+        33.75,
+        "Shallow right-centre"
+      ],
+      [
+        45,
+        "Right field line"
+      ]
+    ],
+    "backstop_ft": 60
   },
   {
     "id": "baltimore-memorial-stadium",
@@ -1598,7 +2155,12 @@ export const PARK_DATA: ParkData[] = [
       "title": "Candlestick Park",
       "revision": 1379458213
     },
-    "note": "The later fence; the article also gives the 1960 figures as opened (330, 397, 420, 397, 330 feet), which are not used."
+    "note": "The later fence; the article also gives the 1960 figures as opened (330, 397, 420, 397, 330 feet), which are not used.",
+    "backstop_ft": 66,
+    "dugouts": {
+      "home": "first",
+      "visitors": "third"
+    }
   },
   {
     "id": "wrigley-field-los-angeles",
@@ -1626,7 +2188,8 @@ export const PARK_DATA: ParkData[] = [
     "en": {
       "title": "Wrigley Field (Los Angeles)",
       "revision": 1373630732
-    }
+    },
+    "backstop_ft": 56
   },
   {
     "id": "metropolitan-stadium",
@@ -1654,7 +2217,16 @@ export const PARK_DATA: ParkData[] = [
     "en": {
       "title": "Metropolitan Stadium",
       "revision": 1376371728
-    }
+    },
+    "backstop_ft": 60,
+    "walls": [
+      {
+        "from": -45,
+        "to": 45,
+        "height": 8,
+        "place": "outfield"
+      }
+    ]
   },
   {
     "id": "colt-stadium",
@@ -1713,7 +2285,8 @@ export const PARK_DATA: ParkData[] = [
       "title": "Robert F. Kennedy Memorial Stadium",
       "revision": 1372225490
     },
-    "note": "In use for baseball 1962 to 1971 and 2005 to 2007."
+    "note": "In use for baseball 1962 to 1971 and 2005 to 2007.",
+    "backstop_ft": 54
   },
   {
     "id": "shea-stadium",
@@ -1792,7 +2365,8 @@ export const PARK_DATA: ParkData[] = [
       "title": "Astrodome",
       "revision": 1379214658
     },
-    "note": "The article's final figures; its original ones (340, 375, 406, 375, 340 feet) are not dated and are not used."
+    "note": "The article's final figures; its original ones (340, 375, 406, 375, 340 feet) are not dated and are not used.",
+    "backstop_ft": 52
   },
   {
     "id": "atlanta-fulton-county-stadium",
@@ -1886,7 +2460,8 @@ export const PARK_DATA: ParkData[] = [
         ]
       }
     ],
-    "note": "Also called Busch Stadium (II)."
+    "note": "Also called Busch Stadium (II).",
+    "backstop_ft": 64
   },
   {
     "id": "oakland-coliseum",
@@ -1913,7 +2488,8 @@ export const PARK_DATA: ParkData[] = [
     "en": {
       "title": "Oakland Coliseum",
       "revision": 1377933344
-    }
+    },
+    "backstop_ft": 60
   },
   {
     "id": "sicks-stadium",
@@ -1968,7 +2544,8 @@ export const PARK_DATA: ParkData[] = [
     "en": {
       "title": "Jarry Park Stadium",
       "revision": 1372207079
-    }
+    },
+    "backstop_ft": 60
   },
   {
     "id": "three-rivers-stadium",
@@ -1996,7 +2573,15 @@ export const PARK_DATA: ParkData[] = [
     "en": {
       "title": "Three Rivers Stadium",
       "revision": 1372243664
-    }
+    },
+    "walls": [
+      {
+        "from": -45,
+        "to": 45,
+        "height": 10,
+        "place": "outfield"
+      }
+    ]
   },
   {
     "id": "riverfront-stadium",
@@ -2024,7 +2609,18 @@ export const PARK_DATA: ParkData[] = [
     "en": {
       "title": "Riverfront Stadium",
       "revision": 1380015923
-    }
+    },
+    "backstop_ft": 51,
+    "walls": [
+      {
+        "from": -9,
+        "to": 9,
+        "height": 40,
+        "label": "Black Monster",
+        "first": 2001,
+        "place": "center"
+      }
+    ]
   },
   {
     "id": "veterans-stadium",
@@ -2052,7 +2648,8 @@ export const PARK_DATA: ParkData[] = [
     "en": {
       "title": "Veterans Stadium",
       "revision": 1379233321
-    }
+    },
+    "backstop_ft": 54
   },
   {
     "id": "arlington-stadium",
@@ -2080,7 +2677,8 @@ export const PARK_DATA: ParkData[] = [
     "en": {
       "title": "Arlington Stadium",
       "revision": 1372064082
-    }
+    },
+    "backstop_ft": 60
   },
   {
     "id": "exhibition-stadium",
@@ -2108,7 +2706,8 @@ export const PARK_DATA: ParkData[] = [
     "en": {
       "title": "Exhibition Stadium",
       "revision": 1373389585
-    }
+    },
+    "backstop_ft": 60
   },
   {
     "id": "olympic-stadium-montreal",
@@ -2177,7 +2776,45 @@ export const PARK_DATA: ParkData[] = [
     "en": {
       "title": "Hubert H. Humphrey Metrodome",
       "revision": 1378988593
-    }
+    },
+    "backstop_ft": 60,
+    "walls": [
+      {
+        "from": -45,
+        "to": -22.5,
+        "height": 7,
+        "last": 1984,
+        "place": "left"
+      },
+      {
+        "from": -45,
+        "to": -22.5,
+        "height": 13,
+        "first": 1985,
+        "last": 1994,
+        "place": "left"
+      },
+      {
+        "from": -45,
+        "to": -22.5,
+        "height": 7,
+        "first": 1995,
+        "place": "left"
+      },
+      {
+        "from": -22.5,
+        "to": 22.5,
+        "height": 7,
+        "place": "center"
+      },
+      {
+        "from": 22.5,
+        "to": 45,
+        "height": 23,
+        "label": "Baggie",
+        "place": "right"
+      }
+    ]
   },
   {
     "id": "mile-high-stadium",
@@ -2205,7 +2842,15 @@ export const PARK_DATA: ParkData[] = [
     "en": {
       "title": "Mile High Stadium",
       "revision": 1372216043
-    }
+    },
+    "walls": [
+      {
+        "from": -22.5,
+        "to": 22.5,
+        "height": 30,
+        "place": "center"
+      }
+    ]
   },
   {
     "id": "globe-life-park-in-arlington",
@@ -2260,7 +2905,8 @@ export const PARK_DATA: ParkData[] = [
     "en": {
       "title": "Turner Field",
       "revision": 1372246325
-    }
+    },
+    "backstop_ft": 43
   },
   {
     "id": "tokyo-dome",
@@ -2291,7 +2937,23 @@ export const PARK_DATA: ParkData[] = [
     "ja": {
       "title": "東京ドーム",
       "revision": 111353030
-    }
+    },
+    "walls": [
+      {
+        "from": -45,
+        "to": 45,
+        "height": 4,
+        "last": 2009,
+        "place": "outfield"
+      },
+      {
+        "from": -45,
+        "to": 45,
+        "height": 4.24,
+        "first": 2010,
+        "place": "outfield"
+      }
+    ]
   },
   {
     "id": "hanshin-koshien-stadium",
@@ -2353,7 +3015,15 @@ export const PARK_DATA: ParkData[] = [
     "ja": {
       "title": "明治神宮野球場",
       "revision": 111058989
-    }
+    },
+    "walls": [
+      {
+        "from": -45,
+        "to": 45,
+        "height": 3.3,
+        "place": "outfield"
+      }
+    ]
   },
   {
     "id": "yokohama-stadium",
@@ -2416,7 +3086,23 @@ export const PARK_DATA: ParkData[] = [
       "title": "ナゴヤドーム",
       "revision": 111136533
     },
-    "note": "Left-center and right-center are 110 m from 2026, when the Home Run Wing was added (116 m before)."
+    "note": "Left-center and right-center are 110 m from 2026, when the Home Run Wing was added (116 m before).",
+    "walls": [
+      {
+        "from": -45,
+        "to": 45,
+        "height": 4.8,
+        "last": 2025,
+        "place": "outfield"
+      },
+      {
+        "from": -45,
+        "to": 45,
+        "height": 3.6,
+        "first": 2026,
+        "place": "outfield"
+      }
+    ]
   },
   {
     "id": "mazda-stadium-hiroshima",
@@ -2447,7 +3133,27 @@ export const PARK_DATA: ParkData[] = [
     "ja": {
       "title": "MAZDA Zoom-Zoom スタジアム広島",
       "revision": 110177362
-    }
+    },
+    "walls": [
+      {
+        "from": -45,
+        "to": -22.5,
+        "height": 3.6,
+        "place": "left"
+      },
+      {
+        "from": -22.5,
+        "to": 22.5,
+        "height": 2.5,
+        "place": "center"
+      },
+      {
+        "from": 22.5,
+        "to": 45,
+        "height": 3.4,
+        "place": "right"
+      }
+    ]
   },
   {
     "id": "es-con-field-hokkaido",
@@ -2540,7 +3246,30 @@ export const PARK_DATA: ParkData[] = [
     "ja": {
       "title": "西武ドーム",
       "revision": 111316508
-    }
+    },
+    "walls": [
+      {
+        "from": -45,
+        "to": -33.75,
+        "height": 4.37,
+        "first": 1999,
+        "place": "left"
+      },
+      {
+        "from": -11.25,
+        "to": 11.25,
+        "height": 3.2,
+        "first": 1999,
+        "place": "center"
+      },
+      {
+        "from": 33.75,
+        "to": 45,
+        "height": 4.37,
+        "first": 1999,
+        "place": "right"
+      }
+    ]
   },
   {
     "id": "zozo-marine-stadium",
@@ -2571,7 +3300,15 @@ export const PARK_DATA: ParkData[] = [
     "ja": {
       "title": "千葉マリンスタジアム",
       "revision": 111145226
-    }
+    },
+    "walls": [
+      {
+        "from": -45,
+        "to": 45,
+        "height": 3.3,
+        "place": "outfield"
+      }
+    ]
   },
   {
     "id": "kyocera-dome-osaka",
@@ -2602,7 +3339,15 @@ export const PARK_DATA: ParkData[] = [
     "ja": {
       "title": "大阪ドーム",
       "revision": 111044952
-    }
+    },
+    "walls": [
+      {
+        "from": -45,
+        "to": 45,
+        "height": 4.2,
+        "place": "outfield"
+      }
+    ]
   },
   {
     "id": "mizuho-paypay-dome-fukuoka",
@@ -2633,7 +3378,23 @@ export const PARK_DATA: ParkData[] = [
     "ja": {
       "title": "福岡ドーム",
       "revision": 111298622
-    }
+    },
+    "walls": [
+      {
+        "from": -45,
+        "to": 45,
+        "height": 5.84,
+        "last": 2014,
+        "place": "outfield"
+      },
+      {
+        "from": -45,
+        "to": 45,
+        "height": 4.2,
+        "first": 2015,
+        "place": "outfield"
+      }
+    ]
   },
   {
     "id": "sapporo-dome",
@@ -2695,7 +3456,23 @@ export const PARK_DATA: ParkData[] = [
     "ja": {
       "title": "神戸総合運動公園野球場",
       "revision": 111289486
-    }
+    },
+    "walls": [
+      {
+        "from": -45,
+        "to": 45,
+        "height": 3.2,
+        "last": 2002,
+        "place": "outfield"
+      },
+      {
+        "from": -45,
+        "to": 45,
+        "height": 2.45,
+        "first": 2003,
+        "place": "outfield"
+      }
+    ]
   },
   {
     "id": "hiroshima-municipal-stadium",
@@ -2723,7 +3500,15 @@ export const PARK_DATA: ParkData[] = [
     "ja": {
       "title": "広島市民球場 (初代)",
       "revision": 111360293
-    }
+    },
+    "walls": [
+      {
+        "from": -45,
+        "to": 45,
+        "height": 2.55,
+        "place": "outfield"
+      }
+    ]
   },
   {
     "id": "korakuen-stadium",
@@ -2788,7 +3573,39 @@ export const PARK_DATA: ParkData[] = [
     "ja": {
       "title": "大阪スタヂアム",
       "revision": 111155388
-    }
+    },
+    "walls": [
+      {
+        "from": -45,
+        "to": -33.75,
+        "height": 5.5,
+        "place": "left"
+      },
+      {
+        "from": -33.75,
+        "to": -11.25,
+        "height": 3.8,
+        "place": "leftCenter"
+      },
+      {
+        "from": -11.25,
+        "to": 11.25,
+        "height": 3,
+        "place": "center"
+      },
+      {
+        "from": 11.25,
+        "to": 33.75,
+        "height": 3.8,
+        "place": "rightCenter"
+      },
+      {
+        "from": 33.75,
+        "to": 45,
+        "height": 5.5,
+        "place": "right"
+      }
+    ]
   },
   {
     "id": "heiwadai-stadium",

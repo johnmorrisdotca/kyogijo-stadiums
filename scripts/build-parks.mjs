@@ -7,7 +7,11 @@
 // distances, not directions, so the angles are ours. Every park carries its Wikidata item (`wikidata`), the key to join it
 // to other data; a past MLB park carries the first and last season an MLB club called it home (`from`, `to`), and the
 // fences an article dates as `periods`. Its coordinates (`lat`, `lon`) and the years it opened and closed (`opened`, `closed`) are
-// Wikidata's (P625, P1619 or P571, P3999 or P576; CC0), written by scripts/fetch-park-coordinates.mjs. See docs/references.md and NOTICE.md.
+// Wikidata's (P625, P1619 or P571, P3999 or P576; CC0), written by scripts/fetch-park-coordinates.mjs. A park may also carry what its article
+// gives beyond the distances, each fact read at the same revision: `labels` (the words the article uses for the points its text adds), `walls`
+// (how high the fence stands along a stretch, in the park's unit), `quirks` (a hill, an overhang, a pole, the bullpens, ivy), `track_ft` and
+// `backstop_ft` (the warning track's width and the distance to the backstop), and `dugouts` (the sides). Where an article has no figure the
+// park has no such key and keeps the plain drawing. See docs/references.md and NOTICE.md.
 import { readFileSync, writeFileSync } from "node:fs";
 import { URL } from "node:url";
 
@@ -18,6 +22,46 @@ const checkFence = (park, points, what) => {
   const angles = points.map((point) => point[0]);
   if (angles.some((angle, i) => i > 0 && angle <= angles[i - 1])) throw new Error(`${park.id}: the angles of ${what} must rise`);
   if (angles[0] !== -45 || angles.at(-1) !== 45) throw new Error(`${park.id}: ${what} runs from line to line`);
+};
+const seasons = (park, thing, what) => {
+  for (const key of ["first", "last"]) if (thing[key] !== undefined && !(Number.isInteger(thing[key]) && thing[key] >= 1850 && thing[key] <= 2100)) throw new Error(`${park.id}: ${what} gives a season as ${key}`);
+  if (thing.first !== undefined && thing.last !== undefined && thing.first > thing.last) throw new Error(`${park.id}: ${what} ends before it starts`);
+};
+const angle = (park, value, what) => {
+  if (!(typeof value === "number" && value >= -45 && value <= 45)) throw new Error(`${park.id}: ${what} is an angle from -45 to 45`);
+};
+const positive = (park, value, what) => {
+  if (!(typeof value === "number" && Number.isFinite(value) && value > 0)) throw new Error(`${park.id}: ${what} is a positive number`);
+};
+const PLACES = ["outfield", "left", "leftCenter", "center", "deadCenter", "rightCenter", "right", "leftToCenter", "centerToRight", "leftCorner", "rightCorner"];
+const QUIRKS = { hill: ["angle", "feet", "width_ft"], overhang: ["from", "to", "depth_ft"], pole: ["angle", "feet"], flagpole: ["angle", "feet"], bullpen: ["angle", "feet"], ivy: ["from", "to"], basket: ["from", "to"] };
+const checkExtras = (park) => {
+  for (const [at, words] of park.labels ?? []) {
+    angle(park, at, "a label");
+    if (!park.points.some((point) => point[0] === at)) throw new Error(`${park.id}: the label at ${at} names no point`);
+    if (typeof words !== "string" || words.trim() === "") throw new Error(`${park.id}: the label at ${at} is words`);
+  }
+  if (park.labels !== undefined && park.points.length !== park.labels.length) throw new Error(`${park.id}: a park that labels its points labels every one`);
+  for (const wall of park.walls ?? []) {
+    angle(park, wall.from, "a wall's start");
+    angle(park, wall.to, "a wall's end");
+    if (wall.from >= wall.to) throw new Error(`${park.id}: a wall runs from the left to the right`);
+    positive(park, wall.height, "a wall's height");
+    seasons(park, wall, "a wall");
+    if (wall.place !== undefined && !PLACES.includes(wall.place)) throw new Error(`${park.id}: a wall's place is one of ${PLACES.join(", ")}`);
+  }
+  for (const quirk of park.quirks ?? []) {
+    if (!Object.hasOwn(QUIRKS, quirk.kind)) throw new Error(`${park.id}: quirk ${quirk.kind}`);
+    for (const key of QUIRKS[quirk.kind]) {
+      if (key === "angle" || key === "from" || key === "to") angle(park, quirk[key], `a ${quirk.kind}'s ${key}`);
+      else positive(park, quirk[key], `a ${quirk.kind}'s ${key}`);
+    }
+    if (park.unit !== "ft") throw new Error(`${park.id}: quirks are in feet`);
+    if (quirk.side !== undefined && !(quirk.kind === "bullpen" && ["home", "visitors"].includes(quirk.side))) throw new Error(`${park.id}: only a bullpen is home's or the visitors'`);
+    seasons(park, quirk, `a ${quirk.kind}`);
+  }
+  for (const key of ["track_ft", "backstop_ft"]) if (park[key] !== undefined) positive(park, park[key], key);
+  for (const [who, side] of Object.entries(park.dugouts ?? {})) if (!["home", "visitors"].includes(who) || !["first", "third"].includes(side)) throw new Error(`${park.id}: dugouts name home and visitors and the first or the third base line`);
 };
 for (const park of parks) {
   if (ids.has(park.id)) throw new Error(`${park.id} is listed twice`);
@@ -31,6 +75,7 @@ for (const park of parks) {
   if (!["current", "secondary", "past"].includes(park.status)) throw new Error(`${park.id}: status ${park.status}`);
   if (!(park.en || park.ja)) throw new Error(`${park.id} cites no source`);
   checkFence(park, park.points, "the fence");
+  checkExtras(park);
   if (park.league === "MLB" && park.status === "past" && !(Number.isInteger(park.from) && Number.isInteger(park.to) && park.from <= park.to)) throw new Error(`${park.id}: a past MLB park gives the seasons it was used`);
   let last = -Infinity;
   for (const period of park.periods ?? []) {

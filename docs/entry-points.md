@@ -16,7 +16,7 @@ The [API reference](https://johnmorrisdotca.github.io/kyogijo/api.html) lists ev
 | `@johnmorrisdotca/kyogijo/plot` | `surfaceMark`, `surfaceScales`: a drawing as a mark of an Observable Plot, with its scales |
 | `@johnmorrisdotca/kyogijo/geojson` | `sceneToGeoJSON`: a drawing as a GeoJSON FeatureCollection, in feet or a provider's frame |
 | `@johnmorrisdotca/kyogijo/png` | `toPNG`, `PNG_PEER_MISSING`: a drawing as PNG bytes in Node, through the optional peer `@resvg/resvg-js` |
-| `@johnmorrisdotca/kyogijo/parks` | `PARKS`, `PARK_IDS`, `parkById`, `parkByWikidata`, `parkPointsIn`, `parkSourceUrl`, `parkUnit`, `fenceFor` |
+| `@johnmorrisdotca/kyogijo/parks` | `PARKS`, `PARK_IDS`, `parkById`, `parkByWikidata`, `parkPointsIn`, `parkWallsIn`, `parkQuirksIn`, `parkSourceUrl`, `parkUnit`, `fenceFor` |
 | `@johnmorrisdotca/kyogijo/eras` | `rulesFor`, `eraChanges`, `eraStates`, `eraRange`, `seasonLabel`, `footballIn`, `ERA_SPORTS`, `ERA_CURRENT`, `ERA_SOURCES` and the rule types |
 | `@johnmorrisdotca/kyogijo/grounds` | `GROUNDS`, `GROUND_IDS`, `groundById`, `groundByWikidata`, `groundNameIn`, `groundsHosting`, `groundSourceUrl` |
 | `@johnmorrisdotca/kyogijo/events` | `EVENTS`, `EVENT_IDS`, `EVENT_SOURCES`, `eventById`, `eventOptions`, `eventSources`, `eventFit`, `fitOf`, `conventionPlacement`, `KYOGIJO_SPECIAL_STYLE` and the game types: the special games, a surface set inside another |

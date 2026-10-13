@@ -12,7 +12,7 @@ export type { ArrowsLayer, Comet, Layer, LayerBase, LayerKind, LayerTeam, LineDa
 export { KYOGIJO_STRINGS } from "./strings.ts";
 export type { KyogijoWords } from "./strings.ts";
 export { KYOGIJO_COURTS_STYLE } from "./courts.style.ts";
-export { KYOGIJO_CURLING_STYLE, KYOGIJO_HEAT_STYLE, KYOGIJO_NOTE_STYLE, KYOGIJO_STYLE, KYOGIJO_TEAM_STYLE } from "./style.ts";
+export { KYOGIJO_CURLING_STYLE, KYOGIJO_HEAT_STYLE, KYOGIJO_NOTE_STYLE, KYOGIJO_STYLE, KYOGIJO_TEAM_STYLE, KYOGIJO_WALLS_STYLE } from "./style.ts";
 export { KYOGIJO_LOOK_STYLE, LOOKS, LOOK_NAMES, LOOK_PAIRS, contrastOf, groupOf, lookPalette, lookStyle } from "./look.ts";
 export type { Group as LookGroup, Look, Palette as LookPalette, PaletteKey as LookPaletteKey } from "./look.ts";
 export { FEATURES, FEATURE_INFO, KYOGIJO_FEATURE_STYLE } from "./features.ts";
@@ -21,8 +21,8 @@ export type { DelaunayLayer, FlowLayer, Formation, FormationLayer, FormationPlay
 export { COURT_THEMES } from "./themes.ts";
 export { abbreviate, capitals, fitLines, textWidth } from "./text.ts";
 export type { FittedLines } from "./text.ts";
-export { PARKS, PARK_IDS, fenceFor, parkById, parkByWikidata, parkPointsIn, parkSourceUrl, parkUnit } from "./parks.ts";
-export type { Park, ParkData, ParkPeriod, ParkPeriodData, ParkSource } from "./parks.ts";
+export { PARKS, PARK_IDS, fenceFor, parkById, parkByWikidata, parkPointsIn, parkQuirksIn, parkSourceUrl, parkUnit, parkWallsIn } from "./parks.ts";
+export type { CoverQuirk, DugoutSide, HillQuirk, OverhangQuirk, Park, ParkData, ParkDugouts, ParkPeriod, ParkPeriodData, ParkQuirk, ParkSource, ParkWall, ParkWallData, PointQuirk, QuirkKind, WallPlace } from "./parks.ts";
 export { ERA_CURRENT, ERA_SOURCES, ERA_SPORTS, eraChanges, eraRange, eraStates, footballIn, rulesFor, seasonLabel } from "./eras.ts";
 export type { EraChange, EraRules, EraRulesOf, EraSource, EraSpan, EraSport, FootballRules, MlbRules, NbaRules, NhlRules } from "./eras.ts";
 export { GROUND_IDS, GROUNDS, groundById, groundByWikidata, groundNameIn, groundSourceUrl, groundsHosting } from "./grounds.ts";
@@ -52,6 +52,8 @@ export type {
   LineWidth,
   LookName,
   Orientation,
+  QuirkName,
+  QuirkOptions,
   RangeBox,
   RangeName,
   RangeNamed,
@@ -64,4 +66,5 @@ export type {
   SurfaceOptions,
   Team,
   Theme,
+  WallOptions,
 } from "./types.ts";

@@ -11,7 +11,7 @@ export const KYOGIJO_TAG = "kyogijo-field";
 /** The attributes the element reads. */
 export const KYOGIJO_ATTRIBUTES = [
   "sport", "league", "size", "theme", "language", "orientation", "park", "ground", "year", "detail", "margin", "stripes", "exact-lines", "uppercase",
-  "pitch", "pitch-type", "half", "range", "range-end", "goals", "stripe-pattern", "corner-flags", "look", "line-width", "line-dash", "line-opacity", "landmarks",
+  "pitch", "pitch-type", "half", "range", "range-end", "goals", "stripe-pattern", "corner-flags", "look", "line-width", "line-dash", "line-opacity", "landmarks", "walls", "quirks",
   "home", "away", "home-abbr", "away-abbr", "home-score", "away-score", "home-penalties", "away-penalties", "score", "home-logo", "away-logo", "home-color", "away-color",
   "status", "competition", "date", "label", "winner", "home-side", "description", "options",
   "loop", "speed", "autoplay", "controls", "trail",
@@ -107,6 +107,18 @@ export function optionsFromAttributes(read: (name: string) => string | null, bas
   const lineOpacity = read("line-opacity");
   if (lineOpacity !== null && /^\s*\d*\.?\d+\s*$/.test(lineOpacity)) o.lineOpacity = Number(lineOpacity);
   if (read("landmarks") !== null) o.landmarks = read("landmarks") !== "false";
+  // `walls="true"`, or words: `legend`, `labels`. `quirks="true"`, or words: `labels` and the names of the quirks to draw.
+  const words = (name: string): string[] | undefined => {
+    const text = read(name);
+    return text === null || text.trim() === "false" ? undefined : text.split(/[\s,]+/).filter((word) => word !== "" && word !== "true");
+  };
+  const wallWords = words("walls");
+  if (wallWords !== undefined) o.walls = wallWords.length === 0 ? true : { legend: wallWords.includes("legend"), labels: wallWords.includes("labels") };
+  const quirkWords = words("quirks");
+  if (quirkWords !== undefined) {
+    const only = quirkWords.filter((word) => word !== "labels");
+    o.quirks = quirkWords.length === 0 ? true : { labels: quirkWords.includes("labels"), ...(only.length === 0 ? {} : { only }) };
+  }
   if (read("corner-flags") !== null) o.cornerFlags = read("corner-flags") !== "false";
   const scores = parseScore(read("score"));
   const team = (role: "home" | "away", given: Team | undefined): Team | undefined => {

@@ -18,6 +18,7 @@ src/
 │   ├── hockey.ts       the NHL rink
 │   ├── basketball.ts   the NBA court
 │   ├── baseball.ts     the baseball field and its fence
+│   ├── baseball.walls.ts  a park's walls and quirks drawn on the field: the bands of the walls, the hill, the overhang, the ivy, the poles, the backstop, the dugouts, the legend
 │   ├── soccer.ts       the soccer pitch
 │   ├── curling.ts      the curling sheet
 │   ├── net.ts          the court of tennis, volleyball, badminton, pickleball and table tennis
@@ -93,7 +94,8 @@ src/
 ├── frames.ts           coordinate frames: the mapper, the registry, toSurface and fromSurface
 ├── frames.providers.ts the NHL, HockeyTech, NBA, NFL, MLBAM, Retrosheet, curling and net sports frames
 ├── frames-entry.ts     the frames' entry
-├── parks.ts            the ballparks, their fences and their sources
+├── parks.ts            the ballparks, their fences, walls, quirks and their sources
+├── ballpark.ts         what a drawing asks of a park's walls and quirks (`walls`, `quirks`), and the words that name them
 ├── parks.data.ts       made by scripts/build-parks.mjs from scripts/parks.data.json
 ├── parks-entry.ts      the parks' entry
 ├── grounds.ts          the soccer grounds

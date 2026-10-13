@@ -128,6 +128,30 @@ export const KYOGIJO_CURLING_STYLE = `
 .kyogijo .ky-badge-hammer-left .ky-hammer{fill:var(--ky-left-ink)}.kyogijo .ky-badge-hammer-left .ky-hammer-in{fill:var(--ky-left)}.kyogijo .ky-badge-hammer-right .ky-hammer{fill:var(--ky-right-ink)}.kyogijo .ky-badge-hammer-right .ky-hammer-in{fill:var(--ky-right)}`.trim();
 
 /**
+ * The rules of a ballpark's walls and quirks (`walls` and `quirks`): the four shades of the wall bands (`--ky-wall-1` to `-4`, from under 10 feet to 30 and over), the hill, the
+ * overhang, the ivy, the poles and bullpens, the backstop's bar, the dugouts, the names and the legend. Kept apart so that a drawing without them does not carry them: a drawing
+ * that has them writes them in after the base rules, and `KYOGIJO_STYLE` has them for a page.
+ */
+export const KYOGIJO_WALLS_STYLE = `
+:where(.kyogijo){--ky-wall-1:#f2e6c2;--ky-wall-2:#e6bd62;--ky-wall-3:#d9742e;--ky-wall-4:#8e2f1c;--ky-hill:#2a5f35;--ky-ivy:#1c6b2f;--ky-over:#101612;--ky-pen:#d9dce0}
+@media (prefers-color-scheme:dark){:where(html:not([data-theme=light]) .kyogijo:not([data-theme=light])){--ky-wall-1:#e9dcb4;--ky-wall-2:#d9ae55;--ky-wall-3:#cc6a2a;--ky-wall-4:#c24a32;--ky-hill:#68a574;--ky-ivy:#4f9a63}}
+:where(html[data-theme=dark] .kyogijo,.kyogijo[data-theme=dark]){--ky-wall-1:#e9dcb4;--ky-wall-2:#d9ae55;--ky-wall-3:#cc6a2a;--ky-wall-4:#c24a32;--ky-hill:#68a574;--ky-ivy:#4f9a63}
+.kyogijo .ky-wall{stroke:var(--ky-layer-edge);stroke-width:.35;stroke-linejoin:round}
+.kyogijo .ky-wall-1{fill:var(--ky-wall-1)}.kyogijo .ky-wall-2{fill:var(--ky-wall-2)}.kyogijo .ky-wall-3{fill:var(--ky-wall-3)}.kyogijo .ky-wall-4{fill:var(--ky-wall-4)}
+.kyogijo .ky-hill{fill:var(--ky-hill);fill-opacity:.6;stroke:var(--ky-line);stroke-width:.5;stroke-dasharray:2 1.5}
+.kyogijo .ky-overhang{fill:var(--ky-over);fill-opacity:.32;stroke:var(--ky-line);stroke-width:.5;stroke-dasharray:3 2}
+.kyogijo .ky-ivy{fill:none;stroke:var(--ky-ivy);stroke-width:3;stroke-dasharray:2.2 1.3;stroke-linecap:round}
+.kyogijo .ky-basket{fill:none;stroke:var(--ky-line);stroke-width:.9;stroke-dasharray:3 1.6}
+.kyogijo .ky-pole{fill:var(--ky-post);stroke:var(--ky-ink);stroke-width:.5}
+.kyogijo .ky-bullpen{fill:var(--ky-pen);stroke:var(--ky-ink);stroke-width:.5}
+.kyogijo .ky-backstop{fill:none;stroke:var(--ky-line);stroke-width:.8}
+.kyogijo .ky-dugout{fill:var(--ky-plate);stroke:var(--ky-line);stroke-width:.6}
+.kyogijo .ky-dugout-away{fill:none}
+.kyogijo .ky-wl{fill:var(--ky-ink);stroke:var(--ky-halo);stroke-width:.14em;paint-order:stroke;stroke-linejoin:round;font-weight:700}
+.kyogijo .ky-wl-p{fill:var(--ky-plate)}
+.kyogijo .ky-wl-k{fill:var(--ky-plate-ink);font-weight:700}`.trim();
+
+/**
  * The rules of the team layers (the cells, triangles and hulls, the roses of a sonar, the arrows of a flow field and the marks of a formation), kept apart
  * like the heat layers' so that a drawing without one does not carry them: a drawing that has one writes them in beside the layer, and `KYOGIJO_STYLE` has them for a page.
  */
@@ -153,4 +177,4 @@ export const KYOGIJO_NOTE_STYLE = `
 .kyogijo .ky-an-hd{fill:var(--c)}`.trim();
 
 /** Every rule of the package, for a page that draws with `style: "none"` and supplies the stylesheet itself. */
-export const KYOGIJO_STYLE = `${KYOGIJO_BASE_STYLE}\n${KYOGIJO_HEAT_STYLE}\n${KYOGIJO_TEAM_STYLE}\n${KYOGIJO_CURLING_STYLE}\n${KYOGIJO_COURTS_STYLE}\n${KYOGIJO_LOOK_STYLE}\n${KYOGIJO_FEATURE_STYLE}\n${KYOGIJO_NOTE_STYLE}\n${KYOGIJO_SPECIAL_STYLE}`;
+export const KYOGIJO_STYLE = `${KYOGIJO_BASE_STYLE}\n${KYOGIJO_HEAT_STYLE}\n${KYOGIJO_TEAM_STYLE}\n${KYOGIJO_CURLING_STYLE}\n${KYOGIJO_WALLS_STYLE}\n${KYOGIJO_COURTS_STYLE}\n${KYOGIJO_LOOK_STYLE}\n${KYOGIJO_FEATURE_STYLE}\n${KYOGIJO_NOTE_STYLE}\n${KYOGIJO_SPECIAL_STYLE}`;

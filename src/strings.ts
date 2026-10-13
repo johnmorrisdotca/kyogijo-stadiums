@@ -20,6 +20,28 @@ export interface KyogijoWords {
    * (written with `size`, `{length}` and `{width}` in a `{unit}`) or a diamond's `{base}` and `{pitch}` in feet.
    */
   league: { basketball: string; hockey: string; football: string; baseball: string; softball: string; curling: string; tennis: string; volleyball: string; beachVolleyball: string; badminton: string; pickleball: string; tabletennis: string; size: string; units: { ft: string; yd: string; m: string } };
+  /**
+   * A ballpark's walls and quirks (`walls` and `quirks`): the words of the legend and the labels, of where a wall stands, and the sentences of the description.
+   * `{unit}` is `unit.ft` or `unit.m`; `{name}` is the name the park's article gives a wall or a quirk, else the kind's own name.
+   */
+  ballpark: {
+    heading: string;
+    sections: Record<"outfield" | "left" | "leftCenter" | "center" | "deadCenter" | "rightCenter" | "right" | "leftToCenter" | "centerToRight" | "leftCorner" | "rightCorner", string>;
+    unit: { ft: string; m: string };
+    tiers: { under: string; between: string; over: string };
+    height: string;
+    walls: string;
+    quirks: string;
+    kinds: {
+      hillName: string; hill: string; hillSlope: string;
+      overhangName: string; overhang: string;
+      poleName: string; flagpoleName: string; pole: string;
+      bullpen: string; bullpenHome: string; bullpenVisitors: string; bullpenItem: string;
+      ivy: string; basket: string;
+      backstop: string;
+      dugoutHome: string; dugoutVisitors: string; first: string; third: string;
+    };
+  };
   /** The net sports' scores: who is serving ({name}), a team's points in each set ({name}, {list}) or game, the points of the game in progress ({name}, {points}), and the heads of the board's columns. */
   net: { serving: string; bySet: string; byGame: string; gamePoints: string; sets: string; games: string; points: string };
   /** The title of a score: placeholders {away}, {awayScore}, {home} and {homeScore}. */
@@ -454,6 +476,24 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       size: "{length} by {width} {unit}",
       units: { ft: "feet", yd: "yards", m: "metres" },
     },
+    ballpark: {
+      heading: "Wall height",
+      sections: { outfield: "Outfield wall", left: "Left field", leftCenter: "Left-centre", center: "Centre field", deadCenter: "Dead centre", rightCenter: "Right-centre", right: "Right field", leftToCenter: "Left to centre field", centerToRight: "Centre to right field", leftCorner: "Left field corner", rightCorner: "Right field corner" },
+      unit: { ft: "ft", m: "m" },
+      tiers: { under: "under {a} {unit}", between: "{a} to {b} {unit}", over: "{a} {unit} and over" },
+      height: "{name} {height} {unit}",
+      walls: "Wall heights: {list}.",
+      quirks: "Features of the park: {list}.",
+      kinds: {
+        hillName: "Hill", hill: "{name}, a hill {width} {unit} wide", hillSlope: "{name}, a hill {width} {unit} wide, sloping at {slope} degrees",
+        overhangName: "Overhang", overhang: "{name}, {depth} {unit} over the field",
+        poleName: "Foul pole", flagpoleName: "Flagpole", pole: "{name}, {feet} {unit} from home plate",
+        bullpen: "Bullpen", bullpenHome: "Home bullpen", bullpenVisitors: "Visitors' bullpen", bullpenItem: "{name}, {feet} {unit} from home plate",
+        ivy: "Ivy on the wall", basket: "The basket along the top of the wall",
+        backstop: "Backstop, {feet} {unit} behind home plate",
+        dugoutHome: "Home dugout, on the {line} base line", dugoutVisitors: "Visitors' dugout, on the {line} base line", first: "first", third: "third",
+      },
+    },
     net: { serving: "{name} is serving.", bySet: "By set, {name}: {list}.", byGame: "By game, {name}: {list}.", gamePoints: "In the current game, {name} has {points}.", sets: "Sets", games: "Games", points: "Pts" },
     scoreTitle: "{away} {awayScore}, {home} {homeScore}",
     said: { home: "home", away: "away", won: "{name} won.", tied: "The game is level.", park: "The outfield fence follows the figures published for {park}.", ground: "The pitch follows the size published for {ground}.", groundDefault: "No pitch size is published for {ground}, so the pitch has the international size of 105 by 68 metres.", era: "The markings are those of the {season} season.", hammer: "{name} has the hammer.", ends: "By end, {name}: {list}.", total: "Total", wonPens: "{name} won {a}-{b} on penalties.", pens: "{a}-{b} pens", on: "Drawn as", sep: ", ", stop: ".", colon: ": ", gap: " " },
@@ -599,6 +639,24 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       tabletennis: "卓球台。{size}で、サイドライン、エンドライン、センターライン、ネットがあります",
       size: "{length}{unit}×{width}{unit}",
       units: { ft: "フィート", yd: "ヤード", m: "m" },
+    },
+    ballpark: {
+      heading: "フェンスの高さ",
+      sections: { outfield: "外野フェンス", left: "左翼", leftCenter: "左中間", center: "中堅", deadCenter: "中堅中央", rightCenter: "右中間", right: "右翼", leftToCenter: "左翼から中堅", centerToRight: "中堅から右翼", leftCorner: "左翼のポール際", rightCorner: "右翼のポール際" },
+      unit: { ft: "フィート", m: "m" },
+      tiers: { under: "{a}{unit}未満", between: "{a}～{b}{unit}", over: "{a}{unit}以上" },
+      height: "{name} {height}{unit}",
+      walls: "フェンスの高さ：{list}。",
+      quirks: "球場の特徴：{list}。",
+      kinds: {
+        hillName: "丘", hill: "{name}（幅{width}{unit}の丘）", hillSlope: "{name}（幅{width}{unit}、傾斜{slope}度の丘）",
+        overhangName: "張り出し席", overhang: "{name}（フィールド上に{depth}{unit}張り出し）",
+        poleName: "ファウルポール", flagpoleName: "旗ざお", pole: "{name}（本塁から{feet}{unit}）",
+        bullpen: "ブルペン", bullpenHome: "ホームのブルペン", bullpenVisitors: "ビジターのブルペン", bullpenItem: "{name}（本塁から{feet}{unit}）",
+        ivy: "外野フェンスのツタ", basket: "フェンス上部の金網（バスケット）",
+        backstop: "バックネット（本塁から{feet}{unit}）",
+        dugoutHome: "ホームのダグアウト（{line}塁側）", dugoutVisitors: "ビジターのダグアウト（{line}塁側）", first: "一", third: "三",
+      },
     },
     net: { serving: "{name}のサーブです。", bySet: "{name}のセットごとのスコア：{list}。", byGame: "{name}のゲームごとの得点：{list}。", gamePoints: "現在のゲームのポイントは、{name}が{points}です。", sets: "セット", games: "ゲーム", points: "ポイント" },
     scoreTitle: "{away} {awayScore}、{home} {homeScore}",

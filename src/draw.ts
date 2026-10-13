@@ -1,3 +1,4 @@
+import { ballparkDrawn, ballparkFor, ballparkSentences } from "./ballpark.ts";
 import { inkOn, safeColour, safeLogo } from "./colour.ts";
 import { drawingId, feetFence, isPortrait, lengthUnit, safeClass } from "./common.ts";
 import { el, esc, num } from "./format.ts";
@@ -20,7 +21,7 @@ import { annotate, annotated, wideView, type Notes } from "./annotate.ts";
 import { featureColours, featureStyle } from "./features.ts";
 import { isLook, lookStyle } from "./look.ts";
 import { lineLook, restyleLines } from "./restyle.ts";
-import { KYOGIJO_BASE_STYLE, KYOGIJO_CURLING_STYLE, KYOGIJO_NOTE_STYLE } from "./style.ts";
+import { KYOGIJO_BASE_STYLE, KYOGIJO_CURLING_STYLE, KYOGIJO_NOTE_STYLE, KYOGIJO_WALLS_STYLE } from "./style.ts";
 import { convertLength, type Unit } from "./units.ts";
 import { baseball } from "./surfaces/baseball.ts";
 import { curling } from "./surfaces/curling.ts";
@@ -239,9 +240,9 @@ function buildWhole(o: SurfaceOptions, portrait: boolean, id: string, score: boo
     case "mlb": {
       if (league?.family === "baseball") {
         const diamond = diamondOf(league, o.year);
-        return baseball(fenceFor(parkById(o.park), feetFence(o.fence, unit), o.year, diamondFence(diamond)), common, undefined, diamond);
+        return baseball(fenceFor(parkById(o.park), feetFence(o.fence, unit), o.year, diamondFence(diamond)), { ...common, ballpark: ballparkFor(o) }, undefined, diamond);
       }
-      return baseball(fenceFor(parkById(o.park), feetFence(o.fence, unit), o.year), common, rulesFor("mlb", o.year).rules);
+      return baseball(fenceFor(parkById(o.park), feetFence(o.fence, unit), o.year), { ...common, ballpark: ballparkFor(o) }, rulesFor("mlb", o.year).rules);
     }
     case "soccer":
       return buildSoccer(o, common, scored, unit);
@@ -372,8 +373,10 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
   const halfLine = pitch !== undefined && !isScore(o) && (o.half === "left" || o.half === "right") ? `${gap}${words.soccer.half}` : "";
   // What the ground says about the size: that it is the published one, or that the ground has none and the international pitch is drawn.
   const groundLine = ground === undefined || groundName === undefined || o.pitch !== undefined ? "" : `${gap}${fill(ground.pitchSize === "published" ? words.said.ground : words.said.groundDefault, { ground: groundName })}`;
+  // A park's walls and quirks that are drawn are said too.
+  const ballpark = park === undefined ? undefined : ballparkFor(o);
   const special = specialText(o, language, surfaceName);
-  const parkLine = (parkName === undefined ? `${groundLine}${halfLine}` : `${gap}${fill(words.said.park, { park: parkName })}`) + (special === undefined ? "" : `${gap}${special.text}`);
+  const parkLine = (parkName === undefined ? `${groundLine}${halfLine}` : `${gap}${fill(words.said.park, { park: parkName })}${ballpark === undefined ? "" : ballparkSentences(ballpark).map((line) => `${gap}${line}`).join("")}`) + (special === undefined ? "" : `${gap}${special.text}`);
   // A drawing of a past season says which: the markings are those of that season.
   const dated = typeof o.year === "number" && Number.isFinite(o.year);
   const eraLine =
@@ -495,6 +498,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
   // The features that have a colour of their own, for the sport as drawn (a `league` of another sport is that sport's).
   const featured = featureColours(sport, o.featureColors);
   const features = featured.length === 0 ? undefined : new Set(featured.map(([name]) => name));
+  const walled = sport === "mlb" && ballparkDrawn(ballparkFor(o));
   const style = colourStyle(o, { left: leftTeam, right: rightTeam, home: isScore(o) ? o.home : undefined, away: isScore(o) ? o.away : undefined }, featured);
   const palette = isLook(o.look) ? o.look : undefined;
   let notes: Notes | undefined;
@@ -609,7 +613,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       style: style === "" ? undefined : style,
     },
     `<title id="${titleId}">${esc(title)}</title><desc id="${descId}">${esc(description)}</desc>` +
-      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}${plan === undefined ? "" : `\n${courtStyle(plan.sport, plan.look)}`}${palette === undefined ? "" : `\n${lookStyle(palette)}`}${features === undefined ? "" : `\n${featureStyle(sport, features)}`}${notes === undefined || notes.svg === "" ? "" : `\n${KYOGIJO_NOTE_STYLE}`}${o.host === undefined ? "" : `\n${specialStyle(hostSport(o.host))}`}</style>`) +
+      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}${plan === undefined ? "" : `\n${courtStyle(plan.sport, plan.look)}`}${palette === undefined ? "" : `\n${lookStyle(palette)}`}${walled ? `\n${KYOGIJO_WALLS_STYLE}` : ""}${features === undefined ? "" : `\n${featureStyle(sport, features)}`}${notes === undefined || notes.svg === "" ? "" : `\n${KYOGIJO_NOTE_STYLE}`}${o.host === undefined ? "" : `\n${specialStyle(hostSport(o.host))}`}</style>`) +
       (defs === "" ? "" : `<defs>${defs}</defs>`) +
       body,
   );

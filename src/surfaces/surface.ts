@@ -1,3 +1,4 @@
+import type { Ballpark } from "../ballpark.ts";
 import { el, num } from "../format.ts";
 import type { Box, Detail, GoalInfo, GoalStyle, Sport, StripePattern } from "../types.ts";
 
@@ -105,6 +106,8 @@ export interface BuildOptions {
   goalMarkup?: (goal: GoalInfo) => string;
   /** Collect the landmarks (`Surface.marks`). */
   landmarks?: boolean;
+  /** For baseball: what the park's article adds to the plain field (the warning track's width, the walls, the quirks). */
+  ballpark?: Ballpark;
 }
 
 /**

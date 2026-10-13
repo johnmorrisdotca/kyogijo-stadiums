@@ -69,6 +69,45 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `league.units.ft` | feet | フィート |
 | `league.units.yd` | yards | ヤード |
 | `league.units.m` | metres | m |
+| `ballpark.heading` | Wall height | フェンスの高さ |
+| `ballpark.sections.outfield` | Outfield wall | 外野フェンス |
+| `ballpark.sections.left` | Left field | 左翼 |
+| `ballpark.sections.leftCenter` | Left-centre | 左中間 |
+| `ballpark.sections.center` | Centre field | 中堅 |
+| `ballpark.sections.deadCenter` | Dead centre | 中堅中央 |
+| `ballpark.sections.rightCenter` | Right-centre | 右中間 |
+| `ballpark.sections.right` | Right field | 右翼 |
+| `ballpark.sections.leftToCenter` | Left to centre field | 左翼から中堅 |
+| `ballpark.sections.centerToRight` | Centre to right field | 中堅から右翼 |
+| `ballpark.sections.leftCorner` | Left field corner | 左翼のポール際 |
+| `ballpark.sections.rightCorner` | Right field corner | 右翼のポール際 |
+| `ballpark.unit.ft` | ft | フィート |
+| `ballpark.unit.m` | m | m |
+| `ballpark.tiers.under` | under {a} {unit} | {a}{unit}未満 |
+| `ballpark.tiers.between` | {a} to {b} {unit} | {a}～{b}{unit} |
+| `ballpark.tiers.over` | {a} {unit} and over | {a}{unit}以上 |
+| `ballpark.height` | {name} {height} {unit} | {name} {height}{unit} |
+| `ballpark.walls` | Wall heights: {list}. | フェンスの高さ：{list}。 |
+| `ballpark.quirks` | Features of the park: {list}. | 球場の特徴：{list}。 |
+| `ballpark.kinds.hillName` | Hill | 丘 |
+| `ballpark.kinds.hill` | {name}, a hill {width} {unit} wide | {name}（幅{width}{unit}の丘） |
+| `ballpark.kinds.hillSlope` | {name}, a hill {width} {unit} wide, sloping at {slope} degrees | {name}（幅{width}{unit}、傾斜{slope}度の丘） |
+| `ballpark.kinds.overhangName` | Overhang | 張り出し席 |
+| `ballpark.kinds.overhang` | {name}, {depth} {unit} over the field | {name}（フィールド上に{depth}{unit}張り出し） |
+| `ballpark.kinds.poleName` | Foul pole | ファウルポール |
+| `ballpark.kinds.flagpoleName` | Flagpole | 旗ざお |
+| `ballpark.kinds.pole` | {name}, {feet} {unit} from home plate | {name}（本塁から{feet}{unit}） |
+| `ballpark.kinds.bullpen` | Bullpen | ブルペン |
+| `ballpark.kinds.bullpenHome` | Home bullpen | ホームのブルペン |
+| `ballpark.kinds.bullpenVisitors` | Visitors' bullpen | ビジターのブルペン |
+| `ballpark.kinds.bullpenItem` | {name}, {feet} {unit} from home plate | {name}（本塁から{feet}{unit}） |
+| `ballpark.kinds.ivy` | Ivy on the wall | 外野フェンスのツタ |
+| `ballpark.kinds.basket` | The basket along the top of the wall | フェンス上部の金網（バスケット） |
+| `ballpark.kinds.backstop` | Backstop, {feet} {unit} behind home plate | バックネット（本塁から{feet}{unit}） |
+| `ballpark.kinds.dugoutHome` | Home dugout, on the {line} base line | ホームのダグアウト（{line}塁側） |
+| `ballpark.kinds.dugoutVisitors` | Visitors' dugout, on the {line} base line | ビジターのダグアウト（{line}塁側） |
+| `ballpark.kinds.first` | first | 一 |
+| `ballpark.kinds.third` | third | 三 |
 | `net.serving` | {name} is serving. | {name}のサーブです。 |
 | `net.bySet` | By set, {name}: {list}. | {name}のセットごとのスコア：{list}。 |
 | `net.byGame` | By game, {name}: {list}. | {name}のゲームごとの得点：{list}。 |

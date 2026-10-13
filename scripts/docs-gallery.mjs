@@ -228,11 +228,21 @@ function placesPage() {
     slug: "gallery-places",
     title: "Gallery: ballparks and grounds",
     ja: "球場とスタジアム",
-    intro: "A sample of the 94 ballparks and 64 grounds, each from its own published figures. The atlas has every one on a map.",
+    intro: "A sample of the 94 ballparks and 64 grounds, each from its own published figures, and the walls and quirks of eight of them. The atlas has every one on a map.",
     sections: [
       section("parks", "Ballparks of today", "`park` takes a key of `PARKS`.", parks.map(([id, title]) => item(`park-${id}`, title, drawing({ sport: "mlb", park: id })))),
       section("past", "Ballparks of the past", "A past park is drawn as it stood in a `year`, where its article dates earlier fences.", past.map(([id, year, title]) => item(`past-${id}${year === undefined ? "" : `-${year}`}`, title, drawing(year === undefined ? { sport: "mlb", park: id } : { sport: "mlb", park: id, year })))),
       section("grounds", "Soccer grounds", "`ground` draws the pitch at the size its article publishes, or at 105 by 68 metres where it gives none.", grounds.map(([id, title]) => item(`ground-${id}`, title, drawing({ sport: "soccer", ground: id })))),
+      section("walls", "Walls and quirks", "`walls` draws a band outside each stretch of the fence whose width and shade say how high it stands, from the height the park's article gives; `quirks` draws what the article describes with figures. Both follow `year`.", [
+        item("walls-fenway", "Fenway Park: the Green Monster, with a key and names", drawing({ sport: "mlb", park: "fenway-park", walls: { legend: true, labels: true }, quirks: { labels: true } })),
+        item("walls-oracle", "Oracle Park: five heights, up to the 24 foot right field wall", drawing({ sport: "mlb", park: "oracle-park", walls: { legend: true, labels: true } })),
+        item("walls-wrigley", "Wrigley Field: the ivy, the basket and the two wells", drawing({ sport: "mlb", park: "wrigley-field", walls: { legend: true }, quirks: true })),
+        item("walls-daikin-2010", "Daikin Park in 2010: Tal's Hill and the Crawford Boxes", drawing({ sport: "mlb", park: "daikin-park", year: 2010, walls: { labels: true }, quirks: { labels: true } })),
+        item("walls-polo", "Polo Grounds: the overhang in left and the bullpens in the gaps", drawing({ sport: "mlb", park: "polo-grounds", quirks: { labels: true } })),
+        item("walls-progressive", "Progressive Field: the Little Green Monster, the backstop and the dugouts", drawing({ sport: "mlb", park: "progressive-field", walls: { legend: true, labels: true }, quirks: { labels: true } })),
+        item("walls-metrodome-1990", "Metrodome in 1990: the Plexiglas screen and the Baggie", drawing({ sport: "mlb", park: "metrodome", year: 1990, walls: { legend: true, labels: true } })),
+        item("walls-tokyo-dome-ja", "Tokyo Dome, in metres and in Japanese", drawing({ sport: "mlb", park: "tokyo-dome", units: "m", language: "ja", walls: { legend: true, labels: true } })),
+      ]),
       section("fence", "A fence of your own", "`fence` lays your distances over a park's or the generic field.", [item("fence-custom", "Short porch in left, deep centre", drawing({ sport: "mlb", fence: { left: 310, center: 420 } }))]),
     ],
   };

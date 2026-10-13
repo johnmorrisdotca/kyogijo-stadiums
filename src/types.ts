@@ -370,6 +370,25 @@ export interface Fence {
   right: number;
 }
 
+/** How a ballpark's walls are drawn (`walls`). */
+export interface WallOptions {
+  /** A key under the drawing for the shades: under 10 feet, 10 to 20, 20 to 30 and 30 and over (the same in metres for a drawing in metres). */
+  legend?: boolean;
+  /** Write each wall's name or place and its height beside it. */
+  labels?: boolean;
+}
+
+/** The things in a ballpark that `quirks` draws besides the walls. */
+export type QuirkName = "hill" | "overhang" | "pole" | "flagpole" | "bullpen" | "ivy" | "basket" | "backstop" | "dugouts";
+
+/** Which quirks of a ballpark are drawn (`quirks`), and whether they carry their names. */
+export interface QuirkOptions {
+  /** Only these; all of the park's by default. */
+  only?: readonly QuirkName[];
+  /** Write each quirk's name beside it. */
+  labels?: boolean;
+}
+
 /** What every drawing takes. */
 export interface SurfaceOptions {
   sport: Sport;
@@ -436,6 +455,17 @@ export interface SurfaceOptions {
   year?: number;
   /** Fence distances of an MLB drawing, in `units`, over the park's. */
   fence?: Partial<Fence>;
+  /**
+   * The height of a ballpark's walls, from the figures its article publishes: a band outside each stretch of the fence whose width and shade say
+   * how high it stands (the Green Monster, the Crawford Boxes, the Baggie), with `legend` for a key and `labels` for the names. For the season
+   * `year` names, else today's. A stretch the article gives no height for is left bare. Off by default, and then the drawing is as it was.
+   */
+  walls?: boolean | WallOptions;
+  /**
+   * What a ballpark's article describes with figures besides the distances: a hill (Tal's Hill), an overhang, the poles, the bullpens, ivy and the basket,
+   * the distance to the backstop and the sides of the dugouts. For the season `year` names. Off by default.
+   */
+  quirks?: boolean | QuirkOptions;
   /** The look of an NBA court. */
   court?: CourtStyle;
   /** The size and look of a curling sheet. */

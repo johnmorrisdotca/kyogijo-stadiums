@@ -3,6 +3,7 @@ import { rulesFor, type MlbRules } from "../eras.ts";
 import { MLB, fenceAt, skinJoin, type FencePoint } from "../geometry.ts";
 import { MLB_DIAMOND, type DiamondSpec } from "../leagues/baseball.ts";
 import { mowPark } from "../mow.ts";
+import { ballparkLegend, ballparkOver, ballparkRoom, ballparkUnder } from "./baseball.walls.ts";
 import { edges, ft, type BuildOptions, type Mark, type Surface } from "./surface.ts";
 
 const SQ = Math.SQRT1_2;
@@ -80,8 +81,12 @@ export function baseball(points: readonly FencePoint[], o: BuildOptions, era?: M
   const umin = Math.min(...us);
   const umax = Math.max(...us);
   const vmax = Math.max(...vs);
-  const m = o.margin ?? 14;
+  // A park's walls and quirks need room beyond the fence, and its backstop and legend room below home plate.
+  const b = o.ballpark;
+  const room = b === undefined ? { side: 0, below: 0, legend: 0 } : ballparkRoom(b);
+  const m = Math.max(o.margin ?? 14, room.side);
   const backstop = d.backstop;
+  const bottom = Math.max(backstop + m, room.below);
   const thin = o.exact ? 1 / 3 : 0.7;
   const full = o.detail === "full";
   // Screen coordinates: x is u, y is -v.
@@ -91,7 +96,7 @@ export function baseball(points: readonly FencePoint[], o: BuildOptions, era?: M
   const fairId = `${o.id}-fair`;
 
   const strip = o.portrait && o.score ? 60 : 0;
-  const view = { x: umin - m, y: -(vmax + m) - strip, w: umax - umin + 2 * m, h: vmax + m + backstop + m + 2 * strip };
+  const view = { x: umin - m, y: -(vmax + m) - strip, w: umax - umin + 2 * m, h: vmax + m + backstop + m + 2 * strip + (bottom - (backstop + m)) + room.legend };
 
   let base = el("rect", { class: ft(o, "foul-ground", "ky-foul"), x: view.x, y: view.y, width: view.w, height: view.h });
   base += el("path", { class: ft(o, "outfield", "ky-surface"), d: fairD });
@@ -108,7 +113,8 @@ export function baseball(points: readonly FencePoint[], o: BuildOptions, era?: M
     if (mown.path !== "") base += el("path", { class: ft(o, "mowing", "ky-stripe"), d: mown.path, "clip-path": `url(#${fairId})` });
   }
   // The warning track: a band along the fence inside the field.
-  base += el("path", { class: ft(o, "warning-track", "ky-track"), d: fenceD, fill: "none", "stroke-width": MLB.warningTrack * 2, "clip-path": `url(#${fairId})` });
+  base += el("path", { class: ft(o, "warning-track", "ky-track"), d: fenceD, fill: "none", "stroke-width": (b?.track ?? MLB.warningTrack) * 2, "clip-path": `url(#${fairId})` });
+  if (b !== undefined) base += ballparkUnder(b, points);
   // The infield's dirt, cut by an arc round the pitcher's plate, and its grass.
   const skin = d.skinRadius ?? d.base + 5;
   const ua = skinJoin(d.pitcher, skin) * SQ;
@@ -167,6 +173,10 @@ export function baseball(points: readonly FencePoint[], o: BuildOptions, era?: M
   ];
   lines += bases.map(([u, v]) => el("path", { class: ft(o, "bases", "ky-fill-line"), d: `M${num(u)} ${num(-(v + h))}L${num(u + h)} ${num(-v)}L${num(u)} ${num(-(v - h))}L${num(u - h)} ${num(-v)}Z` })).join("");
   lines += el("path", { class: ft(o, "fence", "ky-fence"), d: fenceD, fill: "none", "stroke-width": 1.6 });
+  if (b !== undefined) {
+    lines += ballparkOver(b, points);
+    if (b.legend) lines += ballparkLegend(b, bottom + 3);
+  }
 
   const left: Surface["left"] = { cx: 0, cy: 0, w: 0, h: 0, rot: 0, panel: true };
   const right: Surface["right"] = { ...left };
