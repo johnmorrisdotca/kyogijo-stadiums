@@ -95,6 +95,8 @@ pnpm docs:make      # rewrite docs/strings-ja.md after changing a word
 
 **A ballpark is a list of distances.** `scripts/parks.data.json` holds each park's figures, the angle each is read at, and the article and revision they were read from; `pnpm exec node scripts/build-parks.mjs` writes `src/parks.data.ts` from it. A new park adds an entry and its citation in `docs/references.md` and `NOTICE.md`. Distances only: no text, table or picture of an article is used.
 
+**A soccer ground is a list of facts.** `scripts/grounds.data.json` holds each ground's names, place, years, capacity, pitch size and the English and Japanese articles and revisions they were read from; `scripts/grounds.editions.json` holds which grounds each World Cup used. `pnpm grounds` checks them and writes `src/grounds.data.ts` and `docs/grounds.md`, and `pnpm grounds:check` asks Wikidata (one request at a time) whether each item, label, coordinate and country agrees. A pitch size is only what the article's infobox gives for football and only if it is a size for international matches; a ground without one stays at the default and says why. A new ground adds its entry, its row in `NOTICE.md` and a line in `docs/references.md`. Never copy text from an article, and never read FIFA's own pages.
+
 **A drawing is a pure function of its options.** No clock, no random number, no counter: the same options give the same string, and a test holds it. An id inside a drawing comes from a hash of the options unless the caller gives one.
 
 **Anything from outside is made safe.** Text is escaped, a colour passes `safeColour`, a logo address passes `safeLogo`. A new option that reaches the markup has a test with a hostile value.

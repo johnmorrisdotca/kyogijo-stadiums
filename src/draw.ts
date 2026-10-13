@@ -4,6 +4,7 @@ import { el, esc, num } from "./format.ts";
 import { ERA_SPORTS, footballIn, rulesFor, seasonLabel, type EraSport } from "./eras.ts";
 import { FOOTBALL } from "./geometry.ts";
 import { renderLayers } from "./layers.ts";
+import { groundById, groundNameIn } from "./grounds.ts";
 import { fenceFor, parkById } from "./parks.ts";
 import { badgeMarkup, bannerMarkup, plateMarkup, stateOf, type TeamView } from "./score.ts";
 import { KYOGIJO_STRINGS, fill } from "./strings.ts";
@@ -15,7 +16,7 @@ import { football } from "./surfaces/football.ts";
 import { hockey } from "./surfaces/hockey.ts";
 import { soccer } from "./surfaces/soccer.ts";
 import { frameMatrix, layoutFromFrame, resolveFrame } from "./surfaces/soccer-providers.ts";
-import { layoutOf, soccerSpec, type SoccerSpec } from "./surfaces/soccer-spec.ts";
+import { layoutOf, soccerSpec, type SoccerPitchId, type SoccerSize, type SoccerSpec } from "./surfaces/soccer-spec.ts";
 import type { BuildOptions, Surface } from "./surfaces/surface.ts";
 import { abbreviate, capitals } from "./text.ts";
 import type { Colors, CourtStyle, GoalStyle, Language, ScoreOptions, Side, Sport, StripePattern, SurfaceOptions, Team } from "./types.ts";
@@ -132,8 +133,15 @@ const safeLength = (value: number | string | undefined): string | undefined => {
 const PATTERNS: readonly StripePattern[] = ["bands", "wide", "narrow", "lengthwise", "checks", "diagonal", "none"];
 const GOALS: readonly GoalStyle[] = ["box", "line", "strip", "none"];
 
+/** The pitch the options ask for: a `pitch` of the caller's, else the size a `ground` publishes, else none (the international pitch). */
+function pitchOf(o: SurfaceOptions): SoccerPitchId | SoccerSize | undefined {
+  if (o.pitch !== undefined) return o.pitch;
+  const ground = groundById(o.ground);
+  return ground === undefined || ground.pitchSize === "default" ? undefined : { ...ground.pitch, unit: "m" };
+}
+
 function buildSoccer(o: SurfaceOptions, common: BuildOptions, scored: boolean, unit: Unit): Surface {
-  const spec: SoccerSpec = soccerSpec(o.pitch, o.units === undefined ? "m" : unit);
+  const spec: SoccerSpec = soccerSpec(pitchOf(o), o.units === undefined ? "m" : unit);
   const frame = resolveFrame(o.pitchType, spec);
   // A provider's own lines stand where it puts them, on a full pitch only: a small-sided pitch and futsal keep the markings of their own rules.
   const own = frame !== undefined && spec.format === "11";
@@ -233,15 +241,20 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
   const words = KYOGIJO_STRINGS[language];
   const park = o.sport === "mlb" ? parkById(o.park) : undefined;
   const parkName = park === undefined ? undefined : language === "ja" ? (park.nameJa ?? park.name) : park.name;
-  const pitch = o.sport === "soccer" ? soccerSpec(o.pitch) : undefined;
-  const surfaceName = parkName === undefined ? (pitch?.format === "futsal" ? words.soccer.futsal : words.surface[o.sport]) : language === "ja" ? `${parkName}のグラウンド` : `${parkName}, baseball field`;
+  const pitch = o.sport === "soccer" ? soccerSpec(pitchOf(o)) : undefined;
+  // A ground names a full-size pitch; a small-sided pitch or futsal court the caller asked for keeps its own name.
+  const ground = pitch?.format === "11" ? groundById(o.ground) : undefined;
+  const groundName = ground === undefined ? undefined : groundNameIn(ground, o.year, language);
+  const surfaceName = groundName !== undefined ? (language === "ja" ? `${groundName}のピッチ` : `${groundName}, soccer pitch`) : parkName === undefined ? (pitch?.format === "futsal" ? words.soccer.futsal : words.surface[o.sport]) : language === "ja" ? `${parkName}のグラウンド` : `${parkName}, baseball field`;
   const { stop, colon, gap } = words.said;
   const sentence = (text: string): string => (/[.。]$/.test(text) ? text : `${text}${stop}`);
   const metres = (value: number): string => String(Math.round(value * 10) / 10);
   const aboutText = pitch === undefined ? words.about[o.sport] : fill(pitch.format === "futsal" ? words.soccer.aboutFutsal : words.about.soccer, { length: metres(pitch.length), width: metres(pitch.width) });
   const about = `${words.said.on}${colon}${aboutText}${stop}`;
   const halfLine = pitch !== undefined && !isScore(o) && (o.half === "left" || o.half === "right") ? `${gap}${words.soccer.half}` : "";
-  const parkLine = parkName === undefined ? halfLine : `${gap}${fill(words.said.park, { park: parkName })}`;
+  // What the ground says about the size: that it is the published one, or that the ground has none and the international pitch is drawn.
+  const groundLine = ground === undefined || groundName === undefined || o.pitch !== undefined ? "" : `${gap}${fill(ground.pitchSize === "published" ? words.said.ground : words.said.groundDefault, { ground: groundName })}`;
+  const parkLine = parkName === undefined ? `${groundLine}${halfLine}` : `${gap}${fill(words.said.park, { park: parkName })}`;
   // A drawing of a past season says which: the markings are those of that season.
   const eraLine = typeof o.year === "number" && Number.isFinite(o.year) && ERA_SPORTS.includes(o.sport as EraSport) ? `${gap}${fill(words.said.era, { season: seasonLabel(o.sport as EraSport, o.year) })}` : "";
   if (!isScore(o)) return { title: o.title ?? surfaceName, description: o.description ?? `${about}${parkLine}${eraLine}` };

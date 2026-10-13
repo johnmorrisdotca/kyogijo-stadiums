@@ -1,7 +1,7 @@
 // The demo page's own script: a surface to try (the package's own `mountKyogijo`), the code that draws it in four ways,
 // and a page of examples: every sport, wide and tall, badges, compact cards, court looks, a live score, every ballpark,
 // and the custom element. The words are in words.js, the made-up teams in examples.js.
-import { COURT_THEMES, ERA_SPORTS, KYOGIJO_STYLE, PARKS, PARK_IDS, SOCCER_PITCH_IDS, SOCCER_PROVIDERS, SOCCER_PROVIDER_IDS, SPORTS, VERSION, drawKyogijo, rescale, layerTable, eraRange, rulesFor, seasonLabel } from "./dist/index.js";
+import { COURT_THEMES, ERA_SPORTS, GROUNDS, GROUND_IDS, KYOGIJO_STYLE, PARKS, PARK_IDS, SOCCER_PITCH_IDS, SOCCER_PROVIDERS, SOCCER_PROVIDER_IDS, SPORTS, VERSION, drawKyogijo, rescale, layerTable, eraRange, rulesFor, seasonLabel } from "./dist/index.js";
 import { mountKyogijo } from "./dist/mount-entry.js";
 import "./dist/element-define.js";
 import { toParams } from "./embed-params.js";
@@ -64,6 +64,7 @@ const state = {
   exact: false,
   court: pick(params.get("court"), COURTS, "default"),
   pitch: pick(params.get("pitch"), SOCCER_PITCH_IDS, "fifa"),
+  ground: params.get("ground") && GROUNDS[params.get("ground")] ? params.get("ground") : "none",
   pitchType: pick(params.get("pitchtype"), SOCCER_PROVIDER_IDS, "none"),
   pattern: pick(params.get("pattern"), PATTERNS, "bands"),
   goals: pick(params.get("goals"), GOALS, "box"),
@@ -104,6 +105,7 @@ function optionsFor(s, forCode = false) {
   if (s.year !== null && ERA_SPORTS.includes(s.sport)) o.year = s.year;
   if (s.sport === "soccer") {
     if (s.pitch !== "fifa") o.pitch = s.pitch;
+    if (s.ground !== "none") o.ground = s.ground;
     if (s.pitchType !== "none") o.pitchType = s.pitchType;
     if (s.pattern !== "bands") o.stripePattern = s.pattern;
     if (s.goals !== "box") o.goals = s.goals;
@@ -317,6 +319,28 @@ function fillPitches() {
   type.value = state.pitchType;
 }
 $("pitch").addEventListener("change", (event) => { state.pitch = event.target.value; change(); });
+
+// The ground picker: the grounds in three groups, in the page's language. A ground sets the pitch's size unless a preset other than the international one is chosen.
+function fillGrounds() {
+  const select = $("ground");
+  select.replaceChildren(opt("none", say("groundNone")));
+  const name = (g) => (language.lang === "ja" ? g.nameJa : g.name);
+  const finals = (g) => g.tournaments.some((t) => t.final);
+  const in2026 = (g) => g.tournaments.some((t) => t.competition === "world-cup" && t.year === 2026);
+  const groups = [
+    ["groundGroupFinals", finals],
+    ["groundGroup2026", (g) => !finals(g) && in2026(g)],
+    ["groundGroupClubs", (g) => !finals(g) && !in2026(g)],
+  ];
+  for (const [label, keep_] of groups) {
+    const group = document.createElement("optgroup");
+    group.label = say(label);
+    for (const id of GROUND_IDS) if (keep_(GROUNDS[id])) group.append(opt(id, name(GROUNDS[id])));
+    select.append(group);
+  }
+  select.value = state.ground;
+}
+$("ground").addEventListener("change", (event) => { state.ground = event.target.value; change(); });
 $("pitch-type").addEventListener("change", (event) => { state.pitchType = event.target.value; change(); });
 
 function applyTheme() {
@@ -342,6 +366,7 @@ function render() {
   $("park-row").hidden = state.sport !== "mlb";
   const soccer = state.sport === "soccer";
   $("pitch-row").hidden = !soccer;
+  $("ground-row").hidden = !soccer;
   $("pitch-type-row").hidden = !soccer;
   $("soccer-group").hidden = !soccer;
   for (const role of ["away", "home"]) $(`${role}-pens-row`).hidden = !soccer;
@@ -361,7 +386,7 @@ function syncUrl() {
   q.set("sport", state.sport);
   if (state.year !== null && ERA_SPORTS.includes(state.sport)) q.set("year", String(state.year));
   else q.delete("year");
-  for (const [key, value, base] of [["pitch", state.pitch, "fifa"], ["pitchtype", state.pitchType, "none"], ["park", state.park, "generic"], ["size", state.size, "full"], ["orientation", state.orientation, "auto"], ["theme", state.theme, "auto"]]) {
+  for (const [key, value, base] of [["pitch", state.pitch, "fifa"], ["ground", state.ground, "none"], ["pitchtype", state.pitchType, "none"], ["park", state.park, "generic"], ["size", state.size, "full"], ["orientation", state.orientation, "auto"], ["theme", state.theme, "auto"]]) {
     if (value === base) q.delete(key);
     else q.set(key, value);
   }
@@ -389,7 +414,7 @@ function code(kind) {
     attrs.push(`orientation="${o.orientation}"`);
     if (o.language !== "en") attrs.push(`language="${o.language}"`);
     if (o.detail) attrs.push(`detail="${o.detail}"`);
-    for (const [key, attr] of [["pitch", "pitch"], ["pitchType", "pitch-type"], ["half", "half"], ["goals", "goals"], ["stripePattern", "stripe-pattern"]]) if (o[key]) attrs.push(`${attr}="${o[key]}"`);
+    for (const [key, attr] of [["pitch", "pitch"], ["ground", "ground"], ["pitchType", "pitch-type"], ["half", "half"], ["goals", "goals"], ["stripePattern", "stripe-pattern"]]) if (o[key]) attrs.push(`${attr}="${o[key]}"`);
     if (o.cornerFlags === false) attrs.push('corner-flags="false"');
     if (o.away) {
       for (const [role, t] of [["away", o.away], ["home", o.home]]) {
@@ -503,6 +528,10 @@ const examples = {
       named("ncaa"),
       named("7-a-side"),
       named("futsal"),
+      ...["anfield", "maracana"].map((id) => {
+        const g = GROUNDS[id];
+        return [gameOf("soccer", { orientation: "auto", ground: id }), `${language.lang === "ja" ? g.nameJa : g.name} · ${g.pitch.length} × ${g.pitch.width} m`];
+      }),
       [gameOf("soccer", { orientation: "auto", size: "compact", status: "final-aet", away: team("soccer", "away", 1), home: team("soccer", "home", 2) }), say("pitchCompact")],
       [{ sport: "soccer", language: language.lang, style: "none", orientation: "auto", half: "left", stripePattern: "checks", goals: "strip", title: say("pitchHalf") }, say("pitchHalf")],
     ];
@@ -686,6 +715,7 @@ if (typeof IntersectionObserver !== "undefined") {
 // ----- A change of language redraws the words that were drawn in it.
 function onLanguage() {
   fillParks();
+  fillGrounds();
   fillPitches();
   drawProviders();
   if (!state.touched.has("away.name") && !state.touched.has("home.name")) {
@@ -705,6 +735,7 @@ applyTheme();
 fillFields();
 fillParks();
 fillPitches();
+fillGrounds();
 refreshSegs();
 buildExamples();
 drawProviders();

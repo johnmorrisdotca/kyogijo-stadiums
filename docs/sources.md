@@ -146,6 +146,28 @@ Every figure of `src/surfaces/soccer-spec.ts` is in metres, as the Laws give it 
 - **A fixed frame on another pitch.** Opta's, StatsBomb's and Wyscout's figures are fractions of their own extents, so on a 100 by 64 m pitch a drawn penalty line lies at 17 per cent of 100 m. A frame whose numbers follow the pitch (Tracab, SkillCorner, Second Spectrum, Metrica, `international`) has the Laws' landmarks at the size it is given.
 - **The directions** of Tracab's and Second Spectrum's y (up, from the centre) are the libraries'; check one known point against your data.
 
+## Soccer grounds
+
+The facts of the 64 grounds of `scripts/grounds.data.json` (listed in [grounds.md](./grounds.md)) are read from the English Wikipedia article of each ground at the revision named in [NOTICE.md](../NOTICE.md), and its name in Japanese from the Japanese article. They are facts (a length, a year, a name); no text, table or picture of an article is used. Each was read on 2026-10-13.
+
+| Figure | Value | Source |
+| --- | --- | --- |
+| Pitch | the length and width the infobox gives for football, in the unit it gives them in (metres or yards), where they are a size for international matches (100 to 110 by 64 to 75 m) | the infobox (`dimensions`) of the ground's article; Law 1.4 for the range |
+| Names | the names the infobox lists (`former_names`) with the years it dates them; the name of a World Cup (`Miami Stadium` in 2026) where it lists one | the infobox; the Japanese article for Nissan Stadium's naming rights (from 1 March 2005) |
+| Years and capacity | the year it opened, the year it closed (`closed`, else `demolished`) and the first capacity the infobox gives | the infobox |
+| Place | the city and the country, and the coordinates (P625), the country (P17) and the item itself | the article; Wikidata (CC0), checked by `scripts/check-grounds.mjs` |
+| Tournaments | the grounds of the list a World Cup used, and where its final was played | the venue section of the tournament's article, at the revision in NOTICE.md |
+
+**Ours.**
+
+- **A size the article does not give is not guessed.** A ground whose infobox has no football figure (or only that of another sport: the Rose Bowl's American football field, Stadium Australia's oval) is drawn at the international 105 by 68 m and marked `pitchSize: "default"`.
+- **A figure that cannot be a pitch for international matches is not used.** The infoboxes of the Stade de France (119 by 75 m) and of Kashima Soccer Stadium (115 by 78 m) give a size outside the 100 to 110 by 64 to 75 m of Law 1.4, and both held World Cup matches; each is listed at the default with the figure in its `pitchNote`. The build refuses a published size outside that range.
+- **Where two names share a year,** the later name wins, and an entry further down the list overrides one above it. The infobox's years that meet (`Pro Player Stadium (1996-2005)`, `Dolphins Stadium (2005-2006)`) are kept as they are; the order resolves them.
+- **The 1950 World Cup** had a final round and no final; the ground is listed for 1950 without a final.
+- **The Parc des Princes** article's infobox dates the first stadium on the site (1897, pulled down in 1967); the present stadium is Paris Saint-Germain's home from 1974. It is listed with no opening year, at the default size, for 1938 and 1998.
+- **Capacity** is the first figure of the infobox, which for a stadium of two sports is the first sport's. A capacity the infobox leaves to a template (Hampden Park, Celtic Park) or gives as a range (Wankdorf) is left out.
+- **Names in the place's language** are the infobox's native name where it gives one, else the local Wikipedia's title (Wikidata's native label where the two agree).
+
 ## Coordinate frames
 
 `src/frames.providers.ts` holds the frames of the providers below, as landmarks on the drawing's own coordinates (feet; x along the surface from its left end, y across it from the top, a ballpark's x across and y minus out from home plate). Only facts were read: ranges, units, origins and conventions. No code of sportypy, sportyR or hockey_rink (all GPL) was read for them; the MIT projects sdv-plot, sporty and mplsoccer are credited in [references.md](./references.md) for ideas. Each page below was read on 2026-10-13.

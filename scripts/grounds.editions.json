@@ -1,0 +1,421 @@
+[
+ {
+  "competition": "world-cup",
+  "year": 1930,
+  "article": {
+   "title": "1930 FIFA World Cup",
+   "revision": 1379114380
+  },
+  "final": "estadio-centenario",
+  "grounds": [
+   "estadio-centenario"
+  ]
+ },
+ {
+  "competition": "world-cup",
+  "year": 1934,
+  "article": {
+   "title": "1934 FIFA World Cup",
+   "revision": 1379198313
+  },
+  "final": "stadio-nazionale-pnf",
+  "grounds": [
+   "stadio-nazionale-pnf",
+   "san-siro"
+  ]
+ },
+ {
+  "competition": "world-cup",
+  "year": 1938,
+  "article": {
+   "title": "1938 FIFA World Cup",
+   "revision": 1379223069
+  },
+  "final": "stade-yves-du-manoir",
+  "grounds": [
+   "stade-yves-du-manoir",
+   "parc-des-princes"
+  ]
+ },
+ {
+  "competition": "world-cup",
+  "year": 1950,
+  "article": {
+   "title": "1950 FIFA World Cup",
+   "revision": 1379218809
+  },
+  "final": null,
+  "grounds": [
+   "maracana"
+  ],
+  "note": "A final round of four teams, with no final; the deciding match, Uruguay v Brazil, was played at the Maracanã."
+ },
+ {
+  "competition": "world-cup",
+  "year": 1954,
+  "article": {
+   "title": "1954 FIFA World Cup",
+   "revision": 1379225691
+  },
+  "final": "wankdorf",
+  "grounds": [
+   "wankdorf"
+  ]
+ },
+ {
+  "competition": "world-cup",
+  "year": 1958,
+  "article": {
+   "title": "1958 FIFA World Cup",
+   "revision": 1378823627
+  },
+  "final": "rasunda",
+  "grounds": [
+   "rasunda"
+  ]
+ },
+ {
+  "competition": "world-cup",
+  "year": 1962,
+  "article": {
+   "title": "1962 FIFA World Cup",
+   "revision": 1376456305
+  },
+  "final": "estadio-nacional-santiago",
+  "grounds": [
+   "estadio-nacional-santiago"
+  ]
+ },
+ {
+  "competition": "world-cup",
+  "year": 1966,
+  "article": {
+   "title": "1966 FIFA World Cup",
+   "revision": 1379957173
+  },
+  "final": "wembley-1923",
+  "grounds": [
+   "wembley-1923",
+   "old-trafford"
+  ]
+ },
+ {
+  "competition": "world-cup",
+  "year": 1970,
+  "article": {
+   "title": "1970 FIFA World Cup",
+   "revision": 1377513245
+  },
+  "final": "estadio-azteca",
+  "grounds": [
+   "estadio-azteca"
+  ]
+ },
+ {
+  "competition": "world-cup",
+  "year": 1974,
+  "article": {
+   "title": "1974 FIFA World Cup",
+   "revision": 1377511930
+  },
+  "final": "olympiastadion-munich",
+  "grounds": [
+   "olympiastadion-munich",
+   "olympiastadion-berlin",
+   "waldstadion-frankfurt",
+   "signal-iduna-park"
+  ]
+ },
+ {
+  "competition": "world-cup",
+  "year": 1978,
+  "article": {
+   "title": "1978 FIFA World Cup",
+   "revision": 1379956579
+  },
+  "final": "monumental",
+  "grounds": [
+   "monumental"
+  ]
+ },
+ {
+  "competition": "world-cup",
+  "year": 1982,
+  "article": {
+   "title": "1982 FIFA World Cup",
+   "revision": 1377511941
+  },
+  "final": "santiago-bernabeu",
+  "grounds": [
+   "santiago-bernabeu",
+   "camp-nou"
+  ]
+ },
+ {
+  "competition": "world-cup",
+  "year": 1986,
+  "article": {
+   "title": "1986 FIFA World Cup",
+   "revision": 1378182728
+  },
+  "final": "estadio-azteca",
+  "grounds": [
+   "estadio-azteca"
+  ]
+ },
+ {
+  "competition": "world-cup",
+  "year": 1990,
+  "article": {
+   "title": "1990 FIFA World Cup",
+   "revision": 1379879339
+  },
+  "final": "stadio-olimpico-rome",
+  "grounds": [
+   "stadio-olimpico-rome",
+   "san-siro"
+  ]
+ },
+ {
+  "competition": "world-cup",
+  "year": 1994,
+  "article": {
+   "title": "1994 FIFA World Cup",
+   "revision": 1377877674
+  },
+  "final": "rose-bowl",
+  "grounds": [
+   "rose-bowl"
+  ]
+ },
+ {
+  "competition": "world-cup",
+  "year": 1998,
+  "article": {
+   "title": "1998 FIFA World Cup",
+   "revision": 1379416403
+  },
+  "final": "stade-de-france",
+  "grounds": [
+   "stade-de-france",
+   "parc-des-princes"
+  ]
+ },
+ {
+  "competition": "world-cup",
+  "year": 2002,
+  "article": {
+   "title": "2002 FIFA World Cup",
+   "revision": 1379609715
+  },
+  "final": "nissan-stadium-yokohama",
+  "grounds": [
+   "nissan-stadium-yokohama",
+   "saitama-stadium-2002",
+   "kashima-soccer-stadium",
+   "seoul-world-cup-stadium"
+  ]
+ },
+ {
+  "competition": "world-cup",
+  "year": 2006,
+  "article": {
+   "title": "2006 FIFA World Cup",
+   "revision": 1378469485
+  },
+  "final": "olympiastadion-berlin",
+  "grounds": [
+   "olympiastadion-berlin",
+   "waldstadion-frankfurt",
+   "signal-iduna-park",
+   "allianz-arena"
+  ]
+ },
+ {
+  "competition": "world-cup",
+  "year": 2010,
+  "article": {
+   "title": "2010 FIFA World Cup",
+   "revision": 1377514614
+  },
+  "final": "soccer-city",
+  "grounds": [
+   "soccer-city"
+  ]
+ },
+ {
+  "competition": "world-cup",
+  "year": 2014,
+  "article": {
+   "title": "2014 FIFA World Cup",
+   "revision": 1379710385
+  },
+  "final": "maracana",
+  "grounds": [
+   "maracana"
+  ]
+ },
+ {
+  "competition": "world-cup",
+  "year": 2018,
+  "article": {
+   "title": "2018 FIFA World Cup",
+   "revision": 1379259821
+  },
+  "final": "luzhniki",
+  "grounds": [
+   "luzhniki"
+  ]
+ },
+ {
+  "competition": "world-cup",
+  "year": 2022,
+  "article": {
+   "title": "2022 FIFA World Cup",
+   "revision": 1378205329
+  },
+  "final": "lusail",
+  "grounds": [
+   "lusail"
+  ]
+ },
+ {
+  "competition": "world-cup",
+  "year": 2026,
+  "article": {
+   "title": "2026 FIFA World Cup",
+   "revision": 1379825924
+  },
+  "final": "metlife-stadium",
+  "grounds": [
+   "metlife-stadium",
+   "att-stadium",
+   "arrowhead-stadium",
+   "nrg-stadium",
+   "mercedes-benz-stadium",
+   "hard-rock-stadium",
+   "sofi-stadium",
+   "levis-stadium",
+   "lumen-field",
+   "gillette-stadium",
+   "lincoln-financial-field",
+   "bmo-field",
+   "bc-place",
+   "estadio-azteca",
+   "estadio-akron",
+   "estadio-bbva"
+  ]
+ },
+ {
+  "competition": "womens-world-cup",
+  "year": 1991,
+  "article": {
+   "title": "1991 FIFA Women's World Cup",
+   "revision": 1373161637
+  },
+  "final": "tianhe-stadium",
+  "grounds": [
+   "tianhe-stadium"
+  ]
+ },
+ {
+  "competition": "womens-world-cup",
+  "year": 1995,
+  "article": {
+   "title": "1995 FIFA Women's World Cup",
+   "revision": 1367432390
+  },
+  "final": "rasunda",
+  "grounds": [
+   "rasunda"
+  ]
+ },
+ {
+  "competition": "womens-world-cup",
+  "year": 1999,
+  "article": {
+   "title": "1999 FIFA Women's World Cup",
+   "revision": 1365674673
+  },
+  "final": "rose-bowl",
+  "grounds": [
+   "rose-bowl"
+  ]
+ },
+ {
+  "competition": "womens-world-cup",
+  "year": 2003,
+  "article": {
+   "title": "2003 FIFA Women's World Cup",
+   "revision": 1379789675
+  },
+  "final": "dignity-health-sports-park",
+  "grounds": [
+   "dignity-health-sports-park",
+   "gillette-stadium",
+   "lincoln-financial-field"
+  ]
+ },
+ {
+  "competition": "womens-world-cup",
+  "year": 2007,
+  "article": {
+   "title": "2007 FIFA Women's World Cup",
+   "revision": 1360703233
+  },
+  "final": "hongkou-football-stadium",
+  "grounds": [
+   "hongkou-football-stadium"
+  ]
+ },
+ {
+  "competition": "womens-world-cup",
+  "year": 2011,
+  "article": {
+   "title": "2011 FIFA Women's World Cup",
+   "revision": 1370487040
+  },
+  "final": "waldstadion-frankfurt",
+  "grounds": [
+   "waldstadion-frankfurt",
+   "olympiastadion-berlin"
+  ]
+ },
+ {
+  "competition": "womens-world-cup",
+  "year": 2015,
+  "article": {
+   "title": "2015 FIFA Women's World Cup",
+   "revision": 1372575071
+  },
+  "final": "bc-place",
+  "grounds": [
+   "bc-place"
+  ]
+ },
+ {
+  "competition": "womens-world-cup",
+  "year": 2019,
+  "article": {
+   "title": "2019 FIFA Women's World Cup",
+   "revision": 1374714732
+  },
+  "final": "groupama-stadium",
+  "grounds": [
+   "groupama-stadium",
+   "parc-des-princes"
+  ]
+ },
+ {
+  "competition": "womens-world-cup",
+  "year": 2023,
+  "article": {
+   "title": "2023 FIFA Women's World Cup",
+   "revision": 1378315194
+  },
+  "final": "stadium-australia",
+  "grounds": [
+   "stadium-australia"
+  ]
+ }
+]

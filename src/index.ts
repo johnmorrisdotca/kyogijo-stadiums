@@ -14,6 +14,8 @@ export { PARKS, PARK_IDS, fenceFor, parkById, parkByWikidata, parkPointsIn, park
 export type { Park, ParkData, ParkPeriod, ParkPeriodData, ParkSource } from "./parks.ts";
 export { ERA_CURRENT, ERA_SOURCES, ERA_SPORTS, eraChanges, eraRange, eraStates, footballIn, rulesFor, seasonLabel } from "./eras.ts";
 export type { EraChange, EraRules, EraRulesOf, EraSource, EraSpan, EraSport, FootballRules, MlbRules, NbaRules, NhlRules } from "./eras.ts";
+export { GROUND_IDS, GROUNDS, groundById, groundByWikidata, groundNameIn, groundSourceUrl, groundsHosting } from "./grounds.ts";
+export type { Ground, GroundCompetition, GroundData, GroundName, GroundSource, GroundTournament } from "./grounds.ts";
 export { SURFACE_UNITS, UNITS, convertLength, isUnit } from "./units.ts";
 export type { Unit } from "./units.ts";
 export { SOCCER, SOCCER_PITCHES, SOCCER_PITCH_IDS, soccerPitchClass, soccerSpec } from "./surfaces/soccer-spec.ts";

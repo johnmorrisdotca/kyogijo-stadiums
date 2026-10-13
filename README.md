@@ -90,10 +90,12 @@ console.log(svg.startsWith("<svg"), svg.includes("NORTHERN OWLS"));
 | `drawKyogijo`, `drawSurface`, `drawScore`, `drawBadge` | The drawing, as a string of SVG. |
 | `SPORTS`, `PARKS`, `PARK_IDS`, `COURT_THEMES` | The seven sports, the 94 ballparks, the court looks. |
 | `SOCCER_PITCHES`, `SOCCER_PROVIDERS`, `rescale`, `soccerSpec` | The soccer pitches, the data providers' coordinate systems and the map between them. |
+| `GROUNDS`, `GROUND_IDS`, `groundById` | The 64 soccer grounds, each pitch at its own size where the article publishes one. |
 | `@johnmorrisdotca/kyogijo/geometry` | The dimensions of every surface in feet, in any unit, and the functions that follow from them. |
 | `@johnmorrisdotca/kyogijo/frames` | Providers' coordinate frames and the functions that put their points on a surface. |
 | `@johnmorrisdotca/kyogijo/layers` | `drawLayers`, `layerTable` and the layer types. |
 | `@johnmorrisdotca/kyogijo/parks` | The ballparks and the article each was read from. |
+| `@johnmorrisdotca/kyogijo/grounds` | The soccer grounds, their names, places and World Cups. |
 | `@johnmorrisdotca/kyogijo/mount` | `mountKyogijo`: draw into a container and keep it laid out; `kyogijoElement`. |
 | `@johnmorrisdotca/kyogijo/react` | `kyogijoProps` and `createKyogijo`, for React, without depending on it. |
 | `@johnmorrisdotca/kyogijo/element` | The `<kyogijo-field>` class; `element/define` registers it. |
@@ -130,7 +132,7 @@ For a page that cannot run scripts of its own, the demo site serves `embed.html`
 
 - Types for every option and every export, and the doc comment of each export beside it in an editor.
 - A drawing that is a pure function of its options: it can be cached, compared and tested.
-- Entry points that stand apart: the geometry and the parks need nothing else, and the element is not loaded until it is imported.
+- Entry points that stand apart: the geometry, the parks and the grounds need nothing else, and the element is not loaded until it is imported.
 
 ### In a framework
 
@@ -392,6 +394,7 @@ Lines are drawn a little thicker than they are painted, as broadcast graphics do
 | Option | What it does |
 | --- | --- |
 | `pitch` | A preset or a size: `{ length, width, unit }` in metres (or `yd`, `ft`, `in`, `cm`, `mm`; `units` sets the default). The international 105 by 68 m by default. |
+| `ground` | A ground of `GROUNDS` ([below](#famous-grounds)): its pitch size, and its name for `year`. |
 | `half` | `left` or `right`: one half, for a bare pitch. A drawing with teams always shows the whole. |
 | `stripePattern` | `bands` (19, the default), `wide`, `narrow`, `lengthwise`, `checks`, `diagonal` or `none`; `stripes: false` also turns them off. |
 | `goals` | `box` (the net, the default), `line`, `strip` or `none`. `cornerFlags` turns the flags off. |
@@ -422,6 +425,21 @@ console.log(svg.includes("Final · 4-2 pens"), svg.includes("Northern Owls won 4
 const pitch = soccerSpec({ length: 110, width: 70, unit: "yd" });
 console.log(pitch.length.toFixed(2), pitch.width.toFixed(2), soccerPitchClass(pitch.length, pitch.width));
 // 100.58 64.01 international
+```
+
+### Famous grounds
+
+`ground` draws a pitch at the size of a ground of `GROUNDS`: the venue of every men's World Cup final and of 2026, of every Women's final, and well-known club grounds ([docs/grounds.md](./docs/grounds.md) lists them). Each has its city, Wikidata item and coordinates, its names with their years (`year` picks the one for a season), its name in the local language and in Japanese, and the World Cups it staged. A ground whose article gives no football pitch size (22 of 64) is drawn at the international 105 by 68 m and marked `pitchSize: "default"`; no size is guessed. A `pitch` of your own wins over the ground's.
+
+```ts
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { GROUNDS, groundNameIn, groundsHosting } from "@johnmorrisdotca/kyogijo/grounds";
+
+const svg = drawKyogijo({ sport: "soccer", ground: "metlife-stadium", year: 2026 });
+console.log(svg.includes("New York New Jersey Stadium, soccer pitch"), GROUNDS["anfield"].pitch);
+// true { length: 101, width: 68 }
+console.log(groundsHosting("world-cup", 1966).map((g) => g.name), groundNameIn(GROUNDS["soccer-city"], 2010));
+// [ 'Wembley Stadium (1923)', 'Old Trafford' ] Soccer City
 ```
 
 ### Data providers
@@ -661,6 +679,7 @@ The [API reference](https://johnmorrisdotca.github.io/kyogijo/api.html) lists ev
 | `@johnmorrisdotca/kyogijo/layers` | `drawLayers`, `layerTable`, `renderLayers`, `outlineOf`, `OUTCOMES`, `rampColour` and the layer types |
 | `@johnmorrisdotca/kyogijo/parks` | `PARKS`, `PARK_IDS`, `parkById`, `parkByWikidata`, `parkPointsIn`, `parkSourceUrl`, `parkUnit`, `fenceFor` |
 | `@johnmorrisdotca/kyogijo/eras` | `rulesFor`, `eraChanges`, `eraStates`, `eraRange`, `seasonLabel`, `footballIn`, `ERA_SPORTS`, `ERA_CURRENT`, `ERA_SOURCES` and the rule types |
+| `@johnmorrisdotca/kyogijo/grounds` | `GROUNDS`, `GROUND_IDS`, `groundById`, `groundByWikidata`, `groundNameIn`, `groundsHosting`, `groundSourceUrl` |
 | `@johnmorrisdotca/kyogijo/mount` | `mountKyogijo`, `kyogijoElement`, `containerAspect` |
 | `@johnmorrisdotca/kyogijo/react` | `kyogijoProps`, `kyogijoHtml`, `createKyogijo` |
 | `@johnmorrisdotca/kyogijo/element` | `KyogijoField`, `defineKyogijoField`, `optionsFromAttributes`, `KYOGIJO_TAG`, `KYOGIJO_ATTRIBUTES` |
@@ -704,6 +723,7 @@ Each is held by a test, and the ones with a name are exported.
 | Sports | 7 | `SPORTS` |
 | Soccer pitches and providers | 10 presets, 10 providers (90 maps between them, each landmark to its landmark) | `SOCCER_PITCHES`, `SOCCER_PROVIDERS` |
 | Ballparks | 94 (30 current MLB, 44 past MLB, 12 NPB home parks, 8 other NPB grounds) | `PARKS` |
+| Grounds | 64 (21 men's World Cup final venues, 7 more of the Women's, 13 other 2026 venues, 23 club and other grounds) | `GROUNDS` |
 | Units | 6 (`ft`, `in`, `yd`, `m`, `cm`, `mm`) | `UNITS` |
 | Coordinate frames | 16 to start with (`nhl-api`, `hockeytech`, `nba-stats`, `nfl-tracking`, `mlbam`, `retrosheet` and the ten soccer providers), more by `registerFrame` | `FRAMES` |
 | A colour | a hex colour, `rgb()`, `rgba()`, `hsl()`, `hsla()`, a name or `var(--name)`, 64 characters at most | `safeColour` |
@@ -777,6 +797,9 @@ src/
 ├── parks.ts            the ballparks, their fences and their sources
 ├── parks.data.ts       made by scripts/build-parks.mjs from scripts/parks.data.json
 ├── parks-entry.ts      the parks' entry
+├── grounds.ts          the soccer grounds, their names and sources
+├── grounds.data.ts     made by scripts/build-grounds.mjs from scripts/grounds.data.json
+├── grounds-entry.ts    the grounds' entry
 ├── themes.ts           the court looks
 ├── style.ts            the stylesheet, light and dark
 ├── strings.ts          the words, in English and Japanese
@@ -878,4 +901,5 @@ The code is [MIT](./LICENSE) © John Morris. The ballparks' fence distances are 
 | The soccer pitch's dimensions and the providers' coordinates | The IFAB and FIFA Futsal Laws of the Game, UEFA, MLS, NCAA and FA documents, and each provider's own pages (docs/sources.md) | Facts; no text or drawing copied |
 | The fence distances of 94 ballparks | The English and Japanese Wikipedia articles of each, at the revision cited | Facts; the articles are CC BY-SA 4.0 and none of their text is used |
 | The Wikidata item of each ballpark | Wikidata, as linked from the cited article | CC0 |
+| The pitch, names and World Cups of 64 soccer grounds | The English Wikipedia articles of each ground and of each World Cup, at the revision cited; coordinates from Wikidata | Facts; the articles are CC BY-SA 4.0 and none of their text is used; Wikidata is CC0 |
 | The demo's teams and emblems | Written for this package | MIT |

@@ -18,6 +18,10 @@
     "baseball",
     "mlb",
     "ballpark",
+    "soccer",
+    "football-pitch",
+    "stadium",
+    "world-cup",
     "visualization",
     "custom-element",
     "web-component",
@@ -94,6 +98,11 @@
       "import": "./dist/eras-entry.js",
       "default": "./dist/eras-entry.js"
     },
+    "./grounds": {
+      "types": "./dist/grounds-entry.d.ts",
+      "import": "./dist/grounds-entry.js",
+      "default": "./dist/grounds-entry.js"
+    },
     "./element/define": {
       "types": "./dist/element-define.d.ts",
       "import": "./dist/element-define.js",
@@ -124,7 +133,9 @@
     "screenshots:readme": "pnpm site && node scripts/readme-pictures.mjs",
     "test:readme": "pnpm build && node scripts/check-readme-examples.mjs",
     "docs:make": "node scripts/docs.mjs",
-    "parks": "node scripts/build-parks.mjs"
+    "parks": "node scripts/build-parks.mjs",
+    "grounds": "node scripts/build-grounds.mjs",
+    "grounds:check": "node scripts/check-grounds.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^9.0.0",

@@ -40,6 +40,8 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `said.tied` | The game is level. | 同点です。 |
 | `said.park` | The outfield fence follows the figures published for {park}. | 外野フェンスは、{park}の公表されている距離をもとに描かれています。 |
 | `said.era` | The markings are those of the {season} season. | ラインやマークは{season}シーズンのものです。 |
+| `said.ground` | The pitch follows the size published for {ground}. | ピッチは、{ground}の公表されている広さをもとに描かれています。 |
+| `said.groundDefault` | No pitch size is published for {ground}, so the pitch has the international size of 105 by 68 metres. | {ground}のピッチの広さは公表されていないため、国際標準の105×68mで描かれています。 |
 | `said.wonPens` | {name} won {a}-{b} on penalties. | {name}がPK戦を{a}-{b}で制しました。 |
 | `said.pens` | {a}-{b} pens | PK戦 {a}-{b} |
 | `said.on` | Drawn as | 図の内容 |
@@ -109,6 +111,11 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `pitch_7_a_side` | 7-a-side (FA), 60 × 40 yd | 7人制（FA） 60×40ヤード |
 | `pitch_5_a_side` | 5-a-side (FA), 40 × 30 yd | 5人制（FA） 40×30ヤード |
 | `pitch_futsal` | Futsal (FIFA), 40 × 20 m | フットサル（FIFA） 40×20m |
+| `groundLabel` | Ground | スタジアム |
+| `groundNone` | None (the pitch above) | なし（上のピッチ） |
+| `groundGroupFinals` | World Cup finals | ワールドカップ決勝の会場 |
+| `groundGroup2026` | Other 2026 World Cup venues | 2026年ワールドカップのその他の会場 |
+| `groundGroupClubs` | Club and other grounds | クラブなどのスタジアム |
 | `pitchTypeLabel` | Provider's frame | 提供元の座標系 |
 | `pitchTypeNone` | None (the Laws') | なし（競技規則どおり） |
 | `stripePattern` | Mowing | 芝の模様 |
@@ -238,7 +245,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `parksText` | Thirty current MLB parks and forty-four past ones, and the NPB's twelve home parks and eight other grounds, each fence drawn from the distances its article publishes. Press one to try it. | 現在のMLB30球場と過去の44球場、NPBの本拠地12球場とその他8球場。外野フェンスは、各球場の記事で公表されている距離をもとに描いています。球場を選ぶと試せます。 |
 | `parksShow` | Show the parks | 球場を表示する |
 | `pitchesTitle` | The soccer pitch | サッカーのピッチ |
-| `pitchesText` | A pitch from the Laws of the Game at any size, with the presets of UEFA, the MLS, the NCAA, the FA and FIFA's futsal, half pitches, and a score that ends after extra time or on penalties. | 競技規則に基づくピッチを、好きな広さで描けます。UEFA、MLS、NCAA、FA、FIFAフットサルの規格、半面表示に対応し、延長戦やPK戦で決着した試合の得点も表示できます。 |
+| `pitchesText` | A pitch from the Laws of the Game at any size, with the presets of UEFA, the MLS, the NCAA, the FA and FIFA's futsal, the size of sixty-four famous grounds, half pitches, and a score that ends after extra time or on penalties. | 競技規則に基づくピッチを、好きな広さで描けます。UEFA、MLS、NCAA、FA、FIFAフットサルの規格、有名な64のスタジアムの広さ、半面表示に対応し、延長戦やPK戦で決着した試合の得点も表示できます。 |
 | `pitchCompact` | Compact card, after extra time | 延長戦後のコンパクトなカード |
 | `pitchHalf` | Half a pitch, in checks | 半面を市松模様で |
 | `patternsTitle` | Mowing and goals | 芝の模様とゴール |
@@ -348,3 +355,72 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `heiwadai-stadium` | Heiwadai Stadium | 平和台野球場 | 西鉄ライオンズとその後身（〜1978年） |
 | `kawasaki-stadium` | Kawasaki Stadium | 川崎球場 | ロッテオリオンズ（1978〜1991年） |
 | `nagoya-stadium` | Nagoya Stadium | ナゴヤ球場 | 中日ドラゴンズ（1948〜1996年） |
+
+## The grounds' Japanese names
+
+| Key | English | 日本語 | Name in the place's language |
+| --- | --- | --- | --- |
+| `estadio-centenario` | Estadio Centenario | エスタディオ・センテナリオ | Estadio Centenario |
+| `stadio-nazionale-pnf` | Stadio Nazionale PNF | スタディオ・ナツィオナーレPNF | Stadio Nazionale del PNF |
+| `stade-yves-du-manoir` | Stade Yves-du-Manoir | スタッド・デパルトモンタル・イヴ＝デュ＝マノワール | Stade départemental Yves-du-Manoir |
+| `maracana` | Maracanã Stadium | エスタジオ・ド・マラカナン | Estádio do Maracanã |
+| `wankdorf` | Wankdorf Stadium | シュタディオン・ヴァンクドルフ | Wankdorfstadion |
+| `rasunda` | Råsunda Stadium | ロースンダ・スタディオン | Råsunda fotbollsstadion |
+| `estadio-nacional-santiago` | Julio Martínez Prádanos National Stadium | エスタディオ・ナシオナル・デ・チリ | Estadio Nacional Julio Martínez Prádanos |
+| `wembley-1923` | Wembley Stadium (1923) | 旧ウェンブリー・スタジアム |  |
+| `wembley` | Wembley Stadium | ウェンブリー・スタジアム |  |
+| `estadio-azteca` | Estadio Azteca | エスタディオ・アステカ | Estadio Azteca |
+| `olympiastadion-munich` | Olympiastadion (Munich) | ミュンヘン・オリンピアシュタディオン | Olympiastadion München |
+| `monumental` | Estadio Monumental | エスタディオ・モヌメンタル・アントニオ・ベスプチオ・リベルティ | Estadio Monumental |
+| `santiago-bernabeu` | Santiago Bernabéu Stadium | エスタディオ・サンティアゴ・ベルナベウ | Estadio Santiago Bernabéu |
+| `stadio-olimpico-rome` | Stadio Olimpico | スタディオ・オリンピコ・ディ・ローマ | Stadio Olimpico |
+| `rose-bowl` | Rose Bowl | ローズボウル |  |
+| `stade-de-france` | Stade de France | スタッド・ド・フランス | Stade de France |
+| `nissan-stadium-yokohama` | Nissan Stadium | 横浜国際総合競技場 | 横浜国際総合競技場 |
+| `olympiastadion-berlin` | Olympiastadion Berlin | ベルリン・オリンピアシュタディオン | Olympiastadion Berlin |
+| `soccer-city` | FNB Stadium | FNBスタジアム |  |
+| `luzhniki` | Luzhniki Stadium | ルジニキ・スタジアム | стадион «Лужники» |
+| `lusail` | Lusail Stadium | ルサイル・アイコニック・スタジアム | استاد لوسيل |
+| `metlife-stadium` | MetLife Stadium | メットライフ・スタジアム |  |
+| `att-stadium` | AT&T Stadium | AT&Tスタジアム |  |
+| `arrowhead-stadium` | Arrowhead Stadium | アローヘッド・スタジアム |  |
+| `nrg-stadium` | Reliant Stadium | リライアント・スタジアム |  |
+| `mercedes-benz-stadium` | Mercedes-Benz Stadium | メルセデス・ベンツ・スタジアム |  |
+| `hard-rock-stadium` | Hard Rock Stadium | ハードロック・スタジアム |  |
+| `sofi-stadium` | SoFi Stadium | SoFiスタジアム |  |
+| `levis-stadium` | Levi's Stadium | リーバイス・スタジアム |  |
+| `lumen-field` | Lumen Field | ルーメン・フィールド |  |
+| `gillette-stadium` | Gillette Stadium | ジレット・スタジアム |  |
+| `lincoln-financial-field` | Lincoln Financial Field | リンカーン・フィナンシャル・フィールド |  |
+| `bmo-field` | BMO Field | BMOフィールド |  |
+| `bc-place` | BC Place | BCプレイス |  |
+| `estadio-bbva` | Estadio BBVA | エスタディオBBVA | Estadio BBVA |
+| `estadio-akron` | Estadio Akron | エスタディオ・アクロン | Estadio Akron |
+| `tianhe-stadium` | Tianhe Stadium | 天河体育中心体育場 | 天河体育中心体育场 |
+| `dignity-health-sports-park` | Dignity Health Sports Park | ディグニティ・ヘルス・スポーツ・パーク |  |
+| `hongkou-football-stadium` | Hongkou Football Stadium | 上海虹口足球場 | 虹口足球场 |
+| `waldstadion-frankfurt` | Deutsche Bank Park | ヴァルトシュタディオン | Deutsche Bank Park |
+| `groupama-stadium` | Parc Olympique Lyonnais | パルク・オリンピック・リヨン | Parc Olympique Lyonnais |
+| `stadium-australia` | Stadium Australia | スタジアム・オーストラリア |  |
+| `camp-nou` | Camp Nou | カンプ・ノウ | Camp Nou |
+| `san-siro` | San Siro | スタディオ・ジュゼッペ・メアッツァ | Stadio Giuseppe Meazza |
+| `old-trafford` | Old Trafford | オールド・トラッフォード |  |
+| `anfield` | Anfield | アンフィールド |  |
+| `signal-iduna-park` | Signal Iduna Park | ジグナル・イドゥナ・パルク | Signal Iduna Park |
+| `allianz-arena` | Allianz Arena | アリアンツ・アレーナ | Allianz Arena |
+| `la-bombonera` | La Bombonera | ラ・ボンボネーラ | Estadio Alberto José Armando |
+| `hampden-park` | Hampden Park | ハムデン・パーク |  |
+| `celtic-park` | Celtic Park | セルティック・パーク |  |
+| `estadio-da-luz` | Estádio da Luz | エスタディオ・ダ・ルス | Estádio da Luz |
+| `parc-des-princes` | Parc des Princes | パルク・デ・プランス | Parc des Princes |
+| `saitama-stadium-2002` | Saitama Stadium 2002 | 埼玉スタジアム2002 | 埼玉スタジアム2002 |
+| `seoul-world-cup-stadium` | Seoul World Cup Stadium | ソウルワールドカップ競技場 | 서울월드컵경기장 |
+| `emirates-stadium` | Emirates Stadium | エミレーツ・スタジアム |  |
+| `etihad-stadium` | Etihad Stadium | シティ・オブ・マンチェスター・スタジアム |  |
+| `stamford-bridge` | Stamford Bridge | スタンフォード・ブリッジ |  |
+| `tottenham-hotspur-stadium` | Tottenham Hotspur Stadium | トッテナム・ホットスパー・スタジアム |  |
+| `ibrox` | Ibrox Stadium | アイブロックス・スタジアム |  |
+| `johan-cruyff-arena` | Johan Cruyff Arena | ヨハン・クライフ・アレナ | Johan Cruijff ArenA |
+| `allianz-stadium-turin` | Allianz Stadium | ユヴェントス・スタジアム | Allianz Stadium |
+| `japan-national-stadium` | Japan National Stadium | 国立競技場 | 国立競技場 |
+| `kashima-soccer-stadium` | Kashima Soccer Stadium | 茨城県立カシマサッカースタジアム | 茨城県立カシマサッカースタジアム |

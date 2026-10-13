@@ -192,7 +192,7 @@ export interface SurfaceOptions {
    * The season to draw the surface as it was in: a year names the season that starts in it (`1979` is the NHL's and the NBA's 1979–80,
    * the NFL's, the CFL's and baseball's 1979). The markings are those the rules put on the surface that season (`rulesFor`), and
    * a past ballpark's fence is the one it had then (`polo-grounds` in 1915, from its `periods`, else its last fence). Without a
-   * year the surface is today's; the IFAF's has no history.
+   * year the surface is today's; the IFAF's has no history. For a soccer `ground`, the year whose name the drawing uses.
    */
   year?: number;
   /** Fence distances of an MLB drawing, in `units`, over the park's. */
@@ -201,6 +201,8 @@ export interface SurfaceOptions {
   court?: CourtStyle;
   /** The soccer pitch: a preset (`fifa`, `uefa`, `mls`, `nwsl`, `ncaa`, `law-min`, `law-max`, `9-a-side`, `7-a-side`, `5-a-side`, `futsal`) or a size, `{ length, width, unit }`. The international 105 by 68 m by default. */
   pitch?: SoccerPitchId | SoccerSize;
+  /** The soccer ground to draw: a key of `GROUNDS`. The pitch has the size its article publishes (the international 105 by 68 m where none is), and the drawing carries the ground's name for `year`. A `pitch` of your own wins over the ground's size. */
+  ground?: string;
   /** Draw a soccer pitch in a data provider's own coordinates (`opta`, `statsbomb`, `wyscout`, `tracab`, `metrica`, `skillcorner`, `secondspectrum`, `impect`, `uefa`, `international`), or in a frame of your own: the lines stand where the provider puts them, and an empty `ky-data` group in its units is put in the drawing for raw data. */
   pitchType?: SoccerProviderId | SoccerFrame;
   /** Only half of a soccer pitch: the `left` half or the `right` one. Ignored when the drawing has teams. */

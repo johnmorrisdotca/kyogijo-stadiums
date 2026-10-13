@@ -14,6 +14,9 @@ picture or code of the sources is copied; each source is named here so that the 
 | `frames`: the soccer providers' coordinates | StatsBomb's Open Data Events specification (Appendix 2), the Wyscout and Impect glossaries, the Metrica Sports and SkillCorner open-data READMEs; for Opta, Tracab and Second Spectrum, whose specifications are not public, the figures of mplsoccer, ggsoccer, kloppy and floodlight (docs/sources.md) | Facts; no text, table or code copied |
 | `parks`: the fence of each ballpark, current and past, and the seasons of a past park | The distances (and, for a park whose fence moved, the years an article dates them) published in the English and Japanese Wikipedia article of each park, at the revision cited below; the seasons a club played there from the same article's list of tenants | Facts. The articles are CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/); none of their text, tables or images is used, and the angles between the distances are our own reading |
 | `parks`: the Wikidata item of each ballpark (`wikidata`) | The item (`Q49136`) that each cited article is linked to, read with the MediaWiki API (`pageprops`, `wikibase_item`) and checked against the item's label | Wikidata's data is CC0 (https://creativecommons.org/publicdomain/zero/1.0/) |
+| `grounds`: each soccer ground's pitch, names, years, city and capacity | The infobox and the opening text of the English Wikipedia article of each ground, at the revision cited below (the pitch's length and width where the infobox gives them for football, the names with the years the article dates them, the year it opened and closed, the first capacity); the ground's name in Japanese from its Japanese article | Facts. The articles are CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/); none of their text, tables or images is used |
+| `grounds`: the World Cups each ground staged matches of, and where each final was played | The venue section of the English Wikipedia article of each men's and Women's World Cup, at the revision cited below; FIFA's own pages are not used | Facts, CC BY-SA 4.0 articles as above |
+| `grounds`: the Wikidata item and the coordinates of each ground (`wikidata`, `lat`, `lon`) | The item that each cited article is linked to, its coordinates (P625) and its country (P17), read with the Wikidata API and checked against the item's labels by `scripts/check-grounds.mjs` | Wikidata's data is CC0 (https://creativecommons.org/publicdomain/zero/1.0/) |
 
 ## The ballparks' articles
 
@@ -117,3 +120,113 @@ Each article was read at the revision named (94 parks: the 30 current MLB parks,
 | Heiwadai Stadium | Q5365631 | Heiwadai Stadium, 1372186109 | 平和台野球場, 110987269 |
 | Kawasaki Stadium | Q6379828 | – | 川崎球場, 110987263 |
 | Nagoya Stadium | Q5369853 | Nagoya Stadium, 1377205638 | ナゴヤ球場, 111235188 |
+
+## The grounds' articles
+
+Each article was read at the revision named (64 soccer grounds), by its address `https://<en or ja>.wikipedia.org/w/index.php?title=<title>&oldid=<revision>` (the function `groundSourceUrl` writes it). The authors of an article are listed in its history. The figures are in `scripts/grounds.data.json`, which holds each entry's articles and revisions; docs/references.md explains how they were read and docs/grounds.md lists every ground.
+
+| Ground | Wikidata item | English article and revision | Japanese article and revision |
+| --- | --- | --- | --- |
+| Estadio Centenario | Q498245 | Estadio Centenario, 1372279993 | エスタディオ・センテナリオ, 98831471 |
+| Stadio Nazionale PNF | Q642958 | Stadio Nazionale PNF, 1372234262 | スタディオ・ナツィオナーレPNF, 106032907 |
+| Stade Yves-du-Manoir | Q754502 | Stade Yves-du-Manoir, 1372233519 | スタッド・デパルトモンタル・イヴ＝デュ＝マノワール, 107801528 |
+| Maracanã Stadium | Q155174 | Maracanã Stadium, 1378863637 | エスタジオ・ド・マラカナン, 110510766 |
+| Wankdorf Stadium | Q676004 | Wankdorf Stadium, 1372250401 | シュタディオン・ヴァンクドルフ (1925年), 107529969 |
+| Råsunda Stadium | Q725623 | Råsunda Stadium, 1372227046 | ロースンダ・スタディオン, 105505519 |
+| Julio Martínez Prádanos National Stadium | Q594994 | Julio Martínez Prádanos National Stadium, 1379138321 | エスタディオ・ナシオナル・デ・チリ, 101004691 |
+| Wembley Stadium (1923) | Q43279 | Wembley Stadium (1923), 1374252171 | ウェンブリー・スタジアム (1923), 110336995 |
+| Wembley Stadium | Q128468 | Wembley Stadium, 1379930582 | ウェンブリー・スタジアム, 110350755 |
+| Estadio Azteca | Q320454 | Estadio Azteca, 1374978481 | エスタディオ・アステカ, 111238345 |
+| Olympiastadion (Munich) | Q131610 | Olympiastadion (Munich), 1375090249 | ミュンヘン・オリンピアシュタディオン, 109325015 |
+| Estadio Monumental | Q276354 | Estadio Monumental (Buenos Aires), 1379457880 | エスタディオ・モヌメンタル・アントニオ・ベスプチオ・リベルティ, 106840308 |
+| Santiago Bernabéu Stadium | Q164027 | Bernabéu (stadium), 1376542686 | エスタディオ・サンティアゴ・ベルナベウ, 109745684 |
+| Stadio Olimpico | Q159884 | Stadio Olimpico, 1376210332 | スタディオ・オリンピコ・ディ・ローマ, 109745762 |
+| Rose Bowl | Q582280 | Rose Bowl (stadium), 1379595877 | ローズボウル (競技場), 107943058 |
+| Stade de France | Q13205 | Stade de France, 1379022826 | スタッド・ド・フランス, 109911694 |
+| Nissan Stadium | Q116601 | Nissan Stadium (Yokohama), 1378612722 | 横浜国際総合競技場, 111289546 |
+| Olympiastadion Berlin | Q151374 | Olympiastadion (Berlin), 1377305597 | ベルリン・オリンピアシュタディオン, 109745416 |
+| FNB Stadium | Q163521 | FNB Stadium, 1376285767 | FNBスタジアム, 107530782 |
+| Luzhniki Stadium | Q202163 | Luzhniki Stadium, 1372284143 | ルジニキ・スタジアム, 110108346 |
+| Lusail Stadium | Q1186333 | Lusail Stadium, 1375493447 | ルサイル・アイコニック・スタジアム, 110108360 |
+| MetLife Stadium | Q10862290 | MetLife Stadium, 1377506007 | メットライフ・スタジアム, 110420479 |
+| AT&T Stadium | Q838284 | AT&T Stadium, 1378723128 | AT&Tスタジアム, 110578711 |
+| Arrowhead Stadium | Q544553 | Arrowhead Stadium, 1379206337 | アローヘッド・スタジアム, 110785489 |
+| Reliant Stadium | Q1058864 | Reliant Stadium, 1379613664 | リライアント・スタジアム, 110479504 |
+| Mercedes-Benz Stadium | Q7007552 | Mercedes-Benz Stadium, 1377254306 | メルセデス・ベンツ・スタジアム, 110364633 |
+| Hard Rock Stadium | Q864339 | Hard Rock Stadium, 1378219951 | ハードロック・スタジアム, 110333956 |
+| SoFi Stadium | Q19520501 | SoFi Stadium, 1377512452 | SoFiスタジアム, 110365161 |
+| Levi's Stadium | Q7419343 | Levi's Stadium, 1375976386 | リーバイス・スタジアム, 110365038 |
+| Lumen Field | Q612736 | Lumen Field, 1373998493 | ルーメン・フィールド, 110364603 |
+| Gillette Stadium | Q373355 | Gillette Stadium, 1378807964 | ジレット・スタジアム, 110364650 |
+| Lincoln Financial Field | Q1052370 | Lincoln Financial Field, 1379946572 | リンカーン・フィナンシャル・フィールド, 110364983 |
+| BMO Field | Q796351 | BMO Field, 1377704191 | BMOフィールド, 110140746 |
+| BC Place | Q612227 | BC Place, 1372065649 | BCプレイス, 110198797 |
+| Estadio BBVA | Q3058827 | Estadio BBVA, 1374765816 | エスタディオBBVA, 110121756 |
+| Estadio Akron | Q666183 | Estadio Akron, 1378431074 | エスタディオ・アクロン, 110069876 |
+| Tianhe Stadium | Q929126 | Tianhe Stadium, 1372244015 | 天河体育中心体育場, 107400316 |
+| Dignity Health Sports Park | Q200684 | Dignity Health Sports Park, 1372080521 | ディグニティ・ヘルス・スポーツ・パーク, 110881566 |
+| Hongkou Football Stadium | Q201773 | Hongkou Football Stadium, 1372203981 | 上海虹口足球場, 109727595 |
+| Deutsche Bank Park | Q157273 | Waldstadion (Frankfurt), 1375755144 | ヴァルトシュタディオン, 101381780 |
+| Parc Olympique Lyonnais | Q8507 | Parc Olympique Lyonnais, 1374907290 | パルク・オリンピック・リヨン, 110056689 |
+| Stadium Australia | Q295886 | Stadium Australia, 1377697688 | スタジアム・オーストラリア, 109501020 |
+| Camp Nou | Q159848 | Camp Nou, 1380052299 | カンプ・ノウ, 110123137 |
+| San Siro | Q133566 | San Siro, 1375450359 | スタディオ・ジュゼッペ・メアッツァ, 109745448 |
+| Old Trafford | Q83457 | Old Trafford, 1376703746 | オールド・トラッフォード, 111091505 |
+| Anfield | Q45671 | Anfield, 1379230240 | アンフィールド, 109450439 |
+| Signal Iduna Park | Q150928 | Westfalenstadion, 1372251404 | ジグナル・イドゥナ・パルク, 108234696 |
+| Allianz Arena | Q127429 | Allianz Arena, 1379929376 | アリアンツ・アレーナ, 109745086 |
+| La Bombonera | Q499855 | La Bombonera, 1372283373 | ラ・ボンボネーラ, 108892860 |
+| Hampden Park | Q193651 | Hampden Park, 1379015792 | ハムデン・パーク, 109835284 |
+| Celtic Park | Q216037 | Celtic Park, 1377041444 | セルティック・パーク, 109745353 |
+| Estádio da Luz | Q7875112 | Estádio da Luz, 1376285658 | エスタディオ・ダ・ルス, 106143340 |
+| Parc des Princes | Q193431 | Parc des Princes, 1375789690 | パルク・デ・プランス, 108659418 |
+| Saitama Stadium 2002 | Q482446 | Saitama Stadium 2002, 1372227613 | 埼玉スタジアム2002, 110840810 |
+| Seoul World Cup Stadium | Q175477 | Seoul World Cup Stadium, 1372229282 | ソウルワールドカップ競技場, 110969150 |
+| Emirates Stadium | Q163995 | Emirates Stadium, 1379957033 | エミレーツ・スタジアム, 108293184 |
+| Etihad Stadium | Q48159 | Etihad Stadium, 1378004165 | シティ・オブ・マンチェスター・スタジアム, 110549156 |
+| Stamford Bridge | Q171458 | Stamford Bridge (stadium), 1380009353 | スタンフォード・ブリッジ, 110730305 |
+| Tottenham Hotspur Stadium | Q55074091 | Tottenham Hotspur Stadium, 1378659225 | トッテナム・ホットスパー・スタジアム, 109835288 |
+| Ibrox Stadium | Q208709 | Ibrox Stadium, 1372283348 | アイブロックス・スタジアム, 110396167 |
+| Johan Cruyff Arena | Q207109 | Johan Cruyff Arena, 1379542055 | ヨハン・クライフ・アレナ, 108701867 |
+| Allianz Stadium | Q62149 | Juventus Stadium, 1378642162 | ユヴェントス・スタジアム, 110509929 |
+| Japan National Stadium | Q14862239 | Japan National Stadium, 1378899630 | 国立競技場, 110837538 |
+| Kashima Soccer Stadium | Q494769 | Kashima Soccer Stadium, 1372209519 | 茨城県立カシマサッカースタジアム, 108917122 |
+
+## The World Cups' articles
+
+The grounds each World Cup used, and where its final was played, were read from the venue section of the tournament's English Wikipedia article at the revision named (32 tournaments), by the same address. FIFA's own pages are not used.
+
+| Tournament | English article and revision |
+| --- | --- |
+| Men's World Cup 1930 | 1930 FIFA World Cup, 1379114380 |
+| Men's World Cup 1934 | 1934 FIFA World Cup, 1379198313 |
+| Men's World Cup 1938 | 1938 FIFA World Cup, 1379223069 |
+| Men's World Cup 1950 | 1950 FIFA World Cup, 1379218809 |
+| Men's World Cup 1954 | 1954 FIFA World Cup, 1379225691 |
+| Men's World Cup 1958 | 1958 FIFA World Cup, 1378823627 |
+| Men's World Cup 1962 | 1962 FIFA World Cup, 1376456305 |
+| Men's World Cup 1966 | 1966 FIFA World Cup, 1379957173 |
+| Men's World Cup 1970 | 1970 FIFA World Cup, 1377513245 |
+| Men's World Cup 1974 | 1974 FIFA World Cup, 1377511930 |
+| Men's World Cup 1978 | 1978 FIFA World Cup, 1379956579 |
+| Men's World Cup 1982 | 1982 FIFA World Cup, 1377511941 |
+| Men's World Cup 1986 | 1986 FIFA World Cup, 1378182728 |
+| Men's World Cup 1990 | 1990 FIFA World Cup, 1379879339 |
+| Men's World Cup 1994 | 1994 FIFA World Cup, 1377877674 |
+| Men's World Cup 1998 | 1998 FIFA World Cup, 1379416403 |
+| Men's World Cup 2002 | 2002 FIFA World Cup, 1379609715 |
+| Men's World Cup 2006 | 2006 FIFA World Cup, 1378469485 |
+| Men's World Cup 2010 | 2010 FIFA World Cup, 1377514614 |
+| Men's World Cup 2014 | 2014 FIFA World Cup, 1379710385 |
+| Men's World Cup 2018 | 2018 FIFA World Cup, 1379259821 |
+| Men's World Cup 2022 | 2022 FIFA World Cup, 1378205329 |
+| Men's World Cup 2026 | 2026 FIFA World Cup, 1379825924 |
+| Women's World Cup 1991 | 1991 FIFA Women's World Cup, 1373161637 |
+| Women's World Cup 1995 | 1995 FIFA Women's World Cup, 1367432390 |
+| Women's World Cup 1999 | 1999 FIFA Women's World Cup, 1365674673 |
+| Women's World Cup 2003 | 2003 FIFA Women's World Cup, 1379789675 |
+| Women's World Cup 2007 | 2007 FIFA Women's World Cup, 1360703233 |
+| Women's World Cup 2011 | 2011 FIFA Women's World Cup, 1370487040 |
+| Women's World Cup 2015 | 2015 FIFA Women's World Cup, 1372575071 |
+| Women's World Cup 2019 | 2019 FIFA Women's World Cup, 1374714732 |
+| Women's World Cup 2023 | 2023 FIFA Women's World Cup, 1378315194 |

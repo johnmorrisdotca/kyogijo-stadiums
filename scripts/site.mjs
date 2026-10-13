@@ -63,6 +63,10 @@ const page = `<!doctype html>
                 <span class="fam-label" data-say="pitchLabel"></span>
                 <select class="fam-field" id="pitch" data-testid="pitch" data-say-label="pitchLabel"></select>
               </div>
+              <div class="setup fam-row" id="ground-row" hidden ${help("Choose a famous ground: the pitch is drawn at the size its article publishes, or at the international 105 by 68 metres where none is. A pitch other than the international one, chosen above, wins over the ground's size.", "有名なスタジアムを選びます。ピッチは、そのスタジアムの記事で公表されている広さで描かれ、公表されていない場合は国際標準の105×68mで描かれます。上で国際標準以外のピッチを選んだ場合は、そちらが優先されます。")}>
+                <span class="fam-label" data-say="groundLabel"></span>
+                <select class="fam-field" id="ground" data-testid="ground" data-say-label="groundLabel"></select>
+              </div>
               <div class="setup fam-row" id="pitch-type-row" hidden ${help("Draw the pitch in a data provider's own coordinates: the lines stand where the provider puts them, and an empty group in the drawing takes the provider's raw x and y.", "データ提供元の座標系でピッチを描きます。ラインは提供元が定める位置に引かれ、図の中の空のグループに、提供元の生のx・y座標をそのまま描き込めます。")}>
                 <span class="fam-label" data-say="pitchTypeLabel"></span>
                 <select class="fam-field" id="pitch-type" data-testid="pitch-type" data-say-label="pitchTypeLabel"></select>

@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 
 import { ERA_SPORTS, eraChanges, eraStates } from "./eras.ts";
 import { KYOGIJO_STRINGS } from "./strings.ts";
+import { GROUND_IDS, GROUNDS, groundsHosting } from "./grounds.ts";
 import { PARK_IDS, PARKS } from "./parks.ts";
 import { VERSION } from "./version.ts";
 import { WORDS } from "../demo/words.js";
@@ -34,6 +35,8 @@ function stringsDocument() {
   for (const sport of ERA_SPORTS) for (const change of [...eraStates(sport), ...eraChanges(sport)]) lines.push(`| \`${change.id}\` | ${change.what.replace(/\|/g, "\\|")} | ${change.ja.replace(/\|/g, "\\|")} |`);
   lines.push("", "## The parks' Japanese names", "", "| Key | English | 日本語 | Team |", "| --- | --- | --- | --- |");
   for (const id of PARK_IDS) if (PARKS[id].nameJa) lines.push(`| \`${id}\` | ${PARKS[id].name} | ${PARKS[id].nameJa} | ${PARKS[id].teamJa ?? ""} |`);
+  lines.push("", "## The grounds' Japanese names", "", "| Key | English | 日本語 | Name in the place's language |", "| --- | --- | --- | --- |");
+  for (const id of GROUND_IDS) lines.push(`| \`${id}\` | ${GROUNDS[id].name} | ${GROUNDS[id].nameJa} | ${GROUNDS[id].nameLocal ?? ""} |`);
   return `${lines.join("\n")}\n`;
 }
 
@@ -78,6 +81,37 @@ describe("the package's own numbers", () => {
       expect(notice, id).toContain(`| ${park.name} |`);
       for (const source of [park.en, park.ja]) if (source) expect(notice, id).toContain(String(source.revision));
     }
+  });
+
+  it("have a README that says what the grounds hold, and a docs/grounds.md made by the build that lists every one", () => {
+    const readme = readFileSync("README.md", "utf8");
+    expect(GROUND_IDS).toHaveLength(64);
+    expect(readme).toContain("| Grounds | 64 (21 men's World Cup final venues, 7 more of the Women's, 13 other 2026 venues, 23 club and other grounds) | `GROUNDS` |");
+    const list = readFileSync("docs/grounds.md", "utf8");
+    for (const id of GROUND_IDS) expect(list, id).toContain(`| \`${id}\` |`);
+  });
+
+  it("have grounds that are the file they are built from, and tournaments that are the editions' file", () => {
+    const json = JSON.parse(readFileSync("scripts/grounds.data.json", "utf8"));
+    expect(json.map((g) => g.id)).toEqual([...GROUND_IDS]);
+    const editions = JSON.parse(readFileSync("scripts/grounds.editions.json", "utf8"));
+    expect(editions).toHaveLength(32);
+    for (const e of editions) {
+      expect(e.article.revision).toBeGreaterThan(1000);
+      expect(groundsHosting(e.competition, e.year).map((g) => g.id).sort()).toEqual([...e.grounds].sort());
+    }
+  });
+
+  it("list every ground's sources in NOTICE.md, and every World Cup article the tournaments were read from", () => {
+    const notice = readFileSync("NOTICE.md", "utf8");
+    for (const id of GROUND_IDS) {
+      const ground = GROUNDS[id];
+      expect(notice, id).toContain(`| ${ground.name} | ${ground.wikidata} |`);
+      expect(notice, id).toContain(String(ground.en.revision));
+      expect(notice, id).toContain(String(ground.ja.revision));
+    }
+    const editions = JSON.parse(readFileSync("scripts/grounds.editions.json", "utf8"));
+    for (const e of editions) expect(notice, `${e.competition} ${e.year}`).toContain(`${e.article.title}, ${e.article.revision}`);
   });
 
   it("have a sentence in docs/references.md for each reference John sent", () => {
