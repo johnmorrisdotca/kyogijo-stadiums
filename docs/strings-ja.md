@@ -1243,7 +1243,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `metlife-stadium` | MetLife Stadium | メットライフ・スタジアム |  |
 | `att-stadium` | AT&T Stadium | AT&Tスタジアム |  |
 | `arrowhead-stadium` | Arrowhead Stadium | アローヘッド・スタジアム |  |
-| `nrg-stadium` | NRG Stadium | NRGスタジアム |  |
+| `nrg-stadium` | Reliant Stadium | リライアント・スタジアム |  |
 | `mercedes-benz-stadium` | Mercedes-Benz Stadium | メルセデス・ベンツ・スタジアム |  |
 | `hard-rock-stadium` | Hard Rock Stadium | ハードロック・スタジアム |  |
 | `sofi-stadium` | SoFi Stadium | SoFiスタジアム |  |

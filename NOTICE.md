@@ -173,7 +173,7 @@ Each article was read at the revision named (64 soccer grounds), by its address 
 | MetLife Stadium | Q10862290 | MetLife Stadium, 1377506007 | メットライフ・スタジアム, 110420479 |
 | AT&T Stadium | Q838284 | AT&T Stadium, 1378723128 | AT&Tスタジアム, 110578711 |
 | Arrowhead Stadium | Q544553 | Arrowhead Stadium, 1379206337 | アローヘッド・スタジアム, 110785489 |
-| NRG Stadium | Q1058864 | Reliant Stadium, 1379613664 | リライアント・スタジアム, 110479504 |
+| Reliant Stadium | Q1058864 | Reliant Stadium, 1379613664 | リライアント・スタジアム, 110479504 |
 | Mercedes-Benz Stadium | Q7007552 | Mercedes-Benz Stadium, 1377254306 | メルセデス・ベンツ・スタジアム, 110364633 |
 | Hard Rock Stadium | Q864339 | Hard Rock Stadium, 1378219951 | ハードロック・スタジアム, 110333956 |
 | SoFi Stadium | Q19520501 | SoFi Stadium, 1377512452 | SoFiスタジアム, 110365161 |

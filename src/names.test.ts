@@ -129,20 +129,21 @@ describe("the names of every park and ground", () => {
     for (const place of places.filter((one) => one.country === "JP")) expect(place.aliases?.some((alias) => alias.lang === "ja" && alias.kind === "wikipedia"), place.id).toBe(true);
   });
 
-  it("fix NRG Stadium: the everyday name now, Reliant Stadium before 2014 and officially again from 2026", () => {
-    const nrg = GROUNDS["nrg-stadium"];
-    expect(nrg.name).toBe("NRG Stadium");
-    expect(groundNameIn(nrg, 2005)).toBe("Reliant Stadium");
-    expect(groundNameIn(nrg, 2019)).toBe("NRG Stadium");
-    expect(groundNameIn(nrg, 2026)).toBe("Houston Stadium");
-    expect(groundNameIn(nrg)).toBe("NRG Stadium");
-    expect(groundOfficialName(nrg, "en")).toBe("Reliant Stadium");
-    expect(groundOfficialName(nrg, "en", 2019)).toBeUndefined();
-    expect(groundOfficialName(nrg, "en", 2026)).toBeUndefined();
-    expect(describeDrawing({ sport: "soccer", ground: "nrg-stadium" }).title).toBe("NRG Stadium, soccer pitch");
-    expect(describeDrawing({ sport: "soccer", ground: "nrg-stadium", year: 2005 }).title).toBe("Reliant Stadium, soccer pitch");
-    expect(describeDrawing({ sport: "soccer", ground: "nrg-stadium", year: 2005 }).description).not.toContain("official name");
-    expect(describeDrawing({ sport: "soccer", ground: "nrg-stadium" }).description).toContain("Its official name is Reliant Stadium.");
+  it("name Houston's stadium as its source does: Reliant Stadium, which it was called before 2014 and again from 1 August 2026, and NRG Stadium in between", () => {
+    const houston = GROUNDS["nrg-stadium"];
+    expect(houston).toMatchObject({ name: "Reliant Stadium", nameJa: "リライアント・スタジアム" });
+    expect(groundNameIn(houston, 2005)).toBe("Reliant Stadium");
+    expect(groundNameIn(houston, 2019)).toBe("NRG Stadium");
+    expect(groundNameIn(houston, 2026)).toBe("Houston Stadium");
+    expect(groundNameIn(houston, 2027)).toBe("Reliant Stadium");
+    expect(groundNameIn(houston)).toBe("Reliant Stadium");
+    expect(houston.aliases?.find((alias) => alias.name === "NRG Stadium")).toMatchObject({ kind: "sponsor", from: 2014, to: 2026 });
+    // The official name does not differ from the everyday one, so the description does not say it.
+    expect(groundOfficialName(houston, "en")).toBeUndefined();
+    expect(describeDrawing({ sport: "soccer", ground: "nrg-stadium" }).title).toBe("Reliant Stadium, soccer pitch");
+    expect(describeDrawing({ sport: "soccer", ground: "nrg-stadium" }).description).not.toContain("official name");
+    expect(describeDrawing({ sport: "soccer", ground: "nrg-stadium", year: 2019 }).title).toBe("NRG Stadium, soccer pitch");
+    expect(describeDrawing({ sport: "soccer", ground: "nrg-stadium", year: 2026 }).title).toBe("Houston Stadium, soccer pitch");
   });
 });
 
@@ -340,10 +341,10 @@ describe("drawings with the names", () => {
   const hashOf = (options: Record<string, unknown>): string => hash(drawKyogijo({ sport: "soccer", ...options }));
   // The drawings whose name is not what it was, or that gained the sentence that says the official name; every other drawing is byte for byte what it was.
   const GROUNDS_EN_CHANGED = [
-    "stade-yves-du-manoir", "maracana", "estadio-nacional-santiago", "estadio-azteca", "olympiastadion-munich", "nissan-stadium-yokohama", "olympiastadion-berlin", "nrg-stadium",
+    "stade-yves-du-manoir", "maracana", "estadio-nacional-santiago", "estadio-azteca", "olympiastadion-munich", "nissan-stadium-yokohama", "olympiastadion-berlin",
     "groupama-stadium", "camp-nou", "san-siro", "la-bombonera", "estadio-da-luz", "etihad-stadium", "johan-cruyff-arena", "kashima-soccer-stadium",
   ];
-  const GROUNDS_JA_CHANGED = ["nrg-stadium", "maracana", "monumental", "nissan-stadium-yokohama", "waldstadion-frankfurt", "groupama-stadium", "san-siro", "etihad-stadium", "kashima-soccer-stadium"];
+  const GROUNDS_JA_CHANGED = ["maracana", "monumental", "nissan-stadium-yokohama", "waldstadion-frankfurt", "groupama-stadium", "san-siro", "etihad-stadium", "kashima-soccer-stadium"];
 
   it("of a ground are what they were where the ground's name and official name did not change", () => {
     expect(Object.keys(GROUNDS_BEFORE_EN)).toHaveLength(64);

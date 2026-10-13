@@ -28,7 +28,7 @@ Made by `pnpm grounds` from `scripts/grounds.data.json` and `scripts/grounds.edi
 | `metlife-stadium` | MetLife Stadium | East Rutherford, United States | Q10862290 | 2010– | 82,500 | default, 105 × 68 m | WC 2026 (final) |
 | `att-stadium` | AT&T Stadium | Arlington, United States | Q838284 | 2009– | 80,000 | default, 105 × 68 m | WC 2026 |
 | `arrowhead-stadium` | Arrowhead Stadium | Kansas City, United States | Q544553 | 1972– | 76,416 | default, 105 × 68 m | WC 2026 |
-| `nrg-stadium` | NRG Stadium | Houston, United States | Q1058864 | 2002– | 72,220 | default, 105 × 68 m | WC 2026 |
+| `nrg-stadium` | Reliant Stadium | Houston, United States | Q1058864 | 2002– | 72,220 | default, 105 × 68 m | WC 2026 |
 | `mercedes-benz-stadium` | Mercedes-Benz Stadium | Atlanta, United States | Q7007552 | 2017– | 71,000 | 115 × 75 yd | WC 2026 |
 | `hard-rock-stadium` | Hard Rock Stadium | Miami Gardens, United States | Q864339 | 1987– | 64,767 | default, 105 × 68 m | WC 2026 |
 | `sofi-stadium` | SoFi Stadium | Inglewood, United States | Q19520501 | 2020– | 70,240 | default, 105 × 68 m | WC 2026 |
@@ -94,7 +94,6 @@ Where the everyday name is not the title of the article that was cited (names th
 | `rose-bowl` | Rose Bowl | Rose Bowl (stadium) |  | ローズボウル | ローズボウル (競技場) |  |
 | `nissan-stadium-yokohama` | Nissan Stadium | Nissan Stadium (Yokohama) | International Stadium Yokohama | 日産スタジアム | 横浜国際総合競技場 | 横浜国際総合競技場 |
 | `olympiastadion-berlin` | Berlin Olympic Stadium | Olympiastadion (Berlin) |  | ベルリン・オリンピアシュタディオン | ベルリン・オリンピアシュタディオン |  |
-| `nrg-stadium` | NRG Stadium | Reliant Stadium | Reliant Stadium | NRGスタジアム | リライアント・スタジアム | リライアント・スタジアム |
 | `waldstadion-frankfurt` | Deutsche Bank Park | Waldstadion (Frankfurt) |  | ドイチェ・バンク・パルク | ヴァルトシュタディオン | ドイチェ・バンク・パルク |
 | `groupama-stadium` | Groupama Stadium | Parc Olympique Lyonnais | Parc Olympique Lyonnais | グルパマ・スタジアム | パルク・オリンピック・リヨン | パルク・オリンピック・リヨン |
 | `san-siro` | San Siro | San Siro | Giuseppe Meazza Stadium | サン・シーロ | スタディオ・ジュゼッペ・メアッツァ | スタディオ・ジュゼッペ・メアッツァ |
@@ -117,7 +116,7 @@ A ground whose article gives no pitch size for football (or one that cannot be a
 - `metlife-stadium`, MetLife Stadium
 - `att-stadium`, AT&T Stadium
 - `arrowhead-stadium`, Arrowhead Stadium
-- `nrg-stadium`, NRG Stadium
+- `nrg-stadium`, Reliant Stadium
 - `hard-rock-stadium`, Hard Rock Stadium
 - `sofi-stadium`, SoFi Stadium
 - `levis-stadium`, Levi's Stadium
@@ -157,7 +156,7 @@ A ground whose article gives no pitch size for football (or one that cannot be a
 | Men's 2014 | Maracanã Stadium | Maracanã Stadium |
 | Men's 2018 | Luzhniki Stadium | Luzhniki Stadium |
 | Men's 2022 | Lusail Stadium | Lusail Stadium |
-| Men's 2026 | MetLife Stadium | MetLife Stadium, AT&T Stadium, Arrowhead Stadium, NRG Stadium, Mercedes-Benz Stadium, Hard Rock Stadium, SoFi Stadium, Levi's Stadium, Lumen Field, Gillette Stadium, Lincoln Financial Field, BMO Field, BC Place, Estadio Azteca, Estadio Akron, Estadio BBVA |
+| Men's 2026 | MetLife Stadium | MetLife Stadium, AT&T Stadium, Arrowhead Stadium, Reliant Stadium, Mercedes-Benz Stadium, Hard Rock Stadium, SoFi Stadium, Levi's Stadium, Lumen Field, Gillette Stadium, Lincoln Financial Field, BMO Field, BC Place, Estadio Azteca, Estadio Akron, Estadio BBVA |
 | Women's 1991 | Tianhe Stadium | Tianhe Stadium |
 | Women's 1995 | Råsunda Stadium | Råsunda Stadium |
 | Women's 1999 | Rose Bowl | Rose Bowl |

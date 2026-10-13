@@ -841,26 +841,17 @@
  {
   "id": "nrg-stadium",
   "wikidata": "Q1058864",
-  "name": "NRG Stadium",
+  "name": "Reliant Stadium",
   "names": [
-   { "name": "Reliant Stadium", "from": 2002, "to": 2013 },
-   { "name": "Reliant Stadium", "from": 2002, "to": 2013 },
-   { "name": "Reliant Stadium", "from": 2002, "to": 2013 },
-   { "name": "Reliant Stadium", "from": 2002, "to": 2013 },
-   { "name": "Reliant Stadium", "from": 2002, "to": 2013 },
-   { "name": "Reliant Stadium", "from": 2002, "to": 2013 },
    { "name": "NRG Stadium", "from": 2014, "to": 2026 },
    { "name": "Houston Stadium", "from": 2026, "to": 2026 }
   ],
-  "nameJa": "NRGスタジアム",
+  "nameJa": "リライアント・スタジアム",
   "aliases": [
    { "name": "Reliant Stadium", "lang": "en", "kind": "wikipedia", "revision": 1379613664, "source": "en.wikipedia.org" },
    { "name": "リライアント・スタジアム", "lang": "ja", "kind": "wikipedia", "revision": 110479504, "source": "ja.wikipedia.org" },
-   { "name": "Reliant Stadium", "lang": "en", "kind": "official", "from": 2026, "source": "en.wikipedia.org revision 1379613664" },
-   { "name": "リライアント・スタジアム", "lang": "ja", "kind": "official", "from": 2026, "source": "ja.wikipedia.org revision 110479504" },
    { "name": "NRG Stadium", "lang": "en", "kind": "sponsor", "from": 2014, "to": 2026, "source": "en.wikipedia.org revision 1379613664" },
-   { "name": "NRGスタジアム", "lang": "ja", "kind": "sponsor", "from": 2014, "to": 2026, "source": "ja.wikipedia.org revision 110479504" },
-   { "name": "Reliant Stadium", "lang": "en", "kind": "former", "from": 2002, "to": 2013, "source": "en.wikipedia.org revision 1379613664" }
+   { "name": "NRGスタジアム", "lang": "ja", "kind": "sponsor", "from": 2014, "to": 2026, "source": "ja.wikipedia.org revision 110479504" }
   ],
   "city": "Houston",
   "country": "US",

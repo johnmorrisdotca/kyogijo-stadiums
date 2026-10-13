@@ -129,7 +129,7 @@ ${data
 
 A ground has the name people use and every other name it answers to, each with where it was read.
 
-- \`name\` is the **everyday name in English**, the one English sports media use (\`NRG Stadium\`, \`San Siro\`, \`Etihad Stadium\`), with the current sponsor's name where that is what people say. It is not always the title of the article that was cited: that title is an alias.
+- \`name\` is the **everyday name in English**, the one English sports media use (\`Groupama Stadium\`, \`San Siro\`, \`Etihad Stadium\`), with the current sponsor's name where that is what people say. It is not always the title of the article that was cited: that title is an alias.
 - \`nameJa\` is the **everyday name in Japanese**, as Japanese media say it (\`日産スタジアム\`, \`サン・シーロ\`, \`マラカナン\`), and \`readingJa\` its reading in kana wherever it has kanji (\`にっさんスタジアム\`).
 - \`localName\` and \`localLanguage\` are the everyday name in the language of the place (\`San Siro\`, \`it\`; \`Maracanã\`, \`pt\`; a ground of an English-speaking place has none).
 - \`names\` are the names the ground had for some years, as before; \`groundNameIn(ground, year)\` picks the one of a year, and the everyday name follows them where one covers the year.

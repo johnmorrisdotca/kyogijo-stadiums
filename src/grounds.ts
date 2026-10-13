@@ -32,7 +32,7 @@ export interface GroundData {
   id: string;
   /** The Wikidata item of the ground (`Q155174`), the key to join a ground to other data. */
   wikidata: string;
-  /** The everyday name in English, the one English sports media use (`NRG Stadium`, `San Siro`); the title of the English article is one of the `aliases`. */
+  /** The everyday name in English, the one English sports media use (`Reliant Stadium`, `San Siro`); the title of the English article is one of the `aliases`. */
   name: string;
   /**
    * Names the ground had for some years, in order of time: where two share a year the later one is the name at the end of it,
