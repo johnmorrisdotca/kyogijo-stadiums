@@ -45,7 +45,33 @@ describe("the drawings' structure", () => {
 
 describe("the size of a drawing", () => {
   it("is within the budget, with the stylesheet in it", () => {
-    const budget: Record<string, number> = { nfl: 21_000, cfl: 20_000, ifaf: 21_000, nhl: 13_000, nba: 13_000, mlb: 16_000 };
+    const budget: Record<string, number> = { nfl: 21_000, cfl: 20_000, ifaf: 21_000, nhl: 13_000, nba: 13_000, mlb: 16_000, soccer: 14_000 };
     for (const sport of SPORTS) expect(drawKyogijo({ sport, ...game }).length, sport).toBeLessThan(budget[sport]);
+  });
+});
+
+describe("the soccer pitches' structure", () => {
+  const pitches = ["fifa", "mls", "law-max", "9-a-side", "7-a-side", "5-a-side", "futsal"] as const;
+  for (const pitch of pitches) {
+    it(`${pitch}: what a score drawing is made of`, () => {
+      expect(structure(drawKyogijo({ sport: "soccer", pitch, ...game }))).toMatchSnapshot();
+    });
+  }
+  for (const pitchType of ["opta", "statsbomb", "wyscout", "tracab", "metrica", "impect"] as const) {
+    it(`${pitchType}: what a pitch drawn in its own frame is made of`, () => {
+      expect(structure(drawKyogijo({ sport: "soccer", pitchType, id: "snap" }))).toMatchSnapshot();
+    });
+  }
+  for (const [name, options] of [["half", { half: "left" }], ["checks", { stripePattern: "checks" }], ["diagonal", { stripePattern: "diagonal" }], ["line goals", { goals: "line" }], ["strip goals", { goals: "strip" }], ["no goals, no flags", { goals: "none", cornerFlags: false }], ["simple", { detail: "simple" }]] as const) {
+    it(`${name}: what a bare pitch is made of`, () => {
+      expect(structure(drawKyogijo({ sport: "soccer", id: "snap", ...options }))).toMatchSnapshot();
+    });
+  }
+  it("a bare pitch, written out", () => {
+    expect(drawKyogijo({ sport: "soccer", id: "snap", style: "none", margin: 0, exactLines: true })).toMatchSnapshot();
+  });
+  it("is within its size budget, bare, in each pitch and with its frame", () => {
+    for (const pitch of pitches) expect(drawKyogijo({ sport: "soccer", pitch }).length, pitch).toBeLessThan(12_000);
+    expect(drawKyogijo({ sport: "soccer", pitchType: "opta", stripePattern: "checks" }).length).toBeLessThan(14_000);
   });
 });

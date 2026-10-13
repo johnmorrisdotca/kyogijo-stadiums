@@ -4,7 +4,7 @@ import { expect, test } from "@playwright/test";
 
 import { at, open, openGroups, svg } from "./demo.mjs";
 
-const SPORTS = ["nfl", "cfl", "ifaf", "nhl", "nba", "mlb"];
+const SPORTS = ["nfl", "cfl", "ifaf", "nhl", "nba", "mlb", "soccer"];
 
 test("opens on the rink with no complaint from the page, and says what it shows", async ({ page }) => {
   const errors = await open(page, "?sport=nhl&lang=en&help=off");
@@ -135,7 +135,7 @@ test("a live score moves when asked", async ({ page }) => {
 
 test("the examples are all there: every sport, wide and tall, badges, compact cards, courts and the parks on request", async ({ page }) => {
   await open(page, "?lang=en&help=off");
-  expect(await page.locator(`${at("gallery-cards")} svg.kyogijo`).count()).toBe(6);
+  expect(await page.locator(`${at("gallery-cards")} svg.kyogijo`).count()).toBe(7);
   expect(await page.locator(`${at("side-cards")} svg.kyogijo`).count()).toBe(4);
   expect(await page.locator(`${at("badge-list")} svg.kyogijo`).count()).toBe(8);
   expect(await page.locator(`${at("compact-cards")} svg.kyogijo`).count()).toBe(3);

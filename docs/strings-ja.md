@@ -12,24 +12,35 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `surface.nhl` | NHL hockey rink | NHLのアイスホッケーリンク |
 | `surface.nba` | NBA basketball court | NBAのバスケットボールコート |
 | `surface.mlb` | Baseball field | 野球場 |
+| `surface.soccer` | Soccer pitch | サッカーのピッチ |
 | `about.nfl` | an American football field, 120 by 53 and a third yards with its end zones, with a yard line every 5 yards, hash marks, numbers and goal posts | アメリカンフットボールのフィールド。エンドゾーンを含めて120ヤード×53⅓ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールポストがあります |
 | `about.cfl` | a Canadian football field, 150 by 65 yards with its 20-yard end zones, with a yard line every 5 yards, hash marks, numbers and goal posts on the goal lines | カナディアンフットボールのフィールド。20ヤードのエンドゾーンを含めて150ヤード×65ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールライン上のゴールポストがあります |
 | `about.ifaf` | an international (IFAF) football field, 120 by 53 and a third yards with its end zones, with a yard line every 5 yards, hash marks, numbers and goal posts | 国際アメリカンフットボール連盟（IFAF）規格のフィールド。エンドゾーンを含めて120ヤード×53⅓ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールポストがあります |
 | `about.nhl` | an ice hockey rink, 200 by 85 feet with rounded corners, with its red and blue lines, face-off circles, creases and goal nets | アイスホッケーのリンク。200フィート（約61m）×85フィート（約26m）で角が丸く、レッドライン、ブルーライン、フェイスオフサークル、クリース、ゴールがあります |
 | `about.nba` | a basketball court, 94 by 50 feet, with its keys, three-point lines, free-throw circles and the centre circle | バスケットボールのコート。94フィート（約28.7m）×50フィート（約15.2m）で、ペイントエリア、スリーポイントライン、フリースローサークル、センターサークルがあります |
 | `about.mlb` | a baseball field, with a 90-foot infield, the mound, the foul lines and the outfield fence | 野球場。塁間90フィート（約27.4m）の内野、マウンド、ファウルライン、外野フェンスがあります |
+| `about.soccer` | a soccer pitch, {length} by {width} metres, with the halfway line, the centre circle, both penalty areas, goal areas, penalty marks and arcs, the corner arcs and the goals | サッカーのピッチ。{length}m×{width}mで、ハーフウェーライン、センターサークル、両側のペナルティエリアとゴールエリア、ペナルティマークとペナルティアーク、コーナーアーク、ゴールがあります |
 | `status.final` | Final | 試合終了 |
 | `status.final-ot` | Final/OT | 試合終了（延長） |
 | `status.final-so` | Final/SO | 試合終了（SO） |
+| `status.final-aet` | Final/AET | 試合終了（延長戦） |
+| `status.final-pens` | Final/Pens | 試合終了（PK戦） |
 | `status.live` | Live | 試合中 |
 | `status.half` | Halftime | ハーフタイム |
+| `status.extra-time` | Extra time | 延長戦 |
+| `status.penalties` | Penalties | PK戦 |
 | `status.postponed` | Postponed | 延期 |
+| `soccer.futsal` | Futsal court | フットサルのコート |
+| `soccer.aboutFutsal` | a futsal court, {length} by {width} metres, with the halfway line, the centre circle, both penalty areas, the penalty marks and the goals | フットサルのコート。{length}m×{width}mで、ハーフウェーライン、センターサークル、両側のペナルティエリア、ペナルティマーク、ゴールがあります |
+| `soccer.half` | Half of it is shown. | 半面のみ表示しています。 |
 | `scoreTitle` | {away} {awayScore}, {home} {homeScore} | {away} {awayScore}、{home} {homeScore} |
 | `said.home` | home | ホーム |
 | `said.away` | away | アウェイ |
 | `said.won` | {name} won. | {name}の勝ちです。 |
 | `said.tied` | The game is level. | 同点です。 |
 | `said.park` | The outfield fence follows the figures published for {park}. | 外野フェンスは、{park}の公表されている距離をもとに描かれています。 |
+| `said.wonPens` | {name} won {a}-{b} on penalties. | {name}がPK戦を{a}-{b}で制しました。 |
+| `said.pens` | {a}-{b} pens | PK戦 {a}-{b} |
 | `said.on` | Drawn as | 図の内容 |
 | `said.sep` | ,  | 、 |
 | `said.stop` | . | 。 |
@@ -56,6 +67,39 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `sport_nhl` | NHL | NHL |
 | `sport_nba` | NBA | NBA |
 | `sport_mlb` | Baseball | 野球 |
+| `sport_soccer` | Soccer | サッカー |
+| `pitchLabel` | Pitch | ピッチ |
+| `pitch_fifa` | International, 105 × 68 m | 国際試合 105×68m |
+| `pitch_uefa` | UEFA, 105 × 68 m | UEFA 105×68m |
+| `pitch_mls` | MLS least size, 110 × 70 yd | MLSの最小サイズ 110×70ヤード |
+| `pitch_ncaa` | NCAA best size, 120 × 75 yd | NCAAの推奨サイズ 120×75ヤード |
+| `pitch_law_min` | Smallest under the Laws, 90 × 45 m | 競技規則の最小サイズ 90×45m |
+| `pitch_law_max` | Largest under the Laws, 120 × 90 m | 競技規則の最大サイズ 120×90m |
+| `pitch_9_a_side` | 9-a-side (FA), 80 × 50 yd | 9人制（FA） 80×50ヤード |
+| `pitch_7_a_side` | 7-a-side (FA), 60 × 40 yd | 7人制（FA） 60×40ヤード |
+| `pitch_5_a_side` | 5-a-side (FA), 40 × 30 yd | 5人制（FA） 40×30ヤード |
+| `pitch_futsal` | Futsal (FIFA), 40 × 20 m | フットサル（FIFA） 40×20m |
+| `pitchTypeLabel` | Provider's frame | 提供元の座標系 |
+| `pitchTypeNone` | None (the Laws') | なし（競技規則どおり） |
+| `stripePattern` | Mowing | 芝の模様 |
+| `pattern_bands` | Bands | 短辺に沿った縞 |
+| `pattern_wide` | Wide | 太い縞 |
+| `pattern_narrow` | Narrow | 細い縞 |
+| `pattern_lengthwise` | Lengthwise | 長辺に沿った縞 |
+| `pattern_checks` | Checks | 市松 |
+| `pattern_diagonal` | Diagonal | 斜め |
+| `pattern_none` | None | なし |
+| `goalStyle` | Goals | ゴール |
+| `goals_box` | Net | ネット |
+| `goals_line` | Line | 線 |
+| `goals_strip` | Strip | 帯 |
+| `goals_none` | None | なし |
+| `half` | Show | 表示範囲 |
+| `half_none` | Whole pitch | ピッチ全体 |
+| `half_left` | Left half | 左半面 |
+| `half_right` | Right half | 右半面 |
+| `cornerFlags` | Corner flags | コーナーフラッグ |
+| `teamPens` | Pens | PK |
 | `park` | Ballpark | 球場 |
 | `parkGeneric` | A generic field | 標準的なグラウンド |
 | `parkGroupMlb` | MLB, today's home parks | MLB（現在の本拠地） |
@@ -95,6 +139,8 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `status_final_so` | Final/SO | シュートアウトで試合終了 |
 | `status_live` | Live | 試合中 |
 | `status_half` | Halftime | ハーフタイム |
+| `status_final_aet` | Final/AET | 延長戦で試合終了 |
+| `status_final_pens` | Final/Pens | PK戦で試合終了 |
 | `status_custom` | Your own | 自由入力 |
 | `statusCustom` | Status text | 状況のテキスト |
 | `competition` | Competition | 大会 |
@@ -148,6 +194,22 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `parksTitle` | Ballparks | 球場 |
 | `parksText` | Thirty current MLB parks and forty-four past ones, and the NPB's twelve home parks and eight other grounds, each fence drawn from the distances its article publishes. Press one to try it. | 現在のMLB30球場と過去の44球場、NPBの本拠地12球場とその他8球場。外野フェンスは、各球場の記事で公表されている距離をもとに描いています。球場を選ぶと試せます。 |
 | `parksShow` | Show the parks | 球場を表示する |
+| `pitchesTitle` | The soccer pitch | サッカーのピッチ |
+| `pitchesText` | A pitch from the Laws of the Game at any size, with the presets of UEFA, the MLS, the NCAA, the FA and FIFA's futsal, half pitches, and a score that ends after extra time or on penalties. | 競技規則に基づくピッチを、好きな広さで描けます。UEFA、MLS、NCAA、FA、FIFAフットサルの規格、半面表示に対応し、延長戦やPK戦で決着した試合の得点も表示できます。 |
+| `pitchCompact` | Compact card, after extra time | 延長戦後のコンパクトなカード |
+| `pitchHalf` | Half a pitch, in checks | 半面を市松模様で |
+| `patternsTitle` | Mowing and goals | 芝の模様とゴール |
+| `providersTitle` | Data providers' pitches | データ提供元ごとのピッチ |
+| `providersText` | Each provider writes the pitch in its own numbers. Drawn in its own frame, the lines stand where the provider puts them and raw data plots without converting. | データ提供元ごとに、ピッチの座標の取り方が違います。提供元の座標系で描くと、ラインは提供元の定める位置に引かれ、生のデータを変換せずにそのまま描き込めます。 |
+| `providerFixed` | fixed figures | 固定値 |
+| `providerSized` | follows the pitch | ピッチの大きさに連動 |
+| `convTitle` | Move a point between providers | 提供元どうしで点を変換する |
+| `convText` | A point on a line of the pitch stays on that line: the penalty line of one provider is the penalty line of the other. | ピッチのライン上の点は、変換しても同じライン上にあります。たとえば、一方の提供元のペナルティエリアのラインは、もう一方の提供元のペナルティエリアのラインに移ります。 |
+| `convFrom` | From | 変換元 |
+| `convTo` | To | 変換先 |
+| `convSpot` | The penalty mark | ペナルティマーク |
+| `convResult` | Becomes | 変換後 |
+| `convBad` | Two numbers, please | 数値を2つ入力してください |
 | `liveTitle` | A live score | 得点が動く例 |
 | `liveText` | The score moves and the drawing is drawn again. Nothing is fetched: it is a made-up game. | 得点が動くたびに図を描き直します。通信はしません。架空の試合です。 |
 | `liveStep` | Next play | 次のプレー |

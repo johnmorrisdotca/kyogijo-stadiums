@@ -1,7 +1,7 @@
 <h1 align="center">Kyogijo <sub>競技場</sub></h1>
 
 <p align="center"><strong>Sports surfaces as SVG, drawn to scale, with the score on them.</strong><br>
-The NFL, CFL and IFAF football fields, the NHL rink, the NBA court and the baseball field of every MLB ballpark, current and past, and every NPB home park, each drawn from its rulebook or its published distances, with each team's name and logo on its side and the score in the middle. Wide or tall, light or dark, a compact badge for a list, a helper for React, a custom element and a frame for a page that runs no script. One function, no dependencies.</p>
+The NFL, CFL and IFAF football fields, the NHL rink, the NBA court, the soccer pitch and futsal court, and the baseball field of every MLB ballpark, current and past, and every NPB home park, each drawn from its rulebook or its published distances, with each team's name and logo on its side and the score in the middle. Wide or tall, light or dark, a compact badge for a list, a helper for React, a custom element and a frame for a page that runs no script. One function, no dependencies.</p>
 
 <p align="center">
   <a href="https://github.com/johnmorrisdotca/kyogijo/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/johnmorrisdotca/kyogijo/actions/workflows/ci.yml/badge.svg"></a>
@@ -70,7 +70,8 @@ console.log(svg.startsWith("<svg"), svg.includes("NORTHERN OWLS"));
 
 ## Features
 
-- **Six surfaces, to scale.** The NFL field (360 by 160 feet with its end zones), the CFL field (450 by 195), the IFAF field, the NHL rink (200 by 85 with a 28-foot corner radius), the NBA court (94 by 50) and the baseball field, with the markings of each: yard lines, hash marks, numbers and goal posts; blue and red lines, five face-off circles, creases and nets; keys, three-point lines and restricted areas; infield, mound, bases, foul lines and fence. Every figure is cited in [docs/sources.md](./docs/sources.md).
+- **Seven surfaces, to scale.** The NFL field (360 by 160 feet with its end zones), the CFL field (450 by 195), the IFAF field, the NHL rink (200 by 85 with a 28-foot corner radius), the NBA court (94 by 50), the soccer pitch (105 by 68 metres, in ten sizes and variants) and the baseball field, with the markings of each: yard lines, hash marks, numbers and goal posts; blue and red lines, five face-off circles, creases and nets; keys, three-point lines and restricted areas; penalty areas, goal areas, arcs and goals; infield, mound, bases, foul lines and fence. Every figure is cited in [docs/sources.md](./docs/sources.md).
+- **Soccer, to the Laws.** A pitch from Law 1 of the IFAB Laws of the Game of any size, with presets (international, UEFA, MLS, NCAA, the FA's 9-, 7- and 5-a-side, FIFA's futsal), half pitches, five mowing patterns, four goal styles, penalties and extra time in a score, and the pitch drawn in the coordinates of Opta, StatsBomb, Wyscout, Tracab, Metrica, SkillCorner, Second Spectrum or Impect, with `rescale` between them. See [Soccer](#soccer).
 - **Every ballpark.** The 30 current MLB parks and 44 that MLB clubs have left (the Polo Grounds, Ebbets Field, Forbes Field, Tiger Stadium, the Astrodome and more), and the 12 home parks of Nippon Professional Baseball with eight other NPB grounds, past and present, each with its fence drawn from the distances published for it. A named park is one option (`park: "fenway-park"`), and a past park whose fence moved is drawn as it stood in a season (`year: 1915`); the 94 are in `PARKS`, each with its Wikidata item.
 - **Score mode.** Each team's name and logo on its side (the end zones of a football field, the ends of the ice, the halves of the court, the dugouts of a ballpark) and the score large in the middle, with the competition, the status (Final, OT, SO, a period, an inning) and the date, and the winner emphasised.
 - **Wide, tall or fit the box.** Every surface lies wide or tall. Tall turns it a quarter, keeps every word upright, and puts the teams top and bottom. With `orientation: "auto"` the browser helpers watch the box and lay it out again when its shape changes.
@@ -85,7 +86,8 @@ console.log(svg.startsWith("<svg"), svg.includes("NORTHERN OWLS"));
 | Part | What it is |
 | --- | --- |
 | `drawKyogijo`, `drawSurface`, `drawScore`, `drawBadge` | The drawing, as a string of SVG. |
-| `SPORTS`, `PARKS`, `PARK_IDS`, `COURT_THEMES` | The six sports, the 94 ballparks, the court looks. |
+| `SPORTS`, `PARKS`, `PARK_IDS`, `COURT_THEMES` | The seven sports, the 94 ballparks, the court looks. |
+| `SOCCER_PITCHES`, `SOCCER_PROVIDERS`, `rescale`, `soccerSpec` | The soccer pitches, the data providers' coordinate systems and the map between them. |
 | `@johnmorrisdotca/kyogijo/geometry` | The dimensions of every surface in feet, in any unit, and the functions that follow from them. |
 | `@johnmorrisdotca/kyogijo/frames` | Providers' coordinate frames and the functions that put their points on a surface. |
 | `@johnmorrisdotca/kyogijo/parks` | The ballparks and the article each was read from. |
@@ -285,7 +287,7 @@ writeFileSync("rink.svg", drawKyogijo({ sport: "nhl", theme: "dark" }));
 </style>
 ```
 
-The attributes are `sport`, `size`, `theme`, `language`, `orientation`, `park`, `year`, `detail`, `margin`, `stripes`, `exact-lines`, `uppercase`, `home`, `away`, `home-abbr`, `away-abbr`, `home-score`, `away-score`, `score`, `home-logo`, `away-logo`, `home-color`, `away-color`, `status`, `competition`, `date`, `label`, `winner`, `home-side`, `description` and `options` (any other option, as JSON). The parts are `figure`, `svg`, `surface`, `plate`, `team`, `home`, `away`, `score`, `home-score`, `away-score` and `badge`.
+The attributes are `sport`, `size`, `theme`, `language`, `orientation`, `park`, `year`, `pitch`, `pitch-type`, `half`, `goals`, `stripe-pattern`, `corner-flags`, `detail`, `margin`, `stripes`, `exact-lines`, `uppercase`, `home`, `away`, `home-abbr`, `away-abbr`, `home-score`, `away-score`, `home-penalties`, `away-penalties`, `score`, `home-logo`, `away-logo`, `home-color`, `away-color`, `status`, `competition`, `date`, `label`, `winner`, `home-side`, `description` and `options` (any other option, as JSON). The parts are `figure`, `svg`, `surface`, `plate`, `team`, `home`, `away`, `score`, `home-score`, `away-score` and `badge`.
 
 ### In React
 
@@ -359,6 +361,7 @@ Every dimension is kept in feet in the code (`@johnmorrisdotca/kyogijo/geometry`
 | `ifaf` | IFAF field | 120 by 53⅓ yards with 10-yard end zones | hash marks 60 feet from each sideline, numbers 27 feet from the sideline, posts on the end lines |
 | `nhl` | NHL rink | 200 by 85 feet, corners of 28 feet | goal lines 11 feet and blue lines 75 feet from the ends, the red line, five face-off circles and four more spots, creases, nets, trapezoids, the referee's crease |
 | `nba` | NBA court | 94 by 50 feet | 16-foot keys, free-throw circles, three-point lines of 23 feet 9 inches and 22 feet in the corners, restricted areas, backboards and rims, the small marks |
+| `soccer` | Soccer pitch | 105 by 68 m, or any size, or a preset | the halfway line and centre circle, penalty areas, goal areas, marks, arcs, corner arcs and flags, the marks off the field, goals |
 | `mlb` | Baseball field | 90-foot bases, a fence from the park's distances | foul lines, the infield cut by a 95-foot arc round the mound, bases, the plate, batter's boxes, the running lane, warning track and fence |
 
 <p align="center">
@@ -378,6 +381,66 @@ Every dimension is kept in feet in the code (`@johnmorrisdotca/kyogijo/geometry`
 </p>
 
 Lines are drawn a little thicker than they are painted, as broadcast graphics do, so that they stay in view at a small size; `exactLines: true` draws them at their true widths.
+
+## Soccer
+
+`sport: "soccer"` draws a pitch from Law 1 of the IFAB Laws of the Game: the halfway line, the centre circle of 9.15 m, both penalty areas (16.5 m), goal areas (5.5 m), penalty marks (11 m), arcs, corner arcs (1 m) with flags, the marks off the field that show a corner kick's distance, and goals of 7.32 by 2.44 m. In a score each team's name is in its penalty area, in its colour.
+
+| Option | What it does |
+| --- | --- |
+| `pitch` | A preset or a size: `{ length, width, unit }` in metres (or `yd`, `ft`, `in`, `cm`, `mm`; `units` sets the default). The international 105 by 68 m by default. |
+| `half` | `left` or `right`: one half, for a bare pitch. A drawing with teams always shows the whole. |
+| `stripePattern` | `bands` (19, the default), `wide`, `narrow`, `lengthwise`, `checks`, `diagonal` or `none`; `stripes: false` also turns them off. |
+| `goals` | `box` (the net, the default), `line`, `strip` or `none`. `cornerFlags` turns the flags off. |
+| `pitchType` | Draw the pitch in a data provider's own coordinates (below). |
+
+| `pitch` | Size | Read from |
+| --- | --- | --- |
+| `fifa`, `uefa` | 105 by 68 m | Law 1; the UEFA Stadium Infrastructure Regulations, 5.01 (categories 3 and 4) |
+| `mls`, `ncaa` | 110 by 70 yd (the MLS's least), 120 by 75 yd (the NCAA's best) | the MLS Competition Guidelines; the NCAA rules, Rule 1.1.1 |
+| `law-min`, `law-max` | 90 by 45 m, 120 by 90 m | Law 1.3 |
+| `9-a-side`, `7-a-side`, `5-a-side` | 80 by 50, 60 by 40 and 40 by 30 yd | The FA Handbook, Section 38; the markings of the FA's small-sided laws |
+| `futsal` | 40 by 20 m, quarter-circle areas, marks at 6 and 10 m | FIFA's Futsal Laws, Law 1 |
+
+`status` also takes `final-aet`, `final-pens`, `extra-time` and `penalties`. A team's `penalties` is its goals in the shoot-out: both are written with the status (`Final · 4-2 pens`) and a level game goes to the winner of the shoot-out.
+
+```ts
+import { drawKyogijo, soccerPitchClass, soccerSpec } from "@johnmorrisdotca/kyogijo";
+
+const svg = drawKyogijo({
+  sport: "soccer",
+  away: { name: "Northern Owls", abbr: "NOW", score: 2, penalties: 4, color: "#3a2d6b" },
+  home: { name: "Lakeshore Anchors", abbr: "LSA", score: 2, penalties: 2, color: "#0f7a7a" },
+  status: "final-pens",
+  competition: "Cup Final",
+});
+console.log(svg.includes("Final · 4-2 pens"), svg.includes("Northern Owls won 4-2 on penalties."));
+// true true
+const pitch = soccerSpec({ length: 110, width: 70, unit: "yd" });
+console.log(pitch.length.toFixed(2), pitch.width.toFixed(2), soccerPitchClass(pitch.length, pitch.width));
+// 100.58 64.01 international
+```
+
+### Data providers
+
+A provider writes the pitch in its own numbers: Opta's 0 to 100 with y up, StatsBomb's 120 by 80 yards with y down, Tracab's centimetres from the centre spot, Metrica's 0 to 1. `SOCCER_PROVIDERS` has the ten (`opta`, `statsbomb`, `wyscout`, `tracab`, `metrica`, `skillcorner`, `secondspectrum`, `impect`, `uefa`, `international`), each as a frame: its extents, which way y runs and where it puts the penalty area, the goal area, the mark and the posts. Opta, StatsBomb and Wyscout fix those numbers, so their lines are not where the Laws put them on a 105 by 68 m pitch. The others follow the pitch's size.
+
+- `pitchType: "opta"` stands the lines where the provider puts them and adds an empty `<g class="ky-data">` whose `transform` turns the provider's own x and y into the pitch's metres: put raw data in it and it plots. (A circle in it is stretched, as a provider's units are not square.)
+- `rescale(from, to)` maps one provider's points to another's, piecewise linear between the landmarks (the goal line, goal area, mark, penalty area, halfway line, touchlines and posts), so that a point on the penalty line stays on it. Its `inverse` goes back. The providers are also frames of the [frames module](#coordinate-frames), so `toSurface` and `convert` take them by name with a `size`.
+
+```ts
+import { drawKyogijo, rescale } from "@johnmorrisdotca/kyogijo";
+import { toSurface } from "@johnmorrisdotca/kyogijo/frames";
+
+const svg = drawKyogijo({ sport: "soccer", pitchType: "opta", id: "o" });
+console.log(/<g class="ky-data" data-frame="opta" transform="matrix\(1.05 0 0 -0.68 0 68\)"\/>/.test(svg));
+// true
+// Opta's penalty line, 17 from the goal line, is StatsBomb's, 18 yards from it.
+console.log(rescale("opta", "statsbomb")(83, 50));
+// [ 102, 40 ]
+console.log(toSurface([[50, 50]], { from: "opta", size: { length: 105, width: 68, unit: "m" } }).map((p) => p.map(Math.round)));
+// [ [ 172, 112 ] ]
+```
 
 ## Ballparks
 
@@ -409,6 +472,7 @@ Each surface keeps the unit its rulebook states its figures in. The drawing itse
 | `nfl`, `cfl`, `ifaf` | yards (`yd`) | the length of a field and its end zones are counted in yards |
 | `nhl`, `nba` | feet (`ft`) | the rulebooks give feet and inches |
 | `mlb` | feet (`ft`) | the Official Baseball Rules give feet |
+| `soccer` | metres (`m`) | the Laws of the Game give metres, with yards beside them |
 | NPB parks (`parkUnit`) | metres (`m`) | the parks of Japan publish their fence in metres; `PARKS` holds them in feet, converted once at 0.3048 metres to the foot |
 
 `SURFACE_UNITS` is that table. The units are `ft`, `in`, `yd`, `m`, `cm` and `mm`; anything else is an error and not feet.
@@ -443,6 +507,7 @@ A data provider puts a point on a rink or a field in its own numbers: the NHL's 
 | `nfl-tracking` | NFL | yards, x 0 to 120, y 0 to 53.3 | bottom left of the field | up | fixed to the field |
 | `mlbam` | MLB | image units, home plate at (125.42, 198.27) | top left | down | none |
 | `retrosheet` | MLB | feet from home plate (zone centres: `RETROSHEET_ZONES`) | home plate | out | none |
+| `opta`, `statsbomb`, `wyscout`, `tracab`, `metrica`, `skillcorner`, `secondspectrum`, `impect`, `uefa`, `international` | soccer | see [Soccer](#data-providers); a pitch of any size, so `size` is given | by provider | by provider | fixed to the pitch |
 
 ```ts
 import { convert, fromSurface, toSurface } from "@johnmorrisdotca/kyogijo/frames";
@@ -477,12 +542,12 @@ console.log(toSurface([[69, 22]], { from: "nhl-api", attacking: "left" }), conve
 <br><em>Badges for a list of games.</em>
 </p>
 
-Pass `home` and `away`. Each team has a `name`, an optional `abbr`, `score`, `logo`, `color` and `textColor`.
+Pass `home` and `away`. Each team has a `name`, an optional `abbr`, `score`, `penalties` (a soccer shoot-out), `logo`, `color` and `textColor`.
 
 | Option | What it does |
 | --- | --- |
 | `size` | `full` (on the surface), `compact` (the surface with a strip under it) or `badge` (the strip alone). |
-| `status` | `final`, `final-ot`, `final-so`, `live`, `half`, `postponed` (translated), or any text such as `2nd period` or `Bottom 9th`. |
+| `status` | `final`, `final-ot`, `final-so`, `final-aet`, `final-pens`, `live`, `half`, `extra-time`, `penalties`, `postponed` (translated), or any text such as `2nd period` or `Bottom 9th`. |
 | `competition`, `date` | The round and the day, as written. |
 | `label` | A line for the foot of the panel in place of the status and the date. |
 | `winner` | `auto` (the leader once the status is a final one), `leader`, `none`, `home` or `away`. |
@@ -511,9 +576,9 @@ The [API reference](https://johnmorrisdotca.github.io/kyogijo/api.html) lists ev
 
 | Entry | What it holds |
 | --- | --- |
-| `@johnmorrisdotca/kyogijo` | `drawKyogijo`, `drawSurface`, `drawScore`, `drawBadge`, `describe`, `winnerOf`, `statusLabel`, `isPortrait`; `SPORTS`, `COURT_THEMES`, `PARKS`, `PARK_IDS`, `parkById`, `parkByWikidata`, `parkPointsIn`, `parkSourceUrl`, `parkUnit`, `fenceFor`; `SURFACE_UNITS`, `UNITS`, `convertLength`; `safeColour`, `safeLogo`, `inkOn`; `fitLines`, `textWidth`, `abbreviate`, `capitals`; `KYOGIJO_STYLE`, `KYOGIJO_STRINGS`, `COLOR_PROPERTIES`, `VERSION` and the option types |
-| `@johnmorrisdotca/kyogijo/geometry` | `FOOTBALL`, `NHL`, `NBA`, `MLB`, `fenceAt`, `fencePoints`, `threePointJoin`, `skinJoin`, `boardsY` and the other dimensions; `SURFACE_UNITS`, `convertLength`, `convertPoint`, `lengthsIn`, `dimensionsOf`, `surfaceSize`, `fenceIn` |
-| `@johnmorrisdotca/kyogijo/frames` | `toSurface`, `fromSurface`, `convert`, `convertPoints`, `flipEnds`, `attackingIn`, `registerFrame`, `frameByName`, `framesOf`, `piecewise`, `span`, `FRAMES`, `RETROSHEET_ZONES`, `zoneToPoint`, `zoneAt` and the frame types |
+| `@johnmorrisdotca/kyogijo` | `drawKyogijo`, `drawSurface`, `drawScore`, `drawBadge`, `describe`, `winnerOf`, `statusLabel`, `isPortrait`, `statusText`; `SPORTS`, `COURT_THEMES`, `SOCCER`, `SOCCER_PITCHES`, `SOCCER_PROVIDERS`, `soccerSpec`, `soccerFrame`, `rescale`, `PARKS`, `PARK_IDS`, `parkById`, `parkByWikidata`, `parkPointsIn`, `parkSourceUrl`, `parkUnit`, `fenceFor`; `SURFACE_UNITS`, `UNITS`, `convertLength`; `safeColour`, `safeLogo`, `inkOn`; `fitLines`, `textWidth`, `abbreviate`, `capitals`; `KYOGIJO_STYLE`, `KYOGIJO_STRINGS`, `COLOR_PROPERTIES`, `VERSION` and the option types |
+| `@johnmorrisdotca/kyogijo/geometry` | `FOOTBALL`, `NHL`, `NBA`, `MLB`, `SOCCER`, `SOCCER_PITCHES`, `soccerSpec`, `soccerPitchClass`, `fenceAt`, `fencePoints`, `threePointJoin`, `skinJoin`, `boardsY` and the other dimensions; `SURFACE_UNITS`, `convertLength`, `convertPoint`, `lengthsIn`, `dimensionsOf`, `surfaceSize`, `fenceIn` |
+| `@johnmorrisdotca/kyogijo/frames` | `toSurface`, `fromSurface`, `convert`, `convertPoints`, `flipEnds`, `attackingIn`, `registerFrame`, `frameByName`, `framesOf`, `piecewise`, `span`, `FRAMES`, `RETROSHEET_ZONES`, `zoneToPoint`, `zoneAt`, `SOCCER_PROVIDERS`, `rescale` and the frame types |
 | `@johnmorrisdotca/kyogijo/parks` | `PARKS`, `PARK_IDS`, `parkById`, `parkByWikidata`, `parkPointsIn`, `parkSourceUrl`, `parkUnit`, `fenceFor` |
 | `@johnmorrisdotca/kyogijo/mount` | `mountKyogijo`, `kyogijoElement`, `containerAspect` |
 | `@johnmorrisdotca/kyogijo/react` | `kyogijoProps`, `kyogijoHtml`, `createKyogijo` |
@@ -536,6 +601,7 @@ Nothing is branded. The drawing is coloured by custom properties on its `svg`, w
 | `--ky-red`, `--ky-blue`, `--ky-crease` | the rink's lines, and the crease's fill | `#c8372d`, `#2a5db0`, `#bfd3ec` | `#d4574d`, `#5584d4`, `#8ea9cc` |
 | `--ky-boards` | the boards, a court's border, a ballpark's fence | by sport | by sport |
 | `--ky-key` | the paint of a court's keys | `#c25b3c` | `#8a3f2b` |
+| `--ky-court` | a futsal court's floor | `#3b79ad` | `#2a5478` |
 | `--ky-dirt`, `--ky-foul`, `--ky-infield` | the baseball field | `#c28e5c`, `#3a8148`, `#58a05d` | `#8a6040`, `#275a31`, `#367a42` |
 | `--ky-left`, `--ky-right` | the teams' colours | `#2f6db0`, `#b5452c` | the same |
 | `--ky-left-ink`, `--ky-right-ink` | the words on those colours | `#ffffff` | the same |
@@ -553,14 +619,15 @@ Each is held by a test, and the ones with a name are exported.
 
 | Limit | Value | Where |
 | --- | --- | --- |
-| Sports | 6 | `SPORTS` |
+| Sports | 7 | `SPORTS` |
+| Soccer pitches and providers | 10 presets, 10 providers (90 maps between them, each landmark to its landmark) | `SOCCER_PITCHES`, `SOCCER_PROVIDERS` |
 | Ballparks | 94 (30 current MLB, 44 past MLB, 12 NPB home parks, 8 other NPB grounds) | `PARKS` |
 | Units | 6 (`ft`, `in`, `yd`, `m`, `cm`, `mm`) | `UNITS` |
-| Coordinate frames | 6 to start with (`nhl-api`, `hockeytech`, `nba-stats`, `nfl-tracking`, `mlbam`, `retrosheet`), more by `registerFrame` | `FRAMES` |
+| Coordinate frames | 16 to start with (`nhl-api`, `hockeytech`, `nba-stats`, `nfl-tracking`, `mlbam`, `retrosheet` and the ten soccer providers), more by `registerFrame` | `FRAMES` |
 | A colour | a hex colour, `rgb()`, `rgba()`, `hsl()`, `hsla()`, a name or `var(--name)`, 64 characters at most | `safeColour` |
 | A logo | an https or relative address, an image data address, or SVG text up to 200,000 characters | `safeLogo` |
 | A name | any length: it is set on one line or two, in the biggest size that fits its place | `fitLines` |
-| A drawing's size | under 19 kB for a football field, 11 kB for a rink or a court, 14 kB for a ballpark, each with its 6 kB stylesheet (a test holds each under a budget) | `drawKyogijo` |
+| A drawing's size | under 19 kB for a football field, 14 kB for a soccer pitch with a score, 11 kB for a rink or a court, 14 kB for a ballpark, each with its 6 kB stylesheet (a test holds each under a budget) | `drawKyogijo` |
 
 ## Accessibility
 
@@ -584,7 +651,7 @@ English and Japanese: the title, the description and the standard statuses of a 
 
 Not here yet, and each welcome as an [issue](https://github.com/johnmorrisdotca/kyogijo/issues):
 
-- **More surfaces**: the FIBA and college courts, the international rink, rugby and soccer pitches, a stadium's seating.
+- **More surfaces**: the FIBA and college courts, the international rink, rugby pitches, a stadium's seating, soccer's beach and street formats.
 - **Wall heights and quirks** in a ballpark: the Green Monster, Tal's Hill and the walls of Japan's parks.
 - **More parks of the past**: the grounds of the 19th century, and the parks whose articles give no distances yet (the Kingdome, Joe Robbie Stadium, the Los Angeles Coliseum), when they do.
 - **Players on the surface**: a shot chart, a face-off, a pitch, drawn on the same coordinates. The frames that place their points are here; the drawing of them is not.
@@ -606,7 +673,10 @@ src/
 │   ├── football.ts     the NFL, CFL and IFAF fields
 │   ├── hockey.ts       the NHL rink
 │   ├── basketball.ts   the NBA court
-│   └── baseball.ts     the baseball field and its fence
+│   ├── baseball.ts     the baseball field and its fence
+│   ├── soccer.ts       the soccer pitch
+│   ├── soccer-spec.ts  the Laws' figures, the presets, futsal and the small-sided pitches
+│   └── soccer-providers.ts  the data providers' coordinates, registered as frames, and rescale
 ├── geometry.ts         every dimension, in feet, with the fence's curve
 ├── geometry-entry.ts   the geometry's entry
 ├── units.ts            the units of length, each surface's own, and the converters
@@ -705,7 +775,7 @@ Please follow the [code of conduct](./CODE_OF_CONDUCT.md). Text, a colour or a l
 
 ## Changes
 
-See [CHANGELOG.md](./CHANGELOG.md). The first release, 0.1.0, draws the six surfaces and the 94 ballparks, with scores, badges, wide and tall layouts, a custom element and a frame.
+See [CHANGELOG.md](./CHANGELOG.md). The first release, 0.1.0, draws the seven surfaces and the 94 ballparks, with scores, badges, wide and tall layouts, a custom element and a frame.
 
 ## Licence
 
@@ -714,6 +784,7 @@ The code is [MIT](./LICENSE) © John Morris. The ballparks' fence distances are 
 | Data | Made from | Terms |
 | --- | --- | --- |
 | The dimensions of the football fields, the rink and the court | The NFL, CFL, IFAF, NHL and NBA rules and diagrams | Facts; no text or drawing copied |
+| The soccer pitch's dimensions and the providers' coordinates | The IFAB and FIFA Futsal Laws of the Game, UEFA, MLS, NCAA and FA documents, and each provider's own pages (docs/sources.md) | Facts; no text or drawing copied |
 | The fence distances of 94 ballparks | The English and Japanese Wikipedia articles of each, at the revision cited | Facts; the articles are CC BY-SA 4.0 and none of their text is used |
 | The Wikidata item of each ballpark | Wikidata, as linked from the cited article | CC0 |
 | The demo's teams and emblems | Written for this package | MIT |

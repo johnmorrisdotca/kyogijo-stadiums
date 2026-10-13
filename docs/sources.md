@@ -88,6 +88,64 @@ The MLB parks of the past are read the same way, from the English article of eac
 | Baseball | feet | Official Baseball Rules, 2.01 to 2.05 |
 | NPB parks | metres | the Japanese Wikipedia article of each park gives 両翼, 中堅 and 左右中間 in metres; they are converted once, at 0.3048 metres to the international foot (3.280839895 feet to the metre), rounded to a tenth of a foot |
 
+## Soccer
+
+Every figure of `src/surfaces/soccer-spec.ts` is in metres, as the Laws give it (with yards beside). Each page was read on 2026-10-13.
+
+| Figure | Value | Source |
+| --- | --- | --- |
+| Touchline and goal line | the touchline longer than the goal line; 90 to 120 m by 45 to 90 m (100 to 130 yards by 50 to 100) | IFAB Laws of the Game 2025/26, Law 1.3 (theifab.com/laws/2025-26/the-field-of-play/; the 2026/27 text at /laws/latest/ gives the same figures) |
+| International matches | 100 to 110 m by 64 to 75 m (110 to 120 yards by 70 to 80) | Law 1.4 |
+| Lines | at most 12 cm wide | Law 1.2 |
+| Centre circle and arcs | the circle 9.15 m (10 yards) round the centre mark; the penalty arc 9.15 m from the penalty mark, outside the penalty area | Law 1.2, 1.6 |
+| Goal area | lines 5.5 m (6 yards) from the inside of each post and 5.5 m into the field | Law 1.5 |
+| Penalty area and mark | lines 16.5 m (18 yards) from the inside of each post and 16.5 m into the field; the mark 11 m (12 yards) from the midpoint of the posts | Law 1.6 |
+| Corner arc and flags | a quarter circle of 1 m (1 yard); flagposts at least 1.5 m high | Law 1.7, 1.8 |
+| Marks off the field | "9.15 m (10 yds) from the corner arc" | Law 1.2 |
+| Goal | 7.32 m (8 yards) between the posts, 2.44 m (8 feet) from the ground to the crossbar | Law 1.10 |
+| Premier League | 105 by 68 m unless the Board allows otherwise | The Premier League Handbook 2025/26, Section K, rule K.18 |
+| UEFA | 105 by 68 m for stadium categories 3 and 4, 100 to 105 by 64 to 68 m for 1 and 2; the markings are the Laws' | UEFA Stadium Infrastructure Regulations, Article 5.01 and 5.02 (documents.uefa.com) |
+| MLS | at least 70 yards wide and 110 yards long (the preset is that least size) | 2026 MLS Competition Guidelines, "Playing field dimensions and markings" (mlssoccer.com/about/competition-guidelines) |
+| NCAA | length 115 to 120 yards, width 70 to 75 yards, best 120 by 75 | NCAA Men's and Women's Soccer Rules 2026 and 2027, Rule 1.1.1 (ncaa.org) |
+| The FA's youth pitches | 5v5 40 by 30 yards, goals 12 by 6 feet; 7v7 60 by 40, 12 by 6 feet; 9v9 80 by 50, 16 by 7 feet | The FA Handbook 2025/26, Section 38, "Goalpost and pitch sizes and line marking" (recommended sizes) |
+| The FA's small-sided markings | a centre circle of 3 m, a semicircle of 6 m round the middle of each goal line, the mark 6 m out, a corner arc of 25 cm | The FA, Small Sided Football Laws of the Game, Law 1 (revised 2012) |
+| Futsal | the pitch 38 to 42 m by 20 to 25 m for international matches; the lines 8 cm; the centre circle 3 m; the penalty area a quarter circle of 6 m round each post, joined by a line of 3.16 m; the marks at 6 m and 10 m; the corner arc 25 cm; the substitution zone 5 m long and 5 m from the halfway line, closed by marks 80 cm long (40 cm on the pitch and 40 off); marks off the pitch 5 m from each corner arc, 5 cm from the end line, 40 cm long; the goal 3 m by 2 m | FIFA Futsal Laws of the Game 2025/26 (digitalhub.fifa.com), Law 1, sub-sections 2 to 9 |
+
+**Ours.** The Laws do not give these; each is drawn as a reasonable reading.
+
+- **The goal's net**: 2 m deep (1 m in futsal, 1.2 m on a small-sided pitch) and drawn from above with its posts as dots; the crossbar's height is not drawn.
+- **The marks' sizes**: penalty and centre marks are drawn as discs larger than a painted mark (22 cm across), corner flags as a small triangle, and the lines thicker than painted unless `exactLines` is set.
+- **The marks off the field**: read as 9.15 m from the arc's edge, so 10.15 m from the corner point (the arc's radius added); they are drawn 40 cm long. Futsal's, 5 m from the arc, are read the same way.
+- **9-a-side**: the FA's table gives the pitch and the goal, and no text found on any FA page gives the 9v9 penalty area or circle. A box 11 m deep, the goal's width and 11 m either side, a mark at 9 m and a circle of 7.3 m are ours.
+- **5- and 7-a-side**: the pitches are the FA's mini-soccer sizes, the markings those of its small-sided laws; the two documents are different games, and which a league uses is its own.
+- **NWSL**: no official figure was found, so there is no preset.
+- **Mown stripes and colours**: style, not dimensions. Nineteen bands (odd, so that both ends are alike) cut a 105 m pitch into 5.5 m, the depth of the goal area.
+
+### Soccer coordinate frames
+
+`src/surfaces/soccer-providers.ts` registers each provider as a frame. Where a provider's own page gives a figure it is that; where it does not (Opta's, Tracab's and Second Spectrum's specifications are not public), the figure is what the open-source libraries mplsoccer (MIT), ggsoccer (MIT), kloppy and floodlight agree on, which is said in each frame's `source`. No code of any of them is used.
+
+| Frame | Read from | What it gives |
+| --- | --- | --- |
+| `opta` | not public. mplsoccer `soccer/dimensions.py` and ggsoccer `R/dimensions.R` agree on 17 and 28.9 (21.1 to 78.9), 5.8 and 13.2 (36.8 to 63.2), the mark at 11.5; kloppy and mplsoccer put the posts at 45.2 to 54.8, ggsoccer's goal is wider; the origin and y up are from kloppy and mplsoccer | 0 to 100 on both axes, the origin at the bottom left, y up, each team attacking left to right |
+| `statsbomb` | StatsBomb Open Data Events v4.0.0, Appendix 2, "Locations" (github.com/statsbomb/open-data, doc/): the diagram marks (0, 0) top left, (120, 80) bottom right | yards; penalty area 18 yards, 18 to 62; goal area 6 yards, 30 to 50; mark 12 yards; posts 36 to 44 |
+| `wyscout` | Wyscout Data Glossary, "Pitch coordinates" (dataglossary.wyscout.com/pitch_coordinates): the box, the goal area and the mark; the posts (44 to 56) are ggsoccer's | 0 to 100, y from the top; penalty area 16, 19 to 81; goal area 6, 37 to 63; mark 10 |
+| `tracab` | not public: the origin, unit and direction are those of mplsoccer, kloppy and floodlight | centimetres from the centre spot, y up, the extents the pitch's own; the lines are the Laws' |
+| `metrica` | Metrica Sports sample data README (github.com/metrica-sports/sample-data): 0 to 1, (0, 0) top left, (0.5, 0.5) the kick-off | the lines are the Laws' as a fraction of the pitch |
+| `skillcorner` | SkillCorner open data README and field diagram (github.com/SkillCorner/opendata) | metres from the centre, y up, the extents the pitch's own |
+| `secondspectrum` | not public: the same libraries | metres from the centre, y up |
+| `impect` | Impect Glossary, context variables, "How is the pitch defined?" (glossary.impect.com/context-variable): x -52.5 to 52.5, y -34 to 34 with "Outside Left" at +34, the penalty area 36 and 47 for the goal area (from the centre), the mark at 41.5 | metres, y up; the lines are the Laws' |
+| `uefa` | UEFA Stadium Infrastructure Regulations 5.01: 105 by 68 m; mplsoccer's `uefa_dims()` is 105 by 68 in its code, though its text says 65 | 0 to 105 by 0 to 68 metres from the bottom left, y up |
+| `international` | IFAB Law 1; ggsoccer's `pitch_international` (105 by 68, "UEFA Category 4") | metres from the bottom left, y up, the pitch's own size |
+
+**Ours.**
+
+- **Opta's goal.** Three libraries give three goal widths (9.6, 11.6 and a post at 44.62). The frame uses 9.6 (45.2 to 54.8, mplsoccer and kloppy); a feed settles it.
+- **Wyscout's posts** (6 either side) are ggsoccer's, which says its figures came from Wyscout's customer support; the glossary does not mark them.
+- **The centre circle** is not a landmark: it is round, 9.15 m, at any pitch size.
+- **A fixed frame on another pitch.** Opta's, StatsBomb's and Wyscout's figures are fractions of their own extents, so on a 100 by 64 m pitch a drawn penalty line lies at 17 per cent of 100 m. A frame whose numbers follow the pitch (Tracab, SkillCorner, Second Spectrum, Metrica, `international`) has the Laws' landmarks at the size it is given.
+- **The directions** of Tracab's and Second Spectrum's y (up, from the centre) are the libraries'; check one known point against your data.
+
 ## Coordinate frames
 
 `src/frames.providers.ts` holds the frames of the providers below, as landmarks on the drawing's own coordinates (feet; x along the surface from its left end, y across it from the top, a ballpark's x across and y minus out from home plate). Only facts were read: ranges, units, origins and conventions. No code of sportypy, sportyR or hockey_rink (all GPL) was read for them; the MIT projects sdv-plot, sporty and mplsoccer are credited in [references.md](./references.md) for ideas. Each page below was read on 2026-10-13.

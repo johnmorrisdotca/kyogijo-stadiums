@@ -17,6 +17,7 @@ export const TEAMS = {
   football: { away: { name: "Harbour City Gulls", abbr: "HCG", color: "#1f5fa8", emblem: "gull" }, home: { name: "Prairie Ridge Bison", abbr: "PRB", color: "#b5452c", emblem: "bison" } },
   hockey: { away: { name: "Northern Owls", abbr: "NOW", color: "#3a2d6b", emblem: "owl" }, home: { name: "Lakeshore Anchors", abbr: "LSA", color: "#0f7a7a", emblem: "anchor" } },
   basketball: { away: { name: "Summit Peaks", abbr: "SMT", color: "#14233f", emblem: "peak" }, home: { name: "Metro Bolts", abbr: "MTB", color: "#c2410c", emblem: "bolt" } },
+  soccer: { away: { name: "Valley Rovers", abbr: "VRV", color: "#c8102e", emblem: "star" }, home: { name: "Summit Town", abbr: "SUM", color: "#14233f", emblem: "peak" } },
   baseball: { away: { name: "Valley Stars", abbr: "VLY", color: "#c8102e", emblem: "star" }, home: { name: "Coastal Pines", abbr: "CPN", color: "#1f6b3c", emblem: "pine" } },
 };
 
@@ -25,10 +26,11 @@ export const TEAMS_JA = {
   football: { away: "港町ガルズ", home: "草原バイソンズ" },
   hockey: { away: "北国オウルズ", home: "湖畔アンカーズ" },
   basketball: { away: "山頂ピークス", home: "メトロボルツ" },
+  soccer: { away: "渓谷ローヴァーズ", home: "サミット・タウン" },
   baseball: { away: "渓谷スターズ", home: "海岸パインズ" },
 };
 
-export const FAMILIES = { nfl: "football", cfl: "football", ifaf: "football", nhl: "hockey", nba: "basketball", mlb: "baseball" };
+export const FAMILIES = { nfl: "football", cfl: "football", ifaf: "football", nhl: "hockey", nba: "basketball", mlb: "baseball", soccer: "soccer" };
 
 /** Typical scores and a competition line for each sport. */
 export const GAMES = {
@@ -37,5 +39,6 @@ export const GAMES = {
   ifaf: { away: 14, home: 17, status: "final", competition: "World Championship", date: "Jul 12" },
   nhl: { away: 3, home: 2, status: "final-ot", competition: "Cup Final, Game 7", date: "Jun 24" },
   nba: { away: 108, home: 112, status: "final", competition: "Finals, Game 6", date: "Jun 19" },
+  soccer: { away: 2, home: 2, status: "final-pens", competition: "Cup Final", date: "May 24", awayPens: 4, homePens: 2 },
   mlb: { away: 4, home: 6, status: "Bottom 9th", competition: "Division Series", date: "Oct 9" },
 };

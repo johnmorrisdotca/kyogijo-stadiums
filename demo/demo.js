@@ -1,7 +1,7 @@
 // The demo page's own script: a surface to try (the package's own `mountKyogijo`), the code that draws it in four ways,
 // and a page of examples: every sport, wide and tall, badges, compact cards, court looks, a live score, every ballpark,
 // and the custom element. The words are in words.js, the made-up teams in examples.js.
-import { COURT_THEMES, KYOGIJO_STYLE, PARKS, PARK_IDS, SPORTS, VERSION, drawKyogijo } from "./dist/index.js";
+import { COURT_THEMES, KYOGIJO_STYLE, PARKS, PARK_IDS, SOCCER_PITCH_IDS, SOCCER_PROVIDERS, SOCCER_PROVIDER_IDS, SPORTS, VERSION, drawKyogijo, rescale } from "./dist/index.js";
 import { mountKyogijo } from "./dist/mount-entry.js";
 import "./dist/element-define.js";
 import { toParams } from "./embed-params.js";
@@ -35,7 +35,10 @@ const pick = (value, list, fallback) => (list.includes(value) ? value : fallback
 const SIZES = ["full", "compact", "badge", "surface"];
 const ORIENTATIONS = ["landscape", "portrait", "auto"];
 const THEMES = ["auto", "light", "dark"];
-const STATUSES = ["final", "final-ot", "final-so", "live", "half", "custom"];
+const STATUSES = ["final", "final-ot", "final-so", "final-aet", "final-pens", "live", "half", "custom"];
+const PATTERNS = ["bands", "wide", "narrow", "lengthwise", "checks", "diagonal", "none"];
+const GOALS = ["box", "line", "strip", "none"];
+const HALVES = ["none", "left", "right"];
 const WINNERS = ["auto", "leader", "none", "home", "away"];
 const COURTS = ["default", "maple", "twoTone", "night", "sunburst", "tournament"];
 
@@ -57,6 +60,12 @@ const state = {
   stripes: true,
   exact: false,
   court: pick(params.get("court"), COURTS, "default"),
+  pitch: pick(params.get("pitch"), SOCCER_PITCH_IDS, "fifa"),
+  pitchType: pick(params.get("pitchtype"), SOCCER_PROVIDER_IDS, "none"),
+  pattern: pick(params.get("pattern"), PATTERNS, "bands"),
+  goals: pick(params.get("goals"), GOALS, "box"),
+  half: pick(params.get("half"), HALVES, "none"),
+  flags: params.get("flags") !== "0",
   baseline: params.get("baseline") === "1",
   centreLogo: false,
   touched: new Set(),
@@ -71,8 +80,10 @@ function loadGame(sport) {
     const base = TEAMS[family][role];
     state[role] = { name: language.lang === "ja" ? TEAMS_JA[family][role] : base.name, abbr: base.abbr, score: String(game[role]), color: base.color, logo: "emblem", emblem: base.emblem, url: "" };
   }
-  state.status = game.status === "final-ot" || game.status === "final" ? game.status : "custom";
-  state.statusText = game.status === "final-ot" || game.status === "final" ? "" : game.status;
+  state.away.pens = game.awayPens === undefined ? "" : String(game.awayPens);
+  state.home.pens = game.homePens === undefined ? "" : String(game.homePens);
+  state.status = STATUSES.includes(game.status) ? game.status : "custom";
+  state.statusText = STATUSES.includes(game.status) ? "" : game.status;
   state.competition = game.competition;
   state.date = game.date;
   state.label = "";
@@ -87,6 +98,14 @@ function optionsFor(s, forCode = false) {
   if (!s.stripes) o.stripes = false;
   if (s.exact) o.exactLines = true;
   if (s.sport === "mlb" && s.park !== "generic") o.park = s.park;
+  if (s.sport === "soccer") {
+    if (s.pitch !== "fifa") o.pitch = s.pitch;
+    if (s.pitchType !== "none") o.pitchType = s.pitchType;
+    if (s.pattern !== "bands") o.stripePattern = s.pattern;
+    if (s.goals !== "box") o.goals = s.goals;
+    if (s.half !== "none" && s.size === "surface") o.half = s.half;
+    if (!s.flags) o.cornerFlags = false;
+  }
   const names = [s.away.name, s.home.name];
   if (s.sport === "nba" && (s.court !== "default" || s.baseline || s.centreLogo)) {
     const court = s.court === "default" ? {} : { ...COURT_THEMES[s.court] };
@@ -97,6 +116,7 @@ function optionsFor(s, forCode = false) {
   if (s.size !== "surface") {
     const team = (t, placeholder) => {
       const out = { name: t.name, abbr: t.abbr, score: /^-?\d+$/.test(t.score) ? Number(t.score) : t.score, color: t.color };
+      if (s.sport === "soccer" && /^\d+$/.test(t.pens ?? "")) out.penalties = Number(t.pens);
       if (t.logo === "emblem") out.logo = forCode ? placeholder : EMBLEMS[t.emblem];
       else if (t.logo === "url" && t.url) out.logo = t.url;
       return out;
@@ -124,6 +144,9 @@ const labelOf = {
   winner: (v) => (v === "away" && state.sport === "mlb" ? say("awayBaseball") : say(`winner_${v}`)),
   detail: (v) => say(`detail_${v}`),
   court: (v) => say(`court_${v}`),
+  pattern: (v) => say(`pattern_${v}`),
+  goals: (v) => say(`goals_${v}`),
+  half: (v) => say(`half_${v}`),
   logo: (v) => say(`logo_${v}`),
 };
 
@@ -141,9 +164,12 @@ function makeSeg(id, kind, values, get, set) {
     host.append(button);
   }
 }
+/** Statuses that belong to one sport: after extra time and on penalties are soccer's, the overtime and the shoot-out the others'. */
+const hiddenStatus = (value) => (state.sport === "soccer" ? value === "final-ot" || value === "final-so" : value === "final-aet" || value === "final-pens");
 function refreshSegs() {
   for (const seg of Object.values(segs)) {
     for (const button of seg.host.children) {
+      button.hidden = seg.kind === "status" && hiddenStatus(button.dataset.value);
       button.textContent = labelOf[seg.kind](button.dataset.value);
       button.setAttribute("aria-pressed", String(seg.get() === button.dataset.value));
     }
@@ -162,6 +188,9 @@ makeSeg("status", "status", STATUSES, () => state.status, (v) => { state.status 
 makeSeg("winner", "winner", WINNERS, () => state.winner, (v) => { state.winner = v; });
 makeSeg("detail", "detail", ["full", "simple"], () => state.detail, (v) => { state.detail = v; });
 makeSeg("court", "court", COURTS, () => state.court, (v) => { state.court = v; });
+makeSeg("pattern", "pattern", PATTERNS, () => state.pattern, (v) => { state.pattern = v; });
+makeSeg("goals", "goals", GOALS, () => state.goals, (v) => { state.goals = v; });
+makeSeg("half", "half", HALVES, () => state.half, (v) => { state.half = v; });
 for (const role of ["away", "home"]) makeSeg(`${role}-logo`, "logo", ["none", "emblem", "url"], () => state[role].logo, (v) => { state[role].logo = v; });
 
 function toggle(id, key) {
@@ -171,6 +200,7 @@ toggle("stripes", "stripes");
 toggle("exact", "exact");
 toggle("baseline", "baseline");
 toggle("centre-logo", "centreLogo");
+toggle("flags", "flags");
 
 function fillFields() {
   for (const role of ["away", "home"]) {
@@ -179,6 +209,7 @@ function fillFields() {
     $(`${role}-score`).value = state[role].score;
     $(`${role}-color`).value = state[role].color;
     $(`${role}-logo-url`).value = state[role].url;
+    $(`${role}-pens`).value = state[role].pens ?? "";
   }
   $("status-text").value = state.statusText;
   $("competition").value = state.competition;
@@ -186,11 +217,12 @@ function fillFields() {
   $("label").value = state.label;
 }
 for (const role of ["away", "home"]) {
-  for (const [field, key] of [["name", "name"], ["abbr", "abbr"], ["score", "score"], ["color", "color"], ["logo-url", "url"]]) {
+  for (const [field, key] of [["name", "name"], ["abbr", "abbr"], ["score", "score"], ["color", "color"], ["logo-url", "url"], ["pens", "pens"]]) {
     $(`${role}-${field}`).addEventListener("input", (event) => { state[role][key] = event.target.value; state.touched.add(`${role}.${key}`); change(); });
   }
 }
 for (const [id, key] of [["status-text", "statusText"], ["competition", "competition"], ["date", "date"], ["label", "label"]]) $(id).addEventListener("input", (event) => { state[key] = event.target.value; change(); });
+for (const role of ["away", "home"]) $(`${role}-pens-row`).hidden = true;
 $("swap").addEventListener("click", () => {
   [state.away, state.home] = [state.home, state.away];
   fillFields();
@@ -225,6 +257,29 @@ function fillParks() {
 }
 $("park").addEventListener("change", (event) => { state.park = event.target.value; change(); });
 
+/** An option of a select. */
+function opt(value, text) {
+  const option = document.createElement("option");
+  option.value = value;
+  option.textContent = text;
+  return option;
+}
+
+// The pitch pickers: the presets, and the data providers' frames.
+function fillPitches() {
+  const pitch = $("pitch");
+  pitch.replaceChildren();
+  for (const id of SOCCER_PITCH_IDS) pitch.append(opt(id, say(`pitch_${id.replace(/-/g, "_")}`)));
+  pitch.value = state.pitch;
+  const type = $("pitch-type");
+  type.replaceChildren();
+  type.append(opt("none", say("pitchTypeNone")));
+  for (const id of SOCCER_PROVIDER_IDS) type.append(opt(id, SOCCER_PROVIDERS[id].name));
+  type.value = state.pitchType;
+}
+$("pitch").addEventListener("change", (event) => { state.pitch = event.target.value; change(); });
+$("pitch-type").addEventListener("change", (event) => { state.pitchType = event.target.value; change(); });
+
 function applyTheme() {
   if (state.theme === "auto") document.documentElement.removeAttribute("data-theme");
   else document.documentElement.setAttribute("data-theme", state.theme);
@@ -246,6 +301,12 @@ function render() {
   stage.dataset.size = state.size;
   stage.dataset.ready = "true";
   $("park-row").hidden = state.sport !== "mlb";
+  const soccer = state.sport === "soccer";
+  $("pitch-row").hidden = !soccer;
+  $("pitch-type-row").hidden = !soccer;
+  $("soccer-group").hidden = !soccer;
+  for (const role of ["away", "home"]) $(`${role}-pens-row`).hidden = !soccer;
+  $("flags").setAttribute("aria-pressed", String(state.flags));
   $("court-group").hidden = state.sport !== "nba";
   $("stripes").setAttribute("aria-pressed", String(state.stripes));
   $("exact").setAttribute("aria-pressed", String(state.exact));
@@ -258,7 +319,7 @@ function render() {
 function syncUrl() {
   const q = new URLSearchParams(location.search);
   q.set("sport", state.sport);
-  for (const [key, value, base] of [["park", state.park, "generic"], ["size", state.size, "full"], ["orientation", state.orientation, "auto"], ["theme", state.theme, "auto"]]) {
+  for (const [key, value, base] of [["pitch", state.pitch, "fifa"], ["pitchtype", state.pitchType, "none"], ["park", state.park, "generic"], ["size", state.size, "full"], ["orientation", state.orientation, "auto"], ["theme", state.theme, "auto"]]) {
     if (value === base) q.delete(key);
     else q.set(key, value);
   }
@@ -286,10 +347,13 @@ function code(kind) {
     attrs.push(`orientation="${o.orientation}"`);
     if (o.language !== "en") attrs.push(`language="${o.language}"`);
     if (o.detail) attrs.push(`detail="${o.detail}"`);
+    for (const [key, attr] of [["pitch", "pitch"], ["pitchType", "pitch-type"], ["half", "half"], ["goals", "goals"], ["stripePattern", "stripe-pattern"]]) if (o[key]) attrs.push(`${attr}="${o[key]}"`);
+    if (o.cornerFlags === false) attrs.push('corner-flags="false"');
     if (o.away) {
       for (const [role, t] of [["away", o.away], ["home", o.home]]) {
         attrs.push(`${role}="${escapeAttr(t.name)}"`, `${role}-abbr="${escapeAttr(t.abbr)}"`, `${role}-score="${escapeAttr(t.score)}"`, `${role}-color="${t.color}"`);
         if (t.logo) attrs.push(`${role}-logo="${escapeAttr(t.logo)}"`);
+        if (t.penalties !== undefined) attrs.push(`${role}-penalties="${t.penalties}"`);
       }
       for (const [key, attr] of [["status", "status"], ["competition", "competition"], ["date", "date"], ["label", "label"], ["winner", "winner"]]) if (o[key]) attrs.push(`${attr}="${escapeAttr(o[key])}"`);
     }
@@ -364,7 +428,8 @@ const team = (sport, role, score) => {
   const base = TEAMS[FAMILIES[sport]][role];
   return { name: language.lang === "ja" ? TEAMS_JA[FAMILIES[sport]][role] : base.name, abbr: base.abbr, color: base.color, logo: EMBLEMS[base.emblem], score };
 };
-const gameOf = (sport, extra = {}) => ({ sport, away: team(sport, "away", GAMES[sport].away), home: team(sport, "home", GAMES[sport].home), status: GAMES[sport].status, competition: GAMES[sport].competition, date: GAMES[sport].date, language: language.lang, style: "none", ...extra });
+const withPens = (t, pens) => (pens === undefined ? t : { ...t, penalties: pens });
+const gameOf = (sport, extra = {}) => ({ sport, away: withPens(team(sport, "away", GAMES[sport].away), GAMES[sport].awayPens), home: withPens(team(sport, "home", GAMES[sport].home), GAMES[sport].homePens), status: GAMES[sport].status, competition: GAMES[sport].competition, date: GAMES[sport].date, language: language.lang, style: "none", ...extra });
 
 const mounts = [];
 function figure(host, options, caption) {
@@ -389,6 +454,18 @@ const examples = {
     [gameOf("nfl", { orientation: "portrait" }), `${say("sport_nfl")} · ${say("orientation_portrait")}`],
   ],
   compact: () => ["nba", "nfl", "nhl"].map((sport) => [gameOf(sport, { size: "compact", orientation: "auto" }), say(`sport_${sport}`)]),
+  pitches: () => {
+    const named = (id, extra = {}) => [gameOf("soccer", { orientation: "auto", pitch: id, ...extra }), say(`pitch_${id.replace(/-/g, "_")}`)];
+    return [
+      named("fifa"),
+      named("ncaa"),
+      named("7-a-side"),
+      named("futsal"),
+      [gameOf("soccer", { orientation: "auto", size: "compact", status: "final-aet", away: team("soccer", "away", 1), home: team("soccer", "home", 2) }), say("pitchCompact")],
+      [{ sport: "soccer", language: language.lang, style: "none", orientation: "auto", half: "left", stripePattern: "checks", goals: "strip", title: say("pitchHalf") }, say("pitchHalf")],
+    ];
+  },
+  patterns: () => ["bands", "wide", "narrow", "lengthwise", "checks", "diagonal"].map((pattern) => [{ sport: "soccer", language: language.lang, style: "none", orientation: "auto", stripePattern: pattern, goals: pattern === "checks" ? "line" : pattern === "diagonal" ? "strip" : "box", title: say(`pattern_${pattern}`) }, say(`pattern_${pattern}`)]),
   courts: () =>
     ["maple", "twoTone", "night", "sunburst", "tournament"].map((theme) => {
       const names = TEAMS.basketball;
@@ -399,7 +476,7 @@ const examples = {
 function buildExamples() {
   for (const m of mounts) m.handle?.destroy();
   mounts.length = 0;
-  for (const [id, key] of [["gallery-cards", "gallery"], ["side-cards", "sides"], ["compact-cards", "compact"], ["court-cards", "courts"]]) {
+  for (const [id, key] of [["gallery-cards", "gallery"], ["side-cards", "sides"], ["compact-cards", "compact"], ["court-cards", "courts"], ["pitch-cards", "pitches"], ["pattern-cards", "patterns"]]) {
     const host = $(id);
     host.replaceChildren();
     for (const [options, caption] of examples[key]()) figure(host, options, caption);
@@ -461,6 +538,48 @@ $("live-play").addEventListener("click", () => {
   drawLive();
 });
 
+// ----- The soccer providers: each pitch in its own frame, and a converter between any two.
+const NUMBER = /^\s*-?\d+(?:\.\d+)?\s*$/;
+function drawProviders() {
+  const grid = $("provider-grid");
+  grid.replaceChildren();
+  for (const id of SOCCER_PROVIDER_IDS) {
+    const p = SOCCER_PROVIDERS[id];
+    const tile = document.createElement("figure");
+    tile.className = "card provider";
+    tile.dataset.provider = id;
+    tile.innerHTML = `<div class="card-stage">${drawKyogijo({ sport: "soccer", pitchType: id, margin: 6, detail: "simple", style: "none", language: language.lang, title: p.name })}</div><figcaption><strong></strong> <span></span></figcaption>`;
+    tile.querySelector("strong").textContent = p.name;
+    tile.querySelector("span").textContent = `${p.unit} · ${say(p.sized ? "providerSized" : "providerFixed")}`;
+    grid.append(tile);
+  }
+  for (const id of ["conv-from", "conv-to"]) {
+    const select = $(id);
+    const keep_ = select.value || (id === "conv-from" ? "opta" : "statsbomb");
+    select.replaceChildren();
+    for (const key of SOCCER_PROVIDER_IDS) select.append(opt(key, SOCCER_PROVIDERS[key].name));
+    select.value = keep_;
+  }
+  convert();
+}
+function convert() {
+  const out = $("conv-out");
+  const x = $("conv-x").value;
+  const y = $("conv-y").value;
+  if (!NUMBER.test(x) || !NUMBER.test(y)) { out.textContent = say("convBad"); return; }
+  const [a, b] = rescale($("conv-from").value, $("conv-to").value)(Number(x), Number(y));
+  out.textContent = `${Math.round(a * 1000) / 1000}, ${Math.round(b * 1000) / 1000}`;
+}
+for (const id of ["conv-from", "conv-to", "conv-x", "conv-y"]) $(id).addEventListener(id.startsWith("conv-x") || id.startsWith("conv-y") ? "input" : "change", convert);
+$("conv-spot").addEventListener("click", () => {
+  // The penalty mark of the right end, in the first system's own numbers.
+  const from = SOCCER_PROVIDERS[$("conv-from").value].frame(105, 68);
+  const sx = from.xRight > from.xLeft ? 1 : -1;
+  $("conv-x").value = String(Math.round((from.xRight - sx * from.spot) * 1000) / 1000);
+  $("conv-y").value = String(Math.round(((from.yTop + from.yBottom) / 2) * 1000) / 1000);
+  convert();
+});
+
 // ----- Every ballpark, drawn when asked for or when the section comes into view.
 let parksDrawn = false;
 function drawParks() {
@@ -498,6 +617,8 @@ if (typeof IntersectionObserver !== "undefined") {
 // ----- A change of language redraws the words that were drawn in it.
 function onLanguage() {
   fillParks();
+  fillPitches();
+  drawProviders();
   if (!state.touched.has("away.name") && !state.touched.has("home.name")) {
     const family = FAMILIES[state.sport];
     for (const role of ["away", "home"]) state[role].name = language.lang === "ja" ? TEAMS_JA[family][role] : TEAMS[family][role].name;
@@ -514,8 +635,10 @@ function onLanguage() {
 applyTheme();
 fillFields();
 fillParks();
+fillPitches();
 refreshSegs();
 buildExamples();
+drawProviders();
 drawLive();
 render();
 document.documentElement.dataset.kyogijoVersion = VERSION;

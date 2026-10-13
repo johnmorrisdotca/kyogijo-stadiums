@@ -26,6 +26,13 @@ describe("the custom element's options", () => {
     for (const bad of ["", "soon", "15", "19150", "-1915", "1915.5"]) expect(optionsFromAttributes(read({ sport: "mlb", year: bad })).year, bad).toBeUndefined();
   });
 
+  it("read a soccer pitch, its frame, its half, its goals and its stripes, and a shoot-out", () => {
+    const o = optionsFromAttributes(read({ sport: "soccer", pitch: "futsal", "pitch-type": "opta", half: "left", goals: "line", "stripe-pattern": "checks", "corner-flags": "false", home: "H", away: "A", "home-score": "2", "away-score": "2", "home-penalties": "4", "away-penalties": "3", status: "final-pens" })) as ScoreOptions;
+    expect(o).toMatchObject({ sport: "soccer", pitch: "futsal", pitchType: "opta", half: "left", goals: "line", stripePattern: "checks", cornerFlags: false });
+    expect([o.home.penalties, o.away.penalties]).toEqual([4, 3]);
+    expect(drawKyogijo(o)).toContain("Final · 3-4 pens");
+  });
+
   it("draw a bare surface when a team is missing, and a known sport when the sport is not one", () => {
     expect("home" in optionsFromAttributes(read({ sport: "nfl", home: "H" }))).toBe(false);
     expect(optionsFromAttributes(read({ sport: "curling" })).sport).toBe("nhl");

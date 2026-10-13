@@ -41,9 +41,7 @@ function stripes(pattern: StripePattern, L: number, W: number, id: string): { pa
   } else if (pattern === "diagonal") {
     // Bands at 45 degrees, as wide across as the usual bands, cut to the pitch by a clip path.
     const across = L / BANDS.bands;
-    const reach = L + W;
     for (let x = -W; x < L; x += 2 * across * Math.SQRT2) parts.push(`M${n(x)} ${n(W)}L${n(x + W)} 0L${n(x + W + across * Math.SQRT2)} 0L${n(x + across * Math.SQRT2)} ${n(W)}z`);
-    void reach;
     return { path: parts.join(""), defs: `<clipPath id="${id}-turf"><rect x="0" y="0" width="${n(L)}" height="${n(W)}"/></clipPath>` };
   } else {
     const count = BANDS[pattern];
@@ -52,7 +50,7 @@ function stripes(pattern: StripePattern, L: number, W: number, id: string): { pa
   return { path: parts.join(""), defs: "" };
 }
 
-/** One goal at an end of the pitch, seen from above. `dir` is -1 at the left end (the net lies at negative x) and 1 at the right. */
+/** One goal at an end of the pitch, seen from above: the net lies beyond the goal line, at negative x at the left end and past `L` at the right. */
 function goal(style: GoalStyle, spec: SoccerSpec, L: number, W: number, end: 0 | 1, thick: number, exact: boolean): string {
   if (style === "none") return "";
   const half = spec.goalWidth / 2;
@@ -63,12 +61,11 @@ function goal(style: GoalStyle, spec: SoccerSpec, L: number, W: number, end: 0 |
   if (style === "line") return el("path", { class: "ky-goal", d: `M${n(x)} ${n(cy - half)}V${n(cy + half)}`, "stroke-width": thick * 3, fill: "none" });
   if (style === "strip") return el("path", { class: "ky-goal-strip", d: `M${n(x)} ${n(cy - half)}h${n(out * 0.6)}v${n(2 * half)}h${n(-out * 0.6)}z` });
   // The box: the net behind the goal line, with the posts at its mouth.
-  let d = `M${n(x)} ${n(cy - half)}h${n(out * depth)}v${n(2 * half)}h${n(-out * depth)}`;
+  const d = `M${n(x)} ${n(cy - half)}h${n(out * depth)}v${n(2 * half)}h${n(-out * depth)}`;
   const grid: string[] = [];
   const cells = Math.max(3, Math.round(half / 0.6));
   for (let i = 1; i < cells; i += 1) grid.push(`M${n(x)} ${n(cy - half + (2 * half * i) / cells)}h${n(out * depth)}`);
   const posts = el("circle", { class: "ky-post-end", cx: x, cy: cy - half, r: exact ? 0.12 : 0.24 }) + el("circle", { class: "ky-post-end", cx: x, cy: cy + half, r: exact ? 0.12 : 0.24 });
-  d += "";
   return el("path", { class: "ky-goal", d, "stroke-width": thick * 1.4, fill: "none", "stroke-linejoin": "round" }) + el("path", { class: "ky-goal-net", d: grid.join(""), "stroke-width": thick * 0.5, fill: "none" }) + el("path", { class: "ky-goal", d: `M${n(x)} ${n(cy - half)}V${n(cy + half)}`, "stroke-width": thick * 1.4, fill: "none" }) + posts;
 }
 
@@ -102,7 +99,7 @@ function end(spec: SoccerSpec, lay: SoccerLayout, L: number, W: number, side: 0 
     const dx = lay.penaltyDepth - lay.spot;
     if (spec.arcRadius > dx) {
       const h = Math.sqrt(spec.arcRadius * spec.arcRadius - dx * dx);
-      path += `M${n(at(lay.penaltyDepth))} ${n(cy - h)}A${n(spec.arcRadius)} ${n(spec.arcRadius)} 0 0 ${side === 0 ? 1 : 1} ${n(at(lay.penaltyDepth))} ${n(cy + h)}`;
+      path += `M${n(at(lay.penaltyDepth))} ${n(cy - h)}A${n(spec.arcRadius)} ${n(spec.arcRadius)} 0 0 1 ${n(at(lay.penaltyDepth))} ${n(cy + h)}`;
     }
   }
   if (lay.spot > 0) marks += el("circle", { class: "ky-fill-line", cx: at(lay.spot), cy, r: full ? 0.22 : 0.3 });
@@ -141,12 +138,8 @@ export function soccer(b: SoccerBuild, o: BuildOptions): Surface {
   const zoneDepth = Math.max(spec.penaltyDepth, L * 0.12);
   const zoneWidth = Math.max(spec.area === "arcs" ? spec.areaLine + 2 * spec.penaltyDepth : spec.area === "semicircle" ? 2 * spec.penaltyDepth : lay.penaltyHalfWidth * 2, W * 0.4);
   if (o.score) {
-    for (const side of [0, 1] as const) {
-      const cls = `ky-zone ky-zone-${side === 0 ? "left" : "right"}`;
-      if (spec.area === "arcs") inside += el("path", { class: cls, d: `${arcsArea(spec, L, W, side)}Z` });
-      else if (spec.area === "semicircle") inside += el("path", { class: cls, d: `M${n(side === 0 ? 0 : L)} ${n(cy - spec.penaltyDepth)}A${n(spec.penaltyDepth)} ${n(spec.penaltyDepth)} 0 0 ${side === 0 ? 1 : 0} ${n(side === 0 ? 0 : L)} ${n(cy + spec.penaltyDepth)}Z` });
-      else inside += el("rect", { class: cls, x: side === 0 ? 0 : L - zoneDepth, y: cy - zoneWidth / 2, width: zoneDepth, height: zoneWidth });
-    }
+    // A rectangle at each end: the penalty area on a full pitch, a box that holds the name on the others (their areas are curved).
+    for (const side of [0, 1] as const) inside += el("rect", { class: `ky-zone ky-zone-${side === 0 ? "left" : "right"}`, x: side === 0 ? 0 : L - zoneDepth, y: cy - zoneWidth / 2, width: zoneDepth, height: zoneWidth });
   }
   const base = el("rect", { class: "ky-apron", x: view0.x, y: view0.y, width: view0.w, height: view0.h }) + group(inside, `ky-pitch ky-pitch-${spec.format}`);
 

@@ -357,8 +357,8 @@ describe("a soccer score", () => {
   });
 
   it("stays within its size budget", () => {
-    expect(drawKyogijo(game()).length).toBeLessThan(18_000);
-    expect(drawKyogijo({ sport: "soccer" }).length).toBeLessThan(15_000);
+    expect(drawKyogijo(game()).length).toBeLessThan(14_000);
+    expect(drawKyogijo({ sport: "soccer" }).length).toBeLessThan(12_000);
   });
 });
 
