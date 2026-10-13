@@ -447,6 +447,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `nba.threePoint.1994` | The three-point line is shortened to a uniform 22 feet all the way round. | スリーポイントラインが短くなり、全周でバスケットから22フィートになります。 |
 | `nba.restrictedArea.1997` | The restricted area is marked, a half circle of 4 feet from the middle of the basket. | バスケットの中心から半径4フィート（約1.2m）の半円で、ノーチャージセミサークル（リストリクテッドエリア）が描かれます。 |
 | `nba.threePoint.1997` | The three-point line goes back to 23 feet 9 inches (22 feet in the corners). | スリーポイントラインが元の23フィート9インチ（コーナーは22フィート）に戻ります。 |
+| `mlb.baseSize.start` | First, second and third bases are 15 inches square (the size for well over a century; no earlier size is cited). | 一塁・二塁・三塁のベースは一辺15インチ（約38cm）の正方形です（1世紀以上変わらなかった大きさで、それ以前の大きさを示す資料は見つかっていません）。 |
 | `mlb.battersBox.start` | No batter's boxes: the batter hits with the front foot on a line through the centre of the plate. | バッターボックスはなく、打者は本塁の中心を通る線の上に前足を置いて打ちます。 |
 | `mlb.plateShape.1857` | Home plate is a round iron plate of one square foot, about 13½ inches across. | 本塁は面積が1平方フィートの円形の鉄板で、直径は約13.5インチです。 |
 | `mlb.platePlacement.1861` | The centre of home plate stands on the meeting of the foul lines. | 本塁の中心がファウルラインの交点に置かれます。 |
@@ -463,6 +464,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `mlb.plateShape.1900` | The five-sided plate of white rubber is adopted, as it is today. | 現在と同じ五角形の白いゴム製の本塁が採用されます。 |
 | `mlb.moundHeight.1903` | The mound may stand 15 inches above home plate. | マウンドは本塁より15インチ（約38cm）まで高くできます。 |
 | `mlb.moundHeight.1969` | The mound is lowered to 10 inches, after the Year of the Pitcher. | 「投手の年」と呼ばれた1968年のあと、マウンドの高さが10インチ（約25cm）に低くなります。 |
+| `mlb.baseSize.2023` | The bases grow to 18 inches square, which cuts the distance between first and second and between second and third by 4½ inches. | 一塁・二塁・三塁のベースが一辺15インチから18インチ（約46cm）の正方形に大きくなり、一塁と二塁の間、二塁と三塁の間の距離が4.5インチ（約11cm）短くなります。 |
 
 ## The leagues (`LEAGUES`)
 

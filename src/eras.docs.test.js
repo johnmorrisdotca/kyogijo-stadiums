@@ -9,7 +9,7 @@ describe("docs/eras.md, the table of the years", () => {
   const label = {
     centreLine: "centre red line", goalLine: "goal lines", blueLine: "blue lines", trapezoid: "trapezoid", keyWidth: "lane", threePoint: "three-point line",
     restrictedArea: "restricted area", hash: "hash marks", posts: "goal posts", postShape: "goal posts", endZone: "end zones", length: "field", pitcher: "pitcher",
-    battersBox: "batter's boxes", plateShape: "home plate", platePlacement: "home plate", moundHeight: "mound height",
+    battersBox: "batter's boxes", baseSize: "bases", plateShape: "home plate", platePlacement: "home plate", moundHeight: "mound height",
   };
 
   it("has a row for every marking, and each row names the season of every change to it", () => {

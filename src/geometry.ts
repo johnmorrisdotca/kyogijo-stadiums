@@ -75,8 +75,9 @@ export const NHL = {
   /** The neutral-zone spots are 5 feet from the blue line. */
   neutralSpotFromBlue: 5,
   centreSpotRadius: 0.5,
+  /** The hash marks beside an end-zone circle are 2 feet long and 2 inches wide, 5 feet 7 inches apart (Rule 1.9): the gap between the near ends of the two marks, along the line parallel to the goal line; their width lies across it. */
   hashLength: 2,
-  hashApart: 5 + 11 / 12,
+  hashApart: 5 + 7 / 12,
   crease: { radius: 6, depth: 4.5, halfWidth: 4 },
   net: { width: 6, depth: 40 / 12 },
   trapezoid: { atBoards: 28, atGoalLine: 22 },
@@ -116,7 +117,8 @@ export function threePointJoin(): number {
 /** The baseball field, from rules 2.01 to 2.05 of the Official Baseball Rules. */
 export const MLB = {
   base: 90,
-  baseSize: 15 / 12,
+  /** The side of first, second and third base: 18 inches since 2023 (Rule 2.03), 15 before. `rulesFor("mlb", year)` (eras.ts) has the size of a season. */
+  baseSize: 18 / 12,
   /** The back point of home plate is the origin; the pitcher's plate is this far from it. */
   pitcher: 60.5,
   moundRadius: 9,

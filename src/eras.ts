@@ -111,6 +111,27 @@ export const ERA_SOURCES: Readonly<Record<string, EraSource>> = Object.freeze(
         url: "https://www.tsn.ca/cfl/article/stampeders-wr-philpot-keeping-an-open-mind-about-cfls-2027-field-changes/",
         note: "for 2027 the field shortened by 10 yards (to 100), the end zones by 5 yards (to 15), the goal posts to the back of the end zones",
       },
+      {
+        id: "mlb-2023",
+        title: "MLB announces rule changes for 2023 season",
+        by: "Major League Baseball, 9 September 2022",
+        url: "https://www.mlb.com/press-release/press-release-mlb-announces-rule-changes-for-2023-season",
+        note: "for 2023 the size of first, second and third base increases from the standard 15 inches square to 18 inches square, cutting the distance between first and second and between second and third by 4.5 inches",
+      },
+      {
+        id: "cbs-bases-2023",
+        title: "MLB rules changes: What to know about the bigger bases, how they could increase stolen bases",
+        by: "CBS Sports, 2 March 2023",
+        url: "https://www.cbssports.com/mlb/news/mlb-rules-changes-what-to-know-about-the-bigger-bases-how-they-could-increase-stolen-bases",
+        note: "the bases had been 15 inches square 'for well over a century' and are 18 inches from the 2023 season",
+      },
+      {
+        id: "obr-2024",
+        title: "Official Baseball Rules, 2024 edition, Rule 2.03 The Bases",
+        by: "Office of the Commissioner of Baseball (as reproduced by Baseball Canada)",
+        url: "https://www.baseball.ca/uploads/files/2024%20Rules/2024%20MLB%20Official%20Rules%20-%20EN.pdf",
+        note: "'The bags shall be 18 inches square, not less than three nor more than five inches thick'",
+      },
       wikipedia("wp-baseball", "Baseball field", 1376335066, "the pitcher's box at 45 feet, 50 feet from 1881, its 1887 size, the plate at 60 feet 6 inches from 1893, the mound's height, the home plate through the years, the batter's boxes of 1874 and 1885"),
     ].map((source) => [source.id, Object.freeze(source)]),
   ),
@@ -173,6 +194,8 @@ export interface FootballRules {
 
 /** The baseball field's markings in a season. Lengths are feet, the mound's height inches. */
 export interface MlbRules {
+  /** The side of first, second and third base, in feet (home plate is not a base of this size). */
+  baseSize: number;
   /**
    * Where the pitcher throws from: a chalked box whose front edge is `distance` from the back point of home plate, with its
    * `width` and `depth`, or (from 1893) the rubber, whose front edge is `distance` from it.
@@ -284,6 +307,10 @@ const CFL_SPANS: Partial<Spans<FootballRules>> = {
 const MLB_PITCHER_BOX = { kind: "box", width: 4, depth: 5.5 } as const;
 
 const MLB_SPANS: Spans<MlbRules> = {
+  baseSize: [
+    { from: null, value: 15 / 12, what: "First, second and third bases are 15 inches square (the size for well over a century; no earlier size is cited).", ja: "一塁・二塁・三塁のベースは一辺15インチ（約38cm）の正方形です（1世紀以上変わらなかった大きさで、それ以前の大きさを示す資料は見つかっていません）。", sources: ["mlb-2023", "cbs-bases-2023"] },
+    { from: 2023, value: MLB.baseSize, what: "The bases grow to 18 inches square, which cuts the distance between first and second and between second and third by 4½ inches.", ja: "一塁・二塁・三塁のベースが一辺15インチから18インチ（約46cm）の正方形に大きくなり、一塁と二塁の間、二塁と三塁の間の距離が4.5インチ（約11cm）短くなります。", sources: ["mlb-2023", "obr-2024"] },
+  ],
   pitcher: [
     { from: 1871, value: { ...MLB_PITCHER_BOX, distance: 45 }, approx: true, what: "The pitcher throws from a chalked box whose front edge is 45 feet from home plate (its size is not given; drawn as the 1887 box).", ja: "投手は、本塁側の辺が本塁から45フィート（約13.7m）の位置にある、チョークで描いたピッチャーズボックスの中から投げます（ボックスの大きさは不明のため、1887年のものと同じ大きさで描いています）。", sources: ["wp-baseball"] },
     { from: 1881, value: { ...MLB_PITCHER_BOX, distance: 50 }, approx: true, what: "The box's front edge moves back to 50 feet (its size is not given; drawn as the 1887 box).", ja: "ピッチャーズボックスの本塁側の辺が本塁から50フィート（約15.2m）の位置に遠ざかります（ボックスの大きさは不明のため、1887年のものと同じ大きさで描いています）。", sources: ["wp-baseball"] },
@@ -335,6 +362,7 @@ function present(sport: EraSport): EraRulesOf[EraSport] {
     }
     case "mlb":
       return {
+        baseSize: MLB.baseSize,
         pitcher: { kind: "plate", distance: MLB.pitcher, width: 2, depth: 0.5 },
         battersBox: { width: MLB.boxes.batterWidth, length: MLB.boxes.batterLength, gap: MLB.boxes.gap },
         plateShape: "pentagon",

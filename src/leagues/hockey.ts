@@ -71,7 +71,7 @@ export type HockeyLeague = LeagueBase<"hockey", RinkFigures>;
 /** The NHL's rink with other markings laid over it: most leagues' Rule 1 is the NHL's, nearly word for word. */
 const rink = (over: Partial<RinkFigures>): RinkFigures => ({ ...NHL_RINK, ...over });
 
-/** Hash marks beside an end-zone circle, as the rulebooks of the other leagues print them: 2 feet long, 5 ft 7 in apart (the NHL's rule says so too; `NHL_RINK` keeps the 5 ft 11 in measured over the lines). */
+/** Hash marks beside an end-zone circle, as the NCAA prints them: 2 feet long, 5 ft 7 in apart (the NHL's Rule 1.9 says the same, and `NHL_RINK` has it). */
 const HASH_5_7 = { length: 2, apart: 5 + 7 / 12 };
 
 /** The trapezoid the NCAA marks for Division I men's games from 2026-27: 28 feet at the boards, 22 at the goal line. */

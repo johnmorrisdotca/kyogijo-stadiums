@@ -19,6 +19,7 @@ A season is named by the year it starts in: `1979` is the 1979–80 season of th
 | `cfl` | field | 110 yards between the goal lines; 100 planned for 2027 |
 | `cfl` | hash marks | 24 yards from the sideline (cited from 2015), 28 from 2022 |
 | `cfl` | goal posts | on the goal line; the end line planned for 2027 |
+| `mlb` | bases | 15 inches square until 2022, 18 from 2023 (an earlier size is not cited) |
 | `mlb` | pitcher | a chalked box at 45 feet from 1871, 50 feet from 1881 (4 by 5½ feet from 1887), the plate at 60 feet 6 inches from 1893 |
 | `mlb` | batter's boxes | none before 1874; 6 by 3 feet from 1874; 6 by 4 feet from 1885 |
 | `mlb` | home plate | round 1857–67, square 1868–70, turned 1871–99, the pentagon from 1900; its place moved in 1861, 1875 and 1877 |

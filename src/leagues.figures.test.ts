@@ -109,6 +109,25 @@ describe("ice rinks", () => {
     expect(drawKyogijo({ sport: "nhl", league: "ncaa-men", id: "t" })).not.toBe(drawKyogijo({ sport: "nhl", id: "t" }));
   });
 
+  it("the NHL: the hash marks beside an end-zone circle are 2 feet long and 5 feet 7 inches apart, not 5 feet 11 (Rule 1.9)", () => {
+    expect(hockey("nhl").dimensions.hash).toEqual({ length: 2, apart: ft(5, 7) });
+    // The same on the drawing: the gap between the near ends of the two marks on one side of a circle, and a mark's length.
+    for (const svg of [draw("nhl", "nhl"), parse(drawKyogijo({ sport: "nhl", id: "t", margin: 0 }))]) {
+      const d = withClass(svg, "ky-red").map((n) => n.attrs.d ?? "").find((p) => (p.match(/M/g) ?? []).length === 16) as string;
+      const marks = [...d.matchAll(/M([\d.]+) ([\d.]+)V([\d.]+)/g)].map((m) => ({ x: Number(m[1]), y: Number(m[2]), end: Number(m[3]) }));
+      expect(marks).toHaveLength(16);
+      expect(marks[0].x).toBe(marks[1].x);
+      drawn(Math.abs(marks[1].y - marks[0].y), ft(5, 7));
+      drawn(Math.abs(marks[0].end - marks[0].y), 2);
+    }
+    // Every league whose Rule 1 is the NHL's inherits it: the AHL, ECHL, OHL, WHL and PWHL read 5'7" apart in their own rulebooks too.
+    for (const id of ["ahl", "echl", "ohl", "whl", "pwhl", "ncaa-men", "ncaa-women"]) expect(hockey(id).dimensions.hash, id).toEqual({ length: 2, apart: ft(5, 7) });
+  });
+
+  it("the NHL's goalkeeper's trapezoid is 22 feet at the goal line and 28 at the boards: Rule 1.8's 8 feet from each post, not Rule 27.8's 6", () => {
+    expect(hockey("nhl").dimensions.trapezoid).toEqual({ atBoards: 28, atGoalLine: 6 + 2 * 8 });
+  });
+
   it("the leagues whose Rule 1 is the NHL's draw the NHL's rink: AHL, ECHL, OHL, WHL, QMJHL", () => {
     for (const id of ["ahl", "echl", "ohl", "whl", "qmjhl"]) {
       const r = hockey(id).dimensions;
@@ -208,6 +227,12 @@ describe("baseball and softball fields", () => {
     expect(baseball("ncaa").dimensions.baseSize).toBe(1.25);
     expect(baseball("milb").dimensions.baseSize).toBe(1.5);
     expect(baseball("mlb").dimensions.base).toBe(MLB.base);
+  });
+
+  it("MLB: the bases are 18 inches square, as Rule 2.03 has them from 2023", () => {
+    expect(MLB.baseSize).toBe(1.5);
+    expect(baseball("mlb").dimensions.baseSize).toBe(1.5);
+    expect(baseball("milb").dimensions.baseSize).toBe(baseball("mlb").dimensions.baseSize);
   });
 
   it("softball: 60 feet and 43 for the NCAA, the high schools and fast pitch; 70 and 50 for USA slow pitch; 65 and 50 for the WBSC's", () => {

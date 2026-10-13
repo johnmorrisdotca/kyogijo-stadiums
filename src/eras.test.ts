@@ -53,6 +53,12 @@ const probe = {
   },
   /** Baseball: the width of one batter's box, or undefined when there are none. */
   battersBox: (svg: Node) => Math.abs(first(paths(svg, "ky-line").find((d) => /^M-?[\d.]+ -?[\d.]+h-?[\d.]+v6/.test(d)), /h(-?[\d.]+)v6/) ?? NaN) || undefined,
+  /** Baseball: the side of third base, in inches (drawn with exact lines): the bases are the last three of the plain fill-line shapes. */
+  baseSize: (svg: Node) => {
+    const bases = withClass(svg, "ky-fill-line").slice(-3);
+    const xs = [...(bases[2].attrs.d ?? "").matchAll(/[ML]([-\d.]+) /g)].map((m) => Number(m[1]));
+    return Math.round(((Math.max(...xs) - Math.min(...xs)) / Math.SQRT2) * 12);
+  },
   /** Baseball: the home plate's outline: a circle, or the count of its corners. */
   plateShape: (svg: Node) => {
     const plate = withClass(svg, "ky-fill-line")[0];
@@ -95,6 +101,7 @@ const CASES: Record<string, { before: number; after: number; sport: Sport; show:
   "cfl.hash.2015": { sport: "cfl", before: 2014, after: 2015, show: [72, 72] },
   "cfl.hash.2022": { sport: "cfl", before: 2021, after: 2022, show: [72, 84] },
   "cfl.posts.2027": { sport: "cfl", before: 2026, after: 2027, show: [60, -0.6] },
+  "mlb.baseSize.2023": { sport: "mlb", before: 2022, after: 2023, show: [15, 18], extra: { exactLines: true } },
   "mlb.pitcher.1871": { sport: "mlb", before: 1870, after: 1871, show: ["box 50.5", "box 50.5"] },
   "mlb.pitcher.1881": { sport: "mlb", before: 1880, after: 1881, show: ["box 50.5", "box 55.5"] },
   "mlb.pitcher.1887": { sport: "mlb", before: 1886, after: 1887, show: ["box 55.5", "box 55.5"] },
@@ -156,6 +163,8 @@ describe("the history of the surfaces: the data", () => {
     expect(rulesFor("nhl").rules).toEqual({ centreLine: true, goalLine: NHL.goalLine, blueLine: NHL.blueLine, trapezoid: NHL.trapezoid });
     expect(rulesFor("nba").rules).toEqual({ keyWidth: NBA.lane, threePoint: { radius: NBA.threePoint.radius }, restrictedArea: true });
     for (const id of ["nfl", "cfl"] as const) expect(rulesFor(id).rules).toEqual({ length: FOOTBALL[id].length, endZone: FOOTBALL[id].endZone, hash: FOOTBALL[id].hash, posts: FOOTBALL[id].posts, postShape: "slingshot" });
+    expect(rulesFor("mlb").rules.baseSize).toBe(MLB.baseSize);
+    expect(MLB.baseSize * 12).toBe(18);
     expect(rulesFor("mlb").rules.pitcher).toEqual({ kind: "plate", distance: MLB.pitcher, width: 2, depth: 0.5 });
     expect(rulesFor("mlb").rules.battersBox).toEqual({ width: MLB.boxes.batterWidth, length: MLB.boxes.batterLength, gap: MLB.boxes.gap });
     expect(rulesFor("mlb").rules.moundHeight).toBe(10);

@@ -66,6 +66,7 @@ export function baseball(points: readonly FencePoint[], o: BuildOptions, era?: M
     (d === MLB_DIAMOND
       ? rulesFor("mlb").rules
       : {
+          baseSize: d.baseSize,
           pitcher: { kind: "plate", distance: d.pitcher, width: d.pitchersPlate.width, depth: d.pitchersPlate.depth },
           battersBox: d.boxes === null ? null : { width: d.boxes.batterWidth, length: d.boxes.batterLength, gap: d.boxes.gap },
           plateShape: "pentagon",
@@ -153,7 +154,7 @@ export function baseball(points: readonly FencePoint[], o: BuildOptions, era?: M
     // A chalked box: its front edge the pitching distance from home, its back edge the depth beyond.
     lines += el("rect", { class: "ky-line", x: -pitcher.width / 2, y: -(pitcher.distance + pitcher.depth), width: pitcher.width, height: pitcher.depth, "stroke-width": thin * 0.8, fill: "none" });
   }
-  const h = (d.baseSize * grow * Math.SQRT2) / 2;
+  const h = (rules.baseSize * grow * Math.SQRT2) / 2;
   const bases: [number, number][] = [
     [centreV - h, centreV],
     [0, 2 * centreV - h],
