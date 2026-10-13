@@ -10,6 +10,11 @@ export interface KyogijoWords {
   status: Record<"final" | "final-ot" | "final-so" | "final-aet" | "final-pens" | "live" | "half" | "extra-time" | "penalties" | "postponed", string>;
   /** The soccer pitch: its names, and the descriptions with {length} and {width} in metres. */
   soccer: { futsal: string; aboutFutsal: string; half: string };
+  /**
+   * The league surfaces (`league` in the options): what each family of surface is, for the description, with the surface's `{size}`
+   * (written with `size`, `{length}` and `{width}` in a `{unit}`) or a diamond's `{base}` and `{pitch}` in feet.
+   */
+  league: { basketball: string; hockey: string; football: string; baseball: string; softball: string; size: string; units: { ft: string; yd: string; m: string } };
   /** The title of a score: placeholders {away}, {awayScore}, {home} and {homeScore}. */
   scoreTitle: string;
   /** The sentences of a description. */
@@ -166,6 +171,15 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
     },
     status: { final: "Final", "final-ot": "Final/OT", "final-so": "Final/SO", "final-aet": "Final/AET", "final-pens": "Final/Pens", live: "Live", half: "Halftime", "extra-time": "Extra time", penalties: "Penalties", postponed: "Postponed" },
     soccer: { futsal: "Futsal court", aboutFutsal: "a futsal court, {length} by {width} metres, with the halfway line, the centre circle, both penalty areas, the penalty marks and the goals", half: "Half of it is shown." },
+    league: {
+      basketball: "a basketball court, {size}, with its keys, three-point lines, free-throw circles and the centre circle",
+      hockey: "an ice hockey rink, {size} with rounded corners, with its red and blue lines, face-off circles, creases and goal nets",
+      football: "a football field, {size} with its end zones, with its yard lines, hash marks, numbers and goal posts",
+      baseball: "a baseball field, with {base}-foot bases, the pitcher {pitch} feet from home plate, the foul lines and the outfield fence",
+      softball: "a softball field, with {base}-foot bases, the pitcher {pitch} feet from home plate, the foul lines and the outfield fence",
+      size: "{length} by {width} {unit}",
+      units: { ft: "feet", yd: "yards", m: "metres" },
+    },
     scoreTitle: "{away} {awayScore}, {home} {homeScore}",
     said: { home: "home", away: "away", won: "{name} won.", tied: "The game is level.", park: "The outfield fence follows the figures published for {park}.", ground: "The pitch follows the size published for {ground}.", groundDefault: "No pitch size is published for {ground}, so the pitch has the international size of 105 by 68 metres.", era: "The markings are those of the {season} season.", wonPens: "{name} won {a}-{b} on penalties.", pens: "{a}-{b} pens", on: "Drawn as", sep: ", ", stop: ".", colon: ": ", gap: " " },
     layers: {
@@ -202,6 +216,15 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
     },
     status: { final: "試合終了", "final-ot": "試合終了（延長）", "final-so": "試合終了（SO）", "final-aet": "試合終了（延長戦）", "final-pens": "試合終了（PK戦）", live: "試合中", half: "ハーフタイム", "extra-time": "延長戦", penalties: "PK戦", postponed: "延期" },
     soccer: { futsal: "フットサルのコート", aboutFutsal: "フットサルのコート。{length}m×{width}mで、ハーフウェーライン、センターサークル、両側のペナルティエリア、ペナルティマーク、ゴールがあります", half: "半面のみ表示しています。" },
+    league: {
+      basketball: "バスケットボールのコート。{size}で、ペイントエリア、スリーポイントライン、フリースローサークル、センターサークルがあります",
+      hockey: "アイスホッケーのリンク。{size}で角が丸く、レッドライン、ブルーライン、フェイスオフサークル、クリース、ゴールがあります",
+      football: "アメリカンフットボールのフィールド。エンドゾーンを含めて{size}で、ヤードライン、ハッシュマーク、ヤードナンバー、ゴールポストがあります",
+      baseball: "野球場。塁間{base}フィート、投手板は本塁から{pitch}フィートで、ファウルライン、外野フェンスがあります",
+      softball: "ソフトボール場。塁間{base}フィート、投手板は本塁から{pitch}フィートで、ファウルライン、外野フェンスがあります",
+      size: "{length}{unit}×{width}{unit}",
+      units: { ft: "フィート", yd: "ヤード", m: "m" },
+    },
     scoreTitle: "{away} {awayScore}、{home} {homeScore}",
     said: { home: "ホーム", away: "アウェイ", won: "{name}の勝ちです。", tied: "同点です。", park: "外野フェンスは、{park}の公表されている距離をもとに描かれています。", ground: "ピッチは、{ground}の公表されている広さをもとに描かれています。", groundDefault: "{ground}のピッチの広さは公表されていないため、国際標準の105×68mで描かれています。", era: "ラインやマークは{season}シーズンのものです。", wonPens: "{name}がPK戦を{a}-{b}で制しました。", pens: "PK戦 {a}-{b}", on: "図の内容", sep: "、", stop: "。", colon: "：", gap: "" },
     layers: {

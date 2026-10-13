@@ -5,6 +5,8 @@ import { ERA_SPORTS, footballIn, rulesFor, seasonLabel, type EraSport } from "./
 import { FOOTBALL } from "./geometry.ts";
 import { renderLayers } from "./layers.ts";
 import { groundById, groundNameIn } from "./grounds.ts";
+import { chooseLeague, courtOf, diamondOf, fieldOf, hasHistory, leagueSeason, rinkOf, type League } from "./leagues.ts";
+import { diamondFence } from "./leagues/baseball.ts";
 import { fenceFor, parkById } from "./parks.ts";
 import { badgeMarkup, bannerMarkup, plateMarkup, stateOf, type TeamView } from "./score.ts";
 import { KYOGIJO_STRINGS, fill } from "./strings.ts";
@@ -174,21 +176,28 @@ function buildSurface(o: SurfaceOptions, portrait: boolean, id: string, score: b
     score,
     court: { baselineText, centreLogo: safeLogo(court?.centreLogo), paintThreePoint: court?.paintThreePoint },
   };
-  // The markings of the season asked for (`year`); today's without one.
-  switch (o.sport) {
+  // A league's rulebook (`league`), else the markings of the season asked for (`year`), today's without one.
+  const { sport, league } = chooseLeague(o);
+  switch (sport) {
     case "nfl":
-    case "cfl": {
-      const season = rulesFor(o.sport, o.year).rules;
-      return football(footballIn(o.sport, o.year), common, { hashMarks: season.hash !== null, postShape: season.postShape });
+    case "cfl":
+    case "ifaf": {
+      if (league?.family === "football") return football({ ...fieldOf(league, o.year), id: sport }, common, { hashMarks: true, postShape: "slingshot" });
+      if (sport === "ifaf") return football(FOOTBALL.ifaf, common);
+      const season = rulesFor(sport, o.year).rules;
+      return football(footballIn(sport, o.year), common, { hashMarks: season.hash !== null, postShape: season.postShape });
     }
-    case "ifaf":
-      return football(FOOTBALL.ifaf, common);
     case "nhl":
-      return hockey(common, rulesFor("nhl", o.year).rules);
+      return league?.family === "hockey" ? hockey(common, undefined, rinkOf(league, o.year)) : hockey(common, rulesFor("nhl", o.year).rules);
     case "nba":
-      return basketball(common, rulesFor("nba", o.year).rules);
-    case "mlb":
+      return league?.family === "basketball" ? basketball(common, undefined, courtOf(league, o.year)) : basketball(common, rulesFor("nba", o.year).rules);
+    case "mlb": {
+      if (league?.family === "baseball") {
+        const diamond = diamondOf(league, o.year);
+        return baseball(fenceFor(parkById(o.park), feetFence(o.fence, unit), o.year, diamondFence(diamond)), common, undefined, diamond);
+      }
       return baseball(fenceFor(parkById(o.park), feetFence(o.fence, unit), o.year), common, rulesFor("mlb", o.year).rules);
+    }
     case "soccer":
       return buildSoccer(o, common, scored, unit);
     default:
@@ -235,28 +244,61 @@ function teamView(team: Team, side: Side, role: "home" | "away", winner: "home" 
   };
 }
 
+const trimmed = (value: number): string => String(Math.round(value * 100) / 100);
+
+/** What a league's surface is, in a sentence fragment: its size or its bases, from the league's own figures in the unit its rulebook uses. */
+function leagueAbout(league: League, year: number | undefined, language: Language): string {
+  const words = KYOGIJO_STRINGS[language].league;
+  if (league.family === "baseball") {
+    const diamond = diamondOf(league, year);
+    return fill(league.game === "softball" ? words.softball : words.baseball, { base: trimmed(diamond.base), pitch: trimmed(diamond.pitcher) });
+  }
+  const size =
+    league.family === "basketball"
+      ? courtOf(league, year)
+      : league.family === "hockey"
+        ? rinkOf(league, year)
+        : (() => {
+            const field = fieldOf(league, year);
+            return { length: field.length + 2 * field.endZone, width: field.width };
+          })();
+  const to = league.unit;
+  const text = fill(words.size, { length: trimmed(convertLength(size.length, "ft", to)), width: trimmed(convertLength(size.width, "ft", to)), unit: words.units[to === "m" || to === "yd" ? to : "ft"] });
+  return fill(words[league.family], { size: text });
+}
+
 /** A drawing's title and description, in a language. */
 export function describe(o: SurfaceOptions | ScoreOptions): { title: string; description: string } {
   const language: Language = o.language === "ja" ? "ja" : "en";
   const words = KYOGIJO_STRINGS[language];
-  const park = o.sport === "mlb" ? parkById(o.park) : undefined;
+  const { sport, league } = chooseLeague(o);
+  const park = sport === "mlb" ? parkById(o.park) : undefined;
   const parkName = park === undefined ? undefined : language === "ja" ? (park.nameJa ?? park.name) : park.name;
-  const pitch = o.sport === "soccer" ? soccerSpec(pitchOf(o)) : undefined;
+  const pitch = sport === "soccer" ? soccerSpec(pitchOf(o)) : undefined;
   // A ground names a full-size pitch; a small-sided pitch or futsal court the caller asked for keeps its own name.
   const ground = pitch?.format === "11" ? groundById(o.ground) : undefined;
   const groundName = ground === undefined ? undefined : groundNameIn(ground, o.year, language);
-  const surfaceName = groundName !== undefined ? (language === "ja" ? `${groundName}のピッチ` : `${groundName}, soccer pitch`) : parkName === undefined ? (pitch?.format === "futsal" ? words.soccer.futsal : words.surface[o.sport]) : language === "ja" ? `${parkName}のグラウンド` : `${parkName}, baseball field`;
+  // A league other than the sport's own is named by its rulebook's, and its description is made from its figures.
+  const surfaceName = groundName !== undefined ? (language === "ja" ? `${groundName}のピッチ` : `${groundName}, soccer pitch`) : league !== undefined && parkName === undefined ? league.name[language] : parkName === undefined ? (pitch?.format === "futsal" ? words.soccer.futsal : words.surface[sport]) : language === "ja" ? `${parkName}のグラウンド` : `${parkName}, baseball field`;
   const { stop, colon, gap } = words.said;
   const sentence = (text: string): string => (/[.。]$/.test(text) ? text : `${text}${stop}`);
   const metres = (value: number): string => String(Math.round(value * 10) / 10);
-  const aboutText = pitch === undefined ? words.about[o.sport] : fill(pitch.format === "futsal" ? words.soccer.aboutFutsal : words.about.soccer, { length: metres(pitch.length), width: metres(pitch.width) });
+  const aboutText = league !== undefined ? leagueAbout(league, o.year, language) : pitch === undefined ? words.about[sport] : fill(pitch.format === "futsal" ? words.soccer.aboutFutsal : words.about.soccer, { length: metres(pitch.length), width: metres(pitch.width) });
   const about = `${words.said.on}${colon}${aboutText}${stop}`;
   const halfLine = pitch !== undefined && !isScore(o) && (o.half === "left" || o.half === "right") ? `${gap}${words.soccer.half}` : "";
   // What the ground says about the size: that it is the published one, or that the ground has none and the international pitch is drawn.
   const groundLine = ground === undefined || groundName === undefined || o.pitch !== undefined ? "" : `${gap}${fill(ground.pitchSize === "published" ? words.said.ground : words.said.groundDefault, { ground: groundName })}`;
   const parkLine = parkName === undefined ? `${groundLine}${halfLine}` : `${gap}${fill(words.said.park, { park: parkName })}`;
   // A drawing of a past season says which: the markings are those of that season.
-  const eraLine = typeof o.year === "number" && Number.isFinite(o.year) && ERA_SPORTS.includes(o.sport as EraSport) ? `${gap}${fill(words.said.era, { season: seasonLabel(o.sport as EraSport, o.year) })}` : "";
+  const dated = typeof o.year === "number" && Number.isFinite(o.year);
+  const eraLine =
+    dated && league !== undefined
+      ? hasHistory(league)
+        ? `${gap}${fill(words.said.era, { season: leagueSeason(league.family, o.year as number) })}`
+        : ""
+      : dated && ERA_SPORTS.includes(sport as EraSport)
+        ? `${gap}${fill(words.said.era, { season: seasonLabel(sport as EraSport, o.year as number) })}`
+        : "";
   if (!isScore(o)) return { title: o.title ?? surfaceName, description: o.description ?? `${about}${parkLine}${eraLine}` };
   const winner = winnerOf(o);
   const s = (t: Team): string => (t.score === undefined || String(t.score) === "" ? "–" : String(t.score));
@@ -296,6 +338,8 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
  */
 export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
   const language: Language = o.language === "ja" ? "ja" : "en";
+  // The sport as drawn: a league that is a sport of its own (`league: "cfl"` on an `nfl`) is that sport.
+  const { sport } = chooseLeague(o);
   const portrait = isPortrait(o);
   const sized = isScore(o) ? (o.size === "compact" || o.size === "badge" ? o.size : "full") : "full";
   const id = drawingId(o);
@@ -331,7 +375,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
   let body: string;
   let defs = "";
   if (isScore(o) && left !== undefined && right !== undefined && sized === "badge") {
-    const badge = badgeMarkup(left, right, { sport: o.sport, status, parts });
+    const badge = badgeMarkup(left, right, { sport, status, parts });
     viewBox = `0 0 ${badge.w} ${badge.h}`;
     body = badge.markup;
   } else {
@@ -340,7 +384,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
     let inner = surface.base;
     let teams = "";
     if (isScore(o) && left !== undefined && right !== undefined && sized === "full") {
-      const onColour = o.sport === "nfl" || o.sport === "cfl" || o.sport === "ifaf" || o.sport === "soccer";
+      const onColour = sport === "nfl" || sport === "cfl" || sport === "ifaf" || sport === "soccer";
       teams += bannerMarkup(surface.left, left, { turned: surface.turned, onColour, parts });
       teams += bannerMarkup(surface.right, right, { turned: surface.turned, onColour, parts });
     }
@@ -355,12 +399,12 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
     }
     if (isScore(o) && left !== undefined && right !== undefined && sized === "full") {
       const foot = o.label !== undefined && o.label !== "" ? o.label : [status, o.date].filter((part): part is string => part !== undefined && part !== "").join(" · ");
-      inner += plateMarkup(surface.plate, left, right, { competition: o.competition, foot: foot === "" ? undefined : foot }, { turned: surface.turned, parts, surfaceSport: o.sport });
+      inner += plateMarkup(surface.plate, left, right, { competition: o.competition, foot: foot === "" ? undefined : foot }, { turned: surface.turned, parts, surfaceSport: sport });
     }
     const group = el("g", { class: "ky-surface-group", transform: surface.turn, part: parts ? "surface" : undefined }, inner);
     const v = surface.view;
     if (isScore(o) && left !== undefined && right !== undefined && sized === "compact") {
-      const badge = badgeMarkup(left, right, { sport: o.sport, status, parts });
+      const badge = badgeMarkup(left, right, { sport, status, parts });
       const scale = v.w / badge.w;
       const gap = badge.h * scale * 0.12;
       body = group + el("g", { class: "ky-strip", transform: `translate(${num(v.x)} ${num(v.y + v.h + gap)}) scale(${scale.toFixed(4)})` }, badge.markup);
@@ -375,11 +419,12 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
     "svg",
     {
       xmlns: "http://www.w3.org/2000/svg",
-      class: `kyogijo ky-${o.sport}${safeClass(o.className) === "" ? "" : ` ${safeClass(o.className)}`}`,
+      class: `kyogijo ky-${sport}${safeClass(o.className) === "" ? "" : ` ${safeClass(o.className)}`}`,
       viewBox,
       role: "img",
       "aria-labelledby": `${titleId} ${descId}`,
-      "data-sport": o.sport,
+      "data-sport": sport,
+      "data-league": o.league === undefined || o.league === "" ? undefined : o.league,
       "data-size": sized,
       "data-orientation": portrait ? "portrait" : "landscape",
       "data-theme": theme,

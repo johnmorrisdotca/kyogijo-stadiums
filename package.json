@@ -94,6 +94,11 @@
       "import": "./dist/frames-entry.js",
       "default": "./dist/frames-entry.js"
     },
+    "./leagues": {
+      "types": "./dist/leagues-entry.d.ts",
+      "import": "./dist/leagues-entry.js",
+      "default": "./dist/leagues-entry.js"
+    },
     "./eras": {
       "types": "./dist/eras-entry.d.ts",
       "import": "./dist/eras-entry.js",

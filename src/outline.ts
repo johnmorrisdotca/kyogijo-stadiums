@@ -2,6 +2,8 @@
 // a ballpark's x is across the field and its y minus the distance out from home plate): where a data layer is cut, and the size
 // its marks follow.
 import { FEET_PER_METRE, FOOTBALL, NBA, NHL, footballLength, surfaceSize, type SizedSport } from "./geometry.ts";
+import { chooseLeague, courtOf, diamondOf, fieldOf, rinkOf } from "./leagues.ts";
+import { diamondFence } from "./leagues/baseball.ts";
 import { fenceFor, parkById } from "./parks.ts";
 import { fenceOutline } from "./surfaces/baseball.ts";
 import { soccerSpec } from "./surfaces/soccer-spec.ts";
@@ -38,15 +40,22 @@ function inPolygon(points: readonly (readonly [number, number])[], x: number, y:
 }
 
 /** The outline of the surface the options draw. */
-export function outlineOf(o: Pick<SurfaceOptions, "sport" | "park" | "fence" | "units" | "pitch">): Outline {
-  switch (o.sport) {
+export function outlineOf(o: Pick<SurfaceOptions, "sport" | "park" | "fence" | "units" | "pitch" | "league" | "year">): Outline {
+  const { sport, league } = chooseLeague(o);
+  switch (sport) {
     case "nfl":
     case "cfl":
-    case "ifaf":
-      return rect(footballLength(FOOTBALL[o.sport]), FOOTBALL[o.sport].width);
+    case "ifaf": {
+      if (league?.family === "football") {
+        const field = fieldOf(league, o.year);
+        return rect(footballLength(field), field.width);
+      }
+      return rect(footballLength(FOOTBALL[sport]), FOOTBALL[sport].width);
+    }
     case "nhl": {
-      const box = { x: 0, y: 0, w: NHL.length, h: NHL.width };
-      const r = NHL.cornerRadius;
+      const rink = league?.family === "hockey" ? rinkOf(league, o.year) : undefined;
+      const [length, width, r] = rink === undefined ? [NHL.length, NHL.width, NHL.cornerRadius] : [rink.length, rink.width, rink.cornerRadius];
+      const box = { x: 0, y: 0, w: length, h: width };
       // A rectangle with quarter-circle corners: outside only when a point is in a corner's square but beyond its arc.
       const contains = (x: number, y: number): boolean => {
         if (!inBox(box, x, y)) return false;
@@ -54,12 +63,18 @@ export function outlineOf(o: Pick<SurfaceOptions, "sport" | "park" | "fence" | "
         const cy = y < r ? r : y > box.h - r ? box.h - r : y;
         return (x - cx) ** 2 + (y - cy) ** 2 <= r * r;
       };
-      return { d: roundedRect(0, 0, NHL.length, NHL.width, NHL.cornerRadius), box, contains };
+      return { d: roundedRect(0, 0, length, width, r), box, contains };
     }
-    case "nba":
+    case "nba": {
+      if (league?.family === "basketball") {
+        const court = courtOf(league, o.year);
+        return rect(court.length, court.width);
+      }
       return rect(NBA.length, NBA.width);
+    }
     case "mlb": {
-      const outline = fenceOutline(fenceFor(parkById(o.park), feetFence(o.fence, lengthUnit(o))));
+      const generic = league?.family === "baseball" ? diamondFence(diamondOf(league, o.year)) : undefined;
+      const outline = fenceOutline(fenceFor(parkById(o.park), feetFence(o.fence, lengthUnit(o)), o.year, generic));
       const us = outline.map(([u]) => u);
       const vs = outline.map(([, v]) => v);
       const x = Math.min(...us);

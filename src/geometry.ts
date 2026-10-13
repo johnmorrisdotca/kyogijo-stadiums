@@ -34,6 +34,12 @@ export interface FootballSpec {
   centre: string;
   /** Yard lines are drawn every this many feet. */
   yardLine: number;
+  /** The space between the two uprights, inside to inside, when not the usual `GOALPOST_WIDTH`. */
+  postWidth?: number;
+  /** True for a field whose rules give no yard numbers: none are drawn. */
+  noNumbers?: boolean;
+  /** False for a field with walls and no pylons (an indoor field). Pylons are drawn by default. */
+  pylons?: boolean;
 }
 
 /** The space between the two uprights, inside to inside. */
@@ -130,11 +136,11 @@ export const MLB = {
 /** The distance along the diagonal from home plate to second base. */
 export const secondBase = (): number => MLB.base * Math.SQRT2;
 
-/** Where the infield arc meets a foul line, along the line, from the back of home plate. */
-export function skinJoin(): number {
+/** Where the infield arc meets a foul line, along the line, from the back of home plate. The baseball field's by default; a league's pitching distance and arc if given. */
+export function skinJoin(pitcher: number = MLB.pitcher, skinRadius: number = MLB.skinRadius): number {
   // (u, u) on the line, on the circle of radius R round (0, pitcher): u² + (u − p)² = R²
-  const p = MLB.pitcher;
-  const r = MLB.skinRadius;
+  const p = pitcher;
+  const r = skinRadius;
   const u = (p + Math.sqrt(2 * r * r - p * p)) / 2;
   return u * Math.SQRT2;
 }

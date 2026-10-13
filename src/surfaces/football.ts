@@ -75,15 +75,16 @@ export function football(spec: FootballSpec, o: BuildOptions, marks: FootballMar
   // Numbers: each ten yards, upright on the near side and upside down on the far one, with an arrow to the nearest goal line.
   const size = DIGIT_FONT;
   const [near, far] = spec.numbers;
+  const numbered = spec.noNumbers !== true;
   const centreY = (near + far) / 2;
   const yardsLong = spec.length / 3;
   const positions: { x: number; label: string; pos: number }[] = [];
-  for (let p = 10; p < yardsLong; p += 10) {
+  for (let p = 10; numbered && p < yardsLong; p += 10) {
     const label = String(Math.min(p, yardsLong - p));
     positions.push({ x: e + p * 3, label, pos: p });
   }
   // The CFL marks its centre C; on a field whose middle is a ten-yard line (the 100 yards planned for 2027) the line is a 50, as the NFL's.
-  if (spec.id === "cfl" && (yardsLong / 2) % 10 !== 0) positions.push({ x: e + (yardsLong / 2) * 3, label: spec.centre, pos: yardsLong / 2 });
+  if (numbered && spec.id === "cfl" && (yardsLong / 2) % 10 !== 0) positions.push({ x: e + (yardsLong / 2) * 3, label: spec.centre, pos: yardsLong / 2 });
   let numbers = "";
   for (const side of ["near", "far"] as const) {
     const y = side === "near" ? W - centreY : centreY;
@@ -112,7 +113,7 @@ export function football(spec: FootballSpec, o: BuildOptions, marks: FootballMar
       }
     }
   }
-  lines += el("g", { class: "ky-numbers" }, numbers);
+  if (numbered) lines += el("g", { class: "ky-numbers" }, numbers);
 
   // Goal posts, seen from above: the crossbar, the uprights' ends and the stem.
   if (full) {
@@ -121,7 +122,7 @@ export function football(spec: FootballSpec, o: BuildOptions, marks: FootballMar
     let posts = "";
     postX.forEach((x, i) => {
       const dir = outward[i];
-      const h = GOALPOST_WIDTH / 2;
+      const h = (spec.postWidth ?? GOALPOST_WIDTH) / 2;
       // A slingshot post has one support behind the crossbar, drawn as a stem; an H has two poles, which are the ends.
       const stem = marks.postShape === "slingshot" ? `M${num(x)} ${num(W / 2)}h${num(dir * 4)}` : "";
       posts += el("path", { class: "ky-post", d: `M${num(x)} ${num(W / 2 - h)}V${num(W / 2 + h)}${stem}`, fill: "none", "stroke-width": 0.9 });
@@ -131,7 +132,7 @@ export function football(spec: FootballSpec, o: BuildOptions, marks: FootballMar
     lines += el("g", { class: "ky-posts" }, posts);
     // Pylons at the corners of the goal lines and the end lines.
     const corners = [[e, 0, 1, 1], [e, W, 1, -1], [L - e, 0, -1, 1], [L - e, W, -1, -1], [0, 0, 1, 1], [0, W, 1, -1], [L, 0, -1, 1], [L, W, -1, -1]];
-    lines += el("g", { class: "ky-pylons" }, corners.map(([x, y, sx, sy]) => el("rect", { class: "ky-pylon", x: x + (sx > 0 ? 0 : -1.6), y: y + (sy > 0 ? 0 : -1.6), width: 1.6, height: 1.6 })).join(""));
+    if (spec.pylons !== false) lines += el("g", { class: "ky-pylons" }, corners.map(([x, y, sx, sy]) => el("rect", { class: "ky-pylon", x: x + (sx > 0 ? 0 : -1.6), y: y + (sy > 0 ? 0 : -1.6), width: 1.6, height: 1.6 })).join(""));
   }
 
   const long = Math.min(W * 0.86, 142);

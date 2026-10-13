@@ -19,6 +19,8 @@ export { ERA_CURRENT, ERA_SOURCES, ERA_SPORTS, eraChanges, eraRange, eraStates, 
 export type { EraChange, EraRules, EraRulesOf, EraSource, EraSpan, EraSport, FootballRules, MlbRules, NbaRules, NhlRules } from "./eras.ts";
 export { GROUND_IDS, GROUNDS, groundById, groundByWikidata, groundNameIn, groundSourceUrl, groundsHosting } from "./grounds.ts";
 export type { Ground, GroundCompetition, GroundData, GroundName, GroundSource, GroundTournament } from "./grounds.ts";
+export { FAMILY_OF, LEAGUES, LEAGUE_SOURCES, VARIANTS, chooseLeague, hasHistory, leagueAt, leagueById, leagueChanges, leagueFigures, leagueIds, leagueSeason, leagueSize } from "./leagues.ts";
+export type { BaseballLeague, BasketballLeague, CourtFigures, CourtMarks, DiamondFigures, Family, FootballLeague, HockeyLeague, League, LeagueAt, LeagueChange, LeagueSource, LeagueSpan, Named, RinkFigures } from "./leagues.ts";
 export { SURFACE_UNITS, UNITS, convertLength, isUnit } from "./units.ts";
 export type { Unit } from "./units.ts";
 export { SOCCER, SOCCER_PITCHES, SOCCER_PITCH_IDS, soccerPitchClass, soccerSpec } from "./surfaces/soccer-spec.ts";

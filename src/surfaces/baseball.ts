@@ -1,6 +1,7 @@
 import { el, num } from "../format.ts";
 import { rulesFor, type MlbRules } from "../eras.ts";
 import { MLB, fenceAt, skinJoin, type FencePoint } from "../geometry.ts";
+import { MLB_DIAMOND, type DiamondSpec } from "../leagues/baseball.ts";
 import type { BuildOptions, Surface } from "./surface.ts";
 
 const SQ = Math.SQRT1_2;
@@ -33,14 +34,14 @@ export interface PlateShape {
  * Home plate in a season: a round plate, a square, the square turned, or the pentagon, centred on the foul lines' meeting, wholly
  * behind it, or in front of it as now. `grow` draws it larger than life, as the rest of the field's small things are.
  */
-export function plateShape(era: Pick<MlbRules, "plateShape" | "platePlacement">, grow: number): PlateShape {
+export function plateShape(era: Pick<MlbRules, "plateShape" | "platePlacement">, grow: number, plate: { width: number; side: number } = MLB.plate): PlateShape {
   const { plateShape: shape, platePlacement: placement } = era;
-  const half = shape === "circle" ? (ROUND_PLATE / 2) * grow : shape === "square" ? 0.5 * grow : shape === "diamond" ? (Math.SQRT2 / 2) * grow : MLB.plate.side * grow;
-  const depth = shape === "pentagon" ? MLB.plate.width * grow : shape === "circle" ? 2 * half : shape === "square" ? grow : Math.SQRT2 * grow;
+  const half = shape === "circle" ? (ROUND_PLATE / 2) * grow : shape === "square" ? 0.5 * grow : shape === "diamond" ? (Math.SQRT2 / 2) * grow : plate.side * grow;
+  const depth = shape === "pentagon" ? plate.width * grow : shape === "circle" ? 2 * half : shape === "square" ? grow : Math.SQRT2 * grow;
   // Where its back point lies on the line out from home: centred on the meeting of the foul lines, wholly behind it, or in front of it.
   const back = placement === "centred" ? -depth / 2 : placement === "behind" ? -depth : 0;
   const v = (n: number): number => -(back + n);
-  const centre = shape === "pentagon" ? back + MLB.plate.side * grow : back + depth / 2;
+  const centre = shape === "pentagon" ? back + plate.side * grow : back + depth / 2;
   switch (shape) {
     case "circle":
       return { d: "", circle: { cx: 0, cy: v(half), r: half }, halfWidth: half, centre };
@@ -53,8 +54,24 @@ export function plateShape(era: Pick<MlbRules, "plateShape" | "platePlacement">,
   }
 }
 
-/** The baseball field: grass, warning track, infield, bases, lines and the fence of a park, with the markings of a season (today's by default). */
-export function baseball(points: readonly FencePoint[], o: BuildOptions, era: MlbRules = rulesFor("mlb").rules): Surface {
+/**
+ * The baseball field: grass, warning track, infield, bases, lines and the fence of a park, with the markings of a season (today's
+ * by default). With a `diamond` (leagues.ts) the field of a league, in feet: Little League's, a softball field.
+ */
+export function baseball(points: readonly FencePoint[], o: BuildOptions, era?: MlbRules, diamond: DiamondSpec = MLB_DIAMOND): Surface {
+  const d = diamond;
+  // The Official Baseball Rules have a history (eras.ts); a league's field is as its rulebook has it.
+  const rules: MlbRules =
+    era ??
+    (d === MLB_DIAMOND
+      ? rulesFor("mlb").rules
+      : {
+          pitcher: { kind: "plate", distance: d.pitcher, width: d.pitchersPlate.width, depth: d.pitchersPlate.depth },
+          battersBox: d.boxes === null ? null : { width: d.boxes.batterWidth, length: d.boxes.batterLength, gap: d.boxes.gap },
+          plateShape: "pentagon",
+          platePlacement: "front",
+          moundHeight: null,
+        });
   const outline = fenceOutline(points);
   const us = outline.map(([u]) => u);
   const vs = outline.map(([, v]) => v);
@@ -62,7 +79,7 @@ export function baseball(points: readonly FencePoint[], o: BuildOptions, era: Ml
   const umax = Math.max(...us);
   const vmax = Math.max(...vs);
   const m = o.margin ?? 14;
-  const backstop = MLB.backstop;
+  const backstop = d.backstop;
   const thin = o.exact ? 1 / 3 : 0.7;
   const full = o.detail === "full";
   // Screen coordinates: x is u, y is -v.
@@ -87,9 +104,10 @@ export function baseball(points: readonly FencePoint[], o: BuildOptions, era: Ml
   // The warning track: a band along the fence inside the field.
   base += el("path", { class: "ky-track", d: fenceD, fill: "none", "stroke-width": MLB.warningTrack * 2, "clip-path": `url(#${fairId})` });
   // The infield's dirt, cut by an arc round the pitcher's plate, and its grass.
-  const ua = skinJoin() * SQ;
-  base += el("path", { class: "ky-dirt", d: `M0 0L${num(ua)} ${num(-ua)}A${MLB.skinRadius} ${MLB.skinRadius} 0 0 0 ${num(-ua)} ${num(-ua)}Z` });
-  const centreV = MLB.base * SQ;
+  const skin = d.skinRadius ?? d.base + 5;
+  const ua = skinJoin(d.pitcher, skin) * SQ;
+  base += el("path", { class: "ky-dirt", d: `M0 0L${num(ua)} ${num(-ua)}A${num(skin)} ${num(skin)} 0 0 0 ${num(-ua)} ${num(-ua)}Z` });
+  const centreV = d.base * SQ;
   const half = centreV - 4.5 * Math.SQRT2;
   base += el("path", { class: "ky-infield", d: `M0 ${num(-(centreV + half))}L${num(half)} ${num(-centreV)}L0 ${num(-(centreV - half))}L${num(-half)} ${num(-centreV)}Z` });
   const cuts: [number, number, number][] = [
@@ -99,7 +117,7 @@ export function baseball(points: readonly FencePoint[], o: BuildOptions, era: Ml
     [-centreV, centreV, MLB.baseCircleRadius],
   ];
   // The mound is the plate's: before 1893 the pitcher stood in a chalked box and the sources give no mound.
-  if (era.pitcher.kind === "plate") cuts.push([0, MLB.pitcher - 1, MLB.moundRadius]);
+  if (rules.pitcher.kind === "plate") cuts.push([0, d.moundCentre, d.moundRadius]);
   base += cuts.map(([u, v, r]) => el("circle", { class: "ky-dirt", cx: u, cy: -v, r })).join("");
 
   // Lines: the foul lines, the boxes, the lane, the plates, the bases, the fence.
@@ -108,32 +126,34 @@ export function baseball(points: readonly FencePoint[], o: BuildOptions, era: Ml
   let lines = el("path", { class: "ky-line", d: `M0 0L${pt(first)}M0 0L${pt(last)}`, "stroke-width": thin, fill: "none" });
   if (full) {
     // The batter's boxes, from 1874: each beside the plate, centred lengthwise on its middle.
-    if (era.battersBox !== null) {
-      const { width: batterWidth, length: batterLength, gap } = era.battersBox;
-      const at = plateShape(era, 1);
+    if (rules.battersBox !== null) {
+      const { width: batterWidth, length: batterLength, gap } = rules.battersBox;
+      const at = plateShape(rules, 1, d.plate);
       const inner = at.halfWidth + gap;
       const boxes = [-1, 1].map((s) => `M${num(s * inner)} ${num(-(at.centre + batterLength / 2))}h${num(s * batterWidth)}v${batterLength}h${num(-s * batterWidth)}z`).join("");
       lines += el("path", { class: "ky-line", d: boxes, "stroke-width": thin * 0.8, fill: "none" });
     }
-    const dist = (s: number): [number, number] => [s * SQ * MLB.base, -SQ * MLB.base];
-    const off = 3;
-    const a = dist(1);
-    const b: [number, number] = [a[0] / 2, a[1] / 2];
-    const lane = `M${num(b[0])} ${num(b[1])}l${num(off * SQ)} ${num(off * SQ)}L${num(a[0] + off * SQ)} ${num(a[1] + off * SQ)}L${num(a[0])} ${num(a[1])}`;
-    lines += el("path", { class: "ky-line", d: lane, "stroke-width": thin * 0.7, fill: "none" });
+    if (d.runningLane !== null) {
+      const dist = (s: number): [number, number] => [s * SQ * d.base, -SQ * d.base];
+      const off = 3;
+      const a = dist(1);
+      const b: [number, number] = [a[0] / 2, a[1] / 2];
+      const lane = `M${num(b[0])} ${num(b[1])}l${num(off * SQ)} ${num(off * SQ)}L${num(a[0] + off * SQ)} ${num(a[1] + off * SQ)}L${num(a[0])} ${num(a[1])}`;
+      lines += el("path", { class: "ky-line", d: lane, "stroke-width": thin * 0.7, fill: "none" });
+    }
   }
   // Bases and plates are drawn larger than life, as broadcast graphics do, unless exact lines are asked for.
   const grow = o.exact ? 1 : 2.4;
-  const plate = plateShape(era, grow);
+  const plate = plateShape(rules, grow, d.plate);
   lines += plate.circle === undefined ? el("path", { class: "ky-fill-line", d: plate.d }) : el("circle", { class: "ky-fill-line", cx: plate.circle.cx, cy: plate.circle.cy, r: plate.circle.r });
-  const pitcher = era.pitcher;
+  const pitcher = rules.pitcher;
   if (pitcher.kind === "plate") {
     lines += el("rect", { class: "ky-fill-line", x: -1 * grow, y: -(pitcher.distance + 0.25 * grow), width: 2 * grow, height: 0.5 * grow });
   } else {
     // A chalked box: its front edge the pitching distance from home, its back edge the depth beyond.
     lines += el("rect", { class: "ky-line", x: -pitcher.width / 2, y: -(pitcher.distance + pitcher.depth), width: pitcher.width, height: pitcher.depth, "stroke-width": thin * 0.8, fill: "none" });
   }
-  const h = (MLB.baseSize * grow * Math.SQRT2) / 2;
+  const h = (d.baseSize * grow * Math.SQRT2) / 2;
   const bases: [number, number][] = [
     [centreV - h, centreV],
     [0, 2 * centreV - h],

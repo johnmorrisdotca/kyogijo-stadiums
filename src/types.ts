@@ -186,6 +186,13 @@ export interface SurfaceOptions {
   leftColor?: string;
   /** The colour of the right end when no team gives one. */
   rightColor?: string;
+  /**
+   * The league whose rulebook marks the surface: `sport` names the family (`nba` for basketball, `nhl` for hockey, `nfl`, `cfl` or
+   * `ifaf` for football, `mlb` for baseball and softball) and `league` the variant (`fiba`, `ncaa-women`, `iihf`, `little-league`,
+   * `fastpitch`...). See `LEAGUES`. Without it the sport's own league is drawn. A year draws a league's markings of that season only
+   * where the league has a cited history (`leagueChanges`); the sport's own history (`rulesFor`) is that of its own league.
+   */
+  league?: string;
   /** The ballpark of an MLB drawing: a key of `PARKS`, or `generic` (the default) for a typical field. */
   park?: string;
   /**

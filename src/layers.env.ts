@@ -6,6 +6,7 @@ import { fromSurface, toSurface } from "./frames.ts";
 import "./frames.providers.ts";
 import type { P } from "./layers.marks.ts";
 import type { LayerBase } from "./layers.types.ts";
+import { chooseLeague } from "./leagues.ts";
 import { outlineOf, type Outline } from "./outline.ts";
 import { KYOGIJO_STRINGS, type KyogijoWords } from "./strings.ts";
 import type { ScoreOptions, SurfaceOptions } from "./types.ts";
@@ -60,8 +61,11 @@ export const toArray = <T>(value: readonly T[] | undefined, what: string): reado
   return value;
 };
 
+/** The size a provider's frame is fitted to: the drawn surface's, for a soccer pitch and a league's surface; none for a sport's own fixed one. */
+const fittedSize = (env: Env): { length: number; width: number; unit: "ft" } | undefined => (env.o.sport === "soccer" || chooseLeague(env.o).league !== undefined ? { length: env.outline.box.w, width: env.outline.box.h, unit: "ft" as const } : undefined);
+
 export function unitOfLayer(layer: LayerBase, env: Env): Unit {
-  if (layer.units === "rulebook") return SURFACE_UNITS[env.o.sport] ?? "ft";
+  if (layer.units === "rulebook") return chooseLeague(env.o).league?.unit ?? SURFACE_UNITS[chooseLeague(env.o).sport] ?? "ft";
   if (layer.units === undefined) return env.unit;
   if (!isUnit(layer.units)) throw new RangeError(`Unknown units "${String(layer.units)}": use one of ft, in, yd, m, cm, mm or rulebook`);
   return layer.units;
@@ -73,8 +77,8 @@ export function place(layer: LayerBase, env: Env, points: readonly P[], unit: Un
   let out: P[];
   if (layer.from === undefined) out = points.map(([x, y]): P => [x * k, y * k]);
   else {
-    // A soccer pitch is of any size: a frame of a provider is fitted to the pitch that is drawn unless the layer gives another size.
-    const size = layer.surfaceSize ?? (env.o.sport === "soccer" ? { length: env.outline.box.w, width: env.outline.box.h, unit: "ft" as const } : undefined);
+    // A surface of any size has the frame fitted to it unless the layer gives another size: a soccer pitch, and a league's surface (an IIHF rink is not the NHL's).
+    const size = layer.surfaceSize ?? fittedSize(env);
     const placed = toSurface(points, { from: layer.from, units: unit, size, attacking: layer.attacking, anchors: layer.anchors });
     out = placed.map(([x, y]): P => [x * k, y * k]);
   }
@@ -92,7 +96,7 @@ export function place(layer: LayerBase, env: Env, points: readonly P[], unit: Un
 export function placeBack(layer: LayerBase, env: Env, points: readonly P[], unit: Unit): P[] {
   const k = FEET_PER[unit];
   if (layer.from === undefined) return points.map(([x, y]): P => [x / k, y / k]);
-  const size = layer.surfaceSize ?? (env.o.sport === "soccer" ? { length: env.outline.box.w, width: env.outline.box.h, unit: "ft" as const } : undefined);
+  const size = layer.surfaceSize ?? fittedSize(env);
   return fromSurface(
     points.map(([x, y]): [number, number] => [x / k, y / k]),
     { to: layer.from, units: unit, size, attacking: layer.attacking, anchors: layer.anchors },

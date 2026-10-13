@@ -104,10 +104,11 @@ export function parkPointsIn(park: Park, year: number | undefined): FencePoint[]
 
 /**
  * The fence points a drawing uses: a park's (as it stood in `year`, when the park has dated fences), with any of the
- * five usual distances in `fence` laid over them, or the usual 330, 375, 400, 375 and 330 feet of a generic field.
+ * five usual distances in `fence` laid over them, or the usual 330, 375, 400, 375 and 330 feet of a generic field (or the
+ * `generic` points a league's rules give).
  */
-export function fenceFor(park: Park | undefined, fence: Partial<Fence> | undefined, year?: number): FencePoint[] {
-  const base: FencePoint[] = park === undefined ? fencePoints(DEFAULT_FENCE) : parkPointsIn(park, year);
+export function fenceFor(park: Park | undefined, fence: Partial<Fence> | undefined, year?: number, generic: readonly FencePoint[] = fencePoints(DEFAULT_FENCE)): FencePoint[] {
+  const base: FencePoint[] = park === undefined ? [...generic] : parkPointsIn(park, year);
   if (fence === undefined) return base;
   const keys: [keyof Fence, number][] = [["left", -45], ["leftCenter", -22.5], ["center", 0], ["rightCenter", 22.5], ["right", 45]];
   const given = keys.filter(([key]) => typeof fence[key] === "number" && Number.isFinite(fence[key]) && (fence[key] as number) > 0);

@@ -1,4 +1,5 @@
 import { SPORTS } from "./draw.ts";
+import { leagueIds } from "./leagues.ts";
 import { mountKyogijo, type KyogijoMount } from "./mount.ts";
 import type { ScoreOptions, Side, Size, Sport, StatusWord, SurfaceOptions, Team } from "./types.ts";
 
@@ -7,7 +8,7 @@ export const KYOGIJO_TAG = "kyogijo-field";
 
 /** The attributes the element reads. */
 export const KYOGIJO_ATTRIBUTES = [
-  "sport", "size", "theme", "language", "orientation", "park", "ground", "year", "detail", "margin", "stripes", "exact-lines", "uppercase",
+  "sport", "league", "size", "theme", "language", "orientation", "park", "ground", "year", "detail", "margin", "stripes", "exact-lines", "uppercase",
   "pitch", "pitch-type", "half", "goals", "stripe-pattern", "corner-flags",
   "home", "away", "home-abbr", "away-abbr", "home-score", "away-score", "home-penalties", "away-penalties", "score", "home-logo", "away-logo", "home-color", "away-color",
   "status", "competition", "date", "label", "winner", "home-side", "description", "options",
@@ -44,6 +45,10 @@ export function optionsFromAttributes(read: (name: string) => string | null, bas
     if (value !== null && value !== "") o[key] = value;
   };
   text("theme"); text("language"); text("orientation"); text("park"); text("ground"); text("detail"); text("pitch"); text("pitch-type"); text("half"); text("goals"); text("stripe-pattern"); text("competition"); text("date"); text("label"); text("winner"); text("description");
+  // A league the sport does not have is left out, not an error: attributes come from a page's markup.
+  const league = read("league") ?? merged.league;
+  if (typeof league === "string" && leagueIds(o.sport as Sport).includes(league)) o.league = league;
+  else delete o.league;
   const size = read("size");
   if (size !== null) o.size = size as Size;
   const status = read("status");
