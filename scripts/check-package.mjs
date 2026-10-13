@@ -88,7 +88,7 @@ const game = ${JSON.stringify(game)};
 if (drawKyogijo(game) !== ${JSON.stringify(expected)}) throw new Error("the installed package drew another drawing");
 if (drawKyogijo({ ...game, sport: "mlb", park: "fenway-park", orientation: "portrait" }) !== ${JSON.stringify(expectedPortrait)}) throw new Error("the installed package drew another ballpark");
 if (VERSION !== ${JSON.stringify(pkg.version)}) throw new Error("VERSION is " + VERSION);
-if (SPORTS.length !== 6 || Object.keys(PARKS).length !== 50) throw new Error("the sports or the parks are wrong");
+if (SPORTS.length !== 6 || Object.keys(PARKS).length !== 94) throw new Error("the sports or the parks are wrong");
 const { NHL, fenceAt } = m1;
 if (NHL.length !== 200 || fenceAt([[-45, 300], [45, 300]], 0) !== 300) throw new Error("the geometry is wrong");
 const { kyogijoProps } = m4;

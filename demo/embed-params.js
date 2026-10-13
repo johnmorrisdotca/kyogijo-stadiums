@@ -6,6 +6,7 @@ export function toParams(o) {
   const q = new URLSearchParams();
   q.set("sport", o.sport);
   if (o.park) q.set("park", o.park);
+  if (Number.isInteger(o.year)) q.set("year", String(o.year));
   if (o.size && o.size !== "full") q.set("size", o.size);
   if (o.orientation && o.orientation !== "auto") q.set("orientation", o.orientation);
   if (o.theme && o.theme !== "auto") q.set("theme", o.theme);
@@ -29,6 +30,7 @@ export function fromParams(q) {
   for (const [param, key] of [["park", "park"], ["size", "size"], ["theme", "theme"], ["lang", "language"], ["status", "status"], ["competition", "competition"], ["date", "date"], ["label", "label"], ["winner", "winner"]]) {
     if (q.get(param)) o[key] = q.get(param);
   }
+  if (/^\d{4}$/.test(q.get("year") || "")) o.year = Number(q.get("year"));
   for (const [role, short] of [["away", "a"], ["home", "h"]]) {
     if (!q.get(role)) continue;
     const t = { name: q.get(role) };

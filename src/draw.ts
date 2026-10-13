@@ -125,7 +125,7 @@ function buildSurface(o: SurfaceOptions, portrait: boolean, id: string, score: b
     case "nba":
       return basketball(common);
     case "mlb":
-      return baseball(fenceFor(parkById(o.park), feetFence(o.fence, unit)), common);
+      return baseball(fenceFor(parkById(o.park), feetFence(o.fence, unit), o.year), common);
     default:
       throw new Error(`Unknown sport "${String(o.sport)}": use one of ${SPORTS.join(", ")}`);
   }

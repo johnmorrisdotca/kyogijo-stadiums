@@ -70,9 +70,11 @@ The CFL is to change in 2027 (100 yards between the goal lines, 15-yard end zone
 
 ## Ballparks
 
-The fence distances of the 30 MLB parks and the 20 NPB parks are in `scripts/parks.data.json`, each with the article and revision it was read from. Each figure is a distance in feet (MLB) or metres (NPB) as the article gives it. The angle at which a distance is taken is not published and is **ours**: the foul-line figures are at 45 degrees either side of dead centre, the middle at 0, and a figure labelled left-center or right-center at 22.5 degrees unless a park has more than one, in which case they are spread between the line and the middle in the order the article lists them. A fence is a monotone cubic through the points, so it never goes beyond them.
+The fence distances of the 30 current MLB parks, the 44 past ones and the 20 NPB parks are in `scripts/parks.data.json`, each with the article and revision it was read from. Each figure is a distance in feet (MLB) or metres (NPB) as the article gives it. The angle at which a distance is taken is not published and is **ours**: the foul-line figures are at 45 degrees either side of dead centre, the middle at 0, and a figure labelled left-center or right-center at 22.5 degrees unless a park has more than one, in which case they are spread between the line and the middle in the order the article lists them. A fence is a monotone cubic through the points, so it never goes beyond them.
 
-The parks of the past (Hiroshima Municipal Stadium, Korakuen, Osaka Stadium, Heiwadai, Kawasaki, Nagoya Stadium) are drawn with the figures of the article for the park as it was, as the Japanese article gives them (Korakuen and Kawasaki by their measured distances, not their announced ones).
+The NPB parks of the past (Hiroshima Municipal Stadium, Korakuen, Osaka Stadium, Heiwadai, Kawasaki, Nagoya Stadium) are drawn with the figures of the article for the park as it was, as the Japanese article gives them (Korakuen and Kawasaki by their measured distances, not their announced ones).
+
+The MLB parks of the past are read the same way, from the English article of each at the revision cited in [NOTICE.md](../NOTICE.md); where an article dates more than one fence (the Polo Grounds, Shibe Park, Huntington Avenue Grounds and others) each is kept as a period with its first and last season, and `year` picks one. A ground whose article gives no distances is not in `PARKS`; the list is in [references.md](./references.md).
 
 ## Surface units
 

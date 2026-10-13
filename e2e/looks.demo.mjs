@@ -26,7 +26,7 @@ test("the whole page, with every park drawn, does not scroll sideways, in Englis
   test.setTimeout(90_000);
   await open(page, "?lang=en&help=off");
   await page.locator(at("park-grid")).scrollIntoViewIfNeeded();
-  await expect(page.locator(`${at("park-grid")} .park`)).toHaveCount(50);
+  await expect(page.locator(`${at("park-grid")} .park`)).toHaveCount(94);
   await noSidewaysScroll(page);
   await page.locator('[data-lang="ja"]').click();
   await noSidewaysScroll(page);

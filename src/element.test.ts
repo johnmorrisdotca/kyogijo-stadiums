@@ -20,6 +20,12 @@ describe("the custom element's options", () => {
     expect((optionsFromAttributes(read({ sport: "nba", home: "H", away: "A", score: "3–2" })) as ScoreOptions).home.score).toBe(3);
   });
 
+  it("read a season for a past park's fence, and ignore anything that is not a year", () => {
+    expect(optionsFromAttributes(read({ sport: "mlb", park: "polo-grounds", year: "1915" })).year).toBe(1915);
+    expect(optionsFromAttributes(read({ sport: "mlb", year: " 1915 " })).year).toBe(1915);
+    for (const bad of ["", "soon", "15", "19150", "-1915", "1915.5"]) expect(optionsFromAttributes(read({ sport: "mlb", year: bad })).year, bad).toBeUndefined();
+  });
+
   it("draw a bare surface when a team is missing, and a known sport when the sport is not one", () => {
     expect("home" in optionsFromAttributes(read({ sport: "nfl", home: "H" }))).toBe(false);
     expect(optionsFromAttributes(read({ sport: "curling" })).sport).toBe("nhl");

@@ -151,6 +151,18 @@ describe("the baseball field", () => {
     expect(drawKyogijo({ sport: "mlb", id: "p" })).toBe(drawKyogijo({ sport: "mlb", id: "p", park: "no-such-park" }));
   });
 
+  it("draws the fence a park had in the season asked for, and its last fence for any other season", () => {
+    const fence = (year?: number) => withClass(parse(drawKyogijo({ sport: "mlb", park: "polo-grounds", year })), "ky-fence")[0].attrs.d;
+    expect(fence(1905)).not.toBe(fence(1915));
+    expect(fence(1915)).not.toBe(fence());
+    expect(fence(1930)).toBe(fence());
+    expect(fence(1700)).toBe(fence());
+    // A park with one fence, and a generic field, ignore the season.
+    const once = (park: string | undefined, year?: number) => drawKyogijo({ sport: "mlb", id: "x", park, year });
+    expect(once("fenway-park", 1950)).toBe(once("fenway-park"));
+    expect(once(undefined, 1950)).toBe(once(undefined));
+  });
+
   it("takes fence distances over the park's", () => {
     const near = box(parse(drawKyogijo({ sport: "mlb", fence: { left: 300, right: 300 } })));
     const far = box(parse(drawKyogijo({ sport: "mlb", fence: { left: 360, right: 360 } })));

@@ -60,11 +60,12 @@ describe("the package's own numbers", () => {
     expect(VERSION).toBe(pkg.version);
   });
 
-  it("have a README that says what the code holds: fifty parks, six sports", () => {
+  it("have a README that says what the code holds: ninety-four parks, six sports", () => {
     const readme = readFileSync("README.md", "utf8");
-    expect(PARK_IDS).toHaveLength(50);
-    expect(readme).toContain("The 30 MLB parks and the 12 home parks");
-    expect(readme).toContain("| Ballparks | 50 (30 MLB, 12 NPB home parks, 8 other NPB grounds) | `PARKS` |");
+    expect(PARK_IDS).toHaveLength(94);
+    expect(readme).toContain("The 30 current MLB parks and 44 that MLB clubs have left");
+    expect(readme).toContain("the 12 home parks");
+    expect(readme).toContain("| Ballparks | 94 (30 current MLB, 44 past MLB, 12 NPB home parks, 8 other NPB grounds) | `PARKS` |");
   });
 
   it("list every park's source in NOTICE.md", () => {

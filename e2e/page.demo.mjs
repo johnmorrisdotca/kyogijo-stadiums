@@ -46,13 +46,13 @@ test("the sport buttons change the drawing, and the address follows", async ({ p
 test("every park is in the picker and draws its own fence", async ({ page }) => {
   await open(page, "?sport=mlb&lang=en&help=off&orientation=landscape");
   const options = await page.locator(`${at("park")} option`).count();
-  expect(options).toBe(51);
+  expect(options).toBe(95);
   const fences = new Set();
-  for (const value of ["generic", "fenway-park", "tokyo-dome", "hanshin-koshien-stadium", "oracle-park"]) {
+  for (const value of ["generic", "fenway-park", "tokyo-dome", "hanshin-koshien-stadium", "oracle-park", "polo-grounds", "ebbets-field"]) {
     await page.locator(at("park")).selectOption(value);
     fences.add(await page.locator(`${at("stage")} .ky-fence`).getAttribute("d"));
   }
-  expect(fences.size).toBe(5);
+  expect(fences.size).toBe(7);
   await page.locator(at("park")).selectOption("tokyo-dome");
   expect(await svg(page).locator("desc").textContent()).toContain("Tokyo Dome");
 });
@@ -141,7 +141,7 @@ test("the examples are all there: every sport, wide and tall, badges, compact ca
   expect(await page.locator(`${at("compact-cards")} svg.kyogijo`).count()).toBe(3);
   expect(await page.locator(`${at("court-cards")} svg.kyogijo`).count()).toBe(5);
   await page.locator(at("parks-show")).scrollIntoViewIfNeeded();
-  await expect(page.locator(`${at("park-grid")} .park`)).toHaveCount(50);
+  await expect(page.locator(`${at("park-grid")} .park`)).toHaveCount(94);
   await page.locator(`${at("park-grid")} .park[data-park="fenway-park"]`).click();
   await expect(svg(page)).toHaveAttribute("data-sport", "mlb");
   expect(await page.locator(at("park")).inputValue()).toBe("fenway-park");

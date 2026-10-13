@@ -163,6 +163,8 @@ export interface SurfaceOptions {
   rightColor?: string;
   /** The ballpark of an MLB drawing: a key of `PARKS`, or `generic` (the default) for a typical field. */
   park?: string;
+  /** The season of a past park's fence, for a park whose fence moved (`polo-grounds` in 1915): a year in one of its `periods`, else its last fence. */
+  year?: number;
   /** Fence distances of an MLB drawing, in `units`, over the park's. */
   fence?: Partial<Fence>;
   /** The look of an NBA court. */

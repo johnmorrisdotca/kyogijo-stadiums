@@ -58,7 +58,8 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `sport_mlb` | Baseball | 野球 |
 | `park` | Ballpark | 球場 |
 | `parkGeneric` | A generic field | 標準的なグラウンド |
-| `parkGroupMlb` | MLB | MLB |
+| `parkGroupMlb` | MLB, today's home parks | MLB（現在の本拠地） |
+| `parkGroupMlbPast` | MLB, parks of the past | MLB（過去の球場） |
 | `parkGroupNpb` | NPB, today's home parks | NPB（現在の本拠地） |
 | `parkGroupOther` | NPB, other and past grounds | NPB（準本拠地・過去の球場） |
 | `size` | Show | 表示 |
@@ -145,7 +146,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `courtTitle` | Court looks | コートの見た目 |
 | `courtText` | The paint, the border, the wood and the words on the baselines are options. These use plain colours and no one's marks. | ペイント、縁取り、床の木目、ベースラインの文字は設定できます。ここでは単色だけを使い、実在するチームのマークは使っていません。 |
 | `parksTitle` | Ballparks | 球場 |
-| `parksText` | Thirty MLB parks and the NPB's twelve home parks and eight other grounds, each fence drawn from the distances its article publishes. Press one to try it. | MLBの30球場と、NPBの本拠地12球場、その他8球場。外野フェンスは、各球場の公表されている距離をもとに描いています。選ぶと試せます。 |
+| `parksText` | Thirty current MLB parks and forty-four past ones, and the NPB's twelve home parks and eight other grounds, each fence drawn from the distances its article publishes. Press one to try it. | 現在のMLB30球場と過去の44球場、NPBの本拠地12球場とその他8球場。外野フェンスは、各球場の記事で公表されている距離をもとに描いています。球場を選ぶと試せます。 |
 | `parksShow` | Show the parks | 球場を表示する |
 | `liveTitle` | A live score | 得点が動く例 |
 | `liveText` | The score moves and the drawing is drawn again. Nothing is fetched: it is a made-up game. | 得点が動くたびに図を描き直します。通信はしません。架空の試合です。 |

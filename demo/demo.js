@@ -209,7 +209,13 @@ function fillParks() {
   };
   add(select, "generic", say("parkGeneric"));
   const name = (p) => (language.lang === "ja" && p.nameJa ? p.nameJa : p.name);
-  for (const [group, keep_] of [["parkGroupMlb", (p) => p.league === "MLB"], ["parkGroupNpb", (p) => p.league === "NPB" && p.status === "current"], ["parkGroupOther", (p) => p.league === "NPB" && p.status !== "current"]]) {
+  const groups = [
+    ["parkGroupMlb", (p) => p.league === "MLB" && p.status === "current"],
+    ["parkGroupMlbPast", (p) => p.league === "MLB" && p.status === "past"],
+    ["parkGroupNpb", (p) => p.league === "NPB" && p.status === "current"],
+    ["parkGroupOther", (p) => p.league === "NPB" && p.status !== "current"],
+  ];
+  for (const [group, keep_] of groups) {
     const optgroup = document.createElement("optgroup");
     optgroup.label = say(group);
     for (const id of PARK_IDS) if (keep_(PARKS[id])) add(optgroup, id, name(PARKS[id]));
@@ -467,7 +473,7 @@ function drawParks() {
     tile.className = "park";
     tile.dataset.park = id;
     const name = language.lang === "ja" && p.nameJa ? p.nameJa : p.name;
-    tile.innerHTML = `${drawKyogijo({ sport: "mlb", park: id, orientation: "portrait", margin: 6, detail: "simple", stripes: false, style: "none", title: name })}<span class="park-name">${name.replace(/&/g, "&amp;").replace(/</g, "&lt;")}</span><span class="park-sub">${p.league} · ${p.status === "historic" ? (language.lang === "ja" ? "過去" : "past") : p.city}</span>`;
+    tile.innerHTML = `${drawKyogijo({ sport: "mlb", park: id, orientation: "portrait", margin: 6, detail: "simple", stripes: false, style: "none", title: name })}<span class="park-name">${name.replace(/&/g, "&amp;").replace(/</g, "&lt;")}</span><span class="park-sub">${p.league} · ${p.status === "past" ? (p.from !== undefined ? `${p.from}–${p.to}` : language.lang === "ja" ? "過去" : "past") : p.city}</span>`;
     tile.addEventListener("click", () => {
       state.sport = "mlb";
       state.park = id;

@@ -5,6 +5,7 @@ import type { ParkData } from "./parks.ts";
 export const PARK_DATA: ParkData[] = [
   {
     "id": "oriole-park-at-camden-yards",
+    "wikidata": "Q1141174",
     "name": "Oriole Park at Camden Yards",
     "team": "Baltimore Orioles",
     "city": "Baltimore",
@@ -28,6 +29,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "fenway-park",
+    "wikidata": "Q49136",
     "name": "Fenway Park",
     "team": "Boston Red Sox",
     "city": "Boston",
@@ -50,6 +52,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "yankee-stadium",
+    "wikidata": "Q753529",
     "name": "Yankee Stadium",
     "team": "New York Yankees",
     "city": "New York",
@@ -71,6 +74,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "tropicana-field",
+    "wikidata": "Q1810119",
     "name": "Tropicana Field",
     "team": "Tampa Bay Rays",
     "city": "St. Petersburg",
@@ -92,6 +96,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "rogers-centre",
+    "wikidata": "Q76318",
     "name": "Rogers Centre",
     "team": "Toronto Blue Jays",
     "city": "Toronto",
@@ -115,6 +120,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "rate-field",
+    "wikidata": "Q633613",
     "name": "Rate Field",
     "team": "Chicago White Sox",
     "city": "Chicago",
@@ -136,6 +142,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "progressive-field",
+    "wikidata": "Q1154053",
     "name": "Progressive Field",
     "team": "Cleveland Guardians",
     "city": "Cleveland",
@@ -158,6 +165,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "comerica-park",
+    "wikidata": "Q868482",
     "name": "Comerica Park",
     "team": "Detroit Tigers",
     "city": "Detroit",
@@ -179,6 +187,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "kauffman-stadium",
+    "wikidata": "Q1737017",
     "name": "Kauffman Stadium",
     "team": "Kansas City Royals",
     "city": "Kansas City",
@@ -201,6 +210,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "target-field",
+    "wikidata": "Q1156635",
     "name": "Target Field",
     "team": "Minnesota Twins",
     "city": "Minneapolis",
@@ -223,6 +233,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "daikin-park",
+    "wikidata": "Q1193671",
     "name": "Daikin Park",
     "team": "Houston Astros",
     "city": "Houston",
@@ -247,6 +258,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "angel-stadium",
+    "wikidata": "Q531897",
     "name": "Angel Stadium",
     "team": "Los Angeles Angels",
     "city": "Anaheim",
@@ -269,6 +281,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "sutter-health-park",
+    "wikidata": "Q3418115",
     "name": "Sutter Health Park",
     "team": "Athletics",
     "city": "West Sacramento",
@@ -289,6 +302,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "t-mobile-park",
+    "wikidata": "Q1193117",
     "name": "T-Mobile Park",
     "team": "Seattle Mariners",
     "city": "Seattle",
@@ -310,6 +324,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "globe-life-field",
+    "wikidata": "Q24284037",
     "name": "Globe Life Field",
     "team": "Texas Rangers",
     "city": "Arlington",
@@ -331,6 +346,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "truist-park",
+    "wikidata": "Q17003430",
     "name": "Truist Park",
     "team": "Atlanta Braves",
     "city": "Cumberland",
@@ -352,6 +368,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "loandepot-park",
+    "wikidata": "Q1368138",
     "name": "loanDepot Park",
     "team": "Miami Marlins",
     "city": "Miami",
@@ -373,6 +390,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "citi-field",
+    "wikidata": "Q1072882",
     "name": "Citi Field",
     "team": "New York Mets",
     "city": "New York",
@@ -396,6 +414,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "citizens-bank-park",
+    "wikidata": "Q912770",
     "name": "Citizens Bank Park",
     "team": "Philadelphia Phillies",
     "city": "Philadelphia",
@@ -420,6 +439,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "nationals-park",
+    "wikidata": "Q517545",
     "name": "Nationals Park",
     "team": "Washington Nationals",
     "city": "Washington",
@@ -441,6 +461,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "wrigley-field",
+    "wikidata": "Q1052807",
     "name": "Wrigley Field",
     "team": "Chicago Cubs",
     "city": "Chicago",
@@ -462,6 +483,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "great-american-ball-park",
+    "wikidata": "Q979975",
     "name": "Great American Ball Park",
     "team": "Cincinnati Reds",
     "city": "Cincinnati",
@@ -483,6 +505,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "american-family-field",
+    "wikidata": "Q1339293",
     "name": "American Family Field",
     "team": "Milwaukee Brewers",
     "city": "Milwaukee",
@@ -504,6 +527,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "pnc-park",
+    "wikidata": "Q1151177",
     "name": "PNC Park",
     "team": "Pittsburgh Pirates",
     "city": "Pittsburgh",
@@ -526,6 +550,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "busch-stadium",
+    "wikidata": "Q253546",
     "name": "Busch Stadium",
     "team": "St. Louis Cardinals",
     "city": "St. Louis",
@@ -547,6 +572,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "chase-field",
+    "wikidata": "Q1068011",
     "name": "Chase Field",
     "team": "Arizona Diamondbacks",
     "city": "Phoenix",
@@ -570,6 +596,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "coors-field",
+    "wikidata": "Q1129916",
     "name": "Coors Field",
     "team": "Colorado Rockies",
     "city": "Denver",
@@ -591,6 +618,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "dodger-stadium",
+    "wikidata": "Q247420",
     "name": "Dodger Stadium",
     "team": "Los Angeles Dodgers",
     "city": "Los Angeles",
@@ -615,6 +643,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "petco-park",
+    "wikidata": "Q1194586",
     "name": "Petco Park",
     "team": "San Diego Padres",
     "city": "San Diego",
@@ -638,6 +667,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "oracle-park",
+    "wikidata": "Q298585",
     "name": "Oracle Park",
     "team": "San Francisco Giants",
     "city": "San Francisco",
@@ -660,7 +690,1323 @@ export const PARK_DATA: ParkData[] = [
     }
   },
   {
+    "id": "baker-bowl",
+    "wikidata": "Q4849117",
+    "name": "Baker Bowl",
+    "team": "Philadelphia Phillies",
+    "city": "Philadelphia",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1887,
+    "to": 1938,
+    "points": [
+      [-45, 341],
+      [0, 408],
+      [22.5, 300],
+      [45, 280]
+    ],
+    "en": {
+      "title": "Baker Bowl",
+      "revision": 1375146474
+    }
+  },
+  {
+    "id": "exposition-park-pittsburgh",
+    "wikidata": "Q5421611",
+    "name": "Exposition Park",
+    "team": "Pittsburgh Pirates",
+    "city": "Pittsburgh",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1891,
+    "to": 1909,
+    "points": [
+      [-45, 400],
+      [0, 450],
+      [45, 400]
+    ],
+    "en": {
+      "title": "Exposition Park (Pittsburgh)",
+      "revision": 1372151354
+    },
+    "note": "Three published figures only; the article does not say which of the park's versions they belong to."
+  },
+  {
+    "id": "polo-grounds",
+    "wikidata": "Q1276360",
+    "name": "Polo Grounds",
+    "team": "New York Giants / New York Yankees / New York Mets",
+    "city": "New York",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1891,
+    "to": 1963,
+    "points": [
+      [-45, 279],
+      [-37.5, 315],
+      [-30, 360],
+      [-22.5, 414],
+      [-15, 447],
+      [-7.5, 455],
+      [0, 483],
+      [7.5, 455],
+      [15, 449],
+      [22.5, 395],
+      [30, 339],
+      [37.5, 294],
+      [45, 258]
+    ],
+    "en": {
+      "title": "Polo Grounds",
+      "revision": 1379229018
+    },
+    "periods": [
+      {
+        "from": 1891,
+        "to": 1910,
+        "points": [
+          [-45, 335],
+          [0, 500],
+          [45, 335]
+        ]
+      },
+      {
+        "from": 1911,
+        "to": 1922,
+        "points": [
+          [-45, 277],
+          [0, 433],
+          [45, 258]
+        ]
+      }
+    ],
+    "note": "The distances are those compiled in the article; 1923 to 1963 is the last fence. Center field is the posted 483 feet."
+  },
+  {
+    "id": "south-end-grounds",
+    "wikidata": "Q6646308",
+    "name": "South End Grounds",
+    "team": "Boston Braves",
+    "city": "Boston",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1894,
+    "to": 1914,
+    "points": [
+      [-45, 250],
+      [-30, 445],
+      [-15, 450],
+      [0, 440],
+      [22.5, 440],
+      [45, 255]
+    ],
+    "en": {
+      "title": "South End Grounds",
+      "revision": 1372231528
+    },
+    "note": "The figures are those of the third South End Grounds, built in 1894."
+  },
+  {
+    "id": "huntington-avenue-grounds",
+    "wikidata": "Q1056422",
+    "name": "Huntington Avenue Grounds",
+    "team": "Boston Red Sox",
+    "city": "Boston",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1901,
+    "to": 1911,
+    "points": [
+      [-45, 350],
+      [-22.5, 440],
+      [0, 635],
+      [45, 320]
+    ],
+    "en": {
+      "title": "Huntington Avenue Grounds",
+      "revision": 1372204570
+    },
+    "periods": [
+      {
+        "from": 1901,
+        "to": 1907,
+        "points": [
+          [-45, 350],
+          [-22.5, 440],
+          [0, 530],
+          [45, 280]
+        ]
+      }
+    ],
+    "note": "The centre field fence was moved from 530 to 635 feet and right field from 280 to 320 for 1908. No right-center figure is published."
+  },
+  {
+    "id": "league-park-cleveland",
+    "wikidata": "Q870897",
+    "name": "League Park",
+    "team": "Cleveland Indians",
+    "city": "Cleveland",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1901,
+    "to": 1946,
+    "points": [
+      [-45, 375],
+      [-30, 415],
+      [-15, 460],
+      [0, 420],
+      [22.5, 340],
+      [45, 290]
+    ],
+    "en": {
+      "title": "League Park",
+      "revision": 1373475496
+    },
+    "note": "Deep center, 460 feet, is listed before center field, 420, and is taken left of it."
+  },
+  {
+    "id": "sportsmans-park",
+    "wikidata": "Q7579980",
+    "name": "Sportsman's Park",
+    "team": "St. Louis Browns / St. Louis Cardinals",
+    "city": "St. Louis",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1902,
+    "to": 1966,
+    "points": [
+      [-45, 351],
+      [-30, 379],
+      [-15, 426],
+      [0, 422],
+      [22.5, 354],
+      [45, 310]
+    ],
+    "en": {
+      "title": "Sportsman's Park",
+      "revision": 1372232220
+    },
+    "note": "The deepest corner to the left of center, 426 feet, is taken left of center field, 422."
+  },
+  {
+    "id": "hilltop-park",
+    "wikidata": "Q5764114",
+    "name": "Hilltop Park",
+    "team": "New York Highlanders / New York Giants",
+    "city": "New York",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1903,
+    "to": 1912,
+    "points": [
+      [-45, 365],
+      [-22.5, 378],
+      [0, 420],
+      [22.5, 424],
+      [45, 385]
+    ],
+    "en": {
+      "title": "Hilltop Park",
+      "revision": 1372186833
+    }
+  },
+  {
+    "id": "forbes-field",
+    "wikidata": "Q1963954",
+    "name": "Forbes Field",
+    "team": "Pittsburgh Pirates",
+    "city": "Pittsburgh",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1909,
+    "to": 1970,
+    "points": [
+      [-45, 365],
+      [-30, 406],
+      [-15, 457],
+      [0, 442],
+      [15, 436],
+      [30, 375],
+      [45, 300]
+    ],
+    "en": {
+      "title": "Forbes Field",
+      "revision": 1372176812
+    },
+    "periods": [
+      {
+        "from": 1909,
+        "to": 1911,
+        "points": [
+          [-45, 360],
+          [0, 462],
+          [45, 376]
+        ]
+      }
+    ],
+    "note": "The final posted distances. Straightaway center was never marked; 442 is the figure some sources give. The original fence of 1909 was 360, 462 and 376 feet."
+  },
+  {
+    "id": "shibe-park",
+    "wikidata": "Q7496044",
+    "name": "Shibe Park",
+    "team": "Philadelphia Athletics / Philadelphia Phillies",
+    "city": "Philadelphia",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1909,
+    "to": 1970,
+    "points": [
+      [-45, 334],
+      [-22.5, 387],
+      [0, 410],
+      [22.5, 390],
+      [45, 329]
+    ],
+    "en": {
+      "title": "Shibe Park",
+      "revision": 1376110848
+    },
+    "periods": [
+      {
+        "from": 1909,
+        "to": 1924,
+        "points": [
+          [-45, 378],
+          [0, 515],
+          [45, 340]
+        ]
+      },
+      {
+        "from": 1925,
+        "to": 1949,
+        "points": [
+          [-45, 334],
+          [0, 468],
+          [45, 331]
+        ]
+      },
+      {
+        "from": 1950,
+        "to": 1967,
+        "points": [
+          [-45, 334],
+          [-22.5, 420],
+          [0, 447],
+          [22.5, 405],
+          [45, 329]
+        ]
+      }
+    ],
+    "note": "Also called Connie Mack Stadium. Opening day of 1909 had left field at 360 feet; center is the deepest corner (515 and 468 feet) in the first two periods."
+  },
+  {
+    "id": "comiskey-park",
+    "wikidata": "Q1114772",
+    "name": "Comiskey Park",
+    "team": "Chicago White Sox",
+    "city": "Chicago",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1910,
+    "to": 1990,
+    "points": [
+      [-45, 347],
+      [-22.5, 382],
+      [0, 409],
+      [22.5, 382],
+      [45, 347]
+    ],
+    "en": {
+      "title": "Comiskey Park",
+      "revision": 1379270087
+    },
+    "periods": [
+      {
+        "from": 1910,
+        "to": 1985,
+        "points": [
+          [-45, 363],
+          [-22.5, 382],
+          [0, 420],
+          [22.5, 382],
+          [45, 363]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "griffith-stadium",
+    "wikidata": "Q5608924",
+    "name": "Griffith Stadium",
+    "team": "Washington Senators",
+    "city": "Washington",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1911,
+    "to": 1961,
+    "points": [
+      [-45, 388],
+      [-22.5, 360],
+      [0, 421],
+      [22.5, 373],
+      [45, 320]
+    ],
+    "en": {
+      "title": "Griffith Stadium",
+      "revision": 1379220233
+    },
+    "note": "The infobox's final figures."
+  },
+  {
+    "id": "crosley-field",
+    "wikidata": "Q3003747",
+    "name": "Crosley Field",
+    "team": "Cincinnati Reds",
+    "city": "Cincinnati",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1912,
+    "to": 1970,
+    "points": [
+      [-45, 328],
+      [-22.5, 380],
+      [0, 387],
+      [22.5, 383],
+      [45, 366]
+    ],
+    "en": {
+      "title": "Crosley Field",
+      "revision": 1372078480
+    },
+    "periods": [
+      {
+        "from": 1912,
+        "to": 1957,
+        "points": [
+          [-45, 360],
+          [-22.5, 380],
+          [0, 420],
+          [22.5, 383],
+          [45, 360]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tiger-stadium",
+    "wikidata": "Q1750255",
+    "name": "Tiger Stadium",
+    "team": "Detroit Tigers",
+    "city": "Detroit",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1912,
+    "to": 1999,
+    "points": [
+      [-45, 340],
+      [-22.5, 365],
+      [0, 440],
+      [22.5, 370],
+      [45, 325]
+    ],
+    "en": {
+      "title": "Tiger Stadium (Detroit)",
+      "revision": 1379484942
+    },
+    "note": "Called Navin Field and Briggs Stadium before."
+  },
+  {
+    "id": "ebbets-field",
+    "wikidata": "Q1278537",
+    "name": "Ebbets Field",
+    "team": "Brooklyn Dodgers",
+    "city": "Brooklyn",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1913,
+    "to": 1957,
+    "points": [
+      [-45, 348],
+      [-22.5, 351],
+      [0, 399],
+      [22.5, 344],
+      [45, 297]
+    ],
+    "en": {
+      "title": "Ebbets Field",
+      "revision": 1378347217
+    },
+    "periods": [
+      {
+        "from": 1931,
+        "to": 1947,
+        "points": [
+          [-45, 348],
+          [-30, 365],
+          [-15, 407],
+          [0, 399],
+          [22.5, 344],
+          [45, 297]
+        ]
+      }
+    ],
+    "note": "Center field is the posted 399 feet of the notch in deep right-center."
+  },
+  {
+    "id": "braves-field",
+    "wikidata": "Q11335096",
+    "name": "Braves Field",
+    "team": "Boston Braves",
+    "city": "Boston",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1915,
+    "to": 1952,
+    "points": [
+      [-45, 337],
+      [-22.5, 355],
+      [0, 390],
+      [22.5, 355],
+      [45, 319]
+    ],
+    "en": {
+      "title": "Braves Field",
+      "revision": 1372863471
+    },
+    "note": "The final distances; the article lists the fences as moved almost every year."
+  },
+  {
+    "id": "yankee-stadium-1923",
+    "wikidata": "Q675214",
+    "name": "Yankee Stadium (1923)",
+    "team": "New York Yankees",
+    "city": "New York",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1923,
+    "to": 2008,
+    "points": [
+      [-45, 318],
+      [-22.5, 399],
+      [0, 408],
+      [22.5, 385],
+      [45, 314]
+    ],
+    "en": {
+      "title": "Yankee Stadium (1923)",
+      "revision": 1377411197
+    },
+    "note": "The figures after the rebuilding of 1974 and 1975; from 1924 to 1973 the article gives left field at 281 feet and the deepest center at 490."
+  },
+  {
+    "id": "cleveland-stadium",
+    "wikidata": "Q2113078",
+    "name": "Cleveland Stadium",
+    "team": "Cleveland Indians",
+    "city": "Cleveland",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1932,
+    "to": 1993,
+    "points": [
+      [-45, 322],
+      [-22.5, 385],
+      [0, 400],
+      [22.5, 385],
+      [45, 322]
+    ],
+    "en": {
+      "title": "Cleveland Stadium",
+      "revision": 1372955954
+    },
+    "note": "Also called Cleveland Municipal Stadium."
+  },
+  {
+    "id": "milwaukee-county-stadium",
+    "wikidata": "Q3314569",
+    "name": "Milwaukee County Stadium",
+    "team": "Milwaukee Braves / Milwaukee Brewers",
+    "city": "Milwaukee",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1953,
+    "to": 2000,
+    "points": [
+      [-45, 315],
+      [-30, 362],
+      [-15, 392],
+      [0, 402],
+      [15, 392],
+      [30, 362],
+      [45, 315]
+    ],
+    "en": {
+      "title": "Milwaukee County Stadium",
+      "revision": 1373618962
+    },
+    "note": "The White Sox also played some games here in 1968 and 1969."
+  },
+  {
+    "id": "baltimore-memorial-stadium",
+    "wikidata": "Q2748739",
+    "name": "Memorial Stadium (Baltimore)",
+    "team": "Baltimore Orioles",
+    "city": "Baltimore",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1954,
+    "to": 1991,
+    "points": [
+      [-45, 309],
+      [-22.5, 378],
+      [0, 405],
+      [22.5, 378],
+      [45, 309]
+    ],
+    "en": {
+      "title": "Baltimore Memorial Stadium",
+      "revision": 1379214788
+    },
+    "periods": [
+      {
+        "from": 1954,
+        "to": 1979,
+        "points": [
+          [-45, 309],
+          [-22.5, 446],
+          [0, 445],
+          [22.5, 446],
+          [45, 309]
+        ]
+      },
+      {
+        "from": 1980,
+        "to": 1989,
+        "points": [
+          [-45, 309],
+          [-22.5, 446],
+          [0, 405],
+          [22.5, 446],
+          [45, 309]
+        ]
+      }
+    ],
+    "note": "The infobox dates the changes of center field (1980) and of the alleys (1990)."
+  },
+  {
+    "id": "municipal-stadium-kansas-city",
+    "wikidata": "Q6936283",
+    "name": "Municipal Stadium",
+    "team": "Kansas City Athletics / Kansas City Royals",
+    "city": "Kansas City",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1955,
+    "to": 1972,
+    "points": [
+      [-45, 369],
+      [-22.5, 408],
+      [0, 421],
+      [22.5, 382],
+      [45, 338]
+    ],
+    "en": {
+      "title": "Municipal Stadium (Kansas City, Missouri)",
+      "revision": 1372217632
+    },
+    "note": "The article's figures for 1972; those for 1923 (350, 450, 350) are not used."
+  },
+  {
+    "id": "seals-stadium",
+    "wikidata": "Q7440659",
+    "name": "Seals Stadium",
+    "team": "San Francisco Giants",
+    "city": "San Francisco",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1958,
+    "to": 1959,
+    "points": [
+      [-45, 361],
+      [-22.5, 364],
+      [0, 400],
+      [22.5, 397],
+      [45, 348]
+    ],
+    "en": {
+      "title": "Seals Stadium",
+      "revision": 1372229078
+    },
+    "periods": [
+      {
+        "from": 1958,
+        "to": 1958,
+        "points": [
+          [-45, 361],
+          [-22.5, 364],
+          [0, 410],
+          [22.5, 397],
+          [45, 348]
+        ]
+      }
+    ]
+  },
+  {
+    "id": "candlestick-park",
+    "wikidata": "Q1033076",
+    "name": "Candlestick Park",
+    "team": "San Francisco Giants",
+    "city": "San Francisco",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1960,
+    "to": 1999,
+    "points": [
+      [-45, 335],
+      [-22.5, 365],
+      [0, 400],
+      [22.5, 365],
+      [45, 328]
+    ],
+    "en": {
+      "title": "Candlestick Park",
+      "revision": 1379458213
+    },
+    "note": "The later fence; the article also gives the 1960 figures as opened (330, 397, 420, 397, 330 feet), which are not used."
+  },
+  {
+    "id": "wrigley-field-los-angeles",
+    "wikidata": "Q3297716",
+    "name": "Wrigley Field (Los Angeles)",
+    "team": "Los Angeles Angels",
+    "city": "Los Angeles",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1961,
+    "to": 1961,
+    "points": [
+      [-45, 340],
+      [-22.5, 345],
+      [0, 412],
+      [22.5, 345],
+      [45, 339]
+    ],
+    "en": {
+      "title": "Wrigley Field (Los Angeles)",
+      "revision": 1373630732
+    }
+  },
+  {
+    "id": "metropolitan-stadium",
+    "wikidata": "Q1415967",
+    "name": "Metropolitan Stadium",
+    "team": "Minnesota Twins",
+    "city": "Bloomington",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1961,
+    "to": 1981,
+    "points": [
+      [-45, 343],
+      [-22.5, 365],
+      [0, 402],
+      [22.5, 370],
+      [45, 330]
+    ],
+    "en": {
+      "title": "Metropolitan Stadium",
+      "revision": 1376371728
+    }
+  },
+  {
+    "id": "colt-stadium",
+    "wikidata": "Q5149429",
+    "name": "Colt Stadium",
+    "team": "Houston Colt .45s",
+    "city": "Houston",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1962,
+    "to": 1964,
+    "points": [
+      [-45, 360],
+      [-30, 395],
+      [-15, 427],
+      [0, 420],
+      [15, 427],
+      [30, 395],
+      [45, 360]
+    ],
+    "en": {
+      "title": "Colt Stadium",
+      "revision": 1372077099
+    }
+  },
+  {
+    "id": "robert-f-kennedy-memorial-stadium",
+    "wikidata": "Q153312",
+    "name": "Robert F. Kennedy Memorial Stadium",
+    "team": "Washington Senators / Washington Nationals",
+    "city": "Washington",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1962,
+    "to": 2007,
+    "points": [
+      [-45, 335],
+      [-22.5, 380],
+      [0, 410],
+      [22.5, 380],
+      [45, 335]
+    ],
+    "en": {
+      "title": "Robert F. Kennedy Memorial Stadium",
+      "revision": 1372225490
+    },
+    "note": "In use for baseball 1962 to 1971 and 2005 to 2007."
+  },
+  {
+    "id": "shea-stadium",
+    "wikidata": "Q1056326",
+    "name": "Shea Stadium",
+    "team": "New York Mets / New York Yankees",
+    "city": "New York",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1964,
+    "to": 2008,
+    "points": [
+      [-45, 338],
+      [-33.8, 358],
+      [-22.5, 371],
+      [-11.2, 396],
+      [0, 410],
+      [11.2, 396],
+      [22.5, 371],
+      [33.8, 358],
+      [45, 338]
+    ],
+    "en": {
+      "title": "Shea Stadium",
+      "revision": 1372229796
+    },
+    "periods": [
+      {
+        "from": 1964,
+        "to": 1977,
+        "points": [
+          [-45, 341],
+          [-33.8, 358],
+          [-22.5, 371],
+          [-11.2, 396],
+          [0, 410],
+          [11.2, 396],
+          [22.5, 371],
+          [33.8, 358],
+          [45, 341]
+        ]
+      }
+    ],
+    "note": "The Yankees played here in 1974 and 1975."
+  },
+  {
+    "id": "astrodome",
+    "wikidata": "Q1025406",
+    "name": "Astrodome",
+    "team": "Houston Astros",
+    "city": "Houston",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1965,
+    "to": 1999,
+    "points": [
+      [-45, 325],
+      [-22.5, 375],
+      [0, 400],
+      [22.5, 375],
+      [45, 325]
+    ],
+    "en": {
+      "title": "Astrodome",
+      "revision": 1379214658
+    },
+    "note": "The article's final figures; its original ones (340, 375, 406, 375, 340 feet) are not dated and are not used."
+  },
+  {
+    "id": "atlanta-fulton-county-stadium",
+    "wikidata": "Q641243",
+    "name": "Atlanta–Fulton County Stadium",
+    "team": "Atlanta Braves",
+    "city": "Atlanta",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1966,
+    "to": 1996,
+    "points": [
+      [-45, 330],
+      [-22.5, 385],
+      [0, 402],
+      [22.5, 385],
+      [45, 330]
+    ],
+    "en": {
+      "title": "Atlanta–Fulton County Stadium",
+      "revision": 1372064804
+    },
+    "periods": [
+      {
+        "from": 1969,
+        "to": 1972,
+        "points": [
+          [-45, 330],
+          [-22.5, 375],
+          [0, 402],
+          [22.5, 375],
+          [45, 330]
+        ]
+      },
+      {
+        "from": 1973,
+        "to": 1973,
+        "points": [
+          [-45, 330],
+          [-22.5, 375],
+          [0, 402],
+          [22.5, 385],
+          [45, 330]
+        ]
+      }
+    ],
+    "note": "The main figures are those of 1966 to 1968 and 1974 to 1996."
+  },
+  {
+    "id": "busch-memorial-stadium",
+    "wikidata": "Q1017286",
+    "name": "Busch Memorial Stadium",
+    "team": "St. Louis Cardinals",
+    "city": "St. Louis",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1966,
+    "to": 2005,
+    "points": [
+      [-45, 330],
+      [-22.5, 372],
+      [0, 402],
+      [22.5, 372],
+      [45, 330]
+    ],
+    "en": {
+      "title": "Busch Memorial Stadium",
+      "revision": 1375705915
+    },
+    "periods": [
+      {
+        "from": 1966,
+        "to": 1995,
+        "points": [
+          [-45, 330],
+          [-22.5, 386],
+          [0, 414],
+          [22.5, 386],
+          [45, 330]
+        ]
+      }
+    ],
+    "note": "Also called Busch Stadium (II)."
+  },
+  {
+    "id": "oakland-coliseum",
+    "wikidata": "Q1147732",
+    "name": "Oakland Coliseum",
+    "team": "Oakland Athletics",
+    "city": "Oakland",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1968,
+    "to": 2024,
+    "points": [
+      [-45, 330],
+      [-22.5, 388],
+      [0, 400],
+      [22.5, 388],
+      [45, 330]
+    ],
+    "en": {
+      "title": "Oakland Coliseum",
+      "revision": 1377933344
+    }
+  },
+  {
+    "id": "sicks-stadium",
+    "wikidata": "Q6127401",
+    "name": "Sick's Stadium",
+    "team": "Seattle Pilots",
+    "city": "Seattle",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1969,
+    "to": 1969,
+    "points": [
+      [-45, 305],
+      [0, 402],
+      [45, 325]
+    ],
+    "en": {
+      "title": "Sick's Stadium",
+      "revision": 1377791612
+    },
+    "note": "The article's figures for 1969; those for 1938 (325, 400, 325) are not used."
+  },
+  {
+    "id": "jarry-park-stadium",
+    "wikidata": "Q3495641",
+    "name": "Jarry Park Stadium",
+    "team": "Montreal Expos",
+    "city": "Montreal",
+    "country": "CA",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1969,
+    "to": 1976,
+    "points": [
+      [-45, 340],
+      [-22.5, 368],
+      [0, 420],
+      [22.5, 368],
+      [45, 340]
+    ],
+    "en": {
+      "title": "Jarry Park Stadium",
+      "revision": 1372207079
+    }
+  },
+  {
+    "id": "three-rivers-stadium",
+    "wikidata": "Q1189339",
+    "name": "Three Rivers Stadium",
+    "team": "Pittsburgh Pirates",
+    "city": "Pittsburgh",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1970,
+    "to": 2000,
+    "points": [
+      [-45, 335],
+      [-22.5, 375],
+      [0, 400],
+      [22.5, 375],
+      [45, 335]
+    ],
+    "en": {
+      "title": "Three Rivers Stadium",
+      "revision": 1372243664
+    }
+  },
+  {
+    "id": "riverfront-stadium",
+    "wikidata": "Q153824",
+    "name": "Riverfront Stadium",
+    "team": "Cincinnati Reds",
+    "city": "Cincinnati",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1970,
+    "to": 2002,
+    "points": [
+      [-45, 330],
+      [-22.5, 375],
+      [0, 404],
+      [22.5, 375],
+      [45, 330]
+    ],
+    "en": {
+      "title": "Riverfront Stadium",
+      "revision": 1380015923
+    }
+  },
+  {
+    "id": "veterans-stadium",
+    "wikidata": "Q1545870",
+    "name": "Veterans Stadium",
+    "team": "Philadelphia Phillies",
+    "city": "Philadelphia",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1971,
+    "to": 2003,
+    "points": [
+      [-45, 330],
+      [-22.5, 371],
+      [0, 408],
+      [22.5, 371],
+      [45, 330]
+    ],
+    "en": {
+      "title": "Veterans Stadium",
+      "revision": 1379233321
+    }
+  },
+  {
+    "id": "arlington-stadium",
+    "wikidata": "Q2861657",
+    "name": "Arlington Stadium",
+    "team": "Texas Rangers",
+    "city": "Arlington",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1972,
+    "to": 1993,
+    "points": [
+      [-45, 330],
+      [-22.5, 380],
+      [0, 400],
+      [22.5, 380],
+      [45, 330]
+    ],
+    "en": {
+      "title": "Arlington Stadium",
+      "revision": 1372064082
+    }
+  },
+  {
+    "id": "exhibition-stadium",
+    "wikidata": "Q1383747",
+    "name": "Exhibition Stadium",
+    "team": "Toronto Blue Jays",
+    "city": "Toronto",
+    "country": "CA",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1977,
+    "to": 1989,
+    "points": [
+      [-45, 330],
+      [-22.5, 375],
+      [0, 400],
+      [22.5, 375],
+      [45, 330]
+    ],
+    "en": {
+      "title": "Exhibition Stadium",
+      "revision": 1373389585
+    }
+  },
+  {
+    "id": "olympic-stadium-montreal",
+    "wikidata": "Q285467",
+    "name": "Olympic Stadium",
+    "team": "Montreal Expos",
+    "city": "Montreal",
+    "country": "CA",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1977,
+    "to": 2004,
+    "points": [
+      [-45, 325],
+      [-22.5, 375],
+      [0, 404],
+      [22.5, 375],
+      [45, 325]
+    ],
+    "en": {
+      "title": "Olympic Stadium (Montreal)",
+      "revision": 1375638350
+    },
+    "periods": [
+      {
+        "from": 1981,
+        "to": 1982,
+        "points": [
+          [-45, 330],
+          [-22.5, 375],
+          [0, 400],
+          [22.5, 375],
+          [45, 330]
+        ]
+      }
+    ],
+    "note": "The fence of 1977 to 1980 and 1983 on; in 1979 center field was 405 feet."
+  },
+  {
+    "id": "metrodome",
+    "wikidata": "Q1072186",
+    "name": "Hubert H. Humphrey Metrodome",
+    "team": "Minnesota Twins",
+    "city": "Minneapolis",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1982,
+    "to": 2009,
+    "points": [
+      [-45, 343],
+      [-22.5, 385],
+      [0, 408],
+      [22.5, 367],
+      [45, 327]
+    ],
+    "en": {
+      "title": "Hubert H. Humphrey Metrodome",
+      "revision": 1378988593
+    }
+  },
+  {
+    "id": "mile-high-stadium",
+    "wikidata": "Q1934586",
+    "name": "Mile High Stadium",
+    "team": "Colorado Rockies",
+    "city": "Denver",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1993,
+    "to": 1994,
+    "points": [
+      [-45, 333],
+      [-22.5, 366],
+      [0, 423],
+      [22.5, 400],
+      [45, 370]
+    ],
+    "en": {
+      "title": "Mile High Stadium",
+      "revision": 1372216043
+    }
+  },
+  {
+    "id": "globe-life-park-in-arlington",
+    "wikidata": "Q1634492",
+    "name": "Globe Life Park in Arlington",
+    "team": "Texas Rangers",
+    "city": "Arlington",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1994,
+    "to": 2019,
+    "points": [
+      [-45, 332],
+      [-22.5, 390],
+      [0, 400],
+      [22.5, 377],
+      [45, 325]
+    ],
+    "en": {
+      "title": "Choctaw Stadium",
+      "revision": 1374880883
+    },
+    "note": "The article is now titled Choctaw Stadium."
+  },
+  {
+    "id": "turner-field",
+    "wikidata": "Q1150936",
+    "name": "Turner Field",
+    "team": "Atlanta Braves",
+    "city": "Atlanta",
+    "country": "US",
+    "league": "MLB",
+    "unit": "ft",
+    "status": "past",
+    "from": 1997,
+    "to": 2016,
+    "points": [
+      [-45, 335],
+      [-22.5, 380],
+      [0, 400],
+      [22.5, 390],
+      [45, 330]
+    ],
+    "en": {
+      "title": "Turner Field",
+      "revision": 1372246325
+    }
+  },
+  {
     "id": "tokyo-dome",
+    "wikidata": "Q733748",
     "name": "Tokyo Dome",
     "nameJa": "東京ドーム",
     "team": "Yomiuri Giants",
@@ -688,6 +2034,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "hanshin-koshien-stadium",
+    "wikidata": "Q959811",
     "name": "Hanshin Koshien Stadium",
     "nameJa": "阪神甲子園球場",
     "team": "Hanshin Tigers",
@@ -715,6 +2062,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "meiji-jingu-stadium",
+    "wikidata": "Q944559",
     "name": "Meiji Jingu Stadium",
     "nameJa": "明治神宮野球場",
     "team": "Tokyo Yakult Swallows",
@@ -742,6 +2090,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "yokohama-stadium",
+    "wikidata": "Q1148681",
     "name": "Yokohama Stadium",
     "nameJa": "横浜スタジアム",
     "team": "Yokohama DeNA BayStars",
@@ -769,6 +2118,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "vantelin-dome-nagoya",
+    "wikidata": "Q929524",
     "name": "Vantelin Dome Nagoya",
     "nameJa": "バンテリンドーム ナゴヤ",
     "team": "Chunichi Dragons",
@@ -797,6 +2147,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "mazda-stadium-hiroshima",
+    "wikidata": "Q1038647",
     "name": "Mazda Zoom-Zoom Stadium Hiroshima",
     "nameJa": "MAZDA Zoom-Zoom スタジアム広島",
     "team": "Hiroshima Toyo Carp",
@@ -824,6 +2175,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "es-con-field-hokkaido",
+    "wikidata": "Q96395338",
     "name": "ES CON Field Hokkaido",
     "nameJa": "エスコンフィールドHOKKAIDO",
     "team": "Hokkaido Nippon-Ham Fighters",
@@ -850,6 +2202,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "rakuten-mobile-park-miyagi",
+    "wikidata": "Q489699",
     "name": "Rakuten Mobile Park Miyagi",
     "nameJa": "楽天モバイルパーク宮城",
     "team": "Tohoku Rakuten Golden Eagles",
@@ -878,6 +2231,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "belluna-dome",
+    "wikidata": "Q1194822",
     "name": "Belluna Dome",
     "nameJa": "ベルーナドーム",
     "team": "Saitama Seibu Lions",
@@ -905,6 +2259,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "zozo-marine-stadium",
+    "wikidata": "Q486192",
     "name": "ZOZO Marine Stadium",
     "nameJa": "ZOZOマリンスタジアム",
     "team": "Chiba Lotte Marines",
@@ -932,6 +2287,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "kyocera-dome-osaka",
+    "wikidata": "Q128836",
     "name": "Kyocera Dome Osaka",
     "nameJa": "京セラドーム大阪",
     "team": "Orix Buffaloes",
@@ -959,6 +2315,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "mizuho-paypay-dome-fukuoka",
+    "wikidata": "Q1365961",
     "name": "Mizuho PayPay Dome Fukuoka",
     "nameJa": "みずほPayPayドーム福岡",
     "team": "Fukuoka SoftBank Hawks",
@@ -986,6 +2343,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "sapporo-dome",
+    "wikidata": "Q494860",
     "name": "Sapporo Dome",
     "nameJa": "札幌ドーム",
     "team": "Hokkaido Nippon-Ham Fighters (2004-2022)",
@@ -1013,6 +2371,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "hotto-motto-field-kobe",
+    "wikidata": "Q849183",
     "name": "Hotto Motto Field Kobe",
     "nameJa": "ほっともっとフィールド神戸",
     "team": "Orix Buffaloes (second park)",
@@ -1040,6 +2399,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "hiroshima-municipal-stadium",
+    "wikidata": "Q8012748",
     "name": "Hiroshima Municipal Stadium (original)",
     "nameJa": "旧広島市民球場",
     "team": "Hiroshima Toyo Carp (1957-2008)",
@@ -1048,7 +2408,7 @@ export const PARK_DATA: ParkData[] = [
     "country": "JP",
     "league": "NPB",
     "unit": "m",
-    "status": "historic",
+    "status": "past",
     "points": [
       [-45, 91.4],
       [-22.5, 109.7],
@@ -1063,6 +2423,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "korakuen-stadium",
+    "wikidata": "Q473519",
     "name": "Korakuen Stadium",
     "nameJa": "後楽園球場",
     "team": "Yomiuri Giants (1937-1987)",
@@ -1071,7 +2432,7 @@ export const PARK_DATA: ParkData[] = [
     "country": "JP",
     "league": "NPB",
     "unit": "m",
-    "status": "historic",
+    "status": "past",
     "points": [
       [-45, 87.8],
       [-22.5, 110.1],
@@ -1091,6 +2452,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "osaka-stadium",
+    "wikidata": "Q861117",
     "name": "Osaka Stadium",
     "nameJa": "大阪球場",
     "team": "Nankai Hawks (1950-1988)",
@@ -1099,7 +2461,7 @@ export const PARK_DATA: ParkData[] = [
     "country": "JP",
     "league": "NPB",
     "unit": "m",
-    "status": "historic",
+    "status": "past",
     "points": [
       [-45, 91.5],
       [-22.5, 109.7],
@@ -1118,6 +2480,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "heiwadai-stadium",
+    "wikidata": "Q5365631",
     "name": "Heiwadai Stadium",
     "nameJa": "平和台野球場",
     "team": "Nishitetsu Lions and successors (to 1978)",
@@ -1126,7 +2489,7 @@ export const PARK_DATA: ParkData[] = [
     "country": "JP",
     "league": "NPB",
     "unit": "m",
-    "status": "historic",
+    "status": "past",
     "points": [
       [-45, 92],
       [-22.5, 110],
@@ -1145,6 +2508,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "kawasaki-stadium",
+    "wikidata": "Q6379828",
     "name": "Kawasaki Stadium",
     "nameJa": "川崎球場",
     "team": "Lotte Orions (1978-1991)",
@@ -1153,7 +2517,7 @@ export const PARK_DATA: ParkData[] = [
     "country": "JP",
     "league": "NPB",
     "unit": "m",
-    "status": "historic",
+    "status": "past",
     "points": [
       [-45, 89],
       [-22.5, 105],
@@ -1169,6 +2533,7 @@ export const PARK_DATA: ParkData[] = [
   },
   {
     "id": "nagoya-stadium",
+    "wikidata": "Q5369853",
     "name": "Nagoya Stadium",
     "nameJa": "ナゴヤ球場",
     "team": "Chunichi Dragons (1948-1996)",
@@ -1177,7 +2542,7 @@ export const PARK_DATA: ParkData[] = [
     "country": "JP",
     "league": "NPB",
     "unit": "m",
-    "status": "historic",
+    "status": "past",
     "points": [
       [-45, 100],
       [0, 122],

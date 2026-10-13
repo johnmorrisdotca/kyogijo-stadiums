@@ -1,7 +1,7 @@
 <h1 align="center">Kyogijo <sub>競技場</sub></h1>
 
 <p align="center"><strong>Sports surfaces as SVG, drawn to scale, with the score on them.</strong><br>
-The NFL, CFL and IFAF football fields, the NHL rink, the NBA court and the baseball field of every MLB ballpark and every NPB home park, each drawn from its rulebook or its published distances, with each team's name and logo on its side and the score in the middle. Wide or tall, light or dark, a compact badge for a list, a helper for React, a custom element and a frame for a page that runs no script. One function, no dependencies.</p>
+The NFL, CFL and IFAF football fields, the NHL rink, the NBA court and the baseball field of every MLB ballpark, current and past, and every NPB home park, each drawn from its rulebook or its published distances, with each team's name and logo on its side and the score in the middle. Wide or tall, light or dark, a compact badge for a list, a helper for React, a custom element and a frame for a page that runs no script. One function, no dependencies.</p>
 
 <p align="center">
   <a href="https://github.com/johnmorrisdotca/kyogijo/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/johnmorrisdotca/kyogijo/actions/workflows/ci.yml/badge.svg"></a>
@@ -71,7 +71,7 @@ console.log(svg.startsWith("<svg"), svg.includes("NORTHERN OWLS"));
 ## Features
 
 - **Six surfaces, to scale.** The NFL field (360 by 160 feet with its end zones), the CFL field (450 by 195), the IFAF field, the NHL rink (200 by 85 with a 28-foot corner radius), the NBA court (94 by 50) and the baseball field, with the markings of each: yard lines, hash marks, numbers and goal posts; blue and red lines, five face-off circles, creases and nets; keys, three-point lines and restricted areas; infield, mound, bases, foul lines and fence. Every figure is cited in [docs/sources.md](./docs/sources.md).
-- **Every ballpark.** The 30 MLB parks and the 12 home parks of Nippon Professional Baseball, with eight other NPB grounds, past and present, each with its fence drawn from the distances published for it. A named park is one option (`park: "fenway-park"`); the 50 are in `PARKS`.
+- **Every ballpark.** The 30 current MLB parks and 44 that MLB clubs have left (the Polo Grounds, Ebbets Field, Forbes Field, Tiger Stadium, the Astrodome and more), and the 12 home parks of Nippon Professional Baseball with eight other NPB grounds, past and present, each with its fence drawn from the distances published for it. A named park is one option (`park: "fenway-park"`), and a past park whose fence moved is drawn as it stood in a season (`year: 1915`); the 94 are in `PARKS`, each with its Wikidata item.
 - **Score mode.** Each team's name and logo on its side (the end zones of a football field, the ends of the ice, the halves of the court, the dugouts of a ballpark) and the score large in the middle, with the competition, the status (Final, OT, SO, a period, an inning) and the date, and the winner emphasised.
 - **Wide, tall or fit the box.** Every surface lies wide or tall. Tall turns it a quarter, keeps every word upright, and puts the teams top and bottom. With `orientation: "auto"` the browser helpers watch the box and lay it out again when its shape changes.
 - **A compact badge and a compact card.** One strip for a list, or the surface with that strip under it.
@@ -85,7 +85,7 @@ console.log(svg.startsWith("<svg"), svg.includes("NORTHERN OWLS"));
 | Part | What it is |
 | --- | --- |
 | `drawKyogijo`, `drawSurface`, `drawScore`, `drawBadge` | The drawing, as a string of SVG. |
-| `SPORTS`, `PARKS`, `PARK_IDS`, `COURT_THEMES` | The six sports, the 50 ballparks, the court looks. |
+| `SPORTS`, `PARKS`, `PARK_IDS`, `COURT_THEMES` | The six sports, the 94 ballparks, the court looks. |
 | `@johnmorrisdotca/kyogijo/geometry` | The dimensions of every surface in feet, in any unit, and the functions that follow from them. |
 | `@johnmorrisdotca/kyogijo/frames` | Providers' coordinate frames and the functions that put their points on a surface. |
 | `@johnmorrisdotca/kyogijo/parks` | The ballparks and the article each was read from. |
@@ -187,6 +187,23 @@ console.log(svg.includes("阪神甲子園球場のグラウンド"));
 // true
 ```
 
+### A ballpark of the past, in a season
+
+```ts
+import { PARKS, parkByWikidata, parkPointsIn, drawKyogijo } from "@johnmorrisdotca/kyogijo";
+
+const polo = PARKS["polo-grounds"];
+console.log(polo.name, polo.wikidata, polo.from, polo.to, polo.periods?.length);
+// Polo Grounds Q1276360 1891 1963 2
+console.log(parkPointsIn(polo, 1915).map(([, feet]) => feet), parkPointsIn(polo, 1930).length);
+// [ 277, 433, 258 ] 13
+console.log(parkByWikidata("Q1276360") === polo);
+// true
+const svg = drawKyogijo({ sport: "mlb", park: "polo-grounds", year: 1915 });
+console.log(svg === drawKyogijo({ sport: "mlb", park: "polo-grounds", year: 1930 }));
+// false
+```
+
 ### Your own fence
 
 ```ts
@@ -268,7 +285,7 @@ writeFileSync("rink.svg", drawKyogijo({ sport: "nhl", theme: "dark" }));
 </style>
 ```
 
-The attributes are `sport`, `size`, `theme`, `language`, `orientation`, `park`, `detail`, `margin`, `stripes`, `exact-lines`, `uppercase`, `home`, `away`, `home-abbr`, `away-abbr`, `home-score`, `away-score`, `score`, `home-logo`, `away-logo`, `home-color`, `away-color`, `status`, `competition`, `date`, `label`, `winner`, `home-side`, `description` and `options` (any other option, as JSON). The parts are `figure`, `svg`, `surface`, `plate`, `team`, `home`, `away`, `score`, `home-score`, `away-score` and `badge`.
+The attributes are `sport`, `size`, `theme`, `language`, `orientation`, `park`, `year`, `detail`, `margin`, `stripes`, `exact-lines`, `uppercase`, `home`, `away`, `home-abbr`, `away-abbr`, `home-score`, `away-score`, `score`, `home-logo`, `away-logo`, `home-color`, `away-color`, `status`, `competition`, `date`, `label`, `winner`, `home-side`, `description` and `options` (any other option, as JSON). The parts are `figure`, `svg`, `surface`, `plate`, `team`, `home`, `away`, `score`, `home-score`, `away-score` and `badge`.
 
 ### In React
 
@@ -329,7 +346,7 @@ For a page that cannot run scripts (a site builder, a forum, a newsletter archiv
 ></iframe>
 ```
 
-The address takes `sport`, `park`, `size`, `orientation` (it fits its frame by default), `theme`, `lang`, `away`, `home`, `aabbr`, `habbr`, `ascore`, `hscore`, `acolor`, `hcolor` (six hex digits, no `#`), `alogo`, `hlogo` (an https address), `status`, `competition`, `date`, `label` and `winner`. The demo's Embed section writes the tag for what you have chosen.
+The address takes `sport`, `park`, `year`, `size`, `orientation` (it fits its frame by default), `theme`, `lang`, `away`, `home`, `aabbr`, `habbr`, `ascore`, `hscore`, `acolor`, `hcolor` (six hex digits, no `#`), `alogo`, `hlogo` (an https address), `status`, `competition`, `date`, `label` and `winner`. The demo's Embed section writes the tag for what you have chosen.
 
 ## The surfaces
 
@@ -372,15 +389,16 @@ Lines are drawn a little thicker than they are painted, as broadcast graphics do
 <br><em>A ballpark's fence, drawn through the distances its article publishes.</em>
 </p>
 
-`park` takes a key of `PARKS`. The fence is a smooth curve through the distances the park's article publishes (the foul lines, the alleys, the middle), so that it never swings out past them. `fence: { left, leftCenter, center, rightCenter, right }` lays your own distances over a park's or over the generic field of 330, 375, 400, 375 and 330 feet.
+`park` takes a key of `PARKS`, and `year` a season for a past park whose fence moved. The fence is a smooth curve through the distances the park's article publishes (the foul lines, the alleys, the middle), so that it never swings out past them. `fence: { left, leftCenter, center, rightCenter, right }` lays your own distances over a park's or over the generic field of 330, 375, 400, 375 and 330 feet.
 
 | League | Parks |
 | --- | --- |
-| MLB | the 30 current parks, from `oriole-park-at-camden-yards` to `oracle-park` |
+| MLB, current | the 30 current parks, from `oriole-park-at-camden-yards` to `oracle-park` |
+| MLB, past | the 44 parks clubs have left, from `baker-bowl` (1887) to `turner-field` (2016), by their first season of MLB use: `baker-bowl`, `exposition-park-pittsburgh`, `polo-grounds`, `south-end-grounds`, `huntington-avenue-grounds`, `league-park-cleveland`, `sportsmans-park`, `hilltop-park`, `forbes-field`, `shibe-park`, `comiskey-park`, `griffith-stadium`, `crosley-field`, `tiger-stadium`, `ebbets-field`, `braves-field`, `yankee-stadium-1923`, `cleveland-stadium`, `milwaukee-county-stadium`, `baltimore-memorial-stadium`, `municipal-stadium-kansas-city`, `seals-stadium`, `candlestick-park`, `wrigley-field-los-angeles`, `metropolitan-stadium`, `colt-stadium`, `robert-f-kennedy-memorial-stadium`, `shea-stadium`, `astrodome`, `atlanta-fulton-county-stadium`, `busch-memorial-stadium`, `oakland-coliseum`, `sicks-stadium`, `jarry-park-stadium`, `three-rivers-stadium`, `riverfront-stadium`, `veterans-stadium`, `arlington-stadium`, `exhibition-stadium`, `olympic-stadium-montreal`, `metrodome`, `mile-high-stadium`, `globe-life-park-in-arlington`, `turner-field` |
 | NPB, home parks | `tokyo-dome`, `hanshin-koshien-stadium`, `meiji-jingu-stadium`, `yokohama-stadium`, `vantelin-dome-nagoya`, `mazda-stadium-hiroshima`, `es-con-field-hokkaido`, `rakuten-mobile-park-miyagi`, `belluna-dome`, `zozo-marine-stadium`, `kyocera-dome-osaka`, `mizuho-paypay-dome-fukuoka` |
 | NPB, other and past | `sapporo-dome`, `hotto-motto-field-kobe`, `hiroshima-municipal-stadium`, `korakuen-stadium`, `osaka-stadium`, `heiwadai-stadium`, `kawasaki-stadium`, `nagoya-stadium` |
 
-Each park has its name in English (and in Japanese for the parks of Japan), its team, its city, and the article and revision its figures were read from (`parkSourceUrl`). The articles give distances and not directions, so the angle each figure is taken at is our reading of its label; see [docs/references.md](./docs/references.md). Japanese parks are measured in metres and converted once. A fence is not drawn with its wall's height or its quirks (the Green Monster, Tal's Hill).
+Each park has its name in English (and in Japanese for the parks of Japan), its team, its city, `wikidata` (the Wikidata item of the ground, such as `Q49136` for Fenway Park, to join a park to other data; `parkByWikidata` finds a park by it), and the article and revision its figures were read from (`parkSourceUrl`). A past MLB park also has `status: "past"` and `from` and `to`, the first and last season an MLB club played there (the Polo Grounds, 1891 to 1963). `PARKS` has the park's last fence in `points`; where an article dates earlier fences they are in `periods`, each with its first and last season, and `year` (or `parkPointsIn(park, year)`) picks the one that stood that season: `drawKyogijo({ sport: "mlb", park: "polo-grounds", year: 1915 })` draws the 277, 433 and 258 feet of 1911 to 1922, not the 279, 483 and 258 of the Polo Grounds' last years. A park an article gives no distances for is not in `PARKS`; they are listed in [docs/references.md](./docs/references.md). The articles give distances and not directions, so the angle each figure is taken at is our reading of its label; see [docs/references.md](./docs/references.md). Japanese parks are measured in metres and converted once. A fence is not drawn with its wall's height or its quirks (the Green Monster, Tal's Hill).
 
 ## Units
 
@@ -493,10 +511,10 @@ The [API reference](https://johnmorrisdotca.github.io/kyogijo/api.html) lists ev
 
 | Entry | What it holds |
 | --- | --- |
-| `@johnmorrisdotca/kyogijo` | `drawKyogijo`, `drawSurface`, `drawScore`, `drawBadge`, `describe`, `winnerOf`, `statusLabel`, `isPortrait`; `SPORTS`, `COURT_THEMES`, `PARKS`, `PARK_IDS`, `parkById`, `parkSourceUrl`, `parkUnit`, `fenceFor`; `SURFACE_UNITS`, `UNITS`, `convertLength`; `safeColour`, `safeLogo`, `inkOn`; `fitLines`, `textWidth`, `abbreviate`, `capitals`; `KYOGIJO_STYLE`, `KYOGIJO_STRINGS`, `COLOR_PROPERTIES`, `VERSION` and the option types |
+| `@johnmorrisdotca/kyogijo` | `drawKyogijo`, `drawSurface`, `drawScore`, `drawBadge`, `describe`, `winnerOf`, `statusLabel`, `isPortrait`; `SPORTS`, `COURT_THEMES`, `PARKS`, `PARK_IDS`, `parkById`, `parkByWikidata`, `parkPointsIn`, `parkSourceUrl`, `parkUnit`, `fenceFor`; `SURFACE_UNITS`, `UNITS`, `convertLength`; `safeColour`, `safeLogo`, `inkOn`; `fitLines`, `textWidth`, `abbreviate`, `capitals`; `KYOGIJO_STYLE`, `KYOGIJO_STRINGS`, `COLOR_PROPERTIES`, `VERSION` and the option types |
 | `@johnmorrisdotca/kyogijo/geometry` | `FOOTBALL`, `NHL`, `NBA`, `MLB`, `fenceAt`, `fencePoints`, `threePointJoin`, `skinJoin`, `boardsY` and the other dimensions; `SURFACE_UNITS`, `convertLength`, `convertPoint`, `lengthsIn`, `dimensionsOf`, `surfaceSize`, `fenceIn` |
 | `@johnmorrisdotca/kyogijo/frames` | `toSurface`, `fromSurface`, `convert`, `convertPoints`, `flipEnds`, `attackingIn`, `registerFrame`, `frameByName`, `framesOf`, `piecewise`, `span`, `FRAMES`, `RETROSHEET_ZONES`, `zoneToPoint`, `zoneAt` and the frame types |
-| `@johnmorrisdotca/kyogijo/parks` | `PARKS`, `PARK_IDS`, `parkById`, `parkSourceUrl`, `parkUnit`, `fenceFor` |
+| `@johnmorrisdotca/kyogijo/parks` | `PARKS`, `PARK_IDS`, `parkById`, `parkByWikidata`, `parkPointsIn`, `parkSourceUrl`, `parkUnit`, `fenceFor` |
 | `@johnmorrisdotca/kyogijo/mount` | `mountKyogijo`, `kyogijoElement`, `containerAspect` |
 | `@johnmorrisdotca/kyogijo/react` | `kyogijoProps`, `kyogijoHtml`, `createKyogijo` |
 | `@johnmorrisdotca/kyogijo/element` | `KyogijoField`, `defineKyogijoField`, `optionsFromAttributes`, `KYOGIJO_TAG`, `KYOGIJO_ATTRIBUTES` |
@@ -536,7 +554,7 @@ Each is held by a test, and the ones with a name are exported.
 | Limit | Value | Where |
 | --- | --- | --- |
 | Sports | 6 | `SPORTS` |
-| Ballparks | 50 (30 MLB, 12 NPB home parks, 8 other NPB grounds) | `PARKS` |
+| Ballparks | 94 (30 current MLB, 44 past MLB, 12 NPB home parks, 8 other NPB grounds) | `PARKS` |
 | Units | 6 (`ft`, `in`, `yd`, `m`, `cm`, `mm`) | `UNITS` |
 | Coordinate frames | 6 to start with (`nhl-api`, `hockeytech`, `nba-stats`, `nfl-tracking`, `mlbam`, `retrosheet`), more by `registerFrame` | `FRAMES` |
 | A colour | a hex colour, `rgb()`, `rgba()`, `hsl()`, `hsla()`, a name or `var(--name)`, 64 characters at most | `safeColour` |
@@ -568,7 +586,7 @@ Not here yet, and each welcome as an [issue](https://github.com/johnmorrisdotca/
 
 - **More surfaces**: the FIBA and college courts, the international rink, rugby and soccer pitches, a stadium's seating.
 - **Wall heights and quirks** in a ballpark: the Green Monster, Tal's Hill and the walls of Japan's parks.
-- **Parks of the past**: the MLB parks that clubs have left, from their published figures.
+- **More parks of the past**: the grounds of the 19th century, and the parks whose articles give no distances yet (the Kingdome, Joe Robbie Stadium, the Los Angeles Coliseum), when they do.
 - **Players on the surface**: a shot chart, a face-off, a pitch, drawn on the same coordinates. The frames that place their points are here; the drawing of them is not.
 - **Football in a different standard**: the college and high-school hash marks.
 
@@ -687,7 +705,7 @@ Please follow the [code of conduct](./CODE_OF_CONDUCT.md). Text, a colour or a l
 
 ## Changes
 
-See [CHANGELOG.md](./CHANGELOG.md). The first release, 0.1.0, draws the six surfaces and the 50 ballparks, with scores, badges, wide and tall layouts, a custom element and a frame.
+See [CHANGELOG.md](./CHANGELOG.md). The first release, 0.1.0, draws the six surfaces and the 94 ballparks, with scores, badges, wide and tall layouts, a custom element and a frame.
 
 ## Licence
 
@@ -696,5 +714,6 @@ The code is [MIT](./LICENSE) © John Morris. The ballparks' fence distances are 
 | Data | Made from | Terms |
 | --- | --- | --- |
 | The dimensions of the football fields, the rink and the court | The NFL, CFL, IFAF, NHL and NBA rules and diagrams | Facts; no text or drawing copied |
-| The fence distances of 50 ballparks | The English and Japanese Wikipedia articles of each, at the revision cited | Facts; the articles are CC BY-SA 4.0 and none of their text is used |
+| The fence distances of 94 ballparks | The English and Japanese Wikipedia articles of each, at the revision cited | Facts; the articles are CC BY-SA 4.0 and none of their text is used |
+| The Wikidata item of each ballpark | Wikidata, as linked from the cited article | CC0 |
 | The demo's teams and emblems | Written for this package | MIT |

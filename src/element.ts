@@ -7,7 +7,7 @@ export const KYOGIJO_TAG = "kyogijo-field";
 
 /** The attributes the element reads. */
 export const KYOGIJO_ATTRIBUTES = [
-  "sport", "size", "theme", "language", "orientation", "park", "detail", "margin", "stripes", "exact-lines", "uppercase",
+  "sport", "size", "theme", "language", "orientation", "park", "year", "detail", "margin", "stripes", "exact-lines", "uppercase",
   "home", "away", "home-abbr", "away-abbr", "home-score", "away-score", "score", "home-logo", "away-logo", "home-color", "away-color",
   "status", "competition", "date", "label", "winner", "home-side", "description", "options",
 ] as const;
@@ -49,6 +49,8 @@ export function optionsFromAttributes(read: (name: string) => string | null, bas
   if (status !== null && status !== "") o.status = status as StatusWord;
   const side = read("home-side");
   if (side === "left" || side === "right") o.homeSide = side as Side;
+  const year = read("year");
+  if (year !== null && /^\d{4}$/.test(year.trim())) o.year = Number(year);
   const margin = read("margin");
   if (margin !== null && margin !== "") o.margin = Number(margin);
   if (read("stripes") === "false") o.stripes = false;
