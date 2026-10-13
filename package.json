@@ -89,6 +89,11 @@
       "import": "./dist/frames-entry.js",
       "default": "./dist/frames-entry.js"
     },
+    "./eras": {
+      "types": "./dist/eras-entry.d.ts",
+      "import": "./dist/eras-entry.js",
+      "default": "./dist/eras-entry.js"
+    },
     "./element/define": {
       "types": "./dist/element-define.d.ts",
       "import": "./dist/element-define.js",

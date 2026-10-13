@@ -157,8 +157,8 @@ describe("the baseball field", () => {
     expect(fence(1915)).not.toBe(fence());
     expect(fence(1930)).toBe(fence());
     expect(fence(1700)).toBe(fence());
-    // A park with one fence, and a generic field, ignore the season.
-    const once = (park: string | undefined, year?: number) => drawKyogijo({ sport: "mlb", id: "x", park, year });
+    // A park with one fence, and a generic field, keep their fence in every season (the markings of the season are another matter: see eras.test.ts).
+    const once = (park: string | undefined, year?: number) => withClass(parse(drawKyogijo({ sport: "mlb", id: "x", park, year })), "ky-fence")[0].attrs.d;
     expect(once("fenway-park", 1950)).toBe(once("fenway-park"));
     expect(once(undefined, 1950)).toBe(once(undefined));
   });

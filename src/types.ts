@@ -188,7 +188,12 @@ export interface SurfaceOptions {
   rightColor?: string;
   /** The ballpark of an MLB drawing: a key of `PARKS`, or `generic` (the default) for a typical field. */
   park?: string;
-  /** The season of a past park's fence, for a park whose fence moved (`polo-grounds` in 1915): a year in one of its `periods`, else its last fence. */
+  /**
+   * The season to draw the surface as it was in: a year names the season that starts in it (`1979` is the NHL's and the NBA's 1979–80,
+   * the NFL's, the CFL's and baseball's 1979). The markings are those the rules put on the surface that season (`rulesFor`), and
+   * a past ballpark's fence is the one it had then (`polo-grounds` in 1915, from its `periods`, else its last fence). Without a
+   * year the surface is today's; the IFAF's has no history.
+   */
   year?: number;
   /** Fence distances of an MLB drawing, in `units`, over the park's. */
   fence?: Partial<Fence>;

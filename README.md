@@ -70,9 +70,10 @@ console.log(svg.startsWith("<svg"), svg.includes("NORTHERN OWLS"));
 
 ## Features
 
-- **Seven surfaces, to scale.** The NFL field (360 by 160 feet with its end zones), the CFL field (450 by 195), the IFAF field, the NHL rink (200 by 85 with a 28-foot corner radius), the NBA court (94 by 50), the soccer pitch (105 by 68 metres, in ten sizes and variants) and the baseball field, with the markings of each: yard lines, hash marks, numbers and goal posts; blue and red lines, five face-off circles, creases and nets; keys, three-point lines and restricted areas; penalty areas, goal areas, arcs and goals; infield, mound, bases, foul lines and fence. Every figure is cited in [docs/sources.md](./docs/sources.md).
+- **Seven surfaces, to scale.** The NFL field (360 by 160 feet with its end zones), the CFL field (450 by 195), the IFAF field, the NHL rink (200 by 85 with a 28-foot corner radius), the NBA court (94 by 50), the soccer pitch (105 by 68 metres, in ten sizes and variants) and the baseball field, with the lines, circles, keys, boxes and goals of each. Every figure is cited in [docs/sources.md](./docs/sources.md).
 - **Soccer, to the Laws.** A pitch from Law 1 of the IFAB Laws of the Game of any size, with presets (international, UEFA, MLS, NCAA, the FA's 9-, 7- and 5-a-side, FIFA's futsal), half pitches, five mowing patterns, four goal styles, penalties and extra time in a score, and the pitch drawn in the coordinates of Opta, StatsBomb, Wyscout, Tracab, Metrica, SkillCorner, Second Spectrum or Impect, with `rescale` between them. See [Soccer](#soccer).
 - **Every ballpark.** The 30 current MLB parks and 44 that MLB clubs have left (the Polo Grounds, Ebbets Field, Forbes Field, Tiger Stadium, the Astrodome and more), and the 12 home parks of Nippon Professional Baseball with eight other NPB grounds, past and present, each with its fence drawn from the distances published for it. A named park is one option (`park: "fenway-park"`), and a past park whose fence moved is drawn as it stood in a season (`year: 1915`); the 94 are in `PARKS`, each with its Wikidata item.
+- **Surfaces through the years.** `year: 1975` draws a surface as its league's rules marked it that season, each change cited.
 - **Score mode.** Each team's name and logo on its side (the end zones of a football field, the ends of the ice, the halves of the court, the dugouts of a ballpark) and the score large in the middle, with the competition, the status (Final, OT, SO, a period, an inning) and the date, and the winner emphasised.
 - **Wide, tall or fit the box.** Every surface lies wide or tall. Tall turns it a quarter, keeps every word upright, and puts the teams top and bottom. With `orientation: "auto"` the browser helpers watch the box and lay it out again when its shape changes.
 - **Data on the surface.** Points, lines, arrows and text over any surface, in its feet or a provider's frame, cut to its outline, with a title, a description and a table for each layer.
@@ -289,7 +290,7 @@ writeFileSync("rink.svg", drawKyogijo({ sport: "nhl", theme: "dark" }));
 </style>
 ```
 
-The attributes are `sport`, `size`, `theme`, `language`, `orientation`, `park`, `year`, `pitch`, `pitch-type`, `half`, `goals`, `stripe-pattern`, `corner-flags`, `detail`, `margin`, `stripes`, `exact-lines`, `uppercase`, `home`, `away`, `home-abbr`, `away-abbr`, `home-score`, `away-score`, `home-penalties`, `away-penalties`, `score`, `home-logo`, `away-logo`, `home-color`, `away-color`, `status`, `competition`, `date`, `label`, `winner`, `home-side`, `description` and `options` (any other option, as JSON). The parts are `figure`, `svg`, `surface`, `plate`, `team`, `home`, `away`, `score`, `home-score`, `away-score` and `badge`.
+The attributes are the options' names in kebab case (`sport`, `year`, `exact-lines`, `home-score`, `stripe-pattern`, `home-logo` and the rest, all in `KYOGIJO_ATTRIBUTES`), and `options` takes any other option as JSON. The parts are `figure`, `svg`, `surface`, `plate`, `team`, `home`, `away`, `score`, `home-score`, `away-score` and `badge`.
 
 ### In React
 
@@ -454,16 +455,40 @@ console.log(toSurface([[50, 50]], { from: "opta", size: { length: 105, width: 68
 <br><em>A ballpark's fence, drawn through the distances its article publishes.</em>
 </p>
 
-`park` takes a key of `PARKS`, and `year` a season for a past park whose fence moved. The fence is a smooth curve through the distances the park's article publishes (the foul lines, the alleys, the middle), so that it never swings out past them. `fence: { left, leftCenter, center, rightCenter, right }` lays your own distances over a park's or over the generic field of 330, 375, 400, 375 and 330 feet.
+`park` takes a key of `PARKS`, and `year` a season (a past park's fence, and the field's markings: see [Surfaces through the years](#surfaces-through-the-years)). The fence is a smooth curve through the distances the park's article publishes (the foul lines, the alleys, the middle), so that it never swings out past them. `fence: { left, leftCenter, center, rightCenter, right }` lays your own distances over a park's or over the generic field of 330, 375, 400, 375 and 330 feet.
 
 | League | Parks |
 | --- | --- |
 | MLB, current | the 30 current parks, from `oriole-park-at-camden-yards` to `oracle-park` |
-| MLB, past | the 44 parks clubs have left, from `baker-bowl` (1887) to `turner-field` (2016), by their first season of MLB use: `baker-bowl`, `exposition-park-pittsburgh`, `polo-grounds`, `south-end-grounds`, `huntington-avenue-grounds`, `league-park-cleveland`, `sportsmans-park`, `hilltop-park`, `forbes-field`, `shibe-park`, `comiskey-park`, `griffith-stadium`, `crosley-field`, `tiger-stadium`, `ebbets-field`, `braves-field`, `yankee-stadium-1923`, `cleveland-stadium`, `milwaukee-county-stadium`, `baltimore-memorial-stadium`, `municipal-stadium-kansas-city`, `seals-stadium`, `candlestick-park`, `wrigley-field-los-angeles`, `metropolitan-stadium`, `colt-stadium`, `robert-f-kennedy-memorial-stadium`, `shea-stadium`, `astrodome`, `atlanta-fulton-county-stadium`, `busch-memorial-stadium`, `oakland-coliseum`, `sicks-stadium`, `jarry-park-stadium`, `three-rivers-stadium`, `riverfront-stadium`, `veterans-stadium`, `arlington-stadium`, `exhibition-stadium`, `olympic-stadium-montreal`, `metrodome`, `mile-high-stadium`, `globe-life-park-in-arlington`, `turner-field` |
-| NPB, home parks | `tokyo-dome`, `hanshin-koshien-stadium`, `meiji-jingu-stadium`, `yokohama-stadium`, `vantelin-dome-nagoya`, `mazda-stadium-hiroshima`, `es-con-field-hokkaido`, `rakuten-mobile-park-miyagi`, `belluna-dome`, `zozo-marine-stadium`, `kyocera-dome-osaka`, `mizuho-paypay-dome-fukuoka` |
-| NPB, other and past | `sapporo-dome`, `hotto-motto-field-kobe`, `hiroshima-municipal-stadium`, `korakuen-stadium`, `osaka-stadium`, `heiwadai-stadium`, `kawasaki-stadium`, `nagoya-stadium` |
+| MLB, past | the 44 parks clubs have left, from `baker-bowl` (1887) to `turner-field` (2016), by their first season of MLB use; the keys are in [docs/parks.md](./docs/parks.md) |
+| NPB, home parks | the 12 home parks, from `tokyo-dome` to `mizuho-paypay-dome-fukuoka`; keys in [docs/parks.md](./docs/parks.md) |
+| NPB, other and past | the 8 other grounds, from `sapporo-dome` to `nagoya-stadium`; keys in [docs/parks.md](./docs/parks.md) |
 
-Each park has its name in English (and in Japanese for the parks of Japan), its team, its city, `wikidata` (the Wikidata item of the ground, such as `Q49136` for Fenway Park, to join a park to other data; `parkByWikidata` finds a park by it), and the article and revision its figures were read from (`parkSourceUrl`). A past MLB park also has `status: "past"` and `from` and `to`, the first and last season an MLB club played there (the Polo Grounds, 1891 to 1963). `PARKS` has the park's last fence in `points`; where an article dates earlier fences they are in `periods`, each with its first and last season, and `year` (or `parkPointsIn(park, year)`) picks the one that stood that season: `drawKyogijo({ sport: "mlb", park: "polo-grounds", year: 1915 })` draws the 277, 433 and 258 feet of 1911 to 1922, not the 279, 483 and 258 of the Polo Grounds' last years. A park an article gives no distances for is not in `PARKS`; they are listed in [docs/references.md](./docs/references.md). The articles give distances and not directions, so the angle each figure is taken at is our reading of its label; see [docs/references.md](./docs/references.md). Japanese parks are measured in metres and converted once. A fence is not drawn with its wall's height or its quirks (the Green Monster, Tal's Hill).
+Each park has its name (in Japanese too for the parks of Japan), team, city, `wikidata` (its Wikidata item, to join a park to other data; `parkByWikidata` finds a park by it) and the article and revision its figures were read from (`parkSourceUrl`). A past MLB park has `from` and `to`, the first and last season an MLB club played there, and where an article dates earlier fences they are in `periods`: `drawKyogijo({ sport: "mlb", park: "polo-grounds", year: 1915 })` draws the 277, 433 and 258 feet of 1911 to 1922. More on how the figures were read, and the parks left out, is in [docs/references.md](./docs/references.md) and [docs/parks.md](./docs/parks.md).
+
+## Surfaces through the years
+
+`year` draws a surface as the rules marked it in a season, named by the year it starts in: `1979` is the 1979–80 season of the NHL and the NBA, `1974` the 1974 season of the NFL, the CFL and baseball. Without a `year` the surface is today's (`ERA_CURRENT`); the IFAF's has none. Every change is cited in [docs/sources.md](./docs/sources.md) and listed in [docs/eras.md](./docs/eras.md); what could not be cited is in [docs/references.md](./docs/references.md).
+
+| Sport | What changed, and from which season |
+| --- | --- |
+| `nhl` | centre red line (1943–44), goal and blue lines (1998–99, 2005–06), trapezoid (2005–06, 2014–15) |
+| `nba` | lane width (1951–52, 1964–65), three-point line (1979–80, 1994–95, 1997–98), restricted area (1997–98) |
+| `nfl` | hash marks (1933, 1935, 1945, 1972), goal posts' place (1920, 1927, 1933, 1974) and shape (1967) |
+| `cfl` | end zones (1986; 2027 planned), hash marks (2022), the field and the goal posts (2027 planned) |
+| `mlb` | pitcher's box and plate (1871, 1881, 1887, 1893), batter's boxes (1874, 1885), home plate (1857 to 1900), mound height (1903, 1969) |
+
+```ts
+import { drawKyogijo, rulesFor } from "@johnmorrisdotca/kyogijo";
+
+const rink = rulesFor("nhl", 1960);
+console.log(rink.season, rink.rules.centreLine, rink.rules.trapezoid, rink.differences.map((change) => change.feature));
+// 1960–61 true null [ 'trapezoid' ]
+console.log(drawKyogijo({ sport: "nba", year: 1978 }) === drawKyogijo({ sport: "nba", year: 1979 }));
+// false
+```
+
+`rulesFor(sport, year)` gives the markings in force, what differs from today (`differences`, in English and Japanese, cited) and `gaps`, the markings no source covers for that season, which keep the nearest cited state.
 
 ## Units
 
@@ -630,11 +655,12 @@ The [API reference](https://johnmorrisdotca.github.io/kyogijo/api.html) lists ev
 
 | Entry | What it holds |
 | --- | --- |
-| `@johnmorrisdotca/kyogijo` | `drawKyogijo`, `drawSurface`, `drawScore`, `drawBadge`, `drawLayers`, `layerTable`, `describe`, `winnerOf`, `statusLabel`, `isPortrait`, `statusText`; `OUTCOMES`, `rampColour`; `SPORTS`, `COURT_THEMES`, `SOCCER`, `SOCCER_PITCHES`, `SOCCER_PROVIDERS`, `soccerSpec`, `soccerFrame`, `rescale`, `PARKS`, `PARK_IDS`, `parkById`, `parkByWikidata`, `parkPointsIn`, `parkSourceUrl`, `parkUnit`, `fenceFor`; `SURFACE_UNITS`, `UNITS`, `convertLength`; `safeColour`, `safeLogo`, `inkOn`; `fitLines`, `textWidth`, `abbreviate`, `capitals`; `KYOGIJO_STYLE`, `KYOGIJO_STRINGS`, `COLOR_PROPERTIES`, `VERSION` and the option types |
+| `@johnmorrisdotca/kyogijo` | `drawKyogijo`, `drawSurface`, `drawScore`, `drawBadge`, `drawLayers`, `layerTable`, `describe`, `winnerOf`, `statusLabel`, `isPortrait`, `statusText`; `OUTCOMES`, `rampColour`; `SPORTS`, `COURT_THEMES`, `SOCCER`, `SOCCER_PITCHES`, `SOCCER_PROVIDERS`, `soccerSpec`, `soccerFrame`, `rescale`, `PARKS`, `PARK_IDS`, `parkById`, `parkByWikidata`, `parkPointsIn`, `parkSourceUrl`, `parkUnit`, `fenceFor`; `rulesFor`, `eraChanges`, `eraStates`, `eraRange`, `seasonLabel`, `footballIn`, `ERA_SPORTS`, `ERA_CURRENT`, `ERA_SOURCES`; `SURFACE_UNITS`, `UNITS`, `convertLength`; `safeColour`, `safeLogo`, `inkOn`; `fitLines`, `textWidth`, `abbreviate`, `capitals`; `KYOGIJO_STYLE`, `KYOGIJO_STRINGS`, `COLOR_PROPERTIES`, `VERSION` and the option types |
 | `@johnmorrisdotca/kyogijo/geometry` | `FOOTBALL`, `NHL`, `NBA`, `MLB`, `SOCCER`, `SOCCER_PITCHES`, `soccerSpec`, `soccerPitchClass`, `fenceAt`, `fencePoints`, `threePointJoin`, `skinJoin`, `boardsY` and the other dimensions; `SURFACE_UNITS`, `convertLength`, `convertPoint`, `lengthsIn`, `dimensionsOf`, `surfaceSize`, `fenceIn` |
 | `@johnmorrisdotca/kyogijo/frames` | `toSurface`, `fromSurface`, `convert`, `convertPoints`, `flipEnds`, `attackingIn`, `registerFrame`, `frameByName`, `framesOf`, `piecewise`, `span`, `FRAMES`, `RETROSHEET_ZONES`, `zoneToPoint`, `zoneAt`, `SOCCER_PROVIDERS`, `rescale` and the frame types |
 | `@johnmorrisdotca/kyogijo/layers` | `drawLayers`, `layerTable`, `renderLayers`, `outlineOf`, `OUTCOMES`, `rampColour` and the layer types |
 | `@johnmorrisdotca/kyogijo/parks` | `PARKS`, `PARK_IDS`, `parkById`, `parkByWikidata`, `parkPointsIn`, `parkSourceUrl`, `parkUnit`, `fenceFor` |
+| `@johnmorrisdotca/kyogijo/eras` | `rulesFor`, `eraChanges`, `eraStates`, `eraRange`, `seasonLabel`, `footballIn`, `ERA_SPORTS`, `ERA_CURRENT`, `ERA_SOURCES` and the rule types |
 | `@johnmorrisdotca/kyogijo/mount` | `mountKyogijo`, `kyogijoElement`, `containerAspect` |
 | `@johnmorrisdotca/kyogijo/react` | `kyogijoProps`, `kyogijoHtml`, `createKyogijo` |
 | `@johnmorrisdotca/kyogijo/element` | `KyogijoField`, `defineKyogijoField`, `optionsFromAttributes`, `KYOGIJO_TAG`, `KYOGIJO_ATTRIBUTES` |
@@ -702,7 +728,7 @@ Any browser with ES modules, `:where()` and SVG 2's `href` on images: Chrome and
 
 ## Languages
 
-English and Japanese: the title, the description and the standard statuses of a drawing, and the demo. The words are listed beside their English in [docs/strings-ja.md](./docs/strings-ja.md). Team names, competitions and dates are written as you give them, in any language; Japanese names of the NPB parks are in `PARKS`. Not yet: the Japanese read by a native reader (the demo says so when it is shown).
+English and Japanese: the title, the description and the standard statuses of a drawing, the sentence of each change in `eraChanges`, and the demo. The words are listed beside their English in [docs/strings-ja.md](./docs/strings-ja.md). Team names, competitions and dates are written as you give them, in any language; Japanese names of the NPB parks are in `PARKS`. Not yet: the Japanese read by a native reader (the demo says so when it is shown).
 
 ## Roadmap
 
@@ -741,6 +767,8 @@ src/
 ├── outline.ts          a surface's outline: where a layer is cut
 ├── common.ts           the drawing's id, the orientation and the unit, shared by the drawing and its layers
 ├── geometry.ts         every dimension, in feet, with the fence's curve
+├── eras.ts             the markings of each surface in a season, each change with its sources
+├── eras-entry.ts       the eras' entry
 ├── geometry-entry.ts   the geometry's entry
 ├── units.ts            the units of length, each surface's own, and the converters
 ├── frames.ts           coordinate frames: the mapper, the registry, toSurface and fromSurface

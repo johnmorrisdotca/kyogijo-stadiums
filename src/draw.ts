@@ -1,6 +1,7 @@
 import { inkOn, safeColour, safeLogo } from "./colour.ts";
 import { drawingId, feetFence, isPortrait, lengthUnit, safeClass } from "./common.ts";
 import { el, esc, num } from "./format.ts";
+import { ERA_SPORTS, footballIn, rulesFor, seasonLabel, type EraSport } from "./eras.ts";
 import { FOOTBALL } from "./geometry.ts";
 import { renderLayers } from "./layers.ts";
 import { fenceFor, parkById } from "./parks.ts";
@@ -165,17 +166,21 @@ function buildSurface(o: SurfaceOptions, portrait: boolean, id: string, score: b
     score,
     court: { baselineText, centreLogo: safeLogo(court?.centreLogo), paintThreePoint: court?.paintThreePoint },
   };
+  // The markings of the season asked for (`year`); today's without one.
   switch (o.sport) {
     case "nfl":
-    case "cfl":
+    case "cfl": {
+      const season = rulesFor(o.sport, o.year).rules;
+      return football(footballIn(o.sport, o.year), common, { hashMarks: season.hash !== null, postShape: season.postShape });
+    }
     case "ifaf":
-      return football(FOOTBALL[o.sport], common);
+      return football(FOOTBALL.ifaf, common);
     case "nhl":
-      return hockey(common);
+      return hockey(common, rulesFor("nhl", o.year).rules);
     case "nba":
-      return basketball(common);
+      return basketball(common, rulesFor("nba", o.year).rules);
     case "mlb":
-      return baseball(fenceFor(parkById(o.park), feetFence(o.fence, unit), o.year), common);
+      return baseball(fenceFor(parkById(o.park), feetFence(o.fence, unit), o.year), common, rulesFor("mlb", o.year).rules);
     case "soccer":
       return buildSoccer(o, common, scored, unit);
     default:
@@ -237,7 +242,9 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
   const about = `${words.said.on}${colon}${aboutText}${stop}`;
   const halfLine = pitch !== undefined && !isScore(o) && (o.half === "left" || o.half === "right") ? `${gap}${words.soccer.half}` : "";
   const parkLine = parkName === undefined ? halfLine : `${gap}${fill(words.said.park, { park: parkName })}`;
-  if (!isScore(o)) return { title: o.title ?? surfaceName, description: o.description ?? `${about}${parkLine}` };
+  // A drawing of a past season says which: the markings are those of that season.
+  const eraLine = typeof o.year === "number" && Number.isFinite(o.year) && ERA_SPORTS.includes(o.sport as EraSport) ? `${gap}${fill(words.said.era, { season: seasonLabel(o.sport as EraSport, o.year) })}` : "";
+  if (!isScore(o)) return { title: o.title ?? surfaceName, description: o.description ?? `${about}${parkLine}${eraLine}` };
   const winner = winnerOf(o);
   const s = (t: Team): string => (t.score === undefined || String(t.score) === "" ? "–" : String(t.score));
   const line = fill(words.scoreTitle, { away: o.away.name, awayScore: s(o.away), home: o.home.name, homeScore: s(o.home) });
@@ -254,7 +261,7 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
   const tied = winner === "none" && level ? `${gap}${words.said.tied}` : "";
   return {
     title: o.title ?? (status === undefined ? line : `${line}${words.said.sep}${status}`),
-    description: o.description ?? `${extra === "" ? "" : `${sentence(extra)}${gap}`}${sentence(line)}${result}${tied}${gap}${about}${parkLine}`.trim(),
+    description: o.description ?? `${extra === "" ? "" : `${sentence(extra)}${gap}`}${sentence(line)}${result}${tied}${gap}${about}${parkLine}${eraLine}`.trim(),
   };
 }
 

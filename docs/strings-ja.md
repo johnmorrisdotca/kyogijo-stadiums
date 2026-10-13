@@ -39,6 +39,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `said.won` | {name} won. | {name}の勝ちです。 |
 | `said.tied` | The game is level. | 同点です。 |
 | `said.park` | The outfield fence follows the figures published for {park}. | 外野フェンスは、{park}の公表されている距離をもとに描かれています。 |
+| `said.era` | The markings are those of the {season} season. | ラインやマークは{season}シーズンのものです。 |
 | `said.wonPens` | {name} won {a}-{b} on penalties. | {name}がPK戦を{a}-{b}で制しました。 |
 | `said.pens` | {a}-{b} pens | PK戦 {a}-{b} |
 | `said.on` | Drawn as | 図の内容 |
@@ -135,6 +136,13 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `parkGroupMlbPast` | MLB, parks of the past | MLB（過去の球場） |
 | `parkGroupNpb` | NPB, today's home parks | NPB（現在の本拠地） |
 | `parkGroupOther` | NPB, other and past grounds | NPB（準本拠地・過去の球場） |
+| `era` | Season | シーズン |
+| `era_today` | Today | 現在 |
+| `era_past` | A past season | 過去のシーズン |
+| `eraYear` | Year | 年 |
+| `eraNotes` | How it differed from today | 現在との違い |
+| `eraNone` | Nothing on this surface differs from today's. | この競技場には、現在と異なる点はありません。 |
+| `eraPlanned` | Announced for this season, not yet played. | このシーズンに向けて発表された変更で、まだ行われていません。 |
 | `size` | Show | 表示 |
 | `size_full` | On the surface | 競技場に重ねる |
 | `size_compact` | Compact | コンパクト |
@@ -255,6 +263,66 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `elementText` | Each of these is a <kyogijo-field> tag with attributes and no script of its own. | ここにあるのはどれも、属性だけを指定した <kyogijo-field> タグで、専用のスクリプトはありません。 |
 | `moreText` | Everything here is a call of one function. | ここにあるものは、すべて1つの関数の呼び出しです。 |
 | `copiedLine` | Copied to the clipboard | クリップボードにコピーしました |
+
+## The surfaces through the years (`eraChanges`)
+
+| Change | English | 日本語 |
+| --- | --- | --- |
+| `nfl.hash.start` | No hash marks: a play starts where the ball was whistled dead. | ハッシュマークはなく、プレーはボールデッドになった地点から再開されます。 |
+| `nfl.posts.1920` | The goal posts stand on the goal line. | ゴールポストはゴールラインの上に立っています。 |
+| `nfl.postShape.1920` | The goal posts are an H: two poles in the ground joined by the crossbar. | ゴールポストは「H」の形で、地面に立つ2本の支柱をクロスバーがつないでいます。 |
+| `nfl.posts.1927` | The goal posts move back to the end line, at the back of the end zone. | ゴールポストがエンドゾーンの奥、エンドラインの上に下がります。 |
+| `nfl.hash.1933` | Hash marks are adopted, 10 yards (30 feet) from each sideline. | ハッシュマークが採用され、両サイドラインから10ヤード（30フィート）の位置に引かれます。 |
+| `nfl.posts.1933` | The goal posts come forward again to the goal line, to encourage field goals. | フィールドゴールを増やすため、ゴールポストがゴールラインの上に戻ります。 |
+| `nfl.hash.1935` | The hash marks move in to 15 yards (45 feet) from each sideline. | ハッシュマークが内側に寄り、両サイドラインから15ヤード（45フィート）の位置になります。 |
+| `nfl.hash.1945` | The hash marks move in to 20 yards (60 feet) from each sideline. | ハッシュマークが内側に寄り、両サイドラインから20ヤード（60フィート）の位置になります。 |
+| `nfl.postShape.1967` | The slingshot post is introduced: one curved support behind the crossbar. | スリングショット型のゴールポストが登場します。クロスバーの後ろに湾曲した1本の支柱が立つ形です。 |
+| `nfl.hash.1972` | The hash marks move in to 70 feet 9 inches from each sideline, the width of the goal posts. | ハッシュマークが内側に寄り、両サイドラインから70フィート9インチ（約21.6m）の位置になって、左右の間隔がゴールポストの幅と同じになります。 |
+| `nfl.posts.1974` | The goal posts go back to the end line, to discourage field goals. | フィールドゴールを減らすため、ゴールポストがエンドラインの上に下がります。 |
+| `cfl.endZone.start` | End zones are 25 yards deep (a field 160 yards long in all). | エンドゾーンの奥行きは25ヤードで、エンドゾーンを含むフィールド全体の長さは160ヤードです。 |
+| `cfl.length.start` | 110 yards between the goal lines. | ゴールライン間は110ヤードです。 |
+| `cfl.posts.start` | The goal posts stand on the goal line. | ゴールポストはゴールラインの上に立っています。 |
+| `cfl.endZone.1986` | End zones are cut to 20 yards deep. | エンドゾーンの奥行きが20ヤードに短くなります。 |
+| `cfl.hash.2015` | Hash marks are 24 yards from each sideline, 17 yards apart. | ハッシュマークは両サイドラインから24ヤードで、間隔は17ヤードです。 |
+| `cfl.hash.2022` | The hash marks move in to 28 yards from each sideline, 9 yards apart. | ハッシュマークが内側に寄り、両サイドラインから28ヤードの位置になって、間隔は9ヤードになります。 |
+| `cfl.endZone.2027` | Planned: end zones 15 yards deep. | 予定：エンドゾーンの奥行きが15ヤードになります。 |
+| `cfl.length.2027` | Planned: 100 yards between the goal lines. | 予定：ゴールライン間が100ヤードになります。 |
+| `cfl.posts.2027` | Planned: the goal posts move to the end line, the back of the end zone. | 予定：ゴールポストがエンドゾーンの奥、エンドラインの上に移ります。 |
+| `nhl.centreLine.start` | No centre red line: two blue lines divide the ice and nothing marks the middle. | センターレッドラインはなく、リンクを分けるのは2本のブルーラインだけで、中央に線はありません。 |
+| `nhl.trapezoid.start` | No trapezoid behind the net: the goaltender may play the puck anywhere. | ゴール裏にトラペゾイド（台形の区域）はなく、ゴールキーパーはどこでもパックを扱えます。 |
+| `nhl.centreLine.1943` | The centre red line is added, so that a team can pass out of its own zone up to it. | センターレッドラインが加わり、自陣ゾーンからこのラインまでのパスが認められるようになります。 |
+| `nhl.goalLine.1997` | Goal lines are 11 feet from the end boards. | ゴールラインはエンドボードから11フィート（約3.4m）です。 |
+| `nhl.blueLine.1998` | Blue lines are 73 feet from the end boards: a 54-foot neutral zone and 73-foot offensive zones. | ブルーラインはエンドボードから73フィート（約22.3m）で、ニュートラルゾーンは54フィート（約16.5m）です。 |
+| `nhl.goalLine.1998` | Goal lines move out to 13 feet from the end boards, for room behind the net. | ゴールラインがエンドボードから13フィート（約4.0m）の位置に移り、ゴール裏が広くなります。 |
+| `nhl.blueLine.2005` | Blue lines move out to 75 feet from the end boards, cutting the neutral zone to 50 feet. | ブルーラインがエンドボードから75フィート（約22.9m）に移り、ニュートラルゾーンが50フィート（約15.2m）に狭まります。 |
+| `nhl.goalLine.2005` | Goal lines move back to 11 feet from the end boards. | ゴールラインがエンドボードから11フィートの位置に戻ります。 |
+| `nhl.trapezoid.2005` | The goaltender's trapezoid is marked behind each net: 18 feet at the goal line, 28 feet at the end boards. | 各ゴールの裏に、ゴールキーパーがパックを扱える区域として台形（トラペゾイド）が引かれます。ゴールライン側が18フィート、エンドボード側が28フィートです。 |
+| `nhl.trapezoid.2014` | The trapezoid is widened to 22 feet at the goal line (2 feet each side). | トラペゾイドのゴールライン側が左右2フィートずつ広がり、22フィートになります。 |
+| `nba.keyWidth.start` | The lane is 6 feet wide, the narrow keyhole the key is named for. | レーン（ペイントエリア）の幅は6フィート（約1.8m）で、細い鍵穴のような形です。「キー」という呼び名はこの形に由来します。 |
+| `nba.threePoint.start` | No three-point line. | スリーポイントラインはありません。 |
+| `nba.restrictedArea.start` | No restricted area under the basket. | バスケットの下にノーチャージセミサークル（リストリクテッドエリア）はありません。 |
+| `nba.keyWidth.1951` | The lane is widened to 12 feet, against George Mikan. | ジョージ・マイカンへの対策として、レーンの幅が12フィート（約3.7m）に広がります。 |
+| `nba.keyWidth.1964` | The lane is widened to 16 feet, against Wilt Chamberlain. | ウィルト・チェンバレンへの対策として、レーンの幅が16フィート（約4.9m）に広がります。 |
+| `nba.threePoint.1979` | The three-point line is adopted: 23 feet 9 inches from the basket, 22 feet in the corners. | スリーポイントラインが採用されます。バスケットから23フィート9インチ（約7.24m）、コーナーは22フィート（約6.7m）です。 |
+| `nba.threePoint.1994` | The three-point line is shortened to a uniform 22 feet all the way round. | スリーポイントラインが短くなり、全周でバスケットから22フィートになります。 |
+| `nba.restrictedArea.1997` | The restricted area is marked, a half circle of 4 feet from the middle of the basket. | バスケットの中心から半径4フィート（約1.2m）の半円で、ノーチャージセミサークル（リストリクテッドエリア）が描かれます。 |
+| `nba.threePoint.1997` | The three-point line goes back to 23 feet 9 inches (22 feet in the corners). | スリーポイントラインが元の23フィート9インチ（コーナーは22フィート）に戻ります。 |
+| `mlb.battersBox.start` | No batter's boxes: the batter hits with the front foot on a line through the centre of the plate. | バッターボックスはなく、打者は本塁の中心を通る線の上に前足を置いて打ちます。 |
+| `mlb.plateShape.1857` | Home plate is a round iron plate of one square foot, about 13½ inches across. | 本塁は面積が1平方フィートの円形の鉄板で、直径は約13.5インチです。 |
+| `mlb.platePlacement.1861` | The centre of home plate stands on the meeting of the foul lines. | 本塁の中心がファウルラインの交点に置かれます。 |
+| `mlb.plateShape.1868` | Home plate is a 12-inch square, its flat sides towards the pitcher and the catcher. | 本塁は一辺12インチの正方形で、平らな辺が投手と捕手のほうを向きます。 |
+| `mlb.pitcher.1871` | The pitcher throws from a chalked box whose front edge is 45 feet from home plate (its size is not given; drawn as the 1887 box). | 投手は、本塁側の辺が本塁から45フィート（約13.7m）の位置にある、チョークで描いたピッチャーズボックスの中から投げます（ボックスの大きさは不明のため、1887年のものと同じ大きさで描いています）。 |
+| `mlb.plateShape.1871` | The 12-inch square is turned 45 degrees, a corner towards the pitcher. | 一辺12インチの正方形が45度回され、角が投手のほうを向きます。 |
+| `mlb.battersBox.1874` | Batter's boxes appear, 6 feet by 3 feet, 12 inches from the plate. | バッターボックスが登場し、6フィート×3フィートで、本塁から12インチ離れています。 |
+| `mlb.platePlacement.1875` | Home plate is moved wholly into foul ground, the pitcher's point on the meeting of the foul lines. | 本塁が完全にファウルゾーンへ移り、投手側の角がファウルラインの交点に置かれます。 |
+| `mlb.platePlacement.1877` | Home plate is moved forward to its modern place, wholly in fair ground, its back point on the foul lines' meeting. | 本塁が現在の位置、つまり完全にフェアゾーンの中に移り、後ろの角がファウルラインの交点に置かれます。 |
+| `mlb.pitcher.1881` | The box's front edge moves back to 50 feet (its size is not given; drawn as the 1887 box). | ピッチャーズボックスの本塁側の辺が本塁から50フィート（約15.2m）の位置に遠ざかります（ボックスの大きさは不明のため、1887年のものと同じ大きさで描いています）。 |
+| `mlb.battersBox.1885` | Batter's boxes take their modern size, 6 feet by 4 feet, 6 inches from the plate (the National League in 1885). | バッターボックスが現在と同じ6フィート×4フィートの大きさになり、本塁から6インチ離れます（ナショナルリーグでは1885年）。 |
+| `mlb.pitcher.1887` | The box is 4 feet wide and 5½ feet deep, its front edge 50 feet from home plate. | ピッチャーズボックスは幅4フィート、奥行き5.5フィートで、本塁側の辺は本塁から50フィートです。 |
+| `mlb.pitcher.1893` | The box gives way to the pitcher's plate, its front edge 60 feet 6 inches from home plate. | ピッチャーズボックスに代わって投手板が使われ、その本塁側の縁は本塁から60フィート6インチ（約18.44m）です。 |
+| `mlb.plateShape.1900` | The five-sided plate of white rubber is adopted, as it is today. | 現在と同じ五角形の白いゴム製の本塁が採用されます。 |
+| `mlb.moundHeight.1903` | The mound may stand 15 inches above home plate. | マウンドは本塁より15インチ（約38cm）まで高くできます。 |
+| `mlb.moundHeight.1969` | The mound is lowered to 10 inches, after the Year of the Pitcher. | 「投手の年」と呼ばれた1968年のあと、マウンドの高さが10インチ（約25cm）に低くなります。 |
 
 ## The parks' Japanese names
 

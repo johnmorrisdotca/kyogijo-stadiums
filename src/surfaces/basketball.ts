@@ -1,9 +1,10 @@
 import { el, num } from "../format.ts";
-import { NBA, threePointJoin } from "../geometry.ts";
+import { rulesFor, type NbaRules } from "../eras.ts";
+import { NBA } from "../geometry.ts";
 import { quarterTurn, textOn, type BuildOptions, type Surface } from "./surface.ts";
 
-/** The NBA court: the floor, the keys, the arcs, the circles, the baskets and the small marks. */
-export function basketball(o: BuildOptions): Surface {
+/** The NBA court: the floor, the keys, the arcs, the circles, the baskets and the small marks, as the rules of a season (today's by default) marked them. */
+export function basketball(o: BuildOptions, era: NbaRules = rulesFor("nba").rules): Surface {
   const { length: L, width: W } = NBA;
   const m = o.margin ?? 7;
   const view0 = { x: -m, y: -m, w: L + 2 * m, h: W + 2 * m };
@@ -11,9 +12,11 @@ export function basketball(o: BuildOptions): Surface {
   const full = o.detail === "full";
   const bw = 2.6;
   const thin = o.exact ? 1 / 6 : 0.4;
-  const J = threePointJoin();
   const turned = o.portrait;
-  const half = NBA.lane / 2;
+  const half = era.keyWidth / 2;
+  // The three-point line: an arc of the season's radius from the basket, meeting the straight lines 3 feet in from the sidelines.
+  const t = { ...NBA.threePoint, radius: era.threePoint?.radius ?? NBA.threePoint.radius };
+  const J = NBA.basket + Math.sqrt(t.radius * t.radius - t.corner * t.corner);
 
   let base = el("rect", { class: "ky-apron", x: view0.x, y: view0.y, width: view0.w, height: view0.h });
   base += el("path", { class: "ky-boards", "fill-rule": "evenodd", d: `M${-bw} ${-bw}H${L + bw}V${W + bw}H${-bw}ZM0 0V${W}H${L}V0Z` });
@@ -26,12 +29,12 @@ export function basketball(o: BuildOptions): Surface {
   }
   // The keys, painted, and the three-point areas when asked.
   const keyW = NBA.freeThrowLine;
-  if (o.court?.paintThreePoint) {
-    base += el("path", { class: "ky-key ky-key-left", d: `M0 ${NBA.threePoint.sideInset}H${num(J)}A${NBA.threePoint.radius} ${NBA.threePoint.radius} 0 0 1 ${num(J)} ${W - NBA.threePoint.sideInset}H0Z` });
-    base += el("path", { class: "ky-key ky-key-right", d: `M${L} ${NBA.threePoint.sideInset}H${num(L - J)}A${NBA.threePoint.radius} ${NBA.threePoint.radius} 0 0 0 ${num(L - J)} ${W - NBA.threePoint.sideInset}H${L}Z` });
+  if (o.court?.paintThreePoint && era.threePoint !== null) {
+    base += el("path", { class: "ky-key ky-key-left", d: `M0 ${t.sideInset}H${num(J)}A${t.radius} ${t.radius} 0 0 1 ${num(J)} ${W - t.sideInset}H0Z` });
+    base += el("path", { class: "ky-key ky-key-right", d: `M${L} ${t.sideInset}H${num(L - J)}A${t.radius} ${t.radius} 0 0 0 ${num(L - J)} ${W - t.sideInset}H${L}Z` });
   }
-  base += el("rect", { class: "ky-key ky-key-left", x: 0, y: cy - half, width: keyW, height: NBA.lane });
-  base += el("rect", { class: "ky-key ky-key-right", x: L - keyW, y: cy - half, width: keyW, height: NBA.lane });
+  base += el("rect", { class: "ky-key ky-key-left", x: 0, y: cy - half, width: keyW, height: era.keyWidth });
+  base += el("rect", { class: "ky-key ky-key-right", x: L - keyW, y: cy - half, width: keyW, height: era.keyWidth });
   base += el("circle", { class: "ky-centre", cx: L / 2, cy, r: NBA.centreRadius });
 
   let lines = el("rect", { class: "ky-line", x: 0, y: 0, width: L, height: W, "stroke-width": thin * 1.25, fill: "none" });
@@ -44,23 +47,26 @@ export function basketball(o: BuildOptions): Surface {
   // The free-throw circles: whole outside the key, dashed inside it.
   lines += el("path", { class: "ky-line", d: `M${keyW} ${cy - R}A${R} ${R} 0 0 1 ${keyW} ${cy + R}M${L - keyW} ${cy - R}A${R} ${R} 0 0 0 ${L - keyW} ${cy + R}`, "stroke-width": thin, fill: "none" });
   lines += el("path", { class: "ky-line", d: `M${keyW} ${cy - R}A${R} ${R} 0 0 0 ${keyW} ${cy + R}M${L - keyW} ${cy - R}A${R} ${R} 0 0 1 ${L - keyW} ${cy + R}`, "stroke-width": thin, fill: "none", "stroke-dasharray": "1.6 1.2" });
-  // Three-point lines.
-  const t = NBA.threePoint;
-  lines += el("path", {
-    class: "ky-line",
-    d: `M0 ${t.sideInset}H${num(J)}A${t.radius} ${t.radius} 0 0 1 ${num(J)} ${W - t.sideInset}H0M${L} ${t.sideInset}H${num(L - J)}A${t.radius} ${t.radius} 0 0 0 ${num(L - J)} ${W - t.sideInset}H${L}`,
-    "stroke-width": thin,
-    fill: "none",
-  });
-  // Restricted areas, backboards, rims.
+  // Three-point lines, from the season the league had them.
+  if (era.threePoint !== null) {
+    lines += el("path", {
+      class: "ky-line",
+      d: `M0 ${t.sideInset}H${num(J)}A${t.radius} ${t.radius} 0 0 1 ${num(J)} ${W - t.sideInset}H0M${L} ${t.sideInset}H${num(L - J)}A${t.radius} ${t.radius} 0 0 0 ${num(L - J)} ${W - t.sideInset}H${L}`,
+      "stroke-width": thin,
+      fill: "none",
+    });
+  }
+  // Restricted areas (from 1997), backboards, rims.
   const bx = NBA.basket;
   const back = NBA.backboard.fromBaseline;
-  lines += el("path", {
-    class: "ky-line",
-    d: `M${back} ${cy - NBA.restricted}H${bx}A${NBA.restricted} ${NBA.restricted} 0 0 1 ${bx} ${cy + NBA.restricted}H${back}M${L - back} ${cy - NBA.restricted}H${L - bx}A${NBA.restricted} ${NBA.restricted} 0 0 0 ${L - bx} ${cy + NBA.restricted}H${L - back}`,
-    "stroke-width": thin,
-    fill: "none",
-  });
+  if (era.restrictedArea) {
+    lines += el("path", {
+      class: "ky-line",
+      d: `M${back} ${cy - NBA.restricted}H${bx}A${NBA.restricted} ${NBA.restricted} 0 0 1 ${bx} ${cy + NBA.restricted}H${back}M${L - back} ${cy - NBA.restricted}H${L - bx}A${NBA.restricted} ${NBA.restricted} 0 0 0 ${L - bx} ${cy + NBA.restricted}H${L - back}`,
+      "stroke-width": thin,
+      fill: "none",
+    });
+  }
   lines += el("path", { class: "ky-board", d: `M${back} ${cy - NBA.backboard.width / 2}V${cy + NBA.backboard.width / 2}M${L - back} ${cy - NBA.backboard.width / 2}V${cy + NBA.backboard.width / 2}M${back} ${cy}H${bx - NBA.rim}M${L - back} ${cy}H${L - bx + NBA.rim}`, "stroke-width": 0.5, fill: "none" });
   lines += el("circle", { class: "ky-rim", cx: bx, cy, r: NBA.rim, "stroke-width": 0.3, fill: "none" });
   lines += el("circle", { class: "ky-rim", cx: L - bx, cy, r: NBA.rim, "stroke-width": 0.3, fill: "none" });

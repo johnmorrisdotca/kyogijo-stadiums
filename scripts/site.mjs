@@ -71,6 +71,15 @@ const page = `<!doctype html>
                 <span class="fam-label" data-say="park"></span>
                 <select class="fam-field" id="park" data-testid="park" data-say-label="park"></select>
               </div>
+              <div id="era-group">
+                ${seg("era", "era", "Draw the surface as it is today, or as the rules marked it in a past season: the NHL's centre line from 1943, the NBA's three-point line from 1979, the NFL's hash marks as they moved, and more. Each change is cited.", "競技場を現在の姿で描くか、過去のシーズンのルールに従った姿で描くかを選びます。例：NHLのセンターレッドライン（1943年から）、NBAのスリーポイントライン（1979年から）、何度も位置が変わったNFLのハッシュマークなど。どの変更にも出典があります。")}
+                <div class="setup fam-row" id="era-year-row" hidden ${help("Slide to a season. A season is named by the year it starts in: 1979 is the 1979–80 season of the NHL and the NBA.", "スライダーでシーズンを選びます。シーズンは開幕する年で表します。NHLとNBAでは、「1979」は1979–80シーズンを指します。")}>
+                  <label class="fam-label" for="era-year" data-say="eraYear"></label>
+                  <input type="range" class="fam-field era-range" id="era-year" data-testid="era-year" step="1" />
+                  <output class="era-season" id="era-season" data-testid="era-season" for="era-year"></output>
+                </div>
+                <ul class="era-notes" id="era-notes" data-testid="era-notes" hidden></ul>
+              </div>
               ${seg("size", "size", "On the surface puts the names and the score on the field; compact puts a strip under it; a badge is the strip alone, for lists.", "「競技場に重ねる」は名前と得点を競技場の上に表示し、「コンパクト」は下に帯を付け、「バッジ」は帯だけにします。一覧向けです。")}
               ${seg("orientation", "orientation", "Wide is the usual way round. Tall turns the surface a quarter, with the words upright and the teams top and bottom. Fit the box chooses by the shape of the space.", "「横」は通常の向きです。「縦」は競技場を90度回し、文字は水平のまま、チームを上下に並べます。「枠に合わせる」は表示領域の形に合わせて自動で選びます。")}
               ${seg("theme", "theme", "The page's light or dark. Drawings follow it unless they are told otherwise.", "ページのライト／ダークを選びます。特に指定しなければ、図もこれに従います。")}

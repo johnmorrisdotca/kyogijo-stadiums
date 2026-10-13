@@ -1,4 +1,5 @@
 import { el, num } from "../format.ts";
+import { rulesFor, type NhlRules } from "../eras.ts";
 import { NHL } from "../geometry.ts";
 import { quarterTurn, roundedRect, type BuildOptions, type Surface } from "./surface.ts";
 
@@ -9,9 +10,11 @@ export function boardsY(x: number): number {
   return r - Math.sqrt(r * r - (r - x) * (r - x));
 }
 
-/** The NHL rink: the ice, the boards, the lines, the circles, the creases and the nets. */
-export function hockey(o: BuildOptions): Surface {
-  const { length: L, width: W, cornerRadius: r, goalLine: g } = NHL;
+/** The NHL rink: the ice, the boards, the lines, the circles, the creases and the nets, as the rules of a season (today's by default) marked them. */
+export function hockey(o: BuildOptions, era: NhlRules = rulesFor("nhl").rules): Surface {
+  const { length: L, width: W, cornerRadius: r } = NHL;
+  const g = era.goalLine;
+  const blueLine = era.blueLine;
   const m = o.margin ?? 8;
   const view0 = { x: -m, y: -m, w: L + 2 * m, h: W + 2 * m };
   const cy = W / 2;
@@ -28,9 +31,11 @@ export function hockey(o: BuildOptions): Surface {
   const gy = boardsY(g);
   let lines = "";
   // The centre line (red, with its white dashes) and the blue lines.
-  lines += el("path", { class: "ky-red", d: `M${num(L / 2)} 0V${num(W)}`, "stroke-width": wide, fill: "none" });
-  lines += el("path", { class: "ky-dash", d: `M${num(L / 2)} 0V${num(W)}`, "stroke-width": wide * 0.45, fill: "none", "stroke-dasharray": "2.4 1.6" });
-  lines += el("path", { class: "ky-blue", d: `M${NHL.blueLine} 0V${W}M${L - NHL.blueLine} 0V${W}`, "stroke-width": wide, fill: "none" });
+  if (era.centreLine) {
+    lines += el("path", { class: "ky-red", d: `M${num(L / 2)} 0V${num(W)}`, "stroke-width": wide, fill: "none" });
+    lines += el("path", { class: "ky-dash", d: `M${num(L / 2)} 0V${num(W)}`, "stroke-width": wide * 0.45, fill: "none", "stroke-dasharray": "2.4 1.6" });
+  }
+  lines += el("path", { class: "ky-blue", d: `M${blueLine} 0V${W}M${L - blueLine} 0V${W}`, "stroke-width": wide, fill: "none" });
   // The goal lines.
   lines += el("path", { class: "ky-red", d: `M${g} ${num(gy)}V${num(W - gy)}M${L - g} ${num(gy)}V${num(W - gy)}`, "stroke-width": o.exact ? NHL.goalLineWidth : 0.5, fill: "none" });
 
@@ -62,11 +67,12 @@ export function hockey(o: BuildOptions): Surface {
   }
   lines += circles.join("");
   if (hashes.length > 0) lines += el("path", { class: "ky-red", d: hashes.join(""), "stroke-width": thin * 1.3, fill: "none" });
-  const neutral = [NHL.blueLine + NHL.neutralSpotFromBlue, L - NHL.blueLine - NHL.neutralSpotFromBlue];
+  const neutral = [blueLine + NHL.neutralSpotFromBlue, L - blueLine - NHL.neutralSpotFromBlue];
   lines += neutral.flatMap((x) => [cy - NHL.spotOffset, cy + NHL.spotOffset].map((y) => el("circle", { class: "ky-red-fill", cx: x, cy: y, r: NHL.spotRadius }))).join("");
 
   // Creases, nets and the goalkeeper's trapezoid, at both ends.
-  const { crease, net, trapezoid } = NHL;
+  const { crease, net } = NHL;
+  const trapezoid = era.trapezoid;
   const reach = Math.sqrt(crease.radius * crease.radius - crease.halfWidth * crease.halfWidth);
   for (const end of [0, 1] as const) {
     const s = end === 0 ? 1 : -1;
@@ -79,7 +85,7 @@ export function hockey(o: BuildOptions): Surface {
     });
     if (full) {
       lines += el("path", { class: "ky-red", d: `M${num(edge(4))} ${num(cy - crease.halfWidth)}v0.42M${num(edge(4))} ${num(cy + crease.halfWidth)}v-0.42`, "stroke-width": thin * 1.3, fill: "none" });
-      lines += el("path", { class: "ky-red", d: `M${num(gx)} ${num(cy - trapezoid.atGoalLine / 2)}L${num(end === 0 ? 0 : L)} ${num(cy - trapezoid.atBoards / 2)}M${num(gx)} ${num(cy + trapezoid.atGoalLine / 2)}L${num(end === 0 ? 0 : L)} ${num(cy + trapezoid.atBoards / 2)}`, "stroke-width": thin * 1.3, fill: "none" });
+      if (trapezoid !== null) lines += el("path", { class: "ky-red", d: `M${num(gx)} ${num(cy - trapezoid.atGoalLine / 2)}L${num(end === 0 ? 0 : L)} ${num(cy - trapezoid.atBoards / 2)}M${num(gx)} ${num(cy + trapezoid.atGoalLine / 2)}L${num(end === 0 ? 0 : L)} ${num(cy + trapezoid.atBoards / 2)}`, "stroke-width": thin * 1.3, fill: "none" });
     }
     lines += el("path", { class: "ky-net", d: `M${num(gx)} ${num(cy - net.width / 2)}h${num(-s * net.depth)}v${net.width}h${num(s * net.depth)}`, "stroke-width": thin * 1.5, fill: "none" });
   }

@@ -51,7 +51,7 @@ export const FOOTBALL: Record<FootballSpec["id"], FootballSpec> = {
 /** The length of a football field with its end zones. */
 export const footballLength = (spec: FootballSpec): number => spec.length + 2 * spec.endZone;
 
-/** The NHL rink, from Rule 1 of the NHL rulebook. */
+/** The NHL rink as it is today, from Rule 1 of the NHL rulebook. `rulesFor("nhl", year)` (eras.ts) has it as it was in a season. */
 export const NHL = {
   length: 200,
   width: 85,
@@ -73,11 +73,11 @@ export const NHL = {
   hashApart: 5 + 11 / 12,
   crease: { radius: 6, depth: 4.5, halfWidth: 4 },
   net: { width: 6, depth: 40 / 12 },
-  trapezoid: { atBoards: 28, atGoalLine: 18 },
+  trapezoid: { atBoards: 28, atGoalLine: 22 },
   refereeCrease: 10,
 } as const;
 
-/** The NBA court, from Rule 1 of the NBA rulebook and the court diagram. */
+/** The NBA court as it is today, from Rule 1 of the NBA rulebook and the court diagram. `rulesFor("nba", year)` has it as it was in a season. */
 export const NBA = {
   length: 94,
   width: 50,

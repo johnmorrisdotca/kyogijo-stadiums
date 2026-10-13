@@ -9,8 +9,17 @@ const DIGIT_FONT = DIGIT_HEIGHT / 0.72;
 /** Segments of one path: a `d` made of many short strokes. */
 const segments = (parts: string[]): string => parts.join("");
 
-/** A football field of the NFL, the CFL or the IFAF: the field, the end zones, the lines, the marks, the numbers and the posts. */
-export function football(spec: FootballSpec, o: BuildOptions): Surface {
+/** What a season changes in a football field beyond its spec: whether it had hash marks, and the shape of its goal posts. */
+export interface FootballMarks {
+  hashMarks: boolean;
+  postShape: "h" | "slingshot";
+}
+
+/**
+ * A football field of the NFL, the CFL or the IFAF: the field, the end zones, the lines, the marks, the numbers and the posts.
+ * The spec is the field of a season (`footballIn`); `marks` says what else that season had, and is today's by default.
+ */
+export function football(spec: FootballSpec, o: BuildOptions, marks: FootballMarks = { hashMarks: true, postShape: "slingshot" }): Surface {
   const L = footballLength(spec);
   const W = spec.width;
   const e = spec.endZone;
@@ -51,15 +60,15 @@ export function football(spec: FootballSpec, o: BuildOptions): Surface {
     for (let k = 1; k < spec.length / feetPerYard; k += 1) {
       if ((k * feetPerYard) % spec.yardLine === 0) continue;
       const x = e + feetPerYard * k;
-      hashes.push(`M${num(x)} ${num(spec.hash - HASH_LENGTH)}v${HASH_LENGTH}M${num(x)} ${num(W - spec.hash)}v${HASH_LENGTH}`);
+      if (marks.hashMarks) hashes.push(`M${num(x)} ${num(spec.hash - HASH_LENGTH)}v${HASH_LENGTH}M${num(x)} ${num(W - spec.hash)}v${HASH_LENGTH}`);
       if (spec.id !== "cfl") ticks.push(`M${num(x)} ${num(inset)}v${HASH_LENGTH}M${num(x)} ${num(W - inset - HASH_LENGTH)}v${HASH_LENGTH}`);
     }
     // At the five-yard lines the hash marks cross the line: a short stripe along the sideline's direction.
-    for (let i = 1; i < yards; i += 1) {
+    for (let i = 1; marks.hashMarks && i < yards; i += 1) {
       const x = e + spec.yardLine * i;
       hashes.push(`M${num(x - 1)} ${num(spec.hash - 1)}h2M${num(x - 1)} ${num(W - spec.hash + 1)}h2`);
     }
-    lines += el("path", { class: "ky-line", d: segments(hashes), "stroke-width": mark });
+    if (hashes.length > 0) lines += el("path", { class: "ky-line", d: segments(hashes), "stroke-width": mark });
     if (ticks.length > 0) lines += el("path", { class: "ky-line", d: segments(ticks), "stroke-width": mark });
   }
 
@@ -73,7 +82,8 @@ export function football(spec: FootballSpec, o: BuildOptions): Surface {
     const label = String(Math.min(p, yardsLong - p));
     positions.push({ x: e + p * 3, label, pos: p });
   }
-  if (spec.id === "cfl") positions.push({ x: e + (yardsLong / 2) * 3, label: spec.centre, pos: yardsLong / 2 });
+  // The CFL marks its centre C; on a field whose middle is a ten-yard line (the 100 yards planned for 2027) the line is a 50, as the NFL's.
+  if (spec.id === "cfl" && (yardsLong / 2) % 10 !== 0) positions.push({ x: e + (yardsLong / 2) * 3, label: spec.centre, pos: yardsLong / 2 });
   let numbers = "";
   for (const side of ["near", "far"] as const) {
     const y = side === "near" ? W - centreY : centreY;
@@ -112,7 +122,9 @@ export function football(spec: FootballSpec, o: BuildOptions): Surface {
     postX.forEach((x, i) => {
       const dir = outward[i];
       const h = GOALPOST_WIDTH / 2;
-      posts += el("path", { class: "ky-post", d: `M${num(x)} ${num(W / 2 - h)}V${num(W / 2 + h)}M${num(x)} ${num(W / 2)}h${num(dir * 4)}`, fill: "none", "stroke-width": 0.9 });
+      // A slingshot post has one support behind the crossbar, drawn as a stem; an H has two poles, which are the ends.
+      const stem = marks.postShape === "slingshot" ? `M${num(x)} ${num(W / 2)}h${num(dir * 4)}` : "";
+      posts += el("path", { class: "ky-post", d: `M${num(x)} ${num(W / 2 - h)}V${num(W / 2 + h)}${stem}`, fill: "none", "stroke-width": 0.9 });
       posts += el("circle", { class: "ky-post-end", cx: x, cy: W / 2 - h, r: 1.1 });
       posts += el("circle", { class: "ky-post-end", cx: x, cy: W / 2 + h, r: 1.1 });
     });

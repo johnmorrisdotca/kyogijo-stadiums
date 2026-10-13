@@ -53,8 +53,8 @@ describe("the NHL rink", () => {
     expect(Math.sqrt(36 - 16)).toBeCloseTo(NHL.crease.depth, 1);
   });
 
-  it("has a trapezoid 18 feet wide at the goal line and 28 at the end boards", () => {
-    expect(NHL.trapezoid).toEqual({ atBoards: 28, atGoalLine: 18 });
+  it("has a trapezoid 22 feet wide at the goal line (18 until 2013-14) and 28 at the end boards", () => {
+    expect(NHL.trapezoid).toEqual({ atBoards: 28, atGoalLine: 22 });
   });
 
   it("meets the boards' curve where a circle of the corner's radius does", () => {

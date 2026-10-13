@@ -1,7 +1,7 @@
 // The demo page's own script: a surface to try (the package's own `mountKyogijo`), the code that draws it in four ways,
 // and a page of examples: every sport, wide and tall, badges, compact cards, court looks, a live score, every ballpark,
 // and the custom element. The words are in words.js, the made-up teams in examples.js.
-import { COURT_THEMES, KYOGIJO_STYLE, PARKS, PARK_IDS, SOCCER_PITCH_IDS, SOCCER_PROVIDERS, SOCCER_PROVIDER_IDS, SPORTS, VERSION, drawKyogijo, rescale, layerTable } from "./dist/index.js";
+import { COURT_THEMES, ERA_SPORTS, KYOGIJO_STYLE, PARKS, PARK_IDS, SOCCER_PITCH_IDS, SOCCER_PROVIDERS, SOCCER_PROVIDER_IDS, SPORTS, VERSION, drawKyogijo, rescale, layerTable, eraRange, rulesFor, seasonLabel } from "./dist/index.js";
 import { mountKyogijo } from "./dist/mount-entry.js";
 import "./dist/element-define.js";
 import { toParams } from "./embed-params.js";
@@ -46,6 +46,8 @@ const COURTS = ["default", "maple", "twoTone", "night", "sunburst", "tournament"
 const state = {
   sport: pick(params.get("sport"), SPORTS, "nhl"),
   park: params.get("park") && (PARKS[params.get("park")] || params.get("park") === "generic") ? params.get("park") : "generic",
+  // The season to draw the surface in, or null for today's (a year in the address turns it on).
+  year: /^\d{4}$/.test(params.get("year") || "") ? Number(params.get("year")) : null,
   size: pick(params.get("size"), SIZES, "full"),
   orientation: pick(params.get("orientation"), ORIENTATIONS, "auto"),
   theme: pick(params.get("theme") ?? keep.get("kyogijo.theme"), THEMES, "auto"),
@@ -99,6 +101,7 @@ function optionsFor(s, forCode = false) {
   if (!s.stripes) o.stripes = false;
   if (s.exact) o.exactLines = true;
   if (s.sport === "mlb" && s.park !== "generic") o.park = s.park;
+  if (s.year !== null && ERA_SPORTS.includes(s.sport)) o.year = s.year;
   if (s.sport === "soccer") {
     if (s.pitch !== "fifa") o.pitch = s.pitch;
     if (s.pitchType !== "none") o.pitchType = s.pitchType;
@@ -149,6 +152,7 @@ const labelOf = {
   goals: (v) => say(`goals_${v}`),
   half: (v) => say(`half_${v}`),
   logo: (v) => say(`logo_${v}`),
+  era: (v) => say(`era_${v}`),
 };
 
 const segs = {};
@@ -182,6 +186,7 @@ function refreshSegs() {
 }
 
 makeSeg("sport", "sport", SPORTS, () => state.sport, (v) => { state.sport = v; loadGame(v); fillFields(); });
+makeSeg("era", "era", ["today", "past"], () => (state.year === null ? "today" : "past"), (v) => { state.year = v === "today" ? null : (state.year ?? clampYear(1975)); });
 makeSeg("size", "size", SIZES, () => state.size, (v) => { state.size = v; });
 makeSeg("orientation", "orientation", ORIENTATIONS, () => state.orientation, (v) => { state.orientation = v; });
 makeSeg("theme", "theme", THEMES, () => state.theme, (v) => { state.theme = v; keep.set("kyogijo.theme", v); applyTheme(); });
@@ -193,6 +198,39 @@ makeSeg("pattern", "pattern", PATTERNS, () => state.pattern, (v) => { state.patt
 makeSeg("goals", "goals", GOALS, () => state.goals, (v) => { state.goals = v; });
 makeSeg("half", "half", HALVES, () => state.half, (v) => { state.half = v; });
 for (const role of ["away", "home"]) makeSeg(`${role}-logo`, "logo", ["none", "emblem", "url"], () => state[role].logo, (v) => { state[role].logo = v; });
+
+/** A season inside the range the sport's history covers. */
+function clampYear(year) {
+  if (!ERA_SPORTS.includes(state.sport)) return year;
+  const { from, to } = eraRange(state.sport);
+  return Math.min(to, Math.max(from, year));
+}
+$("era-year").addEventListener("input", (event) => { state.year = Number(event.target.value); change(); });
+
+/** The season control: shown for the sports that have a history, with the markings that differed from today's. */
+function renderEra() {
+  const has = ERA_SPORTS.includes(state.sport);
+  $("era-group").hidden = !has;
+  if (!has) return;
+  if (state.year !== null) state.year = clampYear(state.year);
+  const past = state.year !== null;
+  $("era-year-row").hidden = !past;
+  const notes = $("era-notes");
+  notes.hidden = !past;
+  if (!past) return;
+  const { from, to } = eraRange(state.sport);
+  const slider = $("era-year");
+  slider.min = String(from);
+  slider.max = String(to);
+  slider.value = String(state.year);
+  $("era-season").textContent = seasonLabel(state.sport, state.year);
+  const found = rulesFor(state.sport, state.year);
+  const items = found.differences.map((change) => (language.lang === "ja" ? change.ja : change.what));
+  if (found.planned) items.push(say("eraPlanned"));
+  if (items.length === 0) items.push(say("eraNone"));
+  notes.replaceChildren(...items.map((text) => Object.assign(document.createElement("li"), { textContent: text })));
+  notes.setAttribute("aria-label", say("eraNotes"));
+}
 
 function toggle(id, key) {
   $(id).addEventListener("click", () => { state[key] = !state[key]; $(id).setAttribute("aria-pressed", String(state[key])); change(); });
@@ -308,6 +346,7 @@ function render() {
   $("soccer-group").hidden = !soccer;
   for (const role of ["away", "home"]) $(`${role}-pens-row`).hidden = !soccer;
   $("flags").setAttribute("aria-pressed", String(state.flags));
+  renderEra();
   $("court-group").hidden = state.sport !== "nba";
   $("stripes").setAttribute("aria-pressed", String(state.stripes));
   $("exact").setAttribute("aria-pressed", String(state.exact));
@@ -320,6 +359,8 @@ function render() {
 function syncUrl() {
   const q = new URLSearchParams(location.search);
   q.set("sport", state.sport);
+  if (state.year !== null && ERA_SPORTS.includes(state.sport)) q.set("year", String(state.year));
+  else q.delete("year");
   for (const [key, value, base] of [["pitch", state.pitch, "fifa"], ["pitchtype", state.pitchType, "none"], ["park", state.park, "generic"], ["size", state.size, "full"], ["orientation", state.orientation, "auto"], ["theme", state.theme, "auto"]]) {
     if (value === base) q.delete(key);
     else q.set(key, value);
