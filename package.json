@@ -1,6 +1,6 @@
 {
   "name": "@johnmorrisdotca/kyogijo",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Kyogijo 競技場, sports surfaces as SVG, drawn to scale from the rulebooks: NFL, CFL and IFAF football fields, an NHL rink, an NBA court and MLB ballparks, with each team's name and logo on its side and the score in the middle. Light and dark, accessible, a compact badge for lists, a helper for React and a custom element. Zero dependencies.",
   "keywords": [
     "sports",

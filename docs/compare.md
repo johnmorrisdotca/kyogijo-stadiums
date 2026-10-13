@@ -39,7 +39,7 @@ How it was made: each project's README was read on 2026-10-13 through the GitHub
 - **More leagues.** sportyR and sporty hold 53 league surfaces against Kyogijo's 67 rule sets, 48 of them variants. Kyogijo's are the ones it has a rulebook to cite for (see [League variants](./variants.md)).
 - **A wider toolbox.** mplsoccer draws radar, pizza and bumpy charts and loads StatsBomb's open data; the sibling packages of `@sportsdataverse/sporty` do team marks and tables.
 - **The data tools beside them.** The R and Python packages sit in the ecosystems where the data is analysed. Kyogijo takes the data you give it and reads no network.
-- **Age.** ggsoccer's repository dates from 2017, mplsoccer's from 2019, sportyR's, sportypy's and hockey_rink's from 2021. Kyogijo is at version 0.1.0 and not yet on npm.
+- **Age.** ggsoccer's repository dates from 2017, mplsoccer's from 2019, sportyR's, sportypy's and hockey_rink's from 2021. Kyogijo has been on npm since October 2026 (first release 0.1.0).
 
 ## Where Kyogijo goes further
 
