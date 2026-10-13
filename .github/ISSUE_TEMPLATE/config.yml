@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Report a security problem
+    url: https://github.com/johnmorrisdotca/kyogijo/blob/main/SECURITY.md
+    about: Text, a colour or a logo address that gets out of the drawing, or a name that makes the drawing run for a very long time: please write privately, as the policy says.
