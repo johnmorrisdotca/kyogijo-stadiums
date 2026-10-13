@@ -18,6 +18,7 @@ import { setsBoardMarkup } from "./sets.board.ts";
 import { KYOGIJO_STRINGS, fill } from "./strings.ts";
 import { courtStyle } from "./courts.style.ts";
 import { annotate, annotated, wideView, type Notes } from "./annotate.ts";
+import { KYOGIJO_BACKGROUND_STYLE, laidOn } from "./background.ts";
 import { featureColours, featureStyle } from "./features.ts";
 import { isLook, lookStyle } from "./look.ts";
 import { lineLook, restyleLines } from "./restyle.ts";
@@ -507,6 +508,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
   let viewBox: string;
   let body: string;
   let defs = "";
+  let grounded = false;
   if (isScore(o) && left !== undefined && right !== undefined && sized === "badge") {
     const badge = badgeMarkup(left, right, { sport, status, parts });
     viewBox = `0 0 ${badge.w} ${badge.h}`;
@@ -539,8 +541,11 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
     // The width, dashes and opacity of the lines are laid over what the surface wrote.
     const lines = lineLook(o, surface.lineRef, lengthUnit(o));
     if (lines !== undefined) surface.lines = restyleLines(surface.lines, lines);
-    defs = surface.defs;
-    let inner = surface.base;
+    // A ground (a pattern, a colour or a photograph) is laid on the apron, under the surface.
+    const ground = laidOn(surface.base, o.background, id);
+    grounded = ground.base !== surface.base;
+    defs = surface.defs + ground.defs;
+    let inner = ground.base;
     let teams = "";
     if (isScore(o) && left !== undefined && right !== undefined && sized === "full") {
       const onColour = sport === "nfl" || sport === "cfl" || sport === "ifaf" || sport === "soccer";
@@ -613,7 +618,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       style: style === "" ? undefined : style,
     },
     `<title id="${titleId}">${esc(title)}</title><desc id="${descId}">${esc(description)}</desc>` +
-      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}${plan === undefined ? "" : `\n${courtStyle(plan.sport, plan.look)}`}${palette === undefined ? "" : `\n${lookStyle(palette)}`}${walled ? `\n${KYOGIJO_WALLS_STYLE}` : ""}${features === undefined ? "" : `\n${featureStyle(sport, features)}`}${notes === undefined || notes.svg === "" ? "" : `\n${KYOGIJO_NOTE_STYLE}`}${o.host === undefined ? "" : `\n${specialStyle(hostSport(o.host))}`}</style>`) +
+      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}${plan === undefined ? "" : `\n${courtStyle(plan.sport, plan.look)}`}${palette === undefined ? "" : `\n${lookStyle(palette)}`}${walled ? `\n${KYOGIJO_WALLS_STYLE}` : ""}${features === undefined ? "" : `\n${featureStyle(sport, features)}`}${notes === undefined || notes.svg === "" ? "" : `\n${KYOGIJO_NOTE_STYLE}`}${grounded ? `\n${KYOGIJO_BACKGROUND_STYLE}` : ""}${o.host === undefined ? "" : `\n${specialStyle(hostSport(o.host))}`}</style>`) +
       (defs === "" ? "" : `<defs>${defs}</defs>`) +
       body,
   );

@@ -10,7 +10,7 @@ import { pathToFileURL } from "node:url";
 import { API_CSS, apiPage } from "./api.mjs";
 import { atlasMapSvg } from "./atlas-map.mjs";
 import { buildDocs } from "./docs-pages.mjs";
-import { framesBlockHtml, galleryData, galleryPageHtml, libraryFrom } from "./docs-gallery.mjs";
+import { framesBlockHtml, framesFiles, galleryData, galleryPageHtml, libraryFrom } from "./docs-gallery.mjs";
 import { FAMILY_SCRIPT, familyFooter, familyHead, familyHeader, familyUnreviewed } from "./family-template.mjs";
 
 const id = "kyogijo";
@@ -348,6 +348,7 @@ const made = buildDocs({
   icon: ICON,
   extraPages: galleryData(lib).map((one) => galleryPageHtml(one, style)),
   siteBlocks: { frames: framesBlockHtml(lib, style) },
+  files: framesFiles(lib),
 });
 console.log(`site/docs/ is ready: ${made.pages} pages, ${made.entries} titles and headings to search.`);
 console.log("site/ is ready: serve it, or let the Pages workflow publish it.");

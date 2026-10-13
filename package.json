@@ -134,6 +134,11 @@
       "import": "./dist/charts-entry.js",
       "default": "./dist/charts-entry.js"
     },
+    "./layouts": {
+      "types": "./dist/layouts-entry.d.ts",
+      "import": "./dist/layouts-entry.js",
+      "default": "./dist/layouts-entry.js"
+    },
     "./replay": {
       "types": "./dist/replay-entry.d.ts",
       "import": "./dist/replay-entry.js",

@@ -11,7 +11,7 @@
 // a heading of the same page (`#units`), a file of the repository (`../CHANGELOG.md`, shown as its page on GitHub), the demo or its API page by their
 // address on GitHub Pages (kept relative on the site), the README by `../README.md#anchor`, a page of the gallery by its address, or any other https address.
 import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
-import { join, posix } from "node:path";
+import { dirname, join, posix } from "node:path";
 import process from "node:process";
 
 import { Marked } from "marked";
@@ -36,6 +36,7 @@ export const NAV = [
       { slug: "theming", ja: "テーマと色" },
       { slug: "annotations", ja: "攻撃方向・目盛り・部位名の注釈" },
       { slug: "ranges", ja: "表示範囲とズーム" },
+      { slug: "layouts", ja: "レイアウトと背景" },
       { slug: "accessibility", ja: "アクセシビリティ" },
     ],
   },
@@ -86,6 +87,7 @@ export const NAV = [
       { slug: "gallery-courts", en: "Gallery: tennis, volleyball and other net sports", ja: "ギャラリー：ネット型競技のコート", site: true },
       { slug: "gallery-styling", en: "Gallery: looks and annotations", ja: "ギャラリー：スタイルと注釈", site: true },
       { slug: "gallery-ranges", en: "Gallery: display ranges and zoom", ja: "ギャラリー：表示範囲とズーム", site: true },
+      { slug: "gallery-layouts", en: "Gallery: layouts and backgrounds", ja: "ギャラリー：レイアウトと背景", site: true },
     ],
   },
   {
@@ -263,6 +265,9 @@ export const DOCS_WORDS = {
     docsEdit: "Edit this page on GitHub",
     docsEnglishOnly: "The pages are in English; this contents, the search and the buttons are in Japanese.",
     docsShowCode: "Show the code",
+    docsDownload: "Download SVG",
+    docsOpenPage: "Open in a page",
+    docsOpenNote: "Open in a page loads the published package from jsDelivr, which serves only released versions.",
   },
   ja: {
     pitch: "使い方のガイド、リファレンス、描けるすべての図のギャラリー、他のパッケージとの比較。これらのページは、パッケージ自身のファイルから「pnpm site」で作っています。",
@@ -287,6 +292,9 @@ export const DOCS_WORDS = {
     docsEdit: "GitHubでこのページを編集",
     docsEnglishOnly: "ページ本文は英語です。目次、検索、ボタンは日本語で表示しています。",
     docsShowCode: "コードを表示",
+    docsDownload: "SVGを保存",
+    docsOpenPage: "ページで開く",
+    docsOpenNote: "「ページで開く」は、公開済みのパッケージをjsDelivrから読み込みます。jsDelivrが配信するのは公開済みのバージョンだけです。",
   },
 };
 
@@ -364,9 +372,9 @@ ${article}
 
 /**
  * Write the documentation site into `outDir` (site/docs). `extraPages` are the pages made from code:
- * `{ slug, title, description, html, headings }`. `siteBlocks` fills the Markdown pages' `<!-- site:name -->` markers.
+ * `{ slug, title, description, html, headings }`. `siteBlocks` fills the Markdown pages' `<!-- site:name -->` markers; `files` are more files for the site (`{ path, content }`).
  */
-export function buildDocs({ root = process.cwd(), outDir = "site/docs", id = "kyogijo", name = "Kyogijo", icon, extraPages = [], siteBlocks = {}, wordsExtra = {} }) {
+export function buildDocs({ root = process.cwd(), outDir = "site/docs", id = "kyogijo", name = "Kyogijo", icon, extraPages = [], siteBlocks = {}, files = [], wordsExtra = {} }) {
   const extra = new Map(extraPages.map((page) => [page.slug, page]));
   const known = { root, pages: new Set(PAGE_LIST.map((page) => page.slug)) };
   mkdirSync(outDir, { recursive: true });
@@ -409,6 +417,13 @@ export function buildDocs({ root = process.cwd(), outDir = "site/docs", id = "ky
   writeFileSync(join(outDir, "search-index.js"), `/* The titles and headings of every page of the docs: made by scripts/docs-pages.mjs. */\nwindow.KYOGIJO_DOCS_INDEX = ${JSON.stringify(rows)};\nwindow.KYOGIJO_DOCS_WORDS = ${JSON.stringify(words)};\n`);
   writeFileSync(join(outDir, "docs.css"), DOCS_CSS);
   writeFileSync(join(outDir, "docs.js"), DOCS_JS);
+  // The files of the pages made from code: each gallery item's drawing as an SVG and as a page that draws it from the published package.
+  for (const page of [...extraPages, { files }]) {
+    for (const file of page.files ?? []) {
+      mkdirSync(dirname(join(outDir, file.path)), { recursive: true });
+      writeFileSync(join(outDir, file.path), file.content);
+    }
+  }
   // Pictures the pages show.
   for (const file of readdirSync(join(root, "docs"))) if (/\.(svg|png|webp)$/.test(file)) cpSync(join(root, "docs", file), join(outDir, file));
   return { pages: PAGE_LIST.length, entries: rows.length };

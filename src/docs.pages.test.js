@@ -2,12 +2,12 @@
 // somewhere that exists, the site built from them has every page, a search index with every heading, no id twice on a page, and every link
 // in the built HTML ends at an id that is there; and the gallery is made from code that runs, with a picture for every surface, league, season,
 // layer, heat layer, chart and frame. Plain JavaScript, so that reading files needs no Node types.
-import { mkdirSync, readdirSync, readFileSync, rmSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync } from "node:fs";
 import { join, posix, resolve } from "node:path";
 import { Marked } from "marked";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import { framesBlockHtml, framesItems, galleryData, galleryPageHtml, libraryFrom, literal, runSnippet } from "../scripts/docs-gallery.mjs";
+import { cdnUrl, framesBlockHtml, framesFiles, framesItems, galleryData, galleryPageHtml, libraryFrom, literal, runSnippet } from "../scripts/docs-gallery.mjs";
 import { NAV, PAGE_LIST, buildDocs, fileOf, headingsOf, readPages, resolveLink, slugOf } from "../scripts/docs-pages.mjs";
 
 const MAIN = "@johnmorrisdotca/kyogijo";
@@ -109,7 +109,7 @@ describe("the docs site built from the pages", () => {
     rmSync(out, { recursive: true, force: true });
     mkdirSync(out, { recursive: true });
     pages = galleryData(lib).map((one) => galleryPageHtml(one, style));
-    result = buildDocs({ root: resolve("."), outDir: out, icon: "data:,", extraPages: pages, siteBlocks: { frames: framesBlockHtml(lib, style) } });
+    result = buildDocs({ root: resolve("."), outDir: out, icon: "data:,", extraPages: pages, siteBlocks: { frames: framesBlockHtml(lib, style) }, files: framesFiles(lib) });
   });
   afterAll(() => rmSync(out, { recursive: true, force: true }));
 
@@ -137,6 +137,11 @@ describe("the docs site built from the pages", () => {
       for (const match of text.matchAll(/<a\s[^>]*href="([^"]*)"/g)) {
         const href = match[1].replace(/&amp;/g, "&");
         if (/^(https?:|mailto:|\.\.\/)/.test(href)) continue;
+        // A gallery item's own files (its SVG and its page): they are files, and each is there.
+        if (href.startsWith("gallery/")) {
+          if (!existsSync(join(out, href))) bad.push(`${file}: ${href} is not written`);
+          continue;
+        }
         const [path, anchor] = href.split("#");
         const target = path === "" ? file : path === "./" ? "index.html" : posix.normalize(path);
         if (!html.has(target) && !/\.(svg|png|webp|css|js)$/.test(target)) bad.push(`${file}: ${href} is no page`);
@@ -198,6 +203,81 @@ describe("the gallery", () => {
       expect((made.html.match(/<pre id="code-/g) ?? []).length, page.slug).toBe(count);
       expect(made.html.split(style.slice(0, 80)).length - 1, `${page.slug}: the base stylesheet is in the page once`).toBe(1);
     }
+  });
+
+  it("has a page of layouts and backgrounds that shows every preset, every pattern, a key, a chart, a photograph and Japanese", () => {
+    const page = data.find((one) => one.slug === "gallery-layouts");
+    expect(page).toBeDefined();
+    const text = page.sections.flatMap((one) => one.items).map((entry) => entry.code).join("\n");
+    for (const preset of Object.keys(lib[`${MAIN}/layouts`].GRID_PRESETS)) expect(text, preset).toContain(`preset: "${preset}"`);
+    for (const pattern of lib[`${MAIN}/layouts`].BACKGROUND_PATTERNS) expect(page.sections.flatMap((one) => one.items).some((entry) => entry.id === `bg-${pattern}`), pattern).toBe(true);
+    for (const word of ["legend:", "nbaShotChart(", "image: photo", 'language: "ja"', 'theme: "dark"', "columns: 3"]) expect(text, word).toContain(word);
+  });
+
+  it("gives every item a download of its drawing and a page that draws it from the published package", () => {
+    for (const page of data) {
+      const made = galleryPageHtml(page, style);
+      const count = page.sections.reduce((sum, one) => sum + one.items.length, 0);
+      expect((made.html.match(/data-testid="gallery-download"/g) ?? []).length, page.slug).toBe(count);
+      expect((made.html.match(/data-testid="gallery-open"/g) ?? []).length, page.slug).toBe(count);
+      expect(made.files, page.slug).toHaveLength(count * 2);
+      expect(made.html, "it says that only published versions are served").toContain("serves only released versions");
+      for (const entry of page.sections.flatMap((one) => one.items)) {
+        expect(made.html).toContain(`href="gallery/${entry.id}.svg" download="${entry.id}.svg"`);
+        expect(made.html).toContain(`href="gallery/${entry.id}.html"`);
+        // The download is the whole drawing, stylesheet and all, and stands alone.
+        expect(made.files.find((file) => file.path === `gallery/${entry.id}.svg`).content).toBe(`${entry.svg}\n`);
+        expect(entry.svg).toContain('xmlns="http://www.w3.org/2000/svg"');
+      }
+    }
+  });
+
+  it("writes each page as one HTML file that imports the published major version from jsDelivr, runs the snippet and keeps the build's picture", async () => {
+    const AsyncFunction = Object.getPrototypeOf(async () => {}).constructor;
+    const runs = [];
+    for (const page of data) {
+      const made = galleryPageHtml(page, style);
+      for (const entry of page.sections.flatMap((one) => one.items)) {
+        const html = made.files.find((file) => file.path === `gallery/${entry.id}.html`).content;
+        expect(html.startsWith("<!doctype html>"), entry.id).toBe(true);
+        expect(html).toContain(entry.svg);
+        expect(html).not.toMatch(/<script src|<link [^>]*href="http|@import/);
+        const script = /<script type="module">\n([\s\S]*?)<\/script>/.exec(html)?.[1] ?? "";
+        expect(script, entry.id).not.toMatch(/^\s*import\s*\{/m);
+        for (const [, from] of entry.code.matchAll(/from "([^"]+)"/g)) expect(script, `${entry.id} ${from}`).toContain(JSON.stringify(cdnUrl(from, "0")));
+        // Run it against the source, with the CDN's address answered by the module it stands for, and see the same picture.
+        const seen = {};
+        const document = { getElementById: (id) => (seen[id] ??= { textContent: "", innerHTML: "" }) };
+        const run = new AsyncFunction("document", "__import", script.replaceAll("await import(", "await __import("));
+        runs.push(run(document, (url) => {
+          const key = Object.keys(lib).find((name) => cdnUrl(name, "0") === url);
+          if (key === undefined) throw new Error(`no module for ${url}`);
+          return lib[key];
+        }).then(() => {
+          expect(seen.art.innerHTML, entry.id).toBe(entry.svg);
+          expect(seen.status.textContent).toContain("published package");
+        }));
+      }
+    }
+    expect(runs.length).toBeGreaterThan(300);
+    await Promise.all(runs);
+  });
+
+  it("names the CDN's address of the package and of an entry, for a major version", () => {
+    expect(cdnUrl(MAIN, "0")).toBe("https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo@0/+esm");
+    expect(cdnUrl(`${MAIN}/charts`, "1")).toBe("https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo@1/charts/+esm");
+  });
+
+  it("says what a page does when the published package has no such feature", async () => {
+    const entry = data[0].sections[0].items[0];
+    const html = galleryPageHtml({ ...data[0], sections: [{ ...data[0].sections[0], items: [entry] }] }, style).files.find((file) => file.path.endsWith(".html")).content;
+    const script = /<script type="module">\n([\s\S]*?)<\/script>/.exec(html)[1];
+    const AsyncFunction = Object.getPrototypeOf(async () => {}).constructor;
+    const seen = {};
+    const document = { getElementById: (id) => (seen[id] ??= { textContent: "", innerHTML: "kept" }) };
+    await new AsyncFunction("document", "__import", script.replaceAll("await import(", "await __import("))(document, () => Promise.reject(new Error("404")));
+    expect(seen.art.innerHTML).toBe("kept");
+    expect(seen.status.textContent).toMatch(/could not draw this: 404/);
   });
 
   it("writes JavaScript for a value", () => {

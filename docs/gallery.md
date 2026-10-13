@@ -1,6 +1,6 @@
 # Gallery
 
-Every picture the package draws, each with the code that draws it and a button to copy the code. The pictures are drawn by the build of the docs site from that code, so a picture cannot part from its snippet, and a test runs every snippet against the source.
+Every picture the package draws, each with the code that draws it, a button to copy the code, a link to download the drawing as an SVG file and a link that opens it in a page of its own. The pictures are drawn by the build of the docs site from that code, so a picture cannot part from its snippet, and a test runs every snippet against the source. The "Open in a page" link opens one HTML file, made when the site is built, that draws the picture again from the published package on jsDelivr; jsDelivr serves only published versions, so a feature newer than the last release is not in it, and the page then keeps the picture the build drew and says why.
 
 The gallery is made when the site is built (`pnpm site`), so its pages are on the [docs site](https://johnmorrisdotca.github.io/kyogijo/docs/gallery.html) and not in this repository:
 
@@ -15,6 +15,7 @@ The gallery is made when the site is built (`pnpm site`), so its pages are on th
 - [Net sports](https://johnmorrisdotca.github.io/kyogijo/docs/gallery-courts.html): each court wide and tall, every look, the free zone, the singles sticks, the board of sets and games with its serving ball, and the zones of each side of the net.
 - [Looks and annotations](https://johnmorrisdotca.github.io/kyogijo/docs/gallery-styling.html): the seven named looks, colours by feature, line widths and dashes, goal styles, mowing patterns, and the arrows, axes and labels that mark a surface for teaching.
 - [Display ranges and zoom](https://johnmorrisdotca.github.io/kyogijo/docs/gallery-ranges.html): a drawing cropped to a zone, a half court, the red zone, the penalty area, the infield or a box of your own, at either end, wide and tall, with data, labels and a score.
+- [Layouts and backgrounds](https://johnmorrisdotca.github.io/kyogijo/docs/gallery-layouts.html): small multiples in the size of a social card, a square post and a phone, with a title, a key and a credit line; seven patterns and a photograph behind a drawing or a grid.
 
 Every picture in these pages is an SVG string, and each can be put somewhere else without drawing it again: pass the same options (or the SVG, or a chart's `options`) to `drawToCanvas`, `appendSurface`, `surfaceMark`, `sceneToGeoJSON` or `toPNG`, as [the renderers](./renderers.md) say. A picture here and the canvas drawn from the same scene differ in a few pixels: the edges of the letters, and a logo the canvas was not given.
 

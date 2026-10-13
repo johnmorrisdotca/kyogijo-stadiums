@@ -481,6 +481,11 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `ranges.names.outfield` | outfield | 外野 |
 | `ranges.names.sheet` | whole sheet | シート全体 |
 | `ranges.names.house` | house | ハウス |
+| `grid.title` | A grid of drawings ({n}) | 図のグリッド（{n}枚） |
+| `grid.drawings` | Drawings ({n}): {list}. | 図（{n}枚）：{list}。 |
+| `grid.key` | Key: {list}. | 凡例：{list}。 |
+| `grid.cell` | Drawing {n} of {total} | {total}枚中{n}枚目の図 |
+| `grid.listSep` | ;  | ； |
 | `replay.title` | Replay, {time} | リプレイ（再生時間{time}） |
 | `replay.objects` | {n} tracked objects | 追跡対象は{n}個 |
 | `replay.objectsOne` | {n} tracked object | 追跡対象は{n}個 |
@@ -810,6 +815,9 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `docsEdit` | Edit this page on GitHub | GitHubでこのページを編集 |
 | `docsEnglishOnly` | The pages are in English; this contents, the search and the buttons are in Japanese. | ページ本文は英語です。目次、検索、ボタンは日本語で表示しています。 |
 | `docsShowCode` | Show the code | コードを表示 |
+| `docsDownload` | Download SVG | SVGを保存 |
+| `docsOpenPage` | Open in a page | ページで開く |
+| `docsOpenNote` | Open in a page loads the published package from jsDelivr, which serves only released versions. | 「ページで開く」は、公開済みのパッケージをjsDelivrから読み込みます。jsDelivrが配信するのは公開済みのバージョンだけです。 |
 
 ## The docs site's contents (`NAV`)
 
@@ -823,6 +831,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `theming` | Theming | テーマと色 |
 | page `annotations` | Annotations | 攻撃方向・目盛り・部位名の注釈 |
 | page `ranges` | Display ranges and zoom | 表示範囲とズーム |
+| page `layouts` | Layouts and backgrounds | レイアウトと背景 |
 | page `accessibility` | Accessibility | アクセシビリティ |
 | group `places` | Sports and places | 競技と場所 |
 | page `soccer` | Soccer | サッカー |
@@ -855,6 +864,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `gallery-courts` | Gallery: tennis, volleyball and other net sports | ギャラリー：ネット型競技のコート |
 | page `gallery-styling` | Gallery: looks and annotations | ギャラリー：スタイルと注釈 |
 | page `gallery-ranges` | Gallery: display ranges and zoom | ギャラリー：表示範囲とズーム |
+| page `gallery-layouts` | Gallery: layouts and backgrounds | ギャラリー：レイアウトと背景 |
 | group `compare` | Compare | 比較 |
 | page `compare` | How it compares | 他のパッケージとの比較 |
 | group `reference` | Reference | リファレンス |

@@ -74,6 +74,7 @@ export function limitsTable(lib) {
       ["Coordinate frames", `${registered.length} to start with (${registered.filter((name) => FRAMES[name].sport !== "soccer").map((name) => `\`${name}\``).join(", ")} and the ${soccer} soccer providers), more by \`registerFrame\``, "`FRAMES`"],
       ["A colour", "a hex colour, `rgb()`, `rgba()`, `hsl()`, `hsla()`, a name or `var(--name)`, 64 characters at most", "`safeColour`"],
       ["A logo", "an https or relative address, an image data address, or SVG text up to 200,000 characters", "`safeLogo`"],
+      ["A grid of drawings", `${lib[`${MAIN}/layouts`].GRID_MAX_CELLS} drawings at most, 120 to 8,000 wide; each drawing keeps its own ids, and the base stylesheet is written once`, "`drawGrid`"],
       ["A name", "any length: it is set on one line or two, in the biggest size that fits its place", "`fitLines`"],
       ["Formations", `${Object.keys(FORMATIONS).length} named formations of 5 sports, ${Object.values(FORMATIONS).reduce((n, f) => n + f.positions.length, 0)} places in all`, "`FORMATIONS`"],
       ["The team layers", "a Voronoi diagram of 22 players adds under 12 kB; 1,000 points are triangulated in under 600 ms; a pass network of 600 passes adds under 16 kB", "`voronoi`, `delaunay`, `network`"],
@@ -121,8 +122,26 @@ export function rangesTable(lib) {
   return table(["`sport`", "`range`", "Shows", "End by default"], rows);
 }
 
+/** What each pattern of a ground draws. */
+const PATTERN_DRAWS = { felt: "specks in the ink and the line colour", grass: "short blades", wood: "planks, with grain", ice: "scratches", paper: "fibres", grid: "graph paper", dots: "a dot grid" };
+
+/** The sizes of a grid: each preset's size, columns and ground. */
+export function presetsTable(lib) {
+  const { GRID_PRESETS } = lib[`${MAIN}/layouts`];
+  return table(
+    ["`preset`", "Size", "Columns", "Ground"],
+    Object.entries(GRID_PRESETS).map(([name, p]) => [`\`${name}\``, `${p.width} ${p.height === undefined ? "wide, as tall as the drawings need" : `by ${p.height}, ${name === "card" ? "a social card" : "a square post"}`}`, p.columns === undefined ? "the number that makes the drawings largest" : String(p.columns), p.ground ? "plain" : "none"]),
+  );
+}
+
+/** The patterns of a ground, with the opacity each is drawn at. */
+export function backgroundsTable(lib) {
+  const { BACKGROUND_PATTERNS, BACKGROUND_OPACITY } = lib[`${MAIN}/layouts`];
+  return table(["Pattern", "What it draws", "Opacity"], BACKGROUND_PATTERNS.map((name) => [`\`${name}\``, PATTERN_DRAWS[name], String(BACKGROUND_OPACITY[name])]));
+}
+
 /** Every made block by name. */
-export const MADE = { frames: framesTable, units: unitsTable, limits: limitsTable, ranges: rangesTable };
+export const MADE = { frames: framesTable, units: unitsTable, limits: limitsTable, ranges: rangesTable, presets: presetsTable, backgrounds: backgroundsTable };
 
 const BLOCK = /(<!-- made:([\w-]+) -->\n)([\s\S]*?)(<!-- \/made:\2 -->)/g;
 

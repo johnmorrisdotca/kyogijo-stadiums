@@ -186,6 +186,49 @@ test("every other gallery page has its pictures and its code", async ({ page }) 
   await expect(page.locator("#chart-nba svg")).toBeAttached();
 });
 
+test("the layouts page draws grids and grounds, and every item has a download and a page that draws it from the published package", async ({ page }) => {
+  const errors = await docs(page, "gallery-layouts.html");
+  expect(errors).toEqual([]);
+  await expect(page.locator("#grid-card svg.kyogijo-grid")).toHaveAttribute("viewBox", "0 0 1200 675");
+  await expect(page.locator("#grid-phone svg.kyogijo-grid")).toHaveAttribute("data-columns", "1");
+  await expect(page.locator("#bg-felt svg pattern")).toHaveCount(1);
+  await expect(page.locator("#photo-drawing svg image.ky-bg-img")).toHaveCount(1);
+  // A grid's drawings are drawn, each with its own title.
+  expect(await page.locator("#grid-card svg [role=img]").count()).toBe(4);
+  const item = page.locator("#grid-card");
+  await expect(item.locator(at("gallery-download"))).toHaveAttribute("href", "gallery/grid-card.svg");
+  await expect(item.locator(at("gallery-download"))).toHaveAttribute("download", "grid-card.svg");
+  await expect(item.locator(".g-published")).toContainText("only released versions");
+  const svg = await page.evaluate(async () => (await window.fetch("gallery/grid-card.svg")).text());
+  expect(svg.startsWith("<svg")).toBe(true);
+  expect(svg).toContain("Four surfaces");
+  await noSidewaysScroll(page);
+  // Japanese words on the buttons.
+  await page.goto("http://kyogijo.test/docs/gallery-layouts.html?lang=ja&help=off");
+  await expect(page.locator("#grid-card").locator(at("gallery-download"))).toHaveText("SVGを保存");
+  await expect(page.locator("#grid-card").locator(at("gallery-open"))).toHaveText("ページで開く");
+});
+
+test("the page of an item draws it again with the package from jsDelivr, and keeps the build's picture when jsDelivr has none", async ({ page }) => {
+  await serve(page);
+  // The CDN answers with a module that stands for the published package.
+  await page.route("https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo@0/layouts/+esm", (route) =>
+    route.fulfill({ contentType: "text/javascript", body: `export const drawGrid = () => "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10' data-from='cdn'></svg>";` }),
+  );
+  const errors = [];
+  page.on("pageerror", (error) => errors.push(String(error)));
+  await page.goto("http://kyogijo.test/docs/gallery/grid-card.html");
+  await expect(page.locator("#art svg")).toHaveAttribute("data-from", "cdn");
+  await expect(page.locator("#status")).toContainText("published package");
+  expect(errors).toEqual([]);
+  // An entry the published package does not have: the picture stays and the page says why.
+  await page.unroute("https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo@0/layouts/+esm");
+  await page.route("https://cdn.jsdelivr.net/**", (route) => route.fulfill({ status: 404, body: "" }));
+  await page.goto("http://kyogijo.test/docs/gallery/grid-card.html");
+  await expect(page.locator("#status")).toContainText("could not draw this");
+  await expect(page.locator("#art svg.kyogijo-grid")).toHaveAttribute("viewBox", "0 0 1200 675");
+});
+
 test("the frames page has a row for each frame and a drawing of the same spot in each, with a link to the demo's converter", async ({ page }) => {
   await docs(page, "frames.html");
   expect(await page.locator(`${at("docs-article")} .docs-table tbody tr`).first().count()).toBe(1);

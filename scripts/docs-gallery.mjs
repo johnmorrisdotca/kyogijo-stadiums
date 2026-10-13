@@ -570,30 +570,144 @@ function rangesPage(lib) {
   };
 }
 
-export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, specialPage, dataPage, curlingPage, courtsPage, stylingPage, rangesPage];
+/** A snippet that draws `cells` and `options` with `drawGrid`. */
+const gridCode = (cells, options = {}, extra = "") => `import { drawGrid } from "${MAIN}/layouts";\n${extra}\nconst svg = drawGrid(${cells}, ${literal(options)});`;
+
+/** A made-up photograph for the ground behind a drawing: an SVG document as text, which `safeLogo` takes. A caller passes the address of a real photograph. */
+const SKY = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 225'><defs><linearGradient id='s' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#274b7a'/><stop offset='.62' stop-color='#f0b36a'/><stop offset='1' stop-color='#3d5a3b'/></linearGradient></defs><rect width='400' height='225' fill='url(#s)'/><path d='M0 170L60 120L120 160L200 100L290 150L350 125L400 160V225H0Z' fill='#1d2f27'/></svg>";
+
+function layoutsPage() {
+  const four = '[{ drawing: { sport: "nhl" }, label: "Rink" }, { drawing: { sport: "nba" }, label: "Court" }, { drawing: { sport: "soccer" }, label: "Pitch" }, { drawing: { sport: "mlb", park: "fenway-park" }, label: "Ballpark" }]';
+  const parks = '["fenway-park", "wrigley-field", "oracle-park", "coors-field", "yankee-stadium", "tokyo-dome"].map((park) => ({ drawing: { sport: "mlb", park }, label: park }))';
+  const keyed = [{ label: "Goal", color: "#c8102e" }, { label: "Shot", color: "#1f5fa8", hollow: true }, { label: "Block", color: "#6b6f72", shape: "x" }];
+  const patterns = ["felt", "grass", "wood", "ice", "paper", "grid", "dots"];
+  return {
+    slug: "gallery-layouts",
+    title: "Gallery: layouts and backgrounds",
+    ja: "レイアウトと背景",
+    intro: "Small multiples in one SVG, with a title, a subtitle, a key and a credit line, in the size of a social card, a square post or a phone; and the grounds behind a drawing or a grid: seven patterns and a photograph.",
+    sections: [
+      section("presets", "Sizes for a card, a post and a phone", "`preset` fixes the size: `card` is 1200 by 675, `square` 1080 by 1080, `phone` 390 wide in one column and as tall as the drawings need.", [
+        item("grid-card", "A social card", gridCode(four, { preset: "card", title: "Four surfaces", subtitle: "Each drawn to scale from its rulebook", endnote: "Drawn with Kyogijo" })),
+        item("grid-square", "A square post", gridCode(four, { preset: "square", title: "Four surfaces", subtitle: "Each drawn to scale", endnote: "Drawn with Kyogijo", background: "grid" })),
+        item("grid-phone", "A phone's width", gridCode(four, { preset: "phone", title: "Four surfaces", subtitle: "One column", endnote: "Drawn with Kyogijo" }), "The picture is as tall as the drawings need."),
+      ]),
+      section("columns", "Columns, gaps and the last row", "`columns` and `gap` are yours; with neither, the grid picks the columns that make the drawings largest. The last row is centred.", [
+        item("grid-columns-two", "Two columns", gridCode(parks, { columns: 2, width: 800, title: "Six parks", endnote: "Each park's fence from its published figures" }), "Two columns of three rows, as tall as the drawings need."),
+        item("grid-columns-three", "Three columns, a wide gap", gridCode(parks, { columns: 3, gap: 40, width: 900 })),
+        item("grid-odd", "Five drawings in three columns", gridCode('["nhl", "nba", "soccer", "mlb", "curling"].map((sport) => ({ drawing: { sport }, label: sport }))', { columns: 3, width: 900 })),
+      ]),
+      section("key", "A key they share", "`legend` is a list of `{ label, color, shape, hollow }`, set under the title; the description for a screen reader lists it.", [
+        item("grid-key", "Three marks", gridCode('[{ sport: "nhl" }, { sport: "nhl", orientation: "portrait" }]', { width: 900, title: "Shots on the rink", subtitle: "Wide and tall", legend: keyed })),
+      ]),
+      section("charts", "Charts and scores in a cell", "A cell is the options of `drawKyogijo`, a drawing's SVG, a chart or `{ drawing, label }`: a chart is drawn by its own `draw()`, with ids of its own.", [
+        item(
+          "grid-charts",
+          "Two shot charts and a score",
+          `import { nbaShotChart } from "${MAIN}/charts";\nimport { drawGrid } from "${MAIN}/layouts";\n\nconst shots = (n) => Array.from({ length: n }, (_, i) => ({ x: ((i * 97) % 480) - 240, y: (i * 61) % 300, made: i % 3 === 0 }));\nconst svg = drawGrid(\n  [\n    { drawing: nbaShotChart(shots(90), { league: 46, minShots: 2 }), label: "First half" },\n    { drawing: nbaShotChart(shots(140), { league: 46, minShots: 2 }), label: "Second half" },\n    { drawing: { sport: "nba", away: ${literal(PEAKS)}, home: ${literal(BOLTS)}, status: "final" }, label: "Final" },\n  ],\n  { columns: 2, width: 1000, title: "A game in three pictures", endnote: "Synthetic shots" },\n);`,
+        ),
+      ]),
+      section("themes", "Light, dark and Japanese", "`theme` forces light or dark on the grid and on every drawing in it; `language` sets the grid's own words and the language of the drawings that have none of their own.", [
+        item("grid-dark", "Dark", gridCode(four, { preset: "card", theme: "dark", title: "Four surfaces", subtitle: "Dark", background: { pattern: "felt", color: "#16241f" } })),
+        item("grid-ja", "In Japanese", gridCode(four, { preset: "card", language: "ja", title: "4つの競技場", subtitle: "それぞれルールブックどおりの寸法で描いています", endnote: "Kyogijoで描画" })),
+      ]),
+      section("drawing-grounds", "A ground behind a drawing", "`background` on a drawing lays a pattern (and a colour, and a photograph) on the apron, under the surface. Every pattern is a few shapes in the drawing's own ink, so it follows light and dark.", patterns.map((name) => item(`bg-${name}`, `Ground: ${name}`, drawing({ sport: "nba", background: name })))),
+      section("grid-grounds", "A ground behind a grid", "The same option on a grid lays the ground under every drawing and the words; a colour of your own sits under the pattern.", [
+        item("grid-ground-wood", "Wood", gridCode(four, { width: 900, columns: 2, background: { pattern: "wood", color: "#e6d3b3" }, title: "On the table" })),
+        item("grid-ground-ice", "Ice", gridCode(four, { width: 900, columns: 2, background: { pattern: "ice", color: "#e9f2f8" }, title: "On the ice" })),
+      ]),
+      section("photo", "A photograph behind the surface", "`image` is an address or a `data:` image held to the rules of a team's `logo`, drawn over the ground's colour and under the pattern at `imageOpacity`. The picture here is a made-up scene written as an SVG document; pass the address of a real photograph.", [
+        item("photo-drawing", "A photograph behind a court", `import { drawKyogijo } from "${MAIN}";\n\nconst photo = ${JSON.stringify(SKY)};\nconst svg = drawKyogijo({ sport: "nba", background: { color: "#1d2f27", image: photo, imageOpacity: 0.7, pattern: "dots" } });`),
+        item("photo-grid", "A photograph behind a grid", `import { drawGrid } from "${MAIN}/layouts";\n\nconst photo = ${JSON.stringify(SKY)};\nconst svg = drawGrid(${four}, { preset: "card", title: "Four surfaces", background: { image: photo, imageOpacity: 0.5, color: "#1d2f27" }, theme: "dark" });`),
+      ]),
+    ],
+  };
+}
+
+export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, specialPage, dataPage, curlingPage, courtsPage, stylingPage, rangesPage, layoutsPage];
 
 /** The sections of every page, with each item's picture made by running its code. */
 export function galleryData(lib) {
   return GALLERY_BUILDERS.map((build) => {
     const page = build(lib);
-    return { ...page, sections: page.sections.map((one) => ({ ...one, items: one.items.map((entry) => ({ ...entry, svg: runSnippet(entry.code, lib) })) })) };
+    return { ...page, major: String(lib[MAIN].VERSION).split(".")[0], version: String(lib[MAIN].VERSION), sections: page.sections.map((one) => ({ ...one, items: one.items.map((entry) => ({ ...entry, svg: runSnippet(entry.code, lib) })) })) };
   });
 }
 
 /** The base stylesheet is in the page once; a drawing carries it too, which is 8 kB each. The gallery leaves it out of each and says so. */
 const STYLE_RE = /<style>[\s\S]*?<\/style>/;
 
+/** Where a gallery item's own files are, beside the pages: its drawing as an SVG file, and a page that draws it from the published package. */
+export const itemFiles = (id) => ({ svg: `gallery/${id}.svg`, page: `gallery/${id}.html` });
+
 const itemHtml = (entry, style) => {
   const svg = entry.svg.replace(STYLE_RE, (block) => (block.includes(style.slice(0, 60)) ? "" : block));
   const code = escapeHtml(entry.code);
+  const files = itemFiles(entry.id);
   return `<figure class="g-item" id="${entry.id}" data-testid="gallery-item">
   <h3 id="t-${entry.id}">${escapeHtml(entry.title)}</h3>
   <div class="g-art" data-testid="gallery-art">${svg}</div>
   ${entry.note ? `<p class="g-note">${escapeHtml(entry.note)}</p>` : ""}
-  <div class="g-actions"><button type="button" class="fam-button" data-copy-for="code-${entry.id}" aria-describedby="t-${entry.id}" data-testid="gallery-copy"><span data-copy-label data-docs-copy-label>Copy</span></button><span class="g-status" role="status" aria-live="polite"></span></div>
+  <div class="g-actions"><button type="button" class="fam-button" data-copy-for="code-${entry.id}" aria-describedby="t-${entry.id}" data-testid="gallery-copy"><span data-copy-label data-docs-copy-label>Copy</span></button><a class="fam-button" href="${files.svg}" download="${entry.id}.svg" aria-describedby="t-${entry.id}" data-testid="gallery-download" data-say="docsDownload">Download SVG</a><a class="fam-button" href="${files.page}" aria-describedby="t-${entry.id}" data-testid="gallery-open" data-say="docsOpenPage">Open in a page</a><span class="g-status" role="status" aria-live="polite"></span></div>
+  <p class="g-note g-published" data-say="docsOpenNote">Open in a page loads the published package from jsDelivr, which serves only released versions.</p>
   <details class="g-code"><summary data-say="docsShowCode">Show the code</summary><pre id="code-${entry.id}"><code class="language-ts">${code}</code></pre></details>
 </figure>`;
 };
+
+/** The address of the package, or one of its entries (`@johnmorrisdotca/kyogijo/charts`), on jsDelivr as one ES module, for the published major version. */
+export const cdnUrl = (from, major) => `https://cdn.jsdelivr.net/npm/${from.replace(MAIN, `${MAIN}@${major}`)}/+esm`;
+
+/**
+ * A page of one HTML file that draws a gallery item: the picture the build drew (shown at once, and kept when the package cannot be loaded) and the snippet, run
+ * against the package on jsDelivr. jsDelivr serves only published versions, and the page says so. The imports of the snippet become dynamic ones, so that an entry
+ * the published version does not have is reported on the page and does not stop it.
+ */
+export function standalonePage(entry, major, version) {
+  const script = entry.code
+    .replace(/^import\s*\{([^}]*)\}\s*from\s*"([^"]+)";?\s*$/gm, (whole, list, from) => `const {${list}} = await import(${JSON.stringify(cdnUrl(from, major))});`)
+    .split("\n")
+    .map((line) => `    ${line}`)
+    .join("\n")
+    .replace(/<\//g, "<\\/");
+  return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${escapeHtml(entry.title)} · Kyogijo</title>
+<style>
+:root { color-scheme: light dark; --bg: #f6f4ee; --ink: #1f2320; --muted: #566059; --rule: #cfd3cb; --code: #ecebe4; }
+@media (prefers-color-scheme: dark) { :root { --bg: #131716; --ink: #ece8dc; --muted: #a9b2ac; --rule: #2d3430; --code: #1c211f; } }
+body { margin: 0 auto; max-width: 60rem; padding: 16px; background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif; }
+h1 { font-size: 1.4rem; margin: .4em 0; }
+#art svg { max-width: 100%; height: auto; }
+#art svg[data-orientation="portrait"] { max-height: 80vh; width: auto; }
+pre { overflow: auto; padding: 12px; border: 1px solid var(--rule); border-radius: 10px; background: var(--code); font-size: .85rem; }
+.note { color: var(--muted); font-size: .9rem; }
+</style>
+</head>
+<body>
+<h1>${escapeHtml(entry.title)}</h1>
+${entry.note ? `<p class="note">${escapeHtml(entry.note)}</p>\n` : ""}<div id="art">${entry.svg}</div>
+<p id="status" class="note" role="status">The picture above was drawn when the docs were built. The script below draws it again with the published package.</p>
+<pre><code>${escapeHtml(entry.code)}</code></pre>
+<p class="note">This page imports the package from <a href="https://www.jsdelivr.com/package/npm/${MAIN}">jsDelivr</a> (major version ${escapeHtml(major)}), which serves only versions that have been published to npm. A feature added after the last release is not in it: the page then keeps the picture above and says why. The docs were built from version ${escapeHtml(version)}.</p>
+<script type="module">
+const art = document.getElementById("art");
+const status = document.getElementById("status");
+try {
+${script}
+  if (typeof svg !== "string" || !svg.startsWith("<svg")) throw new Error("the snippet did not set svg to an SVG string");
+  art.innerHTML = svg;
+  status.textContent = "Drawn just now by the published package from jsDelivr.";
+} catch (error) {
+  status.textContent = "The published package could not draw this: " + (error && error.message ? error.message : String(error)) + ". It may not have a release with this feature yet; the picture above is the build's.";
+}
+</script>
+</body>
+</html>
+`;
+}
 
 /** A gallery page as HTML for docs-pages.mjs: `{ slug, title, description, html, headings }`. `style` is `KYOGIJO_STYLE`, put in the page once. */
 export function galleryPageHtml(page, style) {
@@ -611,7 +725,10 @@ export function galleryPageHtml(page, style) {
     })
     .join("\n");
   const html = `<h1 id="${headings[0].id}">${escapeHtml(page.title)}</h1>\n<p>${escapeHtml(page.intro).replace(/`([^`]+)`/g, "<code>$1</code>")} The pictures share one stylesheet, which is left out of each one's SVG here; <code>drawKyogijo</code> puts it in every drawing unless <code>style: "none"</code> says not to.</p>\n<style>${style}</style>\n${sections}\n`;
-  return { slug: page.slug, title: page.title, description: page.intro.replace(/`/g, "").slice(0, 280), html, headings };
+  const major = page.major ?? "0";
+  const version = page.version ?? `${major}.x`;
+  const files = page.sections.flatMap((one) => one.items).flatMap((entry) => [{ path: itemFiles(entry.id).svg, content: `${entry.svg}\n` }, { path: itemFiles(entry.id).page, content: standalonePage(entry, major, version) }]);
+  return { slug: page.slug, title: page.title, description: page.intro.replace(/`/g, "").slice(0, 280), html, headings, files };
 }
 
 // ---- The coordinate frames, each drawing the same spot on the same surface in its own numbers. ----
@@ -670,9 +787,19 @@ export function framesBlockHtml(lib, style) {
   return `<style>${style}</style>\n<div class="g-frames" data-testid="frames-gallery">\n${items.map((entry) => itemHtml(entry, style)).join("\n")}\n</div>\n`;
 }
 
+/** The files of the frames' items (each drawing as an SVG and as a page that draws it from the published package), for `buildDocs`' `files`. */
+export function framesFiles(lib) {
+  const major = String(lib[MAIN].VERSION).split(".")[0];
+  const version = String(lib[MAIN].VERSION);
+  return framesItems(lib).flatMap((entry) => {
+    const full = { ...entry, svg: runSnippet(entry.code, lib) };
+    return [{ path: itemFiles(entry.id).svg, content: `${full.svg}\n` }, { path: itemFiles(entry.id).page, content: standalonePage(full, major, version) }];
+  });
+}
+
 /** The package's entry points as `runSnippet` wants them, read from a folder of built (`.js`) or source (`.ts`) files. */
 export async function libraryFrom(dir, ext, importer) {
-  const entries = { "": "index", "/charts": "charts-entry", "/frames": "frames-entry", "/layers": "layers-entry", "/leagues": "leagues-entry", "/eras": "eras-entry", "/grounds": "grounds-entry", "/parks": "parks-entry", "/atlas": "atlas-entry", "/events": "events-entry", "/geometry": "geometry-entry", "/replay": "replay-entry" };
+  const entries = { "": "index", "/charts": "charts-entry", "/frames": "frames-entry", "/layers": "layers-entry", "/leagues": "leagues-entry", "/eras": "eras-entry", "/grounds": "grounds-entry", "/parks": "parks-entry", "/atlas": "atlas-entry", "/events": "events-entry", "/geometry": "geometry-entry", "/replay": "replay-entry", "/layouts": "layouts-entry" };
   const lib = {};
   for (const [suffix, file] of Object.entries(entries)) lib[`${MAIN}${suffix}`] = await importer(`${dir}/${file}${ext}`);
   return lib;

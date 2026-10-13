@@ -243,6 +243,22 @@ function paintImage(ctx: CanvasContext, run: Run, image: SceneImage, matrix: Mat
   let { x, y, width, height } = image;
   const pw = picture.naturalWidth ?? picture.width;
   const ph = picture.naturalHeight ?? picture.height;
+  // `slice` (a photograph that fills a ground): as small as fills the box, in its middle, cut at the box's edges.
+  if (/slice/.test(image.preserveAspectRatio ?? "") && typeof pw === "number" && typeof ph === "number" && pw > 0 && ph > 0) {
+    const fit = Math.max(width / pw, height / ph);
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x + width, y);
+    ctx.lineTo(x + width, y + height);
+    ctx.lineTo(x, y + height);
+    ctx.closePath();
+    ctx.clip();
+    ctx.drawImage(picture as never, x + (width - pw * fit) / 2, y + (height - ph * fit) / 2, pw * fit, ph * fit);
+    ctx.restore();
+    ctx.globalAlpha = 1;
+    return;
+  }
   // The default `xMidYMid meet`: the whole picture, as large as the box allows, in its middle. `none` stretches it.
   if (image.preserveAspectRatio !== "none" && typeof pw === "number" && typeof ph === "number" && pw > 0 && ph > 0) {
     const fit = Math.min(width / pw, height / ph);

@@ -76,6 +76,8 @@ html[lang="ja"] .docs-english { display: block; }
 .g-note { margin: 0; font-size: .85rem; color: var(--muted); }
 .g-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 .g-status { font-size: .8rem; color: var(--muted); }
+.g-actions a.fam-button { text-decoration: none; }
+.g-published { font-size: .75rem; }
 .g-code { min-width: 0; }
 .g-code summary { cursor: pointer; font-size: .85rem; min-height: 32px; display: flex; align-items: center; }
 .g-code pre { margin-top: 6px; max-height: 22rem; overflow: auto; white-space: pre; }

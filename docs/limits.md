@@ -16,6 +16,7 @@ Each is held by a test, and the ones with a name are exported. The counts are ma
 | Coordinate frames | 22 to start with (`nhl-api`, `hockeytech`, `nba-stats`, `nfl-tracking`, `mlbam`, `retrosheet`, `curling`, `tennis`, `volleyball`, `badminton`, `pickleball`, `tabletennis` and the 10 soccer providers), more by `registerFrame` | `FRAMES` |
 | A colour | a hex colour, `rgb()`, `rgba()`, `hsl()`, `hsla()`, a name or `var(--name)`, 64 characters at most | `safeColour` |
 | A logo | an https or relative address, an image data address, or SVG text up to 200,000 characters | `safeLogo` |
+| A grid of drawings | 200 drawings at most, 120 to 8,000 wide; each drawing keeps its own ids, and the base stylesheet is written once | `drawGrid` |
 | A name | any length: it is set on one line or two, in the biggest size that fits its place | `fitLines` |
 | Formations | 21 named formations of 5 sports, 199 places in all | `FORMATIONS` |
 | The team layers | a Voronoi diagram of 22 players adds under 12 kB; 1,000 points are triangulated in under 600 ms; a pass network of 600 passes adds under 16 kB | `voronoi`, `delaunay`, `network` |

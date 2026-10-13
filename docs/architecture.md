@@ -24,6 +24,10 @@ src/
 │   ├── net.ts          the court of tennis, volleyball, badminton, pickleball and table tennis
 │   ├── soccer-spec.ts  the Laws' figures, the presets, futsal and the small-sided pitches
 │   └── soccer-providers.ts  the data providers' coordinates, registered as frames, and rescale
+├── layout.ts           drawGrid: many drawings in one SVG, with a title, a subtitle, a key and a credit line, in a size for a card or a phone
+├── layout.style.ts     the grid's rules: the ground colour and the ink of its words, light and dark
+├── layouts-entry.ts    the layouts' entry
+├── background.ts       the ground behind a drawing or a grid: SVG patterns, a colour and a photograph at an opacity
 ├── layers.ts           data layers: drawLayers, layerTable and the marks
 ├── layers.marks.ts     the shapes, curves, waves, heads and colour ramps of the marks
 ├── layers.types.ts     the types of a layer

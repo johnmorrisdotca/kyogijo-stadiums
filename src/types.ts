@@ -1,3 +1,4 @@
+import type { Background } from "./background.ts";
 import type { Layer } from "./layers.types.ts";
 import type { Unit } from "./units.ts";
 import type { SoccerFrame, SoccerProviderId } from "./surfaces/soccer-providers.ts";
@@ -492,6 +493,12 @@ export interface SurfaceOptions {
    * annotations follow, and a score's panel stands inside it. Unset, the whole surface is drawn, byte for byte as before.
    */
   range?: RangeName | RangeNamed | RangeBox;
+  /**
+   * A ground behind the surface, laid on the apron round it: a pattern drawn in SVG (`"felt"`, `"grass"`, `"wood"`, `"ice"`, `"paper"`, `"grid"` or `"dots"`, subtle and in the drawing's ink,
+   * so that it follows light and dark), or `{ pattern, color, opacity, scale, image, imageOpacity, imageFit }`, where `image` is a photograph held to the rules of a team's `logo`.
+   * Unset, the drawing is byte for byte as before. See `BackgroundOptions`.
+   */
+  background?: Background;
   /** A named look: the surface, the lines and the ground round it in one palette, light and dark. See `LOOKS`. Over the theme's colours, under `colors`. */
   look?: LookName;
   /** The width of the lines (see `LineWidth`): a multiple of the width they are drawn at, or an absolute width. */

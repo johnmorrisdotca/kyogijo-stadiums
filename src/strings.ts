@@ -386,6 +386,11 @@ export interface KyogijoWords {
    * `right` as `notes` says it; for a box of your own {x0}, {x1}, {y0} and {y1} (and the {frame}); and the name of each range, written to follow "shows only the".
    */
   ranges: { shows: string; showsEnd: string; box: string; boxFrame: string; cut: string; names: Record<RangeName, string> };
+  /**
+   * The words of a grid of drawings (`drawGrid`): its accessible title when the caller gives none ({n} drawings), the sentence that lists the drawings ({n}, {list}), the one
+   * that lists the key ({list}), the name of a drawing that has none ({n} of {total}), and what joins a list.
+   */
+  grid: { title: string; drawings: string; key: string; cell: string; listSep: string };
   /** The words of a replay: its summary, its marks, what is announced when something happens, and the controls under it. */
   replay: {
     /** The first sentence of the summary: {time} is the length. */
@@ -592,6 +597,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
         "final-third": "final third", "defensive-third": "defensive third", "middle-third": "middle third", "penalty-area": "penalty area", infield: "infield", outfield: "outfield", sheet: "whole sheet", house: "house",
       },
     },
+    grid: { title: "A grid of drawings ({n})", drawings: "Drawings ({n}): {list}.", key: "Key: {list}.", cell: "Drawing {n} of {total}", listSep: "; " },
     replay: {
       title: "Replay, {time}", objects: "{n} tracked objects", objectsOne: "{n} tracked object", events: "{n} events", eventsOne: "{n} event", players: "Players", others: "Ball, puck and officials", trail: "Trail of the last {s} seconds", numbers: "Shirt numbers", eventLines: "Passes and shots",
       home: "home", away: "away", ball: "ball", puck: "puck", official: "official", pass: "Pass", shot: "Shot", goal: "Goal", whistle: "Whistle",
@@ -756,6 +762,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
         "final-third": "アタッキングサード", "defensive-third": "ディフェンディングサード", "middle-third": "ミドルサード", "penalty-area": "ペナルティエリア", infield: "内野", outfield: "外野", sheet: "シート全体", house: "ハウス",
       },
     },
+    grid: { title: "図のグリッド（{n}枚）", drawings: "図（{n}枚）：{list}。", key: "凡例：{list}。", cell: "{total}枚中{n}枚目の図", listSep: "；" },
     replay: {
       title: "リプレイ（再生時間{time}）", objects: "追跡対象は{n}個", objectsOne: "追跡対象は{n}個", events: "イベント{n}件", eventsOne: "イベント{n}件", players: "選手", others: "ボール・パック・審判", trail: "直近{s}秒の軌跡", numbers: "背番号", eventLines: "パスとシュート",
       home: "ホーム", away: "アウェイ", ball: "ボール", puck: "パック", official: "審判", pass: "パス", shot: "シュート", goal: "ゴール", whistle: "ホイッスル",
