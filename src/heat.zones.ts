@@ -13,9 +13,12 @@ import { fill } from "./strings.ts";
 import type { Sport, SurfaceOptions } from "./types.ts";
 import { lengthUnit } from "./common.ts";
 import { courtFor, courtSize } from "./court.ts";
+import { fieldPlan } from "./fields.ts";
+import { LEAGUES, chooseLeague, cricketOf } from "./leagues.ts";
+import type { CricketLeague } from "./leagues/cricket.ts";
 
 /** The zone sets. */
-export type ZoneSetId = "soccer-positional" | "soccer-thirds" | "soccer-channels" | "soccer-18" | "nba-shot" | "nhl-slot" | "nhl-home-plate" | "baseball-spray" | "baseball-retrosheet" | "football-pass" | "curling-house" | "net-court";
+export type ZoneSetId = "field-thirds" | "cricket-ground" | "soccer-positional" | "soccer-thirds" | "soccer-channels" | "soccer-18" | "nba-shot" | "nhl-slot" | "nhl-home-plate" | "baseball-spray" | "baseball-retrosheet" | "football-pass" | "curling-house" | "net-court";
 
 type Pt = readonly [number, number];
 
@@ -47,7 +50,7 @@ export interface ZoneSet {
 
 /** What a zone set needs to know about the drawing and the layer. */
 export interface ZoneContext {
-  o: Pick<SurfaceOptions, "sport" | "pitch" | "units"> & Partial<Pick<SurfaceOptions, "league" | "net">>;
+  o: Pick<SurfaceOptions, "sport" | "pitch" | "units"> & Partial<Pick<SurfaceOptions, "league" | "net" | "field">>;
   outline: Outline;
   /** The way the team attacks as the surface is drawn wide: names the sides and counts the bands from the team's own end. `right` by default. */
   direction: "left" | "right";
@@ -73,6 +76,8 @@ export const ZONE_SETS: Readonly<Record<ZoneSetId, { sports: readonly Sport[]; t
   "baseball-retrosheet": { sports: ["mlb"], title: "Retrosheet hit locations as the nearest sector", source: "https://www.retrosheet.org/location.htm" },
   "curling-house": { sports: ["curling"], title: "The house: the button, the 4-, 8- and 12-foot rings, and the free guard zone", source: "docs/sources.md#zone-sets" },
   "net-court": { sports: ["tennis", "volleyball", "badminton", "pickleball", "tabletennis"], title: "Each side of the net: the front court and the back court, split by the court's own line", source: "docs/sources.md#zone-sets" },
+  "field-thirds": { sports: ["lacrosse", "rugby", "afl", "gaelic", "fieldhockey", "handball"], title: "Thirds: defensive, middle and attacking", source: "docs/sources.md#zone-sets" },
+  "cricket-ground": { sports: ["cricket"], title: "The pitch, the ground inside the fielding circle, and the outfield", source: "docs/sources.md#zone-sets" },
   "football-pass": { sports: ["nfl", "cfl", "ifaf"], title: "Pass grid: short and deep by left, middle and right", source: "https://nflreadr.nflverse.com/articles/dictionary_pbp.html" },
 });
 
@@ -445,6 +450,40 @@ function netZones(ctx: ZoneContext): ZoneShape[] {
   return out;
 }
 
+/** The surface in thirds along it, counted from the team's own end: the same for every field sport with ends. */
+function fieldThirds(ctx: ZoneContext): ZoneShape[] {
+  const { box } = ctx.outline;
+  const w = ctx.words;
+  const names = ctx.direction === "right" ? [w.defensiveThird, w.middleThird, w.attackingThird] : [w.attackingThird, w.middleThird, w.defensiveThird];
+  return names.map((name, i) => rect(["defensive", "middle", "attacking"][ctx.direction === "right" ? i : 2 - i] + "-third", name, (box.w * i) / 3, 0, (box.w * (i + 1)) / 3, box.h, i === 2, true));
+}
+
+/**
+ * A cricket ground in three: the pitch, the rest of the ground inside the fielding restriction's circle (two semicircles about the middle stumps, joined by two lines) where the league has one, and the outfield.
+ * The pitch is the Laws' (22 yards by 10 feet), the circle the ICC's. The zones do not overlap.
+ */
+function cricketZones(ctx: ZoneContext): ZoneShape[] {
+  const plan = fieldPlan({ sport: "cricket", league: ctx.o.league, field: ctx.o.field, units: ctx.o.units });
+  const pitch = plan.areas.find((area) => area.id === "pitch")?.rect as readonly [number, number, number, number];
+  const [px0, py0, px1, py1] = pitch;
+  const picked = chooseLeague({ sport: "cricket", league: ctx.o.league }).league;
+  const league = picked?.family === "cricket" ? picked : LEAGUES.cricket[0];
+  const circle = ctx.o.field?.circle === false ? null : cricketOf(league as CricketLeague).circle;
+  const { length: L, width: W } = plan;
+  const w = ctx.words;
+  const cx = L / 2;
+  const cy = W / 2;
+  const inPitch = (x: number, y: number): boolean => x >= px0 && x <= px1 && y >= py0 && y <= py1;
+  const half = (px1 - px0) / 2;
+  const inCircle = (x: number, y: number): boolean => circle !== null && (Math.abs(x - cx) <= half ? Math.abs(y - cy) <= circle : Math.hypot(Math.abs(x - cx) - half, y - cy) <= circle);
+  const ground = `M0 ${num(cy)}A${num(cx)} ${num(cy)} 0 1 1 ${num(L)} ${num(cy)}A${num(cx)} ${num(cy)} 0 1 1 0 ${num(cy)}Z`;
+  const ring = circle === null ? "" : `M${num(cx - half)} ${num(cy - circle)}H${num(cx + half)}A${num(circle)} ${num(circle)} 0 0 1 ${num(cx + half)} ${num(cy + circle)}H${num(cx - half)}A${num(circle)} ${num(circle)} 0 0 1 ${num(cx - half)} ${num(cy - circle)}Z`;
+  const out: ZoneShape[] = [{ id: "outfield", name: w.outfieldGround, d: ground + ring, label: [cx, cy - (circle ?? 0) - 0.2 * cy], room: [L * 0.4, W * 0.15], has: (x, y) => !inCircle(x, y) && !inPitch(x, y) && ((x - cx) / cx) ** 2 + ((y - cy) / cy) ** 2 <= 1 }];
+  if (circle !== null) out.push({ id: "inside-circle", name: w.insideCircle, d: ring + rectPath(px0, py0, px1, py1), label: [cx, cy - circle * 0.6], room: [circle * 2, circle * 0.5], has: (x, y) => inCircle(x, y) && !inPitch(x, y) });
+  out.push({ id: "pitch", name: w.pitchZone, d: rectPath(px0, py0, px1, py1), label: [cx, cy], room: [px1 - px0, py1 - py0], has: inPitch });
+  return out;
+}
+
 /** The zones of a set on the surface the context describes. Throws for a set that is not for the surface's sport. */
 export function buildZoneSet(id: ZoneSetId, ctx: ZoneContext): ZoneSet {
   if (!Object.prototype.hasOwnProperty.call(ZONE_SETS, id)) throw new RangeError(`Unknown zone set "${String(id)}": use one of ${ZONE_SET_IDS.join(", ")}`);
@@ -454,6 +493,6 @@ export function buildZoneSet(id: ZoneSetId, ctx: ZoneContext): ZoneSet {
     const { zones, which } = retrosheetZones(ctx);
     return { id, zones, which };
   }
-  const zones = id.startsWith("soccer") ? soccerZones(id, ctx) : id === "nba-shot" ? nbaZones(ctx) : id.startsWith("nhl") ? nhlZones(id, ctx) : id === "baseball-spray" ? baseballSpray(ctx) : id === "curling-house" ? curlingZones(ctx) : id === "net-court" ? netZones(ctx) : footballPass(ctx);
+  const zones = id === "field-thirds" ? fieldThirds(ctx) : id === "cricket-ground" ? cricketZones(ctx) : id.startsWith("soccer") ? soccerZones(id, ctx) : id === "nba-shot" ? nbaZones(ctx) : id.startsWith("nhl") ? nhlZones(id, ctx) : id === "baseball-spray" ? baseballSpray(ctx) : id === "curling-house" ? curlingZones(ctx) : id === "net-court" ? netZones(ctx) : footballPass(ctx);
   return { id, zones, which: lastWins(zones) };
 }

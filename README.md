@@ -70,10 +70,11 @@ console.log(svg.startsWith("<svg"), svg.includes("Northern Owls 3, Lakeshore Anc
 
 ## Features
 
-- **Thirteen surfaces, to scale.** The NFL field (360 by 160 feet with its end zones), the CFL field (450 by 195), the IFAF field, the NHL rink (200 by 85 with a 28-foot corner radius), the NBA court (94 by 50), the soccer pitch (105 by 68 metres, in ten sizes and variants), the baseball field, the curling sheet (150 by 15 feet 7 inches) and the courts of tennis, volleyball and beach volleyball, badminton, pickleball and table tennis, with the lines, circles, keys, boxes and goals of each. Every figure is cited in [sources](./docs/sources.md). [The surfaces](./docs/surfaces.md).
-- **Each league's rulebook.** `league: "fiba"` draws a court as FIBA marks it: 37 variants, from the WNBA, the NCAA and the IIHF to Little League, PONY, softball, Curling Canada and FIVB's beach volleyball, each cited. [League variants](./docs/variants.md).
+- **Twenty surfaces, to scale.** The NFL field (360 by 160 feet with its end zones), the CFL field (450 by 195), the IFAF field, the NHL rink (200 by 85 with a 28-foot corner radius), the NBA court (94 by 50), the soccer pitch (105 by 68 metres, in ten sizes and variants), the baseball field, the curling sheet (150 by 15 feet 7 inches) and the courts of tennis, volleyball and beach volleyball, badminton, pickleball and table tennis, and the fields of lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey and handball, with the lines, circles, keys, boxes and goals of each. Every figure is cited in [sources](./docs/sources.md). [The surfaces](./docs/surfaces.md).
+- **Each league's rulebook.** `league: "fiba"` draws a court as FIBA marks it: 48 variants, from the WNBA, the NCAA and the IIHF to Little League, PONY, softball, Curling Canada, FIVB's beach volleyball, rugby league and the NLL's box lacrosse, each cited. [League variants](./docs/variants.md).
 - **Curling, from the rule books.** A sheet from World Curling's and Curling Canada's rules, tall by default, with the board and the hammer in a score, and `curlingStones` for the stones of an end, scored by the rules. [Curling](./docs/curling.md).
 - **Tennis, volleyball, badminton, pickleball and table tennis, from their rulebooks.** The ITF's court, the FIVB's indoor and beach courts, the BWF's, USA Pickleball's and the ITTF's table, each in its look (hard court, clay, grass, wood, sand), with a board of sets and games and a ball beside the server. [Net sports](./docs/courts.md).
+- **Lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey and handball, from their rulebooks.** The fields and floors of World Lacrosse, the NCAA, the PLL and the NLL; World Rugby's union and the NRL's and IRL's league; the AFL's oval at the size of a named ground; the GAA's field for football and hurling; a cricket ground with a boundary of your own and the 30-yard circle; the FIH's pitch and the IHF's court. A score is goals and behinds (10.12 (72)), goals and points (2-14 (20)) or a board of runs, wickets and overs. [Field sports](./docs/field-sports.md).
 - **Soccer, to the Laws.** A pitch from Law 1 of the IFAB Laws of the Game of any size, with presets (international, UEFA, MLS, NCAA, the FA's 9-, 7- and 5-a-side, FIFA's futsal), half pitches, five mowing patterns, four goal styles, penalties and extra time in a score. [Soccer](./docs/soccer.md).
 - **Every ballpark.** The 30 current MLB parks and 44 that MLB clubs have left (the Polo Grounds, Ebbets Field, the Astrodome and more), and the 12 home parks of Nippon Professional Baseball with eight other NPB grounds, each with its fence drawn from the distances published for it; a past park whose fence moved is drawn as it stood in a season. [Ballparks](./docs/ballparks.md).
 - **Soccer grounds and an atlas.** 64 soccer grounds, each pitch at its published size, and every park and ground on a map, by sport, league, country and year. [The grounds](./docs/grounds.md), [the atlas](./docs/atlas.md).
@@ -87,7 +88,7 @@ console.log(svg.startsWith("<svg"), svg.includes("Northern Owls 3, Lakeshore Anc
 - **Small multiples and backgrounds.** `drawGrid` puts many drawings in one SVG, under a title and a subtitle, over a credit line, with a key they share, in a size for a social card, a square post or a phone; `background` lays a quiet pattern (felt, grass, wood, ice, paper, a grid, dots) or a photograph behind a drawing or a grid. [Layouts and backgrounds](./docs/layouts.md).
 - **Replay.** Tracking data played on any surface: the players with their numbers, the ball and its trail, and the passes, shots and goals as they happen, with controls, the keyboard and a live region, steps for a reader who prefers reduced motion, and a pause when the page is hidden. [Replay](./docs/replay.md).
 - **Renderers.** The same drawing as plain data (a scene), on a canvas (a browser's or a Node canvas), in a d3 selection, as a mark of an Observable Plot, as GeoJSON and as a PNG in Node, each an entry of its own that imports nothing from outside the package. [Renderers](./docs/renderers.md).
-- **Units and frames.** Each surface in its rulebook's unit and any other, and 22 coordinate frames (ten soccer providers, the NHL API, HockeyTech, NBA stats, NFL tracking, MLBAM, Retrosheet, a curling stone's place from the button, a place from the net in each net sport) to move a provider's points onto a surface. [Units](./docs/units.md), [coordinate frames](./docs/frames.md).
+- **Units and frames.** Each surface in its rulebook's unit and any other, and 29 coordinate frames (ten soccer providers, the NHL API, HockeyTech, NBA stats, NFL tracking, MLBAM, Retrosheet, a curling stone's place from the button, a place from the net in each net sport, the centre of each field sport's surface) to move a provider's points onto a surface. [Units](./docs/units.md), [coordinate frames](./docs/frames.md).
 - **A compact badge and a compact card.** One strip for a list, or the surface with that strip under it.
 - **Light and dark**, by the device or the page, and every colour a custom property; seven named looks, colours by feature, line widths and dashes, goal styles and mowing patterns, and arrows, axes and labels for teaching. [Theming](./docs/theming.md), [annotations](./docs/annotations.md).
 - **Accessible.** Each drawing is an `img` with a title and a description that say the surface and the result, in English or Japanese. [Accessibility](./docs/accessibility.md).
@@ -100,7 +101,7 @@ console.log(svg.startsWith("<svg"), svg.includes("Northern Owls 3, Lakeshore Anc
 | Part | What it is |
 | --- | --- |
 | `drawKyogijo`, `drawSurface`, `drawScore`, `drawBadge` | The drawing, as a string of SVG. |
-| `SPORTS`, `PARKS`, `PARK_IDS`, `COURT_THEMES` | The thirteen sports, the 94 ballparks, the court looks. |
+| `SPORTS`, `PARKS`, `PARK_IDS`, `COURT_THEMES` | The twenty sports, the 94 ballparks, the court looks. |
 | `SOCCER_PITCHES`, `SOCCER_PROVIDERS`, `rescale`, `soccerSpec` | The soccer pitches, the data providers' coordinate systems and the map between them. |
 | `GROUNDS`, `groundById` | The 64 soccer grounds, each pitch at its own size. |
 | `EVENTS`, `eventOptions` | The 18 special games: a rink in a ballpark, a court on a carrier's deck, with `host` and `placement` in the options. |
@@ -186,7 +187,7 @@ console.log(box(wide), box(tall));
 <br><em>The same game tall: the teams top and bottom, every word upright.</em>
 </p>
 
-[The surfaces](./docs/surfaces.md) lists the thirteen, with their sizes and what is drawn; [score and layout](./docs/score.md) has the options of a score, a strip and a compact card.
+[The surfaces](./docs/surfaces.md) lists the twenty, with their sizes and what is drawn; [score and layout](./docs/score.md) has the options of a score, a strip and a compact card.
 
 ### A league's rulebook
 
@@ -476,7 +477,7 @@ Nothing is branded. The drawing is coloured by custom properties on its `svg`, w
 
 ## Limits
 
-Each is held by a test: thirteen sports, ten soccer pitches and ten providers, 94 ballparks, 64 grounds, six units, twenty-two frames, a drawing of under 22 kB. The table, made from the code, is [limits](./docs/limits.md).
+Each is held by a test: twenty sports, ten soccer pitches and ten providers, 94 ballparks, 64 grounds, six units, twenty-nine frames, a drawing of under 22 kB. The table, made from the code, is [limits](./docs/limits.md).
 
 ## Accessibility
 
@@ -582,7 +583,7 @@ Please follow the [code of conduct](./CODE_OF_CONDUCT.md). Text, a colour or a l
 
 ## Changes
 
-See [CHANGELOG.md](./CHANGELOG.md). The first release, 0.1.0, draws the thirteen surfaces and the 94 ballparks, with scores, badges, wide and tall layouts, a custom element and a frame.
+See [CHANGELOG.md](./CHANGELOG.md). The first release, 0.1.0, draws the twenty surfaces and the 94 ballparks, with scores, badges, wide and tall layouts, a custom element and a frame.
 
 ## Licence
 

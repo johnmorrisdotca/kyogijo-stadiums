@@ -183,7 +183,7 @@ describe("the leagues' drawings", () => {
   });
 
   it("are within the budget, with the stylesheet in them", () => {
-    const budget = { basketball: 14_000, hockey: 14_000, football: 22_000, baseball: 17_000, curling: 17_500, tennis: 17_500, volleyball: 17_500, badminton: 17_500, pickleball: 17_500, tabletennis: 17_500 };
+    const budget: Record<string, number> = { basketball: 14_000, hockey: 14_000, football: 22_000, baseball: 17_000, curling: 17_500, tennis: 17_500, volleyball: 17_500, badminton: 17_500, pickleball: 17_500, tabletennis: 17_500 };
     for (const { sport, league } of OTHER) expect(drawKyogijo({ sport, league: league.id, ...game }).length, league.id).toBeLessThan(budget[league.family]);
   });
 });

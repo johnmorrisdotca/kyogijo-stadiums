@@ -1,8 +1,24 @@
 // The leagues: each variant of a family of surface, with its rulebook's figures, its names and its sources.
-export { FAMILY_OF, LEAGUES, LEAGUE_SOURCES, VARIANTS, chooseLeague, courtOf, diamondOf, fieldOf, hasHistory, leagueAt, leagueAtOf, leagueById, leagueChanges, leagueFigures, leagueIds, leagueSeason, leagueSize, netOf, rinkOf, sheetOf } from "./leagues.ts";
+export { FAMILY_OF, LEAGUES, LEAGUE_SOURCES, VARIANTS, aflOf, chooseLeague, courtOf, cricketOf, diamondOf, fieldHockeyOf, fieldOf, gaelicOf, handballOf, lacrosseOf, rugbyOf, hasHistory, leagueAt, leagueAtOf, leagueById, leagueChanges, leagueFigures, leagueIds, leagueSeason, leagueSize, netOf, rinkOf, sheetOf } from "./leagues.ts";
 export type { BaseballLeague, BasketballLeague, CourtFigures, CurlingLeague, SheetFigures, BadmintonFigures, BadmintonLeague, FreeZone, FreeZones, NetFigures, NetLeague, NetSport, PickleballFigures, PickleballLeague, TableTennisFigures, TableTennisLeague, TennisFigures, TennisLeague, VolleyballFigures, VolleyballLeague, CourtMarks, DiamondFigures, Family, FootballLeague, HockeyLeague, League, LeagueAt, LeagueChange, LeagueSource, LeagueSpan, Named, RinkFigures } from "./leagues.ts";
 export { MLB_DIAMOND } from "./leagues/baseball.ts";
 export { NBA_COURT } from "./leagues/basketball.ts";
 export { NHL_RINK } from "./leagues/hockey.ts";
 export { CURLING_CANADA_SHEET, CURLING_LEAGUES, WCF_SHEET } from "./leagues/curling.ts";
 export { BADMINTON_LEAGUES, BWF_BADMINTON, FIVB_BEACH, FIVB_INDOOR, ITF_TENNIS, ITTF_TABLE, PICKLEBALL_LEAGUES, TABLE_TENNIS_LEAGUES, TENNIS_LEAGUES, USAP_PICKLEBALL, VOLLEYBALL_LEAGUES } from "./leagues/courts.ts";
+export { AFL_GROUND, AFL_GROUNDS, AFL_LEAGUES } from "./leagues/aussie.ts";
+export type { AflFigures, AflGround, AflLeague } from "./leagues/aussie.ts";
+export { CRICKET_LEAGUES, ICC_MEN_GROUND, ICC_WOMEN_GROUND, MCC_GROUND } from "./leagues/cricket.ts";
+export type { CricketFigures, CricketLeague } from "./leagues/cricket.ts";
+export { FIELD_HOCKEY_LEAGUES, FIH_PITCH } from "./leagues/fieldhockey.ts";
+export type { FieldHockeyFigures, FieldHockeyLeague } from "./leagues/fieldhockey.ts";
+export { GAA_FOOTBALL_FIELD, GAA_HURLING_FIELD, GAELIC_LEAGUES } from "./leagues/gaelic.ts";
+export type { GaelicFigures, GaelicLeague } from "./leagues/gaelic.ts";
+export { HANDBALL_LEAGUES, IHF_COURT } from "./leagues/handball.ts";
+export type { HandballFigures, HandballLeague } from "./leagues/handball.ts";
+export { LACROSSE_LEAGUES, NCAA_MEN_FIELD, NCAA_WOMEN_FIELD, NLL_FLOOR, PLL_FIELD, WORLD_BOX_FLOOR, WORLD_MEN_FIELD, WORLD_WOMEN_FIELD } from "./leagues/lacrosse.ts";
+export type { LacrosseFigures, LacrosseLeague } from "./leagues/lacrosse.ts";
+export { IRL_FIELD, NRL_FIELD, RUGBY_LEAGUES, WORLD_RUGBY_FIELD } from "./leagues/rugby.ts";
+export type { RugbyFigures, RugbyLeague } from "./leagues/rugby.ts";
+export { fixed, span } from "./leagues/fields.ts";
+export type { Span } from "./leagues/fields.ts";

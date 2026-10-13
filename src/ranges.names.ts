@@ -1,15 +1,17 @@
 // The names of the ranges of each sport (`RANGES`) and the check of a drawing's `range` option (`parseRange`): kept apart from ranges.ts, which crops, so that the curling sheet's
 // own builder can read a named range without importing the code that crops every surface.
-import { chooseLeague } from "./leagues.ts";
+import { LEAGUES, chooseLeague } from "./leagues.ts";
 import type { RangeBox, RangeName, Side, Sport, SurfaceOptions } from "./types.ts";
 
 /** One range of a sport: its name, and the end it is at by default when it is at an end (`left` or `right`, as the surface is drawn wide). A range with no `end` is in the middle or is the whole of something. */
 export interface RangeInfo {
   id: RangeName;
   end?: Side;
+  /** The leagues the range is for, when only some of the sport's have it (rugby union's 22 and rugby league's 20-metre area; the fielding circle of the ICC's grounds). Every league when missing. */
+  leagues?: readonly string[];
 }
 
-const range = (id: RangeName, end?: Side): RangeInfo => Object.freeze(end === undefined ? { id } : { id, end });
+const range = (id: RangeName, end?: Side, leagues?: readonly string[]): RangeInfo => Object.freeze({ id, ...(end === undefined ? {} : { end }), ...(leagues === undefined ? {} : { leagues: Object.freeze([...leagues]) }) });
 
 const FOOTBALL: readonly RangeInfo[] = Object.freeze([range("red-zone", "right"), range("end-zone", "right"), range("between-the-20s"), range("field-of-play"), range("own-half", "left"), range("opponent-half", "right")]);
 const NET: readonly RangeInfo[] = Object.freeze([range("half-court", "left")]);
@@ -33,6 +35,13 @@ export const RANGES: Readonly<Record<Sport, readonly RangeInfo[]>> = Object.free
   badminton: NET,
   pickleball: NET,
   tabletennis: NET,
+  lacrosse: Object.freeze([range("half", "left"), range("crease", "right")]),
+  rugby: Object.freeze([range("half", "left"), range("twenty-two", "right", ["world-rugby"]), range("twenty", "right", ["nrl", "irl"]), range("in-goal", "right")]),
+  afl: Object.freeze([range("half", "left"), range("forward-fifty", "right"), range("centre-square")]),
+  gaelic: Object.freeze([range("half", "left"), range("large-rectangle", "right")]),
+  cricket: Object.freeze([range("pitch"), range("circle", undefined, ["icc-men", "icc-women"])]),
+  fieldhockey: Object.freeze([range("half", "left"), range("circle", "right"), range("twenty-three", "right")]),
+  handball: Object.freeze([range("half", "left"), range("goal-area", "right")]),
 });
 
 /** What a drawing's `range` asks for, checked: a name (at an end, or at its default) or a box. */
@@ -49,13 +58,15 @@ const isNumber = (value: unknown): value is number => typeof value === "number" 
 export function parseRange(o: Pick<SurfaceOptions, "sport" | "league" | "range">): ParsedRange | undefined {
   const given: unknown = o.range;
   if (given === undefined || given === null) return undefined;
-  const { sport } = chooseLeague(o);
+  const { sport, league } = chooseLeague(o);
   const named = typeof given === "string" || (typeof given === "object" && "name" in given && typeof (given as { name: unknown }).name === "string");
   if (named) {
     const name = typeof given === "string" ? given : (given as { name: string }).name;
     const end: unknown = typeof given === "object" ? (given as { end?: unknown }).end : undefined;
     const info = (RANGES[sport] ?? []).find((one) => one.id === name);
     if (info === undefined) throw new RangeError(`The ${sport} surface has no range "${name}": use one of ${(RANGES[sport] ?? []).map((one) => one.id).join(", ")}, or a box { x0, x1, y0, y1 }`);
+    const leagueId = league?.id ?? LEAGUES[sport]?.[0]?.id;
+    if (info.leagues !== undefined && leagueId !== undefined && !info.leagues.includes(leagueId)) throw new RangeError(`The ${sport} league "${leagueId}" has no range "${name}": it is for ${info.leagues.join(" and ")}`);
     if (end !== undefined && end !== "left" && end !== "right") throw new RangeError(`A range's end is "left" or "right", not "${String(end)}"`);
     return { kind: "name", name: info.id, end: info.end === undefined ? undefined : ((end as Side | undefined) ?? info.end), asked: end as Side | undefined };
   }

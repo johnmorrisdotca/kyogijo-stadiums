@@ -23,6 +23,13 @@ const AREA: Record<Sport, { x: [number, number]; y: [number, number] }> = {
   badminton: { x: [0, 43.96], y: [0, 20.01] },
   pickleball: { x: [0, 44], y: [0, 20] },
   tabletennis: { x: [0, 8.99], y: [0, 5] },
+  lacrosse: { x: [0, 328.08], y: [0, 196.85] },
+  rugby: { x: [0, 393.7], y: [0, 229.66] },
+  afl: { x: [0, 524.93], y: [0, 462.6] },
+  gaelic: { x: [0, 475.72], y: [0, 295.28] },
+  cricket: { x: [0, 450], y: [0, 450] },
+  fieldhockey: { x: [0, 299.87], y: [0, 180.45] },
+  handball: { x: [0, 131.23], y: [0, 65.62] },
 };
 
 /** Made-up marks spread over a surface: a cluster of normal deviates round its middle, from a fixed seed. */
@@ -59,6 +66,13 @@ const ZONE_FOR: Record<Sport, Layer> = {
   badminton: { kind: "zones", zones: "net-court", data: cloud("badminton", 200) },
   pickleball: { kind: "zones", zones: "net-court", data: cloud("pickleball", 200) },
   tabletennis: { kind: "zones", zones: "net-court", data: cloud("tabletennis", 200) },
+  lacrosse: { kind: "zones", zones: "field-thirds", data: cloud("lacrosse", 200) },
+  rugby: { kind: "zones", zones: "field-thirds", data: cloud("rugby", 200) },
+  afl: { kind: "zones", zones: "field-thirds", data: cloud("afl", 200) },
+  gaelic: { kind: "zones", zones: "field-thirds", data: cloud("gaelic", 200) },
+  cricket: { kind: "zones", zones: "cricket-ground", data: cloud("cricket", 200) },
+  fieldhockey: { kind: "zones", zones: "field-thirds", data: cloud("fieldhockey", 200) },
+  handball: { kind: "zones", zones: "field-thirds", data: cloud("handball", 200) },
 };
 
 describe("every heat layer on every surface", () => {

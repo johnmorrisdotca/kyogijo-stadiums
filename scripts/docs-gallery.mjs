@@ -65,6 +65,15 @@ const GULLS_PICKLE = { name: "Harbour City Gulls", abbr: "HCG", score: 1, color:
 const BISON_PICKLE = { name: "Prairie Ridge Bison", abbr: "PRB", score: 1, color: "#a8452c", sets: [7, 11, 4] };
 const GULLS_TABLE = { name: "Harbour City Gulls", abbr: "HCG", score: 3, color: "#1d4f91", sets: [11, 9, 11, 7, 11] };
 const BISON_TABLE = { name: "Prairie Ridge Bison", abbr: "PRB", score: 2, color: "#a8452c", sets: [7, 11, 8, 11, 6] };
+// The field sports: rugby and lacrosse are plain scores; Australian football writes goals, behinds and the total; Gaelic games goals, points and the total; cricket runs for wickets, overs and the innings.
+const RUGBY_AWAY = { name: "Harbour City Gulls", abbr: "HCG", score: 27, color: "#1d4f91" };
+const RUGBY_HOME = { name: "Prairie Ridge Bison", abbr: "PRB", score: 24, color: "#a8452c" };
+const AFL_AWAY = { name: "Harbour City Gulls", abbr: "HCG", goals: 10, behinds: 12, color: "#1d4f91" };
+const AFL_HOME = { name: "Prairie Ridge Bison", abbr: "PRB", goals: 9, behinds: 14, color: "#a8452c" };
+const GAA_AWAY = { name: "Harbour City Gulls", abbr: "HCG", goals: 2, points: 14, color: "#1d4f91" };
+const GAA_HOME = { name: "Prairie Ridge Bison", abbr: "PRB", goals: 1, points: 15, color: "#a8452c" };
+const CRICKET_AWAY = { name: "Harbour City Gulls", abbr: "HCG", score: 245, wickets: 6, overs: "50", color: "#1d4f91", innings: [245] };
+const CRICKET_HOME = { name: "Prairie Ridge Bison", abbr: "PRB", score: 187, wickets: 10, overs: "41.2", color: "#a8452c", innings: [187] };
 const SOCCER_AWAY = { name: "Northern Owls", abbr: "NOW", score: 2, penalties: 4, color: "#3a2d6b" };
 const SOCCER_HOME = { name: "Lakeshore Anchors", abbr: "LSA", score: 2, penalties: 2, color: "#0f7a7a" };
 
@@ -82,8 +91,15 @@ const GAMES = {
   badminton: { away: GULLS_GAMES, home: BISON_GAMES, status: "game-3", competition: "Final" },
   pickleball: { away: GULLS_PICKLE, home: BISON_PICKLE, status: "game-3", competition: "Final" },
   tabletennis: { away: GULLS_TABLE, home: BISON_TABLE, status: "final", competition: "Final" },
+  lacrosse: { away: RUGBY_AWAY, home: RUGBY_HOME, status: "final", competition: "Final" },
+  rugby: { away: RUGBY_AWAY, home: RUGBY_HOME, status: "final", competition: "Final" },
+  afl: { away: AFL_AWAY, home: AFL_HOME, status: "final", competition: "Grand Final" },
+  gaelic: { away: GAA_AWAY, home: GAA_HOME, status: "final", competition: "All-Ireland Final" },
+  cricket: { away: CRICKET_AWAY, home: CRICKET_HOME, status: "final", competition: "Final" },
+  fieldhockey: { away: GULLS, home: BISON, status: "final", competition: "Final" },
+  handball: { away: GULLS, home: BISON, status: "final", competition: "Final" },
 };
-const SPORT_TITLES = { nfl: "NFL field", cfl: "CFL field", ifaf: "IFAF field", nhl: "NHL rink", nba: "NBA court", soccer: "Soccer pitch", mlb: "Baseball field", curling: "Curling sheet", tennis: "Tennis court", volleyball: "Volleyball court", badminton: "Badminton court", pickleball: "Pickleball court", tabletennis: "Table tennis table" };
+const SPORT_TITLES = { nfl: "NFL field", cfl: "CFL field", ifaf: "IFAF field", nhl: "NHL rink", nba: "NBA court", soccer: "Soccer pitch", mlb: "Baseball field", curling: "Curling sheet", tennis: "Tennis court", volleyball: "Volleyball court", badminton: "Badminton court", pickleball: "Pickleball court", tabletennis: "Table tennis table", lacrosse: "Lacrosse field", rugby: "Rugby field", afl: "Australian football ground", gaelic: "Gaelic games field", cricket: "Cricket ground", fieldhockey: "Field hockey pitch", handball: "Handball court" };
 
 /** A repeatable list of points for the data snippets: no random numbers, so that the same code always draws the same marks. */
 const SPOTS = "Array.from({ length: 36 }, (_, i) => ({ x: 20 + ((i * 53) % 160), y: 8 + ((i * 29) % 70), team: i % 2 ? \"away\" : \"home\", outcome: i % 5 === 0 ? \"goal\" : \"shot\", value: 0.05 + (i % 7) / 20 }))";
@@ -100,13 +116,13 @@ const section = (id, title, intro, items) => ({ id, title, intro, items });
 // ---- The pages. Each is a list of sections, and each section a list of items. ----
 
 function surfacesPage(lib) {
-  const sports = ["nfl", "cfl", "ifaf", "nhl", "nba", "soccer", "mlb", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis"];
+  const sports = ["nfl", "cfl", "ifaf", "nhl", "nba", "soccer", "mlb", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis", "lacrosse", "rugby", "afl", "gaelic", "cricket", "fieldhockey", "handball"];
   const themes = lib[MAIN].COURT_THEMES;
   return {
     slug: "gallery-surfaces",
     title: "Gallery: surfaces and scores",
     ja: "競技場とスコア",
-    intro: "The thirteen surfaces bare, with a game on each, wide and tall, as a strip and as a compact card, and the court's looks. Every picture is drawn by the build from the code under it.",
+    intro: "The twenty surfaces bare, with a game on each, wide and tall, as a strip and as a compact card, and the court's looks. Every picture is drawn by the build from the code under it.",
     sections: [
       section("bare", "Each surface, bare", "`drawKyogijo` with a `sport` and nothing else.", sports.map((sport) => item(`bare-${sport}`, SPORT_TITLES[sport], drawing({ sport })))),
       section("scores", "A game on each surface", "The teams on their sides and the score in the middle.", sports.map((sport) => item(`score-${sport}`, `${SPORT_TITLES[sport]}, with a score`, drawing({ sport, ...GAMES[sport] })))),
@@ -164,6 +180,10 @@ function leaguesPage(lib) {
     ["baseball", "Baseball and softball fields", "mlb"],
     ["curling", "Curling sheets", "curling"],
     ["volleyball", "Volleyball courts", "volleyball"],
+    ["lacrosse", "Lacrosse fields and floors", "lacrosse"],
+    ["rugby", "Rugby fields", "rugby"],
+    ["gaelic", "Gaelic games", "gaelic"],
+    ["cricket", "Cricket grounds", "cricket"],
   ];
   return {
     slug: "gallery-leagues",
@@ -624,7 +644,58 @@ function layoutsPage() {
   };
 }
 
-export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, specialPage, dataPage, curlingPage, courtsPage, stylingPage, rangesPage, layoutsPage];
+/** The field sports: lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey and handball. */
+function fieldsPage(lib) {
+  const grounds = lib[`${MAIN}/leagues`].AFL_GROUNDS;
+  return {
+    slug: "gallery-fields",
+    title: "Gallery: lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey and handball",
+    ja: "ラクロス、ラグビー、オーストラリアンフットボール、ゲーリックゲーム、クリケット、フィールドホッケー、ハンドボール",
+    intro: "Seven field sports from their own rulebooks: each league's surface, the scores they write their own way (goals and behinds, goals and points, runs for wickets), a named ground, a boundary of your own and a part of the surface.",
+    sections: [
+      section("fields", "Each surface, each league", "`sport` is `lacrosse`, `rugby`, `afl`, `gaelic`, `cricket`, `fieldhockey` or `handball`; `league` picks the rulebook.", [
+        item("fields-lacrosse", "Lacrosse: World Lacrosse's men's field", drawing({ sport: "lacrosse" })),
+        item("fields-lacrosse-women", "Lacrosse: World Lacrosse's women's field", drawing({ sport: "lacrosse", league: "world-women" }), "The 15 metre and 11 metre marking areas, the goal circle and the restraining lines."),
+        item("fields-lacrosse-box", "Lacrosse: the NLL's box floor", drawing({ sport: "lacrosse", league: "nll" }), "Boards with rounded corners, the crease cut by a flat, the restraining lines and the face-off circle."),
+        item("fields-rugby", "Rugby union: World Rugby's field", drawing({ sport: "rugby" })),
+        item("fields-rugby-league", "Rugby league: the NRL's field", drawing({ sport: "rugby", league: "nrl" }), "A line every 10 metres, the 20 and 40 metre lines red, and the scrum lines."),
+        item("fields-afl", "Australian football: the AFL's ground", drawing({ sport: "afl" }), "An oval cut at each end by the goal line and the behind lines, at the size of the MCG."),
+        item("fields-gaelic", "Gaelic football: the GAA's field", drawing({ sport: "gaelic" })),
+        item("fields-hurling", "Hurling: the same field with the 65 metre lines", drawing({ sport: "gaelic", league: "gaa-hurling" })),
+        item("fields-cricket", "Cricket: the ICC's ground with its 30-yard circle", drawing({ sport: "cricket" })),
+        item("fields-hockey", "Field hockey: the FIH's pitch", drawing({ sport: "fieldhockey" })),
+        item("fields-handball", "Handball: the IHF's court", drawing({ sport: "handball" })),
+      ]),
+      section("scores", "The scores", "Australian football writes goals, behinds and the total; Gaelic games goals, points and the total; a cricket score is a board of runs, wickets and overs, innings by innings.", [
+        item("field-score-afl", "Australian football: 10.12 (72) to 9.14 (68)", drawing({ sport: "afl", ...GAMES.afl })),
+        item("field-score-gaelic", "Gaelic football: 2-14 (20) to 1-15 (18)", drawing({ sport: "gaelic", ...GAMES.gaelic })),
+        item("field-score-cricket", "Cricket: a limited-overs match", drawing({ sport: "cricket", ...GAMES.cricket })),
+        item("field-score-cricket-test", "Cricket: a Test match, innings by innings", drawing({ sport: "cricket", away: { ...CRICKET_AWAY, score: 490, wickets: 4, overs: "112", innings: ["312", "178/4"] }, home: { ...CRICKET_HOME, score: 564, wickets: 10, overs: "130.3", innings: ["263", "301"] }, status: "innings-4", competition: "Test, day 5" })),
+        item("field-score-rugby-tall", "Rugby, tall", drawing({ sport: "rugby", ...GAMES.rugby, orientation: "portrait" })),
+        item("field-score-handball-badge", "Handball, as a strip", drawing({ sport: "handball", ...GAMES.handball, size: "badge" })),
+      ]),
+      section("size", "A size, a ground and a boundary", "`field` takes a length and a width within the range the rules allow, a named ground of the AFL, or a cricket boundary, round or oval.", [
+        ...grounds.map((ground) => item(`ground-afl-${ground.id}`, `${ground.name.en}: ${ground.length} by ${ground.width} metres`, drawing({ sport: "afl", field: { ground: ground.id } }), `The length and width the AFL's venue page prints.`)),
+        item("size-rugby-short", "Rugby union at its least: 94 by 68 metres, in-goal 6 metres", drawing({ sport: "rugby", units: "m", field: { length: 94, width: 68, inGoal: 6 } })),
+        item("size-cricket-oval", "Cricket: an oval boundary, 90 yards straight and 65 square", drawing({ sport: "cricket", units: "yd", field: { boundary: { straight: 90, square: 65 } } })),
+        item("size-cricket-women", "Cricket: the ICC's women's ground, circle of 25.15 yards", drawing({ sport: "cricket", league: "icc-women" })),
+      ]),
+      section("parts", "A part of the surface, a look and a feature", "`range` crops to a named part; `look` and `featureColors` colour the whole or a part.", [
+        item("parts-rugby-22", "Rugby: the 22", drawing({ sport: "rugby", range: "twenty-two" })),
+        item("parts-afl-fifty", "Australian football: inside the fifty metre arc", drawing({ sport: "afl", range: "forward-fifty" })),
+        item("parts-cricket-pitch", "Cricket: the pitch, with its creases and wickets", drawing({ sport: "cricket", range: "pitch" })),
+        item("parts-hockey-circle", "Field hockey: the circle", drawing({ sport: "fieldhockey", range: "circle" })),
+        item("parts-handball-area", "Handball: the goal area", drawing({ sport: "handball", range: "goal-area" })),
+        item("parts-lacrosse-crease", "Lacrosse: the crease", drawing({ sport: "lacrosse", league: "ncaa-men", range: "crease" })),
+        item("parts-night-rugby", "Rugby, night", drawing({ sport: "rugby", look: "night" })),
+        item("parts-chalk-gaelic", "Gaelic football, chalkboard", drawing({ sport: "gaelic", look: "chalkboard", landmarks: true })),
+        item("parts-feature-nrl", "Rugby league, red lines in gold", drawing({ sport: "rugby", league: "nrl", featureColors: { "red-lines": "#d4a017" } })),
+      ]),
+    ],
+  };
+}
+
+export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, specialPage, dataPage, curlingPage, courtsPage, fieldsPage, stylingPage, rangesPage, layoutsPage];
 
 /** The sections of every page, with each item's picture made by running its code. */
 export function galleryData(lib) {
@@ -746,6 +817,13 @@ const REFERENCE = {
   badminton: { frame: "badminton", spot: [1.98, 0], what: "the middle of the right short service line" },
   pickleball: { frame: "pickleball", spot: [7, 0], what: "the middle of the right non-volley zone line" },
   tabletennis: { frame: "tabletennis", spot: [1.37, 0], what: "the middle of the right end line" },
+  lacrosse: { frame: "lacrosse", spot: [16, 0], what: "the middle of the right restraining line" },
+  rugby: { frame: "rugby", spot: [28, 0], what: "the middle of the right 22-metre line" },
+  afl: { frame: "afl", spot: [30, 0], what: "the middle of the right Fifty Metre Arc" },
+  gaelic: { frame: "gaelic", spot: [27.5, 0], what: "the middle of the right 45 m line" },
+  cricket: { frame: "cricket", spot: [11, 0], what: "the middle of the right bowling crease" },
+  fieldhockey: { frame: "fieldhockey", spot: [39.2, 0], what: "the right penalty spot" },
+  handball: { frame: "handball", spot: [13, 0], what: "the middle of the right 7-metre line" },
 };
 const round2 = (n) => Math.round(n * 100) / 100;
 const UNIT_WORDS = { ft: "feet", yd: "yards", m: "metres", cm: "centimetres", in: "inches", mm: "millimetres", px: "pixels", "tenth-ft": "tenths of a foot", percent: "percent", fraction: "fractions" };
@@ -755,7 +833,12 @@ export function framesItems(lib) {
   const { FRAMES, convert } = lib[`${MAIN}/frames`];
   return Object.values(FRAMES).map((frame) => {
     const reference = REFERENCE[frame.sport];
-    const size = frame.size === "variable" ? (frame.sport === "curling" ? { length: 150, width: 15.58, unit: "ft" } : frame.sport === "volleyball" ? { length: 18, width: 9, unit: "m" } : { length: 105, width: 68, unit: "m" }) : undefined;
+    // A frame of a surface that has a range of sizes is fitted to the one the surface is drawn at.
+    const fieldSize = (sport) => {
+      const plan = lib[MAIN].fieldPlan({ sport });
+      return { length: plan.length, width: plan.width, unit: "ft" };
+    };
+    const size = frame.size === "variable" ? (frame.sport === "curling" ? { length: 150, width: 15.58, unit: "ft" } : frame.sport === "volleyball" ? { length: 18, width: 9, unit: "m" } : lib[MAIN].FIELD_SPORTS.includes(frame.sport) ? fieldSize(frame.sport) : { length: 105, width: 68, unit: "m" }) : undefined;
     const [spot] = convert(reference.frame, frame.name, size ? { size } : {})([reference.spot]);
     const x = round2(spot[0]);
     const y = round2(spot[1]);

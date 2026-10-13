@@ -1,6 +1,6 @@
 # League variants
 
-`league` in the options draws a surface as one league's rulebook marks it; `sport` names the family (`nba` for basketball, `nhl` for hockey, `nfl`, `cfl` or `ifaf` for football, `mlb` for baseball and softball, `curling` for a curling sheet, `tennis`, `volleyball`, `badminton`, `pickleball` and `tabletennis` for the net sports). This page is made from `src/leagues/` by `pnpm docs:make`; a test holds it to them. Each figure is the rulebook's, in its own unit, and each league's sources, with the edition and the address read on 2026-10-13, are listed under its table. What a figure is and where it is ours is in [sources.md](./sources.md#league-variants); what could not be cited is in [references.md](./references.md#league-variants-not-drawn).
+`league` in the options draws a surface as one league's rulebook marks it; `sport` names the family (`nba` for basketball, `nhl` for hockey, `nfl`, `cfl` or `ifaf` for football, `mlb` for baseball and softball, `curling` for a curling sheet, `tennis`, `volleyball`, `badminton`, `pickleball` and `tabletennis` for the net sports, `lacrosse`, `rugby`, `afl`, `gaelic`, `cricket`, `fieldhockey` and `handball` for the field sports). This page is made from `src/leagues/` by `pnpm docs:make`; a test holds it to them. Each figure is the rulebook's, in its own unit, and each league's sources, with the edition and the address read on 2026-10-13, are listed under its table. What a figure is and where it is ours is in [sources.md](./sources.md#league-variants); what could not be cited is in [references.md](./references.md#league-variants-not-drawn).
 
 A `year` draws a league's markings of that season only where a source dates a change (the history under each table); for any other league it is ignored, and the drawing is of the rulebook as it is now. The sport's own league (the NBA, the NHL, the NFL, the CFL, the IFAF, MLB, World Curling, the ITF, the FIVB's indoor court, the BWF, USA Pickleball and the ITTF) keeps the history of [`year`](./eras.md).
 
@@ -231,4 +231,109 @@ Sources:
 Sources:
 
 - `ittf-laws`: Laws of Table Tennis, 2.1 The Table, 2.2 The Net Assembly, 2.11 A Game and 2.12 A Match, International Table Tennis Federation, 2026 statutes, as reproduced by Table Tennis England (issue 1, July 2026). <https://www.tabletennisengland.co.uk/content/uploads/2026/07/Laws-of-Table-Tennis-2026-27.pdf>
+
+## Lacrosse
+
+`sport: "lacrosse"`
+
+| `league` | Name | 日本語 | Key figures |
+| --- | --- | --- | --- |
+| `world-men` (the sport's own) | World Lacrosse men's field | ワールドラクロスの男子フィールド | field 91.4 m to 100 m by 50 m to 60 m; goal 1.83 m wide and 1.83 m high, its line 12 m from the end line; crease a circle of 3 m radius; restraining line 22 m from the goal line |
+| `world-women` | World Lacrosse women's field | ワールドラクロスの女子フィールド | field 91.4 m to 100 m by 50 m to 60 m; goal 1.83 m wide and 1.83 m high, its line 12 m from the end line; goal circle 3 m radius; restraining line 22 m from the goal line |
+| `ncaa-men` | NCAA men's lacrosse field | NCAA男子ラクロスのフィールド | field 110 yd by 60 yd; goal 2 yd wide and 2 yd high, its line 15 yd from the end line; crease a circle of 3 yd radius; restraining line 20 yd from the goal line |
+| `ncaa-women` | NCAA women's lacrosse field | NCAA女子ラクロスのフィールド | field 101 m to 110 m by 55 m to 64 m; goal 1.83 m wide and 1.83 m high, its line 9 m from the end line; goal circle 2.6 m radius; restraining line 27 m from the goal line |
+| `pll` | PLL field | PLLのフィールド | field 100 yd by 60 yd; goal 2 yd wide and 2 yd high, its line 15 yd from the end line; crease a circle of 3 yd radius; two-point arc 13 yd from the goal at the goal line extended, then an arc of 15 yd |
+| `nll` | NLL box lacrosse floor | NLLのボックスラクロスのフロア | floor 180 ft to 200 ft by 85 ft; goal 4 ft 9 in wide and 4 ft high, its line 12 ft from the end boards; crease a circle of 9 ft 3 in radius; restraining line 42 ft 6 in from the centre line |
+| `world-box` | World Lacrosse box lacrosse floor | ワールドラクロスのボックスラクロスのフロア | floor 200 ft by 85 ft; goal 4 ft 9 in wide and 4 ft high, its line 12 ft from the end boards; crease a circle of 9 ft 3 in radius; restraining line 42 ft 6 in from the centre line |
+
+Sources:
+
+- `wl-men`: Men's Field Lacrosse Official Playing Rules, Rules 1 to 7 and 12, World Lacrosse, 2025-2027, version 1.1 (January 2025). <https://worldlacrosse.sport/wp-content/uploads/2026/01/WL_Mens-Rules_25-27_FINAL_1.1.pdf>
+- `wl-women`: Women's Field Lacrosse Official Playing Rules, Rule 1.A and 2.A, World Lacrosse, 2025-2026, version 1.1 (January 2025). <https://worldlacrosse.sport/wp-content/uploads/2025/03/2025_2026-WF-Rulebook_FINALv1.1-1.pdf>
+- `ncaa-men-lacrosse`: NCAA Men's Lacrosse Rules and Interpretations, Rule 1, Sections 2 to 9 and the Men's Lacrosse Field of Play diagram, NCAA, 2027 and 2028 (August 2026). <https://ncaaorg.s3.amazonaws.com/championships/sports/lacrosse/rules/men/PRMLA_RulesBook.pdf>
+- `ncaa-women-lacrosse`: NCAA Women's Lacrosse Rules, Rule 1 The Playing Area and Goals (1-1 to 1-21) and Diagram 2, NCAA, 2026 and 2027 (February 2026). <https://ncaaorg.s3.amazonaws.com/championships/sports/lacrosse/rules/women/PRWLA_RulesBook.pdf>
+- `pll-2024`: 2024 PLL Rulebook, Section II The Field (A to H), Premier Lacrosse League, 2024, the newest book found: the 2025 and 2026 books could not be read. <https://premierlacrosseleague.com/wp-content/uploads/2024/03/2024-PLL-Rulebook.pdf>
+- `nll-rules`: NLL Official Rules, Section 1 The Arena (1.5, 2.1, 2.2, 3.1, 6.1, 6.2), Diagram A Official dimensions of the floor and Diagram B Detail of goal crease, National Lacrosse League, 2025-26 season (the 2024-25 and 2019-20 books have the same figures). <https://www.nll.com/wp-content/uploads/2025/12/NLL-2025-26-Rulebook-FINAL-1.pdf>
+- `wl-box`: Box Lacrosse Official Playing Rules, Rule 1 (1.1.3 to 1.1.9, 1.2.1) and the diagram of Appendix B, World Lacrosse, 2026-2028, version 2.0 (May 2026). <https://worldlacrosse.sport/wp-content/uploads/2026/05/26-28-Box-Rule-Book_v2_0526.pdf>
+
+## Rugby
+
+`sport: "rugby"`
+
+| `league` | Name | 日本語 | Key figures |
+| --- | --- | --- | --- |
+| `world-rugby` (the sport's own) | World Rugby field (rugby union) | ワールドラグビーのグラウンド（ラグビーユニオン） | field of play 94 m to 100 m by 68 m to 70 m; in-goal 6 m to 22 m deep; goal posts 5.6 m apart, the crossbar 3 m up; 22-metre line 22 m from the try line |
+| `nrl` | NRL field (rugby league) | NRLのグラウンド（ラグビーリーグ） | field of play 100 m by 68 m; in-goal 8 m deep; goal posts 5.5 m apart, the crossbar 3 m up; lines across every 10 m from each goal line |
+| `irl` | International Rugby League field | 国際ラグビーリーグ連盟のグラウンド | field of play 100 m by 68 m; in-goal 6 m to 11 m deep; goal posts 5.5 m apart, the crossbar 3 m up; lines across every 10 m from each goal line |
+
+Sources:
+
+- `world-rugby-laws`: Laws of the Game, Rugby Union, Law 1 The ground (1.3 to 1.10) and its ground diagram, World Rugby, 2026 (the book's own label; no date of effect is printed). <https://passport.world.rugby/media/jxrnmptk/2026en-laws-of-the-game-compressed.pdf>
+- `nrl-laws`: Rugby League Laws of the Game, International Level, with Notes on the Laws and NRL Telstra Premiership Interpretations, Section 1 The Playing Field and Section 18 Ground Markings and Dimension Guidelines, National Rugby League, 2023 edition (April 2023). <https://Nrl.Com/siteassets/operations/the-game/nrl-international-rules-book-2023.pdf>
+- `irl-laws`: The International Laws of the Game and Notes on the Laws, Section 1 The Playing Field and its plan, International Rugby League, 2024 (the cover's year; the file is named 2022). <https://intrl.sport/uploads/docs/international-rugby-league-laws-of-the-game-2022%20%283%29.pdf>
+
+## Australian football
+
+`sport: "afl"`
+
+| `league` | Name | 日本語 | Key figures |
+| --- | --- | --- | --- |
+| `afl` (the sport's own) | Australian football ground (AFL) | オーストラリアンフットボールのグラウンド（AFL） | ground an oval 135 m to 185 m long and 110 m to 155 m wide; goal posts 6.4 m apart, behind posts 6.4 m either side; goal square 9 m deep; centre square 50 m by 50 m; fifty metre arc 50 m from the middle of the goal line |
+
+Sources:
+
+- `afl-laws`: Laws of Australian Football, Law 3 Playing Surface and Posts (3.2 to 3.5) and Diagram 1, Australian Football League, 2026. <https://play.afl/sites/default/files/2026-02/Laws%20of%20Australian%20Football%202026.pdf>
+
+## Gaelic football and hurling
+
+`sport: "gaelic"`
+
+| `league` | Name | 日本語 | Key figures |
+| --- | --- | --- | --- |
+| `gaa-football` (the sport's own) | GAA field for Gaelic football | GAAのゲーリック・フットボールのフィールド | field 130 m to 145 m by 80 m to 90 m; lines across 13 m, 20 m, 45 m; goalposts 6.5 m apart, the crossbar 2.5 m up; rectangles 4.5 m deep and 13 m deep |
+| `gaa-hurling` | GAA field for hurling | GAAのハーリングのフィールド | field 130 m to 145 m by 80 m to 90 m; lines across 13 m, 20 m, 45 m, 65 m; goalposts 6.5 m apart, the crossbar 2.5 m up; rectangles 4.5 m deep and 13 m deep |
+
+Sources:
+
+- `gaa-guide`: Official Guide Part 2, Rules of Specification, Rule 1 The Field of Play (1.1 to 1.7) and its diagram, Gaelic Athletic Association, effective from 27 March 2026 (the 2025 edition's Rule 1 is word for word the same). <https://www.gaa.ie/api/images/image/upload/t_q-best/prd/xi4oyuttzqpaqr2vfhbn.pdf>
+
+## Cricket
+
+`sport: "cricket"`
+
+| `league` | Name | 日本語 | Key figures |
+| --- | --- | --- | --- |
+| `icc-men` (the sport's own) | ICC men's ground | ICC男子のグラウンド | pitch 22 yd by 10 ft; bowling crease 8 ft 8 in long; popping crease 4 ft in front of the bowling crease, marked 25 ft either side of the middle stumps at least; return creases 4 ft 4 in either side of the middle stumps, marked 8 ft behind the popping crease; wickets 9 in wide; boundary 65 yd to 90 yd from the centre of the pitch; circle 30 yd radius about each middle stump |
+| `icc-women` | ICC women's ground | ICC女子のグラウンド | pitch 22 yd by 10 ft; bowling crease 8 ft 8 in long; popping crease 4 ft in front of the bowling crease, marked 25 ft either side of the middle stumps at least; return creases 4 ft 4 in either side of the middle stumps, marked 8 ft behind the popping crease; wickets 9 in wide; boundary 60 yd to 70 yd from the centre of the pitch; circle 25.15 yd radius about each middle stump |
+| `mcc` | Laws of Cricket ground (MCC) | クリケット規則（MCC）のグラウンド | pitch 22 yd by 10 ft; bowling crease 8 ft 8 in long; popping crease 4 ft in front of the bowling crease, marked 6 ft either side of the middle stumps at least; return creases 4 ft 4 in either side of the middle stumps, marked 8 ft behind the popping crease; wickets 9 in wide; boundary no size given; circle none |
+
+Sources:
+
+- `mcc-laws`: The Laws of Cricket (2017 Code), Laws 6 The pitch, 7 The creases and 8 The wickets, Marylebone Cricket Club, 4th Edition, 2026. <https://www.lords.org/getmedia/1d908298-5c44-468d-b6a7-e1414a1296e0/Laws-of-Cricket-2017-Code-4th-Edition-(2026)_3.pdf>
+- `icc-men-odi`: ICC Men's One-Day International Playing Conditions, 6 to 8, 19.1 Boundaries, 28.7 Restrictions on the placement of fielders and Appendix C The venue, International Cricket Council, effective from October 2026 (the men's Test and T20I conditions have the same 19.1.3 and the T20I's 28.7.3 the same circle). <https://images.icc-cricket.com/image/upload/prd/bxkzkcyvfn6tvi70zh0w.pdf>
+- `icc-women-odi`: ICC Women's One-Day International Playing Conditions, 19.1.3 Boundaries and 28.7.2.1 the fielding restriction circle, International Cricket Council, effective from October 2026. <https://images.icc-cricket.com/image/upload/prd/qunpw1kfh3ibxlz58jlw.pdf>
+
+## Field hockey
+
+`sport: "fieldhockey"`
+
+| `league` | Name | 日本語 | Key figures |
+| --- | --- | --- | --- |
+| `fih` (the sport's own) | FIH hockey pitch | FIHのフィールドホッケーのピッチ | pitch 91.4 m by 55 m; 23-metre lines 22.9 m from each back-line; circle 14.63 m from the back-line; goal 3.66 m wide and 2.14 m high |
+
+Sources:
+
+- `fih-rules`: Rules of Hockey including explanations, Rule 1 and the Field and Equipment Specifications 1.1 to 1.8, International Hockey Federation, effective from 1 March 2026. <https://www.fih.hockey/static-assets/pdf/fih-Rules-of-hockey-2026-final.pdf>
+
+## Handball
+
+`sport: "handball"`
+
+| `league` | Name | 日本語 | Key figures |
+| --- | --- | --- | --- |
+| `ihf` (the sport's own) | IHF handball court | IHFのハンドボールコート | court 40 m by 20 m; goal area line 6 m from the goal line; free-throw line 9 m from the goal line; goal 3 m wide and 2 m high |
+
+Sources:
+
+- `ihf-rules`: IX. Rules of the Game for Indoor Handball, Rule 1 The Playing Court (1:1 to 1:11) and the Guidelines for Playing Courts and Goals, V, International Handball Federation, 1 July 2025. <https://www.ihf.info/sites/default/files/2025-07/09A%20-%20Rules%20of%20the%20Game_Indoor%20Handball_E.pdf>
 

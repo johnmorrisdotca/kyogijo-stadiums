@@ -1,6 +1,6 @@
 # The surfaces
 
-Thirteen surfaces, each drawn to scale from its rulebook. Every dimension is kept in feet in the code (`@johnmorrisdotca/kyogijo/geometry`) and can be had in any unit (see [Units](./units.md)), and each is cited in [docs/sources.md](./sources.md).
+Twenty surfaces, each drawn to scale from its rulebook. Every dimension is kept in feet in the code (`@johnmorrisdotca/kyogijo/geometry`) and can be had in any unit (see [Units](./units.md)), and each is cited in [docs/sources.md](./sources.md).
 
 | `sport` | Surface | Size | Drawn |
 | --- | --- | --- | --- |
@@ -17,8 +17,15 @@ Thirteen surfaces, each drawn to scale from its rulebook. Every dimension is kep
 | `badminton` | Badminton court | 13.40 by 6.10 m, 5.18 m wide for singles | singles and doubles side lines, short and doubles long service lines, centre lines, the net and its posts |
 | `pickleball` | Pickleball court | 44 by 20 feet | the non-volley zones, the centerlines, the net and its posts, the playing surface round it |
 | `tabletennis` | Table tennis table | 2.74 by 1.525 m | the white edge lines, the centre line, the net and its posts |
+| `lacrosse` | Lacrosse field or box floor | 100 by 60 m (World Lacrosse's men's), 110 by 60 yards (the NCAA's), a floor 200 by 85 feet | the goals, creases, restraining and wing lines; the women's goal circles, marking areas, arc and fan; the PLL's two-point arc; the floor's boards, face-off circle and spots ([Field sports](./field-sports.md)) |
+| `rugby` | Rugby field | 100 m between the try lines and 70 wide, with in-goal areas (union); 100 by 68 m (league) | the 22-metre lines, half-way line and dash lines of union; a line every 10 metres, the 20 and 40 metre lines red, of the NRL's league; goal posts and flag posts |
+| `afl` | Australian football ground | an oval 135 to 185 by 110 to 155 m, the MCG's 160 by 141 drawn, or a named ground | the goal and behind posts, the goal squares, the centre square and circles, the Fifty Metre Arcs |
+| `gaelic` | Gaelic football and hurling field | 145 by 90 m (130 to 145 by 80 to 90) | the lines across at 13, 20, 45 (and 65) metres, the midline, the two rectangles at each end, the arcs, the posts |
+| `cricket` | Cricket ground | a boundary of your own (a circle of 75 yards radius by default), a pitch of 22 yards | the pitch, the creases, the wickets, the boundary and the 30-yard circle |
+| `fieldhockey` | Field hockey pitch | 91.40 by 55.00 m | the centre line, the 23-metre lines, the circles with their broken lines, the penalty spots, the goals, the marks outside |
+| `handball` | Handball court | 40 by 20 m | the centre line, the goal areas, the 6-, 7- and 9-metre lines, the 4-metre lines, the goals, the throw-off area |
 
-`league` draws a surface as one league's rulebook marks it, `sport` naming the family (`drawKyogijo({ sport: "nba", league: "fiba" })`): the WNBA, FIBA, the NCAA, the IIHF, the AHL, the CHL, high school, Little League, PONY, softball, Curling Canada and FIVB's beach volleyball, in [docs/variants.md](./variants.md).
+`league` draws a surface as one league's rulebook marks it, `sport` naming the family (`drawKyogijo({ sport: "nba", league: "fiba" })`): the WNBA, FIBA, the NCAA, the IIHF, the AHL, the CHL, high school, Little League, PONY, softball, Curling Canada, FIVB's beach volleyball, rugby league, the NLL's box lacrosse and the rest, in [docs/variants.md](./variants.md).
 
 `range` crops a drawing to a part of its surface (`range: "offensive-zone"`, `"half-court"`, `"red-zone"`, `"penalty-area"`, `"infield"`, a curling `"house"`, or a box of your own), with its data, annotations and score following: [Display ranges and zoom](./ranges.md).
 

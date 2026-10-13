@@ -29,6 +29,13 @@ Each surface keeps the unit its rulebook states its figures in. The drawing itse
 | `badminton` | the sport's own | badminton | `m` (metres) |
 | `pickleball` | the sport's own | pickleball | `ft` (feet) |
 | `tabletennis` | the sport's own | table tennis | `m` (metres) |
+| `lacrosse` | the sport's own | lacrosse | `m` (metres) |
+| `rugby` | the sport's own | rugby | `m` (metres) |
+| `afl` | the sport's own | Australian football | `m` (metres) |
+| `gaelic` | the sport's own | Gaelic games | `m` (metres) |
+| `cricket` | the sport's own | cricket | `yd` (yards) |
+| `fieldhockey` | the sport's own | field hockey | `m` (metres) |
+| `handball` | the sport's own | handball | `m` (metres) |
 | `nba` | `wnba` | WNBA basketball court | `ft` (feet) |
 | `nba` | `fiba` | FIBA basketball court | `m` (metres) |
 | `nba` | `ncaa-men` | NCAA men's basketball court | `ft` (feet) |
@@ -67,6 +74,17 @@ Each surface keeps the unit its rulebook states its figures in. The drawing itse
 | `mlb` | `slowpitch-wbsc` | WBSC slow-pitch softball field | `ft` (feet) |
 | `curling` | `curling-canada` | Curling Canada sheet | `ft` (feet) |
 | `volleyball` | `fivb-beach` | FIVB beach volleyball court | `m` (metres) |
+| `lacrosse` | `world-women` | World Lacrosse women's field | `m` (metres) |
+| `lacrosse` | `ncaa-men` | NCAA men's lacrosse field | `yd` (yards) |
+| `lacrosse` | `ncaa-women` | NCAA women's lacrosse field | `m` (metres) |
+| `lacrosse` | `pll` | PLL field | `yd` (yards) |
+| `lacrosse` | `nll` | NLL box lacrosse floor | `ft` (feet) |
+| `lacrosse` | `world-box` | World Lacrosse box lacrosse floor | `ft` (feet) |
+| `rugby` | `nrl` | NRL field (rugby league) | `m` (metres) |
+| `rugby` | `irl` | International Rugby League field | `m` (metres) |
+| `gaelic` | `gaa-hurling` | GAA field for hurling | `m` (metres) |
+| `cricket` | `icc-women` | ICC women's ground | `yd` (yards) |
+| `cricket` | `mcc` | Laws of Cricket ground (MCC) | `yd` (yards) |
 <!-- /made:units -->
 
 The table is made from the code by `pnpm docs:make`, and a test holds it to it. The units are `ft`, `in`, `yd`, `m`, `cm` and `mm`; anything else is an error and not feet.

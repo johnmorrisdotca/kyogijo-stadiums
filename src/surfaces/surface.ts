@@ -47,6 +47,8 @@ export interface Surface {
   turned: boolean;
   /** The teams' places are drawn over the lines (panels that must hide them), not under. */
   bannersOver?: boolean;
+  /** The teams' places are painted in the teams' colours, so their names are written in the ink that reads on them (a football end zone), not painted over the grass. The sport's default when missing. */
+  onColour?: boolean;
   /** The playing surface itself, without the ground round it, in the wide frame and in feet: where the margin starts, and what the axes and the labels are placed against. */
   box?: { x: number; y: number; w: number; h: number };
   /** The parts to label, when the drawing is asked for them (`landmarks`): where each is, in the wide frame, in feet. */

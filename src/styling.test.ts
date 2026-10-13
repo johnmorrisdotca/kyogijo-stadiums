@@ -4,6 +4,8 @@ import { FEATURES, FEATURE_INFO, KYOGIJO_FEATURE_STYLE } from "./features.ts";
 import { KYOGIJO_STRINGS } from "./strings.ts";
 import { KYOGIJO_STYLE } from "./style.ts";
 import { LOOK_NAMES } from "./look.ts";
+import { isFieldSport } from "./fields.ts";
+import { LEAGUES } from "./leagues.ts";
 import type { GoalInfo, SurfaceOptions } from "./types.ts";
 import { parseXml, withClass, type Node } from "./xml.fixture.ts";
 
@@ -46,8 +48,10 @@ describe("feature colours", () => {
       if (names.length === 0) return;
       const featureColors = Object.fromEntries(names.map((name, i) => [name, `#0${i % 10}0${(i + 3) % 10}0${(i + 5) % 10}`]));
       const svg = drawKyogijo({ sport, id: "f", featureColors, ...(extras[sport] ?? {}) });
-      const tree = root(svg);
-      const missing = names.filter((name) => withClass(tree, `ky-f-${name}`).length === 0);
+      // A field sport's leagues mark different things (union and league, the box and the field): a feature is on an element of one of its drawings, bare or with a score.
+      const game = { away: { name: "Away", score: 1 }, home: { name: "Home", score: 2 } };
+      const drawn = isFieldSport(sport) ? LEAGUES[sport].flatMap((league) => [drawKyogijo({ sport, league: league.id, id: "f", featureColors }), drawKyogijo({ sport, league: league.id, id: "f", featureColors, ...game })]).map(root) : [root(svg)];
+      const missing = names.filter((name) => drawn.every((tree) => withClass(tree, `ky-f-${name}`).length === 0));
       // A feature a drawing may not have by default: the curling hack lines and courtesy lines belong to World Curling's sheet and the crease marks to some rinks.
       const optional = new Set(["courtesy-lines", "crease-marks", "trapezoid", "referee-crease", "running-lane", "batters-boxes", "centre-dashes", "hash-marks", "areas", "antennae", "free-zone"]);
       expect(missing.filter((name) => !optional.has(name)), `${sport} has no element for`).toEqual([]);

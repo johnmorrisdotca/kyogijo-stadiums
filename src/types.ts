@@ -5,8 +5,11 @@ import type { SoccerFrame, SoccerProviderId } from "./surfaces/soccer-providers.
 import type { SoccerPitchId, SoccerSize } from "./surfaces/soccer-spec.ts";
 import type { Frame } from "./frames.ts";
 
-/** The surfaces: three football fields, a rink, a court, a ballpark, a soccer pitch, a curling sheet and five net sports (tennis, volleyball, badminton, pickleball and table tennis). */
-export type Sport = "nfl" | "cfl" | "ifaf" | "nhl" | "nba" | "mlb" | "soccer" | "curling" | "tennis" | "volleyball" | "badminton" | "pickleball" | "tabletennis";
+/** The field sports: lacrosse (the field and the box), rugby (union and league), Australian football, Gaelic football and hurling, cricket, field hockey and team handball. */
+export type FieldSport = "lacrosse" | "rugby" | "afl" | "gaelic" | "cricket" | "fieldhockey" | "handball";
+
+/** The surfaces: three football fields, a rink, a court, a ballpark, a soccer pitch, a curling sheet, five net sports (tennis, volleyball, badminton, pickleball and table tennis) and seven field sports (lacrosse, rugby, Australian football, Gaelic football and hurling, cricket, field hockey and handball). */
+export type Sport = "nfl" | "cfl" | "ifaf" | "nhl" | "nba" | "mlb" | "soccer" | "curling" | "tennis" | "volleyball" | "badminton" | "pickleball" | "tabletennis" | FieldSport;
 
 /** `auto` follows the device's light or dark setting (and `data-theme` on the page's root), the others force one. */
 export type Theme = "auto" | "light" | "dark";
@@ -229,7 +232,8 @@ export type SheetShow = "sheet" | "half" | "house";
 /**
  * The parts of a surface a drawing can be cropped to (`range`). Football: `red-zone`, `between-the-20s`, `end-zone`, `field-of-play`, `own-half`, `opponent-half`.
  * Hockey: `offensive-zone`, `defensive-zone`, `neutral-zone`, `half`. Basketball: `half-court`, `paint`. Soccer: `half`, `final-third`, `defensive-third`, `middle-third`,
- * `penalty-area`. Baseball: `infield`, `outfield`. The net sports: `half-court`. Curling: `sheet`, `half`, `house`. `RANGES` lists them for each sport.
+ * `penalty-area`. Baseball: `infield`, `outfield`. The net sports: `half-court`. Curling: `sheet`, `half`, `house`. Rugby: `half`, `twenty-two` (union) or `twenty` (league), `in-goal`. Lacrosse: `half`, `crease`. Australian football: `half`, `forward-fifty`, `centre-square`.
+ * Gaelic games: `half`, `large-rectangle`. Cricket: `pitch`, `circle`. Field hockey: `half`, `circle`, `twenty-three`. Handball: `half`, `goal-area`. `RANGES` lists them for each sport.
  */
 export type RangeName =
   | "red-zone"
@@ -251,7 +255,18 @@ export type RangeName =
   | "infield"
   | "outfield"
   | "sheet"
-  | "house";
+  | "house"
+  | "in-goal"
+  | "twenty-two"
+  | "twenty"
+  | "crease"
+  | "forward-fifty"
+  | "centre-square"
+  | "large-rectangle"
+  | "pitch"
+  | "circle"
+  | "twenty-three"
+  | "goal-area";
 
 /** A named range at the end of your choice: `{ name: "offensive-zone", end: "left" }` is the offensive zone of a team that attacks the left. */
 export interface RangeNamed {
@@ -332,6 +347,24 @@ export interface NetStyle {
   sticks?: boolean;
 }
 
+/**
+ * The size and the variants of a field sport's surface (lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey, handball): a size within the range the league's rulebook allows (`length`, `width`,
+ * in `units`, feet by default), and the sport's own parameters. Every part is optional.
+ */
+export interface FieldStyle {
+  /** The length of the surface (rugby: try line to try line; Australian football: goal line to goal line; Gaelic games, hockey, handball, lacrosse: end line to end line) and its width, in `units`: within the league's range; a size outside it is an error that says the range. The greatest the rules allow by default. */
+  length?: number;
+  width?: number;
+  /** Rugby: how deep each in-goal area is, within the league's range. */
+  inGoal?: number;
+  /** Australian football: a named ground of `AFL_GROUNDS` (`mcg`, `optus-stadium`...), whose length and width are those its venue page prints. `length` and `width` win over it. */
+  ground?: string;
+  /** Cricket: the boundary, as its distance from the centre of the pitch (a circle), or `{ straight, square }`, its distances along the pitch and across it (an ellipse), in `units`, within the league's range. */
+  boundary?: number | { straight: number; square: number };
+  /** Cricket: draw the fielding restriction's circle (the 30-yard circle) where the league has one. On by default. */
+  circle?: boolean;
+}
+
 /** One team of a score. */
 export interface Team {
   /** The name, as it is to be written: "Harbour City Gulls". */
@@ -356,6 +389,13 @@ export interface Team {
   points?: number | string;
   /** The team that is serving. A ball is drawn beside its name (and in the corner of its block on the badge). */
   serving?: boolean;
+  /** Australian football: the goals and the behinds it has scored; Gaelic games: its goals and its points (`points`). The score is written "10.12 (72)" in Australian football (a goal is 6, a behind 1) and "2-14 (20)" in Gaelic games (a goal is 3, a point 1), and the total is worked out when `score` is not given. */
+  goals?: number | string;
+  behinds?: number | string;
+  /** Cricket: the wickets it has lost and the overs it has faced ("38.2"), with `score` its runs; for a match of more than one innings, `innings` is each innings as "245" or "245/6d". */
+  wickets?: number | string;
+  overs?: number | string;
+  innings?: readonly (number | string | null | undefined)[];
   /** The team's colour, for its end, key or dugout. */
   color?: string;
   /** The colour of the words on that colour. Black or white by the colour's lightness when missing. */
@@ -473,6 +513,8 @@ export interface SurfaceOptions {
   sheet?: SheetStyle;
   /** The look and the variants of a tennis, volleyball, badminton, pickleball or table tennis court. */
   net?: NetStyle;
+  /** The size and the variants of a lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey or handball surface. */
+  field?: FieldStyle;
   /** The soccer pitch: a preset (`fifa`, `uefa`, `mls`, `nwsl`, `ncaa`, `law-min`, `law-max`, `9-a-side`, `7-a-side`, `5-a-side`, `futsal`) or a size, `{ length, width, unit }`. The international 105 by 68 m by default. */
   pitch?: SoccerPitchId | SoccerSize;
   /** The soccer ground to draw: a key of `GROUNDS`. The pitch has the size its article publishes (the international 105 by 68 m where none is), and the drawing carries the ground's name for `year`. A `pitch` of your own wins over the ground's size. */
@@ -532,7 +574,7 @@ export interface SurfaceOptions {
   height?: number | string;
 }
 
-/** The standard words of a status. `end-6` (or "End 6") is a curling end, `set-3` a set and `game-2` a game. Any other text is written as it is. */
+/** The standard words of a status. `end-6` (or "End 6") is a curling end, `set-3` a set and `game-2` a game, `innings-2` (or "Innings 2") a cricket innings. Any other text is written as it is. */
 export type StatusWord = "final" | "final-ot" | "final-so" | "final-aet" | "final-pens" | "live" | "half" | "extra-time" | "extra-end" | "penalties" | "postponed" | "tiebreak" | "match-tiebreak" | "retired" | "walkover";
 
 /** What a score drawing takes beyond a surface. */

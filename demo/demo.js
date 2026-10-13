@@ -121,6 +121,12 @@ function netExtras(sport, role, score) {
   return out;
 }
 
+/** What a field sport writes beside the score (goals and behinds, goals and points, wickets and overs), while the total is still the made-up game's: an edited score has none. */
+function fieldExtras(sport, role, score) {
+  const game = GAMES[sport];
+  return game[`${role}Extra`] !== undefined && score === game[role] ? game[`${role}Extra`] : {};
+}
+
 /** What the state asks the package to draw. */
 function optionsFor(s, forCode = false) {
   const o = { sport: s.sport, orientation: s.orientation, language: language.lang };
@@ -152,6 +158,7 @@ function optionsFor(s, forCode = false) {
       if (s.sport === "soccer" && /^\d+$/.test(t.pens ?? "")) out.penalties = Number(t.pens);
       if (s.sport === "curling") Object.assign(out, curlingExtras(t === s.away ? "away" : "home", out.score));
       if (GAMES[s.sport].awaySets !== undefined) Object.assign(out, netExtras(s.sport, t === s.away ? "away" : "home", out.score));
+      Object.assign(out, fieldExtras(s.sport, t === s.away ? "away" : "home", out.score));
       if (t.logo === "emblem") out.logo = forCode ? placeholder : EMBLEMS[t.emblem];
       else if (t.logo === "url" && t.url) out.logo = t.url;
       return out;
@@ -552,7 +559,7 @@ $("embed-download").addEventListener("click", () => {
 // ----- The examples.
 const team = (sport, role, score) => {
   const base = TEAMS[FAMILIES[sport]][role];
-  return { name: language.lang === "ja" ? TEAMS_JA[FAMILIES[sport]][role] : base.name, abbr: base.abbr, color: base.color, logo: EMBLEMS[base.emblem], score, ...(sport === "curling" ? curlingExtras(role, score) : {}), ...(GAMES[sport].awaySets !== undefined ? netExtras(sport, role, score) : {}) };
+  return { name: language.lang === "ja" ? TEAMS_JA[FAMILIES[sport]][role] : base.name, abbr: base.abbr, color: base.color, logo: EMBLEMS[base.emblem], score, ...(sport === "curling" ? curlingExtras(role, score) : {}), ...(GAMES[sport].awaySets !== undefined ? netExtras(sport, role, score) : {}), ...fieldExtras(sport, role, score) };
 };
 const withPens = (t, pens) => (pens === undefined ? t : { ...t, penalties: pens });
 const gameOf = (sport, extra = {}) => ({ sport, away: withPens(team(sport, "away", GAMES[sport].away), GAMES[sport].awayPens), home: withPens(team(sport, "home", GAMES[sport].home), GAMES[sport].homePens), status: GAMES[sport].status, competition: GAMES[sport].competition, date: GAMES[sport].date, language: language.lang, style: "none", ...extra });

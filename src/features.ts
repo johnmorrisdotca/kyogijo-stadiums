@@ -140,6 +140,105 @@ const NET: readonly Feature[] = [
   f("antennae", "--ky-red", "The antennae of a volleyball net."),
 ];
 
+
+const TURF: readonly Feature[] = [f("apron", "--ky-apron", "The ground round the surface."), f("turf", "--ky-surface", "The grass."), f("mowing", "--ky-surface-alt", "The lighter tone of the mown pattern.")];
+const POST = "--ky-post";
+
+const RUGBY: readonly Feature[] = [
+  ...TURF,
+  f("in-goal-left", "--ky-left", "The left in-goal area, in a score."),
+  f("in-goal-right", "--ky-right", "The right in-goal area, in a score."),
+  f("boundary", LINE, "The touchlines, the touch-in-goal lines and the dead-ball lines."),
+  f("try-lines", LINE, "The try lines (the goal lines in league)."),
+  f("halfway-line", LINE, "The half-way line, and the mark across it."),
+  f("twenty-two-lines", LINE, "The 22-metre lines (union)."),
+  f("dash-lines", LINE, "The dashes of the lines 5 and 15 m from the touchlines, 5 m from the try lines and 10 m from the half-way line (union)."),
+  f("ten-metre-lines", LINE, "The lines across the field every 10 m (league)."),
+  f("red-lines", "--ky-red", "The 20 m and 40 m lines, where the league marks them red (the NRL)."),
+  f("scrum-lines", LINE, "The scrum lines in from the touchlines (the NRL)."),
+  f("posts", POST, "The goal posts."),
+  f("flags", POST, "The flag posts and the corner posts."),
+];
+
+const LACROSSE: readonly Feature[] = [
+  ...TURF,
+  f("boards", "--ky-boards", "The boards round a box floor."),
+  f("boundary", LINE, "The sidelines and the end lines."),
+  f("centre-line", LINE, "The centre line and the mark at the centre."),
+  f("goal-lines", LINE, "The goal lines between the posts."),
+  f("goals", LINE, "The goal nets."),
+  f("goal-posts", POST, "The goal posts."),
+  f("crease", LINE, "The crease, the goal mouth and the goal circle."),
+  f("restraining-lines", LINE, "The restraining lines and the attack-area lines."),
+  f("wing-lines", LINE, "The wing lines."),
+  f("arcs", LINE, "The marking areas, the arc and fan, the two-point arc."),
+  f("centre-circle", LINE, "The centre circle (the women's game)."),
+  f("face-off-circles", LINE, "The face-off circles of a box floor."),
+  f("face-off-spots", LINE, "The corner face-off spots of a box floor."),
+];
+
+const AFL: readonly Feature[] = [
+  ...TURF,
+  f("boundary", LINE, "The Boundary Line."),
+  f("goal-lines", LINE, "The goal lines and the behind lines."),
+  f("goal-squares", LINE, "The goal squares."),
+  f("arcs", LINE, "The Fifty Metre Arcs."),
+  f("centre-square", LINE, "The centre square."),
+  f("centre-circle", LINE, "The Centre Circle and the Ten Metre Circle."),
+  f("posts", POST, "The goal posts and the behind posts."),
+];
+
+const GAELIC: readonly Feature[] = [
+  ...TURF,
+  f("boundary", LINE, "The sidelines and the end lines."),
+  f("distance-lines", LINE, "The lines across at 13, 20, 45 and (hurling) 65 m."),
+  f("midline", LINE, "The half-way line: the midline and its dashes."),
+  f("rectangles", LINE, "The small and the large rectangle at each end."),
+  f("arcs", LINE, "The 13 m arcs and, in football, the 40 m arcs."),
+  f("penalty-points", LINE, "The penalty point (football)."),
+  f("posts", POST, "The goalposts."),
+  f("flags", POST, "The flags on the lines."),
+];
+
+const CRICKET: readonly Feature[] = [
+  ...TURF,
+  f("boundary", LINE, "The boundary rope."),
+  f("circle", LINE, "The fielding restriction's circle (the 30-yard circle)."),
+  f("pitch", "--ky-dirt", "The pitch."),
+  f("creases", LINE, "The bowling, popping and return creases."),
+  f("wickets", LINE, "The wickets."),
+];
+
+const FIELD_HOCKEY: readonly Feature[] = [
+  ...TURF,
+  f("boundary", LINE, "The side-lines and the back-lines."),
+  f("centre-line", LINE, "The centre line."),
+  f("twenty-three-lines", LINE, "The 23-metre lines."),
+  f("circle-lines", LINE, "The circles."),
+  f("broken-circle-lines", LINE, "The broken lines outside the circles."),
+  f("penalty-spots", LINE, "The penalty spots."),
+  f("outside-marks", LINE, "The marks outside the pitch."),
+  f("flags", POST, "The flag-posts."),
+  f("goals", LINE, "The goals."),
+];
+
+const HANDBALL: readonly Feature[] = [
+  f("apron", "--ky-apron", "The ground round the court."),
+  f("floor", "--ky-surface", "The floor."),
+  f("goal-areas", "--ky-key", "The goal areas' paint."),
+  f("boundary", LINE, "The side lines and the outer goal lines."),
+  f("centre-line", LINE, "The centre line."),
+  f("centre-circle", LINE, "The throw-off area."),
+  f("goal-area-line", LINE, "The goal-area lines (6 m)."),
+  f("free-throw-line", LINE, "The free-throw lines (9 m)."),
+  f("seven-metre-line", LINE, "The 7-metre lines."),
+  f("four-metre-line", LINE, "The 4-metre lines."),
+  f("goal-lines", LINE, "The goal lines between the posts."),
+  f("substitution-lines", LINE, "The marks that end the substitution lines."),
+  f("goal-posts", POST, "The goal posts."),
+  f("goals", LINE, "The goal nets."),
+];
+
 /** The features of each sport, with what each colours. A sport whose surface has none named (one added since) is missing here. */
 export const FEATURE_INFO: Readonly<Record<string, readonly Feature[]>> = Object.freeze({
   nfl: FOOTBALL,
@@ -155,6 +254,13 @@ export const FEATURE_INFO: Readonly<Record<string, readonly Feature[]>> = Object
   badminton: NET,
   pickleball: NET,
   tabletennis: NET,
+  lacrosse: LACROSSE,
+  rugby: RUGBY,
+  afl: AFL,
+  gaelic: GAELIC,
+  cricket: CRICKET,
+  fieldhockey: FIELD_HOCKEY,
+  handball: HANDBALL,
 });
 
 /**

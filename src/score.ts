@@ -23,6 +23,10 @@ export interface TeamView {
   tiebreaks?: string[];
   points?: string;
   serving?: boolean;
+  /** Cricket: the wickets lost, the overs faced and the score of each innings, written. */
+  wickets?: string;
+  overs?: string;
+  innings?: string[];
 }
 
 const part = (on: boolean, names: string): string | undefined => (on ? names : undefined);
@@ -175,6 +179,27 @@ export function glyph(sport: Sport): string {
     case "tabletennis":
       // A table: the net across it and the centre line.
       return "M-16 -8H16V8H-16ZM0 -10V10M-16 0H16";
+    case "lacrosse":
+      // A field: the centre line, the goal circles and the restraining lines.
+      return "M-18 -10H18V10H-18ZM0 -10V10M-12 0A3 3 0 1 0 -6 0A3 3 0 1 0 -12 0M12 0A3 3 0 1 0 6 0A3 3 0 1 0 12 0M-7 -10V10M7 -10V10";
+    case "rugby":
+      // A field: the try lines and in-goal, the 22-metre lines and the half-way line, and the posts.
+      return "M-18 -10H18V10H-18ZM-14 -10V10M14 -10V10M-8 -10V10M8 -10V10M0 -10V10M-14 -2H-17M-14 2H-17M14 -2H17M14 2H17";
+    case "afl":
+      // An oval, with the centre square and the goal squares.
+      return "M-14 -7A18 10 0 0 1 14 -7V7A18 10 0 0 1 -14 7ZM-4 -4H4V4H-4ZM-14 -2H-9V2H-14M14 -2H9V2H14";
+    case "gaelic":
+      // A field: the lines across and the two rectangles at each end.
+      return "M-18 -10H18V10H-18ZM-18 -6H-12V6H-18M-18 -3H-15V3H-18M18 -6H12V6H18M18 -3H15V3H18M-9 -10V10M9 -10V10";
+    case "cricket":
+      // A ground: the boundary, the circle and the pitch with its creases.
+      return "M-17 0A17 10 0 1 0 17 0A17 10 0 1 0 -17 0M-9 -4H9A4 4 0 0 1 9 4H-9A4 4 0 0 1 -9 -4M-5 -1H5V1H-5M-5 -2V2M5 -2V2";
+    case "fieldhockey":
+      // A pitch: the centre line, the 23-metre lines and the circles.
+      return "M-18 -10H18V10H-18ZM0 -10V10M-7 -10V10M7 -10V10M-18 -5A5 5 0 0 1 -13 0A5 5 0 0 1 -18 5M18 -5A5 5 0 0 0 13 0A5 5 0 0 0 18 5";
+    case "handball":
+      // A court: the centre line, and the goal areas with their arcs.
+      return "M-18 -10H18V10H-18ZM0 -10V10M-18 -6A6 6 0 0 1 -12 0A6 6 0 0 1 -18 6M18 -6A6 6 0 0 0 12 0A6 6 0 0 0 18 6";
   }
 }
 

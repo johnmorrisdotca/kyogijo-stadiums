@@ -7,7 +7,7 @@
 const MAIN = "@johnmorrisdotca/kyogijo";
 
 const UNIT_WORDS = { ft: "feet", yd: "yards", m: "metres", cm: "centimetres", in: "inches", mm: "millimetres", px: "pixels", "tenth-ft": "tenths of a foot", percent: "percent of the pitch", fraction: "fractions of the pitch" };
-const SPORT_NAMES = { nfl: "NFL", cfl: "CFL", ifaf: "IFAF", nhl: "NHL", nba: "NBA", mlb: "MLB", soccer: "soccer", curling: "curling", tennis: "tennis", volleyball: "volleyball", badminton: "badminton", pickleball: "pickleball", tabletennis: "table tennis" };
+const SPORT_NAMES = { nfl: "NFL", cfl: "CFL", ifaf: "IFAF", nhl: "NHL", nba: "NBA", mlb: "MLB", soccer: "soccer", curling: "curling", tennis: "tennis", volleyball: "volleyball", badminton: "badminton", pickleball: "pickleball", tabletennis: "table tennis", lacrosse: "lacrosse", rugby: "rugby", afl: "Australian football", gaelic: "Gaelic games", cricket: "cricket", fieldhockey: "field hockey", handball: "handball" };
 const ENDS = { fixed: "fixed to the surface", shooter: "the basket or house attacked", none: "none" };
 const cell = (text) => String(text).replace(/\|/g, "\\|").replace(/\n/g, " ");
 const num = (n) => String(Math.round(n * 100) / 100);
@@ -39,7 +39,7 @@ export function unitsTable(lib) {
   const WORDS = { ft: "feet", yd: "yards", m: "metres", in: "inches", cm: "centimetres", mm: "millimetres" };
   const rows = SPORTS.map((sport) => [`\`${sport}\``, "the sport's own", SPORT_NAMES[sport], `\`${SURFACE_UNITS[sport]}\` (${WORDS[SURFACE_UNITS[sport]]})`]);
   // A football league serves the NFL's, the CFL's and the IFAF's field alike, so it is listed once, under all three.
-  const FAMILIES = { nba: "`nba`", nhl: "`nhl`", nfl: "`nfl`, `cfl`, `ifaf`", mlb: "`mlb`", curling: "`curling`", volleyball: "`volleyball`" };
+  const FAMILIES = { nba: "`nba`", nhl: "`nhl`", nfl: "`nfl`, `cfl`, `ifaf`", mlb: "`mlb`", curling: "`curling`", volleyball: "`volleyball`", lacrosse: "`lacrosse`", rugby: "`rugby`", gaelic: "`gaelic`", cricket: "`cricket`" };
   for (const [sport, label] of Object.entries(FAMILIES)) for (const league of LEAGUES[sport]) if (!league.builtIn) rows.push([label, `\`${league.id}\``, league.name.en, `\`${league.unit}\` (${WORDS[league.unit]})`]);
   return table(["`sport`", "`league`", "Surface", "Rulebook unit"], rows);
 }
@@ -79,7 +79,7 @@ export function limitsTable(lib) {
       ["Formations", `${Object.keys(FORMATIONS).length} named formations of 5 sports, ${Object.values(FORMATIONS).reduce((n, f) => n + f.positions.length, 0)} places in all`, "`FORMATIONS`"],
       ["The team layers", "a Voronoi diagram of 22 players adds under 12 kB; 1,000 points are triangulated in under 600 ms; a pass network of 600 passes adds under 16 kB", "`voronoi`, `delaunay`, `network`"],
       ["A layer's marks", "1,000 points add under 70 kB; 10,000 draw in under 250 ms", "`drawKyogijo`"],
-      ["A drawing's size", "under 22 kB for a football field, 15 kB for a soccer pitch with a score, 14 kB for a rink or a court, 17 kB for a ballpark, 17.5 kB for a curling sheet or a net sport's court with its board, each with its 8 kB stylesheet (a test holds each)", "`drawKyogijo`"],
+      ["A drawing's size", "under 22 kB for a football field, 15 kB for a soccer pitch with a score, 14 kB for a rink or a court, 17 kB for a ballpark, 17.5 kB for a curling sheet, a net sport's court with its board or a field sport's surface with its score, each with its 8 kB stylesheet (a test holds each)", "`drawKyogijo`"],
     ],
   );
 }
@@ -106,6 +106,13 @@ const RANGE_COVERS = {
   mlb: { infield: "the dirt out to the arc round the mound, and the ground behind home plate", outfield: "the grass from the fence in to second base" },
   net: { "half-court": "one side of the net" },
   curling: { sheet: "the whole sheet", half: "from the hog line to the back line at one end", house: "the house at one end" },
+  lacrosse: { half: "from an end line to the centre line", crease: "the crease (the goal circle in the women's game) and the ground round it" },
+  rugby: { half: "from a dead-ball line to the half-way line", "twenty-two": "from the try line to the 22-metre line (union)", twenty: "from the goal line to the 20-metre line (league)", "in-goal": "one in-goal area" },
+  afl: { half: "from a goal line to the centre line", "forward-fifty": "the ground inside the Fifty Metre Arc at one end", "centre-square": "the centre square" },
+  gaelic: { half: "from an end line to the half-way line", "large-rectangle": "the large rectangle (19 by 13 m) at one end" },
+  cricket: { pitch: "the pitch with its creases and wickets, and a little ground round it", circle: "the fielding restriction's circle (the ICC's leagues)" },
+  fieldhockey: { half: "from a back-line to the centre line", circle: "the circle at one end", "twenty-three": "from a back-line to the 23-metre line" },
+  handball: { half: "from a goal line to the centre line", "goal-area": "the goal area at one end, with its arc" },
 };
 
 /** Every named range of every sport, one row each (sports that share their ranges share their rows): what it shows and the end it is at by default. */

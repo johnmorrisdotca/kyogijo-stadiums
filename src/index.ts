@@ -5,6 +5,9 @@ export { OUTCOMES, drawLayers, layerTable } from "./layers.ts";
 export { RANGES } from "./ranges.names.ts";
 export { BACKGROUND_OPACITY, BACKGROUND_PATTERNS, KYOGIJO_BACKGROUND_STYLE } from "./background.ts";
 export type { Background, BackgroundFit, BackgroundOptions, BackgroundPattern } from "./background.ts";
+export { FIELD_SPORTS, fieldPlan, isFieldSport } from "./fields.ts";
+export type { Area as FieldArea, FieldPlan, GoalPlan as FieldGoalPlan, Outline as FieldOutline, Shape as FieldShape } from "./fields.types.ts";
+export { KYOGIJO_FIELDS_STYLE } from "./fields.style.ts";
 export type { RangeInfo } from "./ranges.names.ts";
 export { rampColour } from "./layers.marks.ts";
 export { HEAT_RAMPS, HEAT_RAMP_NAMES } from "./heat.colour.ts";
@@ -29,7 +32,7 @@ export { ERA_CURRENT, ERA_SOURCES, ERA_SPORTS, eraChanges, eraRange, eraStates, 
 export type { EraChange, EraRules, EraRulesOf, EraSource, EraSpan, EraSport, FootballRules, MlbRules, NbaRules, NhlRules } from "./eras.ts";
 export { GROUND_IDS, GROUNDS, groundById, groundByWikidata, groundNameIn, groundSourceUrl, groundsHosting } from "./grounds.ts";
 export type { Ground, GroundCompetition, GroundData, GroundName, GroundSource, GroundTournament } from "./grounds.ts";
-export { FAMILY_OF, LEAGUES, LEAGUE_SOURCES, VARIANTS, chooseLeague, hasHistory, leagueAt, leagueById, leagueChanges, leagueFigures, leagueIds, leagueSeason, leagueSize } from "./leagues.ts";
+export { AFL_GROUNDS, FAMILY_OF, LEAGUES, LEAGUE_SOURCES, VARIANTS, chooseLeague, hasHistory, leagueAt, leagueById, leagueChanges, leagueFigures, leagueIds, leagueSeason, leagueSize } from "./leagues.ts";
 export type { BaseballLeague, BasketballLeague, CourtFigures, CourtMarks, DiamondFigures, Family, FootballLeague, HockeyLeague, League, LeagueAt, LeagueChange, LeagueSource, LeagueSpan, Named, RinkFigures } from "./leagues.ts";
 export { SURFACE_UNITS, UNITS, convertLength, isUnit } from "./units.ts";
 export type { Unit } from "./units.ts";
@@ -45,6 +48,8 @@ export type {
   CourtStyle,
   Detail,
   DirectionOptions,
+  FieldSport,
+  FieldStyle,
   Fence,
   GoalInfo,
   GoalStyle,

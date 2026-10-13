@@ -177,7 +177,40 @@ const badmintonFrame = netFrame("badminton", "Badminton court, in metres from th
 const pickleballFrame = netFrame("pickleball", "Pickleball court, in feet from the centre of the net", "ft", 22, 10, "the court");
 const tableTennisFrame = netFrame("tabletennis", "Table tennis table, in metres from the centre of the net", "m", 1.37, 0.7625, "the table");
 
-for (const frame of [nhlApi, hockeyTech, nbaStats, nflTracking, mlbam, retrosheet, curling, tennisFrame, volleyballFrame, badmintonFrame, pickleballFrame, tableTennisFrame]) if (!Object.prototype.hasOwnProperty.call(FRAMES, frame.name)) registerFrame(frame);
+/**
+ * A field sport's surface in the plain frame of its middle: the centre of the surface as the origin, x along it, positive towards the end drawn at the right, y across it, positive towards the top as it is drawn wide.
+ * The unit is the one the sport's rulebook prints first (metres; yards for cricket, whose frame is measured from the middle of the pitch, which is the middle of the ground). The size of these surfaces is a range, so the frame
+ * fits the size of the surface it is placed on. This package's own frame: no tracking provider's format was read for these sports, and each rulebook measures a field from its lines (the figures of `LEAGUES`).
+ */
+function centreFrame(sport: "lacrosse" | "rugby" | "afl" | "gaelic" | "cricket" | "fieldhockey" | "handball", title: string, unit: "m" | "yd", x: number, y: number): Frame {
+  const per = unit === "m" ? 1 / 0.3048 : 3;
+  const map = (size: { length: number; width: number }): FrameMap => ({ x: span(-size.length / per / 2, size.length / per / 2, 0, size.length), y: span(-size.width / per / 2, size.width / per / 2, size.width, 0) });
+  return {
+    name: sport,
+    title,
+    sport,
+    unit,
+    x: [-x, x],
+    y: [-y, y],
+    origin: sport === "cricket" ? "the middle of the pitch, the centre of the ground" : "the centre of the surface",
+    yDirection: "up",
+    size: "variable",
+    ends: sport === "cricket" ? "none" : "fixed",
+    landmarks: map,
+    source: "this package's own frame: the centre of the surface as the origin",
+    note: "Positive x is towards the end drawn at the right, positive y towards the top as the surface is drawn wide. The frame is not a data provider's: it is the plain reading of the surface, and it is fitted to the size the surface is drawn at.",
+  };
+}
+
+const lacrosseFrame = centreFrame("lacrosse", "Lacrosse surface, in metres from the centre", "m", 50, 30);
+const rugbyFrame = centreFrame("rugby", "Rugby field, in metres from the centre, the in-goal areas included", "m", 60, 35);
+const aflFrame = centreFrame("afl", "Australian football ground, in metres from the centre", "m", 80, 70.5);
+const gaelicFrame = centreFrame("gaelic", "Gaelic games field, in metres from the centre", "m", 72.5, 45);
+const cricketFrame = centreFrame("cricket", "Cricket ground, in yards from the middle of the pitch", "yd", 75, 75);
+const fieldHockeyFrame = centreFrame("fieldhockey", "Field hockey pitch, in metres from the centre", "m", 45.7, 27.5);
+const handballFrame = centreFrame("handball", "Handball court, in metres from the centre", "m", 20, 10);
+
+for (const frame of [nhlApi, hockeyTech, nbaStats, nflTracking, mlbam, retrosheet, curling, tennisFrame, volleyballFrame, badmintonFrame, pickleballFrame, tableTennisFrame, lacrosseFrame, rugbyFrame, aflFrame, gaelicFrame, cricketFrame, fieldHockeyFrame, handballFrame]) if (!Object.prototype.hasOwnProperty.call(FRAMES, frame.name)) registerFrame(frame);
 
 // Retrosheet's hit-location diagram (Project Scoresheet's) draws the field in sectors: columns of the outfield from the left field
 // line to the right (7L, 7, 78, 8, 89, 9, 9L), each cut into rings of about 50 feet by depth (S shallow, none medium, D deep, XD

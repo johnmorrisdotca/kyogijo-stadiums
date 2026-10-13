@@ -11,6 +11,8 @@ import { roundedRect } from "./surfaces/surface.ts";
 import { feetFence, lengthUnit } from "./common.ts";
 import { num } from "./format.ts";
 import { courtFor, courtSize, isNetSport } from "./court.ts";
+import { fieldPlan, isFieldSport } from "./fields.ts";
+import { inOutline, outlineD } from "./fields.kit.ts";
 import { sheetFor } from "./sheet.ts";
 import type { SurfaceOptions } from "./types.ts";
 
@@ -43,10 +45,10 @@ function inPolygon(points: readonly (readonly [number, number])[], x: number, y:
 
 /** The size a provider's frame is fitted to: the drawn surface's own `box`, for a soccer pitch, a curling sheet, a net sport's court and a league's surface; none for a sport's own fixed one. */
 export const frameSizeOf = (o: Pick<SurfaceOptions, "sport" | "league">, box: { w: number; h: number }): { length: number; width: number; unit: "ft" } | undefined =>
-  o.sport === "soccer" || o.sport === "curling" || isNetSport(o.sport) || chooseLeague(o).league !== undefined ? { length: box.w, width: box.h, unit: "ft" as const } : undefined;
+  o.sport === "soccer" || o.sport === "curling" || isNetSport(o.sport) || isFieldSport(o.sport) || chooseLeague(o).league !== undefined ? { length: box.w, width: box.h, unit: "ft" as const } : undefined;
 
 /** The outline of the surface the options draw. */
-export function outlineOf(o: Pick<SurfaceOptions, "sport" | "park" | "fence" | "units" | "pitch" | "league" | "year" | "sheet" | "net">): Outline {
+export function outlineOf(o: Pick<SurfaceOptions, "sport" | "park" | "fence" | "units" | "pitch" | "league" | "year" | "sheet" | "net"> & Partial<Pick<SurfaceOptions, "field" | "detail">>): Outline {
   const { sport, league } = chooseLeague(o);
   switch (sport) {
     case "nfl":
@@ -104,6 +106,16 @@ export function outlineOf(o: Pick<SurfaceOptions, "sport" | "park" | "fence" | "
     case "tabletennis": {
       const { length, width } = courtSize(courtFor({ ...o, sport }));
       return rect(length, width);
+    }
+    case "lacrosse":
+    case "rugby":
+    case "afl":
+    case "gaelic":
+    case "cricket":
+    case "fieldhockey":
+    case "handball": {
+      const plan = fieldPlan({ ...o, sport });
+      return { d: outlineD(plan.length, plan.width, plan.outline), box: { x: 0, y: 0, w: plan.length, h: plan.width }, contains: (x, y) => inOutline(plan.length, plan.width, plan.outline, x, y) };
     }
     default: {
       // A surface added later with one size is a rectangle until it says otherwise.

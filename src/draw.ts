@@ -7,7 +7,11 @@ import { FOOTBALL } from "./geometry.ts";
 import { renderLayers } from "./layers.ts";
 import { groundById, groundNameIn } from "./grounds.ts";
 import { courtFor, isNetSport, type CourtPlan } from "./court.ts";
-import { chooseLeague, courtOf, diamondOf, fieldOf, hasHistory, leagueSeason, netOf, rinkOf, sheetOf, type League } from "./leagues.ts";
+import { cricketBoardMarkup } from "./cricket.board.ts";
+import { fieldPlan, isFieldSport } from "./fields.ts";
+import { fieldScoreText, fieldTotal } from "./field.score.ts";
+import { fieldsStyle } from "./fields.style.ts";
+import { LEAGUES, chooseLeague, courtOf, diamondOf, fieldOf, hasHistory, leagueSeason, leagueSize, netOf, rinkOf, sheetOf, type League } from "./leagues.ts";
 import { diamondFence } from "./leagues/baseball.ts";
 import { fenceFor, parkById } from "./parks.ts";
 import { boardMarkup, endText } from "./curling.board.ts";
@@ -27,6 +31,7 @@ import { convertLength, type Unit } from "./units.ts";
 import { baseball } from "./surfaces/baseball.ts";
 import { curling } from "./surfaces/curling.ts";
 import { netCourt } from "./surfaces/net.ts";
+import { fieldSurface } from "./surfaces/field.ts";
 import { basketball } from "./surfaces/basketball.ts";
 import { football } from "./surfaces/football.ts";
 import { hockey } from "./surfaces/hockey.ts";
@@ -38,13 +43,13 @@ import { specialText } from "./events.ts";
 import { layoutOf, soccerSpec, type SoccerPitchId, type SoccerSize, type SoccerSpec } from "./surfaces/soccer-spec.ts";
 import type { BuildOptions, Surface } from "./surfaces/surface.ts";
 import { abbreviate, capitals } from "./text.ts";
-import type { Colors, CourtStyle, GoalStyle, Language, ScoreOptions, Side, Sport, StripePattern, SurfaceOptions, Team } from "./types.ts";
+import type { Colors, CourtStyle, FieldSport, GoalStyle, Language, ScoreOptions, Side, Sport, StripePattern, SurfaceOptions, Team } from "./types.ts";
 import { VERSION } from "./version.ts";
 
 export { isPortrait };
 
 /** The sports that can be drawn, in the order a menu lists them. */
-export const SPORTS: readonly Sport[] = ["nfl", "cfl", "ifaf", "nhl", "nba", "mlb", "soccer", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis"];
+export const SPORTS: readonly Sport[] = ["nfl", "cfl", "ifaf", "nhl", "nba", "mlb", "soccer", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis", "lacrosse", "rugby", "afl", "gaelic", "cricket", "fieldhockey", "handball"];
 
 /** The CSS custom property each colour of `Colors` sets. */
 export const COLOR_PROPERTIES: Readonly<Record<keyof Colors, string>> = {
@@ -110,6 +115,9 @@ export function statusLabel(status: string | undefined, language: Language = "en
   if (set !== null) return fill(KYOGIJO_STRINGS[language].setStatus, { n: Number(set[1] ?? set[2]) });
   const game = /^(?:game-?(\d{1,2})|第(\d{1,2})ゲーム)$/.exec(key);
   if (game !== null) return fill(KYOGIJO_STRINGS[language].gameStatus, { n: Number(game[1] ?? game[2]) });
+  // A cricket innings: "innings-2", "Innings 2" or "第2イニング".
+  const innings = /^(?:innings-?(\d{1,2})|第(\d{1,2})イニング)$/.exec(key);
+  if (innings !== null) return fill(KYOGIJO_STRINGS[language].field.inningsStatus, { n: Number(innings[1] ?? innings[2]) });
   return Object.prototype.hasOwnProperty.call(words, key) ? words[key as keyof typeof words] : status.trim();
 }
 
@@ -131,11 +139,11 @@ function shootout(o: Pick<ScoreOptions, "home" | "away">): { home: number; away:
  * a final one; `leader` picks the leader of any game; a level game has none unless both teams have a penalty shoot-out
  * score (`penalties`) and the shoot-out was not level; a score that is not a number has none.
  */
-export function winnerOf(o: Pick<ScoreOptions, "home" | "away" | "status" | "winner">): "home" | "away" | "none" {
+export function winnerOf(o: Pick<ScoreOptions, "home" | "away" | "status" | "winner"> & { sport?: Sport }): "home" | "away" | "none" {
   const mode = o.winner ?? "auto";
   if (mode === "home" || mode === "away" || mode === "none") return mode;
-  const h = numeric(o.home.score);
-  const a = numeric(o.away.score);
+  const h = fieldTotal(o.sport, o.home) ?? numeric(o.home.score);
+  const a = fieldTotal(o.sport, o.away) ?? numeric(o.away.score);
   if (h === undefined || a === undefined) return "none";
   if (mode === "auto" && !(o.status !== undefined && FINAL.test(o.status.trim()))) return "none";
   if (h === a) {
@@ -258,6 +266,14 @@ function buildWhole(o: SurfaceOptions, portrait: boolean, id: string, score: boo
     case "pickleball":
     case "tabletennis":
       return netCourt(common, courtFor({ ...o, sport }));
+    case "lacrosse":
+    case "rugby":
+    case "afl":
+    case "gaelic":
+    case "cricket":
+    case "fieldhockey":
+    case "handball":
+      return fieldSurface(common, fieldPlan({ ...o, sport, detail: common.detail }), { goals: common.goals });
     default:
       throw new Error(`Unknown sport "${String(o.sport)}": use one of ${SPORTS.join(", ")}`);
   }
@@ -300,9 +316,10 @@ function colourStyle(o: SurfaceOptions, teams: { left?: Team; right?: Team; home
   return props.join(";");
 }
 
-function teamView(team: Team, side: Side, role: "home" | "away", winner: "home" | "away" | "none", uppercase: boolean): TeamView {
+function teamView(team: Team, side: Side, role: "home" | "away", winner: "home" | "away" | "none", uppercase: boolean, sport: Sport): TeamView {
   const name = String(team.name ?? "");
-  const score = team.score === undefined || team.score === null || String(team.score).trim() === "" ? "–" : String(team.score);
+  const written = fieldScoreText(sport, team);
+  const score = written ?? (team.score === undefined || team.score === null || String(team.score).trim() === "" ? "–" : String(team.score));
   return {
     side,
     role,
@@ -317,6 +334,9 @@ function teamView(team: Team, side: Side, role: "home" | "away", winner: "home" 
     tiebreaks: Array.isArray(team.tiebreaks) ? team.tiebreaks.map(endText) : undefined,
     points: team.points === undefined || team.points === null ? undefined : String(team.points).trim().slice(0, 3),
     serving: team.serving === true ? true : undefined,
+    wickets: sport === "cricket" && team.wickets !== undefined && team.wickets !== null && String(team.wickets).trim() !== "" ? String(team.wickets).trim().slice(0, 2) : undefined,
+    overs: sport === "cricket" && team.overs !== undefined && team.overs !== null && String(team.overs).trim() !== "" ? String(team.overs).trim().slice(0, 6) : undefined,
+    innings: sport === "cricket" && Array.isArray(team.innings) ? team.innings.map((value) => (typeof value === "number" ? (Number.isFinite(value) ? String(value) : "") : typeof value === "string" ? value.trim().slice(0, 7) : "")) : undefined,
   };
 }
 
@@ -325,6 +345,14 @@ const trimmed = (value: number): string => String(Math.round(value * 100) / 100)
 /** What a league's surface is, in a sentence fragment: its size or its bases, from the league's own figures in the unit its rulebook uses. */
 function leagueAbout(league: League, year: number | undefined, language: Language, sheet?: { length: number; width: number }): string {
   const words = KYOGIJO_STRINGS[language].league;
+  // The field sports: their size is the surface drawn (the one the options ask for), in the unit their rulebook prints first.
+  if (league.family === "lacrosse" || league.family === "rugby" || league.family === "afl" || league.family === "gaelic" || league.family === "cricket" || league.family === "fieldhockey" || league.family === "handball") {
+    const sized = sheet ?? leagueSize(league.family, league.id);
+    const to = league.unit;
+    const size = fill(words.size, { length: trimmed(convertLength(sized.length, "ft", to)), width: trimmed(convertLength(sized.width, "ft", to)), unit: words.units[to === "m" || to === "yd" ? to : "ft"] });
+    const key = league.family === "lacrosse" && league.dimensions.kind === "box" ? "lacrosseBox" : league.family === "rugby" && league.dimensions.code === "league" ? "rugbyLeague" : league.family === "gaelic" && league.dimensions.code === "hurling" ? "hurling" : league.family;
+    return fill(words[key], { size });
+  }
   if (league.family === "baseball") {
     const diamond = diamondOf(league, year);
     return fill(league.game === "softball" ? words.softball : words.baseball, { base: trimmed(diamond.base), pitch: trimmed(diamond.pitcher) });
@@ -369,7 +397,9 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
   const sentence = (text: string): string => (/[.。]$/.test(text) ? text : `${text}${stop}`);
   const metres = (value: number): string => String(Math.round(value * 10) / 10);
   const plan = sport === "curling" ? sheetFor(o) : undefined;
-  const aboutText = plan !== undefined ? leagueAbout(plan.league, o.year, language, plan.spec) : league !== undefined ? leagueAbout(league, o.year, language) : pitch === undefined ? words.about[sport] : fill(pitch.format === "futsal" ? words.soccer.aboutFutsal : words.about.soccer, { length: metres(pitch.length), width: metres(pitch.width) });
+  // A field sport: the surface as drawn, at the size the options ask for.
+  const field = isFieldSport(sport) ? fieldPlan({ ...o, sport }) : undefined;
+  const aboutText = field !== undefined ? leagueAbout(league ?? LEAGUES[sport as FieldSport][0], o.year, language, { length: field.length, width: field.width }) : plan !== undefined ? leagueAbout(plan.league, o.year, language, plan.spec) : league !== undefined ? leagueAbout(league, o.year, language) : pitch === undefined ? words.about[sport] : fill(pitch.format === "futsal" ? words.soccer.aboutFutsal : words.about.soccer, { length: metres(pitch.length), width: metres(pitch.width) });
   const about = `${words.said.on}${colon}${aboutText}${stop}`;
   const halfLine = pitch !== undefined && !isScore(o) && (o.half === "left" || o.half === "right") ? `${gap}${words.soccer.half}` : "";
   // What the ground says about the size: that it is the published one, or that the ground has none and the international pitch is drawn.
@@ -391,13 +421,13 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
   // A range says what is shown; a curling score shows all of the sheet, whatever the range.
   const rangeLine = isScore(o) && sport === "curling" ? "" : describeRange(o, language, o.layers !== undefined && o.layers.length > 0);
   if (!isScore(o)) return { title: o.title ?? special?.title ?? surfaceName, description: o.description ?? `${about}${parkLine}${eraLine}${rangeLine}` };
-  const winner = winnerOf(o);
-  const s = (t: Team): string => (t.score === undefined || String(t.score) === "" ? "–" : String(t.score));
+  const winner = winnerOf({ ...o, sport });
+  const s = (t: Team): string => fieldScoreText(sport, t) ?? (t.score === undefined || String(t.score) === "" ? "–" : String(t.score));
   const line = fill(words.scoreTitle, { away: o.away.name, awayScore: s(o.away), home: o.home.name, homeScore: s(o.home) });
   const status = statusText(o, language);
   const pens = shootout(o);
   const extra = [o.competition, status, o.date].filter((part): part is string => part !== undefined && part !== "").join(words.said.sep);
-  const level = numeric(o.home.score) !== undefined && numeric(o.home.score) === numeric(o.away.score);
+  const level = (fieldTotal(sport, o.home) ?? numeric(o.home.score)) !== undefined && (fieldTotal(sport, o.home) ?? numeric(o.home.score)) === (fieldTotal(sport, o.away) ?? numeric(o.away.score));
   const result =
     winner === "none"
       ? ""
@@ -435,9 +465,27 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
         .filter((part) => part !== "")
         .map((part) => `${gap}${part}`)
         .join("");
+  // The field sports: goals and behinds, goals and points, and a cricket team's runs, wickets, overs and innings, which the board shows.
+  const fw = words.field;
+  const fieldLine =
+    sport === "afl" || sport === "gaelic"
+      ? [o.away, o.home]
+          .filter((team) => fieldScoreText(sport, team) !== undefined)
+          .map((team) => `${gap}${fill(sport === "afl" ? fw.aflScore : fw.gaelicScore, { name: team.name, goals: String(team.goals), behinds: String(team.behinds), points: String(team.points) })}`)
+          .join("")
+      : sport === "cricket"
+        ? [o.away, o.home]
+            .flatMap((team) => [
+              team.wickets !== undefined && team.wickets !== null && String(team.wickets) !== "" && team.overs !== undefined && team.overs !== null && String(team.overs) !== "" ? fill(fw.cricketScore, { name: team.name, runs: s(team), wickets: String(team.wickets), overs: String(team.overs) }) : "",
+              Array.isArray(team.innings) && team.innings.length > 0 ? fill(fw.cricketInnings, { name: team.name, list: team.innings.map((value) => endText(value) || "–").join(words.layers.listSep) }) : "",
+            ])
+            .filter((part) => part !== "")
+            .map((part) => `${gap}${part}`)
+            .join("")
+        : "";
   return {
     title: o.title ?? (status === undefined ? line : `${line}${words.said.sep}${status}`),
-    description: o.description ?? `${extra === "" ? "" : `${sentence(extra)}${gap}`}${sentence(line)}${result}${tied}${curlingLine}${netLine}${gap}${about}${parkLine}${eraLine}${rangeLine}`.trim(),
+    description: o.description ?? `${extra === "" ? "" : `${sentence(extra)}${gap}`}${sentence(line)}${result}${tied}${curlingLine}${netLine}${fieldLine}${gap}${about}${parkLine}${eraLine}${rangeLine}`.trim(),
   };
 }
 
@@ -483,10 +531,10 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
   let winner: "home" | "away" | "none" = "none";
   let status: string | undefined;
   if (isScore(o)) {
-    winner = winnerOf(o);
+    winner = winnerOf({ ...o, sport });
     status = statusText(o, language);
-    const home = teamView(o.home, homeSide, "home", winner, uppercase);
-    const away = teamView(o.away, awaySide, "away", winner, uppercase);
+    const home = teamView(o.home, homeSide, "home", winner, uppercase, sport);
+    const away = teamView(o.away, awaySide, "away", winner, uppercase, sport);
     left = homeSide === "left" ? home : away;
     right = homeSide === "left" ? away : home;
     leftTeam = homeSide === "left" ? o.home : o.away;
@@ -548,9 +596,9 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
     let inner = ground.base;
     let teams = "";
     if (isScore(o) && left !== undefined && right !== undefined && sized === "full") {
-      const onColour = sport === "nfl" || sport === "cfl" || sport === "ifaf" || sport === "soccer";
-      // A curling sheet and the net sports' courts have no place for the names: the board names the teams.
-      if (sport !== "curling" && !isNetSport(sport)) {
+      const onColour = surface.onColour ?? (sport === "nfl" || sport === "cfl" || sport === "ifaf" || sport === "soccer");
+      // A curling sheet, the net sports' courts and a cricket ground have no place for the names: the board names the teams.
+      if (sport !== "curling" && !isNetSport(sport) && sport !== "cricket") {
         // Cropped to a range, a team's name is written only where its place is in what is shown.
         if (shows(surface, surface.left)) teams += bannerMarkup(surface.left, left, { turned: surface.turned, onColour, parts });
         if (shows(surface, surface.right)) teams += bannerMarkup(surface.right, right, { turned: surface.turned, onColour, parts });
@@ -573,6 +621,10 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       const foot = o.label !== undefined && o.label !== "" ? o.label : [status, o.date].filter((part): part is string => part !== undefined && part !== "").join(" · ");
       if (sport === "curling") {
         const board = boardMarkup(surface.plate, left, right, { competition: o.competition, foot: foot === "" ? undefined : foot, total: KYOGIJO_STRINGS[language].said.total }, { turned: surface.turned, parts });
+        inner += el("g", { transform: `translate(${num(surface.plate.cx)} ${num(surface.plate.cy)})${surface.turned ? " rotate(-90)" : ""}` }, board);
+      } else if (sport === "cricket") {
+        const words = KYOGIJO_STRINGS[language].field;
+        const board = cricketBoardMarkup(surface.plate, left, right, { competition: o.competition, foot: foot === "" ? undefined : foot, innings: words.innings, total: words.total, overs: words.overs }, { parts });
         inner += el("g", { transform: `translate(${num(surface.plate.cx)} ${num(surface.plate.cy)})${surface.turned ? " rotate(-90)" : ""}` }, board);
       } else if (isNetSport(sport)) {
         const board = setsBoardMarkup(surface.plate, left, right, { competition: o.competition, foot: foot === "" ? undefined : foot, head: KYOGIJO_STRINGS[language].net[sport === "badminton" || sport === "pickleball" || sport === "tabletennis" ? "games" : "sets"], points: KYOGIJO_STRINGS[language].net.points }, { parts, least: minSets(sport, chooseLeague(o).league?.id) });
@@ -618,7 +670,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       style: style === "" ? undefined : style,
     },
     `<title id="${titleId}">${esc(title)}</title><desc id="${descId}">${esc(description)}</desc>` +
-      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}${plan === undefined ? "" : `\n${courtStyle(plan.sport, plan.look)}`}${palette === undefined ? "" : `\n${lookStyle(palette)}`}${walled ? `\n${KYOGIJO_WALLS_STYLE}` : ""}${features === undefined ? "" : `\n${featureStyle(sport, features)}`}${notes === undefined || notes.svg === "" ? "" : `\n${KYOGIJO_NOTE_STYLE}`}${grounded ? `\n${KYOGIJO_BACKGROUND_STYLE}` : ""}${o.host === undefined ? "" : `\n${specialStyle(hostSport(o.host))}`}</style>`) +
+      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}${plan === undefined ? "" : `\n${courtStyle(plan.sport, plan.look)}`}${fieldsStyle(sport) === "" ? "" : `\n${fieldsStyle(sport)}`}${palette === undefined ? "" : `\n${lookStyle(palette)}`}${walled ? `\n${KYOGIJO_WALLS_STYLE}` : ""}${features === undefined ? "" : `\n${featureStyle(sport, features)}`}${notes === undefined || notes.svg === "" ? "" : `\n${KYOGIJO_NOTE_STYLE}`}${grounded ? `\n${KYOGIJO_BACKGROUND_STYLE}` : ""}${o.host === undefined ? "" : `\n${specialStyle(hostSport(o.host))}`}</style>`) +
       (defs === "" ? "" : `<defs>${defs}</defs>`) +
       body,
   );

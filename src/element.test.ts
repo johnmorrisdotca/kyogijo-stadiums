@@ -35,7 +35,7 @@ describe("the custom element's options", () => {
 
   it("draw a bare surface when a team is missing, and a known sport when the sport is not one", () => {
     expect("home" in optionsFromAttributes(read({ sport: "nfl", home: "H" }))).toBe(false);
-    expect(optionsFromAttributes(read({ sport: "cricket" })).sport).toBe("nhl");
+    expect(optionsFromAttributes(read({ sport: "kabaddi" })).sport).toBe("nhl");
   });
 
   it("take any other option as JSON, under the attributes, and ignore JSON that is not JSON", () => {

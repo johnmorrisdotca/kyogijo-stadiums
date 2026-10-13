@@ -268,7 +268,7 @@ describe("drawGrid", () => {
     const cells = SPORTS.flatMap((sport) => [{ sport, ...score }, { sport, orientation: "portrait" as const }]);
     const svg = drawGrid(cells, { width: 1600, id: "all", title: "Every surface" });
     parseXml(svg);
-    expect(withClass(parseXml(svg), "ky-g-cell")).toHaveLength(26);
+    expect(withClass(parseXml(svg), "ky-g-cell")).toHaveLength(SPORTS.length * 2);
     const all = ids(svg);
     expect(new Set(all).size).toBe(all.length);
     for (const ref of references(svg)) expect(all).toContain(ref);

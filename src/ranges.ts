@@ -105,8 +105,11 @@ export function cropToRange(surface: Surface, o: Pick<SurfaceOptions, "sport" | 
   const whole = surface.box;
   if (parsed === undefined || whole === undefined) return surface;
   const wide = boxOf(parsed, surface, whole, o);
-  // The named ranges of a curling sheet are the builder's own (`show`).
-  if (wide === undefined) return surface;
+  // The named ranges of a curling sheet are the builder's own (`show`). A surface that lists its ranges and lacks the one asked for (a cricket ground that marks no circle) cannot be cropped to it.
+  if (wide === undefined) {
+    if (surface.ranges !== undefined && parsed.kind === "name") throw new RangeError(`This ${surface.sport} surface has no range "${parsed.name}": use one of ${Object.keys(surface.ranges).join(", ")}`);
+    return surface;
+  }
   const full = wideView(surface);
   const visible = intersect(wide, full);
   if (!(visible.w > 0 && visible.h > 0)) throw new RangeError("The range lies outside the surface");

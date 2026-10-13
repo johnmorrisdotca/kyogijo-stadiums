@@ -19,6 +19,13 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `surface.badminton` | Badminton court | バドミントンコート |
 | `surface.pickleball` | Pickleball court | ピックルボールコート |
 | `surface.tabletennis` | Table tennis table | 卓球台 |
+| `surface.lacrosse` | Lacrosse field | ラクロスのフィールド |
+| `surface.rugby` | Rugby union field | ラグビーユニオンのグラウンド |
+| `surface.afl` | Australian football ground | オーストラリアンフットボールのグラウンド |
+| `surface.gaelic` | Gaelic football field | ゲーリック・フットボールのフィールド |
+| `surface.cricket` | Cricket ground | クリケットのグラウンド |
+| `surface.fieldhockey` | Field hockey pitch | フィールドホッケーのピッチ |
+| `surface.handball` | Handball court | ハンドボールのコート |
 | `about.nfl` | an American football field, 120 by 53 and a third yards with its end zones, with a yard line every 5 yards, hash marks, numbers and goal posts | アメリカンフットボールのフィールド。エンドゾーンを含めて120ヤード×53⅓ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールポストがあります |
 | `about.cfl` | a Canadian football field, 150 by 65 yards with its 20-yard end zones, with a yard line every 5 yards, hash marks, numbers and goal posts on the goal lines | カナディアンフットボールのフィールド。20ヤードのエンドゾーンを含めて150ヤード×65ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールライン上のゴールポストがあります |
 | `about.ifaf` | an international (IFAF) football field, 120 by 53 and a third yards with its end zones, with a yard line every 5 yards, hash marks, numbers and goal posts | 国際アメリカンフットボール連盟（IFAF）規格のフィールド。エンドゾーンを含めて120ヤード×53⅓ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールポストがあります |
@@ -32,6 +39,13 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `about.badminton` | a badminton court, 13.4 by 6.1 metres, with its singles and doubles lines, short and long service lines, centre lines and the net | バドミントンコート。13.4m×6.1mで、シングルスとダブルスのライン、ショートサービスライン、ロングサービスライン、センターライン、ネットがあります |
 | `about.pickleball` | a pickleball court, 44 by 20 feet, with its non-volley zones, centre lines and the net | ピックルボールコート。44フィート（約13.4m）×20フィート（約6.1m）で、ノンボレーゾーン、センターライン、ネットがあります |
 | `about.tabletennis` | a table tennis table, 2.74 by 1.525 metres, with its side lines, end lines, centre line and the net | 卓球台。2.74m×1.525mで、サイドライン、エンドライン、センターライン、ネットがあります |
+| `about.lacrosse` | a lacrosse field, with its end lines, goals, creases, restraining lines, wing lines and the centre line | ラクロスのフィールド。エンドライン、ゴール、クリース、リストレイニングライン、ウイングライン、センターラインがあります |
+| `about.rugby` | a rugby union field, 94 to 100 metres between the try lines and 68 to 70 metres wide, with its in-goal areas, the 22-metre lines, the half-way line, the dash lines and the goal posts | ラグビーユニオンのグラウンド。トライライン間が94～100m、幅が68～70mで、インゴール、22メートルライン、ハーフウェイライン、破線、ゴールポストがあります |
+| `about.afl` | an Australian football ground, an oval 135 to 185 metres long and 110 to 155 metres wide, with the goal squares, the centre square and circles, the fifty metre arcs, and the goal posts and behind posts | オーストラリアンフットボールのグラウンド。長さ135～185m、幅110～155mの楕円形で、ゴールスクエア、センタースクエアとサークル、50メートルアーク、ゴールポストとビハインドポストがあります |
+| `about.gaelic` | a field for Gaelic football and hurling, 130 to 145 metres by 80 to 90 metres, with its lines across at 13, 20 and 45 metres, the two rectangles at each end, the arcs and the goalposts | ゲーリック・フットボールとハーリング用のフィールド。130～145m×80～90mで、13m・20m・45mの横線、両端の2つの長方形、アーク、ゴールポストがあります |
+| `about.cricket` | a cricket ground, with its boundary, the 30-yard circle, and the 22-yard pitch with its creases and wickets | クリケットのグラウンド。バウンダリー、30ヤードのサークル、クリースとウィケットのある22ヤードのピッチがあります |
+| `about.fieldhockey` | a field hockey pitch, 91.40 by 55.00 metres, with the centre line, the 23-metre lines, the circles, the penalty spots and the goals | フィールドホッケーのピッチ。91.40m×55.00mで、センターライン、23メートルライン、サークル、ペナルティスポット、ゴールがあります |
+| `about.handball` | a handball court, 40 by 20 metres, with the centre line, the goal areas, the 6-, 7- and 9-metre lines, the 4-metre lines and the goals | ハンドボールのコート。40m×20mで、センターライン、ゴールエリア、6m・7m・9mのライン、4mのライン、ゴールがあります |
 | `status.final` | Final | 試合終了 |
 | `status.final-ot` | Final/OT | 試合終了（延長） |
 | `status.final-so` | Final/SO | 試合終了（SO） |
@@ -65,6 +79,16 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `league.badminton` | a badminton court, {size}, with its singles and doubles lines, short and long service lines, centre lines and the net | バドミントンコート。{size}で、シングルスとダブルスのライン、ショートサービスライン、ロングサービスライン、センターライン、ネットがあります |
 | `league.pickleball` | a pickleball court, {size}, with its non-volley zones, centre lines and the net | ピックルボールコート。{size}で、ノンボレーゾーン、センターライン、ネットがあります |
 | `league.tabletennis` | a table tennis table, {size}, with its side lines, end lines, centre line and the net | 卓球台。{size}で、サイドライン、エンドライン、センターライン、ネットがあります |
+| `league.lacrosse` | a lacrosse field, {size}, with its goals, creases and lines | ラクロスのフィールド。{size}で、ゴール、クリース、各種のラインがあります |
+| `league.lacrosseBox` | a box lacrosse floor with rounded corners, {size}, with its goals, creases, restraining lines and face-off circle | 角が丸いボックスラクロスのフロア。{size}で、ゴール、クリース、リストレイニングライン、フェイスオフサークルがあります |
+| `league.rugby` | a rugby union field, {size} with its in-goal areas, with the 22-metre lines, the half-way line, the dash lines and the goal posts | ラグビーユニオンのグラウンド。インゴールを含めて{size}で、22メートルライン、ハーフウェイライン、破線、ゴールポストがあります |
+| `league.rugbyLeague` | a rugby league field, {size} with its in-goal areas, with a line across the field every 10 metres and the goal posts | ラグビーリーグのグラウンド。インゴールを含めて{size}で、10mごとの横線とゴールポストがあります |
+| `league.afl` | an Australian football ground, {size}, an oval with the goal squares, the centre square and circles, the fifty metre arcs, and the goal posts and behind posts | オーストラリアンフットボールのグラウンド。{size}の楕円形で、ゴールスクエア、センタースクエアとサークル、50メートルアーク、ゴールポストとビハインドポストがあります |
+| `league.gaelic` | a field for Gaelic football, {size}, with its lines across, the two rectangles at each end, the 13 and 40 metre arcs, the penalty point and the goalposts | ゲーリック・フットボールのフィールド。{size}で、横線、両端の2つの長方形、13mと40mのアーク、ペナルティポイント、ゴールポストがあります |
+| `league.hurling` | a field for hurling, {size}, with its lines across (the 65 metre lines too), the two rectangles at each end, the 13 metre arcs and the goalposts | ハーリングのフィールド。{size}で、65mの線を含む横線、両端の2つの長方形、13mのアーク、ゴールポストがあります |
+| `league.cricket` | a cricket ground, {size}, with its boundary, the pitch with its creases and wickets, and the fielding restriction's circle where the rules have one | クリケットのグラウンド。{size}で、バウンダリー、クリースとウィケットのあるピッチ、規則によっては守備制限のサークルがあります |
+| `league.fieldhockey` | a field hockey pitch, {size}, with the centre line, the 23-metre lines, the circles, the penalty spots and the goals | フィールドホッケーのピッチ。{size}で、センターライン、23メートルライン、サークル、ペナルティスポット、ゴールがあります |
+| `league.handball` | a handball court, {size}, with the centre line, the goal areas, the 6-, 7- and 9-metre lines, the 4-metre lines and the goals | ハンドボールのコート。{size}で、センターライン、ゴールエリア、6m・7m・9mのライン、4mのライン、ゴールがあります |
 | `league.size` | {length} by {width} {unit} | {length}{unit}×{width}{unit} |
 | `league.units.ft` | feet | フィート |
 | `league.units.yd` | yards | ヤード |
@@ -115,6 +139,16 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `net.sets` | Sets | セット |
 | `net.games` | Games | ゲーム |
 | `net.points` | Pts | ポイント |
+| `field.aflScore` | {name} scored {goals} goals and {behinds} behinds. | {name}は{goals}ゴール{behinds}ビハインドです。 |
+| `field.gaelicScore` | {name} scored {goals} goals and {points} points. | {name}は{goals}ゴール{points}ポイントです。 |
+| `field.cricketScore` | {name}: {runs} runs for {wickets} wickets in {overs} overs. | {name}：{overs}オーバーで{runs}ラン（{wickets}ウィケット喪失）。 |
+| `field.cricketInnings` | By innings, {name}: {list}. | {name}のイニングごとのスコア：{list}。 |
+| `field.inningsStatus` | Innings {n} | 第{n}イニング |
+| `field.innings` | Inn | イニング |
+| `field.runs` | Runs | ラン |
+| `field.wickets` | Wkts | ウィケット |
+| `field.overs` | Ov | オーバー |
+| `field.total` | Total | 合計 |
 | `scoreTitle` | {away} {awayScore}, {home} {homeScore} | {away} {awayScore}、{home} {homeScore} |
 | `said.home` | home | ホーム |
 | `said.away` | away | アウェイ |
@@ -147,6 +181,13 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `special.guest.badminton` | court | コート |
 | `special.guest.pickleball` | court | コート |
 | `special.guest.tabletennis` | table | 卓球台 |
+| `special.guest.lacrosse` | field | フィールド |
+| `special.guest.rugby` | field | グラウンド |
+| `special.guest.afl` | ground | グラウンド |
+| `special.guest.gaelic` | field | フィールド |
+| `special.guest.cricket` | ground | グラウンド |
+| `special.guest.fieldhockey` | pitch | ピッチ |
+| `special.guest.handball` | court | コート |
 | `special.title` | {guest} in {host} | {host}の中の{guest} |
 | `special.game` | {event}, {date}. | {event}、{date}。 |
 | `special.inside` | The {guest} lies wholly inside the outline of {host}. | {guest}全体が{host}の輪郭の内側に収まっています。 |
@@ -332,6 +373,9 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `layers.zones.sideLeft` | left | 左 |
 | `layers.zones.sideMiddle` | middle | 中央 |
 | `layers.zones.sideRight` | right | 右 |
+| `layers.zones.pitchZone` | Pitch | ピッチ |
+| `layers.zones.insideCircle` | Inside the circle | サークルの内側 |
+| `layers.zones.outfieldGround` | Outfield | アウトフィールド |
 | `team.networkTitle` | Pass network: {players} players, {links} links from {passes} passes | パスネットワーク：選手{players}人、つながり{links}本（パス{passes}本） |
 | `team.networkNote` | Most touches: {name}, {touches}. Strongest link: {a} and {b}, {n} passes. | 最多タッチ：{name}（{touches}回）。パスが最も多いつながり：{a}と{b}、{n}本。 |
 | `team.networkNoteDirected` | Most touches: {name}, {touches}. Strongest link: {a} to {b}, {n} passes. | 最多タッチ：{name}（{touches}回）。パスが最も多いつながり：{a}から{b}へ、{n}本。 |
@@ -456,6 +500,43 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `notes.names.centre-line` | Centre line | センターライン |
 | `notes.names.hack` | Hack | ハック |
 | `notes.names.free-guard-zone` | Free guard zone | フリーガードゾーン |
+| `notes.names.try-line` | Try line | トライライン |
+| `notes.names.dead-ball-line` | Dead-ball line | デッドボールライン |
+| `notes.names.twenty-two-line` | 22-metre line | 22メートルライン |
+| `notes.names.ten-metre-line` | 10-metre line | 10メートルライン |
+| `notes.names.forty-metre-line` | 40-metre line | 40メートルライン |
+| `notes.names.in-goal` | In-goal | インゴール |
+| `notes.names.boundary-line` | Boundary line | バウンダリーライン |
+| `notes.names.behind-line` | Behind line | ビハインドライン |
+| `notes.names.goal-square` | Goal square | ゴールスクエア |
+| `notes.names.centre-square` | Centre square | センタースクエア |
+| `notes.names.fifty-metre-arc` | Fifty metre arc | 50メートルアーク |
+| `notes.names.behind-posts` | Behind posts | ビハインドポスト |
+| `notes.names.distance-line` | Distance line | 距離を示すライン |
+| `notes.names.large-rectangle` | Large rectangle | 大きい長方形 |
+| `notes.names.small-rectangle` | Small rectangle | 小さい長方形 |
+| `notes.names.thirteen-metre-arc` | 13 m arc | 13メートルアーク |
+| `notes.names.forty-metre-arc` | 40 m arc | 40メートルアーク |
+| `notes.names.penalty-point` | Penalty point | ペナルティポイント |
+| `notes.names.boundary` | Boundary | バウンダリー |
+| `notes.names.pitch` | Pitch | ピッチ |
+| `notes.names.bowling-crease` | Bowling crease | ボウリングクリース |
+| `notes.names.popping-crease` | Popping crease | ポッピングクリース |
+| `notes.names.return-crease` | Return crease | リターンクリース |
+| `notes.names.wicket` | Wicket | ウィケット |
+| `notes.names.thirty-yard-circle` | 30-yard circle | 30ヤードサークル |
+| `notes.names.twenty-three-line` | 23-metre line | 23メートルライン |
+| `notes.names.shooting-circle` | Shooting circle | シューティングサークル |
+| `notes.names.penalty-spot` | Penalty spot | ペナルティスポット |
+| `notes.names.broken-circle-line` | Broken line round the circle | サークルを囲む破線 |
+| `notes.names.goal-area-line` | Goal-area line | ゴールエリアライン |
+| `notes.names.seven-metre-line` | 7-metre line | 7mスローライン |
+| `notes.names.four-metre-line` | 4-metre line | 4mライン |
+| `notes.names.throw-off-area` | Throw-off area | スローオフエリア |
+| `notes.names.restraining-line` | Restraining line | リストレイニングライン |
+| `notes.names.wing-line` | Wing line | ウイングライン |
+| `notes.names.marking-area` | Marking area | マーキングエリア |
+| `notes.names.two-point-arc` | Two-point arc | 2ポイントアーク |
 | `ranges.shows` | Shows only the {name}. | 表示範囲は{name}です。 |
 | `ranges.showsEnd` | Shows only the {name} at the {side} end. | 表示範囲は{side}側の{name}です。 |
 | `ranges.box` | Shows only a part of the surface: x from {x0} to {x1}, y from {y0} to {y1}. | 競技場の一部だけを表示しています。xは{x0}から{x1}、yは{y0}から{y1}です。 |
@@ -481,6 +562,17 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `ranges.names.outfield` | outfield | 外野 |
 | `ranges.names.sheet` | whole sheet | シート全体 |
 | `ranges.names.house` | house | ハウス |
+| `ranges.names.in-goal` | in-goal area | インゴール |
+| `ranges.names.twenty-two` | area between the try line and the 22-metre line | トライラインから22メートルラインまでのエリア |
+| `ranges.names.twenty` | area between the goal line and the 20-metre line | ゴールラインから20メートルラインまでのエリア |
+| `ranges.names.crease` | crease | クリース |
+| `ranges.names.forward-fifty` | area inside the fifty metre arc | 50メートルアークの内側 |
+| `ranges.names.centre-square` | centre square | センタースクエア |
+| `ranges.names.large-rectangle` | large rectangle | 大きい長方形 |
+| `ranges.names.pitch` | pitch | ピッチ |
+| `ranges.names.circle` | circle | サークル |
+| `ranges.names.twenty-three` | 23-metre area | 23メートルエリア |
+| `ranges.names.goal-area` | goal area | ゴールエリア |
 | `grid.title` | A grid of drawings ({n}) | 図のグリッド（{n}枚） |
 | `grid.drawings` | Drawings ({n}): {list}. | 図（{n}枚）：{list}。 |
 | `grid.key` | Key: {list}. | 凡例：{list}。 |
@@ -552,6 +644,13 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `sport_badminton` | Badminton | バドミントン |
 | `sport_pickleball` | Pickleball | ピックルボール |
 | `sport_tabletennis` | Table tennis | 卓球 |
+| `sport_lacrosse` | Lacrosse | ラクロス |
+| `sport_rugby` | Rugby | ラグビー |
+| `sport_afl` | Australian football | オーストラリアンフットボール |
+| `sport_gaelic` | Gaelic games | ゲーリックゲーム |
+| `sport_cricket` | Cricket | クリケット |
+| `sport_fieldhockey` | Field hockey | フィールドホッケー |
+| `sport_handball` | Handball | ハンドボール |
 | `pitchLabel` | Pitch | ピッチ |
 | `pitch_fifa` | International, 105 × 68 m | 国際試合 105×68m |
 | `pitch_uefa` | UEFA, 105 × 68 m | UEFA 105×68m |
@@ -837,6 +936,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `soccer` | Soccer | サッカー |
 | page `curling` | Curling | カーリング |
 | page `courts` | Tennis, volleyball, badminton, pickleball and table tennis | ネット型競技のコート |
+| page `field-sports` | Lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey and handball | ラクロス、ラグビーなどのフィールド |
 | page `special-games` | Special games | 特設会場での試合 |
 | page `ballparks` | Ballparks | 球場 |
 | page `grounds` | The grounds | スタジアム |
@@ -862,6 +962,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `gallery-data` | Gallery: data on a surface | ギャラリー：競技場の上のデータ |
 | page `gallery-curling` | Gallery: curling | ギャラリー：カーリング |
 | page `gallery-courts` | Gallery: tennis, volleyball and other net sports | ギャラリー：ネット型競技のコート |
+| page `gallery-fields` | Gallery: lacrosse, rugby, Australian football, Gaelic games, cricket, hockey and handball | ギャラリー：ラクロス、ラグビー、オーストラリアンフットボール、ゲーリックゲーム、クリケット、フィールドホッケー、ハンドボール |
 | page `gallery-styling` | Gallery: looks and annotations | ギャラリー：スタイルと注釈 |
 | page `gallery-ranges` | Gallery: display ranges and zoom | ギャラリー：表示範囲とズーム |
 | page `gallery-layouts` | Gallery: layouts and backgrounds | ギャラリー：レイアウトと背景 |

@@ -171,6 +171,13 @@ The links John has sent, and the ones the package's figures were read from: what
 - **Not used:** sporty's code, and sportypy's and sportyR's (GPL-3.0), which were not read for this.
 - **Ours:** the zone set `net-court`, the board of sets and games, the frames, the colours of every look, and the sizes of the marks that stand for posts, antennae and the net.
 
+## Lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey and handball
+
+- **What was read:** the seventeen rulebooks of [sources.md](./sources.md#the-field-sports), each as text from the governing body's own PDF, the diagrams read as pictures where a figure is only on one: World Rugby's *Laws of the Game* 2026, the NRL's *Rugby League Laws of the Game* 2023 and the IRL's 2024, the AFL's *Laws of Australian Football* 2026 and its venue pages, the GAA's *Official Guide Part 2* (March 2026), the MCC's *Laws of Cricket* (4th Edition 2026) and the ICC's playing conditions (October 2026), the FIH's *Rules of Hockey* (March 2026), the IHF's *Rules of the Game for Indoor Handball* (1 July 2025), and, for lacrosse, World Lacrosse's three books, the NCAA's two, the PLL's of 2024 and the NLL's of 2025-26.
+- **Not used:** sportyR's and sportypy's code (GPL-3.0), and the tables of `@sportsdataverse/sporty` (MIT), which has lacrosse: every figure was read again from the rulebooks.
+- **Not found:** the PLL's 2025 and 2026 rulebooks (its 2024 book is cited, and named as the newest); the ground diagrams of the GAA's Guide (an image) and of the IHF's rules (images), where a figure was only there; the width of any crease line in the Laws of Cricket.
+- **Ours:** the plans of every sport (the shapes in feet), the oval's reading as an ellipse cut at its ends, the field sports' scores and the cricket board, the zone sets `field-thirds` and `cricket-ground`, the frames, the colours (the floor of a handball court, the pitch of a hockey match, the pitch strip of a cricket ground), and the sizes of the marks that stand for posts and flags.
+
 ## The soccer pitch and its providers
 
 - **What was read:** Law 1 of the IFAB Laws of the Game, the FIFA Futsal Laws, UEFA's Stadium Infrastructure Regulations, the MLS, NCAA and Premier League documents and the FA's, and each provider's own pages, all named in [sources.md](./sources.md#soccer): for facts only. No text, table or diagram of any is copied.

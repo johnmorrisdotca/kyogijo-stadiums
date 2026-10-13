@@ -3,6 +3,7 @@
 import { describe, expect, it } from "vitest";
 import { describe as describeDrawing, drawKyogijo } from "./draw.ts";
 import { optionsFromAttributes } from "./element.ts";
+import { LEAGUES } from "./leagues.ts";
 import { RANGES, parseRange } from "./ranges.names.ts";
 import { sheetFor } from "./sheet.ts";
 import { KYOGIJO_STRINGS } from "./strings.ts";
@@ -24,12 +25,12 @@ const layers = [{ kind: "heatmap", data: points, legend: true }, { kind: "points
 
 /** Every named range of every sport, with the end it is asked for (a range with no end has none). */
 const named: { sport: Sport; id: RangeName; end?: "left" | "right" }[] = SPORTS.flatMap((sport) =>
-  RANGES[sport].flatMap((info) => (info.end === undefined ? [{ sport, id: info.id }] : [{ sport, id: info.id, end: "left" as const }, { sport, id: info.id, end: "right" as const }])),
+  RANGES[sport].filter((info) => info.leagues === undefined || info.leagues.includes(LEAGUES[sport][0]?.id)).flatMap((info) => (info.end === undefined ? [{ sport, id: info.id }] : [{ sport, id: info.id, end: "left" as const }, { sport, id: info.id, end: "right" as const }])),
 );
 
 describe("the ranges of each sport", () => {
   it("are listed for every sport, each with a name in both languages", () => {
-    expect(SPORTS.length).toBe(13);
+    expect(SPORTS.length).toBe(20);
     for (const sport of SPORTS) {
       expect(RANGES[sport].length, sport).toBeGreaterThan(0);
       for (const info of RANGES[sport]) {

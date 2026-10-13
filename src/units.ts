@@ -21,7 +21,7 @@ export const FEET_PER: Readonly<Record<Unit, number>> = Object.freeze({
 
 /**
  * The unit each surface's rulebook states its dimensions in: the NFL's and the CFL's fields in yards (and the IFAF's, which
- * follows them), the NHL's rink, the NBA's court and the baseball field in feet, a soccer pitch in metres (the Laws'), a tennis court and a pickleball court in feet (the ITF's and USA Pickleball's), a volleyball court, a badminton court and a table in metres (FIVB's, BWF's and ITTF's), a curling sheet in metres (World Curling's rules give metres with feet beside them; Curling Canada's give feet first, and its league `curling-canada` has feet). A Japanese park's fence is measured in
+ * follows them), the NHL's rink, the NBA's court and the baseball field in feet, a soccer pitch in metres (the Laws'), a tennis court and a pickleball court in feet (the ITF's and USA Pickleball's), a volleyball court, a badminton court and a table in metres (FIVB's, BWF's and ITTF's), a curling sheet in metres (World Curling's rules give metres with feet beside them; Curling Canada's give feet first, and its league `curling-canada` has feet), a rugby field, an Australian football ground, a Gaelic field, a hockey pitch and a handball court in metres (the rulebooks') and a cricket ground in yards (the Laws' and the ICC's; the NLL's box floor and the PLL's and the NCAA men's fields are in the leagues' own feet and yards). A Japanese park's fence is measured in
  * metres and converted once: see `parkUnit`.
  */
 export const SURFACE_UNITS: Readonly<Record<Sport, Unit>> = Object.freeze({
@@ -38,6 +38,13 @@ export const SURFACE_UNITS: Readonly<Record<Sport, Unit>> = Object.freeze({
   badminton: "m",
   pickleball: "ft",
   tabletennis: "m",
+  lacrosse: "m",
+  rugby: "m",
+  afl: "m",
+  gaelic: "m",
+  cricket: "yd",
+  fieldhockey: "m",
+  handball: "m",
 });
 
 /** True when `unit` is one of the six. */

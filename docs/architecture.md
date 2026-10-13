@@ -11,6 +11,20 @@ src/
 ├── sets.board.ts       the net sports' scoreboard: each set or game, the points of the game, the sets won and the server's ball
 ├── court.ts            the net sports' court a set of options asks for: the look, the free zone, the lines, areas and fixtures as rectangles
 ├── courts.style.ts     the net sports' rules and the colours of each look, in light and dark
+├── cricket.board.ts    the cricket scoreboard: runs and wickets, the overs and each innings
+├── field.score.ts      the scores the field sports write their own way: goals and behinds, goals and points, and the total
+├── fields.ts           the field sports' plan a set of options asks for: the league, the size held to its range
+├── fields.types.ts     what a plan is: the shapes in feet, the areas, the goals, the places of the names, the ranges and the landmarks
+├── fields.kit.ts       the small functions a plan is made of: a line, an arc, a ring, a size held to a range, the outline's path
+├── fields.style.ts     the colours of the field sports that are not grass: a handball floor, a hockey pitch
+├── fields/
+│   ├── lacrosse.ts     the lacrosse plans: the box floor and the fields of World Lacrosse, the NCAA and the PLL
+│   ├── rugby.ts        the rugby plans: union's dash lines and league's lines every 10 metres
+│   ├── afl.ts          the Australian football ground: the oval cut at the goal lines, the goal squares and the Fifty Metre Arcs
+│   ├── gaelic.ts       the Gaelic games' field: the lines across, the rectangles, the arcs
+│   ├── cricket.ts      the cricket ground: the boundary, the circle, the pitch and its creases
+│   ├── fieldhockey.ts  the field hockey pitch: the circles, the broken lines, the marks outside
+│   └── handball.ts     the handball court: the goal areas, the free-throw line, the small lines
 ├── sheet.ts            the curling sheet a set of options asks for, held to the rules' range
 ├── surfaces/
 │   ├── surface.ts      what a surface is, and the quarter turn
@@ -22,6 +36,7 @@ src/
 │   ├── soccer.ts       the soccer pitch
 │   ├── curling.ts      the curling sheet
 │   ├── net.ts          the court of tennis, volleyball, badminton, pickleball and table tennis
+│   ├── field.ts        a field sport's surface, drawn from its plan
 │   ├── soccer-spec.ts  the Laws' figures, the presets, futsal and the small-sided pitches
 │   └── soccer-providers.ts  the data providers' coordinates, registered as frames, and rescale
 ├── layout.ts           drawGrid: many drawings in one SVG, with a title, a subtitle, a key and a credit line, in a size for a card or a phone
@@ -91,12 +106,20 @@ src/
 │   ├── hockey.ts       the rinks
 │   ├── curling.ts      the sheets
 │   ├── courts.ts       the courts of the net sports
+│   ├── fields.ts       a range of sizes: what the field sports' leagues share
+│   ├── lacrosse.ts     the lacrosse fields and floor
+│   ├── rugby.ts        the rugby fields
+│   ├── aussie.ts       the Australian football ground and its named grounds
+│   ├── gaelic.ts       the Gaelic games' field
+│   ├── cricket.ts      the cricket grounds
+│   ├── fieldhockey.ts  the field hockey pitch
+│   ├── handball.ts     the handball court
 │   ├── football.ts     the fields
 │   └── baseball.ts     the diamonds
 ├── geometry-entry.ts   the geometry's entry
 ├── units.ts            the units of length, each surface's own, and the converters
 ├── frames.ts           coordinate frames: the mapper, the registry, toSurface and fromSurface
-├── frames.providers.ts the NHL, HockeyTech, NBA, NFL, MLBAM, Retrosheet, curling and net sports frames
+├── frames.providers.ts the NHL, HockeyTech, NBA, NFL, MLBAM, Retrosheet, curling, net sports and field sports frames
 ├── frames-entry.ts     the frames' entry
 ├── parks.ts            the ballparks, their fences, walls, quirks and their sources
 ├── ballpark.ts         what a drawing asks of a park's walls and quirks (`walls`, `quirks`), and the words that name them

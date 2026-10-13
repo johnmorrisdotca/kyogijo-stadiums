@@ -1,6 +1,6 @@
 # Display ranges and zoom
 
-`range` crops a drawing to a part of its surface: the offensive zone of a rink, a half court, the red zone, the penalty area, the infield, the house of a curling sheet, or a box of your own. It is what sportypy calls `display_range` and what hockey_rink does with its partial rinks, for every one of the thirteen surfaces and in one option. The view is cut to the range with a small margin, the data and the heat of the layers are cut to it, the annotations stand against what is shown, a score's panel is put inside it, and `orientation` is kept: a tall drawing shows the same part on its side. Without `range` the whole surface is drawn, byte for byte as it was.
+`range` crops a drawing to a part of its surface: the offensive zone of a rink, a half court, the red zone, the penalty area, the infield, the house of a curling sheet, or a box of your own. It is what sportypy calls `display_range` and what hockey_rink does with its partial rinks, for every one of the twenty surfaces and in one option. The view is cut to the range with a small margin, the data and the heat of the layers are cut to it, the annotations stand against what is shown, a score's panel is put inside it, and `orientation` is kept: a tall drawing shows the same part on its side. Without `range` the whole surface is drawn, byte for byte as it was.
 
 ```ts
 import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
@@ -46,6 +46,24 @@ console.log(drawKyogijo({ sport: "nhl", range: undefined }) === drawKyogijo({ sp
 | `curling` | `half` | from the hog line to the back line at one end | `left` |
 | `curling` | `house` | the house at one end | `left` |
 | `tennis`, `volleyball`, `badminton`, `pickleball`, `tabletennis` | `half-court` | one side of the net | `left` |
+| `lacrosse` | `half` | from an end line to the centre line | `left` |
+| `lacrosse` | `crease` | the crease (the goal circle in the women's game) and the ground round it | `right` |
+| `rugby` | `half` | from a dead-ball line to the half-way line | `left` |
+| `rugby` | `twenty-two` | from the try line to the 22-metre line (union) | `right` |
+| `rugby` | `twenty` | from the goal line to the 20-metre line (league) | `right` |
+| `rugby` | `in-goal` | one in-goal area | `right` |
+| `afl` | `half` | from a goal line to the centre line | `left` |
+| `afl` | `forward-fifty` | the ground inside the Fifty Metre Arc at one end | `right` |
+| `afl` | `centre-square` | the centre square | none |
+| `gaelic` | `half` | from an end line to the half-way line | `left` |
+| `gaelic` | `large-rectangle` | the large rectangle (19 by 13 m) at one end | `right` |
+| `cricket` | `pitch` | the pitch with its creases and wickets, and a little ground round it | none |
+| `cricket` | `circle` | the fielding restriction's circle (the ICC's leagues) | none |
+| `fieldhockey` | `half` | from a back-line to the centre line | `left` |
+| `fieldhockey` | `circle` | the circle at one end | `right` |
+| `fieldhockey` | `twenty-three` | from a back-line to the 23-metre line | `right` |
+| `handball` | `half` | from a goal line to the centre line | `left` |
+| `handball` | `goal-area` | the goal area at one end, with its arc | `right` |
 <!-- /made:ranges -->
 
 A range at an end takes `end`: `range: { name: "half", end: "right" }`. The end is as the surface is drawn wide: `left` or `right`, whichever way the drawing lies, so that a tall drawing's left end is its top. A range with no end (the neutral zone, the middle third, the infield) ignores one. The offensive ranges are at the right by default, as a frame's numbers are for a team that attacks the right (see [coordinate frames](./frames.md)), the defensive and own ranges at the left, and the others, such as a half, at the left, as a curling sheet's house is: `end` moves any of them.

@@ -200,6 +200,143 @@ Tennis, volleyball and beach volleyball, badminton, pickleball and table tennis 
 
 **Ours.** The colours; the post's width (a mark of a least size). The playing area round a table is in the ITTF's regulations, not in the Laws, and was not read: no free zone is drawn.
 
+## The field sports
+
+Lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey and handball ([the page](./field-sports.md)). Each rulebook's figures are in `src/leagues/` (`lacrosse.ts`, `rugby.ts`, `aussie.ts`, `gaelic.ts`, `cricket.ts`, `fieldhockey.ts`, `handball.ts`) in the unit it prints first and are held by one test file a sport (`src/rugby.test.ts` and the rest), a test for each rule below. The documents, with the edition and the address read on 2026-10-13, are in `LEAGUE_SOURCES`. Each was read as text from the governing body's own PDF; where a figure is only on a diagram it was read off the diagram and the table says so. Where a book gives a range, the range is kept (`Span` in `src/leagues/fields.ts`) and the size drawn is the greatest unless this says another. The lines of each sport are placed as its rulebook measures them (to the outside edge, to the inside edge or to the centre of a line, where it says), and a line's drawn width is a little more than its true width unless `exactLines` is set.
+
+### Rugby union
+
+*Laws of the Game, Rugby Union*, Law 1 "The ground", World Rugby, 2026 (the book's own label: "Laws of the game Rugby Union, incorporating the playing charter, 2026"; it prints no date of effect), <https://passport.world.rugby/media/jxrnmptk/2026en-laws-of-the-game-compressed.pdf>, pages 26 to 28.
+
+| Figure | Value | Source |
+| --- | --- | --- |
+| The field of play | at most 100 m and at least 94 m between the try lines; at most 70 m and at least 68 m wide | Law 1.3, the dimensions table |
+| An in-goal | at most 22 m and at least 6 m deep | Law 1.3, the table |
+| The playing area | rectangular | Law 1.3 a |
+| A shorter or narrower field | "the distance between the 10-metre lines and 22-metre lines is reduced accordingly", and the 15-metre lines' when the width is less than 70 m | Law 1.3 c and d |
+| Solid lines | the dead-ball lines and touch-in-goal lines, the try lines, the 22-metre lines, the half-way line, the touchlines | Law 1.4 |
+| Dash lines | each dash 5 m: 5 m from and parallel to each touchline; 15 m from each touchline; 10 m from each side of the half-way line; 5 m from each try line | Law 1.5 |
+| The half-way mark | one line 0.5 m long that intersects the centre of the half-way line | Law 1.6 |
+| The 22 | 22 m from the try line; the 10-metre lines 10 m from the half-way line; the 5 m and 15 m lines from the touchlines | the ground diagram, page 26 |
+| The goal posts | 5.6 m apart, "3m to top edge of bar", a minimum height of 3.4 m, on the try line | the goal posts diagram, page 28 |
+| The flag posts | 14, each at least 1.2 m high: one at each intersection of the touch-in-goal lines and the try lines and of the touch-in-goal lines and the dead-ball lines (8), and one in line with the 22-metre line and the half-way line on each side, 2 m outside the touchlines (6) | Law 1.8 to 1.10 |
+
+**Ours.** The width of the lines: Law 1 prints none, and 0.1 m is drawn. The depth of the in-goal drawn, 10 m, which is inside the Law's range of 6 to 22 m. Where the dashes stand along each dash line (a first dash from the 5 m line to 10 m, then one centred on each 22-metre line, 10-metre line and the half-way line, then one ending 5 m from the far try line; across the field at 5 m from the try lines dashes centred 5 m either side of the middle and on the 5 m and 15 m lines, and at the 10-metre lines also on the middle and 10 m either side): the Law gives the length of a dash and the lines they lie on, and the places are read off the ground diagram. How much a shorter field's lines are reduced: proportionally. The technical zones of the diagram (10 m by 3 m, 2 m from the touchline) are not drawn: their place along the touchline is not labelled.
+
+### Rugby league
+
+*Rugby League Laws of the Game, International Level, with Notes on the Laws and NRL Telstra Premiership Interpretations*, NRL, 2023 edition (April 2023), Section 1 "The Playing Field" and Section 18 "Ground Markings and Dimension Guidelines", <https://Nrl.Com/siteassets/operations/the-game/nrl-international-rules-book-2023.pdf>. *The International Laws of the Game and Notes on the Laws*, International Rugby League, 2024 (the cover's year), Section 1 and its plan, <https://intrl.sport/uploads/docs/international-rugby-league-laws-of-the-game-2022%20%283%29.pdf>.
+
+| Figure | Value | Source |
+| --- | --- | --- |
+| The NRL's field | field width 68 m; length 100 m from goal line to goal line; in-goal areas 68 by 8 m; goal posts 16 m high and 5.5 m wide | NRL Section 18 |
+| The NRL's lines | unbroken lines, 15 cm wide and white, at 10 m, 20 m, 30 m, the half-way line, the try line, the dead-ball line and the touchline; "an unbroken red line shall be used for each of the two 20 meter and 40 metre lines"; 15 cm wide | NRL Section 18 (a), Section 1 note 6 |
+| The NRL's scrum lines | marked 10 m and 20 m in from the touchline, 10 cm wide and white | NRL Section 18 (d) |
+| The IRL's field | 100 m between the goal lines, 68 m wide, in-goal 6 to 11 m, a line across at every 10 m (10, 20, 30, 40 from each goal line, the half-way line at 50), the goal posts 5.50 m apart and 16 m high, the crossbar "3m" | IRL Section 1, the plan |
+| Transverse lines | "must be marked across the full width of the field" | IRL Section 1 note 5, NRL Section 1 note 5 |
+
+**Ours.** The IRL's in-goal drawn at 8 m (the NRL's, inside its range of 6 to 11 m); its line width and colours, which its book does not print: the NRL's 15 cm, white. The scrum lines' dashes: the notes say the broken lines "shall consist of marks or dots on the ground not more than 2 metres apart", so 1 m marks and 1 m gaps are drawn. The NRL's media line (1.5 m from each touchline, 10 cm, red) is not drawn: no length is given. The plan's other broken lines and the numbers on the field are not drawn.
+
+### Australian football
+
+*Laws of Australian Football*, Law 3 "Playing Surface and Posts" and its Diagram 1, AFL, 2026, <https://play.afl/sites/default/files/2026-02/Laws%20of%20Australian%20Football%202026.pdf>, pages 18 to 20.
+
+| Figure | Value | Source |
+| --- | --- | --- |
+| The Playing Surface | oval in shape, between 135 and 185 m in length and between 110 and 155 m in width; the field of play "inside the Boundary Line, Goal Line and Behind Line" | Law 3.2 (a), Law 1 definitions |
+| The Boundary Line | a white line in the shape of an arc from the behind post at one end to the behind post at the other | Law 3.2 (b) |
+| The posts | goal posts 6.4 m apart; behind posts 6.4 m on each side of them, in a straight line | Law 3.3.1 |
+| The goal square | two lines at right angles to the Goal Line for 9 m from each goal post, joined by the Kick-Off Line | Law 3.4, Diagram 1 (6.4 m wide, 9 m deep) |
+| The centre | a Centre Square 50 m by 50 m; a Centre Circle 3 m across and a Ten Metre Circle 10 m across, in its middle, each divided in two by a line parallel to the goal lines | Law 3.5 (a), (b) |
+| A Fifty Metre Arc | at each end of the Playing Surface, 50 m from the centre of the Goal Line | Law 3.5 (f), Law 1 definitions, Diagram 1 |
+
+**Named grounds**, the length by the width in metres that the AFL's venue page prints under "Ground dimensions" (afl.com.au/venues/N, read 2026-10-13): MCG 160 by 141 (13), Optus Stadium 165 by 130 (65), the Gabba 156 by 138 (22), the SCG 149 by 136 (9), Marvel Stadium 159.5 by 128.8 (3) and GMHBA Stadium 170 by 114 (15). Other published figures disagree a little (an AFL article of 2018 prints 161 by 138 for the MCG, 155 by 136 for the SCG and 170 by 116 for GMHBA Stadium), and the pages do not say what they measure; only the stadium's own fact sheet says, for Optus Stadium, "boundary line to boundary line". Adelaide Oval's page prints 190 by 125 m, a length beyond the Laws' 185 m, so it is not drawn.
+
+**Ours.** The shape: the Laws say "oval" and draw one; it is an ellipse of the ground's width across and a length such that, at the Goal Line, it is as wide as the Goal Line and the two Behind Lines together (19.2 m), the ends being cut by them as Diagram 1 shows; the Fifty Metre Arc runs between the places it meets the Boundary Line. The width of the lines (Law 3 prints none: 0.1 m). The size drawn, the MCG's, since the Laws give a range. The interchange area (15 m wide, on a wing: the Laws give no place) and the nine-metre line of Law 20 are not drawn.
+
+### Gaelic football and hurling
+
+*Official Guide Part 2* (the playing rules of hurling and football), Rules of Specification, Rule 1 "The Field of Play", Gaelic Athletic Association, effective from 27 March 2026 (the edition effective from 10 March 2025 has Rule 1 word for word the same), <https://www.gaa.ie/api/images/image/upload/t_q-best/prd/xi4oyuttzqpaqr2vfhbn.pdf>, pages 4 to 6.
+
+| Figure | Value | Source |
+| --- | --- | --- |
+| The field | rectangular; length 130 m minimum and 145 m maximum; width 80 m minimum and 90 m maximum | Rule 1.1 |
+| The lines across | at 13 m, 20 m, 45 m and 65 m (Hurling) from each end line, parallel to the end line; flags at their intersections with the sidelines and of the end lines with the sidelines | Rule 1.2 (i) |
+| The midline | "a length of 10m in the centre of the pitch"; lines of 5 m "marked out from the 10m midline, at intervals of 5m across the field"; flags where the dashed lines meet the sideline | Rule 1.2 (i) |
+| The lines | 90 mm ± 13 mm wide, white; the boundary lines are part of the field | Rule 1.2 (i) and (ii) |
+| The scoring space | two goalposts at the centre of each end line, at least 7 m high and 6.5 m apart; the inside edge of the end line at a tangent to the front edge of the posts' bases; a crossbar 2.5 m above the ground | Rule 1.3 (i), (ii) |
+| The rectangles | 14 by 4.5 m, its lines 4.5 m long and 3.75 m from the inside of each goalpost; 19 by 13 m, its lines 13 m long and 6.25 m from the inside of each goalpost; the end line is part of each | Rule 1.3 (a) to (c) |
+| The arcs | a semicircular arc of 13 m radius centred on the middle of each 20 m line, outside it; for football, a semicircular arc of 40 m centred on the middle of the goal line, outside each 20 m line | Rule 1.4 |
+| The penalty point | for football, 11 m from the centre of the goal line | Rule 1.5 |
+
+**Ours.** The 65 m lines are drawn for hurling only, as the Guide marks them "(Hurling)". Whether the dashes of the midline begin at once or after a gap is not said: they begin where the midline ends. The Guide's diagram (an image) was not read. The substitution zone (Rule 1.6, 5 m either side of the centre line, on the sideline) is not drawn. The 20 m arc of the set-play rules is Rule 1.4's 13 m arc.
+
+### Cricket
+
+*The Laws of Cricket* (2017 Code), 4th Edition 2026, MCC, Laws 6, 7 and 8, <https://www.lords.org/getmedia/1d908298-5c44-468d-b6a7-e1414a1296e0/Laws-of-Cricket-2017-Code-4th-Edition-(2026)_3.pdf>. *ICC Men's One-Day International Playing Conditions*, effective from October 2026, clauses 6 to 8, 19.1, 28.7.2.1 and Appendix C, <https://images.icc-cricket.com/image/upload/prd/bxkzkcyvfn6tvi70zh0w.pdf> (the men's Test and T20I conditions' 19.1.3 is the same, and the T20I's 28.7.3 the same circle); *ICC Women's One-Day International Playing Conditions*, effective from October 2026, 19.1.3 and 28.7.2.1, <https://images.icc-cricket.com/image/upload/prd/qunpw1kfh3ibxlz58jlw.pdf>.
+
+| Figure | Value | Source |
+| --- | --- | --- |
+| The pitch | a rectangular area 22 yards (20.12 m) long and 10 feet (3.05 m) wide, bounded at each end by the bowling creases and at each side by lines 5 feet (1.52 m) from the line of the middle stumps | MCC 6.1; ICC 6.1 |
+| The bowling crease | the line that marks the end of the pitch, 8 ft 8 in (2.64 m) long | MCC 7.2; ICC 7.2 |
+| The popping crease | in front of and parallel to the bowling crease, 4 feet (1.22 m) from it; marked at least 6 ft (1.83 m) either side of the line of the middle stumps in the Laws, and at least 25 ft (7.5 m) in the ICC's conditions | MCC 7.3; ICC 7.3 and Appendix C |
+| The return creases | at right angles to the popping crease, their inside edges 4 ft 4 in (1.32 m) either side of that line, marked at least 8 feet (2.44 m) behind the popping crease | MCC 7.4; ICC 7.4 |
+| The wickets | each set 9 inches (22.86 cm) wide, in the centres of the bowling creases; the stumps 28 in (71.12 cm) high | MCC 8.1, 8.2; ICC 8.1, 8.2 |
+| The boundary | the Laws give none; the ICC's men's conditions: not longer than 90 yards (82.29 m) and not shorter than 65 yards (59.43 m) from the centre of the pitch; the women's: not longer than 70 yards (64 m) and not shorter than 60 yards (54.86 m) | ICC men's 19.1.3; ICC women's 19.1.3 |
+| The fielding restriction's circle | two semicircles with the middle stump at either end of the pitch as their centre, of radius 30 yards (27.43 m) for the men and 25.15 yards (23 m) for the women, linked by two parallel straight lines; marked by a continuous white line or dots every 5 yards | ICC men's 28.7.2.1; ICC women's 28.7.2.1 |
+
+**Ours.** The width of the creases (the Laws print none: 2 inches, drawn thin beside the ground). The boundary drawn, 75 yards for the men and the Laws' league and 65 for the women, inside each range; the boundary is a parameter. The pitch's colour. The league `icc-men` is the ground with the 30-yard circle, which applies in limited-overs cricket (ODI and T20I); the Test conditions have none. Not drawn: Appendix C's wide guidelines and protected-area indicators, whose figures (17 in, 1 ft) are labels of a diagram, the sight screens and the run-ups.
+
+### Field hockey
+
+*Rules of Hockey including explanations*, Rule 1 and the "Field and Equipment Specifications" 1.1 to 1.8, FIH, effective from 1 March 2026, <https://www.fih.hockey/static-assets/pdf/fih-Rules-of-hockey-2026-final.pdf>, pages 14 and 55 to 62.
+
+| Figure | Value | Source |
+| --- | --- | --- |
+| The field | rectangular, 91.40 m long bounded by side-lines and 55 m wide bounded by back-lines; lines 75 mm wide, white, and part of the field | Specifications 1.1, 1.2 |
+| The 22.90 m lines | across the field 22.90 m from each back-line "as measured between the furthest edges of each line"; the 23-metres areas | Specifications 1.3 e |
+| The circle | a line 3.66 m long, its outside edge 14.63 m from the outside edge of the back-line, continued in uninterrupted arcs to the back-lines as quarter-circles with centres at the inside front corner of the nearer goal-posts | Specifications 1.4 a to c |
+| The broken line | outer edges 5 m from the outer edge of each circle-line, starting with a solid section at the top centre, each 300 mm long with gaps of 3 m; mandatory for senior international matches | Specifications 1.4 d |
+| The penalty spot | 150 mm across, its centre 6.475 m from the outer edge of the goal-line (6.40 m from the inner edge, Rule 1) | Specifications 1.3 i |
+| The marks outside the pitch | lines 300 mm long on each side-line, the further edge 14.63 m from the outer edge of the back-line; on each back-line on both sides of the goal at 5 m and 10 m from the outer edge of the nearer goal-post | Specifications 1.3 f, g |
+| The goal | the posts' inner edges 3.66 m apart, 2.14 m from the crossbar's lower edge to the ground, outside the pitch at the centre of the back-line; the net at least 0.90 m deep at the crossbar and 1.20 m at the ground | Specifications 1.5 d, e; Rule 1 |
+| The flag-posts | 1.20 to 1.50 m high, at each corner of the field | Specifications 1.8 |
+
+**Ours.** The goal's depth drawn, 1.20 m (the least the Rules allow at the ground). The posts are 50 mm wide (Specifications 1.5 b), which sets the corner marks' places from their outer edges. The clause numbers of Rule 1 (page 14) are read from a text whose labels were separated from their sentences: the table cites the Specifications, whose numbers are clear. Not drawn: the run-off areas and the side-boards and back-boards (1.6).
+
+### Team handball
+
+*IX. Rules of the Game for Indoor Handball*, Rule 1 "Playing Court", IHF, edition of 1 July 2025, <https://www.ihf.info/sites/default/files/2025-07/09A%20-%20Rules%20of%20the%20Game_Indoor%20Handball_E.pdf>, pages 4 to 7; and the *Guidelines for Playing Courts and Goals*, V, which are not part of the rules.
+
+| Figure | Value | Source |
+| --- | --- | --- |
+| The court | a rectangle 40 m long and 20 m wide; lines are fully part of the area they enclose | 1:1, 1:3 |
+| The goal | in the centre of each outer goal line, interior height 2 m, width 3 m; the rear side of the posts in line with the rear edge of the goal line | 1:2 |
+| The lines | the goal lines 8 cm wide between the posts, all other lines 5 cm | 1:3 |
+| The goal-area line (6 m) | a 3 m line parallel to the goal line, 6 m away "measured from the rear edge of the goal line to the front edge of the goal-area line", and two quarter circles of radius 6 m "measured from the rear inner corner of the goalposts" | 1:4 |
+| The free-throw line (9 m) | a broken line 3 m outside the goal-area line, segments and spaces 15 cm | 1:5 |
+| The 7-metre line | 1 m long, 7 m from the rear edge of the goal line to its front edge | 1:6 |
+| The 4-metre line | 15 cm long, 4 m from the rear edge of the goal line to its front edge | 1:7 |
+| The centre line and the throw-off area | the centre line connects the midpoints of the side lines; the throw-off area, a circle 4 m across in the middle of it | 1:8, 1:9 |
+| The substitution line | a segment of the side line from the centre line to 4.5 m from it, ended by a line parallel to the centre line extending 15 cm inside and 15 cm outside the side line | 1:10 |
+| The net's depth | 0.9 m behind the goal line at the top, 1.1 m at the bottom | Guidelines V (h) |
+
+**Ours.** The substitution lines' end marks are drawn on one side line (the book's diagram image was not read). The free-throw line is cut where it meets the side lines: the goal area is 15 m across at the goal line and the line stands 3 m outside it, so it would be 21 m across, more than the court's 20 m. The colours: the floor and the goal areas' paint. Not drawn: the coaching zone (1:11), the benches and the table.
+
+### Lacrosse
+
+| Surface | Figures | Rule |
+| --- | --- | --- |
+| World Lacrosse's men's field | 91.4 to 100 m by 50 to 60 m between the lines; goals 1.83 m (6 ft) apart and high, 12 m from each end line, the net 2.1 m behind the goal line; a crease of 3 m radius; goal area lines 22 m from the goal line; wing lines 18 m from the centre, extending 10 m either side of the centre line; lines 5 cm, the centre line 10 cm | *Men's Field Lacrosse Official Playing Rules* 2025-2027, v1.1 (January 2025): 1.1, 2.1, 2.2, 3.1, 4.1, 5.1, 7.1, 12.1; <https://worldlacrosse.sport/wp-content/uploads/2026/01/WL_Mens-Rules_25-27_FINAL_1.1.pdf> |
+| World Lacrosse's women's field | 91.4 to 100 m by 50 to 60 m; the goal line 12 m from the end lines, 1.83 m long; a goal circle of 3 m radius; a 15 m marking area from the middle of the goal line to each goal line extended, marked from 3 m to 15 m; an 11 m marking area, with a line from where the goal line extended meets the goal circle at 45 degrees to it out to the 11 m radius; restraining lines 22 m from each goal line; a centre line 3 m long and a centre circle of 9 m radius; lines 5 to 10 cm | *Women's Field Lacrosse Official Playing Rules* 2025-2026, v1.1 (January 2025): 1.A.2, 1.A.5 to 1.A.11; <https://worldlacrosse.sport/wp-content/uploads/2025/03/2025_2026-WF-Rulebook_FINALv1.1-1.pdf> |
+| World Lacrosse's box floor | 200 ft by 85 ft (the diagram's labels); the goal 4 ft 9 in apart, 4 ft high, 12 ft from the end boards; a crease of 9 ft 3 in radius cut by a straight line 1 ft from the point of the base of the goal; restraining lines 42 ft 6 in out from the centre line; the centre face-off circle of 11 ft radius with a dotted circle of 17 in; corner face-off spots 5 yards from the boards and 5 yards inside the restraining lines; all lines 2 in | *Box Lacrosse Official Playing Rules* 2026-2028, v2.0 (May 2026): 1.1.3, 1.1.5, 1.1.7, 1.1.9, 1.2.1, and the diagram of Appendix B; <https://worldlacrosse.sport/wp-content/uploads/2026/05/26-28-Box-Rule-Book_v2_0526.pdf> |
+| The NCAA's men's field | 110 by 60 yards; the goal 6 ft by 6 ft, 15 yards from each end line; a crease of 9 ft radius and a goal mouth of 6 ft radius; the net 7 ft back; an attack-area line 40 yards long, centred on goal, 20 yards from the goal line, joined to the end lines; a defensive-area line 20 yards from the goal line, sideline to sideline; wing lines 20 yards from the centre, 10 yards each side; the goal line and goal mouth 2 in wide, the centre line 4 in | *NCAA Men's Lacrosse Rules and Interpretations* 2027 and 2028 (August 2026), Rule 1-2 to 1-9; <https://ncaaorg.s3.amazonaws.com/championships/sports/lacrosse/rules/men/PRMLA_RulesBook.pdf> |
+| The NCAA's women's field | 110 by 60 m optimal, 101 to 110 by 55 to 64 m allowed, the goals 92 m apart (82 to 92 m) with 9 m behind each goal line; a goal circle of 2.6 m radius; a restraining line 27 m from each goal line; a centre circle of 9 m radius and a 3 m line through the centre; an arc of 8 m and a fan of 12 m from the goal circles, 10.6 m and 14.6 m from the middle of the goal line, the arc ending at lines at 45 degrees to the goal line extended (8.58 m long) and the fan at the goal line extended | *NCAA Women's Lacrosse Rules* 2026 and 2027 (February 2026), Rule 1-1 to 1-6, 1-21 and Diagram 2; <https://ncaaorg.s3.amazonaws.com/championships/sports/lacrosse/rules/women/PRWLA_RulesBook.pdf> |
+| The PLL's field | 100 by 60 yards; the goal 6 ft by 6 ft, 15 yards from each end line; a crease of outer radius 9 ft; the two-point arc 13 yards from the middle of the goal line at the goal line extended, parallel to the sideline until it is 15 yards from the middle, then an arc of 15 yards, extended by two lines from the goal line extended to the end line; wing lines 19 yards from the centre, 10 yards either side; the centre line and the arc 4 in wide | *2024 PLL Rulebook* (the newest found), Section II A to H; <https://premierlacrosseleague.com/wp-content/uploads/2024/03/2024-PLL-Rulebook.pdf> |
+| The NLL's floor | 180 to 200 ft by 85 ft, corners of 28 ft radius (Diagram A's labels "180'-200'", "85", "28' r"); the goal 4 ft 9 in apart and 4 ft high, 12 ft from the end boards, poles of 4 ft 6 in; a crease of 9 ft 3 in radius, its line 5 in wide, cut by a straight line 1 ft from the point of the base of the goal (Diagram B); restraining lines 42 ft 6 in from the centre line; the face-off circle of 11 ft radius with a dotted circle of 17 in; corner face-off spots 5 yards from the boards and 5 yards inside the attack lines | *NLL Official Rules* 2025-26, 1.5, 2.1, 2.2, 3.1, 6.1, 6.2, Diagrams A and B (the 2024-25 and 2019-20 books have the same); <https://www.nll.com/wp-content/uploads/2025/12/NLL-2025-26-Rulebook-FINAL-1.pdf> |
+
+**Ours.** Where a book prints a range the greatest is drawn (the NCAA women's, whose book names an optimal size, draws that). The NLL's line width, which its book does not print: World Lacrosse's 2 in is drawn. The width of the face-off circle's line, the men's field's X (World Lacrosse says "X" or a 10 cm square) and the net's depth in World Lacrosse's women's book (it prints none: the men's 2.1 m is drawn). The crease's flat is read as one foot behind the apex of the goal's poles, where Diagram B draws it (the text says "one foot from the point of the base of the goal"), the apex being as far behind the goal line as poles of 4 ft 6 in meeting over a goal 4 ft 9 in wide allow. The two-point arc's straight parts end where the arc of 15 yards begins, which is 7.48 yards from the goal line extended (the book says "until it reaches 15 yards from the center of the goalline"). World Lacrosse's box rules also say the goals stand "25 m from the midline", which does not fit its own 200 ft and 12 ft; the feet are drawn. Not drawn: the benches, the penalty boxes, the timer's table, the substitution areas and the coaches' areas of every book, and the NLL's 10 ft radius at the table.
+
 ## Surface units
 
 `SURFACE_UNITS` (`src/units.ts`) is the unit each rulebook states its principal figures in. The drawing is made in feet and a figure is one conversion from the rulebook's own.
@@ -332,6 +469,7 @@ The 18 games of `EVENTS` ([special-games.md](./special-games.md)) are read from 
 | `mlbam` | Beanumber, "Analyzing Baseball Data with R", 3rd ed., Appendix C (`hc_x` and `hc_y` are "x location" and "y location of batted ball when it lands"; the spray angle is atan((hc_x - 125.42) / (198.27 - hc_y))); Baseball Savant, "Statcast Search CSV Documentation" (`hc_x`, `hc_y` "Hit coordinate X/Y of batted ball", no unit given); MLBAnalytic, "Build a Spray Chart from Statcast" (the origin is the top left of a pixel image; 125.42 and 198.27 are home plate's place; a unit is "roughly 2.5 feet", the ratio to `hit_distance_sc` clustering at 2.48); yasumorishima/baseball-field-viz README (the same transform with a scale of 2.5) | home plate at (125.42, 198.27), x growing to right field, y growing down the image |
 | `curling` | this package's own frame: the button of the house the stones are played to as the origin, feet, x across (positive to the thrower's right), y along (positive towards the back line) | the rules score a stone by its distance from the tee (World Curling R12(d), Curling Canada Rule 14), so the tee is the origin; no data provider's format was read |
 | `tennis`, `volleyball`, `badminton`, `pickleball`, `tabletennis` | this package's own frames: the centre of the net, on the court, as the origin; x along the court (positive towards the end drawn at the right), y across it (positive towards the top as the court is drawn wide); feet for tennis and pickleball, metres for the others | each rulebook measures its court from the net (the service line, the attack line, the short service line and the non-volley zone line from it); no tracking provider's format was read (Hawk-Eye's and the others' are not published) |
+| `lacrosse`, `rugby`, `afl`, `gaelic`, `cricket`, `fieldhockey`, `handball` | this package's own frames: the centre of the surface as the origin; x along it (positive towards the end drawn at the right), y across it (positive towards the top as it is drawn wide); metres, and yards for cricket, whose origin is the middle of the pitch | each of these surfaces has a range of sizes, so the frame is fitted to the size the surface is drawn at; no data provider's format was read |
 | `retrosheet` | Retrosheet, "Hit Location Diagram" (retrosheet.org/location.htm and its diagram hitloc.jpg: the Project Scoresheet batted ball location codes, to scale for a park of 330 feet down each line and 405 to centre, outfield sectors about 50 feet deep, the infield sectors by the fielders' numbers) | the codes of the diagram, which `RETROSHEET_ZONES` places at the centre of each sector |
 
 **Ours.** Where the sources read do not settle a convention, the frame carries the common one and says so in its `note`:
@@ -404,6 +542,8 @@ The named zones that `zones` layers count into (`src/heat.zones.ts`). Each zone 
 | `baseball-retrosheet` | Retrosheet's 68 hit-location sectors, as the cells of the nearest-centre partition of the field: a point belongs to the sector whose centre is nearest, the same rule as `zoneAt` in the frames. The centres are our reading of the diagram (see the Retrosheet frame above). | Retrosheet, "Hit Location Diagram" (https://www.retrosheet.org/location.htm). The cell edges are ours. |
 | `curling-house` | At each end: the button (radius 6 in), the 4-foot ring (to a radius of 2 ft), the 8-foot ring (4 ft) and the 12-foot ring (6 ft), by the centre of the stone; and the free guard zone, between the tee line and the hog line (the hog line's inside edge, 21 ft), outside the 12-foot ring. | R1(d) and R6(a) of the World Curling rules; Rule 3(4) and Rule 12(1) of Curling Canada's. The zones are ours: the rules name the rings and the zone, and do not count stones into them. |
 | `net-court` | On each side of the net: the front court, between the net and the line the sport's own rules draw there, and the back court behind it. The line is tennis's service line (21 ft from the net), volleyball's attack line (3 m), badminton's short service line (1.98 m) and pickleball's non-volley zone line (7 ft); beach volleyball and table tennis have no such line, so each side is one half court. | Rule 1 of the ITF's rules; Rule 1.3.4 of the FIVB's; Diagram A of the BWF's; Rule 3.A.4.c of USA Pickleball's. The zones are ours: the rules name the lines and not the areas. |
+| `field-thirds` | The surface cut in three equal parts along its length, counted from the team's own end, for lacrosse, rugby, Australian football, Gaelic games, field hockey and handball. | Common usage; the cut is equal. |
+| `cricket-ground` | The pitch (22 yards by 10 feet, Laws 6.1); the rest of the ground inside the fielding restriction's circle (the ICC's two semicircles of 30 yards, or 25.15 for the women, about the middle stumps, joined by two lines, 28.7.2.1), where the league has one; and the outfield. | MCC Law 6.1; ICC 28.7.2.1. The zones are ours: the rules name the lines and not the areas. |
 | `football-pass` | Short: up to 15 yards past the line of scrimmage, a pass thrown behind it included; deep: more than 15. Left, middle and right across the field: middle is between the hash marks; left and right are the passer's, facing the way the offence attacks. The line of scrimmage is the layer's `los`. | The field names are nflverse's `pass_length` (short or deep) and `pass_location` (left, middle or right) in the [nflreadr play-by-play dictionary](https://nflreadr.nflverse.com/articles/dictionary_pbp.html). That dictionary does not give the edges (nflverse takes them from the play's text, not from air yards), so the 15 yards and the hash marks are ours. |
 
 The colour ramps are Kyogijo's own: nine stops each, chosen by luminance and checked by a test against the surface colours and the ground a heat layer paints (see [data layers](./layers.md)); no palette of a plotting package is copied.

@@ -5,6 +5,13 @@
 import { SURFACE_UNITS, convertLength, lengthsIn, type Scaled, type Unit } from "./units.ts";
 import { SOCCER, soccerSpec } from "./surfaces/soccer-spec.ts";
 import { BWF_BADMINTON, FIVB_BEACH, FIVB_INDOOR, ITF_TENNIS, ITTF_TABLE, USAP_PICKLEBALL, netInFeet } from "./leagues/courts.ts";
+import { AFL_GROUND } from "./leagues/aussie.ts";
+import { ICC_MEN_GROUND } from "./leagues/cricket.ts";
+import { FIH_PITCH } from "./leagues/fieldhockey.ts";
+import { GAA_FOOTBALL_FIELD } from "./leagues/gaelic.ts";
+import { IHF_COURT } from "./leagues/handball.ts";
+import { WORLD_MEN_FIELD } from "./leagues/lacrosse.ts";
+import { WORLD_RUGBY_FIELD } from "./leagues/rugby.ts";
 import type { Sport } from "./types.ts";
 
 export const FEET_PER_YARD = 3;
@@ -319,6 +326,36 @@ export function surfaceSize(sport: SizedSport, unit: Unit = SURFACE_UNITS[sport]
       length = TABLE_TENNIS.length;
       width = TABLE_TENNIS.width;
       break;
+    case "lacrosse":
+      length = convertLength(WORLD_MEN_FIELD.length.drawn, "m", "ft");
+      width = convertLength(WORLD_MEN_FIELD.width.drawn, "m", "ft");
+      break;
+    case "rugby":
+      // The field of play with an in-goal area at each end.
+      length = convertLength(WORLD_RUGBY_FIELD.length.drawn + 2 * WORLD_RUGBY_FIELD.inGoal.drawn, "m", "ft");
+      width = convertLength(WORLD_RUGBY_FIELD.width.drawn, "m", "ft");
+      break;
+    case "afl":
+      length = convertLength(AFL_GROUND.length.drawn, "m", "ft");
+      width = convertLength(AFL_GROUND.width.drawn, "m", "ft");
+      break;
+    case "gaelic":
+      length = convertLength(GAA_FOOTBALL_FIELD.length.drawn, "m", "ft");
+      width = convertLength(GAA_FOOTBALL_FIELD.width.drawn, "m", "ft");
+      break;
+    case "cricket":
+      // A ground is as large as its boundary: the drawn one, in a circle.
+      length = convertLength(2 * ICC_MEN_GROUND.boundary.drawn, "yd", "ft");
+      width = length;
+      break;
+    case "fieldhockey":
+      length = convertLength(FIH_PITCH.length.drawn, "m", "ft");
+      width = convertLength(FIH_PITCH.width.drawn, "m", "ft");
+      break;
+    case "handball":
+      length = convertLength(IHF_COURT.length.drawn, "m", "ft");
+      width = convertLength(IHF_COURT.width.drawn, "m", "ft");
+      break;
     default:
       throw new Error(`No fixed size for "${String(sport)}": a ballpark's size is its fence`);
   }
@@ -340,6 +377,13 @@ export function dimensionsOf(sport: "volleyball", unit?: Unit): Scaled<typeof VO
 export function dimensionsOf(sport: "badminton", unit?: Unit): Scaled<typeof BADMINTON>;
 export function dimensionsOf(sport: "pickleball", unit?: Unit): Scaled<typeof PICKLEBALL>;
 export function dimensionsOf(sport: "tabletennis", unit?: Unit): Scaled<typeof TABLE_TENNIS>;
+export function dimensionsOf(sport: "lacrosse", unit?: Unit): Scaled<typeof WORLD_MEN_FIELD>;
+export function dimensionsOf(sport: "rugby", unit?: Unit): Scaled<typeof WORLD_RUGBY_FIELD>;
+export function dimensionsOf(sport: "afl", unit?: Unit): Scaled<typeof AFL_GROUND>;
+export function dimensionsOf(sport: "gaelic", unit?: Unit): Scaled<typeof GAA_FOOTBALL_FIELD>;
+export function dimensionsOf(sport: "cricket", unit?: Unit): Scaled<typeof ICC_MEN_GROUND>;
+export function dimensionsOf(sport: "fieldhockey", unit?: Unit): Scaled<typeof FIH_PITCH>;
+export function dimensionsOf(sport: "handball", unit?: Unit): Scaled<typeof IHF_COURT>;
 export function dimensionsOf(sport: Sport, unit?: Unit): unknown;
 export function dimensionsOf(sport: Sport, unit: Unit = SURFACE_UNITS[sport]): unknown {
   switch (sport) {
@@ -368,6 +412,21 @@ export function dimensionsOf(sport: Sport, unit: Unit = SURFACE_UNITS[sport]): u
       return lengthsIn(PICKLEBALL, unit);
     case "tabletennis":
       return lengthsIn(TABLE_TENNIS, unit);
+    // The field sports: the figures of the league a drawing has without a `league` (`LEAGUES` has the others), kept in the unit their rulebook prints them in.
+    case "lacrosse":
+      return lengthsIn(WORLD_MEN_FIELD, unit, "m");
+    case "rugby":
+      return lengthsIn(WORLD_RUGBY_FIELD, unit, "m");
+    case "afl":
+      return lengthsIn(AFL_GROUND, unit, "m");
+    case "gaelic":
+      return lengthsIn(GAA_FOOTBALL_FIELD, unit, "m");
+    case "cricket":
+      return lengthsIn(ICC_MEN_GROUND, unit, "yd");
+    case "fieldhockey":
+      return lengthsIn(FIH_PITCH, unit, "m");
+    case "handball":
+      return lengthsIn(IHF_COURT, unit, "m");
     default:
       throw new Error(`Unknown sport "${String(sport)}"`);
   }

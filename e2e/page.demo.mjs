@@ -5,7 +5,7 @@ import { expect, test } from "@playwright/test";
 import { at, open, openGroups, svg } from "./demo.mjs";
 
 // A wide court is a strip on a phone, and a court has fewer parts than a ballpark or a pitch.
-const NET = ["tennis", "volleyball", "badminton", "pickleball", "tabletennis"];
+const NET = ["tennis", "volleyball", "badminton", "pickleball", "tabletennis", "lacrosse", "rugby", "afl", "gaelic", "cricket", "fieldhockey", "handball"];
 const SPORTS = ["nfl", "cfl", "ifaf", "nhl", "nba", "mlb", "soccer", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis"];
 
 test("opens on the rink with no complaint from the page, and says what it shows", async ({ page }) => {
@@ -138,7 +138,7 @@ test("a live score moves when asked", async ({ page }) => {
 
 test("the examples are all there: every sport, wide and tall, badges, compact cards, courts and the parks on request", async ({ page }) => {
   await open(page, "?lang=en&help=off");
-  expect(await page.locator(`${at("gallery-cards")} svg.kyogijo`).count()).toBe(13);
+  expect(await page.locator(`${at("gallery-cards")} svg.kyogijo`).count()).toBe(20);
   expect(await page.locator(`${at("side-cards")} svg.kyogijo`).count()).toBe(4);
   expect(await page.locator(`${at("badge-list")} svg.kyogijo`).count()).toBe(8);
   expect(await page.locator(`${at("compact-cards")} svg.kyogijo`).count()).toBe(3);

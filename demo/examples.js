@@ -34,7 +34,7 @@ export const TEAMS_JA = {
   net: { away: "港町ガルズ", home: "草原バイソンズ" },
 };
 
-export const FAMILIES = { nfl: "football", cfl: "football", ifaf: "football", nhl: "hockey", nba: "basketball", mlb: "baseball", soccer: "soccer", curling: "curling", tennis: "net", volleyball: "net", badminton: "net", pickleball: "net", tabletennis: "net" };
+export const FAMILIES = { nfl: "football", cfl: "football", ifaf: "football", nhl: "hockey", nba: "basketball", mlb: "baseball", soccer: "soccer", curling: "curling", tennis: "net", volleyball: "net", badminton: "net", pickleball: "net", tabletennis: "net", lacrosse: "football", rugby: "football", afl: "football", gaelic: "football", cricket: "football", fieldhockey: "football", handball: "football" };
 
 /** Typical scores and a competition line for each sport. */
 export const GAMES = {
@@ -52,4 +52,12 @@ export const GAMES = {
   badminton: { away: 1, home: 1, status: "game-3", competition: "Final", date: "Aug 4", awaySets: [21, 18, 11], homeSets: [17, 21, 9], serving: "away" },
   pickleball: { away: 1, home: 1, status: "game-3", competition: "Final", date: "Sep 7", awaySets: [11, 8, 5], homeSets: [7, 11, 4], serving: "away" },
   tabletennis: { away: 3, home: 2, status: "final", competition: "Final", date: "Jul 21", awaySets: [11, 9, 11, 7, 11], homeSets: [7, 11, 8, 11, 6] },
+  // The field sports: a plain score, except Australian football's goals and behinds, Gaelic games' goals and points and cricket's wickets, overs and innings, which an edited score does not keep.
+  lacrosse: { away: 11, home: 9, status: "final", competition: "Final", date: "Jun 1" },
+  rugby: { away: 27, home: 24, status: "final", competition: "Final", date: "Oct 31" },
+  afl: { away: 72, home: 68, status: "final", competition: "Grand Final", date: "Sep 27", awayExtra: { goals: 10, behinds: 12 }, homeExtra: { goals: 9, behinds: 14 } },
+  gaelic: { away: 20, home: 18, status: "final", competition: "All-Ireland Final", date: "Jul 20", awayExtra: { goals: 2, points: 14 }, homeExtra: { goals: 1, points: 15 } },
+  cricket: { away: 245, home: 187, status: "final", competition: "Final", date: "Nov 19", awayExtra: { wickets: 6, overs: "50", innings: [245] }, homeExtra: { wickets: 10, overs: "41.2", innings: [187] } },
+  fieldhockey: { away: 3, home: 2, status: "final", competition: "Final", date: "Aug 8" },
+  handball: { away: 28, home: 26, status: "final", competition: "Final", date: "Aug 10" },
 };
