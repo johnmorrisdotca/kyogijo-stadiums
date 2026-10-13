@@ -34,7 +34,7 @@ export interface SurfaceSize {
 }
 
 /** The unit of a frame's numbers: a length, or what a provider's own scale is. */
-export type FrameUnit = Unit | "px" | "tenth-ft" | "percent";
+export type FrameUnit = Unit | "px" | "tenth-ft" | "percent" | "fraction";
 
 /** The ends of a surface and what a frame says about them. */
 export type Ends =

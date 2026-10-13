@@ -4,3 +4,7 @@ export type { Attacking, ConvertOptions, Ends, Frame, FrameMap, FrameUnit, Landm
 export { RETROSHEET_ZONES, zoneAt, zoneToPoint } from "./frames.providers.ts";
 export { convertLength, convertPoint } from "./units.ts";
 export type { Point, Unit } from "./units.ts";
+// The soccer providers register themselves as frames when this entry loads.
+import "./surfaces/soccer-providers.ts";
+export { SOCCER_PROVIDER_IDS, SOCCER_PROVIDERS, rescale, soccerFrame, soccerLandmarks } from "./surfaces/soccer-providers.ts";
+export type { Rescaler, SoccerFrame, SoccerProvider, SoccerProviderId } from "./surfaces/soccer-providers.ts";

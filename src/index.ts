@@ -13,7 +13,7 @@ export { SURFACE_UNITS, UNITS, convertLength, isUnit } from "./units.ts";
 export type { Unit } from "./units.ts";
 export { SOCCER, SOCCER_PITCHES, SOCCER_PITCH_IDS, soccerPitchClass, soccerSpec } from "./surfaces/soccer-spec.ts";
 export type { SoccerPitchClass, SoccerPitchId, SoccerSize, SoccerSpec } from "./surfaces/soccer-spec.ts";
-export { SOCCER_PROVIDERS, frameMatrix, rescale, soccerFrame, soccerLandmarks } from "./surfaces/soccer-providers.ts";
+export { SOCCER_PROVIDER_IDS, SOCCER_PROVIDERS, frameMatrix, rescale, soccerFrame, soccerLandmarks } from "./surfaces/soccer-providers.ts";
 export type { Rescaler, SoccerFrame, SoccerProvider, SoccerProviderId } from "./surfaces/soccer-providers.ts";
 export { VERSION } from "./version.ts";
 export type {

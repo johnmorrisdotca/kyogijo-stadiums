@@ -3,6 +3,7 @@
 // hold a key distance to the rulebook.
 
 import { SURFACE_UNITS, convertLength, lengthsIn, type Scaled, type Unit } from "./units.ts";
+import { SOCCER, soccerSpec } from "./surfaces/soccer-spec.ts";
 import type { Sport } from "./types.ts";
 
 export const FEET_PER_YARD = 3;
@@ -230,6 +231,13 @@ export function surfaceSize(sport: SizedSport, unit: Unit = SURFACE_UNITS[sport]
       length = NBA.length;
       width = NBA.width;
       break;
+    case "soccer": {
+      // The international pitch, 105 by 68 metres: the size a pitch is drawn at when no other is asked for.
+      const pitch = soccerSpec("fifa");
+      length = convertLength(pitch.length, "m", "ft");
+      width = convertLength(pitch.width, "m", "ft");
+      break;
+    }
     default:
       throw new Error(`No fixed size for "${String(sport)}": a ballpark's size is its fence`);
   }
@@ -244,6 +252,7 @@ export function dimensionsOf(sport: "nhl", unit?: Unit): Scaled<typeof NHL>;
 export function dimensionsOf(sport: "nba", unit?: Unit): Scaled<typeof NBA>;
 export function dimensionsOf(sport: "mlb", unit?: Unit): Scaled<typeof MLB>;
 export function dimensionsOf(sport: "nfl" | "cfl" | "ifaf", unit?: Unit): Scaled<FootballSpec>;
+export function dimensionsOf(sport: "soccer", unit?: Unit): Scaled<typeof SOCCER>;
 export function dimensionsOf(sport: Sport, unit?: Unit): unknown;
 export function dimensionsOf(sport: Sport, unit: Unit = SURFACE_UNITS[sport]): unknown {
   switch (sport) {
@@ -257,6 +266,9 @@ export function dimensionsOf(sport: Sport, unit: Unit = SURFACE_UNITS[sport]): u
       return lengthsIn(NBA, unit);
     case "mlb":
       return lengthsIn(MLB, unit);
+    case "soccer":
+      // The Laws' figures are kept in metres.
+      return lengthsIn(SOCCER, unit, "m");
     default:
       throw new Error(`Unknown sport "${String(sport)}"`);
   }

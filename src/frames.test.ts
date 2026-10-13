@@ -313,7 +313,8 @@ describe("the registry", () => {
       expect(frame.title.length, frame.name).toBeGreaterThan(5);
       expect(frame.origin.length, frame.name).toBeGreaterThan(3);
       expect(["up", "down"]).toContain(frame.yDirection);
-      expect(frame.size).toBe("fixed");
+      // A soccer pitch has any size within the Laws, so its frames are variable; every other surface has one.
+      expect(frame.size).toBe(frame.sport === "soccer" ? "variable" : "fixed");
       expect(frame.x[0]).toBeLessThan(frame.x[1]);
       expect(frame.y[0]).toBeLessThan(frame.y[1]);
       expect(frame.source.length).toBeGreaterThan(3);
@@ -323,7 +324,8 @@ describe("the registry", () => {
   it("says which way y grows, and the landmarks agree", () => {
     for (const frame of Object.values(FRAMES)) {
       if (frame.name === "retrosheet" || frame.name === "mlbam") continue;
-      const [a, b] = [frame.y[0], frame.y[1]].map((y) => toSurface([[frame.x[0], y]], { from: frame }));
+      const size = frame.size === "variable" ? { length: 105, width: 68, unit: "m" as const } : undefined;
+      const [a, b] = [frame.y[0], frame.y[1]].map((y) => toSurface([[frame.x[0], y]], { from: frame, size }));
       const along = frame.landmarks as { swap?: boolean };
       // On the surface, y down is the page's down: a frame whose y goes up has its larger y at a smaller surface y (or, swapped, at a smaller surface x).
       const index = along.swap === true ? 0 : 1;

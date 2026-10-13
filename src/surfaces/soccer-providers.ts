@@ -8,9 +8,12 @@
 // provider that fixes its numbers (Opta, StatsBomb, Wyscout) puts the lines where its own figures say, which is rarely
 // where the Laws put them on a pitch of 105 by 68 metres; the map keeps a point on a line on that line.
 //
-// This file asks nothing of the rest of the package except a pitch's length and width, so that it is easy to move.
+// The providers are registered as frames (`registerFrame`, src/frames.ts) under their ids, so that `toSurface`, `fromSurface`
+// and `convert` take them by name, and the map between two of them is that module's `piecewise` mapper.
 
-import type { SoccerLayout, SoccerSpec } from "./soccer-spec.ts";
+import { FRAMES, piecewise, registerFrame, type Frame, type FrameUnit, type Landmark } from "../frames.ts";
+import { FEET_PER_METRE } from "../geometry.ts";
+import { SOCCER, type SoccerLayout, type SoccerSpec } from "./soccer-spec.ts";
 
 /** The providers, by the id the options use. */
 export type SoccerProviderId = "opta" | "statsbomb" | "wyscout" | "tracab" | "metrica" | "skillcorner" | "secondspectrum" | "impect" | "uefa" | "international";
@@ -48,8 +51,12 @@ export interface SoccerFrame {
 export interface SoccerProvider {
   id: SoccerProviderId;
   name: string;
-  /** The unit of its numbers. */
+  /** The unit of its numbers, for people. */
   unit: string;
+  /** The unit as the frames registry names it. */
+  frameUnit: FrameUnit;
+  /** Where (0, 0) lies, in words. */
+  origin: string;
   /** True when its extents follow the size of the pitch (Tracab's centimetres from the centre): the frame is made for a size. */
   sized: boolean;
   /** The page of the provider's own documentation the figures were read from. */
@@ -107,6 +114,8 @@ const centred = (length: number, width: number, k: number): Pick<SoccerFrame, "x
 export const SOCCER_PROVIDERS: Readonly<Record<SoccerProviderId, SoccerProvider>> = {
   opta: {
     id: "opta",
+    frameUnit: "percent",
+    origin: "the bottom left corner of the pitch",
     name: "Opta / Stats Perform",
     unit: "0 to 100",
     sized: false,
@@ -116,6 +125,8 @@ export const SOCCER_PROVIDERS: Readonly<Record<SoccerProviderId, SoccerProvider>
   },
   statsbomb: {
     id: "statsbomb",
+    frameUnit: "yd",
+    origin: "the top left corner of the pitch",
     name: "StatsBomb",
     unit: "yards",
     sized: false,
@@ -125,6 +136,8 @@ export const SOCCER_PROVIDERS: Readonly<Record<SoccerProviderId, SoccerProvider>
   },
   wyscout: {
     id: "wyscout",
+    frameUnit: "percent",
+    origin: "the top left corner of the pitch",
     name: "Wyscout",
     unit: "0 to 100",
     sized: false,
@@ -134,6 +147,8 @@ export const SOCCER_PROVIDERS: Readonly<Record<SoccerProviderId, SoccerProvider>
   },
   tracab: {
     id: "tracab",
+    frameUnit: "cm",
+    origin: "the centre spot",
     name: "Tracab",
     unit: "centimetres",
     sized: true,
@@ -143,6 +158,8 @@ export const SOCCER_PROVIDERS: Readonly<Record<SoccerProviderId, SoccerProvider>
   },
   metrica: {
     id: "metrica",
+    frameUnit: "fraction",
+    origin: "the top left corner of the pitch",
     name: "Metrica Sports",
     unit: "0 to 1",
     sized: true,
@@ -152,6 +169,8 @@ export const SOCCER_PROVIDERS: Readonly<Record<SoccerProviderId, SoccerProvider>
   },
   skillcorner: {
     id: "skillcorner",
+    frameUnit: "m",
+    origin: "the centre spot",
     name: "SkillCorner",
     unit: "metres",
     sized: true,
@@ -161,6 +180,8 @@ export const SOCCER_PROVIDERS: Readonly<Record<SoccerProviderId, SoccerProvider>
   },
   secondspectrum: {
     id: "secondspectrum",
+    frameUnit: "m",
+    origin: "the centre spot",
     name: "Second Spectrum",
     unit: "metres",
     sized: true,
@@ -170,6 +191,8 @@ export const SOCCER_PROVIDERS: Readonly<Record<SoccerProviderId, SoccerProvider>
   },
   impect: {
     id: "impect",
+    frameUnit: "m",
+    origin: "the centre spot",
     name: "Impect",
     unit: "metres",
     sized: false,
@@ -179,6 +202,8 @@ export const SOCCER_PROVIDERS: Readonly<Record<SoccerProviderId, SoccerProvider>
   },
   uefa: {
     id: "uefa",
+    frameUnit: "m",
+    origin: "the bottom left corner of the pitch",
     name: "UEFA",
     unit: "metres",
     sized: false,
@@ -188,6 +213,8 @@ export const SOCCER_PROVIDERS: Readonly<Record<SoccerProviderId, SoccerProvider>
   },
   international: {
     id: "international",
+    frameUnit: "m",
+    origin: "the bottom left corner of the pitch",
     name: "International",
     unit: "metres",
     sized: true,
@@ -253,7 +280,8 @@ export function soccerFrame(frame: SoccerProviderId | SoccerFrame | string | und
     if (!Object.prototype.hasOwnProperty.call(SOCCER_PROVIDERS, frame)) return undefined;
     const length = Number.isFinite(pitch.length) && pitch.length > 0 ? pitch.length : STANDARD.length;
     const width = Number.isFinite(pitch.width) && pitch.width > 0 ? pitch.width : STANDARD.width;
-    return SOCCER_PROVIDERS[frame as SoccerProviderId].frame(length, width);
+    const made = SOCCER_PROVIDERS[frame as SoccerProviderId].frame(length, width);
+    return validFrame(made) ? made : undefined;
   }
   return validFrame(frame) ? frame : undefined;
 }
@@ -290,16 +318,6 @@ export function frameMatrix(f: SoccerFrame, spec: Pick<SoccerSpec, "length" | "w
   return [a, 0, 0, d, -f.xLeft * a, -f.yTop * d];
 }
 
-/** A value mapped through paired landmarks, piecewise linear, running on past the ends along the end segments. */
-function piecewise(from: readonly number[], to: readonly number[], v: number): number {
-  const n = from.length;
-  const up = from[n - 1] > from[0];
-  let i = 0;
-  while (i < n - 2 && (up ? v > from[i + 1] : v < from[i + 1])) i += 1;
-  const t = (v - from[i]) / (from[i + 1] - from[i]);
-  return to[i] + t * (to[i + 1] - to[i]);
-}
-
 /** A map from one provider's coordinates to another's. */
 export interface Rescaler {
   (x: number, y: number): [number, number];
@@ -307,16 +325,41 @@ export interface Rescaler {
   x(value: number): number;
   /** Only the y of a point. */
   y(value: number): number;
+  /** The map the other way: from the second provider's coordinates to the first's. */
+  inverse: Rescaler;
   from: SoccerFrame;
   to: SoccerFrame;
 }
 
+function rescaler(a: SoccerFrame, b: SoccerFrame): Rescaler {
+  const la = soccerLandmarks(a);
+  const lb = soccerLandmarks(b);
+  const pair = (from: number[], to: number[]): Landmark[] => from.map((value, i): Landmark => [value, to[i]]);
+  const px = piecewise(pair(la.x, lb.x));
+  const py = piecewise(pair(la.y, lb.y));
+  const rx = piecewise(pair(lb.x, la.x));
+  const ry = piecewise(pair(lb.y, la.y));
+  const make = (fx: (v: number) => number, fy: (v: number) => number, from: SoccerFrame, to: SoccerFrame): Rescaler => {
+    const map = ((x: number, y: number): [number, number] => [fx(x), fy(y)]) as Rescaler;
+    map.x = fx;
+    map.y = fy;
+    map.from = from;
+    map.to = to;
+    return map;
+  };
+  const forward = make(px.forward, py.forward, a, b);
+  forward.inverse = make(rx.forward, ry.forward, b, a);
+  forward.inverse.inverse = forward;
+  return forward;
+}
+
 /**
- * The map from one coordinate system to another, piecewise linear between the landmarks, so that a point on a line of
- * the pitch (the goal line, the goal area, the penalty mark, the penalty area, the halfway line, the touchline, the
- * posts) lands on the same line in the other system. Between two landmarks the map is linear; beyond the goal lines and
- * the touchlines (a ball out of play) it runs on along the last piece. Give a pitch size in metres for a provider
- * whose numbers follow the pitch (Tracab, SkillCorner, Second Spectrum, Impect).
+ * The map from one coordinate system to another, piecewise linear between the landmarks (it is built on `piecewise` of
+ * `@johnmorrisdotca/kyogijo/frames`), so that a point on a line of the pitch (the goal line, the goal area, the penalty
+ * mark, the penalty area, the halfway line, the touchline, the posts) lands on the same line in the other system. Between
+ * two landmarks the map is linear; beyond the goal lines and the touchlines (a ball out of play) it runs on along the last
+ * piece. Give a pitch size in metres for a provider whose numbers follow the pitch (Tracab, SkillCorner, Second
+ * Spectrum, Metrica, `international`). The same map, through the surface and in feet, is `convert` of the frames module.
  * @example
  * ```ts
  * import { rescale } from "@johnmorrisdotca/kyogijo";
@@ -330,15 +373,49 @@ export interface Rescaler {
 export function rescale(from: SoccerProviderId | SoccerFrame, to: SoccerProviderId | SoccerFrame, pitch: PitchMetres = STANDARD): Rescaler {
   const a = soccerFrame(from, pitch);
   const b = soccerFrame(to, pitch);
-  if (a === undefined || b === undefined) throw new Error(`Unknown pitch type "${String(a === undefined ? from : to)}": use one of ${Object.keys(SOCCER_PROVIDERS).join(", ")}, or a frame`);
-  const la = soccerLandmarks(a);
-  const lb = soccerLandmarks(b);
-  const x = (value: number): number => piecewise(la.x, lb.x, value);
-  const y = (value: number): number => piecewise(la.y, lb.y, value);
-  const map = ((px: number, py: number): [number, number] => [x(px), y(py)]) as Rescaler;
-  map.x = x;
-  map.y = y;
-  map.from = a;
-  map.to = b;
-  return map;
+  if (a === undefined || b === undefined) throw new Error(`Unknown pitch type "${typeof (a === undefined ? from : to) === "string" ? String(a === undefined ? from : to) : "(a frame)"}", or a pitch too small for it: use one of ${SOCCER_PROVIDER_IDS.join(", ")}, or a valid frame`);
+  return rescaler(a, b);
 }
+
+// ----- The providers are frames of the frames module, for a pitch of any size: toSurface({ from: "opta", size }) and convert("opta", "statsbomb", { size }).
+
+const feet = (metres: number): number => metres * FEET_PER_METRE;
+
+/** Where the landmarks stand on a pitch drawn with the Laws' markings, in feet, in the order of `soccerLandmarks`: along x from the left goal line, and across y from the top touchline. */
+function surfaceLandmarks(length: number, width: number): { x: number[]; y: number[] } {
+  const [ga, spot, pen] = [SOCCER.goalAreaReach, SOCCER.spot, SOCCER.penaltyReach].map(feet);
+  const { goalWidth } = SOCCER;
+  const goal = feet(goalWidth / 2);
+  const six = feet(goalWidth / 2 + SOCCER.goalAreaReach);
+  const box = feet(goalWidth / 2 + SOCCER.penaltyReach);
+  const mx = length / 2;
+  const my = width / 2;
+  return { x: [0, ga, spot, pen, mx, length - pen, length - spot, length - ga, length], y: [0, my - box, my - six, my - goal, my, my + goal, my + six, my + box, width] };
+}
+
+function asFrame(p: SoccerProvider): Frame {
+  const sample = p.frame(STANDARD.length, STANDARD.width);
+  return {
+    name: p.id,
+    title: `${p.name} pitch coordinates`,
+    sport: "soccer",
+    unit: p.frameUnit,
+    x: [Math.min(sample.xLeft, sample.xRight), Math.max(sample.xLeft, sample.xRight)],
+    y: [Math.min(sample.yTop, sample.yBottom), Math.max(sample.yTop, sample.yBottom)],
+    origin: p.origin,
+    yDirection: sample.yBottom < sample.yTop ? "up" : "down",
+    size: "variable",
+    ends: "fixed",
+    // The landmarks on a pitch drawn with the Laws' markings: the surface's size is in feet, the provider's pitch in metres.
+    landmarks: ({ length, width }) => {
+      const frame = p.frame(length / FEET_PER_METRE, width / FEET_PER_METRE);
+      const own = soccerLandmarks(frame);
+      const there = surfaceLandmarks(length, width);
+      return { x: own.x.map((v, i): Landmark => [v, there.x[i]]), y: own.y.map((v, i): Landmark => [v, there.y[i]]) };
+    },
+    source: p.source,
+    note: p.note,
+  };
+}
+
+for (const id of SOCCER_PROVIDER_IDS) if (!Object.prototype.hasOwnProperty.call(FRAMES, id)) registerFrame(asFrame(SOCCER_PROVIDERS[id]));

@@ -92,6 +92,7 @@ function end(spec: SoccerSpec, lay: SoccerLayout, L: number, W: number, side: 0 
   let path = "";
   let marks = "";
   if (spec.area === "arcs") path += arcsArea(spec, L, W, side);
+  else if (spec.area === "semicircle") path += `M${n(gx)} ${n(cy - spec.penaltyDepth)}A${n(spec.penaltyDepth)} ${n(spec.penaltyDepth)} 0 0 ${side === 0 ? 1 : 0} ${n(gx)} ${n(cy + spec.penaltyDepth)}`;
   else if (lay.penaltyDepth > 0) {
     path += `M${n(gx)} ${n(cy - lay.penaltyHalfWidth)}H${n(at(lay.penaltyDepth))}V${n(cy + lay.penaltyHalfWidth)}H${n(gx)}`;
   }
@@ -138,11 +139,12 @@ export function soccer(b: SoccerBuild, o: BuildOptions): Surface {
   if (turf.path !== "" && spec.format !== "futsal") inside += el("path", { class: "ky-stripe", d: turf.path, "clip-path": turf.defs === "" ? undefined : `url(#${o.id}-turf)` });
   // The ends in the team's colour, in a score: the penalty area (or what a small pitch has in its place).
   const zoneDepth = Math.max(spec.penaltyDepth, L * 0.12);
-  const zoneWidth = Math.max(spec.area === "arcs" ? spec.areaLine + 2 * spec.penaltyDepth : lay.penaltyHalfWidth * 2, W * 0.4);
+  const zoneWidth = Math.max(spec.area === "arcs" ? spec.areaLine + 2 * spec.penaltyDepth : spec.area === "semicircle" ? 2 * spec.penaltyDepth : lay.penaltyHalfWidth * 2, W * 0.4);
   if (o.score) {
     for (const side of [0, 1] as const) {
       const cls = `ky-zone ky-zone-${side === 0 ? "left" : "right"}`;
       if (spec.area === "arcs") inside += el("path", { class: cls, d: `${arcsArea(spec, L, W, side)}Z` });
+      else if (spec.area === "semicircle") inside += el("path", { class: cls, d: `M${n(side === 0 ? 0 : L)} ${n(cy - spec.penaltyDepth)}A${n(spec.penaltyDepth)} ${n(spec.penaltyDepth)} 0 0 ${side === 0 ? 1 : 0} ${n(side === 0 ? 0 : L)} ${n(cy + spec.penaltyDepth)}Z` });
       else inside += el("rect", { class: cls, x: side === 0 ? 0 : L - zoneDepth, y: cy - zoneWidth / 2, width: zoneDepth, height: zoneWidth });
     }
   }
@@ -181,11 +183,13 @@ export function soccer(b: SoccerBuild, o: BuildOptions): Surface {
     }
     lines += el("path", { class: "ky-line", d: t.join(""), "stroke-width": lw, fill: "none" });
   }
-  // Futsal's substitution zones: 5 m along the touchline from the halfway line, on one side, with the marks across it.
+  // Futsal (Law 1, sub-sections 6 and 2): the substitution zone is 5 m long, 5 m from the halfway line, closed by marks 80 cm long, half of
+  // them off the pitch; the marks 5 m from each corner arc off the pitch show the distance of a corner kick, 5 cm from the end line.
   if (full && spec.format === "futsal") {
-    const zone = 5;
-    const t = `M${n(L / 2 + 0)} ${n(W)}v${n(0.4)}M${n(L / 2 + zone)} ${n(W)}v${n(0.4)}M${n(L / 2)} ${n(W)}v${n(-0.4)}M${n(L / 2 + zone)} ${n(W)}v${n(-0.4)}`;
-    lines += el("path", { class: "ky-line", d: t, "stroke-width": lw, fill: "none" });
+    const t: string[] = [];
+    for (const x of [L / 2 + 5, L / 2 + 10]) t.push(`M${n(x)} ${n(W - 0.4)}v0.8`);
+    for (const x of [5 + r, L - 5 - r]) for (const y of [0, W]) t.push(`M${n(x)} ${n(y + (y === 0 ? -0.05 : 0.05))}v${y === 0 ? -0.4 : 0.4}`);
+    lines += el("path", { class: "ky-line", d: t.join(""), "stroke-width": lw, fill: "none" });
   }
   // Goals.
   let goals = "";

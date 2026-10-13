@@ -5,8 +5,8 @@
 export const METRES_PER_YARD = 0.9144;
 export const METRES_PER_FOOT = 0.3048;
 
-/** How a pitch's penalty area is shaped: two lines and a line across, or futsal's two quarter circles and a line. */
-export type SoccerArea = "box" | "arcs";
+/** How a pitch's penalty area is shaped: a box (two lines and a line across), futsal's two quarter circles and a line, or the FA small-sided laws' semicircle round the middle of the goal line. */
+export type SoccerArea = "box" | "arcs" | "semicircle";
 
 /** The formats: eleven a side under the IFAB Laws, the small-sided ones of the FA, and futsal under FIFA's Futsal Laws. */
 export type SoccerFormat = "11" | "9" | "7" | "5" | "futsal";
@@ -163,14 +163,15 @@ function small(id: string, name: string, format: SoccerFormat, length: number, w
 }
 
 /** The ids of the presets. */
-export type SoccerPitchId = "fifa" | "uefa" | "mls" | "nwsl" | "ncaa" | "law-min" | "law-max" | "9-a-side" | "7-a-side" | "5-a-side" | "futsal";
+export type SoccerPitchId = "fifa" | "uefa" | "mls" | "ncaa" | "law-min" | "law-max" | "9-a-side" | "7-a-side" | "5-a-side" | "futsal";
 
 /** The ids of the presets, in the order a menu lists them. */
-export const SOCCER_PITCH_IDS: readonly SoccerPitchId[] = ["fifa", "uefa", "mls", "nwsl", "ncaa", "law-min", "law-max", "9-a-side", "7-a-side", "5-a-side", "futsal"];
+export const SOCCER_PITCH_IDS: readonly SoccerPitchId[] = ["fifa", "uefa", "mls", "ncaa", "law-min", "law-max", "9-a-side", "7-a-side", "5-a-side", "futsal"];
 
 /**
- * The presets: the international pitch of 105 by 68 m, the sizes UEFA, MLS, the NWSL and the NCAA publish, the least and
- * most the Laws allow, the FA's 9-, 7- and 5-a-side pitches and FIFA's futsal court. Each is a full `SoccerSpec`.
+ * The presets: the international pitch of 105 by 68 m (the Laws' usual, the Premier League's and UEFA's categories 3 and
+ * 4), the least size the MLS requires (110 by 70 yards) and the NCAA's best (120 by 75 yards), the least and most the Laws
+ * allow, the FA's 9-, 7- and 5-a-side pitches and FIFA's futsal court. Each is a full `SoccerSpec`.
  * @example
  * ```ts
  * import { SOCCER_PITCHES } from "@johnmorrisdotca/kyogijo";
@@ -182,14 +183,14 @@ export const SOCCER_PITCH_IDS: readonly SoccerPitchId[] = ["fifa", "uefa", "mls"
 export const SOCCER_PITCHES: Readonly<Record<SoccerPitchId, SoccerSpec>> = {
   fifa: fullPitch("fifa", "International (FIFA)", 105, 68),
   uefa: fullPitch("uefa", "UEFA", 105, 68),
-  mls: fullPitch("mls", "MLS", yd(115), yd(75)),
-  nwsl: fullPitch("nwsl", "NWSL", yd(115), yd(75)),
-  ncaa: fullPitch("ncaa", "NCAA", yd(115), yd(75)),
+  mls: fullPitch("mls", "MLS (least size)", yd(110), yd(70)),
+  ncaa: fullPitch("ncaa", "NCAA (best size)", yd(120), yd(75)),
   "law-min": fullPitch("law-min", "Smallest under the Laws", 90, 45),
   "law-max": fullPitch("law-max", "Largest under the Laws", 120, 90),
-  "9-a-side": small("9-a-side", "9-a-side", "9", yd(80), yd(50), { penaltyDepth: yd(14), penaltyWidth: yd(36), goalAreaDepth: 0, goalAreaWidth: 0, spot: yd(10), arcRadius: 0, centreRadius: yd(8), goalWidth: ft(16), goalHeight: ft(7) }),
-  "7-a-side": small("7-a-side", "7-a-side", "7", yd(60), yd(40), { penaltyDepth: yd(12), penaltyWidth: yd(24), goalAreaDepth: 0, goalAreaWidth: 0, spot: yd(8), arcRadius: 0, centreRadius: yd(8), goalWidth: ft(12), goalHeight: ft(6) }),
-  "5-a-side": small("5-a-side", "5-a-side", "5", yd(40), yd(30), { penaltyDepth: yd(8), penaltyWidth: yd(12), goalAreaDepth: 0, goalAreaWidth: 0, spot: yd(6), arcRadius: 0, centreRadius: yd(6), goalWidth: ft(12), goalHeight: ft(6) }),
+  // The FA's recommended pitch and goal sizes (Handbook, Section 38); the markings of 5- and 7-a-side are those of its small-sided laws (a semicircle of 6 m round the middle of each goal line, the mark at 6 m, the centre circle of 3 m), and the 9-a-side's are ours.
+  "9-a-side": small("9-a-side", "9-a-side", "9", yd(80), yd(50), { penaltyDepth: 11, penaltyWidth: 22 + ft(16), goalAreaDepth: 0, goalAreaWidth: 0, spot: 9, arcRadius: 0, centreRadius: 7.3, goalWidth: ft(16), goalHeight: ft(7), cornerRadius: 0.25 }),
+  "7-a-side": small("7-a-side", "7-a-side", "7", yd(60), yd(40), { penaltyDepth: 6, penaltyWidth: 12, area: "semicircle", goalAreaDepth: 0, goalAreaWidth: 0, spot: 6, arcRadius: 0, centreRadius: 3, goalWidth: ft(12), goalHeight: ft(6), cornerRadius: 0.25 }),
+  "5-a-side": small("5-a-side", "5-a-side", "5", yd(40), yd(30), { penaltyDepth: 6, penaltyWidth: 12, area: "semicircle", goalAreaDepth: 0, goalAreaWidth: 0, spot: 6, arcRadius: 0, centreRadius: 3, goalWidth: ft(12), goalHeight: ft(6), cornerRadius: 0.25 }),
   futsal: {
     ...fullPitch("futsal", "Futsal (FIFA)", 40, 20),
     format: "futsal",
@@ -215,11 +216,11 @@ export const SOCCER_PITCHES: Readonly<Record<SoccerPitchId, SoccerSpec>> = {
 export interface SoccerSize {
   length: number;
   width: number;
-  /** `m` (the default), `yd` or `ft`. */
-  unit?: "m" | "yd" | "ft";
+  /** `m` (the default), `yd`, `ft`, `in`, `cm` or `mm`. */
+  unit?: "m" | "yd" | "ft" | "in" | "cm" | "mm";
 }
 
-const UNIT: Record<NonNullable<SoccerSize["unit"]>, number> = { m: 1, yd: METRES_PER_YARD, ft: METRES_PER_FOOT };
+const UNIT: Record<NonNullable<SoccerSize["unit"]>, number> = { m: 1, yd: METRES_PER_YARD, ft: METRES_PER_FOOT, in: METRES_PER_FOOT / 12, cm: 0.01, mm: 0.001 };
 
 const isSize = (value: unknown): value is SoccerSize => typeof value === "object" && value !== null && typeof (value as SoccerSize).length === "number" && typeof (value as SoccerSize).width === "number";
 
@@ -235,10 +236,10 @@ const isSize = (value: unknown): value is SoccerSize => typeof value === "object
  * // 100.58 64.01
  * ```
  */
-export function soccerSpec(pitch?: SoccerPitchId | SoccerSize | string): SoccerSpec {
+export function soccerSpec(pitch?: SoccerPitchId | SoccerSize | string, defaultUnit: NonNullable<SoccerSize["unit"]> = "m"): SoccerSpec {
   if (typeof pitch === "string") return Object.prototype.hasOwnProperty.call(SOCCER_PITCHES, pitch) ? SOCCER_PITCHES[pitch as SoccerPitchId] : SOCCER_PITCHES.fifa;
   if (!isSize(pitch)) return SOCCER_PITCHES.fifa;
-  const unit = pitch.unit !== undefined && Object.prototype.hasOwnProperty.call(UNIT, pitch.unit) ? UNIT[pitch.unit] : 1;
+  const unit = pitch.unit !== undefined && Object.prototype.hasOwnProperty.call(UNIT, pitch.unit) ? UNIT[pitch.unit] : UNIT[defaultUnit];
   const length = pitch.length * unit;
   const width = pitch.width * unit;
   if (!(Number.isFinite(length) && Number.isFinite(width) && length > 0 && width > 0 && length <= 400 && width <= 400)) return SOCCER_PITCHES.fifa;

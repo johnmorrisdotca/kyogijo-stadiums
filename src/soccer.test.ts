@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { describe as describeDrawing, drawBadge, drawKyogijo, statusLabel, statusText, winnerOf } from "./draw.ts";
+import { SURFACE_UNITS, dimensionsOf, surfaceSize } from "./geometry-entry.ts";
 import { SOCCER, SOCCER_PITCHES, SOCCER_PITCH_IDS, fullPitch, goalAreaWidth, penaltyAreaWidth, soccerPitchClass, soccerSpec } from "./surfaces/soccer-spec.ts";
 import type { ScoreOptions } from "./types.ts";
 import { parseXml, walk, withClass, type Node } from "./xml.fixture.ts";
@@ -58,6 +59,15 @@ describe("the pitches", () => {
       expect(p.centreRadius * 2, id).toBeLessThan(p.width);
       expect(p.goalWidth, id).toBeLessThan(p.penaltyWidth);
     }
+  });
+
+  it("are the MLS's least size of 110 by 70 yards and the NCAA's best of 120 by 75 yards", () => {
+    expect(SOCCER_PITCHES.mls.length).toBeCloseTo(100.584, 3);
+    expect(SOCCER_PITCHES.mls.width).toBeCloseTo(64.008, 3);
+    expect(SOCCER_PITCHES.ncaa.length).toBeCloseTo(109.728, 3);
+    expect(SOCCER_PITCHES.ncaa.width).toBeCloseTo(68.58, 3);
+    expect(soccerPitchClass(SOCCER_PITCHES.mls.length, SOCCER_PITCHES.mls.width)).toBe("international");
+    expect(soccerPitchClass(SOCCER_PITCHES.ncaa.length, SOCCER_PITCHES.ncaa.width)).toBe("international");
   });
 
   it("are the international pitch of 105 by 68 m, and the least and the most the Laws allow", () => {
@@ -260,18 +270,30 @@ describe("futsal and the small-sided pitches", () => {
     // The left area: a quarter circle round each post to the line 6 m out, 3.16 m long.
     expect(d).toContain("M0 2.42A6 6 0 0 1 6 8.42V11.58A6 6 0 0 1 0 17.58");
     expect(d).toContain("M40 2.42A6 6 0 0 0 34 8.42V11.58A6 6 0 0 0 40 17.58");
+    expect(d).toContain("M5.25 -0.05v-0.4");
+    expect(d).toContain("M30 19.6v0.8");
     const marks = withClass(svg, "ky-fill-line").filter((n) => n.attrs.cy === "10").map((n) => n.attrs.cx);
     expect(marks.sort((a, b) => Number(a) - Number(b))).toEqual(["6", "10", "20", "30", "34"]);
     expect(withClass(svg, "ky-pitch")[0].attrs.class).toContain("ky-pitch-futsal");
     expect(box(svg)[2]).toBeCloseTo(40 * FEET, 1);
   });
 
-  it("draw the FA's pitches with a penalty area and no goal area, and a goal of the size the FA gives", () => {
-    for (const id of ["5-a-side", "7-a-side", "9-a-side"] as const) {
+  it("draw the FA's 5- and 7-a-side pitches with a semicircle of 6 m round the middle of each goal line, and the 9-a-side's with a box", () => {
+    for (const id of ["5-a-side", "7-a-side"] as const) {
       const svg = bare({ pitch: id });
-      expect(withClass(svg, "ky-line").some((n) => n.name === "path" && /^M0 [\d.]+H[\d.]+V[\d.]+H0$/.test(n.attrs.d ?? ""))).toBe(true);
+      const w = SOCCER_PITCHES[id].width;
+      expect(lines(svg).join(" "), id).toContain(`M0 ${Math.round((w / 2 - 6) * 100) / 100}A6 6 0 0 1 0 ${Math.round((w / 2 + 6) * 100) / 100}`);
       expect(box(svg)[2]).toBeCloseTo(SOCCER_PITCHES[id].length * FEET, 1);
+      expect(withClass(svg, "ky-fill-line").some((n) => n.attrs.cx === "6")).toBe(true);
     }
+    expect(lines(bare({ pitch: "9-a-side" })).some((d) => /^M0 [\d.]+H11V[\d.]+H0/.test(d))).toBe(true);
+  });
+
+  it("give the FA's goals: 12 by 6 feet for 5- and 7-a-side, 16 by 7 feet for 9-a-side", () => {
+    expect(SOCCER_PITCHES["5-a-side"].goalWidth).toBeCloseTo(3.6576, 4);
+    expect(SOCCER_PITCHES["7-a-side"].goalHeight).toBeCloseTo(1.8288, 4);
+    expect(SOCCER_PITCHES["9-a-side"].goalWidth).toBeCloseTo(4.8768, 4);
+    expect(SOCCER_PITCHES["9-a-side"].goalHeight).toBeCloseTo(2.1336, 4);
   });
 
   it("name futsal a court in the title and the description", () => {
@@ -403,5 +425,26 @@ describe("the words of a soccer pitch", () => {
     const ja = describeDrawing({ sport: "soccer", language: "ja", pitch: { length: 100.55, width: 64, unit: "m" } });
     expect(ja.title).toBe("サッカーのピッチ");
     expect(ja.description).toContain("100.6m×64m");
+  });
+});
+
+describe("soccer in any unit", () => {
+  it("keeps the Laws' unit, metres, and gives the pitch's size and its dimensions in any other", () => {
+    expect(SURFACE_UNITS.soccer).toBe("m");
+    expect(surfaceSize("soccer")).toEqual({ length: 105, width: 68, unit: "m" });
+    expect(surfaceSize("soccer", "ft").length).toBeCloseTo(344.49, 2);
+    expect(surfaceSize("soccer", "yd").width).toBeCloseTo(74.37, 2);
+    expect(dimensionsOf("soccer").penaltyReach).toBe(16.5);
+    expect(dimensionsOf("soccer", "yd").penaltyReach).toBeCloseTo(18.04, 2);
+    expect(dimensionsOf("soccer", "ft").goalWidth).toBeCloseTo(24.02, 2);
+    expect(dimensionsOf("soccer", "cm").limits.length.map(Math.round)).toEqual([9000, 12000]);
+  });
+
+  it("takes the margin and a size without a unit in the options' units", () => {
+    expect(box(parse(drawKyogijo({ sport: "soccer", margin: 5, units: "m" })))[0]).toBeCloseTo(-5 * FEET, 1);
+    const yards = parse(drawKyogijo({ sport: "soccer", margin: 0, units: "yd", pitch: { length: 110, width: 70 } }));
+    expect(box(yards)[2]).toBeCloseTo(330, 1);
+    expect(box(parse(drawKyogijo({ sport: "soccer", margin: 0, units: "yd", pitch: { length: 110, width: 70, unit: "m" } })))[2]).toBeCloseTo(110 * FEET, 1);
+    expect(() => drawKyogijo({ sport: "soccer", units: "mile" as never })).toThrow(/Unknown units/);
   });
 });
