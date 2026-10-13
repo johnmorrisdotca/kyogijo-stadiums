@@ -1,7 +1,7 @@
 import { el, num } from "../format.ts";
 import { rulesFor, type NbaRules } from "../eras.ts";
 import { NBA_COURT, type CourtSpec } from "../leagues/basketball.ts";
-import { ft, quarterTurn, textOn, type BuildOptions, type Mark, type Surface } from "./surface.ts";
+import { atEnds, edges, ft, quarterTurn, textOn, type BuildOptions, type Mark, type Surface } from "./surface.ts";
 
 /**
  * A basketball court: the floor, the keys, the arcs, the circles, the baskets and the small marks. By default the NBA's, as the
@@ -159,6 +159,13 @@ export function basketball(o: BuildOptions, era?: NbaRules, court: CourtSpec = N
   };
   surface.lineRef = { width: thin, feet: 1 };
   surface.box = { x: 0, y: 0, w: L, h: W };
+  // The paint: the lane from the baseline to the free-throw line and the circle beyond it, with a little floor round them.
+  const paintDeep = keyW + R + 1.5;
+  const paintHalf = Math.min(cy, Math.max(half, wide, R) + 2);
+  surface.ranges = {
+    "half-court": atEnds((end) => (end === "left" ? edges(0, 0, L / 2, W) : edges(L / 2, 0, L, W))),
+    paint: atEnds((end) => (end === "left" ? edges(0, cy - paintHalf, paintDeep, cy + paintHalf) : edges(L - paintDeep, cy - paintHalf, L, cy + paintHalf))),
+  };
   if (o.landmarks === true) {
     const R = court.freeThrowRadius;
     const cos = Math.cos((40 * Math.PI) / 180);

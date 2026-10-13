@@ -1,6 +1,6 @@
 import { courtGeometry, courtSize, sideReach, type CourtPlan, type Fixture, type Rect } from "../court.ts";
 import { el, num } from "../format.ts";
-import { ft, quarterTurn, type BuildOptions, type Mark, type Surface } from "./surface.ts";
+import { atEnds, edges, ft, quarterTurn, type BuildOptions, type Mark, type Surface } from "./surface.ts";
 
 /** A rectangle as a closed sub-path. */
 const box = (r: Rect): string => `M${num(r[0])} ${num(r[1])}H${num(r[2])}V${num(r[3])}H${num(r[0])}Z`;
@@ -68,6 +68,8 @@ export function netCourt(o: BuildOptions, plan: CourtPlan): Surface {
     turned,
   };
   surface.box = { x: 0, y: 0, w: L, h: W };
+  // One side of the net.
+  surface.ranges = { "half-court": atEnds((end) => (end === "left" ? edges(0, 0, net.x, W) : edges(net.x, 0, L, W))) };
   surface.lineRef = { width: plan.sport === "tabletennis" ? plan.figures.edgeLine : plan.figures.lineWidth, feet: 1 };
   if (o.landmarks === true) surface.marks = netMarks(plan, L, W);
   if (turned) {

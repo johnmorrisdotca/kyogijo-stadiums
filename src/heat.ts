@@ -148,7 +148,7 @@ function normalised(values: (number | null)[], mode: HeatBase["normalize"]): (nu
 const cap = (n: number): number => Math.max(1, Math.min(400, Math.round(n)));
 
 function gridCells(layer: HeatmapLayer, env: Env, unit: Unit): Computed {
-  const { box } = env.outline;
+  const box = env.shown;
   const { samples, skipped } = samplesOf(layer, env, unit);
   const xr = rangeOnSurface(layer, env, unit, layer.extent?.x, 0, [box.x, box.x + box.w]);
   const yr = rangeOnSurface(layer, env, unit, layer.extent?.y, 1, [box.y, box.y + box.h]);
@@ -196,7 +196,7 @@ function gridCells(layer: HeatmapLayer, env: Env, unit: Unit): Computed {
 }
 
 function hexCells(layer: HexbinLayer, env: Env, unit: Unit): Computed {
-  const { box } = env.outline;
+  const box = env.shown;
   const k = FEET_PER[unit];
   const { samples, skipped } = samplesOf(layer, env, unit);
   const size = isNum(layer.size) && layer.size > 0 ? layer.size * k : Math.max(box.w, box.h) / 28;
@@ -263,7 +263,7 @@ function zoneCells(layer: ZonesLayer, env: Env, unit: Unit): Computed {
 }
 
 function contourBands(layer: ContourLayer, env: Env, unit: Unit): Computed {
-  const { box } = env.outline;
+  const box = env.shown;
   const k = FEET_PER[unit];
   const mass = layer.by === "mass";
   const { samples, weights, skipped } = samplesOf(layer, env, unit, layer.weighted);
@@ -407,7 +407,7 @@ interface LegendSpec {
 
 /** The legend's marks: a plate, the heading, the steps as a bar and the ticks. Laid out as the eye sees it, then placed on the surface and turned back when the surface is turned. */
 function legendMarks(env: Env, spec: LegendSpec): string {
-  const { box } = env.outline;
+  const box = env.shown;
   const b = env.base;
   const fs = b * 1.1;
   const barH = b * 1.3;

@@ -2,7 +2,7 @@ import { el, num } from "../format.ts";
 import { rulesFor, type NhlRules } from "../eras.ts";
 import { NHL } from "../geometry.ts";
 import { NHL_RINK, type RinkSpec } from "../leagues/hockey.ts";
-import { ft, quarterTurn, roundedRect, type BuildOptions, type Mark, type Surface } from "./surface.ts";
+import { atEnds, edges, ft, quarterTurn, roundedRect, type BuildOptions, type Mark, type Surface } from "./surface.ts";
 
 /** Where the boards' curve is at a distance x from the end: the y at which it meets a line across the rink. The corner's radius is the NHL's unless given. */
 export function boardsY(x: number, radius: number = NHL.cornerRadius): number {
@@ -129,6 +129,14 @@ export function hockey(o: BuildOptions, era?: NhlRules, rink: RinkSpec = NHL_RIN
   };
   surface.lineRef = { width: thin, feet: 1 };
   surface.box = { x: 0, y: 0, w: L, h: W };
+  // The zones of the ice: from the end boards to a blue line, and between the blue lines.
+  const zone = atEnds((end) => (end === "left" ? edges(0, 0, blueLine, W) : edges(L - blueLine, 0, L, W)));
+  surface.ranges = {
+    "offensive-zone": zone,
+    "defensive-zone": zone,
+    "neutral-zone": edges(blueLine, 0, L - blueLine, W),
+    half: atEnds((end) => (end === "left" ? edges(0, 0, L / 2, W) : edges(L / 2, 0, L, W))),
+  };
   if (o.landmarks === true) {
     // The parts to name: the lines across the ice on the top margin, the rest below.
     const marks: Mark[] = [

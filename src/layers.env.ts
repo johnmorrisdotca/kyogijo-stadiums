@@ -1,6 +1,5 @@
 // What every kind of data layer is drawn against: the drawing's id, its unit and outline, the words, and what a layer made. Kept apart
 // from layers.ts so that the heat maps, which are written in files of their own, can use it without importing the file that imports them.
-import { isNetSport } from "./court.ts";
 import { safeLogo } from "./colour.ts";
 import { drawingId, isPortrait, lengthUnit } from "./common.ts";
 import { fromSurface, toSurface } from "./frames.ts";
@@ -8,9 +7,9 @@ import "./frames.providers.ts";
 import type { P } from "./layers.marks.ts";
 import type { LayerBase } from "./layers.types.ts";
 import { chooseLeague } from "./leagues.ts";
-import { outlineOf, type Outline } from "./outline.ts";
+import { frameSizeOf, outlineOf, type Outline } from "./outline.ts";
 import { KYOGIJO_STRINGS, type KyogijoWords } from "./strings.ts";
-import type { ScoreOptions, SurfaceOptions } from "./types.ts";
+import type { Box, ScoreOptions, SurfaceOptions } from "./types.ts";
 import { FEET_PER, SURFACE_UNITS, isUnit, type Unit } from "./units.ts";
 
 export const isNum = (value: unknown): value is number => typeof value === "number" && Number.isFinite(value);
@@ -25,7 +24,14 @@ export interface Env {
   turned: boolean;
   unit: Unit;
   outline: Outline;
-  /** The width of a mark by default, in feet: a share of the surface's longer side. */
+  /**
+   * The part of the surface that is shown, in feet in the drawing's frame: the outline's box, or, when the drawing is cropped to a range, the box of the range. Marks,
+   * heat maps and the legend are sized and laid out against it.
+   */
+  shown: Box;
+  /** True when the drawing is cropped to a range, so that layers are cut to `shown` as well as to the outline. */
+  cropped: boolean;
+  /** The width of a mark by default, in feet: a share of the longer side of what is shown. */
   base: number;
   words: KyogijoWords;
   logos: { home?: string; away?: string };
@@ -63,7 +69,7 @@ export const toArray = <T>(value: readonly T[] | undefined, what: string): reado
 };
 
 /** The size a provider's frame is fitted to: the drawn surface's, for a soccer pitch and a league's surface; none for a sport's own fixed one. */
-export const fittedSize = (env: Env): { length: number; width: number; unit: "ft" } | undefined => (env.o.sport === "soccer" || env.o.sport === "curling" || isNetSport(env.o.sport) || chooseLeague(env.o).league !== undefined ? { length: env.outline.box.w, width: env.outline.box.h, unit: "ft" as const } : undefined);
+export const fittedSize = (env: Env): { length: number; width: number; unit: "ft" } | undefined => frameSizeOf(env.o, env.outline.box);
 
 export function unitOfLayer(layer: LayerBase, env: Env): Unit {
   if (layer.units === "rulebook") return chooseLeague(env.o).league?.unit ?? SURFACE_UNITS[chooseLeague(env.o).sport] ?? "ft";
@@ -108,7 +114,7 @@ export function newMade(): Made {
   return { marks: "", defs: "", style: "", attr: "", opacity: undefined, drawn: 0, skipped: 0, outcomes: new Map(), teams: new Map(), low: Infinity, high: -Infinity };
 }
 
-export function envFor(o: SurfaceOptions | ScoreOptions, turned: boolean | undefined): Env {
+export function envFor(o: SurfaceOptions | ScoreOptions, turned: boolean | undefined, range?: Box): Env {
   const language = o.language === "ja" ? "ja" : "en";
   const outline = outlineOf(o);
   const teams = o as Partial<ScoreOptions>;
@@ -118,7 +124,9 @@ export function envFor(o: SurfaceOptions | ScoreOptions, turned: boolean | undef
     turned: turned ?? (isPortrait(o) && o.sport !== "mlb"),
     unit: lengthUnit(o),
     outline,
-    base: Math.max(outline.box.w, outline.box.h) * 0.013,
+    shown: range ?? outline.box,
+    cropped: range !== undefined,
+    base: Math.max((range ?? outline.box).w, (range ?? outline.box).h) * 0.013,
     words: KYOGIJO_STRINGS[language],
     logos: { home: safeLogo(teams.home?.logo), away: safeLogo(teams.away?.logo) },
   };

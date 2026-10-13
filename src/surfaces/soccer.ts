@@ -3,7 +3,7 @@ import { FEET_PER_METRE } from "../geometry.ts";
 import type { GoalStyle, StripePattern } from "../types.ts";
 import { SOCCER, type SoccerLayout, type SoccerSpec } from "./soccer-spec.ts";
 import { mowTurf } from "../mow.ts";
-import { ft, quarterTurn, type BuildOptions, type Mark, type Surface } from "./surface.ts";
+import { atEnds, edges, ft, quarterTurn, type BuildOptions, type Mark, type Surface } from "./surface.ts";
 
 /** What the soccer builder is given besides the usual. */
 export interface SoccerBuild {
@@ -230,6 +230,19 @@ export function soccer(b: SoccerBuild, o: BuildOptions): Surface {
   };
   surface.lineRef = { width: lw, feet: K };
   surface.box = { x: 0, y: 0, w: Lf, h: Wf };
+  // The penalty area reaches as far as its lines do: the area, the arc beyond it and a small pitch's curved area; and a little more.
+  const arcBeyond = spec.arcRadius > 0 && lay.spot > 0 && lay.penaltyDepth > lay.spot ? Math.max(0, spec.arcRadius - (lay.penaltyDepth - lay.spot)) : 0;
+  const curved = spec.area === "arcs" || spec.area === "semicircle" ? spec.penaltyDepth : 0;
+  const areaDeep = (Math.max(lay.penaltyDepth + arcBeyond, curved, lay.goalAreaDepth, L * 0.1) + 1) * K;
+  const areaHalf = Math.min(Wf / 2, (Math.max(lay.penaltyHalfWidth, spec.area === "arcs" ? spec.areaLine / 2 + spec.penaltyDepth : curved, lay.goalAreaHalfWidth, W * 0.18) + 1) * K);
+  const third = atEnds((end) => (end === "left" ? edges(0, 0, Lf / 3, Wf) : edges((Lf * 2) / 3, 0, Lf, Wf)));
+  surface.ranges = {
+    half: atEnds((end) => (end === "left" ? edges(0, 0, Lf / 2, Wf) : edges(Lf / 2, 0, Lf, Wf))),
+    "final-third": third,
+    "defensive-third": third,
+    "middle-third": edges(Lf / 3, 0, (Lf * 2) / 3, Wf),
+    "penalty-area": atEnds((end) => (end === "left" ? edges(0, Wf / 2 - areaHalf, areaDeep, Wf / 2 + areaHalf) : edges(Lf - areaDeep, Wf / 2 - areaHalf, Lf, Wf / 2 + areaHalf))),
+  };
   if (o.landmarks === true) {
     const at = (x: number, y: number, id: string, side: Mark["side"]): Mark => ({ id, x: x * K, y: y * K, side });
     const marks: Mark[] = [at(0, W * 0.25, "goal-line", "top"), at(L / 2, 0, "halfway-line", "top"), at(L * 0.7, W, "touchline", "bottom"), at(L / 2 + spec.centreRadius * 0.7, cy + spec.centreRadius * 0.7, "centre-circle", "bottom")];

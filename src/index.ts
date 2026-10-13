@@ -2,6 +2,8 @@
 export { COLOR_PROPERTIES, SPORTS, describe, drawBadge, drawKyogijo, drawScore, drawSurface, isPortrait, statusLabel, statusText, winnerOf } from "./draw.ts";
 export { inkOn, luminance, rgbOf, safeColour, safeLogo } from "./colour.ts";
 export { OUTCOMES, drawLayers, layerTable } from "./layers.ts";
+export { RANGES } from "./ranges.names.ts";
+export type { RangeInfo } from "./ranges.names.ts";
 export { rampColour } from "./layers.marks.ts";
 export { HEAT_RAMPS, HEAT_RAMP_NAMES } from "./heat.colour.ts";
 export { ZONE_SETS, ZONE_SET_IDS } from "./heat.zones.ts";
@@ -50,6 +52,9 @@ export type {
   LineWidth,
   LookName,
   Orientation,
+  RangeBox,
+  RangeName,
+  RangeNamed,
   ScoreOptions,
   Side,
   Size,

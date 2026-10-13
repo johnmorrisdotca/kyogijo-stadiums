@@ -1,5 +1,5 @@
 import { el, num } from "../format.ts";
-import type { Detail, GoalInfo, GoalStyle, Sport, StripePattern } from "../types.ts";
+import type { Box, Detail, GoalInfo, GoalStyle, Sport, StripePattern } from "../types.ts";
 
 /** Where a team's name and logo go, and how its words lie. */
 export interface Zone {
@@ -22,6 +22,9 @@ export interface PlateSpot {
   w: number;
   h: number;
 }
+
+/** The parts of a surface a drawing can be cropped to, by name: one box, or one at each end (`left` and `right` as the surface lies wide), in feet in the wide frame. */
+export type SurfaceRanges = Readonly<Record<string, Box | { left: Box; right: Box }>>;
 
 /** A surface, ready for the teams and the score to be laid on it. */
 export interface Surface {
@@ -47,6 +50,14 @@ export interface Surface {
   box?: { x: number; y: number; w: number; h: number };
   /** The parts to label, when the drawing is asked for them (`landmarks`): where each is, in the wide frame, in feet. */
   marks?: Mark[];
+  /** The parts the drawing can be cropped to (`range`), by the names of `RANGES`: the builder knows where its own lines are. */
+  ranges?: SurfaceRanges;
+  /** When the drawing is cropped to a range: the whole playing surface (`box` is then the part of it that is shown). */
+  whole?: { x: number; y: number; w: number; h: number };
+  /** When the drawing is cropped to a range: the part of the surface the range shows, with its small cut beyond the lines and the surface's own ground at its edges; the view is this and the room the annotations need. */
+  cut?: { x: number; y: number; w: number; h: number };
+  /** False when the drawing is cropped to a range too small to hold the score's panel, so that the score is drawn as a strip under the drawing instead. */
+  plateFits?: boolean;
   /** How wide the surface's ordinary line is drawn, in the units of the `lines` markup, and how many feet one of those units is: what `lineWidth` scales. */
   lineRef?: { width: number; feet: number };
 }
@@ -154,3 +165,9 @@ export function quarterTurn(view: { x: number; y: number; w: number; h: number }
     view: { x: 0, y: 0, w: view.h, h: view.w },
   };
 }
+
+/** A box from its edges: the left, the top, the right and the bottom. */
+export const edges = (x0: number, y0: number, x1: number, y1: number): Box => ({ x: Math.min(x0, x1), y: Math.min(y0, y1), w: Math.abs(x1 - x0), h: Math.abs(y1 - y0) });
+
+/** A range that has an end: its box at the left end and at the right, made by a function of the end. */
+export const atEnds = (box: (end: "left" | "right") => Box): { left: Box; right: Box } => ({ left: box("left"), right: box("right") });

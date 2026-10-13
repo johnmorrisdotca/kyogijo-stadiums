@@ -4,7 +4,7 @@
 // The idea of a direction label comes from ggsoccer's `direction_label` and of axes and labels from mplsoccer's pitch `axis` and `label`; the code is our own.
 import { attackingIn, frameByName, toSurface, type Frame } from "./frames.ts";
 import { el, num } from "./format.ts";
-import { fittedSize } from "./layers.env.ts";
+import { frameSizeOf } from "./outline.ts";
 import { fill, type KyogijoWords } from "./strings.ts";
 import { textWidth } from "./text.ts";
 import { textOn, type Mark, type Surface } from "./surfaces/surface.ts";
@@ -210,7 +210,8 @@ function axesOf(env: NoteEnv, g: Ground): { axes: Axis[]; ranges: [[number, numb
   const frame: Frame = typeof a.frame === "string" ? frameByName(a.frame) : a.frame;
   if (frame.sport !== env.o.sport) throw new RangeError(`The frame "${frame.name}" is for ${frame.sport}, not ${env.o.sport}`);
   const ranges: [[number, number], [number, number]] = [[Math.min(...frame.x), Math.max(...frame.x)], [Math.min(...frame.y), Math.max(...frame.y)]];
-  const size = fittedSize({ o: env.o, outline: { box } } as never);
+  // A frame is fitted to the whole surface, not to the part of it that is shown.
+  const size = frameSizeOf(env.o, env.surface.whole ?? box);
   const placed = (point: [number, number]): [number, number] => toSurface([point], { from: frame, units: "ft", size })[0];
   const mid: [number, number] = [(ranges[0][0] + ranges[0][1]) / 2, (ranges[1][0] + ranges[1][1]) / 2];
   // Which way each axis of the frame runs on the surface: nudge it and see where the point moves.
@@ -307,7 +308,9 @@ function landmarkNotes(env: NoteEnv, g: Ground, off: Reach): Part {
   const { s, box, view, turned } = g;
   const names = env.words.notes.names;
   // A part outside what the drawing shows (one end of a half-pitch) is left out.
-  const shown = marks.filter((mark) => mark.x >= view.x && mark.x <= view.x + view.w && mark.y >= view.y && mark.y <= view.y + view.h && names[mark.id] !== undefined);
+  // Cropped to a range, the ground the annotations have beyond the cut is not part of what is shown.
+  const area = env.surface.cut ?? view;
+  const shown = marks.filter((mark) => mark.x >= area.x && mark.x <= area.x + area.w && mark.y >= area.y && mark.y <= area.y + area.h && names[mark.id] !== undefined);
   let svg = "";
   let dots = "";
   let need = 0;

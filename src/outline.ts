@@ -10,7 +10,7 @@ import { soccerSpec } from "./surfaces/soccer-spec.ts";
 import { roundedRect } from "./surfaces/surface.ts";
 import { feetFence, lengthUnit } from "./common.ts";
 import { num } from "./format.ts";
-import { courtFor, courtSize } from "./court.ts";
+import { courtFor, courtSize, isNetSport } from "./court.ts";
 import { sheetFor } from "./sheet.ts";
 import type { SurfaceOptions } from "./types.ts";
 
@@ -40,6 +40,10 @@ function inPolygon(points: readonly (readonly [number, number])[], x: number, y:
   }
   return inside;
 }
+
+/** The size a provider's frame is fitted to: the drawn surface's own `box`, for a soccer pitch, a curling sheet, a net sport's court and a league's surface; none for a sport's own fixed one. */
+export const frameSizeOf = (o: Pick<SurfaceOptions, "sport" | "league">, box: { w: number; h: number }): { length: number; width: number; unit: "ft" } | undefined =>
+  o.sport === "soccer" || o.sport === "curling" || isNetSport(o.sport) || chooseLeague(o).league !== undefined ? { length: box.w, width: box.h, unit: "ft" as const } : undefined;
 
 /** The outline of the surface the options draw. */
 export function outlineOf(o: Pick<SurfaceOptions, "sport" | "park" | "fence" | "units" | "pitch" | "league" | "year" | "sheet" | "net">): Outline {

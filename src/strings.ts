@@ -1,4 +1,4 @@
-import type { Language, Sport } from "./types.ts";
+import type { Language, RangeName, Sport } from "./types.ts";
 
 /** The words the drawing says itself, in English and Japanese. */
 export interface KyogijoWords {
@@ -335,6 +335,11 @@ export interface KyogijoWords {
     /** The name of each part of a surface that can be labelled, by the key a builder gives it. */
     names: Record<string, string>;
   };
+  /**
+   * The words of a range (`range`, the part of a surface a drawing is cropped to): the sentences of the description, {name} being the range's name below and {side} `left` or
+   * `right` as `notes` says it; for a box of your own {x0}, {x1}, {y0} and {y1} (and the {frame}); and the name of each range, written to follow "shows only the".
+   */
+  ranges: { shows: string; showsEnd: string; box: string; boxFrame: string; cut: string; names: Record<RangeName, string> };
   /** The words of a replay: its summary, its marks, what is announced when something happens, and the controls under it. */
   replay: {
     /** The first sentence of the summary: {time} is the length. */
@@ -492,6 +497,17 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
         "hog-line": "Hog line", "tee-line": "Tee line", "back-line": "Back line", house: "House", button: "Button", "centre-line": "Centre line", hack: "Hack", "free-guard-zone": "Free guard zone",
       },
     },
+    ranges: {
+      shows: "Shows only the {name}.", showsEnd: "Shows only the {name} at the {side} end.",
+      box: "Shows only a part of the surface: x from {x0} to {x1}, y from {y0} to {y1}.",
+      boxFrame: "Shows only a part of the surface, in the {frame} frame: x from {x0} to {x1}, y from {y0} to {y1}.",
+      cut: "Data outside it is not drawn.",
+      names: {
+        "red-zone": "red zone", "between-the-20s": "field between the 20-yard lines", "end-zone": "end zone", "field-of-play": "field of play", "own-half": "own half", "opponent-half": "opponent's half",
+        "offensive-zone": "offensive zone", "defensive-zone": "defensive zone", "neutral-zone": "neutral zone", half: "half", "half-court": "half court", paint: "paint",
+        "final-third": "final third", "defensive-third": "defensive third", "middle-third": "middle third", "penalty-area": "penalty area", infield: "infield", outfield: "outfield", sheet: "whole sheet", house: "house",
+      },
+    },
     replay: {
       title: "Replay, {time}", objects: "{n} tracked objects", objectsOne: "{n} tracked object", events: "{n} events", eventsOne: "{n} event", players: "Players", others: "Ball, puck and officials", trail: "Trail of the last {s} seconds", numbers: "Shirt numbers", eventLines: "Passes and shots",
       home: "home", away: "away", ball: "ball", puck: "puck", official: "official", pass: "Pass", shot: "Shot", goal: "Goal", whistle: "Whistle",
@@ -605,6 +621,17 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
         touchline: "タッチライン", "penalty-area": "ペナルティエリア", "goal-area": "ゴールエリア", "penalty-mark": "ペナルティマーク", "penalty-arc": "ペナルティアーク", "corner-arc": "コーナーアーク", goal: "ゴール",
         "service-line": "サービスライン", "centre-service-line": "センターサービスライン", "singles-sideline": "シングルスサイドライン", "centre-mark": "センターマーク", "attack-line": "アタックライン", antenna: "アンテナ", "long-service-line": "ロングサービスライン", "short-service-line": "ショートサービスライン", "non-volley-line": "ノンボレーライン", "non-volley-zone": "ノンボレーゾーン", "court-net": "ネット",
         "hog-line": "ホッグライン", "tee-line": "ティーライン", "back-line": "バックライン", house: "ハウス", button: "ボタン", "centre-line": "センターライン", hack: "ハック", "free-guard-zone": "フリーガードゾーン",
+      },
+    },
+    ranges: {
+      shows: "表示範囲は{name}のみです。", showsEnd: "{side}側の{name}のみを表示しています。",
+      box: "競技場の一部だけを表示しています。xは{x0}から{x1}、yは{y0}から{y1}です。",
+      boxFrame: "競技場の一部だけを表示しています。{frame}の座標系で、xは{x0}から{x1}、yは{y0}から{y1}です。",
+      cut: "範囲の外のデータは描かれません。",
+      names: {
+        "red-zone": "レッドゾーン", "between-the-20s": "20ヤードライン間", "end-zone": "エンドゾーン", "field-of-play": "ゴールライン間のフィールド", "own-half": "自陣側のハーフ", "opponent-half": "敵陣側のハーフ",
+        "offensive-zone": "アタッキングゾーン", "defensive-zone": "ディフェンディングゾーン", "neutral-zone": "ニュートラルゾーン", half: "ハーフ", "half-court": "ハーフコート", paint: "ペイントエリア",
+        "final-third": "アタッキングサード", "defensive-third": "ディフェンディングサード", "middle-third": "ミドルサード", "penalty-area": "ペナルティエリア", infield: "内野", outfield: "外野", sheet: "シート全体", house: "ハウス",
       },
     },
     replay: {

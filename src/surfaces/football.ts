@@ -1,7 +1,7 @@
 import { el, num } from "../format.ts";
 import { GOALPOST_WIDTH, HASH_LENGTH, footballLength, type FootballSpec } from "../geometry.ts";
 import { mowTurf } from "../mow.ts";
-import { ft, quarterTurn, textOn, type BuildOptions, type Mark, type Surface } from "./surface.ts";
+import { atEnds, edges, ft, quarterTurn, textOn, type BuildOptions, type Mark, type Surface } from "./surface.ts";
 
 const DIGIT_HEIGHT = 6;
 /** A font size whose capital digits are six feet tall. */
@@ -167,6 +167,17 @@ export function football(spec: FootballSpec, o: BuildOptions, marks: FootballMar
   };
   surface.lineRef = { width: lw, feet: 1 };
   surface.box = { x: 0, y: 0, w: L, h: W };
+  // The red zone is the 20 yards before a goal line and the end zone behind it; the half is from an end line to midfield.
+  const twenty = 60;
+  const half = atEnds((end) => (end === "left" ? edges(0, 0, L / 2, W) : edges(L / 2, 0, L, W)));
+  surface.ranges = {
+    "red-zone": atEnds((end) => (end === "left" ? edges(0, 0, e + twenty, W) : edges(L - e - twenty, 0, L, W))),
+    "end-zone": atEnds((end) => (end === "left" ? edges(0, 0, e, W) : edges(L - e, 0, L, W))),
+    "between-the-20s": edges(e + twenty, 0, L - e - twenty, W),
+    "field-of-play": edges(e, 0, L - e, W),
+    "own-half": half,
+    "opponent-half": half,
+  };
   if (o.landmarks === true) {
     const marks: Mark[] = [
       { id: "end-zone", x: e / 2, y: 0, side: "top" },

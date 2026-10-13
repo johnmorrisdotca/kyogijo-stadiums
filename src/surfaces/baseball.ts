@@ -3,7 +3,7 @@ import { rulesFor, type MlbRules } from "../eras.ts";
 import { MLB, fenceAt, skinJoin, type FencePoint } from "../geometry.ts";
 import { MLB_DIAMOND, type DiamondSpec } from "../leagues/baseball.ts";
 import { mowPark } from "../mow.ts";
-import { ft, type BuildOptions, type Mark, type Surface } from "./surface.ts";
+import { edges, ft, type BuildOptions, type Mark, type Surface } from "./surface.ts";
 
 const SQ = Math.SQRT1_2;
 /** The round home plate of 1857 to 1867, "one square foot", about 13½ inches across, in feet. */
@@ -181,6 +181,11 @@ export function baseball(points: readonly FencePoint[], o: BuildOptions, era?: M
     Object.assign(right, { cx: (umax + m - 6 + 62) / 2, cy, w, h: 58 });
   }
   const surface: Surface = { sport: "mlb", view, base, lines, defs: clip, left, right, plate: { cx: 0, cy: -Math.round(vmax * 0.42), w: 150, h: 62 }, turned: false, lineRef: { width: thin, feet: 1 }, box: { x: umin, y: -vmax, w: umax - umin, h: vmax } };
+  // The infield: the dirt out to the arc round the mound, with the ground behind home plate; the outfield: the fence in to just short of second base.
+  surface.ranges = {
+    infield: edges(-(ua + 15), -(d.pitcher + skin + 12), ua + 15, 0),
+    outfield: edges(umin, -vmax, umax, -(2 * centreV - 6)),
+  };
   if (o.landmarks === true) {
     const mid = outline[Math.round(outline.length / 2)];
     const aside = outline[Math.round(outline.length * 0.8)];

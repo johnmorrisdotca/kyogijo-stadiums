@@ -191,6 +191,55 @@ export interface CourtStyle {
 /** How much of a curling sheet is shown: all of it, the half from the hog line to the back line, or just the house. */
 export type SheetShow = "sheet" | "half" | "house";
 
+/**
+ * The parts of a surface a drawing can be cropped to (`range`). Football: `red-zone`, `between-the-20s`, `end-zone`, `field-of-play`, `own-half`, `opponent-half`.
+ * Hockey: `offensive-zone`, `defensive-zone`, `neutral-zone`, `half`. Basketball: `half-court`, `paint`. Soccer: `half`, `final-third`, `defensive-third`, `middle-third`,
+ * `penalty-area`. Baseball: `infield`, `outfield`. The net sports: `half-court`. Curling: `sheet`, `half`, `house`. `RANGES` lists them for each sport.
+ */
+export type RangeName =
+  | "red-zone"
+  | "between-the-20s"
+  | "end-zone"
+  | "field-of-play"
+  | "own-half"
+  | "opponent-half"
+  | "offensive-zone"
+  | "defensive-zone"
+  | "neutral-zone"
+  | "half"
+  | "half-court"
+  | "paint"
+  | "final-third"
+  | "defensive-third"
+  | "middle-third"
+  | "penalty-area"
+  | "infield"
+  | "outfield"
+  | "sheet"
+  | "house";
+
+/** A named range at the end of your choice: `{ name: "offensive-zone", end: "left" }` is the offensive zone of a team that attacks the left. */
+export interface RangeNamed {
+  name: RangeName;
+  /** The end of the surface the range is at, as the surface is drawn wide: `left` or `right`. Each range has its own default (`RANGES`); a range with no end ignores it. */
+  end?: Side;
+}
+
+/**
+ * A box of your own to crop to: the corners `x0, y0` and `x1, y1`, in the drawing's frame (feet, or `units`: x along the surface from the left, y across it from the top;
+ * a ballpark's x is across the field and its y minus the distance out from home plate), or, with `frame`, in that frame's own numbers and unit.
+ */
+export interface RangeBox {
+  x0: number;
+  x1: number;
+  y0: number;
+  y1: number;
+  /** A frame of `FRAMES` (or one of your own) the numbers are in. The surface's own when missing. */
+  frame?: string | Frame;
+  /** The end the box's points are attacking, for a frame whose numbers belong to the team's attack (see `toSurface`). */
+  attacking?: Side;
+}
+
 /** The colours of a curling house, each a CSS colour. The 12-foot ring is blue and the 4-foot ring red by default. */
 export interface HouseRings {
   /** The band between the 12-foot and the 8-foot circles. */
@@ -215,7 +264,7 @@ export interface SheetStyle {
   pebble?: boolean;
   /** Shade the free guard zone at both ends: the ground between the hog line and the tee line, outside the house. Off by default. */
   guardZone?: boolean;
-  /** How much of the sheet to show. A bare sheet only; a score always shows all of it. `sheet` by default. */
+  /** How much of the sheet to show. A bare sheet only; a score always shows all of it. `sheet` by default. `range` says the same (`range: "house"`) and wins. */
   show?: SheetShow;
   /** Which end `show: "half"` and `show: "house"` show: the `left` one (the top house of a tall drawing, the default) or the `right`. */
   end?: "left" | "right";
@@ -355,7 +404,7 @@ export interface SurfaceOptions {
   ground?: string;
   /** Draw a soccer pitch in a data provider's own coordinates (`opta`, `statsbomb`, `wyscout`, `tracab`, `metrica`, `skillcorner`, `secondspectrum`, `impect`, `uefa`, `international`), or in a frame of your own: the lines stand where the provider puts them, and an empty `ky-data` group in its units is put in the drawing for raw data. */
   pitchType?: SoccerProviderId | SoccerFrame;
-  /** Only half of a soccer pitch: the `left` half or the `right` one. Ignored when the drawing has teams. */
+  /** Only half of a soccer pitch: the `left` half or the `right` one. Ignored when the drawing has teams. `range: "half"` does the same for every sport and for a score too. */
   half?: "left" | "right";
   /** How the grass of a soccer pitch is mown. `bands` (the usual) by default; `stripes: false` turns it off. */
   stripePattern?: StripePattern;
@@ -363,6 +412,12 @@ export interface SurfaceOptions {
   goals?: GoalStyle;
   /** Corner flags on a soccer pitch. On by default in the `full` detail. */
   cornerFlags?: boolean;
+  /**
+   * Only part of the surface: a named range of the sport (`"offensive-zone"`, `"half-court"`, `"red-zone"`, `"penalty-area"`, `"infield"`... see `RANGES`), one at the end you choose
+   * (`{ name, end }`), or a box of your own (`{ x0, x1, y0, y1 }`, in the drawing's frame or any registered one). The drawing is cropped to it with a small margin; data, heat and
+   * annotations follow, and a score's panel stands inside it. Unset, the whole surface is drawn, byte for byte as before.
+   */
+  range?: RangeName | RangeNamed | RangeBox;
   /** A named look: the surface, the lines and the ground round it in one palette, light and dark. See `LOOKS`. Over the theme's colours, under `colors`. */
   look?: LookName;
   /** The width of the lines (see `LineWidth`): a multiple of the width they are drawn at, or an absolute width. */

@@ -1,0 +1,66 @@
+// The names of the ranges of each sport (`RANGES`) and the check of a drawing's `range` option (`parseRange`): kept apart from ranges.ts, which crops, so that the curling sheet's
+// own builder can read a named range without importing the code that crops every surface.
+import { chooseLeague } from "./leagues.ts";
+import type { RangeBox, RangeName, Side, Sport, SurfaceOptions } from "./types.ts";
+
+/** One range of a sport: its name, and the end it is at by default when it is at an end (`left` or `right`, as the surface is drawn wide). A range with no `end` is in the middle or is the whole of something. */
+export interface RangeInfo {
+  id: RangeName;
+  end?: Side;
+}
+
+const range = (id: RangeName, end?: Side): RangeInfo => Object.freeze(end === undefined ? { id } : { id, end });
+
+const FOOTBALL: readonly RangeInfo[] = Object.freeze([range("red-zone", "right"), range("end-zone", "right"), range("between-the-20s"), range("field-of-play"), range("own-half", "left"), range("opponent-half", "right")]);
+const NET: readonly RangeInfo[] = Object.freeze([range("half-court", "left")]);
+
+/**
+ * The named ranges of each sport, in the order a menu lists them: `{ id, end }`, with `end` the end the range is at when `range` gives none (`left` or `right`, as the surface is
+ * drawn wide; a range with no `end` is in the middle or is the whole of something and ignores one). Offensive ranges are at the right by default, as a frame's numbers are for a team
+ * that attacks the right (see `toSurface`); defensive and own ranges at the left; the others, such as a half, at the left, as a curling sheet's house is.
+ */
+export const RANGES: Readonly<Record<Sport, readonly RangeInfo[]>> = Object.freeze({
+  nfl: FOOTBALL,
+  cfl: FOOTBALL,
+  ifaf: FOOTBALL,
+  nhl: Object.freeze([range("offensive-zone", "right"), range("defensive-zone", "left"), range("neutral-zone"), range("half", "left")]),
+  nba: Object.freeze([range("half-court", "left"), range("paint", "left")]),
+  soccer: Object.freeze([range("half", "left"), range("final-third", "right"), range("defensive-third", "left"), range("middle-third"), range("penalty-area", "left")]),
+  mlb: Object.freeze([range("infield"), range("outfield")]),
+  curling: Object.freeze([range("sheet"), range("half", "left"), range("house", "left")]),
+  tennis: NET,
+  volleyball: NET,
+  badminton: NET,
+  pickleball: NET,
+  tabletennis: NET,
+});
+
+/** What a drawing's `range` asks for, checked: a name (at an end, or at its default) or a box. */
+export type ParsedRange = { kind: "name"; name: RangeName; end: Side | undefined } | { kind: "box"; box: RangeBox };
+
+const isNumber = (value: unknown): value is number => typeof value === "number" && Number.isFinite(value);
+
+/**
+ * The range the options ask for, or `undefined` when they ask for none.
+ * @throws RangeError for a name the sport does not have (the message lists the sport's), or an `end` that is not `left` or `right`.
+ * @throws TypeError for a box without its four numbers.
+ */
+export function parseRange(o: Pick<SurfaceOptions, "sport" | "league" | "range">): ParsedRange | undefined {
+  const given: unknown = o.range;
+  if (given === undefined || given === null) return undefined;
+  const { sport } = chooseLeague(o);
+  const named = typeof given === "string" || (typeof given === "object" && "name" in given && typeof (given as { name: unknown }).name === "string");
+  if (named) {
+    const name = typeof given === "string" ? given : (given as { name: string }).name;
+    const end: unknown = typeof given === "object" ? (given as { end?: unknown }).end : undefined;
+    const info = (RANGES[sport] ?? []).find((one) => one.id === name);
+    if (info === undefined) throw new RangeError(`The ${sport} surface has no range "${name}": use one of ${(RANGES[sport] ?? []).map((one) => one.id).join(", ")}, or a box { x0, x1, y0, y1 }`);
+    if (end !== undefined && end !== "left" && end !== "right") throw new RangeError(`A range's end is "left" or "right", not "${String(end)}"`);
+    return { kind: "name", name: info.id, end: info.end === undefined ? undefined : ((end as Side | undefined) ?? info.end) };
+  }
+  const box = given as Partial<RangeBox>;
+  if (typeof given !== "object" || !isNumber(box.x0) || !isNumber(box.x1) || !isNumber(box.y0) || !isNumber(box.y1)) throw new TypeError(`range is the name of a range of the sport, or a box { x0, x1, y0, y1 } of numbers`);
+  if (box.attacking !== undefined && box.attacking !== "left" && box.attacking !== "right") throw new RangeError(`A range's attacking is "left" or "right", not "${String(box.attacking)}"`);
+  return { kind: "box", box: box as RangeBox };
+}
+

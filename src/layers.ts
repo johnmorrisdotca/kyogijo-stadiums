@@ -41,7 +41,7 @@ import type {
   TextStyle,
 } from "./layers.types.ts";
 import { KYOGIJO_STRINGS, fill, type KyogijoWords } from "./strings.ts";
-import type { ScoreOptions, SurfaceOptions } from "./types.ts";
+import type { Box, ScoreOptions, SurfaceOptions } from "./types.ts";
 import { FEET_PER } from "./units.ts";
 
 type Words = KyogijoWords["layers"];
@@ -367,10 +367,10 @@ function summarise(layer: Layer, made: Made, words: Words, stop: string, gap: st
 }
 
 /** The layers of a drawing as markup, and a sentence for each. `turned` says whether the surface group is turned a quarter. */
-export function renderLayers(o: SurfaceOptions | ScoreOptions, layers: readonly Layer[] | undefined, turned?: boolean): RenderedLayers {
+export function renderLayers(o: SurfaceOptions | ScoreOptions, layers: readonly Layer[] | undefined, turned?: boolean, range?: Box): RenderedLayers {
   if (layers === undefined || layers.length === 0) return { svg: "", summaries: [] };
   if (!Array.isArray(layers)) throw new TypeError("layers is a list of layers");
-  const env = envFor(o, turned);
+  const env = envFor(o, turned, range);
   const clipId = `${env.id}-lc`;
   const { stop, gap } = env.words.said;
   const said: string[] = [];
@@ -437,7 +437,10 @@ export function renderLayers(o: SurfaceOptions | ScoreOptions, layers: readonly 
   groups.length = 0;
   groups.push(...placed);
   if (groups.length === 0) return { svg: "", summaries };
-  const defs = clipped ? `<defs><clipPath id="${clipId}"><path d="${env.outline.d}"/></clipPath></defs>` : "";
+  // Cropped to a range, a layer is cut to the range as well as to the surface's outline: the clip path of the outline is itself cut by the range's.
+  const shown = env.shown;
+  const rangeClip = env.cropped ? `<clipPath id="${clipId}-r"><rect x="${num(shown.x)}" y="${num(shown.y)}" width="${num(shown.w)}" height="${num(shown.h)}"/></clipPath>` : "";
+  const defs = clipped ? `<defs>${rangeClip}<clipPath id="${clipId}"${env.cropped ? ` clip-path="url(#${clipId}-r)"` : ""}><path d="${env.outline.d}"/></clipPath></defs>` : "";
   // The heat layers' rules go beside them, unless the page supplies the stylesheet (KYOGIJO_STYLE has them); the dark set of a ramp is the layer's own and always comes.
   const heated = groups.some((g) => g.includes('class="ky-layer ky-hm') || g.includes('class="ky-lgw"'));
   const teamed = groups.some((g) => g.includes('class="ky-layer ky-tm'));

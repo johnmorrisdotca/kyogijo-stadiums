@@ -11,6 +11,7 @@ import { diamondFence } from "./leagues/baseball.ts";
 import { fenceFor, parkById } from "./parks.ts";
 import { boardMarkup, endText } from "./curling.board.ts";
 import { sheetFor } from "./sheet.ts";
+import { cropToRange, describeRange, rangeLabel, shows } from "./ranges.ts";
 import { badgeMarkup, bannerMarkup, plateMarkup, stateOf, type TeamView } from "./score.ts";
 import { setsBoardMarkup } from "./sets.board.ts";
 import { KYOGIJO_STRINGS, fill } from "./strings.ts";
@@ -179,7 +180,7 @@ function buildSoccer(o: SurfaceOptions, common: BuildOptions, scored: boolean, u
     {
       spec,
       layout: own ? layoutFromFrame(frame, spec) : layoutOf(spec),
-      half: !scored && (o.half === "left" || o.half === "right") ? o.half : undefined,
+      half: !scored && o.range === undefined && (o.half === "left" || o.half === "right") ? o.half : undefined,
       pattern: PATTERNS.includes(o.stripePattern as StripePattern) ? (o.stripePattern as StripePattern) : "bands",
       goals: GOALS.includes(o.goals as GoalStyle) ? (o.goals as GoalStyle) : "box",
       flags: typeof o.cornerFlags === "boolean" ? o.cornerFlags : detail === "full",
@@ -195,7 +196,8 @@ interface Extra {
   margin?: number;
 }
 
-function buildSurface(o: SurfaceOptions, portrait: boolean, id: string, score: boolean, scored: boolean, extra: Extra): Surface {
+/** The surface the options ask for, whole: before it is cropped to a `range`. */
+function buildWhole(o: SurfaceOptions, portrait: boolean, id: string, score: boolean, scored: boolean, extra: Extra): Surface {
   const court: CourtStyle | undefined = o.court;
   const baselineText: [string, string] | undefined = court?.baselineText === undefined ? undefined : typeof court.baselineText === "string" ? [court.baselineText, court.baselineText] : court.baselineText;
   const unit: Unit = lengthUnit(o);
@@ -252,6 +254,15 @@ function buildSurface(o: SurfaceOptions, portrait: boolean, id: string, score: b
     default:
       throw new Error(`Unknown sport "${String(o.sport)}": use one of ${SPORTS.join(", ")}`);
   }
+}
+
+/** The surface the options ask for, cropped to their `range` when they have one (a curling sheet's named ranges are its builder's own: `sheet.show`). */
+function buildSurface(o: SurfaceOptions, portrait: boolean, id: string, score: boolean, scored: boolean, extra: Extra): Surface {
+  const surface = buildWhole(o, portrait, id, score, scored, extra);
+  // A score on a curling sheet shows all of it, for the board's sake.
+  if (o.range === undefined || (scored && chooseLeague(o).sport === "curling")) return surface;
+  const given = typeof o.margin === "number" && Number.isFinite(o.margin) && o.margin >= 0 ? convertLength(o.margin, lengthUnit(o), "ft") : undefined;
+  return cropToRange(surface, o, { id, margin: extra.margin ?? given, panel: score });
 }
 
 /** The custom properties a drawing sets on its root, from the options' colours. */
@@ -365,7 +376,9 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
       : dated && ERA_SPORTS.includes(sport as EraSport)
         ? `${gap}${fill(words.said.era, { season: seasonLabel(sport as EraSport, o.year as number) })}`
         : "";
-  if (!isScore(o)) return { title: o.title ?? surfaceName, description: o.description ?? `${about}${parkLine}${eraLine}` };
+  // A range says what is shown; a curling score shows all of the sheet, whatever the range.
+  const rangeLine = isScore(o) && sport === "curling" ? "" : describeRange(o, language, o.layers !== undefined && o.layers.length > 0);
+  if (!isScore(o)) return { title: o.title ?? surfaceName, description: o.description ?? `${about}${parkLine}${eraLine}${rangeLine}` };
   const winner = winnerOf(o);
   const s = (t: Team): string => (t.score === undefined || String(t.score) === "" ? "–" : String(t.score));
   const line = fill(words.scoreTitle, { away: o.away.name, awayScore: s(o.away), home: o.home.name, homeScore: s(o.home) });
@@ -412,7 +425,7 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
         .join("");
   return {
     title: o.title ?? (status === undefined ? line : `${line}${words.said.sep}${status}`),
-    description: o.description ?? `${extra === "" ? "" : `${sentence(extra)}${gap}`}${sentence(line)}${result}${tied}${curlingLine}${netLine}${gap}${about}${parkLine}${eraLine}`.trim(),
+    description: o.description ?? `${extra === "" ? "" : `${sentence(extra)}${gap}`}${sentence(line)}${result}${tied}${curlingLine}${netLine}${gap}${about}${parkLine}${eraLine}${rangeLine}`.trim(),
   };
 }
 
@@ -442,7 +455,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
   const look = plan?.look;
   // A tall curling sheet is 30 feet wide on the page and a strip under it would be unreadable: its compact size is the board on the ice.
   const asked = isScore(o) ? (o.size === "compact" || o.size === "badge" ? o.size : "full") : "full";
-  const sized = asked === "compact" && sport === "curling" && portrait ? "full" : asked;
+  let sized = asked === "compact" && sport === "curling" && portrait ? "full" : asked;
   const id = drawingId(o);
   const parts = o.parts === true;
   const homeSide: Side = isScore(o) && o.homeSide === "left" ? "left" : "right";
@@ -486,6 +499,11 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
     body = badge.markup;
   } else {
     let surface = buildSurface(o, portrait, id, isScore(o) && sized === "full", isScore(o), { features });
+    // A range too small to hold the score's panel: the score goes to the strip under the drawing, as a compact card does.
+    if (surface.plateFits === false) {
+      sized = "compact";
+      surface = buildSurface(o, portrait, id, false, true, { features });
+    }
     if (annotated(o)) {
       const teams = { home: isScore(o) ? o.home.name : undefined, away: isScore(o) ? o.away.name : undefined };
       notes = annotate({ o, surface, turned: surface.turned, words: KYOGIJO_STRINGS[language], teams });
@@ -506,14 +524,15 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       const onColour = sport === "nfl" || sport === "cfl" || sport === "ifaf" || sport === "soccer";
       // A curling sheet and the net sports' courts have no place for the names: the board names the teams.
       if (sport !== "curling" && !isNetSport(sport)) {
-        teams += bannerMarkup(surface.left, left, { turned: surface.turned, onColour, parts });
-        teams += bannerMarkup(surface.right, right, { turned: surface.turned, onColour, parts });
+        // Cropped to a range, a team's name is written only where its place is in what is shown.
+        if (shows(surface, surface.left)) teams += bannerMarkup(surface.left, left, { turned: surface.turned, onColour, parts });
+        if (shows(surface, surface.right)) teams += bannerMarkup(surface.right, right, { turned: surface.turned, onColour, parts });
       }
     }
     // The teams are painted under the lines, unless the surface asks for them over (a panel that must hide them).
     inner += surface.bannersOver === true ? surface.lines + teams : teams + surface.lines;
     // Data goes over the markings and under the score's panel.
-    const layered = renderLayers(o, o.layers, surface.turned);
+    const layered = renderLayers(o, o.layers, surface.turned, surface.whole === undefined ? undefined : surface.box);
     inner += layered.svg;
     if (layered.summaries.length > 0 && o.description === undefined) {
       const { colon, gap } = KYOGIJO_STRINGS[language].said;
@@ -557,6 +576,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       "aria-labelledby": `${titleId} ${descId}`,
       "data-sport": sport,
       "data-league": o.league === undefined || o.league === "" ? undefined : o.league,
+      "data-range": isScore(o) && sport === "curling" ? undefined : rangeLabel(o),
       "data-look": look,
       "data-size": sized,
       "data-orientation": portrait ? "portrait" : "landscape",
