@@ -6,6 +6,7 @@ export function toParams(o) {
   const q = new URLSearchParams();
   q.set("sport", o.sport);
   if (o.park) q.set("park", o.park);
+  if (o.league) q.set("league", o.league);
   for (const [key, param] of [["pitch", "pitch"], ["ground", "ground"], ["pitchType", "pitchtype"], ["half", "half"], ["goals", "goals"], ["stripePattern", "pattern"]]) if (typeof o[key] === "string") q.set(param, o[key]);
   if (o.cornerFlags === false) q.set("flags", "0");
   if (Number.isInteger(o.year)) q.set("year", String(o.year));
@@ -31,7 +32,7 @@ export function toParams(o) {
 export function fromParams(q) {
   const o = { sport: q.get("sport") || "nhl", orientation: q.get("orientation") || "auto" };
   if (q.get("flags") === "0") o.cornerFlags = false;
-  for (const [param, key] of [["pitch", "pitch"], ["ground", "ground"], ["pitchtype", "pitchType"], ["half", "half"], ["goals", "goals"], ["pattern", "stripePattern"], ["park", "park"], ["size", "size"], ["theme", "theme"], ["lang", "language"], ["status", "status"], ["competition", "competition"], ["date", "date"], ["label", "label"], ["winner", "winner"]]) {
+  for (const [param, key] of [["pitch", "pitch"], ["ground", "ground"], ["pitchtype", "pitchType"], ["half", "half"], ["goals", "goals"], ["pattern", "stripePattern"], ["park", "park"], ["league", "league"], ["size", "size"], ["theme", "theme"], ["lang", "language"], ["status", "status"], ["competition", "competition"], ["date", "date"], ["label", "label"], ["winner", "winner"]]) {
     if (q.get(param)) o[key] = q.get(param);
   }
   if (/^\d{4}$/.test(q.get("year") || "")) o.year = Number(q.get("year"));

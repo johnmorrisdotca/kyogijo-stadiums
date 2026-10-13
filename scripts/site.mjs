@@ -64,6 +64,10 @@ const page = `<!doctype html>
             <details class="fam-fold group" open>
               <summary data-say="groupSurface"></summary>
               ${seg("sport", "sport", "Choose the surface: three football fields, a hockey rink, a basketball court, a baseball field or a soccer pitch.", "競技場を選びます。アメリカンフットボール場3種類（NFL・CFL・IFAF）、アイスホッケーのリンク、バスケットボールのコート、野球場、サッカーのピッチから選べます。")}
+              <div class="setup fam-row" id="league-row" hidden ${help("Choose the league whose rulebook marks the surface: FIBA, the WNBA or the NCAA for the court; the IIHF, the NCAA, the AHL or the CHL for the rink; the NCAA, the high schools or arena football for the field; Little League, PONY or softball for the diamond. Each is drawn from its own rulebook.", "どのリーグのルールブックに沿って描くかを選びます。コートならFIBA・WNBA・NCAA、リンクならIIHF・NCAA・AHL・CHL、フィールドならNCAA・全米高校連盟（NFHS）・インドアフットボール、野球場とソフトボール場ならリトルリーグ・PONY・USAソフトボールなど。どれもそのリーグ自身のルールブックに基づいて描きます。")}>
+                <span class="fam-label" data-say="leagueLabel"></span>
+                <select class="fam-field" id="league" data-testid="league" data-say-label="leagueLabel"></select>
+              </div>
               <div class="setup fam-row" id="pitch-row" hidden ${help("Choose the pitch: the international 105 by 68 metres, the sizes UEFA, the MLS and the NCAA publish, the least and most the Laws allow, the FA's small-sided pitches or FIFA's futsal court.", "ピッチを選びます。国際標準の105×68m、UEFA・MLS・NCAAの公表する広さ、競技規則が認める最小と最大、FAの少人数制ピッチ、FIFAのフットサルのコートがあります。")}>
                 <span class="fam-label" data-say="pitchLabel"></span>
                 <select class="fam-field" id="pitch" data-testid="pitch" data-say-label="pitchLabel"></select>

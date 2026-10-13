@@ -33,6 +33,15 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `soccer.futsal` | Futsal court | フットサルのコート |
 | `soccer.aboutFutsal` | a futsal court, {length} by {width} metres, with the halfway line, the centre circle, both penalty areas, the penalty marks and the goals | フットサルのコート。{length}m×{width}mで、ハーフウェーライン、センターサークル、両側のペナルティエリア、ペナルティマーク、ゴールがあります |
 | `soccer.half` | Half of it is shown. | 半面のみ表示しています。 |
+| `league.basketball` | a basketball court, {size}, with its keys, three-point lines, free-throw circles and the centre circle | バスケットボールのコート。{size}で、ペイントエリア、スリーポイントライン、フリースローサークル、センターサークルがあります |
+| `league.hockey` | an ice hockey rink, {size} with rounded corners, with its red and blue lines, face-off circles, creases and goal nets | アイスホッケーのリンク。{size}で角が丸く、レッドライン、ブルーライン、フェイスオフサークル、クリース、ゴールがあります |
+| `league.football` | a football field, {size} with its end zones, with its yard lines, hash marks, numbers and goal posts | アメリカンフットボールのフィールド。エンドゾーンを含めて{size}で、ヤードライン、ハッシュマーク、ヤードナンバー、ゴールポストがあります |
+| `league.baseball` | a baseball field, with {base}-foot bases, the pitcher {pitch} feet from home plate, the foul lines and the outfield fence | 野球場。塁間{base}フィート、投手板は本塁から{pitch}フィートで、ファウルライン、外野フェンスがあります |
+| `league.softball` | a softball field, with {base}-foot bases, the pitcher {pitch} feet from home plate, the foul lines and the outfield fence | ソフトボール場。塁間{base}フィート、投手板は本塁から{pitch}フィートで、ファウルライン、外野フェンスがあります |
+| `league.size` | {length} by {width} {unit} | {length}{unit}×{width}{unit} |
+| `league.units.ft` | feet | フィート |
+| `league.units.yd` | yards | ヤード |
+| `league.units.m` | metres | m |
 | `scoreTitle` | {away} {awayScore}, {home} {homeScore} | {away} {awayScore}、{home} {homeScore} |
 | `said.home` | home | ホーム |
 | `said.away` | away | アウェイ |
@@ -208,6 +217,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `cornerFlags` | Corner flags | コーナーフラッグ |
 | `teamPens` | Pens | PK |
 | `park` | Ballpark | 球場 |
+| `leagueLabel` | League | リーグ |
 | `parkGeneric` | A generic field | 標準的なグラウンド |
 | `parkGroupMlb` | MLB, today's home parks | MLB（現在の本拠地） |
 | `parkGroupMlbPast` | MLB, parks of the past | MLB（過去の球場） |
@@ -453,6 +463,69 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `mlb.plateShape.1900` | The five-sided plate of white rubber is adopted, as it is today. | 現在と同じ五角形の白いゴム製の本塁が採用されます。 |
 | `mlb.moundHeight.1903` | The mound may stand 15 inches above home plate. | マウンドは本塁より15インチ（約38cm）まで高くできます。 |
 | `mlb.moundHeight.1969` | The mound is lowered to 10 inches, after the Year of the Pitcher. | 「投手の年」と呼ばれた1968年のあと、マウンドの高さが10インチ（約25cm）に低くなります。 |
+
+## The leagues (`LEAGUES`)
+
+| League | English | 日本語 |
+| --- | --- | --- |
+| `wnba` | WNBA basketball court | WNBAのバスケットボールコート |
+| `fiba` | FIBA basketball court | FIBAのバスケットボールコート |
+| `ncaa-men` | NCAA men's basketball court | NCAA男子のバスケットボールコート |
+| `ncaa-women` | NCAA women's basketball court | NCAA女子のバスケットボールコート |
+| `nfhs` | High school (NFHS) basketball court | 全米高校連盟（NFHS）のバスケットボールコート |
+| `gleague` | NBA G League basketball court | NBA Gリーグのバスケットボールコート |
+| `iihf` | IIHF ice hockey rink | IIHF（国際アイスホッケー連盟）のアイスホッケーリンク |
+| `ncaa-men` | NCAA men's ice hockey rink | NCAA男子のアイスホッケーリンク |
+| `ncaa-women` | NCAA women's ice hockey rink | NCAA女子のアイスホッケーリンク |
+| `ahl` | AHL hockey rink | AHLのアイスホッケーリンク |
+| `echl` | ECHL hockey rink | ECHLのアイスホッケーリンク |
+| `ohl` | OHL hockey rink | OHLのアイスホッケーリンク |
+| `whl` | WHL hockey rink | WHLのアイスホッケーリンク |
+| `qmjhl` | QMJHL hockey rink | QMJHLのアイスホッケーリンク |
+| `ushl` | USHL hockey rink | USHLのアイスホッケーリンク |
+| `pwhl` | PWHL hockey rink | PWHLのアイスホッケーリンク |
+| `ncaa` | NCAA football field | NCAAのフィールド |
+| `nfhs` | High school (NFHS) football field, 11 players | 全米高校連盟（NFHS）の11人制フィールド |
+| `nfhs-9` | High school (NFHS) football field, 9 players | 全米高校連盟（NFHS）の9人制フィールド |
+| `nfhs-8` | High school (NFHS) football field, 8 players | 全米高校連盟（NFHS）の8人制フィールド |
+| `nfhs-6` | High school (NFHS) football field, 6 players | 全米高校連盟（NFHS）の6人制フィールド |
+| `uil-6` | Texas (UIL) six-man football field | テキサス州（UIL）の6人制フィールド |
+| `ifl` | Indoor Football League field | インドア・フットボール・リーグ（IFL）のフィールド |
+| `milb` | Minor League Baseball field | マイナーリーグ（MiLB）の野球場 |
+| `ncaa` | NCAA baseball field | NCAAの野球場 |
+| `nfhs` | High school (NFHS) baseball field | 全米高校連盟（NFHS）の野球場 |
+| `little-league` | Little League baseball field (60-foot bases) | リトルリーグの野球場（塁間60フィート） |
+| `little-league-intermediate` | Little League Intermediate (50/70) baseball field | リトルリーグ・インターミディエイト（50/70）の野球場 |
+| `pony` | PONY League (14U) baseball field | ポニーリーグ（14歳以下）の野球場 |
+| `pony-bronco` | PONY Bronco (12U) baseball field | ポニー・ブロンコ（12歳以下）の野球場 |
+| `pony-mustang` | PONY Mustang (10U) baseball field | ポニー・マスタング（10歳以下）の野球場 |
+| `ncaa-softball` | NCAA softball field | NCAAのソフトボール場 |
+| `nfhs-softball` | High school (NFHS) softball field | 全米高校連盟（NFHS）のソフトボール場 |
+| `fastpitch` | USA Softball fast-pitch field | USAソフトボール（ファストピッチ）のソフトボール場 |
+| `slowpitch` | USA Softball slow-pitch field | USAソフトボール（スローピッチ）のソフトボール場 |
+| `slowpitch-wbsc` | WBSC slow-pitch softball field | WBSC（スローピッチ）のソフトボール場 |
+
+## The leagues' dated changes (`leagueChanges`)
+
+| Change | English | 日本語 |
+| --- | --- | --- |
+| `wnba.laneWidth.start` | The free-throw lane is 12 feet wide. | フリースローレーン（ペイントエリア）の幅は12フィート（約3.7m）です。 |
+| `wnba.laneWidth.2004` | The free-throw lane is widened to 16 feet, the NBA's size. | フリースローレーンの幅が、NBAと同じ16フィート（約4.9m）に広がります。 |
+| `ncaa-men.restricted.start` | No restricted-area arc under the baskets. | バスケットの下にリストリクテッドエリア（半円）はありません。 |
+| `ncaa-men.restricted.2011` | A restricted-area arc of 3 feet from the middle of the basket is marked. | バスケットの中心から半径3フィート（約0.9m）のリストリクテッドエリア（半円）が描かれます。 |
+| `ncaa-men.restricted.2015` | The restricted-area arc grows to 4 feet. | リストリクテッドエリアの半径が4フィート（約1.2m）に広がります。 |
+| `ncaa-women.restricted.start` | No restricted-area arc under the baskets. | バスケットの下にリストリクテッドエリア（半円）はありません。 |
+| `ncaa-women.restricted.2011` | A restricted-area arc of 3 feet from the middle of the basket is marked. | バスケットの中心から半径3フィート（約0.9m）のリストリクテッドエリア（半円）が描かれます。 |
+| `ncaa-women.restricted.2017` | The restricted-area arc grows to 4 feet. | リストリクテッドエリアの半径が4フィート（約1.2m）に広がります。 |
+| `ncaa-women.restricted.2023` | The restricted area is only the area under the basket: no arc is required. | リストリクテッドエリアはバスケット直下の区域だけとなり、半円のラインは必須ではなくなります。 |
+| `iihf.blueLine.2018` | Blue lines are 22.86 m (75 feet) from the end boards. | ブルーラインはエンドボードから22.86m（75フィート）の位置にあります。 |
+| `iihf.trapezoid.2018` | No restricted area behind the goal: the goalkeeper may play the puck anywhere. | ゴール裏にトラペゾイドはなく、ゴールキーパーはどこでもパックを扱えます。 |
+| `iihf.trapezoid.2021` | A restricted area for goalkeepers behind the net is marked: 6.80 m at the goal line, 8.60 m at the boards. | ゴール裏にゴールキーパーの制限区域（トラペゾイド）が引かれます。ゴールライン側が6.80m、エンドボード側が8.60mです。 |
+| `iihf.blueLine.2022` | Blue lines are 22.50 m from the end boards (the diagram of the 2022/23 rule book; the sources do not say which edge of the line is measured). | ブルーラインはエンドボードから22.50mの位置です（2022/23年版ルールブックの図による。線のどちらの縁から測るかは、資料には書かれていません）。 |
+| `ncaa-men.trapezoid.start` | No trapezoid behind the net. | ゴール裏にトラペゾイド（台形の区域）はありません。 |
+| `ncaa-men.trapezoid.2026` | Division I men's games have the trapezoid behind the net: 22 feet at the goal line, 28 at the boards. | ディビジョンI男子の試合では、ゴール裏にトラペゾイドが引かれます。ゴールライン側が22フィート、エンドボード側が28フィートです。 |
+| `ahl.blueLine.start` | Blue lines are 71 feet from the end boards: 60-foot attack zones and a 58-foot neutral zone (worked out from the AHL's move of 4 feet). | ブルーラインはエンドボードから71フィート（約21.6m）で、アタッキングゾーンは60フィート、ニュートラルゾーンは58フィートです（AHLが発表した4フィートの移動から算出）。 |
+| `ahl.blueLine.2005` | Blue lines move 4 feet towards centre ice: 64-foot attack zones and a 50-foot neutral zone. | ブルーラインがリンクの中央寄りに4フィート移り、アタッキングゾーンは64フィート、ニュートラルゾーンは50フィートになります。 |
 
 ## The parks' Japanese names
 

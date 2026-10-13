@@ -1,7 +1,7 @@
 // The demo page's own script: a surface to try (the package's own `mountKyogijo`), the code that draws it in four ways,
 // and a page of examples: every sport, wide and tall, badges, compact cards, court looks, a live score, every ballpark,
 // and the custom element. The words are in words.js, the made-up teams in examples.js.
-import { COURT_THEMES, ERA_SPORTS, GROUNDS, GROUND_IDS, KYOGIJO_STYLE, PARKS, PARK_IDS, SOCCER_PITCH_IDS, SOCCER_PROVIDERS, SOCCER_PROVIDER_IDS, SPORTS, VERSION, drawKyogijo, rescale, layerTable, eraRange, rulesFor, seasonLabel } from "./dist/index.js";
+import { COURT_THEMES, ERA_SPORTS, GROUNDS, GROUND_IDS, KYOGIJO_STYLE, LEAGUES, PARKS, PARK_IDS, SOCCER_PITCH_IDS, SOCCER_PROVIDERS, SOCCER_PROVIDER_IDS, SPORTS, VERSION, drawKyogijo, rescale, layerTable, eraRange, rulesFor, seasonLabel, hasHistory, leagueAt, leagueChanges, leagueSeason } from "./dist/index.js";
 import { mountKyogijo } from "./dist/mount-entry.js";
 import "./dist/element-define.js";
 import { initAtlas } from "./atlas.js";
@@ -46,6 +46,8 @@ const COURTS = ["default", "maple", "twoTone", "night", "sunburst", "tournament"
 
 const state = {
   sport: pick(params.get("sport"), SPORTS, "nhl"),
+  // The league whose rulebook marks the surface: the sport's own (its first) unless the address names another.
+  league: params.get("league") || null,
   park: params.get("park") && (PARKS[params.get("park")] || params.get("park") === "generic") ? params.get("park") : "generic",
   // The season to draw the surface in, or null for today's (a year in the address turns it on).
   year: /^\d{4}$/.test(params.get("year") || "") ? Number(params.get("year")) : null,
@@ -103,7 +105,8 @@ function optionsFor(s, forCode = false) {
   if (!s.stripes) o.stripes = false;
   if (s.exact) o.exactLines = true;
   if (s.sport === "mlb" && s.park !== "generic") o.park = s.park;
-  if (s.year !== null && ERA_SPORTS.includes(s.sport)) o.year = s.year;
+  if (s.league !== null && !isOwnLeague(s.sport, s.league)) o.league = s.league;
+  if (s.year !== null && hasSeasons(s)) o.year = s.year;
   if (s.sport === "soccer") {
     if (s.pitch !== "fifa") o.pitch = s.pitch;
     if (s.ground !== "none") o.ground = s.ground;
@@ -188,7 +191,7 @@ function refreshSegs() {
   $("status-text").hidden = state.status !== "custom";
 }
 
-makeSeg("sport", "sport", SPORTS, () => state.sport, (v) => { state.sport = v; loadGame(v); fillFields(); });
+makeSeg("sport", "sport", SPORTS, () => state.sport, (v) => { state.sport = v; state.league = null; loadGame(v); fillFields(); fillLeagues(); });
 makeSeg("era", "era", ["today", "past"], () => (state.year === null ? "today" : "past"), (v) => { state.year = v === "today" ? null : (state.year ?? clampYear(1975)); });
 makeSeg("size", "size", SIZES, () => state.size, (v) => { state.size = v; });
 makeSeg("orientation", "orientation", ORIENTATIONS, () => state.orientation, (v) => { state.orientation = v; });
@@ -202,17 +205,30 @@ makeSeg("goals", "goals", GOALS, () => state.goals, (v) => { state.goals = v; })
 makeSeg("half", "half", HALVES, () => state.half, (v) => { state.half = v; });
 for (const role of ["away", "home"]) makeSeg(`${role}-logo`, "logo", ["none", "emblem", "url"], () => state[role].logo, (v) => { state[role].logo = v; });
 
-/** A season inside the range the sport's history covers. */
+/** True when a league is the sport's own (the first of its list: the NBA for `nba`), which has the sport's history. */
+const isOwnLeague = (sport, league) => LEAGUES[sport].length === 0 || league === LEAGUES[sport].find((l) => l.builtIn && (l.family !== "football" || l.id === sport))?.id;
+/** The league chosen, when it is not the sport's own. */
+const chosenLeague = (s) => (s.league === null || isOwnLeague(s.sport, s.league) ? undefined : LEAGUES[s.sport].find((l) => l.id === s.league));
+/** True when the surface chosen has a history to slide through: the sport's own league's, or a league's cited one. */
+const hasSeasons = (s) => (chosenLeague(s) === undefined ? ERA_SPORTS.includes(s.sport) : hasHistory(chosenLeague(s)));
+/** The seasons the surface chosen has a history for. */
+function seasonRange(s) {
+  const league = chosenLeague(s);
+  if (league === undefined) return eraRange(s.sport);
+  const years = leagueChanges(s.sport, league.id).map((c) => c.from).filter((y) => y !== null);
+  return { from: Math.min(...years) - 1, to: 2026 };
+}
+/** A season inside the range the surface's history covers. */
 function clampYear(year) {
-  if (!ERA_SPORTS.includes(state.sport)) return year;
-  const { from, to } = eraRange(state.sport);
+  if (!hasSeasons(state)) return year;
+  const { from, to } = seasonRange(state);
   return Math.min(to, Math.max(from, year));
 }
 $("era-year").addEventListener("input", (event) => { state.year = Number(event.target.value); change(); });
 
 /** The season control: shown for the sports that have a history, with the markings that differed from today's. */
 function renderEra() {
-  const has = ERA_SPORTS.includes(state.sport);
+  const has = hasSeasons(state);
   $("era-group").hidden = !has;
   if (!has) return;
   if (state.year !== null) state.year = clampYear(state.year);
@@ -221,13 +237,14 @@ function renderEra() {
   const notes = $("era-notes");
   notes.hidden = !past;
   if (!past) return;
-  const { from, to } = eraRange(state.sport);
+  const { from, to } = seasonRange(state);
   const slider = $("era-year");
   slider.min = String(from);
   slider.max = String(to);
   slider.value = String(state.year);
-  $("era-season").textContent = seasonLabel(state.sport, state.year);
-  const found = rulesFor(state.sport, state.year);
+  const league = chosenLeague(state);
+  $("era-season").textContent = league === undefined ? seasonLabel(state.sport, state.year) : leagueSeason(league.family, state.year);
+  const found = league === undefined ? rulesFor(state.sport, state.year) : leagueAt(state.sport, league.id, state.year);
   const items = found.differences.map((change) => (language.lang === "ja" ? change.ja : change.what));
   if (found.planned) items.push(say("eraPlanned"));
   if (items.length === 0) items.push(say("eraNone"));
@@ -270,6 +287,18 @@ $("swap").addEventListener("click", () => {
   fillFields();
   change();
 });
+
+// The league picker: the sport's own league first, then every variant, in the page's language.
+function fillLeagues() {
+  const select = $("league");
+  select.replaceChildren();
+  for (const league of LEAGUES[state.sport]) select.append(opt(league.id, league.name[language.lang]));
+  const own = LEAGUES[state.sport].find((l) => l.builtIn && (l.family !== "football" || l.id === state.sport));
+  if (state.league !== null && !LEAGUES[state.sport].some((l) => l.id === state.league)) state.league = null;
+  select.value = state.league ?? own?.id ?? "";
+}
+$("league").addEventListener("change", (event) => { state.league = event.target.value; clampYearNow(); change(); });
+function clampYearNow() { if (state.year !== null) state.year = hasSeasons(state) ? clampYear(state.year) : null; }
 
 // The ballpark picker: every park by league, in the page's language.
 function fillParks() {
@@ -365,6 +394,7 @@ function render() {
   stage.dataset.size = state.size;
   stage.dataset.ready = "true";
   $("park-row").hidden = state.sport !== "mlb";
+  $("league-row").hidden = LEAGUES[state.sport].length < 2;
   const soccer = state.sport === "soccer";
   $("pitch-row").hidden = !soccer;
   $("ground-row").hidden = !soccer;
@@ -385,8 +415,10 @@ function render() {
 function syncUrl() {
   const q = new URLSearchParams(location.search);
   q.set("sport", state.sport);
-  if (state.year !== null && ERA_SPORTS.includes(state.sport)) q.set("year", String(state.year));
+  if (state.year !== null && hasSeasons(state)) q.set("year", String(state.year));
   else q.delete("year");
+  if (state.league !== null && !isOwnLeague(state.sport, state.league)) q.set("league", state.league);
+  else q.delete("league");
   for (const [key, value, base] of [["pitch", state.pitch, "fifa"], ["ground", state.ground, "none"], ["pitchtype", state.pitchType, "none"], ["park", state.park, "generic"], ["size", state.size, "full"], ["orientation", state.orientation, "auto"], ["theme", state.theme, "auto"]]) {
     if (value === base) q.delete(key);
     else q.set(key, value);
@@ -410,6 +442,7 @@ function code(kind) {
   }
   if (kind === "element") {
     const attrs = [`sport="${o.sport}"`];
+    if (o.league) attrs.push(`league="${o.league}"`);
     if (o.park) attrs.push(`park="${o.park}"`);
     if (o.size && o.size !== "full") attrs.push(`size="${o.size}"`);
     attrs.push(`orientation="${o.orientation}"`);
@@ -741,6 +774,7 @@ function onLanguage() {
   atlas.relabel();
   fillParks();
   fillGrounds();
+  fillLeagues();
   fillPitches();
   drawProviders();
   if (!state.touched.has("away.name") && !state.touched.has("home.name")) {
@@ -759,6 +793,7 @@ function onLanguage() {
 applyTheme();
 fillFields();
 fillParks();
+fillLeagues();
 fillPitches();
 fillGrounds();
 refreshSegs();

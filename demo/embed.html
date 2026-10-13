@@ -24,7 +24,13 @@
       const draw = () => {
         const aspect = frame.clientWidth / Math.max(1, frame.clientHeight);
         const next = { ...options, aspect };
-        frame.innerHTML = drawKyogijo(next);
+        // A league the address names that the sport does not have is left out, as the frame draws what it can.
+        try {
+          frame.innerHTML = drawKyogijo(next);
+        } catch (error) {
+          if (next.league === undefined) throw error;
+          frame.innerHTML = drawKyogijo({ ...next, league: undefined });
+        }
         frame.dataset.orientation = isPortrait(next) ? "portrait" : "landscape";
         frame.dataset.ready = "true";
       };
