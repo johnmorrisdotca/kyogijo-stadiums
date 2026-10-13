@@ -39,9 +39,9 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `said.won` | {name} won. | {name}の勝ちです。 |
 | `said.tied` | The game is level. | 同点です。 |
 | `said.park` | The outfield fence follows the figures published for {park}. | 外野フェンスは、{park}の公表されている距離をもとに描かれています。 |
-| `said.era` | The markings are those of the {season} season. | ラインやマークは{season}シーズンのものです。 |
 | `said.ground` | The pitch follows the size published for {ground}. | ピッチは、{ground}の公表されている広さをもとに描かれています。 |
 | `said.groundDefault` | No pitch size is published for {ground}, so the pitch has the international size of 105 by 68 metres. | {ground}のピッチの広さは公表されていないため、国際標準の105×68mで描かれています。 |
+| `said.era` | The markings are those of the {season} season. | ラインやマークは{season}シーズンのものです。 |
 | `said.wonPens` | {name} won {a}-{b} on penalties. | {name}がPK戦を{a}-{b}で制しました。 |
 | `said.pens` | {a}-{b} pens | PK戦 {a}-{b} |
 | `said.on` | Drawn as | 図の内容 |

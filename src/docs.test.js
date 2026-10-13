@@ -86,7 +86,7 @@ describe("the package's own numbers", () => {
   it("have a README that says what the grounds hold, and a docs/grounds.md made by the build that lists every one", () => {
     const readme = readFileSync("README.md", "utf8");
     expect(GROUND_IDS).toHaveLength(64);
-    expect(readme).toContain("| Grounds | 64 (21 men's World Cup final venues, 7 more of the Women's, 13 other 2026 venues, 23 club and other grounds) | `GROUNDS` |");
+    expect(readme).toContain("| Grounds | 64 | `GROUNDS` |");
     const list = readFileSync("docs/grounds.md", "utf8");
     for (const id of GROUND_IDS) expect(list, id).toContain(`| \`${id}\` |`);
   });

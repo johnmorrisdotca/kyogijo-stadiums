@@ -90,12 +90,12 @@ console.log(svg.startsWith("<svg"), svg.includes("NORTHERN OWLS"));
 | `drawKyogijo`, `drawSurface`, `drawScore`, `drawBadge` | The drawing, as a string of SVG. |
 | `SPORTS`, `PARKS`, `PARK_IDS`, `COURT_THEMES` | The seven sports, the 94 ballparks, the court looks. |
 | `SOCCER_PITCHES`, `SOCCER_PROVIDERS`, `rescale`, `soccerSpec` | The soccer pitches, the data providers' coordinate systems and the map between them. |
-| `GROUNDS`, `GROUND_IDS`, `groundById` | The 64 soccer grounds, each pitch at its own size where the article publishes one. |
+| `GROUNDS`, `groundById` | The 64 soccer grounds, each pitch at its own size. |
 | `@johnmorrisdotca/kyogijo/geometry` | The dimensions of every surface in feet, in any unit, and the functions that follow from them. |
 | `@johnmorrisdotca/kyogijo/frames` | Providers' coordinate frames and the functions that put their points on a surface. |
 | `@johnmorrisdotca/kyogijo/layers` | `drawLayers`, `layerTable` and the layer types. |
 | `@johnmorrisdotca/kyogijo/parks` | The ballparks and the article each was read from. |
-| `@johnmorrisdotca/kyogijo/grounds` | The soccer grounds, their names, places and World Cups. |
+| `@johnmorrisdotca/kyogijo/grounds` | The soccer grounds. |
 | `@johnmorrisdotca/kyogijo/mount` | `mountKyogijo`: draw into a container and keep it laid out; `kyogijoElement`. |
 | `@johnmorrisdotca/kyogijo/react` | `kyogijoProps` and `createKyogijo`, for React, without depending on it. |
 | `@johnmorrisdotca/kyogijo/element` | The `<kyogijo-field>` class; `element/define` registers it. |
@@ -394,7 +394,7 @@ Lines are drawn a little thicker than they are painted, as broadcast graphics do
 | Option | What it does |
 | --- | --- |
 | `pitch` | A preset or a size: `{ length, width, unit }` in metres (or `yd`, `ft`, `in`, `cm`, `mm`; `units` sets the default). The international 105 by 68 m by default. |
-| `ground` | A ground of `GROUNDS` ([below](#famous-grounds)): its pitch size, and its name for `year`. |
+| `ground` | A ground of `GROUNDS` ([below](#famous-grounds)): its pitch size. |
 | `half` | `left` or `right`: one half, for a bare pitch. A drawing with teams always shows the whole. |
 | `stripePattern` | `bands` (19, the default), `wide`, `narrow`, `lengthwise`, `checks`, `diagonal` or `none`; `stripes: false` also turns them off. |
 | `goals` | `box` (the net, the default), `line`, `strip` or `none`. `cornerFlags` turns the flags off. |
@@ -429,7 +429,7 @@ console.log(pitch.length.toFixed(2), pitch.width.toFixed(2), soccerPitchClass(pi
 
 ### Famous grounds
 
-`ground` draws a pitch at the size of a ground of `GROUNDS`: the venue of every men's World Cup final and of 2026, of every Women's final, and well-known club grounds ([docs/grounds.md](./docs/grounds.md) lists them). Each has its city, Wikidata item and coordinates, its names with their years (`year` picks the one for a season), its name in the local language and in Japanese, and the World Cups it staged. A ground whose article gives no football pitch size (22 of 64) is drawn at the international 105 by 68 m and marked `pitchSize: "default"`; no size is guessed. A `pitch` of your own wins over the ground's.
+`ground` draws a pitch at the size of a ground of `GROUNDS`: 64 venues of World Cup finals, of 2026 and of well-known clubs, each with its place, Wikidata item, coordinates, names by year (`year`), local and Japanese names and World Cups ([docs/grounds.md](./docs/grounds.md)). A ground whose article gives no football pitch size (22 of 64) is drawn at 105 by 68 m and marked `pitchSize: "default"`: no size is guessed. A `pitch` of your own wins.
 
 ```ts
 import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
@@ -444,10 +444,10 @@ console.log(groundsHosting("world-cup", 1966).map((g) => g.name), groundNameIn(G
 
 ### Data providers
 
-A provider writes the pitch in its own numbers: Opta's 0 to 100 with y up, StatsBomb's 120 by 80 yards with y down, Tracab's centimetres from the centre spot, Metrica's 0 to 1. `SOCCER_PROVIDERS` has the ten (`opta`, `statsbomb`, `wyscout`, `tracab`, `metrica`, `skillcorner`, `secondspectrum`, `impect`, `uefa`, `international`), each as a frame: its extents, which way y runs and where it puts the penalty area, the goal area, the mark and the posts. Opta, StatsBomb and Wyscout fix those numbers, so their lines are not where the Laws put them on a 105 by 68 m pitch. The others follow the pitch's size.
+A provider writes the pitch in its own numbers (Opta's 0 to 100 with y up, StatsBomb's 120 by 80 yards with y down, Tracab's centimetres from the centre spot). `SOCCER_PROVIDERS` has ten (`opta`, `statsbomb`, `wyscout`, `tracab`, `metrica`, `skillcorner`, `secondspectrum`, `impect`, `uefa`, `international`), each as a frame. Opta, StatsBomb and Wyscout fix their lines, so they are not where the Laws put them on a 105 by 68 m pitch; the others follow the pitch's size.
 
-- `pitchType: "opta"` stands the lines where the provider puts them and adds an empty `<g class="ky-data">` whose `transform` turns the provider's own x and y into the pitch's metres: put raw data in it and it plots. (A circle in it is stretched, as a provider's units are not square.)
-- `rescale(from, to)` maps one provider's points to another's, piecewise linear between the landmarks (the goal line, goal area, mark, penalty area, halfway line, touchlines and posts), so that a point on the penalty line stays on it. Its `inverse` goes back. The providers are also frames of the [frames module](#coordinate-frames), so `toSurface` and `convert` take them by name with a `size`.
+- `pitchType: "opta"` stands the lines where the provider puts them and adds an empty `<g class="ky-data">` whose `transform` turns the provider's x and y into metres: raw data put in it plots.
+- `rescale(from, to)` maps one provider's points to another's, landmark to landmark, so that a point on the penalty line stays on it; `inverse` goes back. The providers are also [frames](#coordinate-frames).
 
 ```ts
 import { drawKyogijo, rescale } from "@johnmorrisdotca/kyogijo";
@@ -691,24 +691,7 @@ Every function is pure: it returns new values and never changes what it was give
 
 Nothing is branded. The drawing is coloured by custom properties on its `svg`, with a light set and a dark set that follow the device (or `data-theme="light"` or `"dark"` on the page's root, or `theme` in the options). A page sets only the ones it wants different, on the drawing or on a container above it. The defaults sit in `:where()`, which has no weight, so a page's own rule always wins. `colors` in the options sets them from code.
 
-| Property | What it colours | Light | Dark |
-| --- | --- | --- | --- |
-| `--ky-apron` | the ground round the surface | `#dcd8c9` | `#1b1f1c` |
-| `--ky-surface` | turf, ice, wood or outfield grass | by sport | by sport |
-| `--ky-surface-alt` | mown stripes and planks | by sport | by sport |
-| `--ky-line` | painted lines | `#ffffff` | `#e9ece6` |
-| `--ky-zone` | a football end zone no team colours | `#2d6a40` | `#1f4a2d` |
-| `--ky-red`, `--ky-blue`, `--ky-crease` | the rink's lines, and the crease's fill | `#c8372d`, `#2a5db0`, `#bfd3ec` | `#d4574d`, `#5584d4`, `#8ea9cc` |
-| `--ky-boards` | the boards, a court's border, a ballpark's fence | by sport | by sport |
-| `--ky-key` | the paint of a court's keys | `#c25b3c` | `#8a3f2b` |
-| `--ky-court` | a futsal court's floor | `#3b79ad` | `#2a5478` |
-| `--ky-dirt`, `--ky-foul`, `--ky-infield` | the baseball field | `#c28e5c`, `#3a8148`, `#58a05d` | `#8a6040`, `#275a31`, `#367a42` |
-| `--ky-left`, `--ky-right` | the teams' colours | `#2f6db0`, `#b5452c` | the same |
-| `--ky-left-ink`, `--ky-right-ink` | the words on those colours | `#ffffff` | the same |
-| `--ky-plate`, `--ky-plate-ink` | the score's panel | `rgba(18,24,21,.9)`, `#ffffff` | `rgba(0,0,0,.82)`, the same |
-| `--ky-halo` | the outline round a name painted on ice or wood | `rgba(255,255,255,.92)` | the same |
-| `--ky-layer`, `--ky-layer-home`, `--ky-layer-away`, `--ky-layer-edge`, `--ky-layer-hollow`, `--ky-layer-ink`, `--ky-layer-halo` | a data layer's marks (see [docs/layers.md](./docs/layers.md)) | light set | lightened |
-| `--ky-font` | the face of every word | the system's, with Hiragino and Noto Sans JP | the same |
+Each property (`--ky-apron`, `--ky-surface`, `--ky-line`, `--ky-left`, `--ky-plate`, `--ky-layer`, `--ky-font` and the rest) is listed with its light and dark value in [docs/theming.md](./docs/theming.md).
 
 Every part carries a class (`ky-surface`, `ky-line`, `ky-zone-left`, `ky-banner`, `ky-plate`, `ky-score`, `ky-winbar`, `ky-lose`, `ky-badge`) for anything a property cannot reach. Pass `style: "none"` to leave the stylesheet out of each drawing and put `KYOGIJO_STYLE` in the page once, which is what the demo does for its many drawings.
 
@@ -723,7 +706,7 @@ Each is held by a test, and the ones with a name are exported.
 | Sports | 7 | `SPORTS` |
 | Soccer pitches and providers | 10 presets, 10 providers (90 maps between them, each landmark to its landmark) | `SOCCER_PITCHES`, `SOCCER_PROVIDERS` |
 | Ballparks | 94 (30 current MLB, 44 past MLB, 12 NPB home parks, 8 other NPB grounds) | `PARKS` |
-| Grounds | 64 (21 men's World Cup final venues, 7 more of the Women's, 13 other 2026 venues, 23 club and other grounds) | `GROUNDS` |
+| Grounds | 64 | `GROUNDS` |
 | Units | 6 (`ft`, `in`, `yd`, `m`, `cm`, `mm`) | `UNITS` |
 | Coordinate frames | 16 to start with (`nhl-api`, `hockeytech`, `nba-stats`, `nfl-tracking`, `mlbam`, `retrosheet` and the ten soccer providers), more by `registerFrame` | `FRAMES` |
 | A colour | a hex colour, `rgb()`, `rgba()`, `hsl()`, `hsla()`, a name or `var(--name)`, 64 characters at most | `safeColour` |
@@ -797,8 +780,8 @@ src/
 ├── parks.ts            the ballparks, their fences and their sources
 ├── parks.data.ts       made by scripts/build-parks.mjs from scripts/parks.data.json
 ├── parks-entry.ts      the parks' entry
-├── grounds.ts          the soccer grounds, their names and sources
-├── grounds.data.ts     made by scripts/build-grounds.mjs from scripts/grounds.data.json
+├── grounds.ts          the soccer grounds
+├── grounds.data.ts     made by scripts/build-grounds.mjs
 ├── grounds-entry.ts    the grounds' entry
 ├── themes.ts           the court looks
 ├── style.ts            the stylesheet, light and dark
@@ -901,5 +884,5 @@ The code is [MIT](./LICENSE) © John Morris. The ballparks' fence distances are 
 | The soccer pitch's dimensions and the providers' coordinates | The IFAB and FIFA Futsal Laws of the Game, UEFA, MLS, NCAA and FA documents, and each provider's own pages (docs/sources.md) | Facts; no text or drawing copied |
 | The fence distances of 94 ballparks | The English and Japanese Wikipedia articles of each, at the revision cited | Facts; the articles are CC BY-SA 4.0 and none of their text is used |
 | The Wikidata item of each ballpark | Wikidata, as linked from the cited article | CC0 |
-| The pitch, names and World Cups of 64 soccer grounds | The English Wikipedia articles of each ground and of each World Cup, at the revision cited; coordinates from Wikidata | Facts; the articles are CC BY-SA 4.0 and none of their text is used; Wikidata is CC0 |
+| 64 soccer grounds | English Wikipedia articles at the revision cited; Wikidata | Facts; CC BY-SA 4.0 articles, no text used; CC0 |
 | The demo's teams and emblems | Written for this package | MIT |
