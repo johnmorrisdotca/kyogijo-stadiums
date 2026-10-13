@@ -6,6 +6,7 @@ import { describe, expect, it } from "vitest";
 import { ERA_SPORTS, eraChanges, eraStates } from "./eras.ts";
 import { FORMATIONS, POSITION_NAMES } from "./formations.ts";
 import { KYOGIJO_STRINGS } from "./strings.ts";
+import { EVENT_IDS, EVENTS } from "./events.ts";
 import { GROUND_IDS, GROUNDS, groundsHosting } from "./grounds.ts";
 import { LEAGUES, LEAGUE_SOURCES, leagueChanges, leagueFigures } from "./leagues.ts";
 import { PARK_IDS, PARKS } from "./parks.ts";
@@ -53,6 +54,14 @@ function stringsDocument() {
   for (const id of PARK_IDS) if (PARKS[id].nameJa) lines.push(`| \`${id}\` | ${PARKS[id].name} | ${PARKS[id].nameJa} | ${PARKS[id].teamJa ?? ""} |`);
   lines.push("", "## The grounds' Japanese names", "", "| Key | English | 日本語 | Name in the place's language |", "| --- | --- | --- | --- |");
   for (const id of GROUND_IDS) lines.push(`| \`${id}\` | ${GROUNDS[id].name} | ${GROUNDS[id].nameJa} | ${GROUNDS[id].nameLocal ?? ""} |`);
+  lines.push("", "## The special games (`EVENTS`)", "", "| Game | English | 日本語 | Venue, English | Venue, 日本語 |", "| --- | --- | --- | --- | --- |");
+  for (const id of EVENT_IDS) lines.push(`| \`${id}\` | ${EVENTS[id].name.en} | ${EVENTS[id].name.ja} | ${EVENTS[id].venue.en} | ${EVENTS[id].venue.ja} |`);
+  lines.push("", "## What the special games say of where their surface stands", "", "| Game | English | 日本語 |", "| --- | --- | --- |");
+  for (const id of EVENT_IDS) {
+    const { basis, note } = EVENTS[id];
+    if (basis.kind === "published") lines.push(`| \`${id}\` | ${basis.note.en.replace(/\|/g, "\\|")} | ${basis.note.ja.replace(/\|/g, "\\|")} |`);
+    if (note !== undefined) lines.push(`| \`${id}\` (note) | ${note.en.replace(/\|/g, "\\|")} | ${note.ja.replace(/\|/g, "\\|")} |`);
+  }
   lines.push("", "## The formations (`FORMATIONS`)", "", "| Formation | English | 日本語 |", "| --- | --- | --- |");
   for (const f of Object.values(FORMATIONS)) lines.push(`| \`${f.id}\` | ${f.name.en.replace(/\|/g, "\\|")}. ${f.about.en.replace(/\|/g, "\\|")} | ${f.name.ja.replace(/\|/g, "\\|")}。${f.about.ja.replace(/\|/g, "\\|")} |`);
   lines.push("", "## The positions' names (`POSITION_NAMES`)", "", "| Position | English | 日本語 |", "| --- | --- | --- |");

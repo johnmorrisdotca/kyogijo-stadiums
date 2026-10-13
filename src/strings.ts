@@ -53,6 +53,30 @@ export interface KyogijoWords {
     colon: string;
     gap: string;
   };
+  /**
+   * A special game, one surface set inside another: the title ({guest} is the inner surface, {host} where it is), the sentence that names the game ({event}, {date}),
+   * whether the surface lies wholly inside the host ({guest}, {host}) or reaches beyond it ({pct} percent of its area), how its place was decided, and the date.
+   */
+  special: {
+    /** What the inner surface is called in these sentences, by sport: the rink, the court. */
+    guest: Record<Sport, string>;
+    title: string;
+    game: string;
+    inside: string;
+    hangs: string;
+    /** For a ballpark, whose outline is the fair ground inside the fence: what a surface over the infield does to it. */
+    foul: string;
+    /** What a host with no name of its own is called: a football `field`, a soccer `pitch`, a `deck`. */
+    unnamed: Record<"field" | "pitch" | "deck", string>;
+    published: string;
+    convention: string;
+    /** The conventions that place a surface when no source gives where: `infield`, `midfield`, `diamond` and `deck`. */
+    rules: Record<"infield" | "midfield" | "diamond" | "deck", string>;
+    /** The twelve months, comma-separated, a date ({month}, {day}, {year}), and what joins two dates. */
+    months: string;
+    date: string;
+    and: string;
+  };
   /** The words of the ready-made charts (`nbaShotChart` and the rest): their titles, the names of their marks, the key and the sentences that sum them up. */
   charts: {
     titleNba: string;
@@ -433,6 +457,26 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
     net: { serving: "{name} is serving.", bySet: "By set, {name}: {list}.", byGame: "By game, {name}: {list}.", gamePoints: "In the current game, {name} has {points}.", sets: "Sets", games: "Games", points: "Pts" },
     scoreTitle: "{away} {awayScore}, {home} {homeScore}",
     said: { home: "home", away: "away", won: "{name} won.", tied: "The game is level.", park: "The outfield fence follows the figures published for {park}.", ground: "The pitch follows the size published for {ground}.", groundDefault: "No pitch size is published for {ground}, so the pitch has the international size of 105 by 68 metres.", era: "The markings are those of the {season} season.", hammer: "{name} has the hammer.", ends: "By end, {name}: {list}.", total: "Total", wonPens: "{name} won {a}-{b} on penalties.", pens: "{a}-{b} pens", on: "Drawn as", sep: ", ", stop: ".", colon: ": ", gap: " " },
+    special: {
+      guest: { nfl: "football field", cfl: "football field", ifaf: "football field", nhl: "rink", nba: "court", mlb: "baseball field", soccer: "pitch", curling: "sheet", tennis: "court", volleyball: "court", badminton: "court", pickleball: "court", tabletennis: "table" },
+      title: "{guest} in {host}",
+      game: "{event}, {date}.",
+      inside: "The {guest} lies wholly inside the outline of {host}.",
+      hangs: "Part of the {guest}, {pct} percent of its area, lies outside the outline of {host}.",
+      foul: "A ballpark's outline is the fair ground inside the fence, so a surface over the infield reaches into foul ground.",
+      unnamed: { field: "the football field", pitch: "the pitch", deck: "the deck" },
+      published: "Where it stands follows the sources: {note}",
+      convention: "No source gives exactly where it stands, so it is placed by convention: {rule}",
+      rules: {
+        infield: "its middle on the middle of the infield, where the line from first base to third crosses the line from home plate to second, and its length across the field from first base to third.",
+        midfield: "its middle on the middle of the field, and its length along the field.",
+        diamond: "the middle of the infield on the middle of the pitch, and the line from home plate to centre field along the pitch.",
+        deck: "its middle on the middle of the deck, and its length along the deck.",
+      },
+      months: "January,February,March,April,May,June,July,August,September,October,November,December",
+      date: "{month} {day}, {year}",
+      and: " and ",
+    },
     charts: {
       titleNba: "NBA shot chart", titleNhl: "NHL shot map", titleMlb: "Baseball spray chart", titleNfl: "NFL pass chart", titleSoccer: "Soccer shot map", titleGoal: "Goal mouth: where the shots crossed the goal line",
       titleCurling: "Curling stones", curlingEnd: "End {n}", curlingStone: "Stone", curlingCounting: "Counting stone", curlingShot: "Shot rock", curlingFrom: "{name}: {d} ft from the button", curlingNoteCounting: "counting", curlingNoteShot: "the shot rock",
@@ -559,6 +603,26 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
     net: { serving: "{name}のサーブです。", bySet: "{name}のセットごとのスコア：{list}。", byGame: "{name}のゲームごとの得点：{list}。", gamePoints: "現在のゲームのポイントは、{name}が{points}です。", sets: "セット", games: "ゲーム", points: "ポイント" },
     scoreTitle: "{away} {awayScore}、{home} {homeScore}",
     said: { home: "ホーム", away: "アウェイ", won: "{name}の勝ちです。", tied: "同点です。", park: "外野フェンスは、{park}の公表されている距離をもとに描かれています。", ground: "ピッチは、{ground}の公表されている広さをもとに描かれています。", groundDefault: "{ground}のピッチの広さは公表されていないため、国際標準の105×68mで描かれています。", era: "ラインやマークは{season}シーズンのものです。", hammer: "{name}がハンマー（最後の1投）を持っています。", ends: "{name}のエンドごとの得点：{list}。", total: "合計", wonPens: "{name}がPK戦を{a}-{b}で制しました。", pens: "PK戦 {a}-{b}", on: "図の内容", sep: "、", stop: "。", colon: "：", gap: "" },
+    special: {
+      guest: { nfl: "アメリカンフットボールのフィールド", cfl: "カナディアンフットボールのフィールド", ifaf: "アメリカンフットボールのフィールド", nhl: "リンク", nba: "コート", mlb: "野球のグラウンド", soccer: "ピッチ", curling: "シート", tennis: "コート", volleyball: "コート", badminton: "コート", pickleball: "コート", tabletennis: "卓球台" },
+      title: "{host}の中の{guest}",
+      game: "{event}、{date}。",
+      inside: "{guest}全体が{host}の輪郭の内側に収まっています。",
+      hangs: "{guest}の一部（面積の{pct}％）が{host}の輪郭の外にはみ出しています。",
+      foul: "球場の輪郭はフェンスの内側のフェア地域なので、内野の上に置いた競技面はファウル地域にかかります。",
+      unnamed: { field: "フットボールのフィールド", pitch: "ピッチ", deck: "甲板" },
+      published: "置かれた位置は資料に基づいています：{note}",
+      convention: "正確な位置を示す資料がないため、慣例に従って置いています：{rule}",
+      rules: {
+        infield: "中心を内野の中心（一塁と三塁を結ぶ線と、本塁と二塁を結ぶ線の交点）に合わせ、長辺をグラウンドを横切る向き、つまり一塁から三塁への向きにしています。",
+        midfield: "中心をフィールドの中心に合わせ、長辺をフィールドに沿わせています。",
+        diamond: "内野の中心をピッチの中心に合わせ、本塁から中堅へ向かう線をピッチに沿わせています。",
+        deck: "中心を甲板の中心に合わせ、長辺を甲板に沿わせています。",
+      },
+      months: "1月,2月,3月,4月,5月,6月,7月,8月,9月,10月,11月,12月",
+      date: "{year}年{month}{day}日",
+      and: "と",
+    },
     charts: {
       titleNba: "NBAのショットチャート", titleNhl: "NHLのシュートマップ", titleMlb: "野球の打球方向図", titleNfl: "NFLのパスチャート", titleSoccer: "サッカーのシュートマップ", titleGoal: "ゴールマウス：シュートがゴールラインを通過した位置",
       titleCurling: "カーリングのストーンの位置", curlingEnd: "第{n}エンド", curlingStone: "ストーン", curlingCounting: "得点になるストーン", curlingShot: "ナンバーワンストーン（ボタンに最も近いストーン）", curlingFrom: "{name}：ボタンから{d}フィート", curlingNoteCounting: "得点になるストーン", curlingNoteShot: "ナンバーワンストーン",

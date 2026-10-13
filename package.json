@@ -119,6 +119,11 @@
       "import": "./dist/grounds-entry.js",
       "default": "./dist/grounds-entry.js"
     },
+    "./events": {
+      "types": "./dist/events-entry.d.ts",
+      "import": "./dist/events-entry.js",
+      "default": "./dist/events-entry.js"
+    },
     "./atlas": {
       "types": "./dist/atlas-entry.d.ts",
       "import": "./dist/atlas-entry.js",

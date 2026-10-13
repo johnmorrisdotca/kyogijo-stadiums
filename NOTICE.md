@@ -18,6 +18,7 @@ picture or code of the sources is copied; each source is named here so that the 
 | `grounds`: the World Cups each ground staged matches of, and where each final was played | The venue section of the English Wikipedia article of each men's and Women's World Cup, at the revision cited below; FIFA's own pages are not used | Facts, CC BY-SA 4.0 articles as above |
 | `grounds`: the Wikidata item and the coordinates of each ground (`wikidata`, `lat`, `lon`) | The item that each cited article is linked to, its coordinates (P625) and its country (P17), read with the Wikidata API and checked against the item's labels by `scripts/check-grounds.mjs` | Wikidata's data is CC0 (https://creativecommons.org/publicdomain/zero/1.0/) |
 | `parks`: the coordinates of each ballpark (`lat`, `lon`) and the years it opened and closed (`opened`, `closed`) | The item's coordinate location (P625), its date of official opening or inception (P1619, P571) and of official closure or dissolution (P3999, P576), read with the Wikidata API by `scripts/fetch-park-coordinates.mjs` and checked by `scripts/check-parks.mjs` (ES CON Field's opening, 2023, is read from its article) | Wikidata's data is CC0 (https://creativecommons.org/publicdomain/zero/1.0/) |
+| `events`: the special games, their days, venues, hosts and where a surface stood | The English Wikipedia articles of each game and of its venue, at the revision cited below, and three articles of the press (Sports Video Group, NHL.com, The Boston Globe), named below with their authors and dates; the size of a carrier from the Nimitz class's article | Facts, CC BY-SA 4.0 articles as above; no text copied |
 | The atlas (`@johnmorrisdotca/kyogijo/atlas`): the places and their map | The parks and grounds above, joined; the demo's and docs/atlas.md's map is drawn by chizu (MIT) from Natural Earth, which is in the public domain (https://www.naturalearthdata.com/about/terms-of-use/) | Facts and CC0 data; Natural Earth is public domain; chizu is a development dependency and none of it is in the package |
 
 ## The ballparks' articles
@@ -232,3 +233,42 @@ The grounds each World Cup used, and where its final was played, were read from 
 | Women's World Cup 2015 | 2015 FIFA Women's World Cup, 1372575071 |
 | Women's World Cup 2019 | 2019 FIFA Women's World Cup, 1374714732 |
 | Women's World Cup 2023 | 2023 FIFA Women's World Cup, 1378315194 |
+
+## The special games' sources
+
+The dates, the venues and the figures of the 18 special games (`events`) were read from 26 English Wikipedia articles at the revision named, by the address `https://en.wikipedia.org/w/index.php?title=<title>&oldid=<revision>`, and from 3 articles of the press, which are named with their authors and dates. They are facts (a day, a venue, a length); no text, table or picture of any of them is used. Each was read on 2026-10-13.
+
+| Article | Revision | What it gave |
+| --- | --- | --- |
+| 2009 NHL Winter Classic | 1373320166 | The date (January 1, 2009), Wrigley Field. |
+| 2010 NHL Winter Classic | 1366739177 | The date (January 1, 2010), Fenway Park. |
+| 2017 NHL Winter Classic | 1379900792 | The date (January 2, 2017), Busch Stadium. |
+| 2018 NHL Winter Classic | 1374252992 | The date (January 1, 2018), Citi Field. |
+| 2019 NHL Winter Classic | 1373254484 | The date (January 1, 2019), Notre Dame Stadium. |
+| 2022 NHL Winter Classic | 1379456628 | The date (January 1, 2022), Target Field. |
+| 2023 NHL Winter Classic | 1366207097 | The date (January 2, 2023), Fenway Park. |
+| NHL Winter Classic | 1374788408 | The venue of each Winter Classic and the sport its stadium is for; that Notre Dame Stadium is a college football stadium. |
+| 2014 NHL Stadium Series | 1372152454 | The dates (January 25, 26 and 29, 2014) and the venues, Dodger Stadium and Yankee Stadium. |
+| 2003 NHL Heritage Classic | 1374350751 | The date (November 22, 2003), Commonwealth Stadium. |
+| 2011 NHL Heritage Classic | 1374350772 | The date (February 20, 2011), McMahon Stadium. |
+| 2014 NHL Heritage Classic | 1374350779 | The date (March 2, 2014), BC Place, with its roof closed. |
+| 2016 NHL Heritage Classic | 1377841702 | The date (October 23, 2016), Investors Group Field, home of the CFL's Blue Bombers. |
+| 2019 NHL Heritage Classic | 1374350802 | The date (October 26, 2019), Mosaic Stadium, home field of the CFL's Saskatchewan Roughriders. |
+| 2023 NHL Heritage Classic | 1374350813 | The date (October 29, 2023), Commonwealth Stadium. |
+| NHL Heritage Classic | 1372780976 | That the Heritage Classic is held in football stadiums based in Canada. |
+| Commonwealth Stadium | 1378728638 | Primarily used as the home field of the Edmonton Elks of the Canadian Football League. |
+| McMahon Stadium | 1373806532 | A Canadian football stadium in Calgary. |
+| BC Place | 1372065649 | The home of the BC Lions of the Canadian Football League; a stadium with a retractable roof. |
+| Princess Auto Stadium | 1377634185 | The stadium (formerly IG Field) is home to the Winnipeg Blue Bombers of the CFL. |
+| Notre Dame Stadium | 1378192410 | The home field of the University of Notre Dame's football team. |
+| MLB London Series | 1377779354 | The dates of the games (June 29 and 30, 2019; June 24 and 25, 2023), the field laid over the stadium's running track and pitch, and its fence: 330 feet to the foul poles, 382 to left center and right center, 385 to center field in 2019; 387 in the power alleys and 392 to center field in 2023. |
+| London Stadium | 1377039897 | The stadium's field of play, 105 by 68 metres. |
+| Carrier Classic | 1372668329 | The date (November 11, 2011), the game on the flight deck of USS Carl Vinson between Michigan State and North Carolina. |
+| Nimitz-class aircraft carrier | 1378895753 | The class's overall length, 1,092 feet, and overall beam, 252 feet. |
+| USS Carl Vinson | 1378362261 | That USS Carl Vinson is a Nimitz-class carrier and played host to the first NCAA basketball game on an aircraft carrier. |
+
+| Article | Author and publication | Date | What it gave |
+| --- | --- | --- | --- |
+| [2009 NHL Winter Classic Takes the Mound](https://www.sportsvideo.org/2008/12/30/2009-nhl-winter-classic-takes-the-mound/) | Carolyn Braff, Sports Video Group | 30 December 2008 | At Wrigley Field the 200- by 85-foot rink "splits the pitchers' mound from first to third" and "sits 112 feet from home plate and 288 feet from the center-field wall"; the 2008 and 2003 games were played on football fields. |
+| [Winter Classic at Wrigley evokes memories of 1st outdoor game at Cubs' home](https://www.nhl.com/news/topic/winter-classic/2009-wrigley-winter-classic-oral-history) | Tracey Myers, NHL.com | 29 December 2024 | Dan Craig, who built the 2009 rink: the diagram had center ice at second base, and the rink was moved inside the infield, so that center ice was basically at the pitching mound. |
+| [The NHL is about to move into Fenway Park. Here's a look at how it will set up for the Winter Classic.](https://www.bostonglobe.com/2022/12/18/sports/nhl-is-about-move-into-fenway-park-heres-look-how-it-will-set-up-winter-classic) | Michael Silverman, The Boston Globe | 18 December 2022 | At Fenway Park in 2023 the 200-foot rink is roughly centered length-wise across the first and third bases, stretched along a second-to-third-base axis across the Green Monster, shifted from its 2010 layout. |

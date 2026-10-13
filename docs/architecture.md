@@ -101,6 +101,11 @@ src/
 ├── grounds-entry.ts    the grounds' entry
 ├── atlas.ts            every park and ground with its place, and the filters
 ├── atlas-entry.ts      the atlas' entry
+├── special.ts          a special game: the host and the guest as one surface, where the guest stands and how it fits
+├── special.style.ts    the host's colours inside a special game
+├── events.ts           the special games, their options, their words and how each fits
+├── events.data.ts      the games, their places and their sources
+├── events-entry.ts     the events' entry
 ├── themes.ts           the court looks
 ├── look.ts             the named looks (grass, night, chalkboard, blueprint, print, broadcast, high-contrast), light and dark, and the pairs that must read
 ├── features.ts         the named features of each surface and the rules that colour them

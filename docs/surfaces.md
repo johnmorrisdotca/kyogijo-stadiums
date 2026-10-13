@@ -39,4 +39,6 @@ console.log(drawKyogijo({ sport: "nba", league: "fiba" }) === drawKyogijo({ spor
 // false
 ```
 
+A surface may also be set inside another, to scale, as a rink was set on a ballpark's infield: that is `host` and `placement`, with the games that were played so, in [special games](./special-games.md).
+
 Every surface is in the [gallery](./gallery.md), each with the code that drew it.

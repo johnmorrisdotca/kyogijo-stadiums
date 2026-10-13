@@ -10,6 +10,7 @@ Each is held by a test, and the ones with a name are exported. The counts are ma
 | League variants | 52 leagues of 10 families, besides each sport's own | `LEAGUES` |
 | Ballparks | 94 (30 current MLB, 44 past MLB, 12 NPB home parks, 8 other NPB grounds) | `PARKS` |
 | Grounds | 64 | `GROUNDS` |
+| Special games | 18 (a surface set inside another: ballparks, football stadiums, a deck, a stadium's pitch) | `EVENTS` |
 | Places on the atlas | 158 | `PLACES` |
 | Units | 6 (`yd`, `m`, `ft`, `in`, `cm`, `mm`) | `UNITS` |
 | Coordinate frames | 22 to start with (`nhl-api`, `hockeytech`, `nba-stats`, `nfl-tracking`, `mlbam`, `retrosheet`, `curling`, `tennis`, `volleyball`, `badminton`, `pickleball`, `tabletennis` and the 10 soccer providers), more by `registerFrame` | `FRAMES` |

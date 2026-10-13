@@ -17,6 +17,7 @@ Kyogijo draws sports surfaces as SVG, to scale, with the score on them. The READ
 - [Soccer](./soccer.md): sizes, mowing patterns, goals, shoot-outs and the providers' coordinates.
 - [Curling](./curling.md): the sheet from World Curling's and Curling Canada's rules, the board with the hammer, and the stones of an end scored by the rules.
 - [Tennis, volleyball and the other net sports](./courts.md): the courts of tennis, volleyball and beach volleyball, badminton, pickleball and table tennis from their rulebooks, their looks, the board of sets and games with the server's ball.
+- [Special games](./special-games.md): a rink in a ballpark, a court on a carrier's deck, baseball over a stadium's pitch: 18 games to scale, each with its sources.
 - [Ballparks](./ballparks.md): 94 parks, each with its own fence, and the past ones by season.
 - [The grounds](./grounds.md): 64 soccer grounds, each pitch at its published size.
 - [League variants](./variants.md): the WNBA, FIBA, the NCAA, the IIHF, Little League and more, each from its rulebook.

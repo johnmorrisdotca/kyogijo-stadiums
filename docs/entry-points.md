@@ -19,6 +19,7 @@ The [API reference](https://johnmorrisdotca.github.io/kyogijo/api.html) lists ev
 | `@johnmorrisdotca/kyogijo/parks` | `PARKS`, `PARK_IDS`, `parkById`, `parkByWikidata`, `parkPointsIn`, `parkSourceUrl`, `parkUnit`, `fenceFor` |
 | `@johnmorrisdotca/kyogijo/eras` | `rulesFor`, `eraChanges`, `eraStates`, `eraRange`, `seasonLabel`, `footballIn`, `ERA_SPORTS`, `ERA_CURRENT`, `ERA_SOURCES` and the rule types |
 | `@johnmorrisdotca/kyogijo/grounds` | `GROUNDS`, `GROUND_IDS`, `groundById`, `groundByWikidata`, `groundNameIn`, `groundsHosting`, `groundSourceUrl` |
+| `@johnmorrisdotca/kyogijo/events` | `EVENTS`, `EVENT_IDS`, `EVENT_SOURCES`, `eventById`, `eventOptions`, `eventSources`, `eventFit`, `fitOf`, `conventionPlacement`, `KYOGIJO_SPECIAL_STYLE` and the game types: the special games, a surface set inside another |
 | `@johnmorrisdotca/kyogijo/atlas` | `PLACES`, `placeById`, `placesBy`, `atlasFacets`, `surfaceOf` |
 | `@johnmorrisdotca/kyogijo/mount` | `mountKyogijo` (with its `replay` method), `kyogijoElement`, `containerAspect` |
 | `@johnmorrisdotca/kyogijo/react` | `kyogijoProps`, `kyogijoHtml`, `createKyogijo` |

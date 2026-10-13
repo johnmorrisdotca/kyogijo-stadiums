@@ -77,6 +77,7 @@ console.log(svg.startsWith("<svg"), svg.includes("Northern Owls 3, Lakeshore Anc
 - **Soccer, to the Laws.** A pitch from Law 1 of the IFAB Laws of the Game of any size, with presets (international, UEFA, MLS, NCAA, the FA's 9-, 7- and 5-a-side, FIFA's futsal), half pitches, five mowing patterns, four goal styles, penalties and extra time in a score. [Soccer](./docs/soccer.md).
 - **Every ballpark.** The 30 current MLB parks and 44 that MLB clubs have left (the Polo Grounds, Ebbets Field, the Astrodome and more), and the 12 home parks of Nippon Professional Baseball with eight other NPB grounds, each with its fence drawn from the distances published for it; a past park whose fence moved is drawn as it stood in a season. [Ballparks](./docs/ballparks.md).
 - **Soccer grounds and an atlas.** 64 soccer grounds, each pitch at its published size, and every park and ground on a map, by sport, league, country and year. [The grounds](./docs/grounds.md), [the atlas](./docs/atlas.md).
+- **Special games.** A surface set inside another, to scale: an NHL rink on a ballpark's infield or a football stadium's field (the Winter Classic, the Stadium Series, the Heritage Classic), a college basketball court on the deck of a carrier, a baseball field laid over a London stadium's pitch. 18 games, each with its day, its venue and its sources, and the place of the rink cited where a source gives it and marked as a convention where none does. [Special games](./docs/special-games.md).
 - **Surfaces through the years.** `year: 1975` draws a surface as its league's rules marked it that season, each change cited. [Surfaces through the years](./docs/eras.md).
 - **Score mode.** Each team's name and logo on its side (the end zones of a football field, the ends of the ice, the halves of the court, the dugouts of a ballpark) and the score large in the middle, with the competition, the status and the date, and the winner emphasised. [Score and layout](./docs/score.md).
 - **Zoom to a part of a surface.** `range: "offensive-zone"` crops a drawing to a rink's zone, a half court, the paint, the red zone, a soccer half, third or penalty area, the infield, a curling house, or a box of your own in any frame, with its data, heat, labels and score following. [Display ranges](./docs/ranges.md).
@@ -100,8 +101,9 @@ console.log(svg.startsWith("<svg"), svg.includes("Northern Owls 3, Lakeshore Anc
 | `SPORTS`, `PARKS`, `PARK_IDS`, `COURT_THEMES` | The thirteen sports, the 94 ballparks, the court looks. |
 | `SOCCER_PITCHES`, `SOCCER_PROVIDERS`, `rescale`, `soccerSpec` | The soccer pitches, the data providers' coordinate systems and the map between them. |
 | `GROUNDS`, `groundById` | The 64 soccer grounds, each pitch at its own size. |
+| `EVENTS`, `eventOptions` | The 18 special games: a rink in a ballpark, a court on a carrier's deck, with `host` and `placement` in the options. |
 | `./geometry`, `./frames`, `./layers`, `./charts`, `./replay` | The dimensions in any unit; the providers' frames; data layers; ready-made charts; tracking data played on a surface. |
-| `./parks`, `./grounds`, `./atlas`, `./eras`, `./leagues` | The ballparks, the grounds, every place, the markings of a season, each league's rulebook. |
+| `./parks`, `./grounds`, `./atlas`, `./eras`, `./leagues`, `./events` | The ballparks, the grounds, every place, the markings of a season, each league's rulebook, the special games. |
 | `./scene`, `./canvas`, `./d3`, `./plot`, `./geojson`, `./png` | The drawing as data; on a canvas; in a d3 selection; as an Observable Plot mark; as GeoJSON; as a PNG (the optional peer `@resvg/resvg-js`). |
 | `./mount`, `./react`, `./element`, `./element/define` | Draw into a container; React props; the `<kyogijo-field>` element and its registration. |
 
@@ -229,6 +231,28 @@ console.log(drawKyogijo({ sport: "mlb", park: "polo-grounds", year: 1915 }) === 
 ```
 
 Your own fence (`fence: { left: 310, center: 420 }`) and every park's key are in [ballparks](./docs/ballparks.md) and [parks](./docs/parks.md).
+
+### A rink in a ballpark
+
+```ts
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { EVENTS, eventOptions } from "@johnmorrisdotca/kyogijo/events";
+
+// The 2009 Winter Classic: the NHL's rink, 200 by 85 feet, on the infield of Wrigley Field.
+const game = EVENTS["winter-classic-2009"];
+console.log(game.name.en, game.dates[0], game.venue.en);
+// 2009 NHL Winter Classic 2009-01-01 Wrigley Field
+const svg = drawKyogijo({
+  ...eventOptions("winter-classic-2009"),
+  away: { name: "Detroit Red Wings", abbr: "DET", score: 6, color: "#ce1126" },
+  home: { name: "Chicago Blackhawks", abbr: "CHI", score: 4, color: "#111111" },
+  status: "final",
+});
+console.log(svg.includes("Detroit Red Wings 6, Chicago Blackhawks 4"), svg.includes("lies outside the outline"));
+// true true
+```
+
+The host, the rink and where it stood are each cited, and each game says whether its place is a source's or a convention: [special games](./docs/special-games.md).
 
 ### A badge for a list
 

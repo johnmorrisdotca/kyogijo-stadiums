@@ -238,6 +238,34 @@ function placesPage() {
   };
 }
 
+function specialPage(lib) {
+  const { EVENTS, EVENT_IDS } = lib[`${MAIN}/events`];
+  const teams = (sport) => (sport === "nba" ? [PEAKS, BOLTS, "Finals, Game 6"] : sport === "mlb" ? [STARS, PINES, "Game 5"] : [OWLS, ANCHORS, "Cup Final, Game 7"]);
+  const game = (id) => {
+    const [away, home] = teams(EVENTS[id].guest.sport);
+    return `import { drawKyogijo } from "${MAIN}";\nimport { eventOptions } from "${MAIN}/events";\n\nconst svg = drawKyogijo({\n  ...eventOptions(${JSON.stringify(id)}),\n  away: ${literal(away)},\n  home: ${literal(home)},\n  status: "final",\n});`;
+  };
+  const where = (id) => (EVENTS[id].basis.kind === "published" ? "Its place is the sources'." : "Its place is a convention: no source gives it.");
+  const group = (ids) => ids.map((id) => item(`event-${id}`, EVENTS[id].name.en, game(id), `${EVENTS[id].venue.en}. ${where(id)}`));
+  const byHost = (test) => EVENT_IDS.filter((id) => test(EVENTS[id].host));
+  return {
+    slug: "gallery-special",
+    title: "Gallery: special games",
+    ja: "特設会場での試合",
+    intro: "One surface set inside another, to scale: the host drawn as it is alone, the game's surface set inside it with its teams and score. Each game is a key of `EVENTS`, with its day, its venue and its sources.",
+    sections: [
+      section("ballparks", "A rink in a ballpark", "The NHL's rink over a ballpark's infield. A rink reaches over foul ground, which a ballpark's outline (the fair ground) does not hold, so each says how much of it lies beyond.", group(byHost((host) => host.park !== undefined))),
+      section("stadiums", "A rink in a football stadium", "The rink at the middle of the field, its length along it. A football stadium's field is the CFL's or the NCAA's.", group(byHost((host) => host.field !== undefined))),
+      section("others", "A court on a deck, baseball over a pitch", "The deck is a plain rectangle of the Nimitz class's length and beam; the London Series' field was laid over the stadium's running track and pitch, with the fence its article gives.", group(byHost((host) => host.deck !== undefined || host.pitch !== undefined))),
+      section("own", "Your own host and place", "`host` and `placement` take any surface and any place: a court at midfield, a rink turned across a ballpark, with a data layer in the rink's own numbers.", [
+        item("own-court", "A basketball court at midfield of an NFL field", drawing({ sport: "nba", host: { field: "nfl" } })),
+        item("own-rink-turned", "A rink turned 30 degrees on the infield of Fenway Park", drawing({ sport: "nhl", host: { park: "fenway-park" }, placement: { x: 0, y: -63.64, angle: 30 } })),
+        item("own-layer", "Shots in the rink's own numbers", `import { drawKyogijo } from "${MAIN}";\n\nconst svg = drawKyogijo({\n  sport: "nhl",\n  host: { park: "wrigley-field" },\n  placement: { x: 0, y: -69.5, angle: 0 },\n  layers: [{ kind: "points", name: "shots", data: [{ x: 172, y: 30 }, { x: 160, y: 55 }, { x: 28, y: 42.5, outcome: "goal" }] }],\n});`, "A point is where the rink puts it, wherever the rink stands."),
+      ]),
+    ],
+  };
+}
+
 function dataPage() {
   const points = [
     item("points-shapes", "Points: the seven shapes", `import { drawKyogijo } from "${MAIN}";\n\nconst shapes = ["circle", "square", "triangle", "diamond", "cross", "x", "star"];\nconst svg = drawKyogijo({\n  sport: "nhl",\n  layers: [{ kind: "points", name: "shapes", data: shapes.map((shape, i) => ({ x: 40 + i * 20, y: 42.5, shape, title: shape })), style: { size: 8 } }],\n});`),
@@ -532,7 +560,7 @@ function rangesPage(lib) {
   };
 }
 
-export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, dataPage, curlingPage, courtsPage, stylingPage, rangesPage];
+export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, specialPage, dataPage, curlingPage, courtsPage, stylingPage, rangesPage];
 
 /** The sections of every page, with each item's picture made by running its code. */
 export function galleryData(lib) {
@@ -634,7 +662,7 @@ export function framesBlockHtml(lib, style) {
 
 /** The package's entry points as `runSnippet` wants them, read from a folder of built (`.js`) or source (`.ts`) files. */
 export async function libraryFrom(dir, ext, importer) {
-  const entries = { "": "index", "/charts": "charts-entry", "/frames": "frames-entry", "/layers": "layers-entry", "/leagues": "leagues-entry", "/eras": "eras-entry", "/grounds": "grounds-entry", "/parks": "parks-entry", "/atlas": "atlas-entry", "/geometry": "geometry-entry", "/replay": "replay-entry" };
+  const entries = { "": "index", "/charts": "charts-entry", "/frames": "frames-entry", "/layers": "layers-entry", "/leagues": "leagues-entry", "/eras": "eras-entry", "/grounds": "grounds-entry", "/parks": "parks-entry", "/atlas": "atlas-entry", "/events": "events-entry", "/geometry": "geometry-entry", "/replay": "replay-entry" };
   const lib = {};
   for (const [suffix, file] of Object.entries(entries)) lib[`${MAIN}${suffix}`] = await importer(`${dir}/${file}${ext}`);
   return lib;

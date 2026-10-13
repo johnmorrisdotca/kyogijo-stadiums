@@ -23,6 +23,40 @@ export type Orientation = "landscape" | "portrait" | "auto";
 /** A side of the drawing as the eye sees it. The away team is on the left unless `homeSide` says otherwise. */
 export type Side = "left" | "right";
 
+/**
+ * Where a special game is played: the surface the game's own surface is set inside. Give one of `park` (a key of `PARKS`), `ground` or `pitch` (a soccer
+ * ground or pitch), `field` (a football field) or `deck` (a plain rectangle, such as a ship's deck). Its markings are those of `year` when it has history.
+ */
+export interface HostOptions {
+  /** A ballpark: a key of `PARKS`. Its frame is the ballpark's: x across the field, y minus the distance out from the back of home plate, in feet. */
+  park?: string;
+  /** A soccer ground: a key of `GROUNDS`. Its frame is the pitch's, in feet: x along it from the left, y across it from the top. */
+  ground?: string;
+  /** A soccer pitch of a size or a preset, when no ground names it. */
+  pitch?: SoccerPitchId | SoccerSize;
+  /** A football field: `nfl`, `cfl` or `ifaf`. Its frame is the field's with its end zones, in feet, from the top left corner. */
+  field?: "nfl" | "cfl" | "ifaf";
+  /** The league whose rulebook marks a football `field` (`ncaa`). */
+  league?: string;
+  /** A plain rectangle in `unit` (feet by default), such as the deck of a ship. */
+  deck?: { length: number; width: number; unit?: Unit };
+  /** The season of the host's markings, when it differs from the drawing's `year` (a ballpark's fence, a field's rules). */
+  year?: number;
+  /** The words for the host in the title and the description, when it is not a park or a ground that has a name. */
+  name?: string;
+  nameJa?: string;
+}
+
+/**
+ * Where the drawing's own surface stands in its host, in the host's frame in feet: `x` and `y` are where the surface's middle is (a ballpark's home plate),
+ * and `angle` is the turn in degrees about it, clockwise as the eye sees it (0 leaves the surface as it lies).
+ */
+export interface Placement {
+  x: number;
+  y: number;
+  angle: number;
+}
+
 /** How much of the surface's markings are drawn. `simple` leaves out the small ones, such as hash marks. */
 export type Detail = "full" | "simple";
 
@@ -383,6 +417,16 @@ export interface SurfaceOptions {
   league?: string;
   /** The ballpark of an MLB drawing: a key of `PARKS`, or `generic` (the default) for a typical field. */
   park?: string;
+  /**
+   * A special game: the surface the drawing's own (`sport`) is set inside, to scale, such as a hockey rink in a ballpark or a basketball court on a ship's deck.
+   * The team banners, the score and the data `layers` are on the inner surface, in its frame. A special game is drawn as the host lies, wide, whatever
+   * `orientation` says. See `EVENTS` and `eventOptions` for the games with their sources.
+   */
+  host?: HostOptions;
+  /** Where the surface stands in its `host`. Without it, the middle of the host's field (`midfield`), or of the infield of a ballpark. */
+  placement?: Placement;
+  /** The key of a special game of `EVENTS`, which `eventOptions` fills in: its name and date are then in the title and the description. */
+  event?: string;
   /**
    * The season to draw the surface as it was in: a year names the season that starts in it (`1979` is the NHL's and the NBA's 1979–80,
    * the NFL's, the CFL's and baseball's 1979). The markings are those the rules put on the surface that season (`rulesFor`), and

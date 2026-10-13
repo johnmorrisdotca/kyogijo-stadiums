@@ -49,6 +49,7 @@ export function limitsTable(lib) {
   const { SPORTS, SOCCER_PITCHES, SOCCER_PROVIDERS, PARKS, PARK_IDS, UNITS } = lib[MAIN];
   const { FRAMES } = lib[`${MAIN}/frames`];
   const { GROUND_IDS } = lib[`${MAIN}/grounds`];
+  const { EVENT_IDS } = lib[`${MAIN}/events`];
   const { LEAGUES } = lib[`${MAIN}/leagues`];
   const { PLACES } = lib[`${MAIN}/atlas`];
   const { FORMATIONS } = lib[`${MAIN}/layers`];
@@ -67,6 +68,7 @@ export function limitsTable(lib) {
       ["League variants", `${leagues} leagues of ${families} families, besides each sport's own`, "`LEAGUES`"],
       ["Ballparks", `${PARK_IDS.length} (${count((p) => p.league === "MLB" && p.status !== "past")} current MLB, ${count((p) => p.league === "MLB" && p.status === "past")} past MLB, ${count((p) => p.league === "NPB" && p.status === "current")} NPB home parks, ${count((p) => p.league === "NPB" && p.status !== "current")} other NPB grounds)`, "`PARKS`"],
       ["Grounds", String(GROUND_IDS.length), "`GROUNDS`"],
+      ["Special games", `${EVENT_IDS.length} (a surface set inside another: ballparks, football stadiums, a deck, a stadium's pitch)`, "`EVENTS`"],
       ["Places on the atlas", String(PLACES.length), "`PLACES`"],
       ["Units", `${UNITS.length} (${UNITS.map((unit) => `\`${unit}\``).join(", ")})`, "`UNITS`"],
       ["Coordinate frames", `${registered.length} to start with (${registered.filter((name) => FRAMES[name].sport !== "soccer").map((name) => `\`${name}\``).join(", ")} and the ${soccer} soccer providers), more by \`registerFrame\``, "`FRAMES`"],

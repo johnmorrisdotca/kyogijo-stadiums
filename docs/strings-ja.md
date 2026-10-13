@@ -95,6 +95,36 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `said.stop` | . | 。 |
 | `said.colon` | :  | ： |
 | `said.gap` |   |  |
+| `special.guest.nfl` | football field | アメリカンフットボールのフィールド |
+| `special.guest.cfl` | football field | カナディアンフットボールのフィールド |
+| `special.guest.ifaf` | football field | アメリカンフットボールのフィールド |
+| `special.guest.nhl` | rink | リンク |
+| `special.guest.nba` | court | コート |
+| `special.guest.mlb` | baseball field | 野球のグラウンド |
+| `special.guest.soccer` | pitch | ピッチ |
+| `special.guest.curling` | sheet | シート |
+| `special.guest.tennis` | court | コート |
+| `special.guest.volleyball` | court | コート |
+| `special.guest.badminton` | court | コート |
+| `special.guest.pickleball` | court | コート |
+| `special.guest.tabletennis` | table | 卓球台 |
+| `special.title` | {guest} in {host} | {host}の中の{guest} |
+| `special.game` | {event}, {date}. | {event}、{date}。 |
+| `special.inside` | The {guest} lies wholly inside the outline of {host}. | {guest}全体が{host}の輪郭の内側に収まっています。 |
+| `special.hangs` | Part of the {guest}, {pct} percent of its area, lies outside the outline of {host}. | {guest}の一部（面積の{pct}％）が{host}の輪郭の外にはみ出しています。 |
+| `special.foul` | A ballpark's outline is the fair ground inside the fence, so a surface over the infield reaches into foul ground. | 球場の輪郭はフェンスの内側のフェア地域なので、内野の上に置いた競技面はファウル地域にかかります。 |
+| `special.unnamed.field` | the football field | フットボールのフィールド |
+| `special.unnamed.pitch` | the pitch | ピッチ |
+| `special.unnamed.deck` | the deck | 甲板 |
+| `special.published` | Where it stands follows the sources: {note} | 置かれた位置は資料に基づいています：{note} |
+| `special.convention` | No source gives exactly where it stands, so it is placed by convention: {rule} | 正確な位置を示す資料がないため、慣例に従って置いています：{rule} |
+| `special.rules.infield` | its middle on the middle of the infield, where the line from first base to third crosses the line from home plate to second, and its length across the field from first base to third. | 中心を内野の中心（一塁と三塁を結ぶ線と、本塁と二塁を結ぶ線の交点）に合わせ、長辺をグラウンドを横切る向き、つまり一塁から三塁への向きにしています。 |
+| `special.rules.midfield` | its middle on the middle of the field, and its length along the field. | 中心をフィールドの中心に合わせ、長辺をフィールドに沿わせています。 |
+| `special.rules.diamond` | the middle of the infield on the middle of the pitch, and the line from home plate to centre field along the pitch. | 内野の中心をピッチの中心に合わせ、本塁から中堅へ向かう線をピッチに沿わせています。 |
+| `special.rules.deck` | its middle on the middle of the deck, and its length along the deck. | 中心を甲板の中心に合わせ、長辺を甲板に沿わせています。 |
+| `special.months` | January,February,March,April,May,June,July,August,September,October,November,December | 1月,2月,3月,4月,5月,6月,7月,8月,9月,10月,11月,12月 |
+| `special.date` | {month} {day}, {year} | {year}年{month}{day}日 |
+| `special.and` |  and  | と |
 | `charts.titleNba` | NBA shot chart | NBAのショットチャート |
 | `charts.titleNhl` | NHL shot map | NHLのシュートマップ |
 | `charts.titleMlb` | Baseball spray chart | 野球の打球方向図 |
@@ -759,6 +789,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `soccer` | Soccer | サッカー |
 | page `curling` | Curling | カーリング |
 | page `courts` | Tennis, volleyball, badminton, pickleball and table tennis | ネット型競技のコート |
+| page `special-games` | Special games | 特設会場での試合 |
 | page `ballparks` | Ballparks | 球場 |
 | page `grounds` | The grounds | スタジアム |
 | page `variants` | League variants | リーグごとの違い |
@@ -779,6 +810,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `gallery-leagues` | Gallery: every league's surface | ギャラリー：リーグごとの競技場 |
 | page `gallery-years` | Gallery: surfaces through the years | ギャラリー：年ごとの競技場 |
 | page `gallery-places` | Gallery: ballparks and grounds | ギャラリー：球場とスタジアム |
+| page `gallery-special` | Gallery: special games | ギャラリー：特設会場での試合 |
 | page `gallery-data` | Gallery: data on a surface | ギャラリー：競技場の上のデータ |
 | page `gallery-curling` | Gallery: curling | ギャラリー：カーリング |
 | page `gallery-courts` | Gallery: tennis, volleyball and other net sports | ギャラリー：ネット型競技のコート |
@@ -1017,6 +1049,42 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `allianz-stadium-turin` | Allianz Stadium | ユヴェントス・スタジアム | Allianz Stadium |
 | `japan-national-stadium` | Japan National Stadium | 国立競技場 | 国立競技場 |
 | `kashima-soccer-stadium` | Kashima Soccer Stadium | 茨城県立カシマサッカースタジアム | 茨城県立カシマサッカースタジアム |
+
+## The special games (`EVENTS`)
+
+| Game | English | 日本語 | Venue, English | Venue, 日本語 |
+| --- | --- | --- | --- | --- |
+| `heritage-classic-2003` | 2003 NHL Heritage Classic | 2003年NHLヘリテージ・クラシック | Commonwealth Stadium | コモンウェルス・スタジアム |
+| `winter-classic-2009` | 2009 NHL Winter Classic | 2009年NHLウィンター・クラシック | Wrigley Field | リグレー・フィールド |
+| `winter-classic-2010` | 2010 NHL Winter Classic | 2010年NHLウィンター・クラシック | Fenway Park | フェンウェイ・パーク |
+| `heritage-classic-2011` | 2011 NHL Heritage Classic | 2011年NHLヘリテージ・クラシック | McMahon Stadium | マクマホン・スタジアム |
+| `carrier-classic-2011` | 2011 Carrier Classic | 2011年キャリアー・クラシック | USS Carl Vinson | 空母カール・ビンソン |
+| `stadium-series-2014-dodger` | 2014 NHL Stadium Series at Dodger Stadium | 2014年NHLスタジアム・シリーズ（ドジャー・スタジアム） | Dodger Stadium | ドジャー・スタジアム |
+| `stadium-series-2014-yankee` | 2014 NHL Stadium Series at Yankee Stadium | 2014年NHLスタジアム・シリーズ（ヤンキー・スタジアム） | Yankee Stadium | ヤンキー・スタジアム |
+| `heritage-classic-2014` | 2014 NHL Heritage Classic | 2014年NHLヘリテージ・クラシック | BC Place | BCプレース |
+| `heritage-classic-2016` | 2016 NHL Heritage Classic | 2016年NHLヘリテージ・クラシック | Investors Group Field | インベスターズ・グループ・フィールド |
+| `winter-classic-2017` | 2017 NHL Winter Classic | 2017年NHLウィンター・クラシック | Busch Stadium | ブッシュ・スタジアム |
+| `winter-classic-2018` | 2018 NHL Winter Classic | 2018年NHLウィンター・クラシック | Citi Field | シティ・フィールド |
+| `winter-classic-2019` | 2019 NHL Winter Classic | 2019年NHLウィンター・クラシック | Notre Dame Stadium | ノートルダム・スタジアム |
+| `mlb-london-2019` | 2019 MLB London Series | 2019年MLBロンドン・シリーズ | London Stadium | ロンドン・スタジアム |
+| `heritage-classic-2019` | 2019 NHL Heritage Classic | 2019年NHLヘリテージ・クラシック | Mosaic Stadium | モザイク・スタジアム |
+| `winter-classic-2022` | 2022 NHL Winter Classic | 2022年NHLウィンター・クラシック | Target Field | ターゲット・フィールド |
+| `winter-classic-2023` | 2023 NHL Winter Classic | 2023年NHLウィンター・クラシック | Fenway Park | フェンウェイ・パーク |
+| `mlb-london-2023` | 2023 MLB London Series | 2023年MLBロンドン・シリーズ | London Stadium | ロンドン・スタジアム |
+| `heritage-classic-2023` | 2023 NHL Heritage Classic | 2023年NHLヘリテージ・クラシック | Commonwealth Stadium | コモンウェルス・スタジアム |
+
+## What the special games say of where their surface stands
+
+| Game | English | 日本語 |
+| --- | --- | --- |
+| `winter-classic-2009` | the rink ran from first base to third, 200 by 85 feet, and its edge toward center field was 112 feet from home plate and 288 feet from the 400-foot center-field wall, so that its middle was 69.5 feet out, within 9 feet of the pitching mound, where the man who built it says center ice was. | リンクは200×85フィートで、長辺は一塁と三塁を結ぶ向きでした。中堅側の縁は本塁から112フィート、400フィートの中堅フェンスから288フィートの位置にあり、そのため中心は本塁から69.5フィート、マウンドから9フィート以内にありました。リンクを造った人物は、センターアイスはこのマウンドのあたりだったと語っています。 |
+| `carrier-classic-2011` (note) | The deck is drawn as a plain rectangle of the Nimitz class's overall length and beam, 1,092 by 252 feet; the ship's flight deck is angled and narrower at its ends. | 甲板は、ニミッツ級の全長と最大幅（1,092×252フィート）の単純な長方形で描いています。実際の飛行甲板は斜めの部分があり、端に向かって細くなります。 |
+| `heritage-classic-2014` (note) | BC Place has a retractable roof, and it was closed for this game. | BCプレースには開閉式の屋根があり、この試合では閉じられていました。 |
+| `winter-classic-2019` (note) | Notre Dame Stadium is a college football stadium, so its field is drawn as the NCAA marks it. | ノートルダム・スタジアムは大学アメリカンフットボールのスタジアムなので、フィールドはNCAAのラインの引き方に合わせて描いています。 |
+| `mlb-london-2019` (note) | The baseball field was laid over the stadium's running track and pitch, so most of it lies beyond the pitch. The fence is 330 feet to the foul poles, 382 to left center and right center and 385 to center field. | 野球のグラウンドはスタジアムの陸上トラックとピッチの上に敷かれたため、大部分がピッチの外にあります。フェンスまでの距離は、ポールまで330フィート、左中間と右中間まで382フィート、中堅まで385フィートです。 |
+| `winter-classic-2022` (note) | The game was planned for 2021 and played a year late, in January 2022. | この試合は2021年に予定されていましたが、1年遅れて2022年1月に行われました。 |
+| `winter-classic-2023` | the 200-foot rink is roughly centered length-wise across first and third bases and stretched along a second-to-third-base axis, so its middle is drawn halfway between first and third, with its length turned to run from third base toward second. | 200フィートのリンクは、一塁と三塁をまたぐように長さ方向のほぼ中央で置かれ、二塁と三塁を結ぶ軸に沿って伸びていました。そこで、中心を一塁と三塁の中間に置き、長辺を三塁から二塁に向けて描いています。 |
+| `mlb-london-2023` (note) | For 2023 the fence was moved out to 387 feet in the power alleys and 392 to center field; the 330 feet to the foul poles is that of 2019, which the source does not restate. | 2023年はフェンスが外側に移され、左中間・右中間は387フィート、中堅は392フィートになりました。ポールまでの330フィートは2019年の数字で、2023年について資料は改めて触れていません。 |
 
 ## The formations (`FORMATIONS`)
 

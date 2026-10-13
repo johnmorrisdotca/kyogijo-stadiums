@@ -295,6 +295,30 @@ The facts of the 64 grounds of `scripts/grounds.data.json` (listed in [grounds.m
 - **Capacity** is the first figure of the infobox, which for a stadium of two sports is the first sport's. A capacity the infobox leaves to a template (Hampden Park, Celtic Park) or gives as a range (Wankdorf) is left out.
 - **Names in the place's language** are the infobox's native name where it gives one, else the local Wikipedia's title (Wikidata's native label where the two agree).
 
+## Special games
+
+The 18 games of `EVENTS` ([special-games.md](./special-games.md)) are read from the English Wikipedia article of each game and of its venue, at the revision named in [NOTICE.md](../NOTICE.md), and from three articles of the press for where a rink stood. They are facts (a day, a venue, a length); no text, table or picture is used. Each was read on 2026-10-13. A game's own surface is the one drawn alone, from the sources of its own section (the NHL rink and the NBA's and NCAA's courts, the CFL's and the NCAA's fields, a ballpark's fence); what is here is the rest.
+
+| Figure | Value | Source |
+| --- | --- | --- |
+| The day of each game | the day or days the article of the game gives | 2009, 2010, 2017, 2018, 2019, 2022 and 2023 NHL Winter Classic, 2014 NHL Stadium Series, 2003, 2011, 2014, 2016, 2019 and 2023 NHL Heritage Classic, Carrier Classic, MLB London Series |
+| The venue | the stadium the article names; a ballpark by its key in `PARKS`, a football stadium by the field its football tenant plays on | the same, and the articles of Commonwealth Stadium, McMahon Stadium, BC Place, Princess Auto Stadium, Mosaic Stadium and Notre Dame Stadium |
+| The rink | 200 by 85 feet, the NHL's (Rule 1); the 2009 story prints that size for Wrigley Field | the Hockey section above; Sports Video Group, 30 December 2008 |
+| Wrigley Field, 2009 | the rink ran from first base to third; its edge toward center field was 112 feet from home plate and 288 from the 400-foot wall; center ice was "basically at the pitching mound" | Sports Video Group, "2009 NHL Winter Classic Takes the Mound"; NHL.com, "Winter Classic at Wrigley evokes memories of 1st outdoor game at Cubs' home" (Tracey Myers, 29 December 2024) |
+| Fenway Park, 2023 | the 200-foot rink roughly centered length-wise across first and third bases, along a second-to-third-base axis | The Boston Globe, 18 December 2022 |
+| The deck of USS Carl Vinson | 1,092 feet overall length and 252 feet overall beam, the Nimitz class's | the Nimitz-class article; the Carrier Classic article for the game, the Carl Vinson article for the ship |
+| London Stadium | a field of play of 105 by 68 metres; the baseball field laid over the running track and the pitch; the fence 330 feet to the poles, 382 to left center and right center and 385 to center in 2019, 387 in the power alleys and 392 to center in 2023 | the London Stadium and MLB London Series articles |
+
+**Ours.**
+
+- **Where no source says where the surface stood, a convention places it, and the game says so.** `midfield` is the middle of the host's field with the surface's length along it; `deck` the same on a deck; `infield` the middle of a ballpark's infield (63.64 feet from home plate, the point where the line from first base to third crosses the line from home plate to second) with the rink's length from first base to third, the direction the Wrigley Field rink of 2009 had; `diamond` the middle of a baseball field's infield on the middle of a pitch, home plate to center field along it. No offset or angle is made up beyond those: a test holds each game's numbers to the rule it names.
+- **Wrigley Field, 2009.** The two numbers 112 and 288 add to the 400 feet to the center-field wall, so 112 is read as the rink's edge toward the wall, the one reading under which the rink also covers the pitching mound, as "splits the pitchers' mound from first to third" says. That puts its middle 69.5 feet out, 9 feet from the mound that NHL.com's Dan Craig names. The sources differ by that much, and by what was planned before: the diagram had center ice at second base before the rink was moved into the infield.
+- **Fenway Park, 2023.** "Roughly centered" is read as the middle halfway between first and third, and "a second-to-third-base axis" as the rink's length turned 45 degrees from third base toward second. The article says the 2023 layout differs from the 2010 one and does not describe the 2010 one, so 2010 is by convention.
+- **The deck** is the bounding rectangle of the class's overall length and beam; the ship's own flight deck is angled and narrower at its ends.
+- **London's five fence distances** are the five of the `fence` option. The article's two points where the temporary fences join the wall are drawn at the usual angle of left center and right center, and the 330 feet to the poles in 2023 is that of 2019, which the article does not restate.
+- **A football stadium's field** is the CFL's, or the NCAA's at Notre Dame Stadium, whose field is the stadium's tenant's; BC Place's roof was closed for its game, and the drawing says so.
+- **What was looked for and not found:** a source for where the rink stood in each of the other ballparks, in the football stadiums, and for the court on the carrier's deck; the exact figures of the 2024 London fence; and the placement of the football fields at Wrigley Field, of which only directions are published (see [special-games.md](./special-games.md#what-is-not-drawn)).
+
 ## Coordinate frames
 
 `src/frames.providers.ts` holds the frames of the providers below, as landmarks on the drawing's own coordinates (feet; x along the surface from its left end, y across it from the top, a ballpark's x across and y minus out from home plate). Only facts were read: ranges, units, origins and conventions. No code of sportypy, sportyR or hockey_rink (all GPL) was read for them; the MIT projects sdv-plot, sporty and mplsoccer are credited in [references.md](./references.md) for ideas. Each page below was read on 2026-10-13.

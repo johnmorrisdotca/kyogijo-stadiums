@@ -61,6 +61,8 @@ export interface Surface {
   room?: number;
   /** False when the drawing is cropped to a range too small to hold the score's panel, so that the score is drawn as a strip under the drawing instead. */
   plateFits?: boolean;
+  /** For a surface set inside another (a special game): the transform that carries the surface's own frame to the drawing's, which data in the surface's frame (`layers`) is put through. */
+  frame?: string;
   /** How wide the surface's ordinary line is drawn, in the units of the `lines` markup, and how many feet one of those units is: what `lineWidth` scales. */
   lineRef?: { width: number; feet: number };
 }

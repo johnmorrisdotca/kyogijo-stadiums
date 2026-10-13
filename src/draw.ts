@@ -30,6 +30,9 @@ import { football } from "./surfaces/football.ts";
 import { hockey } from "./surfaces/hockey.ts";
 import { soccer } from "./surfaces/soccer.ts";
 import { frameMatrix, layoutFromFrame, resolveFrame } from "./surfaces/soccer-providers.ts";
+import { composeSpecial, hostSport } from "./special.ts";
+import { specialStyle } from "./special.style.ts";
+import { specialText } from "./events.ts";
 import { layoutOf, soccerSpec, type SoccerPitchId, type SoccerSize, type SoccerSpec } from "./surfaces/soccer-spec.ts";
 import type { BuildOptions, Surface } from "./surfaces/surface.ts";
 import { abbreviate, capitals } from "./text.ts";
@@ -347,6 +350,8 @@ function leagueAbout(league: League, year: number | undefined, language: Languag
 
 /** A drawing's title and description, in a language. */
 export function describe(o: SurfaceOptions | ScoreOptions): { title: string; description: string } {
+  // A special game is drawn whole: a `range` is for a surface of its own.
+  if (o.host !== undefined && o.range !== undefined) return describe({ ...o, range: undefined });
   const language: Language = o.language === "ja" ? "ja" : "en";
   const words = KYOGIJO_STRINGS[language];
   const { sport, league } = chooseLeague(o);
@@ -367,7 +372,8 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
   const halfLine = pitch !== undefined && !isScore(o) && (o.half === "left" || o.half === "right") ? `${gap}${words.soccer.half}` : "";
   // What the ground says about the size: that it is the published one, or that the ground has none and the international pitch is drawn.
   const groundLine = ground === undefined || groundName === undefined || o.pitch !== undefined ? "" : `${gap}${fill(ground.pitchSize === "published" ? words.said.ground : words.said.groundDefault, { ground: groundName })}`;
-  const parkLine = parkName === undefined ? `${groundLine}${halfLine}` : `${gap}${fill(words.said.park, { park: parkName })}`;
+  const special = specialText(o, language, surfaceName);
+  const parkLine = (parkName === undefined ? `${groundLine}${halfLine}` : `${gap}${fill(words.said.park, { park: parkName })}`) + (special === undefined ? "" : `${gap}${special.text}`);
   // A drawing of a past season says which: the markings are those of that season.
   const dated = typeof o.year === "number" && Number.isFinite(o.year);
   const eraLine =
@@ -380,7 +386,7 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
         : "";
   // A range says what is shown; a curling score shows all of the sheet, whatever the range.
   const rangeLine = isScore(o) && sport === "curling" ? "" : describeRange(o, language, o.layers !== undefined && o.layers.length > 0);
-  if (!isScore(o)) return { title: o.title ?? surfaceName, description: o.description ?? `${about}${parkLine}${eraLine}${rangeLine}` };
+  if (!isScore(o)) return { title: o.title ?? special?.title ?? surfaceName, description: o.description ?? `${about}${parkLine}${eraLine}${rangeLine}` };
   const winner = winnerOf(o);
   const s = (t: Team): string => (t.score === undefined || String(t.score) === "" ? "–" : String(t.score));
   const line = fill(words.scoreTitle, { away: o.away.name, awayScore: s(o.away), home: o.home.name, homeScore: s(o.home) });
@@ -448,10 +454,12 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
  * ```
  */
 export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
+  if (o.host !== undefined && o.range !== undefined) return drawKyogijo({ ...o, range: undefined });
   const language: Language = o.language === "ja" ? "ja" : "en";
   // The sport as drawn: a league that is a sport of its own (`league: "cfl"` on an `nfl`) is that sport.
   const { sport } = chooseLeague(o);
-  const portrait = isPortrait(o);
+  // A special game is drawn as its host lies, wide.
+  const portrait = isPortrait(o) && o.host === undefined;
   // The court of a net sport: its look is the root's `data-look`, and its rules are written in beside the base rules.
   const plan: CourtPlan | undefined = isNetSport(sport) ? courtFor({ ...o, sport }) : undefined;
   const look = plan?.look;
@@ -500,13 +508,19 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
     viewBox = `0 0 ${badge.w} ${badge.h}`;
     body = badge.markup;
   } else {
-    let surface = buildSurface(o, portrait, id, isScore(o) && sized === "full", isScore(o), { features });
+    // A special game: the drawing's own surface is built with no ground round it and set inside the host.
+    const make = (more: Extra): Surface => {
+      if (o.host === undefined) return buildSurface(o, portrait, id, isScore(o) && sized === "full", isScore(o), more);
+      const guest = buildSurface({ ...o, margin: 0 }, false, id, isScore(o) && sized === "full", isScore(o), more);
+      return composeSpecial(o, guest, (host, hostId) => buildSurface(host, false, hostId, false, false, { features: undefined }), id);
+    };
+    let surface = make({ features });
     // A range too small to hold the score's panel: the score goes to the strip under the drawing, as a compact card does.
     if (surface.plateFits === false) {
       sized = "compact";
       surface = buildSurface(o, portrait, id, false, true, { features });
     }
-    if (annotated(o)) {
+    if (annotated(o) && o.host === undefined) {
       const teams = { home: isScore(o) ? o.home.name : undefined, away: isScore(o) ? o.away.name : undefined };
       notes = annotate({ o, surface, turned: surface.turned, words: KYOGIJO_STRINGS[language], teams });
       // The annotations need room in the margin: unless the options fix it, the surface is drawn again with a margin that holds them.
@@ -514,7 +528,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       const have = surface.ground ?? (surface.box === undefined ? 0 : surface.box.y - wideView(surface).y);
       const roomed = surface.room ?? have;
       if (o.margin === undefined && (notes.need > have + 0.01 || notes.need > roomed + 0.01)) {
-        surface = buildSurface(o, portrait, id, isScore(o) && sized === "full", isScore(o), { features, margin: notes.need > have + 0.01 ? notes.need : undefined, room: notes.need });
+        surface = make({ features, margin: notes.need > have + 0.01 ? notes.need : undefined, room: notes.need });
         notes = annotate({ o, surface, turned: surface.turned, words: KYOGIJO_STRINGS[language], teams });
       }
     }
@@ -537,7 +551,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
     inner += surface.bannersOver === true ? surface.lines + teams : teams + surface.lines;
     // Data goes over the markings and under the score's panel.
     const layered = renderLayers(o, o.layers, surface.turned, surface.whole === undefined ? undefined : surface.box);
-    inner += layered.svg;
+    inner += surface.frame === undefined || layered.svg === "" ? layered.svg : el("g", { transform: surface.frame }, layered.svg);
     if (layered.summaries.length > 0 && o.description === undefined) {
       const { colon, gap } = KYOGIJO_STRINGS[language].said;
       description = `${said}${gap}${KYOGIJO_STRINGS[language].layers.data}${colon}${layered.summaries.join(gap)}`;
@@ -581,6 +595,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       "data-sport": sport,
       "data-league": o.league === undefined || o.league === "" ? undefined : o.league,
       "data-range": isScore(o) && sport === "curling" ? undefined : rangeLabel(o),
+      "data-event": o.host !== undefined && typeof o.event === "string" ? safeClass(o.event) : undefined,
       "data-look": look,
       "data-size": sized,
       "data-orientation": portrait ? "portrait" : "landscape",
@@ -594,7 +609,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       style: style === "" ? undefined : style,
     },
     `<title id="${titleId}">${esc(title)}</title><desc id="${descId}">${esc(description)}</desc>` +
-      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}${plan === undefined ? "" : `\n${courtStyle(plan.sport, plan.look)}`}${palette === undefined ? "" : `\n${lookStyle(palette)}`}${features === undefined ? "" : `\n${featureStyle(sport, features)}`}${notes === undefined || notes.svg === "" ? "" : `\n${KYOGIJO_NOTE_STYLE}`}</style>`) +
+      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}${plan === undefined ? "" : `\n${courtStyle(plan.sport, plan.look)}`}${palette === undefined ? "" : `\n${lookStyle(palette)}`}${features === undefined ? "" : `\n${featureStyle(sport, features)}`}${notes === undefined || notes.svg === "" ? "" : `\n${KYOGIJO_NOTE_STYLE}`}${o.host === undefined ? "" : `\n${specialStyle(hostSport(o.host))}`}</style>`) +
       (defs === "" ? "" : `<defs>${defs}</defs>`) +
       body,
   );

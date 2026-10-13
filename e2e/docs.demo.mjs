@@ -173,7 +173,7 @@ test("the gallery draws every picture with its code and a copy button, and the c
 });
 
 test("every other gallery page has its pictures and its code", async ({ page }) => {
-  for (const [path, first] of [["gallery-soccer.html", "#pitch-fifa"], ["gallery-leagues.html", "#league-nba-wnba"], ["gallery-years.html", "#year-nhl-1930"], ["gallery-places.html", "#park-fenway-park"], ["gallery-data.html", "#heatmap"]]) {
+  for (const [path, first] of [["gallery-soccer.html", "#pitch-fifa"], ["gallery-leagues.html", "#league-nba-wnba"], ["gallery-years.html", "#year-nhl-1930"], ["gallery-places.html", "#park-fenway-park"], ["gallery-special.html", "#event-winter-classic-2009"], ["gallery-data.html", "#heatmap"]]) {
     const errors = await docs(page, path);
     expect(errors, path).toEqual([]);
     await expect(page.locator(`${first} svg`).first(), path).toBeAttached();

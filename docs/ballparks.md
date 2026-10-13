@@ -9,7 +9,7 @@
 | NPB, home parks | the 12 home parks, from `tokyo-dome` to `mizuho-paypay-dome-fukuoka` |
 | NPB, other and past | the 8 other grounds, from `sapporo-dome` to `nagoya-stadium` |
 
-Each park has its name (in Japanese too for the parks of Japan), team, city, coordinates, `wikidata` item and the article and revision its figures were read from; a past MLB park has `from` and `to`, and where an article dates earlier fences they are in `periods` (`year: 1915` draws the Polo Grounds' 277, 433 and 258 feet). All the keys and facts are in [parks.md](./parks.md) and [references.md](./references.md).
+Each park has its name (in Japanese too for the parks of Japan), team, city, coordinates, `wikidata` item and the article and revision its figures were read from; a past MLB park has `from` and `to`, and where an article dates earlier fences they are in `periods` (`year: 1915` draws the Polo Grounds' 277, 433 and 258 feet). All the keys and facts are in [parks.md](./parks.md) and [references.md](./references.md). A park may be the host of another surface, as the infield of Wrigley Field was for the rink of the 2009 Winter Classic: see [special games](./special-games.md).
 
 ## A park by name, and a past park in a season
 
