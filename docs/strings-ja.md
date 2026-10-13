@@ -387,6 +387,31 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `notes.names.centre-line` | Centre line | センターライン |
 | `notes.names.hack` | Hack | ハック |
 | `notes.names.free-guard-zone` | Free guard zone | フリーガードゾーン |
+| `ranges.shows` | Shows only the {name}. | 表示範囲は{name}です。 |
+| `ranges.showsEnd` | Shows only the {name} at the {side} end. | 表示範囲は{side}側の{name}です。 |
+| `ranges.box` | Shows only a part of the surface: x from {x0} to {x1}, y from {y0} to {y1}. | 競技場の一部だけを表示しています。xは{x0}から{x1}、yは{y0}から{y1}です。 |
+| `ranges.boxFrame` | Shows only a part of the surface, in the {frame} frame: x from {x0} to {x1}, y from {y0} to {y1}. | 競技場の一部だけを表示しています。{frame}の座標系で、xは{x0}から{x1}、yは{y0}から{y1}です。 |
+| `ranges.cut` | Data outside it is not drawn. | 範囲外のデータは描かれません。 |
+| `ranges.names.red-zone` | red zone | レッドゾーン |
+| `ranges.names.between-the-20s` | field between the 20-yard lines | 20ヤードライン間のフィールド |
+| `ranges.names.end-zone` | end zone | エンドゾーン |
+| `ranges.names.field-of-play` | field of play | ゴールライン間のフィールド |
+| `ranges.names.own-half` | own half | 自陣の半面 |
+| `ranges.names.opponent-half` | opponent's half | 敵陣の半面 |
+| `ranges.names.offensive-zone` | offensive zone | アタッキングゾーン |
+| `ranges.names.defensive-zone` | defensive zone | ディフェンディングゾーン |
+| `ranges.names.neutral-zone` | neutral zone | ニュートラルゾーン |
+| `ranges.names.half` | half | 半面 |
+| `ranges.names.half-court` | half court | ハーフコート |
+| `ranges.names.paint` | paint | ペイントエリア |
+| `ranges.names.final-third` | final third | アタッキングサード |
+| `ranges.names.defensive-third` | defensive third | ディフェンディングサード |
+| `ranges.names.middle-third` | middle third | ミドルサード |
+| `ranges.names.penalty-area` | penalty area | ペナルティエリア |
+| `ranges.names.infield` | infield | 内野 |
+| `ranges.names.outfield` | outfield | 外野 |
+| `ranges.names.sheet` | whole sheet | シート全体 |
+| `ranges.names.house` | house | ハウス |
 | `replay.title` | Replay, {time} | リプレイ（再生時間{time}） |
 | `replay.objects` | {n} tracked objects | 追跡対象は{n}個 |
 | `replay.objectsOne` | {n} tracked object | 追跡対象は{n}個 |
@@ -728,6 +753,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `score` | Score and layout | 得点とレイアウト |
 | page `theming` | Theming | テーマと色 |
 | page `annotations` | Annotations | 攻撃方向・目盛り・部位名の注釈 |
+| page `ranges` | Display ranges and zoom | 表示範囲とズーム |
 | page `accessibility` | Accessibility | アクセシビリティ |
 | group `places` | Sports and places | 競技と場所 |
 | page `soccer` | Soccer | サッカー |
@@ -757,6 +783,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `gallery-curling` | Gallery: curling | ギャラリー：カーリング |
 | page `gallery-courts` | Gallery: tennis, volleyball and other net sports | ギャラリー：ネット型競技のコート |
 | page `gallery-styling` | Gallery: looks and annotations | ギャラリー：スタイルと注釈 |
+| page `gallery-ranges` | Gallery: display ranges and zoom | ギャラリー：表示範囲とズーム |
 | group `compare` | Compare | 比較 |
 | page `compare` | How it compares | 他のパッケージとの比較 |
 | group `reference` | Reference | リファレンス |

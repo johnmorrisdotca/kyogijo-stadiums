@@ -392,9 +392,11 @@ export function renderLayers(o: SurfaceOptions | ScoreOptions, layers: readonly 
       const clip = layer.clip !== "none" && layer.kind !== "legend";
       clipped = clipped || clip;
       const cls = made.cls ?? (layer.kind === "points" ? "ky-pts" : layer.kind === "text" ? "ky-txt" : "ky-lns");
+      // Cropped to a range, a clipped layer is also cut to the range: its group is held by a group with the range's clip.
+      const [cut0, cut1] = clip && env.cropped ? [`<g clip-path="url(#${clipId}-r)">`, "</g>"] : ["", ""];
       groups[index] =
-        `<g id="${gid}" class="ky-layer ${cls}" data-kind="${layer.kind}"${clip ? ` clip-path="url(#${clipId})"` : ""}${made.attr}${made.style === "" ? "" : ` style="${made.style}"`}${made.opacity === undefined ? "" : ` opacity="${num(made.opacity)}"`}>` +
-        `<title id="${gid}-t">${esc(title)}</title>${description === "" ? "" : `<desc id="${gid}-d">${esc(description)}</desc>`}${made.defs === "" ? "" : `<defs>${made.defs}</defs>`}${made.marks}</g>${made.after ?? ""}`;
+        `${cut0}<g id="${gid}" class="ky-layer ${cls}" data-kind="${layer.kind}"${clip ? ` clip-path="url(#${clipId})"` : ""}${made.attr}${made.style === "" ? "" : ` style="${made.style}"`}${made.opacity === undefined ? "" : ` opacity="${num(made.opacity)}"`}>` +
+        `<title id="${gid}-t">${esc(title)}</title>${description === "" ? "" : `<desc id="${gid}-d">${esc(description)}</desc>`}${made.defs === "" ? "" : `<defs>${made.defs}</defs>`}${made.marks}</g>${cut1}${made.after ?? ""}`;
     };
     switch (layer.kind) {
       case "points":
@@ -437,10 +439,10 @@ export function renderLayers(o: SurfaceOptions | ScoreOptions, layers: readonly 
   groups.length = 0;
   groups.push(...placed);
   if (groups.length === 0) return { svg: "", summaries };
-  // Cropped to a range, a layer is cut to the range as well as to the surface's outline: the clip path of the outline is itself cut by the range's.
+  // Cropped to a range, a layer is cut to the range as well as to the surface's outline (see the group each clipped layer is put in).
   const shown = env.shown;
   const rangeClip = env.cropped ? `<clipPath id="${clipId}-r"><rect x="${num(shown.x)}" y="${num(shown.y)}" width="${num(shown.w)}" height="${num(shown.h)}"/></clipPath>` : "";
-  const defs = clipped ? `<defs>${rangeClip}<clipPath id="${clipId}"${env.cropped ? ` clip-path="url(#${clipId}-r)"` : ""}><path d="${env.outline.d}"/></clipPath></defs>` : "";
+  const defs = clipped ? `<defs>${rangeClip}<clipPath id="${clipId}"><path d="${env.outline.d}"/></clipPath></defs>` : "";
   // The heat layers' rules go beside them, unless the page supplies the stylesheet (KYOGIJO_STYLE has them); the dark set of a ramp is the layer's own and always comes.
   const heated = groups.some((g) => g.includes('class="ky-layer ky-hm') || g.includes('class="ky-lgw"'));
   const teamed = groups.some((g) => g.includes('class="ky-layer ky-tm'));

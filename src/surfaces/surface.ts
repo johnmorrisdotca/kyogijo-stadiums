@@ -56,6 +56,9 @@ export interface Surface {
   whole?: { x: number; y: number; w: number; h: number };
   /** When the drawing is cropped to a range: the part of the surface the range shows, with its small cut beyond the lines and the surface's own ground at its edges; the view is this and the room the annotations need. */
   cut?: { x: number; y: number; w: number; h: number };
+  /** When the drawing is cropped to a range: the margin the whole surface has (what `box` lacks of the view, at the top), and the ground the cut has beyond a line. */
+  ground?: number;
+  room?: number;
   /** False when the drawing is cropped to a range too small to hold the score's panel, so that the score is drawn as a strip under the drawing instead. */
   plateFits?: boolean;
   /** How wide the surface's ordinary line is drawn, in the units of the `lines` markup, and how many feet one of those units is: what `lineWidth` scales. */

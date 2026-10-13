@@ -20,6 +20,8 @@ Thirteen surfaces, each drawn to scale from its rulebook. Every dimension is kep
 
 `league` draws a surface as one league's rulebook marks it, `sport` naming the family (`drawKyogijo({ sport: "nba", league: "fiba" })`): the WNBA, FIBA, the NCAA, the IIHF, the AHL, the CHL, high school, Little League, PONY, softball, Curling Canada and FIVB's beach volleyball, in [docs/variants.md](./variants.md).
 
+`range` crops a drawing to a part of its surface (`range: "offensive-zone"`, `"half-court"`, `"red-zone"`, `"penalty-area"`, `"infield"`, a curling `"house"`, or a box of your own), with its data, annotations and score following: [Display ranges and zoom](./ranges.md).
+
 Lines are drawn a little thicker than they are painted, as broadcast graphics do, so that they stay in view at a small size; `exactLines: true` draws them at their true widths.
 
 ## The same surface, as a league marks it

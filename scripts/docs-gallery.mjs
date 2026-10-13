@@ -472,7 +472,67 @@ function stylingPage(lib) {
   };
 }
 
-export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, dataPage, curlingPage, courtsPage, stylingPage];
+/** The shots, the same on every picture of the ranges page: over the whole of a rink in its own feet, so that some are in any zone and some outside it. */
+const RANGE_SHOTS = "Array.from({ length: 48 }, (_, i) => ({ x: 6 + ((i * 53) % 190), y: 6 + ((i * 29) % 74), outcome: i % 6 === 0 ? \"goal\" : \"shot\" }))";
+
+function rangesPage(lib) {
+  const { RANGES } = lib[MAIN];
+  const SPORTS_SHOWN = ["nfl", "nhl", "nba", "soccer", "mlb", "curling", "tennis"];
+  const TITLES = { nfl: "NFL field", nhl: "NHL rink", nba: "NBA court", soccer: "Soccer pitch", mlb: "Baseball field", curling: "Curling sheet", tennis: "Tennis court" };
+  const named = SPORTS_SHOWN.flatMap((sport) =>
+    RANGES[sport].map((info) => item(`range-${sport}-${info.id}`, `${TITLES[sport]}: ${info.id}`, drawing({ sport, range: info.id, ...(sport === "curling" ? { orientation: "landscape" } : {}) }), info.end === undefined ? "A range with no end." : `At the ${info.end} end unless \`end\` says the other.`)),
+  );
+  const shots = RANGE_SHOTS;
+  const code = (options) => `import { drawKyogijo } from "${MAIN}";\n\nconst shots = ${shots};\nconst svg = drawKyogijo({ ${options} });`;
+  return {
+    slug: "gallery-ranges",
+    title: "Gallery: display ranges and zoom",
+    ja: "表示範囲とズーム",
+    intro: "A drawing cropped to a named part of its surface (`range`), at either end, wide and tall, to a box of your own, with data, annotations and a score. Every picture is drawn by the build from the code under it.",
+    sections: [
+      section("named", "The named ranges", "`RANGES` lists them for each sport; `range: \"offensive-zone\"` is the name, and each has the end it is at by default.", named),
+      section("ends", "The other end, and tall", "`range: { name, end }` puts a range at the other end; a tall drawing shows the same part on its side, with the left end at the top.", [
+        item("range-ends-nhl", "The offensive zone at the left end", drawing({ sport: "nhl", range: { name: "offensive-zone", end: "left" } })),
+        item("range-ends-nfl", "The red zone at the left end", drawing({ sport: "nfl", range: { name: "red-zone", end: "left" } })),
+        item("range-tall-nhl", "The offensive zone, tall", drawing({ sport: "nhl", range: "offensive-zone", orientation: "portrait" })),
+        item("range-tall-nba", "The half court, tall", drawing({ sport: "nba", range: "half-court", orientation: "portrait" })),
+        item("range-tall-soccer", "The penalty area, tall", drawing({ sport: "soccer", range: { name: "penalty-area", end: "right" }, orientation: "portrait" })),
+        item("range-tall-mlb", "The outfield, tall", drawing({ sport: "mlb", range: "outfield", orientation: "portrait" })),
+        item("range-curling-house-right", "A curling house, wide, at the right end", drawing({ sport: "curling", range: { name: "house", end: "right" }, orientation: "landscape" }), "The same as `sheet: { show: \"house\", end: \"right\" }`."),
+        item("range-football-cfl", "The CFL's red zone", drawing({ sport: "cfl", range: "red-zone" })),
+      ]),
+      section("boxes", "A box of your own", "`{ x0, x1, y0, y1 }` in the drawing's feet, in `units`, or in a frame's own numbers.", [
+        item("range-box-feet", "A box in feet", drawing({ sport: "nhl", range: { x0: 100, x1: 160, y0: 10, y1: 60 } })),
+        item("range-box-yards", "The same box in yards", drawing({ sport: "nhl", units: "yd", range: { x0: 100 / 3, x1: 160 / 3, y0: 10 / 3, y1: 60 / 3 } })),
+        item("range-box-frame", "The right end zone in the NHL API's numbers", drawing({ sport: "nhl", range: { x0: 25, x1: 100, y0: -42.5, y1: 42.5, frame: "nhl-api" } })),
+        item("range-box-opta", "A pitch's final third in Opta's 0 to 100", drawing({ sport: "soccer", range: { x0: 66, x1: 100, y0: 0, y1: 100, frame: "opta" } })),
+        item("range-box-mlb", "The left-field corner of a ballpark", drawing({ sport: "mlb", range: { x0: -330, x1: -60, y0: -330, y1: -60 } })),
+      ]),
+      section("data", "Data on a range", "Layers are cut to the range, and a heat map has the cells of the zone, not of the whole surface.", [
+        item("range-data-points", "Shots in the offensive zone", code('sport: "nhl", range: "offensive-zone", layers: [{ kind: "points", name: "shots", data: shots }]')),
+        item("range-data-heat", "A heat map of the zone, with its legend", code('sport: "nhl", range: "offensive-zone", layers: [{ kind: "heatmap", name: "shots", data: shots, legend: true }]')),
+        item("range-data-hexbin", "Hexagons over a half court", drawing({ sport: "nba", range: "half-court", layers: [{ kind: "hexbin", name: "shots", data: Array.from({ length: 60 }, (_, i) => ({ x: 4 + ((i * 17) % 44), y: 3 + ((i * 11) % 44) })), legend: true }] })),
+        item("range-data-zones", "Zones of the half court", drawing({ sport: "nba", range: "half-court", layers: [{ kind: "zones", name: "shots", zones: "nba-shot", data: Array.from({ length: 60 }, (_, i) => ({ x: 4 + ((i * 17) % 44), y: 3 + ((i * 11) % 44) })), labels: { show: ["count"] } }] })),
+      ]),
+      section("notes", "Annotations on a range", "The ticks, the names of the parts and the arrows are of what is shown, on the apron beyond the cut.", [
+        item("range-notes-landmarks", "The offensive zone, labelled", drawing({ sport: "nhl", range: "offensive-zone", landmarks: true })),
+        item("range-notes-axes", "The red zone, with axes", drawing({ sport: "nfl", range: "red-zone", axes: { ticks: 10, labels: { x: "yards", y: "yards" } } })),
+        item("range-notes-all", "A half court on the chalkboard", drawing({ sport: "nba", range: "half-court", look: "chalkboard", landmarks: true, direction: { home: "right" }, axes: { ticks: 10 } })),
+        item("range-notes-ja", "The penalty area, in Japanese", drawing({ sport: "soccer", range: "penalty-area", landmarks: true, language: "ja" })),
+      ]),
+      section("score", "A score on a range", "The panel is moved inside what is shown, or, when the range is too small for it, the score is a strip under the drawing.", [
+        item("range-score-nhl", "The offensive zone, with a score", drawing({ sport: "nhl", range: "offensive-zone", ...GAMES.nhl })),
+        item("range-score-nhl-tall", "The offensive zone with a score, tall", drawing({ sport: "nhl", range: "offensive-zone", orientation: "portrait", ...GAMES.nhl })),
+        item("range-score-nba", "The half court, with a score", drawing({ sport: "nba", range: "half-court", ...GAMES.nba })),
+        item("range-score-paint", "The paint: the score is a strip", drawing({ sport: "nba", range: "paint", ...GAMES.nba })),
+        item("range-score-mlb", "The infield, with a score", drawing({ sport: "mlb", range: "infield", ...GAMES.mlb })),
+        item("range-score-nfl", "The red zone, with a score", drawing({ sport: "nfl", range: "red-zone", ...GAMES.nfl })),
+      ]),
+    ],
+  };
+}
+
+export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, dataPage, curlingPage, courtsPage, stylingPage, rangesPage];
 
 /** The sections of every page, with each item's picture made by running its code. */
 export function galleryData(lib) {

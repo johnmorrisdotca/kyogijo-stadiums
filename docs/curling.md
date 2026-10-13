@@ -54,7 +54,7 @@ console.log(leagueFigures(LEAGUES.curling[1]).slice(0, 3).map(([name, value]) =>
 | `sheet.rings` | The colours of the house: `outer` (the 12-foot band, blue), `middle` (the 8-foot, white), `inner` (the 4-foot, red) and `button` (white). Any CSS colour that `colors` takes. |
 | `sheet.pebble` | A fine texture of dots over the ice. Off by default. |
 | `sheet.guardZone` | Shade the free guard zone at both ends. Off by default. |
-| `sheet.show`, `sheet.end` | A part of a bare sheet: `half` (the hog line to the back line, which holds the free guard zone and the house) or `house`, at the `left` end (the top of a tall drawing, the default) or the `right`. A score always shows the whole sheet. |
+| `sheet.show`, `sheet.end` | A part of a bare sheet: `half` (the hog line to the back line, which holds the free guard zone and the house) or `house`, at the `left` end (the top of a tall drawing, the default) or the `right`. A score always shows the whole sheet. These are the sheet's `range` (`range: "house"`, `range: { name: "half", end: "right" }`), which wins where both are given: see [Display ranges and zoom](./ranges.md). |
 | `detail: "simple"` | Leaves out the hacks, the hack line and the courtesy lines. |
 
 ```ts

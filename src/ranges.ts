@@ -134,6 +134,8 @@ export function cropToRange(surface: Surface, o: Pick<SurfaceOptions, "sport" | 
   view.w = (x1 ? cutX1 : Math.min(full.x + full.w, cutX1 + room)) - view.x;
   view.h = (y1 ? cutY1 : Math.min(full.y + full.h, cutY1 + room)) - view.y;
   surface.whole = whole;
+  surface.ground = whole.y - full.y;
+  surface.room = want;
   surface.cut = { x: cutX0, y: cutY0, w: cutX1 - cutX0, h: cutY1 - cutY0 };
   surface.box = shown;
   if (surface.turned) {

@@ -81,8 +81,46 @@ export function limitsTable(lib) {
   );
 }
 
+/** What each range shows, by sport (the sports that share a list of ranges share these words) and range. */
+const RANGE_COVERS = {
+  football: {
+    "red-zone": "the 20 yards before a goal line and the end zone behind it",
+    "end-zone": "one end zone",
+    "between-the-20s": "from one 20-yard line to the other",
+    "field-of-play": "goal line to goal line, without the end zones",
+    "own-half": "from the end line to midfield, the end zone included",
+    "opponent-half": "from midfield to the other end line, the end zone included",
+  },
+  nhl: { "offensive-zone": "from the end boards to the blue line", "defensive-zone": "from the end boards to the blue line", "neutral-zone": "between the blue lines", half: "from the end boards to the red line" },
+  nba: { "half-court": "from a baseline to the half-court line", paint: "the key from the baseline to the free-throw line, with the free-throw circle beyond it" },
+  soccer: {
+    half: "from a goal line to the halfway line",
+    "final-third": "the third of the pitch next to a goal line",
+    "defensive-third": "the third of the pitch next to a goal line",
+    "middle-third": "the third between the other two",
+    "penalty-area": "the penalty area with the arc beyond it (a small pitch's curved area)",
+  },
+  mlb: { infield: "the dirt out to the arc round the mound, and the ground behind home plate", outfield: "the grass from the fence in to second base" },
+  net: { "half-court": "one side of the net" },
+  curling: { sheet: "the whole sheet", half: "from the hog line to the back line at one end", house: "the house at one end" },
+};
+
+/** Every named range of every sport, one row each (sports that share their ranges share their rows): what it shows and the end it is at by default. */
+export function rangesTable(lib) {
+  const { RANGES } = lib[MAIN];
+  const groups = [];
+  for (const sport of Object.keys(RANGES)) {
+    const found = groups.find((group) => group.list === RANGES[sport]);
+    if (found) found.sports.push(sport);
+    else groups.push({ list: RANGES[sport], sports: [sport] });
+  }
+  const family = (sports) => (sports[0] === "nfl" ? "football" : ["tennis"].includes(sports[0]) ? "net" : sports[0]);
+  const rows = groups.flatMap((group) => group.list.map((info) => [group.sports.map((sport) => `\`${sport}\``).join(", "), `\`${info.id}\``, RANGE_COVERS[family(group.sports)][info.id], info.end === undefined ? "none" : `\`${info.end}\``]));
+  return table(["`sport`", "`range`", "Shows", "End by default"], rows);
+}
+
 /** Every made block by name. */
-export const MADE = { frames: framesTable, units: unitsTable, limits: limitsTable };
+export const MADE = { frames: framesTable, units: unitsTable, limits: limitsTable, ranges: rangesTable };
 
 const BLOCK = /(<!-- made:([\w-]+) -->\n)([\s\S]*?)(<!-- \/made:\2 -->)/g;
 

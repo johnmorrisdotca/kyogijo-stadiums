@@ -194,6 +194,8 @@ function buildSoccer(o: SurfaceOptions, common: BuildOptions, scored: boolean, u
 interface Extra {
   features: ReadonlySet<string> | undefined;
   margin?: number;
+  /** The ground the annotations need beyond the cut of a range, which is not the surface's own margin. */
+  room?: number;
 }
 
 /** The surface the options ask for, whole: before it is cropped to a `range`. */
@@ -262,7 +264,7 @@ function buildSurface(o: SurfaceOptions, portrait: boolean, id: string, score: b
   // A score on a curling sheet shows all of it, for the board's sake.
   if (o.range === undefined || (scored && chooseLeague(o).sport === "curling")) return surface;
   const given = typeof o.margin === "number" && Number.isFinite(o.margin) && o.margin >= 0 ? convertLength(o.margin, lengthUnit(o), "ft") : undefined;
-  return cropToRange(surface, o, { id, margin: extra.margin ?? given, panel: score });
+  return cropToRange(surface, o, { id, margin: extra.room ?? extra.margin ?? given, panel: score });
 }
 
 /** The custom properties a drawing sets on its root, from the options' colours. */
@@ -508,9 +510,11 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       const teams = { home: isScore(o) ? o.home.name : undefined, away: isScore(o) ? o.away.name : undefined };
       notes = annotate({ o, surface, turned: surface.turned, words: KYOGIJO_STRINGS[language], teams });
       // The annotations need room in the margin: unless the options fix it, the surface is drawn again with a margin that holds them.
-      const have = surface.box === undefined ? 0 : surface.box.y - wideView(surface).y;
-      if (o.margin === undefined && notes.need > have + 0.01) {
-        surface = buildSurface(o, portrait, id, isScore(o) && sized === "full", isScore(o), { features, margin: notes.need });
+      // Cropped to a range, the surface's own margin is at its edges and the cut's is round the rest: both must hold them.
+      const have = surface.ground ?? (surface.box === undefined ? 0 : surface.box.y - wideView(surface).y);
+      const roomed = surface.room ?? have;
+      if (o.margin === undefined && (notes.need > have + 0.01 || notes.need > roomed + 0.01)) {
+        surface = buildSurface(o, portrait, id, isScore(o) && sized === "full", isScore(o), { features, margin: notes.need > have + 0.01 ? notes.need : undefined, room: notes.need });
         notes = annotate({ o, surface, turned: surface.turned, words: KYOGIJO_STRINGS[language], teams });
       }
     }

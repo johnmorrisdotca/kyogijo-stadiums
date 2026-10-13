@@ -45,7 +45,7 @@ Give `frame` the name of any registered frame of the sport (`FRAMES`, `registerF
 
 ## Landmarks
 
-`landmarks: true` names the parts of the surface in the margin, each with a leader to its place: the blue lines and the creases of a rink, the three-point line and the key of a court, the yard numbers and the hash marks of a field, the penalty arc and the goal area of a pitch, the bases and the warning track of a ballpark, the hog lines and the house of a sheet. A word goes in the first row where it clears the others, so a crowded surface has two or three rows of words. A part the drawing does not show (one goal of half a pitch, or a goal drawn with `goals: "none"`) is left out.
+`landmarks: true` names the parts of the surface in the margin, each with a leader to its place: the blue lines and the creases of a rink, the three-point line and the key of a court, the yard numbers and the hash marks of a field, the penalty arc and the goal area of a pitch, the bases and the warning track of a ballpark, the hog lines and the house of a sheet. A word goes in the first row where it clears the others, so a crowded surface has two or three rows of words. A part the drawing does not show (one goal of half a pitch, a part outside a [`range`](./ranges.md), or a goal drawn with `goals: "none"`) is left out.
 
 ```ts
 import { drawKyogijo } from "@johnmorrisdotca/kyogijo";

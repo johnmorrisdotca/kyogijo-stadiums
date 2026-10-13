@@ -13,6 +13,7 @@ The gallery is made when the site is built (`pnpm site`), so its pages are on th
 - [Curling](https://johnmorrisdotca.github.io/kyogijo/docs/gallery-curling.html): the sheet of each rule book, its display ranges and house colours, the board and the badge, and the stones of an end.
 - [Net sports](https://johnmorrisdotca.github.io/kyogijo/docs/gallery-courts.html): each court wide and tall, every look, the free zone, the singles sticks, the board of sets and games with its serving ball, and the zones of each side of the net.
 - [Looks and annotations](https://johnmorrisdotca.github.io/kyogijo/docs/gallery-styling.html): the seven named looks, colours by feature, line widths and dashes, goal styles, mowing patterns, and the arrows, axes and labels that mark a surface for teaching.
+- [Display ranges and zoom](https://johnmorrisdotca.github.io/kyogijo/docs/gallery-ranges.html): a drawing cropped to a zone, a half court, the red zone, the penalty area, the infield or a box of your own, at either end, wide and tall, with data, labels and a score.
 
 Every picture in these pages is an SVG string, and each can be put somewhere else without drawing it again: pass the same options (or the SVG, or a chart's `options`) to `drawToCanvas`, `appendSurface`, `surfaceMark`, `sceneToGeoJSON` or `toPNG`, as [the renderers](./renderers.md) say. A picture here and the canvas drawn from the same scene differ in a few pixels: the edges of the letters, and a logo the canvas was not given.
 

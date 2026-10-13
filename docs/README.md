@@ -9,6 +9,7 @@ Kyogijo draws sports surfaces as SVG, to scale, with the score on them. The READ
 - [Score and layout](./score.md): the teams, the score, the strip for a list, wide and tall.
 - [Theming](./theming.md): every colour, light and dark, the seven named looks, colours by feature, line widths and dashes, goal styles and mowing patterns.
 - [Annotations](./annotations.md): the direction each team attacks, axes in any frame, and the names of a surface's parts.
+- [Display ranges and zoom](./ranges.md): a drawing cropped to a zone, a half, the red zone, the penalty area, the infield, a curling house or a box of your own.
 - [Accessibility](./accessibility.md): what each drawing says to a screen reader.
 
 ## Sports and places

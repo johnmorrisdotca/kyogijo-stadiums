@@ -45,6 +45,6 @@ export function sheetFor(o: Pick<SurfaceOptions, "sport" | "league" | "sheet" | 
   const ranged = o.sport === "curling" ? parseRange(o) : undefined;
   const named = ranged !== undefined && ranged.kind === "name" ? ranged : undefined;
   const show = named !== undefined ? (named.name as SheetShow) : SHOWS.includes(asked.show as SheetShow) ? (asked.show as SheetShow) : "sheet";
-  const end = named !== undefined && named.end !== undefined ? named.end : asked.end === "right" ? "right" : "left";
+  const end = named?.asked !== undefined ? named.asked : asked.end === "right" ? "right" : "left";
   return { league, spec: { ...base, length, width }, pebble: asked.pebble === true, guardZone: asked.guardZone === true, show, end };
 }

@@ -35,6 +35,7 @@ export const NAV = [
       { slug: "score", ja: "得点とレイアウト" },
       { slug: "theming", ja: "テーマと色" },
       { slug: "annotations", ja: "攻撃方向・目盛り・部位名の注釈" },
+      { slug: "ranges", ja: "表示範囲とズーム" },
       { slug: "accessibility", ja: "アクセシビリティ" },
     ],
   },
@@ -82,6 +83,7 @@ export const NAV = [
       { slug: "gallery-curling", en: "Gallery: curling", ja: "ギャラリー：カーリング", site: true },
       { slug: "gallery-courts", en: "Gallery: tennis, volleyball and other net sports", ja: "ギャラリー：ネット型競技のコート", site: true },
       { slug: "gallery-styling", en: "Gallery: looks and annotations", ja: "ギャラリー：スタイルと注釈", site: true },
+      { slug: "gallery-ranges", en: "Gallery: display ranges and zoom", ja: "ギャラリー：表示範囲とズーム", site: true },
     ],
   },
   {

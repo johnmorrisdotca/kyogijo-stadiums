@@ -36,7 +36,8 @@ export const RANGES: Readonly<Record<Sport, readonly RangeInfo[]>> = Object.free
 });
 
 /** What a drawing's `range` asks for, checked: a name (at an end, or at its default) or a box. */
-export type ParsedRange = { kind: "name"; name: RangeName; end: Side | undefined } | { kind: "box"; box: RangeBox };
+/** A name carries its `end` (the one asked for, else the range's default; none for a range with no end) and `asked`, the end the options named, if they did. */
+export type ParsedRange = { kind: "name"; name: RangeName; end: Side | undefined; asked: Side | undefined } | { kind: "box"; box: RangeBox };
 
 const isNumber = (value: unknown): value is number => typeof value === "number" && Number.isFinite(value);
 
@@ -56,7 +57,7 @@ export function parseRange(o: Pick<SurfaceOptions, "sport" | "league" | "range">
     const info = (RANGES[sport] ?? []).find((one) => one.id === name);
     if (info === undefined) throw new RangeError(`The ${sport} surface has no range "${name}": use one of ${(RANGES[sport] ?? []).map((one) => one.id).join(", ")}, or a box { x0, x1, y0, y1 }`);
     if (end !== undefined && end !== "left" && end !== "right") throw new RangeError(`A range's end is "left" or "right", not "${String(end)}"`);
-    return { kind: "name", name: info.id, end: info.end === undefined ? undefined : ((end as Side | undefined) ?? info.end) };
+    return { kind: "name", name: info.id, end: info.end === undefined ? undefined : ((end as Side | undefined) ?? info.end), asked: end as Side | undefined };
   }
   const box = given as Partial<RangeBox>;
   if (typeof given !== "object" || !isNumber(box.x0) || !isNumber(box.x1) || !isNumber(box.y0) || !isNumber(box.y1)) throw new TypeError(`range is the name of a range of the sport, or a box { x0, x1, y0, y1 } of numbers`);

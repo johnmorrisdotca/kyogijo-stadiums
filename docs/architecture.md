@@ -107,6 +107,8 @@ src/
 ├── restyle.ts          the width, dashes and opacity of the painted lines, laid over what a surface wrote
 ├── mow.ts              the mowing patterns of a football field, a ballpark and a pitch
 ├── annotate.ts         direction arrows, axes and the labels of a surface's parts
+├── ranges.ts           a drawing cropped to a range: the view, the clip, the annotations' room, the score's panel
+├── ranges.names.ts     the named ranges of each sport and the check of the `range` option
 ├── style.ts            the stylesheet, light and dark
 ├── strings.ts          the words, in English and Japanese
 ├── text.ts             measuring and fitting a name

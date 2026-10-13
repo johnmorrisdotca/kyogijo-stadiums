@@ -624,13 +624,13 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       },
     },
     ranges: {
-      shows: "表示範囲は{name}のみです。", showsEnd: "{side}側の{name}のみを表示しています。",
+      shows: "表示範囲は{name}です。", showsEnd: "表示範囲は{side}側の{name}です。",
       box: "競技場の一部だけを表示しています。xは{x0}から{x1}、yは{y0}から{y1}です。",
       boxFrame: "競技場の一部だけを表示しています。{frame}の座標系で、xは{x0}から{x1}、yは{y0}から{y1}です。",
-      cut: "範囲の外のデータは描かれません。",
+      cut: "範囲外のデータは描かれません。",
       names: {
-        "red-zone": "レッドゾーン", "between-the-20s": "20ヤードライン間", "end-zone": "エンドゾーン", "field-of-play": "ゴールライン間のフィールド", "own-half": "自陣側のハーフ", "opponent-half": "敵陣側のハーフ",
-        "offensive-zone": "アタッキングゾーン", "defensive-zone": "ディフェンディングゾーン", "neutral-zone": "ニュートラルゾーン", half: "ハーフ", "half-court": "ハーフコート", paint: "ペイントエリア",
+        "red-zone": "レッドゾーン", "between-the-20s": "20ヤードライン間のフィールド", "end-zone": "エンドゾーン", "field-of-play": "ゴールライン間のフィールド", "own-half": "自陣の半面", "opponent-half": "敵陣の半面",
+        "offensive-zone": "アタッキングゾーン", "defensive-zone": "ディフェンディングゾーン", "neutral-zone": "ニュートラルゾーン", half: "半面", "half-court": "ハーフコート", paint: "ペイントエリア",
         "final-third": "アタッキングサード", "defensive-third": "ディフェンディングサード", "middle-third": "ミドルサード", "penalty-area": "ペナルティエリア", infield: "内野", outfield: "外野", sheet: "シート全体", house: "ハウス",
       },
     },

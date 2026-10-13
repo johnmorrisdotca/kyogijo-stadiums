@@ -1,5 +1,6 @@
 import { SPORTS } from "./draw.ts";
 import { leagueIds } from "./leagues.ts";
+import { parseRange } from "./ranges.names.ts";
 import { mountKyogijo, type KyogijoMount, type KyogijoReplay } from "./mount.ts";
 import type { ReplaySettings, ReplayTimeline } from "./replay.types.ts";
 import type { ScoreOptions, Side, Size, Sport, StatusWord, SurfaceOptions, Team } from "./types.ts";
@@ -10,7 +11,7 @@ export const KYOGIJO_TAG = "kyogijo-field";
 /** The attributes the element reads. */
 export const KYOGIJO_ATTRIBUTES = [
   "sport", "league", "size", "theme", "language", "orientation", "park", "ground", "year", "detail", "margin", "stripes", "exact-lines", "uppercase",
-  "pitch", "pitch-type", "half", "goals", "stripe-pattern", "corner-flags", "look", "line-width", "line-dash", "line-opacity", "landmarks",
+  "pitch", "pitch-type", "half", "range", "range-end", "goals", "stripe-pattern", "corner-flags", "look", "line-width", "line-dash", "line-opacity", "landmarks",
   "home", "away", "home-abbr", "away-abbr", "home-score", "away-score", "home-penalties", "away-penalties", "score", "home-logo", "away-logo", "home-color", "away-color",
   "status", "competition", "date", "label", "winner", "home-side", "description", "options",
   "loop", "speed", "autoplay", "controls", "trail",
@@ -71,6 +72,19 @@ export function optionsFromAttributes(read: (name: string) => string | null, bas
     if (value !== null && value !== "") o[key] = value;
   };
   text("theme"); text("language"); text("orientation"); text("park"); text("ground"); text("detail"); text("pitch"); text("pitch-type"); text("half"); text("goals"); text("stripe-pattern"); text("look"); text("line-dash"); text("competition"); text("date"); text("label"); text("winner"); text("description");
+  // A range is a name (at the end `range-end` says), or a box as JSON; one the sport does not have is left out, as a league is.
+  const range = read("range");
+  if (range !== null && range.trim() !== "") {
+    const given = range.trim();
+    const end = read("range-end");
+    try {
+      const asked: unknown = given.startsWith("{") ? JSON.parse(given) : end === "left" || end === "right" ? { name: given, end } : given;
+      parseRange({ sport: o.sport as Sport, league: typeof o.league === "string" ? o.league : undefined, range: asked as SurfaceOptions["range"] });
+      o.range = asked;
+    } catch {
+      delete o.range;
+    }
+  }
   // A league the sport does not have is left out, not an error: attributes come from a page's markup.
   const league = read("league") ?? merged.league;
   if (typeof league === "string" && leagueIds(o.sport as Sport).includes(league)) o.league = league;
