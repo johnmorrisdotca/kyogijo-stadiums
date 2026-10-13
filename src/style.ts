@@ -1,9 +1,9 @@
 /**
- * The drawing's stylesheet: custom properties for every colour, in light and dark, and the rule of each class. It is
+ * The drawing's stylesheet, without the heat layers' rules: custom properties for every colour, in light and dark, and the rule of each class. It is
  * written into every drawing (so that one saved as a file stands alone) unless `style: "none"` is passed, and the
  * defaults are in `:where()`, which has no weight, so that a page's own rule always wins.
  */
-export const KYOGIJO_STYLE = `
+export const KYOGIJO_BASE_STYLE = `
 :where(.kyogijo){--ky-ink:#1f2320;--ky-line:#fff;--ky-halo:rgba(255,255,255,.92);--ky-plate:rgba(18,24,21,.9);--ky-plate-ink:#fff;--ky-left:#2f6db0;--ky-right:#b5452c;--ky-left-ink:#fff;--ky-right-ink:#fff;--ky-apron:#dcd8c9;--ky-surface:#3f8f55;--ky-surface-alt:#3a864f;--ky-zone:#2d6a40;--ky-boards:#c8c1b0;--ky-red:#c8372d;--ky-blue:#2a5db0;--ky-dirt:#c28e5c;--ky-foul:#3a8148;--ky-infield:#58a05d;--ky-crease:#bfd3ec;--ky-key:#c25b3c;--ky-centre:transparent;--ky-post:#f2c230;--ky-pylon:#f26a1b;--ky-layer:#14213d;--ky-layer-home:#1f5fa8;--ky-layer-away:#d9480f;--ky-layer-edge:rgba(255,255,255,.92);--ky-layer-hollow:rgba(255,255,255,.32);--ky-layer-ink:#14213d;--ky-layer-halo:rgba(255,255,255,.9);--ky-font:system-ui,-apple-system,"Segoe UI","Hiragino Sans","Noto Sans JP",sans-serif;display:block;width:100%;height:auto;font-family:var(--ky-font)}
 :where(.kyogijo[data-sport=nhl]){--ky-surface:#eef5fa;--ky-apron:#d3dbe1;--ky-boards:#9aa4ab;--ky-halo:rgba(255,255,255,.92)}
 :where(.kyogijo[data-sport=nba]){--ky-surface:#d9a766;--ky-surface-alt:#cf9c5b;--ky-apron:#c9c3b4;--ky-boards:#a97d46;--ky-baseline:#fff}
@@ -91,3 +91,21 @@ export const KYOGIJO_STYLE = `
 .kyogijo .ky-lt{fill:var(--c,var(--ky-layer-ink));stroke:var(--ky-layer-halo);stroke-width:.18em;paint-order:stroke;stroke-linejoin:round;font-family:var(--ky-font);font-weight:700;font-variant-numeric:tabular-nums}
 .kyogijo .ky-lt.ky-nh{stroke:none}
 `.trim();
+
+/**
+ * The rules of the heat layers (the ground under a heat map, its zones' and bands' outlines and the legend), kept apart so that a drawing
+ * without one does not carry them: a drawing that has a heat layer writes them in beside the layer, and `KYOGIJO_STYLE` has them for a page.
+ */
+export const KYOGIJO_HEAT_STYLE = `
+:where(.kyogijo){--ky-heat-ground:rgba(255,255,255,.72)}
+@media (prefers-color-scheme:dark){:where(html:not([data-theme=light]) .kyogijo:not([data-theme=light])){--ky-heat-ground:rgba(14,18,16,.82)}}
+:where(html[data-theme=dark] .kyogijo,.kyogijo[data-theme=dark]){--ky-heat-ground:rgba(14,18,16,.82)}
+.kyogijo .ky-hg{fill:var(--ky-heat-ground)}
+.kyogijo .ky-zn,.kyogijo .ky-cf{stroke:var(--ky-layer-edge);stroke-width:calc(var(--w,.2)*1px);stroke-linejoin:round}
+.kyogijo .ky-cl{fill:none;stroke-width:calc(var(--w,.4)*1px);stroke-linejoin:round}
+.kyogijo .ky-lg-p{fill:var(--ky-plate)}
+.kyogijo .ky-lg-t{fill:var(--ky-plate-ink);font-family:var(--ky-font);font-weight:700}
+.kyogijo .ky-lg-k{stroke:var(--ky-plate-ink);fill:none}`.trim();
+
+/** Every rule of the package, for a page that draws with `style: "none"` and supplies the stylesheet itself. */
+export const KYOGIJO_STYLE = `${KYOGIJO_BASE_STYLE}\n${KYOGIJO_HEAT_STYLE}`;

@@ -3,10 +3,13 @@ export { COLOR_PROPERTIES, SPORTS, describe, drawBadge, drawKyogijo, drawScore, 
 export { inkOn, luminance, rgbOf, safeColour, safeLogo } from "./colour.ts";
 export { OUTCOMES, drawLayers, layerTable } from "./layers.ts";
 export { rampColour } from "./layers.marks.ts";
+export { HEAT_RAMPS, HEAT_RAMP_NAMES } from "./heat.colour.ts";
+export { ZONE_SETS, ZONE_SET_IDS } from "./heat.zones.ts";
+export type { Bandwidth, ContourLayer, HeatBase, HeatBins, HeatDatum, HeatLabels, HeatLegend, HeatRamp, HeatRampName, HeatStatistic, HeatmapLayer, HexOrientation, HexbinLayer, LegendLayer, Reducer, StatisticName, ZoneSetId, ZonesLayer } from "./heat.types.ts";
 export type { ArrowsLayer, Comet, Layer, LayerBase, LayerKind, LayerTeam, LineDatum, LineStyle, LinesLayer, MarkDatum, MarkShape, OutcomeStyle, Paint, PointDatum, PointStyle, PointsLayer, Scale, TableOptions, TextDatum, TextLayer, TextStyle } from "./layers.types.ts";
 export { KYOGIJO_STRINGS } from "./strings.ts";
 export type { KyogijoWords } from "./strings.ts";
-export { KYOGIJO_STYLE } from "./style.ts";
+export { KYOGIJO_HEAT_STYLE, KYOGIJO_STYLE } from "./style.ts";
 export { COURT_THEMES } from "./themes.ts";
 export { abbreviate, capitals, fitLines, textWidth } from "./text.ts";
 export type { FittedLines } from "./text.ts";

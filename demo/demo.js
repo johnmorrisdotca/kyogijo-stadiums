@@ -6,7 +6,7 @@ import { mountKyogijo } from "./dist/mount-entry.js";
 import "./dist/element-define.js";
 import { toParams } from "./embed-params.js";
 import { EMBLEMS, FAMILIES, GAMES, TEAMS, TEAMS_JA } from "./examples.js";
-import { passMap, shotMap, sprayChart } from "./layers-data.js";
+import { nbaZones, passMap, shotHeat, shotMap, sprayChart, sprayDensity, touchZones } from "./layers-data.js";
 import { WORDS } from "./words.js";
 
 const $ = (id) => document.getElementById(id);
@@ -550,6 +550,10 @@ const DATA = [
   ["shots", () => ({ sport: "nhl", layers: shotMap() })],
   ["passes", () => ({ sport: "nfl", layers: passMap() })],
   ["spray", () => ({ sport: "mlb", layers: sprayChart() })],
+  ["heat", () => ({ sport: "nhl", layers: shotHeat() })],
+  ["zones", () => ({ sport: "nba", layers: nbaZones() })],
+  ["positional", () => ({ sport: "soccer", layers: touchZones() })],
+  ["density", () => ({ sport: "mlb", layers: sprayDensity() })],
 ];
 function buildData() {
   const host = $("data-cards");
@@ -564,7 +568,7 @@ function buildData() {
     summary.textContent = say("dataTable");
     const holder = document.createElement("div");
     holder.className = "data-table-body";
-    holder.innerHTML = layerTable(options.layers, { language: language.lang, maxRows: 60 });
+    holder.innerHTML = layerTable(options.layers, { language: language.lang, maxRows: 60, surface: options });
     details.append(summary, holder);
     fig.append(details);
   }

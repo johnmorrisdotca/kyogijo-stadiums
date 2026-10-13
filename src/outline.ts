@@ -15,9 +15,27 @@ export interface Outline {
   /** The path of the playing surface's edge: the boards for a rink, the lines of a court, the fence and the foul lines for a ballpark. */
   d: string;
   box: { x: number; y: number; w: number; h: number };
+  /** True when a point (in the drawing's frame, feet) is on the surface, or on its edge. */
+  contains(x: number, y: number): boolean;
 }
 
-const rect = (w: number, h: number): Outline => ({ d: `M0 0H${num(w)}V${num(h)}H0Z`, box: { x: 0, y: 0, w, h } });
+const inBox = (box: Outline["box"], x: number, y: number): boolean => x >= box.x && x <= box.x + box.w && y >= box.y && y <= box.y + box.h;
+
+const rect = (w: number, h: number): Outline => {
+  const box = { x: 0, y: 0, w, h };
+  return { d: `M0 0H${num(w)}V${num(h)}H0Z`, box, contains: (x, y) => inBox(box, x, y) };
+};
+
+/** Whether a point is in a polygon (even-odd). */
+function inPolygon(points: readonly (readonly [number, number])[], x: number, y: number): boolean {
+  let inside = false;
+  for (let i = 0, j = points.length - 1; i < points.length; j = i, i += 1) {
+    const [xi, yi] = points[i];
+    const [xj, yj] = points[j];
+    if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) inside = !inside;
+  }
+  return inside;
+}
 
 /** The outline of the surface the options draw. */
 export function outlineOf(o: Pick<SurfaceOptions, "sport" | "park" | "fence" | "units" | "pitch">): Outline {
@@ -26,8 +44,18 @@ export function outlineOf(o: Pick<SurfaceOptions, "sport" | "park" | "fence" | "
     case "cfl":
     case "ifaf":
       return rect(footballLength(FOOTBALL[o.sport]), FOOTBALL[o.sport].width);
-    case "nhl":
-      return { d: roundedRect(0, 0, NHL.length, NHL.width, NHL.cornerRadius), box: { x: 0, y: 0, w: NHL.length, h: NHL.width } };
+    case "nhl": {
+      const box = { x: 0, y: 0, w: NHL.length, h: NHL.width };
+      const r = NHL.cornerRadius;
+      // A rectangle with quarter-circle corners: outside only when a point is in a corner's square but beyond its arc.
+      const contains = (x: number, y: number): boolean => {
+        if (!inBox(box, x, y)) return false;
+        const cx = x < r ? r : x > box.w - r ? box.w - r : x;
+        const cy = y < r ? r : y > box.h - r ? box.h - r : y;
+        return (x - cx) ** 2 + (y - cy) ** 2 <= r * r;
+      };
+      return { d: roundedRect(0, 0, NHL.length, NHL.width, NHL.cornerRadius), box, contains };
+    }
     case "nba":
       return rect(NBA.length, NBA.width);
     case "mlb": {
@@ -37,7 +65,8 @@ export function outlineOf(o: Pick<SurfaceOptions, "sport" | "park" | "fence" | "
       const x = Math.min(...us);
       const vmax = Math.max(...vs);
       const d = `M0 0L${outline.map(([u, v]) => `${num(u)} ${num(-v)}`).join("L")}Z`;
-      return { d, box: { x, y: -vmax, w: Math.max(...us) - x, h: vmax } };
+      const polygon: [number, number][] = [[0, 0], ...outline.map(([u, v]): [number, number] => [u, -v])];
+      return { d, box: { x, y: -vmax, w: Math.max(...us) - x, h: vmax }, contains: (px, py) => inPolygon(polygon, px, py) };
     }
     case "soccer": {
       const spec = soccerSpec(o.pitch, o.units === undefined ? "m" : lengthUnit(o));

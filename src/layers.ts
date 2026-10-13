@@ -4,10 +4,11 @@
 // the same string. Written for this package; mplsoccer and hockey_rink were read for the list of charts to match, and nothing of
 // either is used.
 import { safeColour, safeLogo } from "./colour.ts";
-import { drawingId, isPortrait, lengthUnit, safeClass } from "./common.ts";
+import { KYOGIJO_HEAT_STYLE } from "./style.ts";
+import { drawHeat, drawLegend, heatTable, type LegendInfo } from "./heat.ts";
+import { clamp01, envFor, isNum, newMade, opacityOf, own, place, toArray, unitOfLayer, type Env, type Made } from "./layers.env.ts";
+import { safeClass } from "./common.ts";
 import { esc, num } from "./format.ts";
-import { toSurface } from "./frames.ts";
-import "./frames.providers.ts";
 import {
   curveBetween,
   curvePath,
@@ -37,10 +38,9 @@ import type {
   TextDatum,
   TextStyle,
 } from "./layers.types.ts";
-import { outlineOf, type Outline } from "./outline.ts";
 import { KYOGIJO_STRINGS, fill, type KyogijoWords } from "./strings.ts";
 import type { ScoreOptions, SurfaceOptions } from "./types.ts";
-import { FEET_PER, SURFACE_UNITS, isUnit, type Unit } from "./units.ts";
+import { FEET_PER } from "./units.ts";
 
 type Words = KyogijoWords["layers"];
 
@@ -72,78 +72,11 @@ const HOME = "var(--ky-layer-home)";
 const AWAY = "var(--ky-layer-away)";
 const INK = "var(--ky-layer-ink)";
 
-const isNum = (value: unknown): value is number => typeof value === "number" && Number.isFinite(value);
-const clamp01 = (value: number): number => Math.max(0, Math.min(1, value));
-const own = (table: object, key: string): boolean => Object.prototype.hasOwnProperty.call(table, key);
-
-/** What a drawing's layers are drawn against. */
-interface Env {
-  o: SurfaceOptions | ScoreOptions;
-  id: string;
-  turned: boolean;
-  unit: Unit;
-  outline: Outline;
-  /** The width of a mark by default, in feet: a share of the surface's longer side. */
-  base: number;
-  words: KyogijoWords;
-  logos: { home?: string; away?: string };
-}
-
-/** What a layer made. */
-interface Made {
-  /** The elements of the layer, and its gradients as `defs`. */
-  marks: string;
-  defs: string;
-  /** The attributes of the layer's group beyond the standard ones. */
-  style: string;
-  /** Attributes for the layer's group. */
-  attr: string;
-  opacity: number | undefined;
-  drawn: number;
-  skipped: number;
-  outcomes: Map<string, number>;
-  teams: Map<string, number>;
-  low: number;
-  high: number;
-}
 
 /** The layers, drawn, and a sentence for each. */
 export interface RenderedLayers {
   svg: string;
   summaries: string[];
-}
-
-const toArray = <T>(value: readonly T[] | undefined, what: string): readonly T[] => {
-  if (!Array.isArray(value)) throw new TypeError(`${what} needs data: a list of marks`);
-  return value;
-};
-
-function unitOfLayer(layer: LayerBase, env: Env): Unit {
-  if (layer.units === "rulebook") return SURFACE_UNITS[env.o.sport] ?? "ft";
-  if (layer.units === undefined) return env.unit;
-  if (!isUnit(layer.units)) throw new RangeError(`Unknown units "${String(layer.units)}": use one of ft, in, yd, m, cm, mm or rulebook`);
-  return layer.units;
-}
-
-/** Places in the layer's frame and unit as places in the drawing's frame, in feet: through the layer's frame when it has one, and held to its limits. */
-function place(layer: LayerBase, env: Env, points: readonly P[], unit: Unit): P[] {
-  const k = FEET_PER[unit];
-  let out: P[];
-  if (layer.from === undefined) out = points.map(([x, y]): P => [x * k, y * k]);
-  else {
-    // A soccer pitch is of any size: a frame of a provider is fitted to the pitch that is drawn unless the layer gives another size.
-    const size = layer.surfaceSize ?? (env.o.sport === "soccer" ? { length: env.outline.box.w, width: env.outline.box.h, unit: "ft" as const } : undefined);
-    const placed = toSurface(points, { from: layer.from, units: unit, size, attacking: layer.attacking, anchors: layer.anchors });
-    out = placed.map(([x, y]): P => [x * k, y * k]);
-  }
-  const limits = layer.limits;
-  if (limits === undefined) return out;
-  const { box } = env.outline;
-  const range = (given: readonly [number, number] | undefined, least: number, greatest: number): [number, number] =>
-    given === undefined ? [least, greatest] : [Math.min(given[0], given[1]) * k, Math.max(given[0], given[1]) * k];
-  const rx = limits === "surface" ? range(undefined, box.x, box.x + box.w) : range(limits.x, -Infinity, Infinity);
-  const ry = limits === "surface" ? range(undefined, box.y, box.y + box.h) : range(limits.y, -Infinity, Infinity);
-  return out.map(([x, y]): P => [Math.min(Math.max(x, rx[0]), rx[1]), Math.min(Math.max(y, ry[0]), ry[1])]);
 }
 
 /** A scale from a datum's value to a number. */
@@ -187,12 +120,7 @@ function colourAttrs(expr: string, layerExpr: string | undefined, neutral: strin
 
 const attrs = (cls: string, css: string, opacity: number | undefined): string => `${cls === "" ? "" : ` class="${cls}"`}${css === "" ? "" : ` style="${css}"`}${opacity === undefined ? "" : ` opacity="${num(opacity)}"`}`;
 const titled = (tag: string, open: string, title: string | undefined): string => (typeof title === "string" && title !== "" ? `<${tag}${open}><title>${esc(title)}</title></${tag}>` : `<${tag}${open}/>`);
-const opacityOf = (value: unknown): number | undefined => (isNum(value) ? clamp01(value) : undefined);
 const fixedPaint = (paint: Paint | undefined): string | undefined => (typeof paint === "string" ? safeColour(paint) : undefined);
-
-function newMade(): Made {
-  return { marks: "", defs: "", style: "", attr: "", opacity: undefined, drawn: 0, skipped: 0, outcomes: new Map(), teams: new Map(), low: Infinity, high: -Infinity };
-}
 
 /** Count a mark that is drawn: its outcome, its team and its value. */
 function tally(made: Made, d: MarkDatum): void {
@@ -405,7 +333,7 @@ function drawText(layer: { data: readonly TextDatum[]; style?: TextStyle } & Lay
   return made;
 }
 
-const plural = (words: Words, kind: Layer["kind"], n: number): string => words[`${kind === "points" ? "point" : kind === "lines" ? "line" : kind === "arrows" ? "arrow" : "text"}${n === 1 ? "One" : "Many"}` as keyof Words];
+const plural = (words: Words, kind: Layer["kind"], n: number): string => words[`${kind === "lines" ? "line" : kind === "arrows" ? "arrow" : kind === "text" ? "text" : "point"}${n === 1 ? "One" : "Many"}` as "pointOne"];
 
 const tidy = (text: string): string => text.replace(/[.。]\s*$/, "");
 
@@ -419,6 +347,11 @@ function listOf(counts: Map<string, number>, words: Words): string {
 }
 
 function summarise(layer: Layer, made: Made, words: Words, stop: string, gap: string): { title: string; description: string } {
+  // A heat layer wrote its own title and sentences.
+  if (made.title !== undefined) {
+    const title = typeof layer.title === "string" && layer.title !== "" ? layer.title : made.title;
+    return { title, description: typeof layer.description === "string" && layer.description !== "" ? layer.description : made.text ?? "" };
+  }
   const noun = typeof layer.name === "string" && layer.name.trim() !== "" ? layer.name.trim() : plural(words, layer.kind, made.drawn);
   const title = typeof layer.title === "string" && layer.title !== "" ? layer.title : fill(words.count, { n: made.drawn, noun });
   if (typeof layer.description === "string" && layer.description !== "") return { title, description: layer.description };
@@ -431,22 +364,6 @@ function summarise(layer: Layer, made: Made, words: Words, stop: string, gap: st
   return { title, description: parts.join(gap) };
 }
 
-function envFor(o: SurfaceOptions | ScoreOptions, turned: boolean | undefined): Env {
-  const language = o.language === "ja" ? "ja" : "en";
-  const outline = outlineOf(o);
-  const teams = o as Partial<ScoreOptions>;
-  return {
-    o,
-    id: drawingId(o),
-    turned: turned ?? (isPortrait(o) && o.sport !== "mlb"),
-    unit: lengthUnit(o),
-    outline,
-    base: Math.max(outline.box.w, outline.box.h) * 0.013,
-    words: KYOGIJO_STRINGS[language],
-    logos: { home: safeLogo(teams.home?.logo), away: safeLogo(teams.away?.logo) },
-  };
-}
-
 /** The layers of a drawing as markup, and a sentence for each. `turned` says whether the surface group is turned a quarter. */
 export function renderLayers(o: SurfaceOptions | ScoreOptions, layers: readonly Layer[] | undefined, turned?: boolean): RenderedLayers {
   if (layers === undefined || layers.length === 0) return { svg: "", summaries: [] };
@@ -454,42 +371,67 @@ export function renderLayers(o: SurfaceOptions | ScoreOptions, layers: readonly 
   const env = envFor(o, turned);
   const clipId = `${env.id}-lc`;
   const { stop, gap } = env.words.said;
-  const summaries: string[] = [];
+  const said: string[] = [];
   const groups: string[] = [];
+  const rules: string[] = [];
+  const known = new Map<string, LegendInfo>();
   let clipped = false;
+  /** The layers made so far, kept in order so that a legend for a layer drawn after it can be filled in last. */
+  const slots: ((() => void) | undefined)[] = [];
   layers.forEach((layer, index) => {
     if (typeof layer !== "object" || layer === null) throw new TypeError(`layer ${index} is not a layer`);
     const name = safeClass(layer.id).replace(/ /g, "-");
     const gid = name === "" ? `${env.id}-l${index}` : `${env.id}-${name}`;
-    let made: Made;
+    const finish = (made: Made): void => {
+      if (made.css !== undefined && made.css !== "") rules.push(made.css);
+      if (layer.hidden === true) return;
+      const { title, description } = summarise(layer, made, env.words.layers, stop, gap);
+      said[index] = description === "" ? `${tidy(title)}${stop}` : `${tidy(title)}${stop}${gap}${description}`;
+      const clip = layer.clip !== "none" && layer.kind !== "legend";
+      clipped = clipped || clip;
+      const cls = made.cls ?? (layer.kind === "points" ? "ky-pts" : layer.kind === "text" ? "ky-txt" : "ky-lns");
+      groups[index] =
+        `<g id="${gid}" class="ky-layer ${cls}" data-kind="${layer.kind}"${clip ? ` clip-path="url(#${clipId})"` : ""}${made.attr}${made.style === "" ? "" : ` style="${made.style}"`}${made.opacity === undefined ? "" : ` opacity="${num(made.opacity)}"`}>` +
+        `<title id="${gid}-t">${esc(title)}</title>${description === "" ? "" : `<desc id="${gid}-d">${esc(description)}</desc>`}${made.defs === "" ? "" : `<defs>${made.defs}</defs>`}${made.marks}</g>${made.after ?? ""}`;
+    };
     switch (layer.kind) {
       case "points":
-        made = drawPoints(layer, env);
-        break;
+        finish(drawPoints(layer, env));
+        return;
       case "lines":
       case "arrows":
-        made = drawLines(layer, env, gid);
-        break;
+        finish(drawLines(layer, env, gid));
+        return;
       case "text":
-        made = drawText(layer, env);
-        break;
+        finish(drawText(layer, env));
+        return;
+      case "heatmap":
+      case "hexbin":
+      case "zones":
+      case "contour":
+        finish(drawHeat(layer, env, gid, known));
+        return;
+      case "legend":
+        // A legend may be for a layer drawn after it, so it is drawn once the others are.
+        slots[index] = () => finish(drawLegend(layer, env, gid, known));
+        return;
       default:
-        throw new TypeError(`layer ${index} has the kind "${String((layer as { kind?: unknown }).kind)}": use points, lines, arrows or text`);
+        throw new TypeError(`layer ${index} has the kind "${String((layer as { kind?: unknown }).kind)}": use points, lines, arrows, text, heatmap, hexbin, zones, contour or legend`);
     }
-    if (layer.hidden === true) return;
-    const { title, description } = summarise(layer, made, env.words.layers, stop, gap);
-    summaries.push(description === "" ? `${tidy(title)}${stop}` : `${tidy(title)}${stop}${gap}${description}`);
-    const clip = layer.clip !== "none";
-    clipped = clipped || clip;
-    const cls = layer.kind === "points" ? "ky-pts" : layer.kind === "text" ? "ky-txt" : "ky-lns";
-    groups.push(
-      `<g id="${gid}" class="ky-layer ${cls}" data-kind="${layer.kind}"${clip ? ` clip-path="url(#${clipId})"` : ""}${made.attr}${made.style === "" ? "" : ` style="${made.style}"`}${made.opacity === undefined ? "" : ` opacity="${num(made.opacity)}"`}>` +
-        `<title id="${gid}-t">${esc(title)}</title>${description === "" ? "" : `<desc id="${gid}-d">${esc(description)}</desc>`}${made.defs === "" ? "" : `<defs>${made.defs}</defs>`}${made.marks}</g>`,
-    );
   });
+  slots.forEach((later) => later?.());
+  // The summaries and the groups are in the order of the layers, whichever order they were made in.
+  const summaries = said.filter((text) => text !== undefined);
+  const placed = groups.filter((g) => g !== undefined);
+  groups.length = 0;
+  groups.push(...placed);
   if (groups.length === 0) return { svg: "", summaries };
   const defs = clipped ? `<defs><clipPath id="${clipId}"><path d="${env.outline.d}"/></clipPath></defs>` : "";
-  return { svg: `<g class="ky-layers" data-layers="${groups.length}">${defs}${groups.join("")}</g>`, summaries };
+  // The heat layers' rules go beside them, unless the page supplies the stylesheet (KYOGIJO_STYLE has them); the dark set of a ramp is the layer's own and always comes.
+  const heated = groups.some((g) => g.includes('class="ky-layer ky-hm') || g.includes('class="ky-lgw"'));
+  const sheet = `${env.o.style === "none" || !heated ? "" : KYOGIJO_HEAT_STYLE}${rules.join("")}`;
+  const style = sheet === "" ? "" : `<style>${sheet}</style>`;
+  return { svg: `<g class="ky-layers" data-layers="${groups.length}">${defs}${style}${groups.join("")}</g>`, summaries };
 }
 
 /**
@@ -529,8 +471,18 @@ export function layerTable(layers: readonly Layer[], options: TableOptions = {})
   const maxRows = isNum(options.maxRows) && options.maxRows >= 0 ? Math.floor(options.maxRows) : 500;
   const cls = safeClass(options.className) || "ky-table";
   if (!Array.isArray(layers)) throw new TypeError("layers is a list of layers");
+  const surfaceEnv = options.surface === undefined ? undefined : envFor({ ...options.surface, language: options.language ?? options.surface.language }, false);
   return layers
     .map((layer, index) => {
+      if (layer.kind === "legend") return "";
+      if (surfaceEnv !== undefined && (layer.kind === "heatmap" || layer.kind === "hexbin" || layer.kind === "zones" || layer.kind === "contour")) {
+        const t = heatTable(layer, surfaceEnv);
+        const shown = t.rows.slice(0, maxRows);
+        const more = t.rows.length > shown.length ? fill(w.tableMore, { shown: shown.length, total: t.rows.length }) : "";
+        const note = [t.note, more].filter((part) => part !== "").join(words.said.gap);
+        const body = shown.map((row) => `<tr><th scope="row">${cell(row[0])}</th>${row.slice(1).map((value) => `<td>${cell(value)}</td>`).join("")}</tr>`).join("");
+        return `<table class="${cls}" data-kind="${layer.kind}"><caption>${esc(t.title)}${note === "" ? "" : ` <small>${esc(note)}</small>`}</caption><thead><tr>${t.head.map((name, i) => `<th scope="col">${esc(i === 0 ? w.tableNo : name)}</th>`).join("")}</tr></thead><tbody>${body}</tbody></table>`;
+      }
       const data = toArray(layer.data as readonly Record<string, unknown>[], `layer ${index}`);
       const columns: [string, string, (d: Record<string, unknown>) => unknown][] = [];
       const has = (key: string): boolean => data.some((d) => typeof d === "object" && d !== null && d[key] !== undefined && d[key] !== null);

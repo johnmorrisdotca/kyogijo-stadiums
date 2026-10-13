@@ -73,6 +73,81 @@ export interface KyogijoWords {
     tableFrame: string;
     /** The caption's note when rows are left out: {shown} and {total}. */
     tableMore: string;
+    /** The title of a heat map, a hexagon map, a zone chart and a density chart: {n} marks and what they are, {noun}. */
+    heatTitle: string;
+    hexTitle: string;
+    zonesTitle: string;
+    contourTitle: string;
+    /** A legend's title: {name} is the statistic. */
+    legendTitle: string;
+    /** What a legend or a summary says about a range: {min} and {max}. */
+    range: string;
+    /** The sentences of a summary: the statistic {stat}, the count {n} and the range {min} to {max}. */
+    heatNote: string;
+    hexNote: string;
+    zoneNote: string;
+    contourNote: string;
+    /** The most of them: {list}. */
+    top: string;
+    /** Marks that fell outside the grid or the zones: {n}. */
+    outside: string;
+    /** What a statistic is called. */
+    stat: Record<"count" | "sum" | "mean" | "median" | "percent" | "max" | "min" | "rate" | "custom" | "density" | "mass", string>;
+    tableZone: string;
+    tableCount: string;
+    tableShare: string;
+    tableLevel: string;
+    tableCell: string;
+    /** The caption of a heat map's table, with the cells' centres in a frame: {frame} and {unit}, as for a layer of points. */
+    tableCells: string;
+    /** The same when the cells are in the surface's own feet and there is no frame to name: {stat} and {unit}. */
+    tableCellsPlain: string;
+    /** One entry of the list of the hottest cells or zones: {name} and the formatted {n}. */
+    valueItem: string;
+    /** The names of the zones, and the words they are made from. */
+    zones: {
+      /** Two words joined: {a} and {b}. */
+      pair: string;
+      /** A name with the end of the court or rink it is at: {name} and {end}. */
+      atEnd: string;
+      endLeft: string;
+      endRight: string;
+      band: string;
+      zone: string;
+      wingLeft: string;
+      halfLeft: string;
+      laneCentre: string;
+      halfRight: string;
+      wingRight: string;
+      defensiveThird: string;
+      middleThird: string;
+      attackingThird: string;
+      restricted: string;
+      paint: string;
+      midRange: string;
+      cornerLeft: string;
+      cornerRight: string;
+      aboveBreak: string;
+      innerSlot: string;
+      outerSlot: string;
+      offensiveZone: string;
+      behindGoalLine: string;
+      homePlate: string;
+      outsideHomePlate: string;
+      pull: string;
+      opposite: string;
+      sprayCentre: string;
+      leftField: string;
+      centreField: string;
+      rightField: string;
+      infield: string;
+      outfield: string;
+      lengthShort: string;
+      lengthDeep: string;
+      sideLeft: string;
+      sideMiddle: string;
+      sideRight: string;
+    };
   };
 }
 
@@ -98,6 +173,20 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       count: "{n} {noun}", item: "{name} {n}", listSep: ", ", outcomes: "By outcome: {list}.", teams: "By team: {list}.", values: "Values from {min} to {max}.", skipped: "{n} left out for want of a place.", data: "Data",
       tableNo: "No.", tableX: "x", tableY: "y", tableToX: "to x", tableToY: "to y", tablePath: "Path", tableValue: "Value", tableTeam: "Team", tableOutcome: "Outcome", tableNote: "Note", tableText: "Text",
       tableFrame: "Coordinates in {frame}, in {unit}.", tableMore: "The first {shown} of {total} rows.",
+      heatTitle: "Heat map of {n} {noun}", hexTitle: "Hexagon map of {n} {noun}", zonesTitle: "Zone chart of {n} {noun}", contourTitle: "Density contours of {n} {noun}", legendTitle: "Legend: {name}",
+      range: "{min} to {max}", heatNote: "{stat} in {n} cells, from {min} to {max}.", hexNote: "{stat} in {n} hexagons, from {min} to {max}.", zoneNote: "{stat} in {n} zones, from {min} to {max}.", contourNote: "{n} density contours; the peak is near {x}, {y}.",
+      top: "Highest: {list}.", outside: "{n} outside the grid or the zones.",
+      stat: { count: "Count", sum: "Sum", mean: "Mean", median: "Median", percent: "Share of all, %", max: "Highest", min: "Lowest", rate: "Success rate, %", custom: "Value", density: "Density, share of the peak, %", mass: "Share of the data inside, %" },
+      tableZone: "Zone", tableCount: "Count", tableShare: "Share, %", tableLevel: "Level", tableCell: "Cell", tableCells: "{stat}. Centres of the cells in {frame}, in {unit}.", tableCellsPlain: "{stat}. Centres of the cells, in {unit}.", valueItem: "{name} ({n})",
+      zones: {
+        pair: "{a}, {b}", atEnd: "{name} ({end})", endLeft: "left end", endRight: "right end", band: "band {n}", zone: "Zone {n}",
+        wingLeft: "Left wing", halfLeft: "Left half-space", laneCentre: "Centre", halfRight: "Right half-space", wingRight: "Right wing",
+        defensiveThird: "Defensive third", middleThird: "Middle third", attackingThird: "Attacking third",
+        restricted: "Restricted area", paint: "In the paint (non-RA)", midRange: "Mid-range", cornerLeft: "Left corner 3", cornerRight: "Right corner 3", aboveBreak: "Above the break 3",
+        innerSlot: "Inner slot", outerSlot: "Outer slot", offensiveZone: "Offensive zone", behindGoalLine: "Behind the goal line", homePlate: "Home plate", outsideHomePlate: "Outside home plate",
+        pull: "Pull", opposite: "Opposite", sprayCentre: "Centre", leftField: "Left field", centreField: "Centre field", rightField: "Right field", infield: "infield", outfield: "outfield",
+        lengthShort: "Short", lengthDeep: "Deep", sideLeft: "left", sideMiddle: "middle", sideRight: "right",
+      },
     },
   },
   ja: {
@@ -120,6 +209,20 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       count: "{noun} {n}件", item: "{name} {n}件", listSep: "、", outcomes: "結果別：{list}。", teams: "チーム別：{list}。", values: "値の範囲：{min}～{max}。", skipped: "位置が不明なため{n}件は描かれていません。", data: "データ",
       tableNo: "番号", tableX: "x", tableY: "y", tableToX: "終点のx", tableToY: "終点のy", tablePath: "経路", tableValue: "値", tableTeam: "チーム", tableOutcome: "結果", tableNote: "備考", tableText: "ラベル",
       tableFrame: "座標系：{frame}、単位：{unit}。", tableMore: "全{total}行のうち先頭の{shown}行を表示しています。",
+      heatTitle: "{noun}のヒートマップ（{n}件）", hexTitle: "{noun}の六角形ビン図（{n}件）", zonesTitle: "{noun}のゾーン別集計（{n}件）", contourTitle: "{noun}の密度等高線（{n}件）", legendTitle: "凡例：{name}",
+      range: "{min}～{max}", heatNote: "{n}個のセルの{stat}は{min}～{max}です。", hexNote: "{n}個の六角形の{stat}は{min}～{max}です。", zoneNote: "{n}個のゾーンの{stat}は{min}～{max}です。", contourNote: "密度の等高線は{n}本です。ピークは({x}, {y})付近です。",
+      top: "上位：{list}。", outside: "グリッドまたはゾーンの範囲外のデータが{n}件あります。",
+      stat: { count: "件数", sum: "合計", mean: "平均", median: "中央値", percent: "全体に占める割合（％）", max: "最大", min: "最小", rate: "成功率（％）", custom: "値", density: "密度（ピークに対する割合、％）", mass: "内側に含まれるデータの割合（％）" },
+      tableZone: "ゾーン", tableCount: "件数", tableShare: "割合（％）", tableLevel: "レベル", tableCell: "セル", tableCells: "{stat}。各セルの中心の位置です。座標系：{frame}、単位：{unit}。", tableCellsPlain: "{stat}。各セルの中心の位置です。単位：{unit}。", valueItem: "{name}（{n}）",
+      zones: {
+        pair: "{a}・{b}", atEnd: "{name}（{end}）", endLeft: "左ゴール側", endRight: "右ゴール側", band: "{n}列目", zone: "ゾーン{n}",
+        wingLeft: "左サイド", halfLeft: "左ハーフスペース", laneCentre: "中央", halfRight: "右ハーフスペース", wingRight: "右サイド",
+        defensiveThird: "ディフェンディングサード", middleThird: "ミドルサード", attackingThird: "アタッキングサード",
+        restricted: "リストリクテッドエリア", paint: "ペイント内（リストリクテッドエリア外）", midRange: "ミッドレンジ", cornerLeft: "左コーナー3", cornerRight: "右コーナー3", aboveBreak: "アバブ・ザ・ブレイク3",
+        innerSlot: "内側スロット", outerSlot: "外側スロット", offensiveZone: "アタッキングゾーン", behindGoalLine: "ゴールライン後方", homePlate: "ゴール前の五角形エリア", outsideHomePlate: "五角形エリアの外",
+        pull: "引っ張り方向", opposite: "逆方向", sprayCentre: "センター方向", leftField: "レフト方向", centreField: "センター方向", rightField: "ライト方向", infield: "内野", outfield: "外野",
+        lengthShort: "ショートパス", lengthDeep: "ディープパス", sideLeft: "左", sideMiddle: "中央", sideRight: "右",
+      },
     },
   },
 };

@@ -78,6 +78,76 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `layers.tableText` | Text | ラベル |
 | `layers.tableFrame` | Coordinates in {frame}, in {unit}. | 座標系：{frame}、単位：{unit}。 |
 | `layers.tableMore` | The first {shown} of {total} rows. | 全{total}行のうち先頭の{shown}行を表示しています。 |
+| `layers.heatTitle` | Heat map of {n} {noun} | {noun}のヒートマップ（{n}件） |
+| `layers.hexTitle` | Hexagon map of {n} {noun} | {noun}の六角形ビン図（{n}件） |
+| `layers.zonesTitle` | Zone chart of {n} {noun} | {noun}のゾーン別集計（{n}件） |
+| `layers.contourTitle` | Density contours of {n} {noun} | {noun}の密度等高線（{n}件） |
+| `layers.legendTitle` | Legend: {name} | 凡例：{name} |
+| `layers.range` | {min} to {max} | {min}～{max} |
+| `layers.heatNote` | {stat} in {n} cells, from {min} to {max}. | {n}個のセルの{stat}は{min}～{max}です。 |
+| `layers.hexNote` | {stat} in {n} hexagons, from {min} to {max}. | {n}個の六角形の{stat}は{min}～{max}です。 |
+| `layers.zoneNote` | {stat} in {n} zones, from {min} to {max}. | {n}個のゾーンの{stat}は{min}～{max}です。 |
+| `layers.contourNote` | {n} density contours; the peak is near {x}, {y}. | 密度の等高線は{n}本です。ピークは({x}, {y})付近です。 |
+| `layers.top` | Highest: {list}. | 上位：{list}。 |
+| `layers.outside` | {n} outside the grid or the zones. | グリッドまたはゾーンの範囲外のデータが{n}件あります。 |
+| `layers.stat.count` | Count | 件数 |
+| `layers.stat.sum` | Sum | 合計 |
+| `layers.stat.mean` | Mean | 平均 |
+| `layers.stat.median` | Median | 中央値 |
+| `layers.stat.percent` | Share of all, % | 全体に占める割合（％） |
+| `layers.stat.max` | Highest | 最大 |
+| `layers.stat.min` | Lowest | 最小 |
+| `layers.stat.rate` | Success rate, % | 成功率（％） |
+| `layers.stat.custom` | Value | 値 |
+| `layers.stat.density` | Density, share of the peak, % | 密度（ピークに対する割合、％） |
+| `layers.stat.mass` | Share of the data inside, % | 内側に含まれるデータの割合（％） |
+| `layers.tableZone` | Zone | ゾーン |
+| `layers.tableCount` | Count | 件数 |
+| `layers.tableShare` | Share, % | 割合（％） |
+| `layers.tableLevel` | Level | レベル |
+| `layers.tableCell` | Cell | セル |
+| `layers.tableCells` | {stat}. Centres of the cells in {frame}, in {unit}. | {stat}。各セルの中心の位置です。座標系：{frame}、単位：{unit}。 |
+| `layers.tableCellsPlain` | {stat}. Centres of the cells, in {unit}. | {stat}。各セルの中心の位置です。単位：{unit}。 |
+| `layers.valueItem` | {name} ({n}) | {name}（{n}） |
+| `layers.zones.pair` | {a}, {b} | {a}・{b} |
+| `layers.zones.atEnd` | {name} ({end}) | {name}（{end}） |
+| `layers.zones.endLeft` | left end | 左ゴール側 |
+| `layers.zones.endRight` | right end | 右ゴール側 |
+| `layers.zones.band` | band {n} | {n}列目 |
+| `layers.zones.zone` | Zone {n} | ゾーン{n} |
+| `layers.zones.wingLeft` | Left wing | 左サイド |
+| `layers.zones.halfLeft` | Left half-space | 左ハーフスペース |
+| `layers.zones.laneCentre` | Centre | 中央 |
+| `layers.zones.halfRight` | Right half-space | 右ハーフスペース |
+| `layers.zones.wingRight` | Right wing | 右サイド |
+| `layers.zones.defensiveThird` | Defensive third | ディフェンディングサード |
+| `layers.zones.middleThird` | Middle third | ミドルサード |
+| `layers.zones.attackingThird` | Attacking third | アタッキングサード |
+| `layers.zones.restricted` | Restricted area | リストリクテッドエリア |
+| `layers.zones.paint` | In the paint (non-RA) | ペイント内（リストリクテッドエリア外） |
+| `layers.zones.midRange` | Mid-range | ミッドレンジ |
+| `layers.zones.cornerLeft` | Left corner 3 | 左コーナー3 |
+| `layers.zones.cornerRight` | Right corner 3 | 右コーナー3 |
+| `layers.zones.aboveBreak` | Above the break 3 | アバブ・ザ・ブレイク3 |
+| `layers.zones.innerSlot` | Inner slot | 内側スロット |
+| `layers.zones.outerSlot` | Outer slot | 外側スロット |
+| `layers.zones.offensiveZone` | Offensive zone | アタッキングゾーン |
+| `layers.zones.behindGoalLine` | Behind the goal line | ゴールライン後方 |
+| `layers.zones.homePlate` | Home plate | ゴール前の五角形エリア |
+| `layers.zones.outsideHomePlate` | Outside home plate | 五角形エリアの外 |
+| `layers.zones.pull` | Pull | 引っ張り方向 |
+| `layers.zones.opposite` | Opposite | 逆方向 |
+| `layers.zones.sprayCentre` | Centre | センター方向 |
+| `layers.zones.leftField` | Left field | レフト方向 |
+| `layers.zones.centreField` | Centre field | センター方向 |
+| `layers.zones.rightField` | Right field | ライト方向 |
+| `layers.zones.infield` | infield | 内野 |
+| `layers.zones.outfield` | outfield | 外野 |
+| `layers.zones.lengthShort` | Short | ショートパス |
+| `layers.zones.lengthDeep` | Deep | ディープパス |
+| `layers.zones.sideLeft` | left | 左 |
+| `layers.zones.sideMiddle` | middle | 中央 |
+| `layers.zones.sideRight` | right | 右 |
 
 ## The demo's words (`WORDS`)
 
@@ -236,10 +306,14 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `courtTitle` | Court looks | コートの見た目 |
 | `courtText` | The paint, the border, the wood and the words on the baselines are options. These use plain colours and no one's marks. | ペイント、縁取り、床の木目、ベースラインの文字は設定できます。ここでは単色だけを使い、実在するチームのマークは使っていません。 |
 | `dataTitle` | Data on the surface | 競技場の上のデータ |
-| `dataText` | Shots, passes and balls in play over the surface they happened on: sized by chance, coloured by team, hollow for a miss, dashed for a pass not caught. The data is made up from a fixed seed; no real game, player or team is in it. | シュート、パス、打球の落下点などを、起きた位置に合わせて競技場の上に描きます。大きさは得点の見込み、色はチーム、白抜きは外れたシュート、破線は通らなかったパスを表します。データは固定のシード値から作った架空のもので、実際の試合、選手、チームは含まれていません。 |
+| `dataText` | Shots, passes and balls in play over the surface they happened on: sized by chance, coloured by team, hollow for a miss, dashed for a pass not caught. Heat maps, shot zones, positional zones and density contours count the marks into cells, zones and bands instead. The data is made up from a fixed seed; no real game, player or team is in it. | シュート、パス、打球の落下点などを、起きた位置に合わせて競技場の上に描きます。大きさは得点の見込み、色はチーム、白抜きは外れたシュート、破線は通らなかったパスを表します。ヒートマップ、シュートゾーン、ポジショナルプレーのゾーン、密度の等高線は、点を一つずつ描くかわりに、セルやゾーン、帯ごとに集計して表します。データは固定のシード値から作った架空のもので、実際の試合、選手、チームは含まれていません。 |
 | `data_shots` | A shot map on the rink | リンク上のシュートマップ |
 | `data_passes` | A pass map on the field | フィールド上のパスマップ |
 | `data_spray` | A spray chart on a ballpark | 球場上の打球方向図 |
+| `data_heat` | A heat map of shots on the rink | リンク上のシュートのヒートマップ |
+| `data_zones` | An NBA shot-zone chart with field-goal percentages | フィールドゴール成功率つきのNBAシュートゾーン図 |
+| `data_positional` | A positional heat map on the pitch | ピッチ上のヒートマップ（ポジショナルプレーのゾーン別） |
+| `data_density` | A density contour on a ballpark | 野球場の打球密度の等高線 |
 | `dataTable` | Show the data as a table | データを表で見る |
 | `parksTitle` | Ballparks | 球場 |
 | `parksText` | Thirty current MLB parks and forty-four past ones, and the NPB's twelve home parks and eight other grounds, each fence drawn from the distances its article publishes. Press one to try it. | 現在のMLB30球場と過去の44球場、NPBの本拠地12球場とその他8球場。外野フェンスは、各球場の記事で公表されている距離をもとに描いています。球場を選ぶと試せます。 |

@@ -8,7 +8,7 @@ import { groundById, groundNameIn } from "./grounds.ts";
 import { fenceFor, parkById } from "./parks.ts";
 import { badgeMarkup, bannerMarkup, plateMarkup, stateOf, type TeamView } from "./score.ts";
 import { KYOGIJO_STRINGS, fill } from "./strings.ts";
-import { KYOGIJO_STYLE } from "./style.ts";
+import { KYOGIJO_BASE_STYLE } from "./style.ts";
 import { convertLength, type Unit } from "./units.ts";
 import { baseball } from "./surfaces/baseball.ts";
 import { basketball } from "./surfaces/basketball.ts";
@@ -391,7 +391,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       style: style === "" ? undefined : style,
     },
     `<title id="${titleId}">${esc(title)}</title><desc id="${descId}">${esc(description)}</desc>` +
-      (o.style === "none" ? "" : `<style>${KYOGIJO_STYLE}</style>`) +
+      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}</style>`) +
       (defs === "" ? "" : `<defs>${defs}</defs>`) +
       body,
   );

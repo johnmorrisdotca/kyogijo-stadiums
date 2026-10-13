@@ -54,7 +54,7 @@ console.log(svg.startsWith("<svg"), svg.includes("NORTHERN OWLS"));
 // true true
 ```
 
-`svg` is a string of SVG: put it in a page with `innerHTML`, write it to a file, or send it in an email. Or, with no build step at all:
+`svg` is a string of SVG: put it in a page with `innerHTML`, write it to a file, or send it in an email. With no build step at all:
 
 ```html
 <script type="module" src="https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo@0/dist/element-define.js"></script>
@@ -63,20 +63,20 @@ console.log(svg.startsWith("<svg"), svg.includes("NORTHERN OWLS"));
 
 ## Who it is for
 
-- **A results page or a stats site** that has the score of a game and wants a picture of where it was played: the teams, the score, a line for the round and the date, with the winner clear.
-- **A list of games** that needs a compact strip for each, small enough for a phone, with the team, the score and the state of the game.
+- **A results page or a stats site** that has the score of a game and wants a picture of where it was played: the teams, the score, the round and the date, with the winner clear.
+- **A list of games** that needs a compact strip for each, small enough for a phone.
 - **Anyone drawing a rink, a field, a court or a ballpark** for a poster, a diagram or a lesson, who wants the dimensions right and the colours their own.
-- **A site that uses a framework or none**: the drawing is a string, so it works from a server, a build step, a React component, a Vue or Svelte template, a custom element or a frame.
+- **A site that uses a framework or none**: the drawing is a string, so it works from a server, a build step, a framework, a custom element or a frame.
 
 ## Features
 
 - **Seven surfaces, to scale.** The NFL field (360 by 160 feet with its end zones), the CFL field (450 by 195), the IFAF field, the NHL rink (200 by 85 with a 28-foot corner radius), the NBA court (94 by 50), the soccer pitch (105 by 68 metres, in ten sizes and variants) and the baseball field, with the lines, circles, keys, boxes and goals of each. Every figure is cited in [docs/sources.md](./docs/sources.md).
 - **Soccer, to the Laws.** A pitch from Law 1 of the IFAB Laws of the Game of any size, with presets (international, UEFA, MLS, NCAA, the FA's 9-, 7- and 5-a-side, FIFA's futsal), half pitches, five mowing patterns, four goal styles, penalties and extra time in a score, and the pitch drawn in the coordinates of Opta, StatsBomb, Wyscout, Tracab, Metrica, SkillCorner, Second Spectrum or Impect, with `rescale` between them. See [Soccer](#soccer).
-- **Every ballpark.** The 30 current MLB parks and 44 that MLB clubs have left (the Polo Grounds, Ebbets Field, Forbes Field, Tiger Stadium, the Astrodome and more), and the 12 home parks of Nippon Professional Baseball with eight other NPB grounds, past and present, each with its fence drawn from the distances published for it. A named park is one option (`park: "fenway-park"`), and a past park whose fence moved is drawn as it stood in a season (`year: 1915`); the 94 are in `PARKS`, each with its Wikidata item.
+- **Every ballpark.** The 30 current MLB parks and 44 that MLB clubs have left (the Polo Grounds, Ebbets Field, the Astrodome and more), and the 12 home parks of Nippon Professional Baseball with eight other NPB grounds, each with its fence drawn from the distances published for it. A named park is one option (`park: "fenway-park"`), and a past park whose fence moved is drawn as it stood in a season (`year: 1915`); the 94 are in `PARKS`, each with its Wikidata item.
 - **Surfaces through the years.** `year: 1975` draws a surface as its league's rules marked it that season, each change cited.
 - **Score mode.** Each team's name and logo on its side (the end zones of a football field, the ends of the ice, the halves of the court, the dugouts of a ballpark) and the score large in the middle, with the competition, the status (Final, OT, SO, a period, an inning) and the date, and the winner emphasised.
 - **Wide, tall or fit the box.** Every surface lies wide or tall. Tall turns it a quarter, keeps every word upright, and puts the teams top and bottom. With `orientation: "auto"` the browser helpers watch the box and lay it out again when its shape changes.
-- **Data on the surface.** Points, lines, arrows and text over any surface, in its feet or a provider's frame, cut to its outline, with a title, a description and a table for each layer.
+- **Data on the surface.** Points, lines, arrows, text, heat maps, hexagons, zone charts and density contours over any surface, in its feet or a provider's frame, cut to its outline, with a title, a description and a table for each layer.
 - **A compact badge and a compact card.** One strip for a list, or the surface with that strip under it.
 - **Light and dark**, by the device or the page, and every colour a custom property; a basketball court's paint, border, wood and baseline words are options, with five looks to start from.
 - **Accessible.** Each drawing is an `img` with a title and a description that say the surface and the result, in English or Japanese.
@@ -130,9 +130,9 @@ For a page that cannot run scripts of its own, the demo site serves `embed.html`
 
 ### What a developer gets
 
-- Types for every option and every export, and the doc comment of each export beside it in an editor.
+- Types for every option and export, with each export's doc comment in an editor.
 - A drawing that is a pure function of its options: it can be cached, compared and tested.
-- Entry points that stand apart: the geometry, the parks and the grounds need nothing else, and the element is not loaded until it is imported.
+- Entry points that stand apart: the geometry, the parks and the grounds need nothing else, and the element loads only when imported.
 
 ### In a framework
 
@@ -542,7 +542,7 @@ console.log(metres === feet);
 
 ## Coordinate frames
 
-A data provider puts a point on a rink or a field in its own numbers: the NHL's feet from centre ice, HockeyTech's canvas of 600 by 300, the NBA's tenths of a foot from the hoop. A `Frame` says how those numbers lie on the surface (their unit, range, origin, which way y grows, whether the surface's size matters, and the landmarks they map through), and `toSurface` and `fromSurface` move points between a frame and the drawing's own coordinates. `convert(from, to)` goes from one provider's frame to another's. The module is `@johnmorrisdotca/kyogijo/frames`, and each frame is cited in [docs/sources.md](./docs/sources.md).
+A data provider puts a point on a rink or a field in its own numbers: the NHL's feet from centre ice, HockeyTech's canvas of 600 by 300, the NBA's tenths of a foot from the hoop. A `Frame` says how those numbers lie on the surface (unit, range, origin, which way y grows, landmarks), and `toSurface` and `fromSurface` move points between a frame and the drawing's own coordinates. `convert(from, to)` goes from one provider's frame to another's. The module is `@johnmorrisdotca/kyogijo/frames`; each frame is cited in [docs/sources.md](./docs/sources.md).
 
 | Frame | Sport | Unit and range | Origin | y grows | Ends |
 | --- | --- | --- | --- | --- | --- |
@@ -579,7 +579,7 @@ console.log(toSurface([[69, 22]], { from: "nhl-api", attacking: "left" }), conve
 
 ## Data layers
 
-`layers` in the options of `drawKyogijo` and `drawSurface` lays data on the surface: a list of layers, each a `kind` (`points`, `lines`, `arrows` or `text`) with its `data` and a `style`. The marks sit in the surface's own frame, over the markings and under a score's panel, cut to its outline and upright when it lies tall.
+`layers` in the options of `drawKyogijo` and `drawSurface` lays data on the surface: a list of layers, each a `kind` (`points`, `lines`, `arrows`, `text`, or the heat layers `heatmap`, `hexbin`, `zones`, `contour` and `legend`) with its `data` and a `style`. The marks sit in the surface's own frame, over the markings and under a score's panel, cut to its outline and upright when it lies tall.
 
 ```ts
 import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
@@ -605,7 +605,7 @@ console.log(svg.includes("3 shots"), svg.includes("By outcome: goal 1, shot 1, b
 // true true
 ```
 
-A miss is drawn hollow and a failed pass dashed. Shapes, colour rules, comets, units and frames are in [docs/layers.md](./docs/layers.md).
+A miss is drawn hollow and a failed pass dashed. Shapes, colour rules, comets, units, frames and the heat layers are in [docs/layers.md](./docs/layers.md).
 
 ```ts
 import { drawKyogijo, layerTable } from "@johnmorrisdotca/kyogijo";
@@ -627,7 +627,7 @@ console.log(layerTable([passes]).includes("<caption>2 passes"));
 // true
 ```
 
-`drawLayers(options, layers)` returns the group alone. `layerTable(layers)` returns an HTML table for each layer, for a screen reader. Each layer has a `<title>` and a `<desc>` ("24 shots", "By outcome: goal 3, shot 21."), and a mark's `title` is its tooltip.
+`drawLayers(options, layers)` returns the group alone; `layerTable(layers)` an HTML table for each layer, for a screen reader. Each layer has a `<title>` and a `<desc>` ("24 shots", "By outcome: goal 3, shot 21."), and a mark's `title` is its tooltip.
 
 ## Score mode
 
@@ -676,7 +676,7 @@ The [API reference](https://johnmorrisdotca.github.io/kyogijo/api.html) lists ev
 | `@johnmorrisdotca/kyogijo` | `drawKyogijo`, `drawSurface`, `drawScore`, `drawBadge`, `drawLayers`, `layerTable`, `describe`, `winnerOf`, `statusLabel`, `isPortrait`, `statusText`; `OUTCOMES`, `rampColour`; `SPORTS`, `COURT_THEMES`, `SOCCER`, `SOCCER_PITCHES`, `SOCCER_PROVIDERS`, `soccerSpec`, `soccerFrame`, `rescale`, `PARKS`, `PARK_IDS`, `parkById`, `parkByWikidata`, `parkPointsIn`, `parkSourceUrl`, `parkUnit`, `fenceFor`; `rulesFor`, `eraChanges`, `eraStates`, `eraRange`, `seasonLabel`, `footballIn`, `ERA_SPORTS`, `ERA_CURRENT`, `ERA_SOURCES`; `SURFACE_UNITS`, `UNITS`, `convertLength`; `safeColour`, `safeLogo`, `inkOn`; `fitLines`, `textWidth`, `abbreviate`, `capitals`; `KYOGIJO_STYLE`, `KYOGIJO_STRINGS`, `COLOR_PROPERTIES`, `VERSION` and the option types |
 | `@johnmorrisdotca/kyogijo/geometry` | `FOOTBALL`, `NHL`, `NBA`, `MLB`, `SOCCER`, `SOCCER_PITCHES`, `soccerSpec`, `soccerPitchClass`, `fenceAt`, `fencePoints`, `threePointJoin`, `skinJoin`, `boardsY` and the other dimensions; `SURFACE_UNITS`, `convertLength`, `convertPoint`, `lengthsIn`, `dimensionsOf`, `surfaceSize`, `fenceIn` |
 | `@johnmorrisdotca/kyogijo/frames` | `toSurface`, `fromSurface`, `convert`, `convertPoints`, `flipEnds`, `attackingIn`, `registerFrame`, `frameByName`, `framesOf`, `piecewise`, `span`, `FRAMES`, `RETROSHEET_ZONES`, `zoneToPoint`, `zoneAt`, `SOCCER_PROVIDERS`, `rescale` and the frame types |
-| `@johnmorrisdotca/kyogijo/layers` | `drawLayers`, `layerTable`, `renderLayers`, `outlineOf`, `OUTCOMES`, `rampColour` and the layer types |
+| `@johnmorrisdotca/kyogijo/layers` | `drawLayers`, `layerTable`, `renderLayers`, `outlineOf`, `OUTCOMES`, `rampColour`, the heat numbers (`binGrid`, `densityGrid`), `ZONE_SETS`, `HEAT_RAMPS` and the layer types |
 | `@johnmorrisdotca/kyogijo/parks` | `PARKS`, `PARK_IDS`, `parkById`, `parkByWikidata`, `parkPointsIn`, `parkSourceUrl`, `parkUnit`, `fenceFor` |
 | `@johnmorrisdotca/kyogijo/eras` | `rulesFor`, `eraChanges`, `eraStates`, `eraRange`, `seasonLabel`, `footballIn`, `ERA_SPORTS`, `ERA_CURRENT`, `ERA_SOURCES` and the rule types |
 | `@johnmorrisdotca/kyogijo/grounds` | `GROUNDS`, `GROUND_IDS`, `groundById`, `groundByWikidata`, `groundNameIn`, `groundsHosting`, `groundSourceUrl` |
@@ -712,8 +712,8 @@ Each is held by a test, and the ones with a name are exported.
 | A colour | a hex colour, `rgb()`, `rgba()`, `hsl()`, `hsla()`, a name or `var(--name)`, 64 characters at most | `safeColour` |
 | A logo | an https or relative address, an image data address, or SVG text up to 200,000 characters | `safeLogo` |
 | A name | any length: it is set on one line or two, in the biggest size that fits its place | `fitLines` |
-| A layer's marks | 1,000 points add under 70 kB; 10,000 are drawn in under 250 ms | `drawKyogijo` |
-| A drawing's size | under 22 kB for a football field, 15 kB for a soccer pitch with a score, 14 kB for a rink or a court, 17 kB for a ballpark, each with its 8 kB stylesheet (a test holds each under a budget) | `drawKyogijo` |
+| A layer's marks | 1,000 points add under 70 kB; 10,000 draw in under 250 ms | `drawKyogijo` |
+| A drawing's size | under 22 kB for a football field, 15 kB for a soccer pitch with a score, 14 kB for a rink or a court, 17 kB for a ballpark, each with its 8 kB stylesheet (a test holds each) | `drawKyogijo` |
 
 ## Accessibility
 
@@ -738,12 +738,12 @@ English and Japanese: the title, the description and the standard statuses of a 
 Not here yet, and each welcome as an [issue](https://github.com/johnmorrisdotca/kyogijo/issues):
 
 - **More surfaces**: the FIBA and college courts, the international rink, rugby pitches, a stadium's seating, soccer's beach and street formats.
-- **Wall heights and quirks** in a ballpark: the Green Monster, Tal's Hill and the walls of Japan's parks.
+- **Wall heights and quirks** in a ballpark: the Green Monster, Tal's Hill, the walls of Japan's parks.
 - **More parks of the past**: the grounds of the 19th century, and the parks whose articles give no distances yet (the Kingdome, Joe Robbie Stadium, the Los Angeles Coliseum), when they do.
-- **More charts on data layers**: heat maps, hexbins, pass networks, a legend and animation.
+- **More charts on data layers**: pass networks and animation.
 - **Football in a different standard**: the college and high-school hash marks.
 
-Left out on purpose: statistics, rosters and schedules. Kyogijo draws the place and the score it is given; it does not look anything up.
+Left out on purpose: statistics, rosters and schedules. Kyogijo draws the place and the score it is given.
 
 ## Architecture
 
@@ -766,6 +766,12 @@ src/
 ├── layers.ts           data layers: drawLayers, layerTable and the marks
 ├── layers.marks.ts     the shapes, curves, waves, heads and colour ramps of the marks
 ├── layers.types.ts     the types of a layer
+├── layers.env.ts       what the layers share
+├── heat.ts             the heat layers
+├── heat.stats.ts       bins, density, contours
+├── heat.colour.ts      the colour ramps
+├── heat.zones.ts       the sports' zones
+├── heat.types.ts       the heat layers' types
 ├── layers-entry.ts     the layers' entry
 ├── outline.ts          a surface's outline: where a layer is cut
 ├── common.ts           the drawing's id, the orientation and the unit, shared by the drawing and its layers

@@ -1,6 +1,8 @@
 // The types of the data layers: what a caller gives `layers` in the options of a drawing. Plain data only (numbers, text and
 // lists), so that the same options always draw the same drawing and a layer can be saved as JSON.
+import type { ScoreOptions, SurfaceOptions } from "./types.ts";
 import type { Frame, Attacking, Landmark, SurfaceSize } from "./frames.ts";
+import type { ContourLayer, HeatmapLayer, HexbinLayer, LegendLayer, ZonesLayer } from "./heat.types.ts";
 import type { Unit } from "./units.ts";
 
 /** The shapes a point can be drawn as. A team's logo is `logo`. */
@@ -207,7 +209,7 @@ export interface TextLayer extends LayerBase {
 }
 
 /** A layer of data on a surface. */
-export type Layer = PointsLayer | LinesLayer | ArrowsLayer | TextLayer;
+export type Layer = PointsLayer | LinesLayer | ArrowsLayer | TextLayer | HeatmapLayer | HexbinLayer | ZonesLayer | ContourLayer | LegendLayer;
 
 /** The kinds of layer. */
 export type LayerKind = Layer["kind"];
@@ -219,4 +221,6 @@ export interface TableOptions {
   maxRows?: number;
   /** A class for each table. `ky-table` by default. */
   className?: string;
+  /** The drawing's options (at least `sport`, and `park`, `pitch`, `units` and `language` where they apply): needed for the tables of heat maps, hexagon maps, zone charts and contours, whose cells and zones follow the surface. Without it those layers' marks are listed as points. */
+  surface?: SurfaceOptions | ScoreOptions;
 }

@@ -100,6 +100,14 @@ The links John has sent, and the ones the package's figures were read from: what
 - **Ours:** outcomes drawn by fill and dash as well as colour (a miss is hollow, a failed pass dashed), a layer's title, description and table for screen readers, a clip to each surface's own outline, and the team colours following a score drawing's teams.
 - **Data:** the demo's shots, passes and balls in play are made up from a fixed seed (`demo/layers-data.js`). No real game, player or team is in the package.
 
+### Heat maps, hexagons, zones and contours
+
+- **What was read:** the lists of charts each package offers for a binned statistic: [hockey_rink](https://github.com/the-bucketless/hockey_rink) (item 11: `binned_statistic_2d`, `heatmap`, `hexbin`, `contour` and `contourf`, all clipped to the boards) and [mplsoccer](https://github.com/andrewRowlinson/mplsoccer) (item 12: `bin_statistic`, `heatmap`, `bin_statistic_positional` with `heatmap_positional` for the juego de posición zones, `hexbin`, `kdeplot`). [sporty](https://github.com/sportsdataverse/sdvplot-js) (item 10) was read for its NBA shot zones. The one file of mplsoccer read for a figure is `dimensions.py`, for where the positional zones' lines lie.
+- **Ideas credited (MIT, so ideas freely and code with credit; we wrote our own):** mplsoccer's positional zones (lanes by bands, the lines at the penalty and goal areas and half way between the penalty area and the halfway line), its binned statistic of count, sum, mean, median or a function of the values with `normalize`, its heat map over a grid and its hexagon plot; sporty's zones of a shot chart; hockey_rink's clipping of every heat layer to the boards. The binning, the hexagon grid (axial coordinates, cube rounding), the Gaussian kernel density (Scott's rule), the highest-density levels and the marching squares in `src/heat.stats.ts` are written from their textbook definitions.
+- **Not used:** hockey_rink's, sportypy's and sportyR's code (GPL-3.0): only hockey_rink's list of charts was read, from its README. No palette of any package is copied (the ramps are our own).
+- **Ours:** the legend as a layer and an option, a ground that makes one ramp readable on every surface, the ramps' light and dark sets checked by a test, zone charts with a rate (a field-goal percentage) and the number of marks in each zone, a table of each layer's numbers and a description that names the hottest cells or zones.
+- **Zone definitions:** the soccer, NBA, NHL, baseball and football zone sets, with each source, are in [sources.md](./sources.md#zone-sets); the NHL slot and home plate and the football pass edges are ours.
+
 ## The coordinate frames and the units
 
 - **What was read:** the pages named in [sources.md](./sources.md#coordinate-frames), for facts only: ranges, units, origins and conventions of each provider's coordinates. No text or code of any is copied.

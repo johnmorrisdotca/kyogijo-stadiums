@@ -89,3 +89,92 @@ export function sprayChart(count = 64, seed = 2612) {
     { kind: "points", name: "balls in play", from: "retrosheet", data: hits, style: { size: 7, outcomes: { homer: { shape: "star", scale: 1.5 }, double: { scale: 1.15 }, triple: { scale: 1.3 }, out: { hollow: true } } } },
   ];
 }
+
+/**
+ * A heat map of shots for the rink: many made-up shots from both ends, their places the same kind as `shotMap`'s, counted into 4-foot
+ * cells and cut to the boards, with a legend.
+ */
+export function shotHeat(count = 900, seed = 2620) {
+  const random = seeded(seed);
+  const data = [];
+  for (let i = 0; i < count; i += 1) {
+    const home = i % 2 === 0;
+    const goalX = home ? 11 : 189;
+    const depth = Math.min(70, Math.abs(normal(random)) * 22 + 6);
+    const x = Math.max(2, Math.min(198, goalX + (home ? depth : -depth)));
+    const y = Math.max(2, Math.min(83, 42.5 + normal(random) * 13));
+    data.push({ x: round1(x), y: round1(y) });
+  }
+  return [{ kind: "heatmap", name: "shots", data, bins: [50, 21], legend: { title: "Shots in each 4 by 4 feet" } }];
+}
+
+/**
+ * An NBA shot-zone chart: made-up shots at one basket, in the units of stats.nba.com's shot chart (tenths of a foot from the hoop, the
+ * right basket attacked), each made or missed with a chance that falls with the distance, counted into the six zones, each zone coloured
+ * by its field-goal percentage against a made-up league figure of 46 percent and written as a percent and as made over taken.
+ */
+export function nbaZones(count = 520, seed = 2621) {
+  const random = seeded(seed);
+  const data = [];
+  for (let i = 0; i < count; i += 1) {
+    const roll = random();
+    // Distance in feet from the hoop: a few at the rim, many in the midrange, a good share from three.
+    const r = roll < 0.22 ? random() * 3.8 : roll < 0.4 ? 4 + random() * 6 : roll < 0.66 ? 10 + random() * 12 : 22 + random() * 5;
+    const spread = r < 4 ? 160 : r < 12 ? 100 : 80;
+    const angle = Math.max(-spread, Math.min(spread, normal(random) * (r > 22 ? 52 : 60))) * (Math.PI / 180);
+    const along = r * Math.cos(angle);
+    const across = r * Math.sin(angle);
+    const chance = r < 4 ? 0.64 : r < 10 ? 0.43 : r < 22 ? 0.41 : 0.37;
+    data.push({ x: Math.round(across * 100) / 10, y: Math.round(along * 100) / 10, outcome: random() < chance ? "made" : "missed" });
+  }
+  return [
+    {
+      kind: "zones",
+      name: "shots",
+      zones: "nba-shot",
+      from: "nba-stats",
+      end: "right",
+      data,
+      statistic: "rate",
+      statisticName: "Field goals made, %",
+      center: 46,
+      minCount: 3,
+      labels: { show: ["value", "ratio"] },
+      legend: { title: "Field-goal % (46 is the league)", ticks: 5, position: "top" },
+    },
+  ];
+}
+
+/**
+ * A positional heat map for the soccer pitch: made-up touches by a team attacking to the right, counted into juego de posición's
+ * thirty zones (five lanes by six bands) and written as each zone's share of all the touches.
+ */
+export function touchZones(count = 760, seed = 2622) {
+  const random = seeded(seed);
+  const data = [];
+  for (let i = 0; i < count; i += 1) {
+    const x = Math.max(1, Math.min(344, 175 + normal(random) * 78));
+    const wide = random() < 0.35;
+    const y = Math.max(1, Math.min(222, wide ? (random() < 0.5 ? 25 : 198) + normal(random) * 20 : 111 + normal(random) * 52));
+    data.push({ x: round1(x), y: round1(y) });
+  }
+  return [{ kind: "zones", name: "touches", zones: "soccer-positional", direction: "right", data, statistic: "percent", ramp: "ocean", labels: { decimals: 1 }, legend: { title: "Share of the touches" } }];
+}
+
+/**
+ * A density contour for a ballpark: made-up balls in play, in feet from home plate (x to the right, y out), with a kernel density estimate
+ * (Scott's rule) drawn as filled bands, and the balls beneath as small points.
+ */
+export function sprayDensity(count = 260, seed = 2623) {
+  const random = seeded(seed);
+  const data = [];
+  for (let i = 0; i < count; i += 1) {
+    const angle = Math.max(-42, Math.min(42, normal(random) * 20 - 6));
+    const depth = Math.max(40, Math.min(380, 150 + normal(random) * 80));
+    data.push({ x: round1(depth * Math.sin((angle * Math.PI) / 180)), y: round1(depth * Math.cos((angle * Math.PI) / 180)) });
+  }
+  return [
+    { kind: "contour", name: "balls in play", from: "retrosheet", data, levels: 6, ramp: "ocean", opacity: 0.85, legend: { title: "Density, share of the peak" } },
+    { kind: "points", name: "balls in play", from: "retrosheet", data, style: { size: 3.4, opacity: 0.55, stroke: "none" } },
+  ];
+}
