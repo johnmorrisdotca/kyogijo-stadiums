@@ -28,6 +28,39 @@ The links John has sent, and the ones the package's figures were read from: what
    - *What:* a critique of what makes a court design work: the wood tone, the key colour, borders, where a logo goes, restraint against clutter.
    - *Useful for:* the defaults and the presets of `COURT_THEMES`: a few clear colours, a border, a restrained centre.
    - *May use:* as design guidance. No text or images are copied.
+7. **[bdilday/GeomMLBStadiums](https://github.com/bdilday/GeomMLBStadiums)** (R, ggplot2)
+   - *What:* outlines of the 30 current MLB parks and a generic one, as paths (foul lines, home plate, infield inner and outer, outfield inner and outer) in MLBAM's Statcast `hc_x`/`hc_y` hit coordinates, with a transform to feet-like axes and a spray-chart geom. Last data change 2023 (Camden Yards).
+   - *Useful for:* the features worth matching: a wall drawn as a path rather than five distances, the infield and warning track as their own segments, and batted balls drawn on the same axes (our roadmap's "players on the surface").
+   - *May use:* nothing (see "Not used" below). The paths sit in MLBAM's own pixel space, which points to MLB's Gameday images as their origin, and no source is named.
+8. **[gavinr/mlb-spring-training-stadiums](https://github.com/gavinr/mlb-spring-training-stadiums)**
+   - *What:* the Cactus and Grapefruit League parks as CSV and GeoJSON (name, latitude, longitude, teams, Wikipedia address), read from Wikipedia's "Spring training" page in 2013 and refreshed in 2021, with an ArcGIS map in the README.
+   - *Useful for:* a spring-training set and the idea of a map of every ground in the README and the demo.
+   - *May use:* the idea only. The repository has no licence. Coordinates and names are facts we can read from Wikidata (CC0) ourselves; the list is also out of date (it still says Cleveland Indians, and Oakland at Hohokam).
+9. **[sportsdataverse/sportypy](https://github.com/sportsdataverse/sportypy)** and its R twin [sportyR](https://github.com/sportsdataverse/sportyR)
+   - *What:* regulation surfaces for baseball, basketball, curling, football, hockey, soccer, tennis and volleyball (about 45 leagues: FIBA, WNBA, NCAA, NFHS, IIHF, AHL, ECHL, OHL, QMJHL, EPL, MLS, ITF, FIVB, WCF and more), each in its rulebook's unit, with `display_range` (red zone, house, half court), rotation, colour updates and a unit option.
+   - *Useful for:* the bar for coverage: the leagues, the surface units table, display ranges.
+   - *May use:* ideas and facts only. Both are GPL-3.0, so no code or data files are copied into an MIT package; every figure is read from its rulebook.
+10. **[sportsdataverse/sdvplot-js](https://github.com/sportsdataverse/sdvplot-js)** (`@sportsdataverse/sporty` on npm)
+    - *What:* the TypeScript port of sportyR: nine sports, 53 league surfaces as a scene of polygons, SVG/canvas/Observable Plot/d3 renderers, coordinate frames (`toSurfaceFrame`: stats.nba.com, HockeyTech, ESPN yard line), NBA shot zones. Its sister packages do team colours, logos and tables.
+    - *Useful for:* the nearest rival in JavaScript; what to match (renderers, frames, units converting the anchors too) and what it lacks (score mode, ballparks by name, eras, layouts for a phone, Japanese).
+    - *May use:* MIT, so ideas freely and code with credit; we write our own and credit it here.
+11. **[the-bucketless/hockey_rink](https://github.com/the-bucketless/hockey_rink)** (Python, Matplotlib)
+    - *What:* NHL, NWHL and IIHF rinks (old and new) with partial rinks, and plotting on them: scatter, lines, arrows, wavy arrows, text, binned statistics, heatmaps, hexbins, contours, clipping to the boards, and animation of tracking data.
+    - *Useful for:* the list of hockey charts to beat: shot maps, heatmaps, zone views, animated replays.
+    - *May use:* ideas only. GPL-3.0: no code is copied.
+12. **[andrewRowlinson/mplsoccer](https://github.com/andrewRowlinson/mplsoccer)** (Python, Matplotlib; hockey_rink's inspiration)
+    - *What:* soccer pitches in nine providers' coordinates (StatsBomb, Opta, Wyscout, Tracab, Second Spectrum, SkillCorner, Metrica, Impect, UEFA) with a standardiser between them; scatter, lines, comet lines, arrows, heatmaps (positional zones), hexbins, KDE, pass networks, flow, Voronoi, Delaunay, convex hulls, sonars, formations, radar, pizza and bumpy charts, grids with title and endnote, animation, and a StatsBomb open-data loader. Its gallery is the standard for documentation.
+    - *Useful for:* the bar for the soccer module and for data layers in every sport.
+    - *May use:* MIT, so ideas freely and code with credit; we write our own. StatsBomb's open data has its own terms and is not bundled.
+    - *Its docs:* the [Pitch types](https://mplsoccer.readthedocs.io/en/latest/gallery/pitch_setup/plot_pitch_types.html) page, one section per provider with a short note, the code and a picture with axes and labels, is the model for our page per coordinate system (we add a summary table, a side-by-side comparison and a live converter).
+13. **[Torvaney/ggsoccer](https://github.com/Torvaney/ggsoccer)** (R, ggplot2)
+    - *What:* soccer pitches as ggplot layers; a pitch is a spec of a few numbers (length, width, penalty box, six-yard box, spot, goal width, arc, origin), with specs for StatsPerform/Opta (100 by 100, the default), StatsBomb (120 by 80), Wyscout, Tracab (centred, variable size), Impect and the international 105 by 68; `rescale_coordinates(from, to)` between them; goal styles (box, line, strip, or your own function); colour, fill, line width, line type and alpha; a direction-of-play label; partial pitches by plot limits.
+    - *Useful for:* providers as specs, rescaling landmark to landmark, goal styles, line styling, the direction label.
+    - *May use:* MIT (`LICENSE.md`, Benjamin Torvaney 2019): ideas freely, and the provider figures are facts from each provider's documentation, which we cite ourselves.
+14. **[shawnmlevin/NFL-Stadium-Polygons](https://github.com/shawnmlevin/NFL-Stadium-Polygons)**
+    - *What:* one GeoJSON of 65 polygons, the field and the outline of about 35 NFL stadiums plus Wembley, Twickenham and Azteca, drawn by hand on Mapbox in 2017 and 2018.
+    - *Useful for:* the idea of a stadium's footprint and its field's real bearing on a map, and a reminder that NFL games are played abroad.
+    - *May use:* nothing. The repository has no licence, and the shapes were traced over Mapbox imagery.
 
 ## Where the figures were read
 
