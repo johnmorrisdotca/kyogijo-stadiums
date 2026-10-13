@@ -92,6 +92,14 @@ The links John has sent, and the ones the package's figures were read from: what
 
 - Per-park equations from any source with no licence (item 3 above). [bdilday/GeomMLBStadiums](https://github.com/bdilday/GeomMLBStadiums) was looked at as a permissive source: its LICENSE file is only the two-line stub of an R package's MIT licence (year and holder), GitHub does not recognise a licence, and the outlines' own provenance is not stated, so nothing of it is used. Nor were Sports Reference or ESPN, whose terms forbid it, or sportypy.
 
+## The data layers
+
+- **What was read:** the lists of what each plotting package draws, and how its charts look in its own gallery, to know what to match: [hockey_rink](https://github.com/the-bucketless/hockey_rink) (item 11: scatter, plot, arrow, wavy arrow, text, clipping to the boards) and [mplsoccer](https://github.com/andrewRowlinson/mplsoccer) (item 12: scatter, lines, comet lines, arrows, markers). [ggsoccer](https://github.com/Torvaney/ggsoccer) (item 13) and [sporty](https://github.com/sportsdataverse/sdvplot-js) (item 10) were read for how a layer sits on a surface that is a spec of a few numbers.
+- **Ideas credited (MIT, so ideas freely and code with credit; we wrote our own):** mplsoccer's comet line (a line that fades in towards its end, with its width growing), its arrows and its split of a mark into a shape, a colour and a size from the data; ggsoccer's layers that take the pitch's own coordinates. No code of either is used: the curves, waves, heads and shapes in `src/layers.marks.ts` are plain geometry (quadratic curves, offsets along a normal).
+- **Not used:** hockey_rink's code (GPL-3.0). Only the list of what it draws was read, from its README. sportypy and sportyR (GPL-3.0) were not read for this.
+- **Ours:** outcomes drawn by fill and dash as well as colour (a miss is hollow, a failed pass dashed), a layer's title, description and table for screen readers, a clip to each surface's own outline, and the team colours following a score drawing's teams.
+- **Data:** the demo's shots, passes and balls in play are made up from a fixed seed (`demo/layers-data.js`). No real game, player or team is in the package.
+
 ## The coordinate frames and the units
 
 - **What was read:** the pages named in [sources.md](./sources.md#coordinate-frames), for facts only: ranges, units, origins and conventions of each provider's coordinates. No text or code of any is copied.

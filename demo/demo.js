@@ -1,11 +1,12 @@
 // The demo page's own script: a surface to try (the package's own `mountKyogijo`), the code that draws it in four ways,
 // and a page of examples: every sport, wide and tall, badges, compact cards, court looks, a live score, every ballpark,
 // and the custom element. The words are in words.js, the made-up teams in examples.js.
-import { COURT_THEMES, KYOGIJO_STYLE, PARKS, PARK_IDS, SOCCER_PITCH_IDS, SOCCER_PROVIDERS, SOCCER_PROVIDER_IDS, SPORTS, VERSION, drawKyogijo, rescale } from "./dist/index.js";
+import { COURT_THEMES, KYOGIJO_STYLE, PARKS, PARK_IDS, SOCCER_PITCH_IDS, SOCCER_PROVIDERS, SOCCER_PROVIDER_IDS, SPORTS, VERSION, drawKyogijo, rescale, layerTable } from "./dist/index.js";
 import { mountKyogijo } from "./dist/mount-entry.js";
 import "./dist/element-define.js";
 import { toParams } from "./embed-params.js";
 import { EMBLEMS, FAMILIES, GAMES, TEAMS, TEAMS_JA } from "./examples.js";
+import { passMap, shotMap, sprayChart } from "./layers-data.js";
 import { WORDS } from "./words.js";
 
 const $ = (id) => document.getElementById(id);
@@ -473,6 +474,32 @@ const examples = {
     }),
 };
 
+// The Data section: made-up shots, passes and balls in play (layers-data.js, from fixed seeds) on a bare surface each, with the
+// table that stands for each drawing under it.
+const DATA = [
+  ["shots", () => ({ sport: "nhl", layers: shotMap() })],
+  ["passes", () => ({ sport: "nfl", layers: passMap() })],
+  ["spray", () => ({ sport: "mlb", layers: sprayChart() })],
+];
+function buildData() {
+  const host = $("data-cards");
+  host.replaceChildren();
+  for (const [key, make] of DATA) {
+    const options = { ...make(), orientation: "auto", language: language.lang, style: "none" };
+    const fig = figure(host, options, say(`data_${key}`));
+    const details = document.createElement("details");
+    details.className = "data-table";
+    details.dataset.testid = `data-table-${key}`;
+    const summary = document.createElement("summary");
+    summary.textContent = say("dataTable");
+    const holder = document.createElement("div");
+    holder.className = "data-table-body";
+    holder.innerHTML = layerTable(options.layers, { language: language.lang, maxRows: 60 });
+    details.append(summary, holder);
+    fig.append(details);
+  }
+}
+
 function buildExamples() {
   for (const m of mounts) m.handle?.destroy();
   mounts.length = 0;
@@ -481,6 +508,7 @@ function buildExamples() {
     host.replaceChildren();
     for (const [options, caption] of examples[key]()) figure(host, options, caption);
   }
+  buildData();
   for (const m of mounts) m.handle = m.make();
   buildBadges();
 }

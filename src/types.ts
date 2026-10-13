@@ -1,3 +1,4 @@
+import type { Layer } from "./layers.types.ts";
 import type { Unit } from "./units.ts";
 import type { SoccerFrame, SoccerProviderId } from "./surfaces/soccer-providers.ts";
 import type { SoccerPitchId, SoccerSize } from "./surfaces/soccer-spec.ts";
@@ -74,6 +75,20 @@ export interface Colors {
   plate?: string;
   /** The words and numbers on the panel. */
   plateInk?: string;
+  /** The plain colour of a data layer's marks. */
+  layer?: string;
+  /** The colour of the home team's marks. In a score drawing the home team's own colour, when it has one. */
+  layerHome?: string;
+  /** The colour of the away team's marks. */
+  layerAway?: string;
+  /** The line round a mark that sets it off the ground. */
+  layerEdge?: string;
+  /** The fill of a hollow mark (a miss). */
+  layerHollow?: string;
+  /** The letters of a text layer. */
+  layerInk?: string;
+  /** The outline round those letters. */
+  layerHalo?: string;
 }
 
 /** The look of a basketball court. Every part is optional, and each falls back to the theme's. */
@@ -191,6 +206,11 @@ export interface SurfaceOptions {
   goals?: GoalStyle;
   /** Corner flags on a soccer pitch. On by default in the `full` detail. */
   cornerFlags?: boolean;
+  /**
+   * Data on the surface: points, lines, arrows and text, in the surface's frame or a provider's. They are drawn over the markings (and
+   * under a score's panel), cut to the surface's outline, and described in the drawing's description. See `drawLayers` and `layerTable`.
+   */
+  layers?: readonly Layer[];
   /** `embed` (the default) writes the stylesheet into the drawing so that it stands alone; `none` leaves it to the page. */
   style?: "embed" | "none";
   /** An extra class on the `svg`. */

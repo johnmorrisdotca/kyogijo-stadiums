@@ -75,6 +75,7 @@ console.log(svg.startsWith("<svg"), svg.includes("NORTHERN OWLS"));
 - **Every ballpark.** The 30 current MLB parks and 44 that MLB clubs have left (the Polo Grounds, Ebbets Field, Forbes Field, Tiger Stadium, the Astrodome and more), and the 12 home parks of Nippon Professional Baseball with eight other NPB grounds, past and present, each with its fence drawn from the distances published for it. A named park is one option (`park: "fenway-park"`), and a past park whose fence moved is drawn as it stood in a season (`year: 1915`); the 94 are in `PARKS`, each with its Wikidata item.
 - **Score mode.** Each team's name and logo on its side (the end zones of a football field, the ends of the ice, the halves of the court, the dugouts of a ballpark) and the score large in the middle, with the competition, the status (Final, OT, SO, a period, an inning) and the date, and the winner emphasised.
 - **Wide, tall or fit the box.** Every surface lies wide or tall. Tall turns it a quarter, keeps every word upright, and puts the teams top and bottom. With `orientation: "auto"` the browser helpers watch the box and lay it out again when its shape changes.
+- **Data on the surface.** Points, lines, arrows and text over any surface, in its feet or a provider's frame, cut to its outline, with a title, a description and a table for each layer.
 - **A compact badge and a compact card.** One strip for a list, or the surface with that strip under it.
 - **Light and dark**, by the device or the page, and every colour a custom property; a basketball court's paint, border, wood and baseline words are options, with five looks to start from.
 - **Accessible.** Each drawing is an `img` with a title and a description that say the surface and the result, in English or Japanese.
@@ -90,6 +91,7 @@ console.log(svg.startsWith("<svg"), svg.includes("NORTHERN OWLS"));
 | `SOCCER_PITCHES`, `SOCCER_PROVIDERS`, `rescale`, `soccerSpec` | The soccer pitches, the data providers' coordinate systems and the map between them. |
 | `@johnmorrisdotca/kyogijo/geometry` | The dimensions of every surface in feet, in any unit, and the functions that follow from them. |
 | `@johnmorrisdotca/kyogijo/frames` | Providers' coordinate frames and the functions that put their points on a surface. |
+| `@johnmorrisdotca/kyogijo/layers` | `drawLayers`, `layerTable` and the layer types. |
 | `@johnmorrisdotca/kyogijo/parks` | The ballparks and the article each was read from. |
 | `@johnmorrisdotca/kyogijo/mount` | `mountKyogijo`: draw into a container and keep it laid out; `kyogijoElement`. |
 | `@johnmorrisdotca/kyogijo/react` | `kyogijoProps` and `createKyogijo`, for React, without depending on it. |
@@ -532,6 +534,58 @@ console.log(toSurface([[69, 22]], { from: "nhl-api", attacking: "left" }), conve
 - **Retrosheet's zones.** `zoneToPoint("8D")` is the centre of a hit-location sector in feet from home plate and `zoneAt([x, y])` the zone whose centre is nearest a point. The centres are read off Retrosheet's diagram and are good to a few feet.
 - **What is ours.** The NHL API's sign of y, the NFL tracking data's corner of origin and the MLBAM scale of 2.5 feet a unit are conventions the sources read do not settle; each is marked in `note` and in [docs/sources.md](./docs/sources.md). Check one known point against your data before trusting a frame.
 
+## Data layers
+
+`layers` in the options of `drawKyogijo` and `drawSurface` lays data on the surface: a list of layers, each a `kind` (`points`, `lines`, `arrows` or `text`) with its `data` and a `style`. The marks sit in the surface's own frame, over the markings and under a score's panel, cut to its outline and upright when it lies tall.
+
+```ts
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+
+// The NHL API's coordinates are feet from centre ice: `from` puts them on the rink.
+const svg = drawKyogijo({
+  sport: "nhl",
+  layers: [
+    {
+      kind: "points",
+      name: "shots",
+      from: "nhl-api",
+      data: [
+        { x: 69, y: 22, team: "home", outcome: "goal", value: 0.31 },
+        { x: 54, y: -8, team: "home", outcome: "shot", value: 0.07 },
+        { x: -61, y: 12, team: "away", outcome: "blocked", value: 0.04 },
+      ],
+      style: { size: { range: [2, 5] }, outcomes: { blocked: { hollow: true, shape: "x" } } },
+    },
+  ],
+});
+console.log(svg.includes("3 shots"), svg.includes("By outcome: goal 1, shot 1, blocked 1."));
+// true true
+```
+
+A miss is drawn hollow and a failed pass dashed. Shapes, colour rules, comets, units and frames are in [docs/layers.md](./docs/layers.md).
+
+```ts
+import { drawKyogijo, layerTable } from "@johnmorrisdotca/kyogijo";
+
+const passes = {
+  kind: "arrows",
+  name: "passes",
+  from: "nfl-tracking",
+  data: [
+    { x: 40, y: 30, x2: 62, y2: 18, outcome: "complete" },
+    { x: 40, y: 30, x2: 55, y2: 44, outcome: "incomplete" },
+  ],
+  style: { curve: 0.1, comet: true },
+} as const;
+
+console.log(drawKyogijo({ sport: "nfl", orientation: "portrait", layers: [passes] }).includes("linearGradient"));
+console.log(layerTable([passes]).includes("<caption>2 passes"));
+// true
+// true
+```
+
+`drawLayers(options, layers)` returns the group alone. `layerTable(layers)` returns an HTML table for each layer, for a screen reader. Each layer has a `<title>` and a `<desc>` ("24 shots", "By outcome: goal 3, shot 21."), and a mark's `title` is its tooltip.
+
 ## Score mode
 
 <p align="center">
@@ -576,9 +630,10 @@ The [API reference](https://johnmorrisdotca.github.io/kyogijo/api.html) lists ev
 
 | Entry | What it holds |
 | --- | --- |
-| `@johnmorrisdotca/kyogijo` | `drawKyogijo`, `drawSurface`, `drawScore`, `drawBadge`, `describe`, `winnerOf`, `statusLabel`, `isPortrait`, `statusText`; `SPORTS`, `COURT_THEMES`, `SOCCER`, `SOCCER_PITCHES`, `SOCCER_PROVIDERS`, `soccerSpec`, `soccerFrame`, `rescale`, `PARKS`, `PARK_IDS`, `parkById`, `parkByWikidata`, `parkPointsIn`, `parkSourceUrl`, `parkUnit`, `fenceFor`; `SURFACE_UNITS`, `UNITS`, `convertLength`; `safeColour`, `safeLogo`, `inkOn`; `fitLines`, `textWidth`, `abbreviate`, `capitals`; `KYOGIJO_STYLE`, `KYOGIJO_STRINGS`, `COLOR_PROPERTIES`, `VERSION` and the option types |
+| `@johnmorrisdotca/kyogijo` | `drawKyogijo`, `drawSurface`, `drawScore`, `drawBadge`, `drawLayers`, `layerTable`, `describe`, `winnerOf`, `statusLabel`, `isPortrait`, `statusText`; `OUTCOMES`, `rampColour`; `SPORTS`, `COURT_THEMES`, `SOCCER`, `SOCCER_PITCHES`, `SOCCER_PROVIDERS`, `soccerSpec`, `soccerFrame`, `rescale`, `PARKS`, `PARK_IDS`, `parkById`, `parkByWikidata`, `parkPointsIn`, `parkSourceUrl`, `parkUnit`, `fenceFor`; `SURFACE_UNITS`, `UNITS`, `convertLength`; `safeColour`, `safeLogo`, `inkOn`; `fitLines`, `textWidth`, `abbreviate`, `capitals`; `KYOGIJO_STYLE`, `KYOGIJO_STRINGS`, `COLOR_PROPERTIES`, `VERSION` and the option types |
 | `@johnmorrisdotca/kyogijo/geometry` | `FOOTBALL`, `NHL`, `NBA`, `MLB`, `SOCCER`, `SOCCER_PITCHES`, `soccerSpec`, `soccerPitchClass`, `fenceAt`, `fencePoints`, `threePointJoin`, `skinJoin`, `boardsY` and the other dimensions; `SURFACE_UNITS`, `convertLength`, `convertPoint`, `lengthsIn`, `dimensionsOf`, `surfaceSize`, `fenceIn` |
 | `@johnmorrisdotca/kyogijo/frames` | `toSurface`, `fromSurface`, `convert`, `convertPoints`, `flipEnds`, `attackingIn`, `registerFrame`, `frameByName`, `framesOf`, `piecewise`, `span`, `FRAMES`, `RETROSHEET_ZONES`, `zoneToPoint`, `zoneAt`, `SOCCER_PROVIDERS`, `rescale` and the frame types |
+| `@johnmorrisdotca/kyogijo/layers` | `drawLayers`, `layerTable`, `renderLayers`, `outlineOf`, `OUTCOMES`, `rampColour` and the layer types |
 | `@johnmorrisdotca/kyogijo/parks` | `PARKS`, `PARK_IDS`, `parkById`, `parkByWikidata`, `parkPointsIn`, `parkSourceUrl`, `parkUnit`, `fenceFor` |
 | `@johnmorrisdotca/kyogijo/mount` | `mountKyogijo`, `kyogijoElement`, `containerAspect` |
 | `@johnmorrisdotca/kyogijo/react` | `kyogijoProps`, `kyogijoHtml`, `createKyogijo` |
@@ -607,6 +662,7 @@ Nothing is branded. The drawing is coloured by custom properties on its `svg`, w
 | `--ky-left-ink`, `--ky-right-ink` | the words on those colours | `#ffffff` | the same |
 | `--ky-plate`, `--ky-plate-ink` | the score's panel | `rgba(18,24,21,.9)`, `#ffffff` | `rgba(0,0,0,.82)`, the same |
 | `--ky-halo` | the outline round a name painted on ice or wood | `rgba(255,255,255,.92)` | the same |
+| `--ky-layer`, `--ky-layer-home`, `--ky-layer-away`, `--ky-layer-edge`, `--ky-layer-hollow`, `--ky-layer-ink`, `--ky-layer-halo` | a data layer's marks (see [docs/layers.md](./docs/layers.md)) | light set | lightened |
 | `--ky-font` | the face of every word | the system's, with Hiragino and Noto Sans JP | the same |
 
 Every part carries a class (`ky-surface`, `ky-line`, `ky-zone-left`, `ky-banner`, `ky-plate`, `ky-score`, `ky-winbar`, `ky-lose`, `ky-badge`) for anything a property cannot reach. Pass `style: "none"` to leave the stylesheet out of each drawing and put `KYOGIJO_STYLE` in the page once, which is what the demo does for its many drawings.
@@ -627,7 +683,8 @@ Each is held by a test, and the ones with a name are exported.
 | A colour | a hex colour, `rgb()`, `rgba()`, `hsl()`, `hsla()`, a name or `var(--name)`, 64 characters at most | `safeColour` |
 | A logo | an https or relative address, an image data address, or SVG text up to 200,000 characters | `safeLogo` |
 | A name | any length: it is set on one line or two, in the biggest size that fits its place | `fitLines` |
-| A drawing's size | under 19 kB for a football field, 14 kB for a soccer pitch with a score, 11 kB for a rink or a court, 14 kB for a ballpark, each with its 6 kB stylesheet (a test holds each under a budget) | `drawKyogijo` |
+| A layer's marks | 1,000 points add under 70 kB; 10,000 are drawn in under 250 ms | `drawKyogijo` |
+| A drawing's size | under 22 kB for a football field, 15 kB for a soccer pitch with a score, 14 kB for a rink or a court, 17 kB for a ballpark, each with its 8 kB stylesheet (a test holds each under a budget) | `drawKyogijo` |
 
 ## Accessibility
 
@@ -654,7 +711,7 @@ Not here yet, and each welcome as an [issue](https://github.com/johnmorrisdotca/
 - **More surfaces**: the FIBA and college courts, the international rink, rugby pitches, a stadium's seating, soccer's beach and street formats.
 - **Wall heights and quirks** in a ballpark: the Green Monster, Tal's Hill and the walls of Japan's parks.
 - **More parks of the past**: the grounds of the 19th century, and the parks whose articles give no distances yet (the Kingdome, Joe Robbie Stadium, the Los Angeles Coliseum), when they do.
-- **Players on the surface**: a shot chart, a face-off, a pitch, drawn on the same coordinates. The frames that place their points are here; the drawing of them is not.
+- **More charts on data layers**: heat maps, hexbins, pass networks, a legend and animation.
 - **Football in a different standard**: the college and high-school hash marks.
 
 Left out on purpose: statistics, rosters and schedules. Kyogijo draws the place and the score it is given; it does not look anything up.
@@ -677,6 +734,12 @@ src/
 │   ├── soccer.ts       the soccer pitch
 │   ├── soccer-spec.ts  the Laws' figures, the presets, futsal and the small-sided pitches
 │   └── soccer-providers.ts  the data providers' coordinates, registered as frames, and rescale
+├── layers.ts           data layers: drawLayers, layerTable and the marks
+├── layers.marks.ts     the shapes, curves, waves, heads and colour ramps of the marks
+├── layers.types.ts     the types of a layer
+├── layers-entry.ts     the layers' entry
+├── outline.ts          a surface's outline: where a layer is cut
+├── common.ts           the drawing's id, the orientation and the unit, shared by the drawing and its layers
 ├── geometry.ts         every dimension, in feet, with the fence's curve
 ├── geometry-entry.ts   the geometry's entry
 ├── units.ts            the units of length, each surface's own, and the converters

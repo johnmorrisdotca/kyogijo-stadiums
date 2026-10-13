@@ -4,17 +4,17 @@
  * defaults are in `:where()`, which has no weight, so that a page's own rule always wins.
  */
 export const KYOGIJO_STYLE = `
-:where(.kyogijo){--ky-ink:#1f2320;--ky-line:#fff;--ky-halo:rgba(255,255,255,.92);--ky-plate:rgba(18,24,21,.9);--ky-plate-ink:#fff;--ky-left:#2f6db0;--ky-right:#b5452c;--ky-left-ink:#fff;--ky-right-ink:#fff;--ky-apron:#dcd8c9;--ky-surface:#3f8f55;--ky-surface-alt:#3a864f;--ky-zone:#2d6a40;--ky-boards:#c8c1b0;--ky-red:#c8372d;--ky-blue:#2a5db0;--ky-dirt:#c28e5c;--ky-foul:#3a8148;--ky-infield:#58a05d;--ky-crease:#bfd3ec;--ky-key:#c25b3c;--ky-centre:transparent;--ky-post:#f2c230;--ky-pylon:#f26a1b;--ky-font:system-ui,-apple-system,"Segoe UI","Hiragino Sans","Noto Sans JP",sans-serif;display:block;width:100%;height:auto;font-family:var(--ky-font)}
+:where(.kyogijo){--ky-ink:#1f2320;--ky-line:#fff;--ky-halo:rgba(255,255,255,.92);--ky-plate:rgba(18,24,21,.9);--ky-plate-ink:#fff;--ky-left:#2f6db0;--ky-right:#b5452c;--ky-left-ink:#fff;--ky-right-ink:#fff;--ky-apron:#dcd8c9;--ky-surface:#3f8f55;--ky-surface-alt:#3a864f;--ky-zone:#2d6a40;--ky-boards:#c8c1b0;--ky-red:#c8372d;--ky-blue:#2a5db0;--ky-dirt:#c28e5c;--ky-foul:#3a8148;--ky-infield:#58a05d;--ky-crease:#bfd3ec;--ky-key:#c25b3c;--ky-centre:transparent;--ky-post:#f2c230;--ky-pylon:#f26a1b;--ky-layer:#14213d;--ky-layer-home:#1f5fa8;--ky-layer-away:#d9480f;--ky-layer-edge:rgba(255,255,255,.92);--ky-layer-hollow:rgba(255,255,255,.32);--ky-layer-ink:#14213d;--ky-layer-halo:rgba(255,255,255,.9);--ky-font:system-ui,-apple-system,"Segoe UI","Hiragino Sans","Noto Sans JP",sans-serif;display:block;width:100%;height:auto;font-family:var(--ky-font)}
 :where(.kyogijo[data-sport=nhl]){--ky-surface:#eef5fa;--ky-apron:#d3dbe1;--ky-boards:#9aa4ab;--ky-halo:rgba(255,255,255,.92)}
 :where(.kyogijo[data-sport=nba]){--ky-surface:#d9a766;--ky-surface-alt:#cf9c5b;--ky-apron:#c9c3b4;--ky-boards:#a97d46;--ky-baseline:#fff}
 :where(.kyogijo[data-sport=mlb]){--ky-surface:#4f9a55;--ky-surface-alt:#478f4e;--ky-apron:#bdb59f;--ky-boards:#2f4a36}
 :where(.kyogijo[data-sport=soccer]){--ky-surface:#4c9b56;--ky-surface-alt:#438f4d;--ky-apron:#c9d2bd;--ky-court:#3b79ad}
-@media (prefers-color-scheme:dark){:where(html:not([data-theme=light]) .kyogijo:not([data-theme=light])){--ky-ink:#ece8dc;--ky-line:#e9ece6;--ky-plate:rgba(0,0,0,.82);--ky-apron:#1b1f1c;--ky-surface:#2c6a3f;--ky-surface-alt:#296239;--ky-zone:#1f4a2d;--ky-boards:#4d5450;--ky-red:#d4574d;--ky-blue:#5584d4;--ky-dirt:#8a6040;--ky-foul:#275a31;--ky-infield:#367a42;--ky-crease:#8ea9cc;--ky-key:#8a3f2b}
+@media (prefers-color-scheme:dark){:where(html:not([data-theme=light]) .kyogijo:not([data-theme=light])){--ky-ink:#ece8dc;--ky-line:#e9ece6;--ky-plate:rgba(0,0,0,.82);--ky-apron:#1b1f1c;--ky-surface:#2c6a3f;--ky-surface-alt:#296239;--ky-zone:#1f4a2d;--ky-boards:#4d5450;--ky-red:#d4574d;--ky-blue:#5584d4;--ky-dirt:#8a6040;--ky-foul:#275a31;--ky-infield:#367a42;--ky-crease:#8ea9cc;--ky-key:#8a3f2b;--ky-layer:#f1f5f9;--ky-layer-home:#6aa9f0;--ky-layer-away:#f59a5b;--ky-layer-edge:rgba(0,0,0,.6);--ky-layer-hollow:rgba(255,255,255,.18);--ky-layer-ink:#f1f5f9;--ky-layer-halo:rgba(0,0,0,.7)}
 :where(html:not([data-theme=light]) .kyogijo[data-sport=nhl]:not([data-theme=light])){--ky-surface:#a9bccb;--ky-apron:#1a2025;--ky-boards:#4b5156}
 :where(html:not([data-theme=light]) .kyogijo[data-sport=nba]:not([data-theme=light])){--ky-surface:#8f6a3c;--ky-surface-alt:#876234;--ky-apron:#1a1c1b;--ky-boards:#5e4426}
 :where(html:not([data-theme=light]) .kyogijo[data-sport=mlb]:not([data-theme=light])){--ky-surface:#2f6b3a;--ky-surface-alt:#2b6336;--ky-apron:#1b1f1c;--ky-boards:#1c2b20}
 :where(html:not([data-theme=light]) .kyogijo[data-sport=soccer]:not([data-theme=light])){--ky-surface:#2d6c3e;--ky-surface-alt:#276136;--ky-apron:#1b1f1c;--ky-court:#2a5478}}
-:where(html[data-theme=dark] .kyogijo,.kyogijo[data-theme=dark]){--ky-ink:#ece8dc;--ky-line:#e9ece6;--ky-plate:rgba(0,0,0,.82);--ky-apron:#1b1f1c;--ky-surface:#2c6a3f;--ky-surface-alt:#296239;--ky-zone:#1f4a2d;--ky-boards:#4d5450;--ky-red:#d4574d;--ky-blue:#5584d4;--ky-dirt:#8a6040;--ky-foul:#275a31;--ky-infield:#367a42;--ky-crease:#8ea9cc;--ky-key:#8a3f2b}
+:where(html[data-theme=dark] .kyogijo,.kyogijo[data-theme=dark]){--ky-ink:#ece8dc;--ky-line:#e9ece6;--ky-plate:rgba(0,0,0,.82);--ky-apron:#1b1f1c;--ky-surface:#2c6a3f;--ky-surface-alt:#296239;--ky-zone:#1f4a2d;--ky-boards:#4d5450;--ky-red:#d4574d;--ky-blue:#5584d4;--ky-dirt:#8a6040;--ky-foul:#275a31;--ky-infield:#367a42;--ky-crease:#8ea9cc;--ky-key:#8a3f2b;--ky-layer:#f1f5f9;--ky-layer-home:#6aa9f0;--ky-layer-away:#f59a5b;--ky-layer-edge:rgba(0,0,0,.6);--ky-layer-hollow:rgba(255,255,255,.18);--ky-layer-ink:#f1f5f9;--ky-layer-halo:rgba(0,0,0,.7)}
 :where(html[data-theme=dark] .kyogijo[data-sport=nhl],.kyogijo[data-theme=dark][data-sport=nhl]){--ky-surface:#a9bccb;--ky-apron:#1a2025;--ky-boards:#4b5156}
 :where(html[data-theme=dark] .kyogijo[data-sport=nba],.kyogijo[data-theme=dark][data-sport=nba]){--ky-surface:#8f6a3c;--ky-surface-alt:#876234;--ky-apron:#1a1c1b;--ky-boards:#5e4426}
 :where(html[data-theme=dark] .kyogijo[data-sport=mlb],.kyogijo[data-theme=dark][data-sport=mlb]){--ky-surface:#2f6b3a;--ky-surface-alt:#2b6336;--ky-apron:#1b1f1c;--ky-boards:#1c2b20}
@@ -81,4 +81,13 @@ export const KYOGIJO_STYLE = `
 .kyogijo .ky-badge-right .ky-score{fill:var(--ky-right-ink)}
 .kyogijo .ky-badge-left .ky-name{fill:var(--ky-left-ink)}
 .kyogijo .ky-badge-right .ky-name{fill:var(--ky-right-ink)}
+.kyogijo .ky-pts>*{fill:var(--c,var(--ky-layer));stroke:var(--ky-layer-edge);stroke-width:calc(var(--w,.3)*1px);stroke-linejoin:round}
+.kyogijo .ky-pts>.ky-hol{fill:var(--ky-layer-hollow);stroke:var(--c,var(--ky-layer));stroke-width:calc(var(--w,.3)*2.2px)}
+.kyogijo .ky-h{--c:var(--ky-layer-home)}
+.kyogijo .ky-a{--c:var(--ky-layer-away)}
+.kyogijo .ky-ln{fill:none;stroke:var(--c,var(--ky-layer));stroke-linecap:round;stroke-linejoin:round}
+.kyogijo .ky-ah{fill:var(--c,var(--ky-layer));stroke:none}
+.kyogijo .ky-cm{stroke:none}
+.kyogijo .ky-lt{fill:var(--c,var(--ky-layer-ink));stroke:var(--ky-layer-halo);stroke-width:.18em;paint-order:stroke;stroke-linejoin:round;font-family:var(--ky-font);font-weight:700;font-variant-numeric:tabular-nums}
+.kyogijo .ky-lt.ky-nh{stroke:none}
 `.trim();

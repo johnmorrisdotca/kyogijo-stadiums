@@ -183,6 +183,12 @@ const page = `<!doctype html>
         </div>
       </section>
 
+      <section class="more" id="data" aria-labelledby="data-title">
+        <h2 id="data-title" data-say="dataTitle"></h2>
+        <p data-say="dataText"></p>
+        <div class="cards" id="data-cards" data-testid="data-cards"></div>
+      </section>
+
       <section class="more" id="live" aria-labelledby="live-title">
         <h2 id="live-title" data-say="liveTitle"></h2>
         <p data-say="liveText"></p>

@@ -31,6 +31,44 @@ export interface KyogijoWords {
     colon: string;
     gap: string;
   };
+  /** The words of a data layer's summary and of the table that stands for it. */
+  layers: {
+    pointOne: string;
+    pointMany: string;
+    lineOne: string;
+    lineMany: string;
+    arrowOne: string;
+    arrowMany: string;
+    textOne: string;
+    textMany: string;
+    /** A layer's title: {n} marks and what they are, {noun}. */
+    count: string;
+    /** One entry of a count by outcome or by team: {name} and {n}. */
+    item: string;
+    /** What joins the entries. */
+    listSep: string;
+    outcomes: string;
+    teams: string;
+    values: string;
+    skipped: string;
+    /** The lead of the layers' summary in the drawing's description. */
+    data: string;
+    tableNo: string;
+    tableX: string;
+    tableY: string;
+    tableToX: string;
+    tableToY: string;
+    tablePath: string;
+    tableValue: string;
+    tableTeam: string;
+    tableOutcome: string;
+    tableNote: string;
+    tableText: string;
+    /** The caption's note on the coordinates: {frame} and {unit}. */
+    tableFrame: string;
+    /** The caption's note when rows are left out: {shown} and {total}. */
+    tableMore: string;
+  };
 }
 
 /** The words of the package, by language. */
@@ -50,6 +88,12 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
     soccer: { futsal: "Futsal court", aboutFutsal: "a futsal court, {length} by {width} metres, with the halfway line, the centre circle, both penalty areas, the penalty marks and the goals", half: "Half of it is shown." },
     scoreTitle: "{away} {awayScore}, {home} {homeScore}",
     said: { home: "home", away: "away", won: "{name} won.", tied: "The game is level.", park: "The outfield fence follows the figures published for {park}.", wonPens: "{name} won {a}-{b} on penalties.", pens: "{a}-{b} pens", on: "Drawn as", sep: ", ", stop: ".", colon: ": ", gap: " " },
+    layers: {
+      pointOne: "point", pointMany: "points", lineOne: "line", lineMany: "lines", arrowOne: "arrow", arrowMany: "arrows", textOne: "label", textMany: "labels",
+      count: "{n} {noun}", item: "{name} {n}", listSep: ", ", outcomes: "By outcome: {list}.", teams: "By team: {list}.", values: "Values from {min} to {max}.", skipped: "{n} left out for want of a place.", data: "Data",
+      tableNo: "No.", tableX: "x", tableY: "y", tableToX: "to x", tableToY: "to y", tablePath: "Path", tableValue: "Value", tableTeam: "Team", tableOutcome: "Outcome", tableNote: "Note", tableText: "Text",
+      tableFrame: "Coordinates in {frame}, in {unit}.", tableMore: "The first {shown} of {total} rows.",
+    },
   },
   ja: {
     surface: { nfl: "NFLのフィールド", cfl: "CFLのフィールド", ifaf: "IFAFのフィールド", nhl: "NHLのアイスホッケーリンク", nba: "NBAのバスケットボールコート", mlb: "野球場", soccer: "サッカーのピッチ" },
@@ -66,6 +110,12 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
     soccer: { futsal: "フットサルのコート", aboutFutsal: "フットサルのコート。{length}m×{width}mで、ハーフウェーライン、センターサークル、両側のペナルティエリア、ペナルティマーク、ゴールがあります", half: "半面のみ表示しています。" },
     scoreTitle: "{away} {awayScore}、{home} {homeScore}",
     said: { home: "ホーム", away: "アウェイ", won: "{name}の勝ちです。", tied: "同点です。", park: "外野フェンスは、{park}の公表されている距離をもとに描かれています。", wonPens: "{name}がPK戦を{a}-{b}で制しました。", pens: "PK戦 {a}-{b}", on: "図の内容", sep: "、", stop: "。", colon: "：", gap: "" },
+    layers: {
+      pointOne: "データ点", pointMany: "データ点", lineOne: "線", lineMany: "線", arrowOne: "矢印", arrowMany: "矢印", textOne: "ラベル", textMany: "ラベル",
+      count: "{noun} {n}件", item: "{name} {n}件", listSep: "、", outcomes: "結果別：{list}。", teams: "チーム別：{list}。", values: "値の範囲：{min}～{max}。", skipped: "位置が不明なため{n}件は描かれていません。", data: "データ",
+      tableNo: "番号", tableX: "x", tableY: "y", tableToX: "終点のx", tableToY: "終点のy", tablePath: "経路", tableValue: "値", tableTeam: "チーム", tableOutcome: "結果", tableNote: "備考", tableText: "ラベル",
+      tableFrame: "座標系：{frame}、単位：{unit}。", tableMore: "全{total}行のうち先頭の{shown}行を表示しています。",
+    },
   },
 };
 

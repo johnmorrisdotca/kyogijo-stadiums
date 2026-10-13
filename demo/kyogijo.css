@@ -86,3 +86,10 @@ kyogijo-field::part(plate) { filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .25)); 
 .conv-result { margin: 8px 0 0; font-weight: 700; }
 .conv-result output { font-family: var(--mono); }
 .provider figcaption strong { font-weight: 700; }
+
+.data-table { margin-top: 8px; font-size: 0.85rem; }
+.data-table summary { cursor: pointer; padding: 6px 0; }
+.data-table-body { max-height: 260px; overflow: auto; }
+.data-table-body table { border-collapse: collapse; width: 100%; margin-bottom: 12px; }
+.data-table-body caption { text-align: left; font-weight: 600; padding: 4px 0; }
+.data-table-body th, .data-table-body td { border-bottom: 1px solid color-mix(in srgb, currentColor 18%, transparent); padding: 3px 8px; text-align: left; }

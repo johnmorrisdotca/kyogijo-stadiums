@@ -46,6 +46,35 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `said.stop` | . | 。 |
 | `said.colon` | :  | ： |
 | `said.gap` |   |  |
+| `layers.pointOne` | point | データ点 |
+| `layers.pointMany` | points | データ点 |
+| `layers.lineOne` | line | 線 |
+| `layers.lineMany` | lines | 線 |
+| `layers.arrowOne` | arrow | 矢印 |
+| `layers.arrowMany` | arrows | 矢印 |
+| `layers.textOne` | label | ラベル |
+| `layers.textMany` | labels | ラベル |
+| `layers.count` | {n} {noun} | {noun} {n}件 |
+| `layers.item` | {name} {n} | {name} {n}件 |
+| `layers.listSep` | ,  | 、 |
+| `layers.outcomes` | By outcome: {list}. | 結果別：{list}。 |
+| `layers.teams` | By team: {list}. | チーム別：{list}。 |
+| `layers.values` | Values from {min} to {max}. | 値の範囲：{min}～{max}。 |
+| `layers.skipped` | {n} left out for want of a place. | 位置が不明なため{n}件は描かれていません。 |
+| `layers.data` | Data | データ |
+| `layers.tableNo` | No. | 番号 |
+| `layers.tableX` | x | x |
+| `layers.tableY` | y | y |
+| `layers.tableToX` | to x | 終点のx |
+| `layers.tableToY` | to y | 終点のy |
+| `layers.tablePath` | Path | 経路 |
+| `layers.tableValue` | Value | 値 |
+| `layers.tableTeam` | Team | チーム |
+| `layers.tableOutcome` | Outcome | 結果 |
+| `layers.tableNote` | Note | 備考 |
+| `layers.tableText` | Text | ラベル |
+| `layers.tableFrame` | Coordinates in {frame}, in {unit}. | 座標系：{frame}、単位：{unit}。 |
+| `layers.tableMore` | The first {shown} of {total} rows. | 全{total}行のうち先頭の{shown}行を表示しています。 |
 
 ## The demo's words (`WORDS`)
 
@@ -191,6 +220,12 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `compactText` | The surface with the score under it, for a card. | 競技場の下に得点の帯を付けた、カード向けの形です。 |
 | `courtTitle` | Court looks | コートの見た目 |
 | `courtText` | The paint, the border, the wood and the words on the baselines are options. These use plain colours and no one's marks. | ペイント、縁取り、床の木目、ベースラインの文字は設定できます。ここでは単色だけを使い、実在するチームのマークは使っていません。 |
+| `dataTitle` | Data on the surface | 競技場の上のデータ |
+| `dataText` | Shots, passes and balls in play over the surface they happened on: sized by chance, coloured by team, hollow for a miss, dashed for a pass not caught. The data is made up from a fixed seed; no real game, player or team is in it. | シュート、パス、打球の落下点などを、起きた位置に合わせて競技場の上に描きます。大きさは得点の見込み、色はチーム、白抜きは外れたシュート、破線は通らなかったパスを表します。データは固定のシード値から作った架空のもので、実際の試合、選手、チームは含まれていません。 |
+| `data_shots` | A shot map on the rink | リンク上のシュートマップ |
+| `data_passes` | A pass map on the field | フィールド上のパスマップ |
+| `data_spray` | A spray chart on a ballpark | 球場上の打球方向図 |
+| `dataTable` | Show the data as a table | データを表で見る |
 | `parksTitle` | Ballparks | 球場 |
 | `parksText` | Thirty current MLB parks and forty-four past ones, and the NPB's twelve home parks and eight other grounds, each fence drawn from the distances its article publishes. Press one to try it. | 現在のMLB30球場と過去の44球場、NPBの本拠地12球場とその他8球場。外野フェンスは、各球場の記事で公表されている距離をもとに描いています。球場を選ぶと試せます。 |
 | `parksShow` | Show the parks | 球場を表示する |

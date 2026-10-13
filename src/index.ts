@@ -1,6 +1,9 @@
 // Kyogijo 競技場: sports surfaces as SVG, drawn to scale, with the teams and the score on them.
 export { COLOR_PROPERTIES, SPORTS, describe, drawBadge, drawKyogijo, drawScore, drawSurface, isPortrait, statusLabel, statusText, winnerOf } from "./draw.ts";
 export { inkOn, luminance, rgbOf, safeColour, safeLogo } from "./colour.ts";
+export { OUTCOMES, drawLayers, layerTable } from "./layers.ts";
+export { rampColour } from "./layers.marks.ts";
+export type { ArrowsLayer, Comet, Layer, LayerBase, LayerKind, LayerTeam, LineDatum, LineStyle, LinesLayer, MarkDatum, MarkShape, OutcomeStyle, Paint, PointDatum, PointStyle, PointsLayer, Scale, TableOptions, TextDatum, TextLayer, TextStyle } from "./layers.types.ts";
 export { KYOGIJO_STRINGS } from "./strings.ts";
 export type { KyogijoWords } from "./strings.ts";
 export { KYOGIJO_STYLE } from "./style.ts";

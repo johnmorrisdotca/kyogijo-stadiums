@@ -42,7 +42,8 @@
   "license": "MIT",
   "type": "module",
   "sideEffects": [
-    "./dist/element-define.js"
+    "./dist/element-define.js",
+    "./dist/frames.providers.js"
   ],
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -77,6 +78,11 @@
       "types": "./dist/element-entry.d.ts",
       "import": "./dist/element-entry.js",
       "default": "./dist/element-entry.js"
+    },
+    "./layers": {
+      "types": "./dist/layers-entry.d.ts",
+      "import": "./dist/layers-entry.js",
+      "default": "./dist/layers-entry.js"
     },
     "./frames": {
       "types": "./dist/frames-entry.d.ts",

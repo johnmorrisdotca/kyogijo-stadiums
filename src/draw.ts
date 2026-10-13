@@ -1,11 +1,13 @@
 import { inkOn, safeColour, safeLogo } from "./colour.ts";
-import { el, esc, hash, num } from "./format.ts";
+import { drawingId, feetFence, isPortrait, lengthUnit, safeClass } from "./common.ts";
+import { el, esc, num } from "./format.ts";
 import { FOOTBALL } from "./geometry.ts";
+import { renderLayers } from "./layers.ts";
 import { fenceFor, parkById } from "./parks.ts";
 import { badgeMarkup, bannerMarkup, plateMarkup, stateOf, type TeamView } from "./score.ts";
 import { KYOGIJO_STRINGS, fill } from "./strings.ts";
 import { KYOGIJO_STYLE } from "./style.ts";
-import { convertLength, isUnit, type Unit } from "./units.ts";
+import { convertLength, type Unit } from "./units.ts";
 import { baseball } from "./surfaces/baseball.ts";
 import { basketball } from "./surfaces/basketball.ts";
 import { football } from "./surfaces/football.ts";
@@ -17,6 +19,8 @@ import type { BuildOptions, Surface } from "./surfaces/surface.ts";
 import { abbreviate, capitals } from "./text.ts";
 import type { Colors, CourtStyle, GoalStyle, Language, ScoreOptions, Side, Sport, StripePattern, SurfaceOptions, Team } from "./types.ts";
 import { VERSION } from "./version.ts";
+
+export { isPortrait };
 
 /** The sports that can be drawn, in the order a menu lists them. */
 export const SPORTS: readonly Sport[] = ["nfl", "cfl", "ifaf", "nhl", "nba", "mlb", "soccer"];
@@ -37,6 +41,13 @@ export const COLOR_PROPERTIES: Readonly<Record<keyof Colors, string>> = {
   halo: "--ky-halo",
   plate: "--ky-plate",
   plateInk: "--ky-plate-ink",
+  layer: "--ky-layer",
+  layerHome: "--ky-layer-home",
+  layerAway: "--ky-layer-away",
+  layerEdge: "--ky-layer-edge",
+  layerHollow: "--ky-layer-hollow",
+  layerInk: "--ky-layer-ink",
+  layerHalo: "--ky-layer-halo",
 };
 
 const COURT_PROPERTIES: Readonly<Record<string, string>> = {
@@ -112,24 +123,10 @@ export function statusText(o: Pick<ScoreOptions, "home" | "away" | "status" | "h
   return base === undefined ? text : `${base} · ${text}`;
 }
 
-const safeClass = (text: string | undefined): string => (text ?? "").replace(/[^\w -]/g, "").trim();
 const safeLength = (value: number | string | undefined): string | undefined => {
   if (typeof value === "number") return Number.isFinite(value) && value > 0 ? num(value) : undefined;
   return typeof value === "string" && /^\d+(?:\.\d+)?(?:px|%|em|rem|vw|vh)?$/.test(value.trim()) ? value.trim() : undefined;
 };
-
-/** The unit the options' lengths are in: `units`, or feet when it is missing. A unit that is not one is an error, not feet. */
-function lengthUnit(o: SurfaceOptions): Unit {
-  if (o.units === undefined) return "ft";
-  if (!isUnit(o.units)) throw new Error(`Unknown units "${String(o.units)}": use one of ft, in, yd, m, cm, mm`);
-  return o.units;
-}
-
-/** The fence the options give, with each distance in feet. */
-function feetFence(fence: SurfaceOptions["fence"], unit: Unit): SurfaceOptions["fence"] {
-  if (fence === undefined || unit === "ft") return fence;
-  return Object.fromEntries(Object.entries(fence).map(([key, value]) => [key, typeof value === "number" ? convertLength(value, unit, "ft") : value]));
-}
 
 const PATTERNS: readonly StripePattern[] = ["bands", "wide", "narrow", "lengthwise", "checks", "diagonal", "none"];
 const GOALS: readonly GoalStyle[] = ["box", "line", "strip", "none"];
@@ -187,7 +184,7 @@ function buildSurface(o: SurfaceOptions, portrait: boolean, id: string, score: b
 }
 
 /** The custom properties a drawing sets on its root, from the options' colours. */
-function colourStyle(o: SurfaceOptions, teams: { left?: Team; right?: Team }): string {
+function colourStyle(o: SurfaceOptions, teams: { left?: Team; right?: Team; home?: Team; away?: Team }): string {
   const props: string[] = [];
   const set = (name: string, value: unknown): void => {
     const colour = safeColour(value);
@@ -195,6 +192,11 @@ function colourStyle(o: SurfaceOptions, teams: { left?: Team; right?: Team }): s
   };
   for (const [key, property] of Object.entries(COLOR_PROPERTIES)) set(property, o.colors?.[key as keyof Colors]);
   if (o.court !== undefined) for (const [key, property] of Object.entries(COURT_PROPERTIES)) set(property, (o.court as Record<string, unknown>)[key]);
+  // A data layer's team marks take the teams' own colours, unless the colours say otherwise.
+  const homeMarks = o.layers === undefined || o.layers.length === 0 ? undefined : safeColour(teams.home?.color);
+  const awayMarks = o.layers === undefined || o.layers.length === 0 ? undefined : safeColour(teams.away?.color);
+  if (homeMarks !== undefined && safeColour(o.colors?.layerHome) === undefined) props.push(`--ky-layer-home:${homeMarks}`);
+  if (awayMarks !== undefined && safeColour(o.colors?.layerAway) === undefined) props.push(`--ky-layer-away:${awayMarks}`);
   const left = safeColour(teams.left?.color) ?? safeColour(o.leftColor);
   const right = safeColour(teams.right?.color) ?? safeColour(o.rightColor);
   if (left !== undefined) props.push(`--ky-left:${left}`);
@@ -256,12 +258,6 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
   };
 }
 
-/** True when a drawing with these options lies in portrait. */
-export function isPortrait(o: Pick<SurfaceOptions, "orientation" | "aspect">): boolean {
-  if (o.orientation === "portrait") return true;
-  return o.orientation === "auto" && typeof o.aspect === "number" && Number.isFinite(o.aspect) && o.aspect > 0 && o.aspect < 1;
-}
-
 /**
  * Draw a surface, or a score on a surface, as an SVG string. With `home` and `away` it is a score; without them, the
  * bare surface. The same options always give the same string.
@@ -282,7 +278,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
   const language: Language = o.language === "ja" ? "ja" : "en";
   const portrait = isPortrait(o);
   const sized = isScore(o) ? (o.size === "compact" || o.size === "badge" ? o.size : "full") : "full";
-  const id = safeClass(o.id).replace(/ /g, "-") || `ky-${hash(JSON.stringify([o, VERSION]))}`;
+  const id = drawingId(o);
   const parts = o.parts === true;
   const homeSide: Side = isScore(o) && o.homeSide === "left" ? "left" : "right";
   const awaySide: Side = homeSide === "left" ? "right" : "left";
@@ -304,10 +300,11 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
     leftTeam = homeSide === "left" ? o.home : o.away;
     rightTeam = homeSide === "left" ? o.away : o.home;
   }
-  const { title, description } = describe(o);
+  const { title, description: said } = describe(o);
+  let description = said;
   const titleId = `${id}-t`;
   const descId = `${id}-d`;
-  const style = colourStyle(o, { left: leftTeam, right: rightTeam });
+  const style = colourStyle(o, { left: leftTeam, right: rightTeam, home: isScore(o) ? o.home : undefined, away: isScore(o) ? o.away : undefined });
   const theme = o.theme === "light" || o.theme === "dark" ? o.theme : undefined;
 
   let viewBox: string;
@@ -329,6 +326,13 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
     }
     // The teams are painted under the lines, unless the surface asks for them over (a panel that must hide them).
     inner += surface.bannersOver === true ? surface.lines + teams : teams + surface.lines;
+    // Data goes over the markings and under the score's panel.
+    const layered = renderLayers(o, o.layers, surface.turned);
+    inner += layered.svg;
+    if (layered.summaries.length > 0 && o.description === undefined) {
+      const { colon, gap } = KYOGIJO_STRINGS[language].said;
+      description = `${said}${gap}${KYOGIJO_STRINGS[language].layers.data}${colon}${layered.summaries.join(gap)}`;
+    }
     if (isScore(o) && left !== undefined && right !== undefined && sized === "full") {
       const foot = o.label !== undefined && o.label !== "" ? o.label : [status, o.date].filter((part): part is string => part !== undefined && part !== "").join(" · ");
       inner += plateMarkup(surface.plate, left, right, { competition: o.competition, foot: foot === "" ? undefined : foot }, { turned: surface.turned, parts, surfaceSport: o.sport });

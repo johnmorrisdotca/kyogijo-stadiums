@@ -45,7 +45,7 @@ describe("the drawings' structure", () => {
 
 describe("the size of a drawing", () => {
   it("is within the budget, with the stylesheet in it", () => {
-    const budget: Record<string, number> = { nfl: 21_000, cfl: 20_000, ifaf: 21_000, nhl: 13_000, nba: 13_000, mlb: 16_000, soccer: 14_000 };
+    const budget: Record<string, number> = { nfl: 22_000, cfl: 21_000, ifaf: 22_000, nhl: 14_000, nba: 14_000, mlb: 17_000, soccer: 15_000 };
     for (const sport of SPORTS) expect(drawKyogijo({ sport, ...game }).length, sport).toBeLessThan(budget[sport]);
   });
 });
@@ -71,7 +71,7 @@ describe("the soccer pitches' structure", () => {
     expect(drawKyogijo({ sport: "soccer", id: "snap", style: "none", margin: 0, exactLines: true })).toMatchSnapshot();
   });
   it("is within its size budget, bare, in each pitch and with its frame", () => {
-    for (const pitch of pitches) expect(drawKyogijo({ sport: "soccer", pitch }).length, pitch).toBeLessThan(12_000);
-    expect(drawKyogijo({ sport: "soccer", pitchType: "opta", stripePattern: "checks" }).length).toBeLessThan(14_000);
+    for (const pitch of pitches) expect(drawKyogijo({ sport: "soccer", pitch }).length, pitch).toBeLessThan(13_500);
+    expect(drawKyogijo({ sport: "soccer", pitchType: "opta", stripePattern: "checks" }).length).toBeLessThan(15_500);
   });
 });
