@@ -29,6 +29,11 @@
     "shot-chart",
     "spray-chart",
     "visualization",
+    "png",
+    "geojson",
+    "observable-plot",
+    "d3",
+    "canvas",
     "custom-element",
     "web-component",
     "accessible",
@@ -129,6 +134,36 @@
       "import": "./dist/replay-entry.js",
       "default": "./dist/replay-entry.js"
     },
+    "./scene": {
+      "types": "./dist/scene-entry.d.ts",
+      "import": "./dist/scene-entry.js",
+      "default": "./dist/scene-entry.js"
+    },
+    "./canvas": {
+      "types": "./dist/canvas-entry.d.ts",
+      "import": "./dist/canvas-entry.js",
+      "default": "./dist/canvas-entry.js"
+    },
+    "./d3": {
+      "types": "./dist/d3-entry.d.ts",
+      "import": "./dist/d3-entry.js",
+      "default": "./dist/d3-entry.js"
+    },
+    "./plot": {
+      "types": "./dist/plot-entry.d.ts",
+      "import": "./dist/plot-entry.js",
+      "default": "./dist/plot-entry.js"
+    },
+    "./geojson": {
+      "types": "./dist/geojson-entry.d.ts",
+      "import": "./dist/geojson-entry.js",
+      "default": "./dist/geojson-entry.js"
+    },
+    "./png": {
+      "types": "./dist/png-entry.d.ts",
+      "import": "./dist/png-entry.js",
+      "default": "./dist/png-entry.js"
+    },
     "./element/define": {
       "types": "./dist/element-define.d.ts",
       "import": "./dist/element-define.js",
@@ -144,6 +179,14 @@
   ],
   "engines": {
     "node": ">=22"
+  },
+  "peerDependencies": {
+    "@resvg/resvg-js": ">=2.6.0"
+  },
+  "peerDependenciesMeta": {
+    "@resvg/resvg-js": {
+      "optional": true
+    }
   },
   "scripts": {
     "build": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.json",

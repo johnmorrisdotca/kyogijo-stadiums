@@ -745,6 +745,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `charts` | Ready-made charts | すぐ使えるチャート |
 | page `team-shape` | Team shape | チームの形 |
 | page `replay` | Replay | リプレイ |
+| page `renderers` | Renderers | レンダラー |
 | group `gallery` | Gallery | ギャラリー |
 | page `gallery` | Gallery | ギャラリーの案内 |
 | page `gallery-surfaces` | Gallery: surfaces and scores | ギャラリー：競技場と得点 |

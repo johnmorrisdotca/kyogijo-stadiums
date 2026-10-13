@@ -71,6 +71,7 @@ console.log("ok   npm install of the tarball");
 
 // What the built package in this checkout makes: the installed one must make the same.
 const local = await import(new URL("../dist/index.js", import.meta.url).href);
+const localScene = await import(new URL("../dist/scene-entry.js", import.meta.url).href);
 const game = { sport: "nhl", away: { name: "Harbour City Gulls", abbr: "HCG", score: 3, color: "#1f5fa8" }, home: { name: "Prairie Ridge Bison", abbr: "PRB", score: 2, color: "#b5452c" }, status: "final-ot", id: "pack" };
 const expected = local.drawKyogijo(game);
 const expectedPortrait = local.drawKyogijo({ ...game, sport: "mlb", park: "fenway-park", orientation: "portrait" });
@@ -98,6 +99,26 @@ if (NHL.length !== 200 || fenceAt([[-45, 300], [45, 300]], 0) !== 300) throw new
 const { kyogijoProps } = m4;
 if (!kyogijoProps(game).dangerouslySetInnerHTML.__html.startsWith("<svg")) throw new Error("the React helper draws nothing");
 if (typeof m5.KyogijoField !== "function" || typeof m5.defineKyogijoField !== "function") throw new Error("the element's entry is wrong");
+const entry = (name) => all[names.indexOf(${JSON.stringify(pkg.name + "/")} + name)];
+const { sceneOf, sceneToSvg, parseSvg, writeSvg } = entry("scene");
+const scene = sceneOf(game);
+if (scene.items.length !== ${localScene.sceneOf(game).items.length} || scene.theme !== "light") throw new Error("the scene is wrong");
+if (writeSvg(parseSvg(drawKyogijo(game))) !== drawKyogijo(game)) throw new Error("the SVG tree does not give the drawing back");
+if (sceneToSvg(game).includes("var(")) throw new Error("the flat SVG has a variable in it");
+const calls = [];
+const ctx = new Proxy({}, { get: (_, name) => (...args) => void calls.push(name), set: () => true });
+const drawn = entry("canvas").drawToCanvas(ctx, game, { width: 400 });
+if (drawn.width !== 400 || !calls.includes("fillText") || !calls.includes("fill")) throw new Error("the canvas draws nothing");
+const sel = { append: (tag) => (calls.push("append " + tag), sel), attr: () => sel, text: () => sel };
+const domain = entry("d3").surfaceDomain(game);
+entry("d3").appendSurface(sel, game, (v) => v * 2, (v) => v * 2);
+if (domain.x.length !== 2 || !calls.includes("append g")) throw new Error("the d3 entry is wrong");
+if (typeof entry("plot").surfaceMark(game) !== "function" || entry("plot").surfaceScales(game).aspectRatio !== 1) throw new Error("the Plot entry is wrong");
+const collection = entry("geojson").sceneToGeoJSON(game);
+if (collection.type !== "FeatureCollection" || collection.features.length !== scene.items.length) throw new Error("the GeoJSON is wrong");
+// The PNG needs the optional peer, which is not installed here: the error must say so, and importing the entry must not have needed it.
+const png = await entry("png").toPNG(game).then(() => "drawn", (error) => String(error.message));
+if (png !== "drawn" && !png.includes("@resvg/resvg-js")) throw new Error("toPNG says: " + png);
 console.log(names.join(" "));
 `,
 );

@@ -82,6 +82,7 @@ console.log(svg.startsWith("<svg"), svg.includes("Northern Owls 3, Lakeshore Anc
 - **Wide, tall or fit the box.** Every surface lies wide or tall: tall turns it a quarter, keeps every word upright and puts the teams top and bottom. With `orientation: "auto"` the browser helpers follow the box.
 - **Data on the surface.** Points, lines, arrows, text, heat maps, hexagons, zone charts and density contours over any surface, in its feet or a data provider's frame, cut to its outline, with a table for each layer; ready-made shot and pass charts. [Data layers](./docs/layers.md), [charts](./docs/charts.md).
 - **Replay.** Tracking data played on any surface: the players with their numbers, the ball and its trail, and the passes, shots and goals as they happen, with controls, the keyboard and a live region, steps for a reader who prefers reduced motion, and a pause when the page is hidden. [Replay](./docs/replay.md).
+- **Renderers.** The same drawing as plain data (a scene), on a canvas (a browser's or a Node canvas), in a d3 selection, as a mark of an Observable Plot, as GeoJSON and as a PNG in Node, each an entry of its own that imports nothing from outside the package. [Renderers](./docs/renderers.md).
 - **Units and frames.** Each surface in its rulebook's unit and any other, and 22 coordinate frames (ten soccer providers, the NHL API, HockeyTech, NBA stats, NFL tracking, MLBAM, Retrosheet, a curling stone's place from the button, a place from the net in each net sport) to move a provider's points onto a surface. [Units](./docs/units.md), [coordinate frames](./docs/frames.md).
 - **A compact badge and a compact card.** One strip for a list, or the surface with that strip under it.
 - **Light and dark**, by the device or the page, and every colour a custom property; seven named looks, colours by feature, line widths and dashes, goal styles and mowing patterns, and arrows, axes and labels for teaching. [Theming](./docs/theming.md), [annotations](./docs/annotations.md).
@@ -100,6 +101,7 @@ console.log(svg.startsWith("<svg"), svg.includes("Northern Owls 3, Lakeshore Anc
 | `GROUNDS`, `groundById` | The 64 soccer grounds, each pitch at its own size. |
 | `./geometry`, `./frames`, `./layers`, `./charts`, `./replay` | The dimensions in any unit; the providers' frames; data layers; ready-made charts; tracking data played on a surface. |
 | `./parks`, `./grounds`, `./atlas`, `./eras`, `./leagues` | The ballparks, the grounds, every place, the markings of a season, each league's rulebook. |
+| `./scene`, `./canvas`, `./d3`, `./plot`, `./geojson`, `./png` | The drawing as data; on a canvas; in a d3 selection; as an Observable Plot mark; as GeoJSON; as a PNG (the optional peer `@resvg/resvg-js`). |
 | `./mount`, `./react`, `./element`, `./element/define` | Draw into a container; React props; the `<kyogijo-field>` element and its registration. |
 
 The full list of entry points is in [entry points](./docs/entry-points.md); every export is in the [API reference](https://johnmorrisdotca.github.io/kyogijo/api.html).

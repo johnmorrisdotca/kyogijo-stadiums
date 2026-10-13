@@ -54,6 +54,24 @@ src/
 ├── replay.dom.ts       the replay's controls, keyboard, live region and the painter that moves only the marks that move
 ├── replay.types.ts     the replay's types
 ├── replay-entry.ts     the replay's entry
+├── scene.ts            sceneOf and sceneFromSvg: the drawing as plain data, read from the markup that writes the SVG
+├── scene.types.ts      the scene's types: items, styles, clips, gradients and patterns
+├── scene.xml.ts        a reader and writer of the package's SVG that gives the same text back, byte for byte
+├── scene.css.ts        the part of CSS the stylesheet uses: selectors, light and dark, var(), calc() and the cascade
+├── scene.path.ts       path data as absolute segments (arcs as curves), transforms, and a shape flattened to points
+├── scene.flat.ts       a scene as elements that need no stylesheet, and sceneToSvg
+├── scene.fit.ts        what d3 and Plot need to put a scene where their scales say
+├── scene-entry.ts      the scene's entry
+├── canvas.ts           a scene drawn onto a canvas context, with the context typed by what is called
+├── canvas-entry.ts     the canvas' entry
+├── d3.ts               a scene appended to a d3 selection, in the caller's scales
+├── d3-entry.ts         the d3 entry
+├── plot.ts             a scene as a mark for Observable Plot, and the scales that fit it
+├── plot-entry.ts       the Plot entry
+├── geojson.ts          a scene as a GeoJSON FeatureCollection, in feet or a provider's frame
+├── geojson-entry.ts    the GeoJSON entry
+├── png.ts              a scene as PNG bytes in Node, through the optional peer resvg
+├── png-entry.ts        the PNG entry
 ├── outline.ts          a surface's outline: where a layer is cut
 ├── common.ts           the drawing's id, the orientation and the unit, shared by the drawing and its layers
 ├── geometry.ts         every dimension, in feet, with the fence's curve
