@@ -1,0 +1,351 @@
+// The gallery of the docs site: every surface, league variant, season, park and ground sample, layer kind, heat kind and chart the package
+// draws, each drawn by the build from the code shown beside it, so that a picture cannot part from its code. A gallery item is a title and a
+// snippet of code that ends by setting `svg`; the build runs the snippet (`runSnippet`) against the built package and puts what it made on the
+// page. A test runs every snippet against the source and checks that what the page shows is what the snippet draws.
+//
+//   const pages = galleryPages(lib);   // lib: { "@johnmorrisdotca/kyogijo": module, "@johnmorrisdotca/kyogijo/charts": module, ... }
+import { escapeHtml, slugOf } from "./docs-pages.mjs";
+
+const MAIN = "@johnmorrisdotca/kyogijo";
+
+/** A value as the JavaScript that makes it: unquoted keys, short things on one line, the rest broken one to a line. */
+export function literal(value, indent = 0) {
+  const pad = " ".repeat(indent);
+  const compact = (v) => {
+    if (v === null || typeof v !== "object") return JSON.stringify(v);
+    if (Array.isArray(v)) return `[${v.map(compact).join(", ")}]`;
+    return `{ ${Object.entries(v).map(([k, x]) => `${/^[A-Za-z_$][\w$]*$/.test(k) ? k : JSON.stringify(k)}: ${compact(x)}`).join(", ")} }`;
+  };
+  const one = compact(value);
+  if (value === null || typeof value !== "object" || pad.length + one.length <= 96) return one;
+  const inner = " ".repeat(indent + 2);
+  if (Array.isArray(value)) return `[\n${value.map((v) => `${inner}${literal(v, indent + 2)},`).join("\n")}\n${pad}]`;
+  return `{\n${Object.entries(value).map(([k, x]) => `${inner}${/^[A-Za-z_$][\w$]*$/.test(k) ? k : JSON.stringify(k)}: ${literal(x, indent + 2)},`).join("\n")}\n${pad}}`;
+}
+
+/** A snippet that draws `options` with `drawKyogijo`. */
+export const drawing = (options, fn = "drawKyogijo") => `import { ${fn} } from "${MAIN}";\n\nconst svg = ${fn}(${literal(options)});`;
+
+/**
+ * Run a gallery snippet: its `import { a, b } from "name"` lines are taken from `lib`, and the value of its `svg` is returned. The snippets are
+ * plain JavaScript that TypeScript also reads, so that a reader may paste one into either.
+ */
+export function runSnippet(code, lib) {
+  const names = [];
+  const body = code.replace(/^import\s*\{([^}]*)\}\s*from\s*"([^"]+)";?\s*$/gm, (whole, list, from) => {
+    if (!(from in lib)) throw new Error(`the snippet imports "${from}", which the gallery was not given`);
+    names.push(`const {${list}} = __lib[${JSON.stringify(from)}];`);
+    return "";
+  });
+  const run = new Function("__lib", `${names.join("\n")}\n${body}\nreturn svg;`);
+  const svg = run(lib);
+  if (typeof svg !== "string" || !svg.startsWith("<svg")) throw new Error("the snippet did not set `svg` to an SVG string");
+  return svg;
+}
+
+// ---- The teams of the made-up games, the same on every page. ----
+const OWLS = { name: "Northern Owls", abbr: "NOW", score: 3, color: "#3a2d6b" };
+const ANCHORS = { name: "Lakeshore Anchors", abbr: "LSA", score: 2, color: "#0f7a7a" };
+const GULLS = { name: "Harbour City Gulls", abbr: "HCG", score: 27, color: "#1d4f91" };
+const BISON = { name: "Prairie Ridge Bison", abbr: "PRB", score: 24, color: "#a8452c" };
+const PEAKS = { name: "Summit Peaks", abbr: "SMT", score: 108, color: "#14233f" };
+const BOLTS = { name: "Metro Bolts", abbr: "MTB", score: 112, color: "#c2410c" };
+const STARS = { name: "Valley Stars", abbr: "VAL", score: 4, color: "#c8102e" };
+const PINES = { name: "Coastal Pines", abbr: "CPN", score: 6, color: "#1f6b3c" };
+const SOCCER_AWAY = { name: "Northern Owls", abbr: "NOW", score: 2, penalties: 4, color: "#3a2d6b" };
+const SOCCER_HOME = { name: "Lakeshore Anchors", abbr: "LSA", score: 2, penalties: 2, color: "#0f7a7a" };
+
+const GAMES = {
+  nfl: { away: GULLS, home: BISON, status: "final", competition: "Championship Game" },
+  cfl: { away: GULLS, home: BISON, status: "final", competition: "Grey Cup" },
+  ifaf: { away: GULLS, home: BISON, status: "final", competition: "World Championship" },
+  nhl: { away: OWLS, home: ANCHORS, status: "final-ot", competition: "Cup Final, Game 7" },
+  nba: { away: PEAKS, home: BOLTS, status: "final", competition: "Finals, Game 6" },
+  soccer: { away: SOCCER_AWAY, home: SOCCER_HOME, status: "final-pens", competition: "Cup Final" },
+  mlb: { away: STARS, home: PINES, status: "Bottom 9th", competition: "Game 5", park: "fenway-park" },
+};
+const SPORT_TITLES = { nfl: "NFL field", cfl: "CFL field", ifaf: "IFAF field", nhl: "NHL rink", nba: "NBA court", soccer: "Soccer pitch", mlb: "Baseball field" };
+
+/** A repeatable list of points for the data snippets: no random numbers, so that the same code always draws the same marks. */
+const SPOTS = "Array.from({ length: 36 }, (_, i) => ({ x: 20 + ((i * 53) % 160), y: 8 + ((i * 29) % 70), team: i % 2 ? \"away\" : \"home\", outcome: i % 5 === 0 ? \"goal\" : \"shot\", value: 0.05 + (i % 7) / 20 }))";
+const CLUSTER = "Array.from({ length: 360 }, (_, i) => { const t = i * 2.399963; const r = 4 + 54 * Math.sqrt((i % 120) / 120); return { x: 189 - r * Math.abs(Math.cos(t)) * 1.1, y: 42.5 + r * Math.sin(t) * 0.7 }; })";
+
+const item = (id, title, code, note = "", extra = {}) => ({ id, title, code, note, ...extra });
+const section = (id, title, intro, items) => ({ id, title, intro, items });
+
+// ---- The pages. Each is a list of sections, and each section a list of items. ----
+
+function surfacesPage(lib) {
+  const sports = ["nfl", "cfl", "ifaf", "nhl", "nba", "soccer", "mlb"];
+  const themes = lib[MAIN].COURT_THEMES;
+  return {
+    slug: "gallery-surfaces",
+    title: "Gallery: surfaces and scores",
+    ja: "競技場とスコア",
+    intro: "The seven surfaces bare, with a game on each, wide and tall, as a strip and as a compact card, and the court's looks. Every picture is drawn by the build from the code under it.",
+    sections: [
+      section("bare", "Each surface, bare", "`drawKyogijo` with a `sport` and nothing else.", sports.map((sport) => item(`bare-${sport}`, SPORT_TITLES[sport], drawing({ sport })))),
+      section("scores", "A game on each surface", "The teams on their sides and the score in the middle.", sports.map((sport) => item(`score-${sport}`, `${SPORT_TITLES[sport]}, with a score`, drawing({ sport, ...GAMES[sport] })))),
+      section("tall", "Wide and tall", "`orientation: \"portrait\"` turns the surface a quarter and keeps every word upright.", [
+        item("tall-nhl", "NHL rink, tall", drawing({ sport: "nhl", ...GAMES.nhl, orientation: "portrait" })),
+        item("tall-nfl", "NFL field, tall", drawing({ sport: "nfl", ...GAMES.nfl, orientation: "portrait" })),
+        item("tall-nba", "NBA court, tall", drawing({ sport: "nba", ...GAMES.nba, orientation: "portrait" })),
+        item("tall-soccer", "Soccer pitch, tall", drawing({ sport: "soccer", ...GAMES.soccer, orientation: "portrait" })),
+        item("tall-mlb", "Baseball field, tall", drawing({ sport: "mlb", ...GAMES.mlb, orientation: "portrait" }), "A ballpark is already upright, so the teams go in strips above and below it."),
+      ]),
+      section("strips", "A strip for a list, and a compact card", "`size: \"badge\"` is the strip alone; `size: \"compact\"` is the surface with that strip under it.", [
+        item("badge-nhl", "Badge, hockey", drawing({ sport: "nhl", ...GAMES.nhl, size: "badge" })),
+        item("badge-nba", "Badge, basketball", drawing({ sport: "nba", ...GAMES.nba, size: "badge" })),
+        item("badge-nfl", "Badge, football", drawing({ sport: "nfl", ...GAMES.nfl, size: "badge" })),
+        item("badge-mlb", "Badge, baseball", drawing({ sport: "mlb", ...GAMES.mlb, size: "badge" })),
+        item("compact-nba", "Compact card, basketball", drawing({ sport: "nba", ...GAMES.nba, size: "compact" })),
+        item("compact-nhl", "Compact card, hockey", drawing({ sport: "nhl", ...GAMES.nhl, size: "compact" })),
+      ]),
+      section("courts", "The court's looks", "Five looks to start from, in `COURT_THEMES`; each colour of a look is an option too.", Object.keys(themes).map((name) => item(`court-${name}`, `Court: ${name}`, `import { COURT_THEMES, drawKyogijo } from "${MAIN}";\n\nconst svg = drawKyogijo({ sport: "nba", court: COURT_THEMES.${name}, away: ${literal(PEAKS)}, home: ${literal(BOLTS)}, status: "final" });`))),
+      section("looks", "Light, dark and detail", "`theme` picks the drawing's colours; `exactLines` draws the lines at their true widths; `detail: \"simple\"` leaves out the small markings.", [
+        item("theme-light", "Rink, light", drawing({ sport: "nhl", theme: "light" })),
+        item("theme-dark", "Rink, dark", drawing({ sport: "nhl", theme: "dark" })),
+        item("exact-nfl", "Field, lines at their true widths", drawing({ sport: "nfl", exactLines: true })),
+        item("simple-nfl", "Field, simple", drawing({ sport: "nfl", detail: "simple" })),
+      ]),
+    ],
+  };
+}
+
+function soccerPage(lib) {
+  const presets = Object.keys(lib[MAIN].SOCCER_PITCHES);
+  return {
+    slug: "gallery-soccer",
+    title: "Gallery: the soccer pitch",
+    ja: "サッカーのピッチ",
+    intro: "A pitch of every preset size, the five ways to mow the grass, the four goal styles, one half, and a shoot-out in the score.",
+    sections: [
+      section("presets", "Pitches by size", "`pitch` takes a preset or a size of your own; every size and its rule is in the sources.", presets.map((name) => item(`pitch-${name}`, `Pitch: ${name}`, drawing({ sport: "soccer", pitch: name })))),
+      section("patterns", "Mowing patterns", "`stripePattern`.", ["bands", "wide", "narrow", "lengthwise", "checks", "diagonal", "none"].map((name) => item(`pattern-${name}`, `Stripes: ${name}`, drawing({ sport: "soccer", stripePattern: name })))),
+      section("goals", "Goals", "`goals`, and `cornerFlags` for the flags.", ["box", "line", "strip", "none"].map((name) => item(`goals-${name}`, `Goals: ${name}`, drawing({ sport: "soccer", goals: name })))),
+      section("halves", "One half", "`half` draws one half of a bare pitch.", ["left", "right"].map((name) => item(`half-${name}`, `Half: ${name}`, drawing({ sport: "soccer", half: name })))),
+      section("pens", "A shoot-out", "A team's `penalties` are written with the status.", [item("shootout", "Final, on penalties", drawing({ sport: "soccer", ...GAMES.soccer }))]),
+    ],
+  };
+}
+
+function leaguesPage(lib) {
+  const leagues = lib[`${MAIN}/leagues`].LEAGUES;
+  const families = [
+    ["basketball", "Basketball courts", "nba"],
+    ["hockey", "Ice hockey rinks", "nhl"],
+    ["football", "Football fields", "nfl"],
+    ["baseball", "Baseball and softball fields", "mlb"],
+  ];
+  return {
+    slug: "gallery-leagues",
+    title: "Gallery: every league's surface",
+    ja: "リーグごとの競技場",
+    intro: "Each league that marks a surface its own way, drawn from its rulebook. The figures and the pages they were read from are in League variants.",
+    sections: families.map(([family, title, sport]) =>
+      section(
+        family,
+        title,
+        `\`sport: "${sport}"\` with a \`league\`.`,
+        leagues[sport].filter((league) => !league.builtIn).map((league) => item(`league-${sport}-${league.id}`, league.name.en, drawing({ sport, league: league.id }), `league: "${league.id}"`)),
+      ),
+    ),
+  };
+}
+
+function yearsPage() {
+  const years = [
+    ["nhl", [1930, 1950, 2000, 2020], "The centre red line from 1943–44, the blue lines and the trapezoid as the rules moved them."],
+    ["nba", [1950, 1970, 1990, 2020], "The lane widened in 1951–52 and 1964–65; the three-point line came in 1979–80."],
+    ["nfl", [1925, 1940, 1960, 1975, 2020], "The hash marks moved in 1933, 1935, 1945 and 1972; the goal posts moved to the end line in 1974."],
+    ["cfl", [1980, 2000, 2022], "The end zones were 25 yards deep until 1985."],
+    ["mlb", [1860, 1890, 1920, 2020], "The pitcher's box, the plate's shape and place, the batter's boxes."],
+  ];
+  return {
+    slug: "gallery-years",
+    title: "Gallery: surfaces through the years",
+    ja: "年ごとの競技場",
+    intro: "`year` draws a surface as the rules marked it in a season. Each change is cited in the sources.",
+    sections: years.map(([sport, list, intro]) => section(`years-${sport}`, SPORT_TITLES[sport], intro, list.map((year) => item(`year-${sport}-${year}`, `${SPORT_TITLES[sport]}, ${year}`, drawing({ sport, year }))))),
+  };
+}
+
+function placesPage() {
+  const parks = [
+    ["fenway-park", "Fenway Park"],
+    ["wrigley-field", "Wrigley Field"],
+    ["oracle-park", "Oracle Park"],
+    ["coors-field", "Coors Field"],
+    ["yankee-stadium", "Yankee Stadium"],
+    ["tokyo-dome", "Tokyo Dome"],
+    ["hanshin-koshien-stadium", "Hanshin Koshien Stadium"],
+  ];
+  const past = [
+    ["polo-grounds", 1915, "Polo Grounds, 1915"],
+    ["polo-grounds", 1930, "Polo Grounds, 1930"],
+    ["ebbets-field", undefined, "Ebbets Field"],
+    ["astrodome", undefined, "Astrodome"],
+    ["candlestick-park", undefined, "Candlestick Park"],
+    ["metropolitan-stadium", undefined, "Metropolitan Stadium"],
+  ];
+  const grounds = [
+    ["maracana", "Maracanã Stadium"],
+    ["wembley", "Wembley Stadium"],
+    ["anfield", "Anfield"],
+    ["estadio-azteca", "Estadio Azteca"],
+    ["nissan-stadium-yokohama", "Nissan Stadium"],
+    ["metlife-stadium", "MetLife Stadium"],
+  ];
+  return {
+    slug: "gallery-places",
+    title: "Gallery: ballparks and grounds",
+    ja: "球場とスタジアム",
+    intro: "A sample of the 94 ballparks and 64 grounds, each from its own published figures. The atlas has every one on a map.",
+    sections: [
+      section("parks", "Ballparks of today", "`park` takes a key of `PARKS`.", parks.map(([id, title]) => item(`park-${id}`, title, drawing({ sport: "mlb", park: id })))),
+      section("past", "Ballparks of the past", "A past park is drawn as it stood in a `year`, where its article dates earlier fences.", past.map(([id, year, title]) => item(`past-${id}${year === undefined ? "" : `-${year}`}`, title, drawing(year === undefined ? { sport: "mlb", park: id } : { sport: "mlb", park: id, year })))),
+      section("grounds", "Soccer grounds", "`ground` draws the pitch at the size its article publishes, or at 105 by 68 metres where it gives none.", grounds.map(([id, title]) => item(`ground-${id}`, title, drawing({ sport: "soccer", ground: id })))),
+      section("fence", "A fence of your own", "`fence` lays your distances over a park's or the generic field.", [item("fence-custom", "Short porch in left, deep centre", drawing({ sport: "mlb", fence: { left: 310, center: 420 } }))]),
+    ],
+  };
+}
+
+function dataPage() {
+  const points = [
+    item("points-shapes", "Points: the seven shapes", `import { drawKyogijo } from "${MAIN}";\n\nconst shapes = ["circle", "square", "triangle", "diamond", "cross", "x", "star"];\nconst svg = drawKyogijo({\n  sport: "nhl",\n  layers: [{ kind: "points", name: "shapes", data: shapes.map((shape, i) => ({ x: 40 + i * 20, y: 42.5, shape, title: shape })), style: { size: 8 } }],\n});`),
+    item("points-outcomes", "Points: outcomes, size and team", `import { drawKyogijo } from "${MAIN}";\n\nconst shots = ${SPOTS};\nconst svg = drawKyogijo({\n  sport: "nhl",\n  layers: [{ kind: "points", name: "shots", data: shots, style: { size: { range: [1.6, 4.6] }, outcomes: { shot: { hollow: true, shape: "x" } } } }],\n});`, "A miss is open, a goal a star, and the size follows each mark's `value`."),
+    item("lines", "Lines: straight, curved and wavy", `import { drawKyogijo } from "${MAIN}";\n\nconst svg = drawKyogijo({\n  sport: "nfl",\n  layers: [\n    { kind: "lines", name: "straight", data: [{ x: 40, y: 12, x2: 80, y2: 12 }], style: { width: 1.4 } },\n    { kind: "lines", name: "curved", data: [{ x: 40, y: 26, x2: 80, y2: 26, curve: 0.25 }], style: { width: 1.4 } },\n    { kind: "lines", name: "wavy", data: [{ x: 40, y: 40, x2: 80, y2: 40 }], style: { width: 1.4, wavy: true } },\n  ],\n});`),
+    item("arrows", "Arrows: heads, dashes and a comet", `import { drawKyogijo } from "${MAIN}";\n\nconst svg = drawKyogijo({\n  sport: "nfl",\n  layers: [\n    { kind: "arrows", name: "complete", data: [{ x: 40, y: 12, x2: 80, y2: 16, outcome: "complete" }], style: { width: 1.4 } },\n    { kind: "arrows", name: "incomplete", data: [{ x: 40, y: 26, x2: 80, y2: 30, outcome: "incomplete" }], style: { width: 1.4 } },\n    { kind: "arrows", name: "comet", data: [{ x: 40, y: 40, x2: 100, y2: 44 }], style: { width: 1.4, comet: { taper: true } } },\n  ],\n});`),
+    item("text", "Text: words on the surface", `import { drawKyogijo } from "${MAIN}";\n\nconst svg = drawKyogijo({\n  sport: "nba",\n  layers: [{ kind: "text", name: "notes", data: [{ x: 47, y: 25, text: "Centre" }, { x: 12, y: 25, text: "Key" }, { x: 82, y: 25, text: "Key" }], style: { size: 3 } }],\n});`),
+  ];
+  const heat = [
+    item("heatmap", "Heat map", `import { drawKyogijo } from "${MAIN}";\n\nconst shots = ${CLUSTER};\nconst svg = drawKyogijo({\n  sport: "nhl",\n  layers: [{ kind: "heatmap", name: "shots", data: shots, bins: [50, 21], legend: { title: "Shots in each 4 by 4 feet" } }],\n});`, "A count in each cell of a grid, in a ramp, cut to the boards."),
+    item("hexbin", "Hexagons", `import { drawKyogijo } from "${MAIN}";\n\nconst shots = ${CLUSTER};\nconst svg = drawKyogijo({ sport: "nhl", layers: [{ kind: "hexbin", name: "shots", data: shots, size: 5, legend: true }] });`),
+    item("zones-nhl", "Zones: the slot", `import { drawKyogijo } from "${MAIN}";\n\nconst shots = ${CLUSTER};\nconst svg = drawKyogijo({ sport: "nhl", layers: [{ kind: "zones", name: "shots", zones: "nhl-slot", data: shots, labels: true, legend: true }] });`),
+    item("zones-nba", "Zones: shot zones", `import { drawKyogijo } from "${MAIN}";\n\nconst shots = Array.from({ length: 160 }, (_, i) => ({ x: ((i * 97) % 480) - 240, y: (i * 61) % 300, outcome: i % 3 === 0 ? "made" : "missed" }));\nconst svg = drawKyogijo({\n  sport: "nba",\n  layers: [{ kind: "zones", name: "shots", zones: "nba-shot", from: "nba-stats", data: shots, statistic: "rate", labels: true, legend: true }],\n});`),
+    item("zones-soccer", "Zones: positional play", `import { drawKyogijo } from "${MAIN}";\n\nconst touches = Array.from({ length: 220 }, (_, i) => ({ x: 6 + ((i * 41) % 93), y: 4 + ((i * 29) % 92) }));\nconst svg = drawKyogijo({ sport: "soccer", layers: [{ kind: "zones", name: "touches", zones: "soccer-positional", from: "opta", data: touches, statistic: "percent", legend: true }] });`),
+    item("zones-football", "Zones: passes", `import { drawKyogijo } from "${MAIN}";\n\nconst passes = Array.from({ length: 90 }, (_, i) => ({ x: 62 + ((i * 17) % 45), y: 6 + ((i * 23) % 42) }));\nconst svg = drawKyogijo({ sport: "nfl", layers: [{ kind: "zones", name: "passes", zones: "football-pass", from: "nfl-tracking", los: 62, data: passes, labels: true, legend: true }] });`),
+    item("contour", "Contours: a density", `import { drawKyogijo } from "${MAIN}";\n\nconst shots = ${CLUSTER};\nconst svg = drawKyogijo({ sport: "nhl", layers: [{ kind: "contour", name: "shots", data: shots, levels: 6, filled: true, legend: true }] });`),
+    item("legend", "A legend of its own", `import { drawKyogijo } from "${MAIN}";\n\nconst shots = ${CLUSTER};\nconst svg = drawKyogijo({\n  sport: "nhl",\n  layers: [\n    { kind: "heatmap", id: "heat", name: "shots", data: shots, bins: [40, 17] },\n    { kind: "legend", for: "heat", title: "Shots", position: "bottom" },\n  ],\n});`),
+  ];
+  const charts = [
+    item("chart-nba", "NBA shot chart", `import { nbaShotChart } from "${MAIN}/charts";\n\nconst shots = Array.from({ length: 140 }, (_, i) => ({ x: ((i * 97) % 480) - 240, y: (i * 61) % 300, made: i % 3 === 0 }));\nconst svg = nbaShotChart(shots, { league: 46, minShots: 2 }).draw();`),
+    item("chart-nhl", "NHL shot map", `import { nhlShotMap } from "${MAIN}/charts";\n\nconst shots = Array.from({ length: 40 }, (_, i) => ({ x: (i % 2 ? -1 : 1) * (50 + ((i * 11) % 38)), y: ((i * 23) % 60) - 30, outcome: ["goal", "saved", "missed", "blocked"][i % 4], xg: 0.03 + (i % 9) / 30, team: i % 2 ? "away" : "home" }));\nconst svg = nhlShotMap(shots, { fold: true, zones: true, statistic: "xg" }).draw();`),
+    item("chart-mlb", "MLB spray chart", `import { mlbSprayChart } from "${MAIN}/charts";\n\nconst types = ["single", "field_out", "double", "field_out", "home_run", "triple"];\nconst balls = Array.from({ length: 60 }, (_, i) => ({ x: 125.4 + (((i * 37) % 120) - 60), y: 198.27 - (30 + ((i * 53) % 110)), type: types[i % types.length] }));\nconst svg = mlbSprayChart(balls, { park: "fenway-park", zones: true }).draw();`),
+    item("chart-nfl", "NFL pass chart", `import { nflPassChart } from "${MAIN}/charts";\n\nconst outcomes = ["complete", "complete", "incomplete", "touchdown", "interception"];\nconst passes = Array.from({ length: 40 }, (_, i) => ({ x: 66 + ((i * 13) % 44), y: 8 + ((i * 17) % 40), outcome: outcomes[i % outcomes.length], fromX: 60, fromY: 26 }));\nconst svg = nflPassChart(passes, { los: 62, arrows: true }).draw();`),
+    item("chart-soccer", "Soccer shot map", `import { soccerShotMap } from "${MAIN}/charts";\n\nconst outcomes = ["goal", "saved", "missed", "blocked"];\nconst shots = Array.from({ length: 24 }, (_, i) => ({ x: 84 + ((i * 7) % 30), y: 18 + ((i * 11) % 44), outcome: outcomes[i % 4], xg: 0.04 + (i % 8) / 20 }));\nconst svg = soccerShotMap(shots, { provider: "statsbomb", half: true }).draw();`),
+  ];
+  return {
+    slug: "gallery-data",
+    title: "Gallery: data on a surface",
+    ja: "データ、ヒートマップ、チャート",
+    intro: "Every kind of data layer, every heat layer and the five ready-made charts, on made-up data that the code under each picture makes. The marks are in the surface's own frame, or a provider's.",
+    sections: [
+      section("layers", "Data layers", "`layers` in the options of `drawKyogijo`: points, lines, arrows and text.", points),
+      section("heat", "Heat layers", "Counts in cells, hexagons, named zones or a density, in a colour ramp.", heat),
+      section("charts", "Ready-made charts", "One call for a good chart: `@johnmorrisdotca/kyogijo/charts`.", charts),
+    ],
+  };
+}
+
+export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, dataPage];
+
+/** The sections of every page, with each item's picture made by running its code. */
+export function galleryData(lib) {
+  return GALLERY_BUILDERS.map((build) => {
+    const page = build(lib);
+    return { ...page, sections: page.sections.map((one) => ({ ...one, items: one.items.map((entry) => ({ ...entry, svg: runSnippet(entry.code, lib) })) })) };
+  });
+}
+
+/** The base stylesheet is in the page once; a drawing carries it too, which is 8 kB each. The gallery leaves it out of each and says so. */
+const STYLE_RE = /<style>[\s\S]*?<\/style>/;
+
+const itemHtml = (entry, style) => {
+  const svg = entry.svg.replace(STYLE_RE, (block) => (block.includes(style.slice(0, 60)) ? "" : block));
+  const code = escapeHtml(entry.code);
+  return `<figure class="g-item" id="${entry.id}" data-testid="gallery-item">
+  <h3 id="t-${entry.id}">${escapeHtml(entry.title)}</h3>
+  <div class="g-art" data-testid="gallery-art">${svg}</div>
+  ${entry.note ? `<p class="g-note">${escapeHtml(entry.note)}</p>` : ""}
+  <div class="g-actions"><button type="button" class="fam-button" data-copy-for="code-${entry.id}" aria-describedby="t-${entry.id}" data-testid="gallery-copy"><span data-copy-label data-docs-copy-label>Copy</span></button><span class="g-status" role="status" aria-live="polite"></span></div>
+  <details class="g-code"><summary data-say="docsShowCode">Show the code</summary><pre id="code-${entry.id}"><code class="language-ts">${code}</code></pre></details>
+</figure>`;
+};
+
+/** A gallery page as HTML for docs-pages.mjs: `{ slug, title, description, html, headings }`. `style` is `KYOGIJO_STYLE`, put in the page once. */
+export function galleryPageHtml(page, style) {
+  const headings = [{ depth: 1, text: page.title, id: slugOf(page.title) }];
+  const sections = page.sections
+    .map((one) => {
+      headings.push({ depth: 2, text: one.title, id: one.id });
+      const items = one.items
+        .map((entry) => {
+          headings.push({ depth: 3, text: entry.title, id: entry.id });
+          return itemHtml(entry, style);
+        })
+        .join("\n");
+      return `<section aria-labelledby="${one.id}"><h2 id="${one.id}">${escapeHtml(one.title)}<a class="docs-anchor" href="#${one.id}" aria-label="${escapeHtml(one.title)}">#</a></h2>\n<p>${escapeHtml(one.intro).replace(/`([^`]+)`/g, "<code>$1</code>")}</p>\n<div class="g-grid">\n${items}\n</div></section>`;
+    })
+    .join("\n");
+  const html = `<h1 id="${headings[0].id}">${escapeHtml(page.title)}</h1>\n<p>${escapeHtml(page.intro).replace(/`([^`]+)`/g, "<code>$1</code>")} The pictures share one stylesheet, which is left out of each one's SVG here; <code>drawKyogijo</code> puts it in every drawing unless <code>style: "none"</code> says not to.</p>\n<style>${style}</style>\n${sections}\n`;
+  return { slug: page.slug, title: page.title, description: page.intro.replace(/`/g, "").slice(0, 280), html, headings };
+}
+
+// ---- The coordinate frames, each drawing the same spot on the same surface in its own numbers. ----
+
+/** The spot every frame of a sport marks, in the numbers of a frame that all of them can convert from. */
+const REFERENCE = {
+  nhl: { frame: "nhl-api", spot: [69, 22], what: "the right end-zone face-off dot" },
+  nba: { frame: "nba-stats", spot: [0, 190], what: "the middle of the free-throw line" },
+  nfl: { frame: "nfl-tracking", spot: [90, 26.67], what: "the middle of the right 20-yard line" },
+  mlb: { frame: "retrosheet", spot: [63.64, 63.64], what: "first base" },
+  soccer: { frame: "international", spot: [94, 34], what: "the right penalty mark" },
+};
+const round2 = (n) => Math.round(n * 100) / 100;
+const UNIT_WORDS = { ft: "feet", yd: "yards", m: "metres", cm: "centimetres", in: "inches", mm: "millimetres", px: "pixels", "tenth-ft": "tenths of a foot", percent: "percent", fraction: "fractions" };
+
+/** One item for each frame: the surface, the spot written in the frame's numbers, and the way x and y grow from it. */
+export function framesItems(lib) {
+  const { FRAMES, convert } = lib[`${MAIN}/frames`];
+  return Object.values(FRAMES).map((frame) => {
+    const reference = REFERENCE[frame.sport];
+    const size = frame.size === "variable" ? { length: 105, width: 68, unit: "m" } : undefined;
+    const [spot] = convert(reference.frame, frame.name, size ? { size } : {})([reference.spot]);
+    const x = round2(spot[0]);
+    const y = round2(spot[1]);
+    const step = (range) => round2(Math.abs(range[1] - range[0]) * 0.12);
+    const dx = step(frame.x);
+    const dy = step(frame.y);
+    const from = frame.name;
+    const where = size ? { surfaceSize: size } : {};
+    const layers = [
+      { kind: "arrows", name: "x grows", from, ...where, data: [{ x, y, x2: round2(x + dx), y2: y }], style: { width: 1.2, color: "var(--ky-layer-home)" } },
+      { kind: "arrows", name: "y grows", from, ...where, data: [{ x, y, x2: x, y2: round2(y + dy) }], style: { width: 1.2, color: "var(--ky-layer-away)" } },
+      { kind: "points", name: reference.what, from, ...where, data: [{ x, y, title: `${reference.what}: ${x}, ${y}` }], style: { size: 4, shape: "star" } },
+      { kind: "text", name: "axes", from, ...where, data: [{ x: round2(x + dx * 1.3), y, text: "x" }, { x, y: round2(y + dy * 1.4), text: "y" }], style: { size: 4 } },
+    ];
+    const options = frame.sport === "soccer" ? { sport: "soccer", pitchType: frame.name, layers } : { sport: frame.sport, layers };
+    const unit = UNIT_WORDS[frame.unit] ?? frame.unit;
+    return item(
+      `frame-${frame.name}`,
+      frame.name,
+      drawing(options),
+      `${frame.title}. ${reference.what[0].toUpperCase()}${reference.what.slice(1)} is (${x}, ${y}) in ${unit}; the arrows show which way x (blue) and y (orange) grow.`,
+    );
+  });
+}
+
+/** The frames' drawings as the HTML of the `<!-- site:frames -->` marker of docs/frames.md. */
+export function framesBlockHtml(lib, style) {
+  const items = framesItems(lib).map((entry) => ({ ...entry, svg: runSnippet(entry.code, lib) }));
+  return `<style>${style}</style>\n<div class="g-frames" data-testid="frames-gallery">\n${items.map((entry) => itemHtml(entry, style)).join("\n")}\n</div>\n`;
+}
+
+/** The package's entry points as `runSnippet` wants them, read from a folder of built (`.js`) or source (`.ts`) files. */
+export async function libraryFrom(dir, ext, importer) {
+  const entries = { "": "index", "/charts": "charts-entry", "/frames": "frames-entry", "/layers": "layers-entry", "/leagues": "leagues-entry", "/eras": "eras-entry", "/grounds": "grounds-entry", "/parks": "parks-entry", "/atlas": "atlas-entry", "/geometry": "geometry-entry" };
+  const lib = {};
+  for (const [suffix, file] of Object.entries(entries)) lib[`${MAIN}${suffix}`] = await importer(`${dir}/${file}${ext}`);
+  return lib;
+}

@@ -11,7 +11,7 @@ The NFL, CFL and IFAF football fields, the NHL rink, the NBA court, the soccer p
   <img alt="TypeScript" src="https://img.shields.io/badge/types-TypeScript-3178c6">
 </p>
 
-<p align="center"><a href="https://johnmorrisdotca.github.io/kyogijo/"><strong>Open the demo →</strong></a> · <a href="https://johnmorrisdotca.github.io/kyogijo/api.html">API reference</a></p>
+<p align="center"><a href="https://johnmorrisdotca.github.io/kyogijo/"><strong>Open the demo →</strong></a> · <a href="https://johnmorrisdotca.github.io/kyogijo/docs/">Documentation</a> · <a href="https://johnmorrisdotca.github.io/kyogijo/docs/gallery.html">Gallery</a> · <a href="./docs/compare.md">How it compares</a> · <a href="https://johnmorrisdotca.github.io/kyogijo/api.html">API reference</a></p>
 
 <table align="center">
 <tr>
@@ -50,7 +50,7 @@ const svg = drawKyogijo({
   status: "final-ot",
   competition: "Cup Final, Game 7",
 });
-console.log(svg.startsWith("<svg"), svg.includes("NORTHERN OWLS"));
+console.log(svg.startsWith("<svg"), svg.includes("Northern Owls 3, Lakeshore Anchors 2"));
 // true true
 ```
 
@@ -70,19 +70,22 @@ console.log(svg.startsWith("<svg"), svg.includes("NORTHERN OWLS"));
 
 ## Features
 
-- **Seven surfaces, to scale.** The NFL field (360 by 160 feet with its end zones), the CFL field (450 by 195), the IFAF field, the NHL rink (200 by 85 with a 28-foot corner radius), the NBA court (94 by 50), the soccer pitch (105 by 68 metres, in ten sizes and variants) and the baseball field, with the lines, circles, keys, boxes and goals of each. Every figure is cited in [docs/sources.md](./docs/sources.md).
-- **Soccer, to the Laws.** A pitch from Law 1 of the IFAB Laws of the Game of any size, with presets (international, UEFA, MLS, NCAA, the FA's 9-, 7- and 5-a-side, FIFA's futsal), half pitches, five mowing patterns, four goal styles, penalties and extra time in a score, and the pitch drawn in the coordinates of Opta, StatsBomb, Wyscout, Tracab, Metrica, SkillCorner, Second Spectrum or Impect, with `rescale` between them. See [Soccer](#soccer).
-- **Every ballpark.** The 30 current MLB parks and 44 that MLB clubs have left (the Polo Grounds, Ebbets Field, the Astrodome and more), and the 12 home parks of Nippon Professional Baseball with eight other NPB grounds, each with its fence drawn from the distances published for it. A named park is one option (`park: "fenway-park"`), and a past park whose fence moved is drawn as it stood in a season (`year: 1915`); the 94 are in `PARKS`, each with its Wikidata item.
-- **A stadium atlas.** Every park and ground on a map, by sport, league, country and year: [docs/atlas.md](./docs/atlas.md).
-- **Surfaces through the years.** `year: 1975` draws a surface as its league's rules marked it that season, each change cited.
-- **Score mode.** Each team's name and logo on its side (the end zones of a football field, the ends of the ice, the halves of the court, the dugouts of a ballpark) and the score large in the middle, with the competition, the status (Final, OT, SO, a period, an inning) and the date, and the winner emphasised.
+- **Seven surfaces, to scale.** The NFL field (360 by 160 feet with its end zones), the CFL field (450 by 195), the IFAF field, the NHL rink (200 by 85 with a 28-foot corner radius), the NBA court (94 by 50), the soccer pitch (105 by 68 metres, in ten sizes and variants) and the baseball field, with the lines, circles, keys, boxes and goals of each. Every figure is cited in [sources](./docs/sources.md). [The surfaces](./docs/surfaces.md).
+- **Each league's rulebook.** `league: "fiba"` draws a court as FIBA marks it: 35 variants, from the WNBA, the NCAA and the IIHF to Little League, PONY and softball, each cited. [League variants](./docs/variants.md).
+- **Soccer, to the Laws.** A pitch from Law 1 of the IFAB Laws of the Game of any size, with presets (international, UEFA, MLS, NCAA, the FA's 9-, 7- and 5-a-side, FIFA's futsal), half pitches, five mowing patterns, four goal styles, penalties and extra time in a score. [Soccer](./docs/soccer.md).
+- **Every ballpark.** The 30 current MLB parks and 44 that MLB clubs have left (the Polo Grounds, Ebbets Field, the Astrodome and more), and the 12 home parks of Nippon Professional Baseball with eight other NPB grounds, each with its fence drawn from the distances published for it; a past park whose fence moved is drawn as it stood in a season. [Ballparks](./docs/ballparks.md).
+- **Soccer grounds and an atlas.** 64 soccer grounds, each pitch at its published size, and every park and ground on a map, by sport, league, country and year. [The grounds](./docs/grounds.md), [the atlas](./docs/atlas.md).
+- **Surfaces through the years.** `year: 1975` draws a surface as its league's rules marked it that season, each change cited. [Surfaces through the years](./docs/eras.md).
+- **Score mode.** Each team's name and logo on its side (the end zones of a football field, the ends of the ice, the halves of the court, the dugouts of a ballpark) and the score large in the middle, with the competition, the status and the date, and the winner emphasised. [Score and layout](./docs/score.md).
 - **Wide, tall or fit the box.** Every surface lies wide or tall: tall turns it a quarter, keeps every word upright and puts the teams top and bottom. With `orientation: "auto"` the browser helpers follow the box.
-- **Data on the surface.** Points, lines, arrows, text, heat maps, hexagons, zone charts and density contours over any surface, in its feet or a provider's frame, cut to its outline, with a title, a description and a table for each layer, and ready-made shot and pass charts ([docs/charts.md](./docs/charts.md)).
+- **Data on the surface.** Points, lines, arrows, text, heat maps, hexagons, zone charts and density contours over any surface, in its feet or a data provider's frame, cut to its outline, with a table for each layer; ready-made shot and pass charts. [Data layers](./docs/layers.md), [charts](./docs/charts.md).
+- **Units and frames.** Each surface in its rulebook's unit and any other, and 16 coordinate frames (ten soccer providers, the NHL API, HockeyTech, NBA stats, NFL tracking, MLBAM, Retrosheet) to move a provider's points onto a surface. [Units](./docs/units.md), [coordinate frames](./docs/frames.md).
 - **A compact badge and a compact card.** One strip for a list, or the surface with that strip under it.
-- **Light and dark**, by the device or the page, and every colour a custom property; a basketball court's paint, border, wood and baseline words are options, with five looks to start from.
-- **Accessible.** Each drawing is an `img` with a title and a description that say the surface and the result, in English or Japanese.
+- **Light and dark**, by the device or the page, and every colour a custom property; a basketball court has five looks to start from. [Theming](./docs/theming.md).
+- **Accessible.** Each drawing is an `img` with a title and a description that say the surface and the result, in English or Japanese. [Accessibility](./docs/accessibility.md).
 - **Four ways in.** A function that returns SVG text; a helper that draws into a container; a standard custom element; a frame for pages that run no script. A React helper that does not import React.
 - **No dependencies**, no network requests, nothing stored. Text, colours and logo addresses that come from outside are made safe before they are drawn.
+- **A docs site.** Guides, a search over every page, a gallery that draws every picture from the code beside it, and [how it compares](./docs/compare.md) with the other packages: [the documentation](./docs/README.md).
 
 ### What's in it
 
@@ -92,14 +95,11 @@ console.log(svg.startsWith("<svg"), svg.includes("NORTHERN OWLS"));
 | `SPORTS`, `PARKS`, `PARK_IDS`, `COURT_THEMES` | The seven sports, the 94 ballparks, the court looks. |
 | `SOCCER_PITCHES`, `SOCCER_PROVIDERS`, `rescale`, `soccerSpec` | The soccer pitches, the data providers' coordinate systems and the map between them. |
 | `GROUNDS`, `groundById` | The 64 soccer grounds, each pitch at its own size. |
-| `@johnmorrisdotca/kyogijo/geometry` | The dimensions of every surface in feet, in any unit, and the functions that follow from them. |
-| `@johnmorrisdotca/kyogijo/frames` | Providers' coordinate frames and the functions that put their points on a surface. |
-| `@johnmorrisdotca/kyogijo/layers` | `drawLayers`, `layerTable` and the layer types. |
-| `@johnmorrisdotca/kyogijo/parks` | The ballparks and the article each was read from. |
-| `@johnmorrisdotca/kyogijo/grounds` | The soccer grounds. |
-| `@johnmorrisdotca/kyogijo/mount` | `mountKyogijo`: draw into a container and keep it laid out; `kyogijoElement`. |
-| `@johnmorrisdotca/kyogijo/react` | `kyogijoProps` and `createKyogijo`, for React, without depending on it. |
-| `@johnmorrisdotca/kyogijo/element` | The `<kyogijo-field>` class; `element/define` registers it. |
+| `./geometry`, `./frames`, `./layers`, `./charts` | The dimensions in any unit; the providers' frames; data layers; ready-made charts. |
+| `./parks`, `./grounds`, `./atlas`, `./eras`, `./leagues` | The ballparks, the grounds, every place, the markings of a season, each league's rulebook. |
+| `./mount`, `./react`, `./element`, `./element/define` | Draw into a container; React props; the `<kyogijo-field>` element and its registration. |
+
+The full list of entry points is in [entry points](./docs/entry-points.md); every export is in the [API reference](https://johnmorrisdotca.github.io/kyogijo/api.html).
 
 ## Use it in your project
 
@@ -113,33 +113,18 @@ npm install @johnmorrisdotca/kyogijo
 
 It needs Node 22 or later on a server, and any current browser. It is plain ES modules, with types. Once it is on npm the same files are on the CDNs: `https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo@0/+esm` is the package as one module for the browser, and `https://unpkg.com/@johnmorrisdotca/kyogijo@0/dist/index.js` the file itself.
 
-### 1. A string of SVG
+### Four ways in
 
-`drawKyogijo(options)` returns SVG text. It needs no DOM, so it runs in Node, an edge function, a build step or a browser. The same options always give the same text.
+1. **A string of SVG.** `drawKyogijo(options)` returns SVG text; it needs no DOM and the same options always give the same text.
+2. **A container in the browser.** `mountKyogijo(element, options)` draws into an element and, with `orientation: "auto"`, draws again when its shape changes.
+3. **A custom element.** `<kyogijo-field>`: import `element/define` once and use the tag with attributes.
+4. **A frame.** For a page that cannot run scripts, the demo site serves `embed.html`, which draws what its address says.
 
-### 2. A container in the browser
-
-`mountKyogijo(element, options)` draws into an element and returns `update`, `svg`, `orientation` and `destroy`. With `orientation: "auto"` it watches the element and draws again, tall or wide, when its shape changes.
-
-### 3. A custom element
-
-`<kyogijo-field>` is a standard custom element. Import `element/define` once, from the package or a CDN, and use the tag with attributes. See [Examples](#the-element-in-a-page) for the attributes and the parts.
-
-### 4. A frame
-
-For a page that cannot run scripts of its own, the demo site serves `embed.html`, which draws what its address says. See [A frame](#a-frame-for-a-page-with-no-script).
-
-### What a developer gets
-
-- Types for every option and export, with each export's doc comment in an editor.
-- A drawing that is a pure function of its options: it can be cached, compared and tested.
-- Entry points that stand apart: the geometry, the parks and the grounds need nothing else, and the element loads only when imported.
-
-### In a framework
-
-The drawing is a string, so every framework can show it. React has a helper; Vue, Svelte and plain HTML use the custom element or `innerHTML`. See the examples below.
+Each is shown with its code in [getting started](./docs/getting-started.md); React, Vue and Svelte are below.
 
 ## Examples
+
+Each example is run against the built package by `pnpm test:readme`, and each links to the page that has the rest.
 
 ### A score on the rink
 
@@ -158,22 +143,22 @@ console.log(svg.includes("Cup Final, Game 7"), svg.includes("Final/OT"));
 // true true
 ```
 
-### A bare surface
+<p align="center">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo/main/docs/images/football-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo/main/docs/images/football-desk-light.webp" alt="A football field drawn wide on the demo's felt: the visiting team's blue end zone on the left with its gull emblem and its name written along it, the home team's rust-red end zone on the right with its bison, the yard lines, hash marks and upright and upside-down yard numbers between them, and the score panel at midfield reading 27 to 24, Final, Championship Game." width="720">
+</picture>
+<br><em>A football field: the end zones in the teams' colours, the score at midfield.</em>
+</p>
+
+### A bare surface, and tall for a phone
 
 ```ts
-import { drawSurface } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo, drawSurface } from "@johnmorrisdotca/kyogijo";
 
 // No teams: just the NFL field at its true shape, 120 by 53⅓ yards with 12 feet of ground round it.
-const svg = drawSurface({ sport: "nfl" });
-console.log(/viewBox="-12 -12 384 184"/.test(svg));
+console.log(/viewBox="-12 -12 384 184"/.test(drawSurface({ sport: "nfl" })));
 // true
-```
-
-### Tall for a phone
-
-```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
-
 const game = { away: { name: "Harbour City Gulls", score: 27 }, home: { name: "Prairie Ridge Bison", score: 24 }, status: "final" };
 const wide = drawKyogijo({ sport: "nfl", ...game, orientation: "landscape" });
 const tall = drawKyogijo({ sport: "nfl", ...game, orientation: "portrait" });
@@ -181,6 +166,28 @@ const box = (svg: string) => /viewBox="[^ ]+ [^ ]+ ([^ ]+) ([^ "]+)"/.exec(svg)!
 console.log(box(wide), box(tall));
 // [ 384, 184 ] [ 184, 384 ]
 ```
+
+<p align="center">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo/main/docs/images/tall-phone-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo/main/docs/images/tall-phone-light.webp" alt="A hockey rink standing tall on a phone, the same game as on the desk: the Northern Owls' emblem and name in the upper zone, the Lakeshore Anchors' in the lower, each reading upright, the score panel between them over the centre line." width="240">
+</picture>
+<br><em>The same game tall: the teams top and bottom, every word upright.</em>
+</p>
+
+[The surfaces](./docs/surfaces.md) lists the seven, with their sizes and what is drawn; [score and layout](./docs/score.md) has the options of a score, a strip and a compact card.
+
+### A league's rulebook
+
+```ts
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+
+// A court as FIBA marks it is not the NBA's.
+console.log(drawKyogijo({ sport: "nba", league: "fiba" }) === drawKyogijo({ sport: "nba" }));
+// false
+```
+
+Thirty-five leagues, each with its figures and its sources, are in [league variants](./docs/variants.md).
 
 ### A ballpark, by name
 
@@ -195,33 +202,27 @@ console.log(svg.includes("阪神甲子園球場のグラウンド"));
 // true
 ```
 
+<p align="center">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo/main/docs/images/ballpark-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo/main/docs/images/ballpark-desk-light.webp" alt="The baseball field of Hanshin Koshien Stadium with the outfield fence drawn through its published distances, 95 metres at the lines and 118 metres in the alleys and the middle, with mown arcs on the grass, the warning track, the infield dirt, and a red and a green panel in the foul ground at the bottom for the teams' dugouts." width="640">
+</picture>
+<br><em>A ballpark's fence, drawn through the distances its article publishes.</em>
+</p>
+
 ### A ballpark of the past, in a season
 
 ```ts
-import { PARKS, parkByWikidata, parkPointsIn, drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { PARKS, parkPointsIn, drawKyogijo } from "@johnmorrisdotca/kyogijo";
 
 const polo = PARKS["polo-grounds"];
-console.log(polo.name, polo.wikidata, polo.from, polo.to, polo.periods?.length);
-// Polo Grounds Q1276360 1891 1963 2
-console.log(parkPointsIn(polo, 1915).map(([, feet]) => feet), parkPointsIn(polo, 1930).length);
-// [ 277, 433, 258 ] 13
-console.log(parkByWikidata("Q1276360") === polo);
-// true
-const svg = drawKyogijo({ sport: "mlb", park: "polo-grounds", year: 1915 });
-console.log(svg === drawKyogijo({ sport: "mlb", park: "polo-grounds", year: 1930 }));
+console.log(polo.name, polo.from, polo.to, parkPointsIn(polo, 1915).map(([, feet]) => feet));
+// Polo Grounds 1891 1963 [ 277, 433, 258 ]
+console.log(drawKyogijo({ sport: "mlb", park: "polo-grounds", year: 1915 }) === drawKyogijo({ sport: "mlb", park: "polo-grounds", year: 1930 }));
 // false
 ```
 
-### Your own fence
-
-```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
-
-// The usual 330, 375, 400, 375 and 330 feet, with a short porch in left and a deep centre.
-const svg = drawKyogijo({ sport: "mlb", fence: { left: 310, center: 420 } });
-console.log(svg.includes('class="ky-fence"'));
-// true
-```
+Your own fence (`fence: { left: 310, center: 420 }`) and every park's key are in [ballparks](./docs/ballparks.md) and [parks](./docs/parks.md).
 
 ### A badge for a list
 
@@ -238,6 +239,14 @@ console.log(/viewBox="0 0 440 64"/.test(badge));
 // true
 ```
 
+<p align="center">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo/main/docs/images/badges-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo/main/docs/images/badges-desk-light.webp" alt="A list of eight score strips in the demo, each a team block with its emblem, a short name and its score at each end, in the team's colour, and in the middle a small picture of the sport and the state of the game, such as Final, Final/OT and 2nd period." width="640">
+</picture>
+<br><em>Badges for a list of games.</em>
+</p>
+
 ### A court of your own look
 
 ```ts
@@ -251,31 +260,90 @@ console.log(svg.includes("--ky-key:#1e4f8f"), svg.includes("METRO BOLTS"));
 // true true
 ```
 
-### A page that moves
+<p align="center">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo/main/docs/images/court-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo/main/docs/images/court-desk-light.webp" alt="A basketball court in the two-tone look: a pale floor with a deep blue key, centre circle and border, the words SUMMIT PEAKS and METRO BOLTS along the baselines, each team's emblem and name on its half, and the score panel at centre court reading 108 to 112, Finals, Game 6." width="640">
+</picture>
+<br><em>A court in a look of its own: the paint, the border and the words on the baselines are options.</em>
+</p>
 
-```ts no-run
-import { mountKyogijo } from "@johnmorrisdotca/kyogijo/mount";
+The five looks and every colour property are in [theming](./docs/theming.md).
 
-const card = mountKyogijo(document.querySelector("#game")!, {
-  sport: "nhl",
-  orientation: "auto",
-  away: { name: "Northern Owls", score: 1 },
-  home: { name: "Lakeshore Anchors", score: 0 },
-  status: "live",
+### A shoot-out, and a famous ground
+
+```ts
+import { drawKyogijo, soccerSpec } from "@johnmorrisdotca/kyogijo";
+
+const svg = drawKyogijo({
+  sport: "soccer",
+  away: { name: "Northern Owls", abbr: "NOW", score: 2, penalties: 4, color: "#3a2d6b" },
+  home: { name: "Lakeshore Anchors", abbr: "LSA", score: 2, penalties: 2, color: "#0f7a7a" },
+  status: "final-pens",
+  ground: "metlife-stadium",
 });
-// Each goal: draw again with the new score. The layout follows the box.
-card.update({ sport: "nhl", orientation: "auto", away: { name: "Northern Owls", score: 2 }, home: { name: "Lakeshore Anchors", score: 0 }, status: "live" });
+console.log(svg.includes("Final · 4-2 pens"), soccerSpec({ length: 110, width: 70, unit: "yd" }).length.toFixed(2));
+// true 100.58
 ```
 
-### A file on a server
+Pitch sizes, mowing patterns, goals and providers are in [soccer](./docs/soccer.md); the 64 grounds are in [the grounds](./docs/grounds.md).
 
-```js no-run
-import { writeFileSync } from "node:fs";
+### A surface in a season
+
+```ts
+import { drawKyogijo, rulesFor } from "@johnmorrisdotca/kyogijo";
+
+const rink = rulesFor("nhl", 1960);
+console.log(rink.season, rink.rules.centreLine, rink.rules.trapezoid);
+// 1960–61 true null
+console.log(drawKyogijo({ sport: "nba", year: 1978 }) === drawKyogijo({ sport: "nba", year: 1979 }));
+// false
+```
+
+Every change and its source is in [surfaces through the years](./docs/eras.md).
+
+### Units and a provider's frame
+
+```ts
+import { convertLength, surfaceSize } from "@johnmorrisdotca/kyogijo/geometry";
+import { convert, toSurface } from "@johnmorrisdotca/kyogijo/frames";
+
+console.log(surfaceSize("nfl").unit, convertLength(100, "yd", "ft"));
+// yd 300
+// The right end-zone face-off dot, in the NHL API's feet and in HockeyTech's canvas, is one place.
+console.log(toSurface([[69, 22]], { from: "nhl-api" }), convert("hockeytech", "nhl-api")([[600, 0]]));
+// [ [ 169, 20.5 ] ] [ [ 100, 42.5 ] ]
+```
+
+[Units](./docs/units.md) and [coordinate frames](./docs/frames.md) have the tables of every surface's unit and every frame's range, origin and source.
+
+### Data on a surface
+
+```ts
 import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
 
-// The drawing carries its own stylesheet, so a saved file stands alone: open it in a browser, or put it in an image tag.
-writeFileSync("rink.svg", drawKyogijo({ sport: "nhl", theme: "dark" }));
+// The NHL API's coordinates are feet from centre ice: `from` puts them on the rink.
+const svg = drawKyogijo({
+  sport: "nhl",
+  layers: [
+    {
+      kind: "points",
+      name: "shots",
+      from: "nhl-api",
+      data: [
+        { x: 69, y: 22, team: "home", outcome: "goal", value: 0.31 },
+        { x: 54, y: -8, team: "home", outcome: "shot", value: 0.07 },
+        { x: -61, y: 12, team: "away", outcome: "blocked", value: 0.04 },
+      ],
+      style: { size: { range: [2, 5] }, outcomes: { blocked: { hollow: true, shape: "x" } } },
+    },
+  ],
+});
+console.log(svg.includes("3 shots"), svg.includes("By outcome: goal 1, shot 1, blocked 1."));
+// true true
 ```
+
+Lines, arrows, text, heat maps, hexagons, zones and contours are in [data layers](./docs/layers.md); a shot chart, a shot map, a spray chart, a pass chart and a soccer shot map are one call each in [charts](./docs/charts.md). Every kind is drawn, with its code, in the [gallery](https://johnmorrisdotca.github.io/kyogijo/docs/gallery.html).
 
 ### The element in a page
 
@@ -286,14 +354,9 @@ writeFileSync("rink.svg", drawKyogijo({ sport: "nhl", theme: "dark" }));
 <kyogijo-field sport="nba" size="compact" orientation="auto"
   home="Metro Bolts" away="Summit Peaks" score="112-108"
   home-color="#c2410c" away-color="#14233f" status="final"></kyogijo-field>
-
-<style>
-  kyogijo-field { --ky-plate: rgba(0, 0, 0, .6); }
-  kyogijo-field::part(plate) { filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .3)); }
-</style>
 ```
 
-The attributes are the options' names in kebab case (`sport`, `year`, `exact-lines`, `home-score`, `stripe-pattern`, `home-logo` and the rest, all in `KYOGIJO_ATTRIBUTES`), and `options` takes any other option as JSON. The parts are `figure`, `svg`, `surface`, `plate`, `team`, `home`, `away`, `score`, `home-score`, `away-score` and `badge`.
+The attributes are the options' names in kebab case, and the parts you can style are listed in [getting started](./docs/getting-started.md#3-a-custom-element).
 
 ### In React
 
@@ -341,386 +404,29 @@ Tell Vue the tag is a custom element with `compilerOptions.isCustomElement: (tag
 <kyogijo-field sport="nhl" away="Northern Owls" home="Lakeshore Anchors" away-score={away} home-score={home} />
 ```
 
-### A frame for a page with no script
-
-For a page that cannot run scripts (a site builder, a forum, a newsletter archive), the demo site serves a frame that draws what its address says. Paste the tag; no script is yours to run.
-
-```html
-<iframe
-  src="https://johnmorrisdotca.github.io/kyogijo/embed.html?sport=nhl&away=Northern+Owls&home=Lakeshore+Anchors&ascore=3&hscore=2&status=final-ot"
-  title="Northern Owls 3, Lakeshore Anchors 2, Final/OT"
-  loading="lazy"
-  style="width:100%;aspect-ratio:2.3;border:0"
-></iframe>
-```
-
-The address takes `sport`, `park`, `year`, `size`, `orientation` (it fits its frame by default), `theme`, `lang`, `away`, `home`, `aabbr`, `habbr`, `ascore`, `hscore`, `acolor`, `hcolor` (six hex digits, no `#`), `alogo`, `hlogo` (an https address), `status`, `competition`, `date`, `label` and `winner`. The demo's Embed section writes the tag for what you have chosen.
-
-## The surfaces
-
-Every dimension is kept in feet in the code (`@johnmorrisdotca/kyogijo/geometry`) and can be had in any unit (see [Units](#units)), and each is cited in [docs/sources.md](./docs/sources.md).
-
-| `sport` | Surface | Size | Drawn |
-| --- | --- | --- | --- |
-| `nfl` | NFL field | 120 by 53⅓ yards with 10-yard end zones | yard lines every 5 yards, hash marks 70 feet 9 inches from each sideline, the sideline ticks, numbers every 10 yards upright and upside down with arrows, goal posts on the end lines, pylons |
-| `cfl` | CFL field | 150 by 65 yards with 20-yard end zones | the same lines, hash marks 28 yards from each sideline, the centre marked C, goal posts on the goal lines |
-| `ifaf` | IFAF field | 120 by 53⅓ yards with 10-yard end zones | hash marks 60 feet from each sideline, numbers 27 feet from the sideline, posts on the end lines |
-| `nhl` | NHL rink | 200 by 85 feet, corners of 28 feet | goal lines 11 feet and blue lines 75 feet from the ends, the red line, five face-off circles and four more spots, creases, nets, trapezoids, the referee's crease |
-| `nba` | NBA court | 94 by 50 feet | 16-foot keys, free-throw circles, three-point lines of 23 feet 9 inches and 22 feet in the corners, restricted areas, backboards and rims, the small marks |
-| `soccer` | Soccer pitch | 105 by 68 m, or any size, or a preset | the halfway line and centre circle, penalty areas, goal areas, marks, arcs, corner arcs and flags, the marks off the field, goals |
-| `mlb` | Baseball field | 90-foot bases, a fence from the park's distances | foul lines, the infield cut by a 95-foot arc round the mound, bases, the plate, batter's boxes, the running lane, warning track and fence |
-
-<p align="center">
-<picture>
-<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo/main/docs/images/football-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo/main/docs/images/football-desk-light.webp" alt="A football field drawn wide on the demo's felt: the visiting team's blue end zone on the left with its gull emblem and its name written along it, the home team's rust-red end zone on the right with its bison, the yard lines, hash marks and upright and upside-down yard numbers between them, and the score panel at midfield reading 27 to 24, Final, Championship Game." width="720">
-</picture>
-<br><em>A football field: the end zones in the teams' colours, the score at midfield.</em>
-</p>
-
-<p align="center">
-<picture>
-<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo/main/docs/images/court-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo/main/docs/images/court-desk-light.webp" alt="A basketball court in the two-tone look: a pale floor with a deep blue key, centre circle and border, the words SUMMIT PEAKS and METRO BOLTS along the baselines, each team's emblem and name on its half, and the score panel at centre court reading 108 to 112, Finals, Game 6." width="640">
-</picture>
-<br><em>A court in a look of its own: the paint, the border and the words on the baselines are options.</em>
-</p>
-
-`league` draws a surface as one league's rulebook marks it, `sport` naming the family (`drawKyogijo({ sport: "nba", league: "fiba" })`): the WNBA, FIBA, the NCAA, the IIHF, the AHL, the CHL, high school, Little League, PONY and softball, in [docs/variants.md](./docs/variants.md).
-
-Lines are drawn a little thicker than they are painted, as broadcast graphics do, so that they stay in view at a small size; `exactLines: true` draws them at their true widths.
-
-## Soccer
-
-`sport: "soccer"` draws a pitch from Law 1 of the IFAB Laws of the Game: the halfway line, the centre circle of 9.15 m, both penalty areas (16.5 m), goal areas (5.5 m), penalty marks (11 m), arcs, corner arcs (1 m) with flags, the marks off the field that show a corner kick's distance, and goals of 7.32 by 2.44 m. In a score each team's name is in its penalty area, in its colour.
-
-| Option | What it does |
-| --- | --- |
-| `pitch` | A preset or a size: `{ length, width, unit }` in metres (or `yd`, `ft`, `in`, `cm`, `mm`; `units` sets the default). The international 105 by 68 m by default. |
-| `ground` | A ground of `GROUNDS` ([below](#famous-grounds)): its pitch size. |
-| `half` | `left` or `right`: one half, for a bare pitch. A drawing with teams always shows the whole. |
-| `stripePattern` | `bands` (19, the default), `wide`, `narrow`, `lengthwise`, `checks`, `diagonal` or `none`; `stripes: false` also turns them off. |
-| `goals` | `box` (the net, the default), `line`, `strip` or `none`. `cornerFlags` turns the flags off. |
-| `pitchType` | Draw the pitch in a data provider's own coordinates (below). |
-
-The presets are `fifa`, `uefa`, `mls`, `ncaa`, `law-min`, `law-max`, `9-a-side`, `7-a-side`, `5-a-side` and `futsal`; each size and the rule it is read from is in [docs/sources.md](./docs/sources.md#soccer).
-
-`status` also takes `final-aet`, `final-pens`, `extra-time` and `penalties`. A team's `penalties` is its goals in the shoot-out: both are written with the status (`Final · 4-2 pens`) and a level game goes to the winner of the shoot-out.
-
-```ts
-import { drawKyogijo, soccerPitchClass, soccerSpec } from "@johnmorrisdotca/kyogijo";
-
-const svg = drawKyogijo({
-  sport: "soccer",
-  away: { name: "Northern Owls", abbr: "NOW", score: 2, penalties: 4, color: "#3a2d6b" },
-  home: { name: "Lakeshore Anchors", abbr: "LSA", score: 2, penalties: 2, color: "#0f7a7a" },
-  status: "final-pens",
-  competition: "Cup Final",
-});
-console.log(svg.includes("Final · 4-2 pens"), svg.includes("Northern Owls won 4-2 on penalties."));
-// true true
-const pitch = soccerSpec({ length: 110, width: 70, unit: "yd" });
-console.log(pitch.length.toFixed(2), pitch.width.toFixed(2), soccerPitchClass(pitch.length, pitch.width));
-// 100.58 64.01 international
-```
-
-### Famous grounds
-
-`ground` draws a pitch at the size of a ground of `GROUNDS`: 64 venues of World Cup finals, of 2026 and of well-known clubs, each with its place, Wikidata item, coordinates, names by year (`year`), local and Japanese names and World Cups ([docs/grounds.md](./docs/grounds.md)). A ground whose article gives no football pitch size (22 of 64) is drawn at 105 by 68 m and marked `pitchSize: "default"`: no size is guessed. A `pitch` of your own wins.
-
-```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
-import { GROUNDS, groundNameIn, groundsHosting } from "@johnmorrisdotca/kyogijo/grounds";
-
-const svg = drawKyogijo({ sport: "soccer", ground: "metlife-stadium", year: 2026 });
-console.log(svg.includes("New York New Jersey Stadium, soccer pitch"), GROUNDS["anfield"].pitch);
-// true { length: 101, width: 68 }
-console.log(groundsHosting("world-cup", 1966).map((g) => g.name), groundNameIn(GROUNDS["soccer-city"], 2010));
-// [ 'Wembley Stadium (1923)', 'Old Trafford' ] Soccer City
-```
-
-### Data providers
-
-A provider writes the pitch in its own numbers (Opta's 0 to 100 with y up, StatsBomb's 120 by 80 yards with y down, Tracab's centimetres from the centre spot). `SOCCER_PROVIDERS` has ten (`opta`, `statsbomb`, `wyscout`, `tracab`, `metrica`, `skillcorner`, `secondspectrum`, `impect`, `uefa`, `international`), each as a frame. Opta, StatsBomb and Wyscout fix their lines, so they are not where the Laws put them on a 105 by 68 m pitch; the others follow the pitch's size.
-
-- `pitchType: "opta"` stands the lines where the provider puts them and adds an empty `<g class="ky-data">` whose `transform` turns the provider's x and y into metres: raw data put in it plots.
-- `rescale(from, to)` maps one provider's points to another's, landmark to landmark, so that a point on the penalty line stays on it; `inverse` goes back. The providers are also [frames](#coordinate-frames).
-
-```ts
-import { drawKyogijo, rescale } from "@johnmorrisdotca/kyogijo";
-import { toSurface } from "@johnmorrisdotca/kyogijo/frames";
-
-const svg = drawKyogijo({ sport: "soccer", pitchType: "opta", id: "o" });
-console.log(/<g class="ky-data" data-frame="opta" transform="matrix\(1.05 0 0 -0.68 0 68\)"\/>/.test(svg));
-// true
-// Opta's penalty line, 17 from the goal line, is StatsBomb's, 18 yards from it.
-console.log(rescale("opta", "statsbomb")(83, 50));
-// [ 102, 40 ]
-console.log(toSurface([[50, 50]], { from: "opta", size: { length: 105, width: 68, unit: "m" } }).map((p) => p.map(Math.round)));
-// [ [ 172, 112 ] ]
-```
-
-## Ballparks
-
-<p align="center">
-<picture>
-<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo/main/docs/images/ballpark-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo/main/docs/images/ballpark-desk-light.webp" alt="The baseball field of Hanshin Koshien Stadium with the outfield fence drawn through its published distances, 95 metres at the lines and 118 metres in the alleys and the middle, with mown arcs on the grass, the warning track, the infield dirt, and a red and a green panel in the foul ground at the bottom for the teams' dugouts." width="640">
-</picture>
-<br><em>A ballpark's fence, drawn through the distances its article publishes.</em>
-</p>
-
-`park` takes a key of `PARKS`, and `year` a season (a past park's fence, and the field's markings: see [Surfaces through the years](#surfaces-through-the-years)). The fence is a smooth curve through the distances the park's article publishes (the foul lines, the alleys, the middle), so that it never swings out past them. `fence: { left, leftCenter, center, rightCenter, right }` lays your own distances over a park's or over the generic field of 330, 375, 400, 375 and 330 feet.
-
-| League | Parks |
-| --- | --- |
-| MLB, current | the 30 current parks, from `oriole-park-at-camden-yards` to `oracle-park` |
-| MLB, past | the 44 parks clubs have left, from `baker-bowl` (1887) to `turner-field` (2016), by their first season of MLB use |
-| NPB, home parks | the 12 home parks, from `tokyo-dome` to `mizuho-paypay-dome-fukuoka` |
-| NPB, other and past | the 8 other grounds, from `sapporo-dome` to `nagoya-stadium` |
-
-Each park has its name (in Japanese too for the parks of Japan), team, city, coordinates, `wikidata` item and the article and revision its figures were read from; a past MLB park has `from` and `to`, and where an article dates earlier fences they are in `periods` (`year: 1915` draws the Polo Grounds' 277, 433 and 258 feet). All the keys and facts are in [docs/parks.md](./docs/parks.md) and [docs/references.md](./docs/references.md).
-
-## Surfaces through the years
-
-`year` draws a surface as the rules marked it in a season, named by the year it starts in: `1979` is the 1979–80 season of the NHL and the NBA, `1974` the 1974 season of the NFL, the CFL and baseball. Without a `year` the surface is today's (`ERA_CURRENT`); the IFAF's has none. Every change is cited in [docs/sources.md](./docs/sources.md) and listed in [docs/eras.md](./docs/eras.md); what could not be cited is in [docs/references.md](./docs/references.md).
-
-| Sport | What changed, and from which season |
-| --- | --- |
-| `nhl` | centre red line (1943–44), goal and blue lines (1998–99, 2005–06), trapezoid (2005–06, 2014–15) |
-| `nba` | lane width (1951–52, 1964–65), three-point line (1979–80, 1994–95, 1997–98), restricted area (1997–98) |
-| `nfl` | hash marks (1933, 1935, 1945, 1972), goal posts' place (1920, 1927, 1933, 1974) and shape (1967) |
-| `cfl` | end zones (1986; 2027 planned), hash marks (2022), the field and the goal posts (2027 planned) |
-| `mlb` | pitcher's box and plate (1871, 1881, 1887, 1893), batter's boxes (1874, 1885), home plate (1857 to 1900), mound height (1903, 1969) |
-
-```ts
-import { drawKyogijo, rulesFor } from "@johnmorrisdotca/kyogijo";
-
-const rink = rulesFor("nhl", 1960);
-console.log(rink.season, rink.rules.centreLine, rink.rules.trapezoid, rink.differences.map((change) => change.feature));
-// 1960–61 true null [ 'trapezoid' ]
-console.log(drawKyogijo({ sport: "nba", year: 1978 }) === drawKyogijo({ sport: "nba", year: 1979 }));
-// false
-```
-
-`rulesFor(sport, year)` gives the markings in force, what differs from today (`differences`, in English and Japanese, cited) and `gaps`, the markings no source covers for that season, which keep the nearest cited state.
-
-## Units
-
-Each surface keeps the unit its rulebook states its figures in. The drawing itself is made in feet, so a figure is one conversion away in either direction, and `units` says what the lengths you pass are in.
-
-| Surface | Unit | Why |
-| --- | --- | --- |
-| `nfl`, `cfl`, `ifaf` | yards (`yd`) | the length of a field and its end zones are counted in yards |
-| `nhl`, `nba` | feet (`ft`) | the rulebooks give feet and inches |
-| `mlb` | feet (`ft`) | the Official Baseball Rules give feet |
-| `soccer` | metres (`m`) | the Laws of the Game give metres, with yards beside them |
-| NPB parks (`parkUnit`) | metres (`m`) | the parks of Japan publish their fence in metres; `PARKS` holds them in feet, converted once at 0.3048 metres to the foot |
-
-`SURFACE_UNITS` is that table. The units are `ft`, `in`, `yd`, `m`, `cm` and `mm`; anything else is an error and not feet.
-
-```ts
-import { NHL, SURFACE_UNITS, convertLength, dimensionsOf, lengthsIn, surfaceSize } from "@johnmorrisdotca/kyogijo/geometry";
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
-
-console.log(SURFACE_UNITS.nfl, surfaceSize("nfl"), convertLength(100, "yd", "ft"));
-// yd { length: 120, width: 53.333333333333336, unit: 'yd' } 300
-console.log(surfaceSize("nhl", "m").length.toFixed(2), lengthsIn(NHL, "m").crease.radius.toFixed(3), dimensionsOf("nba", "yd").length.toFixed(2));
-// 60.96 1.829 31.33
-
-// The margin and the fence are lengths: with `units` they are in metres, and are converted before anything is drawn.
-const metres = drawKyogijo({ sport: "mlb", id: "m", margin: 3.048, fence: { left: 100, center: 122 }, units: "m" });
-const feet = drawKyogijo({ sport: "mlb", id: "m", margin: 10, fence: { left: 100 / 0.3048, center: 122 / 0.3048 } });
-console.log(metres === feet);
-// true
-```
-
-`lengthsIn(table, unit)` converts every length in a table of dimensions (`NHL`, `NBA`, `MLB`, a football spec) and keeps its names and flags; `dimensionsOf(sport, unit)` is the table of a sport, in its own unit when none is given; `fenceIn(points, unit)` converts a fence's distances and not its angles. Nothing is changed in place.
-
-## Coordinate frames
-
-A data provider puts a point on a rink or a field in its own numbers: the NHL's feet from centre ice, HockeyTech's canvas of 600 by 300, the NBA's tenths of a foot from the hoop. A `Frame` says how those numbers lie on the surface (unit, range, origin, which way y grows, landmarks), and `toSurface` and `fromSurface` move points between a frame and the drawing's own coordinates. `convert(from, to)` goes from one provider's frame to another's. The module is `@johnmorrisdotca/kyogijo/frames`; each frame is cited in [docs/sources.md](./docs/sources.md).
-
-| Frame | Sport | Unit and range | Origin | y grows | Ends |
-| --- | --- | --- | --- | --- | --- |
-| `nhl-api` | NHL | feet, x -100 to 100, y -42.5 to 42.5 | centre ice | up | fixed to the rink |
-| `hockeytech` | NHL | canvas, x 0 to 600, y 0 to 300 | top left | down | fixed to the rink |
-| `nba-stats` | NBA | tenths of a foot, x -250 to 250, y -52.5 to 887.5 | the hoop | towards half court | the basket attacked |
-| `nfl-tracking` | NFL | yards, x 0 to 120, y 0 to 53.3 | bottom left of the field | up | fixed to the field |
-| `mlbam` | MLB | image units, home plate at (125.42, 198.27) | top left | down | none |
-| `retrosheet` | MLB | feet from home plate (zone centres: `RETROSHEET_ZONES`) | home plate | out | none |
-| `opta`, `statsbomb`, `wyscout`, `tracab`, `metrica`, `skillcorner`, `secondspectrum`, `impect`, `uefa`, `international` | soccer | see [Soccer](#data-providers); a pitch of any size, so `size` is given | by provider | by provider | fixed to the pitch |
-
-```ts
-import { convert, fromSurface, toSurface } from "@johnmorrisdotca/kyogijo/frames";
-
-// The right end-zone face-off dot: 69 feet from centre ice, 22 to one side.
-console.log(toSurface([[69, 22]], { from: "nhl-api" }), toSurface([[507, 150 - (22 * 300) / 85]], { from: "hockeytech" })[0].map((n) => Math.round(n * 100) / 100));
-// [ [ 169, 20.5 ] ] [ 169, 20.5 ]
-
-// The same point in metres lands where the point in feet does, and goes back.
-const metres = toSurface([[69, 22]], { from: "nhl-api", units: "m" });
-console.log(metres[0].map((n) => n.toFixed(3)), fromSurface(metres, { to: "nhl-api", units: "m" })[0].map((n) => Math.round(n)));
-// [ '51.511', '6.248' ] [ 69, 22 ]
-
-// A team that attacked the left end in a period is turned a half turn, so that every shot attacks the right.
-console.log(toSurface([[69, 22]], { from: "nhl-api", attacking: "left" }), convert("hockeytech", "nhl-api")([[600, 0]]));
-// [ [ 31, 64.5 ] ] [ [ 100, 42.5 ] ]
-```
-
-- **Units, anchors and limits.** `units` is the unit of the surface's numbers (feet by default); `anchors` replace a frame's landmarks with your own for a venue whose markings differ, and `limits` keeps points on the surface (`"surface"`) or in a box. Anchors and limits are converted with `units`, not only the points.
-- **Ends.** `attacking: "left"` turns points a half turn about the middle of the surface. `attackingIn("nhl", period, "right")` says which end a team attacks in a period (hockey changes ends every period, football after the first and third quarters, basketball at the half); for a period no rule here settles, pass `changedAfter`. A baseball frame has no ends and refuses `attacking`.
-- **Your own frame.** `registerFrame(frame)` adds one to `FRAMES`, and `piecewise(landmarks)` is the mapper the frames use: straight between landmarks. A frame for a surface of any size takes its landmarks as a function of the surface's size, and `toSurface` is then given `size`.
-
-## Data layers
-
-`layers` in the options of `drawKyogijo` and `drawSurface` lays data on the surface: a list of layers, each a `kind` (`points`, `lines`, `arrows`, `text`, or the heat layers `heatmap`, `hexbin`, `zones`, `contour` and `legend`) with its `data` and a `style`. The marks sit in the surface's own frame, over the markings and under a score's panel, cut to its outline and upright when it lies tall.
-
-```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
-
-// The NHL API's coordinates are feet from centre ice: `from` puts them on the rink.
-const svg = drawKyogijo({
-  sport: "nhl",
-  layers: [
-    {
-      kind: "points",
-      name: "shots",
-      from: "nhl-api",
-      data: [
-        { x: 69, y: 22, team: "home", outcome: "goal", value: 0.31 },
-        { x: 54, y: -8, team: "home", outcome: "shot", value: 0.07 },
-        { x: -61, y: 12, team: "away", outcome: "blocked", value: 0.04 },
-      ],
-      style: { size: { range: [2, 5] }, outcomes: { blocked: { hollow: true, shape: "x" } } },
-    },
-  ],
-});
-console.log(svg.includes("3 shots"), svg.includes("By outcome: goal 1, shot 1, blocked 1."));
-// true true
-```
-
-A miss is drawn hollow and a failed pass dashed. Shapes, colour rules, comets, units, frames and the heat layers are in [docs/layers.md](./docs/layers.md).
-
-```ts
-import { drawKyogijo, layerTable } from "@johnmorrisdotca/kyogijo";
-
-const passes = {
-  kind: "arrows",
-  name: "passes",
-  from: "nfl-tracking",
-  data: [
-    { x: 40, y: 30, x2: 62, y2: 18, outcome: "complete" },
-    { x: 40, y: 30, x2: 55, y2: 44, outcome: "incomplete" },
-  ],
-  style: { curve: 0.1, comet: true },
-} as const;
-
-console.log(drawKyogijo({ sport: "nfl", orientation: "portrait", layers: [passes] }).includes("linearGradient"));
-console.log(layerTable([passes]).includes("<caption>2 passes"));
-// true
-// true
-```
-
-`drawLayers(options, layers)` returns the group alone; `layerTable(layers)` an HTML table for each layer, for a screen reader. Each layer has a `<title>` and a `<desc>` ("24 shots", "By outcome: goal 3, shot 21."), and a mark's `title` is its tooltip.
-
-## Score mode
-
-<p align="center">
-<picture>
-<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo/main/docs/images/badges-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo/main/docs/images/badges-desk-light.webp" alt="A list of eight score strips in the demo, each a team block with its emblem, a short name and its score at each end, in the team's colour, and in the middle a small picture of the sport and the state of the game, such as Final, Final/OT and 2nd period." width="640">
-</picture>
-<br><em>Badges for a list of games.</em>
-</p>
-
-Pass `home` and `away`. Each team has a `name`, an optional `abbr`, `score`, `penalties` (a soccer shoot-out), `logo`, `color` and `textColor`.
-
-| Option | What it does |
-| --- | --- |
-| `size` | `full` (on the surface), `compact` (the surface with a strip under it) or `badge` (the strip alone). |
-| `status` | `final`, `final-ot`, `final-so`, `final-aet`, `final-pens`, `live`, `half`, `extra-time`, `penalties`, `postponed` (translated), or any text such as `2nd period` or `Bottom 9th`. |
-| `competition`, `date` | The round and the day, as written. |
-| `label` | A line for the foot of the panel in place of the status and the date. |
-| `winner` | `auto` (the leader once the status is a final one), `leader`, `none`, `home` or `away`. |
-| `homeSide` | `right` (the default, as in "away at home") or `left`. |
-| `uppercase` | Names in capitals. On by default. |
-
-A team's logo is an `https:` or relative address, an image `data:` address, or the text of an SVG. It is drawn as an image, so it cannot run a script, and an address of any other kind is ignored. A team without a logo is its name alone.
-
-## Layout
-
-<p align="center">
-<picture>
-<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo/main/docs/images/tall-phone-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo/main/docs/images/tall-phone-light.webp" alt="A hockey rink standing tall on a phone, the same game as on the desk: the Northern Owls' emblem and name in the upper zone, the Lakeshore Anchors' in the lower, each reading upright, the score panel between them over the centre line." width="240">
-</picture>
-<br><em>The same game tall: the teams top and bottom, every word upright.</em>
-</p>
-
-`orientation` is `landscape` (the default), `portrait` or `auto`. Portrait turns the surface a quarter clockwise, so the away team is at the top and the home team at the bottom; every name, number and score is turned back so that it reads upright. `auto` follows `aspect`, the container's width over its height: in a string it is landscape unless `aspect` is given, and the browser helpers measure the container, draw again when its shape changes, and treat a container that is as tall as its content and under 560 pixels wide as tall.
-
-A baseball field is already upright, so in portrait it stays as it is and the teams go in strips above and below it.
+A page that moves (`mountKyogijo`), a file written on a server and a frame for a page with no script are in [getting started](./docs/getting-started.md).
 
 ## API
 
-The [API reference](https://johnmorrisdotca.github.io/kyogijo/api.html) lists every export of every entry point with its signature and its doc comment. It is made from the source by `pnpm site`, so it cannot fall behind the code.
-
-| Entry | What it holds |
-| --- | --- |
-| `@johnmorrisdotca/kyogijo` | `drawKyogijo`, `drawSurface`, `drawScore`, `drawBadge`, `drawLayers`, `layerTable`, `describe`, `winnerOf`, `statusLabel`, `isPortrait`, `statusText`; `OUTCOMES`, `rampColour`; `SPORTS`, `COURT_THEMES`, `SOCCER`, `SOCCER_PITCHES`, `SOCCER_PROVIDERS`, `soccerSpec`, `soccerFrame`, `rescale`, `PARKS`, `PARK_IDS`, `parkById`, `parkByWikidata`, `parkPointsIn`, `parkSourceUrl`, `parkUnit`, `fenceFor`; `rulesFor`, `eraChanges`, `eraStates`, `eraRange`, `seasonLabel`, `footballIn`, `ERA_SPORTS`, `ERA_CURRENT`, `ERA_SOURCES`; `SURFACE_UNITS`, `UNITS`, `convertLength`; `safeColour`, `safeLogo`, `inkOn`; `fitLines`, `textWidth`, `abbreviate`, `capitals`; `KYOGIJO_STYLE`, `KYOGIJO_STRINGS`, `COLOR_PROPERTIES`, `VERSION` and the option types |
-| `@johnmorrisdotca/kyogijo/geometry` | `FOOTBALL`, `NHL`, `NBA`, `MLB`, `SOCCER`, `SOCCER_PITCHES`, `soccerSpec`, `soccerPitchClass`, `fenceAt`, `fencePoints`, `threePointJoin`, `skinJoin`, `boardsY` and the other dimensions; `SURFACE_UNITS`, `convertLength`, `convertPoint`, `lengthsIn`, `dimensionsOf`, `surfaceSize`, `fenceIn` |
-| `@johnmorrisdotca/kyogijo/frames` | `toSurface`, `fromSurface`, `convert`, `convertPoints`, `flipEnds`, `attackingIn`, `registerFrame`, `frameByName`, `framesOf`, `piecewise`, `span`, `FRAMES`, `RETROSHEET_ZONES`, `zoneToPoint`, `zoneAt`, `SOCCER_PROVIDERS`, `rescale` and the frame types |
-| `@johnmorrisdotca/kyogijo/layers` | `drawLayers`, `layerTable`, `renderLayers`, `outlineOf`, `OUTCOMES`, `rampColour`, the heat numbers (`binGrid`, `densityGrid`), `ZONE_SETS`, `HEAT_RAMPS` and the layer types |
-| `@johnmorrisdotca/kyogijo/charts` | `nbaShotChart`, `nhlShotMap`, `mlbSprayChart`, `nflPassChart`, `soccerShotMap`, `soccerGoalMouth` and the chart types |
-| `@johnmorrisdotca/kyogijo/parks` | `PARKS`, `PARK_IDS`, `parkById`, `parkByWikidata`, `parkPointsIn`, `parkSourceUrl`, `parkUnit`, `fenceFor` |
-| `@johnmorrisdotca/kyogijo/eras` | `rulesFor`, `eraChanges`, `eraStates`, `eraRange`, `seasonLabel`, `footballIn`, `ERA_SPORTS`, `ERA_CURRENT`, `ERA_SOURCES` and the rule types |
-| `@johnmorrisdotca/kyogijo/grounds` | `GROUNDS`, `GROUND_IDS`, `groundById`, `groundByWikidata`, `groundNameIn`, `groundsHosting`, `groundSourceUrl` |
-| `@johnmorrisdotca/kyogijo/atlas` | `PLACES`, `placeById`, `placesBy`, `atlasFacets`, `surfaceOf` |
-| `@johnmorrisdotca/kyogijo/mount` | `mountKyogijo`, `kyogijoElement`, `containerAspect` |
-| `@johnmorrisdotca/kyogijo/react` | `kyogijoProps`, `kyogijoHtml`, `createKyogijo` |
-| `@johnmorrisdotca/kyogijo/element` | `KyogijoField`, `defineKyogijoField`, `optionsFromAttributes`, `KYOGIJO_TAG`, `KYOGIJO_ATTRIBUTES` |
-| `@johnmorrisdotca/kyogijo/element/define` | importing it registers `<kyogijo-field>` |
+The [API reference](https://johnmorrisdotca.github.io/kyogijo/api.html) lists every export of every entry point with its signature and its doc comment. It is made from the source by `pnpm site`, so it cannot fall behind the code. [Entry points](./docs/entry-points.md) says what each of the 14 holds: the main one draws; `/geometry`, `/frames`, `/layers`, `/charts`, `/parks`, `/eras`, `/leagues`, `/grounds` and `/atlas` stand apart and need nothing else; `/mount`, `/react`, `/element` and `/element/define` put a drawing in a page.
 
 Every function is pure: it returns new values and never changes what it was given.
 
 ## Theming
 
-Nothing is branded. The drawing is coloured by custom properties on its `svg`, with a light set and a dark set that follow the device (or `data-theme="light"` or `"dark"` on the page's root, or `theme` in the options). A page sets only the ones it wants different, on the drawing or on a container above it. The defaults sit in `:where()`, which has no weight, so a page's own rule always wins. `colors` in the options sets them from code.
-
-Each property (`--ky-apron`, `--ky-surface`, `--ky-line`, `--ky-left`, `--ky-plate`, `--ky-layer`, `--ky-font` and the rest) is listed with its light and dark value in [docs/theming.md](./docs/theming.md).
-
-Every part carries a class (`ky-surface`, `ky-line`, `ky-zone-left`, `ky-banner`, `ky-plate`, `ky-score`, `ky-winbar`, `ky-lose`, `ky-badge`) for anything a property cannot reach. Pass `style: "none"` to leave the stylesheet out of each drawing and put `KYOGIJO_STYLE` in the page once, which is what the demo does for its many drawings.
-
-A court's own look is `court: { wood, woodAlt, apron, border, key, keyLeft, keyRight, line, centreCircle, centreLogo, baselineText, baselineInk, paintThreePoint }`; `COURT_THEMES` has five to start from: `maple`, `twoTone`, `night`, `sunburst` and `tournament` (a floor painted edge to edge, with no wood).
+Nothing is branded. The drawing is coloured by custom properties on its `svg`, with a light set and a dark set that follow the device (or `data-theme` on the page's root, or `theme` in the options); a page sets only the ones it wants different, and its own rule always wins. Each property is listed with its light and dark value, with the court's five looks, in [theming](./docs/theming.md).
 
 ## Limits
 
-Each is held by a test, and the ones with a name are exported.
-
-| Limit | Value | Where |
-| --- | --- | --- |
-| Sports | 7 | `SPORTS` |
-| Soccer pitches and providers | 10 presets, 10 providers (90 maps between them, each landmark to its landmark) | `SOCCER_PITCHES`, `SOCCER_PROVIDERS` |
-| Ballparks | 94 (30 current MLB, 44 past MLB, 12 NPB home parks, 8 other NPB grounds) | `PARKS` |
-| Grounds | 64 | `GROUNDS` |
-| Units | 6 (`ft`, `in`, `yd`, `m`, `cm`, `mm`) | `UNITS` |
-| Coordinate frames | 16 to start with (`nhl-api`, `hockeytech`, `nba-stats`, `nfl-tracking`, `mlbam`, `retrosheet` and the ten soccer providers), more by `registerFrame` | `FRAMES` |
-| A colour | a hex colour, `rgb()`, `rgba()`, `hsl()`, `hsla()`, a name or `var(--name)`, 64 characters at most | `safeColour` |
-| A logo | an https or relative address, an image data address, or SVG text up to 200,000 characters | `safeLogo` |
-| A name | any length: it is set on one line or two, in the biggest size that fits its place | `fitLines` |
-| A layer's marks | 1,000 points add under 70 kB; 10,000 draw in under 250 ms | `drawKyogijo` |
-| A drawing's size | under 22 kB for a football field, 15 kB for a soccer pitch with a score, 14 kB for a rink or a court, 17 kB for a ballpark, each with its 8 kB stylesheet (a test holds each) | `drawKyogijo` |
+Each is held by a test: seven sports, ten soccer pitches and ten providers, 94 ballparks, 64 grounds, six units, sixteen frames, a drawing of under 22 kB. The table, made from the code, is [limits](./docs/limits.md).
 
 ## Accessibility
 
-- **Each drawing says what it is.** The `svg` has `role="img"`, a `<title>` (the teams and the score, or the surface) and a `<desc>` (the competition, the status, the result, and what the surface is), linked by `aria-labelledby`. The words are in English or Japanese by `language`.
-- **A score is also text.** The names, scores and statuses in a drawing are text elements, so they can be selected and found in a page. Pass `title` and `description` to say it your own way.
-- **Words stay upright.** In a tall drawing the text is turned back, and a football field's numbers are upright on both sides.
-- **Colour is not the only sign.** The winner is marked by a bar under the score and the loser's side is lighter, as well as by the colours.
-- **Contrast.** The score sits on a dark panel with white words in both themes; a team's words on its colour are black or white by the colour's lightness, or the `textColor` you give.
-- **Motion.** Nothing in the package animates. The demo's live score moves only when pressed, or every few seconds when told to play and the page is in view.
-- **Not yet: a spoken update.** A page that changes the score may announce it with its own live region; the drawing does not.
+- Each drawing is an `img` with a `<title>` and a `<desc>` that say the teams, the score, the surface and the result, in English or Japanese.
+- A score is also text, words stay upright when the surface lies tall, colour is never the only sign, and each data layer has a table for a screen reader.
+- Nothing in the package animates.
+
+The rest, with the contrast and what is not yet done, is in [accessibility](./docs/accessibility.md).
 
 ## Browser and runtime support
 
@@ -728,7 +434,7 @@ Any browser with ES modules, `:where()` and SVG 2's `href` on images: Chrome and
 
 ## Languages
 
-English and Japanese: the title, the description and the standard statuses of a drawing, the sentence of each change in `eraChanges`, and the demo. The words are listed beside their English in [docs/strings-ja.md](./docs/strings-ja.md). Team names, competitions and dates are written as you give them, in any language; Japanese names of the NPB parks are in `PARKS`. Not yet: the Japanese read by a native reader (the demo says so when it is shown).
+English and Japanese: the title, the description and the standard statuses of a drawing, the sentence of each change in `eraChanges`, and the demo. The words are listed beside their English in [the Japanese of Kyogijo](./docs/strings-ja.md). Team names, competitions and dates are written as you give them, in any language; Japanese names of the NPB parks are in `PARKS`. Not yet: the Japanese read by a native reader (the demo says so when it is shown).
 
 ## Roadmap
 
@@ -744,82 +450,9 @@ Left out on purpose: statistics, rosters and schedules. Kyogijo draws the place 
 
 ## Architecture
 
-The drawing is plain functions over plain data with no DOM and no dependency. The dimensions are in one file, the ballparks are generated from a reviewed list, and each surface is a function that returns its markup and the places the teams and the score go.
+The drawing is plain functions over plain data with no DOM and no dependency. The dimensions are in one file, the ballparks are generated from a reviewed list, and each surface is a function that returns its markup and the places the teams and the score go. Every entry point stands apart, so that importing the geometry, the parks or the grounds loads nothing else. The files and what each is for are in [architecture](./docs/architecture.md).
 
-```text
-src/
-├── index.ts            the main entry
-├── draw.ts             drawKyogijo: options in, one string of SVG out
-├── score.ts            the teams' places, the score's panel and the badge
-├── surfaces/
-│   ├── surface.ts      what a surface is, and the quarter turn
-│   ├── football.ts     the NFL, CFL and IFAF fields
-│   ├── hockey.ts       the NHL rink
-│   ├── basketball.ts   the NBA court
-│   ├── baseball.ts     the baseball field and its fence
-│   ├── soccer.ts       the soccer pitch
-│   ├── soccer-spec.ts  the Laws' figures, the presets, futsal and the small-sided pitches
-│   └── soccer-providers.ts  the data providers' coordinates, registered as frames, and rescale
-├── layers.ts           data layers: drawLayers, layerTable and the marks
-├── layers.marks.ts     the shapes, curves, waves, heads and colour ramps of the marks
-├── layers.types.ts     the types of a layer
-├── layers.env.ts       what the layers share
-├── heat.ts             the heat layers
-├── heat.stats.ts       bins, density, contours
-├── heat.colour.ts      the colour ramps
-├── heat.zones.ts       the sports' zones
-├── heat.types.ts       the heat layers' types
-├── layers-entry.ts     the layers' entry
-├── charts.ts           ready-made charts and what they share
-├── charts.baseball.ts  the spray chart
-├── charts.soccer.ts    the soccer shot map and goal mouth
-├── charts.types.ts     the charts' types
-├── charts-entry.ts     the charts' entry
-├── outline.ts          a surface's outline: where a layer is cut
-├── common.ts           the drawing's id, the orientation and the unit, shared by the drawing and its layers
-├── geometry.ts         every dimension, in feet, with the fence's curve
-├── eras.ts             the markings of each surface in a season, each change with its sources
-├── eras-entry.ts       the eras' entry
-├── leagues.ts          the leagues: which rulebook marks a surface
-├── leagues-entry.ts    the leagues' entry
-├── leagues/
-│   ├── types.ts        what a league is
-│   ├── sources.ts      the rulebooks read
-│   ├── basketball.ts   the courts
-│   ├── hockey.ts       the rinks
-│   ├── football.ts     the fields
-│   └── baseball.ts     the diamonds
-├── geometry-entry.ts   the geometry's entry
-├── units.ts            the units of length, each surface's own, and the converters
-├── frames.ts           coordinate frames: the mapper, the registry, toSurface and fromSurface
-├── frames.providers.ts the NHL, HockeyTech, NBA, NFL, MLBAM and Retrosheet frames
-├── frames-entry.ts     the frames' entry
-├── parks.ts            the ballparks, their fences and their sources
-├── parks.data.ts       made by scripts/build-parks.mjs from scripts/parks.data.json
-├── parks-entry.ts      the parks' entry
-├── grounds.ts          the soccer grounds
-├── grounds.data.ts     made by scripts/build-grounds.mjs
-├── grounds-entry.ts    the grounds' entry
-├── atlas.ts            every park and ground with its place, and the filters
-├── atlas-entry.ts      the atlas' entry
-├── themes.ts           the court looks
-├── style.ts            the stylesheet, light and dark
-├── strings.ts          the words, in English and Japanese
-├── text.ts             measuring and fitting a name
-├── colour.ts           safe colours and logo addresses
-├── format.ts           numbers, escaping and elements as text
-├── types.ts            the options
-├── mount.ts            drawing into a container, and following its shape
-├── mount-entry.ts      the mount's entry
-├── react.ts            props and a component for React, without React
-├── react-entry.ts      React's entry
-├── element.ts          the custom element
-├── element-entry.ts    the element's entry
-├── element-define.ts   registers the element
-└── version.ts          the version
-```
-
-Tests sit beside the code. `scripts/` builds the demo, checks the packed package and the README's examples, and takes the README's pictures; `demo/` is the page and the frame; `e2e/` plays the demo in a real browser.
+Tests sit beside the code. `scripts/` builds the demo and the docs site, checks the packed package and the README's examples, and takes the README's pictures; `demo/` is the page and the frame; `e2e/` plays the demo and the docs in a real browser.
 
 ## The name
 
@@ -876,11 +509,11 @@ Kyogijo is one of twenty-five packages, each made for the same site, each at
 pnpm install
 pnpm check          # lint, types, every test, the build and the packed package
 pnpm test:package   # pack, install and import it as somebody who installed it would
-pnpm test:demo      # build the demo and play it in a real browser, at a phone's width and a desk's
-pnpm site           # build the demo into site/, as the Pages workflow publishes it
+pnpm test:demo      # build the demo and the docs and play them in a real browser, at a phone's width and a desk's
+pnpm site           # build the demo and the docs site into site/, as the Pages workflow publishes it
 pnpm screenshots:readme   # take the README's pictures from the built demo, in light and dark
-pnpm test:readme    # run every example in the README against the built package
-pnpm docs:make      # rewrite docs/strings-ja.md after changing a word
+pnpm test:readme    # run every example in the README and the docs against the built package
+pnpm docs:make      # rewrite what the docs make from the source: the Japanese words, the leagues, the frames and units tables
 ```
 
 ## Contributing

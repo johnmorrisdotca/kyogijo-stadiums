@@ -213,6 +213,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `nameLink` | About the name | 名前の由来（英語） |
 | `foot` | Every dimension is from a rulebook or a published figure; the sources are in the repository. | 寸法はすべて、ルールブックまたは公表されている数値に基づいています。出典はリポジトリに載っています。 |
 | `pageApi` | API reference | API（英語） |
+| `pageDocs` | Docs | ドキュメント |
 | `groupSurface` | Surface | 競技場 |
 | `groupTeams` | Teams | チーム |
 | `tryTitle` | Try it | 試してみる |
@@ -457,6 +458,74 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `elementText` | Each of these is a <kyogijo-field> tag with attributes and no script of its own. | ここにあるのはどれも、属性だけを指定した <kyogijo-field> タグで、専用のスクリプトはありません。 |
 | `moreText` | Everything here is a call of one function. | ここにあるものは、すべて1つの関数の呼び出しです。 |
 | `copiedLine` | Copied to the clipboard | クリップボードにコピーしました |
+
+## The docs site's words (`DOCS_WORDS`)
+
+| Key | English | 日本語 |
+| --- | --- | --- |
+| `pitch` | Guides, the reference, a gallery of every picture it can draw, and how it compares: the pages are made from the package's own files when the site is built. | 使い方のガイド、リファレンス、描けるすべての図のギャラリー、他のパッケージとの比較。これらのページは、パッケージ自身のファイルから「pnpm site」で作っています。 |
+| `nameLink` | About the name | 名前の由来（英語） |
+| `foot` | Made from the package's own docs folder. | パッケージ自身のdocsフォルダーから作っています。 |
+| `pageBack` | Demo | デモ |
+| `pageApi` | API reference | API（英語） |
+| `pageDocs` | Docs | ドキュメント |
+| `docsSearchLabel` | Search the docs | ドキュメントを検索 |
+| `docsSearchPlaceholder` | Search titles and headings (press / to start) | タイトルと見出しを検索（「/」キーで入力開始） |
+| `docsMenu` | Contents | 目次 |
+| `docsNone` | No title or heading has all of: {q} | 「{q}」のすべての語を含むタイトルや見出しはありません |
+| `docsCount` | {n} matches | {n}件見つかりました |
+| `docsCopy` | Copy | コピー |
+| `docsCopyCode` | Copy code | コードをコピー |
+| `docsCopied` | Copied to the clipboard. | クリップボードにコピーしました。 |
+| `docsCopiedShort` | Copied | コピーしました |
+| `docsCopyFailed` | Could not copy: select the code and copy it. | コピーできませんでした。コードを選択してコピーしてください。 |
+| `docsPrev` | Previous | 前へ |
+| `docsNext` | Next | 次へ |
+| `docsEdit` | Edit this page on GitHub | GitHubでこのページを編集 |
+| `docsEnglishOnly` | The pages are in English; this contents, the search and the buttons are in Japanese. | ページ本文は英語です。目次、検索、ボタンは日本語で表示しています。 |
+| `docsShowCode` | Show the code | コードを表示 |
+
+## The docs site's contents (`NAV`)
+
+| Group or page | English | 日本語 |
+| --- | --- | --- |
+| group `start` | Start here | 最初に読む |
+| page `index` | Documentation | ドキュメントの概要 |
+| page `getting-started` | Getting started | はじめに |
+| page `surfaces` | The surfaces | 競技場 |
+| page `score` | Score and layout | 得点とレイアウト |
+| page `theming` | Theming | テーマと色 |
+| page `accessibility` | Accessibility | アクセシビリティ |
+| group `places` | Sports and places | 競技と場所 |
+| page `soccer` | Soccer | サッカー |
+| page `ballparks` | Ballparks | 球場 |
+| page `grounds` | The grounds | スタジアム |
+| page `variants` | League variants | リーグごとの違い |
+| page `eras` | Surfaces through the years | 年ごとの競技場 |
+| page `atlas` | The atlas | 球場とスタジアムの地図 |
+| group `data` | Data on a surface | 競技場の上のデータ |
+| page `units` | Units | 単位 |
+| page `frames` | Coordinate frames | 座標系 |
+| page `layers` | Data layers | データレイヤー |
+| page `charts` | Ready-made charts | すぐ使えるチャート |
+| group `gallery` | Gallery | ギャラリー |
+| page `gallery` | Gallery | ギャラリーの案内 |
+| page `gallery-surfaces` | Gallery: surfaces and scores | ギャラリー：競技場と得点 |
+| page `gallery-soccer` | Gallery: the soccer pitch | ギャラリー：サッカーのピッチ |
+| page `gallery-leagues` | Gallery: every league's surface | ギャラリー：リーグごとの競技場 |
+| page `gallery-years` | Gallery: surfaces through the years | ギャラリー：年ごとの競技場 |
+| page `gallery-places` | Gallery: ballparks and grounds | ギャラリー：球場とスタジアム |
+| page `gallery-data` | Gallery: data on a surface | ギャラリー：競技場の上のデータ |
+| group `compare` | Compare | 比較 |
+| page `compare` | How it compares | 他のパッケージとの比較 |
+| group `reference` | Reference | リファレンス |
+| page `entry-points` | Entry points | エントリーポイント |
+| page `limits` | Limits | 数と上限 |
+| page `sources` | Sources of the dimensions | 寸法の出典 |
+| page `references` | References | 参考資料 |
+| page `parks` | The keys of the ballparks | 球場の識別キー |
+| page `strings-ja` | The Japanese of Kyogijo | 日本語訳の一覧 |
+| page `architecture` | Architecture | アーキテクチャ |
 
 ## The surfaces through the years (`eraChanges`)
 

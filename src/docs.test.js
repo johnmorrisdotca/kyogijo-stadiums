@@ -10,6 +10,7 @@ import { LEAGUES, LEAGUE_SOURCES, leagueChanges, leagueFigures } from "./leagues
 import { PARK_IDS, PARKS } from "./parks.ts";
 import { VERSION } from "./version.ts";
 import { WORDS } from "../demo/words.js";
+import { DOCS_WORDS, NAV, readPages } from "../scripts/docs-pages.mjs";
 
 const pkg = JSON.parse(readFileSync("package.json", "utf8"));
 
@@ -32,6 +33,15 @@ function stringsDocument() {
   for (const key of Object.keys(en)) lines.push(`| \`${key}\` | ${en[key].replace(/\|/g, "\\|")} | ${ja[key].replace(/\|/g, "\\|")} |`);
   lines.push("", "## The demo's words (`WORDS`)", "", "| Key | English | 日本語 |", "| --- | --- | --- |");
   for (const key of Object.keys(WORDS.en)) lines.push(`| \`${key}\` | ${WORDS.en[key].replace(/\|/g, "\\|")} | ${WORDS.ja[key].replace(/\|/g, "\\|")} |`);
+  const docsWords = (words) => Object.entries(words).filter(([, text]) => text !== "");
+  lines.push("", "## The docs site's words (`DOCS_WORDS`)", "", "| Key | English | 日本語 |", "| --- | --- | --- |");
+  for (const [key, text] of docsWords(DOCS_WORDS.en)) lines.push(`| \`${key}\` | ${text.replace(/\|/g, "\\|")} | ${DOCS_WORDS.ja[key].replace(/\|/g, "\\|")} |`);
+  const titles = Object.fromEntries(readPages().map((page) => [page.slug, page.headings.find((heading) => heading.depth === 1).text]));
+  lines.push("", "## The docs site's contents (`NAV`)", "", "| Group or page | English | 日本語 |", "| --- | --- | --- |");
+  for (const group of NAV) {
+    lines.push(`| group \`${group.id}\` | ${group.en} | ${group.ja} |`);
+    for (const page of group.pages) lines.push(`| page \`${page.slug}\` | ${page.en ?? titles[page.slug]} | ${page.ja} |`);
+  }
   lines.push("", "## The surfaces through the years (`eraChanges`)", "", "| Change | English | 日本語 |", "| --- | --- | --- |");
   for (const sport of ERA_SPORTS) for (const change of [...eraStates(sport), ...eraChanges(sport)]) lines.push(`| \`${change.id}\` | ${change.what.replace(/\|/g, "\\|")} | ${change.ja.replace(/\|/g, "\\|")} |`);
   lines.push("", "## The leagues (`LEAGUES`)", "", "| League | English | 日本語 |", "| --- | --- | --- |");
@@ -115,12 +125,12 @@ describe("the package's own numbers", () => {
     expect(VERSION).toBe(pkg.version);
   });
 
-  it("have a README that says what the code holds: ninety-four parks, six sports", () => {
+  it("have a README that says what the code holds, and a limits page made from it: ninety-four parks, seven sports", () => {
     const readme = readFileSync("README.md", "utf8");
     expect(PARK_IDS).toHaveLength(94);
     expect(readme).toContain("The 30 current MLB parks and 44 that MLB clubs have left");
     expect(readme).toContain("the 12 home parks");
-    expect(readme).toContain("| Ballparks | 94 (30 current MLB, 44 past MLB, 12 NPB home parks, 8 other NPB grounds) | `PARKS` |");
+    expect(readFileSync("docs/limits.md", "utf8")).toContain("| Ballparks | 94 (30 current MLB, 44 past MLB, 12 NPB home parks, 8 other NPB grounds) | `PARKS` |");
   });
 
   it("list every park's source in NOTICE.md", () => {
@@ -135,7 +145,8 @@ describe("the package's own numbers", () => {
   it("have a README that says what the grounds hold, and a docs/grounds.md made by the build that lists every one", () => {
     const readme = readFileSync("README.md", "utf8");
     expect(GROUND_IDS).toHaveLength(64);
-    expect(readme).toContain("| Grounds | 64 | `GROUNDS` |");
+    expect(readme).toContain("64 soccer grounds");
+    expect(readFileSync("docs/limits.md", "utf8")).toContain("| Grounds | 64 | `GROUNDS` |");
     const list = readFileSync("docs/grounds.md", "utf8");
     for (const id of GROUND_IDS) expect(list, id).toContain(`| \`${id}\` |`);
   });

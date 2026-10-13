@@ -1,6 +1,36 @@
-# The colours
+# Theming
 
-Every colour of a drawing is a custom property on its `svg`, with a light set and a dark set. See [Theming](../README.md#theming) for how a page sets them.
+Nothing is branded. The drawing is coloured by custom properties on its `svg`, with a light set and a dark set that follow the device (or `data-theme="light"` or `"dark"` on the page's root, or `theme` in the options). A page sets only the ones it wants different, on the drawing or on a container above it. The defaults sit in `:where()`, which has no weight, so a page's own rule always wins. `colors` in the options sets them from code.
+
+Every part carries a class (`ky-surface`, `ky-line`, `ky-zone-left`, `ky-banner`, `ky-plate`, `ky-score`, `ky-winbar`, `ky-lose`, `ky-badge`) for anything a property cannot reach. Pass `style: "none"` to leave the stylesheet out of each drawing and put `KYOGIJO_STYLE` in the page once, which is what the demo does for its many drawings.
+
+```ts
+import { KYOGIJO_STYLE, drawKyogijo } from "@johnmorrisdotca/kyogijo";
+
+// Two drawings on a page: the stylesheet once, and a colour of the page's own on one.
+const rink = drawKyogijo({ sport: "nhl", style: "none", colors: { surface: "#dfe9f3" } });
+console.log(rink.includes("<style>"), KYOGIJO_STYLE.includes("--ky-surface"), rink.includes("--ky-surface:#dfe9f3"));
+// false true true
+```
+
+## A court's look
+
+A court's own look is `court: { wood, woodAlt, apron, border, key, keyLeft, keyRight, line, centreCircle, centreLogo, baselineText, baselineInk, paintThreePoint }`; `COURT_THEMES` has five to start from: `maple`, `twoTone`, `night`, `sunburst` and `tournament` (a floor painted edge to edge, with no wood).
+
+```ts
+import { COURT_THEMES, drawKyogijo } from "@johnmorrisdotca/kyogijo";
+
+const svg = drawKyogijo({
+  sport: "nba",
+  court: { ...COURT_THEMES.twoTone, baselineText: ["SUMMIT PEAKS", "METRO BOLTS"], paintThreePoint: true },
+});
+console.log(svg.includes("--ky-key:#1e4f8f"), svg.includes("METRO BOLTS"));
+// true true
+```
+
+## The colours
+
+Each property is listed with its light and dark value.
 
 | Property | What it colours | Light | Dark |
 | --- | --- | --- | --- |
@@ -18,5 +48,5 @@ Every colour of a drawing is a custom property on its `svg`, with a light set an
 | `--ky-left-ink`, `--ky-right-ink` | the words on those colours | `#ffffff` | the same |
 | `--ky-plate`, `--ky-plate-ink` | the score's panel | `rgba(18,24,21,.9)`, `#ffffff` | `rgba(0,0,0,.82)`, the same |
 | `--ky-halo` | the outline round a name painted on ice or wood | `rgba(255,255,255,.92)` | the same |
-| `--ky-layer`, `--ky-layer-home`, `--ky-layer-away`, `--ky-layer-edge`, `--ky-layer-hollow`, `--ky-layer-ink`, `--ky-layer-halo` | a data layer's marks (see [docs/layers.md](./docs/layers.md)) | light set | lightened |
+| `--ky-layer`, `--ky-layer-home`, `--ky-layer-away`, `--ky-layer-edge`, `--ky-layer-hollow`, `--ky-layer-ink`, `--ky-layer-halo` | a data layer's marks (see [data layers](./layers.md)) | light set | lightened |
 | `--ky-font` | the face of every word | the system's, with Hiragino and Noto Sans JP | the same |

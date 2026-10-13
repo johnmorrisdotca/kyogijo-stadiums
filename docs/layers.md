@@ -1,6 +1,58 @@
 # Data layers
 
-`layers` in the options of `drawKyogijo` and `drawSurface` lays data on a surface. This page lists what each kind of layer takes; the README has two worked examples, and the [API reference](https://johnmorrisdotca.github.io/kyogijo/api.html) has every type.
+`layers` in the options of `drawKyogijo` and `drawSurface` lays data on a surface. Two worked examples come first; then what each kind of layer takes. The [API reference](https://johnmorrisdotca.github.io/kyogijo/api.html) has every type.
+
+## Two examples
+
+```ts
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+
+// The NHL API's coordinates are feet from centre ice: `from` puts them on the rink.
+const svg = drawKyogijo({
+  sport: "nhl",
+  layers: [
+    {
+      kind: "points",
+      name: "shots",
+      from: "nhl-api",
+      data: [
+        { x: 69, y: 22, team: "home", outcome: "goal", value: 0.31 },
+        { x: 54, y: -8, team: "home", outcome: "shot", value: 0.07 },
+        { x: -61, y: 12, team: "away", outcome: "blocked", value: 0.04 },
+      ],
+      style: { size: { range: [2, 5] }, outcomes: { blocked: { hollow: true, shape: "x" } } },
+    },
+  ],
+});
+console.log(svg.includes("3 shots"), svg.includes("By outcome: goal 1, shot 1, blocked 1."));
+// true true
+```
+
+A miss is drawn hollow and a failed pass dashed. Shapes, colour rules, comets, units, frames and the heat layers are below.
+
+```ts
+import { drawKyogijo, layerTable } from "@johnmorrisdotca/kyogijo";
+
+const passes = {
+  kind: "arrows",
+  name: "passes",
+  from: "nfl-tracking",
+  data: [
+    { x: 40, y: 30, x2: 62, y2: 18, outcome: "complete" },
+    { x: 40, y: 30, x2: 55, y2: 44, outcome: "incomplete" },
+  ],
+  style: { curve: 0.1, comet: true },
+} as const;
+
+console.log(drawKyogijo({ sport: "nfl", orientation: "portrait", layers: [passes] }).includes("linearGradient"));
+console.log(layerTable([passes]).includes("<caption>2 passes"));
+// true
+// true
+```
+
+`drawLayers(options, layers)` returns the group alone; `layerTable(layers)` an HTML table for each layer, for a screen reader. Each layer has a `<title>` and a `<desc>` ("24 shots", "By outcome: goal 3, shot 21."), and a mark's `title` is its tooltip.
+
+## What a layer takes
 
 A layer is `{ kind, data, style, ...places }`. The marks are plain SVG elements in the surface's own frame, drawn over the markings and under a score's panel, cut to the surface's outline and turned back upright when the surface lies tall. The same options always give the same string.
 

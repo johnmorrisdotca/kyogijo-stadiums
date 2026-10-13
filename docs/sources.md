@@ -257,7 +257,7 @@ The named zones that `zones` layers count into (`src/heat.zones.ts`). Each zone 
 | `baseball-retrosheet` | Retrosheet's 68 hit-location sectors, as the cells of the nearest-centre partition of the field: a point belongs to the sector whose centre is nearest, the same rule as `zoneAt` in the frames. The centres are our reading of the diagram (see the Retrosheet frame above). | Retrosheet, "Hit Location Diagram" (https://www.retrosheet.org/location.htm). The cell edges are ours. |
 | `football-pass` | Short: up to 15 yards past the line of scrimmage, a pass thrown behind it included; deep: more than 15. Left, middle and right across the field: middle is between the hash marks; left and right are the passer's, facing the way the offence attacks. The line of scrimmage is the layer's `los`. | The field names are nflverse's `pass_length` (short or deep) and `pass_location` (left, middle or right) in the [nflreadr play-by-play dictionary](https://nflreadr.nflverse.com/articles/dictionary_pbp.html). That dictionary does not give the edges (nflverse takes them from the play's text, not from air yards), so the 15 yards and the hash marks are ours. |
 
-The colour ramps are Kyogijo's own: nine stops each, chosen by luminance and checked by a test against the surface colours and the ground a heat layer paints (see docs/layers.md); no palette of a plotting package is copied.
+The colour ramps are Kyogijo's own: nine stops each, chosen by luminance and checked by a test against the surface colours and the ground a heat layer paints (see [data layers](./layers.md)); no palette of a plotting package is copied.
 
 ## League variants
 

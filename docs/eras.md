@@ -1,8 +1,8 @@
 # Surfaces through the years
 
-`year` draws a surface as the rules marked it in a season: see [the README](../README.md#surfaces-through-the-years). This is the list of every change, one row to a marking; each change, with the pages it was read from, is in [sources.md](./sources.md#surfaces-through-the-years), and `eraChanges(sport)` lists them as data with a sentence in English and in Japanese.
+`year` draws a surface as the rules marked it in a season, named by the year it starts in: `1979` is the 1979–80 season of the NHL and the NBA, `1974` the 1974 season of the NFL, the CFL and baseball. Without a `year` the surface is today's (`ERA_CURRENT`); the IFAF's has none. Every change is cited in [sources.md](./sources.md#surfaces-through-the-years) and listed below, one row to a marking; what could not be cited is in [references.md](./references.md). `eraChanges(sport)` lists the changes as data with a sentence in English and in Japanese.
 
-A season is named by the year it starts in: `1979` is the 1979–80 season of the NHL and the NBA, and `1974` the 1974 season of the NFL, the CFL and baseball. A change "from 1979" holds for 1979 and every season after, until another.
+A change "from 1979" holds for 1979 and every season after, until another.
 
 | Sport | Marking | Through the years |
 | --- | --- | --- |
@@ -25,3 +25,15 @@ A season is named by the year it starts in: `1979` is the 1979–80 season of th
 | `mlb` | batter's boxes | none before 1874; 6 by 3 feet from 1874; 6 by 4 feet from 1885 |
 | `mlb` | home plate | round 1857–67, square 1868–70, turned 1871–99, the pentagon from 1900; its place moved in 1861, 1875 and 1877 |
 | `mlb` | mound height | 15 inches from 1903, 10 from 1969: data only, a top view does not show it |
+
+```ts
+import { drawKyogijo, rulesFor } from "@johnmorrisdotca/kyogijo";
+
+const rink = rulesFor("nhl", 1960);
+console.log(rink.season, rink.rules.centreLine, rink.rules.trapezoid, rink.differences.map((change) => change.feature));
+// 1960–61 true null [ 'trapezoid' ]
+console.log(drawKyogijo({ sport: "nba", year: 1978 }) === drawKyogijo({ sport: "nba", year: 1979 }));
+// false
+```
+
+`rulesFor(sport, year)` gives the markings in force, what differs from today (`differences`, in English and Japanese, cited) and `gaps`, the markings no source covers for that season, which keep the nearest cited state. The [gallery](./gallery.md) draws each sport in a season before and after a change.

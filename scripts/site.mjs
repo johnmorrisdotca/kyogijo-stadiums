@@ -9,6 +9,8 @@ import { pathToFileURL } from "node:url";
 
 import { API_CSS, apiPage } from "./api.mjs";
 import { atlasMapSvg } from "./atlas-map.mjs";
+import { buildDocs } from "./docs-pages.mjs";
+import { framesBlockHtml, galleryData, galleryPageHtml, libraryFrom } from "./docs-gallery.mjs";
 import { FAMILY_SCRIPT, familyFooter, familyHead, familyHeader, familyUnreviewed } from "./family-template.mjs";
 
 const id = "kyogijo";
@@ -49,7 +51,7 @@ const page = `<!doctype html>
   </head>
   <body>
     <main>
-      ${familyHeader({ id, links: [{ href: "api.html", say: "pageApi" }] })}
+      ${familyHeader({ id, links: [{ href: "docs/", say: "pageDocs" }, { href: "api.html", say: "pageApi" }] })}
 
       <section class="try" id="try" aria-labelledby="try-title">
         <div class="try-head">
@@ -325,4 +327,17 @@ writeFileSync("docs/atlas-map.svg", picture);
 writeFileSync("site/index.html", page);
 writeFileSync("site/api.css", API_CSS);
 writeFileSync("site/api.html", apiPage({ id, name: "Kyogijo", icon: ICON }));
+// The documentation pages: docs/*.md as pages, and the gallery, drawn from code by the built package.
+const lib = await libraryFrom(join(process.cwd(), "dist"), ".js", (file) => import(pathToFileURL(file).href));
+const style = lib["@johnmorrisdotca/kyogijo"].KYOGIJO_STYLE;
+const made = buildDocs({
+  root: process.cwd(),
+  outDir: "site/docs",
+  id,
+  name: "Kyogijo",
+  icon: ICON,
+  extraPages: galleryData(lib).map((one) => galleryPageHtml(one, style)),
+  siteBlocks: { frames: framesBlockHtml(lib, style) },
+});
+console.log(`site/docs/ is ready: ${made.pages} pages, ${made.entries} titles and headings to search.`);
 console.log("site/ is ready: serve it, or let the Pages workflow publish it.");

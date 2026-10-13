@@ -1,6 +1,6 @@
 # The atlas
 
-Every ballpark and soccer ground the package draws, on one map: 158 places in 23 countries. See the [README](../README.md#features), and the Atlas section of [the demo](https://johnmorrisdotca.github.io/kyogijo/#atlas).
+Every ballpark and soccer ground the package draws, on one map: 158 places in 23 countries. See the Atlas section of [the demo](https://johnmorrisdotca.github.io/kyogijo/#atlas).
 
 ![A world map with a marker on each of 158 places: a circle for a place in use today, a diamond for one of the past, baseball parks solid and soccer grounds with a dot in the middle. Most are in the United States, Japan and western Europe.](./atlas-map.svg)
 

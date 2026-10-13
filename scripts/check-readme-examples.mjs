@@ -1,17 +1,18 @@
-// Runs the README's examples and every export's `@example` (`pnpm test:readme`, after a build): every fenced `ts` and `js` block is written to its own file
+// Runs the examples of the README and of every page of docs/, and every export's `@example` (`pnpm test:readme`, after a build): every fenced `ts` and `js` block is written to its own file
 // under .readme-examples/, which imports the package by its name exactly as a reader would (the package names itself through its
 // `exports`, so this is the built package in this checkout). TypeScript blocks are type-checked together with the compiler's
 // own strictness and then run; JavaScript blocks are run. Flags on the fence: `no-run` type-checks and does not run (the block
-// needs a browser or a server), `no-check` skips the block (an excerpt). A block that fails is named by its line in README.md.
-// An `@example` that ends in comment lines (`// 50 4`) says what it prints: those lines are compared with what it printed.
+// needs a browser or a server), `no-check` skips the block (an excerpt). A block that fails is named by its page and line.
+// An `@example` that ends in comment lines (`// 50 4`) says what it prints: those lines are compared with what it printed; so are the
+// comment lines right after a `console.log` in a block of the README or of docs/ (scripts/docs-examples.mjs).
 import { spawnSync } from "node:child_process";
-import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 
 import { apiOf } from "./api.mjs";
-import { parts } from "./readme-lint.mjs";
+import { blocksOf, matched } from "./docs-examples.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const pkg = JSON.parse(readFileSync(join(root, "package.json"), "utf8"));
@@ -21,15 +22,15 @@ rmSync(work, { recursive: true, force: true });
 mkdirSync(work, { recursive: true });
 
 const blocks = [];
-for (const part of parts(readme)) {
-  if (part.type !== "code") continue;
-  const [language, ...flags] = part.info.split(/\s+/);
-  if (!["ts", "js", "mjs"].includes(language) || flags.includes("no-check")) continue;
-  const typescript = language === "ts";
-  // A block is a module, so that its `await`s and its names are its own, and each file has the same imports as the block says.
-  const file = join(work, `line-${part.line}.${typescript ? "ts" : "mjs"}`);
-  writeFileSync(file, `${part.body}\nexport {};\n`);
-  blocks.push({ file, line: part.line, typescript, run: !flags.includes("no-run") });
+// The README's and every page of docs/'s blocks: each in a file of its own, named for its page and line.
+for (const [file, text] of [["README.md", readme], ...readdirSync(join(root, "docs")).filter((name) => name.endsWith(".md")).map((name) => [`docs/${name}`, readFileSync(join(root, "docs", name), "utf8").replace(/\r\n/g, "\n")])]) {
+  for (const block of blocksOf(text, { withNoRun: true })) {
+    const typescript = block.language === "ts";
+    // A block is a module, so that its `await`s and its names are its own, and each file has the same imports as the block says.
+    const path = join(work, `${file.replace(/[^\w]+/g, "-")}-line-${block.line}.${typescript ? "ts" : "mjs"}`);
+    writeFileSync(path, `${block.body}\nexport {};\n`);
+    blocks.push({ file: path, line: `${file} line ${block.line}`, typescript, run: block.run, runs: block.expected, expected: null });
+  }
 }
 // Every export's examples, from its doc comment: a fenced block in each `@example`.
 for (const entry of apiOf()) {
@@ -51,7 +52,7 @@ for (const entry of apiOf()) {
   }
 }
 if (!blocks.length) {
-  console.error("README.md has no ts or js block to run");
+  console.error("README.md and docs/ have no ts or js block to run");
   process.exit(1);
 }
 
@@ -68,25 +69,28 @@ if (typed.length) {
   const checked = spawnSync(process.execPath, [join(root, "node_modules", "typescript", "bin", "tsc"), "-p", join(work, "tsconfig.json")], { cwd: root, encoding: "utf8" });
   if (checked.status !== 0) {
     failed += 1;
-    const lineOf = (text) => text.replace(/\.readme-examples\/line-(\d+)\.ts\((\d+),(\d+)\)/g, (_, block, row, column) => `README.md:${Number(block) + Number(row)}:${column} (block at line ${block})`);
+    const lineOf = (text) => text.replace(/\.readme-examples\/([\w-]+?)-line-(\d+)\.ts\((\d+),(\d+)\)/g, (_, page, block, row, column) => `${page.replace(/-md$/, ".md").replace(/^docs-/, "docs/")}:${Number(block) + Number(row)}:${column} (block at line ${block})`);
     console.error(`FAIL type check of the README's TypeScript blocks:\n${lineOf(checked.stdout + checked.stderr)}`);
   } else console.log(`ok   ${typed.length} TypeScript block${typed.length === 1 ? "" : "s"} type-check`);
 }
 for (const block of blocks) {
   if (!block.run) continue;
   const ran = spawnSync(process.execPath, [block.file], { cwd: root, encoding: "utf8", timeout: 60_000 });
-  const where = typeof block.line === "number" ? `README.md line ${block.line}` : block.line;
+  const where = block.line;
   if (ran.status !== 0) {
     failed += 1;
     console.error(`FAIL ${where}: the block did not run\n${(ran.stderr || ran.stdout).trim().split("\n").slice(0, 12).join("\n")}`);
   } else if (block.expected !== undefined && block.expected !== null && ran.stdout.trimEnd() !== block.expected) {
     failed += 1;
     console.error(`FAIL ${where}: it printed\n${ran.stdout.trimEnd()}\nand its comment says\n${block.expected}`);
+  } else if (block.runs !== undefined && block.runs.length > 0 && matched(block.runs, ran.stdout.trimEnd().split("\n")).join("\n") !== ran.stdout.trimEnd()) {
+    failed += 1;
+    console.error(`FAIL ${where}: it printed\n${ran.stdout.trimEnd()}\nand its comment lines say\n${block.runs.map((run) => run.join("\n")).join("\n")}`);
   } else console.log(`ok   ${where} ran${ran.stdout.trim() ? `: ${ran.stdout.trim().split("\n").slice(0, 4).join(" | ").slice(0, 110)}` : ""}`);
 }
 rmSync(work, { recursive: true, force: true });
 if (failed) {
-  console.error(`${failed} of the README's and the API's examples failed`);
+  console.error(`${failed} of the examples of the README, of docs/ and of the API failed`);
   process.exit(1);
 }
-console.log(`all ${blocks.length} of ${pkg.name}'s README and API examples hold`);
+console.log(`all ${blocks.length} of ${pkg.name}'s README, docs and API examples hold`);

@@ -61,6 +61,10 @@ The links John has sent, and the ones the package's figures were read from: what
     - *What:* one GeoJSON of 65 polygons, the field and the outline of about 35 NFL stadiums plus Wembley, Twickenham and Azteca, drawn by hand on Mapbox in 2017 and 2018.
     - *Useful for:* the idea of a stadium's footprint and its field's real bearing on a map, and a reminder that NFL games are played abroad.
     - *May use:* nothing. The repository has no licence, and the shapes were traced over Mapbox imagery.
+15. **[thestadi.com](https://thestadi.com)**
+    - *What:* an interactive map of the stadiums and arenas of the NFL, NBA, MLB, NHL and MLS across North America (32, 30, 30, 32 and 30 teams by its own page text), with search, a filter by league, team logos and venue details.
+    - *Useful for:* a comparison of what a map of venues holds, and the idea of filtering one by league (the atlas filters by sport, league, country and year).
+    - *May use:* nothing. The site has no licence statement on its page, so its data and design are not used; the facts in [the comparison](./compare.md) are read from its public page.
 
 ## Where the figures were read
 
@@ -96,7 +100,7 @@ The links John has sent, and the ones the package's figures were read from: what
 
 - **What was read:** the lists of what each plotting package draws, and how its charts look in its own gallery, to know what to match: [hockey_rink](https://github.com/the-bucketless/hockey_rink) (item 11: scatter, plot, arrow, wavy arrow, text, clipping to the boards) and [mplsoccer](https://github.com/andrewRowlinson/mplsoccer) (item 12: scatter, lines, comet lines, arrows, markers). [ggsoccer](https://github.com/Torvaney/ggsoccer) (item 13) and [sporty](https://github.com/sportsdataverse/sdvplot-js) (item 10) were read for how a layer sits on a surface that is a spec of a few numbers.
 - **Ideas credited (MIT, so ideas freely and code with credit; we wrote our own):** mplsoccer's comet line (a line that fades in towards its end, with its width growing), its arrows and its split of a mark into a shape, a colour and a size from the data; ggsoccer's layers that take the pitch's own coordinates. No code of either is used: the curves, waves, heads and shapes in `src/layers.marks.ts` are plain geometry (quadratic curves, offsets along a normal).
-- **Not used:** hockey_rink's code (GPL-3.0). Only the list of what it draws was read, from its README. sportypy and sportyR (GPL-3.0) were not read for this.
+- **Not used:** hockey_rink's code (GPL-3.0). Only the list of what it draws was read, from its README. sportypy and sportyR (GPL-3.0) were not read for this; their READMEs and licence files were read afterwards, for [the comparison](./compare.md), and only facts were taken.
 - **Ours:** outcomes drawn by fill and dash as well as colour (a miss is hollow, a failed pass dashed), a layer's title, description and table for screen readers, a clip to each surface's own outline, and the team colours following a score drawing's teams.
 - **Data:** the demo's shots, passes and balls in play are made up from a fixed seed (`demo/layers-data.js`). No real game, player or team is in the package.
 

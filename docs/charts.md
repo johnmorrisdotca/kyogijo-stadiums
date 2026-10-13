@@ -10,7 +10,7 @@
 | `nflPassChart(passes, options)` | where each pass came down, by outcome and air yards, on the line of scrimmage and the pass grid | NFL tracking data (`nfl-tracking`) |
 | `soccerShotMap(shots, options)` | shots on the pitch or the half it attacks, sized by expected goals, with the xG total, and `goalMouth()` for where they crossed the goal line | a soccer provider (`opta`, `statsbomb`, `wyscout` and the rest) |
 
-The charts are made from the layers of `docs/layers.md` (`points`, `lines`, `text`, `zones`, `hexbin` and their legends), the frames of [sources.md](./sources.md#coordinate-frames) and the zone sets of [sources.md](./sources.md#zone-sets). The data is yours and nothing is read from a network.
+The charts are made from the layers of [Data layers](./layers.md) (`points`, `lines`, `text`, `zones`, `hexbin` and their legends), the frames of [sources.md](./sources.md#coordinate-frames) and the zone sets of [sources.md](./sources.md#zone-sets). The data is yours and nothing is read from a network.
 
 ## What a chart gives back
 
@@ -76,6 +76,7 @@ console.log(chart.totals.zones.filter((zone) => zone.taken > 0).map((zone) => `$
 
 ```ts
 import { nhlShotMap } from "@johnmorrisdotca/kyogijo/charts";
+import type { PointsLayer } from "@johnmorrisdotca/kyogijo/layers";
 
 const shots = [
   { x: 78, y: 3, outcome: "goal", xg: 0.28, team: "home" },
@@ -86,7 +87,7 @@ const shots = [
 const chart = nhlShotMap(shots, { fold: true, zones: true, statistic: "goals" });
 console.log(chart.summary);
 // The two shots at the left end were turned a half turn: every shot is now at the right end.
-console.log(chart.layers[1].data.map((shot) => `${shot.x},${shot.y}`).join(" "));
+console.log((chart.layers[1] as PointsLayer).data.map((shot) => `${shot.x},${shot.y}`).join(" "));
 console.log(JSON.stringify(chart.totals.teams));
 // Shots 4, goals 1, expected goals (xG) 0.43.
 // 78,3 62,10 48,22 70,-6
@@ -145,6 +146,7 @@ Balls of batters from both sides: the pull side is a property of the layer. Draw
 
 ```ts
 import { nflPassChart } from "@johnmorrisdotca/kyogijo/charts";
+import type { ArrowsLayer } from "@johnmorrisdotca/kyogijo/layers";
 
 const passes = [
   { x: 70, y: 20, outcome: "complete" },
@@ -155,7 +157,7 @@ const passes = [
 ];
 const chart = nflPassChart(passes, { los: 62, minPasses: 1 });
 console.log(chart.summary);
-console.log(chart.layers.find((layer) => layer.id === "passes").data.map((pass) => pass.value).join(" "));
+console.log((chart.layers.find((layer) => layer.id === "passes") as ArrowsLayer).data.map((pass) => pass.value).join(" "));
 // Passes 5, complete 3 (60%), touchdowns 1, interceptions 1.
 // 8 16 33 50 4
 ```

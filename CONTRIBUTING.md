@@ -87,8 +87,8 @@ Bug reports and ideas go in the [issues](https://github.com/johnmorrisdotca/kyog
 pnpm check          # lint, types, tests, the build and the packed package
 pnpm test:package   # pack it as npm does, install it in an empty project, import every entry
 pnpm test:demo      # build the demo and play it in a real browser
-pnpm test:readme    # run the README's examples against the built package
-pnpm docs:make      # rewrite docs/strings-ja.md after changing a word
+pnpm test:readme    # run the examples of the README and of docs/ against the built package
+pnpm docs:make      # rewrite what the docs make from the source: docs/strings-ja.md, docs/variants.md, the tables of frames, units and limits
 ```
 
 **A dimension is a published fact.** Every number in `src/geometry.ts` comes from a rulebook, a federation's diagram or a ballpark's published figures, and says where in `docs/sources.md`. A change to one cites its source and has a test that would have caught the old value. Nothing is copied from a drawing or a data set whose terms do not allow it.

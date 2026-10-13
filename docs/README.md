@@ -1,0 +1,40 @@
+# Documentation
+
+Kyogijo draws sports surfaces as SVG, to scale, with the score on them. The README is the pitch and the first minute; these pages are everything else. The same pages are on the [docs site](https://johnmorrisdotca.github.io/kyogijo/docs/), with a search over their titles and headings and a gallery that draws every picture from the code beside it.
+
+## Start here
+
+- [Getting started](./getting-started.md): install, the four ways in, the element and the frame.
+- [The surfaces](./surfaces.md): the seven surfaces and how a league's rules change one.
+- [Score and layout](./score.md): the teams, the score, the strip for a list, wide and tall.
+- [Theming](./theming.md): every colour, light and dark, and the court's looks.
+- [Accessibility](./accessibility.md): what each drawing says to a screen reader.
+
+## Sports and places
+
+- [Soccer](./soccer.md): sizes, mowing patterns, goals, shoot-outs and the providers' coordinates.
+- [Ballparks](./ballparks.md): 94 parks, each with its own fence, and the past ones by season.
+- [The grounds](./grounds.md): 64 soccer grounds, each pitch at its published size.
+- [League variants](./variants.md): the WNBA, FIBA, the NCAA, the IIHF, Little League and more, each from its rulebook.
+- [Surfaces through the years](./eras.md): the markings of a season, each change cited.
+- [The atlas](./atlas.md): every park and ground on a map.
+
+## Data on a surface
+
+- [Units](./units.md): each surface in its rulebook's unit, and the conversions.
+- [Coordinate frames](./frames.md): where each data provider puts a point, and how to move it onto a surface.
+- [Data layers](./layers.md): points, lines, arrows, text and the heat layers.
+- [Ready-made charts](./charts.md): a shot chart, a shot map, a spray chart, a pass chart and a soccer shot map.
+
+## Gallery and comparison
+
+- [Gallery](./gallery.md): every surface, league, season, park, ground, layer, heat map and chart, drawn from the code shown beside it.
+- [How it compares](./compare.md): a table against the other packages that draw playing surfaces.
+
+## Reference
+
+- [Entry points](./entry-points.md), and the [API reference](https://johnmorrisdotca.github.io/kyogijo/api.html) for every export.
+- [Limits](./limits.md): the numbers a test holds.
+- [Sources of the dimensions](./sources.md) and [References](./references.md): where each figure was read, and what may be used of each reference.
+- [The keys of the ballparks](./parks.md), and [the Japanese of Kyogijo](./strings-ja.md): every word in both languages.
+- [Architecture](./architecture.md): the files and what each is for.

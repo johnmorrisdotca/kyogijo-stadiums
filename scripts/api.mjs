@@ -105,8 +105,8 @@ export function apiBody(api = apiOf()) {
 
 /** The reference page's own words, in both languages, under the names the family's header and footer ask for. */
 export const API_WORDS = {
-  en: { pitch: "Every export of every entry point, with its signature and its doc comment. Made from the source when the site is built, so it cannot fall behind the code.", name: "", nameLink: "About the name", foot: "Made from the package's own source.", pageBack: "Demo" },
-  ja: { pitch: "すべてのエントリーポイントのすべてのエクスポートを、シグネチャとドキュメントコメント付きで一覧にしています。サイトをビルドするときにソースから作るので、コードとずれることはありません。", name: "", nameLink: "なまえについて（英語）", foot: "パッケージ自身のソースから作っています。", pageBack: "デモ" },
+  en: { pitch: "Every export of every entry point, with its signature and its doc comment. Made from the source when the site is built, so it cannot fall behind the code.", name: "", nameLink: "About the name", foot: "Made from the package's own source.", pageBack: "Demo", pageDocs: "Docs" },
+  ja: { pitch: "すべてのエントリーポイントのすべてのエクスポートを、シグネチャとドキュメントコメント付きで一覧にしています。サイトをビルドするときにソースから作るので、コードとずれることはありません。", name: "", nameLink: "なまえについて（英語）", foot: "パッケージ自身のソースから作っています。", pageBack: "デモ", pageDocs: "ドキュメント" },
 };
 
 /** The words the demo's own header link to this page needs, for the page that links to it: `pageApi`. */
@@ -143,7 +143,7 @@ export function apiPage({ id, name, icon, api = apiBody() }) {
   </head>
   <body>
     <main>
-      ${familyHeader({ id, links: [{ href: "./", say: "pageBack" }] })}
+      ${familyHeader({ id, links: [{ href: "./", say: "pageBack" }, { href: "docs/", say: "pageDocs" }] })}
       ${api.html}
       ${familyUnreviewed({ id })}
       ${familyFooter({ id })}
