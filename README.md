@@ -76,12 +76,12 @@ console.log(svg.startsWith("<svg"), svg.includes("NORTHERN OWLS"));
 - **A stadium atlas.** Every park and ground on a map, by sport, league, country and year: [docs/atlas.md](./docs/atlas.md).
 - **Surfaces through the years.** `year: 1975` draws a surface as its league's rules marked it that season, each change cited.
 - **Score mode.** Each team's name and logo on its side (the end zones of a football field, the ends of the ice, the halves of the court, the dugouts of a ballpark) and the score large in the middle, with the competition, the status (Final, OT, SO, a period, an inning) and the date, and the winner emphasised.
-- **Wide, tall or fit the box.** Every surface lies wide or tall. Tall turns it a quarter, keeps every word upright, and puts the teams top and bottom. With `orientation: "auto"` the browser helpers watch the box and lay it out again when its shape changes.
+- **Wide, tall or fit the box.** Every surface lies wide or tall: tall turns it a quarter, keeps every word upright and puts the teams top and bottom. With `orientation: "auto"` the browser helpers follow the box.
 - **Data on the surface.** Points, lines, arrows, text, heat maps, hexagons, zone charts and density contours over any surface, in its feet or a provider's frame, cut to its outline, with a title, a description and a table for each layer.
 - **A compact badge and a compact card.** One strip for a list, or the surface with that strip under it.
 - **Light and dark**, by the device or the page, and every colour a custom property; a basketball court's paint, border, wood and baseline words are options, with five looks to start from.
 - **Accessible.** Each drawing is an `img` with a title and a description that say the surface and the result, in English or Japanese.
-- **Four ways in.** A function that returns SVG text; a helper that draws into a container and keeps it laid out; a standard custom element; a frame for pages that run no script. A React helper that does not import React.
+- **Four ways in.** A function that returns SVG text; a helper that draws into a container; a standard custom element; a frame for pages that run no script. A React helper that does not import React.
 - **No dependencies**, no network requests, nothing stored. Text, colours and logo addresses that come from outside are made safe before they are drawn.
 
 ### What's in it
@@ -386,6 +386,8 @@ Every dimension is kept in feet in the code (`@johnmorrisdotca/kyogijo/geometry`
 <br><em>A court in a look of its own: the paint, the border and the words on the baselines are options.</em>
 </p>
 
+`league` draws a surface as one league's rulebook marks it, `sport` naming the family (`drawKyogijo({ sport: "nba", league: "fiba" })`): the WNBA, FIBA, the NCAA, the IIHF, the AHL, the CHL, high school, Little League, PONY and softball, in [docs/variants.md](./docs/variants.md).
+
 Lines are drawn a little thicker than they are painted, as broadcast graphics do, so that they stay in view at a small size; `exactLines: true` draws them at their true widths.
 
 ## Soccer
@@ -401,13 +403,7 @@ Lines are drawn a little thicker than they are painted, as broadcast graphics do
 | `goals` | `box` (the net, the default), `line`, `strip` or `none`. `cornerFlags` turns the flags off. |
 | `pitchType` | Draw the pitch in a data provider's own coordinates (below). |
 
-| `pitch` | Size | Read from |
-| --- | --- | --- |
-| `fifa`, `uefa` | 105 by 68 m | Law 1; the UEFA Stadium Infrastructure Regulations, 5.01 (categories 3 and 4) |
-| `mls`, `ncaa` | 110 by 70 yd (the MLS's least), 120 by 75 yd (the NCAA's best) | the MLS Competition Guidelines; the NCAA rules, Rule 1.1.1 |
-| `law-min`, `law-max` | 90 by 45 m, 120 by 90 m | Law 1.3 |
-| `9-a-side`, `7-a-side`, `5-a-side` | 80 by 50, 60 by 40 and 40 by 30 yd | The FA Handbook, Section 38; the markings of the FA's small-sided laws |
-| `futsal` | 40 by 20 m, quarter-circle areas, marks at 6 and 10 m | FIFA's Futsal Laws, Law 1 |
+The presets are `fifa`, `uefa`, `mls`, `ncaa`, `law-min`, `law-max`, `9-a-side`, `7-a-side`, `5-a-side` and `futsal`; each size and the rule it is read from is in [docs/sources.md](./docs/sources.md#soccer).
 
 `status` also takes `final-aet`, `final-pens`, `extra-time` and `penalties`. A team's `penalties` is its goals in the shoot-out: both are written with the status (`Final · 4-2 pens`) and a level game goes to the winner of the shoot-out.
 
@@ -574,8 +570,8 @@ console.log(toSurface([[69, 22]], { from: "nhl-api", attacking: "left" }), conve
 
 - **Units, anchors and limits.** `units` is the unit of the surface's numbers (feet by default); `anchors` replace a frame's landmarks with your own for a venue whose markings differ, and `limits` keeps points on the surface (`"surface"`) or in a box. Anchors and limits are converted with `units`, not only the points.
 - **Ends.** `attacking: "left"` turns points a half turn about the middle of the surface. `attackingIn("nhl", period, "right")` says which end a team attacks in a period (hockey changes ends every period, football after the first and third quarters, basketball at the half); for a period no rule here settles, pass `changedAfter`. A baseball frame has no ends and refuses `attacking`.
-- **Your own frame.** `registerFrame(frame)` adds one to `FRAMES`, and `piecewise(landmarks)` is the mapper the frames use: straight between landmarks, so a frame whose axis bends (a pitch drawn at a provider's own figures) is a list of landmarks. A frame for a surface of any size takes its landmarks as a function of the surface's size, and `toSurface` is then given `size`.
-- **Retrosheet's zones.** `zoneToPoint("8D")` is the centre of a hit-location sector in feet from home plate and `zoneAt([x, y])` the zone whose centre is nearest a point. The centres are read off Retrosheet's diagram and are good to a few feet.
+- **Your own frame.** `registerFrame(frame)` adds one to `FRAMES`, and `piecewise(landmarks)` is the mapper the frames use: straight between landmarks. A frame for a surface of any size takes its landmarks as a function of the surface's size, and `toSurface` is then given `size`.
+- **Retrosheet's zones.** `zoneToPoint("8D")` is the centre of a hit-location sector in feet from home plate and `zoneAt([x, y])` the zone nearest a point; good to a few feet.
 - **What is ours.** The NHL API's sign of y, the NFL tracking data's corner of origin and the MLBAM scale of 2.5 feet a unit are conventions the sources read do not settle; each is marked in `note` and in [docs/sources.md](./docs/sources.md). Check one known point against your data before trusting a frame.
 
 ## Data layers
@@ -780,6 +776,15 @@ src/
 ├── geometry.ts         every dimension, in feet, with the fence's curve
 ├── eras.ts             the markings of each surface in a season, each change with its sources
 ├── eras-entry.ts       the eras' entry
+├── leagues.ts          the leagues: which rulebook marks a surface
+├── leagues-entry.ts    the leagues' entry
+├── leagues/
+│   ├── types.ts        what a league is
+│   ├── sources.ts      the rulebooks read
+│   ├── basketball.ts   the courts
+│   ├── hockey.ts       the rinks
+│   ├── football.ts     the fields
+│   └── baseball.ts     the diamonds
 ├── geometry-entry.ts   the geometry's entry
 ├── units.ts            the units of length, each surface's own, and the converters
 ├── frames.ts           coordinate frames: the mapper, the registry, toSurface and fromSurface
