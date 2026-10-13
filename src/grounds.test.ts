@@ -131,22 +131,23 @@ describe("the grounds", () => {
   });
 
   it("have the name in the language of the place where it is not English, and Japanese for the grounds of Japan", () => {
-    expect(GROUNDS["maracana"].nameLocal).toBe("Estádio do Maracanã");
+    expect(GROUNDS["maracana"].localName).toBe("Maracanã");
     expect(GROUNDS["maracana"].localLanguage).toBe("pt");
-    expect(GROUNDS["santiago-bernabeu"].nameLocal).toBe("Estadio Santiago Bernabéu");
+    expect(GROUNDS["santiago-bernabeu"].localName).toBe("Estadio Santiago Bernabéu");
     expect(GROUNDS["signal-iduna-park"].localLanguage).toBe("de");
     expect(GROUNDS["luzhniki"].localLanguage).toBe("ru");
     expect(GROUNDS["tianhe-stadium"].localLanguage).toBe("zh");
-    expect(GROUNDS["seoul-world-cup-stadium"].nameLocal).toBe("서울월드컵경기장");
+    expect(GROUNDS["seoul-world-cup-stadium"].localName).toBe("서울월드컵경기장");
     for (const id of all.filter((g) => g.country === "JP").map((g) => g.id)) {
       expect(GROUNDS[id].localLanguage, id).toBe("ja");
-      expect(GROUNDS[id].nameLocal, id).toMatch(/[぀-ヿ一-鿿]/u);
+      expect(GROUNDS[id].localName, id).toBe(GROUNDS[id].nameJa);
     }
-    expect(GROUNDS["saitama-stadium-2002"].nameLocal).toBe("埼玉スタジアム2002");
-    expect(GROUNDS["nissan-stadium-yokohama"].nameLocal).toBe("横浜国際総合競技場");
+    expect(GROUNDS["saitama-stadium-2002"].localName).toBe("埼玉スタジアム2002");
+    expect(GROUNDS["nissan-stadium-yokohama"].localName).toBe("日産スタジアム");
+    expect(GROUNDS["san-siro"].localName).toBe("San Siro");
     // The English-speaking places have none, and a name is not given twice for the same language.
-    for (const id of ["old-trafford", "rose-bowl", "bmo-field", "stadium-australia", "soccer-city"]) expect(GROUNDS[id].nameLocal, id).toBeUndefined();
-    for (const g of all) expect(g.nameLocal === undefined, g.id).toBe(g.localLanguage === undefined);
+    for (const id of ["old-trafford", "rose-bowl", "bmo-field", "stadium-australia", "soccer-city"]) expect(GROUNDS[id].localName, id).toBeUndefined();
+    for (const g of all) expect(g.localName === undefined, g.id).toBe(g.localLanguage === undefined);
   });
 
   it("know the names a ground had, in the year", () => {

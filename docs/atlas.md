@@ -19,7 +19,9 @@ Every ballpark and soccer ground the package draws, on one map: 158 places in 23
 | --- | --- |
 | `id` | The key in `PARKS` or `GROUNDS`: unique across both (`fenway-park`, `maracana`). |
 | `kind` | `park` or `ground`. |
-| `name`, `nameJa` | The name in English, and in Japanese where the data has one (every ground, and the parks of Japan). |
+| `name`, `nameJa`, `readingJa` | The everyday name in English and in Japanese, and the reading of the Japanese one in kana where it has kanji (every place has both names). |
+| `localName`, `localLanguage` | The everyday name in the language of the place, where it is not English (`San Siro`, `it`; `Maracanã`, `pt`). |
+| `aliases`, `names` | Every other name, each with where it was read and the years it was used (`{ name, lang, kind, from?, to?, source? }`), and the names a ground had for some years. See [names](./ballparks.md#names). |
 | `sport` | `baseball` or `soccer`. |
 | `leagues` | `MLB` or `NPB` for a park; `FIFA World Cup` and `FIFA Women's World Cup` for a ground that staged matches of one. A club ground that staged none has none. |
 | `country`, `city` | ISO 3166-1 alpha-2, and the city the data names. |
@@ -44,7 +46,16 @@ console.log(polo.from, polo.to, drawKyogijo({ ...surfaceOf(polo), style: "none" 
 1891 1963 true
 ```
 
-`placesBy({ sport, kind, league, country, status, year, text })` keeps the places that match every field given, in the order of `PLACES`. Each of the first five takes one value or a list (a list matches any of its members). `year` keeps the places in use that year; a place with no known first year, or no known last year, is not shut out by that bound, so a place whose year the data lacks is shown rather than hidden. `text` finds every word in the name, the name in Japanese, the city, the club or the country code, ignoring case and accents. `atlasFacets()` lists the sports, leagues and countries and the span of years, for the controls of a page, and `surfaceOf(place)` gives the options `drawKyogijo` takes to draw a place's surface: a park's fence or a ground's pitch at its own size.
+```ts
+import { placeByName, placesByName } from "@johnmorrisdotca/kyogijo/atlas";
+
+console.log(placeByName("甲子園")?.id, placeByName("Koshien Stadium")?.id, placeByName("サンシーロ")?.id);
+// hanshin-koshien-stadium hanshin-koshien-stadium san-siro
+console.log(placesByName("Wrigley Field").map((place) => place.id).join(), placeByName("nothing here"));
+// wrigley-field,wrigley-field-los-angeles undefined
+```
+
+`placeByName(name)` finds a place by any of its names, and `placesByName(name)` every place that answers to it, best match first (the everyday names, then the official and cited names, then the former names and the nicknames), ignoring case, accents, spaces, punctuation, full-width and half-width, hiragana and katakana and the long vowel mark: `placeByName("甲子園")` and `placeByName("Koshien Stadium")` are both `hanshin-koshien-stadium`, and `placeByName("サンシーロ")` is `san-siro`. `placesBy({ sport, kind, league, country, status, year, text })` keeps the places that match every field given, in the order of `PLACES`. Each of the first five takes one value or a list (a list matches any of its members). `year` keeps the places in use that year; a place with no known first year, or no known last year, is not shut out by that bound, so a place whose year the data lacks is shown rather than hidden. `text` finds every word in a name (the everyday names, the aliases and the readings), the city, the club or the country code, ignoring case and accents: `text: "meazza"` finds San Siro and `text: "こうしえん"` Koshien. `atlasFacets()` lists the sports, leagues and countries and the span of years, for the controls of a page, and `surfaceOf(place)` gives the options `drawKyogijo` takes to draw a place's surface: a park's fence or a ground's pitch at its own size.
 
 ## Where the coordinates come from
 

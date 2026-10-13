@@ -1,5 +1,7 @@
 import { GROUNDS, GROUND_IDS } from "./grounds.ts";
 import type { Ground } from "./grounds.ts";
+import { nameContainsAll, placesNamed, plainName } from "./names.ts";
+import type { PlaceAlias } from "./names.ts";
 import { PARKS, PARK_IDS } from "./parks.ts";
 import type { Park } from "./parks.ts";
 
@@ -17,9 +19,19 @@ export interface Place {
   /** The key in `PARKS` or in `GROUNDS` (`fenway-park`, `maracana`): unique across both. */
   id: string;
   kind: PlaceKind;
+  /** The everyday name in English. */
   name: string;
-  /** The name in Japanese, where the data has one (every ground; the parks of Japan). */
-  nameJa?: string;
+  /** The everyday name in Japanese. */
+  nameJa: string;
+  /** The reading of `nameJa` in kana, where it has kanji. */
+  readingJa?: string;
+  /** The everyday name in the language of the place, where it is not English. */
+  localName?: string;
+  localLanguage?: string;
+  /** Every other name: the cited titles of Wikipedia, the official, sponsor and former names with their years, the nicknames; `placeByName` and the `text` of `placesBy` read them. */
+  aliases: readonly PlaceAlias[];
+  /** The names the place had for some years (a ground that was given another name for a World Cup), first to last. */
+  names?: readonly { name: string; from: number; to: number }[];
   sport: PlaceSport;
   /** The leagues and competitions it is known for: `MLB`, `NPB`, `FIFA World Cup`, `FIFA Women's World Cup`. A club ground that staged none has none. */
   leagues: readonly string[];
@@ -51,7 +63,7 @@ export interface PlaceFilter {
   status?: PlaceStatus | readonly PlaceStatus[];
   /** Keep the places in use in this year. A year that is not known for a place (no `from`, no `to`) does not shut it out. */
   year?: number;
-  /** Words to find in the name, the name in Japanese, the city or the club, ignoring case and accents; every word must be found. */
+  /** Words to find in any name (the everyday names, the aliases, the readings), the city or the club, ignoring case, accents, width and, in Japanese, hiragana or katakana; every word must be found. */
   text?: string;
 }
 
@@ -69,7 +81,10 @@ const fromPark = (park: Park): Place => {
     id: park.id,
     kind: "park",
     name: park.name,
-    ...(park.nameJa === undefined ? {} : { nameJa: park.nameJa }),
+    nameJa: park.nameJa,
+    ...(park.readingJa === undefined ? {} : { readingJa: park.readingJa }),
+    ...(park.localName === undefined ? {} : { localName: park.localName, localLanguage: park.localLanguage }),
+    aliases: park.aliases ?? [],
     sport: "baseball",
     leagues: [park.league],
     country: park.country,
@@ -90,6 +105,10 @@ const fromGround = (ground: Ground): Place => ({
   kind: "ground",
   name: ground.name,
   nameJa: ground.nameJa,
+  ...(ground.readingJa === undefined ? {} : { readingJa: ground.readingJa }),
+  ...(ground.localName === undefined ? {} : { localName: ground.localName, localLanguage: ground.localLanguage }),
+  aliases: ground.aliases ?? [],
+  ...(ground.names === undefined ? {} : { names: ground.names }),
   sport: "soccer",
   leagues: leaguesOfGround(ground),
   country: ground.country,
@@ -120,7 +139,22 @@ const BY_ID: ReadonlyMap<string, Place> = new Map(PLACES.map((place) => [place.i
 /** The place with a key, or `undefined`. */
 export const placeById = (id: string | undefined): Place | undefined => (id === undefined ? undefined : BY_ID.get(id));
 
-const plain = (text: string): string => text.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+/**
+ * The places that answer to a name, best match first: the everyday names, then the official and cited names and the sponsors', then the former names and the nicknames. The comparison
+ * ignores case, accents, spaces and punctuation, width, and in Japanese hiragana or katakana and the long vowel mark.
+ * @example
+ * ```ts
+ * import { placeByName, placesByName } from "@johnmorrisdotca/kyogijo/atlas";
+ * console.log(placeByName("Koshien Stadium")?.id, placeByName("サン・シーロ")?.id, placeByName("Estadio Jornalista Mario Filho")?.id, placesByName("wrigley field").map((place) => place.id).join());
+ * // hanshin-koshien-stadium san-siro maracana wrigley-field,wrigley-field-los-angeles
+ * ```
+ */
+export const placesByName = (name: string | undefined): Place[] => placesNamed(PLACES, name);
+
+/** The place a name belongs to (see `placesByName`; the best match when several answer to it), or `undefined`. */
+export const placeByName = (name: string | undefined): Place | undefined => placesByName(name)[0];
+
+const plain = plainName;
 const many = <T>(value: T | readonly T[] | undefined): readonly T[] | undefined => (value === undefined ? undefined : Array.isArray(value) ? (value as readonly T[]) : [value as T]);
 
 /**
@@ -141,7 +175,7 @@ export function placesBy(filter: PlaceFilter = {}): Place[] {
   const countries = many(filter.country);
   const statuses = many(filter.status);
   const year = filter.year !== undefined && Number.isFinite(filter.year) ? filter.year : undefined;
-  const words = filter.text === undefined ? [] : plain(filter.text).split(/\s+/).filter(Boolean);
+  const words = filter.text === undefined ? [] : filter.text.split(/\s+/).map(plain).filter(Boolean);
   return PLACES.filter((place) => {
     if (sports !== undefined && !sports.includes(place.sport)) return false;
     if (kinds !== undefined && !kinds.includes(place.kind)) return false;
@@ -150,8 +184,8 @@ export function placesBy(filter: PlaceFilter = {}): Place[] {
     if (statuses !== undefined && !statuses.includes(place.status)) return false;
     if (year !== undefined && ((place.from !== undefined && year < place.from) || (place.to !== undefined && year > place.to))) return false;
     if (words.length > 0) {
-      const haystack = plain([place.name, place.nameJa, place.city, place.team, place.country].filter(Boolean).join(" "));
-      if (!words.every((word) => haystack.includes(word))) return false;
+      const haystack = plain([place.city, place.team, place.country].filter(Boolean).join(" "));
+      if (!words.every((word) => haystack.includes(word) || nameContainsAll(place, [word]))) return false;
     }
     return true;
   });

@@ -1,6 +1,7 @@
 import { FEET_PER_METRE, fenceAt, fencePoints, DEFAULT_FENCE, type FencePoint } from "./geometry.ts";
 import { PARK_DATA } from "./parks.data.ts";
-import type { Fence } from "./types.ts";
+import { officialName, placesNamed, type PlaceAlias } from "./names.ts";
+import type { Fence, Language } from "./types.ts";
 import type { Unit } from "./units.ts";
 
 /** Where a park's figures were read: an article of Wikipedia at a revision. */
@@ -105,9 +106,18 @@ export interface ParkData {
   id: string;
   /** The Wikidata item of the ground (`Q49136`), the key to join a park to other data. */
   wikidata: string;
+  /** The everyday name in English, the one English sports media use (`Koshien Stadium`, `Oracle Park`); the title of the Wikipedia article is one of the `aliases`. */
   name: string;
-  /** The name in Japanese, for the parks of Japan. */
-  nameJa?: string;
+  /** The everyday name in Japanese (`甲子園球場`, `マツダスタジアム`), as Japanese media say it; for a park of the United States and Canada the title of the Japanese Wikipedia article. */
+  nameJa: string;
+  /** The reading of `nameJa` in kana, given wherever `nameJa` has kanji (`こうしえんきゅうじょう`). */
+  readingJa?: string;
+  /** The everyday name in the language of the place (`ja` for the parks of Japan, `fr` for two in Montreal); the parks of English-speaking places have none. */
+  localName?: string;
+  /** The language of `localName`. */
+  localLanguage?: string;
+  /** Every other name, each with where it was read: the cited articles' titles (`wikipedia`, with the revision), the `official` name when it is not the everyday one, `sponsor` and `former` names with their years, `nickname`s. */
+  aliases?: PlaceAlias[];
   team: string;
   teamJa?: string;
   city: string;
@@ -194,6 +204,27 @@ export const PARK_IDS: readonly string[] = Object.freeze(PARK_DATA.map((data) =>
 
 /** The unit a park's figures were published in: metres for the parks of Japan (converted to feet once, in `PARKS`), feet for the rest. `undefined` for a key that is not a park. */
 export const parkUnit = (id: string | undefined): Unit | undefined => PARK_DATA.find((data) => data.id === id)?.unit;
+
+/**
+ * The parks that answer to a name, best match first: the everyday names, then the official and cited names and the sponsors', then the former names and the nicknames. A name is
+ * compared without case, accents, spaces or punctuation, in full-width or half-width, and in Japanese with hiragana or katakana and with or without the long vowel mark.
+ * @example
+ * ```ts
+ * import { parksByName } from "@johnmorrisdotca/kyogijo/parks";
+ * console.log(parksByName("Camden Yards")[0]?.id, parksByName("甲子園")[0]?.id, parksByName("ハマスタ")[0]?.id);
+ * // oriole-park-at-camden-yards hanshin-koshien-stadium yokohama-stadium
+ * ```
+ */
+export const parksByName = (name: string | undefined): Park[] => placesNamed(Object.values(PARKS), name);
+
+/** The park a name belongs to (see `parksByName`; the best match when several answer to it), or `undefined`. */
+export const parkByName = (name: string | undefined): Park | undefined => parksByName(name)[0];
+
+/** A park's name in a language: the everyday name in English, or in Japanese. */
+export const parkNameIn = (park: Park, language: Language = "en"): string => (language === "ja" ? park.nameJa : park.name);
+
+/** The name a park officially has in a language, when it is not the everyday name (`Hanshin Koshien Stadium` for `Koshien Stadium`), in the year given or today; else `undefined`. */
+export const parkOfficialName = (park: Park, language: Language = "en", year?: number): string | undefined => officialName(park, language, undefined, Number.isFinite(year) ? year : undefined);
 
 /** The park with a key, or `undefined`. */
 export const parkById = (id: string | undefined): Park | undefined => (id === undefined ? undefined : PARKS[id]);

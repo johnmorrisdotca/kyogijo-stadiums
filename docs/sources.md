@@ -417,7 +417,7 @@ The facts of the 64 grounds of `scripts/grounds.data.json` (listed in [grounds.m
 | Figure | Value | Source |
 | --- | --- | --- |
 | Pitch | the length and width the infobox gives for football, in the unit it gives them in (metres or yards), where they are a size for international matches (100 to 110 by 64 to 75 m) | the infobox (`dimensions`) of the ground's article; Law 1.4 for the range |
-| Names | the names the infobox lists (`former_names`) with the years it dates them; the name of a World Cup (`Miami Stadium` in 2026) where it lists one | the infobox; the Japanese article for Nissan Stadium's naming rights (from 1 March 2005) |
+| Names | the names the infobox lists (`former_names`, `nickname`) with the years it dates them; the name of a World Cup (`Miami Stadium` in 2026) where it lists one; the everyday and the official names, in Japanese and in the language of the place (`aliases`, each with its `source`) | the infobox and the opening text; the Japanese article for the name Japanese media use (`日産スタジアム`, from 1 March 2005) and its reading; Wikidata (CC0) for the labels, aliases and the properties official name, nickname and name |
 | Years and capacity | the year it opened, the year it closed (`closed`, else `demolished`) and the first capacity the infobox gives | the infobox |
 | Place | the city and the country, and the coordinates (P625), the country (P17) and the item itself | the article; Wikidata (CC0), checked by `scripts/check-grounds.mjs` |
 | Tournaments | the grounds of the list a World Cup used, and where its final was played | the venue section of the tournament's article, at the revision in NOTICE.md |

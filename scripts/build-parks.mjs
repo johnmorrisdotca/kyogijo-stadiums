@@ -11,9 +11,13 @@
 // gives beyond the distances, each fact read at the same revision: `labels` (the words the article uses for the points its text adds), `walls`
 // (how high the fence stands along a stretch, in the park's unit), `quirks` (a hill, an overhang, a pole, the bullpens, ivy), `track_ft` and
 // `backstop_ft` (the warning track's width and the distance to the backstop), and `dugouts` (the sides). Where an article has no figure the
-// park has no such key and keeps the plain drawing. See docs/references.md and NOTICE.md.
+// park has no such key and keeps the plain drawing. The names: `name` is the everyday name in English and `nameJa` in Japanese (with `readingJa` in kana where it
+// has kanji), `localName` the everyday name in the language of the place, and `aliases` every other name with where it was read (the titles of the articles the park
+// cites, its official, sponsor and former names with their years, its nicknames); scripts/fetch-names.mjs writes the evidence in scripts/names.wikidata.json and
+// scripts/names-lib.mjs holds each entry to the rules of docs/ballparks.md ("Names"). See docs/references.md and NOTICE.md.
 import { readFileSync, writeFileSync } from "node:fs";
 import { URL } from "node:url";
+import { checkNames } from "./names-lib.mjs";
 
 const parks = JSON.parse(readFileSync(new URL("./parks.data.json", import.meta.url), "utf8"));
 const ids = new Set();
@@ -74,6 +78,9 @@ for (const park of parks) {
   if (park.opened !== undefined && park.closed !== undefined && park.opened > park.closed) throw new Error(`${park.id}: it closed before it opened`);
   if (!["current", "secondary", "past"].includes(park.status)) throw new Error(`${park.id}: status ${park.status}`);
   if (!(park.en || park.ja)) throw new Error(`${park.id} cites no source`);
+  checkNames(park, (message) => {
+    throw new Error(message);
+  });
   checkFence(park, park.points, "the fence");
   checkExtras(park);
   if (park.league === "MLB" && park.status === "past" && !(Number.isInteger(park.from) && Number.isInteger(park.to) && park.from <= park.to)) throw new Error(`${park.id}: a past MLB park gives the seasons it was used`);
@@ -87,11 +94,15 @@ for (const park of parks) {
   }
 }
 const compact = (json) => json.replace(/\[\s+(-?[\d.]+),\s+(-?[\d.]+)\s+\]/g, "[$1, $2]");
+const alias = (entry) => `{ ${Object.entries(entry).map(([key, value]) => `${JSON.stringify(key)}: ${JSON.stringify(value)}`).join(", ")} }`;
+// An alias is one line; the rest is JSON as it is laid out.
+const stash = [];
+const json = JSON.stringify(parks, (key, value) => (key === "aliases" && Array.isArray(value) ? value.map((entry) => `@@${stash.push(alias(entry)) - 1}@@`) : value), 2).replace(/"@@(\d+)@@"/g, (_, n) => stash[Number(n)]);
 const text = `// Made by scripts/build-parks.mjs from scripts/parks.data.json: do not edit by hand.
 // Fence distances are facts published in the articles each entry cites; see docs/references.md.
 import type { ParkData } from "./parks.ts";
 
-export const PARK_DATA: ParkData[] = ${compact(JSON.stringify(parks, null, 2))};
+export const PARK_DATA: ParkData[] = ${compact(json)};
 `;
 writeFileSync(new URL("../src/parks.data.ts", import.meta.url), text);
 console.log(`src/parks.data.ts: ${parks.length} parks`);

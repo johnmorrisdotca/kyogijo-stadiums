@@ -5,10 +5,14 @@
 // Japanese), its Wikidata item is the one that article is linked to (checked against the item's labels by scripts/check-grounds.mjs),
 // and its coordinates are Wikidata's (P625, CC0). No text, table or picture of the articles is copied. The editions file lists, for
 // each World Cup, the grounds of this list that staged matches and where the final was played, read from the venue section of the
-// tournament's article at the revision it names; the tournaments of each ground are made from it. FIFA's own pages are not used.
+// tournament's article at the revision it names; the tournaments of each ground are made from it. FIFA's own pages are not used. The names: `name` is the everyday
+// name in English, `nameJa` in Japanese (with `readingJa` in kana where it has kanji), `localName` the everyday name in the language of the place, `names` the names
+// the ground had for some years, and `aliases` every other name with where it was read; scripts/fetch-names.mjs writes the evidence (Wikidata, CC0) in scripts/names.wikidata.json
+// and scripts/names-lib.mjs holds each entry to the rules of docs/grounds.md ("Names").
 // See docs/references.md and NOTICE.md.
 import { readFileSync, writeFileSync } from "node:fs";
 import { URL } from "node:url";
+import { checkNames } from "./names-lib.mjs";
 
 const grounds = JSON.parse(readFileSync(new URL("./grounds.data.json", import.meta.url), "utf8"));
 const editions = JSON.parse(readFileSync(new URL("./grounds.editions.json", import.meta.url), "utf8"));
@@ -33,7 +37,7 @@ for (const g of grounds) {
   if (typeof g.name !== "string" || g.name === "") fail(`${g.id} needs a name`);
   if (!/^[A-Z]{2}$/.test(g.country ?? "")) fail(`${g.id}: the country is an ISO 3166-1 alpha-2 code`);
   if (typeof g.city !== "string" || g.city === "") fail(`${g.id} needs a city`);
-  if ((g.nameLocal === undefined) !== (g.localLanguage === undefined)) fail(`${g.id}: nameLocal and localLanguage go together`);
+  checkNames(g, fail);
   if (!(typeof g.lat === "number" && g.lat >= -90 && g.lat <= 90 && typeof g.lon === "number" && g.lon >= -180 && g.lon <= 180)) fail(`${g.id}: the coordinates are out of range`);
   if (!["current", "past"].includes(g.status)) fail(`${g.id}: status ${g.status}`);
   if (g.from !== undefined && !isYear(g.from)) fail(`${g.id}: from`);
@@ -84,8 +88,8 @@ const data = grounds.map((g) => {
 // A ground the tournaments pass over is still a ground: it is a club's or a stadium of note.
 
 const line = (value) => JSON.stringify(value).replace(/":/g, '": ').replace(/,"/g, ', "').replace(/\},\{/g, "}, {");
-const field = (key, value) => `    "${key}": ${(key === "names" || key === "tournaments") && value.length > 0 ? `[\n${value.map((v) => `      ${line(v)}`).join(",\n")}\n    ]` : line(value)}`;
-const KEYS = ["id", "wikidata", "name", "names", "nameLocal", "localLanguage", "nameJa", "city", "country", "lat", "lon", "status", "from", "to", "capacity", "pitchSize", "pitch", "pitchNote", "note", "en", "ja", "tournaments"];
+const field = (key, value) => `    "${key}": ${(key === "names" || key === "tournaments" || key === "aliases") && value.length > 0 ? `[\n${value.map((v) => `      ${line(v)}`).join(",\n")}\n    ]` : line(value)}`;
+const KEYS = ["id", "wikidata", "name", "names", "nameJa", "readingJa", "localName", "localLanguage", "aliases", "city", "country", "lat", "lon", "status", "from", "to", "capacity", "pitchSize", "pitch", "pitchNote", "note", "en", "ja", "tournaments"];
 const entry = (g) => {
   for (const key of Object.keys(g)) if (!KEYS.includes(key)) fail(`${g.id}: unknown field ${key}`);
   return `  {\n${KEYS.filter((key) => g[key] !== undefined && !(key === "names" && g[key].length === 0)).map((key) => field(key, g[key])).join(",\n")},\n  }`;
@@ -105,8 +109,10 @@ const COUNTRY = { UY: "Uruguay", IT: "Italy", FR: "France", BR: "Brazil", CH: "S
 const cup = (t) => `${t.competition === "world-cup" ? "WC" : "WWC"} ${t.year}${t.final ? " (final)" : ""}`;
 const size = (g) => (g.pitchSize === "published" ? `${g.pitch.length} × ${g.pitch.width} ${g.pitch.unit}` : "default, 105 × 68 m");
 const years = (g) => (g.status === "past" ? `${g.from}–${g.to}` : g.from === undefined ? "" : `${g.from}–`);
-const name = (g) => (g.nameLocal !== undefined && g.nameLocal !== g.name ? `${g.name} (${g.nameLocal})` : g.name);
+const name = (g) => (g.localName !== undefined && g.localName !== g.name ? `${g.name} (${g.localName})` : g.name);
 const fixed = grounds.filter((g) => g.pitchSize === "default");
+const official = (g, lang) => g.aliases?.find((a) => a.kind === "official" && a.lang === lang && a.to === undefined)?.name ?? "";
+const differ = data.filter((g) => g.name !== g.en.title || g.nameJa !== g.ja.title);
 const md = `# The grounds
 
 Made by \`pnpm grounds\` from \`scripts/grounds.data.json\` and \`scripts/grounds.editions.json\`; do not edit by hand. ${grounds.length} grounds, ${
@@ -118,6 +124,24 @@ Made by \`pnpm grounds\` from \`scripts/grounds.data.json\` and \`scripts/ground
 ${data
   .map((g) => `| \`${g.id}\` | ${name(g)} | ${g.city}, ${COUNTRY[g.country] ?? g.country} | ${g.wikidata} | ${years(g)} | ${g.capacity?.toLocaleString("en-US") ?? ""} | ${size(g)} | ${g.tournaments.map(cup).join(", ")} |`)
   .join("\n")}
+
+## Names
+
+A ground has the name people use and every other name it answers to, each with where it was read.
+
+- \`name\` is the **everyday name in English**, the one English sports media use (\`NRG Stadium\`, \`San Siro\`, \`Etihad Stadium\`), with the current sponsor's name where that is what people say. It is not always the title of the article that was cited: that title is an alias.
+- \`nameJa\` is the **everyday name in Japanese**, as Japanese media say it (\`日産スタジアム\`, \`サン・シーロ\`, \`マラカナン\`), and \`readingJa\` its reading in kana wherever it has kanji (\`にっさんスタジアム\`).
+- \`localName\` and \`localLanguage\` are the everyday name in the language of the place (\`San Siro\`, \`it\`; \`Maracanã\`, \`pt\`; a ground of an English-speaking place has none).
+- \`names\` are the names the ground had for some years, as before; \`groundNameIn(ground, year)\` picks the one of a year, and the everyday name follows them where one covers the year.
+- \`aliases\` are the others, \`{ name, lang, kind, from?, to?, source?, revision? }\`. \`kind\` is \`wikipedia\` (the title of a cited article, with its \`revision\`: no citation is lost), \`official\` (what the owner or operator calls it, when that is not the everyday name), \`sponsor\` (a naming-rights name), \`former\` or \`nickname\`; \`from\` and \`to\` are the years a source gives, and \`source\` says where the name was read (an article and its revision, or a Wikidata item and property).
+- \`groundByName(name)\` (and \`groundsByName\`, the others that answer too) finds a ground by any of these names, in English, Japanese or the place's language, ignoring case, accents, spaces and punctuation, full-width and half-width, hiragana and katakana and the long vowel mark: \`groundByName("サンシーロ")\` and \`groundByName("Meazza Stadium")\` are both \`san-siro\`. The atlas search reads them too.
+- A drawing is titled with the everyday name in its language and, where the official name is another, says so in its description (\`Its official name is Parc Olympique Lyonnais.\`, \`正式名称はパルク・オリンピック・リヨンです。\`).
+
+Where the everyday name is not the title of the article that was cited (names that are not in this table are the titles):
+
+| Key | Everyday name | English article | Official, English | Name in Japanese | Japanese article | Official, Japanese |
+| --- | --- | --- | --- | --- | --- | --- |
+${differ.map((g) => `| \`${g.id}\` | ${g.name} | ${g.en.title} | ${official(g, "en")} | ${g.nameJa} | ${g.ja.title} | ${official(g, "ja")} |`).join("\n")}
 
 ## Grounds at the default size
 

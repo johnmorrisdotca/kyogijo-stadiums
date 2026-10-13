@@ -66,8 +66,8 @@ test("the ground picker has the grounds in three groups, and a ground sets the p
 test("the ground picker reads ?ground= and speaks Japanese", async ({ page }) => {
   await open(page, "?sport=soccer&ground=maracana&lang=ja&help=off&size=surface");
   await expect(page.locator(at("ground"))).toHaveValue("maracana");
-  await expect(page.locator(`${at("ground")} option[value="maracana"]`)).toHaveText("エスタジオ・ド・マラカナン");
-  await expect(svg(page).locator("title")).toHaveText("エスタジオ・ド・マラカナンのピッチ");
+  await expect(page.locator(`${at("ground")} option[value="maracana"]`)).toHaveText("マラカナン");
+  await expect(svg(page).locator("title")).toHaveText("マラカナンのピッチ");
   await noSidewaysScroll(page);
 });
 

@@ -26,11 +26,13 @@ export type { DelaunayLayer, FlowLayer, Formation, FormationLayer, FormationPlay
 export { COURT_THEMES } from "./themes.ts";
 export { abbreviate, capitals, fitLines, textWidth } from "./text.ts";
 export type { FittedLines } from "./text.ts";
-export { PARKS, PARK_IDS, fenceFor, parkById, parkByWikidata, parkPointsIn, parkQuirksIn, parkSourceUrl, parkUnit, parkWallsIn } from "./parks.ts";
+export { PARKS, PARK_IDS, fenceFor, parkById, parkByName, parkByWikidata, parkNameIn, parkOfficialName, parkPointsIn, parkQuirksIn, parkSourceUrl, parkUnit, parkWallsIn, parksByName } from "./parks.ts";
+export { officialName, plainName } from "./names.ts";
+export type { PlaceAlias, PlaceNameKind } from "./names.ts";
 export type { CoverQuirk, DugoutSide, HillQuirk, OverhangQuirk, Park, ParkData, ParkDugouts, ParkPeriod, ParkPeriodData, ParkQuirk, ParkSource, ParkWall, ParkWallData, PointQuirk, QuirkKind, WallPlace } from "./parks.ts";
 export { ERA_CURRENT, ERA_SOURCES, ERA_SPORTS, eraChanges, eraRange, eraStates, footballIn, rulesFor, seasonLabel } from "./eras.ts";
 export type { EraChange, EraRules, EraRulesOf, EraSource, EraSpan, EraSport, FootballRules, MlbRules, NbaRules, NhlRules } from "./eras.ts";
-export { GROUND_IDS, GROUNDS, groundById, groundByWikidata, groundNameIn, groundSourceUrl, groundsHosting } from "./grounds.ts";
+export { GROUND_IDS, GROUNDS, groundById, groundByName, groundByWikidata, groundNameIn, groundOfficialName, groundSourceUrl, groundsByName, groundsHosting } from "./grounds.ts";
 export type { Ground, GroundCompetition, GroundData, GroundName, GroundSource, GroundTournament } from "./grounds.ts";
 export { AFL_GROUNDS, FAMILY_OF, LEAGUES, LEAGUE_SOURCES, VARIANTS, chooseLeague, hasHistory, leagueAt, leagueById, leagueChanges, leagueFigures, leagueIds, leagueSeason, leagueSize } from "./leagues.ts";
 export type { BaseballLeague, BasketballLeague, CourtFigures, CourtMarks, DiamondFigures, Family, FootballLeague, HockeyLeague, League, LeagueAt, LeagueChange, LeagueSource, LeagueSpan, Named, RinkFigures } from "./leagues.ts";

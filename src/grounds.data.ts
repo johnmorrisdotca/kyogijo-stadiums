@@ -7,9 +7,15 @@ export const GROUND_DATA: GroundData[] = [
     "id": "estadio-centenario",
     "wikidata": "Q498245",
     "name": "Estadio Centenario",
-    "nameLocal": "Estadio Centenario",
-    "localLanguage": "es",
     "nameJa": "エスタディオ・センテナリオ",
+    "localName": "Estadio Centenario",
+    "localLanguage": "es",
+    "aliases": [
+      {"name": "Estadio Centenario", "lang": "en", "kind": "wikipedia", "revision": 1372279993, "source": "en.wikipedia.org"},
+      {"name": "エスタディオ・センテナリオ", "lang": "ja", "kind": "wikipedia", "revision": 98831471, "source": "ja.wikipedia.org"},
+      {"name": "Centenary Stadium", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1372279993"},
+      {"name": "センテナリオ競技場", "lang": "ja", "kind": "nickname", "source": "Wikidata Q498245 alias"}
+    ],
     "city": "Montevideo",
     "country": "UY",
     "lat": -34.89444,
@@ -29,9 +35,14 @@ export const GROUND_DATA: GroundData[] = [
     "id": "stadio-nazionale-pnf",
     "wikidata": "Q642958",
     "name": "Stadio Nazionale PNF",
-    "nameLocal": "Stadio Nazionale del PNF",
-    "localLanguage": "it",
     "nameJa": "スタディオ・ナツィオナーレPNF",
+    "localName": "Stadio Nazionale del PNF",
+    "localLanguage": "it",
+    "aliases": [
+      {"name": "Stadio Nazionale PNF", "lang": "en", "kind": "wikipedia", "revision": 1372234262, "source": "en.wikipedia.org"},
+      {"name": "スタディオ・ナツィオナーレPNF", "lang": "ja", "kind": "wikipedia", "revision": 106032907, "source": "ja.wikipedia.org"},
+      {"name": "National Stadium, Rome", "lang": "en", "kind": "nickname", "source": "Wikidata Q642958 alias"}
+    ],
     "city": "Rome",
     "country": "IT",
     "lat": 41.92722,
@@ -56,9 +67,15 @@ export const GROUND_DATA: GroundData[] = [
       {"name": "Stade du Matin", "from": 1907, "to": 1919},
       {"name": "Stade olympique de Colombes", "from": 1920, "to": 1927}
     ],
-    "nameLocal": "Stade départemental Yves-du-Manoir",
-    "localLanguage": "fr",
     "nameJa": "スタッド・デパルトモンタル・イヴ＝デュ＝マノワール",
+    "localName": "Stade Yves-du-Manoir",
+    "localLanguage": "fr",
+    "aliases": [
+      {"name": "Stade Yves-du-Manoir", "lang": "en", "kind": "wikipedia", "revision": 1372233519, "source": "en.wikipedia.org"},
+      {"name": "スタッド・デパルトモンタル・イヴ＝デュ＝マノワール", "lang": "ja", "kind": "wikipedia", "revision": 107801528, "source": "ja.wikipedia.org"},
+      {"name": "Stade départemental Yves-du-Manoir", "lang": "fr", "kind": "official", "source": "ja.wikipedia.org revision 107801528"},
+      {"name": "Colombes", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1372233519"}
+    ],
     "city": "Colombes",
     "country": "FR",
     "lat": 48.93145,
@@ -81,9 +98,16 @@ export const GROUND_DATA: GroundData[] = [
     "names": [
       {"name": "Estádio Municipal", "from": 1950, "to": 1966}
     ],
-    "nameLocal": "Estádio do Maracanã",
+    "nameJa": "マラカナン",
+    "localName": "Maracanã",
     "localLanguage": "pt",
-    "nameJa": "エスタジオ・ド・マラカナン",
+    "aliases": [
+      {"name": "Maracanã Stadium", "lang": "en", "kind": "wikipedia", "revision": 1378863637, "source": "en.wikipedia.org"},
+      {"name": "エスタジオ・ド・マラカナン", "lang": "ja", "kind": "wikipedia", "revision": 110510766, "source": "ja.wikipedia.org"},
+      {"name": "Estádio Jornalista Mário Filho", "lang": "pt", "kind": "official", "source": "en.wikipedia.org revision 1378863637"},
+      {"name": "マラカナン", "lang": "ja", "kind": "nickname", "source": "ja.wikipedia.org revision 110510766"},
+      {"name": "Estádio do Maracanã", "lang": "pt", "kind": "nickname", "source": "en.wikipedia.org revision 1378863637"}
+    ],
     "city": "Rio de Janeiro",
     "country": "BR",
     "lat": -22.91222,
@@ -104,9 +128,13 @@ export const GROUND_DATA: GroundData[] = [
     "id": "wankdorf",
     "wikidata": "Q676004",
     "name": "Wankdorf Stadium",
-    "nameLocal": "Wankdorfstadion",
-    "localLanguage": "de",
     "nameJa": "シュタディオン・ヴァンクドルフ",
+    "localName": "Wankdorfstadion",
+    "localLanguage": "de",
+    "aliases": [
+      {"name": "Wankdorf Stadium", "lang": "en", "kind": "wikipedia", "revision": 1372250401, "source": "en.wikipedia.org"},
+      {"name": "シュタディオン・ヴァンクドルフ (1925年)", "lang": "ja", "kind": "wikipedia", "revision": 107529969, "source": "ja.wikipedia.org"}
+    ],
     "city": "Bern",
     "country": "CH",
     "lat": 46.96278,
@@ -125,9 +153,13 @@ export const GROUND_DATA: GroundData[] = [
     "id": "rasunda",
     "wikidata": "Q725623",
     "name": "Råsunda Stadium",
-    "nameLocal": "Råsunda fotbollsstadion",
-    "localLanguage": "sv",
     "nameJa": "ロースンダ・スタディオン",
+    "localName": "Råsunda fotbollsstadion",
+    "localLanguage": "sv",
+    "aliases": [
+      {"name": "Råsunda Stadium", "lang": "en", "kind": "wikipedia", "revision": 1372227046, "source": "en.wikipedia.org"},
+      {"name": "ロースンダ・スタディオン", "lang": "ja", "kind": "wikipedia", "revision": 105505519, "source": "ja.wikipedia.org"}
+    ],
     "city": "Solna",
     "country": "SE",
     "lat": 59.36278,
@@ -152,9 +184,16 @@ export const GROUND_DATA: GroundData[] = [
     "names": [
       {"name": "Estadio Nacional", "from": 1938, "to": 2008}
     ],
-    "nameLocal": "Estadio Nacional Julio Martínez Prádanos",
-    "localLanguage": "es",
     "nameJa": "エスタディオ・ナシオナル・デ・チリ",
+    "localName": "Estadio Nacional",
+    "localLanguage": "es",
+    "aliases": [
+      {"name": "Julio Martínez Prádanos National Stadium", "lang": "en", "kind": "wikipedia", "revision": 1379138321, "source": "en.wikipedia.org"},
+      {"name": "エスタディオ・ナシオナル・デ・チリ", "lang": "ja", "kind": "wikipedia", "revision": 101004691, "source": "ja.wikipedia.org"},
+      {"name": "Estadio Nacional Julio Martínez Prádanos", "lang": "es", "kind": "official", "source": "en.wikipedia.org revision 1379138321"},
+      {"name": "Estadio Nacional", "lang": "es", "kind": "nickname", "source": "en.wikipedia.org revision 1379138321"},
+      {"name": "El Coloso", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1379138321"}
+    ],
     "city": "Santiago",
     "country": "CL",
     "lat": -33.46444,
@@ -175,6 +214,14 @@ export const GROUND_DATA: GroundData[] = [
     "wikidata": "Q43279",
     "name": "Wembley Stadium (1923)",
     "nameJa": "旧ウェンブリー・スタジアム",
+    "readingJa": "きゅうウェンブリー・スタジアム",
+    "aliases": [
+      {"name": "Wembley Stadium (1923)", "lang": "en", "kind": "wikipedia", "revision": 1374252171, "source": "en.wikipedia.org"},
+      {"name": "ウェンブリー・スタジアム (1923)", "lang": "ja", "kind": "wikipedia", "revision": 110336995, "source": "ja.wikipedia.org"},
+      {"name": "Empire Stadium", "lang": "en", "kind": "former", "source": "en.wikipedia.org revision 1374252171"},
+      {"name": "British Empire Exhibition Stadium", "lang": "en", "kind": "former", "source": "en.wikipedia.org revision 1374252171"},
+      {"name": "Old Wembley", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1374252171"}
+    ],
     "city": "London",
     "country": "GB",
     "lat": 51.55556,
@@ -195,6 +242,13 @@ export const GROUND_DATA: GroundData[] = [
     "wikidata": "Q128468",
     "name": "Wembley Stadium",
     "nameJa": "ウェンブリー・スタジアム",
+    "aliases": [
+      {"name": "Wembley Stadium", "lang": "en", "kind": "wikipedia", "revision": 1379930582, "source": "en.wikipedia.org"},
+      {"name": "ウェンブリー・スタジアム", "lang": "ja", "kind": "wikipedia", "revision": 110350755, "source": "ja.wikipedia.org"},
+      {"name": "Wembley Stadium connected by EE", "lang": "en", "kind": "sponsor", "source": "en.wikipedia.org revision 1379930582"},
+      {"name": "The Home of Football", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1379930582"},
+      {"name": "New Wembley", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1379930582"}
+    ],
     "city": "London",
     "country": "GB",
     "lat": 51.55556,
@@ -216,9 +270,18 @@ export const GROUND_DATA: GroundData[] = [
       {"name": "Estadio Guillermo Cañedo", "from": 1997, "to": 1998},
       {"name": "Estadio Ciudad de México", "from": 2026, "to": 2026}
     ],
-    "nameLocal": "Estadio Azteca",
-    "localLanguage": "es",
     "nameJa": "エスタディオ・アステカ",
+    "localName": "Estadio Azteca",
+    "localLanguage": "es",
+    "aliases": [
+      {"name": "Estadio Azteca", "lang": "en", "kind": "wikipedia", "revision": 1374978481, "source": "en.wikipedia.org"},
+      {"name": "エスタディオ・アステカ", "lang": "ja", "kind": "wikipedia", "revision": 111238345, "source": "ja.wikipedia.org"},
+      {"name": "Estadio Banorte", "lang": "es", "kind": "official", "source": "en.wikipedia.org revision 1374978481"},
+      {"name": "El Coloso de Santa Úrsula", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1374978481"},
+      {"name": "The Colossus of Santa Úrsula", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1374978481"},
+      {"name": "Aztec Stadium", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1374978481"},
+      {"name": "アステカスタジアム", "lang": "ja", "kind": "nickname", "source": "Wikidata Q320454 alias"}
+    ],
     "city": "Mexico City",
     "country": "MX",
     "lat": 19.30306,
@@ -239,10 +302,15 @@ export const GROUND_DATA: GroundData[] = [
   {
     "id": "olympiastadion-munich",
     "wikidata": "Q131610",
-    "name": "Olympiastadion (Munich)",
-    "nameLocal": "Olympiastadion München",
-    "localLanguage": "de",
+    "name": "Munich Olympic Stadium",
     "nameJa": "ミュンヘン・オリンピアシュタディオン",
+    "localName": "Olympiastadion München",
+    "localLanguage": "de",
+    "aliases": [
+      {"name": "Olympiastadion (Munich)", "lang": "en", "kind": "wikipedia", "revision": 1375090249, "source": "en.wikipedia.org"},
+      {"name": "ミュンヘン・オリンピアシュタディオン", "lang": "ja", "kind": "wikipedia", "revision": 109325015, "source": "ja.wikipedia.org"},
+      {"name": "Olympiastadion", "lang": "de", "kind": "nickname", "source": "en.wikipedia.org revision 1375090249"}
+    ],
     "city": "Munich",
     "country": "DE",
     "lat": 48.17306,
@@ -266,9 +334,16 @@ export const GROUND_DATA: GroundData[] = [
       {"name": "Estadio Monumental Antonio Vespucio Liberti", "from": 1986, "to": 2022},
       {"name": "Estadio Mas Monumental", "from": 2022, "to": 2026}
     ],
-    "nameLocal": "Estadio Monumental",
+    "nameJa": "エスタディオ・モヌメンタル",
+    "localName": "Estadio Monumental",
     "localLanguage": "es",
-    "nameJa": "エスタディオ・モヌメンタル・アントニオ・ベスプチオ・リベルティ",
+    "aliases": [
+      {"name": "Estadio Monumental (Buenos Aires)", "lang": "en", "kind": "wikipedia", "revision": 1379457880, "source": "en.wikipedia.org"},
+      {"name": "エスタディオ・モヌメンタル・アントニオ・ベスプチオ・リベルティ", "lang": "ja", "kind": "wikipedia", "revision": 106840308, "source": "ja.wikipedia.org"},
+      {"name": "エスタディオ・モヌメンタル", "lang": "ja", "kind": "official", "source": "ja.wikipedia.org revision 106840308"},
+      {"name": "エル・モヌメンタル", "lang": "ja", "kind": "nickname", "source": "ja.wikipedia.org revision 106840308"},
+      {"name": "Monumental Stadium", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1379457880"}
+    ],
     "city": "Buenos Aires",
     "country": "AR",
     "lat": -34.54528,
@@ -291,9 +366,17 @@ export const GROUND_DATA: GroundData[] = [
     "names": [
       {"name": "Estadio Real Madrid Club de Fútbol", "from": 1947, "to": 1955}
     ],
-    "nameLocal": "Estadio Santiago Bernabéu",
-    "localLanguage": "es",
     "nameJa": "エスタディオ・サンティアゴ・ベルナベウ",
+    "localName": "Estadio Santiago Bernabéu",
+    "localLanguage": "es",
+    "aliases": [
+      {"name": "Bernabéu (stadium)", "lang": "en", "kind": "wikipedia", "revision": 1376542686, "source": "en.wikipedia.org"},
+      {"name": "エスタディオ・サンティアゴ・ベルナベウ", "lang": "ja", "kind": "wikipedia", "revision": 109745684, "source": "ja.wikipedia.org"},
+      {"name": "Santiago Bernabéu", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1376542686"},
+      {"name": "Nuevo Chamartín", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1376542686"},
+      {"name": "Bernabéu", "lang": "es", "kind": "nickname", "source": "en.wikipedia.org revision 1376542686"},
+      {"name": "Bernabéu", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1376542686"}
+    ],
     "city": "Madrid",
     "country": "ES",
     "lat": 40.45306,
@@ -317,9 +400,15 @@ export const GROUND_DATA: GroundData[] = [
       {"name": "Stadio dei Cipressi", "from": 1928, "to": 1953},
       {"name": "Stadio dei Centomila", "from": 1953, "to": 1960}
     ],
-    "nameLocal": "Stadio Olimpico",
-    "localLanguage": "it",
     "nameJa": "スタディオ・オリンピコ・ディ・ローマ",
+    "localName": "Stadio Olimpico",
+    "localLanguage": "it",
+    "aliases": [
+      {"name": "Stadio Olimpico", "lang": "en", "kind": "wikipedia", "revision": 1376210332, "source": "en.wikipedia.org"},
+      {"name": "スタディオ・オリンピコ・ディ・ローマ", "lang": "ja", "kind": "wikipedia", "revision": 109745762, "source": "ja.wikipedia.org"},
+      {"name": "The Olimpico", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1376210332"},
+      {"name": "スタディオ・オリンピコ", "lang": "ja", "kind": "nickname", "source": "ja.wikipedia.org revision 109745762"}
+    ],
     "city": "Rome",
     "country": "IT",
     "lat": 41.93389,
@@ -340,6 +429,12 @@ export const GROUND_DATA: GroundData[] = [
     "wikidata": "Q582280",
     "name": "Rose Bowl",
     "nameJa": "ローズボウル",
+    "aliases": [
+      {"name": "Rose Bowl (stadium)", "lang": "en", "kind": "wikipedia", "revision": 1379595877, "source": "en.wikipedia.org"},
+      {"name": "ローズボウル (競技場)", "lang": "ja", "kind": "wikipedia", "revision": 107943058, "source": "ja.wikipedia.org"},
+      {"name": "Spieker Field at the Rose Bowl", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1379595877"},
+      {"name": "America's Stadium", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1379595877"}
+    ],
     "city": "Pasadena",
     "country": "US",
     "lat": 34.1614,
@@ -360,9 +455,13 @@ export const GROUND_DATA: GroundData[] = [
     "id": "stade-de-france",
     "wikidata": "Q13205",
     "name": "Stade de France",
-    "nameLocal": "Stade de France",
-    "localLanguage": "fr",
     "nameJa": "スタッド・ド・フランス",
+    "localName": "Stade de France",
+    "localLanguage": "fr",
+    "aliases": [
+      {"name": "Stade de France", "lang": "en", "kind": "wikipedia", "revision": 1379022826, "source": "en.wikipedia.org"},
+      {"name": "スタッド・ド・フランス", "lang": "ja", "kind": "wikipedia", "revision": 109911694, "source": "ja.wikipedia.org"}
+    ],
     "city": "Saint-Denis",
     "country": "FR",
     "lat": 48.92444,
@@ -385,9 +484,17 @@ export const GROUND_DATA: GroundData[] = [
     "names": [
       {"name": "International Stadium Yokohama", "from": 1998, "to": 2004}
     ],
-    "nameLocal": "横浜国際総合競技場",
+    "nameJa": "日産スタジアム",
+    "readingJa": "にっさんスタジアム",
+    "localName": "日産スタジアム",
     "localLanguage": "ja",
-    "nameJa": "横浜国際総合競技場",
+    "aliases": [
+      {"name": "Nissan Stadium (Yokohama)", "lang": "en", "kind": "wikipedia", "revision": 1378612722, "source": "en.wikipedia.org"},
+      {"name": "横浜国際総合競技場", "lang": "ja", "kind": "wikipedia", "revision": 111289546, "reading": "よこはまこくさいそうごうきょうぎじょう", "source": "ja.wikipedia.org"},
+      {"name": "横浜国際総合競技場", "lang": "ja", "kind": "official", "reading": "よこはまこくさいそうごうきょうぎじょう", "source": "Wikidata Q116601 P1448"},
+      {"name": "International Stadium Yokohama", "lang": "en", "kind": "official", "source": "en.wikipedia.org revision 1378612722"},
+      {"name": "日産スタジアム", "lang": "ja", "kind": "sponsor", "from": 2005, "source": "ja.wikipedia.org revision 111289546"}
+    ],
     "city": "Yokohama",
     "country": "JP",
     "lat": 35.51004,
@@ -407,10 +514,16 @@ export const GROUND_DATA: GroundData[] = [
   {
     "id": "olympiastadion-berlin",
     "wikidata": "Q151374",
-    "name": "Olympiastadion Berlin",
-    "nameLocal": "Olympiastadion Berlin",
-    "localLanguage": "de",
+    "name": "Berlin Olympic Stadium",
     "nameJa": "ベルリン・オリンピアシュタディオン",
+    "localName": "Olympiastadion Berlin",
+    "localLanguage": "de",
+    "aliases": [
+      {"name": "Olympiastadion (Berlin)", "lang": "en", "kind": "wikipedia", "revision": 1377305597, "source": "en.wikipedia.org"},
+      {"name": "ベルリン・オリンピアシュタディオン", "lang": "ja", "kind": "wikipedia", "revision": 109745416, "source": "ja.wikipedia.org"},
+      {"name": "Olympiastadion Berlin", "lang": "de", "kind": "official", "source": "Wikidata Q151374 P1448"},
+      {"name": "Deutsches Stadion", "lang": "en", "kind": "former", "source": "en.wikipedia.org revision 1377305597"}
+    ],
     "city": "Berlin",
     "country": "DE",
     "lat": 52.51472,
@@ -436,6 +549,13 @@ export const GROUND_DATA: GroundData[] = [
       {"name": "Soccer City", "from": 2010, "to": 2010}
     ],
     "nameJa": "FNBスタジアム",
+    "aliases": [
+      {"name": "FNB Stadium", "lang": "en", "kind": "wikipedia", "revision": 1376285767, "source": "en.wikipedia.org"},
+      {"name": "FNBスタジアム", "lang": "ja", "kind": "wikipedia", "revision": 107530782, "source": "ja.wikipedia.org"},
+      {"name": "First National Bank Stadium", "lang": "en", "kind": "sponsor", "source": "en.wikipedia.org revision 1376285767"},
+      {"name": "サッカーシティスタジアム", "lang": "ja", "kind": "former", "source": "Wikidata Q163521 alias"},
+      {"name": "The Calabash", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1376285767"}
+    ],
     "city": "Johannesburg",
     "country": "ZA",
     "lat": -26.23481,
@@ -458,9 +578,16 @@ export const GROUND_DATA: GroundData[] = [
     "names": [
       {"name": "Central Lenin Stadium", "from": 1956, "to": 1992}
     ],
-    "nameLocal": "стадион «Лужники»",
-    "localLanguage": "ru",
     "nameJa": "ルジニキ・スタジアム",
+    "localName": "Лужники",
+    "localLanguage": "ru",
+    "aliases": [
+      {"name": "Luzhniki Stadium", "lang": "en", "kind": "wikipedia", "revision": 1372284143, "source": "en.wikipedia.org"},
+      {"name": "ルジニキ・スタジアム", "lang": "ja", "kind": "wikipedia", "revision": 110108346, "source": "ja.wikipedia.org"},
+      {"name": "стадион «Лужники»", "lang": "ru", "kind": "official", "source": "en.wikipedia.org revision 1372284143"},
+      {"name": "レーニン・スタジアム", "lang": "ja", "kind": "former", "source": "ja.wikipedia.org revision 110108346"},
+      {"name": "Лужники", "lang": "ru", "kind": "nickname", "source": "en.wikipedia.org revision 1372284143"}
+    ],
     "city": "Moscow",
     "country": "RU",
     "lat": 55.71583,
@@ -480,9 +607,14 @@ export const GROUND_DATA: GroundData[] = [
     "id": "lusail",
     "wikidata": "Q1186333",
     "name": "Lusail Stadium",
-    "nameLocal": "استاد لوسيل",
-    "localLanguage": "ar",
     "nameJa": "ルサイル・アイコニック・スタジアム",
+    "localName": "استاد لوسيل",
+    "localLanguage": "ar",
+    "aliases": [
+      {"name": "Lusail Stadium", "lang": "en", "kind": "wikipedia", "revision": 1375493447, "source": "en.wikipedia.org"},
+      {"name": "ルサイル・アイコニック・スタジアム", "lang": "ja", "kind": "wikipedia", "revision": 110108360, "source": "ja.wikipedia.org"},
+      {"name": "Lusail Iconic Stadium", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1375493447"}
+    ],
     "city": "Lusail",
     "country": "QA",
     "lat": 25.42086,
@@ -506,6 +638,12 @@ export const GROUND_DATA: GroundData[] = [
       {"name": "New York New Jersey Stadium", "from": 2026, "to": 2026}
     ],
     "nameJa": "メットライフ・スタジアム",
+    "aliases": [
+      {"name": "MetLife Stadium", "lang": "en", "kind": "wikipedia", "revision": 1377506007, "source": "en.wikipedia.org"},
+      {"name": "メットライフ・スタジアム", "lang": "ja", "kind": "wikipedia", "revision": 110420479, "source": "ja.wikipedia.org"},
+      {"name": "The Meadowlands", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1377506007"},
+      {"name": "The New Meadowlands", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1377506007"}
+    ],
     "city": "East Rutherford",
     "country": "US",
     "lat": 40.81361,
@@ -529,6 +667,13 @@ export const GROUND_DATA: GroundData[] = [
       {"name": "Dallas Stadium", "from": 2026, "to": 2026}
     ],
     "nameJa": "AT&Tスタジアム",
+    "aliases": [
+      {"name": "AT&T Stadium", "lang": "en", "kind": "wikipedia", "revision": 1378723128, "source": "en.wikipedia.org"},
+      {"name": "AT&Tスタジアム", "lang": "ja", "kind": "wikipedia", "revision": 110578711, "source": "ja.wikipedia.org"},
+      {"name": "Jerry World", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1378723128"},
+      {"name": "The Palace in Dallas", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1378723128"},
+      {"name": "The Cowboys Cathedral", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1378723128"}
+    ],
     "city": "Arlington",
     "country": "US",
     "lat": 32.74769,
@@ -552,6 +697,10 @@ export const GROUND_DATA: GroundData[] = [
       {"name": "Kansas City Stadium", "from": 2026, "to": 2026}
     ],
     "nameJa": "アローヘッド・スタジアム",
+    "aliases": [
+      {"name": "Arrowhead Stadium", "lang": "en", "kind": "wikipedia", "revision": 1379206337, "source": "en.wikipedia.org"},
+      {"name": "アローヘッド・スタジアム", "lang": "ja", "kind": "wikipedia", "revision": 110785489, "source": "ja.wikipedia.org"}
+    ],
     "city": "Kansas City",
     "country": "US",
     "lat": 39.04889,
@@ -569,12 +718,27 @@ export const GROUND_DATA: GroundData[] = [
   {
     "id": "nrg-stadium",
     "wikidata": "Q1058864",
-    "name": "Reliant Stadium",
+    "name": "NRG Stadium",
     "names": [
+      {"name": "Reliant Stadium", "from": 2002, "to": 2013},
+      {"name": "Reliant Stadium", "from": 2002, "to": 2013},
+      {"name": "Reliant Stadium", "from": 2002, "to": 2013},
+      {"name": "Reliant Stadium", "from": 2002, "to": 2013},
+      {"name": "Reliant Stadium", "from": 2002, "to": 2013},
+      {"name": "Reliant Stadium", "from": 2002, "to": 2013},
       {"name": "NRG Stadium", "from": 2014, "to": 2026},
       {"name": "Houston Stadium", "from": 2026, "to": 2026}
     ],
-    "nameJa": "リライアント・スタジアム",
+    "nameJa": "NRGスタジアム",
+    "aliases": [
+      {"name": "Reliant Stadium", "lang": "en", "kind": "wikipedia", "revision": 1379613664, "source": "en.wikipedia.org"},
+      {"name": "リライアント・スタジアム", "lang": "ja", "kind": "wikipedia", "revision": 110479504, "source": "ja.wikipedia.org"},
+      {"name": "Reliant Stadium", "lang": "en", "kind": "official", "from": 2026, "source": "en.wikipedia.org revision 1379613664"},
+      {"name": "リライアント・スタジアム", "lang": "ja", "kind": "official", "from": 2026, "source": "ja.wikipedia.org revision 110479504"},
+      {"name": "NRG Stadium", "lang": "en", "kind": "sponsor", "from": 2014, "to": 2026, "source": "en.wikipedia.org revision 1379613664"},
+      {"name": "NRGスタジアム", "lang": "ja", "kind": "sponsor", "from": 2014, "to": 2026, "source": "ja.wikipedia.org revision 110479504"},
+      {"name": "Reliant Stadium", "lang": "en", "kind": "former", "from": 2002, "to": 2013, "source": "en.wikipedia.org revision 1379613664"}
+    ],
     "city": "Houston",
     "country": "US",
     "lat": 29.68472,
@@ -598,6 +762,11 @@ export const GROUND_DATA: GroundData[] = [
       {"name": "Atlanta Stadium", "from": 2026, "to": 2026}
     ],
     "nameJa": "メルセデス・ベンツ・スタジアム",
+    "aliases": [
+      {"name": "Mercedes-Benz Stadium", "lang": "en", "kind": "wikipedia", "revision": 1377254306, "source": "en.wikipedia.org"},
+      {"name": "メルセデス・ベンツ・スタジアム", "lang": "ja", "kind": "wikipedia", "revision": 110364633, "source": "ja.wikipedia.org"},
+      {"name": "The Benz", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1377254306"}
+    ],
     "city": "Atlanta",
     "country": "US",
     "lat": 33.75528,
@@ -629,6 +798,10 @@ export const GROUND_DATA: GroundData[] = [
       {"name": "Miami Stadium", "from": 2026, "to": 2026}
     ],
     "nameJa": "ハードロック・スタジアム",
+    "aliases": [
+      {"name": "Hard Rock Stadium", "lang": "en", "kind": "wikipedia", "revision": 1378219951, "source": "en.wikipedia.org"},
+      {"name": "ハードロック・スタジアム", "lang": "ja", "kind": "wikipedia", "revision": 110333956, "source": "ja.wikipedia.org"}
+    ],
     "city": "Miami Gardens",
     "country": "US",
     "lat": 25.95806,
@@ -651,6 +824,10 @@ export const GROUND_DATA: GroundData[] = [
       {"name": "Los Angeles Stadium", "from": 2026, "to": 2026}
     ],
     "nameJa": "SoFiスタジアム",
+    "aliases": [
+      {"name": "SoFi Stadium", "lang": "en", "kind": "wikipedia", "revision": 1377512452, "source": "en.wikipedia.org"},
+      {"name": "SoFiスタジアム", "lang": "ja", "kind": "wikipedia", "revision": 110365161, "source": "ja.wikipedia.org"}
+    ],
     "city": "Inglewood",
     "country": "US",
     "lat": 33.9504,
@@ -673,6 +850,12 @@ export const GROUND_DATA: GroundData[] = [
       {"name": "San Francisco Bay Area Stadium", "from": 2026, "to": 2026}
     ],
     "nameJa": "リーバイス・スタジアム",
+    "aliases": [
+      {"name": "Levi's Stadium", "lang": "en", "kind": "wikipedia", "revision": 1375976386, "source": "en.wikipedia.org"},
+      {"name": "リーバイス・スタジアム", "lang": "ja", "kind": "wikipedia", "revision": 110365038, "source": "ja.wikipedia.org"},
+      {"name": "Santa Clara Stadium", "lang": "en", "kind": "former", "from": 2007, "to": 2013, "source": "Wikidata Q7419343 P2561"},
+      {"name": "Field of Jeans", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1375976386"}
+    ],
     "city": "Santa Clara",
     "country": "US",
     "lat": 37.4034,
@@ -698,6 +881,10 @@ export const GROUND_DATA: GroundData[] = [
       {"name": "Seattle Stadium", "from": 2026, "to": 2026}
     ],
     "nameJa": "ルーメン・フィールド",
+    "aliases": [
+      {"name": "Lumen Field", "lang": "en", "kind": "wikipedia", "revision": 1373998493, "source": "en.wikipedia.org"},
+      {"name": "ルーメン・フィールド", "lang": "ja", "kind": "wikipedia", "revision": 110364603, "source": "ja.wikipedia.org"}
+    ],
     "city": "Seattle",
     "country": "US",
     "lat": 47.59528,
@@ -722,6 +909,10 @@ export const GROUND_DATA: GroundData[] = [
       {"name": "Boston Stadium", "from": 2026, "to": 2026}
     ],
     "nameJa": "ジレット・スタジアム",
+    "aliases": [
+      {"name": "Gillette Stadium", "lang": "en", "kind": "wikipedia", "revision": 1378807964, "source": "en.wikipedia.org"},
+      {"name": "ジレット・スタジアム", "lang": "ja", "kind": "wikipedia", "revision": 110364650, "source": "ja.wikipedia.org"}
+    ],
     "city": "Foxborough",
     "country": "US",
     "lat": 42.09094,
@@ -746,6 +937,11 @@ export const GROUND_DATA: GroundData[] = [
       {"name": "Philadelphia Stadium", "from": 2026, "to": 2026}
     ],
     "nameJa": "リンカーン・フィナンシャル・フィールド",
+    "aliases": [
+      {"name": "Lincoln Financial Field", "lang": "en", "kind": "wikipedia", "revision": 1379946572, "source": "en.wikipedia.org"},
+      {"name": "リンカーン・フィナンシャル・フィールド", "lang": "ja", "kind": "wikipedia", "revision": 110364983, "source": "ja.wikipedia.org"},
+      {"name": "The Linc", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1379946572"}
+    ],
     "city": "Philadelphia",
     "country": "US",
     "lat": 39.90089,
@@ -770,6 +966,10 @@ export const GROUND_DATA: GroundData[] = [
       {"name": "Toronto Stadium", "from": 2026, "to": 2026}
     ],
     "nameJa": "BMOフィールド",
+    "aliases": [
+      {"name": "BMO Field", "lang": "en", "kind": "wikipedia", "revision": 1377704191, "source": "en.wikipedia.org"},
+      {"name": "BMOフィールド", "lang": "ja", "kind": "wikipedia", "revision": 110140746, "source": "ja.wikipedia.org"}
+    ],
     "city": "Toronto",
     "country": "CA",
     "lat": 43.63278,
@@ -793,6 +993,10 @@ export const GROUND_DATA: GroundData[] = [
       {"name": "BC Place Vancouver", "from": 2026, "to": 2026}
     ],
     "nameJa": "BCプレイス",
+    "aliases": [
+      {"name": "BC Place", "lang": "en", "kind": "wikipedia", "revision": 1372065649, "source": "en.wikipedia.org"},
+      {"name": "BCプレイス", "lang": "ja", "kind": "wikipedia", "revision": 110198797, "source": "ja.wikipedia.org"}
+    ],
     "city": "Vancouver",
     "country": "CA",
     "lat": 49.27667,
@@ -816,9 +1020,15 @@ export const GROUND_DATA: GroundData[] = [
       {"name": "Estadio BBVA Bancomer", "from": 2015, "to": 2019},
       {"name": "Estadio Monterrey", "from": 2026, "to": 2026}
     ],
-    "nameLocal": "Estadio BBVA",
-    "localLanguage": "es",
     "nameJa": "エスタディオBBVA",
+    "localName": "Estadio BBVA",
+    "localLanguage": "es",
+    "aliases": [
+      {"name": "Estadio BBVA", "lang": "en", "kind": "wikipedia", "revision": 1374765816, "source": "en.wikipedia.org"},
+      {"name": "エスタディオBBVA", "lang": "ja", "kind": "wikipedia", "revision": 110121756, "source": "ja.wikipedia.org"},
+      {"name": "El Gigante de Acero", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1374765816"},
+      {"name": "The Steel Giant", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1374765816"}
+    ],
     "city": "Guadalupe",
     "country": "MX",
     "lat": 25.67017,
@@ -842,9 +1052,13 @@ export const GROUND_DATA: GroundData[] = [
       {"name": "Estadio Chivas", "from": 2016, "to": 2017},
       {"name": "Estadio Guadalajara", "from": 2026, "to": 2026}
     ],
-    "nameLocal": "Estadio Akron",
-    "localLanguage": "es",
     "nameJa": "エスタディオ・アクロン",
+    "localName": "Estadio Akron",
+    "localLanguage": "es",
+    "aliases": [
+      {"name": "Estadio Akron", "lang": "en", "kind": "wikipedia", "revision": 1378431074, "source": "en.wikipedia.org"},
+      {"name": "エスタディオ・アクロン", "lang": "ja", "kind": "wikipedia", "revision": 110069876, "source": "ja.wikipedia.org"}
+    ],
     "city": "Zapopan",
     "country": "MX",
     "lat": 20.68167,
@@ -863,9 +1077,16 @@ export const GROUND_DATA: GroundData[] = [
     "id": "tianhe-stadium",
     "wikidata": "Q929126",
     "name": "Tianhe Stadium",
-    "nameLocal": "天河体育中心体育场",
-    "localLanguage": "zh",
     "nameJa": "天河体育中心体育場",
+    "readingJa": "てんがたいいくちゅうしんたいいくじょう",
+    "localName": "天河体育场",
+    "localLanguage": "zh",
+    "aliases": [
+      {"name": "Tianhe Stadium", "lang": "en", "kind": "wikipedia", "revision": 1372244015, "source": "en.wikipedia.org"},
+      {"name": "天河体育中心体育場", "lang": "ja", "kind": "wikipedia", "revision": 107400316, "source": "ja.wikipedia.org"},
+      {"name": "天河体育中心体育场", "lang": "zh", "kind": "official", "source": "en.wikipedia.org revision 1372244015"},
+      {"name": "天河体育场", "lang": "zh", "kind": "nickname", "source": "en.wikipedia.org revision 1372244015"}
+    ],
     "city": "Guangzhou",
     "country": "CN",
     "lat": 23.14052,
@@ -890,6 +1111,10 @@ export const GROUND_DATA: GroundData[] = [
       {"name": "StubHub Center", "from": 2013, "to": 2018}
     ],
     "nameJa": "ディグニティ・ヘルス・スポーツ・パーク",
+    "aliases": [
+      {"name": "Dignity Health Sports Park", "lang": "en", "kind": "wikipedia", "revision": 1372080521, "source": "en.wikipedia.org"},
+      {"name": "ディグニティ・ヘルス・スポーツ・パーク", "lang": "ja", "kind": "wikipedia", "revision": 110881566, "source": "ja.wikipedia.org"}
+    ],
     "city": "Carson",
     "country": "US",
     "lat": 33.86444,
@@ -909,9 +1134,14 @@ export const GROUND_DATA: GroundData[] = [
     "id": "hongkou-football-stadium",
     "wikidata": "Q201773",
     "name": "Hongkou Football Stadium",
-    "nameLocal": "虹口足球场",
-    "localLanguage": "zh",
     "nameJa": "上海虹口足球場",
+    "readingJa": "シャンハイこうこうそくきゅうじょう",
+    "localName": "虹口足球场",
+    "localLanguage": "zh",
+    "aliases": [
+      {"name": "Hongkou Football Stadium", "lang": "en", "kind": "wikipedia", "revision": 1372203981, "source": "en.wikipedia.org"},
+      {"name": "上海虹口足球場", "lang": "ja", "kind": "wikipedia", "revision": 109727595, "source": "ja.wikipedia.org"}
+    ],
     "city": "Shanghai",
     "country": "CN",
     "lat": 31.2733,
@@ -937,9 +1167,16 @@ export const GROUND_DATA: GroundData[] = [
       {"name": "FIFA World Cup Stadium Frankfurt", "from": 2006, "to": 2006},
       {"name": "FIFA Women's World Cup Stadium Frankfurt", "from": 2011, "to": 2011}
     ],
-    "nameLocal": "Deutsche Bank Park",
+    "nameJa": "ドイチェ・バンク・パルク",
+    "localName": "Deutsche Bank Park",
     "localLanguage": "de",
-    "nameJa": "ヴァルトシュタディオン",
+    "aliases": [
+      {"name": "Waldstadion (Frankfurt)", "lang": "en", "kind": "wikipedia", "revision": 1375755144, "source": "en.wikipedia.org"},
+      {"name": "ヴァルトシュタディオン", "lang": "ja", "kind": "wikipedia", "revision": 101381780, "source": "ja.wikipedia.org"},
+      {"name": "ドイチェ・バンク・パルク", "lang": "ja", "kind": "official", "source": "ja.wikipedia.org revision 101381780"},
+      {"name": "Waldstadion", "lang": "de", "kind": "nickname", "source": "Wikidata Q157273 P1448"},
+      {"name": "ヴァルトシュタディオン", "lang": "ja", "kind": "nickname", "source": "ja.wikipedia.org revision 101381780"}
+    ],
     "city": "Frankfurt",
     "country": "DE",
     "lat": 50.06861,
@@ -960,10 +1197,19 @@ export const GROUND_DATA: GroundData[] = [
   {
     "id": "groupama-stadium",
     "wikidata": "Q8507",
-    "name": "Parc Olympique Lyonnais",
-    "nameLocal": "Parc Olympique Lyonnais",
+    "name": "Groupama Stadium",
+    "nameJa": "グルパマ・スタジアム",
+    "localName": "Groupama Stadium",
     "localLanguage": "fr",
-    "nameJa": "パルク・オリンピック・リヨン",
+    "aliases": [
+      {"name": "Parc Olympique Lyonnais", "lang": "en", "kind": "wikipedia", "revision": 1374907290, "source": "en.wikipedia.org"},
+      {"name": "パルク・オリンピック・リヨン", "lang": "ja", "kind": "wikipedia", "revision": 110056689, "source": "ja.wikipedia.org"},
+      {"name": "Parc Olympique Lyonnais", "lang": "en", "kind": "official", "source": "en.wikipedia.org revision 1374907290"},
+      {"name": "パルク・オリンピック・リヨン", "lang": "ja", "kind": "official", "source": "ja.wikipedia.org revision 110056689"},
+      {"name": "Groupama Stadium", "lang": "en", "kind": "sponsor", "from": 2017, "source": "en.wikipedia.org revision 1374907290"},
+      {"name": "グルパマ・スタジアム", "lang": "ja", "kind": "nickname", "source": "ja.wikipedia.org revision 110056689"},
+      {"name": "Stade des Lumières", "lang": "fr", "kind": "nickname", "source": "ja.wikipedia.org revision 110056689"}
+    ],
     "city": "Décines-Charpieu",
     "country": "FR",
     "lat": 45.76522,
@@ -991,6 +1237,11 @@ export const GROUND_DATA: GroundData[] = [
       {"name": "Sydney Olympic Stadium", "from": 2025, "to": 2025}
     ],
     "nameJa": "スタジアム・オーストラリア",
+    "aliases": [
+      {"name": "Stadium Australia", "lang": "en", "kind": "wikipedia", "revision": 1377697688, "source": "en.wikipedia.org"},
+      {"name": "スタジアム・オーストラリア", "lang": "ja", "kind": "wikipedia", "revision": 109501020, "source": "ja.wikipedia.org"},
+      {"name": "Accor Stadium", "lang": "en", "kind": "sponsor", "from": 2020, "source": "en.wikipedia.org revision 1377697688"}
+    ],
     "city": "Sydney",
     "country": "AU",
     "lat": -33.84722,
@@ -1014,9 +1265,15 @@ export const GROUND_DATA: GroundData[] = [
       {"name": "Estadio del Club de Fútbol Barcelona", "from": 1957, "to": 1973},
       {"name": "Estadi del Futbol Club Barcelona", "from": 1973, "to": 2001}
     ],
-    "nameLocal": "Camp Nou",
-    "localLanguage": "ca",
     "nameJa": "カンプ・ノウ",
+    "localName": "Camp Nou",
+    "localLanguage": "ca",
+    "aliases": [
+      {"name": "Camp Nou", "lang": "en", "kind": "wikipedia", "revision": 1380052299, "source": "en.wikipedia.org"},
+      {"name": "カンプ・ノウ", "lang": "ja", "kind": "wikipedia", "revision": 110123137, "source": "ja.wikipedia.org"},
+      {"name": "Spotify Camp Nou", "lang": "ca", "kind": "official", "source": "Wikidata Q159848 P1448"},
+      {"name": "Nou Camp", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1380052299"}
+    ],
     "city": "Barcelona",
     "country": "ES",
     "lat": 41.38083,
@@ -1037,9 +1294,24 @@ export const GROUND_DATA: GroundData[] = [
     "id": "san-siro",
     "wikidata": "Q133566",
     "name": "San Siro",
-    "nameLocal": "Stadio Giuseppe Meazza",
+    "nameJa": "サン・シーロ",
+    "localName": "San Siro",
     "localLanguage": "it",
-    "nameJa": "スタディオ・ジュゼッペ・メアッツァ",
+    "aliases": [
+      {"name": "San Siro", "lang": "en", "kind": "wikipedia", "revision": 1375450359, "source": "en.wikipedia.org"},
+      {"name": "スタディオ・ジュゼッペ・メアッツァ", "lang": "ja", "kind": "wikipedia", "revision": 109745448, "source": "ja.wikipedia.org"},
+      {"name": "Stadio Giuseppe Meazza", "lang": "it", "kind": "official", "source": "en.wikipedia.org revision 1375450359"},
+      {"name": "Giuseppe Meazza Stadium", "lang": "en", "kind": "official", "source": "Wikidata Q133566 label"},
+      {"name": "スタディオ・ジュゼッペ・メアッツァ", "lang": "ja", "kind": "official", "source": "ja.wikipedia.org revision 109745448"},
+      {"name": "Stadio Comunale di San Siro", "lang": "en", "kind": "former", "source": "en.wikipedia.org revision 1375450359"},
+      {"name": "Stadio Giuseppe Meazza", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1375450359"},
+      {"name": "La Scala del calcio", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1375450359"},
+      {"name": "La Scala del calcio", "lang": "it", "kind": "nickname", "source": "Wikidata Q133566 P1449"},
+      {"name": "サン・シーロ", "lang": "ja", "kind": "nickname", "source": "ja.wikipedia.org revision 109745448"},
+      {"name": "Stadio San Siro", "lang": "it", "kind": "nickname", "source": "Wikidata Q133566 alias"},
+      {"name": "San Siro Stadium", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1375450359"},
+      {"name": "Meazza Stadium", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1375450359"}
+    ],
     "city": "Milan",
     "country": "IT",
     "lat": 45.47806,
@@ -1061,6 +1333,11 @@ export const GROUND_DATA: GroundData[] = [
     "wikidata": "Q83457",
     "name": "Old Trafford",
     "nameJa": "オールド・トラッフォード",
+    "aliases": [
+      {"name": "Old Trafford", "lang": "en", "kind": "wikipedia", "revision": 1376703746, "source": "en.wikipedia.org"},
+      {"name": "オールド・トラッフォード", "lang": "ja", "kind": "wikipedia", "revision": 111091505, "source": "ja.wikipedia.org"},
+      {"name": "The Theatre of Dreams", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1376703746"}
+    ],
     "city": "Manchester",
     "country": "GB",
     "lat": 53.46306,
@@ -1081,6 +1358,10 @@ export const GROUND_DATA: GroundData[] = [
     "wikidata": "Q45671",
     "name": "Anfield",
     "nameJa": "アンフィールド",
+    "aliases": [
+      {"name": "Anfield", "lang": "en", "kind": "wikipedia", "revision": 1379230240, "source": "en.wikipedia.org"},
+      {"name": "アンフィールド", "lang": "ja", "kind": "wikipedia", "revision": 109450439, "source": "ja.wikipedia.org"}
+    ],
     "city": "Liverpool",
     "country": "GB",
     "lat": 53.43083,
@@ -1102,9 +1383,14 @@ export const GROUND_DATA: GroundData[] = [
       {"name": "Westfalenstadion", "from": 1974, "to": 2004},
       {"name": "FIFA World Cup Stadium Dortmund", "from": 2006, "to": 2006}
     ],
-    "nameLocal": "Signal Iduna Park",
-    "localLanguage": "de",
     "nameJa": "ジグナル・イドゥナ・パルク",
+    "localName": "Signal Iduna Park",
+    "localLanguage": "de",
+    "aliases": [
+      {"name": "Westfalenstadion", "lang": "en", "kind": "wikipedia", "revision": 1372251404, "source": "en.wikipedia.org"},
+      {"name": "ジグナル・イドゥナ・パルク", "lang": "ja", "kind": "wikipedia", "revision": 108234696, "source": "ja.wikipedia.org"},
+      {"name": "Westfalenstadion", "lang": "de", "kind": "nickname", "source": "en.wikipedia.org revision 1372251404"}
+    ],
     "city": "Dortmund",
     "country": "DE",
     "lat": 51.4925,
@@ -1128,9 +1414,14 @@ export const GROUND_DATA: GroundData[] = [
     "names": [
       {"name": "FIFA World Cup Stadium, Munich", "from": 2006, "to": 2006}
     ],
-    "nameLocal": "Allianz Arena",
-    "localLanguage": "de",
     "nameJa": "アリアンツ・アレーナ",
+    "localName": "Allianz Arena",
+    "localLanguage": "de",
+    "aliases": [
+      {"name": "Allianz Arena", "lang": "en", "kind": "wikipedia", "revision": 1379929376, "source": "en.wikipedia.org"},
+      {"name": "アリアンツ・アレーナ", "lang": "ja", "kind": "wikipedia", "revision": 109745086, "source": "ja.wikipedia.org"},
+      {"name": "Munich Football Arena", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1379929376"}
+    ],
     "city": "Munich",
     "country": "DE",
     "lat": 48.21878,
@@ -1154,9 +1445,17 @@ export const GROUND_DATA: GroundData[] = [
       {"name": "Estadio de Boca Juniors", "from": 1940, "to": 1986},
       {"name": "Estadio Camilo Cichero", "from": 1986, "to": 2000}
     ],
-    "nameLocal": "Estadio Alberto José Armando",
-    "localLanguage": "es",
     "nameJa": "ラ・ボンボネーラ",
+    "localName": "La Bombonera",
+    "localLanguage": "es",
+    "aliases": [
+      {"name": "La Bombonera", "lang": "en", "kind": "wikipedia", "revision": 1372283373, "source": "en.wikipedia.org"},
+      {"name": "ラ・ボンボネーラ", "lang": "ja", "kind": "wikipedia", "revision": 108892860, "source": "ja.wikipedia.org"},
+      {"name": "Estadio Alberto José Armando", "lang": "es", "kind": "official", "source": "en.wikipedia.org revision 1372283373"},
+      {"name": "Alberto José Armando Stadium", "lang": "en", "kind": "official", "source": "en.wikipedia.org revision 1372283373"},
+      {"name": "La Bombonera", "lang": "es", "kind": "nickname", "source": "en.wikipedia.org revision 1372283373"},
+      {"name": "ボンボネーラ", "lang": "ja", "kind": "nickname", "source": "ja.wikipedia.org revision 108892860"}
+    ],
     "city": "Buenos Aires",
     "country": "AR",
     "lat": -34.63565,
@@ -1175,6 +1474,13 @@ export const GROUND_DATA: GroundData[] = [
     "wikidata": "Q193651",
     "name": "Hampden Park",
     "nameJa": "ハムデン・パーク",
+    "aliases": [
+      {"name": "Hampden Park", "lang": "en", "kind": "wikipedia", "revision": 1379015792, "source": "en.wikipedia.org"},
+      {"name": "ハムデン・パーク", "lang": "ja", "kind": "wikipedia", "revision": 109835284, "source": "ja.wikipedia.org"},
+      {"name": "Barclays Hampden", "lang": "en", "kind": "sponsor", "source": "en.wikipedia.org revision 1379015792"},
+      {"name": "Scotland's National Stadium", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1379015792"},
+      {"name": "Pàirc Hampden", "lang": "gd", "kind": "nickname", "source": "en.wikipedia.org revision 1379015792"}
+    ],
     "city": "Glasgow",
     "country": "GB",
     "lat": 55.82586,
@@ -1192,6 +1498,12 @@ export const GROUND_DATA: GroundData[] = [
     "wikidata": "Q216037",
     "name": "Celtic Park",
     "nameJa": "セルティック・パーク",
+    "aliases": [
+      {"name": "Celtic Park", "lang": "en", "kind": "wikipedia", "revision": 1377041444, "source": "en.wikipedia.org"},
+      {"name": "セルティック・パーク", "lang": "ja", "kind": "wikipedia", "revision": 109745353, "source": "ja.wikipedia.org"},
+      {"name": "Parkhead", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1377041444"},
+      {"name": "Paradise", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1377041444"}
+    ],
     "city": "Glasgow",
     "country": "GB",
     "lat": 55.84971,
@@ -1208,9 +1520,15 @@ export const GROUND_DATA: GroundData[] = [
     "id": "estadio-da-luz",
     "wikidata": "Q7875112",
     "name": "Estádio da Luz",
-    "nameLocal": "Estádio da Luz",
-    "localLanguage": "pt",
     "nameJa": "エスタディオ・ダ・ルス",
+    "localName": "Estádio da Luz",
+    "localLanguage": "pt",
+    "aliases": [
+      {"name": "Estádio da Luz", "lang": "en", "kind": "wikipedia", "revision": 1376285658, "source": "en.wikipedia.org"},
+      {"name": "エスタディオ・ダ・ルス", "lang": "ja", "kind": "wikipedia", "revision": 106143340, "source": "ja.wikipedia.org"},
+      {"name": "Estádio do Sport Lisboa e Benfica", "lang": "pt", "kind": "official", "source": "en.wikipedia.org revision 1376285658"},
+      {"name": "Stadium of Light", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1376285658"}
+    ],
     "city": "Lisbon",
     "country": "PT",
     "lat": 38.75278,
@@ -1228,9 +1546,13 @@ export const GROUND_DATA: GroundData[] = [
     "id": "parc-des-princes",
     "wikidata": "Q193431",
     "name": "Parc des Princes",
-    "nameLocal": "Parc des Princes",
-    "localLanguage": "fr",
     "nameJa": "パルク・デ・プランス",
+    "localName": "Parc des Princes",
+    "localLanguage": "fr",
+    "aliases": [
+      {"name": "Parc des Princes", "lang": "en", "kind": "wikipedia", "revision": 1375789690, "source": "en.wikipedia.org"},
+      {"name": "パルク・デ・プランス", "lang": "ja", "kind": "wikipedia", "revision": 108659418, "source": "ja.wikipedia.org"}
+    ],
     "city": "Paris",
     "country": "FR",
     "lat": 48.84145,
@@ -1251,9 +1573,17 @@ export const GROUND_DATA: GroundData[] = [
     "id": "saitama-stadium-2002",
     "wikidata": "Q482446",
     "name": "Saitama Stadium 2002",
-    "nameLocal": "埼玉スタジアム2002",
-    "localLanguage": "ja",
     "nameJa": "埼玉スタジアム2002",
+    "readingJa": "さいたまスタジアムにまるまるに",
+    "localName": "埼玉スタジアム2002",
+    "localLanguage": "ja",
+    "aliases": [
+      {"name": "Saitama Stadium 2002", "lang": "en", "kind": "wikipedia", "revision": 1372227613, "source": "en.wikipedia.org"},
+      {"name": "埼玉スタジアム2002", "lang": "ja", "kind": "wikipedia", "revision": 110840810, "reading": "さいたまスタジアムにまるまるに", "source": "ja.wikipedia.org"},
+      {"name": "Saisuta", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1372227613"},
+      {"name": "埼玉スタジアム", "lang": "ja", "kind": "nickname", "source": "ja.wikipedia.org revision 110840810"},
+      {"name": "埼スタ", "lang": "ja", "kind": "nickname", "source": "ja.wikipedia.org revision 110840810"}
+    ],
     "city": "Saitama",
     "country": "JP",
     "lat": 35.90314,
@@ -1273,9 +1603,15 @@ export const GROUND_DATA: GroundData[] = [
     "id": "seoul-world-cup-stadium",
     "wikidata": "Q175477",
     "name": "Seoul World Cup Stadium",
-    "nameLocal": "서울월드컵경기장",
-    "localLanguage": "ko",
     "nameJa": "ソウルワールドカップ競技場",
+    "readingJa": "ソウルワールドカップきょうぎじょう",
+    "localName": "서울월드컵경기장",
+    "localLanguage": "ko",
+    "aliases": [
+      {"name": "Seoul World Cup Stadium", "lang": "en", "kind": "wikipedia", "revision": 1372229282, "source": "en.wikipedia.org"},
+      {"name": "ソウルワールドカップ競技場", "lang": "ja", "kind": "wikipedia", "revision": 110969150, "source": "ja.wikipedia.org"},
+      {"name": "Sangam Stadium", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1372229282"}
+    ],
     "city": "Seoul",
     "country": "KR",
     "lat": 37.56823,
@@ -1295,6 +1631,11 @@ export const GROUND_DATA: GroundData[] = [
     "wikidata": "Q163995",
     "name": "Emirates Stadium",
     "nameJa": "エミレーツ・スタジアム",
+    "aliases": [
+      {"name": "Emirates Stadium", "lang": "en", "kind": "wikipedia", "revision": 1379957033, "source": "en.wikipedia.org"},
+      {"name": "エミレーツ・スタジアム", "lang": "ja", "kind": "wikipedia", "revision": 108293184, "source": "ja.wikipedia.org"},
+      {"name": "Ashburton Grove", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1379957033"}
+    ],
     "city": "London",
     "country": "GB",
     "lat": 51.555,
@@ -1312,7 +1653,15 @@ export const GROUND_DATA: GroundData[] = [
     "id": "etihad-stadium",
     "wikidata": "Q48159",
     "name": "Etihad Stadium",
-    "nameJa": "シティ・オブ・マンチェスター・スタジアム",
+    "nameJa": "エティハド・スタジアム",
+    "aliases": [
+      {"name": "Etihad Stadium", "lang": "en", "kind": "wikipedia", "revision": 1378004165, "source": "en.wikipedia.org"},
+      {"name": "シティ・オブ・マンチェスター・スタジアム", "lang": "ja", "kind": "wikipedia", "revision": 110549156, "source": "ja.wikipedia.org"},
+      {"name": "City of Manchester Stadium", "lang": "en", "kind": "official", "source": "Wikidata Q48159 P1448"},
+      {"name": "シティ・オブ・マンチェスター・スタジアム", "lang": "ja", "kind": "official", "source": "ja.wikipedia.org revision 110549156"},
+      {"name": "The Etihad", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1378004165"},
+      {"name": "エティハド・スタジアム", "lang": "ja", "kind": "nickname", "source": "ja.wikipedia.org revision 110549156"}
+    ],
     "city": "Manchester",
     "country": "GB",
     "lat": 53.48306,
@@ -1331,6 +1680,11 @@ export const GROUND_DATA: GroundData[] = [
     "wikidata": "Q171458",
     "name": "Stamford Bridge",
     "nameJa": "スタンフォード・ブリッジ",
+    "aliases": [
+      {"name": "Stamford Bridge (stadium)", "lang": "en", "kind": "wikipedia", "revision": 1380009353, "source": "en.wikipedia.org"},
+      {"name": "スタンフォード・ブリッジ", "lang": "ja", "kind": "wikipedia", "revision": 110730305, "source": "ja.wikipedia.org"},
+      {"name": "The Bridge", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1380009353"}
+    ],
     "city": "London",
     "country": "GB",
     "lat": 51.48167,
@@ -1349,6 +1703,11 @@ export const GROUND_DATA: GroundData[] = [
     "wikidata": "Q55074091",
     "name": "Tottenham Hotspur Stadium",
     "nameJa": "トッテナム・ホットスパー・スタジアム",
+    "aliases": [
+      {"name": "Tottenham Hotspur Stadium", "lang": "en", "kind": "wikipedia", "revision": 1378659225, "source": "en.wikipedia.org"},
+      {"name": "トッテナム・ホットスパー・スタジアム", "lang": "ja", "kind": "wikipedia", "revision": 109835288, "source": "ja.wikipedia.org"},
+      {"name": "New White Hart Lane", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1378659225"}
+    ],
     "city": "London",
     "country": "GB",
     "lat": 51.60444,
@@ -1370,6 +1729,11 @@ export const GROUND_DATA: GroundData[] = [
       {"name": "Ibrox Park", "from": 1899, "to": 1997}
     ],
     "nameJa": "アイブロックス・スタジアム",
+    "aliases": [
+      {"name": "Ibrox Stadium", "lang": "en", "kind": "wikipedia", "revision": 1372283348, "source": "en.wikipedia.org"},
+      {"name": "アイブロックス・スタジアム", "lang": "ja", "kind": "wikipedia", "revision": 110396167, "source": "ja.wikipedia.org"},
+      {"name": "Ibrox", "lang": "en", "kind": "nickname", "source": "en.wikipedia.org revision 1372283348"}
+    ],
     "city": "Glasgow",
     "country": "GB",
     "lat": 55.85306,
@@ -1390,9 +1754,15 @@ export const GROUND_DATA: GroundData[] = [
     "names": [
       {"name": "Amsterdam ArenA", "from": 1996, "to": 2018}
     ],
-    "nameLocal": "Johan Cruijff ArenA",
-    "localLanguage": "nl",
     "nameJa": "ヨハン・クライフ・アレナ",
+    "localName": "Johan Cruijff ArenA",
+    "localLanguage": "nl",
+    "aliases": [
+      {"name": "Johan Cruyff Arena", "lang": "en", "kind": "wikipedia", "revision": 1379542055, "source": "en.wikipedia.org"},
+      {"name": "ヨハン・クライフ・アレナ", "lang": "ja", "kind": "wikipedia", "revision": 108701867, "source": "ja.wikipedia.org"},
+      {"name": "Johan Cruijff ArenA", "lang": "nl", "kind": "official", "source": "Wikidata Q207109 P1448"},
+      {"name": "Stadion Amsterdam", "lang": "en", "kind": "former", "from": 1993, "to": 1995, "source": "en.wikipedia.org revision 1379542055"}
+    ],
     "city": "Amsterdam",
     "country": "NL",
     "lat": 52.31417,
@@ -1410,9 +1780,14 @@ export const GROUND_DATA: GroundData[] = [
     "id": "allianz-stadium-turin",
     "wikidata": "Q62149",
     "name": "Allianz Stadium",
-    "nameLocal": "Allianz Stadium",
-    "localLanguage": "it",
     "nameJa": "ユヴェントス・スタジアム",
+    "localName": "Allianz Stadium",
+    "localLanguage": "it",
+    "aliases": [
+      {"name": "Juventus Stadium", "lang": "en", "kind": "wikipedia", "revision": 1378642162, "source": "en.wikipedia.org"},
+      {"name": "ユヴェントス・スタジアム", "lang": "ja", "kind": "wikipedia", "revision": 110509929, "source": "ja.wikipedia.org"},
+      {"name": "Juventus Stadium", "lang": "en", "kind": "former", "from": 2011, "to": 2017, "source": "en.wikipedia.org revision 1378642162"}
+    ],
     "city": "Turin",
     "country": "IT",
     "lat": 45.10959,
@@ -1430,9 +1805,16 @@ export const GROUND_DATA: GroundData[] = [
     "id": "japan-national-stadium",
     "wikidata": "Q14862239",
     "name": "Japan National Stadium",
-    "nameLocal": "国立競技場",
-    "localLanguage": "ja",
     "nameJa": "国立競技場",
+    "readingJa": "こくりつきょうぎじょう",
+    "localName": "国立競技場",
+    "localLanguage": "ja",
+    "aliases": [
+      {"name": "Japan National Stadium", "lang": "en", "kind": "wikipedia", "revision": 1378899630, "source": "en.wikipedia.org"},
+      {"name": "国立競技場", "lang": "ja", "kind": "wikipedia", "revision": 110837538, "reading": "こくりつきょうぎじょう", "source": "ja.wikipedia.org"},
+      {"name": "MUFG Stadium", "lang": "en", "kind": "sponsor", "source": "en.wikipedia.org revision 1378899630"},
+      {"name": "国立", "lang": "ja", "kind": "nickname", "source": "ja.wikipedia.org revision 110837538"}
+    ],
     "city": "Tokyo",
     "country": "JP",
     "lat": 35.6778,
@@ -1450,9 +1832,18 @@ export const GROUND_DATA: GroundData[] = [
     "id": "kashima-soccer-stadium",
     "wikidata": "Q494769",
     "name": "Kashima Soccer Stadium",
-    "nameLocal": "茨城県立カシマサッカースタジアム",
+    "nameJa": "カシマサッカースタジアム",
+    "localName": "カシマサッカースタジアム",
     "localLanguage": "ja",
-    "nameJa": "茨城県立カシマサッカースタジアム",
+    "aliases": [
+      {"name": "Kashima Soccer Stadium", "lang": "en", "kind": "wikipedia", "revision": 1372209519, "source": "en.wikipedia.org"},
+      {"name": "茨城県立カシマサッカースタジアム", "lang": "ja", "kind": "wikipedia", "revision": 108917122, "reading": "いばらきけんりつカシマサッカースタジアム", "source": "ja.wikipedia.org"},
+      {"name": "茨城県立カシマサッカースタジアム", "lang": "ja", "kind": "official", "reading": "いばらきけんりつカシマサッカースタジアム", "source": "ja.wikipedia.org revision 108917122"},
+      {"name": "Ibaraki Prefectural Kashima Soccer Stadium", "lang": "en", "kind": "official", "source": "Wikidata Q494769 alias"},
+      {"name": "Mercari Stadium", "lang": "en", "kind": "sponsor", "from": 2025, "source": "en.wikipedia.org revision 1372209519"},
+      {"name": "メルカリスタジアム", "lang": "ja", "kind": "sponsor", "from": 2025, "source": "ja.wikipedia.org revision 108917122"},
+      {"name": "カシマサッカースタジアム", "lang": "ja", "kind": "nickname", "source": "ja.wikipedia.org revision 108917122"}
+    ],
     "city": "Kashima",
     "country": "JP",
     "lat": 35.99174,

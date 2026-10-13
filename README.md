@@ -77,7 +77,7 @@ console.log(svg.startsWith("<svg"), svg.includes("Northern Owls 3, Lakeshore Anc
 - **Lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey and handball, from their rulebooks.** The fields and floors of World Lacrosse, the NCAA, the PLL and the NLL; World Rugby's union and the NRL's and IRL's league; the AFL's oval at the size of a named ground; the GAA's field for football and hurling; a cricket ground with a boundary of your own and the 30-yard circle; the FIH's pitch and the IHF's court. A score is goals and behinds (10.12 (72)), goals and points (2-14 (20)) or a board of runs, wickets and overs. [Field sports](./docs/field-sports.md).
 - **Soccer, to the Laws.** A pitch from Law 1 of the IFAB Laws of the Game of any size, with presets (international, UEFA, MLS, NCAA, the FA's 9-, 7- and 5-a-side, FIFA's futsal), half pitches, five mowing patterns, four goal styles, penalties and extra time in a score. [Soccer](./docs/soccer.md).
 - **Every ballpark.** The 30 current MLB parks and 44 that MLB clubs have left (the Polo Grounds, Ebbets Field, the Astrodome and more), and the 12 home parks of Nippon Professional Baseball with eight other NPB grounds, each with its fence drawn from the distances published for it; a past park whose fence moved is drawn as it stood in a season. [Ballparks](./docs/ballparks.md).
-- **Soccer grounds and an atlas.** 64 soccer grounds, each pitch at its published size, and every park and ground on a map, by sport, league, country and year. [The grounds](./docs/grounds.md), [the atlas](./docs/atlas.md).
+- **Soccer grounds and an atlas.** 64 soccer grounds, each pitch at its published size, and every park and ground on a map, by sport, league, country and year, each found by any name it has in English, Japanese or its own language (`Koshien Stadium` is also `甲子園`, `San Siro` is `サン・シーロ`). [The grounds](./docs/grounds.md), [the atlas](./docs/atlas.md), [names](./docs/ballparks.md#names).
 - **Walls and quirks.** How high the fence stands, stretch by stretch and season by season (the Green Monster at 37 feet 2 inches, the Crawford Boxes, the Baggie), drawn as a band outside the fence whose width and shade say the height, with a key (`walls`); and Tal's Hill, Wrigley Field's ivy and basket, overhangs, poles, bullpens, the backstop and the dugouts (`quirks`), each from the park's article, none guessed: [ballparks](./docs/ballparks.md).
 - **Special games.** A surface set inside another, to scale: an NHL rink on a ballpark's infield or a football stadium's field (the Winter Classic, the Stadium Series, the Heritage Classic), a college basketball court on the deck of a carrier, a baseball field laid over a London stadium's pitch. 18 games, each with its day, its venue and its sources, and the place of the rink cited where a source gives it and marked as a convention where none does. [Special games](./docs/special-games.md).
 - **Surfaces through the years.** `year: 1975` draws a surface as its league's rules marked it that season, each change cited. [Surfaces through the years](./docs/eras.md).
@@ -208,10 +208,10 @@ import { PARKS, drawKyogijo } from "@johnmorrisdotca/kyogijo";
 
 const park = PARKS["hanshin-koshien-stadium"];
 console.log(park.name, park.nameJa, park.points.length);
-// Hanshin Koshien Stadium 阪神甲子園球場 5
+// Koshien Stadium 甲子園球場 5
 const svg = drawKyogijo({ sport: "mlb", park: "hanshin-koshien-stadium", language: "ja" });
-console.log(svg.includes("阪神甲子園球場のグラウンド"));
-// true
+console.log(svg.includes("甲子園球場のグラウンド"), svg.includes("阪神甲子園球場のグラウンド"), svg.includes("正式名称は阪神甲子園球場です"));
+// true false true
 ```
 
 <p align="center">

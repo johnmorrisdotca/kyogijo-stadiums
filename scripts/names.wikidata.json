@@ -1,0 +1,8541 @@
+{
+ "read": "2026-10-13",
+ "licence": "CC0",
+ "items": {
+  "oriole-park-at-camden-yards": {
+   "wikidata": "Q1141174",
+   "labels": {
+    "pt": "Oriole Park at Camden Yards",
+    "ko": "캠던 야즈 오리올 파크",
+    "fr": "Oriole Park at Camden Yards",
+    "es": "Oriole Park at Camden Yards",
+    "en": "Oriole Park at Camden Yards",
+    "it": "Oriole Park at Camden Yards",
+    "de": "Oriole Park at Camden Yards",
+    "ja": "オリオール・パーク・アット・カムデン・ヤーズ",
+    "sv": "Oriole Park at Camden Yards",
+    "nl": "Oriole Park at Camden Yards",
+    "zh": "金鶯公園",
+    "ru": "Ориол-парк на Кемден-ярдс",
+    "ca": "Oriole Park at Camden Yards"
+   },
+   "aliases": {
+    "ko": [
+     "캠던 야드 오리올 파크",
+     "캠든야드 오리올파크",
+     "캠든 야드 오리올 파크",
+     "캠든 야즈 오리올 파크",
+     "캠던야즈 오리올파크"
+    ],
+    "ja": [
+     "カムデンヤーズ",
+     "オリオールパーク・アット・カムデンヤーズ",
+     "カムデン・ヤーズ"
+    ],
+    "en": [
+     "The Yard",
+     "Birdland",
+     "The House that Cal Built",
+     "Camden Yards"
+    ],
+    "de": [
+     "Oriole Park",
+     "Camden Yards",
+     "The Yard"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Oriole Park at Camden Yards",
+   "jawiki": "オリオール・パーク・アット・カムデン・ヤーズ"
+  },
+  "fenway-park": {
+   "wikidata": "Q49136",
+   "labels": {
+    "en": "Fenway Park",
+    "ca": "Fenway Park",
+    "de": "Fenway Park",
+    "es": "Fenway Park",
+    "fr": "Fenway Park",
+    "it": "Fenway Park",
+    "ja": "フェンウェイ・パーク",
+    "ko": "펜웨이 파크",
+    "nl": "Fenway Park",
+    "pt": "Fenway Park",
+    "ru": "Фенуэй Парк",
+    "sv": "Fenway Park",
+    "zh": "芬威球場",
+    "ar": "فانواي بارك"
+   },
+   "aliases": {
+    "en": [
+     "Fenway"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Fenway Park",
+   "jawiki": "フェンウェイ・パーク"
+  },
+  "yankee-stadium": {
+   "wikidata": "Q753529",
+   "labels": {
+    "pt": "New Yankee Stadium",
+    "ko": "양키 스타디움",
+    "fr": "Yankee Stadium",
+    "es": "Yankee Stadium",
+    "en": "Yankee Stadium",
+    "ca": "Yankee Stadium",
+    "it": "Yankee Stadium",
+    "de": "Yankee Stadium",
+    "ja": "ヤンキー・スタジアム",
+    "nl": "Yankee Stadium",
+    "sv": "Yankee Stadium",
+    "zh": "洋基體育場",
+    "ru": "Янки-стэдиум",
+    "ar": "ملعب يانكي"
+   },
+   "aliases": {
+    "zh": [
+     "新洋基球場",
+     "新洋基體育館",
+     "新洋基體育場",
+     "New Yankee Stadium"
+    ],
+    "pt": [
+     "Yankees Stadium",
+     "Yankee Stadium"
+    ],
+    "ko": [
+     "뉴 양키 스타디움"
+    ],
+    "fr": [
+     "New Yankee Stadium"
+    ],
+    "es": [
+     "Estadio Yankee"
+    ],
+    "de": [
+     "New Yankee Stadium"
+    ],
+    "ja": [
+     "ヤンキースタジアム",
+     "新ヤンキー・スタジアム"
+    ],
+    "sv": [
+     "New Yankee Stadium"
+    ],
+    "en": [
+     "New Yankee Stadium"
+    ],
+    "nl": [
+     "Yankee Stadium (2009)"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Yankee Stadium",
+   "jawiki": "ヤンキー・スタジアム"
+  },
+  "tropicana-field": {
+   "wikidata": "Q1810119",
+   "labels": {
+    "pt": "Tropicana Field",
+    "de": "Tropicana Field",
+    "ja": "トロピカーナ・フィールド",
+    "fr": "Tropicana Field",
+    "en": "Tropicana Field",
+    "sv": "Tropicana Field",
+    "nl": "Tropicana Field",
+    "it": "Tropicana Field",
+    "ru": "Тропикана-филд",
+    "es": "Tropicana Field",
+    "ko": "트로피카나 필드",
+    "zh": "純品康納室內球場",
+    "ca": "Tropicana Field",
+    "ar": "ملعب تروبيكانا"
+   },
+   "aliases": {
+    "ja": [
+     "トロピカーナフィールド"
+    ],
+    "fr": [
+     "Suncoast Dome",
+     "Florida Suncoast Dome"
+    ],
+    "nl": [
+     "Thunderdome",
+     "Florida Suncoast Dome"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Tropicana Field",
+   "jawiki": "トロピカーナ・フィールド"
+  },
+  "rogers-centre": {
+   "wikidata": "Q76318",
+   "labels": {
+    "zh": "羅渣士中心",
+    "pt": "Rogers Centre",
+    "ru": "Роджерс Центр",
+    "ko": "로저스 센터",
+    "fr": "centre Rogers",
+    "es": "Rogers Centre",
+    "en": "Rogers Centre",
+    "it": "Rogers Centre",
+    "de": "Rogers Centre",
+    "ja": "ロジャース・センター",
+    "sv": "Rogers Centre",
+    "nl": "Rogers Centre",
+    "ca": "Rogers Centre",
+    "ar": "مركز روجرز"
+   },
+   "aliases": {
+    "zh": [
+     "羅傑斯中心球場",
+     "罗杰斯中心",
+     "羅杰斯中心"
+    ],
+    "pt": [
+     "Roger's Centre",
+     "Skydome",
+     "Rogers center"
+    ],
+    "ru": [
+     "Центр Роджерса",
+     "Skydome",
+     "Rogers Centre"
+    ],
+    "ko": [
+     "스카이 돔"
+    ],
+    "fr": [
+     "Skydome",
+     "Sky-dome",
+     "Rogers Centre"
+    ],
+    "es": [
+     "Sky Dome",
+     "Skydome",
+     "Rogers Center"
+    ],
+    "it": [
+     "SkyDome"
+    ],
+    "de": [
+     "Sky Dome",
+     "Skydome"
+    ],
+    "ja": [
+     "ロジャースセンター",
+     "スカイドーム"
+    ],
+    "sv": [
+     "Rogers Center"
+    ],
+    "nl": [
+     "Skydome"
+    ],
+    "en": [
+     "SkyDome"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Rogers Centre",
+   "jawiki": "ロジャーズ・センター"
+  },
+  "rate-field": {
+   "wikidata": "Q633613",
+   "labels": {
+    "de": "Guaranteed Rate Field",
+    "en": "Rate Field",
+    "es": "Guaranteed Rate Field",
+    "fr": "Guaranteed Rate Field",
+    "it": "Guaranteed Rate Field",
+    "ja": "ギャランティード・レート・フィールド",
+    "ko": "개런티드 레이트 필드",
+    "nl": "Guaranteed Rate Field",
+    "pt": "Guaranteed Rate Field",
+    "sv": "Guaranteed Rate Field",
+    "zh": "保證率球場",
+    "ca": "Guaranteed Rate Field"
+   },
+   "aliases": {
+    "es": [
+     "U.S. Cellular Field"
+    ],
+    "en": [
+     "Comiskey Park II",
+     "New Comiskey Park",
+     "U.S. Cellular Field",
+     "The Cell",
+     "Guaranteed Rate Field"
+    ],
+    "nl": [
+     "U.S. Cellular Field"
+    ],
+    "sv": [
+     "U.S. Cellular Field"
+    ],
+    "ko": [
+     "U.S. 셀룰러 필드"
+    ],
+    "fr": [
+     "U.S. Cellular Field"
+    ],
+    "it": [
+     "U.S. Cellular Field"
+    ],
+    "ja": [
+     "USセルラー・フィールド"
+    ],
+    "pt": [
+     "U.S. Cellular Field"
+    ],
+    "zh": [
+     "美國行動通訊球場"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Rate Field",
+   "jawiki": "レート・フィールド"
+  },
+  "progressive-field": {
+   "wikidata": "Q1154053",
+   "labels": {
+    "pt": "Progressive Field",
+    "fr": "Progressive Field",
+    "ko": "프로그레시브 필드",
+    "en": "Progressive Field",
+    "es": "Progressive Field",
+    "it": "Progressive Field",
+    "de": "Progressive Field",
+    "ja": "プログレッシブ・フィールド",
+    "sv": "Progressive Field",
+    "nl": "Progressive Field",
+    "ru": "Прогрессив-филд",
+    "zh": "進步球場",
+    "ca": "Progressive Field"
+   },
+   "aliases": {
+    "pt": [
+     "Jacobs field"
+    ],
+    "fr": [
+     "Jacobs Field"
+    ],
+    "ko": [
+     "제이콥스 필드",
+     "제이콥스필드"
+    ],
+    "es": [
+     "Jacobs Field",
+     "The Jake"
+    ],
+    "de": [
+     "Jacobs Field"
+    ],
+    "ja": [
+     "ジェイコブス・フィールド",
+     "ジェイコブスフィールド"
+    ],
+    "nl": [
+     "Jacobs Field"
+    ],
+    "en": [
+     "Jacobs Field",
+     "The Jake"
+    ],
+    "zh": [
+     "漸進球場"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Progressive Field",
+   "jawiki": "プログレッシブ・フィールド"
+  },
+  "comerica-park": {
+   "wikidata": "Q868482",
+   "labels": {
+    "ru": "Комерика Парк",
+    "fr": "Comerica Park",
+    "en": "Comerica Park",
+    "nl": "Comerica Park",
+    "pt": "Comerica Park",
+    "de": "Comerica Park",
+    "ko": "코메리카 파크",
+    "sv": "Comerica Park",
+    "it": "Comerica Park",
+    "ja": "コメリカ・パーク",
+    "es": "Comerica Park",
+    "zh": "聯信球場",
+    "ca": "Comerica Park"
+   },
+   "aliases": {
+    "ru": [
+     "Comerica Park"
+    ],
+    "pt": [
+     "Comerica park"
+    ],
+    "ja": [
+     "コメリカパーク"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Comerica Park",
+   "jawiki": "コメリカ・パーク"
+  },
+  "kauffman-stadium": {
+   "wikidata": "Q1737017",
+   "labels": {
+    "fr": "Kauffman Stadium",
+    "en": "Kauffman Stadium",
+    "nl": "Kauffman Stadium",
+    "pt": "Kauffman Stadium",
+    "sv": "Kauffman Stadium",
+    "ja": "カウフマン・スタジアム",
+    "de": "Kauffman Stadium",
+    "it": "Kauffman Stadium",
+    "zh": "考夫曼體育場",
+    "ko": "코프먼 스타디움",
+    "es": "Kauffman Stadium",
+    "ca": "Kauffman Stadium"
+   },
+   "aliases": {
+    "fr": [
+     "Royals Stadium",
+     "Ewing M. Kauffman Stadium"
+    ],
+    "nl": [
+     "Royals Stadium"
+    ],
+    "pt": [
+     "Kauffman stadium"
+    ],
+    "ja": [
+     "カウフマンスタジアム",
+     "ロイヤルズ・スタジアム",
+     "コーフマンスタジアム",
+     "コーフマン・スタジアム"
+    ],
+    "en": [
+     "The K",
+     "Royals Stadium"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Kauffman Stadium",
+   "jawiki": "カウフマン・スタジアム"
+  },
+  "target-field": {
+   "wikidata": "Q1156635",
+   "labels": {
+    "de": "Target Field",
+    "ja": "ターゲット・フィールド",
+    "ko": "타깃 필드",
+    "en": "Target Field",
+    "fr": "Target Field",
+    "it": "Target Field",
+    "nl": "Target Field",
+    "ru": "Таргет-филд",
+    "zh": "標靶球場",
+    "es": "Target Field",
+    "ca": "Target Field",
+    "pt": "Target Field",
+    "ar": "تارغت فيلد"
+   },
+   "aliases": {
+    "fr": [
+     "Twins Ballpark"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Target Field",
+   "jawiki": "ターゲット・フィールド"
+  },
+  "daikin-park": {
+   "wikidata": "Q1193671",
+   "labels": {
+    "pt": "Daikin Park",
+    "de": "Daikin Park",
+    "ja": "ダイキン・パーク",
+    "en": "Daikin Park",
+    "ko": "다이킨 파크",
+    "fr": "Daikin Park",
+    "es": "Daikin Park",
+    "nl": "Daikin Park",
+    "it": "Daikin Park",
+    "zh": "美粒果公園球場",
+    "ca": "Daikin Park"
+   },
+   "aliases": {
+    "ko": [
+     "미닛 메이드 파크",
+     "미니트 메이드 파크"
+    ],
+    "fr": [
+     "Enron Field",
+     "Astros Field",
+     "Minute Maid Park"
+    ],
+    "es": [
+     "Enron Field",
+     "Astros Field",
+     "Minute Maid Park"
+    ],
+    "nl": [
+     "Enron Field",
+     "Astros Field",
+     "Minute Maid Park"
+    ],
+    "en": [
+     "The Ballpark at Union Station",
+     "Ballpark at Union Station",
+     "Enron Field",
+     "Astros Field",
+     "Minute Maid Park"
+    ],
+    "zh": [
+     "美汁源公園"
+    ],
+    "ca": [
+     "Minute Maid Park"
+    ],
+    "de": [
+     "Minute Maid Park"
+    ],
+    "it": [
+     "Minute Maid Park"
+    ],
+    "pt": [
+     "Minute Maid Park"
+    ],
+    "ja": [
+     "ミニッツメイド・パーク"
+    ]
+   },
+   "official": [
+    {
+     "text": "Enron Field",
+     "lang": "en"
+    },
+    {
+     "text": "Astros Field",
+     "lang": "en"
+    },
+    {
+     "text": "Minute Maid Park",
+     "lang": "en"
+    },
+    {
+     "text": "Daikin Park",
+     "lang": "en"
+    }
+   ],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Daikin Park",
+   "jawiki": "ダイキン・パーク"
+  },
+  "angel-stadium": {
+   "wikidata": "Q531897",
+   "labels": {
+    "fr": "Angel Stadium of Anaheim",
+    "en": "Angel Stadium of Anaheim",
+    "zh": "安那罕天使球場",
+    "pt": "Angel Stadium",
+    "ca": "Angel Stadium of Anaheim",
+    "de": "Angel Stadium of Anaheim",
+    "ko": "에인절 스타디움 오브 애너하임",
+    "it": "Angel Stadium of Anaheim",
+    "nl": "Angel Stadium of Anaheim",
+    "ja": "エンゼル・スタジアム・オブ・アナハイム",
+    "es": "Angel Stadium of Anaheim"
+   },
+   "aliases": {
+    "fr": [
+     "Angel stadium of anaheim",
+     "Angel Stadium Of Anaheim",
+     "Anaheim Stadium",
+     "Edison International Field of Anaheim",
+     "Angel Stadium",
+     "Edison International Field"
+    ],
+    "pt": [
+     "Angels Stadium",
+     "Angel stadium",
+     "Angels stadium",
+     "Angel Stadium of Anaheim",
+     "Anaheim Stadium"
+    ],
+    "ko": [
+     "에인절 스타디움"
+    ],
+    "ja": [
+     "エンジェルスタジアム",
+     "エンゼルスタジアム",
+     "アナハイム・スタジアム"
+    ],
+    "es": [
+     "Angel stadium of anaheim"
+    ],
+    "en": [
+     "Edison International Field"
+    ],
+    "it": [
+     "Angel Stadium",
+     "Anaheim Stadium",
+     "Edison International Field of Anaheim"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Angel Stadium",
+   "jawiki": "エンゼル・スタジアム・オブ・アナハイム"
+  },
+  "sutter-health-park": {
+   "wikidata": "Q3418115",
+   "labels": {
+    "fr": "Raley Field",
+    "en": "Sutter Health Park",
+    "ja": "サター・ヘルス・パーク",
+    "nl": "Raley Field",
+    "zh": "萊利球場",
+    "pt": "Sutter Health Park",
+    "es": "Sutter Health Park"
+   },
+   "aliases": {
+    "zh": [
+     "雷利球場",
+     "蘇特健康公園"
+    ],
+    "en": [
+     "Sacramento Ballpark"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Sutter Health Park",
+   "jawiki": "サター・ヘルス・パーク"
+  },
+  "t-mobile-park": {
+   "wikidata": "Q1193117",
+   "labels": {
+    "pt": "T-Mobile Park",
+    "de": "T-Mobile Park",
+    "ja": "T-モバイル・パーク",
+    "ko": "T-모바일 파크",
+    "en": "T-Mobile Park",
+    "fr": "T-Mobile Park",
+    "es": "T-Mobile Park",
+    "sv": "T-Mobile Park",
+    "nl": "T-Mobile Park",
+    "it": "T-Mobile Park",
+    "ru": "Сэфико-филд",
+    "zh": "T-Mobile球場",
+    "ca": "Safeco Field",
+    "ar": "ملعب سافيكو فيلد"
+   },
+   "aliases": {
+    "ja": [
+     "セーフコー・フィールド",
+     "セーフコフィールド",
+     "セーフコーフィールド",
+     "セーフコ・フィールド"
+    ],
+    "en": [
+     "The Safe",
+     "Safeco Field"
+    ],
+    "it": [
+     "Safeco Field",
+     "The Safe"
+    ],
+    "zh": [
+     "薩菲口球場",
+     "塞費柯球場"
+    ],
+    "de": [
+     "Safeco Field"
+    ],
+    "nl": [
+     "Safeco Field"
+    ],
+    "ko": [
+     "세이프코 필드"
+    ],
+    "pt": [
+     "Safeco Field"
+    ],
+    "sv": [
+     "Safeco Field"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "T-Mobile Park",
+   "jawiki": "T-モバイル・パーク"
+  },
+  "globe-life-field": {
+   "wikidata": "Q24284037",
+   "labels": {
+    "en": "Globe Life Field",
+    "ja": "グローブライフ・フィールド",
+    "ko": "글로브 라이프 필드",
+    "de": "Globe Life Field",
+    "it": "Globe Life Field",
+    "nl": "Globe Life Field",
+    "zh": "地球生命球场",
+    "fr": "Globe Life Field",
+    "sv": "Globe Life Field",
+    "es": "Globe Life Field",
+    "pt": "Globe Life Field"
+   },
+   "aliases": {
+    "en": [
+     "New Rangers Ballpark"
+    ],
+    "ja": [
+     "ニュー・レンジャーズ・ボールパーク"
+    ],
+    "ko": [
+     "뉴 레인저스 볼파크"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Globe Life Field",
+   "jawiki": "グローブライフ・フィールド"
+  },
+  "truist-park": {
+   "wikidata": "Q17003430",
+   "labels": {
+    "en": "Truist Park",
+    "fr": "Truist Park",
+    "ko": "트루이스트 파크",
+    "ja": "トゥルーイスト・パーク",
+    "it": "Truist Park",
+    "zh": "Truist球場",
+    "de": "Truist Park",
+    "es": "Truist Park",
+    "nl": "Truist Park",
+    "pt": "Truist Park"
+   },
+   "aliases": {
+    "en": [
+     "New Atlanta Braves stadium",
+     "Sun Trust Park",
+     "SunTrust Park"
+    ],
+    "nl": [
+     "SunTrust Park"
+    ],
+    "ja": [
+     "サントラスト・パーク"
+    ],
+    "ko": [
+     "선트러스트 파크"
+    ],
+    "fr": [
+     "SunTrust Park"
+    ],
+    "de": [
+     "SunTrust Park"
+    ],
+    "it": [
+     "SunTrust Park"
+    ],
+    "zh": [
+     "太陽信託公園"
+    ]
+   },
+   "official": [
+    {
+     "text": "SunTrust Park",
+     "lang": "en"
+    },
+    {
+     "text": "Truist Park",
+     "lang": "en"
+    }
+   ],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Truist Park",
+   "jawiki": "トゥルーイスト・パーク"
+  },
+  "loandepot-park": {
+   "wikidata": "Q1368138",
+   "labels": {
+    "de": "loanDepot Park",
+    "ja": "ローンデポ・パーク",
+    "ko": "론디포 파크",
+    "fr": "loanDepot Park",
+    "en": "LoanDepot Park",
+    "es": "loanDepot Park",
+    "it": "LoanDepot Park",
+    "nl": "Marlins Park",
+    "zh": "LoanDepot球場",
+    "ru": "loanDepot парк",
+    "pt": "loanDepot Park",
+    "ca": "Marlins Park"
+   },
+   "aliases": {
+    "ja": [
+     "マーリンズ・パーク"
+    ],
+    "fr": [
+     "Marlins Ballpark",
+     "New Marlins stadium",
+     "Miami Ballpark",
+     "New Miami stadium",
+     "Marlins Park"
+    ],
+    "es": [
+     "Miami ballpark",
+     "Marlins Park"
+    ],
+    "it": [
+     "loanDepot park",
+     "Marlins Park"
+    ],
+    "en": [
+     "loanDepot park",
+     "Marlins Park"
+    ],
+    "ko": [
+     "말린스 파크"
+    ],
+    "de": [
+     "Marlins Park"
+    ],
+    "pt": [
+     "Marlins Park"
+    ],
+    "ru": [
+     "Марлинс-парк"
+    ],
+    "zh": [
+     "馬林魚棒球場"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "LoanDepot Park",
+   "jawiki": "ローンデポ・パーク"
+  },
+  "citi-field": {
+   "wikidata": "Q1072882",
+   "labels": {
+    "pt": "Citi Field",
+    "fr": "Citi Field",
+    "ko": "시티 필드",
+    "es": "Citi Field",
+    "en": "Citi Field",
+    "it": "Citi Field",
+    "de": "Citi Field",
+    "ja": "シティ・フィールド",
+    "sv": "Citi Field",
+    "nl": "Citi Field",
+    "zh": "花旗球場",
+    "ru": "Сити-филд"
+   },
+   "aliases": {
+    "fr": [
+     "New Mets Ballpark"
+    ],
+    "ko": [
+     "시티필드",
+     "씨티 필드"
+    ],
+    "ja": [
+     "シティー・フィールド"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Citi Field",
+   "jawiki": "シティ・フィールド"
+  },
+  "citizens-bank-park": {
+   "wikidata": "Q912770",
+   "labels": {
+    "de": "Citizens Bank Park",
+    "en": "Citizens Bank Park",
+    "fr": "Citizens Bank Park",
+    "it": "Citizens Bank Park",
+    "ja": "シチズンズ・バンク・パーク",
+    "ko": "시티즌스 뱅크 파크",
+    "nl": "Citizens Bank Park",
+    "pt": "Citizens Bank Park",
+    "zh": "市民銀行球場",
+    "ru": "Ситизенс Банк Парк",
+    "es": "Citizens Bank Park",
+    "sv": "Citizens Bank Park"
+   },
+   "aliases": {},
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Citizens Bank Park",
+   "jawiki": "シチズンズ・バンク・パーク"
+  },
+  "nationals-park": {
+   "wikidata": "Q517545",
+   "labels": {
+    "it": "Nationals Park",
+    "de": "Nationals Park",
+    "en": "Nationals Park",
+    "es": "Nationals Park",
+    "fr": "Nationals Park",
+    "ja": "ナショナルズ・パーク",
+    "ko": "내셔널스 파크",
+    "pt": "Nationals Park",
+    "zh": "國民球場",
+    "nl": "Nationals Park",
+    "ca": "Nationals Park"
+   },
+   "aliases": {
+    "en": [
+     "Washington Nationals Park",
+     "Nats Park",
+     "Nationals Baseball Park"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Nationals Park",
+   "jawiki": "ナショナルズ・パーク"
+  },
+  "wrigley-field": {
+   "wikidata": "Q1052807",
+   "labels": {
+    "pt": "Wrigley Field",
+    "fr": "Wrigley Field",
+    "ko": "리글리 필드",
+    "en": "Wrigley Field",
+    "es": "Wrigley Field",
+    "ca": "Wrigley Field",
+    "it": "Wrigley Field",
+    "de": "Wrigley Field",
+    "ja": "リグレー・フィールド",
+    "nl": "Wrigley Field",
+    "sv": "Wrigley Field",
+    "ru": "Ригли Филд",
+    "zh": "瑞格利球场"
+   },
+   "aliases": {
+    "fr": [
+     "Cubs Park",
+     "Weeghman Park"
+    ],
+    "ja": [
+     "リグレーフィールド",
+     "ウィグリー・フィールド"
+    ],
+    "nl": [
+     "Cubs Park",
+     "Weeghman Park"
+    ],
+    "en": [
+     "Weeghman Park",
+     "Wrigley",
+     "Cubs Park"
+    ],
+    "es": [
+     "Los confines amistosos de...",
+     "Parque Weeghman",
+     "Wrigley"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Wrigley Field",
+   "jawiki": "リグレー・フィールド"
+  },
+  "great-american-ball-park": {
+   "wikidata": "Q979975",
+   "labels": {
+    "de": "Great American Ball Park",
+    "en": "Great American Ball Park",
+    "fr": "Great American Ball Park",
+    "it": "Great American Ball Park",
+    "ja": "グレート・アメリカン・ボール・パーク",
+    "ko": "그레이트 아메리칸 볼 파크",
+    "nl": "Great American Ball Park",
+    "pt": "Great American Ball Park",
+    "zh": "大美國球場",
+    "es": "Great American Ball Park"
+   },
+   "aliases": {
+    "en": [
+     "Great American Ballpark",
+     "GABP"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Great American Ball Park",
+   "jawiki": "グレート・アメリカン・ボール・パーク"
+  },
+  "american-family-field": {
+   "wikidata": "Q1339293",
+   "labels": {
+    "pt": "American Family Field",
+    "de": "American Family Field",
+    "ja": "アメリカンファミリー・フィールド",
+    "ko": "아메리칸 패밀리 필드",
+    "fr": "American Family Field",
+    "en": "American Family Field",
+    "it": "American Family Field",
+    "nl": "American Family Field",
+    "zh": "美國家庭球場",
+    "es": "American Family Field"
+   },
+   "aliases": {
+    "ko": [
+     "밀러 파크"
+    ],
+    "ja": [
+     "ミラー・パーク"
+    ],
+    "zh": [
+     "美樂棒球場"
+    ],
+    "it": [
+     "Miller Park"
+    ],
+    "en": [
+     "Miller Park"
+    ]
+   },
+   "official": [
+    {
+     "text": "Miller Park",
+     "lang": "en"
+    },
+    {
+     "text": "American Family Field",
+     "lang": "en"
+    }
+   ],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "American Family Field",
+   "jawiki": "アメリカンファミリー・フィールド"
+  },
+  "pnc-park": {
+   "wikidata": "Q1151177",
+   "labels": {
+    "pt": "PNC Park",
+    "ko": "PNC 파크",
+    "fr": "PNC Park",
+    "en": "PNC Park",
+    "es": "PNC Park",
+    "it": "PNC Park",
+    "de": "PNC Park",
+    "ja": "PNCパーク",
+    "nl": "PNC Park",
+    "sv": "PNC Park",
+    "ru": "PNC-парк",
+    "zh": "PNC球場",
+    "ar": "بي ان سي بارك"
+   },
+   "aliases": {},
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "PNC Park",
+   "jawiki": "PNCパーク"
+  },
+  "busch-stadium": {
+   "wikidata": "Q253546",
+   "labels": {
+    "de": "Busch Stadium",
+    "en": "Busch Stadium",
+    "es": "Busch Stadium",
+    "fr": "Busch Stadium",
+    "it": "Busch Stadium",
+    "ja": "ブッシュ・スタジアム",
+    "nl": "Busch Stadium",
+    "pt": "Busch Stadium",
+    "ru": "Буш-стэдиум",
+    "zh": "布希體育場",
+    "ko": "부시 스타디움",
+    "ca": "Busch Stadium"
+   },
+   "aliases": {
+    "en": [
+     "Busch Stadium III",
+     "New Busch Stadium"
+    ],
+    "it": [
+     "Busch Stadium III",
+     "New Busch Stadium"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Busch Stadium",
+   "jawiki": "ブッシュ・スタジアム"
+  },
+  "chase-field": {
+   "wikidata": "Q1068011",
+   "labels": {
+    "ru": "Чейз Филд",
+    "fr": "Chase Field",
+    "en": "Chase Field",
+    "nl": "Chase Field",
+    "pt": "Chase Field",
+    "de": "Chase Field",
+    "ko": "체이스 필드",
+    "it": "Chase Field",
+    "ja": "チェイス・フィールド",
+    "zh": "大通體育場",
+    "es": "Chase Field",
+    "ca": "Chase Field"
+   },
+   "aliases": {
+    "fr": [
+     "The BOB",
+     "Bank One Ballpark"
+    ],
+    "pt": [
+     "Chase field"
+    ],
+    "ru": [
+     "Chase Field",
+     "Bank One Ballpark"
+    ],
+    "ja": [
+     "バンクワン・ボール・パーク",
+     "バンク・ワン・ボールパーク"
+    ],
+    "en": [
+     "Bank One Ballpark",
+     "BOB",
+     "The Snake Pit",
+     "The Aircraft Hanger"
+    ],
+    "zh": [
+     "Chase球場",
+     "摩根大通体育场"
+    ],
+    "it": [
+     "Bank One Ballpark"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Chase Field",
+   "jawiki": "チェイス・フィールド"
+  },
+  "coors-field": {
+   "wikidata": "Q1129916",
+   "labels": {
+    "fr": "Coors Field",
+    "en": "Coors Field",
+    "nl": "Coors Field",
+    "pt": "Coors Field",
+    "de": "Coors Field",
+    "ko": "쿠어스 필드",
+    "sv": "Coors Field",
+    "it": "Coors Field",
+    "ja": "クアーズ・フィールド",
+    "es": "Coors Field",
+    "zh": "庫爾斯球場",
+    "ru": "Курс-филд"
+   },
+   "aliases": {
+    "pt": [
+     "Coors field"
+    ],
+    "ja": [
+     "クアーズフィールド"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Coors Field",
+   "jawiki": "クアーズ・フィールド"
+  },
+  "dodger-stadium": {
+   "wikidata": "Q247420",
+   "labels": {
+    "pt": "Dodger Stadium",
+    "fr": "Dodger Stadium",
+    "ko": "다저 스타디움",
+    "es": "Dodger Stadium",
+    "en": "Dodger Stadium",
+    "ca": "Dodger Stadium",
+    "it": "Dodger Stadium",
+    "de": "Dodger Stadium",
+    "ja": "ドジャー・スタジアム",
+    "nl": "Dodger Stadium",
+    "zh": "道奇體育場",
+    "ru": "Доджер-стэдиум",
+    "sv": "Dodger Stadium"
+   },
+   "aliases": {
+    "pt": [
+     "Dodgers stadium"
+    ],
+    "fr": [
+     "Chávez Ravine Stadium"
+    ],
+    "ko": [
+     "다저스타디움",
+     "다저 경기장"
+    ],
+    "es": [
+     "Estadio Dodger"
+    ],
+    "ja": [
+     "ドジャースタジアム"
+    ],
+    "en": [
+     "Chavez Ravine",
+     "Dodgers Stadium"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Dodger Stadium",
+   "jawiki": "ドジャー・スタジアム"
+  },
+  "petco-park": {
+   "wikidata": "Q1194586",
+   "labels": {
+    "pt": "PETCO Park",
+    "de": "PETCO Park",
+    "ja": "ペトコ・パーク",
+    "en": "Petco Park",
+    "fr": "PETCO Park",
+    "ko": "펫코 파크",
+    "es": "Petco Park",
+    "it": "Petco Park",
+    "nl": "PETCO Park",
+    "zh": "沛可公園球場",
+    "ru": "Петко-парк",
+    "ar": "ملعب بيتكو بارك"
+   },
+   "aliases": {
+    "ja": [
+     "PETCOパーク",
+     "ペトコパーク"
+    ],
+    "ko": [
+     "페코파크",
+     "페코 파크",
+     "펫코파크"
+    ],
+    "zh": [
+     "沛可球場",
+     "聖地牙哥沛可球場",
+     "Petco球場",
+     "培多克球場"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Petco Park",
+   "jawiki": "ペトコ・パーク"
+  },
+  "oracle-park": {
+   "wikidata": "Q298585",
+   "labels": {
+    "fr": "Oracle Park",
+    "en": "Oracle Park",
+    "zh": "甲骨文球場",
+    "pt": "Oracle Park",
+    "ca": "Oracle Park",
+    "de": "Oracle Park",
+    "ko": "오라클 파크",
+    "it": "Oracle Park",
+    "nl": "Oracle Park",
+    "ja": "オラクル・パーク",
+    "es": "Oracle Park",
+    "ru": "Оракл-парк"
+   },
+   "aliases": {
+    "fr": [
+     "Pacific Bell Park",
+     "SBC Park",
+     "AT&T Park"
+    ],
+    "en": [
+     "Pacific Bell Park",
+     "Pac Bell Park",
+     "SBC Park",
+     "AT&T Park"
+    ],
+    "zh": [
+     "AT&T棒球場",
+     "AT&T球場"
+    ],
+    "pt": [
+     "At&t park",
+     "AT&T Park"
+    ],
+    "nl": [
+     "Pacific Bell Park",
+     "SBC Park",
+     "AT&T Park"
+    ],
+    "ja": [
+     "SBCパーク",
+     "パシフィック・ベル・パーク",
+     "AT&Tパーク",
+     "マッコビー・コーブ"
+    ],
+    "es": [
+     "Pacific Bell Park",
+     "SBC Park",
+     "At&t park",
+     "AT&T Park"
+    ],
+    "ko": [
+     "AT&T 파크"
+    ],
+    "ca": [
+     "AT&T Park"
+    ],
+    "de": [
+     "AT&T Park"
+    ],
+    "it": [
+     "AT&T Park"
+    ],
+    "ru": [
+     "AT&T-парк"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Oracle Park",
+   "jawiki": "オラクル・パーク"
+  },
+  "baker-bowl": {
+   "wikidata": "Q4849117",
+   "labels": {
+    "en": "Baker Bowl",
+    "ja": "ベイカー・ボウル",
+    "ko": "베이커 보올",
+    "zh": "貝克盃球場"
+   },
+   "aliases": {
+    "ja": [
+     "ベイカーボウル",
+     "ベーカー・ボウル"
+    ],
+    "zh": [
+     "貝克碗球場"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Baker Bowl",
+   "jawiki": "ベイカー・ボウル"
+  },
+  "exposition-park-pittsburgh": {
+   "wikidata": "Q5421611",
+   "labels": {
+    "en": "Exposition Park",
+    "ja": "エクスポジション・パーク (ピッツバーグ)",
+    "ko": "엑스포지션 파크",
+    "zh": "匹茲堡博覽會公園"
+   },
+   "aliases": {
+    "en": [
+     "Exposition Park III"
+    ],
+    "zh": [
+     "展覽公園"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Exposition Park (Pittsburgh)",
+   "jawiki": "エクスポジション・パーク (ピッツバーグ)"
+  },
+  "polo-grounds": {
+   "wikidata": "Q1276360",
+   "labels": {
+    "ja": "ポロ・グラウンズ",
+    "fr": "Polo Grounds",
+    "ko": "폴로 그라운즈",
+    "en": "Polo Grounds",
+    "es": "Polo Grounds",
+    "it": "Polo Grounds",
+    "sv": "Polo Grounds",
+    "nl": "Polo Grounds",
+    "pt": "Polo Grounds",
+    "de": "Polo Grounds",
+    "zh": "波罗球场"
+   },
+   "aliases": {
+    "ja": [
+     "ポログラウンズ"
+    ],
+    "ko": [
+     "폴로 그라운드"
+    ],
+    "en": [
+     "Polo Grounds III",
+     "Polo Grounds II",
+     "Polo Grounds I",
+     "Coogan's Bluff"
+    ],
+    "zh": [
+     "纽约波罗体育场",
+     "波羅球場",
+     "馬球球場"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Polo Grounds",
+   "jawiki": "ポロ・グラウンズ"
+  },
+  "south-end-grounds": {
+   "wikidata": "Q6646308",
+   "labels": {
+    "ja": "サウス・エンド・グラウンズ",
+    "en": "South End Grounds I",
+    "fr": "South End Grounds",
+    "ko": "사우스 엔드 그라운즈",
+    "zh": "南端球場"
+   },
+   "aliases": {
+    "ja": [
+     "サウスエンドグラウンズ",
+     "サウス・エンドグラウンズ",
+     "サウスエンド・グラウンズ"
+    ],
+    "en": [
+     "Walpole Street Grounds I",
+     "South End Grounds"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "South End Grounds",
+   "jawiki": "サウス・エンド・グラウンズ"
+  },
+  "huntington-avenue-grounds": {
+   "wikidata": "Q1056422",
+   "labels": {
+    "de": "Huntington Avenue Grounds",
+    "ja": "ハンティントン・アベニュー・グラウンズ",
+    "en": "Huntington Avenue Grounds",
+    "nl": "Huntington Avenue Grounds",
+    "fr": "Huntington Avenue Grounds",
+    "pt": "Huntington Avenue Grounds",
+    "zh": "汉亭顿大道球场",
+    "ko": "헌팅턴 애비뉴 그라운즈",
+    "es": "Huntington Avenue Grounds"
+   },
+   "aliases": {
+    "ja": [
+     "ハンティントン・アベニューグラウンズ",
+     "ハンチントンアベニュー・グラウンズ",
+     "ハンチントンアベニューグラウンズ",
+     "ハンチントン・アベニュー・グラウンズ",
+     "ハンティントンアベニューグラウンズ",
+     "ハンティントンアベニュー・グラウンズ",
+     "ハンチントン・アベニューグラウンズ"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Huntington Avenue Grounds",
+   "jawiki": "ハンティントン・アベニュー・グラウンズ"
+  },
+  "league-park-cleveland": {
+   "wikidata": "Q870897",
+   "labels": {
+    "ja": "リーグ・パーク",
+    "fr": "League Park",
+    "en": "League Park",
+    "nl": "League Park",
+    "zh": "聯盟球場",
+    "ko": "리그 파크",
+    "pt": "League Park"
+   },
+   "aliases": {
+    "ja": [
+     "ダン・フィールド",
+     "ダンフィールド"
+    ],
+    "en": [
+     "Dunn Field"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "League Park",
+   "jawiki": "リーグ・パーク (クリーブランド)"
+  },
+  "sportsmans-park": {
+   "wikidata": "Q7579980",
+   "labels": {
+    "en": "Sportsman's Park",
+    "ja": "スポーツマンズ・パーク",
+    "fr": "Sportsman's Park",
+    "ko": "스포츠맨스 파크",
+    "zh": "运动人公园体育馆",
+    "pt": "Sportsman's Park"
+   },
+   "aliases": {
+    "zh": [
+     "運動人公園",
+     "運動員公園"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Sportsman's Park",
+   "jawiki": "スポーツマンズ・パーク"
+  },
+  "hilltop-park": {
+   "wikidata": "Q5764114",
+   "labels": {
+    "en": "Hilltop Park",
+    "ja": "ヒルトップ・パーク",
+    "ko": "힐탑 파크",
+    "zh": "山顶公园"
+   },
+   "aliases": {
+    "ja": [
+     "ヒルトップパーク"
+    ],
+    "zh": [
+     "山頂球場",
+     "山頂公園",
+     "山頂公園球場"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Hilltop Park",
+   "jawiki": "ヒルトップ・パーク"
+  },
+  "forbes-field": {
+   "wikidata": "Q1963954",
+   "labels": {
+    "nl": "Forbes Field",
+    "en": "Forbes Field",
+    "ja": "フォーブス・フィールド",
+    "fr": "Forbes Field",
+    "ru": "Форбс-филд",
+    "ko": "포브스 필드",
+    "zh": "福布斯球場"
+   },
+   "aliases": {
+    "zh": [
+     "富比世球場"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Forbes Field",
+   "jawiki": "フォーブス・フィールド"
+  },
+  "shibe-park": {
+   "wikidata": "Q7496044",
+   "labels": {
+    "en": "Shibe Park",
+    "ja": "シャイブ・パーク",
+    "fr": "Shibe Park",
+    "es": "Shibe Park",
+    "ko": "쉬브 파크",
+    "pt": "Shibe Park",
+    "zh": "西貝公園"
+   },
+   "aliases": {
+    "ja": [
+     "シャイブパーク",
+     "コニー・マック・スタジアム",
+     "コニーマック・スタジアム",
+     "コニー・マックスタジアム",
+     "コニーマックスタジアム",
+     "シベ・パーク",
+     "シベパーク",
+     "シャイベ・パーク"
+    ],
+    "en": [
+     "Connie Mack Stadium"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Shibe Park",
+   "jawiki": "シャイブ・パーク"
+  },
+  "comiskey-park": {
+   "wikidata": "Q1114772",
+   "labels": {
+    "fr": "Comiskey Park",
+    "en": "Comiskey Park",
+    "pt": "Comiskey Park",
+    "de": "Comiskey Park",
+    "ja": "コミスキー・パーク",
+    "it": "Comiskey Park",
+    "nl": "Comiskey Park",
+    "ko": "코미스키 파크",
+    "zh": "柯敏斯基球場",
+    "es": "Comiskey Park",
+    "sv": "Comiskey Park"
+   },
+   "aliases": {
+    "fr": [
+     "Old Comiskey Park",
+     "White Sox Park"
+    ],
+    "pt": [
+     "Comiskey park"
+    ],
+    "ja": [
+     "コミスキーパーク",
+     "ホワイトソックス・パーク",
+     "ホワイト・ソックス・パーク",
+     "ホワイトソックスパーク",
+     "ホワイト・ソックスパーク"
+    ],
+    "zh": [
+     "科密斯克公园",
+     "科米斯基公園"
+    ],
+    "es": [
+     "Parque Comiskey"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Comiskey Park",
+   "jawiki": "コミスキー・パーク"
+  },
+  "griffith-stadium": {
+   "wikidata": "Q5608924",
+   "labels": {
+    "en": "Griffith Stadium",
+    "ja": "グリフィス・スタジアム",
+    "fr": "Griffith Stadium",
+    "nl": "Griffith Stadium",
+    "ko": "그리피스 스타디움",
+    "pt": "Griffith Stadium",
+    "zh": "格里菲斯体育场",
+    "ca": "Griffith Stadium"
+   },
+   "aliases": {
+    "ja": [
+     "グリフィススタジアム"
+    ],
+    "en": [
+     "Beyer's Seventh Street Park",
+     "National Park",
+     "Clark Griffith Park",
+     "American League Park",
+     "Clark Griffith Stadium"
+    ],
+    "zh": [
+     "格利菲斯體育場"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Griffith Stadium",
+   "jawiki": "グリフィス・スタジアム"
+  },
+  "crosley-field": {
+   "wikidata": "Q3003747",
+   "labels": {
+    "fr": "Crosley Field",
+    "en": "Crosley Field",
+    "ja": "クロスリー・フィールド",
+    "nl": "Crosley Field",
+    "ko": "크로슬리 필드",
+    "zh": "克羅斯利棒球場",
+    "pt": "Crosley Field"
+   },
+   "aliases": {
+    "ja": [
+     "クロスリーフィールド",
+     "レッドランド・フィールド",
+     "レッドランドフィールド"
+    ],
+    "zh": [
+     "克洛斯利球場",
+     "克羅斯利球場"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Crosley Field",
+   "jawiki": "クロスリー・フィールド"
+  },
+  "tiger-stadium": {
+   "wikidata": "Q1750255",
+   "labels": {
+    "de": "Tiger Stadium",
+    "en": "Tiger Stadium",
+    "fr": "Tiger Stadium",
+    "ja": "タイガー・スタジアム",
+    "pt": "Tiger Stadium",
+    "ko": "타이거 스타디움",
+    "zh": "老虎體育場",
+    "es": "Tiger Stadium (Detroit)"
+   },
+   "aliases": {
+    "en": [
+     "Navin Field",
+     "Briggs Stadium"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Tiger Stadium (Detroit)",
+   "jawiki": "タイガー・スタジアム"
+  },
+  "ebbets-field": {
+   "wikidata": "Q1278537",
+   "labels": {
+    "ru": "Эббетс Филд",
+    "fr": "Ebbets Field",
+    "en": "Ebbets Field",
+    "pt": "Ebbets Field",
+    "it": "Ebbets Field",
+    "de": "Ebbets Field",
+    "ja": "エベッツ・フィールド",
+    "es": "Ebbets Field",
+    "sv": "Ebbets Field",
+    "nl": "Ebbets Field",
+    "ko": "에베츠 필드",
+    "zh": "埃布斯球場"
+   },
+   "aliases": {
+    "de": [
+     "Ebbits field"
+    ],
+    "zh": [
+     "艾貝茲球場"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Ebbets Field",
+   "jawiki": "エベッツ・フィールド"
+  },
+  "braves-field": {
+   "wikidata": "Q11335096",
+   "labels": {
+    "en": "Braves Field",
+    "ja": "ブレーブス・フィールド",
+    "ko": "브레이브스 필드",
+    "es": "Braves Field",
+    "zh": "勇士球场",
+    "ca": "Braves Field"
+   },
+   "aliases": {
+    "ja": [
+     "ブレーブスフィールド"
+    ],
+    "en": [
+     "The Wigwam",
+     "The Bee Hive",
+     "National League Park"
+    ],
+    "zh": [
+     "勇士球場"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Braves Field",
+   "jawiki": "ブレーブス・フィールド"
+  },
+  "yankee-stadium-1923": {
+   "wikidata": "Q675214",
+   "labels": {
+    "de": "Yankee Stadium",
+    "en": "Yankee Stadium",
+    "es": "Yankee Stadium",
+    "fr": "Yankee Stadium",
+    "it": "Yankee Stadium",
+    "ja": "ヤンキー・スタジアム",
+    "ko": "양키 스타디움",
+    "nl": "Yankee Stadium",
+    "pt": "Yankee Stadium",
+    "sv": "Yankee Stadium",
+    "zh": "洋基体育场",
+    "ca": "Yankee Stadium"
+   },
+   "aliases": {
+    "en": [
+     "The House That Ruth Built",
+     "Old Yankee Stadium",
+     "Yankee Stadium (1923)"
+    ],
+    "nl": [
+     "Yankee Stadium (1923)"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Yankee Stadium (1923)",
+   "jawiki": "ヤンキー・スタジアム (1923年)"
+  },
+  "cleveland-stadium": {
+   "wikidata": "Q2113078",
+   "labels": {
+    "nl": "Cleveland Stadium",
+    "en": "Cleveland Stadium",
+    "fr": "Cleveland Stadium",
+    "it": "Cleveland Stadium",
+    "ja": "クリーブランド・スタジアム",
+    "zh": "克里夫蘭體育場",
+    "de": "Cleveland Stadium",
+    "ko": "클리블랜드 스타디움",
+    "pt": "Cleveland Stadium",
+    "ca": "estadi de Cleveland"
+   },
+   "aliases": {
+    "zh": [
+     "克利夫兰体育场"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Cleveland Stadium",
+   "jawiki": "クリーブランド・スタジアム"
+  },
+  "milwaukee-county-stadium": {
+   "wikidata": "Q3314569",
+   "labels": {
+    "fr": "Milwaukee County Stadium",
+    "en": "Milwaukee County Stadium",
+    "ja": "カウンティ・スタジアム",
+    "ko": "밀워키 카운티 스타디움",
+    "zh": "密爾瓦基市立體育場",
+    "pt": "Milwaukee County Stadium"
+   },
+   "aliases": {
+    "fr": [
+     "County Stadium"
+    ],
+    "zh": [
+     "密爾瓦基縣立體育場"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Milwaukee County Stadium",
+   "jawiki": "ミルウォーキー・カウンティ・スタジアム"
+  },
+  "baltimore-memorial-stadium": {
+   "wikidata": "Q2748739",
+   "labels": {
+    "ja": "メモリアル・スタジアム",
+    "en": "Memorial Stadium",
+    "fr": "Memorial Stadium",
+    "de": "Memorial Stadium",
+    "ko": "메모리얼 스타디움",
+    "zh": "紀念體育場",
+    "pt": "Memorial Stadium"
+   },
+   "aliases": {
+    "en": [
+     "Memorial Stadium (Baltimore)",
+     "Memorial Stadium (Baltimore, Md.)",
+     "Memorial Stadium, Baltimore",
+     "Baltimore Memorial Stadium",
+     "Memorial Stadium (historical)"
+    ],
+    "zh": [
+     "巴爾的摩紀念體育場"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Baltimore Memorial Stadium",
+   "jawiki": "メモリアル・スタジアム (ボルチモア)"
+  },
+  "municipal-stadium-kansas-city": {
+   "wikidata": "Q6936283",
+   "labels": {
+    "en": "Municipal Stadium",
+    "ja": "カンザスシティ・ミュニシパル・スタジアム",
+    "ko": "뮤니서펄 스타디움",
+    "fr": "Kansas City Municipal Stadium",
+    "pt": "Kansas City Municipal Stadium",
+    "zh": "堪薩斯市立體育場"
+   },
+   "aliases": {
+    "ja": [
+     "ミュニシパル・スタジアム (カンザスシティ)"
+    ],
+    "en": [
+     "Muehlebach Field",
+     "Ruppert Stadium",
+     "Blues Stadium"
+    ],
+    "zh": [
+     "堪萨斯城市政体育场",
+     "堪薩斯市市立體育場"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Municipal Stadium (Kansas City, Missouri)",
+   "jawiki": "カンザスシティ・ミュニシパル・スタジアム"
+  },
+  "seals-stadium": {
+   "wikidata": "Q7440659",
+   "labels": {
+    "en": "Seals Stadium",
+    "ja": "シールズ・スタジアム",
+    "fr": "Seals Stadium",
+    "ko": "실즈 스타디움",
+    "zh": "席爾斯體育場"
+   },
+   "aliases": {
+    "ja": [
+     "シールズスタジアム"
+    ],
+    "zh": [
+     "海豹球場",
+     "海豹體育場"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Seals Stadium",
+   "jawiki": "シールズ・スタジアム"
+  },
+  "candlestick-park": {
+   "wikidata": "Q1033076",
+   "labels": {
+    "fr": "Candlestick Park",
+    "en": "Candlestick Park",
+    "nl": "Candlestick Park",
+    "pt": "Candlestick Park",
+    "ca": "Candlestick Park",
+    "de": "Candlestick Park",
+    "ko": "캔들스틱 파크",
+    "it": "Candlestick Park",
+    "sv": "Candlestick Park",
+    "ar": "ملعب كانديلستيك بارك",
+    "ja": "キャンドルスティック・パーク",
+    "es": "Candlestick Park",
+    "ru": "Кэндлстик-парк",
+    "zh": "蜡扦公园"
+   },
+   "aliases": {
+    "fr": [
+     "3Com Park",
+     "San Francisco Stadium at Candlestick Point",
+     "Monster Park"
+    ],
+    "pt": [
+     "Monster park",
+     "Monster Park",
+     "San Francisco Stadium at Candlestick Point"
+    ],
+    "de": [
+     "Monster Park"
+    ],
+    "ja": [
+     "キャンドル・スティック・パーク",
+     "モンスター・パーク",
+     "3Comパーク",
+     "キャンドルスティックパーク"
+    ],
+    "es": [
+     "Monster Park"
+    ],
+    "ko": [
+     "캔들스틱파크"
+    ],
+    "zh": [
+     "坎德斯迪克公园球场",
+     "燭台公園",
+     "燭台球場",
+     "烛台球场",
+     "燭臺公園",
+     "燭臺球場"
+    ],
+    "en": [
+     "Harney Stadium"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Candlestick Park",
+   "jawiki": "キャンドルスティック・パーク"
+  },
+  "wrigley-field-los-angeles": {
+   "wikidata": "Q3297716",
+   "labels": {
+    "ja": "ロサンゼルス・リグレー・フィールド",
+    "en": "Wrigley Field",
+    "ko": "리글리 필드",
+    "zh": "瑞格利球场",
+    "es": "Wrigley Field (Los Ángeles)"
+   },
+   "aliases": {
+    "ja": [
+     "ロサンゼルスリグレーフィールド",
+     "LAリグレー・フィールド",
+     "LAリグレーフィールド",
+     "リグレー・フィールド",
+     "ロサンゼルス・リグレーフィールド",
+     "リグレーフィールド",
+     "ロサンゼルスリグレー・フィールド"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Wrigley Field (Los Angeles)",
+   "jawiki": "ロサンゼルス・リグレー・フィールド"
+  },
+  "metropolitan-stadium": {
+   "wikidata": "Q1415967",
+   "labels": {
+    "de": "Metropolitan Stadium",
+    "en": "Metropolitan Stadium",
+    "ja": "メトロポリタン・スタジアム",
+    "sv": "Metropolitan Stadium",
+    "nl": "Metropolitan Stadium",
+    "fr": "Metropolitan Stadium",
+    "it": "Metropolitan Stadium",
+    "ko": "메트로폴리탄 스타디움",
+    "pt": "Metropolitan Stadium",
+    "zh": "大都會體育場"
+   },
+   "aliases": {},
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Metropolitan Stadium",
+   "jawiki": "メトロポリタン・スタジアム"
+  },
+  "colt-stadium": {
+   "wikidata": "Q5149429",
+   "labels": {
+    "en": "Colt Stadium",
+    "ja": "コルト・スタジアム",
+    "ko": "콜트 스타디움",
+    "es": "Estadio Mecano",
+    "zh": "小馬體育場"
+   },
+   "aliases": {
+    "ja": [
+     "コルトスタジアム"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Colt Stadium",
+   "jawiki": "コルト・スタジアム"
+  },
+  "robert-f-kennedy-memorial-stadium": {
+   "wikidata": "Q153312",
+   "labels": {
+    "pt": "Robert F. Kennedy Memorial Stadium",
+    "fr": "Robert F. Kennedy Memorial Stadium",
+    "en": "Robert F. Kennedy Memorial Stadium",
+    "es": "Estadio Conmemorativo Robert F. Kennedy",
+    "ca": "Robert F. Kennedy Memorial Stadium",
+    "it": "Robert F. Kennedy Memorial Stadium",
+    "de": "Robert F. Kennedy Memorial Stadium",
+    "ja": "ロバート・F・ケネディ・メモリアル・スタジアム",
+    "nl": "Robert F. Kennedy Memorial Stadium",
+    "ar": "ملعب روبرت كينيدي التذكاري",
+    "ru": "Роберт Ф. Кеннеди Мемориэл Стэдиум",
+    "ko": "로버트 F. 케네디 기념 스타디움",
+    "zh": "甘迺迪紀念球場",
+    "sv": "Robert F. Kennedy Memorial Stadium"
+   },
+   "aliases": {
+    "pt": [
+     "RFK Stadium",
+     "Robert F. Kennedy Stadium",
+     "Estádio Robert F. Kennedy Memorial"
+    ],
+    "fr": [
+     "District of Columbia Stadium",
+     "D.C. Stadium",
+     "RFK Stadium"
+    ],
+    "es": [
+     "Estadio Robert F. Kennedy",
+     "District of Columbia Stadium.",
+     "Estadio Robert F Kennedy",
+     "Estadio RFK",
+     "RFK Stadium",
+     "Robert F Kennedy Memorial Stadium",
+     "RFK Memorial Stadium",
+     "Robert F. Kennedy Memorial Stadium"
+    ],
+    "ca": [
+     "RFK Stadium"
+    ],
+    "it": [
+     "RFK Memorial Stadium",
+     "RFK Stadium"
+    ],
+    "de": [
+     "D.C. Stadium",
+     "RFK Stadium"
+    ],
+    "ja": [
+     "ロバート・F・ケネディースタジアム",
+     "RFKスタジアム"
+    ],
+    "nl": [
+     "RFK Memorial Stadium"
+    ],
+    "en": [
+     "RFK Stadium",
+     "District of Columbia Stadium",
+     "DC Stadium"
+    ],
+    "zh": [
+     "羅伯特·F·甘迺迪紀念球場",
+     "羅伯特甘迺迪紀念球場",
+     "羅伯·甘迺迪紀念體育場",
+     "羅伯特·甘迺迪紀念體育場",
+     "羅伯特·肯尼迪紀念體育場",
+     "羅伯特·弗朗西斯·肯尼迪紀念體育場",
+     "羅伯特·F·肯尼迪紀念體育場",
+     "羅伯特·F·肯尼迪紀念體育館",
+     "罗伯特·肯尼迪纪念体育场",
+     "肯尼迪纪念体育场",
+     "肯尼迪纪念球场",
+     "罗伯特·F·肯尼迪纪念球场"
+    ],
+    "sv": [
+     "RFK Stadium"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Robert F. Kennedy Memorial Stadium",
+   "jawiki": "ロバート・F・ケネディ・メモリアル・スタジアム"
+  },
+  "shea-stadium": {
+   "wikidata": "Q1056326",
+   "labels": {
+    "pt": "Shea Stadium",
+    "ko": "셰이 스타디움",
+    "fr": "Shea Stadium",
+    "en": "Shea Stadium",
+    "it": "Shea Stadium",
+    "de": "Shea Stadium",
+    "ja": "シェイ・スタジアム",
+    "nl": "Shea Stadium",
+    "sv": "Shea Stadium",
+    "zh": "謝亞球場",
+    "es": "Shea Stadium",
+    "ca": "Estadi Shea"
+   },
+   "aliases": {
+    "zh": [
+     "Shea Stadium",
+     "謝伊體育場"
+    ],
+    "fr": [
+     "Stade Shea",
+     "William A. Shea Municipal Stadium"
+    ],
+    "de": [
+     "William A. Shea Municipal Stadium",
+     "Sheastadion",
+     "Shea-Stadion"
+    ],
+    "ja": [
+     "シェイスタジアム"
+    ],
+    "en": [
+     "William A. Shea Municipal Stadium"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Shea Stadium",
+   "jawiki": "シェイ・スタジアム"
+  },
+  "astrodome": {
+   "wikidata": "Q1025406",
+   "labels": {
+    "pt": "Reliant Astrodome",
+    "de": "NRG Astrodome",
+    "ja": "アストロドーム",
+    "ru": "Релиант Астродом",
+    "fr": "NRG Astrodome",
+    "en": "Astrodome",
+    "es": "Astrodome",
+    "sv": "Reliant Astrodome",
+    "nl": "Reliant Astrodome",
+    "it": "Reliant Astrodome",
+    "ko": "릴라이언트 애스트로돔",
+    "ar": "أسترودوم",
+    "zh": "太空圓頂"
+   },
+   "aliases": {
+    "pt": [
+     "Astrodome de Houston",
+     "Astrodome"
+    ],
+    "de": [
+     "Astrodome"
+    ],
+    "ja": [
+     "リライアントアストロドーム",
+     "リライアント・アストロドーム"
+    ],
+    "ru": [
+     "Стадион Астродом",
+     "Астродом",
+     "Astrodome",
+     "Релаэнт Астродом"
+    ],
+    "fr": [
+     "Houston Astrodome",
+     "The Astrodome",
+     "Harris County Domed Stadium",
+     "Reliant Astrodome"
+    ],
+    "es": [
+     "Reliant Astrodome"
+    ],
+    "sv": [
+     "Astrodome"
+    ],
+    "en": [
+     "the Astrodome",
+     "Houston Astrodome",
+     "Reliant Astrodome",
+     "Harris County Domed Stadium"
+    ],
+    "zh": [
+     "太空巨蛋體育場",
+     "阿斯托洛圆顶运动场",
+     "太空巨蛋体育场",
+     "太空圆顶体育场",
+     "休斯顿体育场",
+     "太空穹顶体育场"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Astrodome",
+   "jawiki": "アストロドーム"
+  },
+  "atlanta-fulton-county-stadium": {
+   "wikidata": "Q641243",
+   "labels": {
+    "fr": "Atlanta-Fulton County Stadium",
+    "de": "Atlanta-Fulton County Stadium",
+    "en": "Atlanta-Fulton County Stadium",
+    "es": "Atlanta-Fulton County Stadium",
+    "ja": "アトランタ・フルトン・カウンティ・スタジアム",
+    "pt": "Atlanta-Fulton County Stadium",
+    "nl": "Atlanta-Fulton County Stadium",
+    "ko": "애틀랜타-풀턴 카운티 스타디움",
+    "it": "Atlanta Fulton County Stadium",
+    "zh": "亞特蘭大-富爾頓縣體育場"
+   },
+   "aliases": {
+    "de": [
+     "Atlanta Stadium"
+    ],
+    "en": [
+     "Fulton County Stadium",
+     "Atlanta Stadium"
+    ],
+    "zh": [
+     "亞特蘭大-富勒頓縣立體育場",
+     "亞特蘭大-富勒頓市立體育場",
+     "亞特蘭大–富爾頓市立體育場"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Atlanta–Fulton County Stadium",
+   "jawiki": "アトランタ・フルトン・カウンティ・スタジアム"
+  },
+  "busch-memorial-stadium": {
+   "wikidata": "Q1017286",
+   "labels": {
+    "fr": "Busch Memorial Stadium",
+    "en": "Busch Memorial Stadium",
+    "de": "Busch Memorial Stadium",
+    "ja": "ブッシュ・メモリアル・スタジアム",
+    "pt": "Busch Memorial Stadium",
+    "nl": "Busch Memorial Stadium",
+    "ko": "부시 메모리얼 스타디움",
+    "zh": "布希紀念球場"
+   },
+   "aliases": {
+    "fr": [
+     "Busch Stadium II",
+     "Civic Center Busch Memorial Stadium"
+    ],
+    "ja": [
+     "ブッシュスタジアムII",
+     "ブッシュスタジアム2",
+     "ブッシュ・スタジアム2",
+     "2代目ブッシュ・スタジアム",
+     "2代目ブッシュスタジアム",
+     "ブッシュ・スタジアムII"
+    ],
+    "pt": [
+     "Busch memorial stadium"
+    ],
+    "en": [
+     "Busch Stadium",
+     "Busch Stadium II"
+    ],
+    "zh": [
+     "布希紀念體育場"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Busch Memorial Stadium",
+   "jawiki": "ブッシュ・メモリアル・スタジアム"
+  },
+  "oakland-coliseum": {
+   "wikidata": "Q1147732",
+   "labels": {
+    "pt": "Oakland-Alameda County Coliseum",
+    "fr": "Oakland Coliseum",
+    "en": "Oakland Coliseum",
+    "es": "Oakland Coliseum",
+    "ca": "Oakland-Alameda County Coliseum",
+    "it": "Oakland-Alameda County Coliseum",
+    "de": "Oakland-Alameda County Coliseum",
+    "ja": "オー・ドットコー・コロシアム",
+    "nl": "O.co Coliseum",
+    "ar": "ملعب أوكلاند كولوسيوم",
+    "zh": "O.co 競技場",
+    "ko": "O.co 콜리세움"
+   },
+   "aliases": {
+    "pt": [
+     "McAfee Coliseum",
+     "Network Associates Coliseum",
+     "Oakland Coliseum"
+    ],
+    "zh": [
+     "奧克蘭競技場",
+     "奧克蘭阿拉美達球場",
+     "奧克蘭-阿拉米達郡競技場"
+    ],
+    "fr": [
+     "Overstock.com Coliseum",
+     "McAfee Coliseum",
+     "Network Associates Coliseum",
+     "Oakland-Alameda County Coliseum",
+     "O.co Coliseum"
+    ],
+    "es": [
+     "McAfee Coliseum",
+     "Oakland-Alameda County Coliseum",
+     "Oakland Alameda County Coliseum",
+     "Network Associates Coliseum",
+     "Overstock.com Coliseum",
+     "O.co Coliseum",
+     "RingCentral Coliseum"
+    ],
+    "it": [
+     "McAfee Coliseum",
+     "Oakland Coliseum"
+    ],
+    "de": [
+     "O.co Coliseum",
+     "McAfee Coliseum",
+     "Network Associates Coliseum"
+    ],
+    "ja": [
+     "マカフィー・コロシアム",
+     "ネットワークアソシエイツ・コロシアム",
+     "オークランド・アラメダカウンティ・コロシアム",
+     "アラメダカウンティコロシアム",
+     "ネットワークアソシエーションコロシアム",
+     "ネットワーク・アソシエイツ・コロシアム",
+     "オークランドアラメダカウンティコロシアム",
+     "アラメダカウンティ・コロシアム",
+     "オークランド・アラメダ・カウンティ・コロシアム",
+     "ネットワークアソシエイツコロシアム",
+     "マカフィーコロシアム",
+     "アラメダ・カウンティ・コロシアム"
+    ],
+    "en": [
+     "McAfee Coliseum",
+     "Network Associates Coliseum",
+     "Overstock.com Coliseum",
+     "O.co Coliseum",
+     "Oakland–Alameda County Coliseum",
+     "Oakland-Alameda County Coliseum",
+     "RingCentral Coliseum",
+     "Rickey Henderson Field"
+    ],
+    "nl": [
+     "McAfee Coliseum",
+     "Network Associates Coliseum",
+     "Oakland-Alameda County Coliseum",
+     "McAfee Stadium",
+     "RingCentral Coliseum",
+     "Oakland Coliseum (stadion)"
+    ],
+    "ko": [
+     "오클랜드 콜리세움"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Oakland Coliseum",
+   "jawiki": "オークランド・アラメダ・カウンティ・コロシアム"
+  },
+  "sicks-stadium": {
+   "wikidata": "Q6127401",
+   "labels": {
+    "es": "Sick's Stadium",
+    "en": "Sick's Stadium",
+    "ja": "シックズ・スタジアム",
+    "fr": "Sick's Stadium",
+    "ko": "식스 스타디움"
+   },
+   "aliases": {
+    "ja": [
+     "シックズスタジアム"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Sick's Stadium",
+   "jawiki": "シックズ・スタジアム"
+  },
+  "jarry-park-stadium": {
+   "wikidata": "Q3495641",
+   "labels": {
+    "fr": "stade Jarry",
+    "en": "Jarry Park Stadium",
+    "ja": "ジェリー・パーク",
+    "ko": "제리 파크 스타디움",
+    "zh": "賈瑞公園體育場"
+   },
+   "aliases": {
+    "fr": [
+     "Jarry Park Stadium"
+    ],
+    "ja": [
+     "ジェリーパーク",
+     "パルク・ジェリー",
+     "パルクジェリー",
+     "スタッド・ジェリー",
+     "スタッドジェリー"
+    ],
+    "en": [
+     "stade Jarry"
+    ],
+    "zh": [
+     "傑瑞公園體育場"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Jarry Park Stadium",
+   "jawiki": "ジェリー・パーク"
+  },
+  "three-rivers-stadium": {
+   "wikidata": "Q1189339",
+   "labels": {
+    "pt": "Three Rivers Stadium",
+    "ja": "スリー・リバース・スタジアム",
+    "ko": "스리 리버스 스타디움",
+    "fr": "Three Rivers Stadium",
+    "en": "Three Rivers Stadium",
+    "nl": "Three Rivers Stadium",
+    "de": "Three Rivers Stadium",
+    "es": "Three Rivers Stadium",
+    "zh": "三河體育館",
+    "ca": "Three Rivers Stadium"
+   },
+   "aliases": {
+    "ja": [
+     "スリーリバーススタジアム",
+     "スリーリバース・スタジアム"
+    ],
+    "ko": [
+     "스리 리버스 경기장",
+     "쓰리 리버스 스타디움",
+     "쓰리 리버스 경기장"
+    ],
+    "zh": [
+     "三河体育场",
+     "三河體育場"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Three Rivers Stadium",
+   "jawiki": "スリー・リバース・スタジアム"
+  },
+  "riverfront-stadium": {
+   "wikidata": "Q153824",
+   "labels": {
+    "de": "Riverfront Stadium",
+    "ja": "リバーフロント・スタジアム",
+    "fr": "Cinergy Field",
+    "en": "Riverfront Stadium",
+    "nl": "Riverfront Stadium",
+    "ko": "리버프론트 스타디움",
+    "pt": "Riverfront Stadium",
+    "zh": "辛納吉球場"
+   },
+   "aliases": {
+    "de": [
+     "Cinergy Field"
+    ],
+    "ja": [
+     "リバーフロントスタジアム",
+     "シナジー・フィールド",
+     "シナジーフィールド"
+    ],
+    "fr": [
+     "Stade Riverfront",
+     "Riverfront Stadium"
+    ],
+    "en": [
+     "Cinergy Field"
+    ],
+    "zh": [
+     "濱河體育場",
+     "辛纳吉球场",
+     "河滨体育场"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Riverfront Stadium",
+   "jawiki": "リバーフロント・スタジアム"
+  },
+  "veterans-stadium": {
+   "wikidata": "Q1545870",
+   "labels": {
+    "pt": "Veterans Stadium",
+    "de": "Veterans Stadium",
+    "ja": "ベテランズ・スタジアム",
+    "fr": "Veterans Stadium",
+    "en": "Veterans Stadium",
+    "nl": "Veterans Stadium",
+    "ko": "베테랑스 스타디움",
+    "zh": "榮民體育場",
+    "sv": "Veterans Stadium"
+   },
+   "aliases": {
+    "ja": [
+     "ヴェテランズスタジアム",
+     "ベテランズスタジアム",
+     "ヴェテランズ・スタジアム"
+    ],
+    "fr": [
+     "Philadelphia Veterans Stadium"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Veterans Stadium",
+   "jawiki": "ベテランズ・スタジアム"
+  },
+  "arlington-stadium": {
+   "wikidata": "Q2861657",
+   "labels": {
+    "fr": "Arlington Stadium",
+    "en": "Arlington Stadium",
+    "ja": "アーリントン・スタジアム",
+    "nl": "Arlington Stadium",
+    "ko": "알링턴 스타디움",
+    "pt": "Arlington Stadium",
+    "zh": "阿靈頓體育館"
+   },
+   "aliases": {
+    "fr": [
+     "Turnpike Stadium"
+    ],
+    "ja": [
+     "アーリントンスタジアム"
+    ],
+    "zh": [
+     "阿靈頓體育場"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Arlington Stadium",
+   "jawiki": "アーリントン・スタジアム"
+  },
+  "exhibition-stadium": {
+   "wikidata": "Q1383747",
+   "labels": {
+    "fr": "stade de l'Exposition nationale",
+    "en": "Exhibition Stadium",
+    "de": "Exhibition Stadium",
+    "ja": "エキシビション・スタジアム",
+    "it": "Exhibition Stadium",
+    "nl": "Exhibition Stadium",
+    "ko": "엑시비션 스타디움",
+    "zh": "加拿大展覽會體育場",
+    "pt": "Exhibition Stadium",
+    "es": "Canadian National Exhibition Stadium"
+   },
+   "aliases": {
+    "ja": [
+     "エキシビジョンスタジアム",
+     "エキシビジョン・スタジアム"
+    ],
+    "it": [
+     "CNE Stadium",
+     "Canadian National Exhibition Stadium"
+    ],
+    "en": [
+     "CNE Stadium",
+     "Canadian National Exhibition Stadium",
+     "CNE Grandstand"
+    ],
+    "fr": [
+     "Exhibition Stadium"
+    ],
+    "zh": [
+     "會展體育場",
+     "國家展覽體育場"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Exhibition Stadium",
+   "jawiki": "エキシビション・スタジアム"
+  },
+  "olympic-stadium-montreal": {
+   "wikidata": "Q285467",
+   "labels": {
+    "pt": "Estádio Olímpico de Montreal",
+    "ru": "Олимпийский стадион",
+    "fr": "stade olympique de Montréal",
+    "ko": "몬트리올 올림픽 스타디움",
+    "es": "Estadio Olímpico de Montreal",
+    "en": "Olympic Stadium",
+    "ca": "Estadi Olímpic de Mont-real",
+    "it": "Stadio Olimpico di Montréal",
+    "de": "Olympiastadion Montreal",
+    "ja": "オリンピック・スタジアム",
+    "sv": "Stade olympique de Montréal",
+    "nl": "Olympisch Stadion (Montréal)",
+    "zh": "蒙特婁奧林匹克體育場",
+    "ar": "ملعب مونتريال الأولمبي"
+   },
+   "aliases": {
+    "zh": [
+     "蒙特利爾奧林匹克體育場"
+    ],
+    "fr": [
+     "Tour de Montréal",
+     "Olympic Stadium",
+     "Stade Olympique de Montréal"
+    ],
+    "ko": [
+     "몬트리올 올림픽 경기장"
+    ],
+    "es": [
+     "Stade olympique de Montréal"
+    ],
+    "ca": [
+     "Stade olympique de Montréal"
+    ],
+    "en": [
+     "Stade olympique de Montréal",
+     "Montreal Olympic Stadium",
+     "Olympic Stadium (Montreal)"
+    ],
+    "nl": [
+     "Stade olympique de Montréal"
+    ],
+    "it": [
+     "Stade olympique de Montréal"
+    ],
+    "de": [
+     "Stade olympique de Montréal"
+    ],
+    "pt": [
+     "Stade olympique de Montréal"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Olympic Stadium (Montreal)",
+   "jawiki": "オリンピック・スタジアム (モントリオール)"
+  },
+  "metrodome": {
+   "wikidata": "Q1072186",
+   "labels": {
+    "pt": "Hubert H. Humphrey Metrodome",
+    "ko": "휴버트 H. 험프리 메트로돔",
+    "fr": "Hubert H. Humphrey Metrodome",
+    "en": "Hubert H. Humphrey Metrodome",
+    "es": "Hubert H. Humphrey Metrodome",
+    "it": "Hubert H. Humphrey Metrodome",
+    "de": "Hubert H. Humphrey Metrodome",
+    "ja": "ヒューバート・H・ハンフリー・メトロドーム",
+    "ar": "ملعب هيربيرت همفري ميترودوم",
+    "nl": "Hubert H. Humphrey Metrodome",
+    "sv": "Hubert H. Humphrey Metrodome",
+    "ru": "Хьюберт Эйч Хамфри Метродоум",
+    "zh": "休伯特杭佛瑞巨蛋球場"
+   },
+   "aliases": {
+    "pt": [
+     "Mall of America Field",
+     "Metrodome"
+    ],
+    "ko": [
+     "휴버트 H. 험프리 메트로 돔"
+    ],
+    "fr": [
+     "Metrodome",
+     "Mall of America Field at the Hubert H. Humphrey Metrodome",
+     "Mall of America Field",
+     "Mall of America Field at Hubert H. Humphrey Metrodome"
+    ],
+    "es": [
+     "Hubert H Humphrey Metrodome",
+     "Metrodomo",
+     "Metrodome"
+    ],
+    "it": [
+     "Metrodome"
+    ],
+    "de": [
+     "Mall of America Field",
+     "Metrodome",
+     "Mall of America Field at the Hubert H. Humphrey Metrodome"
+    ],
+    "ja": [
+     "HHHメトロドーム",
+     "メトロドーム",
+     "メトロ・ドーム"
+    ],
+    "en": [
+     "Mall of America Field at Hubert H. Humphrey Metrodome",
+     "Metrodome"
+    ],
+    "nl": [
+     "Homerdome",
+     "Metrodome"
+    ],
+    "zh": [
+     "休伯特·韓福瑞巨蛋",
+     "休伯特·韓福瑞圓頂體育場",
+     "休伯特·H·漢弗萊大都會體育館",
+     "休伯特·H·漢弗萊圓頂體育場",
+     "胡伯特·哈姆佛里圓頂體育場"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Hubert H. Humphrey Metrodome",
+   "jawiki": "ヒューバート・H・ハンフリー・メトロドーム"
+  },
+  "mile-high-stadium": {
+   "wikidata": "Q1934586",
+   "labels": {
+    "fr": "Mile High Stadium",
+    "en": "Mile High Stadium",
+    "nl": "Mile High Stadium",
+    "pt": "Mile High Stadium",
+    "de": "Mile High Stadium",
+    "ja": "マイル・ハイ・スタジアム",
+    "es": "Mile High Stadium",
+    "sv": "Mile High Stadium",
+    "ko": "마일 하이 스타디움",
+    "zh": "哩高體育場"
+   },
+   "aliases": {
+    "pt": [
+     "Mile high stadium"
+    ],
+    "ja": [
+     "マイルハイ・スタジアム"
+    ],
+    "en": [
+     "Bears Stadium"
+    ],
+    "zh": [
+     "里高體育場"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Mile High Stadium",
+   "jawiki": "マイル・ハイ・スタジアム"
+  },
+  "globe-life-park-in-arlington": {
+   "wikidata": "Q1634492",
+   "labels": {
+    "pt": "Choctaw Stadium",
+    "de": "Rangers Ballpark in Arlington",
+    "ja": "レンジャーズ・ボールパーク・イン・アーリントン",
+    "fr": "Rangers Ballpark in Arlington",
+    "en": "Choctaw Stadium",
+    "es": "Rangers Ballpark in Arlington",
+    "it": "Rangers Ballpark in Arlington",
+    "nl": "Rangers Ballpark in Arlington",
+    "zh": "阿靈頓棒球場",
+    "ru": "Глоуб Лайф-парк в Арлингтоне",
+    "ko": "글로브 라이프 파크 인 알링턴"
+   },
+   "aliases": {
+    "pt": [
+     "Rangers Ballpark in Arlington",
+     "The ballpark of arlington"
+    ],
+    "ja": [
+     "アメリクエスト・フィールド・イン・アーリントン",
+     "アメリクエストフィールド・イン・アーリントン"
+    ],
+    "fr": [
+     "Ameriquest Field",
+     "The Ballpark in Arlington",
+     "Ameriquest Field in Arlington",
+     "Rangers Ballpark",
+     "Ballpark in Arlington"
+    ],
+    "es": [
+     "Ameriquest Field",
+     "The Ballpark in Arlington"
+    ],
+    "nl": [
+     "Ameriquest Field in Arlington",
+     "Globe Life Park in Arlington"
+    ],
+    "en": [
+     "The Ballpark in Arlington",
+     "Ballpark in Arlington",
+     "Rangers Ballpark in Arlington",
+     "Ameriquest Field in Arlington",
+     "Globe Life Park in Arlington"
+    ]
+   },
+   "official": [
+    {
+     "text": "Globe Life Park in Arlington",
+     "lang": "en"
+    },
+    {
+     "text": "Choctaw Stadium",
+     "lang": "en"
+    },
+    {
+     "text": "Ameriquest Field in Arlington",
+     "lang": "en"
+    },
+    {
+     "text": "Rangers Ballpark in Arlington",
+     "lang": "en"
+    }
+   ],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Choctaw Stadium",
+   "jawiki": "チョクトー・スタジアム"
+  },
+  "turner-field": {
+   "wikidata": "Q1150936",
+   "labels": {
+    "pt": "Turner Field",
+    "fr": "Turner Field",
+    "ko": "터너 필드",
+    "en": "Turner Field",
+    "es": "Turner Field",
+    "it": "Turner Field",
+    "de": "Turner Field",
+    "ja": "ターナー・フィールド",
+    "nl": "Turner Field",
+    "zh": "透納球場",
+    "ru": "Тёрнер-филд",
+    "ca": "Turner Field"
+   },
+   "aliases": {
+    "nl": [
+     "Centennial Olympic Stadium"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Turner Field",
+   "jawiki": "ターナー・フィールド"
+  },
+  "tokyo-dome": {
+   "wikidata": "Q733748",
+   "labels": {
+    "pt": "Tokyo Dome",
+    "fr": "Tokyo Dome",
+    "ru": "Токио Доум",
+    "ko": "도쿄 돔",
+    "es": "Domo de Tokio",
+    "en": "Tokyo Dome",
+    "ca": "Tokyo Dome",
+    "it": "Tokyo Dome",
+    "de": "Tokyo Dome",
+    "ja": "東京ドーム",
+    "sv": "Tokyo Dome",
+    "nl": "Tokyo Dome",
+    "zh": "東京巨蛋",
+    "ar": "طوكيو دوم"
+   },
+   "aliases": {
+    "zh": [
+     "东京巨蛋",
+     "東京圓頂球場",
+     "東京巨蛋球場",
+     "东京巨蛋球场"
+    ],
+    "fr": [
+     "Tōkyō Dome",
+     "Tokyo dome city",
+     "Korakuen Amusement Park",
+     "Tokyo Dôme"
+    ],
+    "ru": [
+     "Токио Дом",
+     "Tokyo Dome",
+     "Большое яйцо"
+    ],
+    "ko": [
+     "빅 에그",
+     "도쿄돔"
+    ],
+    "de": [
+     "Tokio Dome"
+    ],
+    "ja": [
+     "東京ドーム Big-Egg",
+     "東京ドームグループ",
+     "BIG EGG",
+     "東京ドーム球場",
+     "ビッグエッグ",
+     "東京ドーム Big=Egg"
+    ],
+    "nl": [
+     "Tokio Dome"
+    ],
+    "en": [
+     "Big Egg",
+     "Tokyo Big Egg",
+     "The Big Egg"
+    ],
+    "ar": [
+     "توكيو دوم"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Tokyo Dome",
+   "jawiki": "東京ドーム"
+  },
+  "hanshin-koshien-stadium": {
+   "wikidata": "Q959811",
+   "labels": {
+    "de": "Hanshin-Kōshien-Stadion",
+    "en": "Koshien Stadium",
+    "fr": "Koshien Stadium",
+    "it": "stadio Hanshin Kōshien",
+    "ja": "阪神甲子園球場",
+    "ko": "한신 고시엔 구장",
+    "zh": "阪神甲子園球場",
+    "es": "Estadio Koshien",
+    "nl": "Koshien Stadium",
+    "pt": "Koshien Stadium",
+    "sv": "Hanshin Koshien Stadium",
+    "ca": "estadi Koshien",
+    "ru": "стадион Косиэн"
+   },
+   "aliases": {
+    "ja": [
+     "甲子園球場",
+     "甲子園"
+    ],
+    "en": [
+     "Hanshin Koshien Stadium"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Koshien Stadium",
+   "jawiki": "阪神甲子園球場"
+  },
+  "meiji-jingu-stadium": {
+   "wikidata": "Q944559",
+   "labels": {
+    "de": "Meiji-jingū Yakyūjō",
+    "en": "Meiji Jingu Stadium",
+    "fr": "Meiji Jingu Stadium",
+    "ja": "明治神宮野球場",
+    "ko": "메이지 진구 야구장",
+    "zh": "明治神宮棒球場",
+    "pt": "Meiji Jingu Stadium",
+    "it": "Meiji Jingu Stadium"
+   },
+   "aliases": {
+    "en": [
+     "Jingu Stadium"
+    ],
+    "ja": [
+     "神宮球場"
+    ],
+    "zh": [
+     "神宮球場"
+    ],
+    "it": [
+     "Jingu Stadium"
+    ],
+    "ko": [
+     "메이지 진구구장"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Meiji Jingu Stadium",
+   "jawiki": "明治神宮野球場"
+  },
+  "yokohama-stadium": {
+   "wikidata": "Q1148681",
+   "labels": {
+    "ja": "横浜スタジアム",
+    "ko": "요코하마 스타디움",
+    "fr": "Yokohama Stadium",
+    "en": "Yokohama Stadium",
+    "it": "Yokohama Stadium",
+    "zh": "橫濱球場",
+    "nl": "Yokohama Stadium",
+    "pt": "Yokohama Stadium",
+    "de": "Yokohama Stadium",
+    "ar": "ملعب يوكوهاما",
+    "ca": "Yokohama Stadium",
+    "es": "Estadio de Yokohama",
+    "ru": "Бейсбольный стадион «Иокогама»"
+   },
+   "aliases": {
+    "ja": [
+     "横浜球場",
+     "ハマスタ",
+     "浜スタ"
+    ],
+    "zh": [
+     "橫濱棒球場"
+    ],
+    "en": [
+     "Yokohama Baseball Stadium"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [
+    {
+     "text": "ハマスタ",
+     "lang": "ja"
+    },
+    {
+     "text": "横浜球場",
+     "lang": "ja"
+    }
+   ],
+   "kana": [
+    "よこはまスタジアム"
+   ],
+   "enwiki": "Yokohama Stadium",
+   "jawiki": "横浜スタジアム"
+  },
+  "vantelin-dome-nagoya": {
+   "wikidata": "Q929524",
+   "labels": {
+    "de": "Nagoya Dome",
+    "en": "Nagoya Dome",
+    "fr": "Nagoya Dome",
+    "ja": "ナゴヤドーム",
+    "ko": "나고야 돔",
+    "zh": "名古屋巨蛋",
+    "nl": "Nagoya Dome",
+    "it": "Nagoya Dome",
+    "pt": "Nagoya Dome"
+   },
+   "aliases": {
+    "ja": [
+     "バンテリンドーム ナゴヤ",
+     "名古屋ドーム"
+    ],
+    "en": [
+     "Vantelin Dome Nagoya"
+    ]
+   },
+   "official": [],
+   "nickname": [
+    {
+     "text": "バンテリンドーム ナゴヤ",
+     "lang": "ja"
+    }
+   ],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Vantelin Dome Nagoya",
+   "jawiki": "ナゴヤドーム"
+  },
+  "mazda-stadium-hiroshima": {
+   "wikidata": "Q1038647",
+   "labels": {
+    "ja": "MAZDA Zoom-Zoom スタジアム広島",
+    "fr": "Hiroshima Municipal Stadium",
+    "ko": "MAZDA Zoom-Zoom 스타디움 히로시마",
+    "en": "Hiroshima Municipal Stadium",
+    "zh": "廣島市民球場",
+    "de": "Mazda Zoom-Zoom Stadium",
+    "pt": "Hiroshima Municipal Stadium",
+    "it": "Hiroshima Municipal Stadium",
+    "es": "Hiroshima Municipal Stadium",
+    "sv": "Hiroshima Municipal Stadium"
+   },
+   "aliases": {
+    "zh": [
+     "新廣島市民球場"
+    ],
+    "ja": [
+     "マツダスタジアム",
+     "新広島市民球場債",
+     "MAZDA Zoom-Zoomスタジアム広島",
+     "ズムスタ",
+     "新広島市民球場",
+     "マツダ ズーム・ズーム スタジアムひろしま"
+    ],
+    "fr": [
+     "Mazda Stadium",
+     "MAZDA Zoom-Zoom Stadium Hiroshima"
+    ],
+    "ko": [
+     "마쓰다 줌줌 스타디움 히로시마",
+     "신 히로시마 시민 구장",
+     "마쓰다 스타디움"
+    ],
+    "en": [
+     "MAZDA Zoom-Zoom Stadium Hiroshima",
+     "Mazda Stadium Hiroshima"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Mazda Stadium",
+   "jawiki": "MAZDA Zoom-Zoom スタジアム広島"
+  },
+  "es-con-field-hokkaido": {
+   "wikidata": "Q96395338",
+   "labels": {
+    "en": "Es Con Field Hokkaido",
+    "ja": "エスコンフィールドHOKKAIDO",
+    "ko": "에스콘 필드 HOKKAIDO",
+    "zh": "ES CON FIELD HOKKAIDO",
+    "es": "Es Con Field Hokkaido"
+   },
+   "aliases": {
+    "ja": [
+     "エスコンフィールド北海道",
+     "エスコンフィールド",
+     "エスコンF北海道",
+     "エスコンF",
+     "エスコン北海道",
+     "SコンF北海道",
+     "Sコン北海道",
+     "SコンF"
+    ],
+    "ko": [
+     "에스콘 필드 홋카이도"
+    ],
+    "en": [
+     "Es Con Hokkaido",
+     "Es Con Field",
+     "ES CON FIELD HOKKAIDO",
+     "ES CON FIELD",
+     "Es Con F"
+    ],
+    "zh": [
+     "ES CON FIELD",
+     "ES CON球場"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [
+    "エスコンフィールドほっかいどう"
+   ],
+   "enwiki": "Es Con Field Hokkaido",
+   "jawiki": "エスコンフィールドHOKKAIDO"
+  },
+  "rakuten-mobile-park-miyagi": {
+   "wikidata": "Q489699",
+   "labels": {
+    "ja": "宮城球場",
+    "ko": "미야기 구장",
+    "fr": "Miyagi Baseball Stadium",
+    "en": "Miyagi Baseball Stadium",
+    "zh": "宮城球場",
+    "pt": "Miyagi Baseball Stadium"
+   },
+   "aliases": {
+    "ja": [
+     "フルキャストスタジアム宮城",
+     "ケースタ",
+     "フルスタ宮城",
+     "クリネックススタジアム宮城",
+     "日本製紙スタジアム宮城",
+     "県営宮城球場",
+     "日本製紙クリネックススタジアム",
+     "Kスタ",
+     "仙台宮城球場",
+     "フルスタ",
+     "Kスタ宮城",
+     "フルキャストスタジアム",
+     "日本製紙クリネックススタジアム宮城",
+     "日本製紙スタジアム",
+     "楽天Koboスタジアム宮城",
+     "楽天Koboスタジアム",
+     "楽天Koboスタ",
+     "Koboスタジアム宮城",
+     "Koboスタジアム",
+     "Koboスタ宮城",
+     "Koboスタ",
+     "コボスタジアム",
+     "コボスタ宮城",
+     "コボスタ",
+     "楽天生命パーク宮城",
+     "楽天生命パーク",
+     "楽天モバイルパーク",
+     "楽天モバイルパーク宮城",
+     "Koboパーク",
+     "Koboパーク宮城",
+     "宮城野原公園宮城球場",
+     "楽天モバイル 最強パーク宮城"
+    ],
+    "ko": [
+     "현영미야기구장",
+     "풀캐스트스타디움 미야기",
+     "클리넥스 스타디움",
+     "클리넥스 스타디움 미야기",
+     "K스타 미야기",
+     "풀캐스트 스타디움",
+     "현영 미야기 구장"
+    ],
+    "fr": [
+     "Fullcast Stadium Miyagi",
+     "Kleenex Stadium Miyagi"
+    ],
+    "en": [
+     "Rakuten Life Park Miyagi",
+     "Rakuten Life Park",
+     "Rakuten Seimei Park Miyagi",
+     "Kobo Park Miyagi",
+     "Rakuten Mobile Park Miyagi"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Rakuten Mobile Saikyo Park Miyagi",
+   "jawiki": "宮城球場"
+  },
+  "belluna-dome": {
+   "wikidata": "Q1194822",
+   "labels": {
+    "pt": "Seibu Dome",
+    "de": "Seibu Dome",
+    "ja": "西武ドーム",
+    "ko": "세이부 돔",
+    "fr": "Seibu Dome",
+    "en": "Seibu Dome",
+    "es": "Seibu Dome",
+    "nl": "Seibu Dome",
+    "zh": "西武巨蛋"
+   },
+   "aliases": {
+    "pt": [
+     "Goodwill Dome"
+    ],
+    "de": [
+     "Goodwill Dome"
+    ],
+    "ja": [
+     "インボイスドーム",
+     "インボイスSEIBUドーム",
+     "インボイス西武ドーム",
+     "西武ライオンズ球場",
+     "グッドウィルドーム",
+     "西武ドーム球場",
+     "西武球場",
+     "SEIBUプリンスドーム",
+     "西武プリンスドーム",
+     "プリンスドーム",
+     "メットライフドーム",
+     "ベルーナドーム"
+    ],
+    "ko": [
+     "세이부 라이온스 구장",
+     "세이부 구장",
+     "인보이스 세이부 돔",
+     "굿윌 돔"
+    ],
+    "fr": [
+     "Dome Seibu",
+     "Goodwill Dome",
+     "Invoice Seibu Dome",
+     "Dôme Seibu",
+     "Dôme de Seibu",
+     "Seibu Lions Stadium"
+    ],
+    "en": [
+     "Belluna Dome",
+     "MetLife Dome"
+    ]
+   },
+   "official": [
+    {
+     "text": "ベルーナドーム",
+     "lang": "ja"
+    }
+   ],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Belluna Dome",
+   "jawiki": "西武ドーム"
+  },
+  "zozo-marine-stadium": {
+   "wikidata": "Q486192",
+   "labels": {
+    "pt": "Chiba Marine Stadium",
+    "ja": "千葉マリンスタジアム",
+    "fr": "Chiba Marine Stadium",
+    "ko": "지바 마린 스타디움",
+    "en": "ZOZO Marine Stadium",
+    "it": "Chiba Marine Stadium",
+    "nl": "Chiba Marine Stadium",
+    "zh": "千葉海洋球場",
+    "es": "Estadio Chiba Marine"
+   },
+   "aliases": {
+    "pt": [
+     "QVC Marine Field"
+    ],
+    "ja": [
+     "マリンスタジアム",
+     "QVCマリンフィールド",
+     "QVCマリン",
+     "千葉マリン",
+     "ZOZOマリンスタジアム"
+    ],
+    "ko": [
+     "QVC 마린필드"
+    ],
+    "en": [
+     "Chiba Marine Stadium"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Zozo Marine Stadium",
+   "jawiki": "千葉マリンスタジアム"
+  },
+  "kyocera-dome-osaka": {
+   "wikidata": "Q128836",
+   "labels": {
+    "pt": "Osaka Dome",
+    "de": "Osaka Dome",
+    "ja": "大阪ドーム",
+    "ko": "오사카 돔",
+    "fr": "Osaka Dome",
+    "en": "Kyocera Dome Osaka",
+    "es": "Osaka Dome",
+    "nl": "Osaka Dome",
+    "it": "Osaka Dome",
+    "zh": "大阪巨蛋",
+    "ar": "قبة أوساكا"
+   },
+   "aliases": {
+    "zh": [
+     "京瓷巨蛋大阪"
+    ],
+    "ja": [
+     "京セラドーム",
+     "京セラドーム大阪"
+    ],
+    "ko": [
+     "교세라 돔 오사카"
+    ],
+    "fr": [
+     "Kyocera Dome Osaka",
+     "Dôme d'Osaka"
+    ],
+    "en": [
+     "Osaka Dome",
+     "Kyocera Dome"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Kyocera Dome Osaka",
+   "jawiki": "大阪ドーム"
+  },
+  "mizuho-paypay-dome-fukuoka": {
+   "wikidata": "Q1365961",
+   "labels": {
+    "de": "Fukuoka Dome",
+    "ja": "福岡ドーム",
+    "ko": "후쿠오카 돔",
+    "fr": "Fukuoka Dome",
+    "en": "Fukuoka Dome",
+    "nl": "Fukuoka Dome",
+    "es": "Fukuoka Dome",
+    "it": "Fukuoka Dome",
+    "zh": "福岡巨蛋",
+    "pt": "Fukuoka Dome"
+   },
+   "aliases": {
+    "zh": [
+     "福冈巨蛋"
+    ],
+    "ja": [
+     "Yahooドーム",
+     "福岡Yahoo! JAPANドーム",
+     "ヤフードーム",
+     "福岡ヤフージャパンドーム",
+     "福岡ヤフードーム",
+     "Yahoo!ドーム",
+     "ヤフージャパンドーム",
+     "Yahoo!Japan DOME",
+     "福岡Yahoo!Japanドーム",
+     "福岡PayPayドーム",
+     "PayPayドーム",
+     "福岡 ヤフオク!ドーム",
+     "ヤフオクドーム",
+     "みずほPayPayドーム福岡"
+    ],
+    "ko": [
+     "야후 돔",
+     "후쿠오카 야후!재팬 돔"
+    ],
+    "fr": [
+     "Fukuoka Yahoo! Japan Dome",
+     "Dôme de Fukuoka"
+    ],
+    "en": [
+     "FUKUOKA PayPay Dome",
+     "PayPay Dome"
+    ]
+   },
+   "official": [
+    {
+     "text": "福岡ドーム",
+     "lang": "ja"
+    }
+   ],
+   "nickname": [],
+   "names": [
+    {
+     "text": "福岡 Yahoo! JAPANドーム",
+     "lang": "ja",
+     "from": 2005,
+     "to": 2013
+    },
+    {
+     "text": "福岡 ヤフオク!ドーム",
+     "lang": "ja",
+     "from": 2013,
+     "to": 2020
+    },
+    {
+     "text": "福岡PayPayドーム",
+     "lang": "ja",
+     "from": 2020,
+     "to": 2024
+    },
+    {
+     "text": "みずほPayPayドーム福岡",
+     "lang": "ja",
+     "from": 2024
+    }
+   ],
+   "short": [],
+   "kana": [],
+   "enwiki": "Mizuho PayPay Dome Fukuoka",
+   "jawiki": "福岡ドーム"
+  },
+  "sapporo-dome": {
+   "wikidata": "Q494860",
+   "labels": {
+    "pt": "Sapporo Dome",
+    "ko": "삿포로 돔",
+    "fr": "Sapporo Dome",
+    "en": "Sapporo Dome",
+    "es": "Sapporo Dome",
+    "ca": "Sapporo Dome",
+    "it": "Sapporo Dome",
+    "de": "Sapporo Dome",
+    "ja": "札幌ドーム",
+    "ar": "قبة سابورو",
+    "sv": "Sapporo Dome",
+    "nl": "Sapporo Dome",
+    "zh": "札幌巨蛋",
+    "ru": "Саппоро Доум"
+   },
+   "aliases": {
+    "zh": [
+     "札幌圓頂球場",
+     "札幌巨蛋球場",
+     "札幌圓頂體育場",
+     "札幌巨蛋MVP"
+    ],
+    "ko": [
+     "삿포로 히로바돔"
+    ],
+    "fr": [
+     "dôme de Sapporo"
+    ],
+    "es": [
+     "Domo de Sapporo"
+    ],
+    "ja": [
+     "Hiroba",
+     "大和ハウスプレミストドーム",
+     "プレミストドーム"
+    ],
+    "en": [
+     "Hiroba"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Sapporo Dome",
+   "jawiki": "札幌ドーム"
+  },
+  "hotto-motto-field-kobe": {
+   "wikidata": "Q849183",
+   "labels": {
+    "ja": "神戸総合運動公園野球場",
+    "fr": "Skymark Stadium",
+    "ko": "고베 종합운동공원 야구장",
+    "en": "Kobe Sports Park Baseball Stadium",
+    "zh": "神戶綜合運動公園棒球場"
+   },
+   "aliases": {
+    "ja": [
+     "神戸スカイマークスタジアム",
+     "YahooBBスタジアム",
+     "グリーンスタジアム神戸",
+     "神戸球場",
+     "スカイマークスタジアム",
+     "GS神戸",
+     "神戸グリーンスタジアム",
+     "Yahoo!BBスタジアム",
+     "ヤフーBBスタジアム",
+     "ほっともっとフィールド神戸"
+    ],
+    "ko": [
+     "홋토못토 필드 고베",
+     "그린 스타디움",
+     "스카이마크 스타디움",
+     "호토모토 필드 고베",
+     "그린 스타디움 고베",
+     "고베종합운동공원야구장"
+    ],
+    "zh": [
+     "神戶綜合體育公園棒球場"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Hotto Motto Field Kobe",
+   "jawiki": "神戸総合運動公園野球場"
+  },
+  "hiroshima-municipal-stadium": {
+   "wikidata": "Q8012748",
+   "labels": {
+    "ja": "広島市民球場",
+    "ko": "히로시마 시민 구장",
+    "en": "Hiroshima Municipal Stadium",
+    "zh": "廣島市民球場 (初代)",
+    "it": "Hiroshima Municipal Stadium"
+   },
+   "aliases": {
+    "ja": [
+     "旧広島市民球場",
+     "広球",
+     "広島球場",
+     "ひろしましみんきゅうじょう"
+    ],
+    "ko": [
+     "히로시마 시민구장"
+    ],
+    "zh": [
+     "初代廣島市民球場",
+     "广岛市民球场"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Hiroshima Municipal Stadium (1957)",
+   "jawiki": "広島市民球場 (初代)"
+  },
+  "korakuen-stadium": {
+   "wikidata": "Q473519",
+   "labels": {
+    "de": "Kōrakuen-Stadion",
+    "en": "Korakuen Stadium",
+    "it": "Korakuen Stadium",
+    "ja": "後楽園球場",
+    "ko": "고라쿠엔 구장",
+    "nl": "Korakuen Stadium",
+    "fr": "Korakuen Stadium",
+    "zh": "後樂園球場"
+   },
+   "aliases": {
+    "ja": [
+     "後楽園スタヂアム",
+     "後楽園野球場"
+    ],
+    "zh": [
+     "后乐园球场"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Korakuen Stadium",
+   "jawiki": "後楽園球場"
+  },
+  "osaka-stadium": {
+   "wikidata": "Q861117",
+   "labels": {
+    "ja": "大阪スタヂアム",
+    "ko": "오사카 구장",
+    "en": "Osaka Stadium",
+    "de": "Osaka Stadium",
+    "zh": "大阪球場",
+    "fr": "stade d'Osaka",
+    "it": "Stadio di Osaka"
+   },
+   "aliases": {
+    "ja": [
+     "大阪アイス興業",
+     "ナンバ球場",
+     "大阪球場",
+     "大阪スタジアム",
+     "難波球場"
+    ],
+    "ko": [
+     "오사카 야구장"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Osaka Stadium",
+   "jawiki": "大阪スタヂアム"
+  },
+  "heiwadai-stadium": {
+   "wikidata": "Q5365631",
+   "labels": {
+    "ja": "平和台野球場",
+    "ko": "헤이와다이 야구장",
+    "en": "Heiwadai Stadium",
+    "zh": "平和臺棒球場"
+   },
+   "aliases": {
+    "ja": [
+     "平和台球場"
+    ],
+    "zh": [
+     "平和台棒球場"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Heiwadai Stadium",
+   "jawiki": "平和台野球場"
+  },
+  "kawasaki-stadium": {
+   "wikidata": "Q6379828",
+   "labels": {
+    "en": "Kawasaki Stadium",
+    "ja": "川崎球場",
+    "zh": "川崎球场"
+   },
+   "aliases": {
+    "ja": [
+     "川崎スタヂアム",
+     "川崎スタジアム",
+     "川崎市民球場",
+     "サキスタ",
+     "崎スタ"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Kawasaki Stadium",
+   "jawiki": "川崎球場"
+  },
+  "nagoya-stadium": {
+   "wikidata": "Q5369853",
+   "labels": {
+    "ja": "ナゴヤ球場",
+    "ko": "나고야 구장",
+    "en": "Nagoya Baseball Stadium",
+    "fr": "stade de baseball de Nagoya",
+    "zh": "名古屋體育館"
+   },
+   "aliases": {
+    "ja": [
+     "中日球場",
+     "名古屋野球",
+     "名古屋球場",
+     "中日スタヂアム",
+     "中日スタジアム全焼事件",
+     "中日スタジアム"
+    ],
+    "ko": [
+     "주니치 구장",
+     "주니치 스타디움"
+    ],
+    "zh": [
+     "名古屋球场",
+     "名古屋球場"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Nagoya Stadium",
+   "jawiki": "ナゴヤ球場"
+  },
+  "estadio-centenario": {
+   "wikidata": "Q498245",
+   "labels": {
+    "ko": "에스타디오 센테나리오",
+    "fr": "stade Centenario",
+    "es": "Estadio Centenario",
+    "it": "stadio del Centenario",
+    "de": "Estadio Centenario",
+    "ja": "エスタディオ・センテナリオ",
+    "nl": "Estadio Centenario",
+    "ar": "ملعب سنتيناريو",
+    "sv": "Estadio Centenario",
+    "pt": "Estádio Centenario",
+    "ru": "Сентенарио",
+    "en": "Estadio Centenario",
+    "ca": "Estadio Centenario",
+    "zh": "世紀球場"
+   },
+   "aliases": {
+    "zh": [
+     "世纪体育场",
+     "蒙得維的亞",
+     "蒙特維多世紀球場"
+    ],
+    "ko": [
+     "센테나리오 경기장"
+    ],
+    "fr": [
+     "Estadio Centenario"
+    ],
+    "it": [
+     "Stadio del Centenario di Montevideo",
+     "Estadio Centenario"
+    ],
+    "ja": [
+     "センテナリオ競技場",
+     "エスタディオセンテナリオ"
+    ],
+    "pt": [
+     "Estádio Centenário"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Estadio Centenario",
+   "jawiki": "エスタディオ・センテナリオ"
+  },
+  "stadio-nazionale-pnf": {
+   "wikidata": "Q642958",
+   "labels": {
+    "de": "Stadio Nazionale del PNF",
+    "en": "Stadio Nazionale",
+    "es": "Estadio Nacional",
+    "fr": "Stade National",
+    "it": "stadio Nazionale",
+    "ja": "スタディオ・ナツィオナーレPNF",
+    "ko": "스타디오 나치오날레 PNF",
+    "nl": "Stadio Nazionale PNF",
+    "pt": "Estádio Nacional do PNF",
+    "ru": "Национале",
+    "sv": "Stadio Nazionale PNF",
+    "ar": "ملعب الحزب الوطني الفاشي",
+    "zh": "国家法西斯党国家体育场",
+    "ca": "Stadio Nazionale PNF"
+   },
+   "aliases": {
+    "it": [
+     "Stadio Nazionale PNF"
+    ],
+    "en": [
+     "Stadio Nazionale PNF",
+     "National Stadium, Rome"
+    ],
+    "es": [
+     "Estadio Nacional del Partido Nacional Fascista"
+    ],
+    "fr": [
+     "Stadio Nazionale del PNF",
+     "Stade national du PNF"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Stadio Nazionale PNF",
+   "jawiki": "スタディオ・ナツィオナーレPNF"
+  },
+  "stade-yves-du-manoir": {
+   "wikidata": "Q754502",
+   "labels": {
+    "pt": "Estádio Olímpico Yves-du-Manoir",
+    "ko": "스타드 올랭피크 이브 뒤 마누아르",
+    "fr": "stade départemental Yves-du-Manoir",
+    "ru": "Ив дю Мануар",
+    "es": "Stade Olympique Yves-du-Manoir",
+    "en": "Yves du Manoir Stadium",
+    "ca": "Estadi Olímpic Yves-du-Manoir",
+    "it": "stadio Yves du Manoir",
+    "de": "Stade Olympique Yves-du-Manoir",
+    "ja": "スタッド・オランピック・イヴ＝ドゥ＝マノワール",
+    "sv": "Stade Olympique Yves-du-Manoir",
+    "nl": "Stade olympique Yves-du-Manoir",
+    "ar": "الملعب الأولمبي إيف دي مانوار",
+    "zh": "伊夫·迪馬努瓦爾省級體育場"
+   },
+   "aliases": {
+    "pt": [
+     "Stade Olympique Yves-du-Manoir"
+    ],
+    "ko": [
+     "스타드 올랭피크 드 콜롱브"
+    ],
+    "fr": [
+     "Stade Lucien Choine",
+     "Stade Lucien-Choine",
+     "Stade olympique de Colombes",
+     "Stade du Matin",
+     "Stade de Colombes",
+     "Stade Yves du Manoir de Colombes",
+     "Stade Yves du Manoir",
+     "stade olympique Yves-du-Manoir"
+    ],
+    "ru": [
+     "Олимпийский стадион Ив дю Мануар",
+     "Стад Олимпик",
+     "Олимпик",
+     "Олимпийский стадион"
+    ],
+    "es": [
+     "Stade Olympique Yves du-Manoir",
+     "Estadio Olimpico de Colombes",
+     "Stade Olympique de Colombes",
+     "Estadio Olímpico de Colombes",
+     "Estadio Olímpico Yves-du-Manoir",
+     "Stade Olympique Yves du Manoir",
+     "Estadio Olimpico Yves-du-Manoir"
+    ],
+    "ca": [
+     "Estadi Olímpic de Colombes",
+     "Stade Olympique Yves-du-Manoir",
+     "Stade Olympique du Colombes",
+     "Estadi Olympique Yves-du-Manoir",
+     "Stade du Matin"
+    ],
+    "it": [
+     "Stadio di Colombes",
+     "Colombes",
+     "stadio olimpico Yves du Manoir",
+     "stadio dipartimentale Yves du Manoir"
+    ],
+    "de": [
+     "Stade de Colombes"
+    ],
+    "ja": [
+     "スタッド・オリンピック・イブ・ドゥ・マノール",
+     "コロンブ・スタジアム"
+    ],
+    "sv": [
+     "Stade Olympique de Colombes",
+     "Stade Colombes",
+     "Stade de Colombes"
+    ],
+    "nl": [
+     "Stade Olympique de Colombes",
+     "Colombes",
+     "Stade de Colombes"
+    ],
+    "en": [
+     "Stade Olympique de Colombes",
+     "Stade Lucien choine",
+     "Stade du Matin",
+     "Stade de colombes"
+    ],
+    "ar": [
+     "ملعب اولمبيك دي كولومبوس",
+     "ملعب أولمبيك دي كولومبوس"
+    ],
+    "zh": [
+     "伊芙庄园奥林匹克体育场",
+     "伊夫·迪馬努瓦爾奧林匹克體育場",
+     "伊芙庄园体育场",
+     "伊夫·迪马努瓦尔奥林匹克体育场",
+     "伊夫·迪马努瓦尔体育场"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Stade Yves-du-Manoir",
+   "jawiki": "スタッド・デパルトモンタル・イヴ＝デュ＝マノワール"
+  },
+  "maracana": {
+   "wikidata": "Q155174",
+   "labels": {
+    "ko": "마라카낭",
+    "fr": "stade Maracanã",
+    "es": "Estadio de Maracaná",
+    "it": "stadio Maracanã",
+    "de": "Maracanã",
+    "ja": "エスタジオ・ド・マラカナン",
+    "en": "Maracanã Stadium",
+    "nl": "Maracanã",
+    "ar": "ملعب ماراكانا",
+    "sv": "Maracanã",
+    "pt": "Estádio Jornalista Mário Filho",
+    "ru": "Маракана",
+    "ca": "Estadi Maracanã",
+    "zh": "馬拉卡納體育場"
+   },
+   "aliases": {
+    "zh": [
+     "马拉卡纳体育场",
+     "馬拉簡拿",
+     "馬拉簡拿球場"
+    ],
+    "ko": [
+     "마라카낭 스타디움",
+     "이스타지우 두 마라카낭",
+     "이스타디우 두 마라카낭",
+     "마라카낭 경기장"
+    ],
+    "fr": [
+     "Maracana",
+     "Estadio Maracanã",
+     "Stade Maracanã",
+     "Stade Maracana",
+     "Estadio Maracana",
+     "Estádio Jornalista Mário Filho",
+     "Estádio do Maracanã"
+    ],
+    "es": [
+     "Maracanã",
+     "Estádio Maracaná",
+     "Maracaná",
+     "Maracana",
+     "Estadio Jornalista Mario Filho",
+     "Estadio Maracanã",
+     "Estadio Jornalista Mário Filho",
+     "Maracana Stadium",
+     "Estádio Jornalista Mário Filho",
+     "Estadio Maracana"
+    ],
+    "it": [
+     "Maracanã",
+     "Stadio Maracanà",
+     "Stadio Mário Filho",
+     "Maracanà",
+     "O Dromo"
+    ],
+    "de": [
+     "Estádio Jornalista Mário Filho",
+     "Maracanã-Stadion",
+     "Estádio do Maracanã"
+    ],
+    "ja": [
+     "マラカナン",
+     "マラカナン・スタジアム",
+     "マラカナンスタジアム"
+    ],
+    "nl": [
+     "Estadio do Maracana",
+     "Estádio do Maracanã",
+     "Maracana (stadion)"
+    ],
+    "ar": [
+     "إستاد ماراكانا",
+     "ماراسانيا",
+     "مدرج ماراسانيا",
+     "إستاد ماراسانيا"
+    ],
+    "sv": [
+     "Maracana",
+     "Maracanastadion",
+     "Estádio do Maracanã"
+    ],
+    "pt": [
+     "Maracanã",
+     "Estádio do Maracanã",
+     "Estádio Mário Filho"
+    ],
+    "ru": [
+     "Стадион Маракана",
+     "Maracanã",
+     "Estádio do Maracanã"
+    ],
+    "ca": [
+     "Maracanã",
+     "Estadi Maracanà",
+     "Estadi Maracaná",
+     "Estadi de Maracanã",
+     "Estadi Jornalista Mário Filho",
+     "Estádio Maracanã",
+     "Maracanà",
+     "Estadi de Maracanà"
+    ],
+    "en": [
+     "Maralrkeueoecana Stadium",
+     "Estádio Jornalista Mário Filho",
+     "Estadio Jornalista Mario Filho"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Maracanã Stadium",
+   "jawiki": "エスタジオ・ド・マラカナン"
+  },
+  "wankdorf": {
+   "wikidata": "Q676004",
+   "labels": {
+    "pt": "Estádio Wankdorf",
+    "fr": "stade du Wankdorf",
+    "ko": "방크도르프슈타디온",
+    "en": "Wankdorf Stadium",
+    "es": "Wankdorfstadion",
+    "it": "Stadio Wankdorf",
+    "de": "Stadion Wankdorf",
+    "ja": "シュタディオン・ヴァンクドルフ",
+    "ar": "ملعب وانكدورف",
+    "nl": "Wankdorf",
+    "zh": "萬克多夫體育場",
+    "ca": "Wankdorfstadion",
+    "sv": "Wankdorfs stadion"
+   },
+   "aliases": {
+    "pt": [
+     "Wankdorf Stadium"
+    ],
+    "fr": [
+     "Wankdorf",
+     "Stadion Wankdorf",
+     "Wankdorfstadion",
+     "Wankdorf-Stadion"
+    ],
+    "es": [
+     "Wankdorf Stadium",
+     "Estadio Wankdorf"
+    ],
+    "it": [
+     "Wankdorf",
+     "Wankdorf Stadion",
+     "Wankdorfstadion"
+    ],
+    "ja": [
+     "ヴァンクドルフ・スタジアム",
+     "バンクドルフシュタディオン",
+     "ヴァンクドルフシュタディオン"
+    ],
+    "de": [
+     "Wankdorf Stadion",
+     "Wankdorfstadion"
+    ],
+    "zh": [
+     "万克多夫体育场",
+     "范可多夫体育场",
+     "万科道夫体育场",
+     "雲克多夫體育場",
+     "舊雲克多夫球場"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Wankdorf Stadium",
+   "jawiki": "シュタディオン・ヴァンクドルフ (1925年)"
+  },
+  "rasunda": {
+   "wikidata": "Q725623",
+   "labels": {
+    "pt": "Estádio Råsunda",
+    "ko": "로순다 스타디온",
+    "ru": "Росунда",
+    "fr": "Råsunda",
+    "es": "Estadio Råsunda",
+    "en": "Råsunda Stadium",
+    "it": "Råsundastadion",
+    "de": "Råsundastadion",
+    "ja": "ロースンダ・スタディオン",
+    "nl": "Råsundastadion",
+    "sv": "Råsunda fotbollsstadion",
+    "ar": "ملعب روسوندا",
+    "ca": "Estadi Råsunda"
+   },
+   "aliases": {
+    "pt": [
+     "Råsunda Stadium",
+     "Råsunda"
+    ],
+    "ko": [
+     "로순다 경기장",
+     "로순다스타디온"
+    ],
+    "fr": [
+     "Råsunda Stadium",
+     "Rasunda",
+     "Rasunda Stadium"
+    ],
+    "es": [
+     "Råsunda Stadium",
+     "Rasundastadion",
+     "Estadio Rasunda",
+     "Råsunda fotbollsstadion",
+     "Rasunda Stadium",
+     "Råsundastadion",
+     "Rasunda fotbollsstadion"
+    ],
+    "it": [
+     "Stadio Rasunda",
+     "Råsunda Stadion",
+     "Råsunda Stadium",
+     "Rasundastadion",
+     "Rasunda Stadion",
+     "Stadio Råsunda",
+     "Råsunda",
+     "Rasunda"
+    ],
+    "de": [
+     "Rasunda Stadion",
+     "Råsunda",
+     "Råsunda-Stadion",
+     "Rasunda-Stadion",
+     "Råsunda Stadion",
+     "Rasunda"
+    ],
+    "ja": [
+     "ローズンダ・スタジアム",
+     "ロースンダ・スタジアム"
+    ],
+    "nl": [
+     "Råsunda stadion",
+     "Rasundastadion",
+     "Rasunda stadion"
+    ],
+    "sv": [
+     "Råsunda Stadion",
+     "Råsundastadion",
+     "Råsunda Fotbollstadion"
+    ],
+    "en": [
+     "Råsunda Soccer Stadium",
+     "Råsunda Football Stadium",
+     "Råsunda Association Football Stadium"
+    ],
+    "zh": [
+     "拉森達球場",
+     "卢桑达体育场",
+     "拉松达体育场",
+     "拉松達球場",
+     "羅桑達足球運動場"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Råsunda Stadium",
+   "jawiki": "ロースンダ・スタディオン"
+  },
+  "estadio-nacional-santiago": {
+   "wikidata": "Q594994",
+   "labels": {
+    "ar": "ملعب خوليو مارتينيز برادانوس الوطني",
+    "de": "Estadio Nacional de Chile",
+    "en": "Julio Martínez Prádanos National Stadium",
+    "fr": "stade national",
+    "it": "Stadio Nazionale",
+    "ja": "エスタディオ・ナシオナル・デ・チリ",
+    "ko": "에스타디오 나시오날 데 칠레",
+    "nl": "Estadio Nacional",
+    "pt": "Estádio Nacional de Chile",
+    "ru": "Национальный стадион",
+    "sv": "Estadio Nacional de Chile",
+    "zh": "國家體育場",
+    "ca": "Estadio Nacional de Xile",
+    "es": "Estadio Nacional Julio Martínez Prádanos"
+   },
+   "aliases": {
+    "ru": [
+     "Насиональ де Чили",
+     "Национальный стадион (Чили)"
+    ],
+    "zh": [
+     "國家體育場 (智利)"
+    ],
+    "ca": [
+     "Estadio Nacional Julio Martínez Prádanos"
+    ],
+    "nl": [
+     "Estadio Nacional (Chili)"
+    ],
+    "it": [
+     "Estadio Nacional de Chile",
+     "Stadio nazionale del Cile",
+     "Estadio Nacional",
+     "Stadio nazionale Julio Martínez Prádanos"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Julio Martínez Prádanos National Stadium",
+   "jawiki": "エスタディオ・ナシオナル・デ・チリ"
+  },
+  "wembley-1923": {
+   "wikidata": "Q43279",
+   "labels": {
+    "pt": "Estádio de Wembley",
+    "zh": "温布利球场",
+    "fr": "stade de Wembley",
+    "ru": "Уэмбли (1923)",
+    "ko": "웸블리 스타디움",
+    "es": "Estadio de Wembley",
+    "en": "Wembley Stadium",
+    "ca": "Wembley Stadium",
+    "it": "stadio di Wembley",
+    "ja": "ウェンブリー・スタジアム",
+    "ar": "ملعب ويمبلي",
+    "de": "Wembley Stadium",
+    "sv": "Wembley Stadium",
+    "nl": "Wembley Stadium"
+   },
+   "aliases": {
+    "pt": [
+     "Wembley Stadium"
+    ],
+    "zh": [
+     "溫布萊球場"
+    ],
+    "fr": [
+     "Empire Exhibition Stadium",
+     "Empire Stadium",
+     "British Empire Exhibition Stadium"
+    ],
+    "ko": [
+     "구 웸블리 경기장",
+     "웸블리 경기장 구관",
+     "웸블리 경기장",
+     "옛 웸블리 스타디움",
+     "옛 웸블리 경기장",
+     "구웸블리 경기장",
+     "구 웸블리 스타디움"
+    ],
+    "es": [
+     "Wembley",
+     "Estadio del Antiguo Wembley",
+     "Antiguo estadio de Wembley"
+    ],
+    "it": [
+     "Wembley Stadium",
+     "Empire Stadium"
+    ],
+    "de": [
+     "Empire Stadium"
+    ],
+    "en": [
+     "Old Wembley",
+     "Empire Stadium",
+     "Empire Exhibition Stadium"
+    ],
+    "ar": [
+     "ملعب ويمبلي (١٩٢٣)"
+    ],
+    "ru": [
+     "Стадион «Уэмбли»",
+     "Старый стадион «Уэмбли»"
+    ],
+    "sv": [
+     "Gamla Wembley"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Wembley Stadium (1923)",
+   "jawiki": "ウェンブリー・スタジアム (1923)"
+  },
+  "wembley": {
+   "wikidata": "Q128468",
+   "labels": {
+    "es": "Estadio de Wembley",
+    "ar": "ملعب ويمبلي",
+    "nl": "Wembley Stadium",
+    "sv": "Wembley Stadium",
+    "pt": "Estádio de Wembley",
+    "ru": "Уэмбли",
+    "fr": "stade de Wembley",
+    "ko": "웸블리 스타디움",
+    "it": "stadio di Wembley",
+    "de": "Wembley-Stadion",
+    "ja": "ウェンブリー・スタジアム",
+    "en": "Wembley Stadium",
+    "ca": "Wembley Stadium",
+    "zh": "温布利球场"
+   },
+   "aliases": {
+    "zh": [
+     "溫布萊球場",
+     "溫布利球場站"
+    ],
+    "es": [
+     "Nuevo Wembley",
+     "Estadio Nuevo Wembley",
+     "Nuevo estadio de Wembley",
+     "Estadio Wembley",
+     "Estadio del Nuevo Wembley"
+    ],
+    "ar": [
+     "ملعب ومبلي",
+     "Wembley stadium",
+     "استاد ويمبلي الجديد"
+    ],
+    "nl": [
+     "Wembley National Stadium",
+     "Empire Stadium",
+     "Wembley Stadion"
+    ],
+    "sv": [
+     "Nya Wembley",
+     "Nya wembely",
+     "Empire Stadium",
+     "British Stadium"
+    ],
+    "pt": [
+     "Estádio Wembley",
+     "Wembley Stadium"
+    ],
+    "ru": [
+     "Wembley",
+     "Стадион Уэмбли",
+     "Новый Уэмбли"
+    ],
+    "fr": [
+     "Wembley Empire Stadium",
+     "Stade Wembley",
+     "Wembley Stadium"
+    ],
+    "ko": [
+     "웸블리 경기장 신관",
+     "웸블리 경기장",
+     "웸블리구장",
+     "뉴 웸블리 경기장",
+     "웸블리 구장",
+     "웸블리스타디움",
+     "신 웸블리 경기장",
+     "신웸블리 경기장"
+    ],
+    "de": [
+     "Wembley Stadium",
+     "Wembleystadion"
+    ],
+    "ja": [
+     "ウェンブリースタジアム",
+     "ウェンブレー・スタジアム"
+    ],
+    "ca": [
+     "Estadi de Wembley"
+    ],
+    "en": [
+     "New Wembley",
+     "Wembley"
+    ],
+    "it": [
+     "Nuovo Wembley",
+     "Wembley Stadium"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Wembley Stadium",
+   "jawiki": "ウェンブリー・スタジアム"
+  },
+  "estadio-azteca": {
+   "wikidata": "Q320454",
+   "labels": {
+    "fr": "stade Azteca",
+    "ko": "에스타디오 아스테카",
+    "es": "Estadio Banorte",
+    "it": "stadio Azteca",
+    "de": "Aztekenstadion",
+    "ja": "エスタディオ・アステカ",
+    "ar": "ملعب أزتيكا",
+    "sv": "Aztekastadion",
+    "nl": "Aztekenstadion",
+    "pt": "Estádio Azteca",
+    "ru": "Ацтека",
+    "en": "Estadio Azteca",
+    "ca": "Estadi Azteca",
+    "zh": "阿茲特克體育場"
+   },
+   "aliases": {
+    "zh": [
+     "阿茲特克球場",
+     "阿兹台克体育场"
+    ],
+    "fr": [
+     "stade Aztèque"
+    ],
+    "ko": [
+     "에스타디오 아즈테카",
+     "아즈테카 경기장",
+     "아스테카 경기장"
+    ],
+    "es": [
+     "Estadio Guillermo Cañedo",
+     "El Coloso de Santa Úrsula"
+    ],
+    "it": [
+     "Stadio Azteca"
+    ],
+    "de": [
+     "Estadio de Futbol Azteca"
+    ],
+    "ja": [
+     "アステカスタジアム",
+     "アステカ・スタジアム"
+    ],
+    "sv": [
+     "Aztekstadion"
+    ],
+    "pt": [
+     "Estadio azteca"
+    ],
+    "ru": [
+     "Стадион Ацтека"
+    ],
+    "en": [
+     "El Coloso de Santa Úrsula",
+     "Coloso de Santa Úrsula"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Estadio Azteca",
+   "jawiki": "エスタディオ・アステカ"
+  },
+  "olympiastadion-munich": {
+   "wikidata": "Q131610",
+   "labels": {
+    "fr": "stade olympique de Munich",
+    "ko": "뮌헨 올림픽 스타디움",
+    "es": "Estadio Olímpico de Múnich",
+    "it": "Stadio Olimpico",
+    "de": "Olympiastadion München",
+    "ja": "ミュンヘン・オリンピアシュタディオン",
+    "ar": "ملعب ميونخ الأولمبي",
+    "nl": "Olympiastadion",
+    "sv": "Münchens Olympiastadion",
+    "pt": "Estádio Olímpico de Munique",
+    "ru": "Олимпийский стадион",
+    "en": "Munich Olympic Stadium",
+    "ca": "Estadi Olímpic de Múnic",
+    "zh": "慕尼黑奥林匹克体育场"
+   },
+   "aliases": {
+    "zh": [
+     "慕尼黑奧林匹克球場"
+    ],
+    "fr": [
+     "Olympiastadion München"
+    ],
+    "ko": [
+     "뮌헨 올림픽 경기장",
+     "뮌헨 올림피아슈타디온"
+    ],
+    "es": [
+     "Estadio Olimpico de Múnich",
+     "Estadio Olimpico de Munich",
+     "Estadio Olímpico de Münich",
+     "Olympic Stadium",
+     "Estadio Olímpico de Munich",
+     "Olympiastadion München",
+     "Estadio Olimpico de Münich",
+     "Olympiastadion Munchen"
+    ],
+    "it": [
+     "Stadio Olimpico di Monaco di Baviera",
+     "Stadio Olimpico di Monaco",
+     "olympiastadion monaco"
+    ],
+    "de": [
+     "Olympiastadion",
+     "Münchner Olympiastadion"
+    ],
+    "sv": [
+     "Olympiastadion",
+     "Munich Olympic Stadium"
+    ],
+    "ru": [
+     "Олимпиаштадион",
+     "Олимпийский стадион в Мюнхене"
+    ],
+    "ca": [
+     "Olympiastadion",
+     "Olympiastadion München"
+    ],
+    "en": [
+     "Olympiastadion",
+     "Olympic Stadium in Munich"
+    ],
+    "nl": [
+     "Olympisch Stadion (Munchen)",
+     "Olympiastadion (Munchen)"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Olympiastadion (Munich)",
+   "jawiki": "ミュンヘン・オリンピアシュタディオン"
+  },
+  "monumental": {
+   "wikidata": "Q276354",
+   "labels": {
+    "ko": "엘 모누멘탈",
+    "fr": "stade Monumental,Buenos Aires",
+    "it": "stadio monumentale Antonio Vespucio Liberti",
+    "de": "Estadio Monumental Antonio Vespucio Liberti",
+    "ja": "エスタディオ・モヌメンタル・アントニオ・ベスプチオ・リベルティ",
+    "ar": "ملعب مونومنتال أنتونيو فيسبوسيو ليبرتي",
+    "nl": "Estadio Monumental Antonio Vespucio Liberti",
+    "sv": "Estadio Monumental Antonio Vespucio Liberti",
+    "pt": "Estádio Mâs Monumental",
+    "ru": "Монументаль Ривер Плейт",
+    "en": "Monumental Stadium, Buenos Aires",
+    "ca": "Estadi Monumental Antonio Vespucio Liberti",
+    "zh": "纪念碑球场",
+    "es": "Estadio Monumental, Buenos Aires"
+   },
+   "aliases": {
+    "zh": [
+     "Estadio Monumental Antonio Vespucio Liberti"
+    ],
+    "ko": [
+     "안토니오 리베르티 기념 경기장"
+    ],
+    "fr": [
+     "River Plate Stadium",
+     "Estadio Monumental Antonio Vespucio Liberti",
+     "El Monumental"
+    ],
+    "it": [
+     "Estadio Antonio Vespucio Liberti",
+     "Stadio monumentale Antonio Vespucio Liberti"
+    ],
+    "de": [
+     "Estadio Antonio Vespuci Alberti",
+     "El Monumental",
+     "Estadio River Plate",
+     "River Plate Stadion"
+    ],
+    "ja": [
+     "エスタディオ・モヌメンタル・アントニオ・ベスプシオ・リベルティ",
+     "エル・モヌメンタール",
+     "リバー・プレートスタジアム",
+     "エル・モヌメンタル"
+    ],
+    "ar": [
+     "ستاد مونيومنتال",
+     "استاد مونيومنتال",
+     "إستاد مونومينتال"
+    ],
+    "nl": [
+     "Estadio Monumental Antonio V. Liberti",
+     "El Monumental",
+     "River Plate Stadion"
+    ],
+    "pt": [
+     "Estádio Monumental de Nuñez",
+     "Estadio Monumental Antonio Vespucio Liberti",
+     "El Monumental",
+     "Monumental de Nuñes",
+     "Monumental de Núñez",
+     "River Plate Stadium",
+     "Estádio Monumental de Nuñes",
+     "Estádio Monumental Antonio Vespucio Liberti"
+    ],
+    "ru": [
+     "Монументаль Антонио Веспучио Либерти",
+     "Estadio Monumental Antonio Vespucio Liberti",
+     "Эстадио Монументаль",
+     "Estadio Monumental Antonio V. Liberti",
+     "Антонио Веспуччи Либерти"
+    ],
+    "en": [
+     "River Plate Stadium",
+     "Antonio Vespucio Liberti Stadium",
+     "El Monumental Estadio",
+     "The Monumental Stadium",
+     "Estadio Mas Monumental",
+     "Mas Monumental"
+    ],
+    "es": [
+     "Estadio Antonio Vespucio Liberti",
+     "Estadio Monumental de Buenos Aires",
+     "Estadio de River",
+     "El Monumental de River",
+     "Estadio Monumental, Argentina",
+     "cancha de River",
+     "Estadio Mas Monumental",
+     "Estadio Monumental",
+     "Estadio Mâs Monumental",
+     "Estadio Monumental Antonio Vespucio Liberti"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Estadio Monumental (Buenos Aires)",
+   "jawiki": "エスタディオ・モヌメンタル・アントニオ・ベスプチオ・リベルティ"
+  },
+  "santiago-bernabeu": {
+   "wikidata": "Q164027",
+   "labels": {
+    "es": "Estadio Santiago Bernabéu",
+    "ar": "ملعب سانتياغو برنابيو",
+    "sv": "Bernabéu-stadion",
+    "nl": "Estadio Santiago Bernabéu",
+    "pt": "Estádio Santiago Bernabéu",
+    "ru": "Сантьяго Бернабеу",
+    "fr": "Bernabéu",
+    "ko": "에스타디오 산티아고 베르나베우",
+    "it": "stadio Santiago Bernabéu",
+    "de": "Bernabéu",
+    "ja": "エスタディオ・サンティアゴ・ベルナベウ",
+    "en": "Bernabéu",
+    "ca": "Estadi Santiago Bernabéu",
+    "zh": "伯纳乌球场"
+   },
+   "aliases": {
+    "zh": [
+     "班拿貝球場",
+     "貝納堡球場",
+     "Santiago Bernabéu Stadium",
+     "伯納烏",
+     "巴拿貝球場",
+     "圣地亚哥·伯纳乌球场",
+     "圣地亚哥·伯纳乌体育场"
+    ],
+    "es": [
+     "Santiago Bernabéu",
+     "Nuevo Chamartín",
+     "Estadio Bernabeu",
+     "Santiago Bernabeu",
+     "Estadio Bernabéu",
+     "Estadio Santiago Bernabeu",
+     "Bernabéu",
+     "Bernabeu",
+     "Nuevo Chamartin"
+    ],
+    "ar": [
+     "سانتياغو برنابيو",
+     "ملعب سانتياغو بيرنابيو"
+    ],
+    "sv": [
+     "Santiago Bernabeu-stadion",
+     "Estadio Santiago Bernabéu",
+     "Santiago Bernabéu Stadium",
+     "Estadio Santiago Bernabeu",
+     "Estádio Santiago Bernabéu"
+    ],
+    "nl": [
+     "Bernabeu-stadion",
+     "Bernabeu",
+     "Estadio Santiago Bernabeu",
+     "Estádio Santiago Bernabéu",
+     "Bernabéu"
+    ],
+    "pt": [
+     "Santiago Bernabéu Stadium",
+     "Estadio Santiago Bernabeu",
+     "Estadio santiago bernabéu",
+     "Estádio santiago bernabeu"
+    ],
+    "fr": [
+     "Estadio Santiago Bernabéu",
+     "Stade Santiago Bernabeu",
+     "Stade Santiago-Bernabéu",
+     "Stade Chamartin"
+    ],
+    "ko": [
+     "산티아고 베르나베우 경기장",
+     "산티아고베르나베우 경기장",
+     "산티아고 베르나베우"
+    ],
+    "it": [
+     "Santiago Bernabéu",
+     "Stadio Santiago Bernabeu",
+     "Santiago Bernabeu",
+     "Stadio Santiago Bernabéu"
+    ],
+    "de": [
+     "Bernabeu-Stadion",
+     "Estadio Santiago Bernabeu",
+     "Santiago-Bernabéu-Stadion",
+     "Estadio Bernabeu",
+     "Bernabéu-Stadion",
+     "Estadio Bernabéu",
+     "Santiago-Bernabeu-Stadion"
+    ],
+    "ja": [
+     "サンチャゴ・ベルナベウ・スタジアム",
+     "巨大なスタジアム"
+    ],
+    "ca": [
+     "Estadio Santiago Bernabéu",
+     "Estadi Santiago Bernabeu"
+    ],
+    "en": [
+     "Bernabeu Stadium",
+     "Santiago Bernabeu Stadium",
+     "Estadio Santiago Bernabéu",
+     "E.S.B",
+     "Real Madrid Stadium",
+     "The Bernabeu"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Bernabéu (stadium)",
+   "jawiki": "エスタディオ・サンティアゴ・ベルナベウ"
+  },
+  "stadio-olimpico-rome": {
+   "wikidata": "Q159884",
+   "labels": {
+    "es": "Estadio Olímpico de Roma",
+    "ar": "ملعب أولمبيكو",
+    "nl": "Stadio Olimpico",
+    "sv": "Roms Olympiastadion",
+    "pt": "Estádio Olímpico de Roma",
+    "ru": "Олимпийский стадион",
+    "fr": "stade olympique de Rome",
+    "ko": "스타디오 올림피코",
+    "it": "Stadio Olimpico",
+    "de": "Olympiastadion Rom",
+    "ja": "スタディオ・オリンピコ・ディ・ローマ",
+    "en": "Stadio Olimpico",
+    "ca": "estadi Olímpic de Roma",
+    "zh": "羅馬奧林匹克體育場"
+   },
+   "aliases": {
+    "zh": [
+     "羅馬奧林匹克球場",
+     "奧林匹高球場",
+     "奧林匹克體育場",
+     "奧林匹克球場"
+    ],
+    "es": [
+     "Olimpico de Roma",
+     "Stadio Olimpico",
+     "Olímpico de Roma",
+     "Estadio Olimpico de Roma",
+     "Stadio Olimpico di Roma"
+    ],
+    "ar": [
+     "الملعب الأولمبي",
+     "الأولمبيكو",
+     "الملعب الأولمبيكو",
+     "ملعب الأولمبيكو"
+    ],
+    "nl": [
+     "Olympiastadion Rome",
+     "Olympisch stadion in Rome",
+     "Olympisch stadion Rome"
+    ],
+    "sv": [
+     "Stadio Olimpico",
+     "Olympiastadion"
+    ],
+    "pt": [
+     "Stadio Olimpico"
+    ],
+    "ru": [
+     "Stadio Olimpico",
+     "Олимпико",
+     "Олимпийский"
+    ],
+    "fr": [
+     "Stadio Olimpico",
+     "Stadio olimpico di Roma"
+    ],
+    "ko": [
+     "올림피코 경기장",
+     "로마 올림픽 경기장",
+     "로마 올림피코 경기장",
+     "올림픽 경기장"
+    ],
+    "it": [
+     "Olimpico",
+     "Stadio olimpico di Roma",
+     "Stadio Olimpico di Roma"
+    ],
+    "de": [
+     "Olimpico Roma",
+     "Stadio Olimpico di Roma"
+    ],
+    "ja": [
+     "スタディオ・オリンピコ"
+    ],
+    "ca": [
+     "Estadi olimpic de roma",
+     "Stadio Olímpico",
+     "Stadio Olimpico di Roma"
+    ],
+    "en": [
+     "Stadio Olimpico di Roma",
+     "Olympic Stadium of Rome",
+     "Olimpico Stadium",
+     "The Olimpico"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Stadio Olimpico",
+   "jawiki": "スタディオ・オリンピコ・ディ・ローマ"
+  },
+  "rose-bowl": {
+   "wikidata": "Q582280",
+   "labels": {
+    "it": "Rose Bowl",
+    "ca": "Estadi Rose Bowl",
+    "de": "Rose Bowl Stadium",
+    "en": "Rose Bowl",
+    "es": "Estadio Rose Bowl",
+    "fr": "Rose Bowl Stadium",
+    "ja": "ローズボウル",
+    "ko": "로즈볼",
+    "nl": "Rose Bowl",
+    "pt": "Rose Bowl",
+    "ru": "Роуз Боул",
+    "sv": "Rose Bowl",
+    "zh": "玫瑰碗",
+    "ar": "ملعب روز بول"
+   },
+   "aliases": {
+    "zh": [
+     "玫瑰碗球場"
+    ],
+    "de": [
+     "Rose Bowl"
+    ],
+    "en": [
+     "Rose Bowl Stadium"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Rose Bowl (stadium)",
+   "jawiki": "ローズボウル (競技場)"
+  },
+  "stade-de-france": {
+   "wikidata": "Q13205",
+   "labels": {
+    "zh": "法蘭西體育場",
+    "de": "Stade de France",
+    "en": "Stade de France",
+    "ar": "ملعب فرنسا",
+    "ca": "Stade de France",
+    "es": "Stade de France",
+    "it": "Stade de France",
+    "ja": "スタッド・ド・フランス",
+    "ko": "스타드 드 프랑스",
+    "nl": "Stade de France",
+    "pt": "Stade de France",
+    "ru": "Стад де Франс",
+    "sv": "Stade de France",
+    "fr": "stade de France"
+   },
+   "aliases": {
+    "fr": [
+     "SDF",
+     "société nationale d'économie mixte Grand Stade",
+     "stade de Fra"
+    ],
+    "ru": [
+     "стадион сборной Франции по футболу",
+     "Стадион Франции (в дословном переводе)"
+    ],
+    "en": [
+     "Stadium of France",
+     "SDF",
+     "société nationale d'économie mixte Grand stade"
+    ]
+   },
+   "official": [
+    {
+     "text": "Grand Stade",
+     "lang": "fr"
+    },
+    {
+     "text": "Stade de France",
+     "lang": "fr"
+    }
+   ],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Stade de France",
+   "jawiki": "スタッド・ド・フランス"
+  },
+  "nissan-stadium-yokohama": {
+   "wikidata": "Q116601",
+   "labels": {
+    "de": "Nissan-Stadion",
+    "ar": "ملعب يوكوهاما الدولي",
+    "ca": "Estadi Internacional de Yokohama",
+    "en": "International Stadium Yokohama",
+    "es": "Estadio Internacional de Yokohama",
+    "fr": "stade Nissan",
+    "ko": "요코하마 국제 종합경기장",
+    "ru": "Ниссан",
+    "zh": "橫濱國際綜合競技場",
+    "pt": "Estádio Internacional de Yokohama",
+    "sv": "Nissan Stadium",
+    "it": "Stadio internazionale di Yokohama",
+    "nl": "Nissan-stadion",
+    "ja": "横浜国際総合競技場"
+   },
+   "aliases": {
+    "nl": [
+     "Nissanstadion",
+     "Nissan Stadion",
+     "International Stadium Yokohama"
+    ],
+    "en": [
+     "Nissan Stadium",
+     "International Stadium of Yokohama",
+     "Nissan Stadium (Yokohama)",
+     "Nissan Stadium, Yokohama"
+    ],
+    "pt": [
+     "Estádio Nissan"
+    ],
+    "ja": [
+     "日産スタジアム",
+     "日産ウォーターパーク",
+     "日産スタジアム (横浜市)"
+    ],
+    "it": [
+     "Nissan Stadium",
+     "International Stadium Yokohama",
+     "Stadio Nissan"
+    ],
+    "ca": [
+     "Nissan Stadium"
+    ],
+    "zh": [
+     "日產體育場",
+     "日產體育場 (橫濱市)",
+     "橫濱日產體育場"
+    ]
+   },
+   "official": [
+    {
+     "text": "横浜国際総合競技場",
+     "lang": "ja"
+    }
+   ],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Nissan Stadium (Yokohama)",
+   "jawiki": "横浜国際総合競技場"
+  },
+  "olympiastadion-berlin": {
+   "wikidata": "Q151374",
+   "labels": {
+    "fr": "stade olympique de Berlin",
+    "ko": "베를린 올림픽 스타디움",
+    "es": "Estadio Olímpico de Berlín",
+    "it": "Stadio Olimpico",
+    "de": "Olympiastadion Berlin",
+    "ja": "ベルリン・オリンピアシュタディオン",
+    "en": "Berlin Olympic Stadium",
+    "sv": "Berlins Olympiastadion",
+    "ar": "الملعب الأولمبي",
+    "nl": "Olympiastadion Berlin",
+    "pt": "Estádio Olímpico de Berlim",
+    "ru": "Олимпийский стадион",
+    "ca": "Estadi Olímpic de Berlín",
+    "zh": "柏林奧林匹克體育場"
+   },
+   "aliases": {
+    "zh": [
+     "柏林奧林匹克球場",
+     "柏林奧林匹克運動場",
+     "奧林匹克體育場"
+    ],
+    "fr": [
+     "Olympia-Stadion",
+     "Reichssportfeld"
+    ],
+    "ko": [
+     "베를린 올림피아슈타디온",
+     "베를린 올림픽 주경기장",
+     "베를린 올림픽 경기장",
+     "올림피아슈타디온 베를린"
+    ],
+    "es": [
+     "Estadio Olimpico de Berlín",
+     "Olympic Stadium Berlin",
+     "Estadio Olimpico de Berlin",
+     "Berliner Olympiastadion"
+    ],
+    "it": [
+     "Stadio olimpico di Berlino"
+    ],
+    "de": [
+     "Berliner Olympiastadion",
+     "Berlin Olympiastadion",
+     "Reichssportfeld"
+    ],
+    "ja": [
+     "ベルリナー・オリンピアシュタディオン",
+     "ベルリン・オリンピックスタジアム"
+    ],
+    "sv": [
+     "Reichssportfeld"
+    ],
+    "nl": [
+     "Olympiastadion Berlijn",
+     "Olympisch Stadion in Berlijn"
+    ],
+    "ru": [
+     "Олимпийский",
+     "Олимпийский стадион в Берлине",
+     "Олимпиаштадион",
+     "Берлинский Олимпийский стадион"
+    ],
+    "en": [
+     "Olympic Stadium in Berlin"
+    ],
+    "ca": [
+     "Estadi Olímpic"
+    ]
+   },
+   "official": [
+    {
+     "text": "Olympiastadion Berlin",
+     "lang": "de"
+    }
+   ],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Olympiastadion (Berlin)",
+   "jawiki": "ベルリン・オリンピアシュタディオン"
+  },
+  "soccer-city": {
+   "wikidata": "Q163521",
+   "labels": {
+    "es": "Estadio Soccer City",
+    "nl": "Soccer City",
+    "sv": "Soccer City",
+    "ar": "ملعب البنك الوطني الأول",
+    "pt": "Soccer City",
+    "ru": "Соккер Сити",
+    "fr": "FNB Stadium",
+    "ko": "FNB 경기장",
+    "it": "Soccer City Stadium",
+    "de": "Soccer City",
+    "ja": "FNBスタジアム",
+    "en": "FNB Stadium",
+    "ca": "FNB Stadium",
+    "zh": "足球城體育場"
+   },
+   "aliases": {
+    "zh": [
+     "第一國家銀行球場",
+     "足球城球場"
+    ],
+    "es": [
+     "First National Bank Stadium",
+     "FNB Stadium",
+     "Estadio FNB Soccer City",
+     "Soccer City"
+    ],
+    "nl": [
+     "FNB Stadium",
+     "First National Bank Stadium"
+    ],
+    "sv": [
+     "FNB Stadium",
+     "Soccer City Stadium"
+    ],
+    "ar": [
+     "ستاد البنك الوطني الأول",
+     "ملعب ساكر سيتي",
+     "استاد البنك الوطني الأول",
+     "ستاد سوكر سيتي",
+     "ملعب سوكر سيتي"
+    ],
+    "pt": [
+     "Estádio Soccer City",
+     "Estádio FNB",
+     "FNB Stadium"
+    ],
+    "ru": [
+     "FNB Stadium",
+     "Soccer City",
+     "National Stadium"
+    ],
+    "fr": [
+     "Soccer City",
+     "First National Bank Stadium",
+     "Soccer City Stadium"
+    ],
+    "ko": [
+     "사커시티",
+     "FNB 스타디움",
+     "사커 시티 스타디움",
+     "사커 시티 경기장",
+     "사커 시티"
+    ],
+    "it": [
+     "Soccer City",
+     "First National Bank Stadium",
+     "FNB Stadium"
+    ],
+    "de": [
+     "First National Bank Stadium",
+     "FNB Stadium",
+     "FNB-Stadion",
+     "Soccer-City-Stadion"
+    ],
+    "ja": [
+     "サッカーシティスタジアム",
+     "サッカー・シティスタジアム",
+     "サッカー・シティースタジアム",
+     "サッカーシティースタジアム",
+     "サッカーシティ",
+     "サッカー・シティ",
+     "サッカー・シティー",
+     "サッカー・シティー・スタジアム",
+     "サッカー・シティ・スタジアム",
+     "サッカーシティー・スタジアム",
+     "サッカーシティ・スタジアム",
+     "サッカーシティー"
+    ],
+    "ca": [
+     "Soccer City",
+     "Estadi FNB Soccer City",
+     "Estadi Soccer City"
+    ],
+    "en": [
+     "Soccer City",
+     "The Calabash",
+     "First National Bank Stadium",
+     "Soccer City Stadium"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "FNB Stadium",
+   "jawiki": "FNBスタジアム"
+  },
+  "luzhniki": {
+   "wikidata": "Q202163",
+   "labels": {
+    "fr": "stade Loujniki",
+    "ko": "루즈니키 스타디움",
+    "es": "Estadio Olímpico Luzhnikí",
+    "it": "stadio Lužniki",
+    "de": "Olympiastadion Luschniki",
+    "ja": "ルジニキ・スタジアム",
+    "en": "Luzhniki Stadium",
+    "ar": "ملعب لوجنيكي",
+    "nl": "Olympisch Stadion Loezjniki",
+    "sv": "Luzjnikistadion",
+    "pt": "Estádio Lujniki",
+    "ru": "Лужники",
+    "ca": "Estadi Lujniki",
+    "zh": "卢日尼基体育场"
+   },
+   "aliases": {
+    "zh": [
+     "盧赤尼奇球場",
+     "卢日尼基奥林匹克体育场",
+     "卢赤尼奇奥林匹克体育场",
+     "盧日尼基球場"
+    ],
+    "fr": [
+     "Stade olympique de Moscou",
+     "Luzhniki Stadium",
+     "Stade Central Lénine",
+     "Stade olympique",
+     "Stade Lénine",
+     "Stade Luzhniki",
+     "Luzhniki"
+    ],
+    "ko": [
+     "루즈니키 경기장"
+    ],
+    "es": [
+     "Estadio olímpico Luzhniki,",
+     "Estadio Olimpico de Moscú",
+     "Estadio olímpico Luzhniki",
+     "Estadio Olimpico Luzhnikí",
+     "Estadio Olímpico de Moscu",
+     "Estadio Luzhniki",
+     "Estadio olimpico Luzhniki,",
+     "Estadio olimpico Luzhniki",
+     "Estadio Olimpico de Moscu"
+    ],
+    "it": [
+     "Stadio Luzhniki",
+     "Luzhniki Stadium"
+    ],
+    "de": [
+     "Olympiastadion Luzhniki",
+     "Luzhniki-Stadion",
+     "Luzhniki Stadion",
+     "Luschniki-Stadion"
+    ],
+    "ja": [
+     "レーニン・スタジアム",
+     "ルージャ"
+    ],
+    "ar": [
+     "ستاد لوزنيكي"
+    ],
+    "nl": [
+     "Olimpiyskiy Kompleks Luzhniki",
+     "Loezjniki-stadion",
+     "Luzhniki Olympisch Stadion",
+     "Leninstadion"
+    ],
+    "sv": [
+     "Luzhniki Stadium",
+     "Lenin-stadion",
+     "Luzhnikistadion",
+     "Leninstadion",
+     "Luzhniki-stadion"
+    ],
+    "pt": [
+     "Luzhniki Stadium",
+     "Estádio Luzhniki",
+     "Luzhniki"
+    ],
+    "ru": [
+     "Стадион Лужники",
+     "Стадион имени В. И. Ленина",
+     "Стадион «Лужники»",
+     "БСА Лужники",
+     "Центральный стадион имени Ленина",
+     "Лужа"
+    ],
+    "ca": [
+     "Estadi Central Lenin",
+     "Estadi Luzhniki"
+    ],
+    "en": [
+     "Grand Sports Arena of the Luzhniki Olympic Complex",
+     "Central Lenin Stadium",
+     "Lenin Stadium"
+    ]
+   },
+   "official": [],
+   "nickname": [
+    {
+     "text": "Лужа",
+     "lang": "ru"
+    }
+   ],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Luzhniki Stadium",
+   "jawiki": "ルジニキ・スタジアム"
+  },
+  "lusail": {
+   "wikidata": "Q1186333",
+   "labels": {
+    "de": "Lusail Iconic Stadium",
+    "fr": "stade de Lusail",
+    "ko": "루사일 국립 경기장",
+    "en": "Lusail Stadium",
+    "es": "Estadio Nacional de Lusail",
+    "ar": "ملعب لوسيل",
+    "sv": "Lusail Iconic Stadium",
+    "pt": "Estádio Nacional Lusail",
+    "ru": "Национальный стадион",
+    "ja": "ルサイル・アイコニック・スタジアム",
+    "it": "Lusail Iconic Stadium",
+    "zh": "卢赛尔体育场",
+    "nl": "Lusailstadion",
+    "ca": "Estadi Icònic de Lusail"
+   },
+   "aliases": {
+    "de": [
+     "ملعب لوسيل الدولي"
+    ],
+    "es": [
+     "Lusail Iconic Stadium"
+    ],
+    "ar": [
+     "ملعب الوسيل",
+     "أستاد الوسيل"
+    ],
+    "zh": [
+     "路薩爾地標體育場"
+    ],
+    "fr": [
+     "Stade emblématique de Lusail"
+    ],
+    "en": [
+     "Lusail Iconic Stadium",
+     "Lusail International Stadium",
+     "Lusail Football Stadium"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Lusail Stadium",
+   "jawiki": "ルサイル・アイコニック・スタジアム"
+  },
+  "metlife-stadium": {
+   "wikidata": "Q10862290",
+   "labels": {
+    "pt": "MetLife Stadium",
+    "fr": "MetLife Stadium",
+    "ko": "메트라이프 스타디움",
+    "es": "MetLife Stadium",
+    "en": "MetLife Stadium",
+    "it": "MetLife Stadium",
+    "de": "MetLife Stadium",
+    "ja": "メットライフ・スタジアム",
+    "sv": "MetLife Stadium",
+    "nl": "MetLife Stadium",
+    "ar": "ملعب ميتلايف",
+    "ru": "Метлайф-стэдиум",
+    "zh": "大都會人壽體育場",
+    "ca": "MetLife Stadium"
+   },
+   "aliases": {
+    "pt": [
+     "Estádio Meadowlands"
+    ],
+    "ko": [
+     "멧라이프 경기장",
+     "뉴메덜랜즈 경기장",
+     "뉴메덜랜즈 스타디움"
+    ],
+    "es": [
+     "Estadio Meadowlands",
+     "New York New Jersey Stadium"
+    ],
+    "ja": [
+     "ニュー・メドウランズ・スタジアム",
+     "メドウランズ・スタジアム"
+    ],
+    "zh": [
+     "大都會人壽球場",
+     "大都会人寿保险体育场",
+     "大都会体育馆",
+     "纽约新泽西体育场"
+    ],
+    "en": [
+     "New York Giants Stadium",
+     "New York Jets Stadium",
+     "New York/New Jersey Stadium",
+     "New York New Jersey Stadium"
+    ],
+    "sv": [
+     "New York/New Jersey Stadium"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "MetLife Stadium",
+   "jawiki": "メットライフ・スタジアム"
+  },
+  "att-stadium": {
+   "wikidata": "Q838284",
+   "labels": {
+    "pt": "AT&T Stadium",
+    "ko": "AT&T 스타디움",
+    "fr": "AT&T Stadium",
+    "es": "AT&T Stadium",
+    "en": "AT&T Stadium",
+    "ca": "AT&T Stadium",
+    "it": "AT&T Stadium",
+    "de": "AT&T Stadium",
+    "ja": "AT&Tスタジアム",
+    "sv": "AT&T Stadium",
+    "nl": "AT&T Stadium",
+    "ar": "ملعب دالاس كاوبويز",
+    "zh": "AT&T體育場",
+    "ru": "Эй-ти-энд-ти Стэдиум"
+   },
+   "aliases": {
+    "zh": [
+     "牛仔球場",
+     "新達拉斯牛仔球場",
+     "牛仔體育場"
+    ],
+    "ko": [
+     "카우보이스 스타디움",
+     "카우보이스 경기장"
+    ],
+    "fr": [
+     "Dallas Cowboys New Stadium",
+     "Cowboys Stadium"
+    ],
+    "es": [
+     "Dallas Cowboys New Stadium",
+     "New Cowboys Stadium",
+     "Cowboys Stadium"
+    ],
+    "en": [
+     "Cowboys Stadium",
+     "Jerry World",
+     "Dallas Stadium"
+    ],
+    "ca": [
+     "Cowboys Stadium"
+    ],
+    "it": [
+     "Cowboys Stadium"
+    ],
+    "ja": [
+     "カウボーイズ・スタジアム"
+    ],
+    "nl": [
+     "Cowboys Stadium"
+    ],
+    "pt": [
+     "Cowboys Stadium"
+    ],
+    "sv": [
+     "Cowboys Stadium"
+    ]
+   },
+   "official": [
+    {
+     "text": "Cowboys Stadium",
+     "lang": "en"
+    },
+    {
+     "text": "AT&T Stadium",
+     "lang": "en"
+    }
+   ],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "AT&T Stadium",
+   "jawiki": "AT&Tスタジアム"
+  },
+  "arrowhead-stadium": {
+   "wikidata": "Q544553",
+   "labels": {
+    "it": "GEHA Field at Arrowhead Stadium",
+    "ar": "ملعب أروهيد",
+    "ca": "Arrowhead Stadium",
+    "de": "Arrowhead Stadium",
+    "en": "Arrowhead Stadium",
+    "es": "Arrowhead Stadium",
+    "fr": "Arrowhead Stadium",
+    "ja": "アローヘッド・スタジアム",
+    "ko": "애로우헤드 경기장",
+    "nl": "Arrowhead Stadium",
+    "pt": "Arrowhead Stadium",
+    "sv": "Arrowhead Stadium",
+    "zh": "箭頭體育場",
+    "ru": "Эрроухед Стэдиум"
+   },
+   "aliases": {
+    "zh": [
+     "阿罗黑德体育场"
+    ],
+    "en": [
+     "GEHA Field at Arrowhead Stadium",
+     "Kansas City Stadium"
+    ]
+   },
+   "official": [
+    {
+     "text": "GEHA Field at Arrowhead Stadium",
+     "lang": "en"
+    },
+    {
+     "text": "Arrowhead Stadium",
+     "lang": "en"
+    },
+    {
+     "text": "Arrowhead Stadium",
+     "lang": "en"
+    }
+   ],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Arrowhead Stadium",
+   "jawiki": "アローヘッド・スタジアム"
+  },
+  "nrg-stadium": {
+   "wikidata": "Q1058864",
+   "labels": {
+    "ru": "Эн-ар-джи Стэдиум",
+    "ko": "NRG 스타디움",
+    "ja": "NRGスタジアム",
+    "ar": "ملعب إن آر جي",
+    "zh": "NRG體育場",
+    "es": "Estadio Reliant",
+    "en": "Reliant Stadium",
+    "fr": "Reliant Stadium"
+   },
+   "aliases": {
+    "ru": [
+     "Релайант Стэдиум"
+    ],
+    "ko": [
+     "릴라이언트 스타디움",
+     "릴라이언트 경기장"
+    ],
+    "ar": [
+     "ملعب الاعتماد"
+    ],
+    "zh": [
+     "侯斯頓",
+     "信賴球場",
+     "信賴體育場",
+     "威利仁球場",
+     "NRG球場",
+     "NRG体育场",
+     "NRG球场",
+     "瑞兰特体育场",
+     "信赖体育场",
+     "利拉昂球場",
+     "瑞蘭特體育場"
+    ],
+    "ja": [
+     "リライアント・スタジアム"
+    ],
+    "en": [
+     "NRG Stadium",
+     "Estadio NGR"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Reliant Stadium",
+   "jawiki": "リライアント・スタジアム"
+  },
+  "mercedes-benz-stadium": {
+   "wikidata": "Q7007552",
+   "labels": {
+    "en": "Mercedes-Benz Stadium",
+    "de": "Mercedes-Benz Stadium",
+    "ko": "메르세데스-벤츠 스타디움",
+    "ja": "メルセデス・ベンツ・スタジアム",
+    "fr": "Mercedes-Benz Stadium",
+    "it": "Mercedes-Benz Stadium",
+    "es": "Mercedes-Benz Stadium",
+    "ar": "ملعب مرسيدس-بنز",
+    "pt": "Mercedes-Benz Stadium",
+    "ru": "Мерседес-Бенц Стэдиум",
+    "nl": "Mercedes-Benz Stadium",
+    "zh": "梅賽德斯-賓士體育場",
+    "ca": "Mercedes-Benz Stadium",
+    "sv": "Mercedes-Benz Stadium"
+   },
+   "aliases": {
+    "en": [
+     "New Falcons Stadium",
+     "New Atlanta Stadium"
+    ],
+    "de": [
+     "New Atlanta Stadium"
+    ],
+    "ko": [
+     "뉴 애틀랜타 스타디움"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Mercedes-Benz Stadium",
+   "jawiki": "メルセデス・ベンツ・スタジアム"
+  },
+  "hard-rock-stadium": {
+   "wikidata": "Q864339",
+   "labels": {
+    "pt": "Hard Rock Stadium",
+    "ko": "하드록 스타디움",
+    "ru": "Хард Рок Стэдиум",
+    "fr": "Hard Rock Stadium",
+    "en": "Hard Rock Stadium",
+    "es": "Hard Rock Stadium",
+    "ca": "Hard Rock Stadium",
+    "it": "Hard Rock Stadium",
+    "de": "Hard Rock Stadium",
+    "ja": "ハードロック・スタジアム",
+    "ar": "ملعب هارد روك",
+    "nl": "Hard Rock Stadium",
+    "zh": "硬石体育场",
+    "sv": "Hard Rock Stadium"
+   },
+   "aliases": {
+    "pt": [
+     "The Land Shark Stadium",
+     "Land Shark Stadium",
+     "Dolphins stadium",
+     "Joe Robbie stadium",
+     "Pro Player stadium"
+    ],
+    "ko": [
+     "돌핀 스타디움",
+     "랜드샤크 스타디움",
+     "선라이프 스타디움"
+    ],
+    "ru": [
+     "Pro Player Park",
+     "Pro Player Stadium",
+     "Долфин Стэдиум",
+     "Dolphins Stadium",
+     "Sun Life Stadium",
+     "Долфин",
+     "Сан Лайф-стэдиум"
+    ],
+    "fr": [
+     "LandShark Stadium",
+     "Land Shark Stadium",
+     "Pro Player Stadium",
+     "Dolphins Stadium"
+    ],
+    "it": [
+     "Land Shark Stadium",
+     "Pro Player Stadium",
+     "Pro Player Park"
+    ],
+    "de": [
+     "LandShark Stadium",
+     "Pro Player Stadium",
+     "Dolphins Stadium"
+    ],
+    "ja": [
+     "ドルフィン・スタジアム",
+     "プロプレイヤースタジアム",
+     "プロ・プレイヤー・スタジアム",
+     "ドルフィンズ・スタジアム",
+     "ランドシャーク・スタジアム",
+     "ジョー・ロビー・スタジアム",
+     "プロプレーヤースタジアム",
+     "ドルフィンスタジアム",
+     "サンライフ・スタジアム"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Hard Rock Stadium",
+   "jawiki": "ハードロック・スタジアム"
+  },
+  "sofi-stadium": {
+   "wikidata": "Q19520501",
+   "labels": {
+    "en": "SoFi Stadium",
+    "ko": "소파이 스타디움",
+    "fr": "SoFi Stadium",
+    "de": "SoFi Stadium",
+    "ja": "SoFiスタジアム",
+    "it": "SoFi Stadium",
+    "es": "SoFi Stadium",
+    "zh": "SoFi體育場",
+    "pt": "SoFi Stadium",
+    "sv": "Sofi Stadium",
+    "ar": "ملعب سوفاي",
+    "ca": "SoFi Stadium",
+    "ru": "Софи-стэдиум",
+    "nl": "SoFi Stadium"
+   },
+   "aliases": {
+    "ja": [
+     "新スタジアム",
+     "ハリウッドパーク競馬場跡地に建設予定の新スタジアム（ロサンゼルススタジアム・アットハリウッドパーク）",
+     "ロサンゼルススタジアム・アットハリウッドパーク",
+     "新スタジアム（ロサンゼルス・スタジアムアットハリウッドパーク）",
+     "ハリウッドパーク競馬場跡地に建設予定の新スタジアム"
+    ],
+    "en": [
+     "City of Champions Stadium",
+     "LA Stadium at Hollywood Park",
+     "LA Stadium",
+     "Los Angeles Stadium",
+     "LA Olympic Stadium",
+     "2028 Stadium"
+    ],
+    "es": [
+     "Estadio Ciudad de Campeones"
+    ],
+    "de": [
+     "City of Champions Stadium",
+     "Inglewood Stadium"
+    ],
+    "fr": [
+     "City of Champions Stadium"
+    ],
+    "ko": [
+     "시티 오브 챔피언스 스타디움"
+    ],
+    "zh": [
+     "洛杉磯好萊塢公園球場"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "SoFi Stadium",
+   "jawiki": "SoFiスタジアム"
+  },
+  "levis-stadium": {
+   "wikidata": "Q7419343",
+   "labels": {
+    "en": "Levi's Stadium",
+    "fr": "Levi's Stadium",
+    "ja": "リーバイス・スタジアム",
+    "de": "Levi’s Stadium",
+    "it": "Levi's Stadium",
+    "pt": "Levi's Stadium",
+    "es": "Levi's Stadium",
+    "ru": "Ливайс Стэдиум",
+    "ko": "리바이스 스타디움",
+    "ca": "Levi's Stadium",
+    "nl": "Levi's Stadium",
+    "sv": "Levi's Stadium",
+    "ar": "ملعب ليفاي",
+    "zh": "李維斯體育場"
+   },
+   "aliases": {
+    "zh": [
+     "李維斯球場",
+     "利惠球場",
+     "Levi's球場",
+     "李维斯体育场",
+     "李维斯体育馆",
+     "李维斯球场",
+     "李维球场"
+    ],
+    "en": [
+     "San Francisco 49ers Stadium",
+     "Levis Stadium",
+     "49ers Stadium",
+     "San Francisco Bay Area Stadium",
+     "Santa Clara Stadium"
+    ],
+    "es": [
+     "Estadio Levi's",
+     "Estadio Área de la Bahía de San Francisco"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [
+    {
+     "text": "Santa Clara Stadium",
+     "lang": "en",
+     "from": 2007,
+     "to": 2013
+    },
+    {
+     "text": "Levi's Stadium",
+     "lang": "en",
+     "from": 2013
+    },
+    {
+     "text": "San Francisco Bay Area Stadium",
+     "lang": "en",
+     "from": 2026,
+     "to": 2026
+    }
+   ],
+   "short": [],
+   "kana": [],
+   "enwiki": "Levi's Stadium",
+   "jawiki": "リーバイス・スタジアム"
+  },
+  "lumen-field": {
+   "wikidata": "Q612736",
+   "labels": {
+    "ar": "ملعب سينشري لينك فيلد",
+    "ca": "Lumen Field",
+    "de": "Lumen Field",
+    "en": "Lumen Field",
+    "es": "Lumen Field",
+    "fr": "Lumen Field",
+    "it": "Lumen Field",
+    "ja": "ルーメン・フィールド",
+    "ko": "루멘 필드",
+    "nl": "Lumen Field",
+    "pt": "Lumen Field",
+    "sv": "Lumen Field",
+    "ru": "Люмен Филд",
+    "zh": "流明球場"
+   },
+   "aliases": {
+    "en": [
+     "The Hawk"
+    ],
+    "zh": [
+     "奎斯特球場",
+     "世紀互聯體育場",
+     "西雅圖",
+     "CenturyLink球場",
+     "世紀聯合體育場",
+     "世纪互联体育场",
+     "世紀聯合球場"
+    ],
+    "nl": [
+     "The Hawk"
+    ],
+    "ru": [
+     "Куэст Филд",
+     "Сихокс Стэдиум",
+     "Сенчури-Линк Филд"
+    ],
+    "de": [
+     "The Hawk"
+    ],
+    "fr": [
+     "The Hawk"
+    ],
+    "ko": [
+     "센추리링크 필드"
+    ],
+    "ja": [
+     "センチュリーリンク・フィールド"
+    ],
+    "sv": [
+     "Seattle Stadium"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Lumen Field",
+   "jawiki": "ルーメン・フィールド"
+  },
+  "gillette-stadium": {
+   "wikidata": "Q373355",
+   "labels": {
+    "ar": "ملعب جيليت",
+    "ca": "Gillette Stadium",
+    "de": "Gillette Stadium",
+    "en": "Gillette Stadium",
+    "es": "Gillette Stadium",
+    "fr": "Gillette Stadium",
+    "it": "Gillette Stadium",
+    "ja": "ジレット・スタジアム",
+    "ko": "질레트 스타디움",
+    "nl": "Gillette Stadium",
+    "pt": "Gillette Stadium",
+    "ru": "Джиллетт Стэдиум",
+    "sv": "Gillette Stadium",
+    "zh": "吉列体育场"
+   },
+   "aliases": {
+    "zh": [
+     "吉列球場"
+    ],
+    "en": [
+     "Boston Stadium"
+    ]
+   },
+   "official": [
+    {
+     "text": "Gillette Stadium",
+     "lang": "en"
+    },
+    {
+     "text": "Boston Stadium",
+     "lang": "en"
+    }
+   ],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Gillette Stadium",
+   "jawiki": "ジレット・スタジアム"
+  },
+  "lincoln-financial-field": {
+   "wikidata": "Q1052370",
+   "labels": {
+    "pt": "Lincoln Financial Field",
+    "ru": "Линкольн Файненшел Филд",
+    "fr": "Lincoln Financial Field",
+    "ko": "링컨 파이낸셜 필드",
+    "es": "Lincoln Financial Field",
+    "en": "Lincoln Financial Field",
+    "ca": "Lincoln Financial Field",
+    "it": "Lincoln Financial Field",
+    "de": "Lincoln Financial Field",
+    "ja": "リンカーン・フィナンシャル・フィールド",
+    "ar": "ملعب لينكون فاينانشال فيلد",
+    "nl": "Lincoln Financial Field",
+    "sv": "Lincoln Financial Field",
+    "zh": "林肯金融體育場"
+   },
+   "aliases": {
+    "ko": [
+     "링컨 피넌셜 필드",
+     "링컨 파이넌셜 필드"
+    ],
+    "ja": [
+     "リンカーンファイナンシャルフィールド",
+     "リンカーンファイナンシャル・フィールド",
+     "リンカーン・ファイナンシャルフィールド",
+     "リンカーンフィナンシャルフィールド",
+     "リンカーン・ファイナンシャル・フィールド",
+     "リンカーンフィナンシャル・フィールド",
+     "リンカーン・フィナンシャルフィールド"
+    ],
+    "zh": [
+     "林肯金融球場",
+     "林肯金融体育场"
+    ],
+    "ru": [
+     "Lincoln Financial Field"
+    ],
+    "en": [
+     "The Linc"
+    ]
+   },
+   "official": [],
+   "nickname": [
+    {
+     "text": "The Linc",
+     "lang": "en"
+    }
+   ],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Lincoln Financial Field",
+   "jawiki": "リンカーン・フィナンシャル・フィールド"
+  },
+  "bmo-field": {
+   "wikidata": "Q796351",
+   "labels": {
+    "ru": "Бимо Филд",
+    "fr": "BMO Field",
+    "en": "BMO Field",
+    "zh": "BMO球場",
+    "pt": "BMO Field",
+    "ca": "BMO Field",
+    "de": "BMO Field",
+    "sv": "BMO Field",
+    "it": "BMO Field",
+    "ar": "ملعب بي إم أو فيلد",
+    "nl": "BMO Field",
+    "ja": "BMOフィールド",
+    "es": "BMO Field",
+    "ko": "BMO 필드"
+   },
+   "aliases": {
+    "ru": [
+     "BMO Field",
+     "БМО Филд"
+    ],
+    "zh": [
+     "碧牟球場",
+     "多伦多体育场"
+    ],
+    "ar": [
+     "ملعب بي إم أو",
+     "ملعب بي إم أو فيل"
+    ],
+    "es": [
+     "Estadio Nacional de Fútbol de Canadá",
+     "Estadio Nacional de Canadá",
+     "Bmo field",
+     "Estadio Nacional de Canada",
+     "Estadio Nacional de Futbol de Canada",
+     "Estadio Nacional de Fútbol de Canada",
+     "Estadio Nacional de Futbol de Canadá"
+    ],
+    "sv": [
+     "Toronto Stadium"
+    ],
+    "en": [
+     "Toronto Stadium"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "BMO Field",
+   "jawiki": "BMOフィールド"
+  },
+  "bc-place": {
+   "wikidata": "Q612227",
+   "labels": {
+    "it": "BC Place",
+    "ca": "Estadi BC Place",
+    "de": "BC Place Stadium",
+    "en": "BC Place",
+    "es": "Estadio BC Place",
+    "fr": "BC Place Stadium",
+    "ja": "BCプレイス・スタジアム",
+    "ko": "BC 플레이스 스타디움",
+    "nl": "BC Place Stadium",
+    "pt": "Estádio BC Place",
+    "ru": "Би-Си Плэйс",
+    "sv": "BC Place",
+    "zh": "卑詩體育館",
+    "ar": "بي سي بليس"
+   },
+   "aliases": {},
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "BC Place",
+   "jawiki": "BCプレイス"
+  },
+  "estadio-bbva": {
+   "wikidata": "Q3058827",
+   "labels": {
+    "fr": "Estadio BBVA",
+    "en": "Estadio Monterrey",
+    "es": "Estadio BBVA Bancomer",
+    "nl": "Estadio de Fútbol Monterrey",
+    "it": "estadio de Fútbol Monterrey",
+    "de": "Estadio BBVA Bancomer",
+    "ja": "エスタディオBBVAバンコメル",
+    "pt": "Estádio BBVA Bancomer",
+    "ru": "Бе-бе-уве-а",
+    "zh": "西班牙對外銀行墨西哥商業銀行體育場",
+    "sv": "Estadio BBVA",
+    "ar": "ملعب بي بي في إيه",
+    "ca": "Estadio BBVA",
+    "ko": "에스타디오 BBVA"
+   },
+   "aliases": {
+    "es": [
+     "Estadio de Fútbol Monterrey"
+    ],
+    "en": [
+     "Estadio de Fútbol Monterrey",
+     "Estadio de Futbol Monterrey",
+     "\"The Steel Giant el coloso deW la pastora\"",
+     "Leonel Gonzales Stadium",
+     "Estadio BBVA Bancomer",
+     "Monterrey Football Stadium"
+    ],
+    "nl": [
+     "Estadio BBVA Bancomer"
+    ],
+    "ru": [
+     "Бе-бе-уве-а Банкомер"
+    ],
+    "ar": [
+     "ملعب ببفا بانكومار",
+     "ملعب بي بي في إيه بانكومار"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Estadio BBVA",
+   "jawiki": "エスタディオBBVA"
+  },
+  "estadio-akron": {
+   "wikidata": "Q666183",
+   "labels": {
+    "it": "stadio Omnilife",
+    "ar": "ملعب أكرون",
+    "de": "Estadio Omnilife",
+    "en": "Estadio Akron",
+    "es": "Estadio Akron",
+    "fr": "Estadio Omnilife",
+    "ja": "エスタディオ・アクロン",
+    "pt": "Estádio Omnilife",
+    "ru": "Омнилайф",
+    "nl": "Estadio Omnilife",
+    "zh": "阿克伦体育场",
+    "ca": "Estadi Chivas",
+    "ko": "에스타디오 아크론",
+    "sv": "Akron-stadion"
+   },
+   "aliases": {
+    "en": [
+     "Omnilife Stadium",
+     "Estadio Omnilife",
+     "Estadio Chivas",
+     "Chivas Stadium",
+     "Estadio Chiva"
+    ],
+    "es": [
+     "Estadio Omnilife"
+    ],
+    "zh": [
+     "芝華士球場",
+     "阿克倫球場"
+    ],
+    "nl": [
+     "Estadio Akron"
+    ],
+    "ar": [
+     "ملعب أومنيلايف"
+    ],
+    "ko": [
+     "에스타디오 옴닐리페",
+     "에스타디오 치바스"
+    ],
+    "sv": [
+     "Omnilife-Stadion",
+     "Estadio Chivas"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Estadio Akron",
+   "jawiki": "エスタディオ・アクロン"
+  },
+  "tianhe-stadium": {
+   "wikidata": "Q929126",
+   "labels": {
+    "ar": "ملعب تيانهي",
+    "en": "Tianhe Stadium",
+    "es": "Estadio Tianhe",
+    "ja": "天河体育中心体育場",
+    "ru": "Стадион Тяньхэ",
+    "zh": "天河体育中心体育场",
+    "ko": "톈허 스포츠 센터",
+    "nl": "Tianhestadion",
+    "fr": "stade Tianhe",
+    "pt": "Tianhe Stadium",
+    "de": "Tianhe-Stadion",
+    "sv": "Tianhe Stadium",
+    "it": "Stadio Tianhe",
+    "ca": "Estadi Tianhe"
+   },
+   "aliases": {
+    "ar": [
+     "ملعب تيانخه"
+    ],
+    "zh": [
+     "天河体育场"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Tianhe Stadium",
+   "jawiki": "天河体育中心体育場"
+  },
+  "dignity-health-sports-park": {
+   "wikidata": "Q200684",
+   "labels": {
+    "de": "Dignity Health Sports Park",
+    "ar": "ستاب هاب سنتر",
+    "en": "Dignity Health Sports Park",
+    "ja": "ディグニティ・ヘルス・スポーツ・パーク",
+    "ko": "디그니티 헬스 스포츠 파크",
+    "ru": "Дигнити Хелс Спортс Парк",
+    "zh": "尊严健康体育公园",
+    "es": "Dignity Health Sports Park",
+    "sv": "Dignity Health Sports Park",
+    "fr": "Dignity Health Sports Park",
+    "pt": "Dignity Health Sports Park"
+   },
+   "aliases": {
+    "zh": [
+     "家德寶中心球場",
+     "家得寶中心球場",
+     "家得宝中心球场"
+    ],
+    "en": [
+     "The Home Depot Center",
+     "Home Depot Center",
+     "StubHub Center"
+    ],
+    "de": [
+     "The Home Depot Center",
+     "Home Depot Center",
+     "StubHub Center"
+    ],
+    "es": [
+     "The Home Depot Center",
+     "Home Depot Center",
+     "StubHub Center"
+    ],
+    "fr": [
+     "The Home Depot Center",
+     "Home Depot Center",
+     "StubHub Center"
+    ],
+    "nl": [
+     "The Home Depot Center",
+     "Home Depot Center"
+    ],
+    "ru": [
+     "Хоум Дипо Сентер",
+     "Стабхаб Сентер"
+    ],
+    "ko": [
+     "홈 디포 센터"
+    ],
+    "ja": [
+     "ホーム・デポ・センター"
+    ]
+   },
+   "official": [
+    {
+     "text": "The Home Depot Center",
+     "lang": "en"
+    },
+    {
+     "text": "StubHub Center",
+     "lang": "en"
+    },
+    {
+     "text": "Dignity Health Sports Park",
+     "lang": "en"
+    }
+   ],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Dignity Health Sports Park",
+   "jawiki": "ディグニティ・ヘルス・スポーツ・パーク"
+  },
+  "hongkou-football-stadium": {
+   "wikidata": "Q201773",
+   "labels": {
+    "de": "Shanghai-Hongkou-Fußballstadion",
+    "ar": "ملعب هونغكو لكرة القدم",
+    "en": "Hongkou Football Stadium",
+    "es": "Estadio Hongkou",
+    "fr": "stade de Hongkou",
+    "it": "Hongkou Stadium",
+    "ja": "上海虹口足球場",
+    "ko": "훙커우 축구장",
+    "nl": "Hongkou Voetbalstadion",
+    "pt": "Estádio Hongkou",
+    "ru": "Футбольный стадион Хункоу",
+    "sv": "Hongkou Football Stadium",
+    "zh": "虹口足球场"
+   },
+   "aliases": {
+    "nl": [
+     "Hongkoustadion"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Hongkou Football Stadium",
+   "jawiki": "上海虹口足球場"
+  },
+  "waldstadion-frankfurt": {
+   "wikidata": "Q157273",
+   "labels": {
+    "fr": "Deutsche Bank Park",
+    "ko": "코메르츠방크 아레나",
+    "es": "Deutsche Bank Park",
+    "it": "Waldstadion",
+    "de": "Deutsche Bank Park",
+    "ja": "ヴァルトシュタディオン",
+    "ar": "كومرتسبانك أرينا",
+    "nl": "Deutsche Bank Park",
+    "sv": "Commerzbank-Arena",
+    "pt": "Deutsche Bank Park",
+    "ru": "Дойче Банк-Парк",
+    "en": "Waldstadion",
+    "ca": "Commerzbank-Arena",
+    "zh": "商業銀行球場"
+   },
+   "aliases": {
+    "zh": [
+     "商业银行竞技场",
+     "瓦爾德球場"
+    ],
+    "fr": [
+     "FIFA World Cup Stadium",
+     "FIFA World Cup Stadium Frankfurt",
+     "Commerzbank Arena",
+     "Waldstadion"
+    ],
+    "ko": [
+     "발트슈타디온",
+     "코메르즈방크 아레나",
+     "코메르츠방크-아레나"
+    ],
+    "es": [
+     "Frankfurter Waldstadion",
+     "Waldstadion Frankfurt",
+     "Deutsche-Bank-Park",
+     "Waldstadion",
+     "Commerzbank-Arena"
+    ],
+    "it": [
+     "Commerzbank Arena",
+     "Deutsche Bank Park"
+    ],
+    "de": [
+     "Frankfurter Waldstadion",
+     "Waldstadion Frankfurt",
+     "Deutsche-Bank-Park",
+     "Waldstadion",
+     "Commerzbank-Arena",
+     "Frankfurt Arena"
+    ],
+    "ja": [
+     "バルトシュタディオン",
+     "コメルツバンクアレナ",
+     "Waldstadion",
+     "Commerzbank-Arena",
+     "バルト・シュタディオン",
+     "ヴァルト・シュタディオン",
+     "コメルツバンク・アレナ"
+    ],
+    "nl": [
+     "Waldstadion",
+     "Commerzbank Arena",
+     "Commerzbank-Arena"
+    ],
+    "sv": [
+     "WaldStadion"
+    ],
+    "pt": [
+     "Waldstadion (Frankfurt)",
+     "Waldstadion",
+     "Deutsche-Bank-Park",
+     "Commerzbank-Arena",
+     "Commerzbank Arena"
+    ],
+    "ru": [
+     "Вальдштадион"
+    ],
+    "ca": [
+     "Waldstadion"
+    ],
+    "ar": [
+     "كومرزبانك أرينا"
+    ],
+    "en": [
+     "Waldstadion Frankfurt",
+     "Frankfurter Waldstadion",
+     "Deutsche Bank Park",
+     "Frankfurt Arena"
+    ]
+   },
+   "official": [
+    {
+     "text": "Waldstadion",
+     "lang": "de"
+    },
+    {
+     "text": "Commerzbank-Arena",
+     "lang": "de"
+    },
+    {
+     "text": "Deutsche Bank Park",
+     "lang": "de"
+    }
+   ],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Waldstadion (Frankfurt)",
+   "jawiki": "ヴァルトシュタディオン"
+  },
+  "groupama-stadium": {
+   "wikidata": "Q8507",
+   "labels": {
+    "fr": "Parc Olympique lyonnais",
+    "en": "Parc Olympique Lyonnais",
+    "de": "Parc Olympique lyonnais",
+    "es": "Parc Olympique lyonnais",
+    "it": "Parco dell’Olympique Lione",
+    "ca": "Parc Olympique Lyonnais",
+    "nl": "Parc Olympique Lyonnais",
+    "ja": "スタッド・デ・リュミエール",
+    "ar": "بارك أولمبيك ليون",
+    "zh": "奧林匹克里昂體育場",
+    "ru": "Парк Олимпик Лионне",
+    "ko": "파르크 올랭피크 리요네",
+    "pt": "Parc Olympique Lyonnais",
+    "sv": "Parc Olympique Lyonnais"
+   },
+   "aliases": {
+    "de": [
+     "Stade des Lumieres",
+     "Groupama Stadium",
+     "Stade des Lumières"
+    ],
+    "fr": [
+     "OL Land",
+     "stade des Lumières",
+     "Groupama Stadium",
+     "Parc_Olympique_lyonnais",
+     "stade de Décines"
+    ],
+    "en": [
+     "OL Land",
+     "Stade des Lumières",
+     "Grand Stade de Lyon",
+     "Stade des Lumieres",
+     "Groupama Stadium",
+     "Stade de Lyon"
+    ],
+    "es": [
+     "Stade des Lumieres",
+     "Groupama Stadium",
+     "Stade des Lumières"
+    ],
+    "it": [
+     "Groupama Stadium",
+     "Stade des Lumières",
+     "Parc Olympique Lyonnais"
+    ],
+    "pt": [
+     "Parc OL"
+    ],
+    "ca": [
+     "Stade des Lumières"
+    ],
+    "zh": [
+     "盧米埃爾球場",
+     "里昂體育場"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Parc Olympique Lyonnais",
+   "jawiki": "パルク・オリンピック・リヨン"
+  },
+  "stadium-australia": {
+   "wikidata": "Q295886",
+   "labels": {
+    "fr": "Accor Stadium",
+    "en": "Accor Stadium",
+    "zh": "澳大利亞體育場",
+    "ca": "Accor Stadium",
+    "de": "Accor Stadium",
+    "it": "Stadium Australia",
+    "ar": "ملعب أستراليا",
+    "es": "Accor Stadium",
+    "ru": "Ост­рей­лия",
+    "pt": "Accor Stadium",
+    "ko": "스타디움 오스트레일리아",
+    "sv": "ANZ Stadium",
+    "ja": "スタジアム・オーストラリア",
+    "nl": "Accor Stadium"
+   },
+   "aliases": {
+    "fr": [
+     "Telstra Stadium",
+     "ANZ Stadium"
+    ],
+    "en": [
+     "ANZ Stadium",
+     "Telstra Stadium",
+     "Sydney Olympic Stadium",
+     "Stadium Australia",
+     "Homebush Stadium"
+    ],
+    "ca": [
+     "Telstra Stadium",
+     "Estadi Olímpic de Sydney",
+     "ANZ Stadium",
+     "Stadium Australia"
+    ],
+    "de": [
+     "Telstra-Stadion",
+     "Stadium Australia",
+     "Telstra Stadium",
+     "Sydney Olympic Stadium",
+     "Olympiastadion Sydney",
+     "ANZ Stadium"
+    ],
+    "it": [
+     "Telstra Stadium",
+     "ANZ Stadium",
+     "Accor Stadium"
+    ],
+    "es": [
+     "Estadio Olímpico (Sydney)",
+     "Stadium Australia",
+     "Estadio Olímpico de Sydney",
+     "Telstra Stadium",
+     "Estadio Australia",
+     "Estadio Olimpico de Sydney",
+     "Estadio Olimpico (Sydney)",
+     "ANZ Stadium"
+    ],
+    "ru": [
+     "Стадион Австралия"
+    ],
+    "pt": [
+     "Estádio Olímpico de Sydney",
+     "Stadium Australia",
+     "Telstra stadium",
+     "Stadium australia",
+     "Estádio olímpico de sydney",
+     "Telstra Stadium",
+     "Estádio ANZ"
+    ],
+    "ko": [
+     "ANZ 스타디움",
+     "텔스트라 스타디움",
+     "시드니 텔스트라 스타디움",
+     "시드니 스타디움 오스트레일리아",
+     "시드니 ANZ 스타디움",
+     "텔스트라 경기장",
+     "ANZ 경기장",
+     "시드니 텔스트라 경기장",
+     "시드니 ANZ 경기장",
+     "시드니 올림픽 경기장"
+    ],
+    "sv": [
+     "Stadium Australia",
+     "Telstra Stadium"
+    ],
+    "ja": [
+     "テルストラスタジアム",
+     "ホームブッシュ・スタジアム",
+     "テルストラ・スタジアム"
+    ],
+    "nl": [
+     "ANZ Stadium",
+     "Telstra Stadium"
+    ]
+   },
+   "official": [],
+   "nickname": [
+    {
+     "text": "ANZ Stadium",
+     "lang": "en"
+    },
+    {
+     "text": "Telstra Stadium",
+     "lang": "en"
+    }
+   ],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Stadium Australia",
+   "jawiki": "スタジアム・オーストラリア"
+  },
+  "camp-nou": {
+   "wikidata": "Q159848",
+   "labels": {
+    "es": "Camp Nou",
+    "ar": "كامب نو",
+    "sv": "Camp Nou",
+    "nl": "Camp Nou",
+    "pt": "Camp Nou",
+    "ru": "Камп Ноу",
+    "fr": "Camp Nou",
+    "ko": "캄 노우",
+    "it": "Camp Nou",
+    "de": "Camp Nou",
+    "ja": "カンプ・ノウ",
+    "en": "Camp Nou",
+    "ca": "Camp Nou",
+    "zh": "魯營球場"
+   },
+   "aliases": {
+    "zh": [
+     "諾坎普體育場",
+     "諾坎普球場",
+     "雷昂體育場"
+    ],
+    "es": [
+     "Estadio del Fútbol Club Barcelona",
+     "L'Estadi",
+     "Estadio del Futbol Club Barcelona",
+     "Estadio Camp Nou",
+     "Spotify Camp Nou"
+    ],
+    "sv": [
+     "Nou Camp"
+    ],
+    "nl": [
+     "Nou Camp"
+    ],
+    "pt": [
+     "estádio Camp Nou",
+     "Nou Camp"
+    ],
+    "ru": [
+     "Ноу Камп"
+    ],
+    "ko": [
+     "캄노우",
+     "캄프노우",
+     "캄프 누",
+     "누 캄프",
+     "누캄프",
+     "캄프 노우",
+     "캄프누"
+    ],
+    "it": [
+     "Museo del FC Barcelona",
+     "Nou Camp",
+     "Estadi del Futbol Club Barcelona"
+    ],
+    "de": [
+     "Nou Camp",
+     "Estadi del Futbol Club Barcelona",
+     "Estadio del Club de Fútbol Barcelona",
+     "Estadio del CF Barcelona",
+     "Estadi del FC Barcelona"
+    ],
+    "ja": [
+     "ノウ・カンプ",
+     "カム・ノウ"
+    ],
+    "ca": [
+     "Nou Camp",
+     "Estadi del Futbol Club Barcelona",
+     "Spotify Camp Nou"
+    ],
+    "ar": [
+     "الكامب نو",
+     "ملعب الكامب نو",
+     "ملعب كامب نو"
+    ],
+    "en": [
+     "Estadi del Futbol Club Barcelona",
+     "Nou Camp",
+     "Spotify Camp Nou"
+    ],
+    "fr": [
+     "Nou Camp"
+    ]
+   },
+   "official": [
+    {
+     "text": "Spotify Camp Nou",
+     "lang": "ca"
+    }
+   ],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Camp Nou",
+   "jawiki": "カンプ・ノウ"
+  },
+  "san-siro": {
+   "wikidata": "Q133566",
+   "labels": {
+    "es": "Estadio Giuseppe Meazza",
+    "nl": "Stadio Giuseppe Meazza",
+    "sv": "Stadio Giuseppe Meazza",
+    "ar": "جوسيبي ميانزا",
+    "pt": "Estádio Giuseppe Meazza",
+    "ru": "Джузеппе Меацца",
+    "ko": "스타디오 주세페 메아차",
+    "fr": "stade Giuseppe-Meazza",
+    "it": "stadio Giuseppe Meazza",
+    "ja": "スタディオ・ジュゼッペ・メアッツァ",
+    "en": "Giuseppe Meazza Stadium",
+    "ca": "Estadi Giuseppe Meazza",
+    "zh": "圣西罗球场",
+    "de": "Stadio Giuseppe Meazza"
+   },
+   "aliases": {
+    "zh": [
+     "聖西路",
+     "圣西罗",
+     "梅亞沙球場",
+     "梅阿查球场",
+     "圣西罗体育场",
+     "梅阿查体育场",
+     "朱塞佩·梅阿查球场",
+     "聖西路球場"
+    ],
+    "es": [
+     "Stadio San Siro",
+     "San Siro",
+     "Stadio Giuseppe Meazza",
+     "Estadio de San Siro",
+     "Estadio San Siro",
+     "Giuseppe Meazza"
+    ],
+    "nl": [
+     "Giuseppe-Meazza-stadion",
+     "San Siro",
+     "Stadio San Siro"
+    ],
+    "sv": [
+     "Giuseppe Meazzastadion",
+     "Stadio San Siro"
+    ],
+    "ar": [
+     "ملعب سان سيرو",
+     "ملعب مياتزا",
+     "ستاد جوزيبي مياتزا"
+    ],
+    "pt": [
+     "San Siro",
+     "Estádio San Siro"
+    ],
+    "ru": [
+     "Сан-Сиро",
+     "Стадио Джузеппе Меацца",
+     "Стадион Джузеппе Меацца",
+     "Сан Сиро"
+    ],
+    "ko": [
+     "산 시로",
+     "산 시로 경기장",
+     "주세페메아차 경기장",
+     "주세페 메아차 경기장"
+    ],
+    "fr": [
+     "Stade San Siro",
+     "Stade Meazza",
+     "Stadio Giuseppe Meazza",
+     "San Siro",
+     "stade San Siro"
+    ],
+    "it": [
+     "stadio San Siro",
+     "la Scala del calcio"
+    ],
+    "de": [
+     "San Siro",
+     "Giuseppe-Meazza-Stadion"
+    ],
+    "ja": [
+     "スタディオ・サン・シーロ"
+    ],
+    "en": [
+     "Stadio San Siro",
+     "San Siro Stadium",
+     "Meazza Stadium",
+     "Stadio Giuseppe Meazza",
+     "G. Meazza Stadium",
+     "San Siro"
+    ],
+    "ca": [
+     "Stadio Comunale di San Siro",
+     "Stadio Giuseppe Meazza",
+     "San Siro"
+    ]
+   },
+   "official": [],
+   "nickname": [
+    {
+     "text": "San Siro",
+     "lang": "it"
+    },
+    {
+     "text": "La Scala del calcio",
+     "lang": "it"
+    }
+   ],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "San Siro",
+   "jawiki": "スタディオ・ジュゼッペ・メアッツァ"
+  },
+  "old-trafford": {
+   "wikidata": "Q83457",
+   "labels": {
+    "zh": "老特拉福德球场",
+    "es": "Old Trafford",
+    "ar": "ملعب أولد ترافورد",
+    "sv": "Old Trafford",
+    "nl": "Old Trafford",
+    "pt": "Estádio Old Trafford",
+    "ru": "Олд Траффорд",
+    "fr": "Old Trafford",
+    "ko": "올드 트래퍼드",
+    "it": "Old Trafford",
+    "de": "Old Trafford",
+    "ja": "オールド・トラッフォード",
+    "en": "Old Trafford",
+    "ca": "Old Trafford"
+   },
+   "aliases": {
+    "zh": [
+     "老特拉福德",
+     "老特拉福德球場",
+     "奧脫福",
+     "奧脫福球場"
+    ],
+    "es": [
+     "Estadio de Old Trafford",
+     "Teatro de los Suenos",
+     "Teatro de los Sueños",
+     "Estadio Sir Alexander Chapman Ferguson",
+     "El Teatro de los Sueños",
+     "El Teatro de los Suenos"
+    ],
+    "ar": [
+     "أولد ترافورد",
+     "ملعب اولد ترافورد",
+     "ملعب أولدترافورد"
+    ],
+    "nl": [
+     "Theatre of Dreams"
+    ],
+    "pt": [
+     "Old trafford"
+    ],
+    "ko": [
+     "올드트래포드",
+     "올드 트라포드",
+     "올드트래퍼드",
+     "올드 트래포드",
+     "올드 트래퍼트"
+    ],
+    "de": [
+     "Theatre of Dreams",
+     "Old-Trafford-Stadion"
+    ],
+    "ja": [
+     "オールドトラフォード",
+     "オールド・トラフォード"
+    ],
+    "en": [
+     "Theatre of Dreams",
+     "Old Trafford Stadium",
+     "Manchester United Stadium"
+    ],
+    "ru": [
+     "Театр Мечты",
+     "Олд-Траффорд",
+     "Стадион Манчестер Юнайтед"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Old Trafford",
+   "jawiki": "オールド・トラッフォード"
+  },
+  "anfield": {
+   "wikidata": "Q45671",
+   "labels": {
+    "zh": "安菲尔德球场",
+    "ko": "안필드",
+    "fr": "Anfield",
+    "es": "Anfield",
+    "it": "Anfield",
+    "de": "Anfield",
+    "ja": "アンフィールド",
+    "en": "Anfield",
+    "ar": "ملعب أنفيلد",
+    "nl": "Anfield",
+    "sv": "Anfield",
+    "pt": "Anfield",
+    "ru": "Энфилд",
+    "ca": "Anfield"
+   },
+   "aliases": {
+    "zh": [
+     "晏菲路球場",
+     "安菲尔德",
+     "晏菲路",
+     "安菲爾德"
+    ],
+    "ko": [
+     "앤필드"
+    ],
+    "fr": [
+     "Stade Anfield",
+     "Anfield Road"
+    ],
+    "es": [
+     "Anfield Road"
+    ],
+    "it": [
+     "Anfield Road"
+    ],
+    "de": [
+     "Anfield-Stadion",
+     "Anfield Road"
+    ],
+    "ar": [
+     "أنفيلد رود",
+     "انفيلد",
+     "الأنفيلد"
+    ],
+    "nl": [
+     "Anfield Road"
+    ],
+    "sv": [
+     "Anfield Road",
+     "Anfield fotbollsarena"
+    ],
+    "pt": [
+     "Estádio Anfield",
+     "Anfield Road"
+    ],
+    "ca": [
+     "Anfield Road"
+    ],
+    "en": [
+     "Anfield Stadium",
+     "The Anfield",
+     "Liverpool Stadium",
+     "Anfield Road"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Anfield",
+   "jawiki": "アンフィールド"
+  },
+  "signal-iduna-park": {
+   "wikidata": "Q150928",
+   "labels": {
+    "ko": "지그날 이두나 파크",
+    "fr": "Signal Iduna Park",
+    "es": "Signal Iduna Park",
+    "it": "Westfalenstadion",
+    "de": "Signal Iduna Park",
+    "ja": "ヴェストファーレンシュタディオン",
+    "en": "Westfalenstadion",
+    "nl": "Signal Iduna Park",
+    "sv": "Signal Iduna Park",
+    "ar": "الملعب الفيستفالي",
+    "pt": "Signal Iduna Park",
+    "ru": "Сигнал Идуна Парк",
+    "ca": "Signal Iduna Park",
+    "zh": "西格納伊度納公園"
+   },
+   "aliases": {
+    "zh": [
+     "韋斯法倫球場",
+     "威斯特法伦球场",
+     "Westfalenstadion",
+     "威斯法伦体育场"
+    ],
+    "ko": [
+     "베스트팔렌 경기장",
+     "시그날 이두나 파크",
+     "도르트문트 월드컵 경기장",
+     "베스트팔렌슈타디온",
+     "도르트문트 월드컵 스타디움",
+     "시그널 이두나 파크"
+    ],
+    "fr": [
+     "BVB Stadion Dortmund",
+     "FIFA WM-Stadion Dortmund",
+     "Westfalenstadion",
+     "Westfalen Stadion"
+    ],
+    "es": [
+     "Westfalenstadion",
+     "Signal-Iduna-Park",
+     "BVB-Stadion Dortmund"
+    ],
+    "it": [
+     "Westfalen Stadion"
+    ],
+    "de": [
+     "Signal-Iduna-Park",
+     "FIFA WM-Stadion Dortmund",
+     "BVB-Stadion Dortmund",
+     "Westfalenstadion",
+     "BVB Stadium Dortmund"
+    ],
+    "ja": [
+     "ヴェストファーレン・シュタディオン"
+    ],
+    "nl": [
+     "Westfalenstadion"
+    ],
+    "sv": [
+     "Westfalenstadion",
+     "Westfalenstadium"
+    ],
+    "pt": [
+     "Westfalenstadion"
+    ],
+    "ru": [
+     "Вестфальский стадион",
+     "Вестфальский стадион в Дортмунде",
+     "Вестфаленштадион",
+     "Вестфаленстадион",
+     "Зигналь Идуна Парк"
+    ],
+    "en": [
+     "Signal Iduna Park",
+     "BVB Stadium Dortmund"
+    ],
+    "ca": [
+     "Westfalenstadion"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Westfalenstadion",
+   "jawiki": "ジグナル・イドゥナ・パルク"
+  },
+  "allianz-arena": {
+   "wikidata": "Q127429",
+   "labels": {
+    "es": "Allianz Arena",
+    "ar": "أليانز أرينا",
+    "sv": "Allianz Arena",
+    "nl": "Allianz Arena",
+    "pt": "Allianz Arena",
+    "ru": "Альянц Арена",
+    "fr": "Allianz Arena",
+    "ko": "알리안츠 아레나",
+    "it": "Allianz Arena",
+    "de": "Allianz-Arena",
+    "ja": "アリアンツ・アレーナ",
+    "en": "Allianz Arena",
+    "ca": "Allianz Arena",
+    "zh": "安联竞技场"
+   },
+   "aliases": {
+    "zh": [
+     "慕尼黑安联体育场",
+     "Allianz Arena",
+     "安聯球場",
+     "安联体育场"
+    ],
+    "ar": [
+     "ملعب أليانز أرينا"
+    ],
+    "sv": [
+     "Fußball Arena München"
+    ],
+    "nl": [
+     "Allianz-Arena"
+    ],
+    "pt": [
+     "Allianz-Arena"
+    ],
+    "ru": [
+     "Аллианц-Арена",
+     "Аллианц Арена",
+     "Allianz Arena",
+     "Альянц-Арена",
+     "Альянс Арена",
+     "Мюнхен Арена"
+    ],
+    "fr": [
+     "Allianz-Arena",
+     "FIFA World Cup Stadium Munich",
+     "FIFA WM-Stadion München",
+     "Fußball Arena München",
+     "Fussball Arena München"
+    ],
+    "ko": [
+     "알리안츠아레나"
+    ],
+    "de": [
+     "Allianzarena",
+     "FIFA WM-Stadion München",
+     "Allianz Arena",
+     "Munich Football Arena"
+    ],
+    "ja": [
+     "アリアンツアリーナ",
+     "フースバル・アレーナ・ミュンヘン",
+     "アリアンツ・アリーナ",
+     "アリアンツ・アレナ",
+     "フスバル・アレナ・ミュンヘン"
+    ],
+    "ca": [
+     "Estadi Allianz Arena",
+     "Estadi de la Copa Mundial de la FIFA de Munic",
+     "München Arena"
+    ],
+    "en": [
+     "Fußball Arena München",
+     "FIFA World Cup Stadium Munich",
+     "Munich Football Arena"
+    ],
+    "es": [
+     "Fußball Arena München"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Allianz Arena",
+   "jawiki": "アリアンツ・アレーナ"
+  },
+  "la-bombonera": {
+   "wikidata": "Q499855",
+   "labels": {
+    "ko": "라 봄보네라",
+    "fr": "La Bombonera",
+    "es": "La Bombonera",
+    "it": "stadio Alberto José Armando",
+    "de": "La Bombonera",
+    "ja": "ラ・ボンボネーラ",
+    "sv": "La Bombonera",
+    "nl": "Estadio Alberto J. Armando",
+    "ar": "لا بومبونيرا",
+    "pt": "La Bombonera",
+    "ru": "Бомбонера",
+    "en": "La Bombonera",
+    "ca": "Estadi Alberto J. Armando",
+    "zh": "阿尔贝托·J·阿曼多体育场"
+   },
+   "aliases": {
+    "zh": [
+     "Estadio Alberto J. Armando",
+     "卡米洛·西切罗体育场",
+     "卡米洛·西切羅體育場",
+     "糖果盒",
+     "糖果盒球场"
+    ],
+    "ko": [
+     "알베르토 아르만도 경기장"
+    ],
+    "fr": [
+     "Estadio Alberto J. Armando"
+    ],
+    "it": [
+     "Bombonera",
+     "La Bombonera",
+     "Stadio Alberto Jacinto Armando",
+     "Stadio Alberto J. Armando"
+    ],
+    "de": [
+     "Bombonera",
+     "Estadio Alberto Jacinto Armando",
+     "Estadio Alberto J. Armando",
+     "Estadio Alberto Armando"
+    ],
+    "ja": [
+     "ボンボネーラ",
+     "エスタディオ・アルベルト・J・アルマンド",
+     "カミロ・シチェーロ"
+    ],
+    "sv": [
+     "Estadio Alberto J. Armando"
+    ],
+    "nl": [
+     "La Bombonera",
+     "Estadio Camilo Cichero"
+    ],
+    "pt": [
+     "Bombonera",
+     "Estadio alberto j. armando",
+     "Estádio La Bombonera",
+     "Estádio Alberto J. Armando"
+    ],
+    "ru": [
+     "Стадион Альберто Х. Армандо",
+     "Ла Бомбонера",
+     "Estadio Alberto J. Armando",
+     "Альберто Армандо"
+    ],
+    "ca": [
+     "La Bombonera",
+     "Bombonera",
+     "Estadio Camilo Cichero",
+     "Estadi La Bombonera"
+    ],
+    "en": [
+     "Boca Juniors Stadium",
+     "Alberto José Armando Stadium",
+     "Alberto J. Armando Stadium",
+     "Camilo Cichero Stadium",
+     "La d de Davo Stadium"
+    ],
+    "es": [
+     "Estadio del Club Atlético Boca Juniors",
+     "Estadio de Boca Juniors",
+     "Estadio Boca Juniors",
+     "Estadio Doctor Camilo Cichero",
+     "Estadio Dr. Camilo Cichero",
+     "Estadio Camilo Cichero",
+     "Estadio Alberto J. Armando",
+     "Estadio La d de Davo"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "La Bombonera",
+   "jawiki": "ラ・ボンボネーラ"
+  },
+  "hampden-park": {
+   "wikidata": "Q193651",
+   "labels": {
+    "fr": "Hampden Park",
+    "ko": "햄던 파크",
+    "es": "Hampden Park",
+    "it": "Hampden Park",
+    "de": "Hampden Park",
+    "ja": "ハムデン・パーク",
+    "en": "Hampden Park",
+    "nl": "Hampden Park",
+    "sv": "Hampden Park",
+    "ar": "هامبدن بارك",
+    "pt": "Hampden Park",
+    "ru": "Хэмпден Парк",
+    "ca": "Hampden Park",
+    "zh": "汉普登公园球场"
+   },
+   "aliases": {
+    "zh": [
+     "汉普顿公园球场",
+     "汉普顿公园体育场",
+     "咸普頓公園",
+     "咸普頓公園球場"
+    ],
+    "ko": [
+     "햄든 파크",
+     "햄든파크"
+    ],
+    "ja": [
+     "ハンプデン・パーク"
+    ],
+    "ar": [
+     "ملعب هامبدن بارك"
+    ],
+    "ru": [
+     "Хемпден Парк"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Hampden Park",
+   "jawiki": "ハムデン・パーク"
+  },
+  "celtic-park": {
+   "wikidata": "Q216037",
+   "labels": {
+    "fr": "Celtic Park",
+    "ko": "셀틱 파크",
+    "es": "Celtic Park",
+    "it": "Celtic Park",
+    "de": "Celtic Park",
+    "ja": "セルティック・パーク",
+    "en": "Celtic Park",
+    "sv": "Celtic Park",
+    "nl": "Celtic Park",
+    "ar": "سلتيك بارك",
+    "pt": "Celtic Park",
+    "ru": "Селтик Парк",
+    "ca": "Celtic Park",
+    "zh": "凯尔特人公园球场"
+   },
+   "aliases": {
+    "zh": [
+     "凯尔特人公園球場",
+     "凱爾特公園球場"
+    ],
+    "es": [
+     "Celtic Park Stadium"
+    ],
+    "ar": [
+     "سيلتيك بارك"
+    ],
+    "en": [
+     "Celtic Park Stadium"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Celtic Park",
+   "jawiki": "セルティック・パーク"
+  },
+  "estadio-da-luz": {
+   "wikidata": "Q7875112",
+   "labels": {
+    "it": "estádio da Luz",
+    "ar": "ملعب دا لوز",
+    "ca": "Estádio da Luz",
+    "de": "Estádio da Luz",
+    "en": "Estádio da Luz",
+    "es": "Estádio da Luz",
+    "fr": "Estadio da Luz",
+    "ja": "エスタディオ・ダ・ルス",
+    "ko": "이스타디우 다 루스",
+    "nl": "Estádio da Luz",
+    "pt": "Estádio da Luz",
+    "ru": "Эштадиу да Луш",
+    "sv": "Estádio da Luz",
+    "zh": "盧斯球場"
+   },
+   "aliases": {
+    "it": [
+     "Estádio do Sport Lisboa e Benfica"
+    ],
+    "ru": [
+     "Да Луж"
+    ],
+    "en": [
+     "Estádio do Sport Lisboa e Benfica",
+     "Stadium of Light",
+     "Stadium of Sport Lisboa e Benfica",
+     "Benfica Stadium",
+     "S.L. Benfica Stadium"
+    ],
+    "es": [
+     "Estadio da Luz"
+    ],
+    "ar": [
+     "ملعب النور",
+     "ملعب نادي بنفيكا"
+    ],
+    "nl": [
+     "Estadio da Luz"
+    ],
+    "fr": [
+     "stade de la Luz"
+    ],
+    "pt": [
+     "Estádio do Sport Lisboa e Benfica",
+     "Complexo desportivo do Sport Lisboa e Benfica"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Estádio da Luz",
+   "jawiki": "エスタディオ・ダ・ルス"
+  },
+  "parc-des-princes": {
+   "wikidata": "Q193431",
+   "labels": {
+    "ko": "파르크 데 프랭스",
+    "fr": "Parc des Princes",
+    "es": "Parque de los Príncipes",
+    "it": "Parco dei Principi",
+    "de": "Parc des Princes",
+    "ja": "パルク・デ・プランス",
+    "sv": "Parc des Princes",
+    "nl": "Parc des Princes",
+    "ar": "بارك دي برينس",
+    "pt": "Parc des Princes",
+    "ru": "Парк де Пренс",
+    "en": "Parc des Princes",
+    "ca": "Parc dels Prínceps",
+    "zh": "王子公园体育场"
+   },
+   "aliases": {
+    "zh": [
+     "王子公园球场",
+     "王子球場",
+     "巴黎王子球場"
+    ],
+    "ko": [
+     "파크 데 프린스"
+    ],
+    "fr": [
+     "Parc-des-Princes",
+     "Boulogne rouge",
+     "Stade du Parc des Princes"
+    ],
+    "es": [
+     "Parque de los Principes",
+     "Parc des Princes"
+    ],
+    "it": [
+     "Parc des Princes"
+    ],
+    "de": [
+     "Prinzenparkstadion",
+     "Prinzenpark",
+     "Le Parc"
+    ],
+    "ar": [
+     "بارك دي برنس",
+     "حديقة الأمراء"
+    ],
+    "pt": [
+     "Parque dos Príncipes"
+    ],
+    "ca": [
+     "Parc des Princes"
+    ],
+    "en": [
+     "Parc des princes"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Parc des Princes",
+   "jawiki": "パルク・デ・プランス"
+  },
+  "saitama-stadium-2002": {
+   "wikidata": "Q482446",
+   "labels": {
+    "pt": "Estádio Saitama 2002",
+    "ru": "Сайтама 2002",
+    "fr": "stade Saitama 2002",
+    "ko": "사이타마 스타디움 2002",
+    "en": "Saitama Stadium 2002",
+    "es": "Estadio de Saitama",
+    "ca": "Estadi de Saitama",
+    "it": "Saitama Stadium 2002",
+    "de": "Saitama Stadium",
+    "ja": "埼玉スタジアム2002",
+    "nl": "Saitamastadion",
+    "sv": "Saitama Stadium",
+    "ar": "ملعب سايتاما 2002",
+    "zh": "埼玉2002體育場"
+   },
+   "aliases": {
+    "pt": [
+     "Estádio saitama",
+     "Saitama Stadium 2002",
+     "Saitama Stadium",
+     "Saisuta"
+    ],
+    "zh": [
+     "埼玉體育場",
+     "埼玉體育場2002"
+    ],
+    "ru": [
+     "Сайтама"
+    ],
+    "fr": [
+     "Stade Saitama",
+     "Saitama Stadium",
+     "Saitama Stadium 2002"
+    ],
+    "ko": [
+     "사이타마 경기장 2002",
+     "사이타마 경기장",
+     "사이타마 스타디움"
+    ],
+    "es": [
+     "Estadio Saitama"
+    ],
+    "ca": [
+     "Estadi Saitama 2002"
+    ],
+    "it": [
+     "Stadio di Saitama",
+     "Saitama Stadium"
+    ],
+    "de": [
+     "Saitama Stadion 2002",
+     "Saitamastadion",
+     "Saitama Stadion",
+     "Saitama-Stadion"
+    ],
+    "ja": [
+     "埼玉スタジアム2002第2グラウンド",
+     "埼スタ",
+     "埼玉スタジアム2002第4グラウンド",
+     "埼玉スタジアム2002第3グラウンド",
+     "埼玉スタジアム"
+    ],
+    "nl": [
+     "Saitama Stadion"
+    ],
+    "sv": [
+     "Saitama Stadium 2002"
+    ],
+    "ar": [
+     "ملعب سايتاما ٢٠٠٢"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Saitama Stadium 2002",
+   "jawiki": "埼玉スタジアム2002"
+  },
+  "seoul-world-cup-stadium": {
+   "wikidata": "Q175477",
+   "labels": {
+    "de": "Seoul-World-Cup-Stadion",
+    "ar": "ملعب كأس العالم بسول",
+    "ca": "Estadi de la Copa del Món de Seül",
+    "en": "Seoul World Cup Stadium",
+    "es": "Estadio Mundialista de Seúl",
+    "fr": "stade de la Coupe du monde de Séoul",
+    "it": "Seoul World Cup Stadium",
+    "ja": "ソウルワールドカップ競技場",
+    "ko": "서울월드컵경기장",
+    "nl": "Seoul World Cup Stadion",
+    "pt": "Estádio Sang-am de Seul",
+    "zh": "首爾世界盃競技場",
+    "sv": "Seoul World Cup Stadium",
+    "ru": "Сеул Уорлд Кап Стадиум"
+   },
+   "aliases": {
+    "es": [
+     "Estadio Mundialista de Seul"
+    ],
+    "ru": [
+     "Сангам",
+     "Санам"
+    ],
+    "nl": [
+     "Seoul World Cupstadion"
+    ],
+    "ko": [
+     "서울월드컵경기장 주경기장"
+    ],
+    "ar": [
+     "ملعب كأس العالم سول",
+     "ملعب كأس العالم سيول",
+     "ملعب كأس العالم بسيول"
+    ]
+   },
+   "official": [
+    {
+     "text": "서울월드컵경기장",
+     "lang": "ko"
+    }
+   ],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Seoul World Cup Stadium",
+   "jawiki": "ソウルワールドカップ競技場"
+  },
+  "emirates-stadium": {
+   "wikidata": "Q163995",
+   "labels": {
+    "es": "Emirates Stadium",
+    "sv": "Emirates Stadium",
+    "ar": "ملعب الإمارات",
+    "nl": "Emirates Stadium",
+    "pt": "Emirates Stadium",
+    "ru": "Эмирейтс",
+    "fr": "Emirates Stadium",
+    "ko": "에미레이트 스타디움",
+    "it": "Emirates Stadium",
+    "de": "Emirates Stadium",
+    "ja": "エミレーツ・スタジアム",
+    "en": "Emirates Stadium",
+    "ca": "Emirates Stadium",
+    "zh": "酋长球场"
+   },
+   "aliases": {
+    "zh": [
+     "Emirates Stadium",
+     "埃米尔球场",
+     "阿聯酋球場"
+    ],
+    "sv": [
+     "Ashburton Grove"
+    ],
+    "ar": [
+     "ستاد الإمارات",
+     "إميريتس ستاديوم"
+    ],
+    "nl": [
+     "Emirates Stadion"
+    ],
+    "pt": [
+     "Emirates St.",
+     "Estádio Emirados",
+     "Estádio Emirates"
+    ],
+    "ru": [
+     "Эшбёртон Гроув",
+     "Emirates Stadium",
+     "Эмирэйтс Стэдиум",
+     "Эмирэйтс Стдэдиум",
+     "Эшбертон Гроув",
+     "Эмирейтс Стэдиум"
+    ],
+    "fr": [
+     "Ashburton Grove",
+     "The Emirates Stadium",
+     "L'Emirates"
+    ],
+    "ko": [
+     "에미러츠 스타디움",
+     "디 에미리츠",
+     "에미레이츠 경기장",
+     "에미레이츠 스타디움",
+     "에미리츠 스타디움",
+     "에미레이트 경기장"
+    ],
+    "de": [
+     "Ashburton Grove"
+    ],
+    "ja": [
+     "エミレーツスタジアム"
+    ],
+    "en": [
+     "The Emirates Stadium",
+     "Arsenal Stadium",
+     "The Emirates"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Emirates Stadium",
+   "jawiki": "エミレーツ・スタジアム"
+  },
+  "etihad-stadium": {
+   "wikidata": "Q48159",
+   "labels": {
+    "zh": "曼徹斯特市球場",
+    "fr": "City of Manchester Stadium",
+    "ko": "시티 오브 맨체스터 스타디움",
+    "es": "Estadio Ciudad de Mánchester",
+    "it": "City of Manchester Stadium",
+    "de": "City of Manchester Stadium",
+    "ja": "シティ・オブ・マンチェスター・スタジアム",
+    "en": "Etihad Stadium",
+    "ar": "ملعب مدينة مانشستر",
+    "sv": "City of Manchester Stadium",
+    "nl": "City of Manchester Stadium",
+    "pt": "City of Manchester Stadium",
+    "ru": "Этихад",
+    "ca": "City of Manchester Stadium"
+   },
+   "aliases": {
+    "zh": [
+     "曼徹斯特城市體育場",
+     "City of Manchester Stadium",
+     "曼城運動場",
+     "曼徹斯特城市運動場",
+     "曼城球場",
+     "曼徹斯特城市球場",
+     "曼徹斯特城體育場"
+    ],
+    "ko": [
+     "시티 오브 맨체스터 경기장",
+     "시티오브맨체스터 경기장",
+     "이티하드 스타디움",
+     "시티오브맨체스터 스타디움"
+    ],
+    "es": [
+     "City of Manchester Stadium",
+     "Estadio Ciudad de Manchester",
+     "Manchester Stadium",
+     "Eithad Stadium",
+     "Etihad Stadium"
+    ],
+    "it": [
+     "COMS",
+     "Eastlands",
+     "Etihad Stadium"
+    ],
+    "de": [
+     "City-of-Manchester-Stadion",
+     "Etihad Stadium"
+    ],
+    "ja": [
+     "シティ・オブ・マンチェスター"
+    ],
+    "ar": [
+     "سيتي أوف مانشستر ستوديوم",
+     "ملعب الإتحاد",
+     "ملعب الاتحاد"
+    ],
+    "sv": [
+     "Etihad Stadium"
+    ],
+    "nl": [
+     "Eastlands",
+     "Etihad Stadium"
+    ],
+    "pt": [
+     "Estádio City of Manchester"
+    ],
+    "ru": [
+     "Сити оф Манчестер Стадиум",
+     "Сити оф Манчестер",
+     "Etihad Stadium",
+     "Этихад Стэдиум",
+     "City of Manchester Stadium"
+    ],
+    "fr": [
+     "Etihad Stadium"
+    ],
+    "en": [
+     "COMS",
+     "Docklands Stadium",
+     "City of Manchester Stadium"
+    ]
+   },
+   "official": [
+    {
+     "text": "City of Manchester Stadium",
+     "lang": "en"
+    }
+   ],
+   "nickname": [
+    {
+     "text": "Etihad Stadium",
+     "lang": "en"
+    }
+   ],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Etihad Stadium",
+   "jawiki": "シティ・オブ・マンチェスター・スタジアム"
+  },
+  "stamford-bridge": {
+   "wikidata": "Q171458",
+   "labels": {
+    "ko": "스탬퍼드 브리지",
+    "fr": "Stamford Bridge",
+    "es": "Stamford Bridge",
+    "it": "Stamford Bridge",
+    "de": "Stamford Bridge",
+    "ja": "スタンフォード・ブリッジ",
+    "en": "Stamford Bridge",
+    "ar": "ستامفورد بريدج",
+    "nl": "Stamford Bridge",
+    "sv": "Stamford Bridge",
+    "pt": "Stamford Bridge",
+    "ru": "Стэмфорд Бридж",
+    "ca": "Stamford Bridge",
+    "zh": "史丹福橋球場"
+   },
+   "aliases": {
+    "zh": [
+     "Stamford Bridge",
+     "斯坦福桥"
+    ],
+    "ko": [
+     "스탬퍼드브리지",
+     "스탬포드 브리지",
+     "스탬포드 브릿지",
+     "스탬퍼드 브릿지",
+     "스탬포드브리지"
+    ],
+    "de": [
+     "Stamford Bridge Stadium"
+    ],
+    "ar": [
+     "ملعب ستانفوردبريدج",
+     "ستامفورد بريدج/نسخة بديلة"
+    ],
+    "sv": [
+     "Stamford Bridge Athletic Ground"
+    ],
+    "ru": [
+     "Стемфорд Бридж"
+    ],
+    "nl": [
+     "Stamford Bridge (stadion)"
+    ],
+    "en": [
+     "The Bridge"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Stamford Bridge (stadium)",
+   "jawiki": "スタンフォード・ブリッジ"
+  },
+  "tottenham-hotspur-stadium": {
+   "wikidata": "Q55074091",
+   "labels": {
+    "en": "Tottenham Hotspur Stadium",
+    "ar": "ملعب توتنهام هوتسبير",
+    "nl": "Tottenham Hotspur Stadium",
+    "zh": "托定咸熱刺球場",
+    "ko": "토트넘 홋스퍼 스타디움",
+    "it": "Tottenham Hotspur Stadium",
+    "pt": "Tottenham Hotspur Stadium",
+    "fr": "Tottenham Hotspur Stadium",
+    "de": "Tottenham Hotspur Stadium",
+    "ru": "Тоттенхэм Хотспур",
+    "ca": "Tottenham Hotspur Stadium",
+    "ja": "トッテナム・ホットスパースタジアム",
+    "sv": "Tottenham Hotspur Stadium"
+   },
+   "aliases": {
+    "ru": [
+     "Тоттенхэм Хотспур (стадион)"
+    ],
+    "en": [
+     "New White Hart Lane",
+     "Tottenham Stadium"
+    ],
+    "ja": [
+     "ニュー・ホワイト・ハート・レーン"
+    ]
+   },
+   "official": [
+    {
+     "text": "Tottenham Hotspur Stadium",
+     "lang": "en"
+    }
+   ],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Tottenham Hotspur Stadium",
+   "jawiki": "トッテナム・ホットスパー・スタジアム"
+  },
+  "ibrox": {
+   "wikidata": "Q208709",
+   "labels": {
+    "fr": "Ibrox Stadium",
+    "ko": "아이브록스 스타디움",
+    "es": "Ibrox Stadium",
+    "it": "Ibrox Stadium",
+    "de": "Ibrox Park",
+    "ja": "アイブロックス・スタジアム",
+    "en": "Ibrox Stadium",
+    "nl": "Ibrox Stadium",
+    "sv": "Ibrox Stadium",
+    "pt": "Ibrox Stadium",
+    "ru": "Айброкс",
+    "ca": "Ibrox Stadium",
+    "zh": "埃布羅克斯球場",
+    "ar": "ملعب إيبروكس"
+   },
+   "aliases": {
+    "fr": [
+     "Ibrox Park"
+    ],
+    "ko": [
+     "이브록스 스타디움",
+     "아이브록스 경기장"
+    ],
+    "es": [
+     "Estadio de Ibrox",
+     "Ibrox Park"
+    ],
+    "it": [
+     "Stadio Ibrox di Glasgow"
+    ],
+    "de": [
+     "Ibrox-Stadion",
+     "Ibrox Stadium"
+    ],
+    "ja": [
+     "アイブロックス・パーク",
+     "アイブロックス"
+    ],
+    "nl": [
+     "Ibrox Stadion",
+     "Ibrox Park"
+    ],
+    "sv": [
+     "Ibrox Park"
+    ],
+    "pt": [
+     "Ibrox Park",
+     "Estádio Ibrox"
+    ],
+    "ru": [
+     "Айброкс Парк",
+     "Айброкс-Парк"
+    ],
+    "en": [
+     "Ibrox",
+     "Ibrox Stadium, 100-170 Edmiston Drive, Glasgow"
+    ],
+    "ca": [
+     "Ibrox Park"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Ibrox Stadium",
+   "jawiki": "アイブロックス・スタジアム"
+  },
+  "johan-cruyff-arena": {
+   "wikidata": "Q207109",
+   "labels": {
+    "ko": "암스테르담 아레나",
+    "fr": "Johan Cruijff Arena",
+    "es": "Johan Cruijff Arena",
+    "it": "Johan Cruijff Arena",
+    "de": "Johan-Cruyff-Arena",
+    "ja": "アムステルダム・アレナ",
+    "nl": "Johan Cruijff Arena",
+    "sv": "Johan Cruijff Arena",
+    "ar": "يوهان كرويف أرينا",
+    "pt": "Amsterdam ArenA",
+    "ru": "Йохан Кройф Арена",
+    "en": "Johan Cruyff Arena",
+    "ca": "Johan Cruijff Arena",
+    "zh": "阿姆斯特丹球場"
+   },
+   "aliases": {
+    "zh": [
+     "阿姆斯特丹体育场"
+    ],
+    "ko": [
+     "암스테르담 어리너",
+     "암스테르담 축구경기장",
+     "암스테르담 축구장"
+    ],
+    "es": [
+     "Amsterdam Arena"
+    ],
+    "de": [
+     "Amsterdam Arena",
+     "Johan Cruijff ArenA",
+     "Johan Cruijff Arena",
+     "Amsterdam ArenA",
+     "Johan Cruyff Arena"
+    ],
+    "ja": [
+     "アヤックス・アレナ",
+     "アムステルダムアリーナ",
+     "アムステルダム・アリーナ"
+    ],
+    "nl": [
+     "ArenA",
+     "Amsterdam Arena"
+    ],
+    "ar": [
+     "ملعب أمستردام أرينا"
+    ],
+    "ru": [
+     "Амстердам АренА",
+     "Амстердам Арена"
+    ],
+    "en": [
+     "Amsterdam ArenA",
+     "Johan Cruijff Arena",
+     "ArenA"
+    ],
+    "it": [
+     "amsterdam arena"
+    ]
+   },
+   "official": [
+    {
+     "text": "Amsterdam ArenA",
+     "lang": "nl"
+    },
+    {
+     "text": "Johan Cruijff ArenA",
+     "lang": "nl"
+    }
+   ],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Johan Cruyff Arena",
+   "jawiki": "ヨハン・クライフ・アレナ"
+  },
+  "allianz-stadium-turin": {
+   "wikidata": "Q62149",
+   "labels": {
+    "en": "Juventus Stadium",
+    "ar": "ملعب يوفنتوس",
+    "ca": "Juventus Stadium",
+    "de": "Juventus Stadium",
+    "es": "Juventus Stadium",
+    "fr": "Juventus Stadium",
+    "it": "Juventus Stadium",
+    "ja": "ユヴェントス・アリーナ",
+    "ko": "유벤투스 스타디움",
+    "nl": "Juventus Stadium",
+    "pt": "Juventus Stadium",
+    "ru": "Ювентус",
+    "sv": "Juventus Stadium",
+    "zh": "尤文圖斯球場"
+   },
+   "aliases": {
+    "it": [
+     "J-Stadium",
+     "Allianz Stadium",
+     "Stadium"
+    ],
+    "en": [
+     "Allianz Stadium Turin",
+     "Juventus Stadium"
+    ],
+    "es": [
+     "Allianz Stadium",
+     "Estadio de la Juventus",
+     "Juventus Stadium"
+    ],
+    "fr": [
+     "Allianz Stadium"
+    ],
+    "de": [
+     "Allianz Stadium"
+    ],
+    "nl": [
+     "Allianz Stadium"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Juventus Stadium",
+   "jawiki": "ユヴェントス・スタジアム"
+  },
+  "japan-national-stadium": {
+   "wikidata": "Q14862239",
+   "labels": {
+    "ja": "国立競技場",
+    "zh": "國立競技場",
+    "ko": "신국립 경기장",
+    "en": "Japan National Stadium",
+    "it": "stadio nazionale del Giappone",
+    "de": "Neues Nationalstadion (Tokio)",
+    "pt": "Novo Estádio Olímpico de Tóquio",
+    "sv": "Japans nationalstadion",
+    "nl": "Nieuw Olympisch Stadion",
+    "ar": "ملعب اليابان الوطني",
+    "es": "Estadio Olímpico de Tokio (2019)",
+    "ru": "Японский национальный стадион",
+    "ca": "Estadi Nacional del Japó",
+    "fr": "stade national du Japon"
+   },
+   "aliases": {
+    "ar": [
+     "الملعب الأولمبي الجديد",
+     "الملعب الوطني الجديد",
+     "ملعب طوكيو الأولمبي"
+    ],
+    "fr": [
+     "Nouveau stade olympique national",
+     "Stade olympique"
+    ],
+    "en": [
+     "National Stadium",
+     "New National Stadium",
+     "Kokuritsu",
+     "Tokyo Olympic Stadium",
+     "MUFG Statium",
+     "MUFG Kokuritsu"
+    ],
+    "ja": [
+     "新国立競技場",
+     "国立",
+     "オリンピックスタジアム",
+     "MUFGスタジアム",
+     "MUFG国立"
+    ],
+    "zh": [
+     "新國立競技場",
+     "國立",
+     "東京奧林匹克體育場",
+     "MUFG體育場",
+     "MUFG國立"
+    ],
+    "ru": [
+     "Новый национальный стадион"
+    ],
+    "it": [
+     "stadio olimpico di Tokyo",
+     "Tokyo Olympic Stadium",
+     "nuovo stadio nazionale del Giappone",
+     "Japan New National Stadium"
+    ],
+    "es": [
+     "Estadio Nacional de Japón"
+    ],
+    "sv": [
+     "Tokyos olympiastadion"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Japan National Stadium",
+   "jawiki": "国立競技場"
+  },
+  "kashima-soccer-stadium": {
+   "wikidata": "Q494769",
+   "labels": {
+    "pt": "Estádio Kashima",
+    "ko": "이바라키 현립 가시마 축구 스타디움",
+    "fr": "stade de Kashima",
+    "ru": "Касима",
+    "en": "Kashima Soccer Stadium",
+    "es": "Estadio de Kashima",
+    "ca": "Estadi de Kashima",
+    "it": "Kashima Soccer Stadium",
+    "de": "Kashima Soccer Stadium",
+    "ja": "茨城県立カシマサッカースタジアム",
+    "nl": "Kashimastadion",
+    "ar": "ملعب كاشيما لكرة القدم",
+    "zh": "茨城縣立鹿嶋足球場"
+   },
+   "aliases": {
+    "pt": [
+     "Kashima stadium"
+    ],
+    "zh": [
+     "鹿島足球體育場"
+    ],
+    "ko": [
+     "가시마 축구 스타디움",
+     "가시마 스타디움",
+     "가시마 축구장"
+    ],
+    "fr": [
+     "Stade Kashima",
+     "Kashima Soccer Stadium",
+     "Kashima Stadium"
+    ],
+    "es": [
+     "Estadio Kashima"
+    ],
+    "ca": [
+     "Estadi Kashima",
+     "Estadi de Futbol de Kashima"
+    ],
+    "it": [
+     "Kashima Stadium"
+    ],
+    "de": [
+     "Kashima Stadium"
+    ],
+    "ja": [
+     "鹿島サッカースタジアム",
+     "カシマサッカースタジアム",
+     "カシマスタジアム",
+     "県立カシマサッカースタジアム"
+    ],
+    "nl": [
+     "Kashima Stadion"
+    ],
+    "en": [
+     "Ibaraki Prefectural Kashima Soccer Stadium"
+    ]
+   },
+   "official": [],
+   "nickname": [],
+   "names": [],
+   "short": [],
+   "kana": [],
+   "enwiki": "Kashima Soccer Stadium",
+   "jawiki": "茨城県立カシマサッカースタジアム"
+  }
+ }
+}

@@ -9,6 +9,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import process from "node:process";
 import { setTimeout } from "node:timers";
 import { URL } from "node:url";
+import { stringify } from "./json-compact.mjs";
 
 const file = new URL("./parks.data.json", import.meta.url);
 const parks = JSON.parse(readFileSync(file, "utf8"));
@@ -57,6 +58,6 @@ const placed = parks.map((park) => {
   }
   return out;
 });
-writeFileSync(file, `${JSON.stringify(placed, null, 1)}`);
+writeFileSync(file, stringify(placed));
 console.log(`${parks.length - missing} of ${parks.length} parks have coordinates`);
 process.exit(missing === 0 ? 0 : 1);

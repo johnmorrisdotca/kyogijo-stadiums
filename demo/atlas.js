@@ -2,7 +2,7 @@
 // markers do (so a keyboard or a screen reader needs no marker), and the chosen place's surface drawn beside it by kyogijo.
 // The map's modules are chizu's own (copied into ./chizu by `pnpm site`) and the places are the package's `atlas` entry.
 import { GROUNDS, drawKyogijo } from "./dist/index.js";
-import { PLACES, atlasFacets, placeById, placesBy, surfaceOf } from "./dist/atlas-entry.js";
+import { PLACES, atlasFacets, officialName, placeById, placesBy, plainName, surfaceOf } from "./dist/atlas-entry.js";
 import { ATLAS_MARK_STYLE, markIcon, markSvg } from "./atlas-marks.js";
 
 const $ = (id) => document.getElementById(id);
@@ -29,6 +29,23 @@ export async function initAtlas({ say, lang, onTry }) {
   const regionNames = () => { try { return new Intl.DisplayNames([lang()], { type: "region" }); } catch { return null; } };
   const countryName = (code) => regionNames()?.of(code) ?? code;
   const nameOf = (place) => (lang() === "ja" && place.nameJa ? place.nameJa : place.name);
+  /** The other names of a place in the page's language: the official name, then the sponsors', former and nicknames, without repeating the one that is shown. */
+  const otherNames = (place) => {
+    const language = lang() === "ja" ? "ja" : "en";
+    const shown = nameOf(place);
+    const official = officialName(place, language) ?? null;
+    const seen = new Set([plainName(shown), ...(official === null ? [] : [plainName(official)])]);
+    const also = [];
+    for (const alias of place.aliases) {
+      if (alias.lang !== language || alias.kind === "wikipedia" || alias.kind === "official") continue;
+      const key = plainName(alias.name);
+      if (!seen.has(key)) {
+        seen.add(key);
+        also.push(alias.name);
+      }
+    }
+    return { official, also: also.slice(0, 6) };
+  };
   const yearsOf = (place) => {
     if (place.from !== undefined && place.to !== undefined) return sentence("atlasYears", { from: place.from, to: place.to });
     if (place.from !== undefined) return sentence("atlasSince", { from: place.from });
@@ -266,8 +283,11 @@ export async function initAtlas({ say, lang, onTry }) {
     const options = { ...surfaceOf(place), size: "surface", orientation: "landscape", style: "none", language: lang() };
     if (place.kind === "park" && state.yearOn) options.year = state.year;
     const ground = place.kind === "ground" ? GROUNDS[place.id] : undefined;
+    const others = otherNames(place);
     const rows = [
       ["atlasPlace", `${place.city}, ${countryName(place.country)}`],
+      others.official === null ? null : ["atlasOfficial", others.official],
+      others.also.length === 0 ? null : ["atlasAlso", others.also.join(lang() === "ja" ? "、" : ", ")],
       ["atlasInUse", [say(`atlasStatus_${place.status}`), yearsOf(place)].filter(Boolean).join(" · ")],
       place.team === undefined ? null : ["atlasTeam", place.team],
       place.leagues.length === 0 ? null : ["atlasLeagues", place.leagues.map((l) => say(LEAGUES[l] ?? l)).join(", ")],

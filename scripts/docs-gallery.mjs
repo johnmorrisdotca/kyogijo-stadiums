@@ -226,7 +226,7 @@ function placesPage() {
     ["coors-field", "Coors Field"],
     ["yankee-stadium", "Yankee Stadium"],
     ["tokyo-dome", "Tokyo Dome"],
-    ["hanshin-koshien-stadium", "Hanshin Koshien Stadium"],
+    ["hanshin-koshien-stadium", "Koshien Stadium"],
   ];
   const past = [
     ["polo-grounds", 1915, "Polo Grounds, 1915"],

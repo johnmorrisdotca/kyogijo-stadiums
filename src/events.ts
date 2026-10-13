@@ -1,6 +1,6 @@
 import { EVENT_DATA, EVENT_SOURCES, type EventSource, type PlacementRule, type SpecialEventData } from "./events.data.ts";
 import { groundById, groundNameIn } from "./grounds.ts";
-import { parkById } from "./parks.ts";
+import { parkById, parkNameIn } from "./parks.ts";
 import { INFIELD_CENTRE, fitOf, hostOutline, type Fit } from "./special.ts";
 import { KYOGIJO_STRINGS, fill } from "./strings.ts";
 import type { HostOptions, Language, Placement, SurfaceOptions } from "./types.ts";
@@ -101,7 +101,7 @@ function hostName(o: SurfaceOptions, language: Language): string {
   if (event !== undefined) return event.venue[language];
   if (host.name !== undefined) return language === "ja" ? (host.nameJa ?? host.name) : host.name;
   const park = parkById(host.park);
-  if (park !== undefined) return language === "ja" ? (park.nameJa ?? park.name) : park.name;
+  if (park !== undefined) return parkNameIn(park, language);
   const ground = groundById(host.ground);
   if (ground !== undefined) return groundNameIn(ground, finiteYear(host.year) ? host.year : o.year, language);
   const unnamed = KYOGIJO_STRINGS[language].special.unnamed;

@@ -31,6 +31,7 @@ picture or code of the sources is copied; each source is named here so that the 
 | `frames`: the soccer providers' coordinates | StatsBomb's Open Data Events specification (Appendix 2), the Wyscout and Impect glossaries, the Metrica Sports and SkillCorner open-data READMEs; for Opta, Tracab and Second Spectrum, whose specifications are not public, the figures of mplsoccer, ggsoccer, kloppy and floodlight (docs/sources.md) | Facts; no text, table or code copied |
 | `parks`: the fence of each ballpark, current and past, and the seasons of a past park | The distances (and, for a park whose fence moved, the years an article dates them) published in the English and Japanese Wikipedia article of each park, at the revision cited below; the seasons a club played there from the same article's list of tenants | Facts. The articles are CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/); none of their text, tables or images is used, and the angles between the distances are our own reading |
 | `parks`: the Wikidata item of each ballpark (`wikidata`) | The item (`Q49136`) that each cited article is linked to, read with the MediaWiki API (`pageprops`, `wikibase_item`) and checked against the item's label | Wikidata's data is CC0 (https://creativecommons.org/publicdomain/zero/1.0/) |
+| `parks` and `grounds`: the names (`name`, `nameJa`, `readingJa`, `localName`, `aliases`) | The names are facts. Each alias says where it was read (`source`): the title of the English or Japanese Wikipedia article a place cites (with its revision), a name the infobox or the opening text of the same revision gives (a former or sponsor's name with the years it dates, a nickname, the name in Japanese and its reading), or Wikidata's labels, aliases and properties "official name" (P1448), "nickname" (P1449), "name" (P2561), "short name" (P1813), read with the Wikidata API by `scripts/fetch-names.mjs` into `scripts/names.wikidata.json` | Facts; Wikidata's data is CC0 (https://creativecommons.org/publicdomain/zero/1.0/), and the articles are CC BY-SA 4.0 as above, none of their text copied. Which name is the everyday one is our reading, in docs/references.md ("Names") |
 | `grounds`: each soccer ground's pitch, names, years, city and capacity | The infobox and the opening text of the English Wikipedia article of each ground, at the revision cited below (the pitch's length and width where the infobox gives them for football, the names with the years the article dates them, the year it opened and closed, the first capacity); the ground's name in Japanese from its Japanese article | Facts. The articles are CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/); none of their text, tables or images is used |
 | `grounds`: the World Cups each ground staged matches of, and where each final was played | The venue section of the English Wikipedia article of each men's and Women's World Cup, at the revision cited below; FIFA's own pages are not used | Facts, CC BY-SA 4.0 articles as above |
 | `grounds`: the Wikidata item and the coordinates of each ground (`wikidata`, `lat`, `lon`) | The item that each cited article is linked to, its coordinates (P625) and its country (P17), read with the Wikidata API and checked against the item's labels by `scripts/check-grounds.mjs` | Wikidata's data is CC0 (https://creativecommons.org/publicdomain/zero/1.0/) |
@@ -119,16 +120,16 @@ Each article was read at the revision named (94 parks: the 30 current MLB parks,
 | Olympic Stadium | Q285467 | Olympic Stadium (Montreal), 1375638350 | – |
 | Hubert H. Humphrey Metrodome | Q1072186 | Hubert H. Humphrey Metrodome, 1378988593 | – |
 | Mile High Stadium | Q1934586 | Mile High Stadium, 1372216043 | – |
-| Globe Life Park in Arlington | Q1634492 | Choctaw Stadium, 1374880883 | – |
+| Choctaw Stadium | Q1634492 | Choctaw Stadium, 1374880883 | – |
 | Turner Field | Q1150936 | Turner Field, 1372246325 | – |
 | Tokyo Dome | Q733748 | Tokyo Dome, 1379232526 | 東京ドーム, 111353030 |
-| Hanshin Koshien Stadium | Q959811 | Koshien Stadium, 1374217766 | 阪神甲子園球場, 111237979 |
+| Koshien Stadium | Q959811 | Koshien Stadium, 1374217766 | 阪神甲子園球場, 111237979 |
 | Meiji Jingu Stadium | Q944559 | Meiji Jingu Stadium, 1372085507 | 明治神宮野球場, 111058989 |
 | Yokohama Stadium | Q1148681 | Yokohama Stadium, 1379493268 | 横浜スタジアム, 111000229 |
 | Vantelin Dome Nagoya | Q929524 | Vantelin Dome Nagoya, 1377205624 | ナゴヤドーム, 111136533 |
-| Mazda Zoom-Zoom Stadium Hiroshima | Q1038647 | Mazda Stadium, 1358258868 | MAZDA Zoom-Zoom スタジアム広島, 110177362 |
+| Mazda Stadium | Q1038647 | Mazda Stadium, 1358258868 | MAZDA Zoom-Zoom スタジアム広島, 110177362 |
 | ES CON Field Hokkaido | Q96395338 | Es Con Field Hokkaido, 1376475578 | エスコンフィールドHOKKAIDO, 110902270 |
-| Rakuten Mobile Park Miyagi | Q489699 | Rakuten Mobile Park Miyagi, 1371540312 | 楽天モバイルパーク宮城, 111313121 |
+| Rakuten Mobile Saikyo Park Miyagi | Q489699 | Rakuten Mobile Park Miyagi, 1371540312 | 楽天モバイルパーク宮城, 111313121 |
 | Belluna Dome | Q1194822 | Belluna Dome, 1376434975 | 西武ドーム, 111316508 |
 | ZOZO Marine Stadium | Q486192 | Zozo Marine Stadium, 1374482006 | 千葉マリンスタジアム, 111145226 |
 | Kyocera Dome Osaka | Q128836 | Kyocera Dome Osaka, 1374181588 | 大阪ドーム, 111044952 |
@@ -158,21 +159,21 @@ Each article was read at the revision named (64 soccer grounds), by its address 
 | Wembley Stadium (1923) | Q43279 | Wembley Stadium (1923), 1374252171 | ウェンブリー・スタジアム (1923), 110336995 |
 | Wembley Stadium | Q128468 | Wembley Stadium, 1379930582 | ウェンブリー・スタジアム, 110350755 |
 | Estadio Azteca | Q320454 | Estadio Azteca, 1374978481 | エスタディオ・アステカ, 111238345 |
-| Olympiastadion (Munich) | Q131610 | Olympiastadion (Munich), 1375090249 | ミュンヘン・オリンピアシュタディオン, 109325015 |
+| Munich Olympic Stadium | Q131610 | Olympiastadion (Munich), 1375090249 | ミュンヘン・オリンピアシュタディオン, 109325015 |
 | Estadio Monumental | Q276354 | Estadio Monumental (Buenos Aires), 1379457880 | エスタディオ・モヌメンタル・アントニオ・ベスプチオ・リベルティ, 106840308 |
 | Santiago Bernabéu Stadium | Q164027 | Bernabéu (stadium), 1376542686 | エスタディオ・サンティアゴ・ベルナベウ, 109745684 |
 | Stadio Olimpico | Q159884 | Stadio Olimpico, 1376210332 | スタディオ・オリンピコ・ディ・ローマ, 109745762 |
 | Rose Bowl | Q582280 | Rose Bowl (stadium), 1379595877 | ローズボウル (競技場), 107943058 |
 | Stade de France | Q13205 | Stade de France, 1379022826 | スタッド・ド・フランス, 109911694 |
 | Nissan Stadium | Q116601 | Nissan Stadium (Yokohama), 1378612722 | 横浜国際総合競技場, 111289546 |
-| Olympiastadion Berlin | Q151374 | Olympiastadion (Berlin), 1377305597 | ベルリン・オリンピアシュタディオン, 109745416 |
+| Berlin Olympic Stadium | Q151374 | Olympiastadion (Berlin), 1377305597 | ベルリン・オリンピアシュタディオン, 109745416 |
 | FNB Stadium | Q163521 | FNB Stadium, 1376285767 | FNBスタジアム, 107530782 |
 | Luzhniki Stadium | Q202163 | Luzhniki Stadium, 1372284143 | ルジニキ・スタジアム, 110108346 |
 | Lusail Stadium | Q1186333 | Lusail Stadium, 1375493447 | ルサイル・アイコニック・スタジアム, 110108360 |
 | MetLife Stadium | Q10862290 | MetLife Stadium, 1377506007 | メットライフ・スタジアム, 110420479 |
 | AT&T Stadium | Q838284 | AT&T Stadium, 1378723128 | AT&Tスタジアム, 110578711 |
 | Arrowhead Stadium | Q544553 | Arrowhead Stadium, 1379206337 | アローヘッド・スタジアム, 110785489 |
-| Reliant Stadium | Q1058864 | Reliant Stadium, 1379613664 | リライアント・スタジアム, 110479504 |
+| NRG Stadium | Q1058864 | Reliant Stadium, 1379613664 | リライアント・スタジアム, 110479504 |
 | Mercedes-Benz Stadium | Q7007552 | Mercedes-Benz Stadium, 1377254306 | メルセデス・ベンツ・スタジアム, 110364633 |
 | Hard Rock Stadium | Q864339 | Hard Rock Stadium, 1378219951 | ハードロック・スタジアム, 110333956 |
 | SoFi Stadium | Q19520501 | SoFi Stadium, 1377512452 | SoFiスタジアム, 110365161 |
@@ -188,7 +189,7 @@ Each article was read at the revision named (64 soccer grounds), by its address 
 | Dignity Health Sports Park | Q200684 | Dignity Health Sports Park, 1372080521 | ディグニティ・ヘルス・スポーツ・パーク, 110881566 |
 | Hongkou Football Stadium | Q201773 | Hongkou Football Stadium, 1372203981 | 上海虹口足球場, 109727595 |
 | Deutsche Bank Park | Q157273 | Waldstadion (Frankfurt), 1375755144 | ヴァルトシュタディオン, 101381780 |
-| Parc Olympique Lyonnais | Q8507 | Parc Olympique Lyonnais, 1374907290 | パルク・オリンピック・リヨン, 110056689 |
+| Groupama Stadium | Q8507 | Parc Olympique Lyonnais, 1374907290 | パルク・オリンピック・リヨン, 110056689 |
 | Stadium Australia | Q295886 | Stadium Australia, 1377697688 | スタジアム・オーストラリア, 109501020 |
 | Camp Nou | Q159848 | Camp Nou, 1380052299 | カンプ・ノウ, 110123137 |
 | San Siro | Q133566 | San Siro, 1375450359 | スタディオ・ジュゼッペ・メアッツァ, 109745448 |

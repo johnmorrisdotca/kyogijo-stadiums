@@ -1,4 +1,5 @@
 import { GROUND_DATA } from "./grounds.data.ts";
+import { officialName, placesNamed, type PlaceAlias } from "./names.ts";
 import type { Language } from "./types.ts";
 
 /** Where a ground's facts were read: an article of Wikipedia at a revision. */
@@ -31,19 +32,23 @@ export interface GroundData {
   id: string;
   /** The Wikidata item of the ground (`Q155174`), the key to join a ground to other data. */
   wikidata: string;
-  /** The name the English article uses. */
+  /** The everyday name in English, the one English sports media use (`NRG Stadium`, `San Siro`); the title of the English article is one of the `aliases`. */
   name: string;
   /**
    * Names the ground had for some years, in order of time: where two share a year the later one is the name at the end of it,
    * and an entry further down overrides one above it. A year in none of them has `name`.
    */
   names?: GroundName[];
-  /** The name in the language of the place, as the article or the local Wikipedia gives it (the names of English-speaking places have none). */
-  nameLocal?: string;
-  /** The language of `nameLocal`: `es`, `pt`, `de`, `ja`, ... */
-  localLanguage?: string;
-  /** The name in Japanese, from the Japanese article. */
+  /** The everyday name in Japanese (`日産スタジアム`, `マラカナン`), as Japanese media say it. */
   nameJa: string;
+  /** The reading of `nameJa` in kana, given wherever `nameJa` has kanji (`にっさんスタジアム`). */
+  readingJa?: string;
+  /** The everyday name in the language of the place (`San Siro`, `Maracanã`, `日産スタジアム`); the grounds of English-speaking places have none. */
+  localName?: string;
+  /** The language of `localName`: `es`, `pt`, `de`, `ja`, ... */
+  localLanguage?: string;
+  /** Every other name, each with where it was read: the cited articles' titles (`wikipedia`, with the revision), the `official` name when it is not the everyday one, `sponsor` and `former` names with their years, `nickname`s. */
+  aliases?: PlaceAlias[];
   city: string;
   /** ISO 3166-1 alpha-2: `BR`. */
   country: string;
@@ -109,11 +114,35 @@ export const GROUND_IDS: readonly string[] = Object.freeze(GROUND_DATA.map((data
 /** The ground with a key, or `undefined`. */
 export const groundById = (id: string | undefined): Ground | undefined => (id !== undefined && Object.prototype.hasOwnProperty.call(GROUNDS, id) ? GROUNDS[id] : undefined);
 
+/**
+ * The grounds that answer to a name, best match first: the everyday names, then the official and cited names, the sponsors' and the names the ground had in some years, then the
+ * former names and the nicknames. A name is compared without case, accents, spaces or punctuation, in full-width or half-width, and in Japanese with hiragana or katakana and with
+ * or without the long vowel mark.
+ * @example
+ * ```ts
+ * import { groundByName, groundsByName } from "@johnmorrisdotca/kyogijo/grounds";
+ * console.log(groundByName("Giuseppe Meazza Stadium")?.id, groundByName("日産スタジアム")?.id, groundByName("Estadio Jornalista Mario Filho")?.id, groundsByName("stadium australia").length);
+ * // san-siro nissan-stadium-yokohama maracana 1
+ * ```
+ */
+export const groundsByName = (name: string | undefined): Ground[] => placesNamed(Object.values(GROUNDS), name);
+
+/** The ground a name belongs to (see `groundsByName`; the best match when several answer to it), or `undefined`. */
+export const groundByName = (name: string | undefined): Ground | undefined => groundsByName(name)[0];
+
+/** The name a ground officially has in a language, when it is not the everyday name (`Parc Olympique Lyonnais` for `Groupama Stadium`), in the year given or today; else `undefined`. */
+export function groundOfficialName(ground: Ground, language: Language = "en", year?: number): string | undefined {
+  const shown = groundNameIn(ground, year, language);
+  // A name the ground had for some years (the one FIFA gave it for a World Cup) is not followed by what it is officially today.
+  if (year !== undefined && Number.isFinite(year) && language === "en" && shown !== ground.name) return undefined;
+  return officialName(ground, language, shown, Number.isFinite(year) ? year : undefined);
+}
+
 /** The ground whose Wikidata item is `Q155174`, or `undefined`. */
 export const groundByWikidata = (wikidata: string | undefined): Ground | undefined => Object.values(GROUNDS).find((ground) => ground.wikidata === wikidata);
 
 /**
- * A ground's name in a year: the name it had then, or its name today, in English. In Japanese there is one name for every year.
+ * A ground's name in a year: the name it had then, or its everyday name, in English. In Japanese there is one name for every year.
  * @example
  * ```ts
  * import { GROUNDS, groundNameIn } from "@johnmorrisdotca/kyogijo/grounds";

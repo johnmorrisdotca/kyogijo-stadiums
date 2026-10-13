@@ -147,8 +147,18 @@ export function backgroundsTable(lib) {
   return table(["Pattern", "What it draws", "Opacity"], BACKGROUND_PATTERNS.map((name) => [`\`${name}\``, PATTERN_DRAWS[name], String(BACKGROUND_OPACITY[name])]));
 }
 
+/** The parks whose everyday name is not the title of the article that was cited, in English or in Japanese, with the official name, the reading and the titles. */
+export function parkNamesTable(lib) {
+  const { PARKS, PARK_IDS, parkOfficialName } = lib[`${MAIN}/parks`];
+  const title = (park, lang) => park.aliases?.find((alias) => alias.kind === "wikipedia" && alias.lang === lang)?.name ?? "";
+  const rows = PARK_IDS.map((id) => PARKS[id])
+    .filter((park) => park.name !== title(park, "en") || park.nameJa !== title(park, "ja"))
+    .map((park) => [`\`${park.id}\``, park.name, title(park, "en"), parkOfficialName(park, "en") ?? "", park.nameJa, park.readingJa ?? "", title(park, "ja"), parkOfficialName(park, "ja") ?? ""]);
+  return table(["Key", "Everyday name", "English article", "Official, English", "Name in Japanese", "Reading", "Japanese article", "Official, Japanese"], rows);
+}
+
 /** Every made block by name. */
-export const MADE = { frames: framesTable, units: unitsTable, limits: limitsTable, ranges: rangesTable, presets: presetsTable, backgrounds: backgroundsTable };
+export const MADE = { frames: framesTable, units: unitsTable, limits: limitsTable, ranges: rangesTable, presets: presetsTable, backgrounds: backgroundsTable, "park-names": parkNamesTable };
 
 const BLOCK = /(<!-- made:([\w-]+) -->\n)([\s\S]*?)(<!-- \/made:\2 -->)/g;
 

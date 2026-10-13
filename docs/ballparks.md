@@ -11,6 +11,58 @@
 
 Each park has its name (in Japanese too for the parks of Japan), team, city, coordinates, `wikidata` item and the article and revision its figures were read from; a past MLB park has `from` and `to`, and where an article dates earlier fences they are in `periods` (`year: 1915` draws the Polo Grounds' 277, 433 and 258 feet). All the keys and facts are in [parks.md](./parks.md) and [references.md](./references.md). A park may be the host of another surface, as the infield of Wrigley Field was for the rink of the 2009 Winter Classic: see [special games](./special-games.md).
 
+## Names
+
+A park has the name people use and every other name it answers to, each with where it was read. This holds for the parks of Japan as for the parks of the United States and Canada.
+
+- `name` is the **everyday name in English**, the one English sports media use (`Koshien Stadium`, `Oracle Park`, `Mazda Stadium`). Where a park carries a sponsor's name and that is what people say, it is the sponsor's. It is not always the title of the article that was cited: that title is an alias.
+- `nameJa` is the **everyday name in Japanese**, as Japanese media say it (`甲子園球場`, `神宮球場`, `マツダスタジアム`); for a park of the United States or Canada, the title of its Japanese article. `readingJa` is its reading in kana wherever it has kanji (`こうしえんきゅうじょう`). `localName` and `localLanguage` give the name in the language of the place (`ja`, and `fr` for the two parks of Montreal); the parks of English-speaking places have none.
+- `aliases` are the others, `{ name, lang, kind, from?, to?, source?, revision? }`. `kind` is `wikipedia` (the title of a cited article in English or in Japanese, with its `revision`: no citation is lost), `official` (what the owner or the operator calls the park, when that is not the everyday name: `阪神甲子園球場`, `Hanshin Koshien Stadium`), `sponsor` (a naming-rights name), `former` (an earlier name) or `nickname` (a short form, a name people use: `Camden Yards`, `ハマスタ`). `from` and `to` are the years a source gives, and `source` says where the name was read: an article and its revision, or a Wikidata item and property (`Wikidata Q49136 P1449`).
+- `parkByName(name)` (and `parksByName`, every park that answers to it, best match first) finds a park by any of these names, in English or in Japanese. The comparison ignores case, accents, spaces and punctuation, full-width and half-width, hiragana and katakana and the long vowel mark, so `ﾏﾂﾀﾞｽﾀｼﾞｱﾑ` and `マツダ スタジアム` are the same name. The everyday names come before the official, cited and sponsors' names, and those before the former names and the nicknames. `placeByName` of the [atlas](./atlas.md) does the same over the parks and the grounds together.
+- A drawing is titled with the everyday name in its language. Where the park is officially called something else, the description says so in that language (`Its official name is Hanshin Koshien Stadium.`, `正式名称は阪神甲子園球場です。`); `parkOfficialName(park, language, year)` gives that name.
+
+```ts
+import { PARKS, parkByName, parkOfficialName, parksByName } from "@johnmorrisdotca/kyogijo/parks";
+
+const koshien = PARKS["hanshin-koshien-stadium"];
+console.log(koshien.name, koshien.nameJa, koshien.readingJa);
+// Koshien Stadium 甲子園球場 こうしえんきゅうじょう
+console.log(parkOfficialName(koshien), parkOfficialName(koshien, "ja"));
+// Hanshin Koshien Stadium 阪神甲子園球場
+console.log(parkByName("Camden Yards")?.id, parkByName("ハマスタ")?.id, parkByName("ﾏﾂﾀﾞｽﾀｼﾞｱﾑ")?.id);
+// oriole-park-at-camden-yards yokohama-stadium mazda-stadium-hiroshima
+console.log(parksByName("Wrigley Field").map((park) => park.id).join(), parkByName("Tiger Stadium (Detroit)")?.id);
+// wrigley-field,wrigley-field-los-angeles tiger-stadium
+```
+
+The parks whose everyday name is not the title of the article that was cited (a park that is not in this table is named by its title in both languages; the table is made from the code by `pnpm docs:make`):
+
+<!-- made:park-names -->
+| Key | Everyday name | English article | Official, English | Name in Japanese | Reading | Japanese article | Official, Japanese |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `loandepot-park` | loanDepot Park | LoanDepot Park |  | ローンデポ・パーク |  | ローンデポ・パーク |  |
+| `exposition-park-pittsburgh` | Exposition Park | Exposition Park (Pittsburgh) |  | エクスポジション・パーク (ピッツバーグ) |  | エクスポジション・パーク (ピッツバーグ) |  |
+| `tiger-stadium` | Tiger Stadium | Tiger Stadium (Detroit) |  | タイガー・スタジアム |  | タイガー・スタジアム |  |
+| `baltimore-memorial-stadium` | Memorial Stadium (Baltimore) | Baltimore Memorial Stadium |  | メモリアル・スタジアム (ボルチモア) |  | メモリアル・スタジアム (ボルチモア) |  |
+| `municipal-stadium-kansas-city` | Municipal Stadium | Municipal Stadium (Kansas City, Missouri) |  | カンザスシティ・ミュニシパル・スタジアム |  | カンザスシティ・ミュニシパル・スタジアム |  |
+| `olympic-stadium-montreal` | Olympic Stadium | Olympic Stadium (Montreal) |  | オリンピック・スタジアム (モントリオール) |  | オリンピック・スタジアム (モントリオール) |  |
+| `hanshin-koshien-stadium` | Koshien Stadium | Koshien Stadium | Hanshin Koshien Stadium | 甲子園球場 | こうしえんきゅうじょう | 阪神甲子園球場 | 阪神甲子園球場 |
+| `meiji-jingu-stadium` | Meiji Jingu Stadium | Meiji Jingu Stadium |  | 神宮球場 | じんぐうきゅうじょう | 明治神宮野球場 | 明治神宮野球場 |
+| `vantelin-dome-nagoya` | Vantelin Dome Nagoya | Vantelin Dome Nagoya |  | バンテリンドーム ナゴヤ |  | ナゴヤドーム |  |
+| `mazda-stadium-hiroshima` | Mazda Stadium | Mazda Stadium | Hiroshima Municipal Stadium | マツダスタジアム |  | MAZDA Zoom-Zoom スタジアム広島 | 広島市民球場 |
+| `es-con-field-hokkaido` | ES CON Field Hokkaido | Es Con Field Hokkaido |  | エスコンフィールド北海道 | エスコンフィールドほっかいどう | エスコンフィールドHOKKAIDO | エスコンフィールドHOKKAIDO |
+| `rakuten-mobile-park-miyagi` | Rakuten Mobile Saikyo Park Miyagi | Rakuten Mobile Park Miyagi | Miyagi Baseball Stadium | 楽天モバイル 最強パーク宮城 | らくてんモバイル さいきょうパークみやぎ | 楽天モバイルパーク宮城 | 宮城球場 |
+| `belluna-dome` | Belluna Dome | Belluna Dome |  | ベルーナドーム |  | 西武ドーム |  |
+| `zozo-marine-stadium` | ZOZO Marine Stadium | Zozo Marine Stadium | Chiba Marine Stadium | ZOZOマリンスタジアム |  | 千葉マリンスタジアム |  |
+| `kyocera-dome-osaka` | Kyocera Dome Osaka | Kyocera Dome Osaka |  | 京セラドーム大阪 | きょうセラドームおおさか | 大阪ドーム |  |
+| `mizuho-paypay-dome-fukuoka` | Mizuho PayPay Dome Fukuoka | Mizuho PayPay Dome Fukuoka | Fukuoka Dome | みずほPayPayドーム福岡 | みずほペイペイドームふくおか | 福岡ドーム | 福岡ドーム |
+| `hotto-motto-field-kobe` | Hotto Motto Field Kobe | Hotto Motto Field Kobe | Kobe Sports Park Baseball Stadium | ほっともっとフィールド神戸 | ほっともっとフィールドこうべ | 神戸総合運動公園野球場 | 神戸総合運動公園野球場 |
+| `hiroshima-municipal-stadium` | Hiroshima Municipal Stadium (original) | Hiroshima Municipal Stadium (1957) |  | 旧広島市民球場 | きゅうひろしましみんきゅうじょう | 広島市民球場 (初代) | 広島市民球場 |
+| `osaka-stadium` | Osaka Stadium | Osaka Stadium |  | 大阪球場 | おおさかきゅうじょう | 大阪スタヂアム | 大阪スタヂアム |
+<!-- /made:park-names -->
+
+Where it was not certain what people call a park, the cited title is the everyday name, and [references.md](./references.md#names) says which.
+
 ## A park by name, and a past park in a season
 
 ```ts
@@ -18,10 +70,10 @@ import { PARKS, drawKyogijo } from "@johnmorrisdotca/kyogijo";
 
 const park = PARKS["hanshin-koshien-stadium"];
 console.log(park.name, park.nameJa, park.points.length);
-// Hanshin Koshien Stadium 阪神甲子園球場 5
+// Koshien Stadium 甲子園球場 5
 const svg = drawKyogijo({ sport: "mlb", park: "hanshin-koshien-stadium", language: "ja" });
-console.log(svg.includes("阪神甲子園球場のグラウンド"));
-// true
+console.log(svg.includes("甲子園球場のグラウンド"), svg.includes("阪神甲子園球場のグラウンド"), svg.includes("正式名称は阪神甲子園球場です"));
+// true false true
 ```
 
 ```ts

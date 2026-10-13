@@ -121,7 +121,8 @@ src/
 ├── frames.ts           coordinate frames: the mapper, the registry, toSurface and fromSurface
 ├── frames.providers.ts the NHL, HockeyTech, NBA, NFL, MLBAM, Retrosheet, curling, net sports and field sports frames
 ├── frames-entry.ts     the frames' entry
-├── parks.ts            the ballparks, their fences, walls, quirks and their sources
+├── names.ts            the names of a place: the aliases, the lookup by any name and the official name
+├── parks.ts            the ballparks, their fences, walls, quirks, names and their sources
 ├── ballpark.ts         what a drawing asks of a park's walls and quirks (`walls`, `quirks`), and the words that name them
 ├── parks.data.ts       made by scripts/build-parks.mjs from scripts/parks.data.json
 ├── parks-entry.ts      the parks' entry

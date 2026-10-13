@@ -5,7 +5,7 @@ import { el, esc, num } from "./format.ts";
 import { ERA_SPORTS, footballIn, rulesFor, seasonLabel, type EraSport } from "./eras.ts";
 import { FOOTBALL } from "./geometry.ts";
 import { renderLayers } from "./layers.ts";
-import { groundById, groundNameIn } from "./grounds.ts";
+import { groundById, groundNameIn, groundOfficialName } from "./grounds.ts";
 import { courtFor, isNetSport, type CourtPlan } from "./court.ts";
 import { cricketBoardMarkup } from "./cricket.board.ts";
 import { fieldPlan, isFieldSport } from "./fields.ts";
@@ -13,7 +13,7 @@ import { fieldScoreText, fieldTotal } from "./field.score.ts";
 import { fieldsStyle } from "./fields.style.ts";
 import { LEAGUES, chooseLeague, courtOf, diamondOf, fieldOf, hasHistory, leagueSeason, leagueSize, netOf, rinkOf, sheetOf, type League } from "./leagues.ts";
 import { diamondFence } from "./leagues/baseball.ts";
-import { fenceFor, parkById } from "./parks.ts";
+import { fenceFor, parkById, parkNameIn, parkOfficialName } from "./parks.ts";
 import { boardMarkup, endText } from "./curling.board.ts";
 import { sheetFor } from "./sheet.ts";
 import { cropToRange, describeRange, rangeLabel, shows } from "./ranges.ts";
@@ -386,7 +386,7 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
   const words = KYOGIJO_STRINGS[language];
   const { sport, league } = chooseLeague(o);
   const park = sport === "mlb" ? parkById(o.park) : undefined;
-  const parkName = park === undefined ? undefined : language === "ja" ? (park.nameJa ?? park.name) : park.name;
+  const parkName = park === undefined ? undefined : parkNameIn(park, language);
   const pitch = sport === "soccer" ? soccerSpec(pitchOf(o)) : undefined;
   // A ground names a full-size pitch; a small-sided pitch or futsal court the caller asked for keeps its own name.
   const ground = pitch?.format === "11" ? groundById(o.ground) : undefined;
@@ -403,11 +403,15 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
   const about = `${words.said.on}${colon}${aboutText}${stop}`;
   const halfLine = pitch !== undefined && !isScore(o) && (o.half === "left" || o.half === "right") ? `${gap}${words.soccer.half}` : "";
   // What the ground says about the size: that it is the published one, or that the ground has none and the international pitch is drawn.
-  const groundLine = ground === undefined || groundName === undefined || o.pitch !== undefined ? "" : `${gap}${fill(ground.pitchSize === "published" ? words.said.ground : words.said.groundDefault, { ground: groundName })}`;
+  const year = typeof o.year === "number" && Number.isFinite(o.year) ? o.year : undefined;
+  const groundOfficial = ground === undefined ? undefined : groundOfficialName(ground, language, year);
+  const parkOfficial = park === undefined ? undefined : parkOfficialName(park, language, year);
+  const officially = (name: string | undefined): string => (name === undefined ? "" : `${gap}${fill(words.said.officially, { name })}`);
+  const groundLine = ground === undefined || groundName === undefined || o.pitch !== undefined ? "" : `${gap}${fill(ground.pitchSize === "published" ? words.said.ground : words.said.groundDefault, { ground: groundName })}${officially(groundOfficial)}`;
   // A park's walls and quirks that are drawn are said too.
   const ballpark = park === undefined ? undefined : ballparkFor(o);
   const special = specialText(o, language, surfaceName);
-  const parkLine = (parkName === undefined ? `${groundLine}${halfLine}` : `${gap}${fill(words.said.park, { park: parkName })}${ballpark === undefined ? "" : ballparkSentences(ballpark).map((line) => `${gap}${line}`).join("")}`) + (special === undefined ? "" : `${gap}${special.text}`);
+  const parkLine = (parkName === undefined ? `${groundLine}${halfLine}` : `${gap}${fill(words.said.park, { park: parkName })}${officially(parkOfficial)}${ballpark === undefined ? "" : ballparkSentences(ballpark).map((line) => `${gap}${line}`).join("")}`) + (special === undefined ? "" : `${gap}${special.text}`);
   // A drawing of a past season says which: the markings are those of that season.
   const dated = typeof o.year === "number" && Number.isFinite(o.year);
   const eraLine =

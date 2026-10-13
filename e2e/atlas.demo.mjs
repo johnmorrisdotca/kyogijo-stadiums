@@ -64,7 +64,7 @@ test("the filters narrow the markers and the list together, and reset brings the
   await expect(page.locator(at("atlas-count"))).toHaveText("24 of 158 places");
   await page.locator(at("atlas-search")).fill("koshien");
   await expect(page.locator(at("atlas-count"))).toHaveText("1 of 158 places");
-  await expect(items(page).first()).toContainText("Hanshin Koshien Stadium");
+  await expect(items(page).first()).toContainText("Koshien Stadium");
   await page.locator(at("atlas-search")).fill("nowhere at all");
   await expect(items(page)).toHaveCount(0);
   await expect(page.locator(at("atlas-list"))).toContainText("No place matches");
@@ -184,7 +184,7 @@ test("the atlas opens on the place the address names, and speaks Japanese", asyn
   await expect(page.locator("#atlas-title")).toHaveText("球場・スタジアムマップ");
   await expect(detailName(page)).toHaveText("東京ドーム");
   await expect(page.locator(at("atlas-count"))).toHaveText("158か所中158か所");
-  await expect(page.locator(`${at("atlas-list")} .atlas-item[data-id="maracana"] .atlas-item-name`)).toHaveText("エスタジオ・ド・マラカナン");
+  await expect(page.locator(`${at("atlas-list")} .atlas-item[data-id="maracana"] .atlas-item-name`)).toHaveText("マラカナン");
   await expect(page.locator(at("atlas-detail"))).toContainText("日本");
   await page.locator(at("atlas-year-on")).click();
   await page.locator(at("atlas-year")).fill("1950");

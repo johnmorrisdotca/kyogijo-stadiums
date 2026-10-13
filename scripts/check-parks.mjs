@@ -2,12 +2,14 @@
 //
 // For each park it reads the Wikidata item the entry names and checks that: the item's English article, when it is not the one the entry
 // cites (an article is moved now and then), is named in a note; the item's coordinates (P625) are the entry's; and the item's country (P17), by its ISO 3166-1 alpha-2 code
-// (P297), is the entry's; and the years it opened and closed are Wikidata's where it gives them. A request at a time, with a User-Agent that names the project and a way to reach its author, as Wikimedia
+// (P297), is the entry's; the years it opened and closed are Wikidata's where it gives them; and every alias that says it was read from Wikidata is still a label, an alias
+// or a name (P1448, P1449, P2561, P1813) of the item. A request at a time, with a User-Agent that names the project and a way to reach its author, as Wikimedia
 // asks. Wikidata's data is CC0.
 import { readFileSync } from "node:fs";
 import process from "node:process";
 import { setTimeout } from "node:timers";
 import { URL } from "node:url";
+import { checkWikidataAliases } from "./names-lib.mjs";
 
 const parks = JSON.parse(readFileSync(new URL("./parks.data.json", import.meta.url), "utf8"));
 const USER_AGENT = "kyogijo-parks-check/0.1 (https://github.com/johnmorrisdotca/kyogijo; john@johnmorris.ca)";
@@ -22,7 +24,7 @@ const ask = async (ids, props) => {
 const plain = (text) => text.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 
 const entities = {};
-for (let i = 0; i < parks.length; i += 25) Object.assign(entities, await ask(parks.slice(i, i + 25).map((p) => p.wikidata), "claims|sitelinks"));
+for (let i = 0; i < parks.length; i += 25) Object.assign(entities, await ask(parks.slice(i, i + 25).map((p) => p.wikidata), "labels|aliases|claims|sitelinks"));
 const countries = new Set(Object.values(entities).flatMap((e) => (e.claims?.P17 ?? []).map((claim) => claim.mainsnak?.datavalue?.value?.id)).filter(Boolean));
 const iso = {};
 for (const [id, entity] of Object.entries(await ask([...countries], "claims"))) iso[id] = entity.claims?.P297?.[0]?.mainsnak?.datavalue?.value;
@@ -42,6 +44,7 @@ for (const p of parks) {
   const site = e.sitelinks?.enwiki?.title;
   // An article that has been moved since the revision the entry cites is a note and not a problem: the revision still names the article.
   if (p.en !== undefined && (site === undefined || plain(site) !== plain(p.en.title))) console.log(`note: ${p.id} (${p.wikidata}): its English article is now ${site}, and the entry cites ${p.en.title}`);
+  checkWikidataAliases(e, p, report);
   const at = e.claims?.P625?.[0]?.mainsnak?.datavalue?.value;
   if (at === undefined) report(p, "the item has no coordinates");
   else if (Math.abs(at.latitude - p.lat) > 0.0005 || Math.abs(at.longitude - p.lon) > 0.0005) report(p, `its coordinates are ${at.latitude}, ${at.longitude}, not ${p.lat}, ${p.lon}`);

@@ -53,7 +53,7 @@ function stringsDocument() {
   lines.push("", "## The parks' Japanese names", "", "| Key | English | 日本語 | Team |", "| --- | --- | --- | --- |");
   for (const id of PARK_IDS) if (PARKS[id].nameJa) lines.push(`| \`${id}\` | ${PARKS[id].name} | ${PARKS[id].nameJa} | ${PARKS[id].teamJa ?? ""} |`);
   lines.push("", "## The grounds' Japanese names", "", "| Key | English | 日本語 | Name in the place's language |", "| --- | --- | --- | --- |");
-  for (const id of GROUND_IDS) lines.push(`| \`${id}\` | ${GROUNDS[id].name} | ${GROUNDS[id].nameJa} | ${GROUNDS[id].nameLocal ?? ""} |`);
+  for (const id of GROUND_IDS) lines.push(`| \`${id}\` | ${GROUNDS[id].name} | ${GROUNDS[id].nameJa} | ${GROUNDS[id].localName ?? ""} |`);
   lines.push("", "## The special games (`EVENTS`)", "", "| Game | English | 日本語 | Venue, English | Venue, 日本語 |", "| --- | --- | --- | --- | --- |");
   for (const id of EVENT_IDS) lines.push(`| \`${id}\` | ${EVENTS[id].name.en} | ${EVENTS[id].name.ja} | ${EVENTS[id].venue.en} | ${EVENTS[id].venue.ja} |`);
   lines.push("", "## What the special games say of where their surface stands", "", "| Game | English | 日本語 |", "| --- | --- | --- |");
@@ -186,6 +186,18 @@ describe("the package's own numbers", () => {
     }
     const editions = JSON.parse(readFileSync("scripts/grounds.editions.json", "utf8"));
     for (const e of editions) expect(notice, `${e.competition} ${e.year}`).toContain(`${e.article.title}, ${e.article.revision}`);
+  });
+
+  it("have a help text for the demo's sport selector that names all the sports, in both languages", () => {
+    const page = readFileSync("scripts/site.mjs", "utf8");
+    const line = page.split("\n").find((text) => text.includes('seg("sport", "sport"')) ?? "";
+    const en = ["football fields", "hockey rink", "basketball court", "baseball field", "soccer pitch", "curling sheet", "tennis", "volleyball", "badminton", "pickleball", "table tennis", "lacrosse", "rugby", "Australian football", "Gaelic", "cricket", "field hockey", "handball"];
+    const ja = ["アメリカンフットボール", "アイスホッケー", "バスケットボール", "野球", "サッカー", "カーリング", "テニス", "バレーボール", "バドミントン", "ピックルボール", "卓球", "ラクロス", "ラグビー", "オーストラリアンフットボール", "ゲーリック", "クリケット", "フィールドホッケー", "ハンドボール"];
+    for (const word of en) expect(line, word).toContain(word);
+    for (const word of ja) expect(line, word).toContain(word);
+    // Twenty sports on the selector, and each is in the words of the help.
+    expect(WORDS.en).toHaveProperty("sport_handball");
+    expect(Object.keys(WORDS.en).filter((key) => key.startsWith("sport_"))).toHaveLength(20);
   });
 
   it("have a sentence in docs/references.md for each reference John sent", () => {

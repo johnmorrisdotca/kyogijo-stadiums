@@ -155,6 +155,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `said.won` | {name} won. | {name}の勝ちです。 |
 | `said.tied` | The game is level. | 同点です。 |
 | `said.park` | The outfield fence follows the figures published for {park}. | 外野フェンスは、{park}の公表されている距離をもとに描かれています。 |
+| `said.officially` | Its official name is {name}. | 正式名称は{name}です。 |
 | `said.ground` | The pitch follows the size published for {ground}. | ピッチは、{ground}の公表されている広さをもとに描かれています。 |
 | `said.groundDefault` | No pitch size is published for {ground}, so the pitch has the international size of 105 by 68 metres. | {ground}のピッチの広さは公表されていないため、国際標準の105×68mで描かれています。 |
 | `said.era` | The markings are those of the {season} season. | ラインやマークは{season}シーズンのものです。 |
@@ -848,6 +849,8 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `atlasKeyCurrent` | In use today (circle) | 現在使用中（丸） |
 | `atlasKeyPast` | Of the past (diamond) | 過去に使用（ひし形） |
 | `atlasPlace` | Place | 所在地 |
+| `atlasOfficial` | Officially | 正式名称 |
+| `atlasAlso` | Also called | ほかの呼び名 |
 | `atlasInUse` | In use | 使用状況 |
 | `atlasTeam` | Club | チーム |
 | `atlasLeagues` | Leagues | リーグ・大会 |
@@ -1117,14 +1120,88 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 
 | Key | English | 日本語 | Team |
 | --- | --- | --- | --- |
+| `oriole-park-at-camden-yards` | Oriole Park at Camden Yards | オリオール・パーク・アット・カムデン・ヤーズ |  |
+| `fenway-park` | Fenway Park | フェンウェイ・パーク |  |
+| `yankee-stadium` | Yankee Stadium | ヤンキー・スタジアム |  |
+| `tropicana-field` | Tropicana Field | トロピカーナ・フィールド |  |
+| `rogers-centre` | Rogers Centre | ロジャーズ・センター |  |
+| `rate-field` | Rate Field | レート・フィールド |  |
+| `progressive-field` | Progressive Field | プログレッシブ・フィールド |  |
+| `comerica-park` | Comerica Park | コメリカ・パーク |  |
+| `kauffman-stadium` | Kauffman Stadium | カウフマン・スタジアム |  |
+| `target-field` | Target Field | ターゲット・フィールド |  |
+| `daikin-park` | Daikin Park | ダイキン・パーク |  |
+| `angel-stadium` | Angel Stadium | エンゼル・スタジアム・オブ・アナハイム |  |
+| `sutter-health-park` | Sutter Health Park | サター・ヘルス・パーク |  |
+| `t-mobile-park` | T-Mobile Park | T-モバイル・パーク |  |
+| `globe-life-field` | Globe Life Field | グローブライフ・フィールド |  |
+| `truist-park` | Truist Park | トゥルーイスト・パーク |  |
+| `loandepot-park` | loanDepot Park | ローンデポ・パーク |  |
+| `citi-field` | Citi Field | シティ・フィールド |  |
+| `citizens-bank-park` | Citizens Bank Park | シチズンズ・バンク・パーク |  |
+| `nationals-park` | Nationals Park | ナショナルズ・パーク |  |
+| `wrigley-field` | Wrigley Field | リグレー・フィールド |  |
+| `great-american-ball-park` | Great American Ball Park | グレート・アメリカン・ボール・パーク |  |
+| `american-family-field` | American Family Field | アメリカンファミリー・フィールド |  |
+| `pnc-park` | PNC Park | PNCパーク |  |
+| `busch-stadium` | Busch Stadium | ブッシュ・スタジアム |  |
+| `chase-field` | Chase Field | チェイス・フィールド |  |
+| `coors-field` | Coors Field | クアーズ・フィールド |  |
+| `dodger-stadium` | Dodger Stadium | ドジャー・スタジアム |  |
+| `petco-park` | Petco Park | ペトコ・パーク |  |
+| `oracle-park` | Oracle Park | オラクル・パーク |  |
+| `baker-bowl` | Baker Bowl | ベイカー・ボウル |  |
+| `exposition-park-pittsburgh` | Exposition Park | エクスポジション・パーク (ピッツバーグ) |  |
+| `polo-grounds` | Polo Grounds | ポロ・グラウンズ |  |
+| `south-end-grounds` | South End Grounds | サウス・エンド・グラウンズ |  |
+| `huntington-avenue-grounds` | Huntington Avenue Grounds | ハンティントン・アベニュー・グラウンズ |  |
+| `league-park-cleveland` | League Park | リーグ・パーク (クリーブランド) |  |
+| `sportsmans-park` | Sportsman's Park | スポーツマンズ・パーク |  |
+| `hilltop-park` | Hilltop Park | ヒルトップ・パーク |  |
+| `forbes-field` | Forbes Field | フォーブス・フィールド |  |
+| `shibe-park` | Shibe Park | シャイブ・パーク |  |
+| `comiskey-park` | Comiskey Park | コミスキー・パーク |  |
+| `griffith-stadium` | Griffith Stadium | グリフィス・スタジアム |  |
+| `crosley-field` | Crosley Field | クロスリー・フィールド |  |
+| `tiger-stadium` | Tiger Stadium | タイガー・スタジアム |  |
+| `ebbets-field` | Ebbets Field | エベッツ・フィールド |  |
+| `braves-field` | Braves Field | ブレーブス・フィールド |  |
+| `yankee-stadium-1923` | Yankee Stadium (1923) | ヤンキー・スタジアム (1923年) |  |
+| `cleveland-stadium` | Cleveland Stadium | クリーブランド・スタジアム |  |
+| `milwaukee-county-stadium` | Milwaukee County Stadium | ミルウォーキー・カウンティ・スタジアム |  |
+| `baltimore-memorial-stadium` | Memorial Stadium (Baltimore) | メモリアル・スタジアム (ボルチモア) |  |
+| `municipal-stadium-kansas-city` | Municipal Stadium | カンザスシティ・ミュニシパル・スタジアム |  |
+| `seals-stadium` | Seals Stadium | シールズ・スタジアム |  |
+| `candlestick-park` | Candlestick Park | キャンドルスティック・パーク |  |
+| `wrigley-field-los-angeles` | Wrigley Field (Los Angeles) | ロサンゼルス・リグレー・フィールド |  |
+| `metropolitan-stadium` | Metropolitan Stadium | メトロポリタン・スタジアム |  |
+| `colt-stadium` | Colt Stadium | コルト・スタジアム |  |
+| `robert-f-kennedy-memorial-stadium` | Robert F. Kennedy Memorial Stadium | ロバート・F・ケネディ・メモリアル・スタジアム |  |
+| `shea-stadium` | Shea Stadium | シェイ・スタジアム |  |
+| `astrodome` | Astrodome | アストロドーム |  |
+| `atlanta-fulton-county-stadium` | Atlanta–Fulton County Stadium | アトランタ・フルトン・カウンティ・スタジアム |  |
+| `busch-memorial-stadium` | Busch Memorial Stadium | ブッシュ・メモリアル・スタジアム |  |
+| `oakland-coliseum` | Oakland Coliseum | オークランド・アラメダ・カウンティ・コロシアム |  |
+| `sicks-stadium` | Sick's Stadium | シックズ・スタジアム |  |
+| `jarry-park-stadium` | Jarry Park Stadium | ジェリー・パーク |  |
+| `three-rivers-stadium` | Three Rivers Stadium | スリー・リバース・スタジアム |  |
+| `riverfront-stadium` | Riverfront Stadium | リバーフロント・スタジアム |  |
+| `veterans-stadium` | Veterans Stadium | ベテランズ・スタジアム |  |
+| `arlington-stadium` | Arlington Stadium | アーリントン・スタジアム |  |
+| `exhibition-stadium` | Exhibition Stadium | エキシビション・スタジアム |  |
+| `olympic-stadium-montreal` | Olympic Stadium | オリンピック・スタジアム (モントリオール) |  |
+| `metrodome` | Hubert H. Humphrey Metrodome | ヒューバート・H・ハンフリー・メトロドーム |  |
+| `mile-high-stadium` | Mile High Stadium | マイル・ハイ・スタジアム |  |
+| `globe-life-park-in-arlington` | Choctaw Stadium | チョクトー・スタジアム |  |
+| `turner-field` | Turner Field | ターナー・フィールド |  |
 | `tokyo-dome` | Tokyo Dome | 東京ドーム | 読売ジャイアンツ |
-| `hanshin-koshien-stadium` | Hanshin Koshien Stadium | 阪神甲子園球場 | 阪神タイガース |
-| `meiji-jingu-stadium` | Meiji Jingu Stadium | 明治神宮野球場 | 東京ヤクルトスワローズ |
+| `hanshin-koshien-stadium` | Koshien Stadium | 甲子園球場 | 阪神タイガース |
+| `meiji-jingu-stadium` | Meiji Jingu Stadium | 神宮球場 | 東京ヤクルトスワローズ |
 | `yokohama-stadium` | Yokohama Stadium | 横浜スタジアム | 横浜DeNAベイスターズ |
 | `vantelin-dome-nagoya` | Vantelin Dome Nagoya | バンテリンドーム ナゴヤ | 中日ドラゴンズ |
-| `mazda-stadium-hiroshima` | Mazda Zoom-Zoom Stadium Hiroshima | MAZDA Zoom-Zoom スタジアム広島 | 広島東洋カープ |
-| `es-con-field-hokkaido` | ES CON Field Hokkaido | エスコンフィールドHOKKAIDO | 北海道日本ハムファイターズ |
-| `rakuten-mobile-park-miyagi` | Rakuten Mobile Park Miyagi | 楽天モバイルパーク宮城 | 東北楽天ゴールデンイーグルス |
+| `mazda-stadium-hiroshima` | Mazda Stadium | マツダスタジアム | 広島東洋カープ |
+| `es-con-field-hokkaido` | ES CON Field Hokkaido | エスコンフィールド北海道 | 北海道日本ハムファイターズ |
+| `rakuten-mobile-park-miyagi` | Rakuten Mobile Saikyo Park Miyagi | 楽天モバイル 最強パーク宮城 | 東北楽天ゴールデンイーグルス |
 | `belluna-dome` | Belluna Dome | ベルーナドーム | 埼玉西武ライオンズ |
 | `zozo-marine-stadium` | ZOZO Marine Stadium | ZOZOマリンスタジアム | 千葉ロッテマリーンズ |
 | `kyocera-dome-osaka` | Kyocera Dome Osaka | 京セラドーム大阪 | オリックス・バファローズ |
@@ -1144,29 +1221,29 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | --- | --- | --- | --- |
 | `estadio-centenario` | Estadio Centenario | エスタディオ・センテナリオ | Estadio Centenario |
 | `stadio-nazionale-pnf` | Stadio Nazionale PNF | スタディオ・ナツィオナーレPNF | Stadio Nazionale del PNF |
-| `stade-yves-du-manoir` | Stade Yves-du-Manoir | スタッド・デパルトモンタル・イヴ＝デュ＝マノワール | Stade départemental Yves-du-Manoir |
-| `maracana` | Maracanã Stadium | エスタジオ・ド・マラカナン | Estádio do Maracanã |
+| `stade-yves-du-manoir` | Stade Yves-du-Manoir | スタッド・デパルトモンタル・イヴ＝デュ＝マノワール | Stade Yves-du-Manoir |
+| `maracana` | Maracanã Stadium | マラカナン | Maracanã |
 | `wankdorf` | Wankdorf Stadium | シュタディオン・ヴァンクドルフ | Wankdorfstadion |
 | `rasunda` | Råsunda Stadium | ロースンダ・スタディオン | Råsunda fotbollsstadion |
-| `estadio-nacional-santiago` | Julio Martínez Prádanos National Stadium | エスタディオ・ナシオナル・デ・チリ | Estadio Nacional Julio Martínez Prádanos |
+| `estadio-nacional-santiago` | Julio Martínez Prádanos National Stadium | エスタディオ・ナシオナル・デ・チリ | Estadio Nacional |
 | `wembley-1923` | Wembley Stadium (1923) | 旧ウェンブリー・スタジアム |  |
 | `wembley` | Wembley Stadium | ウェンブリー・スタジアム |  |
 | `estadio-azteca` | Estadio Azteca | エスタディオ・アステカ | Estadio Azteca |
-| `olympiastadion-munich` | Olympiastadion (Munich) | ミュンヘン・オリンピアシュタディオン | Olympiastadion München |
-| `monumental` | Estadio Monumental | エスタディオ・モヌメンタル・アントニオ・ベスプチオ・リベルティ | Estadio Monumental |
+| `olympiastadion-munich` | Munich Olympic Stadium | ミュンヘン・オリンピアシュタディオン | Olympiastadion München |
+| `monumental` | Estadio Monumental | エスタディオ・モヌメンタル | Estadio Monumental |
 | `santiago-bernabeu` | Santiago Bernabéu Stadium | エスタディオ・サンティアゴ・ベルナベウ | Estadio Santiago Bernabéu |
 | `stadio-olimpico-rome` | Stadio Olimpico | スタディオ・オリンピコ・ディ・ローマ | Stadio Olimpico |
 | `rose-bowl` | Rose Bowl | ローズボウル |  |
 | `stade-de-france` | Stade de France | スタッド・ド・フランス | Stade de France |
-| `nissan-stadium-yokohama` | Nissan Stadium | 横浜国際総合競技場 | 横浜国際総合競技場 |
-| `olympiastadion-berlin` | Olympiastadion Berlin | ベルリン・オリンピアシュタディオン | Olympiastadion Berlin |
+| `nissan-stadium-yokohama` | Nissan Stadium | 日産スタジアム | 日産スタジアム |
+| `olympiastadion-berlin` | Berlin Olympic Stadium | ベルリン・オリンピアシュタディオン | Olympiastadion Berlin |
 | `soccer-city` | FNB Stadium | FNBスタジアム |  |
-| `luzhniki` | Luzhniki Stadium | ルジニキ・スタジアム | стадион «Лужники» |
+| `luzhniki` | Luzhniki Stadium | ルジニキ・スタジアム | Лужники |
 | `lusail` | Lusail Stadium | ルサイル・アイコニック・スタジアム | استاد لوسيل |
 | `metlife-stadium` | MetLife Stadium | メットライフ・スタジアム |  |
 | `att-stadium` | AT&T Stadium | AT&Tスタジアム |  |
 | `arrowhead-stadium` | Arrowhead Stadium | アローヘッド・スタジアム |  |
-| `nrg-stadium` | Reliant Stadium | リライアント・スタジアム |  |
+| `nrg-stadium` | NRG Stadium | NRGスタジアム |  |
 | `mercedes-benz-stadium` | Mercedes-Benz Stadium | メルセデス・ベンツ・スタジアム |  |
 | `hard-rock-stadium` | Hard Rock Stadium | ハードロック・スタジアム |  |
 | `sofi-stadium` | SoFi Stadium | SoFiスタジアム |  |
@@ -1178,19 +1255,19 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `bc-place` | BC Place | BCプレイス |  |
 | `estadio-bbva` | Estadio BBVA | エスタディオBBVA | Estadio BBVA |
 | `estadio-akron` | Estadio Akron | エスタディオ・アクロン | Estadio Akron |
-| `tianhe-stadium` | Tianhe Stadium | 天河体育中心体育場 | 天河体育中心体育场 |
+| `tianhe-stadium` | Tianhe Stadium | 天河体育中心体育場 | 天河体育场 |
 | `dignity-health-sports-park` | Dignity Health Sports Park | ディグニティ・ヘルス・スポーツ・パーク |  |
 | `hongkou-football-stadium` | Hongkou Football Stadium | 上海虹口足球場 | 虹口足球场 |
-| `waldstadion-frankfurt` | Deutsche Bank Park | ヴァルトシュタディオン | Deutsche Bank Park |
-| `groupama-stadium` | Parc Olympique Lyonnais | パルク・オリンピック・リヨン | Parc Olympique Lyonnais |
+| `waldstadion-frankfurt` | Deutsche Bank Park | ドイチェ・バンク・パルク | Deutsche Bank Park |
+| `groupama-stadium` | Groupama Stadium | グルパマ・スタジアム | Groupama Stadium |
 | `stadium-australia` | Stadium Australia | スタジアム・オーストラリア |  |
 | `camp-nou` | Camp Nou | カンプ・ノウ | Camp Nou |
-| `san-siro` | San Siro | スタディオ・ジュゼッペ・メアッツァ | Stadio Giuseppe Meazza |
+| `san-siro` | San Siro | サン・シーロ | San Siro |
 | `old-trafford` | Old Trafford | オールド・トラッフォード |  |
 | `anfield` | Anfield | アンフィールド |  |
 | `signal-iduna-park` | Signal Iduna Park | ジグナル・イドゥナ・パルク | Signal Iduna Park |
 | `allianz-arena` | Allianz Arena | アリアンツ・アレーナ | Allianz Arena |
-| `la-bombonera` | La Bombonera | ラ・ボンボネーラ | Estadio Alberto José Armando |
+| `la-bombonera` | La Bombonera | ラ・ボンボネーラ | La Bombonera |
 | `hampden-park` | Hampden Park | ハムデン・パーク |  |
 | `celtic-park` | Celtic Park | セルティック・パーク |  |
 | `estadio-da-luz` | Estádio da Luz | エスタディオ・ダ・ルス | Estádio da Luz |
@@ -1198,14 +1275,14 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `saitama-stadium-2002` | Saitama Stadium 2002 | 埼玉スタジアム2002 | 埼玉スタジアム2002 |
 | `seoul-world-cup-stadium` | Seoul World Cup Stadium | ソウルワールドカップ競技場 | 서울월드컵경기장 |
 | `emirates-stadium` | Emirates Stadium | エミレーツ・スタジアム |  |
-| `etihad-stadium` | Etihad Stadium | シティ・オブ・マンチェスター・スタジアム |  |
+| `etihad-stadium` | Etihad Stadium | エティハド・スタジアム |  |
 | `stamford-bridge` | Stamford Bridge | スタンフォード・ブリッジ |  |
 | `tottenham-hotspur-stadium` | Tottenham Hotspur Stadium | トッテナム・ホットスパー・スタジアム |  |
 | `ibrox` | Ibrox Stadium | アイブロックス・スタジアム |  |
 | `johan-cruyff-arena` | Johan Cruyff Arena | ヨハン・クライフ・アレナ | Johan Cruijff ArenA |
 | `allianz-stadium-turin` | Allianz Stadium | ユヴェントス・スタジアム | Allianz Stadium |
 | `japan-national-stadium` | Japan National Stadium | 国立競技場 | 国立競技場 |
-| `kashima-soccer-stadium` | Kashima Soccer Stadium | 茨城県立カシマサッカースタジアム | 茨城県立カシマサッカースタジアム |
+| `kashima-soccer-stadium` | Kashima Soccer Stadium | カシマサッカースタジアム | カシマサッカースタジアム |
 
 ## The special games (`EVENTS`)
 
