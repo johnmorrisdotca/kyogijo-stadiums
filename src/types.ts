@@ -1,3 +1,5 @@
+import type { Unit } from "./units.ts";
+
 /** The surfaces: three football fields, a rink, a court and a ballpark. */
 export type Sport = "nfl" | "cfl" | "ifaf" | "nhl" | "nba" | "mlb";
 
@@ -140,8 +142,13 @@ export interface SurfaceOptions {
   description?: string;
   /** A prefix for the ids inside the drawing. Made from the options when missing, so that the same call gives the same drawing. */
   id?: string;
-  /** Feet of ground to draw round the playing surface. A default for each sport. */
+  /** The ground to draw round the playing surface, in `units` (feet by default). A default for each sport. */
   margin?: number;
+  /**
+   * The unit of every length in these options: `margin` and the distances of `fence`, and the coordinates and limits a
+   * data layer places. Feet when missing; they are converted to feet once, before anything is drawn.
+   */
+  units?: Unit;
   /** `simple` leaves out the small markings. */
   detail?: Detail;
   /** Draw lines at their true widths. By default they are drawn thicker, as broadcast graphics do, so they stay in view when small. */
@@ -156,7 +163,7 @@ export interface SurfaceOptions {
   rightColor?: string;
   /** The ballpark of an MLB drawing: a key of `PARKS`, or `generic` (the default) for a typical field. */
   park?: string;
-  /** Fence distances of an MLB drawing, over the park's. */
+  /** Fence distances of an MLB drawing, in `units`, over the park's. */
   fence?: Partial<Fence>;
   /** The look of an NBA court. */
   court?: CourtStyle;

@@ -86,7 +86,8 @@ console.log(svg.startsWith("<svg"), svg.includes("NORTHERN OWLS"));
 | --- | --- |
 | `drawKyogijo`, `drawSurface`, `drawScore`, `drawBadge` | The drawing, as a string of SVG. |
 | `SPORTS`, `PARKS`, `PARK_IDS`, `COURT_THEMES` | The six sports, the 50 ballparks, the court looks. |
-| `@johnmorrisdotca/kyogijo/geometry` | The dimensions of every surface in feet, and the functions that follow from them. |
+| `@johnmorrisdotca/kyogijo/geometry` | The dimensions of every surface in feet, in any unit, and the functions that follow from them. |
+| `@johnmorrisdotca/kyogijo/frames` | Providers' coordinate frames and the functions that put their points on a surface. |
 | `@johnmorrisdotca/kyogijo/parks` | The ballparks and the article each was read from. |
 | `@johnmorrisdotca/kyogijo/mount` | `mountKyogijo`: draw into a container and keep it laid out; `kyogijoElement`. |
 | `@johnmorrisdotca/kyogijo/react` | `kyogijoProps` and `createKyogijo`, for React, without depending on it. |
@@ -332,7 +333,7 @@ The address takes `sport`, `park`, `size`, `orientation` (it fits its frame by d
 
 ## The surfaces
 
-All dimensions are in feet in the code (`@johnmorrisdotca/kyogijo/geometry`), and each is cited in [docs/sources.md](./docs/sources.md).
+Every dimension is kept in feet in the code (`@johnmorrisdotca/kyogijo/geometry`) and can be had in any unit (see [Units](#units)), and each is cited in [docs/sources.md](./docs/sources.md).
 
 | `sport` | Surface | Size | Drawn |
 | --- | --- | --- | --- |
@@ -381,6 +382,73 @@ Lines are drawn a little thicker than they are painted, as broadcast graphics do
 
 Each park has its name in English (and in Japanese for the parks of Japan), its team, its city, and the article and revision its figures were read from (`parkSourceUrl`). The articles give distances and not directions, so the angle each figure is taken at is our reading of its label; see [docs/references.md](./docs/references.md). Japanese parks are measured in metres and converted once. A fence is not drawn with its wall's height or its quirks (the Green Monster, Tal's Hill).
 
+## Units
+
+Each surface keeps the unit its rulebook states its figures in. The drawing itself is made in feet, so a figure is one conversion away in either direction, and `units` says what the lengths you pass are in.
+
+| Surface | Unit | Why |
+| --- | --- | --- |
+| `nfl`, `cfl`, `ifaf` | yards (`yd`) | the length of a field and its end zones are counted in yards |
+| `nhl`, `nba` | feet (`ft`) | the rulebooks give feet and inches |
+| `mlb` | feet (`ft`) | the Official Baseball Rules give feet |
+| NPB parks (`parkUnit`) | metres (`m`) | the parks of Japan publish their fence in metres; `PARKS` holds them in feet, converted once at 0.3048 metres to the foot |
+
+`SURFACE_UNITS` is that table. The units are `ft`, `in`, `yd`, `m`, `cm` and `mm`; anything else is an error and not feet.
+
+```ts
+import { NHL, SURFACE_UNITS, convertLength, dimensionsOf, lengthsIn, surfaceSize } from "@johnmorrisdotca/kyogijo/geometry";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+
+console.log(SURFACE_UNITS.nfl, surfaceSize("nfl"), convertLength(100, "yd", "ft"));
+// yd { length: 120, width: 53.333333333333336, unit: 'yd' } 300
+console.log(surfaceSize("nhl", "m").length.toFixed(2), lengthsIn(NHL, "m").crease.radius.toFixed(3), dimensionsOf("nba", "yd").length.toFixed(2));
+// 60.96 1.829 31.33
+
+// The margin and the fence are lengths: with `units` they are in metres, and are converted before anything is drawn.
+const metres = drawKyogijo({ sport: "mlb", id: "m", margin: 3.048, fence: { left: 100, center: 122 }, units: "m" });
+const feet = drawKyogijo({ sport: "mlb", id: "m", margin: 10, fence: { left: 100 / 0.3048, center: 122 / 0.3048 } });
+console.log(metres === feet);
+// true
+```
+
+`lengthsIn(table, unit)` converts every length in a table of dimensions (`NHL`, `NBA`, `MLB`, a football spec) and keeps its names and flags; `dimensionsOf(sport, unit)` is the table of a sport, in its own unit when none is given; `fenceIn(points, unit)` converts a fence's distances and not its angles. Nothing is changed in place.
+
+## Coordinate frames
+
+A data provider puts a point on a rink or a field in its own numbers: the NHL's feet from centre ice, HockeyTech's canvas of 600 by 300, the NBA's tenths of a foot from the hoop. A `Frame` says how those numbers lie on the surface (their unit, range, origin, which way y grows, whether the surface's size matters, and the landmarks they map through), and `toSurface` and `fromSurface` move points between a frame and the drawing's own coordinates. `convert(from, to)` goes from one provider's frame to another's. The module is `@johnmorrisdotca/kyogijo/frames`, and each frame is cited in [docs/sources.md](./docs/sources.md).
+
+| Frame | Sport | Unit and range | Origin | y grows | Ends |
+| --- | --- | --- | --- | --- | --- |
+| `nhl-api` | NHL | feet, x -100 to 100, y -42.5 to 42.5 | centre ice | up | fixed to the rink |
+| `hockeytech` | NHL | canvas, x 0 to 600, y 0 to 300 | top left | down | fixed to the rink |
+| `nba-stats` | NBA | tenths of a foot, x -250 to 250, y -52.5 to 887.5 | the hoop | towards half court | the basket attacked |
+| `nfl-tracking` | NFL | yards, x 0 to 120, y 0 to 53.3 | bottom left of the field | up | fixed to the field |
+| `mlbam` | MLB | image units, home plate at (125.42, 198.27) | top left | down | none |
+| `retrosheet` | MLB | feet from home plate (zone centres: `RETROSHEET_ZONES`) | home plate | out | none |
+
+```ts
+import { convert, fromSurface, toSurface } from "@johnmorrisdotca/kyogijo/frames";
+
+// The right end-zone face-off dot: 69 feet from centre ice, 22 to one side.
+console.log(toSurface([[69, 22]], { from: "nhl-api" }), toSurface([[507, 150 - (22 * 300) / 85]], { from: "hockeytech" })[0].map((n) => Math.round(n * 100) / 100));
+// [ [ 169, 20.5 ] ] [ 169, 20.5 ]
+
+// The same point in metres lands where the point in feet does, and goes back.
+const metres = toSurface([[69, 22]], { from: "nhl-api", units: "m" });
+console.log(metres[0].map((n) => n.toFixed(3)), fromSurface(metres, { to: "nhl-api", units: "m" })[0].map((n) => Math.round(n)));
+// [ '51.511', '6.248' ] [ 69, 22 ]
+
+// A team that attacked the left end in a period is turned a half turn, so that every shot attacks the right.
+console.log(toSurface([[69, 22]], { from: "nhl-api", attacking: "left" }), convert("hockeytech", "nhl-api")([[600, 0]]));
+// [ [ 31, 64.5 ] ] [ [ 100, 42.5 ] ]
+```
+
+- **Units, anchors and limits.** `units` is the unit of the surface's numbers (feet by default); `anchors` replace a frame's landmarks with your own for a venue whose markings differ, and `limits` keeps points on the surface (`"surface"`) or in a box. Anchors and limits are converted with `units`, not only the points.
+- **Ends.** `attacking: "left"` turns points a half turn about the middle of the surface. `attackingIn("nhl", period, "right")` says which end a team attacks in a period (hockey changes ends every period, football after the first and third quarters, basketball at the half); for a period no rule here settles, pass `changedAfter`. A baseball frame has no ends and refuses `attacking`.
+- **Your own frame.** `registerFrame(frame)` adds one to `FRAMES`, and `piecewise(landmarks)` is the mapper the frames use: straight between landmarks, so a frame whose axis bends (a pitch drawn at a provider's own figures) is a list of landmarks. A frame for a surface of any size takes its landmarks as a function of the surface's size, and `toSurface` is then given `size`.
+- **Retrosheet's zones.** `zoneToPoint("8D")` is the centre of a hit-location sector in feet from home plate and `zoneAt([x, y])` the zone whose centre is nearest a point. The centres are read off Retrosheet's diagram and are good to a few feet.
+- **What is ours.** The NHL API's sign of y, the NFL tracking data's corner of origin and the MLBAM scale of 2.5 feet a unit are conventions the sources read do not settle; each is marked in `note` and in [docs/sources.md](./docs/sources.md). Check one known point against your data before trusting a frame.
+
 ## Score mode
 
 <p align="center">
@@ -425,9 +493,10 @@ The [API reference](https://johnmorrisdotca.github.io/kyogijo/api.html) lists ev
 
 | Entry | What it holds |
 | --- | --- |
-| `@johnmorrisdotca/kyogijo` | `drawKyogijo`, `drawSurface`, `drawScore`, `drawBadge`, `describe`, `winnerOf`, `statusLabel`, `isPortrait`; `SPORTS`, `COURT_THEMES`, `PARKS`, `PARK_IDS`, `parkById`, `parkSourceUrl`, `fenceFor`; `safeColour`, `safeLogo`, `inkOn`; `fitLines`, `textWidth`, `abbreviate`, `capitals`; `KYOGIJO_STYLE`, `KYOGIJO_STRINGS`, `COLOR_PROPERTIES`, `VERSION` and the option types |
-| `@johnmorrisdotca/kyogijo/geometry` | `FOOTBALL`, `NHL`, `NBA`, `MLB`, `fenceAt`, `fencePoints`, `threePointJoin`, `skinJoin`, `boardsY` and the other dimensions |
-| `@johnmorrisdotca/kyogijo/parks` | `PARKS`, `PARK_IDS`, `parkById`, `parkSourceUrl`, `fenceFor` |
+| `@johnmorrisdotca/kyogijo` | `drawKyogijo`, `drawSurface`, `drawScore`, `drawBadge`, `describe`, `winnerOf`, `statusLabel`, `isPortrait`; `SPORTS`, `COURT_THEMES`, `PARKS`, `PARK_IDS`, `parkById`, `parkSourceUrl`, `parkUnit`, `fenceFor`; `SURFACE_UNITS`, `UNITS`, `convertLength`; `safeColour`, `safeLogo`, `inkOn`; `fitLines`, `textWidth`, `abbreviate`, `capitals`; `KYOGIJO_STYLE`, `KYOGIJO_STRINGS`, `COLOR_PROPERTIES`, `VERSION` and the option types |
+| `@johnmorrisdotca/kyogijo/geometry` | `FOOTBALL`, `NHL`, `NBA`, `MLB`, `fenceAt`, `fencePoints`, `threePointJoin`, `skinJoin`, `boardsY` and the other dimensions; `SURFACE_UNITS`, `convertLength`, `convertPoint`, `lengthsIn`, `dimensionsOf`, `surfaceSize`, `fenceIn` |
+| `@johnmorrisdotca/kyogijo/frames` | `toSurface`, `fromSurface`, `convert`, `convertPoints`, `flipEnds`, `attackingIn`, `registerFrame`, `frameByName`, `framesOf`, `piecewise`, `span`, `FRAMES`, `RETROSHEET_ZONES`, `zoneToPoint`, `zoneAt` and the frame types |
+| `@johnmorrisdotca/kyogijo/parks` | `PARKS`, `PARK_IDS`, `parkById`, `parkSourceUrl`, `parkUnit`, `fenceFor` |
 | `@johnmorrisdotca/kyogijo/mount` | `mountKyogijo`, `kyogijoElement`, `containerAspect` |
 | `@johnmorrisdotca/kyogijo/react` | `kyogijoProps`, `kyogijoHtml`, `createKyogijo` |
 | `@johnmorrisdotca/kyogijo/element` | `KyogijoField`, `defineKyogijoField`, `optionsFromAttributes`, `KYOGIJO_TAG`, `KYOGIJO_ATTRIBUTES` |
@@ -468,6 +537,8 @@ Each is held by a test, and the ones with a name are exported.
 | --- | --- | --- |
 | Sports | 6 | `SPORTS` |
 | Ballparks | 50 (30 MLB, 12 NPB home parks, 8 other NPB grounds) | `PARKS` |
+| Units | 6 (`ft`, `in`, `yd`, `m`, `cm`, `mm`) | `UNITS` |
+| Coordinate frames | 6 to start with (`nhl-api`, `hockeytech`, `nba-stats`, `nfl-tracking`, `mlbam`, `retrosheet`), more by `registerFrame` | `FRAMES` |
 | A colour | a hex colour, `rgb()`, `rgba()`, `hsl()`, `hsla()`, a name or `var(--name)`, 64 characters at most | `safeColour` |
 | A logo | an https or relative address, an image data address, or SVG text up to 200,000 characters | `safeLogo` |
 | A name | any length: it is set on one line or two, in the biggest size that fits its place | `fitLines` |
@@ -498,7 +569,7 @@ Not here yet, and each welcome as an [issue](https://github.com/johnmorrisdotca/
 - **More surfaces**: the FIBA and college courts, the international rink, rugby and soccer pitches, a stadium's seating.
 - **Wall heights and quirks** in a ballpark: the Green Monster, Tal's Hill and the walls of Japan's parks.
 - **Parks of the past**: the MLB parks that clubs have left, from their published figures.
-- **Players on the surface**: a shot chart, a face-off, a pitch, drawn on the same coordinates.
+- **Players on the surface**: a shot chart, a face-off, a pitch, drawn on the same coordinates. The frames that place their points are here; the drawing of them is not.
 - **Football in a different standard**: the college and high-school hash marks.
 
 Left out on purpose: statistics, rosters and schedules. Kyogijo draws the place and the score it is given; it does not look anything up.
@@ -520,6 +591,10 @@ src/
 │   └── baseball.ts     the baseball field and its fence
 ├── geometry.ts         every dimension, in feet, with the fence's curve
 ├── geometry-entry.ts   the geometry's entry
+├── units.ts            the units of length, each surface's own, and the converters
+├── frames.ts           coordinate frames: the mapper, the registry, toSurface and fromSurface
+├── frames.providers.ts the NHL, HockeyTech, NBA, NFL, MLBAM and Retrosheet frames
+├── frames-entry.ts     the frames' entry
 ├── parks.ts            the ballparks, their fences and their sources
 ├── parks.data.ts       made by scripts/build-parks.mjs from scripts/parks.data.json
 ├── parks-entry.ts      the parks' entry

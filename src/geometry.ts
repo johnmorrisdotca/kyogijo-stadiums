@@ -2,6 +2,9 @@
 // the full citations). Nothing here draws: it is numbers and the few functions that follow from them, so that a test can
 // hold a key distance to the rulebook.
 
+import { SURFACE_UNITS, convertLength, lengthsIn, type Scaled, type Unit } from "./units.ts";
+import type { Sport } from "./types.ts";
+
 export const FEET_PER_YARD = 3;
 export const FEET_PER_METRE = 3.280839895;
 /** Inches as feet. */
@@ -194,4 +197,72 @@ export function fenceAt(points: readonly FencePoint[], angle: number): number {
   const t2 = t * t;
   const t3 = t2 * t;
   return (2 * t3 - 3 * t2 + 1) * points[k][1] + (t3 - 2 * t2 + t) * h[k] * m[k] + (-2 * t3 + 3 * t2) * points[k + 1][1] + (t3 - t2) * h[k] * m[k + 1];
+}
+
+/** The sports whose surface has one size. A ballpark's size is its fence, which `fenceIn` gives. */
+export type SizedSport = Exclude<Sport, "mlb">;
+
+/**
+ * The length and the width of a surface, in a unit: the rulebook's own (`SURFACE_UNITS`) when none is given. A football
+ * field is measured with its end zones, end line to end line.
+ * @example
+ * ```ts
+ * import { surfaceSize } from "@johnmorrisdotca/kyogijo/geometry";
+ * console.log(surfaceSize("nfl"), surfaceSize("nhl", "m").length.toFixed(2));
+ * // { length: 120, width: 53.333333333333336, unit: 'yd' } 60.96
+ * ```
+ */
+export function surfaceSize(sport: SizedSport, unit: Unit = SURFACE_UNITS[sport]): { length: number; width: number; unit: Unit } {
+  let length: number;
+  let width: number;
+  switch (sport) {
+    case "nfl":
+    case "cfl":
+    case "ifaf":
+      length = footballLength(FOOTBALL[sport]);
+      width = FOOTBALL[sport].width;
+      break;
+    case "nhl":
+      length = NHL.length;
+      width = NHL.width;
+      break;
+    case "nba":
+      length = NBA.length;
+      width = NBA.width;
+      break;
+    default:
+      throw new Error(`No fixed size for "${String(sport)}": a ballpark's size is its fence`);
+  }
+  return { length: convertLength(length, "ft", unit), width: convertLength(width, "ft", unit), unit };
+}
+
+/**
+ * Every dimension of a sport's surface in a unit (the rulebook's own when none is given): the football spec, `NHL`, `NBA` or
+ * `MLB` with each length converted and every name and flag kept.
+ */
+export function dimensionsOf(sport: "nhl", unit?: Unit): Scaled<typeof NHL>;
+export function dimensionsOf(sport: "nba", unit?: Unit): Scaled<typeof NBA>;
+export function dimensionsOf(sport: "mlb", unit?: Unit): Scaled<typeof MLB>;
+export function dimensionsOf(sport: "nfl" | "cfl" | "ifaf", unit?: Unit): Scaled<FootballSpec>;
+export function dimensionsOf(sport: Sport, unit?: Unit): unknown;
+export function dimensionsOf(sport: Sport, unit: Unit = SURFACE_UNITS[sport]): unknown {
+  switch (sport) {
+    case "nfl":
+    case "cfl":
+    case "ifaf":
+      return lengthsIn(FOOTBALL[sport], unit);
+    case "nhl":
+      return lengthsIn(NHL, unit);
+    case "nba":
+      return lengthsIn(NBA, unit);
+    case "mlb":
+      return lengthsIn(MLB, unit);
+    default:
+      throw new Error(`Unknown sport "${String(sport)}"`);
+  }
+}
+
+/** A fence's points with each distance in another unit; the angles stay as they are. Feet are the default for `from`. */
+export function fenceIn(points: readonly FencePoint[], to: Unit, from: Unit = "ft"): FencePoint[] {
+  return points.map(([angle, distance]): FencePoint => [angle, convertLength(distance, from, to)]);
 }

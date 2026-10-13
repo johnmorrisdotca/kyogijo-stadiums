@@ -7,8 +7,10 @@ export { KYOGIJO_STYLE } from "./style.ts";
 export { COURT_THEMES } from "./themes.ts";
 export { abbreviate, capitals, fitLines, textWidth } from "./text.ts";
 export type { FittedLines } from "./text.ts";
-export { PARKS, PARK_IDS, fenceFor, parkById, parkSourceUrl } from "./parks.ts";
+export { PARKS, PARK_IDS, fenceFor, parkById, parkSourceUrl, parkUnit } from "./parks.ts";
 export type { Park, ParkData, ParkSource } from "./parks.ts";
+export { SURFACE_UNITS, UNITS, convertLength, isUnit } from "./units.ts";
+export type { Unit } from "./units.ts";
 export { VERSION } from "./version.ts";
 export type {
   Box,

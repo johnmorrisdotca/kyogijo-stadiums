@@ -1,6 +1,7 @@
 import { FEET_PER_METRE, fenceAt, fencePoints, DEFAULT_FENCE, type FencePoint } from "./geometry.ts";
 import { PARK_DATA } from "./parks.data.ts";
 import type { Fence } from "./types.ts";
+import type { Unit } from "./units.ts";
 
 /** Where a park's figures were read: an article of Wikipedia at a revision. */
 export interface ParkSource {
@@ -55,6 +56,9 @@ export const PARKS: Readonly<Record<string, Park>> = Object.freeze(Object.fromEn
 
 /** The keys of `PARKS`, MLB first, then NPB, each in the order of the sources. */
 export const PARK_IDS: readonly string[] = Object.freeze(PARK_DATA.map((data) => data.id));
+
+/** The unit a park's figures were published in: metres for the parks of Japan (converted to feet once, in `PARKS`), feet for the rest. `undefined` for a key that is not a park. */
+export const parkUnit = (id: string | undefined): Unit | undefined => PARK_DATA.find((data) => data.id === id)?.unit;
 
 /** The park with a key, or `undefined`. */
 export const parkById = (id: string | undefined): Park | undefined => (id === undefined ? undefined : PARKS[id]);

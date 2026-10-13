@@ -78,6 +78,11 @@
       "import": "./dist/element-entry.js",
       "default": "./dist/element-entry.js"
     },
+    "./frames": {
+      "types": "./dist/frames-entry.d.ts",
+      "import": "./dist/frames-entry.js",
+      "default": "./dist/frames-entry.js"
+    },
     "./element/define": {
       "types": "./dist/element-define.d.ts",
       "import": "./dist/element-define.js",

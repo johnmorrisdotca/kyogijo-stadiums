@@ -5,6 +5,7 @@ import { fenceFor, parkById } from "./parks.ts";
 import { badgeMarkup, bannerMarkup, plateMarkup, stateOf, type TeamView } from "./score.ts";
 import { KYOGIJO_STRINGS, fill } from "./strings.ts";
 import { KYOGIJO_STYLE } from "./style.ts";
+import { convertLength, isUnit, type Unit } from "./units.ts";
 import { baseball } from "./surfaces/baseball.ts";
 import { basketball } from "./surfaces/basketball.ts";
 import { football } from "./surfaces/football.ts";
@@ -87,12 +88,26 @@ const safeLength = (value: number | string | undefined): string | undefined => {
   return typeof value === "string" && /^\d+(?:\.\d+)?(?:px|%|em|rem|vw|vh)?$/.test(value.trim()) ? value.trim() : undefined;
 };
 
+/** The unit the options' lengths are in: `units`, or feet when it is missing. A unit that is not one is an error, not feet. */
+function lengthUnit(o: SurfaceOptions): Unit {
+  if (o.units === undefined) return "ft";
+  if (!isUnit(o.units)) throw new Error(`Unknown units "${String(o.units)}": use one of ft, in, yd, m, cm, mm`);
+  return o.units;
+}
+
+/** The fence the options give, with each distance in feet. */
+function feetFence(fence: SurfaceOptions["fence"], unit: Unit): SurfaceOptions["fence"] {
+  if (fence === undefined || unit === "ft") return fence;
+  return Object.fromEntries(Object.entries(fence).map(([key, value]) => [key, typeof value === "number" ? convertLength(value, unit, "ft") : value]));
+}
+
 function buildSurface(o: SurfaceOptions, portrait: boolean, id: string, score: boolean): Surface {
   const court: CourtStyle | undefined = o.court;
   const baselineText: [string, string] | undefined = court?.baselineText === undefined ? undefined : typeof court.baselineText === "string" ? [court.baselineText, court.baselineText] : court.baselineText;
+  const unit: Unit = lengthUnit(o);
   const common: BuildOptions = {
     portrait,
-    margin: typeof o.margin === "number" && Number.isFinite(o.margin) && o.margin >= 0 ? o.margin : undefined,
+    margin: typeof o.margin === "number" && Number.isFinite(o.margin) && o.margin >= 0 ? convertLength(o.margin, unit, "ft") : undefined,
     exact: o.exactLines === true,
     detail: o.detail === "simple" ? "simple" : "full",
     stripes: o.stripes !== false,
@@ -110,7 +125,7 @@ function buildSurface(o: SurfaceOptions, portrait: boolean, id: string, score: b
     case "nba":
       return basketball(common);
     case "mlb":
-      return baseball(fenceFor(parkById(o.park), o.fence), common);
+      return baseball(fenceFor(parkById(o.park), feetFence(o.fence, unit)), common);
     default:
       throw new Error(`Unknown sport "${String(o.sport)}": use one of ${SPORTS.join(", ")}`);
   }
