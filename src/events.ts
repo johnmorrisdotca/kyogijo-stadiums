@@ -18,7 +18,7 @@ export type SpecialEvent = SpecialEventData;
  * deck of a carrier and Major League Baseball in London. Each has its dates, its venue, what its surface was set inside and where, and the sources of all of it.
  * @example
  * ```ts
- * import { EVENTS, EVENT_IDS } from "@johnmorrisdotca/kyogijo/events";
+ * import { EVENTS, EVENT_IDS } from "@johnmorrisdotca/kyogijo-stadiums/events";
  * const { name, dates, venue } = EVENTS["winter-classic-2009"];
  * console.log(name.en, dates[0], venue.en, EVENT_IDS.length);
  * // 2009 NHL Winter Classic 2009-01-01 Wrigley Field 18
@@ -36,8 +36,8 @@ export const eventById = (id: string | undefined): SpecialEvent | undefined => (
  * The options that draw a game: its sport and season, its host and where its surface stands in it. Spread them into `drawKyogijo` with a score or without.
  * @example
  * ```ts
- * import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
- * import { eventOptions } from "@johnmorrisdotca/kyogijo/events";
+ * import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
+ * import { eventOptions } from "@johnmorrisdotca/kyogijo-stadiums/events";
  * const svg = drawKyogijo({ ...eventOptions("winter-classic-2009") });
  * console.log(svg.includes("2009 NHL Winter Classic"), svg.includes("Wrigley Field"));
  * // true true

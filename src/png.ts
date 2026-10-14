@@ -27,7 +27,7 @@ export const PNG_PEER_MISSING = "toPNG needs the optional package @resvg/resvg-j
  * SVG the package wrote or a scene; light or dark by `theme`. Without the peer installed this throws an error that says what to install.
  * @example
  * ```ts
- * import { toPNG } from "@johnmorrisdotca/kyogijo/png";
+ * import { toPNG } from "@johnmorrisdotca/kyogijo-stadiums/png";
  * // Without the peer installed this stays undefined; with it, the bytes start with the PNG signature.
  * const png = await toPNG({ sport: "nhl", id: "rink" }, { width: 800, theme: "dark" }).catch(() => undefined);
  * console.log(png === undefined || (png[1] === 80 && png[2] === 78 && png[3] === 71));

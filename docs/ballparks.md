@@ -22,7 +22,7 @@ A park has the name people use and every other name it answers to, each with whe
 - A drawing is titled with the everyday name in its language. Where the park is officially called something else, the description says so in that language (`Its official name is Hanshin Koshien Stadium.`, `正式名称は阪神甲子園球場です。`); `parkOfficialName(park, language, year)` gives that name.
 
 ```ts
-import { PARKS, parkByName, parkOfficialName, parksByName } from "@johnmorrisdotca/kyogijo/parks";
+import { PARKS, parkByName, parkOfficialName, parksByName } from "@johnmorrisdotca/kyogijo-stadiums/parks";
 
 const koshien = PARKS["hanshin-koshien-stadium"];
 console.log(koshien.name, koshien.nameJa, koshien.readingJa);
@@ -66,7 +66,7 @@ Where it was not certain what people call a park, the cited title is the everyda
 ## A park by name, and a past park in a season
 
 ```ts
-import { PARKS, drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { PARKS, drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const park = PARKS["hanshin-koshien-stadium"];
 console.log(park.name, park.nameJa, park.points.length);
@@ -77,7 +77,7 @@ console.log(svg.includes("甲子園球場のグラウンド"), svg.includes("阪
 ```
 
 ```ts
-import { PARKS, parkByWikidata, parkPointsIn, drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { PARKS, parkByWikidata, parkPointsIn, drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const polo = PARKS["polo-grounds"];
 console.log(polo.name, polo.wikidata, polo.from, polo.to, polo.periods?.length);
@@ -94,7 +94,7 @@ console.log(svg === drawKyogijo({ sport: "mlb", park: "polo-grounds", year: 1930
 ## Your own fence
 
 ```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 // The usual 330, 375, 400, 375 and 330 feet, with a short porch in left and a deep centre.
 const svg = drawKyogijo({ sport: "mlb", fence: { left: 310, center: 420 } });
@@ -109,7 +109,7 @@ Where a park's article gives the height of the fence, a stretch of it has a wall
 `walls: true` draws each as a band outside the fence. The band's **width** and its **shade** both say how high the wall is (a wall of 8 feet has a band about 4 feet wide, the Green Monster's is 10), so the height can be read without colour; there are four shades, for under 10 feet, 10 to 20, 20 to 30 and 30 and over, light and dark. `walls: { legend: true }` adds a key under the field and `walls: { labels: true }` writes each wall's name and height beside it (in feet, or in metres with `units: "m"`). `year` draws the walls of that season: Fenway Park's was 25 feet until 1933 and is 37 feet 2 inches since 1934. The description lists the heights, in the language asked.
 
 ```ts
-import { PARKS, parkWallsIn, drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { PARKS, parkWallsIn, drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const fenway = PARKS["fenway-park"];
 console.log(parkWallsIn(fenway, 1920).map((wall) => wall.height_ft), parkWallsIn(fenway).map((wall) => [wall.label, wall.height_ft]));
@@ -136,7 +136,7 @@ console.log(svg.includes("Green Monster 37.2 ft"), svg.includes("Wall height"), 
 `quirks: { only: ["hill", "backstop"] }` draws some of them and `quirks: { labels: true }` names them. The sizes of a dugout, a bullpen and a pole are for the eye and not measured: the articles give only where they are.
 
 ```ts
-import { PARKS, parkQuirksIn, drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { PARKS, parkQuirksIn, drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const daikin = PARKS["daikin-park"];
 console.log(parkQuirksIn(daikin, 2010).map((quirk) => quirk.label), parkQuirksIn(daikin).length);

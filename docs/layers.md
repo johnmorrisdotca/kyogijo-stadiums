@@ -1,11 +1,11 @@
 # Data layers
 
-`layers` in the options of `drawKyogijo` and `drawSurface` lays data on a surface. Two worked examples come first; then what each kind of layer takes. The [API reference](https://johnmorrisdotca.github.io/kyogijo/api.html) has every type.
+`layers` in the options of `drawKyogijo` and `drawSurface` lays data on a surface. Two worked examples come first; then what each kind of layer takes. The [API reference](https://johnmorrisdotca.github.io/kyogijo-stadiums/api.html) has every type.
 
 ## Two examples
 
 ```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 // The NHL API's coordinates are feet from centre ice: `from` puts them on the rink.
 const svg = drawKyogijo({
@@ -31,7 +31,7 @@ console.log(svg.includes("3 shots"), svg.includes("By outcome: goal 1, shot 1, b
 A miss is drawn hollow and a failed pass dashed. Shapes, colour rules, comets, units, frames and the heat layers are below.
 
 ```ts
-import { drawKyogijo, layerTable } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo, layerTable } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const passes = {
   kind: "arrows",

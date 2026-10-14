@@ -79,7 +79,7 @@ not published again.
 
 ## Particular to Kyogijo
 
-Bug reports and ideas go in the [issues](https://github.com/johnmorrisdotca/kyogijo/issues).
+Bug reports and ideas go in the [issues](https://github.com/johnmorrisdotca/kyogijo-stadiums/issues).
 
 ### Commands and rules
 

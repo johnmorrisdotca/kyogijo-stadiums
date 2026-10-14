@@ -267,7 +267,7 @@ export const FEATURE_INFO: Readonly<Record<string, readonly Feature[]>> = Object
  * The names of the features of each sport: the keys `featureColors` takes. Football's three fields have the same, and so have the five net sports.
  * @example
  * ```ts
- * import { FEATURES } from "@johnmorrisdotca/kyogijo";
+ * import { FEATURES } from "@johnmorrisdotca/kyogijo-stadiums";
  * console.log(FEATURES.nhl.includes("blue-lines"), FEATURES.nfl.length);
  * // true 12
  * ```

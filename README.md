@@ -4,28 +4,30 @@
 The NFL, CFL and IFAF football fields, the NHL rink, the NBA court, the soccer pitch and futsal court, and the baseball field of every MLB ballpark, current and past, and every NPB home park, each drawn from its rulebook or its published distances, with each team's name and logo on its side and the score in the middle. Wide or tall, light or dark, a compact badge for a list, a helper for React, a custom element and a frame for a page that runs no script. One function, no dependencies.</p>
 
 <p align="center">
-  <a href="https://github.com/johnmorrisdotca/kyogijo/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/johnmorrisdotca/kyogijo/actions/workflows/ci.yml/badge.svg"></a>
-  <a href="https://www.npmjs.com/package/@johnmorrisdotca/kyogijo"><img alt="npm" src="https://img.shields.io/npm/v/@johnmorrisdotca/kyogijo?color=2f5d4a"></a>
+  <a href="https://github.com/johnmorrisdotca/kyogijo-stadiums/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/johnmorrisdotca/kyogijo-stadiums/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://www.npmjs.com/package/@johnmorrisdotca/kyogijo-stadiums"><img alt="npm" src="https://img.shields.io/npm/v/@johnmorrisdotca/kyogijo-stadiums?color=2f5d4a"></a>
   <a href="./LICENSE"><img alt="MIT licence" src="https://img.shields.io/badge/licence-MIT-2f5d4a"></a>
   <img alt="No dependencies" src="https://img.shields.io/badge/dependencies-0-2f5d4a">
   <img alt="TypeScript" src="https://img.shields.io/badge/types-TypeScript-3178c6">
 </p>
 
-<p align="center"><a href="https://johnmorrisdotca.github.io/kyogijo/"><strong>Open the demo →</strong></a> · <a href="https://johnmorrisdotca.github.io/kyogijo/docs/">Documentation</a> · <a href="https://johnmorrisdotca.github.io/kyogijo/docs/gallery.html">Gallery</a> · <a href="./docs/compare.md">How it compares</a> · <a href="https://johnmorrisdotca.github.io/kyogijo/api.html">API reference</a></p>
+<p align="center"><a href="https://johnmorrisdotca.github.io/kyogijo-stadiums/"><strong>Open the demo →</strong></a> · <a href="https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/">Documentation</a> · <a href="https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery.html">Gallery</a> · <a href="./docs/compare.md">How it compares</a> · <a href="https://johnmorrisdotca.github.io/kyogijo-stadiums/api.html">API reference</a></p>
+
+> **Renamed.** Previously `@johnmorrisdotca/kyogijo`; renamed in 0.4.0 to `@johnmorrisdotca/kyogijo-stadiums`. The product is still Kyogijo (競技場); only the package and the repository names changed. See the [changelog](./CHANGELOG.md).
 
 <table align="center">
 <tr>
 <td align="center" valign="top">
 <picture>
-<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo/main/docs/images/hero-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo/main/docs/images/hero-desk-light.webp" alt="The demo on a desk, in English: the page header with the language chooser, five cloth patches and the Help switch, and an NHL rink drawn wide on green felt, with a made-up game on it, the Northern Owls and their owl emblem on the left, the Lakeshore Anchors and their anchor on the right, and a panel of the score 3 to 2, Final/OT, in the middle. The controls for the sport, the layout and the teams are on the right." width="640">
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/hero-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/hero-desk-light.webp" alt="The demo on a desk, in English: the page header with the language chooser, five cloth patches and the Help switch, and an NHL rink drawn wide on green felt, with a made-up game on it, the Northern Owls and their owl emblem on the left, the Lakeshore Anchors and their anchor on the right, and a panel of the score 3 to 2, Final/OT, in the middle. The controls for the sport, the layout and the teams are on the right." width="640">
 </picture>
 <br><em>The demo on a desk: a rink, with the teams on their sides and the score in the middle.</em>
 </td>
 <td align="center" valign="top">
 <picture>
-<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo/main/docs/images/hero-phone-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo/main/docs/images/hero-phone-light.webp" alt="The demo on a phone: a football field turned a quarter to stand tall, the visiting team's blue end zone at the top and the home team's red end zone at the bottom, each with its logo and name written across it, the yard numbers upright, and a score panel at midfield reading 27 to 24, Final." width="240">
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/hero-phone-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/hero-phone-light.webp" alt="The demo on a phone: a football field turned a quarter to stand tall, the visiting team's blue end zone at the top and the home team's red end zone at the bottom, each with its logo and name written across it, the yard numbers upright, and a score panel at midfield reading 27 to 24, Final." width="240">
 </picture>
 <br><em>On a phone the same surface stands tall, the words still upright.</em>
 </td>
@@ -37,11 +39,11 @@ Kyogijo draws the places a game is played on, and puts a game on them. It was ma
 ## In 30 seconds
 
 ```sh
-npm install @johnmorrisdotca/kyogijo
+npm install @johnmorrisdotca/kyogijo-stadiums
 ```
 
 ```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const svg = drawKyogijo({
   sport: "nhl",
@@ -57,7 +59,7 @@ console.log(svg.startsWith("<svg"), svg.includes("Northern Owls 3, Lakeshore Anc
 `svg` is a string of SVG: put it in a page with `innerHTML`, write it to a file, or send it in an email. With no build step at all:
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo@0/dist/element-define.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo-stadiums@0/dist/element-define.js"></script>
 <kyogijo-field sport="nhl" orientation="auto" away="Northern Owls" home="Lakeshore Anchors" away-score="3" home-score="2" status="final-ot"></kyogijo-field>
 ```
 
@@ -111,19 +113,19 @@ console.log(svg.startsWith("<svg"), svg.includes("Northern Owls 3, Lakeshore Anc
 | `./layouts` | `drawGrid` and `GRID_PRESETS`: small multiples with a title, a subtitle, a key and a credit line; the grounds behind a drawing or a grid. |
 | `./mount`, `./react`, `./element`, `./element/define` | Draw into a container; React props; the `<kyogijo-field>` element and its registration. |
 
-The full list of entry points is in [entry points](./docs/entry-points.md); every export is in the [API reference](https://johnmorrisdotca.github.io/kyogijo/api.html).
+The full list of entry points is in [entry points](./docs/entry-points.md); every export is in the [API reference](https://johnmorrisdotca.github.io/kyogijo-stadiums/api.html).
 
 ## Use it in your project
 
 ### Install
 
 ```sh
-npm install @johnmorrisdotca/kyogijo
-# or: pnpm add @johnmorrisdotca/kyogijo
-# or: yarn add @johnmorrisdotca/kyogijo
+npm install @johnmorrisdotca/kyogijo-stadiums
+# or: pnpm add @johnmorrisdotca/kyogijo-stadiums
+# or: yarn add @johnmorrisdotca/kyogijo-stadiums
 ```
 
-It needs Node 22 or later on a server, and any current browser. It is plain ES modules, with types. Once it is on npm the same files are on the CDNs: `https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo@0/+esm` is the package as one module for the browser, and `https://unpkg.com/@johnmorrisdotca/kyogijo@0/dist/index.js` the file itself.
+It needs Node 22 or later on a server, and any current browser. It is plain ES modules, with types. Once it is on npm the same files are on the CDNs: `https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo-stadiums@0/+esm` is the package as one module for the browser, and `https://unpkg.com/@johnmorrisdotca/kyogijo-stadiums@0/dist/index.js` the file itself.
 
 ### Four ways in
 
@@ -141,7 +143,7 @@ Each example is run against the built package by `pnpm test:readme`, and each li
 ### A score on the rink
 
 ```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const svg = drawKyogijo({
   sport: "nhl",
@@ -157,8 +159,8 @@ console.log(svg.includes("Cup Final, Game 7"), svg.includes("Final/OT"));
 
 <p align="center">
 <picture>
-<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo/main/docs/images/football-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo/main/docs/images/football-desk-light.webp" alt="A football field drawn wide on the demo's felt: the visiting team's blue end zone on the left with its gull emblem and its name written along it, the home team's rust-red end zone on the right with its bison, the yard lines, hash marks and upright and upside-down yard numbers between them, and the score panel at midfield reading 27 to 24, Final, Championship Game." width="720">
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/football-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/football-desk-light.webp" alt="A football field drawn wide on the demo's felt: the visiting team's blue end zone on the left with its gull emblem and its name written along it, the home team's rust-red end zone on the right with its bison, the yard lines, hash marks and upright and upside-down yard numbers between them, and the score panel at midfield reading 27 to 24, Final, Championship Game." width="720">
 </picture>
 <br><em>A football field: the end zones in the teams' colours, the score at midfield.</em>
 </p>
@@ -166,7 +168,7 @@ console.log(svg.includes("Cup Final, Game 7"), svg.includes("Final/OT"));
 ### A bare surface, and tall for a phone
 
 ```ts
-import { drawKyogijo, drawSurface } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo, drawSurface } from "@johnmorrisdotca/kyogijo-stadiums";
 
 // No teams: just the NFL field at its true shape, 120 by 53⅓ yards with 12 feet of ground round it.
 console.log(/viewBox="-12 -12 384 184"/.test(drawSurface({ sport: "nfl" })));
@@ -181,8 +183,8 @@ console.log(box(wide), box(tall));
 
 <p align="center">
 <picture>
-<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo/main/docs/images/tall-phone-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo/main/docs/images/tall-phone-light.webp" alt="A hockey rink standing tall on a phone, the same game as on the desk: the Northern Owls' emblem and name in the upper zone, the Lakeshore Anchors' in the lower, each reading upright, the score panel between them over the centre line." width="240">
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/tall-phone-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/tall-phone-light.webp" alt="A hockey rink standing tall on a phone, the same game as on the desk: the Northern Owls' emblem and name in the upper zone, the Lakeshore Anchors' in the lower, each reading upright, the score panel between them over the centre line." width="240">
 </picture>
 <br><em>The same game tall: the teams top and bottom, every word upright.</em>
 </p>
@@ -192,7 +194,7 @@ console.log(box(wide), box(tall));
 ### A league's rulebook
 
 ```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 // A court as FIBA marks it is not the NBA's.
 console.log(drawKyogijo({ sport: "nba", league: "fiba" }) === drawKyogijo({ sport: "nba" }));
@@ -204,7 +206,7 @@ Thirty-five leagues, each with its figures and its sources, are in [league varia
 ### A ballpark, by name
 
 ```ts
-import { PARKS, drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { PARKS, drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const park = PARKS["hanshin-koshien-stadium"];
 console.log(park.name, park.nameJa, park.points.length);
@@ -216,8 +218,8 @@ console.log(svg.includes("甲子園球場のグラウンド"), svg.includes("阪
 
 <p align="center">
 <picture>
-<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo/main/docs/images/ballpark-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo/main/docs/images/ballpark-desk-light.webp" alt="The baseball field of Hanshin Koshien Stadium with the outfield fence drawn through its published distances, 95 metres at the lines and 118 metres in the alleys and the middle, with mown arcs on the grass, the warning track, the infield dirt, and a red and a green panel in the foul ground at the bottom for the teams' dugouts." width="640">
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/ballpark-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/ballpark-desk-light.webp" alt="The baseball field of Hanshin Koshien Stadium with the outfield fence drawn through its published distances, 95 metres at the lines and 118 metres in the alleys and the middle, with mown arcs on the grass, the warning track, the infield dirt, and a red and a green panel in the foul ground at the bottom for the teams' dugouts." width="640">
 </picture>
 <br><em>A ballpark's fence, drawn through the distances its article publishes.</em>
 </p>
@@ -225,7 +227,7 @@ console.log(svg.includes("甲子園球場のグラウンド"), svg.includes("阪
 ### A ballpark of the past, in a season
 
 ```ts
-import { PARKS, parkPointsIn, drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { PARKS, parkPointsIn, drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const polo = PARKS["polo-grounds"];
 console.log(polo.name, polo.from, polo.to, parkPointsIn(polo, 1915).map(([, feet]) => feet));
@@ -239,8 +241,8 @@ Your own fence (`fence: { left: 310, center: 420 }`) and every park's key are in
 ### A rink in a ballpark
 
 ```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
-import { EVENTS, eventOptions } from "@johnmorrisdotca/kyogijo/events";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
+import { EVENTS, eventOptions } from "@johnmorrisdotca/kyogijo-stadiums/events";
 
 // The 2009 Winter Classic: the NHL's rink, 200 by 85 feet, on the infield of Wrigley Field.
 const game = EVENTS["winter-classic-2009"];
@@ -261,7 +263,7 @@ The host, the rink and where it stood are each cited, and each game says whether
 ### A badge for a list
 
 ```ts
-import { drawBadge } from "@johnmorrisdotca/kyogijo";
+import { drawBadge } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const badge = drawBadge({
   sport: "nba",
@@ -275,8 +277,8 @@ console.log(/viewBox="0 0 440 64"/.test(badge));
 
 <p align="center">
 <picture>
-<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo/main/docs/images/badges-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo/main/docs/images/badges-desk-light.webp" alt="A list of eight score strips in the demo, each a team block with its emblem, a short name and its score at each end, in the team's colour, and in the middle a small picture of the sport and the state of the game, such as Final, Final/OT and 2nd period." width="640">
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/badges-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/badges-desk-light.webp" alt="A list of eight score strips in the demo, each a team block with its emblem, a short name and its score at each end, in the team's colour, and in the middle a small picture of the sport and the state of the game, such as Final, Final/OT and 2nd period." width="640">
 </picture>
 <br><em>Badges for a list of games.</em>
 </p>
@@ -284,7 +286,7 @@ console.log(/viewBox="0 0 440 64"/.test(badge));
 ### A court of your own look
 
 ```ts
-import { COURT_THEMES, drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { COURT_THEMES, drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const svg = drawKyogijo({
   sport: "nba",
@@ -296,8 +298,8 @@ console.log(svg.includes("--ky-key:#1e4f8f"), svg.includes("METRO BOLTS"));
 
 <p align="center">
 <picture>
-<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo/main/docs/images/court-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo/main/docs/images/court-desk-light.webp" alt="A basketball court in the two-tone look: a pale floor with a deep blue key, centre circle and border, the words SUMMIT PEAKS and METRO BOLTS along the baselines, each team's emblem and name on its half, and the score panel at centre court reading 108 to 112, Finals, Game 6." width="640">
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/court-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/court-desk-light.webp" alt="A basketball court in the two-tone look: a pale floor with a deep blue key, centre circle and border, the words SUMMIT PEAKS and METRO BOLTS along the baselines, each team's emblem and name on its half, and the score panel at centre court reading 108 to 112, Finals, Game 6." width="640">
 </picture>
 <br><em>A court in a look of its own: the paint, the border and the words on the baselines are options.</em>
 </p>
@@ -307,7 +309,7 @@ The five court looks, the seven looks of every sport and every colour property a
 ### A shoot-out, and a famous ground
 
 ```ts
-import { drawKyogijo, soccerSpec } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo, soccerSpec } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const svg = drawKyogijo({
   sport: "soccer",
@@ -325,7 +327,7 @@ Pitch sizes, mowing patterns, goals and providers are in [soccer](./docs/soccer.
 ### A surface in a season
 
 ```ts
-import { drawKyogijo, rulesFor } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo, rulesFor } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const rink = rulesFor("nhl", 1960);
 console.log(rink.season, rink.rules.centreLine, rink.rules.trapezoid);
@@ -339,8 +341,8 @@ Every change and its source is in [surfaces through the years](./docs/eras.md).
 ### Units and a provider's frame
 
 ```ts
-import { convertLength, surfaceSize } from "@johnmorrisdotca/kyogijo/geometry";
-import { convert, toSurface } from "@johnmorrisdotca/kyogijo/frames";
+import { convertLength, surfaceSize } from "@johnmorrisdotca/kyogijo-stadiums/geometry";
+import { convert, toSurface } from "@johnmorrisdotca/kyogijo-stadiums/frames";
 
 console.log(surfaceSize("nfl").unit, convertLength(100, "yd", "ft"));
 // yd 300
@@ -354,7 +356,7 @@ console.log(toSurface([[69, 22]], { from: "nhl-api" }), convert("hockeytech", "n
 ### Data on a surface
 
 ```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 // The NHL API's coordinates are feet from centre ice: `from` puts them on the rink.
 const svg = drawKyogijo({
@@ -380,21 +382,21 @@ console.log(svg.includes("3 shots"), svg.includes("By outcome: goal 1, shot 1, b
 Zoom to a part of the surface with `range`: the data, the heat and the labels follow the crop ([display ranges](./docs/ranges.md)).
 
 ```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const zone = drawKyogijo({ sport: "nhl", range: "offensive-zone", layers: [{ kind: "points", name: "shots", data: [{ x: 169, y: 20.5 }, { x: 150, y: 40 }] }] });
 console.log(zone.includes('data-range="offensive-zone"'), zone.includes("Shows only the offensive zone at the right end."));
 // true true
 ```
 
-Lines, arrows, text, heat maps, hexagons, zones and contours are in [data layers](./docs/layers.md); a shot chart, a shot map, a spray chart, a pass chart and a soccer shot map are one call each in [charts](./docs/charts.md). Pass networks, formations, Voronoi cells, Delaunay triangles, hulls, flow fields and sonars are layers too: [team shape](./docs/team-shape.md). Every kind is drawn, with its code, in the [gallery](https://johnmorrisdotca.github.io/kyogijo/docs/gallery.html).
+Lines, arrows, text, heat maps, hexagons, zones and contours are in [data layers](./docs/layers.md); a shot chart, a shot map, a spray chart, a pass chart and a soccer shot map are one call each in [charts](./docs/charts.md). Pass networks, formations, Voronoi cells, Delaunay triangles, hulls, flow fields and sonars are layers too: [team shape](./docs/team-shape.md). Every kind is drawn, with its code, in the [gallery](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery.html).
 
 ### Small multiples on a card
 
 Many drawings in one SVG, with a title, a credit line and a ground behind them ([layouts and backgrounds](./docs/layouts.md)).
 
 ```ts
-import { drawGrid } from "@johnmorrisdotca/kyogijo/layouts";
+import { drawGrid } from "@johnmorrisdotca/kyogijo-stadiums/layouts";
 
 const svg = drawGrid(
   ["fenway-park", "wrigley-field", "oracle-park"].map((park) => ({ drawing: { sport: "mlb", park }, label: park })),
@@ -407,7 +409,7 @@ console.log(svg.includes('viewBox="0 0 1200 675"'), svg.includes("Three ballpark
 ### The element in a page
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo@0/dist/element-define.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo-stadiums@0/dist/element-define.js"></script>
 
 <!-- score is home-away; home-score and away-score say it the other way -->
 <kyogijo-field sport="nba" size="compact" orientation="auto"
@@ -421,7 +423,7 @@ The attributes are the options' names in kebab case, and the parts you can style
 
 ```tsx no-run
 import React from "react";
-import { createKyogijo, kyogijoProps } from "@johnmorrisdotca/kyogijo/react";
+import { createKyogijo, kyogijoProps } from "@johnmorrisdotca/kyogijo-stadiums/react";
 
 // A component made from your React, which measures its box for orientation="auto":
 const Kyogijo = createKyogijo(React);
@@ -437,7 +439,7 @@ export const Plain = () => <div {...kyogijoProps({ sport: "nba" })} />;
 
 ```vue
 <script setup>
-import "@johnmorrisdotca/kyogijo/element/define";
+import "@johnmorrisdotca/kyogijo-stadiums/element/define";
 </script>
 
 <template>
@@ -451,8 +453,8 @@ Tell Vue the tag is a custom element with `compilerOptions.isCustomElement: (tag
 
 ```svelte
 <script>
-  import "@johnmorrisdotca/kyogijo/element/define";
-  import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+  import "@johnmorrisdotca/kyogijo-stadiums/element/define";
+  import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
   export let home = 0;
   export let away = 0;
   $: svg = drawKyogijo({ sport: "nhl", away: { name: "Northern Owls", score: away }, home: { name: "Lakeshore Anchors", score: home } });
@@ -467,7 +469,7 @@ A page that moves (`mountKyogijo`), a file written on a server and a frame for a
 
 ## API
 
-The [API reference](https://johnmorrisdotca.github.io/kyogijo/api.html) lists every export of every entry point with its signature and its doc comment. It is made from the source by `pnpm site`, so it cannot fall behind the code. [Entry points](./docs/entry-points.md) says what each of the 15 holds: the main one draws; `/geometry`, `/frames`, `/layers`, `/charts`, `/replay`, `/parks`, `/eras`, `/leagues`, `/grounds` and `/atlas` stand apart and need nothing else; `/mount`, `/react`, `/element` and `/element/define` put a drawing in a page.
+The [API reference](https://johnmorrisdotca.github.io/kyogijo-stadiums/api.html) lists every export of every entry point with its signature and its doc comment. It is made from the source by `pnpm site`, so it cannot fall behind the code. [Entry points](./docs/entry-points.md) says what each of the 15 holds: the main one draws; `/geometry`, `/frames`, `/layers`, `/charts`, `/replay`, `/parks`, `/eras`, `/leagues`, `/grounds` and `/atlas` stand apart and need nothing else; `/mount`, `/react`, `/element` and `/element/define` put a drawing in a page.
 
 Every function is pure: it returns new values and never changes what it was given.
 
@@ -497,7 +499,7 @@ English and Japanese: the title, the description and the standard statuses of a 
 
 ## Roadmap
 
-Not here yet, and each welcome as an [issue](https://github.com/johnmorrisdotca/kyogijo/issues):
+Not here yet, and each welcome as an [issue](https://github.com/johnmorrisdotca/kyogijo-stadiums/issues):
 
 - **More surfaces**: the FIBA and college courts, the international rink, rugby pitches, a stadium's seating, soccer's beach and street formats.
 - **Wall heights and quirks** in a ballpark: the Green Monster, Tal's Hill, the walls of Japan's parks.
@@ -557,7 +559,7 @@ Kyogijo is one of twenty-five packages, each made for the same site, each at
 - [Gunjin](https://github.com/johnmorrisdotca/gunjin) (軍人): five hidden-rank strategy games with pass-the-device play. [Demo](https://johnmorrisdotca.github.io/gunjin/).
 - [Karakuri](https://github.com/johnmorrisdotca/karakuri) (からくり): eight hyper-casual puzzle games, some of them physics: draw a shield, pull pins, cut ropes, slide blocks, pour tubes. [Demo](https://johnmorrisdotca.github.io/karakuri/).
 - [Houseki](https://github.com/johnmorrisdotca/houseki) (宝石): gem and stone matching puzzles: falling triplets, stone collapse, colour chains and gem swap. [Demo](https://johnmorrisdotca.github.io/houseki/).
-- [Kyogijo](https://github.com/johnmorrisdotca/kyogijo) (競技場): sports fields, rinks, courts and ballparks drawn to scale as SVG, with each team and the score on them. [Demo](https://johnmorrisdotca.github.io/kyogijo/).
+- [Kyogijo](https://github.com/johnmorrisdotca/kyogijo-stadiums) (競技場): sports fields, rinks, courts and ballparks drawn to scale as SVG, with each team and the score on them. [Demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/).
 
 **This package is Kyogijo.** The demos of all twenty-five share one header and footer, so each links the rest.
 <!-- family:end -->

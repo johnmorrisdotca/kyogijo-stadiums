@@ -29,7 +29,7 @@ const isNum = (value: unknown): value is number => typeof value === "number" && 
  * blank. Places are feet from the button (in `units`, feet by default), x across and y along.
  * @example
  * ```ts
- * import { curlingScore } from "@johnmorrisdotca/kyogijo/charts";
+ * import { curlingScore } from "@johnmorrisdotca/kyogijo-stadiums/charts";
  * const end = curlingScore([
  *   { x: 0.3, y: 0.2, team: "home" },
  *   { x: -1.5, y: 1, team: "home" },
@@ -102,7 +102,7 @@ const LOOKS: Record<string, Look> = { stone: {}, counting: { hollow: true }, "sh
  * Stones out of play are taken off, as the rules take them. `layerTable` and `chart.table()` list every stone with its distance from the button.
  * @example
  * ```ts
- * import { curlingStones } from "@johnmorrisdotca/kyogijo/charts";
+ * import { curlingStones } from "@johnmorrisdotca/kyogijo-stadiums/charts";
  * const chart = curlingStones(
  *   [
  *     { x: 0.4, y: 0.3, team: "home", number: 8 },

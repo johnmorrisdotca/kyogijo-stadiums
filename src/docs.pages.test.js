@@ -10,7 +10,7 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { cdnUrl, framesBlockHtml, framesFiles, framesItems, galleryData, galleryPageHtml, libraryFrom, literal, runSnippet } from "../scripts/docs-gallery.mjs";
 import { NAV, PAGE_LIST, buildDocs, fileOf, headingsOf, readPages, resolveLink, slugOf } from "../scripts/docs-pages.mjs";
 
-const MAIN = "@johnmorrisdotca/kyogijo";
+const MAIN = "@johnmorrisdotca/kyogijo-stadiums";
 const lib = await libraryFrom(resolve("src"), ".ts", (file) => import(/* @vite-ignore */ file));
 const style = lib[MAIN].KYOGIJO_STYLE;
 const known = { root: resolve("."), pages: new Set(PAGE_LIST.map((page) => page.slug)) };
@@ -94,10 +94,10 @@ describe("the links of the README and of every page", () => {
     expect(resolveLink("docs/soccer.md", "./nowhere.md", known).kind).toBe("error");
     expect(resolveLink("docs/soccer.md", "../NOTHING.md", known).kind).toBe("error");
     expect(resolveLink("docs/soccer.md", "./frames.md#x", known)).toMatchObject({ kind: "page", url: "frames.html#x" });
-    expect(resolveLink("docs/soccer.md", "../CHANGELOG.md", known).url).toBe("https://github.com/johnmorrisdotca/kyogijo/blob/main/CHANGELOG.md");
-    expect(resolveLink("docs/soccer.md", "https://johnmorrisdotca.github.io/kyogijo/api.html#x", known).url).toBe("../api.html#x");
-    expect(resolveLink("docs/soccer.md", "https://johnmorrisdotca.github.io/kyogijo/docs/gallery-data.html", known).kind).toBe("page");
-    expect(resolveLink("docs/soccer.md", "https://johnmorrisdotca.github.io/kyogijo/docs/gallery-nothing.html", known).kind).toBe("error");
+    expect(resolveLink("docs/soccer.md", "../CHANGELOG.md", known).url).toBe("https://github.com/johnmorrisdotca/kyogijo-stadiums/blob/main/CHANGELOG.md");
+    expect(resolveLink("docs/soccer.md", "https://johnmorrisdotca.github.io/kyogijo-stadiums/api.html#x", known).url).toBe("../api.html#x");
+    expect(resolveLink("docs/soccer.md", "https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-data.html", known).kind).toBe("page");
+    expect(resolveLink("docs/soccer.md", "https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-nothing.html", known).kind).toBe("error");
   });
 });
 
@@ -264,8 +264,8 @@ describe("the gallery", () => {
   });
 
   it("names the CDN's address of the package and of an entry, for a major version", () => {
-    expect(cdnUrl(MAIN, "0")).toBe("https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo@0/+esm");
-    expect(cdnUrl(`${MAIN}/charts`, "1")).toBe("https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo@1/charts/+esm");
+    expect(cdnUrl(MAIN, "0")).toBe("https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo-stadiums@0/+esm");
+    expect(cdnUrl(`${MAIN}/charts`, "1")).toBe("https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo-stadiums@1/charts/+esm");
   });
 
   it("says what a page does when the published package has no such feature", async () => {

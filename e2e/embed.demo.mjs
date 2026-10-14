@@ -7,14 +7,14 @@ test("the snippet for each way in says what is on the stage", async ({ page }) =
   await open(page, "?sport=nhl&lang=en&help=off");
   const code = () => page.locator(at("embed-code")).textContent();
   await page.locator('#embed-tabs button[data-tab="module"]').click();
-  expect(await code()).toContain('import { drawKyogijo } from "https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo@0/+esm"');
+  expect(await code()).toContain('import { drawKyogijo } from "https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo-stadiums@0/+esm"');
   expect(await code()).toContain('"sport": "nhl"');
   await page.locator('#embed-tabs button[data-tab="element"]').click();
   expect(await code()).toContain("<kyogijo-field");
   expect(await code()).toContain('home="Lakeshore Anchors"');
   expect(await code()).toContain("element-define.js");
   await page.locator('#embed-tabs button[data-tab="iframe"]').click();
-  expect(await code()).toMatch(/src="https:\/\/johnmorrisdotca\.github\.io\/kyogijo\/embed\.html\?sport=nhl/);
+  expect(await code()).toMatch(/src="https:\/\/johnmorrisdotca\.github\.io\/kyogijo-stadiums\/embed\.html\?sport=nhl/);
   expect(await code()).toContain("aspect-ratio");
   await page.locator('#embed-tabs button[data-tab="svg"]').click();
   expect((await code()).startsWith("<svg")).toBe(true);

@@ -447,7 +447,7 @@ test("the docs have a Replay page in the contents, and the gallery draws a frame
     const item = page.locator(`#${id}`);
     await expect(item.locator('g[id$="replay-players"]')).toHaveCount(1);
     expect(await item.locator('g[id$="replay-numbers"] text').count()).toBeGreaterThanOrEqual(5);
-    expect(await item.locator("pre code").textContent()).toContain('from "@johnmorrisdotca/kyogijo/replay"');
+    expect(await item.locator("pre code").textContent()).toContain('from "@johnmorrisdotca/kyogijo-stadiums/replay"');
   }
   await noSidewaysScroll(page);
 });

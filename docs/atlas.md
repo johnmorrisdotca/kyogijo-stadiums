@@ -1,6 +1,6 @@
 # The atlas
 
-Every ballpark and soccer ground the package draws, on one map: 158 places in 23 countries. See the Atlas section of [the demo](https://johnmorrisdotca.github.io/kyogijo/#atlas).
+Every ballpark and soccer ground the package draws, on one map: 158 places in 23 countries. See the Atlas section of [the demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/#atlas).
 
 ![A world map with a marker on each of 158 places: a circle for a place in use today, a diamond for one of the past, baseball parks solid and soccer grounds with a dot in the middle. Most are in the United States, Japan and western Europe.](./atlas-map.svg)
 
@@ -13,7 +13,7 @@ Every ballpark and soccer ground the package draws, on one map: 158 places in 23
 
 ## The data
 
-`@johnmorrisdotca/kyogijo/atlas` joins the two lists into one, `PLACES`, and needs nothing else (no dependency, no network).
+`@johnmorrisdotca/kyogijo-stadiums/atlas` joins the two lists into one, `PLACES`, and needs nothing else (no dependency, no network).
 
 | Field | What it is |
 | --- | --- |
@@ -32,8 +32,8 @@ Every ballpark and soccer ground the package draws, on one map: 158 places in 23
 | `wikidata` | The Wikidata item (`Q49136`), the key to join a place to other data. |
 
 ```ts
-import { PLACES, atlasFacets, placeById, placesBy, surfaceOf } from "@johnmorrisdotca/kyogijo/atlas";
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { PLACES, atlasFacets, placeById, placesBy, surfaceOf } from "@johnmorrisdotca/kyogijo-stadiums/atlas";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const nineteenFifty = placesBy({ year: 1950, sport: "baseball", country: "US" });
 console.log(PLACES.length, nineteenFifty.length, atlasFacets().countries.length);
@@ -47,7 +47,7 @@ console.log(polo.from, polo.to, drawKyogijo({ ...surfaceOf(polo), style: "none" 
 ```
 
 ```ts
-import { placeByName, placesByName } from "@johnmorrisdotca/kyogijo/atlas";
+import { placeByName, placesByName } from "@johnmorrisdotca/kyogijo-stadiums/atlas";
 
 console.log(placeByName("甲子園")?.id, placeByName("Koshien Stadium")?.id, placeByName("サンシーロ")?.id);
 // hanshin-koshien-stadium hanshin-koshien-stadium san-siro

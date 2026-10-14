@@ -90,8 +90,8 @@ Each surface keeps the unit its rulebook states its figures in. The drawing itse
 The table is made from the code by `pnpm docs:make`, and a test holds it to it. The units are `ft`, `in`, `yd`, `m`, `cm` and `mm`; anything else is an error and not feet.
 
 ```ts
-import { NHL, SURFACE_UNITS, convertLength, dimensionsOf, lengthsIn, surfaceSize } from "@johnmorrisdotca/kyogijo/geometry";
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { NHL, SURFACE_UNITS, convertLength, dimensionsOf, lengthsIn, surfaceSize } from "@johnmorrisdotca/kyogijo-stadiums/geometry";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 console.log(SURFACE_UNITS.nfl, surfaceSize("nfl"), convertLength(100, "yd", "ft"));
 // yd { length: 120, width: 53.333333333333336, unit: 'yd' } 300

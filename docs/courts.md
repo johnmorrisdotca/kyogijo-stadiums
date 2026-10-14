@@ -3,7 +3,7 @@
 Five net sports, each drawn to scale from its own rulebook: `sport: "tennis"` (the ITF's Rules of Tennis), `"volleyball"` (the FIVB's Official Volleyball Rules; beach volleyball is `league: "fivb-beach"`, from the FIVB's Beach Volleyball Rules), `"badminton"` (the BWF's Laws of Badminton), `"pickleball"` (USA Pickleball's rulebook) and `"tabletennis"` (the ITTF's Laws of Table Tennis). Every figure is cited, rule by rule, in [sources.md](./sources.md#the-net-sports). They lie wide, with the net across the middle and the teams' score on a board over it; `orientation: "portrait"` lays them tall.
 
 ```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const court = drawKyogijo({ sport: "tennis" });
 const beach = drawKyogijo({ sport: "volleyball", league: "fivb-beach" });
@@ -27,8 +27,8 @@ Each is the rulebook's, in the unit it prints first: feet for the ITF and USA Pi
 | Table tennis (ITTF, Laws 2.1 and 2.2) | 2.74 by 1.525 m, 76 cm above the floor | a white side line and end line 2 cm wide, a centre line 3 mm wide | 15.25 cm above the playing surface, on posts 15.25 cm high whose outside limits are 15.25 cm outside the side line |
 
 ```ts
-import { dimensionsOf, surfaceSize } from "@johnmorrisdotca/kyogijo/geometry";
-import { LEAGUES, leagueFigures } from "@johnmorrisdotca/kyogijo/leagues";
+import { dimensionsOf, surfaceSize } from "@johnmorrisdotca/kyogijo-stadiums/geometry";
+import { LEAGUES, leagueFigures } from "@johnmorrisdotca/kyogijo-stadiums/leagues";
 
 console.log(surfaceSize("tennis", "ft"), surfaceSize("volleyball"), dimensionsOf("badminton", "m").shortServiceLine);
 // { length: 78, width: 36, unit: 'ft' } { length: 18, width: 9, unit: 'm' } 1.98
@@ -54,7 +54,7 @@ ATP and WTA matches are played by the ITF's rules, so there is one tennis league
 | `margin` | The ground drawn beyond the free zone, in `units` (feet by default). |
 
 ```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const club = drawKyogijo({ sport: "tennis", net: { free: "least", sticks: true } });
 console.log(club.match(/class="ky-free" x="([^"]*)" y="([^"]*)"/)?.slice(1).join(" "), (club.match(/class="ky-nt-post"/g) ?? []).length);
@@ -82,7 +82,7 @@ A net sport's score is a board over the net, with a team in each row. A team's `
 The board has as many columns as the sets a match can run to (tennis 3, volleyball 5, beach volleyball 3, badminton 3, pickleball 3, table tennis 5) and more when a team gives more, a column for the points of the game when a team has any, and a column of the sets or games won ("Sets" for tennis and volleyball, "Games" for badminton, pickleball and table tennis, which is the word each rulebook uses). In each set the lower score is dimmed.
 
 ```ts
-import { drawKyogijo, statusLabel } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo, statusLabel } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const game = {
   sport: "tennis" as const,
@@ -109,7 +109,7 @@ The zone set `net-court` counts a data layer's marks into each side of the net, 
 Each sport has a frame of its own, named like the sport: the centre of the net, on the court, as the origin, with x along the court (positive towards the end drawn at the right) and y across it (positive towards the top as the court is drawn wide), in the unit its rulebook prints first ([coordinate frames](./frames.md)). Tennis, badminton, pickleball and table tennis have one size each; a volleyball court is indoor or beach, so its frame is given the size it is placed on.
 
 ```ts
-import { toSurface } from "@johnmorrisdotca/kyogijo/frames";
+import { toSurface } from "@johnmorrisdotca/kyogijo-stadiums/frames";
 
 // The T of the right half: the service line is 21 feet from the net, on the centre service line.
 console.log(toSurface([[21, 0]], { from: "tennis" }));

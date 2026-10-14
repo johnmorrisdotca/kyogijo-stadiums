@@ -149,7 +149,7 @@ export interface FlatOptions extends SceneOptions {
  * (an image converter, an email, a slide) draws what a browser does. Light by default, or the drawing's own `data-theme`.
  * @example
  * ```ts
- * import { sceneToSvg } from "@johnmorrisdotca/kyogijo/scene";
+ * import { sceneToSvg } from "@johnmorrisdotca/kyogijo-stadiums/scene";
  * const svg = sceneToSvg({ sport: "nhl", id: "rink" }, { theme: "dark", width: 800 });
  * console.log(svg.includes("var("), svg.includes("<style"), svg.startsWith("<svg"));
  * // false false true

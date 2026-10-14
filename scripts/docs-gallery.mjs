@@ -3,10 +3,10 @@
 // snippet of code that ends by setting `svg`; the build runs the snippet (`runSnippet`) against the built package and puts what it made on the
 // page. A test runs every snippet against the source and checks that what the page shows is what the snippet draws.
 //
-//   const pages = galleryPages(lib);   // lib: { "@johnmorrisdotca/kyogijo": module, "@johnmorrisdotca/kyogijo/charts": module, ... }
+//   const pages = galleryPages(lib);   // lib: { "@johnmorrisdotca/kyogijo-stadiums": module, "@johnmorrisdotca/kyogijo-stadiums/charts": module, ... }
 import { escapeHtml, slugOf } from "./docs-pages.mjs";
 
-const MAIN = "@johnmorrisdotca/kyogijo";
+const MAIN = "@johnmorrisdotca/kyogijo-stadiums";
 
 /** A value as the JavaScript that makes it: unquoted keys, short things on one line, the rest broken one to a line. */
 export function literal(value, indent = 0) {
@@ -398,9 +398,9 @@ function dataPage() {
     sections: [
       section("layers", "Data layers", "`layers` in the options of `drawKyogijo`: points, lines, arrows and text.", points),
       section("heat", "Heat layers", "Counts in cells, hexagons, named zones or a density, in a colour ramp.", heat),
-      section("charts", "Ready-made charts", "One call for a good chart: `@johnmorrisdotca/kyogijo/charts`.", charts),
+      section("charts", "Ready-made charts", "One call for a good chart: `@johnmorrisdotca/kyogijo-stadiums/charts`.", charts),
       section("team", "Team shape", "Pass networks, formations, space control, triangulations, hulls, flow fields and sonars, as on the Team shape page. Made-up players and passes from a fixed formula.", team),
-      section("replay", "Replay", "A frame of tracking data on a surface: `drawFrame` from `@johnmorrisdotca/kyogijo/replay`. The same frame, played, is `mountKyogijo(...).replay(...)`.", replay),
+      section("replay", "Replay", "A frame of tracking data on a surface: `drawFrame` from `@johnmorrisdotca/kyogijo-stadiums/replay`. The same frame, played, is `mountKyogijo(...).replay(...)`.", replay),
     ],
   };
 }
@@ -771,7 +771,7 @@ const itemHtml = (entry, style) => {
 </figure>`;
 };
 
-/** The address of the package, or one of its entries (`@johnmorrisdotca/kyogijo/charts`), on jsDelivr as one ES module, for the published major version. */
+/** The address of the package, or one of its entries (`@johnmorrisdotca/kyogijo-stadiums/charts`), on jsDelivr as one ES module, for the published major version. */
 export const cdnUrl = (from, major) => `https://cdn.jsdelivr.net/npm/${from.replace(MAIN, `${MAIN}@${major}`)}/+esm`;
 
 /**

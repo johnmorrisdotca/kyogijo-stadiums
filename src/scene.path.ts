@@ -125,7 +125,7 @@ const ARGS: Record<string, number> = { M: 2, L: 2, H: 1, V: 1, C: 6, S: 4, Q: 4,
  * Path data as absolute segments: `M`, `L`, `C`, `Q` and `Z`. Relative commands, `H`, `V`, `S` and `T` are worked out, and an arc is cubic curves.
  * @example
  * ```ts
- * import { pathCommands } from "@johnmorrisdotca/kyogijo/scene";
+ * import { pathCommands } from "@johnmorrisdotca/kyogijo-stadiums/scene";
  * console.log(pathCommands("M0 0h10v5H0Z").map((c) => c.join(" ")));
  * // [ 'M 0 0', 'L 10 0', 'L 10 5', 'L 0 5', 'Z' ]
  * ```

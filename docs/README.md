@@ -1,6 +1,6 @@
 # Documentation
 
-Kyogijo draws sports surfaces as SVG, to scale, with the score on them. The README is the pitch and the first minute; these pages are everything else. The same pages are on the [docs site](https://johnmorrisdotca.github.io/kyogijo/docs/), with a search over their titles and headings and a gallery that draws every picture from the code beside it.
+Kyogijo draws sports surfaces as SVG, to scale, with the score on them. The README is the pitch and the first minute; these pages are everything else. The same pages are on the [docs site](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/), with a search over their titles and headings and a gallery that draws every picture from the code beside it.
 
 ## Start here
 
@@ -43,7 +43,7 @@ Kyogijo draws sports surfaces as SVG, to scale, with the score on them. The READ
 
 ## Reference
 
-- [Entry points](./entry-points.md), and the [API reference](https://johnmorrisdotca.github.io/kyogijo/api.html) for every export.
+- [Entry points](./entry-points.md), and the [API reference](https://johnmorrisdotca.github.io/kyogijo-stadiums/api.html) for every export.
 - [Limits](./limits.md): the numbers a test holds.
 - [Sources of the dimensions](./sources.md) and [References](./references.md): where each figure was read, and what may be used of each reference.
 - [The keys of the ballparks](./parks.md), and [the Japanese of Kyogijo](./strings-ja.md): every word in both languages.

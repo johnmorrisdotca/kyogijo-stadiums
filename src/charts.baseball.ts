@@ -43,7 +43,7 @@ export function ballType(type: string | undefined): string | undefined {
  * from home plate (`retrosheet`) or as Retrosheet's hit-location codes.
  * @example
  * ```ts
- * import { mlbSprayChart } from "@johnmorrisdotca/kyogijo/charts";
+ * import { mlbSprayChart } from "@johnmorrisdotca/kyogijo-stadiums/charts";
  * const chart = mlbSprayChart(
  *   [
  *     { x: 125.4, y: 90, type: "single" },

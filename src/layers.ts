@@ -457,7 +457,7 @@ export function renderLayers(o: SurfaceOptions | ScoreOptions, layers: readonly 
  * the text still upright. The same options and layers always give the same string; `drawKyogijo` draws exactly this when it is given `layers`.
  * @example
  * ```ts
- * import { drawLayers } from "@johnmorrisdotca/kyogijo";
+ * import { drawLayers } from "@johnmorrisdotca/kyogijo-stadiums";
  * const group = drawLayers({ sport: "nhl", id: "rink" }, [
  *   { kind: "points", name: "shots", data: [{ x: 169, y: 20.5, outcome: "goal", team: "home" }, { x: 150, y: 40, outcome: "shot", team: "home" }] },
  * ]);
@@ -479,7 +479,7 @@ const cell = (value: unknown): string => (isNum(value) ? String(Math.round(value
  * coordinates are the ones given (in the layer's frame and unit), and a caption says which. Hidden layers are in it too. Every cell is escaped.
  * @example
  * ```ts
- * import { layerTable } from "@johnmorrisdotca/kyogijo";
+ * import { layerTable } from "@johnmorrisdotca/kyogijo-stadiums";
  * const html = layerTable([{ kind: "points", name: "shots", from: "nhl-api", data: [{ x: 69, y: 22, outcome: "goal", title: "Goal, 2nd period" }] }]);
  * console.log(html.includes("<th scope=\"col\">Outcome</th>"), html.includes("Goal, 2nd period"));
  * // true true

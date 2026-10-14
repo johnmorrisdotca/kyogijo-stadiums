@@ -1,6 +1,6 @@
 // A made-up play for the demo's "Replay" section, for the tests and for the docs: a team brings the ball forward with passes and scores. No real game,
 // player or team is behind it, and every number comes from a fixed seed, so the same call always gives the same frames. The shape is a timeline of
-// `@johnmorrisdotca/kyogijo/replay`: frames of { t, objects, possession }, in the numbers of a provider's frame (Opta's 0 to 100 for the pitch, the NHL
+// `@johnmorrisdotca/kyogijo-stadiums/replay`: frames of { t, objects, possession }, in the numbers of a provider's frame (Opta's 0 to 100 for the pitch, the NHL
 // API's feet from centre ice for the rink).
 import { seeded } from "./layers-data.js";
 

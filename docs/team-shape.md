@@ -15,7 +15,7 @@ Seven kinds of [data layer](./layers.md) read where a team's players stand and h
 ## Pass networks
 
 ```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 // Passes in Opta's numbers: who passed to whom, from where to where. Players are told apart by id (and by team).
 const passes = [
@@ -44,7 +44,7 @@ A player is a node at the average of the places he passed from and received at (
 Two teams in one layer are two networks: a player is told apart by his team, so number 4 of each is two players. The chart makes the layer, a key and the totals in one call:
 
 ```ts
-import { passNetwork } from "@johnmorrisdotca/kyogijo/charts";
+import { passNetwork } from "@johnmorrisdotca/kyogijo-stadiums/charts";
 
 const chart = passNetwork(
   [
@@ -78,8 +78,8 @@ console.log(chart.layers.map((layer) => layer.id).join(" "));
 | Baseball, in `retrosheet` | `baseball-standard`, `baseball-shift` |
 
 ```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
-import { FORMATIONS, formationById, positionName } from "@johnmorrisdotca/kyogijo/layers";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
+import { FORMATIONS, formationById, positionName } from "@johnmorrisdotca/kyogijo-stadiums/layers";
 
 console.log(Object.keys(FORMATIONS).length, formationById("4-3-3").positions.length);
 console.log(positionName("soccer", "LB", "en"), positionName("soccer", "LB", "ja"));
@@ -112,8 +112,8 @@ A formation is a convention that coaches draw a little differently each time, so
 ## Space and shape
 
 ```ts
-import { drawKyogijo, layerTable } from "@johnmorrisdotca/kyogijo";
-import { convexHull, delaunay, voronoiCells } from "@johnmorrisdotca/kyogijo/layers";
+import { drawKyogijo, layerTable } from "@johnmorrisdotca/kyogijo-stadiums";
+import { convexHull, delaunay, voronoiCells } from "@johnmorrisdotca/kyogijo-stadiums/layers";
 
 const players = [
   { x: 25, y: 50, team: "home", number: 4 },
@@ -149,7 +149,7 @@ The geometry is [Andrew's monotone chain](https://en.wikipedia.org/wiki/Gift_wra
 ## Flow fields and sonars
 
 ```ts
-import { drawKyogijo, layerTable } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo, layerTable } from "@johnmorrisdotca/kyogijo-stadiums";
 
 // 60 passes that go forward and a little up the page, from different players.
 const passes = Array.from({ length: 60 }, (_, i) => ({ x: 20 + (i % 10) * 5, y: 30 + (i % 6) * 8, x2: 32 + (i % 10) * 5, y2: 34 + (i % 6) * 8, id: i % 3 }));

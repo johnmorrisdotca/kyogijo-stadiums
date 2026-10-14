@@ -1,13 +1,13 @@
 # Replay
 
-A replay plays tracking data on a surface: where each player, the ball and the officials were, second by second, with the passes, the shots and the goals marked as they happen. The data is yours and nothing is fetched. `@johnmorrisdotca/kyogijo/replay` has the frame as a string (`drawFrame`) and the pure functions behind it; `mountKyogijo(...).replay(...)` and `<kyogijo-field>` play it in a page.
+A replay plays tracking data on a surface: where each player, the ball and the officials were, second by second, with the passes, the shots and the goals marked as they happen. The data is yours and nothing is fetched. `@johnmorrisdotca/kyogijo-stadiums/replay` has the frame as a string (`drawFrame`) and the pure functions behind it; `mountKyogijo(...).replay(...)` and `<kyogijo-field>` play it in a page.
 
 It is built on the [data layers](./layers.md) and the [coordinate frames](./frames.md): the positions are in a provider's frame (`from: "nhl-api"`, `from: "opta"`) or the surface's own feet, and every mark is an element of the drawing in the surface's own frame, cut to nothing and turned back upright when the surface lies tall.
 
 ## One frame
 
 ```ts
-import { drawFrame } from "@johnmorrisdotca/kyogijo/replay";
+import { drawFrame } from "@johnmorrisdotca/kyogijo-stadiums/replay";
 
 const frames = [0, 1, 2].map((t) => ({
   t,
@@ -25,7 +25,7 @@ console.log(svg.includes("Replay, 0:02. 3 tracked objects. By team: home 1, away
 // true
 ```
 
-`drawFrame(options, timeline, t, look?)` is `drawKyogijo` with the replay's layers added to the ones in `options`. The same options, timeline and time always give the same string; the ids inside the drawing come from the options and the timeline, not from the time, so every frame of a replay has the same ids (give an `id` of your own when two replays share a page). The drawing's description says what the replay is (its length, what it tracks, how many events) and does not change with the time. [The gallery](https://johnmorrisdotca.github.io/kyogijo/docs/gallery-data.html#replay) draws a frame on the rink and on the pitch from the code beside it.
+`drawFrame(options, timeline, t, look?)` is `drawKyogijo` with the replay's layers added to the ones in `options`. The same options, timeline and time always give the same string; the ids inside the drawing come from the options and the timeline, not from the time, so every frame of a replay has the same ids (give an `id` of your own when two replays share a page). The drawing's description says what the replay is (its length, what it tracks, how many events) and does not change with the time. [The gallery](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-data.html#replay) draws a frame on the rink and on the pitch from the code beside it.
 
 ## The timeline
 
@@ -57,7 +57,7 @@ What is drawn: the home team as circles and the away team as squares (so that th
 Each is pure and takes the timeline and a time in seconds.
 
 ```ts
-import { activeEvents, interpolate, possession, trails } from "@johnmorrisdotca/kyogijo/replay";
+import { activeEvents, interpolate, possession, trails } from "@johnmorrisdotca/kyogijo-stadiums/replay";
 
 const frames = [0, 1, 2, 3].map((t) => ({
   t,
@@ -93,8 +93,8 @@ console.log(activeEvents(timeline, 2.5).map((a) => `${a.event.kind} at ${a.x}`).
 ## Playing it in a page
 
 ```ts no-run
-import { mountKyogijo } from "@johnmorrisdotca/kyogijo/mount";
-import type { ReplayTimeline } from "@johnmorrisdotca/kyogijo/replay";
+import { mountKyogijo } from "@johnmorrisdotca/kyogijo-stadiums/mount";
+import type { ReplayTimeline } from "@johnmorrisdotca/kyogijo-stadiums/replay";
 
 declare const timeline: ReplayTimeline;
 const mount = mountKyogijo(document.querySelector("#rink")!, { sport: "nhl", language: "en" });
@@ -110,7 +110,7 @@ replay.destroy();    // takes the replay and its controls away; the surface stay
 ```html
 <kyogijo-field id="rink" sport="nhl" loop speed="2"></kyogijo-field>
 <script type="module">
-  import "@johnmorrisdotca/kyogijo/element/define";
+  import "@johnmorrisdotca/kyogijo-stadiums/element/define";
   document.getElementById("rink").timeline = timeline;   // a timeline is too large for an attribute
 </script>
 ```
@@ -143,7 +143,7 @@ The keys work with the focus on the drawing or on a button; the slider and the s
 The controller is a state machine that knows nothing of the page: the caller tells it how many seconds went by. A test, a server and a page that has its own loop can use it as it is.
 
 ```ts
-import { createReplay } from "@johnmorrisdotca/kyogijo/replay";
+import { createReplay } from "@johnmorrisdotca/kyogijo-stadiums/replay";
 
 const frames = [0, 1, 2, 3, 4].map((t) => ({ t, objects: [{ id: "ball", team: "ball" as const, x: t * 10, y: 0 }] }));
 const replay = createReplay({ frames, events: [{ t: 2, kind: "goal" }] }, { speed: 2, loop: true });

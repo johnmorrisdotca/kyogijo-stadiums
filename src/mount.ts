@@ -86,7 +86,7 @@ export function containerAspect(host: HTMLElement, breakpoint = 560): number | u
  * out again, tall or wide, when its shape changes.
  * @example
  * ```ts no-run
- * import { mountKyogijo } from "@johnmorrisdotca/kyogijo/mount";
+ * import { mountKyogijo } from "@johnmorrisdotca/kyogijo-stadiums/mount";
  * const card = mountKyogijo(document.querySelector("#game")!, {
  *   sport: "nhl",
  *   orientation: "auto",
@@ -176,7 +176,7 @@ export function mountKyogijo(host: HTMLElement, options: SurfaceOptions | ScoreO
  * The drawing as an `svg` element, made by the browser's own parser, for code that appends nodes rather than sets text.
  * @example
  * ```ts no-run
- * import { kyogijoElement } from "@johnmorrisdotca/kyogijo/mount";
+ * import { kyogijoElement } from "@johnmorrisdotca/kyogijo-stadiums/mount";
  * document.body.append(kyogijoElement({ sport: "nba" }));
  * ```
  */

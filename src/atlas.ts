@@ -126,7 +126,7 @@ const fromGround = (ground: Ground): Place => ({
  * `PARKS` and the soccer grounds of `GROUNDS`, with where each stands.
  * @example
  * ```ts
- * import { PLACES } from "@johnmorrisdotca/kyogijo/atlas";
+ * import { PLACES } from "@johnmorrisdotca/kyogijo-stadiums/atlas";
  * const fenway = PLACES.find((place) => place.id === "fenway-park");
  * console.log(fenway?.name, fenway?.lat, fenway?.lon, fenway?.country);
  * // Fenway Park 42.34639 -71.0975 US
@@ -144,7 +144,7 @@ export const placeById = (id: string | undefined): Place | undefined => (id === 
  * ignores case, accents, spaces and punctuation, width, and in Japanese hiragana or katakana and the long vowel mark.
  * @example
  * ```ts
- * import { placeByName, placesByName } from "@johnmorrisdotca/kyogijo/atlas";
+ * import { placeByName, placesByName } from "@johnmorrisdotca/kyogijo-stadiums/atlas";
  * console.log(placeByName("Koshien Stadium")?.id, placeByName("サン・シーロ")?.id, placeByName("Estadio Jornalista Mario Filho")?.id, placesByName("wrigley field").map((place) => place.id).join());
  * // hanshin-koshien-stadium san-siro maracana wrigley-field,wrigley-field-los-angeles
  * ```
@@ -161,7 +161,7 @@ const many = <T>(value: T | readonly T[] | undefined): readonly T[] | undefined 
  * The places that match every field of the filter, in the order of `PLACES`.
  * @example
  * ```ts
- * import { placesBy } from "@johnmorrisdotca/kyogijo/atlas";
+ * import { placesBy } from "@johnmorrisdotca/kyogijo-stadiums/atlas";
  * const japan = placesBy({ sport: "baseball", country: "JP", status: "current" });
  * const in1950 = placesBy({ year: 1950, country: "US" });
  * console.log(japan.length, in1950.some((place) => place.id === "ebbets-field"));
@@ -204,7 +204,7 @@ export interface AtlasFacets {
  * The sports, leagues and countries of the places, and the span of years they give.
  * @example
  * ```ts
- * import { atlasFacets } from "@johnmorrisdotca/kyogijo/atlas";
+ * import { atlasFacets } from "@johnmorrisdotca/kyogijo-stadiums/atlas";
  * const { sports, leagues, countries, years } = atlasFacets();
  * console.log(sports.join(), leagues.join(), countries.length, years.min);
  * // baseball,soccer FIFA Women's World Cup,FIFA World Cup,MLB,NPB 23 1877

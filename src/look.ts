@@ -154,7 +154,7 @@ const HIGH_CONTRAST: Look = {
  * The named looks. Each is a light and a dark palette for every sport, as custom properties on `.kyogijo[data-palette="<name>"]`; pass one as `look`.
  * @example
  * ```ts
- * import { LOOKS, drawKyogijo } from "@johnmorrisdotca/kyogijo";
+ * import { LOOKS, drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
  * const svg = drawKyogijo({ sport: "nhl", look: "chalkboard" });
  * console.log(Object.keys(LOOKS).length, svg.includes('data-palette="chalkboard"'));
  * // 7 true

@@ -211,8 +211,8 @@ export function replayEvents(timeline: ReplayTimeline): readonly ReplayEvent[] {
  * the later frame appears when its frame comes. `t` is held to the first and last moments. The objects keep the order of their first appearance.
  * @example
  * ```ts
- * import { interpolate } from "@johnmorrisdotca/kyogijo/replay";
- * import type { ReplayTimeline } from "@johnmorrisdotca/kyogijo/replay";
+ * import { interpolate } from "@johnmorrisdotca/kyogijo-stadiums/replay";
+ * import type { ReplayTimeline } from "@johnmorrisdotca/kyogijo-stadiums/replay";
  * const timeline: ReplayTimeline = { frames: [
  *   { t: 0, objects: [{ id: "ball", team: "ball", x: 100, y: 40 }] },
  *   { t: 2, objects: [{ id: "ball", team: "ball", x: 140, y: 20 }] },
@@ -250,8 +250,8 @@ export function interpolate(timeline: ReplayTimeline, t: number, options: { smoo
  * Only objects that are there at `t` have a trail. `teams` and `ids` choose whose; all by default.
  * @example
  * ```ts
- * import { trails } from "@johnmorrisdotca/kyogijo/replay";
- * import type { ReplayTimeline } from "@johnmorrisdotca/kyogijo/replay";
+ * import { trails } from "@johnmorrisdotca/kyogijo-stadiums/replay";
+ * import type { ReplayTimeline } from "@johnmorrisdotca/kyogijo-stadiums/replay";
  * const timeline: ReplayTimeline = { frames: [0, 1, 2, 3].map((t) => ({ t, objects: [{ id: "puck", team: "puck", x: t * 10, y: 0 }] })) };
  * console.log(trails(timeline, 3, 2)[0].points.map((point) => point[0]).join());
  * // 10,20,30
@@ -292,8 +292,8 @@ export function trails(timeline: ReplayTimeline, t: number, seconds: number, opt
  * says, or when the latest says nobody does (`null`).
  * @example
  * ```ts
- * import { possession } from "@johnmorrisdotca/kyogijo/replay";
- * import type { ReplayTimeline } from "@johnmorrisdotca/kyogijo/replay";
+ * import { possession } from "@johnmorrisdotca/kyogijo-stadiums/replay";
+ * import type { ReplayTimeline } from "@johnmorrisdotca/kyogijo-stadiums/replay";
  * const timeline: ReplayTimeline = { frames: [
  *   { t: 0, possession: "h7", objects: [{ id: "h7", team: "home", x: 1, y: 1 }, { id: "ball", team: "ball", x: 1, y: 1 }] },
  *   { t: 1, possession: null, objects: [{ id: "h7", team: "home", x: 2, y: 1 }, { id: "ball", team: "ball", x: 5, y: 1 }] },
@@ -337,7 +337,7 @@ function placeEvent(p: Prepared, index: number, smooth: number): ActiveEvent {
  * The events that are on the surface at a time: from the moment of each until `hold` seconds after it ends (3 by default), with their places worked out.
  * @example
  * ```ts
- * import { activeEvents } from "@johnmorrisdotca/kyogijo/replay";
+ * import { activeEvents } from "@johnmorrisdotca/kyogijo-stadiums/replay";
  * const ball = { id: "ball", team: "ball" as const, x: 10, y: 10 };
  * const timeline = { frames: [{ t: 0, objects: [ball] }, { t: 10, objects: [ball] }], events: [{ t: 4, kind: "goal", team: "home" as const }] };
  * console.log(activeEvents(timeline, 3).length, activeEvents(timeline, 5).map((a) => a.event.kind).join(), activeEvents(timeline, 9).length);
@@ -369,7 +369,7 @@ const kindWord = (w: KyogijoWords["replay"], kind: string): string => ((KINDS as
  * What is said of an event, for a live region and a tooltip: its `label`, else the word for its kind and its team, then the time.
  * @example
  * ```ts
- * import { describeEvent } from "@johnmorrisdotca/kyogijo/replay";
+ * import { describeEvent } from "@johnmorrisdotca/kyogijo-stadiums/replay";
  * console.log(describeEvent({ t: 72, kind: "goal", team: "home" }));
  * console.log(describeEvent({ t: 72, kind: "goal", team: "home" }, "ja"));
  * // Goal, home, 1:12
@@ -572,8 +572,8 @@ export function replayPlacer(options: SurfaceOptions | ScoreOptions, timeline: R
  * an `id` the drawing's ids come from the options and the timeline, not from the time, so that every frame of a replay has the same ids.
  * @example
  * ```ts
- * import { drawFrame } from "@johnmorrisdotca/kyogijo/replay";
- * import type { ReplayTimeline } from "@johnmorrisdotca/kyogijo/replay";
+ * import { drawFrame } from "@johnmorrisdotca/kyogijo-stadiums/replay";
+ * import type { ReplayTimeline } from "@johnmorrisdotca/kyogijo-stadiums/replay";
  * const timeline: ReplayTimeline = {
  *   from: "nhl-api",
  *   frames: [0, 1, 2].map((t) => ({ t, objects: [
@@ -610,7 +610,7 @@ export const replayId = (options: SurfaceOptions | ScoreOptions, timeline: Repla
  * The events of a timeline as an HTML table, for a reader who cannot see the drawing: the time, the kind, the team and what is said of it. Every cell is escaped.
  * @example
  * ```ts
- * import { replayTable } from "@johnmorrisdotca/kyogijo/replay";
+ * import { replayTable } from "@johnmorrisdotca/kyogijo-stadiums/replay";
  * const html = replayTable({ frames: [{ t: 0, objects: [] }], events: [{ t: 12, kind: "goal", team: "home", label: "Goal, Rivera" }] });
  * console.log(html.includes("<td>0:12</td>"), html.includes("Goal, Rivera"));
  * // true true

@@ -45,7 +45,7 @@ function inCircle(a: Pt, b: Pt, c: Pt, d: Pt): number {
  * not a corner. The same point twice is one. With no points the hull is empty, with one it is that point, and with two or with all on a line it is the two ends.
  * @example
  * ```ts
- * import { convexHull } from "@johnmorrisdotca/kyogijo/layers";
+ * import { convexHull } from "@johnmorrisdotca/kyogijo-stadiums/layers";
  * console.log(convexHull([[0, 0], [4, 0], [2, 0], [4, 3], [1, 1], [0, 3]]));
  * // [ [ 0, 0 ], [ 4, 0 ], [ 4, 3 ], [ 0, 3 ] ]
  * ```
@@ -140,7 +140,7 @@ function circle(points: readonly Pt[], v: [number, number, number]): Tri {
  * (up to which of four points on one circle are joined). Points that are not finite numbers are not allowed; a repeated point is one point.
  * @example
  * ```ts
- * import { delaunay } from "@johnmorrisdotca/kyogijo/layers";
+ * import { delaunay } from "@johnmorrisdotca/kyogijo-stadiums/layers";
  * const t = delaunay([[0, 0], [10, 0], [5, 8], [5, 3]]);
  * console.log(t.points.length, t.triangles.length / 3);
  * // 4 3
@@ -278,7 +278,7 @@ export function clipNearer(polygon: readonly Pt[], a: Pt, b: Pt): Pt[] {
  * from a handful of cuts and not from every other point.
  * @example
  * ```ts
- * import { voronoiCells } from "@johnmorrisdotca/kyogijo/layers";
+ * import { voronoiCells } from "@johnmorrisdotca/kyogijo-stadiums/layers";
  * const cells = voronoiCells([[2, 5], [8, 5]], { x: 0, y: 0, w: 10, h: 10 });
  * console.log(cells[0].length, cells[1].map((p) => p.join(",")).join(" "));
  * // 4 5,0 10,0 10,10 5,10

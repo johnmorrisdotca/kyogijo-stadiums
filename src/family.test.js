@@ -15,9 +15,9 @@ const id = pkg.name.replace(/^@[^/]+\//, "");
 
 // The recorded hashes. The template's is the one that says every demo's header and footer, and every README's
 // list of the family, are the same text.
-// The template of 2026-10-13 lists twenty-five packages, Kyogijo included; it is Kyogijo's own copy until the other twenty-four are swept to match. The family's list is swept again, in every
+// The template of 2026-10-14 lists twenty-five packages, Kyogijo included (as kyogijo-stadiums, the name it was renamed to in 0.4.0); it is Kyogijo's own copy until the other twenty-four are swept to match. The family's list is swept again, in every
 // repository at once, when a package is added to it, and this hash is then the new one.
-const TEMPLATE = { version: "2026-10-13", sha256: "b0fe802290b78f4fcd1d8971e6ba37d230956bb835682bffcf3d1246f078b9fb" };
+const TEMPLATE = { version: "2026-10-14", sha256: "f6c6cef21038aab97889e8b5b5cdf7accbfcfa43c2af6a9c1bcce8db23abff97" };
 const FILES = {
   "scripts/family-readme.mjs": "3c9d5b2cbf17a92d31bced98edac7f544616edb0dff90bf2d141722a9d4516c5",
   "scripts/release-notes.mjs": "efab0fb78ad05973a8885624c0d2ce3b458b55799c11eabaa5176603ce8cd1e9",
@@ -38,10 +38,10 @@ describe("the family template", () => {
   it("lists every package of the family, in order, each with its Japanese name and a line on it", () => {
     expect(FAMILY.map((one) => one.id)).toEqual([
       "korokoro", "kyuubu", "hitotsu", "toranpu", "tane", "narabe", "tenka", "kumimoji", "tsunagi", "jarajara",
-      "suido", "domino", "kotoba", "sugoroku", "kazu", "meikyuu", "hikidashi", "chizu", "bushu", "tobiishi", "jirai", "gunjin", "karakuri", "houseki", "kyogijo",
+      "suido", "domino", "kotoba", "sugoroku", "kazu", "meikyuu", "hikidashi", "chizu", "bushu", "tobiishi", "jirai", "gunjin", "karakuri", "houseki", "kyogijo-stadiums",
     ]);
     for (const one of FAMILY) {
-      expect(one.name, one.id).toBe(one.id[0].toUpperCase() + one.id.slice(1));
+      expect(one.id === one.name.toLowerCase() || one.id.startsWith(`${one.name.toLowerCase()}-`), one.id).toBe(true);
       expect(one.kana, one.id).toMatch(/\S/);
       expect(FAMILY_PITCH[one.id], one.id).toMatch(/^[^A-Z.].*[^.]$/);
     }

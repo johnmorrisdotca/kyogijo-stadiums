@@ -15,7 +15,7 @@ import { FAMILY_SCRIPT, familyFooter, familyHead, familyHeader, familyUnreviewed
 import { firstPaintHead, sayEnglish } from "./first-paint.mjs";
 import { WORDS } from "../demo/words.js";
 
-const id = "kyogijo";
+const id = "kyogijo-stadiums";
 const ICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%232f5d4a'/%3E%3Ctext x='50' y='72' font-size='60' text-anchor='middle' fill='%23f3efe4'%3E場%3C/text%3E%3C/svg%3E";
 
 const escape = (text) => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -44,7 +44,7 @@ cpSync(join(chizu, "LICENSE"), "site/chizu/LICENSE");
 cpSync(join(chizu, "NOTICE.md"), "site/chizu/NOTICE.md");
 
 const lib = await libraryFrom(join(process.cwd(), "dist"), ".js", (file) => import(pathToFileURL(file).href));
-const style = lib["@johnmorrisdotca/kyogijo"].KYOGIJO_STYLE;
+const style = lib["@johnmorrisdotca/kyogijo-stadiums"].KYOGIJO_STYLE;
 // The playground's own code, from the copy in site/ (which finds the package beside it), run here as the page runs it.
 const here = (file) => import(pathToFileURL(join(process.cwd(), "site", file)).href);
 const { SPORTS, LEAGUES, drawKyogijo } = await here("dist/index.js");

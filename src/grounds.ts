@@ -100,7 +100,7 @@ const toGround = (data: GroundData): Ground => {
  * and well-known club grounds, each with its pitch at its own size where the English article publishes one.
  * @example
  * ```ts
- * import { GROUNDS, GROUND_IDS } from "@johnmorrisdotca/kyogijo/grounds";
+ * import { GROUNDS, GROUND_IDS } from "@johnmorrisdotca/kyogijo-stadiums/grounds";
  * const { name, city, pitch, pitchSize } = GROUNDS["old-trafford"];
  * console.log(name, city, pitch.length, pitch.width, pitchSize, GROUND_IDS.length);
  * // Old Trafford Manchester 105 68 published 64
@@ -120,7 +120,7 @@ export const groundById = (id: string | undefined): Ground | undefined => (id !=
  * or without the long vowel mark.
  * @example
  * ```ts
- * import { groundByName, groundsByName } from "@johnmorrisdotca/kyogijo/grounds";
+ * import { groundByName, groundsByName } from "@johnmorrisdotca/kyogijo-stadiums/grounds";
  * console.log(groundByName("Giuseppe Meazza Stadium")?.id, groundByName("日産スタジアム")?.id, groundByName("Estadio Jornalista Mario Filho")?.id, groundsByName("stadium australia").length);
  * // san-siro nissan-stadium-yokohama maracana 1
  * ```
@@ -145,7 +145,7 @@ export const groundByWikidata = (wikidata: string | undefined): Ground | undefin
  * A ground's name in a year: the name it had then, or its everyday name, in English. In Japanese there is one name for every year.
  * @example
  * ```ts
- * import { GROUNDS, groundNameIn } from "@johnmorrisdotca/kyogijo/grounds";
+ * import { GROUNDS, groundNameIn } from "@johnmorrisdotca/kyogijo-stadiums/grounds";
  * console.log(groundNameIn(GROUNDS["soccer-city"], 2010), "/", groundNameIn(GROUNDS["soccer-city"], 2012));
  * // Soccer City / FNB Stadium
  * ```

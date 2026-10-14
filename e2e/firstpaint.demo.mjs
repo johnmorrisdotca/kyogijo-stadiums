@@ -285,7 +285,7 @@ test("the sports, pitches, parks and grounds do not jump when the script runs", 
 
 for (const [name, setup, query] of [
   ["asked for in the address", () => {}, "?lang=ja"],
-  ["kept on the device", () => window.localStorage.setItem("kyogijo.page.lang", "ja"), ""],
+  ["kept on the device", () => window.localStorage.setItem("kyogijo-stadiums.page.lang", "ja"), ""],
 ]) {
   test(`a page in Japanese is held back, then shown in Japanese, with no jump: ${name}`, async ({ page, browserName }) => {
     await page.emulateMedia({ colorScheme: "dark" });

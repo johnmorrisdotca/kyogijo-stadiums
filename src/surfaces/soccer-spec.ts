@@ -134,7 +134,7 @@ export type SoccerPitchClass = "international" | "within-laws" | "outside-laws";
  * matches), `within-laws` (90 to 120 m by 45 to 90 m, and the touchline longer than the goal line) or `outside-laws`.
  * @example
  * ```ts
- * import { soccerPitchClass } from "@johnmorrisdotca/kyogijo";
+ * import { soccerPitchClass } from "@johnmorrisdotca/kyogijo-stadiums";
  * console.log(soccerPitchClass(105, 68), soccerPitchClass(95, 60), soccerPitchClass(60, 40));
  * // international within-laws outside-laws
  * ```
@@ -174,7 +174,7 @@ export const SOCCER_PITCH_IDS: readonly SoccerPitchId[] = ["fifa", "uefa", "mls"
  * allow, the FA's 9-, 7- and 5-a-side pitches and FIFA's futsal court. Each is a full `SoccerSpec`.
  * @example
  * ```ts
- * import { SOCCER_PITCHES } from "@johnmorrisdotca/kyogijo";
+ * import { SOCCER_PITCHES } from "@johnmorrisdotca/kyogijo-stadiums";
  * const { length, width, name } = SOCCER_PITCHES.fifa;
  * console.log(name, length, width);
  * // International (FIFA) 105 68
@@ -230,7 +230,7 @@ const isSize = (value: unknown): value is SoccerSize => typeof value === "object
  * the areas are never wider than the pitch.
  * @example
  * ```ts
- * import { soccerSpec } from "@johnmorrisdotca/kyogijo";
+ * import { soccerSpec } from "@johnmorrisdotca/kyogijo-stadiums";
  * const pitch = soccerSpec({ length: 110, width: 70, unit: "yd" });
  * console.log(pitch.length.toFixed(2), pitch.width.toFixed(2));
  * // 100.58 64.01

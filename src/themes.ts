@@ -6,7 +6,7 @@ import type { CourtStyle } from "./types.ts";
  * and change a part.
  * @example
  * ```ts
- * import { COURT_THEMES, drawKyogijo } from "@johnmorrisdotca/kyogijo";
+ * import { COURT_THEMES, drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
  * const svg = drawKyogijo({ sport: "nba", court: { ...COURT_THEMES.twoTone, baselineText: "HARBOUR CITY" } });
  * console.log(svg.includes("--ky-key:#1e4f8f"));
  * // true

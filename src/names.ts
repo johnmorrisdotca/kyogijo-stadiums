@@ -128,7 +128,7 @@ const covers = (alias: PlaceAlias, year: number | undefined): boolean => (year =
  * there is none or when it is the name shown.
  * @example
  * ```ts
- * import { PARKS, officialName } from "@johnmorrisdotca/kyogijo/parks";
+ * import { PARKS, officialName } from "@johnmorrisdotca/kyogijo-stadiums/parks";
  * const koshien = PARKS["hanshin-koshien-stadium"];
  * console.log(officialName(koshien, "en"), "/", officialName(koshien, "ja"));
  * // Hanshin Koshien Stadium / 阪神甲子園球場

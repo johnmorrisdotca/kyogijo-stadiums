@@ -269,7 +269,7 @@ const STANDARD: PitchMetres = { length: 105, width: 68 };
  * drawn, gives `undefined`.
  * @example
  * ```ts
- * import { soccerFrame } from "@johnmorrisdotca/kyogijo";
+ * import { soccerFrame } from "@johnmorrisdotca/kyogijo-stadiums";
  * const opta = soccerFrame("opta");
  * console.log(opta?.xRight, opta?.yTop);
  * // 100 100
@@ -355,14 +355,14 @@ function rescaler(a: SoccerFrame, b: SoccerFrame): Rescaler {
 
 /**
  * The map from one coordinate system to another, piecewise linear between the landmarks (it is built on `piecewise` of
- * `@johnmorrisdotca/kyogijo/frames`), so that a point on a line of the pitch (the goal line, the goal area, the penalty
+ * `@johnmorrisdotca/kyogijo-stadiums/frames`), so that a point on a line of the pitch (the goal line, the goal area, the penalty
  * mark, the penalty area, the halfway line, the touchline, the posts) lands on the same line in the other system. Between
  * two landmarks the map is linear; beyond the goal lines and the touchlines (a ball out of play) it runs on along the last
  * piece. Give a pitch size in metres for a provider whose numbers follow the pitch (Tracab, SkillCorner, Second
  * Spectrum, Metrica, `international`). The same map, through the surface and in feet, is `convert` of the frames module.
  * @example
  * ```ts
- * import { rescale } from "@johnmorrisdotca/kyogijo";
+ * import { rescale } from "@johnmorrisdotca/kyogijo-stadiums";
  * const toStatsBomb = rescale("opta", "statsbomb");
  * // The middle of Opta's penalty-box line, 17 units from the goal line, is on StatsBomb's, 18 yards from it.
  * const [x, y] = toStatsBomb(100 - 17, 50);

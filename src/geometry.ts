@@ -228,7 +228,7 @@ export function fencePoints(fence: { left: number; leftCenter: number; center: n
  * smooth and never swings out past the figures it was made from. Outside the points' angles it holds the end distance.
  * @example
  * ```ts
- * import { fenceAt, fencePoints, DEFAULT_FENCE } from "@johnmorrisdotca/kyogijo/geometry";
+ * import { fenceAt, fencePoints, DEFAULT_FENCE } from "@johnmorrisdotca/kyogijo-stadiums/geometry";
  * const points = fencePoints(DEFAULT_FENCE);
  * console.log(fenceAt(points, 0), fenceAt(points, -45));
  * // 400 330
@@ -272,7 +272,7 @@ export type SizedSport = Exclude<Sport, "mlb">;
  * field is measured with its end zones, end line to end line.
  * @example
  * ```ts
- * import { surfaceSize } from "@johnmorrisdotca/kyogijo/geometry";
+ * import { surfaceSize } from "@johnmorrisdotca/kyogijo-stadiums/geometry";
  * console.log(surfaceSize("nfl"), surfaceSize("nhl", "m").length.toFixed(2));
  * // { length: 120, width: 53.333333333333336, unit: 'yd' } 60.96
  * ```

@@ -16,7 +16,7 @@ A *drawing*, wherever one is asked for, is the options of `drawKyogijo`, the SVG
 ## The scene
 
 ```ts
-import { sceneOf } from "@johnmorrisdotca/kyogijo/scene";
+import { sceneOf } from "@johnmorrisdotca/kyogijo-stadiums/scene";
 
 const scene = sceneOf({ sport: "nhl", id: "rink" }, { theme: "dark" });
 const [apron, boards] = scene.items;
@@ -38,8 +38,8 @@ Light is the default, or the drawing's own `data-theme`; `theme: "dark"` works t
 The SVG is still written once, by the code that has always written it, and a scene is read from that markup: the text is parsed into a tree that remembers every attribute as it was written, and the scene is worked out from the tree. `parseSvg` and `writeSvg` are that tree, and `writeSvg(parseSvg(svg)) === svg` for every drawing in the package's tests (127 of them: every sport wide, tall, as a badge and a compact card, light and dark, with and without its stylesheet, in Japanese, every kind of layer, the five charts and a frame of a replay). The tests that hold the drawing itself, the snapshots of every sport and the fingerprint of the text, are unchanged.
 
 ```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
-import { parseSvg, writeSvg } from "@johnmorrisdotca/kyogijo/scene";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
+import { parseSvg, writeSvg } from "@johnmorrisdotca/kyogijo-stadiums/scene";
 
 const svg = drawKyogijo({ sport: "nhl", id: "rink" });
 console.log(writeSvg(parseSvg(svg)) === svg);
@@ -51,7 +51,7 @@ console.log(writeSvg(parseSvg(svg)) === svg);
 `sceneToSvg` writes a scene as SVG with every colour, width and font an attribute, every transform on its shape and each clip as a group. It is the SVG for anything that does not read CSS variables: an image converter, an email, a slide, a tool that draws an SVG with its own engine. It is also what the d3, Plot and PNG renderers are built from.
 
 ```ts
-import { sceneToSvg } from "@johnmorrisdotca/kyogijo/scene";
+import { sceneToSvg } from "@johnmorrisdotca/kyogijo-stadiums/scene";
 
 const svg = sceneToSvg({ sport: "nhl", id: "rink" }, { theme: "dark", width: 800 });
 console.log(svg.includes("var("), svg.includes("<style"), svg.includes('width="800" height="374"'));
@@ -63,7 +63,7 @@ console.log(svg.includes("var("), svg.includes("<style"), svg.includes('width="8
 `drawToCanvas(ctx, drawing, options)` paints a scene on a 2D context. No canvas library is imported: the context is typed by the members that are called (`CanvasContext`), so a browser's `CanvasRenderingContext2D`, an `OffscreenCanvasRenderingContext2D` and the contexts of `@napi-rs/canvas`, `skia-canvas` and `canvas` all do. It returns the box it drew.
 
 ```ts no-run
-import { drawToCanvas } from "@johnmorrisdotca/kyogijo/canvas";
+import { drawToCanvas } from "@johnmorrisdotca/kyogijo-stadiums/canvas";
 
 const canvas = document.querySelector("canvas") as HTMLCanvasElement;
 const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
@@ -83,7 +83,7 @@ In Node, with `@napi-rs/canvas`:
 
 ```ts no-check
 import { createCanvas } from "@napi-rs/canvas";
-import { drawToCanvas } from "@johnmorrisdotca/kyogijo/canvas";
+import { drawToCanvas } from "@johnmorrisdotca/kyogijo-stadiums/canvas";
 
 const canvas = createCanvas(1200, 561);
 drawToCanvas(canvas.getContext("2d") as never, { sport: "nhl", id: "rink" }, { width: 1200, background: "#fff" });
@@ -96,7 +96,7 @@ const png = canvas.toBuffer("image/png");
 
 ```ts no-check
 import * as d3 from "d3";
-import { appendSurface, surfaceDomain } from "@johnmorrisdotca/kyogijo/d3";
+import { appendSurface, surfaceDomain } from "@johnmorrisdotca/kyogijo-stadiums/d3";
 
 const options = { sport: "nhl", id: "rink" } as const;
 const { x: xd, y: yd } = surfaceDomain(options); // [-8, 208] and [-8, 93]: the drawing's feet, its margin included
@@ -116,7 +116,7 @@ svg.selectAll("circle.shot").data(shots).join("circle").attr("class", "shot").at
 
 ```ts no-check
 import * as Plot from "@observablehq/plot";
-import { surfaceMark, surfaceScales } from "@johnmorrisdotca/kyogijo/plot";
+import { surfaceMark, surfaceScales } from "@johnmorrisdotca/kyogijo-stadiums/plot";
 
 const options = { sport: "nhl", id: "rink" } as const;
 const plot = Plot.plot({
@@ -134,7 +134,7 @@ The marks after the surface use the drawing's numbers, so provider data goes thr
 `sceneToGeoJSON(drawing, options)` writes every shape as a feature of a `FeatureCollection` (RFC 7946): a filled shape is a `Polygon` or `MultiPolygon` (a ring inside another is its hole, the exterior wound counter-clockwise and a hole clockwise, as the RFC has it), an outline or a line a `LineString` or `MultiLineString`, a label a `Point` with its `text`, and a logo a `Polygon` with its `href`. Curves are cut into straight pieces no more than 0.05 feet from the curve. The painting of each shape is in its `properties` (`class`, `fill`, `stroke`, `strokeWidth`, `opacity`, `label`, the `data` of its layer, and `order`, its place in the paint order), so a map style can colour it the way the drawing does.
 
 ```ts
-import { sceneToGeoJSON } from "@johnmorrisdotca/kyogijo/geojson";
+import { sceneToGeoJSON } from "@johnmorrisdotca/kyogijo-stadiums/geojson";
 
 // The playing surface of the rink, in the NHL API's frame: feet from centre ice, y up.
 const ice = sceneToGeoJSON({ sport: "nhl", id: "rink" }, { frame: "nhl-api", filter: (item) => item.class === "ky-surface" });
@@ -151,7 +151,7 @@ console.log(ice.features.length, ice.features[0].geometry.type, ice.bbox);
 `toPNG(drawing, { width })` returns PNG bytes, by [resvg](https://github.com/yisibl/resvg-js), a Rust renderer. It is an optional peer dependency: `npm install @resvg/resvg-js` to use it, and without it `toPNG` throws an error that says what to install. It is loaded when `toPNG` is called, by name, so nothing that does not call it needs it, and it runs in Node only. It draws the stylesheet-free SVG of the scene (resvg does not read CSS variables).
 
 ```ts
-import { toPNG } from "@johnmorrisdotca/kyogijo/png";
+import { toPNG } from "@johnmorrisdotca/kyogijo-stadiums/png";
 
 // With @resvg/resvg-js installed this is the PNG; without, it stays undefined. The first bytes of a PNG are its signature.
 const png = await toPNG({ sport: "nhl", id: "rink" }, { width: 800, theme: "dark" }).catch(() => undefined);
@@ -164,7 +164,7 @@ console.log(png === undefined || (png[1] === 80 && png[2] === 78 && png[3] === 7
 **In a browser**, or anywhere resvg is awkward, rasterise with the canvas instead: draw to a canvas and ask it for the picture.
 
 ```ts no-run
-import { drawToCanvas } from "@johnmorrisdotca/kyogijo/canvas";
+import { drawToCanvas } from "@johnmorrisdotca/kyogijo-stadiums/canvas";
 
 const canvas = document.createElement("canvas");
 canvas.width = 1200;

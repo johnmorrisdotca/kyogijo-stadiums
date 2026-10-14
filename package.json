@@ -1,6 +1,6 @@
 {
-  "name": "@johnmorrisdotca/kyogijo",
-  "version": "0.3.0",
+  "name": "@johnmorrisdotca/kyogijo-stadiums",
+  "version": "0.4.0",
   "description": "Kyogijo 競技場, sports surfaces as SVG, drawn to scale from the rulebooks: NFL, CFL and IFAF football fields, an NHL rink, an NBA court and MLB ballparks, with each team's name and logo on its side and the score in the middle. Light and dark, accessible, a compact badge for lists, a helper for React and a custom element. Zero dependencies.",
   "keywords": [
     "sports",
@@ -45,13 +45,13 @@
     "node",
     "itsutsu"
   ],
-  "homepage": "https://johnmorrisdotca.github.io/kyogijo/",
+  "homepage": "https://johnmorrisdotca.github.io/kyogijo-stadiums/",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/johnmorrisdotca/kyogijo.git"
+    "url": "git+https://github.com/johnmorrisdotca/kyogijo-stadiums.git"
   },
   "bugs": {
-    "url": "https://github.com/johnmorrisdotca/kyogijo/issues"
+    "url": "https://github.com/johnmorrisdotca/kyogijo-stadiums/issues"
   },
   "author": "John Morris",
   "license": "MIT",

@@ -3,7 +3,7 @@
 Seven field sports, each drawn to scale from its own current rulebook: `sport: "lacrosse"` (World Lacrosse's men's and women's fields and its box floor, the NCAA's men's and women's fields, the PLL's field and the NLL's floor), `"rugby"` (World Rugby's Law 1 for union; the NRL's and the IRL's playing field for league), `"afl"` (the AFL's Laws of Australian Football), `"gaelic"` (the GAA's field, for football and for hurling), `"cricket"` (the Laws of Cricket and the ICC's playing conditions), `"fieldhockey"` (the FIH's Rules of Hockey) and `"handball"` (the IHF's Rules of the Game for Indoor Handball). Every figure is cited, rule by rule, in [sources.md](./sources.md#the-field-sports). They lie wide, with the teams' names at the ends and the score in the middle; `orientation: "portrait"` lays them tall.
 
 ```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const rugby = drawKyogijo({ sport: "rugby" });
 const ground = drawKyogijo({ sport: "afl", field: { ground: "mcg" } });
@@ -29,8 +29,8 @@ Each is the rulebook's, in the unit it prints first: metres for World Rugby, the
 | Lacrosse (World Lacrosse, the NCAA, the PLL, the NLL) | a field 91.4 to 100 by 50 to 60 m (World Lacrosse), 110 by 60 yd (the NCAA's men's), 101 to 110 by 55 to 64 m (the NCAA's women's), 100 by 60 yd (the PLL), or a floor 180 to 200 by 85 ft with rounded corners and boards | goals 6 ft (1.83 m) by 6 ft, or 4 ft 9 in by 4 ft on the floor; the crease; the restraining lines; wing lines; the women's goal circle, marking areas, arc and fan; the PLL's two-point arc; the floor's face-off circle and spots |
 
 ```ts
-import { dimensionsOf, surfaceSize } from "@johnmorrisdotca/kyogijo/geometry";
-import { LEAGUES, leagueFigures, leagueSize } from "@johnmorrisdotca/kyogijo/leagues";
+import { dimensionsOf, surfaceSize } from "@johnmorrisdotca/kyogijo-stadiums/geometry";
+import { LEAGUES, leagueFigures, leagueSize } from "@johnmorrisdotca/kyogijo-stadiums/leagues";
 
 console.log(surfaceSize("handball"), dimensionsOf("fieldhockey", "m").circleRadius);
 // { length: 40, width: 20, unit: 'm' } 14.63
@@ -69,7 +69,7 @@ The leagues, the sport's own first:
 | `stripes`, `stripePattern` | The mown bands of the grass: on by default for the grass sports, not for handball or the box floor. |
 
 ```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const short = drawKyogijo({ sport: "rugby", units: "m", field: { length: 94, width: 68, inGoal: 6 } });
 console.log(short.match(/viewBox="([^"]*)"/)?.[1]);
@@ -94,7 +94,7 @@ Rugby, lacrosse, field hockey and handball write a score as every other surface 
 - **Cricket** has a board, as curling and the net sports have: a team's `score` is its runs, `wickets` the wickets it has lost, written `245/6`, and `overs` the overs it has faced; for a match of more than one innings, `innings` is each innings as `"312"` or `"178/4"`. `innings-2` (or "Innings 2", or `第2イニング`) is a status.
 
 ```ts
-import { drawKyogijo, statusLabel } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo, statusLabel } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const afl = drawKyogijo({
   sport: "afl",
@@ -129,7 +129,7 @@ The zone set `field-thirds` counts a data layer's marks into the thirds of a fie
 Each sport has a frame of its own, named like the sport: the centre of the surface as the origin, x along it (positive towards the end drawn at the right) and y across it (positive towards the top as it is drawn wide), in metres, and in yards for cricket, fitted to the size the surface is drawn at ([coordinate frames](./frames.md)).
 
 ```ts
-import { toSurface } from "@johnmorrisdotca/kyogijo/frames";
+import { toSurface } from "@johnmorrisdotca/kyogijo-stadiums/frames";
 
 // The middle of the right 22-metre line of a rugby field 120 metres long with its in-goal areas: 28 metres to the right of the centre.
 console.log(toSurface([[28, 0]], { from: "rugby", size: { length: 393.7, width: 229.66, unit: "ft" } }));

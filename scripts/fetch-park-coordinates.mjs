@@ -13,7 +13,7 @@ import { stringify } from "./json-compact.mjs";
 
 const file = new URL("./parks.data.json", import.meta.url);
 const parks = JSON.parse(readFileSync(file, "utf8"));
-const USER_AGENT = "kyogijo-parks-coordinates/0.1 (https://github.com/johnmorrisdotca/kyogijo; john@johnmorris.ca)";
+const USER_AGENT = "kyogijo-parks-coordinates/0.1 (https://github.com/johnmorrisdotca/kyogijo-stadiums; john@johnmorris.ca)";
 const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const ask = async (ids) => {
   const url = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${ids.join("|")}&props=claims&format=json&formatversion=2&redirects=yes`;

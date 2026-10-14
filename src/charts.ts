@@ -234,7 +234,7 @@ const NBA_LOOKS: Record<string, Look> = { made: {}, missed: { shape: "x", hollow
  * `league` (the league's percentage) and the zones are coloured by how far they are above or below it, on a diverging ramp.
  * @example
  * ```ts
- * import { nbaShotChart } from "@johnmorrisdotca/kyogijo/charts";
+ * import { nbaShotChart } from "@johnmorrisdotca/kyogijo-stadiums/charts";
  * const chart = nbaShotChart(
  *   [
  *     { x: 0, y: 12, made: true },
@@ -350,7 +350,7 @@ export function teamTotals(rows: readonly { x?: number | null; y?: number | null
  * With `fold` the shots at the left end are turned a half turn, so that every shot is at the right end.
  * @example
  * ```ts
- * import { nhlShotMap } from "@johnmorrisdotca/kyogijo/charts";
+ * import { nhlShotMap } from "@johnmorrisdotca/kyogijo-stadiums/charts";
  * const chart = nhlShotMap(
  *   [
  *     { x: 75, y: 4, outcome: "goal", xg: 0.31 },
@@ -449,7 +449,7 @@ const NFL_LOOKS: Record<string, Look> = {
  * percentage with the air yards of each pass in its table. The offence goes to the right whichever way `direction` says it went in the data.
  * @example
  * ```ts
- * import { nflPassChart } from "@johnmorrisdotca/kyogijo/charts";
+ * import { nflPassChart } from "@johnmorrisdotca/kyogijo-stadiums/charts";
  * const chart = nflPassChart(
  *   [
  *     { x: 72, y: 26, outcome: "complete" },

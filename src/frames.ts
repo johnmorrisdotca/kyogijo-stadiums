@@ -87,7 +87,7 @@ const finite = (value: number): boolean => Number.isFinite(value);
  * undone. Reuse it for a frame whose axis bends at its landmarks.
  * @example
  * ```ts
- * import { piecewise } from "@johnmorrisdotca/kyogijo/frames";
+ * import { piecewise } from "@johnmorrisdotca/kyogijo-stadiums/frames";
  * // A pitch drawn 0 to 100 whose halfway line is at 52.5 metres of a 105-metre pitch.
  * const along = piecewise([[0, 0], [50, 172.2], [100, 344.5]]);
  * console.log(along.forward(25), along.inverse(172.2));
@@ -124,7 +124,7 @@ export const FRAMES: Record<string, Frame> = {};
  * error unless `replace` says it is meant. Returns the frame.
  * @example
  * ```ts
- * import { FRAMES, registerFrame, toSurface } from "@johnmorrisdotca/kyogijo/frames";
+ * import { FRAMES, registerFrame, toSurface } from "@johnmorrisdotca/kyogijo-stadiums/frames";
  * registerFrame({
  *   name: "my-rink-grid", title: "A rink in tenths of a foot", sport: "nhl", unit: "tenth-ft", x: [-1000, 1000], y: [-425, 425],
  *   origin: "centre ice", yDirection: "up", size: "fixed", ends: "fixed", source: "my own data",
@@ -246,7 +246,7 @@ function checked(points: readonly Point[]): void {
  * right, `anchors` for landmarks of your own and `limits` to keep them on the surface.
  * @example
  * ```ts
- * import { toSurface } from "@johnmorrisdotca/kyogijo/frames";
+ * import { toSurface } from "@johnmorrisdotca/kyogijo-stadiums/frames";
  * // The NHL API's centre ice is the middle of the rink; its (69, 22) is the right end-zone face-off dot.
  * console.log(toSurface([[0, 0], [69, 22]], { from: "nhl-api" }));
  * // [ [ 100, 42.5 ], [ 169, 20.5 ] ]
@@ -268,7 +268,7 @@ export function toSurface(points: readonly Point[], options: PlaceOptions & { fr
  * `units` (feet by default).
  * @example
  * ```ts
- * import { fromSurface } from "@johnmorrisdotca/kyogijo/frames";
+ * import { fromSurface } from "@johnmorrisdotca/kyogijo-stadiums/frames";
  * // The right end-zone face-off dot of an NHL rink, as the NHL API writes it.
  * console.log(fromSurface([[169, 20.5]], { to: "nhl-api" }));
  * // [ [ 69, 22 ] ]
@@ -298,7 +298,7 @@ export interface ConvertOptions {
  * A function that turns points from one provider's frame into another's through the surface. Both frames are of one sport.
  * @example
  * ```ts
- * import { convert } from "@johnmorrisdotca/kyogijo/frames";
+ * import { convert } from "@johnmorrisdotca/kyogijo-stadiums/frames";
  * // HockeyTech's canvas to the NHL API's feet: its middle, (300, 150), is centre ice.
  * const toNhl = convert("hockeytech", "nhl-api");
  * console.log(toNhl([[300, 150], [600, 0]]));
@@ -322,7 +322,7 @@ export const convertPoints = (points: readonly Point[], from: Frame | string, to
  * Turn points a half turn about the middle of a surface: where they are when the same play is drawn attacking the other end.
  * @example
  * ```ts
- * import { flipEnds } from "@johnmorrisdotca/kyogijo/frames";
+ * import { flipEnds } from "@johnmorrisdotca/kyogijo-stadiums/frames";
  * console.log(flipEnds([[169, 20.5]], { length: 200, width: 85 }));
  * // [ [ 31, 64.5 ] ]
  * ```
@@ -350,7 +350,7 @@ const ENDS_CHANGED: Partial<Record<string, (period: number) => number | undefine
  * not settle, or a sport with no rule here, pass `changedAfter`: the periods after which the teams change ends.
  * @example
  * ```ts
- * import { attackingIn } from "@johnmorrisdotca/kyogijo/frames";
+ * import { attackingIn } from "@johnmorrisdotca/kyogijo-stadiums/frames";
  * console.log([1, 2, 3].map((period) => attackingIn("nhl", period, "right")));
  * // [ 'right', 'left', 'right' ]
  * ```

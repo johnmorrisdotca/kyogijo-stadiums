@@ -4,7 +4,7 @@
 //   <!-- made:frames -->  …  <!-- /made:frames -->
 //
 // and `pnpm docs:make` rewrites what is between them; a test (src/docs.made.test.js) holds each page to what this file makes.
-const MAIN = "@johnmorrisdotca/kyogijo";
+const MAIN = "@johnmorrisdotca/kyogijo-stadiums";
 
 const UNIT_WORDS = { ft: "feet", yd: "yards", m: "metres", cm: "centimetres", in: "inches", mm: "millimetres", px: "pixels", "tenth-ft": "tenths of a foot", percent: "percent of the pitch", fraction: "fractions of the pitch" };
 const SPORT_NAMES = { nfl: "NFL", cfl: "CFL", ifaf: "IFAF", nhl: "NHL", nba: "NBA", mlb: "MLB", soccer: "soccer", curling: "curling", tennis: "tennis", volleyball: "volleyball", badminton: "badminton", pickleball: "pickleball", tabletennis: "table tennis", lacrosse: "lacrosse", rugby: "rugby", afl: "Australian football", gaelic: "Gaelic games", cricket: "cricket", fieldhockey: "field hockey", handball: "handball" };

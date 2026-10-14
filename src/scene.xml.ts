@@ -30,7 +30,7 @@ export const encode = (text: string): string => text.replace(/&/g, "&amp;").repl
  * Read an SVG string into a tree. Anything that is not the markup this package writes (an unclosed tag, an unquoted attribute) is an error that says where.
  * @example
  * ```ts
- * import { parseSvg } from "@johnmorrisdotca/kyogijo/scene";
+ * import { parseSvg } from "@johnmorrisdotca/kyogijo-stadiums/scene";
  * const tree = parseSvg('<svg viewBox="0 0 10 5"><rect x="1" y="1" width="3" height="2"/></svg>');
  * console.log(tree.name, tree.attrs.viewBox, tree.children.length);
  * // svg 0 0 10 5 1

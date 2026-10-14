@@ -5,19 +5,19 @@ Install the package, draw a surface as a string of SVG, and choose the way in th
 ## Install
 
 ```sh
-npm install @johnmorrisdotca/kyogijo
-# or: pnpm add @johnmorrisdotca/kyogijo
-# or: yarn add @johnmorrisdotca/kyogijo
+npm install @johnmorrisdotca/kyogijo-stadiums
+# or: pnpm add @johnmorrisdotca/kyogijo-stadiums
+# or: yarn add @johnmorrisdotca/kyogijo-stadiums
 ```
 
-It needs Node 22 or later on a server, and any current browser. It is plain ES modules, with types, and it depends on nothing. Once it is on npm the same files are on the CDNs: `https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo@0/+esm` is the package as one module for the browser, and `https://unpkg.com/@johnmorrisdotca/kyogijo@0/dist/index.js` the file itself.
+It needs Node 22 or later on a server, and any current browser. It is plain ES modules, with types, and it depends on nothing. Once it is on npm the same files are on the CDNs: `https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo-stadiums@0/+esm` is the package as one module for the browser, and `https://unpkg.com/@johnmorrisdotca/kyogijo-stadiums@0/dist/index.js` the file itself.
 
 ## 1. A string of SVG
 
 `drawKyogijo(options)` returns SVG text. It needs no DOM, so it runs in Node, an edge function, a build step or a browser. The same options always give the same text.
 
 ```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const svg = drawKyogijo({
   sport: "nhl",
@@ -36,7 +36,7 @@ Put the string in a page with `innerHTML`, write it to a file, or send it in an 
 
 ```js no-run
 import { writeFileSync } from "node:fs";
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 // The drawing carries its own stylesheet, so a saved file stands alone: open it in a browser, or put it in an image tag.
 writeFileSync("rink.svg", drawKyogijo({ sport: "nhl", theme: "dark" }));
@@ -47,7 +47,7 @@ writeFileSync("rink.svg", drawKyogijo({ sport: "nhl", theme: "dark" }));
 `mountKyogijo(element, options)` draws into an element and returns `update`, `svg`, `orientation` and `destroy`. With `orientation: "auto"` it watches the element and draws again, tall or wide, when its shape changes.
 
 ```ts no-run
-import { mountKyogijo } from "@johnmorrisdotca/kyogijo/mount";
+import { mountKyogijo } from "@johnmorrisdotca/kyogijo-stadiums/mount";
 
 const card = mountKyogijo(document.querySelector("#game")!, {
   sport: "nhl",
@@ -65,7 +65,7 @@ card.update({ sport: "nhl", orientation: "auto", away: { name: "Northern Owls", 
 `<kyogijo-field>` is a standard custom element. Import `element/define` once, from the package or a CDN, and use the tag with attributes.
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo@0/dist/element-define.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo-stadiums@0/dist/element-define.js"></script>
 
 <!-- score is home-away; home-score and away-score say it the other way -->
 <kyogijo-field sport="nba" size="compact" orientation="auto"
@@ -78,7 +78,7 @@ card.update({ sport: "nhl", orientation: "auto", away: { name: "Northern Owls", 
 </style>
 ```
 
-The attributes are the options' names in kebab case (`sport`, `year`, `exact-lines`, `home-score`, `stripe-pattern`, `home-logo` and the rest, all in `KYOGIJO_ATTRIBUTES`), and `options` takes any other option as JSON. The parts are `figure`, `svg`, `surface`, `plate`, `team`, `home`, `away`, `score`, `home-score`, `away-score` and `badge`. React, Vue and Svelte examples are in the [README](https://github.com/johnmorrisdotca/kyogijo#in-react).
+The attributes are the options' names in kebab case (`sport`, `year`, `exact-lines`, `home-score`, `stripe-pattern`, `home-logo` and the rest, all in `KYOGIJO_ATTRIBUTES`), and `options` takes any other option as JSON. The parts are `figure`, `svg`, `surface`, `plate`, `team`, `home`, `away`, `score`, `home-score`, `away-score` and `badge`. React, Vue and Svelte examples are in the [README](https://github.com/johnmorrisdotca/kyogijo-stadiums#in-react).
 
 ## 4. A frame
 
@@ -86,7 +86,7 @@ For a page that cannot run scripts (a site builder, a forum, a newsletter archiv
 
 ```html
 <iframe
-  src="https://johnmorrisdotca.github.io/kyogijo/embed.html?sport=nhl&away=Northern+Owls&home=Lakeshore+Anchors&ascore=3&hscore=2&status=final-ot"
+  src="https://johnmorrisdotca.github.io/kyogijo-stadiums/embed.html?sport=nhl&away=Northern+Owls&home=Lakeshore+Anchors&ascore=3&hscore=2&status=final-ot"
   title="Northern Owls 3, Lakeshore Anchors 2, Final/OT"
   loading="lazy"
   style="width:100%;aspect-ratio:2.3;border:0"

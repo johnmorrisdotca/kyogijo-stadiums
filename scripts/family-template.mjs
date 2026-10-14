@@ -46,7 +46,7 @@
 const OWNER = "johnmorrisdotca";
 
 /** The day this file was last changed, in every repository at once. A test records the file's hash beside it. */
-export const FAMILY_TEMPLATE_VERSION = "2026-10-13";
+export const FAMILY_TEMPLATE_VERSION = "2026-10-14";
 
 /** The packages, in the order the footer lists them. `kana` is the name as it is written in Japanese. */
 export const FAMILY = [
@@ -74,7 +74,7 @@ export const FAMILY = [
   { id: "gunjin", name: "Gunjin", kana: "軍人" },
   { id: "karakuri", name: "Karakuri", kana: "からくり" },
   { id: "houseki", name: "Houseki", kana: "宝石" },
-  { id: "kyogijo", name: "Kyogijo", kana: "競技場" },
+  { id: "kyogijo-stadiums", name: "Kyogijo", kana: "競技場" },
 ];
 
 /**
@@ -107,7 +107,7 @@ export const FAMILY_PITCH = {
   gunjin: "five hidden-rank strategy games with pass-the-device play",
   karakuri: "eight hyper-casual puzzle games, some of them physics: draw a shield, pull pins, cut ropes, slide blocks, pour tubes",
   houseki: "gem and stone matching puzzles: falling triplets, stone collapse, colour chains and gem swap",
-  kyogijo: "sports fields, rinks, courts and ballparks drawn to scale as SVG, with each team and the score on them",
+  "kyogijo-stadiums": "sports fields, rinks, courts and ballparks drawn to scale as SVG, with each team and the score on them",
 };
 
 /**

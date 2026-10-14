@@ -105,7 +105,7 @@ const close = (ring: Position[]): Position[] => {
  * `CRS.Simple`, d3's `geoIdentity`, deck.gl's Cartesian coordinates). The painting of each shape is in its properties.
  * @example
  * ```ts
- * import { sceneToGeoJSON } from "@johnmorrisdotca/kyogijo/geojson";
+ * import { sceneToGeoJSON } from "@johnmorrisdotca/kyogijo-stadiums/geojson";
  * const rink = sceneToGeoJSON({ sport: "nhl", id: "rink" }, { filter: (item) => item.class.includes("ky-surface") });
  * console.log(rink.type, rink.features.length, rink.features[0].geometry.type, rink.bbox);
  * // FeatureCollection 1 Polygon [ 0, 0, 200, 85 ]

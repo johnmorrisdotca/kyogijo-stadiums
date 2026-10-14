@@ -52,7 +52,7 @@ export interface PassNetworkTotals {
  * and `table()` lists the players and the links as text.
  * @example
  * ```ts
- * import { passNetwork } from "@johnmorrisdotca/kyogijo/charts";
+ * import { passNetwork } from "@johnmorrisdotca/kyogijo-stadiums/charts";
  * const passes = [
  *   { from: 4, to: 8, x: 30, y: 40, x2: 45, y2: 55, team: "home" },
  *   { from: 8, to: 4, x: 45, y: 55, x2: 32, y2: 42, team: "home" },

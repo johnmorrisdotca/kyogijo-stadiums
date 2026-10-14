@@ -3,7 +3,7 @@
 Some games are played on a surface that was built inside another: an NHL rink on a ballpark's infield, a rink at midfield of a football stadium, a college basketball court on the deck of a carrier, a baseball field laid over a stadium's running track. Kyogijo draws them as they were, to scale: the host as it is drawn alone, and the game's own surface set inside it, at its own size, with its lines, its team banners, its score and its data layers.
 
 ```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const svg = drawKyogijo({
   sport: "nhl",
@@ -38,7 +38,7 @@ A drawing of a special game is drawn as its host lies, wide, whatever `orientati
 Data `layers` are in the game's surface, in its own frame and its own numbers: a point at (100, 42.5) is the middle of the rink wherever the rink stands. They are cut to the rink's outline and drawn over its lines.
 
 ```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const svg = drawKyogijo({
   sport: "nhl",
@@ -51,11 +51,11 @@ console.log(svg.includes('transform="translate(225 97.5) translate(-100 -42.5)"'
 
 ## The games
 
-`EVENTS` (`@johnmorrisdotca/kyogijo/events`) holds eighteen games, in the order they were played, each with its day or days, its venue, what its surface was set inside, where, and the sources of all of it. `eventOptions(id)` gives the options that draw one; spread them into `drawKyogijo`, with teams for a score or without. The title and the description then say the game and its day, and how its place was decided.
+`EVENTS` (`@johnmorrisdotca/kyogijo-stadiums/events`) holds eighteen games, in the order they were played, each with its day or days, its venue, what its surface was set inside, where, and the sources of all of it. `eventOptions(id)` gives the options that draw one; spread them into `drawKyogijo`, with teams for a score or without. The title and the description then say the game and its day, and how its place was decided.
 
 ```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
-import { EVENTS, eventOptions } from "@johnmorrisdotca/kyogijo/events";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
+import { EVENTS, eventOptions } from "@johnmorrisdotca/kyogijo-stadiums/events";
 
 const { name, dates, venue } = EVENTS["winter-classic-2009"];
 console.log(name.en, dates[0], venue.en);
@@ -109,7 +109,7 @@ A source gives the place for two games. For the rest no source read says where t
 `eventFit(id)` says how the surface sits in its host: `{ inside, outside }`, where `outside` is the share of the surface's area beyond the host's outline. The rinks in football stadiums and the court on the deck lie wholly inside. A rink on a ballpark reaches beyond the fair ground, over foul ground (the host's outline is the fair ground inside the fence, so this is what a rink across the infield does), and a baseball field laid over a soccer pitch is mostly beyond the pitch, over the track round it. A drawing says which, in its description.
 
 ```ts
-import { eventFit } from "@johnmorrisdotca/kyogijo/events";
+import { eventFit } from "@johnmorrisdotca/kyogijo-stadiums/events";
 
 console.log(eventFit("heritage-classic-2023"), eventFit("winter-classic-2009").inside);
 // { inside: true, outside: 0 } false

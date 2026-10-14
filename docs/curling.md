@@ -3,7 +3,7 @@
 `sport: "curling"` draws a curling sheet to scale: a house at each end (the 12-, 8- and 4-foot circles round the button), the tee, back, hog and centre lines, the hacks, and, if asked, the free guard zone and the ice's pebble. It is drawn from two rule books, each cited figure by figure in [sources.md](./sources.md#curling): R1 of World Curling's *The Rules of Curling and Rules of Competition* (1 September 2026) and Rule 3 of Curling Canada's *Rules of Curling for General Play* (September 2022 to August 2026). The sheet lies **tall** by default, with the far house at the top; `orientation: "landscape"` lays it wide.
 
 ```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const tall = drawKyogijo({ sport: "curling" });
 const wide = drawKyogijo({ sport: "curling", orientation: "landscape" });
@@ -35,8 +35,8 @@ The two books agree on every line and circle; they differ in what they print aro
 The sheet is drawn at the largest the rules allow, 150 feet by 15 feet 7 inches, with a line a little thicker than painted, as the other surfaces' are (`exactLines: true` draws them at their true widths: half an inch, and 4 inches for the hog line). The hog line is red, the other lines dark, the 12-foot band blue and the 4-foot band red. The hack line and the courtesy lines are World Curling's only, because Curling Canada's book prints neither.
 
 ```ts
-import { dimensionsOf, surfaceSize } from "@johnmorrisdotca/kyogijo/geometry";
-import { LEAGUES, leagueFigures } from "@johnmorrisdotca/kyogijo/leagues";
+import { dimensionsOf, surfaceSize } from "@johnmorrisdotca/kyogijo-stadiums/geometry";
+import { LEAGUES, leagueFigures } from "@johnmorrisdotca/kyogijo-stadiums/leagues";
 
 console.log(surfaceSize("curling", "ft"), dimensionsOf("curling", "ft").teeFromMiddle);
 // { length: 150, width: 15.583333333333334, unit: 'ft' } 57
@@ -58,7 +58,7 @@ console.log(leagueFigures(LEAGUES.curling[1]).slice(0, 3).map(([name, value]) =>
 | `detail: "simple"` | Leaves out the hacks, the hack line and the courtesy lines. |
 
 ```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const house = drawKyogijo({ sport: "curling", sheet: { show: "house", rings: { outer: "#0b6e4f", inner: "#d4a017" } } });
 console.log(house.includes("--ky-rg-o:#0b6e4f"), house.match(/viewBox="([^"]*)"/)?.[1]);
@@ -74,7 +74,7 @@ The sheet has no history in the package: a `year` is ignored.
 A curling score is a board on the ice between the hog lines. A team's `ends` is its score in each end, in order (`"X"` for a conceded end, `null` for one not played yet); `hammer: true` marks the team that has the last stone. The board has ten ends and an `E` for each extra end, each team's total, and the status under it. A tall sheet has the ends down the board and a team in each column; a wide one has the ends across and a team in each row. The hammer is a small stone beside the team's name, on the board and on the badge.
 
 ```ts
-import { drawKyogijo, statusLabel } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo, statusLabel } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const game = {
   sport: "curling" as const,
@@ -98,7 +98,7 @@ console.log(statusLabel("end-6"), statusLabel("extra-end"), statusLabel("End 6",
 `curlingStones` is a ready-made chart ([charts](./charts.md)) for the stones of an end on the house. It judges them by the rules, takes off the stones the rules take off, rings the stones that score and rings the shot rock twice, and tells the score of the end.
 
 ```ts
-import { curlingScore, curlingStones } from "@johnmorrisdotca/kyogijo/charts";
+import { curlingScore, curlingStones } from "@johnmorrisdotca/kyogijo-stadiums/charts";
 
 const stones = [
   { x: 0.4, y: 0.3, team: "home", number: 8 },

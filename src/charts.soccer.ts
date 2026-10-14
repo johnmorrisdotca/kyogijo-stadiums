@@ -41,7 +41,7 @@ function entriesOf(counts: ReadonlyMap<string, number>, labels: Record<string, s
  * total, a key and a table. `goalMouth()` of the result is the goal-mouth view of the same shots.
  * @example
  * ```ts
- * import { soccerShotMap } from "@johnmorrisdotca/kyogijo/charts";
+ * import { soccerShotMap } from "@johnmorrisdotca/kyogijo-stadiums/charts";
  * const chart = soccerShotMap(
  *   [
  *     { x: 104, y: 36, outcome: "goal", xg: 0.31, goalY: -1.2, goalZ: 0.6 },
@@ -108,7 +108,7 @@ export function soccerShotMap(shots: readonly SoccerShot[], options: SoccerShotO
  * or high of the frame is drawn beside or above it; a block has no place across the goal and is left out, and the count says how many were.
  * @example
  * ```ts
- * import { soccerGoalMouth } from "@johnmorrisdotca/kyogijo/charts";
+ * import { soccerGoalMouth } from "@johnmorrisdotca/kyogijo-stadiums/charts";
  * const view = soccerGoalMouth([
  *   { x: 100, y: 40, outcome: "goal", goalY: 0.8, goalZ: 1.9, xg: 0.2 },
  *   { x: 90, y: 40, outcome: "missed", goalY: -4.6, goalZ: 1.2 },

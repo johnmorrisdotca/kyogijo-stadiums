@@ -30,7 +30,7 @@ function build(parent: D3Selection, spec: Spec): void {
  * `orientation: "landscape"` to have the surface's own).
  * @example
  * ```ts
- * import { surfaceDomain } from "@johnmorrisdotca/kyogijo/d3";
+ * import { surfaceDomain } from "@johnmorrisdotca/kyogijo-stadiums/d3";
  * console.log(surfaceDomain({ sport: "nhl", id: "rink" }));
  * // { x: [ -8, 208 ], y: [ -8, 93 ] }
  * ```
@@ -45,7 +45,7 @@ export function surfaceDomain(source: SceneSource, options: SceneOptions = {}): 
  * the drawing is light or dark by `theme`. Returns the group it made, with a class on each shape for selecting.
  * @example
  * ```ts
- * import { appendSurface, surfaceDomain } from "@johnmorrisdotca/kyogijo/d3";
+ * import { appendSurface, surfaceDomain } from "@johnmorrisdotca/kyogijo-stadiums/d3";
  * // With d3: appendSurface(d3.select("svg"), options, d3.scaleLinear().domain(d.x).range([0, 800]), d3.scaleLinear().domain(d.y).range([0, 374]))
  * const options = { sport: "nhl", id: "rink" } as const;
  * const made: string[] = [];

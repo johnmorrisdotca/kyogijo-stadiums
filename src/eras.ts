@@ -436,7 +436,7 @@ const featuresOf = (sport: EraSport): [string, EraSpan<unknown>[]][] => Object.e
  * and the sources that say so. The state a sport started with is not a change and is left out (see `eraStates`).
  * @example
  * ```ts
- * import { eraChanges } from "@johnmorrisdotca/kyogijo/eras";
+ * import { eraChanges } from "@johnmorrisdotca/kyogijo-stadiums/eras";
  * const nhl = eraChanges("nhl");
  * console.log(nhl.length, nhl[0].id, nhl[0].from);
  * // 10 nhl.centreLine.1943 1943
@@ -466,7 +466,7 @@ export function eraRange(sport: EraSport): { from: number; to: number } {
  * the NFL, the CFL and baseball. The year is the one the season starts in.
  * @example
  * ```ts
- * import { seasonLabel } from "@johnmorrisdotca/kyogijo/eras";
+ * import { seasonLabel } from "@johnmorrisdotca/kyogijo-stadiums/eras";
  * console.log(seasonLabel("nba", 1979), seasonLabel("nhl", 1999), seasonLabel("nfl", 1974));
  * // 1979–80 1999–00 1974
  * ```
@@ -510,7 +510,7 @@ const sameValue = (a: unknown, b: unknown): boolean => JSON.stringify(a) === JSO
  * not as it is today, `gaps` the markings that no source covers for the season, and `approx` those whose measure is not cited.
  * @example
  * ```ts
- * import { rulesFor } from "@johnmorrisdotca/kyogijo/eras";
+ * import { rulesFor } from "@johnmorrisdotca/kyogijo-stadiums/eras";
  * const nba = rulesFor("nba", 1995);
  * console.log(nba.season, nba.rules.threePoint, nba.rules.restrictedArea, nba.differences.length);
  * // 1995–96 { radius: 22 } false 2
@@ -542,7 +542,7 @@ export function rulesFor<S extends EraSport>(sport: S, year?: number): EraRules<
  * hash marks and the goal posts of that season. The IFAF's has no history and is returned as it is.
  * @example
  * ```ts
- * import { footballIn } from "@johnmorrisdotca/kyogijo/eras";
+ * import { footballIn } from "@johnmorrisdotca/kyogijo-stadiums/eras";
  * console.log(footballIn("cfl", 1985).endZone / 3, footballIn("cfl", 1986).endZone / 3, footballIn("nfl", 1960).hash / 3);
  * // 25 20 20
  * ```

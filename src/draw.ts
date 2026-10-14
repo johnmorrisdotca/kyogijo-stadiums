@@ -513,7 +513,7 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
  * bare surface. The same options always give the same string.
  * @example
  * ```ts
- * import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+ * import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
  * const svg = drawKyogijo({
  *   sport: "nhl",
  *   away: { name: "Harbour City Gulls", abbr: "HCG", score: 3, color: "#1f5fa8" },

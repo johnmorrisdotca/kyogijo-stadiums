@@ -30,9 +30,9 @@ describe("the parts of the docs made from the source", () => {
 
   it("has a row for every frame, every sport and every league, and counts the code's own numbers", () => {
     const frames = MADE.frames(lib);
-    for (const name of Object.keys(lib["@johnmorrisdotca/kyogijo/frames"].FRAMES)) expect(frames).toContain(`| \`${name}\` |`);
+    for (const name of Object.keys(lib["@johnmorrisdotca/kyogijo-stadiums/frames"].FRAMES)) expect(frames).toContain(`| \`${name}\` |`);
     const units = MADE.units(lib);
-    for (const sport of lib["@johnmorrisdotca/kyogijo"].SPORTS) expect(units).toContain(`| \`${sport}\` | the sport's own |`);
+    for (const sport of lib["@johnmorrisdotca/kyogijo-stadiums"].SPORTS) expect(units).toContain(`| \`${sport}\` | the sport's own |`);
     expect(units).toContain("| `nba` | `fiba` |");
     const limits = MADE.limits(lib);
     expect(limits).toContain("| Ballparks | 94 (30 current MLB, 44 past MLB, 12 NPB home parks, 8 other NPB grounds) | `PARKS` |");

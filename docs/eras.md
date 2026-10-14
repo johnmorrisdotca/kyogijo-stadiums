@@ -27,7 +27,7 @@ A change "from 1979" holds for 1979 and every season after, until another.
 | `mlb` | mound height | 15 inches from 1903, 10 from 1969: data only, a top view does not show it |
 
 ```ts
-import { drawKyogijo, rulesFor } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo, rulesFor } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const rink = rulesFor("nhl", 1960);
 console.log(rink.season, rink.rules.centreLine, rink.rules.trapezoid, rink.differences.map((change) => change.feature));

@@ -3,7 +3,7 @@
 `range` crops a drawing to a part of its surface: the offensive zone of a rink, a half court, the red zone, the penalty area, the infield, the house of a curling sheet, or a box of your own. It is what sportypy calls `display_range` and what hockey_rink does with its partial rinks, for every one of the twenty surfaces and in one option. The view is cut to the range with a small margin, the data and the heat of the layers are cut to it, the annotations stand against what is shown, a score's panel is put inside it, and `orientation` is kept: a tall drawing shows the same part on its side. Without `range` the whole surface is drawn, byte for byte as it was.
 
 ```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 // The right end zone of the NHL's rink: from the blue line to the end boards, with the rink's own ground at the boards.
 const zone = drawKyogijo({ sport: "nhl", range: "offensive-zone" });
@@ -71,7 +71,7 @@ A range at an end takes `end`: `range: { name: "half", end: "right" }`. The end 
 ## A box of your own
 
 ```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 // 60 by 50 feet of the rink in the drawing's own feet (x along the rink from the left, y across it from the top)...
 const feet = drawKyogijo({ sport: "nhl", range: { x0: 100, x1: 160, y0: 10, y1: 60 } });
@@ -94,7 +94,7 @@ The corners are in the drawing's frame (feet, or `units`; a ballpark's x is acro
 - **The description** says what is shown (`Shows only the offensive zone at the right end.`), and, when the drawing has data, that data outside it is not drawn; in English and Japanese. The root carries `data-range` with the range's name, or `custom` for a box.
 
 ```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const shots = Array.from({ length: 30 }, (_, i) => ({ x: 125 + ((i * 41) % 70), y: 8 + ((i * 29) % 70), outcome: i % 5 === 0 ? "goal" : "shot" }));
 const svg = drawKyogijo({

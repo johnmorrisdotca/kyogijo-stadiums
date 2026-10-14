@@ -285,7 +285,7 @@ function paintItem(ctx: CanvasContext, run: Run, item: SceneItem): void {
  * drawing keeps its shape. Light or dark by `theme`. A team's logo is drawn only if `images` returns a picture for its address.
  * @example
  * ```ts
- * import { drawToCanvas, type CanvasContext } from "@johnmorrisdotca/kyogijo/canvas";
+ * import { drawToCanvas, type CanvasContext } from "@johnmorrisdotca/kyogijo-stadiums/canvas";
  * // Any object with the context's members will do: this one only counts what is drawn.
  * const counts: Record<string, number> = {};
  * const ctx = new Proxy({} as CanvasContext, { get: (_, name: string) => () => void (counts[name] = (counts[name] ?? 0) + 1), set: () => true });

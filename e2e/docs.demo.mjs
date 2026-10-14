@@ -142,7 +142,7 @@ for (const how of ["api", "fallback"]) {
     await button.click();
     await expect(button).toHaveText("Copied");
     expect(await page.evaluate(() => window.__copied)).toBe(await page.locator(".docs-code pre").first().evaluate((pre) => pre.textContent.replace(/\n$/, "")));
-    expect(await page.evaluate(() => window.__copied)).toContain("npm install @johnmorrisdotca/kyogijo");
+    expect(await page.evaluate(() => window.__copied)).toContain("npm install @johnmorrisdotca/kyogijo-stadiums");
     await expect(button).toHaveText("Copy");
   });
 }
@@ -166,7 +166,7 @@ test("the gallery draws every picture with its code and a copy button, and the c
   await expect(nfl.locator("pre")).toContainText('drawKyogijo({ sport: "nfl" })');
   await nfl.locator(at("gallery-copy")).click();
   await expect(nfl.locator(".g-status")).toHaveText("Copied to the clipboard.");
-  expect(await page.evaluate(() => window.__copied)).toBe('import { drawKyogijo } from "@johnmorrisdotca/kyogijo";\n\nconst svg = drawKyogijo({ sport: "nfl" });');
+  expect(await page.evaluate(() => window.__copied)).toBe('import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";\n\nconst svg = drawKyogijo({ sport: "nfl" });');
   // The picture of a tall rink is tall, and the one of a league is that league's.
   await expect(page.locator("#tall-nhl svg")).toHaveAttribute("data-orientation", "portrait");
   await noSidewaysScroll(page);
@@ -212,7 +212,7 @@ test("the layouts page draws grids and grounds, and every item has a download an
 test("the page of an item draws it again with the package from jsDelivr, and keeps the build's picture when jsDelivr has none", async ({ page }) => {
   await serve(page);
   // The CDN answers with a module that stands for the published package.
-  await page.route("https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo@0/layouts/+esm", (route) =>
+  await page.route("https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo-stadiums@0/layouts/+esm", (route) =>
     route.fulfill({ contentType: "text/javascript", body: `export const drawGrid = () => "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10' data-from='cdn'></svg>";` }),
   );
   const errors = [];
@@ -222,7 +222,7 @@ test("the page of an item draws it again with the package from jsDelivr, and kee
   await expect(page.locator("#status")).toContainText("published package");
   expect(errors).toEqual([]);
   // An entry the published package does not have: the picture stays and the page says why.
-  await page.unroute("https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo@0/layouts/+esm");
+  await page.unroute("https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo-stadiums@0/layouts/+esm");
   await page.route("https://cdn.jsdelivr.net/**", (route) => route.fulfill({ status: 404, body: "" }));
   await page.goto("http://kyogijo.test/docs/gallery/grid-card.html");
   await expect(page.locator("#status")).toContainText("could not draw this");

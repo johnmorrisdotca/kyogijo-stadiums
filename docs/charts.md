@@ -1,6 +1,6 @@
 # Ready-made charts
 
-`@johnmorrisdotca/kyogijo/charts` has one function for each of six charts, `passNetwork` for a seventh, which [Team shape](./team-shape.md#pass-networks) describes, and `roadToFinal` for an eighth that is not drawn on a surface at all: [the road to the final](#the-road-to-the-final). Each takes plain data and returns the [data layers](./layers.md) and the drawing options to lay them on, so one call gives a good chart and every layer can still be changed.
+`@johnmorrisdotca/kyogijo-stadiums/charts` has one function for each of six charts, `passNetwork` for a seventh, which [Team shape](./team-shape.md#pass-networks) describes, and `roadToFinal` for an eighth that is not drawn on a surface at all: [the road to the final](#the-road-to-the-final). Each takes plain data and returns the [data layers](./layers.md) and the drawing options to lay them on, so one call gives a good chart and every layer can still be changed.
 
 | Function | Chart | Reads |
 | --- | --- | --- |
@@ -17,7 +17,7 @@ The charts are made from the layers of [Data layers](./layers.md) (`points`, `li
 ## What a chart gives back
 
 ```ts
-import { nbaShotChart } from "@johnmorrisdotca/kyogijo/charts";
+import { nbaShotChart } from "@johnmorrisdotca/kyogijo-stadiums/charts";
 
 const chart = nbaShotChart([{ x: 0, y: 20, made: true }, { x: -120, y: 90, made: false }], { minShots: 1 });
 console.log(Object.keys(chart).join(" "));
@@ -43,7 +43,7 @@ Every mark differs in shape as well as in fill (a miss is an open x, a save an o
 `nbaShotChart(shots, options)`. A shot is `{ x, y, made }` (or `outcome: "made" | "missed"`), `LOC_X` and `LOC_Y` of stats.nba.com's shot chart in tenths of a foot from the hoop, every shot at the basket attacked. The chart puts them at the right basket (`end: "left"` for the left one) and counts them into the six shot zones: restricted area, in the paint, mid-range, both corner threes and above the break. Each zone is coloured by its field-goal percentage and written as a percent and as made over taken.
 
 ```ts
-import { nbaShotChart } from "@johnmorrisdotca/kyogijo/charts";
+import { nbaShotChart } from "@johnmorrisdotca/kyogijo-stadiums/charts";
 
 const shots = [
   { x: 0, y: 12, made: true },
@@ -77,8 +77,8 @@ console.log(chart.totals.zones.filter((zone) => zone.taken > 0).map((zone) => `$
 `nhlShotMap(shots, options)`. A shot is `{ x, y, outcome, xg }`: `goal`, `saved`, `missed`, `blocked` or `shot`, and the chance it had of scoring (or `goal: true`). `fold: true` turns the shots at the left end a half turn so that all of them are at the right end. With `xg` the area of a mark follows it. Slot zones (`zones: true`, or `"nhl-home-plate"`) or hexagons (`hexbin: true`) count the shots into a statistic of your choice: `shots`, `xg` or `goals` (the percent that were goals).
 
 ```ts
-import { nhlShotMap } from "@johnmorrisdotca/kyogijo/charts";
-import type { PointsLayer } from "@johnmorrisdotca/kyogijo/layers";
+import { nhlShotMap } from "@johnmorrisdotca/kyogijo-stadiums/charts";
+import type { PointsLayer } from "@johnmorrisdotca/kyogijo-stadiums/layers";
 
 const shots = [
   { x: 78, y: 3, outcome: "goal", xg: 0.28, team: "home" },
@@ -111,7 +111,7 @@ console.log(JSON.stringify(chart.totals.teams));
 `mlbSprayChart(balls, options)`. A ball is `{ x, y, type }` in the frame (`mlbam`: Statcast's `hc_x` and `hc_y`), or `{ zone: "8D", type }` with a Retrosheet hit-location code. `type` is `single`, `double`, `triple`, `home run` or `out`, or the words of Statcast's `events` (`home_run`, `field_out`) and the usual short forms (`1B`, `HR`); any other word is drawn as it is. `park` and `year` draw the real park of that season, with the fence it had (the Polo Grounds had a fence of 277, 433 and 258 feet in 1915 and 279, 483 and 258 in 1950); balls that came down beyond it are drawn beyond it, over the ground round the fence, with a note of how many. `bats` says which side of the field is pull.
 
 ```ts
-import { mlbSprayChart } from "@johnmorrisdotca/kyogijo/charts";
+import { mlbSprayChart } from "@johnmorrisdotca/kyogijo-stadiums/charts";
 
 const balls = [
   { x: 125.4, y: 100, type: "single" },
@@ -147,8 +147,8 @@ Balls of batters from both sides: the pull side is a property of the layer. Draw
 `nflPassChart(passes, options)`. A pass is `{ x, y, outcome }`: where the ball came down or was caught, in the yards of NFL tracking data, `complete`, `incomplete`, `touchdown` or `interception`. `fromX` and `fromY` add the passer's place, for arrows; `airYards` is given or worked out from the destination and `los`, the line of scrimmage (midfield by default). The offence goes to the right; `direction: "left"` says it went left in the data. The pass grid (short is up to 15 yards past the line of scrimmage, deep is beyond, by left, middle and right) is coloured by completion percentage.
 
 ```ts
-import { nflPassChart } from "@johnmorrisdotca/kyogijo/charts";
-import type { ArrowsLayer } from "@johnmorrisdotca/kyogijo/layers";
+import { nflPassChart } from "@johnmorrisdotca/kyogijo-stadiums/charts";
+import type { ArrowsLayer } from "@johnmorrisdotca/kyogijo-stadiums/layers";
 
 const passes = [
   { x: 70, y: 20, outcome: "complete" },
@@ -177,7 +177,7 @@ console.log((chart.layers.find((layer) => layer.id === "passes") as ArrowsLayer)
 `soccerShotMap(shots, options)`. A shot is `{ x, y, outcome, xg }` in a provider's numbers (`provider`: `opta`, `statsbomb`, `wyscout`... or a `Frame`; `international` by default): `goal`, `saved`, `blocked`, `missed` or `post`. The pitch is drawn in the provider's own coordinates, all of it or the half the shots attack (`half: true`). Marks are sized by expected goals and the xG total is written beside the key. `goalMouth()` of the result is a small drawing of the goal frame seen from the front, with where each shot crossed the goal line: `goalY` across the goal from its centre (positive to the shooter's right) and `goalZ` up from the ground, in `goalUnit` (metres, `yd` or `ft`). A shot with no place across the goal (a block) is left out and counted. For StatsBomb's `end_location` `[x, y, z]`, `goalY` is `y - 40` and `goalZ` is `z`, with `goalUnit: "yd"`.
 
 ```ts
-import { soccerShotMap } from "@johnmorrisdotca/kyogijo/charts";
+import { soccerShotMap } from "@johnmorrisdotca/kyogijo-stadiums/charts";
 
 const shots = [
   { x: 104, y: 36, outcome: "goal", xg: 0.31, goalY: -1.2, goalZ: 0.6 },
@@ -213,7 +213,7 @@ A finalist is a `Team` (`name`, `abbr`, `color`, and `logo` for its flag or cres
 A group match is the same without `round`; its words under the score are left out unless `decidedBy` or `note` asks for them.
 
 ```ts
-import { roadToFinal, type RoadFinalist } from "@johnmorrisdotca/kyogijo/charts";
+import { roadToFinal, type RoadFinalist } from "@johnmorrisdotca/kyogijo-stadiums/charts";
 
 const owls: RoadFinalist = {
   name: "Northern Owls", abbr: "NOW", color: "#3a2d6b",

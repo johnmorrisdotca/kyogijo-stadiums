@@ -47,7 +47,7 @@ The default is by sport and by `league` only where a league's own convention dif
 A flag or a crest can be drawn round, as a broadcast graphic draws a country against a country: `mark: "round"` on a team, or `markShape: "round"` on the score for both (a team's own `mark`, `round` or `plain`, wins). The logo is clipped to a circle and ringed, on each side of the surface in the full drawing, in the badge and in the strip of a compact card. It is sized by the place the surface gives the team: the end zone of a pitch, the half of a court. Where the words are turned (along the ends of a wide pitch, and in a tall drawing) the mark is turned back and stays upright.
 
 ```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const flag = (colours: string[]): string => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 20">${colours.map((c, i) => `<rect x="${i * 10}" width="10" height="20" fill="${c}"/>`).join("")}</svg>`;
 const svg = drawKyogijo({
@@ -73,7 +73,7 @@ A baseball field is already upright, so in portrait it stays as it is and the te
 `size: "badge"` is the strip alone, for a list of games; `size: "compact"` is the surface with that strip under it. `drawBadge` draws the strip directly.
 
 ```ts
-import { drawBadge } from "@johnmorrisdotca/kyogijo";
+import { drawBadge } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const badge = drawBadge({
   sport: "nba",
@@ -88,7 +88,7 @@ console.log(/viewBox="0 0 440 64"/.test(badge));
 ## Wide and tall
 
 ```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const game = { away: { name: "Harbour City Gulls", score: 27 }, home: { name: "Prairie Ridge Bison", score: 24 }, status: "final" };
 const wide = drawKyogijo({ sport: "nfl", ...game, orientation: "landscape" });

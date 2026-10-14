@@ -7,7 +7,7 @@ Three options mark a surface for teaching and for charts that need a reference: 
 `direction` draws an arrow for each team that is given, the home team's below the surface and the away team's above it, in the layer colours (`--ky-layer-home` and `--ky-layer-away`, which are the teams' own colours in a score drawing), with the team's name or "Home" and "Away".
 
 ```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const svg = drawKyogijo({ sport: "nhl", direction: { home: "right", away: "left" } });
 console.log(svg.includes("Home attacking"), svg.includes("Away attacks the left end."));
@@ -28,7 +28,7 @@ Baseball and curling have no ends to attack, so `direction` is an error there. T
 `axes` draws ticks and numbers along the bottom and left edges of the surface as it lies wide. By default they are the drawing's own numbers: x along the surface from the left and y across it from the top, in `units` or, without, the rulebook's unit for the sport (yards for football, feet for the rink and the court, metres for a pitch and a sheet).
 
 ```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const svg = drawKyogijo({ sport: "nfl", axes: { ticks: 10, labels: { x: "yards" } } });
 console.log(svg.includes("Axes in the drawing's own numbers, in yd: x from 0 to 120"));
@@ -48,21 +48,21 @@ Give `frame` the name of any registered frame of the sport (`FRAMES`, `registerF
 `landmarks: true` names the parts of the surface in the margin, each with a leader to its place: the blue lines and the creases of a rink, the three-point line and the key of a court, the yard numbers and the hash marks of a field, the penalty arc and the goal area of a pitch, the bases and the warning track of a ballpark, the hog lines and the house of a sheet. A word goes in the first row where it clears the others, so a crowded surface has two or three rows of words. A part the drawing does not show (one goal of half a pitch, a part outside a [`range`](./ranges.md), or a goal drawn with `goals: "none"`) is left out.
 
 ```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const svg = drawKyogijo({ sport: "soccer", landmarks: true, language: "ja" });
 console.log(svg.includes("ペナルティーアーク"), svg.includes("コーナーアーク"));
 // true true
 ```
 
-The names are `KYOGIJO_STRINGS[language].notes.names`, in English and Japanese; the list of what each sport labels is in [the gallery](https://johnmorrisdotca.github.io/kyogijo/docs/gallery-styling.html).
+The names are `KYOGIJO_STRINGS[language].notes.names`, in English and Japanese; the list of what each sport labels is in [the gallery](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-styling.html).
 
 ## Together
 
 The three keep to their own places: the axes nearest the surface, then the words, then the arrows. A drawing that has all of them is the one to print for a lesson.
 
 ```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const svg = drawKyogijo({ sport: "nba", look: "chalkboard", landmarks: true, direction: { home: "right" }, axes: { ticks: 10 } });
 console.log(svg.includes("ky-an-marks"), svg.includes("ky-an-axes"), svg.includes("ky-an-dir"));

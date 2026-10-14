@@ -1,6 +1,6 @@
 # The surfaces
 
-Twenty surfaces, each drawn to scale from its rulebook. Every dimension is kept in feet in the code (`@johnmorrisdotca/kyogijo/geometry`) and can be had in any unit (see [Units](./units.md)), and each is cited in [docs/sources.md](./sources.md).
+Twenty surfaces, each drawn to scale from its rulebook. Every dimension is kept in feet in the code (`@johnmorrisdotca/kyogijo-stadiums/geometry`) and can be had in any unit (see [Units](./units.md)), and each is cited in [docs/sources.md](./sources.md).
 
 | `sport` | Surface | Size | Drawn |
 | --- | --- | --- | --- |
@@ -36,7 +36,7 @@ Lines are drawn a little thicker than they are painted, as broadcast graphics do
 `league` keeps the family and changes the rulebook: `drawKyogijo({ sport: "nba", league: "fiba" })` is a court with FIBA's keys and three-point line. Every league, with its figures and the pages it was read from, is in [League variants](./variants.md). `year` draws the markings a surface had in a season ([Surfaces through the years](./eras.md)), and a ballpark is drawn from its own fence ([Ballparks](./ballparks.md)). The soccer pitch has pages of its own, for its sizes, mowing patterns, goals and providers' coordinates ([Soccer](./soccer.md)).
 
 ```ts
-import { drawKyogijo, drawSurface } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo, drawSurface } from "@johnmorrisdotca/kyogijo-stadiums";
 
 // No teams: the NFL field at its true shape, 120 by 53⅓ yards with 12 feet of ground round it.
 console.log(/viewBox="-12 -12 384 184"/.test(drawSurface({ sport: "nfl" })));

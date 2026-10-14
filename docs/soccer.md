@@ -16,7 +16,7 @@ The presets are `fifa`, `uefa`, `mls`, `ncaa`, `law-min`, `law-max`, `9-a-side`,
 `status` also takes `final-aet`, `final-pens`, `extra-time` and `penalties`. A team's `penalties` is its goals in the shoot-out: both are written with the status (`Final · 2-4 pens`, the home team's first, as the home team is on the left in soccer, [Score](./score.md#which-side-the-home-team-is-on)) and a level game goes to the winner of the shoot-out.
 
 ```ts
-import { drawKyogijo, soccerPitchClass, soccerSpec } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo, soccerPitchClass, soccerSpec } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const svg = drawKyogijo({
   sport: "soccer",
@@ -37,8 +37,8 @@ console.log(pitch.length.toFixed(2), pitch.width.toFixed(2), soccerPitchClass(pi
 `ground` draws a pitch at the size of a ground of `GROUNDS`: 64 venues of World Cup finals, of 2026 and of well-known clubs, each with its place, Wikidata item, coordinates, names by year (`year`), local and Japanese names and World Cups ([grounds.md](./grounds.md)). A ground whose article gives no football pitch size (22 of 64) is drawn at 105 by 68 m and marked `pitchSize: "default"`: no size is guessed. A `pitch` of your own wins.
 
 ```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
-import { GROUNDS, groundNameIn, groundsHosting } from "@johnmorrisdotca/kyogijo/grounds";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
+import { GROUNDS, groundNameIn, groundsHosting } from "@johnmorrisdotca/kyogijo-stadiums/grounds";
 
 const svg = drawKyogijo({ sport: "soccer", ground: "metlife-stadium", year: 2026 });
 console.log(svg.includes("New York New Jersey Stadium, soccer pitch"), GROUNDS["anfield"].pitch);
@@ -55,8 +55,8 @@ A provider writes the pitch in its own numbers (Opta's 0 to 100 with y up, Stats
 - `rescale(from, to)` maps one provider's points to another's, landmark to landmark, so that a point on the penalty line stays on it; `inverse` goes back. The providers are also [frames](./frames.md).
 
 ```ts
-import { drawKyogijo, rescale } from "@johnmorrisdotca/kyogijo";
-import { toSurface } from "@johnmorrisdotca/kyogijo/frames";
+import { drawKyogijo, rescale } from "@johnmorrisdotca/kyogijo-stadiums";
+import { toSurface } from "@johnmorrisdotca/kyogijo-stadiums/frames";
 
 const svg = drawKyogijo({ sport: "soccer", pitchType: "opta", id: "o" });
 console.log(/<g class="ky-data" data-frame="opta" transform="matrix\(1.05 0 0 -0.68 0 68\)"\/>/.test(svg));

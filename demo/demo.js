@@ -21,10 +21,10 @@ import { WORDS } from "./words.js";
 
 const $ = (id) => document.getElementById(id);
 const params = new URLSearchParams(location.search);
-const CANON = "https://johnmorrisdotca.github.io/kyogijo/";
-const CDN = "https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo@0";
+const CANON = "https://johnmorrisdotca.github.io/kyogijo-stadiums/";
+const CDN = "https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo-stadiums@0";
 
-const language = familyLanguage({ id: "kyogijo", words: WORDS, onChange: () => onLanguage() });
+const language = familyLanguage({ id: "kyogijo-stadiums", words: WORDS, onChange: () => onLanguage() });
 const say = (key) => WORDS[language.lang][key];
 
 // The stylesheet once for the whole page: every drawing here is made with style: "none".
@@ -45,7 +45,7 @@ const keep = {
   },
 };
 
-const state = makeState(params, keep.get("kyogijo.theme"));
+const state = makeState(params, keep.get("kyogijo-stadiums.theme"));
 
 /** The made-up game for a sport, laid into the state (names in the page's language until a name is typed). */
 const loadGame = (sport) => loadGameInto(state, sport, language.lang);
@@ -100,7 +100,7 @@ makeSeg("sport", (v) => { state.sport = v; state.league = null; loadGame(v); fil
 makeSeg("era", (v) => { state.year = v === "today" ? null : (state.year ?? clampYear(1975)); });
 makeSeg("size", (v) => { state.size = v; });
 makeSeg("orientation", (v) => { state.orientation = v; });
-makeSeg("theme", (v) => { state.theme = v; keep.set("kyogijo.theme", v); applyTheme(); });
+makeSeg("theme", (v) => { state.theme = v; keep.set("kyogijo-stadiums.theme", v); applyTheme(); });
 makeSeg("status", (v) => { state.status = v; });
 makeSeg("winner", (v) => { state.winner = v; });
 makeSeg("detail", (v) => { state.detail = v; });
@@ -307,7 +307,7 @@ const tidy = (value) => JSON.stringify(value, null, 2);
 function code(kind) {
   const o = optionsFor(state, true);
   if (kind === "module") {
-    return `import { drawKyogijo } from "${CDN}/+esm";\n// or, from npm: import { drawKyogijo } from "@johnmorrisdotca/kyogijo";\n\ndocument.querySelector("#game").innerHTML = drawKyogijo(${tidy(o)});`;
+    return `import { drawKyogijo } from "${CDN}/+esm";\n// or, from npm: import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";\n\ndocument.querySelector("#game").innerHTML = drawKyogijo(${tidy(o)});`;
   }
   if (kind === "element") {
     const attrs = [`sport="${o.sport}"`];

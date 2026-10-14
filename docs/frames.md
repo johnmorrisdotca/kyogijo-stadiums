@@ -1,6 +1,6 @@
 # Coordinate frames
 
-A data provider puts a point on a rink or a field in its own numbers: the NHL's feet from centre ice, HockeyTech's canvas of 600 by 300, the NBA's tenths of a foot from the hoop. A `Frame` says how those numbers lie on the surface (unit, range, origin, which way y grows, landmarks), and `toSurface` and `fromSurface` move points between a frame and the drawing's own coordinates. `convert(from, to)` goes from one provider's frame to another's. The module is `@johnmorrisdotca/kyogijo/frames`; each frame is cited in [sources.md](./sources.md).
+A data provider puts a point on a rink or a field in its own numbers: the NHL's feet from centre ice, HockeyTech's canvas of 600 by 300, the NBA's tenths of a foot from the hoop. A `Frame` says how those numbers lie on the surface (unit, range, origin, which way y grows, landmarks), and `toSurface` and `fromSurface` move points between a frame and the drawing's own coordinates. `convert(from, to)` goes from one provider's frame to another's. The module is `@johnmorrisdotca/kyogijo-stadiums/frames`; each frame is cited in [sources.md](./sources.md).
 
 ## Every frame
 
@@ -42,14 +42,14 @@ One row for each frame the package starts with. The table is made from the code 
 
 ## The same spot in each frame
 
-Each picture is the same surface with the same spot marked, written in the frame's own numbers: the star is the spot, and an arrow from it shows which way x grows and another which way y does, each with its letter. They are drawn by the build of the docs site from the code under each, with `from` naming the frame, so every one lands on the same place. The soccer providers that fix their lines (Opta, StatsBomb, Wyscout) are drawn with the lines where they put them. To try a point of your own, use the converter in [the demo](https://johnmorrisdotca.github.io/kyogijo/#providers).
+Each picture is the same surface with the same spot marked, written in the frame's own numbers: the star is the spot, and an arrow from it shows which way x grows and another which way y does, each with its letter. They are drawn by the build of the docs site from the code under each, with `from` naming the frame, so every one lands on the same place. The soccer providers that fix their lines (Opta, StatsBomb, Wyscout) are drawn with the lines where they put them. To try a point of your own, use the converter in [the demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/#providers).
 
 <!-- site:frames -->
 
 ## Using a frame
 
 ```ts
-import { convert, fromSurface, toSurface } from "@johnmorrisdotca/kyogijo/frames";
+import { convert, fromSurface, toSurface } from "@johnmorrisdotca/kyogijo-stadiums/frames";
 
 // The right end-zone face-off dot: 69 feet from centre ice, 22 to one side.
 console.log(toSurface([[69, 22]], { from: "nhl-api" }), toSurface([[507, 150 - (22 * 300) / 85]], { from: "hockeytech" })[0].map((n) => Math.round(n * 100) / 100));

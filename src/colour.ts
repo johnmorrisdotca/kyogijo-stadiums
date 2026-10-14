@@ -9,7 +9,7 @@ const NAME = /^[a-z]{3,24}$/i;
  * can end the attribute or add a rule.
  * @example
  * ```ts
- * import { safeColour } from "@johnmorrisdotca/kyogijo";
+ * import { safeColour } from "@johnmorrisdotca/kyogijo-stadiums";
  * console.log(safeColour("#1f5fa8"), safeColour("red;fill:url(x)"));
  * // #1f5fa8 undefined
  * ```
@@ -66,7 +66,7 @@ export function inkOn(color: string | undefined): string {
  * relative path, an image `data:` address, or an SVG document as text (written as an image, which cannot run scripts).
  * @example
  * ```ts
- * import { safeLogo } from "@johnmorrisdotca/kyogijo";
+ * import { safeLogo } from "@johnmorrisdotca/kyogijo-stadiums";
  * console.log(safeLogo("https://example.com/gulls.svg"), safeLogo("javascript:alert(1)"));
  * // https://example.com/gulls.svg undefined
  * ```

@@ -13,7 +13,7 @@ import { URL } from "node:url";
 import { checkWikidataAliases } from "./names-lib.mjs";
 
 const grounds = JSON.parse(readFileSync(new URL("./grounds.data.json", import.meta.url), "utf8"));
-const USER_AGENT = "kyogijo-grounds-check/0.1 (https://github.com/johnmorrisdotca/kyogijo; john@johnmorris.ca)";
+const USER_AGENT = "kyogijo-grounds-check/0.1 (https://github.com/johnmorrisdotca/kyogijo-stadiums; john@johnmorris.ca)";
 const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const ask = async (ids, props) => {
   const url = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${ids.join("|")}&props=${props}&format=json&formatversion=2&redirects=yes`;

@@ -210,7 +210,7 @@ export const parkUnit = (id: string | undefined): Unit | undefined => PARK_DATA.
  * compared without case, accents, spaces or punctuation, in full-width or half-width, and in Japanese with hiragana or katakana and with or without the long vowel mark.
  * @example
  * ```ts
- * import { parksByName } from "@johnmorrisdotca/kyogijo/parks";
+ * import { parksByName } from "@johnmorrisdotca/kyogijo-stadiums/parks";
  * console.log(parksByName("Camden Yards")[0]?.id, parksByName("甲子園")[0]?.id, parksByName("ハマスタ")[0]?.id);
  * // oriole-park-at-camden-yards hanshin-koshien-stadium yokohama-stadium
  * ```

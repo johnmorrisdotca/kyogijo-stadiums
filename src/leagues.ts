@@ -96,7 +96,7 @@ const figuresUnit = (league: League): Unit => league.figuresUnit ?? league.unit;
  * sport. A league of another family, or one that does not exist, is an error that says what to use.
  * @example
  * ```ts
- * import { chooseLeague } from "@johnmorrisdotca/kyogijo/leagues";
+ * import { chooseLeague } from "@johnmorrisdotca/kyogijo-stadiums/leagues";
  * console.log(chooseLeague({ sport: "nba", league: "fiba" }).league?.name.en, chooseLeague({ sport: "nfl", league: "cfl" }).sport);
  * // FIBA basketball court cfl
  * ```
@@ -139,7 +139,7 @@ const historyOf = (league: League): [string, LeagueSpan<unknown>[]][] => Object.
  * sources. A league with no cited history has none (a drawing with a `year` is then the league's rulebook as it is now).
  * @example
  * ```ts
- * import { leagueChanges } from "@johnmorrisdotca/kyogijo/leagues";
+ * import { leagueChanges } from "@johnmorrisdotca/kyogijo-stadiums/leagues";
  * console.log(leagueChanges("nba", "ncaa-men").map((change) => change.id));
  * ```
  */
@@ -179,7 +179,7 @@ function spanIn<T>(spans: LeagueSpan<T>[], year: number): { span: LeagueSpan<T>;
  * it is now.
  * @example
  * ```ts
- * import { leagueAt } from "@johnmorrisdotca/kyogijo/leagues";
+ * import { leagueAt } from "@johnmorrisdotca/kyogijo-stadiums/leagues";
  * console.log(leagueAt("nba", "ncaa-men", 2010).differences.map((change) => change.id));
  * // [ 'ncaa-men.restricted.start' ]
  * ```
@@ -247,7 +247,7 @@ export const diamondOf = (league: BaseballLeague, year?: number): DiamondSpec =>
  * zones, end line to end line. A diamond has no fixed size, its fence is its size.
  * @example
  * ```ts
- * import { leagueSize } from "@johnmorrisdotca/kyogijo/leagues";
+ * import { leagueSize } from "@johnmorrisdotca/kyogijo-stadiums/leagues";
  * console.log(leagueSize("nba", "nba"));
  * // { length: 94, width: 50, unit: 'ft' }
  * ```
@@ -327,7 +327,7 @@ function written(feet: number, unit: Unit): string {
  * test that holds the drawing to the rulebook.
  * @example
  * ```ts
- * import { LEAGUES, leagueFigures } from "@johnmorrisdotca/kyogijo/leagues";
+ * import { LEAGUES, leagueFigures } from "@johnmorrisdotca/kyogijo-stadiums/leagues";
  * const fiba = LEAGUES.nba.find((league) => league.id === "fiba")!;
  * console.log(leagueFigures(fiba).slice(0, 2).map(([name, value]) => `${name}: ${value}`).join("; "));
  * // court: 28 m by 15 m; lane: 4.9 m wide

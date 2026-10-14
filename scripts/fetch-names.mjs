@@ -13,7 +13,7 @@ import { URL } from "node:url";
 const here = (name) => new URL(`./${name}`, import.meta.url);
 const parks = JSON.parse(readFileSync(here("parks.data.json"), "utf8"));
 const grounds = JSON.parse(readFileSync(here("grounds.data.json"), "utf8"));
-const USER_AGENT = "kyogijo-names/0.1 (https://github.com/johnmorrisdotca/kyogijo; john@johnmorris.ca)";
+const USER_AGENT = "kyogijo-names/0.1 (https://github.com/johnmorrisdotca/kyogijo-stadiums; john@johnmorris.ca)";
 const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const ask = async (ids, languages) => {
   const url = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${ids.join("|")}&props=labels|aliases|claims|sitelinks&languages=${languages.join("|")}&sitefilter=enwiki|jawiki&format=json&formatversion=2&redirects=yes`;

@@ -5,7 +5,7 @@ Nothing is branded. The drawing is coloured by custom properties on its `svg`, w
 Every part carries a class (`ky-surface`, `ky-line`, `ky-zone-left`, `ky-banner`, `ky-plate`, `ky-score`, `ky-winbar`, `ky-lose`, `ky-badge`) for anything a property cannot reach. Pass `style: "none"` to leave the stylesheet out of each drawing and put `KYOGIJO_STYLE` in the page once, which is what the demo does for its many drawings.
 
 ```ts
-import { KYOGIJO_STYLE, drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { KYOGIJO_STYLE, drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 // Two drawings on a page: the stylesheet once, and a colour of the page's own on one.
 const rink = drawKyogijo({ sport: "nhl", style: "none", colors: { surface: "#dfe9f3" } });
@@ -18,7 +18,7 @@ console.log(rink.includes("<style>"), KYOGIJO_STYLE.includes("--ky-surface"), ri
 A court's own look is `court: { wood, woodAlt, apron, border, key, keyLeft, keyRight, line, centreCircle, centreLogo, baselineText, baselineInk, paintThreePoint }`; `COURT_THEMES` has five to start from: `maple`, `twoTone`, `night`, `sunburst` and `tournament` (a floor painted edge to edge, with no wood).
 
 ```ts
-import { COURT_THEMES, drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { COURT_THEMES, drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const svg = drawKyogijo({
   sport: "nba",
@@ -43,7 +43,7 @@ console.log(svg.includes("--ky-key:#1e4f8f"), svg.includes("METRO BOLTS"));
 | `high-contrast` | Black on white, or white on black, at the highest contrast the colours allow. |
 
 ```ts
-import { LOOKS, contrastOf, drawKyogijo, lookPalette } from "@johnmorrisdotca/kyogijo";
+import { LOOKS, contrastOf, drawKyogijo, lookPalette } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const svg = drawKyogijo({ sport: "nba", look: "chalkboard", theme: "dark" });
 const palette = lookPalette("chalkboard", "dark", "nba");
@@ -60,7 +60,7 @@ With `style: "none"` a page puts `KYOGIJO_STYLE` in once, which has every look; 
 `featureColors` colours a part of a surface by its name: `{ "blue-lines": "#1d4f8f" }`. `FEATURES[sport]` lists the names (the three football fields share theirs) and `FEATURE_INFO[sport]` says what each is and which custom properties its colour goes to. A name the sport does not have is an error that lists the ones it has, and a colour that is not a hex colour, `rgb()`, `hsl()`, a name or `var(--name)` is ignored.
 
 ```ts
-import { FEATURES, drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { FEATURES, drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const svg = drawKyogijo({ sport: "nhl", featureColors: { "blue-lines": "#0a7d3b", "face-off-circles": "#e07b00", nets: "#1d4f8f" } });
 console.log(FEATURES.nhl.slice(0, 4).join(", "), svg.includes("--ky-f-blue-lines:#0a7d3b"));
@@ -84,7 +84,7 @@ Fixtures keep their size (posts, rims, nets, the fence) and so do filled marks (
 `goals` (`box`, `line`, `strip`, `none`) styles a soccer goal, a hockey net, a basketball basket (`box` is the backboard, its arm and the rim; `line` the backboard alone; `strip` a solid backboard and a filled rim) and a football field's posts, and the goals of lacrosse, field hockey and handball (a net behind the goal line, a line across the mouth, a solid strip, or none). `goalMarkup` takes a function of your own that draws the goals: it is given where each stands (`GoalInfo`: the end, the middle of the mouth in feet, its width, its depth, which way it reaches, and the width of the drawing's ordinary line) and returns SVG in the drawing's wide frame, in feet. What it returns is written into the drawing as it is, so it must not come from a form.
 
 ```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const svg = drawKyogijo({
   sport: "nhl",

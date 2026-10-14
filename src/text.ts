@@ -66,7 +66,7 @@ export const LINE_HEIGHT = 1.1;
  * Set a name in the biggest size that fits a box, on one line or, at a space, on two.
  * @example
  * ```ts
- * import { fitLines } from "@johnmorrisdotca/kyogijo";
+ * import { fitLines } from "@johnmorrisdotca/kyogijo-stadiums";
  * console.log(fitLines("GOLDEN STATE WARRIORS", 40, 12, 8).lines);
  * // [ 'GOLDEN STATE', 'WARRIORS' ]
  * ```

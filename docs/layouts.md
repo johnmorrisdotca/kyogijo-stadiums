@@ -3,7 +3,7 @@
 `drawGrid` puts many drawings in one SVG: small multiples, one per park, per period or per player, under a title and a subtitle, over a credit line, with a key they share. It is what mplsoccer's `grid` does for pitches, for every surface and every chart of the package. Behind a drawing or a grid, `background` lays a quiet pattern drawn in SVG (felt, grass, wood, ice, paper, a grid, dots) and, when you have one, a photograph.
 
 ```ts
-import { drawGrid } from "@johnmorrisdotca/kyogijo/layouts";
+import { drawGrid } from "@johnmorrisdotca/kyogijo-stadiums/layouts";
 
 const svg = drawGrid(
   [
@@ -31,9 +31,9 @@ The grid is one picture. Its drawings keep their own title and description, with
 A drawing given as options takes the grid's `language` and `style: "none"` unless it has its own. Every drawing is set in its cell at the largest size the cell allows, centred with its caption; the last row is centred.
 
 ```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
-import { nbaShotChart } from "@johnmorrisdotca/kyogijo/charts";
-import { drawGrid } from "@johnmorrisdotca/kyogijo/layouts";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
+import { nbaShotChart } from "@johnmorrisdotca/kyogijo-stadiums/charts";
+import { drawGrid } from "@johnmorrisdotca/kyogijo-stadiums/layouts";
 
 const shots = Array.from({ length: 60 }, (_, i) => ({ x: ((i * 97) % 480) - 240, y: (i * 61) % 300, made: i % 3 === 0 }));
 const chart = nbaShotChart(shots, { id: "first" });
@@ -61,7 +61,7 @@ Without a preset the grid is 960 wide and as tall as the drawings need, with as 
 ## Title, subtitle, credit line and key
 
 ```ts
-import { drawGrid } from "@johnmorrisdotca/kyogijo/layouts";
+import { drawGrid } from "@johnmorrisdotca/kyogijo-stadiums/layouts";
 
 const svg = drawGrid([{ sport: "nhl" }, { sport: "nhl", orientation: "portrait" }], {
   width: 900,
@@ -101,7 +101,7 @@ The root is a `group` named by `label` (or the `title`, or "A grid of drawings (
 <!-- /made:backgrounds -->
 
 ```ts
-import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 // A pattern, drawn over the apron and under the surface, in the drawing's ink: it follows light and dark.
 const felt = drawKyogijo({ sport: "nba", id: "c", background: "felt" });
@@ -128,7 +128,7 @@ console.log(photo.includes('href="https://example.com/arena.jpg"'), photo.includ
 On a drawing the ground lies on the apron, round the surface and under it, wide or tall, cropped to a range, round a special game's host, and on a compact card; a badge has no surface and no ground. On a grid it lies under everything: `card` and `square` have a plain one unless it is `"none"`, `phone` has none. A grid's `background: "felt"` is a pattern on the plain colour; give a `color` of your own with a dark `theme` for a green felt.
 
 ```ts
-import { drawGrid } from "@johnmorrisdotca/kyogijo/layouts";
+import { drawGrid } from "@johnmorrisdotca/kyogijo-stadiums/layouts";
 
 const cells = (["nhl", "nba", "soccer", "mlb"] as const).map((sport) => ({ sport }));
 // A pattern and a colour under four drawings, in the dark.

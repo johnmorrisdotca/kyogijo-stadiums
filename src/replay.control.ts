@@ -44,7 +44,7 @@ export interface ReplayController {
  * events went by in each move so that they can be announced. It never reads a clock or the page: `advance(seconds)` is how time passes.
  * @example
  * ```ts
- * import { createReplay } from "@johnmorrisdotca/kyogijo/replay";
+ * import { createReplay } from "@johnmorrisdotca/kyogijo-stadiums/replay";
  * const frames = [0, 1, 2, 3, 4].map((t) => ({ t, objects: [{ id: "ball", team: "ball" as const, x: t * 10, y: 0 }] }));
  * const replay = createReplay({ frames, events: [{ t: 2, kind: "goal" }] }, { speed: 2 });
  * replay.play();

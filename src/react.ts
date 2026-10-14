@@ -12,7 +12,7 @@ export function kyogijoHtml(options: SurfaceOptions | ScoreOptions): { __html: s
  * With `orientation: "auto"` and no `aspect`, the drawing is wide; use `createKyogijo` for a container that is measured.
  * @example
  * ```ts
- * import { kyogijoProps } from "@johnmorrisdotca/kyogijo/react";
+ * import { kyogijoProps } from "@johnmorrisdotca/kyogijo-stadiums/react";
  * const props = kyogijoProps({ sport: "nba", away: { name: "Harbour City Gulls", score: 108 }, home: { name: "Prairie Ridge Bison", score: 112 }, status: "final" });
  * console.log(props["data-kyogijo"], props.dangerouslySetInnerHTML.__html.startsWith("<svg"));
  * // nba true
@@ -38,7 +38,7 @@ export type KyogijoProps = (SurfaceOptions | ScoreOptions) & { containerClassNam
  * own box and lays the drawing out tall or wide as the box changes.
  * @example
  * ```ts
- * import { createKyogijo } from "@johnmorrisdotca/kyogijo/react";
+ * import { createKyogijo } from "@johnmorrisdotca/kyogijo-stadiums/react";
  * // With React: `const Kyogijo = createKyogijo(React);` and then `<Kyogijo sport="nhl" orientation="auto" />`.
  * // Here a stand-in for React, to show what comes out:
  * const Kyogijo = createKyogijo({ createElement: (type, props) => ({ type, props }), useRef: (initial) => ({ current: initial }), useState: (initial) => [initial, () => {}], useEffect: () => {} });

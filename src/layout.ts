@@ -260,7 +260,7 @@ function legendItem(item: GridLegendItem, x: number, y: number, size: number): s
  * wide and as tall as the drawings need. The scene and every renderer read it like any other drawing. The same cells and options always give the same string.
  * @example
  * ```ts
- * import { drawGrid } from "@johnmorrisdotca/kyogijo/layouts";
+ * import { drawGrid } from "@johnmorrisdotca/kyogijo-stadiums/layouts";
  * const svg = drawGrid(
  *   [{ drawing: { sport: "nhl" }, label: "Rink" }, { drawing: { sport: "nba" }, label: "Court" }],
  *   { columns: 2, title: "Two surfaces", endnote: "Drawn by Kyogijo" },

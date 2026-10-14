@@ -41,7 +41,7 @@ export interface SurfaceScales {
  * y growing down as in a drawing, the same size for a foot across and down, no axis and no margin. Spread them into `Plot.plot` and put `surfaceMark` first.
  * @example
  * ```ts
- * import { surfaceScales } from "@johnmorrisdotca/kyogijo/plot";
+ * import { surfaceScales } from "@johnmorrisdotca/kyogijo-stadiums/plot";
  * console.log(surfaceScales({ sport: "nhl", id: "rink" }));
  * // {
  * //   x: { domain: [ -8, 208 ], axis: null },
@@ -74,7 +74,7 @@ export type SurfaceMark = (index: unknown, scales: PlotScales, values: unknown, 
  * Every colour and width is an attribute of the shape, so the page needs no stylesheet; light or dark by `theme`.
  * @example
  * ```ts
- * import { surfaceMark, surfaceScales } from "@johnmorrisdotca/kyogijo/plot";
+ * import { surfaceMark, surfaceScales } from "@johnmorrisdotca/kyogijo-stadiums/plot";
  * // With Plot: Plot.plot({ ...surfaceScales(options), marks: [surfaceMark(options), Plot.dot(shots, { x: "x", y: "y" })] })
  * const options = { sport: "nhl", id: "rink" } as const;
  * const made: string[] = [];

@@ -302,7 +302,7 @@ export function zoneToPoint(code: string): Point | undefined {
  * zone the point most probably lay in. Zone centres are not boundaries, so a point near the edge of two may go to either.
  * @example
  * ```ts
- * import { zoneAt, zoneToPoint } from "@johnmorrisdotca/kyogijo/frames";
+ * import { zoneAt, zoneToPoint } from "@johnmorrisdotca/kyogijo-stadiums/frames";
  * console.log(zoneAt([0, 335]), zoneToPoint("8D"));
  * // 8D [ 0, 330 ]
  * ```

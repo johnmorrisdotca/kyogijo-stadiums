@@ -191,8 +191,8 @@ const urlId = (value: string): string | undefined => /^url\(\s*['"]?#([^'")\s]+)
  * A drawing made with `style: "none"` is read with the package's own stylesheet (`KYOGIJO_STYLE`); `css` adds a page's rules after the drawing's.
  * @example
  * ```ts
- * import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
- * import { sceneFromSvg } from "@johnmorrisdotca/kyogijo/scene";
+ * import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
+ * import { sceneFromSvg } from "@johnmorrisdotca/kyogijo-stadiums/scene";
  * const scene = sceneFromSvg(drawKyogijo({ sport: "nhl", id: "rink" }), { theme: "dark" });
  * console.log(scene.theme, scene.items[0].kind, scene.items[0].style.fill);
  * // dark rect #1a2025
@@ -439,7 +439,7 @@ const isScene = (source: SceneSource): source is Scene => typeof source === "obj
  * with, in order, each with its colours worked out for light or dark.
  * @example
  * ```ts
- * import { sceneOf } from "@johnmorrisdotca/kyogijo/scene";
+ * import { sceneOf } from "@johnmorrisdotca/kyogijo-stadiums/scene";
  * const scene = sceneOf({ sport: "nhl", id: "rink" });
  * console.log(scene.viewBox, scene.items.length > 30, scene.items[0].kind);
  * // { x: -8, y: -8, w: 216, h: 101 } true rect

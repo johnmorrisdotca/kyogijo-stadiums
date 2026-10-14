@@ -59,7 +59,7 @@ function factor(unit: Unit): number {
  * A length in another unit.
  * @example
  * ```ts
- * import { convertLength } from "@johnmorrisdotca/kyogijo/geometry";
+ * import { convertLength } from "@johnmorrisdotca/kyogijo-stadiums/geometry";
  * console.log(convertLength(100, "yd", "ft"), convertLength(200, "ft", "m").toFixed(2));
  * // 300 60.96
  * ```
@@ -88,7 +88,7 @@ export type Scaled<T> = T extends number ? number : T extends string | boolean |
  * unit. Text and flags are kept as they are. The table is not changed.
  * @example
  * ```ts
- * import { NHL, lengthsIn } from "@johnmorrisdotca/kyogijo/geometry";
+ * import { NHL, lengthsIn } from "@johnmorrisdotca/kyogijo-stadiums/geometry";
  * const rink = lengthsIn(NHL, "m");
  * console.log(rink.length.toFixed(2), rink.width.toFixed(3));
  * // 60.96 25.908

@@ -22,7 +22,7 @@ const SIZES = ["card", "square", "wide", "phone"];
  * each match is brighter; the sizes are `card` (1080 by 1350), `square`, `wide` (1200 by 675) and `phone` (390 wide). `table()` lists every match as text.
  * @example
  * ```ts
- * import { roadToFinal, type RoadFinalist } from "@johnmorrisdotca/kyogijo/charts";
+ * import { roadToFinal, type RoadFinalist } from "@johnmorrisdotca/kyogijo-stadiums/charts";
  * const owls: RoadFinalist = { name: "Northern Owls", abbr: "NOW", color: "#3a2d6b", path: [
  *   { round: "quarter-final", opponent: { name: "Coastal Pines", abbr: "CPN" }, score: [2, 0] },
  *   { round: "semi-final", opponent: { name: "Valley Stars", abbr: "VAL" }, score: [1, 1], decidedBy: "pens", pens: [4, 3] },
