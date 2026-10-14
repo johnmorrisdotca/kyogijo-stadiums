@@ -43,6 +43,8 @@ export interface OutcomeStyle {
 
 /** What every mark can carry. */
 export interface MarkDatum {
+  /** Your id for the mark: written on it as `data-mark-id`, so that a listener can link it to a row of your table. The mark's index is written when there is none. */
+  id?: string | number;
   /** The tooltip, and what a screen reader reads for the mark. */
   title?: string;
   /** `home`, `away` or another team. */

@@ -2,7 +2,7 @@
 // is near whom) and the convex hull (how much ground the team covers). Written for this package from the plain geometry of team.geometry.ts;
 // the ideas are those of mplsoccer's Voronoi, Delaunay and convex-hull examples (MIT), and no code of it is used.
 import { num } from "./format.ts";
-import { opacityOf, newMade, toArray, unitOfLayer, type Env, type Made } from "./layers.env.ts";
+import { markAttrs, opacityOf, newMade, toArray, unitOfLayer, type Env, type Made } from "./layers.env.ts";
 import type { P } from "./layers.marks.ts";
 import { attrs, dots, frameNote, squareWord, unitWord, groupByTeam, paintOf, placeAll, polygonPath, round, teamClass, teamKey, teamLabel, titled, labelOf, type Placed, type TeamTable } from "./team.common.ts";
 import { convexHull, delaunay, polygonArea, polygonCentroid, triangulationEdges, voronoiCells } from "./team.geometry.ts";
@@ -86,9 +86,9 @@ export function drawVoronoi(layer: VoronoiLayer, env: Env): Made {
   c.players.forEach((p, i) => {
     if (c.cells[i].length === 0) return;
     const { cls, css } = paintOf(p.d);
-    out.push(titled("path", `${attrs(`ky-sp${cls === "" ? "" : ` ${cls}`}`, css)} d="${polygonPath(c.cells[i])}"`, `${[who(p), teamKey(p.d.team) === "" ? "" : teamLabel(teamKey(p.d.team), env)].filter((t) => t !== "").join(", ")}: ${round(100 * c.shares[i])}%`));
+    out.push(titled("path", `${attrs(`ky-sp${cls === "" ? "" : ` ${cls}`}`, css)} d="${polygonPath(c.cells[i])}"${markAttrs(env, (p.d as { id?: unknown }).id, p.index, [p.x, p.y])}`, `${[who(p), teamKey(p.d.team) === "" ? "" : teamLabel(teamKey(p.d.team), env)].filter((t) => t !== "").join(", ")}: ${round(100 * c.shares[i])}%`));
   });
-  if (layer.points !== false) out.push(dots(c.players, env.base * 0.55, () => undefined));
+  if (layer.points !== false) out.push(dots(c.players, env.base * 0.55, () => undefined, env));
   made.marks = out.join("");
   made.title = fill(words.voronoiTitle, { n: c.players.length });
   const list = [...c.teams].sort((a, b) => b.share - a.share).map((t) => fill(words.shareItem, { name: teamLabel(t.team, env), pct: round(100 * t.share) })).join(env.words.layers.listSep);
@@ -158,7 +158,7 @@ export function drawDelaunay(layer: DelaunayLayer, env: Env): Made {
     if (layer.triangles === true && g.triangles.length > 0) out.push(titled("path", `${attrs(`ky-sp${cls === "" ? "" : ` ${cls}`}`, "")} d="${g.triangles.map((t) => polygonPath(t)).join("")}"`, tip));
     else if (g.edges.length > 0) out.push(titled("path", `${attrs(`ky-sp ky-sp-e${cls === "" ? "" : ` ${cls}`}`, "")} d="${g.edges.map(([a, b]) => `M${num(a[0])} ${num(a[1])}L${num(b[0])} ${num(b[1])}`).join("")}"`, tip));
   }
-  if (layer.points !== false) out.push(dots(c.all, env.base * 0.55, () => undefined));
+  if (layer.points !== false) out.push(dots(c.all, env.base * 0.55, () => undefined, env));
   made.marks = out.join("");
   made.title = fill(words.delaunayTitle, { n: c.all.length });
   const triangles = c.groups.reduce((s, g) => s + g.triangles.length, 0);
@@ -219,7 +219,7 @@ export function drawHull(layer: HullLayer, env: Env): Made {
     if (h.corners.length >= 3) out.push(titled("path", `${attrs(`ky-sp${cls === "" ? "" : ` ${cls}`}`, "")} d="${polygonPath(h.corners)}"`, tip));
     else if (h.corners.length === 2) out.push(titled("path", `${attrs(`ky-sp ky-sp-e${cls === "" ? "" : ` ${cls}`}`, "")} d="M${num(h.corners[0][0])} ${num(h.corners[0][1])}L${num(h.corners[1][0])} ${num(h.corners[1][1])}"`, tip));
   }
-  if (layer.points !== false) out.push(dots(c.all, env.base * 0.55, () => undefined));
+  if (layer.points !== false) out.push(dots(c.all, env.base * 0.55, () => undefined, env));
   made.marks = out.join("");
   made.title = fill(words.hullTitle, { n: c.all.length });
   const parts = [c.hulls.map((h) => fill(words.hullItem, { name: teamLabel(h.team, env), n: h.players.length, area: Math.round(h.area), unit: squareWord(c.unit, env) })).join(env.words.layers.listSep) + env.words.said.stop];

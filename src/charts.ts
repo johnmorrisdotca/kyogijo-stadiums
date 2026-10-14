@@ -259,7 +259,7 @@ export function nbaShotChart(shots: readonly NbaShot[], options: NbaShotOptions 
   const end: "left" | "right" = options.end === "left" ? "left" : "right";
   // A shot chart puts every shot at the basket it was taken at; a frame fixed to the court says where each one is.
   const shooter = frame.ends === "shooter";
-  const data = shots.map((s) => clean({ x: s.x, y: s.y, outcome: s.made === undefined ? s.outcome : s.made ? "made" : "missed", value: s.value, team: s.team, title: s.title }));
+  const data = shots.map((s) => clean({ id: s.id, x: s.x, y: s.y, outcome: s.made === undefined ? s.outcome : s.made ? "made" : "missed", value: s.value, team: s.team, title: s.title }));
   const { counts, placed: count, skipped } = countOutcomes(data);
   const entries: KeyEntry[] = [{ label: w.made, outcome: "made" }, { label: w.missed, outcome: "missed" }];
   const o = drawingOptions("nba", options, w.titleNba);
@@ -373,7 +373,7 @@ export function nhlShotMap(shots: readonly NhlShot[], options: NhlShotOptions = 
   const frame = frameOf(options.from, "nhl-api");
   const o = drawingOptions("nhl", options, w.titleNhl);
   const folded = options.fold === true;
-  const given = shots.map((s) => clean({ x: s.x, y: s.y, outcome: hockeyOutcome(s), value: s.xg, team: s.team, title: s.title }));
+  const given = shots.map((s) => clean({ id: s.id, x: s.x, y: s.y, outcome: hockeyOutcome(s), value: s.xg, team: s.team, title: s.title }));
   const data = folded ? foldToRight(given, frame, o) : given;
   const { counts, placed: count, skipped } = countOutcomes(data);
   const hasXg = data.some((d) => isNum(d.value));
@@ -486,7 +486,7 @@ export function nflPassChart(passes: readonly NflPass[], options: NflPassOptions
   const data = rows.map(({ p, outcome }, i) => {
     const place_ = at[i];
     const air = isNum(p.airYards) ? p.airYards : place_ === undefined ? undefined : round(inYards(place_[0] - losFeet), 1);
-    return clean({ x: p.x, y: p.y, outcome, value: air, team: p.team, title: p.title });
+    return clean({ id: p.id, x: p.x, y: p.y, outcome, value: air, team: p.team, title: p.title });
   });
   const { counts, placed: count, skipped } = countOutcomes(data);
   const entries: KeyEntry[] = ([["complete", w.complete], ["incomplete", w.incomplete], ["touchdown", w.touchdown], ["interception", w.interception]] as const).filter(([k]) => counts.has(k) || counts.size === 0 || ["complete", "incomplete"].includes(k)).map(([outcome, label]) => ({ label, outcome }));
@@ -525,7 +525,7 @@ export function nflPassChart(passes: readonly NflPass[], options: NflPassOptions
     layers.push(line);
   }
   if (options.arrows === true) {
-    const arrows = rows.filter(({ p }) => isNum(p.fromX) && isNum(p.fromY) && isNum(p.x) && isNum(p.y)).map(({ p, outcome }) => clean({ x: p.fromX as number, y: p.fromY as number, x2: p.x as number, y2: p.y as number, outcome, team: p.team, title: p.title }));
+    const arrows = rows.filter(({ p }) => isNum(p.fromX) && isNum(p.fromY) && isNum(p.x) && isNum(p.y)).map(({ p, outcome }) => clean({ id: p.id, x: p.fromX as number, y: p.fromY as number, x2: p.x as number, y2: p.y as number, outcome, team: p.team, title: p.title }));
     layers.push(clean({ kind: "arrows" as const, id: "arrows", name: w.passes, ...where, data: arrows, style: { width: 0.7, opacity: 0.7, curve: 0.08, outcomes: { touchdown: {}, interception: {}, complete: {}, incomplete: { hollow: true } } } }));
   }
   const values = data.map((d) => d.value).filter(isNum);

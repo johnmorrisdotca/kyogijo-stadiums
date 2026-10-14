@@ -4,6 +4,7 @@ import { withEmblems } from "./emblems-source.ts";
 import { safeLogo } from "./logo.ts";
 import { drawingId, feetFence, isPortrait, lengthUnit, safeClass } from "./common.ts";
 import { el, esc, num } from "./format.ts";
+import { fieldAttributes } from "./field.data.ts";
 import { ERA_SPORTS, footballIn, rulesFor, seasonLabel, type EraSport } from "./eras.ts";
 import { FOOTBALL } from "./geometry.ts";
 import { renderLayers } from "./layers.ts";
@@ -930,7 +931,7 @@ function drawnKyogijo(o: SurfaceOptions | ScoreOptions): string {
         inner += el("g", { transform: `translate(${num(surface.plate.cx)} ${num(surface.plate.cy)})${surface.turned ? " rotate(-90)" : ""}` }, board);
       } else inner += plateMarkup(surface.plate, left, right, { competition: o.competition, foot: foot === "" ? undefined : foot }, { turned: surface.turned, parts, surfaceSport: sport });
     }
-    const group = el("g", { class: "ky-surface-group", transform: surface.turn, part: parts ? "surface" : undefined }, inner);
+    const group = el("g", { class: "ky-surface-group", transform: surface.turn, part: parts ? "surface" : undefined, ...(o.pointer === true ? fieldAttributes({ ...o, sport }) : {}) }, inner);
     const v = surface.view;
     if (isScore(o) && left !== undefined && right !== undefined && sized === "compact") {
       const badge = badgeMarkup(left, right, { sport, status, parts, id });

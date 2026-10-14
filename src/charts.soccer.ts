@@ -72,7 +72,7 @@ export function soccerShotMap(shots: readonly SoccerShot[], options: SoccerShotO
   });
   const attacking = options.attacking === "left" ? ("left" as const) : undefined;
   const where = clean({ from: fromOf(typeof provider === "object" ? provider : undefined, frame), attacking });
-  const data = shots.map((s) => clean({ x: s.x, y: s.y, outcome: outcomeOf(s), value: s.xg, team: s.team, title: s.title }));
+  const data = shots.map((s) => clean({ id: s.id, x: s.x, y: s.y, outcome: outcomeOf(s), value: s.xg, team: s.team, title: s.title }));
   const { counts, placed: count, skipped } = countOutcomes(data);
   const hasXg = data.some((d) => isNum(d.value));
   const sized = options.xg === false ? false : hasXg;
@@ -147,7 +147,7 @@ export function soccerGoalMouth(shots: readonly SoccerShot[], options: GoalMouth
   };
   const id = options.id === undefined ? undefined : options.id;
   const surface = { sport: "soccer" as const, pitch: { length: viewW, width: viewH, unit: "m" as const }, units: "m" as const, language, ...(id === undefined ? {} : { id }), margin: 0 };
-  const rows = shots.map((s) => clean({ x: isNum(s.goalY) ? round(s.goalY * k, 3) : null, y: isNum(s.goalZ) ? round(s.goalZ * k, 3) : null, outcome: outcomeOf(s), value: s.xg, team: s.team, title: s.title }));
+  const rows = shots.map((s) => clean({ id: s.id, x: isNum(s.goalY) ? round(s.goalY * k, 3) : null, y: isNum(s.goalZ) ? round(s.goalZ * k, 3) : null, outcome: outcomeOf(s), value: s.xg, team: s.team, title: s.title }));
   const { counts, placed: placedCount, skipped } = countOutcomes(rows);
   const hasXg = rows.some((r) => isNum(r.value));
   const sized = options.xg === false ? false : options.xg === true || hasXg;
@@ -157,7 +157,7 @@ export function soccerGoalMouth(shots: readonly SoccerShot[], options: GoalMouth
   const style: PointStyle = { outcomes: LOOKS, opacity: 0.92, ...(sized ? { size: { domain: [0, xgMax] as [number, number], range: [0.25, 0.8] as [number, number] } } : { size: 0.45 }) };
   const layer = clean({ kind: "points" as const, id: "goal-shots", name: w.shots, description: describeCounts(entries, counts, all), from: frame, units: "m" as const, data: rows, style, clip: "none" as const }) as PointsLayer;
   const layers: Layer[] = [layer];
-  const rendered = renderLayers(surface, layers, false);
+  const rendered = renderLayers(surface, layers, false, undefined, undefined, () => undefined);
   const F = FEET_PER_METRE;
   const x0 = ((viewW - goalW) / 2) * F;
   const x1 = x0 + goalW * F;

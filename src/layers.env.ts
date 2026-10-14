@@ -1,8 +1,10 @@
 // What every kind of data layer is drawn against: the drawing's id, its unit and outline, the words, and what a layer made. Kept apart
 // from layers.ts so that the heat maps, which are written in files of their own, can use it without importing the file that imports them.
 import { safeLogo } from "./logo.ts";
+import { esc } from "./format.ts";
 import { drawingId, isPortrait, lengthUnit } from "./common.ts";
 import { fromSurface, toSurface } from "./frames.ts";
+import { zoneResolver, type ZoneOptions } from "./rules.ts";
 import "./frames.providers.ts";
 import type { P } from "./layers.marks.ts";
 import type { LayerBase } from "./layers.types.ts";
@@ -37,6 +39,33 @@ export interface Env {
   base: number;
   words: KyogijoWords;
   logos: { home?: string; away?: string };
+  /** The finest zone of the surface a place (feet, the drawing's wide frame) lies in, by id: what a mark carries as `data-zone`. `undefined` where the sport has none there. */
+  zone: (x: number, y: number) => string | undefined;
+}
+
+/** The zone of a drawing's marks, made when the first mark asks: a surface the rules cannot be made for (a special game) has none. */
+function zonesOf(o: SurfaceOptions | ScoreOptions): Env["zone"] {
+  let resolver: Env["zone"] | undefined;
+  return (x, y) => {
+    if (resolver === undefined) {
+      try {
+        resolver = o.host !== undefined ? () => undefined : zoneResolver(o.sport, o as unknown as ZoneOptions);
+      } catch {
+        resolver = () => undefined;
+      }
+    }
+    return resolver(x, y);
+  };
+}
+
+/**
+ * The data attributes every mark carries, so that one listener on the drawing can link a mark to a table: `data-mark-id` (the id the caller gave the datum, else its index),
+ * `data-index` (its place in the layer's data) and `data-zone` (the zone it lies in, from `zoneAt`'s rules). The place is in feet in the drawing's wide frame.
+ */
+export function markAttrs(env: Env, id: unknown, index: number, at?: readonly [number, number], name = "data-zone"): string {
+  const given = typeof id === "string" && id !== "" ? id : typeof id === "number" && Number.isFinite(id) ? String(id) : String(index);
+  const zone = at === undefined ? undefined : env.zone(at[0], at[1]);
+  return ` data-mark-id="${esc(given)}" data-index="${index}"${zone === undefined ? "" : ` ${name}="${esc(zone)}"`}`;
 }
 
 /** What a layer made. */
@@ -116,7 +145,7 @@ export function newMade(): Made {
   return { marks: "", defs: "", style: "", attr: "", opacity: undefined, drawn: 0, skipped: 0, outcomes: new Map(), teams: new Map(), low: Infinity, high: -Infinity };
 }
 
-export function envFor(o: SurfaceOptions | ScoreOptions, turned: boolean | undefined, range?: Box, upright?: number): Env {
+export function envFor(o: SurfaceOptions | ScoreOptions, turned: boolean | undefined, range?: Box, upright?: number, zone?: Env["zone"]): Env {
   const language = o.language === "ja" ? "ja" : "en";
   const outline = outlineOf(o);
   const teams = o as Partial<ScoreOptions>;
@@ -133,5 +162,6 @@ export function envFor(o: SurfaceOptions | ScoreOptions, turned: boolean | undef
     base: Math.max((range ?? outline.box).w, (range ?? outline.box).h) * 0.013,
     words: KYOGIJO_STRINGS[language],
     logos: { home: safeLogo(teams.home?.logo, { color: teams.home?.color, accent: teams.home?.textColor }), away: safeLogo(teams.away?.logo, { color: teams.away?.color, accent: teams.away?.textColor }) },
+    zone: zone ?? zonesOf(o),
   };
 }

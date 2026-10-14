@@ -56,6 +56,8 @@ export interface ChartOptions {
 
 /** A shot as stats.nba.com's shot chart gives it: `LOC_X` and `LOC_Y` and whether it went in. */
 export interface NbaShot {
+  /** Your id for the shot, written on its mark as `data-mark-id`. */
+  id?: string | number;
   x: number | null;
   y: number | null;
   /** True for a shot that went in. Or give `outcome`. */
@@ -112,6 +114,8 @@ export interface NbaTotals {
 
 /** A shot as the NHL's play-by-play gives it. */
 export interface NhlShot {
+  /** Your id for the shot, written on its mark as `data-mark-id`. */
+  id?: string | number;
   x: number | null;
   y: number | null;
   /** `goal`, `saved` (a shot on goal), `missed`, `blocked`, or `shot` for an attempt of no known result. */
@@ -165,6 +169,8 @@ export interface NhlTotals {
 
 /** A ball in play. Give `x` and `y` in the frame, or for Retrosheet a `zone` (the location code, `8D`). */
 export interface Ball {
+  /** Your id for the shot, written on its mark as `data-mark-id`. */
+  id?: string | number;
   x?: number | null;
   y?: number | null;
   /** A Retrosheet hit-location code in place of `x` and `y`. */
@@ -215,6 +221,8 @@ export interface MlbTotals {
 
 /** A pass. The destination is `x` and `y`; the passer's place is `fromX` and `fromY` when you have it. */
 export interface NflPass {
+  /** Your id for the shot, written on its mark as `data-mark-id`. */
+  id?: string | number;
   /** Where the ball came down or was caught, in the frame. */
   x: number | null;
   y: number | null;
@@ -269,6 +277,8 @@ export interface NflTotals {
 
 /** A shot. The place is in the provider's frame; `goalY` and `goalZ` say where it crossed the goal line. */
 export interface SoccerShot {
+  /** Your id for the shot, written on its mark as `data-mark-id`. */
+  id?: string | number;
   x: number | null;
   y: number | null;
   /** `goal`, `saved`, `blocked`, `missed` or `post`. */

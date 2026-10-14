@@ -772,6 +772,11 @@ export interface SurfaceOptions {
    * under a score's panel), cut to the surface's outline, and described in the drawing's description. See `drawLayers` and `layerTable`.
    */
   layers?: readonly Layer[];
+  /**
+   * Write what `clientPointToField` (the `pointer` entry) needs on the drawing's surface group: the box of the playing surface and the options that decide its rules (the league, the
+   * season, the park, the pitch). Off by default, so that a drawing without data is the same text as ever; a page that asks where a click is turns it on.
+   */
+  pointer?: boolean;
   /** `embed` (the default) writes the stylesheet into the drawing so that it stands alone; `none` leaves it to the page. */
   style?: "embed" | "none";
   /** An extra class on the `svg`. */
