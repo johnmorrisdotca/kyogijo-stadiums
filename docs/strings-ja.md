@@ -956,6 +956,35 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `atlasYears` | {from}–{to} | {from}年〜{to}年 |
 | `atlasSince` | since {from} | {from}年〜 |
 | `atlasUntil` | until {to} | 〜{to}年 |
+| `atlasYearOne` | {from} | {from}年 |
+| `atlasLeagueMain` | Main leagues and tournaments | 主なリーグと大会 |
+| `atlasLeagueOther` | Other leagues, past and present | そのほかのリーグ（過去を含む） |
+| `atlasLeague_pl` | Premier League | プレミアリーグ |
+| `atlasLeague_laliga` | La Liga | ラ・リーガ |
+| `atlasLeague_seriea` | Serie A | セリエA |
+| `atlasLeague_bundesliga` | Bundesliga | ブンデスリーガ |
+| `atlasLeague_ligue1` | Ligue 1 | リーグ・アン |
+| `atlasLeague_j1` | J1 League | J1リーグ |
+| `atlasLeague_j2` | J2 League | J2リーグ |
+| `atlasLeague_ligamx` | Liga MX | リーガMX |
+| `atlasLeague_k1` | K League 1 | Kリーグ1 |
+| `atlasLeague_csl` | Chinese Super League | 中国スーパーリーグ |
+| `atlasLeague_eredivisie` | Eredivisie | エールディビジ |
+| `atlasLeague_primeira` | Primeira Liga | プリメイラ・リーガ |
+| `atlasLeague_scottish` | Scottish Premiership | スコティッシュ・プレミアシップ |
+| `atlasLeague_negro` | Negro leagues | ニグロリーグ |
+| `atlasTenants` | Clubs that played here | ここを本拠地としたチーム |
+| `atlasTryAlso` | Also try it as | ほかの競技でも試す |
+| `atlasSurface_mlb` | Ballpark | 野球場 |
+| `atlasSurface_soccer` | Soccer pitch | サッカーのピッチ |
+| `atlasSurface_nfl` | NFL field | NFLのフィールド |
+| `atlasSurface_cfl` | CFL field | CFLのフィールド |
+| `atlasSurface_nba` | NBA court | NBAのコート |
+| `atlasSurface_nhl` | NHL rink | NHLのリンク |
+| `atlasSurface_rugby` | Rugby union field | ラグビーユニオンのフィールド |
+| `atlasSurface_nrl` | Rugby league field | ラグビーリーグのフィールド |
+| `atlasSurface_afl` | Australian football ground | オーストラリアンフットボール場 |
+| `atlasSurface_cricket` | Cricket ground | クリケット場 |
 | `atlasCreditMap` | Map | 地図 |
 | `atlasCreditMapNote` | (public domain; MIT) | （パブリックドメイン、MIT） |
 | `atlasCreditPlaces` | Coordinates | 座標 |

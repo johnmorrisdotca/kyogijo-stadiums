@@ -19,3 +19,14 @@ describe("the atlas's picture", () => {
     expect(readFileSync("docs/atlas.md", "utf8")).toContain("./atlas-map.svg");
   });
 });
+
+describe("the tenants the docs count", () => {
+  it("are the clubs the data holds", async () => {
+    const text = readFileSync("docs/atlas.md", "utf8");
+    const withTenants = PLACES.filter((place) => place.tenants.length > 0);
+    const tenants = PLACES.flatMap((place) => place.tenants);
+    expect(text).toContain(`the ${tenants.length} clubs (${new Set(tenants.map((t) => t.wikidata)).size} of them different) that played their home matches in ${withTenants.length} of them`);
+    expect(readFileSync("CHANGELOG.md", "utf8")).toContain(`${tenants.length} tenants (${new Set(tenants.map((t) => t.wikidata)).size} clubs) at ${withTenants.length} of the 158 places, ${tenants.filter((t) => t.to === undefined).length} of them still there`);
+    expect(text).toContain(`a club whose years neither gives has none (${tenants.filter((t) => t.from === undefined && t.to === undefined).length} do)`);
+  });
+});

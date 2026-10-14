@@ -2,15 +2,26 @@
 // markers do (so a keyboard or a screen reader needs no marker), and the chosen place's surface drawn beside it by kyogijo.
 // The map's modules are chizu's own (copied into ./chizu by `pnpm site`) and the places are the package's `atlas` entry.
 import { GROUNDS, drawKyogijo } from "./dist/index.js";
-import { PLACES, atlasFacets, officialName, placeById, placesBy, plainName, surfaceOf } from "./dist/atlas-entry.js";
+import { PLACES, atlasFacets, officialName, placeById, placesBy, plainName, surfaceOf, surfacesOf } from "./dist/atlas-entry.js";
 import { ATLAS_MARK_STYLE, markIcon, markSvg } from "./atlas-marks.js";
 
 const $ = (id) => document.getElementById(id);
-const LEAGUES = { MLB: "atlasLeague_mlb", NPB: "atlasLeague_npb", "FIFA World Cup": "atlasLeague_wc", "FIFA Women's World Cup": "atlasLeague_wwc" };
+// The words of the leagues that have a name in Japanese other than the one they go by in English; any other league is shown by its name as the data gives it.
+const LEAGUES = {
+  MLB: "atlasLeague_mlb", NPB: "atlasLeague_npb", "FIFA World Cup": "atlasLeague_wc", "FIFA Women's World Cup": "atlasLeague_wwc",
+  "Premier League": "atlasLeague_pl", "La Liga": "atlasLeague_laliga", "Serie A": "atlasLeague_seriea", Bundesliga: "atlasLeague_bundesliga", "Ligue 1": "atlasLeague_ligue1",
+  "J1 League": "atlasLeague_j1", "J2 League": "atlasLeague_j2", "Liga MX": "atlasLeague_ligamx", "K League 1": "atlasLeague_k1", "Chinese Super League": "atlasLeague_csl",
+  Eredivisie: "atlasLeague_eredivisie", "Primeira Liga": "atlasLeague_primeira", "Scottish Premiership": "atlasLeague_scottish", "Negro leagues": "atlasLeague_negro",
+};
+/** The leagues and tournaments a visitor looks for first: the rest follow, past and present. */
+const MAIN_LEAGUES = ["MLB", "NPB", "NFL", "CFL", "NBA", "NHL", "MLS", "FIFA World Cup", "FIFA Women's World Cup"];
+/** The words that name a surface a place offers, by the key `surfaceKey` gives it. */
+const SURFACE_WORDS = { mlb: "atlasSurface_mlb", soccer: "atlasSurface_soccer", nfl: "atlasSurface_nfl", cfl: "atlasSurface_cfl", nba: "atlasSurface_nba", nhl: "atlasSurface_nhl", rugby: "atlasSurface_rugby", "rugby-nrl": "atlasSurface_nrl", afl: "atlasSurface_afl", cricket: "atlasSurface_cricket" };
+const surfaceKey = (surface) => (surface.league === undefined ? surface.sport : `${surface.sport}-${surface.league}`);
 const DEFAULT_YEAR = 1950;
 const FIRST = "fenway-park";
 
-/** Set up the atlas. `say(key)` and `lang()` give the page's words and language; `onTry(place)` opens a place in the playground. */
+/** Set up the atlas. `say(key)` and `lang()` give the page's words and language; `onTry(place, surface)` opens a place's surface in the playground. */
 export async function initAtlas({ say, lang, onTry }) {
   const host = $("atlas-map");
   if (host === null) return { relabel() {} };
@@ -47,11 +58,12 @@ export async function initAtlas({ say, lang, onTry }) {
     return { official, also: also.slice(0, 6) };
   };
   const yearsOf = (place) => {
-    if (place.from !== undefined && place.to !== undefined) return sentence("atlasYears", { from: place.from, to: place.to });
+    if (place.from !== undefined && place.to !== undefined) return place.from === place.to ? sentence("atlasYearOne", { from: place.from }) : sentence("atlasYears", { from: place.from, to: place.to });
     if (place.from !== undefined) return sentence("atlasSince", { from: place.from });
     if (place.to !== undefined) return sentence("atlasUntil", { to: place.to });
     return "";
   };
+  const leagueName = (name) => (LEAGUES[name] === undefined ? name : say(LEAGUES[name]));
 
   // ----- The map.
   const mount = mountChizu(host, { map: WORLD, language: lang(), selectable: false });
@@ -174,7 +186,15 @@ export async function initAtlas({ say, lang, onTry }) {
   function fillSelects() {
     const league = $("atlas-league");
     league.replaceChildren(new Option(say("atlasLeagueAll"), "all"));
-    for (const name of facets.leagues) league.append(new Option(say(LEAGUES[name] ?? name), name));
+    const main = facets.leagues.filter((name) => MAIN_LEAGUES.includes(name)).sort((a, b) => MAIN_LEAGUES.indexOf(a) - MAIN_LEAGUES.indexOf(b));
+    const rest = facets.leagues.filter((name) => !MAIN_LEAGUES.includes(name)).sort((a, b) => leagueName(a).localeCompare(leagueName(b), lang()));
+    for (const [label, names] of [["atlasLeagueMain", main], ["atlasLeagueOther", rest]]) {
+      if (names.length === 0) continue;
+      const group = document.createElement("optgroup");
+      group.label = say(label);
+      for (const name of names) group.append(new Option(leagueName(name), name));
+      league.append(group);
+    }
     league.value = state.league;
     const country = $("atlas-country");
     country.replaceChildren(new Option(say("atlasCountryAll"), "all"));
@@ -290,24 +310,57 @@ export async function initAtlas({ say, lang, onTry }) {
       others.also.length === 0 ? null : ["atlasAlso", others.also.join(lang() === "ja" ? "、" : ", ")],
       ["atlasInUse", [say(`atlasStatus_${place.status}`), yearsOf(place)].filter(Boolean).join(" · ")],
       place.team === undefined ? null : ["atlasTeam", place.team],
-      place.leagues.length === 0 ? null : ["atlasLeagues", place.leagues.map((l) => say(LEAGUES[l] ?? l)).join(", ")],
+      place.leagues.length === 0 ? null : ["atlasLeagues", place.leagues.map(leagueName).join(lang() === "ja" ? "、" : ", ")],
       ground === undefined ? null : ["atlasPitch", `${ground.pitch.length} × ${ground.pitch.width} m${ground.pitchSize === "default" ? (lang() === "ja" ? `（${say("atlasPitchDefault")}）` : ` (${say("atlasPitchDefault")})`) : ""}`],
       ["atlasCoordinates", `${coordinate(place.lat, "N", "S")}, ${coordinate(place.lon, "E", "W")}`],
     ].filter(Boolean);
+    const surfaces = surfacesOf(place);
     box_.innerHTML = `<div class="fam-felt atlas-surface" data-testid="atlas-surface">${drawKyogijo(options)}</div>
       <h3 class="atlas-name"></h3>
       <dl class="atlas-facts">${rows.map(([key]) => `<div><dt>${key}</dt><dd></dd></div>`).join("")}</dl>
-      <div class="fam-actions"><button type="button" class="fam-button" data-primary="true" id="atlas-try" data-testid="atlas-try"></button><a class="atlas-link" target="_blank" rel="noopener"></a></div>`;
+      ${place.tenants.length === 0 ? "" : '<h4 class="atlas-tenants-title"></h4><ul class="atlas-tenants" data-testid="atlas-tenants"></ul>'}
+      <div class="fam-actions"><button type="button" class="fam-button" data-primary="true" id="atlas-try" data-testid="atlas-try"></button><a class="atlas-link" target="_blank" rel="noopener"></a></div>
+      ${surfaces.length < 2 ? "" : '<div class="fam-actions atlas-also" data-testid="atlas-also"><span class="atlas-also-label"></span></div>'}`;
     box_.querySelector(".atlas-name").textContent = nameOf(place);
     box_.querySelectorAll(".atlas-facts > div").forEach((row, i) => {
       row.querySelector("dt").textContent = say(rows[i][0]);
       row.querySelector("dd").textContent = rows[i][1];
     });
+    // The clubs that played there, the current ones first, each with its league and the years it was there.
+    if (place.tenants.length > 0) {
+      box_.querySelector(".atlas-tenants-title").textContent = say("atlasTenants");
+      box_.querySelector(".atlas-tenants").replaceChildren(...place.tenants.map((tenant) => {
+        const item = document.createElement("li");
+        item.dataset.current = String(tenant.to === undefined);
+        const name = document.createElement("span");
+        name.className = "atlas-tenant-name";
+        name.textContent = lang() === "ja" && tenant.clubJa ? tenant.clubJa : tenant.club;
+        const meta = document.createElement("span");
+        meta.className = "atlas-tenant-meta";
+        meta.textContent = [leagueName(tenant.league), yearsOf(tenant)].filter(Boolean).join(" · ");
+        item.append(name, " ", meta);
+        return item;
+      }));
+    }
     const link = box_.querySelector(".atlas-link");
     link.href = `https://www.wikidata.org/wiki/${place.wikidata}`;
     link.textContent = `Wikidata ${place.wikidata}`;
     box_.querySelector("#atlas-try").textContent = say("atlasTry");
-    box_.querySelector("#atlas-try").addEventListener("click", () => onTry(place));
+    box_.querySelector("#atlas-try").addEventListener("click", () => onTry(place, surfaces[0]));
+    // A place that more than one sport played in offers the others' surfaces too.
+    const also = box_.querySelector(".atlas-also");
+    if (also !== null) {
+      also.querySelector(".atlas-also-label").textContent = say("atlasTryAlso");
+      for (const surface of surfaces.slice(1)) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "fam-button";
+        button.dataset.testid = `atlas-try-${surfaceKey(surface)}`;
+        button.textContent = say(SURFACE_WORDS[surfaceKey(surface)]);
+        button.addEventListener("click", () => onTry(place, surface));
+        also.append(button);
+      }
+    }
   }
 
   /** Choose a place; from the list the map goes to its country, from the map it stays where it is. */

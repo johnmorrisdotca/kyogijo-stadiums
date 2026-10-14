@@ -217,6 +217,8 @@
     "grounds:check": "node scripts/check-grounds.mjs",
     "parks:coordinates": "node scripts/fetch-park-coordinates.mjs",
     "names:fetch": "node scripts/fetch-names.mjs",
+    "tenants": "node scripts/build-tenants.mjs",
+    "tenants:fetch": "node scripts/fetch-tenants.mjs",
     "parks:check": "node scripts/check-parks.mjs"
   },
   "devDependencies": {

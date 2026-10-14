@@ -190,6 +190,14 @@ kyogijo-field::part(plate) { filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .25)); 
 .atlas-facts dd { margin: 0; overflow-wrap: anywhere; }
 .atlas-detail .fam-actions { margin-top: 10px; align-items: center; }
 .atlas-link { font-size: .85rem; }
+.atlas-tenants-title { margin: 12px 0 4px; font-size: .85rem; color: var(--muted); font-weight: 600; }
+.atlas-tenants { list-style: none; margin: 0; padding: 0; max-height: 11rem; overflow: auto; font-size: .85rem; display: grid; gap: 2px; }
+.atlas-tenants li { display: flex; flex-wrap: wrap; gap: 0 6px; overflow-wrap: anywhere; }
+.atlas-tenant-name { font-weight: 600; }
+.atlas-tenants li[data-current="false"] .atlas-tenant-name { font-weight: 400; }
+.atlas-tenant-meta { color: var(--muted); }
+.atlas-also { margin-top: 8px; flex-wrap: wrap; align-items: center; }
+.atlas-also-label { font-size: .85rem; color: var(--muted); }
 .atlas-pick { margin: 0; color: var(--muted); }
 .atlas-list { list-style: none; margin: 10px 0 0; padding: 0; max-height: 22rem; overflow: auto; border: 1px solid var(--rule); border-radius: 12px; background: var(--surface); }
 .atlas-list li { min-width: 0; }
