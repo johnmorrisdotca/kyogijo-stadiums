@@ -464,8 +464,8 @@ function courtsPage() {
     sections: [
       section("courts", "Each court", "`sport` is `tennis`, `volleyball`, `badminton`, `pickleball` or `tabletennis`; beach volleyball is `league: \"fivb-beach\"`. They lie wide unless `orientation` says tall.", [
         item("court-tennis", "Tennis court (ITF)", drawing({ sport: "tennis" })),
-        item("court-volleyball", "Volleyball court (FIVB)", drawing({ sport: "volleyball" })),
-        item("court-beach", "Beach volleyball court (FIVB Beach)", drawing({ sport: "volleyball", league: "fivb-beach" }), "16 by 8 metres and no centre line or attack line."),
+        item("court-volleyball", "Indoor volleyball court (FIVB)", drawing({ sport: "volleyball" }), "18 by 9 metres: the centre line under the net (white, between the net's edges), the attack lines 3 metres from it with the front zone a shade apart, the attack lines' five-dash extensions beyond the side lines, the service zone's two marks behind each end line, and the antennae."),
+        item("court-beach", "Beach volleyball court (FIVB Beach)", drawing({ sport: "volleyball", league: "fivb-beach" }), "The beach court is 16 by 8 metres with four boundary lines and nothing else: no centre line, no attack line and no service marks (Beach Rules 1.3.2). The sand look draws its lines in blue."),
         item("court-badminton", "Badminton court (BWF)", drawing({ sport: "badminton" })),
         item("court-pickleball", "Pickleball court (USA Pickleball)", drawing({ sport: "pickleball" })),
         item("court-table", "Table tennis table (ITTF)", drawing({ sport: "tabletennis" })),

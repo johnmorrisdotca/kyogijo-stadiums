@@ -470,6 +470,32 @@ describe("the drawings", () => {
     expect(withClass(draw({ sport: "badminton" }), "ky-red-fill")).toHaveLength(0);
   });
 
+  it("draw every line of the indoor volleyball court: the boundary, the centre line and the two attack lines, the ten attack line extensions and the four service zone marks (the full detail), and the beach court's four boundary lines only", () => {
+    const count = (svg: Node): number => withClass(svg, "ky-fill-line")[0].attrs.d.split("Z").length - 1;
+    // 4 boundary lines + the centre line + 2 attack lines, then 2 attack lines x 2 sides x 5 dashes, then 2 ends x 2 marks.
+    expect(count(draw({ sport: "volleyball" }))).toBe(4 + 1 + 2 + 20 + 4);
+    expect(count(draw({ sport: "volleyball", detail: "simple" }))).toBe(4 + 1 + 2);
+    expect(count(draw({ sport: "volleyball", net: { free: "least" } }))).toBe(4 + 1 + 2 + 4);
+    expect(count(draw({ sport: "volleyball", league: "fivb-beach" }))).toBe(4);
+    expect(count(draw({ sport: "volleyball", league: "fivb-beach", detail: "simple" }))).toBe(4);
+  });
+
+  it("draw the indoor centre line over the net, between the net's edges, and no such line over the beach net", () => {
+    const rect = (n: Node): { x0: number; x1: number; y0: number; y1: number } => ({ x0: Number(n.attrs.x), x1: Number(n.attrs.x) + Number(n.attrs.width), y0: Number(n.attrs.y), y1: Number(n.attrs.y) + Number(n.attrs.height) });
+    const indoor = draw({ sport: "volleyball" });
+    const [net] = withClass(indoor, "ky-nt-line").map(rect);
+    const over = withClass(indoor, "ky-fill-line").filter((n) => n.name === "rect").map(rect);
+    // One rectangle, the width of the line, centred on the net and running from side line to side line: it is drawn after the net, so it shows through it.
+    expect(over).toHaveLength(1);
+    expect((over[0].x0 + over[0].x1) / 2).toBeCloseTo((net.x0 + net.x1) / 2, 1);
+    expect(over[0].x1 - over[0].x0).toBeCloseTo(0.05 * FT_PER_M, 1);
+    expect(over[0].x1 - over[0].x0).toBeLessThan(net.x1 - net.x0);
+    expect([over[0].y0, over[0].y1]).toEqual([0, 9 * FT_PER_M].map((v) => expect.closeTo(v, 1)));
+    const svg = drawKyogijo({ sport: "volleyball", margin: 0, exactLines: true, id: "t", style: "none" });
+    expect(svg.indexOf("ky-nt-line")).toBeLessThan(svg.lastIndexOf("ky-fill-line"));
+    expect(withClass(draw({ sport: "volleyball", league: "fivb-beach" }), "ky-fill-line").filter((n) => n.name === "rect")).toHaveLength(0);
+  });
+
   it("draw lines a little thicker than painted, and at their true widths with `exactLines`", () => {
     const rects = (svg: Node): number[] => withClass(svg, "ky-fill-line")[0].attrs.d.split("Z").filter(Boolean).map((part) => {
       const [x0, y0] = part.slice(1).split("H")[0].split(" ").map(Number);

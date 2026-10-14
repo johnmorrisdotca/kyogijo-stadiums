@@ -917,7 +917,7 @@ exports[`the drawings' structure > soccer: what a tall bare surface is made of 1
 }
 `;
 
-exports[`the drawings' structure > stays the same text unless a drawing was meant to change: one fingerprint for every sport 1`] = `"1gkhw52"`;
+exports[`the drawings' structure > stays the same text unless a drawing was meant to change: one fingerprint for every sport 1`] = `"122i1gi"`;
 
 exports[`the drawings' structure > tabletennis: what a score drawing is made of 1`] = `
 {
@@ -1022,6 +1022,7 @@ exports[`the drawings' structure > volleyball: what a score drawing is made of 1
   "path.ky-area": 1,
   "path.ky-fill-line": 1,
   "rect.ky-apron": 1,
+  "rect.ky-fill-line": 1,
   "rect.ky-free": 1,
   "rect.ky-nt-line": 1,
   "rect.ky-panel-left": 1,
@@ -1049,6 +1050,7 @@ exports[`the drawings' structure > volleyball: what a tall bare surface is made 
   "path.ky-area": 1,
   "path.ky-fill-line": 1,
   "rect.ky-apron": 1,
+  "rect.ky-fill-line": 1,
   "rect.ky-free": 1,
   "rect.ky-nt-line": 1,
   "rect.ky-surface": 1,
