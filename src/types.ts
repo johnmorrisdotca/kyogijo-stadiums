@@ -843,6 +843,12 @@ export interface ScoreOptions extends SurfaceOptions {
   uppercase?: boolean;
   /** The shape of both teams' marks, unless a team's own `mark` says otherwise: `plain` (the default) or `round`, a flag or logo in a circle with a ring. */
   markShape?: TeamMark;
+  /**
+   * Where the score goes: `centre` (the panel stands on the middle of the surface), `strip` (the compact strip under the drawing, as a pageant's `score: "strip"` does) or `auto` (the default:
+   * the centre, unless the drawing has a `lineup` layer, whose players the panel would hide, and then the strip). The strip also carries the situation's pill, scorebug or tag, which a drawing
+   * with a lineup then leaves off the surface. A pageant has its own `pageant.score`, which says it for the drawing.
+   */
+  score?: "auto" | "centre" | "strip";
   /** Draw the score's panel (or board) on the surface. On by default; `false` leaves the teams' names and the rest and no panel, as the 3D view does when it hangs the score up as a scoreboard. */
   plate?: boolean;
 }

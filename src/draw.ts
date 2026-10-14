@@ -840,6 +840,10 @@ function drawnKyogijo(o: SurfaceOptions | ScoreOptions): string {
     if (sport === "curling" && portrait) pageant = { ...pageant, score: "centre", emblem: undefined };
     else if (sized === "full") sized = "compact";
   }
+  // A lineup's players stand in the middle of the surface, where the score's panel would hide them: the score goes to the strip under the drawing, as a pageant's does, unless `score: "centre"` asks for it.
+  const lineupped = (o.layers ?? []).some((layer) => layer?.kind === "lineup");
+  const stripped = isScore(o) && lineupped && o.score !== "centre";
+  if (isScore(o) && pageant === undefined && sized === "full" && (o.score === "strip" || stripped) && !(sport === "curling" && portrait)) sized = "compact";
   // The situation of the game (hockey's skaters, baseball's runners, football's down), decided once: the surface, the badge and the description draw from it.
   const situation = situationOf(o);
   // A situation that is not drawn (a sport that has none, nothing the sport can have in it) leaves the drawing, its ids included, as it was.
@@ -901,8 +905,8 @@ function drawnKyogijo(o: SurfaceOptions | ScoreOptions): string {
     let surface = make({ features, pageant: pageant !== undefined });
     // The score of a pageant with no emblem and no board: the plate stays in the middle if the pictures lose little to it, else it goes to the strip and the surface is built again.
     if (pageant !== undefined && pageant.score === "auto") {
-      let score: "centre" | "strip" = "centre";
-      if (isScore(o) && left !== undefined && right !== undefined && leftTeam !== undefined && rightTeam !== undefined && sized === "full") {
+      let score: "centre" | "strip" = stripped ? "strip" : "centre";
+      if (!stripped && isScore(o) && left !== undefined && right !== undefined && leftTeam !== undefined && rightTeam !== undefined && sized === "full") {
         const [first, second] = pageantPair(surface, { left, right, leftTeam, rightTeam });
         score = autoScore({ pageant, surface, outline: outlineOf(o), left: first, right: second, turned: surface.turned, sport, plate: true });
       }
@@ -948,6 +952,7 @@ function drawnKyogijo(o: SurfaceOptions | ScoreOptions): string {
             homeSide,
             abbrs: left !== undefined && right !== undefined ? ({ [left.role]: left.abbr, [right.role]: right.abbr } as { home: string; away: string }) : undefined,
             plate: isScore(o) && sized === "full" && o.plate !== false,
+            strip: stripped && sized === "compact",
           });
     const cutSit = (markup: string): string => (markup !== "" && surface.defs.includes(`id="${id}-rg"`) ? el("g", { "clip-path": `url(#${id}-rg)` }, markup) : markup);
     let inner = ground.base + (sit === undefined ? "" : cutSit(sit.under));
@@ -977,6 +982,8 @@ function drawnKyogijo(o: SurfaceOptions | ScoreOptions): string {
       const laid = cut ? el("g", { "clip-path": `url(#${id}-rg)` }, pg.pictures) : pg.pictures;
       inner += pageant.lines !== "over" ? surface.lines + laid + pg.names + pg.emblem : laid + surface.lines + pg.names + pg.emblem;
     } else inner += surface.bannersOver === true ? surface.lines + teams : teams + surface.lines;
+    // A lineup's players stand over what the situation lights (a runner's base, a drive's arrows), so that none of them is hidden; any other data goes over it.
+    if (sit !== undefined && lineupped) inner += cutSit(sit.over);
     // Data goes over the markings and under the score's panel.
     const layered = renderLayers(o, o.layers, surface.turned, surface.whole === undefined ? undefined : surface.box, surface.upright);
     inner += surface.frame === undefined || layered.svg === "" ? layered.svg : el("g", { transform: surface.frame }, layered.svg);
@@ -992,7 +999,7 @@ function drawnKyogijo(o: SurfaceOptions | ScoreOptions): string {
       const { colon, gap } = KYOGIJO_STRINGS[language].said;
       description = `${said}${gap}${KYOGIJO_STRINGS[language].layers.data}${colon}${layered.summaries.join(gap)}`;
     }
-    if (sit !== undefined) inner += cutSit(sit.over);
+    if (sit !== undefined && !lineupped) inner += cutSit(sit.over);
     if (surface.over !== undefined) inner += surface.over;
     if (notes !== undefined && notes.svg !== "") {
       inner += notes.svg;

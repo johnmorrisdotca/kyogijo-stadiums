@@ -19,6 +19,8 @@ export interface SituationEnv {
   abbrs?: { home: string; away: string };
   /** The score's panel stands in the middle of the surface. */
   plate: boolean;
+  /** The strip under the drawing shows the situation (the pill, the scorebug or the tag), so the surface does not: a lineup's players stand where they would be. */
+  strip?: boolean;
 }
 
 /** What a situation adds to a drawing. */
@@ -84,7 +86,7 @@ function drawHockey(read: HockeyRead, surface: Surface, env: SituationEnv): Situ
     const pad = 1.3;
     out.over += el("rect", { class: "ky-sit-net", x: dir < 0 ? gx - a.net.depth - pad : gx - pad, y: a.width / 2 - a.net.width / 2 - pad, width: a.net.depth + 2 * pad, height: a.net.width + 2 * pad, rx: 1.2 });
   }
-  if (label !== undefined) {
+  if (label !== undefined && env.strip !== true) {
     const pill = pillWidget(label, size, read.attacker === undefined ? undefined : sideOf(read.attacker, env.homeSide));
     // Wide, at the top of the ice in the middle; tall, just inside the top blue line, in the middle across.
     const at = surface.turned
@@ -95,7 +97,7 @@ function drawHockey(read: HockeyRead, surface: Surface, env: SituationEnv): Situ
   return out;
 }
 
-function drawBaseball(read: BaseballRead, surface: Surface): SituationDrawn {
+function drawBaseball(read: BaseballRead, surface: Surface, env: SituationEnv): SituationDrawn {
   const a = surface.anchors?.kind === "baseball" ? surface.anchors : undefined;
   const out: SituationDrawn = { under: "", over: "", defs: "" };
   if (a === undefined) return out;
@@ -111,7 +113,7 @@ function drawBaseball(read: BaseballRead, surface: Surface): SituationDrawn {
   // The scorebug at the foot of the field, behind home plate, held inside what is shown.
   const view = wideView(surface);
   const bug = { bases: read.bases, outs: read.outs, inning: read.inning, half: read.half, balls: read.balls, strikes: read.strikes };
-  if (Object.values(bug).some((value) => value !== undefined)) {
+  if (env.strip !== true && Object.values(bug).some((value) => value !== undefined)) {
     let u = Math.min(11, view.h * 0.2, view.w * 0.1);
     let widget = scorebugWidget(bug, u, true);
     // A drawing cut very small gets a bug that fits it.
@@ -177,7 +179,7 @@ function drawFootball(read: FootballRead, surface: Surface, env: SituationEnv): 
   // The tag: the down and distance, with the yard line, behind the line of scrimmage near the far sideline.
   const main = downTag(read, env.language);
   const where = read.ballOn === undefined ? undefined : yardLineText(read.ballOn, read.yards, env.language);
-  if (main !== undefined || where !== undefined) {
+  if (env.strip !== true && (main !== undefined || where !== undefined)) {
     const tag = tagWidget(main ?? where ?? "", main === undefined ? undefined : where, 5.6, headAngle(read.toward, surface.turned));
     const along = (surface.turned ? tag.h : tag.w) / 2;
     const across = (surface.turned ? tag.w : tag.h) / 2;
@@ -198,7 +200,7 @@ function drawFootball(read: FootballRead, surface: Surface, env: SituationEnv): 
 
 /** A situation drawn on a surface, or `undefined` when nothing is to be drawn. */
 export function drawSituation(read: SituationRead, surface: Surface, env: SituationEnv): SituationDrawn | undefined {
-  const drawn = read.kind === "hockey" ? drawHockey(read, surface, env) : read.kind === "baseball" ? drawBaseball(read, surface) : drawFootball(read, surface, env);
+  const drawn = read.kind === "hockey" ? drawHockey(read, surface, env) : read.kind === "baseball" ? drawBaseball(read, surface, env) : drawFootball(read, surface, env);
   return drawn.under === "" && drawn.over === "" ? undefined : drawn;
 }
 

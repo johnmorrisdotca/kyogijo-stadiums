@@ -122,6 +122,8 @@ A formation is a convention that coaches draw a little differently each time, so
 
 A **lineup** places a team's players by their position code, so a team sheet is all it needs: no coordinates. It reads where each position stands from a [formation](#formations), draws each player as a disc or a jersey with his number in it and his name under it, and puts the visitors at the other end. Two teams are two layers.
 
+A drawing with a lineup and a score puts the score in the strip under the surface, and a situation's pill, scorebug or tag in the strip with it, so that the panel hides none of the players; `score: "centre"` keeps the panel over the surface (see [score and layout](./score.md)).
+
 ```ts
 import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
