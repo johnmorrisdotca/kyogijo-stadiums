@@ -1063,6 +1063,140 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `turn.parts.cage` | discus and hammer cage | 円盤投・ハンマー投の囲い |
 | `turn.parts.padding` | padding | 防護マット |
 | `turn.parts.rink-boards` | boards | フェンス |
+| `rules.defensive-zone` | Defensive zone | ディフェンディングゾーン |
+| `rules.neutral-zone` | Neutral zone | ニュートラルゾーン |
+| `rules.offensive-zone` | Offensive zone | アタッキングゾーン |
+| `rules.crease` | Crease | ゴールクリース |
+| `rules.trapezoid` | Goalkeeper's trapezoid | ゴールキーパーのトラペゾイド |
+| `rules.behind-goal-line` | Behind the goal line | ゴール裏 |
+| `rules.inner-slot` | Inner slot | インナースロット |
+| `rules.outer-slot` | Outer slot | アウタースロット |
+| `rules.slot` | Slot | スロット |
+| `rules.faceoff-circle` | Face-off circle | フェイスオフサークル |
+| `rules.centre-circle` | Centre circle | センターサークル |
+| `rules.frontcourt` | Frontcourt | フロントコート |
+| `rules.backcourt` | Backcourt | バックコート |
+| `rules.restricted-area` | Restricted area | リストリクテッドエリア |
+| `rules.paint` | Paint (the key) | ペイントエリア |
+| `rules.mid-range` | Mid-range | ミッドレンジ |
+| `rules.corner-three-left` | Left corner three | 左コーナースリー |
+| `rules.corner-three-right` | Right corner three | 右コーナースリー |
+| `rules.above-the-break` | Above the break three | アバブ・ザ・ブレイク・スリー |
+| `rules.three-point` | Three-point area | スリーポイントエリア |
+| `rules.defensive-third` | Defensive third | ディフェンディングサード |
+| `rules.middle-third` | Middle third | ミドルサード |
+| `rules.attacking-third` | Attacking third | アタッキングサード |
+| `rules.six-yard-box` | Six-yard box (goal area) | ゴールエリア |
+| `rules.own-six-yard-box` | Own six-yard box | 自陣のゴールエリア |
+| `rules.penalty-area` | Penalty area | ペナルティエリア |
+| `rules.own-penalty-area` | Own penalty area | 自陣のペナルティエリア |
+| `rules.penalty-arc` | Penalty arc (the D) | ペナルティアーク |
+| `rules.own-penalty-arc` | Own penalty arc | 自陣のペナルティアーク |
+| `rules.wing-left` | Left wing | 左サイド |
+| `rules.half-space-left` | Left half-space | 左ハーフスペース |
+| `rules.central-corridor` | Central corridor | 中央 |
+| `rules.half-space-right` | Right half-space | 右ハーフスペース |
+| `rules.wing-right` | Right wing | 右サイド |
+| `rules.infield` | Infield | 内野 |
+| `rules.outfield` | Outfield | 外野 |
+| `rules.fair-territory` | Fair territory | フェアグラウンド |
+| `rules.foul-territory` | Foul territory | ファウルグラウンド |
+| `rules.over-the-wall` | Over the wall | フェンス越え |
+| `rules.warning-track` | Warning track | ウォーニングトラック |
+| `rules.left-field` | Left field | レフト |
+| `rules.centre-field` | Centre field | センター |
+| `rules.right-field` | Right field | ライト |
+| `rules.third-base-side` | Third-base side | 三塁側 |
+| `rules.middle-infield` | Middle infield | 二遊間 |
+| `rules.first-base-side` | First-base side | 一塁側 |
+| `rules.own-end-zone` | Own end zone | 自陣のエンドゾーン |
+| `rules.own-half` | Own half | 自陣 |
+| `rules.opponent-half` | Opponent's half | 敵陣 |
+| `rules.red-zone` | Red zone | レッドゾーン |
+| `rules.opponent-end-zone` | Opponent's end zone | 敵陣のエンドゾーン |
+| `rules.end-zone` | End zone | エンドゾーン |
+| `rules.between-the-hashes` | Between the hashes | ハッシュマークの間 |
+| `rules.outside-hashes-left` | Outside the hashes, left | ハッシュマークの外側（左） |
+| `rules.outside-hashes-right` | Outside the hashes, right | ハッシュマークの外側（右） |
+| `target.sports.nhl` | Hockey net | アイスホッケーのゴール |
+| `target.sports.soccer` | Soccer goal | サッカーのゴール |
+| `target.sports.handball` | Handball goal | ハンドボールのゴール |
+| `target.sports.waterpolo` | Water polo goal | 水球のゴール |
+| `target.sports.lacrosse` | Lacrosse goal | ラクロスのゴール |
+| `target.sports.fieldhockey` | Field hockey goal | フィールドホッケーのゴール |
+| `target.sports.cricket` | Wicket | ウィケット |
+| `target.sports.mlb` | Strike zone | ストライクゾーン |
+| `target.titleGoal` | Goal mouth, {name}: where the shots crossed the goal line | ゴールマウス（{name}）：シュートがゴールラインを通過した位置 |
+| `target.descGoal` | The {name}, {w} by {h} {unit}, seen from the front: the shooter's left is on the left. | {name}（幅{w}×高さ{h}{unit}）を正面から見た図です。図の左側は、シュートを打つ選手から見た左側です。 |
+| `target.titleStrike` | Strike zone: where the pitches crossed the plate | ストライクゾーン：投球がホームプレートを通過した位置 |
+| `target.descStrike` | The strike zone seen from the catcher's position: the plate {w} inches wide, the zone from {bottom} to {top} feet above the ground. The batter stands on the {side}. | 捕手の位置から見たストライクゾーンです。ホームプレートの幅は{w}インチ、ゾーンの高さは地面から{bottom}〜{top}フィートです。打者は図の{side}側に立ちます。 |
+| `target.titleStumps` | Stumps: where the deliveries reached the wicket | スタンプ：投球がウィケットに到達した位置 |
+| `target.descStumps` | The stumps seen from the bowler's end: three stumps across 9 inches (22.86 cm) and 28 inches (71.12 cm) high, with the bails. | ボウラー側から見たスタンプです。3本のスタンプの幅は9インチ（22.86cm）、高さは28インチ（71.12cm）で、ベイルが載っています。 |
+| `target.left` | left | 左 |
+| `target.right` | right | 右 |
+| `target.units.m` | metres | メートル |
+| `target.units.ft` | feet | フィート |
+| `target.units.in` | inches | インチ |
+| `target.units.cm` | centimetres | センチメートル |
+| `target.units.yd` | yards | ヤード |
+| `target.outcomes.goal` | Goal | ゴール |
+| `target.outcomes.saved` | Saved | セーブ |
+| `target.outcomes.post` | Post | ポスト |
+| `target.outcomes.crossbar` | Crossbar | クロスバー |
+| `target.outcomes.wide` | Wide | 枠外（横） |
+| `target.outcomes.high` | High | 枠外（上） |
+| `target.outcomes.blocked` | Blocked | ブロック |
+| `target.outcomes.shot` | Shot | シュート |
+| `target.outcomes.missed` | Missed | 外れ |
+| `target.outcomes.ball` | Ball | ボール |
+| `target.outcomes.called-strike` | Called strike | 見逃しストライク |
+| `target.outcomes.swinging-strike` | Swinging strike | 空振りストライク |
+| `target.outcomes.foul` | Foul | ファウル |
+| `target.outcomes.in-play` | In play | インプレー |
+| `target.outcomes.hit-by-pitch` | Hit by pitch | 死球 |
+| `target.outcomes.wicket` | Wicket | ウィケット |
+| `target.outcomes.runs` | Runs | 得点 |
+| `target.outcomes.dot` | Dot ball | ドットボール |
+| `target.zones.top-left-corner` | Top left corner | 左上隅 |
+| `target.zones.top-shelf` | Top shelf | トップシェルフ（ネット上部） |
+| `target.zones.top-centre` | Top centre | 上段中央 |
+| `target.zones.top-right-corner` | Top right corner | 右上隅 |
+| `target.zones.mid-left` | Left side | 左側 |
+| `target.zones.centre` | Centre | 中央 |
+| `target.zones.mid-right` | Right side | 右側 |
+| `target.zones.bottom-left-corner` | Bottom left corner | 左下隅 |
+| `target.zones.five-hole` | Five-hole | ファイブホール（パッドの間） |
+| `target.zones.bottom-centre` | Bottom centre | 下段中央 |
+| `target.zones.bottom-right-corner` | Bottom right corner | 右下隅 |
+| `target.zones.wide-left` | Wide left | 枠外（左） |
+| `target.zones.wide-right` | Wide right | 枠外（右） |
+| `target.zones.over-the-bar` | Over the bar | バーの上 |
+| `target.zones.zone-1` | Zone 1 | ゾーン1 |
+| `target.zones.zone-2` | Zone 2 | ゾーン2 |
+| `target.zones.zone-3` | Zone 3 | ゾーン3 |
+| `target.zones.zone-4` | Zone 4 | ゾーン4 |
+| `target.zones.zone-5` | Zone 5 | ゾーン5 |
+| `target.zones.zone-6` | Zone 6 | ゾーン6 |
+| `target.zones.zone-7` | Zone 7 | ゾーン7 |
+| `target.zones.zone-8` | Zone 8 | ゾーン8 |
+| `target.zones.zone-9` | Zone 9 | ゾーン9 |
+| `target.zones.zone-11` | Zone 11, high and left | ゾーン11（左高め） |
+| `target.zones.zone-12` | Zone 12, high and right | ゾーン12（右高め） |
+| `target.zones.zone-13` | Zone 13, low and left | ゾーン13（左低め） |
+| `target.zones.zone-14` | Zone 14, low and right | ゾーン14（右低め） |
+| `target.zones.outside` | Outside the zones | ゾーンの外 |
+| `target.zones.outside-left` | Outside, left of the stumps | スタンプの左外 |
+| `target.zones.on-stumps` | On the stumps | スタンプのライン上 |
+| `target.zones.over-stumps` | Over the stumps | スタンプの上方 |
+| `target.zones.outside-right` | Outside, right of the stumps | スタンプの右外 |
+| `target.lengths.yorker` | Yorker length | ヨーカー |
+| `target.lengths.full` | Full length | フルレングス |
+| `target.lengths.good-length` | Good length | グッドレングス |
+| `target.lengths.short-of-a-length` | Short of a length | ショート・オブ・ア・レングス |
+| `target.lengths.short` | Short | ショート |
+| `target.pitches` | pitches | 投球 |
+| `target.deliveries` | deliveries | 投球 |
+| `target.numbers` | pitch numbers | 投球番号 |
 
 ## The demo's words (`WORDS`)
 
@@ -1488,6 +1622,15 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `convSpot` | The penalty mark | ペナルティーマーク |
 | `convResult` | Becomes | 変換後 |
 | `convBad` | Two numbers, please | 数値を2つ入力してください |
+| `pointTitle` | Point at the field | 図上の位置を調べる |
+| `pointText` | Click or drag on the drawing, or use the arrow keys: the place is written in every provider's numbers, with the zone the rules put it in. Nothing is sent anywhere; the drawing answers by itself. | 図をクリックまたはドラッグするか、矢印キーで動かすと、その位置が各データ提供元の座標で表示され、ルールで決まるゾーンも分かります。データはどこにも送信されません。 |
+| `pointSport` | Surface | 競技面 |
+| `pointSurface` | The drawing's own: feet from the top left | この図の座標（左上からのフィート） |
+| `pointZone` | Zone | ゾーン |
+| `pointArea` | Area | エリア |
+| `pointOff` | Off the surface | 競技面の外 |
+| `pointNone` | Not pointed at yet | まだ位置を選んでいません |
+| `pointStage` | The drawing to point at | 位置を調べる図 |
 | `liveTitle` | A live score | 得点が動く例 |
 | `liveText` | The score moves and the drawing is drawn again; a number that changes swells and settles (it only fades for a reader who prefers reduced motion). Nothing is fetched: it is a made-up game. | 得点が動くたびに図を描き直し、変わった数字は少し大きくなってから元に戻ります（動きを減らす設定の場合は、フェードインするだけです）。データは取得しません。架空の試合です。 |
 | `liveStep` | Next play | 次のプレー |
@@ -1568,8 +1711,11 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | group `data` | Data on a surface | 競技場の上のデータ |
 | page `units` | Units | 単位 |
 | page `frames` | Coordinate frames | 座標系 |
+| page `zones` | Zones and the rules | ゾーンとルール |
+| page `pointer` | Pointing at a drawing | 図上の位置を調べる |
 | page `layers` | Data layers | データレイヤー |
 | page `charts` | Ready-made charts | すぐ使えるチャート |
+| page `targets` | Goal mouths, the strike zone and the stumps | ゴールマウス・ストライクゾーン・スタンプ |
 | page `team-shape` | Team shape | チームの形 |
 | page `replay` | Replay | リプレイ |
 | page `turn` | The 3D view | 3D表示 |

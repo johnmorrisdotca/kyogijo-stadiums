@@ -190,6 +190,14 @@ src/
 ├── frames.ts           coordinate frames: the mapper, the registry, toSurface and fromSurface
 ├── frames.providers.ts the NHL, HockeyTech, NBA, NFL, MLBAM, Retrosheet, curling, net sports and field sports frames
 ├── frames-entry.ts     the frames' entry
+├── rules.ts            the rules engine: zoneAt, the yes-or-no questions, home runs from a park's fence and wall
+├── rules.types.ts      the ids of the zones the rules engine names
+├── zones-entry.ts      the zones' entry
+├── field.data.ts       what a drawing writes on its surface group for the pointer (the box and the rules' options)
+├── pointer.ts          a click as a place on the field: clientPointToField, fieldPointToClient, clientPointToFrames
+├── pointer-entry.ts    the pointer's entry
+├── target.ts           the goals, the strike zone and the stumps seen end-on, with their zones and marks
+├── target-entry.ts     the targets' entry
 ├── names.ts            the names of a place: the aliases, the lookup by any name and the official name
 ├── parks.ts            the ballparks, their fences, walls, quirks, names and their sources
 ├── ballpark.ts         what a drawing asks of a park's walls and quirks (`walls`, `quirks`), and the words that name them

@@ -37,8 +37,11 @@ Kyogijo Stadiums draws sports surfaces as SVG, to scale, with the score on them.
 
 - [Units](./units.md): each surface in its rulebook's unit, and the conversions.
 - [Coordinate frames](./frames.md): where each data provider puts a point, and how to move it onto a surface.
-- [Data layers](./layers.md): points, lines, arrows, text and the heat layers.
+- [Zones and the rules](./zones.md): where a point lies by a sport's own rules (the zone, the crease, the paint, the six-yard box, the warning track, the red zone), the yes-or-no questions, and home runs from a park's own fence and wall.
+- [Pointing at a drawing](./pointer.md): a click as a place on the field in any provider's numbers, with its zone, and the way back for a marker.
+- [Data layers](./layers.md): points, lines, arrows, text and the heat layers, every mark carrying its id, its index and its zone.
 - [Ready-made charts](./charts.md): a shot chart, a shot map, a spray chart, a pass chart, a soccer shot map, the stones of a curling end, the splits of a swimming race, a pass network and the road to a tournament's final.
+- [Goal mouths, the strike zone and the stumps](./targets.md): a goal seen from the shooter's side in six sports, the catcher's view of the plate with its nine and thirteen zones, and the wicket from the bowler's end, with the shots, pitches and deliveries on them.
 - [Team shape](./team-shape.md): pass networks, formations, Voronoi cells, triangulations, hulls, flow fields and sonars.
 - [Replay](./replay.md): tracking data played on a surface, with controls, a keyboard, a live region and steps for reduced motion.
 - [Renderers](./renderers.md): the drawing as plain data, on a canvas, in a d3 selection, in an Observable Plot, as GeoJSON and as a PNG.

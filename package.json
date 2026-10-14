@@ -184,6 +184,21 @@
       "import": "./dist/png-entry.js",
       "default": "./dist/png-entry.js"
     },
+    "./zones": {
+      "types": "./dist/zones-entry.d.ts",
+      "import": "./dist/zones-entry.js",
+      "default": "./dist/zones-entry.js"
+    },
+    "./pointer": {
+      "types": "./dist/pointer-entry.d.ts",
+      "import": "./dist/pointer-entry.js",
+      "default": "./dist/pointer-entry.js"
+    },
+    "./target": {
+      "types": "./dist/target-entry.d.ts",
+      "import": "./dist/target-entry.js",
+      "default": "./dist/target-entry.js"
+    },
     "./turn": {
       "types": "./dist/turn-entry.d.ts",
       "import": "./dist/turn-entry.js",

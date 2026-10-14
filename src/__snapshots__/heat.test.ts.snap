@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`the heat layers are the same every time, and safe > the same options draw the same string, and each kind has one fingerprint for the structure it is made of 1`] = `"1wwo028"`;
+exports[`the heat layers are the same every time, and safe > the same options draw the same string, and each kind has one fingerprint for the structure it is made of 1`] = `"1jzfqaa"`;
 
 exports[`what each heat layer is made of > contour, filled: the elements and classes it is drawn with 1`] = `
 {
@@ -75,13 +75,14 @@ exports[`what each heat layer is made of > heatmap: the elements and classes it 
   "clipPath": 1,
   "defs": 1,
   "desc": 2,
+  "g": 8,
   "g.ky-hl": 1,
   "g.ky-hm.ky-layer": 1,
   "g.ky-layers": 1,
   "g.ky-lg": 1,
   "g.ky-lgw": 1,
   "g.ky-surface-group": 1,
-  "path": 9,
+  "path": 103,
   "path.ky-blue": 1,
   "path.ky-boards": 1,
   "path.ky-crease": 2,
@@ -112,12 +113,13 @@ exports[`what each heat layer is made of > hexbin: the elements and classes it i
   "clipPath": 1,
   "defs": 1,
   "desc": 2,
+  "g": 8,
   "g.ky-hm.ky-layer": 1,
   "g.ky-layers": 1,
   "g.ky-lg": 1,
   "g.ky-lgw": 1,
   "g.ky-surface-group": 1,
-  "path": 9,
+  "path": 106,
   "path.ky-blue": 1,
   "path.ky-boards": 1,
   "path.ky-crease": 2,

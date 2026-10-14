@@ -575,12 +575,14 @@ export function drawHeat(layer: HeatLayer, env: Env, gid: string, known?: Map<st
     } else {
       // Each cell is a path of its own, so that a listener can tell which one it was on; the cells of a colour share a group that holds the fill.
       const byStep: string[][] = Array.from({ length: colours.steps }, () => []);
+      const pointable = layer.marks !== false;
       c.items.forEach((it, i) => {
         if (it.value === null) return;
-        byStep[step(it.value)].push(`<path d="${it.d}"${markAttrs(env, undefined, i, [it.cx, it.cy])}/>`);
+        byStep[step(it.value)].push(pointable ? `<path d="${it.d}"${markAttrs(env, undefined, i, [it.cx, it.cy])}/>` : it.d);
       });
       byStep.forEach((list, k) => {
-        if (list.length > 0) marks.push(`<g style="fill:${fillOf(colours, k)}">${list.join("")}</g>`);
+        if (list.length === 0) return;
+        marks.push(pointable ? `<g style="fill:${fillOf(colours, k)}">${list.join("")}</g>` : `<path style="fill:${fillOf(colours, k)}" d="${list.join("")}"/>`);
       });
     }
   }

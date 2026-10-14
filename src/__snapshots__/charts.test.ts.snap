@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`every chart > mlb: the same input draws the same drawing, and a fingerprint of the chart's own marks holds it 1`] = `"0kb5q1x"`;
+exports[`every chart > mlb: the same input draws the same drawing, and a fingerprint of the chart's own marks holds it 1`] = `"0udaopj"`;
 
 exports[`every chart > mlb: what the chart's marks are made of 1`] = `
 {
@@ -30,7 +30,7 @@ exports[`every chart > mlb: what the chart's marks are made of 1`] = `
 }
 `;
 
-exports[`every chart > nba: the same input draws the same drawing, and a fingerprint of the chart's own marks holds it 1`] = `"05315lk"`;
+exports[`every chart > nba: the same input draws the same drawing, and a fingerprint of the chart's own marks holds it 1`] = `"12kan6o"`;
 
 exports[`every chart > nba: what the chart's marks are made of 1`] = `
 {
@@ -60,7 +60,7 @@ exports[`every chart > nba: what the chart's marks are made of 1`] = `
 }
 `;
 
-exports[`every chart > nfl: the same input draws the same drawing, and a fingerprint of the chart's own marks holds it 1`] = `"1b0ydci"`;
+exports[`every chart > nfl: the same input draws the same drawing, and a fingerprint of the chart's own marks holds it 1`] = `"0myfsmx"`;
 
 exports[`every chart > nfl: what the chart's marks are made of 1`] = `
 {
@@ -92,7 +92,7 @@ exports[`every chart > nfl: what the chart's marks are made of 1`] = `
 }
 `;
 
-exports[`every chart > nhl: the same input draws the same drawing, and a fingerprint of the chart's own marks holds it 1`] = `"1s6wq5o"`;
+exports[`every chart > nhl: the same input draws the same drawing, and a fingerprint of the chart's own marks holds it 1`] = `"1bjhxlm"`;
 
 exports[`every chart > nhl: what the chart's marks are made of 1`] = `
 {
@@ -128,7 +128,7 @@ exports[`every chart > nhl: what the chart's marks are made of 1`] = `
 }
 `;
 
-exports[`every chart > soccer: the same input draws the same drawing, and a fingerprint of the chart's own marks holds it 1`] = `"17t94ih"`;
+exports[`every chart > soccer: the same input draws the same drawing, and a fingerprint of the chart's own marks holds it 1`] = `"19zo9pr"`;
 
 exports[`every chart > soccer: what the chart's marks are made of 1`] = `
 {

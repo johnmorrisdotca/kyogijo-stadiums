@@ -124,7 +124,7 @@ function toLocal(found: Found, clientX: number, clientY: number): [number, numbe
  * @example
  * ```ts no-run
  * import { clientPointToField } from "@johnmorrisdotca/kyogijo-stadiums/pointer";
- * const svg = document.querySelector("svg.kyogijo")!;
+ * const svg = document.querySelector<SVGSVGElement>("svg.kyogijo")!;
  * svg.addEventListener("click", (event) => {
  *   const at = clientPointToField(svg, event.clientX, event.clientY, { provider: "nhl-api" });
  *   if (at !== null) console.log(at.x, at.y, at.zone, at.inBounds);
@@ -154,8 +154,9 @@ export function clientPointToField(svg: SvgLike | Element, clientX: number, clie
  * @example
  * ```ts no-run
  * import { fieldPointToClient } from "@johnmorrisdotca/kyogijo-stadiums/pointer";
- * const svg = document.querySelector("svg.kyogijo")!;
+ * const svg = document.querySelector<SVGSVGElement>("svg.kyogijo")!;
  * const at = fieldPointToClient(svg, [69, 22], { provider: "nhl-api" });
+ * declare const marker: HTMLElement;
  * if (at !== null) marker.style.transform = `translate(${at.x}px, ${at.y}px)`;
  * ```
  */
@@ -180,8 +181,11 @@ export function fieldPointToClient(svg: SvgLike | Element, point: PlaceLike, opt
  * @example
  * ```ts no-run
  * import { clientPointToFrames } from "@johnmorrisdotca/kyogijo-stadiums/pointer";
- * const all = clientPointToFrames(svg, event.clientX, event.clientY);
- * console.log(all?.points.map((p) => `${p.provider}: ${p.x}, ${p.y}`), all?.zone);
+ * const svg = document.querySelector<SVGSVGElement>("svg.kyogijo")!;
+ * svg.addEventListener("pointermove", (event) => {
+ *   const all = clientPointToFrames(svg, event.clientX, event.clientY);
+ *   console.log(all?.points.map((p) => `${p.provider}: ${p.x}, ${p.y}`), all?.zone);
+ * });
  * ```
  */
 export function clientPointToFrames(svg: SvgLike | Element, clientX: number, clientY: number, options: Omit<PointerOptions, "provider"> & { providers?: readonly (Frame | string)[] } = {}): (Omit<FieldPoint, "x" | "y" | "provider"> & { points: { provider: string; title: string; unit: string; x: number; y: number }[] }) | null {

@@ -100,11 +100,12 @@ describe("every chart", () => {
   }
 
   it("the drawings stay within their size budgets, stylesheet and key and legend in", () => {
-    expect(demo.nba().draw().length).toBeLessThan(70_000);
-    expect(demo.nhl().draw().length).toBeLessThan(40_000);
-    expect(demo.mlb().draw().length).toBeLessThan(45_000);
-    expect(demo.nfl().draw().length).toBeLessThan(35_000);
-    expect(demo.soccer().draw().length).toBeLessThan(25_000);
+    // Every mark carries its data-mark-id, data-index and data-zone (about 55 bytes), so that one listener can link a mark to a table.
+    expect(demo.nba().draw().length).toBeLessThan(105_000);
+    expect(demo.nhl().draw().length).toBeLessThan(60_000);
+    expect(demo.mlb().draw().length).toBeLessThan(65_000);
+    expect(demo.nfl().draw().length).toBeLessThan(50_000);
+    expect(demo.soccer().draw().length).toBeLessThan(36_000);
     expect(demo.soccer().goalMouth().svg.length).toBeLessThan(16_000);
   });
 

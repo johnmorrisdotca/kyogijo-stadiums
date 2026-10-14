@@ -680,6 +680,29 @@ export interface KyogijoWords {
   };
   /** The names of the zones that `zoneAt` answers with (rules.ts), by id. */
   rules: Record<RuleId, string>;
+  /** The words of the targets seen end-on (target.ts): the goals, the stumps and the strike zone. */
+  target: {
+    sports: Record<"nhl" | "soccer" | "handball" | "waterpolo" | "lacrosse" | "fieldhockey" | "cricket" | "mlb", string>;
+    /** Titles ({name}) and descriptions ({name} {w} {h} {unit}; {w} {bottom} {top} {side}). */
+    titleGoal: string;
+    descGoal: string;
+    titleStrike: string;
+    descStrike: string;
+    titleStumps: string;
+    descStumps: string;
+    left: string;
+    right: string;
+    units: Record<"m" | "ft" | "in" | "cm" | "yd", string>;
+    /** What became of a shot, a pitch or a delivery. */
+    outcomes: Record<string, string>;
+    /** The zones, by id. */
+    zones: Record<string, string>;
+    /** The length zones of a delivery, by id. */
+    lengths: Record<string, string>;
+    pitches: string;
+    deliveries: string;
+    numbers: string;
+  };
 }
 
 /** The words of the package, by language. */
@@ -1089,6 +1112,24 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       "outside-hashes-left": "Outside the hashes, left",
       "outside-hashes-right": "Outside the hashes, right",
     },
+    target: {
+      sports: {"nhl": "Hockey net", "soccer": "Soccer goal", "handball": "Handball goal", "waterpolo": "Water polo goal", "lacrosse": "Lacrosse goal", "fieldhockey": "Field hockey goal", "cricket": "Wicket", "mlb": "Strike zone"},
+      titleGoal: "Goal mouth, {name}: where the shots crossed the goal line",
+      descGoal: "The {name}, {w} by {h} {unit}, seen from the front: the shooter's left is on the left.",
+      titleStrike: "Strike zone: where the pitches crossed the plate",
+      descStrike: "The strike zone seen from the catcher's position: the plate {w} inches wide, the zone from {bottom} to {top} feet above the ground. The batter stands on the {side}.",
+      titleStumps: "Stumps: where the deliveries reached the wicket",
+      descStumps: "The stumps seen from the bowler's end: three stumps across 9 inches (22.86 cm) and 28 inches (71.12 cm) high, with the bails.",
+      left: "left",
+      right: "right",
+      units: {"m": "metres", "ft": "feet", "in": "inches", "cm": "centimetres", "yd": "yards"},
+      outcomes: {"goal": "Goal", "saved": "Saved", "post": "Post", "crossbar": "Crossbar", "wide": "Wide", "high": "High", "blocked": "Blocked", "shot": "Shot", "missed": "Missed", "ball": "Ball", "called-strike": "Called strike", "swinging-strike": "Swinging strike", "foul": "Foul", "in-play": "In play", "hit-by-pitch": "Hit by pitch", "wicket": "Wicket", "runs": "Runs", "dot": "Dot ball"},
+      zones: {"top-left-corner": "Top left corner", "top-shelf": "Top shelf", "top-centre": "Top centre", "top-right-corner": "Top right corner", "mid-left": "Left side", "centre": "Centre", "mid-right": "Right side", "bottom-left-corner": "Bottom left corner", "five-hole": "Five-hole", "bottom-centre": "Bottom centre", "bottom-right-corner": "Bottom right corner", "wide-left": "Wide left", "wide-right": "Wide right", "over-the-bar": "Over the bar", "zone-1": "Zone 1", "zone-2": "Zone 2", "zone-3": "Zone 3", "zone-4": "Zone 4", "zone-5": "Zone 5", "zone-6": "Zone 6", "zone-7": "Zone 7", "zone-8": "Zone 8", "zone-9": "Zone 9", "zone-11": "Zone 11, high and left", "zone-12": "Zone 12, high and right", "zone-13": "Zone 13, low and left", "zone-14": "Zone 14, low and right", "outside": "Outside the zones", "outside-left": "Outside, left of the stumps", "on-stumps": "On the stumps", "over-stumps": "Over the stumps", "outside-right": "Outside, right of the stumps"},
+      lengths: {"yorker": "Yorker length", "full": "Full length", "good-length": "Good length", "short-of-a-length": "Short of a length", "short": "Short"},
+      pitches: "pitches",
+      deliveries: "deliveries",
+      numbers: "pitch numbers",
+    },
   },
   // The Japanese of athletics and skating is each governing body's own word where its rule book has one (read 2026-10-14; the pages and files are in docs/references.md).
   // Athletics, 日本陸上競技連盟 競技規則 2026年度版 (JAAF; the World Athletics Technical Rules in Japanese) and 陸上競技場公認に関する細則:
@@ -1469,7 +1510,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       "offensive-zone": "アタッキングゾーン",
       "crease": "ゴールクリース",
       "trapezoid": "ゴールキーパーのトラペゾイド",
-      "behind-goal-line": "ゴールラインの後ろ",
+      "behind-goal-line": "ゴール裏",
       "inner-slot": "インナースロット",
       "outer-slot": "アウタースロット",
       "slot": "スロット",
@@ -1478,11 +1519,11 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       "frontcourt": "フロントコート",
       "backcourt": "バックコート",
       "restricted-area": "リストリクテッドエリア",
-      "paint": "ペイントエリア（キー）",
+      "paint": "ペイントエリア",
       "mid-range": "ミッドレンジ",
-      "corner-three-left": "左コーナーのスリー",
-      "corner-three-right": "右コーナーのスリー",
-      "above-the-break": "アバブ・ザ・ブレイクのスリー",
+      "corner-three-left": "左コーナースリー",
+      "corner-three-right": "右コーナースリー",
+      "above-the-break": "アバブ・ザ・ブレイク・スリー",
       "three-point": "スリーポイントエリア",
       "defensive-third": "ディフェンディングサード",
       "middle-third": "ミドルサード",
@@ -1519,6 +1560,24 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       "between-the-hashes": "ハッシュマークの間",
       "outside-hashes-left": "ハッシュマークの外側（左）",
       "outside-hashes-right": "ハッシュマークの外側（右）",
+    },
+    target: {
+      sports: {"nhl": "アイスホッケーのゴール", "soccer": "サッカーのゴール", "handball": "ハンドボールのゴール", "waterpolo": "水球のゴール", "lacrosse": "ラクロスのゴール", "fieldhockey": "フィールドホッケーのゴール", "cricket": "ウィケット", "mlb": "ストライクゾーン"},
+      titleGoal: "ゴールマウス（{name}）：シュートがゴールラインを通過した位置",
+      descGoal: "{name}（幅{w}×高さ{h}{unit}）を正面から見た図です。図の左側は、シュートを打つ選手から見た左側です。",
+      titleStrike: "ストライクゾーン：投球がホームプレートを通過した位置",
+      descStrike: "捕手の位置から見たストライクゾーンです。ホームプレートの幅は{w}インチ、ゾーンの高さは地面から{bottom}〜{top}フィートです。打者は図の{side}側に立ちます。",
+      titleStumps: "スタンプ：投球がウィケットに到達した位置",
+      descStumps: "ボウラー側から見たスタンプです。3本のスタンプの幅は9インチ（22.86cm）、高さは28インチ（71.12cm）で、ベイルが載っています。",
+      left: "左",
+      right: "右",
+      units: {"m": "メートル", "ft": "フィート", "in": "インチ", "cm": "センチメートル", "yd": "ヤード"},
+      outcomes: {"goal": "ゴール", "saved": "セーブ", "post": "ポスト", "crossbar": "クロスバー", "wide": "枠外（横）", "high": "枠外（上）", "blocked": "ブロック", "shot": "シュート", "missed": "外れ", "ball": "ボール", "called-strike": "見逃しストライク", "swinging-strike": "空振りストライク", "foul": "ファウル", "in-play": "インプレー", "hit-by-pitch": "死球", "wicket": "ウィケット", "runs": "得点", "dot": "ドットボール"},
+      zones: {"top-left-corner": "左上隅", "top-shelf": "トップシェルフ（ネット上部）", "top-centre": "上段中央", "top-right-corner": "右上隅", "mid-left": "左側", "centre": "中央", "mid-right": "右側", "bottom-left-corner": "左下隅", "five-hole": "ファイブホール（パッドの間）", "bottom-centre": "下段中央", "bottom-right-corner": "右下隅", "wide-left": "枠外（左）", "wide-right": "枠外（右）", "over-the-bar": "バーの上", "zone-1": "ゾーン1", "zone-2": "ゾーン2", "zone-3": "ゾーン3", "zone-4": "ゾーン4", "zone-5": "ゾーン5", "zone-6": "ゾーン6", "zone-7": "ゾーン7", "zone-8": "ゾーン8", "zone-9": "ゾーン9", "zone-11": "ゾーン11（左高め）", "zone-12": "ゾーン12（右高め）", "zone-13": "ゾーン13（左低め）", "zone-14": "ゾーン14（右低め）", "outside": "ゾーンの外", "outside-left": "スタンプの左外", "on-stumps": "スタンプのライン上", "over-stumps": "スタンプの上方", "outside-right": "スタンプの右外"},
+      lengths: {"yorker": "ヨーカー", "full": "フルレングス", "good-length": "グッドレングス", "short-of-a-length": "ショート・オブ・ア・レングス", "short": "ショート"},
+      pitches: "投球",
+      deliveries: "投球",
+      numbers: "投球番号",
     },
   },
 };

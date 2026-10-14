@@ -140,11 +140,15 @@ describe("a 50 by 30 grid", () => {
       const data = cloud(sport, 3000, 5);
       const base = drawKyogijo({ sport, id: "g" });
       const t0 = performance.now();
-      const plain = drawKyogijo({ sport, id: "g", layers: [{ kind: "heatmap", data, bins: [50, 30] }] });
+      const plain = drawKyogijo({ sport, id: "g", layers: [{ kind: "heatmap", data, bins: [50, 30], marks: false }] });
       const took = performance.now() - t0;
-      const full = drawKyogijo({ sport, id: "g", layers: [{ kind: "heatmap", data, bins: [50, 30], labels: true, legend: true }] });
+      const full = drawKyogijo({ sport, id: "g", layers: [{ kind: "heatmap", data, bins: [50, 30], labels: true, legend: true, marks: false }] });
       expect(plain.length - base.length).toBeLessThan(30_000);
       expect(full.length - base.length).toBeLessThan(100_000);
+      // With a path for each cell, so that a pointer can tell which one it is on: about 50 bytes a cell more, 1,500 cells.
+      const pointable = drawKyogijo({ sport, id: "g", layers: [{ kind: "heatmap", data, bins: [50, 30] }] });
+      expect(pointable.length - base.length).toBeLessThan(90_000);
+      expect(pointable).toContain('data-index="0"');
       // The documented budget is 20 ms on a laptop; the test allows for a busy machine.
       expect(took).toBeLessThan(400);
     });
@@ -408,7 +412,7 @@ describe("hexagons and contours", () => {
     const pointy = drawKyogijo({ sport: "nhl", id: "h", layers: [{ kind: "hexbin", data, size: 4 }] });
     const flat = drawKyogijo({ sport: "nhl", id: "h", layers: [{ kind: "hexbin", data, size: 4, orientation: "flat" }] });
     expect(pointy).not.toBe(flat);
-    const path = /<path style="fill:[^"]+" d="(M[^"]+)"\/>/.exec(pointy)![1];
+    const path = /<g style="fill:[^"]+"><path d="(M[^"]+)"/.exec(pointy)![1];
     const first = path.split("z")[0];
     expect((first.match(/l/g) ?? []).length).toBe(5);
     expect(first).toMatch(/^M[-\d. ]+(l[-\d. ]+){5}$/);
