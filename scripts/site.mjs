@@ -212,7 +212,7 @@ const page = `<!doctype html>
           <div class="try-controls">
             <details class="fam-fold group" open>
               <summary data-say="groupSurface"></summary>
-              ${seg("sport", "sport", "Choose the surface: three football fields (NFL, CFL, IFAF), a hockey rink, a basketball court, a baseball field, a soccer pitch, a curling sheet, the court of tennis, volleyball, badminton, pickleball, table tennis, padel, squash, racquetball, sepak takraw, teqball, roundnet or netball, or the field of lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey or handball.", "競技場を選びます。アメリカンフットボール場3種類（NFL・CFL・IFAF）、アイスホッケーのリンク、バスケットボールのコート、野球場、サッカーのピッチ、カーリングのシート、テニス・バレーボール・バドミントン・ピックルボール・パデル・スカッシュ・ラケットボール・セパタクロー・テックボール・ラウンドネット・ネットボールのコート、卓球台のほか、ラクロス、ラグビー、オーストラリアンフットボール、ゲーリック・ゲームズ、クリケット、フィールドホッケーのフィールド、ハンドボールのコートから選べます。")}
+              ${seg("sport", "sport", "Choose the surface: three football fields (NFL, CFL, IFAF), a hockey rink, a basketball court, a baseball field, a soccer pitch, a curling sheet, the court of tennis, volleyball, badminton, pickleball, table tennis, padel, squash, racquetball, sepak takraw, teqball, roundnet or netball, or the field of lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey or handball, or the pool of swimming, water polo, diving or artistic swimming.", "競技場を選びます。アメリカンフットボール場3種類（NFL・CFL・IFAF）、アイスホッケーのリンク、バスケットボールのコート、野球場、サッカーのピッチ、カーリングのシート、テニス・バレーボール・バドミントン・ピックルボール・パデル・スカッシュ・ラケットボール・セパタクロー・テックボール・ラウンドネット・ネットボールのコート、卓球台のほか、ラクロス、ラグビー、オーストラリアンフットボール、ゲーリック・ゲームズ、クリケット、フィールドホッケーのフィールド、ハンドボールのコート、競泳・水球・飛込・アーティスティックスイミングのプールから選べます。")}
               <div class="setup fam-row" id="league-row"${hid("league-row")} ${help("Choose the league whose rulebook marks the surface: FIBA, the WNBA or the NCAA for the court; the IIHF, the NCAA, the AHL or the CHL for the rink; the NCAA, the high schools or arena football for the field; Little League, PONY or softball for the diamond; World Curling or Curling Canada for the sheet; beach volleyball for the volleyball court. Each is drawn from its own rulebook.", "どのリーグのルールブックに沿って描くかを選びます。コートならFIBA・WNBA・NCAA、リンクならIIHF・NCAA・AHL・CHL、フィールドならNCAA・全米高校連盟（NFHS）・インドアフットボール、野球場とソフトボール場ならリトルリーグ・PONY・USAソフトボール、カーリングのシートならワールドカーリングやカーリング・カナダ、バレーボールのコートならビーチバレーボールなど。どれもそのリーグ自身のルールブックに基づいて描きます。")}>
                 <span class="fam-label" data-say="leagueLabel"></span>
                 <select class="fam-field" id="league" data-testid="league" data-say-label="leagueLabel"></select>
@@ -293,6 +293,16 @@ const page = `<!doctype html>
               </div>
               <div id="curling-group"${hid("curling-group")}>
                 ${seg("sheet", "sheet", "Show the whole sheet, only its top house or only its bottom house (the hog line to the back line), or fold it: the whole sheet as a strip with both houses enlarged beside it, so that the drawing fills a square. A drawing with teams always shows the whole sheet.", "シート全体、上のハウスだけ、下のハウスだけ（どちらもホッグラインからバックラインまで）、または折りたたみ表示を選びます。折りたたみ表示では、シート全体を細長い帯にして中央に置き、両端のハウスを拡大して並べるので、図がほぼ正方形に収まります。チームを載せた図では常にシート全体を表示します。")}
+              </div>
+              <div id="pool-group"${hid("pool-group")}>
+                ${seg("pool-look", "poolLook", "How the water is painted: one flat colour, a faint net of light on the floor (the same light every time), or the light with the tiles of the floor.", "水面の描き方を、1色のフラット、床に映る光の網目（毎回同じ模様）、光に床のタイルを加えたものから選びます。")}
+                ${seg("pool-deck", "poolDeck", "The deck round the pool, plain or tiled.", "プールの周りのデッキを、無地かタイル張りから選びます。")}
+                <div id="swim-group"${hid("swim-group")}>
+                  ${seg("pool-course", "poolCourse", "The long course of 50 metres or the short course of 25 metres.", "長水路（50m）か短水路（25m）を選びます。")}
+                  ${seg("pool-lanes", "poolLanes", "How many lanes: six, eight (the Olympic Games) or ten (the World Championships, lanes 0 to 9).", "コース数を選びます。6、8（オリンピック）、10（世界選手権。コース0〜9）です。")}
+                  ${seg("pool-race", "poolRace", "A made-up race on the pool: none, the results with places, times, reaction times and splits, or the split pace bars.", "プールに架空のレースを載せます。なし、順位・タイム・反応時間・スプリットを載せた結果、スプリットのペースの棒から選べます。")}
+                  <div class="setup fam-row" ${help("A side section under the plan: the depth, the blocks, the flags and the false start rope.", "平面図の下に断面図を付けます。水深、スタート台、バックストロークフラッグ、フォルススタートロープを示します。")}>${toggle("pool-section", "poolSection")}</div>
+                </div>
               </div>
               <div id="court-group"${hid("court-group")}>
                 ${seg("court", "court", "Five looks for the basketball court, in plain colours: the paint, the border, the wood and the words on the baselines.", "バスケットボールのコートの見た目を5種類から選べます。無地の色で、ペイント、縁取り、床の木目、ベースラインの文字を変えます。")}
@@ -423,6 +433,12 @@ const page = `<!doctype html>
         <div class="cards" id="chart-cards" data-testid="chart-cards"></div>
       </section>
 
+      <section class="more" id="pools" aria-labelledby="pools-title">
+        <h2 id="pools-title" data-say="poolsTitle"></h2>
+        <p data-say="poolsText"></p>
+        <div class="cards cards-pair" id="pool-cards" data-testid="pool-cards"></div>
+      </section>
+
       <section class="more" id="road" aria-labelledby="road-title">
         <h2 id="road-title" data-say="roadTitle"></h2>
         <p data-say="roadText"></p>
@@ -448,6 +464,7 @@ const page = `<!doctype html>
         <div class="replay-grid" data-testid="replay-cards">
           <figure class="card"><div class="card-stage" id="replay-rink" data-testid="replay-rink"></div><figcaption data-say="replayRink"></figcaption></figure>
           <figure class="card"><div class="card-stage" id="replay-pitch" data-testid="replay-pitch"></div><figcaption data-say="replayPitch"></figcaption></figure>
+          <figure class="card"><div class="card-stage" id="replay-pool" data-testid="replay-pool"></div><figcaption data-say="replayPool"></figcaption></figure>
           <figure class="card"><kyogijo-field id="replay-element" data-testid="replay-element" sport="nhl" loop speed="2" language="en"></kyogijo-field><figcaption data-say="replayElement"></figcaption></figure>
         </div>
       </section>

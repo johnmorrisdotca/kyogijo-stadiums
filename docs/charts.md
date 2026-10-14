@@ -1,6 +1,6 @@
 # Ready-made charts
 
-`@johnmorrisdotca/kyogijo-stadiums/charts` has one function for each of six charts, `passNetwork` for a seventh, which [Team shape](./team-shape.md#pass-networks) describes, `curlingHeat` for an eighth, which [Curling](./curling.md#where-the-stones-of-many-ends-came-to-rest) describes with the statistics beside `curlingScore`, and `roadToFinal` for a ninth that is not drawn on a surface at all: [the road to the final](#the-road-to-the-final). Each takes plain data and returns the [data layers](./layers.md) and the drawing options to lay them on, so one call gives a good chart and every layer can still be changed.
+`@johnmorrisdotca/kyogijo-stadiums/charts` has one function for each of seven charts (`splitsChart` for a swimming race among them), `passNetwork` for an eighth, which [Team shape](./team-shape.md#pass-networks) describes, `curlingHeat` for an eighth, which [Curling](./curling.md#where-the-stones-of-many-ends-came-to-rest) describes with the statistics beside `curlingScore`, and `roadToFinal` for a ninth that is not drawn on a surface at all: [the road to the final](#the-road-to-the-final). Each takes plain data and returns the [data layers](./layers.md) and the drawing options to lay them on, so one call gives a good chart and every layer can still be changed.
 
 | Function | Chart | Reads |
 | --- | --- | --- |
@@ -195,6 +195,29 @@ console.log(mouth.placed, mouth.skipped, chart.options.half, chart.options.pitch
 ```
 
 `soccerGoalMouth(shots, options)` makes the view without the map. The goal is the Laws' 7.32 by 2.44 metres unless `goal` says another, the marks are in metres from the centre and up, and the view has its own table.
+
+## The splits of a race
+
+`splitsChart(race, options)` lays the splits of a swimming race out as pace bars in the lanes of a pool: each lane is the whole race laid out flat, from the start at the left to the finish at the right, each split a bar as long as its share of the race, in a colour from the field's slowest split (dark) to its fastest (bright), with the split's time on it. A 200 m race in a 50 m pool is swum along the lane and back; the chart lays it straight so that the four splits can be compared in one look. `race` is `pool.race` of the [pools](./pools.md#the-lanes-of-a-race): the swimmers with their lanes, names, flags and cumulative splits, one every 50 m (every 25 m in a short course pool). `options` are a chart's own (`language`, `id`, `surface`) and `pool` (`course`, `lanes`, `look`, `deck`), and `labels: false` leaves the times off the bars.
+
+```ts
+import { splitsChart } from "@johnmorrisdotca/kyogijo-stadiums/charts";
+
+const chart = splitsChart({
+  event: "Men's 100 m freestyle, final",
+  distance: 100,
+  swimmers: [
+    { lane: 4, name: "A. Swimmer", splits: [25.1, 52.4] },
+    { lane: 5, name: "B. Swimmer", splits: [25.6, 52.9] },
+  ],
+});
+console.log(chart.title, "|", chart.totals.fastest?.name, chart.totals.fastest?.pace, chart.totals.slowest?.pace);
+console.log(chart.draw().includes("A. Swimmer"), chart.table().includes('data-kind="splits"'));
+// Split pace, Men's 100 m freestyle, final | A. Swimmer 50.2 54.6
+// true true
+```
+
+`chart.totals` has the swimmers, the distance, each swimmer's splits (the seconds, the cumulative time and the pace in seconds per 100 m) and the fastest and the slowest split of the field. `chart.table()` is an HTML table of every split with its pace, for a reader who cannot see the bars; the chart has no `layers`, because the pace bars are the pool's own. The same bars, with the lanes' names and results, are `pool: { race: { pace: true } }` in `drawKyogijo`.
 
 ## The road to the final
 

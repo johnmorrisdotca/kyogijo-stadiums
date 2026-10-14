@@ -47,11 +47,11 @@ export type { Family, LeagueSpan, Named } from "./leagues/types.ts";
 export type League = BasketballLeague | HockeyLeague | FootballLeague | BaseballLeague | CurlingLeague | NetLeague | LacrosseLeague | RugbyLeague | AflLeague | GaelicLeague | CricketLeague | FieldHockeyLeague | HandballLeague;
 
 /** The family of surface each sport draws; soccer's variants are its pitches (`pitch`), not leagues. */
-export const FAMILY_OF: Readonly<Record<Sport, Family | undefined>> = Object.freeze({ nfl: "football", cfl: "football", ifaf: "football", nhl: "hockey", nba: "basketball", mlb: "baseball", soccer: undefined, curling: "curling", tennis: "tennis", volleyball: "volleyball", badminton: "badminton", pickleball: "pickleball", tabletennis: "tabletennis", padel: "padel", squash: "squash", racquetball: "racquetball", sepaktakraw: "sepaktakraw", teqball: "teqball", roundnet: "roundnet", netball: "netball", lacrosse: "lacrosse", rugby: "rugby", afl: "afl", gaelic: "gaelic", cricket: "cricket", fieldhockey: "fieldhockey", handball: "handball" });
+export const FAMILY_OF: Readonly<Record<Sport, Family | undefined>> = Object.freeze({ nfl: "football", cfl: "football", ifaf: "football", nhl: "hockey", nba: "basketball", mlb: "baseball", soccer: undefined, curling: "curling", tennis: "tennis", volleyball: "volleyball", badminton: "badminton", pickleball: "pickleball", tabletennis: "tabletennis", padel: "padel", squash: "squash", racquetball: "racquetball", sepaktakraw: "sepaktakraw", teqball: "teqball", roundnet: "roundnet", netball: "netball", lacrosse: "lacrosse", rugby: "rugby", afl: "afl", gaelic: "gaelic", cricket: "cricket", fieldhockey: "fieldhockey", handball: "handball", swimming: undefined, waterpolo: undefined, diving: undefined, artisticswimming: undefined });
 
 /**
  * The leagues each sport can draw, in the order a menu lists them, the sport's own first (the three football sports share their
- * list, the football leagues). Soccer has none.
+ * list, the football leagues). Soccer and the pools have none.
  */
 export const LEAGUES: Readonly<Record<Sport, readonly League[]>> = Object.freeze({
   nba: BASKETBALL_LEAGUES,
@@ -81,6 +81,11 @@ export const LEAGUES: Readonly<Record<Sport, readonly League[]>> = Object.freeze
   cricket: CRICKET_LEAGUES,
   fieldhockey: FIELD_HOCKEY_LEAGUES,
   handball: HANDBALL_LEAGUES,
+  // The pools have one rulebook, World Aquatics', and no leagues.
+  swimming: [],
+  waterpolo: [],
+  diving: [],
+  artisticswimming: [],
 });
 
 /** Every league of every family, once each. */

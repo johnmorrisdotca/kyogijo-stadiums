@@ -37,7 +37,7 @@ export const TEAMS_JA = {
   net: { away: "港町ガルズ", home: "草原バイソンズ" },
 };
 
-export const FAMILIES = { nfl: "football", cfl: "football", ifaf: "football", nhl: "hockey", nba: "basketball", mlb: "baseball", soccer: "soccer", curling: "curling", tennis: "net", volleyball: "net", badminton: "net", pickleball: "net", tabletennis: "net", padel: "net", squash: "net", racquetball: "net", sepaktakraw: "net", teqball: "net", roundnet: "net", netball: "net", lacrosse: "football", rugby: "football", afl: "football", gaelic: "football", cricket: "football", fieldhockey: "football", handball: "football" };
+export const FAMILIES = { nfl: "football", cfl: "football", ifaf: "football", nhl: "hockey", nba: "basketball", mlb: "baseball", soccer: "soccer", curling: "curling", tennis: "net", volleyball: "net", badminton: "net", pickleball: "net", tabletennis: "net", padel: "net", squash: "net", racquetball: "net", sepaktakraw: "net", teqball: "net", roundnet: "net", netball: "net", lacrosse: "football", rugby: "football", afl: "football", gaelic: "football", cricket: "football", fieldhockey: "football", handball: "football", swimming: "football", waterpolo: "football", diving: "football", artisticswimming: "football" };
 
 /** Typical scores and a competition line for each sport. */
 export const GAMES = {
@@ -70,4 +70,9 @@ export const GAMES = {
   cricket: { away: 245, home: 187, status: "final", competition: "Final", date: "Nov 19", awayExtra: { wickets: 6, overs: "50", innings: [245] }, homeExtra: { wickets: 10, overs: "41.2", innings: [187] } },
   fieldhockey: { away: 3, home: 2, status: "final", competition: "Final", date: "Aug 8" },
   handball: { away: 28, home: 26, status: "final", competition: "Final", date: "Aug 10" },
+  // The pools: a water polo match, and the points of a dual meet (swimming, diving and artistic swimming are scored by the points of the meet).
+  swimming: { away: 146, home: 154, status: "final", competition: "Dual meet", date: "Feb 14" },
+  waterpolo: { away: 9, home: 11, status: "final", competition: "Quarter-final", date: "Aug 9" },
+  diving: { away: 146, home: 154, status: "final", competition: "Dual meet", date: "Feb 14" },
+  artisticswimming: { away: 146, home: 154, status: "final", competition: "Team event", date: "Aug 7" },
 };

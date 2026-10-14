@@ -10,6 +10,7 @@ import { ICC_MEN_GROUND } from "./leagues/cricket.ts";
 import { FIH_PITCH } from "./leagues/fieldhockey.ts";
 import { GAA_FOOTBALL_FIELD } from "./leagues/gaelic.ts";
 import { IHF_COURT } from "./leagues/handball.ts";
+import { ARTISTIC, DIVING, SWIMMING, SWIMMING_WIDTHS, WATER_POLO } from "./pool.figures.ts";
 import { WORLD_MEN_FIELD } from "./leagues/lacrosse.ts";
 import { WORLD_RUGBY_FIELD } from "./leagues/rugby.ts";
 import type { Sport } from "./types.ts";
@@ -392,6 +393,23 @@ export function surfaceSize(sport: SizedSport, unit: Unit = SURFACE_UNITS[sport]
       length = convertLength(IHF_COURT.length.drawn, "m", "ft");
       width = convertLength(IHF_COURT.width.drawn, "m", "ft");
       break;
+    // The pools, as drawn without options: the 50 by 25 m pool of eight lanes, the water polo pool (the field and the 0.30 m behind each goal line), a diving well and the Olympic artistic swimming area.
+    case "swimming":
+      length = convertLength(SWIMMING.longCourse, "m", "ft");
+      width = convertLength(SWIMMING_WIDTHS.permanent, "m", "ft");
+      break;
+    case "waterpolo":
+      length = convertLength(WATER_POLO.length + 2 * WATER_POLO.goal.netClear, "m", "ft");
+      width = convertLength(WATER_POLO.width, "m", "ft");
+      break;
+    case "diving":
+      length = convertLength(DIVING.well.length, "m", "ft");
+      width = convertLength(DIVING.well.width, "m", "ft");
+      break;
+    case "artisticswimming":
+      length = convertLength(ARTISTIC.olympic.length, "m", "ft");
+      width = convertLength(ARTISTIC.olympic.width, "m", "ft");
+      break;
     default:
       throw new Error(`No fixed size for "${String(sport)}": a ballpark's size is its fence`);
   }
@@ -427,6 +445,10 @@ export function dimensionsOf(sport: "gaelic", unit?: Unit): Scaled<typeof GAA_FO
 export function dimensionsOf(sport: "cricket", unit?: Unit): Scaled<typeof ICC_MEN_GROUND>;
 export function dimensionsOf(sport: "fieldhockey", unit?: Unit): Scaled<typeof FIH_PITCH>;
 export function dimensionsOf(sport: "handball", unit?: Unit): Scaled<typeof IHF_COURT>;
+export function dimensionsOf(sport: "swimming", unit?: Unit): Scaled<typeof SWIMMING>;
+export function dimensionsOf(sport: "waterpolo", unit?: Unit): Scaled<typeof WATER_POLO>;
+export function dimensionsOf(sport: "diving", unit?: Unit): Scaled<typeof DIVING>;
+export function dimensionsOf(sport: "artisticswimming", unit?: Unit): Scaled<typeof ARTISTIC>;
 export function dimensionsOf(sport: Sport, unit?: Unit): unknown;
 export function dimensionsOf(sport: Sport, unit: Unit = SURFACE_UNITS[sport]): unknown {
   switch (sport) {
@@ -484,6 +506,15 @@ export function dimensionsOf(sport: Sport, unit: Unit = SURFACE_UNITS[sport]): u
       return lengthsIn(FIH_PITCH, unit, "m");
     case "handball":
       return lengthsIn(IHF_COURT, unit, "m");
+    // The pools' figures, kept in metres as World Aquatics prints them.
+    case "swimming":
+      return lengthsIn(SWIMMING, unit, "m");
+    case "waterpolo":
+      return lengthsIn(WATER_POLO, unit, "m");
+    case "diving":
+      return lengthsIn(DIVING, unit, "m");
+    case "artisticswimming":
+      return lengthsIn(ARTISTIC, unit, "m");
     default:
       throw new Error(`Unknown sport "${String(sport)}"`);
   }

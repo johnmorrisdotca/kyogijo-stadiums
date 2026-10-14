@@ -7,7 +7,7 @@
 const MAIN = "@johnmorrisdotca/kyogijo-stadiums";
 
 const UNIT_WORDS = { ft: "feet", yd: "yards", m: "metres", cm: "centimetres", in: "inches", mm: "millimetres", px: "pixels", "tenth-ft": "tenths of a foot", percent: "percent of the pitch", fraction: "fractions of the pitch" };
-const SPORT_NAMES = { nfl: "NFL", cfl: "CFL", ifaf: "IFAF", nhl: "NHL", nba: "NBA", mlb: "MLB", soccer: "soccer", curling: "curling", tennis: "tennis", volleyball: "volleyball", badminton: "badminton", pickleball: "pickleball", tabletennis: "table tennis", padel: "padel", squash: "squash", racquetball: "racquetball", sepaktakraw: "sepak takraw", teqball: "teqball", roundnet: "roundnet", netball: "netball", lacrosse: "lacrosse", rugby: "rugby", afl: "Australian football", gaelic: "Gaelic games", cricket: "cricket", fieldhockey: "field hockey", handball: "handball" };
+const SPORT_NAMES = { nfl: "NFL", cfl: "CFL", ifaf: "IFAF", nhl: "NHL", nba: "NBA", mlb: "MLB", soccer: "soccer", curling: "curling", tennis: "tennis", volleyball: "volleyball", badminton: "badminton", pickleball: "pickleball", tabletennis: "table tennis", padel: "padel", squash: "squash", racquetball: "racquetball", sepaktakraw: "sepak takraw", teqball: "teqball", roundnet: "roundnet", netball: "netball", lacrosse: "lacrosse", rugby: "rugby", afl: "Australian football", gaelic: "Gaelic games", cricket: "cricket", fieldhockey: "field hockey", handball: "handball", swimming: "swimming", waterpolo: "water polo", diving: "diving", artisticswimming: "artistic swimming" };
 const ENDS = { fixed: "fixed to the surface", shooter: "the basket or house attacked", none: "none" };
 const cell = (text) => String(text).replace(/\|/g, "\\|").replace(/\n/g, " ");
 const num = (n) => String(Math.round(n * 100) / 100);
@@ -79,7 +79,7 @@ export function limitsTable(lib) {
       ["Formations", `${Object.keys(FORMATIONS).length} named formations of 5 sports, ${Object.values(FORMATIONS).reduce((n, f) => n + f.positions.length, 0)} places in all`, "`FORMATIONS`"],
       ["The team layers", "a Voronoi diagram of 22 players adds under 12 kB; 1,000 points are triangulated in under 600 ms; a pass network of 600 passes adds under 16 kB", "`voronoi`, `delaunay`, `network`"],
       ["A layer's marks", "1,000 points add under 70 kB; 10,000 draw in under 250 ms", "`drawKyogijo`"],
-      ["A drawing's size", "under 22 kB for a football field, 15 kB for a soccer pitch with a score, 14 kB for a rink or a court, 17 kB for a ballpark, 17.5 kB for a curling sheet, a net sport's court with its board or a field sport's surface with its score, each with its 8 kB stylesheet (a test holds each)", "`drawKyogijo`"],
+      ["A drawing's size", "under 22 kB for a football field, 15 kB for a soccer pitch with a score, 14 kB for a rink or a court, 17 kB for a ballpark, 17.5 kB for a curling sheet, a net sport's court with its board or a field sport's surface with its score, 19 kB for a swimming pool, 17.5 kB for a water polo pool, 15.5 kB for a diving well and 14 kB for an artistic swimming area, each with its 8 to 10 kB stylesheet (a test holds each)", "`drawKyogijo`"],
     ],
   );
 }
@@ -113,6 +113,10 @@ const RANGE_COVERS = {
   cricket: { pitch: "the pitch with its creases and wickets, and a little ground round it", circle: "the fielding restriction's circle (the ICC's leagues)" },
   fieldhockey: { half: "from a back-line to the centre line", circle: "the circle at one end", "twenty-three": "from a back-line to the 23-metre line" },
   handball: { half: "from a goal line to the centre line", "goal-area": "the goal area at one end, with its arc" },
+  swimming: { half: "from an end wall to the middle of the pool", "pool-end": "from an end wall to the 15 m mark" },
+  waterpolo: { half: "from a goal line to the half distance line", "goal-area": "the goal area at one end: from the goal line to the 2 m line" },
+  diving: { springboards: "the side of the well the 1 and 3 m springboards are on", platforms: "the side of the well the platforms are on" },
+  artisticswimming: { half: "from an end of the pool to its middle", "centre-stage": "the middle third of the pool, where the athletes enter" },
 };
 
 /** Every named range of every sport, one row each (sports that share their ranges share their rows): what it shows and the end it is at by default. */

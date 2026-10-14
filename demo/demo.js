@@ -13,6 +13,8 @@ import { gameOf as gameFor, teamOf } from "./games.js";
 import { nbaZones, passMap, shotHeat, shotMap, sprayChart, sprayDensity, touchZones } from "./layers-data.js";
 import { mlbBalls, nbaShots, nflPasses, nhlShots, soccerShots } from "./charts-data.js";
 import { replayPlay } from "./replay-data.js";
+import { poolRace, shortRace } from "./pool-data.js";
+import { raceTimeline } from "./dist/replay-entry.js";
 import { ROAD_FINAL, SERIES_LABELS, SERIES_LABELS_JA, nation, roadFinalists, roadSeries } from "./road-data.js";
 import { roadToFinal } from "./dist/charts-entry.js";
 import { mlbSprayChart, nbaShotChart, nflPassChart, nhlShotMap, soccerShotMap } from "./dist/charts-entry.js";
@@ -109,6 +111,11 @@ makeSeg("detail", (v) => { state.detail = v; });
 makeSeg("pageant", (v) => { state.pageant = v; });
 makeSeg("pageant-lines", (v) => { state.pageantLines = v; });
 makeSeg("court", (v) => { state.court = v; });
+makeSeg("pool-look", (v) => { state.poolLook = v; });
+makeSeg("pool-deck", (v) => { state.poolDeck = v; });
+makeSeg("pool-course", (v) => { state.poolCourse = v; });
+makeSeg("pool-lanes", (v) => { state.poolLanes = v; });
+makeSeg("pool-race", (v) => { state.poolRace = v; });
 makeSeg("pattern", (v) => { state.pattern = v; });
 makeSeg("goals", (v) => { state.goals = v; });
 makeSeg("half", (v) => { state.half = v; });
@@ -150,7 +157,7 @@ function renderEra() {
 function toggle(id, key) {
   $(id).addEventListener("click", () => { state[key] = !state[key]; $(id).setAttribute("aria-pressed", String(state[key])); change(); });
 }
-for (const [id, key] of [["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["crowd", "crowd"], ["crowd-tifo", "crowdTifo"], ["flags", "flags"], ["pageant-emblem", "pageantEmblem"], ["pageant-entrance", "pageantEntrance"]]) toggle(id, key);
+for (const [id, key] of [["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["crowd", "crowd"], ["crowd-tifo", "crowdTifo"], ["flags", "flags"], ["pageant-emblem", "pageantEmblem"], ["pageant-entrance", "pageantEntrance"], ["pool-section", "poolSection"]]) toggle(id, key);
 
 function fillFields() {
   for (const field of FIELDS) {
@@ -306,7 +313,7 @@ function render() {
   }
   renderEra();
   applyRows();
-  for (const toggleOf of [["flags", "flags"], ["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["crowd", "crowd"], ["crowd-tifo", "crowdTifo"], ["pageant-emblem", "pageantEmblem"], ["pageant-entrance", "pageantEntrance"]]) $(toggleOf[0]).setAttribute("aria-pressed", String(state[toggleOf[1]]));
+  for (const toggleOf of [["flags", "flags"], ["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["crowd", "crowd"], ["crowd-tifo", "crowdTifo"], ["pageant-emblem", "pageantEmblem"], ["pageant-entrance", "pageantEntrance"], ["pool-section", "poolSection"]]) $(toggleOf[0]).setAttribute("aria-pressed", String(state[toggleOf[1]]));
   $("crowd-density").value = String(state.crowdDensity);
   $("crowd-density-out").textContent = `${state.crowdDensity}%`;
   updateEmbed();
@@ -320,7 +327,7 @@ function syncUrl() {
   else q.delete("year");
   if (state.league !== null && !isOwnLeague(state.sport, state.league)) q.set("league", state.league);
   else q.delete("league");
-  for (const [key, value, base] of [["pitch", state.pitch, "fifa"], ["ground", state.ground, "none"], ["pitchtype", state.pitchType, "none"], ["park", state.park, "generic"], ["sheet", state.sport === "curling" ? state.sheet : "sheet", "sheet"], ["size", state.size, "full"], ["orientation", state.orientation, "auto"], ["view", state.view, "flat"], ["viewpoint", state.view === "3d" ? state.viewpoint : "corner", "corner"], ["theme", state.theme, "auto"], ["pageant", state.pageant, "off"], ["pageantlines", state.pageantLines, "over"]]) {
+  for (const [key, value, base] of [["pitch", state.pitch, "fifa"], ["ground", state.ground, "none"], ["pitchtype", state.pitchType, "none"], ["park", state.park, "generic"], ["sheet", state.sport === "curling" ? state.sheet : "sheet", "sheet"], ["size", state.size, "full"], ["orientation", state.orientation, "auto"], ["view", state.view, "flat"], ["viewpoint", state.view === "3d" ? state.viewpoint : "corner", "corner"], ["theme", state.theme, "auto"], ["pageant", state.pageant, "off"], ["pageantlines", state.pageantLines, "over"], ["poollook", state.poolLook, "flat"], ["pooldeck", state.poolDeck, "plain"], ["poolcourse", state.poolCourse, "long"], ["poollanes", state.poolLanes, "8"], ["poolrace", state.poolRace, "none"], ["poolsection", state.poolSection ? "1" : "0", "0"]]) {
     if (value === base) q.delete(key);
     else q.set(key, value);
   }
@@ -366,7 +373,7 @@ function code(kind) {
       for (const [key, attr] of [["status", "status"], ["competition", "competition"], ["date", "date"], ["label", "label"], ["winner", "winner"]]) if (o[key]) attrs.push(`${attr}="${escapeAttr(o[key])}"`);
     }
     // What has no attribute of its own goes in the `options` JSON.
-    const more = { ...(o.court ? { court: o.court } : {}), ...(o.sheet ? { sheet: o.sheet } : {}), ...(o.crowd ? { crowd: o.crowd } : {}), ...(o.pageant ? { pageant: o.pageant } : {}) };
+    const more = { ...(o.court ? { court: o.court } : {}), ...(o.sheet ? { sheet: o.sheet } : {}), ...(o.crowd ? { crowd: o.crowd } : {}), ...(o.pageant ? { pageant: o.pageant } : {}), ...(o.pool ? { pool: o.pool } : {}) };
     if (Object.keys(more).length > 0) attrs.push(`options='${JSON.stringify(more).replace(/'/g, "&#39;")}'`);
     return `<script type="module" src="${CDN}/dist/element-define.js"></script>\n\n<kyogijo-field\n  ${attrs.join("\n  ")}\n></kyogijo-field>`;
   }
@@ -596,6 +603,35 @@ function buildRoad() {
   }
 }
 
+// The Pools section: the four pools, and a made-up race (swimmers and nations that do not exist, flags drawn in code, from pool-data.js) as results, as pace bars, as a start list and tall.
+function pools() {
+  const lang = language.lang;
+  const race = poolRace(lang);
+  const start = shortRace(lang);
+  const startList = { ...start, swimmers: start.swimmers.filter((one) => one.lane <= 6).map(({ lane, name, abbr, flag, seed }) => ({ lane, name, abbr, flag, seed })) };
+  const swim = (id, pool, extra = {}) => ({ sport: "swimming", orientation: "landscape", language: lang, style: "none", id: `pools-${id}`, pool, ...extra });
+  return [
+    ["results", swim("results", { look: "water", race })],
+    ["pace", swim("pace", { look: "water", race: { ...race, pace: true } })],
+    ["start", swim("start", { course: "short", lanes: 6, look: "water", race: startList })],
+    ["tall", swim("tall", { race }, { orientation: "portrait" })],
+    ["hall", swim("hall", { venue: "natatorium", look: "water" })],
+    ["polo", { sport: "waterpolo", orientation: "landscape", language: lang, style: "none", id: "pools-polo", pool: { look: "water" } }],
+    ["dive", { sport: "diving", orientation: "landscape", language: lang, style: "none", id: "pools-dive", pool: { look: "water" } }],
+    ["art", { sport: "artisticswimming", orientation: "landscape", language: lang, style: "none", id: "pools-art", pool: { look: "water" } }],
+  ];
+}
+function buildPools() {
+  const host = $("pool-cards");
+  host.replaceChildren();
+  for (const [key, options] of pools()) {
+    const fig = figure(host, options, say(`pools_${key}`));
+    fig.dataset.pool = key;
+    // The race and the hall are read across the whole row.
+    if (key === "results" || key === "pace" || key === "hall") fig.style.gridColumn = "1 / -1";
+  }
+}
+
 function buildExamples() {
   for (const m of mounts) m.handle?.destroy();
   mounts.length = 0;
@@ -607,6 +643,7 @@ function buildExamples() {
   buildData();
   buildCharts();
   buildRoad();
+  buildPools();
   for (const m of mounts) m.handle = m.make();
   buildBadges();
 }
@@ -669,12 +706,15 @@ const REPLAY_PLAYS = { hockey: replayPlay("hockey", { seconds: 14 }), soccer: re
 const replays = new Map();
 function drawReplays() {
   const lang = language.lang;
-  for (const [id, kind, sport] of [["replay-rink", "hockey", "nhl"], ["replay-pitch", "soccer", "soccer"]]) {
+  // The race: the splits of a made-up 200 m final played as swimmers going down their lanes and back, with a wake behind each.
+  const swum = { look: "water", race: { ...poolRace(lang), show: { results: false, seeds: false, medals: false } } };
+  const plays = { hockey: REPLAY_PLAYS.hockey, soccer: REPLAY_PLAYS.soccer, pool: raceTimeline({ pool: swum }, { language: lang }) };
+  for (const [id, kind, sport] of [["replay-rink", "hockey", "nhl"], ["replay-pitch", "soccer", "soccer"], ["replay-pool", "pool", "swimming"]]) {
     const before = replays.get(id);
     const at = before?.handle.state();
     before?.mount.destroy();
-    const mount = mountKyogijo($(id), { sport, orientation: "landscape", language: lang, style: "none", id: `replay-${kind}` });
-    const handle = mount.replay(REPLAY_PLAYS[kind], at === undefined ? {} : { start: at.t - at.start, speed: at.speed, loop: at.loop });
+    const mount = mountKyogijo($(id), { sport, orientation: "landscape", language: lang, style: "none", id: `replay-${kind}`, ...(kind === "pool" ? { pool: swum } : {}) });
+    const handle = mount.replay(plays[kind], { ...(kind === "pool" ? { trail: 3, trailOf: ["home"] } : {}), ...(at === undefined ? {} : { start: at.t - at.start, speed: at.speed, loop: at.loop }) });
     replays.set(id, { mount, handle });
   }
   const element = $("replay-element");

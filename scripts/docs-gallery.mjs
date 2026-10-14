@@ -84,6 +84,11 @@ const GAA_AWAY = { name: "Harbour City Gulls", abbr: "HCG", goals: 2, points: 14
 const GAA_HOME = { name: "Prairie Ridge Bison", abbr: "PRB", goals: 1, points: 15, color: "#a8452c" };
 const CRICKET_AWAY = { name: "Harbour City Gulls", abbr: "HCG", score: 245, wickets: 6, overs: "50", color: "#1d4f91", innings: [245] };
 const CRICKET_HOME = { name: "Prairie Ridge Bison", abbr: "PRB", score: 187, wickets: 10, overs: "41.2", color: "#a8452c", innings: [187] };
+// The pools: a dual meet's points, and a water polo match.
+const POOL_AWAY = { name: "Harbour City Gulls", abbr: "HCG", score: 146, color: "#1d4f91" };
+const POOL_HOME = { name: "Prairie Ridge Bison", abbr: "PRB", score: 154, color: "#a8452c" };
+const POLO_AWAY = { name: "Harbour City Gulls", abbr: "HCG", score: 9, color: "#1d4f91" };
+const POLO_HOME = { name: "Prairie Ridge Bison", abbr: "PRB", score: 11, color: "#a8452c" };
 const SOCCER_AWAY = { name: "Northern Owls", abbr: "NOW", score: 2, penalties: 4, color: "#3a2d6b" };
 const SOCCER_HOME = { name: "Lakeshore Anchors", abbr: "LSA", score: 2, penalties: 2, color: "#0f7a7a" };
 
@@ -115,8 +120,12 @@ const GAMES = {
   cricket: { away: CRICKET_AWAY, home: CRICKET_HOME, status: "final", competition: "Final" },
   fieldhockey: { away: GULLS, home: BISON, status: "final", competition: "Final" },
   handball: { away: GULLS, home: BISON, status: "final", competition: "Final" },
+  swimming: { away: POOL_AWAY, home: POOL_HOME, status: "final", competition: "Dual meet" },
+  waterpolo: { away: POLO_AWAY, home: POLO_HOME, status: "final", competition: "Quarter-final" },
+  diving: { away: POOL_AWAY, home: POOL_HOME, status: "final", competition: "Dual meet" },
+  artisticswimming: { away: POOL_AWAY, home: POOL_HOME, status: "final", competition: "Team event" },
 };
-const SPORT_TITLES = { nfl: "NFL field", cfl: "CFL field", ifaf: "IFAF field", nhl: "NHL rink", nba: "NBA court", soccer: "Soccer pitch", mlb: "Baseball field", curling: "Curling sheet", tennis: "Tennis court", volleyball: "Volleyball court", badminton: "Badminton court", pickleball: "Pickleball court", tabletennis: "Table tennis table", padel: "Padel court", squash: "Squash court", racquetball: "Racquetball court", sepaktakraw: "Sepak takraw court", teqball: "Teqball court", roundnet: "Roundnet court", netball: "Netball court", lacrosse: "Lacrosse field", rugby: "Rugby field", afl: "Australian football ground", gaelic: "Gaelic games field", cricket: "Cricket ground", fieldhockey: "Field hockey pitch", handball: "Handball court" };
+const SPORT_TITLES = { nfl: "NFL field", cfl: "CFL field", ifaf: "IFAF field", nhl: "NHL rink", nba: "NBA court", soccer: "Soccer pitch", mlb: "Baseball field", curling: "Curling sheet", tennis: "Tennis court", volleyball: "Volleyball court", badminton: "Badminton court", pickleball: "Pickleball court", tabletennis: "Table tennis table", padel: "Padel court", squash: "Squash court", racquetball: "Racquetball court", sepaktakraw: "Sepak takraw court", teqball: "Teqball court", roundnet: "Roundnet court", netball: "Netball court", lacrosse: "Lacrosse field", rugby: "Rugby field", afl: "Australian football ground", gaelic: "Gaelic games field", cricket: "Cricket ground", fieldhockey: "Field hockey pitch", handball: "Handball court", swimming: "Swimming pool", waterpolo: "Water polo field", diving: "Diving well", artisticswimming: "Artistic swimming area" };
 
 /** A repeatable list of points for the data snippets: no random numbers, so that the same code always draws the same marks. */
 const SPOTS = "Array.from({ length: 36 }, (_, i) => ({ x: 20 + ((i * 53) % 160), y: 8 + ((i * 29) % 70), team: i % 2 ? \"away\" : \"home\", outcome: i % 5 === 0 ? \"goal\" : \"shot\", value: 0.05 + (i % 7) / 20 }))";
@@ -168,13 +177,13 @@ const section = (id, title, intro, items) => ({ id, title, intro, items });
 // ---- The pages. Each is a list of sections, and each section a list of items. ----
 
 function surfacesPage(lib) {
-  const sports = ["nfl", "cfl", "ifaf", "nhl", "nba", "soccer", "mlb", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis", "padel", "squash", "racquetball", "sepaktakraw", "teqball", "roundnet", "netball", "lacrosse", "rugby", "afl", "gaelic", "cricket", "fieldhockey", "handball"];
+  const sports = ["nfl", "cfl", "ifaf", "nhl", "nba", "soccer", "mlb", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis", "padel", "squash", "racquetball", "sepaktakraw", "teqball", "roundnet", "netball", "lacrosse", "rugby", "afl", "gaelic", "cricket", "fieldhockey", "handball", "swimming", "waterpolo", "diving", "artisticswimming"];
   const themes = lib[MAIN].COURT_THEMES;
   return {
     slug: "gallery-surfaces",
     title: "Gallery: surfaces and scores",
     ja: "競技場と得点",
-    intro: "The twenty-seven surfaces bare, with a game on each, wide and tall, as a strip and as a compact card, and the court's looks. Every picture is drawn by the build from the code under it.",
+    intro: "The twenty-seven-four surfaces bare, with a game on each, wide and tall, as a strip and as a compact card, and the court's looks. Every picture is drawn by the build from the code under it.",
     sections: [
       section("bare", "Each surface, bare", "`drawKyogijo` with a `sport` and nothing else.", sports.map((sport) => item(`bare-${sport}`, SPORT_TITLES[sport], drawing({ sport })))),
       section("scores", "A game on each surface", "The teams on their sides and the score in the middle.", sports.map((sport) => item(`score-${sport}`, `${SPORT_TITLES[sport]}, with a score`, drawing({ sport, ...GAMES[sport] })))),
@@ -895,7 +904,85 @@ function pageantPage() {
   };
 }
 
-export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, specialPage, dataPage, curlingPage, courtsPage, fieldsPage, stylingPage, rangesPage, layoutsPage, pageantPage];
+/** The eight swimmers of the pool pages' races, in code: made-up names, nations that do not exist (a flag of bands in two colours) and the splits at 50, 100, 150 and 200 m. */
+const SWIMMERS_CODE = `const flag = (a, b) => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 20"><rect width="30" height="20" fill="' + a + '"/><rect y="7" width="30" height="6" fill="' + b + '"/></svg>';
+const swimmers = [
+  [4, "Ivo Lindqvist", "AUR", "#0f7a7a", "#f4f0e4", 0.64, [25.31, 52.28, 79.6, 106.12]],
+  [5, "Mateo Varga", "CAL", "#6b2d5c", "#f2c230", 0.67, [25.55, 52.6, 79.95, 106.48]],
+  [3, "Oskar Dahl", "BOR", "#8a2d4b", "#e8e2cf", 0.61, [25.12, 52.3, 79.98, 106.92]],
+  [6, "Ren Takahashi", "DOR", "#c2410c", "#14233f", 0.7, [25.8, 53.02, 80.4, 107.15]],
+  [2, "Callum Rhodes", "EST", "#3a2d6b", "#e8e2cf", 0.66, [25.7, 52.95, 80.66, 107.8]],
+  [7, "Pavel Novak", "FEN", "#1f6b3c", "#f2c230", 0.69, [26.01, 53.4, 81.02, 108.21]],
+  [8, "Jonas Berg", "HEL", "#7a2a8c", "#f2c230", 0.72, [26.1, 53.55, 81.38, 108.77]],
+  [1, "Daniel Okoro", "GAR", "#14233f", "#f2a900", 0.74, [26.2, 53.71, 81.45, 108.9]],
+].map(([lane, name, abbr, a, b, reaction, splits]) => ({ lane, name, abbr, flag: flag(a, b), reaction, splits }));`;
+
+/** A snippet that draws a swimming pool with the eight swimmers: `pool` the pool's own options (each ending in a comma), `race` the race's own, `swimmers` what the list is made into, `top` more options of the drawing. */
+const raceCode = ({ pool = "", race = "", swimmers = "swimmers", top = "" } = {}) =>
+  `import { drawKyogijo } from "${MAIN}";\n\n${SWIMMERS_CODE}\nconst svg = drawKyogijo({ sport: "swimming"${top}, pool: { ${pool}race: { event: "Men's 200 m freestyle, final (made up)", distance: 200, ${race}swimmers: ${swimmers} } } });`;
+
+/** Swimming, water polo, diving and artistic swimming. */
+function poolsPage() {
+  return {
+    slug: "gallery-pools",
+    title: "Gallery: swimming, water polo, diving and artistic swimming",
+    ja: "ギャラリー：競泳、水球、飛込、アーティスティックスイミング",
+    intro: "The four pools from World Aquatics' Competition Regulations: the swimming pool in 50 and 25 m, the water polo field, the diving well and the artistic swimming area, with the looks of the water and the deck, a side section, the lanes of a made-up race with their flags, results, splits and pace, a frame of a race replay, the split pace chart and a natatorium.",
+    sections: [
+      section("pools", "Each pool", "`sport` is `swimming`, `waterpolo`, `diving` or `artisticswimming`; `pool` has the course, the lanes, the boards and the area.", [
+        item("pools-long", "Swimming: the 50 m pool of eight lanes", drawing({ sport: "swimming" }), "Ropes green, blue and yellow with red floats within 5 m of the walls, the lane markings and their cross lines, the blocks, the touch panels, the backstroke flags at 5 m and the false start rope at 15 m."),
+        item("pools-ten", "Swimming: ten lanes, numbered 0 to 9", drawing({ sport: "swimming", pool: { lanes: 10 } }), "Lanes 0 and 9 are 2.4 m wide with spaces of 0.1 m outside them in a permanent pool; `temporary: true` is the 26 m pool."),
+        item("pools-short", "Swimming: the 25 m short course", drawing({ sport: "swimming", pool: { course: "short" } }), "Eight lanes of 2.5 m with spaces of 0.5 m make a pool 21 m wide."),
+        item("pools-warmup", "Swimming: a warm-up pool", drawing({ sport: "swimming", pool: { course: "short", kind: "warm-up" } }), "The same lanes and ropes, without blocks, panels, flags or the false start rope."),
+        item("pools-polo", "Water polo: the field of play", drawing({ sport: "waterpolo" }), "25 by 20 m between the goal lines: the ropes red to 2 m, yellow to 6 m and green to the half distance line, the 2, 5 and 6 m lines, the goals, the re-entry areas, the referees' platforms, the table and the substitution areas."),
+        item("pools-diving", "Diving: the 1 and 3 m springboards and the 5, 7.5 and 10 m platforms", drawing({ sport: "diving" }), "Each board at the distances of Appendix 2, seen from above, with its plummet; the three lines across the well."),
+        item("pools-diving-all", "Diving: every platform", drawing({ sport: "diving", pool: { platforms: [1, 3, 5, 7.5, 10] } })),
+        item("pools-artistic", "Artistic swimming: the Olympic area", drawing({ sport: "artisticswimming" }), "30 by 20 m, the lines along the floor, the judges' platform and the starting platform at centre stage."),
+        item("pools-artistic-least", "Artistic swimming: the least area", drawing({ sport: "artisticswimming", pool: { area: "minimum" } }), "25 by 15 m with a deep part of 12 by 12 m."),
+      ]),
+      section("looks", "The look of the water and the deck", "`pool.look` is `flat` (the default), `water` (a faint, seeded net of light) or `tiled`; `pool.deck` is `plain` or `tiled`; `pool.section` adds a side section with the depth.", [
+        item("looks-water", "The water look, from a seed", drawing({ sport: "swimming", pool: { look: "water", seed: 3 } }), "The same seed draws the same light; the light is one small pattern, defined once."),
+        item("looks-tiled", "Tiles on the floor and the deck", drawing({ sport: "swimming", pool: { look: "tiled", deck: "tiled" } })),
+        item("looks-section", "A side section", drawing({ sport: "swimming", pool: { look: "water", section: true } }), "The depth, the blocks and panels, the flags 5 m from each end, the false start rope at 15 m and the least depth the rules ask of the water near a wall with blocks. The height is exaggerated."),
+        item("looks-dark", "Swimming, dark", drawing({ sport: "swimming", theme: "dark", pool: { look: "water" } })),
+        item("looks-night", "Water polo, the night look", drawing({ sport: "waterpolo", look: "night", pool: { look: "water" } })),
+        item("looks-tall", "Swimming, tall", drawing({ sport: "swimming", orientation: "portrait", pool: { look: "water" } })),
+        item("looks-polo-tall", "Water polo, tall", drawing({ sport: "waterpolo", orientation: "portrait" })),
+        item("looks-chalk", "Diving, chalkboard, with its parts named", drawing({ sport: "diving", look: "chalkboard", landmarks: true })),
+      ]),
+      section("races", "The lanes of a race", "`pool.race` gives each swimmer a lane, a name, a flag you pass as SVG or an address, and, once the race is swum, the time, the reaction time and the splits. Places come from the times; the first three get a medal.", [
+        item("race-start", "A start list: the lane, the flag, the name and the entry time", raceCode({ swimmers: "swimmers.map(({ splits, reaction, ...s }) => ({ ...s, seed: splits[3] + 0.4 }))" }), "With no results, the entry times are shown."),
+        item("race-results", "The results: places, times, reaction times and splits", raceCode({ pool: "look: \"water\", " }), "Swimmers sit in the order of their lanes; the splits are written under each time."),
+        item("race-pace", "Split pace bars", raceCode({ pool: "look: \"water\", ", race: "pace: true, " }), "Each lane is the whole race laid out flat: each split a bar as long as its share of the race, in a colour from the field's slowest pace to its fastest."),
+        item("race-short", "A 100 m race in a short course pool", `import { drawKyogijo } from "${MAIN}";\n\nconst swimmers = [[4, "Ivo Lindqvist", [11.5, 23.74, 35.8, 47.9]], [5, "Mateo Varga", [11.62, 23.9, 36.1, 48.21]], [3, "Oskar Dahl", [11.3, 23.65, 36.0, 48.4]], [6, "Ren Takahashi", [11.75, 24.1, 36.45, 48.66]]].map(([lane, name, splits]) => ({ lane, name, splits }));\nconst svg = drawKyogijo({ sport: "swimming", pool: { course: "short", lanes: 6, look: "water", race: { event: "Men's 100 m freestyle, short course (made up)", swimmers } } });`, "A split every 25 m."),
+        item("race-tall", "A race, tall", raceCode({ top: ', orientation: "portrait"' }), "The names and times lie along the lanes; the numbers in the discs stay upright."),
+        item("race-dnf", "A disqualification, a swimmer who did not start", `import { drawKyogijo } from "${MAIN}";\n\nconst swimmers = [{ lane: 4, name: "A. Swimmer", time: 49.12, reaction: 0.62 }, { lane: 5, name: "B. Swimmer", time: 49.4, reaction: 0.66 }, { lane: 3, name: "C. Swimmer", status: "dq", time: 48.98 }, { lane: 6, name: "D. Swimmer", status: "dns" }];\nconst svg = drawKyogijo({ sport: "swimming", pool: { race: { event: "Men's 50 m freestyle, final (made up)", swimmers } } });`),
+      ]),
+      section("data", "Charts and a replay", "`splitsChart` from `/charts` is the pace bars with a title, a summary and a table; `raceTimeline` from `/replay` plays the splits as swimmers going down their lanes and back.", [
+        item("chart-splits", "The split pace chart", `import { splitsChart } from "${MAIN}/charts";\n\n${SWIMMERS_CODE}\nconst chart = splitsChart({ event: "Men's 200 m freestyle, final (made up)", distance: 200, swimmers }, { pool: { look: "water" } });\nconst svg = chart.draw();`, "The chart also gives `chart.totals` (the fastest split of the field) and `chart.table()`."),
+        item("replay-race", "A frame of the race replay, 75 seconds after the signal", `import { drawFrame, raceTimeline } from "${MAIN}/replay";\n\n${SWIMMERS_CODE}\nconst pool = { look: "water", race: { event: "Men's 200 m freestyle, final (made up)", distance: 200, swimmers, show: { results: false } } };\nconst timeline = raceTimeline({ pool });\nconst svg = drawFrame({ sport: "swimming", pool }, timeline, 75, { trail: 3, trailOf: ["home"] });`, "The marks are the swimmers, numbered by lane, moving from the splits; the clock and the controls are the replay's own."),
+        item("zones-lanes", "Heat by lane", `import { drawKyogijo } from "${MAIN}";\n\nconst data = Array.from({ length: 240 }, (_, i) => ({ x: 20 + ((i * 37) % 120), y: 4 + ((i * 17) % 76) }));\nconst svg = drawKyogijo({ sport: "swimming", layers: [{ kind: "zones", zones: "pool-lanes", data, labels: { show: ["name", "value"] }, legend: true }] });`, "The zone set `pool-lanes` counts marks into the lanes."),
+      ]),
+      section("hall", "A natatorium", "`pool.venue` sets several pools in one hall, to scale, at least 8 m apart (10 m by default), with the deck round them drawn once.", [
+        item("hall-flat", "The competition pool, the diving well and a warm-up pool", drawing({ sport: "swimming", pool: { venue: "natatorium" } })),
+        item("hall-water", "The same hall in water and tiles", drawing({ sport: "swimming", pool: { venue: "natatorium", look: "water", deck: "tiled" } })),
+        item("hall-own", "A hall of your own: a water polo pool and an artistic swimming area", drawing({ sport: "swimming", pool: { venue: { pools: [{ sport: "waterpolo" }, { sport: "artisticswimming" }, { sport: "swimming", course: "short", lanes: 6, kind: "warm-up" }], apart: 12 } } })),
+      ]),
+      section("scores", "A score, a part of the pool and its parts named", "A dual meet's points, a water polo match, a crop to the first 15 m of a pool or the goal area, and the parts of the pool named.", [
+        item("pool-score-swimming", "A dual meet", drawing({ sport: "swimming", ...GAMES.swimming })),
+        item("pool-score-polo", "A water polo match", drawing({ sport: "waterpolo", ...GAMES.waterpolo })),
+        item("pool-score-diving-badge", "Diving, as a strip", drawing({ sport: "diving", ...GAMES.diving, size: "badge" })),
+        item("pool-range-end", "Swimming: the end of the pool to the 15 m mark", drawing({ sport: "swimming", range: "pool-end" })),
+        item("pool-range-goal", "Water polo: the goal area", drawing({ sport: "waterpolo", range: "goal-area" })),
+        item("pool-range-boards", "Diving: the springboards", drawing({ sport: "diving", range: "springboards" })),
+        item("pool-range-stage", "Artistic swimming: centre stage", drawing({ sport: "artisticswimming", range: "centre-stage" })),
+        item("pool-landmarks", "Swimming, with its parts named", drawing({ sport: "swimming", landmarks: true })),
+      ]),
+    ],
+  };
+}
+
+export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, specialPage, dataPage, curlingPage, courtsPage, fieldsPage, poolsPage, stylingPage, rangesPage, layoutsPage, pageantPage];
 
 /** The sections of every page, with each item's picture made by running its code. */
 export function galleryData(lib) {
@@ -1031,6 +1118,10 @@ const REFERENCE = {
   cricket: { frame: "cricket", spot: [11, 0], what: "the middle of the right bowling crease" },
   fieldhockey: { frame: "fieldhockey", spot: [39.2, 0], what: "the right penalty spot" },
   handball: { frame: "handball", spot: [13, 0], what: "the middle of the right 7-metre line" },
+  swimming: { frame: "swimming", spot: [-10, -8.75], what: "the 15 m cross line in lane 1" },
+  waterpolo: { frame: "waterpolo", spot: [-7.5, 0], what: "the 5 m mark in front of the left goal" },
+  diving: { frame: "diving", spot: [-9, 6.75], what: "the plummet of the 10 m platform" },
+  artisticswimming: { frame: "artisticswimming", spot: [0, -10], what: "centre stage, at the pool's edge" },
 };
 const round2 = (n) => Math.round(n * 100) / 100;
 const UNIT_WORDS = { ft: "feet", yd: "yards", m: "metres", cm: "centimetres", in: "inches", mm: "millimetres", px: "pixels", "tenth-ft": "tenths of a foot", percent: "percent", fraction: "fractions" };
@@ -1045,7 +1136,7 @@ export function framesItems(lib) {
       const plan = lib[MAIN].fieldPlan({ sport });
       return { length: plan.length, width: plan.width, unit: "ft" };
     };
-    const size = frame.size === "variable" ? (frame.sport === "curling" ? { length: 150, width: 15.58, unit: "ft" } : frame.sport === "volleyball" ? { length: 18, width: 9, unit: "m" } : frame.sport === "squash" ? { length: 9.75, width: 6.4, unit: "m" } : lib[MAIN].FIELD_SPORTS.includes(frame.sport) ? fieldSize(frame.sport) : { length: 105, width: 68, unit: "m" }) : undefined;
+    const size = frame.size === "variable" ? (frame.sport === "curling" ? { length: 150, width: 15.58, unit: "ft" } : frame.sport === "volleyball" ? { length: 18, width: 9, unit: "m" } : frame.sport === "squash" ? { length: 9.75, width: 6.4, unit: "m" } : lib[MAIN].FIELD_SPORTS.includes(frame.sport) ? fieldSize(frame.sport) : lib[MAIN].POOL_SPORTS.includes(frame.sport) ? { length: lib[MAIN].poolPlan({ sport: frame.sport, pool: {} }).length, width: lib[MAIN].poolPlan({ sport: frame.sport, pool: {} }).width, unit: "m" } : { length: 105, width: 68, unit: "m" }) : undefined;
     const [spot] = convert(reference.frame, frame.name, size ? { size } : {})([reference.spot]);
     const x = round2(spot[0]);
     const y = round2(spot[1]);

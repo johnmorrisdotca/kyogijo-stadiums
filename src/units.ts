@@ -21,7 +21,7 @@ export const FEET_PER: Readonly<Record<Unit, number>> = Object.freeze({
 
 /**
  * The unit each surface's rulebook states its dimensions in: the NFL's and the CFL's fields in yards (and the IFAF's, which
- * follows them), the NHL's rink, the NBA's court and the baseball field in feet, a soccer pitch in metres (the Laws'), a tennis court, a pickleball court and a racquetball court in feet (the ITF's, USA Pickleball's and the IRF's), a volleyball court, a badminton court, a table, a padel court, a squash court, a sepak takraw court, a teqball court, a roundnet court and a netball court in metres (FIVB's, BWF's, ITTF's, FIP's, World Squash's, ISTAF's, FITEQ's, the International Roundnet Federation's and World Netball's), a curling sheet in metres (World Curling's rules give metres with feet beside them; Curling Canada's give feet first, and its league `curling-canada` has feet), a rugby field, an Australian football ground, a Gaelic field, a hockey pitch and a handball court in metres (the rulebooks') and a cricket ground in yards (the Laws' and the ICC's; the NLL's box floor and the PLL's and the NCAA men's fields are in the leagues' own feet and yards). A Japanese park's fence is measured in
+ * follows them), the NHL's rink, the NBA's court and the baseball field in feet, a soccer pitch in metres (the Laws'), a tennis court, a pickleball court and a racquetball court in feet (the ITF's, USA Pickleball's and the IRF's), a volleyball court, a badminton court, a table, a padel court, a squash court, a sepak takraw court, a teqball court, a roundnet court and a netball court in metres (FIVB's, BWF's, ITTF's, FIP's, World Squash's, ISTAF's, FITEQ's, the International Roundnet Federation's and World Netball's), a curling sheet in metres (World Curling's rules give metres with feet beside them; Curling Canada's give feet first, and its league `curling-canada` has feet), a rugby field, an Australian football ground, a Gaelic field, a hockey pitch and a handball court in metres (the rulebooks'), a swimming pool, a water polo field, a diving well and an artistic swimming area in metres (World Aquatics') and a cricket ground in yards (the Laws' and the ICC's; the NLL's box floor and the PLL's and the NCAA men's fields are in the leagues' own feet and yards). A Japanese park's fence is measured in
  * metres and converted once: see `parkUnit`.
  */
 export const SURFACE_UNITS: Readonly<Record<Sport, Unit>> = Object.freeze({
@@ -52,6 +52,11 @@ export const SURFACE_UNITS: Readonly<Record<Sport, Unit>> = Object.freeze({
   cricket: "yd",
   fieldhockey: "m",
   handball: "m",
+  // The pools: World Aquatics' Competition Regulations print every figure in metres.
+  swimming: "m",
+  waterpolo: "m",
+  diving: "m",
+  artisticswimming: "m",
 });
 
 /** True when `unit` is one of the six. */

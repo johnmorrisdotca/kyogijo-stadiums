@@ -65,6 +65,14 @@ console.log(drawKyogijo({ sport: "nhl", range: undefined }) === drawKyogijo({ sp
 | `fieldhockey` | `twenty-three` | from a back-line to the 23-metre line | `right` |
 | `handball` | `half` | from a goal line to the centre line | `left` |
 | `handball` | `goal-area` | the goal area at one end, with its arc | `right` |
+| `swimming` | `half` | from an end wall to the middle of the pool | `left` |
+| `swimming` | `pool-end` | from an end wall to the 15 m mark | `left` |
+| `waterpolo` | `half` | from a goal line to the half distance line | `left` |
+| `waterpolo` | `goal-area` | the goal area at one end: from the goal line to the 2 m line | `right` |
+| `diving` | `springboards` | the side of the well the 1 and 3 m springboards are on | `left` |
+| `diving` | `platforms` | the side of the well the platforms are on | `right` |
+| `artisticswimming` | `half` | from an end of the pool to its middle | `left` |
+| `artisticswimming` | `centre-stage` | the middle third of the pool, where the athletes enter | none |
 <!-- /made:ranges -->
 
 A range at an end takes `end`: `range: { name: "half", end: "right" }`. The end is as the surface is drawn wide: `left` or `right`, whichever way the drawing lies, so that a tall drawing's left end is its top. A range with no end (the neutral zone, the middle third, the infield) ignores one. The offensive ranges are at the right by default, as a frame's numbers are for a team that attacks the right (see [coordinate frames](./frames.md)), the defensive and own ranges at the left, and the others, such as a half, at the left, as a curling sheet's house is: `end` moves any of them.

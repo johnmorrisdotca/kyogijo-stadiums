@@ -2,6 +2,9 @@
 // are in the mount (`mountKyogijo(...).replay(...)`) and in `<kyogijo-field>`.
 export { activeEvents, describeEvent, drawFrame, eventsBetween, interpolate, possession, replayClock, replayEvents, replayInfo, replayLayers, replaySnapshot, replaySummary, replayTable, replayTimes, trails } from "./replay.ts";
 export type { ReplaySnapshot } from "./replay.ts";
+export { alongPool, distanceAt, progressOf, raceTimeline } from "./pool.replay.ts";
+export type { Progress, RaceReplayOptions } from "./pool.replay.ts";
+export { formatTime, parseTime } from "./pool.race.ts";
 export { REPLAY_SPEEDS, REPLAY_SPEED_RANGE, createReplay } from "./replay.control.ts";
 export type { ReplayController } from "./replay.control.ts";
 export type {

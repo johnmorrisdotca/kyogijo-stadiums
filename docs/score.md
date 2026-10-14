@@ -35,6 +35,8 @@ The side decides everything that follows the drawing: the banners and the plate,
 | `gaelic` | home on the left | GAA fixtures and results name the home team first. |
 | `fieldhockey`, `handball` | home on the left | FIH and IHF fixtures and results are written home v away, as other European and international team sports are. |
 | `netball` | home on the left | World Netball's fixtures, and those of the Commonwealth countries where the sport is played most, name the home team first ("Home v Away"). Netball is scored in goals, so it has the usual score, not a board of sets. |
+| `waterpolo` | home on the left | Water polo fixtures and results, LEN's and World Aquatics', are written home v away. |
+| `swimming`, `diving`, `artisticswimming` | home on the right | A dual meet, as the North American leagues that swim them write one, lists the visitor first ("at"). |
 | `cricket` | home on the left | Fixtures are written "Home v Away" ("England v Australia"). The board's rows are the two teams; a scorecard in batting order is `homeSide: "right"` or the teams passed the other way round. |
 | `lacrosse` | home on the right; home on the left for `world-men`, `world-women` and `world-box` | The leagues of North America (the NCAA, the PLL and the NLL, which writes "Buffalo at Toronto") list the visitor first. The leagues of World Lacrosse, an international federation, follow the international fixture convention. |
 | `nfl`, `cfl` | home on the right | North American football lists the visitor first in schedules ("at"), box scores and line scores. |

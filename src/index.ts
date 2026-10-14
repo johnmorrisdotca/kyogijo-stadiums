@@ -7,6 +7,10 @@ export { RANGES } from "./ranges.names.ts";
 export { BACKGROUND_OPACITY, BACKGROUND_PATTERNS, KYOGIJO_BACKGROUND_STYLE } from "./background.ts";
 export type { Background, BackgroundFit, BackgroundOptions, BackgroundPattern } from "./background.ts";
 export { FIELD_SPORTS, fieldPlan, isFieldSport } from "./fields.ts";
+export { POOL_SPORTS, isPoolSport, poolPlan, swimPlan, venueLayout } from "./pool.ts";
+export type { ArtisticPlan, Board, DivePlan, LanePlan, PoloPlan, PoolPlan, Rope, RopeColour, SwimPlan, VenueItem, VenueLayout } from "./pool.ts";
+export { formatTime, parseTime } from "./pool.race.ts";
+export type { DeckLook, DivingPlatform, PaceOptions, PoolKind, PoolLook, PoolRace, PoolSection, RaceShow, Swimmer, SwimmerStatus, VenueOptions, VenuePool } from "./pool.types.ts";
 export type { Area as FieldArea, FieldPlan, GoalPlan as FieldGoalPlan, Outline as FieldOutline, Shape as FieldShape } from "./fields.types.ts";
 export { KYOGIJO_FIELDS_STYLE } from "./fields.style.ts";
 export type { RangeInfo } from "./ranges.names.ts";
@@ -24,6 +28,7 @@ export { GRIDIRON_GROUNDS, WALL_SEATS, outlinePath, outlinePoints } from "./crow
 export type { CrowdStands, StandGap, StandRing, StandSector, Outline as StandOutline } from "./crowd.ts";
 export { KYOGIJO_MARK_STYLE } from "./mark.ts";
 export { KYOGIJO_PAGEANT_MOTION, KYOGIJO_PAGEANT_STYLE } from "./pageant.style.ts";
+export { KYOGIJO_POOL_STYLE } from "./pool.style.ts";
 export { KYOGIJO_CURLING_STYLE, KYOGIJO_HEAT_STYLE, KYOGIJO_NOTE_STYLE, KYOGIJO_STYLE, KYOGIJO_TEAM_STYLE, KYOGIJO_WALLS_STYLE } from "./style.ts";
 export { KYOGIJO_LOOK_STYLE, LOOKS, LOOK_NAMES, LOOK_PAIRS, contrastOf, groupOf, lookPalette, lookStyle } from "./look.ts";
 export type { Group as LookGroup, Look, Palette as LookPalette, PaletteKey as LookPaletteKey } from "./look.ts";
@@ -71,6 +76,8 @@ export type {
   LineWidth,
   LookName,
   Orientation,
+  PoolSport,
+  PoolStyle,
   QuirkName,
   QuirkOptions,
   RangeBox,

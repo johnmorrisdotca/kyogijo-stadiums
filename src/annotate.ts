@@ -12,7 +12,7 @@ import type { DirectionOptions, ScoreOptions, Side, Sport, SurfaceOptions } from
 import { FEET_PER, SURFACE_UNITS, isUnit, type Unit } from "./units.ts";
 
 /** The margin each surface has when the options give none (the builders' own defaults), in feet. */
-export const DEFAULT_MARGIN: Readonly<Record<string, number>> = { nfl: 12, cfl: 12, ifaf: 12, nhl: 8, nba: 7, mlb: 14, soccer: 15, curling: 3, lacrosse: 16, rugby: 16, afl: 16, gaelic: 16, cricket: 9, fieldhockey: 16, handball: 10 };
+export const DEFAULT_MARGIN: Readonly<Record<string, number>> = { nfl: 12, cfl: 12, ifaf: 12, nhl: 8, nba: 7, mlb: 14, soccer: 15, curling: 3, swimming: 8.2, waterpolo: 9.8, diving: 8.2, artisticswimming: 9.8, lacrosse: 16, rugby: 16, afl: 16, gaelic: 16, cricket: 9, fieldhockey: 16, handball: 10 };
 
 /** What the annotations are drawn against. */
 export interface NoteEnv {

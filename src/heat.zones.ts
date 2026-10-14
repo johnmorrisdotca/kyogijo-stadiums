@@ -14,11 +14,13 @@ import type { Sport, SurfaceOptions } from "./types.ts";
 import { lengthUnit } from "./common.ts";
 import { courtFor, courtSize } from "./court.ts";
 import { fieldPlan } from "./fields.ts";
+import { WATER_POLO } from "./pool.figures.ts";
+import { swimPlan } from "./pool.ts";
 import { LEAGUES, chooseLeague, cricketOf } from "./leagues.ts";
 import type { CricketLeague } from "./leagues/cricket.ts";
 
 /** The zone sets. */
-export type ZoneSetId = "field-thirds" | "cricket-ground" | "soccer-positional" | "soccer-thirds" | "soccer-channels" | "soccer-18" | "nba-shot" | "nhl-slot" | "nhl-home-plate" | "baseball-spray" | "baseball-retrosheet" | "football-pass" | "curling-house" | "net-court" | "wall-court" | "roundnet-rings";
+export type ZoneSetId = "field-thirds" | "cricket-ground" | "soccer-positional" | "soccer-thirds" | "soccer-channels" | "soccer-18" | "nba-shot" | "nhl-slot" | "nhl-home-plate" | "baseball-spray" | "baseball-retrosheet" | "football-pass" | "curling-house" | "net-court" | "wall-court" | "roundnet-rings" | "pool-lanes" | "water-polo-areas" | "pool-thirds";
 
 type Pt = readonly [number, number];
 
@@ -50,7 +52,7 @@ export interface ZoneSet {
 
 /** What a zone set needs to know about the drawing and the layer. */
 export interface ZoneContext {
-  o: Pick<SurfaceOptions, "sport" | "pitch" | "units"> & Partial<Pick<SurfaceOptions, "league" | "net" | "field">>;
+  o: Pick<SurfaceOptions, "sport" | "pitch" | "units"> & Partial<Pick<SurfaceOptions, "league" | "net" | "field" | "pool">>;
   outline: Outline;
   /** The way the team attacks as the surface is drawn wide: names the sides and counts the bands from the team's own end. `right` by default. */
   direction: "left" | "right";
@@ -78,6 +80,9 @@ export const ZONE_SETS: Readonly<Record<ZoneSetId, { sports: readonly Sport[]; t
   "net-court": { sports: ["tennis", "volleyball", "badminton", "pickleball", "tabletennis", "padel", "sepaktakraw", "teqball"], title: "Each side of the net: the front court and the back court, split by the court's own line", source: "docs/sources.md#zone-sets" },
   "wall-court": { sports: ["squash", "racquetball"], title: "The front court and the back court, split by the short line", source: "docs/sources.md#zone-sets" },
   "roundnet-rings": { sports: ["roundnet"], title: "The no hit zone, the ring out to the serving line, and the rest of the court", source: "docs/sources.md#zone-sets" },
+  "pool-lanes": { sports: ["swimming"], title: "Lanes: each lane of the pool, the whole length of it", source: "docs/sources.md#zone-sets" },
+  "water-polo-areas": { sports: ["waterpolo"], title: "The goal area, the ground from 2 to 6 m, and the rest of the field, at each end", source: "docs/sources.md#zone-sets" },
+  "pool-thirds": { sports: ["diving", "artisticswimming"], title: "Thirds along the pool, from the wall the boards or the judges stand at", source: "docs/sources.md#zone-sets" },
   "field-thirds": { sports: ["lacrosse", "rugby", "afl", "gaelic", "fieldhockey", "handball", "netball"], title: "Thirds: defensive, middle and attacking", source: "docs/sources.md#zone-sets" },
   "cricket-ground": { sports: ["cricket"], title: "The pitch, the ground inside the fielding circle, and the outfield", source: "docs/sources.md#zone-sets" },
   "football-pass": { sports: ["nfl", "cfl", "ifaf"], title: "Pass grid: short and deep by left, middle and right", source: "https://nflreadr.nflverse.com/articles/dictionary_pbp.html" },
@@ -519,6 +524,46 @@ function cricketZones(ctx: ZoneContext): ZoneShape[] {
   return out;
 }
 
+/** A swimming pool in lanes: each lane across the whole length of the pool, from the top of the drawing down. The lane's edges are the ropes'. */
+function poolLanes(ctx: ZoneContext): ZoneShape[] {
+  const plan = swimPlan({ sport: "swimming", pool: ctx.o.pool });
+  const L = ctx.outline.box.w;
+  const per = FEET_PER_METRE;
+  const lanes = plan.lanes;
+  return lanes.map((lane, i) => rect(`lane-${lane.number}`, fill(ctx.words.poolLane, { n: lane.number }), 0, i === 0 ? 0 : lane.top * per, L, i === lanes.length - 1 ? ctx.outline.box.h : lane.bottom * per, true, i === lanes.length - 1));
+}
+
+/**
+ * A water polo field at each end: the goal area (to the 2 m line), the ground from 2 to 6 m (where the penalty foul applies), and the rest, split at the half distance line. The marks are the rules' (Part Six,
+ * Appendix 4); the zones are ours.
+ */
+function waterPoloAreas(ctx: ZoneContext): ZoneShape[] {
+  const { box } = ctx.outline;
+  const L = box.w;
+  const W = box.h;
+  const w = ctx.words;
+  const post = WATER_POLO.goal.netClear * FEET_PER_METRE;
+  const two = WATER_POLO.twoMetre * FEET_PER_METRE;
+  const six = WATER_POLO.sixMetre * FEET_PER_METRE;
+  const goalLeft = post;
+  const goalRight = L - post;
+  return [
+    rect("goal-area-left", `${w.poloGoalArea} (${w.endLeft})`, 0, 0, goalLeft + two, W, false, true),
+    rect("two-to-six-left", `${w.poloTwoToSix} (${w.endLeft})`, goalLeft + two, 0, goalLeft + six, W, false, true),
+    rect("beyond-six-left", `${w.poloBeyondSix} (${w.endLeft})`, goalLeft + six, 0, L / 2, W, false, true),
+    rect("beyond-six-right", `${w.poloBeyondSix} (${w.endRight})`, L / 2, 0, goalRight - six, W, false, true),
+    rect("two-to-six-right", `${w.poloTwoToSix} (${w.endRight})`, goalRight - six, 0, goalRight - two, W, false, true),
+    rect("goal-area-right", `${w.poloGoalArea} (${w.endRight})`, goalRight - two, 0, L, W, true, true),
+  ];
+}
+
+/** The pool in thirds along its length. */
+function poolThirds(ctx: ZoneContext): ZoneShape[] {
+  const { box } = ctx.outline;
+  const w = ctx.words;
+  return [w.poolNear, w.poolMiddle, w.poolFar].map((name, i) => rect(["near", "middle", "far"][i] + "-third", name, (box.w * i) / 3, 0, (box.w * (i + 1)) / 3, box.h, i === 2, true));
+}
+
 /** The zones of a set on the surface the context describes. Throws for a set that is not for the surface's sport. */
 export function buildZoneSet(id: ZoneSetId, ctx: ZoneContext): ZoneSet {
   if (!Object.prototype.hasOwnProperty.call(ZONE_SETS, id)) throw new RangeError(`Unknown zone set "${String(id)}": use one of ${ZONE_SET_IDS.join(", ")}`);
@@ -528,6 +573,6 @@ export function buildZoneSet(id: ZoneSetId, ctx: ZoneContext): ZoneSet {
     const { zones, which } = retrosheetZones(ctx);
     return { id, zones, which };
   }
-  const zones = id === "field-thirds" ? fieldThirds(ctx) : id === "cricket-ground" ? cricketZones(ctx) : id.startsWith("soccer") ? soccerZones(id, ctx) : id === "nba-shot" ? nbaZones(ctx) : id.startsWith("nhl") ? nhlZones(id, ctx) : id === "baseball-spray" ? baseballSpray(ctx) : id === "curling-house" ? curlingZones(ctx) : id === "net-court" ? netZones(ctx) : id === "wall-court" ? wallZones(ctx) : id === "roundnet-rings" ? roundnetZones(ctx) : footballPass(ctx);
+  const zones = id === "field-thirds" ? fieldThirds(ctx) : id === "cricket-ground" ? cricketZones(ctx) : id.startsWith("soccer") ? soccerZones(id, ctx) : id === "nba-shot" ? nbaZones(ctx) : id.startsWith("nhl") ? nhlZones(id, ctx) : id === "baseball-spray" ? baseballSpray(ctx) : id === "curling-house" ? curlingZones(ctx) : id === "net-court" ? netZones(ctx) : id === "wall-court" ? wallZones(ctx) : id === "roundnet-rings" ? roundnetZones(ctx) : id === "pool-lanes" ? poolLanes(ctx) : id === "water-polo-areas" ? waterPoloAreas(ctx) : id === "pool-thirds" ? poolThirds(ctx) : footballPass(ctx);
   return { id, zones, which: lastWins(zones) };
 }

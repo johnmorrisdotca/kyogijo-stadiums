@@ -195,6 +195,11 @@ const PROFILES: Readonly<Record<Sport, Profile>> = {
   teqball: { shape: "bowl", side: 18, end: 20, bench: 3, corner: 18, tiers: [lower(38, 3, 20), upper(45, 79, 28, 52)], away: "corner" },
   roundnet: { shape: "sides", side: 16, end: 12, bench: 0, corner: 8, tiers: [lower(26, 2, 12), upper(32, 56, 18, 32)], away: "corner" },
   netball: { shape: "bowl", side: 20, end: 22, bench: 4, corner: 20, tiers: [lower(44, 3, 24), upper(51, 95, 32, 62)], away: "corner" },
+  // The pools: a natatorium has its stands along the long sides, a deck's width back from the water (ours: no rulebook gives the stands).
+  swimming: { shape: "sides", side: 26, end: 20, bench: 0, corner: 10, tiers: [lower(40, 3, 20), upper(47, 87, 28, 52)], away: "corner" },
+  waterpolo: { shape: "sides", side: 22, end: 18, bench: 0, corner: 10, tiers: [lower(36, 3, 18), upper(43, 79, 26, 48)], away: "corner" },
+  diving: { shape: "sides", side: 26, end: 20, bench: 0, corner: 10, tiers: [lower(40, 3, 20), upper(47, 87, 28, 52)], away: "corner" },
+  artisticswimming: { shape: "sides", side: 26, end: 20, bench: 0, corner: 10, tiers: [lower(40, 3, 20), upper(47, 87, 28, 52)], away: "corner" },
   lacrosse: { shape: "bowl", side: 24, end: 30, bench: 6, corner: 40, tiers: [lower(70), upper(77, 125, 58, 100)], away: "end" },
   rugby: { shape: "bowl", side: 26, end: 36, bench: 6, corner: 48, tiers: [lower(78), upper(85, 145)], away: "end" },
   afl: { shape: "bowl", side: 30, end: 30, bench: 0, corner: 0, tiers: [lower(70), upper(77, 135)], oval: true, away: "end" },

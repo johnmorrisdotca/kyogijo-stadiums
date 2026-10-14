@@ -129,6 +129,68 @@ const CURLING: readonly Feature[] = [
   f("hacks", "--ky-hack", "The hacks."),
 ];
 
+const ROPES = ["--ky-pg", "--ky-pb", "--ky-py"] as const;
+
+const SWIMMING: readonly Feature[] = [
+  f("apron", "--ky-apron", "The deck round the pool."),
+  f("gutter", "--ky-boards", "The gutter and the coping round the water."),
+  f("water", "--ky-surface", "The water."),
+  f("lane-lines", LINE, "The lane markings on the floor with their cross lines, the cross lines at 15 m, the marks on the deck and the target lines."),
+  f("touch-pads", "--ky-pd", "The touch panels on the end walls."),
+  f("starting-blocks", "--ky-pk", "The starting blocks."),
+  f("lane-ropes", ROPES, "The lane ropes' green, blue and yellow floats; the red floats near the walls are `rope-red` and the distinct marks `rope-white`."),
+  f("rope-green", "--ky-pg", "The green ropes of the outside lanes."),
+  f("rope-blue", "--ky-pb", "The blue ropes."),
+  f("rope-yellow", "--ky-py", "The yellow ropes of the middle lanes."),
+  f("rope-red", "--ky-pr", "The red floats within 5 m of each wall."),
+  f("rope-white", "--ky-pw", "The floats of a distinct colour at 15 m and 25 m."),
+  f("backstroke-flags", ["--ky-fa"], "The backstroke flags' rope 5 m from each wall."),
+  f("false-start-rope", "--ky-pf", "The false start rope 15 m from the starting end."),
+  f("pace-bars", "--ky-pe", "The outline of the split pace bars."),
+];
+
+const WATER_POLO: readonly Feature[] = [
+  f("apron", "--ky-apron", "The deck round the pool."),
+  f("gutter", "--ky-boards", "The gutter round the water."),
+  f("water", "--ky-surface", "The water."),
+  f("goal-lines", "--ky-pw", "The two goal lines."),
+  f("half-distance-line", "--ky-pw", "The half distance line."),
+  f("two-metre-lines", "--ky-pr", "The 2 m lines."),
+  f("five-metre-marks", "--ky-pr", "The 5 m marks, where a penalty throw is taken from."),
+  f("six-metre-lines", "--ky-py", "The 6 m lines."),
+  f("goal-area-lines", "--ky-pr", "The lines 2 m long from the goal posts that make the goal areas."),
+  f("re-entry-areas", "--ky-pr", "The excluded players' re-entry areas."),
+  f("referee-platforms", ["--ky-pr", "--ky-py", "--ky-pg"], "The referees' platforms along both sides, coloured as the ropes are."),
+  f("lane-ropes", ROPES, "The ropes along the sides: their green floats, their yellow floats; the red ones are `rope-red`, the white ones `rope-white`."),
+  f("rope-green", "--ky-pg", "The green floats from 6 m to the half distance line."),
+  f("rope-yellow", "--ky-py", "The yellow floats from 2 to 6 m."),
+  f("rope-red", "--ky-pr", "The red floats from the goal line to 2 m and the 5 m mark."),
+  f("rope-white", "--ky-pw", "The white floats at the goal lines and the half distance line."),
+  f("goals", "--ky-pw", "The goals: the crossbar and the net."),
+  f("goal-posts", "--ky-pw", "The goal posts."),
+  f("official-table", "--ky-pk", "The official table."),
+  f("substitution-areas", ["--ky-left", "--ky-right"], "The areas for flying substitutions, in each team's colour."),
+];
+
+const DIVING: readonly Feature[] = [
+  f("apron", "--ky-apron", "The deck round the well."),
+  f("gutter", "--ky-boards", "The gutter round the well."),
+  f("water", "--ky-surface", "The water."),
+  f("lane-lines", LINE, "The three lines across the well."),
+  f("stands", "--ky-boards", "The stands the boards are fixed to."),
+  f("platforms", "--ky-pc", "The platforms."),
+  f("springboards", "--ky-pbd", "The springboards."),
+];
+
+const ARTISTIC_SWIMMING: readonly Feature[] = [
+  f("apron", "--ky-apron", "The deck round the pool."),
+  f("gutter", "--ky-boards", "The gutter round the water."),
+  f("water", "--ky-surface", "The water."),
+  f("floor-lines", LINE, "The lines on the floor along the pool."),
+  f("judges-platform", "--ky-pk", "The judges' platform."),
+  f("starting-platform", "--ky-pk", "The starting platform."),
+];
+
 const NET: readonly Feature[] = [
   f("apron", "--ky-apron", "The ground round the court."),
   f("free-zone", "--ky-free", "The free zone round the court, where the rules give one."),
@@ -263,6 +325,10 @@ export const FEATURE_INFO: Readonly<Record<string, readonly Feature[]>> = Object
   mlb: BASEBALL,
   soccer: SOCCER,
   curling: CURLING,
+  swimming: SWIMMING,
+  waterpolo: WATER_POLO,
+  diving: DIVING,
+  artisticswimming: ARTISTIC_SWIMMING,
   tennis: NET,
   volleyball: NET,
   badminton: NET,
