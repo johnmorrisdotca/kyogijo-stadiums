@@ -197,7 +197,7 @@ export function athleticsPlan(o: Pick<SurfaceOptions, "sport" | "league" | "athl
   // The ground inside the track: the synthetic surface of the segments, and the turf between them (Marking Plan).
   addParts(parts, ovalParts(oval, fig, indoor ? undefined : straight, numbers, indoor ? undefined : D.d));
   if (indoor) {
-    // The covered track's bends are banked (Rule 43.3): shaded, as a plan shows a slope.
+    // The covered track's bends are banked (Rule 43): shaded, as a plan shows a slope.
     const rr = Rout;
     parts.areas.push(
       { id: "banking-east", feature: "banking", cls: "ky-ath-bank", d: `M${num(S / 2)} ${num(-rr)}A${num(rr)} ${num(rr)} 0 0 1 ${num(S / 2)} ${num(rr)}V${num(R)}A${num(R)} ${num(R)} 0 0 0 ${num(S / 2)} ${num(-R)}Z` },

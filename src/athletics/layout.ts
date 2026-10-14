@@ -46,11 +46,11 @@ function runwayGround(id: string, event: AthleticsFieldEvent, x0: number, x1: nu
   return { id: `${id}-runway-ground`, feature: event, cls: "ky-ath-track", d: `M${num(x0)} ${num(-width / 2)}H${num(x1)}V${num(width / 2)}H${num(x0)}Z` };
 }
 
-/** The long jump's and the triple jump's facility: the runway 45 m long (Rule 29.1; Manual 2.3.1.2), the take-off boards, the landing area 3 m wide and 8 m long. */
+/** The long jump's and the triple jump's facility: the runway 45 m long (Rule 29; Manual 2.3.1.2), the take-off boards, the landing area 3 m wide and 8 m long. */
 function jumpLayout(event: "long-jump" | "triple-jump"): Layout {
   const parts = emptyParts();
   parts.areas.push(runwayGround(event, event, -45, event === "long-jump" ? 3 : 13, 1.22));
-  // The pit: 8 m long, 3 m wide, its near end 3 m past the long jump's take-off line (Manual 2.3.1.4) or 13 m past the men's triple jump line (Rule 31.4: not less than 13 m for men, 11 for women).
+  // The pit: 8 m long, 3 m wide, its near end 3 m past the long jump's take-off line (Manual 2.3.1.4) or 13 m past the men's triple jump line (Rule 31: not less than 13 m for men, 11 for women).
   const near = event === "long-jump" ? 3 : 13;
   const len = 8;
   addParts(parts, pitParts(event, event, [near + len / 2, 0], 0, len, 3));

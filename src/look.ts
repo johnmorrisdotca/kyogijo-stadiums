@@ -159,9 +159,12 @@ const LINE_DRAWING: Look = {
   about: "Ink only: black lines on white and nothing filled, for a plan that prints on any printer and copies cleanly (dark: white lines on black).",
   light: {
     base: { ink: "#000000", line: "#000000", apron: "#ffffff", surface: "#ffffff", alt: "#ffffff", zone: "#ffffff", boards: "#000000", red: "#000000", blue: "#000000", dirt: "#ffffff", foul: "#ffffff", infield: "#ffffff", crease: "#ffffff", key: "#ffffff", court: "#ffffff", post: "#000000", pylon: "#000000", rgo: "#ffffff", rgm: "#ffffff", rgi: "#ffffff", rgb: "#ffffff", hog: "#000000", hack: "#000000", fgz: "rgba(0,0,0,0)", pebble: "rgba(0,0,0,0)", markY: "#000000", markB: "#000000", markG: "#000000", markR: "#000000" },
+    // An athletics stadium in ink: nothing filled but the pads of a pole vault box, so that a pit, a mat, a circle and the track are their outlines.
+    groups: { athletics: { track: "#ffffff", sand: "#ffffff", mat: "#ffffff", water: "#ffffff", concrete: "#ffffff", pad: "#000000" } },
   },
   dark: {
     base: { ink: "#ffffff", line: "#ffffff", apron: "#000000", surface: "#000000", alt: "#000000", zone: "#000000", boards: "#ffffff", red: "#ffffff", blue: "#ffffff", dirt: "#000000", foul: "#000000", infield: "#000000", crease: "#000000", key: "#000000", court: "#000000", post: "#ffffff", pylon: "#ffffff", rgo: "#000000", rgm: "#000000", rgi: "#000000", rgb: "#000000", hog: "#ffffff", hack: "#ffffff", fgz: "rgba(0,0,0,0)", pebble: "rgba(0,0,0,0)", markY: "#ffffff", markB: "#ffffff", markG: "#ffffff", markR: "#ffffff" },
+    groups: { athletics: { track: "#000000", sand: "#000000", mat: "#000000", water: "#000000", concrete: "#000000", pad: "#ffffff" } },
   },
 };
 

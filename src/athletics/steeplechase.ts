@@ -65,7 +65,7 @@ export function standardDistance(o: Oval, variant: WaterJump, s: number): number
   }
   const first = Math.PI * a + o.straight + INSIDE.b2;
   if (t <= first) return t;
-  if (t >= first + 2 * INSIDE.b1 + INSIDE.middle + INSIDE.b2) return t + (L - INSIDE.lap);
+  if (t >= first + 2 * INSIDE.b1 + INSIDE.middle) return t + (L - INSIDE.lap);
   return undefined;
 }
 

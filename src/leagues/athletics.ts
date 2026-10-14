@@ -81,7 +81,7 @@ export const WA_STANDARD_TRACK: AthleticsFigures = {
 
 /**
  * The 200 m Standard Short Track (Marking Plan for the World Athletics Standard Short Track, 1 January 2026; Rules 41 to 44): the bends have a construction radius of 17.205 m at the kerb and the
- * centres of the banked bends are 44.983 m apart; lanes are 1.000 m wide on the oval and 1.220 m on the infield straight, four to six of them (Rule 43.2: 0.90 to 1.22 m, a minimum of four lanes and
+ * centres of the banked bends are 44.983 m apart; lanes are 1.000 m wide on the oval and 1.220 m on the infield straight, four to six of them (Rule 43: 0.90 to 1.22 m, a minimum of four lanes and
  * a maximum of six); the bends are banked at 10.000 degrees. The plan's own transitions (the ascending and descending sections) are drawn here as one circular bend of the same radius, which is ours.
  */
 export const WA_SHORT_TRACK: AthleticsFigures = {

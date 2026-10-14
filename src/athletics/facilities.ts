@@ -27,10 +27,10 @@ export interface Facility {
   reach?: number;
 }
 
-/** What every throw's sector needs. The angle is 34.92 degrees (Rule 32; Manual 2.4.1.4): 12 m apart at 20 m from the centre, so 0.6 m for each metre. */
-export const SECTOR_ANGLE = 2 * Math.atan(0.3);
+/** The angle of a throw's sector: 34.92 degrees (Rule 32, landing sector; Manual 2.4.1.4). Its lines are 12 m apart (the chord) 20 m from the circle's centre, 0.60 m more for each metre further: 2 asin(0.3). */
+export const SECTOR_ANGLE = 2 * Math.asin(0.3);
 
-/** The javelin sector's half angle: the arc's radius is 8 m and the runway 4 m wide, so the lines through the arc's ends make 28.96 degrees (Rule 32.12.2; Figure 2.4.3.2). */
+/** The javelin sector's half angle: the arc's radius is 8 m and the runway 4 m wide, so the lines through the arc's ends make 28.96 degrees (Rule 32, landing sector; Figure 2.4.3.2). */
 export const JAVELIN_HALF = Math.asin(2 / 8);
 
 const f = (n: number): string => num(n);
@@ -49,7 +49,7 @@ export function rectLine(id: string, feature: string, c: Pt, heading: number, w:
   return poly(id, feature, [at(c, heading, -w / 2, -h / 2), at(c, heading, w / 2, -h / 2), at(c, heading, w / 2, h / 2), at(c, heading, -w / 2, h / 2)], { closed: true, w: wLine });
 }
 
-/** The sector of a throw: its two lines from the circle's rim to the arc, and the arc, 50 mm wide, the inner edges through the circle's centre (Rule 32.12.1). */
+/** The sector of a throw: its two lines from the circle's rim to the arc, and the arc, 50 mm wide, the inner edges through the circle's centre (Rule 32, landing sector). */
 export function sectorShapes(id: string, feature: string, c: Pt, heading: number, rim: number, reach: number, half = SECTOR_ANGLE / 2): Shape[] {
   const a = heading - half;
   const b = heading + half;
@@ -61,7 +61,7 @@ export function sectorShapes(id: string, feature: string, c: Pt, heading: number
   return [poly(`${id}-sector-line`, feature, [p0, p1], thin), poly(`${id}-sector-line`, feature, [q0, q1], thin), path(`${id}-sector-arc`, feature, arcD(c[0], c[1], reach, a, b), thin)];
 }
 
-/** A throwing circle (Rule 32.6 to 32.8; Manual 2.4.1.2): the concrete inside the rim, the rim, the 0.75 m lines at right angles to the sector's axis, the centre. `d` is the inside diameter. */
+/** A throwing circle (Rule 32, throwing circle, and 32.8; Manual 2.4.1.2): the concrete inside the rim, the rim, the 0.75 m lines at right angles to the sector's axis, the centre. `d` is the inside diameter. */
 export function circleParts(id: string, event: AthleticsFieldEvent, c: Pt, heading: number, d: number, rim = 0.06): Parts {
   const parts = emptyParts();
   const r = d / 2;
@@ -105,7 +105,7 @@ export function cageShapes(id: string, c: Pt, heading: number): Shape[] {
   return [poly(`${id}-cage`, "cage", [left[0], left[1]], { w: 0.12, cls: "ky-ath-k" }), poly(`${id}-cage`, "cage", [right[0], right[1]], { w: 0.12, cls: "ky-ath-k" }), path(`${id}-cage`, "cage", rear, { w: 0.12, cls: "ky-ath-k" })];
 }
 
-/** The javelin's runway and arc (Rule 32.9 to 32.12; Manual 2.4.3.2 and 2.4.3.3), about the centre point of the arc and the throwing direction `heading` (0 throws right). */
+/** The javelin's runway and arc (Rule 32, javelin throw runway; Manual 2.4.3.2 and 2.4.3.3), about the centre point of the arc and the throwing direction `heading` (0 throws right). */
 export function javelinParts(id: string, c: Pt, heading: number, runway = 36.5): { parts: Parts; facility: Facility } {
   const parts = emptyParts();
   const xe = 8 * Math.cos(JAVELIN_HALF);
@@ -138,8 +138,8 @@ export function bounds(points: readonly Pt[]): { x0: number; y0: number; x1: num
 
 
 /**
- * A high jump facility (Rule 27; Manual 2.3.3): the uprights 4.02 m apart (Rule 27.6: 4.00 to 4.04 m), the crossbar, the landing mat of 6 m by 4 m at the least (Rule 27.7; Manual 2.3.3.4) with the bar's
- * plane 0.5 m inside its front edge, the 50 mm line 3 m outside each upright (Rule 27.1, note) and the run-up: a 16 m wide area, 15 m long (Rule 27.3: 25 m for the major competitions), drawn
+ * A high jump facility (Rule 27; Manual 2.3.3): the uprights 4.02 m apart (Rule 27.6: 4.00 to 4.04 m), the crossbar, the landing mat of 6 m by 4 m at the least (Rule 27, landing area; Manual 2.3.3.4) with the bar's
+ * plane 0.5 m inside its front edge, the 50 mm line 3 m outside each upright (Rule 27.2, note) and the run-up: a 16 m wide area, 15 m long (Rule 27.3: 25 m for the major competitions), drawn
  * as a dashed outline cut by the arc of the 15 m radius. `heading` is the way the athlete jumps; the facility is about the bar's middle.
  */
 export function highJumpParts(id: string, c: Pt, heading: number, runup = 15): { parts: Parts; facility: Facility } {
@@ -169,9 +169,9 @@ export function highJumpParts(id: string, c: Pt, heading: number, runup = 15): {
 }
 
 /**
- * A pole vault's box and 0-line at the end of a runway (Rule 28.3 and 28.4; Manual 2.3.4.2): the box 1.00 m long, 0.60 m wide at the front and 0.15 m at the stop board, set so that the top inside
+ * A pole vault's box and 0-line at the end of a runway (Rule 28; Manual 2.3.4.2): the box 1.00 m long, 0.60 m wide at the front and 0.15 m at the stop board, set so that the top inside
  * edge of the stop board is on the 0-line, which is 10 mm wide and runs on past the uprights (5.20 m apart at the least). `c` is the middle of the stop board and `heading` the way the athlete
- * runs; the landing mat of 6.00 m by 6.00 m at the least with front pieces 2 m long (Rule 28.5; Manual 2.3.4.4) lies beyond, its front 0.10 to 0.15 m from the box.
+ * runs; the landing mat of 6.00 m by 6.00 m at the least with front pieces 2 m long (Rule 28; Manual 2.3.4.4) lies beyond, its front 0.10 to 0.15 m from the box.
  */
 export function poleVaultEnd(id: string, c: Pt, heading: number): { parts: Parts; facility: Facility } {
   const parts = emptyParts();
@@ -189,7 +189,7 @@ export function poleVaultEnd(id: string, c: Pt, heading: number): { parts: Parts
   return { parts, facility: { id, event: "pole-vault", x: c[0], y: c[1], heading, box, reach: 45 } };
 }
 
-/** The runway of a jump: two lines 1.22 m apart (Rule 29.1; Manual 2.3.1.2) from `from` to `to` along `heading`, as lines. */
+/** The runway of a jump: two lines 1.22 m apart (Rule 29; Manual 2.3.1.2) from `from` to `to` along `heading`, as lines. */
 export function runwayLines(id: string, event: AthleticsFieldEvent, from: Pt, to: Pt, width = 1.22): Shape[] {
   const heading = Math.atan2(to[1] - from[1], to[0] - from[0]);
   return [-1, 1].map((side) => {
@@ -207,7 +207,7 @@ export function pitParts(id: string, event: AthleticsFieldEvent, c: Pt, heading:
   return parts;
 }
 
-/** A take-off board (Rule 29.2; Manual 2.3.1.3): 1.22 m by 0.20 m, white, whose edge nearer the pit is the take-off line, `d` metres from the pit's near end. `pitEdge` is that end's middle. */
+/** A take-off board (Rule 29, take-off board; Manual 2.3.1.3): 1.22 m by 0.20 m, white, whose edge nearer the pit is the take-off line, `d` metres from the pit's near end. `pitEdge` is that end's middle. */
 export function takeOffBoard(id: string, event: AthleticsFieldEvent, pitEdge: Pt, heading: number, d: number): Area {
   // The board lies behind the take-off line, away from the pit: along the run, `d` from the pit's near end is the line and the board is the 0.20 m before it.
   const line0 = at(pitEdge, heading, -d);

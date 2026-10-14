@@ -80,7 +80,7 @@ export function straightOf(o: Oval, fig: AthleticsFigures, lanes: number, longes
 }
 
 /**
- * The straight of a covered track (Rules 41.3 and 42; the Marking Plan for the Standard Short Track): lanes 1.22 m wide inside the oval, parallel to its straights, with a starting area of 3 m before a
+ * The straight of a covered track (Rules 41 to 43; the Marking Plan for the Standard Short Track): lanes 1.22 m wide inside the oval, parallel to its straights, with a starting area of 3 m before a
  * 60 m start line and a run-out beyond the finish line. Its place in the infield is ours: the Rules and the plan give its lanes and its length, not where it lies.
  */
 export function indoorStraightOf(o: Oval, fig: AthleticsFigures, lanes: number, length: number): StraightPlan {

@@ -485,7 +485,7 @@ export function raceReplay(runners: readonly AthleticsRunner[], options: RaceRep
 
 // ----- field events
 
-/** The distance from the facility's centre to where a mark is measured from: the circle's inside edge (Rule 32), or the javelin's arc (8 m, Rule 32.9). */
+/** The distance from the facility's centre to where a mark is measured from: the circle's inside edge (Rule 32), or the javelin's arc (8 m, Rule 32, javelin throw runway). */
 const MEASURED_FROM: Readonly<Partial<Record<AthleticsFieldEvent, number>>> = { "shot-put": 1.0675, "discus-throw": 1.25, "hammer-throw": 1.0675, "javelin-throw": 8 };
 
 /**

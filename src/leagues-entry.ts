@@ -20,5 +20,7 @@ export { LACROSSE_LEAGUES, NCAA_MEN_FIELD, NCAA_WOMEN_FIELD, NLL_FLOOR, PLL_FIEL
 export type { LacrosseFigures, LacrosseLeague } from "./leagues/lacrosse.ts";
 export { IRL_FIELD, NRL_FIELD, RUGBY_LEAGUES, WORLD_RUGBY_FIELD } from "./leagues/rugby.ts";
 export type { RugbyFigures, RugbyLeague } from "./leagues/rugby.ts";
+export { ATHLETICS_LEAGUES, WA_SHORT_STAGGER_TABLE, WA_SHORT_TRACK, WA_STAGGER_TABLE, WA_STANDARD_TRACK } from "./leagues/athletics.ts";
+export type { AthleticsFigures, AthleticsLeague } from "./leagues/athletics.ts";
 export { fixed, span } from "./leagues/fields.ts";
 export type { Span } from "./leagues/fields.ts";

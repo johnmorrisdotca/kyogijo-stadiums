@@ -9,6 +9,8 @@ export type { Background, BackgroundFit, BackgroundOptions, BackgroundPattern } 
 export { FIELD_SPORTS, fieldPlan, isFieldSport } from "./fields.ts";
 export type { Area as FieldArea, FieldPlan, GoalPlan as FieldGoalPlan, Outline as FieldOutline, Shape as FieldShape } from "./fields.types.ts";
 export { KYOGIJO_FIELDS_STYLE } from "./fields.style.ts";
+export { KYOGIJO_ATHLETICS_STYLE, KYOGIJO_TRACK_STYLE } from "./athletics.style.ts";
+export type { AthleticsFieldEvent, AthleticsInfield, AthleticsRace, AthleticsStyle, AthleticsTrackLook, WaterJump } from "./athletics/types.ts";
 export type { RangeInfo } from "./ranges.names.ts";
 export { rampColour } from "./layers.marks.ts";
 export { HEAT_RAMPS, HEAT_RAMP_NAMES } from "./heat.colour.ts";

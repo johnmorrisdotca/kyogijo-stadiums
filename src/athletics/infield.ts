@@ -107,7 +107,7 @@ export function infieldParts(o: Oval, events: ReadonlySet<AthleticsFieldEvent>):
     const c: Pt = [cp2x + ARENA.discus.out, ARENA.discus.across];
     const heading = ARENA.discus.heading;
     const both = has("discus-throw") && has("hammer-throw");
-    // A circle of 2.50 m, reduced to 2.135 m for the hammer by a ring inside it (Rule 32.7): both are drawn when both events are.
+    // A circle of 2.50 m, reduced to 2.135 m for the hammer by a ring inside it (Rule 32, throwing circle): both are drawn when both events are.
     addParts(parts, circleParts("discus-hammer", has("discus-throw") ? "discus-throw" : "hammer-throw", c, heading, has("discus-throw") ? 2.5 : 2.135));
     if (both) parts.shapes.push(...circleParts("hammer-insert", "hammer-throw", c, heading, 2.135).shapes.filter((s) => s.kind === "ring"));
     parts.shapes.push(...cageShapes("discus-hammer", c, heading));
@@ -115,7 +115,7 @@ export function infieldParts(o: Oval, events: ReadonlySet<AthleticsFieldEvent>):
     parts.shapes.push(...sectorShapes("discus-hammer", has("discus-throw") ? "discus-throw" : "hammer-throw", c, heading, has("discus-throw") ? 1.25 : 1.0675, reach));
     if (both) {
       // The discus's shorter arc across the same sector.
-      const half = Math.atan(0.3);
+      const half = Math.asin(0.3);
       const a = heading - half;
       const b = heading + half;
       const r = SECTOR_REACH["discus-throw"];

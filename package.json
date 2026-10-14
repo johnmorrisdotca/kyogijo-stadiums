@@ -129,6 +129,11 @@
       "import": "./dist/atlas-entry.js",
       "default": "./dist/atlas-entry.js"
     },
+    "./athletics": {
+      "types": "./dist/athletics-entry.d.ts",
+      "import": "./dist/athletics-entry.js",
+      "default": "./dist/athletics-entry.js"
+    },
     "./charts": {
       "types": "./dist/charts-entry.d.ts",
       "import": "./dist/charts-entry.js",
