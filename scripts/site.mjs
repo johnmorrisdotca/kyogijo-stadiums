@@ -44,7 +44,7 @@ cpSync(join(chizu, "LICENSE"), "site/chizu/LICENSE");
 cpSync(join(chizu, "NOTICE.md"), "site/chizu/NOTICE.md");
 
 const lib = await libraryFrom(join(process.cwd(), "dist"), ".js", (file) => import(pathToFileURL(file).href));
-const style = lib["@johnmorrisdotca/kyogijo-stadiums"].KYOGIJO_STYLE;
+const style = `${lib["@johnmorrisdotca/kyogijo-stadiums"].KYOGIJO_STYLE}\n${lib["@johnmorrisdotca/kyogijo-stadiums/turn"].KYOGIJO_TURN_STYLE}`;
 // The playground's own code, from the copy in site/ (which finds the package beside it), run here as the page runs it.
 const here = (file) => import(pathToFileURL(join(process.cwd(), "site", file)).href);
 const { SPORTS, LEAGUES, drawKyogijo } = await here("dist/index.js");
@@ -151,14 +151,17 @@ const FIRST_SCRIPT = `(function () {
   if (league !== null && Object.prototype.hasOwnProperty.call(eras, league)) $("era-group").hidden = eras[league];
   var off = F.statuses[sport];
   if (off) Array.prototype.forEach.call($("status").children, function (button) { button.hidden = off.indexOf(button.dataset.value) >= 0; });
-  [["sport", sport], ["size", size], ["orientation", way === "landscape" || way === "portrait" ? way : "auto"]].forEach(function (one) {
+  var view = q.get("view") === "3d" ? "3d" : "flat";
+  [["sport", sport], ["size", size], ["orientation", way === "landscape" || way === "portrait" ? way : "auto"], ["view", view]].forEach(function (one) {
     Array.prototype.forEach.call($(one[0]).children, function (button) { button.setAttribute("aria-pressed", String(button.dataset.value === one[1])); });
   });
   stage.dataset.orientation = shape[1] ? "portrait" : "landscape";
   stage.dataset.sport = sport;
   stage.dataset.size = size;
   stage.style.setProperty("--r", String(shape[0]));
-  var use = sport === F.sport && size === "full" ? F.use[mode] : null;
+  // The 3D view is made by the script: the box is kept for it, and the flat drawing in the page is hidden until it is replaced.
+  stage.dataset.view = view;
+  var use = view === "flat" && sport === F.sport && size === "full" ? F.use[mode] : null;
   if (use === "tall") stage.replaceChildren($("stage-tall").content.cloneNode(true));
   else if (use === null) stage.setAttribute("data-pending", "");
 })();`;
@@ -241,6 +244,7 @@ const page = `<!doctype html>
               </div>
               ${seg("size", "size", "On the surface puts the names and the score on the field; compact puts a strip under it; a badge is the strip alone, for lists.", "「競技場に重ねる」は名前と得点を競技場の上に表示し、「コンパクト」は下に帯を付け、「バッジ」は帯だけにします。一覧向けです。")}
               ${seg("orientation", "orientation", "Wide is the usual way round. Tall turns the surface a quarter, with the words upright and the teams top and bottom. Fit the box chooses by the shape of the space.", "「横」は通常の向きです。「縦」は競技場を90度回し、文字は水平のまま、チームを上下に並べます。「枠に合わせる」は表示領域の形に合わせて自動で選びます。")}
+              ${seg("view", "view", "Flat is the drawing seen from above. 3D lets you turn it: drag it, swipe sideways, use the arrow keys or the four viewpoints under it, and see the net, the basket, the goal or the posts stand up on the floor.", "「平面」は真上から見た図です。「3D」では図を回して見られ、ネットやバスケットゴール、ゴール、ポストが床の上に立って見えます。向きの変更は、ドラッグ、横方向のスワイプ、矢印キー、図の下の4つの視点ボタンでできます。")}
               ${seg("theme", "theme", "The page's light or dark. Drawings follow it unless they are told otherwise.", "ページのライト／ダークを選びます。特に指定しなければ、図もこれに従います。")}
             </details>
             <details class="fam-fold group" open>

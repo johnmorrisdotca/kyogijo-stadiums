@@ -3,6 +3,7 @@
 // and the custom element. The words are in words.js, the made-up teams in examples.js.
 import { COURT_THEMES, GROUNDS, GROUND_IDS, KYOGIJO_STYLE, LEAGUES, PARKS, PARK_IDS, SOCCER_PITCH_IDS, SOCCER_PROVIDERS, SOCCER_PROVIDER_IDS, VERSION, drawKyogijo, fenceFor, rescale, layerTable, rulesFor, seasonLabel, leagueAt, leagueSeason } from "./dist/index.js";
 import { mountKyogijo } from "./dist/mount-entry.js";
+import { KYOGIJO_TURN_STYLE, mountKyogijoTurn } from "./dist/turn-entry.js";
 import "./dist/element-define.js";
 import { initAtlas } from "./atlas.js";
 import { mountPlaceGrid } from "./place-grid.js";
@@ -32,7 +33,7 @@ const say = (key) => WORDS[language.lang][key];
 if (document.getElementById("kyogijo-style") === null) {
   const sheet = document.createElement("style");
   sheet.id = "kyogijo-style";
-  sheet.textContent = KYOGIJO_STYLE;
+  sheet.textContent = `${KYOGIJO_STYLE}\n${KYOGIJO_TURN_STYLE}`;
   document.head.append(sheet);
 }
 
@@ -100,6 +101,7 @@ makeSeg("sport", (v) => { state.sport = v; state.league = null; loadGame(v); fil
 makeSeg("era", (v) => { state.year = v === "today" ? null : (state.year ?? clampYear(1975)); });
 makeSeg("size", (v) => { state.size = v; });
 makeSeg("orientation", (v) => { state.orientation = v; });
+makeSeg("view", (v) => { state.view = v; });
 makeSeg("theme", (v) => { state.theme = v; keep.set("kyogijo-stadiums.theme", v); applyTheme(); });
 makeSeg("status", (v) => { state.status = v; });
 makeSeg("winner", (v) => { state.winner = v; });
@@ -256,24 +258,47 @@ function applyTheme() {
 // ----- The stage.
 const stage = $("stage");
 let mount;
+/** The 3D view, while the playground is on it: it takes the stage over from the flat drawing, and gives it back. */
+let turn;
 function render() {
   const o = optionsFor(state);
   o.style = "none";
-  if (mount === undefined) {
-    // The first drawing is in the page already (the build drew it): when it is the one this state asks for, it stays, node for node.
-    const drawn = stage.firstElementChild;
-    mount = mountKyogijo(stage, o);
-    const again = stage.firstElementChild;
-    if (drawn !== null && again !== null && drawn !== again && drawn.outerHTML === again.outerHTML) stage.replaceChildren(drawn);
-  } else mount.update(o);
-  const svg = stage.querySelector("svg");
-  const box = svg.viewBox.baseVal;
-  stage.style.setProperty("--r", String(box.width / box.height));
-  stage.dataset.orientation = mount.orientation();
-  stage.dataset.sport = state.sport;
-  stage.dataset.size = state.size;
-  stage.dataset.ready = "true";
-  stage.removeAttribute("data-pending");
+  stage.dataset.view = state.view;
+  if (state.view === "3d") {
+    if (turn === undefined) {
+      mount?.destroy();
+      mount = undefined;
+      stage.replaceChildren();
+      // The page's own light or dark is the stylesheet's to follow; the turn's own rules are written once into the page, like the drawing's.
+      turn = mountKyogijoTurn(stage, o, { preset: state.viewpoint, onChange: (_, preset) => { if (preset !== undefined) state.viewpoint = preset; syncUrl(); } });
+    } else turn.update(o);
+    stage.dataset.orientation = "landscape";
+    stage.dataset.sport = state.sport;
+    stage.dataset.size = state.size;
+    stage.dataset.ready = "true";
+    stage.removeAttribute("data-pending");
+  } else {
+    if (turn !== undefined) {
+      turn.destroy();
+      turn = undefined;
+      mount = undefined;
+    }
+    if (mount === undefined) {
+      // The first drawing is in the page already (the build drew it): when it is the one this state asks for, it stays, node for node.
+      const drawn = stage.firstElementChild;
+      mount = mountKyogijo(stage, o);
+      const again = stage.firstElementChild;
+      if (drawn !== null && again !== null && drawn !== again && drawn.outerHTML === again.outerHTML) stage.replaceChildren(drawn);
+    } else mount.update(o);
+    const svg = stage.querySelector("svg");
+    const box = svg.viewBox.baseVal;
+    stage.style.setProperty("--r", String(box.width / box.height));
+    stage.dataset.orientation = mount.orientation();
+    stage.dataset.sport = state.sport;
+    stage.dataset.size = state.size;
+    stage.dataset.ready = "true";
+    stage.removeAttribute("data-pending");
+  }
   renderEra();
   applyRows();
   for (const toggleOf of [["flags", "flags"], ["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"]]) $(toggleOf[0]).setAttribute("aria-pressed", String(state[toggleOf[1]]));
@@ -288,7 +313,7 @@ function syncUrl() {
   else q.delete("year");
   if (state.league !== null && !isOwnLeague(state.sport, state.league)) q.set("league", state.league);
   else q.delete("league");
-  for (const [key, value, base] of [["pitch", state.pitch, "fifa"], ["ground", state.ground, "none"], ["pitchtype", state.pitchType, "none"], ["park", state.park, "generic"], ["size", state.size, "full"], ["orientation", state.orientation, "auto"], ["theme", state.theme, "auto"]]) {
+  for (const [key, value, base] of [["pitch", state.pitch, "fifa"], ["ground", state.ground, "none"], ["pitchtype", state.pitchType, "none"], ["park", state.park, "generic"], ["size", state.size, "full"], ["orientation", state.orientation, "auto"], ["view", state.view, "flat"], ["viewpoint", state.view === "3d" ? state.viewpoint : "corner", "corner"], ["theme", state.theme, "auto"]]) {
     if (value === base) q.delete(key);
     else q.set(key, value);
   }
@@ -306,6 +331,9 @@ const tidy = (value) => JSON.stringify(value, null, 2);
 
 function code(kind) {
   const o = optionsFor(state, true);
+  if (kind === "module" && state.view === "3d") {
+    return `import { mountKyogijoTurn } from "${CDN}/dist/turn-entry.js";\n// or, from npm: import { mountKyogijoTurn } from "@johnmorrisdotca/kyogijo-stadiums/turn";\n\nmountKyogijoTurn(document.querySelector("#game"), ${tidy(o)}, { preset: "${state.viewpoint}" });`;
+  }
   if (kind === "module") {
     return `import { drawKyogijo } from "${CDN}/+esm";\n// or, from npm: import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";\n\ndocument.querySelector("#game").innerHTML = drawKyogijo(${tidy(o)});`;
   }
@@ -315,6 +343,7 @@ function code(kind) {
     if (o.park) attrs.push(`park="${o.park}"`);
     if (o.size && o.size !== "full") attrs.push(`size="${o.size}"`);
     attrs.push(`orientation="${o.orientation}"`);
+    if (state.view === "3d") attrs.push("turn", `turn-view="${state.viewpoint}"`);
     if (o.language !== "en") attrs.push(`language="${o.language}"`);
     if (o.detail) attrs.push(`detail="${o.detail}"`);
     for (const [key, attr] of [["pitch", "pitch"], ["ground", "ground"], ["pitchType", "pitch-type"], ["half", "half"], ["goals", "goals"], ["stripePattern", "stripe-pattern"]]) if (o[key]) attrs.push(`${attr}="${o[key]}"`);

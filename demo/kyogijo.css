@@ -23,6 +23,9 @@ select.fam-field { min-width: min(100%, 20rem); }
 #stage[data-orientation="portrait"] { min-height: min(78vh, 880px); }
 #stage[data-orientation="portrait"] svg { width: auto; height: min(78vh, 880px); }
 #stage[data-pending] svg { visibility: hidden; }
+#stage[data-view="3d"] { display: block; min-height: 0; }
+#stage[data-view="3d"][data-pending] { min-height: calc(100cqw / 1.6 + 120px); }
+#stage[data-view="3d"] svg { max-width: none; }
 @media (min-width: 700px) { .stage-felt { padding: 18px 16px; } }
 
 .try-controls { display: grid; gap: 10px; min-width: 0; }
