@@ -7,6 +7,8 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.10.0] - 2026-10-14
+
 ### Added
 
 - **The demo has an optional Background menu.** None by default, then the family's twenty-five backgrounds (`scripts/family-backgrounds.ts`, version 1.0.0, copied byte for byte from taisen-brackets and pinned by version and sha256), also by `?background=<name>`. It draws one behind the stage in the dark or the light variant of the page's look, takes the stage's text colour from the ink the background returns, and loads the module only when one is chosen. It is presentation only: the drawing's SVG is the same string with and without it, and an e2e test holds that. The package ships none of it and still has no dependency.
