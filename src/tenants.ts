@@ -1,4 +1,4 @@
-import { TENANT_ARTICLES, TENANT_DATA, TENANT_NO_SURFACE } from "./tenants.data.ts";
+import { TENANT_ARTICLES, TENANT_DATA, TENANT_NAMES_JA, TENANT_NO_SURFACE } from "./tenants.data.ts";
 
 /** The sport a tenant plays: what decides the surface a place offers for it (`surfaceOf`). */
 export type TenantSport = "baseball" | "soccer" | "american-football" | "canadian-football" | "basketball" | "ice-hockey" | "rugby-union" | "rugby-league" | "australian-football" | "lacrosse" | "cricket";
@@ -19,10 +19,23 @@ export interface TenantSource {
   years?: "wikidata" | "wikipedia";
 }
 
+/** Why a club's name in Japanese is not Wikidata's label: the label is a transliteration of an abbreviation (`abbreviation`), of a formal name or a suffix such as FC that Japanese media do not use (`formal`), a page title with a disambiguator or "history of" (`title`), or the club's name in another period (`era`). */
+export type TenantNameKind = "abbreviation" | "formal" | "title" | "era";
+
+/** The everyday Japanese form of a club's name where it is not Wikidata's label, and the source of it. */
+export interface TenantNameJa {
+  /** The name Japanese media use, which the atlas shows as `clubJa`. */
+  ja: string;
+  kind: TenantNameKind;
+  /** What was checked, where and when. */
+  note: string;
+}
+
 /** A tenant as the data gives it. */
 export interface TenantData {
   club: string;
   clubJa?: string;
+  aliasesJa?: string[];
   league: string;
   sport: TenantSport;
   from?: number;
@@ -38,8 +51,10 @@ export interface TenantData {
 export interface Tenant {
   /** The club's name in English: the one the place's article gives it (`Montreal Expos`, `Boston Braves` for a club named differently then), else Wikidata's label. */
   club: string;
-  /** The club's name in Japanese, where Wikidata has one for this name of the club (`ブリティッシュ・コロンビア・ライオンズ`). */
+  /** The club's name in Japanese as Japanese media say it (`BCライオンズ`), where there is one for this name of the club: the curated form in `TENANT_NAMES_JA` if the club has one, else Wikidata's label. */
   clubJa?: string;
+  /** Other names the club is found by in Japanese: Wikidata's label where `clubJa` is the curated form instead (`ブリティッシュ・コロンビア・ライオンズ`). */
+  aliasesJa?: readonly string[];
   /** The league it played in there: `MLB`, `CFL`, `MLS`, `NPB`, `Premier League`... A league that has had several names or several seasons of the same name has one (`NASL` is the league of 1968 to 1984). */
   league: string;
   sport: TenantSport;
@@ -62,6 +77,7 @@ const toTenant = (placeId: string, data: TenantData): Tenant => {
   return {
     club: data.club,
     ...(data.clubJa === undefined ? {} : { clubJa: data.clubJa }),
+    ...(data.aliasesJa === undefined ? {} : { aliasesJa: data.aliasesJa }),
     league: data.league,
     sport: data.sport,
     ...(data.from === undefined ? {} : { from: data.from }),
@@ -97,3 +113,9 @@ export const SURFACE_OF_SPORT: Readonly<Record<TenantSport, { sport: "mlb" | "so
 
 /** True when the package draws a surface for the tenant's sport and league. */
 export const hasSurface = (tenant: Tenant): boolean => SURFACE_OF_SPORT[tenant.sport] !== undefined && !TENANT_NO_SURFACE.includes(tenant.league);
+
+/** The clubs whose name in Japanese is the everyday form and not Wikidata's label, by Wikidata item, with why and the source of each: `nameJaOf(tenant)` finds a tenant's. */
+export const TENANT_JAPANESE_NAMES: Readonly<Record<string, TenantNameJa>> = TENANT_NAMES_JA;
+
+/** The note on a tenant's name in Japanese, if its everyday form is a curated one. */
+export const nameJaOf = (tenant: Pick<Tenant, "wikidata">): TenantNameJa | undefined => TENANT_NAMES_JA[tenant.wikidata];

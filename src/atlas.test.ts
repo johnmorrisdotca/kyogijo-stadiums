@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { TENANTS, TENANT_JAPANESE_NAMES, nameJaOf } from "./atlas-entry.ts";
 import { PLACES, atlasFacets, placeById, placesBy, placesByClub, surfaceOf, surfacesOf, tenantsOf } from "./atlas.ts";
 import { drawKyogijo } from "./draw.ts";
 import { GROUNDS } from "./grounds.ts";
@@ -287,5 +288,46 @@ describe("finding a place by its club", () => {
     expect(placesBy({ text: "ライオンズ" }).map((place) => place.id)).toEqual(expect.arrayContaining(["bc-place", "belluna-dome"]));
     expect(placesBy({ text: "expos", year: 1980 }).map((place) => place.id)).toContain("olympic-stadium-montreal");
     expect(placesBy({ text: "seahawks sounders" }).map((place) => place.id)).toEqual(["lumen-field"]);
+  });
+});
+
+describe("the everyday Japanese names of the clubs", () => {
+  const all = Object.values(TENANTS).flat();
+  const rows = Object.entries(TENANT_JAPANESE_NAMES);
+
+  it("show a club by the name Japanese media use, and keep Wikidata's label as an alias", () => {
+    expect(tenantsOf("bc-place")[0]).toMatchObject({ club: "BC Lions", clubJa: "BCライオンズ", aliasesJa: ["ブリティッシュ・コロンビア・ライオンズ"] });
+    // A club whose label Wikidata has right is left as it is, with no alias.
+    const expos = tenantsOf("olympic-stadium-montreal").find((t) => t.club === "Montreal Expos")!;
+    expect(expos.clubJa).toBe("モントリオール・エクスポズ");
+    expect(expos.aliasesJa).toBeUndefined();
+  });
+
+  it("find a place by the curated name, the formal one and the English one", () => {
+    for (const name of ["BCライオンズ", "ブリティッシュ・コロンビア・ライオンズ", "BC Lions"]) expect(placesByClub(name).map((place) => place.id), name).toContain("bc-place");
+    expect(placesBy({ text: "BCライオンズ" }).map((place) => place.id)).toContain("bc-place");
+    expect(placesBy({ text: "インテル" }).length).toBeGreaterThan(0);
+    expect(placesBy({ text: "ブリティッシュ" }).map((place) => place.id)).toContain("bc-place");
+  });
+
+  it("have a source note, a kind and a name for every row, and every row is a club of the table that Wikidata labels differently", () => {
+    expect(rows.length).toBeGreaterThan(20);
+    for (const [id, row] of rows) {
+      expect(row.ja.length, id).toBeGreaterThan(0);
+      expect(["abbreviation", "formal", "title", "era"], id).toContain(row.kind);
+      expect(row.note, id).toMatch(/\d{4}-\d{2}-\d{2}|Wikidata's label/);
+      const tenants = all.filter((t) => t.wikidata === id);
+      expect(tenants.length, id).toBeGreaterThan(0);
+      for (const t of tenants) {
+        expect(t.clubJa, id).toBe(row.ja);
+        expect(nameJaOf(t), id).toBe(row);
+        // The label Wikidata had is still there to be found by.
+        if (t.aliasesJa !== undefined) expect(t.aliasesJa.includes(row.ja), id).toBe(false);
+      }
+    }
+  });
+
+  it("leave no label that is a page title with a disambiguator or a history", () => {
+    for (const t of all) expect(t.clubJa ?? "", `${t.club} ${t.wikidata}`).not.toMatch(/ \(|の歴史|（/);
   });
 });

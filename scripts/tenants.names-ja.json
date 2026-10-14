@@ -1,0 +1,212 @@
+{
+ "about": "The everyday Japanese form of a club's name, where the Japanese label Wikidata holds for it is a long transliteration of an abbreviation or of a formal name that Japanese media do not use (BC Lions: ブリティッシュ・コロンビア・ライオンズ for BCライオンズ; Liverpool F.C.: リヴァプールFC for リバプール), a Wikipedia page title with a disambiguator or 'history of' added, or the name of the club in another period. Keyed by the club's Wikidata item. `ja` is what the atlas shows as `clubJa`; Wikidata's own label is kept as `aliasesJa` so that a search by it still finds the club. `kind` says why: abbreviation, formal (a formal name or a suffix such as FC), title (a page title and not a name) or era (the label is the club's name in another period). `note` is the source: what was checked, where and when. Added by hand and checked by a Japanese-language reviewer (2026-10-13); `aliases` are further names the club is found by, kept beside Wikidata's label. The build leaves every other club's label as Wikidata has it.",
+ "names": {
+  "Q919062": {
+   "club": "BC Lions",
+   "ja": "BCライオンズ",
+   "kind": "abbreviation",
+   "note": "BC is the everyday abbreviation of British Columbia, as written in Japanese sources. ja.wikipedia.org has a page titled BCライオンズ (checked 2026-10-13)."
+  },
+  "Q631": {
+   "club": "Inter Milan",
+   "ja": "インテル・ミラノ",
+   "kind": "formal",
+   "note": "Japanese media say インテル or インテル・ミラノ; インテルナツィオナーレ・ミラノ is the full formal name. ja.wikipedia.org redirects インテル・ミラノ to インテルナツィオナーレ・ミラノ (checked 2026-10-13). Media often say インテル alone (kept as an alias); インテル・ミラノ is also common and tells it from Inter Miami.",
+   "aliases": [
+    "インテル"
+   ]
+  },
+  "Q15799": {
+   "club": "Club Atlético River Plate",
+   "ja": "リーベル・プレート",
+   "kind": "formal",
+   "note": "CA is the initials of Club Atlético and is not said as a part of the name. ja.wikipedia.org redirects リーベル・プレート to CAリーベル・プレート (checked 2026-10-13)."
+  },
+  "Q18656": {
+   "club": "Manchester United F.C.",
+   "ja": "マンチェスター・ユナイテッド",
+   "kind": "formal",
+   "note": "The suffix FC is not said. ja.wikipedia.org redirects マンチェスター・ユナイテッド to マンチェスター・ユナイテッドFC (checked 2026-10-13)."
+  },
+  "Q50602": {
+   "club": "Manchester City F.C.",
+   "ja": "マンチェスター・シティ",
+   "kind": "formal",
+   "note": "The suffix FC is not said. ja.wikipedia.org redirects マンチェスター・シティ to マンチェスター・シティFC (checked 2026-10-13)."
+  },
+  "Q483020": {
+   "club": "Paris Saint-Germain FC",
+   "ja": "パリ・サンジェルマン",
+   "kind": "formal",
+   "note": "The suffix FC is not said. ja.wikipedia.org redirects パリ・サンジェルマン to パリ・サンジェルマンFC (checked 2026-10-13)."
+  },
+  "Q1422": {
+   "club": "Juventus FC",
+   "ja": "ユベントス",
+   "kind": "formal",
+   "note": "The suffix FC is not said, and Japanese newspapers and broadcasts write the club with ベ where Wikidata's label uses ヴェ. ja.wikipedia.org redirects ユベントス to ユヴェントスFC (checked 2026-10-13)."
+  },
+  "Q1130849": {
+   "club": "Liverpool F.C.",
+   "ja": "リバプール",
+   "kind": "formal",
+   "note": "The suffix FC is not said, and Japanese newspapers and broadcasts write the name with バ where Wikidata's label uses ヴァ. ja.wikipedia.org redirects リバプール to リヴァプール (checked 2026-10-13)."
+  },
+  "Q5794": {
+   "club": "Everton F.C.",
+   "ja": "エバートン",
+   "kind": "formal",
+   "note": "The suffix FC is not said, and Japanese newspapers and broadcasts write the name with バ where Wikidata's label uses ヴァ. ja.wikipedia.org has a page titled エバートン (checked 2026-10-13)."
+  },
+  "Q9617": {
+   "club": "Arsenal F.C.",
+   "ja": "アーセナル",
+   "kind": "formal",
+   "note": "The suffix FC is not said. ja.wikipedia.org has a page titled アーセナル (checked 2026-10-13)."
+  },
+  "Q9616": {
+   "club": "Chelsea F.C.",
+   "ja": "チェルシー",
+   "kind": "formal",
+   "note": "The suffix FC is not said. ja.wikipedia.org has a page titled チェルシー (checked 2026-10-13)."
+  },
+  "Q18741": {
+   "club": "Tottenham Hotspur F.C.",
+   "ja": "トッテナム",
+   "kind": "formal",
+   "note": "Hotspur and FC are not said. ja.wikipedia.org has a page titled トッテナム (checked 2026-10-13)."
+  },
+  "Q19593": {
+   "club": "Celtic F.C.",
+   "ja": "セルティック",
+   "kind": "formal",
+   "note": "The suffix FC is not said. ja.wikipedia.org has a page titled セルティック (checked 2026-10-13)."
+  },
+  "Q19597": {
+   "club": "Rangers F.C.",
+   "ja": "グラスゴー・レンジャーズ",
+   "kind": "formal",
+   "note": "Written with its city to tell it from the baseball and hockey Rangers; the suffix FC is not said. ja.wikipedia.org redirects グラスゴー・レンジャーズ to レンジャーズFC (checked 2026-10-13). Media also say レンジャーズ alone (kept as an alias); the city is kept here to tell it from the baseball and hockey Rangers.",
+   "aliases": [
+    "レンジャーズ"
+   ]
+  },
+  "Q1886": {
+   "club": "Atalanta BC",
+   "ja": "アタランタ",
+   "kind": "formal",
+   "note": "BC (Bergamasca Calcio) is not said. ja.wikipedia.org has a page titled アタランタ (checked 2026-10-13)."
+  },
+  "Q131499": {
+   "club": "S.L. Benfica",
+   "ja": "ベンフィカ",
+   "kind": "formal",
+   "note": "SL (Sport Lisboa) is not said. ja.wikipedia.org redirects ベンフィカ to SLベンフィカ (checked 2026-10-13)."
+  },
+  "Q141971": {
+   "club": "1. FC Union Berlin",
+   "ja": "ウニオン・ベルリン",
+   "kind": "formal",
+   "note": "1. FC (Erster Fussball-Club) is not said. ja.wikipedia.org redirects ウニオン・ベルリン to 1.FCウニオン・ベルリン (checked 2026-10-13)."
+  },
+  "Q725367": {
+   "club": "Shanghai Shenhua F.C.",
+   "ja": "上海申花",
+   "kind": "formal",
+   "note": "足球倶楽部 (football club) is the formal suffix of the ja.wikipedia title and is not said; the club is 上海申花. ja.wikipedia.org redirects 上海申花 to 上海申花足球倶楽部 (checked 2026-10-13)."
+  },
+  "Q3356382": {
+   "club": "Baltimore Orioles",
+   "ja": "ボルチモア・オリオールズ",
+   "kind": "title",
+   "note": "Wikidata's label ボルチモア・オリオールズ (マーナーリーグ) is a Japanese Wikipedia page title with a disambiguator (and a typo, マーナー for マイナー) added: the name is the label without it. The atlas shows the league beside the name."
+  },
+  "Q17030254": {
+   "club": "Washington Senators",
+   "ja": "ワシントン・セネターズ",
+   "kind": "title",
+   "note": "Wikidata's label ワシントン・セネターズ (1901年-1960年) の歴史 is the title of the page on the club's history: the name is the label without the years and 'history of'. ja.wikipedia's own page for the club spells it セネタース (kept as an alias); セネターズ is the spelling current MLB and NHL coverage uses (オタワ・セネターズ).",
+   "aliases": [
+    "ワシントン・セネタース"
+   ]
+  },
+  "Q2984507": {
+   "club": "Baltimore Colts",
+   "ja": "ボルチモア・コルツ",
+   "kind": "title",
+   "note": "Wikidata's label ボルチモア・コルツの歴史 is the title of the page on the club's history ('history of'): the name is the label without it. ja.wikipedia has the page ボルチモア・コルツ for the club."
+  },
+  "Q5869212": {
+   "club": "Chicago Cardinals",
+   "ja": "シカゴ・カージナルズ",
+   "kind": "title",
+   "note": "Wikidata's label シカゴ・カージナルズの歴史 is the title of the page on the club's history ('history of'): the name is the label without it."
+  },
+  "Q1439096": {
+   "club": "Houston Oilers",
+   "ja": "ヒューストン・オイラーズ",
+   "kind": "title",
+   "note": "Wikidata's label ヒューストン・オイラーズの歴史 is the title of the page on the club's history ('history of'): the name is the label without it. ja.wikipedia redirects ヒューストン・オイラーズ to テネシー・タイタンズ, the same franchise."
+  },
+  "Q1942096": {
+   "club": "St. Louis Stars",
+   "ja": "セントルイス・スターズ",
+   "kind": "title",
+   "note": "Wikidata's label セントルイス・スターズ (サッカー) is a Japanese Wikipedia page title with a disambiguator (soccer) added: the name is the label without it."
+  },
+  "Q3024169": {
+   "club": "New York Giants",
+   "ja": "ニューヨーク・ジャイアンツ",
+   "kind": "title",
+   "note": "Wikidata's label ニューヨーク・ジャイアンツ (ナ・リーグ) is a Japanese Wikipedia page title with a disambiguator (National League) added: the name is the label without it. The atlas shows the league beside the name."
+  },
+  "Q3259700": {
+   "club": "Los Angeles Angels",
+   "ja": "ロサンゼルス・エンゼルス",
+   "kind": "title",
+   "note": "Wikidata's label ロサンゼルス・エンゼルス (パシフィック・コーストリーグ) is a Japanese Wikipedia page title with a disambiguator (Pacific Coast League) added: the name is the label without it. The atlas shows the league beside the name."
+  },
+  "Q7182824": {
+   "club": "Philadelphia Stars",
+   "ja": "フィラデルフィア・スターズ",
+   "kind": "title",
+   "note": "Wikidata's label フィラデルフィア・スターズ (野球) is a Japanese Wikipedia page title with a disambiguator (baseball) added: the name is the label without it."
+  },
+  "Q2091731": {
+   "club": "Seattle Sounders",
+   "ja": "シアトル・サウンダーズ",
+   "kind": "title",
+   "note": "Wikidata's label シアトル・サウンダーズ (USL) is a Japanese Wikipedia page title with a disambiguator (USL) added: the name is the label without it. ja.wikipedia.org has a page titled シアトル・サウンダーズ (checked 2026-10-13)."
+  },
+  "Q3339056": {
+   "club": "New York Giants",
+   "ja": "ニューヨーク・ジャイアンツ",
+   "kind": "title",
+   "note": "Wikidata's label ニューヨーク・ジャイアンツ (プレイヤーズ・リーグ) is a Japanese Wikipedia page title with a disambiguator (Players' League) added: the name is the label without it. The atlas shows the league beside the name."
+  },
+  "Q5869184": {
+   "club": "Brooklyn Dodgers",
+   "ja": "ブルックリン・ドジャース",
+   "kind": "era",
+   "note": "Wikidata's label ブルックリン・ブライドグルームス is the club's name in 1890 (the Bridegrooms), not the name the place's article gives it, Dodgers. ja.wikipedia.org has a page titled ブルックリン・ドジャース (checked 2026-10-13)."
+  },
+  "Q60766919": {
+   "club": "Dallas Renegades",
+   "ja": "ダラス・レネゲイズ",
+   "kind": "era",
+   "note": "Wikidata's label アーリントン・レネゲイズ is the franchise's later name (the Arlington Renegades of the UFL, 2023), not the Dallas Renegades of the XFL (2020) that played here. No Japanese page of that name was found; it is the English name in katakana, as ja.wikipedia writes the XFL's other clubs (ロサンゼルス・ワイルドキャッツ)."
+  },
+  "Q953046": {
+   "club": "Minnesota United FC",
+   "ja": "ミネソタ・ユナイテッドFC",
+   "kind": "era",
+   "note": "Wikidata's label ミネソタ・スターズFC is the club's name in 2010 (the Minnesota Stars), not the name the place's article gives it, Minnesota United FC. ja.wikipedia.org has a page titled ミネソタ・ユナイテッドFC (checked 2026-10-13). It is also where ミネソタ・スターズFC redirects."
+  },
+  "Q1357111": {
+   "club": "Seattle Reign FC",
+   "ja": "シアトル・レインFC",
+   "kind": "era",
+   "note": "Wikidata's label OLレイン is the club's name from 2020 to 2023 (OL Reign), not the name the place's article gives it, Seattle Reign FC. ja.wikipedia.org has a page titled シアトル・レインFC (checked 2026-10-13). It is also where OLレイン redirects."
+  }
+ }
+}

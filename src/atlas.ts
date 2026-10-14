@@ -195,7 +195,7 @@ export function placesBy(filter: PlaceFilter = {}): Place[] {
     if (words.length > 0) {
       const haystack = plain([place.city, place.team, place.country].filter(Boolean).join(" "));
       // A word may be in the name of any one club that played there.
-      const clubs = place.tenants.map((tenant) => plain([tenant.club, tenant.clubJa].filter(Boolean).join(" ")));
+      const clubs = place.tenants.map((tenant) => plain([tenant.club, tenant.clubJa, ...(tenant.aliasesJa ?? [])].filter(Boolean).join(" ")));
       if (!words.every((word) => haystack.includes(word) || nameContainsAll(place, [word]) || clubs.some((club) => club.includes(word)))) return false;
     }
     return true;
@@ -340,7 +340,7 @@ export function placesByClub(name: string | undefined): Place[] {
   PLACES.forEach((place, index) => {
     let best: number | undefined;
     for (const tenant of place.tenants) {
-      for (const club of [tenant.club, tenant.clubJa]) {
+      for (const club of [tenant.club, tenant.clubJa, ...(tenant.aliasesJa ?? [])]) {
         if (club === undefined) continue;
         const own = plain(club);
         const rank = own === wanted ? 0 : words.every((word) => own.includes(word)) ? 1 : undefined;

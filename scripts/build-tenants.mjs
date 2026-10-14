@@ -16,6 +16,8 @@ const here = (name) => new URL(`./${name}`, import.meta.url);
 const read = (name) => JSON.parse(readFileSync(here(name), "utf8"));
 const evidence = read("tenants.wikidata.json");
 const curated = read("tenants.curated.json");
+// The everyday Japanese form of a club's name where Wikidata's label is not it, by the club's Wikidata item, with a source note for each (scripts/tenants.names-ja.json).
+const namesJa = read("tenants.names-ja.json").names;
 const parks = read("parks.data.json");
 const grounds = read("grounds.data.json");
 const places = [...parks, ...grounds];
@@ -46,6 +48,13 @@ const leagueOfText = (text) => {
   return text.split(/\s*[/,]\s*/).map((part) => byAbbr.get(plain(part)) ?? byTitle.get(plain(part))).filter(Boolean).pop();
 };
 const labelOf = (id) => evidence.labels[id]?.en;
+/** A club's name in Japanese: the curated everyday form where there is one (Wikidata's label kept as an alias), else Wikidata's label. */
+const japanese = (id, label) => {
+  const row = namesJa[id];
+  if (row === undefined) return label === undefined ? {} : { clubJa: label };
+  const aliases = [...(label === undefined || label === row.ja ? [] : [label]), ...(row.aliases ?? [])];
+  return { clubJa: row.ja, ...(aliases.length === 0 ? {} : { aliasesJa: aliases }) };
+};
 const leagueOfItem = (id) => byItem.get(id) ?? byLabel.get(plain(labelOf(id) ?? ""));
 
 // ----- Years.
@@ -164,7 +173,7 @@ for (const place of places) {
     const wikidataProps = [...new Set(candidate.statements.map((t) => t.prop))];
     out.push({
       club: name,
-      ...(club.ja === undefined || plain(name) !== plain(wdName ?? "") ? {} : { clubJa: club.ja }),
+      ...japanese(candidate.id, club.ja === undefined || plain(name) !== plain(wdName ?? "") ? undefined : club.ja),
       league: code,
       sport: league.sport,
       ...(when.from === undefined ? {} : { from: when.from }),
@@ -195,8 +204,12 @@ for (const place of places) {
   }
 }
 
+// Every curated name belongs to a club that is a tenant: a row for a club that is not is a mistake (or a club left out), and is said.
+const used = new Set(Object.values(result).flatMap((list) => list.map((t) => t.wikidata)));
+for (const id of Object.keys(namesJa)) if (!used.has(id)) fail(`scripts/tenants.names-ja.json: ${id} (${namesJa[id].club}) is not a tenant`);
+
 // ----- The data file.
-const KEYS = ["club", "clubJa", "league", "sport", "from", "to", "wikidata", "statements", "listed", "years"];
+const KEYS = ["club", "clubJa", "aliasesJa", "league", "sport", "from", "to", "wikidata", "statements", "listed", "years"];
 const line = (value) => JSON.stringify(value).replace(/":/g, '": ').replace(/,"/g, ', "').replace(/\},\{/g, "}, {");
 const tenant = (t) => {
   for (const key of Object.keys(t)) if (!KEYS.includes(key)) fail(`unknown field ${key}`);
@@ -204,7 +217,7 @@ const tenant = (t) => {
 };
 const text = `// Made by scripts/build-tenants.mjs from scripts/tenants.wikidata.json and scripts/tenants.curated.json: do not edit by hand.
 // The clubs are Wikidata's (CC0) and the tenants lines of the English Wikipedia articles cited (CC BY-SA 4.0); see docs/atlas.md ("Tenants") and docs/references.md.
-import type { TenantArticle, TenantData } from "./tenants.ts";
+import type { TenantArticle, TenantData, TenantNameJa } from "./tenants.ts";
 
 /** The article of English Wikipedia, at the revision read, that the tenants of a place are listed in. */
 export const TENANT_ARTICLES: Readonly<Record<string, TenantArticle>> = {
@@ -213,6 +226,11 @@ ${Object.entries(articles).map(([id, a]) => `  "${id}": ${line(a)}`).join(",\n")
 
 /** The leagues whose field or court is not the one the package draws for their sport (arena football, a basketball league that played on another court): their clubs ask for no surface. */
 export const TENANT_NO_SURFACE: readonly string[] = ${line(Object.entries(curated.leagues).filter(([, l]) => l.surface === false).map(([code]) => code))};
+
+/** The clubs whose name in Japanese is not Wikidata's label, by the club's Wikidata item: the everyday form, why Wikidata's label is not it, and the source of each. See scripts/tenants.names-ja.json. */
+export const TENANT_NAMES_JA: Readonly<Record<string, TenantNameJa>> = {
+${Object.entries(namesJa).map(([id, r]) => `  "${id}": ${line({ ja: r.ja, kind: r.kind, note: r.note })}`).join(",\n")},
+};
 
 export const TENANT_DATA: Readonly<Record<string, TenantData[]>> = {
 ${Object.entries(result).map(([id, list]) => `  "${id}": [\n${list.map(tenant).join(",\n")},\n  ]`).join(",\n")},

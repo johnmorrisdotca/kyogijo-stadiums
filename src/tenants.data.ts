@@ -1,6 +1,6 @@
 // Made by scripts/build-tenants.mjs from scripts/tenants.wikidata.json and scripts/tenants.curated.json: do not edit by hand.
 // The clubs are Wikidata's (CC0) and the tenants lines of the English Wikipedia articles cited (CC BY-SA 4.0); see docs/atlas.md ("Tenants") and docs/references.md.
-import type { TenantArticle, TenantData } from "./tenants.ts";
+import type { TenantArticle, TenantData, TenantNameJa } from "./tenants.ts";
 
 /** The article of English Wikipedia, at the revision read, that the tenants of a place are listed in. */
 export const TENANT_ARTICLES: Readonly<Record<string, TenantArticle>> = {
@@ -158,6 +158,43 @@ export const TENANT_ARTICLES: Readonly<Record<string, TenantArticle>> = {
 /** The leagues whose field or court is not the one the package draws for their sport (arena football, a basketball league that played on another court): their clubs ask for no surface. */
 export const TENANT_NO_SURFACE: readonly string[] = ["Arena Football League", "WBL", "Major League Lacrosse"];
 
+/** The clubs whose name in Japanese is not Wikidata's label, by the club's Wikidata item: the everyday form, why Wikidata's label is not it, and the source of each. See scripts/tenants.names-ja.json. */
+export const TENANT_NAMES_JA: Readonly<Record<string, TenantNameJa>> = {
+  "Q919062": {"ja": "BCライオンズ", "kind": "abbreviation", "note": "BC is the everyday abbreviation of British Columbia, as written in Japanese sources. ja.wikipedia.org has a page titled BCライオンズ (checked 2026-10-13)."},
+  "Q631": {"ja": "インテル・ミラノ", "kind": "formal", "note": "Japanese media say インテル or インテル・ミラノ; インテルナツィオナーレ・ミラノ is the full formal name. ja.wikipedia.org redirects インテル・ミラノ to インテルナツィオナーレ・ミラノ (checked 2026-10-13). Media often say インテル alone (kept as an alias); インテル・ミラノ is also common and tells it from Inter Miami."},
+  "Q15799": {"ja": "リーベル・プレート", "kind": "formal", "note": "CA is the initials of Club Atlético and is not said as a part of the name. ja.wikipedia.org redirects リーベル・プレート to CAリーベル・プレート (checked 2026-10-13)."},
+  "Q18656": {"ja": "マンチェスター・ユナイテッド", "kind": "formal", "note": "The suffix FC is not said. ja.wikipedia.org redirects マンチェスター・ユナイテッド to マンチェスター・ユナイテッドFC (checked 2026-10-13)."},
+  "Q50602": {"ja": "マンチェスター・シティ", "kind": "formal", "note": "The suffix FC is not said. ja.wikipedia.org redirects マンチェスター・シティ to マンチェスター・シティFC (checked 2026-10-13)."},
+  "Q483020": {"ja": "パリ・サンジェルマン", "kind": "formal", "note": "The suffix FC is not said. ja.wikipedia.org redirects パリ・サンジェルマン to パリ・サンジェルマンFC (checked 2026-10-13)."},
+  "Q1422": {"ja": "ユベントス", "kind": "formal", "note": "The suffix FC is not said, and Japanese newspapers and broadcasts write the club with ベ where Wikidata's label uses ヴェ. ja.wikipedia.org redirects ユベントス to ユヴェントスFC (checked 2026-10-13)."},
+  "Q1130849": {"ja": "リバプール", "kind": "formal", "note": "The suffix FC is not said, and Japanese newspapers and broadcasts write the name with バ where Wikidata's label uses ヴァ. ja.wikipedia.org redirects リバプール to リヴァプール (checked 2026-10-13)."},
+  "Q5794": {"ja": "エバートン", "kind": "formal", "note": "The suffix FC is not said, and Japanese newspapers and broadcasts write the name with バ where Wikidata's label uses ヴァ. ja.wikipedia.org has a page titled エバートン (checked 2026-10-13)."},
+  "Q9617": {"ja": "アーセナル", "kind": "formal", "note": "The suffix FC is not said. ja.wikipedia.org has a page titled アーセナル (checked 2026-10-13)."},
+  "Q9616": {"ja": "チェルシー", "kind": "formal", "note": "The suffix FC is not said. ja.wikipedia.org has a page titled チェルシー (checked 2026-10-13)."},
+  "Q18741": {"ja": "トッテナム", "kind": "formal", "note": "Hotspur and FC are not said. ja.wikipedia.org has a page titled トッテナム (checked 2026-10-13)."},
+  "Q19593": {"ja": "セルティック", "kind": "formal", "note": "The suffix FC is not said. ja.wikipedia.org has a page titled セルティック (checked 2026-10-13)."},
+  "Q19597": {"ja": "グラスゴー・レンジャーズ", "kind": "formal", "note": "Written with its city to tell it from the baseball and hockey Rangers; the suffix FC is not said. ja.wikipedia.org redirects グラスゴー・レンジャーズ to レンジャーズFC (checked 2026-10-13). Media also say レンジャーズ alone (kept as an alias); the city is kept here to tell it from the baseball and hockey Rangers."},
+  "Q1886": {"ja": "アタランタ", "kind": "formal", "note": "BC (Bergamasca Calcio) is not said. ja.wikipedia.org has a page titled アタランタ (checked 2026-10-13)."},
+  "Q131499": {"ja": "ベンフィカ", "kind": "formal", "note": "SL (Sport Lisboa) is not said. ja.wikipedia.org redirects ベンフィカ to SLベンフィカ (checked 2026-10-13)."},
+  "Q141971": {"ja": "ウニオン・ベルリン", "kind": "formal", "note": "1. FC (Erster Fussball-Club) is not said. ja.wikipedia.org redirects ウニオン・ベルリン to 1.FCウニオン・ベルリン (checked 2026-10-13)."},
+  "Q725367": {"ja": "上海申花", "kind": "formal", "note": "足球倶楽部 (football club) is the formal suffix of the ja.wikipedia title and is not said; the club is 上海申花. ja.wikipedia.org redirects 上海申花 to 上海申花足球倶楽部 (checked 2026-10-13)."},
+  "Q3356382": {"ja": "ボルチモア・オリオールズ", "kind": "title", "note": "Wikidata's label ボルチモア・オリオールズ (マーナーリーグ) is a Japanese Wikipedia page title with a disambiguator (and a typo, マーナー for マイナー) added: the name is the label without it. The atlas shows the league beside the name."},
+  "Q17030254": {"ja": "ワシントン・セネターズ", "kind": "title", "note": "Wikidata's label ワシントン・セネターズ (1901年-1960年) の歴史 is the title of the page on the club's history: the name is the label without the years and 'history of'. ja.wikipedia's own page for the club spells it セネタース (kept as an alias); セネターズ is the spelling current MLB and NHL coverage uses (オタワ・セネターズ)."},
+  "Q2984507": {"ja": "ボルチモア・コルツ", "kind": "title", "note": "Wikidata's label ボルチモア・コルツの歴史 is the title of the page on the club's history ('history of'): the name is the label without it. ja.wikipedia has the page ボルチモア・コルツ for the club."},
+  "Q5869212": {"ja": "シカゴ・カージナルズ", "kind": "title", "note": "Wikidata's label シカゴ・カージナルズの歴史 is the title of the page on the club's history ('history of'): the name is the label without it."},
+  "Q1439096": {"ja": "ヒューストン・オイラーズ", "kind": "title", "note": "Wikidata's label ヒューストン・オイラーズの歴史 is the title of the page on the club's history ('history of'): the name is the label without it. ja.wikipedia redirects ヒューストン・オイラーズ to テネシー・タイタンズ, the same franchise."},
+  "Q1942096": {"ja": "セントルイス・スターズ", "kind": "title", "note": "Wikidata's label セントルイス・スターズ (サッカー) is a Japanese Wikipedia page title with a disambiguator (soccer) added: the name is the label without it."},
+  "Q3024169": {"ja": "ニューヨーク・ジャイアンツ", "kind": "title", "note": "Wikidata's label ニューヨーク・ジャイアンツ (ナ・リーグ) is a Japanese Wikipedia page title with a disambiguator (National League) added: the name is the label without it. The atlas shows the league beside the name."},
+  "Q3259700": {"ja": "ロサンゼルス・エンゼルス", "kind": "title", "note": "Wikidata's label ロサンゼルス・エンゼルス (パシフィック・コーストリーグ) is a Japanese Wikipedia page title with a disambiguator (Pacific Coast League) added: the name is the label without it. The atlas shows the league beside the name."},
+  "Q7182824": {"ja": "フィラデルフィア・スターズ", "kind": "title", "note": "Wikidata's label フィラデルフィア・スターズ (野球) is a Japanese Wikipedia page title with a disambiguator (baseball) added: the name is the label without it."},
+  "Q2091731": {"ja": "シアトル・サウンダーズ", "kind": "title", "note": "Wikidata's label シアトル・サウンダーズ (USL) is a Japanese Wikipedia page title with a disambiguator (USL) added: the name is the label without it. ja.wikipedia.org has a page titled シアトル・サウンダーズ (checked 2026-10-13)."},
+  "Q3339056": {"ja": "ニューヨーク・ジャイアンツ", "kind": "title", "note": "Wikidata's label ニューヨーク・ジャイアンツ (プレイヤーズ・リーグ) is a Japanese Wikipedia page title with a disambiguator (Players' League) added: the name is the label without it. The atlas shows the league beside the name."},
+  "Q5869184": {"ja": "ブルックリン・ドジャース", "kind": "era", "note": "Wikidata's label ブルックリン・ブライドグルームス is the club's name in 1890 (the Bridegrooms), not the name the place's article gives it, Dodgers. ja.wikipedia.org has a page titled ブルックリン・ドジャース (checked 2026-10-13)."},
+  "Q60766919": {"ja": "ダラス・レネゲイズ", "kind": "era", "note": "Wikidata's label アーリントン・レネゲイズ is the franchise's later name (the Arlington Renegades of the UFL, 2023), not the Dallas Renegades of the XFL (2020) that played here. No Japanese page of that name was found; it is the English name in katakana, as ja.wikipedia writes the XFL's other clubs (ロサンゼルス・ワイルドキャッツ)."},
+  "Q953046": {"ja": "ミネソタ・ユナイテッドFC", "kind": "era", "note": "Wikidata's label ミネソタ・スターズFC is the club's name in 2010 (the Minnesota Stars), not the name the place's article gives it, Minnesota United FC. ja.wikipedia.org has a page titled ミネソタ・ユナイテッドFC (checked 2026-10-13). It is also where ミネソタ・スターズFC redirects."},
+  "Q1357111": {"ja": "シアトル・レインFC", "kind": "era", "note": "Wikidata's label OLレイン is the club's name from 2020 to 2023 (OL Reign), not the name the place's article gives it, Seattle Reign FC. ja.wikipedia.org has a page titled シアトル・レインFC (checked 2026-10-13). It is also where OLレイン redirects."},
+};
+
 export const TENANT_DATA: Readonly<Record<string, TenantData[]>> = {
   "oriole-park-at-camden-yards": [
     { "club": "Baltimore Orioles", "clubJa": "ボルチモア・オリオールズ", "league": "MLB", "sport": "baseball", "from": 1992, "wikidata": "Q650816", "statements": "P466 P115", "listed": true, "years": "wikidata" },
@@ -241,7 +278,7 @@ export const TENANT_DATA: Readonly<Record<string, TenantData[]>> = {
     { "club": "Chicago Cubs", "clubJa": "シカゴ・カブス", "league": "MLB", "sport": "baseball", "from": 1916, "wikidata": "Q246782", "statements": "P466 P115", "listed": true, "years": "wikidata" },
     { "club": "Chicago Sting", "clubJa": "シカゴ・スティング", "league": "NASL", "sport": "soccer", "from": 1977, "to": 1984, "wikidata": "Q670603", "listed": true, "years": "wikipedia" },
     { "club": "Chicago Bears", "clubJa": "シカゴ・ベアーズ", "league": "NFL", "sport": "american-football", "from": 1921, "to": 1970, "wikidata": "Q205033", "statements": "P466 P115", "listed": true, "years": "wikidata" },
-    { "club": "Chicago Cardinals", "clubJa": "シカゴ・カージナルズの歴史", "league": "NFL", "sport": "american-football", "from": 1931, "to": 1939, "wikidata": "Q5869212", "listed": true, "years": "wikipedia" },
+    { "club": "Chicago Cardinals", "clubJa": "シカゴ・カージナルズ", "aliasesJa": ["シカゴ・カージナルズの歴史"], "league": "NFL", "sport": "american-football", "from": 1931, "to": 1939, "wikidata": "Q5869212", "listed": true, "years": "wikipedia" },
     { "club": "Hammond Pros", "league": "NFL", "sport": "american-football", "from": 1920, "to": 1926, "wikidata": "Q1573925", "statements": "P466", "listed": true, "years": "wikidata" },
     { "club": "Chicago Tigers", "league": "NFL", "sport": "american-football", "from": 1920, "to": 1920, "wikidata": "Q5095811", "statements": "P466", "listed": true, "years": "wikidata" },
     { "club": "Chicago Whales", "clubJa": "シカゴ・ホエールズ", "league": "Federal League", "sport": "baseball", "from": 1914, "to": 1915, "wikidata": "Q3298529", "statements": "P466", "listed": true, "years": "wikidata" },
@@ -293,7 +330,7 @@ export const TENANT_DATA: Readonly<Record<string, TenantData[]>> = {
   "polo-grounds": [
     { "club": "New York Jets", "clubJa": "ニューヨーク・ジェッツ", "league": "AFL (1960–69)", "sport": "american-football", "from": 1960, "to": 1963, "wikidata": "Q219602", "listed": true, "years": "wikipedia" },
     { "club": "New York Mets", "clubJa": "ニューヨーク・メッツ", "league": "MLB", "sport": "baseball", "from": 1962, "to": 1963, "wikidata": "Q692417", "listed": true, "years": "wikipedia" },
-    { "club": "New York Giants", "clubJa": "ニューヨーク・ジャイアンツ (ナ・リーグ)", "league": "MLB", "sport": "baseball", "from": 1891, "to": 1957, "wikidata": "Q3024169", "listed": true, "years": "wikipedia" },
+    { "club": "New York Giants", "clubJa": "ニューヨーク・ジャイアンツ", "aliasesJa": ["ニューヨーク・ジャイアンツ (ナ・リーグ)"], "league": "MLB", "sport": "baseball", "from": 1891, "to": 1957, "wikidata": "Q3024169", "listed": true, "years": "wikipedia" },
     { "club": "New York Giants", "clubJa": "ニューヨーク・ジャイアンツ", "league": "NFL", "sport": "american-football", "from": 1925, "to": 1955, "wikidata": "Q190618", "listed": true, "years": "wikipedia" },
     { "club": "New York Cubans", "league": "Negro leagues", "sport": "baseball", "from": 1939, "to": 1950, "wikidata": "Q7013434", "listed": true, "years": "wikipedia" },
     { "club": "New York Yanks", "clubJa": "ニューヨーク・ヤンクス", "league": "NFL", "sport": "american-football", "from": 1949, "to": 1949, "wikidata": "Q1141883", "listed": true, "years": "wikipedia" },
@@ -302,7 +339,7 @@ export const TENANT_DATA: Readonly<Record<string, TenantData[]>> = {
     { "club": "New York Nationals", "league": "American Soccer League (1921–33)", "sport": "soccer", "from": 1927, "to": 1930, "wikidata": "Q7013801", "listed": true, "years": "wikipedia" },
     { "club": "New York Yankees", "clubJa": "ニューヨーク・ヤンキース", "league": "MLB", "sport": "baseball", "from": 1913, "to": 1922, "wikidata": "Q213417", "statements": "P115", "listed": true, "years": "wikidata" },
     { "club": "New York Brickley Giants", "league": "NFL", "sport": "american-football", "from": 1921, "to": 1921, "wikidata": "Q17021450", "listed": true, "years": "wikipedia" },
-    { "club": "New York Giants", "clubJa": "ニューヨーク・ジャイアンツ (プレイヤーズ・リーグ)", "league": "Players' League", "sport": "baseball", "from": 1890, "to": 1890, "wikidata": "Q3339056", "statements": "P466", "listed": true, "years": "wikipedia" },
+    { "club": "New York Giants", "clubJa": "ニューヨーク・ジャイアンツ", "aliasesJa": ["ニューヨーク・ジャイアンツ (プレイヤーズ・リーグ)"], "league": "Players' League", "sport": "baseball", "from": 1890, "to": 1890, "wikidata": "Q3339056", "statements": "P466", "listed": true, "years": "wikipedia" },
     { "club": "New York Metropolitans", "clubJa": "ニューヨーク・メトロポリタンズ", "league": "American Association (1882–91)", "sport": "baseball", "from": 1883, "to": 1883, "wikidata": "Q1252365", "listed": true, "years": "wikipedia" },
   ],
   "south-end-grounds": [
@@ -333,7 +370,7 @@ export const TENANT_DATA: Readonly<Record<string, TenantData[]>> = {
   ],
   "hilltop-park": [
     { "club": "New York Highlanders", "league": "MLB", "sport": "baseball", "from": 1903, "to": 1912, "wikidata": "Q213417", "statements": "P466 P115", "listed": true, "years": "wikidata" },
-    { "club": "New York Giants", "clubJa": "ニューヨーク・ジャイアンツ (ナ・リーグ)", "league": "MLB", "sport": "baseball", "from": 1911, "to": 1911, "wikidata": "Q3024169", "listed": true, "years": "wikipedia" },
+    { "club": "New York Giants", "clubJa": "ニューヨーク・ジャイアンツ", "aliasesJa": ["ニューヨーク・ジャイアンツ (ナ・リーグ)"], "league": "MLB", "sport": "baseball", "from": 1911, "to": 1911, "wikidata": "Q3024169", "listed": true, "years": "wikipedia" },
   ],
   "forbes-field": [
     { "club": "Pittsburgh Pirates", "clubJa": "ピッツバーグ・パイレーツ", "league": "MLB", "sport": "baseball", "from": 1909, "to": 1970, "wikidata": "Q653772", "statements": "P466 P115", "listed": true, "years": "wikidata" },
@@ -346,20 +383,20 @@ export const TENANT_DATA: Readonly<Record<string, TenantData[]>> = {
     { "club": "Philadelphia Phillies", "clubJa": "フィラデルフィア・フィリーズ", "league": "MLB", "sport": "baseball", "from": 1938, "to": 1970, "wikidata": "Q650840", "statements": "P466", "listed": true, "years": "wikidata" },
     { "club": "Philadelphia Eagles", "clubJa": "フィラデルフィア・イーグルス", "league": "NFL", "sport": "american-football", "from": 1940, "to": 1957, "wikidata": "Q219714", "listed": true, "years": "wikipedia" },
     { "club": "Philadelphia Athletics", "clubJa": "フィラデルフィア・アスレチックス", "league": "MLB", "sport": "baseball", "from": 1909, "to": 1954, "wikidata": "Q5870201", "statements": "P466", "listed": true, "years": "wikidata" },
-    { "club": "Philadelphia Stars", "clubJa": "フィラデルフィア・スターズ (野球)", "league": "Negro leagues", "sport": "baseball", "from": 1943, "to": 1943, "wikidata": "Q7182824", "listed": true, "years": "wikipedia" },
+    { "club": "Philadelphia Stars", "clubJa": "フィラデルフィア・スターズ", "aliasesJa": ["フィラデルフィア・スターズ (野球)"], "league": "Negro leagues", "sport": "baseball", "from": 1943, "to": 1943, "wikidata": "Q7182824", "listed": true, "years": "wikipedia" },
   ],
   "comiskey-park": [
     { "club": "Chicago White Sox", "clubJa": "シカゴ・ホワイトソックス", "league": "MLB", "sport": "baseball", "from": 1910, "to": 1990, "wikidata": "Q335169", "statements": "P466", "listed": true, "years": "wikipedia" },
     { "club": "Chicago Sting", "clubJa": "シカゴ・スティング", "league": "NASL", "sport": "soccer", "from": 1980, "to": 1985, "wikidata": "Q670603", "listed": true, "years": "wikipedia" },
     { "club": "Chicago Mustangs", "clubJa": "シカゴ・マスタングス", "league": "NASL", "sport": "soccer", "from": 1967, "to": 1968, "wikidata": "Q1133759", "statements": "P115", "listed": true, "years": "wikipedia" },
-    { "club": "Chicago Cardinals", "clubJa": "シカゴ・カージナルズの歴史", "league": "NFL", "sport": "american-football", "from": 1922, "to": 1958, "wikidata": "Q5869212", "listed": true, "years": "wikipedia" },
+    { "club": "Chicago Cardinals", "clubJa": "シカゴ・カージナルズ", "aliasesJa": ["シカゴ・カージナルズの歴史"], "league": "NFL", "sport": "american-football", "from": 1922, "to": 1958, "wikidata": "Q5869212", "listed": true, "years": "wikipedia" },
     { "club": "Chicago American Giants", "clubJa": "シカゴ・アメリカン・ジャイアンツ", "league": "Negro leagues", "sport": "baseball", "from": 1941, "to": 1952, "wikidata": "Q2963291", "listed": true, "years": "wikipedia" },
     { "club": "Chicago Bulls", "league": "AFL (1926)", "sport": "american-football", "from": 1926, "to": 1926, "wikidata": "Q5095520", "listed": true, "years": "wikipedia" },
   ],
   "griffith-stadium": [
     { "club": "Washington Senators", "league": "MLB", "sport": "baseball", "from": 1961, "to": 1961, "wikidata": "Q111678972", "statements": "P466 P115", "listed": true, "years": "wikidata" },
     { "club": "Washington Redskins", "league": "NFL", "sport": "american-football", "from": 1937, "to": 1960, "wikidata": "Q212654", "statements": "P466 P115", "listed": true, "years": "wikidata" },
-    { "club": "Washington Senators", "clubJa": "ワシントン・セネターズ (1901年-1960年) の歴史", "league": "MLB", "sport": "baseball", "from": 1911, "to": 1960, "wikidata": "Q17030254", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Washington Senators", "clubJa": "ワシントン・セネターズ", "aliasesJa": ["ワシントン・セネターズ (1901年-1960年) の歴史", "ワシントン・セネタース"], "league": "MLB", "sport": "baseball", "from": 1911, "to": 1960, "wikidata": "Q17030254", "statements": "P466 P115", "listed": true, "years": "wikidata" },
     { "club": "Homestead Grays", "league": "Negro leagues", "sport": "baseball", "from": 1940, "to": 1948, "wikidata": "Q3115867", "listed": true, "years": "wikipedia" },
     { "club": "Washington Black Senators", "league": "Negro leagues", "sport": "baseball", "from": 1938, "to": 1938, "wikidata": "Q7971688", "listed": true, "years": "wikipedia" },
     { "club": "Washington Elite Giants", "league": "Negro leagues", "sport": "baseball", "from": 1936, "to": 1937, "wikidata": "Q4852856", "listed": true, "years": "wikipedia" },
@@ -380,7 +417,7 @@ export const TENANT_DATA: Readonly<Record<string, TenantData[]>> = {
     { "club": "Detroit Cougars", "clubJa": "デトロイト・クーガーズ", "league": "NASL", "sport": "soccer", "from": 1967, "to": 1968, "wikidata": "Q583671", "statements": "P115", "listed": true, "years": "wikipedia" },
   ],
   "ebbets-field": [
-    { "club": "Brooklyn Dodgers", "clubJa": "ブルックリン・ブライドグルームス", "league": "MLB", "sport": "baseball", "from": 1913, "to": 1957, "wikidata": "Q5869184", "listed": true, "years": "wikipedia" },
+    { "club": "Brooklyn Dodgers", "clubJa": "ブルックリン・ドジャース", "aliasesJa": ["ブルックリン・ブライドグルームス"], "league": "MLB", "sport": "baseball", "from": 1913, "to": 1957, "wikidata": "Q5869184", "listed": true, "years": "wikipedia" },
     { "club": "Brooklyn Dodgers", "clubJa": "ブルックリン・ドジャース", "league": "AAFC", "sport": "american-football", "from": 1946, "to": 1948, "wikidata": "Q929497", "listed": true, "years": "wikipedia" },
     { "club": "Brooklyn Dodgers", "clubJa": "ブルックリン・ドジャース", "league": "NFL", "sport": "american-football", "from": 1930, "to": 1944, "wikidata": "Q929532", "statements": "P466", "listed": true, "years": "wikipedia" },
     { "club": "Brooklyn Eagles", "league": "Negro leagues", "sport": "baseball", "from": 1935, "to": 1935, "wikidata": "Q7016676", "listed": true, "years": "wikipedia" },
@@ -424,10 +461,10 @@ export const TENANT_DATA: Readonly<Record<string, TenantData[]>> = {
     { "club": "Baltimore Stallions", "clubJa": "ボルチモア・スタリオンズ", "league": "CFL", "sport": "canadian-football", "from": 1994, "to": 1995, "wikidata": "Q3496446", "statements": "P466 P115", "listed": true, "years": "wikidata" },
     { "club": "Bowie Baysox", "clubJa": "ブーイ・ベイソックス", "league": "Eastern League", "sport": "baseball", "from": 1993, "to": 1993, "wikidata": "Q2892340", "statements": "P466 P115", "listed": true, "years": "wikidata" },
     { "club": "Baltimore Orioles", "clubJa": "ボルチモア・オリオールズ", "league": "MLB", "sport": "baseball", "from": 1954, "to": 1991, "wikidata": "Q650816", "statements": "P466 P115", "listed": true, "years": "wikidata" },
-    { "club": "Baltimore Colts", "clubJa": "ボルチモア・コルツの歴史", "league": "NFL", "sport": "american-football", "from": 1953, "to": 1983, "wikidata": "Q2984507", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Baltimore Colts", "clubJa": "ボルチモア・コルツ", "aliasesJa": ["ボルチモア・コルツの歴史"], "league": "NFL", "sport": "american-football", "from": 1953, "to": 1983, "wikidata": "Q2984507", "statements": "P466 P115", "listed": true, "years": "wikidata" },
     { "club": "Baltimore Comets", "league": "NASL", "sport": "soccer", "from": 1974, "to": 1975, "wikidata": "Q2190741", "statements": "P115", "listed": true, "years": "wikipedia" },
     { "club": "Baltimore Bays", "league": "NASL", "sport": "soccer", "from": 1967, "to": 1968, "wikidata": "Q2019465", "statements": "P115", "listed": true, "years": "wikipedia" },
-    { "club": "Baltimore Orioles", "clubJa": "ボルチモア・オリオールズ (マーナーリーグ)", "league": "International League", "sport": "baseball", "from": 1944, "to": 1953, "wikidata": "Q3356382", "listed": true, "years": "wikipedia" },
+    { "club": "Baltimore Orioles", "clubJa": "ボルチモア・オリオールズ", "aliasesJa": ["ボルチモア・オリオールズ (マーナーリーグ)"], "league": "International League", "sport": "baseball", "from": 1944, "to": 1953, "wikidata": "Q3356382", "listed": true, "years": "wikipedia" },
     { "club": "Baltimore Colts", "clubJa": "ボルチモア・コルツ", "league": "NFL", "sport": "american-football", "from": 1947, "to": 1950, "wikidata": "Q614724", "statements": "P466", "listed": true, "years": "wikidata" },
     { "club": "Baltimore Elite Giants", "clubJa": "ボルチモア・エリートジャイアンツ", "league": "Negro leagues", "sport": "baseball", "from": 1950, "to": 1950, "wikidata": "Q4852856", "listed": true, "years": "wikipedia" },
   ],
@@ -453,7 +490,7 @@ export const TENANT_DATA: Readonly<Record<string, TenantData[]>> = {
   ],
   "wrigley-field-los-angeles": [
     { "club": "Los Angeles Angels", "clubJa": "ロサンゼルス・エンゼルス", "league": "MLB", "sport": "baseball", "from": 1961, "to": 1961, "wikidata": "Q743309", "listed": true, "years": "wikipedia" },
-    { "club": "Los Angeles Angels", "clubJa": "ロサンゼルス・エンゼルス (パシフィック・コーストリーグ)", "league": "Pacific Coast League", "sport": "baseball", "from": 1925, "to": 1957, "wikidata": "Q3259700", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+    { "club": "Los Angeles Angels", "clubJa": "ロサンゼルス・エンゼルス", "aliasesJa": ["ロサンゼルス・エンゼルス (パシフィック・コーストリーグ)"], "league": "Pacific Coast League", "sport": "baseball", "from": 1925, "to": 1957, "wikidata": "Q3259700", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
     { "club": "Hollywood Stars", "clubJa": "ハリウッド・スターズ", "league": "Pacific Coast League", "sport": "baseball", "from": 1926, "to": 1938, "wikidata": "Q3139426", "listed": true, "years": "wikipedia" },
   ],
   "metropolitan-stadium": [
@@ -485,7 +522,7 @@ export const TENANT_DATA: Readonly<Record<string, TenantData[]>> = {
   ],
   "astrodome": [
     { "club": "Houston Astros", "clubJa": "ヒューストン・アストロズ", "league": "MLB", "sport": "baseball", "from": 1965, "to": 1999, "wikidata": "Q848117", "statements": "P466", "listed": true, "years": "wikipedia" },
-    { "club": "Houston Oilers", "clubJa": "ヒューストン・オイラーズの歴史", "league": "NFL", "sport": "american-football", "from": 1968, "to": 1996, "wikidata": "Q1439096", "listed": true, "years": "wikipedia" },
+    { "club": "Houston Oilers", "clubJa": "ヒューストン・オイラーズ", "aliasesJa": ["ヒューストン・オイラーズの歴史"], "league": "NFL", "sport": "american-football", "from": 1968, "to": 1996, "wikidata": "Q1439096", "listed": true, "years": "wikipedia" },
     { "club": "Houston Gamblers", "clubJa": "ヒューストン・ギャンブラーズ", "league": "USFL", "sport": "american-football", "from": 1984, "to": 1985, "wikidata": "Q3094944", "listed": true, "years": "wikipedia" },
     { "club": "Houston Hurricane", "clubJa": "ヒューストン・ハリケーン", "league": "NASL", "sport": "soccer", "from": 1978, "to": 1980, "wikidata": "Q2297160", "statements": "P115", "listed": true, "years": "wikipedia" },
     { "club": "Houston Rockets", "clubJa": "ヒューストン・ロケッツ", "league": "NBA", "sport": "basketball", "from": 1971, "to": 1975, "wikidata": "Q161345", "listed": true, "years": "wikipedia" },
@@ -502,7 +539,7 @@ export const TENANT_DATA: Readonly<Record<string, TenantData[]>> = {
     { "club": "St. Louis Cardinals", "clubJa": "セントルイス・カージナルス", "league": "MLB", "sport": "baseball", "from": 1966, "to": 2005, "wikidata": "Q504309", "statements": "P466", "listed": true, "years": "wikidata" },
     { "club": "St. Louis Rams", "clubJa": "セントルイス・ラムズ", "league": "NFL", "sport": "american-football", "from": 1995, "to": 1995, "wikidata": "Q5870467", "listed": true, "years": "wikipedia" },
     { "club": "St. Louis Cardinals", "league": "NFL", "sport": "american-football", "from": 1966, "to": 1987, "wikidata": "Q2938063", "listed": true, "years": "wikipedia" },
-    { "club": "St. Louis Stars", "clubJa": "セントルイス・スターズ (サッカー)", "league": "NASL", "sport": "soccer", "from": 1967, "to": 1977, "wikidata": "Q1942096", "statements": "P115", "listed": true, "years": "wikipedia" },
+    { "club": "St. Louis Stars", "clubJa": "セントルイス・スターズ", "aliasesJa": ["セントルイス・スターズ (サッカー)"], "league": "NASL", "sport": "soccer", "from": 1967, "to": 1977, "wikidata": "Q1942096", "statements": "P115", "listed": true, "years": "wikipedia" },
   ],
   "oakland-coliseum": [
     { "club": "Oakland Roots SC", "clubJa": "オークランド・ルーツSC", "league": "USL Championship", "sport": "soccer", "from": 2025, "wikidata": "Q65966164", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
@@ -556,7 +593,7 @@ export const TENANT_DATA: Readonly<Record<string, TenantData[]>> = {
     { "club": "Montreal Manic", "clubJa": "モントリオール・マニック", "league": "NASL", "sport": "soccer", "from": 1981, "to": 1983, "wikidata": "Q1133645", "statements": "P115", "listed": true, "years": "wikipedia" },
   ],
   "metrodome": [
-    { "club": "Minnesota United FC", "clubJa": "ミネソタ・スターズFC", "league": "NASL", "sport": "soccer", "from": 2013, "to": 2013, "wikidata": "Q953046", "listed": true, "years": "wikipedia" },
+    { "club": "Minnesota United FC", "clubJa": "ミネソタ・ユナイテッドFC", "aliasesJa": ["ミネソタ・スターズFC"], "league": "NASL", "sport": "soccer", "from": 2013, "to": 2013, "wikidata": "Q953046", "listed": true, "years": "wikipedia" },
     { "club": "Minnesota Vikings", "clubJa": "ミネソタ・バイキングス", "league": "NFL", "sport": "american-football", "from": 1982, "to": 2013, "wikidata": "Q221150", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
     { "club": "Minnesota Twins", "clubJa": "ミネソタ・ツインズ", "league": "MLB", "sport": "baseball", "from": 1982, "to": 2009, "wikidata": "Q604879", "statements": "P466 P115", "listed": true, "years": "wikidata" },
     { "club": "Minnesota Timberwolves", "clubJa": "ミネソタ・ティンバーウルブズ", "league": "NBA", "sport": "basketball", "from": 1989, "to": 1990, "wikidata": "Q170558", "statements": "P466 P115", "listed": true, "years": "wikidata" },
@@ -574,7 +611,7 @@ export const TENANT_DATA: Readonly<Record<string, TenantData[]>> = {
     { "club": "Denver Bears", "league": "Western League", "sport": "baseball", "from": 1948, "to": 1954, "wikidata": "Q19564273", "listed": true, "years": "wikipedia" },
   ],
   "globe-life-park-in-arlington": [
-    { "club": "Dallas Renegades", "clubJa": "アーリントン・レネゲイズ", "league": "UFL", "sport": "american-football", "from": 2020, "to": 2025, "wikidata": "Q60766919", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+    { "club": "Dallas Renegades", "clubJa": "ダラス・レネゲイズ", "aliasesJa": ["アーリントン・レネゲイズ"], "league": "UFL", "sport": "american-football", "from": 2020, "to": 2025, "wikidata": "Q60766919", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
     { "club": "North Texas SC", "clubJa": "ノース・テキサスSC", "league": "MLS Next Pro", "sport": "soccer", "from": 2020, "to": 2025, "wikidata": "Q60761240", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
     { "club": "Dallas Jackals", "clubJa": "ダラス・ジャッカルズ", "league": "Major League Rugby", "sport": "rugby-union", "from": 2022, "to": 2024, "wikidata": "Q96073676", "listed": true, "years": "wikipedia" },
     { "club": "Texas Rangers", "clubJa": "テキサス・レンジャーズ", "league": "MLB", "sport": "baseball", "from": 1994, "to": 2019, "wikidata": "Q329816", "statements": "P466 P115", "listed": true, "years": "wikidata" },
@@ -690,12 +727,12 @@ export const TENANT_DATA: Readonly<Record<string, TenantData[]>> = {
     { "club": "Deportes Melipilla", "clubJa": "メリピージャ", "league": "Chilean Primera División", "sport": "soccer", "wikidata": "Q1858893", "listed": true },
   ],
   "wembley-1923": [
-    { "club": "Arsenal F.C.", "clubJa": "アーセナルFC", "league": "Premier League", "sport": "soccer", "from": 1998, "to": 2000, "wikidata": "Q9617", "listed": true, "years": "wikipedia" },
+    { "club": "Arsenal F.C.", "clubJa": "アーセナル", "aliasesJa": ["アーセナルFC"], "league": "Premier League", "sport": "soccer", "from": 1998, "to": 2000, "wikidata": "Q9617", "listed": true, "years": "wikipedia" },
     { "club": "London Monarchs", "clubJa": "ロンドン・モナークス", "league": "WLAF", "sport": "american-football", "from": 1991, "to": 1992, "wikidata": "Q1689310", "listed": true, "years": "wikipedia" },
   ],
   "wembley": [
     { "club": "Catalans Dragons", "clubJa": "カタラン・ドラゴンズ", "league": "Super League", "sport": "rugby-league", "from": 2018, "to": 2018, "wikidata": "Q862384", "statements": "P115", "years": "wikidata" },
-    { "club": "Tottenham Hotspur F.C.", "clubJa": "トッテナム・ホットスパーFC", "league": "Premier League", "sport": "soccer", "from": 2016, "to": 2017, "wikidata": "Q18741", "statements": "P466", "years": "wikidata" },
+    { "club": "Tottenham Hotspur F.C.", "clubJa": "トッテナム", "aliasesJa": ["トッテナム・ホットスパーFC"], "league": "Premier League", "sport": "soccer", "from": 2016, "to": 2017, "wikidata": "Q18741", "statements": "P466", "years": "wikidata" },
   ],
   "estadio-azteca": [
     { "club": "Atlante F.C.", "clubJa": "アトランテFC", "league": "Ascenso MX", "sport": "soccer", "from": 1966, "wikidata": "Q849949", "listed": true, "years": "wikipedia" },
@@ -708,7 +745,7 @@ export const TENANT_DATA: Readonly<Record<string, TenantData[]>> = {
     { "club": "Bayern Munich", "league": "Bundesliga", "sport": "soccer", "from": 1972, "to": 2005, "wikidata": "Q15789", "statements": "P466 P115", "listed": true, "years": "wikidata" },
   ],
   "monumental": [
-    { "club": "Club Atlético River Plate", "clubJa": "CAリーベル・プレート", "league": "Argentine Primera División", "sport": "soccer", "from": 1938, "wikidata": "Q15799", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Club Atlético River Plate", "clubJa": "リーベル・プレート", "aliasesJa": ["CAリーベル・プレート"], "league": "Argentine Primera División", "sport": "soccer", "from": 1938, "wikidata": "Q15799", "statements": "P466 P115", "listed": true, "years": "wikidata" },
   ],
   "santiago-bernabeu": [
     { "club": "Real Madrid CF", "league": "La Liga", "sport": "soccer", "from": 1947, "wikidata": "Q8682", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
@@ -727,7 +764,7 @@ export const TENANT_DATA: Readonly<Record<string, TenantData[]>> = {
   ],
   "olympiastadion-berlin": [
     { "club": "Hertha BSC", "clubJa": "ヘルタ・ベルリン", "league": "2. Bundesliga", "sport": "soccer", "from": 1963, "wikidata": "Q102720", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
-    { "club": "1. FC Union Berlin", "clubJa": "1.FCウニオン・ベルリン", "league": "Bundesliga", "sport": "soccer", "from": 2021, "to": 2023, "wikidata": "Q141971", "listed": true, "years": "wikipedia" },
+    { "club": "1. FC Union Berlin", "clubJa": "ウニオン・ベルリン", "aliasesJa": ["1.FCウニオン・ベルリン"], "league": "Bundesliga", "sport": "soccer", "from": 2021, "to": 2023, "wikidata": "Q141971", "listed": true, "years": "wikipedia" },
     { "club": "Berlin Thunder", "clubJa": "ベルリン・サンダー", "league": "WLAF", "sport": "american-football", "from": 2003, "to": 2007, "wikidata": "Q644290", "statements": "P115", "listed": true, "years": "wikipedia" },
     { "club": "Blau-Weiß 1890 Berlin", "league": "2. Bundesliga", "sport": "soccer", "from": 1984, "to": 1990, "wikidata": "Q3163786", "listed": true, "years": "wikipedia" },
   ],
@@ -770,9 +807,9 @@ export const TENANT_DATA: Readonly<Record<string, TenantData[]>> = {
   "lumen-field": [
     { "club": "Seattle Seahawks", "clubJa": "シアトル・シーホークス", "league": "NFL", "sport": "american-football", "from": 2002, "wikidata": "Q221878", "statements": "P466 P115", "listed": true, "years": "wikidata" },
     { "club": "Seattle Sounders FC", "clubJa": "シアトル・サウンダーズFC", "league": "MLS", "sport": "soccer", "from": 2009, "wikidata": "Q632511", "statements": "P466 P115", "listed": true, "years": "wikidata" },
-    { "club": "Seattle Reign FC", "clubJa": "OLレイン", "league": "NWSL", "sport": "soccer", "from": 2022, "wikidata": "Q1357111", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Seattle Reign FC", "clubJa": "シアトル・レインFC", "aliasesJa": ["OLレイン"], "league": "NWSL", "sport": "soccer", "from": 2022, "wikidata": "Q1357111", "statements": "P466 P115", "listed": true, "years": "wikidata" },
     { "club": "Seattle Sea Dragons", "clubJa": "シアトル・シードラゴンズ", "league": "XFL", "sport": "american-football", "from": 2020, "to": 2023, "wikidata": "Q60761290", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
-    { "club": "Seattle Sounders", "clubJa": "シアトル・サウンダーズ (USL)", "league": "USL First Division", "sport": "soccer", "from": 2003, "to": 2007, "wikidata": "Q2091731", "statements": "P466", "listed": true, "years": "wikidata" },
+    { "club": "Seattle Sounders", "clubJa": "シアトル・サウンダーズ", "aliasesJa": ["シアトル・サウンダーズ (USL)"], "league": "USL First Division", "sport": "soccer", "from": 2003, "to": 2007, "wikidata": "Q2091731", "statements": "P466", "listed": true, "years": "wikidata" },
   ],
   "gillette-stadium": [
     { "club": "New England Patriots", "clubJa": "ニューイングランド・ペイトリオッツ", "league": "NFL", "sport": "american-football", "from": 2002, "wikidata": "Q193390", "statements": "P466 P115", "listed": true, "years": "wikidata" },
@@ -793,7 +830,7 @@ export const TENANT_DATA: Readonly<Record<string, TenantData[]>> = {
     { "club": "Hamilton Nationals", "league": "Major League Lacrosse", "sport": "lacrosse", "from": 2009, "to": 2009, "wikidata": "Q1573515", "listed": true, "years": "wikipedia" },
   ],
   "bc-place": [
-    { "club": "BC Lions", "clubJa": "ブリティッシュ・コロンビア・ライオンズ", "league": "CFL", "sport": "canadian-football", "from": 1983, "wikidata": "Q919062", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "BC Lions", "clubJa": "BCライオンズ", "aliasesJa": ["ブリティッシュ・コロンビア・ライオンズ"], "league": "CFL", "sport": "canadian-football", "from": 1983, "wikidata": "Q919062", "statements": "P466 P115", "listed": true, "years": "wikidata" },
     { "club": "Vancouver Whitecaps FC", "clubJa": "バンクーバー・ホワイトキャップスFC", "league": "MLS", "sport": "soccer", "from": 2011, "wikidata": "Q196107", "statements": "P466 P115", "listed": true, "years": "wikidata" },
     { "club": "Vancouver Nighthawks", "league": "WBL", "sport": "basketball", "from": 1988, "to": 1988, "wikidata": "Q15729850", "statements": "P115", "listed": true, "years": "wikipedia" },
     { "club": "Vancouver Whitecaps", "clubJa": "バンクーバー・ホワイトキャップス", "league": "NASL", "sport": "soccer", "from": 1983, "to": 1984, "wikidata": "Q1090574", "listed": true, "years": "wikipedia" },
@@ -818,7 +855,7 @@ export const TENANT_DATA: Readonly<Record<string, TenantData[]>> = {
     { "club": "Los Angeles Riptide", "clubJa": "ロサンゼルス・リプタイド", "league": "Major League Lacrosse", "sport": "lacrosse", "from": 2006, "to": 2008, "wikidata": "Q3433065", "listed": true, "years": "wikipedia" },
   ],
   "hongkou-football-stadium": [
-    { "club": "Shanghai Shenhua F.C.", "clubJa": "上海申花足球倶楽部", "league": "Chinese Super League", "sport": "soccer", "from": 1994, "to": 2019, "wikidata": "Q725367", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+    { "club": "Shanghai Shenhua F.C.", "clubJa": "上海申花", "aliasesJa": ["上海申花足球倶楽部"], "league": "Chinese Super League", "sport": "soccer", "from": 1994, "to": 2019, "wikidata": "Q725367", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
   ],
   "waldstadion-frankfurt": [
     { "club": "Eintracht Frankfurt", "clubJa": "アイントラハト・フランクフルト", "league": "Bundesliga", "sport": "soccer", "from": 1925, "wikidata": "Q38245", "statements": "P466 P115", "listed": true, "years": "wikidata" },
@@ -844,16 +881,16 @@ export const TENANT_DATA: Readonly<Record<string, TenantData[]>> = {
   ],
   "san-siro": [
     { "club": "AC Milan", "clubJa": "ACミラン", "league": "Serie A", "sport": "soccer", "from": 1926, "wikidata": "Q1543", "statements": "P466 P115", "listed": true, "years": "wikidata" },
-    { "club": "Inter Milan", "clubJa": "インテルナツィオナーレ・ミラノ", "league": "Serie A", "sport": "soccer", "from": 1947, "wikidata": "Q631", "statements": "P466 P115", "listed": true, "years": "wikidata" },
-    { "club": "Atalanta BC", "clubJa": "アタランタBC", "league": "Serie A", "sport": "soccer", "from": 2018, "to": 2019, "wikidata": "Q1886", "statements": "P466", "years": "wikidata" },
-    { "club": "Juventus FC", "clubJa": "ユヴェントスFC", "league": "Serie A", "sport": "soccer", "from": 1995, "to": 1995, "wikidata": "Q1422", "statements": "P466", "years": "wikidata" },
+    { "club": "Inter Milan", "clubJa": "インテル・ミラノ", "aliasesJa": ["インテルナツィオナーレ・ミラノ", "インテル"], "league": "Serie A", "sport": "soccer", "from": 1947, "wikidata": "Q631", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Atalanta BC", "clubJa": "アタランタ", "aliasesJa": ["アタランタBC"], "league": "Serie A", "sport": "soccer", "from": 2018, "to": 2019, "wikidata": "Q1886", "statements": "P466", "years": "wikidata" },
+    { "club": "Juventus FC", "clubJa": "ユベントス", "aliasesJa": ["ユヴェントスFC"], "league": "Serie A", "sport": "soccer", "from": 1995, "to": 1995, "wikidata": "Q1422", "statements": "P466", "years": "wikidata" },
   ],
   "old-trafford": [
-    { "club": "Manchester United F.C.", "clubJa": "マンチェスター・ユナイテッドFC", "league": "Premier League", "sport": "soccer", "from": 1910, "wikidata": "Q18656", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+    { "club": "Manchester United F.C.", "clubJa": "マンチェスター・ユナイテッド", "aliasesJa": ["マンチェスター・ユナイテッドFC"], "league": "Premier League", "sport": "soccer", "from": 1910, "wikidata": "Q18656", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
   ],
   "anfield": [
-    { "club": "Liverpool F.C.", "clubJa": "リヴァプールFC", "league": "Premier League", "sport": "soccer", "from": 1892, "wikidata": "Q1130849", "statements": "P466 P115", "listed": true, "years": "wikidata" },
-    { "club": "Everton F.C.", "clubJa": "エヴァートンFC", "league": "Premier League", "sport": "soccer", "from": 1884, "to": 1892, "wikidata": "Q5794", "statements": "P466", "listed": true, "years": "wikidata" },
+    { "club": "Liverpool F.C.", "clubJa": "リバプール", "aliasesJa": ["リヴァプールFC"], "league": "Premier League", "sport": "soccer", "from": 1892, "wikidata": "Q1130849", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Everton F.C.", "clubJa": "エバートン", "aliasesJa": ["エヴァートンFC"], "league": "Premier League", "sport": "soccer", "from": 1884, "to": 1892, "wikidata": "Q5794", "statements": "P466", "listed": true, "years": "wikidata" },
   ],
   "signal-iduna-park": [
     { "club": "Borussia Dortmund", "clubJa": "ボルシア・ドルトムント", "league": "Bundesliga", "sport": "soccer", "from": 1974, "wikidata": "Q41420", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
@@ -866,18 +903,18 @@ export const TENANT_DATA: Readonly<Record<string, TenantData[]>> = {
   ],
   "hampden-park": [
     { "club": "Queen's Park F.C.", "clubJa": "クイーンズ・パークFC", "league": "Scottish Football League", "sport": "soccer", "from": 1903, "to": 2025, "wikidata": "Q852753", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
-    { "club": "Rangers F.C.", "clubJa": "グラスゴー・レンジャーズFC", "league": "Scottish Premiership", "sport": "soccer", "from": 2024, "to": 2024, "wikidata": "Q19597", "listed": true, "years": "wikipedia" },
+    { "club": "Rangers F.C.", "clubJa": "グラスゴー・レンジャーズ", "aliasesJa": ["グラスゴー・レンジャーズFC", "レンジャーズ"], "league": "Scottish Premiership", "sport": "soccer", "from": 2024, "to": 2024, "wikidata": "Q19597", "listed": true, "years": "wikipedia" },
     { "club": "Scottish Claymores", "clubJa": "スコティッシュ・クレイモアーズ", "league": "WLAF", "sport": "american-football", "from": 1998, "to": 2004, "wikidata": "Q748560", "listed": true, "years": "wikipedia" },
-    { "club": "Celtic F.C.", "clubJa": "セルティックFC", "league": "Scottish Premiership", "sport": "soccer", "from": 1994, "to": 1995, "wikidata": "Q19593", "listed": true, "years": "wikipedia" },
+    { "club": "Celtic F.C.", "clubJa": "セルティック", "aliasesJa": ["セルティックFC"], "league": "Scottish Premiership", "sport": "soccer", "from": 1994, "to": 1995, "wikidata": "Q19593", "listed": true, "years": "wikipedia" },
   ],
   "celtic-park": [
-    { "club": "Celtic F.C.", "clubJa": "セルティックFC", "league": "Scottish Premiership", "sport": "soccer", "from": 1892, "wikidata": "Q19593", "statements": "P466 P115", "years": "wikidata" },
+    { "club": "Celtic F.C.", "clubJa": "セルティック", "aliasesJa": ["セルティックFC"], "league": "Scottish Premiership", "sport": "soccer", "from": 1892, "wikidata": "Q19593", "statements": "P466 P115", "years": "wikidata" },
   ],
   "estadio-da-luz": [
-    { "club": "S.L. Benfica", "clubJa": "SLベンフィカ", "league": "Primeira Liga", "sport": "soccer", "from": 2003, "wikidata": "Q131499", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "S.L. Benfica", "clubJa": "ベンフィカ", "aliasesJa": ["SLベンフィカ"], "league": "Primeira Liga", "sport": "soccer", "from": 2003, "wikidata": "Q131499", "statements": "P466 P115", "listed": true, "years": "wikidata" },
   ],
   "parc-des-princes": [
-    { "club": "Paris Saint-Germain FC", "clubJa": "パリ・サンジェルマンFC", "league": "Ligue 1", "sport": "soccer", "from": 1974, "wikidata": "Q483020", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+    { "club": "Paris Saint-Germain FC", "clubJa": "パリ・サンジェルマン", "aliasesJa": ["パリ・サンジェルマンFC"], "league": "Ligue 1", "sport": "soccer", "from": 1974, "wikidata": "Q483020", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
   ],
   "saitama-stadium-2002": [
     { "club": "Urawa Red Diamonds", "clubJa": "浦和レッドダイヤモンズ", "league": "J1 League", "sport": "soccer", "from": 2001, "wikidata": "Q218883", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
@@ -886,28 +923,28 @@ export const TENANT_DATA: Readonly<Record<string, TenantData[]>> = {
     { "club": "FC Seoul", "clubJa": "FCソウル", "league": "K League 1", "sport": "soccer", "from": 2004, "wikidata": "Q482406", "statements": "P466 P115", "listed": true, "years": "wikidata" },
   ],
   "emirates-stadium": [
-    { "club": "Arsenal F.C.", "clubJa": "アーセナルFC", "league": "Premier League", "sport": "soccer", "from": 2006, "wikidata": "Q9617", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Arsenal F.C.", "clubJa": "アーセナル", "aliasesJa": ["アーセナルFC"], "league": "Premier League", "sport": "soccer", "from": 2006, "wikidata": "Q9617", "statements": "P466 P115", "listed": true, "years": "wikidata" },
     { "club": "Arsenal W.F.C.", "clubJa": "アーセナル・ウィメンFC", "league": "Women's Super League", "sport": "soccer", "from": 2024, "wikidata": "Q1775265", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
   ],
   "etihad-stadium": [
-    { "club": "Manchester City F.C.", "clubJa": "マンチェスター・シティFC", "league": "Premier League", "sport": "soccer", "from": 2003, "wikidata": "Q50602", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+    { "club": "Manchester City F.C.", "clubJa": "マンチェスター・シティ", "aliasesJa": ["マンチェスター・シティFC"], "league": "Premier League", "sport": "soccer", "from": 2003, "wikidata": "Q50602", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
   ],
   "stamford-bridge": [
-    { "club": "Chelsea F.C.", "clubJa": "チェルシーFC", "league": "Premier League", "sport": "soccer", "from": 1905, "wikidata": "Q9616", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+    { "club": "Chelsea F.C.", "clubJa": "チェルシー", "aliasesJa": ["チェルシーFC"], "league": "Premier League", "sport": "soccer", "from": 1905, "wikidata": "Q9616", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
     { "club": "Chelsea F.C. Women", "clubJa": "チェルシーFCウィメン", "league": "Women's Super League", "sport": "soccer", "from": 2016, "wikidata": "Q2422811", "listed": true, "years": "wikipedia" },
   ],
   "tottenham-hotspur-stadium": [
-    { "club": "Tottenham Hotspur F.C.", "clubJa": "トッテナム・ホットスパーFC", "league": "Premier League", "sport": "soccer", "from": 2019, "wikidata": "Q18741", "statements": "P466 P115", "years": "wikidata" },
+    { "club": "Tottenham Hotspur F.C.", "clubJa": "トッテナム", "aliasesJa": ["トッテナム・ホットスパーFC"], "league": "Premier League", "sport": "soccer", "from": 2019, "wikidata": "Q18741", "statements": "P466 P115", "years": "wikidata" },
   ],
   "ibrox": [
-    { "club": "Rangers F.C.", "clubJa": "グラスゴー・レンジャーズFC", "league": "Scottish Premiership", "sport": "soccer", "from": 1899, "wikidata": "Q19597", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+    { "club": "Rangers F.C.", "clubJa": "グラスゴー・レンジャーズ", "aliasesJa": ["グラスゴー・レンジャーズFC", "レンジャーズ"], "league": "Scottish Premiership", "sport": "soccer", "from": 1899, "wikidata": "Q19597", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
   ],
   "johan-cruyff-arena": [
     { "club": "AFC Ajax", "clubJa": "アヤックス・アムステルダム", "league": "Eredivisie", "sport": "soccer", "from": 1996, "wikidata": "Q81888", "statements": "P466 P115", "listed": true, "years": "wikidata" },
     { "club": "Amsterdam Admirals", "clubJa": "アムステルダム・アドミラルズ", "league": "WLAF", "sport": "american-football", "from": 1997, "to": 2007, "wikidata": "Q478462", "statements": "P115", "listed": true, "years": "wikipedia" },
   ],
   "allianz-stadium-turin": [
-    { "club": "Juventus FC", "clubJa": "ユヴェントスFC", "league": "Serie A", "sport": "soccer", "from": 2011, "wikidata": "Q1422", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Juventus FC", "clubJa": "ユベントス", "aliasesJa": ["ユヴェントスFC"], "league": "Serie A", "sport": "soccer", "from": 2011, "wikidata": "Q1422", "statements": "P466 P115", "listed": true, "years": "wikidata" },
   ],
   "kashima-soccer-stadium": [
     { "club": "Kashima Antlers", "clubJa": "鹿島アントラーズ", "league": "J1 League", "sport": "soccer", "from": 1993, "wikidata": "Q16932", "statements": "P466 P115", "listed": true, "years": "wikipedia" },

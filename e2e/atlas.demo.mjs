@@ -249,7 +249,7 @@ test("a place lists the clubs that played in it, with their league and years, an
 
 test("the clubs of a place are named in Japanese on the Japanese page", async ({ page }) => {
   await openAtlas(page, "?lang=ja&help=off&place=bc-place");
-  await expect(page.locator(`${at("atlas-tenants")} li`).first()).toContainText("ブリティッシュ・コロンビア・ライオンズ");
+  await expect(page.locator(`${at("atlas-tenants")} li`).first()).toContainText("BCライオンズ");
   await expect(page.locator(`${at("atlas-tenants")} li`).first()).toContainText("1983年〜");
   await expect(page.locator(at("atlas-also"))).toContainText("CFLのフィールド");
   await noSidewaysScroll(page);

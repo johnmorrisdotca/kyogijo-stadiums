@@ -64,12 +64,16 @@ A place is rarely a place of one sport. BC Place staged a World Cup, and is the 
 
 | Field of a tenant | What it is |
 | --- | --- |
-| `club`, `clubJa` | The club's name in English, as the place's article names it (`Boston Braves` for the club that is the Atlanta Braves now), else Wikidata's label; and its name in Japanese, where Wikidata has one for that name (`ブリティッシュ・コロンビア・ライオンズ`). |
+| `club`, `clubJa`, `aliasesJa` | The club's name in English, as the place's article names it (`Boston Braves` for the club that is the Atlanta Braves now), else Wikidata's label; its name in Japanese as Japanese media say it (`BCライオンズ`), where there is one for that name: Wikidata's label, or the curated form where the label is not what is said ([below](#names-in-japanese)); and, where the two differ, Wikidata's label as an alias (`ブリティッシュ・コロンビア・ライオンズ`), which `placesByClub` and the `text` filter of `placesBy` still find the club by. |
 | `league` | The league it played in there: `CFL`, `MLS`, `NFL`, `NBA`, `NHL`, `NPB`, `Premier League`, `J1 League`... A league that was played in different periods under one name is one (`NASL` is the league of 1968 to 1984). |
 | `sport` | `baseball`, `soccer`, `american-football`, `canadian-football`, `basketball`, `ice-hockey`, `rugby-union`, `rugby-league`, `australian-football`, `lacrosse` or `cricket`. It decides the surface the place offers for the club. |
 | `from`, `to` | The first and the last year it played there; a club still there has no `to`, and a club whose years neither source gives has neither. A club that was away for some seasons (the Blue Jays in 2020) has the first and the last. |
 | `wikidata` | The club's Wikidata item (`Q919062`), the key to join a tenant to other data. |
 | `source` | Where it was read: `wikidata` (`P466`, the place lists it as an occupant, `P115`, it lists the place as its home venue, or both), `wikipedia` (the title and revision of the place's article, whose infobox lists it among the tenants) and `years` (`wikidata` or `wikipedia`, whichever the years were read from). |
+
+### Names in Japanese
+
+Wikidata's Japanese label is the title of a Japanese Wikipedia page, which is not always the name people say: it spells out the initials of a name (`ブリティッシュ・コロンビア・ライオンズ` for the BC Lions, who are `BCライオンズ`), keeps a formal name or a suffix (`インテルナツィオナーレ・ミラノ` for Inter, who are `インテル・ミラノ`; `リヴァプールFC` for Liverpool, who are `リバプール`), carries a disambiguator or "history of" (`ボルチモア・コルツの歴史`), or is the club's name in another period (`OLレイン` for the Seattle Reign). `scripts/tenants.names-ja.json` holds the everyday form for each such club, by its Wikidata item, with a `kind` (`abbreviation`, `formal`, `title` or `era`) and a `note` that says what was checked, where and when; `pnpm tenants` puts it in as `clubJa` and keeps Wikidata's label as `aliasesJa`. The table is `TENANT_JAPANESE_NAMES` (`nameJaOf(tenant)` finds a tenant's row). A club is added by hand, with its source, and read by someone who reads Japanese; every other label is Wikidata's as it came.
 
 ```ts
 import { placeById, placesByClub, tenantsOf } from "@johnmorrisdotca/kyogijo-stadiums/atlas";
