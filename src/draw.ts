@@ -12,6 +12,14 @@ import { athleticsPlan } from "./athletics/plan.ts";
 import { skatingPlan } from "./skating/plan.ts";
 import { skatingAbout, skatingSentences } from "./skating/describe.ts";
 import { skatingStyle } from "./skating.style.ts";
+import { budoPlan, isBudoSport } from "./budo/plan.ts";
+import { budoAbout, budoScoreSentences, budoSentences } from "./budo/describe.ts";
+import { lookOf as budoLookOf } from "./budo/looks.ts";
+import { kimariteName } from "./budo/kimarite.ts";
+import { budoScoreText, budoView } from "./budo.score.ts";
+import { budoStyle } from "./budo.style.ts";
+import { budoBoardMarkup } from "./budo.board.ts";
+import { budoSurface } from "./surfaces/budo.ts";
 import { skatingSurface } from "./surfaces/skating.ts";
 import { athleticsAbout, athleticsSentences } from "./athletics/describe.ts";
 import { athleticsStyle, athleticsTrackRules } from "./athletics.style.ts";
@@ -75,7 +83,7 @@ import { VERSION } from "./version.ts";
 export { isPortrait };
 
 /** The sports that can be drawn, in the order a menu lists them. */
-export const SPORTS: readonly Sport[] = ["nfl", "cfl", "ifaf", "nhl", "nba", "mlb", "soccer", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis", "padel", "squash", "racquetball", "sepaktakraw", "teqball", "roundnet", "netball", "swimming", "waterpolo", "diving", "artisticswimming", "athletics", "skating", "lacrosse", "rugby", "afl", "gaelic", "cricket", "fieldhockey", "handball"];
+export const SPORTS: readonly Sport[] = ["nfl", "cfl", "ifaf", "nhl", "nba", "mlb", "soccer", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis", "padel", "squash", "racquetball", "sepaktakraw", "teqball", "roundnet", "netball", "swimming", "waterpolo", "diving", "artisticswimming", "athletics", "skating", "judo", "karate", "kendo", "sumo", "kyudo", "dojo", "lacrosse", "rugby", "afl", "gaelic", "cricket", "fieldhockey", "handball"];
 
 /** The CSS custom property each colour of `Colors` sets. */
 export const COLOR_PROPERTIES: Readonly<Record<keyof Colors, string>> = {
@@ -169,8 +177,8 @@ function shootout(o: Pick<ScoreOptions, "home" | "away">): { home: number; away:
 export function winnerOf(o: Pick<ScoreOptions, "home" | "away" | "status" | "winner"> & { sport?: Sport }): "home" | "away" | "none" {
   const mode = o.winner ?? "auto";
   if (mode === "home" || mode === "away" || mode === "none") return mode;
-  const h = fieldTotal(o.sport, o.home) ?? numeric(o.home.score);
-  const a = fieldTotal(o.sport, o.away) ?? numeric(o.away.score);
+  const h = fieldTotal(o.sport, o.home) ?? numeric(o.home.score) ?? (o.sport === undefined ? undefined : numeric(budoScoreText(o.sport, o.home)));
+  const a = fieldTotal(o.sport, o.away) ?? numeric(o.away.score) ?? (o.sport === undefined ? undefined : numeric(budoScoreText(o.sport, o.away)));
   if (h === undefined || a === undefined) return "none";
   if (mode === "auto" && !(o.status !== undefined && FINAL.test(o.status.trim()))) return "none";
   if (h === a) {
@@ -254,6 +262,12 @@ function buildAthletics(o: SurfaceOptions, common: BuildOptions): Surface {
 function buildSkating(o: SurfaceOptions, common: BuildOptions): Surface {
   const plan = skatingPlan({ ...o, detail: common.detail });
   return skatingSurface(common, plan, common.margin ?? (o.range === undefined ? 20 : 5));
+}
+
+/** The budō surface: its plan, drawn as it lies. A hall, a kyūdōjō and a range of mats have little ground round them. */
+function buildBudo(o: SurfaceOptions, common: BuildOptions): Surface {
+  const plan = budoPlan({ ...o, detail: common.detail });
+  return budoSurface(common, plan, common.margin ?? (o.range === undefined ? 12 : 4));
 }
 
 /** What a drawing adds to what the builders are given: the features with a colour of their own, and a margin the annotations ask for. */
@@ -355,6 +369,13 @@ function buildWhole(o: SurfaceOptions, portrait: boolean, id: string, score: boo
       return buildAthletics({ ...o, sport }, common);
     case "skating":
       return buildSkating({ ...o, sport }, common);
+    case "judo":
+    case "karate":
+    case "kendo":
+    case "sumo":
+    case "kyudo":
+    case "dojo":
+      return buildBudo({ ...o, sport }, common);
     default:
       throw new Error(`Unknown sport "${String(o.sport)}": use one of ${SPORTS.join(", ")}`);
   }
@@ -404,7 +425,7 @@ function standsFor(o: SurfaceOptions, surface: Surface, crowd: Crowd): CrowdStan
     const walls = park === undefined || crowd.wallSeats === false ? [] : parkWallsIn(park, o.year).filter((w) => (crowd.wallSeats === true ? w.height_ft >= 25 : w.label !== undefined && WALL_SEATS[park.id] === w.label));
     return parkLayout({ fence: fenceOutline(points), backstop, crowd, seatsOnWalls: walls.map((w) => ({ from: w.from, to: w.to, height: w.height_ft })) });
   }
-  return crowdLayout({ sport, box: surface.whole ?? surface.box ?? { x: 0, y: 0, w: 100, h: 100 }, crowd, awaySide, ground: o.ground });
+  return crowdLayout({ sport, box: surface.whole ?? surface.box ?? { x: 0, y: 0, w: 100, h: 100 }, crowd, awaySide, ground: o.ground, arena: o.budo?.hall === "budokan" });
 }
 
 /** True when the drawing is asked to be small: `detail: "simple"` or a `width` under 480 pixels. */
@@ -492,7 +513,7 @@ function roundOf(team: Team, markShape: TeamMark | undefined): Pick<TeamView, "r
 
 function teamView(team: Team, side: Side, role: "home" | "away", winner: "home" | "away" | "none", uppercase: boolean, sport: Sport, markShape?: TeamMark): TeamView {
   const name = String(team.name ?? "");
-  const written = fieldScoreText(sport, team);
+  const written = fieldScoreText(sport, team) ?? budoScoreText(sport, team);
   const score = written ?? (team.score === undefined || team.score === null || String(team.score).trim() === "" ? "–" : String(team.score));
   return {
     side,
@@ -511,6 +532,7 @@ function teamView(team: Team, side: Side, role: "home" | "away", winner: "home" 
     serving: team.serving === true ? true : undefined,
     wickets: sport === "cricket" && team.wickets !== undefined && team.wickets !== null && String(team.wickets).trim() !== "" ? String(team.wickets).trim().slice(0, 2) : undefined,
     overs: sport === "cricket" && team.overs !== undefined && team.overs !== null && String(team.overs).trim() !== "" ? String(team.overs).trim().slice(0, 6) : undefined,
+    budo: isBudoSport(sport) ? budoView(team.budo) : undefined,
     innings: sport === "cricket" && Array.isArray(team.innings) ? team.innings.map((value) => (typeof value === "number" ? (Number.isFinite(value) ? String(value) : "") : typeof value === "string" ? value.trim().slice(0, 7) : "")) : undefined,
   };
 }
@@ -565,6 +587,7 @@ const trimmed = (value: number): string => String(Math.round(value * 100) / 100)
 function leagueAbout(league: League, year: number | undefined, language: Language, sheet?: { length: number; width: number }): string {
   const words = KYOGIJO_STRINGS[language].league;
   if (league.family === "skating") return skatingAbout({ sport: "skating", league: league.id }, language);
+  if (league.family === "judo" || league.family === "karate" || league.family === "kendo" || league.family === "sumo" || league.family === "kyudo" || league.family === "dojo") return budoAbout({ sport: league.family, league: league.id }, language);
   if (league.family === "athletics") return athleticsAbout({ sport: "athletics", league: league.id, athletics: sheet === undefined ? undefined : undefined }, language);
   // The field sports: their size is the surface drawn (the one the options ask for), in the unit their rulebook prints first.
   if (league.family === "lacrosse" || league.family === "rugby" || league.family === "afl" || league.family === "gaelic" || league.family === "cricket" || league.family === "fieldhockey" || league.family === "handball") {
@@ -624,8 +647,8 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
   const field = isFieldSport(sport) ? fieldPlan({ ...o, sport }) : undefined;
   const pools = isPoolSport(sport) ? poolDescription({ sport, pool: o.pool }, language) : undefined;
   const poolLine = pools === undefined ? "" : pools.after.map((line) => `${gap}${line}`).join("");
-  const aboutText = pools !== undefined ? pools.about : sport === "skating" ? skatingAbout(o, language) : sport === "athletics" ? athleticsAbout(o, language) : field !== undefined ? leagueAbout(league ?? LEAGUES[sport as FieldSport][0], o.year, language, { length: field.length, width: field.width }) : plan !== undefined ? leagueAbout(plan.league, o.year, language, plan.spec) : league !== undefined ? leagueAbout(league, o.year, language) : pitch === undefined ? words.about[sport] : fill(pitch.format === "futsal" ? words.soccer.aboutFutsal : words.about.soccer, { length: metres(pitch.length), width: metres(pitch.width) });
-  const about = `${words.said.on}${colon}${aboutText}${stop}${sport === "athletics" ? athleticsSentences(o, language) : sport === "skating" ? skatingSentences(o, language) : ""}`;
+  const aboutText = pools !== undefined ? pools.about : isBudoSport(sport) ? budoAbout(o, language) : sport === "skating" ? skatingAbout(o, language) : sport === "athletics" ? athleticsAbout(o, language) : field !== undefined ? leagueAbout(league ?? LEAGUES[sport as FieldSport][0], o.year, language, { length: field.length, width: field.width }) : plan !== undefined ? leagueAbout(plan.league, o.year, language, plan.spec) : league !== undefined ? leagueAbout(league, o.year, language) : pitch === undefined ? words.about[sport] : fill(pitch.format === "futsal" ? words.soccer.aboutFutsal : words.about.soccer, { length: metres(pitch.length), width: metres(pitch.width) });
+  const about = `${words.said.on}${colon}${aboutText}${stop}${sport === "athletics" ? athleticsSentences(o, language) : sport === "skating" ? skatingSentences(o, language) : isBudoSport(sport) ? budoSentences(o, language) : ""}`;
   const halfLine = pitch !== undefined && !isScore(o) && (o.half === "left" || o.half === "right") ? `${gap}${words.soccer.half}` : "";
   // What the ground says about the size: that it is the published one, or that the ground has none and the international pitch is drawn.
   const year = typeof o.year === "number" && Number.isFinite(o.year) ? o.year : undefined;
@@ -663,7 +686,7 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
   const pageant = pageantOf(o);
   const pg = KYOGIJO_STRINGS[language].pageant;
   const pageantLine = pageant === undefined ? "" : `${gap}${pageant.style === "stage" ? pg.stage : pg.carpet}${pageant.emblem === undefined ? "" : `${gap}${pageant.emblem.name === undefined ? pg.emblem : fill(pg.emblemNamed, { name: pageant.emblem.name })}`}`;
-  const s = (t: Team): string => fieldScoreText(sport, t) ?? (t.score === undefined || String(t.score) === "" ? "–" : String(t.score));
+  const s = (t: Team): string => fieldScoreText(sport, t) ?? budoScoreText(sport, t) ?? (t.score === undefined || String(t.score) === "" ? "–" : String(t.score));
   // The sentence follows the drawing: the team on the left is first. The words' {away} and {home} are the first and the second team named.
   const order: [Team, Team] = resolveHomeSide({ ...o, sport }) === "left" ? [o.home, o.away] : [o.away, o.home];
   const line = fill(words.scoreTitle, { away: order[0].name, awayScore: s(order[0]), home: order[1].name, homeScore: s(order[1]) });
@@ -728,7 +751,7 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
         : "";
   return {
     title: o.title ?? (status === undefined ? line : `${line}${words.said.sep}${status}`),
-    description: o.description ?? `${extra === "" ? "" : `${sentence(extra)}${gap}`}${sentence(line)}${result}${tied}${curlingLine}${netLine}${fieldLine}${gap}${about}${parkLine}${eraLine}${rangeLine}${pageantLine}${poolLine}`.trim(),
+    description: o.description ?? `${extra === "" ? "" : `${sentence(extra)}${gap}`}${sentence(line)}${result}${tied}${curlingLine}${netLine}${fieldLine}${isBudoSport(sport) ? budoScoreSentences(sport, order, language) : ""}${gap}${about}${parkLine}${eraLine}${rangeLine}${pageantLine}${poolLine}`.trim(),
   };
 }
 
@@ -803,6 +826,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
   const crowded = crowdOf(o) !== undefined;
   const style = colourStyle(o, { left: leftTeam, right: rightTeam, home: isScore(o) ? o.home : undefined, away: isScore(o) ? o.away : undefined }, featured);
   const palette = isLook(o.look) ? o.look : undefined;
+  const budoLook = isBudoSport(sport) ? budoLookOf(sport, o.budo?.look ?? (sport === "dojo" ? o.dojo?.look : undefined)) : undefined;
   let notes: Notes | undefined;
   const theme = o.theme === "light" || o.theme === "dark" ? o.theme : undefined;
 
@@ -876,7 +900,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
     if (isScore(o) && left !== undefined && right !== undefined && sized === "full" && pg === undefined) {
       const onColour = surface.onColour ?? (sport === "nfl" || sport === "cfl" || sport === "ifaf" || sport === "soccer");
       // A curling sheet, the net sports' courts and a cricket ground have no place for the names: the board names the teams.
-      if (sport !== "curling" && !hasSetsBoard(sport) && sport !== "cricket") {
+      if (sport !== "curling" && !hasSetsBoard(sport) && sport !== "cricket" && sport !== "judo" && sport !== "karate" && sport !== "kendo" && sport !== "sumo") {
         // Cropped to a range, a team's name is written only where its place is in what is shown.
         if (shows(surface, surface.left)) teams += bannerMarkup(surface.left, left, { turned: surface.turned, onColour, parts, id });
         if (shows(surface, surface.right)) teams += bannerMarkup(surface.right, right, { turned: surface.turned, onColour, parts, id });
@@ -918,6 +942,10 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
         const words = KYOGIJO_STRINGS[language].field;
         const board = cricketBoardMarkup(surface.plate, left, right, { competition: o.competition, foot: foot === "" ? undefined : foot, innings: words.innings, total: words.total, overs: words.overs }, { parts });
         inner += el("g", { transform: `translate(${num(surface.plate.cx)} ${num(surface.plate.cy)})${surface.turned ? " rotate(-90)" : ""}` }, board);
+      } else if (isBudoSport(sport) && sport !== "kyudo" && sport !== "dojo") {
+        const b = KYOGIJO_STRINGS[language].budo.board;
+        const board = budoBoardMarkup(sport, surface.plate, left, right, { competition: o.competition, foot: foot === "" ? undefined : foot, wazaari: b.wazaari, yuko: b.yuko, shido: b.shido, senshu: b.senshu, chui: b.chui, kimarite: b.kimarite, techniques: b.techniques, kimariteName: (key) => kimariteName(key, language) }, { parts });
+        inner += el("g", { transform: `translate(${num(surface.plate.cx)} ${num(surface.plate.cy)})${surface.turned ? " rotate(-90)" : ""}` }, board);
       } else if (hasSetsBoard(sport)) {
         const board = setsBoardMarkup(surface.plate, left, right, { competition: o.competition, foot: foot === "" ? undefined : foot, head: KYOGIJO_STRINGS[language].net[BOARD[sport] === "games" ? "games" : "sets"], points: KYOGIJO_STRINGS[language].net.points }, { parts, least: minSets(sport, chooseLeague(o).league?.id) });
         inner += el("g", { transform: `translate(${num(surface.plate.cx)} ${num(surface.plate.cy)})${surface.turned ? " rotate(-90)" : ""}` }, board);
@@ -949,7 +977,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       "data-league": o.league === undefined || o.league === "" ? undefined : o.league,
       "data-range": isScore(o) && sport === "curling" ? undefined : rangeLabel(o),
       "data-event": o.host !== undefined && typeof o.event === "string" ? safeClass(o.event) : undefined,
-      "data-look": look,
+      "data-look": look ?? budoLook,
       "data-size": sized,
       "data-orientation": portrait ? "portrait" : "landscape",
       "data-theme": theme,
@@ -964,7 +992,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       style: style === "" ? undefined : style,
     },
     `<title id="${titleId}">${esc(title)}</title><desc id="${descId}">${esc(description)}</desc>` +
-      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${left?.round === true || right?.round === true || (pg !== undefined && pageant?.style === "stage") || (pg !== undefined && pageant?.emblem?.shape !== "plain" && pageant?.emblem !== undefined) ? `\n${KYOGIJO_MARK_STYLE}` : ""}${pg === undefined ? "" : `\n${KYOGIJO_PAGEANT_STYLE}${pageant?.animate === undefined || pageant.animate === "none" ? "" : `\n${KYOGIJO_PAGEANT_MOTION}`}`}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}${foldedSheet ? `\n${KYOGIJO_FOLD_STYLE}` : ""}${isPoolSport(sport) ? `\n${o.pool?.venue !== undefined ? KYOGIJO_POOL_STYLE : poolStyle({ sport, ...commonOf(o.pool ?? {}), race: o.pool?.race !== undefined, section: o.pool?.section !== undefined && o.pool.section !== false })}` : ""}${plan === undefined ? "" : `\n${courtStyle(plan.sport, plan.look)}`}${fieldsStyle(sport) === "" ? "" : `\n${fieldsStyle(sport)}`}${athleticsStyle(sport) === "" ? "" : `\n${athleticsStyle(sport)}`}${skatingStyle(sport) === "" ? "" : `\n${skatingStyle(sport)}`}${palette === undefined ? "" : `\n${lookStyle(palette)}`}${athleticsTrackRules(sport, o.athletics?.track) === "" ? "" : `\n${athleticsTrackRules(sport, o.athletics?.track)}`}${walled ? `\n${KYOGIJO_WALLS_STYLE}` : ""}${hardwood ? `\n${KYOGIJO_HARDWOOD_STYLE}` : ""}${features === undefined ? "" : `\n${featureStyle(sport, features)}`}${notes === undefined || notes.svg === "" ? "" : `\n${KYOGIJO_NOTE_STYLE}`}${grounded ? `\n${KYOGIJO_BACKGROUND_STYLE}` : ""}${crowded ? `\n${KYOGIJO_CROWD_STYLE}` : ""}${o.host === undefined ? "" : `\n${specialStyle(hostSport(o.host))}`}</style>`) +
+      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${left?.round === true || right?.round === true || (pg !== undefined && pageant?.style === "stage") || (pg !== undefined && pageant?.emblem?.shape !== "plain" && pageant?.emblem !== undefined) ? `\n${KYOGIJO_MARK_STYLE}` : ""}${pg === undefined ? "" : `\n${KYOGIJO_PAGEANT_STYLE}${pageant?.animate === undefined || pageant.animate === "none" ? "" : `\n${KYOGIJO_PAGEANT_MOTION}`}`}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}${foldedSheet ? `\n${KYOGIJO_FOLD_STYLE}` : ""}${isPoolSport(sport) ? `\n${o.pool?.venue !== undefined ? KYOGIJO_POOL_STYLE : poolStyle({ sport, ...commonOf(o.pool ?? {}), race: o.pool?.race !== undefined, section: o.pool?.section !== undefined && o.pool.section !== false })}` : ""}${plan === undefined ? "" : `\n${courtStyle(plan.sport, plan.look)}`}${fieldsStyle(sport) === "" ? "" : `\n${fieldsStyle(sport)}`}${athleticsStyle(sport) === "" ? "" : `\n${athleticsStyle(sport)}`}${skatingStyle(sport) === "" ? "" : `\n${skatingStyle(sport)}`}${budoLook === undefined ? "" : `\n${budoStyle(sport, budoLook)}`}${palette === undefined ? "" : `\n${lookStyle(palette)}`}${athleticsTrackRules(sport, o.athletics?.track) === "" ? "" : `\n${athleticsTrackRules(sport, o.athletics?.track)}`}${walled ? `\n${KYOGIJO_WALLS_STYLE}` : ""}${hardwood ? `\n${KYOGIJO_HARDWOOD_STYLE}` : ""}${features === undefined ? "" : `\n${featureStyle(sport, features)}`}${notes === undefined || notes.svg === "" ? "" : `\n${KYOGIJO_NOTE_STYLE}`}${grounded ? `\n${KYOGIJO_BACKGROUND_STYLE}` : ""}${crowded ? `\n${KYOGIJO_CROWD_STYLE}` : ""}${o.host === undefined ? "" : `\n${specialStyle(hostSport(o.host))}`}</style>`) +
       (defs === "" ? "" : `<defs>${defs}</defs>`) +
       body,
   );

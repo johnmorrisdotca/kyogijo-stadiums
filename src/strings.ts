@@ -173,6 +173,41 @@ export interface KyogijoWords {
    */
   skating: { longTrack: string; shortTrack: string; figure: string; races: string; furniture: string; furnitureNames: Record<"judges" | "referee" | "technical-panel" | "kiss-and-cry", string>; start: string; finish: string; data: SkatingData };
   athletics: { track400: string; track200: string; infieldPitch: string; infieldGrass: string; infieldNone: string; events: string; races: string; start: string; finish: string; layout: string; waterJump: string; inside: string; outside: string; lane: string; ground: string; data: AthleticsData };
+  /**
+   * The budō surfaces' description (judo, karate, kendo, sumo, kyūdō and a dojo): each a fragment with its figures ({contest}, {safety}, {tatami}, {area}, {side}, {height}...), the sentences
+   * that follow it, the names of the four sides, and the words of the scoreboards.
+   */
+  budo: {
+    sides: Record<"north" | "south" | "east" | "west", string>;
+    judo: string;
+    judoMany: string;
+    judoKata: string;
+    danger: string;
+    platform: string;
+    start: string;
+    officials: string;
+    tatami: string;
+    karate: string;
+    karateMany: string;
+    karateKata: string;
+    karateOfficials: string;
+    kendo: string;
+    sumo: string;
+    sumoBare: string;
+    tassels: string;
+    kyudo: string;
+    kyudoEnteki: string;
+    dojoTraditional: string;
+    dojoCompetition: string;
+    dojoChecker: string;
+    dojoBorder: string;
+    dojoKamiza: string;
+    dojoShinzen: string;
+    dojoAreas: string;
+    dojoWalls: string;
+    /** The scoreboards: the heads and the sentences that say what each side scored. */
+    board: { ippon: string; wazaari: string; yuko: string; shido: string; senshu: string; chui: string; points: string; kimarite: string; techniques: Record<"men" | "kote" | "do" | "tsuki" | "hansoku", string>; judoScore: string; karateScore: string; kendoScore: string; sumoScore: string };
+  };
   /** The title of a score: placeholders {away}, {awayScore}, {home} and {homeScore}. */
   scoreTitle: string;
   /** The sentences of a description. */
@@ -460,6 +495,19 @@ export interface KyogijoWords {
       rinkLeft: string;
       rinkMiddle: string;
       rinkRight: string;
+      /** The budō surfaces' zones: the contest area and the safety area, the boundary band, the floor, the clay, the sand and the ring of a dohyō, the shajō, the yamichi and the azuchi, the kamiza and the rest. */
+      budoContest: string;
+      budoSafety: string;
+      budoBand: string;
+      budoFloor: string;
+      budoClay: string;
+      budoJano: string;
+      budoRing: string;
+      budoShajo: string;
+      budoYamichi: string;
+      budoAzuchi: string;
+      budoKamiza: string;
+      budoRest: string;
       sideRight: string;
     };
   };
@@ -675,14 +723,14 @@ export interface KyogijoWords {
     item: string;
     itemSag: string;
     /** The names of what stands on the surface, by kind. */
-    parts: Record<"scoreboard" | "net" | "antennae" | "goalposts" | "netposts" | "hoop" | "goal" | "boards" | "stumps" | "pylons" | "flags" | "fence" | "backstop" | "foul-poles" | "table-legs" | "walls" | "starting-blocks" | "backstroke-flags" | "false-start-rope" | "springboards" | "platforms" | "judges-stand" | "hurdles" | "steeplechase" | "high-jump" | "pole-vault" | "cage" | "padding" | "rink-boards", string>;
+    parts: Record<"scoreboard" | "net" | "antennae" | "goalposts" | "netposts" | "hoop" | "goal" | "boards" | "stumps" | "pylons" | "flags" | "fence" | "backstop" | "foul-poles" | "table-legs" | "walls" | "starting-blocks" | "backstroke-flags" | "false-start-rope" | "springboards" | "platforms" | "judges-stand" | "hurdles" | "steeplechase" | "high-jump" | "pole-vault" | "cage" | "padding" | "rink-boards" | "mound" | "azuchi" | "targets", string>;
   };
 }
 
 /** The words of the package, by language. */
 export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
   en: {
-    surface: { skating: "Skating rink", nfl: "NFL football field", cfl: "CFL football field", ifaf: "IFAF football field", nhl: "NHL hockey rink", nba: "NBA basketball court", mlb: "Baseball field", soccer: "Soccer pitch", curling: "Curling sheet", tennis: "Tennis court", volleyball: "Volleyball court", badminton: "Badminton court", pickleball: "Pickleball court", tabletennis: "Table tennis table", padel: "Padel court", squash: "Squash court", racquetball: "Racquetball court", sepaktakraw: "Sepak takraw court", teqball: "Teqball court", roundnet: "Roundnet court", netball: "Netball court", lacrosse: "Lacrosse field", rugby: "Rugby union field", afl: "Australian football ground", gaelic: "Gaelic football field", cricket: "Cricket ground", fieldhockey: "Field hockey pitch", handball: "Handball court", swimming: "Swimming pool", waterpolo: "Water polo field", diving: "Diving well", artisticswimming: "Artistic swimming pool", athletics: "Athletics track" },
+    surface: { skating: "Skating rink", nfl: "NFL football field", cfl: "CFL football field", ifaf: "IFAF football field", nhl: "NHL hockey rink", nba: "NBA basketball court", mlb: "Baseball field", soccer: "Soccer pitch", curling: "Curling sheet", tennis: "Tennis court", volleyball: "Volleyball court", badminton: "Badminton court", pickleball: "Pickleball court", tabletennis: "Table tennis table", padel: "Padel court", squash: "Squash court", racquetball: "Racquetball court", sepaktakraw: "Sepak takraw court", teqball: "Teqball court", roundnet: "Roundnet court", netball: "Netball court", lacrosse: "Lacrosse field", rugby: "Rugby union field", afl: "Australian football ground", gaelic: "Gaelic football field", cricket: "Cricket ground", fieldhockey: "Field hockey pitch", handball: "Handball court", swimming: "Swimming pool", waterpolo: "Water polo field", diving: "Diving well", artisticswimming: "Artistic swimming pool", athletics: "Athletics track", judo: "Judo contest area", karate: "Karate competition area", kendo: "Kendo shiai-jo", sumo: "Sumo dohyō", kyudo: "Kyūdō range", dojo: "Dojo" },
     about: {
       nfl: "an American football field, 120 by 53 and a third yards with its end zones, with a yard line every 5 yards, hash marks, numbers and goal posts",
       cfl: "a Canadian football field, 150 by 65 yards with its 20-yard end zones, with a yard line every 5 yards, hash marks, numbers and goal posts on the goal lines",
@@ -717,6 +765,12 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       artisticswimming: "an artistic swimming area, 30 by 20 metres, with the lines on the floor, the judges' platform and the starting platform",
       athletics: "an athletics track of 400 metres with eight lanes, the finish line and the lane numbers, with a soccer pitch inside it",
       skating: "a speed skating track of 400 metres with two lanes, the warm-up lane, the blocks of the curves and the finishing line",
+      judo: "a judo contest area of 10 by 10 metres in a safety area 4 metres wide, laid with tatami of 2 by 1 metres",
+      karate: "a karate kumite area: a matted square of 8 metres with its outer metre in another colour, in a safety area 2 metres wide",
+      kendo: "a kendo shiai-jo of 10 by 10 metres with a wooden floor, white boundary lines and the two kaishi-sen",
+      sumo: "a sumo dohyō: a clay square of 6.7 metres with a ring of 4.55 metres made of 20 tawara",
+      kyudo: "a kyūdōjō for kinteki: a shajō with five shooting positions, 28 metres from the targets at the azuchi",
+      dojo: "a dojo of 20 jō of tatami",
     },
     status: { final: "Final", "final-ot": "Final/OT", "final-so": "Final/SO", "final-aet": "Final/AET", "final-pens": "Final/Pens", live: "Live", half: "Halftime", "extra-time": "Extra time", "extra-end": "Extra end", penalties: "Penalties", postponed: "Postponed", tiebreak: "Tiebreak", "match-tiebreak": "Match tiebreak", retired: "Retired", walkover: "Walkover" },
     endStatus: "End {n}",
@@ -872,9 +926,43 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
     },
     scoreTitle: "{away} {awayScore}, {home} {homeScore}",
     said: { home: "home", away: "away", won: "{name} won.", tied: "The game is level.", park: "The outfield fence follows the figures published for {park}.", officially: "Its official name is {name}.", ground: "The pitch follows the size published for {ground}.", groundDefault: "No pitch size is published for {ground}, so the pitch has the international size of 105 by 68 metres.", era: "The markings are those of the {season} season.", hammer: "{name} has the hammer.", ends: "By end, {name}: {list}.", total: "Total", wonPens: "{name} won {a}-{b} on penalties.", pens: "{a}-{b} pens", on: "Drawn as", sep: ", ", stop: ".", colon: ": ", gap: " " },
+    budo: {
+      sides: { north: "north", south: "south", east: "east", west: "west" },
+      judo: "a judo contest area of {contest} by {contest} metres in a safety area {safety} metres wide, laid with tatami of {tatami}",
+      judoMany: "a judo competition area of {areas} contest areas of {contest} by {contest} metres, {gap} metres apart, each in a safety area {safety} metres wide, laid with tatami of {tatami}",
+      judoKata: "a judo kata area of {contest} by {contest} metres in a safety area {safety} metres wide, laid with tatami of {tatami}",
+      danger: "A red danger zone, one tatami wide, runs round the inside of each contest area.",
+      platform: "The tatami lies on a platform one metre wider and longer than it.",
+      start: "The tape that marks where the contestants start lies at the centre, {apart} metres apart.",
+      officials: "The technical table is at the top.",
+      tatami: "{length} by {width} metres",
+      karate: "a karate kumite area: a matted square of {area} metres with its outer metre in another colour, in a safety area {safety} metres wide, with the two start mats",
+      karateMany: "a karate kumite competition area of {areas} matted squares of {area} metres with their outer metre in another colour, {gap} metres apart, each in a safety area {safety} metres wide, with the two start mats",
+      karateKata: "a karate kata area: a matted square of {area} metres in a safety area {safety} metres wide",
+      karateOfficials: "The table, the referee and the four judges are marked.",
+      kendo: "a kendo shiai-jo: a wooden floor of {side} by {side} metres with white boundary lines, the cross at the centre and the two kaishi-sen, and 1.5 metres kept clear outside it",
+      sumo: "a sumo dohyō: a clay square of {platform} metres, {height} centimetres high, with a ring of {circle} metres made of {count} tawara, the sand of the jano-me and the two shikiri-sen",
+      sumoBare: "a sumo dohyō: a clay square of {platform} metres, {height} centimetres high, with a ring of {circle} metres",
+      tassels: "The four tassels of the roof are in the colours of the quarters: green east, red south, white west, black north.",
+      kyudo: "a kyūdōjō for kinteki: a shajō with {n} shooting positions, {distance} metres from the targets at the azuchi, with the yamichi between them and the path for fetching the arrows beside it",
+      kyudoEnteki: "a kyūdōjō for enteki: a shajō with {n} shooting positions, {distance} metres from the targets of 1 metre at the azuchi, with the yamichi between them and the path for fetching the arrows beside it",
+      dojoTraditional: "a dojo of {jo} jō, {width} by {length} metres, laid with tatami of {mat} metres so that no four corners meet",
+      dojoCompetition: "a dojo of {jo} jō, {width} by {length} metres, laid with tatami of {mat} metres in the colours of a contest area and its safety area",
+      dojoChecker: "a dojo of {jo} jō, {width} by {length} metres, laid with tatami of {mat} metres in two tones that alternate",
+      dojoBorder: "a dojo of {jo} jō, {width} by {length} metres, laid with tatami of {mat} metres with a border of another colour",
+      dojoKamiza: "The kamiza is at the {side}.",
+      dojoShinzen: "The shinzen, the shrine, is at the kamiza.",
+      dojoAreas: "{n} contest areas of 8 metres are marked on the floor.",
+      dojoWalls: "It has walls with {doors} and {windows}.",
+      board: {
+        ippon: "Ippon", wazaari: "Waza-ari", yuko: "Yuko", shido: "Shido", senshu: "Senshu", chui: "Chui", points: "Points", kimarite: "Kimarite",
+        techniques: { men: "Men", kote: "Kote", do: "Dō", tsuki: "Tsuki", hansoku: "Hansoku" },
+        judoScore: "{name}: {list}.", karateScore: "{name}: {list}.", kendoScore: "{name}: {list}.", sumoScore: "{name} won by {kimarite}.",
+      },
+    },
     pageant: { carpet: "Each team's flag or logo is laid out large over its own part of the surface, as a carpet.", stage: "Each team's crest stands on a large round stage over its own part of the surface.", emblem: "An emblem is in the middle.", emblemNamed: "The {name} emblem is in the middle." },
     special: {
-      guest: { skating: "rink", nfl: "football field", cfl: "football field", ifaf: "football field", nhl: "rink", nba: "court", mlb: "baseball field", soccer: "pitch", curling: "sheet", tennis: "court", volleyball: "court", badminton: "court", pickleball: "court", tabletennis: "table", padel: "court", squash: "court", racquetball: "court", sepaktakraw: "court", teqball: "court", roundnet: "court", netball: "court", lacrosse: "field", rugby: "field", afl: "ground", gaelic: "field", cricket: "ground", fieldhockey: "pitch", handball: "court", swimming: "pool", waterpolo: "pool", diving: "well", artisticswimming: "pool", athletics: "track" },
+      guest: { skating: "rink", nfl: "football field", cfl: "football field", ifaf: "football field", nhl: "rink", nba: "court", mlb: "baseball field", soccer: "pitch", curling: "sheet", tennis: "court", volleyball: "court", badminton: "court", pickleball: "court", tabletennis: "table", padel: "court", squash: "court", racquetball: "court", sepaktakraw: "court", teqball: "court", roundnet: "court", netball: "court", lacrosse: "field", rugby: "field", afl: "ground", gaelic: "field", cricket: "ground", fieldhockey: "pitch", handball: "court", swimming: "pool", waterpolo: "pool", diving: "well", artisticswimming: "pool", athletics: "track", judo: "contest area", karate: "competition area", kendo: "shiai-jo", sumo: "dohyō", kyudo: "range", dojo: "dojo" },
       title: "{guest} in {host}",
       game: "{event}, {date}.",
       inside: "The {guest} lies wholly inside the outline of {host}.",
@@ -930,7 +1018,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
         pull: "Pull", opposite: "Opposite", sprayCentre: "Centre", leftField: "Left field", centreField: "Centre field", rightField: "Right field", infield: "infield", outfield: "outfield",
         lengthShort: "Short", lengthDeep: "Deep", houseButton: "Button", houseFour: "4-foot ring", houseEight: "8-foot ring", houseTwelve: "12-foot ring", guardZone: "Free guard zone", frontCourt: "Front court", backCourt: "Back court", halfCourt: "Half court", outsideCircles: "Outside the circles", servingRing: "Serving ring", noHitZone: "No hit zone", sideLeft: "left", sideMiddle: "middle", sideRight: "right",
         pitchZone: "Pitch", insideCircle: "Inside the circle", outfieldGround: "Outfield",
-        trackInfield: "Infield", homeStraight: "Finish straight", firstBend: "First bend", backStraight: "Back straight", secondBend: "Second bend", crossingStraight: "Crossing straight", firstCurve: "First curve", secondCurve: "Second curve", finishStraight: "Finish straight", rinkLeft: "Left end", rinkMiddle: "Middle", rinkRight: "Right end",
+        trackInfield: "Infield", homeStraight: "Finish straight", firstBend: "First bend", backStraight: "Back straight", secondBend: "Second bend", crossingStraight: "Crossing straight", firstCurve: "First curve", secondCurve: "Second curve", finishStraight: "Finish straight", rinkLeft: "Left end", rinkMiddle: "Middle", rinkRight: "Right end", budoContest: "Contest area", budoSafety: "Safety area", budoBand: "Boundary band", budoFloor: "Floor", budoClay: "Clay", budoJano: "Jano-me", budoRing: "Ring", budoShajo: "Shajō", budoYamichi: "Yamichi", budoAzuchi: "Azuchi", budoKamiza: "Kamiza end", budoRest: "The rest of the floor",
       },
     },
     team: {
@@ -968,7 +1056,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
         boundary: "Boundary", pitch: "Pitch", "bowling-crease": "Bowling crease", "popping-crease": "Popping crease", "return-crease": "Return crease", wicket: "Wicket", "thirty-yard-circle": "30-yard circle",
         "twenty-three-line": "23-metre line", "shooting-circle": "Shooting circle", "penalty-spot": "Penalty spot", "broken-circle-line": "Broken line round the circle", "goal-area-line": "Goal-area line",
         "finish-line": "Finish line", kerb: "Kerb", "lane-lines": "Lane lines", bend: "Bend", straight: "Straight", "infield-pitch": "Soccer pitch", "start-line": "Start line", breakline: "Breakline", "water-jump": "Water jump", "exchange-zone": "Takeover zone",
-        "inner-lane": "Inner lane", "outer-lane": "Outer lane", "crossing-straight": "Crossing straight", "warm-up-lane": "Warm-up lane", padding: "Padding", infield: "Infield", "coaches-area": "Coaches' area", blocks: "Blocks", "track-line": "Line of the track", "start-lines": "Starting lines", ice: "Ice", "technical-panel": "Technical panel", referee: "Referee", "kiss-and-cry": "Kiss and cry", judges: "Judges", runway: "Runway", "take-off-board": "Take-off board", "landing-area": "Landing area", "throwing-circle": "Throwing circle", sector: "Landing sector", "stop-board": "Stop board", cage: "Cage", "throwing-arc": "Throwing arc", crossbar: "Crossbar", "landing-mat": "Landing mat", "run-up": "Run-up", "zero-line": "Zero line", box: "Box",
+        "referee-position": "Referee's place", "shiai-jo": "Shiai-jo", floorboard: "Floorboard", heri: "Heri, the mat's edge", "contest-area": "Contest area", "safety-area": "Safety area", "danger-zone": "Danger zone", "start-mark": "Start mark", "common-safe-zone": "Common safe zone", "free-zone": "Free zone", platform: "Platform", "technical-table": "Technical table", arena: "Arena floor", "competition-area": "Competition area", "boundary-band": "Boundary band", "start-mat": "Start mat", judge: "Judge", "between-areas": "Between the areas", "centre-cross": "Centre cross", "kaishi-sen": "Kaishi-sen", "outer-boundary": "Outer boundary", dohyo: "Dohyō", ring: "Ring", tawara: "Tawara", tokudawara: "Tokudawara", "shikiri-sen": "Shikiri-sen", "jano-me": "Jano-me", shajo: "Shajō", "shooting-position": "Shooting position", honza: "Honza", yamichi: "Yamichi", "yatori-michi": "Path for the arrows", azuchi: "Azuchi", mato: "Target", kamiza: "Kamiza", shimoza: "Shimoza", shinzen: "Shinzen", entrance: "Entrance", window: "Window", tatami: "Tatami", wall: "Wall", "inner-lane": "Inner lane", "outer-lane": "Outer lane", "crossing-straight": "Crossing straight", "warm-up-lane": "Warm-up lane", padding: "Padding", infield: "Infield", "coaches-area": "Coaches' area", blocks: "Blocks", "track-line": "Line of the track", "start-lines": "Starting lines", ice: "Ice", "technical-panel": "Technical panel", referee: "Referee", "kiss-and-cry": "Kiss and cry", judges: "Judges", runway: "Runway", "take-off-board": "Take-off board", "landing-area": "Landing area", "throwing-circle": "Throwing circle", sector: "Landing sector", "stop-board": "Stop board", cage: "Cage", "throwing-arc": "Throwing arc", crossbar: "Crossbar", "landing-mat": "Landing mat", "run-up": "Run-up", "zero-line": "Zero line", box: "Box",
         "seven-metre-line": "7-metre line", "four-metre-line": "4-metre line", "throw-off-area": "Throw-off area", "restraining-line": "Restraining line", "wing-line": "Wing line", "marking-area": "Marking area", "two-point-arc": "Two-point arc",
         "lane-rope": "Lane rope", "lane-line": "Lane marking on the floor", "lane-end-cross": "Cross line at the end of the lane marking", "fifteen-metre-mark": "15 m mark", "touch-pad": "Touch panel", "starting-block": "Starting block", "backstroke-flags": "Backstroke flags", "false-start-rope": "False start rope", gutter: "Gutter",
         "two-metre-line": "2 m line", "five-metre-mark": "5 m mark", "six-metre-line": "6 m line", "half-distance-line": "Half distance line", "re-entry-area": "Re-entry area", "referee-platform": "Referee platform", "official-table": "Official table", "substitution-area": "Substitution area",
@@ -988,7 +1076,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
         "in-goal": "in-goal area", "twenty-two": "area between the try line and the 22-metre line", twenty: "area between the goal line and the 20-metre line", crease: "crease", "forward-fifty": "area inside the fifty metre arc", "centre-square": "centre square",
         "large-rectangle": "large rectangle", pitch: "pitch", circle: "circle", "twenty-three": "23-metre area", "goal-area": "goal area",
         "pool-end": "end of the pool, up to the 15 m mark", springboards: "springboards", platforms: "platforms", "centre-stage": "centre of the pool, the middle third",
-        "crossing-straight": "crossing straight", "first-bend": "first bend", "second-bend": "second bend", judges: "judges", "kiss-and-cry": "kiss and cry", bend: "bend", "home-straight": "finish straight", "back-straight": "back straight", finish: "finish line", start: "start", "high-jump": "high jump", "pole-vault": "pole vault", "long-jump": "long jump", "triple-jump": "triple jump", "shot-put": "shot put", "discus-throw": "discus throw", "hammer-throw": "hammer throw", "javelin-throw": "javelin throw", "water-jump": "water jump",
+        "contest-area": "contest area", ring: "ring", shajo: "shajō", yamichi: "yamichi", azuchi: "azuchi", kamiza: "kamiza", "crossing-straight": "crossing straight", "first-bend": "first bend", "second-bend": "second bend", judges: "judges", "kiss-and-cry": "kiss and cry", bend: "bend", "home-straight": "finish straight", "back-straight": "back straight", finish: "finish line", start: "start", "high-jump": "high jump", "pole-vault": "pole vault", "long-jump": "long jump", "triple-jump": "triple jump", "shot-put": "shot put", "discus-throw": "discus throw", "hammer-throw": "hammer throw", "javelin-throw": "javelin throw", "water-jump": "water jump",
       },
       folded: {
         top: "Top house", bottom: "Bottom house", left: "Left house", right: "Right house",
@@ -1027,7 +1115,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       announce: "{name} view", announceAngle: "Turned to {yaw} degrees, raised {pitch} degrees.",
       flat: "This browser cannot draw the 3D view, so the flat drawing is shown.",
       standing: "Standing on it, in the 3D view: {list}.", item: "{name} {h}", itemSag: "{name} {h} at the posts, {low} at the middle",
-      parts: { scoreboard: "scoreboard (lower edge)", net: "net", antennae: "antennae", goalposts: "goal posts", netposts: "net posts", hoop: "baskets", goal: "goals", boards: "boards and glass", stumps: "stumps", pylons: "pylons", flags: "corner flags", fence: "fence", backstop: "backstop", "foul-poles": "foul poles", "table-legs": "table top", walls: "walls", "starting-blocks": "starting blocks", "backstroke-flags": "backstroke flags", "false-start-rope": "false start rope", springboards: "springboards", platforms: "platforms", "judges-stand": "judges' stand", hurdles: "hurdles", steeplechase: "steeplechase barriers", "high-jump": "high jump uprights and bar", "pole-vault": "pole vault uprights and bar", cage: "discus and hammer cage", padding: "padding", "rink-boards": "boards" },
+      parts: { scoreboard: "scoreboard (lower edge)", net: "net", antennae: "antennae", goalposts: "goal posts", netposts: "net posts", hoop: "baskets", goal: "goals", boards: "boards and glass", stumps: "stumps", pylons: "pylons", flags: "corner flags", fence: "fence", backstop: "backstop", "foul-poles": "foul poles", "table-legs": "table top", walls: "walls", "starting-blocks": "starting blocks", "backstroke-flags": "backstroke flags", "false-start-rope": "false start rope", springboards: "springboards", platforms: "platforms", "judges-stand": "judges' stand", hurdles: "hurdles", steeplechase: "steeplechase barriers", "high-jump": "high jump uprights and bar", "pole-vault": "pole vault uprights and bar", cage: "discus and hammer cage", padding: "padding", "rink-boards": "boards", mound: "clay mound", azuchi: "azuchi", targets: "targets" },
     },
   },
   // The Japanese of athletics and skating is each governing body's own word where its rule book has one (read 2026-10-14; the pages and files are in docs/references.md).
@@ -1046,7 +1134,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
   //   (ISU Rule 281.1a; the JOC's usage). Television's インコース, アウトコース, バックストレート and ホームストレート are aliases in docs/skating.md. No rule book words were found for the figure skating
   //   furniture (ジャッジ席, テクニカルパネル, レフェリー, キス・アンド・クライ): they are the usual words.
   ja: {
-    surface: { skating: "スケートリンク", nfl: "NFLのフィールド", cfl: "CFLのフィールド", ifaf: "IFAFのフィールド", nhl: "NHLのアイスホッケーリンク", nba: "NBAのバスケットボールコート", mlb: "野球場", soccer: "サッカーのピッチ", curling: "カーリングのシート", tennis: "テニスコート", volleyball: "バレーボールコート", badminton: "バドミントンコート", pickleball: "ピックルボールコート", tabletennis: "卓球台", padel: "パデルコート", squash: "スカッシュコート", racquetball: "ラケットボールコート", sepaktakraw: "セパタクローコート", teqball: "テックボールコート", roundnet: "ラウンドネットコート", netball: "ネットボールコート", lacrosse: "ラクロスのフィールド", rugby: "ラグビーユニオンのグラウンド", afl: "オーストラリアンフットボールのグラウンド", gaelic: "ゲーリック・フットボールのフィールド", cricket: "クリケットのグラウンド", fieldhockey: "フィールドホッケーのピッチ", handball: "ハンドボールのコート", swimming: "競泳プール", waterpolo: "水球のフィールド", diving: "飛込プール", artisticswimming: "アーティスティックスイミングのプール", athletics: "陸上競技のトラック" },
+    surface: { skating: "スケートリンク", nfl: "NFLのフィールド", cfl: "CFLのフィールド", ifaf: "IFAFのフィールド", nhl: "NHLのアイスホッケーリンク", nba: "NBAのバスケットボールコート", mlb: "野球場", soccer: "サッカーのピッチ", curling: "カーリングのシート", tennis: "テニスコート", volleyball: "バレーボールコート", badminton: "バドミントンコート", pickleball: "ピックルボールコート", tabletennis: "卓球台", padel: "パデルコート", squash: "スカッシュコート", racquetball: "ラケットボールコート", sepaktakraw: "セパタクローコート", teqball: "テックボールコート", roundnet: "ラウンドネットコート", netball: "ネットボールコート", lacrosse: "ラクロスのフィールド", rugby: "ラグビーユニオンのグラウンド", afl: "オーストラリアンフットボールのグラウンド", gaelic: "ゲーリック・フットボールのフィールド", cricket: "クリケットのグラウンド", fieldhockey: "フィールドホッケーのピッチ", handball: "ハンドボールのコート", swimming: "競泳プール", waterpolo: "水球のフィールド", diving: "飛込プール", artisticswimming: "アーティスティックスイミングのプール", athletics: "陸上競技のトラック", judo: "柔道の試合場", karate: "空手道の試合場", kendo: "剣道の試合場", sumo: "相撲の土俵", kyudo: "弓道場", dojo: "道場" },
     about: {
       nfl: "アメリカンフットボールのフィールド。エンドゾーンを含めて120×53⅓ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールポストがあります",
       cfl: "カナディアンフットボールのフィールド。20ヤードのエンドゾーンを含めて150×65ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールライン上のゴールポストがあります",
@@ -1081,6 +1169,12 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       artisticswimming: "アーティスティックスイミングの競技エリア。30×20mで、プール底のライン、ジャッジ台、スタート台があります",
       athletics: "陸上競技の400mトラック。8レーンで、フィニッシュラインとレーン番号があり、内側にサッカーのピッチがあります",
       skating: "400mのスピードスケートリンク。インレーンとアウトレーン、ウォームアップレーン、カーブのブロック、フィニッシュラインがあります",
+      judo: "柔道の試合場。試合場内は10m四方、幅4mの安全地帯があり、2×1mの畳を敷いています",
+      karate: "空手道の組手の試合場。一辺8mの正方形にマットを敷き、外側の1mは別の色で、幅2mの安全地帯があります",
+      kendo: "剣道の試合場。10m四方の板張りで、白い境界線と2本の開始線があります",
+      sumo: "相撲の土俵。一辺6.7mの粘土の正方形に、20俵でつくる直径4.55mの円があります",
+      kyudo: "近的の弓道場。射位が5つある射場から、安土の的まで28mあります",
+      dojo: "20畳の道場",
     },
     status: { final: "試合終了", "final-ot": "試合終了（延長）", "final-so": "試合終了（SO）", "final-aet": "試合終了（延長戦）", "final-pens": "試合終了（PK戦）", live: "試合中", half: "ハーフタイム", "extra-time": "延長戦", "extra-end": "エキストラエンド", penalties: "PK戦", postponed: "延期", tiebreak: "タイブレーク", "match-tiebreak": "マッチタイブレーク", retired: "途中棄権", walkover: "不戦勝" },
     endStatus: "第{n}エンド",
@@ -1246,9 +1340,43 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
     },
     scoreTitle: "{away} {awayScore}、{home} {homeScore}",
     said: { home: "ホーム", away: "アウェイ", won: "{name}の勝ちです。", tied: "同点です。", park: "外野フェンスは、{park}の公表されている距離をもとに描かれています。", officially: "正式名称は{name}です。", ground: "ピッチは、{ground}の公表されている広さをもとに描かれています。", groundDefault: "{ground}のピッチの広さは公表されていないため、国際標準の105×68mで描かれています。", era: "ラインやマークは{season}シーズンのものです。", hammer: "{name}がハンマー（最後の1投）を持っています。", ends: "{name}のエンドごとの得点：{list}。", total: "合計", wonPens: "{name}がPK戦を{a}-{b}で制しました。", pens: "PK戦 {a}-{b}", on: "図の内容", sep: "、", stop: "。", colon: "：", gap: "" },
+    budo: {
+      sides: { north: "北", south: "南", east: "東", west: "西" },
+      judo: "柔道の試合場。試合場内は{contest}m四方、幅{safety}mの安全地帯があり、{tatami}の畳を敷いています",
+      judoMany: "柔道の試合場。試合場内が{contest}m四方の試合場が{areas}面、間隔は{gap}mで、それぞれ幅{safety}mの安全地帯があり、{tatami}の畳を敷いています",
+      judoKata: "柔道の形の試合場。{contest}m四方で、幅{safety}mの安全地帯があり、{tatami}の畳を敷いています",
+      danger: "各試合場内の内側には、畳1枚の幅の赤い危険地帯があります。",
+      platform: "畳は、畳より縦横とも1m大きい台の上にあります。",
+      start: "選手が開始する位置を示すテープが、中央に{apart}m離れて貼られています。",
+      officials: "係員席は上にあります。",
+      tatami: "{length}×{width}m",
+      karate: "空手道の組手の試合場。一辺{area}mの正方形にマットを敷き、外側の1mは別の色で、幅{safety}mの安全地帯があり、開始位置のマットが2枚あります",
+      karateMany: "空手道の組手の試合場。一辺{area}mの正方形が{areas}面で、外側の1mは別の色、間隔は{gap}mで、それぞれ幅{safety}mの安全地帯があり、開始位置のマットが2枚あります",
+      karateKata: "空手道の形の試合場。一辺{area}mの正方形にマットを敷き、幅{safety}mの安全地帯があります",
+      karateOfficials: "係員席、主審、4人の副審の位置を示しています。",
+      kendo: "剣道の試合場。{side}m四方の板張りで、白い境界線、中央の×印、2本の開始線があり、外側に1.5mの余地があります",
+      sumo: "相撲の土俵。一辺{platform}m、高さ{height}cmの粘土の正方形に、{count}俵でつくる直径{circle}mの円、蛇の目の砂、2本の仕切り線があります",
+      sumoBare: "相撲の土俵。一辺{platform}m、高さ{height}cmの粘土の正方形に、直径{circle}mの円があります",
+      tassels: "吊り屋根の四つの房は、四方の色です。東は青、南は赤、西は白、北は黒です。",
+      kyudo: "近的の弓道場。射位が{n}つある射場から、安土の的まで{distance}mあり、その間に矢道があり、横に矢を取りに行く道があります",
+      kyudoEnteki: "遠的の弓道場。射位が{n}つある射場から、安土の1mの的まで{distance}mあり、その間に矢道があり、横に矢を取りに行く道があります",
+      dojoTraditional: "{jo}畳の道場。{width}×{length}mで、{mat}mの畳を、四つ角が合わないように敷いています",
+      dojoCompetition: "{jo}畳の道場。{width}×{length}mで、{mat}mの畳を、試合場内と安全地帯の色に敷いています",
+      dojoChecker: "{jo}畳の道場。{width}×{length}mで、{mat}mの畳を、二色が交互になるように敷いています",
+      dojoBorder: "{jo}畳の道場。{width}×{length}mで、{mat}mの畳を敷き、周りに別の色の縁があります",
+      dojoKamiza: "上座は{side}にあります。",
+      dojoShinzen: "上座に神前があります。",
+      dojoAreas: "床に、8m四方の試合場が{n}面示されています。",
+      dojoWalls: "壁があり、{doors}と{windows}があります。",
+      board: {
+        ippon: "一本", wazaari: "技あり", yuko: "有効", shido: "指導", senshu: "先取", chui: "注意", points: "ポイント", kimarite: "決まり手",
+        techniques: { men: "面", kote: "小手", do: "胴", tsuki: "突き", hansoku: "反則" },
+        judoScore: "{name}：{list}。", karateScore: "{name}：{list}。", kendoScore: "{name}：{list}。", sumoScore: "{name}の勝ち。決まり手は{kimarite}。",
+      },
+    },
     pageant: { carpet: "各チームの旗またはロゴが、競技場のチームごとの区域に、カーペットのように大きく広げられています。", stage: "各チームのエンブレムが、競技場のチームごとの区域にある大きな丸いステージの上に置かれています。", emblem: "中央にエンブレムがあります。", emblemNamed: "中央に{name}のエンブレムがあります。" },
     special: {
-      guest: { skating: "リンク", nfl: "アメリカンフットボールのフィールド", cfl: "カナディアンフットボールのフィールド", ifaf: "アメリカンフットボールのフィールド", nhl: "リンク", nba: "コート", mlb: "野球のグラウンド", soccer: "ピッチ", curling: "シート", tennis: "コート", volleyball: "コート", badminton: "コート", pickleball: "コート", tabletennis: "卓球台", padel: "コート", squash: "コート", racquetball: "コート", sepaktakraw: "コート", teqball: "コート", roundnet: "コート", netball: "コート", lacrosse: "フィールド", rugby: "グラウンド", afl: "グラウンド", gaelic: "フィールド", cricket: "グラウンド", fieldhockey: "ピッチ", handball: "コート", swimming: "プール", waterpolo: "プール", diving: "プール", artisticswimming: "プール", athletics: "トラック" },
+      guest: { skating: "リンク", nfl: "アメリカンフットボールのフィールド", cfl: "カナディアンフットボールのフィールド", ifaf: "アメリカンフットボールのフィールド", nhl: "リンク", nba: "コート", mlb: "野球のグラウンド", soccer: "ピッチ", curling: "シート", tennis: "コート", volleyball: "コート", badminton: "コート", pickleball: "コート", tabletennis: "卓球台", padel: "コート", squash: "コート", racquetball: "コート", sepaktakraw: "コート", teqball: "コート", roundnet: "コート", netball: "コート", lacrosse: "フィールド", rugby: "グラウンド", afl: "グラウンド", gaelic: "フィールド", cricket: "グラウンド", fieldhockey: "ピッチ", handball: "コート", swimming: "プール", waterpolo: "プール", diving: "プール", artisticswimming: "プール", athletics: "トラック", judo: "試合場", karate: "試合場", kendo: "試合場", sumo: "土俵", kyudo: "弓道場", dojo: "道場" },
       title: "{host}の中の{guest}",
       game: "{event}、{date}。",
       inside: "{guest}全体が{host}の輪郭の内側に収まっています。",
@@ -1304,7 +1432,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
         pull: "引っ張り方向", opposite: "逆方向", sprayCentre: "センター方向", leftField: "レフト方向", centreField: "センター方向", rightField: "ライト方向", infield: "内野", outfield: "外野",
         lengthShort: "ショートパス", lengthDeep: "ディープパス", houseButton: "ボタン", houseFour: "4フィートの円", houseEight: "8フィートの円", houseTwelve: "12フィートの円", guardZone: "フリーガードゾーン", frontCourt: "フロントコート", backCourt: "バックコート", halfCourt: "ハーフコート", outsideCircles: "サーブの円の外側", servingRing: "ノーヒットゾーンとサーブの円の間", noHitZone: "ノーヒットゾーン", sideLeft: "左", sideMiddle: "中央", sideRight: "右",
         pitchZone: "ピッチ", insideCircle: "サークルの内側", outfieldGround: "アウトフィールド",
-        trackInfield: "インフィールド", homeStraight: "メイン側直走路", firstBend: "第1曲走路", backStraight: "バック・ストレート", secondBend: "第2曲走路", crossingStraight: "交差ストレート", firstCurve: "第1カーブ", secondCurve: "第2カーブ", finishStraight: "フィニッシュ側ストレート", rinkLeft: "左端", rinkMiddle: "中央", rinkRight: "右端",
+        trackInfield: "インフィールド", homeStraight: "メイン側直走路", firstBend: "第1曲走路", backStraight: "バック・ストレート", secondBend: "第2曲走路", crossingStraight: "交差ストレート", firstCurve: "第1カーブ", secondCurve: "第2カーブ", finishStraight: "フィニッシュ側ストレート", rinkLeft: "左端", rinkMiddle: "中央", rinkRight: "右端", budoContest: "試合場内", budoSafety: "安全地帯", budoBand: "境界の帯", budoFloor: "床", budoClay: "土", budoJano: "蛇の目", budoRing: "土俵の円", budoShajo: "射場", budoYamichi: "矢道", budoAzuchi: "安土", budoKamiza: "上座側", budoRest: "それ以外の床",
       },
     },
     team: {
@@ -1341,7 +1469,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
         "distance-line": "距離を示すライン", "large-rectangle": "大きい長方形", "small-rectangle": "小さい長方形", "thirteen-metre-arc": "13メートルアーク", "forty-metre-arc": "40メートルアーク", "penalty-point": "ペナルティーマーク",
         boundary: "バウンダリー", pitch: "ピッチ", "bowling-crease": "ボウリングクリース", "popping-crease": "ポッピングクリース", "return-crease": "リターンクリース", wicket: "ウィケット", "thirty-yard-circle": "30ヤードサークル",
         "twenty-three-line": "23メートルライン", "shooting-circle": "シューティングサークル", "penalty-spot": "ペナルティースポット", "broken-circle-line": "サークルを囲む破線", "goal-area-line": "ゴールエリアライン",
-        "inner-lane": "インレーン", "outer-lane": "アウトレーン", "crossing-straight": "交差ストレート", "warm-up-lane": "ウォームアップレーン", padding: "防護マット", infield: "インフィールド", "coaches-area": "コーチエリア", blocks: "ブロック", "track-line": "トラックのライン", "start-lines": "スタートライン", ice: "氷面", "technical-panel": "テクニカルパネル", referee: "レフェリー", "kiss-and-cry": "キス・アンド・クライ", judges: "ジャッジ席", runway: "助走路", "take-off-board": "踏切板", "landing-area": "砂場", "throwing-circle": "投てきサークル", sector: "着地場所", "stop-board": "足留材", cage: "囲い", "throwing-arc": "スターティング・ライン", crossbar: "バー", "landing-mat": "着地マット", "run-up": "助走路", "zero-line": "ゼロライン", box: "ボックス",
+        "referee-position": "主審の位置", "shiai-jo": "試合場", floorboard: "床板", heri: "畳縁", "contest-area": "試合場内", "safety-area": "安全地帯", "danger-zone": "危険地帯", "start-mark": "開始線", "common-safe-zone": "共通の安全地帯", "free-zone": "フリーゾーン", platform: "競技台", "technical-table": "係員席", arena: "アリーナの床", "competition-area": "試合場", "boundary-band": "境界の帯", "start-mat": "開始位置のマット", judge: "副審", "between-areas": "試合場の間", "centre-cross": "中央の×印", "kaishi-sen": "開始線", "outer-boundary": "場外の余地", dohyo: "土俵", ring: "土俵の円", tawara: "俵", tokudawara: "徳俵", "shikiri-sen": "仕切り線", "jano-me": "蛇の目", shajo: "射場", "shooting-position": "射位", honza: "本座", yamichi: "矢道", "yatori-michi": "矢取道", azuchi: "安土", mato: "的", kamiza: "上座", shimoza: "下座", shinzen: "神前", entrance: "入口", window: "窓", tatami: "畳", wall: "壁", "inner-lane": "インレーン", "outer-lane": "アウトレーン", "crossing-straight": "交差ストレート", "warm-up-lane": "ウォームアップレーン", padding: "防護マット", infield: "インフィールド", "coaches-area": "コーチエリア", blocks: "ブロック", "track-line": "トラックのライン", "start-lines": "スタートライン", ice: "氷面", "technical-panel": "テクニカルパネル", referee: "レフェリー", "kiss-and-cry": "キス・アンド・クライ", judges: "ジャッジ席", runway: "助走路", "take-off-board": "踏切板", "landing-area": "砂場", "throwing-circle": "投てきサークル", sector: "着地場所", "stop-board": "足留材", cage: "囲い", "throwing-arc": "スターティング・ライン", crossbar: "バー", "landing-mat": "着地マット", "run-up": "助走路", "zero-line": "ゼロライン", box: "ボックス",
         "finish-line": "フィニッシュライン", kerb: "縁石", "lane-lines": "レーンライン", bend: "曲走路", straight: "直走路", "infield-pitch": "サッカーのピッチ", "start-line": "スタートライン", breakline: "ブレイクライン", "water-jump": "水濠", "exchange-zone": "テークオーバーゾーン",
         "seven-metre-line": "7mスローライン", "four-metre-line": "4mライン", "throw-off-area": "スローオフエリア", "restraining-line": "リストレイニングライン", "wing-line": "ウイングライン", "marking-area": "マーキングエリア", "two-point-arc": "2ポイントアーク",
         "lane-rope": "レーンロープ", "lane-line": "床面のレーンライン", "lane-end-cross": "クロスライン", "fifteen-metre-mark": "15mマーク", "touch-pad": "タッチ板", "starting-block": "スタート台", "backstroke-flags": "背泳ぎ用フラッグ", "false-start-rope": "フォルススタートロープ", gutter: "ガター",
@@ -1362,7 +1490,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
         "in-goal": "インゴール", "twenty-two": "トライラインから22メートルラインまでのエリア", twenty: "ゴールラインから20メートルラインまでのエリア", crease: "クリース", "forward-fifty": "50メートルアークの内側", "centre-square": "センタースクエア",
         "large-rectangle": "大きい長方形", pitch: "ピッチ", circle: "サークル", "twenty-three": "23メートルエリア", "goal-area": "ゴールエリア",
         "pool-end": "プールの端（15mの目印まで）", springboards: "飛板", platforms: "固定台", "centre-stage": "プールの中央（真ん中の3分の1）",
-        "crossing-straight": "交差ストレート", "first-bend": "第1カーブ", "second-bend": "第2カーブ", judges: "ジャッジ席", "kiss-and-cry": "キス・アンド・クライ", bend: "曲走路", "home-straight": "メイン側直走路", "back-straight": "バック・ストレート", finish: "フィニッシュライン", start: "スタート", "high-jump": "走高跳", "pole-vault": "棒高跳", "long-jump": "走幅跳", "triple-jump": "三段跳", "shot-put": "砲丸投", "discus-throw": "円盤投", "hammer-throw": "ハンマー投", "javelin-throw": "やり投", "water-jump": "水濠",
+        "contest-area": "試合場内", ring: "土俵の円", shajo: "射場", yamichi: "矢道", azuchi: "安土", kamiza: "上座", "crossing-straight": "交差ストレート", "first-bend": "第1カーブ", "second-bend": "第2カーブ", judges: "ジャッジ席", "kiss-and-cry": "キス・アンド・クライ", bend: "曲走路", "home-straight": "メイン側直走路", "back-straight": "バック・ストレート", finish: "フィニッシュライン", start: "スタート", "high-jump": "走高跳", "pole-vault": "棒高跳", "long-jump": "走幅跳", "triple-jump": "三段跳", "shot-put": "砲丸投", "discus-throw": "円盤投", "hammer-throw": "ハンマー投", "javelin-throw": "やり投", "water-jump": "水濠",
       },
       folded: {
         top: "上のハウス", bottom: "下のハウス", left: "左のハウス", right: "右のハウス",
@@ -1401,7 +1529,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       announce: "{name}の視点", announceAngle: "向き{yaw}度、床面から{pitch}度の角度。",
       flat: "このブラウザーでは3D表示ができないため、平面の図を表示しています。",
       standing: "3D表示で立って見えるもの：{list}。", item: "{name} {h}", itemSag: "{name} 支柱の位置で{h}（中央は{low}）",
-      parts: { scoreboard: "スコアボードの下端", net: "ネット", antennae: "アンテナ", goalposts: "ゴールポスト", netposts: "支柱", hoop: "バスケットゴール", goal: "ゴール", boards: "ボードとガラス", stumps: "ウィケットのスタンプ", pylons: "パイロン", flags: "コーナーフラッグ", fence: "外野フェンス", backstop: "バックネット", "foul-poles": "ファウルポール", "table-legs": "天板", walls: "壁", "starting-blocks": "スタート台", "backstroke-flags": "背泳ぎ用フラッグ", "false-start-rope": "フォルススタートロープ", springboards: "飛板", platforms: "固定台", "judges-stand": "ジャッジ台", hurdles: "ハードル", steeplechase: "障害物", "high-jump": "走高跳の支柱とバー", "pole-vault": "棒高跳の支柱とバー", cage: "円盤投・ハンマー投の囲い", padding: "防護マット", "rink-boards": "フェンス" },
+      parts: { scoreboard: "スコアボードの下端", net: "ネット", antennae: "アンテナ", goalposts: "ゴールポスト", netposts: "支柱", hoop: "バスケットゴール", goal: "ゴール", boards: "ボードとガラス", stumps: "ウィケットのスタンプ", pylons: "パイロン", flags: "コーナーフラッグ", fence: "外野フェンス", backstop: "バックネット", "foul-poles": "ファウルポール", "table-legs": "天板", walls: "壁", "starting-blocks": "スタート台", "backstroke-flags": "背泳ぎ用フラッグ", "false-start-rope": "フォルススタートロープ", springboards: "飛板", platforms: "固定台", "judges-stand": "ジャッジ台", hurdles: "ハードル", steeplechase: "障害物", "high-jump": "走高跳の支柱とバー", "pole-vault": "棒高跳の支柱とバー", cage: "円盤投・ハンマー投の囲い", padding: "防護マット", "rink-boards": "フェンス", mound: "土の台", azuchi: "安土", targets: "的" },
     },
   },
 };

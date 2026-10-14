@@ -3,6 +3,7 @@ import { TENANTS, TENANT_JAPANESE_NAMES, nameJaOf } from "./atlas-entry.ts";
 import { PLACES, atlasFacets, placeById, placesBy, placesByClub, surfaceOf, surfacesOf, tenantsOf } from "./atlas.ts";
 import { drawKyogijo } from "./draw.ts";
 import { GROUNDS } from "./grounds.ts";
+import { HALLS } from "./halls.ts";
 import { PARKS } from "./parks.ts";
 
 /** Rough boxes round each country: [south, north, west, east]. A sign slipped in a coordinate puts a place in the sea. */
@@ -14,8 +15,9 @@ const BOXES: Record<string, [number, number, number, number]> = {
 };
 
 describe("the places", () => {
-  it("are every ballpark and every ground, once each", () => {
-    expect(PLACES).toHaveLength(Object.keys(PARKS).length + Object.keys(GROUNDS).length);
+  it("are every ballpark and every ground, once each, and every hall of the budō", () => {
+    expect(PLACES).toHaveLength(Object.keys(PARKS).length + Object.keys(GROUNDS).length + HALLS.length);
+    expect(PLACES.filter((place) => place.kind === "hall")).toHaveLength(HALLS.length);
     expect(PLACES.filter((place) => place.kind === "park")).toHaveLength(Object.keys(PARKS).length);
     expect(PLACES.filter((place) => place.kind === "ground")).toHaveLength(Object.keys(GROUNDS).length);
     expect(PLACES.filter((place) => place.sport === "baseball")).toHaveLength(Object.keys(PARKS).length);
@@ -121,7 +123,7 @@ describe("placesBy", () => {
 describe("atlasFacets", () => {
   it("lists the sports, leagues and countries, sorted, and the span of years", () => {
     const facets = atlasFacets();
-    expect(facets.sports).toEqual(["baseball", "soccer"]);
+    expect(facets.sports).toEqual(["baseball", "budo", "soccer"]);
     expect(facets.leagues).toEqual([...facets.leagues].sort());
     // The tournaments, and every league a club that played in a place belonged to.
     expect(facets.leagues).toEqual(expect.arrayContaining(["FIFA Women's World Cup", "FIFA World Cup", "MLB", "NPB", "NFL", "CFL", "NBA", "NHL", "MLS", "Premier League", "J1 League"]));
@@ -143,6 +145,8 @@ describe("surfaceOf", () => {
 describe("surfaceOf with a sport", () => {
   it("is the place's own surface with none, for every place, and draws what it always drew", () => {
     for (const place of PLACES) {
+      // A hall's own surface is the first it offers.
+      if (place.kind === "hall") continue;
       const own = place.kind === "park" ? { sport: "mlb", park: place.id } : { sport: "soccer", ground: place.id };
       expect(surfaceOf(place), place.id).toEqual(own);
       expect(surfacesOf(place)[0], place.id).toEqual(own);

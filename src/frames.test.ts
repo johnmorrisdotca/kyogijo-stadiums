@@ -314,7 +314,7 @@ describe("the registry", () => {
       expect(frame.origin.length, frame.name).toBeGreaterThan(3);
       expect(["up", "down"]).toContain(frame.yDirection);
       // A soccer pitch has any size within the Laws, a curling sheet 146 to 150 feet and a volleyball court is indoor, beach or sitting and a squash court singles, doubles or wide doubles, and a field sport's surface has a range of sizes, so their frames are variable; every other surface has one.
-      expect(frame.size).toBe(frame.sport === "soccer" || frame.sport === "curling" || frame.sport === "volleyball" || frame.sport === "squash" || ["lacrosse", "rugby", "afl", "gaelic", "cricket", "fieldhockey", "handball", "swimming", "waterpolo", "diving", "artisticswimming", "athletics", "skating"].includes(frame.sport) ? "variable" : "fixed");
+      expect(frame.size).toBe(frame.sport === "soccer" || frame.sport === "curling" || frame.sport === "volleyball" || frame.sport === "squash" || ["lacrosse", "rugby", "afl", "gaelic", "cricket", "fieldhockey", "handball", "swimming", "waterpolo", "diving", "artisticswimming", "athletics", "skating", "judo", "karate", "kendo", "sumo", "kyudo", "dojo"].includes(frame.sport) ? "variable" : "fixed");
       expect(frame.x[0]).toBeLessThan(frame.x[1]);
       expect(frame.y[0]).toBeLessThan(frame.y[1]);
       expect(frame.source.length).toBeGreaterThan(3);

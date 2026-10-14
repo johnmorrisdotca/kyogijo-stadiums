@@ -106,6 +106,77 @@ const SKATING: readonly Feature[] = [
   f("kiss-and-cry", "--ky-red", "The kiss and cry."),
 ];
 
+const JUDO: readonly Feature[] = [
+  f("apron", "--ky-apron", "The ground round the competition area."),
+  f("free-zone", "--ky-free", "The free zone of 50 cm kept round the competition area."),
+  f("platform", "--ky-bud-floor", "The platform under the tatami, when there is one."),
+  f("floor", "--ky-bud-floor", "The arena floor under the surface, when there is one (the Budokan's)."),
+  f("contest-area", "--ky-surface", "The tatami of the contest area."),
+  f("safety-area", "--ky-surface-alt", "The tatami of the safety area."),
+  f("danger-zone", "--ky-red", "The red tatami of the danger zone inside a contest area (the AJJF's)."),
+  f("seams", "--ky-ink", "The seams between the mats."),
+  f("start-right", ["--ky-blue", "--ky-red"], "The tape where the contestant to the referee's right starts: blue, or red in the AJJF's."),
+  f("start-left", "--ky-line", "The tape where the contestant to the referee's left starts."),
+  f("officials", "--ky-ink", "The technical table."),
+];
+
+const KARATE: readonly Feature[] = [
+  f("apron", "--ky-apron", "The ground round the mats."),
+  f("floor", "--ky-bud-floor", "The arena floor under the surface, when there is one (the Budokan's)."),
+  f("safety-area", "--ky-surface-alt", "The mats of the safety area."),
+  f("boundary-band", "--ky-red", "The outer metre of a kumite area, in another colour."),
+  f("competition-area", "--ky-surface", "The mats inside the boundary band."),
+  f("start-mats", "--ky-red", "The two mats turned over at the start."),
+  f("seams", "--ky-ink", "The seams between the mats."),
+  f("judges", "--ky-ink", "The judges' seats."),
+  f("referee", "--ky-ink", "The referee's place."),
+  f("officials", "--ky-ink", "The officials' table."),
+];
+
+const KENDO: readonly Feature[] = [
+  f("apron", "--ky-apron", "The ground round the shiai-jo."),
+  f("outside", "--ky-free", "The 1.5 m kept clear outside the boundary lines."),
+  f("floor", "--ky-bud-floor", "The wooden floor."),
+  f("boards", "--ky-ink", "The seams between the floorboards."),
+  f("boundary-lines", "--ky-line", "The boundary lines."),
+  f("cross", "--ky-line", "The cross at the centre."),
+  f("start-lines", "--ky-line", "The two kaishi-sen."),
+  f("outer-boundary", "--ky-ink", "The outer boundary, 1.5 m outside."),
+];
+
+const SUMO: readonly Feature[] = [
+  f("apron", "--ky-apron", "The ground round the dohyō."),
+  f("clay", "--ky-dirt", "The clay of the platform and of the ring."),
+  f("jano-me", "--ky-sand", "The sand outside the tawara."),
+  f("tawara", "--ky-bud-straw", "The tawara of the ring."),
+  f("shikiri-sen", "--ky-line", "The two shikiri-sen."),
+];
+
+const KYUDO: readonly Feature[] = [
+  f("apron", "--ky-apron", "The ground round the range."),
+  f("shajo", "--ky-bud-floor", "The floor of the shajō."),
+  f("yamichi", "--ky-surface", "The yamichi."),
+  f("yatori-michi", "--ky-surface-alt", "The path for fetching the arrows."),
+  f("azuchi", "--ky-dirt", "The azuchi, the mound."),
+  f("shooting-positions", "--ky-line", "The shooting positions and their line."),
+  f("honza", "--ky-line", "The honza and their line."),
+  f("targets", "--ky-line", "The targets."),
+  f("roofs", "--ky-ink", "The outlines of the roofs of the shajō and the matoba."),
+];
+
+const DOJO: readonly Feature[] = [
+  f("apron", "--ky-apron", "The ground round the dojo."),
+  f("mats", "--ky-surface", "The mats, or the first tone of a checker or a competition floor."),
+  f("mats-alt", "--ky-surface-alt", "The second tone of a checker or a competition floor."),
+  f("border", "--ky-red", "The border of another colour of a border floor."),
+  f("seams", "--ky-ink", "The seams between the mats."),
+  f("heri", "--ky-ink", "The heri, the cloth along the long sides of a traditional mat."),
+  f("walls", "--ky-boards", "The walls."),
+  f("doors", "--ky-apron", "The doors."),
+  f("windows", "--ky-blue", "The windows."),
+  f("shrine", "--ky-red", "The shinzen, the shrine."),
+];
+
 const KEY = ["--ky-key", "--ky-key-left", "--ky-key-right"];
 const BASKETBALL: readonly Feature[] = [
   f("apron", "--ky-apron", "The ground round the court."),
@@ -400,6 +471,12 @@ export const FEATURE_INFO: Readonly<Record<string, readonly Feature[]>> = Object
   handball: HANDBALL,
   athletics: ATHLETICS,
   skating: SKATING,
+  judo: JUDO,
+  karate: KARATE,
+  kendo: KENDO,
+  sumo: SUMO,
+  kyudo: KYUDO,
+  dojo: DOJO,
 });
 
 /**

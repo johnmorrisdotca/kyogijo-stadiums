@@ -1,17 +1,19 @@
 import { GROUNDS, GROUND_IDS } from "./grounds.ts";
 import type { Ground } from "./grounds.ts";
+import { HALLS, type Hall, type HallSurface } from "./halls.ts";
 import { nameContainsAll, placesNamed, plainName } from "./names.ts";
 import type { PlaceAlias } from "./names.ts";
+import type { BudoSport, BudoStyle, DojoSpec } from "./types.ts";
 import { PARKS, PARK_IDS } from "./parks.ts";
 import type { Park } from "./parks.ts";
 import { SURFACE_OF_SPORT, TENANTS, hasSurface, leaguesOf, playedIn } from "./tenants.ts";
 import type { Tenant, TenantSport } from "./tenants.ts";
 
-/** What a place is: a ballpark (of `PARKS`) or a soccer ground (of `GROUNDS`). */
-export type PlaceKind = "park" | "ground";
+/** What a place is: a ballpark (of `PARKS`), a soccer ground (of `GROUNDS`) or a hall of the budō (of `HALLS`: a dojo, an arena, a sumo hall). */
+export type PlaceKind = "park" | "ground" | "hall";
 
-/** The sport a place is drawn for: baseball parks have a fence, soccer grounds a pitch. */
-export type PlaceSport = "baseball" | "soccer";
+/** The sport a place is drawn for: baseball parks have a fence, soccer grounds a pitch, and the halls of the budō (`budo`) the mats, the dohyō or the range of their sports. */
+export type PlaceSport = "baseball" | "soccer" | "budo";
 
 /** `current` is a ground a club or a competition uses today, `past` one it has left, closed or pulled down. */
 export type PlaceStatus = "current" | "past";
@@ -54,6 +56,8 @@ export interface Place {
   to?: number;
   /** The Wikidata item (`Q49136`): the key to join a place to other data. */
   wikidata: string;
+  /** A hall of the budō (`kind: "hall"`): what it holds, how it came to be and the surfaces it offers (see `HALLS`). */
+  hall?: Hall;
   /** True where Wikidata lists athletics among the sports of a soccer ground: a running track lies round its pitch (`drawKyogijo({ sport: "athletics", ground })`). Absent where Wikidata says nothing of it. */
   track?: boolean;
 }
@@ -144,7 +148,27 @@ const fromGround = (ground: Ground): Place => ({
  * // Fenway Park 42.34639 -71.0975 US
  * ```
  */
-export const PLACES: readonly Place[] = Object.freeze([...PARK_IDS.map((id) => fromPark(PARKS[id])), ...GROUND_IDS.map((id) => fromGround(GROUNDS[id]))]);
+const fromHall = (hall: Hall): Place => ({
+  id: hall.id,
+  kind: "hall",
+  name: hall.name,
+  nameJa: hall.nameJa,
+  ...(hall.readingJa === undefined ? {} : { readingJa: hall.readingJa }),
+  aliases: hall.aliases,
+  sport: "budo",
+  leagues: hall.leagues,
+  tenants: [],
+  country: hall.country,
+  city: hall.city,
+  lat: hall.lat,
+  lon: hall.lon,
+  status: "current",
+  from: hall.from,
+  wikidata: hall.wikidata,
+  hall,
+});
+
+export const PLACES: readonly Place[] = Object.freeze([...PARK_IDS.map((id) => fromPark(PARKS[id])), ...GROUND_IDS.map((id) => fromGround(GROUNDS[id])), ...HALLS.map(fromHall)]);
 
 const BY_ID: ReadonlyMap<string, Place> = new Map(PLACES.map((place) => [place.id, place]));
 
@@ -236,6 +260,7 @@ export function atlasFacets(): AtlasFacets {
 
 /** The options `drawKyogijo` takes to draw a surface a place offers. */
 export type PlaceSurface =
+  | { sport: BudoSport; league?: string; budo?: BudoStyle; dojo?: DojoSpec }
   | { sport: "mlb"; park: string }
   | { sport: "soccer"; ground?: string }
   | { sport: "nfl" | "cfl" | "nba" | "nhl" | "afl" | "cricket" }
@@ -243,6 +268,20 @@ export type PlaceSurface =
 
 /** The sports `surfaceOf` can be asked for. */
 export type SurfaceSport = PlaceSurface["sport"];
+
+/** The options that draw a surface of a hall. */
+const hallOptions = (surface: HallSurface): PlaceSurface => ({ sport: surface.sport, ...surface.options });
+
+/**
+ * Every surface a hall of the budō offers, each with its name, how much of it is documented (`basis`) and the options that draw it, in the order of the hall's own list. A place that is not a hall has none.
+ * @example
+ * ```ts
+ * import { hallSurfaces, placeById } from "@johnmorrisdotca/kyogijo-stadiums/atlas";
+ * console.log(hallSurfaces(placeById("kodokan")!).map((surface) => `${surface.id} ${surface.mats}`).join());
+ * // main-dojo 420,school-dojo 240,international-dojo 192,womens-dojo 240,juniors-dojo 114
+ * ```
+ */
+export const hallSurfaces = (place: Place): readonly HallSurface[] => (place.kind === "hall" ? (place.hall?.surfaces ?? []) : []);
 
 /**
  * Every surface a place offers, the place's own first: a park's fence (`mlb` with the park) or a ground's pitch at its size (`soccer` with the ground), then one for each
@@ -256,6 +295,7 @@ export type SurfaceSport = PlaceSurface["sport"];
  * ```
  */
 export function surfacesOf(place: Place): PlaceSurface[] {
+  if (place.kind === "hall") return (place.hall?.surfaces ?? []).map(hallOptions);
   const own: PlaceSurface = place.kind === "park" ? { sport: "mlb", park: place.id } : { sport: "soccer", ground: place.id };
   const out: PlaceSurface[] = [own];
   for (const tenant of place.tenants) {
@@ -282,9 +322,10 @@ export function surfacesOf(place: Place): PlaceSurface[] {
  * // { sport: 'soccer', ground: 'bc-place' } { sport: 'cfl' } undefined
  * ```
  */
-export function surfaceOf(place: Place): { sport: "mlb"; park: string } | { sport: "soccer"; ground: string };
+export function surfaceOf(place: Place): { sport: "mlb"; park: string } | { sport: "soccer"; ground: string } | PlaceSurface;
 export function surfaceOf(place: Place, sport: SurfaceSport): PlaceSurface | undefined;
 export function surfaceOf(place: Place, sport?: SurfaceSport): PlaceSurface | undefined {
+  if (place.kind === "hall") return sport === undefined ? surfacesOf(place)[0] : surfacesOf(place).find((surface) => surface.sport === sport);
   if (sport === undefined) return place.kind === "park" ? { sport: "mlb", park: place.id } : { sport: "soccer", ground: place.id };
   return surfacesOf(place).find((surface) => surface.sport === sport);
 }

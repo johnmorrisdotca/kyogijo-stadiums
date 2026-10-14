@@ -9,7 +9,7 @@
 export type V3 = readonly [number, number, number];
 
 /** What a plane is a part of: it is the class of its element (`ky-up-<kind>`) and what a test finds it by. */
-export type PartKind = "post" | "net" | "tape" | "antenna" | "board" | "glass" | "rim" | "stanchion" | "frame" | "goal" | "flag" | "stump" | "leg" | "table" | "pylon" | "wall" | "screen" | "pole" | "ground";
+export type PartKind = "post" | "net" | "tape" | "antenna" | "board" | "glass" | "rim" | "stanchion" | "frame" | "goal" | "flag" | "stump" | "leg" | "table" | "pylon" | "wall" | "screen" | "pole" | "ground" | "target";
 
 /** One flat rectangle. Its own x runs along `u` (its whole length) and its own y along `v`; `o` is the corner both start from. `svg` is what is drawn on it, in feet along `u` and `v`. */
 export interface Plane {
@@ -33,7 +33,7 @@ export interface Plane {
 }
 
 /** What stands on the surface as a thing a reader would name: a net, a basket, a goal, a pair of posts. */
-export type UprightKind = "scoreboard" | "net" | "antennae" | "goalposts" | "netposts" | "hoop" | "goal" | "boards" | "stumps" | "pylons" | "flags" | "fence" | "backstop" | "foul-poles" | "table-legs" | "walls" | "starting-blocks" | "backstroke-flags" | "false-start-rope" | "springboards" | "platforms" | "judges-stand" | "hurdles" | "steeplechase" | "high-jump" | "pole-vault" | "cage" | "padding" | "rink-boards";
+export type UprightKind = "scoreboard" | "net" | "antennae" | "goalposts" | "netposts" | "hoop" | "goal" | "boards" | "stumps" | "pylons" | "flags" | "fence" | "backstop" | "foul-poles" | "table-legs" | "walls" | "starting-blocks" | "backstroke-flags" | "false-start-rope" | "springboards" | "platforms" | "judges-stand" | "hurdles" | "steeplechase" | "high-jump" | "pole-vault" | "cage" | "padding" | "rink-boards" | "mound" | "azuchi" | "targets";
 
 /** A thing that stands on the surface: where, how high, and the planes it is made of. */
 export interface Upright {

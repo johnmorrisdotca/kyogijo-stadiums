@@ -18,13 +18,14 @@ import { WATER_POLO } from "./pool.figures.ts";
 import { swimPlan } from "./pool.ts";
 import { athleticsLanes, athleticsLeague } from "./athletics/plan.ts";
 import { skatingPlan } from "./skating/plan.ts";
+import { budoPlan } from "./budo/plan.ts";
 import { laneEdges } from "./skating/track.ts";
 import { iceRadius } from "./skating/long.ts";
 import { LEAGUES, chooseLeague, cricketOf } from "./leagues.ts";
 import type { CricketLeague } from "./leagues/cricket.ts";
 
 /** The zone sets. */
-export type ZoneSetId = "field-thirds" | "cricket-ground" | "soccer-positional" | "soccer-thirds" | "soccer-channels" | "soccer-18" | "nba-shot" | "nhl-slot" | "nhl-home-plate" | "baseball-spray" | "baseball-retrosheet" | "football-pass" | "athletics-track" | "skating-track" | "curling-house" | "net-court" | "wall-court" | "roundnet-rings" | "pool-lanes" | "water-polo-areas" | "pool-thirds";
+export type ZoneSetId = "field-thirds" | "cricket-ground" | "soccer-positional" | "soccer-thirds" | "soccer-channels" | "soccer-18" | "nba-shot" | "nhl-slot" | "nhl-home-plate" | "baseball-spray" | "baseball-retrosheet" | "football-pass" | "athletics-track" | "skating-track" | "budo-areas" | "curling-house" | "net-court" | "wall-court" | "roundnet-rings" | "pool-lanes" | "water-polo-areas" | "pool-thirds";
 
 type Pt = readonly [number, number];
 
@@ -56,7 +57,7 @@ export interface ZoneSet {
 
 /** What a zone set needs to know about the drawing and the layer. */
 export interface ZoneContext {
-  o: Pick<SurfaceOptions, "sport" | "pitch" | "units"> & Partial<Pick<SurfaceOptions, "league" | "net" | "field" | "pool" | "athletics" | "skating">>;
+  o: Pick<SurfaceOptions, "sport" | "pitch" | "units"> & Partial<Pick<SurfaceOptions, "league" | "net" | "field" | "pool" | "athletics" | "skating" | "budo" | "dojo">>;
   outline: Outline;
   /** The way the team attacks as the surface is drawn wide: names the sides and counts the bands from the team's own end. `right` by default. */
   direction: "left" | "right";
@@ -87,6 +88,7 @@ export const ZONE_SETS: Readonly<Record<ZoneSetId, { sports: readonly Sport[]; t
   "pool-lanes": { sports: ["swimming"], title: "Lanes: each lane of the pool, the whole length of it", source: "docs/sources.md#zone-sets" },
   "water-polo-areas": { sports: ["waterpolo"], title: "The goal area, the ground from 2 to 6 m, and the rest of the field, at each end", source: "docs/sources.md#zone-sets" },
   "pool-thirds": { sports: ["diving", "artisticswimming"], title: "Thirds along the pool, from the wall the boards or the judges stand at", source: "docs/sources.md#zone-sets" },
+  "budo-areas": { sports: ["judo", "karate", "kendo", "sumo", "kyudo", "dojo"], title: "The surface in its areas: the contest and the safety areas, the boundary band, the clay and the ring of a dohyō, the shajō, the yamichi and the azuchi, a dojo's floor", source: "docs/sources.md#zone-sets" },
   "field-thirds": { sports: ["lacrosse", "rugby", "afl", "gaelic", "fieldhockey", "handball", "netball"], title: "Thirds: defensive, middle and attacking", source: "docs/sources.md#zone-sets" },
   "skating-track": { sports: ["skating"], title: "The rink in parts: the finish straight, the first curve, the crossing straight, the second curve and the infield (a figure skating rink in thirds)", source: "docs/sources.md#zone-sets" },
   "athletics-track": { sports: ["athletics"], title: "The track in parts: the finish straight, the first bend, the back straight, the second bend, and the infield", source: "docs/sources.md#zone-sets" },
@@ -638,6 +640,53 @@ function skatingZones(ctx: ZoneContext): ZoneShape[] {
   ];
 }
 
+/**
+ * The budō surface in its areas, each as the plan lays it out (budo/plan.ts): a judo or karate area's mats by the colour they are laid in (the safety area under, the contest area, and for karate the boundary band, over
+ * it); a dohyō's clay, the jano-me and the ring; a kyūdōjō's shajō, yamichi and azuchi; a kendo floor and a dojo's in two parts (a dojo's kamiza end and the rest). The zones are ours: no rule names them.
+ */
+function budoZones(ctx: ZoneContext): ZoneShape[] {
+  const plan = budoPlan({ sport: ctx.o.sport, league: ctx.o.league, budo: ctx.o.budo, dojo: ctx.o.dojo });
+  const k = FEET_PER_METRE;
+  const ox = plan.box.x0;
+  const oy = plan.box.y0;
+  const w = ctx.words;
+  const box = (b: { x0: number; y0: number; x1: number; y1: number }): [number, number, number, number] => [(b.x0 - ox) * k, (b.y0 - oy) * k, (b.x1 - ox) * k, (b.y1 - oy) * k];
+  const one = (id: string, name: string, b: { x0: number; y0: number; x1: number; y1: number }): ZoneShape => {
+    const [x0, y0, x1, y1] = box(b);
+    return rect(id, name, x0, y0, x1, y1, true, true);
+  };
+  const whole = one("surface", w.budoSafety, plan.box);
+  // The zones do not overlap: a zone is what is in it and in none of the zones laid over it.
+  const inBox = (b: { x0: number; y0: number; x1: number; y1: number }, x: number, y: number): boolean => x >= (b.x0 - ox) * k - 1e-9 && x <= (b.x1 - ox) * k + 1e-9 && y >= (b.y0 - oy) * k - 1e-9 && y <= (b.y1 - oy) * k + 1e-9;
+  const without = (z: ZoneShape, over: readonly { x0: number; y0: number; x1: number; y1: number }[]): ZoneShape => ({ ...z, has: (x, y) => z.has(x, y) && !over.some((b) => inBox(b, x, y)) });
+  if (plan.judo !== undefined) return [without(one("safety-area", w.budoSafety, plan.judo.tatami), plan.judo.contests), ...plan.judo.contests.map((c, i) => one(`contest-area-${i + 1}`, w.budoContest, c))];
+  if (plan.karate !== undefined) return [without(one("safety-area", w.budoSafety, plan.karate.mats), plan.karate.areas), ...plan.karate.areas.map((c, i) => without(one(`boundary-band-${i + 1}`, w.budoBand, c), plan.karate!.inner)), ...plan.karate.inner.map((c, i) => one(`contest-area-${i + 1}`, w.budoContest, c))];
+  if (plan.sumo !== undefined) {
+    const L = plan.sumo;
+    const [cx, cy] = [(L.centre[0] - ox) * k, (L.centre[1] - oy) * k];
+    const ring = (r: number): string => `M${num(cx - r * k)} ${num(cy)}A${num(r * k)} ${num(r * k)} 0 1 0 ${num(cx + r * k)} ${num(cy)}A${num(r * k)} ${num(r * k)} 0 1 0 ${num(cx - r * k)} ${num(cy)}Z`;
+    const jano = L.outer + (plan.figures as { jano: number }).jano;
+    const dist = (x: number, y: number): number => Math.hypot(x - cx, y - cy) / k;
+    const base = one("clay", w.budoClay, L.platform);
+    const inner = L.ring + (plan.figures as { bale: { width: number } }).bale.width;
+    return [
+      { ...base, has: (x, y) => base.has(x, y) && dist(x, y) > jano },
+      { id: "jano-me", name: w.budoJano, d: ring(jano), label: [cx, cy - ((L.outer + jano) / 2) * k], room: [(jano - L.outer) * k, (jano - L.outer) * k], has: (x, y) => dist(x, y) <= jano && dist(x, y) > inner },
+      { id: "ring", name: w.budoRing, d: ring(L.ring), label: [cx, cy - L.ring * 0.5 * k], room: [L.ring * k, L.ring * k * 0.4], has: (x, y) => dist(x, y) <= inner },
+    ];
+  }
+  if (plan.kyudo !== undefined) {
+    const parts = [plan.kyudo.shajo, plan.kyudo.yamichi, plan.kyudo.azuchi];
+    return [without({ ...whole, id: "range", name: w.budoRest }, parts), one("shajo", w.budoShajo, plan.kyudo.shajo), without(one("yamichi", w.budoYamichi, plan.kyudo.yamichi), [plan.kyudo.shajo, plan.kyudo.azuchi]), without(one("azuchi", w.budoAzuchi, plan.kyudo.azuchi), [plan.kyudo.shajo, plan.kyudo.yamichi])];
+  }
+  const ranges = plan.ranges;
+  const kamiza = ranges.kamiza;
+  if (plan.dojo !== undefined && kamiza !== undefined && !("left" in kamiza)) return [without({ ...whole, id: "floor", name: w.budoRest }, [kamiza]), one("kamiza", w.budoKamiza, kamiza)];
+  const halves = ranges.half;
+  if (halves !== undefined && "left" in halves) return [one("left", w.endLeft, halves.left), without(one("right", w.endRight, halves.right), [halves.left])];
+  return [whole];
+}
+
 /** The zones of a set on the surface the context describes. Throws for a set that is not for the surface's sport. */
 export function buildZoneSet(id: ZoneSetId, ctx: ZoneContext): ZoneSet {
   if (!Object.prototype.hasOwnProperty.call(ZONE_SETS, id)) throw new RangeError(`Unknown zone set "${String(id)}": use one of ${ZONE_SET_IDS.join(", ")}`);
@@ -647,6 +696,6 @@ export function buildZoneSet(id: ZoneSetId, ctx: ZoneContext): ZoneSet {
     const { zones, which } = retrosheetZones(ctx);
     return { id, zones, which };
   }
-  const zones = id === "skating-track" ? skatingZones(ctx) : id === "athletics-track" ? athleticsZones(ctx) : id === "field-thirds" ? fieldThirds(ctx) : id === "cricket-ground" ? cricketZones(ctx) : id.startsWith("soccer") ? soccerZones(id, ctx) : id === "nba-shot" ? nbaZones(ctx) : id.startsWith("nhl") ? nhlZones(id, ctx) : id === "baseball-spray" ? baseballSpray(ctx) : id === "curling-house" ? curlingZones(ctx) : id === "net-court" ? netZones(ctx) : id === "wall-court" ? wallZones(ctx) : id === "roundnet-rings" ? roundnetZones(ctx) : id === "pool-lanes" ? poolLanes(ctx) : id === "water-polo-areas" ? waterPoloAreas(ctx) : id === "pool-thirds" ? poolThirds(ctx) : footballPass(ctx);
+  const zones = id === "budo-areas" ? budoZones(ctx) : id === "skating-track" ? skatingZones(ctx) : id === "athletics-track" ? athleticsZones(ctx) : id === "field-thirds" ? fieldThirds(ctx) : id === "cricket-ground" ? cricketZones(ctx) : id.startsWith("soccer") ? soccerZones(id, ctx) : id === "nba-shot" ? nbaZones(ctx) : id.startsWith("nhl") ? nhlZones(id, ctx) : id === "baseball-spray" ? baseballSpray(ctx) : id === "curling-house" ? curlingZones(ctx) : id === "net-court" ? netZones(ctx) : id === "wall-court" ? wallZones(ctx) : id === "roundnet-rings" ? roundnetZones(ctx) : id === "pool-lanes" ? poolLanes(ctx) : id === "water-polo-areas" ? waterPoloAreas(ctx) : id === "pool-thirds" ? poolThirds(ctx) : footballPass(ctx);
   return { id, zones, which: lastWins(zones) };
 }

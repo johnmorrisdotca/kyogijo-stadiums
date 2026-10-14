@@ -15,6 +15,10 @@ export type { Area as FieldArea, FieldPlan, GoalPlan as FieldGoalPlan, Outline a
 export { KYOGIJO_FIELDS_STYLE } from "./fields.style.ts";
 export { KYOGIJO_ATHLETICS_STYLE, KYOGIJO_TRACK_STYLE } from "./athletics.style.ts";
 export { KYOGIJO_SKATING_STYLE } from "./skating.style.ts";
+export { KYOGIJO_BUDO_STYLE } from "./budo.style.ts";
+export { dojo, drawDojo } from "./budo/dojo.api.ts";
+export type { Dojo, Tatami } from "./budo/dojo.api.ts";
+export type { BudoScore, BudoStyle, DojoSpec } from "./budo/types.ts";
 export type { SkatingDiscipline, SkatingFurniture, SkatingInfield, SkatingRace, SkatingStyle } from "./skating/types.ts";
 export type { AthleticsFieldEvent, AthleticsInfield, AthleticsRace, AthleticsStyle, AthleticsTrackLook, WaterJump } from "./athletics/types.ts";
 export type { RangeInfo } from "./ranges.names.ts";
@@ -68,6 +72,7 @@ export type {
   CrowdShape,
   Detail,
   DirectionOptions,
+  BudoSport,
   FieldSport,
   FieldStyle,
   Fence,

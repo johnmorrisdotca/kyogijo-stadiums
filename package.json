@@ -139,6 +139,11 @@
       "import": "./dist/skating-entry.js",
       "default": "./dist/skating-entry.js"
     },
+    "./budo": {
+      "types": "./dist/budo-entry.d.ts",
+      "import": "./dist/budo-entry.js",
+      "default": "./dist/budo-entry.js"
+    },
     "./charts": {
       "types": "./dist/charts-entry.d.ts",
       "import": "./dist/charts-entry.js",

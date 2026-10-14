@@ -15,6 +15,7 @@ import { FIELD_HOCKEY_LEAGUES, fieldHockeyInFeet, type FieldHockeyLeague, type F
 import { ATHLETICS_LEAGUES, athleticsInFeet, type AthleticsFigures, type AthleticsLeague } from "./leagues/athletics.ts";
 import { longOval, outerEdge } from "./skating/track.ts";
 import { SKATING_LEAGUES, skatingInFeet, type SkatingFigures, type SkatingLeague } from "./leagues/skating.ts";
+import { BUDO_LEAGUES, DOJO_LEAGUES, JUDO_LEAGUES, KARATE_LEAGUES, KENDO_LEAGUES, KYUDO_LEAGUES, SUMO_LEAGUES, type BudoLeague } from "./leagues/budo.ts";
 import { GAELIC_LEAGUES, gaelicInFeet, type GaelicLeague, type GaelicSpec } from "./leagues/gaelic.ts";
 import { HANDBALL_LEAGUES, handballInFeet, type HandballLeague, type HandballSpec } from "./leagues/handball.ts";
 import { LACROSSE_LEAGUES, lacrosseInFeet, type LacrosseLeague, type LacrosseSpec } from "./leagues/lacrosse.ts";
@@ -43,6 +44,8 @@ export type { AthleticsFigures, AthleticsLeague } from "./leagues/athletics.ts";
 export { WA_STANDARD_TRACK, WA_SHORT_TRACK, WA_STAGGER_TABLE, WA_SHORT_STAGGER_TABLE } from "./leagues/athletics.ts";
 export type { SkatingFigures, SkatingLeague, LongTrackFigures, ShortTrackFigures, FigureRinkFigures } from "./leagues/skating.ts";
 export { ISU_LONG_TRACK, ISU_SHORT_TRACK, ISU_FIGURE_RINK, ISU_LONG_TRACK_TABLE } from "./leagues/skating.ts";
+export type { BudoFigures, BudoLeague, DojoFigures, DojoLeague, JudoFigures, JudoLeague, KarateFigures, KarateLeague, KendoFigures, KendoLeague, KyudoFigures, KyudoLeague, Mat, SumoFigures, SumoLeague } from "./leagues/budo.ts";
+export { AJJF_CONTEST, BUDO_LEAGUES, ENTEKI, FIK_SHIAI_JO, IJF_CONTEST, IJF_KATA, JSA_DOHYO, KINTEKI, WKF_KATA, WKF_KUMITE } from "./leagues/budo.ts";
 export type { BadmintonFigures, BadmintonLeague, FreeZone, FreeZones, NetFigures, NetLeague, NetSport, NetballFigures, NetballLeague, PadelFigures, PadelLeague, PickleballFigures, PickleballLeague, RacquetballFigures, RacquetballLeague, RoundnetFigures, RoundnetLeague, SepakTakrawFigures, SepakTakrawLeague, SquashFigures, SquashLeague, TableTennisFigures, TableTennisLeague, TennisFigures, TennisLeague, TeqballFigures, TeqballLeague, VolleyballFigures, VolleyballLeague } from "./leagues/courts.ts";
 export type { CourtFigures, CourtMarks } from "./leagues/basketball.ts";
 export type { RinkFigures } from "./leagues/hockey.ts";
@@ -51,10 +54,10 @@ export type { DiamondFigures } from "./leagues/baseball.ts";
 export type { Family, LeagueSpan, Named } from "./leagues/types.ts";
 
 /** A league: a variant of a family of surface. */
-export type League = BasketballLeague | HockeyLeague | FootballLeague | BaseballLeague | CurlingLeague | NetLeague | LacrosseLeague | RugbyLeague | AflLeague | GaelicLeague | CricketLeague | FieldHockeyLeague | HandballLeague | AthleticsLeague | SkatingLeague;
+export type League = BasketballLeague | HockeyLeague | FootballLeague | BaseballLeague | CurlingLeague | NetLeague | LacrosseLeague | RugbyLeague | AflLeague | GaelicLeague | CricketLeague | FieldHockeyLeague | HandballLeague | AthleticsLeague | SkatingLeague | BudoLeague;
 
 /** The family of surface each sport draws; soccer's variants are its pitches (`pitch`), not leagues. */
-export const FAMILY_OF: Readonly<Record<Sport, Family | undefined>> = Object.freeze({ nfl: "football", cfl: "football", ifaf: "football", nhl: "hockey", nba: "basketball", mlb: "baseball", soccer: undefined, curling: "curling", tennis: "tennis", volleyball: "volleyball", badminton: "badminton", pickleball: "pickleball", tabletennis: "tabletennis", padel: "padel", squash: "squash", racquetball: "racquetball", sepaktakraw: "sepaktakraw", teqball: "teqball", roundnet: "roundnet", netball: "netball", lacrosse: "lacrosse", rugby: "rugby", afl: "afl", gaelic: "gaelic", cricket: "cricket", fieldhockey: "fieldhockey", handball: "handball", swimming: undefined, waterpolo: undefined, diving: undefined, artisticswimming: undefined, athletics: "athletics", skating: "skating" });
+export const FAMILY_OF: Readonly<Record<Sport, Family | undefined>> = Object.freeze({ nfl: "football", cfl: "football", ifaf: "football", nhl: "hockey", nba: "basketball", mlb: "baseball", soccer: undefined, curling: "curling", tennis: "tennis", volleyball: "volleyball", badminton: "badminton", pickleball: "pickleball", tabletennis: "tabletennis", padel: "padel", squash: "squash", racquetball: "racquetball", sepaktakraw: "sepaktakraw", teqball: "teqball", roundnet: "roundnet", netball: "netball", lacrosse: "lacrosse", rugby: "rugby", afl: "afl", gaelic: "gaelic", cricket: "cricket", fieldhockey: "fieldhockey", handball: "handball", swimming: undefined, waterpolo: undefined, diving: undefined, artisticswimming: undefined, athletics: "athletics", skating: "skating", judo: "judo", karate: "karate", kendo: "kendo", sumo: "sumo", kyudo: "kyudo", dojo: "dojo" });
 
 /**
  * The leagues each sport can draw, in the order a menu lists them, the sport's own first (the three football sports share their
@@ -95,10 +98,16 @@ export const LEAGUES: Readonly<Record<Sport, readonly League[]>> = Object.freeze
   artisticswimming: [],
   athletics: ATHLETICS_LEAGUES,
   skating: SKATING_LEAGUES,
+  judo: JUDO_LEAGUES,
+  karate: KARATE_LEAGUES,
+  kendo: KENDO_LEAGUES,
+  sumo: SUMO_LEAGUES,
+  kyudo: KYUDO_LEAGUES,
+  dojo: DOJO_LEAGUES,
 });
 
 /** Every league of every family, once each. */
-export const VARIANTS: readonly League[] = Object.freeze([...BASKETBALL_LEAGUES, ...HOCKEY_LEAGUES, ...FOOTBALL_LEAGUES, ...BASEBALL_LEAGUES, ...CURLING_LEAGUES, ...TENNIS_LEAGUES, ...VOLLEYBALL_LEAGUES, ...BADMINTON_LEAGUES, ...PICKLEBALL_LEAGUES, ...TABLE_TENNIS_LEAGUES, ...PADEL_LEAGUES, ...SQUASH_LEAGUES, ...RACQUETBALL_LEAGUES, ...SEPAK_TAKRAW_LEAGUES, ...TEQBALL_LEAGUES, ...ROUNDNET_LEAGUES, ...NETBALL_LEAGUES, ...LACROSSE_LEAGUES, ...RUGBY_LEAGUES, ...AFL_LEAGUES, ...GAELIC_LEAGUES, ...CRICKET_LEAGUES, ...FIELD_HOCKEY_LEAGUES, ...HANDBALL_LEAGUES, ...ATHLETICS_LEAGUES]);
+export const VARIANTS: readonly League[] = Object.freeze([...BASKETBALL_LEAGUES, ...HOCKEY_LEAGUES, ...FOOTBALL_LEAGUES, ...BASEBALL_LEAGUES, ...CURLING_LEAGUES, ...TENNIS_LEAGUES, ...VOLLEYBALL_LEAGUES, ...BADMINTON_LEAGUES, ...PICKLEBALL_LEAGUES, ...TABLE_TENNIS_LEAGUES, ...PADEL_LEAGUES, ...SQUASH_LEAGUES, ...RACQUETBALL_LEAGUES, ...SEPAK_TAKRAW_LEAGUES, ...TEQBALL_LEAGUES, ...ROUNDNET_LEAGUES, ...NETBALL_LEAGUES, ...LACROSSE_LEAGUES, ...RUGBY_LEAGUES, ...AFL_LEAGUES, ...GAELIC_LEAGUES, ...CRICKET_LEAGUES, ...FIELD_HOCKEY_LEAGUES, ...HANDBALL_LEAGUES, ...ATHLETICS_LEAGUES, ...BUDO_LEAGUES]);
 
 /** The ids of a sport's leagues. */
 export const leagueIds = (sport: Sport): string[] => LEAGUES[sport].map((league) => league.id);
@@ -351,6 +360,43 @@ export function leagueSize(sport: Sport, id: string, unit?: Unit): { length: num
       const d = league.dimensions;
       const m = d.kind === "long-track" ? ((): { length: number; width: number } => { const o = longOval(undefined, undefined, d); const R = outerEdge(o) + d.padding.clear; return { length: o.straight + 2 * R, width: 2 * R }; })() : d.kind === "short-track" ? d.rink : { length: d.length.drawn, width: d.width.drawn };
       feet = { length: convertLength(m.length, league.unit, "ft"), width: convertLength(m.width, league.unit, "ft") };
+      break;
+    }
+    case "judo": {
+      // The contest area with its safety area all round it, in metres.
+      const d = league.dimensions;
+      const m = d.contest.drawn + 2 * d.safety.drawn;
+      feet = { length: convertLength(m, "m", "ft"), width: convertLength(m, "m", "ft") };
+      break;
+    }
+    case "karate": {
+      const d = league.dimensions;
+      const m = d.area + 2 * d.safety;
+      feet = { length: convertLength(m, "m", "ft"), width: convertLength(m, "m", "ft") };
+      break;
+    }
+    case "kendo": {
+      const m = league.dimensions.side.drawn;
+      feet = { length: convertLength(m, "m", "ft"), width: convertLength(m, "m", "ft") };
+      break;
+    }
+    case "sumo": {
+      const m = league.dimensions.platform;
+      feet = { length: convertLength(m, "m", "ft"), width: convertLength(m, "m", "ft") };
+      break;
+    }
+    case "kyudo": {
+      // The shajō from its back wall to the back of the azuchi, and the width of its frontage with the judges' side.
+      const d = league.dimensions;
+      const frontage = (d.count - 1) * d.step.drawn + 2 * d.hall.side + d.hall.judges;
+      const length = d.hall.rear + d.hall.depth - d.hall.front + d.distance - 1 + d.azuchi.depth;
+      feet = { length: convertLength(length, "m", "ft"), width: convertLength(frontage, "m", "ft") };
+      break;
+    }
+    case "dojo": {
+      // The usual 20 jō: 5 mats' widths across and 8 along.
+      const d = league.dimensions;
+      feet = { length: convertLength(8 * d.mat.width, "m", "ft"), width: convertLength(5 * d.mat.width, "m", "ft") };
       break;
     }
     default:
@@ -646,6 +692,61 @@ export function leagueFigures(league: League): [string, string][] {
         ["goal area line", `${w(f.areaDistance)} from the goal line`],
         ["free-throw line", `${w(f.areaDistance + f.freeThrowOutside)} from the goal line`],
         ["goal", `${w(f.goalWidth)} wide and ${w(f.goalHeight)} high`],
+      ];
+    }
+    case "judo": {
+      const f = league.dimensions;
+      return [
+        ["contest area", `${w(convertLength(f.contest.min, "m", "ft"))} to ${w(convertLength(f.contest.max, "m", "ft"))} square (${f.contest.drawn} m drawn)`],
+        ["safety area", `at least ${w(convertLength(f.safety.min, "m", "ft"))} wide; at least ${w(convertLength(f.common, "m", "ft"))} between two areas`],
+        ["tatami", `${f.tatami.length} m by ${f.tatami.width} m by ${f.tatami.thickness * 100} cm`],
+        ["free zone", `at least ${f.freeZone * 100} cm round the competition area`],
+        ["platform", `${f.platform} m wider and longer than the tatami`],
+        ["start tape", f.marks === null ? "none" : `${f.marks.width * 100} cm by ${f.marks.length * 100} cm, ${f.marks.fromCentre} m from the centre`],
+      ];
+    }
+    case "karate": {
+      const f = league.dimensions;
+      return [
+        ["area", `${f.area} m square, measured from the outside`],
+        ["boundary band", f.band === 0 ? "none" : `the outer ${f.band} m in another colour`],
+        ["safety area", `${f.safety} m, and ${f.between} m between areas`],
+        ["start mats", f.startMats === null ? "none" : `${f.startMats.fromCentre} m from the centre`],
+        ["referee", `${f.referee} m from the boundary; each judge ${f.judges} m off a corner`],
+      ];
+    }
+    case "kendo": {
+      const f = league.dimensions;
+      return [
+        ["shiai-jo", `${f.side.min} m to ${f.side.max} m a side, wooden floor`],
+        ["lines", `${f.lineWidth.min * 100} cm to ${f.lineWidth.max * 100} cm, white`],
+        ["centre cross", `${f.cross.min * 100} cm to ${f.cross.max * 100} cm`],
+        ["kaishi-sen", `${f.startLine.length * 100} cm long, ${f.startLine.fromCentre} m from the centre`],
+        ["outside", `${f.outside} m kept clear`],
+      ];
+    }
+    case "sumo": {
+      const f = league.dimensions;
+      return [
+        ["platform", `${f.platform} m square, ${f.height.min * 100} cm to ${f.height.max * 100} cm high`],
+        ["ring", `${f.circle} m across, ${f.tawara.count} tawara (${f.tawara.tokuda} tokudawara)`],
+        ["shikiri-sen", `${f.shikiri.length * 100} cm long, ${f.shikiri.width * 100} cm wide, ${f.shikiri.apart * 100} cm apart`],
+      ];
+    }
+    case "kyudo": {
+      const f = league.dimensions;
+      return [
+        ["distance", `${f.distance} m from the shooting position to the target`],
+        ["target", `${f.target.diameter * 100} cm across, its centre ${f.target.centre * 100} cm up, tilted ${f.target.tilt} degrees`],
+        ["shooters", `${f.step.drawn} m apart (${f.step.min} m to ${f.step.max} m), ${f.honza} m from the shooting position to the honza`],
+        ["shajō", `${f.hall.depth} m deep, ${f.hall.side} m from the end shooters to the walls, ceiling ${f.ceiling} m`],
+      ];
+    }
+    case "dojo": {
+      const f = league.dimensions;
+      return [
+        ["tatami", `${f.mat.length} m by ${f.mat.width} m (${f.region.en})`],
+        ["area of a mat", `${Math.round(f.mat.length * f.mat.width * 1000) / 1000} square metres`],
       ];
     }
     default: {

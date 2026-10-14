@@ -20,7 +20,7 @@ describe("the names of every park and ground", () => {
       expect(place.nameJa.trim().length, place.id).toBeGreaterThan(1);
     }
     // The places of the atlas carry the same names.
-    for (const place of PLACES) {
+    for (const place of PLACES.filter((p) => p.kind !== "hall")) {
       const source = PARKS[place.id] ?? GROUNDS[place.id];
       expect([place.name, place.nameJa, place.readingJa, place.localName, place.localLanguage, place.aliases]).toEqual([source.name, source.nameJa, source.readingJa, source.localName, source.localLanguage, source.aliases ?? []]);
     }

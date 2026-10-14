@@ -30,7 +30,7 @@ const named: { sport: Sport; id: RangeName; end?: "left" | "right" }[] = SPORTS.
 
 describe("the ranges of each sport", () => {
   it("are listed for every sport, each with a name in both languages", () => {
-    expect(SPORTS.length).toBe(33);
+    expect(SPORTS.length).toBe(39);
     for (const sport of SPORTS) {
       expect(RANGES[sport].length, sport).toBeGreaterThan(0);
       for (const info of RANGES[sport]) {
