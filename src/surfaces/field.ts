@@ -119,7 +119,7 @@ export function fieldSurface(o: BuildOptions, plan: FieldPlan, style: { goals?: 
     }
   }
   for (const area of plan.areas) base += el("path", { class: ft(o, area.feature, area.cls), d: areaD(area), "fill-rule": area.frame === undefined ? undefined : "evenodd" });
-  const ends = o.score && plan.ends !== undefined ? plan.ends : undefined;
+  const ends = o.score && o.pageant !== true && plan.ends !== undefined ? plan.ends : undefined;
   if (ends !== undefined) {
     for (const side of ["left", "right"] as const) {
       const b = ends[side];
@@ -152,6 +152,9 @@ export function fieldSurface(o: BuildOptions, plan: FieldPlan, style: { goals?: 
   surface.box = { x: 0, y: 0, w: L, h: W };
   surface.lineRef = { width: thick, feet: 1 };
   surface.ranges = plan.ranges;
+  // A pageant's pictures keep clear of a cricket pitch, which runs through the middle.
+  const pitch = plan.sport === "cricket" ? plan.ranges?.pitch : undefined;
+  if (pitch !== undefined && !("left" in pitch)) surface.pageant = { clear: pitch.w / 2 };
   if (o.landmarks === true) surface.marks = full ? [...plan.marks] : plan.marks.filter((mark) => !mark.id.startsWith("~"));
   if (o.portrait) {
     const t = quarterTurn(view0);

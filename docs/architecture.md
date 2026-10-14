@@ -9,6 +9,9 @@ src/
 ├── score.ts            the teams' places, the score's panel and the badge
 ├── homeside.ts         which side the home team is on by default, for each sport: home first for soccer and the world codes, away first for the North American leagues
 ├── mark.ts             the round team mark: a flag or a logo in a circle with a ring, or the team's initials on its colour
+├── pageant.ts          the pageant: what the options ask for, the carpet's ratio, and where each team's picture and the emblem go on the surface
+├── pageant.draw.ts     the pageant drawn: a carpet (a flag laid flat with a border and fabric), a stage (a crest on a round disc with a ring) and the emblem
+├── pageant.style.ts    the pageant's colours, light and dark, and its entrance (CSS only, for readers who have not asked for less motion)
 ├── curling.board.ts    the curling scoreboard: each end, the total and the hammer
 ├── sets.board.ts       the net sports' scoreboard: each set or game, the points of the game, the sets won and the server's ball
 ├── court.ts            the net sports' court a set of options asks for: the look, the free zone, the lines, areas and fixtures as rectangles

@@ -13,7 +13,7 @@ export const KYOGIJO_ATTRIBUTES = [
   "sport", "league", "size", "theme", "language", "orientation", "park", "ground", "year", "detail", "margin", "stripes", "exact-lines", "uppercase",
   "pitch", "pitch-type", "half", "range", "range-end", "goals", "stripe-pattern", "corner-flags", "look", "line-width", "line-dash", "line-opacity", "landmarks", "walls", "quirks",
   "home", "away", "home-abbr", "away-abbr", "home-score", "away-score", "home-penalties", "away-penalties", "score", "home-logo", "away-logo", "home-color", "away-color",
-  "status", "competition", "date", "label", "winner", "home-side", "description", "options",
+  "status", "competition", "date", "label", "winner", "home-side", "pageant", "description", "options",
   "loop", "speed", "autoplay", "controls", "trail",
 ] as const;
 
@@ -93,6 +93,13 @@ export function optionsFromAttributes(read: (name: string) => string | null, bas
   if (size !== null) o.size = size as Size;
   const status = read("status");
   if (status !== null && status !== "") o.status = status as StatusWord;
+  // `pageant="carpet"` or `"stage"`, or `"true"` for a carpet; `"false"` leaves out what the `options` say.
+  const pageant = read("pageant");
+  if (pageant !== null) {
+    if (pageant === "carpet" || pageant === "stage") o.pageant = pageant;
+    else if (pageant === "true" || pageant === "") o.pageant = true;
+    else if (pageant === "false") delete o.pageant;
+  }
   const side = read("home-side");
   if (side === "left" || side === "right") o.homeSide = side as Side;
   const year = read("year");

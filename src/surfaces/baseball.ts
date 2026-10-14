@@ -191,6 +191,21 @@ export function baseball(points: readonly FencePoint[], o: BuildOptions, era?: M
     Object.assign(right, { cx: (umax + m - 6 + 62) / 2, cy, w, h: 58 });
   }
   const surface: Surface = { sport: "mlb", view, base, lines, defs: clip, left, right, plate: { cx: 0, cy: -Math.round(vmax * 0.42), w: 150, h: 62 }, turned: false, lineRef: { width: thin, feet: 1 }, box: { x: umin, y: -vmax, w: umax - umin, h: vmax } };
+  // A pageant: the home team's picture on the infield, the visitors' in the outfield beyond the plate, and the emblem on the mound.
+  {
+    const inW = 2 * centreV * 0.6 * 0.95;
+    const inH = 2 * centreV * 0.4 * 0.95;
+    const plateTop = Math.round(vmax * 0.42) + 31;
+    const v0 = plateTop + 10;
+    const v1 = vmax - (b?.track ?? MLB.warningTrack) - 8;
+    const outH = Math.min(v1 - v0, inH * 1.9);
+    surface.pageant = {
+      byRole: true,
+      left: { cx: 0, cy: -(v0 + v1) / 2, w: Math.min(inW * 1.9, (umax - umin) * 0.5), h: outH },
+      right: { cx: 0, cy: -centreV, w: inW, h: inH },
+      centre: { cx: 0, cy: -d.moundCentre, r: 15 },
+    };
+  }
   // The infield: the dirt out to the arc round the mound, with the ground behind home plate; the outfield: the fence in to just short of second base.
   surface.ranges = {
     infield: edges(-(ua + 15), -(d.pitcher + skin + 12), ua + 15, 0),

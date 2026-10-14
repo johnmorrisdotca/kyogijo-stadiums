@@ -117,6 +117,8 @@ export function curling(o: BuildOptions, look: SheetLook): Surface {
   };
   surface.lineRef = { width: lineW, feet: 1 };
   surface.box = { x: 0, y: 0, w: L, h: W };
+  // A pageant: a picture in each house, the emblem in the middle of the sheet.
+  surface.pageant = { left: { cx: tl, cy, w: twelve * 2, h: twelve * 2, disc: twelve * 2 }, right: { cx: tr, cy, w: twelve * 2, h: twelve * 2, disc: twelve * 2 }, centre: { cx: L / 2, cy, r: W * 0.42 } };
   if (o.landmarks === true) {
     const marks: Mark[] = [
       { id: "hog-line", x: tl + spec.hogLine + hogW / 2, y: 0, side: "top" },

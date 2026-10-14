@@ -82,6 +82,8 @@ export interface KyogijoWords {
     colon: string;
     gap: string;
   };
+  /** The pageant, in a drawing's description: what lies over each half ({carpet}, {stage}), and the emblem in the middle, with its name ({name}) or without. */
+  pageant: { carpet: string; stage: string; emblem: string; emblemNamed: string };
   /**
    * A special game, one surface set inside another: the title ({guest} is the inner surface, {host} where it is), the sentence that names the game ({event}, {date}),
    * whether the surface lies wholly inside the host ({guest}, {host}) or reaches beyond it ({pct} percent of its area), how its place was decided, and the date.
@@ -568,6 +570,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
     field: { aflScore: "{name} scored {goals} goals and {behinds} behinds.", gaelicScore: "{name} scored {goals} goals and {points} points.", cricketScore: "{name}: {runs} runs for {wickets} wickets in {overs} overs.", cricketInnings: "By innings, {name}: {list}.", inningsStatus: "Innings {n}", innings: "Inn", runs: "Runs", wickets: "Wkts", overs: "Ov", total: "Total" },
     scoreTitle: "{away} {awayScore}, {home} {homeScore}",
     said: { home: "home", away: "away", won: "{name} won.", tied: "The game is level.", park: "The outfield fence follows the figures published for {park}.", officially: "Its official name is {name}.", ground: "The pitch follows the size published for {ground}.", groundDefault: "No pitch size is published for {ground}, so the pitch has the international size of 105 by 68 metres.", era: "The markings are those of the {season} season.", hammer: "{name} has the hammer.", ends: "By end, {name}: {list}.", total: "Total", wonPens: "{name} won {a}-{b} on penalties.", pens: "{a}-{b} pens", on: "Drawn as", sep: ", ", stop: ".", colon: ": ", gap: " " },
+    pageant: { carpet: "Each team's flag or logo is laid out large over its own part of the surface, as a carpet.", stage: "Each team's crest stands on a large round stage over its own part of the surface.", emblem: "An emblem is in the middle.", emblemNamed: "The {name} emblem is in the middle." },
     special: {
       guest: { nfl: "football field", cfl: "football field", ifaf: "football field", nhl: "rink", nba: "court", mlb: "baseball field", soccer: "pitch", curling: "sheet", tennis: "court", volleyball: "court", badminton: "court", pickleball: "court", tabletennis: "table", lacrosse: "field", rugby: "field", afl: "ground", gaelic: "field", cricket: "ground", fieldhockey: "pitch", handball: "court" },
       title: "{guest} in {host}",
@@ -770,6 +773,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
     field: { aflScore: "{name}は{goals}ゴール{behinds}ビハインドです。", gaelicScore: "{name}は{goals}ゴール{points}ポイントです。", cricketScore: "{name}：{overs}オーバーで{runs}ラン（{wickets}ウィケット喪失）。", cricketInnings: "{name}のイニングごとのスコア：{list}。", inningsStatus: "第{n}イニング", innings: "イニング", runs: "ラン", wickets: "ウィケット", overs: "オーバー", total: "合計" },
     scoreTitle: "{away} {awayScore}、{home} {homeScore}",
     said: { home: "ホーム", away: "アウェイ", won: "{name}の勝ちです。", tied: "同点です。", park: "外野フェンスは、{park}の公表されている距離をもとに描かれています。", officially: "正式名称は{name}です。", ground: "ピッチは、{ground}の公表されている広さをもとに描かれています。", groundDefault: "{ground}のピッチの広さは公表されていないため、国際標準の105×68mで描かれています。", era: "ラインやマークは{season}シーズンのものです。", hammer: "{name}がハンマー（最後の1投）を持っています。", ends: "{name}のエンドごとの得点：{list}。", total: "合計", wonPens: "{name}がPK戦を{a}-{b}で制しました。", pens: "PK戦 {a}-{b}", on: "図の内容", sep: "、", stop: "。", colon: "：", gap: "" },
+    pageant: { carpet: "各チームの旗またはロゴが、競技場のチームごとの区域に、カーペットのように大きく広げられています。", stage: "各チームのエンブレムが、競技場のチームごとの区域にある大きな丸いステージの上に置かれています。", emblem: "中央にエンブレムがあります。", emblemNamed: "中央に{name}のエンブレムがあります。" },
     special: {
       guest: { nfl: "アメリカンフットボールのフィールド", cfl: "カナディアンフットボールのフィールド", ifaf: "アメリカンフットボールのフィールド", nhl: "リンク", nba: "コート", mlb: "野球のグラウンド", soccer: "ピッチ", curling: "シート", tennis: "コート", volleyball: "コート", badminton: "コート", pickleball: "コート", tabletennis: "卓球台", lacrosse: "フィールド", rugby: "グラウンド", afl: "グラウンド", gaelic: "フィールド", cricket: "グラウンド", fieldhockey: "ピッチ", handball: "コート" },
       title: "{host}の中の{guest}",

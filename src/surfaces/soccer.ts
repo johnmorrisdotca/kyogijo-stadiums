@@ -143,7 +143,7 @@ export function soccer(b: SoccerBuild, o: BuildOptions): Surface {
   // The ends in the team's colour, in a score: the penalty area (or what a small pitch has in its place).
   const zoneDepth = Math.max(spec.penaltyDepth, L * 0.12);
   const zoneWidth = Math.max(spec.area === "arcs" ? spec.areaLine + 2 * spec.penaltyDepth : spec.area === "semicircle" ? 2 * spec.penaltyDepth : lay.penaltyHalfWidth * 2, W * 0.4);
-  if (o.score) {
+  if (o.score && o.pageant !== true) {
     // A rectangle at each end: the penalty area on a full pitch, a box that holds the name on the others (their areas are curved).
     for (const side of [0, 1] as const) inside += el("rect", { class: `ky-zone ky-zone-${side === 0 ? "left" : "right"}`, x: side === 0 ? 0 : L - zoneDepth, y: cy - zoneWidth / 2, width: zoneDepth, height: zoneWidth });
   }
@@ -230,6 +230,7 @@ export function soccer(b: SoccerBuild, o: BuildOptions): Surface {
   };
   surface.lineRef = { width: lw, feet: K };
   surface.box = { x: 0, y: 0, w: Lf, h: Wf };
+  surface.centreRadius = spec.centreRadius * K;
   // The penalty area reaches as far as its lines do: the area, the arc beyond it and a small pitch's curved area; and a little more.
   const arcBeyond = spec.arcRadius > 0 && lay.spot > 0 && lay.penaltyDepth > lay.spot ? Math.max(0, spec.arcRadius - (lay.penaltyDepth - lay.spot)) : 0;
   const curved = spec.area === "arcs" || spec.area === "semicircle" ? spec.penaltyDepth : 0;
