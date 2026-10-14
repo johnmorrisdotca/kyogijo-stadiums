@@ -1,40 +1,48 @@
-// The demo's made-up teams, and their emblems: original shapes in plain colours, on a white ground so that they read on any colour.
-const disc = (inner) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#fff"/>${inner}</svg>`;
+// The demo's teams are real countries, each drawn with its national flag through the flag plug-in (flags.js), and the demo's own logos, to show that a logo of your own works as well: a maple leaf with the
+// word CANADA and a red sun disc with the word JAPAN, drawn here in code, and for every other country a roundel with its three letters. Only national flags and country names are used, never a
+// federation's crest or logo.
+import { NATIONS } from "./nations.js";
 
-export const EMBLEMS = {
-  gull: disc(`<path d="M12 56Q32 18 50 50Q68 18 88 56Q68 46 50 72Q32 46 12 56Z" fill="#1f5fa8"/>`),
-  bison: disc(`<path d="M20 42Q26 28 42 34H58Q74 28 80 42Q74 44 70 46Q74 62 62 76Q50 82 38 76Q26 62 30 46Q26 44 20 42Z" fill="#b5452c"/><path d="M20 42Q14 32 22 22M80 42Q86 32 78 22" stroke="#b5452c" stroke-width="6" fill="none" stroke-linecap="round"/><circle cx="41" cy="52" r="3" fill="#fff"/><circle cx="59" cy="52" r="3" fill="#fff"/>`),
-  owl: disc(`<path d="M24 28L38 38H62L76 28V58Q76 78 50 80Q24 78 24 58Z" fill="#3a2d6b"/><circle cx="38" cy="52" r="8" fill="#fff"/><circle cx="62" cy="52" r="8" fill="#fff"/><path d="M46 62H54L50 70Z" fill="#f2c230"/>`),
-  anchor: disc(`<path d="M46 20H54V30H64V38H54V66Q70 64 74 50L68 52L78 40L86 52L80 54Q76 76 50 78Q24 76 20 54L14 52L22 40L32 52L26 50Q30 64 46 66V38H36V30H46Z" fill="#0f7a7a"/>`),
-  peak: disc(`<path d="M10 76L38 28L52 52L62 38L90 76Z" fill="#14233f"/><path d="M38 28L46 42L38 40L30 42Z" fill="#fff"/>`),
-  bolt: disc(`<path d="M56 12L24 56H44L38 88L76 40H54Z" fill="#e0a100"/>`),
-  star: disc(`<path d="M50 14L60 40L88 40L66 57L74 84L50 68L26 84L34 57L12 40L40 40Z" fill="#c8102e"/>`),
-  pine: disc(`<path d="M50 12L72 44H62L80 68H58V86H42V68H20L38 44H28Z" fill="#1f6b3c"/>`),
-};
+const disc = (inner) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#fff"/>${inner}</svg>`;
+const word = (text, colour) => `<text x="50" y="86" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="800" font-size="13" letter-spacing="1" fill="${colour}">${text}</text>`;
+
+// A maple leaf of eleven points, drawn from half of its outline and mirrored.
+const LEAF_HALF = [[0, 14], [5, 26], [10, 23], [9, 36], [22, 28], [19, 39], [31, 35], [27, 44], [33, 53], [22, 52], [24, 58], [6, 55], [5, 70]];
+const LEAF = [...LEAF_HALF, ...LEAF_HALF.slice(0, -1).reverse().map(([dx, y]) => [-dx, y])].map(([dx, y]) => `${50 + dx},${y}`).join(" ");
+
+/** A roundel of a country's colour with its three letters: the logo of a country that has no drawing of its own here. */
+const roundel = (abbr, colour) => disc(`<circle cx="50" cy="50" r="40" fill="${colour}"/><circle cx="50" cy="50" r="33" fill="none" stroke="#fff" stroke-width="2"/><text x="50" y="58" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="800" font-size="24" fill="#fff">${abbr}</text>`);
+
+/** The demo's own logos, by country: the maple leaf and the sun disc, and a roundel for each of the others. */
+export const EMBLEMS = Object.fromEntries(Object.entries(NATIONS).map(([key, n]) => [key, roundel(n.abbr, n.color)]));
+EMBLEMS.canada = disc(`<polygon points="${LEAF}" fill="#d52b1e"/>${word("CANADA", "#d52b1e")}`);
+EMBLEMS.japan = disc(`<circle cx="50" cy="42" r="22" fill="#bc002d"/>${word("JAPAN", "#bc002d")}`);
 
 /** The made-up emblem of a made-up cup, drawn in code for a pageant's centre: a gold cup on a navy disc with a white ring. */
 export const PAGEANT_EMBLEM = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#14233f"/><circle cx="50" cy="50" r="42" fill="none" stroke="#f4f0e4" stroke-width="2"/><path d="M33 26H67V42Q67 58 50 62Q33 58 33 42Z" fill="#f2c230"/><path d="M33 30H24Q24 46 36 50M67 30H76Q76 46 64 50" fill="none" stroke="#f2c230" stroke-width="4"/><path d="M46 62H54V72H62V78H38V72H46Z" fill="#f2c230"/></svg>`;
 
-/** A made-up game for each sport: [away, home], each a name, a short form, a colour and an emblem. */
+/** A game for each sport: [away, home], each a country: its name, short form and colour (from nations.js), its flag code and the key of its own logo. */
+const team = (key) => ({ name: NATIONS[key].name, abbr: NATIONS[key].abbr, color: NATIONS[key].color, flag: NATIONS[key].flag, emblem: key });
 export const TEAMS = {
-  football: { away: { name: "Harbour City Gulls", abbr: "HCG", color: "#1f5fa8", emblem: "gull" }, home: { name: "Prairie Ridge Bison", abbr: "PRB", color: "#b5452c", emblem: "bison" } },
-  hockey: { away: { name: "Northern Owls", abbr: "NOW", color: "#3a2d6b", emblem: "owl" }, home: { name: "Lakeshore Anchors", abbr: "LSA", color: "#0f7a7a", emblem: "anchor" } },
-  basketball: { away: { name: "Summit Peaks", abbr: "SMT", color: "#14233f", emblem: "peak" }, home: { name: "Metro Bolts", abbr: "MTB", color: "#c2410c", emblem: "bolt" } },
-  soccer: { away: { name: "Valley Rovers", abbr: "VRV", color: "#c8102e", emblem: "star" }, home: { name: "Summit Town", abbr: "SUM", color: "#14233f", emblem: "peak" } },
-  curling: { away: { name: "Harbour City Gulls", abbr: "HCG", color: "#1f5fa8", emblem: "gull" }, home: { name: "Prairie Ridge Bison", abbr: "PRB", color: "#b5452c", emblem: "bison" } },
-  net: { away: { name: "Harbour City Gulls", abbr: "HCG", color: "#1f5fa8", emblem: "gull" }, home: { name: "Prairie Ridge Bison", abbr: "PRB", color: "#b5452c", emblem: "bison" } },
-  baseball: { away: { name: "Valley Stars", abbr: "VLY", color: "#c8102e", emblem: "star" }, home: { name: "Coastal Pines", abbr: "CPN", color: "#1f6b3c", emblem: "pine" } },
+  football: { away: team("mexico"), home: team("usa") },
+  hockey: { away: team("usa"), home: team("canada") },
+  basketball: { away: team("australia"), home: team("japan") },
+  soccer: { away: team("brazil"), home: team("england") },
+  curling: { away: team("japan"), home: team("canada") },
+  net: { away: team("korea"), home: team("germany") },
+  baseball: { away: team("japan"), home: team("usa") },
 };
 
-/** The same teams with Japanese names, for the page in Japanese. */
+/** The same countries with Japanese names, for the page in Japanese. */
+const ja = (key) => NATIONS[key].ja;
 export const TEAMS_JA = {
-  football: { away: "港町ガルズ", home: "草原バイソンズ" },
-  hockey: { away: "北国オウルズ", home: "湖畔アンカーズ" },
-  basketball: { away: "山頂ピークス", home: "メトロボルツ" },
-  soccer: { away: "渓谷ローヴァーズ", home: "サミット・タウン" },
-  baseball: { away: "渓谷スターズ", home: "海岸パインズ" },
-  curling: { away: "港町ガルズ", home: "草原バイソンズ" },
-  net: { away: "港町ガルズ", home: "草原バイソンズ" },
+  football: { away: ja("mexico"), home: ja("usa") },
+  hockey: { away: ja("usa"), home: ja("canada") },
+  basketball: { away: ja("australia"), home: ja("japan") },
+  soccer: { away: ja("brazil"), home: ja("england") },
+  baseball: { away: ja("japan"), home: ja("usa") },
+  curling: { away: ja("japan"), home: ja("canada") },
+  net: { away: ja("korea"), home: ja("germany") },
 };
 
 export const FAMILIES = { nfl: "football", cfl: "football", ifaf: "football", nhl: "hockey", nba: "basketball", mlb: "baseball", soccer: "soccer", curling: "curling", tennis: "net", volleyball: "net", badminton: "net", pickleball: "net", tabletennis: "net", padel: "net", squash: "net", racquetball: "net", sepaktakraw: "net", teqball: "net", roundnet: "net", netball: "net", athletics: "football", skating: "hockey", lacrosse: "football", rugby: "football", afl: "football", gaelic: "football", cricket: "football", fieldhockey: "football", handball: "football", swimming: "football", waterpolo: "football", diving: "football", artisticswimming: "football", judo: "football", karate: "football", kendo: "football", sumo: "football", kyudo: "football", dojo: "football" };

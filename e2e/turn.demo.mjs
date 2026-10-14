@@ -16,7 +16,7 @@ test("opens in 3D from the address, with the flat drawing for a floor and the ne
   const view = page.locator(`${STAGE} .ky-turn-view`);
   await expect(view).toHaveAttribute("role", "group");
   await expect(view).toHaveAttribute("aria-roledescription", "3D view");
-  await expect(view).toHaveAccessibleName(/Harbour City Gulls 2, Prairie Ridge Bison 1/);
+  await expect(view).toHaveAccessibleName(/Korea 2, Germany 1/);
   expect(await view.getAttribute("aria-describedby")).toBeTruthy();
   await expect(page.locator(`${STAGE} .ky-turn-floor svg.kyogijo`)).toHaveAttribute("role", "img");
   await expect(page.locator(`${STAGE} [data-part="net"]`)).toHaveCount(1);
@@ -256,11 +256,11 @@ test("speaks Japanese, and says what stands on the surface in it", async ({ page
 
 test("keeps the score, the teams and the layers on the floor", async ({ page }) => {
   await open(page, "?sport=nhl&view=3d&lang=en&help=off");
-  expect(await page.locator(`${STAGE} .ky-turn-floor svg text`).allTextContents()).toContain("NORTHERN OWLS");
+  expect(await page.locator(`${STAGE} .ky-turn-floor svg text`).allTextContents()).toContain("USA");
   // The score is hung up as a scoreboard, not laid on the floor.
   await expect(page.locator(`${STAGE} .ky-turn-floor .ky-plate`)).toHaveCount(0);
   await expect(page.locator(`${STAGE} [data-part="scoreboard"]`)).toHaveCount(1);
-  expect(await page.locator(`${STAGE} [data-part="scoreboard"] text`).allTextContents()).toContain("NOW");
+  expect(await page.locator(`${STAGE} [data-part="scoreboard"] text`).allTextContents()).toContain("USA");
 });
 
 test("the element turns with the `turn` attribute, takes a viewpoint by `turn-view`, and gives the flat drawing back", async ({ page }) => {

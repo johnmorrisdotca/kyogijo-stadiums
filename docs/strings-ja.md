@@ -1556,7 +1556,8 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `teamColour` | Colour | 色 |
 | `teamLogo` | Logo | ロゴ |
 | `logo_none` | None | なし |
-| `logo_emblem` | Emblem | エンブレム |
+| `logo_flag` | Flag | 国旗 |
+| `logo_emblem` | Own logo | 独自ロゴ |
 | `logo_ready` | Ready-made | プリセット |
 | `logo_url` | Address | URL |
 | `teamMark` | Mark | マーク |
@@ -1701,7 +1702,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `chart_soccer` | A soccer shot map: marks sized by expected goals, with the total | サッカーのシュートマップ：マークの大きさは期待ゴール数で、合計も表示 |
 | `chart_goal` | The goal-mouth view of the same shots: where each crossed the goal line | 同じシュートのゴールマウス図：ゴールラインを通過した位置 |
 | `marksTitle` | Round marks | 丸いマーク |
-| `marksText` | A flag or a crest clipped to a circle with a thin ring, as a broadcast graphic draws a country against a country: at the two ends of a pitch, turned with each team's name, tall, and in a badge. The nations and their flags are made up: no nation in it exists, and every flag is a few shapes drawn in code. | 国旗やエンブレムを円形に切り抜き、細いリングを付けたマークです。中継映像のグラフィックのように、国と国の対戦を表示します。ピッチの両端にチーム名と同じ向きで置く表示のほか、縦向きの表示とバッジにも対応します。国名と国旗はすべて架空で、実在する国はなく、国旗はコードで描いた数個の図形です。 |
+| `marksText` | A flag or a crest clipped to a circle with a thin ring, as a broadcast graphic draws a country against a country: at the two ends of a pitch, turned with each team's name, tall, and in a badge. The countries are real and their national flags are Hata's, drawn through a plug-in the page sets once; the demo carries only the codes. The Own logo choice shows a logo of your own as well: a maple leaf with the word CANADA and a red sun disc with the word JAPAN, drawn in code. | 国旗やエンブレムを円形に切り抜き、細いリングを付けたマークです。中継映像のグラフィックのように、国と国の対戦を表示します。ピッチの両端にチーム名と同じ向きで置く表示のほか、縦向きの表示とバッジにも対応します。デモの国は実在する国で、国旗はHata（国旗ライブラリ）のものです。ページで一度設定するプラグインを通して描くため、デモが持っているのは国コードだけです。「独自ロゴ」を選ぶと、自分で用意したロゴも同じように表示できます。カナダにはカエデの葉と「CANADA」の文字、日本には赤い円と「JAPAN」の文字を、コードで描いています。 |
 | `mark_wide` | The round mark on a pitch: each country's flag in a circle with a ring, turned with its name at its end | 丸いマークをピッチに：各国の国旗を円形に切り抜いてリングを付け、チーム名と同じ向きに回転させてそれぞれのゴール側に表示 |
 | `mark_tall` | The same game tall | 同じ試合を縦向きで表示 |
 | `mark_badge` | The same game as a badge | 同じ試合をバッジで表示 |
@@ -1722,7 +1723,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `poolrace_pace` | Pace | ペース |
 | `poolSection` | Side section | 断面図 |
 | `poolsTitle` | Pools | プール |
-| `poolsText` | Swimming, water polo, diving and artistic swimming, drawn from World Aquatics' regulations. A made-up race (swimmers and nations that do not exist, flags drawn in code) shows the lanes with names, flags, places, times, reaction times and splits, the split pace bars, a tall race and a natatorium of several pools. | 競泳、水球、飛込、アーティスティックスイミングのプールを、ワールドアクアティクスの規則をもとに描きます。架空のレース（実在しない選手と国、コードで描いた国旗）で、名前・国旗・順位・タイム・反応時間・途中時間を載せたレーン、途中時間のペースの棒、縦向きのレース、複数のプールを並べたプール施設を表示します。 |
+| `poolsText` | Swimming, water polo, diving and artistic swimming, drawn from World Aquatics' regulations. A made-up race (swimmers who do not exist, each for a real country with its national flag from Hata) shows the lanes with names, flags, places, times, reaction times and splits, the split pace bars, a tall race and a natatorium of several pools. | 競泳、水球、飛込、アーティスティックスイミングのプールを、ワールドアクアティクスの規則をもとに描きます。架空のレース（選手は実在せず、国は実在する国で、国旗はHataのものを使用）で、名前・国旗・順位・タイム・反応時間・途中時間を載せたレーン、途中時間のペースの棒、縦向きのレース、複数のプールを並べたプール施設を表示します。 |
 | `pools_results` | The results of a 200 m final: places (a medal for the first three), times, reaction times and splits, in the order of the lanes | 200m決勝の結果：順位（上位3人はメダル）、タイム、反応時間、途中時間を、レーンの順に表示 |
 | `pools_pace` | The same race as split pace bars: each lane the whole race laid flat, each split a bar in a colour from the slowest pace to the fastest | 同じレースを途中時間のペースの棒で表示：1レーンが1本の帯でレース全体を表し、途中時間ごとに最も遅いペースから最も速いペースまでを色分けします |
 | `pools_start` | A start list in the 25 m short course pool of six lanes: flags, names and entry times | 短水路（25m）・6レーンのスタートリスト：国旗、名前、エントリータイム |
@@ -1948,6 +1949,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `pageant` | The pageant: flags on the halves | ハーフに広げる旗とエンブレム |
 | page `situation` | The situation of a game | 試合の状況（人数・走者・ダウン） |
 | page `emblems` | Emblems: trophies, medals, balls and crests | トロフィー・メダル・ボール・エンブレム |
+| page `flags` | Flags: a country's code, drawn by Hata | 国旗（国コードからHataで描く） |
 | page `accessibility` | Accessibility | アクセシビリティ |
 | group `places` | Sports and places | 競技と場所 |
 | page `soccer` | Soccer | サッカー |

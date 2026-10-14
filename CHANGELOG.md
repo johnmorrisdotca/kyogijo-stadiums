@@ -7,6 +7,16 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-10-14
+
+### Added
+
+- **Country flags from a plug-in: `useFlags(render)` and the `flags` option.** A team takes a country's code, `flag: "CA"`, and the flag is drawn by a function you plug in, as the emblems are by `useEmblems`. The renderer is `(code, { shape, size, theme }) => string` (an SVG document, or nothing for a code it has no flag for), synchronous because a drawing is a pure function of its options: it is the shape [Taisen Brackets](https://www.npmjs.com/package/@johnmorrisdotca/taisen-brackets) takes, so one adapter over [Hata](https://github.com/johnmorrisdotca/hata) serves both. `shape` is `round` (a round mark, a pageant's stage), `rect` (a plain mark, a banner, a badge, a pageant's carpet, in its own proportions) or `square`; `size` is a nominal width in pixels; `theme` is `light`, `dark` or `inherit`. `useFlags` is in the main entry and in `/element`; `flags: render` in the options of a drawing (or the `surface` of a chart) wins over it for that drawing. The same code works for `Swimmer.country` and `LineupPlayer.country` (where `flag` is missing), for the `country` of an athlete or a skater of a lane draw or a start list, a layer's mark of the shape `logo` for a team, and the element's `home-flag` and `away-flag` attributes. A team's `flag` wins over its `logo` where the renderer has a flag for the code; with no renderer, or none for the code, a drawing is the text it was (and a code that is not a code is never asked about). A round flag turns with its team's name as a round logo does. Kyogijo imports no flag and keeps no dependencies; `@johnmorrisdotca/hata` 1.5.0 is a development dependency (for the demo and the tests) and an optional peer one. [Flags](./docs/flags.md).
+
+### Changed
+
+- **The demo's teams are real countries, drawn with Hata's flags.** The made-up teams (Harbour City Gulls and the rest) and the sixteen made-up nations of `demo/nations.js` are replaced by Canada, USA, Japan, Mexico, Australia, Brazil, England, Korea, Germany, France and Italy, each with its national flag through the plug-in (the build loads the flags it draws from Hata into the page), and the pool's swimmers, who still do not exist, swim for real countries. The demo's teams have a new "Flag" logo choice, the default; "Own logo" shows a logo of your own beside it: a maple leaf with the word CANADA, a red sun disc with the word JAPAN and, for the others, a roundel of their letters, all drawn in the demo's code. No federation's crest or logo, and no Olympic rings, is used. The embedded frame takes `aflag` and `hflag`. The made-up nations stay, for the tests only, in `src/nations.fixture.ts`, so that no drawing in a test changed.
+
 ## [0.8.0] - 2026-10-14
 
 ### Added

@@ -20,14 +20,14 @@ The NFL, CFL and IFAF football fields, the NHL rink, the NBA court, the soccer p
 <td align="center" valign="top">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/hero-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/hero-desk-light.webp" alt="The demo on a desk, in English: the heading Kyogijo Stadiums with the language chooser, the Docs and API reference links, five cloth patches and the Help switch, and an NHL rink drawn wide on green felt, with a made-up game on it, the Northern Owls and their owl emblem on the left, the Lakeshore Anchors and their anchor on the right, and a panel of the score 3 to 2, Final/OT, in the middle. The controls on the right list the sports, from the NFL and the NHL to handball, and then the layout and the teams." width="640">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/hero-desk-light.webp" alt="The demo on a desk, in English: the heading Kyogijo Stadiums with the language chooser, the Docs and API reference links, five cloth patches and the Help switch, and an NHL rink drawn wide on green felt, with a made-up game on it, the USA and its flag on the left, Canada and its flag on the right, and a panel of the score 3 to 2, Final/OT, in the middle. The controls on the right list the sports, from the NFL and the NHL to handball, and then the layout and the teams." width="640">
 </picture>
 <br><em>The demo on a desk: a rink, with the teams on their sides and the score in the middle.</em>
 </td>
 <td align="center" valign="top">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/hero-phone-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/hero-phone-light.webp" alt="The demo on a phone: the heading Kyogijo Stadiums over the page's controls, and under them a football field turned a quarter to stand tall, the visiting team's blue end zone at the top and the home team's red end zone at the bottom, each with its logo and name written across it, the yard numbers upright, and a score panel at midfield reading 27 to 24, Final." width="240">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/hero-phone-light.webp" alt="The demo on a phone: the heading Kyogijo Stadiums over the page's controls, and under them a football field turned a quarter to stand tall, Mexico's green end zone at the top and the USA's navy end zone at the bottom, each with its flag and name written across it, the yard numbers upright, and a score panel at midfield reading 27 to 24, Final." width="240">
 </picture>
 <br><em>On a phone the same surface stands tall, the words still upright.</em>
 </td>
@@ -47,12 +47,12 @@ import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const svg = drawKyogijo({
   sport: "nhl",
-  away: { name: "Northern Owls", abbr: "NOW", score: 3, color: "#3a2d6b" },
-  home: { name: "Lakeshore Anchors", abbr: "LSA", score: 2, color: "#0f7a7a" },
+  away: { name: "USA", abbr: "USA", score: 3, color: "#1c3f7a" },
+  home: { name: "Canada", abbr: "CAN", score: 2, color: "#d52b1e" },
   status: "final-ot",
   competition: "Cup Final, Game 7",
 });
-console.log(svg.startsWith("<svg"), svg.includes("Northern Owls 3, Lakeshore Anchors 2"));
+console.log(svg.startsWith("<svg"), svg.includes("USA 3, Canada 2"));
 // true true
 ```
 
@@ -60,7 +60,7 @@ console.log(svg.startsWith("<svg"), svg.includes("Northern Owls 3, Lakeshore Anc
 
 ```html
 <script type="module" src="https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo-stadiums@0/dist/element-define.js"></script>
-<kyogijo-field sport="nhl" orientation="auto" away="Northern Owls" home="Lakeshore Anchors" away-score="3" home-score="2" status="final-ot"></kyogijo-field>
+<kyogijo-field sport="nhl" orientation="auto" away="USA" home="Canada" away-score="3" home-score="2" status="final-ot"></kyogijo-field>
 ```
 
 ## Who it is for
@@ -94,6 +94,7 @@ console.log(svg.startsWith("<svg"), svg.includes("Northern Owls 3, Lakeshore Anc
 - **Lineups.** A `lineup` layer places a team's players by position code (`GK`, `CB`, `HK`, `C`) with no coordinates: it reads where each stands from a formation (36 of them, in 13 sports), draws a disc or a jersey with the shirt number and the name under it, a captain's C and a flag, and puts the visitors at the other end. A drawing with a lineup puts the score in the strip under it, so the panel hides no player. [Lineups](./docs/team-shape.md#lineups).
 - **A pageant.** Each team's flag or crest laid large over its half of the surface, as a stadium lays giant flags and crests for a final: `pageant: "carpet"` (a flag at its own ratio with a border and a gentle fabric) or `"stage"` (a crest on a round disc with a gold ring), an emblem or a trophy of your own in the centre circle, the score in the middle or in the strip, upright wide and tall, in light and dark, with an entrance in CSS for readers who have not asked for less motion. [The pageant](./docs/pageant.md).
 - **Trophies, medals, balls and crests, by id.** `useEmblems(renderEmblem)` plugs in the sister package [Dougu Sports 道具](https://johnmorrisdotca.github.io/dougu-sports/) in one line, and an id goes wherever a logo, a flag or a mark is taken: `logo: "crest:shield"` (a crest in the team's colour with its letters), `pageant: { emblem: "trophy:hockey-cup" }`, `"sport:nhl/line"`, `"ball:puck"`, `"cup"`. Kyogijo bundles no emblem and keeps zero dependencies; without the plug-in an id is refused like any unsafe address. [Emblems](./docs/emblems.md).
+- **Country flags, by code.** `useFlags(render)` plugs in the sister package [Hata 旗](https://github.com/johnmorrisdotca/hata) through a small adapter, and a team's `flag: "CA"` is its flag: round in a round mark, at its own proportions on a banner, a badge or a pageant's carpet. The same adapter serves [Taisen Brackets](https://github.com/johnmorrisdotca/taisen-brackets). Kyogijo bundles no flag and keeps zero dependencies; without the plug-in a code is ignored. [Flags](./docs/flags.md).
 - **Zoom to a part of a surface.** `range: "offensive-zone"` crops a drawing to a rink's zone, a half court, the paint, the red zone, a soccer half, third or penalty area, the infield, a curling house, or a box of your own in any frame, with its data, heat, labels and score following. [Display ranges](./docs/ranges.md).
 - **Wide, tall or fit the box.** Every surface lies wide or tall: tall turns it a quarter, keeps every word upright and puts the teams top and bottom. With `orientation: "auto"` the browser helpers follow the box.
 - **Where a point lies, by the rules, and a click as a place.** `zoneAt("nhl", [69, 22], { frame: "nhl-api" })` names the zone and the area in it from the rink's, court's, pitch's, park's or field's own figures (the offensive zone and its face-off circle, the frontcourt and the corner three, the attacking third and the six-yard box, the infield and the warning track, the red zone and between the hashes), with `isThreePointer`, `inSlot`, `inPenaltyArea`, `isFair`, `overWall` and the like, and `isHomeRun(park, point, { height })` from the park's fence and wall; `clientPointToField(svg, x, y, { provider })` is a pointer's place in any of the frames, with the zone, and `fieldPointToClient` the way back. `marks: true` writes `data-mark-id`, `data-index` and `data-zone` on every mark of a layer, for one listener to link it to a table. [Zones](./docs/zones.md), [pointing](./docs/pointer.md).
@@ -165,8 +166,8 @@ import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const svg = drawKyogijo({
   sport: "nhl",
-  away: { name: "Northern Owls", abbr: "NOW", score: 3, color: "#3a2d6b" },
-  home: { name: "Lakeshore Anchors", abbr: "LSA", score: 2, color: "#0f7a7a" },
+  away: { name: "USA", abbr: "USA", score: 3, color: "#1c3f7a" },
+  home: { name: "Canada", abbr: "CAN", score: 2, color: "#d52b1e" },
   status: "final-ot",
   competition: "Cup Final, Game 7",
   date: "June 24",
@@ -178,7 +179,7 @@ console.log(svg.includes("Cup Final, Game 7"), svg.includes("Final/OT"));
 <p align="center">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/football-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/football-desk-light.webp" alt="A football field drawn wide on the demo's felt: the visiting team's blue end zone on the left with its gull emblem and its name written along it, the home team's rust-red end zone on the right with its bison, the yard lines, hash marks and upright and upside-down yard numbers between them, and the score panel at midfield reading 27 to 24, Final, Championship Game." width="720">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/football-desk-light.webp" alt="A football field drawn wide on the demo's felt: Mexico's green end zone on the left with its flag and its name written along it, the USA's navy end zone on the right with its flag, the yard lines, hash marks and upright and upside-down yard numbers between them, and the score panel at midfield reading 27 to 24, Final, Championship Game." width="720">
 </picture>
 <br><em>A football field: the end zones in the teams' colours, the score at midfield.</em>
 </p>
@@ -223,7 +224,7 @@ console.log(box(wide), box(tall));
 <p align="center">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/tall-phone-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/tall-phone-light.webp" alt="A hockey rink standing tall on a phone, the same game as on the desk: the Northern Owls' emblem and name in the upper zone, the Lakeshore Anchors' in the lower, each reading upright, the score panel between them over the centre line." width="240">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/tall-phone-light.webp" alt="A hockey rink standing tall on a phone, the same game as on the desk: the USA's flag and name in the upper zone, Canada's in the lower, each reading upright, the score panel between them over the centre line." width="240">
 </picture>
 <br><em>The same game tall: the teams top and bottom, every word upright.</em>
 </p>
@@ -258,7 +259,7 @@ console.log(svg.includes("甲子園球場のグラウンド"), svg.includes("阪
 <p align="center">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/ballpark-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/ballpark-desk-light.webp" alt="The baseball field of Hanshin Koshien Stadium with the outfield fence drawn through its published distances, 95 metres at the lines and 118 metres in the alleys and the middle, with mown arcs on the grass, the warning track, the infield dirt, and a red and a green panel in the foul ground at the bottom for the teams' dugouts." width="640">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/ballpark-desk-light.webp" alt="The baseball field of Hanshin Koshien Stadium with the outfield fence drawn through its published distances, 95 metres at the lines and 118 metres in the alleys and the middle, with mown arcs on the grass, the warning track, the infield dirt, and a red and a navy panel in the foul ground at the bottom for the teams' dugouts, each with its country's flag, Japan's and the USA's." width="640">
 </picture>
 <br><em>A ballpark's fence, drawn through the distances its article publishes.</em>
 </p>
@@ -317,7 +318,7 @@ console.log(/viewBox="0 0 440 64"/.test(badge));
 <p align="center">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/badges-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/badges-desk-light.webp" alt="A list of eight score strips in the demo, each a team block with its emblem, a short name and its score at each end, in the team's colour, and in the middle a small picture of the sport and the state of the game, such as Final, Final/OT and 2nd period." width="640">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/badges-desk-light.webp" alt="A list of eight score strips in the demo, each a team block with its country's flag, a short name and its score at each end, in the team's colour, and in the middle a small picture of the sport and the state of the game, such as Final, Final/OT and 2nd period." width="640">
 </picture>
 <br><em>Badges for a list of games.</em>
 </p>
@@ -338,7 +339,7 @@ console.log(svg.includes("--ky-key:#1e4f8f"), svg.includes("METRO BOLTS"));
 <p align="center">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/court-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/court-desk-light.webp" alt="A basketball court in the two-tone look: a pale floor with a deep blue key, centre circle and border, the words SUMMIT PEAKS and METRO BOLTS along the baselines, each team's emblem and name on its half, and the score panel at centre court reading 108 to 112, Finals, Game 6." width="640">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/court-desk-light.webp" alt="A basketball court in the two-tone look: a pale floor with a deep blue key, centre circle and border, the words AUSTRALIA and JAPAN along the baselines, each country's flag and name on its half, and the score panel at centre court reading 108 to 112, Finals, Game 6." width="640">
 </picture>
 <br><em>A court in a look of its own: the paint, the border and the words on the baselines are options.</em>
 </p>
@@ -396,8 +397,8 @@ import { drawKyogijo, soccerSpec } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const svg = drawKyogijo({
   sport: "soccer",
-  away: { name: "Northern Owls", abbr: "NOW", score: 2, penalties: 4, color: "#3a2d6b" },
-  home: { name: "Lakeshore Anchors", abbr: "LSA", score: 2, penalties: 2, color: "#0f7a7a" },
+  away: { name: "USA", abbr: "USA", score: 2, penalties: 4, color: "#1c3f7a" },
+  home: { name: "Canada", abbr: "CAN", score: 2, penalties: 2, color: "#d52b1e" },
   status: "final-pens",
   ground: "metlife-stadium",
 });
@@ -511,7 +512,7 @@ import { createKyogijo, kyogijoProps } from "@johnmorrisdotca/kyogijo-stadiums/r
 // A component made from your React, which measures its box for orientation="auto":
 const Kyogijo = createKyogijo(React);
 export const Game = () => (
-  <Kyogijo sport="nhl" orientation="auto" away={{ name: "Northern Owls", score: 3 }} home={{ name: "Lakeshore Anchors", score: 2 }} status="final" />
+  <Kyogijo sport="nhl" orientation="auto" away={{ name: "USA", score: 3 }} home={{ name: "Canada", score: 2 }} status="final" />
 );
 
 // Or props to spread onto your own element; nothing here imports React:
@@ -540,12 +541,12 @@ Tell Vue the tag is a custom element with `compilerOptions.isCustomElement: (tag
   import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
   export let home = 0;
   export let away = 0;
-  $: svg = drawKyogijo({ sport: "nhl", away: { name: "Northern Owls", score: away }, home: { name: "Lakeshore Anchors", score: home } });
+  $: svg = drawKyogijo({ sport: "nhl", away: { name: "USA", score: away }, home: { name: "Canada", score: home } });
 </script>
 
 <!-- the string of SVG, or the element: either works -->
 {@html svg}
-<kyogijo-field sport="nhl" away="Northern Owls" home="Lakeshore Anchors" away-score={away} home-score={home} />
+<kyogijo-field sport="nhl" away="USA" home="Canada" away-score={away} home-score={home} />
 ```
 
 A page that moves (`mountKyogijo`), a file written on a server and a frame for a page with no script are in [getting started](./docs/getting-started.md).
@@ -684,5 +685,6 @@ The code is [MIT](./LICENSE) © John Morris. The ballparks' fence distances are 
 | The fence distances of 94 ballparks | The English and Japanese Wikipedia articles of each, at the revision cited | Facts; the articles are CC BY-SA 4.0 and none of their text is used |
 | The Wikidata item of each ballpark | Wikidata, as linked from the cited article | CC0 |
 | 64 soccer grounds | English Wikipedia articles at the revision cited; Wikidata | Facts; CC BY-SA 4.0 articles, no text used; CC0 |
-| The demo's teams and emblems | Written for this package | MIT |
+| The demo's countries and their logos | The names and codes of real countries; the maple leaf, the sun disc and the roundels are drawn for this package | MIT |
+| The demo's country flags | [Hata](https://github.com/johnmorrisdotca/hata), a development dependency whose flags are loaded into the demo site with its licence and notice; the package itself draws none | MIT, and its flags' own licences in its NOTICE.md |
 | The demo's trophies, medals, balls and crests | [Dougu Sports](https://github.com/johnmorrisdotca/dougu-sports), a development dependency copied into the demo site with its licences; the package itself draws none | MIT, and its sources' licences in its NOTICE.md |

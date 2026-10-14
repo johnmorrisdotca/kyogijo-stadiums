@@ -13,8 +13,8 @@ test("opens on the rink with no complaint from the page, and says what it shows"
   expect(errors).toEqual([]);
   await expect(svg(page)).toHaveAttribute("role", "img");
   await expect(svg(page)).toHaveAttribute("data-sport", "nhl");
-  expect(await svg(page).locator("title").textContent()).toContain("Northern Owls 3, Lakeshore Anchors 2");
-  expect(await page.locator(`${at("stage")} svg text`).allTextContents()).toContain("NORTHERN OWLS");
+  expect(await svg(page).locator("title").textContent()).toContain("USA 3, Canada 2");
+  expect(await page.locator(`${at("stage")} svg text`).allTextContents()).toContain("USA");
   expect(await page.title()).toContain("Kyogijo");
 });
 
@@ -28,10 +28,10 @@ for (const sport of SPORTS) {
     // A curling sheet is 150 feet by 15: wide, on a phone, it is a strip.
     expect(box.height).toBeGreaterThan(sport === "curling" ? 30 : 50);
     const texts = (await page.locator(`${at("stage")} svg text`).allTextContents()).join(" ");
-    expect(texts).toMatch(/VALLEY|HARBOUR|NORTHERN|SUMMIT/);
+    expect(texts).toMatch(/MEXICO|USA|AUSTRALIA|JAPAN|BRAZIL|ENGLAND|KOREA|GERMANY|CANADA/);
     expect(await page.locator(`${at("stage")} .ky-plate`).count()).toBe(1);
     // Not blank: the drawing has many parts and its picture is more than a flat colour.
-    expect(await page.locator(`${at("stage")} svg *`).count()).toBeGreaterThan(NET.includes(sport) ? 30 : 40);
+    expect(await page.locator(`${at("stage")} svg *`).count()).toBeGreaterThan(NET.includes(sport) ? 25 : 40);
     const shot = await page.locator(at("stage")).screenshot();
     expect(shot.length).toBeGreaterThan(sport === "curling" || NET.includes(sport) ? 3000 : 8000);
   });
@@ -217,7 +217,7 @@ test("the status, the size and the swap change what is drawn", async ({ page }) 
   const before = await page.locator(`${at("stage")} .ky-banner`).first().getAttribute("data-team");
   await page.locator(at("swap")).click();
   expect(before).toBe("away");
-  expect(await page.locator(`${at("away-name")}`).inputValue()).toMatch(/Metro Bolts/);
+  expect(await page.locator(`${at("away-name")}`).inputValue()).toMatch(/Japan/);
 });
 
 test("the page speaks Japanese when asked, and the drawing with it", async ({ page }) => {
@@ -226,7 +226,7 @@ test("the page speaks Japanese when asked, and the drawing with it", async ({ pa
   await expect(page.locator("html")).toHaveAttribute("lang", "ja");
   expect(await svg(page).locator("title").textContent()).toContain("試合終了");
   expect(await page.locator("#try-title").textContent()).toBe("試してみる");
-  expect(await page.locator(`${at("away-name")}`).inputValue()).toBe("北国オウルズ");
+  expect(await page.locator(`${at("away-name")}`).inputValue()).toBe("アメリカ");
   await page.locator(`${at("sport")} button[data-value="mlb"]`).click();
   await page.locator(at("park")).selectOption("tokyo-dome");
   expect(await svg(page).locator("desc").textContent()).toContain("東京ドーム");

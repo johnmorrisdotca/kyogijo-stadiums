@@ -46,6 +46,7 @@ export function toParams(o) {
     if (hex(t.color)) q.set(`${short}color`, hex(t.color));
     if (t.penalties !== undefined) q.set(`${short}pens`, String(t.penalties));
     if (typeof t.logo === "string" && /^https?:\/\//.test(t.logo)) q.set(`${short}logo`, t.logo);
+    if (typeof t.flag === "string" && /^[A-Za-z0-9-]{2,10}$/.test(t.flag)) q.set(`${short}flag`, t.flag);
   }
   for (const [key, param] of [["status", "status"], ["competition", "competition"], ["date", "date"], ["label", "label"], ["winner", "winner"]]) if (o[key]) q.set(param, o[key]);
   return q;
@@ -87,6 +88,7 @@ export function fromParams(q) {
     if (q.get(`${short}color`)) t.color = `#${q.get(`${short}color`)}`;
     if (/^\d+$/.test(q.get(`${short}pens`) ?? "")) t.penalties = Number(q.get(`${short}pens`));
     if (q.get(`${short}logo`)) t.logo = q.get(`${short}logo`);
+    if (/^[A-Za-z0-9-]{2,10}$/.test(q.get(`${short}flag`) ?? "")) t.flag = q.get(`${short}flag`);
     o[role] = t;
   }
   if (!o.home || !o.away) {

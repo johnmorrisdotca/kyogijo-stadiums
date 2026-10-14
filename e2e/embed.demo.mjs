@@ -7,11 +7,16 @@ test("the snippet for each way in says what is on the stage", async ({ page }) =
   await open(page, "?sport=nhl&lang=en&help=off");
   const code = () => page.locator(at("embed-code")).textContent();
   await page.locator('#embed-tabs button[data-tab="module"]').click();
-  expect(await code()).toContain('import { drawKyogijo } from "https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo-stadiums@0/+esm"');
+  expect(await code()).toContain('import { drawKyogijo, useFlags } from "https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo-stadiums@0/+esm"');
+  // The teams are countries drawn by their flag codes, which a page needs Hata for: the snippet loads the flags first and plugs a lookup in.
+  expect(await code()).toContain('"flag": "US"');
+  expect(await code()).toContain('import { flag } from "@johnmorrisdotca/hata/load";');
+  expect(await code()).toContain("useFlags((code, { shape }) => loaded[shape]?.[code.toUpperCase()]);");
   expect(await code()).toContain('"sport": "nhl"');
   await page.locator('#embed-tabs button[data-tab="element"]').click();
   expect(await code()).toContain("<kyogijo-field");
-  expect(await code()).toContain('home="Lakeshore Anchors"');
+  expect(await code()).toContain('home="Canada"');
+  expect(await code()).toContain('home-flag="CA"');
   expect(await code()).toContain("element-define.js");
   await page.locator('#embed-tabs button[data-tab="iframe"]').click();
   expect(await code()).toMatch(/src="https:\/\/johnmorrisdotca\.github\.io\/kyogijo-stadiums\/embed\.html\?sport=nhl/);
@@ -38,9 +43,9 @@ test("the element in the page draws in a shadow root, with named parts, and foll
   const svgIn = nhl.locator("svg.kyogijo");
   await expect(svgIn).toHaveAttribute("part", "svg");
   expect(await nhl.locator(".ky-plate").getAttribute("part")).toBe("plate");
-  expect(await nhl.locator("title").textContent()).toContain("Northern Owls 3, Lakeshore Anchors 2");
+  expect(await nhl.locator("title").textContent()).toContain("USA 3, Canada 2");
   await nhl.evaluate((el) => el.setAttribute("away-score", "9"));
-  expect(await nhl.locator("title").textContent()).toContain("Northern Owls 9");
+  expect(await nhl.locator("title").textContent()).toContain("USA 9");
   expect(await nhl.locator(".ky-score").allTextContents()).toEqual(["9", "2"]);
   const nba = page.locator(at("element-nba"));
   expect(await nba.locator("svg.kyogijo").getAttribute("data-size")).toBe("compact");
@@ -63,9 +68,11 @@ test("the frame draws what its address says, and fits its box", async ({ page })
   await serve(page);
   const errors = [];
   page.on("pageerror", (e) => errors.push(String(e)));
-  await page.goto("http://kyogijo.test/embed.html?sport=nhl&away=Northern+Owls&home=Lakeshore+Anchors&ascore=3&hscore=2&acolor=3a2d6b&hcolor=0f7a7a&status=final-ot&competition=Cup+Final%2C+Game+7");
+  await page.goto("http://kyogijo.test/embed.html?sport=nhl&away=USA&aflag=US&home=Canada&hflag=CA&ascore=3&hscore=2&acolor=1c3f7a&hcolor=d52b1e&status=final-ot&competition=Cup+Final%2C+Game+7");
   await page.waitForSelector('#frame[data-ready="true"] svg.kyogijo');
-  expect(await page.locator("svg title").textContent()).toBe("Northern Owls 3, Lakeshore Anchors 2, Final/OT");
+  expect(await page.locator("svg title").textContent()).toBe("USA 3, Canada 2, Final/OT");
+  // The frame plugs Hata's flags in, so each flag code in the address is a picture on its side.
+  expect(await page.locator("svg image.ky-logo").count()).toBe(2);
   expect(await page.locator("svg style").count()).toBe(1);
   const size = page.viewportSize();
   const box = await page.locator("svg.kyogijo").boundingBox();

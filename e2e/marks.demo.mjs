@@ -42,6 +42,6 @@ test("the section is in Japanese too", async ({ page }) => {
   expect(await page.locator("#marks-title").textContent()).toBe("丸いマーク");
   const card = page.locator(`${at("mark-cards")} figure[data-mark="mark_wide"] svg.kyogijo`);
   await card.scrollIntoViewIfNeeded();
-  expect(await card.locator("g.ky-banner text.ky-name").first().textContent()).toBe("カルヴァラ");
+  expect(await card.locator("g.ky-banner text.ky-name").first().textContent()).toBe("カナダ");
   await noSidewaysScroll(page);
 });

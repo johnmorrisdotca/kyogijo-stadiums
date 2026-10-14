@@ -3,6 +3,7 @@
 // and the custom element. The words are in words.js, the made-up teams in examples.js.
 import { COURT_THEMES, GROUNDS, GROUND_IDS, KYOGIJO_STYLE, LEAGUES, PARKS, PARK_IDS, SOCCER_PITCH_IDS, SOCCER_PROVIDERS, SOCCER_PROVIDER_IDS, VERSION, drawKyogijo, fenceFor, rescale, layerTable, rulesFor, seasonLabel, leagueAt, leagueSeason } from "./dist/index.js";
 import { emblemName, renderEmblem } from "./emblems.js";
+import "./flags.js";
 import { mountKyogijo } from "./dist/mount-entry.js";
 import { clientPointToField, clientPointToFrames, fieldPointToClient } from "./dist/pointer-entry.js";
 import { KYOGIJO_TURN_STYLE, mountKyogijoTurn } from "./dist/turn-entry.js";
@@ -20,7 +21,7 @@ import { raceTimeline } from "./dist/replay-entry.js";
 import { nation } from "./nations.js";
 import { mlbSprayChart, nbaShotChart, nflPassChart, nhlShotMap, soccerShotMap } from "./dist/charts-entry.js";
 import { fenceAt } from "./dist/geometry-entry.js";
-import { FIELDS, MAX_SHOTS, SEGS, applyParams, budoFromSurface, chosenLeague, hasSeasons, hiddenRows, hiddenStatus, labelOf as labelsFor, loadGame as loadGameInto, makeState, optionsFor as optionsOf, seasonRange, urlPairs, usesEmblems } from "./model.js";
+import { FIELDS, MAX_SHOTS, SEGS, applyParams, budoFromSurface, chosenLeague, hasSeasons, hiddenRows, hiddenStatus, labelOf as labelsFor, loadGame as loadGameInto, makeState, optionsFor as optionsOf, seasonRange, urlPairs, usesEmblems, usesFlags, flagCodes } from "./model.js";
 import { WORDS } from "./words.js";
 
 const $ = (id) => document.getElementById(id);
@@ -28,6 +29,9 @@ const params = new URLSearchParams(location.search);
 const CANON = "https://johnmorrisdotca.github.io/kyogijo-stadiums/";
 const CDN = "https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo-stadiums@0";
 const DOUGU = "https://cdn.jsdelivr.net/npm/@johnmorrisdotca/dougu-sports@0";
+
+/** The lines of a page that loads the flags it draws from Hata and plugs a lookup in with `useFlags`: Hata's `flag()` is asynchronous and a drawing is not, so the flags are loaded first, in the three shapes a drawing asks for. */
+const flagPlug = (codes, use) => `import { flag } from "@johnmorrisdotca/hata/load";\n\n// Hata's flag() is asynchronous and a drawing is not: load each flag first, in the shapes a drawing asks for, then plug in a lookup.\nconst codes = ${JSON.stringify(codes)};\nconst loaded = {};\nfor (const [shape, framing] of [["round", "round"], ["square", "1:1"], ["rect", "flag"]]) {\n  loaded[shape] = Object.fromEntries(await Promise.all(codes.map(async (code) => [code, await flag(code, { shape: framing })])));\n}\n${use}((code, { shape }) => loaded[shape]?.[code.toUpperCase()]);\n`;
 
 const language = familyLanguage({ id: "kyogijo-stadiums", words: WORDS, onChange: () => onLanguage() });
 const say = (key) => WORDS[language.lang][key];
@@ -397,7 +401,10 @@ function code(kind) {
     // An emblem's id is drawn by Dougu Sports, which the page plugs in once.
     const plug = usesEmblems(state) ? `import { renderEmblem } from "${DOUGU}/dist/emblems-entry.js";\n// or, from npm: import { renderEmblem } from "@johnmorrisdotca/dougu-sports/emblems";\n` : "";
     const use = plug === "" ? "" : "\nuseEmblems(renderEmblem);\n";
-    return `import { drawKyogijo${plug === "" ? "" : ", useEmblems"} } from "${CDN}/+esm";\n// or, from npm: import { drawKyogijo${plug === "" ? "" : ", useEmblems"} } from "@johnmorrisdotca/kyogijo-stadiums";\n${plug}${use}\ndocument.querySelector("#game").innerHTML = drawKyogijo(${tidy(o)});`;
+    const names = [usesEmblems(state) ? "useEmblems" : "", usesFlags(state) ? "useFlags" : ""].filter(Boolean);
+    const named = ["drawKyogijo", ...names].join(", ");
+    const flags = usesFlags(state) ? `\n${flagPlug(flagCodes(state), "useFlags")}` : "";
+    return `import { ${named} } from "${CDN}/+esm";\n// or, from npm: import { ${named} } from "@johnmorrisdotca/kyogijo-stadiums";\n${plug}${use}${flags}\ndocument.querySelector("#game").innerHTML = drawKyogijo(${tidy(o)});`;
   }
   if (kind === "element") {
     const attrs = [`sport="${o.sport}"`];
@@ -415,6 +422,7 @@ function code(kind) {
       for (const [role, t] of [["away", o.away], ["home", o.home]]) {
         attrs.push(`${role}="${escapeAttr(t.name)}"`, `${role}-abbr="${escapeAttr(t.abbr)}"`, `${role}-score="${escapeAttr(t.score)}"`, `${role}-color="${t.color}"`);
         if (t.logo) attrs.push(`${role}-logo="${escapeAttr(t.logo)}"`);
+        if (t.flag) attrs.push(`${role}-flag="${escapeAttr(t.flag)}"`);
         if (t.penalties !== undefined) attrs.push(`${role}-penalties="${t.penalties}"`);
       }
       for (const [key, attr] of [["status", "status"], ["competition", "competition"], ["date", "date"], ["label", "label"], ["winner", "winner"]]) if (o[key]) attrs.push(`${attr}="${escapeAttr(o[key])}"`);
@@ -423,7 +431,8 @@ function code(kind) {
     const more = { ...(o.court ? { court: o.court } : {}), ...(o.sheet ? { sheet: o.sheet } : {}), ...(o.crowd ? { crowd: o.crowd } : {}), ...(o.pageant ? { pageant: o.pageant } : {}), ...(o.pool ? { pool: o.pool } : {}), ...(o.athletics ? { athletics: o.athletics } : {}), ...(o.situation ? { situation: o.situation } : {}), ...(o.budo ? { budo: o.budo } : {}), ...(o.dojo ? { dojo: o.dojo } : {}) };
     if (Object.keys(more).length > 0) attrs.push(`options='${JSON.stringify(more).replace(/'/g, "&#39;")}'`);
     const plug = usesEmblems(state) ? `<script type="module">\n  import { useEmblems } from "${CDN}/dist/element-entry.js";\n  import { renderEmblem } from "${DOUGU}/dist/emblems-entry.js";\n  useEmblems(renderEmblem);\n</script>\n` : "";
-    return `<script type="module" src="${CDN}/dist/element-define.js"></script>\n${plug}\n<kyogijo-field\n  ${attrs.join("\n  ")}\n></kyogijo-field>`;
+    const flagScript = usesFlags(state) ? `<script type="module">\n  import { useFlags } from "${CDN}/dist/element-entry.js";\n${flagPlug(flagCodes(state), "useFlags").replace(/^/gm, "  ").trimEnd()}\n</script>\n` : "";
+    return `<script type="module" src="${CDN}/dist/element-define.js"></script>\n${plug}${flagScript}\n<kyogijo-field\n  ${attrs.join("\n  ")}\n></kyogijo-field>`;
   }
   if (kind === "iframe") {
     const box = stage.querySelector("svg").viewBox.baseVal;
@@ -608,26 +617,26 @@ function buildCharts() {
   }
 }
 
-// The round marks section: a country against a country (nations that do not exist, with flags drawn in code, from nations.js), each flag in a circle with a ring on its side,
+// The round marks section: a country against a country (from nations.js, each flag Hata's, drawn through the flag plug-in), each flag in a circle with a ring on its side,
 // on a pitch wide and tall and in a badge.
 function buildMarks() {
   const host = $("mark-cards");
   host.replaceChildren();
   const lang = language.lang;
   const cup = lang === "ja" ? "ノーザンカップ決勝" : "Northern Cup final";
-  const game = { sport: "soccer", markShape: "round", away: { ...nation("aurelia", lang), score: 2, penalties: 4 }, home: { ...nation("calvara", lang), score: 2, penalties: 3 }, status: "final-pens", competition: cup, language: lang, style: "none" };
+  const game = { sport: "soccer", markShape: "round", away: { ...nation("japan", lang), score: 2, penalties: 4 }, home: { ...nation("canada", lang), score: 2, penalties: 3 }, status: "final-pens", competition: cup, language: lang, style: "none" };
   for (const [key, extra] of [["mark_wide", { orientation: "landscape" }], ["mark_tall", { orientation: "portrait" }], ["mark_badge", { size: "badge" }]]) {
     const fig = figure(host, { ...game, ...extra, id: `marks-${key}` }, say(key));
     fig.dataset.mark = key;
   }
 }
 
-// The Pools section: the four pools, and a made-up race (swimmers and nations that do not exist, flags drawn in code, from pool-data.js) as results, as pace bars, as a start list and tall.
+// The Pools section: the four pools, and a made-up race (swimmers who do not exist, each for a real country whose flag is drawn from its code, from pool-data.js) as results, as pace bars, as a start list and tall.
 function pools() {
   const lang = language.lang;
   const race = poolRace(lang);
   const start = shortRace(lang);
-  const startList = { ...start, swimmers: start.swimmers.filter((one) => one.lane <= 6).map(({ lane, name, abbr, flag, seed }) => ({ lane, name, abbr, flag, seed })) };
+  const startList = { ...start, swimmers: start.swimmers.filter((one) => one.lane <= 6).map(({ lane, name, abbr, country, seed }) => ({ lane, name, abbr, country, seed })) };
   const swim = (id, pool, extra = {}) => ({ sport: "swimming", orientation: "landscape", language: lang, style: "none", id: `pools-${id}`, pool, ...extra });
   return [
     ["results", swim("results", { look: "water", race })],

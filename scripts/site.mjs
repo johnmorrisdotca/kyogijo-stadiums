@@ -54,6 +54,17 @@ const dougu = dirname(dirname(createRequire(import.meta.url).resolve("@johnmorri
 cpSync(join(dougu, "dist"), "site/dougu", { recursive: true, filter: (from) => !/\.d\.ts$/.test(from) });
 for (const name of ["LICENSE", "LICENSES", "NOTICE.md"]) cpSync(join(dougu, name), join("site/dougu", name), { recursive: true });
 
+// The country flags are Hata's. Its `flag()` is asynchronous and a drawing is not, so the build loads each flag the demo draws, in each shape the drawing asks for, and writes them into flags.data.js, a plain
+// module that flags.js looks them up in (and plugs into the package with `useFlags`). Only the flags of nations.js are carried, with Hata's licence and notice.
+const hata = dirname(dirname(createRequire(import.meta.url).resolve("@johnmorrisdotca/hata/load")));
+const { flag } = await import("@johnmorrisdotca/hata/load");
+const { FLAG_CODES } = await import(pathToFileURL(join(process.cwd(), "demo/nations.js")).href);
+const framing = { round: "round", square: "1:1", rect: "flag" };
+const loaded = Object.fromEntries(await Promise.all(Object.entries(framing).map(async ([shape, as]) => [shape, Object.fromEntries(await Promise.all(FLAG_CODES.map(async (code) => [code, await flag(code, { shape: as })])))])));
+writeFileSync("site/flags.data.js", `// The flags of the demo's countries, loaded from Hata (@johnmorrisdotca/hata) when the demo was built: by shape, then by code.\nexport const FLAGS = ${JSON.stringify(loaded)};\n`);
+mkdirSync("site/hata", { recursive: true });
+for (const name of ["LICENSE", "NOTICE.md"]) cpSync(join(hata, name), join("site/hata", name));
+
 const lib = await libraryFrom(join(process.cwd(), "dist"), ".js", (file) => import(pathToFileURL(file).href));
 const style = `${lib["@johnmorrisdotca/kyogijo-stadiums"].KYOGIJO_STYLE}\n${lib["@johnmorrisdotca/kyogijo-stadiums/turn"].KYOGIJO_TURN_STYLE}`;
 // The playground's own code, from the copy in site/ (which finds the package beside it), run here as the page runs it.
@@ -61,6 +72,8 @@ const here = (file) => import(pathToFileURL(join(process.cwd(), "site", file)).h
 const { SPORTS, LEAGUES, drawKyogijo } = await here("dist/index.js");
 // Dougu Sports, plugged in by the demo's own module (`useEmblems`) before anything is drawn.
 const { emblemName, renderEmblem } = await here("emblems.js");
+// Hata's flags, plugged in by the demo's own module (`useFlags`) before anything is drawn.
+await here("flags.js");
 const model = await here("model.js");
 const places = await here("place-grid.js");
 const { FIELDS, SEGS, TOGGLES, SIZES } = model;
@@ -188,7 +201,7 @@ const team = (role) => `<div class="team" data-role="${role}">
             <label class="setup fam-row" id="${role}-pens-row"${hid(`${role}-pens-row`)}><span class="fam-label" data-say="teamPens"></span><input class="fam-field" id="${role}-pens" data-testid="${role}-pens" data-say-label="teamPens" autocomplete="off" type="text" inputmode="numeric" maxlength="2" value="${escapeAttr(fieldValue[`${role}-pens`])}" /></label>
             <label class="setup fam-row"><span class="fam-label" data-say="teamColour"></span><input class="fam-field fam-colour" type="color" id="${role}-color" data-testid="${role}-color" data-say-label="teamColour" value="${escapeAttr(fieldValue[`${role}-color`])}" /></label>
           </div>
-          ${seg(`${role}-logo`, "teamLogo", "Pick a made-up emblem, or give the address of a logo of your own. A logo may be an https address, a path, an image data address or the text of an SVG.", "架空のエンブレムを選ぶか、お持ちのロゴのURLを入力します。ロゴには、httpsのURL、パス、画像のデータURI、SVGのコードを使えます。")}
+          ${seg(`${role}-logo`, "teamLogo", "Pick the country's flag (Hata's, drawn from its code through the flag plug-in), a logo of your own drawn in code, a ready-made emblem, or give the address of a logo. A logo may be an https address, a path, an image data address or the text of an SVG.", "国旗（Hataの国旗を国コードから描きます）、コードで描いた独自ロゴ、プリセットのエンブレムから選べます。お持ちのロゴのURLを入力することもできます。ロゴには、httpsのURL、パス、画像のデータURI、SVGのコードを使えます。")}
           ${tiles(`${role}-mark`, `${role}-mark-row`, "teamMark", "A ready-made emblem for this team's mark: a crest that takes the team's colour and initials, the icon of a sport, a trophy or a medal. In your own code it is only its id, such as crest:shield.", "このチームのマークに使うプリセットのエンブレムです。チームの色と頭文字が入るエンブレム、競技のアイコン、トロフィー、メダルから選べます。コードでは「crest:shield」のようなIDだけで指定します。")}
           <input class="fam-field logo-url" id="${role}-logo-url" data-testid="${role}-logo-url" data-say-label="logoUrl" data-say-placeholder="logoUrl" autocomplete="off" value="${escapeAttr(fieldValue[`${role}-logo-url`])}"${hid(`${role}-logo-url`)} />
         </div>`;
@@ -573,9 +586,9 @@ const page = `<!doctype html>
         <h2 id="elements-title" data-say="elementTitle"></h2>
         <p data-say="elementText"></p>
         <div class="cards cards-pair" data-testid="element-cards">
-          <kyogijo-field data-testid="element-nhl" sport="nhl" orientation="auto" home="Lakeshore Anchors" away="Northern Owls" home-score="2" away-score="3" home-color="#0f7a7a" away-color="#3a2d6b" status="final-ot" competition="Cup Final, Game 7"></kyogijo-field>
-          <kyogijo-field data-testid="element-nba" sport="nba" orientation="auto" size="compact" home="Metro Bolts" away="Summit Peaks" score="112-108" home-color="#c2410c" away-color="#14233f" status="final"></kyogijo-field>
-          <kyogijo-field data-testid="element-mlb" sport="mlb" park="fenway-park" size="badge" home="Coastal Pines" away="Valley Stars" home-score="6" away-score="4" home-color="#1f6b3c" away-color="#c8102e" status="Bottom 9th"></kyogijo-field>
+          <kyogijo-field data-testid="element-nhl" sport="nhl" orientation="auto" home="Canada" home-flag="CA" away="USA" away-flag="US" home-score="2" away-score="3" home-color="#d52b1e" away-color="#1c3f7a" status="final-ot" competition="Cup Final, Game 7"></kyogijo-field>
+          <kyogijo-field data-testid="element-nba" sport="nba" orientation="auto" size="compact" home="Japan" home-flag="JP" away="Australia" away-flag="AU" score="112-108" home-color="#bc002d" away-color="#00843d" status="final"></kyogijo-field>
+          <kyogijo-field data-testid="element-mlb" sport="mlb" park="fenway-park" size="badge" home="USA" home-flag="US" away="Japan" away-flag="JP" home-score="6" away-score="4" home-color="#1c3f7a" away-color="#bc002d" status="Bottom 9th"></kyogijo-field>
         </div>
       </section>
 
@@ -584,7 +597,7 @@ const page = `<!doctype html>
         <h2 id="more-title" data-say="usesTitle"></h2>
         <p data-say="moreText"></p>
         <ul class="uses">
-          <li><code>drawKyogijo({ sport: "nhl", away: { name: "Northern Owls", score: 3 }, home: { name: "Lakeshore Anchors", score: 2 }, status: "final-ot" })</code></li>
+          <li><code>drawKyogijo({ sport: "nhl", away: { name: "USA", flag: "US", score: 3 }, home: { name: "Canada", flag: "CA", score: 2 }, status: "final-ot" })</code></li>
           <li><code>drawKyogijo({ sport: "mlb", park: "tokyo-dome", orientation: "portrait" })</code></li>
           <li><code>drawKyogijo({ sport: "nba", size: "badge", away, home })</code></li>
           <li><code>drawKyogijo({ sport: "soccer", pitchType: "opta" })</code></li>

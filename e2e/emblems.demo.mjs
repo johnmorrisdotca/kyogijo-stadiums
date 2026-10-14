@@ -18,7 +18,7 @@ test("a team's mark can be a ready-made emblem: its tiles are a finger wide, a t
   await page.locator(`${at("away-mark")} button[data-value="crest:diamond"]`).scrollIntoViewIfNeeded();
   await page.locator(`${at("away-mark")} button[data-value="crest:diamond"]`).click();
   await expect(page.locator(`${at("away-mark")} button[data-value="crest:diamond"]`)).toHaveAttribute("aria-pressed", "true");
-  await expect.poll(async () => (await images(page)).some((doc) => doc.includes("<title>Diamond crest</title>") && doc.includes(">NOW<"))).toBe(true);
+  await expect.poll(async () => (await images(page)).some((doc) => doc.includes("<title>Diamond crest</title>") && doc.includes(">USA<"))).toBe(true);
   await page.locator(`${at("away-mark")} button[data-value="sport:curling"]`).scrollIntoViewIfNeeded();
   await page.locator(`${at("away-mark")} button[data-value="sport:curling"]`).click();
   await expect.poll(async () => (await images(page)).some((doc) => doc.includes("<title>Curling stone</title>"))).toBe(true);

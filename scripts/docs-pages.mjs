@@ -42,6 +42,7 @@ export const NAV = [
       { slug: "pageant", ja: "ハーフに広げる旗とエンブレム" },
       { slug: "situation", ja: "試合の状況（人数・走者・ダウン）" },
       { slug: "emblems", ja: "トロフィー・メダル・ボール・エンブレム" },
+      { slug: "flags", ja: "国旗（国コードからHataで描く）" },
       { slug: "accessibility", ja: "アクセシビリティ" },
     ],
   },

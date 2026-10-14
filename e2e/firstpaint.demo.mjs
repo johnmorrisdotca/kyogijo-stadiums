@@ -91,7 +91,7 @@ test.describe("with JavaScript off", () => {
     // The drawing: the rink, with both teams and the score, in a box that has not collapsed.
     const drawing = page.locator(`${at("stage")} svg.kyogijo`);
     await expect(drawing).toHaveAttribute("data-sport", "nhl");
-    expect(await drawing.locator("title").textContent()).toContain("Northern Owls 3, Lakeshore Anchors 2");
+    expect(await drawing.locator("title").textContent()).toContain("USA 3, Canada 2");
     expect(await page.locator(`${at("stage")} svg *`).count()).toBeGreaterThan(40);
     const box = await page.locator(at("stage")).boundingBox();
     expect(box.height).toBeGreaterThan(150);
@@ -112,9 +112,9 @@ test.describe("with JavaScript off", () => {
     await expect(page.locator(`${at("sport")} button[aria-pressed="true"]`)).toHaveText("NHL");
     await expect(page.locator(`${at("orientation")} button[aria-pressed="true"]`)).toHaveText("Fit the box");
     await expect(page.locator(`${at("size")} button[aria-pressed="true"]`)).toHaveText("On the surface");
-    await expect(page.locator(at("away-name"))).toHaveValue("Northern Owls");
+    await expect(page.locator(at("away-name"))).toHaveValue("USA");
     await expect(page.locator(at("home-score"))).toHaveValue("2");
-    await expect(page.locator(at("away-color"))).toHaveValue("#3a2d6b");
+    await expect(page.locator(at("away-color"))).toHaveValue("#1c3f7a");
     await expect(page.locator(`${at("status")} button[aria-pressed="true"]`)).toHaveText("Final/OT");
     await expect(page.locator(at("stripes"))).toHaveAttribute("aria-pressed", "true");
     await expect(page.locator(at("stripes"))).toHaveText("Mown stripes");

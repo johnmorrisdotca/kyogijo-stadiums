@@ -166,6 +166,16 @@ export function makeState(params, kept = null) {
 /** Whether the options this state draws hold the id of a ready-made emblem, so that the code the page shows must plug Dougu Sports in. */
 export const usesEmblems = (s) => (s.away.logo === "ready" || s.home.logo === "ready") && s.size !== "surface" || (s.pageant !== "off" && s.pageantEmblem && s.size !== "surface");
 
+/** Whether the options this state draws hold a country's flag code, so that the code the page shows must plug Hata in. */
+export const usesFlags = (s) => flagCodes(s).length > 0;
+
+/** The codes of the flags the options of this state draw: the teams' (a race on a pool draws its swimmers instead of the teams) or the swimmers'. */
+export function flagCodes(s) {
+  if (s.sport === "swimming" && s.poolRace !== "none") return [...new Set((s.poolCourse === "short" ? shortRace("en") : poolRace("en")).swimmers.filter((one) => Number(s.poolLanes) === 10 || one.lane <= Number(s.poolLanes)).map((one) => one.country))];
+  if (s.size === "surface" || isPool(s.sport)) return [];
+  return [s.away, s.home].filter((t) => t.logo === "flag").map((t) => t.flag);
+}
+
 /** An emblem's id as a logo is given: with `/line` after it when the outline style is on. The code the page shows is this same string. */
 export const emblemRef = (id, s) => (s.emblemLine ? `${id}/line` : id);
 
@@ -175,7 +185,7 @@ export function loadGame(state, sport, lang) {
   const game = GAMES[sport];
   for (const role of ["away", "home"]) {
     const base = TEAMS[family][role];
-    state[role] = { name: lang === "ja" ? TEAMS_JA[family][role] : base.name, abbr: base.abbr, score: String(game[role]), color: base.color, logo: "emblem", emblem: base.emblem, mark: state[role]?.mark ?? MARKS[role], url: "" };
+    state[role] = { name: lang === "ja" ? TEAMS_JA[family][role] : base.name, abbr: base.abbr, score: String(game[role]), color: base.color, logo: "flag", flag: base.flag, emblem: base.emblem, mark: state[role]?.mark ?? MARKS[role], url: "" };
   }
   state.away.pens = game.awayPens === undefined ? "" : String(game.awayPens);
   state.home.pens = game.homePens === undefined ? "" : String(game.homePens);
@@ -226,16 +236,16 @@ export function seasonRange(s) {
   return { from: Math.min(...years) - 1, to: 2026 };
 }
 
-/** A made-up race for the swimming playground: the lanes the pool has, and, for the code a reader copies, flags as addresses (the picture's are SVG in code). */
-function poolRaceFor(s, lang, forCode) {
+/** A made-up race for the swimming playground: the lanes the pool has, each swimmer for a country whose flag is drawn from its code. */
+function poolRaceFor(s, lang) {
   const lanes = Number(s.poolLanes);
   const base = s.poolCourse === "short" ? shortRace(lang) : poolRace(lang);
-  const swimmers = base.swimmers.filter((one) => lanes === 10 || one.lane <= lanes).map((one) => (forCode ? { ...one, flag: `/flags/${one.abbr}.svg` } : one));
+  const swimmers = base.swimmers.filter((one) => lanes === 10 || one.lane <= lanes);
   return { ...base, swimmers, ...(s.poolRace === "pace" ? { pace: true } : {}) };
 }
 
 /** The pool the state asks for, or nothing when it asks for none of it. */
-function poolOptions(s, lang, forCode) {
+function poolOptions(s, lang) {
   const pool = {};
   if (s.poolLook !== "flat") pool.look = s.poolLook;
   if (s.poolDeck !== "plain") pool.deck = s.poolDeck;
@@ -243,7 +253,7 @@ function poolOptions(s, lang, forCode) {
     if (s.poolCourse === "short") pool.course = "short";
     if (s.poolLanes !== "8") pool.lanes = Number(s.poolLanes);
     if (s.poolSection) pool.section = true;
-    if (s.poolRace !== "none") pool.race = poolRaceFor(s, lang, forCode);
+    if (s.poolRace !== "none") pool.race = poolRaceFor(s, lang);
   }
   return Object.keys(pool).length === 0 ? undefined : pool;
 }
@@ -355,7 +365,7 @@ export function optionsFor(s, lang, forCode = false) {
   // Click to place asks the drawing where the pointer is (`clientPointToField`), which a drawing answers when it is made with `pointer: true`; the code on show does not need it.
   if (s.place && !forCode) o.pointer = true;
   if (isBudo(s.sport)) budoOptions(s, o);
-  const pool = isPool(s.sport) ? poolOptions(s, lang, forCode) : undefined;
+  const pool = isPool(s.sport) ? poolOptions(s, lang) : undefined;
   if (pool !== undefined) o.pool = pool;
   if (s.sport === "skating" && s.races !== "none") o.skating = { races: s.races };
   if (s.sport === "athletics" && (s.track !== "red" || s.infield !== "pitch" || s.races !== "none")) {
@@ -380,6 +390,7 @@ export function optionsFor(s, lang, forCode = false) {
       if (GAMES[s.sport].awaySets !== undefined) Object.assign(out, netExtras(s.sport, t === s.away ? "away" : "home", out.score));
       Object.assign(out, fieldExtras(s.sport, t === s.away ? "away" : "home", out.score));
       if (t.logo === "ready") out.logo = emblemRef(t.mark, s);
+      else if (t.logo === "flag") out.flag = t.flag;
       else if (t.logo === "emblem") out.logo = forCode ? placeholder : EMBLEMS[t.emblem];
       else if (t.logo === "url" && t.url) out.logo = t.url;
       return out;
@@ -478,8 +489,8 @@ export const SEGS = [
   { id: "budo-look", kind: "budolook", values: BUDO_LOOKS, get: (s) => s.budoLook },
   { id: "budo-areas", kind: "budoareas", values: BUDO_AREAS, get: (s) => s.budoAreas },
   { id: "dojo-jo", kind: "dojojo", values: DOJO_SIZES, get: (s) => s.dojoJo },
-  { id: "away-logo", kind: "logo", values: ["none", "emblem", "ready", "url"], get: (s) => s.away.logo },
-  { id: "home-logo", kind: "logo", values: ["none", "emblem", "ready", "url"], get: (s) => s.home.logo },
+  { id: "away-logo", kind: "logo", values: ["none", "flag", "emblem", "ready", "url"], get: (s) => s.away.logo },
+  { id: "home-logo", kind: "logo", values: ["none", "flag", "emblem", "ready", "url"], get: (s) => s.home.logo },
   { id: "away-mark", kind: "mark", values: MARK_IDS, get: (s) => s.away.mark },
   { id: "home-mark", kind: "mark", values: MARK_IDS, get: (s) => s.home.mark },
   { id: "pageant-emblem-id", kind: "mark", values: CENTRE_IDS, get: (s) => s.pageantEmblemId },
@@ -602,7 +613,7 @@ export function applyParams(s, params) {
       s[role][key] = text(value, field === "url" ? 300 : field === "name" ? 40 : 20);
       s.touched.add(`${role}.${key}`);
     }
-    s[role].logo = pick(params.get(`${letter}logo`), ["none", "emblem", "ready", "url"], s[role].logo);
+    s[role].logo = pick(params.get(`${letter}logo`), ["none", "flag", "emblem", "ready", "url"], s[role].logo);
     s[role].mark = pick(params.get(`${letter}mark`), MARK_IDS, s[role].mark);
   }
   s.status = pick(params.get("status"), STATUSES, s.status);
