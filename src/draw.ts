@@ -222,8 +222,7 @@ function buildAthletics(o: SurfaceOptions, common: BuildOptions): Surface {
   let embedded: Embedded | undefined;
   if (plan.pitch !== undefined) {
     const spec = plan.pitch.spec;
-    // The pitch of a cropped view has line goals: a net drawn beyond the view's edge, which the soccer builder fades with an opacity, makes resvg (the PNG renderer's peer) stop.
-    const goals = common.goals ?? (o.range === undefined ? "box" : "line");
+    const goals = common.goals ?? "box";
     const pitch = soccer(
       { spec, layout: layoutOf(spec), half: undefined, pattern: "bands", goals, flags: common.detail === "full", frame: undefined },
       { ...common, portrait: false, margin: 0, score: false, landmarks: false, id: `${common.id}-pitch` },

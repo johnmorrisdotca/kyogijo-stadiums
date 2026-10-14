@@ -15,6 +15,10 @@ All notable changes to this project are written here. The format follows
 - **Skating data charts** (`@johnmorrisdotca/kyogijo-stadiums/skating`): `skatingPairs` (a pair's names and flags on the lines of their lanes, the armbands white and red), `skatingGrid` (the starters of a short track race on the five positions), `skatingResults` (medals, times, splits along the lane, lap times in the table), `skatingReplay` (a timeline: each skater on his own way, the lane changed on every crossing) and `figureElements` (a jump, a spin, a step sequence and the other elements of a programme as marks on the ice, the track of a sequence as a line).
 - The docs have a page for the stadium, a gallery of it (52 pictures, each made from the code beside it) and the athletics rows of the sources, references, notice, limits, ranges and frames pages.
 
+### Fixed
+
+- **`toPNG` no longer stops the process on a drawing cropped to a range.** resvg (the PNG renderer) panics on a shape with an opacity below 1 that lies wholly outside the viewBox, as the net of a soccer goal does in the `penalty-area` and `defensive-third` ranges: `toPNG` now leaves out the shapes wholly outside the frame (they paint nothing). A test renders every named range of every sport and league, wide and tall, to a PNG.
+
 ### Changed
 
 - The name a reader sees is Kyogijo Stadiums (競技場 in Japanese): the demo's title, the docs site, the API page, the README and the package description. Code names (`drawKyogijo`, `<kyogijo-field>`) are unchanged.
