@@ -108,6 +108,8 @@ makeSeg("court", (v) => { state.court = v; });
 makeSeg("pattern", (v) => { state.pattern = v; });
 makeSeg("goals", (v) => { state.goals = v; });
 makeSeg("half", (v) => { state.half = v; });
+// A part of the sheet or a folded one is a bare sheet: a score always shows the whole of it, so the choice turns the teams off, and says so in the Show row's help.
+makeSeg("sheet", (v) => { state.sheet = v; if (v !== "sheet" && state.size !== "surface") state.size = "surface"; });
 for (const role of ["away", "home"]) makeSeg(`${role}-logo`, (v) => { state[role].logo = v; });
 
 /** A season inside the range the surface's history covers. */
@@ -288,7 +290,7 @@ function syncUrl() {
   else q.delete("year");
   if (state.league !== null && !isOwnLeague(state.sport, state.league)) q.set("league", state.league);
   else q.delete("league");
-  for (const [key, value, base] of [["pitch", state.pitch, "fifa"], ["ground", state.ground, "none"], ["pitchtype", state.pitchType, "none"], ["park", state.park, "generic"], ["size", state.size, "full"], ["orientation", state.orientation, "auto"], ["theme", state.theme, "auto"]]) {
+  for (const [key, value, base] of [["pitch", state.pitch, "fifa"], ["ground", state.ground, "none"], ["pitchtype", state.pitchType, "none"], ["park", state.park, "generic"], ["sheet", state.sport === "curling" ? state.sheet : "sheet", "sheet"], ["size", state.size, "full"], ["orientation", state.orientation, "auto"], ["theme", state.theme, "auto"]]) {
     if (value === base) q.delete(key);
     else q.set(key, value);
   }
@@ -327,7 +329,9 @@ function code(kind) {
       }
       for (const [key, attr] of [["status", "status"], ["competition", "competition"], ["date", "date"], ["label", "label"], ["winner", "winner"]]) if (o[key]) attrs.push(`${attr}="${escapeAttr(o[key])}"`);
     }
-    if (o.court) attrs.push(`options='${JSON.stringify({ court: o.court }).replace(/'/g, "&#39;")}'`);
+    // What has no attribute of its own goes in the `options` JSON.
+    const more = { ...(o.court ? { court: o.court } : {}), ...(o.sheet ? { sheet: o.sheet } : {}) };
+    if (Object.keys(more).length > 0) attrs.push(`options='${JSON.stringify(more).replace(/'/g, "&#39;")}'`);
     return `<script type="module" src="${CDN}/dist/element-define.js"></script>\n\n<kyogijo-field\n  ${attrs.join("\n  ")}\n></kyogijo-field>`;
   }
   if (kind === "iframe") {

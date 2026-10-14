@@ -132,6 +132,11 @@ export const KYOGIJO_CURLING_STYLE = `
 .kyogijo .ky-hammer{fill:var(--ky-plate-ink)}.kyogijo .ky-hammer-in{fill:var(--ky-plate)}.kyogijo .ky-grid{stroke:var(--ky-plate-ink);opacity:.22}
 .kyogijo .ky-badge-hammer-left .ky-hammer{fill:var(--ky-left-ink)}.kyogijo .ky-badge-hammer-left .ky-hammer-in{fill:var(--ky-left)}.kyogijo .ky-badge-hammer-right .ky-hammer{fill:var(--ky-right-ink)}.kyogijo .ky-badge-hammer-right .ky-hammer-in{fill:var(--ky-right)}`.trim();
 
+/** The rules of a folded curling sheet: the fan that joins each enlarged house to the part of the strip it shows, the frames and the labels. Written in only by a folded sheet, and in `KYOGIJO_STYLE`. */
+export const KYOGIJO_FOLD_STYLE = `
+.kyogijo .ky-fold-link{fill:var(--ky-line);fill-opacity:.07}.kyogijo .ky-fold-edge{fill:none;stroke:var(--ky-line);stroke-opacity:.4;stroke-width:.3}.kyogijo .ky-fold-hl{fill:var(--ky-line);fill-opacity:.08;stroke:var(--ky-line);stroke-opacity:.7;stroke-width:.35}
+.kyogijo .ky-fold-frame{fill:none;stroke:var(--ky-boards);stroke-width:.6}.kyogijo .ky-fold-pill{fill:var(--ky-plate);fill-opacity:.92;stroke:var(--ky-boards);stroke-width:.2}.kyogijo .ky-fold-t{fill:var(--ky-plate-ink)}`.trim();
+
 /**
  * The rules of a ballpark's walls and quirks (`walls` and `quirks`): the four shades of the wall bands (`--ky-wall-1` to `-4`, from under 10 feet to 30 and over), the hill, the
  * overhang, the ivy, the poles and bullpens, the backstop's bar, the dugouts, the names and the legend. Kept apart so that a drawing without them does not carry them: a drawing
@@ -182,4 +187,4 @@ export const KYOGIJO_NOTE_STYLE = `
 .kyogijo .ky-an-hd{fill:var(--c)}`.trim();
 
 /** Every rule of the package, for a page that draws with `style: "none"` and supplies the stylesheet itself. */
-export const KYOGIJO_STYLE = `${KYOGIJO_BASE_STYLE}\n${KYOGIJO_HEAT_STYLE}\n${KYOGIJO_TEAM_STYLE}\n${KYOGIJO_CURLING_STYLE}\n${KYOGIJO_WALLS_STYLE}\n${KYOGIJO_COURTS_STYLE}\n${KYOGIJO_FIELDS_STYLE}\n${KYOGIJO_LOOK_STYLE}\n${KYOGIJO_FEATURE_STYLE}\n${KYOGIJO_NOTE_STYLE}\n${KYOGIJO_SPECIAL_STYLE}\n${KYOGIJO_BACKGROUND_STYLE}\n${KYOGIJO_GRID_STYLE}\n${KYOGIJO_MARK_STYLE}\n${KYOGIJO_ROAD_STYLE}`;
+export const KYOGIJO_STYLE = `${KYOGIJO_BASE_STYLE}\n${KYOGIJO_HEAT_STYLE}\n${KYOGIJO_TEAM_STYLE}\n${KYOGIJO_CURLING_STYLE}\n${KYOGIJO_FOLD_STYLE}\n${KYOGIJO_WALLS_STYLE}\n${KYOGIJO_COURTS_STYLE}\n${KYOGIJO_FIELDS_STYLE}\n${KYOGIJO_LOOK_STYLE}\n${KYOGIJO_FEATURE_STYLE}\n${KYOGIJO_NOTE_STYLE}\n${KYOGIJO_SPECIAL_STYLE}\n${KYOGIJO_BACKGROUND_STYLE}\n${KYOGIJO_GRID_STYLE}\n${KYOGIJO_MARK_STYLE}\n${KYOGIJO_ROAD_STYLE}`;

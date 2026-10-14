@@ -4,6 +4,7 @@ import type { HeatRamp } from "./heat.colour.ts";
 import type { HexOrientation, Reducer, StatisticName } from "./heat.stats.ts";
 import type { ZoneSetId } from "./heat.zones.ts";
 import type { LayerBase, MarkDatum } from "./layers.types.ts";
+import type { Box } from "./types.ts";
 
 export type { HeatRamp, HeatRampName } from "./heat.colour.ts";
 export type { HexOrientation, Reducer, StatisticName } from "./heat.stats.ts";
@@ -40,6 +41,8 @@ export interface HeatLegend {
   ticks?: number;
   /** The opacity of the legend, 0 to 1. */
   opacity?: number;
+  /** Size and place the legend against this part of the surface, in feet in the drawing's frame (x along the surface, y across it), instead of the whole of what is shown: the half of a curling sheet that is drawn, say. */
+  region?: Box;
 }
 
 /** What the heat layers take beyond a layer's places. */
@@ -151,4 +154,6 @@ export interface LegendLayer extends Omit<LayerBase, "from" | "attacking" | "sur
   ticks?: number;
   /** The opacity of the legend, 0 to 1. */
   opacity?: number;
+  /** Size and place the legend against this part of the surface, as `HeatLegend.region` does. */
+  region?: Box;
 }

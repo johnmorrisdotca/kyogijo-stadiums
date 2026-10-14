@@ -16,9 +16,12 @@ export interface SheetPlan {
   guardZone: boolean;
   show: SheetShow;
   end: "left" | "right";
+  /** `show: "folded"`: what each enlarged panel holds, and the shape of the frame it fills. */
+  panels: "half" | "house";
+  fit: number;
 }
 
-const SHOWS: readonly SheetShow[] = ["sheet", "half", "house"];
+const SHOWS: readonly SheetShow[] = ["sheet", "half", "house", "folded"];
 const FEET = (feet: number): string => String(Math.round(feet * 100) / 100);
 
 /**
@@ -45,6 +48,9 @@ export function sheetFor(o: Pick<SurfaceOptions, "sport" | "league" | "sheet" | 
   const ranged = o.sport === "curling" ? parseRange(o) : undefined;
   const named = ranged !== undefined && ranged.kind === "name" ? ranged : undefined;
   const show = named !== undefined ? (named.name as SheetShow) : SHOWS.includes(asked.show as SheetShow) ? (asked.show as SheetShow) : "sheet";
-  const end = named?.asked !== undefined ? named.asked : asked.end === "right" ? "right" : "left";
-  return { league, spec: { ...base, length, width }, pebble: asked.pebble === true, guardZone: asked.guardZone === true, show, end };
+  const end = named?.asked !== undefined ? named.asked : asked.end === "right" || asked.end === "bottom" ? "right" : "left";
+  const panels = asked.panels === "house" ? "house" : "half";
+  if (asked.fit !== undefined && !(typeof asked.fit === "number" && asked.fit >= 0.5 && asked.fit <= 2)) throw new RangeError(`The folded sheet's fit is its width over its height, 0.5 to 2: ${String(asked.fit)} is not`);
+  const fit = asked.fit ?? 1;
+  return { league, spec: { ...base, length, width }, pebble: asked.pebble === true, guardZone: asked.guardZone === true, show, end, panels, fit };
 }

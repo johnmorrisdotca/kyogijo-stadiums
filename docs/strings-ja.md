@@ -223,6 +223,12 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `charts.sumCurling` | {n} stones in play. {team} scores {points}. | プレー中のストーンは{n}個です。{team}が{points}点を取ります。 |
 | `charts.sumCurlingBlank` | {n} stones in play. No one scores: the end is blanked. | プレー中のストーンは{n}個です。どちらも得点できず、ブランクエンドになります。 |
 | `charts.curlingOut` | {n} out of play. | {n}個はプレー外です。 |
+| `charts.titleCurlingHeat` | Where the stones came to rest | ストーンが止まった位置 |
+| `charts.curlingHeatStat` | Stones | ストーン |
+| `charts.sumCurlingHeat` | {n} stones in play: {house} in the house and {guards} in the free guard zone. | プレー中のストーンは{n}個です。ハウス内が{house}個、フリーガードゾーン内が{guards}個です。 |
+| `charts.curlingHeatTeam` | Only {name}'s stones. | {name}のストーンのみです。 |
+| `charts.curlingHeatGuards` | Only the free guards. | フリーガードのみです。 |
+| `charts.curlingHeatHouse` | Only the stones in the house. | ハウス内のストーンのみです。 |
 | `charts.shots` | shots | シュート |
 | `charts.passes` | passes | パス |
 | `charts.balls` | balls in play | インプレー打球 |
@@ -567,6 +573,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `ranges.names.outfield` | outfield | 外野 |
 | `ranges.names.sheet` | whole sheet | シート全体 |
 | `ranges.names.house` | house | ハウス |
+| `ranges.names.folded` | whole sheet, folded | 折りたたんだシート全体 |
 | `ranges.names.in-goal` | in-goal area | インゴール |
 | `ranges.names.twenty-two` | area between the try line and the 22-metre line | トライラインから22メートルラインまでのエリア |
 | `ranges.names.twenty` | area between the goal line and the 20-metre line | ゴールラインから20メートルラインまでのエリア |
@@ -578,6 +585,15 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `ranges.names.circle` | circle | サークル |
 | `ranges.names.twenty-three` | 23-metre area | 23メートルエリア |
 | `ranges.names.goal-area` | goal area | ゴールエリア |
+| `ranges.folded.top` | Top house | 上のハウス |
+| `ranges.folded.bottom` | Bottom house | 下のハウス |
+| `ranges.folded.left` | Left house | 左のハウス |
+| `ranges.folded.right` | Right house | 右のハウス |
+| `ranges.folded.tall` | Shown folded: the whole sheet is in the middle, with its top house enlarged on the left and its bottom house enlarged on the right. | 折りたたみ表示です。シート全体を中央に置き、上のハウスを左に、下のハウスを右に拡大して表示しています。 |
+| `ranges.folded.wide` | Shown folded: the whole sheet is in the middle, with its left house enlarged above it and its right house enlarged below it. | 折りたたみ表示です。シート全体を中央に置き、左のハウスを上に、右のハウスを下に拡大して表示しています。 |
+| `ranges.folded.half` | Each enlarged part runs from the hog line to the back line. | 拡大部分はホッグラインからバックラインまでです。 |
+| `ranges.folded.house` | Each enlarged part is the house. | 拡大部分はハウスです。 |
+| `ranges.folded.data` | Data is drawn in the enlarged parts as well. | データは拡大部分にも描かれます。 |
 | `grid.title` | A grid of drawings ({n}) | 図のグリッド（{n}枚） |
 | `grid.drawings` | Drawings ({n}): {list}. | 図（{n}枚）：{list}。 |
 | `grid.key` | Key: {list}. | 凡例：{list}。 |
@@ -720,6 +736,11 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `half_none` | Whole pitch | ピッチ全体 |
 | `half_left` | Left half | 左半面 |
 | `half_right` | Right half | 右半面 |
+| `sheet` | Show | 表示範囲 |
+| `sheet_sheet` | Whole sheet | シート全体 |
+| `sheet_top` | Top house | 上のハウス |
+| `sheet_bottom` | Bottom house | 下のハウス |
+| `sheet_folded` | Folded | 折りたたみ |
 | `cornerFlags` | Corner flags | コーナーフラッグ |
 | `teamPens` | Pens | PK |
 | `park` | Ballpark | 球場 |

@@ -28,7 +28,7 @@ import { featureColours, featureStyle } from "./features.ts";
 import { isLook, lookStyle } from "./look.ts";
 import { lineLook, restyleLines } from "./restyle.ts";
 import { KYOGIJO_MARK_STYLE } from "./mark.ts";
-import { KYOGIJO_BASE_STYLE, KYOGIJO_CURLING_STYLE, KYOGIJO_NOTE_STYLE, KYOGIJO_WALLS_STYLE } from "./style.ts";
+import { KYOGIJO_BASE_STYLE, KYOGIJO_CURLING_STYLE, KYOGIJO_FOLD_STYLE, KYOGIJO_NOTE_STYLE, KYOGIJO_WALLS_STYLE } from "./style.ts";
 import { convertLength, type Unit } from "./units.ts";
 import { baseball } from "./surfaces/baseball.ts";
 import { curling } from "./surfaces/curling.ts";
@@ -263,7 +263,9 @@ function buildWhole(o: SurfaceOptions, portrait: boolean, id: string, score: boo
     case "curling": {
       const plan = sheetFor(o);
       // A score always shows the whole sheet, for the board's sake.
-      return curling(common, { pebble: plan.pebble, guardZone: plan.guardZone, show: scored ? "sheet" : plan.show, end: plan.end, figures: plan.spec });
+      const words = KYOGIJO_STRINGS[o.language === "ja" ? "ja" : "en"].ranges.folded;
+      const labels: [string, string] = portrait ? [words.top, words.bottom] : [words.left, words.right];
+      return curling(common, { pebble: plan.pebble, guardZone: plan.guardZone, show: scored ? "sheet" : plan.show, end: plan.end, figures: plan.spec, fold: { panels: plan.panels, fit: plan.fit, labels } });
     }
     case "tennis":
     case "volleyball":
@@ -436,7 +438,15 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
         ? `${gap}${fill(words.said.era, { season: seasonLabel(sport as EraSport, o.year as number) })}`
         : "";
   // A range says what is shown; a curling score shows all of the sheet, whatever the range.
-  const rangeLine = isScore(o) && sport === "curling" ? "" : describeRange(o, language, o.layers !== undefined && o.layers.length > 0);
+  const hasData = o.layers !== undefined && o.layers.length > 0;
+  // A folded sheet says what is enlarged and where, in place of the range's own sentence.
+  const foldedWords = words.ranges.folded;
+  const rangeLine =
+    isScore(o) && sport === "curling"
+      ? ""
+      : plan?.show === "folded"
+        ? `${gap}${[foldedWords[isPortrait(o) ? "tall" : "wide"], foldedWords[plan.panels], hasData ? foldedWords.data : ""].filter((part) => part !== "").join(gap)}`
+        : describeRange(o, language, hasData);
   if (!isScore(o)) return { title: o.title ?? special?.title ?? surfaceName, description: o.description ?? `${about}${parkLine}${eraLine}${rangeLine}` };
   const winner = winnerOf({ ...o, sport });
   const s = (t: Team): string => fieldScoreText(sport, t) ?? (t.score === undefined || String(t.score) === "" ? "–" : String(t.score));
@@ -576,6 +586,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
   let body: string;
   let defs = "";
   let grounded = false;
+  let foldedSheet = false;
   if (isScore(o) && left !== undefined && right !== undefined && sized === "badge") {
     const badge = badgeMarkup(left, right, { sport, status, parts, id });
     viewBox = `0 0 ${badge.w} ${badge.h}`;
@@ -588,12 +599,14 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       return composeSpecial(o, guest, (host, hostId) => buildSurface(host, false, hostId, false, false, { features: undefined }), id);
     };
     let surface = make({ features });
+    foldedSheet = surface.folded === true;
     // A range too small to hold the score's panel: the score goes to the strip under the drawing, as a compact card does.
     if (surface.plateFits === false) {
       sized = "compact";
       surface = buildSurface(o, portrait, id, false, true, { features });
     }
-    if (annotated(o) && o.host === undefined) {
+    // A folded sheet has no margin for the annotations to stand in: they are not drawn on it.
+    if (annotated(o) && o.host === undefined && surface.folded !== true) {
       const teams = { home: isScore(o) ? o.home.name : undefined, away: isScore(o) ? o.away.name : undefined };
       notes = annotate({ o, surface, turned: surface.turned, words: KYOGIJO_STRINGS[language], teams });
       // The annotations need room in the margin: unless the options fix it, the surface is drawn again with a margin that holds them.
@@ -628,10 +641,19 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
     // Data goes over the markings and under the score's panel.
     const layered = renderLayers(o, o.layers, surface.turned, surface.whole === undefined ? undefined : surface.box);
     inner += surface.frame === undefined || layered.svg === "" ? layered.svg : el("g", { transform: surface.frame }, layered.svg);
+    // A surface drawn in parts shows the data again in each enlarged part, with its own ids, hidden from a reader of the drawing (the strip says it). A colour bar sized
+    // against the whole sheet falls outside the panels' part of it and is cut away there; one given a `region` inside a panel's part is drawn there, large.
+    if (surface.panels !== undefined && layered.svg !== "" && o.layers !== undefined) {
+      surface.panels.forEach((panel, i) => {
+        const copy = renderLayers({ ...o, id: `${id}-f${i}` }, o.layers, surface.turned);
+        if (copy.svg !== "") inner += el("g", { class: "ky-fold-data", "aria-hidden": "true", transform: panel.transform, "clip-path": `url(#${panel.clip})` }, copy.svg);
+      });
+    }
     if (layered.summaries.length > 0 && o.description === undefined) {
       const { colon, gap } = KYOGIJO_STRINGS[language].said;
       description = `${said}${gap}${KYOGIJO_STRINGS[language].layers.data}${colon}${layered.summaries.join(gap)}`;
     }
+    if (surface.over !== undefined) inner += surface.over;
     if (notes !== undefined && notes.svg !== "") {
       inner += notes.svg;
       if (notes.summaries.length > 0 && o.description === undefined) description = `${description}${KYOGIJO_STRINGS[language].said.gap}${notes.summaries.join(KYOGIJO_STRINGS[language].said.gap)}`;
@@ -689,7 +711,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       style: style === "" ? undefined : style,
     },
     `<title id="${titleId}">${esc(title)}</title><desc id="${descId}">${esc(description)}</desc>` +
-      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${left?.round === true || right?.round === true ? `\n${KYOGIJO_MARK_STYLE}` : ""}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}${plan === undefined ? "" : `\n${courtStyle(plan.sport, plan.look)}`}${fieldsStyle(sport) === "" ? "" : `\n${fieldsStyle(sport)}`}${palette === undefined ? "" : `\n${lookStyle(palette)}`}${walled ? `\n${KYOGIJO_WALLS_STYLE}` : ""}${features === undefined ? "" : `\n${featureStyle(sport, features)}`}${notes === undefined || notes.svg === "" ? "" : `\n${KYOGIJO_NOTE_STYLE}`}${grounded ? `\n${KYOGIJO_BACKGROUND_STYLE}` : ""}${o.host === undefined ? "" : `\n${specialStyle(hostSport(o.host))}`}</style>`) +
+      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${left?.round === true || right?.round === true ? `\n${KYOGIJO_MARK_STYLE}` : ""}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}${foldedSheet ? `\n${KYOGIJO_FOLD_STYLE}` : ""}${plan === undefined ? "" : `\n${courtStyle(plan.sport, plan.look)}`}${fieldsStyle(sport) === "" ? "" : `\n${fieldsStyle(sport)}`}${palette === undefined ? "" : `\n${lookStyle(palette)}`}${walled ? `\n${KYOGIJO_WALLS_STYLE}` : ""}${features === undefined ? "" : `\n${featureStyle(sport, features)}`}${notes === undefined || notes.svg === "" ? "" : `\n${KYOGIJO_NOTE_STYLE}`}${grounded ? `\n${KYOGIJO_BACKGROUND_STYLE}` : ""}${o.host === undefined ? "" : `\n${specialStyle(hostSport(o.host))}`}</style>`) +
       (defs === "" ? "" : `<defs>${defs}</defs>`) +
       body,
   );

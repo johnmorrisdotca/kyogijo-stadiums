@@ -1,5 +1,19 @@
 import type { Language, RangeName, Sport } from "./types.ts";
 
+/** The words of a folded curling sheet: the labels of its enlarged ends and the sentences that say what is drawn. */
+export interface FoldedWords {
+  top: string;
+  bottom: string;
+  left: string;
+  right: string;
+  /** A tall sheet's panels are at the sides, a wide sheet's above and below. */
+  tall: string;
+  wide: string;
+  half: string;
+  house: string;
+  data: string;
+}
+
 /** The words the drawing says itself, in English and Japanese. */
 export interface KyogijoWords {
   /** The name of each surface. */
@@ -126,6 +140,13 @@ export interface KyogijoWords {
     sumCurling: string;
     sumCurlingBlank: string;
     curlingOut: string;
+    /** The heat chart of stones at rest: its title, its legend's heading, the sum ({n} stones, {house} in the house, {guards} free guards), and the sentences that say which stones were kept ({name}). */
+    titleCurlingHeat: string;
+    curlingHeatStat: string;
+    sumCurlingHeat: string;
+    curlingHeatTeam: string;
+    curlingHeatGuards: string;
+    curlingHeatHouse: string;
     /** What the marks of each chart are, as a plural noun for a layer's title: "24 shots". */
     shots: string;
     passes: string;
@@ -398,7 +419,7 @@ export interface KyogijoWords {
    * The words of a range (`range`, the part of a surface a drawing is cropped to): the sentences of the description, {name} being the range's name below and {side} `left` or
    * `right` as `notes` says it; for a box of your own {x0}, {x1}, {y0} and {y1} (and the {frame}); and the name of each range, written to follow "shows only the".
    */
-  ranges: { shows: string; showsEnd: string; box: string; boxFrame: string; cut: string; names: Record<RangeName, string> };
+  ranges: { shows: string; showsEnd: string; box: string; boxFrame: string; cut: string; names: Record<RangeName, string>; folded: FoldedWords };
   /**
    * The words of a grid of drawings (`drawGrid`): its accessible title when the caller gives none ({n} drawings), the sentence that lists the drawings ({n}, {list}), the one
    * that lists the key ({list}), the name of a drawing that has none ({n} of {total}), and what joins a list.
@@ -592,6 +613,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       titleNba: "NBA shot chart", titleNhl: "NHL shot map", titleMlb: "Baseball spray chart", titleNfl: "NFL pass chart", titleSoccer: "Soccer shot map", titleGoal: "Goal mouth: where the shots crossed the goal line",
       titleCurling: "Curling stones", curlingEnd: "End {n}", curlingStone: "Stone", curlingCounting: "Counting stone", curlingShot: "Shot rock", curlingFrom: "{name}: {d} ft from the button", curlingNoteCounting: "counting", curlingNoteShot: "the shot rock",
       sumCurling: "{n} stones in play. {team} scores {points}.", sumCurlingBlank: "{n} stones in play. No one scores: the end is blanked.", curlingOut: "{n} out of play.",
+      titleCurlingHeat: "Where the stones came to rest", curlingHeatStat: "Stones", sumCurlingHeat: "{n} stones in play: {house} in the house and {guards} in the free guard zone.", curlingHeatTeam: "Only {name}'s stones.", curlingHeatGuards: "Only the free guards.", curlingHeatHouse: "Only the stones in the house.",
       shots: "shots", passes: "passes", balls: "balls in play", ballsBeyond: "balls beyond the fence", lineOfScrimmage: "line of scrimmage", key: "Key",
       made: "Made", missed: "Missed", missedNet: "Off target", goal: "Goal", saved: "Saved", blocked: "Blocked", shot: "Shot", post: "Hit the post",
       single: "Single", double: "Double", triple: "Triple", homeRun: "Home run", out: "Out", complete: "Complete", incomplete: "Incomplete", touchdown: "Touchdown", interception: "Interception",
@@ -667,9 +689,17 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       names: {
         "red-zone": "red zone", "between-the-20s": "field between the 20-yard lines", "end-zone": "end zone", "field-of-play": "field of play", "own-half": "own half", "opponent-half": "opponent's half",
         "offensive-zone": "offensive zone", "defensive-zone": "defensive zone", "neutral-zone": "neutral zone", half: "half", "half-court": "half court", paint: "paint",
-        "final-third": "final third", "defensive-third": "defensive third", "middle-third": "middle third", "penalty-area": "penalty area", infield: "infield", outfield: "outfield", sheet: "whole sheet", house: "house",
+        "final-third": "final third", "defensive-third": "defensive third", "middle-third": "middle third", "penalty-area": "penalty area", infield: "infield", outfield: "outfield", sheet: "whole sheet", house: "house", folded: "whole sheet, folded",
         "in-goal": "in-goal area", "twenty-two": "area between the try line and the 22-metre line", twenty: "area between the goal line and the 20-metre line", crease: "crease", "forward-fifty": "area inside the fifty metre arc", "centre-square": "centre square",
         "large-rectangle": "large rectangle", pitch: "pitch", circle: "circle", "twenty-three": "23-metre area", "goal-area": "goal area",
+      },
+      folded: {
+        top: "Top house", bottom: "Bottom house", left: "Left house", right: "Right house",
+        tall: "Shown folded: the whole sheet is in the middle, with its top house enlarged on the left and its bottom house enlarged on the right.",
+        wide: "Shown folded: the whole sheet is in the middle, with its left house enlarged above it and its right house enlarged below it.",
+        half: "Each enlarged part runs from the hog line to the back line.",
+        house: "Each enlarged part is the house.",
+        data: "Data is drawn in the enlarged parts as well.",
       },
     },
     grid: { title: "A grid of drawings ({n})", drawings: "Drawings ({n}): {list}.", key: "Key: {list}.", cell: "Drawing {n} of {total}", listSep: "; " },
@@ -794,6 +824,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       titleNba: "NBAのショットチャート", titleNhl: "NHLのシュートマップ", titleMlb: "野球の打球方向図", titleNfl: "NFLのパスチャート", titleSoccer: "サッカーのシュートマップ", titleGoal: "ゴールマウス：シュートがゴールラインを通過した位置",
       titleCurling: "カーリングのストーンの位置", curlingEnd: "第{n}エンド", curlingStone: "ストーン", curlingCounting: "得点になるストーン", curlingShot: "ナンバーワンストーン（ボタンに最も近いストーン）", curlingFrom: "{name}：ボタンから{d}フィート", curlingNoteCounting: "得点になるストーン", curlingNoteShot: "ナンバーワンストーン",
       sumCurling: "プレー中のストーンは{n}個です。{team}が{points}点を取ります。", sumCurlingBlank: "プレー中のストーンは{n}個です。どちらも得点できず、ブランクエンドになります。", curlingOut: "{n}個はプレー外です。",
+      titleCurlingHeat: "ストーンが止まった位置", curlingHeatStat: "ストーン", sumCurlingHeat: "プレー中のストーンは{n}個です。ハウス内が{house}個、フリーガードゾーン内が{guards}個です。", curlingHeatTeam: "{name}のストーンのみです。", curlingHeatGuards: "フリーガードのみです。", curlingHeatHouse: "ハウス内のストーンのみです。",
       shots: "シュート", passes: "パス", balls: "インプレー打球", ballsBeyond: "フェンス越えの打球", lineOfScrimmage: "スクリメージライン", key: "凡例",
       made: "成功", missed: "失敗", missedNet: "枠外", goal: "ゴール", saved: "セーブ", blocked: "ブロック", shot: "シュート", post: "ポスト直撃",
       single: "単打", double: "二塁打", triple: "三塁打", homeRun: "本塁打", out: "アウト", complete: "パス成功", incomplete: "パス不成功", touchdown: "タッチダウン", interception: "インターセプト",
@@ -869,9 +900,17 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       names: {
         "red-zone": "レッドゾーン", "between-the-20s": "20ヤードライン間のフィールド", "end-zone": "エンドゾーン", "field-of-play": "ゴールライン間のフィールド", "own-half": "自陣の半面", "opponent-half": "敵陣の半面",
         "offensive-zone": "アタッキングゾーン", "defensive-zone": "ディフェンディングゾーン", "neutral-zone": "ニュートラルゾーン", half: "半面", "half-court": "ハーフコート", paint: "ペイントエリア",
-        "final-third": "アタッキングサード", "defensive-third": "ディフェンディングサード", "middle-third": "ミドルサード", "penalty-area": "ペナルティーエリア", infield: "内野", outfield: "外野", sheet: "シート全体", house: "ハウス",
+        "final-third": "アタッキングサード", "defensive-third": "ディフェンディングサード", "middle-third": "ミドルサード", "penalty-area": "ペナルティーエリア", infield: "内野", outfield: "外野", sheet: "シート全体", house: "ハウス", folded: "折りたたんだシート全体",
         "in-goal": "インゴール", "twenty-two": "トライラインから22メートルラインまでのエリア", twenty: "ゴールラインから20メートルラインまでのエリア", crease: "クリース", "forward-fifty": "50メートルアークの内側", "centre-square": "センタースクエア",
         "large-rectangle": "大きい長方形", pitch: "ピッチ", circle: "サークル", "twenty-three": "23メートルエリア", "goal-area": "ゴールエリア",
+      },
+      folded: {
+        top: "上のハウス", bottom: "下のハウス", left: "左のハウス", right: "右のハウス",
+        tall: "折りたたみ表示です。シート全体を中央に置き、上のハウスを左に、下のハウスを右に拡大して表示しています。",
+        wide: "折りたたみ表示です。シート全体を中央に置き、左のハウスを上に、右のハウスを下に拡大して表示しています。",
+        half: "拡大部分はホッグラインからバックラインまでです。",
+        house: "拡大部分はハウスです。",
+        data: "データは拡大部分にも描かれます。",
       },
     },
     grid: { title: "図のグリッド（{n}枚）", drawings: "図（{n}枚）：{list}。", key: "凡例：{list}。", cell: "{total}枚中{n}枚目の図", listSep: "；" },

@@ -226,13 +226,19 @@ export interface CourtStyle {
   paintThreePoint?: boolean;
 }
 
-/** How much of a curling sheet is shown: all of it, the half from the hog line to the back line, or just the house. */
-export type SheetShow = "sheet" | "half" | "house";
+/**
+ * How much of a curling sheet is shown: all of it (`sheet`), the half from the hog line to the back line (`half`), just the house (`house`), or `folded`: the whole sheet as a strip in the
+ * middle with its two houses enlarged beside it, so that the drawing fills a roughly square frame (see `SheetStyle.panels`).
+ */
+export type SheetShow = "sheet" | "half" | "house" | "folded";
+
+/** An end of a curling sheet: `left` or `right` as the sheet lies wide, or `top` (the left end) and `bottom` (the right end), as a tall sheet's ends are read. */
+export type SheetEnd = Side | "top" | "bottom";
 
 /**
  * The parts of a surface a drawing can be cropped to (`range`). Football: `red-zone`, `between-the-20s`, `end-zone`, `field-of-play`, `own-half`, `opponent-half`.
  * Hockey: `offensive-zone`, `defensive-zone`, `neutral-zone`, `half`. Basketball: `half-court`, `paint`. Soccer: `half`, `final-third`, `defensive-third`, `middle-third`,
- * `penalty-area`. Baseball: `infield`, `outfield`. The net sports: `half-court`. Curling: `sheet`, `half`, `house`. Rugby: `half`, `twenty-two` (union) or `twenty` (league), `in-goal`. Lacrosse: `half`, `crease`. Australian football: `half`, `forward-fifty`, `centre-square`.
+ * `penalty-area`. Baseball: `infield`, `outfield`. The net sports: `half-court`. Curling: `sheet`, `half`, `house`, `folded`. Rugby: `half`, `twenty-two` (union) or `twenty` (league), `in-goal`. Lacrosse: `half`, `crease`. Australian football: `half`, `forward-fifty`, `centre-square`.
  * Gaelic games: `half`, `large-rectangle`. Cricket: `pitch`, `circle`. Field hockey: `half`, `circle`, `twenty-three`. Handball: `half`, `goal-area`. `RANGES` lists them for each sport.
  */
 export type RangeName =
@@ -256,6 +262,7 @@ export type RangeName =
   | "outfield"
   | "sheet"
   | "house"
+  | "folded"
   | "in-goal"
   | "twenty-two"
   | "twenty"
@@ -271,8 +278,8 @@ export type RangeName =
 /** A named range at the end of your choice: `{ name: "offensive-zone", end: "left" }` is the offensive zone of a team that attacks the left. */
 export interface RangeNamed {
   name: RangeName;
-  /** The end of the surface the range is at, as the surface is drawn wide: `left` or `right`. Each range has its own default (`RANGES`); a range with no end ignores it. */
-  end?: Side;
+  /** The end of the surface the range is at, as the surface is drawn wide: `left` or `right` (a curling sheet's also `top` and `bottom`: the left end and the right). Each range has its own default (`RANGES`); a range with no end ignores it. */
+  end?: SheetEnd;
 }
 
 /**
@@ -314,10 +321,14 @@ export interface SheetStyle {
   pebble?: boolean;
   /** Shade the free guard zone at both ends: the ground between the hog line and the tee line, outside the house. Off by default. */
   guardZone?: boolean;
-  /** How much of the sheet to show. A bare sheet only; a score always shows all of it. `sheet` by default. `range` says the same (`range: "house"`) and wins. */
+  /** How much of the sheet to show. A bare sheet only; a score always shows all of it. `sheet` by default. `range` says the same (`range: "house"`) and wins. `folded` is the whole sheet with both houses enlarged beside it. */
   show?: SheetShow;
-  /** Which end `show: "half"` and `show: "house"` show: the `left` one (the top house of a tall drawing, the default) or the `right`. */
-  end?: "left" | "right";
+  /** Which end `show: "half"` and `show: "house"` show: the `left` one (the top house of a tall drawing, the default) or the `right`; `top` and `bottom` say the same for a tall sheet (`top` is the left end). */
+  end?: SheetEnd;
+  /** What each enlarged panel of `show: "folded"` holds: the `half` from the hog line to the back line, with the free guard zone (the default), or just the `house`. */
+  panels?: "half" | "house";
+  /** The shape of the frame `show: "folded"` fills: width over height as the drawing lies, 1 (square) by default; the panels are as large as that allows. */
+  fit?: number;
 }
 
 /** The named looks of a tennis court: the colour of its surface and of the ground round it. */

@@ -407,6 +407,8 @@ function dataPage() {
 
 
 function curlingPage() {
+  // Made-up stones from a fixed formula, no real game: some in the house, some guards, some in between.
+  const crowd = `const luck = (n) => {\n  const v = Math.sin(n * 12.9898) * 43758.5453;\n  return v - Math.floor(v);\n};\nconst bell = (n) => luck(n) + luck(n + 1) + luck(n + 2) - 1.5;\nconst stones = Array.from({ length: 240 }, (_, i) => {\n  const inHouse = luck(i * 7) < 0.45;\n  return { x: bell(i * 5) * (inHouse ? 3 : 2.5), y: inHouse ? bell(i * 11) * 3 : -8 - 9 * luck(i * 13), team: i % 2 ? "home" : "away" };\n});`;
   const stones = `[
   { x: 0.4, y: 0.3, team: "home", number: 8 },
   { x: -1.2, y: -0.8, team: "home", number: 6 },
@@ -437,6 +439,27 @@ function curlingPage() {
         item("curling-half", "Hog line to back line", drawing({ sport: "curling", sheet: { show: "half", guardZone: true } })),
         item("curling-house", "The house", drawing({ sport: "curling", sheet: { show: "house", pebble: true } })),
         item("curling-house-right", "The house at the right end, wide", drawing({ sport: "curling", orientation: "landscape", sheet: { show: "house", end: "right" } })),
+      ]),
+      section("folded", "The top end, the bottom end, both folded", "`sheet.show: \"folded\"` is the whole sheet as a strip with its two houses enlarged beside it, so that a sheet 150 feet long fills a square. `end: \"top\"` or `\"bottom\"` is one end alone.", [
+        item("curling-folded-tall", "Folded, tall: the top house on the left, the bottom house on the right", drawing({ sport: "curling", sheet: { show: "folded" } }), "The strip keeps its scale; each panel is the same sheet from the hog line to the back line, enlarged, with a fan to the part it shows."),
+        item("curling-folded-wide", "Folded, wide: the left house above, the right house below", drawing({ sport: "curling", orientation: "landscape", sheet: { show: "folded" } })),
+        item("curling-folded-house", "Folded, with only the houses", drawing({ sport: "curling", sheet: { show: "folded", panels: "house", guardZone: true } }), "`panels: \"house\"`; the free guard zone is shaded on the strip."),
+        item("curling-folded-fit", "Folded, a little wider than tall", drawing({ sport: "curling", sheet: { show: "folded", fit: 1.2, pebble: true } }), "`fit` is width over height; a panel is never longer than the strip."),
+        item("curling-folded-dark", "Folded, dark, in Curling Canada's rules", drawing({ sport: "curling", league: "curling-canada", theme: "dark", sheet: { show: "folded" } })),
+        item("curling-top", "Only the top end", drawing({ sport: "curling", sheet: { show: "half", end: "top", guardZone: true } })),
+        item("curling-bottom", "Only the bottom end", drawing({ sport: "curling", sheet: { show: "half", end: "bottom", guardZone: true } })),
+        item("chart-curling-folded", "The stones of an end, folded", `import { curlingStones } from "${MAIN}/charts";\n\nconst stones = ${stones};\nconst chart = curlingStones(stones, { end: 6, hammer: "home", show: "folded" });\nconst svg = chart.draw();`, "The stones are in the strip, small, and in the top panel, large, at the house they were played to."),
+        item("chart-curling-folded-wide", "The same end, folded wide, with its key", `import { curlingStones } from "${MAIN}/charts";\n\nconst stones = ${stones};\nconst chart = curlingStones(stones, { end: 6, hammer: "home", show: "folded" });\nconst svg = chart.draw({ orientation: "landscape" });`),
+      ]),
+      section("heat", "Where the stones of many ends came to rest", "`curlingHeat` counts the stones of many ends into cells, hexagons, a density or the zones of the house, or draws each as a translucent disc in its team's colour; it can keep one team's stones, the free guards or the stones in the house.", [
+        item("curling-heat-cells", "Cells, the half of the sheet", `import { curlingHeat } from "${MAIN}/charts";\n\n${crowd}\nconst svg = curlingHeat(stones).draw();`, "A cell is a foot square; a cell with no stone is not drawn."),
+        item("curling-heat-hex", "Hexagons, wide", `import { curlingHeat } from "${MAIN}/charts";\n\n${crowd}\nconst svg = curlingHeat(stones, { view: "hexbin", cell: 1.2 }).draw({ orientation: "landscape" });`),
+        item("curling-heat-contour", "A density, one team, wide", `import { curlingHeat } from "${MAIN}/charts";\n\n${crowd}\nconst svg = curlingHeat(stones, { view: "contour", team: "home" }).draw({ orientation: "landscape" });`),
+        item("curling-heat-zones", "The zones of the house", `import { curlingHeat } from "${MAIN}/charts";\n\n${crowd}\nconst svg = curlingHeat(stones, { view: "zones", show: "house" }).draw();`, "The number in each zone is the stones that came to rest in it, by their centres."),
+        item("curling-heat-guards", "The free guards, as discs in the teams' colours, folded", `import { curlingHeat } from "${MAIN}/charts";\n\n${crowd}\nconst svg = curlingHeat(stones, { view: "discs", only: "guards", show: "folded" }).draw();`, "Stones that fall on each other build up colour."),
+        item("curling-heat-folded", "Cells, folded", `import { curlingHeat } from "${MAIN}/charts";\n\n${crowd}\nconst svg = curlingHeat(stones, { show: "folded" }).draw();`, "The colour bar stands in the enlarged house the stones are at."),
+        item("curling-heat-house", "The stones in the house, the house alone", `import { curlingHeat } from "${MAIN}/charts";\n\n${crowd}\nconst svg = curlingHeat(stones, { only: "house", show: "house", cell: 0.8 }).draw();`),
+        item("curling-ends-grid", "A game's ends in one picture", `import { curlingStones } from "${MAIN}/charts";\nimport { drawGrid } from "${MAIN}/layouts";\n\n${crowd}\nconst ends = [0, 1, 2, 3, 4, 5].map((end) => {\n  const chart = curlingStones(stones.slice(end * 8, end * 8 + 8).map((s, i) => ({ ...s, y: s.y > -2 ? s.y : s.y * 0.4, number: i + 1 })), { end: end + 1, id: \`end-\${end + 1}\` });\n  return { drawing: chart, label: \`End \${end + 1}: \${chart.totals.scoring ?? "blank"} \${chart.totals.points}\` };\n});\nconst svg = drawGrid(ends, { columns: 3, width: 900, title: "A game, end by end" });`, "Each cell is the chart of that end, scored by the rules."),
       ]),
       section("score", "The board and the badge", "Each team's score in each end (`ends`), the total, the hammer, and an end as the status.", [
         item("curling-board-tall", "The board, tall", drawing({ sport: "curling", ...GAMES.curling })),

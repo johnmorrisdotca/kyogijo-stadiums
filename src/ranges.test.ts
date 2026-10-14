@@ -46,7 +46,7 @@ describe("the ranges of each sport", () => {
     expect(ids("soccer")).toEqual(expect.arrayContaining(["half", "final-third", "penalty-area"]));
     expect(ids("mlb")).toEqual(["infield", "outfield"]);
     for (const sport of ["tennis", "volleyball", "badminton", "pickleball", "tabletennis"] as const) expect(ids(sport)).toEqual(["half-court"]);
-    expect(ids("curling")).toEqual(["sheet", "half", "house"]);
+    expect(ids("curling")).toEqual(["sheet", "half", "house", "folded"]);
   });
 
   it("have each a default end where they have one, and the offensive ones attack the right", () => {
@@ -86,10 +86,16 @@ describe("every named range, wide and tall", () => {
         const box = view(root);
         const full = view(whole);
         if (id === "sheet") expect(box).toEqual(full);
-        else expect(area(box), label).toBeLessThan(area(full));
+        // A folded sheet is not a crop: it is the whole sheet with its houses enlarged beside it, so it is larger, and square.
+        else if (id === "folded") {
+          expect(area(box), label).toBeGreaterThan(area(full));
+          expect(box[2] / box[3], label).toBeCloseTo(1, 2);
+        } else expect(area(box), label).toBeLessThan(area(full));
         // The crop stays inside the whole drawing's view, in the frame it lies in.
-        expect(box[2]).toBeLessThanOrEqual(full[2] + 1e-6);
-        expect(box[3]).toBeLessThanOrEqual(full[3] + 1e-6);
+        if (id !== "folded") {
+          expect(box[2]).toBeLessThanOrEqual(full[2] + 1e-6);
+          expect(box[3]).toBeLessThanOrEqual(full[3] + 1e-6);
+        }
         expect(box[2]).toBeGreaterThan(0);
         // A tall drawing is the wide one turned a quarter: the same part of the surface, on its side.
         if (orientation === "portrait" && sport !== "mlb" && sport !== "curling") {
@@ -106,7 +112,7 @@ describe("every named range, wide and tall", () => {
       const root = parse(svg);
       const group = walk(root).find((n) => n.attrs.class === "ky-layers");
       expect(group, label).toBeDefined();
-      if (id === "sheet" || id === "half" || id === "house") {
+      if (id === "sheet" || id === "half" || id === "house" || id === "folded") {
         if (sport === "curling") return;
       }
       const clips = walk(root).filter((n) => n.name === "clipPath");

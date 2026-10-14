@@ -12,6 +12,9 @@ import { fill } from "./strings.ts";
 import { outlineOf } from "./outline.ts";
 import { isUnit } from "./units.ts";
 import type { SheetStyle } from "./types.ts";
+import { isPortrait } from "./common.ts";
+import { foldPlan } from "./surfaces/curling.fold.ts";
+import { teesOf } from "./surfaces/curling.ts";
 
 const R = STONE_DIAMETER / 2;
 const EPS = 1e-6;
@@ -125,7 +128,7 @@ export function curlingStones(stones: readonly CurlingStone[], options: CurlingO
   const title = options.end === undefined ? w.titleCurling : `${w.titleCurling}${all.said.sep}${fill(w.curlingEnd, { n: options.end })}`;
   const surface = options.surface ?? {};
   // The two stone colours and the half of the sheet with the free guard zone, under whatever the caller laid over them.
-  const sheet: SheetStyle = { show: "half", end: house, guardZone: true, ...(surface.sheet ?? {}) };
+  const sheet: SheetStyle = { show: options.show ?? "half", end: house, guardZone: true, ...(surface.sheet ?? {}) };
   const o = drawingOptions("curling", { ...options, surface: { ...surface, sheet, colors: { layerHome: CURLING_COLORS.home, layerAway: CURLING_COLORS.away, ...(surface.colors ?? {}) } } }, title, { margin: 4.5 });
   const plan = sheetFor(o);
   const totals = curlingScore(stones, { units: options.units, width: plan.spec.width });
@@ -182,8 +185,15 @@ export function curlingStones(stones: readonly CurlingStone[], options: CurlingO
   if (options.key !== false) {
     const { box } = outlineOf(o);
     const tee = house === "left" ? box.w / 2 - CURLING.teeFromMiddle : box.w / 2 + CURLING.teeFromMiddle;
-    const shown = { x: house === "left" ? tee - CURLING.backLine : tee - CURLING.hogLine - 1, w: CURLING.backLine + CURLING.hogLine + 1 };
-    layers.push(...keyLayers(o, entries, LOOKS, all, [], shown));
+    if (plan.show === "folded") {
+      // A folded sheet's key runs along the top of the whole drawing, above the enlarged house that is there.
+      const margin = typeof o.margin === "number" ? convertLength(o.margin, o.units ?? "ft", "ft") : 3;
+      const fold = foldPlan(plan.spec, teesOf(plan.spec), { panels: plan.panels, fit: plan.fit, margin, turned: isPortrait(o), id: "k" });
+      layers.push(...keyLayers(o, entries, LOOKS, all, [], { x: box.x, w: box.w, y: fold.view.y + margin * 0.5 }));
+    } else {
+      const shown = { x: house === "left" ? tee - CURLING.backLine : tee - CURLING.hogLine - 1, w: CURLING.backLine + CURLING.hogLine + 1 };
+      layers.push(...keyLayers(o, entries, LOOKS, all, [], shown));
+    }
   }
   const teamName = totals.scoring === null ? "" : name(totals.scoring);
   const parts = [

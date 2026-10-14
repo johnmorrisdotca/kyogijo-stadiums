@@ -271,6 +271,9 @@ const page = `<!doctype html>
                 ${seg("half", "half", "Show the whole pitch or one half. A drawing with teams always shows the whole pitch.", "ピッチ全体か、片側の半面を表示します。チームを載せた図では常にピッチ全体を表示します。")}
                 <div class="setup fam-row">${toggle("flags", "cornerFlags")}</div>
               </div>
+              <div id="curling-group"${hid("curling-group")}>
+                ${seg("sheet", "sheet", "Show the whole sheet, only its top house or only its bottom house (the hog line to the back line), or fold it: the whole sheet as a strip with both houses enlarged beside it, so that the drawing fills a square. A drawing with teams always shows the whole sheet.", "シート全体、上のハウスだけ、下のハウスだけ（どちらもホッグラインからバックラインまで）、または折りたたみ表示を選びます。折りたたみ表示では、シート全体を細長い帯にして中央に置き、両端のハウスを拡大して並べるので、図がほぼ正方形に収まります。チームを載せた図では常にシート全体を表示します。")}
+              </div>
               <div id="court-group"${hid("court-group")}>
                 ${seg("court", "court", "Five looks for the basketball court, in plain colours: the paint, the border, the wood and the words on the baselines.", "バスケットボールのコートの見た目を5種類から選べます。無地の色で、ペイント、縁取り、床の木目、ベースラインの文字を変えます。")}
                 <div class="setup fam-row">${toggle("baseline", "baseline")}${toggle("centre-logo", "centreLogo")}</div>

@@ -33,6 +33,7 @@ import { rampColour, type P } from "./layers.marks.ts";
 import type { LayerBase } from "./layers.types.ts";
 import { fill } from "./strings.ts";
 import { textWidth } from "./text.ts";
+import type { Box } from "./types.ts";
 import { FEET_PER, type Unit } from "./units.ts";
 
 /** The layers this file draws, except the legend. */
@@ -400,6 +401,8 @@ interface LegendSpec {
   title: string;
   ticks: number;
   position: NonNullable<HeatLegend["position"]>;
+  /** The part of the surface the legend is sized and placed against, in feet in the drawing's frame; what is shown by default. */
+  region?: Box;
   format: (v: number) => string;
   /** Tick values, when the caller fixes them (a contour's levels); otherwise nice numbers over the domain. */
   at?: readonly number[];
@@ -407,8 +410,8 @@ interface LegendSpec {
 
 /** The legend's marks: a plate, the heading, the steps as a bar and the ticks. Laid out as the eye sees it, then placed on the surface and turned back when the surface is turned. */
 function legendMarks(env: Env, spec: LegendSpec): string {
-  const box = env.shown;
-  const b = env.base;
+  const box = spec.region ?? env.shown;
+  const b = spec.region === undefined ? env.base : Math.max(box.w, box.h) * 0.013;
   const fs = b * 1.1;
   const barH = b * 1.3;
   const pad = b * 1;
@@ -586,6 +589,7 @@ export function drawHeat(layer: HeatLayer, env: Env, gid: string, known?: Map<st
         title: legend.title ?? c.stat,
         ticks: legend.ticks ?? 5,
         position: legend.position ?? (env.o.sport === "mlb" ? "bottom-right" : "bottom"),
+        region: legend.region,
         format: formatter(c.percent, undefined),
         at: contour === undefined || contour.levels.length > 6 ? undefined : contour.levels.map((l) => 100 * l.label),
       }),
@@ -637,7 +641,7 @@ export function drawLegend(layer: LegendLayer, env: Env, gid: string, known: Rea
   const title = typeof layer.name === "string" && layer.name.trim() !== "" ? layer.name.trim() : target?.stat ?? words.stat.custom;
   made.cls = "ky-hm";
   made.opacity = opacityOf(layer.opacity);
-  made.marks = legendMarks(env, { colours, title, ticks: layer.ticks ?? 5, position: layer.position ?? (env.o.sport === "mlb" ? "bottom-right" : "bottom"), format: formatter(percent, undefined) });
+  made.marks = legendMarks(env, { colours, title, ticks: layer.ticks ?? 5, position: layer.position ?? (env.o.sport === "mlb" ? "bottom-right" : "bottom"), region: layer.region, format: formatter(percent, undefined) });
   made.css = darkRules(colours, [gid]);
   made.title = fill(words.legendTitle, { name: title });
   made.text = fill(words.range, { min: formatter(percent, undefined)(colours.domain[0]), max: formatter(percent, undefined)(colours.domain[1]) });

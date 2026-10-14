@@ -37,6 +37,7 @@ src/
 │   ├── baseball.walls.ts  a park's walls and quirks drawn on the field: the bands of the walls, the hill, the overhang, the ivy, the poles, the backstop, the dugouts, the legend
 │   ├── soccer.ts       the soccer pitch
 │   ├── curling.ts      the curling sheet
+│   ├── curling.fold.ts the folded sheet: the whole sheet as a strip, its two houses enlarged beside it, the fan that joins them and their labels
 │   ├── net.ts          the court of tennis, volleyball, badminton, pickleball and table tennis
 │   ├── field.ts        a field sport's surface, drawn from its plan
 │   ├── soccer-spec.ts  the Laws' figures, the presets, futsal and the small-sided pitches
@@ -68,6 +69,8 @@ src/
 ├── charts.baseball.ts  the spray chart
 ├── charts.soccer.ts    the soccer shot map and goal mouth
 ├── charts.curling.ts   the curling stones chart and the score of an end
+├── charts.curling.heat.ts  the curling heat chart: where the stones of many ends came to rest, as cells, hexagons, a density, zones or discs
+├── curling.stats.ts    curling's statistics: the free guards, the stones in play, the ends (hammer, steals, forced ends) and the shots
 ├── charts.network.ts   the pass network chart
 ├── charts.types.ts     the charts' types
 ├── road.ts             roadToFinal: the two finalists' road to the final, as round marks of both teams with the score between them
