@@ -98,7 +98,7 @@ const entry = (name) => all[names.indexOf(${JSON.stringify(pkg.name + "/")} + na
 const athletics = entry("athletics");
 if (typeof athletics.laneDraw !== "function" || athletics.WA_STANDARD_TRACK.straight !== 84.39 || athletics.RACE_IDS.length !== 20) throw new Error("the athletics entry is wrong");
 const skating = entry("skating");
-if (typeof skating.skatingPairs !== "function" || skating.ISU_SHORT_TRACK.straight !== 28.85 || skating.RACE_IDS.length !== 10 || Math.abs(skating.longOval().straight - 113.57) > 0.01) throw new Error("the skating entry is wrong");
+if (typeof skating.skatingPairs !== "function" || skating.ISU_SHORT_TRACK.straight !== 28.85 || skating.RACE_IDS.length !== 12 || Math.abs(skating.longOval().straight - 113.57) > 0.01) throw new Error("the skating entry is wrong");
 const { NHL, fenceAt } = m1;
 if (NHL.length !== 200 || fenceAt([[-45, 300], [45, 300]], 0) !== 300) throw new Error("the geometry is wrong");
 const { kyogijoProps } = m4;
