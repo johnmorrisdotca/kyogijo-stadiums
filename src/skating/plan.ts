@@ -193,7 +193,8 @@ function shortRanges(plan: SkatingPlan): Record<string, MRange> {
   const r: Record<string, MRange> = {};
   r["home-straight"] = { x0: -S / 2 - 3, y0: o.blocks - 2, x1: S / 2 + 3, y1: W };
   r["crossing-straight"] = { x0: -S / 2 - 3, y0: -W, x1: S / 2 + 3, y1: -o.blocks + 2 };
-  r.bend = { left: { x0: -S / 2 - o.radius - 3, y0: -W, x1: -S / 2, y1: W }, right: { x0: S / 2, y0: -W, x1: S / 2 + o.radius + 3, y1: W } };
+  r["first-bend"] = { x0: S / 2, y0: -W, x1: S / 2 + o.radius + 3, y1: W };
+  r["second-bend"] = { x0: -S / 2 - o.radius - 3, y0: -W, x1: -S / 2, y1: W };
   r.finish = { x0: -10, y0: o.blocks - 4, x1: 10, y1: W };
   const lines = trackLines(plan.tracks);
   r.start = { x0: Math.min(...lines) - 8, y0: -W, x1: Math.max(...lines) + 8, y1: -o.blocks + 4 };

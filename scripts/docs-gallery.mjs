@@ -880,7 +880,7 @@ function skatingPage() {
         item("ska-short-seven", "Seven tracks", short({ skating: { tracks: 7, races: ["500m"] } })),
         item("ska-short-start", "A close-up of the 500 m's start", short({ range: "start", skating: { start: "500m" } })),
         item("ska-short-finish", "The finishing line", short({ range: "finish" })),
-        item("ska-short-bend", "A curve with its seven blocks", short({ range: "bend" })),
+        item("ska-short-bend", "A curve with its seven blocks", short({ range: "first-bend" })),
         item("ska-short-line", "Line drawing", short({ look: "line-drawing", skating: { races: ["500m"] } })),
       ]),
       section("figure", "The figure skating rink", "`league: \"isu-figure\"`: 60 m by 30 m if possible and never less than 56 m by 26 m, with the judges and the referee at the rinkboard, the technical panel and the kiss and cry.", [

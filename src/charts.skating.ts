@@ -10,6 +10,7 @@ import type { ReplayEvent, ReplayFrame, ReplayLook, ReplayObject, ReplayTimeline
 import { fill } from "./strings.ts";
 import type { SurfaceOptions } from "./types.ts";
 import { ELEMENT_KINDS, ELEMENT_NAMES, type ElementKind, raceById } from "./skating/events.ts";
+import { ISU_SHORT_TRACK } from "./leagues/skating.ts";
 import { disciplineOf, skatingPlan, type SkatingPlan } from "./skating/plan.ts";
 import { raceName } from "./skating/describe.ts";
 import { markRace } from "./skating/long.ts";
@@ -130,7 +131,7 @@ function longAt(oval: LongOval, race: LongTrackRace, lane: Lane, d: number): { x
 
 /** Where a skater of a short track race is when `d` metres have been skated from the starting position `position` (1 on the inner side). */
 function shortAt(oval: ShortOval, race: ShortTrackRace, position: number, d: number): { x: number; y: number; heading: number } {
-  const laps = ({ "500m": 4.5, "1000m": 9, "1500m": 13.5, "2000m": 18, "3000m": 27, "5000m": 45 } as const)[race];
+  const laps = ISU_SHORT_TRACK.laps[race];
   const total = laps * oval.lap;
   // The finishing line is the middle of the bottom straight: S/2 along it. A half-lap race starts at the middle of the top one.
   const finish = oval.straight / 2;
@@ -421,7 +422,7 @@ export function skatingReplay(runners: readonly SkatingRunner[], options: Skatin
   const step = isNum(options.step) && options.step > 0 ? options.step : 0.25;
   for (const r of runners) if (!isNum(r.time) || r.time <= 0) throw new RangeError(`${String(r.name)}: the time is a number of seconds above zero`);
   const total = (info as { distance: number }).distance;
-  const shortTotal = plan.short === undefined ? 0 : ({ "500m": 4.5, "1000m": 9, "1500m": 13.5, "2000m": 18, "3000m": 27, "5000m": 45 } as Record<string, number>)[race] * plan.short.lap;
+  const shortTotal = plan.short === undefined ? 0 : (ISU_SHORT_TRACK.laps as Record<string, number>)[race] * plan.short.lap;
   const duration = Math.max(...runners.map((r) => r.time), 0);
   const frames: ReplayFrame[] = [];
   const at = (r: SkatingRunner, d: number): { x: number; y: number } => {

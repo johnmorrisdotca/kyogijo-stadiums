@@ -103,6 +103,25 @@ console.log(JSON.stringify(throws.totals));
 
 Athletics has its own frame, `athletics`: metres from the middle of the track, x along the straights and y down, so that a data provider's numbers lie on the track as the frame says ([frames](./frames.md)). A heat layer counts into the zone set `athletics-track` (the finish straight, the first bend, the back straight, the second bend and the infield).
 
+## The Japanese words
+
+The Japanese is the Japan Association of Athletics Federations' own word where its rule book has one (the 競技規則 2026, which is the World Athletics Technical Rules in Japanese, and the 陸上競技場公認に関する細則). Television's word, where it differs, is an alias: a reader who searches for it finds the same part.
+
+| Part | The rule book's word | Where | Television's word (alias) |
+| --- | --- | --- | --- |
+| Pole vault box | ボックス | TR28.8 | ボックス |
+| Take-off board, long jump pit | 踏切板, 砂場 | TR29.3, TR30 | 砂場 |
+| Landing sector of a throw | 着地場所 (the range: 着地場所の範囲) | TR32.12 | 落下区域, 有効区域, 有効角度 |
+| The javelin's arc of 8 m radius | スターティング・ライン | TR32.9 | 投てき弧, スクラッチライン |
+| Shot put stop board | 足留材 | TR33.2 | ストップボード |
+| Discus and hammer cage | 囲い | TR35 | ケージ |
+| The straights and the bends | 直走路, 曲走路 (第1曲走路) | TR14.1, TR17.5.1 | ストレート, コーナー |
+| The finishing straight and the back straight | メイン側, バック・ストレート | 細則 第10条, TR17.5.1 | ホームストレート, バックストレート |
+| Takeover zone | テーク・オーバー・ゾーン | 細則 第10条 | テイクオーバーゾーン |
+| The breakline | ブレイクライン | TR17.5.1 | ブレークライン |
+| The steeplechase | 障害物競走 (3000m障害物競走) | TR17.5.2 | 障害 |
+| The covered track | 200mトラック（ショート・トラック）, 室内陸上競技場 | 競技規則 第5部, 細則 | 室内200mトラック |
+
 ## What is ours
 
 The shapes of the cages' rear (an arc about the circle's centre), the covered track's bends (one circle for the plan's three sections), the water jump's pit and the colours are ours, and the sources page says so. The grass of a sector is drawn out to the reach the standard arena draws (`SECTOR_REACH`: the shot's 25 m, the discus's 80 m, the hammer's 90 m, the javelin's 100 m), not to a record. Starting blocks, sponsors' boards, the photo-finish gantry and the officials' places are not drawn. The banking is drawn only on the covered track.

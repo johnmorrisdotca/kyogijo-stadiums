@@ -153,7 +153,7 @@ describe("the long track's drawing", () => {
 
   it("refuses a race it does not mark, naming the ones it does", () => {
     expect(() => drawKyogijo({ sport: "skating", skating: { races: ["marathon"] as never } })).toThrow(/Unknown race "marathon"/);
-    expect(() => drawKyogijo({ sport: "skating", skating: { races: ["2000m"] } })).toThrow(/does not mark the 2000m/);
+    expect(() => drawKyogijo({ sport: "skating", skating: { races: ["5000m-relay"] } })).toThrow(/does not mark the 5000m-relay/);
     expect(() => drawKyogijo({ sport: "skating", league: "isu-figure", skating: { races: ["500m"] } })).toThrow(/no races/);
     expect(() => drawKyogijo({ sport: "skating", skating: { infield: "grass" as never } })).toThrow(/floor/);
     expect(() => drawKyogijo({ sport: "skating", skating: { blocks: 1 as never } })).toThrow(TypeError);
@@ -282,7 +282,7 @@ describe("the drawings and their words", () => {
 
   it("has a range for every part it names, smaller than the whole, wide and tall", () => {
     const whole = parseXml(drawKyogijo({ sport: "skating" })).attrs.viewBox.split(" ").map(Number);
-    const sets: Record<string, string[]> = { "isu-long-track": ["home-straight", "crossing-straight", "first-bend", "second-bend", "finish", "start", "infield"], "isu-short-track": ["home-straight", "crossing-straight", "bend", "finish", "start", "infield"], "isu-figure": ["half", "judges", "kiss-and-cry"] };
+    const sets: Record<string, string[]> = { "isu-long-track": ["home-straight", "crossing-straight", "first-bend", "second-bend", "finish", "start", "infield"], "isu-short-track": ["home-straight", "crossing-straight", "first-bend", "second-bend", "finish", "start", "infield"], "isu-figure": ["half", "judges", "kiss-and-cry"] };
     for (const [league, names] of Object.entries(sets)) {
       const w = parseXml(drawKyogijo({ sport: "skating", league })).attrs.viewBox.split(" ").map(Number);
       for (const name of names) {

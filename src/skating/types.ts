@@ -8,7 +8,7 @@ export type SkatingDiscipline = "long-track" | "short-track" | "figure";
 export type LongTrackRace = "500m" | "1000m" | "1500m" | "3000m" | "5000m" | "10000m" | "mass-start" | "team-pursuit" | "team-sprint";
 
 /** The races of the short track whose lines are marked. */
-export type ShortTrackRace = "500m" | "1000m" | "1500m" | "2000m" | "3000m" | "5000m";
+export type ShortTrackRace = "500m" | "1000m" | "1500m" | "3000m" | "3000m-relay" | "5000m-relay" | "2000m-mixed-relay";
 
 /** Every race a drawing can mark. */
 export type SkatingRace = LongTrackRace | ShortTrackRace;

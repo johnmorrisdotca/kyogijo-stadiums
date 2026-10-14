@@ -551,10 +551,10 @@ function skatingZones(ctx: ZoneContext): ZoneShape[] {
   const west = `M${p(-S / 2, Ro)}${arc(Ro, 1)} ${p(-S / 2, -Ro)}V${num(cy - R * k)}${arc(R, 0)} ${p(-S / 2, R)}Z`;
   return [
     { id: "infield", name: w.trackInfield, d: stadium(R), label: [cx, cy], room: [S * k, R * k], has: (x, y) => { const [u, v] = m(x, y); return inside(u, v, R); } },
-    { id: "home-straight", name: w.homeStraight, d: `M${p(-S / 2, R)}H${num(cx + (S / 2) * k)}V${num(cy + Ro * k)}H${num(cx - (S / 2) * k)}Z`, label: [cx, cy + ((R + Ro) / 2) * k], room: [S * k, (Ro - R) * k], has: (x, y) => { const [u, v] = m(x, y); return onIce(u, v) && Math.abs(u) <= S / 2 && v > 0; } },
-    { id: "first-curve", name: w.firstBend, d: east, label: [cx + (S / 2 + (R + Ro) / 2) * k, cy], room: [(Ro - R) * k, R * k], has: (x, y) => { const [u, v] = m(x, y); return onIce(u, v) && u > S / 2; } },
+    { id: "home-straight", name: w.finishStraight, d: `M${p(-S / 2, R)}H${num(cx + (S / 2) * k)}V${num(cy + Ro * k)}H${num(cx - (S / 2) * k)}Z`, label: [cx, cy + ((R + Ro) / 2) * k], room: [S * k, (Ro - R) * k], has: (x, y) => { const [u, v] = m(x, y); return onIce(u, v) && Math.abs(u) <= S / 2 && v > 0; } },
+    { id: "first-curve", name: w.firstCurve, d: east, label: [cx + (S / 2 + (R + Ro) / 2) * k, cy], room: [(Ro - R) * k, R * k], has: (x, y) => { const [u, v] = m(x, y); return onIce(u, v) && u > S / 2; } },
     { id: "crossing-straight", name: w.crossingStraight, d: `M${p(-S / 2, -Ro)}H${num(cx + (S / 2) * k)}V${num(cy - R * k)}H${num(cx - (S / 2) * k)}Z`, label: [cx, cy - ((R + Ro) / 2) * k], room: [S * k, (Ro - R) * k], has: (x, y) => { const [u, v] = m(x, y); return onIce(u, v) && Math.abs(u) <= S / 2 && v < 0; } },
-    { id: "second-curve", name: w.secondBend, d: west, label: [cx - (S / 2 + (R + Ro) / 2) * k, cy], room: [(Ro - R) * k, R * k], has: (x, y) => { const [u, v] = m(x, y); return onIce(u, v) && u < -S / 2; } },
+    { id: "second-curve", name: w.secondCurve, d: west, label: [cx - (S / 2 + (R + Ro) / 2) * k, cy], room: [(Ro - R) * k, R * k], has: (x, y) => { const [u, v] = m(x, y); return onIce(u, v) && u < -S / 2; } },
   ];
 }
 

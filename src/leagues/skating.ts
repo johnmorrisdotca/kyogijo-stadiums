@@ -56,8 +56,8 @@ export interface ShortTrackFigures {
   line: number;
   /** The starting positions of the 500 m and the 1000 m: five dots of 2 cm every 1.3 m, from 50 cm out from the inner side of the track (Rule 280.2c). */
   dots: { count: number; step: number; from: number; diameter: number };
-  /** The laps of each distance (the diagram). */
-  laps: { "500m": number; "1000m": number; "1500m": number; "2000m": number; "3000m": number; "5000m": number };
+  /** The laps of each distance (the diagram): 500 m = 4 1/2 laps ... 5000 m = 45 laps. At the ISU Championships and the Olympic Winter Games the 3000 m is the women's relay, the 5000 m the men's and the 2000 m the mixed relay (Rule 281.1a); the individual distances are 500, 1000 and 1500 m, and 3000 m in the World Cup. */
+  laps: { "500m": number; "1000m": number; "1500m": number; "3000m": number; "3000m-relay": number; "5000m-relay": number; "2000m-mixed-relay": number };
   /** The inner surface of the track, coloured, lies this far inside the blocks (the diagram: the finishing line reaches 1.5 m in). */
   inner: number;
 }
@@ -128,7 +128,7 @@ export const ISU_SHORT_TRACK: ShortTrackFigures = {
   finishExtra: 1.5,
   line: 0.02,
   dots: { count: 5, step: 1.3, from: 0.5, diameter: 0.02 },
-  laps: { "500m": 4.5, "1000m": 9, "1500m": 13.5, "2000m": 18, "3000m": 27, "5000m": 45 },
+  laps: { "500m": 4.5, "1000m": 9, "1500m": 13.5, "3000m": 27, "3000m-relay": 27, "5000m-relay": 45, "2000m-mixed-relay": 18 },
   inner: 1.5,
 };
 

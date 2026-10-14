@@ -17,14 +17,18 @@ export const LONG_TRACK_RACES: readonly RaceInfo[] = Object.freeze([
   race({ id: "team-sprint", distance: 1200, name: { en: "Team sprint", ja: "チームスプリント", fr: "Sprint par équipes" } }),
 ]);
 
-/** The races of the short track. */
+/**
+ * The races of the short track: the individual 500, 1000 and 1500 m, the 3000 m of the World Cup, and the relays: the women's 3000 m, the men's 5000 m and the mixed 2000 m (Rule 281.1a, which gives the
+ * distances of the ISU Championships; the diagram of the tracks gives the laps of each distance).
+ */
 export const SHORT_TRACK_RACES: readonly RaceInfo[] = Object.freeze([
   race({ id: "500m", distance: 500, name: { en: "500 m", ja: "500m", fr: "500\u00a0m" } }),
   race({ id: "1000m", distance: 1000, name: { en: "1000 m", ja: "1000m", fr: "1000\u00a0m" } }),
   race({ id: "1500m", distance: 1500, name: { en: "1500 m", ja: "1500m", fr: "1500\u00a0m" } }),
-  race({ id: "2000m", distance: 2000, name: { en: "2000 m", ja: "2000m", fr: "2000\u00a0m" } }),
   race({ id: "3000m", distance: 3000, name: { en: "3000 m", ja: "3000m", fr: "3000\u00a0m" } }),
-  race({ id: "5000m", distance: 5000, name: { en: "5000 m", ja: "5000m", fr: "5000\u00a0m" } }),
+  race({ id: "3000m-relay", distance: 3000, name: { en: "3000 m relay", ja: "3000mリレー", fr: "Relais 3000\u00a0m" } }),
+  race({ id: "5000m-relay", distance: 5000, name: { en: "5000 m relay", ja: "5000mリレー", fr: "Relais 5000\u00a0m" } }),
+  race({ id: "2000m-mixed-relay", distance: 2000, name: { en: "2000 m mixed relay", ja: "2000m混合リレー", fr: "Relais mixte 2000\u00a0m" } }),
 ]);
 
 /** Every race of both tracks, once by id. */

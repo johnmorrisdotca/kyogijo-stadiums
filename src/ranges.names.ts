@@ -47,9 +47,8 @@ export const RANGES: Readonly<Record<Sport, readonly RangeInfo[]>> = Object.free
   skating: Object.freeze([
     range("home-straight", undefined, ["isu-long-track", "isu-short-track"]),
     range("crossing-straight", undefined, ["isu-long-track", "isu-short-track"]),
-    range("first-bend", "right", ["isu-long-track"]),
-    range("second-bend", "left", ["isu-long-track"]),
-    range("bend", "right", ["isu-short-track"]),
+    range("first-bend", "right", ["isu-long-track", "isu-short-track"]),
+    range("second-bend", "left", ["isu-long-track", "isu-short-track"]),
     range("finish", undefined, ["isu-long-track", "isu-short-track"]),
     range("start", undefined, ["isu-long-track", "isu-short-track"]),
     range("infield", undefined, ["isu-long-track", "isu-short-track"]),

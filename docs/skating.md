@@ -10,7 +10,7 @@ const start = drawKyogijo({ sport: "skating", league: "isu-short-track", range: 
 console.log(track.includes('data-sport="skating"'), start.match(/viewBox="([^"]*)"/)?.[1]);
 // true 59.9 0.84 80.34 37.69
 console.log(RANGES.skating.map((range) => range.id).join(", "));
-// home-straight, crossing-straight, first-bend, second-bend, bend, finish, start, infield, half, judges, kiss-and-cry
+// home-straight, crossing-straight, first-bend, second-bend, finish, start, infield, half, judges, kiss-and-cry
 ```
 
 ## The long track
@@ -56,7 +56,7 @@ console.log(startOf(oval, 0, 1500, finish, true).pose.x.toFixed(2), startOf(oval
 
 ## The short track
 
-The oval is 111.12 m round: two straights of S = 28.85 m between the centres of the curves and a track line of C = R8.50 m; the blocks stand 0.5 m inside it, on R8.00 m, seven in each curve (Rule 280.4). The rink is at least 60 by 30 m (Rule 280.1a), the barrier at least 7 m from the line of the blocks (Rule 280.1b); a line is drawn between the last block of a curve and the first of the next (Rule 280.1g). Beside the standard track the diagram lays out four or six more, each moved along the straight (1.00 m for five tracks, 0.70 m for seven), with starting lines 2.00 m or 1.40 m apart: a track moved by δ starts the half-lap races 2δ along the straight, so that the single finishing line, in the middle of the finishing straight, is a half lap on. The 500 m (4½ laps) and the 1500 m (13½) start on the straight opposite the finishing line, the others (9, 18, 27 and 45 laps) at it. The finishing line is the width of the straight and 1.5 m more, the lines at most 2 cm wide (Rule 280.2), and the starting positions of the 500 m and the 1000 m are five dots every 1.3 m from 50 cm out from the inner side (Rule 280.2c).
+The oval is 111.12 m round: two straights of S = 28.85 m between the centres of the curves and a track line of C = R8.50 m; the blocks stand 0.5 m inside it, on R8.00 m, seven in each curve (Rule 280.4). The rink is at least 60 by 30 m (Rule 280.1a), the barrier at least 7 m from the line of the blocks (Rule 280.1b); a line is drawn between the last block of a curve and the first of the next (Rule 280.1g). Beside the standard track the diagram lays out four or six more, each moved along the straight (1.00 m for five tracks, 0.70 m for seven), with starting lines 2.00 m or 1.40 m apart: a track moved by δ starts the half-lap races 2δ along the straight, so that the single finishing line, in the middle of the finishing straight, is a half lap on. The 500 m (4½ laps) and the 1500 m (13½) start on the straight opposite the finishing line, the others (9, 18, 27 and 45 laps: the 1000 m, the mixed relay, the 3000 m and its relay, the 5000 m relay) at it. The finishing line is the width of the straight and 1.5 m more, the lines at most 2 cm wide (Rule 280.2), and the starting positions of the 500 m and the 1000 m are five dots every 1.3 m from 50 cm out from the inner side (Rule 280.2c).
 
 ## The figure skating rink
 
@@ -72,13 +72,13 @@ Everything is optional. `skating` takes:
 | `laneWidth` | Long track: the outer lane's width, 4 m to 6 m. |
 | `warmUp`, `blocks`, `coaches`, `padding` | Long track (the blocks and the padding the short track's too): on by default; `false` leaves the part out. |
 | `infield` | Long track: `floor` (the default) or `ice`. |
-| `races` | Long and short track: the races whose starting lines are drawn: none by default, `"all"` or a list (`500m`, `1000m`, `1500m`, `3000m`, `5000m`, `10000m`, `mass-start`, `team-pursuit`, `team-sprint` on the long track; `500m` to `5000m` on the short). The finishing line is always drawn. |
+| `races` | Long and short track: the races whose starting lines are drawn: none by default, `"all"` or a list (`500m`, `1000m`, `1500m`, `3000m`, `5000m`, `10000m`, `mass-start`, `team-pursuit`, `team-sprint` on the long track; `500m`, `1000m`, `1500m`, `3000m`, `3000m-relay`, `5000m-relay` and `2000m-mixed-relay` on the short: the relays are the women's, the men's and the mixed distances of the ISU Championships, Rule 281.1a). The finishing line is always drawn. |
 | `start` | The race of the close-up `range: "start"` (the 500 m by default). |
 | `tracks` | Short track: 5 or 7 tracks. |
 | `rink` | Short track: `{ length, width }`, at least 60 by 30 m. Figure skating: within 56 m to 60 m by 26 m to 30 m. |
 | `furniture` | Figure skating: all by default, `false` for none, or a list of `judges`, `referee`, `technical-panel` and `kiss-and-cry`. |
 
-`look` is any look (the ice, the boards and the lines take the hockey rink's colours: the lanes' lines are the look's blue, the starting and finishing lines its red); `line-drawing` is ink only. The lines take the ISU's colours: blue for the lanes' demarcation, red for the starting, finishing and coaches' lines. `range` crops to a part: `home-straight`, `crossing-straight`, `first-bend`, `second-bend`, `finish`, `start` and `infield` on the long track; `home-straight`, `crossing-straight`, `bend`, `finish`, `start` and `infield` on the short; `half`, `judges` and `kiss-and-cry` on the figure skating rink.
+`look` is any look (the ice, the boards and the lines take the hockey rink's colours: the lanes' lines are the look's blue, the starting and finishing lines its red); `line-drawing` is ink only. The lines take the ISU's colours: blue for the lanes' demarcation, red for the starting, finishing and coaches' lines. `range` crops to a part: `home-straight`, `crossing-straight`, `first-bend`, `second-bend`, `finish`, `start` and `infield` on the long track; `home-straight`, `crossing-straight`, `first-bend`, `second-bend`, `finish`, `start` and `infield` on the short; `half`, `judges` and `kiss-and-cry` on the figure skating rink.
 
 ## The data
 
@@ -104,6 +104,23 @@ console.log(elements.totals.elements, elements.totals.kinds.jump);
 | `figureElements(elements, options)` | The elements of a programme as marks on the rink: a shape for each kind (a jump, a spin, a step sequence, a choreographic sequence, a lift, a spiral, a twizzle, a death spiral, a throw jump), the track of a sequence as a dashed line, the order and the name beside it. |
 
 Skating has its own frame, `skating`: metres from the middle of the rink, x along it and y down ([frames](./frames.md)). A heat layer counts into the zone set `skating-track` (the finishing straight, the first curve, the crossing straight, the second curve and the infield; a figure skating rink in thirds).
+
+## The Japanese words
+
+Where the Japan Skating Federation's own rule books are not on the web, the Japanese is the Japanese translation of the ISU's Special Regulations and Technical Rules Speed Skating (the 2018 edition, kept by the Aomori skating association), the Federation's teaching text (スピードスケート指導教本) and its viewing guide. Television's word, where it differs, is an alias.
+
+| Part | The word | Where | Television's word (alias) |
+| --- | --- | --- | --- |
+| The two lanes of a pair | インレーン, アウトレーン | Rules 253.3.1 and 254; the teaching text | インコース, アウトコース |
+| The crossing straight, the finishing straight | 交差ストレート (交差エリア), フィニッシュ側ストレート | Rules 203.2, 254.5 and 227.2 | バックストレート, ホームストレート |
+| The curves | カーブ | the same rules; the guide: カーブの半径8m | コーナー |
+| The warm-up lane, the blocks, the cones | ウォームアップレーン, ブロック, コーン | Rules 205 and 226 | |
+| The padding, the coaches' area, the pre-start line | 防護マット, コーチエリア, プレ-スタートライン | Rules 228.2, 227.3 and 227.2 | |
+| The mass start, the team races | マススタート, チームパシュート, チームスプリント | Rules 256 and 257 | |
+| The tracks of the short track | トラック (標準ショートトラック) | the Federation's 大会要項 | コース |
+| The relays | 3000mリレー, 5000mリレー, 2000m混合リレー | Rule 281.1a; the JOC | |
+
+The figure skating furniture (ジャッジ席, テクニカルパネル, レフェリー, キス・アンド・クライ) has no word in a rule book that could be read: it is the usual one.
 
 ## What is ours
 

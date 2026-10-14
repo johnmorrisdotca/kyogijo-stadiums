@@ -26,8 +26,8 @@ export const RACES: readonly RaceInfo[] = Object.freeze([
   race({ id: "3000m", distance: 3000, kind: "curved", group: true, name: { en: "3000 m", ja: "3000m", fr: "3000\u00a0m" } }),
   race({ id: "5000m", distance: 5000, kind: "curved", group: true, name: { en: "5000 m", ja: "5000m", fr: "5000\u00a0m" } }),
   race({ id: "10000m", distance: 10000, kind: "curved", group: true, name: { en: "10,000 m", ja: "10000m", fr: "10\u00a0000\u00a0m" } }),
-  race({ id: "2000m-steeplechase", distance: 2000, kind: "steeplechase", name: { en: "2000 m steeplechase", ja: "2000m障害", fr: "2000\u00a0m steeple" } }),
-  race({ id: "3000m-steeplechase", distance: 3000, kind: "steeplechase", group: true, name: { en: "3000 m steeplechase", ja: "3000m障害", fr: "3000\u00a0m steeple" } }),
+  race({ id: "2000m-steeplechase", distance: 2000, kind: "steeplechase", name: { en: "2000 m steeplechase", ja: "2000m障害物競走", fr: "2000\u00a0m steeple" } }),
+  race({ id: "3000m-steeplechase", distance: 3000, kind: "steeplechase", group: true, name: { en: "3000 m steeplechase", ja: "3000m障害物競走", fr: "3000\u00a0m steeple" } }),
   race({ id: "4x100m", distance: 400, kind: "stagger", bends: 2, legs: [100, 100, 100, 100], name: { en: "4 x 100 m relay", ja: "4×100mリレー", fr: "Relais 4\u00a0×\u00a0100\u00a0m" } }),
   race({ id: "4x400m", distance: 1600, kind: "stagger", bends: 3, breakline: true, legs: [400, 400, 400, 400], name: { en: "4 x 400 m relay", ja: "4×400mリレー", fr: "Relais 4\u00a0×\u00a0400\u00a0m" } }),
 ]);

@@ -126,9 +126,8 @@ const RANGE_COVERS = {
   skating: {
     "home-straight": "the finishing straight with its lanes (the long track) or the finishing line's straight (the short track)",
     "crossing-straight": "the straight where the lanes are changed, with the coaches' area (the long track)",
-    "first-bend": "the right-hand curve, entered from the finishing straight",
+    "first-bend": "the right-hand curve, entered from the finishing straight (with its seven blocks on the short track)",
     "second-bend": "the left-hand curve, entered from the crossing straight",
-    bend: "one curve of the short track, with its blocks",
     finish: "the finishing line, with the lines 1 m apart before it",
     start: "the starting lines of the race in `skating.start`",
     infield: "the warm-up lane and the ground inside the track",
