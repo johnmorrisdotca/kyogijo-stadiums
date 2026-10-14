@@ -8,6 +8,7 @@ import { fieldAttributes } from "./field.data.ts";
 import { ERA_SPORTS, footballIn, rulesFor, seasonLabel, type EraSport } from "./eras.ts";
 import { FOOTBALL } from "./geometry.ts";
 import { renderLayers } from "./layers.ts";
+import { arenaById, arenaCourtIn, arenaNameIn, arenaOfficialName, arenaRinkIn } from "./arenas.ts";
 import { groundById, groundNameIn, groundOfficialName } from "./grounds.ts";
 import { BOARD, courtFor, hasSetsBoard, isNetLeague, isNetSport, type CourtPlan } from "./court.ts";
 import { cricketBoardMarkup } from "./cricket.board.ts";
@@ -77,6 +78,8 @@ import { fieldSurface } from "./surfaces/field.ts";
 import { basketball } from "./surfaces/basketball.ts";
 import { football } from "./surfaces/football.ts";
 import { hockey } from "./surfaces/hockey.ts";
+import { NHL_RINK } from "./leagues/hockey.ts";
+import { NBA_COURT } from "./leagues/basketball.ts";
 import { soccer } from "./surfaces/soccer.ts";
 import { frameMatrix, layoutFromFrame, resolveFrame } from "./surfaces/soccer-providers.ts";
 import { composeSpecial, hostSport } from "./special.ts";
@@ -323,10 +326,17 @@ function buildWhole(o: SurfaceOptions, portrait: boolean, id: string, score: boo
       const season = rulesFor(sport, o.year).rules;
       return football(footballIn(sport, o.year), common, { hashMarks: season.hash !== null, postShape: season.postShape });
     }
-    case "nhl":
+    case "nhl": {
+      // An arena's rink is the size its sources publish, with the markings of the season asked for; an arena with none published has the NHL's.
+      const sized = league === undefined ? arenaRinkIn(arenaById(o.arena), o.year) : undefined;
+      if (sized !== undefined) return hockey(common, rulesFor("nhl", o.year).rules, { ...NHL_RINK, length: sized.length, width: sized.width });
       return league?.family === "hockey" ? hockey(common, undefined, rinkOf(league, o.year)) : hockey(common, rulesFor("nhl", o.year).rules);
-    case "nba":
+    }
+    case "nba": {
+      const sized = league === undefined ? arenaCourtIn(arenaById(o.arena), o.year) : undefined;
+      if (sized !== undefined) return basketball(common, rulesFor("nba", o.year).rules, { ...NBA_COURT, length: sized.length, width: sized.width });
       return league?.family === "basketball" ? basketball(common, undefined, courtOf(league, o.year)) : basketball(common, rulesFor("nba", o.year).rules);
+    }
     case "mlb": {
       if (league?.family === "baseball") {
         const diamond = diamondOf(league, o.year);
@@ -679,7 +689,11 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
   // A league other than the sport's own is named by its rulebook's, and its description is made from its figures.
   const trackGround = sport === "athletics" ? groundById(o.ground) : undefined;
   const trackGroundName = trackGround === undefined ? undefined : groundNameIn(trackGround, o.year, language);
-  const surfaceName = trackGroundName !== undefined ? fill(words.athletics.ground, { ground: trackGroundName }) : groundName !== undefined ? (language === "ja" ? `${groundName}のピッチ` : `${groundName}, soccer pitch`) : league !== undefined && parkName === undefined ? league.name[language] : parkName === undefined ? (pitch?.format === "futsal" ? words.soccer.futsal : words.surface[sport]) : language === "ja" ? `${parkName}のグラウンド` : `${parkName}, baseball field`;
+  // An arena names its rink or its court.
+  const arena = (sport === "nhl" || sport === "nba") && league === undefined ? arenaById(o.arena) : undefined;
+  const arenaName = arena === undefined ? undefined : arenaNameIn(arena, o.year, language);
+  const arenaSize = arena === undefined || arenaName === undefined ? undefined : sport === "nhl" ? arenaRinkIn(arena, o.year) : arenaCourtIn(arena, o.year);
+  const surfaceName = arenaName !== undefined ? fill(sport === "nhl" ? words.said.arenaRink : words.said.arenaCourt, { arena: arenaName }) : trackGroundName !== undefined ? fill(words.athletics.ground, { ground: trackGroundName }) : groundName !== undefined ? (language === "ja" ? `${groundName}のピッチ` : `${groundName}, soccer pitch`) : league !== undefined && parkName === undefined ? league.name[language] : parkName === undefined ? (pitch?.format === "futsal" ? words.soccer.futsal : words.surface[sport]) : language === "ja" ? `${parkName}のグラウンド` : `${parkName}, baseball field`;
   const { stop, colon, gap } = words.said;
   const sentence = (text: string): string => (/[.。]$/.test(text) ? text : `${text}${stop}`);
   const metres = (value: number): string => String(Math.round(value * 10) / 10);
@@ -688,7 +702,9 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
   const field = isFieldSport(sport) ? fieldPlan({ ...o, sport }) : undefined;
   const pools = isPoolSport(sport) ? poolDescription({ sport, pool: o.pool }, language) : undefined;
   const poolLine = pools === undefined ? "" : pools.after.map((line) => `${gap}${line}`).join("");
-  const aboutText = pools !== undefined ? pools.about : isBudoSport(sport) ? budoAbout(o, language) : sport === "skating" ? skatingAbout(o, language) : sport === "athletics" ? athleticsAbout(o, language) : field !== undefined ? leagueAbout(league ?? LEAGUES[sport as FieldSport][0], o.year, language, { length: field.length, width: field.width }) : plan !== undefined ? leagueAbout(plan.league, o.year, language, plan.spec) : league !== undefined ? leagueAbout(league, o.year, language) : pitch === undefined ? words.about[sport] : fill(pitch.format === "futsal" ? words.soccer.aboutFutsal : words.about.soccer, { length: metres(pitch.length), width: metres(pitch.width) });
+  // An arena of a size of its own says what it is at that size.
+  const arenaAbout = arenaSize === undefined ? undefined : fill(sport === "nhl" ? words.said.arenaRinkAbout : words.said.arenaCourtAbout, { length: metres(arenaSize.length), width: metres(arenaSize.width), lengthM: metres(arenaSize.length * 0.3048), widthM: metres(arenaSize.width * 0.3048) });
+  const aboutText = arenaAbout !== undefined ? arenaAbout : pools !== undefined ? pools.about : isBudoSport(sport) ? budoAbout(o, language) : sport === "skating" ? skatingAbout(o, language) : sport === "athletics" ? athleticsAbout(o, language) : field !== undefined ? leagueAbout(league ?? LEAGUES[sport as FieldSport][0], o.year, language, { length: field.length, width: field.width }) : plan !== undefined ? leagueAbout(plan.league, o.year, language, plan.spec) : league !== undefined ? leagueAbout(league, o.year, language) : pitch === undefined ? words.about[sport] : fill(pitch.format === "futsal" ? words.soccer.aboutFutsal : words.about.soccer, { length: metres(pitch.length), width: metres(pitch.width) });
   const about = `${words.said.on}${colon}${aboutText}${stop}${sport === "athletics" ? athleticsSentences(o, language) : sport === "skating" ? skatingSentences(o, language) : isBudoSport(sport) ? budoSentences(o, language) : ""}`;
   const halfLine = pitch !== undefined && !isScore(o) && (o.half === "left" || o.half === "right") ? `${gap}${words.soccer.half}` : "";
   // What the ground says about the size: that it is the published one, or that the ground has none and the international pitch is drawn.
@@ -700,7 +716,9 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
   // A park's walls and quirks that are drawn are said too.
   const ballpark = park === undefined ? undefined : ballparkFor(o);
   const special = specialText(o, language, surfaceName);
-  const parkLine = (parkName === undefined ? `${groundLine}${halfLine}` : `${gap}${fill(words.said.park, { park: parkName })}${officially(parkOfficial)}${ballpark === undefined ? "" : ballparkSentences(ballpark).map((line) => `${gap}${line}`).join("")}`) + (special === undefined ? "" : `${gap}${special.text}`);
+  // What the arena says about the size: that it is the one its sources publish, or that its rink is said to have been shorter and no size is given.
+  const arenaLine = arenaName === undefined ? "" : `${arenaSize !== undefined ? `${gap}${fill(words.said.arenaSize, { arena: arenaName })}` : sport === "nhl" && arena?.rinkUnknown === true ? `${gap}${fill(words.said.arenaUnknown, { arena: arenaName })}` : ""}${officially(arena === undefined ? undefined : arenaOfficialName(arena, language, year))}`;
+  const parkLine = (parkName === undefined ? `${groundLine}${halfLine}${arenaLine}` : `${gap}${fill(words.said.park, { park: parkName })}${officially(parkOfficial)}${ballpark === undefined ? "" : ballparkSentences(ballpark).map((line) => `${gap}${line}`).join("")}`) + (special === undefined ? "" : `${gap}${special.text}`);
   // A drawing of a past season says which: the markings are those of that season.
   const dated = typeof o.year === "number" && Number.isFinite(o.year);
   const eraLine =

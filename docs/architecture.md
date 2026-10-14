@@ -238,7 +238,10 @@ src/
 ├── grounds.ts          the soccer grounds
 ├── grounds.data.ts     made by scripts/build-grounds.mjs
 ├── grounds-entry.ts    the grounds' entry
-├── atlas.ts            every park and ground with its place, its tenants and the surfaces it offers, and the filters
+├── arenas.ts           the hockey and basketball arenas: their names, seats and the rink or court sizes the sources publish
+├── arenas.data.ts      made by scripts/build-arenas.mjs from scripts/arenas.data.json
+├── arenas-entry.ts     the arenas' entry
+├── atlas.ts            every park, ground and arena with its place, its tenants and the surfaces it offers, and the filters
 ├── tenants.ts          the clubs that played in a place: their types, the sport each draws as and the leagues that ask for no surface
 ├── tenants.data.ts     made by scripts/build-tenants.mjs from scripts/tenants.wikidata.json
 ├── atlas-entry.ts      the atlas' entry

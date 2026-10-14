@@ -121,6 +121,11 @@
       "import": "./dist/eras-entry.js",
       "default": "./dist/eras-entry.js"
     },
+    "./arenas": {
+      "types": "./dist/arenas-entry.d.ts",
+      "import": "./dist/arenas-entry.js",
+      "default": "./dist/arenas-entry.js"
+    },
     "./grounds": {
       "types": "./dist/grounds-entry.d.ts",
       "import": "./dist/grounds-entry.js",
@@ -255,6 +260,9 @@
     "test:readme": "pnpm build && node scripts/check-readme-examples.mjs",
     "docs:make": "node scripts/docs.mjs",
     "parks": "node scripts/build-parks.mjs",
+    "arenas": "node scripts/build-arenas.mjs",
+    "arenas:fetch": "node scripts/fetch-arenas.mjs",
+    "arenas:check": "node scripts/check-arenas.mjs",
     "grounds": "node scripts/build-grounds.mjs",
     "grounds:check": "node scripts/check-grounds.mjs",
     "parks:coordinates": "node scripts/fetch-park-coordinates.mjs",

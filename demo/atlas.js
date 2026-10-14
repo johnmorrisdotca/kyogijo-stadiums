@@ -1,7 +1,7 @@
-// The demo's Atlas: a world map (chizu) with a marker on every ballpark and soccer ground, filters, a list that does everything the
+// The demo's Atlas: a world map (chizu) with a marker on every ballpark, soccer ground and hockey and basketball arena, filters, a list that does everything the
 // markers do (so a keyboard or a screen reader needs no marker), and the chosen place's surface drawn beside it by kyogijo.
 // The map's modules are chizu's own (copied into ./chizu by `pnpm site`) and the places are the package's `atlas` entry.
-import { GROUNDS, drawKyogijo } from "./dist/index.js";
+import { ARENAS, GROUNDS, arenaCourtIn, arenaRinkIn, drawKyogijo } from "./dist/index.js";
 import { PLACES, atlasFacets, hallSurfaces, officialName, placeById, placesBy, plainName, surfaceOf, surfacesOf } from "./dist/atlas-entry.js";
 import { ATLAS_MARK_STYLE, markIcon, markSvg } from "./atlas-marks.js";
 
@@ -14,7 +14,7 @@ const LEAGUES = {
   Eredivisie: "atlasLeague_eredivisie", "Primeira Liga": "atlasLeague_primeira", "Scottish Premiership": "atlasLeague_scottish", "Negro leagues": "atlasLeague_negro",
 };
 /** The leagues and tournaments a visitor looks for first: the rest follow, past and present. */
-const MAIN_LEAGUES = ["MLB", "NPB", "NFL", "CFL", "NBA", "NHL", "MLS", "FIFA World Cup", "FIFA Women's World Cup"];
+const MAIN_LEAGUES = ["MLB", "NPB", "NFL", "CFL", "NBA", "NHL", "WNBA", "PWHL", "MLS", "FIFA World Cup", "FIFA Women's World Cup"];
 /** The words that name a surface a place offers, by the key `surfaceKey` gives it. */
 const SURFACE_WORDS = { mlb: "atlasSurface_mlb", soccer: "atlasSurface_soccer", nfl: "atlasSurface_nfl", cfl: "atlasSurface_cfl", nba: "atlasSurface_nba", nhl: "atlasSurface_nhl", rugby: "atlasSurface_rugby", "rugby-nrl": "atlasSurface_nrl", afl: "atlasSurface_afl", cricket: "atlasSurface_cricket" };
 const surfaceKey = (surface) => (surface.league === undefined ? surface.sport : `${surface.sport}-${surface.league}`);
@@ -180,7 +180,7 @@ export async function initAtlas({ say, lang, onTry }) {
       group.append(button);
     }
   }
-  makeSeg("atlas-sport", ["all", "baseball", "soccer", "budo"], (v) => say(v === "all" ? "atlasAll" : `atlasSport_${v}`), () => state.sport, (v) => { state.sport = v; });
+  makeSeg("atlas-sport", ["all", "baseball", "soccer", "hockey", "basketball", "budo"], (v) => say(v === "all" ? "atlasAll" : `atlasSport_${v}`), () => state.sport, (v) => { state.sport = v; });
   makeSeg("atlas-status", ["all", "current", "past"], (v) => say(v === "all" ? "atlasAll" : `atlasStatus_${v}`), () => state.status, (v) => { state.status = v; });
 
   function fillSelects() {
@@ -239,7 +239,7 @@ export async function initAtlas({ say, lang, onTry }) {
     $("atlas-search").placeholder = say("atlasSearchPlaceholder");
     $("atlas-list").setAttribute("aria-label", say("atlasListLabel"));
     // The key: the sport by colour and by the dot, the status by shape.
-    $("atlas-key").replaceChildren(...[["baseball", "current", "atlasKeyBaseball"], ["soccer", "current", "atlasKeySoccer"], ["budo", "current", "atlasKeyBudo"], ["baseball", "current", "atlasKeyCurrent"], ["baseball", "past", "atlasKeyPast"]].map(([sport, status, key]) => {
+    $("atlas-key").replaceChildren(...[["baseball", "current", "atlasKeyBaseball"], ["soccer", "current", "atlasKeySoccer"], ["hockey", "current", "atlasKeyHockey"], ["basketball", "current", "atlasKeyBasketball"], ["budo", "current", "atlasKeyBudo"], ["baseball", "current", "atlasKeyCurrent"], ["baseball", "past", "atlasKeyPast"]].map(([sport, status, key]) => {
       const item = document.createElement("li");
       item.innerHTML = markIcon({ id: "", sport, status }, 16);
       item.append(document.createTextNode(` ${say(key)}`));
@@ -301,8 +301,15 @@ export async function initAtlas({ say, lang, onTry }) {
       return;
     }
     const options = { ...surfaceOf(place), size: "surface", orientation: "landscape", style: "none", language: lang() };
-    if (place.kind === "park" && state.yearOn) options.year = state.year;
+    // A park's fence and an arena's names and markings are those of the year picked.
+    if ((place.kind === "park" || place.kind === "arena") && state.yearOn) options.year = state.year;
     const ground = place.kind === "ground" ? GROUNDS[place.id] : undefined;
+    const arena = place.kind === "arena" ? ARENAS[place.id] : undefined;
+    const feet = (size) => `${size.length} × ${size.width} ft`;
+    // The size the sources publish in the year picked (or today), else the league's.
+    const rinkSize = arena === undefined ? undefined : arenaRinkIn(arena, state.yearOn ? state.year : undefined);
+    const courtSize = arena === undefined ? undefined : arenaCourtIn(arena, state.yearOn ? state.year : undefined);
+    const seats = arena?.capacity === undefined ? [] : [["hockey", arena.capacity.hockey], ["basketball", arena.capacity.basketball]].filter(([, n]) => n !== undefined).map(([sport, n]) => sentence(`atlasSeats_${sport}`, { n: n.toLocaleString(lang() === "ja" ? "ja-JP" : "en-US") }));
     const others = otherNames(place);
     const rows = [
       ["atlasPlace", `${place.city}, ${countryName(place.country)}`],
@@ -311,6 +318,9 @@ export async function initAtlas({ say, lang, onTry }) {
       ["atlasInUse", [say(`atlasStatus_${place.status}`), yearsOf(place)].filter(Boolean).join(" · ")],
       place.team === undefined ? null : ["atlasTeam", place.team],
       place.leagues.length === 0 ? null : ["atlasLeagues", place.leagues.map(leagueName).join(lang() === "ja" ? "、" : ", ")],
+      arena === undefined || !place.sports.includes("hockey") ? null : ["atlasRink", rinkSize === undefined ? say("atlasRinkStandard") : `${feet(rinkSize)}${lang() === "ja" ? `（${say("atlasSizePublished")}）` : ` (${say("atlasSizePublished")})`}`],
+      arena === undefined || !place.sports.includes("basketball") ? null : ["atlasCourt", courtSize === undefined ? say("atlasCourtStandard") : `${feet(courtSize)}${lang() === "ja" ? `（${say("atlasSizePublished")}）` : ` (${say("atlasSizePublished")})`}`],
+      seats.length === 0 ? null : ["atlasSeats", seats.join(lang() === "ja" ? "、" : ", ")],
       ground === undefined ? null : ["atlasPitch", `${ground.pitch.length} × ${ground.pitch.width} m${ground.pitchSize === "default" ? (lang() === "ja" ? `（${say("atlasPitchDefault")}）` : ` (${say("atlasPitchDefault")})`) : ""}`],
       ["atlasCoordinates", `${coordinate(place.lat, "N", "S")}, ${coordinate(place.lon, "E", "W")}`],
     ].filter(Boolean);

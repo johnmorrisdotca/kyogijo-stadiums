@@ -1,4 +1,4 @@
-// The atlas: every ballpark and soccer ground, and the famous halls of the budō, with where it stands, when it was in use and the clubs that played there, and the filters over them.
+// The atlas: every ballpark, soccer ground and hockey and basketball arena, and the famous halls of the budō, with where it stands, when it was in use and the clubs that played there, and the filters over them.
 export { PLACES, atlasFacets, hallSurfaces, placeById, placeByName, placesBy, placesByClub, placesByName, surfaceOf, surfacesOf, tenantsOf } from "./atlas.ts";
 export { HALLS } from "./halls.ts";
 export type { Hall, HallBasis, HallSurface } from "./halls.ts";

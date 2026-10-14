@@ -288,6 +288,16 @@ export interface KyogijoWords {
     /** A soccer ground drawn at its published size, or without one: {ground}. */
     ground: string;
     groundDefault: string;
+    /** The title of an arena's drawing: {arena}. */
+    arenaRink: string;
+    arenaCourt: string;
+    /** What an arena drawn at the size its sources publish is, in place of the league's description: {length} and {width} in feet, {lengthM} and {widthM} in metres. */
+    arenaRinkAbout: string;
+    arenaCourtAbout: string;
+    /** The size is the one published for {arena}. */
+    arenaSize: string;
+    /** An arena whose rink is said to have been shorter than the NHL's, with no size given: {arena}. */
+    arenaUnknown: string;
     /** A game decided on penalties: {name}, and the shoot-out score {a}-{b}, winner first. */
     wonPens: string;
     /** The shoot-out, as it is written beside a status: {a} and {b}, in the order of the sides on the drawing. */
@@ -1028,7 +1038,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
 
     },
     scoreTitle: "{away} {awayScore}, {home} {homeScore}",
-    said: { home: "home", away: "away", won: "{name} won.", tied: "The game is level.", park: "The outfield fence follows the figures published for {park}.", officially: "Its official name is {name}.", ground: "The pitch follows the size published for {ground}.", groundDefault: "No pitch size is published for {ground}, so the pitch has the international size of 105 by 68 metres.", era: "The markings are those of the {season} season.", hammer: "{name} has the hammer.", ends: "By end, {name}: {list}.", total: "Total", wonPens: "{name} won {a}-{b} on penalties.", pens: "{a}-{b} pens", on: "Drawn as", sep: ", ", stop: ".", colon: ": ", gap: " " },
+    said: { home: "home", away: "away", won: "{name} won.", tied: "The game is level.", park: "The outfield fence follows the figures published for {park}.", officially: "Its official name is {name}.", ground: "The pitch follows the size published for {ground}.", groundDefault: "No pitch size is published for {ground}, so the pitch has the international size of 105 by 68 metres.", arenaRink: "{arena}, hockey rink", arenaCourt: "{arena}, basketball court", arenaRinkAbout: "an ice hockey rink, {length} by {width} feet ({lengthM} by {widthM} metres) with rounded corners, with its red and blue lines, face-off circles, creases and goal nets", arenaCourtAbout: "a basketball court, {length} by {width} feet ({lengthM} by {widthM} metres), with its keys, three-point lines, free-throw circles and the centre circle", arenaSize: "The size is the one published for {arena}.", arenaUnknown: "The article says the rink of {arena} was shorter than the NHL's but gives no size, so the NHL's is drawn.", era: "The markings are those of the {season} season.", hammer: "{name} has the hammer.", ends: "By end, {name}: {list}.", total: "Total", wonPens: "{name} won {a}-{b} on penalties.", pens: "{a}-{b} pens", on: "Drawn as", sep: ", ", stop: ".", colon: ": ", gap: " " },
     budo: {
       sides: { north: "north", south: "south", east: "east", west: "west" },
       judo: "a judo contest area of {contest} by {contest} metres in a safety area {safety} metres wide, laid with tatami of {tatami}",
@@ -1574,7 +1584,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
 
     },
     scoreTitle: "{away} {awayScore}、{home} {homeScore}",
-    said: { home: "ホーム", away: "アウェイ", won: "{name}の勝ちです。", tied: "同点です。", park: "外野フェンスは、{park}の公表されている距離をもとに描かれています。", officially: "正式名称は{name}です。", ground: "ピッチは、{ground}の公表されている広さをもとに描かれています。", groundDefault: "{ground}のピッチの広さは公表されていないため、国際標準の105×68mで描かれています。", era: "ラインやマークは{season}シーズンのものです。", hammer: "{name}がハンマー（最後の1投）を持っています。", ends: "{name}のエンドごとの得点：{list}。", total: "合計", wonPens: "{name}がPK戦を{a}-{b}で制しました。", pens: "PK戦 {a}-{b}", on: "図の内容", sep: "、", stop: "。", colon: "：", gap: "" },
+    said: { home: "ホーム", away: "アウェイ", won: "{name}の勝ちです。", tied: "同点です。", park: "外野フェンスは、{park}の公表されている距離をもとに描かれています。", officially: "正式名称は{name}です。", ground: "ピッチは、{ground}の公表されている広さをもとに描かれています。", groundDefault: "{ground}のピッチの広さは公表されていないため、国際標準の105×68mで描かれています。", arenaRink: "{arena}のアイスホッケーリンク", arenaCourt: "{arena}のバスケットボールコート", arenaRinkAbout: "アイスホッケーのリンク。{length}フィート（約{lengthM}m）×{width}フィート（約{widthM}m）で角が丸く、レッドライン、ブルーライン、フェイスオフサークル、クリース、ゴールがあります", arenaCourtAbout: "バスケットボールのコート。{length}フィート（約{lengthM}m）×{width}フィート（約{widthM}m）で、ペイントエリア、スリーポイントライン、フリースローサークル、センターサークルがあります", arenaSize: "広さは、{arena}の公表されている数値をもとに描かれています。", arenaUnknown: "{arena}のリンクはNHLの規格より短かったとされていますが、広さが示されていないため、NHLの規格で描かれています。", era: "ラインやマークは{season}シーズンのものです。", hammer: "{name}がハンマー（最後の1投）を持っています。", ends: "{name}のエンドごとの得点：{list}。", total: "合計", wonPens: "{name}がPK戦を{a}-{b}で制しました。", pens: "PK戦 {a}-{b}", on: "図の内容", sep: "、", stop: "。", colon: "：", gap: "" },
     budo: {
       sides: { north: "北", south: "南", east: "東", west: "西" },
       judo: "柔道の試合場。試合場内は{contest}m四方、幅{safety}mの安全地帯があり、{tatami}の畳を敷いています",

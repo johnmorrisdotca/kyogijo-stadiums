@@ -1,7 +1,7 @@
 // What the demo's playground is, apart from the page: the state a web address asks for, the options that state draws, the
 // choices every control offers, and which rows are shown. The page's script (demo.js) runs it in the browser; the build
 // (scripts/site.mjs) runs the same code to write the first view into the HTML, so what the script finds is what it would draw.
-import { COURT_THEMES, ERA_SPORTS, GROUNDS, LEAGUES, PARKS, SOCCER_PITCH_IDS, SOCCER_PROVIDER_IDS, SPORTS, eraRange, hasHistory, leagueChanges } from "./dist/index.js";
+import { ARENAS, COURT_THEMES, ERA_SPORTS, GROUNDS, LEAGUES, PARKS, SOCCER_PITCH_IDS, SOCCER_PROVIDER_IDS, SPORTS, eraRange, hasHistory, leagueChanges } from "./dist/index.js";
 import { EMBLEM_GROUPS } from "./emblems.js";
 import { EMBLEMS, FAMILIES, GAMES, TEAMS, TEAMS_JA } from "./examples.js";
 import { LINEUP_SPORTS, sampleLayers } from "./lineup-data.js";
@@ -126,6 +126,8 @@ export function makeState(params, kept = null) {
     budoBase: null,
     pitch: pick(params.get("pitch"), SOCCER_PITCH_IDS, "fifa"),
     ground: params.get("ground") && GROUNDS[params.get("ground")] ? params.get("ground") : "none",
+    // The arena whose rink or court an atlas place asked for (NHL and NBA only): `none` draws the league's.
+    arena: params.get("arena") && ARENAS[params.get("arena")] ? params.get("arena") : "none",
     pitchType: pick(params.get("pitchtype"), SOCCER_PROVIDER_IDS, "none"),
     pattern: pick(params.get("pattern"), PATTERNS, "bands"),
     goals: pick(params.get("goals"), GOALS, "box"),
@@ -329,6 +331,7 @@ export function optionsFor(s, lang, forCode = false) {
   if (s.sport === "soccer") {
     if (s.pitch !== "fifa") o.pitch = s.pitch;
     if (s.ground !== "none") o.ground = s.ground;
+    if (s.arena !== "none" && (s.sport === "nhl" || s.sport === "nba")) o.arena = s.arena;
     if (s.pitchType !== "none") o.pitchType = s.pitchType;
     if (s.pattern !== "bands") o.stripePattern = s.pattern;
     if (s.goals !== "box") o.goals = s.goals;
@@ -620,7 +623,7 @@ export function urlPairs(s, lang) {
   const put = (key, value, start) => out.push([key, value === start ? null : String(value)]);
   out.push(["year", s.year !== null && hasSeasons(s) ? String(s.year) : null]);
   out.push(["league", s.league !== null && !isOwnLeague(s.sport, s.league) ? s.league : null]);
-  for (const [key, value, start] of [["pitch", s.pitch, "fifa"], ["ground", s.ground, "none"], ["pitchtype", s.pitchType, "none"], ["park", s.park, "generic"], ["sheet", s.sport === "curling" ? s.sheet : "sheet", "sheet"], ["size", s.size, "full"], ["orientation", s.orientation, "auto"], ["view", s.view, "flat"], ["viewpoint", s.view === "3d" ? s.viewpoint : "corner", "corner"], ["theme", s.theme, "auto"], ["pageant", s.pageant, "off"], ["pageantlines", s.pageantLines, "over"], ["poollook", s.poolLook, "flat"], ["pooldeck", s.poolDeck, "plain"], ["poolcourse", s.poolCourse, "long"], ["poollanes", s.poolLanes, "8"], ["poolrace", s.poolRace, "none"], ["poolsection", s.poolSection ? "1" : "0", "0"], ["track", s.track, "red"], ["infield", s.infield, "pitch"], ["races", s.races, "none"]]) put(key, value, start);
+  for (const [key, value, start] of [["pitch", s.pitch, "fifa"], ["ground", s.ground, "none"], ["arena", s.sport === "nhl" || s.sport === "nba" ? s.arena : "none", "none"], ["pitchtype", s.pitchType, "none"], ["park", s.park, "generic"], ["sheet", s.sport === "curling" ? s.sheet : "sheet", "sheet"], ["size", s.size, "full"], ["orientation", s.orientation, "auto"], ["view", s.view, "flat"], ["viewpoint", s.view === "3d" ? s.viewpoint : "corner", "corner"], ["theme", s.theme, "auto"], ["pageant", s.pageant, "off"], ["pageantlines", s.pageantLines, "over"], ["poollook", s.poolLook, "flat"], ["pooldeck", s.poolDeck, "plain"], ["poolcourse", s.poolCourse, "long"], ["poollanes", s.poolLanes, "8"], ["poolrace", s.poolRace, "none"], ["poolsection", s.poolSection ? "1" : "0", "0"], ["track", s.track, "red"], ["infield", s.infield, "pitch"], ["races", s.races, "none"]]) put(key, value, start);
   out.push(["emblem", s.pageant !== "off" && s.pageantEmblem ? "1" : null]);
   out.push(["emblemid", s.pageant !== "off" && s.pageantEmblem && s.pageantEmblemId !== "trophy:soccer-globe" ? s.pageantEmblemId : null]);
   out.push(["emblemline", s.emblemLine ? "1" : null]);

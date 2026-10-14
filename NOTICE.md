@@ -39,11 +39,12 @@ picture or code of the sources is copied; each source is named here so that the 
 | `grounds`: each soccer ground's pitch, names, years, city and capacity | The infobox and the opening text of the English Wikipedia article of each ground, at the revision cited below (the pitch's length and width where the infobox gives them for football, the names with the years the article dates them, the year it opened and closed, the first capacity); the ground's name in Japanese from its Japanese article | Facts. The articles are CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/); none of their text, tables or images is used |
 | `grounds`: the World Cups each ground staged matches of, and where each final was played | The venue section of the English Wikipedia article of each men's and Women's World Cup, at the revision cited below; FIFA's own pages are not used | Facts, CC BY-SA 4.0 articles as above |
 | `grounds`: the Wikidata item and the coordinates of each ground (`wikidata`, `lat`, `lon`) | The item that each cited article is linked to, its coordinates (P625) and its country (P17), read with the Wikidata API and checked against the item's labels by `scripts/check-grounds.mjs` | Wikidata's data is CC0 (https://creativecommons.org/publicdomain/zero/1.0/) |
-| `atlas`: the clubs that played in each park and ground (`tenants`: the club, its Wikidata item, its league, the years) | The occupants (P466) and home venues (P115) Wikidata lists for each place, with the start (P580) and end (P582) times of each statement, and the clubs' labels in English and Japanese, sports (P641) and leagues (P118), read with the Wikidata API and query service by `scripts/fetch-tenants.mjs` into `scripts/tenants.wikidata.json`; and the `tenants` line of the infobox of each place's English Wikipedia article, at the revision that `source.wikipedia` names for each club (155 articles, read on 2026-10-13) | Facts. Wikidata's data is CC0 (https://creativecommons.org/publicdomain/zero/1.0/), and the articles are CC BY-SA 4.0 as above; the names of clubs and the years are facts, no text, table or image of an article is used. Which clubs are tenants, and the league each is filed under, are our reading, in docs/atlas.md ("Tenants") |
+| `arenas`: each arena's names, years, city, seats, rink sizes, Wikidata item and coordinates | The infobox and the text of the English Wikipedia article of each arena, at the revision cited below (the names with the years the article dates them, the year it opened, closed and was pulled down, the seats for ice hockey and for basketball, a rink's length and width where the article gives them in a sentence of its own); the name in Japanese from the title of its Japanese article or written for the package; the Wikidata item (CC0) that each article is linked to and its coordinates (P625) | Facts. The articles are CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/); none of their text, tables or images is used |
+| `atlas`: the clubs that played in each park, ground and arena (`tenants`: the club, its Wikidata item, its league, the years) | The occupants (P466) and home venues (P115) Wikidata lists for each place, with the start (P580) and end (P582) times of each statement, and the clubs' labels in English and Japanese, sports (P641) and leagues (P118), read with the Wikidata API and query service by `scripts/fetch-tenants.mjs` into `scripts/tenants.wikidata.json`; and the `tenants` line of the infobox of each place's English Wikipedia article, at the revision that `source.wikipedia` names for each club (155 articles, read on 2026-10-13) | Facts. Wikidata's data is CC0 (https://creativecommons.org/publicdomain/zero/1.0/), and the articles are CC BY-SA 4.0 as above; the names of clubs and the years are facts, no text, table or image of an article is used. Which clubs are tenants, and the league each is filed under, are our reading, in docs/atlas.md ("Tenants") |
 | `parks`: the walls, quirks, backstop, warning track, dugouts and extra points of a ballpark (`walls`, `quirks`, `backstop_ft`, `track_ft`, `dugouts`, `labels`) | The infobox and the text of the same English article of each park, at the same revision as its fence (the Japanese article for the heights of the walls of the parks of Japan): the height of the wall along a stretch of the fence and the seasons it stood, the hill, overhang, poles, bullpens, ivy and basket the text describes with figures, the infobox's backstop distance, the warning track's width, the sides of the dugouts, and the further distances the text gives (Wrigley Field's wells, Sportsman's Park's and Milwaukee County Stadium's markers). The stretch each figure covers and the angle of each extra point are our reading of the article's words | Facts. The articles are CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/); none of their text, tables or images is used |
 | `parks`: the coordinates of each ballpark (`lat`, `lon`) and the years it opened and closed (`opened`, `closed`) | The item's coordinate location (P625), its date of official opening or inception (P1619, P571) and of official closure or dissolution (P3999, P576), read with the Wikidata API by `scripts/fetch-park-coordinates.mjs` and checked by `scripts/check-parks.mjs` (ES CON Field's opening, 2023, is read from its article) | Wikidata's data is CC0 (https://creativecommons.org/publicdomain/zero/1.0/) |
 | `events`: the special games, their days, venues, hosts and where a surface stood | The English Wikipedia articles of each game and of its venue, at the revision cited below, and three articles of the press (Sports Video Group, NHL.com, The Boston Globe), named below with their authors and dates; the size of a carrier from the Nimitz class's article | Facts, CC BY-SA 4.0 articles as above; no text copied |
-| The atlas (`@johnmorrisdotca/kyogijo-stadiums/atlas`): the places and their map | The parks and grounds above, joined; the demo's and docs/atlas.md's map is drawn by chizu (MIT) from Natural Earth, which is in the public domain (https://www.naturalearthdata.com/about/terms-of-use/) | Facts and CC0 data; Natural Earth is public domain; chizu is a development dependency and none of it is in the package |
+| The atlas (`@johnmorrisdotca/kyogijo-stadiums/atlas`): the places and their map | The parks, grounds and arenas above, joined; the demo's and docs/atlas.md's map is drawn by chizu (MIT) from Natural Earth, which is in the public domain (https://www.naturalearthdata.com/about/terms-of-use/) | Facts and CC0 data; Natural Earth is public domain; chizu is a development dependency and none of it is in the package |
 
 ## The ballparks' articles
 
@@ -218,6 +219,180 @@ Each article was read at the revision named (64 soccer grounds), by its address 
 | Allianz Stadium | Q62149 | Juventus Stadium, 1378642162 | ユヴェントス・スタジアム, 110509929 |
 | Japan National Stadium | Q14862239 | Japan National Stadium, 1378899630 | 国立競技場, 110837538 |
 | Kashima Soccer Stadium | Q494769 | Kashima Soccer Stadium, 1372209519 | 茨城県立カシマサッカースタジアム, 108917122 |
+
+## The arenas' articles
+
+Each article was read at the revision named (167 arenas), by its address `https://<en or ja>.wikipedia.org/w/index.php?title=<title>&oldid=<revision>` (the function `arenaSourceUrl` writes it). The authors of an article are listed in its history. The figures are in `scripts/arenas.data.json`, which holds each entry's article and revision; docs/references.md explains how they were read and docs/arenas.md lists every arena. The Japanese article is named by its title, as Wikidata links it; the name in Japanese is the package's (see docs/arenas.md, "Names").
+
+| Arena | Wikidata item | English article and revision | Japanese article |
+| --- | --- | --- | --- |
+| Amerant Bank Arena | Q795526 | Amerant Bank Arena, 1379821144 | アメラント・バンク・アリーナ |
+| American Airlines Center | Q463345 | American Airlines Center, 1379833787 | アメリカン・エアラインズ・センター |
+| Ball Arena | Q795470 | Ball Arena, 1379560431 | ボール・アリーナ |
+| Bell Centre | Q522282 | Bell Centre, 1380110375 | ベル・センター |
+| Benchmark International Arena | Q940199 | Benchmark International Arena, 1376541285 | ベンチマーク・インターナショナル・アリーナ |
+| Bridgestone Arena | Q302869 | Bridgestone Arena, 1373721363 | ブリヂストン・アリーナ |
+| Canada Life Centre | Q656928 | Canada Life Centre, 1379717047 | カナダライフ・センター |
+| Canadian Tire Centre | Q1327290 | Canadian Tire Centre, 1378044395 | カナディアン・タイヤ・センター |
+| Capital One Arena | Q223240 | Capital One Arena, 1375927841 | キャピタル・ワン・アリーナ |
+| Climate Pledge Arena | Q977529 | Climate Pledge Arena, 1376105473 | クライメット・プレッジ・アリーナ |
+| Crypto.com Arena | Q186080 | Crypto.com Arena, 1379936314 | クリプト・ドットコム・アリーナ |
+| Delta Center | Q82294 | Delta Center, 1379043310 | デルタ・センター |
+| Enterprise Center | Q1067700 | Enterprise Center, 1372086380 | エンタープライズ・センター |
+| Grand Casino Arena | Q1421388 | Grand Casino Arena, 1379407082 | グランド・カジノ・アリーナ |
+| Honda Center | Q774138 | Honda Center, 1380000927 | ホンダセンター |
+| KeyBank Center | Q1110789 | KeyBank Center, 1375699062 | キーバンク・センター |
+| Lenovo Center | Q39177 | Lenovo Center, 1380055594 | レノボ・センター |
+| Little Caesars Arena | Q18154984 | Little Caesars Arena, 1379995369 | リトル・シーザーズ・アリーナ |
+| Madison Square Garden | Q186125 | Madison Square Garden, 1380115046 | マディソン・スクエア・ガーデン |
+| Nationwide Arena | Q166503 | Nationwide Arena, 1379010656 | ネイションワイド・アリーナ |
+| PPG Paints Arena | Q595460 | PPG Paints Arena, 1378458359 | PPGペインツ・アリーナ |
+| Prudential Center | Q849027 | Prudential Center, 1380112777 | プルデンシャル・センター |
+| Rogers Arena | Q517318 | Rogers Arena, 1379918849 | ロジャーズ・アリーナ |
+| Rogers Place | Q5339036 | Rogers Place, 1380110483 | ロジャーズ・プレイス |
+| SAP Center | Q261863 | SAP Center, 1376082812 | SAPセンター |
+| Scotiabank Arena | Q406972 | Scotiabank Arena, 1379971880 | スコシアバンク・アリーナ |
+| Scotiabank Saddledome | Q1140083 | Scotiabank Saddledome, 1377341466 | スコシアバンク・サドルドーム |
+| T-Mobile Arena | Q3338973 | T-Mobile Arena, 1379155307 | T-モバイル・アリーナ |
+| TD Garden | Q432105 | TD Garden, 1372238200 | TDガーデン |
+| UBS Arena | Q48742753 | UBS Arena, 1374271562 | UBSアリーナ |
+| United Center | Q639975 | United Center, 1375751561 | ユナイテッド・センター |
+| Xfinity Mobile Arena | Q818735 | Xfinity Mobile Arena, 1380172806 | エクスフィニティ・モバイル・アリーナ |
+| Barclays Center | Q807966 | Barclays Center, 1379823700 | バークレイズ・センター |
+| Mortgage Matchup Center | Q1538690 | Mortgage Matchup Center, 1378999780 | モートゲージ・マッチアップセンター |
+| Pacific Coliseum | Q832644 | Pacific Coliseum, 1378607871 | パシフィック・コロシアム |
+| State Farm Arena | Q1123297 | State Farm Arena, 1379287335 | ステートファーム・アリーナ |
+| Chase Center | Q15262098 | Chase Center, 1379490317 | チェイス・センター |
+| FedExForum | Q641212 | FedExForum, 1373012936 | フェデックス・フォーラム |
+| Fiserv Forum | Q20372160 | Fiserv Forum, 1379397566 | ファイサーブ・フォーラム |
+| Frost Bank Center | Q298573 | Frost Bank Center, 1372180807 | フロスト・バンク・センター |
+| Gainbridge Fieldhouse | Q545007 | Gainbridge Fieldhouse, 1374223283 | ゲインブリッジ・フィールドハウス |
+| Golden 1 Center | Q7011384 | Golden 1 Center, 1379743809 | ゴールデン1センター |
+| Intuit Dome | Q54958436 | Intuit Dome, 1379936828 | インテュイット・ドーム |
+| Kaseya Center | Q420129 | Kaseya Center, 1379398233 | カセヤ・センター |
+| Kia Center | Q481795 | Kia Center, 1377516173 | キア・センター |
+| Moda Center | Q1347442 | Moda Center, 1379961159 | モダ・センター |
+| Paycom Center | Q665434 | Paycom Center, 1372206126 | ペイコム・センター |
+| Rocket Arena | Q387157 | Rocket Arena, 1379138612 | ロケット・アリーナ |
+| Smoothie King Center | Q1515840 | Smoothie King Center, 1380134811 | スムージー・キング・センター |
+| Spectrum Center | Q983870 | Spectrum Center, 1380171931 | スペクトラム・センター |
+| Target Center | Q282675 | Target Center, 1379559475 | ターゲット・センター |
+| Toyota Center | Q1166157 | Toyota Center, 1379987960 | トヨタセンター |
+| CareFirst Arena | Q30488454 | CareFirst Arena, 1372072999 |  |
+| Coca-Cola Coliseum | Q541481 | Coca-Cola Coliseum, 1379824041 |  |
+| Michelob Ultra Arena | Q1888848 | Michelob Ultra Arena, 1379157029 | ミケロブ・ウルトラ・アリーナ |
+| Wintrust Arena | Q16991688 | Wintrust Arena, 1373715864 |  |
+| Place Bell | Q3389723 | Place Bell, 1372214741 |  |
+| The Arena (Ottawa) | Q7714219 | The Arena (Ottawa), 1372241202 |  |
+| Barton Street Arena | Q4865692 | Barton Street Arena, 1372066713 |  |
+| The Big E Coliseum | Q7717607 | Big E Coliseum, 1372675694 |  |
+| Boston Garden | Q894567 | Boston Garden, 1379921964 | ボストン・ガーデン |
+| Buffalo Memorial Auditorium | Q2927640 | Buffalo Memorial Auditorium, 1378939642 |  |
+| Capital Centre | Q3656844 | Capital Centre (Landover, Maryland), 1378275954 |  |
+| Chicago Coliseum | Q2370898 | Chicago Coliseum, 1370805073 |  |
+| Chicago Stadium | Q2703852 | Chicago Stadium, 1377159109 | シカゴ・スタジアム |
+| Civic Arena | Q1237181 | Civic Arena (Pittsburgh), 1378604648 | メロン・アリーナ |
+| Colisée de Québec | Q600226 | Colisée de Québec, 1376437739 |  |
+| Cow Palace | Q604015 | Cow Palace, 1372078143 |  |
+| Desert Diamond Arena | Q1421377 | Desert Diamond Arena, 1380097867 | ヒラ・リバー・アリーナ |
+| Detroit Olympia | Q1201545 | Detroit Olympia, 1372080309 |  |
+| Duquesne Gardens | Q3041488 | Duquesne Gardens, 1372081879 |  |
+| Expo Hall | Q1384652 | Expo Hall, 1372151342 |  |
+| First Horizon Coliseum | Q133089582 | First Horizon Coliseum, 1372176337 |  |
+| Kemper Arena | Q1489399 | Hy-Vee Arena, 1377650000 |  |
+| Joe Louis Arena | Q168579 | Joe Louis Arena, 1378833772 | ジョー・ルイス・アリーナ |
+| Jubilee Arena | Q599978 | Jubilee Arena, 1372208380 |  |
+| Kia Forum | Q639129 | Kia Forum, 1378606147 | ザ・フォーラム (アリーナ) |
+| Los Angeles Memorial Sports Arena | Q1571403 | Los Angeles Memorial Sports Arena, 1378620043 | ロサンゼルス・メモリアル・スポーツ・アリーナ |
+| Madison Square Garden (1925) | Q6728098 | Madison Square Garden (1925), 1374252217 |  |
+| Maple Leaf Gardens | Q1814534 | Maple Leaf Gardens, 1378352628 | メープルリーフ・ガーデンズ |
+| MassMutual Center | Q6783965 | MassMutual Center, 1376168573 |  |
+| Matthews Arena | Q919959 | Matthews Arena, 1372084660 |  |
+| McNichols Sports Arena | Q2081796 | McNichols Sports Arena, 1376436998 |  |
+| Meadowlands Arena | Q538218 | Meadowlands Arena, 1379389390 | アイゾッド・センター |
+| Met Center | Q3307175 | Met Center, 1379253396 |  |
+| Miami Arena | Q1857422 | Miami Arena, 1372086645 |  |
+| Montreal Arena | Q849938 | Montreal Arena, 1372216977 |  |
+| Montreal Forum | Q367272 | Montreal Forum, 1372775440 | モントリオール・フォーラム |
+| Mount Royal Arena | Q544559 | Mount Royal Arena, 1372217380 |  |
+| Mullett Arena | Q111169373 | Mullett Arena, 1377666841 |  |
+| Mutual Street Arena | Q3331013 | Mutual Street Arena, 1373119845 |  |
+| Nassau Coliseum | Q1048921 | Nassau Coliseum, 1378968533 | ナッソー・ベテランズ・メモリアル・コロシアム |
+| Northlands Coliseum | Q1139489 | Northlands Coliseum, 1380012552 | レクソール・プレイス |
+| Oakland Arena | Q1139021 | Oakland Arena, 1376082185 | オラクル・アリーナ |
+| Omni Coliseum | Q1970067 | Omni Coliseum, 1372222916 | オムニ・コロシアム |
+| Ottawa Auditorium | Q7109141 | Ottawa Auditorium, 1372223758 |  |
+| PeoplesBank Arena | Q1783634 | PeoplesBank Arena, 1378577514 |  |
+| Philadelphia Arena | Q3378842 | Philadelphia Arena, 1372214135 |  |
+| Quebec Arena | Q7269749 | Quebec Arena, 1372222670 |  |
+| Reunion Arena | Q1859962 | Reunion Arena, 1374129116 | リユニオン・アリーナ |
+| Richfield Coliseum | Q2982682 | Richfield Coliseum, 1372224989 |  |
+| St. Louis Arena | Q3495282 | St. Louis Arena, 1372232504 |  |
+| Spectrum | Q2085822 | Spectrum (arena), 1379231350 | ワコビア・スペクトラム |
+| Stampede Corral | Q1147148 | Stampede Corral, 1372236029 |  |
+| TD Place Arena | Q1143666 | TD Place Arena, 1377852926 |  |
+| Windsor Arena | Q8024565 | Windsor Arena, 1372252144 |  |
+| Winnipeg Arena | Q1165024 | Winnipeg Arena, 1378999660 |  |
+| Baltimore Civic Center | Q2739940 | CFG Bank Arena, 1378813714 | ファースト・マリナー・アリーナ |
+| 69th Regiment Armory | Q2781236 | 69th Regiment Armory, 1370518966 |  |
+| Allen County War Memorial Coliseum | Q1144284 | Allen County War Memorial Coliseum, 1372062120 |  |
+| Orlando Arena | Q481794 | Amway Arena, 1373824360 | アムウェイ・アリーナ |
+| ARCO Arena | Q93831 | ARCO Arena, 1373275228 | スリープ・トレイン・アリーナ |
+| ARCO Arena I | Q4653610 | ARCO Arena (1985), 1372270268 |  |
+| Arizona Veterans Memorial Coliseum | Q670890 | Arizona Veterans Memorial Coliseum, 1372064017 |  |
+| Baltimore Coliseum | Q4852825 | Baltimore Coliseum, 1375271173 |  |
+| Bill Graham Civic Auditorium | Q4909197 | Bill Graham Civic Auditorium, 1379142669 |  |
+| Rochester Community War Memorial | Q885674 | Blue Cross Arena, 1376259229 |  |
+| Bradley Center | Q737976 | Bradley Center, 1373828595 | ブラッドリー・センター |
+| Calihan Hall | Q5021351 | Calihan Hall, 1372071903 |  |
+| Charlotte Coliseum | Q632138 | Charlotte Coliseum, 1376080591 | シャーロット・コロシアム |
+| Cincinnati Gardens | Q1092220 | Cincinnati Gardens, 1378899753 |  |
+| Cleveland Arena | Q5132059 | Cleveland Arena, 1372076382 |  |
+| Cobo Arena | Q1104711 | Huntington Place, 1373508313 |  |
+| The Summit | Q2435324 | Lakewood Church Central Campus, 1379795560 | ザ・サミット |
+| Denver Auditorium Arena | Q5259672 | Denver Auditorium Arena, 1372080181 |  |
+| Edgerton Park Arena | Q5337822 | Edgerton Park Arena, 1372082646 |  |
+| Hofheinz Pavilion | Q5876764 | Fertitta Center, 1376960498 |  |
+| HemisFair Arena | Q1145169 | HemisFair Arena, 1379338909 |  |
+| Hinkle Fieldhouse | Q3785713 | Hinkle Fieldhouse, 1372282020 |  |
+| International Amphitheatre | Q1666325 | International Amphitheatre, 1372205870 |  |
+| Rutgers Athletic Center | Q6686804 | Jersey Mike's Arena, 1378814713 |  |
+| Kiel Auditorium | Q3024991 | Kiel Auditorium, 1372210290 | キール・オーディトリアム |
+| Loyola Field House | Q6694553 | Loyola Field House, 1315777970 |  |
+| Market Square Arena | Q3294309 | Market Square Arena, 1372084194 |  |
+| Alexander Memorial Coliseum | Q1492102 | McCamish Pavilion, 1380055740 |  |
+| Memphis Pyramid | Q2226897 | Memphis Pyramid, 1379632380 |  |
+| Minneapolis Armory | Q745327 | Minneapolis Armory, 1373394869 |  |
+| Minneapolis Auditorium | Q125537911 | Minneapolis Auditorium, 1380186125 |  |
+| Moody Coliseum | Q9035055 | Moody Coliseum, 1372217034 |  |
+| Municipal Auditorium (Kansas City) | Q14704450 | Municipal Auditorium (Kansas City, Missouri), 1372217597 |  |
+| Municipal Auditorium (New Orleans) | Q6936134 | Municipal Auditorium (New Orleans), 1372217599 |  |
+| Omaha Civic Auditorium | Q7089414 | Omaha Civic Auditorium, 1372685910 |  |
+| The Palace of Auburn Hills | Q1327633 | The Palace of Auburn Hills, 1380097365 | ザ・パレス・オブ・オーバーンヒルズ |
+| Pechanga Arena | Q3106621 | Pechanga Arena, 1378571330 |  |
+| Philadelphia Convention Hall and Civic Center | Q3378843 | Philadelphia Convention Hall and Civic Center, 1372214142 |  |
+| Salt Palace | Q17030210 | Salt Palace (arena), 1372227896 |  |
+| Sheboygan Municipal Auditorium and Armory | Q7492276 | Sheboygan Armory, 1364628837 |  |
+| War Memorial Gymnasium | Q781955 | Sobrato Center, 1372231105 |  |
+| Tacoma Dome | Q1570942 | Tacoma Dome, 1372238448 | タコマドーム |
+| The Hippodrome | Q6801072 | The Hippodrome, 1377122238 |  |
+| Toyota Coliseum | Q7603208 | Toyota Coliseum, 1362308915 |  |
+| Uline Arena | Q7971729 | Uline Arena, 1373462233 | ワシントン・コロシアム |
+| Onondaga County War Memorial | Q3566224 | Upstate Medical University Arena, 1372247955 |  |
+| Milwaukee Arena | Q1142808 | UW–Milwaukee Panther Arena, 1372247035 |  |
+| Veterans Memorial Coliseum | Q549437 | Veterans Memorial Coliseum (Portland, Oregon), 1378608620 |  |
+| Wharton Field House | Q14688239 | Wharton Field House, 1372251506 |  |
+| Allstate Arena | Q1336027 | Allstate Arena, 1379742186 | オールステート・アリーナ |
+| BOK Center | Q2877349 | BOK Center, 1372680708 |  |
+| College Park Center | Q2982974 | College Park Center, 1379987097 |  |
+| Credit Union 1 Arena | Q3547208 | Credit Union 1 Arena, 1379822104 | クレジット・ユニオン・1・アリーナ |
+| Mohegan Sun Arena | Q2056942 | Mohegan Sun Arena, 1379406879 |  |
+| Reliant Arena | Q7311038 | Reliant Arena, 1377831984 |  |
+| Westchester County Center | Q7987239 | Westchester County Center, 1373852052 |  |
+| Total Mortgage Arena | Q7978892 | Total Mortgage Arena, 1372244808 |  |
+| Tsongas Center | Q2076478 | Tsongas Center, 1372246034 |  |
+| Verdun Auditorium | Q2870805 | Verdun Auditorium, 1372712513 |  |
+| Rhode Island Auditorium | Q7320897 | Rhode Island Auditorium, 1373848518 |  |
 
 ## The World Cups' articles
 

@@ -20,10 +20,10 @@ const detailName = (page) => page.locator(`${at("atlas-detail")} .atlas-name`);
 test("the atlas puts every place on the map and in the list", async ({ page }) => {
   const errors = await openAtlas(page);
   expect(errors).toEqual([]);
-  await expect(page.locator(at("atlas-count"))).toHaveText("163 of 163 places");
-  await expect(items(page)).toHaveCount(163);
+  await expect(page.locator(at("atlas-count"))).toHaveText("330 of 330 places");
+  await expect(items(page)).toHaveCount(330);
   // The whole world is one copy of the canvas, so each place has one marker.
-  await expect(marks(page)).toHaveCount(163);
+  await expect(marks(page)).toHaveCount(330);
   await expect(page.locator(`${at("atlas-map")} .czm-stage svg:not(.atlas-overlay) .cz-land`).first()).toBeAttached();
   // Credits for the map and the coordinates.
   await expect(page.locator("#atlas .atlas-credits")).toContainText("Natural Earth");
@@ -36,11 +36,14 @@ test("a place in use is a circle and one of the past is a diamond, so that colou
   await openAtlas(page);
   expect(await marks(page, ".am-current .am-body").evaluateAll((all) => all.every((n) => n.tagName === "circle"))).toBe(true);
   expect(await marks(page, ".am-past .am-body").evaluateAll((all) => all.every((n) => n.tagName === "path"))).toBe(true);
-  expect(await marks(page, ".am-current").count()).toBeGreaterThan(80);
-  expect(await marks(page, ".am-past").count()).toBeGreaterThan(40);
+  expect(await marks(page, ".am-current").count()).toBeGreaterThan(130);
+  expect(await marks(page, ".am-past").count()).toBeGreaterThan(150);
   // A soccer ground has a dot in its middle, a baseball park has none.
   expect(await marks(page, ".am-soccer").evaluateAll((all) => all.every((n) => n.querySelector(".am-dot") !== null))).toBe(true);
   expect(await marks(page, ".am-baseball").evaluateAll((all) => all.every((n) => n.querySelector(".am-dot") === null))).toBe(true);
+  // A hockey arena has a bar across and a basketball arena an upright one, in colours of their own.
+  expect(await marks(page, ".am-hockey").evaluateAll((all) => all.length > 50 && all.every((n) => n.querySelector(".am-bar") !== null))).toBe(true);
+  expect(await marks(page, ".am-basketball").evaluateAll((all) => all.length > 30 && all.every((n) => n.querySelector(".am-bar") !== null && n.querySelector(".am-dot") === null))).toBe(true);
   // The key says so too.
   await expect(page.locator(at("atlas-key"))).toContainText("circle");
   await expect(page.locator(at("atlas-key"))).toContainText("diamond");
@@ -49,21 +52,21 @@ test("a place in use is a circle and one of the past is a diamond, so that colou
 test("the filters narrow the markers and the list together, and reset brings them all back", async ({ page }) => {
   await openAtlas(page);
   await page.locator(`${at("atlas-sport")} button[data-value="soccer"]`).click();
-  await expect(page.locator(at("atlas-count"))).toHaveText("64 of 163 places");
+  await expect(page.locator(at("atlas-count"))).toHaveText("64 of 330 places");
   await expect(marks(page)).toHaveCount(64);
   await expect(marks(page, ".am-baseball")).toHaveCount(0);
   await page.locator(`${at("atlas-sport")} button[data-value="all"]`).click();
   await page.locator(at("atlas-league")).selectOption("NPB");
-  await expect(page.locator(at("atlas-count"))).toHaveText("20 of 163 places");
+  await expect(page.locator(at("atlas-count"))).toHaveText("20 of 330 places");
   await page.locator(`${at("atlas-status")} button[data-value="past"]`).click();
-  await expect(page.locator(at("atlas-count"))).toHaveText("6 of 163 places");
+  await expect(page.locator(at("atlas-count"))).toHaveText("6 of 330 places");
   expect(await marks(page).evaluateAll((all) => all.every((n) => n.classList.contains("am-past")))).toBe(true);
   await page.locator(at("atlas-reset")).click();
-  await expect(page.locator(at("atlas-count"))).toHaveText("163 of 163 places");
+  await expect(page.locator(at("atlas-count"))).toHaveText("330 of 330 places");
   await page.locator(at("atlas-country")).selectOption("JP");
-  await expect(page.locator(at("atlas-count"))).toHaveText("28 of 163 places");
+  await expect(page.locator(at("atlas-count"))).toHaveText("28 of 330 places");
   await page.locator(at("atlas-search")).fill("koshien");
-  await expect(page.locator(at("atlas-count"))).toHaveText("1 of 163 places");
+  await expect(page.locator(at("atlas-count"))).toHaveText("1 of 330 places");
   await expect(items(page).first()).toContainText("Koshien Stadium");
   await page.locator(at("atlas-search")).fill("nowhere at all");
   await expect(items(page)).toHaveCount(0);
@@ -86,7 +89,7 @@ test("the year keeps the places that were in use then", async ({ page }) => {
   await expect(page.locator(`${at("atlas-list")} .atlas-item[data-id="polo-grounds"]`)).toHaveCount(0);
   await expect(page.locator(`${at("atlas-list")} .atlas-item[data-id="citi-field"]`)).toHaveCount(1);
   await page.locator(at("atlas-year-on")).click();
-  await expect(page.locator(at("atlas-count"))).toHaveText("163 of 163 places");
+  await expect(page.locator(at("atlas-count"))).toHaveText("330 of 330 places");
 });
 
 test("choosing a place in the list draws its surface beside the map", async ({ page }, testInfo) => {
@@ -106,6 +109,54 @@ test("choosing a place in the list draws its surface beside the map", async ({ p
   await expect(page.locator(`${at("atlas-surface")} svg.kyogijo .ky-pitch`).first()).toBeAttached();
   await expect(page.locator(at("atlas-detail"))).toContainText("101 × 68 m");
   await expect(page.locator(at("atlas-detail"))).toContainText("53.4308° N, 2.9608° W");
+});
+
+test("the sport and league filters find the hockey and basketball arenas, and an arena of both is found by either", async ({ page }) => {
+  await openAtlas(page);
+  await page.locator(`${at("atlas-sport")} button[data-value="hockey"]`).click();
+  await expect(page.locator(at("atlas-count"))).toHaveText("90 of 330 places");
+  await expect(marks(page, ".am-baseball")).toHaveCount(0);
+  await expect(page.locator(`${at("atlas-list")} .atlas-item[data-id="td-garden"]`)).toHaveCount(1);
+  await expect(page.locator(`${at("atlas-list")} .atlas-item[data-id="chase-center"]`)).toHaveCount(0);
+  await page.locator(`${at("atlas-sport")} button[data-value="basketball"]`).click();
+  await expect(page.locator(at("atlas-count"))).toHaveText("125 of 330 places");
+  await expect(page.locator(`${at("atlas-list")} .atlas-item[data-id="td-garden"]`)).toHaveCount(1);
+  await expect(page.locator(`${at("atlas-list")} .atlas-item[data-id="chase-center"]`)).toHaveCount(1);
+  await page.locator(`${at("atlas-sport")} button[data-value="all"]`).click();
+  await page.locator(at("atlas-league")).selectOption("NHL");
+  await page.locator(`${at("atlas-status")} button[data-value="current"]`).click();
+  await expect(page.locator(at("atlas-count"))).toHaveText(/^3[2-9] of 330 places$/);
+  await page.locator(at("atlas-reset")).click();
+  // A search by a club, in English and in Japanese.
+  await page.locator(at("atlas-search")).fill("bruins");
+  await expect(page.locator(`${at("atlas-list")} .atlas-item[data-id="boston-garden"]`)).toHaveCount(1);
+  await page.locator(at("atlas-search")).fill("ブルーインズ");
+  await expect(page.locator(`${at("atlas-list")} .atlas-item[data-id="td-garden"]`)).toHaveCount(1);
+});
+
+test("an arena is drawn as a rink and a court, at its own size where an article gives one", async ({ page }, testInfo) => {
+  await openAtlas(page);
+  await tap(page, `${at("atlas-list")} .atlas-item[data-id="boston-garden"]`, testInfo);
+  await expect(detailName(page)).toHaveText("Boston Garden");
+  await expect(page.locator(`${at("atlas-surface")} svg.kyogijo`)).toHaveAttribute("data-sport", "nhl");
+  await expect(page.locator(`${at("atlas-surface")} svg.kyogijo`)).toHaveAttribute("viewBox", "-8 -8 206.9 99");
+  await expect(page.locator(at("atlas-detail"))).toContainText("190.9 × 83 ft (published)");
+  await expect(page.locator(at("atlas-detail"))).toContainText("Boston Bruins");
+  // Boston Garden was the Celtics' too: the court is offered beside the rink.
+  await tap(page, at("atlas-try-nba"), testInfo);
+  await expect(page.locator('[data-testid="sport"] [aria-pressed="true"]')).toHaveText("NBA");
+  expect(new URL(page.url()).searchParams.get("arena")).toBe("boston-garden");
+  await tap(page, `${at("atlas-list")} .atlas-item[data-id="td-garden"]`, testInfo);
+  await expect(page.locator(at("atlas-detail"))).toContainText("the NHL's, 200 × 85 ft");
+  await expect(page.locator(at("atlas-detail"))).toContainText("hockey");
+  await tap(page, at("atlas-try"), testInfo);
+  await expect(page.locator('[data-testid="sport"] [aria-pressed="true"]')).toHaveText("NHL");
+  // The year picks the Boston Arena's ice and its name of the time.
+  await page.locator(at("atlas-year-on")).click();
+  await page.locator(at("atlas-year")).fill("1926");
+  await tap(page, `${at("atlas-list")} .atlas-item[data-id="matthews-arena"]`, testInfo);
+  await expect(page.locator(`${at("atlas-surface")} svg.kyogijo title`).first()).toHaveText("Boston Arena, hockey rink");
+  await expect(page.locator(`${at("atlas-surface")} svg.kyogijo`)).toHaveAttribute("viewBox", "-8 -8 236 106");
 });
 
 test("a press on a marker on the map chooses it, and a drag does not", async ({ page }) => {
@@ -183,7 +234,7 @@ test("the atlas opens on the place the address names, and speaks Japanese", asyn
   await openAtlas(page, "?lang=ja&help=off&place=tokyo-dome");
   await expect(page.locator("#atlas-title")).toHaveText("球場・スタジアムマップ");
   await expect(detailName(page)).toHaveText("東京ドーム");
-  await expect(page.locator(at("atlas-count"))).toHaveText("163か所中163か所");
+  await expect(page.locator(at("atlas-count"))).toHaveText("330か所中330か所");
   await expect(page.locator(`${at("atlas-list")} .atlas-item[data-id="maracana"] .atlas-item-name`)).toHaveText("マラカナン");
   await expect(page.locator(at("atlas-detail"))).toContainText("日本");
   await page.locator(at("atlas-year-on")).click();
@@ -214,15 +265,16 @@ test("a place lists the clubs that played in it, with their league and years, an
   await expect(tenants.nth(1)).toContainText("MLS · since 2011");
   // A club finds its place, in English and in Japanese.
   await page.locator(at("atlas-search")).fill("Whitecaps");
-  await expect(page.locator(at("atlas-count"))).toHaveText("1 of 163 places");
+  await expect(page.locator(at("atlas-count"))).toHaveText("2 of 330 places");
   await expect(items(page).first()).toContainText("BC Place");
+  await expect(items(page).nth(1)).toContainText("Pacific Coliseum");
   await page.locator(at("atlas-search")).fill("ライオンズ");
   await expect(items(page).filter({ hasText: "BC Place" })).toHaveCount(1);
   await expect(items(page).filter({ hasText: "Belluna Dome" })).toHaveCount(1);
   await page.locator(at("atlas-reset")).click();
   // A league a club played in is a league of the place, and the league filter has the main ones first.
   await page.locator(at("atlas-league")).selectOption("CFL");
-  await expect(page.locator(at("atlas-count"))).toHaveText("6 of 163 places");
+  await expect(page.locator(at("atlas-count"))).toHaveText("6 of 330 places");
   await expect(page.locator(`${at("atlas-league")} optgroup`).first()).toHaveAttribute("label", "Main leagues and tournaments");
   await page.locator(at("atlas-reset")).click();
   await page.locator(at("atlas-league")).selectOption("all");

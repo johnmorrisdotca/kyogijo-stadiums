@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { ARENAS } from "./arenas.ts";
 import { TENANTS, TENANT_JAPANESE_NAMES, nameJaOf } from "./atlas-entry.ts";
 import { PLACES, atlasFacets, placeById, placesBy, placesByClub, surfaceOf, surfacesOf, tenantsOf } from "./atlas.ts";
 import { drawKyogijo } from "./draw.ts";
@@ -15,12 +16,14 @@ const BOXES: Record<string, [number, number, number, number]> = {
 };
 
 describe("the places", () => {
-  it("are every ballpark and every ground, once each, and every hall of the budō", () => {
-    expect(PLACES).toHaveLength(Object.keys(PARKS).length + Object.keys(GROUNDS).length + HALLS.length);
+  it("are every ballpark, every ground, every hall of the budō and every arena, once each", () => {
+    expect(PLACES).toHaveLength(Object.keys(PARKS).length + Object.keys(GROUNDS).length + HALLS.length + Object.keys(ARENAS).length);
     expect(PLACES.filter((place) => place.kind === "hall")).toHaveLength(HALLS.length);
+    expect(PLACES.filter((place) => place.kind === "arena")).toHaveLength(Object.keys(ARENAS).length);
     expect(PLACES.filter((place) => place.kind === "park")).toHaveLength(Object.keys(PARKS).length);
     expect(PLACES.filter((place) => place.kind === "ground")).toHaveLength(Object.keys(GROUNDS).length);
     expect(PLACES.filter((place) => place.sport === "baseball")).toHaveLength(Object.keys(PARKS).length);
+    expect(PLACES.filter((place) => place.sport === "soccer")).toHaveLength(Object.keys(GROUNDS).length);
   });
 
   it("have unique ids and unique Wikidata items", () => {
@@ -123,7 +126,7 @@ describe("placesBy", () => {
 describe("atlasFacets", () => {
   it("lists the sports, leagues and countries, sorted, and the span of years", () => {
     const facets = atlasFacets();
-    expect(facets.sports).toEqual(["baseball", "budo", "soccer"]);
+    expect(facets.sports).toEqual(["baseball", "basketball", "budo", "hockey", "soccer"]);
     expect(facets.leagues).toEqual([...facets.leagues].sort());
     // The tournaments, and every league a club that played in a place belonged to.
     expect(facets.leagues).toEqual(expect.arrayContaining(["FIFA Women's World Cup", "FIFA World Cup", "MLB", "NPB", "NFL", "CFL", "NBA", "NHL", "MLS", "Premier League", "J1 League"]));
@@ -147,7 +150,7 @@ describe("surfaceOf with a sport", () => {
     for (const place of PLACES) {
       // A hall's own surface is the first it offers.
       if (place.kind === "hall") continue;
-      const own = place.kind === "park" ? { sport: "mlb", park: place.id } : { sport: "soccer", ground: place.id };
+      const own = place.kind === "park" ? { sport: "mlb", park: place.id } : place.kind === "arena" ? { sport: place.sport === "hockey" ? "nhl" : "nba", arena: place.id } : { sport: "soccer", ground: place.id };
       expect(surfaceOf(place), place.id).toEqual(own);
       expect(surfacesOf(place)[0], place.id).toEqual(own);
       expect(drawKyogijo({ ...surfaceOf(place), style: "none" }), place.id).toBe(drawKyogijo({ ...own, style: "none" } as Parameters<typeof drawKyogijo>[0]));
@@ -266,7 +269,7 @@ describe("finding a place by its club", () => {
   it("finds the places a club played in, by its name in English or in Japanese, in full or by a word of it", () => {
     expect(placesByClub("BC Lions").map((place) => place.id)).toEqual(["bc-place"]);
     expect(placesByClub("bc lions").map((place) => place.id)).toEqual(["bc-place"]);
-    expect(placesByClub("Whitecaps").map((place) => place.id)).toEqual(["bc-place"]);
+    expect(placesByClub("Whitecaps").map((place) => place.id)).toContain("bc-place");
     expect(placesByClub("Montreal Expos").map((place) => place.id)).toEqual(["jarry-park-stadium", "olympic-stadium-montreal"]);
     expect(placesByClub("ブリティッシュ・コロンビア・ライオンズ").map((place) => place.id)).toEqual(["bc-place"]);
     expect(placesByClub("ライオンズ").map((place) => place.id)).toContain("bc-place");
@@ -288,7 +291,7 @@ describe("finding a place by its club", () => {
     // (Oracle Park answers to "bc" too: it was SBC Park.)
     expect(placesBy({ text: "bc lions" }).map((place) => place.id)).toContain("bc-place");
     expect(placesBy({ text: "lions", country: "CA" }).map((place) => place.id)).toContain("bc-place");
-    expect(placesBy({ text: "whitecaps" }).map((place) => place.id)).toEqual(["bc-place"]);
+    expect(placesBy({ text: "whitecaps" }).map((place) => place.id)).toEqual(expect.arrayContaining(["bc-place"]));
     expect(placesBy({ text: "ライオンズ" }).map((place) => place.id)).toEqual(expect.arrayContaining(["bc-place", "belluna-dome"]));
     expect(placesBy({ text: "expos", year: 1980 }).map((place) => place.id)).toContain("olympic-stadium-montreal");
     expect(placesBy({ text: "seahawks sounders" }).map((place) => place.id)).toEqual(["lumen-field"]);

@@ -207,6 +207,36 @@
    "ja": "シアトル・レインFC",
    "kind": "era",
    "note": "Wikidata's label OLレイン is the club's name from 2020 to 2023 (OL Reign), not the name the place's article gives it, Seattle Reign FC. ja.wikipedia.org has a page titled シアトル・レインFC (checked 2026-10-13). It is also where OLレイン redirects."
+  },
+  "Q1469370": {
+   "club": "Pittsburgh Pirates",
+   "ja": "ピッツバーグ・パイレーツ",
+   "kind": "title",
+   "note": "The Pirates of the NHL (1925 to 1930); Wikidata's label adds (NHL) to tell the club from the baseball club, which the league beside the name already does. Wikidata's label, without the brackets (checked 2026-10-14)."
+  },
+  "Q868358": {
+   "club": "Colorado Rockies",
+   "ja": "コロラド・ロッキーズ",
+   "kind": "title",
+   "note": "The Rockies of the NHL (1976 to 1982); Wikidata's label adds (NHL) to tell the club from the baseball club, which the league beside the name already does. Wikidata's label, without the brackets (checked 2026-10-14)."
+  },
+  "Q2928124": {
+   "club": "Baltimore Bullets",
+   "ja": "ボルチモア・ブレッツ",
+   "kind": "title",
+   "note": "The Bullets of 1944 to 1954; Wikidata's label adds the years in brackets and spells Baltimore ボルティモア, where the rest of this table has ボルチモア as Wikidata's labels of the Orioles and the Ravens do (checked 2026-10-14)."
+  },
+  "Q2017456": {
+   "club": "San Diego Sockers",
+   "ja": "サンディエゴ・ソッカーズ",
+   "kind": "title",
+   "note": "Wikidata's label adds the years in brackets; the club's name is without them (checked 2026-10-14)."
+  },
+  "Q1095113": {
+   "club": "San Jose Earthquakes",
+   "ja": "サンノゼ・アースクエイクス",
+   "kind": "title",
+   "note": "The Earthquakes of the NASL (1974 to 1988); Wikidata's label adds the years in brackets; the club's name is without them (checked 2026-10-14)."
   }
  }
 }

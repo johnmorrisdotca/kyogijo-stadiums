@@ -13,6 +13,9 @@ import { URL } from "node:url";
 const here = (name) => new URL(`./${name}`, import.meta.url);
 const parks = JSON.parse(readFileSync(here("parks.data.json"), "utf8"));
 const grounds = JSON.parse(readFileSync(here("grounds.data.json"), "utf8"));
+const arenas = JSON.parse(readFileSync(here("arenas.data.json"), "utf8"));
+// `--arenas` reads the arenas only and adds them to what the file already holds (the parks' and grounds' evidence stays as it was read).
+const onlyArenas = process.argv.includes("--arenas");
 const USER_AGENT = "kyogijo-tenants/0.1 (https://github.com/johnmorrisdotca/kyogijo-stadiums; john@johnmorris.ca)";
 const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const get = async (url) => {
@@ -28,7 +31,7 @@ const get = async (url) => {
   throw new Error(`gave up on ${url.slice(0, 120)}`);
 };
 
-const places = [...parks, ...grounds].map((p) => ({ id: p.id, wikidata: p.wikidata, title: p.en?.title }));
+const places = [...(onlyArenas ? [] : [...parks, ...grounds]), ...arenas].map((p) => ({ id: p.id, wikidata: p.wikidata, title: p.en?.title }));
 const byItem = new Map(places.map((p) => [p.wikidata, p.id]));
 const year = (value) => Number(/^[+-]?(\d+)-/.exec(value)?.[1]);
 const qid = (uri) => uri.slice(uri.lastIndexOf("/") + 1);
@@ -178,7 +181,19 @@ for (const id of extraLabelled) {
   if (e === undefined || e.missing !== undefined) continue;
   labels[id] = { en: e.labels?.en?.value, ...(e.labels?.ja === undefined ? {} : { ja: e.labels.ja.value }), ...(claimIds(e, "P641").length === 0 ? {} : { sport: claimIds(e, "P641") }) };
 }
-const body = { read: new Date().toISOString().slice(0, 10), licence: "Wikidata CC0; the tenants lines of English Wikipedia CC BY-SA 4.0", statements, clubs, labels, links, articles };
+let body = { read: new Date().toISOString().slice(0, 10), licence: "Wikidata CC0; the tenants lines of English Wikipedia CC BY-SA 4.0", statements, clubs, labels, links, articles };
+if (onlyArenas) {
+  const have = JSON.parse(readFileSync(here("tenants.wikidata.json"), "utf8"));
+  const mine = new Set(arenas.map((a) => a.id));
+  body = {
+    ...have,
+    statements: [...have.statements.filter((s) => !mine.has(s.place)), ...statements],
+    clubs: { ...have.clubs, ...clubs },
+    labels: { ...have.labels, ...labels },
+    links: { ...have.links, ...links },
+    articles: { ...Object.fromEntries(Object.entries(have.articles).filter(([id]) => !mine.has(id))), ...articles },
+  };
+}
 writeFileSync(here("tenants.wikidata.json"), `${JSON.stringify(body, null, 1)}\n`);
 console.log(`${statements.length} statements, ${Object.keys(clubs).length} clubs, ${Object.keys(labels).length} labels, ${Object.keys(links).length} linked titles`);
 process.exit(0);

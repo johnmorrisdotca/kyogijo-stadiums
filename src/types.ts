@@ -741,6 +741,8 @@ export interface SurfaceOptions {
   pitch?: SoccerPitchId | SoccerSize;
   /** The soccer ground to draw: a key of `GROUNDS`. The pitch has the size its article publishes (the international 105 by 68 m where none is), and the drawing carries the ground's name for `year`. A `pitch` of your own wins over the ground's size. */
   ground?: string;
+  /** The arena to draw an NHL rink or an NBA court of: a key of `ARENAS`. The rink or the court has the size its sources publish where that differs from the league's (the league's where none does), the markings are those of `year`, and the drawing carries the arena's name for `year`. A `league` of your own wins over the arena's size. */
+  arena?: string;
   /** Draw a soccer pitch in a data provider's own coordinates (`opta`, `statsbomb`, `wyscout`, `tracab`, `metrica`, `skillcorner`, `secondspectrum`, `impect`, `uefa`, `international`), or in a frame of your own: the lines stand where the provider puts them, and an empty `ky-data` group in its units is put in the drawing for raw data. */
   pitchType?: SoccerProviderId | SoccerFrame;
   /** Only half of a soccer pitch: the `left` half or the `right` one. Ignored when the drawing has teams. `range: "half"` does the same for every sport and for a score too. */
