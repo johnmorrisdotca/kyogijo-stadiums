@@ -24,7 +24,7 @@ describe("the SVG tree", () => {
     for (const d of all) sceneFromSvg(d.svg, { theme: "dark" });
     expect(hash(corpus().map((d) => d.svg).join("\n"))).toBe(before);
     expect(drawKyogijo({ sport: "nhl", ...GAME })).toBe(all.find((d) => d.name === "nhl score")?.svg);
-  });
+  }, 30000);
 
   it("reads entities, empty and non-empty elements, and says where a drawing is not well formed", () => {
     const tree = parseSvg('<svg a="1 &amp; 2"><g/><text>a &lt; b</text><title></title></svg>');

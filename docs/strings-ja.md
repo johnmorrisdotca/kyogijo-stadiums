@@ -26,6 +26,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `surface.cricket` | Cricket ground | クリケットのグラウンド |
 | `surface.fieldhockey` | Field hockey pitch | フィールドホッケーのピッチ |
 | `surface.handball` | Handball court | ハンドボールのコート |
+| `surface.athletics` | Athletics track | 陸上競技のトラック |
 | `about.nfl` | an American football field, 120 by 53 and a third yards with its end zones, with a yard line every 5 yards, hash marks, numbers and goal posts | アメリカンフットボールのフィールド。エンドゾーンを含めて120×53⅓ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールポストがあります |
 | `about.cfl` | a Canadian football field, 150 by 65 yards with its 20-yard end zones, with a yard line every 5 yards, hash marks, numbers and goal posts on the goal lines | カナディアンフットボールのフィールド。20ヤードのエンドゾーンを含めて150×65ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールライン上のゴールポストがあります |
 | `about.ifaf` | an international (IFAF) football field, 120 by 53 and a third yards with its end zones, with a yard line every 5 yards, hash marks, numbers and goal posts | 国際アメリカンフットボール連盟（IFAF）規格のフィールド。エンドゾーンを含めて120×53⅓ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールポストがあります |
@@ -46,6 +47,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `about.cricket` | a cricket ground, with its boundary, the 30-yard circle, and the 22-yard pitch with its creases and wickets | クリケットのグラウンド。バウンダリー、30ヤードのサークル、クリースとウィケットのある22ヤードのピッチがあります |
 | `about.fieldhockey` | a field hockey pitch, 91.40 by 55.00 metres, with the centre line, the 23-metre lines, the circles, the penalty spots and the goals | フィールドホッケーのピッチ。91.40×55.00mで、センターライン、23メートルライン、サークル、ペナルティースポット、ゴールがあります |
 | `about.handball` | a handball court, 40 by 20 metres, with the centre line, the goal areas, the 6-, 7- and 9-metre lines, the 4-metre lines and the goals | ハンドボールのコート。40×20mで、センターライン、ゴールエリア、6m・7m・9mのライン、4mのライン、ゴールがあります |
+| `about.athletics` | an athletics track of 400 metres with eight lanes, the finish line and the lane numbers, with a soccer pitch inside it | 陸上競技の400mトラック。8レーンで、フィニッシュラインとレーン番号があり、内側にサッカーのピッチがあります |
 | `status.final` | Final | 試合終了 |
 | `status.final-ot` | Final/OT | 試合終了（延長） |
 | `status.final-so` | Final/SO | 試合終了（SO） |
@@ -89,6 +91,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `league.cricket` | a cricket ground, {size}, with its boundary, the pitch with its creases and wickets, and the fielding restriction's circle where the rules have one | クリケットのグラウンド。{size}で、バウンダリー、クリースとウィケットのあるピッチ、規則によっては守備制限のサークルがあります |
 | `league.fieldhockey` | a field hockey pitch, {size}, with the centre line, the 23-metre lines, the circles, the penalty spots and the goals | フィールドホッケーのピッチ。{size}で、センターライン、23メートルライン、サークル、ペナルティースポット、ゴールがあります |
 | `league.handball` | a handball court, {size}, with the centre line, the goal areas, the 6-, 7- and 9-metre lines, the 4-metre lines and the goals | ハンドボールのコート。{size}で、センターライン、ゴールエリア、6m・7m・9mのライン、4mのライン、ゴールがあります |
+| `league.athletics` | an athletics track, {size}, with its lanes, the finish line and the lane numbers | 陸上競技のトラック。{size}で、レーン、フィニッシュライン、レーン番号があります |
 | `league.size` | {length} by {width} {unit} | {length}×{width}{unit} |
 | `league.units.ft` | feet | フィート |
 | `league.units.yd` | yards | ヤード |
@@ -149,6 +152,60 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `field.wickets` | Wkts | ウィケット |
 | `field.overs` | Ov | オーバー |
 | `field.total` | Total | 合計 |
+| `athletics.track400` | an athletics track of 400 metres with {lanes} lanes, its bends of 36.50 metres radius at the kerb and its straights of 84.39 metres, with the finish line and the lane numbers | {lanes}レーンの陸上競技の400mトラック。コーナーの内縁の半径は36.50m、直線は84.39mで、フィニッシュラインとレーン番号があります |
+| `athletics.track200` | a covered athletics track of 200 metres with {lanes} lanes, its banked bends of 17.205 metres radius at the kerb and its straights of 44.983 metres, with the finish line and the lane numbers | {lanes}レーンの屋内200mトラック。バンクのついたコーナーの内縁の半径は17.205m、直線は44.983mで、フィニッシュラインとレーン番号があります |
+| `athletics.infieldPitch` | A soccer pitch lies inside the track. | トラックの内側にはサッカーのピッチがあります。 |
+| `athletics.infieldGrass` | Mown grass lies inside the track. | トラックの内側は芝生です。 |
+| `athletics.infieldNone` | Nothing lies inside the track. | トラックの内側には何もありません。 |
+| `athletics.events` | Field events marked: {list}. | 表示している競技: {list}。 |
+| `athletics.races` | Races marked: {list}. | 表示しているレース: {list}。 |
+| `athletics.start` | A close-up of the start of the {race}. | {race}のスタートの拡大図。 |
+| `athletics.finish` | A close-up of the finish line. | フィニッシュラインの拡大図。 |
+| `athletics.layout` | The {event}, drawn alone at a large scale. | {event}を大きく表示しています。 |
+| `athletics.waterJump` | The steeplechase's water jump is {where} the second bend. | 障害物競走の水濠は第2コーナーの{where}にあります。 |
+| `athletics.inside` | inside | 内側 |
+| `athletics.outside` | outside | 外側 |
+| `athletics.lane` | lane {n} | 第{n}レーン |
+| `athletics.ground` | {ground}, athletics track | {ground}の陸上競技トラック |
+| `athletics.data.draw` | Lane draw, {race} | {race}のレーン抽選 |
+| `athletics.data.results` | Results, {race} | {race}の結果 |
+| `athletics.data.replay` | Replay of the {race} | {race}のリプレイ |
+| `athletics.data.marks` | {event}: the attempts | {event}の試技 |
+| `athletics.data.summaryDraw` | {n} athletes in the {race}, from lane {first} to lane {last}. | {race}は{n}選手で、第{first}レーンから第{last}レーンです。 |
+| `athletics.data.summaryResults` | {winner} won the {race} in {time}. | {race}は{winner}が{time}で優勝しました。 |
+| `athletics.data.summaryMarks` | {n} attempts, the best {best} by {who}. | 試技は{n}回で、最高記録は{who}の{best}です。 |
+| `athletics.data.summaryReplay` | {n} athletes run the {race}. | {race}を{n}選手が走ります。 |
+| `athletics.data.columns.place` | Place | 順位 |
+| `athletics.data.columns.lane` | Lane | レーン |
+| `athletics.data.columns.athlete` | Athlete | 選手 |
+| `athletics.data.columns.country` | Country | 国 |
+| `athletics.data.columns.time` | Time | 記録 |
+| `athletics.data.columns.reaction` | Reaction | 反応時間 |
+| `athletics.data.columns.splits` | Splits | スプリット |
+| `athletics.data.columns.note` | Note | 備考 |
+| `athletics.data.columns.distance` | Mark | 記録 |
+| `athletics.data.columns.round` | Round | 回 |
+| `athletics.data.columns.valid` | Valid | 有効 |
+| `athletics.data.medals.gold` | Gold | 金 |
+| `athletics.data.medals.silver` | Silver | 銀 |
+| `athletics.data.medals.bronze` | Bronze | 銅 |
+| `athletics.data.reaction` | Reaction {t} s | 反応時間 {t}秒 |
+| `athletics.data.split` | {d} m: {t} s | {d}m: {t}秒 |
+| `athletics.data.foul` | foul | ファウル |
+| `athletics.data.best` | best mark | 最高記録 |
+| `athletics.data.yes` | yes | はい |
+| `athletics.data.no` | no | いいえ |
+| `athletics.data.layers.names` | Names | 選手名 |
+| `athletics.data.layers.flags` | Flags | 国旗 |
+| `athletics.data.layers.medals` | Places | 順位 |
+| `athletics.data.layers.splits` | Splits | スプリット |
+| `athletics.data.layers.reactions` | Reaction times | 反応時間 |
+| `athletics.data.layers.attempts` | Attempts | 試技 |
+| `athletics.data.layers.best` | Best mark | 最高記録 |
+| `athletics.data.gun` | Gun | 号砲 |
+| `athletics.data.finish` | {name} finishes in {time} | {name}が{time}でフィニッシュ |
+| `athletics.data.seconds` | s | 秒 |
+| `athletics.data.metres` | m | m |
 | `scoreTitle` | {away} {awayScore}, {home} {homeScore} | {away} {awayScore}、{home} {homeScore} |
 | `said.home` | home | ホーム |
 | `said.away` | away | アウェイ |
@@ -189,6 +246,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `special.guest.cricket` | ground | グラウンド |
 | `special.guest.fieldhockey` | pitch | ピッチ |
 | `special.guest.handball` | court | コート |
+| `special.guest.athletics` | track | トラック |
 | `special.title` | {guest} in {host} | {host}の中の{guest} |
 | `special.game` | {event}, {date}. | {event}、{date}。 |
 | `special.inside` | The {guest} lies wholly inside the outline of {host}. | {guest}全体が{host}の輪郭の内側に収まっています。 |
@@ -377,6 +435,11 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `layers.zones.pitchZone` | Pitch | ピッチ |
 | `layers.zones.insideCircle` | Inside the circle | サークルの内側 |
 | `layers.zones.outfieldGround` | Outfield | アウトフィールド |
+| `layers.zones.trackInfield` | Infield | インフィールド |
+| `layers.zones.homeStraight` | Finish straight | フィニッシュ側の直線 |
+| `layers.zones.firstBend` | First bend | 第1コーナー |
+| `layers.zones.backStraight` | Back straight | バックストレート |
+| `layers.zones.secondBend` | Second bend | 第2コーナー |
 | `team.networkTitle` | Pass network: {players} players, {links} links from {passes} passes | パスネットワーク：選手{players}人、つながり{links}本（パス{passes}本） |
 | `team.networkNote` | Most touches: {name}, {touches}. Strongest link: {a} and {b}, {n} passes. | 最多タッチ：{name}（{touches}回）。パスが最も多いつながり：{a}と{b}、{n}本。 |
 | `team.networkNoteDirected` | Most touches: {name}, {touches}. Strongest link: {a} to {b}, {n} passes. | 最多タッチ：{name}（{touches}回）。パスが最も多いつながり：{a}から{b}へ、{n}本。 |
@@ -535,6 +598,16 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `notes.names.penalty-spot` | Penalty spot | ペナルティースポット |
 | `notes.names.broken-circle-line` | Broken line round the circle | サークルを囲む破線 |
 | `notes.names.goal-area-line` | Goal-area line | ゴールエリアライン |
+| `notes.names.finish-line` | Finish line | フィニッシュライン |
+| `notes.names.kerb` | Kerb | 縁石 |
+| `notes.names.lane-lines` | Lane lines | レーンライン |
+| `notes.names.bend` | Bend | コーナー |
+| `notes.names.straight` | Straight | 直線 |
+| `notes.names.infield-pitch` | Soccer pitch | サッカーのピッチ |
+| `notes.names.start-line` | Start line | スタートライン |
+| `notes.names.breakline` | Breakline | ブレークライン |
+| `notes.names.water-jump` | Water jump | 水濠 |
+| `notes.names.exchange-zone` | Takeover zone | テイクオーバーゾーン |
 | `notes.names.seven-metre-line` | 7-metre line | 7mスローライン |
 | `notes.names.four-metre-line` | 4-metre line | 4mライン |
 | `notes.names.throw-off-area` | Throw-off area | スローオフエリア |
@@ -578,6 +651,20 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `ranges.names.circle` | circle | サークル |
 | `ranges.names.twenty-three` | 23-metre area | 23メートルエリア |
 | `ranges.names.goal-area` | goal area | ゴールエリア |
+| `ranges.names.bend` | bend | コーナー |
+| `ranges.names.home-straight` | finish straight | フィニッシュ側の直線 |
+| `ranges.names.back-straight` | back straight | バックストレート |
+| `ranges.names.finish` | finish line | フィニッシュライン |
+| `ranges.names.start` | start | スタート |
+| `ranges.names.high-jump` | high jump | 走高跳 |
+| `ranges.names.pole-vault` | pole vault | 棒高跳 |
+| `ranges.names.long-jump` | long jump | 走幅跳 |
+| `ranges.names.triple-jump` | triple jump | 三段跳 |
+| `ranges.names.shot-put` | shot put | 砲丸投 |
+| `ranges.names.discus-throw` | discus throw | 円盤投 |
+| `ranges.names.hammer-throw` | hammer throw | ハンマー投 |
+| `ranges.names.javelin-throw` | javelin throw | やり投 |
+| `ranges.names.water-jump` | water jump | 水濠 |
 | `grid.title` | A grid of drawings ({n}) | 図のグリッド（{n}枚） |
 | `grid.drawings` | Drawings ({n}): {list}. | 図（{n}枚）：{list}。 |
 | `grid.key` | Key: {list}. | 凡例：{list}。 |
@@ -1053,6 +1140,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `gallery-curling` | Gallery: curling | ギャラリー：カーリング |
 | page `gallery-courts` | Gallery: tennis, volleyball and other net sports | ギャラリー：ネット型競技のコート |
 | page `gallery-fields` | Gallery: lacrosse, rugby, Australian football, Gaelic games, cricket, hockey and handball | ギャラリー：ラクロス、ラグビー、オーストラリアンフットボール、ゲーリック・ゲームズ、クリケット、フィールドホッケー、ハンドボール |
+| page `gallery-athletics` | Gallery: the athletics stadium | ギャラリー：陸上競技場 |
 | page `gallery-styling` | Gallery: looks and annotations | ギャラリー：スタイルと注釈 |
 | page `gallery-ranges` | Gallery: display ranges and zoom | ギャラリー：表示範囲とズーム |
 | page `gallery-layouts` | Gallery: layouts and backgrounds | ギャラリー：レイアウトと背景 |

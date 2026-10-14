@@ -41,6 +41,7 @@ console.log(svg.includes("--ky-key:#1e4f8f"), svg.includes("METRO BOLTS"));
 | `print` | Black on white with greys, for a printer that has no colour; dark mode is white on black. |
 | `broadcast` | Television graphics: saturated turf and wood, a navy apron, bright red and blue lines. |
 | `high-contrast` | Black on white, or white on black, at the highest contrast the colours allow. |
+| `line-drawing` | Ink only: black lines on white and no surface colour, for a printer, a copier or a plan to colour in (white on black in dark mode). Every sport takes it; the athletics stadium has the track, the pits and the mats as outlines. |
 
 ```ts
 import { LOOKS, contrastOf, drawKyogijo, lookPalette } from "@johnmorrisdotca/kyogijo-stadiums";
@@ -48,7 +49,7 @@ import { LOOKS, contrastOf, drawKyogijo, lookPalette } from "@johnmorrisdotca/ky
 const svg = drawKyogijo({ sport: "nba", look: "chalkboard", theme: "dark" });
 const palette = lookPalette("chalkboard", "dark", "nba");
 console.log(svg.includes('data-palette="chalkboard"'), Object.keys(LOOKS).length, contrastOf(palette.line, palette.surface)! >= 3);
-// true 7 true
+// true 8 true
 ```
 
 A test holds every look, in both modes and for every sport, to the contrast that WCAG 2.2 asks: every painted line is 3:1 against what it is painted on (the surface, and where the sport paints them under the line, the second tone of the mowing or planks, the key, the dirt, the infield and the foul ground), and the drawing's words are 4.5:1 against the apron. `LOOK_PAIRS` lists the pairs. A sport added later with no palette of its own takes the look's base. A court's own look (`court`, above), a net sport's `net.look` ([net sports](./courts.md)) and `colors` are over a look's colours, in that order; the attribute that says which look a drawing has is `data-palette`, since `data-look` is a net court's. The net sports (tennis, volleyball, badminton, pickleball, table tennis) take the look's surface, free zone, painted areas, lines and net.

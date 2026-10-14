@@ -30,8 +30,9 @@ function stringsDocument() {
     "| Key | English | 日本語 |",
     "| --- | --- | --- |",
   ];
-  const en = Object.fromEntries(Object.entries(KYOGIJO_STRINGS.en).flatMap(([key, value]) => (typeof value === "string" ? [[key, value]] : Object.entries(value).flatMap(([a, b]) => (typeof b === "string" ? [[`${key}.${a}`, b]] : Object.entries(b).map(([c, d]) => [`${key}.${a}.${c}`, d]))))));
-  const ja = Object.fromEntries(Object.entries(KYOGIJO_STRINGS.ja).flatMap(([key, value]) => (typeof value === "string" ? [[key, value]] : Object.entries(value).flatMap(([a, b]) => (typeof b === "string" ? [[`${key}.${a}`, b]] : Object.entries(b).map(([c, d]) => [`${key}.${a}.${c}`, d]))))));
+  const flat = (words, prefix = "") => Object.entries(words).flatMap(([key, value]) => (typeof value === "string" ? [[`${prefix}${key}`, value]] : flat(value, `${prefix}${key}.`)));
+  const en = Object.fromEntries(flat(KYOGIJO_STRINGS.en));
+  const ja = Object.fromEntries(flat(KYOGIJO_STRINGS.ja));
   for (const key of Object.keys(en)) lines.push(`| \`${key}\` | ${en[key].replace(/\|/g, "\\|")} | ${ja[key].replace(/\|/g, "\\|")} |`);
   lines.push("", "## The demo's words (`WORDS`)", "", "| Key | English | 日本語 |", "| --- | --- | --- |");
   for (const key of Object.keys(WORDS.en)) lines.push(`| \`${key}\` | ${WORDS.en[key].replace(/\|/g, "\\|")} | ${WORDS.ja[key].replace(/\|/g, "\\|")} |`);

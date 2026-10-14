@@ -88,6 +88,7 @@ export const NAV = [
       { slug: "gallery-curling", en: "Gallery: curling", ja: "ギャラリー：カーリング", site: true },
       { slug: "gallery-courts", en: "Gallery: tennis, volleyball and other net sports", ja: "ギャラリー：ネット型競技のコート", site: true },
       { slug: "gallery-fields", en: "Gallery: lacrosse, rugby, Australian football, Gaelic games, cricket, hockey and handball", ja: "ギャラリー：ラクロス、ラグビー、オーストラリアンフットボール、ゲーリック・ゲームズ、クリケット、フィールドホッケー、ハンドボール", site: true },
+      { slug: "gallery-athletics", en: "Gallery: the athletics stadium", ja: "ギャラリー：陸上競技場", site: true },
       { slug: "gallery-styling", en: "Gallery: looks and annotations", ja: "ギャラリー：スタイルと注釈", site: true },
       { slug: "gallery-ranges", en: "Gallery: display ranges and zoom", ja: "ギャラリー：表示範囲とズーム", site: true },
       { slug: "gallery-layouts", en: "Gallery: layouts and backgrounds", ja: "ギャラリー：レイアウトと背景", site: true },

@@ -64,6 +64,21 @@ console.log(drawKyogijo({ sport: "nhl", range: undefined }) === drawKyogijo({ sp
 | `fieldhockey` | `twenty-three` | from a back-line to the 23-metre line | `right` |
 | `handball` | `half` | from a goal line to the centre line | `left` |
 | `handball` | `goal-area` | the goal area at one end, with its arc | `right` |
+| `athletics` | `bend` | one bend of the track, with the lanes across it | `right` |
+| `athletics` | `home-straight` | the finish straight, from the end of the second bend to the end of the first, with the finish line | none |
+| `athletics` | `back-straight` | the straight opposite the finish | none |
+| `athletics` | `finish` | the finish line with its lanes, close enough to read the lane numbers | none |
+| `athletics` | `start` | a close-up of the start of the race in `athletics.start`, turned so that the athletes run to the right (or up the page in portrait) | none |
+| `athletics` | `infield` | the ground inside the track, with the field events' facilities | none |
+| `athletics` | `high-jump` | a high jump: the fan and the landing area | `right` |
+| `athletics` | `pole-vault` | a pole vault: the runway, the box and the landing area | `left` |
+| `athletics` | `long-jump` | the long jump's runways, boards and pits | none |
+| `athletics` | `triple-jump` | the triple jump's runways, boards and pits | none |
+| `athletics` | `shot-put` | a shot put circle with its stop board and sector | `left` |
+| `athletics` | `discus-throw` | a discus circle with its cage and the 34.92 degree sector | `right` |
+| `athletics` | `hammer-throw` | a hammer circle with its cage and the 34.92 degree sector | `right` |
+| `athletics` | `javelin-throw` | a javelin runway with its arc and sector | `left` |
+| `athletics` | `water-jump` | the steeplechase water jump and the bend round it | `left` |
 <!-- /made:ranges -->
 
 A range at an end takes `end`: `range: { name: "half", end: "right" }`. The end is as the surface is drawn wide: `left` or `right`, whichever way the drawing lies, so that a tall drawing's left end is its top. A range with no end (the neutral zone, the middle third, the infield) ignores one. The offensive ranges are at the right by default, as a frame's numbers are for a team that attacks the right (see [coordinate frames](./frames.md)), the defensive and own ranges at the left, and the others, such as a half, at the left, as a curling sheet's house is: `end` moves any of them.
