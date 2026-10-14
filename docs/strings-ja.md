@@ -374,20 +374,20 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `situation.pp` | PP | PP |
 | `situation.en` | EN | EN |
 | `situation.delayed` | DEL PEN | ディレード |
-| `situation.shootout` | SO | GWS |
+| `situation.shootout` | SO | SO |
 | `situation.sudden` | SD | SD |
 | `situation.powerPlay` | Power play: {team} have {a} skaters against {b}. | パワープレー：{team}が{a}人、相手は{b}人です。 |
 | `situation.strength` | {a} skaters against {b}. | スケーターは{a}人対{b}人です。 |
 | `situation.penaltyTime` | {clock} left on the penalty. | ペナルティの残り時間は{clock}です。 |
-| `situation.emptyNet` | {team} have pulled the goalkeeper, and the net is empty. | {team}はゴールキーパーを下げ、ゴールは無人です。 |
-| `situation.delayedPenalty` | A penalty to {team} is delayed. | {team}へのペナルティは、プレー続行中（ディレード）です。 |
-| `situation.shootoutScore` | Shootout after {n} rounds: {away} {awayGoals}, {home} {homeGoals}. | {n}ラウンド終了時点のゲームウイニングショット：{away} {awayGoals}、{home} {homeGoals}。 |
+| `situation.emptyNet` | {team} have pulled the goalkeeper, and the net is empty. | {team}はゴーリーを下げ、ゴールは無人です。 |
+| `situation.delayedPenalty` | A penalty to {team} is delayed. | {team}に対するディレードペナルティで、プレーは続いています。 |
+| `situation.shootoutScore` | Shootout after {n} rounds: {away} {awayGoals}, {home} {homeGoals}. | シュートアウト（{n}ラウンド終了時点）：{away} {awayGoals}、{home} {homeGoals}。 |
 | `situation.suddenDeath` | The rounds after the third are sudden death. | 4ラウンド目からはサドンデスです。 |
 | `situation.top` | Top | 表 |
 | `situation.bottom` | Bottom | 裏 |
 | `situation.inning` | {half} of the {nth} inning. | {n}回{half}です。 |
 | `situation.inningOnly` | The {nth} inning. | {n}回です。 |
-| `situation.halfOnly` | {half} of the inning. | {half}です。 |
+| `situation.halfOnly` | {half} of the inning. | イニングの{half}です。 |
 | `situation.noOuts` | No outs. | ノーアウトです。 |
 | `situation.oneOut` | 1 out. | 1アウトです。 |
 | `situation.outs` | {n} outs. | {n}アウトです。 |
@@ -407,13 +407,13 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `situation.tagGoal` | {ord} & Goal | {ord} ゴール前 |
 | `situation.down` | {ord} down. | {ord}です。 |
 | `situation.downDistance` | {ord} and {n}. | {ord}、残り{n}ヤードです。 |
-| `situation.downGoal` | {ord} and goal. | {ord}、ゴール前です。 |
+| `situation.downGoal` | {ord} and goal. | {ord}、ゴール前（ゴール・トゥ・ゴー）です。 |
 | `situation.ballOwn` | The ball is on the offence's own {n}-yard line. | ボールは攻撃側の自陣{n}ヤードラインにあります。 |
-| `situation.ballOpp` | The ball is on the defence's {n}-yard line. | ボールは守備側の{n}ヤードラインにあります。 |
-| `situation.ballMid` | The ball is at midfield. | ボールは中央（ミッドフィールド）にあります。 |
-| `situation.placeOwn` | own {n} | 自陣{n} |
-| `situation.placeOpp` | opponent's {n} | 敵陣{n} |
-| `situation.placeMid` | midfield | 中央 |
+| `situation.ballOpp` | The ball is on the defence's {n}-yard line. | ボールは攻撃側の敵陣{n}ヤードラインにあります。 |
+| `situation.ballMid` | The ball is at midfield. | ボールはミッドフィールドにあります。 |
+| `situation.placeOwn` | own {n} | 自陣{n}ヤード |
+| `situation.placeOpp` | opponent's {n} | 敵陣{n}ヤード |
+| `situation.placeMid` | midfield | ミッドフィールド |
 | `situation.tagOwn` | OWN {n} | 自陣{n} |
 | `situation.tagOpp` | OPP {n} | 敵陣{n} |
 | `situation.redZone` | The ball is in the red zone. | ボールはレッドゾーンにあります。 |
@@ -429,7 +429,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `situation.results.fumble` | fumble | ファンブル |
 | `situation.results.downs` | turnover on downs | ダウン更新失敗によるターンオーバー |
 | `situation.results.safety` | safety | セーフティ |
-| `situation.results.end-of-half` | end of the half | 前半または後半の終了 |
+| `situation.results.end-of-half` | end of the half | ハーフ終了 |
 | `special.guest.skating` | rink | リンク |
 | `special.guest.nfl` | football field | アメリカンフットボールのフィールド |
 | `special.guest.cfl` | football field | カナディアンフットボールのフィールド |
@@ -1324,7 +1324,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `sitHockey` | Strength | 人数 |
 | `sithockey_pp` | Power play | パワープレー |
 | `sithockey_en` | Empty net | エンプティネット |
-| `sithockey_delayed` | Delayed penalty | ディレードペナルティ |
+| `sithockey_delayed` | Delayed penalty | ディレード |
 | `sithockey_shootout` | Shootout | シュートアウト |
 | `sitFirst` | Runner on first | 一塁に走者 |
 | `sitSecond` | Runner on second | 二塁に走者 |
@@ -1332,7 +1332,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `sitOuts` | Outs | アウト |
 | `sitCount` | Count | カウント |
 | `sitDown` | Down | ダウン |
-| `sitToGo` | To go | 残り |
+| `sitToGo` | To go | 残りヤード |
 | `sitGoal` | Goal | ゴール前 |
 | `sitBallOn` | Ball on | ボールの位置 |
 | `sitDrive` | Drive chart | ドライブチャート |
@@ -1714,14 +1714,14 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `nhl.trapezoid.start` | No trapezoid behind the net: the goaltender may play the puck anywhere. | ゴール裏にトラペゾイド（台形の区域）はなく、ゴーリーはどこでもパックを扱えます。 |
 | `nhl.twoLinePass.start` | No two-line pass rule: there is no centre line to judge it by. | ツーライン・パス（2本のラインをまたぐパス）の反則はありません。判定に使うセンターラインがまだないためです。 |
 | `nhl.centreLine.1943` | The centre red line is added, so that a team can pass out of its own zone up to it. | センターレッドラインが加わり、自陣ゾーンからこのラインまでのパスが認められるようになります。 |
-| `nhl.twoLinePass.1943` | The centre red line judges the two-line pass: a pass across both a team's own blue line and the centre line, to a team-mate who has not touched it, is an offside pass. | センターレッドラインでツーライン・パスを判定します。自陣のブルーラインとセンターラインの両方をまたぐパスを、まだ触れていない味方が受けると、オフサイドパスの反則です。 |
+| `nhl.twoLinePass.1943` | The centre red line judges the two-line pass: a pass across both a team's own blue line and the centre line, to a team-mate who has not touched it, is an offside pass. | センターレッドラインでツーライン・パスを判定します。自陣のブルーラインとセンターラインの両方をまたぐパスを、まだ触れていない味方が受けると、オフサイドパスの反則になります。 |
 | `nhl.goalLine.1997` | Goal lines are 11 feet from the end boards. | ゴールラインはエンドボードから11フィート（約3.4m）です。 |
 | `nhl.blueLine.1998` | Blue lines are 73 feet from the end boards: a 54-foot neutral zone and 73-foot offensive zones. | ブルーラインはエンドボードから73フィート（約22.3m）で、ニュートラルゾーンは54フィート（約16.5m）です。 |
 | `nhl.goalLine.1998` | Goal lines move out to 13 feet from the end boards, for room behind the net. | ゴールラインがエンドボードから13フィート（約4.0m）の位置に移り、ゴール裏が広くなります。 |
 | `nhl.blueLine.2005` | Blue lines move out to 75 feet from the end boards, cutting the neutral zone to 50 feet. | ブルーラインがエンドボードから75フィート（約22.9m）に移り、ニュートラルゾーンが50フィート（約15.2m）に狭まります。 |
 | `nhl.goalLine.2005` | Goal lines move back to 11 feet from the end boards. | ゴールラインがエンドボードから11フィートの位置に戻ります。 |
 | `nhl.trapezoid.2005` | The goaltender's trapezoid is marked behind each net: 18 feet at the goal line, 28 feet at the end boards. | 各ゴールの裏に、ゴーリーがパックを扱える区域として台形（トラペゾイド）が引かれます。ゴールライン側が18フィート、エンドボード側が28フィートです。 |
-| `nhl.twoLinePass.2005` | The centre line no longer judges the offside pass, under the 2005 collective bargaining agreement, so a pass across two lines is legal. | 2005年の労使協定により、センターラインは反則パスの判定に使われなくなり、2本のラインをまたぐパスは認められます。 |
+| `nhl.twoLinePass.2005` | The centre line no longer judges the offside pass, under the 2005 collective bargaining agreement, so a pass across two lines is legal. | 2005年の労使協定により、センターラインはオフサイドパスの判定に使われなくなり、ツーライン・パスは反則ではなくなります。 |
 | `nhl.hashApart.2012` | The two hash marks beside each end-zone face-off circle are 3 feet apart (Rule 1.9 of 2012-13; no earlier season is cited). | エンドゾーンのフェイスオフサークルの両脇にある2本のハッシュマークは、間隔が3フィート（約91cm）です（2012-13シーズンのルール1.9。それ以前のシーズンを示す資料は見つかっていません）。 |
 | `nhl.hashApart.2014` | The hash marks move apart to 5 feet 7 inches, more in line with the marks on international ice. | 2本のハッシュマークの間隔が5フィート7インチ（約1.7m）に広がり、国際大会のリンクにあるマークに近づきます。 |
 | `nhl.trapezoid.2014` | The trapezoid is widened to 22 feet at the goal line (2 feet each side). | トラペゾイドのゴールライン側が左右2フィートずつ広がり、22フィートになります。 |

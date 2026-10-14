@@ -314,7 +314,7 @@ export function hockeyPill(read: HockeyRead, language: Language): string | undef
  * console.log(situationText({ sport: "nfl", situation: { ballOn: 88, down: 3, toGo: 7 } }));
  * // 5v4 PP 1:42
  * // Top 7 · 2 out · 3-2
- * // 3rd & 7
+ * // 3rd & 7 · OPP 12
  * ```
  */
 export function situationText(options: { sport: Sport; league?: string; homeSide?: Side; direction?: DirectionOptions; language?: Language; situation?: Situation }, language: Language = options.language === "ja" ? "ja" : "en"): string | undefined {

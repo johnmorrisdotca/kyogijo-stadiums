@@ -269,8 +269,8 @@ const NHL_SPANS: Spans<NhlRules> = {
   ],
   twoLinePass: [
     { from: null, value: false, what: "No two-line pass rule: there is no centre line to judge it by.", ja: "ツーライン・パス（2本のラインをまたぐパス）の反則はありません。判定に使うセンターラインがまだないためです。", sources: ["wp-offside"] },
-    { from: 1943, value: true, what: "The centre red line judges the two-line pass: a pass across both a team's own blue line and the centre line, to a team-mate who has not touched it, is an offside pass.", ja: "センターレッドラインでツーライン・パスを判定します。自陣のブルーラインとセンターラインの両方をまたぐパスを、まだ触れていない味方が受けると、オフサイドパスの反則です。", sources: ["wp-offside"] },
-    { from: 2005, value: false, what: "The centre line no longer judges the offside pass, under the 2005 collective bargaining agreement, so a pass across two lines is legal.", ja: "2005年の労使協定により、センターラインは反則パスの判定に使われなくなり、2本のラインをまたぐパスは認められます。", sources: ["wp-offside"] },
+    { from: 1943, value: true, what: "The centre red line judges the two-line pass: a pass across both a team's own blue line and the centre line, to a team-mate who has not touched it, is an offside pass.", ja: "センターレッドラインでツーライン・パスを判定します。自陣のブルーラインとセンターラインの両方をまたぐパスを、まだ触れていない味方が受けると、オフサイドパスの反則になります。", sources: ["wp-offside"] },
+    { from: 2005, value: false, what: "The centre line no longer judges the offside pass, under the 2005 collective bargaining agreement, so a pass across two lines is legal.", ja: "2005年の労使協定により、センターラインはオフサイドパスの判定に使われなくなり、ツーライン・パスは反則ではなくなります。", sources: ["wp-offside"] },
   ],
   hashApart: [
     { from: 2012, value: 3, what: "The two hash marks beside each end-zone face-off circle are 3 feet apart (Rule 1.9 of 2012-13; no earlier season is cited).", ja: "エンドゾーンのフェイスオフサークルの両脇にある2本のハッシュマークは、間隔が3フィート（約91cm）です（2012-13シーズンのルール1.9。それ以前のシーズンを示す資料は見つかっていません）。", sources: ["nhl-rules-2012", "nhl-hash-2014", "cbs-hash-2014"] },
@@ -446,7 +446,7 @@ const featuresOf = (sport: EraSport): [string, EraSpan<unknown>[]][] => Object.e
  * import { eraChanges } from "@johnmorrisdotca/kyogijo-stadiums/eras";
  * const nhl = eraChanges("nhl");
  * console.log(nhl.length, nhl[0].id, nhl[0].from);
- * // 10 nhl.centreLine.1943 1943
+ * // 12 nhl.centreLine.1943 1943
  * ```
  */
 export function eraChanges(sport: EraSport): EraChange[] {
