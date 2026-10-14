@@ -22,13 +22,15 @@ for (const sport of SPORTS) {
   });
 }
 
-test("the whole page, with every park drawn, does not scroll sideways, in English and in Japanese", async ({ page }) => {
+test("the whole page, with every park and ground shown, does not scroll sideways, in English and in Japanese", async ({ page }) => {
   test.setTimeout(90_000);
-  await open(page, "?lang=en&help=off");
+  await open(page, "?lang=en&help=off&parkleague=all&parkstatus=all&parkall=1&groundgroup=all&groundall=1");
   await page.locator(at("park-grid")).scrollIntoViewIfNeeded();
   await expect(page.locator(`${at("park-grid")} .park`)).toHaveCount(94);
+  await expect(page.locator(`${at("ground-grid")} .park`)).toHaveCount(64);
   await noSidewaysScroll(page);
   await page.locator('[data-lang="ja"]').click();
+  await expect(page.locator(at("parks-count"))).toHaveText("94球場中94球場");
   await noSidewaysScroll(page);
 });
 

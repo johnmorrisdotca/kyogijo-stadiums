@@ -814,8 +814,32 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `chart_soccer` | A soccer shot map: marks sized by expected goals, with the total | サッカーのシュートマップ：マークの大きさは期待ゴール数で、合計も表示 |
 | `chart_goal` | The goal-mouth view of the same shots: where each crossed the goal line | 同じシュートのゴールマウス図：ゴールラインを通過した位置 |
 | `parksTitle` | Ballparks | 球場 |
-| `parksText` | Thirty current MLB parks and forty-four past ones, and the NPB's twelve home parks and eight other grounds, each fence drawn from the distances its article publishes. Press one to try it. | 現在のMLB30球場と過去の44球場、NPBの本拠地12球場とその他8球場。外野フェンスは、各球場の記事で公表されている距離をもとに描いています。球場を選ぶと試せます。 |
-| `parksShow` | Show the parks | 球場を表示する |
+| `parksText` | Thirty current MLB parks and forty-four past ones, and the NPB's twelve home parks and eight other grounds, each fence drawn from the distances its article publishes. Press one to try it. Filter them by league, whether they are in use and era, or search any name they have had, in English or in Japanese. | 現在のMLB30球場と過去の44球場、NPBの本拠地12球場とその他8球場。外野フェンスは、各球場の記事で公表されている距離をもとに描いています。球場を選ぶと試せます。リーグ、使用状況、年代で絞り込めるほか、これまでの呼び名なら英語でも日本語でも検索できます。 |
+| `parksFilterLabel` | Filter the ballparks | 球場の絞り込み |
+| `parksEra` | Era | 年代 |
+| `parksEraAll` | Any era | すべての年代 |
+| `parksEraDecade` | {d}s | {d}年代 |
+| `parksSearch` | Find a park | 球場を探す |
+| `parksSearchPlaceholder` | Name, nickname, city or team | 名前、通称、都市、チーム |
+| `parksCount` | {n} of {total} parks | {total}球場中{n}球場 |
+| `parksFound` | {n} of {total} parks match your search | {total}球場中{n}球場が見つかりました |
+| `parksNone` | No park matches. Try another name, or reset the filters. | 条件に合う球場がありません。別の名前を試すか、絞り込みをリセットしてください。 |
+| `parksMore` | Show all {n} parks | 全{n}球場を表示 |
+| `gridLess` | Show fewer | 一部のみ表示 |
+| `gridReset` | Reset filters | 絞り込み解除 |
+| `groundsTitle` | Soccer grounds | サッカースタジアム |
+| `groundsText` | Sixty-four grounds: the stadiums of every World Cup final, the other venues of the 2026 World Cup and the clubs' own, each pitch drawn at the size its article publishes. Press one to try it. Filter them by group and country, or search any name they have had, in English, in Japanese or in their own language. | 64のスタジアム。ワールドカップ決勝の会場、2026年ワールドカップのその他の会場、クラブのスタジアムを、各記事で公表されている広さのピッチで描いています。スタジアムを選ぶと試せます。区分や国で絞り込めるほか、これまでの呼び名なら英語、日本語、現地の言葉のどれでも検索できます。 |
+| `groundsFilterLabel` | Filter the soccer grounds | サッカースタジアムの絞り込み |
+| `groundsGroup` | Group | 区分 |
+| `groundsGroup_finals` | Finals | ワールドカップ決勝 |
+| `groundsGroup_2026` | 2026 | 2026年大会 |
+| `groundsGroup_clubs` | Clubs | クラブ |
+| `groundsSearch` | Find a ground | スタジアムを探す |
+| `groundsSearchPlaceholder` | Name, nickname or city | 名前、通称、都市 |
+| `groundsCount` | {n} of {total} grounds | {total}会場中{n}会場 |
+| `groundsFound` | {n} of {total} grounds match your search | {total}会場中{n}会場が見つかりました |
+| `groundsNone` | No ground matches. Try another name, or reset the filters. | 条件に合うスタジアムがありません。別の名前を試すか、絞り込みをリセットしてください。 |
+| `groundsMore` | Show all {n} grounds | 全{n}会場を表示 |
 | `atlasTitle` | Atlas | 球場・スタジアムマップ |
 | `atlasText` | Every ballpark and soccer ground in the package on one map: choose a place to see its surface drawn to scale. Filter by sport, league, country, today or the past, and pick a year to keep the places that were in use then. | このパッケージにある野球場とサッカー場をすべて1枚の地図に載せました。場所を選ぶと、その競技場を縮尺どおりに描きます。競技、リーグ、国、現在か過去かで絞り込めます。年を選ぶと、その年に使われていた場所だけが残ります。 |
 | `atlasSport` | Sport | 競技 |

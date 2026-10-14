@@ -127,6 +127,35 @@ test.describe("with JavaScript off", () => {
     for (const section of ["atlas", "embed", "gallery", "badges", "replay", "elements"]) await expect(page.locator(`#${section} h2`)).not.toBeEmpty();
   });
 
+  test("the parks and the grounds have their filters, their count and their first cards", async ({ page }) => {
+    await serve(page);
+    await page.goto("http://kyogijo.test/");
+    // The default views, drawn into the page: the MLB parks in use today and the grounds of the World Cup finals.
+    await expect(page.locator("#parks-body .park")).toHaveCount(30);
+    await expect(page.locator("#grounds-body .park")).toHaveCount(28);
+    expect(await page.locator("#parks-body .park svg.kyogijo").count()).toBe(30);
+    expect(await page.locator("#grounds-body .park svg.kyogijo").count()).toBe(28);
+    await expect(page.locator(at("parks-count"))).toHaveText("30 of 94 parks");
+    await expect(page.locator(at("grounds-count"))).toHaveText("28 of 64 grounds");
+    await expect(page.locator(`${at("parks-league")} button[aria-pressed="true"]`)).toHaveText("MLB");
+    await expect(page.locator(`${at("parks-status")} button[aria-pressed="true"]`)).toHaveText("Today");
+    await expect(page.locator(`${at("grounds-group")} button[aria-pressed="true"]`)).toHaveText("Finals");
+    await expect(page.locator(at("parks-search"))).toHaveAttribute("placeholder", "Name, nickname, city or team");
+    await expect(page.locator(at("parks-more"))).toHaveText("Show all 30 parks");
+    await expect(page.locator(at("grounds-more"))).toHaveText("Show all 28 grounds");
+    await expect(page.locator('[data-field="era"]')).toBeHidden();
+    await expect(page.locator(at("parks-reset"))).toBeHidden();
+    await expect(page.locator(at("grounds-country"))).toHaveValue("all");
+    expect(await page.locator(`${at("grounds-country")} option`).count()).toBe(24);
+    // A section's own words and no empty ones.
+    await expect(page.locator("#parks h2")).toHaveText("Ballparks");
+    await expect(page.locator("#grounds h2")).toHaveText("Soccer grounds");
+    // The page is short already: the rest of the cards are shut away by the stylesheet, not by the script.
+    const shut = await page.locator("#parks-body .park").evaluateAll((all) => all.filter((el) => getComputedStyle(el).display === "none").length);
+    expect(shut === 0 || shut === 14 || shut === 22).toBe(true);
+    expect((await page.locator("#parks").boundingBox()).height).toBeLessThan(page.viewportSize().width < 560 ? 700 : 760);
+  });
+
   for (const path of ["docs/", "docs/getting-started.html", "docs/gallery-fields.html", "api.html"]) {
     test(`${path} has its header, its words and its footer`, async ({ page }) => {
       await serve(page);
@@ -168,6 +197,48 @@ for (const [name, query] of [["by default", ""], ["at the address the owner used
     await expect(page.locator(at("stage"))).not.toHaveAttribute("data-pending", "");
   });
 }
+
+// The parks and the grounds: the script takes over the cards that are in the page, and moves nothing. The rest of the page is put aside
+// (the sections above them are drawn by the script, so with the reader down at the Ballparks they would push them about and hide whether the
+// sections themselves moved), and the two sections sit at the top of the screen where a shift is one the browser counts.
+async function onlyThePlaces(page, delay) {
+  await serveSlowly(page, delay);
+  await page.goto("http://kyogijo.test/", { waitUntil: "commit" });
+  await page.waitForSelector("#grounds-body .park", { state: "attached" });
+  await page.addStyleTag({ content: "main > :not(#parks):not(#grounds) { display: none !important; }" });
+  // Putting the rest aside moved the two sections itself: count from here.
+  await page.evaluate(() => new Promise((done) => requestAnimationFrame(() => requestAnimationFrame(() => { window.__shift = 0; window.__shifts = []; done(); }))));
+}
+
+test("the parks and the grounds keep their box and their cards when the script takes over", async ({ page }) => {
+  await onlyThePlaces(page, 700);
+  expect(await page.locator("#parks-body").getAttribute("data-ready")).toBeNull();
+  const boxes = async () => {
+    const [parks, grounds] = await Promise.all(["parks", "grounds"].map((id) => page.locator(`#${id}`).boundingBox()));
+    return { parks: Math.round(parks.height), grounds: Math.round(grounds.height), gap: Math.round(grounds.y - parks.y) };
+  };
+  const before = await boxes();
+  await page.evaluate(() => { for (const id of ["park-grid", "ground-grid"]) document.getElementById(id).firstElementChild.firstDrawing = true; });
+  await page.waitForSelector('#grounds-body[data-ready="true"]');
+  await page.waitForSelector('#parks-body[data-ready="true"]');
+  expect(await boxes()).toEqual(before);
+  // The cards are the ones that were in the page, not drawn again; and the script has taken them over.
+  expect(await page.evaluate(() => ["park-grid", "ground-grid"].map((id) => document.getElementById(id).firstElementChild.firstDrawing === true))).toEqual([true, true]);
+  await page.locator(at("parks-more")).click();
+  await expect(page.locator(at("parks-more"))).toHaveText("Show fewer");
+});
+
+test("the parks and the grounds do not jump when the script runs", async ({ page, browserName }, testInfo) => {
+  test.skip(browserName !== "chromium", "only Chromium reports layout shifts");
+  await page.emulateMedia({ colorScheme: "dark" });
+  await watchShifts(page);
+  await onlyThePlaces(page, 700);
+  await page.waitForSelector('#grounds-body[data-ready="true"]');
+  await page.waitForTimeout(1200);
+  const [total, shifts] = await page.evaluate(() => [window.__shift, window.__shifts]);
+  console.log(`${testInfo.project.name} parks and grounds: CLS ${total?.toFixed(4)} ${JSON.stringify(shifts)}`);
+  expect(total).toBeLessThan(0.01);
+});
 
 // ----- A reader of Japanese is not shown English first.
 

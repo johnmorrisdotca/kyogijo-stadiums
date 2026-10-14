@@ -74,7 +74,33 @@ kyogijo-field::part(plate) { filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .25)); 
 .live-stage svg { max-width: 100%; }
 .live-stage svg[data-orientation="portrait"] { width: auto; height: min(64vh, 600px); }
 
-.parks { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); margin-top: 12px; }
+/* The Ballparks and Soccer grounds sections (place-grid.js). Shut, a phone shows one row that scrolls sideways and a wider screen the first rows
+   (--cap cards, in whole rows of the columns it has); "show all" (data-open="true") opens a grid of every card, 3, 4 or 8 across. */
+.parks { display: grid; gap: 10px; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 12px; --cap: 6; }
+.parks[data-open="false"] { display: flex; overflow-x: auto; scroll-snap-type: x proximity; overscroll-behavior-x: contain; padding-bottom: 8px; scroll-padding-inline: 2px; }
+.parks[data-open="false"] > .park { flex: 0 0 calc((100% - 20px) / 3.35); scroll-snap-align: start; }
+@media (min-width: 560px) {
+  .parks, .parks[data-open="false"] { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); overflow: visible; padding-bottom: 0; --cap: 8; }
+  .parks[data-open="false"] > .park { flex: none; }
+  .parks[data-open="false"] > .park:nth-child(n + 9) { display: none; }
+}
+@media (min-width: 900px) {
+  .parks, .parks[data-open="false"] { grid-template-columns: repeat(8, minmax(0, 1fr)); --cap: 16; }
+  .parks[data-open="false"] > .park:nth-child(n + 9) { display: grid; }
+  .parks[data-open="false"] > .park:nth-child(n + 17) { display: none; }
+}
+.pf { margin-top: 10px; display: grid; gap: 2px; }
+.pf-bar { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 8px 16px; }
+.pf-field { display: grid; gap: 2px; min-width: 0; max-width: 100%; flex: none; }
+.pf-field .fam-label { min-width: 0; }
+.pf-field .fam-seg button { padding: 0 8px; }
+.pf-search { flex: 1 1 12rem; }
+.pf-field select.fam-field { min-width: 8rem; }
+.pf-search .fam-field { width: 100%; }
+.pf-status { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 46px; }
+.pf-count { font-weight: 700; font-variant-numeric: tabular-nums; }
+.pf-more { justify-content: center; margin-top: 10px; }
+.pf-empty { grid-column: 1 / -1; margin: 0; padding: 14px 4px; color: var(--muted); }
 .park { text-align: left; font: inherit; color: inherit; border: 1px solid var(--rule); background: var(--surface); border-radius: 12px; padding: 8px; display: grid; gap: 2px; align-content: start; cursor: pointer; min-height: 44px; min-width: 0; }
 .park:hover { border-color: var(--ink); }
 .park svg { width: 100%; height: auto; margin-bottom: 4px; }

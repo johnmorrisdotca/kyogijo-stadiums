@@ -5,6 +5,7 @@ import { COURT_THEMES, GROUNDS, GROUND_IDS, KYOGIJO_STYLE, LEAGUES, PARKS, PARK_
 import { mountKyogijo } from "./dist/mount-entry.js";
 import "./dist/element-define.js";
 import { initAtlas } from "./atlas.js";
+import { mountPlaceGrid } from "./place-grid.js";
 import { toParams } from "./embed-params.js";
 import { EMBLEMS, FAMILIES, GAMES, TEAMS, TEAMS_JA } from "./examples.js";
 import { nbaZones, passMap, shotHeat, shotMap, sprayChart, sprayDensity, touchZones } from "./layers-data.js";
@@ -647,41 +648,7 @@ $("conv-spot").addEventListener("click", () => {
   convert();
 });
 
-// ----- Every ballpark, drawn when asked for or when the section comes into view.
-let parksDrawn = false;
-function drawParks() {
-  const grid = $("park-grid");
-  grid.replaceChildren();
-  for (const id of PARK_IDS) {
-    const p = PARKS[id];
-    const tile = document.createElement("button");
-    tile.type = "button";
-    tile.className = "park";
-    tile.dataset.park = id;
-    const name = language.lang === "ja" && p.nameJa ? p.nameJa : p.name;
-    tile.innerHTML = `${drawKyogijo({ sport: "mlb", park: id, orientation: "portrait", margin: 6, detail: "simple", stripes: false, style: "none", title: name })}<span class="park-name">${name.replace(/&/g, "&amp;").replace(/</g, "&lt;")}</span><span class="park-sub">${p.league} · ${p.status === "past" ? (p.from !== undefined ? `${p.from}–${p.to}` : language.lang === "ja" ? "過去" : "past") : p.city}</span>`;
-    tile.addEventListener("click", () => {
-      state.sport = "mlb";
-      state.park = id;
-      loadGame("mlb");
-      fillFields();
-      $("park").value = id;
-      refreshSegs();
-      change();
-      $("try").scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-    grid.append(tile);
-  }
-  parksDrawn = true;
-}
-$("parks-show").addEventListener("click", () => { drawParks(); $("parks-show").hidden = true; });
-if (typeof IntersectionObserver !== "undefined") {
-  new IntersectionObserver((entries, observer) => {
-    if (entries.some((e) => e.isIntersecting) && !parksDrawn) { drawParks(); $("parks-show").hidden = true; observer.disconnect(); }
-  }, { rootMargin: "300px" }).observe($("park-grid"));
-}
-
-// ----- The atlas: a map of every park and ground. Its places open in the playground above.
+// ----- The Ballparks and Soccer grounds sections and the atlas's map of every park and ground. Their places open in the playground above.
 function tryPlace(place) {
   if (place.kind === "park") {
     state.sport = "mlb";
@@ -699,10 +666,13 @@ function tryPlace(place) {
   $("try").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 let atlas = { relabel() {} };
+const pick = (kind, id) => tryPlace({ kind, id });
+const grids = [mountPlaceGrid("parks", { say, lang: () => language.lang, onPick: pick }), mountPlaceGrid("grounds", { say, lang: () => language.lang, onPick: pick })];
 
 // ----- A change of language redraws the words that were drawn in it.
 function onLanguage() {
   atlas.relabel();
+  for (const grid of grids) grid.relabel();
   fillParks();
   fillGrounds();
   fillLeagues();
@@ -717,7 +687,6 @@ function onLanguage() {
   buildExamples();
   drawLive();
   drawReplays();
-  if (parksDrawn) drawParks();
   render();
 }
 

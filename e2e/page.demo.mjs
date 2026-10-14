@@ -136,15 +136,16 @@ test("a live score moves when asked", async ({ page }) => {
   expect(await scores()).toEqual(["0", "0"]);
 });
 
-test("the examples are all there: every sport, wide and tall, badges, compact cards, courts and the parks on request", async ({ page }) => {
+test("the examples are all there: every sport, wide and tall, badges, compact cards, courts and the parks", async ({ page }) => {
   await open(page, "?lang=en&help=off");
   expect(await page.locator(`${at("gallery-cards")} svg.kyogijo`).count()).toBe(20);
   expect(await page.locator(`${at("side-cards")} svg.kyogijo`).count()).toBe(4);
   expect(await page.locator(`${at("badge-list")} svg.kyogijo`).count()).toBe(8);
   expect(await page.locator(`${at("compact-cards")} svg.kyogijo`).count()).toBe(3);
   expect(await page.locator(`${at("court-cards")} svg.kyogijo`).count()).toBe(5);
-  await page.locator(at("parks-show")).scrollIntoViewIfNeeded();
-  await expect(page.locator(`${at("park-grid")} .park`)).toHaveCount(94);
+  // The parks open on the MLB parks in use today (see places.demo.mjs for the filters).
+  await page.locator(at("parks-more")).scrollIntoViewIfNeeded();
+  await expect(page.locator(`${at("park-grid")} .park`)).toHaveCount(30);
   await page.locator(`${at("park-grid")} .park[data-park="fenway-park"]`).click();
   await expect(svg(page)).toHaveAttribute("data-sport", "mlb");
   expect(await page.locator(at("park")).inputValue()).toBe("fenway-park");

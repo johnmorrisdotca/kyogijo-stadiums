@@ -49,6 +49,7 @@ const style = lib["@johnmorrisdotca/kyogijo"].KYOGIJO_STYLE;
 const here = (file) => import(pathToFileURL(join(process.cwd(), "site", file)).href);
 const { SPORTS, LEAGUES, drawKyogijo } = await here("dist/index.js");
 const model = await here("model.js");
+const places = await here("place-grid.js");
 const { FIELDS, SEGS, TOGGLES, SIZES } = model;
 const say = (key) => {
   if (!(key in WORDS.en)) throw new Error(`demo/words.js has no English word for "${key}"`);
@@ -113,6 +114,12 @@ for (const mode of ["wide", "tall", "landscape", "portrait"]) {
   const svg = drawn(first, mode);
   FIRST.use[mode] = svg === WIDE ? "wide" : svg === TALL ? "tall" : null;
 }
+
+/** The Ballparks and Soccer grounds sections' filters and first cards, in their default view (demo/place-grid.js): what the script would draw first. */
+const placeBody = (name) => {
+  const { attributes, html } = places.prerender(name, say);
+  return `<div class="pf-body" id="${name}-body" data-testid="${name}-body" ${attributes}>${html}</div>`;
+};
 
 const escapeAttr = (text) => String(text).replace(/&/g, "&amp;").replace(/"/g, "&quot;");
 const hid = (id) => {
@@ -421,8 +428,13 @@ const page = `<!doctype html>
       <section class="more" id="parks" aria-labelledby="parks-title">
         <h2 id="parks-title" data-say="parksTitle"></h2>
         <p data-say="parksText"></p>
-        <div class="fam-actions"><button type="button" class="fam-button" id="parks-show" data-testid="parks-show" data-say="parksShow"></button></div>
-        <div class="parks" id="park-grid" data-testid="park-grid"></div>
+        ${placeBody("parks")}
+      </section>
+
+      <section class="more" id="grounds" aria-labelledby="grounds-title">
+        <h2 id="grounds-title" data-say="groundsTitle"></h2>
+        <p data-say="groundsText"></p>
+        ${placeBody("grounds")}
       </section>
 
       <section class="more" id="elements" aria-labelledby="elements-title">
