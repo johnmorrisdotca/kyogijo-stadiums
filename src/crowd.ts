@@ -18,7 +18,7 @@ export type Outline =
 export interface StandRing {
   /** `lower`, `upper`, `courtside`, `grandstand` or `bleachers`, with the tier's number where a ring has parts. */
   id: string;
-  tier: "courtside" | "lower" | "upper" | "grandstand" | "bleachers" | "wall";
+  tier: "courtside" | "gallery" | "lower" | "upper" | "grandstand" | "bleachers" | "wall";
   /** The band is `region` less `hole` (nothing for a polygon that is the band itself). */
   region: Outline;
   /** Further pieces of the band that are apart from `region` (a ballpark's bleachers either side of the batter's eye). */
@@ -72,6 +72,8 @@ export interface CrowdStands {
   reach: { left: number; right: number; top: number; bottom: number };
   /** The seats of all the stands, from the model: what a density is a share of when no capacity is given. */
   seats: number;
+  /** The stands are a hall's gallery (a dojo's balcony): a thin band close to the walls, plain seats, a few neutral people and no sides. */
+  gallery?: boolean;
 }
 
 // ---- The options. ----
@@ -147,7 +149,7 @@ export function generator(seed: number): () => number {
 // ---- The profiles. ----
 
 interface Tier {
-  id: "courtside" | "lower" | "upper";
+  id: "courtside" | "lower" | "upper" | "gallery";
   from: number;
   to: number;
   height: [number, number];
@@ -434,6 +436,8 @@ export interface LayoutInput {
   ground?: string;
   /** The surface lies on an arena floor that fills most of the hall: the sport's closer stands, where it has them. */
   arena?: boolean;
+  /** A hall's gallery instead of the sport's stands (a dojo's balcony, from `dojoRoom`): the distance of its first row from the surface, its depth and the heights of its first and last rows, in feet. */
+  gallery?: { offset: number; depth: number; height: [number, number] };
   /** The ballpark's fence as points on the field, for a ballpark (see `parkLayout`). */
   fence?: readonly Pt[];
   /** The foul lines' length at the poles and the backstop's distance, for a ballpark. */
@@ -454,8 +458,11 @@ function offsets(p: Profile, box: Box, stadium: "purpose" | "nfl" | "cfl"): { le
 
 /** The layout of a sport's stands round its surface: rings, covers, sectors and gaps. For a ballpark see `parkLayout`. */
 export function layoutOf(input: LayoutInput): CrowdStands {
-  const { sport, box, crowd } = input;
-  const base0 = PROFILES[sport];
+  const { sport, box } = input;
+  const gal = input.gallery;
+  // A gallery has no home and no visitors, no card display and no tunnel, camera or benches.
+  const crowd: Crowd = gal === undefined ? input.crowd : { ...input.crowd, awayEnd: "none", tifo: undefined, gaps: false, shape: input.crowd.shape === "sides" ? "sides" : "bowl" };
+  const base0: Profile = gal === undefined ? PROFILES[sport] : { shape: "bowl", side: gal.offset, end: gal.offset, bench: 0, corner: 0, tiers: [{ id: "gallery", from: 0, to: gal.depth, height: gal.height, fill: 1 }], away: "corner" };
   const base: Profile = input.arena === true && base0.arena !== undefined ? { ...base0, ...base0.arena, tiers: base0.arena.tiers ?? base0.tiers } : base0;
   const host = sport === "soccer" ? (crowd.stadium === "nfl" || crowd.stadium === "cfl" ? crowd.stadium : crowd.stadium === "auto" && input.ground !== undefined ? GRIDIRON_GROUNDS[input.ground] : undefined) : undefined;
   const stadium: "purpose" | "nfl" | "cfl" | undefined = sport === "soccer" ? host ?? "purpose" : undefined;
@@ -512,6 +519,7 @@ export function layoutOf(input: LayoutInput): CrowdStands {
   });
   const stands: CrowdStands = { sport, shape, box, rings, covers, concourses, sectors: [], gaps: [], reach: reachOf, seats: rings.reduce((n, r) => n + r.seats, 0) };
   if (stadium !== undefined) stands.stadium = stadium;
+  if (gal !== undefined) stands.gallery = true;
   if (stadium === "nfl" || stadium === "cfl") {
     const f = gridiron(stadium);
     const field: Box = { x: cx - f.length / 2, y: cy - f.width / 2, w: f.length, h: f.width };

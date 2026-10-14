@@ -14,11 +14,12 @@ import { skatingAbout, skatingSentences } from "./skating/describe.ts";
 import { skatingStyle } from "./skating.style.ts";
 import { budoPlan, isBudoSport } from "./budo/plan.ts";
 import { dojoSpecOf } from "./budo/dojo.ts";
+import { dojoGallery } from "./budo/room.ts";
 import { budoAbout, budoScoreSentences, budoSentences } from "./budo/describe.ts";
 import { lookOf as budoLookOf } from "./budo/looks.ts";
 import { kimariteName } from "./budo/kimarite.ts";
 import { budoScoreText, budoView } from "./budo.score.ts";
-import { budoStyle } from "./budo.style.ts";
+import { KYOGIJO_BUDO_GALLERY_STYLE, budoStyle } from "./budo.style.ts";
 import { budoBoardMarkup } from "./budo.board.ts";
 import { budoSurface } from "./surfaces/budo.ts";
 import { skatingSurface } from "./surfaces/skating.ts";
@@ -426,7 +427,10 @@ function standsFor(o: SurfaceOptions, surface: Surface, crowd: Crowd): CrowdStan
     const walls = park === undefined || crowd.wallSeats === false ? [] : parkWallsIn(park, o.year).filter((w) => (crowd.wallSeats === true ? w.height_ft >= 25 : w.label !== undefined && WALL_SEATS[park.id] === w.label));
     return parkLayout({ fence: fenceOutline(points), backstop, crowd, seatsOnWalls: walls.map((w) => ({ from: w.from, to: w.to, height: w.height_ft })) });
   }
-  return crowdLayout({ sport, box: surface.whole ?? surface.box ?? { x: 0, y: 0, w: 100, h: 100 }, crowd, awaySide, ground: o.ground, arena: o.budo?.hall === "budokan" });
+  // A dojo's crowd sits in its gallery, from the room's balcony data (in feet here); the arenas (the Budokan, the Kokugikan) keep their bowls.
+  const hall = sport === "dojo" ? dojoGallery(o) : undefined;
+  const gallery = hall === undefined ? undefined : { offset: hall.offset / 0.3048, depth: hall.depth / 0.3048, height: [hall.height[0] / 0.3048, hall.height[1] / 0.3048] as [number, number] };
+  return crowdLayout({ sport, box: surface.whole ?? surface.box ?? { x: 0, y: 0, w: 100, h: 100 }, crowd, awaySide, ground: o.ground, arena: o.budo?.hall === "budokan", ...(gallery === undefined ? {} : { gallery }) });
 }
 
 /** True when the drawing is asked to be small: `detail: "simple"` or a `width` under 480 pixels. */
@@ -454,7 +458,9 @@ function buildCrowded(o: SurfaceOptions, portrait: boolean, id: string, score: b
   const fine = crowd.detail === "fine" || (crowd.detail === "auto" && !smallDrawing(o));
   const first = /^<[^>]*\/>/.exec(surface.base)?.[0] ?? "";
   const bg = /class="([^"]*)"/.exec(first)?.[1] ?? "ky-apron";
-  const drawn = drawCrowd(stands, { id, crowd, density: densityOf(crowd, seats, ground), fine, ground: bg });
+  // A gallery is sparsely taken unless the options say how full.
+  const taken = stands.gallery === true && crowd.density === undefined && crowd.attendance === undefined ? 0.4 : densityOf(crowd, seats, ground);
+  const drawn = drawCrowd(stands, { id, crowd, density: taken, fine, ground: bg });
   surface.base = first + drawn.markup + surface.base.slice(first.length);
   surface.defs += drawn.defs;
   surface.lines += drawn.over;
@@ -998,7 +1004,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       style: style === "" ? undefined : style,
     },
     `<title id="${titleId}">${esc(title)}</title><desc id="${descId}">${esc(description)}</desc>` +
-      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${left?.round === true || right?.round === true || (pg !== undefined && pageant?.style === "stage") || (pg !== undefined && pageant?.emblem?.shape !== "plain" && pageant?.emblem !== undefined) ? `\n${KYOGIJO_MARK_STYLE}` : ""}${pg === undefined ? "" : `\n${KYOGIJO_PAGEANT_STYLE}${pageant?.animate === undefined || pageant.animate === "none" ? "" : `\n${KYOGIJO_PAGEANT_MOTION}`}`}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}${foldedSheet ? `\n${KYOGIJO_FOLD_STYLE}` : ""}${isPoolSport(sport) ? `\n${o.pool?.venue !== undefined ? KYOGIJO_POOL_STYLE : poolStyle({ sport, ...commonOf(o.pool ?? {}), race: o.pool?.race !== undefined, section: o.pool?.section !== undefined && o.pool.section !== false })}` : ""}${plan === undefined ? "" : `\n${courtStyle(plan.sport, plan.look)}`}${fieldsStyle(sport) === "" ? "" : `\n${fieldsStyle(sport)}`}${athleticsStyle(sport) === "" ? "" : `\n${athleticsStyle(sport)}`}${skatingStyle(sport) === "" ? "" : `\n${skatingStyle(sport)}`}${budoLook === undefined ? "" : `\n${budoStyle(sport, budoLook)}`}${palette === undefined ? "" : `\n${lookStyle(palette)}`}${athleticsTrackRules(sport, o.athletics?.track) === "" ? "" : `\n${athleticsTrackRules(sport, o.athletics?.track)}`}${walled ? `\n${KYOGIJO_WALLS_STYLE}` : ""}${hardwood ? `\n${KYOGIJO_HARDWOOD_STYLE}` : ""}${features === undefined ? "" : `\n${featureStyle(sport, features)}`}${notes === undefined || notes.svg === "" ? "" : `\n${KYOGIJO_NOTE_STYLE}`}${grounded ? `\n${KYOGIJO_BACKGROUND_STYLE}` : ""}${crowded ? `\n${KYOGIJO_CROWD_STYLE}` : ""}${o.host === undefined ? "" : `\n${specialStyle(hostSport(o.host))}`}</style>`) +
+      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${left?.round === true || right?.round === true || (pg !== undefined && pageant?.style === "stage") || (pg !== undefined && pageant?.emblem?.shape !== "plain" && pageant?.emblem !== undefined) ? `\n${KYOGIJO_MARK_STYLE}` : ""}${pg === undefined ? "" : `\n${KYOGIJO_PAGEANT_STYLE}${pageant?.animate === undefined || pageant.animate === "none" ? "" : `\n${KYOGIJO_PAGEANT_MOTION}`}`}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}${foldedSheet ? `\n${KYOGIJO_FOLD_STYLE}` : ""}${isPoolSport(sport) ? `\n${o.pool?.venue !== undefined ? KYOGIJO_POOL_STYLE : poolStyle({ sport, ...commonOf(o.pool ?? {}), race: o.pool?.race !== undefined, section: o.pool?.section !== undefined && o.pool.section !== false })}` : ""}${plan === undefined ? "" : `\n${courtStyle(plan.sport, plan.look)}`}${fieldsStyle(sport) === "" ? "" : `\n${fieldsStyle(sport)}`}${athleticsStyle(sport) === "" ? "" : `\n${athleticsStyle(sport)}`}${skatingStyle(sport) === "" ? "" : `\n${skatingStyle(sport)}`}${budoLook === undefined ? "" : `\n${budoStyle(sport, budoLook)}`}${palette === undefined ? "" : `\n${lookStyle(palette)}`}${athleticsTrackRules(sport, o.athletics?.track) === "" ? "" : `\n${athleticsTrackRules(sport, o.athletics?.track)}`}${walled ? `\n${KYOGIJO_WALLS_STYLE}` : ""}${hardwood ? `\n${KYOGIJO_HARDWOOD_STYLE}` : ""}${features === undefined ? "" : `\n${featureStyle(sport, features)}`}${notes === undefined || notes.svg === "" ? "" : `\n${KYOGIJO_NOTE_STYLE}`}${grounded ? `\n${KYOGIJO_BACKGROUND_STYLE}` : ""}${crowded ? `\n${KYOGIJO_CROWD_STYLE}` : ""}${crowded && sport === "dojo" ? KYOGIJO_BUDO_GALLERY_STYLE : ""}${o.host === undefined ? "" : `\n${specialStyle(hostSport(o.host))}`}</style>`) +
       (defs === "" ? "" : `<defs>${defs}</defs>`) +
       body,
   );

@@ -136,12 +136,12 @@ describe("the stands as data", () => {
     for (const sport of SPORTS) {
       const stands = crowdStands({ sport, crowd: true });
       expect(stands, sport).toBeDefined();
-      expect(stands?.rings.length, sport).toBeGreaterThanOrEqual(sport === "curling" || sport === "pickleball" ? 1 : 2);
+      expect(stands?.rings.length, sport).toBeGreaterThanOrEqual(sport === "curling" || sport === "pickleball" || sport === "dojo" ? 1 : 2);
       let last = -1;
       for (const ring of stands?.rings ?? []) {
         expect(ring.to, `${sport} ${ring.id}`).toBeGreaterThan(ring.from);
         expect(ring.height[1], `${sport} ${ring.id}`).toBeGreaterThan(ring.height[0]);
-        expect(ring.rake, `${sport} ${ring.id}`).toBeGreaterThan(5);
+        expect(ring.rake, `${sport} ${ring.id}`).toBeGreaterThan(sport === "dojo" ? 1 : 5);
         expect(ring.rake, `${sport} ${ring.id}`).toBeLessThan(60);
         expect(ring.seats, `${sport} ${ring.id}`).toBeGreaterThan(100);
         if (sport !== "mlb") {
@@ -149,7 +149,8 @@ describe("the stands as data", () => {
           last = ring.to;
         }
       }
-      expect(Math.max(...Object.values(stands?.reach ?? {})), sport).toBeGreaterThan(40);
+      // A dojo's gallery is a thin band close to its walls (a few metres), the other stands are tens of feet.
+      expect(Math.max(...Object.values(stands?.reach ?? {})), sport).toBeGreaterThan(sport === "dojo" ? 5 : 40);
       expect(stands?.seats, sport).toBe(stands?.rings.reduce((n, r) => n + r.seats, 0));
     }
     expect(crowdStands({ sport: "soccer" })).toBeUndefined();
@@ -408,7 +409,7 @@ describe("every sport", () => {
         const box = (markup: string): number[] => (/viewBox="([^"]*)"/.exec(markup)?.[1] ?? "").split(" ").map(Number);
         const bare = box(drawKyogijo({ sport, id: "ev", ...extra, crowd: undefined }));
         const crowded = box(out);
-        expect(crowded[2] * crowded[3], `${sport} ${JSON.stringify(extra)}`).toBeGreaterThan(bare[2] * bare[3] * 1.3);
+        expect(crowded[2] * crowded[3], `${sport} ${JSON.stringify(extra)}`).toBeGreaterThan(bare[2] * bare[3] * (sport === "dojo" ? 1.05 : 1.3));
       }
     });
   }

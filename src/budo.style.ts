@@ -55,6 +55,14 @@ function lookRules(sport: BudoKind, name: string): string {
   ].join("\n");
 }
 
+/** The rules of a dojo's gallery, the stands of a crowd in a dojo: brown seats and a rail, a few neutral people. */
+export const KYOGIJO_BUDO_GALLERY_STYLE = `
+.kyogijo .ky-bud-gbed.ky-bud-gbed{fill:var(--ky-bud-gal,#7a5a3c)}
+.kyogijo .ky-bud-gblk.ky-bud-gblk{fill:var(--ky-bud-gpeople,#a89a86)}
+.kyogijo .ky-bud-gseat.ky-bud-gseat{stroke:var(--ky-bud-grail,#3a2c1f);stroke-opacity:.3}
+.kyogijo .ky-bud-rail{stroke:var(--ky-bud-grail,#3a2c1f);stroke-width:1.6;stroke-opacity:.85}
+`;
+
 /** The rules of a drawing of a budō sport in a look: the shared rules and the look's colours. Nothing for another sport. */
 export function budoStyle(sport: string, look?: string): string {
   const kind = sport as BudoKind;
@@ -63,4 +71,4 @@ export function budoStyle(sport: string, look?: string): string {
 }
 
 /** Every budō sport's rules and every look, for a page that draws with `style: "none"` and supplies the stylesheet itself. */
-export const KYOGIJO_BUDO_STYLE: string = `${CLASSES}\n${(Object.keys(BUDO_LOOKS) as BudoKind[]).flatMap((sport) => Object.keys(BUDO_LOOKS[sport]).map((name) => lookRules(sport, name))).join("\n")}`;
+export const KYOGIJO_BUDO_STYLE: string = `${CLASSES}${KYOGIJO_BUDO_GALLERY_STYLE}\n${(Object.keys(BUDO_LOOKS) as BudoKind[]).flatMap((sport) => Object.keys(BUDO_LOOKS[sport]).map((name) => lookRules(sport, name))).join("\n")}`;

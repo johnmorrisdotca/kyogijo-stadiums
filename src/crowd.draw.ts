@@ -18,7 +18,7 @@ const n1 = (v: number): string => {
 };
 
 /** One tile of people: the seats of a block 18 feet square, each taken with the probability `density`, in the colour of a team with the probability `share` and else in a neutral. */
-function tile(seed: number, density: number, share: number, team: "ky-cr-h" | "ky-cr-a"): string {
+function tile(seed: number, density: number, share: number, team: "ky-cr-h" | "ky-cr-a", neutral = false): string {
   const next = generator(seed);
   const shirts = new Map<string, string[]>();
   const heads = new Map<string, string[]>();
@@ -45,16 +45,16 @@ function tile(seed: number, density: number, share: number, team: "ky-cr-h" | "k
     }
   }
   let out = "";
-  if (empty.length > 0) out += el("path", { class: "ky-cr-seat", d: empty.join("") });
+  if (empty.length > 0) out += el("path", { class: neutral ? "ky-cr-seat ky-bud-gseat" : "ky-cr-seat", d: empty.join("") });
   for (const [key, list] of shirts) out += key.startsWith("ky-") ? el("path", { class: key, d: list.join("") }) : el("path", { stroke: key, d: list.join("") });
   const headPaths = [...heads].map(([colour, list]) => el("path", { stroke: colour, "stroke-width": 1.15, d: list.join("") })).join("");
   return el("g", { fill: "none", "stroke-linecap": "round", "stroke-width": 2.3 }, out + headPaths);
 }
 
 /** The tiles a crowd needs: the home tile, the home tile of the upper tiers (emptier) and the visitors', and the display tiles. */
-function patterns(id: string, crowd: Crowd, density: number, tifo: { home: boolean; away: boolean } | undefined): string {
+function patterns(id: string, crowd: Crowd, density: number, tifo: { home: boolean; away: boolean } | undefined, neutral = false): string {
   const make = (suffix: string, body: string, size = TILE): string => el("pattern", { id: `${id}-cr-${suffix}`, width: size, height: size, patternUnits: "userSpaceOnUse" }, body);
-  let out = make("h", tile(crowd.seed * 7 + 1, density, 0.88, "ky-cr-h")) + make("a", tile(crowd.seed * 7 + 3, Math.min(1, density * 1.04), 0.94, "ky-cr-a"));
+  let out = make("h", tile(crowd.seed * 7 + 1, density, neutral ? 0 : 0.88, "ky-cr-h", neutral)) + make("a", tile(crowd.seed * 7 + 3, Math.min(1, density * 1.04), 0.94, "ky-cr-a"));
   if (tifo !== undefined) {
     const stripes = (cls: string): string => el("rect", { class: cls, width: 3, height: 6 }) + el("rect", { class: "ky-cr-tw", x: 3, width: 3, height: 6 });
     const checks = (cls: string): string => el("rect", { class: cls, width: 3, height: 3 }) + el("rect", { class: cls, x: 3, y: 3, width: 3, height: 3 }) + el("rect", { class: "ky-cr-tw", x: 3, width: 3, height: 3 }) + el("rect", { class: "ky-cr-tw", y: 3, width: 3, height: 3 });
@@ -140,14 +140,17 @@ export function drawCrowd(stands: CrowdStands, o: DrawInput): { defs: string; ma
     for (const ring of stands.rings) {
     // The upper tiers are a little emptier: their paint is the same tile with the empty seats' bed showing through a veil.
     // The bed of seats under the tile, so that no seam of the pattern shows light.
-    if (fine) body += el("path", { class: "ky-cr-bed", d: path(ring) }) + el("path", { class: "ky-cr-people", d: path(ring), fill: `url(#${id}-cr-h)` });
-    else body += el("path", { class: "ky-cr-bed", d: path(ring) }) + el("path", { class: "ky-cr-blk", d: path(ring), "fill-opacity": num(0.28 + 0.6 * density * ring.fill) });
+    const bed = stands.gallery === true ? "ky-cr-bed ky-bud-gbed" : "ky-cr-bed";
+    if (fine) body += el("path", { class: bed, d: path(ring) }) + el("path", { class: "ky-cr-people", d: path(ring), fill: `url(#${id}-cr-h)` });
+    else body += el("path", { class: bed, d: path(ring) }) + el("path", { class: stands.gallery === true ? "ky-cr-blk ky-bud-gblk" : "ky-cr-blk", d: path(ring), "fill-opacity": num(0.28 + 0.6 * density * ring.fill) });
     if (fine && ring.fill < 0.95) body += el("path", { class: "ky-cr-bed", d: path(ring), "fill-opacity": num(Math.min(0.5, (1 - ring.fill) * 1.6)) });
   }
   for (const s of stands.sectors) body += sector(s, id, fine, density);
-  if (fine) for (const ring of stands.rings) body += rows(ring) + aisles(ring);
+  if (fine) for (const ring of stands.rings) body += rows(ring) + (stands.gallery === true ? "" : aisles(ring));
   // Depth: the front wall of a tier throws a shade on its first rows (and the ground in front of it), the roof's edge on the last rows of the upper tier.
-  if (fine) {
+  // A gallery's railing: a line along its front edge, over the seats.
+  if (stands.gallery === true) for (const ring of stands.rings) if (ring.hole !== null) body += el("path", { class: "ky-bud-rail", d: outlinePath(ring.hole), fill: "none" });
+  if (fine && stands.gallery !== true) {
     for (const ring of stands.rings) {
       if (ring.hole !== null) body += el("path", { d: outlinePath(ring.hole), fill: "none", stroke: "#000", "stroke-opacity": 0.2, "stroke-width": 7 });
       if (ring.tier === "upper" && crowd.roof) body += el("path", { d: outlinePath(ring.region), fill: "none", stroke: "#000", "stroke-opacity": 0.16, "stroke-width": 18 });
@@ -158,7 +161,7 @@ export function drawCrowd(stands: CrowdStands, o: DrawInput): { defs: string; ma
     const [x0, y0, x1, y1] = g.box;
     body += el("rect", { class: `ky-cr-${g.kind}`, x: n1(x0), y: n1(y0), width: n1(x1 - x0), height: n1(y1 - y0), rx: g.kind === "bench" ? 1 : undefined });
   }
-  return { defs: (fine ? patterns(id, crowd, density, tifo.home || tifo.away ? tifo : undefined) : ""), markup: el("g", { class: "ky-crowd" }, body), over };
+  return { defs: (fine ? patterns(id, crowd, density, tifo.home || tifo.away ? tifo : undefined, stands.gallery === true) : ""), markup: el("g", { class: "ky-crowd" }, body), over };
 }
 
 /** A block of visitors or a card display, a polygon over the band it is in. */

@@ -5,7 +5,8 @@ import { dojo } from "./budo/dojo.api.ts";
 import { resolveEra } from "./budo/dojo.ts";
 import { dojoRoom } from "./budo/room.ts";
 import { fourCorners } from "./budo/tatami.ts";
-import { drawKyogijo } from "./draw.ts";
+import { crowdStands, drawKyogijo } from "./draw.ts";
+import { dojoGallery } from "./budo/room.ts";
 import type { DojoSpec } from "./budo/types.ts";
 
 const eras: DojoSpec["eras"] = [
@@ -124,5 +125,35 @@ describe("the room as data", () => {
 
   it("has nothing for a sport that is not a budō", () => {
     expect(dojoRoom({ sport: "nhl" })).toBeUndefined();
+  });
+});
+
+describe("a dojo's gallery", () => {
+  it("is a thin band of plain seats close to the walls, with no sides and no team colours, from the room's balcony data", () => {
+    const o = { sport: "dojo" as const, dojo: { jo: 50, surround: 1, balcony: true }, crowd: true as const };
+    const stands = crowdStands(o);
+    expect(stands?.gallery).toBe(true);
+    expect(stands?.rings.map((r) => r.tier)).toEqual(["gallery"]);
+    expect(stands?.sectors).toEqual([]);
+    expect(stands?.gaps).toEqual([]);
+    const gallery = dojoGallery(o);
+    expect(gallery?.rows).toBe(4);
+    // The first row is just beyond the wood surround and the wall, and the band is as deep as the balcony.
+    expect(gallery?.offset).toBeCloseTo(1.3, 6);
+    const ring = stands?.rings[0];
+    expect(ring?.to).toBeCloseTo((gallery?.depth ?? 0) / 0.3048, 6);
+    const svg = drawKyogijo(o);
+    expect(svg).toContain("ky-bud-gbed");
+    expect(svg).toContain("ky-bud-rail");
+    expect(svg).not.toContain("ky-cr-a)");
+  });
+
+  it("is the dojo's crowd unless the dojo says balcony false, and the arenas keep their bowls", () => {
+    expect(crowdStands({ sport: "dojo", crowd: true })?.gallery).toBe(true);
+    expect(crowdStands({ sport: "dojo", dojo: { balcony: false }, crowd: true })?.gallery).toBeUndefined();
+    const budokan = crowdStands({ sport: "judo", budo: { hall: "budokan" }, crowd: true });
+    expect(budokan?.gallery).toBeUndefined();
+    expect(budokan?.rings.map((r) => r.tier)).toEqual(["lower", "upper"]);
+    expect(crowdStands({ sport: "sumo", crowd: true })?.gallery).toBeUndefined();
   });
 });

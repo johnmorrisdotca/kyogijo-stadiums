@@ -2,8 +2,8 @@
 export { DOJO_STANDARDS, dojo, drawDojo } from "./budo/dojo.api.ts";
 export type { Dojo, Tatami } from "./budo/dojo.api.ts";
 export { DOJO_SIZES, floorOf, shapeOfJo } from "./budo/dojo.ts";
-export { dojoRoom, ROOM_HEIGHTS } from "./budo/room.ts";
-export type { DojoRoom, RoomBalcony, RoomBasis, RoomOpening, RoomWall } from "./budo/room.ts";
+export { dojoGallery, dojoRoom, ROOM_HEIGHTS } from "./budo/room.ts";
+export type { DojoGallery, DojoRoom, RoomBalcony, RoomBasis, RoomOpening, RoomWall } from "./budo/room.ts";
 export { budoLeague, budoPlan, BUDO_SPORTS, BUDOKAN_ARENA, isBudoSport } from "./budo/plan.ts";
 export type { BudoPlan, MBox, MMark, MRange } from "./budo/plan.ts";
 export { checker, fourCorners, kindOf, lay, matCount, tint } from "./budo/tatami.ts";

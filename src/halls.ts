@@ -152,7 +152,7 @@ export const HALLS: readonly Hall[] = Object.freeze([
     from: 1899,
     fromWhat: { en: "built as a hall for martial arts by the Dai Nippon Butokukai, designed by Matsumuro Shigemitsu; an Important Cultural Property since 1996", ja: "大日本武徳会が演武場として造営、設計は松室重光、1996年に国の重要文化財に指定" },
     leagues: [],
-    surfaces: [{ id: "hall", name: { en: "The hall", ja: "旧武徳殿の床" }, sport: "dojo", options: { dojo: { jo: 100, look: "green-beige", kamiza: "north", shinzen: true } }, basis: "generic", note: { en: "The hall seats 1,200 and is part of the Kyoto Municipal Budo Center. The size of its floor and its mats were not found in a source: a floor of 100 jō is drawn as plausible.", ja: "旧武徳殿の座席は1,200席で、京都市武道センターの施設の一つです。床の大きさと畳の数は資料で確認できなかったので、100畳の床を推定して描いています。" } }],
+    surfaces: [{ id: "hall", name: { en: "The hall", ja: "旧武徳殿の床" }, sport: "dojo", options: { dojo: { jo: 100, look: "green-beige", kamiza: "north", shinzen: true, balcony: true } }, basis: "generic", note: { en: "The hall seats 1,200 and is part of the Kyoto Municipal Budo Center. The size of its floor and its mats were not found in a source: a floor of 100 jō is drawn as plausible.", ja: "旧武徳殿の座席は1,200席で、京都市武道センターの施設の一つです。床の大きさと畳の数は資料で確認できなかったので、100畳の床を推定して描いています。" } }],
     sources: ["butokuden-ja"],
     note: { en: "The hall was requisitioned after 1946 and used by the city's police school and art college, and is now a facility of the Kyoto Municipal Budo Center.", ja: "1946年以降は接収され、京都市警察学校や京都市立芸術大学が使い、今は京都市武道センターの施設です。" },
   },

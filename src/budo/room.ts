@@ -70,8 +70,16 @@ export interface DojoRoom {
   notes: string[];
 }
 
+/** The gallery of a dojo for the crowd: where its first row is from the mats, its depth and the heights of its first and last rows, in metres, from the room's balcony data. */
+export interface DojoGallery {
+  offset: number;
+  depth: number;
+  rows: number;
+  height: [number, number];
+}
+
 /** Our heights, in metres, where no source gives one. */
-export const ROOM_HEIGHTS = Object.freeze({ wall: 3, dais: 0.3, bannerBottom: 1, bannerTop: 3, door: 2, windowSill: 1, windowHead: 2.4, shrine: 1.2, rail: 1, balcony: 4, mat: 0.05, rowRise: 0.4, rowDepth: 0.8, balconyDepth: 3, balconyRows: 5 });
+export const ROOM_HEIGHTS = Object.freeze({ wall: 3, dais: 0.3, bannerBottom: 1, bannerTop: 3, door: 2, windowSill: 1, windowHead: 2.4, shrine: 1.2, rail: 1, balcony: 4, mat: 0.05, rowRise: 0.4, rowDepth: 0.8, balconyDepth: 2.4, balconyRows: 4 });
 
 const SIDES: readonly Compass[] = ["north", "east", "south", "west"];
 const COMPASS: Readonly<Record<string, Compass>> = { north: "north", south: "south", east: "east", west: "west", top: "north", bottom: "south", left: "west", right: "east" };
@@ -156,4 +164,20 @@ export function dojoRoom(o: Pick<SurfaceOptions, "sport" | "league" | "budo" | "
   }
   if (room.mats !== undefined && plan.judo !== undefined) notes.push("A competition mat's top stands 5 cm above the floor (the IJF's tatami): at the outer edge of the safety area its thickness shows.");
   return room;
+}
+
+/**
+ * The gallery a dojo's crowd sits in, from the same balcony data as `dojoRoom()`, so that the 2D stands and a 3D view agree: a thin band of 4 rows (ours) close to the walls, just beyond the wood
+ * surround. A dojo that asks for no balcony still has the default one when it has a crowd; `balcony: false` asks for none, and the sport's own stands are drawn. Not a dojo: nothing.
+ */
+export function dojoGallery(o: Pick<SurfaceOptions, "sport" | "league" | "budo" | "dojo" | "range">): DojoGallery | undefined {
+  if (o.sport !== "dojo") return undefined;
+  const spec = dojoSpecOf(o.dojo);
+  if (spec.balcony === false) return undefined;
+  const room = dojoRoom({ ...o, dojo: { ...spec, eras: undefined, era: undefined, year: undefined, balcony: spec.balcony ?? true } });
+  const b = room?.balconies[0];
+  if (room === undefined || b === undefined) return undefined;
+  const f = room.floor;
+  const offset = Math.min(...room.balconies.map((x) => (x.side === "north" ? f.y0 - x.box.y1 : x.side === "south" ? x.box.y0 - f.y1 : x.side === "west" ? f.x0 - x.box.x1 : x.box.x0 - f.x1)));
+  return { offset, depth: b.depth, rows: b.rows, height: [b.height, b.height + b.rows * b.rowRise] };
 }
