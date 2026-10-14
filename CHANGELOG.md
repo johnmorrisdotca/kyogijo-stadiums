@@ -7,6 +7,8 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.6.1] - 2026-10-14
+
 ### Fixed
 
 - **The 3D view zoomed in and out as it turned.** The camera fitted the scene to its box for each angle on its own, so every angle fitted but the scale changed with the yaw: a long floor was drawn up to 1.8 times as large (overhead; 1.5 times at a tip of 30 degrees and 1.15 to 1.65 times from 60 to 80) at the angle where it is seen end-on as side-on, and the field grew and shrank under a drag or the auto-turn. `fit` now fits the scene at every angle of the circle at the view's pitch (so it takes the pitch and not the yaw) and takes the one scale and centre that hold them all: turning never changes the zoom or sways the scene, and no angle is cut off. The floor is the size it had at its tightest angle (down to 0.55 of its old size where it had room). Tipping the view still rescales it, since the pitch changes the extent; zoom is laid on top of the fit as before. `src/turn.camera.test.ts` holds the scale constant over every yaw, pitch and container, for every sport's scene, and measures every degree of the turn against the box.
