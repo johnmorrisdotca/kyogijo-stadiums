@@ -20,7 +20,8 @@ const curated = read("tenants.curated.json");
 const namesJa = read("tenants.names-ja.json").names;
 const parks = read("parks.data.json");
 const grounds = read("grounds.data.json");
-const places = [...parks, ...grounds];
+const arenas = read("arenas.data.json");
+const places = [...parks, ...grounds, ...arenas];
 const argv = new Set(process.argv.slice(2));
 const fail = (message) => {
   throw new Error(message);

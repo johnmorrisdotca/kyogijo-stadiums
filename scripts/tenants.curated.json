@@ -555,13 +555,28 @@
   "NBA": {
    "sport": "basketball",
    "titles": [
-    "National Basketball Association"
+    "National Basketball Association",
+    "Basketball Association of America"
    ],
    "abbr": [
-    "NBA"
+    "NBA",
+    "BAA"
    ],
    "labels": [
-    "National Basketball Association"
+    "National Basketball Association",
+    "Basketball Association of America"
+   ]
+  },
+  "WNBA": {
+   "sport": "basketball",
+   "titles": [
+    "Women's National Basketball Association"
+   ],
+   "abbr": [
+    "WNBA"
+   ],
+   "labels": [
+    "Women's National Basketball Association"
    ]
   },
   "WBL": {
@@ -590,6 +605,18 @@
    ],
    "labels": [
     "National Hockey League"
+   ]
+  },
+  "PWHL": {
+   "sport": "ice-hockey",
+   "titles": [
+    "Professional Women's Hockey League"
+   ],
+   "abbr": [
+    "PWHL"
+   ],
+   "labels": [
+    "Professional Women's Hockey League"
    ]
   },
   "MLS": {
