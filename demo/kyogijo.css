@@ -30,6 +30,10 @@ select.fam-field { min-width: min(100%, 20rem); }
 #stage[data-view="3d"][data-pending] { min-height: calc(100cqw / 1.6 + 120px); }
 #stage[data-view="3d"] svg { max-width: none; }
 @media (min-width: 700px) { .stage-felt { padding: 18px 16px; } }
+/* A background chosen in the menu (presentation only) replaces the felt's green and its dots; the felt's text takes the ink the background returns. */
+.stage-felt[data-background] { background-size: cover; background-position: center; padding: 28px 20px; }
+@media (min-width: 700px) { .stage-felt[data-background] { padding: 56px 64px; } }
+.stage-felt[data-background]::after { display: none; }
 
 .try-controls { display: grid; gap: 10px; min-width: 0; }
 details.group { border: 1px solid var(--rule); border-radius: var(--radius); background: var(--surface); padding: 0 12px 12px; min-width: 0; }

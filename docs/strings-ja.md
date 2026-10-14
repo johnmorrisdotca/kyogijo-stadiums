@@ -1547,6 +1547,8 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `theme_auto` | Device | 端末に合わせる |
 | `theme_light` | Light | ライト |
 | `theme_dark` | Dark | ダーク |
+| `background` | Background | 背景 |
+| `backgroundNone` | None | なし |
 | `away` | Away team | アウェイ |
 | `awayBaseball` | Away team | ビジター |
 | `home` | Home team | ホーム |

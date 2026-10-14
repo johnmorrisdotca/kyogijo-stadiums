@@ -55,6 +55,9 @@ const keep = {
 };
 
 const state = makeState(params, keep.get("kyogijo-stadiums.theme"));
+// The backgrounds the menu offers (None is the empty one); an address naming any other gets none.
+const BACKGROUNDS = [...document.querySelectorAll("#background option")].map((o) => o.value);
+if (!BACKGROUNDS.includes(state.background)) state.background = "";
 
 /** The made-up game for a sport, laid into the state (names in the page's language until a name is typed). */
 const loadGame = (sport) => loadGameInto(state, sport, language.lang);
@@ -309,7 +312,52 @@ $("pitch-type").addEventListener("change", (event) => { state.pitchType = event.
 function applyTheme() {
   if (state.theme === "auto") document.documentElement.removeAttribute("data-theme");
   else document.documentElement.setAttribute("data-theme", state.theme);
+  paintBackground();
 }
+
+// ----- The background: presentation only.
+let backgrounds;
+let painted = "";
+const felt = $("felt");
+const dark = matchMedia("(prefers-color-scheme: dark)");
+/**
+ * The optional background behind the stage: one of the family's twenty-five, drawn in code (family-backgrounds.js, loaded only when one is chosen), in the dark or the light variant of the page's look, at the
+ * shape of the felt, and the stage's text takes the ink it returns. It is a picture behind the stage and nothing more: the surface the package draws is the same string with or without it.
+ */
+async function paintBackground() {
+  const name = state.background;
+  if (name === "") {
+    painted = "";
+    felt.style.backgroundImage = "";
+    felt.style.color = "";
+    delete felt.dataset.background;
+    return;
+  }
+  try {
+    backgrounds ??= await import("./family-backgrounds.js");
+  } catch {
+    return;
+  }
+  // The choice may have changed while the module loaded.
+  if (state.background !== name) return;
+  const forced = document.documentElement.dataset.theme;
+  const theme = forced === "dark" || (forced !== "light" && dark.matches) ? "dark" : "light";
+  const wide = 1200;
+  const high = Math.max(300, Math.min(2400, Math.round(wide * (felt.clientHeight / Math.max(1, felt.clientWidth)))) || 675);
+  // A new picture only when its choice, look or shape (to the nearest tenth) changed.
+  const key = `${name}|${theme}|${Math.round((high / wide) * 10)}`;
+  if (key === painted) return;
+  painted = key;
+  const { defs, body, ink } = backgrounds.backgroundSvg(name, { width: wide, height: high, theme, id: "stage-bg" });
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${wide} ${high}" preserveAspectRatio="xMidYMid slice"><defs>${defs}</defs><rect width="${wide}" height="${high}" fill="${ink.base}"/>${body}</svg>`;
+  felt.style.backgroundImage = `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
+  felt.style.color = ink.text;
+  felt.dataset.background = name;
+}
+dark.addEventListener("change", paintBackground);
+new ResizeObserver(() => { if (state.background !== "") paintBackground(); }).observe(felt);
+$("background").value = state.background;
+$("background").addEventListener("change", () => { state.background = $("background").value; paintBackground(); syncUrl(); });
 
 // ----- The stage.
 const stage = $("stage");

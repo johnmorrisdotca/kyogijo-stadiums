@@ -3,13 +3,27 @@
 // The page is served to a browser without a port, never fetched from the live site, and the same each run: the sport, the park and
 // the layout are named by the address, the teams are made up, and motion is reduced. It waits on the drawing's own svg and the
 // page's ready mark, never on a clock.
+// Every picture stands on one of the family's shared backgrounds (scripts/family-backgrounds.ts, chosen in the demo's own Background menu, so the picture is the page as a reader can make it): the
+// surface is the drawing as the package makes it, and the background is the felt around it, in the dark or the light variant of the picture's scheme. Which background, and why, is at each shot.
 // Output: docs/images/<subject>-<desk|phone>-<light|dark>.webp.
 import { takePictures } from "./readme-pictures-lib.mjs";
 
 const READY = '[data-testid="stage"][data-ready="true"] svg.kyogijo';
-const stage = '[data-testid="stage"]';
+const stage = "#felt";
 const READY_TURN = '[data-testid="stage"][data-ready="true"] .ky-turn';
 const address = (query) => `/?lang=en&help=off&${query}`;
+
+/** Wait for the page to be at rest: two frames, so that a picture drawn at the felt's shape has been laid in. */
+const settle = (page) => page.evaluate(() => new Promise((done) => requestAnimationFrame(() => requestAnimationFrame(done))));
+/** Choose a background in the demo's menu (a name, one for each scheme, or a function of the view and scheme), once `before` (if any) has set the page up; `after` runs last. */
+const behind = (names, before, after) => async (page, state) => {
+  if (before) await before(page, state);
+  const name = typeof names === "string" ? names : typeof names === "function" ? names(state) : names[state.scheme];
+  await page.selectOption("#background", name);
+  await page.waitForSelector(`#felt[data-background="${name}"]`);
+  await settle(page);
+  if (after) await after(page, state);
+};
 
 await takePictures({
   shots: [
@@ -20,28 +34,46 @@ await takePictures({
       url: address("sport=nhl&orientation=landscape"),
       height: 900,
       ready: READY,
-      async prepare(page, { view }) {
+      // The rink on ice; the football field under floodlights.
+      prepare: behind(({ view }) => (view === "phone" ? "floodlights" : "ice"), async (page, { view }) => {
         if (view === "phone") {
           await page.goto(new URL(address("sport=nfl"), page.url()).href);
           await page.waitForSelector(READY);
         }
+      }, async (page) => {
         await page.evaluate(() => window.scrollTo(0, 0));
         await page.mouse.move(0, 0);
-      },
+      }),
     },
     // A football field with a score on it.
-    { subject: "football", views: ["desk"], url: address("sport=nfl&orientation=landscape"), ready: READY, target: stage },
-    // A basketball court in a look of its own.
-    { subject: "court", views: ["desk"], url: address("sport=nba&orientation=landscape&court=twoTone&baseline=1"), ready: READY, target: stage },
+    { subject: "football", views: ["desk"], url: address("sport=nfl&orientation=landscape"), ready: READY, target: stage, prepare: behind("floodlights") },
+    // A basketball court in a look of its own, in a glow.
+    { subject: "court", views: ["desk"], url: address("sport=nba&orientation=landscape&court=twoTone&baseline=1"), ready: READY, target: stage, prepare: behind("glow") },
     // A ballpark's fence, drawn from its published distances, with its dugouts for the teams.
-    { subject: "ballpark", views: ["desk"], url: address("sport=mlb&park=hanshin-koshien-stadium&orientation=landscape"), ready: READY, target: stage },
+    { subject: "ballpark", views: ["desk"], url: address("sport=mlb&park=hanshin-koshien-stadium&orientation=landscape"), ready: READY, target: stage, prepare: behind("royal") },
     // The same game tall, for a phone: the words upright, the teams top and bottom.
-    { subject: "tall", views: ["phone"], url: address("sport=nhl&orientation=portrait"), ready: READY, target: stage },
+    { subject: "tall", views: ["phone"], url: address("sport=nhl&orientation=portrait"), ready: READY, target: stage, prepare: behind("ice") },
     // The 3D view: a volleyball court from behind an end line with the net standing on it, a rink from a low corner with its boards, glass and goals, a court from the main camera with its baskets.
-    { subject: "turn-volleyball", views: ["desk"], url: address("sport=volleyball&view=3d&viewpoint=end"), ready: READY_TURN, target: stage },
-    { subject: "turn-rink", views: ["desk"], url: address("sport=nhl&view=3d&viewpoint=corner"), ready: READY_TURN, target: stage },
-    { subject: "turn-court", views: ["desk"], url: address("sport=nba&view=3d&viewpoint=broadcast"), ready: READY_TURN, target: stage },
-    // The strips for a list of games.
-    { subject: "badges", views: ["desk"], url: address("sport=nba"), ready: READY, target: '[data-testid="badge-list"]' },
+    { subject: "turn-volleyball", views: ["desk"], url: address("sport=volleyball&view=3d&viewpoint=end"), ready: READY_TURN, target: stage, prepare: behind("spotlight") },
+    { subject: "turn-rink", views: ["desk"], url: address("sport=nhl&view=3d&viewpoint=corner"), ready: READY_TURN, target: stage, prepare: behind("ice") },
+    { subject: "turn-court", views: ["desk"], url: address("sport=nba&view=3d&viewpoint=broadcast"), ready: READY_TURN, target: stage, prepare: behind("glow") },
+    // The strips for a list of games, on midnight. They are a list and not a surface, so the background is laid behind the list itself, by the same module and in the same way as behind the felt.
+    {
+      subject: "badges",
+      views: ["desk"],
+      url: address("sport=nba"),
+      ready: READY,
+      target: '[data-testid="badge-list"]',
+      prepare: (page, { scheme }) => page.evaluate(async ({ name, scheme }) => {
+        const { backgroundSvg } = await import("/family-backgrounds.js");
+        const list = document.querySelector('[data-testid="badge-list"]');
+        const box = list.getBoundingClientRect();
+        const width = Math.round(box.width) + 56;
+        const height = Math.round(box.height) + 56;
+        const { defs, body, ink } = backgroundSvg(name, { width, height, theme: scheme, id: "list-bg" });
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}"><defs>${defs}</defs><rect width="${width}" height="${height}" fill="${ink.base}"/>${body}</svg>`;
+        list.style.cssText += `;padding:28px;border-radius:12px;color:${ink.text};background:url("data:image/svg+xml,${encodeURIComponent(svg)}") center / cover`;
+      }, { name: "midnight", scheme }),
+    },
   ],
 });

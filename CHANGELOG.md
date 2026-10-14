@@ -7,6 +7,15 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **The demo has an optional Background menu.** None by default, then the family's twenty-five backgrounds (`scripts/family-backgrounds.ts`, version 1.0.0, copied byte for byte from taisen-brackets and pinned by version and sha256), also by `?background=<name>`. It draws one behind the stage in the dark or the light variant of the page's look, takes the stage's text colour from the ink the background returns, and loads the module only when one is chosen. It is presentation only: the drawing's SVG is the same string with and without it, and an e2e test holds that. The package ships none of it and still has no dependency.
+
+### Changed
+
+- **Every README picture stands on one of the family's backgrounds,** in a light and a dark twin (ice behind the rinks, floodlights behind the football field, a royal purple behind the ballpark, a glow or a spotlight behind the courts), and `pnpm screenshots:readme` remakes all twenty in one run.
+- **The docs' and the README's samples use real countries,** Canada, the USA and Japan first, with their names and colours and no flag (a snippet cannot await Hata); where a sample shows marks it draws a maple leaf and a sun disc of its own. The gallery's teams and the pool races' swimmers' countries are real too.
+
 ## [0.9.0] - 2026-10-14
 
 ### Added

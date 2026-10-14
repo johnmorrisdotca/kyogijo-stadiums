@@ -20,14 +20,14 @@ The NFL, CFL and IFAF football fields, the NHL rink, the NBA court, the soccer p
 <td align="center" valign="top">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/hero-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/hero-desk-light.webp" alt="The demo on a desk, in English: the heading Kyogijo Stadiums with the language chooser, the Docs and API reference links, five cloth patches and the Help switch, and an NHL rink drawn wide on green felt, with a made-up game on it, the USA and its flag on the left, Canada and its flag on the right, and a panel of the score 3 to 2, Final/OT, in the middle. The controls on the right list the sports, from the NFL and the NHL to handball, and then the layout and the teams." width="640">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/hero-desk-light.webp" alt="The demo on a desk, in English: the heading Kyogijo Stadiums with the language chooser, the Docs and API reference links, five cloth patches and the Help switch, and an NHL rink drawn wide on an ice-blue background of faint skate marks and rink lines, with a made-up game on it, the USA and its flag on the left, Canada and its flag on the right, and a panel of the score 3 to 2, Final/OT, in the middle. The controls on the right list the sports, from the NFL and the NHL to handball, and then the layout and the teams." width="640">
 </picture>
 <br><em>The demo on a desk: a rink, with the teams on their sides and the score in the middle.</em>
 </td>
 <td align="center" valign="top">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/hero-phone-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/hero-phone-light.webp" alt="The demo on a phone: the heading Kyogijo Stadiums over the page's controls, and under them a football field turned a quarter to stand tall, Mexico's green end zone at the top and the USA's navy end zone at the bottom, each with its flag and name written across it, the yard numbers upright, and a score panel at midfield reading 27 to 24, Final." width="240">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/hero-phone-light.webp" alt="The demo on a phone: the heading Kyogijo Stadiums over the page's controls, and under them, on a background of floodlight beams, a football field turned a quarter to stand tall, Mexico's green end zone at the top and the USA's navy end zone at the bottom, each with its flag and name written across it, the yard numbers upright, and a score panel at midfield reading 27 to 24, Final." width="240">
 </picture>
 <br><em>On a phone the same surface stands tall, the words still upright.</em>
 </td>
@@ -179,7 +179,7 @@ console.log(svg.includes("Cup Final, Game 7"), svg.includes("Final/OT"));
 <p align="center">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/football-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/football-desk-light.webp" alt="A football field drawn wide on the demo's felt: Mexico's green end zone on the left with its flag and its name written along it, the USA's navy end zone on the right with its flag, the yard lines, hash marks and upright and upside-down yard numbers between them, and the score panel at midfield reading 27 to 24, Final, Championship Game." width="720">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/football-desk-light.webp" alt="A football field drawn wide on a background of floodlight beams: Mexico's green end zone on the left with its flag and its name written along it, the USA's navy end zone on the right with its flag, the yard lines, hash marks and upright and upside-down yard numbers between them, and the score panel at midfield reading 27 to 24, Final, Championship Game." width="720">
 </picture>
 <br><em>A football field: the end zones in the teams' colours, the score at midfield.</em>
 </p>
@@ -224,7 +224,7 @@ console.log(box(wide), box(tall));
 <p align="center">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/tall-phone-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/tall-phone-light.webp" alt="A hockey rink standing tall on a phone, the same game as on the desk: the USA's flag and name in the upper zone, Canada's in the lower, each reading upright, the score panel between them over the centre line." width="240">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/tall-phone-light.webp" alt="A hockey rink standing tall on a phone, on an ice-blue background, the same game as on the desk: the USA's flag and name in the upper zone, Canada's in the lower, each reading upright, the score panel between them over the centre line." width="240">
 </picture>
 <br><em>The same game tall: the teams top and bottom, every word upright.</em>
 </p>
@@ -259,7 +259,7 @@ console.log(svg.includes("甲子園球場のグラウンド"), svg.includes("阪
 <p align="center">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/ballpark-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/ballpark-desk-light.webp" alt="The baseball field of Hanshin Koshien Stadium with the outfield fence drawn through its published distances, 95 metres at the lines and 118 metres in the alleys and the middle, with mown arcs on the grass, the warning track, the infield dirt, and a red and a navy panel in the foul ground at the bottom for the teams' dugouts, each with its country's flag, Japan's and the USA's." width="640">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/ballpark-desk-light.webp" alt="The baseball field of Hanshin Koshien Stadium on a royal purple background, with the outfield fence drawn through its published distances, 95 metres at the lines and 118 metres in the alleys and the middle, with mown arcs on the grass, the warning track, the infield dirt, and a red and a navy panel in the foul ground at the bottom for the teams' dugouts, each with its country's flag, Japan's and the USA's." width="640">
 </picture>
 <br><em>A ballpark's fence, drawn through the distances its article publishes.</em>
 </p>
@@ -318,7 +318,7 @@ console.log(/viewBox="0 0 440 64"/.test(badge));
 <p align="center">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/badges-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/badges-desk-light.webp" alt="A list of eight score strips in the demo, each a team block with its country's flag, a short name and its score at each end, in the team's colour, and in the middle a small picture of the sport and the state of the game, such as Final, Final/OT and 2nd period." width="640">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/badges-desk-light.webp" alt="A list of eight score strips in the demo, on a midnight-blue background, each a team block with its country's flag, a short name and its score at each end, in the team's colour, and in the middle a small picture of the sport and the state of the game, such as Final, Final/OT and 2nd period." width="640">
 </picture>
 <br><em>Badges for a list of games.</em>
 </p>
@@ -339,7 +339,7 @@ console.log(svg.includes("--ky-key:#1e4f8f"), svg.includes("METRO BOLTS"));
 <p align="center">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/court-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/court-desk-light.webp" alt="A basketball court in the two-tone look: a pale floor with a deep blue key, centre circle and border, the words AUSTRALIA and JAPAN along the baselines, each country's flag and name on its half, and the score panel at centre court reading 108 to 112, Finals, Game 6." width="640">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/court-desk-light.webp" alt="A basketball court in the two-tone look, in a warm glow: a pale floor with a deep blue key, centre circle and border, the words AUSTRALIA and JAPAN along the baselines, each country's flag and name on its half, and the score panel at centre court reading 108 to 112, Finals, Game 6." width="640">
 </picture>
 <br><em>A court in a look of its own: the paint, the border and the words on the baselines are options.</em>
 </p>
@@ -369,7 +369,7 @@ The flat drawing is the floor, turned by a drag, a swipe, the keys or four viewp
 <p align="center">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turn-volleyball-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turn-volleyball-desk-light.webp" alt="A volleyball court from behind an end line, turned in the demo: the net at 2.43 metres on its posts with the red and white antennae, and under it the buttons for the four viewpoints, turning, raising, zooming and resetting." width="640">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turn-volleyball-desk-light.webp" alt="A volleyball court from behind an end line under a spotlight, turned in the demo: the net at 2.43 metres on its posts with the red and white antennae, and under it the buttons for the four viewpoints, turning, raising, zooming and resetting." width="640">
 </picture>
 <br><em>A volleyball net at its rulebook height, with its posts and antennae.</em>
 </p>
@@ -377,7 +377,7 @@ The flat drawing is the floor, turned by a drag, a swipe, the keys or four viewp
 <p align="center">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turn-rink-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turn-rink-desk-light.webp" alt="An ice rink from a low corner, turned in the demo: the boards with their glass round the ice, a goal at each end, and the score on the ice." width="640">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turn-rink-desk-light.webp" alt="An ice rink from a low corner on an ice-blue background, turned in the demo: the boards with their glass round the ice, a goal at each end, and the score on the ice." width="640">
 </picture>
 <br><em>A rink with its boards, glass and goals.</em>
 </p>
@@ -385,7 +385,7 @@ The flat drawing is the floor, turned by a drag, a swipe, the keys or four viewp
 <p align="center">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turn-court-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turn-court-desk-light.webp" alt="A basketball court from the main camera, turned in the demo: a basket on its backboard and padded stanchion at each end of the floor." width="640">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turn-court-desk-light.webp" alt="A basketball court from the main camera in a warm glow, turned in the demo: a basket on its backboard and padded stanchion at each end of the floor." width="640">
 </picture>
 <br><em>A court with a basket at each end, the rim at 10 feet.</em>
 </p>
@@ -659,7 +659,7 @@ pnpm check          # lint, types, every test, the build and the packed package
 pnpm test:package   # pack, install and import it as somebody who installed it would
 pnpm test:demo      # build the demo and the docs and play them in a real browser, at a phone's width and a desk's
 pnpm site           # build the demo and the docs site into site/, as the Pages workflow publishes it
-pnpm screenshots:readme   # take the README's pictures from the built demo, in light and dark
+pnpm screenshots:readme   # remake every README picture from the built demo, in light and dark, each on one of the family's backgrounds
 pnpm test:readme    # run every example in the README and the docs against the built package
 pnpm docs:make      # rewrite what the docs make from the source: the Japanese words, the leagues, the frames and units tables
 ```

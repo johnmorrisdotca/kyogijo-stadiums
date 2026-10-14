@@ -8,6 +8,7 @@ import process from "node:process";
 import { pathToFileURL } from "node:url";
 
 import { API_CSS, apiPage } from "./api.mjs";
+import { backgroundOptions, backgroundsModule } from "./backgrounds.mjs";
 import { atlasMapSvg } from "./atlas-map.mjs";
 import { buildDocs } from "./docs-pages.mjs";
 import { framesBlockHtml, framesFiles, galleryData, galleryPageHtml, libraryFrom } from "./docs-gallery.mjs";
@@ -273,6 +274,7 @@ const page = `<!doctype html>
               ${seg("orientation", "orientation", "Wide is the usual way round. Tall turns the surface a quarter, with the words upright and the teams top and bottom. Fit the box chooses by the shape of the space.", "「横」は通常の向きです。「縦」は競技場を90度回し、文字は水平のまま、チームを上下に並べます。「枠に合わせる」は表示領域の形に合わせて自動で選びます。")}
               ${seg("view", "view", "Flat is the drawing seen from above. 3D lets you turn it: drag it, swipe sideways, use the arrow keys or the four viewpoints under it, and see the net, the basket, the goal or the posts stand up on the floor.", "「平面」は真上から見た図です。「3D」では図を回して見られ、ネットやバスケットゴール、ゴール、ポストが床の上に立って見えます。向きの変更は、ドラッグ、横方向のスワイプ、矢印キー、図の下の4つの視点ボタンでできます。")}
               ${seg("theme", "theme", "The page's light or dark. Drawings follow it unless they are told otherwise.", "ページのライト／ダークを選びます。特に指定しなければ、図もこれに従います。")}
+              <label class="setup fam-row" ${help("A background behind the surface, for this page only: twenty-five drawn in code, in the page's light or dark. The surface the package draws is the same with or without one.", "競技場の後ろに表示する背景を選びます。このページだけの飾りで、コードで描いた25種類を用意しています。ページのライト／ダークに合わせて色合いが変わります。パッケージが描く競技場は、背景があってもなくても同じです。")}><span class="fam-label" data-say="background"></span><select class="fam-field" id="background" data-testid="background" data-say-label="background">${await backgroundOptions()}</select></label>
             </details>
             <details class="fam-fold group" open>
               <summary data-say="groupTeams"></summary>
@@ -601,7 +603,7 @@ const page = `<!doctype html>
           <li><code>drawKyogijo({ sport: "mlb", park: "tokyo-dome", orientation: "portrait" })</code></li>
           <li><code>drawKyogijo({ sport: "nba", size: "badge", away, home })</code></li>
           <li><code>drawKyogijo({ sport: "soccer", pitchType: "opta" })</code></li>
-          <li><code>&lt;kyogijo-field sport="nfl" away="Gulls" home="Bison" score="24-27"&gt;</code></li>
+          <li><code>&lt;kyogijo-field sport="nfl" away="Mexico" home="USA" score="24-27"&gt;</code></li>
         </ul>
       </section>
       ${familyFooter({ id })}
@@ -618,6 +620,7 @@ const picture = atlasMapSvg({ places: PLACES, world: (await load("world-entry.js
 writeFileSync("site/atlas-map.svg", picture);
 writeFileSync("docs/atlas-map.svg", picture);
 writeFileSync("site/index.html", sayEnglish(page, WORDS.en));
+writeFileSync("site/family-backgrounds.js", backgroundsModule());
 writeFileSync("site/api.css", API_CSS);
 writeFileSync("site/api.html", apiPage({ id, name: "Kyogijo Stadiums" }));
 // The documentation pages: docs/*.md as pages, and the gallery, drawn from code by the built package.

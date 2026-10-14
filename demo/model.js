@@ -87,6 +87,8 @@ export function makeState(params, kept = null) {
     size: pick(params.get("size"), SIZES, "full"),
     orientation: pick(params.get("orientation"), ORIENTATIONS, "auto"),
     theme: pick(params.get("theme") ?? kept, THEMES, "auto"),
+    // A background behind the stage, for the page only (one of the family's, named in the address; the page checks the name, which it reads from its menu): none by default.
+    background: params.get("background") ?? "",
     // How the surface is looked at: the flat drawing, or the 3D view that turns, and the viewpoint it is on.
     view: pick(params.get("view"), VIEWS, "flat"),
     viewpoint: pick(params.get("viewpoint"), VIEWPOINTS, "corner"),
@@ -636,6 +638,7 @@ export function urlPairs(s, lang) {
   base.sport = s.sport;
   loadGame(base, s.sport, lang);
   const out = [["sport", s.sport]];
+  out.push(["background", s.background === "" ? null : s.background]);
   const put = (key, value, start) => out.push([key, value === start ? null : String(value)]);
   out.push(["year", s.year !== null && hasSeasons(s) ? String(s.year) : null]);
   out.push(["league", s.league !== null && !isOwnLeague(s.sport, s.league) ? s.league : null]);
