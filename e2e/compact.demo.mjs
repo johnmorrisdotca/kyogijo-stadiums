@@ -233,7 +233,7 @@ test("in Japanese the sections say everything in Japanese, and a change of langu
   await expect(pressed(page, "gallery")).toHaveText("すべて");
   await expect(page.getByRole("search", { name: "競技の絞り込み" })).toBeAttached();
   await expect(page.getByRole("search", { name: "ピッチの絞り込み" })).toBeAttached();
-  expect(await page.locator(`${at("gallery-family")} button`).allTextContents()).toEqual(["すべて", "アメリカンフットボール", "アイスホッケー", "バスケットボール", "野球", "サッカー", "カーリング", "ネット球技", "プール", "フィールド球技"]);
+  expect(await page.locator(`${at("gallery-family")} button`).allTextContents()).toEqual(["すべて", "アメリカンフットボール", "アイスホッケー", "バスケットボール", "野球", "サッカー", "カーリング", "ネット球技", "水泳競技", "フィールド球技"]);
   expect(await page.locator(`${at("pitches-group")} button`).allTextContents()).toEqual(["すべて", "規格", "5・7・9人制", "フットサル", "有名なスタジアム", "表示形式", "芝の模様とゴール"]);
   // The cards are drawn in Japanese, and the grounds' names too.
   await expect(page.locator(`${at("gallery-cards")} figcaption`).first()).toHaveText("NFL");

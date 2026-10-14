@@ -47,7 +47,7 @@ function raceSentences(plan: SwimPlan, language: Language): string[] {
       if (race.show.medals && row.place !== undefined && MEDALS[row.place] !== undefined) parts.push(w.medal[(["gold", "silver", "bronze"] as const)[row.place - 1]]);
       if (row.timeText !== undefined) parts.push(fill(w.time, { time: row.timeText }));
       if (race.show.reaction && row.reaction !== undefined) parts.push(fill(w.reaction, { rt: row.reaction.toFixed(2) }));
-      if (race.show.splits && row.splits.some((s) => Number.isFinite(s))) parts.push(fill(w.splits, { list: row.splits.filter((s) => Number.isFinite(s)).map(formatTime).join(", ") }));
+      if (race.show.splits && row.splits.some((s) => Number.isFinite(s))) parts.push(fill(w.splits, { list: row.splits.filter((s) => Number.isFinite(s)).map(formatTime).join(w.joiner) }));
       if (row.record !== undefined) parts.push(fill(w.record, { record: row.record }));
     }
     if (race.show.seeds && row.seed !== undefined && row.timeText === undefined && row.status === undefined) parts.push(fill(w.seed, { time: row.seed }));
@@ -85,7 +85,7 @@ export function poolDescription(o: Pick<SurfaceOptions, "sport" | "pool">, langu
       const hasBoards = plan.boards.some((b) => b.kind === "springboard");
       const list = listOf(heights.map(String), language);
       const boards = [hasBoards ? w.boards : "", heights.length > 0 ? fill(w.platforms, { list }) : ""].filter((part) => part !== "").join(w.and);
-      return { about: fill(w.aboutDiving, { size: sizeText(language, plan.length, plan.width), boards: boards === "" ? "" : boards }).replace(/,\s*with\s*$/, ""), after: [] };
+      return { about: fill(w.aboutDiving, { size: sizeText(language, plan.length, plan.width), boards: boards === "" ? "" : boards }).replace(/,\s*with\s*$/, "").replace(/で、があります$/, "です"), after: [] };
     }
     default: {
       const deep = plan.deep === undefined ? "" : fill(w.deep, { size: sizeText(language, plan.deep.length, plan.deep.width) });

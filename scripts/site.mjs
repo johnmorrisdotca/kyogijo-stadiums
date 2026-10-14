@@ -272,12 +272,12 @@ const page = `<!doctype html>
                 <div class="setup fam-row">${toggle("flags", "cornerFlags")}</div>
               </div>
               <div id="pool-group"${hid("pool-group")}>
-                ${seg("pool-look", "poolLook", "How the water is painted: one flat colour, a faint net of light on the floor (the same light every time), or the light with the tiles of the floor.", "水面の描き方です。1色のフラット、床に映る光の網目（毎回同じ模様）、光に床のタイルを加えたもの、から選べます。")}
+                ${seg("pool-look", "poolLook", "How the water is painted: one flat colour, a faint net of light on the floor (the same light every time), or the light with the tiles of the floor.", "水面の描き方を、1色のフラット、床に映る光の網目（毎回同じ模様）、光に床のタイルを加えたものから選びます。")}
                 ${seg("pool-deck", "poolDeck", "The deck round the pool, plain or tiled.", "プールの周りのデッキを、無地かタイル張りから選びます。")}
                 <div id="swim-group"${hid("swim-group")}>
                   ${seg("pool-course", "poolCourse", "The long course of 50 metres or the short course of 25 metres.", "長水路（50m）か短水路（25m）を選びます。")}
-                  ${seg("pool-lanes", "poolLanes", "How many lanes: six, eight (the Olympic Games) or ten (the World Championships, lanes 0 to 9).", "レーン数を選びます。6、8（オリンピック）、10（世界選手権、レーン0〜9）です。")}
-                  ${seg("pool-race", "poolRace", "A made-up race on the pool: none, the results with places, times, reaction times and splits, or the split pace bars.", "プールに架空のレースを載せます。なし、順位・タイム・反応時間・スプリットを載せた結果、スプリットのペースの棒、から選べます。")}
+                  ${seg("pool-lanes", "poolLanes", "How many lanes: six, eight (the Olympic Games) or ten (the World Championships, lanes 0 to 9).", "コース数を選びます。6、8（オリンピック）、10（世界選手権。コース0〜9）です。")}
+                  ${seg("pool-race", "poolRace", "A made-up race on the pool: none, the results with places, times, reaction times and splits, or the split pace bars.", "プールに架空のレースを載せます。なし、順位・タイム・反応時間・スプリットを載せた結果、スプリットのペースの棒から選べます。")}
                   <div class="setup fam-row" ${help("A side section under the plan: the depth, the blocks, the flags and the false start rope.", "平面図の下に断面図を付けます。水深、スタート台、バックストロークフラッグ、フォルススタートロープを示します。")}>${toggle("pool-section", "poolSection")}</div>
                 </div>
               </div>
