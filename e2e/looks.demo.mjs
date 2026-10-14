@@ -94,3 +94,42 @@ test("the controls' groups open and close, and the first two are open", async ({
   const open_ = await page.locator("details.group").evaluateAll((all) => all.map((d) => d.open));
   expect(open_).toEqual([true, true, false, false]);
 });
+
+test("the pageant: carpets and stages go on the halves, its rows open with it, and every one of its controls is a finger wide", async ({ page }) => {
+  await open(page, "?sport=soccer&lang=en&help=off");
+  await page.locator("details.group").nth(3).locator("summary").click();
+  await expect(page.locator(at("pageant"))).toBeVisible();
+  await expect(page.locator(at("pageant-lines"))).toBeHidden();
+  await page.locator(`${at("pageant")} button[data-value="carpet"]`).click();
+  await expect(svg(page)).toHaveAttribute("data-pageant", "carpet");
+  await expect(svg(page).locator(".ky-pg-carpet")).toHaveCount(2);
+  await expect(page.locator(at("pageant-lines"))).toBeVisible();
+  await page.locator(at("pageant-emblem")).click();
+  await expect(svg(page).locator(".ky-pg-emblem")).toHaveCount(1);
+  await page.locator(`${at("pageant")} button[data-value="stage"]`).click();
+  await expect(svg(page).locator(".ky-pg-stage")).toHaveCount(2);
+  await page.locator(`${at("pageant-lines")} button[data-value="through"]`).click();
+  await expect(svg(page).locator(".ky-pageant")).toHaveAttribute("opacity", ".9");
+  await page.locator(at("pageant-entrance")).click();
+  await expect(svg(page).locator(".ky-pg-unfurl").first()).toBeVisible();
+  const small = await page.evaluate(() =>
+    [...document.querySelectorAll("#pageant button, #pageant-lines button, #pageant-emblem, #pageant-entrance")]
+      .filter((one) => one.offsetParent !== null)
+      .map((one) => ({ name: one.textContent.trim() || one.id, ...one.getBoundingClientRect().toJSON() }))
+      .filter((one) => one.width < 43.5 || one.height < 43.5),
+  );
+  expect(small).toEqual([]);
+  await noSidewaysScroll(page);
+  await page.locator(`${at("pageant")} button[data-value="off"]`).click();
+  await expect(svg(page)).not.toHaveAttribute("data-pageant", /.+/);
+  await expect(page.locator(at("pageant-lines"))).toBeHidden();
+});
+
+test("the pageant is in the address, comes back from it, and comes back from it", async ({ page }) => {
+  await open(page, "?sport=nhl&lang=en&help=off&pageant=stage&emblem=1");
+  await expect(svg(page)).toHaveAttribute("data-pageant", "stage");
+  await expect(svg(page).locator(".ky-pg-emblem")).toHaveCount(1);
+  await page.locator("details.group").nth(3).locator("summary").click();
+  await expect(page.locator(`${at("pageant")} button[data-value="stage"]`)).toHaveAttribute("aria-pressed", "true");
+  expect(page.url()).toContain("pageant=stage");
+});

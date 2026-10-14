@@ -14,6 +14,7 @@ export function toParams(o) {
   if (o.orientation && o.orientation !== "auto") q.set("orientation", o.orientation);
   if (o.theme && o.theme !== "auto") q.set("theme", o.theme);
   if (o.language && o.language !== "en") q.set("lang", o.language);
+  if (o.pageant && (o.pageant.style === "carpet" || o.pageant.style === "stage")) q.set("pageant", o.pageant.style);
   for (const [role, short] of [["away", "a"], ["home", "h"]]) {
     const t = o[role];
     if (!t) continue;
@@ -36,6 +37,7 @@ export function fromParams(q) {
     if (q.get(param)) o[key] = q.get(param);
   }
   if (/^\d{4}$/.test(q.get("year") || "")) o.year = Number(q.get("year"));
+  if (q.get("pageant") === "carpet" || q.get("pageant") === "stage") o.pageant = { style: q.get("pageant") };
   for (const [role, short] of [["away", "a"], ["home", "h"]]) {
     if (!q.get(role)) continue;
     const t = { name: q.get(role) };

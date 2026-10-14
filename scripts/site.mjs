@@ -261,6 +261,14 @@ const page = `<!doctype html>
             <details class="fam-fold group">
               <summary data-say="look"></summary>
               ${seg("detail", "detail", "Simple leaves out the small markings, which helps at small sizes.", "「簡略」は小さなラインを省きます。小さく表示するときに役立ちます。")}
+              ${seg("pageant", "pageant", "Lay each team's flag or logo large over its half of the surface, as a stadium does for a final's ceremony: as a carpet with a border, or on a round stage with a ring. The score stays on the surface, or goes to the strip when the pictures need the room.", "決勝前のセレモニーのように、各チームの旗やロゴを競技場のそれぞれのハーフに大きく広げます。縁取りのあるカーペットか、金色の輪のついた丸いステージを選べます。得点は競技場の上に残るか、旗やロゴに場所が要るときは下の帯に移ります。")}
+              <div id="pageant-group"${hid("pageant-group")}>
+                ${seg("pageant-lines", "pageantLines", "Where the surface's lines lie: over the pictures, under them (the pictures cover the lines), or through them (under, and the pictures a little see-through).", "競技場のラインの位置を選びます。「上」は旗やロゴの上、「下」は旗やロゴの下（ラインは隠れます）、「透過」は下に置いて旗やロゴを少し透かし、ラインをうっすら見せます。")}
+                <div class="setup fam-row" ${help("A made-up cup in the centre circle, centre ice or centre court, and an entrance: the carpets roll out and the stages grow, for readers who have not asked for less motion.", "センターサークルやリンク中央、コート中央に、架空のカップのエンブレムを置きます。「登場の動き」は、カーペットが広がり、ステージが現れる動きです。動きを減らす設定にしている人には表示されません。")}>
+                  ${toggle("pageant-emblem", "pageantEmblem")}
+                  ${toggle("pageant-entrance", "pageantEntrance")}
+                </div>
+              </div>
               <div class="setup fam-row" ${help("Mown stripes on the grass, and true line widths: lines are drawn thicker than painted so that they stay in view when small.", "芝の縞模様と、実寸どおりの線幅です。通常は、小さくても見えるよう線を実際より太く描きます。")}>
                 ${toggle("stripes", "stripes")}
                 ${toggle("exact", "exact")}

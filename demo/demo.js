@@ -104,6 +104,8 @@ makeSeg("theme", (v) => { state.theme = v; keep.set("kyogijo-stadiums.theme", v)
 makeSeg("status", (v) => { state.status = v; });
 makeSeg("winner", (v) => { state.winner = v; });
 makeSeg("detail", (v) => { state.detail = v; });
+makeSeg("pageant", (v) => { state.pageant = v; });
+makeSeg("pageant-lines", (v) => { state.pageantLines = v; });
 makeSeg("court", (v) => { state.court = v; });
 makeSeg("pattern", (v) => { state.pattern = v; });
 makeSeg("goals", (v) => { state.goals = v; });
@@ -143,7 +145,7 @@ function renderEra() {
 function toggle(id, key) {
   $(id).addEventListener("click", () => { state[key] = !state[key]; $(id).setAttribute("aria-pressed", String(state[key])); change(); });
 }
-for (const [id, key] of [["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["flags", "flags"]]) toggle(id, key);
+for (const [id, key] of [["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["flags", "flags"], ["pageant-emblem", "pageantEmblem"], ["pageant-entrance", "pageantEntrance"]]) toggle(id, key);
 
 function fillFields() {
   for (const field of FIELDS) {
@@ -276,7 +278,7 @@ function render() {
   stage.removeAttribute("data-pending");
   renderEra();
   applyRows();
-  for (const toggleOf of [["flags", "flags"], ["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"]]) $(toggleOf[0]).setAttribute("aria-pressed", String(state[toggleOf[1]]));
+  for (const toggleOf of [["flags", "flags"], ["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["pageant-emblem", "pageantEmblem"], ["pageant-entrance", "pageantEntrance"]]) $(toggleOf[0]).setAttribute("aria-pressed", String(state[toggleOf[1]]));
   updateEmbed();
   syncUrl();
 }
@@ -288,10 +290,12 @@ function syncUrl() {
   else q.delete("year");
   if (state.league !== null && !isOwnLeague(state.sport, state.league)) q.set("league", state.league);
   else q.delete("league");
-  for (const [key, value, base] of [["pitch", state.pitch, "fifa"], ["ground", state.ground, "none"], ["pitchtype", state.pitchType, "none"], ["park", state.park, "generic"], ["size", state.size, "full"], ["orientation", state.orientation, "auto"], ["theme", state.theme, "auto"]]) {
+  for (const [key, value, base] of [["pitch", state.pitch, "fifa"], ["ground", state.ground, "none"], ["pitchtype", state.pitchType, "none"], ["park", state.park, "generic"], ["size", state.size, "full"], ["orientation", state.orientation, "auto"], ["theme", state.theme, "auto"], ["pageant", state.pageant, "off"], ["pageantlines", state.pageantLines, "over"]]) {
     if (value === base) q.delete(key);
     else q.set(key, value);
   }
+  if (state.pageant !== "off" && state.pageantEmblem) q.set("emblem", "1");
+  else q.delete("emblem");
   history.replaceState(history.state, "", `${location.pathname}?${q.toString()}${location.hash}`);
 }
 
@@ -327,7 +331,7 @@ function code(kind) {
       }
       for (const [key, attr] of [["status", "status"], ["competition", "competition"], ["date", "date"], ["label", "label"], ["winner", "winner"]]) if (o[key]) attrs.push(`${attr}="${escapeAttr(o[key])}"`);
     }
-    if (o.court) attrs.push(`options='${JSON.stringify({ court: o.court }).replace(/'/g, "&#39;")}'`);
+    if (o.court || o.pageant) attrs.push(`options='${JSON.stringify({ ...(o.court ? { court: o.court } : {}), ...(o.pageant ? { pageant: o.pageant } : {}) }).replace(/'/g, "&#39;")}'`);
     return `<script type="module" src="${CDN}/dist/element-define.js"></script>\n\n<kyogijo-field\n  ${attrs.join("\n  ")}\n></kyogijo-field>`;
   }
   if (kind === "iframe") {

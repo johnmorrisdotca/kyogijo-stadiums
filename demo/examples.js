@@ -12,6 +12,9 @@ export const EMBLEMS = {
   pine: disc(`<path d="M50 12L72 44H62L80 68H58V86H42V68H20L38 44H28Z" fill="#1f6b3c"/>`),
 };
 
+/** The made-up emblem of a made-up cup, drawn in code for a pageant's centre: a gold cup on a navy disc with a white ring. */
+export const PAGEANT_EMBLEM = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#14233f"/><circle cx="50" cy="50" r="42" fill="none" stroke="#f4f0e4" stroke-width="2"/><path d="M33 26H67V42Q67 58 50 62Q33 58 33 42Z" fill="#f2c230"/><path d="M33 30H24Q24 46 36 50M67 30H76Q76 46 64 50" fill="none" stroke="#f2c230" stroke-width="4"/><path d="M46 62H54V72H62V78H38V72H46Z" fill="#f2c230"/></svg>`;
+
 /** A made-up game for each sport: [away, home], each a name, a short form, a colour and an emblem. */
 export const TEAMS = {
   football: { away: { name: "Harbour City Gulls", abbr: "HCG", color: "#1f5fa8", emblem: "gull" }, home: { name: "Prairie Ridge Bison", abbr: "PRB", color: "#b5452c", emblem: "bison" } },
