@@ -276,7 +276,7 @@ const page = `<!doctype html>
               </div>
               <div id="court-group"${hid("court-group")}>
                 ${seg("court", "court", "Five looks for the basketball court, in plain colours: the paint, the border, the wood and the words on the baselines.", "バスケットボールのコートの見た目を5種類から選べます。無地の色で、ペイント、縁取り、床の木目、ベースラインの文字を変えます。")}
-                <div class="setup fam-row">${toggle("baseline", "baseline")}${toggle("centre-logo", "centreLogo")}</div>
+                <div class="setup fam-row">${toggle("baseline", "baseline")}${toggle("centre-logo", "centreLogo")}${toggle("hardwood", "hardwood")}</div>
               </div>
             </details>
           </div>

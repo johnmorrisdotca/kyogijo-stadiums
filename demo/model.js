@@ -52,6 +52,7 @@ export function makeState(params, kept = null) {
     flags: params.get("flags") !== "0",
     baseline: params.get("baseline") === "1",
     centreLogo: false,
+    hardwood: params.get("hardwood") === "1",
     touched: new Set(),
     embed: "module",
   };
@@ -135,8 +136,9 @@ export function optionsFor(s, lang, forCode = false) {
   // A curling sheet: a part of it, or folded. A drawing with teams always shows the whole sheet.
   if (s.sport === "curling" && s.sheet !== "sheet" && s.size === "surface") o.sheet = s.sheet === "folded" ? { show: "folded" } : { show: "half", end: s.sheet };
   const names = [s.away.name, s.home.name];
-  if (s.sport === "nba" && (s.court !== "default" || s.baseline || s.centreLogo)) {
+  if (s.sport === "nba" && (s.court !== "default" || s.baseline || s.centreLogo || s.hardwood)) {
     const court = s.court === "default" ? {} : { ...COURT_THEMES[s.court] };
+    if (s.hardwood) court.hardwood = true;
     if (s.baseline) court.baselineText = names.map((n) => n.toUpperCase().slice(0, 18));
     if (s.centreLogo) court.centreLogo = forCode ? "/logos/centre.svg" : EMBLEMS[s.home.emblem];
     o.court = court;
@@ -211,6 +213,7 @@ export const TOGGLES = [
   { id: "exact", get: (s) => s.exact },
   { id: "baseline", get: (s) => s.baseline },
   { id: "centre-logo", get: (s) => s.centreLogo },
+  { id: "hardwood", get: (s) => s.hardwood },
   { id: "flags", get: (s) => s.flags },
 ];
 

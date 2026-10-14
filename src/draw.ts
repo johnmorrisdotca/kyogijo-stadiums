@@ -24,6 +24,7 @@ import { KYOGIJO_STRINGS, fill } from "./strings.ts";
 import { courtStyle } from "./courts.style.ts";
 import { annotate, annotated, wideView, type Notes } from "./annotate.ts";
 import { KYOGIJO_BACKGROUND_STYLE, laidOn } from "./background.ts";
+import { KYOGIJO_HARDWOOD_STYLE, resolveHardwood } from "./hardwood.ts";
 import { featureColours, featureStyle } from "./features.ts";
 import { isLook, lookStyle } from "./look.ts";
 import { lineLook, restyleLines } from "./restyle.ts";
@@ -216,10 +217,13 @@ interface Extra {
   room?: number;
 }
 
+/** One text for both ends or sides, or a pair of them. */
+const pair = (text: string | [string, string] | undefined): [string, string] | undefined => (text === undefined ? undefined : typeof text === "string" ? [text, text] : text);
+
 /** The surface the options ask for, whole: before it is cropped to a `range`. */
 function buildWhole(o: SurfaceOptions, portrait: boolean, id: string, score: boolean, scored: boolean, extra: Extra): Surface {
   const court: CourtStyle | undefined = o.court;
-  const baselineText: [string, string] | undefined = court?.baselineText === undefined ? undefined : typeof court.baselineText === "string" ? [court.baselineText, court.baselineText] : court.baselineText;
+  const baselineText: [string, string] | undefined = pair(court?.baselineText);
   const unit: Unit = lengthUnit(o);
   const common: BuildOptions = {
     portrait,
@@ -229,7 +233,7 @@ function buildWhole(o: SurfaceOptions, portrait: boolean, id: string, score: boo
     stripes: o.stripes !== false,
     id,
     score,
-    court: { baselineText, centreLogo: safeLogo(court?.centreLogo), paintThreePoint: court?.paintThreePoint },
+    court: { baselineText, centreLogo: safeLogo(court?.centreLogo), paintThreePoint: court?.paintThreePoint, hardwood: resolveHardwood(court, o.detail === "simple", o.width), sidelineText: pair(court?.sidelineText) },
     features: extra.features,
     mow: PATTERNS.includes(o.stripePattern as StripePattern) ? (o.stripePattern as StripePattern) : undefined,
     goals: GOALS.includes(o.goals as GoalStyle) ? (o.goals as GoalStyle) : undefined,
@@ -320,6 +324,14 @@ function colourStyle(o: SurfaceOptions, teams: { left?: Team; right?: Team; home
   const rightInk = safeColour(teams.right?.textColor) ?? (right === undefined ? undefined : inkOn(right));
   if (leftInk !== undefined) props.push(`--ky-left-ink:${leftInk}`);
   if (rightInk !== undefined) props.push(`--ky-right-ink:${rightInk}`);
+  // A hardwood floor's border behind each baseline: the court's colour for it, else the team's, else the border's.
+  if (o.court?.hardwood !== undefined && o.court.hardwood !== false) {
+    const ends = pair(o.court.baselineColor);
+    const endLeft = safeColour(ends?.[0]) ?? left;
+    const endRight = safeColour(ends?.[1]) ?? right;
+    if (endLeft !== undefined) props.push(`--ky-hw-end-left:${endLeft}`);
+    if (endRight !== undefined) props.push(`--ky-hw-end-right:${endRight}`);
+  }
   return props.join(";");
 }
 
@@ -577,6 +589,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
   const featured = featureColours(sport, o.featureColors);
   const features = featured.length === 0 ? undefined : new Set(featured.map(([name]) => name));
   const walled = sport === "mlb" && ballparkDrawn(ballparkFor(o));
+  const hardwood = sport === "nba" && o.court?.hardwood !== undefined && o.court.hardwood !== false;
   const style = colourStyle(o, { left: leftTeam, right: rightTeam, home: isScore(o) ? o.home : undefined, away: isScore(o) ? o.away : undefined }, featured);
   const palette = isLook(o.look) ? o.look : undefined;
   let notes: Notes | undefined;
@@ -711,7 +724,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       style: style === "" ? undefined : style,
     },
     `<title id="${titleId}">${esc(title)}</title><desc id="${descId}">${esc(description)}</desc>` +
-      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${left?.round === true || right?.round === true ? `\n${KYOGIJO_MARK_STYLE}` : ""}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}${foldedSheet ? `\n${KYOGIJO_FOLD_STYLE}` : ""}${plan === undefined ? "" : `\n${courtStyle(plan.sport, plan.look)}`}${fieldsStyle(sport) === "" ? "" : `\n${fieldsStyle(sport)}`}${palette === undefined ? "" : `\n${lookStyle(palette)}`}${walled ? `\n${KYOGIJO_WALLS_STYLE}` : ""}${features === undefined ? "" : `\n${featureStyle(sport, features)}`}${notes === undefined || notes.svg === "" ? "" : `\n${KYOGIJO_NOTE_STYLE}`}${grounded ? `\n${KYOGIJO_BACKGROUND_STYLE}` : ""}${o.host === undefined ? "" : `\n${specialStyle(hostSport(o.host))}`}</style>`) +
+      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${left?.round === true || right?.round === true ? `\n${KYOGIJO_MARK_STYLE}` : ""}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}${foldedSheet ? `\n${KYOGIJO_FOLD_STYLE}` : ""}${plan === undefined ? "" : `\n${courtStyle(plan.sport, plan.look)}`}${fieldsStyle(sport) === "" ? "" : `\n${fieldsStyle(sport)}`}${palette === undefined ? "" : `\n${lookStyle(palette)}`}${walled ? `\n${KYOGIJO_WALLS_STYLE}` : ""}${hardwood ? `\n${KYOGIJO_HARDWOOD_STYLE}` : ""}${features === undefined ? "" : `\n${featureStyle(sport, features)}`}${notes === undefined || notes.svg === "" ? "" : `\n${KYOGIJO_NOTE_STYLE}`}${grounded ? `\n${KYOGIJO_BACKGROUND_STYLE}` : ""}${o.host === undefined ? "" : `\n${specialStyle(hostSport(o.host))}`}</style>`) +
       (defs === "" ? "" : `<defs>${defs}</defs>`) +
       body,
   );

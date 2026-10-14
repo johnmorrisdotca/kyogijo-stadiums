@@ -1,5 +1,6 @@
 import type { Ballpark } from "../ballpark.ts";
 import { el, num } from "../format.ts";
+import type { Hardwood } from "../hardwood.ts";
 import type { Box, Detail, GoalInfo, GoalStyle, Sport, StripePattern } from "../types.ts";
 
 /** Where a team's name and logo go, and how its words lie. */
@@ -101,6 +102,10 @@ export interface BuildOptions {
     baselineText?: [string, string];
     centreLogo?: string;
     paintThreePoint?: boolean;
+    /** The realistic floor, when asked for (`court.hardwood`), its options read. */
+    hardwood?: Hardwood;
+    /** Words along the sidelines, `[top, bottom]`, on a hardwood floor. */
+    sidelineText?: [string, string];
   };
   /** True in a score drawing, so that panels are made room for. */
   score: boolean;

@@ -64,6 +64,10 @@ export function corpus(): Drawing[] {
   add("styled: a look, direction, axes and landmarks", { sport: "soccer", id: "snap", look: "night", direction: {}, axes: { frame: "opta", size: { length: 105, width: 68, unit: "m" } }, landmarks: true } as never);
   add("styled: football with axes and mowing", { sport: "nfl", id: "snap", direction: {}, landmarks: true, ...GAME } as never);
   add("an unusual unit and a text label", { sport: "nba", id: "snap", units: "m", court: { baselineText: ["North", "South"] } });
+  // The realistic floor: boards, stain, shadows and sheen; tall with a score and in the plain detail; and with a data layer over it.
+  add("a hardwood floor", { sport: "nba", id: "snap", court: { hardwood: true, baselineText: ["North", "South"], sidelineText: "League", baselineColor: ["#1d4f91", "#8a2432"] } });
+  add("a hardwood floor, tall and plain, with a score", { sport: "nba", ...GAME, orientation: "portrait", theme: "dark", court: { hardwood: { detail: "plain", seed: 5 }, sidelineText: ["Top", "Bottom"] } });
+  add("a hardwood floor with shots", { sport: "nba", id: "snap", league: "fiba", court: { hardwood: true }, layers: [{ kind: "points", data: [{ x: 20, y: 25 }, { x: 70, y: 10 }] } as Layer] });
 
   const layer = (l: object): Layer => l as Layer;
   add("rink with shots, arrows, text and a key", { sport: "nhl", id: "snap", layers: shotMap().map(layer) });

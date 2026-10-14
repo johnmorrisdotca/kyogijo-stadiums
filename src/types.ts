@@ -224,6 +224,37 @@ export interface CourtStyle {
   baselineInk?: string;
   /** Paint the area inside the three-point line in the key's colour. */
   paintThreePoint?: boolean;
+  /**
+   * A realistic floor: maple boards that run the length of the court with staggered ends, grain and tone, stained keys and centre circle with the wood showing through,
+   * a stained border with a baseline in each team's colour, the baskets seen from above with their shadows, and a satin sheen. `true` for the defaults, or the options
+   * (`HardwoodOptions`). Off by default, and then the drawing is byte for byte as before. See `docs/hardwood.md`.
+   */
+  hardwood?: boolean | HardwoodOptions;
+  /** The colour of the border behind each baseline (`[left, right]`, or one for both) on a `hardwood` floor: a team's colour by default, else the border's. */
+  baselineColor?: string | [string, string];
+  /** Words along the sidelines, in the border of a `hardwood` floor: one text for both, or `[top, bottom]`. */
+  sidelineText?: string | [string, string];
+}
+
+/** The options of a `hardwood` floor. Every part is optional. */
+export interface HardwoodOptions {
+  /** The seed of the boards' lengths and tones and of the grain: the same seed always gives the same floor. 1 by default. */
+  seed?: number;
+  /**
+   * How much is drawn. `fine`: the boards' seams and ends, the grain, the baskets' soft shadows, the table and the benches. `plain`: broad boards and one shadow, for a
+   * thumbnail. `auto` (the default) is `plain` when the drawing has `detail: "simple"` or a `width` under 480 pixels, else `fine`.
+   */
+  detail?: "auto" | "fine" | "plain";
+  /** The width of a board in inches, 1.5 to 6. 2.25 by default, as a maple strip floor is laid. */
+  board?: number;
+  /** How much of the paint is stain, 0.3 to 1: the lower, the more wood shows through the keys, the circle and the border. 0.82 by default. */
+  stain?: number;
+  /** The satin sheen, 0 (none) to 1.5. 1 by default. */
+  sheen?: number;
+  /** Draw the baskets from above, with the stanchion and its shadows (the usual `goals` choices still apply). On by default. */
+  hoops?: boolean;
+  /** The coaching box's lines, the scorers' table and the two benches along the bottom sideline. On by default in the `fine` detail. */
+  bench?: boolean;
 }
 
 /**

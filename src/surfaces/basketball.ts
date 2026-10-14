@@ -1,6 +1,8 @@
 import { el, num } from "../format.ts";
 import { rulesFor, type NbaRules } from "../eras.ts";
 import { NBA_COURT, type CourtSpec } from "../leagues/basketball.ts";
+import { bench, hoops } from "./basketball.gear.ts";
+import { hardwoodFloor, hardwoodWords } from "./basketball.floor.ts";
 import { atEnds, edges, ft, quarterTurn, textOn, type BuildOptions, type Mark, type Surface } from "./surface.ts";
 
 /**
@@ -16,7 +18,9 @@ export function basketball(o: BuildOptions, era?: NbaRules, court: CourtSpec = N
   const cy = W / 2;
   const full = o.detail === "full";
   const bw = 2.6;
-  const thin = o.exact ? 1 / 6 : 0.4;
+  // A realistic floor (`court.hardwood`) paints its lines nearer to a real court's two inches, unless it is small and they would vanish.
+  const hw = o.court?.hardwood;
+  const thin = o.exact ? 1 / 6 : hw?.fine === true ? 0.3 : 0.4;
   const turned = o.portrait;
   const laneWidth = nba?.keyWidth ?? court.laneWidth;
   const half = laneWidth / 2;
@@ -31,32 +35,38 @@ export function basketball(o: BuildOptions, era?: NbaRules, court: CourtSpec = N
   const threeLeft = (): string => `M0 ${num(inset)}H${num(J)}A${num(radius)} ${num(radius)} 0 0 1 ${num(J)} ${num(W - inset)}H0`;
   const threeRight = (): string => `M${num(L)} ${num(inset)}H${num(L - J)}A${num(radius)} ${num(radius)} 0 0 0 ${num(L - J)} ${num(W - inset)}H${num(L)}`;
 
+  // A realistic floor lays boards under the paint and the seams and the sheen over it; the clean floor is as it always was.
+  const floor = hw === undefined ? undefined : hardwoodFloor(hw, { L, W, bw, margin: m, id: o.id }, o);
   let base = el("rect", { class: ft(o, "apron", "ky-apron"), x: view0.x, y: view0.y, width: view0.w, height: view0.h });
-  base += el("path", { class: ft(o, "border", "ky-boards"), "fill-rule": "evenodd", d: `M${-bw} ${-bw}H${num(L + bw)}V${num(W + bw)}H${-bw}ZM0 0V${num(W)}H${num(L)}V0Z` });
-  base += el("rect", { class: ft(o, "floor", "ky-surface"), x: 0, y: 0, width: L, height: W });
-  if (o.stripes) {
-    // The planks run along the court: a second tone on every other board.
-    const planks: string[] = [];
-    for (let y = 1; y < W; y += 2) planks.push(`M0 ${y}H${num(L)}v1H0z`);
-    base += el("path", { class: ft(o, "planks", "ky-stripe"), d: planks.join("") });
+  if (floor !== undefined) base += floor.under;
+  else {
+    base += el("path", { class: ft(o, "border", "ky-boards"), "fill-rule": "evenodd", d: `M${-bw} ${-bw}H${num(L + bw)}V${num(W + bw)}H${-bw}ZM0 0V${num(W)}H${num(L)}V0Z` });
+    base += el("rect", { class: ft(o, "floor", "ky-surface"), x: 0, y: 0, width: L, height: W });
+    if (o.stripes) {
+      // The planks run along the court: a second tone on every other board.
+      const planks: string[] = [];
+      for (let y = 1; y < W; y += 2) planks.push(`M0 ${y}H${num(L)}v1H0z`);
+      base += el("path", { class: ft(o, "planks", "ky-stripe"), d: planks.join("") });
+    }
   }
   // The keys, painted, and the three-point areas when asked.
   const keyW = court.freeThrowLine;
   const wide = (court.laneEndWidth ?? laneWidth) / 2;
   if (o.court?.paintThreePoint && three !== null) {
-    base += el("path", { class: ft(o, "three-point-area", "ky-key ky-key-left"), d: `${threeLeft()}Z` });
-    base += el("path", { class: ft(o, "three-point-area", "ky-key ky-key-right"), d: `${threeRight()}Z` });
+    base += el("path", { class: ft(o, "three-point-area", "ky-key ky-key-left"), "fill-opacity": hw?.stain, d: `${threeLeft()}Z` });
+    base += el("path", { class: ft(o, "three-point-area", "ky-key ky-key-right"), "fill-opacity": hw?.stain, d: `${threeRight()}Z` });
   }
   // A lane that is a rectangle, or a trapezoid wider at the baseline.
   const lane = (x: number, away: number): string => `M${num(x)} ${num(cy - wide)}L${num(x + away * keyW)} ${num(cy - half)}V${num(cy + half)}L${num(x)} ${num(cy + wide)}`;
   if (court.laneEndWidth === undefined) {
-    base += el("rect", { class: ft(o, "key", "ky-key ky-key-left"), x: 0, y: cy - half, width: keyW, height: laneWidth });
-    base += el("rect", { class: ft(o, "key", "ky-key ky-key-right"), x: L - keyW, y: cy - half, width: keyW, height: laneWidth });
+    base += el("rect", { class: ft(o, "key", "ky-key ky-key-left"), "fill-opacity": hw?.stain, x: 0, y: cy - half, width: keyW, height: laneWidth });
+    base += el("rect", { class: ft(o, "key", "ky-key ky-key-right"), "fill-opacity": hw?.stain, x: L - keyW, y: cy - half, width: keyW, height: laneWidth });
   } else {
-    base += el("path", { class: ft(o, "key", "ky-key ky-key-left"), d: `${lane(0, 1)}Z` });
-    base += el("path", { class: ft(o, "key", "ky-key ky-key-right"), d: `${lane(L, -1)}Z` });
+    base += el("path", { class: ft(o, "key", "ky-key ky-key-left"), "fill-opacity": hw?.stain, d: `${lane(0, 1)}Z` });
+    base += el("path", { class: ft(o, "key", "ky-key ky-key-right"), "fill-opacity": hw?.stain, d: `${lane(L, -1)}Z` });
   }
-  base += el("circle", { class: ft(o, "centre-paint", "ky-centre"), cx: L / 2, cy, r: court.centreRadius });
+  base += el("circle", { class: ft(o, "centre-paint", "ky-centre"), "fill-opacity": hw?.stain, cx: L / 2, cy, r: court.centreRadius });
+  if (floor !== undefined) base += floor.over;
 
   let lines = el("rect", { class: ft(o, "boundary", "ky-line"), x: 0, y: 0, width: L, height: W, "stroke-width": thin * 1.25, fill: "none" });
   lines += el("path", { class: ft(o, "halfway-line", "ky-line"), d: `M${num(L / 2)} 0V${num(W)}`, "stroke-width": thin, fill: "none" });
@@ -101,7 +111,10 @@ export function basketball(o: BuildOptions, era?: NbaRules, court: CourtSpec = N
         return el("path", { class: ft(o, "backboards", "ky-board"), d: `${boardLine}${arm}`, "stroke-width": 0.5, fill: "none" }) + el("circle", { class: ft(o, "rims", "ky-rim"), cx: rimX, cy, r: court.rim, "stroke-width": 0.3, fill: "none" });
     }
   };
-  if (o.goalMarkup === undefined && (o.goals === undefined || o.goals === "box")) {
+  if (hw?.hoops === true && o.goalMarkup === undefined && (o.goals === undefined || o.goals === "box")) {
+    // The baskets of a hardwood floor: the stanchion, the board and the rim seen from above, with their shadows.
+    lines += hoops(o, hw, court, { L, W, bw });
+  } else if (o.goalMarkup === undefined && (o.goals === undefined || o.goals === "box")) {
     lines += el("path", { class: ft(o, "backboards", "ky-board"), d: `M${num(back)} ${num(cy - board)}V${num(cy + board)}M${num(L - back)} ${num(cy - board)}V${num(cy + board)}M${num(back)} ${num(cy)}H${num(bx - court.rim)}M${num(L - back)} ${num(cy)}H${num(L - bx + court.rim)}`, "stroke-width": 0.5, fill: "none" });
     lines += el("circle", { class: ft(o, "rims", "ky-rim"), cx: bx, cy, r: court.rim, "stroke-width": 0.3, fill: "none" });
     lines += el("circle", { class: ft(o, "rims", "ky-rim"), cx: L - bx, cy, r: court.rim, "stroke-width": 0.3, fill: "none" });
@@ -130,17 +143,20 @@ export function basketball(o: BuildOptions, era?: NbaRules, court: CourtSpec = N
     if (marks.substitution !== null) lines += el("path", { class: ft(o, "court-marks", "ky-line"), d: [L / 2 - marks.substitution, L / 2 + marks.substitution].map((x) => `M${num(x)} ${num(W)}v${num(-side.length)}`).join(""), "stroke-width": thin, fill: "none" });
   }
 
-  // The court's own words and logo: the baseline words in the apron, the logo in the centre circle.
+  // The court's own words and logo: the baseline words in the apron, the logo in the centre circle. A hardwood floor sets the words in its border instead.
   const words = o.court?.baselineText;
-  if (words !== undefined) {
+  if (hw !== undefined) lines += hardwoodWords(o, { L, W, bw, margin: m, id: o.id }, turned, o.court?.sidelineText);
+  else if (words !== undefined) {
     const x = -bw - 1.4;
     lines += textOn(turned, x, cy + 1.1, words[0], { size: 3, anchor: "middle", rot: -90, cls: ft(o, "baseline-text", "ky-baseline"), weight: 800, spacing: 0.3 });
     lines += textOn(turned, L - x, cy + 1.1, words[1], { size: 3, anchor: "middle", rot: 90, cls: ft(o, "baseline-text", "ky-baseline"), weight: 800, spacing: 0.3 });
   }
   if (o.court?.centreLogo !== undefined) {
-    const s = court.centreRadius * 1.5;
+    const s = court.centreRadius * (hw === undefined ? 1.5 : 1.8);
     lines += el("image", { href: o.court.centreLogo, x: L / 2 - s / 2, y: cy - s / 2, width: s, height: s, preserveAspectRatio: "xMidYMid meet", transform: turned ? `rotate(-90 ${num(L / 2)} ${num(cy)})` : undefined });
   }
+  // Beside the bottom sideline: the coaching box, the scorers' table and the benches.
+  if (hw?.bench === true) lines += bench(o, { L, W, bw, box: marks?.sideline.fromBaseline ?? L * 0.3, thin }, m);
 
   // The teams' places and the score's panel, in proportion to the court (the NBA's is 94 feet by 50).
   const kx = L / NBA_COURT.length;
@@ -150,7 +166,7 @@ export function basketball(o: BuildOptions, era?: NbaRules, court: CourtSpec = N
     view: view0,
     base,
     lines,
-    defs: "",
+    defs: floor?.defs ?? "",
     left: { cx: 16.5 * kx, cy, w: 27 * kx, h: 25 * ky, rot: 0, panel: true },
     right: { cx: L - 16.5 * kx, cy, w: 27 * kx, h: 25 * ky, rot: 0, panel: true },
     plate: { cx: L / 2, cy, w: 34 * kx, h: 20 * ky },
