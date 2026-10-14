@@ -1,6 +1,6 @@
 {
   "name": "@johnmorrisdotca/kyogijo-stadiums",
-  "version": "0.6.2",
+  "version": "0.7.0",
   "description": "Kyogijo Stadiums 競技場, 39 sports' surfaces as SVG, drawn to scale from the rulebooks: NFL, CFL and IFAF football fields, an NHL rink, an NBA court, MLB ballparks, soccer pitches, curling sheets, athletics stadiums, speed skating, short track and figure skating rinks, swimming pools, water polo fields, diving wells, artistic swimming areas, and the courts and fields of tennis, volleyball (indoor, beach and sitting), badminton, pickleball, table tennis, padel, squash, racquetball, sepak takraw, teqball, roundnet, netball, lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey and handball, and the budo of judo, karate, kendo, sumo and kyudo with a dojo of tatami laid as real units, with each team's name and logo on its side and the score in the middle, stands and a crowd, a pageant of flags, and a 3D view. Light and dark, accessible, a compact badge for lists, a helper for React and a custom element. Zero dependencies.",
   "keywords": [
     "sports",

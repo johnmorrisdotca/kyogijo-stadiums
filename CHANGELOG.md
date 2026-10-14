@@ -7,6 +7,8 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-10-14
+
 ### Removed
 
 - **`roadToFinal` and the road-to-the-final chart moved to [`@johnmorrisdotca/taisen-brackets`](https://www.npmjs.com/package/@johnmorrisdotca/taisen-brackets)** (0.4.0 and later; its `/road` entry), where it is built on the bracket package and shares its look. There is no shim here: import it from taisen. Gone from `@johnmorrisdotca/kyogijo-stadiums/charts`: `roadToFinal`, `ROAD_SIZES`, `KYOGIJO_ROAD_STYLE` (and from `KYOGIJO_STYLE`) and the types `RoadChart`, `RoadDecided`, `RoadFinal`, `RoadFinalist`, `RoadGroupMatch`, `RoadMatch`, `RoadOptions`, `RoadRecord`, `RoadScore`, `RoadSize`, `RoadSizeInfo` and `RoadTotals`. The `road` words are gone from `KYOGIJO_STRINGS` (a custom set of words no longer has to give them), and the docs' section, the demo's "Road to the final" section, its gallery items and its tests went with it.
