@@ -7,6 +7,7 @@ src/
 ├── index.ts            the main entry
 ├── draw.ts             drawKyogijo: options in, one string of SVG out
 ├── score.ts            the teams' places, the score's panel and the badge
+├── mark.ts             the round team mark: a flag or a logo in a circle with a ring, or the team's initials on its colour
 ├── curling.board.ts    the curling scoreboard: each end, the total and the hammer
 ├── sets.board.ts       the net sports' scoreboard: each set or game, the points of the game, the sets won and the server's ball
 ├── court.ts            the net sports' court a set of options asks for: the look, the free zone, the lines, areas and fixtures as rectangles
@@ -68,6 +69,11 @@ src/
 ├── charts.curling.ts   the curling stones chart and the score of an end
 ├── charts.network.ts   the pass network chart
 ├── charts.types.ts     the charts' types
+├── road.ts             roadToFinal: the two finalists' road to the final, as round marks of both teams with the score between them
+├── road.model.ts       the road chart's data read and checked: scores, winners, rounds in order, the words, the summary and the table
+├── road.draw.ts        the road chart drawn: the card, square, wide and phone arrangements
+├── road.style.ts       the road chart's rules: the ground, the ink, the panels and the road, light and dark
+├── road.types.ts       the road chart's types
 ├── charts-entry.ts     the charts' entry
 ├── replay.ts           a replay's frame and its pure functions: interpolate, trails, possession, events, drawFrame
 ├── replay.control.ts   the replay's clock as a state machine: play, seek, step, speed, loop, reduced motion

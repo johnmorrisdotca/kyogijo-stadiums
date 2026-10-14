@@ -31,7 +31,7 @@ Kyogijo draws sports surfaces as SVG, to scale, with the score on them. The READ
 - [Units](./units.md): each surface in its rulebook's unit, and the conversions.
 - [Coordinate frames](./frames.md): where each data provider puts a point, and how to move it onto a surface.
 - [Data layers](./layers.md): points, lines, arrows, text and the heat layers.
-- [Ready-made charts](./charts.md): a shot chart, a shot map, a spray chart, a pass chart, a soccer shot map the stones of a curling end and a pass network.
+- [Ready-made charts](./charts.md): a shot chart, a shot map, a spray chart, a pass chart, a soccer shot map, the stones of a curling end, a pass network and the road to a tournament's final.
 - [Team shape](./team-shape.md): pass networks, formations, Voronoi cells, triangulations, hulls, flow fields and sonars.
 - [Replay](./replay.md): tracking data played on a surface, with controls, a keyboard, a live region and steps for reduced motion.
 - [Renderers](./renderers.md): the drawing as plain data, on a canvas, in a d3 selection, in an Observable Plot, as GeoJSON and as a PNG.

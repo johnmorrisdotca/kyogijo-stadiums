@@ -110,6 +110,41 @@ const SQUADS = "Array.from({ length: 22 }, (_, i) => ({ x: 8 + ((i * 37 + (i < 1
 const PASSES = "Array.from({ length: 240 }, (_, i) => { const a = (i * 7) % 11; const b = (a + 1 + ((i * 3) % 4)) % 11; return { from: a + 1, to: b + 1, x: 14 + a * 6 + (i % 5), y: 12 + ((a * 17) % 76) + (i % 7), x2: 14 + b * 6, y2: 12 + ((b * 17) % 76), team: \"home\", fromNumber: a + 1, toNumber: b + 1 }; })";
 const MOVES = "Array.from({ length: 400 }, (_, i) => { const x = 5 + ((i * 13) % 90); const y = 5 + ((i * 29) % 90); return { x, y, x2: x + 8 + (i % 5) + (x > 50 ? 4 : 0), y2: y + ((i % 7) - 3) * 2.2, id: (i % 5) + 1 }; })";
 
+/** The flags of the road-to-the-final snippets: three shapes each, drawn in code, of nations that do not exist. */
+const MARK_CODE = String.raw`const flag = (a, b, c) => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 20"><rect width="30" height="20" fill="' + a + '"/><path d="M15 2L27 10L15 18L3 10Z" fill="' + b + '"/><circle cx="15" cy="10" r="3.4" fill="' + c + '"/></svg>';
+const stripes = (a, b, c) => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 20"><rect width="10.1" height="20" fill="' + a + '"/><rect x="10" width="10.1" height="20" fill="' + b + '"/><rect x="20" width="10" height="20" fill="' + c + '"/></svg>';
+const aurelia = { name: "Aurelia", abbr: "AUR", score: 2, penalties: 4, color: "#0f7a7a", logo: flag("#0f7a7a", "#f4f0e4", "#e07a1f") };
+const calvara = { name: "Calvara", abbr: "CAL", score: 2, penalties: 3, color: "#6b2d5c", logo: stripes("#6b2d5c", "#f2c230", "#14233f") };`;
+
+const ROAD_CODE = String.raw`const flag = (a, b, c) => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 20"><rect width="30" height="20" fill="' + a + '"/><path d="M15 2L27 10L15 18L3 10Z" fill="' + b + '"/><circle cx="15" cy="10" r="3.4" fill="' + c + '"/></svg>';
+const stripes = (a, b, c) => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 20"><rect width="10.1" height="20" fill="' + a + '"/><rect x="10" width="10.1" height="20" fill="' + b + '"/><rect x="20" width="10" height="20" fill="' + c + '"/></svg>';
+const aurelia = {
+  name: "Aurelia", abbr: "AUR", color: "#0f7a7a", logo: flag("#0f7a7a", "#f4f0e4", "#e07a1f"),
+  group: [
+    { opponent: { name: "Isenmark", abbr: "ISE", color: "#3a2d6b", logo: stripes("#3a2d6b", "#f4f0e4", "#3a2d6b") }, score: [2, 0] },
+    { opponent: { name: "Lumeria", abbr: "LUM", color: "#14233f", logo: flag("#14233f", "#f2c230", "#14233f") }, score: [1, 1] },
+    { opponent: { name: "Rovana", abbr: "ROV", color: "#1f6b3c", logo: stripes("#f2c230", "#1f6b3c", "#f2c230") }, score: [3, 0] },
+  ],
+  path: [
+    { round: "round-of-16", opponent: { name: "Fenlund", abbr: "FEN", color: "#1f6b3c", logo: flag("#1f6b3c", "#f2c230", "#1f6b3c") }, score: [2, 1] },
+    { round: "quarter-final", opponent: { name: "Garrovia", abbr: "GAR", color: "#14233f", logo: stripes("#14233f", "#f2a900", "#14233f") }, score: [1, 1], decidedBy: "pens", pens: [5, 4] },
+    { round: "semi-final", opponent: { name: "Norvane", abbr: "NRV", color: "#1f6b3c", logo: flag("#f4f0e4", "#1f6b3c", "#f4f0e4") }, score: [2, 1], decidedBy: "aet" },
+  ],
+};
+const calvara = {
+  name: "Calvara", abbr: "CAL", color: "#6b2d5c", logo: stripes("#6b2d5c", "#f2c230", "#14233f"),
+  group: [
+    { opponent: { name: "Estria", abbr: "EST", color: "#3a2d6b", logo: flag("#e8e2cf", "#3a2d6b", "#e8e2cf") }, score: [4, 1] },
+    { opponent: { name: "Borea", abbr: "BOR", color: "#8a2d4b", logo: stripes("#8a2d4b", "#e8e2cf", "#2f7a67") }, score: [0, 1] },
+    { opponent: { name: "Kestrel Isles", abbr: "KES", color: "#14233f", logo: flag("#14233f", "#e8e2cf", "#c2410c") }, score: [2, 2] },
+  ],
+  path: [
+    { round: "round-of-16", opponent: { name: "Dornmark", abbr: "DOR", color: "#c2410c", logo: flag("#c2410c", "#14233f", "#c2410c") }, score: [1, 0] },
+    { round: "quarter-final", opponent: { name: "Helmara", abbr: "HEL", color: "#7a2a8c", logo: stripes("#f2c230", "#7a2a8c", "#f2c230") }, score: [2, 2], decidedBy: "pens", pens: [3, 2] },
+    { round: "semi-final", opponent: { name: "Valdor", abbr: "VAL", color: "#c2410c", logo: stripes("#c2410c", "#f4f0e4", "#c2410c") }, score: [3, 1] },
+  ],
+};`;
+
 const item = (id, title, code, note = "", extra = {}) => ({ id, title, code, note, ...extra });
 const section = (id, title, intro, items) => ({ id, title, intro, items });
 
@@ -142,6 +177,13 @@ function surfacesPage(lib) {
         item("badge-curling", "Badge, curling", drawing({ sport: "curling", ...GAMES.curling, size: "badge" }), "The hammer is the small stone in the corner of the team that has it."),
         item("compact-nba", "Compact card, basketball", drawing({ sport: "nba", ...GAMES.nba, size: "compact" })),
         item("compact-nhl", "Compact card, hockey", drawing({ sport: "nhl", ...GAMES.nhl, size: "compact" })),
+      ]),
+      section("marks", "Round marks", "`mark: \"round\"` on a team, or `markShape: \"round\"` for both, clips a flag or a logo to a circle with a ring: on each side of the surface, in the badge and in the strip of a compact card. A team with no logo is its initials on its colour. The flags are made-up shapes drawn in the code.", [
+        item("mark-pitch", "Round marks on a pitch, wide", `import { drawKyogijo } from "${MAIN}";\n\n${MARK_CODE}\nconst svg = drawKyogijo({ sport: "soccer", markShape: "round", away: aurelia, home: calvara, status: "final-pens", competition: "Northern Cup final", orientation: "landscape" });`),
+        item("mark-pitch-tall", "Round marks on a pitch, tall", `import { drawKyogijo } from "${MAIN}";\n\n${MARK_CODE}\nconst svg = drawKyogijo({ sport: "soccer", markShape: "round", away: aurelia, home: calvara, status: "final-pens", competition: "Northern Cup final", orientation: "portrait" });`, "The flags stay upright where the names are turned."),
+        item("mark-badge", "Round marks in a badge", `import { drawKyogijo } from "${MAIN}";\n\n${MARK_CODE}\nconst svg = drawKyogijo({ sport: "soccer", markShape: "round", away: aurelia, home: calvara, status: "final-pens", size: "badge" });`),
+        item("mark-compact", "Round marks in a compact card", `import { drawKyogijo } from "${MAIN}";\n\n${MARK_CODE}\nconst svg = drawKyogijo({ sport: "soccer", markShape: "round", away: aurelia, home: calvara, status: "final-pens", size: "compact" });`),
+        item("mark-initials", "No flag: the initials on the team's colour", `import { drawKyogijo } from "${MAIN}";\n\nconst svg = drawKyogijo({\n  sport: "nhl",\n  markShape: "round",\n  away: { name: "Northern Owls", abbr: "NOW", score: 3, color: "#3a2d6b" },\n  home: { name: "Lakeshore Anchors", abbr: "LSA", score: 2, color: "#0f7a7a" },\n  status: "final-ot",\n});`),
       ]),
       section("courts", "The court's looks", "Five looks to start from, in `COURT_THEMES`; each colour of a look is an option too.", Object.keys(themes).map((name) => item(`court-${name}`, `Court: ${name}`, `import { COURT_THEMES, drawKyogijo } from "${MAIN}";\n\nconst svg = drawKyogijo({ sport: "nba", court: COURT_THEMES.${name}, away: ${literal(PEAKS)}, home: ${literal(BOLTS)}, status: "final" });`))),
       section("looks", "Light, dark and detail", "`theme` picks the drawing's colours; `exactLines` draws the lines at their true widths; `detail: \"simple\"` leaves out the small markings.", [
@@ -320,6 +362,10 @@ function dataPage() {
     item("chart-mlb", "MLB spray chart", `import { mlbSprayChart } from "${MAIN}/charts";\n\nconst types = ["single", "field_out", "double", "field_out", "home_run", "triple"];\nconst balls = Array.from({ length: 60 }, (_, i) => ({ x: 125.4 + (((i * 37) % 120) - 60), y: 198.27 - (30 + ((i * 53) % 110)), type: types[i % types.length] }));\nconst svg = mlbSprayChart(balls, { park: "fenway-park", zones: true }).draw();`),
     item("chart-nfl", "NFL pass chart", `import { nflPassChart } from "${MAIN}/charts";\n\nconst outcomes = ["complete", "complete", "incomplete", "touchdown", "interception"];\nconst passes = Array.from({ length: 40 }, (_, i) => ({ x: 66 + ((i * 13) % 44), y: 8 + ((i * 17) % 40), outcome: outcomes[i % outcomes.length], fromX: 60, fromY: 26 }));\nconst svg = nflPassChart(passes, { los: 62, arrows: true }).draw();`),
     item("chart-soccer", "Soccer shot map", `import { soccerShotMap } from "${MAIN}/charts";\n\nconst outcomes = ["goal", "saved", "missed", "blocked"];\nconst shots = Array.from({ length: 24 }, (_, i) => ({ x: 84 + ((i * 7) % 30), y: 18 + ((i * 11) % 44), outcome: outcomes[i % 4], xg: 0.04 + (i % 8) / 20 }));\nconst svg = soccerShotMap(shots, { provider: "statsbomb", half: true }).draw();`),
+    item("chart-road-card", "Road to the final, card", `import { roadToFinal } from "${MAIN}/charts";\n\n${ROAD_CODE}\nconst svg = roadToFinal([aurelia, calvara], { title: "Northern Cup 2030", final: { score: [2, 2], decidedBy: "pens", pens: [4, 3] }, endnote: "Made-up teams, flags and results" }).draw();`, "1080 by 1350. The winner of each match is brighter; the final's loser is quiet."),
+    item("chart-road-wide", "Road to the final, wide", `import { roadToFinal } from "${MAIN}/charts";\n\n${ROAD_CODE}\nconst svg = roadToFinal([aurelia, calvara], { title: "Northern Cup 2030", size: "wide" }).draw();`, "1200 by 675, before the final is played: the middle says v."),
+    item("chart-road-phone", "Road to the final, phone, dark", `import { roadToFinal } from "${MAIN}/charts";\n\n${ROAD_CODE}\nconst svg = roadToFinal([aurelia, calvara], { title: "Northern Cup 2030", size: "phone", theme: "dark" }).draw();`, "390 wide and as tall as the rounds need, with each round's name over its row."),
+    item("chart-road-series", "Road to the final: a series, with no flags", `import { roadToFinal } from "${MAIN}/charts";\n\nconst owls = {\n  name: "Northern Owls", abbr: "NOW", color: "#3a2d6b",\n  path: [\n    { round: "first-round", opponent: { name: "Coastal Pines", abbr: "CPN", color: "#1f6b3c" }, score: "4-0", note: "Game 4" },\n    { round: "second-round", opponent: { name: "Lakeshore Anchors", abbr: "LSA", color: "#0f7a7a" }, score: "4-2", note: "Game 6" },\n    { round: "conference-final", opponent: { name: "Prairie Ridge Bison", abbr: "PRB", color: "#a8452c" }, score: "4-3", note: "Game 7" },\n  ],\n};\nconst gulls = {\n  name: "Harbour City Gulls", abbr: "HCG", color: "#1d4f91",\n  path: [\n    { round: "first-round", opponent: { name: "Metro Bolts", abbr: "MTB", color: "#c2410c" }, score: "4-1", note: "Game 5" },\n    { round: "second-round", opponent: { name: "Summit Peaks", abbr: "SMT", color: "#14233f" }, score: "4-3", note: "Game 7" },\n    { round: "conference-final", opponent: { name: "Valley Stars", abbr: "VAL", color: "#c8102e" }, score: "4-2", note: "Game 6" },\n  ],\n};\nconst labels = { "first-round": "First round", "second-round": "Second round", "conference-final": "Conference final", final: "Cup final" };\nconst svg = roadToFinal([owls, gulls], { title: "Cup play-offs", labels, size: "square" }).draw();`, "A team with no flag or logo is its initials on its colour; the rounds are named by the caller and the scores are games won."),
   ];
   const replay = [
     item("replay-rink", "A frame of a replay: the rink", `import { drawFrame } from "${MAIN}/replay";\n\nconst skater = (id, team, number, x, y, t) => ({ id, team, number, x: x + 6 * Math.sin(t / 1.4 + number), y: y + 4 * Math.cos(t / 1.1 + number) });\nconst frames = Array.from({ length: 51 }, (_, i) => {\n  const t = i / 5;\n  const objects = [skater("h9", "home", 9, 30, 0, t), skater("h17", "home", 17, 48, 18, t), skater("h28", "home", 28, 48, -18, t), skater("a4", "away", 4, 62, 8, t), skater("a8", "away", 8, 62, -8, t), skater("a31", "away", 31, 89, 0, 0)];\n  const puck = objects[Math.min(2, Math.floor(t / 3.5))];\n  return { t, objects: [...objects, { id: "puck", team: "puck", x: puck.x, y: puck.y }] };\n});\nconst events = [\n  { t: 3.5, kind: "pass", team: "home", by: "h9", to: "h17", until: 4 },\n  { t: 7, kind: "shot", team: "home", by: "h28", x2: 89, y2: 2, until: 7.6 },\n];\nconst svg = drawFrame({ sport: "nhl" }, { from: "nhl-api", frames, events }, 7.8);`, "Tracking data in the NHL API's frame, played on the rink: the players with their numbers, the puck with its trail, and the events that are on the surface at 7.8 seconds (the pass has gone, the shot is on its way). Played, with controls, it is mountKyogijo(...).replay(...)."),
@@ -712,7 +758,7 @@ const STYLE_RE = /<style>[\s\S]*?<\/style>/;
 export const itemFiles = (id) => ({ svg: `gallery/${id}.svg`, page: `gallery/${id}.html` });
 
 const itemHtml = (entry, style) => {
-  const svg = entry.svg.replace(STYLE_RE, (block) => (block.includes(style.slice(0, 60)) ? "" : block));
+  const svg = entry.svg.replace(STYLE_RE, (block) => (block.includes(style.slice(0, 60)) || style.includes(block.slice("<style>".length, -"</style>".length)) ? "" : block));
   const code = escapeHtml(entry.code);
   const files = itemFiles(entry.id);
   return `<figure class="g-item" id="${entry.id}" data-testid="gallery-item">

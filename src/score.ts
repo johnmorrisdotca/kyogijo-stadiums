@@ -1,4 +1,5 @@
 import { el, num } from "./format.ts";
+import { roundMarkup } from "./mark.ts";
 import { LINE_HEIGHT, fitLines, textWidth } from "./text.ts";
 import type { Side, Sport } from "./types.ts";
 import type { PlateSpot, Zone } from "./surfaces/surface.ts";
@@ -12,6 +13,11 @@ export interface TeamView {
   score: string;
   /** The logo as an image address, or `undefined`. */
   logo: string | undefined;
+  /** The team's mark is round: its logo in a circle with a ring, or, with no logo, its initials on its colour (`color`). */
+  round?: boolean;
+  fit?: "cover" | "contain";
+  color?: string;
+  ink?: string;
   state: "win" | "lose" | "none";
   /** The role in the game, for part names. */
   role: "home" | "away";
@@ -35,22 +41,28 @@ const part = (on: boolean, names: string): string | undefined => (on ? names : u
  * A team's name and logo in its place. The place is a box in the surface's own frame; the words are set as the eye
  * sees them, turned by `rot` (or a quarter back when the whole surface is turned).
  */
-export function bannerMarkup(zone: Zone, team: TeamView, o: { turned: boolean; onColour: boolean; parts: boolean }): string {
+export function bannerMarkup(zone: Zone, team: TeamView, o: { turned: boolean; onColour: boolean; parts: boolean; id?: string }): string {
   const rot = o.turned ? -90 : zone.rot;
   const { w, h } = zone;
   let inner = "";
   if (zone.panel) inner += el("rect", { class: `ky-panel ky-panel-${team.side}`, x: -w / 2, y: -h / 2, width: w, height: h, rx: Math.min(h * 0.16, 8) });
   const ink = `ky-${o.onColour || zone.panel ? "ink" : "paint"}-${team.side}`;
   const logo = team.logo;
-  const row = logo !== undefined && w / h >= 2.6;
-  const stack = logo !== undefined && !row;
+  // A round mark is a picture even where the team has no logo (its initials on its colour), and stays upright in a zone that is turned.
+  const mark = (size: number, x: number, y: number): string =>
+    team.round === true
+      ? roundMarkup({ id: `${o.id ?? "ky"}-mk-${team.role}`, cx: x + size / 2, cy: y + size / 2, r: size / 2, href: logo, fit: team.fit, initials: team.abbr, color: team.color, ink: team.ink, upright: rot })
+      : el("image", { class: "ky-logo", href: logo, x, y, width: size, height: size, preserveAspectRatio: "xMidYMid meet" });
+  const pictured = logo !== undefined || team.round === true;
+  const row = pictured && w / h >= 2.6;
+  const stack = pictured && !row;
   if (row) {
     const size = Math.min(h * 0.9, w * 0.3);
     const gap = size * 0.22;
     const fit = fitLines(team.name, w - size - gap - h * 0.1, h * 0.92, h * 0.5);
     const total = size + gap + fit.width;
     const x0 = -total / 2;
-    inner += el("image", { class: "ky-logo", href: logo, x: x0, y: -size / 2, width: size, height: size, preserveAspectRatio: "xMidYMid meet" });
+    inner += mark(size, x0, -size / 2);
     inner += lines(fit.lines, fit.size, x0 + size + gap, 0, "start", ink);
   } else if (stack) {
     const size = Math.min(h * 0.56, w * 0.8);
@@ -58,7 +70,7 @@ export function bannerMarkup(zone: Zone, team: TeamView, o: { turned: boolean; o
     const fit = fitLines(team.name, w * 0.96, h - size - gap - h * 0.06, h * 0.22);
     const total = size + gap + fit.height;
     const top = -total / 2;
-    inner += el("image", { class: "ky-logo", href: logo, x: -size / 2, y: top, width: size, height: size, preserveAspectRatio: "xMidYMid meet" });
+    inner += mark(size, -size / 2, top);
     inner += lines(fit.lines, fit.size, 0, top + size + gap + fit.height / 2, "middle", ink);
   } else {
     const fit = fitLines(team.name, w * 0.96, h * 0.92, h * 0.5);
@@ -210,7 +222,7 @@ export function stateOf(winner: "home" | "away" | "none", role: "home" | "away")
 }
 
 /** The badge: one strip, [logo abbreviation score] [picture and status] [score abbreviation logo]. */
-export function badgeMarkup(left: TeamView, right: TeamView, o: { sport: Sport; status: string | undefined; turned?: boolean; parts: boolean }): { w: number; h: number; markup: string } {
+export function badgeMarkup(left: TeamView, right: TeamView, o: { sport: Sport; status: string | undefined; turned?: boolean; parts: boolean; id?: string }): { w: number; h: number; markup: string } {
   const W = 440;
   const H = 64;
   const block = 182;
@@ -231,7 +243,11 @@ export function badgeMarkup(left: TeamView, right: TeamView, o: { sport: Sport; 
     // The ball of the team that is serving, in the same corner.
     if (team.serving === true) out += el("g", { transform: `translate(${isLeft ? block - 11 : W - block + 11} 11)` }, el("circle", { class: "ky-serve", r: 6 }) + el("path", { class: "ky-serve-seam", d: "M-4.7 -1.8Q0 1.8 4.7 -1.8", "stroke-width": 0.9 }));
     out += el("g", { class: `ky-badge-team ky-badge-${team.side} ky-${team.state}`, part: part(o.parts, `team ${team.role}`) },
-      (team.logo === undefined ? "" : el("image", { class: "ky-logo", href: team.logo, x: logoX, y: 12, width: logoSize, height: logoSize, preserveAspectRatio: "xMidYMid meet" })) +
+      (team.logo === undefined
+        ? ""
+        : team.round === true
+          ? roundMarkup({ id: `${o.id ?? "ky"}-mk-${team.role}`, cx: logoX + logoSize / 2, cy: 12 + logoSize / 2, r: logoSize / 2, href: team.logo, fit: team.fit, ring: 2 })
+          : el("image", { class: "ky-logo", href: team.logo, x: logoX, y: 12, width: logoSize, height: logoSize, preserveAspectRatio: "xMidYMid meet" })) +
         el("text", { class: `ky-text ky-name ky-ink-${team.side}`, x: textStart, y: H / 2 + abbrSize * 0.36, "font-size": abbrSize, "text-anchor": isLeft ? undefined : "end" }, esc(team.abbr)) +
         el("text", { class: `ky-text ky-score ky-ink-${team.side} ky-${team.state}`, x: scoreEdge, y: H / 2 + scoreSize * 0.36, "font-size": scoreSize, "text-anchor": isLeft ? "end" : "start", part: part(o.parts, `score ${team.role}-score`) }, esc(team.score)),
     );

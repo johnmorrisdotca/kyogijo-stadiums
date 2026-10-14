@@ -365,6 +365,9 @@ export interface FieldStyle {
   circle?: boolean;
 }
 
+/** The shape of a team's mark: its logo as it is (`plain`), or clipped to a circle with a ring (`round`). */
+export type TeamMark = "plain" | "round";
+
 /** One team of a score. */
 export interface Team {
   /** The name, as it is to be written: "Harbour City Gulls". */
@@ -375,6 +378,13 @@ export interface Team {
   score?: number | string;
   /** The logo: an `https:` or relative address, an image `data:` address, or an SVG document as text. */
   logo?: string;
+  /**
+   * How the logo is drawn: `round` clips it to a circle with a thin ring (a flag, or a crest) and, for a team with no logo, draws its initials on its colour; `plain` is the
+   * logo as it is, in a box. The score's `markShape` is the default for both teams.
+   */
+  mark?: TeamMark;
+  /** A round mark's fit: `cover` (the default) fills the circle with the picture, as a flag does; `contain` shows a crest whole on a plain disc. */
+  markFit?: "cover" | "contain";
   /** The goals it scored in a penalty shoot-out: shown with the status, and the winner of a level game. */
   penalties?: number | string;
   /** Curling: the points it scored in each end, in order (`null` for an end not played yet; `"X"` for a conceded one). */
@@ -597,4 +607,6 @@ export interface ScoreOptions extends SurfaceOptions {
   homeSide?: Side;
   /** Write names in capitals. On by default. */
   uppercase?: boolean;
+  /** The shape of both teams' marks, unless a team's own `mark` says otherwise: `plain` (the default) or `round`, a flag or logo in a circle with a ring. */
+  markShape?: TeamMark;
 }

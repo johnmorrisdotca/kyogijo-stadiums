@@ -4,7 +4,7 @@ A game on a surface: each team's name and logo on its side, the score in the mid
 
 ## Score mode
 
-Pass `home` and `away`. Each team has a `name`, an optional `abbr`, `score`, `penalties` (a soccer shoot-out), `ends` and `hammer` (curling: the score of each end, and the last stone), `sets`, `tiebreaks`, `points` and `serving` (tennis, volleyball, badminton, pickleball and table tennis: the score in each set or game, a tie-break's points, the game in progress and the server, [Net sports](./courts.md#a-score)), `goals`, `behinds` and `points` (Australian football's goals and behinds, written `10.12 (72)`; Gaelic games' goals and points, `2-14 (20)`), `wickets`, `overs` and `innings` (cricket: runs for wickets, the overs faced and each innings, [Field sports](./field-sports.md#a-score)), `logo`, `color` and `textColor`.
+Pass `home` and `away`. Each team has a `name`, an optional `abbr`, `score`, `penalties` (a soccer shoot-out), `ends` and `hammer` (curling: the score of each end, and the last stone), `sets`, `tiebreaks`, `points` and `serving` (tennis, volleyball, badminton, pickleball and table tennis: the score in each set or game, a tie-break's points, the game in progress and the server, [Net sports](./courts.md#a-score)), `goals`, `behinds` and `points` (Australian football's goals and behinds, written `10.12 (72)`; Gaelic games' goals and points, `2-14 (20)`), `wickets`, `overs` and `innings` (cricket: runs for wickets, the overs faced and each innings, [Field sports](./field-sports.md#a-score)), `logo`, `mark` and `markFit` ([round marks](#round-marks)), `color` and `textColor`.
 
 | Option | What it does |
 | --- | --- |
@@ -15,8 +15,29 @@ Pass `home` and `away`. Each team has a `name`, an optional `abbr`, `score`, `pe
 | `winner` | `auto` (the leader once the status is a final one), `leader`, `none`, `home` or `away`. |
 | `homeSide` | `right` (the default, as in "away at home") or `left`. |
 | `uppercase` | Names in capitals. On by default. |
+| `markShape` | `plain` (the default) or `round`: a flag or a logo in a circle with a ring, for both teams; a team's `mark` wins. |
 
 A team's logo is an `https:` or relative address, an image `data:` address, or the text of an SVG. It is drawn as an image, so it cannot run a script, and an address of any other kind is ignored. A team without a logo is its name alone.
+
+### Round marks
+
+A flag or a crest can be drawn round, as a broadcast graphic draws a country against a country: `mark: "round"` on a team, or `markShape: "round"` on the score for both (a team's own `mark`, `round` or `plain`, wins). The logo is clipped to a circle and ringed, on each side of the surface in the full drawing, in the badge and in the strip of a compact card. It is sized by the place the surface gives the team: the end zone of a pitch, the half of a court. Where the words are turned (along the ends of a wide pitch, and in a tall drawing) the mark is turned back and stays upright.
+
+```ts
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo";
+
+const flag = (colours: string[]): string => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 20">${colours.map((c, i) => `<rect x="${i * 10}" width="10" height="20" fill="${c}"/>`).join("")}</svg>`;
+const svg = drawKyogijo({
+  sport: "soccer",
+  markShape: "round",
+  away: { name: "Aurelia", abbr: "AUR", score: 2, color: "#0f7a7a", logo: flag(["#0f7a7a", "#f4f0e4", "#e07a1f"]) },
+  home: { name: "Calvara", abbr: "CAL", score: 1, color: "#6b2d5c" },
+});
+console.log(svg.split('class="ky-mark"').length - 1, svg.includes("<clipPath"), svg.includes("ky-mark-i"));
+// 2 true true
+```
+
+A round mark with no logo (Calvara above) is the team's initials on its colour; in the badge, which already writes the three letters, a team with no logo has no mark. `markFit: "contain"` shows a crest whole on a plain disc where `cover` (the default) fills the circle and cuts the edges of a flag. Curling, the net sports and cricket put the teams on the board, not on the surface, so they have no mark. The mark's ring and hairline are `--ky-mark-ring` and `--ky-mark-edge`.
 
 ## Layout
 

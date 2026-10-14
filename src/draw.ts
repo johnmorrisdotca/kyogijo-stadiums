@@ -26,6 +26,7 @@ import { KYOGIJO_BACKGROUND_STYLE, laidOn } from "./background.ts";
 import { featureColours, featureStyle } from "./features.ts";
 import { isLook, lookStyle } from "./look.ts";
 import { lineLook, restyleLines } from "./restyle.ts";
+import { KYOGIJO_MARK_STYLE } from "./mark.ts";
 import { KYOGIJO_BASE_STYLE, KYOGIJO_CURLING_STYLE, KYOGIJO_NOTE_STYLE, KYOGIJO_WALLS_STYLE } from "./style.ts";
 import { convertLength, type Unit } from "./units.ts";
 import { baseball } from "./surfaces/baseball.ts";
@@ -43,7 +44,7 @@ import { specialText } from "./events.ts";
 import { layoutOf, soccerSpec, type SoccerPitchId, type SoccerSize, type SoccerSpec } from "./surfaces/soccer-spec.ts";
 import type { BuildOptions, Surface } from "./surfaces/surface.ts";
 import { abbreviate, capitals } from "./text.ts";
-import type { Colors, CourtStyle, FieldSport, GoalStyle, Language, ScoreOptions, Side, Sport, StripePattern, SurfaceOptions, Team } from "./types.ts";
+import type { Colors, CourtStyle, FieldSport, GoalStyle, Language, ScoreOptions, Side, Sport, StripePattern, SurfaceOptions, Team, TeamMark } from "./types.ts";
 import { VERSION } from "./version.ts";
 
 export { isPortrait };
@@ -316,7 +317,14 @@ function colourStyle(o: SurfaceOptions, teams: { left?: Team; right?: Team; home
   return props.join(";");
 }
 
-function teamView(team: Team, side: Side, role: "home" | "away", winner: "home" | "away" | "none", uppercase: boolean, sport: Sport): TeamView {
+/** The round mark of a team, when its own `mark` or the score's `markShape` asks for one: the fit, the colour of its disc and the ink of its initials. */
+function roundOf(team: Team, markShape: TeamMark | undefined): Pick<TeamView, "round" | "fit" | "color" | "ink"> | undefined {
+  const shape = team.mark === "round" || team.mark === "plain" ? team.mark : markShape;
+  if (shape !== "round") return undefined;
+  return { round: true, fit: team.markFit === "contain" ? "contain" : undefined, color: safeColour(team.color), ink: safeColour(team.textColor) };
+}
+
+function teamView(team: Team, side: Side, role: "home" | "away", winner: "home" | "away" | "none", uppercase: boolean, sport: Sport, markShape?: TeamMark): TeamView {
   const name = String(team.name ?? "");
   const written = fieldScoreText(sport, team);
   const score = written ?? (team.score === undefined || team.score === null || String(team.score).trim() === "" ? "–" : String(team.score));
@@ -327,6 +335,7 @@ function teamView(team: Team, side: Side, role: "home" | "away", winner: "home" 
     abbr: (team.abbr !== undefined && team.abbr.trim() !== "" ? team.abbr.trim() : abbreviate(name)).slice(0, 5),
     score,
     logo: safeLogo(team.logo),
+    ...roundOf(team, markShape),
     state: stateOf(winner, role),
     ends: Array.isArray(team.ends) ? team.ends.map(endText) : undefined,
     hammer: team.hammer === true ? true : undefined,
@@ -537,8 +546,8 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
   if (isScore(o)) {
     winner = winnerOf({ ...o, sport });
     status = statusText(o, language);
-    const home = teamView(o.home, homeSide, "home", winner, uppercase, sport);
-    const away = teamView(o.away, awaySide, "away", winner, uppercase, sport);
+    const home = teamView(o.home, homeSide, "home", winner, uppercase, sport, o.markShape);
+    const away = teamView(o.away, awaySide, "away", winner, uppercase, sport, o.markShape);
     left = homeSide === "left" ? home : away;
     right = homeSide === "left" ? away : home;
     leftTeam = homeSide === "left" ? o.home : o.away;
@@ -562,7 +571,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
   let defs = "";
   let grounded = false;
   if (isScore(o) && left !== undefined && right !== undefined && sized === "badge") {
-    const badge = badgeMarkup(left, right, { sport, status, parts });
+    const badge = badgeMarkup(left, right, { sport, status, parts, id });
     viewBox = `0 0 ${badge.w} ${badge.h}`;
     body = badge.markup;
   } else {
@@ -604,8 +613,8 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       // A curling sheet, the net sports' courts and a cricket ground have no place for the names: the board names the teams.
       if (sport !== "curling" && !isNetSport(sport) && sport !== "cricket") {
         // Cropped to a range, a team's name is written only where its place is in what is shown.
-        if (shows(surface, surface.left)) teams += bannerMarkup(surface.left, left, { turned: surface.turned, onColour, parts });
-        if (shows(surface, surface.right)) teams += bannerMarkup(surface.right, right, { turned: surface.turned, onColour, parts });
+        if (shows(surface, surface.left)) teams += bannerMarkup(surface.left, left, { turned: surface.turned, onColour, parts, id });
+        if (shows(surface, surface.right)) teams += bannerMarkup(surface.right, right, { turned: surface.turned, onColour, parts, id });
       }
     }
     // The teams are painted under the lines, unless the surface asks for them over (a panel that must hide them).
@@ -638,7 +647,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
     const group = el("g", { class: "ky-surface-group", transform: surface.turn, part: parts ? "surface" : undefined }, inner);
     const v = surface.view;
     if (isScore(o) && left !== undefined && right !== undefined && sized === "compact") {
-      const badge = badgeMarkup(left, right, { sport, status, parts });
+      const badge = badgeMarkup(left, right, { sport, status, parts, id });
       const scale = v.w / badge.w;
       const gap = badge.h * scale * 0.12;
       body = group + el("g", { class: "ky-strip", transform: `translate(${num(v.x)} ${num(v.y + v.h + gap)}) scale(${scale.toFixed(4)})` }, badge.markup);
@@ -674,7 +683,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       style: style === "" ? undefined : style,
     },
     `<title id="${titleId}">${esc(title)}</title><desc id="${descId}">${esc(description)}</desc>` +
-      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}${plan === undefined ? "" : `\n${courtStyle(plan.sport, plan.look)}`}${fieldsStyle(sport) === "" ? "" : `\n${fieldsStyle(sport)}`}${palette === undefined ? "" : `\n${lookStyle(palette)}`}${walled ? `\n${KYOGIJO_WALLS_STYLE}` : ""}${features === undefined ? "" : `\n${featureStyle(sport, features)}`}${notes === undefined || notes.svg === "" ? "" : `\n${KYOGIJO_NOTE_STYLE}`}${grounded ? `\n${KYOGIJO_BACKGROUND_STYLE}` : ""}${o.host === undefined ? "" : `\n${specialStyle(hostSport(o.host))}`}</style>`) +
+      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${left?.round === true || right?.round === true ? `\n${KYOGIJO_MARK_STYLE}` : ""}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}${plan === undefined ? "" : `\n${courtStyle(plan.sport, plan.look)}`}${fieldsStyle(sport) === "" ? "" : `\n${fieldsStyle(sport)}`}${palette === undefined ? "" : `\n${lookStyle(palette)}`}${walled ? `\n${KYOGIJO_WALLS_STYLE}` : ""}${features === undefined ? "" : `\n${featureStyle(sport, features)}`}${notes === undefined || notes.svg === "" ? "" : `\n${KYOGIJO_NOTE_STYLE}`}${grounded ? `\n${KYOGIJO_BACKGROUND_STYLE}` : ""}${o.host === undefined ? "" : `\n${specialStyle(hostSport(o.host))}`}</style>`) +
       (defs === "" ? "" : `<defs>${defs}</defs>`) +
       body,
   );

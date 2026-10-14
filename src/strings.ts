@@ -404,6 +404,34 @@ export interface KyogijoWords {
    * that lists the key ({list}), the name of a drawing that has none ({n} of {total}), and what joins a list.
    */
   grid: { title: string; drawings: string; key: string; cell: string; listSep: string };
+  /**
+   * The words of the road-to-the-final chart (`roadToFinal`): its title when the caller gives none, the names of the soccer knockout rounds (any other round is named by
+   * the caller, or by its own key), how a match was decided (`ft`, `aet`, `pens` with {a} and {b}), the results, the table's headings and caption, and the summary.
+   */
+  road: {
+    title: string;
+    vs: string;
+    group: string;
+    rounds: Record<"round-of-32" | "round-of-16" | "quarter-final" | "semi-final" | "final", string>;
+    ft: string;
+    aet: string;
+    pens: string;
+    won: string;
+    lost: string;
+    drew: string;
+    tableTeam: string;
+    tableRound: string;
+    tableOpponent: string;
+    tableScore: string;
+    tableDecided: string;
+    tableResult: string;
+    caption: string;
+    name: string;
+    summary: string;
+    final: string;
+    champion: string;
+    toPlay: string;
+  };
   /** The words of a replay: its summary, its marks, what is announced when something happens, and the controls under it. */
   replay: {
     /** The first sentence of the summary: {time} is the length. */
@@ -645,6 +673,16 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       },
     },
     grid: { title: "A grid of drawings ({n})", drawings: "Drawings ({n}): {list}.", key: "Key: {list}.", cell: "Drawing {n} of {total}", listSep: "; " },
+    road: {
+      title: "Road to the final", vs: "v", group: "Group stage",
+      rounds: { "round-of-32": "Round of 32", "round-of-16": "Round of 16", "quarter-final": "Quarter-final", "semi-final": "Semi-final", final: "Final" },
+      ft: "FT", aet: "AET", pens: "{a}-{b} pens", won: "Won", lost: "Lost", drew: "Drew",
+      tableTeam: "Team", tableRound: "Round", tableOpponent: "Opponent", tableScore: "Score", tableDecided: "Decided", tableResult: "Result",
+      caption: "{a} and {b}: every match on the way to the final. Scores are written with the team in the first column first.",
+      name: "{a} and {b}: {title}",
+      summary: "{a} played {an} matches on the way to the final and {b} played {bn}.",
+      final: "The final: {a} {score} {b} ({how}).", champion: "{name} won the final.", toPlay: "The final is still to be played.",
+    },
     replay: {
       title: "Replay, {time}", objects: "{n} tracked objects", objectsOne: "{n} tracked object", events: "{n} events", eventsOne: "{n} event", players: "Players", others: "Ball, puck and officials", trail: "Trail of the last {s} seconds", numbers: "Shirt numbers", eventLines: "Passes and shots",
       home: "home", away: "away", ball: "ball", puck: "puck", official: "official", pass: "Pass", shot: "Shot", goal: "Goal", whistle: "Whistle",
@@ -837,6 +875,16 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       },
     },
     grid: { title: "図のグリッド（{n}枚）", drawings: "図（{n}枚）：{list}。", key: "凡例：{list}。", cell: "{total}枚中{n}枚目の図", listSep: "；" },
+    road: {
+      title: "決勝への道", vs: "対", group: "グループステージ",
+      rounds: { "round-of-32": "ラウンド32", "round-of-16": "ラウンド16", "quarter-final": "準々決勝", "semi-final": "準決勝", final: "決勝" },
+      ft: "90分", aet: "延長", pens: "PK {a}-{b}", won: "勝ち", lost: "負け", drew: "引き分け",
+      tableTeam: "チーム", tableRound: "ラウンド", tableOpponent: "対戦相手", tableScore: "スコア", tableDecided: "決着", tableResult: "結果",
+      caption: "{a}と{b}：決勝までの全試合。スコアは「チーム」列のチームの得点を先に書いています。",
+      name: "{a}と{b}：{title}",
+      summary: "{a}は決勝までに{an}試合、{b}は{bn}試合を戦いました。",
+      final: "決勝は{a} {score} {b}（{how}）でした。", champion: "{name}が優勝しました。", toPlay: "決勝はまだ行われていません。",
+    },
     replay: {
       title: "リプレイ（再生時間{time}）", objects: "追跡対象は{n}個", objectsOne: "追跡対象は{n}個", events: "イベント{n}件", eventsOne: "イベント{n}件", players: "選手", others: "ボール・パック・審判", trail: "直近{s}秒の軌跡", numbers: "背番号", eventLines: "パスとシュート",
       home: "ホーム", away: "アウェイ", ball: "ボール", puck: "パック", official: "審判", pass: "パス", shot: "シュート", goal: "ゴール", whistle: "ホイッスル",

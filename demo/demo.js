@@ -11,6 +11,8 @@ import { EMBLEMS, FAMILIES, GAMES, TEAMS, TEAMS_JA } from "./examples.js";
 import { nbaZones, passMap, shotHeat, shotMap, sprayChart, sprayDensity, touchZones } from "./layers-data.js";
 import { mlbBalls, nbaShots, nflPasses, nhlShots, soccerShots } from "./charts-data.js";
 import { replayPlay } from "./replay-data.js";
+import { ROAD_FINAL, SERIES_LABELS, SERIES_LABELS_JA, nation, roadFinalists, roadSeries } from "./road-data.js";
+import { roadToFinal } from "./dist/charts-entry.js";
 import { mlbSprayChart, nbaShotChart, nflPassChart, nhlShotMap, soccerShotMap } from "./dist/charts-entry.js";
 import { fenceAt } from "./dist/geometry-entry.js";
 import { FIELDS, SEGS, chosenLeague, curlingExtras, fieldExtras, netExtras, hasSeasons, hiddenRows, hiddenStatus, isOwnLeague, labelOf as labelsFor, loadGame as loadGameInto, makeState, optionsFor as optionsOf, seasonRange } from "./model.js";
@@ -521,6 +523,56 @@ function buildCharts() {
   }
 }
 
+// The Road to the final section: the two finalists of a made-up tournament (nations that do not exist, with flags drawn in code, from road-data.js) in each size, a
+// play-off series with no flags, and the round mark on a pitch and in a badge. Each chart has the table that stands for it under it.
+function roads() {
+  const lang = language.lang;
+  const ja = lang === "ja";
+  const title = ja ? "ノーザンカップ2030" : "Northern Cup 2030";
+  const note = ja ? "架空のチーム・国旗・結果" : "Made-up teams, flags and results";
+  const finalists = roadFinalists(lang);
+  const card = roadToFinal(finalists, { language: lang, title, final: ROAD_FINAL, endnote: note, id: "road-card" });
+  const wide = roadToFinal(finalists, { language: lang, title, size: "wide", id: "road-wide" });
+  const phone = roadToFinal(finalists, { language: lang, title, size: "phone", theme: "dark", id: "road-phone" });
+  const series = roadToFinal(roadSeries(EMBLEMS), { language: lang, title: ja ? "プレーオフ" : "Cup play-offs", labels: ja ? SERIES_LABELS_JA : SERIES_LABELS, size: "square", id: "road-series" });
+  return [["card", card], ["wide", wide], ["phone", phone], ["series", series]];
+}
+function buildRoad() {
+  const host = $("road-cards");
+  host.replaceChildren();
+  for (const [key, chart] of roads()) {
+    const fig = document.createElement("figure");
+    fig.className = "card";
+    fig.dataset.road = key;
+    // A wide card is read across the whole row.
+    if (key === "wide") fig.style.gridColumn = "1 / -1";
+    const box = document.createElement("div");
+    box.className = "card-stage";
+    box.innerHTML = chart.draw({ style: "none" });
+    const text = document.createElement("figcaption");
+    text.textContent = say(`road_${key}`);
+    const details = document.createElement("details");
+    details.className = "data-table";
+    details.dataset.testid = `road-table-${key}`;
+    const summary = document.createElement("summary");
+    summary.textContent = say("dataTable");
+    const holder = document.createElement("div");
+    holder.className = "data-table-body";
+    holder.innerHTML = chart.table();
+    details.append(summary, holder);
+    fig.append(box, text, details);
+    host.append(fig);
+  }
+  // The round mark on a pitch and in a badge: a country against a country, each flag in a circle with a ring on its side.
+  const lang = language.lang;
+  const cup = lang === "ja" ? "ノーザンカップ決勝" : "Northern Cup final";
+  const game = { sport: "soccer", markShape: "round", away: { ...nation("aurelia", lang), score: 2, penalties: 4 }, home: { ...nation("calvara", lang), score: 2, penalties: 3 }, status: "final-pens", competition: cup, language: lang, style: "none" };
+  for (const [key, extra] of [["mark_wide", { orientation: "landscape" }], ["mark_tall", { orientation: "portrait" }], ["mark_badge", { size: "badge" }]]) {
+    const fig = figure(host, { ...game, ...extra, id: `road-${key}` }, say(`road_${key}`));
+    fig.dataset.road = key;
+  }
+}
+
 function buildExamples() {
   for (const m of mounts) m.handle?.destroy();
   mounts.length = 0;
@@ -531,6 +583,7 @@ function buildExamples() {
   }
   buildData();
   buildCharts();
+  buildRoad();
   for (const m of mounts) m.handle = m.make();
   buildBadges();
 }
