@@ -11,7 +11,7 @@ import type { Formation, FormationLayer, FormationPlayer, FormationSport } from 
 import { FEET_PER } from "./units.ts";
 
 /** The sports whose surface a formation of a sport is drawn on. */
-const SURFACES: Readonly<Record<FormationSport, readonly string[]>> = { soccer: ["soccer"], nhl: ["nhl"], nba: ["nba"], nfl: ["nfl", "ifaf"], mlb: ["mlb"] };
+export const SURFACES: Readonly<Record<FormationSport, readonly string[]>> = { soccer: ["soccer"], nhl: ["nhl"], nba: ["nba"], nfl: ["nfl", "ifaf"], mlb: ["mlb"], rugby: ["rugby"], afl: ["afl"], cricket: ["cricket"], volleyball: ["volleyball"], handball: ["handball"], waterpolo: ["waterpolo"], fieldhockey: ["fieldhockey"], netball: ["netball"] };
 
 /** The line of scrimmage the football formations are written for, in the frame `nfl-tracking`. */
 const MIDFIELD = 60;

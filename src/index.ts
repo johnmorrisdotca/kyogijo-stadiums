@@ -44,7 +44,7 @@ export { KYOGIJO_LOOK_STYLE, LOOKS, LOOK_NAMES, LOOK_PAIRS, contrastOf, groupOf,
 export type { Group as LookGroup, Look, Palette as LookPalette, PaletteKey as LookPaletteKey } from "./look.ts";
 export { FEATURES, FEATURE_INFO, KYOGIJO_FEATURE_STYLE } from "./features.ts";
 export type { Feature } from "./features.ts";
-export type { DelaunayLayer, FlowLayer, Formation, FormationLayer, FormationPlayer, FormationPosition, FormationSport, HullLayer, MoveDatum, NetworkLayer, NetworkNode, PassDatum, PlayerDatum, SonarLayer, VoronoiLayer } from "./team.types.ts";
+export type { DelaunayLayer, FlowLayer, Formation, FormationLayer, FormationPlayer, FormationPosition, FormationSport, HullLayer, LineupLayer, LineupPlayer, MoveDatum, NetworkLayer, NetworkNode, PassDatum, PlayerDatum, SonarLayer, VoronoiLayer } from "./team.types.ts";
 export { COURT_THEMES } from "./themes.ts";
 export { abbreviate, capitals, fitLines, textWidth } from "./text.ts";
 export type { FittedLines } from "./text.ts";

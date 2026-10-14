@@ -12,11 +12,11 @@ import { atlasMapSvg } from "./atlas-map.mjs";
 import { buildDocs } from "./docs-pages.mjs";
 import { framesBlockHtml, framesFiles, galleryData, galleryPageHtml, libraryFrom } from "./docs-gallery.mjs";
 import { FAMILY_SCRIPT, familyFooter, familyHead, familyHeader, familyUnreviewed } from "./family-template.mjs";
+import { iconLinks } from "./icon-links.mjs";
 import { firstPaintHead, sayEnglish } from "./first-paint.mjs";
 import { WORDS } from "../demo/words.js";
 
 const id = "kyogijo-stadiums";
-const ICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%232f5d4a'/%3E%3Ctext x='50' y='72' font-size='60' text-anchor='middle' fill='%23f3efe4'%3E場%3C/text%3E%3C/svg%3E";
 
 const escape = (text) => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const help = (en, ja) => `data-help-en="${escape(en)}" data-help-ja="${escape(ja)}"`;
@@ -203,7 +203,7 @@ const page = `<!doctype html>
       ogTitle: "Kyogijo Stadiums sports surfaces",
       ogDescription: "Fields, rinks, courts and ballparks drawn to scale as SVG, with the score on them: wide or tall, light or dark.",
     })}
-    <link rel="icon" href="${ICON}" />
+    ${iconLinks("")}
     ${firstPaintHead(id, { theme: true })}
     <link rel="stylesheet" href="family.css" />
     <link rel="stylesheet" href="kyogijo.css" />
@@ -297,6 +297,14 @@ const page = `<!doctype html>
               </div>
               <div class="setup fam-row" ${help("Draw the stands round the surface and the people in them: a bowl, two sides, a horseshoe or a ballpark's grandstands, in the home colours with the visitors at an end. Every surface that has spectators takes it.", "競技場の周りにスタンドと観客を描きます。ボウル型、両サイド型、馬蹄形、球場型など、会場に合わせた形で、観客はホームチームの色、ビジターの観客は片方の端に集まります。スタンドのある競技場すべてで使えます。")}>
                 ${toggle("crowd", "crowd")}${toggle("crowd-tifo", "crowdTifo")}
+              </div>
+              <div id="lineup-group"${hid("lineup-group")}>
+                ${seg("lineup", "lineup", "Draw a made-up team on each side of the surface, placed by position code in a formation of the sport: the six on the ice and a second line for hockey, the nine fielders and the designated hitter for baseball, the fifteen for rugby, the eighteen of Australian football, and so on. A disc or a jersey holds the number, the name is under it.", "競技ごとのフォーメーションに従って、架空のチームを競技場の両側に配置します。ポジションのコードで位置が決まり、アイスホッケーは氷上の6人と第2ライン、野球は9人の野手と指名打者、ラグビーは15人、オーストラリアンフットボールは18人などです。円形またはユニフォームの中に番号、その下に名前が入ります。")}
+              </div>
+              <div class="setup fam-row" id="place-group"${hid("place-group")} ${help("Click the drawing to drop a point where you click, and read its coordinates: feet from the surface's top left as it is drawn wide. The points are in the address and in the code below.", "図をクリックした位置に点を置き、その座標を読み取ります。座標は、競技場を横長に描いたときの左上からの距離（フィート）です。点はURLと下のコードにも反映されます。")}>
+                ${toggle("place", "place")}
+                <button type="button" class="fam-chip" id="place-clear" data-testid="place-clear" data-say="placeClear"></button>
+                <output class="era-season" id="place-out" data-testid="place-out" aria-live="polite"></output>
               </div>
               <div class="setup fam-row" id="crowd-row"${hid("crowd-row")} ${help("How full the stands are: the share of seats with someone in them. The empty seats show.", "スタンドの埋まり具合です。人が座っている席の割合で、空席もそのまま描かれます。")}>
                 <label class="fam-label" for="crowd-density" data-say="crowdDensity"></label>
@@ -415,6 +423,7 @@ const page = `<!doctype html>
             <pre><code id="embed-code" data-testid="embed-code"></code></pre>
             <div class="fam-actions">
               <button type="button" class="fam-button" data-primary="true" id="embed-copy" data-testid="embed-copy" data-say="copy"></button>
+              <button type="button" class="fam-button" id="embed-link" data-testid="embed-link" data-say="copyLink"></button>
               <button type="button" class="fam-button" id="embed-download" data-testid="embed-download" data-say="download"></button>
               <span class="fam-muted" id="embed-status" role="status"></span>
             </div>
@@ -582,14 +591,13 @@ writeFileSync("site/atlas-map.svg", picture);
 writeFileSync("docs/atlas-map.svg", picture);
 writeFileSync("site/index.html", sayEnglish(page, WORDS.en));
 writeFileSync("site/api.css", API_CSS);
-writeFileSync("site/api.html", apiPage({ id, name: "Kyogijo Stadiums", icon: ICON }));
+writeFileSync("site/api.html", apiPage({ id, name: "Kyogijo Stadiums" }));
 // The documentation pages: docs/*.md as pages, and the gallery, drawn from code by the built package.
 const made = buildDocs({
   root: process.cwd(),
   outDir: "site/docs",
   id,
   name: "Kyogijo Stadiums",
-  icon: ICON,
   extraPages: galleryData(lib).map((one) => galleryPageHtml(one, style)),
   siteBlocks: { frames: framesBlockHtml(lib, style) },
   files: framesFiles(lib),

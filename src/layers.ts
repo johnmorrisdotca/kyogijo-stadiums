@@ -407,7 +407,8 @@ function renderedLayers(o: SurfaceOptions | ScoreOptions, layers: readonly Layer
       if (layer.hidden === true) return;
       const { title, description } = summarise(layer, made, env.words.layers, stop, gap);
       said[index] = description === "" ? `${tidy(title)}${stop}` : `${tidy(title)}${stop}${gap}${description}`;
-      const clip = layer.clip !== "none" && layer.kind !== "legend";
+      // A lineup is not cut to the outline unless it is asked to be: a fielder at the foul line or a catcher behind the plate would lose half a jersey.
+      const clip = layer.kind !== "legend" && (layer.clip === "surface" || (layer.clip !== "none" && layer.kind !== "lineup"));
       clipped = clipped || clip;
       const cls = made.cls ?? (layer.kind === "points" ? "ky-pts" : layer.kind === "text" ? "ky-txt" : "ky-lns");
       // Cropped to a range, a clipped layer is also cut to the range: its group is held by a group with the range's clip.
@@ -435,6 +436,7 @@ function renderedLayers(o: SurfaceOptions | ScoreOptions, layers: readonly Layer
         return;
       case "network":
       case "formation":
+      case "lineup":
       case "voronoi":
       case "delaunay":
       case "hull":
@@ -447,7 +449,7 @@ function renderedLayers(o: SurfaceOptions | ScoreOptions, layers: readonly Layer
         slots[index] = () => finish(drawLegend(layer, env, gid, known));
         return;
       default:
-        throw new TypeError(`layer ${index} has the kind "${String((layer as { kind?: unknown }).kind)}": use points, lines, arrows, text, network, formation, voronoi, delaunay, hull, flow, sonar, heatmap, hexbin, zones, contour or legend`);
+        throw new TypeError(`layer ${index} has the kind "${String((layer as { kind?: unknown }).kind)}": use points, lines, arrows, text, network, formation, lineup, voronoi, delaunay, hull, flow, sonar, heatmap, hexbin, zones, contour or legend`);
     }
   });
   slots.forEach((later) => later?.());
@@ -522,13 +524,14 @@ export function layerTable(layers: readonly Layer[], options: TableOptions = {})
       };
       if (surfaceEnv !== undefined && (layer.kind === "heatmap" || layer.kind === "hexbin" || layer.kind === "zones" || layer.kind === "contour")) return render(heatTable(layer, surfaceEnv), layer.kind);
       if (surfaceEnv !== undefined && isTeamLayer(layer)) return teamTables(layer, surfaceEnv).map((t) => render(t, layer.kind)).join("");
-      const data = layer.kind === "formation" ? ((layer.data ?? []) as readonly Record<string, unknown>[]) : toArray(layer.data as readonly Record<string, unknown>[], `layer ${index}`);
+      const data = layer.kind === "formation" ? ((layer.data ?? []) as readonly Record<string, unknown>[]) : layer.kind === "lineup" ? ((layer.players ?? []) as unknown as readonly Record<string, unknown>[]) : toArray(layer.data as readonly Record<string, unknown>[], `layer ${index}`);
       const columns: [string, string, (d: Record<string, unknown>) => unknown][] = [];
       const has = (key: string): boolean => data.some((d) => typeof d === "object" && d !== null && d[key] !== undefined && d[key] !== null);
       const t = words.team;
       if (layer.kind === "text") columns.push([w.tableText, "text", (d) => d.text]);
       if (layer.kind === "network") columns.push([t.tableFrom, "from", (d) => d.from], [t.tableTo, "to", (d) => d.to]);
       if (layer.kind === "formation") columns.push([t.tablePosition, "position", (d) => d.position], [t.tableNumber, "number", (d) => d.number], [t.tableName, "name", (d) => d.name]);
+      else if (layer.kind === "lineup") columns.push([t.tablePosition, "pos", (d) => d.pos], [t.tableNumber, "number", (d) => d.number], [t.tableName, "name", (d) => d.name]);
       else {
         columns.push([w.tableX, "x", (d) => d.x]);
         columns.push([w.tableY, "y", (d) => d.y]);

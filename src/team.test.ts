@@ -57,6 +57,7 @@ const ALL: [string, object][] = [
   ["hull", { kind: "hull", data: both, from: "opta" }],
   ["network", { kind: "network", data: passes(200), from: "opta" }],
   ["formation", { kind: "formation", formation: "4-4-2", team: "home" }],
+  ["lineup", { kind: "lineup", clip: "surface", side: "home", formation: "4-4-2", players: [{ pos: "GK", number: 1, name: "Okafor", captain: true }, { pos: "ST", number: 9, name: "Silva" }] }],
   ["flow", { kind: "flow", data: moves(300), from: "opta" }],
   ["sonar", { kind: "sonar", data: moves(300), from: "opta", by: "player" }],
 ];
@@ -279,20 +280,22 @@ describe("the network layer", () => {
 });
 
 describe("the formations", () => {
-  const expected: Record<FormationSport, number> = { soccer: 11, nhl: 6, nba: 5, nfl: 11, mlb: 9 };
+  const expected: Record<FormationSport, number> = { soccer: 11, nhl: 6, nba: 5, nfl: 11, mlb: 9, rugby: 15, afl: 18, cricket: 11, volleyball: 6, handball: 7, waterpolo: 7, fieldhockey: 11, netball: 7 };
+  const count = (f: Formation): number => (f.id === "hockey-two-lines" ? 11 : expected[f.sport]);
 
-  it("are many: ten for soccer, two for hockey, three for basketball, four for football and two for baseball", () => {
+  it("are many: ten for soccer, three for hockey, four for basketball, four for football, three for baseball and softball, and one or more for each of eight other sports", () => {
     expect(formationsOf("soccer")).toHaveLength(10);
-    expect(formationsOf("nhl")).toHaveLength(2);
-    expect(formationsOf("nba")).toHaveLength(3);
+    expect(formationsOf("nhl")).toHaveLength(3);
+    expect(formationsOf("nba")).toHaveLength(4);
     expect(formationsOf("nfl")).toHaveLength(4);
-    expect(formationsOf("mlb")).toHaveLength(2);
+    expect(formationsOf("mlb")).toHaveLength(3);
+    expect(Object.fromEntries((["rugby", "afl", "cricket", "volleyball", "handball", "waterpolo", "fieldhockey", "netball"] as const).map((sport) => [sport, formationsOf(sport).length]))).toEqual({ rugby: 1, afl: 1, cricket: 3, volleyball: 1, handball: 2, waterpolo: 1, fieldhockey: 2, netball: 1 });
     expect(FORMATION_IDS).toEqual(expect.arrayContaining(["4-4-2", "4-3-3", "4-2-3-1", "3-5-2", "5-3-2", "football-i-formation", "football-shotgun", "football-4-3", "football-3-4", "baseball-shift"]));
   });
 
   for (const f of Object.values(FORMATIONS)) {
     it(`${f.id}: has the players of a side, each on its own place in its frame, with a name in both languages`, () => {
-      expect(f.positions, f.id).toHaveLength(expected[f.sport]);
+      expect(f.positions, f.id).toHaveLength(count(f));
       expect(new Set(f.positions.map((p) => p.id)).size).toBe(f.positions.length);
       const frame = FRAMES[f.frame];
       expect(frame, f.frame).toBeDefined();
@@ -304,7 +307,7 @@ describe("the formations", () => {
         expect(p.y).toBeLessThanOrEqual(Math.max(...frame.y));
         expect(Object.prototype.hasOwnProperty.call(POSITION_NAMES[f.sport], p.id), `${f.sport} ${p.id} has a name`).toBe(true);
         expect(positionName(f.sport, p.id, "ja")).toMatch(/[぀-ヿ一-鿿]/u);
-        expect(positionName(f.sport, p.id, "en")).toMatch(/^[A-Za-z0-9 -]+$/);
+        expect(positionName(f.sport, p.id, "en")).toMatch(/^[A-Za-z0-9 ,()-]+$/);
       }
       // No two players on one spot.
       for (const [i, a] of f.positions.entries()) for (const b of f.positions.slice(i + 1)) expect(Math.hypot(a.x - b.x, a.y - b.y), `${a.id} and ${b.id}`).toBeGreaterThan(0.5);
@@ -522,6 +525,7 @@ describe("the same options always draw the same layers: fingerprints", () => {
       basketball: fingerprint("nba", { kind: "formation", formation: "basketball-5-out", team: "home" }, "en"),
       football: fingerprint("nfl", { kind: "formation", formation: "football-shotgun", team: "home", los: 40 }, "en"),
       baseball: fingerprint("mlb", { kind: "formation", formation: "baseball-shift", team: "away" }, "en"),
+      lineup: fingerprint("nhl", { kind: "lineup", side: "away", shape: "jersey", players: [{ pos: "G", number: 31, name: "Quick" }, { pos: "C", number: 11, name: "Kopitar", captain: true }, { pos: "C", number: 22, line: 2 }] }, "en"),
       rink: fingerprint("nhl", { kind: "voronoi", data: [{ x: 20, y: 20, team: "home" }, { x: 150, y: 60, team: "away" }, { x: 100, y: 40, team: "home" }] }, "en"),
     }).toMatchSnapshot();
   });

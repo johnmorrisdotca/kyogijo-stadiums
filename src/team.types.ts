@@ -154,10 +154,12 @@ export interface FormationPosition {
   id: string;
   x: number;
   y: number;
+  /** How big the mark of a lineup is here, against the others: 1 by default. A second line's marks are smaller. */
+  size?: number;
 }
 
 /** The sports that have formations. */
-export type FormationSport = "soccer" | "nhl" | "nba" | "nfl" | "mlb";
+export type FormationSport = "soccer" | "nhl" | "nba" | "nfl" | "mlb" | "rugby" | "afl" | "cricket" | "volleyball" | "handball" | "waterpolo" | "fieldhockey" | "netball";
 
 /** A formation: where each position stands. Points in the numbers of a registered frame, for a team that attacks the right end of the surface as it is drawn wide (a football formation: the offence going right, with the ball at midfield). */
 export interface Formation {
@@ -169,6 +171,8 @@ export interface Formation {
   /** What the formation is, in a sentence: the side of the ball, the strategy. */
   about: { en: string; ja: string };
   positions: readonly FormationPosition[];
+  /** Places beside the surface's play that a lineup lists but the side does not field: baseball's designated hitter. A `formation` layer leaves them out; a `lineup` draws them. */
+  extra?: readonly FormationPosition[];
 }
 
 /** A player to stand on a position. */
@@ -195,6 +199,43 @@ export interface FormationLayer extends LayerBase {
   /** The width of a mark, in the layer's units. A share of the surface's longer side by default. */
   size?: number;
   /** The line of scrimmage of a football formation, as the ball lies in the frame `nfl-tracking` (yards from the back of the left end zone). Midfield by default. */
+  los?: number;
+  opacity?: number;
+}
+
+/** A player of a lineup, placed by a position's code: nothing else about where he stands is needed. */
+export interface LineupPlayer extends MarkDatum {
+  /** The position's code: `GK`, `SS`, `C`, `QB`, `9`, `P4` (a volleyball court's zone). The formation's own ids, and the usual short ones (`CB` for a centre-back of either side, `D` for a defenceman, `OF` for an outfielder), as `LINEUP_CODES` lists. */
+  pos: string | number;
+  name?: string;
+  number?: string | number;
+  /** A flag or crest for a small badge on the mark: an SVG as text, an image `data:` address or a path or address of an image. The package draws no flag of its own. */
+  flag?: string;
+  /** The captain wears an armband: a small "C" on the mark. */
+  captain?: boolean;
+  /** 1 by default. Hockey's second line is `line: 2` with the same codes. */
+  line?: number;
+}
+
+/** A team's lineup drawn on the surface: its players placed by position code in a named formation, as discs or jerseys, each with its number in the mark and its name under it. Two teams are two layers, one for each `side`. A lineup is not cut to the surface's outline (a fielder at the foul line keeps his whole jersey) unless `clip` is `"surface"`. */
+export interface LineupLayer extends LayerBase {
+  kind: "lineup";
+  /** `home` (the default) or `away`: the team's colour, and the end it attacks (the right for `home`, the left for `away`) unless `attacking` says. A football lineup's `side` is only the colour: the offence goes right unless `attacking` says, and a defence faces it. Baseball's fielders do not turn. */
+  side?: "home" | "away";
+  /** The id of a formation in `FORMATIONS` (`4-2-3-1`), or a formation of your own. Without it, the one of the surface's sport that places the most of the players, the first of its sport's table on a tie. */
+  formation?: string | Formation;
+  players: readonly LineupPlayer[];
+  /** `disc` (the default) or `jersey`. */
+  shape?: "disc" | "jersey";
+  /** What is written in a mark: the shirt `number` (the default), the `position`'s code, the `name` or `none`. */
+  labels?: "number" | "position" | "name" | "none";
+  /** Write each name under its mark. On by default. */
+  names?: boolean;
+  /** The width of a mark, in the layer's units. A share of the surface's longer side by default. */
+  size?: number;
+  /** A volleyball lineup is listed in the serving order, `P1` to `P6`; `rotation` (1 to 6) is how many rotations on: each player moves one place clockwise. 1 by default. */
+  rotation?: number;
+  /** The line of scrimmage of a football lineup, as for a `formation` layer. */
   los?: number;
   opacity?: number;
 }

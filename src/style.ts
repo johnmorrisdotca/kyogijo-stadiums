@@ -178,7 +178,12 @@ export const KYOGIJO_TEAM_STYLE = `
 .kyogijo .ky-ro{fill:var(--c,var(--ky-layer));fill-opacity:.7;stroke:var(--ky-layer-edge);stroke-width:calc(var(--w,.3)*1px);stroke-linejoin:round}
 .kyogijo .ky-ro-r{fill:none;stroke:var(--c,var(--ky-layer));stroke-opacity:.45;stroke-dasharray:calc(var(--w,.3)*3px) calc(var(--w,.3)*3px);stroke-width:calc(var(--w,.3)*1px)}
 .kyogijo .ky-fm>*{fill:var(--c,var(--ky-layer));stroke:var(--ky-layer-edge);stroke-width:calc(var(--w,.3)*1px)}
-.kyogijo .ky-fm>.ky-e{fill:var(--ky-layer-hollow);stroke:var(--c,var(--ky-layer));stroke-width:calc(var(--w,.3)*2.2px)}`.trim();
+.kyogijo .ky-fm>.ky-e{fill:var(--ky-layer-hollow);stroke:var(--c,var(--ky-layer));stroke-width:calc(var(--w,.3)*2.2px)}
+.kyogijo .ky-fm>path{stroke-linejoin:round}
+.kyogijo .ky-nm{fill:var(--ky-plate-ink);stroke:var(--ky-plate);stroke-width:.14em;paint-order:stroke;stroke-linejoin:round;font-family:var(--ky-font);font-weight:700;font-variant-numeric:tabular-nums}
+.kyogijo .ky-lc{fill:var(--ky-post);stroke:var(--ky-layer-edge);stroke-width:calc(var(--w,.3)*1px)}
+.kyogijo .ky-cl{fill:var(--ky-plate);stroke:none;font-family:var(--ky-font);font-weight:700}
+.kyogijo .ky-lf{fill:none;stroke:var(--ky-layer-edge);stroke-width:calc(var(--w,.3)*1px)}`.trim();
 
 /**
  * The rules of the annotations (the arrows of `direction`, the axes of `axes` and the labels and leaders of `landmarks`): words in the ink of the page with an outline in the

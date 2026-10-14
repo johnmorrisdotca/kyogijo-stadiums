@@ -21,7 +21,7 @@ import { ROAD_FINAL, SERIES_LABELS, SERIES_LABELS_JA, nation, roadFinalists, roa
 import { roadToFinal } from "./dist/charts-entry.js";
 import { mlbSprayChart, nbaShotChart, nflPassChart, nhlShotMap, soccerShotMap } from "./dist/charts-entry.js";
 import { fenceAt } from "./dist/geometry-entry.js";
-import { FIELDS, SEGS, SITUATION_SPORTS, chosenLeague, hasSeasons, hiddenRows, hiddenStatus, isOwnLeague, labelOf as labelsFor, loadGame as loadGameInto, makeState, optionsFor as optionsOf, seasonRange, usesEmblems } from "./model.js";
+import { FIELDS, MAX_SHOTS, SEGS, applyParams, chosenLeague, hasSeasons, hiddenRows, hiddenStatus, labelOf as labelsFor, loadGame as loadGameInto, makeState, optionsFor as optionsOf, seasonRange, urlPairs, usesEmblems } from "./model.js";
 import { WORDS } from "./words.js";
 
 const $ = (id) => document.getElementById(id);
@@ -56,6 +56,7 @@ const state = makeState(params, keep.get("kyogijo-stadiums.theme"));
 /** The made-up game for a sport, laid into the state (names in the page's language until a name is typed). */
 const loadGame = (sport) => loadGameInto(state, sport, language.lang);
 loadGame(state.sport);
+applyParams(state, params);
 
 /** What the state asks the package to draw. */
 const optionsFor = (s, forCode = false) => optionsOf(s, language.lang, forCode);
@@ -142,6 +143,7 @@ makeSeg("sheet", (v) => { state.sheet = v; if (v !== "sheet" && state.size !== "
 makeSeg("track", (v) => { state.track = v; });
 makeSeg("infield", (v) => { state.infield = v; });
 makeSeg("races", (v) => { state.races = v; });
+makeSeg("lineup", (v) => { state.lineup = v; });
 for (const role of ["away", "home"]) makeSeg(`${role}-logo`, (v) => { state[role].logo = v; });
 // The pickers of a ready-made emblem: a grid of tiles, each the emblem itself, for a team's mark and for the middle of a pageant.
 for (const role of ["away", "home"]) makeSeg(`${role}-mark`, (v) => { state[role].mark = v; });
@@ -191,7 +193,7 @@ function renderEra() {
 function toggle(id, key) {
   $(id).addEventListener("click", () => { state[key] = !state[key]; $(id).setAttribute("aria-pressed", String(state[key])); change(); });
 }
-for (const [id, key] of [["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["crowd", "crowd"], ["crowd-tifo", "crowdTifo"], ["flags", "flags"], ["pageant-emblem", "pageantEmblem"], ["emblem-line", "emblemLine"], ["pageant-entrance", "pageantEntrance"], ["pool-section", "poolSection"], ["situation", "situation"], ["sit-drive", "sitDrive"]]) toggle(id, key);
+for (const [id, key] of [["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["crowd", "crowd"], ["crowd-tifo", "crowdTifo"], ["flags", "flags"], ["pageant-emblem", "pageantEmblem"], ["emblem-line", "emblemLine"], ["pageant-entrance", "pageantEntrance"], ["pool-section", "poolSection"], ["situation", "situation"], ["sit-drive", "sitDrive"], ["place", "place"]]) toggle(id, key);
 $("emblem-line").addEventListener("click", () => refreshSegs());
 $("pageant-emblem").addEventListener("click", () => refreshSegs());
 
@@ -349,7 +351,7 @@ function render() {
   }
   renderEra();
   applyRows();
-  for (const toggleOf of [["flags", "flags"], ["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["crowd", "crowd"], ["crowd-tifo", "crowdTifo"], ["pageant-emblem", "pageantEmblem"], ["emblem-line", "emblemLine"], ["pageant-entrance", "pageantEntrance"], ["pool-section", "poolSection"], ["situation", "situation"], ["sit-drive", "sitDrive"]]) $(toggleOf[0]).setAttribute("aria-pressed", String(state[toggleOf[1]]));
+  for (const toggleOf of [["flags", "flags"], ["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["crowd", "crowd"], ["crowd-tifo", "crowdTifo"], ["pageant-emblem", "pageantEmblem"], ["emblem-line", "emblemLine"], ["pageant-entrance", "pageantEntrance"], ["pool-section", "poolSection"], ["situation", "situation"], ["sit-drive", "sitDrive"], ["place", "place"]]) $(toggleOf[0]).setAttribute("aria-pressed", String(state[toggleOf[1]]));
   for (const [i, id] of ["sit-b1", "sit-b2", "sit-b3"].entries()) $(id).setAttribute("aria-pressed", String(state.sitBases[i] === "1"));
   $("sit-ballon").value = String(state.sitBallOn);
   $("sit-ballon-out").textContent = String(state.sitBallOn);
@@ -361,31 +363,10 @@ function render() {
 
 function syncUrl() {
   const q = new URLSearchParams(location.search);
-  q.set("sport", state.sport);
-  if (state.year !== null && hasSeasons(state)) q.set("year", String(state.year));
-  else q.delete("year");
-  if (state.league !== null && !isOwnLeague(state.sport, state.league)) q.set("league", state.league);
-  else q.delete("league");
-  for (const [key, value, base] of [["pitch", state.pitch, "fifa"], ["ground", state.ground, "none"], ["pitchtype", state.pitchType, "none"], ["park", state.park, "generic"], ["sheet", state.sport === "curling" ? state.sheet : "sheet", "sheet"], ["size", state.size, "full"], ["orientation", state.orientation, "auto"], ["view", state.view, "flat"], ["viewpoint", state.view === "3d" ? state.viewpoint : "corner", "corner"], ["theme", state.theme, "auto"], ["pageant", state.pageant, "off"], ["pageantlines", state.pageantLines, "over"], ["poollook", state.poolLook, "flat"], ["pooldeck", state.poolDeck, "plain"], ["poolcourse", state.poolCourse, "long"], ["poollanes", state.poolLanes, "8"], ["poolrace", state.poolRace, "none"], ["poolsection", state.poolSection ? "1" : "0", "0"], ["track", state.track, "red"], ["infield", state.infield, "pitch"], ["races", state.races, "none"]]) {
-    if (value === base) q.delete(key);
+  for (const [key, value] of urlPairs(state, language.lang)) {
+    if (value === null) q.delete(key);
     else q.set(key, value);
   }
-  if (state.pageant !== "off" && state.pageantEmblem) q.set("emblem", "1");
-  else q.delete("emblem");
-  if (state.pageant !== "off" && state.pageantEmblem && state.pageantEmblemId !== "trophy:soccer-globe") q.set("emblemid", state.pageantEmblemId);
-  else q.delete("emblemid");
-  if (state.emblemLine) q.set("emblemline", "1");
-  else q.delete("emblemline");
-  // The situation: only what the sport on show uses is written.
-  const sit = state.situation && SITUATION_SPORTS.includes(state.sport);
-  for (const [key, value, base, used] of [["sithockey", state.sitHockey, "pp", state.sport === "nhl"], ["sitbases", state.sitBases, "101", state.sport === "mlb"], ["sitouts", state.sitOuts, "2", state.sport === "mlb"], ["sitcount", state.sitCount, "3-2", state.sport === "mlb"], ["sitdown", state.sitDown, "3", !(state.sport === "nhl" || state.sport === "mlb")], ["sittogo", state.sitToGo, "7", !(state.sport === "nhl" || state.sport === "mlb")], ["sitballon", String(state.sitBallOn), "88", !(state.sport === "nhl" || state.sport === "mlb")]]) {
-    if (sit && used && value !== base) q.set(key, value);
-    else q.delete(key);
-  }
-  if (sit) q.set("situation", "1");
-  else q.delete("situation");
-  if (sit && state.sitDrive && !(state.sport === "nhl" || state.sport === "mlb")) q.set("sitdrive", "1");
-  else q.delete("sitdrive");
   history.replaceState(history.state, "", `${location.pathname}?${q.toString()}${location.hash}`);
 }
 
@@ -452,7 +433,7 @@ function updateEmbed() {
       button.type = "button";
       button.setAttribute("role", "tab");
       button.dataset.tab = tab;
-      button.addEventListener("click", () => { state.embed = tab; updateEmbed(); });
+      button.addEventListener("click", () => { state.embed = tab; updateEmbed(); syncUrl(); });
       tabs.append(button);
     }
   }
@@ -486,6 +467,13 @@ async function copyText(text) {
 $("embed-copy").addEventListener("click", async () => {
   await copyText($("embed-code").textContent);
   $("embed-status").textContent = say("copiedLine");
+  setTimeout(() => { $("embed-status").textContent = ""; }, 2400);
+});
+// The address of this exact view: every control is in it (syncUrl keeps it current), so a reader who opens it sees what this one sees.
+$("embed-link").addEventListener("click", async () => {
+  syncUrl();
+  await copyText(location.href);
+  $("embed-status").textContent = say("linkCopied");
   setTimeout(() => { $("embed-status").textContent = ""; }, 2400);
 });
 $("embed-download").addEventListener("click", () => {
@@ -936,6 +924,38 @@ function onLanguage() {
   drawReplays();
   render();
 }
+
+// ----- Click to place: with the toggle on, a click on the drawing drops a point there and the readout follows the pointer, in the surface's own feet (from its top left, as drawn wide).
+// TODO: take the point from `clientPointToField` of the package's ./pointer entry once work/dx is merged; this is a small local stand-in for it.
+/** The surface's feet under a pointer event, or null when the pointer is not over a drawing that has a layer to measure against (the layers lie in the surface's own frame, quarter turn included). */
+function pointOnSurface(event) {
+  const svg = stage.querySelector("svg");
+  const group = stage.querySelector(".ky-layers");
+  if (svg === null || group === null || typeof group.getScreenCTM !== "function") return null;
+  const matrix = group.getScreenCTM();
+  if (matrix === null) return null;
+  const point = svg.createSVGPoint();
+  point.x = event.clientX;
+  point.y = event.clientY;
+  const at = point.matrixTransform(matrix.inverse());
+  return [Math.round(at.x * 10) / 10, Math.round(at.y * 10) / 10];
+}
+const placeText = (at) => say("placeAt").replace("{x}", String(at[0])).replace("{y}", String(at[1])).replace("{xm}", (at[0] * 0.3048).toFixed(1)).replace("{ym}", (at[1] * 0.3048).toFixed(1));
+function showPlace(at) {
+  $("place-out").textContent = !state.place ? "" : at === null ? say("placeHint") : placeText(at);
+}
+stage.addEventListener("pointermove", (event) => { if (state.place) showPlace(pointOnSurface(event)); });
+stage.addEventListener("pointerleave", () => showPlace(null));
+stage.addEventListener("click", (event) => {
+  if (!state.place) return;
+  const at = pointOnSurface(event);
+  if (at === null || state.shots.length >= MAX_SHOTS) return;
+  state.shots.push(at);
+  change();
+  showPlace(at);
+});
+$("place-clear").addEventListener("click", () => { state.shots = []; change(); });
+$("place").addEventListener("click", () => showPlace(null));
 
 // ----- Start.
 applyTheme();

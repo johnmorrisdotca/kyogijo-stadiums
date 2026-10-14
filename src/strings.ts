@@ -548,6 +548,14 @@ export interface KyogijoWords {
     formationNote: string;
     formationPlayers: string;
     formationItem: string;
+    /** A lineup: the title ({name} and {n} players), the captain ({who}), the volleyball rotation ({n}), the players with no place ({list}), the armband's tooltip and letter, and the head of the captain column. */
+    lineupTitle: string;
+    lineupCaptain: string;
+    lineupRotation: string;
+    lineupUnplaced: string;
+    captainTip: string;
+    captainMark: string;
+    tableCaptain: string;
     /** Space control: the title ({n} players), the share of the surface nearest each team ({list}; each {name} and {pct}) and the players who share a place with another ({n}). */
     voronoiTitle: string;
     voronoiNote: string;
@@ -1083,6 +1091,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       networkTitle: "Pass network: {players} players, {links} links from {passes} passes", networkNote: "Most touches: {name}, {touches}. Strongest link: {a} and {b}, {n} passes.", networkNoteDirected: "Most touches: {name}, {touches}. Strongest link: {a} to {b}, {n} passes.", networkMin: "Links of fewer than {n} passes are left out.",
       nodeTitle: "{name}: {touches} touches ({made} passes made, {received} received)", linkTitle: "{a} and {b}: {n} passes", linkTitleDirected: "{a} to {b}: {n} passes",
       formationTitle: "Formation {name}: {n} positions", formationNote: "Positions: {list}.", formationPlayers: "Players: {list}.", formationItem: "{who} ({position})",
+      lineupTitle: "Lineup in {name}: {n} players", lineupCaptain: "Captain: {who}.", lineupRotation: "Rotation {n} of 6.", lineupUnplaced: "With no place in the formation: {list}.", captainTip: "Captain", captainMark: "C", tableCaptain: "Captain",
       voronoiTitle: "Space control of {n} players", voronoiNote: "Share of the surface nearest each team's players: {list}.", shareItem: "{name} {pct}%", voronoiShared: "{n} players share a place with another and have no cell.",
       delaunayTitle: "Delaunay triangulation of {n} players", delaunayNote: "{triangles} triangles and {edges} edges.",
       hullTitle: "Convex hull of {n} players", hullItem: "{name}: {n} players, area {area} {unit}", hullAll: "all players", squareUnits: { ft: "square feet", yd: "square yards", m: "square metres" }, squareOther: "square {unit}",
@@ -1586,6 +1595,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       networkTitle: "パスネットワーク：選手{players}人、つながり{links}本（パス{passes}本）", networkNote: "最多タッチ：{name}（{touches}回）。パスが最も多いつながり：{a}と{b}、{n}本。", networkNoteDirected: "最多タッチ：{name}（{touches}回）。パスが最も多いつながり：{a}から{b}へ、{n}本。", networkMin: "パスが{n}本未満のつながりは描かれていません。",
       nodeTitle: "{name}：タッチ{touches}回（出したパス{made}本、受けたパス{received}本）", linkTitle: "{a}と{b}：パス{n}本", linkTitleDirected: "{a}から{b}へ：パス{n}本",
       formationTitle: "フォーメーション{name}：{n}人分のポジション", formationNote: "ポジション：{list}。", formationPlayers: "選手：{list}。", formationItem: "{who}（{position}）",
+      lineupTitle: "{name}のラインナップ：選手{n}人", lineupCaptain: "キャプテン：{who}。", lineupRotation: "ローテーション：6つのうち{n}番目。", lineupUnplaced: "フォーメーションに配置されていない選手：{list}。", captainTip: "キャプテン", captainMark: "C", tableCaptain: "キャプテン",
       voronoiTitle: "選手{n}人のスペース支配（ボロノイ図）", voronoiNote: "競技場のうち、各チームの選手が最も近い範囲の割合：{list}。", shareItem: "{name} {pct}％", voronoiShared: "{n}人は他の選手と同じ位置にいるため、エリアがありません。",
       delaunayTitle: "選手{n}人のドロネー三角形分割", delaunayNote: "三角形{triangles}個、辺{edges}本。",
       hullTitle: "選手{n}人の凸包", hullItem: "{name}：選手{n}人、面積{area}{unit}", hullAll: "全選手", squareUnits: { ft: "平方フィート", yd: "平方ヤード", m: "平方メートル" }, squareOther: "平方{unit}",

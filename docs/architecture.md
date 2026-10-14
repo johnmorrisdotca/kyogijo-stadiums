@@ -114,15 +114,18 @@ src/
 ├── heat.colour.ts      the colour ramps
 ├── heat.zones.ts       the sports' zones
 ├── heat.types.ts       the heat layers' types
-├── team.layers.ts      the team layers: one function that draws any of the seven kinds and one that lists their tables
+├── team.layers.ts      the team layers: one function that draws any of the eight kinds and one that lists their tables
 ├── team.network.ts     the pass network: nodes, links, touches
 ├── team.shape.ts       Voronoi cells, Delaunay triangles and convex hulls of a team's players
 ├── team.formation.ts   a formation drawn on a surface, with a lineup on it
+├── team.lineup.ts      the lineup layer: a team placed by position code, as discs or jerseys with number, name, captain and flag
+├── lineup.codes.ts     the short position codes of each sport and how a lineup finds each player's place
 ├── team.motion.ts      flow fields and sonars of movements
 ├── team.common.ts      what the team layers share: teams, classes, tables, grouping
 ├── team.geometry.ts    convex hull, Delaunay triangulation (Bowyer and Watson) and Voronoi cells, from the textbook
 ├── team.types.ts       the team layers' types
-├── formations.ts       the named formations of five sports and the names of their positions
+├── formations.ts       the named formations and the names of their positions
+├── formations.sports.ts the formations of rugby, Australian football, cricket, volleyball, handball, water polo, field hockey and netball, softball, hockey's second line and a traditional basketball set
 ├── layers-entry.ts     the layers' entry
 ├── charts.ts           ready-made charts and what they share
 ├── charts.baseball.ts  the spray chart
