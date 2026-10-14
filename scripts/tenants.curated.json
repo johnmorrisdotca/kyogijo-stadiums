@@ -1,0 +1,1377 @@
+{
+ "about": "The leagues a tenant can play in, and the few decisions a person made. A league has the sport it is played in (the surface a place offers for it follows from the sport, see docs/atlas.md), the titles of its English Wikipedia articles, its short forms (read only where the infobox gives no link), and its Wikidata items or labels. A league with `drop` is read and left out: college and youth sport, a lower division, a cup. `surface: false` is a league whose field is not the one the package draws for its sport (arena football).",
+ "leagues": {
+  "MLB": {
+   "sport": "baseball",
+   "titles": [
+    "Major League Baseball",
+    "American League",
+    "National League (baseball)",
+    "National League",
+    "American League East",
+    "American League West",
+    "American League Central",
+    "National League East",
+    "National League West",
+    "National League Central"
+   ],
+   "abbr": [
+    "MLB",
+    "AL",
+    "NL"
+   ],
+   "items": [
+    "Q1163715"
+   ],
+   "labels": [
+    "American League",
+    "National League",
+    "Major League Baseball",
+    "American League East",
+    "American League West",
+    "American League Central",
+    "National League East",
+    "National League West",
+    "National League Central"
+   ]
+  },
+  "NPB": {
+   "sport": "baseball",
+   "titles": [
+    "Nippon Professional Baseball",
+    "Central League",
+    "Pacific League"
+   ],
+   "abbr": [
+    "NPB",
+    "CL",
+    "PL"
+   ],
+   "labels": [
+    "Nippon Professional Baseball",
+    "Central League",
+    "Pacific League"
+   ]
+  },
+  "JBL": {
+   "sport": "baseball",
+   "titles": [
+    "Japanese Baseball League"
+   ],
+   "abbr": [
+    "JBL"
+   ],
+   "labels": [
+    "Japanese Baseball League"
+   ]
+  },
+  "Negro leagues": {
+   "sport": "baseball",
+   "titles": [
+    "Negro league baseball",
+    "Negro Leagues",
+    "Negro American League",
+    "Negro National League (1920–31)",
+    "Negro National League (1933–1948)",
+    "Eastern Colored League",
+    "East-West League",
+    "Negro Southern League"
+   ],
+   "abbr": [
+    "NAL",
+    "NNL",
+    "NLB",
+    "ECL",
+    "EWL"
+   ],
+   "labels": [
+    "Negro league baseball",
+    "Negro American League",
+    "Negro National League",
+    "Eastern Colored League",
+    "East–West League",
+    "Negro National League (1933–1948)",
+    "Negro National League (1920–1931)"
+   ]
+  },
+  "American Association (1882–91)": {
+   "sport": "baseball",
+   "titles": [
+    "American Association (1882–1891)",
+    "American Association (19th century)"
+   ],
+   "labels": [
+    "American Association"
+   ]
+  },
+  "Players' League": {
+   "sport": "baseball",
+   "titles": [
+    "Players' League"
+   ],
+   "abbr": [
+    "PL"
+   ],
+   "labels": [
+    "Players' League"
+   ]
+  },
+  "Federal League": {
+   "sport": "baseball",
+   "titles": [
+    "Federal League"
+   ],
+   "abbr": [
+    "FL"
+   ],
+   "labels": [
+    "Federal League"
+   ]
+  },
+  "National Association": {
+   "sport": "baseball",
+   "titles": [
+    "National Association of Professional Base Ball Players"
+   ],
+   "labels": [
+    "National Association of Professional Base Ball Players"
+   ]
+  },
+  "Pacific Coast League": {
+   "sport": "baseball",
+   "titles": [
+    "Pacific Coast League"
+   ],
+   "abbr": [
+    "PCL"
+   ],
+   "labels": [
+    "Pacific Coast League"
+   ]
+  },
+  "International League": {
+   "sport": "baseball",
+   "titles": [
+    "International League"
+   ],
+   "abbr": [
+    "IL"
+   ],
+   "labels": [
+    "International League"
+   ]
+  },
+  "American Association (1902–97)": {
+   "sport": "baseball",
+   "titles": [
+    "American Association (20th century)",
+    "American Association (1902–1997)"
+   ],
+   "labels": [
+    "American Association (1902–1997)"
+   ]
+  },
+  "Western League": {
+   "sport": "baseball",
+   "titles": [
+    "Western League (original)",
+    "Western League (1900-1958)",
+    "Western League (1900–1958)",
+    "Western League"
+   ],
+   "abbr": [
+    "WL"
+   ],
+   "labels": [
+    "Western League"
+   ]
+  },
+  "Eastern League": {
+   "sport": "baseball",
+   "titles": [
+    "Eastern League (1938–2020)",
+    "Eastern League"
+   ],
+   "abbr": [
+    "EL"
+   ],
+   "labels": [
+    "Eastern League"
+   ]
+  },
+  "Texas League": {
+   "sport": "baseball",
+   "titles": [
+    "Texas League"
+   ],
+   "abbr": [
+    "TL"
+   ],
+   "labels": [
+    "Texas League"
+   ]
+  },
+  "Northwest League": {
+   "sport": "baseball",
+   "titles": [
+    "Northwest League"
+   ],
+   "abbr": [
+    "NWL"
+   ],
+   "labels": [
+    "Northwest League"
+   ]
+  },
+  "California League": {
+   "sport": "baseball",
+   "titles": [
+    "California League"
+   ],
+   "labels": [
+    "California League"
+   ]
+  },
+  "Atlantic League (1896–1900)": {
+   "sport": "baseball",
+   "titles": [
+    "Atlantic League (1896–1900)"
+   ],
+   "abbr": [
+    "AtL"
+   ]
+  },
+  "American Association of Professional Baseball": {
+   "sport": "baseball",
+   "titles": [
+    "American Association of Professional Baseball"
+   ],
+   "labels": [
+    "American Association of Professional Baseball"
+   ]
+  },
+  "Kansai Independent Baseball League": {
+   "drop": "an independent league of Japan",
+   "sport": "baseball",
+   "titles": [
+    "Kansai Independent Baseball League"
+   ],
+   "labels": [
+    "Kansai Independent Baseball League"
+   ]
+  },
+  "Japan High School Baseball Federation": {
+   "drop": "school sport",
+   "titles": [
+    "Japan High School Baseball Federation"
+   ]
+  },
+  "United States Baseball League": {
+   "drop": "a league that never played",
+   "titles": [
+    "United States Baseball League"
+   ],
+   "labels": [
+    "United States Baseball League"
+   ]
+  },
+  "NFL": {
+   "sport": "american-football",
+   "titles": [
+    "National Football League",
+    "NFL",
+    "American Professional Football Association"
+   ],
+   "abbr": [
+    "NFL",
+    "APFA"
+   ],
+   "labels": [
+    "National Football League"
+   ]
+  },
+  "NFL (1902)": {
+   "sport": "american-football",
+   "titles": [
+    "National Football League (1902)"
+   ]
+  },
+  "AFL (1960–69)": {
+   "sport": "american-football",
+   "titles": [
+    "American Football League"
+   ],
+   "abbr": [
+    "AFL/NFL",
+    "AFL / NFL"
+   ],
+   "labels": [
+    "American Football League"
+   ]
+  },
+  "AFL (1926)": {
+   "sport": "american-football",
+   "titles": [
+    "American Football League (1926)"
+   ],
+   "labels": [
+    "American Football League (1926)"
+   ]
+  },
+  "AFL (1936–37)": {
+   "sport": "american-football",
+   "titles": [
+    "American Football League (1936)"
+   ],
+   "labels": [
+    "American Football League (1936)"
+   ]
+  },
+  "AFL (1940–41)": {
+   "sport": "american-football",
+   "titles": [
+    "American Football League (1940)"
+   ],
+   "labels": [
+    "American Football League (1940)"
+   ]
+  },
+  "AAFC": {
+   "sport": "american-football",
+   "titles": [
+    "All-America Football Conference"
+   ],
+   "abbr": [
+    "AAFC"
+   ],
+   "labels": [
+    "All-America Football Conference"
+   ]
+  },
+  "American League of Professional Football": {
+   "sport": "american-football",
+   "titles": [
+    "American League of Professional Football"
+   ],
+   "abbr": [
+    "ALPF"
+   ],
+   "labels": [
+    "American League of Professional Football"
+   ]
+  },
+  "Continental Football League": {
+   "sport": "american-football",
+   "titles": [
+    "Continental Football League"
+   ],
+   "abbr": [
+    "CoFL"
+   ],
+   "labels": [
+    "Continental Football League"
+   ]
+  },
+  "WFL": {
+   "sport": "american-football",
+   "titles": [
+    "World Football League"
+   ],
+   "abbr": [
+    "WFL"
+   ],
+   "labels": [
+    "World Football League"
+   ]
+  },
+  "USFL": {
+   "sport": "american-football",
+   "titles": [
+    "United States Football League",
+    "United States Football League (2022)"
+   ],
+   "abbr": [
+    "USFL"
+   ],
+   "labels": [
+    "United States Football League"
+   ]
+  },
+  "XFL": {
+   "sport": "american-football",
+   "titles": [
+    "XFL (2020)",
+    "XFL (2001)",
+    "XFL (2023)",
+    "XFL"
+   ],
+   "abbr": [
+    "XFL"
+   ],
+   "labels": [
+    "XFL"
+   ]
+  },
+  "UFL": {
+   "sport": "american-football",
+   "titles": [
+    "United Football League (2009–2012)",
+    "United Football League (2024)",
+    "United Football League"
+   ],
+   "abbr": [
+    "UFL"
+   ],
+   "labels": [
+    "United Football League"
+   ]
+  },
+  "WLAF": {
+   "sport": "american-football",
+   "titles": [
+    "World League of American Football",
+    "NFL Europe"
+   ],
+   "abbr": [
+    "WLAF"
+   ],
+   "labels": [
+    "World League of American Football",
+    "NFL Europe"
+   ]
+  },
+  "Arena Football League": {
+   "sport": "american-football",
+   "surface": false,
+   "titles": [
+    "Arena Football League"
+   ],
+   "labels": [
+    "Arena Football League"
+   ]
+  },
+  "NCAA": {
+   "drop": "college sport",
+   "titles": [
+    "National Collegiate Athletic Association",
+    "NCAA Division I",
+    "NCAA Division I Football Bowl Subdivision",
+    "NCAA Division I Football Championship Subdivision",
+    "Pac-12 Conference",
+    "Big 12 Conference",
+    "Atlantic Coast Conference",
+    "Big Ten Conference"
+   ],
+   "abbr": [
+    "NCAA"
+   ],
+   "labels": [
+    "NCAA Division I",
+    "NCAA Division I Football Bowl Subdivision",
+    "Pac-12 Conference",
+    "Big 12 Conference",
+    "Atlantic Coast Conference",
+    "Big Ten Conference"
+   ]
+  },
+  "Ohio League": {
+   "drop": "not a league with a table",
+   "titles": [
+    "Ohio League"
+   ],
+   "abbr": [
+    "OL"
+   ],
+   "labels": [
+    "Ohio League"
+   ]
+  },
+  "Women's Professional Football League": {
+   "drop": "not drawn",
+   "titles": [
+    "Women's Professional Football League"
+   ],
+   "labels": [
+    "Women's Professional Football League"
+   ]
+  },
+  "AFC": {
+   "drop": "a conference, not a league",
+   "labels": [
+    "American Conference"
+   ]
+  },
+  "CFL": {
+   "sport": "canadian-football",
+   "titles": [
+    "Canadian Football League",
+    "Canadian Football League East Division",
+    "Canadian Football League West Division"
+   ],
+   "abbr": [
+    "CFL"
+   ],
+   "labels": [
+    "Canadian Football League",
+    "Canadian Football League East Division"
+   ]
+  },
+  "IRFU": {
+   "sport": "canadian-football",
+   "titles": [
+    "Interprovincial Rugby Football Union"
+   ],
+   "abbr": [
+    "IRFU"
+   ],
+   "labels": [
+    "Interprovincial Rugby Football Union"
+   ]
+  },
+  "ORFU": {
+   "sport": "canadian-football",
+   "titles": [
+    "Ontario Rugby Football Union"
+   ],
+   "abbr": [
+    "ORFU"
+   ],
+   "labels": [
+    "Ontario Rugby Football Union"
+   ]
+  },
+  "WIFU": {
+   "sport": "canadian-football",
+   "titles": [
+    "Western Interprovincial Football Union"
+   ],
+   "abbr": [
+    "WIFU"
+   ],
+   "labels": [
+    "Western Interprovincial Football Union"
+   ]
+  },
+  "NBA": {
+   "sport": "basketball",
+   "titles": [
+    "National Basketball Association"
+   ],
+   "abbr": [
+    "NBA"
+   ],
+   "labels": [
+    "National Basketball Association"
+   ]
+  },
+  "WBL": {
+   "sport": "basketball",
+   "titles": [
+    "World Basketball League"
+   ],
+   "abbr": [
+    "WBL"
+   ],
+   "labels": [
+    "World Basketball League"
+   ],
+   "surface": false
+  },
+  "NHL": {
+   "sport": "ice-hockey",
+   "titles": [
+    "National Hockey League"
+   ],
+   "abbr": [
+    "NHL"
+   ],
+   "items": [
+    "Q1215892"
+   ],
+   "labels": [
+    "National Hockey League"
+   ]
+  },
+  "MLS": {
+   "sport": "soccer",
+   "titles": [
+    "Major League Soccer"
+   ],
+   "abbr": [
+    "MLS"
+   ],
+   "labels": [
+    "Major League Soccer"
+   ]
+  },
+  "MLS Next Pro": {
+   "sport": "soccer",
+   "titles": [
+    "MLS Next Pro"
+   ],
+   "abbr": [
+    "MLSNP"
+   ],
+   "labels": [
+    "MLS Next Pro"
+   ]
+  },
+  "NWSL": {
+   "sport": "soccer",
+   "titles": [
+    "National Women's Soccer League"
+   ],
+   "abbr": [
+    "NWSL"
+   ],
+   "labels": [
+    "National Women's Soccer League"
+   ]
+  },
+  "USL Championship": {
+   "sport": "soccer",
+   "titles": [
+    "USL Championship"
+   ],
+   "abbr": [
+    "USLC"
+   ],
+   "labels": [
+    "USL Championship"
+   ]
+  },
+  "USL League One": {
+   "sport": "soccer",
+   "titles": [
+    "USL League One"
+   ],
+   "abbr": [
+    "USL1"
+   ],
+   "labels": [
+    "USL League One"
+   ]
+  },
+  "USL First Division": {
+   "sport": "soccer",
+   "titles": [
+    "USL First Division"
+   ],
+   "abbr": [
+    "USL 1"
+   ],
+   "labels": [
+    "USL First Division"
+   ]
+  },
+  "A-League (1995–2004)": {
+   "sport": "soccer",
+   "titles": [
+    "A-League (1995–2004)",
+    "A-League (1995&ndash;2004)",
+    "A-League (1995-2004)"
+   ],
+   "labels": [
+    "A-League"
+   ]
+  },
+  "United Soccer League": {
+   "sport": "soccer",
+   "titles": [
+    "United Soccer League"
+   ],
+   "abbr": [
+    "USL"
+   ],
+   "labels": [
+    "United Soccer League"
+   ]
+  },
+  "NASL": {
+   "sport": "soccer",
+   "titles": [
+    "North American Soccer League (1968–84)",
+    "North American Soccer League (1968–1984)",
+    "North American Soccer League (1968-84)",
+    "North American Soccer League"
+   ],
+   "abbr": [
+    "NASL"
+   ],
+   "labels": [
+    "North American Soccer League"
+   ]
+  },
+  "NPSL (1967)": {
+   "sport": "soccer",
+   "titles": [
+    "National Professional Soccer League (1967)",
+    "National Professional Soccer League"
+   ],
+   "abbr": [
+    "NPSL"
+   ],
+   "labels": [
+    "National Professional Soccer League"
+   ]
+  },
+  "United Soccer Association": {
+   "sport": "soccer",
+   "titles": [
+    "United Soccer Association"
+   ],
+   "abbr": [
+    "USA"
+   ],
+   "labels": [
+    "United Soccer Association"
+   ]
+  },
+  "American Soccer League (1921–33)": {
+   "sport": "soccer",
+   "titles": [
+    "American Soccer League (1921–1933)"
+   ],
+   "abbr": [
+    "ASL"
+   ],
+   "labels": [
+    "American Soccer League"
+   ]
+  },
+  "American Professional Soccer League": {
+   "sport": "soccer",
+   "titles": [
+    "American Professional Soccer League"
+   ],
+   "abbr": [
+    "APSL"
+   ],
+   "labels": [
+    "American Professional Soccer League"
+   ]
+  },
+  "WUSA": {
+   "sport": "soccer",
+   "titles": [
+    "Women's United Soccer Association"
+   ],
+   "abbr": [
+    "WUSA"
+   ],
+   "labels": [
+    "Women's United Soccer Association"
+   ]
+  },
+  "WPS": {
+   "sport": "soccer",
+   "titles": [
+    "Women's Professional Soccer"
+   ],
+   "abbr": [
+    "WPS"
+   ],
+   "labels": [
+    "Women's Professional Soccer"
+   ]
+  },
+  "Canadian Soccer League (1983)": {
+   "sport": "soccer",
+   "titles": [
+    "Canadian Professional Soccer League (1983)"
+   ],
+   "labels": [
+    "Canadian Professional Soccer League"
+   ]
+  },
+  "Canadian National Soccer League": {
+   "sport": "soccer",
+   "titles": [
+    "Canadian National Soccer League"
+   ],
+   "abbr": [
+    "NSL"
+   ],
+   "labels": [
+    "Canadian National Soccer League"
+   ]
+  },
+  "Northern Super League": {
+   "sport": "soccer",
+   "titles": [
+    "Northern Super League"
+   ],
+   "labels": [
+    "Northern Super League"
+   ]
+  },
+  "A-League Men": {
+   "sport": "soccer",
+   "titles": [
+    "A-League Men",
+    "A-League"
+   ],
+   "labels": [
+    "A-League Men"
+   ]
+  },
+  "Premier League": {
+   "sport": "soccer",
+   "titles": [
+    "Premier League"
+   ],
+   "labels": [
+    "Premier League"
+   ]
+  },
+  "La Liga": {
+   "sport": "soccer",
+   "titles": [
+    "La Liga"
+   ],
+   "labels": [
+    "La Liga"
+   ]
+  },
+  "Serie A": {
+   "sport": "soccer",
+   "titles": [
+    "Serie A"
+   ],
+   "items": [
+    "Q15804"
+   ],
+   "labels": [
+    "Serie A"
+   ]
+  },
+  "Serie B": {
+   "sport": "soccer",
+   "titles": [
+    "Serie B"
+   ],
+   "labels": [
+    "Serie B"
+   ]
+  },
+  "Bundesliga": {
+   "sport": "soccer",
+   "titles": [
+    "Bundesliga"
+   ],
+   "items": [
+    "Q82595"
+   ],
+   "labels": [
+    "Bundesliga"
+   ]
+  },
+  "2. Bundesliga": {
+   "sport": "soccer",
+   "titles": [
+    "2. Bundesliga"
+   ],
+   "labels": [
+    "2. Bundesliga"
+   ]
+  },
+  "Ligue 1": {
+   "sport": "soccer",
+   "titles": [
+    "Ligue 1"
+   ],
+   "labels": [
+    "Ligue 1"
+   ]
+  },
+  "Liga MX": {
+   "sport": "soccer",
+   "titles": [
+    "Liga MX"
+   ],
+   "labels": [
+    "Liga MX"
+   ]
+  },
+  "Liga MX Femenil": {
+   "sport": "soccer",
+   "titles": [
+    "Liga MX Femenil"
+   ],
+   "labels": [
+    "Liga MX Femenil"
+   ]
+  },
+  "Ascenso MX": {
+   "sport": "soccer",
+   "titles": [
+    "Ascenso MX",
+    "Liga de Expansión MX"
+   ],
+   "labels": [
+    "Ascenso MX"
+   ]
+  },
+  "J1 League": {
+   "sport": "soccer",
+   "titles": [
+    "J1 League",
+    "J.League"
+   ],
+   "abbr": [
+    "J1"
+   ],
+   "labels": [
+    "J1 League",
+    "J.League"
+   ]
+  },
+  "J2 League": {
+   "sport": "soccer",
+   "titles": [
+    "J2 League"
+   ],
+   "abbr": [
+    "J2"
+   ],
+   "labels": [
+    "J2 League"
+   ]
+  },
+  "K League 1": {
+   "sport": "soccer",
+   "titles": [
+    "K League 1"
+   ],
+   "labels": [
+    "K League 1"
+   ]
+  },
+  "Chinese Super League": {
+   "sport": "soccer",
+   "titles": [
+    "Chinese Super League"
+   ],
+   "labels": [
+    "Chinese Super League"
+   ]
+  },
+  "Scottish Premiership": {
+   "sport": "soccer",
+   "titles": [
+    "Scottish Premiership"
+   ],
+   "labels": [
+    "Scottish Premiership"
+   ]
+  },
+  "Scottish Football League": {
+   "sport": "soccer",
+   "titles": [
+    "Scottish Football League",
+    "Scottish Football League Third Division"
+   ],
+   "labels": [
+    "Scottish Football League",
+    "Scottish Football League Third Division"
+   ]
+  },
+  "Eredivisie": {
+   "sport": "soccer",
+   "titles": [
+    "Eredivisie"
+   ],
+   "labels": [
+    "Eredivisie"
+   ]
+  },
+  "Primeira Liga": {
+   "sport": "soccer",
+   "titles": [
+    "Primeira Liga"
+   ],
+   "labels": [
+    "Primeira Liga"
+   ]
+  },
+  "Allsvenskan": {
+   "sport": "soccer",
+   "titles": [
+    "Allsvenskan"
+   ],
+   "labels": [
+    "Allsvenskan"
+   ]
+  },
+  "Swiss Super League": {
+   "sport": "soccer",
+   "titles": [
+    "Swiss Super League"
+   ],
+   "labels": [
+    "Swiss Super League"
+   ]
+  },
+  "Russian Premier League": {
+   "sport": "soccer",
+   "titles": [
+    "Russian Premier League"
+   ],
+   "labels": [
+    "Russian Premier League"
+   ]
+  },
+  "Russian First League": {
+   "sport": "soccer",
+   "titles": [
+    "Russian First League",
+    "Russian Football National League"
+   ],
+   "labels": [
+    "Russian First League"
+   ]
+  },
+  "Argentine Primera División": {
+   "sport": "soccer",
+   "titles": [
+    "Argentine Primera División"
+   ],
+   "labels": [
+    "Argentine Primera División"
+   ]
+  },
+  "Campeonato Brasileiro Série A": {
+   "sport": "soccer",
+   "titles": [
+    "Campeonato Brasileiro Série A"
+   ],
+   "labels": [
+    "Campeonato Brasileiro Série A"
+   ]
+  },
+  "Chilean Primera División": {
+   "sport": "soccer",
+   "titles": [
+    "Chilean Primera División"
+   ],
+   "labels": [
+    "Chilean Primera División"
+   ]
+  },
+  "Uruguayan Primera División": {
+   "sport": "soccer",
+   "titles": [
+    "Uruguayan Primera División"
+   ],
+   "labels": [
+    "Uruguayan Primera División"
+   ]
+  },
+  "South African Premier Division": {
+   "sport": "soccer",
+   "titles": [
+    "South African Premier Division",
+    "Premier Soccer League"
+   ],
+   "labels": [
+    "South African Premier Division",
+    "Premier Soccer League"
+   ]
+  },
+  "Israeli Premier League": {
+   "sport": "soccer",
+   "titles": [
+    "Israeli Premier League"
+   ],
+   "labels": [
+    "Israeli Premier League"
+   ]
+  },
+  "Liga Leumit": {
+   "sport": "soccer",
+   "titles": [
+    "Liga Leumit"
+   ],
+   "labels": [
+    "Liga Leumit"
+   ]
+  },
+  "Women's Super League": {
+   "sport": "soccer",
+   "titles": [
+    "Women's Super League",
+    "FA Women's Super League"
+   ],
+   "labels": [
+    "Women's Super League"
+   ]
+  },
+  "Liga Portugal 2": {
+   "drop": "a lower division",
+   "titles": [
+    "Liga Portugal 2"
+   ],
+   "labels": [
+    "Liga Portugal 2"
+   ]
+  },
+  "3. Liga": {
+   "drop": "a lower division",
+   "titles": [
+    "3. Liga"
+   ],
+   "labels": [
+    "3. Liga"
+   ]
+  },
+  "Lower divisions": {
+   "drop": "a lower division or a reserve team",
+   "titles": [
+    "Regionalliga",
+    "Regionalliga Bayern",
+    "Regionalliga West",
+    "Oberliga Niedersachsen",
+    "Landesliga Bayern-Südost",
+    "Brandenburg-Liga",
+    "Championnat National 3",
+    "Tercera División de México",
+    "Segunda División de México",
+    "Primera División A",
+    "Professional Development League",
+    "USL W League",
+    "Chilean women's football championship",
+    "Women's FA Cup",
+    "Women's League Cup"
+   ],
+   "labels": [
+    "Regionalliga",
+    "Regionalliga Bayern",
+    "Regionalliga West",
+    "Oberliga Niedersachsen",
+    "Landesliga Bayern-Südost",
+    "Brandenburg-Liga",
+    "Championnat National 3",
+    "Tercera División de México",
+    "Segunda División de México",
+    "Primera División A",
+    "Professional Development League",
+    "Chilean women's football championship",
+    "Women's FA Cup",
+    "Women's League Cup"
+   ]
+  },
+  "Not played on a field": {
+   "drop": "volleyball, esports, tennis and other sports the package draws no field for",
+   "titles": [
+    "Tennis",
+    "League of Legends EMEA Championship"
+   ],
+   "labels": [
+    "Liga de Voleibol Argentina – Serie A1",
+    "League of Legends EMEA Championship",
+    "Liga Nacional de Básquet"
+   ]
+  },
+  "Top 14": {
+   "sport": "rugby-union",
+   "titles": [
+    "Top 14"
+   ],
+   "labels": [
+    "Top 14"
+   ]
+  },
+  "United Rugby Championship": {
+   "sport": "rugby-union",
+   "titles": [
+    "United Rugby Championship",
+    "Pro14"
+   ],
+   "labels": [
+    "2018–19 Pro14",
+    "United Rugby Championship"
+   ]
+  },
+  "Major League Rugby": {
+   "sport": "rugby-union",
+   "titles": [
+    "Major League Rugby"
+   ],
+   "abbr": [
+    "MLR"
+   ],
+   "labels": [
+    "Major League Rugby"
+   ]
+  },
+  "NRL": {
+   "sport": "rugby-league",
+   "titles": [
+    "National Rugby League"
+   ],
+   "abbr": [
+    "NRL"
+   ],
+   "labels": [
+    "National Rugby League"
+   ]
+  },
+  "Super League": {
+   "sport": "rugby-league",
+   "titles": [
+    "Super League"
+   ],
+   "labels": [
+    "Super League"
+   ]
+  },
+  "AFL": {
+   "sport": "australian-football",
+   "titles": [
+    "Australian Football League"
+   ],
+   "labels": [
+    "Australian Football League"
+   ]
+  },
+  "NEAFL": {
+   "drop": "a reserve league",
+   "titles": [
+    "North East Australian Football League"
+   ],
+   "labels": [
+    "North East Australian Football League"
+   ]
+  },
+  "Major League Lacrosse": {
+   "sport": "lacrosse",
+   "titles": [
+    "Major League Lacrosse"
+   ],
+   "abbr": [
+    "MLL"
+   ],
+   "labels": [
+    "Major League Lacrosse"
+   ],
+   "surface": false
+  },
+  "Major League Cricket": {
+   "sport": "cricket",
+   "titles": [
+    "Major League Cricket"
+   ],
+   "abbr": [
+    "MLC"
+   ],
+   "labels": [
+    "Major League Cricket"
+   ]
+  },
+  "Big Bash League": {
+   "sport": "cricket",
+   "titles": [
+    "Big Bash League"
+   ],
+   "labels": [
+    "Big Bash League"
+   ]
+  }
+ },
+ "tenants": [
+  {
+   "place": "fenway-park",
+   "club": "Washington Commanders",
+   "drop": "the same club as Boston Redskins, which the article names as it was named then"
+  },
+  {
+   "place": "griffith-stadium",
+   "club": "Minnesota Twins",
+   "drop": "the same club as the Washington Senators of 1911 to 1960"
+  },
+  {
+   "place": "sportsmans-park",
+   "club": "Baltimore Orioles",
+   "drop": "the same club as the St. Louis Browns of 1902 to 1953"
+  },
+  {
+   "place": "jarry-park-stadium",
+   "club": "Washington Nationals",
+   "drop": "the same club as the Montreal Expos"
+  },
+  {
+   "place": "olympic-stadium-montreal",
+   "club": "Washington Nationals",
+   "drop": "the same club as the Montreal Expos"
+  },
+  {
+   "place": "hanshin-koshien-stadium",
+   "club": "Fukuoka SoftBank Hawks",
+   "drop": "a Wikidata statement the article does not make, for a club that never played there at home"
+  },
+  {
+   "place": "metropolitan-stadium",
+   "club": "Arizona Cardinals",
+   "drop": "one home game of 1959, not a tenancy"
+  },
+  {
+   "place": "crosley-field",
+   "club": "Cincinnati Bengals",
+   "drop": "the article does not say which of the three leagues called AFL the club played in"
+  },
+  {
+   "place": "fenway-park",
+   "club": "New England Patriots",
+   "name": "Boston Patriots",
+   "reason": "the name of the time, as the article's link shows it"
+  },
+  {
+   "place": "braves-field",
+   "club": "Washington Commanders",
+   "name": "Boston Braves",
+   "reason": "the name of the time, as the article's link shows it"
+  },
+  {
+   "place": "municipal-stadium-kansas-city",
+   "club": "Kansas City",
+   "name": "Kansas City Blues",
+   "reason": "the article's link is to the page of the club's several names"
+  },
+  {
+   "place": "league-park-cleveland",
+   "club": "Cleveland Guardians",
+   "name": "Cleveland Indians",
+   "reason": "the name of the time; Wikidata's label is today's"
+  },
+  {
+   "place": "olympiastadion-berlin",
+   "club": "Berlin Thunder",
+   "league": "WLAF",
+   "reason": "NFL Europe, the WLAF of the table"
+  },
+  {
+   "place": "waldstadion-frankfurt",
+   "club": "Frankfurt Galaxy",
+   "league": "WLAF",
+   "reason": "NFL Europe, the WLAF of the table"
+  },
+  {
+   "place": "hampden-park",
+   "club": "Scottish Claymores",
+   "league": "WLAF",
+   "reason": "NFL Europe, the WLAF of the table"
+  },
+  {
+   "place": "johan-cruyff-arena",
+   "club": "Amsterdam Admirals",
+   "league": "WLAF",
+   "reason": "NFL Europe, the WLAF of the table"
+  },
+  {
+   "place": "wembley-1923",
+   "club": "London Monarchs",
+   "league": "WLAF",
+   "reason": "NFL Europe, the WLAF of the table"
+  }
+ ]
+}

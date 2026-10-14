@@ -1,6 +1,6 @@
 # The atlas
 
-Every ballpark and soccer ground the package draws, on one map: 158 places in 23 countries. See the Atlas section of [the demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/#atlas).
+Every ballpark and soccer ground the package draws, on one map: 158 places in 23 countries, and the 443 clubs (333 of them different) that played their home matches in 155 of them. See the Atlas section of [the demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/#atlas) and [Tenants](#tenants) below.
 
 ![A world map with a marker on each of 158 places: a circle for a place in use today, a diamond for one of the past, baseball parks solid and soccer grounds with a dot in the middle. Most are in the United States, Japan and western Europe.](./atlas-map.svg)
 
@@ -23,9 +23,10 @@ Every ballpark and soccer ground the package draws, on one map: 158 places in 23
 | `localName`, `localLanguage` | The everyday name in the language of the place, where it is not English (`San Siro`, `it`; `Maracanã`, `pt`). |
 | `aliases`, `names` | Every other name, each with where it was read and the years it was used (`{ name, lang, kind, from?, to?, source? }`), and the names a ground had for some years. See [names](./ballparks.md#names). |
 | `sport` | `baseball` or `soccer`. |
-| `leagues` | `MLB` or `NPB` for a park; `FIFA World Cup` and `FIFA Women's World Cup` for a ground that staged matches of one. A club ground that staged none has none. |
+| `leagues` | The leagues of the club of a park (`MLB` or `NPB`) and of every club that played its home matches in the place (`CFL` and `MLS` for BC Place, `MLB` and `CFL` for the Olympic Stadium in Montreal), then `FIFA World Cup` and `FIFA Women's World Cup` for a ground that staged matches of one. A ground with no tenant that staged none has none. |
+| `tenants` | The clubs that play, or played, their home matches there, each with its league, its sport and the years it was there: see [Tenants](#tenants). Empty for a place no club is known to have called home. |
 | `country`, `city` | ISO 3166-1 alpha-2, and the city the data names. |
-| `team` | The club that plays in a park. |
+| `team` | The club that plays in a park (a ground has none: see `tenants`). |
 | `lat`, `lon` | Wikidata's coordinates (P625), in degrees. |
 | `status` | `current` or `past`. A ground a club also uses (`secondary` in `PARKS`) is `current`. |
 | `from`, `to` | The first and the last year in use. For a past MLB park they are its first and last MLB season (the Polo Grounds, 1891 to 1963); for any other place the year it opened and the year it closed, as Wikidata gives them. A current place has no `to`. A year the data does not give is left out. |
@@ -55,7 +56,81 @@ console.log(placesByName("Wrigley Field").map((place) => place.id).join(), place
 // wrigley-field,wrigley-field-los-angeles undefined
 ```
 
-`placeByName(name)` finds a place by any of its names, and `placesByName(name)` every place that answers to it, best match first (the everyday names, then the official and cited names, then the former names and the nicknames), ignoring case, accents, spaces, punctuation, full-width and half-width, hiragana and katakana and the long vowel mark: `placeByName("甲子園")` and `placeByName("Koshien Stadium")` are both `hanshin-koshien-stadium`, and `placeByName("サンシーロ")` is `san-siro`. `placesBy({ sport, kind, league, country, status, year, text })` keeps the places that match every field given, in the order of `PLACES`. Each of the first five takes one value or a list (a list matches any of its members). `year` keeps the places in use that year; a place with no known first year, or no known last year, is not shut out by that bound, so a place whose year the data lacks is shown rather than hidden. `text` finds every word in a name (the everyday names, the aliases and the readings), the city, the club or the country code, ignoring case and accents: `text: "meazza"` finds San Siro and `text: "こうしえん"` Koshien. `atlasFacets()` lists the sports, leagues and countries and the span of years, for the controls of a page, and `surfaceOf(place)` gives the options `drawKyogijo` takes to draw a place's surface: a park's fence or a ground's pitch at its own size.
+`placeByName(name)` finds a place by any of its names, and `placesByName(name)` every place that answers to it, best match first (the everyday names, then the official and cited names, then the former names and the nicknames), ignoring case, accents, spaces, punctuation, full-width and half-width, hiragana and katakana and the long vowel mark: `placeByName("甲子園")` and `placeByName("Koshien Stadium")` are both `hanshin-koshien-stadium`, and `placeByName("サンシーロ")` is `san-siro`. `placesBy({ sport, kind, league, country, status, year, text })` keeps the places that match every field given, in the order of `PLACES`. Each of the first five takes one value or a list (a list matches any of its members). `year` keeps the places in use that year; a place with no known first year, or no known last year, is not shut out by that bound, so a place whose year the data lacks is shown rather than hidden. `text` finds every word in a name (the everyday names, the aliases and the readings), the city, the club or the country code, ignoring case and accents: `text: "meazza"` finds San Siro and `text: "こうしえん"` Koshien. `atlasFacets()` lists the sports, leagues and countries and the span of years, for the controls of a page, and `surfaceOf(place)` gives the options `drawKyogijo` takes to draw a place's surface: a park's fence or a ground's pitch at its own size. `league` keeps the places with a club of that league as well as those that staged a tournament: `placesBy({ league: "CFL" })` finds BC Place and the Rogers Centre. `text` also finds a word of the name of a club, in English or in Japanese: `text: "whitecaps"` or `text: "ライオンズ"`.
+
+## Tenants
+
+A place is rarely a place of one sport. BC Place staged a World Cup, and is the BC Lions' home (the CFL, since 1983) and the Vancouver Whitecaps' (MLS, since 2011); the Olympic Stadium in Montreal was the Expos' and the Alouettes'; the Rogers Centre is the Blue Jays', the Argonauts' and, from 1995 to 1999, the Raptors'. `Place.tenants` lists the clubs that played their home matches in a place, with the league each played in there, its sport and the years it was there, and the place's `leagues` name every one of them.
+
+| Field of a tenant | What it is |
+| --- | --- |
+| `club`, `clubJa` | The club's name in English, as the place's article names it (`Boston Braves` for the club that is the Atlanta Braves now), else Wikidata's label; and its name in Japanese, where Wikidata has one for that name (`ブリティッシュ・コロンビア・ライオンズ`). |
+| `league` | The league it played in there: `CFL`, `MLS`, `NFL`, `NBA`, `NHL`, `NPB`, `Premier League`, `J1 League`... A league that was played in different periods under one name is one (`NASL` is the league of 1968 to 1984). |
+| `sport` | `baseball`, `soccer`, `american-football`, `canadian-football`, `basketball`, `ice-hockey`, `rugby-union`, `rugby-league`, `australian-football`, `lacrosse` or `cricket`. It decides the surface the place offers for the club. |
+| `from`, `to` | The first and the last year it played there; a club still there has no `to`, and a club whose years neither source gives has neither. A club that was away for some seasons (the Blue Jays in 2020) has the first and the last. |
+| `wikidata` | The club's Wikidata item (`Q919062`), the key to join a tenant to other data. |
+| `source` | Where it was read: `wikidata` (`P466`, the place lists it as an occupant, `P115`, it lists the place as its home venue, or both), `wikipedia` (the title and revision of the place's article, whose infobox lists it among the tenants) and `years` (`wikidata` or `wikipedia`, whichever the years were read from). |
+
+```ts
+import { placeById, placesByClub, tenantsOf } from "@johnmorrisdotca/kyogijo-stadiums/atlas";
+
+const bcPlace = placeById("bc-place")!;
+console.log(bcPlace.leagues.join(", "));
+// CFL, MLS, WBL, NASL, FIFA World Cup, FIFA Women's World Cup
+for (const tenant of tenantsOf(bcPlace)) console.log(`${tenant.club} (${tenant.league}) ${tenant.from}–${tenant.to ?? ""}`);
+// BC Lions (CFL) 1983–
+// Vancouver Whitecaps FC (MLS) 2011–
+// Vancouver Nighthawks (WBL) 1988–1988
+// Vancouver Whitecaps (NASL) 1983–1984
+console.log(tenantsOf("olympic-stadium-montreal").map((tenant) => `${tenant.club} ${tenant.league}`).join(", "));
+// Montreal Expos MLB, Montreal Alouettes CFL, Montreal Machine WLAF, Montreal Manic NASL
+console.log(tenantsOf("rogers-centre", { year: 1997 }).map((tenant) => tenant.club).join(", "));
+// Toronto Blue Jays, Toronto Argonauts, Toronto Raptors
+console.log(placesByClub("BC Lions").map((place) => place.id).join(), "|", placesByClub("Montreal Expos").map((place) => place.id).join());
+// bc-place | jarry-park-stadium,olympic-stadium-montreal
+console.log(placesByClub("whitecaps")[0]?.id, placesByClub("ブリティッシュ・コロンビア・ライオンズ")[0]?.id);
+// bc-place bc-place
+```
+
+`tenantsOf(place, filter)` takes a place or its key and gives its clubs, the current ones first (by the year they came) and then those that have left (the latest to leave first); the filter's `year` keeps the clubs that played there that year (a bound the data does not give shuts none out), `league` and `sport` one value or a list, and `current` the clubs that are there now (`true`) or have left (`false`). `placesByClub(name)` gives the places a club played in, best match first: a club whose name is the one given (ignoring case, accents, spaces, punctuation, width, and in Japanese hiragana or katakana), then a club with every word given in its name; the names are the club's in English and in Japanese.
+
+### One place, several surfaces
+
+`surfacesOf(place)` lists the surfaces a place offers, the place's own first: a park's fence (`mlb` with the park) or a ground's pitch at its own size (`soccer` with the ground), then one for each sport a tenant plays that the package draws. `surfaceOf(place)` is still the place's own, and with a sport it is the surface the place offers for it, else `undefined`.
+
+| A tenant plays | The surface | Options |
+| --- | --- | --- |
+| American football (the NFL, the AFL of 1960 to 1969, the AAFC, the XFL, the USFL...) | the NFL's field | `{ sport: "nfl" }` |
+| Canadian football | the CFL's field | `{ sport: "cfl" }` |
+| Baseball | a park's fence; a ground has none to draw | `{ sport: "mlb", park }` |
+| Soccer | at a ground, its pitch at its size; at a park, the international 105 by 68 m | `{ sport: "soccer", ground }` or `{ sport: "soccer" }` |
+| Basketball (the NBA...) | the NBA's court | `{ sport: "nba" }` |
+| Ice hockey | the NHL's rink | `{ sport: "nhl" }` |
+| Rugby union; rugby league | World Rugby's field; the NRL's | `{ sport: "rugby" }`; `{ sport: "rugby", league: "nrl" }` |
+| Australian football; cricket | the AFL's ground; the ICC's | `{ sport: "afl" }`; `{ sport: "cricket" }` |
+
+A lacrosse club asks for no surface, nor does one of a league whose field is not the one the package draws for its sport (arena football, played on an indoor field of 50 yards, and the World Basketball League of 1988). A drawing of a place that has no tenant, or has the tenants of its own sport only, is the same as before.
+
+```ts
+import { placeById, surfaceOf, surfacesOf } from "@johnmorrisdotca/kyogijo-stadiums/atlas";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
+
+const bcPlace = placeById("bc-place")!;
+console.log(surfacesOf(bcPlace).map((surface) => surface.sport).join(), surfaceOf(bcPlace, "cfl"), surfaceOf(bcPlace, "mlb"));
+// soccer,cfl { sport: 'cfl' } undefined
+console.log(surfacesOf(placeById("olympic-stadium-montreal")!).map((surface) => surface.sport).join());
+// mlb,cfl,nfl,soccer
+console.log(drawKyogijo({ ...surfaceOf(bcPlace, "cfl")!, style: "none" }).includes('data-sport="cfl"'));
+// true
+```
+
+### Where the tenants come from
+
+The clubs are those Wikidata (CC0) lists for the place as its occupants (property P466) or lists the place as their home venue (P115), and those in the `tenants` line of the infobox of the place's English Wikipedia article (CC BY-SA 4.0), at the revision named in `source.wikipedia`; a club is in a place when either says so, and `source` says which. The years are Wikidata's (the start time P580 and end time P582 of the statement) where Wikidata has them, and the article's where it has none; where the two differ, the article's, because a reader can check it at the revision named (for 21 clubs they differ; the article's end year of the Argonauts at the Rogers Centre, 2015, is right, and so is the start of the Yakult Swallows at Meiji Jingu Stadium in 1964, while Wikidata gives 2016 and 2006). A year is never guessed: a club whose years neither gives has none (4 do).
+
+What is not a tenant: a club the article says plays only some of its matches there (select, part-time, intermittent, derby matches), a national team, a college team, a bowl game and any other event, a season, a club of a lower division or of a league the package draws no surface for and the table lists as left out (scripts/tenants.curated.json says which and why), and a club Wikidata names for no years when the article lists tenants without it. A franchise that moved or was renamed is the club of the name the article gives it then (`Boston Braves` at Braves Field, `St. Louis Browns` at Sportsman's Park), and the same franchise under its present name is left out of the same place.
+
+`scripts/tenants.curated.json` holds the table of leagues (with the titles of their articles, their short forms and Wikidata items, and the sport each is played in) and the handful of decisions a person made, each with its reason. `pnpm tenants:fetch` reads Wikidata and English Wikipedia, one request at a time with a User-Agent that names this project and john@johnmorris.ca, as Wikimedia asks, into `scripts/tenants.wikidata.json` (it needs the network and is not part of `pnpm check`); `pnpm tenants` makes `src/tenants.data.ts` from it and prints, with `-- --report`, what it left out and where the sources disagree.
 
 ## Where the coordinates come from
 
@@ -68,9 +143,9 @@ A test holds every place to a rough box round its country, so that a sign slippe
 The Atlas section of the demo is a chizu world map with a marker on every place:
 
 - **Markers.** A circle is a place in use today and a diamond one of the past, so that the two differ by shape and not by colour alone; baseball parks are solid and soccer grounds have a dot in the middle, in the sport's colour. Drag the map, zoom with its buttons, Ctrl and the wheel or a pinch, and press a marker to choose it.
-- **Filters.** Sport, today or the past, league, country, a search of the name, the city or the club, and a year: pick a year and the map and the list keep only the places in use then. Choosing a country frames it on the map.
+- **Filters.** Sport, today or the past, league (the main leagues and tournaments first, then every league a club of the atlas played in), country, a search of the name, the city or a club (`Whitecaps`, `ライオンズ`), and a year: pick a year and the map and the list keep only the places in use then. Choosing a country frames it on the map.
 - **The list** beside the map holds the same places and does everything the markers do, so that the page works by keyboard and for a screen reader (the markers are not in the tab order): the arrow keys, Home and End move through it and Enter or Space chooses a place. Choosing a place in the list frames its country.
-- **The surface.** The chosen place's surface is drawn beside the map by kyogijo, a park's fence (as it stood in the year picked, where the park has dated fences) or a ground's pitch at its size, with its facts, its coordinates and a link to its Wikidata item, and a button to try it in the playground above.
+- **The surface.** The chosen place's surface is drawn beside the map by kyogijo, a park's fence (as it stood in the year picked, where the park has dated fences) or a ground's pitch at its size, with its facts, the clubs that played there (each with its league and years, the current ones first), its coordinates and a link to its Wikidata item, and a button to try it in the playground above. A place that more than one sport played in has a button for each of the other surfaces it offers (BC Place: the CFL field), which opens the playground on that sport.
 - **English and Japanese**, light and dark, on a phone and on a desk. `?place=fenway-park` opens the page on a place.
 
 The map is chizu's own build, copied into the demo by `pnpm site`; it is a development dependency of this package and nothing of it is in the package itself.
@@ -78,5 +153,5 @@ The map is chizu's own build, copied into the demo by `pnpm site`; it is a devel
 ## Credits
 
 - The map: [Natural Earth](https://www.naturalearthdata.com/) (public domain), drawn with [chizu](https://github.com/johnmorrisdotca/chizu) (MIT).
-- The coordinates, the Wikidata items and the years: [Wikidata](https://www.wikidata.org/) (CC0).
+- The coordinates, the Wikidata items and the years: [Wikidata](https://www.wikidata.org/) (CC0). The clubs and their leagues: Wikidata, and the tenants lines of the English Wikipedia articles of the places (CC BY-SA 4.0, at the revisions named in the data; no text copied).
 - The fences and the pitches: the figures published by the English and Japanese Wikipedia articles cited for each place (see [parks](./parks.md), [grounds](./grounds.md) and [references](./references.md)).

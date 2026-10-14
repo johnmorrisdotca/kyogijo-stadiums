@@ -682,16 +682,16 @@ $("conv-spot").addEventListener("click", () => {
 });
 
 // ----- The Every sport, The soccer pitch, Ballparks and Soccer grounds sections (demo/place-grid.js: short, with filters) and the atlas's map of every park and ground. Their places open in the playground above.
-function tryPlace(place) {
-  if (place.kind === "park") {
-    state.sport = "mlb";
-    state.park = place.id;
-  } else {
-    state.sport = "soccer";
-    state.ground = place.id;
-  }
+function tryPlace(place, surface) {
+  // A park's fence and a ground's pitch, or the surface of another sport that a club played in the place (a CFL field, an NFL field, a rugby league field).
+  const sport = surface?.sport ?? (place.kind === "park" ? "mlb" : "soccer");
+  state.sport = sport;
+  state.league = surface?.league ?? null;
+  if (sport === "mlb") state.park = place.id;
+  else if (sport === "soccer") state.ground = surface?.ground ?? (surface === undefined && place.kind === "ground" ? place.id : "none");
   loadGame(state.sport);
   fillFields();
+  fillLeagues();
   $("park").value = state.park;
   $("ground").value = state.ground;
   refreshSegs();

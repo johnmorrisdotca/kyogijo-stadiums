@@ -200,3 +200,57 @@ test("the markers take the page's light and dark", async ({ page }) => {
   await page.locator('[data-testid="theme"] button[data-value="dark"]').click();
   await expect.poll(fill).not.toBe(light);
 });
+
+test("a place lists the clubs that played in it, with their league and years, and is found by them", async ({ page }, testInfo) => {
+  const errors = await openAtlas(page, "?lang=en&help=off&place=bc-place");
+  await expect(detailName(page)).toHaveText("BC Place");
+  // The leagues of its clubs and of the tournaments it staged.
+  await expect(page.locator(at("atlas-detail"))).toContainText("CFL, MLS");
+  await expect(page.locator(at("atlas-detail"))).toContainText("FIFA World Cup");
+  const tenants = page.locator(`${at("atlas-tenants")} li`);
+  await expect(tenants.first()).toContainText("BC Lions");
+  await expect(tenants.first()).toContainText("CFL · since 1983");
+  await expect(tenants.nth(1)).toContainText("Vancouver Whitecaps FC");
+  await expect(tenants.nth(1)).toContainText("MLS · since 2011");
+  // A club finds its place, in English and in Japanese.
+  await page.locator(at("atlas-search")).fill("Whitecaps");
+  await expect(page.locator(at("atlas-count"))).toHaveText("1 of 158 places");
+  await expect(items(page).first()).toContainText("BC Place");
+  await page.locator(at("atlas-search")).fill("ライオンズ");
+  await expect(items(page).filter({ hasText: "BC Place" })).toHaveCount(1);
+  await expect(items(page).filter({ hasText: "Belluna Dome" })).toHaveCount(1);
+  await page.locator(at("atlas-reset")).click();
+  // A league a club played in is a league of the place, and the league filter has the main ones first.
+  await page.locator(at("atlas-league")).selectOption("CFL");
+  await expect(page.locator(at("atlas-count"))).toHaveText("6 of 158 places");
+  await expect(page.locator(`${at("atlas-league")} optgroup`).first()).toHaveAttribute("label", "Main leagues and tournaments");
+  await page.locator(at("atlas-reset")).click();
+  await page.locator(at("atlas-league")).selectOption("all");
+  await tap(page, `${at("atlas-list")} .atlas-item[data-id="bc-place"]`, testInfo);
+  // The place offers the CFL field as well as the soccer pitch; trying it opens the playground on that sport.
+  await expect(page.locator(at("atlas-also"))).toContainText("CFL field");
+  await tap(page, at("atlas-try-cfl"), testInfo);
+  await expect(page.locator('[data-testid="sport"] [aria-pressed="true"]')).toHaveAttribute("data-value", "cfl");
+  await tap(page, at("atlas-try"), testInfo);
+  await expect(page.locator('[data-testid="sport"] [aria-pressed="true"]')).toHaveAttribute("data-value", "soccer");
+  await expect(page.locator(at("ground"))).toHaveValue("bc-place");
+  // A park of one club has no other surface to offer.
+  await tap(page, `${at("atlas-list")} .atlas-item[data-id="oriole-park-at-camden-yards"]`, testInfo);
+  await expect(page.locator(at("atlas-also"))).toHaveCount(0);
+  await expect(page.locator(`${at("atlas-tenants")} li`)).toHaveCount(1);
+  // The Olympic Stadium offers its fence and the football fields.
+  await tap(page, `${at("atlas-list")} .atlas-item[data-id="olympic-stadium-montreal"]`, testInfo);
+  await expect(page.locator(at("atlas-also"))).toContainText("CFL field");
+  await expect(page.locator(`${at("atlas-tenants")} li`).first()).toContainText("Montreal Expos");
+  await tap(page, at("atlas-try-cfl"), testInfo);
+  await expect(page.locator('[data-testid="sport"] [aria-pressed="true"]')).toHaveAttribute("data-value", "cfl");
+  expect(errors).toEqual([]);
+});
+
+test("the clubs of a place are named in Japanese on the Japanese page", async ({ page }) => {
+  await openAtlas(page, "?lang=ja&help=off&place=bc-place");
+  await expect(page.locator(`${at("atlas-tenants")} li`).first()).toContainText("ブリティッシュ・コロンビア・ライオンズ");
+  await expect(page.locator(`${at("atlas-tenants")} li`).first()).toContainText("1983年〜");
+  await expect(page.locator(at("atlas-also"))).toContainText("CFLのフィールド");
+  await noSidewaysScroll(page);
+});
