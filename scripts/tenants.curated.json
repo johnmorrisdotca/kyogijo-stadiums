@@ -1399,6 +1399,49 @@
    "club": "London Monarchs",
    "league": "WLAF",
    "reason": "NFL Europe, the WLAF of the table"
+  },
+  {
+   "place": "toyota-center",
+   "club": "Houston Comets",
+   "years": {
+    "from": 2004,
+    "to": 2007
+   },
+   "reason": "the article gives 2004 to 2007 and a return in 2027, which has not happened"
+  },
+  {
+   "place": "american-airlines-center",
+   "club": "Dallas Wings",
+   "drop": "the article says the club comes in 2027, which has not happened"
+  },
+  {
+   "place": "little-caesars-arena",
+   "club": "Detroit WNBA team",
+   "drop": "the article says a team that has no name yet starts in 2029"
+  },
+  {
+   "place": "little-caesars-arena",
+   "club": "PWHL Detroit",
+   "years": {
+    "from": 2026
+   },
+   "reason": "the article says the club starts in 2026, with no end"
+  },
+  {
+   "place": "sap-center",
+   "club": "PWHL San Jose",
+   "years": {
+    "from": 2026
+   },
+   "reason": "the article says the club starts in 2026, with no end"
+  },
+  {
+   "place": "t-mobile-arena",
+   "club": "PWHL Las Vegas",
+   "years": {
+    "from": 2026
+   },
+   "reason": "the article says the club starts in 2026, with no end"
   }
  ]
 }

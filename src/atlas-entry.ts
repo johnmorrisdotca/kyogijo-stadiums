@@ -1,4 +1,4 @@
-// The atlas: every ballpark and soccer ground with where it stands, when it was in use and the clubs that played there, and the filters over them.
+// The atlas: every ballpark, soccer ground and hockey and basketball arena with where it stands, when it was in use and the clubs that played there, and the filters over them.
 export { PLACES, atlasFacets, placeById, placeByName, placesBy, placesByClub, placesByName, surfaceOf, surfacesOf, tenantsOf } from "./atlas.ts";
 export { officialName, plainName } from "./names.ts";
 export { TENANTS, TENANT_JAPANESE_NAMES, nameJaOf } from "./tenants.ts";

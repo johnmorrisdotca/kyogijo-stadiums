@@ -11,7 +11,7 @@ import { atEnds, edges, ft, quarterTurn, textOn, type BuildOptions, type Mark, t
  */
 export function basketball(o: BuildOptions, era?: NbaRules, court: CourtSpec = NBA_COURT): Surface {
   // The NBA's court has a history of its own (eras.ts); a league's, if it has one, is already in its `court`.
-  const nba = court === NBA_COURT ? (era ?? rulesFor("nba").rules) : undefined;
+  const nba = court === NBA_COURT || era !== undefined ? (era ?? rulesFor("nba").rules) : undefined;
   const { length: L, width: W } = court;
   const m = o.margin ?? 7;
   const view0 = { x: -m, y: -m, w: L + 2 * m, h: W + 2 * m };

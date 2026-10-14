@@ -1,3 +1,5 @@
+import { ARENAS, ARENA_IDS } from "./arenas.ts";
+import type { Arena } from "./arenas.ts";
 import { GROUNDS, GROUND_IDS } from "./grounds.ts";
 import type { Ground } from "./grounds.ts";
 import { nameContainsAll, placesNamed, plainName } from "./names.ts";
@@ -7,11 +9,11 @@ import type { Park } from "./parks.ts";
 import { SURFACE_OF_SPORT, TENANTS, hasSurface, leaguesOf, playedIn } from "./tenants.ts";
 import type { Tenant, TenantSport } from "./tenants.ts";
 
-/** What a place is: a ballpark (of `PARKS`) or a soccer ground (of `GROUNDS`). */
-export type PlaceKind = "park" | "ground";
+/** What a place is: a ballpark (of `PARKS`), a soccer ground (of `GROUNDS`) or an arena (of `ARENAS`). */
+export type PlaceKind = "park" | "ground" | "arena";
 
-/** The sport a place is drawn for: baseball parks have a fence, soccer grounds a pitch. */
-export type PlaceSport = "baseball" | "soccer";
+/** The sport a place is drawn for: baseball parks have a fence, soccer grounds a pitch, arenas an ice rink (`hockey`) and a court (`basketball`). */
+export type PlaceSport = "baseball" | "soccer" | "hockey" | "basketball";
 
 /** `current` is a ground a club or a competition uses today, `past` one it has left, closed or pulled down. */
 export type PlaceStatus = "current" | "past";
@@ -34,7 +36,10 @@ export interface Place {
   aliases: readonly PlaceAlias[];
   /** The names the place had for some years (a ground that was given another name for a World Cup), first to last. */
   names?: readonly { name: string; from: number; to: number }[];
+  /** The sport it is first drawn for: a park's is baseball, a ground's soccer, an arena's hockey where an ice hockey club played there, else basketball. */
   sport: PlaceSport;
+  /** Every sport it is drawn for: a park's and a ground's is its `sport` alone, an arena's is `hockey`, `basketball` or both (`TD Garden`), by the clubs that played there. */
+  sports: readonly PlaceSport[];
   /** The leagues and competitions it is known for: the leagues of the park's club and of every club that has played its home matches there (`CFL` and `MLS` for BC Place, `MLB` and `CFL` for Montreal's Olympic Stadium), then the World Cups it staged (`FIFA World Cup`, `FIFA Women's World Cup`). A ground with no tenant that staged none has none. */
   leagues: readonly string[];
   /** The clubs that play, or played, their home matches there, with the league and the years of each (see `tenantsOf`): the current ones first. A place no club is known to have called home has none. */
@@ -42,7 +47,7 @@ export interface Place {
   /** ISO 3166-1 alpha-2: `US`. */
   country: string;
   city: string;
-  /** The club that plays in a park (`Boston Red Sox`); soccer grounds have none (see `tenants`). */
+  /** The club that plays in a park (`Boston Red Sox`); soccer grounds and arenas have none (see `tenants`). */
   team?: string;
   /** Wikidata's coordinates (P625, CC0), in degrees. */
   lat: number;
@@ -60,6 +65,7 @@ export interface Place {
 
 /** What `placesBy` keeps: every field given must match. A list matches any of its members. */
 export interface PlaceFilter {
+  /** A sport a place is drawn for: an arena is found by `hockey` and by `basketball` if clubs of both played there. */
   sport?: PlaceSport | readonly PlaceSport[];
   kind?: PlaceKind | readonly PlaceKind[];
   /** A league or competition from `Place.leagues`: a tenant's league (`CFL`) or a tournament. */
@@ -95,6 +101,7 @@ const fromPark = (park: Park): Place => {
     ...(park.localName === undefined ? {} : { localName: park.localName, localLanguage: park.localLanguage }),
     aliases: park.aliases ?? [],
     sport: "baseball",
+    sports: ["baseball"],
     leagues: withoutRepeats([park.league], leaguesOf(tenants)),
     tenants,
     country: park.country,
@@ -120,6 +127,7 @@ const fromGround = (ground: Ground): Place => ({
   aliases: ground.aliases ?? [],
   ...(ground.names === undefined ? {} : { names: ground.names }),
   sport: "soccer",
+  sports: ["soccer"],
   leagues: withoutRepeats(leaguesOf(TENANTS[ground.id] ?? []), leaguesOfGround(ground)),
   tenants: TENANTS[ground.id] ?? [],
   country: ground.country,
@@ -133,9 +141,44 @@ const fromGround = (ground: Ground): Place => ({
   ...(ground.track === true ? { track: true } : {}),
 });
 
+/** The sports an arena is drawn for, by the clubs that played there: hockey first when any ice hockey club did. */
+const sportsOfArena = (tenants: readonly Tenant[]): PlaceSport[] => {
+  const out: PlaceSport[] = [];
+  if (tenants.some((tenant) => tenant.sport === "ice-hockey" && hasSurface(tenant))) out.push("hockey");
+  if (tenants.some((tenant) => tenant.sport === "basketball" && hasSurface(tenant))) out.push("basketball");
+  return out;
+};
+
+const fromArena = (arena: Arena): Place => {
+  const tenants = TENANTS[arena.id] ?? [];
+  const sports = sportsOfArena(tenants);
+  return {
+    id: arena.id,
+    kind: "arena",
+    name: arena.name,
+    nameJa: arena.nameJa,
+    ...(arena.readingJa === undefined ? {} : { readingJa: arena.readingJa }),
+    ...(arena.localName === undefined ? {} : { localName: arena.localName, localLanguage: arena.localLanguage }),
+    aliases: arena.aliases ?? [],
+    ...(arena.names === undefined ? {} : { names: arena.names }),
+    sport: sports[0] ?? "hockey",
+    sports: sports.length === 0 ? ["hockey"] : sports,
+    leagues: leaguesOf(tenants),
+    tenants,
+    country: arena.country,
+    city: arena.city,
+    lat: arena.lat,
+    lon: arena.lon,
+    status: arena.status,
+    ...(arena.from === undefined ? {} : { from: arena.from }),
+    ...(arena.status === "past" && arena.to !== undefined ? { to: arena.to } : {}),
+    wikidata: arena.wikidata,
+  };
+};
+
 /**
- * Every place the package draws, parks first and then grounds, each in the order of its own list: the ballparks of
- * `PARKS` and the soccer grounds of `GROUNDS`, with where each stands.
+ * Every place the package draws, parks first, then grounds, then arenas, each in the order of its own list: the ballparks of
+ * `PARKS`, the soccer grounds of `GROUNDS` and the hockey and basketball arenas of `ARENAS`, with where each stands.
  * @example
  * ```ts
  * import { PLACES } from "@johnmorrisdotca/kyogijo-stadiums/atlas";
@@ -144,7 +187,7 @@ const fromGround = (ground: Ground): Place => ({
  * // Fenway Park 42.34639 -71.0975 US
  * ```
  */
-export const PLACES: readonly Place[] = Object.freeze([...PARK_IDS.map((id) => fromPark(PARKS[id])), ...GROUND_IDS.map((id) => fromGround(GROUNDS[id]))]);
+export const PLACES: readonly Place[] = Object.freeze([...PARK_IDS.map((id) => fromPark(PARKS[id])), ...GROUND_IDS.map((id) => fromGround(GROUNDS[id])), ...ARENA_IDS.map((id) => fromArena(ARENAS[id]))]);
 
 const BY_ID: ReadonlyMap<string, Place> = new Map(PLACES.map((place) => [place.id, place]));
 
@@ -189,7 +232,7 @@ export function placesBy(filter: PlaceFilter = {}): Place[] {
   const year = filter.year !== undefined && Number.isFinite(filter.year) ? filter.year : undefined;
   const words = filter.text === undefined ? [] : filter.text.split(/\s+/).map(plain).filter(Boolean);
   return PLACES.filter((place) => {
-    if (sports !== undefined && !sports.includes(place.sport)) return false;
+    if (sports !== undefined && !place.sports.some((sport) => sports.includes(sport))) return false;
     if (kinds !== undefined && !kinds.includes(place.kind)) return false;
     if (leagues !== undefined && !place.leagues.some((league) => leagues.includes(league))) return false;
     if (countries !== undefined && !countries.includes(place.country)) return false;
@@ -221,7 +264,7 @@ export interface AtlasFacets {
  * import { atlasFacets } from "@johnmorrisdotca/kyogijo-stadiums/atlas";
  * const { sports, leagues, countries, years } = atlasFacets();
  * console.log(sports.join(), leagues.length, leagues.includes("CFL"), countries.length, years.min);
- * // baseball,soccer 83 true 23 1877
+ * // baseball,basketball,hockey,soccer 85 true 23 1877
  * ```
  */
 export function atlasFacets(): AtlasFacets {
@@ -234,11 +277,15 @@ export function atlasFacets(): AtlasFacets {
   };
 }
 
+/** The rink (`hockey`) or the court (`basketball`) of an arena, drawn at the arena's own size where the data has one. */
+const arenaSurface = (place: Place, sport: PlaceSport): { sport: "nhl" | "nba"; arena: string } => ({ sport: sport === "basketball" ? "nba" : "nhl", arena: place.id });
+
 /** The options `drawKyogijo` takes to draw a surface a place offers. */
 export type PlaceSurface =
   | { sport: "mlb"; park: string }
   | { sport: "soccer"; ground?: string }
-  | { sport: "nfl" | "cfl" | "nba" | "nhl" | "afl" | "cricket" }
+  | { sport: "nhl" | "nba"; arena?: string }
+  | { sport: "nfl" | "cfl" | "afl" | "cricket" }
   | { sport: "rugby"; league?: "nrl" };
 
 /** The sports `surfaceOf` can be asked for. */
@@ -256,13 +303,17 @@ export type SurfaceSport = PlaceSurface["sport"];
  * ```
  */
 export function surfacesOf(place: Place): PlaceSurface[] {
-  const own: PlaceSurface = place.kind === "park" ? { sport: "mlb", park: place.id } : { sport: "soccer", ground: place.id };
+  // An arena's surfaces are its rink and its court, each at the arena's own size where the sources publish one.
+  const own: PlaceSurface = place.kind === "park" ? { sport: "mlb", park: place.id } : place.kind === "arena" ? arenaSurface(place, place.sport) : { sport: "soccer", ground: place.id };
   const out: PlaceSurface[] = [own];
+  if (place.kind === "arena") for (const sport of place.sports) if (sport !== place.sport) out.push(arenaSurface(place, sport));
   for (const tenant of place.tenants) {
     const drawn = SURFACE_OF_SPORT[tenant.sport];
     if (drawn === undefined || !hasSurface(tenant)) continue;
     // A baseball club's fence is a park's: a ground has none to draw.
     if (drawn.sport === "mlb") continue;
+    // An arena's rink and court are already offered, at its size.
+    if (place.kind === "arena" && (drawn.sport === "nhl" || drawn.sport === "nba")) continue;
     const surface: PlaceSurface = drawn.sport === "soccer" ? { sport: "soccer" } : drawn.sport === "rugby" ? { sport: "rugby", ...(drawn.league === undefined ? {} : { league: drawn.league }) } : { sport: drawn.sport };
     if (out.some((have) => have.sport === surface.sport && (have.sport !== "rugby" || (have as { league?: string }).league === (surface as { league?: string }).league))) continue;
     out.push(surface);
@@ -282,10 +333,10 @@ export function surfacesOf(place: Place): PlaceSurface[] {
  * // { sport: 'soccer', ground: 'bc-place' } { sport: 'cfl' } undefined
  * ```
  */
-export function surfaceOf(place: Place): { sport: "mlb"; park: string } | { sport: "soccer"; ground: string };
+export function surfaceOf(place: Place): { sport: "mlb"; park: string } | { sport: "soccer"; ground: string } | { sport: "nhl" | "nba"; arena: string };
 export function surfaceOf(place: Place, sport: SurfaceSport): PlaceSurface | undefined;
 export function surfaceOf(place: Place, sport?: SurfaceSport): PlaceSurface | undefined {
-  if (sport === undefined) return place.kind === "park" ? { sport: "mlb", park: place.id } : { sport: "soccer", ground: place.id };
+  if (sport === undefined) return place.kind === "park" ? { sport: "mlb", park: place.id } : place.kind === "arena" ? arenaSurface(place, place.sport) : { sport: "soccer", ground: place.id };
   return surfacesOf(place).find((surface) => surface.sport === sport);
 }
 

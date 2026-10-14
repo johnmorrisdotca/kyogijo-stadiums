@@ -7,6 +7,7 @@ import { ERA_SPORTS, eraChanges, eraStates } from "./eras.ts";
 import { FORMATIONS, POSITION_NAMES } from "./formations.ts";
 import { KYOGIJO_STRINGS } from "./strings.ts";
 import { EVENT_IDS, EVENTS } from "./events.ts";
+import { ARENA_IDS, ARENAS } from "./arenas.ts";
 import { GROUND_IDS, GROUNDS, groundsHosting } from "./grounds.ts";
 import { LEAGUES, LEAGUE_SOURCES, leagueChanges, leagueFigures } from "./leagues.ts";
 import { PARK_IDS, PARKS } from "./parks.ts";
@@ -187,6 +188,14 @@ describe("the package's own numbers", () => {
     }
     const editions = JSON.parse(readFileSync("scripts/grounds.editions.json", "utf8"));
     for (const e of editions) expect(notice, `${e.competition} ${e.year}`).toContain(`${e.article.title}, ${e.article.revision}`);
+  });
+
+  it("list every arena's sources in NOTICE.md", () => {
+    const notice = readFileSync("NOTICE.md", "utf8");
+    for (const id of ARENA_IDS) {
+      const arena = ARENAS[id];
+      expect(notice, id).toContain(`| ${arena.name} | ${arena.wikidata} | ${arena.en.title}, ${arena.en.revision} |`);
+    }
   });
 
   it("have a help text for the demo's sport selector that names all the sports, in both languages", () => {

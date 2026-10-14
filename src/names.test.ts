@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { ARENAS } from "./arenas.ts";
 import { PLACES, placeById, placeByName, placesBy, placesByName } from "./atlas.ts";
 import { describe as describeDrawing, drawKyogijo } from "./draw.ts";
 import { hash } from "./format.ts";
@@ -21,7 +22,7 @@ describe("the names of every park and ground", () => {
     }
     // The places of the atlas carry the same names.
     for (const place of PLACES) {
-      const source = PARKS[place.id] ?? GROUNDS[place.id];
+      const source = PARKS[place.id] ?? GROUNDS[place.id] ?? ARENAS[place.id];
       expect([place.name, place.nameJa, place.readingJa, place.localName, place.localLanguage, place.aliases]).toEqual([source.name, source.nameJa, source.readingJa, source.localName, source.localLanguage, source.aliases ?? []]);
     }
   });

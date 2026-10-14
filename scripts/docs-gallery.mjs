@@ -337,15 +337,26 @@ function placesPage() {
     ["nissan-stadium-yokohama", "Nissan Stadium"],
     ["metlife-stadium", "MetLife Stadium"],
   ];
+  const arenas = [
+    ["nhl", "td-garden", undefined, "TD Garden, the rink"],
+    ["nba", "td-garden", undefined, "TD Garden, the court"],
+    ["nhl", "boston-garden", undefined, "Boston Garden: the rink 190.9 by 83 feet"],
+    ["nhl", "matthews-arena", 1926, "The Boston Arena in 1926: the ice 220 by 90 feet"],
+    ["nhl", "matthews-arena", 1972, "Matthews Arena in 1972: reduced to 200 by 80 feet"],
+    ["nhl", "montreal-forum", undefined, "Montreal Forum"],
+    ["nhl", "chicago-stadium", undefined, "Chicago Stadium: its short rink has no published size"],
+    ["nba", "crypto-com-arena", 2005, "Staples Center in 2005"],
+  ];
   return {
     slug: "gallery-places",
-    title: "Gallery: ballparks and grounds",
-    ja: "球場とスタジアム",
-    intro: "A sample of the 94 ballparks and 64 grounds, each from its own published figures, and the walls and quirks of eight of them. The atlas has every one on a map.",
+    title: "Gallery: ballparks, grounds and arenas",
+    ja: "球場、スタジアム、アリーナ",
+    intro: "A sample of the 94 ballparks, 64 grounds and 167 arenas, each from its own published figures, and the walls and quirks of eight of the parks. The atlas has every one on a map.",
     sections: [
       section("parks", "Ballparks of today", "`park` takes a key of `PARKS`.", parks.map(([id, title]) => item(`park-${id}`, title, drawing({ sport: "mlb", park: id })))),
       section("past", "Ballparks of the past", "A past park is drawn as it stood in a `year`, where its article dates earlier fences.", past.map(([id, year, title]) => item(`past-${id}${year === undefined ? "" : `-${year}`}`, title, drawing(year === undefined ? { sport: "mlb", park: id } : { sport: "mlb", park: id, year })))),
       section("grounds", "Soccer grounds", "`ground` draws the pitch at the size its article publishes, or at 105 by 68 metres where it gives none.", grounds.map(([id, title]) => item(`ground-${id}`, title, drawing({ sport: "soccer", ground: id })))),
+      section("arenas", "Arenas", "`arena` draws the NHL's rink or the NBA's court at the size its article publishes, with the arena's name and the markings of the `year`; an arena with no published size has the league's.", arenas.map(([sport, id, year, title]) => item(`arena-${sport}-${id}${year === undefined ? "" : `-${year}`}`, title, drawing(year === undefined ? { sport, arena: id } : { sport, arena: id, year })))),
       section("walls", "Walls and quirks", "`walls` draws a band outside each stretch of the fence whose width and shade say how high it stands, from the height the park's article gives; `quirks` draws what the article describes with figures. Both follow `year`.", [
         item("walls-fenway", "Fenway Park: the Green Monster, with a key and names", drawing({ sport: "mlb", park: "fenway-park", walls: { legend: true, labels: true }, quirks: { labels: true } })),
         item("walls-oracle", "Oracle Park: five heights, up to the 24 foot right field wall", drawing({ sport: "mlb", park: "oracle-park", walls: { legend: true, labels: true } })),
@@ -1344,7 +1355,7 @@ export function framesFiles(lib) {
 
 /** The package's entry points as `runSnippet` wants them, read from a folder of built (`.js`) or source (`.ts`) files. */
 export async function libraryFrom(dir, ext, importer) {
-  const entries = { "": "index", "/charts": "charts-entry", "/frames": "frames-entry", "/layers": "layers-entry", "/leagues": "leagues-entry", "/eras": "eras-entry", "/grounds": "grounds-entry", "/parks": "parks-entry", "/atlas": "atlas-entry", "/events": "events-entry", "/geometry": "geometry-entry", "/replay": "replay-entry", "/layouts": "layouts-entry", "/turn": "turn-entry", "/athletics": "athletics-entry", "/skating": "skating-entry" };
+  const entries = { "": "index", "/charts": "charts-entry", "/frames": "frames-entry", "/layers": "layers-entry", "/leagues": "leagues-entry", "/eras": "eras-entry", "/grounds": "grounds-entry", "/arenas": "arenas-entry", "/parks": "parks-entry", "/atlas": "atlas-entry", "/events": "events-entry", "/geometry": "geometry-entry", "/replay": "replay-entry", "/layouts": "layouts-entry", "/turn": "turn-entry", "/athletics": "athletics-entry", "/skating": "skating-entry" };
   const lib = {};
   for (const [suffix, file] of Object.entries(entries)) lib[`${MAIN}${suffix}`] = await importer(`${dir}/${file}${ext}`);
   return lib;

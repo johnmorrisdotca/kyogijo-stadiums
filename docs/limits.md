@@ -10,8 +10,9 @@ Each is held by a test, and the ones with a name are exported. The counts are ma
 | League variants | 69 leagues of 26 families, besides each sport's own | `LEAGUES` |
 | Ballparks | 94 (30 current MLB, 44 past MLB, 12 NPB home parks, 8 other NPB grounds) | `PARKS` |
 | Grounds | 64 | `GROUNDS` |
+| Arenas | 167 | `ARENAS` |
 | Special games | 18 (a surface set inside another: ballparks, football stadiums, a deck, a stadium's pitch) | `EVENTS` |
-| Places on the atlas | 158 | `PLACES` |
+| Places on the atlas | 325 | `PLACES` |
 | Units | 6 (`yd`, `m`, `ft`, `in`, `cm`, `mm`) | `UNITS` |
 | Coordinate frames | 42 to start with (`nhl-api`, `hockeytech`, `nba-stats`, `nfl-tracking`, `mlbam`, `retrosheet`, `curling`, `tennis`, `volleyball`, `badminton`, `pickleball`, `tabletennis`, `padel`, `squash`, `racquetball`, `sepaktakraw`, `teqball`, `roundnet`, `netball`, `lacrosse`, `rugby`, `afl`, `gaelic`, `cricket`, `fieldhockey`, `handball`, `swimming`, `waterpolo`, `diving`, `artisticswimming`, `athletics`, `skating` and the 10 soccer providers), more by `registerFrame` | `FRAMES` |
 | A colour | a hex colour, `rgb()`, `rgba()`, `hsl()`, `hsla()`, a name or `var(--name)`, 64 characters at most | `safeColour` |

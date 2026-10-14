@@ -37,5 +37,6 @@ describe("the parts of the docs made from the source", () => {
     const limits = MADE.limits(lib);
     expect(limits).toContain("| Ballparks | 94 (30 current MLB, 44 past MLB, 12 NPB home parks, 8 other NPB grounds) | `PARKS` |");
     expect(limits).toContain("| Grounds | 64 | `GROUNDS` |");
+    expect(limits).toContain("| Arenas | 167 | `ARENAS` |");
   });
 });

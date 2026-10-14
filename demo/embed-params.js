@@ -7,7 +7,7 @@ export function toParams(o) {
   q.set("sport", o.sport);
   if (o.park) q.set("park", o.park);
   if (o.league) q.set("league", o.league);
-  for (const [key, param] of [["pitch", "pitch"], ["ground", "ground"], ["pitchType", "pitchtype"], ["half", "half"], ["goals", "goals"], ["stripePattern", "pattern"]]) if (typeof o[key] === "string") q.set(param, o[key]);
+  for (const [key, param] of [["pitch", "pitch"], ["ground", "ground"], ["arena", "arena"], ["pitchType", "pitchtype"], ["half", "half"], ["goals", "goals"], ["stripePattern", "pattern"]]) if (typeof o[key] === "string") q.set(param, o[key]);
   if (o.cornerFlags === false) q.set("flags", "0");
   // A curling sheet's part: `folded`, or its `top` or `bottom` end.
   if (o.sheet?.show === "folded") q.set("sheet", "folded");
@@ -44,7 +44,7 @@ export function fromParams(q) {
   if (q.get("flags") === "0") o.cornerFlags = false;
   if (q.get("sheet") === "folded") o.sheet = { show: "folded" };
   else if (q.get("sheet") === "top" || q.get("sheet") === "bottom") o.sheet = { show: "half", end: q.get("sheet") };
-  for (const [param, key] of [["pitch", "pitch"], ["ground", "ground"], ["pitchtype", "pitchType"], ["half", "half"], ["goals", "goals"], ["pattern", "stripePattern"], ["park", "park"], ["league", "league"], ["size", "size"], ["theme", "theme"], ["lang", "language"], ["status", "status"], ["competition", "competition"], ["date", "date"], ["label", "label"], ["winner", "winner"]]) {
+  for (const [param, key] of [["pitch", "pitch"], ["ground", "ground"], ["arena", "arena"], ["pitchtype", "pitchType"], ["half", "half"], ["goals", "goals"], ["pattern", "stripePattern"], ["park", "park"], ["league", "league"], ["size", "size"], ["theme", "theme"], ["lang", "language"], ["status", "status"], ["competition", "competition"], ["date", "date"], ["label", "label"], ["winner", "winner"]]) {
     if (q.get(param)) o[key] = q.get(param);
   }
   const pool = {};

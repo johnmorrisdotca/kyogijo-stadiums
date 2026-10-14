@@ -86,6 +86,7 @@ const plain = (text) =>
     .replace(/<!--[\s\S]*?-->/g, "")
     .replace(/<ref[^>]*\/>/gi, "")
     .replace(/<ref[^>]*>[\s\S]*?<\/ref>/gi, "")
+    .replace(/\{\{\s*(?:start|end)[ -]date(?: and age)?\s*\|\s*(\d{4})(?:\|\s*(\d{1,2}))?(?:\|\s*(\d{1,2}))?[^{}]*\}\}/gi, "$1")
     .replace(/\{\{\s*(?:convert|cvt)\s*\|([^{}|]*)\|([^{}|]*)(?:\|[^{}]*)?\}\}/gi, "$1 $2")
     .replace(/\{\{[^{}]*\}\}/g, "")
     .replace(/\[\[(?:[^\]|]*\|)?([^\]]*)\]\]/g, "$1")
@@ -100,8 +101,10 @@ function sizeSentences(text) {
   const prose = plain(text.replace(/^\{\{[\s\S]*?\n\}\}\n/m, ""));
   const out = [];
   for (const sentence of prose.split(/(?<=[.!?])\s+(?=[A-Z])/)) {
-    if (!/\b(?:rink|ice surface|ice|court|floor|playing surface|hardwood)\b/i.test(sentence)) continue;
-    if (!/\b\d{2,3}(?:\.\d+)?\s*(?:ft|feet|foot|m|metres|meters|-?foot|-?metre)?\s*(?:by|×|x|\bx\b)\s*\d{2,3}(?:\.\d+)?\s*(?:ft|feet|foot|m|metres|meters|-?foot|-?metre)\b/i.test(sentence) && !/\b\d{2,3}\s*(?:ft|feet|foot)\s*(?:long|wide|by)\b/i.test(sentence)) continue;
+    if (!/\b(?:rink|ice surface|ice sheet|ice|court|floor|playing surface|hardwood)\b/i.test(sentence)) continue;
+    // A size: two numbers joined by "by", "x" or a multiplication sign, with a foot or a metre somewhere in the sentence; or a length or a width in feet.
+    if (!/\b\d{2,3}(?:\.\d+)?\s*(?:ft|feet|foot|m|metres|meters|')?\s*(?:by|×|x)\s*\d{2,3}(?:\.\d+)?\b/i.test(sentence) && !/\b\d{2,3}(?:\.\d+)?[\s-]*(?:ft|feet|foot)\b[^.]{0,30}\b(?:long|wide|length|width)\b/i.test(sentence)) continue;
+    if (!/\b(?:ft|feet|foot|m|metres|meters)\b/i.test(sentence)) continue;
     out.push(sentence.length > 400 ? `${sentence.slice(0, 400)}…` : sentence);
   }
   return out;

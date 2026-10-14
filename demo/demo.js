@@ -347,7 +347,7 @@ function syncUrl() {
   else q.delete("year");
   if (state.league !== null && !isOwnLeague(state.sport, state.league)) q.set("league", state.league);
   else q.delete("league");
-  for (const [key, value, base] of [["pitch", state.pitch, "fifa"], ["ground", state.ground, "none"], ["pitchtype", state.pitchType, "none"], ["park", state.park, "generic"], ["sheet", state.sport === "curling" ? state.sheet : "sheet", "sheet"], ["size", state.size, "full"], ["orientation", state.orientation, "auto"], ["view", state.view, "flat"], ["viewpoint", state.view === "3d" ? state.viewpoint : "corner", "corner"], ["theme", state.theme, "auto"], ["pageant", state.pageant, "off"], ["pageantlines", state.pageantLines, "over"], ["poollook", state.poolLook, "flat"], ["pooldeck", state.poolDeck, "plain"], ["poolcourse", state.poolCourse, "long"], ["poollanes", state.poolLanes, "8"], ["poolrace", state.poolRace, "none"], ["poolsection", state.poolSection ? "1" : "0", "0"], ["track", state.track, "red"], ["infield", state.infield, "pitch"], ["races", state.races, "none"]]) {
+  for (const [key, value, base] of [["pitch", state.pitch, "fifa"], ["ground", state.ground, "none"], ["arena", state.sport === "nhl" || state.sport === "nba" ? state.arena : "none", "none"], ["pitchtype", state.pitchType, "none"], ["park", state.park, "generic"], ["sheet", state.sport === "curling" ? state.sheet : "sheet", "sheet"], ["size", state.size, "full"], ["orientation", state.orientation, "auto"], ["view", state.view, "flat"], ["viewpoint", state.view === "3d" ? state.viewpoint : "corner", "corner"], ["theme", state.theme, "auto"], ["pageant", state.pageant, "off"], ["pageantlines", state.pageantLines, "over"], ["poollook", state.poolLook, "flat"], ["pooldeck", state.poolDeck, "plain"], ["poolcourse", state.poolCourse, "long"], ["poollanes", state.poolLanes, "8"], ["poolrace", state.poolRace, "none"], ["poolsection", state.poolSection ? "1" : "0", "0"], ["track", state.track, "red"], ["infield", state.infield, "pitch"], ["races", state.races, "none"]]) {
     if (value === base) q.delete(key);
     else q.set(key, value);
   }
@@ -795,11 +795,12 @@ $("conv-spot").addEventListener("click", () => {
 // ----- The Every sport, The soccer pitch, Ballparks and Soccer grounds sections (demo/place-grid.js: short, with filters) and the atlas's map of every park and ground. Their places open in the playground above.
 function tryPlace(place, surface) {
   // A park's fence and a ground's pitch, or the surface of another sport that a club played in the place (a CFL field, an NFL field, a rugby league field).
-  const sport = surface?.sport ?? (place.kind === "park" ? "mlb" : "soccer");
+  const sport = surface?.sport ?? (place.kind === "park" ? "mlb" : place.kind === "arena" ? "nhl" : "soccer");
   state.sport = sport;
   state.league = surface?.league ?? null;
   if (sport === "mlb") state.park = place.id;
   else if (sport === "soccer") state.ground = surface?.ground ?? (surface === undefined && place.kind === "ground" ? place.id : "none");
+  state.arena = (sport === "nhl" || sport === "nba") && surface?.arena !== undefined ? surface.arena : "none";
   loadGame(state.sport);
   fillFields();
   fillLeagues();

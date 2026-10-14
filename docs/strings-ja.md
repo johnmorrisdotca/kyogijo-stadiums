@@ -352,6 +352,12 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `said.officially` | Its official name is {name}. | 正式名称は{name}です。 |
 | `said.ground` | The pitch follows the size published for {ground}. | ピッチは、{ground}の公表されている広さをもとに描かれています。 |
 | `said.groundDefault` | No pitch size is published for {ground}, so the pitch has the international size of 105 by 68 metres. | {ground}のピッチの広さは公表されていないため、国際標準の105×68mで描かれています。 |
+| `said.arenaRink` | {arena}, hockey rink | {arena}のアイスホッケーリンク |
+| `said.arenaCourt` | {arena}, basketball court | {arena}のバスケットボールコート |
+| `said.arenaRinkAbout` | an ice hockey rink, {length} by {width} feet ({lengthM} by {widthM} metres) with rounded corners, with its red and blue lines, face-off circles, creases and goal nets | アイスホッケーのリンク。{length}フィート（約{lengthM}m）×{width}フィート（約{widthM}m）で角が丸く、レッドライン、ブルーライン、フェイスオフサークル、クリース、ゴールがあります |
+| `said.arenaCourtAbout` | a basketball court, {length} by {width} feet ({lengthM} by {widthM} metres), with its keys, three-point lines, free-throw circles and the centre circle | バスケットボールのコート。{length}フィート（約{lengthM}m）×{width}フィート（約{widthM}m）で、ペイントエリア、スリーポイントライン、フリースローサークル、センターサークルがあります |
+| `said.arenaSize` | The size is the one published for {arena}. | 広さは、{arena}の公表されている数値をもとに描かれています。 |
+| `said.arenaUnknown` | The article says the rink of {arena} was shorter than the NHL's but gives no size, so the NHL's is drawn. | {arena}のリンクはNHLの規格より短かったとされていますが、広さが示されていないため、NHLの規格で描かれています。 |
 | `said.era` | The markings are those of the {season} season. | ラインやマークは{season}シーズンのものです。 |
 | `said.hammer` | {name} has the hammer. | {name}がハンマー（最後の1投）を持っています。 |
 | `said.ends` | By end, {name}: {list}. | {name}のエンドごとの得点：{list}。 |
@@ -1384,11 +1390,13 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `groundsNone` | No ground matches. Try another name, or reset the filters. | 条件に合うスタジアムがありません。別の名前を試すか、絞り込みをリセットしてください。 |
 | `groundsMore` | Show all {n} grounds | 全{n}会場を表示 |
 | `atlasTitle` | Atlas | 球場・スタジアムマップ |
-| `atlasText` | Every ballpark and soccer ground in the package on one map: choose a place to see its surface drawn to scale. Filter by sport, league, country, today or the past, and pick a year to keep the places that were in use then. | このパッケージにある野球場とサッカー場をすべて1枚の地図に載せました。場所を選ぶと、その競技場を縮尺どおりに描きます。競技、リーグ、国、現在か過去かで絞り込めます。年を選ぶと、その年に使われていた場所だけが残ります。 |
+| `atlasText` | Every ballpark, soccer ground and NHL, NBA, WNBA and PWHL arena in the package on one map: choose a place to see its surface drawn to scale. Filter by sport, league, country, today or the past, and pick a year to keep the places that were in use then. | このパッケージにある野球場、サッカー場、NHL・NBA・WNBA・PWHLのアリーナをすべて1枚の地図に載せました。場所を選ぶと、その競技場を縮尺どおりに描きます。競技、リーグ、国、現在か過去かで絞り込めます。年を選ぶと、その年に使われていた場所だけが残ります。 |
 | `atlasSport` | Sport | 競技 |
 | `atlasAll` | All | すべて |
 | `atlasSport_baseball` | Baseball | 野球 |
 | `atlasSport_soccer` | Soccer | サッカー |
+| `atlasSport_hockey` | Hockey | アイスホッケー |
+| `atlasSport_basketball` | Basketball | バスケットボール |
 | `atlasStatus` | In use | 使用状況 |
 | `atlasStatus_current` | Today | 現在 |
 | `atlasStatus_past` | Past | 過去 |
@@ -1413,6 +1421,8 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `atlasHint` | The markers are for pointing and touch; the list beside the map does the same by keyboard and for a screen reader. Drag the map, or zoom with its buttons or Ctrl and the wheel. | 地図上のマーカーは、マウスやタッチ操作用です。キーボードやスクリーンリーダーでは、地図の横のリストで同じ操作ができます。地図はドラッグで動かせます。拡大・縮小は、ボタンか、Ctrlキーを押しながらホイールで行います。 |
 | `atlasKeyBaseball` | Baseball park | 野球場 |
 | `atlasKeySoccer` | Soccer ground (dot in the middle) | サッカー場（中央に点） |
+| `atlasKeyHockey` | Hockey arena (bar across) | アイスホッケーのアリーナ（横棒） |
+| `atlasKeyBasketball` | Basketball arena (upright bar) | バスケットボールのアリーナ（縦棒） |
 | `atlasKeyCurrent` | In use today (circle) | 現在使用中（丸） |
 | `atlasKeyPast` | Of the past (diamond) | 過去に使用（ひし形） |
 | `atlasPlace` | Place | 所在地 |
@@ -1423,6 +1433,14 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `atlasLeagues` | Leagues | リーグ・大会 |
 | `atlasPitch` | Pitch | ピッチ |
 | `atlasPitchDefault` | no size published, drawn at the international size | 公表された寸法がないため、国際標準の寸法で描画 |
+| `atlasRink` | Rink | リンク |
+| `atlasCourt` | Court | コート |
+| `atlasSeats` | Seats | 座席数 |
+| `atlasSeats_hockey` | {n} for hockey | アイスホッケー{n}席 |
+| `atlasSeats_basketball` | {n} for basketball | バスケットボール{n}席 |
+| `atlasRinkStandard` | the NHL's, 200 × 85 ft | NHLの規格（200×85フィート） |
+| `atlasCourtStandard` | the NBA's, 94 × 50 ft | NBAの規格（94×50フィート） |
+| `atlasSizePublished` | published | 公表値 |
 | `atlasCoordinates` | Coordinates | 座標 |
 | `atlasTry` | Try this place above | この場所を上で試す |
 | `atlasYears` | {from}–{to} | {from}年〜{to}年 |
@@ -1461,7 +1479,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `atlasCreditMapNote` | (public domain; MIT) | （パブリックドメイン、MIT） |
 | `atlasCreditPlaces` | Coordinates | 座標 |
 | `atlasCreditPlacesNote` | (CC0) | （CC0） |
-| `atlasCreditSurfaces` | Fences and pitches | フェンスとピッチ |
+| `atlasCreditSurfaces` | Fences, pitches, rinks and courts | フェンス、ピッチ、リンク、コート |
 | `atlasCreditSurfacesNote` | (published figures only) | （公表された数値のみ） |
 | `pitchesTitle` | The soccer pitch | サッカーのピッチ |
 | `pitchesText` | A pitch from the Laws of the Game at any size, with the presets of UEFA, the MLS, the NCAA, the FA and FIFA's futsal, the size of sixty-four famous grounds, half pitches, and a score that ends after extra time or on penalties. | 競技規則に基づくピッチを、好きな広さで描けます。UEFA、MLS、NCAA、FA、FIFAフットサルの規格、有名な64のスタジアムの広さ、半面表示に対応し、延長戦やPK戦で決着した試合の得点も表示できます。 |
@@ -1562,6 +1580,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `special-games` | Special games | 特設会場での試合 |
 | page `ballparks` | Ballparks | 球場 |
 | page `grounds` | The grounds | スタジアム |
+| page `arenas` | The arenas | アリーナ |
 | page `variants` | League variants | リーグごとの違い |
 | page `eras` | Surfaces through the years | 年ごとの競技場 |
 | page `atlas` | The atlas | 球場とスタジアムの地図 |
@@ -1580,7 +1599,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `gallery-soccer` | Gallery: the soccer pitch | ギャラリー：サッカーのピッチ |
 | page `gallery-leagues` | Gallery: every league's surface | ギャラリー：リーグごとの競技場 |
 | page `gallery-years` | Gallery: surfaces through the years | ギャラリー：年ごとの競技場 |
-| page `gallery-places` | Gallery: ballparks and grounds | ギャラリー：球場とスタジアム |
+| page `gallery-places` | Gallery: ballparks, grounds and arenas | ギャラリー：球場、スタジアム、アリーナ |
 | page `gallery-special` | Gallery: special games | ギャラリー：特設会場での試合 |
 | page `gallery-data` | Gallery: data on a surface | ギャラリー：競技場の上のデータ |
 | page `gallery-curling` | Gallery: curling | ギャラリー：カーリング |

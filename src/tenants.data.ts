@@ -153,6 +153,160 @@ export const TENANT_ARTICLES: Readonly<Record<string, TenantArticle>> = {
   "johan-cruyff-arena": {"title": "Johan Cruyff Arena", "revision": 1379542055},
   "allianz-stadium-turin": {"title": "Juventus Stadium", "revision": 1378642162},
   "kashima-soccer-stadium": {"title": "Kashima Soccer Stadium", "revision": 1372209519},
+  "amerant-bank-arena": {"title": "Amerant Bank Arena", "revision": 1379821144},
+  "american-airlines-center": {"title": "American Airlines Center", "revision": 1379833787},
+  "ball-arena": {"title": "Ball Arena", "revision": 1379560431},
+  "bell-centre": {"title": "Bell Centre", "revision": 1380110375},
+  "benchmark-international-arena": {"title": "Benchmark International Arena", "revision": 1376541285},
+  "bridgestone-arena": {"title": "Bridgestone Arena", "revision": 1373721363},
+  "canada-life-centre": {"title": "Canada Life Centre", "revision": 1379717047},
+  "canadian-tire-centre": {"title": "Canadian Tire Centre", "revision": 1378044395},
+  "capital-one-arena": {"title": "Capital One Arena", "revision": 1375927841},
+  "climate-pledge-arena": {"title": "Climate Pledge Arena", "revision": 1376105473},
+  "crypto-com-arena": {"title": "Crypto.com Arena", "revision": 1379936314},
+  "delta-center": {"title": "Delta Center", "revision": 1379043310},
+  "enterprise-center": {"title": "Enterprise Center", "revision": 1372086380},
+  "grand-casino-arena": {"title": "Grand Casino Arena", "revision": 1379407082},
+  "honda-center": {"title": "Honda Center", "revision": 1380000927},
+  "keybank-center": {"title": "KeyBank Center", "revision": 1375699062},
+  "lenovo-center": {"title": "Lenovo Center", "revision": 1380055594},
+  "little-caesars-arena": {"title": "Little Caesars Arena", "revision": 1379995369},
+  "madison-square-garden": {"title": "Madison Square Garden", "revision": 1380115046},
+  "nationwide-arena": {"title": "Nationwide Arena", "revision": 1379010656},
+  "ppg-paints-arena": {"title": "PPG Paints Arena", "revision": 1378458359},
+  "prudential-center": {"title": "Prudential Center", "revision": 1380112777},
+  "rogers-arena": {"title": "Rogers Arena", "revision": 1379918849},
+  "rogers-place": {"title": "Rogers Place", "revision": 1380110483},
+  "sap-center": {"title": "SAP Center", "revision": 1376082812},
+  "scotiabank-arena": {"title": "Scotiabank Arena", "revision": 1379971880},
+  "scotiabank-saddledome": {"title": "Scotiabank Saddledome", "revision": 1377341466},
+  "t-mobile-arena": {"title": "T-Mobile Arena", "revision": 1379155307},
+  "td-garden": {"title": "TD Garden", "revision": 1372238200},
+  "ubs-arena": {"title": "UBS Arena", "revision": 1374271562},
+  "united-center": {"title": "United Center", "revision": 1375751561},
+  "xfinity-mobile-arena": {"title": "Xfinity Mobile Arena", "revision": 1380172806},
+  "barclays-center": {"title": "Barclays Center", "revision": 1379823700},
+  "mortgage-matchup-center": {"title": "Mortgage Matchup Center", "revision": 1378999780},
+  "pacific-coliseum": {"title": "Pacific Coliseum", "revision": 1378607871},
+  "state-farm-arena": {"title": "State Farm Arena", "revision": 1379287335},
+  "chase-center": {"title": "Chase Center", "revision": 1379490317},
+  "fedexforum": {"title": "FedExForum", "revision": 1373012936},
+  "fiserv-forum": {"title": "Fiserv Forum", "revision": 1379397566},
+  "frost-bank-center": {"title": "Frost Bank Center", "revision": 1372180807},
+  "gainbridge-fieldhouse": {"title": "Gainbridge Fieldhouse", "revision": 1374223283},
+  "golden-1-center": {"title": "Golden 1 Center", "revision": 1379743809},
+  "intuit-dome": {"title": "Intuit Dome", "revision": 1379936828},
+  "kaseya-center": {"title": "Kaseya Center", "revision": 1379398233},
+  "kia-center": {"title": "Kia Center", "revision": 1377516173},
+  "moda-center": {"title": "Moda Center", "revision": 1379961159},
+  "paycom-center": {"title": "Paycom Center", "revision": 1372206126},
+  "rocket-arena": {"title": "Rocket Arena", "revision": 1379138612},
+  "smoothie-king-center": {"title": "Smoothie King Center", "revision": 1380134811},
+  "spectrum-center": {"title": "Spectrum Center", "revision": 1380171931},
+  "target-center": {"title": "Target Center", "revision": 1379559475},
+  "toyota-center": {"title": "Toyota Center", "revision": 1379987960},
+  "carefirst-arena": {"title": "CareFirst Arena", "revision": 1372072999},
+  "coca-cola-coliseum": {"title": "Coca-Cola Coliseum", "revision": 1379824041},
+  "michelob-ultra-arena": {"title": "Michelob Ultra Arena", "revision": 1379157029},
+  "wintrust-arena": {"title": "Wintrust Arena", "revision": 1373715864},
+  "place-bell": {"title": "Place Bell", "revision": 1372214741},
+  "the-arena-ottawa": {"title": "The Arena (Ottawa)", "revision": 1372241202},
+  "barton-street-arena": {"title": "Barton Street Arena", "revision": 1372066713},
+  "big-e-coliseum": {"title": "Big E Coliseum", "revision": 1372675694},
+  "boston-garden": {"title": "Boston Garden", "revision": 1379921964},
+  "buffalo-memorial-auditorium": {"title": "Buffalo Memorial Auditorium", "revision": 1378939642},
+  "capital-centre": {"title": "Capital Centre (Landover, Maryland)", "revision": 1378275954},
+  "chicago-stadium": {"title": "Chicago Stadium", "revision": 1377159109},
+  "civic-arena": {"title": "Civic Arena (Pittsburgh)", "revision": 1378604648},
+  "colisee-de-quebec": {"title": "Colisée de Québec", "revision": 1376437739},
+  "cow-palace": {"title": "Cow Palace", "revision": 1372078143},
+  "desert-diamond-arena": {"title": "Desert Diamond Arena", "revision": 1380097867},
+  "detroit-olympia": {"title": "Detroit Olympia", "revision": 1372080309},
+  "duquesne-gardens": {"title": "Duquesne Gardens", "revision": 1372081879},
+  "expo-hall": {"title": "Expo Hall", "revision": 1372151342},
+  "first-horizon-coliseum": {"title": "First Horizon Coliseum", "revision": 1372176337},
+  "joe-louis-arena": {"title": "Joe Louis Arena", "revision": 1378833772},
+  "jubilee-arena": {"title": "Jubilee Arena", "revision": 1372208380},
+  "kia-forum": {"title": "Kia Forum", "revision": 1378606147},
+  "los-angeles-memorial-sports-arena": {"title": "Los Angeles Memorial Sports Arena", "revision": 1378620043},
+  "madison-square-garden-1925": {"title": "Madison Square Garden (1925)", "revision": 1374252217},
+  "maple-leaf-gardens": {"title": "Maple Leaf Gardens", "revision": 1378352628},
+  "massmutual-center": {"title": "MassMutual Center", "revision": 1376168573},
+  "matthews-arena": {"title": "Matthews Arena", "revision": 1372084660},
+  "mcnichols-sports-arena": {"title": "McNichols Sports Arena", "revision": 1376436998},
+  "meadowlands-arena": {"title": "Meadowlands Arena", "revision": 1379389390},
+  "met-center": {"title": "Met Center", "revision": 1379253396},
+  "miami-arena": {"title": "Miami Arena", "revision": 1372086645},
+  "montreal-arena": {"title": "Montreal Arena", "revision": 1372216977},
+  "montreal-forum": {"title": "Montreal Forum", "revision": 1372775440},
+  "mount-royal-arena": {"title": "Mount Royal Arena", "revision": 1372217380},
+  "mullett-arena": {"title": "Mullett Arena", "revision": 1377666841},
+  "mutual-street-arena": {"title": "Mutual Street Arena", "revision": 1373119845},
+  "nassau-coliseum": {"title": "Nassau Coliseum", "revision": 1378968533},
+  "northlands-coliseum": {"title": "Northlands Coliseum", "revision": 1380012552},
+  "oakland-arena": {"title": "Oakland Arena", "revision": 1376082185},
+  "omni-coliseum": {"title": "Omni Coliseum", "revision": 1372222916},
+  "ottawa-auditorium": {"title": "Ottawa Auditorium", "revision": 1372223758},
+  "peoplesbank-arena": {"title": "PeoplesBank Arena", "revision": 1378577514},
+  "philadelphia-arena": {"title": "Philadelphia Arena", "revision": 1372214135},
+  "quebec-arena": {"title": "Quebec Arena", "revision": 1372222670},
+  "reunion-arena": {"title": "Reunion Arena", "revision": 1374129116},
+  "richfield-coliseum": {"title": "Richfield Coliseum", "revision": 1372224989},
+  "st-louis-arena": {"title": "St. Louis Arena", "revision": 1372232504},
+  "spectrum": {"title": "Spectrum (arena)", "revision": 1379231350},
+  "td-place-arena": {"title": "TD Place Arena", "revision": 1377852926},
+  "windsor-arena": {"title": "Windsor Arena", "revision": 1372252144},
+  "winnipeg-arena": {"title": "Winnipeg Arena", "revision": 1378999660},
+  "baltimore-civic-center": {"title": "CFG Bank Arena", "revision": 1378813714},
+  "allen-county-war-memorial-coliseum": {"title": "Allen County War Memorial Coliseum", "revision": 1372062120},
+  "orlando-arena": {"title": "Amway Arena", "revision": 1373824360},
+  "arco-arena": {"title": "ARCO Arena", "revision": 1373275228},
+  "arco-arena-1985": {"title": "ARCO Arena (1985)", "revision": 1372270268},
+  "arizona-veterans-memorial-coliseum": {"title": "Arizona Veterans Memorial Coliseum", "revision": 1372064017},
+  "baltimore-coliseum": {"title": "Baltimore Coliseum", "revision": 1375271173},
+  "rochester-community-war-memorial": {"title": "Blue Cross Arena", "revision": 1376259229},
+  "bradley-center": {"title": "Bradley Center", "revision": 1373828595},
+  "calihan-hall": {"title": "Calihan Hall", "revision": 1372071903},
+  "charlotte-coliseum": {"title": "Charlotte Coliseum", "revision": 1376080591},
+  "cincinnati-gardens": {"title": "Cincinnati Gardens", "revision": 1378899753},
+  "cleveland-arena": {"title": "Cleveland Arena", "revision": 1372076382},
+  "the-summit": {"title": "Lakewood Church Central Campus", "revision": 1379795560},
+  "denver-auditorium-arena": {"title": "Denver Auditorium Arena", "revision": 1372080181},
+  "edgerton-park-arena": {"title": "Edgerton Park Arena", "revision": 1372082646},
+  "hofheinz-pavilion": {"title": "Fertitta Center", "revision": 1376960498},
+  "hemisfair-arena": {"title": "HemisFair Arena", "revision": 1379338909},
+  "hinkle-fieldhouse": {"title": "Hinkle Fieldhouse", "revision": 1372282020},
+  "international-amphitheatre": {"title": "International Amphitheatre", "revision": 1372205870},
+  "rutgers-athletic-center": {"title": "Jersey Mike's Arena", "revision": 1378814713},
+  "kiel-auditorium": {"title": "Kiel Auditorium", "revision": 1372210290},
+  "loyola-field-house": {"title": "Loyola Field House", "revision": 1315777970},
+  "market-square-arena": {"title": "Market Square Arena", "revision": 1372084194},
+  "alexander-memorial-coliseum": {"title": "McCamish Pavilion", "revision": 1380055740},
+  "minneapolis-auditorium": {"title": "Minneapolis Auditorium", "revision": 1380186125},
+  "municipal-auditorium-new-orleans": {"title": "Municipal Auditorium (New Orleans)", "revision": 1372217599},
+  "omaha-civic-auditorium": {"title": "Omaha Civic Auditorium", "revision": 1372685910},
+  "palace-of-auburn-hills": {"title": "The Palace of Auburn Hills", "revision": 1380097365},
+  "pechanga-arena": {"title": "Pechanga Arena", "revision": 1378571330},
+  "philadelphia-convention-hall-and-civic-center": {"title": "Philadelphia Convention Hall and Civic Center", "revision": 1372214142},
+  "salt-palace": {"title": "Salt Palace (arena)", "revision": 1372227896},
+  "tacoma-dome": {"title": "Tacoma Dome", "revision": 1372238448},
+  "the-hippodrome": {"title": "The Hippodrome", "revision": 1377122238},
+  "uline-arena": {"title": "Uline Arena", "revision": 1373462233},
+  "onondaga-county-war-memorial": {"title": "Upstate Medical University Arena", "revision": 1372247955},
+  "milwaukee-arena": {"title": "UW–Milwaukee Panther Arena", "revision": 1372247035},
+  "veterans-memorial-coliseum": {"title": "Veterans Memorial Coliseum (Portland, Oregon)", "revision": 1378608620},
+  "wharton-field-house": {"title": "Wharton Field House", "revision": 1372251506},
+  "allstate-arena": {"title": "Allstate Arena", "revision": 1379742186},
+  "bok-center": {"title": "BOK Center", "revision": 1372680708},
+  "college-park-center": {"title": "College Park Center", "revision": 1379987097},
+  "credit-union-1-arena": {"title": "Credit Union 1 Arena", "revision": 1379822104},
+  "mohegan-sun-arena": {"title": "Mohegan Sun Arena", "revision": 1379406879},
+  "reliant-arena": {"title": "Reliant Arena", "revision": 1377831984},
+  "westchester-county-center": {"title": "Westchester County Center", "revision": 1373852052},
+  "total-mortgage-arena": {"title": "Total Mortgage Arena", "revision": 1372244808},
+  "tsongas-center": {"title": "Tsongas Center", "revision": 1372246034},
+  "verdun-auditorium": {"title": "Verdun Auditorium", "revision": 1372712513},
+  "rhode-island-auditorium": {"title": "Rhode Island Auditorium", "revision": 1373848518},
 };
 
 /** The leagues whose field or court is not the one the package draws for their sport (arena football, a basketball league that played on another court): their clubs ask for no surface. */
@@ -193,6 +347,11 @@ export const TENANT_NAMES_JA: Readonly<Record<string, TenantNameJa>> = {
   "Q60766919": {"ja": "ダラス・レネゲイズ", "kind": "era", "note": "Wikidata's label アーリントン・レネゲイズ is the franchise's later name (the Arlington Renegades of the UFL, 2023), not the Dallas Renegades of the XFL (2020) that played here. No Japanese page of that name was found; it is the English name in katakana, as ja.wikipedia writes the XFL's other clubs (ロサンゼルス・ワイルドキャッツ)."},
   "Q953046": {"ja": "ミネソタ・ユナイテッドFC", "kind": "era", "note": "Wikidata's label ミネソタ・スターズFC is the club's name in 2010 (the Minnesota Stars), not the name the place's article gives it, Minnesota United FC. ja.wikipedia.org has a page titled ミネソタ・ユナイテッドFC (checked 2026-10-13). It is also where ミネソタ・スターズFC redirects."},
   "Q1357111": {"ja": "シアトル・レインFC", "kind": "era", "note": "Wikidata's label OLレイン is the club's name from 2020 to 2023 (OL Reign), not the name the place's article gives it, Seattle Reign FC. ja.wikipedia.org has a page titled シアトル・レインFC (checked 2026-10-13). It is also where OLレイン redirects."},
+  "Q1469370": {"ja": "ピッツバーグ・パイレーツ", "kind": "title", "note": "The Pirates of the NHL (1925 to 1930); Wikidata's label adds (NHL) to tell the club from the baseball club, which the league beside the name already does. Wikidata's label, without the brackets (checked 2026-10-14)."},
+  "Q868358": {"ja": "コロラド・ロッキーズ", "kind": "title", "note": "The Rockies of the NHL (1976 to 1982); Wikidata's label adds (NHL) to tell the club from the baseball club, which the league beside the name already does. Wikidata's label, without the brackets (checked 2026-10-14)."},
+  "Q2928124": {"ja": "ボルチモア・ブレッツ", "kind": "title", "note": "The Bullets of 1944 to 1954; Wikidata's label adds the years in brackets and spells Baltimore ボルティモア, where the rest of this table has ボルチモア as Wikidata's labels of the Orioles and the Ravens do (checked 2026-10-14)."},
+  "Q2017456": {"ja": "サンディエゴ・ソッカーズ", "kind": "title", "note": "Wikidata's label adds the years in brackets; the club's name is without them (checked 2026-10-14)."},
+  "Q1095113": {"ja": "サンノゼ・アースクエイクス", "kind": "title", "note": "The Earthquakes of the NASL (1974 to 1988); Wikidata's label adds the years in brackets; the club's name is without them (checked 2026-10-14)."},
 };
 
 export const TENANT_DATA: Readonly<Record<string, TenantData[]>> = {
@@ -948,5 +1107,694 @@ export const TENANT_DATA: Readonly<Record<string, TenantData[]>> = {
   ],
   "kashima-soccer-stadium": [
     { "club": "Kashima Antlers", "clubJa": "鹿島アントラーズ", "league": "J1 League", "sport": "soccer", "from": 1993, "wikidata": "Q16932", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+  ],
+  "amerant-bank-arena": [
+    { "club": "Florida Panthers", "clubJa": "フロリダ・パンサーズ", "league": "NHL", "sport": "ice-hockey", "from": 1998, "wikidata": "Q204623", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Florida Bobcats", "league": "Arena Football League", "sport": "american-football", "from": 1999, "to": 2001, "wikidata": "Q5461235", "listed": true, "years": "wikipedia" },
+    { "club": "Florida ThunderCats", "league": "NPSL (1967)", "sport": "soccer", "from": 1998, "to": 1999, "wikidata": "Q5461677", "statements": "P115", "listed": true, "years": "wikipedia" },
+  ],
+  "american-airlines-center": [
+    { "club": "Dallas Mavericks", "clubJa": "ダラス・マーベリックス", "league": "NBA", "sport": "basketball", "from": 2001, "wikidata": "Q132893", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Dallas Stars", "clubJa": "ダラス・スターズ", "league": "NHL", "sport": "ice-hockey", "from": 2001, "wikidata": "Q208652", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Dallas Desperados", "clubJa": "ダラス・デスペラードス", "league": "Arena Football League", "sport": "american-football", "from": 2002, "to": 2008, "wikidata": "Q3024550", "listed": true, "years": "wikipedia" },
+  ],
+  "ball-arena": [
+    { "club": "Colorado Avalanche", "clubJa": "コロラド・アバランチ", "league": "NHL", "sport": "ice-hockey", "from": 1999, "wikidata": "Q206297", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Denver Nuggets", "clubJa": "デンバー・ナゲッツ", "league": "NBA", "sport": "basketball", "from": 1999, "wikidata": "Q162954", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Colorado Crush", "clubJa": "コロラド・クラッシュ", "league": "Arena Football League", "sport": "american-football", "from": 2003, "to": 2008, "wikidata": "Q953000", "listed": true, "years": "wikipedia" },
+  ],
+  "bell-centre": [
+    { "club": "Montreal Canadiens", "clubJa": "モントリオール・カナディアンズ", "league": "NHL", "sport": "ice-hockey", "from": 1996, "wikidata": "Q188143", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "benchmark-international-arena": [
+    { "club": "Tampa Bay Lightning", "clubJa": "タンパベイ・ライトニング", "league": "NHL", "sport": "ice-hockey", "from": 1996, "wikidata": "Q201864", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Toronto Raptors", "clubJa": "トロント・ラプターズ", "league": "NBA", "sport": "basketball", "from": 2020, "to": 2021, "wikidata": "Q132880", "listed": true, "years": "wikipedia" },
+    { "club": "Tampa Bay Storm", "clubJa": "タンパベイ・ストーム", "league": "Arena Football League", "sport": "american-football", "from": 1997, "to": 2017, "wikidata": "Q770543", "listed": true, "years": "wikipedia" },
+  ],
+  "bridgestone-arena": [
+    { "club": "Nashville Predators", "clubJa": "ナッシュビル・プレデターズ", "league": "NHL", "sport": "ice-hockey", "from": 1998, "wikidata": "Q207980", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+  ],
+  "canada-life-centre": [
+    { "club": "Winnipeg Jets", "clubJa": "ウィニペグ・ジェッツ", "league": "NHL", "sport": "ice-hockey", "from": 2011, "wikidata": "Q472741", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "canadian-tire-centre": [
+    { "club": "Ottawa Senators", "clubJa": "オタワ・セネターズ", "league": "NHL", "sport": "ice-hockey", "from": 1996, "wikidata": "Q203013", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Ottawa Charge", "league": "PWHL", "sport": "ice-hockey", "from": 2026, "wikidata": "Q122234829", "listed": true, "years": "wikipedia" },
+  ],
+  "capital-one-arena": [
+    { "club": "Washington Capitals", "clubJa": "ワシントン・キャピタルズ", "league": "NHL", "sport": "ice-hockey", "from": 1997, "wikidata": "Q204627", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Washington Wizards", "clubJa": "ワシントン・ウィザーズ", "league": "NBA", "sport": "basketball", "from": 1997, "wikidata": "Q169165", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Washington Valor", "league": "Arena Football League", "sport": "american-football", "from": 2017, "to": 2019, "wikidata": "Q23058770", "listed": true, "years": "wikipedia" },
+    { "club": "Washington Mystics", "clubJa": "ワシントン・ミスティクス", "league": "WNBA", "sport": "basketball", "from": 1998, "to": 2018, "wikidata": "Q1465192", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "climate-pledge-arena": [
+    { "club": "Seattle Storm", "clubJa": "シアトル・ストーム", "league": "WNBA", "sport": "basketball", "from": 2000, "wikidata": "Q1544869", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+    { "club": "Seattle Kraken", "clubJa": "シアトル・クラーケン", "league": "NHL", "sport": "ice-hockey", "from": 2021, "wikidata": "Q59422166", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+    { "club": "Seattle Torrent", "league": "PWHL", "sport": "ice-hockey", "from": 2025, "wikidata": "Q134281331", "statements": "P466", "listed": true, "years": "wikipedia" },
+    { "club": "Oklahoma City Thunder", "clubJa": "オクラホマシティ・サンダー", "league": "NBA", "sport": "basketball", "from": 1967, "to": 2008, "wikidata": "Q180950", "statements": "P115", "years": "wikidata" },
+    { "club": "Seattle SuperSonics", "clubJa": "シアトル・スーパーソニックス", "league": "NBA", "sport": "basketball", "from": 1967, "to": 2008, "wikidata": "Q235326", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "crypto-com-arena": [
+    { "club": "Los Angeles Kings", "clubJa": "ロサンゼルス・キングス", "league": "NHL", "sport": "ice-hockey", "from": 1999, "wikidata": "Q203008", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Los Angeles Lakers", "clubJa": "ロサンゼルス・レイカーズ", "league": "NBA", "sport": "basketball", "from": 1999, "wikidata": "Q121783", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Los Angeles Sparks", "clubJa": "ロサンゼルス・スパークス", "league": "WNBA", "sport": "basketball", "from": 2001, "wikidata": "Q1329633", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+    { "club": "Los Angeles Clippers", "clubJa": "ロサンゼルス・クリッパーズ", "league": "NBA", "sport": "basketball", "from": 1999, "to": 2024, "wikidata": "Q976396", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+    { "club": "Los Angeles Avengers", "clubJa": "ロサンゼルス・アベンジャーズ", "league": "Arena Football League", "sport": "american-football", "from": 2000, "to": 2008, "wikidata": "Q2873436", "listed": true, "years": "wikipedia" },
+  ],
+  "delta-center": [
+    { "club": "Utah Jazz", "clubJa": "ユタ・ジャズ", "league": "NBA", "sport": "basketball", "from": 1991, "wikidata": "Q170649", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Utah Mammoth", "clubJa": "ユタ・マンモス", "league": "NHL", "sport": "ice-hockey", "from": 2024, "wikidata": "Q125520712", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+    { "club": "Utah Blaze", "clubJa": "ユタ・ブレイズ", "league": "Arena Football League", "sport": "american-football", "from": 2006, "to": 2013, "wikidata": "Q952879", "listed": true, "years": "wikipedia" },
+    { "club": "Utah Starzz", "league": "WNBA", "sport": "basketball", "from": 1997, "to": 2002, "wikidata": "Q1812243", "statements": "P115", "listed": true, "years": "wikipedia" },
+  ],
+  "enterprise-center": [
+    { "club": "St. Louis Blues", "clubJa": "セントルイス・ブルース", "league": "NHL", "sport": "ice-hockey", "from": 1995, "wikidata": "Q207735", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "St. Louis Ambush", "league": "NPSL (1967)", "sport": "soccer", "from": 1994, "to": 2000, "wikidata": "Q7589555", "statements": "P466", "listed": true, "years": "wikidata" },
+  ],
+  "grand-casino-arena": [
+    { "club": "Minnesota Wild", "clubJa": "ミネソタ・ワイルド", "league": "NHL", "sport": "ice-hockey", "from": 2000, "wikidata": "Q206357", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Minnesota Frost", "league": "PWHL", "sport": "ice-hockey", "from": 2024, "wikidata": "Q122625470", "statements": "P466", "listed": true, "years": "wikidata" },
+    { "club": "Minnesota Lynx", "clubJa": "ミネソタ・リンクス", "league": "WNBA", "sport": "basketball", "from": 2017, "to": 2017, "wikidata": "Q1474850", "statements": "P466", "listed": true, "years": "wikipedia" },
+  ],
+  "honda-center": [
+    { "club": "Anaheim Ducks", "clubJa": "アナハイム・ダックス", "league": "NHL", "sport": "ice-hockey", "from": 1993, "wikidata": "Q192751", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+    { "club": "Los Angeles Clippers", "clubJa": "ロサンゼルス・クリッパーズ", "league": "NBA", "sport": "basketball", "from": 1994, "to": 1999, "wikidata": "Q976396", "listed": true, "years": "wikipedia" },
+    { "club": "Anaheim Piranhas", "league": "Arena Football League", "sport": "american-football", "from": 1996, "to": 1997, "wikidata": "Q4750887", "listed": true, "years": "wikipedia" },
+  ],
+  "keybank-center": [
+    { "club": "Buffalo Sabres", "clubJa": "バッファロー・セイバーズ", "league": "NHL", "sport": "ice-hockey", "from": 1996, "wikidata": "Q131206", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Columbus Destroyers", "clubJa": "コロンバス・デストロイヤーズ", "league": "Arena Football League", "sport": "american-football", "from": 1999, "to": 2003, "wikidata": "Q730085", "statements": "P466", "listed": true, "years": "wikidata" },
+  ],
+  "lenovo-center": [
+    { "club": "Carolina Hurricanes", "clubJa": "カロライナ・ハリケーンズ", "league": "NHL", "sport": "ice-hockey", "from": 1999, "wikidata": "Q201857", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Carolina Cobras", "league": "Arena Football League", "sport": "american-football", "from": 2000, "to": 2002, "wikidata": "Q5044797", "listed": true, "years": "wikipedia" },
+  ],
+  "little-caesars-arena": [
+    { "club": "Detroit Pistons", "clubJa": "デトロイト・ピストンズ", "league": "NBA", "sport": "basketball", "from": 2017, "wikidata": "Q169661", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Detroit Red Wings", "clubJa": "デトロイト・レッドウィングス", "league": "NHL", "sport": "ice-hockey", "from": 2017, "wikidata": "Q194116", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "PWHL Detroit", "league": "PWHL", "sport": "ice-hockey", "from": 2026, "wikidata": "Q139695288", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+  ],
+  "madison-square-garden": [
+    { "club": "New York Knicks", "clubJa": "ニューヨーク・ニックス", "league": "NBA", "sport": "basketball", "from": 1968, "wikidata": "Q131364", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "New York Rangers", "clubJa": "ニューヨーク・レンジャース", "league": "NHL", "sport": "ice-hockey", "from": 1968, "wikidata": "Q188984", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "New York Liberty", "clubJa": "ニューヨーク・リバティ", "league": "WNBA", "sport": "basketball", "from": 1997, "to": 2017, "wikidata": "Q974705", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Toronto Phantoms", "clubJa": "トロント・ファントムズ", "league": "Arena Football League", "sport": "american-football", "from": 1997, "to": 1998, "wikidata": "Q1722865", "listed": true, "years": "wikipedia" },
+    { "club": "New York Knights", "league": "Arena Football League", "sport": "american-football", "from": 1988, "to": 1988, "wikidata": "Q7013677", "listed": true, "years": "wikipedia" },
+    { "club": "New York Cosmos", "clubJa": "ニューヨーク・コスモス", "league": "NASL", "sport": "soccer", "from": 1983, "to": 1984, "wikidata": "Q646135", "listed": true, "years": "wikipedia" },
+  ],
+  "nationwide-arena": [
+    { "club": "Columbus Blue Jackets", "clubJa": "コロンバス・ブルージャケッツ", "league": "NHL", "sport": "ice-hockey", "from": 2000, "wikidata": "Q207507", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+    { "club": "Columbus Destroyers", "clubJa": "コロンバス・デストロイヤーズ", "league": "Arena Football League", "sport": "american-football", "from": 2004, "to": 2019, "wikidata": "Q730085", "listed": true, "years": "wikipedia" },
+  ],
+  "ppg-paints-arena": [
+    { "club": "Pittsburgh Penguins", "clubJa": "ピッツバーグ・ペンギンズ", "league": "NHL", "sport": "ice-hockey", "from": 2010, "wikidata": "Q193643", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Pittsburgh Power", "league": "Arena Football League", "sport": "american-football", "from": 2011, "to": 2014, "wikidata": "Q3905890", "listed": true, "years": "wikipedia" },
+  ],
+  "prudential-center": [
+    { "club": "New Jersey Devils", "clubJa": "ニュージャージー・デビルス", "league": "NHL", "sport": "ice-hockey", "from": 2007, "wikidata": "Q192081", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "New York Sirens", "league": "PWHL", "sport": "ice-hockey", "from": 2024, "wikidata": "Q122338601", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "New York Liberty", "clubJa": "ニューヨーク・リバティ", "league": "WNBA", "sport": "basketball", "from": 2011, "to": 2013, "wikidata": "Q974705", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "New Jersey Nets", "league": "NBA", "sport": "basketball", "from": 2010, "to": 2012, "wikidata": "Q115657357", "statements": "P115", "listed": true, "years": "wikidata" },
+  ],
+  "rogers-arena": [
+    { "club": "Vancouver Canucks", "clubJa": "バンクーバー・カナックス", "league": "NHL", "sport": "ice-hockey", "from": 1995, "wikidata": "Q192890", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Vancouver Grizzlies", "clubJa": "バンクーバー・グリズリーズ", "league": "NBA", "sport": "basketball", "from": 1995, "to": 2001, "wikidata": "Q3307390", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "rogers-place": [
+    { "club": "Edmonton Oilers", "clubJa": "エドモントン・オイラーズ", "league": "NHL", "sport": "ice-hockey", "from": 2016, "wikidata": "Q205973", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "sap-center": [
+    { "club": "San Jose Sharks", "clubJa": "サンノゼ・シャークス", "league": "NHL", "sport": "ice-hockey", "from": 1993, "wikidata": "Q206381", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "PWHL San Jose", "league": "PWHL", "sport": "ice-hockey", "from": 2026, "wikidata": "Q139853056", "listed": true, "years": "wikipedia" },
+    { "club": "San Jose SaberCats", "league": "Arena Football League", "sport": "american-football", "from": 1995, "to": 2015, "wikidata": "Q1410858", "listed": true, "years": "wikipedia" },
+    { "club": "Golden State Warriors", "clubJa": "ゴールデンステート・ウォリアーズ", "league": "NBA", "sport": "basketball", "from": 1996, "to": 1997, "wikidata": "Q157376", "statements": "P115", "listed": true, "years": "wikidata" },
+  ],
+  "scotiabank-arena": [
+    { "club": "Toronto Maple Leafs", "clubJa": "トロント・メープルリーフス", "league": "NHL", "sport": "ice-hockey", "from": 1999, "wikidata": "Q203384", "statements": "P466 P115", "years": "wikidata" },
+    { "club": "Toronto Raptors", "clubJa": "トロント・ラプターズ", "league": "NBA", "sport": "basketball", "from": 1999, "wikidata": "Q132880", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Toronto Phantoms", "clubJa": "トロント・ファントムズ", "league": "Arena Football League", "sport": "american-football", "from": 2001, "to": 2002, "wikidata": "Q1722865", "listed": true, "years": "wikipedia" },
+  ],
+  "scotiabank-saddledome": [
+    { "club": "Calgary Flames", "clubJa": "カルガリー・フレームス", "league": "NHL", "sport": "ice-hockey", "from": 1983, "wikidata": "Q194126", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Calgary 88s", "league": "WBL", "sport": "basketball", "from": 1988, "to": 1992, "wikidata": "Q5019631", "statements": "P115", "listed": true, "years": "wikipedia" },
+  ],
+  "t-mobile-arena": [
+    { "club": "Vegas Golden Knights", "clubJa": "ベガス・ゴールデンナイツ", "league": "NHL", "sport": "ice-hockey", "from": 2017, "wikidata": "Q24725640", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+    { "club": "PWHL Las Vegas", "league": "PWHL", "sport": "ice-hockey", "from": 2026, "wikidata": "Q139791703", "listed": true, "years": "wikipedia" },
+  ],
+  "td-garden": [
+    { "club": "Boston Bruins", "clubJa": "ボストン・ブルーインズ", "league": "NHL", "sport": "ice-hockey", "from": 1995, "wikidata": "Q194121", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Boston Celtics", "clubJa": "ボストン・セルティックス", "league": "NBA", "sport": "basketball", "from": 1995, "wikidata": "Q131371", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "ubs-arena": [
+    { "club": "New York Islanders", "clubJa": "ニューヨーク・アイランダース", "league": "NHL", "sport": "ice-hockey", "from": 2021, "wikidata": "Q194369", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "New York Sirens", "league": "PWHL", "sport": "ice-hockey", "from": 2024, "to": 2024, "wikidata": "Q122338601", "statements": "P466", "listed": true, "years": "wikipedia" },
+  ],
+  "united-center": [
+    { "club": "Chicago Blackhawks", "clubJa": "シカゴ・ブラックホークス", "league": "NHL", "sport": "ice-hockey", "from": 1994, "wikidata": "Q209636", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Chicago Bulls", "clubJa": "シカゴ・ブルズ", "league": "NBA", "sport": "basketball", "from": 1994, "wikidata": "Q128109", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "xfinity-mobile-arena": [
+    { "club": "Philadelphia 76ers", "clubJa": "フィラデルフィア・セブンティシクサーズ", "league": "NBA", "sport": "basketball", "from": 1996, "wikidata": "Q138089", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Philadelphia Flyers", "clubJa": "フィラデルフィア・フライヤーズ", "league": "NHL", "sport": "ice-hockey", "from": 1996, "wikidata": "Q192083", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "barclays-center": [
+    { "club": "Brooklyn Nets", "clubJa": "ブルックリン・ネッツ", "league": "NBA", "sport": "basketball", "from": 2012, "wikidata": "Q572134", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "New York Liberty", "clubJa": "ニューヨーク・リバティ", "league": "WNBA", "sport": "basketball", "from": 2021, "wikidata": "Q974705", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+    { "club": "New York Islanders", "clubJa": "ニューヨーク・アイランダース", "league": "NHL", "sport": "ice-hockey", "from": 2015, "to": 2020, "wikidata": "Q194369", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+  ],
+  "mortgage-matchup-center": [
+    { "club": "Phoenix Suns", "clubJa": "フェニックス・サンズ", "league": "NBA", "sport": "basketball", "from": 1992, "wikidata": "Q164177", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Phoenix Mercury", "clubJa": "フェニックス・マーキュリー", "league": "WNBA", "sport": "basketball", "from": 1997, "wikidata": "Q1274643", "statements": "P115", "listed": true, "years": "wikipedia" },
+    { "club": "Arizona Rattlers", "clubJa": "アリゾナラトラーズ", "league": "Arena Football League", "sport": "american-football", "from": 1992, "to": 2023, "wikidata": "Q1410957", "listed": true, "years": "wikipedia" },
+    { "club": "Phoenix Coyotes", "league": "NHL", "sport": "ice-hockey", "from": 1996, "to": 2003, "wikidata": "Q206312", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "pacific-coliseum": [
+    { "club": "Vancouver Goldeneyes", "league": "PWHL", "sport": "ice-hockey", "from": 2025, "wikidata": "Q134081772", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+    { "club": "Vancouver Canucks", "clubJa": "バンクーバー・カナックス", "league": "NHL", "sport": "ice-hockey", "from": 1970, "to": 1995, "wikidata": "Q192890", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Vancouver Whitecaps", "clubJa": "バンクーバー・ホワイトキャップス", "league": "NASL", "sport": "soccer", "from": 1980, "to": 1984, "wikidata": "Q1090574", "listed": true, "years": "wikipedia" },
+  ],
+  "state-farm-arena": [
+    { "club": "Atlanta Hawks", "clubJa": "アトランタ・ホークス", "league": "NBA", "sport": "basketball", "from": 1999, "wikidata": "Q159893", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Atlanta Dream", "clubJa": "アトランタ・ドリーム", "league": "WNBA", "sport": "basketball", "from": 2008, "wikidata": "Q756160", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+    { "club": "Atlanta Thrashers", "clubJa": "アトランタ・スラッシャーズ", "league": "NHL", "sport": "ice-hockey", "from": 1999, "to": 2011, "wikidata": "Q244039", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+  ],
+  "chase-center": [
+    { "club": "Golden State Warriors", "clubJa": "ゴールデンステート・ウォリアーズ", "league": "NBA", "sport": "basketball", "from": 2019, "wikidata": "Q157376", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Golden State Valkyries", "clubJa": "ゴールデンステート・バルキリーズ", "league": "WNBA", "sport": "basketball", "from": 2025, "wikidata": "Q125521245", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "fedexforum": [
+    { "club": "Memphis Grizzlies", "clubJa": "メンフィス・グリズリーズ", "league": "NBA", "sport": "basketball", "from": 2004, "wikidata": "Q165529", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "fiserv-forum": [
+    { "club": "Milwaukee Bucks", "clubJa": "ミルウォーキー・バックス", "league": "NBA", "sport": "basketball", "from": 2018, "wikidata": "Q169637", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "frost-bank-center": [
+    { "club": "San Antonio Spurs", "clubJa": "サンアントニオ・スパーズ", "league": "NBA", "sport": "basketball", "from": 2002, "wikidata": "Q159729", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "San Antonio Stars", "clubJa": "サンアントニオ・シルバースターズ", "league": "WNBA", "sport": "basketball", "from": 2003, "to": 2017, "wikidata": "Q1472697", "statements": "P466", "listed": true, "years": "wikipedia" },
+  ],
+  "gainbridge-fieldhouse": [
+    { "club": "Indiana Pacers", "clubJa": "インディアナ・ペイサーズ", "league": "NBA", "sport": "basketball", "from": 1999, "wikidata": "Q170329", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Indiana Fever", "clubJa": "インディアナ・フィーバー", "league": "WNBA", "sport": "basketball", "from": 2000, "wikidata": "Q1631017", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Indiana Firebirds", "league": "Arena Football League", "sport": "american-football", "from": 2001, "to": 2004, "wikidata": "Q16848255", "listed": true, "years": "wikipedia" },
+  ],
+  "golden-1-center": [
+    { "club": "Sacramento Kings", "clubJa": "サクラメント・キングス", "league": "NBA", "sport": "basketball", "from": 2016, "wikidata": "Q166105", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "intuit-dome": [
+    { "club": "Los Angeles Clippers", "clubJa": "ロサンゼルス・クリッパーズ", "league": "NBA", "sport": "basketball", "from": 2024, "wikidata": "Q976396", "listed": true, "years": "wikipedia" },
+  ],
+  "kaseya-center": [
+    { "club": "Miami Heat", "clubJa": "マイアミ・ヒート", "league": "NBA", "sport": "basketball", "from": 2000, "wikidata": "Q169138", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+    { "club": "Miami Sol", "clubJa": "マイアミ・ソル", "league": "WNBA", "sport": "basketball", "from": 2000, "to": 2002, "wikidata": "Q655386", "statements": "P115", "listed": true, "years": "wikipedia" },
+  ],
+  "kia-center": [
+    { "club": "Orlando Magic", "clubJa": "オーランド・マジック", "league": "NBA", "sport": "basketball", "from": 2010, "wikidata": "Q161337", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Orlando Predators", "clubJa": "オーランド・プレデターズ", "league": "Arena Football League", "sport": "american-football", "from": 2011, "to": 2016, "wikidata": "Q2304286", "listed": true, "years": "wikipedia" },
+  ],
+  "moda-center": [
+    { "club": "Portland Trail Blazers", "clubJa": "ポートランド・トレイルブレイザーズ", "league": "NBA", "sport": "basketball", "from": 1995, "wikidata": "Q167253", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Portland Fire", "league": "WNBA", "sport": "basketball", "from": 2026, "wikidata": "Q130329996", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Portland Steel", "league": "Arena Football League", "sport": "american-football", "from": 2014, "to": 2016, "wikidata": "Q20338239", "listed": true, "years": "wikipedia" },
+    { "club": "Portland Fire", "league": "WNBA", "sport": "basketball", "from": 2000, "to": 2002, "wikidata": "Q1470412", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Portland Forest Dragons", "league": "Arena Football League", "sport": "american-football", "from": 1997, "to": 1999, "wikidata": "Q7082419", "listed": true, "years": "wikipedia" },
+  ],
+  "paycom-center": [
+    { "club": "Oklahoma City Thunder", "clubJa": "オクラホマシティ・サンダー", "league": "NBA", "sport": "basketball", "from": 2008, "wikidata": "Q180950", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "New Orleans Pelicans", "clubJa": "ニューオーリンズ・ペリカンズ", "league": "NBA", "sport": "basketball", "from": 2005, "to": 2007, "wikidata": "Q172339", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "rocket-arena": [
+    { "club": "Cleveland Cavaliers", "clubJa": "クリーブランド・キャバリアーズ", "league": "NBA", "sport": "basketball", "from": 1994, "wikidata": "Q162990", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Cleveland Rockers", "league": "WNBA", "sport": "basketball", "from": 1997, "to": 2003, "wikidata": "Q536458", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "smoothie-king-center": [
+    { "club": "New Orleans Pelicans", "clubJa": "ニューオーリンズ・ペリカンズ", "league": "NBA", "sport": "basketball", "from": 2002, "wikidata": "Q172339", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "New Orleans VooDoo", "clubJa": "ニューオーリンズ・ブードゥー", "league": "Arena Football League", "sport": "american-football", "from": 2004, "to": 2015, "wikidata": "Q196144", "listed": true, "years": "wikipedia" },
+  ],
+  "spectrum-center": [
+    { "club": "Charlotte Hornets", "clubJa": "シャーロット・ホーネッツ", "league": "NBA", "sport": "basketball", "from": 2014, "wikidata": "Q163480", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+    { "club": "Charlotte Sting", "clubJa": "シャーロット・スティング", "league": "WNBA", "sport": "basketball", "from": 2006, "to": 2006, "wikidata": "Q1067358", "listed": true, "years": "wikipedia" },
+  ],
+  "target-center": [
+    { "club": "Minnesota Timberwolves", "clubJa": "ミネソタ・ティンバーウルブズ", "league": "NBA", "sport": "basketball", "from": 1990, "wikidata": "Q170558", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Minnesota Lynx", "clubJa": "ミネソタ・リンクス", "league": "WNBA", "sport": "basketball", "from": 1999, "wikidata": "Q1474850", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+    { "club": "Minnesota Fighting Pike", "league": "Arena Football League", "sport": "american-football", "from": 1996, "to": 1996, "wikidata": "Q6868237", "listed": true, "years": "wikipedia" },
+  ],
+  "toyota-center": [
+    { "club": "Houston Rockets", "clubJa": "ヒューストン・ロケッツ", "league": "NBA", "sport": "basketball", "from": 2003, "wikidata": "Q161345", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Houston Comets", "clubJa": "ヒューストン・コメッツ", "league": "WNBA", "sport": "basketball", "from": 2004, "to": 2007, "wikidata": "Q1479748", "listed": true, "years": "wikipedia" },
+  ],
+  "carefirst-arena": [
+    { "club": "Washington Mystics", "clubJa": "ワシントン・ミスティクス", "league": "WNBA", "sport": "basketball", "from": 2019, "wikidata": "Q1465192", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "coca-cola-coliseum": [
+    { "club": "Toronto Sceptres", "league": "PWHL", "sport": "ice-hockey", "from": 2024, "wikidata": "Q122368957", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Toronto Tempo", "league": "WNBA", "sport": "basketball", "from": 2026, "wikidata": "Q125879905", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "michelob-ultra-arena": [
+    { "club": "Las Vegas Aces", "clubJa": "ラスベガス・エーシズ", "league": "WNBA", "sport": "basketball", "from": 2018, "wikidata": "Q42333021", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+  ],
+  "wintrust-arena": [
+    { "club": "Chicago Sky", "clubJa": "シカゴ・スカイ", "league": "WNBA", "sport": "basketball", "from": 2018, "wikidata": "Q796358", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "place-bell": [
+    { "club": "Montreal Victoire", "league": "PWHL", "sport": "ice-hockey", "from": 2024, "wikidata": "Q122368257", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+  ],
+  "the-arena-ottawa": [
+    { "club": "Ottawa Hockey Club", "league": "NHL", "sport": "ice-hockey", "from": 1908, "to": 1923, "wikidata": "Q1753100", "statements": "P466", "listed": true, "years": "wikipedia" },
+  ],
+  "barton-street-arena": [
+    { "club": "Hamilton Tigers", "league": "NHL", "sport": "ice-hockey", "from": 1920, "to": 1925, "wikidata": "Q1573571", "statements": "P115", "listed": true, "years": "wikipedia" },
+  ],
+  "big-e-coliseum": [
+    { "club": "New England Whalers", "league": "NHL", "sport": "ice-hockey", "from": 1974, "to": 1975, "wikidata": "Q830968", "listed": true, "years": "wikipedia" },
+  ],
+  "boston-garden": [
+    { "club": "Boston Bruins", "clubJa": "ボストン・ブルーインズ", "league": "NHL", "sport": "ice-hockey", "from": 1928, "to": 1995, "wikidata": "Q194121", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Boston Celtics", "clubJa": "ボストン・セルティックス", "league": "NBA", "sport": "basketball", "from": 1946, "to": 1995, "wikidata": "Q131371", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "New England Whalers", "league": "NHL", "sport": "ice-hockey", "from": 1973, "to": 1974, "wikidata": "Q830968", "listed": true, "years": "wikipedia" },
+  ],
+  "buffalo-memorial-auditorium": [
+    { "club": "Buffalo Sabres", "clubJa": "バッファロー・セイバーズ", "league": "NHL", "sport": "ice-hockey", "from": 1970, "to": 1996, "wikidata": "Q131206", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Buffalo Braves", "clubJa": "バッファロー・ブレーブス", "league": "NBA", "sport": "basketball", "from": 1970, "to": 1978, "wikidata": "Q1100222", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Los Angeles Clippers", "clubJa": "ロサンゼルス・クリッパーズ", "league": "NBA", "sport": "basketball", "from": 1970, "to": 1978, "wikidata": "Q976396", "statements": "P115", "years": "wikidata" },
+    { "club": "Atlanta Hawks", "clubJa": "アトランタ・ホークス", "league": "NBA", "sport": "basketball", "from": 1946, "to": 1946, "wikidata": "Q159893", "statements": "P466", "listed": true, "years": "wikidata" },
+  ],
+  "capital-centre": [
+    { "club": "Washington Capitals", "clubJa": "ワシントン・キャピタルズ", "league": "NHL", "sport": "ice-hockey", "from": 1974, "to": 1997, "wikidata": "Q204627", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Washington Wizards", "clubJa": "ワシントン・ウィザーズ", "league": "NBA", "sport": "basketball", "from": 1973, "to": 1997, "wikidata": "Q169165", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Washington Commandos", "league": "Arena Football League", "sport": "american-football", "from": 1987, "to": 1989, "wikidata": "Q7971737", "listed": true, "years": "wikipedia" },
+  ],
+  "chicago-coliseum": [
+    { "club": "Washington Wizards", "clubJa": "ワシントン・ウィザーズ", "league": "NBA", "sport": "basketball", "from": 1962, "to": 1963, "wikidata": "Q169165", "statements": "P115", "years": "wikidata" },
+    { "club": "Chicago Blackhawks", "clubJa": "シカゴ・ブラックホークス", "league": "NHL", "sport": "ice-hockey", "from": 1926, "to": 1929, "wikidata": "Q209636", "statements": "P466 P115", "years": "wikidata" },
+  ],
+  "chicago-stadium": [
+    { "club": "Chicago Blackhawks", "clubJa": "シカゴ・ブラックホークス", "league": "NHL", "sport": "ice-hockey", "from": 1929, "to": 1994, "wikidata": "Q209636", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Chicago Bulls", "clubJa": "シカゴ・ブルズ", "league": "NBA", "sport": "basketball", "from": 1967, "to": 1994, "wikidata": "Q128109", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Chicago Sting", "clubJa": "シカゴ・スティング", "league": "NASL", "sport": "soccer", "from": 1980, "to": 1988, "wikidata": "Q670603", "statements": "P466", "listed": true, "years": "wikidata" },
+    { "club": "Chicago Stags", "clubJa": "シカゴ・スタッグズ", "league": "NBA", "sport": "basketball", "from": 1946, "to": 1950, "wikidata": "Q954929", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "civic-arena": [
+    { "club": "Pittsburgh Penguins", "clubJa": "ピッツバーグ・ペンギンズ", "league": "NHL", "sport": "ice-hockey", "from": 1967, "to": 2010, "wikidata": "Q193643", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Pittsburgh Gladiators", "league": "Arena Football League", "sport": "american-football", "from": 1987, "to": 1990, "wikidata": "Q770543", "listed": true, "years": "wikipedia" },
+  ],
+  "colisee-de-quebec": [
+    { "club": "Quebec Nordiques", "clubJa": "ケベック・ノルディクス", "league": "NHL", "sport": "ice-hockey", "from": 1972, "to": 1995, "wikidata": "Q530764", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "cow-palace": [
+    { "club": "San Jose Sharks", "clubJa": "サンノゼ・シャークス", "league": "NHL", "sport": "ice-hockey", "from": 1991, "to": 1993, "wikidata": "Q206381", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "San Jose Earthquakes", "clubJa": "サンノゼ・アースクエイクス", "aliasesJa": ["サンノゼ・アースクエイクス (1974–88)"], "league": "NASL", "sport": "soccer", "from": 1975, "to": 1984, "wikidata": "Q1095113", "statements": "P466", "listed": true, "years": "wikidata" },
+    { "club": "San Francisco Warriors", "league": "NBA", "sport": "basketball", "from": 1962, "to": 1971, "wikidata": "Q12811690", "statements": "P466", "listed": true, "years": "wikidata" },
+  ],
+  "desert-diamond-arena": [
+    { "club": "Arizona Coyotes", "clubJa": "アリゾナ・コヨーテズ", "league": "NHL", "sport": "ice-hockey", "from": 2003, "to": 2022, "wikidata": "Q206312", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "detroit-olympia": [
+    { "club": "Detroit Red Wings", "clubJa": "デトロイト・レッドウィングス", "league": "NHL", "sport": "ice-hockey", "from": 1927, "to": 1979, "wikidata": "Q194116", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Detroit Pistons", "clubJa": "デトロイト・ピストンズ", "league": "NBA", "sport": "basketball", "from": 1957, "to": 1961, "wikidata": "Q169661", "statements": "P115", "listed": true, "years": "wikidata" },
+    { "club": "Detroit Falcons", "clubJa": "デトロイト・ファルコンズ", "league": "NBA", "sport": "basketball", "from": 1946, "to": 1947, "wikidata": "Q2839652", "statements": "P115", "listed": true, "years": "wikidata" },
+  ],
+  "duquesne-gardens": [
+    { "club": "Pittsburgh Ironmen", "clubJa": "ピッツバーグ・アイアンメン", "league": "NBA", "sport": "basketball", "from": 1946, "to": 1947, "wikidata": "Q3154554", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Pittsburgh Pirates", "clubJa": "ピッツバーグ・パイレーツ", "aliasesJa": ["ピッツバーグ・パイレーツ (NHL)"], "league": "NHL", "sport": "ice-hockey", "from": 1925, "to": 1930, "wikidata": "Q1469370", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "expo-hall": [
+    { "club": "Tampa Bay Lightning", "clubJa": "タンパベイ・ライトニング", "league": "NHL", "sport": "ice-hockey", "from": 1992, "to": 1993, "wikidata": "Q201864", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Tampa Bay Rowdies", "clubJa": "タンパベイ・ローディーズ", "league": "NASL", "sport": "soccer", "from": 1984, "to": 1984, "wikidata": "Q1972199", "listed": true, "years": "wikipedia" },
+  ],
+  "first-horizon-coliseum": [
+    { "club": "Carolina Hurricanes", "clubJa": "カロライナ・ハリケーンズ", "league": "NHL", "sport": "ice-hockey", "from": 1997, "to": 1999, "wikidata": "Q201857", "listed": true, "years": "wikipedia" },
+  ],
+  "kemper-arena": [
+    { "club": "Sacramento Kings", "clubJa": "サクラメント・キングス", "league": "NBA", "sport": "basketball", "from": 1974, "to": 1985, "wikidata": "Q166105", "statements": "P115", "years": "wikidata" },
+  ],
+  "joe-louis-arena": [
+    { "club": "Detroit Red Wings", "clubJa": "デトロイト・レッドウィングス", "league": "NHL", "sport": "ice-hockey", "from": 1979, "to": 2017, "wikidata": "Q194116", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Detroit Drive", "league": "Arena Football League", "sport": "american-football", "from": 1988, "to": 1993, "wikidata": "Q2372933", "listed": true, "years": "wikipedia" },
+    { "club": "Detroit Pistons", "clubJa": "デトロイト・ピストンズ", "league": "NBA", "sport": "basketball", "from": 1985, "to": 1985, "wikidata": "Q169661", "listed": true, "years": "wikipedia" },
+  ],
+  "jubilee-arena": [
+    { "club": "Montreal Canadiens", "clubJa": "モントリオール・カナディアンズ", "league": "NHL", "sport": "ice-hockey", "from": 1909, "to": 1919, "wikidata": "Q188143", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "kia-forum": [
+    { "club": "Los Angeles Sparks", "clubJa": "ロサンゼルス・スパークス", "league": "WNBA", "sport": "basketball", "from": 1997, "to": 2000, "wikidata": "Q1329633", "statements": "P466", "listed": true, "years": "wikipedia" },
+    { "club": "Los Angeles Kings", "clubJa": "ロサンゼルス・キングス", "league": "NHL", "sport": "ice-hockey", "from": 1967, "to": 1999, "wikidata": "Q203008", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Los Angeles Lakers", "clubJa": "ロサンゼルス・レイカーズ", "league": "NBA", "sport": "basketball", "from": 1967, "to": 1999, "wikidata": "Q121783", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Los Angeles Aztecs", "clubJa": "ロサンゼルス・アズテックス", "league": "NASL", "sport": "soccer", "from": 1979, "to": 1980, "wikidata": "Q1156317", "listed": true, "years": "wikipedia" },
+  ],
+  "los-angeles-memorial-sports-arena": [
+    { "club": "Los Angeles Clippers", "clubJa": "ロサンゼルス・クリッパーズ", "league": "NBA", "sport": "basketball", "from": 1984, "to": 1999, "wikidata": "Q976396", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Los Angeles Cobras", "league": "Arena Football League", "sport": "american-football", "from": 1988, "to": 1988, "wikidata": "Q6682047", "listed": true, "years": "wikipedia" },
+    { "club": "Los Angeles Aztecs", "clubJa": "ロサンゼルス・アズテックス", "league": "NASL", "sport": "soccer", "from": 1980, "to": 1981, "wikidata": "Q1156317", "listed": true, "years": "wikipedia" },
+    { "club": "Los Angeles Kings", "clubJa": "ロサンゼルス・キングス", "league": "NHL", "sport": "ice-hockey", "from": 1967, "to": 1967, "wikidata": "Q203008", "listed": true, "years": "wikipedia" },
+    { "club": "Los Angeles Lakers", "clubJa": "ロサンゼルス・レイカーズ", "league": "NBA", "sport": "basketball", "from": 1960, "to": 1967, "wikidata": "Q121783", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "madison-square-garden-1925": [
+    { "club": "New York Knicks", "clubJa": "ニューヨーク・ニックス", "league": "NBA", "sport": "basketball", "from": 1946, "to": 1968, "wikidata": "Q131364", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "New York Rangers", "clubJa": "ニューヨーク・レンジャース", "league": "NHL", "sport": "ice-hockey", "from": 1926, "to": 1968, "wikidata": "Q188984", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "New York Americans", "clubJa": "ニューヨーク・アメリカンズ", "league": "NHL", "sport": "ice-hockey", "from": 1925, "to": 1942, "wikidata": "Q1543977", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "maple-leaf-gardens": [
+    { "club": "Toronto Sceptres", "league": "PWHL", "sport": "ice-hockey", "from": 2023, "to": 2024, "wikidata": "Q122368957", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Toronto Maple Leafs", "clubJa": "トロント・メープルリーフス", "league": "NHL", "sport": "ice-hockey", "from": 1931, "to": 1999, "wikidata": "Q203384", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Toronto Raptors", "clubJa": "トロント・ラプターズ", "league": "NBA", "sport": "basketball", "from": 1997, "to": 1999, "wikidata": "Q132880", "statements": "P466", "years": "wikidata" },
+    { "club": "Toronto Shooting Stars", "league": "NPSL (1967)", "sport": "soccer", "from": 1996, "to": 1997, "wikidata": "Q7826506", "statements": "P115", "listed": true, "years": "wikipedia" },
+    { "club": "Toronto Blizzard", "clubJa": "トロント・ブリザード", "league": "NASL", "sport": "soccer", "from": 1980, "to": 1982, "wikidata": "Q13404889", "listed": true, "years": "wikipedia" },
+    { "club": "Los Angeles Clippers", "clubJa": "ロサンゼルス・クリッパーズ", "league": "NBA", "sport": "basketball", "from": 1971, "to": 1974, "wikidata": "Q976396", "statements": "P115", "years": "wikidata" },
+    { "club": "Toronto Huskies", "clubJa": "トロント・ハスキーズ", "league": "NBA", "sport": "basketball", "from": 1946, "to": 1947, "wikidata": "Q3143461", "statements": "P115", "listed": true, "years": "wikidata" },
+  ],
+  "massmutual-center": [
+    { "club": "Hartford Whalers", "clubJa": "ハートフォード・ホエーラーズ", "league": "NHL", "sport": "ice-hockey", "from": 1979, "to": 1980, "wikidata": "Q830968", "statements": "P466", "listed": true, "years": "wikipedia" },
+  ],
+  "matthews-arena": [
+    { "club": "New England Whalers", "league": "NHL", "sport": "ice-hockey", "from": 1972, "to": 1973, "wikidata": "Q830968", "statements": "P115", "listed": true, "years": "wikipedia" },
+    { "club": "Boston Celtics", "clubJa": "ボストン・セルティックス", "league": "NBA", "sport": "basketball", "from": 1946, "to": 1955, "wikidata": "Q131371", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+    { "club": "Boston Bruins", "clubJa": "ボストン・ブルーインズ", "league": "NHL", "sport": "ice-hockey", "from": 1924, "to": 1928, "wikidata": "Q194121", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "mcnichols-sports-arena": [
+    { "club": "Colorado Avalanche", "clubJa": "コロラド・アバランチ", "league": "NHL", "sport": "ice-hockey", "from": 1995, "to": 1999, "wikidata": "Q206297", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Denver Nuggets", "clubJa": "デンバー・ナゲッツ", "league": "NBA", "sport": "basketball", "from": 1975, "to": 1999, "wikidata": "Q162954", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Denver Dynamite", "league": "Arena Football League", "sport": "american-football", "from": 1987, "to": 1991, "wikidata": "Q3042009", "listed": true, "years": "wikipedia" },
+    { "club": "Colorado Rockies", "clubJa": "コロラド・ロッキーズ", "aliasesJa": ["コロラド・ロッキーズ (NHL)"], "league": "NHL", "sport": "ice-hockey", "from": 1976, "to": 1982, "wikidata": "Q868358", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+  ],
+  "meadowlands-arena": [
+    { "club": "Brooklyn Nets", "clubJa": "ブルックリン・ネッツ", "league": "NBA", "sport": "basketball", "from": 1981, "to": 2010, "wikidata": "Q572134", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "New Jersey Devils", "clubJa": "ニュージャージー・デビルス", "league": "NHL", "sport": "ice-hockey", "from": 1982, "to": 2007, "wikidata": "Q192081", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Cleveland Gladiators", "league": "Arena Football League", "sport": "american-football", "from": 1997, "to": 2002, "wikidata": "Q724171", "listed": true, "years": "wikipedia" },
+    { "club": "New York Cosmos", "clubJa": "ニューヨーク・コスモス", "league": "NASL", "sport": "soccer", "from": 1981, "to": 1985, "wikidata": "Q646135", "listed": true, "years": "wikipedia" },
+  ],
+  "met-center": [
+    { "club": "Minnesota North Stars", "clubJa": "ミネソタ・ノーススターズ", "league": "NHL", "sport": "ice-hockey", "from": 1967, "to": 1993, "wikidata": "Q902512", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+    { "club": "Minnesota Strikers", "clubJa": "ミネソタ・ストライカーズ", "league": "NASL", "sport": "soccer", "from": 1984, "to": 1988, "wikidata": "Q13858732", "listed": true, "years": "wikipedia" },
+    { "club": "Minnesota Kicks", "league": "NASL", "sport": "soccer", "from": 1979, "to": 1981, "wikidata": "Q1133687", "listed": true, "years": "wikipedia" },
+  ],
+  "miami-arena": [
+    { "club": "Miami Heat", "clubJa": "マイアミ・ヒート", "league": "NBA", "sport": "basketball", "from": 1988, "to": 1999, "wikidata": "Q169138", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Florida Panthers", "clubJa": "フロリダ・パンサーズ", "league": "NHL", "sport": "ice-hockey", "from": 1993, "to": 1998, "wikidata": "Q204623", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+  ],
+  "montreal-arena": [
+    { "club": "Montreal Canadiens", "clubJa": "モントリオール・カナディアンズ", "league": "NHL", "sport": "ice-hockey", "from": 1911, "to": 1918, "wikidata": "Q188143", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "montreal-forum": [
+    { "club": "Montreal Manic", "clubJa": "モントリオール・マニック", "league": "NASL", "sport": "soccer", "wikidata": "Q1133645", "listed": true },
+    { "club": "Montreal Canadiens", "clubJa": "モントリオール・カナディアンズ", "league": "NHL", "sport": "ice-hockey", "from": 1926, "to": 1996, "wikidata": "Q188143", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "mount-royal-arena": [
+    { "club": "Montreal Canadiens", "clubJa": "モントリオール・カナディアンズ", "league": "NHL", "sport": "ice-hockey", "from": 1920, "to": 1926, "wikidata": "Q188143", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "mullett-arena": [
+    { "club": "Arizona Coyotes", "clubJa": "アリゾナ・コヨーテズ", "league": "NHL", "sport": "ice-hockey", "from": 2022, "to": 2024, "wikidata": "Q206312", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "mutual-street-arena": [
+    { "club": "Toronto Arenas", "league": "NHL", "sport": "ice-hockey", "from": 1917, "to": 1931, "wikidata": "Q7222210", "statements": "P115", "listed": true, "years": "wikipedia" },
+    { "club": "Toronto Maple Leafs", "clubJa": "トロント・メープルリーフス", "league": "NHL", "sport": "ice-hockey", "from": 1917, "to": 1931, "wikidata": "Q203384", "statements": "P466 P115", "years": "wikidata" },
+  ],
+  "nassau-coliseum": [
+    { "club": "New York Islanders", "clubJa": "ニューヨーク・アイランダース", "league": "NHL", "sport": "ice-hockey", "from": 1972, "to": 2021, "wikidata": "Q194369", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "New York Dragons", "league": "Arena Football League", "sport": "american-football", "from": 2001, "to": 2008, "wikidata": "Q2603547", "listed": true, "years": "wikipedia" },
+    { "club": "New York Nets", "league": "NBA", "sport": "basketball", "from": 1972, "to": 1977, "wikidata": "Q18357897", "listed": true, "years": "wikipedia" },
+  ],
+  "northlands-coliseum": [
+    { "club": "Edmonton Oilers", "clubJa": "エドモントン・オイラーズ", "league": "NHL", "sport": "ice-hockey", "from": 1974, "to": 2016, "wikidata": "Q205973", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Edmonton Drillers", "league": "NPSL (1967)", "sport": "soccer", "from": 1996, "to": 2000, "wikidata": "Q5339038", "statements": "P115", "listed": true, "years": "wikipedia" },
+    { "club": "Edmonton Drillers", "clubJa": "エドモントン・ドリラーズ", "league": "NASL", "sport": "soccer", "from": 1980, "to": 1982, "wikidata": "Q16765359", "listed": true, "years": "wikipedia" },
+  ],
+  "oakland-arena": [
+    { "club": "Golden State Warriors", "clubJa": "ゴールデンステート・ウォリアーズ", "league": "NBA", "sport": "basketball", "from": 1971, "to": 2019, "wikidata": "Q157376", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Golden Bay Earthquakes", "clubJa": "サンノゼ・アースクエイクス", "league": "NASL", "sport": "soccer", "from": 1982, "to": 1984, "wikidata": "Q1095113", "listed": true, "years": "wikipedia" },
+    { "club": "California Golden Seals", "clubJa": "カリフォルニア・ゴールデンシールズ", "league": "NHL", "sport": "ice-hockey", "from": 1970, "to": 1976, "wikidata": "Q849315", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+  ],
+  "omni-coliseum": [
+    { "club": "Atlanta Hawks", "clubJa": "アトランタ・ホークス", "league": "NBA", "sport": "basketball", "from": 1972, "to": 1997, "wikidata": "Q159893", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Atlanta Chiefs", "league": "NASL", "sport": "soccer", "from": 1979, "to": 1981, "wikidata": "Q2358722", "listed": true, "years": "wikipedia" },
+    { "club": "Atlanta Flames", "clubJa": "アトランタ・フレームス", "league": "NHL", "sport": "ice-hockey", "from": 1972, "to": 1980, "wikidata": "Q756173", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "ottawa-auditorium": [
+    { "club": "Ottawa Senators", "clubJa": "先代のオタワ・セネターズ", "league": "NHL", "sport": "ice-hockey", "from": 1923, "to": 1934, "wikidata": "Q1753100", "statements": "P466", "listed": true, "years": "wikipedia" },
+  ],
+  "peoplesbank-arena": [
+    { "club": "New England Sea Wolves", "league": "Arena Football League", "sport": "american-football", "from": 1999, "to": 2000, "wikidata": "Q1722865", "listed": true, "years": "wikipedia" },
+    { "club": "Hartford Whalers", "clubJa": "ハートフォード・ホエーラーズ", "league": "NHL", "sport": "ice-hockey", "from": 1975, "to": 1997, "wikidata": "Q830968", "listed": true, "years": "wikipedia" },
+    { "club": "Connecticut Coyotes", "league": "Arena Football League", "sport": "american-football", "from": 1995, "to": 1996, "wikidata": "Q5161505", "listed": true, "years": "wikipedia" },
+    { "club": "Boston Celtics", "clubJa": "ボストン・セルティックス", "league": "NBA", "sport": "basketball", "from": 1975, "to": 1995, "wikidata": "Q131371", "statements": "P115", "listed": true, "years": "wikidata" },
+  ],
+  "philadelphia-arena": [
+    { "club": "Philadelphia Warriors", "league": "NBA", "sport": "basketball", "from": 1946, "to": 1952, "wikidata": "Q16253422", "listed": true, "years": "wikipedia" },
+    { "club": "Philadelphia Quakers", "league": "NHL", "sport": "ice-hockey", "from": 1930, "to": 1931, "wikidata": "Q1065402", "statements": "P115", "listed": true, "years": "wikipedia" },
+  ],
+  "quebec-arena": [
+    { "club": "Quebec Bulldogs", "clubJa": "ケベック・ブルドッグス", "league": "NHL", "sport": "ice-hockey", "wikidata": "Q1469113", "statements": "P466", "listed": true },
+  ],
+  "reunion-arena": [
+    { "club": "Dallas Desperados", "clubJa": "ダラス・デスペラードス", "league": "Arena Football League", "sport": "american-football", "from": 2003, "to": 2003, "wikidata": "Q3024550", "listed": true, "years": "wikipedia" },
+    { "club": "Dallas Mavericks", "clubJa": "ダラス・マーベリックス", "league": "NBA", "sport": "basketball", "from": 1980, "to": 2001, "wikidata": "Q132893", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Dallas Stars", "clubJa": "ダラス・スターズ", "league": "NHL", "sport": "ice-hockey", "from": 1993, "to": 2001, "wikidata": "Q208652", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Dallas Texans", "league": "Arena Football League", "sport": "american-football", "from": 1990, "to": 1993, "wikidata": "Q5211425", "listed": true, "years": "wikipedia" },
+    { "club": "Dallas Tornado", "clubJa": "ダラス・トーネード", "league": "United Soccer Association", "sport": "soccer", "from": 1980, "to": 1981, "wikidata": "Q1158012", "listed": true, "years": "wikipedia" },
+  ],
+  "richfield-coliseum": [
+    { "club": "Cleveland Cavaliers", "clubJa": "クリーブランド・キャバリアーズ", "league": "NBA", "sport": "basketball", "from": 1974, "to": 1994, "wikidata": "Q162990", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Cleveland Thunderbolts", "league": "Arena Football League", "sport": "american-football", "from": 1992, "to": 1994, "wikidata": "Q5132263", "listed": true, "years": "wikipedia" },
+    { "club": "Cleveland Barons", "league": "NHL", "sport": "ice-hockey", "from": 1976, "to": 1978, "wikidata": "Q546839", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+  ],
+  "st-louis-arena": [
+    { "club": "St. Louis Ambush", "league": "NPSL (1967)", "sport": "soccer", "from": 1992, "to": 1994, "wikidata": "Q7589555", "statements": "P115", "listed": true, "years": "wikipedia" },
+    { "club": "St. Louis Blues", "clubJa": "セントルイス・ブルース", "league": "NHL", "sport": "ice-hockey", "from": 1967, "to": 1994, "wikidata": "Q207735", "listed": true, "years": "wikipedia" },
+    { "club": "St. Louis Stars", "clubJa": "セントルイス・スターズ", "aliasesJa": ["セントルイス・スターズ (サッカー)"], "league": "NASL", "sport": "soccer", "from": 1971, "to": 1974, "wikidata": "Q1942096", "listed": true, "years": "wikipedia" },
+    { "club": "St. Louis Bombers", "clubJa": "セントルイス・ボンバーズ", "league": "NBA", "sport": "basketball", "from": 1946, "to": 1950, "wikidata": "Q2320413", "statements": "P115", "listed": true, "years": "wikidata" },
+    { "club": "St. Louis Eagles", "league": "NHL", "sport": "ice-hockey", "from": 1934, "to": 1935, "wikidata": "Q642399", "statements": "P115", "listed": true, "years": "wikipedia" },
+  ],
+  "spectrum": [
+    { "club": "Philadelphia 76ers", "clubJa": "フィラデルフィア・セブンティシクサーズ", "league": "NBA", "sport": "basketball", "from": 1967, "to": 1996, "wikidata": "Q138089", "statements": "P115", "listed": true, "years": "wikidata" },
+    { "club": "Philadelphia Flyers", "clubJa": "フィラデルフィア・フライヤーズ", "league": "NHL", "sport": "ice-hockey", "from": 1967, "to": 1996, "wikidata": "Q192083", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "stampede-corral": [
+    { "club": "Calgary Flames", "clubJa": "カルガリー・フレームス", "league": "NHL", "sport": "ice-hockey", "from": 1980, "to": 1983, "wikidata": "Q194126", "statements": "P466 P115", "years": "wikidata" },
+  ],
+  "td-place-arena": [
+    { "club": "Ottawa Charge", "league": "PWHL", "sport": "ice-hockey", "from": 2024, "to": 2026, "wikidata": "Q122234829", "statements": "P466", "listed": true, "years": "wikipedia" },
+    { "club": "Ottawa Senators", "clubJa": "オタワ・セネターズ", "league": "NHL", "sport": "ice-hockey", "from": 1992, "to": 1996, "wikidata": "Q203013", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "windsor-arena": [
+    { "club": "Detroit Red Wings", "clubJa": "デトロイト・レッドウィングス", "league": "NHL", "sport": "ice-hockey", "from": 1926, "to": 1927, "wikidata": "Q194116", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "winnipeg-arena": [
+    { "club": "Winnipeg Jets", "clubJa": "ウィニペグ・ジェッツ", "league": "NHL", "sport": "ice-hockey", "from": 1972, "to": 1996, "wikidata": "Q576406", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+    { "club": "Winnipeg Thunder", "clubJa": "ウィニペグ・サンダー", "league": "WBL", "sport": "basketball", "from": 1992, "to": 1994, "wikidata": "Q8025817", "listed": true, "years": "wikipedia" },
+  ],
+  "baltimore-civic-center": [
+    { "club": "Baltimore Brigade", "league": "Arena Football League", "sport": "american-football", "from": 2017, "to": 2019, "wikidata": "Q28448787", "listed": true, "years": "wikipedia" },
+    { "club": "Baltimore Bullets", "league": "NBA", "sport": "basketball", "from": 1963, "to": 1973, "wikidata": "Q169165", "statements": "P115", "listed": true, "years": "wikidata" },
+  ],
+  "69th-regiment-armory": [
+    { "club": "New York Knicks", "clubJa": "ニューヨーク・ニックス", "league": "NBA", "sport": "basketball", "from": 1946, "to": 1960, "wikidata": "Q131364", "statements": "P115", "years": "wikidata" },
+  ],
+  "allen-county-war-memorial-coliseum": [
+    { "club": "Fort Wayne Pistons", "league": "NBA", "sport": "basketball", "from": 1952, "to": 1957, "wikidata": "Q169661", "statements": "P115", "listed": true, "years": "wikidata" },
+  ],
+  "orlando-arena": [
+    { "club": "Orlando Magic", "clubJa": "オーランド・マジック", "league": "NBA", "sport": "basketball", "from": 1989, "to": 2010, "wikidata": "Q161337", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Orlando Predators", "clubJa": "オーランド・プレデターズ", "league": "Arena Football League", "sport": "american-football", "from": 1991, "to": 2010, "wikidata": "Q2304286", "listed": true, "years": "wikipedia" },
+    { "club": "Orlando Miracle", "league": "WNBA", "sport": "basketball", "from": 1999, "to": 2002, "wikidata": "Q2031044", "statements": "P115", "listed": true, "years": "wikipedia" },
+  ],
+  "arco-arena": [
+    { "club": "Sacramento Kings", "clubJa": "サクラメント・キングス", "league": "NBA", "sport": "basketball", "from": 1988, "to": 2016, "wikidata": "Q166105", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Sacramento Monarchs", "clubJa": "サクラメント・モナークス", "league": "WNBA", "sport": "basketball", "from": 1997, "to": 2009, "wikidata": "Q1541588", "statements": "P115", "listed": true, "years": "wikipedia" },
+    { "club": "Florida Bobcats", "league": "Arena Football League", "sport": "american-football", "from": 1992, "to": 1992, "wikidata": "Q5461235", "listed": true, "years": "wikipedia" },
+  ],
+  "arco-arena-1985": [
+    { "club": "Sacramento Kings", "clubJa": "サクラメント・キングス", "league": "NBA", "sport": "basketball", "from": 1985, "to": 1988, "wikidata": "Q166105", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "arizona-veterans-memorial-coliseum": [
+    { "club": "Phoenix Suns", "clubJa": "フェニックス・サンズ", "league": "NBA", "sport": "basketball", "from": 1968, "to": 1992, "wikidata": "Q164177", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "baltimore-coliseum": [
+    { "club": "Baltimore Bullets", "clubJa": "ボルチモア・ブレッツ", "aliasesJa": ["ボルティモア・ブレッツ (1944-54)"], "league": "NBA", "sport": "basketball", "from": 1944, "to": 1954, "wikidata": "Q2928124", "statements": "P115", "listed": true, "years": "wikidata" },
+  ],
+  "bill-graham-civic-auditorium": [
+    { "club": "Golden State Warriors", "clubJa": "ゴールデンステート・ウォリアーズ", "league": "NBA", "sport": "basketball", "from": 1964, "to": 1971, "wikidata": "Q157376", "statements": "P115", "years": "wikidata" },
+  ],
+  "rochester-community-war-memorial": [
+    { "club": "Rochester Royals", "league": "NBA", "sport": "basketball", "from": 1955, "to": 1957, "wikidata": "Q166105", "statements": "P115", "listed": true, "years": "wikidata" },
+  ],
+  "bradley-center": [
+    { "club": "Milwaukee Bucks", "clubJa": "ミルウォーキー・バックス", "league": "NBA", "sport": "basketball", "from": 1988, "to": 2018, "wikidata": "Q169637", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Milwaukee Mustangs", "league": "Arena Football League", "sport": "american-football", "from": 1994, "to": 2001, "wikidata": "Q6861774", "listed": true, "years": "wikipedia" },
+  ],
+  "calihan-hall": [
+    { "club": "Detroit Pistons", "clubJa": "デトロイト・ピストンズ", "league": "NBA", "sport": "basketball", "from": 1957, "to": 1961, "wikidata": "Q169661", "statements": "P115", "listed": true, "years": "wikidata" },
+  ],
+  "charlotte-coliseum": [
+    { "club": "Charlotte Sting", "clubJa": "シャーロット・スティング", "league": "WNBA", "sport": "basketball", "from": 1997, "to": 2005, "wikidata": "Q1067358", "statements": "P115", "listed": true, "years": "wikipedia" },
+    { "club": "Charlotte Hornets", "clubJa": "シャーロット・ホーネッツ", "league": "NBA", "sport": "basketball", "from": 1988, "to": 2002, "wikidata": "Q163480", "statements": "P115", "listed": true, "years": "wikipedia" },
+    { "club": "Charlotte Rage", "league": "Arena Football League", "sport": "american-football", "from": 1992, "to": 1996, "wikidata": "Q5086104", "listed": true, "years": "wikipedia" },
+  ],
+  "cincinnati-gardens": [
+    { "club": "Cincinnati Silverbacks", "league": "NPSL (1967)", "sport": "soccer", "from": 1995, "to": 1997, "wikidata": "Q5120304", "listed": true, "years": "wikipedia" },
+    { "club": "Cincinnati Royals", "league": "NBA", "sport": "basketball", "from": 1957, "to": 1972, "wikidata": "Q166105", "statements": "P115", "listed": true, "years": "wikidata" },
+  ],
+  "cleveland-arena": [
+    { "club": "Cleveland Cavaliers", "clubJa": "クリーブランド・キャバリアーズ", "league": "NBA", "sport": "basketball", "from": 1970, "to": 1974, "wikidata": "Q162990", "statements": "P115", "listed": true, "years": "wikidata" },
+    { "club": "Cincinnati Royals", "league": "NBA", "sport": "basketball", "from": 1966, "to": 1970, "wikidata": "Q166105", "listed": true, "years": "wikipedia" },
+    { "club": "Cleveland Rebels", "clubJa": "クリーブランド・レベルズ", "league": "NBA", "sport": "basketball", "from": 1946, "to": 1947, "wikidata": "Q3421779", "statements": "P115", "listed": true, "years": "wikidata" },
+  ],
+  "cobo-arena": [
+    { "club": "Detroit Pistons", "clubJa": "デトロイト・ピストンズ", "league": "NBA", "sport": "basketball", "from": 1961, "to": 1978, "wikidata": "Q169661", "statements": "P115", "years": "wikidata" },
+  ],
+  "the-summit": [
+    { "club": "Houston Comets", "clubJa": "ヒューストン・コメッツ", "league": "WNBA", "sport": "basketball", "from": 1997, "to": 2003, "wikidata": "Q1479748", "statements": "P115", "listed": true, "years": "wikipedia" },
+    { "club": "Houston Rockets", "clubJa": "ヒューストン・ロケッツ", "league": "NBA", "sport": "basketball", "from": 1975, "to": 2003, "wikidata": "Q161345", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Houston ThunderBears", "clubJa": "ヒューストン・サンダーベアーズ", "league": "Arena Football League", "sport": "american-football", "from": 1998, "to": 2000, "wikidata": "Q5916769", "listed": true, "years": "wikipedia" },
+  ],
+  "denver-auditorium-arena": [
+    { "club": "Denver Nuggets", "clubJa": "デンバー・ナゲッツ", "league": "NBA", "sport": "basketball", "from": 1967, "to": 1975, "wikidata": "Q162954", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Denver Nuggets", "league": "NBA", "sport": "basketball", "from": 1948, "to": 1950, "wikidata": "Q726423", "statements": "P115", "listed": true, "years": "wikidata" },
+  ],
+  "edgerton-park-arena": [
+    { "club": "Rochester Royals", "league": "NBA", "sport": "basketball", "from": 1945, "to": 1955, "wikidata": "Q166105", "statements": "P115", "listed": true, "years": "wikidata" },
+  ],
+  "hofheinz-pavilion": [
+    { "club": "Houston Rockets", "clubJa": "ヒューストン・ロケッツ", "league": "NBA", "sport": "basketball", "from": 1971, "to": 1975, "wikidata": "Q161345", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "hemisfair-arena": [
+    { "club": "San Antonio Spurs", "clubJa": "サンアントニオ・スパーズ", "league": "NBA", "sport": "basketball", "from": 1973, "to": 1993, "wikidata": "Q159729", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "hinkle-fieldhouse": [
+    { "club": "Indiana Fever", "clubJa": "インディアナ・フィーバー", "league": "WNBA", "sport": "basketball", "from": 2020, "to": 2022, "wikidata": "Q1631017", "statements": "P466 P115", "years": "wikidata" },
+    { "club": "Indianapolis Olympians", "clubJa": "インディアナポリス・オリンピアンズ", "league": "NBA", "sport": "basketball", "from": 1949, "to": 1953, "wikidata": "Q513372", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Indianapolis Jets", "clubJa": "インディアナポリス・ジェッツ", "league": "NBA", "sport": "basketball", "from": 1948, "to": 1949, "wikidata": "Q3177814", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "international-amphitheatre": [
+    { "club": "Chicago Sting", "clubJa": "シカゴ・スティング", "league": "NASL", "sport": "soccer", "from": 1976, "to": 1976, "wikidata": "Q670603", "listed": true, "years": "wikipedia" },
+    { "club": "Chicago Bulls", "clubJa": "シカゴ・ブルズ", "league": "NBA", "sport": "basketball", "from": 1966, "to": 1967, "wikidata": "Q128109", "statements": "P115", "listed": true, "years": "wikidata" },
+    { "club": "Chicago Packers", "league": "NBA", "sport": "basketball", "from": 1961, "to": 1962, "wikidata": "Q169165", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "rutgers-athletic-center": [
+    { "club": "New Jersey Nets", "league": "NBA", "sport": "basketball", "from": 1977, "to": 1981, "wikidata": "Q115657357", "statements": "P115", "listed": true, "years": "wikidata" },
+  ],
+  "kiel-auditorium": [
+    { "club": "St. Louis Hawks", "league": "NBA", "sport": "basketball", "from": 1955, "to": 1968, "wikidata": "Q159893", "statements": "P115", "listed": true, "years": "wikidata" },
+  ],
+  "loyola-field-house": [
+    { "club": "New Orleans Jazz", "league": "NBA", "sport": "basketball", "from": 1974, "to": 1975, "wikidata": "Q170649", "statements": "P115", "listed": true, "years": "wikidata" },
+  ],
+  "market-square-arena": [
+    { "club": "Indiana Pacers", "clubJa": "インディアナ・ペイサーズ", "league": "NBA", "sport": "basketball", "from": 1974, "to": 1999, "wikidata": "Q170329", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "alexander-memorial-coliseum": [
+    { "club": "Atlanta Dream", "clubJa": "アトランタ・ドリーム", "league": "WNBA", "sport": "basketball", "from": 2017, "to": 2018, "wikidata": "Q756160", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Atlanta Hawks", "clubJa": "アトランタ・ホークス", "league": "NBA", "sport": "basketball", "from": 1968, "to": 1999, "wikidata": "Q159893", "statements": "P115", "listed": true, "years": "wikidata" },
+  ],
+  "memphis-pyramid": [
+    { "club": "Memphis Grizzlies", "clubJa": "メンフィス・グリズリーズ", "league": "NBA", "sport": "basketball", "from": 2001, "to": 2004, "wikidata": "Q165529", "statements": "P466 P115", "years": "wikidata" },
+  ],
+  "minneapolis-armory": [
+    { "club": "Los Angeles Lakers", "clubJa": "ロサンゼルス・レイカーズ", "league": "NBA", "sport": "basketball", "from": 1947, "to": 1960, "wikidata": "Q121783", "statements": "P466 P115", "years": "wikidata" },
+  ],
+  "minneapolis-auditorium": [
+    { "club": "Los Angeles Lakers", "clubJa": "ロサンゼルス・レイカーズ", "league": "NBA", "sport": "basketball", "to": 1960, "wikidata": "Q121783", "statements": "P466", "years": "wikidata" },
+    { "club": "Minneapolis Lakers", "league": "NBA", "sport": "basketball", "from": 1947, "to": 1959, "wikidata": "Q929032", "listed": true, "years": "wikipedia" },
+  ],
+  "moody-coliseum": [
+    { "club": "San Antonio Spurs", "clubJa": "サンアントニオ・スパーズ", "league": "NBA", "sport": "basketball", "from": 1967, "to": 1973, "wikidata": "Q159729", "statements": "P466 P115", "years": "wikidata" },
+  ],
+  "municipal-auditorium-kansas-city": [
+    { "club": "Sacramento Kings", "clubJa": "サクラメント・キングス", "league": "NBA", "sport": "basketball", "from": 1972, "to": 1974, "wikidata": "Q166105", "statements": "P115", "years": "wikidata" },
+  ],
+  "municipal-auditorium-new-orleans": [
+    { "club": "Utah Jazz", "clubJa": "ユタ・ジャズ", "league": "NBA", "sport": "basketball", "from": 1974, "to": 1975, "wikidata": "Q170649", "statements": "P115", "listed": true, "years": "wikidata" },
+  ],
+  "omaha-civic-auditorium": [
+    { "club": "Sacramento Kings", "clubJa": "サクラメント・キングス", "league": "NBA", "sport": "basketball", "from": 1972, "to": 1975, "wikidata": "Q166105", "statements": "P115", "listed": true, "years": "wikipedia" },
+  ],
+  "palace-of-auburn-hills": [
+    { "club": "Detroit Pistons", "clubJa": "デトロイト・ピストンズ", "league": "NBA", "sport": "basketball", "from": 1988, "to": 2017, "wikidata": "Q169661", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Detroit Shock", "clubJa": "デトロイト・ショック", "league": "WNBA", "sport": "basketball", "from": 1998, "to": 2009, "wikidata": "Q3175515", "statements": "P115", "listed": true, "years": "wikipedia" },
+    { "club": "Detroit Fury", "league": "Arena Football League", "sport": "american-football", "from": 2001, "to": 2004, "wikidata": "Q5265933", "listed": true, "years": "wikipedia" },
+  ],
+  "pechanga-arena": [
+    { "club": "San Diego Sockers", "clubJa": "サンディエゴ・ソッカーズ", "aliasesJa": ["サンディエゴ・ソッカーズ (1978年-1996年)"], "league": "NASL", "sport": "soccer", "wikidata": "Q2017456", "listed": true },
+    { "club": "Los Angeles Clippers", "clubJa": "ロサンゼルス・クリッパーズ", "league": "NBA", "sport": "basketball", "from": 1978, "to": 1984, "wikidata": "Q976396", "statements": "P115", "listed": true, "years": "wikidata" },
+    { "club": "Houston Rockets", "clubJa": "ヒューストン・ロケッツ", "league": "NBA", "sport": "basketball", "from": 1967, "to": 1971, "wikidata": "Q161345", "statements": "P466 P115", "years": "wikidata" },
+  ],
+  "philadelphia-convention-hall-and-civic-center": [
+    { "club": "Philadelphia 76ers", "clubJa": "フィラデルフィア・セブンティシクサーズ", "league": "NBA", "sport": "basketball", "from": 1963, "to": 1967, "wikidata": "Q138089", "statements": "P115", "listed": true, "years": "wikidata" },
+    { "club": "Philadelphia Warriors", "league": "NBA", "sport": "basketball", "from": 1952, "to": 1962, "wikidata": "Q16253422", "listed": true, "years": "wikipedia" },
+  ],
+  "salt-palace": [
+    { "club": "Utah Jazz", "clubJa": "ユタ・ジャズ", "league": "NBA", "sport": "basketball", "from": 1979, "to": 1991, "wikidata": "Q170649", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "sheboygan-armory": [
+    { "club": "Sheboygan Redskins", "clubJa": "シボイガン・レッドスキンズ", "league": "NBA", "sport": "basketball", "from": 1942, "to": 1951, "wikidata": "Q2354728", "statements": "P115", "years": "wikidata" },
+  ],
+  "war-memorial-gymnasium": [
+    { "club": "Golden State Warriors", "clubJa": "ゴールデンステート・ウォリアーズ", "league": "NBA", "sport": "basketball", "from": 1962, "to": 1965, "wikidata": "Q157376", "statements": "P115", "years": "wikidata" },
+  ],
+  "tacoma-dome": [
+    { "club": "Seattle Sounders", "clubJa": "シアトル・サウンダーズ", "aliasesJa": ["シアトル・サウンダーズ (USL)"], "league": "USL First Division", "sport": "soccer", "wikidata": "Q2091731", "listed": true },
+    { "club": "Oklahoma City Thunder", "clubJa": "オクラホマシティ・サンダー", "league": "NBA", "sport": "basketball", "from": 1994, "to": 1995, "wikidata": "Q180950", "statements": "P115", "years": "wikidata" },
+  ],
+  "the-hippodrome": [
+    { "club": "Waterloo Hawks", "clubJa": "ウォータールー・ホークス", "league": "NBA", "sport": "basketball", "from": 1948, "to": 1951, "wikidata": "Q3128787", "statements": "P115", "listed": true, "years": "wikidata" },
+  ],
+  "toyota-coliseum": [
+    { "club": "Philadelphia 76ers", "clubJa": "フィラデルフィア・セブンティシクサーズ", "league": "NBA", "sport": "basketball", "from": 1949, "to": 1951, "wikidata": "Q138089", "statements": "P115", "years": "wikidata" },
+  ],
+  "uline-arena": [
+    { "club": "Washington Capitols", "clubJa": "ワシントン・キャピトルズ", "league": "NBA", "sport": "basketball", "from": 1946, "to": 1951, "wikidata": "Q957952", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "onondaga-county-war-memorial": [
+    { "club": "Philadelphia 76ers", "clubJa": "フィラデルフィア・セブンティシクサーズ", "league": "NBA", "sport": "basketball", "from": 1951, "to": 1963, "wikidata": "Q138089", "statements": "P115", "years": "wikidata" },
+    { "club": "Syracuse Nationals", "league": "NBA", "sport": "basketball", "from": 1951, "to": 1963, "wikidata": "Q5870198", "listed": true, "years": "wikipedia" },
+  ],
+  "milwaukee-arena": [
+    { "club": "Milwaukee Bucks", "clubJa": "ミルウォーキー・バックス", "league": "NBA", "sport": "basketball", "from": 1968, "to": 1988, "wikidata": "Q169637", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Milwaukee Hawks", "league": "NBA", "sport": "basketball", "from": 1951, "to": 1955, "wikidata": "Q159893", "statements": "P115", "listed": true, "years": "wikidata" },
+  ],
+  "veterans-memorial-coliseum": [
+    { "club": "Portland Timbers", "clubJa": "ポートランド・ティンバーズ", "league": "NASL", "sport": "soccer", "wikidata": "Q1138386", "listed": true },
+    { "club": "Portland Trail Blazers", "clubJa": "ポートランド・トレイルブレイザーズ", "league": "NBA", "sport": "basketball", "from": 1970, "to": 1995, "wikidata": "Q167253", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "wharton-field-house": [
+    { "club": "Tri-Cities Blackhawks", "league": "NBA", "sport": "basketball", "from": 1946, "to": 1951, "wikidata": "Q159893", "statements": "P115", "listed": true, "years": "wikidata" },
+  ],
+  "allstate-arena": [
+    { "club": "Chicago Sky", "clubJa": "シカゴ・スカイ", "league": "WNBA", "sport": "basketball", "from": 2010, "to": 2017, "wikidata": "Q796358", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+    { "club": "Chicago Power", "league": "NPSL (1967)", "sport": "soccer", "from": 1988, "to": 1996, "wikidata": "Q5095750", "listed": true, "years": "wikipedia" },
+    { "club": "Chicago Bruisers", "league": "Arena Football League", "sport": "american-football", "from": 1987, "to": 1989, "wikidata": "Q5095517", "statements": "P466", "listed": true, "years": "wikidata" },
+    { "club": "Chicago Express", "league": "WBL", "sport": "basketball", "from": 1988, "to": 1988, "wikidata": "Q5095588", "statements": "P466", "listed": true, "years": "wikipedia" },
+    { "club": "Chicago Sting", "clubJa": "シカゴ・スティング", "league": "NASL", "sport": "soccer", "from": 1984, "to": 1988, "wikidata": "Q670603", "statements": "P466", "listed": true, "years": "wikipedia" },
+  ],
+  "bok-center": [
+    { "club": "Tulsa Shock", "clubJa": "タルサ・ショック", "league": "WNBA", "sport": "basketball", "from": 2010, "to": 2015, "wikidata": "Q1536851", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+    { "club": "Tulsa Talons", "league": "Arena Football League", "sport": "american-football", "from": 2009, "to": 2011, "wikidata": "Q724139", "listed": true, "years": "wikipedia" },
+  ],
+  "college-park-center": [
+    { "club": "Dallas Wings", "clubJa": "ダラス・ウィングス", "league": "WNBA", "sport": "basketball", "from": 2016, "to": 2026, "wikidata": "Q21334944", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+  ],
+  "credit-union-1-arena": [
+    { "club": "Chicago Sky", "clubJa": "シカゴ・スカイ", "league": "WNBA", "sport": "basketball", "from": 2006, "to": 2009, "wikidata": "Q796358", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "mohegan-sun-arena": [
+    { "club": "Connecticut Sun", "clubJa": "コネティカット・サン", "league": "WNBA", "sport": "basketball", "from": 2003, "to": 2026, "wikidata": "Q1126243", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+  ],
+  "reliant-arena": [
+    { "club": "Houston Comets", "clubJa": "ヒューストン・コメッツ", "league": "WNBA", "sport": "basketball", "wikidata": "Q1479748", "listed": true },
+  ],
+  "westchester-county-center": [
+    { "club": "New York Liberty", "clubJa": "ニューヨーク・リバティ", "league": "WNBA", "sport": "basketball", "from": 2018, "to": 2019, "wikidata": "Q974705", "statements": "P466 P115", "listed": true, "years": "wikidata" },
+  ],
+  "total-mortgage-arena": [
+    { "club": "New York Sirens", "league": "PWHL", "sport": "ice-hockey", "from": 2024, "to": 2024, "wikidata": "Q122338601", "statements": "P466 P115", "listed": true, "years": "wikipedia" },
+  ],
+  "tsongas-center": [
+    { "club": "Boston Fleet", "league": "PWHL", "sport": "ice-hockey", "from": 2024, "to": 2026, "wikidata": "Q122369365", "statements": "P466", "listed": true, "years": "wikipedia" },
+  ],
+  "verdun-auditorium": [
+    { "club": "Montreal Victoire", "league": "PWHL", "sport": "ice-hockey", "from": 2024, "to": 2024, "wikidata": "Q122368257", "listed": true, "years": "wikipedia" },
+  ],
+  "rhode-island-auditorium": [
+    { "club": "Providence Steamrollers", "clubJa": "プロビデンス・スチームローラーズ", "league": "NBA", "sport": "basketball", "from": 1946, "to": 1949, "wikidata": "Q2113979", "statements": "P115", "listed": true, "years": "wikidata" },
   ],
 };

@@ -29,9 +29,10 @@ Kyogijo Stadiums draws sports surfaces as SVG, to scale, with the score on them.
 - [Special games](./special-games.md): a rink in a ballpark, a court on a carrier's deck, baseball over a stadium's pitch: 18 games to scale, each with its sources.
 - [Ballparks](./ballparks.md): 94 parks, each with its own fence, and the past ones by season.
 - [The grounds](./grounds.md): 64 soccer grounds, each pitch at its published size.
+- [The arenas](./arenas.md): 167 arenas of the NHL, the NBA, the WNBA and the PWHL, with the size of a rink where an article gives one.
 - [League variants](./variants.md): the WNBA, FIBA, the NCAA, the IIHF, Little League and more, each from its rulebook.
 - [Surfaces through the years](./eras.md): the markings of a season, each change cited.
-- [The atlas](./atlas.md): every park and ground on a map.
+- [The atlas](./atlas.md): every park, ground and arena on a map.
 
 ## Data on a surface
 

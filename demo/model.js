@@ -1,7 +1,7 @@
 // What the demo's playground is, apart from the page: the state a web address asks for, the options that state draws, the
 // choices every control offers, and which rows are shown. The page's script (demo.js) runs it in the browser; the build
 // (scripts/site.mjs) runs the same code to write the first view into the HTML, so what the script finds is what it would draw.
-import { COURT_THEMES, ERA_SPORTS, GROUNDS, LEAGUES, PARKS, SOCCER_PITCH_IDS, SOCCER_PROVIDER_IDS, SPORTS, eraRange, hasHistory, leagueChanges } from "./dist/index.js";
+import { ARENAS, COURT_THEMES, ERA_SPORTS, GROUNDS, LEAGUES, PARKS, SOCCER_PITCH_IDS, SOCCER_PROVIDER_IDS, SPORTS, eraRange, hasHistory, leagueChanges } from "./dist/index.js";
 import { EMBLEM_GROUPS } from "./emblems.js";
 import { EMBLEMS, FAMILIES, GAMES, TEAMS, TEAMS_JA } from "./examples.js";
 import { poolRace, shortRace } from "./pool-data.js";
@@ -82,6 +82,8 @@ export function makeState(params, kept = null) {
     poolSection: params.get("poolsection") === "1",
     pitch: pick(params.get("pitch"), SOCCER_PITCH_IDS, "fifa"),
     ground: params.get("ground") && GROUNDS[params.get("ground")] ? params.get("ground") : "none",
+    // The arena whose rink or court an atlas place asked for (NHL and NBA only): `none` draws the league's.
+    arena: params.get("arena") && ARENAS[params.get("arena")] ? params.get("arena") : "none",
     pitchType: pick(params.get("pitchtype"), SOCCER_PROVIDER_IDS, "none"),
     pattern: pick(params.get("pattern"), PATTERNS, "bands"),
     goals: pick(params.get("goals"), GOALS, "box"),
@@ -199,6 +201,7 @@ export function optionsFor(s, lang, forCode = false) {
   if (s.sport === "soccer") {
     if (s.pitch !== "fifa") o.pitch = s.pitch;
     if (s.ground !== "none") o.ground = s.ground;
+    if (s.arena !== "none" && (s.sport === "nhl" || s.sport === "nba")) o.arena = s.arena;
     if (s.pitchType !== "none") o.pitchType = s.pitchType;
     if (s.pattern !== "bands") o.stripePattern = s.pattern;
     if (s.goals !== "box") o.goals = s.goals;

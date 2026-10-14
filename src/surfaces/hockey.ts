@@ -16,8 +16,8 @@ export function boardsY(x: number, radius: number = NHL.cornerRadius): number {
  * season (today's by default) marked it; with a `rink` (leagues.ts), that league's, in feet.
  */
 export function hockey(o: BuildOptions, era?: NhlRules, rink: RinkSpec = NHL_RINK): Surface {
-  // The NHL's rink has a history of its own (eras.ts); a league's, if it has one, is already in its `rink`.
-  const nhl = rink === NHL_RINK ? (era ?? rulesFor("nhl").rules) : undefined;
+  // The NHL's rink has a history of its own (eras.ts), and so has an arena's rink of another size (an `era` given with it); a league's, if it has one, is already in its `rink`.
+  const nhl = rink === NHL_RINK || era !== undefined ? (era ?? rulesFor("nhl").rules) : undefined;
   const { length: L, width: W, cornerRadius: r } = rink;
   const g = nhl?.goalLine ?? rink.goalLine;
   const blueLine = nhl?.blueLine ?? rink.blueLine;
