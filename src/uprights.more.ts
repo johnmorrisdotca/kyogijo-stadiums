@@ -3,12 +3,15 @@
 // view"); what a rulebook leaves to the maker (a mesh's cell, the thickness of a bar) is ours and said so there.
 import type { Band, CourtGeometry, CourtPlan } from "./court.ts";
 import type { NetballFigures, PadelFigures, RacquetballFigures, RoundnetFigures, SepakTakrawFigures, SquashFigures, TeqballFigures } from "./leagues/courts.ts";
-import { bar, mesh, n, plane, pole, polygon, threads, wall, type Plane, type Upright } from "./turn.kit.ts";
+import { bar, mesh, n, plane, pole, polygon, shy, threads, wall, type Plane, type Upright } from "./turn.kit.ts";
 import { netPlane, sag, tableBody } from "./uprights.netkit.ts";
 import type { NetEnd } from "./uprights.net.ts";
 import { convertLength } from "./units.ts";
 
 const feet = (metres: number): number => convertLength(metres, "m", "ft");
+
+/** The walls of a court, each giving way when it is between the eye and the court. */
+const shyAll = (planes: Plane[], geo: CourtGeometry): Plane[] => planes.map((p) => shy(p, [geo.length / 2, geo.width / 2]));
 
 /** The posts of a court at the fixtures' places, `height` high. */
 const postsOf = (geo: CourtGeometry, x: number, y0: number, y1: number, height: number, thin: number): Upright => ({
@@ -58,7 +61,7 @@ function padelWalls(f: PadelFigures, geo: CourtGeometry, thin: number): Upright 
     else if (x0 === x1) planes.push(solidWall(`wall-${i}`, x0, y0, x1, y1, 0, f.enclosure.endWall, "u-glass", thin), fencing(`fence-${i}`, x0, y0, x1, y1, f.enclosure.endWall, f.enclosure.endHeight, cell));
     else planes.push(solidWall(`wall-${i}`, x0, y0, x1, y1, 0, f.enclosure.sideHeight, "u-glass", thin));
   });
-  return { id: "walls", kind: "walls", at: [L / 2, W / 2], height: f.enclosure.endHeight, planes };
+  return { id: "walls", kind: "walls", at: [L / 2, W / 2], height: f.enclosure.endHeight, planes: shyAll(planes, geo) };
 }
 
 /**
@@ -72,7 +75,7 @@ function squashWalls(f: SquashFigures, geo: CourtGeometry, thin: number): Uprigh
   const planes: Plane[] = [solidWall("wall-front", 0, 0, 0, W, 0, front, "u-wall", thin), solidWall("wall-back", L, 0, L, W, 0, back, "u-glass", thin)];
   const side = polygon([[0, 0], [L, front - back], [L, front], [0, front]]);
   for (const [id, y] of [["wall-side-a", 0], ["wall-side-b", W]] as const) planes.push(wall(id, "wall", 0, y, L, y, 0, front, `<path d="${side}" class="u-glass"/>`));
-  return { id: "walls", kind: "walls", at: [L / 2, W / 2], height: front, planes };
+  return { id: "walls", kind: "walls", at: [L / 2, W / 2], height: front, planes: shyAll(planes, geo) };
 }
 
 /** A racquetball court's walls, 20 feet high all round (Rule 2.1(a): the court is 20 feet high, the back wall at least 12), the front wall solid and the others glass. */
@@ -85,7 +88,7 @@ function racquetballWalls(f: RacquetballFigures, geo: CourtGeometry, thin: numbe
     solidWall("wall-side-a", 0, 0, L, 0, 0, h, "u-glass", thin),
     solidWall("wall-side-b", 0, W, L, W, 0, h, "u-glass", thin),
   ];
-  return { id: "walls", kind: "walls", at: [L / 2, W / 2], height: h, planes };
+  return { id: "walls", kind: "walls", at: [L / 2, W / 2], height: h, planes: shyAll(planes, geo) };
 }
 
 /** A roundnet set: a net stretched in a ring 91.4 cm across, its rim 20.3 cm over the ground, on four legs (Rule 1.1.2). */

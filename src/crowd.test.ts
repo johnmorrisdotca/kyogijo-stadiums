@@ -520,3 +520,24 @@ describe("every renderer", () => {
     expect((await toPNG({ ...soccer, width: 300 }, { width: 300 })).length).toBeGreaterThan(500);
   });
 });
+
+describe("a crowd with the other looks", () => {
+  it("draws a pageant over a crowd, on a pitch, a rink and a court, each with both", () => {
+    for (const sport of ["soccer", "nhl", "nba", "squash", "swimming"] as const) {
+      const svg = drawKyogijo({ sport, ...GAME, crowd: true, pageant: "carpet" });
+      expect(svg, sport).toContain("ky-crowd");
+      expect(svg, sport).toContain("data-pageant");
+      expect(svg, sport).not.toMatch(/NaN|undefined/);
+    }
+  });
+
+  it("draws no stands round a folded curling sheet, whose enlarged houses cover where they would be, and draws them for the same sheet with a score, which shows the whole sheet", () => {
+    const folded = { sport: "curling", sheet: { show: "folded" } } as const;
+    expect(drawKyogijo({ ...folded, crowd: true })).not.toContain("ky-crowd");
+    expect(crowdStands({ ...folded, crowd: true })).toBeUndefined();
+    const scored = drawKyogijo({ ...folded, ...GAME, crowd: true, pageant: "carpet" });
+    expect(scored).toContain("ky-crowd");
+    expect(scored).toContain("data-pageant");
+    expect(crowdStands({ sport: "curling", crowd: true })).toBeDefined();
+  });
+});

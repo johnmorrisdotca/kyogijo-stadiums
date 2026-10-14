@@ -29,7 +29,7 @@ import {
   uprightsFor,
 } from "./turn-entry.ts";
 import { nearest, wrap } from "./turn.camera.ts";
-import { facing } from "./turn.kit.ts";
+import { facing, fadeOf } from "./turn.kit.ts";
 import { KYOGIJO_STRINGS } from "./strings.ts";
 import type { Upright } from "./turn.kit.ts";
 import type { SurfaceOptions } from "./types.ts";
@@ -350,6 +350,94 @@ describe("what stands on the other fields", () => {
 
   it("can leave the uprights out, or keep only some kinds", () => {
     expect(uprightsFor({ sport: "volleyball" }, { only: ["net"] }).items.map((i) => i.kind)).toEqual(["net"]);
+  });
+});
+
+describe("what stands on the pools", () => {
+  it("stands a block 0.7 m high in each lane at each end of a swimming pool, numbered, with a flagged rope 1.8 m up five metres from each wall and the false start rope 1.2 m up at 15 m", () => {
+    const { by, u } = find("swimming");
+    expect(by("starting-blocks").planes.filter((p) => p.id.endsWith("-top"))).toHaveLength(16);
+    expect(metres(by("starting-blocks").height)).toBe(0.7);
+    expect(by("starting-blocks").planes[0].svg).toMatch(/>\d<\/text>/);
+    expect(metres(by("backstroke-flags").height)).toBe(1.8);
+    const flags = by("backstroke-flags").planes.filter((p) => p.id.startsWith("flags-") && p.kind === "tape");
+    expect(flags.map((p) => Math.round(p.o[0] / M))).toEqual([5, 45]);
+    expect(metres(by("false-start-rope").height)).toBe(1.2);
+    expect(Math.round(by("false-start-rope").planes[0].o[0] / M)).toBe(15);
+    expect(u.items.map((i) => i.kind)).toEqual(["starting-blocks", "backstroke-flags", "false-start-rope"]);
+  });
+
+  it("leaves the blocks, the flags and the rope off a warm-up pool and a natatorium", () => {
+    expect(find("swimming", { pool: { kind: "warm-up" } }).u.items).toHaveLength(0);
+    expect(find("swimming", { pool: { venue: "natatorium" } }).u.items).toHaveLength(0);
+  });
+
+  it("stands the springboards at 1 m and 3 m and the platforms at 5, 7.5 and 10 m of a diving well, each on a stand that reaches the deck", () => {
+    const { by } = find("diving");
+    expect(metres(by("springboards").height)).toBe(3);
+    expect(metres(by("platforms").height)).toBe(10);
+    const tops = (id: string): number[] => [...new Set(by(id).planes.filter((p) => p.id.endsWith("-top")).map((p) => metres(p.o[2])))].sort((a, b) => a - b);
+    expect(tops("springboards")).toEqual([1, 3]);
+    expect(tops("platforms")).toEqual([5, 7.5, 10]);
+    expect(heights(by("platforms"))[0]).toBeCloseTo(0, 5);
+    expect(heights(by("springboards"))[0]).toBeCloseTo(0, 5);
+    expect(find("diving", { pool: { platforms: [1, 3] } }).by("platforms").height).toBeCloseTo(3 * M, 5);
+    expect(find("diving", { pool: { springboards: false } }).u.items.map((i) => i.kind)).toEqual(["platforms"]);
+  });
+
+  it("stands a floating goal on each goal line of a water polo field, 3 m wide, the underside of the bar 0.9 m over the water", () => {
+    const { u } = find("waterpolo");
+    expect(u.items.map((i) => i.id)).toEqual(["goal-left", "goal-right"]);
+    expect(metres(u.items[0].height)).toBe(0.9);
+    const post = u.items[0].planes.filter((p) => p.id.includes("post-"));
+    const ys = [...new Set(post.map((p) => Math.round(((p.o[1] + p.u[1] * 0) / M) * 100) / 100))];
+    expect(Math.abs(Math.max(...ys) - Math.min(...ys) - 3.08)).toBeLessThan(0.2);
+  });
+
+  it("stands the judges' platform 0.6 m and the starting platform 0.7 m high at an artistic swimming area, and says them in words", () => {
+    const { by } = find("artisticswimming");
+    expect(metres(by("judges-stand").height)).toBe(0.6);
+    expect(metres(by("starting-platform").height)).toBe(0.7);
+    const o = { sport: "diving" } as const;
+    expect(describeUprights(o, uprightsFor(o))).toContain("springboards 3 metres, platforms 10 metres");
+    expect(describeUprights(o, uprightsFor(o), "ja")).toContain("飛板 3 m");
+    expect(describeUprights({ sport: "swimming" }, uprightsFor({ sport: "swimming" }), "ja")).toContain("スタート台 0.7 m");
+  });
+});
+
+describe("walls that give way to the eye", () => {
+  const wallOf = (u: ReturnType<typeof uprightsFor>, id: string) => planesOf(u).find((p) => p.id === id)!;
+
+  it("marks the walls of padel, squash, racquetball and a rink with the way they face out of the surface", () => {
+    const squash = uprightsFor({ sport: "squash" });
+    const out = (id: string): number[] => wallOf(squash, id).shy!.map((v) => v + 0);
+    expect(out("wall-front")).toEqual([-1, 0]);
+    expect(out("wall-back")).toEqual([1, 0]);
+    expect(out("wall-side-a")).toEqual([0, -1]);
+    expect(out("wall-side-b")).toEqual([0, 1]);
+    for (const sport of ["padel", "racquetball", "nhl"] as const) expect(planesOf(uprightsFor({ sport })).filter((p) => p.kind === "wall" || p.kind === "glass").every((p) => p.shy !== undefined), sport).toBe(true);
+    expect(wallOf(uprightsFor({ sport: "racquetball" }), "wall-front").shy!.map((v) => v + 0)).toEqual([-1, 0]);
+  });
+
+  it("cuts away the wall on the eye's side, more the lower the eye, and none from straight above or on the far side", () => {
+    const wall = { shy: [1, 0] as const };
+    // The eye is on the side a view of yaw 90 looks from: (sin 90, cos 90) = (1, 0).
+    expect(fadeOf(wall, 90, 60)).toBeLessThan(0.2);
+    expect(fadeOf(wall, 90, 20)).toBeGreaterThan(fadeOf(wall, 90, 60));
+    expect(fadeOf(wall, 90, 0)).toBe(1);
+    expect(fadeOf(wall, -90, 60)).toBe(1);
+    expect(fadeOf({}, 90, 60)).toBe(1);
+  });
+
+  it("writes the fade into the layout and the markup of a view, and leaves a floor and a plain plane whole", () => {
+    const model = buildTurn({ sport: "squash" }, {});
+    const near = layoutOf(model, { yaw: 90, pitch: 60, zoom: 1 }, 960, 600);
+    const far = layoutOf(model, { yaw: -90, pitch: 60, zoom: 1 }, 960, 600);
+    expect(near.fade[0]).toBe(1);
+    expect(Math.min(...near.fade)).toBeLessThan(0.2);
+    expect(Math.min(...far.fade.slice(1))).toBeLessThan(1);
+    expect(near.fade.length).toBe(model.planes.length + 1);
+    expect(turnMarkup({ sport: "squash" }, { preset: "end" })).toMatch(/opacity:/);
   });
 });
 

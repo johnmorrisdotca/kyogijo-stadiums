@@ -72,6 +72,10 @@ Heights are the rulebooks', read from the current rulebooks and cited by rule nu
 | Teqball | The table, its top 76 cm up (900 mm with the net) on four legs, and the net 14 cm over it (FITEQ 1.1, 1.2). |
 | Roundnet | The set: a net in a ring 91.4 cm across, its rim 20.3 cm up, on four legs (International Roundnet Federation 1.1.2). |
 | Netball | A goalpost at the middle of each goal line, 3.05 m high, with its ring on a bar 150 mm long (World Netball, Rule 1, items 13 and 14). |
+| Swimming | A starting block 0.7 m high in each lane at each end, numbered; a flagged rope 1.8 m above the water 5 m from each wall; the false start rope 1.2 m above it at 15 m (World Aquatics CR 16.2.8, 16.1.10, 16.1.12). A warm-up pool and a natatorium have none. |
+| Diving | The springboards at 1 m and 3 m on their stands, and the platforms (5, 7.5 and 10 m, or what `pool.platforms` asks for) on their towers, at the heights of Appendix 2 (CR Part Four, 13.1.1 and 13.1.2). |
+| Water polo | A floating goal on each goal line: 3 m between the posts, the underside of the bar 0.9 m over the water, a net behind (CR 18.3.3). |
+| Artistic swimming | The judges' platform 0.6 m high along the top side and the starting platform 0.7 m high (CR 27.2.8, 27.2.7). |
 | Basketball | Each basket: the backboard (6 ft by 3 1/2 ft, FIBA 1.80 by 1.05 m, its lower edge 150 mm under the ring's top), the ring at 10 ft (FIBA 3.05 m) with its 18 in net, and the padded stanchion, its padding 2 m behind the end line. |
 | Hockey | The boards (42 in) with glass over them, 8 ft at the ends and 6 ft along the sides (NHL 1.3), and a goal 6 ft wide and 4 ft high on each goal line (NHL 2.1; `boards: false` leaves the boards out). |
 | Soccer | A goal 7.32 by 2.44 m (the pitch's own size) on each goal line, and a corner flag 1.5 m high at each corner (`cornerFlags: false`). |
@@ -84,6 +88,8 @@ Heights are the rulebooks', read from the current rulebooks and cited by rule nu
 | Baseball | The fence as high as its walls (the Green Monster's 37 ft at Fenway Park; 8 ft where no wall is listed), a foul pole at each line, and the backstop. |
 | Curling | Nothing but the scoreboard: a sheet is flat. |
 | Any score drawing | The scoreboard: see below. |
+
+**Walls give way.** The walls of a padel, squash or racquetball court and the boards and glass of a rink are cut away when they stand between the eye and the court: a wall whose outside faces the eye fades as the eye comes down (`fadeOf`, `Layout.fade`), to about a tenth of what it was when the eye is low, and is whole again seen from straight above or from the far side. A page that lays the planes out itself reads `Plane.shy`, the direction a wall faces away from the surface, and `fadeOf(plane, yaw, pitch)`.
 
 `uprightsFor(options, { only: ["net"] })` says what stands on a surface as planes in the drawing's frame (x along the surface, y across it, z the height, in feet), and `describeUprights(options, uprights, "ja")` says it in a sentence: the view's description ends with it, so a reader who cannot see the view hears what stands in it.
 

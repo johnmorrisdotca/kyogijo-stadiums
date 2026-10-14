@@ -7,7 +7,7 @@
 import type { CourtFigures } from "./leagues/basketball.ts";
 import type { RinkFigures } from "./leagues/hockey.ts";
 import { goalCage } from "./uprights.goal.ts";
-import { bar, mesh, n, plane, polygon, pole, threads, wall, type Plane, type Upright } from "./turn.kit.ts";
+import { bar, mesh, n, plane, polygon, pole, shy, threads, wall, type Plane, type Upright } from "./turn.kit.ts";
 
 /** The boards of a rink, 42 in (NHL Rule 1.3: 40 to 48 in, 42 the ideal), the glass over them 8 ft at each end and 6 ft along the sides (Rule 1.3: not less than 6 ft). */
 export const BOARD_HEIGHT = 3.5;
@@ -56,7 +56,7 @@ export function boardPlanes(length: number, width: number, radius: number, board
 export function rinkUprights(rink: RinkFigures, goalLine: number, thin: number, boards: boolean): Upright[] {
   const { length: L, width: W } = rink;
   const items: Upright[] = [];
-  if (boards) items.push({ id: "boards", kind: "boards", at: [L / 2, W / 2], height: BOARD_HEIGHT, low: BOARD_HEIGHT + GLASS_END, planes: boardPlanes(L, W, rink.cornerRadius, BOARD_HEIGHT, thin) });
+  if (boards) items.push({ id: "boards", kind: "boards", at: [L / 2, W / 2], height: BOARD_HEIGHT, low: BOARD_HEIGHT + GLASS_END, planes: boardPlanes(L, W, rink.cornerRadius, BOARD_HEIGHT, thin).map((p) => shy(p, [L / 2, W / 2])) });
   const { width, depth } = rink.net;
   for (const end of ["left", "right"] as const) {
     const left = end === "left";

@@ -325,9 +325,19 @@ function buildWhole(o: SurfaceOptions, portrait: boolean, id: string, score: boo
   }
 }
 
+/**
+ * The crowd the options ask for, or `undefined` for none: a special game has none, and nor has a folded curling sheet (its houses are enlarged over where the stands would be, so the
+ * stands would show only as strips behind the panels). A score on a curling sheet shows the whole sheet, which has its stands.
+ */
+function crowdOf(o: SurfaceOptions): Crowd | undefined {
+  if (o.host !== undefined) return undefined;
+  if (chooseLeague(o).sport === "curling" && !isScore(o) && sheetFor(o).show === "folded") return undefined;
+  return resolveCrowd(o.crowd);
+}
+
 /** The surface the options ask for, cropped to their `range` when they have one (a curling sheet's named ranges are its builder's own: `sheet.show`). */
 function buildSurface(o: SurfaceOptions, portrait: boolean, id: string, score: boolean, scored: boolean, extra: Extra): Surface {
-  const crowd = o.host === undefined ? resolveCrowd(o.crowd) : undefined;
+  const crowd = crowdOf(o);
   const surface = crowd === undefined ? buildWhole(o, portrait, id, score, scored, extra) : buildCrowded(o, portrait, id, score, scored, extra, crowd);
   // A score on a curling sheet shows all of it, for the board's sake.
   if (o.range === undefined || (scored && chooseLeague(o).sport === "curling")) return surface;
@@ -427,7 +437,7 @@ function colourStyle(o: SurfaceOptions, teams: { left?: Team; right?: Team; home
     if (endRight !== undefined) props.push(`--ky-hw-end-right:${endRight}`);
   }
   // The crowd's colours: the home fans in the home team's colour and the visitors in the other's, or the colours the crowd names.
-  const crowd = o.host === undefined ? resolveCrowd(o.crowd) : undefined;
+  const crowd = crowdOf(o);
   if (crowd !== undefined) {
     const homeLeft = resolveHomeSide({ ...o, sport: chooseLeague(o).sport }) === "left";
     props.push(`--ky-cr-home:${safeColour(crowd.home) ?? (homeLeft ? left : right) ?? `var(--ky-${homeLeft ? "left" : "right"})`}`);
@@ -749,7 +759,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
   const features = featured.length === 0 ? undefined : new Set(featured.map(([name]) => name));
   const walled = sport === "mlb" && ballparkDrawn(ballparkFor(o));
   const hardwood = sport === "nba" && o.court?.hardwood !== undefined && o.court.hardwood !== false;
-  const crowded = o.host === undefined && resolveCrowd(o.crowd) !== undefined;
+  const crowded = crowdOf(o) !== undefined;
   const style = colourStyle(o, { left: leftTeam, right: rightTeam, home: isScore(o) ? o.home : undefined, away: isScore(o) ? o.away : undefined }, featured);
   const palette = isLook(o.look) ? o.look : undefined;
   let notes: Notes | undefined;
@@ -949,7 +959,7 @@ export function drawBadge(options: ScoreOptions): string {
  * ```
  */
 export function crowdStands(o: SurfaceOptions): CrowdStands | undefined {
-  const crowd = o.host === undefined ? resolveCrowd(o.crowd) : undefined;
+  const crowd = crowdOf(o);
   if (crowd === undefined) return undefined;
   const probe = buildWhole({ ...o, margin: 0 }, false, drawingId(o), false, false, { features: undefined });
   return standsFor(o, probe, crowd);

@@ -162,3 +162,7 @@ A page that draws with `style: "none"` and supplies the stylesheet itself gets t
 ## What is not drawn
 
 The roof and its shadow on the stands beyond the shade of its edge, the concourse's food and stairs, the scoreboard, the cameras and the crowd's movement, the pitch's advertising boards and a ballpark's dugouts and bullpens (a park's `quirks` draw them on the field), the seating of a curling hall beyond its two sides, the tenants of the atlas's places. They are left for another change, not for want of a rule.
+
+## Where it is not drawn
+
+A special game has no stands, and nor has a folded curling sheet (`sheet.show: "folded"`): its enlarged houses lie over where the stands would be, so the stands would show only as strips behind them. The same sheet with a score shows the whole sheet, and has its stands.

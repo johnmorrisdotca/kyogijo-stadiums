@@ -25,10 +25,15 @@ export interface Plane {
    * place as it lies at a yaw of 0; `v` must be vertical.
    */
   billboard?: boolean;
+  /**
+   * A wall round the surface that gives way when it is between the eye and what it surrounds: the horizontal direction (x, y, a unit vector) that points from the surface out through the
+   * wall. The nearer the eye is to that side, and the lower it is, the more the wall is cut away (see `fadeOf`), so that the court is never hidden behind its own glass.
+   */
+  shy?: readonly [number, number];
 }
 
 /** What stands on the surface as a thing a reader would name: a net, a basket, a goal, a pair of posts. */
-export type UprightKind = "scoreboard" | "net" | "antennae" | "goalposts" | "netposts" | "hoop" | "goal" | "boards" | "stumps" | "pylons" | "flags" | "fence" | "backstop" | "foul-poles" | "table-legs" | "walls";
+export type UprightKind = "scoreboard" | "net" | "antennae" | "goalposts" | "netposts" | "hoop" | "goal" | "boards" | "stumps" | "pylons" | "flags" | "fence" | "backstop" | "foul-poles" | "table-legs" | "walls" | "starting-blocks" | "backstroke-flags" | "false-start-rope" | "springboards" | "platforms" | "judges-stand";
 
 /** A thing that stands on the surface: where, how high, and the planes it is made of. */
 export interface Upright {
@@ -129,3 +134,29 @@ export const lerp = (a: number, b: number, t: number): number => a + (b - a) * t
  * line is at least a thousandth of the surface's diagonal.
  */
 export const thinnest = (w: number, h: number): number => Math.hypot(w, h) * 0.0012;
+
+/** A wall plane marked to give way: its outward direction is the way the wall faces away from `centre` (x, y in feet), which is where the surface's middle is. */
+export function shy(p: Plane, centre: readonly [number, number]): Plane {
+  // The plane stands over a line on the surface: the horizontal part of `u` (or of `v` for one lying down) is that line, and its normal in the surface is the way out or the way in.
+  const line: readonly [number, number] = Math.hypot(p.u[0], p.u[1]) >= Math.hypot(p.v[0], p.v[1]) ? [p.u[0], p.u[1]] : [p.v[0], p.v[1]];
+  const length = Math.hypot(line[0], line[1]);
+  if (length === 0) return p;
+  let normal: [number, number] = [-line[1] / length, line[0] / length];
+  const middle: [number, number] = [p.o[0] + (p.u[0] + p.v[0]) / 2, p.o[1] + (p.u[1] + p.v[1]) / 2];
+  if (normal[0] * (middle[0] - centre[0]) + normal[1] * (middle[1] - centre[1]) < 0) normal = [-normal[0], -normal[1]];
+  return { ...p, shy: normal };
+}
+
+/**
+ * How much of a wall is left (1 whole, down to 0.08) at a view: none is cut away unless the wall is on the eye's side of the surface, and then more the lower the eye is, because a wall seen
+ * from straight above hides nothing. `yaw` and `pitch` are the view's, in degrees.
+ */
+export function fadeOf(p: Pick<Plane, "shy">, yaw: number, pitch: number): number {
+  if (p.shy === undefined) return 1;
+  const a = (yaw * Math.PI) / 180;
+  // The horizontal direction from the surface to the eye (the same sum as the depth of a point).
+  const toward = p.shy[0] * Math.sin(a) + p.shy[1] * Math.cos(a);
+  const hides = toward * Math.sin((pitch * Math.PI) / 180);
+  const t = Math.min(1, Math.max(0, (hides - 0.1) / 0.25));
+  return Math.round((1 - 0.92 * t) * 1000) / 1000;
+}

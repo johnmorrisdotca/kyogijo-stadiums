@@ -104,10 +104,12 @@ export function mountKyogijoTurn(host: HTMLElement, options: SurfaceOptions | Sc
   let elements: HTMLElement[] = [];
   let written: string[] = [];
   let stacked: string[] = [];
+  let faded: string[] = [];
   const gather = (): void => {
     elements = [...stage.querySelectorAll<HTMLElement>(".ky-turn-floor, .ky-up")];
     written = elements.map((one) => one.style.transform);
     stacked = elements.map((one) => one.style.zIndex);
+    faded = elements.map((one) => one.style.opacity);
   };
   gather();
 
@@ -121,6 +123,8 @@ export function mountKyogijoTurn(host: HTMLElement, options: SurfaceOptions | Sc
       if (written[i] !== layout.transforms[i]) one.style.transform = written[i] = layout.transforms[i];
       const z = String(layout.stack[i]);
       if (stacked[i] !== z) one.style.zIndex = stacked[i] = z;
+      const o = layout.fade[i] < 1 ? String(layout.fade[i]) : "";
+      if (faded[i] !== o) one.style.opacity = faded[i] = o;
     });
   };
   const label = (): void => {

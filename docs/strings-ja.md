@@ -869,6 +869,12 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `turn.parts.foul-poles` | foul poles | ファウルポール |
 | `turn.parts.table-legs` | table top | 天板 |
 | `turn.parts.walls` | walls | 壁 |
+| `turn.parts.starting-blocks` | starting blocks | スタート台 |
+| `turn.parts.backstroke-flags` | backstroke flags | 背泳ぎ用フラッグ |
+| `turn.parts.false-start-rope` | false start rope | フォルススタートロープ |
+| `turn.parts.springboards` | springboards | 飛板 |
+| `turn.parts.platforms` | platforms | 固定台 |
+| `turn.parts.judges-stand` | judges' stand | ジャッジ台 |
 
 ## The demo's words (`WORDS`)
 

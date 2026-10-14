@@ -3,7 +3,7 @@
 // the elements are stacked far to near by `z-index`. A browser that cannot keep nested 3D layers (Safari on a phone can lose them) draws it as it is meant.
 // The same text is what a page is given from `turnMarkup` and what the mount writes; the mount then makes it turn.
 import { TURN_PRESET_NAMES, cameraMatrix, depthOf, eyeDistance, fit, matrix3d, multiply, presetOf, type Placement, type TurnView } from "./turn.camera.ts";
-import { cross, facing, n, size, unit, type Plane } from "./turn.kit.ts";
+import { cross, facing, fadeOf, n, size, unit, type Plane } from "./turn.kit.ts";
 import { buildTurn, turnWords, type TurnModel, type TurnSettings } from "./turn.model.ts";
 import { KYOGIJO_TURN_STYLE } from "./turn.style.ts";
 import { esc } from "./format.ts";
@@ -29,6 +29,8 @@ export interface Layout {
   transforms: string[];
   /** The stack of each: 0 for the ground of a hall, 1 for the floor, then the planes far to near from 2. */
   stack: number[];
+  /** How much of each is left: 1 for all but the walls that are between the eye and the surface, which are cut away as the view is low and on their side (`fadeOf`). */
+  fade: number[];
 }
 
 /** Work a view out in a container `width` by `height` pixels. */
@@ -52,13 +54,14 @@ export function layoutOf(model: TurnModel, view: TurnView, width: number, height
   order.forEach((one, rank) => {
     stack[one.i + 1] = rank + 2;
   });
-  return { at, transforms, stack };
+  const fade = [1, ...model.planes.map((p) => fadeOf(p, view.yaw, view.pitch))];
+  return { at, transforms, stack, fade };
 }
 
 /** One plane as an element: its box in pixels and the SVG drawn on it in feet. */
-export function planeMarkup(p: Plane, scale: number, transform: string, stack: number): string {
+export function planeMarkup(p: Plane, scale: number, transform: string, stack: number, fade = 1): string {
   const [w, h] = size(p);
-  return `<div class="ky-up ky-up-${p.kind}" data-part="${esc(p.id)}" style="width:${px(w * scale)}px;height:${px(h * scale)}px;transform:${transform};z-index:${stack}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n(w)} ${n(h)}" width="${px(w * scale)}" height="${px(h * scale)}" aria-hidden="true" focusable="false">${p.svg}</svg></div>`;
+  return `<div class="ky-up ky-up-${p.kind}" data-part="${esc(p.id)}" style="width:${px(w * scale)}px;height:${px(h * scale)}px;transform:${transform};z-index:${stack}${fade < 1 ? `;opacity:${n(fade)}` : ""}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n(w)} ${n(h)}" width="${px(w * scale)}" height="${px(h * scale)}" aria-hidden="true" focusable="false">${p.svg}</svg></div>`;
 }
 
 /** The floor as an element: the flat drawing, in the pixels of the scene. */
@@ -69,7 +72,7 @@ export function floorMarkup(model: TurnModel, transform: string, stack: number):
 
 /** The floor and the planes of a model, laid out. */
 export function worldMarkup(model: TurnModel, layout: Layout): string {
-  return floorMarkup(model, layout.transforms[0], layout.stack[0]) + model.planes.map((p, i) => planeMarkup(p, model.scale, layout.transforms[i + 1], layout.stack[i + 1])).join("");
+  return floorMarkup(model, layout.transforms[0], layout.stack[0]) + model.planes.map((p, i) => planeMarkup(p, model.scale, layout.transforms[i + 1], layout.stack[i + 1], layout.fade[i + 1])).join("");
 }
 
 /** The buttons under the view. */
