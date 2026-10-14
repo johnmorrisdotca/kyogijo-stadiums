@@ -13,7 +13,7 @@ export function kyogijoHtml(options: SurfaceOptions | ScoreOptions): { __html: s
  * @example
  * ```ts
  * import { kyogijoProps } from "@johnmorrisdotca/kyogijo-stadiums/react";
- * const props = kyogijoProps({ sport: "nba", away: { name: "Harbour City Gulls", score: 108 }, home: { name: "Prairie Ridge Bison", score: 112 }, status: "final" });
+ * const props = kyogijoProps({ sport: "nba", away: { name: "Australia", score: 108 }, home: { name: "Japan", score: 112 }, status: "final" });
  * console.log(props["data-kyogijo"], props.dangerouslySetInnerHTML.__html.startsWith("<svg"));
  * // nba true
  * ```

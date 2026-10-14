@@ -110,12 +110,12 @@ import { drawKyogijo, statusLabel } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const game = {
   sport: "tennis" as const,
-  away: { name: "Harbour City Gulls", abbr: "HCG", score: 1, color: "#1d4f91", sets: [6, 6, 2], tiebreaks: [5, null, null], points: "40", serving: true },
-  home: { name: "Prairie Ridge Bison", abbr: "PRB", score: 1, color: "#a8452c", sets: [7, 3, 3], points: "30" },
+  away: { name: "Canada", abbr: "CAN", score: 1, color: "#d52b1e", sets: [6, 6, 2], tiebreaks: [5, null, null], points: "40", serving: true },
+  home: { name: "Japan", abbr: "JPN", score: 1, color: "#bc002d", sets: [7, 3, 3], points: "30" },
   status: "set-3",
 };
 const svg = drawKyogijo(game);
-console.log(svg.includes("Set 3"), svg.includes("Harbour City Gulls is serving."));
+console.log(svg.includes("Set 3"), svg.includes("Canada is serving."));
 // true true
 console.log(statusLabel("set-3"), statusLabel("tiebreak"), statusLabel("set-3", "ja"), statusLabel("Game 2", "ja"));
 // Set 3 Tiebreak 第3セット 第2ゲーム

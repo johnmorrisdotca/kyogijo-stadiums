@@ -14,12 +14,12 @@ useEmblems(renderEmblem);
 
 const svg = drawKyogijo({
   sport: "soccer",
-  away: { name: "Harbour City Gulls", abbr: "HCG", score: 2, color: "#1f5fa8", logo: "crest:shield" },
-  home: { name: "Prairie Ridge Bison", abbr: "PRB", score: 1, color: "#b5452c", logo: "crest:roundel" },
+  away: { name: "Japan", abbr: "JPN", score: 2, color: "#bc002d", logo: "crest:shield" },
+  home: { name: "Canada", abbr: "CAN", score: 1, color: "#d52b1e", logo: "crest:roundel" },
   status: "final",
   pageant: { style: "stage", emblem: "trophy:soccer-globe", emblemName: "Northern Cup" },
 });
-console.log(svg.includes(encodeURIComponent("<title>Shield crest</title>")), svg.includes(encodeURIComponent(">HCG<")));
+console.log(svg.includes(encodeURIComponent("<title>Shield crest</title>")), svg.includes(encodeURIComponent(">JPN<")));
 // true true
 ```
 
@@ -42,8 +42,8 @@ useEmblems(renderEmblem);
 
 const svg = drawKyogijo({
   sport: "nhl",
-  away: { name: "Northern Owls", abbr: "NOW", score: 3, color: "#3a2d6b", logo: "sport:nhl/line" },
-  home: { name: "Lakeshore Anchors", abbr: "LSA", score: 2, color: "#0f7a7a", logo: "ball:puck" },
+  away: { name: "USA", abbr: "USA", score: 3, color: "#1c3f7a", logo: "sport:nhl/line" },
+  home: { name: "Canada", abbr: "CAN", score: 2, color: "#d52b1e", logo: "ball:puck" },
   status: "final",
   pageant: { emblem: "cup" },
 });
@@ -65,12 +65,12 @@ import { renderEmblem } from "@johnmorrisdotca/dougu-sports/emblems";
 
 const svg = drawKyogijo({
   sport: "nba",
-  away: { name: "Summit Peaks", abbr: "SMT", score: 101, logo: "crest:diamond", color: "#14233f" },
-  home: { name: "Metro Bolts", abbr: "MTB", score: 99, logo: "crest:pennant", color: "#c2410c" },
+  away: { name: "Australia", abbr: "AUS", score: 101, logo: "crest:diamond", color: "#00843d" },
+  home: { name: "Japan", abbr: "JPN", score: 99, logo: "crest:pennant", color: "#bc002d" },
   status: "final",
   emblems: renderEmblem,
 });
-console.log(svg.includes(encodeURIComponent(">SMT<")));
+console.log(svg.includes(encodeURIComponent(">AUS<")));
 // true
 ```
 
@@ -101,7 +101,7 @@ const mine: EmblemRenderer = (id, options) => {
 };
 useEmblems(mine);
 
-const svg = drawKyogijo({ sport: "nhl", away: { name: "Northern Owls", score: 3, logo: "club:badge", color: "#3a2d6b" }, home: { name: "Lakeshore Anchors", score: 2 }, status: "final" });
+const svg = drawKyogijo({ sport: "nhl", away: { name: "USA", score: 3, logo: "club:badge", color: "#1c3f7a" }, home: { name: "Canada", score: 2 }, status: "final" });
 console.log(svg.includes(encodeURIComponent("<title>Badge</title>")));
 // true
 ```

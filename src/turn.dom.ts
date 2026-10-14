@@ -56,7 +56,7 @@ const between = (from: TurnView, to: TurnView, t: number): TurnView => ({ yaw: f
  * @example
  * ```ts no-run
  * import { mountKyogijoTurn } from "@johnmorrisdotca/kyogijo-stadiums/turn";
- * const view = mountKyogijoTurn(document.querySelector("#court")!, { sport: "volleyball", home: { name: "Harbour City Gulls", score: 3 }, away: { name: "Prairie Ridge Bison", score: 2 } }, { preset: "end" });
+ * const view = mountKyogijoTurn(document.querySelector("#court")!, { sport: "volleyball", home: { name: "Japan", score: 3 }, away: { name: "USA", score: 2 } }, { preset: "end" });
  * view.preset("corner");
  * view.set({ yaw: 60, pitch: 40 });
  * ```

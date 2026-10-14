@@ -13,7 +13,7 @@ import { mountKyogijoTurn } from "@johnmorrisdotca/kyogijo-stadiums/turn";
 
 const view = mountKyogijoTurn(
   document.querySelector("#court")!,
-  { sport: "volleyball", home: { name: "Harbour City Gulls", score: 3 }, away: { name: "Prairie Ridge Bison", score: 2 }, status: "final" },
+  { sport: "volleyball", home: { name: "Japan", score: 3 }, away: { name: "USA", score: 2 }, status: "final" },
   { preset: "end" },
 );
 view.preset("corner");        // glide to a viewpoint

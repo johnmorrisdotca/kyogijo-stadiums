@@ -99,9 +99,9 @@ const pool = {
     event: "Men's 100 m freestyle, final",
     distance: 100,
     swimmers: [
-      { lane: 4, name: "A. Swimmer", abbr: "AUR", splits: [25.1, 52.4], reaction: 0.64 },
-      { lane: 5, name: "B. Swimmer", abbr: "CAL", splits: [25.6, 52.9], reaction: 0.7 },
-      { lane: 3, name: "C. Swimmer", abbr: "BOR", status: "dq" as const, time: 52.0 },
+      { lane: 4, name: "A. Swimmer", abbr: "JPN", splits: [25.1, 52.4], reaction: 0.64 },
+      { lane: 5, name: "B. Swimmer", abbr: "USA", splits: [25.6, 52.9], reaction: 0.7 },
+      { lane: 3, name: "C. Swimmer", abbr: "CAN", status: "dq" as const, time: 52.0 },
     ],
   },
 };

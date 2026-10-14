@@ -5,11 +5,13 @@ A stadium that hosts a final lays giant flags on the pitch, one over each half, 
 ```ts
 import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
-const flag = (a: string, b: string): string => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 20"><rect width="30" height="20" fill="${a}"/><circle cx="15" cy="10" r="5" fill="${b}"/></svg>`;
+// Our own marks, drawn here: a maple leaf for Canada and a sun disc for Japan (no federation's crest or logo, and no flag, which would need Hata's `flag()` to be awaited first).
+const leaf = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#fff"/><polygon points="50,14 55,26 60,23 59,36 72,28 69,39 81,35 77,44 83,53 72,52 74,58 56,55 55,70 44,55 26,58 28,52 17,53 23,44 19,35 31,39 28,28 41,36 40,23 45,26 50,14" fill="#d52b1e"/></svg>';
+const sun = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#fff"/><circle cx="50" cy="50" r="24" fill="#bc002d"/></svg>';
 const svg = drawKyogijo({
   sport: "soccer",
-  away: { name: "Aurelia", abbr: "AUR", score: 2, color: "#0f7a7a", logo: flag("#0f7a7a", "#f4f0e4") },
-  home: { name: "Calvara", abbr: "CAL", score: 1, color: "#6b2d5c", logo: flag("#6b2d5c", "#f2c230") },
+  away: { name: "Canada", abbr: "CAN", score: 2, color: "#d52b1e", logo: leaf },
+  home: { name: "Japan", abbr: "JPN", score: 1, color: "#bc002d", logo: sun },
   status: "final",
   pageant: "carpet",
 });
@@ -80,8 +82,8 @@ import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const svg = drawKyogijo({
   sport: "nhl",
-  away: { name: "Northern Owls", abbr: "NOW", score: 3, color: "#3a2d6b" },
-  home: { name: "Lakeshore Anchors", abbr: "LSA", score: 2, color: "#0f7a7a" },
+  away: { name: "USA", abbr: "USA", score: 3, color: "#1c3f7a" },
+  home: { name: "Canada", abbr: "CAN", score: 2, color: "#d52b1e" },
   pageant: { style: "stage", ring: "team", animate: "unfurl" },
 });
 console.log(svg.includes("@keyframes ky-pg-grow"), svg.includes("prefers-reduced-motion:no-preference"));

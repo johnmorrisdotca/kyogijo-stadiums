@@ -20,12 +20,12 @@ import { drawKyogijo, soccerPitchClass, soccerSpec } from "@johnmorrisdotca/kyog
 
 const svg = drawKyogijo({
   sport: "soccer",
-  away: { name: "Northern Owls", abbr: "NOW", score: 2, penalties: 4, color: "#3a2d6b" },
-  home: { name: "Lakeshore Anchors", abbr: "LSA", score: 2, penalties: 2, color: "#0f7a7a" },
+  away: { name: "Brazil", abbr: "BRA", score: 2, penalties: 4, color: "#009739" },
+  home: { name: "England", abbr: "ENG", score: 2, penalties: 2, color: "#c8102e" },
   status: "final-pens",
   competition: "Cup Final",
 });
-console.log(svg.includes("Final · 2-4 pens"), svg.includes("Northern Owls won 4-2 on penalties."));
+console.log(svg.includes("Final · 2-4 pens"), svg.includes("Brazil won 4-2 on penalties."));
 // true true
 const pitch = soccerSpec({ length: 110, width: 70, unit: "yd" });
 console.log(pitch.length.toFixed(2), pitch.width.toFixed(2), soccerPitchClass(pitch.length, pitch.width));

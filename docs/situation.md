@@ -7,12 +7,12 @@ import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const svg = drawKyogijo({
   sport: "nhl",
-  away: { name: "Northern Owls", abbr: "NOW", score: 3, color: "#3a2d6b" },
-  home: { name: "Lakeshore Anchors", abbr: "LSA", score: 2, color: "#0f7a7a" },
+  away: { name: "USA", abbr: "USA", score: 3, color: "#1c3f7a" },
+  home: { name: "Canada", abbr: "CAN", score: 2, color: "#d52b1e" },
   status: "live",
   situation: { awaySkaters: 5, homeSkaters: 4, clock: "1:42" },
 });
-console.log(svg.includes("5v4 PP 1:42"), svg.includes("Power play: Northern Owls have 5 skaters against 4."));
+console.log(svg.includes("5v4 PP 1:42"), svg.includes("Power play: USA have 5 skaters against 4."));
 // true true
 ```
 
@@ -101,7 +101,7 @@ console.log(svg.includes('d="M354 0V195"'), svg.includes(">TD<"));
 
 ## Words and the description
 
-`situationText(options)` is the short label a drawing writes: `5v4 PP 1:42`, `Top 7 · 2 out · 3-2`, `3rd & 7 · OPP 12`. The description adds a sentence for each part of the situation, in English or Japanese by `language`, naming the teams when the drawing has them (`Power play: Northern Owls have 5 skaters against 4.`). The short words (`PP`, `EN`, `DEL PEN`, `SO`) are in `KYOGIJO_STRINGS[language].situation`, and the drive codes in `DRIVE_CODES`.
+`situationText(options)` is the short label a drawing writes: `5v4 PP 1:42`, `Top 7 · 2 out · 3-2`, `3rd & 7 · OPP 12`. The description adds a sentence for each part of the situation, in English or Japanese by `language`, naming the teams when the drawing has them (`Power play: USA have 5 skaters against 4.`). The short words (`PP`, `EN`, `DEL PEN`, `SO`) are in `KYOGIJO_STRINGS[language].situation`, and the drive codes in `DRIVE_CODES`.
 
 ## Styling
 

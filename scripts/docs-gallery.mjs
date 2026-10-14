@@ -43,70 +43,82 @@ export function runSnippet(code, lib) {
   return svg;
 }
 
-// ---- The teams of the made-up games, the same on every page. ----
-const OWLS = { name: "Northern Owls", abbr: "NOW", score: 3, color: "#3a2d6b" };
-const ANCHORS = { name: "Lakeshore Anchors", abbr: "LSA", score: 2, color: "#0f7a7a" };
-const GULLS = { name: "Harbour City Gulls", abbr: "HCG", score: 27, color: "#1d4f91" };
-const BISON = { name: "Prairie Ridge Bison", abbr: "PRB", score: 24, color: "#a8452c" };
-const PEAKS = { name: "Summit Peaks", abbr: "SMT", score: 108, color: "#14233f" };
-const BOLTS = { name: "Metro Bolts", abbr: "MTB", score: 112, color: "#c2410c" };
-const STARS = { name: "Valley Stars", abbr: "VAL", score: 4, color: "#c8102e" };
-const PINES = { name: "Coastal Pines", abbr: "CPN", score: 6, color: "#1f6b3c" };
-const WOLVES = { name: "Harbour City Gulls", abbr: "HCG", score: 5, color: "#1d4f91", ends: [0, 1, 0, 2, 0, 0, 1, 0, 1, "X"] };
-const RIDGE = { name: "Prairie Ridge Bison", abbr: "PRB", score: 4, color: "#a8452c", hammer: true, ends: [1, 0, 2, 0, 1, 0, 0, 1, 0] };
-// The net sports: Harbour City is serving, a set in progress is the last column; in tennis a set's games and the points of the game.
-const GULLS_SETS = { name: "Harbour City Gulls", abbr: "HCG", score: 1, color: "#1d4f91", sets: [6, 6, 2], tiebreaks: [5, null, null], points: "40", serving: true };
-const BISON_SETS = { name: "Prairie Ridge Bison", abbr: "PRB", score: 1, color: "#a8452c", sets: [7, 3, 3], points: "30" };
-const GULLS_VOLLEY = { name: "Harbour City Gulls", abbr: "HCG", score: 2, color: "#1d4f91", sets: [25, 22, 25, 18], serving: true };
-const BISON_VOLLEY = { name: "Prairie Ridge Bison", abbr: "PRB", score: 1, color: "#a8452c", sets: [21, 25, 20, 20] };
-const GULLS_GAMES = { name: "Harbour City Gulls", abbr: "HCG", score: 1, color: "#1d4f91", sets: [21, 18, 11], serving: true };
-const BISON_GAMES = { name: "Prairie Ridge Bison", abbr: "PRB", score: 1, color: "#a8452c", sets: [17, 21, 9] };
-const GULLS_PICKLE = { name: "Harbour City Gulls", abbr: "HCG", score: 1, color: "#1d4f91", sets: [11, 8, 5], serving: true };
-const BISON_PICKLE = { name: "Prairie Ridge Bison", abbr: "PRB", score: 1, color: "#a8452c", sets: [7, 11, 4] };
-const GULLS_TABLE = { name: "Harbour City Gulls", abbr: "HCG", score: 3, color: "#1d4f91", sets: [11, 9, 11, 7, 11] };
-const BISON_TABLE = { name: "Prairie Ridge Bison", abbr: "PRB", score: 2, color: "#a8452c", sets: [7, 11, 8, 11, 6] };
-const GULLS_BEST5 = { name: "Harbour City Gulls", abbr: "HCG", score: 3, color: "#1d4f91", sets: [11, 8, 11, 11] };
-const BISON_BEST5 = { name: "Prairie Ridge Bison", abbr: "PRB", score: 1, color: "#a8452c", sets: [7, 11, 9, 5] };
-const GULLS_SEPAK = { name: "Harbour City Gulls", abbr: "HCG", score: 2, color: "#1d4f91", sets: [21, 17, 15], serving: true };
-const BISON_SEPAK = { name: "Prairie Ridge Bison", abbr: "PRB", score: 1, color: "#a8452c", sets: [18, 21, 12] };
-const GULLS_TEQ = { name: "Harbour City Gulls", abbr: "HCG", score: 2, color: "#1d4f91", sets: [12, 9, 12], serving: true };
-const BISON_TEQ = { name: "Prairie Ridge Bison", abbr: "PRB", score: 1, color: "#a8452c", sets: [10, 12, 7] };
-const GULLS_ROUND = { name: "Harbour City Gulls", abbr: "HCG", score: 2, color: "#1d4f91", sets: [21, 18, 21], serving: true };
-const BISON_ROUND = { name: "Prairie Ridge Bison", abbr: "PRB", score: 1, color: "#a8452c", sets: [15, 21, 17] };
-const NETBALL_AWAY = { name: "Harbour City Gulls", abbr: "HCG", score: 52, color: "#1d4f91" };
-const NETBALL_HOME = { name: "Prairie Ridge Bison", abbr: "PRB", score: 49, color: "#a8452c" };
+// ---- The teams of the games, the same on every page: real countries, by name, three letters and colour (Canada, the USA and Japan first), and no flag: a snippet cannot await Hata's `flag()`. ----
+// A team carries only a country's name and a colour, never a federation's crest or logo; the colours are the demo's (demo/nations.js).
+const COUNTRIES = {
+  canada: ["Canada", "CAN", "#d52b1e"], usa: ["USA", "USA", "#1c3f7a"], japan: ["Japan", "JPN", "#bc002d"], mexico: ["Mexico", "MEX", "#006847"], brazil: ["Brazil", "BRA", "#009739"],
+  england: ["England", "ENG", "#c8102e"], australia: ["Australia", "AUS", "#00843d"], ireland: ["Ireland", "IRL", "#169b62"], germany: ["Germany", "GER", "#222222"], france: ["France", "FRA", "#0055a4"],
+  italy: ["Italy", "ITA", "#0b5cab"], korea: ["Korea", "KOR", "#c60c30"], spain: ["Spain", "ESP", "#aa151b"], thailand: ["Thailand", "THA", "#2d2a4a"], malaysia: ["Malaysia", "MAS", "#010066"],
+  hungary: ["Hungary", "HUN", "#436f4d"], mongolia: ["Mongolia", "MGL", "#c4272f"],
+};
+/** A team: a country by key, its score (or `undefined` where a sport has none) and what else the sport's board needs. */
+const side = (key, score, extra = {}) => {
+  const [name, abbr, color] = COUNTRIES[key];
+  return { name, abbr, ...(score === undefined ? {} : { score }), color, ...extra };
+};
+const OWLS = side("usa", 3);
+const ANCHORS = side("canada", 2);
+const GULLS = side("mexico", 27);
+const BISON = side("usa", 24);
+const PEAKS = side("australia", 108);
+const BOLTS = side("japan", 112);
+const STARS = side("japan", 4);
+const PINES = side("usa", 6);
+const WOLVES = side("japan", 5, { ends: [0, 1, 0, 2, 0, 0, 1, 0, 1, "X"] });
+const RIDGE = side("canada", 4, { hammer: true, ends: [1, 0, 2, 0, 1, 0, 0, 1, 0] });
+// The net sports: the away side is serving, a set in progress is the last column; in tennis a set's games and the points of the game.
+const GULLS_SETS = side("canada", 1, { sets: [6, 6, 2], tiebreaks: [5, null, null], points: "40", serving: true });
+const BISON_SETS = side("japan", 1, { sets: [7, 3, 3], points: "30" });
+const GULLS_VOLLEY = side("japan", 2, { sets: [25, 22, 25, 18], serving: true });
+const BISON_VOLLEY = side("usa", 1, { sets: [21, 25, 20, 20] });
+const GULLS_GAMES = side("japan", 1, { sets: [21, 18, 11], serving: true });
+const BISON_GAMES = side("korea", 1, { sets: [17, 21, 9] });
+const GULLS_PICKLE = side("usa", 1, { sets: [11, 8, 5], serving: true });
+const BISON_PICKLE = side("canada", 1, { sets: [7, 11, 4] });
+const GULLS_TABLE = side("japan", 3, { sets: [11, 9, 11, 7, 11] });
+const BISON_TABLE = side("germany", 2, { sets: [7, 11, 8, 11, 6] });
+const GULLS_BEST5 = side("usa", 3, { sets: [11, 8, 11, 11] });
+const BISON_BEST5 = side("mexico", 1, { sets: [7, 11, 9, 5] });
+const GULLS_SEPAK = side("thailand", 2, { sets: [21, 17, 15], serving: true });
+const BISON_SEPAK = side("malaysia", 1, { sets: [18, 21, 12] });
+const GULLS_TEQ = side("hungary", 2, { sets: [12, 9, 12], serving: true });
+const BISON_TEQ = side("brazil", 1, { sets: [10, 12, 7] });
+const GULLS_ROUND = side("usa", 2, { sets: [21, 18, 21], serving: true });
+const BISON_ROUND = side("canada", 1, { sets: [15, 21, 17] });
+const NETBALL_AWAY = side("australia", 52);
+const NETBALL_HOME = side("england", 49);
 // The field sports: rugby and lacrosse are plain scores; Australian football writes goals, behinds and the total; Gaelic games goals, points and the total; cricket runs for wickets, overs and the innings.
-const RUGBY_AWAY = { name: "Harbour City Gulls", abbr: "HCG", score: 27, color: "#1d4f91" };
-const RUGBY_HOME = { name: "Prairie Ridge Bison", abbr: "PRB", score: 24, color: "#a8452c" };
-const AFL_AWAY = { name: "Harbour City Gulls", abbr: "HCG", goals: 10, behinds: 12, color: "#1d4f91" };
-const AFL_HOME = { name: "Prairie Ridge Bison", abbr: "PRB", goals: 9, behinds: 14, color: "#a8452c" };
-const GAA_AWAY = { name: "Harbour City Gulls", abbr: "HCG", goals: 2, points: 14, color: "#1d4f91" };
-const GAA_HOME = { name: "Prairie Ridge Bison", abbr: "PRB", goals: 1, points: 15, color: "#a8452c" };
-const CRICKET_AWAY = { name: "Harbour City Gulls", abbr: "HCG", score: 245, wickets: 6, overs: "50", color: "#1d4f91", innings: [245] };
-const CRICKET_HOME = { name: "Prairie Ridge Bison", abbr: "PRB", score: 187, wickets: 10, overs: "41.2", color: "#a8452c", innings: [187] };
+const RUGBY_AWAY = side("england", 27);
+const RUGBY_HOME = side("france", 24);
+const AFL_AWAY = side("australia", undefined, { goals: 10, behinds: 12 });
+const AFL_HOME = side("ireland", undefined, { goals: 9, behinds: 14 });
+const GAA_AWAY = side("ireland", undefined, { goals: 2, points: 14 });
+const GAA_HOME = side("australia", undefined, { goals: 1, points: 15 });
+const CRICKET_AWAY = side("australia", 245, { wickets: 6, overs: "50", innings: [245] });
+const CRICKET_HOME = side("england", 187, { wickets: 10, overs: "41.2", innings: [187] });
 // The pools: a dual meet's points, and a water polo match.
-const POOL_AWAY = { name: "Harbour City Gulls", abbr: "HCG", score: 146, color: "#1d4f91" };
-const POOL_HOME = { name: "Prairie Ridge Bison", abbr: "PRB", score: 154, color: "#a8452c" };
-const POLO_AWAY = { name: "Harbour City Gulls", abbr: "HCG", score: 9, color: "#1d4f91" };
-const POLO_HOME = { name: "Prairie Ridge Bison", abbr: "PRB", score: 11, color: "#a8452c" };
+const POOL_AWAY = side("japan", 146);
+const POOL_HOME = side("usa", 154);
+const POLO_AWAY = side("italy", 9);
+const POLO_HOME = side("spain", 11);
 // The budō: a judo side's waza-ari, yuko and shido, a karate side's points and warnings, a kendo side's points by the target, and a sumo winner's kimarite.
-const JUDO_AWAY = { name: "Harbour City Gulls", abbr: "HCG", color: "#1d4f91", budo: { wazaari: 1, yuko: 2, shido: 1 } };
-const JUDO_HOME = { name: "Prairie Ridge Bison", abbr: "PRB", color: "#a8452c", budo: { wazaari: 1, shido: 2 } };
-const KARATE_AWAY = { name: "Harbour City Gulls", abbr: "HCG", color: "#1d4f91", budo: { ippon: 1, wazaari: 1, senshu: true, shido: 1 } };
-const KARATE_HOME = { name: "Prairie Ridge Bison", abbr: "PRB", color: "#a8452c", budo: { wazaari: 2, yuko: 1 } };
-const KENDO_AWAY = { name: "Harbour City Gulls", abbr: "HCG", color: "#1d4f91", budo: { techniques: ["men", "kote"] } };
-const KENDO_HOME = { name: "Prairie Ridge Bison", abbr: "PRB", color: "#a8452c", budo: { techniques: ["do"] } };
-const SUMO_EAST = { name: "Harbour City Gulls", abbr: "HCG", score: 1, color: "#1d4f91", budo: { kimarite: "yorikiri" } };
-const SUMO_WEST = { name: "Prairie Ridge Bison", abbr: "PRB", score: 0, color: "#a8452c" };
-const KYUDO_AWAY = { name: "Harbour City Gulls", abbr: "HCG", score: 14, color: "#1d4f91" };
-const KYUDO_HOME = { name: "Prairie Ridge Bison", abbr: "PRB", score: 12, color: "#a8452c" };
-const SOCCER_AWAY = { name: "Northern Owls", abbr: "NOW", score: 2, penalties: 4, color: "#3a2d6b" };
-const SOCCER_HOME = { name: "Lakeshore Anchors", abbr: "LSA", score: 2, penalties: 2, color: "#0f7a7a" };
+const JUDO_AWAY = side("japan", undefined, { budo: { wazaari: 1, yuko: 2, shido: 1 } });
+const JUDO_HOME = side("france", undefined, { budo: { wazaari: 1, shido: 2 } });
+const KARATE_AWAY = side("japan", undefined, { budo: { ippon: 1, wazaari: 1, senshu: true, shido: 1 } });
+const KARATE_HOME = side("italy", undefined, { budo: { wazaari: 2, yuko: 1 } });
+const KENDO_AWAY = side("japan", undefined, { budo: { techniques: ["men", "kote"] } });
+const KENDO_HOME = side("korea", undefined, { budo: { techniques: ["do"] } });
+const SUMO_EAST = side("japan", 1, { budo: { kimarite: "yorikiri" } });
+const SUMO_WEST = side("mongolia", 0);
+const KYUDO_AWAY = side("japan", 14);
+const KYUDO_HOME = side("usa", 12);
+const SOCCER_AWAY = side("brazil", 2, { penalties: 4 });
+const SOCCER_HOME = side("england", 2, { penalties: 2 });
 
 const GAMES = {
   nfl: { away: GULLS, home: BISON, status: "final", competition: "Championship Game" },
-  cfl: { away: GULLS, home: BISON, status: "final", competition: "Grey Cup" },
-  ifaf: { away: GULLS, home: BISON, status: "final", competition: "World Championship" },
+  cfl: { away: side("canada", 27), home: side("usa", 24), status: "final", competition: "Grey Cup" },
+  ifaf: { away: side("japan", 27), home: side("mexico", 24), status: "final", competition: "World Championship" },
   nhl: { away: OWLS, home: ANCHORS, status: "final-ot", competition: "Cup Final, Game 7" },
   nba: { away: PEAKS, home: BOLTS, status: "final", competition: "Finals, Game 6" },
   soccer: { away: SOCCER_AWAY, home: SOCCER_HOME, status: "final-pens", competition: "Cup Final" },
@@ -124,21 +136,21 @@ const GAMES = {
   teqball: { away: GULLS_TEQ, home: BISON_TEQ, status: "final", competition: "Final" },
   roundnet: { away: GULLS_ROUND, home: BISON_ROUND, status: "final", competition: "Final" },
   netball: { away: NETBALL_AWAY, home: NETBALL_HOME, status: "final", competition: "Final" },
-  athletics: { away: GULLS, home: BISON, status: "final", competition: "Relay final" },
-  skating: { away: GULLS, home: BISON, status: "final", competition: "Team pursuit final" },
+  athletics: { away: side("japan", 27), home: side("usa", 24), status: "final", competition: "Relay final" },
+  skating: { away: side("canada", 27), home: side("japan", 24), status: "final", competition: "Team pursuit final" },
   judo: { away: JUDO_AWAY, home: JUDO_HOME, status: "final", competition: "Final, 73 kg" },
   karate: { away: KARATE_AWAY, home: KARATE_HOME, status: "final", competition: "Kumite final" },
   kendo: { away: KENDO_AWAY, home: KENDO_HOME, status: "final", competition: "Final" },
   sumo: { away: SUMO_EAST, home: SUMO_WEST, status: "final", competition: "Day 15" },
   kyudo: { away: KYUDO_AWAY, home: KYUDO_HOME, status: "final", competition: "Team final" },
-  dojo: { away: GULLS, home: BISON, status: "final", competition: "Open day" },
-  lacrosse: { away: RUGBY_AWAY, home: RUGBY_HOME, status: "final", competition: "Final" },
+  dojo: { away: side("japan", 27), home: side("canada", 24), status: "final", competition: "Open day" },
+  lacrosse: { away: side("canada", 27), home: side("usa", 24), status: "final", competition: "Final" },
   rugby: { away: RUGBY_AWAY, home: RUGBY_HOME, status: "final", competition: "Final" },
   afl: { away: AFL_AWAY, home: AFL_HOME, status: "final", competition: "Grand Final" },
   gaelic: { away: GAA_AWAY, home: GAA_HOME, status: "final", competition: "All-Ireland Final" },
   cricket: { away: CRICKET_AWAY, home: CRICKET_HOME, status: "final", competition: "Final" },
-  fieldhockey: { away: GULLS, home: BISON, status: "final", competition: "Final" },
-  handball: { away: GULLS, home: BISON, status: "final", competition: "Final" },
+  fieldhockey: { away: side("australia", 27), home: side("germany", 24), status: "final", competition: "Final" },
+  handball: { away: side("france", 27), home: side("japan", 24), status: "final", competition: "Final" },
   swimming: { away: POOL_AWAY, home: POOL_HOME, status: "final", competition: "Dual meet" },
   waterpolo: { away: POLO_AWAY, home: POLO_HOME, status: "final", competition: "Quarter-final" },
   diving: { away: POOL_AWAY, home: POOL_HOME, status: "final", competition: "Dual meet" },
@@ -155,11 +167,12 @@ const SQUADS = "Array.from({ length: 22 }, (_, i) => ({ x: 8 + ((i * 37 + (i < 1
 const PASSES = "Array.from({ length: 240 }, (_, i) => { const a = (i * 7) % 11; const b = (a + 1 + ((i * 3) % 4)) % 11; return { from: a + 1, to: b + 1, x: 14 + a * 6 + (i % 5), y: 12 + ((a * 17) % 76) + (i % 7), x2: 14 + b * 6, y2: 12 + ((b * 17) % 76), team: \"home\", fromNumber: a + 1, toNumber: b + 1 }; })";
 const MOVES = "Array.from({ length: 400 }, (_, i) => { const x = 5 + ((i * 13) % 90); const y = 5 + ((i * 29) % 90); return { x, y, x2: x + 8 + (i % 5) + (x > 50 ? 4 : 0), y2: y + ((i % 7) - 3) * 2.2, id: (i % 5) + 1 }; })";
 
-/** The flags of the round-mark snippets: three shapes each, drawn in code, of nations that do not exist. */
-const MARK_CODE = String.raw`const flag = (a, b, c) => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 20"><rect width="30" height="20" fill="' + a + '"/><path d="M15 2L27 10L15 18L3 10Z" fill="' + b + '"/><circle cx="15" cy="10" r="3.4" fill="' + c + '"/></svg>';
-const stripes = (a, b, c) => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 20"><rect width="10.1" height="20" fill="' + a + '"/><rect x="10" width="10.1" height="20" fill="' + b + '"/><rect x="20" width="10" height="20" fill="' + c + '"/></svg>';
-const aurelia = { name: "Aurelia", abbr: "AUR", score: 2, penalties: 4, color: "#0f7a7a", logo: flag("#0f7a7a", "#f4f0e4", "#e07a1f") };
-const calvara = { name: "Calvara", abbr: "CAL", score: 2, penalties: 3, color: "#6b2d5c", logo: stripes("#6b2d5c", "#f2c230", "#14233f") };`;
+/** The marks of the round-mark snippets: our own maple leaf and sun disc, drawn in code, for Canada and Japan. */
+const MARK_CODE = String.raw`// Our own marks, drawn here: a maple leaf for Canada and a sun disc for Japan (never a federation's crest or logo, and no flag: a snippet cannot await Hata's flag()).
+const leaf = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#fff"/><polygon points="50,14 55,26 60,23 59,36 72,28 69,39 81,35 77,44 83,53 72,52 74,58 56,55 55,70 44,55 26,58 28,52 17,53 23,44 19,35 31,39 28,28 41,36 40,23 45,26 50,14" fill="#d52b1e"/></svg>';
+const sun = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#fff"/><circle cx="50" cy="50" r="24" fill="#bc002d"/></svg>';
+const canada = { name: "Canada", abbr: "CAN", score: 2, penalties: 4, color: "#d52b1e", logo: leaf };
+const japan = { name: "Japan", abbr: "JPN", score: 2, penalties: 3, color: "#bc002d", logo: sun };`;
 
 const item = (id, title, code, note = "", extra = {}) => ({ id, title, code, note, ...extra });
 const section = (id, title, intro, items) => ({ id, title, intro, items });
@@ -194,12 +207,12 @@ function surfacesPage(lib) {
         item("compact-nba", "Compact card, basketball", drawing({ sport: "nba", ...GAMES.nba, size: "compact" })),
         item("compact-nhl", "Compact card, hockey", drawing({ sport: "nhl", ...GAMES.nhl, size: "compact" })),
       ]),
-      section("marks", "Round marks", "`mark: \"round\"` on a team, or `markShape: \"round\"` for both, clips a flag or a logo to a circle with a ring: on each side of the surface, in the badge and in the strip of a compact card. A team with no logo is its initials on its colour. The flags are made-up shapes drawn in the code.", [
-        item("mark-pitch", "Round marks on a pitch, wide", `import { drawKyogijo } from "${MAIN}";\n\n${MARK_CODE}\nconst svg = drawKyogijo({ sport: "soccer", markShape: "round", away: aurelia, home: calvara, status: "final-pens", competition: "Northern Cup final", orientation: "landscape" });`),
-        item("mark-pitch-tall", "Round marks on a pitch, tall", `import { drawKyogijo } from "${MAIN}";\n\n${MARK_CODE}\nconst svg = drawKyogijo({ sport: "soccer", markShape: "round", away: aurelia, home: calvara, status: "final-pens", competition: "Northern Cup final", orientation: "portrait" });`, "Each flag turns with its name where the name is turned."),
-        item("mark-badge", "Round marks in a badge", `import { drawKyogijo } from "${MAIN}";\n\n${MARK_CODE}\nconst svg = drawKyogijo({ sport: "soccer", markShape: "round", away: aurelia, home: calvara, status: "final-pens", size: "badge" });`),
-        item("mark-compact", "Round marks in a compact card", `import { drawKyogijo } from "${MAIN}";\n\n${MARK_CODE}\nconst svg = drawKyogijo({ sport: "soccer", markShape: "round", away: aurelia, home: calvara, status: "final-pens", size: "compact" });`),
-        item("mark-initials", "No flag: the initials on the team's colour", `import { drawKyogijo } from "${MAIN}";\n\nconst svg = drawKyogijo({\n  sport: "nhl",\n  markShape: "round",\n  away: { name: "Northern Owls", abbr: "NOW", score: 3, color: "#3a2d6b" },\n  home: { name: "Lakeshore Anchors", abbr: "LSA", score: 2, color: "#0f7a7a" },\n  status: "final-ot",\n});`),
+      section("marks", "Round marks", "`mark: \"round\"` on a team, or `markShape: \"round\"` for both, clips a flag or a logo to a circle with a ring: on each side of the surface, in the badge and in the strip of a compact card. A team with no logo is its initials on its colour. The marks are a maple leaf and a sun disc drawn in the code.", [
+        item("mark-pitch", "Round marks on a pitch, wide", `import { drawKyogijo } from "${MAIN}";\n\n${MARK_CODE}\nconst svg = drawKyogijo({ sport: "soccer", markShape: "round", away: canada, home: japan, status: "final-pens", competition: "Northern Cup final", orientation: "landscape" });`),
+        item("mark-pitch-tall", "Round marks on a pitch, tall", `import { drawKyogijo } from "${MAIN}";\n\n${MARK_CODE}\nconst svg = drawKyogijo({ sport: "soccer", markShape: "round", away: canada, home: japan, status: "final-pens", competition: "Northern Cup final", orientation: "portrait" });`, "Each mark turns with its name where the name is turned."),
+        item("mark-badge", "Round marks in a badge", `import { drawKyogijo } from "${MAIN}";\n\n${MARK_CODE}\nconst svg = drawKyogijo({ sport: "soccer", markShape: "round", away: canada, home: japan, status: "final-pens", size: "badge" });`),
+        item("mark-compact", "Round marks in a compact card", `import { drawKyogijo } from "${MAIN}";\n\n${MARK_CODE}\nconst svg = drawKyogijo({ sport: "soccer", markShape: "round", away: canada, home: japan, status: "final-pens", size: "compact" });`),
+        item("mark-initials", "No flag: the initials on the team's colour", `import { drawKyogijo } from "${MAIN}";\n\nconst svg = drawKyogijo({\n  sport: "nhl",\n  markShape: "round",\n  away: { name: "USA", abbr: "USA", score: 3, color: "#1c3f7a" },\n  home: { name: "Canada", abbr: "CAN", score: 2, color: "#d52b1e" },\n  status: "final-ot",\n});`),
       ]),
       section("courts", "The court's looks", "Five looks to start from, in `COURT_THEMES`; each colour of a look is an option too.", Object.keys(themes).map((name) => item(`court-${name}`, `Court: ${name}`, `import { COURT_THEMES, drawKyogijo } from "${MAIN}";\n\nconst svg = drawKyogijo({ sport: "nba", court: COURT_THEMES.${name}, away: ${literal(PEAKS)}, home: ${literal(BOLTS)}, status: "final" });`))),
       section("hardwood", "A realistic basketball floor", "`court: { hardwood: true }` lays maple boards that run the length of the court, with staggered ends, grain and tone, stained paint and border, the baskets and their shadows from above, and a satin sheen. The clean floor stays the default.", [
@@ -857,21 +870,22 @@ function fieldsPage(lib) {
   };
 }
 
-/** The made-up nations, flags and cup of the pageant's pictures: shapes drawn in code, none of them a real flag, crest or emblem. */
-const PAGEANT_CODE = String.raw`const flag = (a, b, c) => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 20"><rect width="30" height="20" fill="' + a + '"/><path d="M15 2L27 10L15 18L3 10Z" fill="' + b + '"/><circle cx="15" cy="10" r="3.4" fill="' + c + '"/></svg>';
-const stripes = (a, b, c) => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 20"><rect width="10.1" height="20" fill="' + a + '"/><rect x="10" width="10.1" height="20" fill="' + b + '"/><rect x="20" width="10" height="20" fill="' + c + '"/></svg>';
+/** The teams and cup of the pageant's pictures: Canada and Japan with our own maple leaf and sun disc, and a made-up cup, all drawn in code (no flag, federation crest or emblem). */
+const PAGEANT_CODE = String.raw`// Our own marks, drawn here: a maple leaf for Canada and a sun disc for Japan (never a federation's crest or logo, and no flag: a snippet cannot await Hata's flag()).
+const leaf = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#fff"/><polygon points="50,14 55,26 60,23 59,36 72,28 69,39 81,35 77,44 83,53 72,52 74,58 56,55 55,70 44,55 26,58 28,52 17,53 23,44 19,35 31,39 28,28 41,36 40,23 45,26 50,14" fill="#d52b1e"/></svg>';
+const sun = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#fff"/><circle cx="50" cy="50" r="24" fill="#bc002d"/></svg>';
 const cup = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#14233f"/><path d="M33 26H67V42Q67 58 50 62Q33 58 33 42Z" fill="#f2c230"/><path d="M33 30H24Q24 46 36 50M67 30H76Q76 46 64 50" fill="none" stroke="#f2c230" stroke-width="4"/><path d="M46 62H54V72H62V78H38V72H46Z" fill="#f2c230"/></svg>';
-const aurelia = { name: "Aurelia", abbr: "AUR", score: 2, color: "#0f7a7a", logo: flag("#0f7a7a", "#f4f0e4", "#e07a1f") };
-const calvara = { name: "Calvara", abbr: "CAL", score: 1, color: "#6b2d5c", logo: stripes("#6b2d5c", "#f2c230", "#14233f") };`;
+const canada = { name: "Canada", abbr: "CAN", score: 2, color: "#d52b1e", logo: leaf };
+const japan = { name: "Japan", abbr: "JPN", score: 1, color: "#bc002d", logo: sun };`;
 
 function pageantPage() {
   const sports = ["nfl", "cfl", "ifaf", "nhl", "nba", "soccer", "mlb", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis", "lacrosse", "rugby", "afl", "gaelic", "cricket", "fieldhockey", "handball"];
-  const call = (extra, more = "") => `import { drawKyogijo } from "${MAIN}";\n\n${PAGEANT_CODE}\nconst svg = drawKyogijo({ ${extra}, away: aurelia, home: calvara, status: "final", competition: "Northern Cup final"${more} });`;
+  const call = (extra, more = "") => `import { drawKyogijo } from "${MAIN}";\n\n${PAGEANT_CODE}\nconst svg = drawKyogijo({ ${extra}, away: canada, home: japan, status: "final", competition: "Northern Cup final"${more} });`;
   return {
     slug: "gallery-pageant",
     title: "Gallery: flags on the halves",
     ja: "ハーフに広げる旗",
-    intro: "Each team's flag or crest laid large over its half of the surface, as a stadium does for a final's ceremony: as a carpet, or on a round stage, with an emblem in the centre. The nations, flags and cup are made up, and drawn in the code under each picture.",
+    intro: "Each team's flag or crest laid large over its half of the surface, as a stadium does for a final's ceremony: as a carpet, or on a round stage, with an emblem in the centre. The teams are Canada and Japan with a maple leaf and a sun disc, and the cup is made up, all drawn in the code under each picture.",
     sections: [
       section("carpets", "A carpet on every surface", "`pageant: \"carpet\"` lays each flag at its own ratio, with a dark border and a gentle fabric of light and shade. A diamond's home team is on the infield and the visitors are in the outfield; a curling sheet has a flag in each house. Where the plate would cost the carpets their size the score goes to the strip.", sports.map((sport) => item(`pageant-carpet-${sport}`, `${SPORT_TITLES[sport]}, carpets`, call(`sport: "${sport}", pageant: "carpet"`)))),
       section("stages", "A stage on every surface", "`pageant: \"stage\"` puts each crest on a large round disc with a gold ring. A flag is cut to the circle; `markFit: \"contain\"` on a team shows a crest whole.", sports.map((sport) => item(`pageant-stage-${sport}`, `${SPORT_TITLES[sport]}, stages`, call(`sport: "${sport}", pageant: "stage"`)))),
@@ -881,7 +895,7 @@ function pageantPage() {
         item("pageant-emblem-nhl", "NHL rink: stages and the cup at centre ice", call('sport: "nhl", pageant: { style: "stage", emblem: cup }')),
         item("pageant-emblem-nba", "NBA court: carpets and the cup at centre court", call('sport: "nba", pageant: { emblem: cup }')),
         item("pageant-emblem-nfl", "NFL field: carpets and the cup at midfield", call('sport: "nfl", pageant: { emblem: cup }')),
-        item("pageant-emblem-plain", "A trophy as it is, with no disc", `import { drawKyogijo } from "${MAIN}";\n\n${PAGEANT_CODE}\nconst trophy = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M30 14H70V40Q70 62 50 66Q30 62 30 40Z" fill="#d8ae4a"/><path d="M30 20H16Q16 44 34 50M70 20H84Q84 44 66 50" fill="none" stroke="#d8ae4a" stroke-width="5"/><path d="M44 66H56V80H68V88H32V80H44Z" fill="#a67a1d"/></svg>';\nconst svg = drawKyogijo({ sport: "soccer", away: aurelia, home: calvara, status: "final", pageant: { emblem: trophy, emblemShape: "plain" } });`, "`emblemShape: \"plain\"` draws a picture with a cut-out outline as it is, over a soft shadow."),
+        item("pageant-emblem-plain", "A trophy as it is, with no disc", `import { drawKyogijo } from "${MAIN}";\n\n${PAGEANT_CODE}\nconst trophy = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M30 14H70V40Q70 62 50 66Q30 62 30 40Z" fill="#d8ae4a"/><path d="M30 20H16Q16 44 34 50M70 20H84Q84 44 66 50" fill="none" stroke="#d8ae4a" stroke-width="5"/><path d="M44 66H56V80H68V88H32V80H44Z" fill="#a67a1d"/></svg>';\nconst svg = drawKyogijo({ sport: "soccer", away: canada, home: japan, status: "final", pageant: { emblem: trophy, emblemShape: "plain" } });`, "`emblemShape: \"plain\"` draws a picture with a cut-out outline as it is, over a soft shadow."),
         item("pageant-emblem-baseball", "Baseball field: the cup on the mound", call('sport: "mlb", pageant: { emblem: cup }')),
       ]),
       section("tall", "Tall, and small", "A tall drawing lays the halves one above the other, and each flag is turned back upright. Under 320 pixels wide, or with `detail: \"simple\"`, the fabric, the hairlines and the name pills are left out.", [
@@ -902,9 +916,9 @@ function pageantPage() {
         item("pageant-centre", "The score in the middle", call('sport: "nhl", pageant: { score: "centre" }'), "The plate is a little smaller and the carpets keep clear of it."),
         item("pageant-scale", "Smaller pictures", call('sport: "soccer", pageant: { scale: 0.7, score: "strip" }')),
         item("pageant-stage-team", "A stage ringed in the team's colour", call('sport: "nhl", pageant: { style: "stage", ring: "team" }')),
-        item("pageant-no-flags", "No flags: the team's colours with its name", `import { drawKyogijo } from "${MAIN}";\n\nconst svg = drawKyogijo({\n  sport: "nhl",\n  away: { name: "Northern Owls", abbr: "NOW", score: 3, color: "#3a2d6b" },\n  home: { name: "Lakeshore Anchors", abbr: "LSA", score: 2, color: "#0f7a7a" },\n  status: "final-ot",\n  pageant: "carpet",\n});`),
-        item("pageant-no-flags-stage", "No flags, on stages", `import { drawKyogijo } from "${MAIN}";\n\nconst svg = drawKyogijo({\n  sport: "nhl",\n  away: { name: "Northern Owls", abbr: "NOW", score: 3, color: "#3a2d6b" },\n  home: { name: "Lakeshore Anchors", abbr: "LSA", score: 2, color: "#0f7a7a" },\n  status: "final-ot",\n  pageant: "stage",\n});`, "A team with no picture is its initials on its colour."),
-        item("pageant-ratio", "A flag of 2 to 1", `import { drawKyogijo } from "${MAIN}";\n\n${PAGEANT_CODE}\nconst long = { ...aurelia, logoRatio: 2, logo: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 20"><rect width="40" height="20" fill="#0f7a7a"/><rect y="7" width="40" height="6" fill="#f4f0e4"/></svg>' };\nconst svg = drawKyogijo({ sport: "soccer", away: long, home: calvara, status: "final", pageant: { score: "strip" } });`, "A carpet is at its flag's own ratio, read from an SVG's viewBox or given as `logoRatio`."),
+        item("pageant-no-flags", "No marks: the team's colours with its name", `import { drawKyogijo } from "${MAIN}";\n\nconst svg = drawKyogijo({\n  sport: "nhl",\n  away: { name: "USA", abbr: "USA", score: 3, color: "#1c3f7a" },\n  home: { name: "Canada", abbr: "CAN", score: 2, color: "#d52b1e" },\n  status: "final-ot",\n  pageant: "carpet",\n});`),
+        item("pageant-no-flags-stage", "No marks, on stages", `import { drawKyogijo } from "${MAIN}";\n\nconst svg = drawKyogijo({\n  sport: "nhl",\n  away: { name: "USA", abbr: "USA", score: 3, color: "#1c3f7a" },\n  home: { name: "Canada", abbr: "CAN", score: 2, color: "#d52b1e" },\n  status: "final-ot",\n  pageant: "stage",\n});`, "A team with no picture is its initials on its colour."),
+        item("pageant-ratio", "A mark of 2 to 1", `import { drawKyogijo } from "${MAIN}";\n\n${PAGEANT_CODE}\nconst long = { ...canada, logoRatio: 2, logo: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 20"><rect width="40" height="20" fill="#d52b1e"/><polygon transform="translate(20 10) scale(.2) translate(-50 -42)" points="50,14 55,26 60,23 59,36 72,28 69,39 81,35 77,44 83,53 72,52 74,58 56,55 55,70 44,55 26,58 28,52 17,53 23,44 19,35 31,39 28,28 41,36 40,23 45,26 50,14" fill="#fff"/></svg>' };\nconst svg = drawKyogijo({ sport: "soccer", away: long, home: japan, status: "final", pageant: { score: "strip" } });`, "A carpet is at its mark's own ratio, read from an SVG's viewBox or given as `logoRatio`."),
       ]),
       section("themes", "Dark, a crop and an entrance", "In the dark theme the border, the hairline and the shadow change. A drawing cropped to a `range` shows the carpet in the part that is shown. `animate` is CSS only and for readers who have not asked for less motion; a picture here is the finished drawing.", [
         item("pageant-dark", "Dark theme", call('sport: "soccer", theme: "dark", pageant: { emblem: cup }')),
@@ -918,11 +932,11 @@ function pageantPage() {
   };
 }
 
-/** The made-up teams of the situation pages: the same two clubs on every surface. */
-const SIT_OWLS = { name: "Northern Owls", abbr: "NOW", score: 3, color: "#3a2d6b" };
-const SIT_ANCHORS = { name: "Lakeshore Anchors", abbr: "LSA", score: 2, color: "#0f7a7a" };
-const SIT_GULLS = { name: "Harbour City Gulls", abbr: "HCG", score: 27, color: "#1d4f91" };
-const SIT_BISON = { name: "Prairie Ridge Bison", abbr: "PRB", score: 24, color: "#a8452c" };
+/** The teams of the situation pages: the same two countries on every surface (Canada and the USA on ice and diamond, Mexico and the USA on the gridiron). */
+const SIT_OWLS = side("usa", 3);
+const SIT_ANCHORS = side("canada", 2);
+const SIT_GULLS = side("mexico", 27);
+const SIT_BISON = side("usa", 24);
 
 /** The situation of a game: hockey's strength and shootout, baseball's bases and count, football's down and drives. */
 function situationPage() {
@@ -942,7 +956,7 @@ function situationPage() {
     slug: "gallery-situation",
     title: "Gallery: the situation of a game",
     ja: "ギャラリー：試合の状況",
-    intro: "Hockey's skaters and shootout, baseball's runners, outs and count, and football's down, distance and drives, drawn on the surface, in the badge and in the compact card. The teams are made up.",
+    intro: "Hockey's skaters and shootout, baseball's runners, outs and count, and football's down, distance and drives, drawn on the surface, in the badge and in the compact card. The teams are real countries.",
     sections: [
       section("hockey", "Hockey: the strength, the empty net and the shootout", "A pill says the strength (`5v4 PP`), the empty net (`EN`), a delayed penalty and the clock; the attacking zone is tinted in the attacking team's colour. A shootout is a strip of dots across centre ice: a goal filled, a miss hollow, and the rounds after the third apart, as sudden death.", [
         item("situation-pp", "A power play, 5 against 4", rink(pp)),
@@ -993,18 +1007,17 @@ function situationPage() {
   };
 }
 
-/** The eight swimmers of the pool pages' races, in code: made-up names, nations that do not exist (a flag of bands in two colours) and the splits at 50, 100, 150 and 200 m. */
-const SWIMMERS_CODE = `const flag = (a, b) => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 20"><rect width="30" height="20" fill="' + a + '"/><rect y="7" width="30" height="6" fill="' + b + '"/></svg>';
-const swimmers = [
-  [4, "Ivo Lindqvist", "AUR", "#0f7a7a", "#f4f0e4", 0.64, [25.31, 52.28, 79.6, 106.12]],
-  [5, "Mateo Varga", "CAL", "#6b2d5c", "#f2c230", 0.67, [25.55, 52.6, 79.95, 106.48]],
-  [3, "Oskar Dahl", "BOR", "#8a2d4b", "#e8e2cf", 0.61, [25.12, 52.3, 79.98, 106.92]],
-  [6, "Ren Takahashi", "DOR", "#c2410c", "#14233f", 0.7, [25.8, 53.02, 80.4, 107.15]],
-  [2, "Callum Rhodes", "EST", "#3a2d6b", "#e8e2cf", 0.66, [25.7, 52.95, 80.66, 107.8]],
-  [7, "Pavel Novak", "FEN", "#1f6b3c", "#f2c230", 0.69, [26.01, 53.4, 81.02, 108.21]],
-  [8, "Jonas Berg", "HEL", "#7a2a8c", "#f2c230", 0.72, [26.1, 53.55, 81.38, 108.77]],
-  [1, "Daniel Okoro", "GAR", "#14233f", "#f2a900", 0.74, [26.2, 53.71, 81.45, 108.9]],
-].map(([lane, name, abbr, a, b, reaction, splits]) => ({ lane, name, abbr, flag: flag(a, b), reaction, splits }));`;
+/** The eight swimmers of the pool pages' races, in code: made-up names, the three letters of the country each swims for (no flag: a snippet cannot await Hata's flag()) and the splits at 50, 100, 150 and 200 m. */
+const SWIMMERS_CODE = `const swimmers = [
+  [4, "Ivo Lindqvist", "SWE", 0.64, [25.31, 52.28, 79.6, 106.12]],
+  [5, "Mateo Varga", "HUN", 0.67, [25.55, 52.6, 79.95, 106.48]],
+  [3, "Oskar Dahl", "NOR", 0.61, [25.12, 52.3, 79.98, 106.92]],
+  [6, "Ren Takahashi", "JPN", 0.7, [25.8, 53.02, 80.4, 107.15]],
+  [2, "Callum Rhodes", "AUS", 0.66, [25.7, 52.95, 80.66, 107.8]],
+  [7, "Pavel Novak", "CZE", 0.69, [26.01, 53.4, 81.02, 108.21]],
+  [8, "Jonas Berg", "CAN", 0.72, [26.1, 53.55, 81.38, 108.77]],
+  [1, "Daniel Okoro", "USA", 0.74, [26.2, 53.71, 81.45, 108.9]],
+].map(([lane, name, abbr, reaction, splits]) => ({ lane, name, abbr, reaction, splits }));`;
 
 /** A snippet that draws a swimming pool with the eight swimmers: `pool` the pool's own options (each ending in a comma), `race` the race's own, `swimmers` what the list is made into, `top` more options of the drawing. */
 const raceCode = ({ pool = "", race = "", swimmers = "swimmers", top = "" } = {}) =>
@@ -1040,7 +1053,7 @@ function poolsPage() {
         item("looks-chalk", "Diving, chalkboard, with its parts named", drawing({ sport: "diving", look: "chalkboard", landmarks: true })),
       ]),
       section("races", "The lanes of a race", "`pool.race` gives each swimmer a lane, a name, a flag you pass as SVG or an address, and, once the race is swum, the time, the reaction time and the splits. Places come from the times; the first three get a medal.", [
-        item("race-start", "A start list: the lane, the flag, the name and the entry time", raceCode({ swimmers: "swimmers.map(({ splits, reaction, ...s }) => ({ ...s, seed: splits[3] + 0.4 }))" }), "With no results, the entry times are shown."),
+        item("race-start", "A start list: the lane, the country, the name and the entry time", raceCode({ swimmers: "swimmers.map(({ splits, reaction, ...s }) => ({ ...s, seed: splits[3] + 0.4 }))" }), "With no results, the entry times are shown."),
         item("race-results", "The results: places, times, reaction times and splits", raceCode({ pool: "look: \"water\", " }), "Swimmers sit in the order of their lanes; the splits are written under each time."),
         item("race-pace", "Split pace bars", raceCode({ pool: "look: \"water\", ", race: "pace: true, " }), "Each lane is the whole race laid out flat: each split a bar as long as its share of the race, in a colour from the field's slowest pace to its fastest."),
         item("race-short", "A 100 m race in a short course pool", `import { drawKyogijo } from "${MAIN}";\n\nconst swimmers = [[4, "Ivo Lindqvist", [11.5, 23.74, 35.8, 47.9]], [5, "Mateo Varga", [11.62, 23.9, 36.1, 48.21]], [3, "Oskar Dahl", [11.3, 23.65, 36.0, 48.4]], [6, "Ren Takahashi", [11.75, 24.1, 36.45, 48.66]]].map(([lane, name, splits]) => ({ lane, name, splits }));\nconst svg = drawKyogijo({ sport: "swimming", pool: { course: "short", lanes: 6, look: "water", race: { event: "Men's 100 m freestyle, short course (made up)", swimmers } } });`, "A split every 25 m."),

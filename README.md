@@ -196,12 +196,12 @@ useEmblems(renderEmblem);
 
 const svg = drawKyogijo({
   sport: "soccer",
-  away: { name: "Harbour City Gulls", abbr: "HCG", score: 2, color: "#1f5fa8", logo: "crest:shield" },
-  home: { name: "Prairie Ridge Bison", abbr: "PRB", score: 1, color: "#b5452c", logo: "crest:roundel" },
+  away: { name: "Brazil", abbr: "BRA", score: 2, color: "#009739", logo: "crest:shield" },
+  home: { name: "England", abbr: "ENG", score: 1, color: "#c8102e", logo: "crest:roundel" },
   status: "final",
   pageant: { style: "stage", emblem: "trophy:soccer-globe", emblemName: "Northern Cup" },
 });
-console.log(svg.includes(encodeURIComponent(">HCG<")), svg.includes("Northern Cup"));
+console.log(svg.includes(encodeURIComponent(">BRA<")), svg.includes("Northern Cup"));
 // true true
 ```
 
@@ -213,7 +213,7 @@ import { drawKyogijo, drawSurface } from "@johnmorrisdotca/kyogijo-stadiums";
 // No teams: just the NFL field at its true shape, 120 by 53⅓ yards with 12 feet of ground round it.
 console.log(/viewBox="-12 -12 384 184"/.test(drawSurface({ sport: "nfl" })));
 // true
-const game = { away: { name: "Harbour City Gulls", score: 27 }, home: { name: "Prairie Ridge Bison", score: 24 }, status: "final" };
+const game = { away: { name: "Mexico", score: 27 }, home: { name: "USA", score: 24 }, status: "final" };
 const wide = drawKyogijo({ sport: "nfl", ...game, orientation: "landscape" });
 const tall = drawKyogijo({ sport: "nfl", ...game, orientation: "portrait" });
 const box = (svg: string) => /viewBox="[^ ]+ [^ ]+ ([^ ]+) ([^ "]+)"/.exec(svg)!.slice(1).map(Number);
@@ -307,8 +307,8 @@ import { drawBadge } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const badge = drawBadge({
   sport: "nba",
-  away: { name: "Summit Peaks", abbr: "SMT", score: 98, color: "#14233f" },
-  home: { name: "Metro Bolts", abbr: "MTB", score: 104, color: "#c2410c" },
+  away: { name: "Australia", abbr: "AUS", score: 98, color: "#00843d" },
+  home: { name: "Japan", abbr: "JPN", score: 104, color: "#bc002d" },
   status: "Q4 2:31",
 });
 console.log(/viewBox="0 0 440 64"/.test(badge));
@@ -497,7 +497,7 @@ console.log(svg.includes('viewBox="0 0 1200 675"'), svg.includes("Three ballpark
 
 <!-- score is home-away; home-score and away-score say it the other way -->
 <kyogijo-field sport="nba" size="compact" orientation="auto"
-  home="Metro Bolts" away="Summit Peaks" score="112-108"
+  home="Japan" away="Australia" score="112-108"
   home-color="#c2410c" away-color="#14233f" status="final"></kyogijo-field>
 ```
 
@@ -527,7 +527,7 @@ import "@johnmorrisdotca/kyogijo-stadiums/element/define";
 </script>
 
 <template>
-  <kyogijo-field sport="nfl" orientation="auto" away="Harbour City Gulls" home="Prairie Ridge Bison" away-score="27" home-score="24" status="final" />
+  <kyogijo-field sport="nfl" orientation="auto" away="Mexico" home="USA" away-score="27" home-score="24" status="final" />
 </template>
 ```
 

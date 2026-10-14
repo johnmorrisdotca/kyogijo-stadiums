@@ -98,19 +98,19 @@ import { drawKyogijo, statusLabel } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const afl = drawKyogijo({
   sport: "afl",
-  away: { name: "Harbour City Gulls", abbr: "HCG", goals: 10, behinds: 12, color: "#1d4f91" },
-  home: { name: "Prairie Ridge Bison", abbr: "PRB", goals: 9, behinds: 14, color: "#a8452c" },
+  away: { name: "Australia", abbr: "AUS", goals: 10, behinds: 12, color: "#00843d" },
+  home: { name: "Ireland", abbr: "IRL", goals: 9, behinds: 14, color: "#169b62" },
   status: "final",
 });
-console.log(afl.includes("10.12 (72)"), afl.includes("Harbour City Gulls scored 10 goals and 12 behinds."));
+console.log(afl.includes("10.12 (72)"), afl.includes("Australia scored 10 goals and 12 behinds."));
 // true true
 const cricket = drawKyogijo({
   sport: "cricket",
-  away: { name: "Harbour City Gulls", abbr: "HCG", score: 245, wickets: 6, overs: "50", color: "#1d4f91", innings: [245] },
-  home: { name: "Prairie Ridge Bison", abbr: "PRB", score: 187, wickets: 10, overs: "41.2", color: "#a8452c", innings: [187] },
+  away: { name: "Australia", abbr: "AUS", score: 245, wickets: 6, overs: "50", color: "#00843d", innings: [245] },
+  home: { name: "England", abbr: "ENG", score: 187, wickets: 10, overs: "41.2", color: "#c8102e", innings: [187] },
   status: "final",
 });
-console.log(cricket.includes("245/6"), cricket.includes("Harbour City Gulls: 245 runs for 6 wickets in 50 overs."));
+console.log(cricket.includes("245/6"), cricket.includes("Australia: 245 runs for 6 wickets in 50 overs."));
 console.log(statusLabel("innings-2"), statusLabel("innings-2", "ja"));
 // true true
 // Innings 2 第2イニング

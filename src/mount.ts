@@ -90,11 +90,11 @@ export function containerAspect(host: HTMLElement, breakpoint = 560): number | u
  * const card = mountKyogijo(document.querySelector("#game")!, {
  *   sport: "nhl",
  *   orientation: "auto",
- *   away: { name: "Harbour City Gulls", score: 1 },
- *   home: { name: "Prairie Ridge Bison", score: 0 },
+ *   away: { name: "USA", score: 1 },
+ *   home: { name: "Canada", score: 0 },
  *   status: "live",
  * });
- * card.update({ sport: "nhl", orientation: "auto", away: { name: "Harbour City Gulls", score: 2 }, home: { name: "Prairie Ridge Bison", score: 0 } });
+ * card.update({ sport: "nhl", orientation: "auto", away: { name: "USA", score: 2 }, home: { name: "Canada", score: 0 } });
  * ```
  */
 export function mountKyogijo(host: HTMLElement, options: SurfaceOptions | ScoreOptions, settings: MountSettings = {}): KyogijoMount {

@@ -21,12 +21,12 @@ import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const svg = drawKyogijo({
   sport: "nhl",
-  away: { name: "Northern Owls", abbr: "NOW", score: 3, color: "#3a2d6b" },
-  home: { name: "Lakeshore Anchors", abbr: "LSA", score: 2, color: "#0f7a7a" },
+  away: { name: "USA", abbr: "USA", score: 3, color: "#1c3f7a" },
+  home: { name: "Canada", abbr: "CAN", score: 2, color: "#d52b1e" },
   status: "final-ot",
   competition: "Cup Final, Game 7",
 });
-console.log(svg.startsWith("<svg"), svg.includes("Northern Owls 3, Lakeshore Anchors 2"));
+console.log(svg.startsWith("<svg"), svg.includes("USA 3, Canada 2"));
 // true true
 ```
 
@@ -52,12 +52,12 @@ import { mountKyogijo } from "@johnmorrisdotca/kyogijo-stadiums/mount";
 const card = mountKyogijo(document.querySelector("#game")!, {
   sport: "nhl",
   orientation: "auto",
-  away: { name: "Northern Owls", score: 1 },
-  home: { name: "Lakeshore Anchors", score: 0 },
+  away: { name: "USA", score: 1 },
+  home: { name: "Canada", score: 0 },
   status: "live",
 });
 // Each goal: draw again with the new score. The layout follows the box.
-card.update({ sport: "nhl", orientation: "auto", away: { name: "Northern Owls", score: 2 }, home: { name: "Lakeshore Anchors", score: 0 }, status: "live" });
+card.update({ sport: "nhl", orientation: "auto", away: { name: "USA", score: 2 }, home: { name: "Canada", score: 0 }, status: "live" });
 ```
 
 ## 3. A custom element
@@ -69,7 +69,7 @@ card.update({ sport: "nhl", orientation: "auto", away: { name: "Northern Owls", 
 
 <!-- score is home-away; home-score and away-score say it the other way -->
 <kyogijo-field sport="nba" size="compact" orientation="auto"
-  home="Metro Bolts" away="Summit Peaks" score="112-108"
+  home="Japan" away="Australia" score="112-108"
   home-color="#c2410c" away-color="#14233f" status="final"></kyogijo-field>
 
 <style>
@@ -86,8 +86,8 @@ For a page that cannot run scripts (a site builder, a forum, a newsletter archiv
 
 ```html
 <iframe
-  src="https://johnmorrisdotca.github.io/kyogijo-stadiums/embed.html?sport=nhl&away=Northern+Owls&home=Lakeshore+Anchors&ascore=3&hscore=2&status=final-ot"
-  title="Northern Owls 3, Lakeshore Anchors 2, Final/OT"
+  src="https://johnmorrisdotca.github.io/kyogijo-stadiums/embed.html?sport=nhl&away=USA&home=Canada&ascore=3&hscore=2&status=final-ot"
+  title="USA 3, Canada 2, Final/OT"
   loading="lazy"
   style="width:100%;aspect-ratio:2.3;border:0"
 ></iframe>

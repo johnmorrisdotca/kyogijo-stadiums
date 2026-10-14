@@ -113,7 +113,7 @@ const LOOKS: Record<string, Look> = { stone: {}, counting: { hollow: true }, "sh
  *     { x: 1.9, y: 1.1, team: "away", number: 7 },
  *     { x: 0, y: -12, team: "away", number: 3 },
  *   ],
- *   { end: 6, hammer: "home", names: { home: "Prairie Ridge", away: "Harbour City" } },
+ *   { end: 6, hammer: "home", names: { home: "Canada", away: "Japan" } },
  * );
  * console.log(chart.totals.points, chart.totals.scoring, chart.title);
  * // 2 home Curling stones, End 6

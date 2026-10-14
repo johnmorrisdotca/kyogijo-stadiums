@@ -839,11 +839,11 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
  * import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
  * const svg = drawKyogijo({
  *   sport: "nhl",
- *   away: { name: "Harbour City Gulls", abbr: "HCG", score: 3, color: "#1f5fa8" },
- *   home: { name: "Prairie Ridge Bison", abbr: "PRB", score: 2, color: "#b5452c" },
+ *   away: { name: "USA", abbr: "USA", score: 3, color: "#1c3f7a" },
+ *   home: { name: "Canada", abbr: "CAN", score: 2, color: "#d52b1e" },
  *   status: "final-ot",
  * });
- * console.log(svg.startsWith("<svg"), svg.includes("Harbour City Gulls"));
+ * console.log(svg.startsWith("<svg"), svg.includes("USA"));
  * // true true
  * ```
  */

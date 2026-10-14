@@ -72,7 +72,7 @@ console.log("ok   npm install of the tarball");
 // What the built package in this checkout makes: the installed one must make the same.
 const local = await import(new URL("../dist/index.js", import.meta.url).href);
 const localScene = await import(new URL("../dist/scene-entry.js", import.meta.url).href);
-const game = { sport: "nhl", away: { name: "Harbour City Gulls", abbr: "HCG", score: 3, color: "#1f5fa8" }, home: { name: "Prairie Ridge Bison", abbr: "PRB", score: 2, color: "#b5452c" }, status: "final-ot", id: "pack" };
+const game = { sport: "nhl", away: { name: "USA", abbr: "USA", score: 3, color: "#1c3f7a" }, home: { name: "Canada", abbr: "CAN", score: 2, color: "#d52b1e" }, status: "final-ot", id: "pack" };
 const expected = local.drawKyogijo(game);
 const expectedPortrait = local.drawKyogijo({ ...game, sport: "mlb", park: "fenway-park", orientation: "portrait" });
 

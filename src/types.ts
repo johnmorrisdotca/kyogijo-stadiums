@@ -562,7 +562,7 @@ export interface PageantOptions {
 
 /** One team of a score. */
 export interface Team {
-  /** The name, as it is to be written: "Harbour City Gulls". */
+  /** The name, as it is to be written: "Canada". */
   name: string;
   /** A short form, three letters or so, for the score and the badge. Taken from the name when missing. */
   abbr?: string;

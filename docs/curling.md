@@ -146,12 +146,12 @@ import { drawKyogijo, statusLabel } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const game = {
   sport: "curling" as const,
-  away: { name: "Harbour City Gulls", abbr: "HCG", score: 5, color: "#1d4f91", ends: [0, 1, 0, 2, 0, 0, 1, 0, 1, "X"] },
-  home: { name: "Prairie Ridge Bison", abbr: "PRB", score: 4, color: "#a8452c", hammer: true, ends: [1, 0, 2, 0, 1, 0, 0, 1, 0] },
+  away: { name: "Japan", abbr: "JPN", score: 5, color: "#bc002d", ends: [0, 1, 0, 2, 0, 0, 1, 0, 1, "X"] },
+  home: { name: "Canada", abbr: "CAN", score: 4, color: "#d52b1e", hammer: true, ends: [1, 0, 2, 0, 1, 0, 0, 1, 0] },
   status: "end-10",
 };
 const svg = drawKyogijo(game);
-console.log(svg.includes("End 10"), svg.includes("Prairie Ridge Bison has the hammer."));
+console.log(svg.includes("End 10"), svg.includes("Canada has the hammer."));
 console.log(statusLabel("end-6"), statusLabel("extra-end"), statusLabel("End 6", "ja"));
 // true true
 // End 6 Extra end 第6エンド
@@ -175,9 +175,9 @@ const stones = [
   { x: 0.2, y: -9, team: "away", number: 3 },
   { x: 8.5, y: 0, team: "home", number: 1 },
 ];
-const chart = curlingStones(stones, { end: 6, hammer: "home", names: { home: "Prairie Ridge", away: "Harbour City" } });
+const chart = curlingStones(stones, { end: 6, hammer: "home", names: { home: "Canada", away: "Japan" } });
 console.log(chart.title, "|", chart.summary);
-// Curling stones, End 6 | 4 stones in play. Prairie Ridge scores 2. 1 out of play. Prairie Ridge has the hammer.
+// Curling stones, End 6 | 4 stones in play. Canada scores 2. 1 out of play. Canada has the hammer.
 console.log(chart.totals.points, chart.totals.scoring, chart.totals.shot, curlingScore(stones.slice(0, 3)).counting);
 // 2 home 0 2
 ```

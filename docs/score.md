@@ -25,7 +25,7 @@ A team's logo is an `https:` or relative address, an image `data:` address, the 
 
 A score is drawn the way the sport lists it. Soccer and most of the world's other codes write the home team first, so it is on the left; the North American leagues write the visitor first ("away at home"), so the home team is on the right. `homeSide` overrides either; `homeSideFor(sport, league?)` returns the default (`"left"` or `"right"`), and `HOME_FIRST` (and `HOME_FIRST_LEAGUES` for the leagues that differ from their sport) is the table behind it.
 
-The side decides everything that follows the drawing: the banners and the plate, the badge and the strip of a compact card, the order of the teams in the title and the description ("Calvara 1, Aurelia 2", or in Japanese "Calvara 1、Aurelia 2"), the order of a shoot-out in the status (`Final · 2-4 pens`, the home team's first when it is on the left), the rows of a curling, net-sport or cricket board, and the way `update` pulses a changed score.
+The side decides everything that follows the drawing: the banners and the plate, the badge and the strip of a compact card, the order of the teams in the title and the description ("Japan 1, Canada 2", or in Japanese "日本 1、カナダ 2"), the order of a shoot-out in the status (`Final · 2-4 pens`, the home team's first when it is on the left), the rows of a curling, net-sport or cricket board, and the way `update` pulses a changed score.
 
 | Sport | Default | Why |
 | --- | --- | --- |
@@ -56,18 +56,19 @@ A real country's flag is a code: with [Hata](./flags.md) plugged in (`useFlags`)
 ```ts
 import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
-const flag = (colours: string[]): string => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 20">${colours.map((c, i) => `<rect x="${i * 10}" width="10" height="20" fill="${c}"/>`).join("")}</svg>`;
+// Our own mark, drawn here: a maple leaf on a white disc (not a federation's crest or logo).
+const leaf = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#fff"/><polygon points="50,14 55,26 60,23 59,36 72,28 69,39 81,35 77,44 83,53 72,52 74,58 56,55 55,70 44,55 26,58 28,52 17,53 23,44 19,35 31,39 28,28 41,36 40,23 45,26 50,14" fill="#d52b1e"/></svg>';
 const svg = drawKyogijo({
   sport: "soccer",
   markShape: "round",
-  away: { name: "Aurelia", abbr: "AUR", score: 2, color: "#0f7a7a", logo: flag(["#0f7a7a", "#f4f0e4", "#e07a1f"]) },
-  home: { name: "Calvara", abbr: "CAL", score: 1, color: "#6b2d5c" },
+  away: { name: "Canada", abbr: "CAN", score: 2, color: "#d52b1e", logo: leaf },
+  home: { name: "Japan", abbr: "JPN", score: 1, color: "#bc002d" },
 });
 console.log(svg.split('class="ky-mark"').length - 1, svg.includes("<clipPath"), svg.includes("ky-mark-i"));
 // 2 true true
 ```
 
-A round mark with no logo (Calvara above) is the team's initials on its colour; in the badge, which already writes the three letters, a team with no logo has no mark. `markFit: "contain"` shows a crest whole on a plain disc where `cover` (the default) fills the circle and cuts the edges of a flag. Curling, the net sports and cricket put the teams on the board, not on the surface, so they have no mark. The mark's ring and hairline are `--ky-mark-ring` and `--ky-mark-edge`.
+A round mark with no logo (Japan above) is the team's initials on its colour; in the badge, which already writes the three letters, a team with no logo has no mark. `markFit: "contain"` shows a crest whole on a plain disc where `cover` (the default) fills the circle and cuts the edges of a flag. Curling, the net sports and cricket put the teams on the board, not on the surface, so they have no mark. The mark's ring and hairline are `--ky-mark-ring` and `--ky-mark-edge`.
 
 ### Without the panel
 
@@ -90,8 +91,8 @@ import { drawBadge } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const badge = drawBadge({
   sport: "nba",
-  away: { name: "Summit Peaks", abbr: "SMT", score: 98, color: "#14233f" },
-  home: { name: "Metro Bolts", abbr: "MTB", score: 104, color: "#c2410c" },
+  away: { name: "Australia", abbr: "AUS", score: 98, color: "#00843d" },
+  home: { name: "Japan", abbr: "JPN", score: 104, color: "#bc002d" },
   status: "Q4 2:31",
 });
 console.log(/viewBox="0 0 440 64"/.test(badge));
@@ -103,7 +104,7 @@ console.log(/viewBox="0 0 440 64"/.test(badge));
 ```ts
 import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 
-const game = { away: { name: "Harbour City Gulls", score: 27 }, home: { name: "Prairie Ridge Bison", score: 24 }, status: "final" };
+const game = { away: { name: "Mexico", score: 27 }, home: { name: "USA", score: 24 }, status: "final" };
 const wide = drawKyogijo({ sport: "nfl", ...game, orientation: "landscape" });
 const tall = drawKyogijo({ sport: "nfl", ...game, orientation: "portrait" });
 const box = (svg: string) => /viewBox="[^ ]+ [^ ]+ ([^ ]+) ([^ "]+)"/.exec(svg)!.slice(1).map(Number);
