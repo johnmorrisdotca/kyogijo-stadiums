@@ -7,6 +7,8 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.6.2] - 2026-10-14
+
 ### Fixed
 
 - **A round mark turns with its team's name.** Where a zone's words are turned (along the ends of a wide pitch, and in a tall drawing, where the surface is turned a quarter and the words are turned back) the flag in its circle was turned back to stay upright, so on a wide pitch the flag stood upright beside a name written sideways, and in a tall drawing the flag lay a quarter turn over while the name read upright. The mark's group now lies in the banner's group and takes its turn: the same angle, the same way, as the name, so a flag and its name read as one unit (sideways along the ends of a wide pitch, the right way up in a tall drawing). The clip, the ring, the hairline and the initials of a team with no picture turn with the group, and the clip path's id (`<id>-mk-home-c`, `<id>-mk-away-c`) is unchanged. A flag in a zone that is not turned is as before, and so are the badge and the strip of a compact card, which are not turned. `RoundMark.upright` stays in `mark.ts`, but the score no longer passes it. A test reads the turn of the mark and of the name in every orientation, with logos and with initials, and holds the two equal.
