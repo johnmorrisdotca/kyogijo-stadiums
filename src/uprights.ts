@@ -21,6 +21,7 @@ import { ballparkUprights, fieldUprights, footballUprights, soccerUprights } fro
 import { netUprights } from "./uprights.net.ts";
 import { isPoolSport, poolPlan, feet as poolFeet } from "./pool.ts";
 import { poolUprights } from "./uprights.pools.ts";
+import { athleticsUprights, skatingUprights } from "./uprights.track.ts";
 import { courtUprights, rinkUprights } from "./uprights.rinks.ts";
 import { convertLength, type Unit } from "./units.ts";
 import { sheetFor } from "./sheet.ts";
@@ -53,7 +54,7 @@ export interface Uprights {
 export const planesOf = (u: Pick<Uprights, "items">): Plane[] => u.items.flatMap((item) => item.planes);
 
 /** The unit each sport's rulebook gives its heights in, when the options name none. */
-const RULEBOOK_UNIT: Partial<Record<string, Unit>> = { volleyball: "m", badminton: "m", tabletennis: "m", padel: "m", squash: "m", swimming: "m", waterpolo: "m", diving: "m", artisticswimming: "m", sepaktakraw: "m", teqball: "m", roundnet: "m", netball: "m", soccer: "m", handball: "m", fieldhockey: "m", rugby: "m", afl: "m", gaelic: "m" };
+const RULEBOOK_UNIT: Partial<Record<string, Unit>> = { volleyball: "m", badminton: "m", tabletennis: "m", padel: "m", squash: "m", athletics: "m", skating: "m", swimming: "m", waterpolo: "m", diving: "m", artisticswimming: "m", sepaktakraw: "m", teqball: "m", roundnet: "m", netball: "m", soccer: "m", handball: "m", fieldhockey: "m", rugby: "m", afl: "m", gaelic: "m" };
 
 /** What stands on the surface the options draw: nothing on a curling sheet, which is flat. */
 export function uprightsFor(o: SurfaceOptions, settings: UprightOptions = {}): Uprights {
@@ -109,6 +110,16 @@ export function uprightsFor(o: SurfaceOptions, settings: UprightOptions = {}): U
     thin = thinnest(w, h);
     area = { x0: 0, y0: 0, x1: w, y1: h };
     items = poolUprights({ ...o, sport } as SurfaceOptions, thin).items;
+  } else if (sport === "athletics") {
+    const built = athleticsUprights({ ...o, sport }, 0.3);
+    area = built.area;
+    thin = thinnest(area.x1, area.y1);
+    items = athleticsUprights({ ...o, sport }, thin).items;
+  } else if (sport === "skating") {
+    const built = skatingUprights({ ...o, sport }, 0.3);
+    area = built.area;
+    thin = thinnest(area.x1, area.y1);
+    items = skatingUprights({ ...o, sport }, thin).items;
   } else if (isFieldSport(sport)) {
     const plan = fieldPlan({ ...o, sport });
     thin = thinnest(plan.length, plan.width);

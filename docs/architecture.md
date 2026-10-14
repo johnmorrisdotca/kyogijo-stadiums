@@ -234,6 +234,7 @@ src/
 ├── uprights.netkit.ts  what the net sports' uprights share: a net hung between a top and a bottom line, its sag, a table on its legs
 ├── uprights.more.ts    padel's walls and fence, squash's and racquetball's walls, sepak takraw's net, teqball's table, roundnet's set, netball's goalposts
 ├── uprights.pools.ts   the pools' starting blocks, flags and false start rope, springboards and platforms, water polo goals, judges' and starting platforms
+├── uprights.track.ts   an athletics stadium's hurdles, steeplechase barriers, jumps' uprights and bars and cage; a skating rink's padding and boards
 ├── uprights.rinks.ts   the hockey rink's boards and glass and goals, the basketball court's baskets and stanchions
 ├── uprights.board.ts   the score stood up: its badge on a board that faces the eye, hung over the middle of a court or a rink and standing behind an end of a field
 ├── uprights.fields.ts  football's posts and pylons, a soccer pitch's goals and flags, the posts of rugby, Gaelic and Australian football, stumps, a ballpark's fence, poles and backstop

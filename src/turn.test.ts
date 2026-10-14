@@ -405,6 +405,53 @@ describe("what stands on the pools", () => {
   });
 });
 
+describe("what stands in an athletics stadium and at a skating rink", () => {
+  it("stands the high jump's uprights 4.02 m apart and the pole vault's 5.20 m, each pair with its bar, and the discus and hammer cage with its netting 4 m high and 6 m at the front", () => {
+    const { by } = find("athletics");
+    expect(by("high-jump").planes.filter((p) => p.id.includes("-upright-") && !p.id.endsWith("-x"))).toHaveLength(4);
+    // Two runways, a box and a mat at each end of each: four vaults.
+    expect(by("pole-vault").planes.filter((p) => p.id.includes("-upright-") && !p.id.endsWith("-x"))).toHaveLength(8);
+    const apart = (id: string, n: number): number => {
+      const ps = by(id).planes.filter((p) => p.id.includes("-upright-a") && !p.id.endsWith("-x")).slice(0, n);
+      const bs = by(id).planes.filter((p) => p.id.includes("-upright-b") && !p.id.endsWith("-x")).slice(0, n);
+      return Math.hypot(ps[0].o[0] - bs[0].o[0], ps[0].o[1] - bs[0].o[1]);
+    };
+    expect(Math.abs(apart("high-jump", 1) / M - 4.02)).toBeLessThan(0.2);
+    expect(Math.abs(apart("pole-vault", 1) / M - 5.2)).toBeLessThan(0.2);
+    expect(metres(by("high-jump").height)).toBe(2);
+    expect(metres(by("pole-vault").height)).toBe(5);
+    const tops = by("cage").planes.map((p) => metres(p.o[2]));
+    expect(Math.max(...tops)).toBe(6);
+    expect(tops).toContain(4);
+    expect(by("cage").planes.filter((p) => metres(p.o[2]) === 6)).toHaveLength(2);
+  });
+
+  it("stands hurdles of the height of the race in every lane of the races a drawing marks, and the steeplechase's five barriers and water jump", () => {
+    const sprint = find("athletics", { athletics: { races: ["110m-hurdles"] } });
+    expect(sprint.by("hurdles").planes).toHaveLength(80);
+    expect(metres(sprint.by("hurdles").height)).toBe(1.067);
+    expect(metres(find("athletics", { athletics: { races: ["100m-hurdles"] } }).by("hurdles").height)).toBe(0.838);
+    expect(metres(find("athletics", { athletics: { races: ["400m-hurdles"] } }).by("hurdles").height)).toBe(0.914);
+    const chase = find("athletics", { athletics: { races: ["3000m-steeplechase"] } }).by("steeplechase");
+    expect(chase.planes.filter((p) => p.id.includes("barrier"))).toHaveLength(5);
+    expect(chase.planes.some((p) => p.id === "water-pit")).toBe(true);
+    expect(metres(chase.height)).toBe(0.914);
+    expect(find("athletics").u.items.map((i) => i.kind)).not.toContain("hurdles");
+  });
+
+  it("puts the padding 0.80 m high round a long or a short track, and a figure skating rink's boards as high as a hockey rink's, with no glass", () => {
+    for (const league of [undefined, "isu-short-track"] as const) {
+      const { by } = find("skating", league === undefined ? {} : { league });
+      expect(metres(by("padding").height)).toBe(0.8);
+      expect(by("padding").planes.every((p) => p.shy !== undefined)).toBe(true);
+    }
+    const figure = find("skating", { league: "isu-figure" }).by("rink-boards");
+    expect(figure.height).toBeCloseTo(3.5, 5);
+    expect(figure.planes.some((p) => p.kind === "glass")).toBe(false);
+    expect(find("skating", { skating: { padding: false } }).u.items).toHaveLength(0);
+  });
+});
+
 describe("walls that give way to the eye", () => {
   const wallOf = (u: ReturnType<typeof uprightsFor>, id: string) => planesOf(u).find((p) => p.id === id)!;
 

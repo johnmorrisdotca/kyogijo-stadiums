@@ -173,7 +173,7 @@ test.describe("with JavaScript off", () => {
     expect(boxes).toBe(1);
     await expect(page.locator(at("gallery-count"))).toHaveText("33 of 33 sports");
     await expect(page.locator(at("pitches-count"))).toHaveText("16 of 16 pitches");
-    await expect(page.locator(`${at("gallery-family")} button`)).toHaveCount(10);
+    await expect(page.locator(`${at("gallery-family")} button`)).toHaveCount(11);
     await expect(page.locator(`${at("gallery-family")} button[aria-pressed="true"]`)).toHaveText("All");
     await expect(page.locator(`${at("pitches-group")} button`)).toHaveCount(7);
     await expect(page.locator(at("gallery-more"))).toHaveText("Show all 33 sports");

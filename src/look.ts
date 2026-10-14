@@ -188,7 +188,7 @@ const LINE_DRAWING: Look = {
  * import { LOOKS, drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
  * const svg = drawKyogijo({ sport: "nhl", look: "chalkboard" });
  * console.log(Object.keys(LOOKS).length, svg.includes('data-palette="chalkboard"'));
- * // 7 true
+ * // 8 true
  * ```
  */
 export const LOOKS: Readonly<Record<LookName, Look>> = { grass: GRASS, night: NIGHT, chalkboard: CHALKBOARD, blueprint: BLUEPRINT, print: PRINT, broadcast: BROADCAST, "high-contrast": HIGH_CONTRAST, "line-drawing": LINE_DRAWING };

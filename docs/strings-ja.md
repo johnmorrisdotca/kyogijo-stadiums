@@ -1056,6 +1056,13 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `turn.parts.springboards` | springboards | 飛板 |
 | `turn.parts.platforms` | platforms | 固定台 |
 | `turn.parts.judges-stand` | judges' stand | ジャッジ台 |
+| `turn.parts.hurdles` | hurdles | ハードル |
+| `turn.parts.steeplechase` | steeplechase barriers | 障害物 |
+| `turn.parts.high-jump` | high jump uprights and bar | 走高跳の支柱とバー |
+| `turn.parts.pole-vault` | pole vault uprights and bar | 棒高跳の支柱とバー |
+| `turn.parts.cage` | discus and hammer cage | 円盤投・ハンマー投の囲い |
+| `turn.parts.padding` | padding | 防護マット |
+| `turn.parts.rink-boards` | boards | フェンス |
 
 ## The demo's words (`WORDS`)
 
