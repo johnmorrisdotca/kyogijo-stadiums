@@ -1,6 +1,6 @@
 # Swimming, water polo, diving and artistic swimming
 
-Four sports draw a pool: `sport: "swimming"` (the competition pool, in lanes), `"waterpolo"` (the field of play), `"diving"` (the well, with its springboards and platforms) and `"artisticswimming"` (the routine area). Each is drawn to scale from World Aquatics' *Competition Regulations* (in force as from 25 June 2025), which is where the Facilities Rules (FR 2 to FR 8 of the 2017 to 2025 editions) now sit as Article 16 of Part Two, Article 13 of Part Four, Article 18 of Part Six and Article 27 of Part Seven. Every figure is cited in [sources.md](./sources.md#the-pools), and each says where the rules give no figure and the drawing's is ours. The pool is drawn **wide** (the start at the left; a tall drawing turns it a quarter, with the words still upright), in metres, the unit the rules print.
+Four sports draw a pool: `sport: "swimming"` (the competition pool, in lanes), `"waterpolo"` (the field of play), `"diving"` (the well, with its springboards and platforms) and `"artisticswimming"` (the routine area). Each is drawn to scale from World Aquatics' *Competition Regulations* (in force as from February 2026), which is where the Facilities Rules (FR 2 to FR 8 of the 2017 to 2025 editions) now sit as Article 15 of Part Two, Article 15 of Part Four, Articles 20 and 21 of Part Six and Article 12 of Part Seven (in the edition of 25 June 2025 they were Articles 16, 13, 18 and 27). Every figure is cited in [sources.md](./sources.md#the-pools), and each says where the rules give no figure and the drawing's is ours. The pool is drawn **wide** (the start at the left; a tall drawing turns it a quarter, with the words still upright), in metres, the unit the rules print.
 
 ```ts
 import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
@@ -13,16 +13,16 @@ console.log(wide.match(/viewBox="([^"]*)"/)?.[1], "|", tall.match(/viewBox="([^"
 
 | `sport` | What it draws | Its size | The rules |
 | --- | --- | --- | --- |
-| `swimming` | the pool in lanes: ropes, floor markings, blocks, touch panels, backstroke flags, false start rope | 50 or 25 m, 1 to 10 lanes | Part Two, Article 16 |
-| `waterpolo` | the field of play, its ropes, lines, goals, re-entry areas, platforms and table | 25 by 20 m between the goal lines | Part Six, Article 18 and Appendix 4 |
-| `diving` | the boards seen from above, at the distances of the table, and the lines across the well | 25 m across, 21 m deep | Part Four, Article 13 and Appendix 2 |
-| `artisticswimming` | the routine area, its floor lines, the judges' platform and the starting platform | 30 by 20 m, or 25 by 15 m | Part Seven, Article 27 |
+| `swimming` | the pool in lanes: ropes, floor markings, blocks, touch panels, backstroke flags, false start rope | 50 or 25 m, 1 to 10 lanes | Part Two, Article 15 |
+| `waterpolo` | the field of play, its ropes, lines, goals, re-entry areas, platforms and table | 25 by 20 m between the goal lines | Part Six, Articles 20 and 21 |
+| `diving` | the boards seen from above, at the distances of the table, and the lines across the well | 25 m across, 21 m deep | Part Four, Article 15 and Appendix 2 |
+| `artisticswimming` | the routine area, its floor lines, the judges' platform and the starting platform | 30 by 20 m, or 25 by 15 m | Part Seven, Article 12 |
 
 All four take a `pool` option for the look, `layers`, `range`, `landmarks`, a `score` of two teams (a dual meet, a water polo match), every renderer, and the usual themes and [looks](./theming.md). The pools have no `league`: World Aquatics has one rulebook.
 
 ## The swimming pool
 
-The default is the pool of the Olympic Games: 50 m between the touch panels, eight lanes of 2.5 m with a space of 2.5 m outside the first and the last (CR 16.2.6.2), 25 m wide. `pool.course: "short"` is the 25 m pool; `pool.lanes` is 1 to 10.
+The default is the pool of the Olympic Games: 50 m between the touch panels, eight lanes of 2.5 m with a space of 2.5 m outside the first and the last (Part Two Article 15.6.1), 25 m wide. `pool.course: "short"` is the 25 m pool; `pool.lanes` is 1 to 10.
 
 ```ts
 import { swimPlan } from "@johnmorrisdotca/kyogijo-stadiums";
@@ -36,18 +36,18 @@ console.log(ten.ropes.map((rope) => rope.colour[0]).join(""));
 
 | Figure | Rule | In the drawing |
 | --- | --- | --- |
-| Length 50.000 m or 25.000 m between the touch panels | CR 16.1.1, was FR 2.1 | the pool's water |
-| Lanes at least 2.5 m wide; lanes 0 and 9 2.4 m wide with spaces of 0.1 m outside them for ten lanes in a permanent pool, all 2.5 m with spaces of 0.5 m for a temporary one (26 m wide) | CR 16.1.6, 16.2.6.3 | `lanes`, `temporary`; a pool of another number of lanes has spaces of 0.5 m, as the 25 by 21 m pool of eight lanes of Annexes 6 and 7 does |
-| Lane 1 (lane 0 for ten) on the right facing the course from the start | CR 16.2.9 | at the bottom of a wide drawing |
-| Lane ropes: floats 0.15 m across; green outside, then blue, then yellow in the middle (two green, four blue and three yellow for eight lanes; two, six and three for ten) | CR 16.1.7.1, 16.2.7.1 | one run of beaded floats for each rope |
-| The floats within 5.0 m of each wall red; a distinct colour at 15 m from each wall and, in a 50 m pool, at 25 m | CR 16.1.7.1 to 16.1.7.3 | red floats, and a run of four white ones (the length of a run is ours) |
-| Lane markings on the floor 0.2 to 0.3 m wide, 46 m (21 m) long, ending 2 m from the wall in a cross line 1 m long | CR 16.2.15, was FR 2.14 | a line in each lane with a cross line at each end |
-| A cross line 0.5 m long at 15 m from each wall | CR 16.2.15 | a small cross on each lane marking |
-| Touch panels 2.4 m wide, 0.3 m above the water and 0.6 m below, with a target line down the middle | CR 16.3.4, 16.2.15 | a yellow panel on each wall, in every lane, with the target line and its cross line |
-| Starting blocks 0.5 by 0.6 m, 0.5 to 0.75 m above the water, numbered on top | CR 16.2.8, 16.2.9 | a block behind each wall, in every lane, with the lane number |
-| Backstroke flags on a rope 1.8 m above the water, 5.0 m from each wall | CR 16.1.10, was FR 2.9 | a rope of alternating flags across the pool, on standards at both sides |
-| The false start rope 15.0 m from the starting end, at least 1.2 m up | CR 16.1.12, was FR 2.11 | a dashed line across the pool |
-| Depth: 1.35 m from 1.0 to at least 6.0 m from a wall with blocks; 2.5 m at the Olympic Games and World Championships, 2.0 m for the 25 m World Championships | CR 16.1.4, 16.2.4 | the side section |
+| Length 50.000 m or 25.000 m between the touch panels | Part Two 15.1.1.1 and 15.1.2.1, was FR 2.1 (June 2025: CR 16.1.1) | the pool's water |
+| Lanes at least 2.5 m wide; lanes 0 and 9 2.4 m wide with spaces of 0.1 m outside them for ten lanes in a permanent pool, all 2.5 m with spaces of 0.5 m for a temporary one (26 m wide) | Part Two 15.6.2.1, 15.6.2.2 and 15.6.3 (June 2025: CR 16.1.6, 16.2.6.3) | `lanes`, `temporary`; a pool of another number of lanes has spaces of 0.5 m, as the 25 by 21 m pool of eight lanes of Appendix 6 of Part Two (Article 17.6) does |
+| Lane 1 (lane 0 for ten) on the right facing the course from the start | Part Two 15.8.6, a recommendation (June 2025: CR 16.2.9) | at the bottom of a wide drawing |
+| Lane ropes: floats 0.15 m across; green outside, then blue, then yellow in the middle (two green, four blue and three yellow for eight lanes; two, six and three for ten) | Part Two 15.7.4 and 15.7.6 (June 2025: CR 16.1.7.1, 16.2.7.1); the float width in 15.7.4 is unverified, see [sources.md](./sources.md#the-pools) | one run of beaded floats for each rope |
+| The floats within 5.0 m of each wall red; a distinct colour at 15 m from each wall and, in a 50 m pool, at 25 m | Part Two 15.7.7, 15.7.9 and 15.7.10 (June 2025: CR 16.1.7.1 to 16.1.7.3) | red floats, and a run of four white ones (the length of a run is ours) |
+| Lane markings on the floor 0.2 to 0.3 m wide, 46 m (21 m) long, ending 2 m from the wall in a cross line 1 m long | Part Two 15.13.1 and 15.13.2, was FR 2.14 (June 2025: CR 16.2.15) | a line in each lane with a cross line at each end |
+| A cross line 0.5 m long at 15 m from each wall | Part Two 15.13.4 (June 2025: CR 16.2.15) | a small cross on each lane marking |
+| Touch panels 2.4 m wide, 0.3 m above the water and 0.6 m below, with a target line down the middle | Part Two 15.16.4 and 15.13.3 (June 2025: CR 16.3.4, 16.2.15) | a yellow panel on each wall, in every lane, with the target line and its cross line |
+| Starting blocks 0.5 by 0.6 m, 0.5 to 0.75 m above the water, numbered on top | Part Two 15.8.1 and 15.8.6 (June 2025: CR 16.2.8, 16.2.9); the 0.6 m length is the June 2025 edition's, February 2026 says at least 0.5 by 0.5 m | a block behind each wall, in every lane, with the lane number |
+| Backstroke flags on a rope 1.8 m above the water, 5.0 m from each wall | Part Two 15.9.1 and 15.9.2, was FR 2.9 (June 2025: CR 16.1.10) | a rope of alternating flags across the pool, on standards at both sides |
+| The false start rope 15.0 m from the starting end, at least 1.2 m up | unverified: no clause in the February 2026 text; was FR 2.11, June 2025: CR 16.1.12 | a dashed line across the pool |
+| Depth: 1.35 m from 1.0 to at least 6.0 m from a wall with blocks; 2.5 m at the Olympic Games and World Championships, 2.0 m for the 25 m World Championships | Part Two 15.4.1 to 15.4.3 and 15.8.4 (June 2025: CR 16.1.4, 16.2.4) | the side section |
 
 The blocks, the flags and the false start rope make a *competition* pool. `pool.kind: "warm-up"` leaves them out with the touch panels: the same lanes and ropes in a pool for warming up. The rules set no size for a swimming warm-up pool, so it is whatever `course` and `lanes` say. `blocks`, `pads`, `flags` and `falseStart` switch each one on or off.
 
@@ -148,43 +148,43 @@ console.log(drawFrame({ sport: "swimming", pool }, timeline, 30).includes("2 tra
 
 ## Water polo
 
-The field of play is 25.00 by 20.00 m between the goal lines for men and women alike (CR 18.1.2). It lies in a pool 0.30 m longer at each end, where the nets hang (CR 18.3.5). `pool.table` (`bottom` by default, or `top`) is the side of the official table.
+The field of play is 25.00 by 20.00 m between the goal lines for men and women alike (Part Six Article 20.2.2). It lies in a pool 0.30 m longer at each end, where the nets hang (Part Six Articles 21.6.5 and 21.7.2.1). `pool.table` (`bottom` by default, or `top`) is the side of the official table.
 
 | Part | Rule |
 | --- | --- |
-| Goal lines and the half distance line white; the 2 m line red; the 6 m line yellow; a red mark at 5 m for the penalty throw | Appendix 4, 20.4.1.5 |
-| The ropes along both sides, and the referees' platforms: red from the goal line to 2 m, yellow from 2 to 6 m, green from 6 m to the half distance line, white marks at the goal lines and the half distance line | CR 18.3.1, 18.3.2, Appendix 4, 20.4.1.5 |
-| The goals: posts and crossbar 75 or 80 mm square, white, 3.0 m between the posts, the crossbar 0.9 m above the water, nets with at least 0.30 m clear behind the goal line | CR 18.3.3, 18.3.5, Appendix 4, 20.4.2 |
-| The goal areas: lines 2 m long from the outer faces of the posts | Appendix 4, 20.4.1.2, Appendix 3 |
-| The excluded players' re-entry area, 2.0 by 1.08 m, in each corner on the side away from the table | CR 18.3.4, Appendix 4, 20.4.1.6 |
-| The referees' platforms 1 m wide, 0.7 m above the water | CR 18.3.2 |
-| An area for flying substitutions at least 0.50 m wide on the bench side, from the goal line in front of the bench to the centre, drawn in each team's colour | CR 18.1.8 |
-| The official table (its size is ours; the rules do not give it) | CR 18.3.6 |
+| Goal lines and the half distance line white; the 2 m line red; the 6 m line yellow; a red mark at 5 m for the penalty throw | Part Six 21.7.1 (June 2025: Appendix 4, 20.4.1.5) |
+| The ropes along both sides, and the referees' platforms: red from the goal line to 2 m, yellow from 2 to 6 m, green from 6 m to the half distance line, white marks at the goal lines and the half distance line | Part Six 21.7.1, 21.7.2 and 21.9.3.3 (June 2025: CR 18.3.1, 18.3.2, Appendix 4, 20.4.1.5) |
+| The goals: posts and crossbar 75 or 80 mm square, white, 3.0 m between the posts, the crossbar 0.9 m above the water, nets with at least 0.30 m clear behind the goal line | Part Six 21.6.2.2, 21.6.3.2, 21.6.4.2 and 21.6.5 (June 2025: CR 18.3.3, 18.3.5, Appendix 4, 20.4.2) |
+| The goal areas: lines 2 m long from the outer faces of the posts | Part Six 20.4 and 21.7.2.1.2 (June 2025: Appendix 4, 20.4.1.2, Appendix 3) |
+| The excluded players' re-entry area, 2.0 by 1.08 m, in each corner on the side away from the table (the rules give the re-entry area as 2.0 m by 1.0 to 1.1 m) | Part Six 20.7 and 21.11 (June 2025: CR 18.3.4, Appendix 4, 20.4.1.6) |
+| The referees' platforms 1 m wide, 0.7 m above the water | Part Six 21.9.3 (June 2025: CR 18.3.2) |
+| An area for flying substitutions at least 0.50 m wide on the bench side, from the goal line in front of the bench to the centre, drawn in each team's colour | Part Six 20.6 (June 2025: CR 18.1.8) |
+| The official table (its size is ours; the rules do not give it) | Part Six 21.10 (June 2025: CR 18.3.6) |
 
 A score puts the home team on the **left**: water polo lists the home team first, as soccer and handball do ([score](./score.md)). The names stand on the decks at the ends.
 
 ## Diving
 
-The well is seen from above with the boards' wall at the left and the dive towards the right. `pool.platforms` (5, 7.5 and 10 by default; 1, 3, 5, 7.5 and 10 are the rules'), `pool.springboards` (on) and `pool.boards` (the springboards of each height, 2 by default so that a synchronised pair stands side by side) say what stands there. Every distance is measured from the **plummet**, the vertical line through the middle of the front edge, as Appendix 2 does.
+The well is seen from above with the boards' wall at the left and the dive towards the right. `pool.platforms` (5, 7.5 and 10 by default; 1, 3, 5, 7.5 and 10 are the rules'), `pool.springboards` (on) and `pool.boards` (the springboards of each height, 2 by default so that a synchronised pair stands side by side) say what stands there. Every distance is measured from the **plummet**, the vertical line through the middle of the front edge, as Appendix 2 of Part Four does.
 
 | Figure | Rule | In the drawing |
 | --- | --- | --- |
-| Springboard 4.88 by 0.50 m, 1 m or 3 m above the water | CR 13.1.1.1 | an orange bar, its front end (the plummet) 2.22 m beyond the wall (A) |
-| Platforms: length 5 or 6 m; width 1 to 3 m by height; heights 1, 3, 5, 7.5, 10 m | CR 13.1.2.2, Appendix 2 | a grey rectangle, its front edge 0.75 to 1.50 m beyond the wall (A) |
+| Springboard 4.88 by 0.50 m, 1 m or 3 m above the water | Part Four 15.3.2 and Appendix 2 (June 2025: CR 13.1.1.1) | an orange bar, its front end (the plummet) 2.22 m beyond the wall (A) |
+| Platforms: length 5 or 6 m; width 1 to 3 m by height; heights 1, 3, 5, 7.5, 10 m | Part Four 15.4.3, 15.4.9 and Appendix 2 (June 2025: CR 13.1.2.2) | a grey rectangle, its front edge 0.75 to 1.50 m beyond the wall (A) |
 | B, plummet to the side wall (3.5 m for a 3 m board, 5.75 m for the 10 m platform), the preferred figure | Appendix 2 | the boards' places from the side walls |
 | C, plummet to plummet (2.0, 2.6 m for boards; 3.0, 2.75, 2.85 m for platforms), the preferred figure | Appendix 2 | the boards' places from each other: the distance of the *higher* board's C |
-| Three lines across the well, 21 m long, 2.5 m apart, the first under the plummet of the 3 m springboard | CR 13.2.7 | dark lines across the well |
-| 5 m of water under the boards at least for new facilities and the Olympic Games | CR 13.1.3.1, 13.2.1 | said in the description's sources, not drawn |
+| Three lines across the well, 21 m long, 2.5 m apart, the first under the plummet of the 3 m springboard | Part Four 15.6.3.1 (June 2025: CR 13.2.7) | dark lines across the well |
+| 5 m of water under the boards if possible for facilities built after 1 January 2025 | Part Four 15.1.2.1; for the Olympic Games the 5 m of June 2025 (CR 13.1.3.1, 13.2.1) is unverified in February 2026 | said in the description's sources, not drawn |
 
 The rules give clearances, not the size of the well; the drawing makes it 25 m across and 21 m deep, and wider if the boards asked for need more room. The springboards stand from the left wall (3 m boards outside, 1 m boards inside), the platforms from the right (the tallest the distance B from the wall).
 
 ## Artistic swimming
 
-The routine area of the Olympic Games and the World Championships is at least 30.0 by 20.0 m and 3.00 m deep (CR 27.2.2, 27.2.3); elsewhere at least 15 by 25 m, of which 12 by 12 m is 3.0 m deep and the rest 2.0 m (CR 27.1.2). `pool.area: "olympic"` (the default) and `"minimum"` (25 by 15 m, the deep part shaded and dashed). The floor is marked with lines in one direction along the pool, as the lane markings are (CR 27.2.4); the judges' platform (at least 0.6 m high) is within 2 m of the edge (CR 27.2.8); the starting platform (0.7 m) stands at centre stage (CR 27.2.7). The platforms' sizes are ours, as the rules give their heights.
+The routine area of the Olympic Games and the World Championships is at least 30.0 by 20.0 m and 3.00 m deep (Part Seven Article 12.2.2); elsewhere at least 15 by 25 m, of which 12 by 12 m is 3.0 m deep and the rest 2.0 m (Part Seven 12.1.1). `pool.area: "olympic"` (the default) and `"minimum"` (25 by 15 m, the deep part shaded and dashed). The floor is marked with lines in one direction along the pool, as the lane markings are (Part Seven 12.1.3); the judges' (Technical Officials') platform (at least 0.6 m high) is within 2 m of the edge (Part Seven 12.2.5); the starting platform (0.7 m) stands at centre stage (Part Seven 12.2.4 and 12.1.7). The platforms' sizes are ours, as the rules give their heights.
 
 ## A natatorium
 
-`pool.venue` sets several pools in one hall, to scale, each drawn by its own sport's builder, with the deck drawn once, the paint of the water defined once and the names written under the pools. The pools stand at least 8 m apart (the rules' least distance between a swimming pool and a diving well, 10 m preferred and the default, CR 16.2.17). `"natatorium"` is a competition pool, a diving well and a warm-up pool side by side, with seating along the top; your own is `{ pools, apart, labels, seating }`, each pool `{ sport, course, lanes, kind, name, x, y }` (`x` and `y`, in metres from the corner of the hall's water, or none to let them fall: the pools stand in a line along the seating, top walls level, and a new row starts when a line would be longer than 125 m).
+`pool.venue` sets several pools in one hall, to scale, each drawn by its own sport's builder, with the deck drawn once, the paint of the water defined once and the names written under the pools. The pools stand at least 8 m apart (the rules' least distance between a swimming pool and a diving well, 10 m preferred and the default, Part Two Article 15.15.1). `"natatorium"` is a competition pool, a diving well and a warm-up pool side by side, with seating along the top; your own is `{ pools, apart, labels, seating }`, each pool `{ sport, course, lanes, kind, name, x, y }` (`x` and `y`, in metres from the corner of the hall's water, or none to let them fall: the pools stand in a line along the seating, top walls level, and a new row starts when a line would be longer than 125 m).
 
 ```ts
 import { venueLayout } from "@johnmorrisdotca/kyogijo-stadiums";

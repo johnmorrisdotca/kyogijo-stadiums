@@ -1,5 +1,6 @@
-// The pools, held to World Aquatics' Competition Regulations (in force as from 25 June 2025): Part Two, Article 16 (the swimming pool; FR 2 of the Facilities Rules before it), Part Four, Article 13 and Appendix 2
-// (diving), Part Six, Article 18 and Appendix 4 (water polo) and Part Seven, Article 27 (artistic swimming). Each figure is the rule's, read off the drawing; the rule numbers are in docs/sources.md.
+// The pools, held to World Aquatics' Competition Regulations (in force as from February 2026): Part Two, Article 15 (the swimming pool; FR 2 of the Facilities Rules before it), Part Four, Article 15 and Appendix 2
+// (diving), Part Six, Articles 20 and 21 (water polo) and Part Seven, Article 12 (artistic swimming). Each figure is the rule's; the rule numbers are in docs/sources.md. A few figures are still the June 2025 edition's and
+// differ in the February 2026 text (the starting platform's length, the false start rope, the water polo depth, the minimum depths H of the diving table): `src/pool.figures.ts` says which, and the tests keep the figures the drawings use.
 import { describe, expect, it } from "vitest";
 import { splitsChart } from "./charts.pool.ts";
 import { describe as describeDrawing, drawKyogijo } from "./draw.ts";
@@ -33,7 +34,7 @@ const swimmers = (n = 8): Swimmer[] =>
 const race = (extra: Partial<PoolRace> = {}): PoolRace => ({ event: "Men's 200 m freestyle", distance: 200, swimmers: swimmers(), ...extra });
 
 describe("the figures of the rules", () => {
-  it("CR 16.1.1: 50.000 and 25.000 m between the touch panels; 16.2.15: lane markings 46 m and 21 m long, ending 2 m from the wall in a cross line 1 m long", () => {
+  it("Part Two 15.1.1.1 and 15.1.2.1: 50.000 and 25.000 m between the touch panels; 15.13.1 and 15.13.2: lane markings 46 m and 21 m long, ending 2 m from the wall in a cross line 1 m long", () => {
     expect([SWIMMING.longCourse, SWIMMING.shortCourse]).toEqual([50, 25]);
     expect(SWIMMING.laneLine).toMatchObject({ longLength: 46, shortLength: 21, endGap: 2, cross: 1 });
     expect(SWIMMING.laneLine.width).toBeGreaterThanOrEqual(0.2);
@@ -42,7 +43,7 @@ describe("the figures of the rules", () => {
     expect(SWIMMING.shortCourse - 2 * SWIMMING.laneLine.endGap).toBe(SWIMMING.laneLine.shortLength);
   });
 
-  it("CR 16.1.10, 16.1.12, 16.2.8, 16.3.4: flags 5 m from the walls, 1.8 m up; false start rope 15 m from the start, 1.2 m up; blocks 0.5 by 0.6 m; panels 2.4 by 0.9 m", () => {
+  it("Part Two 15.9.1, 15.8.1, 15.16.4.1: flags 5 m from the walls, 1.8 m up; blocks 0.5 m wide; panels 2.4 by 0.9 m; and, from the June 2025 edition, the false start rope 15 m from the start, 1.2 m up (unverified in February 2026) and blocks 0.6 m long (February 2026: at least 0.5 by 0.5 m)", () => {
     expect(SWIMMING.flags).toEqual({ at: 5, height: 1.8, side: 0.4, apart: 0.25 });
     expect(SWIMMING.falseStart).toEqual({ at: 15, height: 1.2 });
     expect([SWIMMING.block.width, SWIMMING.block.length]).toEqual([0.5, 0.6]);
@@ -51,13 +52,13 @@ describe("the figures of the rules", () => {
     expect(SWIMMING.pad.above + SWIMMING.pad.below).toBeCloseTo(SWIMMING.pad.height, 10);
   });
 
-  it("CR 16.1.4 and 16.2.4: 1.35 m deep from 1 to 6 m from a wall with blocks; 2.5 m at the Olympic Games, 2.0 m for the 25 m World Championships, 3 m shared with artistic swimming", () => {
+  it("Part Two 15.4.3, 15.4.1 and 15.4.2: 1.35 m deep from 1 to 6 m from a wall with blocks; 2.5 m at the Olympic Games, 2.0 m for the 25 m World Championships; 3 m shared with artistic swimming is the June 2025 edition's (unverified in February 2026)", () => {
     expect(SWIMMING.depth).toMatchObject({ least: 1, atBlocks: 1.35, blocksFrom: 1, blocksTo: 6, olympic: 2.5, shortWorld: 2, shared: 3 });
     expect(SWIMMING.poolsApart).toBe(8);
     expect(SWIMMING.poolsApartPreferred).toBe(10);
   });
 
-  it("Part Six: a water polo field of 25 by 20 m, 3 m between the posts, the crossbar 0.9 m up, a re-entry area of 2.0 by 1.08 m, platforms 1 m wide", () => {
+  it("Part Six 20.2.2, 21.6.3.2, 21.6.4.2, 20.7.2, 21.9.3.2: a water polo field of 25 by 20 m, 3 m between the posts, the crossbar 0.9 m up, a re-entry area of 2.0 by 1.08 m (1.0 to 1.1 m long), platforms 1 m wide", () => {
     expect([WATER_POLO.length, WATER_POLO.width]).toEqual([25, 20]);
     expect(WATER_POLO.goal).toMatchObject({ width: 3, crossbarHeight: 0.9, netClear: 0.3 });
     expect(WATER_POLO.reEntry).toMatchObject({ length: 2, depth: 1.08 });
@@ -66,7 +67,7 @@ describe("the figures of the rules", () => {
     expect(WATER_POLO.platform.width).toBe(1);
   });
 
-  it("Part Four, Appendix 2: the springboard 4.88 by 0.50 m, the platforms' lengths and widths, the distances A to D, H = 5 m under every board at most", () => {
+  it("Part Four 15.3.2, 15.4.3 and Appendix 2: the springboard 4.88 by 0.50 m, the platforms' lengths and widths, the distances A to D, H = 5 m under every board at most (the June 2025 table's minima for H differ from February 2026's, see pool.figures.ts)", () => {
     expect(DIVING.springboard).toEqual({ length: 4.88, width: 0.5 });
     expect(DIVING.platforms["10"]).toMatchObject({ length: 6, height: 10 });
     expect(DIVING.platforms["10"].width[0]).toBe(3);
@@ -81,7 +82,7 @@ describe("the figures of the rules", () => {
     expect(DIVING.lines).toMatchObject({ length: 21, apart: 2.5 });
   });
 
-  it("Part Seven: 30 by 20 m, 3 m deep; the least is 25 by 15 m with 12 by 12 m of it 3 m deep", () => {
+  it("Part Seven 12.2.2 and 12.1.1: 30 by 20 m, 3 m deep; the least is 25 by 15 m with 12 by 12 m of it 3 m deep", () => {
     expect(ARTISTIC.olympic).toEqual({ length: 30, width: 20, depth: 3 });
     expect(ARTISTIC.minimum).toMatchObject({ length: 25, width: 15, deepLength: 12, deepWidth: 12, deepDepth: 3, depth: 2 });
     expect(ARTISTIC.start.heightOlympic).toBe(0.7);
@@ -101,18 +102,18 @@ describe("the figures of the rules", () => {
 });
 
 describe("the swimming pool's lanes", () => {
-  it("is 25 m wide for eight lanes of 2.5 m with spaces of 2.5 m (CR 16.2.6.2), and 21 m for the short course's eight with spaces of 0.5 m", () => {
+  it("is 25 m wide for eight lanes of 2.5 m with spaces of 2.5 m (Part Two 15.6.1), and 21 m for the short course's eight with spaces of 0.5 m", () => {
     expect(laneWidths("long", 8, false)).toEqual({ width: 25, space: 2.5, edge: 2.5 });
     expect(laneWidths("short", 8, false)).toEqual({ width: 21, space: 0.5, edge: 2.5 });
     expect(laneWidths("short", 6, false)).toEqual({ width: 16, space: 0.5, edge: 2.5 });
   });
 
-  it("is 25 m wide for ten lanes, lanes 0 and 9 being 2.4 m with spaces of 0.1 m (CR 16.2.6.3), 26 m for a temporary pool with spaces of 0.5 m", () => {
+  it("is 25 m wide for ten lanes, lanes 0 and 9 being 2.4 m with spaces of 0.1 m (Part Two 15.6.2.1), 26 m for a temporary pool with spaces of 0.5 m", () => {
     expect(laneWidths("long", 10, false)).toEqual({ width: 25, space: 0.1, edge: 2.4 });
     expect(laneWidths("long", 10, true)).toEqual({ width: 26, space: 0.5, edge: 2.5 });
     const permanent = swimPlan({ sport: "swimming", pool: { lanes: 10 } });
     expect(permanent.lanes.map((l) => l.number)).toEqual([9, 8, 7, 6, 5, 4, 3, 2, 1, 0]);
-    // The marking of lane 0 is 1.25 m from the wall, and the markings are 2.5 m apart (CR 16.2.15).
+    // The marking of lane 0 is 1.25 m from the wall, and the markings are 2.5 m apart (Part Two 15.13.2).
     const ys = permanent.lanes.map((l) => l.y);
     for (let i = 1; i < ys.length; i += 1) near(ys[i] - ys[i - 1], 2.5, 6);
     near(permanent.width - ys[ys.length - 1], 1.25, 6);
@@ -127,7 +128,7 @@ describe("the swimming pool's lanes", () => {
     expect(eight.lanes[eight.lanes.length - 1].y).toBeGreaterThan(eight.lanes[0].y);
   });
 
-  it("colours the ropes green, blue, yellow, blue, green for the outside to the middle (CR 16.1.7.1): two green, four blue and three yellow for eight lanes; two, six and three for ten", () => {
+  it("colours the ropes green, blue, yellow, blue, green for the outside to the middle (Part Two 15.7.6): two green, four blue and three yellow for eight lanes; two, six and three for ten", () => {
     const count = (lanes: number): Record<string, number> => {
       const colours = Array.from({ length: lanes + 1 }, (_, i) => ropeColour(i, lanes));
       return { green: colours.filter((c) => c === "green").length, blue: colours.filter((c) => c === "blue").length, yellow: colours.filter((c) => c === "yellow").length };
@@ -577,7 +578,7 @@ describe("the water polo field", () => {
     near(Number(water.attrs.height), 20 * FT, 2);
   });
 
-  it("marks the goal lines white, 2 m red, 6 m yellow and 5 m with a dashed red line, and the half distance line white (Appendix 4, 20.4.1.5)", () => {
+  it("marks the goal lines white, 2 m red, 6 m yellow and 5 m with a dashed red line, and the half distance line white (Part Six 21.7.1)", () => {
     const at = (cls: string): number[] => withClass(svg, cls).map((n) => numbers(n.attrs.d)[0]);
     const goal = at("ky-pl-wl-white");
     near(goal[0], 0.3 * FT, 1);
@@ -594,7 +595,7 @@ describe("the water polo field", () => {
     near(yellow[1], (0.3 + 19) * FT, 1);
   });
 
-  it("colours the ropes' floats red to 2 m, yellow from 2 to 6 m, green from 6 m to the half distance line, with white marks (CR 18.3.1)", () => {
+  it("colours the ropes' floats red to 2 m, yellow from 2 to 6 m, green from 6 m to the half distance line, with white marks (Part Six 21.7.2)", () => {
     expect(withClass(svg, "ky-pl-r-green").length).toBe(1);
     expect(withClass(svg, "ky-pl-r-yellow").length).toBe(1);
     expect(withClass(svg, "ky-pl-r-red").length).toBe(1);

@@ -51,7 +51,7 @@ export interface SwimPlan extends Common {
   /** The length between the touch panels and the width across the lanes and the spaces, in metres. */
   length: number;
   width: number;
-  /** The lanes from the top of the drawing down: lane 1 (or 0) is at the bottom, on the right when one faces the course from the start (CR 16.1.9). */
+  /** The lanes from the top of the drawing down: lane 1 (or 0) is at the bottom, on the right when one faces the course from the start (Part Two 15.8.6). */
   lanes: LanePlan[];
   /** The metres of space outside the first and the last lane. */
   space: number;
@@ -125,7 +125,7 @@ export function commonOf(style: PoolStyle): Common {
   return { look, deck, seed };
 }
 
-/** The colour of rope `i` of `n + 1`: green outside, yellow round the middle, blue between (CR 16.1.7.1 for eight lanes; 16.2.7.1.2 for ten). */
+/** The colour of rope `i` of `n + 1`: green outside, yellow round the middle, blue between (Part Two 15.7.6.1 and 15.7.6.3 for eight lanes; 15.7.6.2 for ten). */
 export function ropeColour(i: number, lanes: number): RopeColour {
   if (i === 0 || i === lanes) return "green";
   return Math.abs(i - lanes / 2) <= 1 ? "yellow" : "blue";
@@ -143,7 +143,7 @@ export function laneWidths(course: "long" | "short", lanes: number, temporary: b
 /** The lanes and the ropes of a pool of this width, from the top. */
 export function lanesOf(width: number, lanes: number, space: number): { lanes: LanePlan[]; ropes: Rope[] } {
   const lane = SWIMMING.lane;
-  // From the bottom wall: the ropes at the edges of the lanes. Ten lanes in the permanent pool: the end ropes 0.1 m from the walls, the others 2.5 m apart from 2.5 m, so that the markings stay 2.5 m apart (CR 16.2.15).
+  // From the bottom wall: the ropes at the edges of the lanes. Ten lanes in the permanent pool: the end ropes 0.1 m from the walls, the others 2.5 m apart from 2.5 m, so that the markings stay 2.5 m apart (Part Two 15.13.2).
   const fromBottom: number[] = [];
   for (let k = 0; k <= lanes; k += 1) fromBottom.push(lanes === 10 && width === SWIMMING_WIDTHS.permanent ? (k === 0 ? space : k === 10 ? width - space : k * lane) : space + k * lane);
   const first = lanes === 10 ? 0 : 1;
@@ -158,7 +158,7 @@ export function lanesOf(width: number, lanes: number, space: number): { lanes: L
 
 /**
  * The swimming pool the options ask for: `pool.course` (`long`, 50 m, or `short`, 25 m) and `pool.lanes` (8 by default). The width is the rules' for that many lanes: 25 m for eight in a 50 m
- * pool (CR 16.2.6.2), 25 m for ten with lanes 0 and 9 of 2.4 m, or 26 m for a temporary pool (CR 16.2.6.3), and lanes of 2.5 m with spaces of 0.5 m for the other pools.
+ * pool (Part Two 15.6.1), 25 m for ten with lanes 0 and 9 of 2.4 m (Part Two 15.6.2.1), or 26 m for a temporary pool (Part Two 15.6.2.2), and lanes of 2.5 m with spaces of 0.5 m for the other pools.
  * @throws RangeError for a lane count that is not 1 to 10, @throws Error for an unknown look.
  */
 export function swimPlan(o: Pick<SurfaceOptions, "pool" | "sport">, defaults: Partial<Pick<VenuePool, "course" | "kind" | "lanes">> = {}): SwimPlan {
@@ -195,7 +195,7 @@ export function swimPlan(o: Pick<SurfaceOptions, "pool" | "sport">, defaults: Pa
   return plan;
 }
 
-/** The water polo field the options ask for: 25 by 20 m (CR 18.1.2). */
+/** The water polo field the options ask for: 25 by 20 m (Part Six 20.2.2). */
 export function poloPlan(o: Pick<SurfaceOptions, "pool">): PoloPlan {
   const style = o.pool ?? {};
   const table = style.table === "top" ? "top" : "bottom";
@@ -215,7 +215,7 @@ const BOARDS = {
 
 /**
  * The diving well the options ask for. The springboards (1 m and 3 m, `pool.boards` of each, 2 by default so that a synchronised pair stands side by side) stand along the left wall, 3 m boards outside, each the preferred
- * distance (Appendix 2, B and C) from the wall and from the next; the platforms (5, 7.5 and 10 m by default) stand towards the right wall, the tallest the distance B from it and each lower one the distance C of the
+ * distance (Part Four, Appendix 2, B and C) from the wall and from the next; the platforms (5, 7.5 and 10 m by default) stand towards the right wall, the tallest the distance B from it and each lower one the distance C of the
  * platform above it from that one. The well is 25 m across, wider if the boards need more room than that.
  * @throws RangeError for a platform the rules do not have or a count of boards that is not 1 to 4.
  */
@@ -275,7 +275,7 @@ export function divePlan(o: Pick<SurfaceOptions, "pool">): DivePlan {
   return { sport: "diving", ...commonOf(style), length: DIVING.well.length, width, boards: all, behind };
 }
 
-/** The artistic swimming area the options ask for: 30 by 20 m for the Olympic Games and the World Championships, or the least, 25 by 15 m with a 12 by 12 m deep part (CR 27.2.2, 27.1.2). */
+/** The artistic swimming area the options ask for: 30 by 20 m for the Olympic Games and the World Championships, or the least, 25 by 15 m with a 12 by 12 m deep part (Part Seven 12.2.2, 12.1.1). */
 export function artisticPlan(o: Pick<SurfaceOptions, "pool">): ArtisticPlan {
   const style = o.pool ?? {};
   const area = style.area === "minimum" ? "minimum" : "olympic";
@@ -355,7 +355,7 @@ const ROW = 125;
 
 /**
  * The pools of a hall (`pool.venue`) laid out to scale. A pool with an `x` and a `y` stands there; the others are set in rows, left to right, each `apart` metres (10, the distance the rules prefer between
- * a swimming pool and a diving well, CR 16.2.17; never less than the 8 they require) from the one before, and a new row when a row would be longer than 125 m.
+ * a swimming pool and a diving well, Part Two 15.15.1; never less than the 8 they require) from the one before, and a new row when a row would be longer than 125 m.
  * @throws RangeError when two pools are nearer each other than `apart`, for the pools given places.
  */
 export function venueLayout(style: PoolStyle): VenueLayout | undefined {

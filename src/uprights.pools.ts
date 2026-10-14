@@ -1,5 +1,5 @@
 // What stands on the pools, in 3D: a swimming pool's starting blocks, its backstroke flag lines and its false start rope; a diving well's springboards and platforms on their stands; a water
-// polo field's two floating goals; an artistic swimming area's judges' stand and starting platform. The heights are World Aquatics' (the Competition Regulations in force from 25 June 2025):
+// polo field's two floating goals; an artistic swimming area's judges' stand and starting platform. The heights are World Aquatics' (the Competition Regulations in force from February 2026, bar the few figures `pool.figures.ts` marks as the June 2025 edition's):
 // docs/sources.md, "Heights in the 3D view", says which rule each comes from, and `pool.figures.ts` holds the figures. A plan is in metres and the drawing's frame in feet, with the pool's
 // top left corner for the origin and the water level for the floor, so every length goes through `feet`. What the rules leave to the maker (the thickness of a stand, a rope, the sides of a
 // box) is ours and is said so there.
@@ -78,7 +78,7 @@ function swimmingUprights(plan: SwimPlan, thin: number): Upright[] {
   return items;
 }
 
-/** The two goals of a water polo field, floating on the goal lines: 3 m between the posts, the crossbar's underside 0.9 m over the water (CR 18.3.3), a net 0.30 m deep behind the line. */
+/** The two goals of a water polo field, floating on the goal lines: 3 m between the posts, the crossbar's underside 0.9 m over the water (Part Six 21.6.3.2 and 21.6.4.2), a net 0.30 m deep behind the line (21.6.5). */
 function poloUprights(plan: PoloPlan, thin: number): Upright[] {
   const { goal } = WATER_POLO;
   const g0 = goal.netClear;
@@ -106,7 +106,7 @@ function poloUprights(plan: PoloPlan, thin: number): Upright[] {
 }
 
 /**
- * A diving well: each springboard 4.88 m long and 0.50 m wide at 1 m or 3 m, its plummet over the water, on a stand behind the wall (Appendix 2); each platform at its height of 1, 3, 5, 7.5 or 10 m with
+ * A diving well: each springboard 4.88 m long and 0.50 m wide at 1 m or 3 m, its plummet over the water, on a stand behind the wall (Part Four, Appendix 2); each platform at its height of 1, 3, 5, 7.5 or 10 m with
  * the length and width of the table, on a tower behind the wall. The stands and towers are ours: the rules give where the plummet is and not what holds the board up.
  */
 function diveUprights(plan: DivePlan): Upright[] {
@@ -142,7 +142,7 @@ function diveUprights(plan: DivePlan): Upright[] {
   return items;
 }
 
-/** An artistic swimming area: the judges' platform along the top side, 0.6 m high (CR 27.2.8: at least 0.6 m, not more than 2 m from the edge), and the starting platform 0.7 m high (CR 27.2.7). */
+/** An artistic swimming area: the judges' platform along the top side, 0.6 m high (Part Seven 12.2.5: at least 0.6 m, not more than 2 m from the edge), and the starting platform 0.7 m high (Part Seven 12.2.4). */
 function artisticUprights(plan: ArtisticPlan): Upright[] {
   const { judges, start } = ARTISTIC.drawn;
   const L = plan.length;

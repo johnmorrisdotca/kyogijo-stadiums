@@ -11,9 +11,9 @@ import { edges, ft, quarterTurn, textOn, type BuildOptions, type Mark, type Surf
 const markId = (b: Board): string => (b.kind === "springboard" ? `springboard-${b.height}m` : `platform-${String(b.height).replace(".", "-")}m`);
 
 /**
- * A diving well seen from above, from World Aquatics' rules (Part Four, Article 13 and Appendix 2): the pool wall the boards stand at on the left, the diving direction towards the right. Every springboard is 4.88 m
- * long and 0.50 m wide with its front edge, the plummet, 2.22 m beyond the wall; each platform has the length and width of the table, its front edge 0.75 to 1.50 m beyond the wall (13.1.2.5); the boards stand the preferred
- * distance (Appendix 2, B and C) from the side wall and from each other. The three lines across the well (13.2.7) are 21 m long, 2.5 m apart, the first under the plummet of the 3 m springboard.
+ * A diving well seen from above, from World Aquatics' rules (Part Four, Article 15 and Appendix 2): the pool wall the boards stand at on the left, the diving direction towards the right. Every springboard is 4.88 m
+ * long and 0.50 m wide with its front edge, the plummet, 2.22 m beyond the wall; each platform has the length and width of the table, its front edge 0.75 to 1.50 m beyond the wall (15.4.9); the boards stand the preferred
+ * distance (Appendix 2, B and C) from the side wall and from each other. The three lines across the well (15.6.3.1) are 21 m long, 2.5 m apart, the first under the plummet of the 3 m springboard.
  */
 export function diving(o: BuildOptions, plan: DivePlan, ctx: PoolCtx = {}): Surface {
   const L = plan.length;

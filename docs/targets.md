@@ -27,9 +27,9 @@ console.log(view.target.width, view.target.height, view.target.unit);
 | `nhl` | 6 by 4 feet | NHL Official Rules, Rule 2.1 |
 | `soccer` | 7.32 by 2.44 m (8 yards by 8 feet), or the format's own goal for a `pitch` of a small-sided format | IFAB Laws of the Game, Law 1 |
 | `handball` | 3 by 2 m | IHF Rules of the Game for Indoor Handball, Rule 1:2 |
-| `waterpolo` | 3.0 m between the posts, the crossbar's underside 0.9 m over the water | World Aquatics Competition Regulations, Appendix 4 |
+| `waterpolo` | 3.0 m between the posts, the crossbar's underside 0.9 m over the water | World Aquatics Competition Regulations (February 2026), Part Six Article 21.6 (21.6.3.2 posts, 21.6.4.2 crossbar) |
 | `lacrosse` | 6 by 6 feet (World Lacrosse's 1.83 m, the NCAA's and the PLL's six feet); `league: "nll"` or `"world-box"`, the box floor's 4 feet 9 inches by 4 | each league's rules, in [the sources](./sources.md) |
-| `fieldhockey` | 3.66 by 2.14 m | FIH Rules of Hockey, Rule 1.5 |
+| `fieldhockey` | 3.66 by 2.14 m | FIH Rules of Hockey 2026, Field and Equipment Specifications 1.5 (Goals) |
 
 `units` is the unit of the shots' `x` and `z` (and of `goal`, a goal of another size): the rulebook's own by default, feet for hockey and lacrosse and metres for the rest. A shot's `outcome` is `goal`, `saved`, `post`, `crossbar`, `wide`, `high` or `blocked` (a block has no place across the goal and is left out and counted); without one a shot outside the frame is `wide` or `high`. A post and a crossbar are drawn on the frame, a shot wide or high outside it.
 

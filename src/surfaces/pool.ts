@@ -23,7 +23,7 @@ export interface SwimBody {
 export const GUTTER = 0.4;
 
 /**
- * The body of a swimming pool: every figure is the rules' (`SWIMMING`, pool.figures.ts). The lane markings on the floor are 46 m (21 m in a 25 m pool) long and end 2 m from the walls in a cross line 1 m long (CR 16.2.15); a
+ * The body of a swimming pool: every figure is the rules' (`SWIMMING`, pool.figures.ts). The lane markings on the floor are 46 m (21 m in a 25 m pool) long and end 2 m from the walls in a cross line 1 m long (Part Two 15.13.1 and 15.13.2); a
  * cross line 0.5 m long at 15 m from each end; the touch panels 2.4 m wide at the walls with the target lines; the ropes in the rules' colours with red floats within 5 m of the walls and a mark at 15 m and 25 m;
  * the starting blocks with their lane numbers; the backstroke flags 5 m from each end, and the false start rope 15 m from the starting end.
  */
@@ -87,7 +87,7 @@ export function swimBody(o: BuildOptions, plan: SwimPlan, ids: PoolIds): SwimBod
     for (const x of at) runs.push(["white", Math.max(0, x - run), Math.min(L, x + run), rope.y]);
   }
   lines += ropeMarkup(o, runs, SWIMMING.floatDiameter, 0.45);
-  // The marks on the deck at 15 m (and 25 m) from the walls, and the standards of the flags: on both sides of the pool (CR 16.1.10).
+  // The marks on the deck at 15 m (and 25 m) from the walls, and the standards of the flags: on both sides of the pool (Part Two 15.9.1).
   if (full && !neutral) {
     let ticks = "";
     for (const x of [SWIMMING.markAt15, L - SWIMMING.markAt15, ...(plan.course === "long" ? [SWIMMING.markAt25] : [])]) {
@@ -110,7 +110,7 @@ export function swimBody(o: BuildOptions, plan: SwimPlan, ids: PoolIds): SwimBod
       if (full) for (const y of [-0.6, W + 0.6]) lines += el("circle", { class: "ky-pl-st", cx: fx, cy: feet(y), r: feet(0.22) * s });
     }
   }
-  // The starting blocks, 0.5 by 0.6 m, one in each lane at each end, numbered on the top (CR 16.2.8 and 16.2.9).
+  // The starting blocks, 0.5 by 0.6 m (the length is the June 2025 edition's; Part Two 15.8.1 of February 2026 says at least 0.5 by 0.5 m), one in each lane at each end, numbered on the top (Part Two 15.8.1 and 15.8.6).
   if (plan.blocks && !neutral) {
     const bw = SWIMMING.block.width * s;
     const bl = SWIMMING.block.length * s;

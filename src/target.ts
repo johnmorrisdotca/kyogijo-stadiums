@@ -152,7 +152,7 @@ export function goalSize(sport: GoalSport, options: Pick<TargetOptions, "league"
     case "handball":
       return { width: IHF_COURT.goalWidth, height: IHF_COURT.goalHeight, unit: "m", source: "IHF Rules of the Game for Indoor Handball, Rule 1:2: 3 m wide and 2 m high" };
     case "waterpolo":
-      return { width: WATER_POLO.goal.width, height: WATER_POLO.goal.crossbarHeight, unit: "m", source: "World Aquatics Competition Regulations, Appendix 4 (20.4.2.1): 3.0 m between the posts, the crossbar's underside 0.9 m over the water" };
+      return { width: WATER_POLO.goal.width, height: WATER_POLO.goal.crossbarHeight, unit: "m", source: "World Aquatics Competition Regulations (February 2026), Part Six Article 21.6 (21.6.3.2 posts, 21.6.4.2 crossbar): 3.0 m between the posts, the crossbar's underside 0.9 m over the water" };
     case "lacrosse": {
       const { league } = chooseLeague({ sport: "lacrosse", league: options.league });
       if (league?.family === "lacrosse") {
@@ -162,7 +162,7 @@ export function goalSize(sport: GoalSport, options: Pick<TargetOptions, "league"
       return { width: 6, height: 6, unit: "ft", source: "World Lacrosse Men's Field Lacrosse Rules 2.1 (1.83 m by 1.83 m), the NCAA's and the PLL's six feet by six feet" };
     }
     case "fieldhockey":
-      return { width: FIH_PITCH.goalWidth, height: FIH_PITCH.goalHeight, unit: "m", source: "FIH Rules of Hockey, Rule 1.5: 3.66 m between the posts, 2.14 m under the crossbar" };
+      return { width: FIH_PITCH.goalWidth, height: FIH_PITCH.goalHeight, unit: "m", source: "FIH Rules of Hockey 2026, Field and Equipment Specifications 1.5 (Goals): 3.66 m between the posts, 2.14 m under the crossbar" };
   }
 }
 

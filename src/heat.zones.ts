@@ -543,7 +543,7 @@ function poolLanes(ctx: ZoneContext): ZoneShape[] {
 
 /**
  * A water polo field at each end: the goal area (to the 2 m line), the ground from 2 to 6 m (where the penalty foul applies), and the rest, split at the half distance line. The marks are the rules' (Part Six,
- * Appendix 4); the zones are ours.
+ * Article 21.7, February 2026; Appendix 4, 20.4.1.5 in the June 2025 edition); the zones are ours.
  */
 function waterPoloAreas(ctx: ZoneContext): ZoneShape[] {
   const { box } = ctx.outline;

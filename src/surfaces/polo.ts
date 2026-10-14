@@ -6,14 +6,14 @@ import { WATER_POLO } from "../pool.figures.ts";
 import { GUTTER } from "./pool.ts";
 import { atEnds, edges, ft, quarterTurn, type BuildOptions, type Mark, type Surface } from "./surface.ts";
 
-/** The space behind each goal line where the goal's net hangs, in metres (CR 18.3.5): the pool is the field of play, 25 m between the goal lines (CR 18.1.2), and this behind each of them. */
+/** The space behind each goal line where the goal's net hangs, in metres (Part Six 21.6.5 and 21.7.2.1: the goal at least 0.3 m deep, the lane rope 0.3 m behind the goal line): the pool is the field of play, 25 m between the goal lines (Part Six 20.2.2.1), and this behind each of them. */
 export const POLO_BEHIND = WATER_POLO.goal.netClear;
 
 /**
  * A water polo field of play lying wide, from World Aquatics' rules: 25 by 20 m between the goal lines; lane ropes along both sides whose floats are white at the goal line and the half distance line, red to
- * the 2 m mark, yellow from 2 to 6 m and green from 6 m to the half distance line, with a red mark at 5 m (CR 18.3.1 and Appendix 4, 20.4.1.5); the 2 m lines from the goal posts that make the goal areas
- * (20.4.1.2); the goals, 3 m between the posts (18.3.3); the re-entry area 2.0 by 1.08 m in each corner on the side away from the official table (18.3.4); the referees' platforms 1 m wide along both sides, coloured
- * as the ropes are (18.3.2); the official table and the area for flying substitutions on the side of the benches (18.1.8).
+ * the 2 m mark, yellow from 2 to 6 m and green from 6 m to the half distance line, with a red mark at 5 m (Part Six 21.7.1 and 21.7.2); the 2 m lines from the goal posts that make the goal areas
+ * (Part Six 20.4 and 21.7.2.1.2); the goals, 3 m between the posts (21.6.3.2); the re-entry area 2.0 by 1.08 m in each corner on the side away from the official table (20.7); the referees' platforms 1 m wide along both sides, coloured
+ * as the ropes are (21.9.3); the official table (21.10) and the area for flying substitutions on the side of the benches (20.6).
  */
 export function waterPolo(o: BuildOptions, plan: PoloPlan, ctx: PoolCtx = {}): Surface {
   const Lp = plan.length;
@@ -62,7 +62,7 @@ export function waterPolo(o: BuildOptions, plan: PoloPlan, ctx: PoolCtx = {}): S
     lines += across("six-metre-lines", "yellow", at(WATER_POLO.sixMetre, from));
     lines += across("five-metre-marks", "red", at(WATER_POLO.fiveMetre, from), `${num(feet(0.5))} ${num(feet(0.5))}`);
   }
-  // The goal areas: red lines 2 m long from the outer faces of the goal posts (Appendix 4, 20.4.1.2).
+  // The goal areas: red lines 2 m long from the outer faces of the goal posts (Part Six 20.4.1 and 21.7.2.1.2).
   const post = WATER_POLO.goal.post;
   const half = WATER_POLO.goal.width / 2;
   for (const from of ["left", "right"] as const) {

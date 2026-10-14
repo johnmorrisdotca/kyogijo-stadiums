@@ -7,9 +7,9 @@ import { GUTTER } from "./pool.ts";
 import { atEnds, edges, ft, quarterTurn, textOn, type BuildOptions, type Mark, type Surface } from "./surface.ts";
 
 /**
- * An artistic swimming area lying wide, from World Aquatics' rules (Part Seven, Article 27): 30 by 20 m for the Olympic Games and the World Championships (27.2.2), or the least, 25 by 15 m of which 12 by 12 m is the
- * deep part (27.1.2), the floor marked with contrasting lines in one direction along its length (27.2.4), the judges' platform not more than 2 m from the pool's edge (27.2.8) and the starting platform at centre
- * stage (27.2.7). The sizes of the two platforms are ours: the rules give their heights.
+ * An artistic swimming area lying wide, from World Aquatics' rules (Part Seven, Article 12): 30 by 20 m for the Olympic Games and the World Championships (12.2.2), or the least, 25 by 15 m of which 12 by 12 m is the
+ * deep part (12.1.1), the floor marked with contrasting lines in one direction along its length (12.1.3), the judges' (Technical Officials') platform not more than 2 m from the pool's edge (12.2.5) and the starting platform at centre
+ * stage (12.1.7). The sizes of the two platforms are ours: the rules give their heights.
  */
 export function artistic(o: BuildOptions, plan: ArtisticPlan, ctx: PoolCtx = {}): Surface {
   const L = plan.length;

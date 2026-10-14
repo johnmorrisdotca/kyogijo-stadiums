@@ -34,7 +34,7 @@ export function venueName(item: VenueLayout["items"][number], language: Language
 /**
  * Several pools in one hall, to scale: each pool is drawn by its own sport's builder (the competition pool of 8 lanes, a diving well, a warm-up pool, a water polo pool or an artistic swimming area) and set at its place,
  * with the deck round the hall drawn once and the paint of the water and the deck defined once for all of them. The pools stand at least 8 m apart, 10 m by default, as the rules keep a swimming pool and a diving well
- * (CR 16.2.17). The water of the whole hall is the surface's `box`.
+ * (Part Two 15.15.1). The water of the whole hall is the surface's `box`.
  */
 export function natatorium(o: BuildOptions, style: PoolStyle, look: { look: "flat" | "water" | "tiled"; deck: "plain" | "tiled"; seed: number }, language: Language): Surface {
   const layout = venueLayout(style) as VenueLayout;
