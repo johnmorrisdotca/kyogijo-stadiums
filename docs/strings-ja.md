@@ -155,12 +155,12 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `field.wickets` | Wkts | ウィケット |
 | `field.overs` | Ov | オーバー |
 | `field.total` | Total | 合計 |
-| `skating.longTrack` | a speed skating track of 400 metres, its inner lane and its outer lane, the inner curve of {radius} metres radius, the outer lane {outer} metres wide and the straights {straight} metres long, with the warm-up lane, the blocks of the curves and the finishing line | 400mのスピードスケートリンク。インレーンとアウトレーンがあり、内側のカーブの半径は{radius}m、アウトレーンの幅は{outer}m、直線は{straight}mで、ウォームアップレーン、コーナーのブロック、フィニッシュラインがあります |
-| `skating.shortTrack` | a short track speed skating oval of 111.12 metres on a rink of {length} by {width} metres, with {tracks} tracks, seven blocks in each curve, the finishing line and the starting lines | {length}m×{width}mのリンク上の111.12mショートトラックのオーバル。{tracks}本のトラック、各コーナー7個のブロック、フィニッシュラインとスタートラインがあります |
+| `skating.longTrack` | a speed skating track of 400 metres, its inner lane and its outer lane, the inner curve of {radius} metres radius, the outer lane {outer} metres wide and the straights {straight} metres long, with the warm-up lane, the blocks of the curves and the finishing line | 400mのスピードスケートリンク。インコースとアウトコースがあり、内側のコーナーの半径は{radius}m、アウトコースの幅は{outer}m、直線部分は{straight}mで、ウォームアップレーン、コーナーのブロック、フィニッシュラインがあります |
+| `skating.shortTrack` | a short track speed skating oval of 111.12 metres on a rink of {length} by {width} metres, with {tracks} tracks, seven blocks in each curve, the finishing line and the starting lines | 1周111.12mのショートトラック。{length}m×{width}mのリンクに、コース{tracks}本、各コーナー7個のブロック、フィニッシュラインとスタートラインがあります |
 | `skating.figure` | a figure skating rink of {length} by {width} metres, with its boards | {length}m×{width}mのフィギュアスケートのリンク。フェンスがあります |
 | `skating.races` | Races marked: {list}. | 表示している種目：{list}。 |
 | `skating.furniture` | Beside the rink: {list}. | リンクのそばにあるもの：{list}。 |
-| `skating.furnitureNames.judges` | the judges | ジャッジ |
+| `skating.furnitureNames.judges` | the judges | ジャッジ席 |
 | `skating.furnitureNames.referee` | the referee | レフェリー |
 | `skating.furnitureNames.technical-panel` | the technical panel | テクニカルパネル |
 | `skating.furnitureNames.kiss-and-cry` | the kiss and cry | キス・アンド・クライ |
@@ -174,21 +174,22 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `skating.data.summaryGrid` | {n} starters in the {race}. | {race}は{n}選手がスタートします。 |
 | `skating.data.summaryResults` | {winner} won the {race} in {time}. | {race}は{winner}が記録{time}で優勝しました。 |
 | `skating.data.summaryReplay` | {n} skaters skate the {race}. | {race}を{n}選手が滑ります。 |
-| `skating.data.summaryElements` | {n} elements on the ice, {who}. | 氷上のエレメントは{n}個で、{who}のものです。 |
+| `skating.data.summaryElements` | {n} elements on the ice, {who}. | 氷上のエレメントは{n}個です：{who}。 |
 | `skating.data.columns.place` | Place | 順位 |
 | `skating.data.columns.pair` | Pair | 組 |
-| `skating.data.columns.lane` | Lane | レーン |
+| `skating.data.columns.lane` | Lane | コース |
 | `skating.data.columns.skater` | Skater | 選手 |
 | `skating.data.columns.country` | Country | 国 |
 | `skating.data.columns.time` | Time | 記録 |
 | `skating.data.columns.splits` | Splits | スプリット |
+| `skating.data.columns.laps` | Laps | 周回 |
 | `skating.data.columns.note` | Note | 備考 |
 | `skating.data.columns.element` | Element | エレメント |
 | `skating.data.columns.kind` | Kind | 種類 |
 | `skating.data.columns.order` | No. | 順番 |
 | `skating.data.pair` | Pair {n} | 第{n}組 |
-| `skating.data.lanes.inner` | inner lane | インレーン |
-| `skating.data.lanes.outer` | outer lane | アウトレーン |
+| `skating.data.lanes.inner` | inner lane | インコース |
+| `skating.data.lanes.outer` | outer lane | アウトコース |
 | `skating.data.medals.gold` | Gold | 金 |
 | `skating.data.medals.silver` | Silver | 銀 |
 | `skating.data.medals.bronze` | Bronze | 銅 |
@@ -494,9 +495,9 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `layers.zones.backStraight` | Back straight | バックストレート |
 | `layers.zones.secondBend` | Second bend | 第2コーナー |
 | `layers.zones.crossingStraight` | Crossing straight | バックストレート |
-| `layers.zones.rinkLeft` | Left end | 左側 |
+| `layers.zones.rinkLeft` | Left end | 左端 |
 | `layers.zones.rinkMiddle` | Middle | 中央 |
-| `layers.zones.rinkRight` | Right end | 右側 |
+| `layers.zones.rinkRight` | Right end | 右端 |
 | `team.networkTitle` | Pass network: {players} players, {links} links from {passes} passes | パスネットワーク：選手{players}人、つながり{links}本（パス{passes}本） |
 | `team.networkNote` | Most touches: {name}, {touches}. Strongest link: {a} and {b}, {n} passes. | 最多タッチ：{name}（{touches}回）。パスが最も多いつながり：{a}と{b}、{n}本。 |
 | `team.networkNoteDirected` | Most touches: {name}, {touches}. Strongest link: {a} to {b}, {n} passes. | 最多タッチ：{name}（{touches}回）。パスが最も多いつながり：{a}から{b}へ、{n}本。 |
@@ -665,8 +666,8 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `notes.names.breakline` | Breakline | ブレークライン |
 | `notes.names.water-jump` | Water jump | 水濠 |
 | `notes.names.exchange-zone` | Takeover zone | テイクオーバーゾーン |
-| `notes.names.inner-lane` | Inner lane | インレーン |
-| `notes.names.outer-lane` | Outer lane | アウトレーン |
+| `notes.names.inner-lane` | Inner lane | インコース |
+| `notes.names.outer-lane` | Outer lane | アウトコース |
 | `notes.names.warm-up-lane` | Warm-up lane | ウォームアップレーン |
 | `notes.names.padding` | Padding | 防護マット |
 | `notes.names.infield` | Infield | インフィールド |
@@ -678,7 +679,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `notes.names.technical-panel` | Technical panel | テクニカルパネル |
 | `notes.names.referee` | Referee | レフェリー |
 | `notes.names.kiss-and-cry` | Kiss and cry | キス・アンド・クライ |
-| `notes.names.judges` | Judges | ジャッジ |
+| `notes.names.judges` | Judges | ジャッジ席 |
 | `notes.names.runway` | Runway | 助走路 |
 | `notes.names.take-off-board` | Take-off board | 踏切板 |
 | `notes.names.landing-area` | Landing area | 砂場 |

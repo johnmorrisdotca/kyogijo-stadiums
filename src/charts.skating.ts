@@ -341,7 +341,7 @@ function resultsTable(results: readonly SkatingResult[], language: "en" | "ja"):
       return `<tr><td>${r.place ?? ""}</td><td>${r.pair ?? ""}</td><td>${r.lane === undefined ? "" : r.lane === "inner" ? w.lanes.inner : w.lanes.outer}</td><td>${esc(r.name)}</td><td>${esc(r.country ?? "")}</td><td>${isNum(r.time) ? formatTime(r.time) : esc(r.note ?? "")}</td><td>${esc(splits)}</td><td>${esc(laps)}</td></tr>`;
     })
     .join("");
-  return `<table class="ky-table"><thead><tr><th>${c.place}</th><th>${c.pair}</th><th>${c.lane}</th><th>${c.skater}</th><th>${c.country}</th><th>${c.time}</th><th>${c.splits}</th><th>${c.splits}</th></tr></thead><tbody>${rows}</tbody></table>`;
+  return `<table class="ky-table"><thead><tr><th>${c.place}</th><th>${c.pair}</th><th>${c.lane}</th><th>${c.skater}</th><th>${c.country}</th><th>${c.time}</th><th>${c.splits}</th><th>${c.laps}</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
 // ----- the replay
@@ -531,7 +531,7 @@ export function figureElements(elements: readonly SkatingElement[], options: Fig
   layers.push({ kind: "points", id: "elements", name: w.data.layers.elements, ...AT, clip: "none", data: points, style: { size: 1.5 } });
   if (labels.length > 0) layers.push({ kind: "text", id: "labels", name: w.data.layers.elements, ...AT, clip: "none", data: labels, style: { size: 1.15, weight: 800 } });
   const totals: ElementTotals = { elements: elements.length, kinds };
-  const who = sorted.map((e) => e.name ?? ELEMENT_NAMES[e.kind][language]).slice(0, 6).join(", ");
+  const who = sorted.map((e) => e.name ?? ELEMENT_NAMES[e.kind][language]).slice(0, 6).join(language === "ja" ? "、" : ", ");
   const summary = elements.length === 0 ? "" : fill(w.data.summaryElements, { n: elements.length, who });
   const chart = assemble(o, layers, { title, summary, totals, tableLayers: ["elements"] });
   chart.table = (): string => {

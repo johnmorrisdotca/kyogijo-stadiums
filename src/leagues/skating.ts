@@ -150,7 +150,7 @@ export const ISU_LONG_TRACK_TABLE: Readonly<Record<"25m" | "25.5m" | "26m", { ra
 
 /** The skating leagues: the long track (the sport's own), the short track and the figure skating rink. */
 export const SKATING_LEAGUES: readonly SkatingLeague[] = [
-  { id: "isu-long-track", family: "skating", name: { en: "ISU 400 m speed skating track", ja: "ISU 400mスピードスケートリンク" }, unit: "m", dimensions: ISU_LONG_TRACK, sources: ["isu-speed-skating-rules"], builtIn: true },
+  { id: "isu-long-track", family: "skating", name: { en: "ISU 400 m speed skating track", ja: "ISU 400mスピードスケートのリンク" }, unit: "m", dimensions: ISU_LONG_TRACK, sources: ["isu-speed-skating-rules"], builtIn: true },
   { id: "isu-short-track", family: "skating", name: { en: "ISU 111.12 m short track speed skating oval", ja: "ISU 111.12mショートトラックのリンク" }, unit: "m", dimensions: ISU_SHORT_TRACK, sources: ["isu-short-track-rules"] },
   { id: "isu-figure", family: "skating", name: { en: "ISU figure skating rink", ja: "ISUフィギュアスケートのリンク" }, unit: "m", dimensions: ISU_FIGURE_RINK, sources: ["isu-figure-skating-rules"] },
 ];

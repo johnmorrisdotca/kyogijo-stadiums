@@ -14,7 +14,7 @@ export interface SkatingData {
   summaryReplay: string;
   summaryElements: string;
   /** The heads of the tables, a pair ({n}) and a lane. */
-  columns: { place: string; pair: string; lane: string; skater: string; country: string; time: string; splits: string; note: string; element: string; kind: string; order: string };
+  columns: { place: string; pair: string; lane: string; skater: string; country: string; time: string; splits: string; laps: string; note: string; element: string; kind: string; order: string };
   pair: string;
   lanes: { inner: string; outer: string };
   medals: { gold: string; silver: string; bronze: string };
@@ -670,7 +670,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
         summaryResults: "{winner} won the {race} in {time}.",
         summaryReplay: "{n} skaters skate the {race}.",
         summaryElements: "{n} elements on the ice, {who}.",
-        columns: { place: "Place", pair: "Pair", lane: "Lane", skater: "Skater", country: "Country", time: "Time", splits: "Splits", note: "Note", element: "Element", kind: "Kind", order: "No." },
+        columns: { place: "Place", pair: "Pair", lane: "Lane", skater: "Skater", country: "Country", time: "Time", splits: "Splits", laps: "Laps", note: "Note", element: "Element", kind: "Kind", order: "No." },
         pair: "Pair {n}",
         lanes: { inner: "inner lane", outer: "outer lane" },
         medals: { gold: "Gold", silver: "Silver", bronze: "Bronze" },
@@ -935,12 +935,12 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
     net: { serving: "{name}のサーブです。", bySet: "{name}のセットごとのスコア：{list}。", byGame: "{name}のゲームごとのスコア：{list}。", gamePoints: "現在のゲームのポイントは、{name}が{points}です。", sets: "セット", games: "ゲーム", points: "ポイント" },
     field: { aflScore: "{name}は{goals}ゴール{behinds}ビハインドです。", gaelicScore: "{name}は{goals}ゴール{points}ポイントです。", cricketScore: "{name}：{overs}オーバーで{runs}ラン（{wickets}ウィケット喪失）。", cricketInnings: "{name}のイニングごとのスコア：{list}。", inningsStatus: "第{n}イニング", innings: "イニング", runs: "ラン", wickets: "ウィケット", overs: "オーバー", total: "合計" },
     skating: {
-      longTrack: "400mのスピードスケートリンク。インレーンとアウトレーンがあり、内側のカーブの半径は{radius}m、アウトレーンの幅は{outer}m、直線は{straight}mで、ウォームアップレーン、コーナーのブロック、フィニッシュラインがあります",
-      shortTrack: "{length}m×{width}mのリンク上の111.12mショートトラックのオーバル。{tracks}本のトラック、各コーナー7個のブロック、フィニッシュラインとスタートラインがあります",
+      longTrack: "400mのスピードスケートリンク。インコースとアウトコースがあり、内側のコーナーの半径は{radius}m、アウトコースの幅は{outer}m、直線部分は{straight}mで、ウォームアップレーン、コーナーのブロック、フィニッシュラインがあります",
+      shortTrack: "1周111.12mのショートトラック。{length}m×{width}mのリンクに、コース{tracks}本、各コーナー7個のブロック、フィニッシュラインとスタートラインがあります",
       figure: "{length}m×{width}mのフィギュアスケートのリンク。フェンスがあります",
       races: "表示している種目：{list}。",
       furniture: "リンクのそばにあるもの：{list}。",
-      furnitureNames: { judges: "ジャッジ", referee: "レフェリー", "technical-panel": "テクニカルパネル", "kiss-and-cry": "キス・アンド・クライ" },
+      furnitureNames: { judges: "ジャッジ席", referee: "レフェリー", "technical-panel": "テクニカルパネル", "kiss-and-cry": "キス・アンド・クライ" },
       start: "{race}のスタートの拡大図。",
       finish: "フィニッシュラインの拡大図。",
       data: {
@@ -952,10 +952,10 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
         summaryGrid: "{race}は{n}選手がスタートします。",
         summaryResults: "{race}は{winner}が記録{time}で優勝しました。",
         summaryReplay: "{race}を{n}選手が滑ります。",
-        summaryElements: "氷上のエレメントは{n}個で、{who}のものです。",
-        columns: { place: "順位", pair: "組", lane: "レーン", skater: "選手", country: "国", time: "記録", splits: "スプリット", note: "備考", element: "エレメント", kind: "種類", order: "順番" },
+        summaryElements: "氷上のエレメントは{n}個です：{who}。",
+        columns: { place: "順位", pair: "組", lane: "コース", skater: "選手", country: "国", time: "記録", splits: "スプリット", laps: "周回", note: "備考", element: "エレメント", kind: "種類", order: "順番" },
         pair: "第{n}組",
-        lanes: { inner: "インレーン", outer: "アウトレーン" },
+        lanes: { inner: "インコース", outer: "アウトコース" },
         medals: { gold: "金", silver: "銀", bronze: "銅" },
         split: "{d}m：{t}秒",
         lap: "{n}周目：{t}秒",
@@ -1064,7 +1064,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
         pull: "引っ張り方向", opposite: "逆方向", sprayCentre: "センター方向", leftField: "レフト方向", centreField: "センター方向", rightField: "ライト方向", infield: "内野", outfield: "外野",
         lengthShort: "ショートパス", lengthDeep: "ディープパス", houseButton: "ボタン", houseFour: "4フィートの円", houseEight: "8フィートの円", houseTwelve: "12フィートの円", guardZone: "フリーガードゾーン", frontCourt: "フロントコート", backCourt: "バックコート", halfCourt: "ハーフコート", sideLeft: "左", sideMiddle: "中央", sideRight: "右",
         pitchZone: "ピッチ", insideCircle: "サークルの内側", outfieldGround: "アウトフィールド",
-        trackInfield: "インフィールド", homeStraight: "ホームストレート", firstBend: "第1コーナー", backStraight: "バックストレート", secondBend: "第2コーナー", crossingStraight: "バックストレート", rinkLeft: "左側", rinkMiddle: "中央", rinkRight: "右側",
+        trackInfield: "インフィールド", homeStraight: "ホームストレート", firstBend: "第1コーナー", backStraight: "バックストレート", secondBend: "第2コーナー", crossingStraight: "バックストレート", rinkLeft: "左端", rinkMiddle: "中央", rinkRight: "右端",
       },
     },
     team: {
@@ -1098,7 +1098,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
         "distance-line": "距離を示すライン", "large-rectangle": "大きい長方形", "small-rectangle": "小さい長方形", "thirteen-metre-arc": "13メートルアーク", "forty-metre-arc": "40メートルアーク", "penalty-point": "ペナルティーマーク",
         boundary: "バウンダリー", pitch: "ピッチ", "bowling-crease": "ボウリングクリース", "popping-crease": "ポッピングクリース", "return-crease": "リターンクリース", wicket: "ウィケット", "thirty-yard-circle": "30ヤードサークル",
         "twenty-three-line": "23メートルライン", "shooting-circle": "シューティングサークル", "penalty-spot": "ペナルティースポット", "broken-circle-line": "サークルを囲む破線", "goal-area-line": "ゴールエリアライン",
-        "inner-lane": "インレーン", "outer-lane": "アウトレーン", "warm-up-lane": "ウォームアップレーン", padding: "防護マット", infield: "インフィールド", "coaches-area": "コーチエリア", blocks: "ブロック", "track-line": "トラックのライン", "start-lines": "スタートライン", ice: "氷面", "technical-panel": "テクニカルパネル", referee: "レフェリー", "kiss-and-cry": "キス・アンド・クライ", judges: "ジャッジ", runway: "助走路", "take-off-board": "踏切板", "landing-area": "砂場", "throwing-circle": "投てきサークル", sector: "落下区域", "stop-board": "ストップボード", cage: "ケージ", "throwing-arc": "投てき弧", crossbar: "バー", "landing-mat": "着地マット", "run-up": "助走", "zero-line": "ゼロライン", box: "ボックス",
+        "inner-lane": "インコース", "outer-lane": "アウトコース", "warm-up-lane": "ウォームアップレーン", padding: "防護マット", infield: "インフィールド", "coaches-area": "コーチエリア", blocks: "ブロック", "track-line": "トラックのライン", "start-lines": "スタートライン", ice: "氷面", "technical-panel": "テクニカルパネル", referee: "レフェリー", "kiss-and-cry": "キス・アンド・クライ", judges: "ジャッジ席", runway: "助走路", "take-off-board": "踏切板", "landing-area": "砂場", "throwing-circle": "投てきサークル", sector: "落下区域", "stop-board": "ストップボード", cage: "ケージ", "throwing-arc": "投てき弧", crossbar: "バー", "landing-mat": "着地マット", "run-up": "助走", "zero-line": "ゼロライン", box: "ボックス",
         "finish-line": "フィニッシュライン", kerb: "縁石", "lane-lines": "レーンライン", bend: "コーナー", straight: "直線", "infield-pitch": "サッカーのピッチ", "start-line": "スタートライン", breakline: "ブレークライン", "water-jump": "水濠", "exchange-zone": "テイクオーバーゾーン",
         "seven-metre-line": "7mスローライン", "four-metre-line": "4mライン", "throw-off-area": "スローオフエリア", "restraining-line": "リストレイニングライン", "wing-line": "ウイングライン", "marking-area": "マーキングエリア", "two-point-arc": "2ポイントアーク",
       },

@@ -46,7 +46,7 @@ export const ELEMENT_NAMES: Readonly<Record<ElementKind, { en: string; ja: strin
   jump: { en: "Jump", ja: "ジャンプ", fr: "Saut" },
   spin: { en: "Spin", ja: "スピン", fr: "Pirouette" },
   "step-sequence": { en: "Step sequence", ja: "ステップシークエンス", fr: "Séquence de pas" },
-  "choreographic-sequence": { en: "Choreographic sequence", ja: "コレオグラフィックシークエンス", fr: "Séquence chorégraphique" },
+  "choreographic-sequence": { en: "Choreographic sequence", ja: "コレオシークエンス", fr: "Séquence chorégraphique" },
   lift: { en: "Lift", ja: "リフト", fr: "Levée" },
   spiral: { en: "Spiral", ja: "スパイラル", fr: "Spirale" },
   twizzle: { en: "Twizzle", ja: "ツイズル", fr: "Twizzle" },
