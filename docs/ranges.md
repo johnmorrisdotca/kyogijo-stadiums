@@ -64,6 +64,17 @@ console.log(drawKyogijo({ sport: "nhl", range: undefined }) === drawKyogijo({ sp
 | `fieldhockey` | `twenty-three` | from a back-line to the 23-metre line | `right` |
 | `handball` | `half` | from a goal line to the centre line | `left` |
 | `handball` | `goal-area` | the goal area at one end, with its arc | `right` |
+| `skating` | `home-straight` | the finishing straight with its lanes (the long track) or the finishing line's straight (the short track) | none |
+| `skating` | `crossing-straight` | the straight where the lanes are changed, with the coaches' area (the long track) | none |
+| `skating` | `first-bend` | the right-hand curve, entered from the finishing straight | `right` |
+| `skating` | `second-bend` | the left-hand curve, entered from the crossing straight | `left` |
+| `skating` | `bend` | one curve of the short track, with its blocks | `right` |
+| `skating` | `finish` | the finishing line, with the lines 1 m apart before it | none |
+| `skating` | `start` | the starting lines of the race in `skating.start` | none |
+| `skating` | `infield` | the warm-up lane and the ground inside the track | none |
+| `skating` | `half` | one half of the figure skating rink, from the end boards to the middle | `left` |
+| `skating` | `judges` | the judges', the referee's and the technical panel's seats at the rinkboard | none |
+| `skating` | `kiss-and-cry` | the kiss and cry beside the rink | `left` |
 | `athletics` | `bend` | one bend of the track, with the lanes across it | `right` |
 | `athletics` | `home-straight` | the finish straight, from the end of the second bend to the end of the first, with the finish line | none |
 | `athletics` | `back-straight` | the straight opposite the finish | none |

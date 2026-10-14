@@ -197,6 +197,13 @@ The links John has sent, and the ones the package's figures were read from: what
 - **Not used:** any stadium plan, template or stock image of a track: none was copied or traced.
 - **Ours:** the stencil digits, which are a face of our own written as strokes (no typeface was used or looked at), the lane tags, the colours of the tracks and of the looks, the plans' reading of the Marking Plan to the metre, the covered track's bends drawn as one circle, the zone set `athletics-track` and the frame `athletics`.
 
+## The skating rinks
+
+- **What was read:** the International Skating Union's *Sports Rules - Speed Skating* (the Special Regulations and Technical Rules, effective 12 June 2026: Rules 203 to 206, 226 to 228 and 253 to 257, and "H. Track", the layout plan and the measurements of standard 400 m tracks), its *Special Regulations and Technical Rules Short Track Speed Skating* (2024: Rule 280 and the diagram of the tracks, a copy kept by the Dutch federation) and its *Sports Rules - Figure Skating* (effective 12 June 2026: Rule 342), each as text from the ISU's own PDF and the plans and diagrams as pictures: for facts only (lengths, radii, places), all named in [sources.md](./sources.md#ice-skating). No text, table or diagram is copied, and the starting lines of the long track were worked out from the track's measurements and then held by a test to the layout plan's own dimensions (k, j, i and the 12.57 m between the lanes).
+- **Licence:** the documents are the ISU's and carry its copyright; a dimension is a fact, so the figures are used and the documents are not reproduced. The credit is here and in [NOTICE.md](../NOTICE.md).
+- **Not used:** any rink plan, template or image of a rink: none was copied or traced. The ISU Media Guide was not used.
+- **Ours:** the colours, the corner and the furniture of the figure skating rink, the padding's place, the spacing of the short track's blocks, the zone set `skating-track`, the frame `skating` and the kinds of element of a programme.
+
 ## The soccer pitch and its providers
 
 - **What was read:** Law 1 of the IFAB Laws of the Game, the FIFA Futsal Laws, UEFA's Stadium Infrastructure Regulations, the MLS, NCAA and Premier League documents and the FA's, and each provider's own pages, all named in [sources.md](./sources.md#soccer): for facts only. No text, table or diagram of any is copied.

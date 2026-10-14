@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 
 import { at, noSidewaysScroll, open, svg } from "./demo.mjs";
 
-const SPORTS = ["nfl", "cfl", "ifaf", "nhl", "nba", "mlb", "soccer", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis", "athletics", "lacrosse", "rugby", "afl", "gaelic", "cricket", "fieldhockey", "handball"];
+const SPORTS = ["nfl", "cfl", "ifaf", "nhl", "nba", "mlb", "soccer", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis", "athletics", "skating", "lacrosse", "rugby", "afl", "gaelic", "cricket", "fieldhockey", "handball"];
 
 for (const sport of SPORTS) {
   test(`${sport} fits the page in every size and layout without a sideways scroll`, async ({ page }) => {

@@ -134,6 +134,11 @@
       "import": "./dist/athletics-entry.js",
       "default": "./dist/athletics-entry.js"
     },
+    "./skating": {
+      "types": "./dist/skating-entry.d.ts",
+      "import": "./dist/skating-entry.js",
+      "default": "./dist/skating-entry.js"
+    },
     "./charts": {
       "types": "./dist/charts-entry.d.ts",
       "import": "./dist/charts-entry.js",

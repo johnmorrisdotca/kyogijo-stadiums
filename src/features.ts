@@ -83,6 +83,29 @@ const ATHLETICS: readonly Feature[] = [
   f("banking", "--ky-ath-k", "The shade of the covered track's banked bends."),
 ];
 
+const SKATING: readonly Feature[] = [
+  f("apron", "--ky-apron", "The ground round the rink."),
+  f("ice", "--ky-surface", "The ice."),
+  f("infield", "--ky-surface-alt", "The floor or the ice inside the track."),
+  f("warm-up", "--ky-surface-alt", "The warm-up lane of the long track."),
+  f("padding", "--ky-boards", "The padding round the track."),
+  f("boards", "--ky-boards", "The boards of a figure skating rink."),
+  f("lane-lines", "--ky-blue", "The lines that demarcate the lanes of the long track."),
+  f("track-line", ["--ky-blue", "--ky-ink"], "The line of the short track and the line between its blocks."),
+  f("blocks", "--ky-ink", "The blocks of a curve."),
+  f("cones", "--ky-red", "The cones at the entrance of a curve."),
+  f("finish-line", "--ky-red", "The finishing line."),
+  f("finish-marks", "--ky-blue", "The lines 1 m apart in the last 5 m before the finishing line."),
+  f("start-lines", "--ky-red", "The starting lines of the races marked."),
+  f("pre-start-lines", "--ky-blue", "The pre-start line 2 m before each starting line."),
+  f("start-positions", "--ky-ink", "The starting positions of the short track's 500 m and 1000 m."),
+  f("coaches-area", "--ky-red", "The coaches' area on the crossing straight."),
+  f("judges", "--ky-ink", "The judges' seats at the rinkboard."),
+  f("referee", "--ky-ink", "The referee's seat."),
+  f("technical-panel", "--ky-ink", "The technical panel's table."),
+  f("kiss-and-cry", "--ky-red", "The kiss and cry."),
+];
+
 const KEY = ["--ky-key", "--ky-key-left", "--ky-key-right"];
 const BASKETBALL: readonly Feature[] = [
   f("apron", "--ky-apron", "The ground round the court."),
@@ -289,6 +312,7 @@ export const FEATURE_INFO: Readonly<Record<string, readonly Feature[]>> = Object
   fieldhockey: FIELD_HOCKEY,
   handball: HANDBALL,
   athletics: ATHLETICS,
+  skating: SKATING,
 });
 
 /**

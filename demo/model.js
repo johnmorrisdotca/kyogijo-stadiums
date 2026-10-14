@@ -135,6 +135,7 @@ export function optionsFor(s, lang, forCode = false) {
     if (s.half !== "none" && s.size === "surface") o.half = s.half;
     if (!s.flags) o.cornerFlags = false;
   }
+  if (s.sport === "skating" && s.races !== "none") o.skating = { races: s.races };
   if (s.sport === "athletics" && (s.track !== "red" || s.infield !== "pitch" || s.races !== "none")) {
     o.athletics = {};
     if (s.track !== "red") o.athletics.track = s.track;
@@ -264,6 +265,7 @@ export function hiddenRows(s) {
     "era-notes": !(seasons && past),
     "court-group": s.sport !== "nba",
     "athletics-group": s.sport !== "athletics",
+    "races-group": s.sport !== "athletics" && s.sport !== "skating",
     "status-text": s.status !== "custom",
     "away-logo-url": s.away.logo !== "url",
     "home-logo-url": s.home.logo !== "url",

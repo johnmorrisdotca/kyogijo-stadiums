@@ -5,12 +5,13 @@ import type { SoccerFrame, SoccerProviderId } from "./surfaces/soccer-providers.
 import type { SoccerPitchId, SoccerSize } from "./surfaces/soccer-spec.ts";
 import type { Frame } from "./frames.ts";
 import type { AthleticsStyle } from "./athletics/types.ts";
+import type { SkatingStyle } from "./skating/types.ts";
 
 /** The field sports: lacrosse (the field and the box), rugby (union and league), Australian football, Gaelic football and hurling, cricket, field hockey and team handball. */
 export type FieldSport = "lacrosse" | "rugby" | "afl" | "gaelic" | "cricket" | "fieldhockey" | "handball";
 
 /** The surfaces: three football fields, a rink, a court, a ballpark, a soccer pitch, a curling sheet, five net sports (tennis, volleyball, badminton, pickleball and table tennis), seven field sports (lacrosse, rugby, Australian football, Gaelic football and hurling, cricket, field hockey and handball) and the athletics stadium (the 400 m track with its infield, and the covered 200 m track). */
-export type Sport = "nfl" | "cfl" | "ifaf" | "nhl" | "nba" | "mlb" | "soccer" | "curling" | "tennis" | "volleyball" | "badminton" | "pickleball" | "tabletennis" | FieldSport | "athletics";
+export type Sport = "nfl" | "cfl" | "ifaf" | "nhl" | "nba" | "mlb" | "soccer" | "curling" | "tennis" | "volleyball" | "badminton" | "pickleball" | "tabletennis" | FieldSport | "athletics" | "skating";
 
 /** `auto` follows the device's light or dark setting (and `data-theme` on the page's root), the others force one. */
 export type Theme = "auto" | "light" | "dark";
@@ -282,7 +283,12 @@ export type RangeName =
   | "discus-throw"
   | "hammer-throw"
   | "javelin-throw"
-  | "water-jump";
+  | "water-jump"
+  | "crossing-straight"
+  | "first-bend"
+  | "second-bend"
+  | "judges"
+  | "kiss-and-cry";
 
 /** A named range at the end of your choice: `{ name: "offensive-zone", end: "left" }` is the offensive zone of a team that attacks the left. */
 export interface RangeNamed {
@@ -543,6 +549,8 @@ export interface SurfaceOptions {
   field?: FieldStyle;
   /** The athletics stadium: the number of lanes, the colour of the track, what is in the infield, the races and the field events marked. See `AthleticsStyle`. */
   athletics?: AthleticsStyle;
+  /** The skating rink: the long track's radius and lanes, the short track's tracks, the figure skating rink's size and furniture, the races marked. See `SkatingStyle`; the discipline is the `league`. */
+  skating?: SkatingStyle;
   /** The soccer pitch: a preset (`fifa`, `uefa`, `mls`, `nwsl`, `ncaa`, `law-min`, `law-max`, `9-a-side`, `7-a-side`, `5-a-side`, `futsal`) or a size, `{ length, width, unit }`. The international 105 by 68 m by default. */
   pitch?: SoccerPitchId | SoccerSize;
   /** The soccer ground to draw: a key of `GROUNDS`. The pitch has the size its article publishes (the international 105 by 68 m where none is), and the drawing carries the ground's name for `year`. A `pitch` of your own wins over the ground's size. */

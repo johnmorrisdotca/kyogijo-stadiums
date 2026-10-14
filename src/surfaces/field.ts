@@ -72,7 +72,7 @@ export function marks(plan: Pick<FieldPlan, "shapes">, o: Pick<BuildOptions, "ex
   const lift = o.exact ? 1 : 1.6;
   for (const shape of plan.shapes) {
     if (shape.kind === "bar") bars.set(`${shape.feature}|${shape.cls ?? ""}`, [...(bars.get(`${shape.feature}|${shape.cls ?? ""}`) ?? []), pathOf(shape)]);
-    else if (shape.kind === "dot") dots += el("circle", { class: ft(o, shape.feature, shape.paint === "post" ? "ky-post-end" : "ky-fill-line"), cx: shape.cx, cy: shape.cy, r: shape.r * lift });
+    else if (shape.kind === "dot") dots += el("circle", { class: ft(o, shape.feature, shape.paint === "post" ? "ky-post-end" : shape.paint === "block" ? "ky-ska-block" : shape.paint === "cone" ? "ky-ska-cone" : "ky-fill-line"), cx: shape.cx, cy: shape.cy, r: shape.r * lift });
   }
   let out = "";
   for (const [key, d] of bars) {

@@ -41,7 +41,7 @@ const PROPERTY: Readonly<Record<PaletteKey, string>> = {
 };
 
 /** The sports of each group. */
-const GROUP_SPORTS: Readonly<Record<Group, readonly string[]>> = { football: ["nfl", "cfl", "ifaf"], nhl: ["nhl"], nba: ["nba"], mlb: ["mlb"], soccer: ["soccer"], curling: ["curling"], net: ["tennis", "volleyball", "badminton", "pickleball", "tabletennis"], athletics: ["athletics"] };
+const GROUP_SPORTS: Readonly<Record<Group, readonly string[]>> = { football: ["nfl", "cfl", "ifaf"], nhl: ["nhl", "skating"], nba: ["nba"], mlb: ["mlb"], soccer: ["soccer"], curling: ["curling"], net: ["tennis", "volleyball", "badminton", "pickleball", "tabletennis"], athletics: ["athletics"] };
 
 /** The group a sport is painted with, or `undefined` for a surface with no palette of its own (it takes the look's base). */
 export const groupOf = (sport: Sport | string): Group | undefined => (Object.keys(GROUP_SPORTS) as Group[]).find((group) => GROUP_SPORTS[group].includes(sport));

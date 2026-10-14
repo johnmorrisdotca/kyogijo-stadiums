@@ -947,6 +947,62 @@ exports[`the drawings' structure > rugby: what a tall bare surface is made of 1`
 }
 `;
 
+exports[`the drawings' structure > skating: what a score drawing is made of 1`] = `
+{
+  "circle.ky-ska-cone": 4,
+  "desc": 1,
+  "g.ky-banner.ky-banner-left.ky-win": 1,
+  "g.ky-banner.ky-banner-right.ky-lose": 1,
+  "g.ky-plate": 1,
+  "g.ky-ska-ground": 1,
+  "g.ky-ska-lines": 1,
+  "g.ky-surface-group": 1,
+  "path.ky-ska-b": 2,
+  "path.ky-ska-blocks": 2,
+  "path.ky-ska-floor": 1,
+  "path.ky-ska-ice": 1,
+  "path.ky-ska-pad": 1,
+  "path.ky-ska-r": 2,
+  "path.ky-ska-warm": 1,
+  "rect.ky-apron": 1,
+  "rect.ky-plate-bg": 1,
+  "rect.ky-winbar.ky-winbar-left": 1,
+  "style": 1,
+  "svg.ky-skating.kyogijo": 1,
+  "text.ky-abbr.ky-abbr-left.ky-text": 1,
+  "text.ky-abbr.ky-abbr-right.ky-text": 1,
+  "text.ky-comp.ky-text": 1,
+  "text.ky-dash-text.ky-text": 1,
+  "text.ky-foot.ky-text": 1,
+  "text.ky-lose.ky-score.ky-text": 1,
+  "text.ky-name.ky-paint-left.ky-text": 1,
+  "text.ky-name.ky-paint-right.ky-text": 1,
+  "text.ky-score.ky-text.ky-win": 1,
+  "title": 1,
+}
+`;
+
+exports[`the drawings' structure > skating: what a tall bare surface is made of 1`] = `
+{
+  "circle.ky-ska-cone": 4,
+  "desc": 1,
+  "g.ky-ska-ground": 1,
+  "g.ky-ska-lines": 1,
+  "g.ky-surface-group": 1,
+  "path.ky-ska-b": 2,
+  "path.ky-ska-blocks": 2,
+  "path.ky-ska-floor": 1,
+  "path.ky-ska-ice": 1,
+  "path.ky-ska-pad": 1,
+  "path.ky-ska-r": 2,
+  "path.ky-ska-warm": 1,
+  "rect.ky-apron": 1,
+  "style": 1,
+  "svg.ky-skating.kyogijo": 1,
+  "title": 1,
+}
+`;
+
 exports[`the drawings' structure > soccer: what a score drawing is made of 1`] = `
 {
   "circle.ky-fill-line": 3,

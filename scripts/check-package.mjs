@@ -89,7 +89,7 @@ const game = ${JSON.stringify(game)};
 if (drawKyogijo(game) !== ${JSON.stringify(expected)}) throw new Error("the installed package drew another drawing");
 if (drawKyogijo({ ...game, sport: "mlb", park: "fenway-park", orientation: "portrait" }) !== ${JSON.stringify(expectedPortrait)}) throw new Error("the installed package drew another ballpark");
 if (VERSION !== ${JSON.stringify(pkg.version)}) throw new Error("VERSION is " + VERSION);
-if (SPORTS.length !== 21 || Object.keys(PARKS).length !== 94) throw new Error("the sports or the parks are wrong");
+if (SPORTS.length !== 22 || Object.keys(PARKS).length !== 94) throw new Error("the sports or the parks are wrong");
 const grounds = all[names.indexOf(${JSON.stringify(`${pkg.name}/grounds`)})];
 if (Object.keys(grounds.GROUNDS).length !== 64 || grounds.groundById("maracana").pitchSize !== "published") throw new Error("the grounds are wrong");
 const atlas = all[names.indexOf(${JSON.stringify(`${pkg.name}/atlas`)})];
@@ -97,6 +97,8 @@ if (atlas.PLACES.length !== 158 || atlas.placesBy({ sport: "baseball", country: 
 const entry = (name) => all[names.indexOf(${JSON.stringify(pkg.name + "/")} + name)];
 const athletics = entry("athletics");
 if (typeof athletics.laneDraw !== "function" || athletics.WA_STANDARD_TRACK.straight !== 84.39 || athletics.RACE_IDS.length !== 20) throw new Error("the athletics entry is wrong");
+const skating = entry("skating");
+if (typeof skating.skatingPairs !== "function" || skating.ISU_SHORT_TRACK.straight !== 28.85 || skating.RACE_IDS.length !== 10 || Math.abs(skating.longOval().straight - 113.57) > 0.01) throw new Error("the skating entry is wrong");
 const { NHL, fenceAt } = m1;
 if (NHL.length !== 200 || fenceAt([[-45, 300], [45, 300]], 0) !== 300) throw new Error("the geometry is wrong");
 const { kyogijoProps } = m4;

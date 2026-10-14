@@ -10,6 +10,8 @@ export { FIELD_SPORTS, fieldPlan, isFieldSport } from "./fields.ts";
 export type { Area as FieldArea, FieldPlan, GoalPlan as FieldGoalPlan, Outline as FieldOutline, Shape as FieldShape } from "./fields.types.ts";
 export { KYOGIJO_FIELDS_STYLE } from "./fields.style.ts";
 export { KYOGIJO_ATHLETICS_STYLE, KYOGIJO_TRACK_STYLE } from "./athletics.style.ts";
+export { KYOGIJO_SKATING_STYLE } from "./skating.style.ts";
+export type { SkatingDiscipline, SkatingFurniture, SkatingInfield, SkatingRace, SkatingStyle } from "./skating/types.ts";
 export type { AthleticsFieldEvent, AthleticsInfield, AthleticsRace, AthleticsStyle, AthleticsTrackLook, WaterJump } from "./athletics/types.ts";
 export type { RangeInfo } from "./ranges.names.ts";
 export { rampColour } from "./layers.marks.ts";

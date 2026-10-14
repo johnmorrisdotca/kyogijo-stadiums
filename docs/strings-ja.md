@@ -6,6 +6,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 
 | Key | English | 日本語 |
 | --- | --- | --- |
+| `surface.skating` | Skating rink | スケートリンク |
 | `surface.nfl` | NFL football field | NFLのフィールド |
 | `surface.cfl` | CFL football field | CFLのフィールド |
 | `surface.ifaf` | IFAF football field | IFAFのフィールド |
@@ -48,6 +49,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `about.fieldhockey` | a field hockey pitch, 91.40 by 55.00 metres, with the centre line, the 23-metre lines, the circles, the penalty spots and the goals | フィールドホッケーのピッチ。91.40×55.00mで、センターライン、23メートルライン、サークル、ペナルティースポット、ゴールがあります |
 | `about.handball` | a handball court, 40 by 20 metres, with the centre line, the goal areas, the 6-, 7- and 9-metre lines, the 4-metre lines and the goals | ハンドボールのコート。40×20mで、センターライン、ゴールエリア、6m・7m・9mのライン、4mのライン、ゴールがあります |
 | `about.athletics` | an athletics track of 400 metres with eight lanes, the finish line and the lane numbers, with a soccer pitch inside it | 陸上競技の400mトラック。8レーンで、フィニッシュラインとレーン番号があり、内側にサッカーのピッチがあります |
+| `about.skating` | a speed skating track of 400 metres with two lanes, the warm-up lane, the blocks of the curves and the finishing line | 400mのスピードスケートリンク。2つのレーン、ウォームアップレーン、コーナーのブロック、フィニッシュラインがあります |
 | `status.final` | Final | 試合終了 |
 | `status.final-ot` | Final/OT | 試合終了（延長） |
 | `status.final-so` | Final/SO | 試合終了（SO） |
@@ -92,6 +94,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `league.fieldhockey` | a field hockey pitch, {size}, with the centre line, the 23-metre lines, the circles, the penalty spots and the goals | フィールドホッケーのピッチ。{size}で、センターライン、23メートルライン、サークル、ペナルティースポット、ゴールがあります |
 | `league.handball` | a handball court, {size}, with the centre line, the goal areas, the 6-, 7- and 9-metre lines, the 4-metre lines and the goals | ハンドボールのコート。{size}で、センターライン、ゴールエリア、6m・7m・9mのライン、4mのライン、ゴールがあります |
 | `league.athletics` | an athletics track, {size}, with its lanes, the finish line and the lane numbers | 陸上競技のトラック。{size}で、レーン、フィニッシュライン、レーン番号があります |
+| `league.skating` | a skating rink, {size}, with its lines | スケートリンク。{size}で、ラインがあります |
 | `league.size` | {length} by {width} {unit} | {length}×{width}{unit} |
 | `league.units.ft` | feet | フィート |
 | `league.units.yd` | yards | ヤード |
@@ -152,6 +155,55 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `field.wickets` | Wkts | ウィケット |
 | `field.overs` | Ov | オーバー |
 | `field.total` | Total | 合計 |
+| `skating.longTrack` | a speed skating track of 400 metres, its inner lane and its outer lane, the inner curve of {radius} metres radius, the outer lane {outer} metres wide and the straights {straight} metres long, with the warm-up lane, the blocks of the curves and the finishing line | 400mのスピードスケートリンク。インレーンとアウトレーンがあり、内側のカーブの半径は{radius}m、アウトレーンの幅は{outer}m、直線は{straight}mで、ウォームアップレーン、コーナーのブロック、フィニッシュラインがあります |
+| `skating.shortTrack` | a short track speed skating oval of 111.12 metres on a rink of {length} by {width} metres, with {tracks} tracks, seven blocks in each curve, the finishing line and the starting lines | {length}m×{width}mのリンク上の111.12mショートトラックのオーバル。{tracks}本のトラック、各コーナー7個のブロック、フィニッシュラインとスタートラインがあります |
+| `skating.figure` | a figure skating rink of {length} by {width} metres, with its boards | {length}m×{width}mのフィギュアスケートのリンク。フェンスがあります |
+| `skating.races` | Races marked: {list}. | 表示している種目：{list}。 |
+| `skating.furniture` | Beside the rink: {list}. | リンクのそばにあるもの：{list}。 |
+| `skating.furnitureNames.judges` | the judges | ジャッジ |
+| `skating.furnitureNames.referee` | the referee | レフェリー |
+| `skating.furnitureNames.technical-panel` | the technical panel | テクニカルパネル |
+| `skating.furnitureNames.kiss-and-cry` | the kiss and cry | キス・アンド・クライ |
+| `skating.start` | A close-up of the start of the {race}. | {race}のスタートの拡大図。 |
+| `skating.finish` | A close-up of the finishing line. | フィニッシュラインの拡大図。 |
+| `skating.data.draw` | Pairs, {race} | {race}の組み合わせ |
+| `skating.data.results` | Results, {race} | {race}の結果 |
+| `skating.data.replay` | Replay of the {race} | {race}のリプレイ |
+| `skating.data.elements` | The elements of the programme | プログラムのエレメント |
+| `skating.data.summaryDraw` | {n} skaters in the {race}, last pair: {last}. | {race}は{n}選手が出場し、最終組は第{last}組です。 |
+| `skating.data.summaryGrid` | {n} starters in the {race}. | {race}は{n}選手がスタートします。 |
+| `skating.data.summaryResults` | {winner} won the {race} in {time}. | {race}は{winner}が記録{time}で優勝しました。 |
+| `skating.data.summaryReplay` | {n} skaters skate the {race}. | {race}を{n}選手が滑ります。 |
+| `skating.data.summaryElements` | {n} elements on the ice, {who}. | 氷上のエレメントは{n}個で、{who}のものです。 |
+| `skating.data.columns.place` | Place | 順位 |
+| `skating.data.columns.pair` | Pair | 組 |
+| `skating.data.columns.lane` | Lane | レーン |
+| `skating.data.columns.skater` | Skater | 選手 |
+| `skating.data.columns.country` | Country | 国 |
+| `skating.data.columns.time` | Time | 記録 |
+| `skating.data.columns.splits` | Splits | スプリット |
+| `skating.data.columns.note` | Note | 備考 |
+| `skating.data.columns.element` | Element | エレメント |
+| `skating.data.columns.kind` | Kind | 種類 |
+| `skating.data.columns.order` | No. | 順番 |
+| `skating.data.pair` | Pair {n} | 第{n}組 |
+| `skating.data.lanes.inner` | inner lane | インレーン |
+| `skating.data.lanes.outer` | outer lane | アウトレーン |
+| `skating.data.medals.gold` | Gold | 金 |
+| `skating.data.medals.silver` | Silver | 銀 |
+| `skating.data.medals.bronze` | Bronze | 銅 |
+| `skating.data.split` | {d} m: {t} s | {d}m：{t}秒 |
+| `skating.data.lap` | Lap {n}: {t} s | {n}周目：{t}秒 |
+| `skating.data.layers.names` | Names | 選手名 |
+| `skating.data.layers.flags` | Flags | 国旗 |
+| `skating.data.layers.medals` | Places | 順位 |
+| `skating.data.layers.splits` | Splits | スプリット |
+| `skating.data.layers.elements` | Elements | エレメント |
+| `skating.data.layers.paths` | Paths | 軌跡 |
+| `skating.data.gun` | Start | スタート |
+| `skating.data.finish` | {name} finishes in {time} | {name}が{time}でフィニッシュ |
+| `skating.data.seconds` | s | 秒 |
+| `skating.data.metres` | m | m |
 | `athletics.track400` | an athletics track of 400 metres with {lanes} lanes, its bends of 36.50 metres radius at the kerb and its straights of 84.39 metres, with the finish line and the lane numbers | {lanes}レーンの陸上競技400mトラック。コーナーの縁石での半径は36.50m、直線は84.39mで、フィニッシュラインとレーン番号があります |
 | `athletics.track200` | a covered athletics track of 200 metres with {lanes} lanes, its banked bends of 17.205 metres radius at the kerb and its straights of 44.983 metres, with the finish line and the lane numbers | {lanes}レーンの室内200mトラック。バンクのあるコーナーの縁石での半径は17.205m、直線は44.983mで、フィニッシュラインとレーン番号があります |
 | `athletics.infieldPitch` | A soccer pitch lies inside the track. | トラックの内側にはサッカーのピッチがあります。 |
@@ -226,6 +278,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `said.stop` | . | 。 |
 | `said.colon` | :  | ： |
 | `said.gap` |   |  |
+| `special.guest.skating` | rink | リンク |
 | `special.guest.nfl` | football field | アメリカンフットボールのフィールド |
 | `special.guest.cfl` | football field | カナディアンフットボールのフィールド |
 | `special.guest.ifaf` | football field | アメリカンフットボールのフィールド |
@@ -440,6 +493,10 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `layers.zones.firstBend` | First bend | 第1コーナー |
 | `layers.zones.backStraight` | Back straight | バックストレート |
 | `layers.zones.secondBend` | Second bend | 第2コーナー |
+| `layers.zones.crossingStraight` | Crossing straight | バックストレート |
+| `layers.zones.rinkLeft` | Left end | 左側 |
+| `layers.zones.rinkMiddle` | Middle | 中央 |
+| `layers.zones.rinkRight` | Right end | 右側 |
 | `team.networkTitle` | Pass network: {players} players, {links} links from {passes} passes | パスネットワーク：選手{players}人、つながり{links}本（パス{passes}本） |
 | `team.networkNote` | Most touches: {name}, {touches}. Strongest link: {a} and {b}, {n} passes. | 最多タッチ：{name}（{touches}回）。パスが最も多いつながり：{a}と{b}、{n}本。 |
 | `team.networkNoteDirected` | Most touches: {name}, {touches}. Strongest link: {a} to {b}, {n} passes. | 最多タッチ：{name}（{touches}回）。パスが最も多いつながり：{a}から{b}へ、{n}本。 |
@@ -608,6 +665,20 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `notes.names.breakline` | Breakline | ブレークライン |
 | `notes.names.water-jump` | Water jump | 水濠 |
 | `notes.names.exchange-zone` | Takeover zone | テイクオーバーゾーン |
+| `notes.names.inner-lane` | Inner lane | インレーン |
+| `notes.names.outer-lane` | Outer lane | アウトレーン |
+| `notes.names.warm-up-lane` | Warm-up lane | ウォームアップレーン |
+| `notes.names.padding` | Padding | 防護マット |
+| `notes.names.infield` | Infield | インフィールド |
+| `notes.names.coaches-area` | Coaches' area | コーチエリア |
+| `notes.names.blocks` | Blocks | ブロック |
+| `notes.names.track-line` | Line of the track | トラックのライン |
+| `notes.names.start-lines` | Starting lines | スタートライン |
+| `notes.names.ice` | Ice | 氷面 |
+| `notes.names.technical-panel` | Technical panel | テクニカルパネル |
+| `notes.names.referee` | Referee | レフェリー |
+| `notes.names.kiss-and-cry` | Kiss and cry | キス・アンド・クライ |
+| `notes.names.judges` | Judges | ジャッジ |
 | `notes.names.runway` | Runway | 助走路 |
 | `notes.names.take-off-board` | Take-off board | 踏切板 |
 | `notes.names.landing-area` | Landing area | 砂場 |
@@ -664,6 +735,11 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `ranges.names.circle` | circle | サークル |
 | `ranges.names.twenty-three` | 23-metre area | 23メートルエリア |
 | `ranges.names.goal-area` | goal area | ゴールエリア |
+| `ranges.names.crossing-straight` | crossing straight | バックストレート |
+| `ranges.names.first-bend` | first bend | 第1コーナー |
+| `ranges.names.second-bend` | second bend | 第2コーナー |
+| `ranges.names.judges` | judges | ジャッジ席 |
+| `ranges.names.kiss-and-cry` | kiss and cry | キス・アンド・クライ |
 | `ranges.names.bend` | bend | コーナー |
 | `ranges.names.home-straight` | finish straight | ホームストレート |
 | `ranges.names.back-straight` | back straight | バックストレート |
@@ -779,6 +855,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `sport_pickleball` | Pickleball | ピックルボール |
 | `sport_tabletennis` | Table tennis | 卓球 |
 | `sport_athletics` | Athletics | 陸上競技 |
+| `sport_skating` | Ice skating | スケート |
 | `sport_lacrosse` | Lacrosse | ラクロス |
 | `sport_rugby` | Rugby | ラグビー |
 | `sport_afl` | Australian football | オーストラリアンフットボール |
@@ -936,6 +1013,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `galleryFamily_curling` | Curling | カーリング |
 | `galleryFamily_net` | Net sports | ネット球技 |
 | `galleryFamily_field` | Field sports | フィールド球技 |
+| `galleryFamily_track` | Athletics and skating | 陸上・スケート |
 | `galleryCount` | {n} of {total} sports | {total}競技中{n}競技 |
 | `galleryMore` | Show all {n} sports | 全{n}競技を表示 |
 | `sideTitle` | Wide and tall | 横と縦 |
@@ -1141,6 +1219,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `courts` | Tennis, volleyball, badminton, pickleball and table tennis | ネット型競技のコート |
 | page `field-sports` | Lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey and handball | ラクロス、ラグビーなどのフィールド |
 | page `athletics` | The athletics stadium | 陸上競技場 |
+| page `skating` | The skating rinks | スケートリンク |
 | page `special-games` | Special games | 特設会場での試合 |
 | page `ballparks` | Ballparks | 球場 |
 | page `grounds` | The grounds | スタジアム |
@@ -1168,6 +1247,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `gallery-courts` | Gallery: tennis, volleyball and other net sports | ギャラリー：ネット型競技のコート |
 | page `gallery-fields` | Gallery: lacrosse, rugby, Australian football, Gaelic games, cricket, hockey and handball | ギャラリー：ラクロス、ラグビー、オーストラリアンフットボール、ゲーリック・ゲームズ、クリケット、フィールドホッケー、ハンドボール |
 | page `gallery-athletics` | Gallery: the athletics stadium | ギャラリー：陸上競技場 |
+| page `gallery-skating` | Gallery: the skating rinks | ギャラリー：スケートリンク |
 | page `gallery-styling` | Gallery: looks and annotations | ギャラリー：スタイルと注釈 |
 | page `gallery-ranges` | Gallery: display ranges and zoom | ギャラリー：表示範囲とズーム |
 | page `gallery-layouts` | Gallery: layouts and backgrounds | ギャラリー：レイアウトと背景 |

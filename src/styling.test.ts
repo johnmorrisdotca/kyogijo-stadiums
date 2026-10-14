@@ -42,6 +42,7 @@ describe("feature colours", () => {
     curling: { sheet: { pebble: true, guardZone: true }, league: "wcf" },
     mlb: {},
     athletics: { athletics: { races: "all" } },
+    skating: { skating: { races: "all" } },
   };
   for (const sport of SPORTS) {
     const names = FEATURES[sport] ?? [];
@@ -51,7 +52,7 @@ describe("feature colours", () => {
       const svg = drawKyogijo({ sport, id: "f", featureColors, ...(extras[sport] ?? {}) });
       // A field sport's leagues mark different things (union and league, the box and the field): a feature is on an element of one of its drawings, bare or with a score.
       const game = { away: { name: "Away", score: 1 }, home: { name: "Home", score: 2 } };
-      const drawn = isFieldSport(sport) ? LEAGUES[sport].flatMap((league) => [drawKyogijo({ sport, league: league.id, id: "f", featureColors }), drawKyogijo({ sport, league: league.id, id: "f", featureColors, ...game })]).map(root) : [root(svg)];
+      const drawn = isFieldSport(sport) || sport === "skating" ? LEAGUES[sport as keyof typeof LEAGUES].flatMap((league) => [drawKyogijo({ sport, league: league.id, id: "f", featureColors, ...(extras[sport] ?? {}) }), drawKyogijo({ sport, league: league.id, id: "f", featureColors, ...(extras[sport] ?? {}), ...game })]).map(root) : [root(svg)];
       const missing = names.filter((name) => drawn.every((tree) => withClass(tree, `ky-f-${name}`).length === 0));
       // A feature a drawing may not have by default: the curling hack lines and courtesy lines belong to World Curling's sheet and the crease marks to some rinks.
       const optional = new Set(["courtesy-lines", "crease-marks", "trapezoid", "referee-crease", "running-lane", "batters-boxes", "centre-dashes", "hash-marks", "areas", "antennae", "free-zone", "banking"]);

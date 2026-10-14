@@ -20,7 +20,7 @@ interface Stroked extends Named {
   /** The least this shape is drawn at, in feet, when the drawing is not at true widths: the plan's `drawnLine` when missing. */
   least?: number;
   /** The class it is painted with: the ordinary line (`ky-line`, white) unless it is a red line (`ky-red`), or one of athletics' coloured marks (yellow, blue, green, black or red). */
-  cls?: "ky-line" | "ky-red" | AthleticsMark;
+  cls?: "ky-line" | "ky-red" | AthleticsMark | SkatingMark;
 }
 
 /** The coloured marks of an athletics track: the yellow of the 4 x 100 m's takeover zones, the blue of the 4 x 400 m's and the 110 m hurdles (red on a blue track), the green of the 400 m hurdles and the breakline, black marks and red ones. */
@@ -28,6 +28,9 @@ interface Stroked extends Named {
 export type AthleticsFill = "ky-ath-y-fill" | "ky-ath-b-fill" | "ky-ath-g-fill" | "ky-ath-k-fill" | "ky-ath-r-fill";
 
 export type AthleticsMark = "ky-ath-y" | "ky-ath-b" | "ky-ath-g" | "ky-ath-k" | "ky-ath-r" | "ky-ath-s";
+
+/** The coloured marks of a skating rink: the blue lines that demarcate the lanes, the red starting, finishing and coaches' lines, black lines, the dotted blocks of a curve. */
+export type SkatingMark = "ky-ska-b" | "ky-ska-r" | "ky-ska-k" | "ky-ska-blocks";
 
 /** A line from one point to another. */
 export interface LineShape extends Stroked {
@@ -80,7 +83,7 @@ export interface DotShape extends Named {
   cy: number;
   r: number;
   /** The paint: the line's (`line`, the default), or the post's. */
-  paint?: "line" | "post";
+  paint?: "line" | "post" | "block" | "cone";
 }
 
 /** A rectangle filled in the line's colour: a short thick mark. */
@@ -104,11 +107,14 @@ export interface PathShape extends Stroked {
 export type Shape = LineShape | ArcShape | RingShape | BoxShape | PolyShape | DotShape | BarShape | PathShape;
 
 /** The areas of an athletics stadium: the track, the grass, the sand of a pit, the mat of a jump, the water of a pit, the concrete of a circle and a runway's cover. */
+/** The areas of a skating rink: the ice, the floor of the infield, the warm-up lane, the padding and the furniture. */
+export type SkatingArea = "ky-ska-ice" | "ky-ska-floor" | "ky-ska-warm" | "ky-ska-pad" | "ky-ska-desk" | "ky-ska-kiss";
+
 export type AthleticsArea = "ky-ath-track" | "ky-ath-grass" | "ky-ath-sand" | "ky-ath-mat" | "ky-ath-water" | "ky-ath-concrete" | "ky-ath-pad" | "ky-ath-board" | "ky-ath-bank";
 
 /** A painted area, under the lines: a rectangle or an ellipse filled with a class of the stylesheet (`ky-area`, the tint of a goal area, or `ky-zone`). */
 export interface Area extends Named {
-  cls: "ky-area" | "ky-zone" | "ky-dirt" | "ky-key" | "ky-boards" | AthleticsArea;
+  cls: "ky-area" | "ky-zone" | "ky-dirt" | "ky-key" | "ky-boards" | AthleticsArea | SkatingArea;
   /** Fill the path's insides by the even-odd rule: a ring (the track between its kerb and its outer edge). */
   evenodd?: boolean;
   /** A rectangle `[x0, y0, x1, y1]`, an ellipse's centre and radii, a path of your own, or a frame: the ring between a rounded rectangle and the one `thick` outside it (boards). */

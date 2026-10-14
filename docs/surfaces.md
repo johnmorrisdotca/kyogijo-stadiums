@@ -1,6 +1,6 @@
 # The surfaces
 
-Twenty-one surfaces, each drawn to scale from its rulebook. Every dimension is kept in feet in the code (`@johnmorrisdotca/kyogijo-stadiums/geometry`) and can be had in any unit (see [Units](./units.md)), and each is cited in [docs/sources.md](./sources.md).
+Twenty-two surfaces, each drawn to scale from its rulebook. Every dimension is kept in feet in the code (`@johnmorrisdotca/kyogijo-stadiums/geometry`) and can be had in any unit (see [Units](./units.md)), and each is cited in [docs/sources.md](./sources.md).
 
 | `sport` | Surface | Size | Drawn |
 | --- | --- | --- | --- |
@@ -18,6 +18,7 @@ Twenty-one surfaces, each drawn to scale from its rulebook. Every dimension is k
 | `pickleball` | Pickleball court | 44 by 20 feet | the non-volley zones, the centerlines, the net and its posts, the playing surface round it |
 | `tabletennis` | Table tennis table | 2.74 by 1.525 m | the white edge lines, the centre line, the net and its posts |
 | `athletics` | Athletics stadium | the 400 m standard track (8 lanes of 1.22 m) round a soccer pitch, or the covered 200 m track | the lanes, the finish, the stagger, curved and relay starts, the hurdles, the steeplechase and its water jump, each field event in its place, close-ups of a start and the finish ([The athletics stadium](./athletics.md)) |
+| `skating` | Skating rink | the standard 400 m speed skating track, the short track's oval of 111.12 m on 60 by 30 m, or the figure skating rink of 60 by 30 m | the lanes, the warm-up lane, the blocks, the lines of each race and the coaches' area; the short track's blocks, tracks and starting positions; the figure skating rink's boards and furniture ([The skating rinks](./skating.md)) |
 | `lacrosse` | Lacrosse field or box floor | 100 by 60 m (World Lacrosse's men's), 110 by 60 yards (the NCAA's), a floor 200 by 85 feet | the goals, creases, restraining and wing lines; the women's goal circles, marking areas, arc and fan; the PLL's two-point arc; the floor's boards, face-off circle and spots ([Field sports](./field-sports.md)) |
 | `rugby` | Rugby field | 100 m between the try lines and 70 wide, with in-goal areas (union); 100 by 68 m (league) | the 22-metre lines, half-way line and dash lines of union; a line every 10 metres, the 20 and 40 metre lines red, of the NRL's league; goal posts and flag posts |
 | `afl` | Australian football ground | an oval 135 to 185 by 110 to 155 m, the MCG's 160 by 141 drawn, or a named ground | the goal and behind posts, the goal squares, the centre square and circles, the Fifty Metre Arcs |

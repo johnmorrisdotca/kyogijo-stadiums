@@ -212,6 +212,9 @@ export function glyph(sport: Sport): string {
     case "handball":
       // A court: the centre line, and the goal areas with their arcs.
       return "M-18 -10H18V10H-18ZM0 -10V10M-18 -6A6 6 0 0 1 -12 0A6 6 0 0 1 -18 6M18 -6A6 6 0 0 0 12 0A6 6 0 0 0 18 6";
+    case "skating":
+      // A rink: the oval of a track inside the boards, and the finishing line.
+      return "M-18 -10H18V10H-18ZM-9 -6H9A6 6 0 0 1 9 6H-9A6 6 0 0 1 -9 -6ZM-9 -3.5H9A3.5 3.5 0 0 1 9 3.5H-9A3.5 3.5 0 0 1 -9 -3.5ZM4 3.5V10";
     case "athletics":
       // A track: the oval's outer edge, a lane line and the kerb, and the finish line across the straight.
       return "M-9 -10H9A10 10 0 0 1 9 10H-9A10 10 0 0 1 -9 -10ZM-9 -8.2H9A8.2 8.2 0 0 1 9 8.2H-9A8.2 8.2 0 0 1 -9 -8.2ZM-9 -6.4H9A6.4 6.4 0 0 1 9 6.4H-9A6.4 6.4 0 0 1 -9 -6.4ZM9 6.4V10";

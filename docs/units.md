@@ -30,6 +30,7 @@ Each surface keeps the unit its rulebook states its figures in. The drawing itse
 | `pickleball` | the sport's own | pickleball | `ft` (feet) |
 | `tabletennis` | the sport's own | table tennis | `m` (metres) |
 | `athletics` | the sport's own | athletics | `m` (metres) |
+| `skating` | the sport's own | ice skating | `m` (metres) |
 | `lacrosse` | the sport's own | lacrosse | `m` (metres) |
 | `rugby` | the sport's own | rugby | `m` (metres) |
 | `afl` | the sport's own | Australian football | `m` (metres) |

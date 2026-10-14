@@ -232,7 +232,28 @@ const athleticsFrame: Frame = {
   note: "Positive x is towards the right as the stadium is drawn wide, positive y towards the bottom, where the finish straight is. The athletes run counter-clockwise: to the right along the finish straight. The frame is fitted to the stadium's outer edge.",
 };
 
-for (const frame of [nhlApi, hockeyTech, nbaStats, nflTracking, mlbam, retrosheet, curling, tennisFrame, volleyballFrame, badmintonFrame, pickleballFrame, tableTennisFrame, lacrosseFrame, rugbyFrame, aflFrame, gaelicFrame, cricketFrame, fieldHockeyFrame, handballFrame, athleticsFrame]) if (!Object.prototype.hasOwnProperty.call(FRAMES, frame.name)) registerFrame(frame);
+/**
+ * The skating rink in the plain frame of its middle: the middle of the rink (the long track's ice, the short track's or the figure skating rink) as the origin, x along it (positive towards the right as
+ * the rink is drawn wide), y across it, positive towards the bottom, where a long track's finishing straight, a short track's finishing line and a figure skating rink's judges are. In metres. The frame is
+ * the plan's own (`skatingPlan`): a point of a lane (`pose`) is a point of the frame. It is fitted to the rink's box. This package's own frame: no tracking provider's format was read for skating.
+ */
+const skatingFrame: Frame = {
+  name: "skating",
+  title: "Skating rink, in metres from the middle of the rink",
+  sport: "skating",
+  unit: "m",
+  x: [-100, 100],
+  y: [-60, 60],
+  origin: "the middle of the rink",
+  yDirection: "down",
+  size: "variable",
+  ends: "none",
+  landmarks: (size: { length: number; width: number }): FrameMap => ({ x: span(-size.length / (1 / 0.3048) / 2, size.length / (1 / 0.3048) / 2, 0, size.length), y: span(-size.width / (1 / 0.3048) / 2, size.width / (1 / 0.3048) / 2, 0, size.width) }),
+  source: "this package's own frame: the middle of the rink as the origin",
+  note: "Positive x is towards the right as the rink is drawn wide, positive y towards the bottom. The skaters go counter-clockwise: to the right along the finishing straight at the bottom. The frame is fitted to the rink's box.",
+};
+
+for (const frame of [nhlApi, hockeyTech, nbaStats, nflTracking, mlbam, retrosheet, curling, tennisFrame, volleyballFrame, badmintonFrame, pickleballFrame, tableTennisFrame, lacrosseFrame, rugbyFrame, aflFrame, gaelicFrame, cricketFrame, fieldHockeyFrame, handballFrame, athleticsFrame, skatingFrame]) if (!Object.prototype.hasOwnProperty.call(FRAMES, frame.name)) registerFrame(frame);
 
 // Retrosheet's hit-location diagram (Project Scoresheet's) draws the field in sectors: columns of the outfield from the left field
 // line to the right (7L, 7, 78, 8, 89, 9, 9L), each cut into rings of about 50 feet by depth (S shallow, none medium, D deep, XD
