@@ -4,7 +4,7 @@
 import { COURT_THEMES, GROUNDS, GROUND_IDS, KYOGIJO_STYLE, LEAGUES, PARKS, PARK_IDS, SOCCER_PITCH_IDS, SOCCER_PROVIDERS, SOCCER_PROVIDER_IDS, VERSION, drawKyogijo, fenceFor, rescale, layerTable, rulesFor, seasonLabel, leagueAt, leagueSeason } from "./dist/index.js";
 import { emblemName, renderEmblem } from "./emblems.js";
 import { mountKyogijo } from "./dist/mount-entry.js";
-import { clientPointToFrames, fieldPointToClient } from "./dist/pointer-entry.js";
+import { clientPointToField, clientPointToFrames, fieldPointToClient } from "./dist/pointer-entry.js";
 import { KYOGIJO_TURN_STYLE, mountKyogijoTurn } from "./dist/turn-entry.js";
 import "./dist/element-define.js";
 import { initAtlas } from "./atlas.js";
@@ -926,19 +926,11 @@ function onLanguage() {
 }
 
 // ----- Click to place: with the toggle on, a click on the drawing drops a point there and the readout follows the pointer, in the surface's own feet (from its top left, as drawn wide).
-// TODO: take the point from `clientPointToField` of the package's ./pointer entry once work/dx is merged; this is a small local stand-in for it.
-/** The surface's feet under a pointer event, or null when the pointer is not over a drawing that has a layer to measure against (the layers lie in the surface's own frame, quarter turn included). */
+/** The surface's feet under a pointer event, or null when the pointer is not over a drawing that can be asked (the drawing is made with `pointer: true` while Click to place is on). */
 function pointOnSurface(event) {
   const svg = stage.querySelector("svg");
-  const group = stage.querySelector(".ky-layers");
-  if (svg === null || group === null || typeof group.getScreenCTM !== "function") return null;
-  const matrix = group.getScreenCTM();
-  if (matrix === null) return null;
-  const point = svg.createSVGPoint();
-  point.x = event.clientX;
-  point.y = event.clientY;
-  const at = point.matrixTransform(matrix.inverse());
-  return [Math.round(at.x * 10) / 10, Math.round(at.y * 10) / 10];
+  const at = svg === null ? null : clientPointToField(svg, event.clientX, event.clientY);
+  return at === null ? null : [Math.round(at.surface.x * 10) / 10, Math.round(at.surface.y * 10) / 10];
 }
 const placeText = (at) => say("placeAt").replace("{x}", String(at[0])).replace("{y}", String(at[1])).replace("{xm}", (at[0] * 0.3048).toFixed(1)).replace("{ym}", (at[1] * 0.3048).toFixed(1));
 function showPlace(at) {

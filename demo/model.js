@@ -281,6 +281,8 @@ export function optionsFor(s, lang, forCode = false) {
   }
   const layers = layersFor(s);
   if (layers.length > 0) o.layers = layers;
+  // Click to place asks the drawing where the pointer is (`clientPointToField`), which a drawing answers when it is made with `pointer: true`; the code on show does not need it.
+  if (s.place && !forCode) o.pointer = true;
   const pool = isPool(s.sport) ? poolOptions(s, lang, forCode) : undefined;
   if (pool !== undefined) o.pool = pool;
   if (s.sport === "skating" && s.races !== "none") o.skating = { races: s.races };
