@@ -428,7 +428,7 @@ describe("a race on the pool", () => {
     expect(description).toContain("Lane 3: Swimmer 3 (AUR), place 3, bronze medal");
     expect(description).toContain("pace of each split");
     const ja = describeDrawing({ sport: "swimming", language: "ja", pool: { race: race() } }).description;
-    expect(ja).toContain("第1コース：Swimmer 1（AUR）、1位、金メダル、タイム1:47.00");
+    expect(ja).toContain("第1レーン：Swimmer 1（AUR）、1位、金メダル、タイム1:47.00");
   });
 
   it("makes an unsafe name, flag or colour harmless", () => {
@@ -559,7 +559,7 @@ describe("the splits chart", () => {
     const chart = splitsChart({ swimmers: [{ lane: 1, name: "A", splits: [11, 23] }] }, { pool: { course: "short" }, language: "ja" });
     expect(chart.totals.splitEvery).toBe(25);
     expect(chart.totals.distance).toBe(50);
-    expect(chart.title).toBe("スプリットのペース");
+    expect(chart.title).toBe("途中時間のペース");
     expect(() => splitsChart(undefined as never)).toThrow(TypeError);
   });
 });
@@ -796,7 +796,7 @@ describe("what every pool shares with the other sports", () => {
     expect(isPoolSport("curling")).toBe(false);
     expect(() => poolPlan({ sport: "curling" as never, pool: {} })).toThrow(/not a pool sport/);
     expect(describeDrawing({ sport: "diving" }).description).toContain("platforms at 5, 7.5 and 10 metres");
-    expect(describeDrawing({ sport: "waterpolo", language: "ja" }).title).toBe("水球のコート");
+    expect(describeDrawing({ sport: "waterpolo", language: "ja" }).title).toBe("水球のフィールド");
   });
 
   it("counts a point in a zone: lanes for swimming, the goal area and the ground to 6 m for water polo, thirds for diving and artistic swimming", () => {
