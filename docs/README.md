@@ -1,6 +1,6 @@
 # Documentation
 
-Kyogijo draws sports surfaces as SVG, to scale, with the score on them. The README is the pitch and the first minute; these pages are everything else. The same pages are on the [docs site](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/), with a search over their titles and headings and a gallery that draws every picture from the code beside it.
+Kyogijo Stadiums draws sports surfaces as SVG, to scale, with the score on them. The README is the pitch and the first minute; these pages are everything else. The same pages are on the [docs site](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/), with a search over their titles and headings and a gallery that draws every picture from the code beside it.
 
 ## Start here
 

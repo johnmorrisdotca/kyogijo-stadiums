@@ -5,7 +5,7 @@
 // holds (the gallery) is made by scripts/docs-gallery.mjs from the code and passed in.
 //
 //   import { buildDocs } from "./docs-pages.mjs";
-//   await buildDocs({ root, outDir: "site/docs", id: "kyogijo-stadiums", name: "Kyogijo", icon, version, siteBlocks, extraPages });
+//   await buildDocs({ root, outDir: "site/docs", id: "kyogijo-stadiums", name: "Kyogijo Stadiums", icon, version, siteBlocks, extraPages });
 //
 // What a link in a Markdown page may be (`resolveLink` says, and a test holds every page to it): another page of docs/ (`./soccer.md#data-providers`),
 // a heading of the same page (`#units`), a file of the repository (`../CHANGELOG.md`, shown as its page on GitHub), the demo or its API page by their
@@ -378,7 +378,7 @@ ${article}
  * Write the documentation site into `outDir` (site/docs). `extraPages` are the pages made from code:
  * `{ slug, title, description, html, headings }`. `siteBlocks` fills the Markdown pages' `<!-- site:name -->` markers; `files` are more files for the site (`{ path, content }`).
  */
-export function buildDocs({ root = process.cwd(), outDir = "site/docs", id = "kyogijo-stadiums", name = "Kyogijo", icon, extraPages = [], siteBlocks = {}, files = [], wordsExtra = {} }) {
+export function buildDocs({ root = process.cwd(), outDir = "site/docs", id = "kyogijo-stadiums", name = "Kyogijo Stadiums", icon, extraPages = [], siteBlocks = {}, files = [], wordsExtra = {} }) {
   const extra = new Map(extraPages.map((page) => [page.slug, page]));
   const known = { root, pages: new Set(PAGE_LIST.map((page) => page.slug)) };
   mkdirSync(outDir, { recursive: true });

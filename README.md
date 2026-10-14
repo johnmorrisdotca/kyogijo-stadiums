@@ -1,4 +1,4 @@
-<h1 align="center">Kyogijo <sub>競技場</sub></h1>
+<h1 align="center">Kyogijo Stadiums <sub>競技場</sub></h1>
 
 <p align="center"><strong>Sports surfaces as SVG, drawn to scale, with the score on them.</strong><br>
 The NFL, CFL and IFAF football fields, the NHL rink, the NBA court, the soccer pitch and futsal court, and the baseball field of every MLB ballpark, current and past, and every NPB home park, each drawn from its rulebook or its published distances, with each team's name and logo on its side and the score in the middle. Wide or tall, light or dark, a compact badge for a list, a helper for React, a custom element and a frame for a page that runs no script. One function, no dependencies.</p>
@@ -13,7 +13,7 @@ The NFL, CFL and IFAF football fields, the NHL rink, the NBA court, the soccer p
 
 <p align="center"><a href="https://johnmorrisdotca.github.io/kyogijo-stadiums/"><strong>Open the demo →</strong></a> · <a href="https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/">Documentation</a> · <a href="https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery.html">Gallery</a> · <a href="./docs/compare.md">How it compares</a> · <a href="https://johnmorrisdotca.github.io/kyogijo-stadiums/api.html">API reference</a></p>
 
-> **Renamed.** Previously `@johnmorrisdotca/kyogijo`; renamed in 0.4.0 to `@johnmorrisdotca/kyogijo-stadiums`. The product is still Kyogijo (競技場); only the package and the repository names changed. See the [changelog](./CHANGELOG.md).
+> **Renamed.** Previously `@johnmorrisdotca/kyogijo`; renamed in 0.4.0 to `@johnmorrisdotca/kyogijo-stadiums`. The product is still Kyogijo Stadiums (競技場); only the package and the repository names changed. See the [changelog](./CHANGELOG.md).
 
 <table align="center">
 <tr>
@@ -34,7 +34,7 @@ The NFL, CFL and IFAF football fields, the NHL rink, the NBA court, the soccer p
 </tr>
 </table>
 
-Kyogijo draws the places a game is played on, and puts a game on them. It was made to show the score of a game or a championship on the surface it was played on: the teams at their ends, the score in the middle, a label for what it was. The surfaces are drawn to scale from the rulebooks, so that a football field has its hash marks where the rules put them and a ballpark has its fence where its published distances put it.
+Kyogijo Stadiums draws the places a game is played on, and puts a game on them. It was made to show the score of a game or a championship on the surface it was played on: the teams at their ends, the score in the middle, a label for what it was. The surfaces are drawn to scale from the rulebooks, so that a football field has its hash marks where the rules put them and a ballpark has its fence where its published distances put it.
 
 ## In 30 seconds
 
@@ -507,7 +507,7 @@ Not here yet, and each welcome as an [issue](https://github.com/johnmorrisdotca/
 - **More charts on data layers**: a formation chart, a pass sonar chart and a Voronoi chart of their own (the layers exist; see [team shape](./docs/team-shape.md)).
 - **Football in a different standard**: the college and high-school hash marks.
 
-Left out on purpose: statistics, rosters and schedules. Kyogijo draws the place and the score it is given.
+Left out on purpose: statistics, rosters and schedules. Kyogijo Stadiums draws the place and the score it is given.
 
 ## Architecture
 
@@ -517,17 +517,17 @@ Tests sit beside the code. `scripts/` builds the demo and the docs site, checks 
 
 ## The name
 
-*Kyogijo* (競技場, きょうぎじょう) is Japanese for a sports ground: the place a contest is held. It is written with 競技, "contest" or "competition", and 場, "place", and said in five beats, *kyo-u-gi-jo-u*. In Japanese it is the general word for a place where sport is played, a stadium or a ground; the package uses it as a name for every surface it draws, the field, the rink, the court and the diamond. The long vowels are written without a macron in the package's name, as in the other packages of the family.
+*Kyogijo* (競技場, kyōgijō, きょうぎじょう) is Japanese for a sports ground: the place a contest is held. "Stadiums" is added in English, so that the name says what it draws; in Japanese the name stays 競技場. It is written with 競技, "contest" or "competition", and 場, "place", and said in five beats, *kyo-u-gi-jo-u*. In Japanese it is the general word for a place where sport is played, a stadium or a ground; the package uses it as a name for every surface it draws, the field, the rink, the court and the diamond. The long vowels are written without a macron in the package's name, as in the other packages of the family.
 
 ## Where it comes from, and where it is used
 
-Kyogijo was made for [SPX Stats](https://spxn.com), the historical record of the NHL, NBA, MLB, NFL and CFL, to show the score of a game or a championship on the surface it was played on, with each team's name and logo at its side. Its Japanese names and its Japanese parks are there because the same author makes a Japanese study app and a site for Japanese board games, and because baseball in Japan is a sport its fans know by its grounds.
+Kyogijo Stadiums was made for [SPX Stats](https://spxn.com), the historical record of the NHL, NBA, MLB, NFL and CFL, to show the score of a game or a championship on the surface it was played on, with each team's name and logo at its side. Its Japanese names and its Japanese parks are there because the same author makes a Japanese study app and a site for Japanese board games, and because baseball in Japan is a sport its fans know by its grounds.
 
 ### Used by
 
 - [SPX Stats](https://spxn.com), planned, for the score of a game or a championship.
 
-Using Kyogijo in something? Open an *Add my project* issue and we will add you.
+Using Kyogijo Stadiums in something? Open an *Add my project* issue and we will add you.
 
 ### The family
 

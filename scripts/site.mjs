@@ -181,9 +181,9 @@ const page = `<!doctype html>
   <head>
     ${familyHead({
       id,
-      title: "Kyogijo · sports fields, rinks, courts and ballparks drawn to scale, with the score on them",
+      title: "Kyogijo Stadiums · sports fields, rinks, courts and ballparks drawn to scale, with the score on them",
       description: "NFL, CFL and IFAF fields, an NHL rink, an NBA court, the soccer pitch and futsal court, a curling sheet, the courts of tennis, volleyball, badminton, pickleball and table tennis, and every MLB and NPB ballpark as SVG, drawn to scale from the rulebooks, with each team's name and logo and the score on them. Light and dark, tall or wide, with a compact badge for lists.",
-      ogTitle: "Kyogijo sports surfaces",
+      ogTitle: "Kyogijo Stadiums sports surfaces",
       ogDescription: "Fields, rinks, courts and ballparks drawn to scale as SVG, with the score on them: wide or tall, light or dark.",
     })}
     <link rel="icon" href="${ICON}" />
@@ -478,13 +478,13 @@ writeFileSync("site/atlas-map.svg", picture);
 writeFileSync("docs/atlas-map.svg", picture);
 writeFileSync("site/index.html", sayEnglish(page, WORDS.en));
 writeFileSync("site/api.css", API_CSS);
-writeFileSync("site/api.html", apiPage({ id, name: "Kyogijo", icon: ICON }));
+writeFileSync("site/api.html", apiPage({ id, name: "Kyogijo Stadiums", icon: ICON }));
 // The documentation pages: docs/*.md as pages, and the gallery, drawn from code by the built package.
 const made = buildDocs({
   root: process.cwd(),
   outDir: "site/docs",
   id,
-  name: "Kyogijo",
+  name: "Kyogijo Stadiums",
   icon: ICON,
   extraPages: galleryData(lib).map((one) => galleryPageHtml(one, style)),
   siteBlocks: { frames: framesBlockHtml(lib, style) },

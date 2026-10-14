@@ -7,6 +7,11 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Changed
+
+- The name a reader sees is Kyogijo Stadiums (競技場 in Japanese): the demo's title, the docs site, the API page, the README and the package description. Code names (`drawKyogijo`, `<kyogijo-field>`) are unchanged.
+- The demo's year switch in the atlas is a finger wide before its words arrive, in WebKit too.
+
 ## [0.4.0] - 2026-10-14
 
 Previously `@johnmorrisdotca/kyogijo`; renamed in 0.4.0 to `@johnmorrisdotca/kyogijo-stadiums`.

@@ -791,7 +791,7 @@ export function standalonePage(entry, major, version) {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${escapeHtml(entry.title)} · Kyogijo</title>
+<title>${escapeHtml(entry.title)} · Kyogijo Stadiums</title>
 <style>
 :root { color-scheme: light dark; --bg: #f6f4ee; --ink: #1f2320; --muted: #566059; --rule: #cfd3cb; --code: #ecebe4; }
 @media (prefers-color-scheme: dark) { :root { --bg: #131716; --ink: #ece8dc; --muted: #a9b2ac; --rule: #2d3430; --code: #1c211f; } }

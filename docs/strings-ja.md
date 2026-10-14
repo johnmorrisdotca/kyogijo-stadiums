@@ -655,7 +655,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | Key | English | 日本語 |
 | --- | --- | --- |
 | `pitch` | Sports fields, rinks, courts and ballparks drawn to scale as SVG, with each team's name and logo on its side and the score in the middle. Light and dark, tall or wide, and one line to put it in your page. | フィールド・リンク・コート・球場を縮尺どおりにSVGで描きます。両チームの名前とロゴを両脇に、得点を中央に表示できます。ライト・ダーク、縦・横に対応し、1行でページに組み込めます。 |
-| `name` | 競技場 (kyōgijō) is Japanese for a sports ground. | 競技場（きょうぎじょう）は、スポーツの試合や競技を行う場所のことです。 |
+| `name` | Kyogijo Stadiums: 競技場 (kyōgijō) is Japanese for a sports ground; "Stadiums" is added in English. | 競技場（きょうぎじょう）は、スポーツの試合や競技を行う場所のことです。 |
 | `nameLink` | About the name | 名前の由来（英語） |
 | `foot` | Every dimension is from a rulebook or a published figure; the sources are in the repository. | 寸法はすべて、ルールブックまたは公表されている数値に基づいています。出典はリポジトリに載っています。 |
 | `pageApi` | API reference | APIリファレンス（英語） |

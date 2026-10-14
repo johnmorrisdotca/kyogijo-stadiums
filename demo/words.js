@@ -3,7 +3,7 @@
 export const WORDS = {
   en: {
     pitch: "Sports fields, rinks, courts and ballparks drawn to scale as SVG, with each team's name and logo on its side and the score in the middle. Light and dark, tall or wide, and one line to put it in your page.",
-    name: "競技場 (kyōgijō) is Japanese for a sports ground.",
+    name: "Kyogijo Stadiums: 競技場 (kyōgijō) is Japanese for a sports ground; \"Stadiums\" is added in English.",
     nameLink: "About the name",
     foot: "Every dimension is from a rulebook or a published figure; the sources are in the repository.",
     pageApi: "API reference",
