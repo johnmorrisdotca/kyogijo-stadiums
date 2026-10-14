@@ -50,6 +50,7 @@ export const NAV = [
       { slug: "curling", ja: "カーリング" },
       { slug: "courts", ja: "ネット型競技のコート" },
       { slug: "field-sports", ja: "ラクロス、ラグビーなどのフィールド" },
+      { slug: "athletics", ja: "陸上競技場" },
       { slug: "special-games", ja: "特設会場での試合" },
       { slug: "ballparks", ja: "球場" },
       { slug: "grounds", ja: "スタジアム" },

@@ -48,7 +48,7 @@ const GROUND_COUNTRIES = [...new Set(GROUND_IDS.map((id) => GROUNDS[id].country)
 const cardImage = (options) => drawKyogijo({ orientation: "portrait", margin: 6, detail: "simple", stripes: false, style: "none", ...options });
 
 /** The sports in the families the section names them by (the field sports are the seven of docs/field-sports.md). */
-const FAMILY_OF = { nfl: "football", cfl: "football", ifaf: "football", nhl: "hockey", nba: "basketball", mlb: "baseball", soccer: "soccer", curling: "curling", tennis: "net", volleyball: "net", badminton: "net", pickleball: "net", tabletennis: "net", lacrosse: "field", rugby: "field", afl: "field", gaelic: "field", cricket: "field", fieldhockey: "field", handball: "field" };
+const FAMILY_OF = { nfl: "football", cfl: "football", ifaf: "football", nhl: "hockey", nba: "basketball", mlb: "baseball", soccer: "soccer", curling: "curling", tennis: "net", volleyball: "net", badminton: "net", pickleball: "net", tabletennis: "net", athletics: "field", lacrosse: "field", rugby: "field", afl: "field", gaelic: "field", cricket: "field", fieldhockey: "field", handball: "field" };
 const FAMILIES = ["football", "hockey", "basketball", "baseball", "soccer", "curling", "net", "field"];
 
 /** The soccer pitches the section shows, in order, each in the group of the chip that keeps it. */

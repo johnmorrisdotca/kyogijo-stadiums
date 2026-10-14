@@ -66,6 +66,11 @@ The links John has sent, and the ones the package's figures were read from: what
     - *Useful for:* a comparison of what a map of venues holds, and the idea of filtering one by league (the atlas filters by sport, league, country and year).
     - *May use:* nothing. The site has no licence statement on its page, so its data and design are not used; the facts in [the comparison](./compare.md) are read from its public page.
 
+16. **Three stock photographs of an Olympic track meet and a black-and-white diagram of a start** (descriptions only, sent by John)
+    - *What:* a red six-lane oval round a green infield; an eight-lane oval with a soccer pitch inside; the straight that runs on beyond the oval with lane numbers painted on it; and a line drawing of the lanes 1 to 9 side by side with the numbers at the left edge and the curved lines of a waterfall start.
+    - *Useful for:* what a reader expects of an athletics stadium: the colours, the pitch inside the track, the lane numbers just behind a start line, the waterfall.
+    - *May use:* the descriptions only. No photograph or drawing is copied or traced: the stadium is drawn from World Athletics' Manual, and the curves of every start line are computed from the Rule (an involute), not read off a picture.
+
 ## Where the figures were read
 
 - **NFL rulebook, Rule 1; CFL rulebook, "The Field"** ([cfldb.ca](https://cfldb.ca/rulebook/conduct-of-the-game/the-field/), and the [2015 edition](https://cfldb.ca/rulebook/2015/conduct-of-the-game/the-field/)); **NHL rulebook, Rule 1; NBA rulebook, Rule 1** ([official.nba.com](https://official.nba.com/rule-no-1-court-dimensions/)); **Official Baseball Rules**, 2.01 to 2.05. Dimensions are facts, cited in [sources.md](./sources.md).
@@ -184,6 +189,13 @@ The links John has sent, and the ones the package's figures were read from: what
 - **Not used:** sportyR's and sportypy's code (GPL-3.0), and the tables of `@sportsdataverse/sporty` (MIT), which has lacrosse: every figure was read again from the rulebooks.
 - **Not found:** the PLL's 2025 and 2026 rulebooks (its 2024 book is cited, and named as the newest); the ground diagrams of the GAA's Guide (an image) and of the IHF's rules (images), where a figure was only there; the width of any crease line in the Laws of Cricket.
 - **Ours:** the plans of every sport (the shapes in feet), the oval's reading as an ellipse cut at its ends, the field sports' scores and the cricket board, the zone sets `field-thirds` and `cricket-ground`, the frames, the colours (the floor of a handball court, the pitch of a hockey match, the pitch strip of a cricket ground), and the sizes of the marks that stand for posts and flags.
+
+## The athletics stadium
+
+- **What was read:** World Athletics' *Track and Field Facilities Manual*, 2019 edition (Chapters 1 to 3: the 400 m standard track, its running lines, Table 2.2.1.6a, the breakline and the curved starts, the hurdles, the steeplechase, the facilities of the jumps and the throws, the standard arena), its *400 Metre Standard Track Marking Plan*, Books C1.1 and C2.1 of the *Competition and Technical Rules* in force from 1 July 2026, and the *Marking Plan for the Standard Short Track* of 1 January 2026, each as text from World Athletics' own PDF and the Marking Plan as a picture: for facts only (lengths, radii, angles, places), all named in [sources.md](./sources.md#athletics). No text, table or diagram is copied, and the stagger table was not copied but worked out from the running lines' radii and the breakline's construction, then held to the printed numbers by a test.
+- **Licence:** the documents are World Athletics' and carry its copyright; a dimension is a fact, so the figures are used and the documents are not reproduced. The credit is here and in [NOTICE.md](../NOTICE.md).
+- **Not used:** any stadium plan, template or stock image of a track: none was copied or traced.
+- **Ours:** the stencil digits, which are a face of our own written as strokes (no typeface was used or looked at), the lane tags, the colours of the tracks and of the looks, the plans' reading of the Marking Plan to the metre, the covered track's bends drawn as one circle, the zone set `athletics-track` and the frame `athletics`.
 
 ## The soccer pitch and its providers
 

@@ -122,5 +122,5 @@ export const WA_SHORT_STAGGER_TABLE: Readonly<Record<"two-bends" | "three-bends"
 /** The athletics leagues: the outdoor track (the sport's own) and the covered one. */
 export const ATHLETICS_LEAGUES: readonly AthleticsLeague[] = [
   { id: "world-athletics", family: "athletics", name: { en: "World Athletics 400 m standard track", ja: "ワールドアスレティックスの400m標準トラック" }, unit: "m", dimensions: WA_STANDARD_TRACK, sources: ["wa-facilities-manual", "wa-technical-rules"], builtIn: true },
-  { id: "world-athletics-short", family: "athletics", name: { en: "World Athletics 200 m standard short track", ja: "ワールドアスレティックスの200m標準ショートトラック" }, unit: "m", dimensions: WA_SHORT_TRACK, sources: ["wa-short-track-plan", "wa-technical-rules"] },
+  { id: "world-athletics-short", family: "athletics", name: { en: "World Athletics 200 m standard short track", ja: "ワールドアスレティックスの室内200m標準トラック" }, unit: "m", dimensions: WA_SHORT_TRACK, sources: ["wa-short-track-plan", "wa-technical-rules"] },
 ];

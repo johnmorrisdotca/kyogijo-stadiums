@@ -72,11 +72,12 @@ console.log(svg.startsWith("<svg"), svg.includes("Northern Owls 3, Lakeshore Anc
 
 ## Features
 
-- **Twenty surfaces, to scale.** The NFL field (360 by 160 feet with its end zones), the CFL field (450 by 195), the IFAF field, the NHL rink (200 by 85 with a 28-foot corner radius), the NBA court (94 by 50), the soccer pitch (105 by 68 metres, in ten sizes and variants), the baseball field, the curling sheet (150 by 15 feet 7 inches) and the courts of tennis, volleyball and beach volleyball, badminton, pickleball and table tennis, and the fields of lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey and handball, with the lines, circles, keys, boxes and goals of each. Every figure is cited in [sources](./docs/sources.md). [The surfaces](./docs/surfaces.md).
+- **Twenty-one surfaces, to scale.** The NFL field (360 by 160 feet with its end zones), the CFL field (450 by 195), the IFAF field, the NHL rink (200 by 85 with a 28-foot corner radius), the NBA court (94 by 50), the soccer pitch (105 by 68 metres, in ten sizes and variants), the baseball field, the curling sheet (150 by 15 feet 7 inches) and the courts of tennis, volleyball and beach volleyball, badminton, pickleball and table tennis, the athletics stadium, and the fields of lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey and handball, with the lines, circles, keys, boxes and goals of each. Every figure is cited in [sources](./docs/sources.md). [The surfaces](./docs/surfaces.md).
 - **Each league's rulebook.** `league: "fiba"` draws a court as FIBA marks it: 48 variants, from the WNBA, the NCAA and the IIHF to Little League, PONY, softball, Curling Canada, FIVB's beach volleyball, rugby league and the NLL's box lacrosse, each cited. [League variants](./docs/variants.md).
 - **Curling, from the rule books.** A sheet from World Curling's and Curling Canada's rules, tall by default, with the board and the hammer in a score, and `curlingStones` for the stones of an end, scored by the rules. [Curling](./docs/curling.md).
 - **Tennis, volleyball, badminton, pickleball and table tennis, from their rulebooks.** The ITF's court, the FIVB's indoor and beach courts, the BWF's, USA Pickleball's and the ITTF's table, each in its look (hard court, clay, grass, wood, sand), with a board of sets and games and a ball beside the server. [Net sports](./docs/courts.md).
 - **Lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey and handball, from their rulebooks.** The fields and floors of World Lacrosse, the NCAA, the PLL and the NLL; World Rugby's union and the NRL's and IRL's league; the AFL's oval at the size of a named ground; the GAA's field for football and hurling; a cricket ground with a boundary of your own and the 30-yard circle; the FIH's pitch and the IHF's court. A score is goals and behinds (10.12 (72)), goals and points (2-14 (20)) or a board of runs, wickets and overs. [Field sports](./docs/field-sports.md).
+- **The athletics stadium, from World Athletics' rules.** The 400 m track with its lanes, the staggers worked out from the running lines (the 200 m and 400 m to the millimetre of the Manual's table, the 800 m and 4 x 400 m from the breakline's own construction), curved and relay starts, hurdles, the steeplechase with the water jump inside or outside, every field event in its place or alone at a large scale, a close-up of each start with stencil lane numbers, the covered 200 m track, an ink-only `line-drawing` look, and lane draws, results, a race replay and the marks of throws and jumps. [The athletics stadium](./docs/athletics.md).
 - **Soccer, to the Laws.** A pitch from Law 1 of the IFAB Laws of the Game of any size, with presets (international, UEFA, MLS, NCAA, the FA's 9-, 7- and 5-a-side, FIFA's futsal), half pitches, five mowing patterns, four goal styles, penalties and extra time in a score. [Soccer](./docs/soccer.md).
 - **Every ballpark.** The 30 current MLB parks and 44 that MLB clubs have left (the Polo Grounds, Ebbets Field, the Astrodome and more), and the 12 home parks of Nippon Professional Baseball with eight other NPB grounds, each with its fence drawn from the distances published for it; a past park whose fence moved is drawn as it stood in a season. [Ballparks](./docs/ballparks.md).
 - **Soccer grounds and an atlas.** 64 soccer grounds, each pitch at its published size, and every park and ground on a map, by sport, league, country and year, each found by any name it has in English, Japanese or its own language (`Koshien Stadium` is also `甲子園`, `San Siro` is `サン・シーロ`). [The grounds](./docs/grounds.md), [the atlas](./docs/atlas.md), [names](./docs/ballparks.md#names).
@@ -103,11 +104,12 @@ console.log(svg.startsWith("<svg"), svg.includes("Northern Owls 3, Lakeshore Anc
 | Part | What it is |
 | --- | --- |
 | `drawKyogijo`, `drawSurface`, `drawScore`, `drawBadge` | The drawing, as a string of SVG. |
-| `SPORTS`, `PARKS`, `PARK_IDS`, `COURT_THEMES` | The twenty sports, the 94 ballparks, the court looks. |
+| `SPORTS`, `PARKS`, `PARK_IDS`, `COURT_THEMES` | The twenty-one sports, the 94 ballparks, the court looks. |
 | `SOCCER_PITCHES`, `SOCCER_PROVIDERS`, `rescale`, `soccerSpec` | The soccer pitches, the data providers' coordinate systems and the map between them. |
 | `GROUNDS`, `groundById` | The 64 soccer grounds, each pitch at its own size. |
 | `EVENTS`, `eventOptions` | The 18 special games: a rink in a ballpark, a court on a carrier's deck, with `host` and `placement` in the options. |
 | `./geometry`, `./frames`, `./layers`, `./charts`, `./replay` | The dimensions in any unit; the providers' frames; data layers; ready-made charts; tracking data played on a surface. |
+| `./athletics` | The athletics stadium: the plan, the track's geometry (the stagger of any lane), the races and field events, and the lane draw, results, race replay and field marks charts. |
 | `./parks`, `./grounds`, `./atlas`, `./eras`, `./leagues`, `./events` | The ballparks, the grounds, every place, the markings of a season, each league's rulebook, the special games. |
 | `./scene`, `./canvas`, `./d3`, `./plot`, `./geojson`, `./png` | The drawing as data; on a canvas; in a d3 selection; as an Observable Plot mark; as GeoJSON; as a PNG (the optional peer `@resvg/resvg-js`). |
 | `./layouts` | `drawGrid` and `GRID_PRESETS`: small multiples with a title, a subtitle, a key and a credit line; the grounds behind a drawing or a grid. |
@@ -189,7 +191,7 @@ console.log(box(wide), box(tall));
 <br><em>The same game tall: the teams top and bottom, every word upright.</em>
 </p>
 
-[The surfaces](./docs/surfaces.md) lists the twenty, with their sizes and what is drawn; [score and layout](./docs/score.md) has the options of a score, a strip and a compact card.
+[The surfaces](./docs/surfaces.md) lists the twenty-one, with their sizes and what is drawn; [score and layout](./docs/score.md) has the options of a score, a strip and a compact card.
 
 ### A league's rulebook
 
@@ -479,7 +481,7 @@ Nothing is branded. The drawing is coloured by custom properties on its `svg`, w
 
 ## Limits
 
-Each is held by a test: twenty sports, ten soccer pitches and ten providers, 94 ballparks, 64 grounds, six units, twenty-nine frames, a drawing of under 22 kB. The table, made from the code, is [limits](./docs/limits.md).
+Each is held by a test: twenty-one sports, ten soccer pitches and ten providers, 94 ballparks, 64 grounds, six units, thirty frames, a drawing of under 22 kB. The table, made from the code, is [limits](./docs/limits.md).
 
 ## Accessibility
 

@@ -108,6 +108,9 @@ makeSeg("court", (v) => { state.court = v; });
 makeSeg("pattern", (v) => { state.pattern = v; });
 makeSeg("goals", (v) => { state.goals = v; });
 makeSeg("half", (v) => { state.half = v; });
+makeSeg("track", (v) => { state.track = v; });
+makeSeg("infield", (v) => { state.infield = v; });
+makeSeg("races", (v) => { state.races = v; });
 for (const role of ["away", "home"]) makeSeg(`${role}-logo`, (v) => { state[role].logo = v; });
 
 /** A season inside the range the surface's history covers. */
@@ -288,7 +291,7 @@ function syncUrl() {
   else q.delete("year");
   if (state.league !== null && !isOwnLeague(state.sport, state.league)) q.set("league", state.league);
   else q.delete("league");
-  for (const [key, value, base] of [["pitch", state.pitch, "fifa"], ["ground", state.ground, "none"], ["pitchtype", state.pitchType, "none"], ["park", state.park, "generic"], ["size", state.size, "full"], ["orientation", state.orientation, "auto"], ["theme", state.theme, "auto"]]) {
+  for (const [key, value, base] of [["pitch", state.pitch, "fifa"], ["ground", state.ground, "none"], ["pitchtype", state.pitchType, "none"], ["park", state.park, "generic"], ["size", state.size, "full"], ["orientation", state.orientation, "auto"], ["theme", state.theme, "auto"], ["track", state.track, "red"], ["infield", state.infield, "pitch"], ["races", state.races, "none"]]) {
     if (value === base) q.delete(key);
     else q.set(key, value);
   }
@@ -327,7 +330,7 @@ function code(kind) {
       }
       for (const [key, attr] of [["status", "status"], ["competition", "competition"], ["date", "date"], ["label", "label"], ["winner", "winner"]]) if (o[key]) attrs.push(`${attr}="${escapeAttr(o[key])}"`);
     }
-    if (o.court) attrs.push(`options='${JSON.stringify({ court: o.court }).replace(/'/g, "&#39;")}'`);
+    if (o.court || o.athletics) attrs.push(`options='${JSON.stringify({ ...(o.court ? { court: o.court } : {}), ...(o.athletics ? { athletics: o.athletics } : {}) }).replace(/'/g, "&#39;")}'`);
     return `<script type="module" src="${CDN}/dist/element-define.js"></script>\n\n<kyogijo-field\n  ${attrs.join("\n  ")}\n></kyogijo-field>`;
   }
   if (kind === "iframe") {

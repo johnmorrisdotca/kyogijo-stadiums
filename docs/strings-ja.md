@@ -152,17 +152,17 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `field.wickets` | Wkts | ウィケット |
 | `field.overs` | Ov | オーバー |
 | `field.total` | Total | 合計 |
-| `athletics.track400` | an athletics track of 400 metres with {lanes} lanes, its bends of 36.50 metres radius at the kerb and its straights of 84.39 metres, with the finish line and the lane numbers | {lanes}レーンの陸上競技の400mトラック。コーナーの内縁の半径は36.50m、直線は84.39mで、フィニッシュラインとレーン番号があります |
-| `athletics.track200` | a covered athletics track of 200 metres with {lanes} lanes, its banked bends of 17.205 metres radius at the kerb and its straights of 44.983 metres, with the finish line and the lane numbers | {lanes}レーンの屋内200mトラック。バンクのついたコーナーの内縁の半径は17.205m、直線は44.983mで、フィニッシュラインとレーン番号があります |
+| `athletics.track400` | an athletics track of 400 metres with {lanes} lanes, its bends of 36.50 metres radius at the kerb and its straights of 84.39 metres, with the finish line and the lane numbers | {lanes}レーンの陸上競技400mトラック。コーナーの縁石での半径は36.50m、直線は84.39mで、フィニッシュラインとレーン番号があります |
+| `athletics.track200` | a covered athletics track of 200 metres with {lanes} lanes, its banked bends of 17.205 metres radius at the kerb and its straights of 44.983 metres, with the finish line and the lane numbers | {lanes}レーンの室内200mトラック。バンクのあるコーナーの縁石での半径は17.205m、直線は44.983mで、フィニッシュラインとレーン番号があります |
 | `athletics.infieldPitch` | A soccer pitch lies inside the track. | トラックの内側にはサッカーのピッチがあります。 |
 | `athletics.infieldGrass` | Mown grass lies inside the track. | トラックの内側は芝生です。 |
 | `athletics.infieldNone` | Nothing lies inside the track. | トラックの内側には何もありません。 |
-| `athletics.events` | Field events marked: {list}. | 表示している競技: {list}。 |
-| `athletics.races` | Races marked: {list}. | 表示しているレース: {list}。 |
+| `athletics.events` | Field events marked: {list}. | 表示しているフィールド種目：{list}。 |
+| `athletics.races` | Races marked: {list}. | 表示しているトラック種目：{list}。 |
 | `athletics.start` | A close-up of the start of the {race}. | {race}のスタートの拡大図。 |
 | `athletics.finish` | A close-up of the finish line. | フィニッシュラインの拡大図。 |
 | `athletics.layout` | The {event}, drawn alone at a large scale. | {event}を大きく表示しています。 |
-| `athletics.waterJump` | The steeplechase's water jump is {where} the second bend. | 障害物競走の水濠は第2コーナーの{where}にあります。 |
+| `athletics.waterJump` | The steeplechase's water jump is {where} the second bend. | 障害の水濠は第2コーナーの{where}にあります。 |
 | `athletics.inside` | inside | 内側 |
 | `athletics.outside` | outside | 外側 |
 | `athletics.lane` | lane {n} | 第{n}レーン |
@@ -171,8 +171,8 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `athletics.data.results` | Results, {race} | {race}の結果 |
 | `athletics.data.replay` | Replay of the {race} | {race}のリプレイ |
 | `athletics.data.marks` | {event}: the attempts | {event}の試技 |
-| `athletics.data.summaryDraw` | {n} athletes in the {race}, from lane {first} to lane {last}. | {race}は{n}選手で、第{first}レーンから第{last}レーンです。 |
-| `athletics.data.summaryResults` | {winner} won the {race} in {time}. | {race}は{winner}が{time}で優勝しました。 |
+| `athletics.data.summaryDraw` | {n} athletes in the {race}, from lane {first} to lane {last}. | {race}は{n}選手が出場し、第{first}レーンから第{last}レーンに入ります。 |
+| `athletics.data.summaryResults` | {winner} won the {race} in {time}. | {race}は{winner}が記録{time}で優勝しました。 |
 | `athletics.data.summaryMarks` | {n} attempts, the best {best} by {who}. | 試技は{n}回で、最高記録は{who}の{best}です。 |
 | `athletics.data.summaryReplay` | {n} athletes run the {race}. | {race}を{n}選手が走ります。 |
 | `athletics.data.columns.place` | Place | 順位 |
@@ -184,13 +184,13 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `athletics.data.columns.splits` | Splits | スプリット |
 | `athletics.data.columns.note` | Note | 備考 |
 | `athletics.data.columns.distance` | Mark | 記録 |
-| `athletics.data.columns.round` | Round | 回 |
+| `athletics.data.columns.round` | Round | 試技 |
 | `athletics.data.columns.valid` | Valid | 有効 |
 | `athletics.data.medals.gold` | Gold | 金 |
 | `athletics.data.medals.silver` | Silver | 銀 |
 | `athletics.data.medals.bronze` | Bronze | 銅 |
 | `athletics.data.reaction` | Reaction {t} s | 反応時間 {t}秒 |
-| `athletics.data.split` | {d} m: {t} s | {d}m: {t}秒 |
+| `athletics.data.split` | {d} m: {t} s | {d}m：{t}秒 |
 | `athletics.data.foul` | foul | ファウル |
 | `athletics.data.best` | best mark | 最高記録 |
 | `athletics.data.yes` | yes | はい |
@@ -436,7 +436,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `layers.zones.insideCircle` | Inside the circle | サークルの内側 |
 | `layers.zones.outfieldGround` | Outfield | アウトフィールド |
 | `layers.zones.trackInfield` | Infield | インフィールド |
-| `layers.zones.homeStraight` | Finish straight | フィニッシュ側の直線 |
+| `layers.zones.homeStraight` | Finish straight | ホームストレート |
 | `layers.zones.firstBend` | First bend | 第1コーナー |
 | `layers.zones.backStraight` | Back straight | バックストレート |
 | `layers.zones.secondBend` | Second bend | 第2コーナー |
@@ -608,6 +608,19 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `notes.names.breakline` | Breakline | ブレークライン |
 | `notes.names.water-jump` | Water jump | 水濠 |
 | `notes.names.exchange-zone` | Takeover zone | テイクオーバーゾーン |
+| `notes.names.runway` | Runway | 助走路 |
+| `notes.names.take-off-board` | Take-off board | 踏切板 |
+| `notes.names.landing-area` | Landing area | 砂場 |
+| `notes.names.throwing-circle` | Throwing circle | 投てきサークル |
+| `notes.names.sector` | Landing sector | 落下区域 |
+| `notes.names.stop-board` | Stop board | ストップボード |
+| `notes.names.cage` | Cage | ケージ |
+| `notes.names.throwing-arc` | Throwing arc | 投てき弧 |
+| `notes.names.crossbar` | Crossbar | バー |
+| `notes.names.landing-mat` | Landing mat | 着地マット |
+| `notes.names.run-up` | Run-up | 助走 |
+| `notes.names.zero-line` | Zero line | ゼロライン |
+| `notes.names.box` | Box | ボックス |
 | `notes.names.seven-metre-line` | 7-metre line | 7mスローライン |
 | `notes.names.four-metre-line` | 4-metre line | 4mライン |
 | `notes.names.throw-off-area` | Throw-off area | スローオフエリア |
@@ -652,7 +665,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `ranges.names.twenty-three` | 23-metre area | 23メートルエリア |
 | `ranges.names.goal-area` | goal area | ゴールエリア |
 | `ranges.names.bend` | bend | コーナー |
-| `ranges.names.home-straight` | finish straight | フィニッシュ側の直線 |
+| `ranges.names.home-straight` | finish straight | ホームストレート |
 | `ranges.names.back-straight` | back straight | バックストレート |
 | `ranges.names.finish` | finish line | フィニッシュライン |
 | `ranges.names.start` | start | スタート |
@@ -765,6 +778,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `sport_badminton` | Badminton | バドミントン |
 | `sport_pickleball` | Pickleball | ピックルボール |
 | `sport_tabletennis` | Table tennis | 卓球 |
+| `sport_athletics` | Athletics | 陸上競技 |
 | `sport_lacrosse` | Lacrosse | ラクロス |
 | `sport_rugby` | Rugby | ラグビー |
 | `sport_afl` | Australian football | オーストラリアンフットボール |
@@ -798,6 +812,18 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `pattern_checks` | Checks | 市松 |
 | `pattern_diagonal` | Diagonal | 斜め |
 | `pattern_none` | None | なし |
+| `track` | Track | トラックの色 |
+| `track_red` | Red | 赤 |
+| `track_blue` | Blue | 青 |
+| `track_terracotta` | Terracotta | テラコッタ |
+| `track_green` | Green | 緑 |
+| `infield` | Infield | インフィールド |
+| `infield_pitch` | Pitch | ピッチ |
+| `infield_grass` | Grass | 芝 |
+| `infield_none` | None | なし |
+| `races` | Races | 種目 |
+| `races_none` | None | なし |
+| `races_all` | All | すべて |
 | `goalStyle` | Goals | ゴール |
 | `goals_box` | Net | ネット |
 | `goals_line` | Line | 線 |
@@ -1114,6 +1140,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `curling` | Curling | カーリング |
 | page `courts` | Tennis, volleyball, badminton, pickleball and table tennis | ネット型競技のコート |
 | page `field-sports` | Lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey and handball | ラクロス、ラグビーなどのフィールド |
+| page `athletics` | The athletics stadium | 陸上競技場 |
 | page `special-games` | Special games | 特設会場での試合 |
 | page `ballparks` | Ballparks | 球場 |
 | page `grounds` | The grounds | スタジアム |

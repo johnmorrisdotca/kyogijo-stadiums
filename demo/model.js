@@ -12,6 +12,9 @@ export const PATTERNS = ["bands", "wide", "narrow", "lengthwise", "checks", "dia
 export const GOALS = ["box", "line", "strip", "none"];
 export const HALVES = ["none", "left", "right"];
 export const WINNERS = ["auto", "leader", "none", "home", "away"];
+export const TRACKS = ["red", "blue", "terracotta", "green"];
+export const INFIELDS = ["pitch", "grass", "none"];
+export const RACE_MARKS = ["none", "all"];
 export const COURTS = ["default", "maple", "twoTone", "night", "sunburst", "tournament"];
 
 const pick = (value, list, fallback) => (list.includes(value) ? value : fallback);
@@ -46,6 +49,9 @@ export function makeState(params, kept = null) {
     pattern: pick(params.get("pattern"), PATTERNS, "bands"),
     goals: pick(params.get("goals"), GOALS, "box"),
     half: pick(params.get("half"), HALVES, "none"),
+    track: pick(params.get("track"), TRACKS, "red"),
+    infield: pick(params.get("infield"), INFIELDS, "pitch"),
+    races: pick(params.get("races"), RACE_MARKS, "none"),
     flags: params.get("flags") !== "0",
     baseline: params.get("baseline") === "1",
     centreLogo: false,
@@ -129,6 +135,12 @@ export function optionsFor(s, lang, forCode = false) {
     if (s.half !== "none" && s.size === "surface") o.half = s.half;
     if (!s.flags) o.cornerFlags = false;
   }
+  if (s.sport === "athletics" && (s.track !== "red" || s.infield !== "pitch" || s.races !== "none")) {
+    o.athletics = {};
+    if (s.track !== "red") o.athletics.track = s.track;
+    if (s.infield !== "pitch") o.athletics.infield = s.infield;
+    if (s.races !== "none") o.athletics.races = s.races;
+  }
   const names = [s.away.name, s.home.name];
   if (s.sport === "nba" && (s.court !== "default" || s.baseline || s.centreLogo)) {
     const court = s.court === "default" ? {} : { ...COURT_THEMES[s.court] };
@@ -173,6 +185,9 @@ export const labelOf = (say, s) => ({
   pattern: (v) => say(`pattern_${v}`),
   goals: (v) => say(`goals_${v}`),
   half: (v) => say(`half_${v}`),
+  track: (v) => say(`track_${v}`),
+  infield: (v) => say(`infield_${v}`),
+  races: (v) => say(`races_${v}`),
   logo: (v) => say(`logo_${v}`),
   era: (v) => say(`era_${v}`),
 });
@@ -194,6 +209,9 @@ export const SEGS = [
   { id: "pattern", kind: "pattern", values: PATTERNS, get: (s) => s.pattern },
   { id: "goals", kind: "goals", values: GOALS, get: (s) => s.goals },
   { id: "half", kind: "half", values: HALVES, get: (s) => s.half },
+  { id: "track", kind: "track", values: TRACKS, get: (s) => s.track },
+  { id: "infield", kind: "infield", values: INFIELDS, get: (s) => s.infield },
+  { id: "races", kind: "races", values: RACE_MARKS, get: (s) => s.races },
   { id: "away-logo", kind: "logo", values: ["none", "emblem", "url"], get: (s) => s.away.logo },
   { id: "home-logo", kind: "logo", values: ["none", "emblem", "url"], get: (s) => s.home.logo },
 ];
@@ -245,6 +263,7 @@ export function hiddenRows(s) {
     "era-year-row": !(seasons && past),
     "era-notes": !(seasons && past),
     "court-group": s.sport !== "nba",
+    "athletics-group": s.sport !== "athletics",
     "status-text": s.status !== "custom",
     "away-logo-url": s.away.logo !== "url",
     "home-logo-url": s.home.logo !== "url",
