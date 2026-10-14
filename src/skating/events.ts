@@ -6,12 +6,12 @@ const race = (r: RaceInfo): RaceInfo => Object.freeze(r);
 
 /** The races of the long track, in the order a menu lists them. The mass start is 16 laps (6400 m); the team pursuit and the team sprint are marked by their lines in the middle of the straights. */
 export const LONG_TRACK_RACES: readonly RaceInfo[] = Object.freeze([
-  race({ id: "500m", distance: 500, name: { en: "500 m", ja: "500m", fr: "500 m" } }),
-  race({ id: "1000m", distance: 1000, name: { en: "1000 m", ja: "1000m", fr: "1000 m" } }),
-  race({ id: "1500m", distance: 1500, name: { en: "1500 m", ja: "1500m", fr: "1500 m" } }),
-  race({ id: "3000m", distance: 3000, name: { en: "3000 m", ja: "3000m", fr: "3000 m" } }),
-  race({ id: "5000m", distance: 5000, name: { en: "5000 m", ja: "5000m", fr: "5000 m" } }),
-  race({ id: "10000m", distance: 10000, name: { en: "10,000 m", ja: "10000m", fr: "10 000 m" } }),
+  race({ id: "500m", distance: 500, name: { en: "500 m", ja: "500m", fr: "500\u00a0m" } }),
+  race({ id: "1000m", distance: 1000, name: { en: "1000 m", ja: "1000m", fr: "1000\u00a0m" } }),
+  race({ id: "1500m", distance: 1500, name: { en: "1500 m", ja: "1500m", fr: "1500\u00a0m" } }),
+  race({ id: "3000m", distance: 3000, name: { en: "3000 m", ja: "3000m", fr: "3000\u00a0m" } }),
+  race({ id: "5000m", distance: 5000, name: { en: "5000 m", ja: "5000m", fr: "5000\u00a0m" } }),
+  race({ id: "10000m", distance: 10000, name: { en: "10,000 m", ja: "10000m", fr: "10\u00a0000\u00a0m" } }),
   race({ id: "mass-start", distance: 6400, name: { en: "Mass start", ja: "マススタート", fr: "Départ groupé" } }),
   race({ id: "team-pursuit", distance: 3200, name: { en: "Team pursuit", ja: "チームパシュート", fr: "Poursuite par équipes" } }),
   race({ id: "team-sprint", distance: 1200, name: { en: "Team sprint", ja: "チームスプリント", fr: "Sprint par équipes" } }),
@@ -19,12 +19,12 @@ export const LONG_TRACK_RACES: readonly RaceInfo[] = Object.freeze([
 
 /** The races of the short track. */
 export const SHORT_TRACK_RACES: readonly RaceInfo[] = Object.freeze([
-  race({ id: "500m", distance: 500, name: { en: "500 m", ja: "500m", fr: "500 m" } }),
-  race({ id: "1000m", distance: 1000, name: { en: "1000 m", ja: "1000m", fr: "1000 m" } }),
-  race({ id: "1500m", distance: 1500, name: { en: "1500 m", ja: "1500m", fr: "1500 m" } }),
-  race({ id: "2000m", distance: 2000, name: { en: "2000 m", ja: "2000m", fr: "2000 m" } }),
-  race({ id: "3000m", distance: 3000, name: { en: "3000 m", ja: "3000m", fr: "3000 m" } }),
-  race({ id: "5000m", distance: 5000, name: { en: "5000 m", ja: "5000m", fr: "5000 m" } }),
+  race({ id: "500m", distance: 500, name: { en: "500 m", ja: "500m", fr: "500\u00a0m" } }),
+  race({ id: "1000m", distance: 1000, name: { en: "1000 m", ja: "1000m", fr: "1000\u00a0m" } }),
+  race({ id: "1500m", distance: 1500, name: { en: "1500 m", ja: "1500m", fr: "1500\u00a0m" } }),
+  race({ id: "2000m", distance: 2000, name: { en: "2000 m", ja: "2000m", fr: "2000\u00a0m" } }),
+  race({ id: "3000m", distance: 3000, name: { en: "3000 m", ja: "3000m", fr: "3000\u00a0m" } }),
+  race({ id: "5000m", distance: 5000, name: { en: "5000 m", ja: "5000m", fr: "5000\u00a0m" } }),
 ]);
 
 /** Every race of both tracks, once by id. */

@@ -61,10 +61,10 @@ export function curveD(s: number, side: "right" | "left", r: number, t0: number,
 export function blocksOf(id: string, s: number, side: "right" | "left", r: number, near: number, nearLength: number, far: number, width: number): Shape[] {
   const out: Shape[] = [];
   const tNear = Math.min(Math.PI, nearLength / r);
-  out.push(path(`${id}-near`, "blocks", curveD(s, side, r, 0, tNear), { w: width, dash: [0, near], cls: "ky-ska-blocks", least: 0.3 }));
+  out.push(path(`${id}-near`, "blocks", curveD(s, side, r, 0, tNear), { w: width, dash: [0, near], cls: "ky-ska-blocks", least: 0.4 }));
   // The far part starts a step after the near one stops, so that no block stands twice.
   const start = tNear + far / r;
-  if (start < Math.PI + 1e-9) out.push(path(`${id}-far`, "blocks", curveD(s, side, r, start, Math.PI), { w: width, dash: [0, far], cls: "ky-ska-blocks", least: 0.3 }));
+  if (start < Math.PI + 1e-9) out.push(path(`${id}-far`, "blocks", curveD(s, side, r, start, Math.PI), { w: width, dash: [0, far], cls: "ky-ska-blocks", least: 0.4 }));
   const [cx, cy] = curvePoint(s, side, r, 0);
   out.push({ kind: "dot", id: `${id}-cone`, feature: "cones", cx, cy, r: width * 1.3, paint: "cone" });
   return out;

@@ -90,8 +90,8 @@ export function furnitureOf(style: SkatingStyle | undefined): SkatingFurniture[]
   return FURNITURE.filter((f) => asked.includes(f));
 }
 
-/** The width a line is drawn at unless the drawing is at true widths: a thousandth and a half of the surface, so that a lane line stays in sight in a drawing that holds the whole track. */
-const drawn = (box: MBox): number => Math.max(0.1, Math.round((box.x1 - box.x0) * 0.0013 * 100) / 100);
+/** The width a line is drawn at unless the drawing is at true widths: a little under two thousandths of the surface, so that a lane line stays in sight in a drawing that holds the whole track. */
+const drawn = (box: MBox): number => Math.max(0.1, Math.round((box.x1 - box.x0) * 0.0018 * 100) / 100);
 
 const flag = (v: unknown, def: boolean, label: string): boolean => {
   if (v === undefined) return def;
