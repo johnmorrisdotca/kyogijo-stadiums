@@ -1,7 +1,7 @@
 // Curling's statistics and the heat chart of stones: the free guards, the stones in play, the hammer through a game, the shots, and the chart on the heat layers.
 import { describe, expect, it } from "vitest";
 import { curlingHeat } from "./charts.curling.heat.ts";
-import { curlingEndStats, curlingFreeGuards, curlingHammers, curlingInPlay, curlingIsHit, curlingShotStats } from "./curling.stats.ts";
+import { curlingEndStats, curlingFreeGuards, curlingGuardScores, curlingHammers, curlingInPlay, curlingIsHit, curlingShotStats } from "./curling.stats.ts";
 import { drawKyogijo } from "./draw.ts";
 import { parseXml, walk } from "./xml.fixture.ts";
 
@@ -91,6 +91,40 @@ describe("the hammer through a game", () => {
   });
 });
 
+describe("curlingGuardScores", () => {
+  const ends = [
+    { hammerGuards: 0, otherGuards: 1, hammerPoints: 1, otherPoints: 0 },
+    { hammerGuards: 2, otherGuards: 0, hammerPoints: 2, otherPoints: 0 },
+    { hammerGuards: 1, otherGuards: 2, hammerPoints: 0, otherPoints: 1 },
+    { hammerGuards: 0, otherGuards: 0, hammerPoints: 0, otherPoints: 0 },
+    { hammerGuards: 4, otherGuards: 3, hammerPoints: 3, otherPoints: 0 },
+  ];
+
+  it("averages each team's points by how many guards it had out, in bands", () => {
+    const t = curlingGuardScores(ends);
+    expect(t.bands).toEqual(["0", "1-2", "3+"]);
+    expect(t.hammer).toEqual([{ band: "0", ends: 2, average: 0.5 }, { band: "1-2", ends: 2, average: 1 }, { band: "3+", ends: 1, average: 3 }]);
+    expect(t.other.map((b) => b.average)).toEqual([0, 0.5, 0]);
+    expect(t.cells).toHaveLength(9);
+    expect(t.cells.find((c) => c.hammer === "1-2" && c.other === "1-2")).toMatchObject({ ends: 1, hammerAverage: 0, otherAverage: 1 });
+    expect(t.cells.find((c) => c.hammer === "3+" && c.other === "0")).toMatchObject({ ends: 0, hammerAverage: null, otherAverage: null });
+  });
+
+  it("leaves the blank ends out of the hammer team's averages when asked, and takes bands of its own", () => {
+    expect(curlingGuardScores(ends, { blanks: false }).hammer[0]).toEqual({ band: "0", ends: 1, average: 1 });
+    expect(curlingGuardScores(ends, { bands: [0, 2] }).bands).toEqual(["0-1", "2+"]);
+    expect(curlingGuardScores(ends, { bands: [0, 1, 2, 3] }).bands).toEqual(["0", "1", "2", "3+"]);
+  });
+
+  it("refuses bands that do not rise from 0, and ends that are not whole numbers", () => {
+    expect(() => curlingGuardScores(ends, { bands: [1, 2] })).toThrow(/rise from 0/);
+    expect(() => curlingGuardScores(ends, { bands: [0, 2, 2] })).toThrow(/rise from 0/);
+    expect(() => curlingGuardScores(ends, { bands: [] })).toThrow(/rise from 0/);
+    expect(() => curlingGuardScores([{ hammerGuards: 1.5, otherGuards: 0, hammerPoints: 0, otherPoints: 0 }])).toThrow(/whole number/);
+    expect(() => curlingGuardScores(undefined as never)).toThrow(TypeError);
+  });
+});
+
 describe("curlingShotStats", () => {
   const shots = [
     { team: "home", type: "draw", score: 4 },
@@ -153,18 +187,18 @@ describe("curlingHeat", () => {
     expect(curlingHeat(stones as never, { only: "guards", language: "ja" }).summary).toContain("フリーガードのみです。");
   });
 
-  it("draws each view, in the sheet's half, whole, or folded, with a legend where it can be read", () => {
+  it("draws each view, on the sheet's half, house, whole or folded, with a colour bar sized to what is drawn", () => {
     for (const view of ["heatmap", "hexbin", "contour", "zones", "discs"] as const) {
       for (const show of ["half", "house", "sheet", "folded"] as const) {
         const svg = curlingHeat(stones as never, { view, show, id: "h" }).draw();
         const root = parseXml(svg);
         expect(walk(root).some((n) => (n.attrs.class ?? "").startsWith("ky-layer")), `${view} ${show}`).toBe(true);
         const legends = (svg.match(/data-kind="legend"/g) ?? []).length;
-        // The colour bar is the strip's and the half's, and is left out of a folded sheet, where it would be drawn at the strip's small scale.
-        expect(legends, `${view} ${show}`).toBe(view === "discs" || show === "folded" ? 0 : 1);
+        // The colour bar is sized to the part of the sheet that is drawn; on a folded sheet it is in the strip and in each panel's copy, where the house it is against shows it large.
+        expect(legends, `${view} ${show}`).toBe(view === "discs" ? 0 : show === "folded" ? 3 : 1);
       }
     }
-    expect(curlingHeat(stones as never, { show: "folded", legend: true, id: "h" }).draw().match(/data-kind="legend"/g)).toHaveLength(1);
+    expect(curlingHeat(stones as never, { show: "folded", legend: false, id: "h" }).draw()).not.toContain('data-kind="legend"');
     expect(curlingHeat(stones as never, { legend: false }).draw()).not.toContain('data-kind="legend"');
   });
 

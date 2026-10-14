@@ -1,6 +1,6 @@
 # Ready-made charts
 
-`@johnmorrisdotca/kyogijo-stadiums/charts` has one function for each of six charts, `passNetwork` for a seventh, which [Team shape](./team-shape.md#pass-networks) describes, and `roadToFinal` for an eighth that is not drawn on a surface at all: [the road to the final](#the-road-to-the-final). Each takes plain data and returns the [data layers](./layers.md) and the drawing options to lay them on, so one call gives a good chart and every layer can still be changed.
+`@johnmorrisdotca/kyogijo-stadiums/charts` has one function for each of six charts, `passNetwork` for a seventh, which [Team shape](./team-shape.md#pass-networks) describes, `curlingHeat` for an eighth, which [Curling](./curling.md#where-the-stones-of-many-ends-came-to-rest) describes with the statistics beside `curlingScore`, and `roadToFinal` for a ninth that is not drawn on a surface at all: [the road to the final](#the-road-to-the-final). Each takes plain data and returns the [data layers](./layers.md) and the drawing options to lay them on, so one call gives a good chart and every layer can still be changed.
 
 | Function | Chart | Reads |
 | --- | --- | --- |
@@ -9,6 +9,7 @@
 | `mlbSprayChart(balls, options)` | balls in play on the ballpark of their season, each hit type in its own mark, beyond-the-fence balls drawn beyond it, and spray zones by the side the batter bats from | Statcast's `hc_x` and `hc_y` (`mlbam`), feet from home plate or Retrosheet's codes (`retrosheet`) |
 | `nflPassChart(passes, options)` | where each pass came down, by outcome and air yards, on the line of scrimmage and the pass grid | NFL tracking data (`nfl-tracking`) |
 | `curlingStones(stones, options)` | the stones of a curling end on the house, with the stones that score ringed, the shot rock ringed twice and the end scored by the rules (`curlingScore`) | feet from the button (`curling`) |
+| `curlingHeat(stones, options)` | where the stones of many ends came to rest, as cells, hexagons, a density, the zones of the house or translucent discs in each team's colour, for one team, the free guards or the house, on the half, the strip or the folded sheet (see [Curling](./curling.md#where-the-stones-of-many-ends-came-to-rest)) | feet from the button (`curling`) |
 | `soccerShotMap(shots, options)` | shots on the pitch or the half it attacks, sized by expected goals, with the xG total, and `goalMouth()` for where they crossed the goal line | a soccer provider (`opta`, `statsbomb`, `wyscout` and the rest) |
 | `roadToFinal(finalists, options)` | the two finalists of a tournament and the matches each played on the way: round flags or crests of both teams with the score between them, the rounds named down the middle, the group stage as a row at the foot | the matches you give it, and flags or logos of your own (see [the road to the final](#the-road-to-the-final)) |
 

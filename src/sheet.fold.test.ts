@@ -98,9 +98,11 @@ describe("a folded sheet", () => {
     expect(walk(root).filter((n) => n.name === "title" && n.text.startsWith("4 ")).length).toBe(3);
     const marks = (n: ReturnType<typeof parseXml>): number => walk(n).filter((m) => m.name === "circle" || m.name === "path").length;
     expect(marks(copies[0])).toBe(marks(copies[1]));
-    // A legend is the strip's only.
+    // A colour bar is drawn in each copy too, with ids of its own: one sized against the whole sheet falls outside a panel's part of it and is cut away there.
     const heat = folded({ layers: [{ kind: "heatmap", id: "h", data: [{ x: 0, y: 0 }] }, { kind: "legend", for: "h" }] as never });
-    expect(heat.match(/data-kind="legend"/g)).toHaveLength(1);
+    expect(heat.match(/data-kind="legend"/g)).toHaveLength(3);
+    const legendIds = [...heat.matchAll(/<g id="([^"]*-lg|[^"]*-l1)"/g)].map((m) => m[1]);
+    expect(new Set(legendIds).size).toBe(legendIds.length);
   });
 
   it("puts the stones of a chart in the strip and in the enlarged house at their end, and the key above the whole", () => {

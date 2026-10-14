@@ -8,7 +8,8 @@ import { assemble, clean, drawingOptions, languageOf, percentOf, wordsOf } from 
 import type { Chart, CurlingHeatOptions, CurlingHeatTotals, CurlingStone, KeyItem } from "./charts.types.ts";
 import { STONE_DIAMETER } from "./geometry.ts";
 import { sheetFor } from "./sheet.ts";
-import { shownIce } from "./surfaces/curling.ts";
+import { shownIce, teesOf } from "./surfaces/curling.ts";
+import { foldCrop } from "./surfaces/curling.fold.ts";
 import { zoneCounts } from "./heat.ts";
 import type { ZonesLayer } from "./heat.types.ts";
 import { envFor } from "./layers.env.ts";
@@ -79,7 +80,9 @@ export function curlingHeat(stones: readonly CurlingStone[], options: CurlingHea
   const cell = isNum(options.cell) && options.cell > 0 ? options.cell : 1;
   const plan = sheetFor(o);
   const bins = Math.min(400, Math.max(1, Math.round(plan.spec.length / cell)));
-  const heat = { name: w.curlingHeatStat, statistic: "count" as const, statisticName: w.curlingHeatStat, ramp: options.ramp, legend: options.legend === false || (options.legend === undefined && plan.show === "folded") ? undefined : { position: "bottom" as const, region: shownIce(plan.spec, plan.show, plan.end) }, labels: options.labels === true ? true : undefined, ground: "none" as const, minCount: 1 };
+  // The colour bar is sized and placed against the part of the sheet that is drawn: the half or the house, or on a folded sheet the house end the stones are at, where its panel shows it large.
+  const region = plan.show === "folded" ? ((crop) => ({ x: crop.x, y: 0, w: crop.w, h: plan.spec.width }))(foldCrop(plan.spec, teesOf(plan.spec)[house === "left" ? 0 : 1], house, plan.panels)) : shownIce(plan.spec, plan.show, plan.end);
+  const heat = { name: w.curlingHeatStat, statistic: "count" as const, statisticName: w.curlingHeatStat, ramp: options.ramp, legend: options.legend === false ? undefined : { position: "bottom" as const, region }, labels: options.labels === true ? true : undefined, ground: "none" as const, minCount: 1 };
   const layers: Layer[] = [];
   if (view === "heatmap") layers.push(clean({ kind: "heatmap" as const, id: "heat", ...at, data: kept, bins, ...heat }));
   else if (view === "hexbin") layers.push(clean({ kind: "hexbin" as const, id: "heat", ...at, data: kept, size: cell, ...heat }));

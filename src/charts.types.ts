@@ -44,7 +44,7 @@ export interface ChartOptions {
   id?: string;
   /** Draw the key (what each mark is) in the margin above the surface. On by default. */
   key?: boolean;
-  /** Draw the colour bar of the zones, hexagons or cells. On by default (a curling heat chart of a folded sheet leaves it out unless asked, as it would be drawn at the strip's small scale). */
+  /** Draw the colour bar of the zones, hexagons or cells. On by default. */
   legend?: boolean;
   /** The colour ramp of the zones, hexagons or cells: a built-in name, a list of stops or `{ light, dark }`. */
   ramp?: HeatRamp;

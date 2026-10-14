@@ -641,12 +641,11 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
     // Data goes over the markings and under the score's panel.
     const layered = renderLayers(o, o.layers, surface.turned, surface.whole === undefined ? undefined : surface.box);
     inner += surface.frame === undefined || layered.svg === "" ? layered.svg : el("g", { transform: surface.frame }, layered.svg);
-    // A surface drawn in parts shows the data again in each enlarged part, with its own ids, hidden from a reader of the drawing (the strip says it).
+    // A surface drawn in parts shows the data again in each enlarged part, with its own ids, hidden from a reader of the drawing (the strip says it). A colour bar sized
+    // against the whole sheet falls outside the panels' part of it and is cut away there; one given a `region` inside a panel's part is drawn there, large.
     if (surface.panels !== undefined && layered.svg !== "" && o.layers !== undefined) {
-      // The legend of a heat layer is the strip's only: at the panel's scale it would be the size of the house.
-      const kept = o.layers.filter((layer) => layer.kind !== "legend").map((layer) => ("legend" in layer && layer.legend !== undefined && layer.legend !== false ? { ...layer, legend: false } : layer));
       surface.panels.forEach((panel, i) => {
-        const copy = renderLayers({ ...o, id: `${id}-f${i}` }, kept, surface.turned);
+        const copy = renderLayers({ ...o, id: `${id}-f${i}` }, o.layers, surface.turned);
         if (copy.svg !== "") inner += el("g", { class: "ky-fold-data", "aria-hidden": "true", transform: panel.transform, "clip-path": `url(#${panel.clip})` }, copy.svg);
       });
     }

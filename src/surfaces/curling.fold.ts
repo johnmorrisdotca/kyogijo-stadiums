@@ -59,7 +59,7 @@ export interface FoldOptions {
 }
 
 /** The part of the sheet an end's panel shows, in the sheet's own feet along it (the boards included across it). */
-function cropOf(spec: SheetSpec, tee: number, end: "left" | "right", panels: "half" | "house"): Wide {
+export function foldCrop(spec: SheetSpec, tee: number, end: "left" | "right", panels: "half" | "house"): Wide {
   const [twelve] = spec.rings;
   const hogW = spec.lineWidths.hog;
   const outer = panels === "half" ? spec.hogLine + hogW : twelve;
@@ -75,7 +75,7 @@ function cropOf(spec: SheetSpec, tee: number, end: "left" | "right", panels: "ha
  */
 export function foldPlan(spec: SheetSpec, tees: readonly [number, number], o: FoldOptions): FoldPlan {
   const across = spec.width + 2 * BOARD;
-  const crops = [cropOf(spec, tees[0], "left", o.panels), cropOf(spec, tees[1], "right", o.panels)] as const;
+  const crops = [foldCrop(spec, tees[0], "left", o.panels), foldCrop(spec, tees[1], "right", o.panels)] as const;
   const whole = spec.length + 2 * o.margin;
   // The height of the whole as the drawing lies wide: the strip, two panels and the ground round them. The eye's width over height is `fit`, which a tall drawing turns the other way.
   const ratio = o.turned ? o.fit : 1 / o.fit;

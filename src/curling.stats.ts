@@ -275,6 +275,75 @@ export function curlingEndStats(ends: readonly CurlingEndScore[], options: { ham
   return { ends: ends.length, blanks, records, home: teams.home, away: teams.away };
 }
 
+/** One end for the free guard analysis: the free guards each team had after the first four stones of the end (or whenever the caller counts them), and the points each scored. */
+export interface CurlingGuardEnd {
+  hammerGuards: number;
+  otherGuards: number;
+  hammerPoints: number;
+  otherPoints: number;
+}
+
+/** What `curlingGuardScores` gives back. */
+export interface CurlingGuardScores {
+  /** The names of the bands of guards: `0`, `1-2` and `3+` by default. */
+  bands: string[];
+  /** For each band of guards the hammer team had: the ends, and the average points the hammer team scored in them. */
+  hammer: { band: string; ends: number; average: number | null }[];
+  /** The same for the guards the team without the hammer had and the points it scored. */
+  other: { band: string; ends: number; average: number | null }[];
+  /** Every pair of bands, the hammer team's first: the ends, and the average points each team scored. */
+  cells: { hammer: string; other: string; ends: number; hammerAverage: number | null; otherAverage: number | null }[];
+}
+
+/**
+ * How many points each team scored against how many free guards each had out: the free guard analysis (does the team with the hammer score more when it has put guards out, does the
+ * team without it score more when it has?). The guards are put in bands, `0`, `1-2` and `3+` by default (`bands` are the lowest number of each band). `blanks: false` leaves the
+ * blank ends out of the hammer team's averages, as a team that blanks an end has chosen to score nothing.
+ * @throws TypeError when `ends` is not a list; RangeError for a number of guards or points that is not a whole number, or bands that do not rise from 0.
+ * @example
+ * ```ts
+ * import { curlingGuardScores } from "@johnmorrisdotca/kyogijo-stadiums/charts";
+ * const table = curlingGuardScores([
+ *   { hammerGuards: 0, otherGuards: 1, hammerPoints: 1, otherPoints: 0 },
+ *   { hammerGuards: 2, otherGuards: 0, hammerPoints: 2, otherPoints: 0 },
+ *   { hammerGuards: 1, otherGuards: 2, hammerPoints: 0, otherPoints: 1 },
+ * ]);
+ * console.log(table.bands.join(" "), table.hammer.map((b) => b.average ?? "-").join(" "));
+ * // 0 1-2 3+ 1 1 -
+ * ```
+ */
+export function curlingGuardScores(ends: readonly CurlingGuardEnd[], options: { bands?: readonly number[]; blanks?: boolean } = {}): CurlingGuardScores {
+  if (!Array.isArray(ends)) throw new TypeError("ends is a list of ends, each { hammerGuards, otherGuards, hammerPoints, otherPoints }");
+  const edges = options.bands ?? [0, 1, 3];
+  if (edges.length === 0 || edges[0] !== 0 || !edges.every((e, i) => Number.isInteger(e) && (i === 0 || e > edges[i - 1]))) throw new RangeError("bands are whole numbers that rise from 0: the lowest number of guards of each band");
+  const names = edges.map((e, i) => (i === edges.length - 1 ? `${e}+` : edges[i + 1] - 1 === e ? String(e) : `${e}-${edges[i + 1] - 1}`));
+  const bandOf = (n: number): number => edges.reduce((at, e, i) => (n >= e ? i : at), 0);
+  const whole = (value: unknown): value is number => typeof value === "number" && Number.isInteger(value) && value >= 0;
+  ends.forEach((e, i) => {
+    if (typeof e !== "object" || e === null || ![e.hammerGuards, e.otherGuards, e.hammerPoints, e.otherPoints].every(whole)) throw new RangeError(`end ${i + 1} needs a whole number for each of hammerGuards, otherGuards, hammerPoints and otherPoints`);
+  });
+  const blanks = options.blanks !== false;
+  const average = (sum: number, n: number): number | null => mean(sum, n);
+  const sums = (pick: (e: CurlingGuardEnd) => number, points: (e: CurlingGuardEnd) => number, keep: (e: CurlingGuardEnd) => boolean): { band: string; ends: number; average: number | null }[] =>
+    names.map((band, i) => {
+      const list = ends.filter((e) => bandOf(pick(e)) === i && keep(e));
+      return { band, ends: list.length, average: average(list.reduce((sum, e) => sum + points(e), 0), list.length) };
+    });
+  const cells = names.flatMap((hammer, h) =>
+    names.map((other, o) => {
+      const list = ends.filter((e) => bandOf(e.hammerGuards) === h && bandOf(e.otherGuards) === o);
+      const kept = list.filter((e) => blanks || e.hammerPoints > 0 || e.otherPoints > 0);
+      return { hammer, other, ends: list.length, hammerAverage: average(kept.reduce((sum, e) => sum + e.hammerPoints, 0), kept.length), otherAverage: average(list.reduce((sum, e) => sum + e.otherPoints, 0), list.length) };
+    }),
+  );
+  return {
+    bands: names,
+    hammer: sums((e) => e.hammerGuards, (e) => e.hammerPoints, (e) => blanks || e.hammerPoints > 0 || e.otherPoints > 0),
+    other: sums((e) => e.otherGuards, (e) => e.otherPoints, () => true),
+    cells,
+  };
+}
+
 // ----- the shots of a game
 
 /** One shot, as a shot-by-shot summary gives it: who threw it, what kind it was, and how it was scored from 0 to 4 (4 is the perfect shot). `hit` says whether it was a hit, when the type does not. */

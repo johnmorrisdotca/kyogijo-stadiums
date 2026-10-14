@@ -54,7 +54,8 @@ console.log(leagueFigures(LEAGUES.curling[1]).slice(0, 3).map(([name, value]) =>
 | `sheet.rings` | The colours of the house: `outer` (the 12-foot band, blue), `middle` (the 8-foot, white), `inner` (the 4-foot, red) and `button` (white). Any CSS colour that `colors` takes. |
 | `sheet.pebble` | A fine texture of dots over the ice. Off by default. |
 | `sheet.guardZone` | Shade the free guard zone at both ends. Off by default. |
-| `sheet.show`, `sheet.end` | A part of a bare sheet: `half` (the hog line to the back line, which holds the free guard zone and the house) or `house`, at the `left` end (the top of a tall drawing, the default) or the `right`. A score always shows the whole sheet. These are the sheet's `range` (`range: "house"`, `range: { name: "half", end: "right" }`), which wins where both are given: see [Display ranges and zoom](./ranges.md). |
+| `sheet.show`, `sheet.end` | A part of a bare sheet: `half` (the hog line to the back line, which holds the free guard zone and the house), `house`, or `folded` (the whole sheet with both houses enlarged beside it: see [the top, the bottom, or both](#the-top-end-the-bottom-end-or-both-folded)), at the `left` end (the top of a tall drawing, the default) or the `right`; `top` and `bottom` say the same, as a tall sheet's ends are read. A score always shows the whole sheet. These are the sheet's `range` (`range: "house"`, `range: { name: "half", end: "bottom" }`, `range: "folded"`), which wins where both are given: see [Display ranges and zoom](./ranges.md). |
+| `sheet.panels`, `sheet.fit` | For `folded`: what each enlarged panel holds, the `half` (the default) or the `house`, and the shape of the whole, width over height as it lies, from 0.5 to 2 (1, a square, by default). |
 | `detail: "simple"` | Leaves out the hacks, the hack line and the courtesy lines. |
 
 ```ts
@@ -68,6 +69,73 @@ console.log(drawKyogijo({ sport: "curling", sheet: { length: 146, width: 14.5 } 
 ```
 
 The sheet has no history in the package: a `year` is ignored.
+
+## The top end, the bottom end, or both folded
+
+A tall sheet is a strip 150 feet long and 15 wide, and a house on it is small. Three ways to look closer, each a `sheet.show` (and a named `range`):
+
+| To see | Ask for | In a tall drawing |
+| --- | --- | --- |
+| only the top end | `show: "half"` or `"house"`, `end: "top"` (or `end: "left"`, or leave `end` out) | the far house, at the top |
+| only the bottom end | `show: "half"` or `"house"`, `end: "bottom"` (or `end: "right"`) | the near house, at the bottom |
+| both, enlarged beside the whole sheet | `show: "folded"` | the whole strip in the middle, the top house on its left and the bottom house on its right |
+
+`top` is the left end of the sheet and `bottom` the right, as a tall sheet's ends are read; a wide sheet's are still its left and its right, and `left` and `right` mean what they always did. A `half` is the hog line to the back line, with the free guard zone; a `house` is just the circles with a little ice round them.
+
+```ts
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
+
+const viewBox = (svg: string): string | undefined => svg.match(/viewBox="([^"]*)"/)?.[1];
+console.log(viewBox(drawKyogijo({ sport: "curling", sheet: { show: "half", end: "top" } })));
+console.log(viewBox(drawKyogijo({ sport: "curling", sheet: { show: "half", end: "bottom" } })));
+const bottom = drawKyogijo({ sport: "curling", id: "a", sheet: { show: "house", end: "bottom" } });
+console.log(bottom === drawKyogijo({ sport: "curling", id: "a", sheet: { show: "house", end: "right" } }));
+// 0 0 21.58 30.34
+// 0 0 21.58 30.34
+// true
+```
+
+### Folded
+
+`show: "folded"` draws the whole sheet as a strip, and each house again, larger, beside it, so that the drawing fills a roughly square frame instead of a sliver. A tall drawing has the top house on the left and the bottom house on the right; a wide one has the left house above the strip and the right house below it (the same drawing turned a quarter).
+
+- **The strip keeps its own scale and its own numbers**, so data laid on it (the stones of an end, a heat map) is where it was on a sheet drawn whole, and a layer that works on the strip works on the folded sheet.
+- **Each panel is cut from the same sheet at a larger scale**, chosen so that the whole is square (`sheet.fit` says another shape, width over height as it lies, 0.5 to 2; a panel is never longer than the strip, so a very wide frame is as wide as the panels allow). `sheet.panels: "half"` (the default) gives each panel the hog line to the back line, with the free guard zone; `"house"` gives just the house.
+- **Each panel is named and joined to its place.** A label ("Top house" and "Bottom house" in a tall drawing, "Left house" and "Right house" in a wide one, in Japanese too) stands beside the panel; a faint fan runs from the panel's edge to the part of the strip it enlarges, and that part is framed on the strip, as an inset on a map is joined to what it shows.
+- **Data is drawn in the strip and again in each panel**, at the panel's scale: stones at the top house are in the strip, small, and in the top panel, large, and a heat map of them likewise. The copies in the panels are hidden from a screen reader, which hears the strip's layer once, and carry ids of their own; a colour bar that has a `region` inside a panel's part of the sheet (`curlingHeat` gives it one) is drawn there, large; one sized against the whole sheet is cut away in the panels.
+- **The description says what is enlarged and where**, and that data is drawn in the enlarged parts as well.
+- **Every renderer reads it**: the scene, the canvas, d3, Plot, GeoJSON and PNG read the drawing the SVG writes, panels, clips and all.
+- **What it leaves out:** the annotations (`landmarks`, `axes`, `direction`) have no margin to stand in and are not drawn on a folded sheet, and a score shows the whole sheet, as with every `show`.
+
+```ts
+import { drawKyogijo, describe } from "@johnmorrisdotca/kyogijo-stadiums";
+
+const tall = drawKyogijo({ sport: "curling", sheet: { show: "folded" } });
+const wide = drawKyogijo({ sport: "curling", orientation: "landscape", sheet: { show: "folded", panels: "house" } });
+console.log(tall.match(/viewBox="([^"]*)"/)?.[1], "|", wide.match(/viewBox="([^"]*)"/)?.[1]);
+console.log(describe({ sport: "curling", sheet: { show: "folded" } }).description.split(". ").slice(1).join(". "));
+// 0 0 156 156 | -3 -70.21 156 156
+// Shown folded: the whole sheet is in the middle, with its top house enlarged on the left and its bottom house enlarged on the right. Each enlarged part runs from the hog line to the back line.
+```
+
+`curlingStones` and `curlingHeat` take `show: "folded"` too (`surface.sheet.show` says the same and wins), and put their key above the whole drawing.
+
+```ts
+import { curlingStones } from "@johnmorrisdotca/kyogijo-stadiums/charts";
+
+const chart = curlingStones(
+  [
+    { x: 0.4, y: 0.3, team: "home", number: 8 },
+    { x: -1.2, y: -0.8, team: "home", number: 6 },
+    { x: 1.9, y: 1.1, team: "away", number: 7 },
+    { x: 0.2, y: -9, team: "away", number: 3 },
+  ],
+  { end: 6, hammer: "home", show: "folded" },
+);
+const svg = chart.draw({ orientation: "landscape" });
+console.log(chart.totals.points, svg.includes("ky-fold-data"), svg.includes("Left house"));
+// 2 true true
+```
 
 ## A score
 
@@ -123,6 +191,118 @@ A stone is a place in feet from the button (the [`curling` frame](./frames.md)):
 `chart.draw()` shows the half of the sheet from the hog line to the back line with the free guard zone shaded, at the left (top) house, or the right with `house: "right"`, and the stones as seen from above: grey granite, a handle in the team's colour (red for `home` and yellow for `away`, over `colors.layerHome` and `layerAway`), the stone's number. `chart.table()` lists every stone with its distance from the button, and says which count. The key is above a wide drawing.
 
 The zone set `curling-house` counts any `zones` layer into the button, the 4-, 8- and 12-foot rings and the free guard zone, at each end ([data layers](./layers.md)).
+
+## Where the stones of many ends came to rest
+
+`curlingHeat` is a chart of the stones of many ends on a house: where they stopped, counted into cells, hexagons or a density, into the zones of the house, or drawn as translucent discs in each team's colour so that stones that fall on each other build up colour. It judges the stones by the same rules as `curlingStones` (a stone out of play is not drawn), and it can keep one team's stones, or only the free guards, or only the stones in the house, so that "where do the guards end up when the team has the hammer" is one call.
+
+| Option | What it does |
+| --- | --- |
+| `view` | `heatmap` (counts in square cells, the default), `hexbin`, `contour` (a density), `zones` (the button, the three rings and the free guard zone, with the count in each) or `discs`. |
+| `team` | Only this team's stones: `home` or `away`. |
+| `only` | `all` of those in play (the default), `guards` (the free guards: between the tee line and the hog line, outside the house) or `house` (in or touching it). |
+| `cell` | The width of a cell, or the radius of a hexagon, in feet. 1 foot by default. |
+| `house`, `units`, `show` | The house the stones are at (`left`, the top, or `right`), their unit (feet from the button, as for `curlingStones`) and how much of the sheet is drawn: `half` by default, `house`, `sheet` or `folded`. |
+| `labels`, `legend`, `ramp` | The count written in each cell or zone (off, except for zones); the colour bar (on; sized to the part of the sheet drawn, and on a folded sheet standing in the enlarged house the stones are at); the colour ramp of the heat layers. |
+
+```ts
+import { curlingHeat } from "@johnmorrisdotca/kyogijo-stadiums/charts";
+
+// The stones that came to rest in a few ends, as feet from the button.
+const stones = [
+  { x: 0.3, y: 0.2, team: "home" },
+  { x: -1.1, y: 0.9, team: "away" },
+  { x: 0.1, y: -14, team: "away" },
+  { x: 2.4, y: -17, team: "home" },
+  { x: 0, y: -10, team: "home" },
+  { x: 0, y: -30, team: "home" },
+];
+const chart = curlingHeat(stones, { only: "guards", view: "discs", show: "folded" });
+console.log(chart.totals.inPlay, chart.totals.drawn, chart.totals.guards, chart.totals.house);
+console.log(chart.summary);
+// 5 3 { home: 2, away: 1 } { home: 1, away: 1 }
+// 5 stones in play: 2 in the house and 3 in the free guard zone. Only the free guards.
+```
+
+The totals say how many stones were in play and drawn, the free guards and the stones in the house for each team (by the rules: a stone touching the house is in it), and the share of the stones drawn that came to rest in each zone (`totals.zones`, counted by the stone's centre, as the zone set `curling-house` does). `chart.table()` lists the cells or zones.
+
+## Statistics
+
+Small pure functions beside `curlingScore` ([charts](./charts.md)), for the numbers behind the pictures. They take plain data and draw nothing, so a chart of them is yours (Observable Plot and d3 read them as they are).
+
+| Function | What it works out |
+| --- | --- |
+| `curlingFreeGuards(stones)` | the free guards of a layout: how many each team has and which stones they are. |
+| `curlingInPlay(layouts)` | the stones in play after each throw of an end, and the most there were. |
+| `curlingHammers(ends, first)` | the team with the hammer in each end: the team that scored gives it up; a blank end keeps it. |
+| `curlingEndStats(ends, { hammer })` | each end (who scored, the hammer, a blank end, a steal, a forced end) and, for each team, its points, **hammer efficiency** (points per end with the hammer), how often it scored, blanked, was held to one or was stolen from with the hammer, and its **steal rate** without it. |
+| `curlingGuardScores(ends)` | the **free guard analysis**: the average points each team scored against how many guards each had out, in bands (0, 1-2, 3+), with the pairs of bands as a table. |
+| `curlingShotStats(shots)` | the **shot percentage** (points 0 to 4 as a percent of 4 for each scored shot), the **hit rate**, and how often each type of shot was played, for all the shots and for each team. |
+
+```ts
+import { curlingEndStats, curlingGuardScores, curlingInPlay, curlingShotStats } from "@johnmorrisdotca/kyogijo-stadiums/charts";
+
+// What each team scored in each end, with the hammer to home in the first.
+const game = curlingEndStats(
+  [{ home: 2, away: 0 }, { home: 0, away: 1 }, { home: 0, away: 1 }, { home: 1, away: 0 }, { home: 0, away: 2 }, { home: 0, away: 0 }],
+  { hammer: "home" },
+);
+console.log(game.home.points, game.away.points, game.blanks);
+console.log(game.home.withHammer.efficiency, game.home.withHammer.stolenRate, game.away.withoutHammer.stealRate);
+// 3 4 1
+// 0.75 25 25
+
+const guards = curlingGuardScores([
+  { hammerGuards: 0, otherGuards: 1, hammerPoints: 1, otherPoints: 0 },
+  { hammerGuards: 2, otherGuards: 0, hammerPoints: 2, otherPoints: 0 },
+  { hammerGuards: 1, otherGuards: 2, hammerPoints: 0, otherPoints: 1 },
+]);
+console.log(guards.bands.join(" "), guards.hammer.map((band) => band.average ?? "-").join(" "));
+// 0 1-2 3+ 1 1 -
+
+const shots = curlingShotStats([
+  { team: "home", type: "draw", score: 4 },
+  { team: "home", type: "take-out", score: 3 },
+  { team: "away", type: "Hit and Roll", score: 2 },
+  { team: "away", type: "guard", score: 4 },
+]);
+console.log(shots.percent, shots.hitRate, shots.types.map((t) => `${t.type} ${t.share}%`).join(", "));
+// 81.3 50 draw 25%, guard 25%, hit and roll 25%, take out 25%
+
+// The most stones in play, throw by throw, for a histogram over many ends.
+console.log(curlingInPlay([[{ x: 0, y: -12 }], [{ x: 0, y: -12 }, { x: 1, y: 0 }]]).max);
+// 2
+```
+
+- **An end is scored by one team**, so an end with a score for both is an error, and a score is a whole number. The hammer's first holder is `hammer` (or the first end names its own); with neither, the hammer figures are left empty and the points are still counted.
+- **Hits are the shot types in `CURLING_HIT_TYPES`** (take-out, double take-out, raise take-out, hit and roll, peel, clearing and runback), or what a shot says with `hit`; `curlingIsHit` is the test. Any other type is not a hit. Types are compared in lower case with one space between words, so `Hit-and-Roll` and `Hit & Roll` are `hit and roll`.
+- **The shot percentage is World Curling's**: each shot is scored 0 to 4, and a team's percentage is the points it earned over four for each scored shot. A shot with no score is counted in the types and left out of the percentage; a score outside 0 to 4 is an error.
+- **No inference.** Chi-square tests and the like are not here: a drawing package is for the picture and the counts behind it.
+
+## What other curling analyses offer, and what is here
+
+Two analyses were read for what a curling chart is worth having: [jdumm/curlovision](https://github.com/jdumm/curlovision) (broadcast video to stone positions, and the analyses of them) and Jordan Myslik's [Curling Analytics](https://jordanmyslik.com/portfolio/curling-analytics/) (World Curling's shot-by-shot summaries to a database, and a study of men's and women's play). What each offers, from the README and the page (for curlovision also the names of its functions), and what Kyogijo had before and has now. Nothing of either was copied: see [references](./references.md#curling).
+
+| Feature | curlovision | Myslik | Kyogijo before | Kyogijo now |
+| --- | --- | --- | --- | --- |
+| The sheet and the house drawn to the rules | a house and its lines in pixels (`draw_house`) | a reference diagram of a sheet | yes, from both rule books, figure by figure | the same, and folded: the top and the bottom house enlarged beside the whole strip |
+| The stones of an end drawn on the house | yes (`StoneLayout.draw`: grey stone, a handle in the team's colour) | an example of World Curling's shot-by-shot diagram, not drawn by the analysis | yes: `curlingStones`, with the number, the counting stones ringed and the shot rock ringed twice | the same, on the half, the house, the strip or the folded sheet, with the stones in the strip and in the enlarged house |
+| Only the top end or only the bottom end | no (one house) | no | `show: "half"` or `"house"` with `end: "left"` or `"right"` | the same, with `top` and `bottom` as names for a tall sheet's ends, documented |
+| All the ends of a game in one picture | yes (`MatchResult.draw`) | no | by hand | a `drawGrid` of the ends' charts (the gallery shows it) |
+| An end's score from the stones | yes (`score_layout`: counts the nearest stones of one colour within the house) | the end's score is stored, not derived | yes: `curlingScore`, with the out-of-play rules, the equal-distance rule and the shot rock | the same |
+| Stones in play, after each throw; the most in play | the stones left for each team and the layout after each throw | a histogram of the most stones in play, by gender | the count of one layout (`curlingScore`) | `curlingInPlay`: after each throw and the most |
+| A heat map of where stones stop | yes (every stone of a set of matches, grey on the house) | yes (700,000 stones, the house at the bottom) | by hand, on the heat layers, with a cell size to find | `curlingHeat`: cells, hexagons, a density or zones, per team, for the guards or the house, on any part of the sheet |
+| The free guards, drawn by team | yes (translucent discs, red and yellow) | no | the zone shaded | `curlingHeat` with `only: "guards"` and `view: "discs"`; `curlingFreeGuards` counts them |
+| The free guard analysis: points against guards | yes (average score by the guards each team had out, hammer against not) | no | no | `curlingGuardScores` |
+| The hammer: efficiency, steals, forced ends, blanks | reads who has the hammer; uses it in the guard analysis | stores `color_hammer`, does not analyse it | the hammer drawn on the board | `curlingHammers` and `curlingEndStats` |
+| End-by-end scoring | reads each end's score from the scoreboard | stores each end's score (a third are missing), does not chart it | the board, with the score of each end | the same, and `curlingEndStats` for each end's record and the running score |
+| Shot types, and hits against not | no | yes (shot type by gender; hit and not hit) | no | `curlingShotStats`: the types by how often each was played, and the hit rate |
+| Shot percentage | no | stores each shot's score, 0 to 100, does not analyse it | no | `curlingShotStats`: the percentage, by team and by type |
+| Stone paths | no (stones at rest) | no | lines and arrows on the curling frame; a replay of tracking data | the same: nothing curling-specific is drawn for a path |
+| Tests of significance | no | yes (chi-square) | no | no: not a drawing |
+| Positions from video, or from the PDFs | yes (OpenCV on broadcast video) | yes (OpenCV on the shot-by-shot PDFs) | no | no: data in, SVG out; the data is yours |
+
+Of the other curling drawings, [`@sportsdataverse/sporty`](https://github.com/sportsdataverse/sdvplot-js) (MIT) and sportypy and sportyR (GPL-3.0) draw the sheet and no stones, scores or statistics; [Where it differs from `@sportsdataverse/sporty`](#where-it-differs-from-sportsdataversesporty) says how the sheet differs.
 
 ## Where it differs from `@sportsdataverse/sporty`
 
