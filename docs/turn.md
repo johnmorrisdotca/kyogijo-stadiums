@@ -199,7 +199,7 @@ A page with no script keeps the flat drawing: render `drawKyogijo(options)` into
 
 ## Reading it
 
-- The view is a `group` named by the drawing's title, with the role description "3D view" (3D表示), focusable, with `aria-keyshortcuts` and a description that gives the keys and what stands on the surface, with its heights in the rulebook's own unit.
+- The view is a `group` named by the drawing's title, with the role description "3D view" (in Japanese, the same words), focusable, with `aria-keyshortcuts` and a description that gives the keys and what stands on the surface, with its heights in the rulebook's own unit.
 - The flat drawing keeps its own `role="img"`, title and description. The parts that stand up are decoration and hidden from a screen reader.
 - A viewpoint, a reset and the end of a drag or a run of keys are said in a polite live region ("End-on view", "Turned to 40 degrees, seen from 34 degrees above the floor"); a drag is not said as it goes.
 - With `prefers-reduced-motion` the view jumps between viewpoints instead of gliding, and nothing ever moves by itself: the auto-turn runs only after the reader presses Play or Space, or when the page's `autoPlay` asks (not for a reader who prefers reduced motion, whose view starts paused). Nothing is polled: the elements' transforms are written when the view changes, and a glide is half a second of animation frames.

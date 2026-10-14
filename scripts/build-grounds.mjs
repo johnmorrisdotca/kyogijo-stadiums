@@ -1,4 +1,4 @@
-// Writes src/grounds.data.ts and docs/grounds.md from scripts/grounds.data.json and scripts/grounds.editions.json.
+// Writes src/grounds.data.ts, docs/grounds.md and docs/grounds.ja.md from scripts/grounds.data.json and scripts/grounds.editions.json.
 //
 // The grounds are listed by hand, as the parks are: a fact (a name, a place, a year, a capacity, a pitch's length and width) is
 // read from the English Wikipedia article of each ground at the revision the entry names (and the Japanese article for the name in
@@ -112,11 +112,16 @@ const COUNTRY = { UY: "Uruguay", IT: "Italy", FR: "France", BR: "Brazil", CH: "S
 const cup = (t) => `${t.competition === "world-cup" ? "WC" : "WWC"} ${t.year}${t.final ? " (final)" : ""}`;
 const size = (g) => (g.pitchSize === "published" ? `${g.pitch.length} × ${g.pitch.width} ${g.pitch.unit}` : "default, 105 × 68 m");
 const years = (g) => (g.status === "past" ? `${g.from}–${g.to}` : g.from === undefined ? "" : `${g.from}–`);
-const name = (g) => (g.localName !== undefined && g.localName !== g.name ? `${g.name} (${g.localName})` : g.name);
+const CJK = /[\u3040-\u30ff\u3400-\u9fff]/u;
+// The English page shows a local name in Latin or Cyrillic letters; a name in Japanese or Chinese characters is on the Japanese page.
+const name = (g) => (g.localName !== undefined && g.localName !== g.name && !CJK.test(g.localName) ? `${g.name} (${g.localName})` : g.name);
 const fixed = grounds.filter((g) => g.pitchSize === "default");
 const official = (g, lang) => g.aliases?.find((a) => a.kind === "official" && a.lang === lang && a.to === undefined)?.name ?? "";
-const differ = data.filter((g) => g.name !== g.en.title || g.nameJa !== g.ja.title);
+const differ = data.filter((g) => g.name !== g.en.title);
+const differJa = data.filter((g) => g.nameJa !== g.ja.title);
 const md = `# The grounds
+
+[日本語](grounds.ja.md) · English
 
 Made by \`pnpm grounds\` from \`scripts/grounds.data.json\` and \`scripts/grounds.editions.json\`; do not edit by hand. ${grounds.length} grounds, ${
   grounds.length - fixed.length
@@ -142,9 +147,11 @@ A ground has the name people use and every other name it answers to, each with w
 
 Where the everyday name is not the title of the article that was cited (names that are not in this table are the titles):
 
-| Key | Everyday name | English article | Official, English | Name in Japanese | Japanese article | Official, Japanese |
-| --- | --- | --- | --- | --- | --- | --- |
-${differ.map((g) => `| \`${g.id}\` | ${g.name} | ${g.en.title} | ${official(g, "en")} | ${g.nameJa} | ${g.ja.title} | ${official(g, "ja")} |`).join("\n")}
+| Key | Everyday name | English article | Official name |
+| --- | --- | --- | --- |
+${differ.map((g) => `| \`${g.id}\` | ${g.name} | ${g.en.title} | ${official(g, "en")} |`).join("\n")}
+
+The same table for the names in Japanese, with the readings, is in [Japanese](./grounds.ja.md#名前).
 
 ## Grounds at the default size
 
@@ -162,4 +169,57 @@ ${[...editions]
   .join("\n")}
 `;
 writeFileSync(new URL("../docs/grounds.md", import.meta.url), md);
-console.log(`src/grounds.data.ts: ${grounds.length} grounds, ${editions.length} tournaments; docs/grounds.md`);
+
+// docs/grounds.ja.md: the same list in Japanese, from the same data.
+const COUNTRY_JA = { UY: "ウルグアイ", IT: "イタリア", FR: "フランス", BR: "ブラジル", CH: "スイス", SE: "スウェーデン", CL: "チリ", GB: "イギリス", MX: "メキシコ", DE: "ドイツ", AR: "アルゼンチン", ES: "スペイン", US: "アメリカ合衆国", JP: "日本", ZA: "南アフリカ", RU: "ロシア", QA: "カタール", CA: "カナダ", CN: "中国", AU: "オーストラリア", PT: "ポルトガル", KR: "韓国", NL: "オランダ" };
+const cupJa = (t) => `${t.competition === "world-cup" ? "男子W杯" : "女子W杯"} ${t.year}${t.final ? "（決勝）" : ""}`;
+const sizeJa = (g) => (g.pitchSize === "published" ? `${g.pitch.length} × ${g.pitch.width} ${g.pitch.unit}` : "既定 105 × 68 m");
+const yearsJa = (g) => years(g).replace("–", "〜");
+const mdJa = `# 競技場（サッカー）
+
+日本語 · [English](grounds.md)
+
+\`pnpm grounds\` が \`scripts/grounds.data.json\` と \`scripts/grounds.editions.json\` から作るページです。手で書き換えないでください。${grounds.length}か所のサッカー競技場のうち、ピッチの大きさが公表されているものが ${grounds.length - fixed.length}、既定の 105 × 68 m で描くものが ${fixed.length} です。数値や事実はすべて、[NOTICE.md](../NOTICE.md) に挙げた英語版ウィキペディアの記事を、そこに書いた版で読み取ったもの（ピッチは記事の基本情報欄から）で、座標は Wikidata（CC0）のものです。大会は、各大会の記事の会場の節から読み取りました。\`GROUNDS\` の各競技場には、国、Wikidata の項目と座標、年ごとの名前（\`year\` で選べます：\`groundNameIn\`）、その土地の言語での名前と日本語の名前、開場していた年、収容人数、開催したワールドカップ、それぞれの事実を読み取った記事とその版が付いています。\`drawKyogijo({ sport: "soccer", ground })\` は、「ピッチ」の列の大きさでピッチを描きます。「大会」の列の「男子W杯」は男子ワールドカップ、「女子W杯」は女子ワールドカップです。この一覧にある競技場だけを載せているので、大会のほかの会場は載っていません。
+
+| キー | 競技場 | 国 | Wikidata | 開場 | 収容人数 | ピッチ | 大会 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+${data
+  .map((g) => `| \`${g.id}\` | ${g.nameJa} | ${COUNTRY_JA[g.country] ?? g.country} | ${g.wikidata} | ${yearsJa(g)} | ${g.capacity?.toLocaleString("en-US") ?? ""} | ${sizeJa(g)} | ${g.tournaments.map(cupJa).join("、")} |`)
+  .join("\n")}
+
+## 名前
+
+競技場には、人びとが使う名前と、それ以外に呼ばれるすべての名前があり、どれにも、その名前を読み取った出典が付いています。
+
+- \`name\` は**英語の通称**で、英語のスポーツメディアが使う名前です（\`Groupama Stadium\`、\`San Siro\`、\`Etihad Stadium\`）。企業名が付いていて、人びとがその名で呼ぶ場合は、現在の企業名を採ります。引用した記事の題名と同じとはかぎらず、その題名は別名（alias）になります。
+- \`nameJa\` は**日本語の通称**で、日本のメディアが使う名前です（\`日産スタジアム\`、\`サン・シーロ\`、\`マラカナン\`）。\`readingJa\` は、漢字を含む名前の読み（かな）です（\`にっさんスタジアム\`）。
+- \`localName\` と \`localLanguage\` は、その土地の言語での通称です（\`San Siro\` と \`it\`、\`Maracanã\` と \`pt\`）。英語圏の競技場にはありません。
+- \`names\` は、何年かのあいだ使われた名前です。\`groundNameIn(ground, year)\` は、その年の名前を返します。その年を含む \`names\` があれば、通称もそれに従います。
+- \`aliases\` はそれ以外の名前で、\`{ name, lang, kind, from?, to?, source?, revision? }\` の形をしています。\`kind\` は \`wikipedia\`（引用した記事の題名。\`revision\` が付くので出典は失われません）、\`official\`（所有者や運営者が呼ぶ名前で、通称と違うもの）、\`sponsor\`（命名権による名前）、\`former\`、\`nickname\` のいずれかです。\`from\` と \`to\` は出典が示す年で、\`source\` は名前を読み取った場所（記事とその版、または Wikidata の項目とプロパティ）を示します。
+- \`groundByName(name)\`（と、名前に当てはまるほかの競技場も返す \`groundsByName\`）は、これらのどの名前でも、英語・日本語・その土地の言語で競技場を探します。大文字小文字、アクセント、空白と記号、全角と半角、ひらがなとカタカナ、長音符の違いは区別しません。\`groundByName("サンシーロ")\` と \`groundByName("Meazza Stadium")\` は、どちらも \`san-siro\` です。地図の検索もこれらの名前を読みます。
+- 図のタイトルは、その言語での通称です。正式名称が別にある場合は、説明文でそう伝えます（\`正式名称はパルク・オリンピック・リヨンです。\`）。
+
+日本語の通称が、引用した日本語版の記事の題名と違う競技場です（この表にない競技場は、記事の題名が通称です）。
+
+| キー | 通称 | 読み | 日本語版の記事 | 正式名称 |
+| --- | --- | --- | --- | --- |
+${differJa.map((g) => `| \`${g.id}\` | ${g.nameJa} | ${g.readingJa ?? ""} | ${g.ja.title} | ${official(g, "ja")} |`).join("\n")}
+
+## 既定の大きさの競技場
+
+サッカーのピッチの大きさが記事に載っていない競技場（または、国際試合のピッチにはなりえない大きさのもの）は、国際試合の 105 × 68 m で描き、\`pitchSize: "default"\` と記します。大きさを推測することはありません。理由は[英語版](grounds.md#grounds-at-the-default-size)に書いてあります。
+
+${fixed.map((g) => `- \`${g.id}\`、${g.nameJa}`).join("\n")}
+
+## ワールドカップ
+
+| 大会 | 決勝 | この一覧にある会場 |
+| --- | --- | --- |
+${[...editions]
+  .sort(order)
+  .map((e) => `| ${e.competition === "world-cup" ? "男子" : "女子"} ${e.year} | ${e.final === null ? "なし（決勝リーグ）" : grounds.find((g) => g.id === e.final).nameJa} | ${e.grounds.map((id) => grounds.find((g) => g.id === id).nameJa).join("、")} |`)
+  .join("\n")}
+`;
+writeFileSync(new URL("../docs/grounds.ja.md", import.meta.url), mdJa);
+
+console.log(`src/grounds.data.ts: ${grounds.length} grounds, ${editions.length} tournaments; docs/grounds.md, docs/grounds.ja.md`);

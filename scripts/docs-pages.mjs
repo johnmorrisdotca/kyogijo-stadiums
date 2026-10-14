@@ -132,6 +132,7 @@ export const NAV = [
       { slug: "references", ja: "参考資料" },
       { slug: "parks", ja: "球場の識別キー" },
       { slug: "strings-ja", ja: "日本語訳の一覧" },
+      { slug: "terminology", ja: "用語集" },
       { slug: "architecture", ja: "アーキテクチャ" },
     ],
   },
@@ -205,7 +206,7 @@ export function resolveLink(from, href, known) {
   const target = path === "" ? from : posix.normalize(posix.join(posix.dirname(from), path));
   if (target.startsWith("..")) return { kind: "error", error: `${href} leaves the repository` };
   if (target === "README.md") return { kind: "external", url: `${REPO}${hash}`, repo: true };
-  const page = /^docs\/([^/]+)\.md$/.exec(target);
+  const page = /^docs\/([^/.]+)\.md$/.exec(target);
   if (page || target === "docs/README.md") {
     const slug = target === "docs/README.md" ? "index" : page[1];
     if (!known.pages.has(slug)) return { kind: "error", error: `${href} is not a page of the docs (${target})` };

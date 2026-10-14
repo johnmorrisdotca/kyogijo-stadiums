@@ -1,5 +1,7 @@
 # League variants
 
+[日本語](variants.ja.md) · English
+
 `league` in the options draws a surface as one league's rulebook marks it; `sport` names the family (`nba` for basketball, `nhl` for hockey, `nfl`, `cfl` or `ifaf` for football, `mlb` for baseball and softball, `curling` for a curling sheet, `tennis`, `volleyball`, `badminton`, `pickleball`, `tabletennis`, `padel`, `squash`, `racquetball`, `sepaktakraw`, `teqball`, `roundnet` and `netball` for the net, racket and court sports, `lacrosse`, `rugby`, `afl`, `gaelic`, `cricket`, `fieldhockey` and `handball` for the field sports). This page is made from `src/leagues/` by `pnpm docs:make`; a test holds it to them. Each figure is the rulebook's, in its own unit, and each league's sources, with the edition and the address read on 2026-10-13, are listed under its table. What a figure is and where it is ours is in [sources.md](./sources.md#league-variants); what could not be cited is in [references.md](./references.md#league-variants-not-drawn).
 
 A `year` draws a league's markings of that season only where a source dates a change (the history under each table); for any other league it is ignored, and the drawing is of the rulebook as it is now. The sport's own league (the NBA, the NHL, the NFL, the CFL, the IFAF, MLB, World Curling, the ITF, the FIVB's indoor court, the BWF, USA Pickleball, the ITTF, the FIP, World Squash's singles court, the IRF, the ISTAF, the FITEQ, the International Roundnet Federation and World Netball) keeps the history of [`year`](./eras.md).
@@ -8,15 +10,15 @@ A `year` draws a league's markings of that season only where a source dates a ch
 
 `sport: "nba"`
 
-| `league` | Name | 日本語 | Key figures |
-| --- | --- | --- | --- |
-| `nba` (the sport's own) | NBA basketball court | NBAのバスケットボールコート | court 94 ft by 50 ft; lane 16 ft wide; free-throw line 19 ft from the baseline; three-point line 23 ft 9 in arc, straights 3 ft from the sidelines; restricted area 4 ft arc |
-| `wnba` | WNBA basketball court | WNBAのバスケットボールコート | court 94 ft by 50 ft; lane 16 ft wide; free-throw line 19 ft from the baseline; three-point line 22 ft 1.75 in arc, straights 3 ft from the sidelines; restricted area 4 ft arc |
-| `fiba` | FIBA basketball court | FIBAのバスケットボールコート | court 28 m by 15 m; lane 4.9 m wide; free-throw line 5.8 m from the baseline; three-point line 6.75 m arc, straights 0.9 m from the sidelines; restricted area 1.3 m arc |
-| `ncaa-men` | NCAA men's basketball court | NCAA男子のバスケットボールコート | court 94 ft by 50 ft; lane 12 ft wide; free-throw line 19 ft from the baseline; three-point line 22 ft 1.75 in arc, straights 3 ft 4.13 in from the sidelines; restricted area 4 ft arc |
-| `ncaa-women` | NCAA women's basketball court | NCAA女子のバスケットボールコート | court 94 ft by 50 ft; lane 12 ft wide; free-throw line 19 ft from the baseline; three-point line 22 ft 1.75 in arc, straights 3 ft 4.13 in from the sidelines; restricted area none |
-| `nfhs` | High school (NFHS) basketball court | 全米高校連盟（NFHS）のバスケットボールコート | court 84 ft by 50 ft; lane 12 ft wide; free-throw line 19 ft from the baseline; three-point line 19 ft 9 in arc, straights 5 ft 3 in from the sidelines; restricted area none |
-| `gleague` | NBA G League basketball court | NBA Gリーグのバスケットボールコート | court 94 ft by 50 ft; lane 16 ft wide; free-throw line 19 ft from the baseline; three-point line 23 ft 9 in arc, straights 3 ft from the sidelines; restricted area 4 ft arc |
+| `league` | Name | Key figures |
+| --- | --- | --- |
+| `nba` (the sport's own) | NBA basketball court | court 94 ft by 50 ft; lane 16 ft wide; free-throw line 19 ft from the baseline; three-point line 23 ft 9 in arc, straights 3 ft from the sidelines; restricted area 4 ft arc |
+| `wnba` | WNBA basketball court | court 94 ft by 50 ft; lane 16 ft wide; free-throw line 19 ft from the baseline; three-point line 22 ft 1.75 in arc, straights 3 ft from the sidelines; restricted area 4 ft arc |
+| `fiba` | FIBA basketball court | court 28 m by 15 m; lane 4.9 m wide; free-throw line 5.8 m from the baseline; three-point line 6.75 m arc, straights 0.9 m from the sidelines; restricted area 1.3 m arc |
+| `ncaa-men` | NCAA men's basketball court | court 94 ft by 50 ft; lane 12 ft wide; free-throw line 19 ft from the baseline; three-point line 22 ft 1.75 in arc, straights 3 ft 4.13 in from the sidelines; restricted area 4 ft arc |
+| `ncaa-women` | NCAA women's basketball court | court 94 ft by 50 ft; lane 12 ft wide; free-throw line 19 ft from the baseline; three-point line 22 ft 1.75 in arc, straights 3 ft 4.13 in from the sidelines; restricted area none |
+| `nfhs` | High school (NFHS) basketball court | court 84 ft by 50 ft; lane 12 ft wide; free-throw line 19 ft from the baseline; three-point line 19 ft 9 in arc, straights 5 ft 3 in from the sidelines; restricted area none |
+| `gleague` | NBA G League basketball court | court 94 ft by 50 ft; lane 16 ft wide; free-throw line 19 ft from the baseline; three-point line 23 ft 9 in arc, straights 3 ft from the sidelines; restricted area 4 ft arc |
 
 Sources:
 
@@ -33,37 +35,37 @@ Sources:
 
 History a source dates:
 
-| Change | English | 日本語 |
-| --- | --- | --- |
-| `wnba.laneWidth.start` | The free-throw lane is 12 feet wide. | フリースローレーン（ペイントエリア）の幅は12フィート（約3.7m）です。 |
-| `wnba.laneWidth.2004` | The free-throw lane is widened to 16 feet, the NBA's size. | フリースローレーンの幅が、NBAと同じ16フィート（約4.9m）に広がります。 |
-| `ncaa-men.restricted.start` | No restricted-area arc under the baskets. | バスケットの下にリストリクテッドエリア（半円）はありません。 |
-| `ncaa-men.restricted.2011` | A restricted-area arc of 3 feet from the middle of the basket is marked. | バスケットの中心から半径3フィート（約0.9m）のリストリクテッドエリア（半円）が描かれます。 |
-| `ncaa-men.restricted.2015` | The restricted-area arc grows to 4 feet. | リストリクテッドエリアの半径が4フィート（約1.2m）に広がります。 |
-| `ncaa-women.restricted.start` | No restricted-area arc under the baskets. | バスケットの下にリストリクテッドエリア（半円）はありません。 |
-| `ncaa-women.restricted.2011` | A restricted-area arc of 3 feet from the middle of the basket is marked. | バスケットの中心から半径3フィート（約0.9m）のリストリクテッドエリア（半円）が描かれます。 |
-| `ncaa-women.restricted.2017` | The restricted-area arc grows to 4 feet. | リストリクテッドエリアの半径が4フィート（約1.2m）に広がります。 |
-| `ncaa-women.restricted.2023` | The restricted area is only the area under the basket: no arc is required. | リストリクテッドエリアはバスケット直下の区域だけとなり、半円のラインは必須ではなくなります。 |
+| Change | What changed |
+| --- | --- |
+| `wnba.laneWidth.start` | The free-throw lane is 12 feet wide. |
+| `wnba.laneWidth.2004` | The free-throw lane is widened to 16 feet, the NBA's size. |
+| `ncaa-men.restricted.start` | No restricted-area arc under the baskets. |
+| `ncaa-men.restricted.2011` | A restricted-area arc of 3 feet from the middle of the basket is marked. |
+| `ncaa-men.restricted.2015` | The restricted-area arc grows to 4 feet. |
+| `ncaa-women.restricted.start` | No restricted-area arc under the baskets. |
+| `ncaa-women.restricted.2011` | A restricted-area arc of 3 feet from the middle of the basket is marked. |
+| `ncaa-women.restricted.2017` | The restricted-area arc grows to 4 feet. |
+| `ncaa-women.restricted.2023` | The restricted area is only the area under the basket: no arc is required. |
 
 ## Ice hockey
 
 `sport: "nhl"`
 
-| `league` | Name | 日本語 | Key figures |
-| --- | --- | --- | --- |
-| `nhl` (the sport's own) | NHL hockey rink | NHLのアイスホッケーリンク | rink 200 ft by 85 ft; corner radius 28 ft; goal line 11 ft from the end boards; blue line 75 ft from the end boards; face-off circle 15 ft radius; trapezoid 22 ft at the goal line, 28 ft at the boards |
-| `iihf` | IIHF ice hockey rink | IIHF（国際アイスホッケー連盟）のアイスホッケーリンク | rink 60 m by 30 m; corner radius 8.5 m; goal line 4 m from the end boards; blue line 22.5 m from the end boards; face-off circle 4.5 m radius; trapezoid 6.8 m at the goal line, 8.6 m at the boards |
-| `ncaa-men` | NCAA men's ice hockey rink | NCAA男子のアイスホッケーリンク | rink 200 ft by 85 ft; corner radius 20 ft; goal line 11 ft from the end boards; blue line 75 ft from the end boards; face-off circle 15 ft radius; trapezoid 22 ft at the goal line, 28 ft at the boards |
-| `ncaa-women` | NCAA women's ice hockey rink | NCAA女子のアイスホッケーリンク | rink 200 ft by 85 ft; corner radius 20 ft; goal line 11 ft from the end boards; blue line 75 ft from the end boards; face-off circle 15 ft radius; trapezoid none |
-| `ahl` | AHL hockey rink | AHLのアイスホッケーリンク | rink 200 ft by 85 ft; corner radius 28 ft; goal line 11 ft from the end boards; blue line 75 ft from the end boards; face-off circle 15 ft radius; trapezoid 22 ft at the goal line, 28 ft at the boards |
-| `echl` | ECHL hockey rink | ECHLのアイスホッケーリンク | rink 200 ft by 85 ft; corner radius 28 ft; goal line 11 ft from the end boards; blue line 75 ft from the end boards; face-off circle 15 ft radius; trapezoid 22 ft at the goal line, 28 ft at the boards |
-| `ohl` | OHL hockey rink | OHLのアイスホッケーリンク | rink 200 ft by 85 ft; corner radius 28 ft; goal line 11 ft from the end boards; blue line 75 ft from the end boards; face-off circle 15 ft radius; trapezoid 22 ft at the goal line, 28 ft at the boards |
-| `whl` | WHL hockey rink | WHLのアイスホッケーリンク | rink 200 ft by 85 ft; corner radius 28 ft; goal line 11 ft from the end boards; blue line 75 ft from the end boards; face-off circle 15 ft radius; trapezoid 22 ft at the goal line, 28 ft at the boards |
-| `qmjhl` | QMJHL hockey rink | QMJHLのアイスホッケーリンク | rink 200 ft by 85 ft; corner radius 28 ft; goal line 11 ft from the end boards; blue line 75 ft from the end boards; face-off circle 15 ft radius; trapezoid 22 ft at the goal line, 28 ft at the boards |
-| `ushl` | USHL hockey rink | USHLのアイスホッケーリンク | rink 200 ft by 85 ft; corner radius 28 ft; goal line 11 ft from the end boards; blue line 75 ft from the end boards; face-off circle 15 ft radius; trapezoid none |
-| `pwhl` | PWHL hockey rink | PWHLのアイスホッケーリンク | rink 200 ft by 85 ft; corner radius 28 ft; goal line 11 ft from the end boards; blue line 75 ft from the end boards; face-off circle 15 ft radius; trapezoid none |
-| `olympic` | Olympic ice hockey rink (60 by 26 m) | オリンピックのアイスホッケーリンク（60×26m） | rink 60 m by 26 m; corner radius 8.5 m; goal line 4 m from the end boards; blue line 22.5 m from the end boards; face-off circle 4.5 m radius; trapezoid 6.8 m at the goal line, 8.6 m at the boards |
-| `boston-garden` | Boston Garden hockey rink | ボストン・ガーデンのアイスホッケーリンク | rink 190 ft 11.34 in by 83 ft 0.06 in; corner radius 28 ft; goal line 11 ft from the end boards; blue line 75 ft from the end boards; face-off circle 15 ft radius; trapezoid 22 ft at the goal line, 28 ft at the boards |
+| `league` | Name | Key figures |
+| --- | --- | --- |
+| `nhl` (the sport's own) | NHL hockey rink | rink 200 ft by 85 ft; corner radius 28 ft; goal line 11 ft from the end boards; blue line 75 ft from the end boards; face-off circle 15 ft radius; trapezoid 22 ft at the goal line, 28 ft at the boards |
+| `iihf` | IIHF ice hockey rink | rink 60 m by 30 m; corner radius 8.5 m; goal line 4 m from the end boards; blue line 22.5 m from the end boards; face-off circle 4.5 m radius; trapezoid 6.8 m at the goal line, 8.6 m at the boards |
+| `ncaa-men` | NCAA men's ice hockey rink | rink 200 ft by 85 ft; corner radius 20 ft; goal line 11 ft from the end boards; blue line 75 ft from the end boards; face-off circle 15 ft radius; trapezoid 22 ft at the goal line, 28 ft at the boards |
+| `ncaa-women` | NCAA women's ice hockey rink | rink 200 ft by 85 ft; corner radius 20 ft; goal line 11 ft from the end boards; blue line 75 ft from the end boards; face-off circle 15 ft radius; trapezoid none |
+| `ahl` | AHL hockey rink | rink 200 ft by 85 ft; corner radius 28 ft; goal line 11 ft from the end boards; blue line 75 ft from the end boards; face-off circle 15 ft radius; trapezoid 22 ft at the goal line, 28 ft at the boards |
+| `echl` | ECHL hockey rink | rink 200 ft by 85 ft; corner radius 28 ft; goal line 11 ft from the end boards; blue line 75 ft from the end boards; face-off circle 15 ft radius; trapezoid 22 ft at the goal line, 28 ft at the boards |
+| `ohl` | OHL hockey rink | rink 200 ft by 85 ft; corner radius 28 ft; goal line 11 ft from the end boards; blue line 75 ft from the end boards; face-off circle 15 ft radius; trapezoid 22 ft at the goal line, 28 ft at the boards |
+| `whl` | WHL hockey rink | rink 200 ft by 85 ft; corner radius 28 ft; goal line 11 ft from the end boards; blue line 75 ft from the end boards; face-off circle 15 ft radius; trapezoid 22 ft at the goal line, 28 ft at the boards |
+| `qmjhl` | QMJHL hockey rink | rink 200 ft by 85 ft; corner radius 28 ft; goal line 11 ft from the end boards; blue line 75 ft from the end boards; face-off circle 15 ft radius; trapezoid 22 ft at the goal line, 28 ft at the boards |
+| `ushl` | USHL hockey rink | rink 200 ft by 85 ft; corner radius 28 ft; goal line 11 ft from the end boards; blue line 75 ft from the end boards; face-off circle 15 ft radius; trapezoid none |
+| `pwhl` | PWHL hockey rink | rink 200 ft by 85 ft; corner radius 28 ft; goal line 11 ft from the end boards; blue line 75 ft from the end boards; face-off circle 15 ft radius; trapezoid none |
+| `olympic` | Olympic ice hockey rink (60 by 26 m) | rink 60 m by 26 m; corner radius 8.5 m; goal line 4 m from the end boards; blue line 22.5 m from the end boards; face-off circle 4.5 m radius; trapezoid 6.8 m at the goal line, 8.6 m at the boards |
+| `boston-garden` | Boston Garden hockey rink | rink 190 ft 11.34 in by 83 ft 0.06 in; corner radius 28 ft; goal line 11 ft from the end boards; blue line 75 ft from the end boards; face-off circle 15 ft radius; trapezoid 22 ft at the goal line, 28 ft at the boards |
 
 Sources:
 
@@ -84,33 +86,33 @@ Sources:
 
 History a source dates:
 
-| Change | English | 日本語 |
-| --- | --- | --- |
-| `iihf.blueLine.2018` | Blue lines are 22.86 m (75 feet) from the end boards. | ブルーラインはエンドボードから22.86m（75フィート）の位置にあります。 |
-| `iihf.trapezoid.2018` | No restricted area behind the goal: the goalkeeper may play the puck anywhere. | ゴール裏にトラペゾイドはなく、ゴールキーパーはどこでもパックを扱えます。 |
-| `iihf.trapezoid.2021` | A restricted area for goalkeepers behind the net is marked: 6.80 m at the goal line, 8.60 m at the boards. | ゴール裏にゴールキーパーの制限区域（トラペゾイド）が引かれます。ゴールライン側が6.80m、エンドボード側が8.60mです。 |
-| `iihf.blueLine.2022` | Blue lines are 22.50 m from the end boards (the diagram of the 2022/23 rule book; the sources do not say which edge of the line is measured). | ブルーラインはエンドボードから22.50mの位置です（2022/23年版ルールブックの図による。線のどちらの縁から測るかは、資料には書かれていません）。 |
-| `ncaa-men.trapezoid.start` | No trapezoid behind the net. | ゴール裏にトラペゾイド（台形の区域）はありません。 |
-| `ncaa-men.trapezoid.2026` | Division I men's games have the trapezoid behind the net: 22 feet at the goal line, 28 at the boards. | ディビジョンI男子の試合では、ゴール裏にトラペゾイドが引かれます。ゴールライン側が22フィート、エンドボード側が28フィートです。 |
-| `ahl.blueLine.start` | Blue lines are 71 feet from the end boards: 60-foot attack zones and a 58-foot neutral zone (worked out from the AHL's move of 4 feet). | ブルーラインはエンドボードから71フィート（約21.6m）で、アタッキングゾーンは60フィート、ニュートラルゾーンは58フィートです（AHLが発表した4フィートの移動から算出）。 |
-| `ahl.blueLine.2005` | Blue lines move 4 feet towards centre ice: 64-foot attack zones and a 50-foot neutral zone. | ブルーラインがリンクの中央寄りに4フィート移り、アタッキングゾーンは64フィート、ニュートラルゾーンは50フィートになります。 |
+| Change | What changed |
+| --- | --- |
+| `iihf.blueLine.2018` | Blue lines are 22.86 m (75 feet) from the end boards. |
+| `iihf.trapezoid.2018` | No restricted area behind the goal: the goalkeeper may play the puck anywhere. |
+| `iihf.trapezoid.2021` | A restricted area for goalkeepers behind the net is marked: 6.80 m at the goal line, 8.60 m at the boards. |
+| `iihf.blueLine.2022` | Blue lines are 22.50 m from the end boards (the diagram of the 2022/23 rule book; the sources do not say which edge of the line is measured). |
+| `ncaa-men.trapezoid.start` | No trapezoid behind the net. |
+| `ncaa-men.trapezoid.2026` | Division I men's games have the trapezoid behind the net: 22 feet at the goal line, 28 at the boards. |
+| `ahl.blueLine.start` | Blue lines are 71 feet from the end boards: 60-foot attack zones and a 58-foot neutral zone (worked out from the AHL's move of 4 feet). |
+| `ahl.blueLine.2005` | Blue lines move 4 feet towards centre ice: 64-foot attack zones and a 50-foot neutral zone. |
 
 ## Football
 
 `sport: "nfl"`
 
-| `league` | Name | 日本語 | Key figures |
-| --- | --- | --- | --- |
-| `nfl` (the sport's own) | NFL football field | NFLのフィールド | goal lines 100 yd apart; end zones 10 yd; width 53.33 yd; hash marks 70 ft 9 in from each sideline; goal posts 18 ft 6 in apart, on the end line |
-| `cfl` (the sport's own) | CFL football field | CFLのフィールド | goal lines 110 yd apart; end zones 20 yd; width 65 yd; hash marks 84 ft from each sideline; goal posts 18 ft 6 in apart, on the goal line |
-| `ifaf` (the sport's own) | IFAF football field | IFAFのフィールド | goal lines 100 yd apart; end zones 10 yd; width 53.33 yd; hash marks 60 ft from each sideline; goal posts 18 ft 6 in apart, on the end line |
-| `ncaa` | NCAA football field | NCAAのフィールド | goal lines 100 yd apart; end zones 10 yd; width 53.33 yd; hash marks 60 ft from each sideline; goal posts 18 ft 6 in apart, on the end line |
-| `nfhs` | High school (NFHS) football field, 11 players | 全米高校連盟（NFHS）の11人制フィールド | goal lines 100 yd apart; end zones 10 yd; width 53.33 yd; hash marks 53 ft 4 in from each sideline; goal posts 23 ft 4 in apart, on the end line |
-| `nfhs-9` | High school (NFHS) football field, 9 players | 全米高校連盟（NFHS）の9人制フィールド | goal lines 80 yd apart; end zones 10 yd; width 40 yd; hash marks 48 ft 4 in from each sideline; goal posts 23 ft 4 in apart, on the end line |
-| `nfhs-8` | High school (NFHS) football field, 8 players | 全米高校連盟（NFHS）の8人制フィールド | goal lines 80 yd apart; end zones 10 yd; width 40 yd; hash marks 45 ft from each sideline; goal posts 23 ft 4 in apart, on the end line |
-| `nfhs-6` | High school (NFHS) football field, 6 players | 全米高校連盟（NFHS）の6人制フィールド | goal lines 80 yd apart; end zones 10 yd; width 40 yd; hash marks 45 ft from each sideline; goal posts 23 ft 4 in apart, on the end line |
-| `uil-6` | Texas (UIL) six-man football field | テキサス州（UIL）の6人制フィールド | goal lines 80 yd apart; end zones 10 yd; width 40 yd; hash marks 40 ft from each sideline; goal posts 25 ft apart, on the end line |
-| `ifl` | Indoor Football League field | インドア・フットボール・リーグ（IFL）のフィールド | goal lines 50 yd apart; end zones 8 yd; width 28 yd; hash marks 27 ft from each sideline; goal posts 10 ft apart, on the end line |
+| `league` | Name | Key figures |
+| --- | --- | --- |
+| `nfl` (the sport's own) | NFL football field | goal lines 100 yd apart; end zones 10 yd; width 53.33 yd; hash marks 70 ft 9 in from each sideline; goal posts 18 ft 6 in apart, on the end line |
+| `cfl` (the sport's own) | CFL football field | goal lines 110 yd apart; end zones 20 yd; width 65 yd; hash marks 84 ft from each sideline; goal posts 18 ft 6 in apart, on the goal line |
+| `ifaf` (the sport's own) | IFAF football field | goal lines 100 yd apart; end zones 10 yd; width 53.33 yd; hash marks 60 ft from each sideline; goal posts 18 ft 6 in apart, on the end line |
+| `ncaa` | NCAA football field | goal lines 100 yd apart; end zones 10 yd; width 53.33 yd; hash marks 60 ft from each sideline; goal posts 18 ft 6 in apart, on the end line |
+| `nfhs` | High school (NFHS) football field, 11 players | goal lines 100 yd apart; end zones 10 yd; width 53.33 yd; hash marks 53 ft 4 in from each sideline; goal posts 23 ft 4 in apart, on the end line |
+| `nfhs-9` | High school (NFHS) football field, 9 players | goal lines 80 yd apart; end zones 10 yd; width 40 yd; hash marks 48 ft 4 in from each sideline; goal posts 23 ft 4 in apart, on the end line |
+| `nfhs-8` | High school (NFHS) football field, 8 players | goal lines 80 yd apart; end zones 10 yd; width 40 yd; hash marks 45 ft from each sideline; goal posts 23 ft 4 in apart, on the end line |
+| `nfhs-6` | High school (NFHS) football field, 6 players | goal lines 80 yd apart; end zones 10 yd; width 40 yd; hash marks 45 ft from each sideline; goal posts 23 ft 4 in apart, on the end line |
+| `uil-6` | Texas (UIL) six-man football field | goal lines 80 yd apart; end zones 10 yd; width 40 yd; hash marks 40 ft from each sideline; goal posts 25 ft apart, on the end line |
+| `ifl` | Indoor Football League field | goal lines 50 yd apart; end zones 8 yd; width 28 yd; hash marks 27 ft from each sideline; goal posts 10 ft apart, on the end line |
 
 Sources:
 
@@ -128,22 +130,22 @@ Sources:
 
 `sport: "mlb"`
 
-| `league` | Name | 日本語 | Key figures |
-| --- | --- | --- | --- |
-| `mlb` (the sport's own) | Baseball field | 野球場 | bases 90 ft apart; pitching distance 60 ft 6 in; fence 330 ft at the lines, 400 ft in the middle |
-| `milb` | Minor League Baseball field | マイナーリーグ（MiLB）の野球場 | bases 90 ft apart; pitching distance 60 ft 6 in; fence 325 ft at the lines, 400 ft in the middle |
-| `ncaa` | NCAA baseball field | NCAAの野球場 | bases 90 ft apart; pitching distance 60 ft 6 in; fence 330 ft at the lines, 400 ft in the middle |
-| `nfhs` | High school (NFHS) baseball field | 全米高校連盟（NFHS）の野球場 | bases 90 ft apart; pitching distance 60 ft 6 in; fence 300 ft at the lines, 350 ft in the middle |
-| `little-league` | Little League baseball field (60-foot bases) | リトルリーグの野球場（塁間60フィート） | bases 60 ft apart; pitching distance 46 ft; fence 200 ft |
-| `little-league-intermediate` | Little League Intermediate (50/70) baseball field | リトルリーグ・インターミディエイト（50/70）の野球場 | bases 70 ft apart; pitching distance 50 ft; fence 200 ft |
-| `pony` | PONY League (14U) baseball field | ポニーリーグ（14歳以下）の野球場 | bases 80 ft apart; pitching distance 54 ft; fence 275 ft at the lines, 315 ft in the middle |
-| `pony-bronco` | PONY Bronco (12U) baseball field | ポニー・ブロンコ（12歳以下）の野球場 | bases 70 ft apart; pitching distance 50 ft; fence 225 ft at the lines, 275 ft in the middle |
-| `pony-mustang` | PONY Mustang (10U) baseball field | ポニー・マスタング（10歳以下）の野球場 | bases 60 ft apart; pitching distance 46 ft; fence 175 ft at the lines, 225 ft in the middle |
-| `ncaa-softball` | NCAA softball field | NCAAのソフトボール場 | bases 60 ft apart; pitching distance 43 ft; fence 200 ft at the lines, 220 ft in the middle |
-| `nfhs-softball` | High school (NFHS) softball field | 全米高校連盟（NFHS）のソフトボール場 | bases 60 ft apart; pitching distance 43 ft; fence 185 ft |
-| `fastpitch` | USA Softball fast-pitch field | USAソフトボール（ファストピッチ）のソフトボール場 | bases 60 ft apart; pitching distance 43 ft; fence 200 ft |
-| `slowpitch` | USA Softball slow-pitch field | USAソフトボール（スローピッチ）のソフトボール場 | bases 70 ft apart; pitching distance 50 ft; fence 265 ft |
-| `slowpitch-wbsc` | WBSC slow-pitch softball field | WBSC（スローピッチ）のソフトボール場 | bases 65 ft apart; pitching distance 50 ft; fence 275 ft |
+| `league` | Name | Key figures |
+| --- | --- | --- |
+| `mlb` (the sport's own) | Baseball field | bases 90 ft apart; pitching distance 60 ft 6 in; fence 330 ft at the lines, 400 ft in the middle |
+| `milb` | Minor League Baseball field | bases 90 ft apart; pitching distance 60 ft 6 in; fence 325 ft at the lines, 400 ft in the middle |
+| `ncaa` | NCAA baseball field | bases 90 ft apart; pitching distance 60 ft 6 in; fence 330 ft at the lines, 400 ft in the middle |
+| `nfhs` | High school (NFHS) baseball field | bases 90 ft apart; pitching distance 60 ft 6 in; fence 300 ft at the lines, 350 ft in the middle |
+| `little-league` | Little League baseball field (60-foot bases) | bases 60 ft apart; pitching distance 46 ft; fence 200 ft |
+| `little-league-intermediate` | Little League Intermediate (50/70) baseball field | bases 70 ft apart; pitching distance 50 ft; fence 200 ft |
+| `pony` | PONY League (14U) baseball field | bases 80 ft apart; pitching distance 54 ft; fence 275 ft at the lines, 315 ft in the middle |
+| `pony-bronco` | PONY Bronco (12U) baseball field | bases 70 ft apart; pitching distance 50 ft; fence 225 ft at the lines, 275 ft in the middle |
+| `pony-mustang` | PONY Mustang (10U) baseball field | bases 60 ft apart; pitching distance 46 ft; fence 175 ft at the lines, 225 ft in the middle |
+| `ncaa-softball` | NCAA softball field | bases 60 ft apart; pitching distance 43 ft; fence 200 ft at the lines, 220 ft in the middle |
+| `nfhs-softball` | High school (NFHS) softball field | bases 60 ft apart; pitching distance 43 ft; fence 185 ft |
+| `fastpitch` | USA Softball fast-pitch field | bases 60 ft apart; pitching distance 43 ft; fence 200 ft |
+| `slowpitch` | USA Softball slow-pitch field | bases 70 ft apart; pitching distance 50 ft; fence 265 ft |
+| `slowpitch-wbsc` | WBSC slow-pitch softball field | bases 65 ft apart; pitching distance 50 ft; fence 275 ft |
 
 Sources:
 
@@ -164,10 +166,10 @@ Sources:
 
 `sport: "curling"`
 
-| `league` | Name | 日本語 | Key figures |
-| --- | --- | --- | --- |
-| `wcf` (the sport's own) | World Curling sheet | ワールドカーリングのシート | sheet 45.72 m by 4.75 m; least sheet 44.501 m by 4.42 m; tee to tee 34.75 m; back line 1.829 m from the tee; hog line 6.401 m from the tee; house circles of 1.829 m, 1.219 m and 0.61 m radius, a button of 0.152 m; courtesy line 1.219 m outside each hog line |
-| `curling-canada` | Curling Canada sheet | カーリング・カナダのシート | sheet 150 ft by 15 ft 7 in; least sheet 146 ft by 14 ft 2 in; tee to tee 114 ft; back line 6 ft from the tee; hog line 21 ft from the tee; house circles of 6 ft, 4 ft and 2 ft radius, a button of 6 in; courtesy line none |
+| `league` | Name | Key figures |
+| --- | --- | --- |
+| `wcf` (the sport's own) | World Curling sheet | sheet 45.72 m by 4.75 m; least sheet 44.501 m by 4.42 m; tee to tee 34.75 m; back line 1.829 m from the tee; hog line 6.401 m from the tee; house circles of 1.829 m, 1.219 m and 0.61 m radius, a button of 0.152 m; courtesy line 1.219 m outside each hog line |
+| `curling-canada` | Curling Canada sheet | sheet 150 ft by 15 ft 7 in; least sheet 146 ft by 14 ft 2 in; tee to tee 114 ft; back line 6 ft from the tee; hog line 21 ft from the tee; house circles of 6 ft, 4 ft and 2 ft radius, a button of 6 in; courtesy line none |
 
 Sources:
 
@@ -178,9 +180,9 @@ Sources:
 
 `sport: "tennis"`
 
-| `league` | Name | 日本語 | Key figures |
-| --- | --- | --- | --- |
-| `itf` (the sport's own) | ITF tennis court | ITFのテニスコート | court 78 ft by 36 ft (singles 27 ft wide); service line 21 ft from the net; net 3 ft 6 in at the posts, 3 ft at the centre; net posts 3 ft outside the doubles court; free zone 21 ft behind the baselines, 12 ft beside the sidelines |
+| `league` | Name | Key figures |
+| --- | --- | --- |
+| `itf` (the sport's own) | ITF tennis court | court 78 ft by 36 ft (singles 27 ft wide); service line 21 ft from the net; net 3 ft 6 in at the posts, 3 ft at the centre; net posts 3 ft outside the doubles court; free zone 21 ft behind the baselines, 12 ft beside the sidelines |
 
 Sources:
 
@@ -190,11 +192,11 @@ Sources:
 
 `sport: "volleyball"`
 
-| `league` | Name | 日本語 | Key figures |
-| --- | --- | --- | --- |
-| `fivb` (the sport's own) | FIVB volleyball court | FIVBのバレーボールコート | court 18 m by 9 m; attack line 3 m from the centre line; net 10 m long, 2.43 m high (women's 2.24 m); posts 1 m outside the side lines; free zone 6.5 m behind the end lines, 5 m beside the side lines |
-| `fivb-beach` | FIVB beach volleyball court | FIVBのビーチバレーボールコート | court 16 m by 8 m; attack line none; net 8.5 m long, 2.43 m high (women's 2.24 m); posts 1 m outside the side lines; free zone 5 m behind the end lines, 5 m beside the side lines |
-| `wpv-sitting` | World ParaVolley sitting volleyball court | ワールドパラバレーのシッティングバレーボールコート | court 10 m by 6 m; attack line 2 m from the centre line; net 7 m long, 1.15 m high (women's 1.05 m); posts 1 m outside the side lines; free zone 6 m behind the end lines, 4 m beside the side lines |
+| `league` | Name | Key figures |
+| --- | --- | --- |
+| `fivb` (the sport's own) | FIVB volleyball court | court 18 m by 9 m; attack line 3 m from the centre line; net 10 m long, 2.43 m high (women's 2.24 m); posts 1 m outside the side lines; free zone 6.5 m behind the end lines, 5 m beside the side lines |
+| `fivb-beach` | FIVB beach volleyball court | court 16 m by 8 m; attack line none; net 8.5 m long, 2.43 m high (women's 2.24 m); posts 1 m outside the side lines; free zone 5 m behind the end lines, 5 m beside the side lines |
+| `wpv-sitting` | World ParaVolley sitting volleyball court | court 10 m by 6 m; attack line 2 m from the centre line; net 7 m long, 1.15 m high (women's 1.05 m); posts 1 m outside the side lines; free zone 6 m behind the end lines, 4 m beside the side lines |
 
 Sources:
 
@@ -206,9 +208,9 @@ Sources:
 
 `sport: "badminton"`
 
-| `league` | Name | 日本語 | Key figures |
-| --- | --- | --- | --- |
-| `bwf` (the sport's own) | BWF badminton court | BWFのバドミントンコート | court 13.4 m by 6.1 m (singles 5.18 m wide); short service line 1.98 m from the net; doubles long service line 0.76 m inside the back boundary; net 1.524 m at the centre, 1.55 m over the side lines |
+| `league` | Name | Key figures |
+| --- | --- | --- |
+| `bwf` (the sport's own) | BWF badminton court | court 13.4 m by 6.1 m (singles 5.18 m wide); short service line 1.98 m from the net; doubles long service line 0.76 m inside the back boundary; net 1.524 m at the centre, 1.55 m over the side lines |
 
 Sources:
 
@@ -218,9 +220,9 @@ Sources:
 
 `sport: "pickleball"`
 
-| `league` | Name | 日本語 | Key figures |
-| --- | --- | --- | --- |
-| `usap` (the sport's own) | USA Pickleball court | USA Pickleballのコート | court 44 ft by 20 ft; non-volley zone 7 ft from the net; net 3 ft at the sidelines, 2 ft 10 in at the centre; playing surface at least 30 ft by 60 ft |
+| `league` | Name | Key figures |
+| --- | --- | --- |
+| `usap` (the sport's own) | USA Pickleball court | court 44 ft by 20 ft; non-volley zone 7 ft from the net; net 3 ft at the sidelines, 2 ft 10 in at the centre; playing surface at least 30 ft by 60 ft |
 
 Sources:
 
@@ -230,9 +232,9 @@ Sources:
 
 `sport: "tabletennis"`
 
-| `league` | Name | 日本語 | Key figures |
-| --- | --- | --- | --- |
-| `ittf` (the sport's own) | ITTF table | ITTFの卓球台 | table 2.74 m by 1.525 m, 0.76 m high; net 0.153 m above the playing surface; lines 0.02 m at the edges, a 0.003 m centre line |
+| `league` | Name | Key figures |
+| --- | --- | --- |
+| `ittf` (the sport's own) | ITTF table | table 2.74 m by 1.525 m, 0.76 m high; net 0.153 m above the playing surface; lines 0.02 m at the edges, a 0.003 m centre line |
 
 Sources:
 
@@ -242,9 +244,9 @@ Sources:
 
 `sport: "padel"`
 
-| `league` | Name | 日本語 | Key figures |
-| --- | --- | --- | --- |
-| `fip` (the sport's own) | FIP padel court | FIPのパデルコート | court 20 m by 10 m, inside its walls; service line 6.95 m from the net; net 0.88 m at the centre, 0.92 m at the ends, 10 m long; walls the end walls 4 m high, the side walls 4 m long at each end |
+| `league` | Name | Key figures |
+| --- | --- | --- |
+| `fip` (the sport's own) | FIP padel court | court 20 m by 10 m, inside its walls; service line 6.95 m from the net; net 0.88 m at the centre, 0.92 m at the ends, 10 m long; walls the end walls 4 m high, the side walls 4 m long at each end |
 
 Sources:
 
@@ -254,11 +256,11 @@ Sources:
 
 `sport: "squash"`
 
-| `league` | Name | 日本語 | Key figures |
-| --- | --- | --- | --- |
-| `wsf` (the sport's own) | World Squash singles court | ワールドスカッシュのシングルスコート | court 9.75 m by 6.4 m; short line 4.26 m from the back wall to its nearest edge; service box 1.6 m square inside its lines; front wall the tin 0.48 m, the service line 1.78 m and the front wall line 4.57 m up |
-| `wsf-doubles` | World Squash doubles court | ワールドスカッシュのダブルスコート | court 9.75 m by 7.62 m; short line 4.26 m from the back wall to its nearest edge; service box 1.6 m square inside its lines; front wall the tin 0.48 m, the service line 1.78 m and the front wall line 4.57 m up |
-| `wsf-doubles-wide` | World Squash international competition width doubles court | ワールドスカッシュの国際大会規格のダブルスコート | court 9.75 m by 8.42 m; short line 4.26 m from the back wall to its nearest edge; service box 1.6 m square inside its lines; front wall the tin 0.33 m, the service line 1.78 m and the front wall line 4.57 m up |
+| `league` | Name | Key figures |
+| --- | --- | --- |
+| `wsf` (the sport's own) | World Squash singles court | court 9.75 m by 6.4 m; short line 4.26 m from the back wall to its nearest edge; service box 1.6 m square inside its lines; front wall the tin 0.48 m, the service line 1.78 m and the front wall line 4.57 m up |
+| `wsf-doubles` | World Squash doubles court | court 9.75 m by 7.62 m; short line 4.26 m from the back wall to its nearest edge; service box 1.6 m square inside its lines; front wall the tin 0.48 m, the service line 1.78 m and the front wall line 4.57 m up |
+| `wsf-doubles-wide` | World Squash international competition width doubles court | court 9.75 m by 8.42 m; short line 4.26 m from the back wall to its nearest edge; service box 1.6 m square inside its lines; front wall the tin 0.33 m, the service line 1.78 m and the front wall line 4.57 m up |
 
 Sources:
 
@@ -269,9 +271,9 @@ Sources:
 
 `sport: "racquetball"`
 
-| `league` | Name | 日本語 | Key figures |
-| --- | --- | --- | --- |
-| `irf` (the sport's own) | IRF racquetball court | IRFのラケットボールコート | court 40 ft by 20 ft, 20 ft high; short line 20 ft from the back wall to its back edge; service line 5 ft in front of the short line; receiving line 5 ft behind the short line |
+| `league` | Name | Key figures |
+| --- | --- | --- |
+| `irf` (the sport's own) | IRF racquetball court | court 40 ft by 20 ft, 20 ft high; short line 20 ft from the back wall to its back edge; service line 5 ft in front of the short line; receiving line 5 ft behind the short line |
 
 Sources:
 
@@ -282,9 +284,9 @@ Sources:
 
 `sport: "sepaktakraw"`
 
-| `league` | Name | 日本語 | Key figures |
-| --- | --- | --- | --- |
-| `istaf` (the sport's own) | ISTAF sepak takraw court | ISTAFのセパタクローコート | court 13.4 m by 6.1 m; quarter circles 0.9 m radius, at the ends of the centre line; service circles 0.3 m radius, 2.45 m from the back line; net 1.52 m high at the centre (women's 1.42 m) |
+| `league` | Name | Key figures |
+| --- | --- | --- |
+| `istaf` (the sport's own) | ISTAF sepak takraw court | court 13.4 m by 6.1 m; quarter circles 0.9 m radius, at the ends of the centre line; service circles 0.3 m radius, 2.45 m from the back line; net 1.52 m high at the centre (women's 1.42 m) |
 
 Sources:
 
@@ -294,9 +296,9 @@ Sources:
 
 `sport: "teqball"`
 
-| `league` | Name | 日本語 | Key figures |
-| --- | --- | --- | --- |
-| `fiteq` (the sport's own) | FITEQ teqball court | FITEQのテックボールコート | court at least 16 m by 12 m; table 3 m by 1.5 m; service line 3.5 m from the middle of the table; net 1.7 m wide, 0.14 m high |
+| `league` | Name | Key figures |
+| --- | --- | --- |
+| `fiteq` (the sport's own) | FITEQ teqball court | court at least 16 m by 12 m; table 3 m by 1.5 m; service line 3.5 m from the middle of the table; net 1.7 m wide, 0.14 m high |
 
 Sources:
 
@@ -306,9 +308,9 @@ Sources:
 
 `sport: "roundnet"`
 
-| `league` | Name | 日本語 | Key figures |
-| --- | --- | --- | --- |
-| `irf-roundnet` (the sport's own) | International Roundnet Federation court | 国際ラウンドネット連盟のコート | court at least 10 m by 10 m, with no out of bounds; set 0.914 m across; serving line a circle of 2.6 m radius; no hit zone a circle of 0.9 m radius |
+| `league` | Name | Key figures |
+| --- | --- | --- |
+| `irf-roundnet` (the sport's own) | International Roundnet Federation court | court at least 10 m by 10 m, with no out of bounds; set 0.914 m across; serving line a circle of 2.6 m radius; no hit zone a circle of 0.9 m radius |
 
 Sources:
 
@@ -318,9 +320,9 @@ Sources:
 
 `sport: "netball"`
 
-| `league` | Name | 日本語 | Key figures |
-| --- | --- | --- | --- |
-| `wn` (the sport's own) | World Netball court | ワールドネットボールのコート | court 30.5 m by 15.25 m; centre circle 0.9 m across; goal circles semicircles of 4.9 m radius; goalposts 3.05 m high, at the middle of each goal line |
+| `league` | Name | Key figures |
+| --- | --- | --- |
+| `wn` (the sport's own) | World Netball court | court 30.5 m by 15.25 m; centre circle 0.9 m across; goal circles semicircles of 4.9 m radius; goalposts 3.05 m high, at the middle of each goal line |
 
 Sources:
 
@@ -330,15 +332,15 @@ Sources:
 
 `sport: "lacrosse"`
 
-| `league` | Name | 日本語 | Key figures |
-| --- | --- | --- | --- |
-| `world-men` (the sport's own) | World Lacrosse men's field | ワールドラクロスの男子フィールド | field 91.4 m to 100 m by 50 m to 60 m; goal 1.83 m wide and 1.83 m high, its line 12 m from the end line; crease a circle of 3 m radius; restraining line 22 m from the goal line |
-| `world-women` | World Lacrosse women's field | ワールドラクロスの女子フィールド | field 91.4 m to 100 m by 50 m to 60 m; goal 1.83 m wide and 1.83 m high, its line 12 m from the end line; goal circle 3 m radius; restraining line 22 m from the goal line |
-| `ncaa-men` | NCAA men's lacrosse field | NCAA男子ラクロスのフィールド | field 110 yd by 60 yd; goal 2 yd wide and 2 yd high, its line 15 yd from the end line; crease a circle of 3 yd radius; restraining line 20 yd from the goal line |
-| `ncaa-women` | NCAA women's lacrosse field | NCAA女子ラクロスのフィールド | field 101 m to 110 m by 55 m to 64 m; goal 1.83 m wide and 1.83 m high, its line 9 m from the end line; goal circle 2.6 m radius; restraining line 27 m from the goal line |
-| `pll` | PLL field | PLLのフィールド | field 100 yd by 60 yd; goal 2 yd wide and 2 yd high, its line 15 yd from the end line; crease a circle of 3 yd radius; two-point arc 13 yd from the goal at the goal line extended, then an arc of 15 yd |
-| `nll` | NLL box lacrosse floor | NLLのボックスラクロスのフロア | floor 180 ft to 200 ft by 85 ft; goal 4 ft 9 in wide and 4 ft high, its line 12 ft from the end boards; crease a circle of 9 ft 3 in radius; restraining line 42 ft 6 in from the centre line |
-| `world-box` | World Lacrosse box lacrosse floor | ワールドラクロスのボックスラクロスのフロア | floor 200 ft by 85 ft; goal 4 ft 9 in wide and 4 ft high, its line 12 ft from the end boards; crease a circle of 9 ft 3 in radius; restraining line 42 ft 6 in from the centre line |
+| `league` | Name | Key figures |
+| --- | --- | --- |
+| `world-men` (the sport's own) | World Lacrosse men's field | field 91.4 m to 100 m by 50 m to 60 m; goal 1.83 m wide and 1.83 m high, its line 12 m from the end line; crease a circle of 3 m radius; restraining line 22 m from the goal line |
+| `world-women` | World Lacrosse women's field | field 91.4 m to 100 m by 50 m to 60 m; goal 1.83 m wide and 1.83 m high, its line 12 m from the end line; goal circle 3 m radius; restraining line 22 m from the goal line |
+| `ncaa-men` | NCAA men's lacrosse field | field 110 yd by 60 yd; goal 2 yd wide and 2 yd high, its line 15 yd from the end line; crease a circle of 3 yd radius; restraining line 20 yd from the goal line |
+| `ncaa-women` | NCAA women's lacrosse field | field 101 m to 110 m by 55 m to 64 m; goal 1.83 m wide and 1.83 m high, its line 9 m from the end line; goal circle 2.6 m radius; restraining line 27 m from the goal line |
+| `pll` | PLL field | field 100 yd by 60 yd; goal 2 yd wide and 2 yd high, its line 15 yd from the end line; crease a circle of 3 yd radius; two-point arc 13 yd from the goal at the goal line extended, then an arc of 15 yd |
+| `nll` | NLL box lacrosse floor | floor 180 ft to 200 ft by 85 ft; goal 4 ft 9 in wide and 4 ft high, its line 12 ft from the end boards; crease a circle of 9 ft 3 in radius; restraining line 42 ft 6 in from the centre line |
+| `world-box` | World Lacrosse box lacrosse floor | floor 200 ft by 85 ft; goal 4 ft 9 in wide and 4 ft high, its line 12 ft from the end boards; crease a circle of 9 ft 3 in radius; restraining line 42 ft 6 in from the centre line |
 
 Sources:
 
@@ -354,11 +356,11 @@ Sources:
 
 `sport: "rugby"`
 
-| `league` | Name | 日本語 | Key figures |
-| --- | --- | --- | --- |
-| `world-rugby` (the sport's own) | World Rugby field (rugby union) | ワールドラグビーのグラウンド（ラグビーユニオン） | field of play 94 m to 100 m by 68 m to 70 m; in-goal 6 m to 22 m deep; goal posts 5.6 m apart, the crossbar 3 m up; 22-metre line 22 m from the try line |
-| `nrl` | NRL field (rugby league) | NRLのグラウンド（ラグビーリーグ） | field of play 100 m by 68 m; in-goal 8 m deep; goal posts 5.5 m apart, the crossbar 3 m up; lines across every 10 m from each goal line |
-| `irl` | International Rugby League field | 国際ラグビーリーグ連盟のグラウンド | field of play 100 m by 68 m; in-goal 6 m to 11 m deep; goal posts 5.5 m apart, the crossbar 3 m up; lines across every 10 m from each goal line |
+| `league` | Name | Key figures |
+| --- | --- | --- |
+| `world-rugby` (the sport's own) | World Rugby field (rugby union) | field of play 94 m to 100 m by 68 m to 70 m; in-goal 6 m to 22 m deep; goal posts 5.6 m apart, the crossbar 3 m up; 22-metre line 22 m from the try line |
+| `nrl` | NRL field (rugby league) | field of play 100 m by 68 m; in-goal 8 m deep; goal posts 5.5 m apart, the crossbar 3 m up; lines across every 10 m from each goal line |
+| `irl` | International Rugby League field | field of play 100 m by 68 m; in-goal 6 m to 11 m deep; goal posts 5.5 m apart, the crossbar 3 m up; lines across every 10 m from each goal line |
 
 Sources:
 
@@ -370,9 +372,9 @@ Sources:
 
 `sport: "afl"`
 
-| `league` | Name | 日本語 | Key figures |
-| --- | --- | --- | --- |
-| `afl` (the sport's own) | Australian football ground (AFL) | オーストラリアンフットボールのグラウンド（AFL） | ground an oval 135 m to 185 m long and 110 m to 155 m wide; goal posts 6.4 m apart, behind posts 6.4 m either side; goal square 9 m deep; centre square 50 m by 50 m; fifty metre arc 50 m from the middle of the goal line |
+| `league` | Name | Key figures |
+| --- | --- | --- |
+| `afl` (the sport's own) | Australian football ground (AFL) | ground an oval 135 m to 185 m long and 110 m to 155 m wide; goal posts 6.4 m apart, behind posts 6.4 m either side; goal square 9 m deep; centre square 50 m by 50 m; fifty metre arc 50 m from the middle of the goal line |
 
 Sources:
 
@@ -382,10 +384,10 @@ Sources:
 
 `sport: "gaelic"`
 
-| `league` | Name | 日本語 | Key figures |
-| --- | --- | --- | --- |
-| `gaa-football` (the sport's own) | GAA field for Gaelic football | GAAのゲーリック・フットボールのフィールド | field 130 m to 145 m by 80 m to 90 m; lines across 13 m, 20 m, 45 m; goalposts 6.5 m apart, the crossbar 2.5 m up; rectangles 4.5 m deep and 13 m deep |
-| `gaa-hurling` | GAA field for hurling | GAAのハーリングのフィールド | field 130 m to 145 m by 80 m to 90 m; lines across 13 m, 20 m, 45 m, 65 m; goalposts 6.5 m apart, the crossbar 2.5 m up; rectangles 4.5 m deep and 13 m deep |
+| `league` | Name | Key figures |
+| --- | --- | --- |
+| `gaa-football` (the sport's own) | GAA field for Gaelic football | field 130 m to 145 m by 80 m to 90 m; lines across 13 m, 20 m, 45 m; goalposts 6.5 m apart, the crossbar 2.5 m up; rectangles 4.5 m deep and 13 m deep |
+| `gaa-hurling` | GAA field for hurling | field 130 m to 145 m by 80 m to 90 m; lines across 13 m, 20 m, 45 m, 65 m; goalposts 6.5 m apart, the crossbar 2.5 m up; rectangles 4.5 m deep and 13 m deep |
 
 Sources:
 
@@ -395,11 +397,11 @@ Sources:
 
 `sport: "cricket"`
 
-| `league` | Name | 日本語 | Key figures |
-| --- | --- | --- | --- |
-| `icc-men` (the sport's own) | ICC men's ground | ICC男子のグラウンド | pitch 22 yd by 10 ft; bowling crease 8 ft 8 in long; popping crease 4 ft in front of the bowling crease, marked 25 ft either side of the middle stumps at least; return creases 4 ft 4 in either side of the middle stumps, marked 8 ft behind the popping crease; wickets 9 in wide; boundary 65 yd to 90 yd from the centre of the pitch; circle 30 yd radius about each middle stump |
-| `icc-women` | ICC women's ground | ICC女子のグラウンド | pitch 22 yd by 10 ft; bowling crease 8 ft 8 in long; popping crease 4 ft in front of the bowling crease, marked 25 ft either side of the middle stumps at least; return creases 4 ft 4 in either side of the middle stumps, marked 8 ft behind the popping crease; wickets 9 in wide; boundary 60 yd to 70 yd from the centre of the pitch; circle 25.15 yd radius about each middle stump |
-| `mcc` | Laws of Cricket ground (MCC) | クリケット規則（MCC）のグラウンド | pitch 22 yd by 10 ft; bowling crease 8 ft 8 in long; popping crease 4 ft in front of the bowling crease, marked 6 ft either side of the middle stumps at least; return creases 4 ft 4 in either side of the middle stumps, marked 8 ft behind the popping crease; wickets 9 in wide; boundary no size given; circle none |
+| `league` | Name | Key figures |
+| --- | --- | --- |
+| `icc-men` (the sport's own) | ICC men's ground | pitch 22 yd by 10 ft; bowling crease 8 ft 8 in long; popping crease 4 ft in front of the bowling crease, marked 25 ft either side of the middle stumps at least; return creases 4 ft 4 in either side of the middle stumps, marked 8 ft behind the popping crease; wickets 9 in wide; boundary 65 yd to 90 yd from the centre of the pitch; circle 30 yd radius about each middle stump |
+| `icc-women` | ICC women's ground | pitch 22 yd by 10 ft; bowling crease 8 ft 8 in long; popping crease 4 ft in front of the bowling crease, marked 25 ft either side of the middle stumps at least; return creases 4 ft 4 in either side of the middle stumps, marked 8 ft behind the popping crease; wickets 9 in wide; boundary 60 yd to 70 yd from the centre of the pitch; circle 25.15 yd radius about each middle stump |
+| `mcc` | Laws of Cricket ground (MCC) | pitch 22 yd by 10 ft; bowling crease 8 ft 8 in long; popping crease 4 ft in front of the bowling crease, marked 6 ft either side of the middle stumps at least; return creases 4 ft 4 in either side of the middle stumps, marked 8 ft behind the popping crease; wickets 9 in wide; boundary no size given; circle none |
 
 Sources:
 
@@ -411,9 +413,9 @@ Sources:
 
 `sport: "fieldhockey"`
 
-| `league` | Name | 日本語 | Key figures |
-| --- | --- | --- | --- |
-| `fih` (the sport's own) | FIH hockey pitch | FIHのフィールドホッケーのピッチ | pitch 91.4 m by 55 m; 23-metre lines 22.9 m from each back-line; circle 14.63 m from the back-line; goal 3.66 m wide and 2.14 m high |
+| `league` | Name | Key figures |
+| --- | --- | --- |
+| `fih` (the sport's own) | FIH hockey pitch | pitch 91.4 m by 55 m; 23-metre lines 22.9 m from each back-line; circle 14.63 m from the back-line; goal 3.66 m wide and 2.14 m high |
 
 Sources:
 
@@ -423,9 +425,9 @@ Sources:
 
 `sport: "handball"`
 
-| `league` | Name | 日本語 | Key figures |
-| --- | --- | --- | --- |
-| `ihf` (the sport's own) | IHF handball court | IHFのハンドボールコート | court 40 m by 20 m; goal area line 6 m from the goal line; free-throw line 9 m from the goal line; goal 3 m wide and 2 m high |
+| `league` | Name | Key figures |
+| --- | --- | --- |
+| `ihf` (the sport's own) | IHF handball court | court 40 m by 20 m; goal area line 6 m from the goal line; free-throw line 9 m from the goal line; goal 3 m wide and 2 m high |
 
 Sources:
 
@@ -435,11 +437,11 @@ Sources:
 
 `sport: "judo"`
 
-| `league` | Name | 日本語 | Key figures |
-| --- | --- | --- | --- |
-| `ijf` (the sport's own) | IJF contest area | 国際柔道連盟の試合場 | contest area 8 m to 10 m square (10 m drawn); safety area at least 3 m wide; at least 4 m between two areas; tatami 2 m by 1 m by 5 cm; free zone at least 50 cm round the competition area; platform 1 m wider and longer than the tatami; start tape 10 cm by 50 cm, 2 m from the centre |
-| `ajjf` | AJJF contest area | 全日本柔道連盟の試合場 | contest area 8 m to 10 m square (8 m drawn); safety area at least 3 m wide; at least 4 m between two areas; tatami 1.82 m by 0.91 m by 6 cm; free zone at least 50 cm round the competition area; platform 1 m wider and longer than the tatami; start tape 10 cm by 50 cm, 2 m from the centre |
-| `ijf-kata` | IJF kata area | 国際柔道連盟の形の試合場 | contest area 8 m to 10 m square (10 m drawn); safety area at least 2 m wide; at least 4 m between two areas; tatami 2 m by 1 m by 5 cm; free zone at least 50 cm round the competition area; platform 1 m wider and longer than the tatami; start tape 5 cm by 50 cm, 3 m from the centre |
+| `league` | Name | Key figures |
+| --- | --- | --- |
+| `ijf` (the sport's own) | IJF contest area | contest area 8 m to 10 m square (10 m drawn); safety area at least 3 m wide; at least 4 m between two areas; tatami 2 m by 1 m by 5 cm; free zone at least 50 cm round the competition area; platform 1 m wider and longer than the tatami; start tape 10 cm by 50 cm, 2 m from the centre |
+| `ajjf` | AJJF contest area | contest area 8 m to 10 m square (8 m drawn); safety area at least 3 m wide; at least 4 m between two areas; tatami 1.82 m by 0.91 m by 6 cm; free zone at least 50 cm round the competition area; platform 1 m wider and longer than the tatami; start tape 10 cm by 50 cm, 2 m from the centre |
+| `ijf-kata` | IJF kata area | contest area 8 m to 10 m square (10 m drawn); safety area at least 2 m wide; at least 4 m between two areas; tatami 2 m by 1 m by 5 cm; free zone at least 50 cm round the competition area; platform 1 m wider and longer than the tatami; start tape 5 cm by 50 cm, 3 m from the centre |
 
 Sources:
 
@@ -451,10 +453,10 @@ Sources:
 
 `sport: "karate"`
 
-| `league` | Name | 日本語 | Key figures |
-| --- | --- | --- | --- |
-| `wkf-kumite` (the sport's own) | WKF kumite area | 世界空手連盟の組手の試合場 | area 8 m square, measured from the outside; boundary band the outer 1 m in another colour; safety area 2 m, and 2 m between areas; start mats 1 m from the centre; referee 2 m from the boundary; each judge 1.5 m off a corner |
-| `wkf-kata` | WKF kata area | 世界空手連盟の形の試合場 | area 8 m square, measured from the outside; boundary band none; safety area 2 m, and 2 m between areas; start mats none; referee 2 m from the boundary; each judge 1.5 m off a corner |
+| `league` | Name | Key figures |
+| --- | --- | --- |
+| `wkf-kumite` (the sport's own) | WKF kumite area | area 8 m square, measured from the outside; boundary band the outer 1 m in another colour; safety area 2 m, and 2 m between areas; start mats 1 m from the centre; referee 2 m from the boundary; each judge 1.5 m off a corner |
+| `wkf-kata` | WKF kata area | area 8 m square, measured from the outside; boundary band none; safety area 2 m, and 2 m between areas; start mats none; referee 2 m from the boundary; each judge 1.5 m off a corner |
 
 Sources:
 
@@ -465,9 +467,9 @@ Sources:
 
 `sport: "kendo"`
 
-| `league` | Name | 日本語 | Key figures |
-| --- | --- | --- | --- |
-| `fik` (the sport's own) | FIK shiai-jo | 国際剣道連盟の試合場 | shiai-jo 9 m to 11 m a side, wooden floor; lines 5 cm to 10 cm, white; centre cross 30 cm to 40 cm; kaishi-sen 50 cm long, 1.4 m from the centre; outside 1.5 m kept clear |
+| `league` | Name | Key figures |
+| --- | --- | --- |
+| `fik` (the sport's own) | FIK shiai-jo | shiai-jo 9 m to 11 m a side, wooden floor; lines 5 cm to 10 cm, white; centre cross 30 cm to 40 cm; kaishi-sen 50 cm long, 1.4 m from the centre; outside 1.5 m kept clear |
 
 Sources:
 
@@ -477,9 +479,9 @@ Sources:
 
 `sport: "sumo"`
 
-| `league` | Name | 日本語 | Key figures |
-| --- | --- | --- | --- |
-| `jsa` (the sport's own) | Japan Sumo Association dohyō | 日本相撲協会の土俵 | platform 6.7 m square, 34 cm to 60 cm high; ring 4.55 m across, 20 tawara (4 tokudawara); shikiri-sen 90 cm long, 6 cm wide, 70 cm apart |
+| `league` | Name | Key figures |
+| --- | --- | --- |
+| `jsa` (the sport's own) | Japan Sumo Association dohyō | platform 6.7 m square, 34 cm to 60 cm high; ring 4.55 m across, 20 tawara (4 tokudawara); shikiri-sen 90 cm long, 6 cm wide, 70 cm apart |
 
 Sources:
 
@@ -491,10 +493,10 @@ Sources:
 
 `sport: "kyudo"`
 
-| `league` | Name | 日本語 | Key figures |
-| --- | --- | --- | --- |
-| `kinteki` (the sport's own) | Kyūdōjō for kinteki, 28 m | 近的の弓道場（28m） | distance 28 m from the shooting position to the target; target 36 cm across, its centre 27 cm up, tilted 5 degrees; shooters 1.8 m apart (1.6 m to 2 m), 2 m from the shooting position to the honza; shajō 9 m deep, 2.7 m from the end shooters to the walls, ceiling 4 m |
-| `enteki` | Kyūdōjō for enteki, 60 m | 遠的の弓道場（60m） | distance 60 m from the shooting position to the target; target 100 cm across, its centre 97 cm up, tilted 15 degrees; shooters 1.6 m apart (1.4 m to 1.8 m), 1.1 m from the shooting position to the honza; shajō 9 m deep, 2.2 m from the end shooters to the walls, ceiling 4 m |
+| `league` | Name | Key figures |
+| --- | --- | --- |
+| `kinteki` (the sport's own) | Kyūdōjō for kinteki, 28 m | distance 28 m from the shooting position to the target; target 36 cm across, its centre 27 cm up, tilted 5 degrees; shooters 1.8 m apart (1.6 m to 2 m), 2 m from the shooting position to the honza; shajō 9 m deep, 2.7 m from the end shooters to the walls, ceiling 4 m |
+| `enteki` | Kyūdōjō for enteki, 60 m | distance 60 m from the shooting position to the target; target 100 cm across, its centre 97 cm up, tilted 15 degrees; shooters 1.6 m apart (1.4 m to 1.8 m), 1.1 m from the shooting position to the honza; shajō 9 m deep, 2.2 m from the end shooters to the walls, ceiling 4 m |
 
 Sources:
 
@@ -505,13 +507,13 @@ Sources:
 
 `sport: "dojo"`
 
-| `league` | Name | 日本語 | Key figures |
-| --- | --- | --- | --- |
-| `chukyoma` (the sport's own) | Chūkyōma tatami, 1820 by 910 mm | 中京間の畳（1820×910mm） | tatami 1.82 m by 0.91 m (Nagoya and the Chūbu region); area of a mat 1.656 square metres |
-| `kyoma` | Kyōma tatami, 1910 by 955 mm | 京間の畳（1910×955mm） | tatami 1.91 m by 0.955 m (Kyoto and the Kansai region); area of a mat 1.824 square metres |
-| `edoma` | Edoma tatami, 1760 by 880 mm | 江戸間の畳（1760×880mm） | tatami 1.76 m by 0.88 m (Edo (Tokyo) and the Kantō region); area of a mat 1.549 square metres |
-| `danchima` | Danchima tatami, 1700 by 850 mm | 団地間の畳（1700×850mm） | tatami 1.7 m by 0.85 m (housing complexes); area of a mat 1.445 square metres |
-| `judo-2x1` | Judo tatami, 2 m by 1 m | 柔道畳（2m×1m） | tatami 2 m by 1 m (the IJF's standard); area of a mat 2 square metres |
+| `league` | Name | Key figures |
+| --- | --- | --- |
+| `chukyoma` (the sport's own) | Chūkyōma tatami, 1820 by 910 mm | tatami 1.82 m by 0.91 m (Nagoya and the Chūbu region); area of a mat 1.656 square metres |
+| `kyoma` | Kyōma tatami, 1910 by 955 mm | tatami 1.91 m by 0.955 m (Kyoto and the Kansai region); area of a mat 1.824 square metres |
+| `edoma` | Edoma tatami, 1760 by 880 mm | tatami 1.76 m by 0.88 m (Edo (Tokyo) and the Kantō region); area of a mat 1.549 square metres |
+| `danchima` | Danchima tatami, 1700 by 850 mm | tatami 1.7 m by 0.85 m (housing complexes); area of a mat 1.445 square metres |
+| `judo-2x1` | Judo tatami, 2 m by 1 m | tatami 2 m by 1 m (the IJF's standard); area of a mat 2 square metres |
 
 Sources:
 

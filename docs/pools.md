@@ -200,37 +200,7 @@ Two pools nearer than `apart` are an error that says the rule. The hall is a swi
 
 ## The Japanese words
 
-The Japanese text of the pools uses the words of the Japan Swimming Federation (日本水泳連盟) in its own rule books, read from swim.or.jp on 2026-10-13, and not a translation of World Aquatics' English. The main label is the rule's word; the everyday word that television and the newspapers use more is an alias, and is not written by the package.
-
-| English | Used in the package | Everyday alias | Where the federation uses it |
-|---|---|---|---|
-| lane | レーン (第4レーン) | コース | 競泳競技規則 (passim); プール公認規則 第27条 |
-| lane rope | レーンロープ | コースロープ | 競泳競技規則, the pool's conditions (16.2.7.1.1); 第27条 |
-| lane line on the floor, cross line | 床面のレーンライン, クロスライン | コースライン | プール公認規則 第22条, 第23条 |
-| touch pad | タッチ板 | タッチパッド, タッチパネル | 競泳競技規則, the touch; 第29条 |
-| starting block | スタート台 | スタートブロック | 競泳競技規則; 第21条 |
-| 15 m mark | 15mマーク | | 競泳競技規則 (16.1.7.2) |
-| backstroke flags | 背泳ぎ用フラッグ | バックストロークフラッグ | 競泳競技規則 (背泳ぎ用5mフラッグ, 16.1.10); プール公認規則 第28条 calls it 背泳ぎ用ターン標識 |
-| false start rope | フォルススタートロープ | 不正スタート用ロープ | not in the federation's books: the World Aquatics word in katakana |
-| long and short course | 長水路, 短水路 | | 競泳競技規則 12.1, 12.2 |
-| split (the time at a wall) | 途中時間 | スプリット, スプリットタイム, ラップ | 競泳競技規則 2.9.2, 11.3.2, 11.6 |
-| reaction time | 反応時間 | リアクションタイム | not in the books: the common word |
-| did not start / disqualified | 棄権（スタートせず） / 失格 | 欠場 | 競泳競技規則 (棄権者, 失格) |
-| springboard | 飛板 | スプリングボード | 飛込競技規則 1.2, and 飛板飛込 for the event |
-| platform | 固定台 | 飛込台, プラットフォーム | 飛込競技規則 1.2, 3.7.3 (10m固定台), and 高飛込 for the event |
-| the three lines across the diving well | 飛込プールのレーンマーク | | プール公認規則 第87条 |
-| diving well, water polo pool, swimming pool | 飛込プール, 水球プール, 競泳プール | | プール公認規則 |
-| warm-up pool | 練習用プール | ウォーミングアッププール, サブプール | 公認プール施設要領 (練習用ウォームアッププール) |
-| natatorium | プール施設 | 水泳場 | 公認プール施設要領 |
-| water polo field | フィールド | コート | 水球競技ハンドブック (フィールド, 競技場) |
-| half way line | ハーフライン | ハーフウェイライン | 水球競技ハンドブック 1.10 (a definition) |
-| the 5 m mark | 5mの標識 | | 水球競技ハンドブック 18.3.1 (標識; 1.8 defines the 5mライン) |
-| referees' platform | 審判台 | | 水球競技ハンドブック 18.3.2 (the book's own number, read on 2026-10-14; February 2026: Part Six 21.9) |
-| officials' table | オフィシャル席 | オフィシャルテーブル | 水球競技ハンドブック 1.2 (a definition; セクレタリーテーブル is the secretary's own, 18.3.6) |
-| artistic swimming judges' platform | ジャッジ台 | 審判台 | アーティスティックスイミング競技規則 27.2.8 (the book's own number, read on 2026-10-14, the same as World Aquatics' June 2025 edition; February 2026: Part Seven 12.2.5) |
-| artistic swimming starting platform | スタート台 | スターティングプラットフォーム | アーティスティックスイミング競技規則 27.2.7 (February 2026: Part Seven 12.2.4) |
-
-The federation's books are, with the dates in their file names: 競泳競技規則 (2023-04-01), 飛込競技規則 (2026-04-01), 水球競技ハンドブック (2023-04-01), アーティスティックスイミング競技規則 (2026-04-23), プール公認規則 (2026-07-01) and 公認プール施設要領 (2025-04-01).
+The Japanese words of this page, with the rule books they were read in and the everyday words that are aliases, are in [the terminology](./terminology.md#swimming-water-polo-diving-and-artistic-swimming).
 
 ## Scores, parts, zones and data
 

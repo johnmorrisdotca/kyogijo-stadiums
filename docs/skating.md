@@ -107,20 +107,7 @@ Skating has its own frame, `skating`: metres from the middle of the rink, x alon
 
 ## The Japanese words
 
-Where the Japan Skating Federation's own rule books are not on the web, the Japanese is the Japanese translation of the ISU's Special Regulations and Technical Rules Speed Skating (the 2018 edition, kept by the Aomori skating association), the Federation's teaching text (スピードスケート指導教本) and its viewing guide. Television's word, where it differs, is an alias.
-
-| Part | The word | Where | Television's word (alias) |
-| --- | --- | --- | --- |
-| The two lanes of a pair | インレーン, アウトレーン | Rules 253.3.1 and 254; the teaching text | インコース, アウトコース |
-| The crossing straight, the finishing straight | 交差ストレート (交差エリア), フィニッシュ側ストレート | Rules 203.2, 254.5 and 227.2 | バックストレート, ホームストレート |
-| The curves | カーブ | the same rules; the guide: カーブの半径8m | コーナー |
-| The warm-up lane, the blocks, the cones | ウォームアップレーン, ブロック, コーン | Rules 205 and 226 | |
-| The padding, the coaches' area, the pre-start line | 防護マット, コーチエリア, プレ-スタートライン | Rules 228.2, 227.3 and 227.2 | |
-| The mass start, the team races | マススタート, チームパシュート, チームスプリント | Rules 256 and 257 | |
-| The tracks of the short track | トラック (標準ショートトラック) | the Federation's 大会要項 | コース |
-| The relays | 3000mリレー, 5000mリレー, 2000m混合リレー | Rule 281.1a; the JOC | |
-
-The figure skating furniture (ジャッジ席, テクニカルパネル, レフェリー, キス・アンド・クライ) has no word in a rule book that could be read: it is the usual one.
+The Japanese words of this page, with the rule books they were read in and the everyday words that are aliases, are in [the terminology](./terminology.md#skating).
 
 ## What is ours
 

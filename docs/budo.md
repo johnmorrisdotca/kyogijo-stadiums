@@ -73,7 +73,7 @@ The rules give no mat's size: 1 m by 1 m is drawn (**ours**, the size of a WKF-a
 
 ## Kyūdō
 
-`sport: "kyudo"`: the kyūdōjō, kinteki (28 m, `league: "kinteki"`) or enteki (60 m, `league: "enteki"`): the shajō, the hall the archers shoot from, with the shooting positions (射位) and the honza (本座), the yamichi (矢道), the open ground to the azuchi (安土), the mound the targets stand against, and the path for fetching the arrows.
+`sport: "kyudo"`: the kyūdōjō, kinteki (28 m, `league: "kinteki"`) or enteki (60 m, `league: "enteki"`): the shajō, the hall the archers shoot from, with the shooting positions and the honza, the yamichi, the open ground to the azuchi, the mound the targets stand against, and the path for fetching the arrows.
 
 | What | Figure | Source |
 | --- | --- | --- |
@@ -100,16 +100,16 @@ console.log(small.jo, small.width.toFixed(2), small.length.toFixed(2), small.kam
 // 6 3.64 2.73 east
 ```
 
-`mats` is the floor: a number is its area in jō (畳), and 8, 12, 20, 50, 100 and 200 give the usual shapes (a mat's width is the unit: 8 jō is 4 by 4 of them, 3.64 m square); `[across, along]` is the whole mats across and along; `{ width, length, unit }` a size in `m`, `ft`, `mat` or `jo`. `standard` (or `league`) is the mat: `chukyoma` (1820 by 910 mm, the default), `kyoma` (1910 by 955), `edoma` (1760 by 880), `danchima` (1700 by 850) or `judo-2x1`; the sizes are those of the regions (English and Japanese Wikipedia).
+`mats` is the floor: a number is its area in jō, and 8, 12, 20, 50, 100 and 200 give the usual shapes (a mat's width is the unit: 8 jō is 4 by 4 of them, 3.64 m square); `[across, along]` is the whole mats across and along; `{ width, length, unit }` a size in `m`, `ft`, `mat` or `jo`. `standard` (or `league`) is the mat: `chukyoma` (1820 by 910 mm, the default), `kyoma` (1910 by 955), `edoma` (1760 by 880), `danchima` (1700 by 850) or `judo-2x1`; the sizes are those of the regions (English and Japanese Wikipedia).
 
 | `pattern` | How the mats are laid |
 | --- | --- |
-| `traditional` | the columns of mats set off by half a mat, so that no four corners meet (shūgi-jiki, 祝儀敷き), with the heri (畳縁) along each mat's long sides; hanjō, half mats, fill the ends of the set-off columns |
+| `traditional` | the columns of mats set off by half a mat, so that no four corners meet (shūgi-jiki), with the heri along each mat's long sides; hanjō, half mats, fill the ends of the set-off columns |
 | `competition` | the same lay in the colours of a contest area and its safety area |
 | `checker` | the mats' tones alternate, as a chessboard's squares do (four corners meet, which a traditional room avoids) |
 | `border` | a band of another colour round the floor, with the heri |
 
-`kamiza` (`north` by default) is the wall of the seat of honour (上座); `shinzen` puts the shrine (神前) there; `entrances` and `windows` (a list, or a number spread along the long walls) cut the walls; `walls: false` leaves the floor alone; `areas` lays judo contest areas of 8 m on the floor (it must fit); `colours` and `look` (`green-beige`, `yellow-red`, `yellow-blue`, `blue-grey`, `black-red`, `green-red`) paint it.
+`kamiza` (`north` by default) is the wall of the seat of honour; `shinzen` puts the shrine there; `entrances` and `windows` (a list, or a number spread along the long walls) cut the walls; `walls: false` leaves the floor alone; `areas` lays judo contest areas of 8 m on the floor (it must fit); `colours` and `look` (`green-beige`, `yellow-red`, `yellow-blue`, `blue-grey`, `black-red`, `green-red`) paint it.
 
 ### Blocks of contest areas, a room with a history and the weave of the mats
 
@@ -140,10 +140,10 @@ console.log(room?.walls.length, room?.platforms[0]?.height, room?.banners.length
 
 | Hall | Facts | Surfaces |
 | --- | --- | --- |
-| Kodokan 講道館 (Tokyo) | founded 1882 by Kanō Jigorō; the International Judo Center completed in 1984, on 8 floors; main dojo 420 jō on the 7th floor, a gallery on the 8th for about 900 | the main dojo (420 jō, now and in its earlier colours), the Judo School dojo (240), the international dojo (192), the women's (240) and the boys' (114); a dojo for special techniques on the 5th floor is not drawn (no count is given) |
-| Nippon Budokan 日本武道館 (Tokyo) | opened 3 October 1964; at most 14,501; the arena an octagon 55 m across the flats, 2,513 m²; the Olympic judo in 1964 and 2020, karate in 2020 | judo (two areas, one area), karate, kendo, on the octagon floor |
-| Ryōgoku Kokugikan 両国国技館 (Tokyo) | opened 9 January 1985; 11,098 | the dohyō |
-| Kyū Butokuden 旧武徳殿 (Kyoto) | built in 1899 by the Dai Nippon Butokukai; an Important Cultural Property since 1996; 1,200 seats | a floor of 100 jō drawn as plausible |
+| Kodokan (Tokyo) | founded 1882 by Kanō Jigorō; the International Judo Center completed in 1984, on 8 floors; main dojo 420 jō on the 7th floor, a gallery on the 8th for about 900 | the main dojo (420 jō, now and in its earlier colours), the Judo School dojo (240), the international dojo (192), the women's (240) and the boys' (114); a dojo for special techniques on the 5th floor is not drawn (no count is given) |
+| Nippon Budokan (Tokyo) | opened 3 October 1964; at most 14,501; the arena an octagon 55 m across the flats, 2,513 m²; the Olympic judo in 1964 and 2020, karate in 2020 | judo (two areas, one area), karate, kendo, on the octagon floor |
+| Ryōgoku Kokugikan (Tokyo) | opened 9 January 1985; 11,098 | the dohyō |
+| Kyū Butokuden (Kyoto) | built in 1899 by the Dai Nippon Butokukai; an Important Cultural Property since 1996; 1,200 seats | a floor of 100 jō drawn as plausible |
 | The Budokwai (London) | opened 26 January 1918 by Gunji Koizumi; at 4 Gilston Road since 1954 | a floor of 50 jō drawn as plausible |
 
 ```ts

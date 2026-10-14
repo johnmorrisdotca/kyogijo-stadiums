@@ -35,7 +35,7 @@ The attacker is the team with its goalkeeper pulled, else the team with more ska
 
 A **shootout** is a strip of dots across centre ice, under the score's panel: a goal filled (●), a miss hollow (○), an attempt not yet taken a faint speck, each team's goals at the end. The first three rounds are the regular ones; the rounds after the third are sudden death and stand apart, after a divider. The strip is drawn instead of the pill, and in the badge the pill reads `SO 3–2` with the goals.
 
-The word follows the league: `SO` and "shootout" (シュートアウト) in the NHL and the leagues that play as it does, `GWS` and "game winning shots" (ゲームウイニングショット) under the `iihf` and `olympic` rinks, as the IIHF's rules call them.
+The word follows the league: `SO` and "shootout" in the NHL and the leagues that play as it does, `GWS` and "game winning shots" under the `iihf` and `olympic` rinks, as the IIHF's rules call them.
 
 ```ts
 import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";

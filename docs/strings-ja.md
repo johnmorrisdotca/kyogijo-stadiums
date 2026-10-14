@@ -2013,6 +2013,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `references` | References | 参考資料 |
 | page `parks` | The keys of the ballparks | 球場の識別キー |
 | page `strings-ja` | The Japanese of Kyogijo | 日本語訳の一覧 |
+| page `terminology` | Terminology: the Japanese words of the docs | 用語集 |
 | page `architecture` | Architecture | アーキテクチャ |
 
 ## The surfaces through the years (`eraChanges`)

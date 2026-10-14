@@ -105,22 +105,7 @@ Athletics has its own frame, `athletics`: metres from the middle of the track, x
 
 ## The Japanese words
 
-The Japanese is the Japan Association of Athletics Federations' own word where its rule book has one (the 競技規則 2026, which is the World Athletics Technical Rules in Japanese, and the 陸上競技場公認に関する細則). Television's word, where it differs, is an alias: a reader who searches for it finds the same part.
-
-| Part | The rule book's word | Where | Television's word (alias) |
-| --- | --- | --- | --- |
-| Pole vault box | ボックス | TR28.8 | ボックス |
-| Take-off board, long jump pit | 踏切板, 砂場 | TR29.3, TR30 | 砂場 |
-| Landing sector of a throw | 着地場所 (the range: 着地場所の範囲) | TR32.12 | 落下区域, 有効区域, 有効角度 |
-| The javelin's arc of 8 m radius | スターティング・ライン | TR32.9 | 投てき弧, スクラッチライン |
-| Shot put stop board | 足留材 | TR33.2 | ストップボード |
-| Discus and hammer cage | 囲い | TR35 | ケージ |
-| The straights and the bends | 直走路, 曲走路 (第1曲走路) | TR14.1, TR17.5.1 | ストレート, コーナー |
-| The finishing straight and the back straight | メイン側, バック・ストレート | 細則 第10条, TR17.5.1 | ホームストレート, バックストレート |
-| Takeover zone | テーク・オーバー・ゾーン | 細則 第10条 | テイクオーバーゾーン |
-| The breakline | ブレイクライン | TR17.5.1 | ブレークライン |
-| The steeplechase | 障害物競走 (3000m障害物競走) | TR17.5.2 | 障害 |
-| The covered track | 200mトラック（ショート・トラック）, 室内陸上競技場 | 競技規則 第5部, 細則 | 室内200mトラック |
+The Japanese words of this page, with the rule books they were read in and the everyday words that are aliases, are in [the terminology](./terminology.md#athletics).
 
 ## What is ours
 

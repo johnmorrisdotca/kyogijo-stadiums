@@ -1,6 +1,6 @@
 # Flags: a country's code, drawn by Hata
 
-Kyogijo Stadiums draws no flag of its own. A team is given a country's code, `flag: "CA"`, and the flag comes from a function you plug in, as the emblems come from [Dougu Sports](./emblems.md). The flags are the sister package [Hata 旗](https://github.com/johnmorrisdotca/hata)'s: 465 of them, every one at the proportions its government gives it, with a round frame that never misrepresents it. Kyogijo keeps zero dependencies: it asks a function you give it, and it bundles none. Hata is an optional peer dependency that Kyogijo never imports.
+Kyogijo Stadiums draws no flag of its own. A team is given a country's code, `flag: "CA"`, and the flag comes from a function you plug in, as the emblems come from [Dougu Sports](./emblems.md). The flags are the sister package [Hata](https://github.com/johnmorrisdotca/hata)'s: 465 of them, every one at the proportions its government gives it, with a round frame that never misrepresents it. Kyogijo keeps zero dependencies: it asks a function you give it, and it bundles none. Hata is an optional peer dependency that Kyogijo never imports.
 
 ## The adapter
 

@@ -1,5 +1,7 @@
 # The grounds
 
+[日本語](grounds.ja.md) · English
+
 Made by `pnpm grounds` from `scripts/grounds.data.json` and `scripts/grounds.editions.json`; do not edit by hand. 64 grounds, 42 with a published pitch size and 22 drawn at the default 105 by 68 m. Every figure is a fact read from the English Wikipedia article named in [NOTICE.md](../NOTICE.md) at the revision named there (the pitch from its infobox), the coordinates are Wikidata's (CC0), and the tournaments are read from the venue sections of the tournaments' articles, also listed there. Each ground in `GROUNDS` has its city and country, its Wikidata item and coordinates, the names it had with their years (`year` picks one: `groundNameIn`), its name in the place's language and in Japanese, the years it was open, its capacity, the World Cups it staged and the article and revision each fact was read from. `drawKyogijo({ sport: "soccer", ground })` draws the pitch at the size in the Pitch column. `WC` is the men's World Cup, `WWC` the Women's; only the grounds of this list are named, so a tournament's other venues are not here.
 
 | Key | Ground | City | Wikidata | Open | Capacity | Pitch | Tournaments |
@@ -20,7 +22,7 @@ Made by `pnpm grounds` from `scripts/grounds.data.json` and `scripts/grounds.edi
 | `stadio-olimpico-rome` | Stadio Olimpico | Rome, Italy | Q159884 | 1953– | 70,634 | 105 × 68 m | WC 1990 (final) |
 | `rose-bowl` | Rose Bowl | Pasadena, United States | Q582280 | 1922– | 89,702 | default, 105 × 68 m | WC 1994 (final), WWC 1999 (final) |
 | `stade-de-france` | Stade de France | Saint-Denis, France | Q13205 | 1998– | 81,338 | default, 105 × 68 m | WC 1998 (final) |
-| `nissan-stadium-yokohama` | Nissan Stadium (日産スタジアム) | Yokohama, Japan | Q116601 | 1998– | 72,327 | 107 × 72 m | WC 2002 (final) |
+| `nissan-stadium-yokohama` | Nissan Stadium | Yokohama, Japan | Q116601 | 1998– | 72,327 | 107 × 72 m | WC 2002 (final) |
 | `olympiastadion-berlin` | Berlin Olympic Stadium (Olympiastadion Berlin) | Berlin, Germany | Q151374 | 1936– | 74,475 | 105 × 68 m | WC 1974, WC 2006 (final), WWC 2011 |
 | `soccer-city` | FNB Stadium | Johannesburg, South Africa | Q163521 | 1989– | 94,736 | 105 × 68 m | WC 2010 (final) |
 | `luzhniki` | Luzhniki Stadium (Лужники) | Moscow, Russia | Q202163 | 1956– | 81,000 | 105 × 68 m | WC 2018 (final) |
@@ -40,9 +42,9 @@ Made by `pnpm grounds` from `scripts/grounds.data.json` and `scripts/grounds.edi
 | `bc-place` | BC Place | Vancouver, Canada | Q612227 | 1983– | 54,500 | default, 105 × 68 m | WC 2026, WWC 2015 (final) |
 | `estadio-bbva` | Estadio BBVA | Guadalupe, Mexico | Q3058827 | 2015– | 53,529 | default, 105 × 68 m | WC 2026 |
 | `estadio-akron` | Estadio Akron | Zapopan, Mexico | Q666183 | 2010– | 49,813 | default, 105 × 68 m | WC 2026 |
-| `tianhe-stadium` | Tianhe Stadium (天河体育场) | Guangzhou, China | Q929126 | 1987– | 54,856 | 105 × 68 m | WWC 1991 (final) |
+| `tianhe-stadium` | Tianhe Stadium | Guangzhou, China | Q929126 | 1987– | 54,856 | 105 × 68 m | WWC 1991 (final) |
 | `dignity-health-sports-park` | Dignity Health Sports Park | Carson, United States | Q200684 | 2003– | 27,000 | 120 × 75 yd | WWC 2003 (final) |
-| `hongkou-football-stadium` | Hongkou Football Stadium (虹口足球场) | Shanghai, China | Q201773 | 1999– | 33,060 | default, 105 × 68 m | WWC 2007 (final) |
+| `hongkou-football-stadium` | Hongkou Football Stadium | Shanghai, China | Q201773 | 1999– | 33,060 | default, 105 × 68 m | WWC 2007 (final) |
 | `waldstadion-frankfurt` | Deutsche Bank Park | Frankfurt, Germany | Q157273 | 1925– | 60,100 | 105 × 68 m | WC 1974, WC 2006, WWC 2011 (final) |
 | `groupama-stadium` | Groupama Stadium | Décines-Charpieu, France | Q8507 | 2016– | 59,186 | 105 × 68 m | WWC 2019 (final) |
 | `stadium-australia` | Stadium Australia | Sydney, Australia | Q295886 | 1999– | 83,000 | default, 105 × 68 m | WWC 2023 (final) |
@@ -57,7 +59,7 @@ Made by `pnpm grounds` from `scripts/grounds.data.json` and `scripts/grounds.edi
 | `celtic-park` | Celtic Park | Glasgow, United Kingdom | Q216037 | 1892– |  | 114 × 74 yd |  |
 | `estadio-da-luz` | Estádio da Luz | Lisbon, Portugal | Q7875112 | 2003– | 68,100 | 105 × 68 m |  |
 | `parc-des-princes` | Parc des Princes | Paris, France | Q193431 |  | 47,929 | default, 105 × 68 m | WC 1938, WC 1998, WWC 2019 |
-| `saitama-stadium-2002` | Saitama Stadium 2002 (埼玉スタジアム2002) | Saitama, Japan | Q482446 | 2001– | 63,700 | 105 × 68 m | WC 2002 |
+| `saitama-stadium-2002` | Saitama Stadium 2002 | Saitama, Japan | Q482446 | 2001– | 63,700 | 105 × 68 m | WC 2002 |
 | `seoul-world-cup-stadium` | Seoul World Cup Stadium (서울월드컵경기장) | Seoul, South Korea | Q175477 | 2001– | 66,704 | default, 105 × 68 m | WC 2002 |
 | `emirates-stadium` | Emirates Stadium | London, United Kingdom | Q163995 | 2006– | 60,704 | 105 × 68 m |  |
 | `etihad-stadium` | Etihad Stadium | Manchester, United Kingdom | Q48159 | 2002– | 61,038 | 105 × 68 m |  |
@@ -66,8 +68,8 @@ Made by `pnpm grounds` from `scripts/grounds.data.json` and `scripts/grounds.edi
 | `ibrox` | Ibrox Stadium | Glasgow, United Kingdom | Q208709 | 1899– | 51,700 | 105 × 68 m |  |
 | `johan-cruyff-arena` | Johan Cruyff Arena (Johan Cruijff ArenA) | Amsterdam, Netherlands | Q207109 | 1996– | 56,120 | 105 × 68 m |  |
 | `allianz-stadium-turin` | Allianz Stadium | Turin, Italy | Q62149 | 2011– | 41,689 | 105 × 68 m |  |
-| `japan-national-stadium` | Japan National Stadium (国立競技場) | Tokyo, Japan | Q14862239 | 2019– | 67,750 | 107 × 71 m |  |
-| `kashima-soccer-stadium` | Kashima Soccer Stadium (カシマサッカースタジアム) | Kashima, Japan | Q494769 | 1993– | 40,728 | default, 105 × 68 m | WC 2002 |
+| `japan-national-stadium` | Japan National Stadium | Tokyo, Japan | Q14862239 | 2019– | 67,750 | 107 × 71 m |  |
+| `kashima-soccer-stadium` | Kashima Soccer Stadium | Kashima, Japan | Q494769 | 1993– | 40,728 | default, 105 × 68 m | WC 2002 |
 
 ## Names
 
@@ -83,25 +85,21 @@ A ground has the name people use and every other name it answers to, each with w
 
 Where the everyday name is not the title of the article that was cited (names that are not in this table are the titles):
 
-| Key | Everyday name | English article | Official, English | Name in Japanese | Japanese article | Official, Japanese |
-| --- | --- | --- | --- | --- | --- | --- |
-| `maracana` | Maracanã Stadium | Maracanã Stadium |  | マラカナン | エスタジオ・ド・マラカナン |  |
-| `wankdorf` | Wankdorf Stadium | Wankdorf Stadium |  | シュタディオン・ヴァンクドルフ | シュタディオン・ヴァンクドルフ (1925年) |  |
-| `wembley-1923` | Wembley Stadium (1923) | Wembley Stadium (1923) |  | 旧ウェンブリー・スタジアム | ウェンブリー・スタジアム (1923) |  |
-| `olympiastadion-munich` | Munich Olympic Stadium | Olympiastadion (Munich) |  | ミュンヘン・オリンピアシュタディオン | ミュンヘン・オリンピアシュタディオン |  |
-| `monumental` | Estadio Monumental | Estadio Monumental (Buenos Aires) |  | エスタディオ・モヌメンタル | エスタディオ・モヌメンタル・アントニオ・ベスプチオ・リベルティ | エスタディオ・モヌメンタル |
-| `santiago-bernabeu` | Santiago Bernabéu Stadium | Bernabéu (stadium) |  | エスタディオ・サンティアゴ・ベルナベウ | エスタディオ・サンティアゴ・ベルナベウ |  |
-| `rose-bowl` | Rose Bowl | Rose Bowl (stadium) |  | ローズボウル | ローズボウル (競技場) |  |
-| `nissan-stadium-yokohama` | Nissan Stadium | Nissan Stadium (Yokohama) | International Stadium Yokohama | 日産スタジアム | 横浜国際総合競技場 | 横浜国際総合競技場 |
-| `olympiastadion-berlin` | Berlin Olympic Stadium | Olympiastadion (Berlin) |  | ベルリン・オリンピアシュタディオン | ベルリン・オリンピアシュタディオン |  |
-| `waldstadion-frankfurt` | Deutsche Bank Park | Waldstadion (Frankfurt) |  | ドイチェ・バンク・パルク | ヴァルトシュタディオン | ドイチェ・バンク・パルク |
-| `groupama-stadium` | Groupama Stadium | Parc Olympique Lyonnais | Parc Olympique Lyonnais | グルパマ・スタジアム | パルク・オリンピック・リヨン | パルク・オリンピック・リヨン |
-| `san-siro` | San Siro | San Siro | Giuseppe Meazza Stadium | サン・シーロ | スタディオ・ジュゼッペ・メアッツァ | スタディオ・ジュゼッペ・メアッツァ |
-| `signal-iduna-park` | Signal Iduna Park | Westfalenstadion |  | ジグナル・イドゥナ・パルク | ジグナル・イドゥナ・パルク |  |
-| `etihad-stadium` | Etihad Stadium | Etihad Stadium | City of Manchester Stadium | エティハド・スタジアム | シティ・オブ・マンチェスター・スタジアム | シティ・オブ・マンチェスター・スタジアム |
-| `stamford-bridge` | Stamford Bridge | Stamford Bridge (stadium) |  | スタンフォード・ブリッジ | スタンフォード・ブリッジ |  |
-| `allianz-stadium-turin` | Allianz Stadium | Juventus Stadium |  | ユヴェントス・スタジアム | ユヴェントス・スタジアム |  |
-| `kashima-soccer-stadium` | Kashima Soccer Stadium | Kashima Soccer Stadium | Ibaraki Prefectural Kashima Soccer Stadium | カシマサッカースタジアム | 茨城県立カシマサッカースタジアム | 茨城県立カシマサッカースタジアム |
+| Key | Everyday name | English article | Official name |
+| --- | --- | --- | --- |
+| `olympiastadion-munich` | Munich Olympic Stadium | Olympiastadion (Munich) |  |
+| `monumental` | Estadio Monumental | Estadio Monumental (Buenos Aires) |  |
+| `santiago-bernabeu` | Santiago Bernabéu Stadium | Bernabéu (stadium) |  |
+| `rose-bowl` | Rose Bowl | Rose Bowl (stadium) |  |
+| `nissan-stadium-yokohama` | Nissan Stadium | Nissan Stadium (Yokohama) | International Stadium Yokohama |
+| `olympiastadion-berlin` | Berlin Olympic Stadium | Olympiastadion (Berlin) |  |
+| `waldstadion-frankfurt` | Deutsche Bank Park | Waldstadion (Frankfurt) |  |
+| `groupama-stadium` | Groupama Stadium | Parc Olympique Lyonnais | Parc Olympique Lyonnais |
+| `signal-iduna-park` | Signal Iduna Park | Westfalenstadion |  |
+| `stamford-bridge` | Stamford Bridge | Stamford Bridge (stadium) |  |
+| `allianz-stadium-turin` | Allianz Stadium | Juventus Stadium |  |
+
+The same table for the names in Japanese, with the readings, is in [Japanese](./grounds.ja.md#名前).
 
 ## Grounds at the default size
 

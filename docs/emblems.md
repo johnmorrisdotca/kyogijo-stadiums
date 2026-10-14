@@ -1,6 +1,6 @@
 # Emblems: trophies, medals, balls and crests
 
-Kyogijo Stadiums draws no trophy, medal, ball or crest of its own. They come from its sister package, [Dougu Sports 道具](https://johnmorrisdotca.github.io/dougu-sports/), which has 167 of them (0.2.0): the trophies, medals and awards, four generic crests, a pennant, an icon for each of the 38 sports (the budo too: judo, karate, kendo, sumo and kyudo; a dojo takes the judo one), and the ball and the gear of each. Plug it in once, and an emblem's id goes anywhere a logo, a flag or a mark is taken. Kyogijo keeps zero dependencies: it asks a function you give it to draw the emblem, and it bundles none.
+Kyogijo Stadiums draws no trophy, medal, ball or crest of its own. They come from its sister package, [Dougu Sports](https://johnmorrisdotca.github.io/dougu-sports/), which has 167 of them (0.2.0): the trophies, medals and awards, four generic crests, a pennant, an icon for each of the 38 sports (the budo too: judo, karate, kendo, sumo and kyudo; a dojo takes the judo one), and the ball and the gear of each. Plug it in once, and an emblem's id goes anywhere a logo, a flag or a mark is taken. Kyogijo keeps zero dependencies: it asks a function you give it to draw the emblem, and it bundles none.
 
 ## Trophies, medals, balls and crests from Dougu Sports
 

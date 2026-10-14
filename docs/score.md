@@ -25,7 +25,7 @@ A team's logo is an `https:` or relative address, an image `data:` address, the 
 
 A score is drawn the way the sport lists it. Soccer and most of the world's other codes write the home team first, so it is on the left; the North American leagues write the visitor first ("away at home"), so the home team is on the right. `homeSide` overrides either; `homeSideFor(sport, league?)` returns the default (`"left"` or `"right"`), and `HOME_FIRST` (and `HOME_FIRST_LEAGUES` for the leagues that differ from their sport) is the table behind it.
 
-The side decides everything that follows the drawing: the banners and the plate, the badge and the strip of a compact card, the order of the teams in the title and the description ("Japan 1, Canada 2", or in Japanese "日本 1、カナダ 2"), the order of a shoot-out in the status (`Final · 2-4 pens`, the home team's first when it is on the left), the rows of a curling, net-sport or cricket board, and the way `update` pulses a changed score.
+The side decides everything that follows the drawing: the banners and the plate, the badge and the strip of a compact card, the order of the teams in the title and the description ("Japan 1, Canada 2", and the same in Japanese), the order of a shoot-out in the status (`Final · 2-4 pens`, the home team's first when it is on the left), the rows of a curling, net-sport or cricket board, and the way `update` pulses a changed score.
 
 | Sport | Default | Why |
 | --- | --- | --- |

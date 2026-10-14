@@ -1,5 +1,7 @@
 # Ballparks
 
+[日本語](ballparks.ja.md) · English
+
 `park` takes a key of `PARKS`, and `year` a season (a past park's fence, and the field's markings: see [Surfaces through the years](./eras.md)). The fence is a smooth curve through the distances the park's article publishes (the foul lines, the alleys, the middle), so that it never swings out past them. `fence: { left, leftCenter, center, rightCenter, right }` lays your own distances over a park's or over the generic field of 330, 375, 400, 375 and 330 feet.
 
 | League | Parks |
@@ -35,30 +37,21 @@ console.log(parksByName("Wrigley Field").map((park) => park.id).join(), parkByNa
 // wrigley-field,wrigley-field-los-angeles tiger-stadium
 ```
 
-The parks whose everyday name is not the title of the article that was cited (a park that is not in this table is named by its title in both languages; the table is made from the code by `pnpm docs:make`):
+The parks whose everyday name in English is not the title of the English article that was cited (a park that is not in this table is named by that title; the table is made from the code by `pnpm docs:make`). The same table for the Japanese names, with the readings, is in [Japanese](./ballparks.ja.md):
 
 <!-- made:park-names -->
-| Key | Everyday name | English article | Official, English | Name in Japanese | Reading | Japanese article | Official, Japanese |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| `loandepot-park` | loanDepot Park | LoanDepot Park |  | ローンデポ・パーク |  | ローンデポ・パーク |  |
-| `exposition-park-pittsburgh` | Exposition Park | Exposition Park (Pittsburgh) |  | エクスポジション・パーク (ピッツバーグ) |  | エクスポジション・パーク (ピッツバーグ) |  |
-| `tiger-stadium` | Tiger Stadium | Tiger Stadium (Detroit) |  | タイガー・スタジアム |  | タイガー・スタジアム |  |
-| `baltimore-memorial-stadium` | Memorial Stadium (Baltimore) | Baltimore Memorial Stadium |  | メモリアル・スタジアム (ボルチモア) |  | メモリアル・スタジアム (ボルチモア) |  |
-| `municipal-stadium-kansas-city` | Municipal Stadium | Municipal Stadium (Kansas City, Missouri) |  | カンザスシティ・ミュニシパル・スタジアム |  | カンザスシティ・ミュニシパル・スタジアム |  |
-| `olympic-stadium-montreal` | Olympic Stadium | Olympic Stadium (Montreal) |  | オリンピック・スタジアム (モントリオール) |  | オリンピック・スタジアム (モントリオール) |  |
-| `hanshin-koshien-stadium` | Koshien Stadium | Koshien Stadium | Hanshin Koshien Stadium | 甲子園球場 | こうしえんきゅうじょう | 阪神甲子園球場 | 阪神甲子園球場 |
-| `meiji-jingu-stadium` | Meiji Jingu Stadium | Meiji Jingu Stadium |  | 神宮球場 | じんぐうきゅうじょう | 明治神宮野球場 | 明治神宮野球場 |
-| `vantelin-dome-nagoya` | Vantelin Dome Nagoya | Vantelin Dome Nagoya |  | バンテリンドーム ナゴヤ |  | ナゴヤドーム |  |
-| `mazda-stadium-hiroshima` | Mazda Stadium | Mazda Stadium | Hiroshima Municipal Stadium | マツダスタジアム |  | MAZDA Zoom-Zoom スタジアム広島 | 広島市民球場 |
-| `es-con-field-hokkaido` | ES CON Field Hokkaido | Es Con Field Hokkaido |  | エスコンフィールド北海道 | エスコンフィールドほっかいどう | エスコンフィールドHOKKAIDO | エスコンフィールドHOKKAIDO |
-| `rakuten-mobile-park-miyagi` | Rakuten Mobile Saikyo Park Miyagi | Rakuten Mobile Park Miyagi | Miyagi Baseball Stadium | 楽天モバイル 最強パーク宮城 | らくてんモバイル さいきょうパークみやぎ | 楽天モバイルパーク宮城 | 宮城球場 |
-| `belluna-dome` | Belluna Dome | Belluna Dome |  | ベルーナドーム |  | 西武ドーム |  |
-| `zozo-marine-stadium` | ZOZO Marine Stadium | Zozo Marine Stadium | Chiba Marine Stadium | ZOZOマリンスタジアム |  | 千葉マリンスタジアム |  |
-| `kyocera-dome-osaka` | Kyocera Dome Osaka | Kyocera Dome Osaka |  | 京セラドーム大阪 | きょうセラドームおおさか | 大阪ドーム |  |
-| `mizuho-paypay-dome-fukuoka` | Mizuho PayPay Dome Fukuoka | Mizuho PayPay Dome Fukuoka | Fukuoka Dome | みずほPayPayドーム福岡 | みずほペイペイドームふくおか | 福岡ドーム | 福岡ドーム |
-| `hotto-motto-field-kobe` | Hotto Motto Field Kobe | Hotto Motto Field Kobe | Kobe Sports Park Baseball Stadium | ほっともっとフィールド神戸 | ほっともっとフィールドこうべ | 神戸総合運動公園野球場 | 神戸総合運動公園野球場 |
-| `hiroshima-municipal-stadium` | Hiroshima Municipal Stadium (original) | Hiroshima Municipal Stadium (1957) |  | 旧広島市民球場 | きゅうひろしましみんきゅうじょう | 広島市民球場 (初代) | 広島市民球場 |
-| `osaka-stadium` | Osaka Stadium | Osaka Stadium |  | 大阪球場 | おおさかきゅうじょう | 大阪スタヂアム | 大阪スタヂアム |
+| Key | Everyday name | English article | Official name |
+| --- | --- | --- | --- |
+| `loandepot-park` | loanDepot Park | LoanDepot Park |  |
+| `exposition-park-pittsburgh` | Exposition Park | Exposition Park (Pittsburgh) |  |
+| `tiger-stadium` | Tiger Stadium | Tiger Stadium (Detroit) |  |
+| `baltimore-memorial-stadium` | Memorial Stadium (Baltimore) | Baltimore Memorial Stadium |  |
+| `municipal-stadium-kansas-city` | Municipal Stadium | Municipal Stadium (Kansas City, Missouri) |  |
+| `olympic-stadium-montreal` | Olympic Stadium | Olympic Stadium (Montreal) |  |
+| `es-con-field-hokkaido` | ES CON Field Hokkaido | Es Con Field Hokkaido |  |
+| `rakuten-mobile-park-miyagi` | Rakuten Mobile Saikyo Park Miyagi | Rakuten Mobile Park Miyagi | Miyagi Baseball Stadium |
+| `zozo-marine-stadium` | ZOZO Marine Stadium | Zozo Marine Stadium | Chiba Marine Stadium |
+| `hiroshima-municipal-stadium` | Hiroshima Municipal Stadium (original) | Hiroshima Municipal Stadium (1957) |  |
 <!-- /made:park-names -->
 
 Where it was not certain what people call a park, the cited title is the everyday name, and [references.md](./references.md#names) says which.

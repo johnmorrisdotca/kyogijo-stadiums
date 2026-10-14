@@ -188,18 +188,28 @@ export function backgroundsTable(lib) {
   return table(["Pattern", "What it draws", "Opacity"], BACKGROUND_PATTERNS.map((name) => [`\`${name}\``, PATTERN_DRAWS[name], String(BACKGROUND_OPACITY[name])]));
 }
 
-/** The parks whose everyday name is not the title of the article that was cited, in English or in Japanese, with the official name, the reading and the titles. */
+/** The parks whose everyday name in English is not the title of the article that was cited, with the official name and the title. */
 export function parkNamesTable(lib) {
   const { PARKS, PARK_IDS, parkOfficialName } = lib[`${MAIN}/parks`];
   const title = (park, lang) => park.aliases?.find((alias) => alias.kind === "wikipedia" && alias.lang === lang)?.name ?? "";
   const rows = PARK_IDS.map((id) => PARKS[id])
-    .filter((park) => park.name !== title(park, "en") || park.nameJa !== title(park, "ja"))
-    .map((park) => [`\`${park.id}\``, park.name, title(park, "en"), parkOfficialName(park, "en") ?? "", park.nameJa, park.readingJa ?? "", title(park, "ja"), parkOfficialName(park, "ja") ?? ""]);
-  return table(["Key", "Everyday name", "English article", "Official, English", "Name in Japanese", "Reading", "Japanese article", "Official, Japanese"], rows);
+    .filter((park) => park.name !== title(park, "en"))
+    .map((park) => [`\`${park.id}\``, park.name, title(park, "en"), parkOfficialName(park, "en") ?? ""]);
+  return table(["Key", "Everyday name", "English article", "Official name"], rows);
+}
+
+/** The same in Japanese (for docs/ballparks.ja.md): the parks whose everyday name in Japanese is not the title of the Japanese article, with the reading and the official name. */
+export function parkNamesTableJa(lib) {
+  const { PARKS, PARK_IDS, parkOfficialName } = lib[`${MAIN}/parks`];
+  const title = (park, lang) => park.aliases?.find((alias) => alias.kind === "wikipedia" && alias.lang === lang)?.name ?? "";
+  const rows = PARK_IDS.map((id) => PARKS[id])
+    .filter((park) => park.nameJa !== undefined && park.nameJa !== title(park, "ja"))
+    .map((park) => [`\`${park.id}\``, park.nameJa, park.readingJa ?? "", title(park, "ja"), parkOfficialName(park, "ja") ?? ""]);
+  return table(["キー", "通称", "読み", "日本語版の記事", "正式名称"], rows);
 }
 
 /** Every made block by name. */
-export const MADE = { frames: framesTable, units: unitsTable, limits: limitsTable, ranges: rangesTable, presets: presetsTable, backgrounds: backgroundsTable, "park-names": parkNamesTable };
+export const MADE = { frames: framesTable, units: unitsTable, limits: limitsTable, ranges: rangesTable, presets: presetsTable, backgrounds: backgroundsTable, "park-names": parkNamesTable, "park-names-ja": parkNamesTableJa };
 
 const BLOCK = /(<!-- made:([\w-]+) -->\n)([\s\S]*?)(<!-- \/made:\2 -->)/g;
 

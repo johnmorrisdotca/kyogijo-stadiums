@@ -78,16 +78,18 @@ function variantsDocument() {
   const lines = [
     "# League variants",
     "",
+    "[日本語](variants.ja.md) · English",
+    "",
     "`league` in the options draws a surface as one league's rulebook marks it; `sport` names the family (`nba` for basketball, `nhl` for hockey, `nfl`, `cfl` or `ifaf` for football, `mlb` for baseball and softball, `curling` for a curling sheet, `tennis`, `volleyball`, `badminton`, `pickleball`, `tabletennis`, `padel`, `squash`, `racquetball`, `sepaktakraw`, `teqball`, `roundnet` and `netball` for the net, racket and court sports, `lacrosse`, `rugby`, `afl`, `gaelic`, `cricket`, `fieldhockey` and `handball` for the field sports). This page is made from `src/leagues/` by `pnpm docs:make`; a test holds it to them. Each figure is the rulebook's, in its own unit, and each league's sources, with the edition and the address read on 2026-10-13, are listed under its table. What a figure is and where it is ours is in [sources.md](./sources.md#league-variants); what could not be cited is in [references.md](./references.md#league-variants-not-drawn).",
     "",
     "A `year` draws a league's markings of that season only where a source dates a change (the history under each table); for any other league it is ignored, and the drawing is of the rulebook as it is now. The sport's own league (the NBA, the NHL, the NFL, the CFL, the IFAF, MLB, World Curling, the ITF, the FIVB's indoor court, the BWF, USA Pickleball, the ITTF, the FIP, World Squash's singles court, the IRF, the ISTAF, the FITEQ, the International Roundnet Federation and World Netball) keeps the history of [`year`](./eras.md).",
     "",
   ];
   for (const [title, sport] of Object.values(FAMILY_TITLES)) {
-    lines.push(`## ${title}`, "", `\`sport: "${sport}"\``, "", "| `league` | Name | 日本語 | Key figures |", "| --- | --- | --- | --- |");
+    lines.push(`## ${title}`, "", `\`sport: "${sport}"\``, "", "| `league` | Name | Key figures |", "| --- | --- | --- |");
     for (const league of LEAGUES[sport]) {
       const figures = leagueFigures(league).map(([k, v]) => `${k} ${v}`).join("; ");
-      lines.push(`| \`${league.id}\`${league.builtIn ? " (the sport's own)" : ""} | ${league.name.en} | ${league.name.ja} | ${figures} |`);
+      lines.push(`| \`${league.id}\`${league.builtIn ? " (the sport's own)" : ""} | ${league.name.en} | ${figures} |`);
     }
     lines.push("");
     const used = [...new Set(LEAGUES[sport].flatMap((league) => league.sources))];
@@ -98,8 +100,39 @@ function variantsDocument() {
     }
     const history = LEAGUES[sport].flatMap((league) => (league.builtIn ? [] : leagueChanges(sport, league.id)));
     if (history.length > 0) {
-      lines.push("", "History a source dates:", "", "| Change | English | 日本語 |", "| --- | --- | --- |");
-      for (const change of history) lines.push(`| \`${change.id}\` | ${change.what} | ${change.ja} |`);
+      lines.push("", "History a source dates:", "", "| Change | What changed |", "| --- | --- |");
+      for (const change of history) lines.push(`| \`${change.id}\` | ${change.what} |`);
+    }
+    lines.push("");
+  }
+  return `${lines.join("\n")}\n`;
+}
+
+const FAMILY_TITLES_JA = { basketball: "バスケットボール", hockey: "アイスホッケー", football: "アメリカンフットボールとカナディアンフットボール", baseball: "野球とソフトボール", curling: "カーリング", tennis: "テニス", volleyball: "バレーボール、ビーチバレー、シッティングバレーボール", badminton: "バドミントン", pickleball: "ピックルボール", tabletennis: "卓球", padel: "パデル", squash: "スカッシュ", racquetball: "ラケットボール", sepaktakraw: "セパタクロー", teqball: "テックボール", roundnet: "ラウンドネット", netball: "ネットボール", lacrosse: "ラクロス", rugby: "ラグビー", afl: "オーストラリアンフットボール", gaelic: "ゲーリック・フットボールとハーリング", cricket: "クリケット", fieldhockey: "フィールドホッケー", handball: "ハンドボール", judo: "柔道", karate: "空手", kendo: "剣道", sumo: "相撲", kyudo: "弓道", dojo: "道場の畳" };
+
+/** docs/variants.ja.md: the leagues' Japanese names, their sources and their dated changes in Japanese, made from the same source. */
+function variantsDocumentJa() {
+  const lines = [
+    "# リーグごとの違い",
+    "",
+    "日本語 · [English](variants.md)",
+    "",
+    "オプションの `league` は、あるリーグの規則書どおりに競技場を描きます。`sport` は競技の系統を指します（バスケットボールは `nba`、アイスホッケーは `nhl`、アメリカンフットボールとカナディアンフットボールは `nfl`・`cfl`・`ifaf`、野球とソフトボールは `mlb`、カーリングのシートは `curling`、ネット型・ラケット型などのコート競技は `tennis`・`volleyball`・`badminton`・`pickleball`・`tabletennis`・`padel`・`squash`・`racquetball`・`sepaktakraw`・`teqball`・`roundnet`・`netball`、フィールド球技は `lacrosse`・`rugby`・`afl`・`gaelic`・`cricket`・`fieldhockey`・`handball`）。このページは `src/leagues/` から `pnpm docs:make` で作られ、テストがそれとの一致を確かめます。各リーグの寸法（規則書の値を、規則書の単位で載せたもの）と出典の書名や版は、[英語版](variants.md)の表にあります。ここには、リーグの日本語名と、出典の URL（2026-10-13 に読み取ったもの）と、日付のわかる変更の日本語の説明を載せています。",
+    "",
+    "`year` は、出典が変更の日付を示している場合にかぎり、そのシーズンのリーグの描き方になります（各表の下の「日付のわかる変更」）。それ以外のリーグでは `year` は無視され、現在の規則書のとおりに描きます。その競技の標準のリーグ（NBA、NHL、NFL、CFL、IFAF、MLB、World Curling、ITF、FIVB の屋内コート、BWF、USA Pickleball、ITTF、FIP、World Squash のシングルスコート、IRF、ISTAF、FITEQ、International Roundnet Federation、World Netball）は、[`year`](./eras.md) で年ごとの変遷を描けます。",
+    "",
+  ];
+  for (const [family, [, sport]] of Object.entries(FAMILY_TITLES)) {
+    lines.push(`## ${FAMILY_TITLES_JA[family]}`, "", `\`sport: "${sport}"\``, "", "| `league` | 名前 |", "| --- | --- |");
+    for (const league of LEAGUES[sport]) lines.push(`| \`${league.id}\`${league.builtIn ? "（その競技の標準）" : ""} | ${league.name.ja} |`);
+    lines.push("");
+    const used = [...new Set(LEAGUES[sport].flatMap((league) => league.sources))];
+    lines.push("出典の URL：", "");
+    for (const id of used) lines.push(`- \`${id}\`: <${LEAGUE_SOURCES[id].url}>`);
+    const history = LEAGUES[sport].flatMap((league) => (league.builtIn ? [] : leagueChanges(sport, league.id)));
+    if (history.length > 0) {
+      lines.push("", "日付のわかる変更：", "", "| 変更 | 内容 |", "| --- | --- |");
+      for (const change of history) lines.push(`| \`${change.id}\` | ${change.ja} |`);
     }
     lines.push("");
   }
@@ -128,12 +161,14 @@ describe("the words", () => {
 });
 
 describe("the leagues", () => {
-  it("are listed in docs/variants.md, which is made from them", () => {
-    const made = variantsDocument();
-    if (process.env.UPDATE_DOCS === "1") writeFileSync("docs/variants.md", made);
-    expect(existsSync("docs/variants.md"), "run `pnpm docs:make`").toBe(true);
-    expect(readFileSync("docs/variants.md", "utf8"), "docs/variants.md is out of date: run `pnpm docs:make`").toBe(made);
-  });
+  for (const [file, make] of [["variants.md", variantsDocument], ["variants.ja.md", variantsDocumentJa]]) {
+    it(`are listed in docs/${file}, which is made from them`, () => {
+      const made = make();
+      if (process.env.UPDATE_DOCS === "1") writeFileSync(`docs/${file}`, made);
+      expect(existsSync(`docs/${file}`), "run `pnpm docs:make`").toBe(true);
+      expect(readFileSync(`docs/${file}`, "utf8"), `docs/${file} is out of date: run \`pnpm docs:make\``).toBe(made);
+    });
+  }
 });
 
 describe("the package's own numbers", () => {
@@ -151,10 +186,12 @@ describe("the package's own numbers", () => {
 
   it("list every park's source in NOTICE.md", () => {
     const notice = readFileSync("NOTICE.md", "utf8");
+    const noticeJa = readFileSync("NOTICE.ja.md", "utf8");
     for (const id of PARK_IDS) {
       const park = PARKS[id];
       expect(notice, id).toContain(`| ${park.name} |`);
-      for (const source of [park.en, park.ja]) if (source) expect(notice, id).toContain(String(source.revision));
+      if (park.en) expect(notice, id).toContain(String(park.en.revision));
+      if (park.ja) expect(noticeJa, id).toContain(`| ${park.wikidata} | ${park.ja.title}, ${park.ja.revision} |`);
     }
   });
 
@@ -180,11 +217,12 @@ describe("the package's own numbers", () => {
 
   it("list every ground's sources in NOTICE.md, and every World Cup article the tournaments were read from", () => {
     const notice = readFileSync("NOTICE.md", "utf8");
+    const noticeJa = readFileSync("NOTICE.ja.md", "utf8");
     for (const id of GROUND_IDS) {
       const ground = GROUNDS[id];
       expect(notice, id).toContain(`| ${ground.name} | ${ground.wikidata} |`);
       expect(notice, id).toContain(String(ground.en.revision));
-      expect(notice, id).toContain(String(ground.ja.revision));
+      expect(noticeJa, id).toContain(`| ${ground.wikidata} | ${ground.ja.title}, ${ground.ja.revision} |`);
     }
     const editions = JSON.parse(readFileSync("scripts/grounds.editions.json", "utf8"));
     for (const e of editions) expect(notice, `${e.competition} ${e.year}`).toContain(`${e.article.title}, ${e.article.revision}`);

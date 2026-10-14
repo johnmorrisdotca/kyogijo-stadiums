@@ -61,4 +61,6 @@ Kyogijo Stadiums draws sports surfaces as SVG, to scale, with the score on them.
 - [Limits](./limits.md): the numbers a test holds.
 - [Sources of the dimensions](./sources.md) and [References](./references.md): where each figure was read, and what may be used of each reference.
 - [The keys of the ballparks](./parks.md), and [the Japanese of Kyogijo](./strings-ja.md): every word in both languages.
+- [Terminology](./terminology.md): the Japanese words of the rule books that the docs rest on, beside the English.
+- Each page is in one language. The pages in Japanese (named `<name>.ja.md`) are on GitHub beside their English twins: [ballparks](./ballparks.ja.md), [grounds](./grounds.ja.md), [league variants](./variants.ja.md) and [the notice of the data's sources](../NOTICE.ja.md).
 - [Architecture](./architecture.md): the files and what each is for.

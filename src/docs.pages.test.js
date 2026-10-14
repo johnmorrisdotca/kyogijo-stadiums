@@ -37,7 +37,7 @@ function linksOf(markdown) {
 describe("the contents", () => {
   it("lists every Markdown page of docs/ once, and every page it lists is a file or is made by the build", () => {
     const listed = PAGE_LIST.filter((page) => !page.site).map((page) => fileOf(page.slug).replace(/^docs\//, ""));
-    const files = readdirSync("docs").filter((file) => file.endsWith(".md"));
+    const files = readdirSync("docs").filter((file) => file.endsWith(".md") && !file.endsWith(".ja.md"));
     expect(listed.sort()).toEqual(files.sort());
     expect(new Set(PAGE_LIST.map((page) => page.slug)).size).toBe(PAGE_LIST.length);
     for (const page of PAGE_LIST) expect(page.ja, page.slug).toMatch(/[぀-ヿ一-鿿]/u);
