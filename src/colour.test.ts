@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { inkOn, rgbOf, safeColour, safeLogo } from "./colour.ts";
+import { inkOn, rgbOf, safeColour } from "./colour.ts";
+import { safeLogo } from "./logo.ts";
 
 describe("colours", () => {
   it("accept hex colours, functions, names and variables", () => {

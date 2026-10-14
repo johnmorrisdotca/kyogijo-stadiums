@@ -90,6 +90,7 @@ console.log(svg.startsWith("<svg"), svg.includes("Northern Owls 3, Lakeshore Anc
 - **Surfaces through the years.** `year: 1975` draws a surface as its league's rules marked it that season, each change cited. [Surfaces through the years](./docs/eras.md).
 - **Score mode.** Each team's name and logo on its side (the end zones of a football field, the ends of the ice, the halves of the court, the dugouts of a ballpark) and the score large in the middle, with the competition, the status and the date, and the winner emphasised; a flag or a crest can be round, in a circle with a ring (`markShape: "round"`). [Score and layout](./docs/score.md#round-marks).
 - **A pageant.** Each team's flag or crest laid large over its half of the surface, as a stadium lays giant flags and crests for a final: `pageant: "carpet"` (a flag at its own ratio with a border and a gentle fabric) or `"stage"` (a crest on a round disc with a gold ring), an emblem or a trophy of your own in the centre circle, the score in the middle or in the strip, upright wide and tall, in light and dark, with an entrance in CSS for readers who have not asked for less motion. [The pageant](./docs/pageant.md).
+- **Trophies, medals, balls and crests, by id.** `useEmblems(renderEmblem)` plugs in the sister package [Dougu Sports 道具](https://johnmorrisdotca.github.io/dougu-sports/) in one line, and an id goes wherever a logo, a flag or a mark is taken: `logo: "crest:shield"` (a crest in the team's colour with its letters), `pageant: { emblem: "trophy:hockey-cup" }`, `"sport:nhl/line"`, `"ball:puck"`, `"cup"`. Kyogijo bundles no emblem and keeps zero dependencies; without the plug-in an id is refused like any unsafe address. [Emblems](./docs/emblems.md).
 - **Zoom to a part of a surface.** `range: "offensive-zone"` crops a drawing to a rink's zone, a half court, the paint, the red zone, a soccer half, third or penalty area, the infield, a curling house, or a box of your own in any frame, with its data, heat, labels and score following. [Display ranges](./docs/ranges.md).
 - **Wide, tall or fit the box.** Every surface lies wide or tall: tall turns it a quarter, keeps every word upright and puts the teams top and bottom. With `orientation: "auto"` the browser helpers follow the box.
 - **Data on the surface.** Points, lines, arrows, text, heat maps, hexagons, zone charts and density contours over any surface, in its feet or a data provider's frame, cut to its outline, with a table for each layer; ready-made shot and pass charts, and the road to a tournament's final (`roadToFinal`: the two finalists' matches as round flags with the scores, in four sizes). [Data layers](./docs/layers.md), [charts](./docs/charts.md).
@@ -174,6 +175,27 @@ console.log(svg.includes("Cup Final, Game 7"), svg.includes("Final/OT"));
 </picture>
 <br><em>A football field: the end zones in the teams' colours, the score at midfield.</em>
 </p>
+
+### Trophies, medals, balls and crests
+
+Kyogijo draws none of its own. Plug in [Dougu Sports](https://johnmorrisdotca.github.io/dougu-sports/) (`npm install @johnmorrisdotca/dougu-sports`) once, and its 148 emblems are ids: [Emblems](./docs/emblems.md).
+
+```ts
+import { drawKyogijo, useEmblems } from "@johnmorrisdotca/kyogijo-stadiums";
+import { renderEmblem } from "@johnmorrisdotca/dougu-sports/emblems";
+
+useEmblems(renderEmblem);
+
+const svg = drawKyogijo({
+  sport: "soccer",
+  away: { name: "Harbour City Gulls", abbr: "HCG", score: 2, color: "#1f5fa8", logo: "crest:shield" },
+  home: { name: "Prairie Ridge Bison", abbr: "PRB", score: 1, color: "#b5452c", logo: "crest:roundel" },
+  status: "final",
+  pageant: { style: "stage", emblem: "trophy:soccer-globe", emblemName: "Northern Cup" },
+});
+console.log(svg.includes(encodeURIComponent(">HCG<")), svg.includes("Northern Cup"));
+// true true
+```
 
 ### A bare surface, and tall for a phone
 
@@ -654,3 +676,4 @@ The code is [MIT](./LICENSE) © John Morris. The ballparks' fence distances are 
 | The Wikidata item of each ballpark | Wikidata, as linked from the cited article | CC0 |
 | 64 soccer grounds | English Wikipedia articles at the revision cited; Wikidata | Facts; CC BY-SA 4.0 articles, no text used; CC0 |
 | The demo's teams and emblems | Written for this package | MIT |
+| The demo's trophies, medals, balls and crests | [Dougu Sports](https://github.com/johnmorrisdotca/dougu-sports), a development dependency copied into the demo site with its licences; the package itself draws none | MIT, and its sources' licences in its NOTICE.md |

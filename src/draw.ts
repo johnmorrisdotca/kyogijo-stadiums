@@ -1,5 +1,7 @@
 import { ballparkDrawn, ballparkFor, ballparkSentences } from "./ballpark.ts";
-import { inkOn, safeColour, safeLogo } from "./colour.ts";
+import { inkOn, safeColour } from "./colour.ts";
+import { withEmblems } from "./emblems-source.ts";
+import { safeLogo } from "./logo.ts";
 import { drawingId, feetFence, isPortrait, lengthUnit, safeClass } from "./common.ts";
 import { el, esc, num } from "./format.ts";
 import { ERA_SPORTS, footballIn, rulesFor, seasonLabel, type EraSport } from "./eras.ts";
@@ -490,17 +492,18 @@ function roundOf(team: Team, markShape: TeamMark | undefined): Pick<TeamView, "r
   return { round: true, fit: team.markFit === "contain" ? "contain" : undefined, color: safeColour(team.color), ink: safeColour(team.textColor) };
 }
 
-function teamView(team: Team, side: Side, role: "home" | "away", winner: "home" | "away" | "none", uppercase: boolean, sport: Sport, markShape?: TeamMark): TeamView {
+function teamView(team: Team, side: Side, role: "home" | "away", winner: "home" | "away" | "none", uppercase: boolean, sport: Sport, markShape?: TeamMark, theme?: "light" | "dark"): TeamView {
   const name = String(team.name ?? "");
+  const abbr = (team.abbr !== undefined && team.abbr.trim() !== "" ? team.abbr.trim() : abbreviate(name)).slice(0, 5);
   const written = fieldScoreText(sport, team);
   const score = written ?? (team.score === undefined || team.score === null || String(team.score).trim() === "" ? "–" : String(team.score));
   return {
     side,
     role,
     name: uppercase ? capitals(name) : name,
-    abbr: (team.abbr !== undefined && team.abbr.trim() !== "" ? team.abbr.trim() : abbreviate(name)).slice(0, 5),
+    abbr,
     score,
-    logo: safeLogo(team.logo),
+    logo: safeLogo(team.logo, { color: team.color, accent: team.textColor, initials: abbr.slice(0, 3), theme }),
     ...roundOf(team, markShape),
     state: stateOf(winner, role),
     ends: Array.isArray(team.ends) ? team.ends.map(endText) : undefined,
@@ -749,6 +752,10 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
  * ```
  */
 export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
+  return withEmblems(o.emblems, () => drawnKyogijo(o));
+}
+
+function drawnKyogijo(o: SurfaceOptions | ScoreOptions): string {
   if (o.host !== undefined && o.range !== undefined) return drawKyogijo({ ...o, range: undefined });
   // A special game is a surface set inside another, drawn to scale with no stands.
   if (o.host !== undefined && o.crowd !== undefined) return drawKyogijo({ ...o, crowd: undefined });
@@ -784,8 +791,8 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
   if (isScore(o)) {
     winner = winnerOf({ ...o, sport });
     status = statusText({ ...o, sport }, language);
-    const home = teamView(o.home, homeSide, "home", winner, uppercase, sport, o.markShape);
-    const away = teamView(o.away, awaySide, "away", winner, uppercase, sport, o.markShape);
+    const home = teamView(o.home, homeSide, "home", winner, uppercase, sport, o.markShape, o.theme === "light" || o.theme === "dark" ? o.theme : undefined);
+    const away = teamView(o.away, awaySide, "away", winner, uppercase, sport, o.markShape, o.theme === "light" || o.theme === "dark" ? o.theme : undefined);
     left = homeSide === "left" ? home : away;
     right = homeSide === "left" ? away : home;
     leftTeam = homeSide === "left" ? o.home : o.away;

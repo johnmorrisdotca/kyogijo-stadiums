@@ -62,16 +62,16 @@ export function inkOn(color: string | undefined): string {
 }
 
 /**
- * A logo's address as it may be written into an image's `href`, or `undefined`. An `https:` or `http:` address, a
+ * A picture's address as it may be written into an image's `href`, or `undefined` (what `safeLogo` checks after it has looked for an emblem's id). An `https:` or `http:` address, a
  * relative path, an image `data:` address, or an SVG document as text (written as an image, which cannot run scripts).
  * @example
  * ```ts
- * import { safeLogo } from "@johnmorrisdotca/kyogijo-stadiums";
- * console.log(safeLogo("https://example.com/gulls.svg"), safeLogo("javascript:alert(1)"));
+ * import { safePicture } from "@johnmorrisdotca/kyogijo-stadiums";
+ * console.log(safePicture("https://example.com/gulls.svg"), safePicture("javascript:alert(1)"));
  * // https://example.com/gulls.svg undefined
  * ```
  */
-export function safeLogo(value: unknown): string | undefined {
+export function safePicture(value: unknown): string | undefined {
   if (typeof value !== "string") return undefined;
   const text = value.trim();
   if (text.length === 0) return undefined;

@@ -2,7 +2,9 @@
 // (a `carpet`: a rectangle at the flag's own ratio with a border; a `stage`: a crest on a large round disc with a ring), and an emblem or a trophy in the centre circle. This file
 // decides what is asked (`pageantOf`) and where each picture goes (`pageantLayout`); `pageant.draw.ts` draws them. Written for this package; the idea is a broadcast's, and no
 // flag, crest or emblem is drawn or supplied here.
-import { safeColour, safeLogo } from "./colour.ts";
+import { safeColour } from "./colour.ts";
+import { renderedEmblem } from "./emblems-source.ts";
+import { safeLogo } from "./logo.ts";
 import { isNetSport } from "./court.ts";
 import type { Outline } from "./outline.ts";
 import type { Surface } from "./surfaces/surface.ts";
@@ -66,7 +68,7 @@ export function pageantOf(o: SurfaceOptions & { home?: unknown; away?: unknown; 
   if (o.home === undefined || o.away === undefined || o.size === "badge" || o.host !== undefined) return undefined;
   const p: PageantOptions = given === true ? {} : typeof given === "string" ? { style: given } : typeof given === "object" ? given : {};
   const style = oneOf(p.style, ["carpet", "stage"] as const) ?? "carpet";
-  const href = safeLogo(p.emblem);
+  const href = safeLogo(p.emblem, { theme: o.theme === "light" || o.theme === "dark" ? o.theme : undefined });
   const asked = oneOf(p.score, ["auto", "centre", "strip"] as const) ?? "auto";
   // The emblem takes the middle, and a board is as wide as the middle: both send the score to the strip, unless the options say otherwise.
   const score = asked === "auto" && (href !== undefined || BOARDS(o.sport)) ? "strip" : asked;
@@ -103,7 +105,8 @@ export function ratioOf(team: Pick<Team, "logo" | "logoRatio">): number {
   if (typeof team.logoRatio === "number" && Number.isFinite(team.logoRatio) && team.logoRatio > 0) return clamp(team.logoRatio);
   const logo = typeof team.logo === "string" ? team.logo.trim() : "";
   let found: number | undefined;
-  if (/^(?:<\?xml|<svg)\b/i.test(logo)) found = svgRatio(logo);
+  if (renderedEmblem(logo) !== undefined) found = 1;
+  else if (/^(?:<\?xml|<svg)\b/i.test(logo)) found = svgRatio(logo);
   else if (/^data:image\/svg\+xml/i.test(logo)) {
     const comma = logo.indexOf(",");
     try {

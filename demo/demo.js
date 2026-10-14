@@ -2,6 +2,7 @@
 // and a page of examples: every sport, wide and tall, badges, compact cards, court looks, a live score, every ballpark,
 // and the custom element. The words are in words.js, the made-up teams in examples.js.
 import { COURT_THEMES, GROUNDS, GROUND_IDS, KYOGIJO_STYLE, LEAGUES, PARKS, PARK_IDS, SOCCER_PITCH_IDS, SOCCER_PROVIDERS, SOCCER_PROVIDER_IDS, VERSION, drawKyogijo, fenceFor, rescale, layerTable, rulesFor, seasonLabel, leagueAt, leagueSeason } from "./dist/index.js";
+import { emblemName, renderEmblem } from "./emblems.js";
 import { mountKyogijo } from "./dist/mount-entry.js";
 import { KYOGIJO_TURN_STYLE, mountKyogijoTurn } from "./dist/turn-entry.js";
 import "./dist/element-define.js";
@@ -19,13 +20,14 @@ import { ROAD_FINAL, SERIES_LABELS, SERIES_LABELS_JA, nation, roadFinalists, roa
 import { roadToFinal } from "./dist/charts-entry.js";
 import { mlbSprayChart, nbaShotChart, nflPassChart, nhlShotMap, soccerShotMap } from "./dist/charts-entry.js";
 import { fenceAt } from "./dist/geometry-entry.js";
-import { FIELDS, SEGS, chosenLeague, hasSeasons, hiddenRows, hiddenStatus, isOwnLeague, labelOf as labelsFor, loadGame as loadGameInto, makeState, optionsFor as optionsOf, seasonRange } from "./model.js";
+import { FIELDS, SEGS, chosenLeague, hasSeasons, hiddenRows, hiddenStatus, isOwnLeague, labelOf as labelsFor, loadGame as loadGameInto, makeState, optionsFor as optionsOf, seasonRange, usesEmblems } from "./model.js";
 import { WORDS } from "./words.js";
 
 const $ = (id) => document.getElementById(id);
 const params = new URLSearchParams(location.search);
 const CANON = "https://johnmorrisdotca.github.io/kyogijo-stadiums/";
 const CDN = "https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo-stadiums@0";
+const DOUGU = "https://cdn.jsdelivr.net/npm/@johnmorrisdotca/dougu-sports@0";
 
 const language = familyLanguage({ id: "kyogijo-stadiums", words: WORDS, onChange: () => onLanguage() });
 const say = (key) => WORDS[language.lang][key];
@@ -89,6 +91,16 @@ function refreshSegs() {
   for (const seg of Object.values(segs)) {
     for (const button of seg.host.children) {
       button.hidden = seg.kind === "status" && hiddenStatus(state.sport, button.dataset.value);
+      if (seg.kind === "mark") {
+        // A tile is the emblem drawn small, in the style that is on, and named for a screen reader in the page's language.
+        const id = button.dataset.value;
+        const svg = renderEmblem(state.emblemLine ? `${id}/line` : id, { size: 34 });
+        if (button.dataset.drawn !== svg) { button.innerHTML = svg; button.dataset.drawn = svg; }
+        const name = emblemName(id, language.lang);
+        if (button.getAttribute("aria-label") !== name) { button.setAttribute("aria-label", name); button.title = name; }
+        button.setAttribute("aria-pressed", String(seg.get() === id));
+        continue;
+      }
       const text = labelOf[seg.kind](button.dataset.value);
       if (button.textContent !== text) button.textContent = text;
       button.setAttribute("aria-pressed", String(seg.get() === button.dataset.value));
@@ -125,6 +137,9 @@ makeSeg("track", (v) => { state.track = v; });
 makeSeg("infield", (v) => { state.infield = v; });
 makeSeg("races", (v) => { state.races = v; });
 for (const role of ["away", "home"]) makeSeg(`${role}-logo`, (v) => { state[role].logo = v; });
+// The pickers of a ready-made emblem: a grid of tiles, each the emblem itself, for a team's mark and for the middle of a pageant.
+for (const role of ["away", "home"]) makeSeg(`${role}-mark`, (v) => { state[role].mark = v; });
+makeSeg("pageant-emblem-id", (v) => { state.pageantEmblemId = v; });
 
 /** A season inside the range the surface's history covers. */
 function clampYear(year) {
@@ -160,7 +175,9 @@ function renderEra() {
 function toggle(id, key) {
   $(id).addEventListener("click", () => { state[key] = !state[key]; $(id).setAttribute("aria-pressed", String(state[key])); change(); });
 }
-for (const [id, key] of [["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["crowd", "crowd"], ["crowd-tifo", "crowdTifo"], ["flags", "flags"], ["pageant-emblem", "pageantEmblem"], ["pageant-entrance", "pageantEntrance"], ["pool-section", "poolSection"]]) toggle(id, key);
+for (const [id, key] of [["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["crowd", "crowd"], ["crowd-tifo", "crowdTifo"], ["flags", "flags"], ["pageant-emblem", "pageantEmblem"], ["emblem-line", "emblemLine"], ["pageant-entrance", "pageantEntrance"], ["pool-section", "poolSection"]]) toggle(id, key);
+$("emblem-line").addEventListener("click", () => refreshSegs());
+$("pageant-emblem").addEventListener("click", () => refreshSegs());
 
 function fillFields() {
   for (const field of FIELDS) {
@@ -316,7 +333,7 @@ function render() {
   }
   renderEra();
   applyRows();
-  for (const toggleOf of [["flags", "flags"], ["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["crowd", "crowd"], ["crowd-tifo", "crowdTifo"], ["pageant-emblem", "pageantEmblem"], ["pageant-entrance", "pageantEntrance"], ["pool-section", "poolSection"]]) $(toggleOf[0]).setAttribute("aria-pressed", String(state[toggleOf[1]]));
+  for (const toggleOf of [["flags", "flags"], ["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["crowd", "crowd"], ["crowd-tifo", "crowdTifo"], ["pageant-emblem", "pageantEmblem"], ["emblem-line", "emblemLine"], ["pageant-entrance", "pageantEntrance"], ["pool-section", "poolSection"]]) $(toggleOf[0]).setAttribute("aria-pressed", String(state[toggleOf[1]]));
   $("crowd-density").value = String(state.crowdDensity);
   $("crowd-density-out").textContent = `${state.crowdDensity}%`;
   updateEmbed();
@@ -336,6 +353,10 @@ function syncUrl() {
   }
   if (state.pageant !== "off" && state.pageantEmblem) q.set("emblem", "1");
   else q.delete("emblem");
+  if (state.pageant !== "off" && state.pageantEmblem && state.pageantEmblemId !== "trophy:soccer-globe") q.set("emblemid", state.pageantEmblemId);
+  else q.delete("emblemid");
+  if (state.emblemLine) q.set("emblemline", "1");
+  else q.delete("emblemline");
   history.replaceState(history.state, "", `${location.pathname}?${q.toString()}${location.hash}`);
 }
 
@@ -354,7 +375,10 @@ function code(kind) {
     return `import { mountKyogijoTurn } from "${CDN}/dist/turn-entry.js";\n// or, from npm: import { mountKyogijoTurn } from "@johnmorrisdotca/kyogijo-stadiums/turn";\n\nmountKyogijoTurn(document.querySelector("#game"), ${tidy(o)}, { preset: "${state.viewpoint}" });`;
   }
   if (kind === "module") {
-    return `import { drawKyogijo } from "${CDN}/+esm";\n// or, from npm: import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";\n\ndocument.querySelector("#game").innerHTML = drawKyogijo(${tidy(o)});`;
+    // An emblem's id is drawn by Dougu Sports, which the page plugs in once.
+    const plug = usesEmblems(state) ? `import { renderEmblem } from "${DOUGU}/dist/emblems-entry.js";\n// or, from npm: import { renderEmblem } from "@johnmorrisdotca/dougu-sports/emblems";\n` : "";
+    const use = plug === "" ? "" : "\nuseEmblems(renderEmblem);\n";
+    return `import { drawKyogijo${plug === "" ? "" : ", useEmblems"} } from "${CDN}/+esm";\n// or, from npm: import { drawKyogijo${plug === "" ? "" : ", useEmblems"} } from "@johnmorrisdotca/kyogijo-stadiums";\n${plug}${use}\ndocument.querySelector("#game").innerHTML = drawKyogijo(${tidy(o)});`;
   }
   if (kind === "element") {
     const attrs = [`sport="${o.sport}"`];
@@ -378,7 +402,8 @@ function code(kind) {
     // What has no attribute of its own goes in the `options` JSON.
     const more = { ...(o.court ? { court: o.court } : {}), ...(o.sheet ? { sheet: o.sheet } : {}), ...(o.crowd ? { crowd: o.crowd } : {}), ...(o.pageant ? { pageant: o.pageant } : {}), ...(o.pool ? { pool: o.pool } : {}), ...(o.athletics ? { athletics: o.athletics } : {}) };
     if (Object.keys(more).length > 0) attrs.push(`options='${JSON.stringify(more).replace(/'/g, "&#39;")}'`);
-    return `<script type="module" src="${CDN}/dist/element-define.js"></script>\n\n<kyogijo-field\n  ${attrs.join("\n  ")}\n></kyogijo-field>`;
+    const plug = usesEmblems(state) ? `<script type="module">\n  import { useEmblems } from "${CDN}/dist/element-entry.js";\n  import { renderEmblem } from "${DOUGU}/dist/emblems-entry.js";\n  useEmblems(renderEmblem);\n</script>\n` : "";
+    return `<script type="module" src="${CDN}/dist/element-define.js"></script>\n${plug}\n<kyogijo-field\n  ${attrs.join("\n  ")}\n></kyogijo-field>`;
   }
   if (kind === "iframe") {
     const box = stage.querySelector("svg").viewBox.baseVal;

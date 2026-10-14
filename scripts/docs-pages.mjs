@@ -39,6 +39,7 @@ export const NAV = [
       { slug: "ranges", ja: "表示範囲とズーム" },
       { slug: "layouts", ja: "レイアウトと背景" },
       { slug: "pageant", ja: "ハーフに広げる旗とエンブレム" },
+      { slug: "emblems", ja: "トロフィー・メダル・ボール・クレスト" },
       { slug: "accessibility", ja: "アクセシビリティ" },
     ],
   },

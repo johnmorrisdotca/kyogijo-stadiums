@@ -18,6 +18,9 @@ importers:
       '@johnmorrisdotca/chizu':
         specifier: 1.4.0
         version: 1.4.0
+      '@johnmorrisdotca/dougu-sports':
+        specifier: 0.1.0
+        version: 0.1.0
       '@playwright/test':
         specifier: ^1.63.0
         version: 1.64.0
@@ -99,6 +102,10 @@ packages:
 
   '@johnmorrisdotca/chizu@1.4.0':
     resolution: {integrity: sha512-tlfHQ9bL0Sim3SNuDRw7YNAjdnlrmWDzFZve9DIF9SNngHN3KQQj7r+zsSI0xAAzQ+dyOiZSbHHZ1jM15ZkoDA==}
+    engines: {node: '>=22'}
+
+  '@johnmorrisdotca/dougu-sports@0.1.0':
+    resolution: {integrity: sha512-/Yq2T9ak6X906hIMwU2JCJYQVZuehL58LvOGXicZbg9ckEBVxvEx75QVG13z1VsNdIxBXuN7E60ZfZR+dqelqA==}
     engines: {node: '>=22'}
 
   '@jridgewell/resolve-uri@3.1.2':
@@ -1012,6 +1019,8 @@ snapshots:
   '@humanwhocodes/retry@0.4.3': {}
 
   '@johnmorrisdotca/chizu@1.4.0': {}
+
+  '@johnmorrisdotca/dougu-sports@0.1.0': {}
 
   '@jridgewell/resolve-uri@3.1.2': {}
 

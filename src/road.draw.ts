@@ -1,7 +1,8 @@
 // The road chart, drawn: the two finalists' big round marks with their names, the round names down the middle on a dotted road, each finalist's matches on its side as
 // the round marks of both teams with the score between them, and the group stage as a compact row at the foot. Each size has its own arrangement: `card`, `square` and
 // `phone` stack the finalists over the rounds; `wide` puts them at the two ends. Nothing is measured in a browser: type is set by estimates (`textWidth`).
-import { safeColour, safeLogo } from "./colour.ts";
+import { safeColour } from "./colour.ts";
+import { safeLogo } from "./logo.ts";
 import { safeClass } from "./common.ts";
 import { el, esc, num } from "./format.ts";
 import { KYOGIJO_MARK_STYLE, roundMarkup } from "./mark.ts";
@@ -61,7 +62,7 @@ export function drawRoad(model: Model, o: RoadOptions, gid: string): string {
       cx,
       cy,
       r,
-      href: safeLogo(team.logo),
+      href: safeLogo(team.logo, { color: team.color, accent: team.textColor, initials: codeOf(team).slice(0, 3), theme }),
       fit: team.markFit === "contain" ? "contain" : undefined,
       initials: codeOf(team).slice(0, 3),
       color: safeColour(team.color),

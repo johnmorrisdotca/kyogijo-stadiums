@@ -2,7 +2,8 @@
 // choices every control offers, and which rows are shown. The page's script (demo.js) runs it in the browser; the build
 // (scripts/site.mjs) runs the same code to write the first view into the HTML, so what the script finds is what it would draw.
 import { COURT_THEMES, ERA_SPORTS, GROUNDS, LEAGUES, PARKS, SOCCER_PITCH_IDS, SOCCER_PROVIDER_IDS, SPORTS, eraRange, hasHistory, leagueChanges } from "./dist/index.js";
-import { EMBLEMS, FAMILIES, GAMES, PAGEANT_EMBLEM, TEAMS, TEAMS_JA } from "./examples.js";
+import { EMBLEM_GROUPS } from "./emblems.js";
+import { EMBLEMS, FAMILIES, GAMES, TEAMS, TEAMS_JA } from "./examples.js";
 import { poolRace, shortRace } from "./pool-data.js";
 
 export const SIZES = ["full", "compact", "badge", "surface"];
@@ -28,6 +29,12 @@ export const POOL_DECKS = ["plain", "tiled"];
 export const POOL_COURSES = ["long", "short"];
 export const POOL_LANES = ["6", "8", "10"];
 export const POOL_RACES = ["none", "results", "pace"];
+/** The ready-made emblems (Dougu Sports) a team's mark can be: the crests first (they take the team's colours), then the sports, the trophies, the medals, the awards, the balls and the gear. */
+export const MARK_IDS = [...EMBLEM_GROUPS.crest, ...EMBLEM_GROUPS.sport, ...EMBLEM_GROUPS.trophy, ...EMBLEM_GROUPS.medal, ...EMBLEM_GROUPS.award, ...EMBLEM_GROUPS.ball, ...EMBLEM_GROUPS.gear];
+/** The ready-made emblems that go in the centre of a pageant: the trophies, the medals, the awards and the balls. */
+export const CENTRE_IDS = [...EMBLEM_GROUPS.trophy, ...EMBLEM_GROUPS.medal, ...EMBLEM_GROUPS.award, ...EMBLEM_GROUPS.ball];
+/** The marks a team starts with: its crest. */
+const MARKS = { away: "crest:shield", home: "crest:roundel" };
 /** The sports whose surface is a pool. */
 export const isPool = (sport) => sport === "swimming" || sport === "waterpolo" || sport === "diving" || sport === "artisticswimming";
 
@@ -61,6 +68,8 @@ export function makeState(params, kept = null) {
     pageant: pick(params.get("pageant"), PAGEANTS, "off"),
     pageantLines: pick(params.get("pageantlines"), PAGEANT_LINES, "over"),
     pageantEmblem: params.get("emblem") === "1",
+    pageantEmblemId: CENTRE_IDS.includes(params.get("emblemid")) ? params.get("emblemid") : "trophy:soccer-globe",
+    emblemLine: params.get("emblemline") === "1",
     pageantEntrance: false,
     stripes: true,
     exact: false,
@@ -93,13 +102,19 @@ export function makeState(params, kept = null) {
   };
 }
 
+/** Whether the options this state draws hold the id of a ready-made emblem, so that the code the page shows must plug Dougu Sports in. */
+export const usesEmblems = (s) => (s.away.logo === "ready" || s.home.logo === "ready") && s.size !== "surface" || (s.pageant !== "off" && s.pageantEmblem && s.size !== "surface");
+
+/** An emblem's id as a logo is given: with `/line` after it when the outline style is on. The code the page shows is this same string. */
+export const emblemRef = (id, s) => (s.emblemLine ? `${id}/line` : id);
+
 /** The made-up game for a sport, laid into the state (names in the page's language until a name is typed). */
 export function loadGame(state, sport, lang) {
   const family = FAMILIES[sport];
   const game = GAMES[sport];
   for (const role of ["away", "home"]) {
     const base = TEAMS[family][role];
-    state[role] = { name: lang === "ja" ? TEAMS_JA[family][role] : base.name, abbr: base.abbr, score: String(game[role]), color: base.color, logo: "emblem", emblem: base.emblem, url: "" };
+    state[role] = { name: lang === "ja" ? TEAMS_JA[family][role] : base.name, abbr: base.abbr, score: String(game[role]), color: base.color, logo: "emblem", emblem: base.emblem, mark: state[role]?.mark ?? MARKS[role], url: "" };
   }
   state.away.pens = game.awayPens === undefined ? "" : String(game.awayPens);
   state.home.pens = game.homePens === undefined ? "" : String(game.homePens);
@@ -223,7 +238,8 @@ export function optionsFor(s, lang, forCode = false) {
       if (s.sport === "curling") Object.assign(out, curlingExtras(t === s.away ? "away" : "home", out.score));
       if (GAMES[s.sport].awaySets !== undefined) Object.assign(out, netExtras(s.sport, t === s.away ? "away" : "home", out.score));
       Object.assign(out, fieldExtras(s.sport, t === s.away ? "away" : "home", out.score));
-      if (t.logo === "emblem") out.logo = forCode ? placeholder : EMBLEMS[t.emblem];
+      if (t.logo === "ready") out.logo = emblemRef(t.mark, s);
+      else if (t.logo === "emblem") out.logo = forCode ? placeholder : EMBLEMS[t.emblem];
       else if (t.logo === "url" && t.url) out.logo = t.url;
       return out;
     };
@@ -239,7 +255,7 @@ export function optionsFor(s, lang, forCode = false) {
     if (s.pageant !== "off") {
       o.pageant = { style: s.pageant };
       if (s.pageantLines !== "over") o.pageant.lines = s.pageantLines;
-      if (s.pageantEmblem) o.pageant.emblem = forCode ? "/logos/cup.svg" : PAGEANT_EMBLEM;
+      if (s.pageantEmblem) o.pageant.emblem = emblemRef(s.pageantEmblemId, s);
       if (s.pageantEntrance) o.pageant.animate = "unfurl";
     }
   }
@@ -272,6 +288,7 @@ export const labelOf = (say, s) => ({
   infield: (v) => say(`infield_${v}`),
   races: (v) => say(`races_${v}`),
   logo: (v) => say(`logo_${v}`),
+  mark: (v) => v,
   era: (v) => say(`era_${v}`),
 });
 
@@ -304,8 +321,11 @@ export const SEGS = [
   { id: "track", kind: "track", values: TRACKS, get: (s) => s.track },
   { id: "infield", kind: "infield", values: INFIELDS, get: (s) => s.infield },
   { id: "races", kind: "races", values: RACE_MARKS, get: (s) => s.races },
-  { id: "away-logo", kind: "logo", values: ["none", "emblem", "url"], get: (s) => s.away.logo },
-  { id: "home-logo", kind: "logo", values: ["none", "emblem", "url"], get: (s) => s.home.logo },
+  { id: "away-logo", kind: "logo", values: ["none", "emblem", "ready", "url"], get: (s) => s.away.logo },
+  { id: "home-logo", kind: "logo", values: ["none", "emblem", "ready", "url"], get: (s) => s.home.logo },
+  { id: "away-mark", kind: "mark", values: MARK_IDS, get: (s) => s.away.mark },
+  { id: "home-mark", kind: "mark", values: MARK_IDS, get: (s) => s.home.mark },
+  { id: "pageant-emblem-id", kind: "mark", values: CENTRE_IDS, get: (s) => s.pageantEmblemId },
 ];
 
 /** The on/off chips and the state they show. */
@@ -319,6 +339,7 @@ export const TOGGLES = [
   { id: "crowd-tifo", get: (s) => s.crowdTifo },
   { id: "flags", get: (s) => s.flags },
   { id: "pageant-emblem", get: (s) => s.pageantEmblem },
+  { id: "emblem-line", get: (s) => s.emblemLine },
   { id: "pageant-entrance", get: (s) => s.pageantEntrance },
   { id: "pool-section", get: (s) => s.poolSection },
 ];
@@ -369,6 +390,10 @@ export function hiddenRows(s) {
     "athletics-group": s.sport !== "athletics",
     "races-group": s.sport !== "athletics" && s.sport !== "skating",
     "status-text": s.status !== "custom",
+    "away-mark-row": s.away.logo !== "ready",
+    "home-mark-row": s.home.logo !== "ready",
+    "pageant-emblem-row": s.pageant === "off" || s.size === "surface" || !s.pageantEmblem,
+    "emblem-line-row": !(s.away.logo === "ready" || s.home.logo === "ready" || (s.pageant !== "off" && s.size !== "surface" && s.pageantEmblem)),
     "away-logo-url": s.away.logo !== "url",
     "home-logo-url": s.home.logo !== "url",
   };

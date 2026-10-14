@@ -1,6 +1,6 @@
 // What every kind of data layer is drawn against: the drawing's id, its unit and outline, the words, and what a layer made. Kept apart
 // from layers.ts so that the heat maps, which are written in files of their own, can use it without importing the file that imports them.
-import { safeLogo } from "./colour.ts";
+import { safeLogo } from "./logo.ts";
 import { drawingId, isPortrait, lengthUnit } from "./common.ts";
 import { fromSurface, toSurface } from "./frames.ts";
 import "./frames.providers.ts";
@@ -132,6 +132,6 @@ export function envFor(o: SurfaceOptions | ScoreOptions, turned: boolean | undef
     cropped: range !== undefined,
     base: Math.max((range ?? outline.box).w, (range ?? outline.box).h) * 0.013,
     words: KYOGIJO_STRINGS[language],
-    logos: { home: safeLogo(teams.home?.logo), away: safeLogo(teams.away?.logo) },
+    logos: { home: safeLogo(teams.home?.logo, { color: teams.home?.color, accent: teams.home?.textColor }), away: safeLogo(teams.away?.logo, { color: teams.away?.color, accent: teams.away?.textColor }) },
   };
 }

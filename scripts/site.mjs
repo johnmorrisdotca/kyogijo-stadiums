@@ -27,6 +27,12 @@ const seg = (name, label, en, ja) => {
   return `<div class="setup fam-row" ${help(en, ja)}><span class="fam-label" data-say="${label}"></span><div class="fam-seg" role="group" data-say-label="${label}" id="${name}" data-testid="${name}">${buttons}</div></div>`;
 };
 const field = (name, label, attrs = "") => `<label class="setup fam-row"><span class="fam-label" data-say="${label}"></span><input class="fam-field" id="${name}" data-testid="${name}" data-say-label="${label}" autocomplete="off" ${attrs} value="${escapeAttr(fieldValue[name])}" /></label>`;
+/** A picker of ready-made emblems: a grid of tiles, each the emblem itself in the style that is on, named for a screen reader. `rowId` is the row that hides it. */
+const tiles = (name, rowId, label, en, ja) => {
+  const { values, get } = SEGS.find((one) => one.id === name);
+  const buttons = values.map((value) => `<button type="button" data-value="${value}" aria-pressed="${get(first) === value}" aria-label="${escape(emblemName(value, "en"))}" title="${escape(emblemName(value, "en"))}">${renderEmblem(first.emblemLine ? `${value}/line` : value, { size: 34 })}</button>`).join("");
+  return `<div class="setup fam-row tiles-row" id="${rowId}"${hid(rowId)} ${help(en, ja)}><span class="fam-label" data-say="${label}"></span><div class="fam-seg emblem-tiles" role="group" data-say-label="${label}" id="${name}" data-testid="${name}">${buttons}</div></div>`;
+};
 const toggle = (name, label) => `<button type="button" class="fam-chip" id="${name}" data-testid="${name}" aria-pressed="${toggled[name]}" data-say="${label}"></button>`;
 
 // ----- The site's files, and the first view of the playground: what its script would draw first, written into the HTML.
@@ -43,11 +49,18 @@ cpSync(join(chizu, "dist"), "site/chizu", { recursive: true, filter: (from) => !
 cpSync(join(chizu, "LICENSE"), "site/chizu/LICENSE");
 cpSync(join(chizu, "NOTICE.md"), "site/chizu/NOTICE.md");
 
+// The ready-made emblems are Dougu Sports': the whole of its build (plain modules), with its licences and notice, beside the package, where the demo plugs it in.
+const dougu = dirname(dirname(createRequire(import.meta.url).resolve("@johnmorrisdotca/dougu-sports/emblems")));
+cpSync(join(dougu, "dist"), "site/dougu", { recursive: true, filter: (from) => !/\.d\.ts$/.test(from) });
+for (const name of ["LICENSE", "LICENSES", "NOTICE.md"]) cpSync(join(dougu, name), join("site/dougu", name), { recursive: true });
+
 const lib = await libraryFrom(join(process.cwd(), "dist"), ".js", (file) => import(pathToFileURL(file).href));
 const style = `${lib["@johnmorrisdotca/kyogijo-stadiums"].KYOGIJO_STYLE}\n${lib["@johnmorrisdotca/kyogijo-stadiums/turn"].KYOGIJO_TURN_STYLE}`;
 // The playground's own code, from the copy in site/ (which finds the package beside it), run here as the page runs it.
 const here = (file) => import(pathToFileURL(join(process.cwd(), "site", file)).href);
 const { SPORTS, LEAGUES, drawKyogijo } = await here("dist/index.js");
+// Dougu Sports, plugged in by the demo's own module (`useEmblems`) before anything is drawn.
+const { emblemName, renderEmblem } = await here("emblems.js");
 const model = await here("model.js");
 const places = await here("place-grid.js");
 const { FIELDS, SEGS, TOGGLES, SIZES } = model;
@@ -176,6 +189,7 @@ const team = (role) => `<div class="team" data-role="${role}">
             <label class="setup fam-row"><span class="fam-label" data-say="teamColour"></span><input class="fam-field fam-colour" type="color" id="${role}-color" data-testid="${role}-color" data-say-label="teamColour" value="${escapeAttr(fieldValue[`${role}-color`])}" /></label>
           </div>
           ${seg(`${role}-logo`, "teamLogo", "Pick a made-up emblem, or give the address of a logo of your own. A logo may be an https address, a path, an image data address or the text of an SVG.", "架空のエンブレムを選ぶか、お持ちのロゴのURLを入力します。ロゴには、httpsのURL、パス、画像のデータURI、SVGのコードを使えます。")}
+          ${tiles(`${role}-mark`, `${role}-mark-row`, "teamMark", "A ready-made emblem for this team's mark: a crest that takes the team's colour and initials, the icon of a sport, a trophy or a medal. In your own code it is only its id, such as crest:shield.", "このチームのマークに使う既製のエンブレムです。チームの色と頭文字が入るクレスト、競技のアイコン、トロフィー、メダルから選べます。コードでは「crest:shield」のようなIDだけで指定します。")}
           <input class="fam-field logo-url" id="${role}-logo-url" data-testid="${role}-logo-url" data-say-label="logoUrl" data-say-placeholder="logoUrl" autocomplete="off" value="${escapeAttr(fieldValue[`${role}-logo-url`])}"${hid(`${role}-logo-url`)} />
         </div>`;
 
@@ -268,10 +282,14 @@ const page = `<!doctype html>
               ${seg("pageant", "pageant", "Lay each team's flag or logo large over its half of the surface, as a stadium does for a final's ceremony: as a carpet with a border, or on a round stage with a ring. The score stays on the surface, or goes to the strip when the pictures need the room.", "決勝前のセレモニーのように、各チームの旗やロゴを競技場のそれぞれのハーフに大きく広げます。縁取りのあるカーペットか、金色の輪のついた丸いステージを選べます。得点は競技場の上に残るか、旗やロゴに場所が要るときは下の帯に移ります。")}
               <div id="pageant-group"${hid("pageant-group")}>
                 ${seg("pageant-lines", "pageantLines", "Where the surface's lines lie: over the pictures, under them (the pictures cover the lines), or through them (under, and the pictures a little see-through).", "競技場のラインの位置を選びます。「上」は旗やロゴの上、「下」は旗やロゴの下（ラインは隠れます）、「透過」は下に置いて旗やロゴを少し透かし、ラインをうっすら見せます。")}
-                <div class="setup fam-row" ${help("A made-up cup in the centre circle, centre ice or centre court, and an entrance: the carpets roll out and the stages grow, for readers who have not asked for less motion.", "センターサークルやリンク中央、コート中央に、架空のカップのエンブレムを置きます。「登場の動き」は、カーペットが広がり、ステージが現れる動きです。動きを減らす設定にしている人には表示されません。")}>
+                <div class="setup fam-row" ${help("A ready-made trophy or medal (picked below) in the centre circle, centre ice or centre court, and an entrance: the carpets roll out and the stages grow, for readers who have not asked for less motion.", "センターサークルやリンク中央、コート中央に、トロフィーやメダルの既製エンブレムを置きます（種類は下で選びます）。「登場の動き」は、カーペットが広がり、ステージが現れる動きです。端末で動きを減らす設定にしている場合は、動きは再生されません。")}>
                   ${toggle("pageant-emblem", "pageantEmblem")}
                   ${toggle("pageant-entrance", "pageantEntrance")}
                 </div>
+                ${tiles("pageant-emblem-id", "pageant-emblem-row", "pageantEmblemPick", "The trophy or medal in the centre. Each is a ready-made emblem; in your own code it is only its id, such as trophy:soccer-globe.", "中央に置くトロフィーまたはメダルです。どれも既製のエンブレムで、コードでは「trophy:soccer-globe」のようなIDだけで指定します。")}
+              </div>
+              <div class="setup fam-row" id="emblem-line-row"${hid("emblem-line-row")} ${help("Draw the ready-made emblems as one outline in the page's colour instead of full-colour metal: it reads at 14 pixels, next to text. In code it is /line after the id.", "既製のエンブレムを、金属調のフルカラーではなく、ページの文字色の線画で描きます。14ピクセルほどの小ささでも、文字の横で見分けやすくなります。コードではIDの後ろに「/line」を付けます。")}>
+                ${toggle("emblem-line", "emblemLine")}
               </div>
               <div class="setup fam-row" ${help("Mown stripes on the grass, and true line widths: lines are drawn thicker than painted so that they stay in view when small.", "芝の縞模様と、実寸どおりの線幅です。通常は、小さくても見えるよう線を実際より太く描きます。")}>
                 ${toggle("stripes", "stripes")}

@@ -7,6 +7,14 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **Trophies, medals, balls and crests by id, from Dougu Sports** ([docs/emblems.md](./docs/emblems.md)). `useEmblems(render)` (from the main entry and from `/element`) plugs a renderer of ready-made emblems into the package, which keeps zero dependencies and bundles no art: `import { renderEmblem } from "@johnmorrisdotca/dougu-sports/emblems"; useEmblems(renderEmblem);`. After that an emblem's id is accepted wherever a logo, a flag or a mark was: a team's `logo` in a score, a compact card, a badge and a pageant, the pageant's `emblem`, the road to the final, a layer's `logo`, a swimmer's flag, a court's `centreLogo`, and the element's `home-logo` and `away-logo`. `logo: "crest:shield"` takes the team's `color`, `textColor` and the first letters of its `abbr`; `"cup"` is `"trophy:cup"`, and `/line` after an id gives the outline style.
+- **`emblems: render` in the options of one drawing** (and of a road chart): a renderer for that drawing alone, over the page's own.
+- **Types:** `EmblemRenderer`, `EmblemDrawOptions`, `EmblemRef` and `EmblemId`, which is the union of Dougu Sports' ids where `@johnmorrisdotca/dougu-sports` is installed beside the package and `string` where it is not. `safePicture` is exported: the check of an address, an image `data:` address or an SVG document, without the emblems. `safeLogo(value, context?)` is that check after looking for an emblem's id, and takes the team's colours for a crest.
+- Without a renderer plugged in an id is an address like any other and is refused as before; in development the first refused id with a group (`"crest:shield"`) prints one hint to the console saying how to plug Dougu Sports in (nothing is printed where `process.env.NODE_ENV` is `"production"`).
+- The demo's playground has a Ready-made choice for a team's logo and a picker for the pageant's centre (a tile for each of Dougu Sports' 148 emblems, a finger wide, named in English and Japanese), an Outline style chip, and the code tabs add the two lines that plug Dougu Sports in when an id is used. Dougu Sports is a development dependency, used by the docs, the demo and the tests only.
+
 ## [0.5.0] - 2026-10-14
 
 Thirteen new sports (padel, squash, racquetball, sepak takraw, teqball, roundnet and netball, with sitting volleyball; swimming, water polo, diving and artistic swimming; athletics and skating), which makes 33. A 3D view that stands what a rulebook puts on a surface (nets, posts, goals, walls, blocks, boards, bars, hurdles, boards and platforms) on a floor that turns. A crowd in the stands, and a pageant of flags and crests over the halves. A folded curling sheet, with a heat chart and statistics. A realistic basketball floor. The clubs that played in each ballpark and ground, with their Japanese names as Japanese media say them.

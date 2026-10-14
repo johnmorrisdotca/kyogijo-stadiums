@@ -17,7 +17,7 @@ console.log(svg.includes('data-pageant="carpet"'), svg.split("ky-pg-carpet").len
 // true 2
 ```
 
-`pageant` is `"carpet"`, `"stage"`, `true` (a carpet) or the options below. It needs a score (`home` and `away`) and the full or the compact size; a bare surface, a badge and a [special game](./special-games.md) are drawn as they were. The gallery draws [every surface with each style](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-pageant.html), and the demo has the controls (Look, "Flags on the halves"). The nations and flags in the examples are made up; the package draws no real flag, crest or emblem and supplies none.
+`pageant` is `"carpet"`, `"stage"`, `true` (a carpet) or the options below. It needs a score (`home` and `away`) and the full or the compact size; a bare surface, a badge and a [special game](./special-games.md) are drawn as they were. The gallery draws [every surface with each style](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-pageant.html), and the demo has the controls (Look, "Flags on the halves"). The nations and flags in the examples are made up, and the package draws no real flag or crest. The package supplies none: for a team with no flag, and for the middle, plug in [Dougu Sports](./emblems.md), whose generic crests, trophies and medals are ids.
 
 ## The two styles
 
@@ -43,7 +43,7 @@ Tall and wide drawings put the halves where the reader sees them (a tall drawing
 
 ## The emblem
 
-`emblem` is a competition's emblem or a trophy, given as a logo is (an address, an image `data:` address or an SVG document as text): it is yours, and none is supplied. It goes in the centre circle of a pitch, centre ice, centre court, the middle of a field, the middle of a curling sheet, or on the pitcher's mound.
+`emblem` is a competition's emblem or a trophy, given as a logo is: the id of an emblem from [Dougu Sports](./emblems.md), once it is plugged in with `useEmblems` (`"trophy:cup"`, `"trophy:soccer-globe"`, `"medal:gold"`), or your own (an address, an image `data:` address or an SVG document as text). It goes in the centre circle of a pitch, centre ice, centre court, the middle of a field, the middle of a curling sheet, or on the pitcher's mound.
 
 - `emblemShape: "round"` (the default) draws it on a disc with a ring, like a team's stage; `emblemFit` is `contain` (the default, shown whole) or `cover`.
 - `emblemShape: "plain"` draws the picture as it is over a soft shadow, for a trophy with a cut-out outline.

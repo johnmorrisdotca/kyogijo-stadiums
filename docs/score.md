@@ -19,7 +19,7 @@ Pass `home` and `away`. Each team has a `name`, an optional `abbr`, `score`, `pe
 
 A flag or a crest can also be laid large over each half of the surface, with an emblem in the centre: [the pageant](./pageant.md).
 
-A team's logo is an `https:` or relative address, an image `data:` address, or the text of an SVG. It is drawn as an image, so it cannot run a script, and an address of any other kind is ignored. A team without a logo is its name alone.
+A team's logo is an `https:` or relative address, an image `data:` address, the text of an SVG, or, once [Dougu Sports is plugged in](./emblems.md) with `useEmblems`, the id of one of its emblems: `logo: "crest:shield"` is a shield in the team's `color` with its letters, `"sport:nhl"` the icon of a sport and `"trophy:cup"` a cup. It is drawn as an image, so it cannot run a script, and an address of any other kind is ignored. A team without a logo is its name alone.
 
 ### Which side the home team is on
 

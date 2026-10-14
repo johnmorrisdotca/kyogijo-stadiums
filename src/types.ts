@@ -1,4 +1,5 @@
 import type { Background } from "./background.ts";
+import type { EmblemRef, EmblemRenderer } from "./emblems-source.ts";
 import type { Layer } from "./layers.types.ts";
 import type { Unit } from "./units.ts";
 import type { SoccerFrame, SoccerProviderId } from "./surfaces/soccer-providers.ts";
@@ -521,8 +522,8 @@ export interface PageantOptions {
   lines?: "over" | "under" | "through";
   /** A stage's ring: `gold` (the default), `team` (each team's colour), or a colour. */
   ring?: "gold" | "team" | (string & {});
-  /** The picture in the centre circle, centre ice, centre court or at the mound: a competition's emblem or a trophy, as a logo is given (an address, an image `data:` address or an SVG document as text). Yours; none is supplied. */
-  emblem?: string;
+  /** The picture in the centre circle, centre ice, centre court or at the mound: a competition's emblem or a trophy, as a logo is given (an address, an image `data:` address, an SVG document as text, or, with a renderer of emblems plugged in, the id of one: `"trophy:hockey-cup"`). Yours; none is supplied. */
+  emblem?: EmblemRef;
   /** `round` (the default): the emblem on a disc with a ring, as a team's mark. `plain`: the picture as it is, for a trophy with a cut-out outline. */
   emblemShape?: "round" | "plain";
   /** An emblem's fit on its disc: `contain` (the default: shown whole) or `cover` (it fills the disc). */
@@ -553,8 +554,8 @@ export interface Team {
   abbr?: string;
   /** The score. A number, or text such as "–" before the game. */
   score?: number | string;
-  /** The logo: an `https:` or relative address, an image `data:` address, or an SVG document as text. */
-  logo?: string;
+  /** The logo: an `https:` or relative address, an image `data:` address, an SVG document as text, or, with a renderer of emblems plugged in (`useEmblems`), the id of a ready-made emblem: `"crest:shield"` takes the team's `color`, `textColor` and `abbr`. */
+  logo?: EmblemRef;
   /**
    * How the logo is drawn: `round` clips it to a circle with a thin ring (a flag, or a crest) and, for a team with no logo, draws its initials on its colour; `plain` is the
    * logo as it is, in a box. The score's `markShape` is the default for both teams.
@@ -638,6 +639,8 @@ export interface SurfaceOptions {
   description?: string;
   /** A prefix for the ids inside the drawing. Made from the options when missing, so that the same call gives the same drawing. */
   id?: string;
+  /** A renderer of ready-made emblems for this drawing alone, so that a `logo`, an `emblem` or a mark may be an emblem's id: `emblems: renderEmblem` from `@johnmorrisdotca/dougu-sports/emblems`. Over the one the page plugged in with `useEmblems`. */
+  emblems?: EmblemRenderer;
   /** The ground to draw round the playing surface, in `units` (feet by default). A default for each sport. */
   margin?: number;
   /**

@@ -2,6 +2,7 @@
 // them, the rounds named down the middle, and the group stage as a compact row at the foot. The idea is that of the "road to the final" graphics that sports sites post
 // for a World Cup or a Stanley Cup; the arrangement, the type and the code are this package's own, and no one's artwork is used: the marks are the caller's flags and
 // logos, or the team's initials on its colour.
+import { withEmblems } from "./emblems-source.ts";
 import { hash } from "./format.ts";
 import { safeClass } from "./common.ts";
 import { drawRoad } from "./road.draw.ts";
@@ -48,7 +49,7 @@ export function roadToFinal(finalists: readonly [RoadFinalist, RoadFinalist], op
     check(merged);
     const m = readModel(finalists, merged);
     const gid = safeClass(merged.id).replace(/ /g, "-") || `kr-${hash(JSON.stringify([finalists, merged, VERSION]))}`;
-    return drawRoad(m, merged, gid);
+    return withEmblems(merged.emblems, () => drawRoad(m, merged, gid));
   };
   return {
     options: { ...options },

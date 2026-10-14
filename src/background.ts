@@ -1,7 +1,8 @@
 // The ground behind a drawing: a subtle pattern drawn in SVG (felt, grass, wood, ice, paper, a grid, dots) and, when the caller has one, a photograph at an opacity. It is
 // written once here for the drawing (`background` in the options, laid on the apron under the surface) and for a grid of drawings (`drawGrid`, laid under all of them).
 // Every pattern is a few shapes in a tile, with no random number, in the ink or the line colour of the drawing at a low opacity, so that it follows light and dark.
-import { safeColour, safeLogo } from "./colour.ts";
+import { safeColour } from "./colour.ts";
+import { safeLogo } from "./logo.ts";
 import { el, num } from "./format.ts";
 
 /** The patterns: a tile of shapes repeated over the ground. */

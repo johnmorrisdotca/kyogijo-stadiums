@@ -1,7 +1,8 @@
 // The data of a race on a pool: who is in each lane (the lane number, the flag, the name, the country's letters), what each swam (the place as a medal, the time, the reaction time, the splits) and the
 // split pace bars in the lanes. Drawn in feet in the frame of a pool lying wide; a pool lying tall turns it with the pool, so that the labels lie along the lanes, and only the numbers in the discs are
 // turned back upright. Nothing here is a rule of the sport: the sizes are ours.
-import { safeColour, safeLogo } from "./colour.ts";
+import { safeColour } from "./colour.ts";
+import { safeLogo } from "./logo.ts";
 import { el, esc, num } from "./format.ts";
 import { feet, type SwimPlan } from "./pool.ts";
 import { STATUS_TEXT, formatTime, pacePer100, splitMetres, type RaceRow } from "./pool.race.ts";

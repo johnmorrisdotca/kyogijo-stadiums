@@ -1,4 +1,5 @@
 // The types of the road-to-the-final chart: what `roadToFinal` takes (the two finalists and the matches on their way) and what it gives back. Plain data.
+import type { EmblemRenderer } from "./emblems-source.ts";
 import type { Language, Team } from "./types.ts";
 
 /** A match's score from the finalist's side: `[for, against]` (numbers, or text such as a series' `4`), or one text, `"4-2"`, that is split at its dash. */
@@ -55,6 +56,8 @@ export interface RoadOptions {
   language?: Language;
   /** A prefix for the ids inside the drawing. Made from the chart when missing, so that two charts on a page do not share ids. */
   id?: string;
+  /** A renderer of ready-made emblems for this chart alone, so that a finalist's `logo` may be an emblem's id. Over the one the page plugged in with `useEmblems`. */
+  emblems?: EmblemRenderer;
   /** The tournament, set large at the top. "Road to the final" when missing. */
   title?: string;
   /** The line under it. "Road to the final" when a `title` is given. */

@@ -3,7 +3,9 @@
 // table that stands for the drawing. Every mark is a plain SVG element in the drawing's own frame, so the same options always give
 // the same string. Written for this package; mplsoccer and hockey_rink were read for the list of charts to match, and nothing of
 // either is used.
-import { safeColour, safeLogo } from "./colour.ts";
+import { safeColour } from "./colour.ts";
+import { withEmblems } from "./emblems-source.ts";
+import { safeLogo } from "./logo.ts";
 import { FRAMES } from "./frames.ts";
 import { KYOGIJO_HEAT_STYLE, KYOGIJO_TEAM_STYLE } from "./style.ts";
 import { drawTeam, isTeamLayer, teamTables } from "./team.layers.ts";
@@ -368,6 +370,10 @@ function summarise(layer: Layer, made: Made, words: Words, stop: string, gap: st
 
 /** The layers of a drawing as markup, and a sentence for each. `turned` says whether the surface group is turned a quarter. */
 export function renderLayers(o: SurfaceOptions | ScoreOptions, layers: readonly Layer[] | undefined, turned?: boolean, range?: Box, upright?: number): RenderedLayers {
+  return withEmblems(o.emblems, () => renderedLayers(o, layers, turned, range, upright));
+}
+
+function renderedLayers(o: SurfaceOptions | ScoreOptions, layers: readonly Layer[] | undefined, turned?: boolean, range?: Box, upright?: number): RenderedLayers {
   if (layers === undefined || layers.length === 0) return { svg: "", summaries: [] };
   if (!Array.isArray(layers)) throw new TypeError("layers is a list of layers");
   const env = envFor(o, turned, range, upright);
