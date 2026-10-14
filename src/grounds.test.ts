@@ -239,7 +239,7 @@ describe("drawing a ground", () => {
     expect(describeDrawing({ sport: "soccer", ground: "metlife-stadium", language: "ja" }).description).toContain("公表されていない");
     // In a score the title is the score, and the description still names the size.
     const score = describeDrawing({ sport: "soccer", ground: "anfield", away: { name: "Away", score: 1 }, home: { name: "Home", score: 0 } });
-    expect(score.title).toBe("Away 1, Home 0");
+    expect(score.title).toBe("Home 0, Away 1");
     expect(score.description).toContain("follows the size published for Anfield");
   });
 

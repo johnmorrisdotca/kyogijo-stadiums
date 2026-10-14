@@ -13,7 +13,7 @@
 
 The presets are `fifa`, `uefa`, `mls`, `ncaa`, `law-min`, `law-max`, `9-a-side`, `7-a-side`, `5-a-side` and `futsal`; each size and the rule it is read from is in [sources.md](./sources.md#soccer).
 
-`status` also takes `final-aet`, `final-pens`, `extra-time` and `penalties`. A team's `penalties` is its goals in the shoot-out: both are written with the status (`Final · 4-2 pens`) and a level game goes to the winner of the shoot-out.
+`status` also takes `final-aet`, `final-pens`, `extra-time` and `penalties`. A team's `penalties` is its goals in the shoot-out: both are written with the status (`Final · 2-4 pens`, the home team's first, as the home team is on the left in soccer, [Score](./score.md#which-side-the-home-team-is-on)) and a level game goes to the winner of the shoot-out.
 
 ```ts
 import { drawKyogijo, soccerPitchClass, soccerSpec } from "@johnmorrisdotca/kyogijo";
@@ -25,7 +25,7 @@ const svg = drawKyogijo({
   status: "final-pens",
   competition: "Cup Final",
 });
-console.log(svg.includes("Final · 4-2 pens"), svg.includes("Northern Owls won 4-2 on penalties."));
+console.log(svg.includes("Final · 2-4 pens"), svg.includes("Northern Owls won 4-2 on penalties."));
 // true true
 const pitch = soccerSpec({ length: 110, width: 70, unit: "yd" });
 console.log(pitch.length.toFixed(2), pitch.width.toFixed(2), soccerPitchClass(pitch.length, pitch.width));

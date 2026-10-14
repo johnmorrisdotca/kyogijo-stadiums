@@ -207,7 +207,7 @@ A finalist is a `Team` (`name`, `abbr`, `color`, and `logo` for its flag or cres
 | `opponent` | A `Team`: its name, three letters, colour and flag or crest. |
 | `score` | The finalist's first: `[2, 1]`, or text, `"4-2"` for the games of a series, split at its dash. A text that has no dash (`walkover`) is written whole. |
 | `decidedBy`, `pens` | `ft` (the default), `aet` or `pens`, with the shoot-out `[4, 3]`, the finalist's first. FT, AET or the shoot-out is written under the score, in the order the two marks stand. |
-| `homeFirst` | `true` puts the finalist's mark first (on the left) of the pair, `false` its opponent's. By default the finalist is at the outer edge of its side, so that the two paths mirror each other. |
+| `homeFirst` | `true` puts the finalist's mark first (on the left) of the pair, `false` its opponent's; it is how the match is listed, so `true` is a match the finalist played as the home team in a sport that lists the home team first (soccer: [Score](./score.md#which-side-the-home-team-is-on)). By default the finalist is at the outer edge of its side, so that the two paths mirror each other. |
 | `note` | Words under the score in place of FT, AET or the shoot-out: `Game 6`. An empty text writes nothing. |
 
 A group match is the same without `round`; its words under the score are left out unless `decidedBy` or `note` asks for them.

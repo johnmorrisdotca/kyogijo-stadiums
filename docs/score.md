@@ -13,11 +13,34 @@ Pass `home` and `away`. Each team has a `name`, an optional `abbr`, `score`, `pe
 | `competition`, `date` | The round and the day, as written. |
 | `label` | A line for the foot of the panel in place of the status and the date. |
 | `winner` | `auto` (the leader once the status is a final one), `leader`, `none`, `home` or `away`. |
-| `homeSide` | `right` (the default, as in "away at home") or `left`. |
+| `homeSide` | `left` (home first, "Home 2-1 Away") or `right` (away at home). The default is the sport's own convention, [below](#which-side-the-home-team-is-on); a value you give always wins. |
 | `uppercase` | Names in capitals. On by default. |
 | `markShape` | `plain` (the default) or `round`: a flag or a logo in a circle with a ring, for both teams; a team's `mark` wins. |
 
 A team's logo is an `https:` or relative address, an image `data:` address, or the text of an SVG. It is drawn as an image, so it cannot run a script, and an address of any other kind is ignored. A team without a logo is its name alone.
+
+### Which side the home team is on
+
+A score is drawn the way the sport lists it. Soccer and most of the world's other codes write the home team first, so it is on the left; the North American leagues write the visitor first ("away at home"), so the home team is on the right. `homeSide` overrides either; `homeSideFor(sport, league?)` returns the default (`"left"` or `"right"`), and `HOME_FIRST` (and `HOME_FIRST_LEAGUES` for the leagues that differ from their sport) is the table behind it.
+
+The side decides everything that follows the drawing: the banners and the plate, the badge and the strip of a compact card, the order of the teams in the title and the description ("Calvara 1, Aurelia 2", or in Japanese "Calvara 1、Aurelia 2"), the order of a shoot-out in the status (`Final · 2-4 pens`, the home team's first when it is on the left), the rows of a curling, net-sport or cricket board, and the way `update` pulses a changed score.
+
+| Sport | Default | Why |
+| --- | --- | --- |
+| `soccer` | home on the left | FIFA's and UEFA's fixture lists and match reports name the home team first ("Home v Away"). |
+| `rugby` (union and league) | home on the left | Rugby World Cup, Six Nations and NRL fixtures and results are written home v away; the data feeds tag the first-named team as home. |
+| `afl` | home on the left | The AFL fixture lists the home team first ("Home v Away"). |
+| `gaelic` | home on the left | GAA fixtures and results name the home team first. |
+| `fieldhockey`, `handball` | home on the left | FIH and IHF fixtures and results are written home v away, as other European and international team sports are. |
+| `cricket` | home on the left | Fixtures are written "Home v Away" ("England v Australia"). The board's rows are the two teams; a scorecard in batting order is `homeSide: "right"` or the teams passed the other way round. |
+| `lacrosse` | home on the right; home on the left for `world-men`, `world-women` and `world-box` | The leagues of North America (the NCAA, the PLL and the NLL, which writes "Buffalo at Toronto") list the visitor first. The leagues of World Lacrosse, an international federation, follow the international fixture convention. |
+| `nfl`, `cfl` | home on the right | North American football lists the visitor first in schedules ("at"), box scores and line scores. |
+| `ifaf` | home on the right | Kept as it was. International American football has no single order: one IFAF event schedule is marked "home team listed first" ([2016 U-19 championship](https://www.americanfootballinternational.com/?p=39465)), others list seeds or no home team at all, and most data feeds follow the NFL's box score. Pass `homeSide: "left"` for a listing that is home first. |
+| `nhl`, `nba`, `mlb` | home on the right | The North American leagues list the visitor first ("away at home"); a baseball line score has the visitor, who bats first, on top. |
+| `curling` | home on the right | A curling game has no home team: the board's rows follow the draw sheet, and the layout is the one it has always had. |
+| `tennis`, `volleyball`, `badminton`, `pickleball`, `tabletennis` | home on the right | The board lists the two sides in the order of the draw, not home against away; the layout is the one it has always had. |
+
+The default is by sport and by `league` only where a league's own convention differs from its sport's (today the lacrosse leagues above); the hockey and basketball leagues of other federations (`iihf`, `fiba`) keep their sport's default. A league that is a sport of its own (`league: "cfl"` on an `nfl`) takes that sport's.
 
 ### Round marks
 

@@ -1,4 +1,6 @@
 import { drawKyogijo, isPortrait } from "./draw.ts";
+import { resolveHomeSide } from "./homeside.ts";
+import { chooseLeague } from "./leagues.ts";
 import type { ReplayController } from "./replay.control.ts";
 import { createReplayView, type ReplayView } from "./replay.dom.ts";
 import type { ReplaySettings, ReplayTimeline } from "./replay.types.ts";
@@ -42,7 +44,9 @@ const scoreText = (team: ScoreOptions["home"]): string => (team.score === undefi
  */
 function highlightScores(host: HTMLElement, before: SurfaceOptions | ScoreOptions, after: SurfaceOptions | ScoreOptions): void {
   if (!isScored(before) || !isScored(after)) return;
-  const order = after.homeSide === "left" ? (["home", "away"] as const) : (["away", "home"] as const);
+  // The sport as drawn: a league that is a sport of its own (`league: "cfl"` on an `nfl`) is that sport.
+  const chosen = { ...after, sport: chooseLeague(after).sport };
+  const order = resolveHomeSide(chosen) === "left" ? (["home", "away"] as const) : (["away", "home"] as const);
   const numbers = host.querySelectorAll<SVGElement>(".ky-score");
   const reduced = typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
   order.forEach((role, index) => {

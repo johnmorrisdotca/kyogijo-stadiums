@@ -316,7 +316,7 @@ const svg = drawKyogijo({
   status: "final-pens",
   ground: "metlife-stadium",
 });
-console.log(svg.includes("Final · 4-2 pens"), soccerSpec({ length: 110, width: 70, unit: "yd" }).length.toFixed(2));
+console.log(svg.includes("Final · 2-4 pens"), soccerSpec({ length: 110, width: 70, unit: "yd" }).length.toFixed(2));
 // true 100.58
 ```
 

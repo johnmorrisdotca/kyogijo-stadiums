@@ -311,7 +311,7 @@ describe("a soccer score", () => {
     expect(withClass(svg, "ky-zone-right")).toHaveLength(1);
     expect(withClass(svg, "ky-zone-left")[0].attrs).toMatchObject({ x: "0", y: "13.84", width: "16.5", height: "40.32" });
     const banners = withClass(svg, "ky-banner");
-    expect(banners.map((n) => n.attrs["data-team"])).toEqual(["away", "home"]);
+    expect(banners.map((n) => n.attrs["data-team"])).toEqual(["home", "away"]);
     expect(banners[0].attrs.transform).toContain("rotate(-90)");
     expect(banners[1].attrs.transform).toContain("rotate(90)");
     const text = walk(svg).filter((n) => n.name === "text").map((n) => n.text);
@@ -375,12 +375,17 @@ describe("the end of a soccer game", () => {
     expect(statusLabel("extra-time", "ja")).toBe("延長戦");
   });
 
-  it("writes the shoot-out beside the status in the order of the sides: away first, or home first when home is on the left", () => {
+  it("writes the shoot-out beside the status in the order of the sides: home first in soccer, away first when home is on the right", () => {
     const pens = level({ status: "final-pens", away: { ...away, score: 2, penalties: 4 }, home: { ...home, score: 2, penalties: 2 } });
-    expect(statusText(pens)).toBe("Final · 4-2 pens");
+    expect(statusText(pens)).toBe("Final · 2-4 pens");
+    expect(statusText({ ...pens, homeSide: "right" })).toBe("Final · 4-2 pens");
     expect(statusText({ ...pens, homeSide: "left" })).toBe("Final · 2-4 pens");
-    expect(statusText({ ...pens, language: "ja" } as never, "ja")).toBe("試合終了 · PK戦 4-2");
-    expect(statusText({ ...pens, status: "final-aet" })).toBe("Final/AET · 4-2 pens");
+    // With no sport to ask, the order is the old one: the away team's first.
+    const plain: Pick<ScoreOptions, "home" | "away" | "status"> = { home: pens.home, away: pens.away, status: pens.status };
+    expect(statusText(plain)).toBe("Final · 4-2 pens");
+    expect(statusText({ ...plain, sport: "nhl" })).toBe("Final · 4-2 pens");
+    expect(statusText({ ...pens, language: "ja" } as never, "ja")).toBe("試合終了 · PK戦 2-4");
+    expect(statusText({ ...pens, status: "final-aet" })).toBe("Final/AET · 2-4 pens");
     expect(statusText(level({ status: "final-pens" }))).toBe("Final/Pens");
     expect(statusText(level({ status: "final-aet" }))).toBe("Final/AET");
   });
@@ -388,8 +393,8 @@ describe("the end of a soccer game", () => {
   it("puts it on the plate's foot and in the badge", () => {
     const o = level({ status: "final-pens", date: "May 24", away: { ...away, score: 2, penalties: 4 }, home: { ...home, score: 2, penalties: 2 } });
     const text = walk(parse(drawKyogijo(o))).filter((n) => n.name === "text").map((n) => n.text);
-    expect(text).toContain("Final · 4-2 pens · May 24");
-    expect(walk(parse(drawBadge(o))).some((n) => n.name === "text" && n.text === "Final · 4-2 pens")).toBe(true);
+    expect(text).toContain("Final · 2-4 pens · May 24");
+    expect(walk(parse(drawBadge(o))).some((n) => n.name === "text" && n.text === "Final · 2-4 pens")).toBe(true);
   });
 
   it("names the winner of a level game by its shoot-out, and none when the shoot-out is level or missing", () => {
@@ -408,7 +413,7 @@ describe("the end of a soccer game", () => {
   it("says who won on penalties, and still says who won a game decided on goals", () => {
     const o = level({ status: "final-pens", away: { ...away, score: 2, penalties: 2 }, home: { ...home, score: 2, penalties: 4 } });
     const { title, description } = describeDrawing(o);
-    expect(title).toBe("Harbour City Gulls 2, Prairie Ridge Bison 2, Final · 2-4 pens");
+    expect(title).toBe("Prairie Ridge Bison 2, Harbour City Gulls 2, Final · 4-2 pens");
     expect(description).toContain("Prairie Ridge Bison won 4-2 on penalties.");
     expect(description).not.toContain("The game is level.");
     expect(describeDrawing(game()).description).toContain("Harbour City Gulls won.");

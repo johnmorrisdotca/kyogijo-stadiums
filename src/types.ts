@@ -24,7 +24,7 @@ export type Language = "en" | "ja";
  */
 export type Orientation = "landscape" | "portrait" | "auto";
 
-/** A side of the drawing as the eye sees it. The away team is on the left unless `homeSide` says otherwise. */
+/** A side of the drawing as the eye sees it. Which side the home team is on follows the sport (see `homeSideFor`) unless `homeSide` says otherwise. */
 export type Side = "left" | "right";
 
 /**
@@ -603,7 +603,10 @@ export interface ScoreOptions extends SurfaceOptions {
   label?: string;
   /** Who is emphasised: `auto` (the default) the leader of a finished game, `leader` the leader of any game, `none` nobody. */
   winner?: "auto" | "leader" | "none" | "home" | "away";
-  /** The side the home team is on. Right by default, as in a score line "away at home". */
+  /**
+   * The side the home team is on. By default the sport's convention (`homeSideFor`): `left` (home first, "Home 2-1 Away") for soccer, rugby, Australian football, Gaelic games, field hockey, handball, cricket
+   * and the international lacrosse leagues; `right` (away at home) for the North American leagues and the net sports. A value given here always wins.
+   */
   homeSide?: Side;
   /** Write names in capitals. On by default. */
   uppercase?: boolean;

@@ -73,10 +73,10 @@ test("the ground picker reads ?ground= and speaks Japanese", async ({ page }) =>
 
 test("a game on penalties shows the shoot-out, and the code the demo writes carries it", async ({ page }) => {
   await open(page, "?sport=soccer&lang=en&help=off&orientation=landscape");
-  expect(await page.locator(`${at("stage")} svg text`).allTextContents()).toContain("Final · 4-2 pens · May 24");
+  expect(await page.locator(`${at("stage")} svg text`).allTextContents()).toContain("Final · 2-4 pens · May 24");
   await openGroups(page);
   await page.locator(at("home-pens")).fill("5");
-  expect(await page.locator(`${at("stage")} svg text`).allTextContents()).toContain("Final · 4-5 pens · May 24");
+  expect(await page.locator(`${at("stage")} svg text`).allTextContents()).toContain("Final · 5-4 pens · May 24");
   expect(await page.locator(at("embed-code")).textContent()).toContain('"penalties": 5');
   await page.locator(`${at("embed-tabs")} button[data-tab="element"]`).click();
   expect(await page.locator(at("embed-code")).textContent()).toContain('home-penalties="5"');

@@ -11,6 +11,7 @@ import { cricketBoardMarkup } from "./cricket.board.ts";
 import { fieldPlan, isFieldSport } from "./fields.ts";
 import { fieldScoreText, fieldTotal } from "./field.score.ts";
 import { fieldsStyle } from "./fields.style.ts";
+import { resolveHomeSide } from "./homeside.ts";
 import { LEAGUES, chooseLeague, courtOf, diamondOf, fieldOf, hasHistory, leagueSeason, leagueSize, netOf, rinkOf, sheetOf, type League } from "./leagues.ts";
 import { diamondFence } from "./leagues/baseball.ts";
 import { fenceFor, parkById, parkNameIn, parkOfficialName } from "./parks.ts";
@@ -156,14 +157,17 @@ export function winnerOf(o: Pick<ScoreOptions, "home" | "away" | "status" | "win
 
 /**
  * The words of a status, with the penalty shoot-out beside them when both teams have one: "Final/AET", or
- * "Final · 4-2 pens" (the shoot-out score in the order of the drawing's sides, the away team's first unless `homeSide` is left).
+ * "Final · 4-2 pens" (the shoot-out score in the order of the drawing's sides: the home team's first when it is on the left, which is
+ * the default for soccer and the other sports that list the home team first). Pass `sport` (and `league`) for the sport's default; with
+ * neither, the away team's is first unless `homeSide` is left.
  */
-export function statusText(o: Pick<ScoreOptions, "home" | "away" | "status" | "homeSide">, language: Language = "en"): string | undefined {
+export function statusText(o: Pick<ScoreOptions, "home" | "away" | "status" | "homeSide"> & Partial<Pick<ScoreOptions, "sport" | "league">>, language: Language = "en"): string | undefined {
   const label = statusLabel(o.status, language);
   const pens = shootout(o);
   if (pens === undefined) return label;
-  const left = o.homeSide === "left" ? pens.home : pens.away;
-  const right = o.homeSide === "left" ? pens.away : pens.home;
+  const homeLeft = resolveHomeSide(o) === "left";
+  const left = homeLeft ? pens.home : pens.away;
+  const right = homeLeft ? pens.away : pens.home;
   const text = fill(KYOGIJO_STRINGS[language].said.pens, { a: left, b: right });
   const base = (o.status ?? "").trim().toLowerCase() === "final-pens" ? statusLabel("final", language) : label;
   return base === undefined ? text : `${base} · ${text}`;
@@ -436,8 +440,10 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
   if (!isScore(o)) return { title: o.title ?? special?.title ?? surfaceName, description: o.description ?? `${about}${parkLine}${eraLine}${rangeLine}` };
   const winner = winnerOf({ ...o, sport });
   const s = (t: Team): string => fieldScoreText(sport, t) ?? (t.score === undefined || String(t.score) === "" ? "–" : String(t.score));
-  const line = fill(words.scoreTitle, { away: o.away.name, awayScore: s(o.away), home: o.home.name, homeScore: s(o.home) });
-  const status = statusText(o, language);
+  // The sentence follows the drawing: the team on the left is first. The words' {away} and {home} are the first and the second team named.
+  const order: [Team, Team] = resolveHomeSide({ ...o, sport }) === "left" ? [o.home, o.away] : [o.away, o.home];
+  const line = fill(words.scoreTitle, { away: order[0].name, awayScore: s(order[0]), home: order[1].name, homeScore: s(order[1]) });
+  const status = statusText({ ...o, sport }, language);
   const pens = shootout(o);
   const extra = [o.competition, status, o.date].filter((part): part is string => part !== undefined && part !== "").join(words.said.sep);
   const level = (fieldTotal(sport, o.home) ?? numeric(o.home.score)) !== undefined && (fieldTotal(sport, o.home) ?? numeric(o.home.score)) === (fieldTotal(sport, o.away) ?? numeric(o.away.score));
@@ -452,7 +458,7 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
   const curlingLine =
     sport !== "curling"
       ? ""
-      : [o.away, o.home]
+      : order
           .flatMap((team) => [
             team.hammer === true ? fill(words.said.hammer, { name: team.name }) : "",
             Array.isArray(team.ends) && team.ends.length > 0 ? fill(words.said.ends, { name: team.name, list: team.ends.map((value) => endText(value) || "–").join(words.layers.listSep) }) : "",
@@ -469,7 +475,7 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
     }).join(words.layers.listSep);
   const netLine = !isNetSport(sport)
     ? ""
-    : [o.away, o.home]
+    : order
         .flatMap((team) => [
           team.serving === true ? fill(net.serving, { name: team.name }) : "",
           Array.isArray(team.sets) && team.sets.length > 0 ? fill(sport === "badminton" || sport === "pickleball" || sport === "tabletennis" ? net.byGame : net.bySet, { name: team.name, list: setList(team) }) : "",
@@ -482,12 +488,12 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
   const fw = words.field;
   const fieldLine =
     sport === "afl" || sport === "gaelic"
-      ? [o.away, o.home]
+      ? order
           .filter((team) => fieldScoreText(sport, team) !== undefined)
           .map((team) => `${gap}${fill(sport === "afl" ? fw.aflScore : fw.gaelicScore, { name: team.name, goals: String(team.goals), behinds: String(team.behinds), points: String(team.points) })}`)
           .join("")
       : sport === "cricket"
-        ? [o.away, o.home]
+        ? order
             .flatMap((team) => [
               team.wickets !== undefined && team.wickets !== null && String(team.wickets) !== "" && team.overs !== undefined && team.overs !== null && String(team.overs) !== "" ? fill(fw.cricketScore, { name: team.name, runs: s(team), wickets: String(team.wickets), overs: String(team.overs) }) : "",
               Array.isArray(team.innings) && team.innings.length > 0 ? fill(fw.cricketInnings, { name: team.name, list: team.innings.map((value) => endText(value) || "–").join(words.layers.listSep) }) : "",
@@ -533,7 +539,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
   let sized = asked === "compact" && sport === "curling" && portrait ? "full" : asked;
   const id = drawingId(o);
   const parts = o.parts === true;
-  const homeSide: Side = isScore(o) && o.homeSide === "left" ? "left" : "right";
+  const homeSide: Side = isScore(o) ? resolveHomeSide({ ...o, sport }) : "right";
   const awaySide: Side = homeSide === "left" ? "right" : "left";
   const uppercase = !isScore(o) || o.uppercase !== false;
 
@@ -545,7 +551,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
   let status: string | undefined;
   if (isScore(o)) {
     winner = winnerOf({ ...o, sport });
-    status = statusText(o, language);
+    status = statusText({ ...o, sport }, language);
     const home = teamView(o.home, homeSide, "home", winner, uppercase, sport, o.markShape);
     const away = teamView(o.away, awaySide, "away", winner, uppercase, sport, o.markShape);
     left = homeSide === "left" ? home : away;

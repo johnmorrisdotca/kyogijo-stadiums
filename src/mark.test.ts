@@ -36,9 +36,9 @@ describe("the round team mark in a score", () => {
       const svg = drawKyogijo(game({ markShape: "round", orientation }));
       const doc = parse(svg);
       const clips = walk(doc).filter((n) => n.name === "clipPath");
-      expect(clips.map((c) => c.attrs.id)).toEqual(["m-mk-away-c", "m-mk-home-c"]);
+      expect(clips.map((c) => c.attrs.id)).toEqual(["m-mk-home-c", "m-mk-away-c"]);
       const images = walk(doc).filter((n) => n.name === "image");
-      expect(images.map((i) => i.attrs["clip-path"])).toEqual(["url(#m-mk-away-c)", "url(#m-mk-home-c)"]);
+      expect(images.map((i) => i.attrs["clip-path"])).toEqual(["url(#m-mk-home-c)", "url(#m-mk-away-c)"]);
       expect(images.every((i) => i.attrs.preserveAspectRatio === "xMidYMid slice")).toBe(true);
       expect(withClass(doc, "ky-mark-ring").length).toBe(2);
       expect(withClass(doc, "ky-mark-edge").length).toBe(2);
@@ -61,17 +61,17 @@ describe("the round team mark in a score", () => {
     const svg = drawKyogijo(game({ markShape: "round", home: { name: "Calvara", color: "#6b2d5c", score: 1 }, away: { name: "Aurelia", logo: "javascript:alert(1)", color: "#0f7a7a", score: 0 } }));
     expect(count(svg, "image")).toBe(0);
     expect(count(svg, "clipPath")).toBe(0);
-    expect(withClass(parse(svg), "ky-mark-i").map((n) => n.text)).toEqual(["AUR", "CAL"]);
+    expect(withClass(parse(svg), "ky-mark-i").map((n) => n.text)).toEqual(["CAL", "AUR"]);
     expect(svg).not.toContain("javascript:");
-    expect(marks(svg).map((m) => m.attrs.style)).toEqual(["--c:#0f7a7a;--ci:#ffffff", "--c:#6b2d5c;--ci:#ffffff"]);
+    expect(marks(svg).map((m) => m.attrs.style)).toEqual(["--c:#6b2d5c;--ci:#ffffff", "--c:#0f7a7a;--ci:#ffffff"]);
     // The ink follows the colour.
-    expect(marks(drawKyogijo(game({ markShape: "round", home: { name: "Calvara", color: "#f2c230" } })))[1].attrs.style).toContain("--ci:#161a18");
+    expect(marks(drawKyogijo(game({ markShape: "round", home: { name: "Calvara", color: "#f2c230" } })))[0].attrs.style).toContain("--ci:#161a18");
   });
 
   it("shows a crest whole on a plain disc when asked to `contain`", () => {
     const svg = drawKyogijo(game({ markShape: "round", home: { ...home, markFit: "contain" } }));
     const images = walk(parse(svg)).filter((n) => n.name === "image");
-    expect(images.map((i) => i.attrs.preserveAspectRatio)).toEqual(["xMidYMid slice", "xMidYMid meet"]);
+    expect(images.map((i) => i.attrs.preserveAspectRatio)).toEqual(["xMidYMid meet", "xMidYMid slice"]);
     expect(withClass(parse(svg), "ky-mark-light").length).toBe(1);
   });
 

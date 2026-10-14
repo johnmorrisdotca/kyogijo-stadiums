@@ -37,7 +37,7 @@ describe("Australian football's score is goals, behinds and the total", () => {
   it("says each team's goals and behinds in the description, and who won", () => {
     const { description, title } = describeDrawing(afl);
     expect(description).toContain("Harbour City Gulls scored 10 goals and 12 behinds.");
-    expect(title).toBe("Harbour City Gulls 10.12 (72), Prairie Ridge Bison 9.14 (68), Final");
+    expect(title).toBe("Prairie Ridge Bison 9.14 (68), Harbour City Gulls 10.12 (72), Final");
     expect(winnerOf({ ...afl })).toBe("away");
     expect(drawKyogijo(afl)).toContain('data-winner="away"');
   });

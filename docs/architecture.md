@@ -7,6 +7,7 @@ src/
 ├── index.ts            the main entry
 ├── draw.ts             drawKyogijo: options in, one string of SVG out
 ├── score.ts            the teams' places, the score's panel and the badge
+├── homeside.ts         which side the home team is on by default, for each sport: home first for soccer and the world codes, away first for the North American leagues
 ├── mark.ts             the round team mark: a flag or a logo in a circle with a ring, or the team's initials on its colour
 ├── curling.board.ts    the curling scoreboard: each end, the total and the hammer
 ├── sets.board.ts       the net sports' scoreboard: each set or game, the points of the game, the sets won and the server's ball

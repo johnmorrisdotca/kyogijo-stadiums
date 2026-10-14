@@ -26,7 +26,13 @@ export function capitals(text: string): string {
   return /[a-z]/i.test(text) ? text.toLocaleUpperCase("en") : text;
 }
 
-/** A short form of a name: its initials when it has several words, else its first letters. Japanese names give their first two or three characters. */
+/**
+ * A short form of a name: its initials when it has several words, else its first letters. Japanese names give their first two or three characters.
+ *
+ * This is a guess at a label, not a code. For a national team it is often not the code the sport uses: "Spain" gives SPA, where FIFA's
+ * three-letter code is ESP ("Germany" gives GER, which happens to match; "Netherlands" gives NET, FIFA's is NED). Pass each team's `abbr` yourself
+ * (the FIFA, World Rugby or ICC code your data carries); the package bundles no table of country codes.
+ */
 export function abbreviate(name: string): string {
   const clean = name.trim();
   if (clean.length === 0) return "";

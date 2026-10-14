@@ -30,7 +30,7 @@ describe("the custom element's options", () => {
     const o = optionsFromAttributes(read({ sport: "soccer", pitch: "futsal", "pitch-type": "opta", half: "left", goals: "line", "stripe-pattern": "checks", "corner-flags": "false", home: "H", away: "A", "home-score": "2", "away-score": "2", "home-penalties": "4", "away-penalties": "3", status: "final-pens" })) as ScoreOptions;
     expect(o).toMatchObject({ sport: "soccer", pitch: "futsal", pitchType: "opta", half: "left", goals: "line", stripePattern: "checks", cornerFlags: false });
     expect([o.home.penalties, o.away.penalties]).toEqual([4, 3]);
-    expect(drawKyogijo(o)).toContain("Final · 3-4 pens");
+    expect(drawKyogijo(o)).toContain("Final · 4-3 pens");
   });
 
   it("draw a bare surface when a team is missing, and a known sport when the sport is not one", () => {
