@@ -1,8 +1,9 @@
-// Formations: where the players of a team stand, as named positions in a registered coordinate frame, so that a formation lies on a surface of any
+// Formations (the first five sports' here, the others' in formations.sports.ts): where the players of a team stand, as named positions in a registered coordinate frame, so that a formation lies on a surface of any
 // size and can be read back in a provider's own numbers. The positions are the usual ones of each sport, and the numbers are ours: a formation is a
 // convention that coaches draw a little differently each time, so each place is an example of the shape and not a measurement. The names of the
 // positions are the conventional ones; the rulebooks name few of them (the Laws of the Game, Law 3, name the goalkeeper and no other position; the
 // Official Baseball Rules name the nine fielders, whose numbers 1 to 9 are the scorer's). The sources are in docs/sources.md.
+import { DESIGNATED_HITTER, MORE_FORMATIONS, MORE_NAMES } from "./formations.sports.ts";
 import type { Formation, FormationPosition, FormationSport } from "./team.types.ts";
 
 /** A name in both languages. */
@@ -13,8 +14,8 @@ export interface Named {
 
 const named = (en: string, ja: string): Named => ({ en, ja });
 
-/** The names of the positions of each sport, by the id a formation uses for them. */
-export const POSITION_NAMES: Readonly<Record<FormationSport, Readonly<Record<string, Named>>>> = Object.freeze({
+/** The names of the positions of the first five sports (the others are in formations.sports.ts), by the id a formation uses for them. */
+const FIRST_NAMES: Readonly<Partial<Record<FormationSport, Readonly<Record<string, Named>>>>> = {
   soccer: {
     GK: named("Goalkeeper", "ゴールキーパー"),
     RB: named("Right back", "右サイドバック"),
@@ -97,7 +98,12 @@ export const POSITION_NAMES: Readonly<Record<FormationSport, Readonly<Record<str
     CF: named("Centre fielder", "センター"),
     RF: named("Right fielder", "ライト"),
   },
-});
+};
+
+/** The names of the positions of each sport, by the id a formation uses for them. */
+export const POSITION_NAMES: Readonly<Record<FormationSport, Readonly<Record<string, Named>>>> = Object.freeze(
+  Object.fromEntries((["soccer", "nhl", "nba", "nfl", "mlb", "rugby", "afl", "cricket", "volleyball", "handball", "waterpolo", "fieldhockey", "netball"] as const).map((sport) => [sport, Object.freeze({ ...FIRST_NAMES[sport], ...MORE_NAMES[sport] })])),
+) as Record<FormationSport, Readonly<Record<string, Named>>>;
 
 const at = (id: string, x: number, y: number): FormationPosition => ({ id, x, y });
 
@@ -206,6 +212,7 @@ export const FORMATIONS: Readonly<Record<string, Formation>> = Object.freeze(
           name: { en: "Baseball, standard defence", ja: "野球（通常の守備位置）" },
           about: { en: "The nine fielders where they usually stand: a straight infield and the outfielders in their fields.", ja: "9人の野手の定位置。内野はシフトなしで、外野手はそれぞれ自分の守備範囲に立ちます。" },
           positions: [at("P", 0, 60.5), at("C", 0, -3), at("1B", 70, 78), at("2B", 36, 140), at("SS", -36, 140), at("3B", -70, 78), at("LF", -120, 260), at("CF", 0, 290), at("RF", 120, 260)],
+          extra: DESIGNATED_HITTER,
         },
         {
           id: "baseball-shift",
@@ -214,7 +221,9 @@ export const FORMATIONS: Readonly<Record<string, Formation>> = Object.freeze(
           name: { en: "Baseball, infield shift against a left-handed pull hitter", ja: "野球（左打者の引っ張り対策の内野シフト）" },
           about: { en: "Three infielders on the right side of second base and the outfield turned the same way. Since 2023 MLB's Rule 5.02 requires two infielders on each side of second base, so this shift is not allowed there.", ja: "二塁ベースの一塁側に内野手3人が寄り、外野手も同じ方向に寄った守備。2023年から、MLBの規則5.02は二塁ベースの一塁側と三塁側に内野手を2人ずつ置くことを求めているため、MLBではこのシフトは認められません。" },
           positions: [at("P", 0, 60.5), at("C", 0, -3), at("1B", 82, 92), at("2B", 60, 175), at("SS", 24, 135), at("3B", -34, 138), at("LF", -70, 275), at("CF", 60, 295), at("RF", 135, 270)],
+          extra: DESIGNATED_HITTER,
         },
+        ...MORE_FORMATIONS,
       ] as Formation[]
     ).map((f) => [f.id, f]),
   ),

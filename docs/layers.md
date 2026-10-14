@@ -65,7 +65,7 @@ A layer is `{ kind, data, style, ...places }`. The marks are plain SVG elements 
 
 ## Team layers
 
-Seven more kinds read where a team's players stand and how they move: `network`, `formation`, `voronoi`, `delaunay`, `hull`, `flow` and `sonar`. They take the same places as the others and are on their own page: [Team shape](./team-shape.md).
+Eight more kinds read where a team's players stand and how they move: `network`, `formation`, `lineup`, `voronoi`, `delaunay`, `hull`, `flow` and `sonar`. They take the same places as the others and are on their own page: [Team shape](./team-shape.md).
 
 ## Heat layers
 

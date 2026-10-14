@@ -1,11 +1,12 @@
 # Team shape
 
-Seven kinds of [data layer](./layers.md) read where a team's players stand and how they move: a **pass network**, a **formation**, the **Voronoi** cells that say who controls the space, a **Delaunay** triangulation of who is near whom, the **convex hull** of a team's shape, a **flow field** of average directions and a **sonar** of direction roses. Each is drawn on any surface, in the surface's feet or a provider's [frame](./frames.md), cut to the surface's outline, in the team colours of the page (light and dark), with a title, a description and a table of its numbers for a screen reader. The geometry is written for this package, with no dependency.
+Eight kinds of [data layer](./layers.md) read where a team's players stand and how they move: a **pass network**, a **formation**, a **lineup** (the players of a team placed by position code), the **Voronoi** cells that say who controls the space, a **Delaunay** triangulation of who is near whom, the **convex hull** of a team's shape, a **flow field** of average directions and a **sonar** of direction roses. Each is drawn on any surface, in the surface's feet or a provider's [frame](./frames.md), cut to the surface's outline, in the team colours of the page (light and dark), with a title, a description and a table of its numbers for a screen reader. The geometry is written for this package, with no dependency.
 
 | Kind | What it draws | Its data |
 | --- | --- | --- |
 | `network` | A node for each player at the average place of the passes he made and received, sized by touches, and a link for each pair sized and shaded by their passes. Also `passNetwork(passes, options)` in the [charts](./charts.md) entry. | passes: `{ from, to, x, y, x2, y2, team }` |
-| `formation` | A labelled mark for each position of a named formation, with the players of a lineup on them. | a `formation` and, if you like, `{ position, number, name }` players |
+| `formation` | A labelled mark for each position of a named formation, with the players of a lineup on them. See [Formations](#formations). | a `formation` and, if you like, `{ position, number, name }` players |
+| `lineup` | A team's players placed by position code, as discs or jerseys with the number in them and the name under them. See [Lineups](#lineups). | `players`: `{ pos, name, number, flag, captain }`, and a `formation` if you like |
 | `voronoi` | The part of the surface nearest each player, in his team's colour: space control, with each team's share. | players: `{ x, y, team }` |
 | `delaunay` | The triangulation of the players, for each team or all of them. | players |
 | `hull` | The convex hull of each team's players, with its area. | players |
@@ -67,15 +68,23 @@ console.log(chart.layers.map((layer) => layer.id).join(" "));
 
 ## Formations
 
-`FORMATIONS` holds the named formations of five sports. Each position is a place in a registered [frame](./frames.md), for a team that attacks the right end of the surface as it is drawn wide, so a formation lies on a surface of any size and a layer needs no coordinates.
+`FORMATIONS` holds the named formations of thirteen sports. Each position is a place in a registered [frame](./frames.md), for a team that attacks the right end of the surface as it is drawn wide, so a formation lies on a surface of any size and a layer needs no coordinates.
 
 | Sport | Formations (`id`) |
 | --- | --- |
 | Soccer, in `opta` | `4-4-2`, `4-3-3`, `4-2-3-1`, `4-1-4-1`, `3-5-2`, `3-4-3`, `5-3-2`, `5-4-1`, `4-3-2-1`, `4-4-2-diamond` |
-| Hockey, in `nhl-api` | `hockey-5v5` (the goaltender and five skaters), `hockey-1-3-1` (a power play) |
-| Basketball, in `nba-stats` | `basketball-5-out`, `basketball-4-out-1-in`, `basketball-high-post` |
+| Hockey, in `nhl-api` | `hockey-5v5` (the goaltender and five skaters), `hockey-1-3-1` (a power play), `hockey-two-lines` (the six on the ice and the next line and pair in a row along the bench) |
+| Basketball, in `nba-stats` | `basketball-traditional`, `basketball-5-out`, `basketball-4-out-1-in`, `basketball-high-post` |
 | Football, in `nfl-tracking` | `football-i-formation`, `football-shotgun` (the offence), `football-4-3`, `football-3-4` (the defence) |
-| Baseball, in `retrosheet` | `baseball-standard`, `baseball-shift` |
+| Baseball and softball, in `retrosheet` | `baseball-standard`, `baseball-shift`, `softball-standard` (a 60-foot diamond); each lists the designated hitter beside home plate |
+| Rugby union, in `rugby` | `rugby-15`: the numbers 1 to 15 |
+| Australian football, in `afl` | `afl-18`: five lines of three and three followers |
+| Cricket, in `cricket` | `cricket-test-attacking` (three slips and a gully), `cricket-powerplay` (two outside the circle), `cricket-boundary-defence` (five outside it), for a right-handed batter |
+| Volleyball, in `volleyball` | `volleyball-rotation`: the six places `P1` to `P6` |
+| Handball, in `handball` | `handball-attack`, `handball-6-0` (a defence) |
+| Water polo, in `waterpolo` | `waterpolo-attack` (six on five) |
+| Field hockey, in `fieldhockey` | `fieldhockey-4-3-3`, `fieldhockey-3-4-3` |
+| Netball, in `netball` | `netball-start`: the seven positions, which are its zones |
 
 ```ts
 import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
@@ -83,7 +92,7 @@ import { FORMATIONS, formationById, positionName } from "@johnmorrisdotca/kyogij
 
 console.log(Object.keys(FORMATIONS).length, formationById("4-3-3").positions.length);
 console.log(positionName("soccer", "LB", "en"), positionName("soccer", "LB", "ja"));
-// 21 11
+// 36 11
 // Left back 左サイドバック
 const svg = drawKyogijo({
   sport: "soccer",
@@ -105,9 +114,82 @@ console.log(svg.includes("Players: Okafor (Goalkeeper), Silva (Striker)."));
 // true
 ```
 
-A mark says its position (`GK`, `LB`), or, with a lineup in `data`, the player's `number`; `labels` says `position`, `number`, `name` or `none`, and `names` writes the name under the mark. A position nobody stands on is hollow. `attacking: "left"` turns the formation for a team that attacks the left. A football formation is written with the ball at midfield and the offence going right (a defence faces it): `los` is where the ball lies, in the numbers of `nfl-tracking` (yards from the back of the left end zone), and `attacking` is the way the offence goes. A formation of your own is `{ id, sport, frame, name, about, positions: [{ id, x, y }] }` as the `formation`.
+A mark says its position (`GK`, `LB`), or, with a lineup in `data`, the player's `number`; `labels` says `position`, `number`, `name` or `none`, and `names` writes the name under the mark. A position nobody stands on is hollow. `attacking: "left"` turns the formation for a team that attacks the left. A football formation is written with the ball at midfield and the offence going right (a defence faces it): `los` is where the ball lies, in the numbers of `nfl-tracking` (yards from the back of the left end zone), and `attacking` is the way the offence goes. A formation of your own is `{ id, sport, frame, name, about, positions: [{ id, x, y }] }` as the `formation`. A formation may also list `extra` places, which a `formation` layer leaves out and a [lineup](#lineups) draws (baseball's designated hitter), and a position's `size` (a lineup's mark is that much of the usual one; a second line's is 0.8).
 
 A formation is a convention that coaches draw a little differently each time, so each place is an example of the shape and not a measurement, and the numbers are ours. The position names are conventional too, in English and Japanese: the Laws of the Game (Law 3) name the goalkeeper and no other position, and the Official Baseball Rules name the nine fielders. The baseball shift is the one against a left-handed pull hitter; since 2023 MLB's Rule 5.02 requires two infielders on each side of second base, so it is not allowed there. [sources.md](./sources.md#formations) says where each figure is from.
+
+## Lineups
+
+A **lineup** places a team's players by their position code, so a team sheet is all it needs: no coordinates. It reads where each position stands from a [formation](#formations), draws each player as a disc or a jersey with his number in it and his name under it, and puts the visitors at the other end. Two teams are two layers.
+
+```ts
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
+
+const home = [
+  { pos: "GK", number: 1, name: "Okafor" },
+  { pos: "RB", number: 2, name: "Silva" },
+  { pos: "CB", number: 4, name: "Van der Berg-Hoekstra", captain: true },
+  { pos: "CB", number: 5, name: "Mbeki" },
+  { pos: "LB", number: 3, name: "Ito" },
+  { pos: "DM", number: 6, name: "Rossi" },
+  { pos: "DM", number: 8, name: "Nakamura" },
+  { pos: "RW", number: 7, name: "Costa" },
+  { pos: "AM", number: 10, name: "Dubois" },
+  { pos: "LW", number: 11, name: "Haddad" },
+  { pos: "ST", number: 9, name: "Kowalski" },
+];
+const away = [{ pos: "GK", number: 1, name: "Meyer" }, { pos: "ST", number: 9, name: "Moreau" }, { pos: "ST", number: 10, name: "Eze" }];
+const svg = drawKyogijo({
+  sport: "soccer",
+  layers: [
+    { kind: "lineup", side: "home", shape: "jersey", players: home },
+    { kind: "lineup", side: "away", formation: "4-4-2", players: away },
+  ],
+});
+console.log(svg.includes("Lineup in 4-2-3-1: 11 players"));
+console.log(svg.includes("Captain: Van der Berg-Hoekstra."));
+// true
+// true
+```
+
+The home team above has no `formation`: the one of the surface's sport that places the most of the players is chosen (4-2-3-1 for this sheet, with two defensive midfielders and an attacking one), and the first of the table on a tie. `formation` names one (`"4-4-2"`, `"cricket-powerplay"`) or is one of your own.
+
+| Option | What it does |
+| --- | --- |
+| `side` | `home` (the default) or `away`: the team's colour and the end it attacks, the right or the left. A football lineup's `side` is only the colour (the offence goes right and a defence faces it; `attacking` says otherwise), and baseball's fielders and a cricket field do not turn. |
+| `players` | `{ pos, name, number, flag, captain, line, color, title }`. `pos` is a code, below. A player with no place in the formation is not drawn; the description and the table list him. |
+| `formation` | An id of `FORMATIONS`, or a formation of your own. Without it, the best fit (a softball field gets `softball-standard`). |
+| `shape` | `disc` (the default) or `jersey`. |
+| `labels` | What a mark says: `number` (the default; the position's code where a player has no number), `position`, `name` or `none`. |
+| `names` | Write each name under its mark. On by default. |
+| `size` | The width of a mark in the layer's units, a share of the surface by default. |
+| `rotation` | Volleyball: how many rotations on, 1 to 6. Players are listed in the serving order, `P1` to `P6`, and each moves one place clockwise for each rotation. |
+| `los`, `attacking` | As for a `formation`. |
+
+A lineup is not cut to the surface's outline, so that a fielder at the foul line keeps his whole jersey (`clip: "surface"` cuts it).
+
+**Position codes.** A code is a position's id in the formation (`GK`, `SS`, `QB`, `LW`) or a short one that stands for several; the first free place that fits is taken, and a code that names a place has it before a short one. `LINEUP_CODES` (in the layers entry) lists them all. Case, spaces, dots and hyphens do not matter.
+
+| Sport | Codes |
+| --- | --- |
+| Soccer, field hockey | The ids (`GK`, `RB`, `RCB`, `CDM`, `RW`, `ST`...) and `CB`, `D` (a centre-back of either side), `DM`, `CM`, `AM`, `RM`, `LM`, `ST`, `CF` and `FW`, which take the places of that kind in the formation |
+| Hockey | `G`, `LD`, `RD`, `LW`, `C`, `RW`; `D` (either defenceman), `W` (either wing), `GOALIE`. `line: 2` puts a player on the second line or pair (`hockey-two-lines`). |
+| Basketball | `PG`, `SG`, `SF`, `PF`, `C`; `G`, `F`, `GF` and `FC` |
+| Football | The ids (`QB`, `HB`, `WR1`, `LDE`, `MLB`...) and `WR`, `RB`, `OG`, `OT`, `DE`, `DT`, `CB`, `S`, `LB`, `OLB`, `ILB` |
+| Baseball, softball | `P`, `C`, `1B`, `2B`, `3B`, `SS`, `LF`, `CF`, `RF`, the scorer's numbers 1 to 9, `OF`, `IF`, and `DH`, who is listed beside home plate |
+| Rugby union | The numbers 1 to 15, and `LHP`, `HK`, `THP`, `LK`, `BF`, `OF`, `N8`, `SH`, `FH`, `SO`, `IC`, `OC`, `CTB`, `WG`, `FB` |
+| Australian football | The ids (`BPL`, `FB`, `HBFL`, `CHB`, `WL`, `C`, `CHF`, `FF`, `RUC`, `RR`, `ROV`...) and `BP`, `HBF`, `W`, `HFF`, `FP` |
+| Cricket | `BWL`, `WK`, `SL1` to `SL3`, `GU`, `PT`, `CV`, `MO`, `MN`, `MW`, `SQ`, `FL`, `TM`, `LO`, `LN`, `DC`, `DM` |
+| Volleyball | `P1` to `P6`, or the numbers 1 to 6 |
+| Handball | `GK`, `LW`, `LB`, `CB`, `RB`, `RW`, `PV`; `P` for the pivot |
+| Water polo | `GK`, `LW`, `RW`, `LD`, `RD`, `CF`, `CB`; `HS` for the hole set (the centre forward) and `PT` for the point (the centre back) |
+| Netball | `GS`, `GA`, `WA`, `C`, `WD`, `GD`, `GK` |
+
+Left and right are the team's own, as it faces the end it attacks: a team that attacks the right has its left at the top of the page, and the visitors, who attack the left, have theirs at the bottom.
+
+**The marks.** The number is in the mark, in white on the team's colour with a dark outline, so it reads on any team's colour, in a light and a dark page. A name goes under the mark at the biggest size that fits between its neighbours, down to a fifth of the mark's width; a name still too long is cut with an ellipsis, and a name with no room for two letters (a football line stands shoulder to shoulder, so use a `range` or a bigger `size`) is left out of the picture but stays in the tooltip, the description and the table. The mark of a place nobody takes is hollow and says its code. A `captain` has a small yellow "C" on the mark. A `flag` is a small badge on the other corner: an SVG as text, an image `data:` address or the address of an image (the same as a team's `logo`; a script is refused). The package draws no flag of its own: [`@johnmorrisdotca/hata`](https://www.npmjs.com/package/@johnmorrisdotca/hata) draws them.
+
+**Football, baseball and the others.** Two football teams are an offence and a defence: `{ kind: "lineup", side: "home", players: [{ pos: "QB" }, ...] }` takes the I formation, `{ kind: "lineup", side: "away", players: [{ pos: "DE" }, ...] }` takes the 4-3, and `los` moves the ball. A baseball lineup adds the designated hitter (`pos: "DH"`) beside home plate. A volleyball team stands in the six places of its rotation, and a hockey team's second line is a row of smaller marks along the bench. Cricket's formations are fielding presets for a right-handed batter, with the striker's end at the right: the off side is up the page. [sources.md](./sources.md#formations) says what each rests on.
 
 ## Space and shape
 
