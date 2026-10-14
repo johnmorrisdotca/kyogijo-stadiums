@@ -264,6 +264,10 @@ export interface CrowdOptions {
   tifoDesign?: "stripes" | "checks";
   /** Tunnels, the benches' places and the camera platform of the media side. On by default. */
   gaps?: boolean;
+  /** The roof's edge throws a shade on the last rows of the upper tier. On by default. */
+  roof?: boolean;
+  /** A ballpark's seats on top of a wall: `true` for every wall of the park's data that is 25 feet or more (and has a `walls` entry), `false` for none, and by default the walls the package knows have seats (Fenway Park's Green Monster). */
+  wallSeats?: boolean;
   /** How much is drawn: `fine` (the crowd as heads and shoulders, empty seats, aisles), `plain` (blocks of colour), or `auto` (`plain` for `detail: "simple"` or a `width` under 480 pixels). */
   detail?: "auto" | "fine" | "plain";
 }

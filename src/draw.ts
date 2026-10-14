@@ -14,7 +14,7 @@ import { fieldsStyle } from "./fields.style.ts";
 import { resolveHomeSide } from "./homeside.ts";
 import { LEAGUES, chooseLeague, courtOf, diamondOf, fieldOf, hasHistory, leagueSeason, leagueSize, netOf, rinkOf, sheetOf, type League } from "./leagues.ts";
 import { MLB_DIAMOND, diamondFence } from "./leagues/baseball.ts";
-import { fenceFor, parkById, parkNameIn, parkOfficialName } from "./parks.ts";
+import { fenceFor, parkById, parkNameIn, parkOfficialName, parkWallsIn } from "./parks.ts";
 import { boardMarkup, endText } from "./curling.board.ts";
 import { sheetFor } from "./sheet.ts";
 import { cropToRange, describeRange, rangeLabel, shows } from "./ranges.ts";
@@ -24,7 +24,7 @@ import { KYOGIJO_STRINGS, fill } from "./strings.ts";
 import { courtStyle } from "./courts.style.ts";
 import { annotate, annotated, wideView, type Notes } from "./annotate.ts";
 import { KYOGIJO_BACKGROUND_STYLE, laidOn } from "./background.ts";
-import { densityOf, layoutOf as crowdLayout, resolveCrowd, type Crowd, type CrowdStands } from "./crowd.ts";
+import { WALL_SEATS, densityOf, layoutOf as crowdLayout, resolveCrowd, type Crowd, type CrowdStands } from "./crowd.ts";
 import { drawCrowd, KYOGIJO_CROWD_STYLE } from "./crowd.draw.ts";
 import { parkLayout } from "./crowd.park.ts";
 import { featureColours, featureStyle } from "./features.ts";
@@ -314,7 +314,10 @@ function standsFor(o: SurfaceOptions, surface: Surface, crowd: Crowd): CrowdStan
   const awaySide: Side = resolveHomeSide({ ...o, sport }) === "left" ? "right" : "left";
   if (sport === "mlb") {
     const { points, backstop } = parkFence(o);
-    return parkLayout({ fence: fenceOutline(points), backstop, crowd });
+    // The walls that have seats on top of them: the ones the package knows (Fenway Park's Green Monster), or, asked for, every wall of 25 feet or more.
+    const park = parkById(o.park);
+    const walls = park === undefined || crowd.wallSeats === false ? [] : parkWallsIn(park, o.year).filter((w) => (crowd.wallSeats === true ? w.height_ft >= 25 : w.label !== undefined && WALL_SEATS[park.id] === w.label));
+    return parkLayout({ fence: fenceOutline(points), backstop, crowd, seatsOnWalls: walls.map((w) => ({ from: w.from, to: w.to, height: w.height_ft })) });
   }
   return crowdLayout({ sport, box: surface.whole ?? surface.box ?? { x: 0, y: 0, w: 100, h: 100 }, crowd, awaySide, ground: o.ground });
 }

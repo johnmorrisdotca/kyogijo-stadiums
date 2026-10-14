@@ -31,6 +31,8 @@ The distances, the depths and the heights of the stands are conventions for a dr
 | `awayEnd` | Where the visitors sit: `auto` (the sport's usual place: an end for the football codes and the pitch sports, a corner block in an arena), `left`, `right`, `corner` or `none`. |
 | `tifo`, `tifoDesign` | A card display in the colours of a team in the lower stands behind its goal: `home`, `away`, `both` (`true` is `home`). `stripes` (the usual) or `checks`. |
 | `gaps` | The tunnel, the camera platform, the benches and the media row. On by default. |
+| `roof` | The roof's edge throws a shade on the last rows of the upper tier. On by default. |
+| `wallSeats` | A ballpark's seats on top of a wall: by default the walls the package knows have them (Fenway Park's Green Monster, `WALL_SEATS`), `true` for every wall of the park's data that is 25 feet or more, `false` for none. |
 | `detail` | `fine` (the people, the empty seats, the aisles and the shade), `plain` (blocks of colour), or `auto` (the default): `plain` for `detail: "simple"` or a `width` under 480 pixels. |
 
 ```ts
@@ -54,7 +56,7 @@ Each sport has a plain profile in feet: how far its first row is from the surfac
 | Sport | Shape | Tiers | First row from the surface |
 | --- | --- | --- | --- |
 | `nfl`, `cfl`, `ifaf` | bowl | lower, upper | 40 feet at the sides, 26 at the ends (the CFL's 42 and 28) |
-| `soccer` | bowl | lower, upper | 28 feet at the sides (36 on the bench side), 34 at the ends |
+| `soccer` | bowl | lower, upper | the run-off a stadium regulation recommends, taken as about 6 metres (19.7 feet) along the touchlines (27.7 on the bench side) and 8.5 metres (27.9 feet) behind the goal lines |
 | `rugby`, `gaelic`, `lacrosse`, `fieldhockey` | bowl | lower, upper | a little less for the smaller sports, a little more for rugby and Gaelic games |
 | `afl`, `cricket` | oval, round the oval ground | lower, upper | 30 feet all round |
 | `nhl` | bowl | lower, upper | 8 feet |
@@ -68,21 +70,21 @@ import { crowdStands } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const arena = crowdStands({ sport: "nba", crowd: true });
 console.log(arena?.rings.map((ring) => `${ring.id} ${ring.from}-${ring.to} ft, ${ring.height[0]}-${ring.height[1]} ft up, ${ring.rake} deg`).join("; "));
-// courtside 0-7 ft, 1-4 ft up, 23.2 deg; lower 13-70 ft, 3-32 ft up, 27 deg; upper 82-136 ft, 42-80 ft up, 35.1 deg
+// courtside 0-7 ft, 1-4 ft up, 23.2 deg; lower 13-70 ft, 3-32 ft up, 27 deg; upper 77-131 ft, 42-80 ft up, 35.1 deg
 console.log(arena?.seats, crowdStands({ sport: "nhl", crowd: true })?.seats);
-// 19372 23948
+// 19003 23719
 ```
 
 ## A ballpark
 
-The grandstands follow the foul lines from the poles in to a curve behind home plate, each in a lower and an upper tier, and the bleachers stand behind the outfield fence, along the fence's own outline: `park` and `year` pick the fence, `fence` changes its distances, and every seat of the bleachers is behind the wall at its bearing. A horseshoe leaves a gap at the batter's eye in centre field; `bowl` closes it, and `grandstand` draws the infield's stands only. The stands stand on a plaza of their own, not on the foul ground's grass, and the visitors sit along the third-base line.
+The grandstands follow the foul lines from the poles in to a curve behind home plate, each in a lower and an upper tier, and the bleachers stand behind the outfield fence, along the fence's own outline: `park` and `year` pick the fence, `fence` changes its distances, and every seat of the bleachers is behind the wall at its bearing. A horseshoe leaves a gap at the batter's eye in centre field; `bowl` closes it, and `grandstand` draws the infield's stands only. The stands stand on a plaza of their own, not on the foul ground's grass, and the visitors sit along the third-base line, from one aisle to another. The bleachers stand 12 feet behind the fence, where a park has seats on top of a wall (Fenway Park's Green Monster, 37 feet) a band of them runs along the wall at its height, and the grandstands' edge is smooth from the poles round behind home plate.
 
 ```ts
 import { crowdStands } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const fenway = crowdStands({ sport: "mlb", park: "fenway-park", crowd: true });
 console.log(fenway?.rings.map((ring) => `${ring.id} ${ring.seats}`).join(", "), fenway?.seats);
-// lower 11653, upper 12649, bleachers 6850 31152
+// lower 11173, upper 11693, bleachers 6563, wall-seats 225 29654
 console.log(crowdStands({ sport: "mlb", park: "fenway-park", crowd: { shape: "grandstand" } })?.rings.length);
 // 2
 ```
@@ -91,7 +93,7 @@ console.log(crowdStands({ sport: "mlb", park: "fenway-park", crowd: { shape: "gr
 
 Many grounds that stage soccer are the home of a football club (the grounds of the NFL's and the CFL's clubs in the package's list: `GRIDIRON_GROUNDS`). Their stands are where a football field's stands are, round a field of 120 yards with its end zones by 160 feet, not where a soccer ground's are round a pitch. For such a ground (`ground: "metlife-stadium"`, or `stadium: "nfl"` or `"cfl"` for any pitch) the stands keep the football field's footprint and the pitch stands in the middle of it, and the footprint is drawn faintly over the pitch, with its end zones, its five-yard lines and a dashed outline, so that the gap is seen.
 
-It is to scale, and it is not the gap one might expect. The pitch is 68 metres wide, 223 feet, and the field is 160 feet, so the touchlines are 8.5 feet from the front rows on both sides, against 28 and 36 in a ground built for soccer; the ends are 33.8 feet, a little less than a purpose-built ground's 34 (the pitch is 344 feet long and the field 360). A soccer pitch in a gridiron stadium has stands right up to its touchlines and the football field's end zones round its goals.
+It is to scale, and it is not the gap one might expect. The pitch is 68 metres wide, 223 feet, and the field is 160 feet, so the touchlines are 8.5 feet from the front rows on both sides, against 19.7 and 27.7 in a ground built for soccer, and the ends are 33.8 feet, wider than a purpose-built ground's 27.9 (the pitch is 344 feet long and the field 360, with the stands set back from its end zones). A soccer pitch in a gridiron stadium has stands close to its touchlines and a wider apron behind its goals.
 
 ```ts
 import { crowdStands } from "@johnmorrisdotca/kyogijo-stadiums";
@@ -106,7 +108,7 @@ const gaps = (id: string) => {
 console.log(gaps("metlife-stadium"));
 // nfl: 8.5 ft at the side, 8.5 at the bench side, 33.8 at the end
 console.log(gaps("wembley"));
-// purpose: 28 ft at the side, 36 at the bench side, 34 at the end
+// purpose: 19.7 ft at the side, 27.7 at the bench side, 27.9 at the end
 console.log(crowdStands({ sport: "soccer", ground: "bc-place", crowd: true })?.footprint?.field.w);
 // 450
 ```
@@ -115,9 +117,9 @@ The package has no data of which club plays where beyond the grounds' articles, 
 
 ## The people
 
-The crowd is a tile of 36 seats, 14.4 feet square, repeated over each tier as an SVG pattern: each seat is empty with the probability the density leaves, or has a shoulders-and-head, a dot of a shirt (the team's colour, in two shades, or a neutral) with a smaller dot of hair over it, laid with a little jitter from the seed. A dot is a stroke of no length with round caps, a few bytes, so a tile is about 1 kB and a stadium is two or three tiles: the home tile, the visitors' and the card display's. The upper tier is a little emptier than the lower: its tile has a veil of the seats' bed over it. The aisles are lines across each tier, and the front wall of each tier throws a soft shade on its first rows and the roof's edge on the upper tier's last. In the dark, the crowd is one opacity (`--ky-cr-dim`) dimmer.
+The crowd is a tile of 36 seats, 14.4 feet square, repeated over each tier as an SVG pattern: each seat is empty with the probability the density leaves, or has a shoulders-and-head, a dot of a shirt (the team's colour, in two shades, or a neutral) with a smaller dot of hair over it, laid with a little jitter from the seed. A dot is a stroke of no length with round caps, a few bytes, so a tile is about 1 kB and a stadium is two or three tiles: the home tile, the visitors' and the card display's. The upper tier is a little emptier than the lower: its tile has a veil of the seats' bed over it. Over the people are the row lines (every second row, stepped across each tier so that they follow its curves, in a corner as on a side), the aisles and every fourth one a wider vomitory (dark gaps across each tier, square to the front on the sides and fanning round the corners, as the stands data gives them in `aisles`), and the front wall of each tier throws a soft shade on its first rows and the roof's edge on the upper tier's last. The walk between the tiers is a thin, darker band, `concourses` in the data. In the dark, the crowd is one opacity (`--ky-cr-dim`) dimmer.
 
-The visitors' block is a sector of the two tiers at an end (or in a corner) in the other team's colour; with `awayEnd: "none"` the whole bowl is the home fans'. A card display is a block of the lower tier behind a goal in stripes or checks of the team's colour and white.
+The visitors' block is a section of the two tiers at an end (or in a corner) in the other team's colour, cut on aisle lines, so that it is a block of the stands and not a wedge (round an oval ground, whose aisles fan, it is a wedge); with `awayEnd: "none"` the whole bowl is the home fans'. A card display is a block of the lower tier behind a goal in stripes or checks of the team's colour and white.
 
 ## The places left open
 
@@ -133,11 +135,11 @@ import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 const clean = drawKyogijo({ sport: "soccer", id: "d" });
 const fine = drawKyogijo({ sport: "soccer", id: "d", crowd: true });
 const thumb = drawKyogijo({ sport: "soccer", id: "d", width: 300, crowd: true });
-console.log(fine.includes("<pattern"), thumb.includes("<pattern"), thumb.includes("ky-cr-blk"), fine.length - clean.length < 10_000, thumb.length - clean.length < 6_000);
+console.log(fine.includes("<pattern"), thumb.includes("<pattern"), thumb.includes("ky-cr-blk"), fine.length - clean.length < 14_000, thumb.length - clean.length < 6_000);
 // true false true true true
 ```
 
-A soccer ground's stands add about 9 kB to the drawing in the detail and about 4.5 kB as blocks; a ballpark's 14 kB and 10 kB (its stands are polygons, not rounded rectangles). Neither grows with the seats. A test holds both to a budget.
+A soccer ground's stands add about 12.5 kB to the drawing in the detail (a stylesheet of 2.5 kB, the tiles 3 kB, the row lines and aisles 5 kB) and about 4 kB as blocks; a ballpark's 16.5 kB and 8 kB (its stands are polygons, not rounded rectangles). Neither grows with the seats. A test holds both to a budget.
 
 ## Everywhere
 
@@ -155,7 +157,7 @@ A page that draws with `style: "none"` and supplies the stylesheet itself gets t
 
 ## The stands as data
 
-`crowdStands(options)` gives the stands as data, in feet in the surface's wide frame, without drawing them: the `rings` (each with `region` and `hole` outlines, `from` and `to` its distance from the surface, `height` of its first and last row, `rake` in degrees, `fill` and `seats`), `covers`, the `sectors` of visitors and of the card display, the `gaps`, the gridiron `footprint`, the `reach` the stands need beyond the surface on each side, and the `seats` the model holds. `outlinePath` and `outlinePoints` turn an outline into a path or a polygon. This is what a view that raises the stands needs, such as the 3D view of the `work/turn` branch: a follow-up, not done here.
+`crowdStands(options)` gives the stands as data, in feet in the surface's wide frame, without drawing them: the `rings` (each with `region` and `hole` outlines, `from` and `to` its distance from the surface, `height` of its first and last row, `rake` in degrees, `fill`, `seats` and its `aisles`), the `concourses`, `covers`, the `sectors` of visitors and of the card display, the `gaps`, the gridiron `footprint`, the `reach` the stands need beyond the surface on each side, and the `seats` the model holds. `outlinePath` and `outlinePoints` turn an outline into a path or a polygon. This is what a view that raises the stands needs, such as the 3D view of the `work/turn` branch: a follow-up, not done here.
 
 ## What is not drawn
 

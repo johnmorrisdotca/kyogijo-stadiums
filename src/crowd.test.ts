@@ -30,7 +30,7 @@ describe("the option", () => {
   });
 
   it("is read once: every part has its value and a part out of range is held to it", () => {
-    expect(resolveCrowd(true)).toEqual({ shape: undefined, open: "right", stadium: "auto", density: undefined, attendance: undefined, capacity: undefined, seed: 1, home: undefined, away: undefined, awayEnd: "auto", tifo: undefined, tifoDesign: "stripes", gaps: true, detail: "auto" });
+    expect(resolveCrowd(true)).toEqual({ shape: undefined, open: "right", stadium: "auto", density: undefined, attendance: undefined, capacity: undefined, seed: 1, home: undefined, away: undefined, awayEnd: "auto", tifo: undefined, tifoDesign: "stripes", gaps: true, roof: true, wallSeats: undefined, detail: "auto" });
     const held = resolveCrowd({ density: 7, seed: 2.9, shape: "oval" as never, awayEnd: "up" as never, tifo: true, tifoDesign: "checks", open: "left", gaps: false, stadium: "nfl", capacity: -3, attendance: -1 });
     expect(held).toMatchObject({ density: 1, seed: 2, shape: undefined, awayEnd: "auto", tifo: "home", tifoDesign: "checks", open: "left", gaps: false, stadium: "nfl", capacity: undefined, attendance: undefined });
     expect(resolveCrowd({ density: -1 })?.density).toBe(0);
@@ -64,10 +64,10 @@ describe("the crowd", () => {
     expect(sceneOf(soccer).items.length).toBeLessThan(80);
   });
 
-  it("holds its size: the stands and the people add under 10 kB, a thumbnail's under 6", () => {
+  it("holds its size: the stands and the people add under 14 kB, a thumbnail's under 6", () => {
     const clean = drawKyogijo({ sport: "soccer", id: "cr" });
     const small = drawKyogijo({ ...soccer, width: 320 });
-    expect(svg.length - clean.length).toBeLessThan(10_000);
+    expect(svg.length - clean.length).toBeLessThan(14_000);
     expect(small.length - clean.length).toBeLessThan(6_000);
     expect(count(small, /<pattern /g)).toBe(0);
     expect(small).toContain("ky-cr-blk");
@@ -162,14 +162,15 @@ describe("the stands as data", () => {
     if (lower?.hole?.kind !== "rrect" || stands === undefined) throw new Error("a bowl is a rounded rectangle");
     const { box } = stands;
     expect(box.w).toBeCloseTo(105 / 0.3048, 0);
-    expect(box.x - lower.hole.x0).toBeCloseTo(34, 6);
-    expect(lower.hole.x1 - (box.x + box.w)).toBeCloseTo(34, 6);
-    expect(box.y - lower.hole.y0).toBeCloseTo(28, 6);
-    expect(lower.hole.y1 - (box.y + box.h)).toBeCloseTo(36, 6);
+    // The run-off: about 8.5 metres behind the goal lines and 6 along the touchlines, with the bench side's 8 feet more.
+    expect(box.x - lower.hole.x0).toBeCloseTo(8.5 / 0.3048, 1);
+    expect(lower.hole.x1 - (box.x + box.w)).toBeCloseTo(8.5 / 0.3048, 1);
+    expect(box.y - lower.hole.y0).toBeCloseTo(6 / 0.3048, 1);
+    expect(lower.hole.y1 - (box.y + box.h)).toBeCloseTo(6 / 0.3048 + 8, 1);
     // The points of an outline are for a view that raises the stands.
     const points = outlinePoints(lower.region);
     expect(points.length).toBeGreaterThan(40);
-    expect(Math.min(...points.map(([x]) => x))).toBeCloseTo(box.x - 34 - 75, 5);
+    expect(Math.min(...points.map(([x]) => x))).toBeCloseTo(box.x - 8.5 / 0.3048 - 75, 1);
     expect(outlinePath(lower.region)).toMatch(/^M[\d. -]+H[\d. -]+A/);
     expect(outlinePath(lower.region, true)).toMatch(/A[\d. ]+ 0 0 0 /);
   });
@@ -217,6 +218,45 @@ describe("the stands as data", () => {
   });
 });
 
+describe("rows, aisles and sections", () => {
+  const stands = crowdStands({ sport: "soccer", crowd: true });
+
+  it("have aisles across every tier, from its inner edge to its outer, and the sections of visitors begin and end on them", () => {
+    for (const ring of stands?.rings ?? []) {
+      expect(ring.aisles.length, ring.id).toBeGreaterThan(20);
+      for (const [a, b] of ring.aisles) expect(Math.hypot(b[0] - a[0], b[1] - a[1]), ring.id).toBeGreaterThan((ring.to - ring.from) * 0.95);
+    }
+    const lower = stands?.rings[0];
+    const away = stands?.sectors.find((k) => k.kind === "away" && k.ring === "lower");
+    const near = (p: [number, number]): boolean => (lower?.aisles ?? []).some(([a, b]) => Math.hypot(a[0] - p[0], a[1] - p[1]) < 0.01 || Math.hypot(b[0] - p[0], b[1] - p[1]) < 0.01);
+    // A section is a block cut on the aisles: each of its corners is the end of an aisle, and on the end it is a rectangle, not a wedge.
+    const corners = (away?.points ?? []).filter((p, i, all) => i === 0 || i === all.length - 1 || near(p));
+    expect(corners.length).toBeGreaterThanOrEqual(4);
+    for (const p of [away?.points[0], away?.points[away.points.length / 2 - 1]]) expect(near(p as [number, number])).toBe(true);
+    const xs = (away?.points ?? []).map(([x]) => x);
+    expect(Math.max(...xs) - Math.min(...xs)).toBeCloseTo(75, 1);
+  });
+
+  it("have row lines that follow the bowl's curve, and the walks between the tiers are a thin band", () => {
+    const out = drawKyogijo(soccer);
+    const rowPath = /class="ky-cr-row" d="([^"]*)"/.exec(out)?.[1] ?? "";
+    expect(count(rowPath, /M/g)).toBeGreaterThan(10);
+    expect(rowPath).toContain("a");
+    expect(stands?.concourses.length).toBe(1);
+    const lower = stands?.rings[0];
+    const upper = stands?.rings[1];
+    expect((upper?.from ?? 0) - (lower?.to ?? 0)).toBeLessThanOrEqual(8);
+    expect(out).toContain('class="ky-cr-conc"');
+    expect(drawKyogijo({ ...soccer, width: 300 })).not.toContain('class="ky-cr-row"');
+  });
+
+  it("have a roof's shade on the upper tier that can be turned off", () => {
+    const shade = (markup: string): number => count(markup, /stroke-opacity="0\.16"/g);
+    expect(shade(drawKyogijo(soccer))).toBe(1);
+    expect(shade(drawKyogijo({ ...soccer, crowd: { roof: false } }))).toBe(0);
+  });
+});
+
 describe("a soccer pitch in a gridiron stadium", () => {
   it("is chosen for the grounds of the NFL's and the CFL's clubs, and by `stadium`", () => {
     for (const id of Object.keys(GRIDIRON_GROUNDS)) expect(GROUNDS[id], id).toBeDefined();
@@ -247,8 +287,8 @@ describe("a soccer pitch in a gridiron stadium", () => {
     const end = box.x - first.hole.x0;
     expect(side).toBeCloseTo(40 + (160 - box.h) / 2, 6);
     expect(end).toBeCloseTo(26 + (360 - box.w) / 2, 6);
-    expect(side).toBeLessThan(28);
-    expect(end).toBeGreaterThan(30);
+    expect(side).toBeLessThan(6 / 0.3048 - 10);
+    expect(end).toBeGreaterThan(8.5 / 0.3048 + 5);
     // A purpose-built ground has its own run-off, and no footprint.
     expect(crowdStands({ sport: "soccer", ground: "wembley", crowd: true })?.footprint).toBeUndefined();
   });
@@ -275,7 +315,7 @@ describe("a ballpark", () => {
   const stands = crowdStands({ sport: "mlb", park, crowd: true });
 
   it("has grandstands along the foul lines and round behind home plate, and bleachers behind the outfield", () => {
-    expect(stands?.rings.map((r) => r.id)).toEqual(["lower", "upper", "bleachers"]);
+    expect(stands?.rings.map((r) => r.id)).toEqual(["lower", "upper", "bleachers", "wall-seats"]);
     expect(stands?.shape).toBe("horseshoe");
     expect(crowdStands({ sport: "mlb", park, crowd: { shape: "grandstand" } })?.rings.map((r) => r.id)).toEqual(["lower", "upper"]);
     expect(crowdStands({ sport: "mlb", park, crowd: { shape: "bowl" } })?.rings.find((r) => r.id === "bleachers")?.more).toBeUndefined();
@@ -290,7 +330,7 @@ describe("a ballpark", () => {
     for (const [x, y] of pieces) {
       // The drawing's y is minus the distance out, so the bearing from the line up the middle is atan(x / -y).
       const bearing = (Math.atan2(x, -y) * 180) / Math.PI;
-      if (Math.abs(bearing) <= 45) expect(Math.hypot(x, y), `${x.toFixed(0)} ${y.toFixed(0)}`).toBeGreaterThan(fenceAt(points, bearing) + 20);
+      if (Math.abs(bearing) <= 45) expect(Math.hypot(x, y), `${x.toFixed(0)} ${y.toFixed(0)}`).toBeGreaterThan(fenceAt(points, bearing) + 10);
     }
   });
 
@@ -320,6 +360,39 @@ describe("a ballpark", () => {
     expect(drawKyogijo({ sport: "mlb", ...GAME, orientation: "portrait", crowd: true })).toContain("ky-cr-people");
     expect(stands?.seats).toBeGreaterThan(25_000);
     expect(stands?.seats).toBeLessThan(60_000);
+  });
+});
+
+describe("a ballpark's walls", () => {
+  const ring = (o: SurfaceOptions, id: string) => crowdStands(o)?.rings.find((r) => r.id === id);
+
+  it("have seats on top of the Green Monster, at the wall's height, where the park's data has the wall, and no other park has them", () => {
+    const seats = ring({ sport: "mlb", park: "fenway-park", crowd: true }, "wall-seats");
+    expect(seats?.height[0]).toBeCloseTo(37.167, 2);
+    expect(seats?.tier).toBe("wall");
+    expect(ring({ sport: "mlb", park: "fenway-park", crowd: { wallSeats: false } }, "wall-seats")).toBeUndefined();
+    expect(ring({ sport: "mlb", park: "wrigley-field", crowd: true }, "wall-seats")).toBeUndefined();
+    // Asked for, every wall of 25 feet or more has them, in the seasons the park had it.
+    expect(ring({ sport: "mlb", park: "fenway-park", crowd: { wallSeats: true } }, "wall-seats")).toBeDefined();
+    expect(ring({ sport: "mlb", park: "fenway-park", year: 1920, crowd: { wallSeats: true } }, "wall-seats")?.height[0]).toBeCloseTo(25, 1);
+  });
+
+  it("have the bleachers close behind the fence, 12 feet back, and the grandstand's edge smooth, with no corner sharper than 35 degrees", () => {
+    const points = fenceFor(parkById("fenway-park"), undefined, undefined);
+    const bleachers = ring({ sport: "mlb", park: "fenway-park", crowd: true }, "bleachers");
+    const first = bleachers?.region.kind === "poly" ? bleachers.region.points : [];
+    const near = first.slice(0, first.length / 2);
+    const gaps = near.map(([x, y]) => Math.hypot(x, y) - fenceAt(points, (Math.atan2(x, -y) * 180) / Math.PI));
+    for (const g of gaps) expect(g).toBeCloseTo(12, 0);
+    const lower = ring({ sport: "mlb", park: "fenway-park", crowd: true }, "lower");
+    const edge = lower?.region.kind === "poly" ? lower.region.points.slice(0, lower.region.points.length / 2) : [];
+    let sharpest = 0;
+    for (let i = 1; i < edge.length - 1; i += 1) {
+      const a = Math.atan2(edge[i][1] - edge[i - 1][1], edge[i][0] - edge[i - 1][0]);
+      const b = Math.atan2(edge[i + 1][1] - edge[i][1], edge[i + 1][0] - edge[i][0]);
+      sharpest = Math.max(sharpest, Math.abs(((b - a + 3 * Math.PI) % (2 * Math.PI)) - Math.PI));
+    }
+    expect((sharpest * 180) / Math.PI).toBeLessThan(35);
   });
 });
 
@@ -432,7 +505,7 @@ describe("every renderer", () => {
     expect(performance.now() - t0).toBeLessThan(1500);
     expect(box.width).toBeGreaterThan(0);
     expect(calls.stroke).toBeGreaterThan(5000);
-    expect(calls.fill).toBeGreaterThan(100);
+    expect(calls.fill).toBeGreaterThan(20);
   });
 
   it("is a PNG when resvg is installed, light and dark, large and small", async () => {

@@ -18,7 +18,7 @@ export type Outline =
 export interface StandRing {
   /** `lower`, `upper`, `courtside`, `grandstand` or `bleachers`, with the tier's number where a ring has parts. */
   id: string;
-  tier: "courtside" | "lower" | "upper" | "grandstand" | "bleachers";
+  tier: "courtside" | "lower" | "upper" | "grandstand" | "bleachers" | "wall";
   /** The band is `region` less `hole` (nothing for a polygon that is the band itself). */
   region: Outline;
   /** Further pieces of the band that are apart from `region` (a ballpark's bleachers either side of the batter's eye). */
@@ -34,6 +34,8 @@ export interface StandRing {
   fill: number;
   /** The seats the band holds, at a seat's 2 by 2.3 feet. */
   seats: number;
+  /** The aisles and vomitories across the band, each from a point on its inner edge to its outer: across the sides, fanning round the corners. */
+  aisles: [Pt, Pt][];
 }
 
 /** A block of the stands that is not the home fans': the visitors', or a card display. A polygon in the wide frame. */
@@ -62,6 +64,8 @@ export interface CrowdStands {
   covers: [x0: number, y0: number, x1: number, y1: number][];
   sectors: StandSector[];
   gaps: StandGap[];
+  /** The walks between the tiers: a band between one tier's outer edge and the next one's inner. */
+  concourses: { region: Outline; hole: Outline | null }[];
   /** A gridiron stadium's field under a soccer pitch: its outline and its two end zones, in the wide frame, so that the gap is seen. */
   footprint?: { field: Box; endZones: [Box, Box] };
   /** The ground the stands need beyond the surface on each side, in feet. */
@@ -87,6 +91,8 @@ export interface Crowd {
   tifo: "home" | "away" | "both" | undefined;
   tifoDesign: "stripes" | "checks";
   gaps: boolean;
+  roof: boolean;
+  wallSeats: boolean | undefined;
   detail: "auto" | "fine" | "plain";
 }
 
@@ -113,6 +119,8 @@ export function resolveCrowd(value: SurfaceOptions["crowd"]): Crowd | undefined 
     tifo: o.tifo === true ? "home" : o.tifo === "home" || o.tifo === "away" || o.tifo === "both" ? o.tifo : undefined,
     tifoDesign: o.tifoDesign === "checks" ? "checks" : "stripes",
     gaps: o.gaps !== false,
+    roof: o.roof !== false,
+    wallSeats: typeof o.wallSeats === "boolean" ? o.wallSeats : undefined,
     detail: o.detail === "fine" || o.detail === "plain" ? o.detail : "auto",
   };
 }
@@ -166,26 +174,26 @@ const courtside = (to = 7): Tier => ({ id: "courtside", from: 0, to, height: [1,
 
 /** The venues, by sport, in feet. */
 const PROFILES: Readonly<Record<Sport, Profile>> = {
-  nfl: { shape: "bowl", side: 40, end: 26, bench: 0, corner: 60, tiers: [lower(85), upper(99, 172)], away: "end" },
-  cfl: { shape: "bowl", side: 42, end: 28, bench: 0, corner: 60, tiers: [lower(85), upper(99, 172)], away: "end" },
-  ifaf: { shape: "bowl", side: 40, end: 26, bench: 0, corner: 55, tiers: [lower(75), upper(88, 150)], away: "end" },
-  soccer: { shape: "bowl", side: 28, end: 34, bench: 8, corner: 45, tiers: [lower(75), upper(88, 150)], away: "end" },
-  nhl: { shape: "bowl", side: 8, end: 8, bench: 6, corner: 40, tiers: [lower(58, 3, 28), upper(68, 124, 38, 74)], away: "corner" },
-  nba: { shape: "bowl", side: 5, end: 10, bench: 9, corner: 30, tiers: [courtside(7), { id: "lower", from: 13, to: 70, height: [3, 32], fill: 1 }, upper(82, 136, 42, 80)], away: "corner" },
+  nfl: { shape: "bowl", side: 40, end: 26, bench: 0, corner: 60, tiers: [lower(85), upper(92, 165)], away: "end" },
+  cfl: { shape: "bowl", side: 42, end: 28, bench: 0, corner: 60, tiers: [lower(85), upper(92, 165)], away: "end" },
+  ifaf: { shape: "bowl", side: 40, end: 26, bench: 0, corner: 55, tiers: [lower(75), upper(82, 144)], away: "end" },
+  soccer: { shape: "bowl", side: 19.7, end: 27.9, bench: 8, corner: 40, tiers: [lower(75), upper(82, 144)], away: "end" },
+  nhl: { shape: "bowl", side: 8, end: 8, bench: 6, corner: 40, tiers: [lower(58, 3, 28), upper(65, 121, 38, 74)], away: "corner" },
+  nba: { shape: "bowl", side: 5, end: 10, bench: 9, corner: 30, tiers: [courtside(7), { id: "lower", from: 13, to: 70, height: [3, 32], fill: 1 }, upper(77, 131, 42, 80)], away: "corner" },
   mlb: { shape: "horseshoe", side: 0, end: 0, bench: 0, corner: 0, tiers: [], away: "corner" },
   curling: { shape: "sides", side: 14, end: 10, bench: 0, corner: 6, tiers: [lower(30, 2, 12)], away: "corner" },
-  tennis: { shape: "bowl", side: 22, end: 32, bench: 4, corner: 24, tiers: [lower(44, 3, 24), upper(54, 98, 32, 62)], away: "corner" },
-  volleyball: { shape: "bowl", side: 20, end: 24, bench: 4, corner: 22, tiers: [lower(40, 3, 22), upper(50, 90, 30, 58)], away: "corner" },
-  badminton: { shape: "bowl", side: 16, end: 22, bench: 4, corner: 20, tiers: [lower(40, 3, 22), upper(50, 90, 30, 58)], away: "corner" },
+  tennis: { shape: "bowl", side: 22, end: 32, bench: 4, corner: 24, tiers: [lower(44, 3, 24), upper(51, 95, 32, 62)], away: "corner" },
+  volleyball: { shape: "bowl", side: 20, end: 24, bench: 4, corner: 22, tiers: [lower(40, 3, 22), upper(47, 87, 30, 58)], away: "corner" },
+  badminton: { shape: "bowl", side: 16, end: 22, bench: 4, corner: 20, tiers: [lower(40, 3, 22), upper(47, 87, 30, 58)], away: "corner" },
   pickleball: { shape: "sides", side: 18, end: 16, bench: 0, corner: 8, tiers: [lower(32, 2, 12)], away: "corner" },
-  tabletennis: { shape: "bowl", side: 16, end: 16, bench: 2, corner: 14, tiers: [lower(34, 2, 16), upper(42, 74, 22, 40)], away: "corner" },
-  lacrosse: { shape: "bowl", side: 24, end: 30, bench: 6, corner: 40, tiers: [lower(70), upper(82, 130, 58, 100)], away: "end" },
-  rugby: { shape: "bowl", side: 26, end: 36, bench: 6, corner: 48, tiers: [lower(78), upper(90, 150)], away: "end" },
-  afl: { shape: "bowl", side: 30, end: 30, bench: 0, corner: 0, tiers: [lower(70), upper(82, 140)], oval: true, away: "end" },
-  gaelic: { shape: "bowl", side: 34, end: 40, bench: 6, corner: 50, tiers: [lower(80), upper(92, 156)], away: "end" },
-  cricket: { shape: "bowl", side: 30, end: 30, bench: 0, corner: 0, tiers: [lower(66), upper(78, 130)], oval: true, away: "end" },
-  fieldhockey: { shape: "bowl", side: 20, end: 26, bench: 5, corner: 30, tiers: [lower(46, 3, 24), upper(56, 90, 32, 54)], away: "end" },
-  handball: { shape: "bowl", side: 14, end: 18, bench: 4, corner: 16, tiers: [courtside(6), { id: "lower", from: 10, to: 46, height: [3, 22], fill: 1 }, upper(56, 100, 30, 56)], away: "corner" },
+  tabletennis: { shape: "bowl", side: 16, end: 16, bench: 2, corner: 14, tiers: [lower(34, 2, 16), upper(41, 73, 22, 40)], away: "corner" },
+  lacrosse: { shape: "bowl", side: 24, end: 30, bench: 6, corner: 40, tiers: [lower(70), upper(77, 125, 58, 100)], away: "end" },
+  rugby: { shape: "bowl", side: 26, end: 36, bench: 6, corner: 48, tiers: [lower(78), upper(85, 145)], away: "end" },
+  afl: { shape: "bowl", side: 30, end: 30, bench: 0, corner: 0, tiers: [lower(70), upper(77, 135)], oval: true, away: "end" },
+  gaelic: { shape: "bowl", side: 34, end: 40, bench: 6, corner: 50, tiers: [lower(80), upper(87, 151)], away: "end" },
+  cricket: { shape: "bowl", side: 30, end: 30, bench: 0, corner: 0, tiers: [lower(66), upper(73, 125)], oval: true, away: "end" },
+  fieldhockey: { shape: "bowl", side: 20, end: 26, bench: 5, corner: 30, tiers: [lower(46, 3, 24), upper(53, 87, 32, 54)], away: "end" },
+  handball: { shape: "bowl", side: 14, end: 18, bench: 4, corner: 16, tiers: [courtside(6), { id: "lower", from: 10, to: 46, height: [3, 22], fill: 1 }, upper(53, 97, 30, 56)], away: "corner" },
 };
 
 /** The grounds of the package that are the home of an NFL or a CFL club, where a soccer pitch stands inside a gridiron's stands. From each ground's article. */
@@ -210,6 +218,9 @@ function gridiron(kind: "nfl" | "cfl"): { length: number; width: number; endZone
   const f = FOOTBALL[kind];
   return { length: f.length + 2 * f.endZone, width: f.width, endZone: f.endZone };
 }
+
+/** The walls the package knows have seats on top of them, by park and the wall's label: Fenway Park's Green Monster (the Monster seats, 2003). */
+export const WALL_SEATS: Readonly<Record<string, string>> = Object.freeze({ "fenway-park": "Green Monster" });
 
 // ---- Outlines. ----
 
@@ -259,7 +270,7 @@ const n1 = (v: number): string => {
 export function outlinePath(o: Outline, reverse = false): string {
   if (o.kind === "poly") {
     const pts = reverse ? [...o.points].reverse() : o.points;
-    return `M${pts.map(([x, y]) => `${n1(x)} ${n1(y)}`).join("L")}Z`;
+    return `M${pts.map(([x, y]) => `${Math.round(x)} ${Math.round(y)}`).join("L")}Z`;
   }
   if (o.kind === "ellipse") {
     const sweep = reverse ? 0 : 1;
@@ -313,6 +324,74 @@ const area = (o: Outline): number => {
 
 /** The seats of a band of the stands: its area at a seat's 2 by 2.3 feet. */
 export const seatsIn = (region: Outline, hole: Outline | null): number => Math.round((area(region) - (hole === null ? 0 : area(hole))) / 4.6);
+
+
+/** A point of a rounded rectangle and the outward normal there, by its parameter `u` (any real number, taken modulo 8): the four straight sides are the even whole numbers (the top from left to right, the right from top to bottom and so on round) and the four corners the odd ones. Concentric outlines (the same corners' centres) have the same parameter at the points an aisle joins. */
+export function rrectAt(o: Extract<Outline, { kind: "rrect" }>, u: number): { p: Pt; n: Pt } {
+  const m = ((u % 8) + 8) % 8;
+  const k = Math.floor(m);
+  const f = m - k;
+  const w = o.x1 - o.x0;
+  const h = o.y1 - o.y0;
+  const r = Math.min(o.r, w / 2, h / 2);
+  const lh = w - 2 * r;
+  const lv = h - 2 * r;
+  const arc = (cx: number, cy: number, a0: number): { p: Pt; n: Pt } => {
+    const a = ((a0 + 90 * f) * Math.PI) / 180;
+    return { p: [cx + r * Math.cos(a), cy + r * Math.sin(a)], n: [Math.cos(a), Math.sin(a)] };
+  };
+  switch (k) {
+    case 0:
+      return { p: [o.x0 + r + f * lh, o.y0], n: [0, -1] };
+    case 1:
+      return arc(o.x1 - r, o.y0 + r, -90);
+    case 2:
+      return { p: [o.x1, o.y0 + r + f * lv], n: [1, 0] };
+    case 3:
+      return arc(o.x1 - r, o.y1 - r, 0);
+    case 4:
+      return { p: [o.x1 - r - f * lh, o.y1], n: [0, 1] };
+    case 5:
+      return arc(o.x0 + r, o.y1 - r, 90);
+    case 6:
+      return { p: [o.x0, o.y1 - r - f * lv], n: [-1, 0] };
+    default:
+      return arc(o.x0 + r, o.y0 + r, 180);
+  }
+}
+
+/** The aisles a band has, as parameters of its inner outline: one at each end of every straight side (about every 30 feet along it) and one in the middle of every corner. */
+function aisleParameters(hole: Extract<Outline, { kind: "rrect" }>): { us: number[]; nh: number; nv: number } {
+  const r = Math.min(hole.r, (hole.x1 - hole.x0) / 2, (hole.y1 - hole.y0) / 2);
+  const nh = Math.max(2, Math.round((hole.x1 - hole.x0 - 2 * r) / 30));
+  const nv = Math.max(2, Math.round((hole.y1 - hole.y0 - 2 * r) / 30));
+  const us: number[] = [];
+  for (let k = 0; k < 8; k += 1) {
+    if (k % 2 === 1) us.push(k + 0.5);
+    else for (let i = 0; i < (k % 4 === 0 ? nh : nv); i += 1) us.push(k + i / (k % 4 === 0 ? nh : nv));
+  }
+  return { us, nh, nv };
+}
+
+/** The aisles of a band as lines from its inner edge to its outer. */
+function aislesOf(region: Outline, hole: Outline | null): [Pt, Pt][] {
+  if (region.kind === "rrect" && hole !== null && hole.kind === "rrect") return aisleParameters(hole).us.map((u): [Pt, Pt] => [rrectAt(hole, u).p, rrectAt(region, u).p]);
+  if (region.kind === "ellipse" && hole !== null && hole.kind === "ellipse") {
+    return Array.from({ length: 48 }, (_, i): [Pt, Pt] => {
+      const t = (i * Math.PI) / 24;
+      return [[hole.cx + hole.rx * Math.cos(t), hole.cy + hole.ry * Math.sin(t)], [region.cx + region.rx * Math.cos(t), region.cy + region.ry * Math.sin(t)]];
+    });
+  }
+  return [];
+}
+
+/** The polygon of a band between two aisle parameters: along the outer edge, then back along the inner. */
+function sectionBetween(region: Extract<Outline, { kind: "rrect" }>, hole: Extract<Outline, { kind: "rrect" }>, u0: number, u1: number): Pt[] {
+  const us: number[] = [u0];
+  for (let u = Math.floor(u0 * 4) / 4 + 0.25; u < u1 - 1e-9; u += 0.25) if (u > u0 + 1e-9) us.push(u);
+  us.push(u1);
+  return [...us.map((u) => rrectAt(region, u).p), ...us.map((u) => rrectAt(hole, u).p).reverse()];
+}
 
 // ---- The layout round a rectangle or an oval. ----
 
@@ -376,6 +455,7 @@ export function layoutOf(input: LayoutInput): CrowdStands {
       rake: Math.round((Math.atan2(rise, Math.max(1, t.to - t.from)) * 180) / Math.PI * 10) / 10,
       fill: t.fill,
       seats: seatsIn(region, hole),
+      aisles: aislesOf(region, hole),
     });
     reachOf.left = Math.max(reachOf.left, off.left + t.to);
     reachOf.right = Math.max(reachOf.right, off.right + t.to);
@@ -395,7 +475,12 @@ export function layoutOf(input: LayoutInput): CrowdStands {
   } else if (shape === "sides") {
     covers.push([box.x - reachOf.left - 4, yTop, x0 + p.corner * 0.5, yBot], [x1 - p.corner * 0.5, yTop, box.x + box.w + reachOf.right + 4, yBot]);
   }
-  const stands: CrowdStands = { sport, shape, box, rings, covers, sectors: [], gaps: [], reach: reachOf, seats: rings.reduce((n, r) => n + r.seats, 0) };
+  const concourses: CrowdStands["concourses"] = [];
+  rings.forEach((ring, i) => {
+    const before = rings[i - 1];
+    if (before !== undefined && ring.hole !== null && ring.from > before.to) concourses.push({ region: ring.hole, hole: before.region });
+  });
+  const stands: CrowdStands = { sport, shape, box, rings, covers, concourses, sectors: [], gaps: [], reach: reachOf, seats: rings.reduce((n, r) => n + r.seats, 0) };
   if (stadium !== undefined) stands.stadium = stadium;
   if (stadium === "nfl" || stadium === "cfl") {
     const f = gridiron(stadium);
@@ -410,50 +495,62 @@ export function layoutOf(input: LayoutInput): CrowdStands {
   // The visitors, a card display, and the places left open.
   const lowerRing = rings.find((r) => r.tier === "lower") ?? rings[0];
   if (lowerRing !== undefined) {
-    const corner = Math.atan2(box.h / 2 + off.top + lowerRing.to / 2, box.w / 2 + off.left + lowerRing.to / 2);
-    const sectorOf = (ring: StandRing, from: number, to: number): Pt[] => {
-      const outer: Pt[] = [];
-      const inner: Pt[] = [];
-      const steps = 8;
-      for (let i = 0; i <= steps; i += 1) {
-        const a = from + ((to - from) * i) / steps;
-        outer.push(rayAt(ring.region, cx, cy, a));
-        inner.push(rayAt(ring.hole ?? ring.region, cx, cy, a));
-      }
-      return [...outer, ...inner.reverse()];
-    };
-    const open = (a: number): boolean => !covers.some(([bx0, by0, bx1, by1]) => {
-      const [px, py] = rayAt(lowerRing.region, cx, cy, a);
-      return px >= bx0 && px <= bx1 && py >= by0 && py <= by1;
-    });
     const side = crowd.awayEnd === "left" || crowd.awayEnd === "right" ? crowd.awayEnd : input.awaySide;
     const sign = side === "right" ? 1 : -1;
-    const centreA = side === "right" ? 0 : Math.PI;
     const mode = crowd.awayEnd === "auto" ? (p.away === "end" ? "end" : "corner") : crowd.awayEnd === "corner" ? "corner" : "end";
-    const place = (kind: StandSector["kind"], a0: number, a1: number): void => {
-      const mid = (a0 + a1) / 2;
-      if (!open(mid) || !open(a0) || !open(a1)) return;
-      for (const ring of rings.filter((r) => r.tier === "lower" || r.tier === "upper")) stands.sectors.push({ ring: ring.id, kind, points: sectorOf(ring, a0, a1) });
-    };
-    if (crowd.awayEnd !== "none") {
-      if (mode === "end") {
-        // The middle part of an end, both tiers.
-        place("away", centreA - corner * 0.5, centreA + corner * 0.5);
-      } else {
-        // A block in the corner on the far side from the benches: along the side a little, and round the corner a little.
-        const cornerA = sign > 0 ? -corner : corner - Math.PI;
-        place("away", sign > 0 ? cornerA - 0.3 : cornerA - 0.12, sign > 0 ? cornerA + 0.12 : cornerA + 0.3);
-      }
-    }
-    if (crowd.tifo !== undefined) {
-      const mk = (team: "home" | "away"): void => {
-        const homeSideIsLeft = input.awaySide === "right";
-        const a = (team === "home") === homeSideIsLeft ? Math.PI : 0;
-        const half = corner * 0.42;
-        if (open(a)) stands.sectors.push({ ring: lowerRing.id, kind: team === "home" ? "tifo-home" : "tifo-away", points: sectorOf(lowerRing, a - half, a + half) });
+    const tiers = rings.filter((r) => r.tier === "lower" || r.tier === "upper");
+    const hole = lowerRing.hole;
+    if (lowerRing.region.kind === "rrect" && hole !== null && hole.kind === "rrect") {
+      // Round a rectangle a block is whole sections: it starts and ends on aisles, so that it is a section of the stands and not a wedge.
+      const { nh, nv } = aisleParameters(hole);
+      const clear = (u: number): boolean => {
+        const [px, py] = rrectAt(lowerRing.region as Extract<Outline, { kind: "rrect" }>, u).p;
+        return !covers.some(([bx0, by0, bx1, by1]) => px >= bx0 && px <= bx1 && py >= by0 && py <= by1);
       };
-      if (crowd.tifo === "home" || crowd.tifo === "both") mk("home");
-      if (crowd.tifo === "away" || crowd.tifo === "both") mk("away");
+      const section = (kind: StandSector["kind"], u0: number, u1: number, only?: StandRing): void => {
+        if (!clear((u0 + u1) / 2) || !clear(u0) || !clear(u1)) return;
+        for (const ring of only === undefined ? tiers : [only]) if (ring.region.kind === "rrect" && ring.hole?.kind === "rrect") stands.sectors.push({ ring: ring.id, kind, points: sectionBetween(ring.region, ring.hole, u0, u1) });
+      };
+      // An end's side is the right (segment 2) or the left (segment 6); a block on it is from one aisle to another near its middle.
+      const along = (seg: number, from: number, to: number): [number, number] => [seg + Math.max(0, Math.min(nv - 1, Math.round(nv * from))) / nv, seg + Math.max(1, Math.min(nv, Math.round(nv * to))) / nv];
+      if (crowd.awayEnd !== "none") {
+        if (mode === "end") section("away", ...along(sign > 0 ? 2 : 6, 0.28, 0.72));
+        else if (sign > 0) section("away", (nh - 2) / nh, 1.5);
+        else section("away", 7.5, 8 + 2 / nh);
+      }
+      if (crowd.tifo !== undefined) {
+        const homeSideIsLeft = input.awaySide === "right";
+        const mk = (team: "home" | "away"): void => {
+          const left = (team === "home") === homeSideIsLeft;
+          section(team === "home" ? "tifo-home" : "tifo-away", ...along(left ? 6 : 2, 0.32, 0.68), lowerRing);
+        };
+        if (crowd.tifo === "home" || crowd.tifo === "both") mk("home");
+        if (crowd.tifo === "away" || crowd.tifo === "both") mk("away");
+      }
+    } else {
+      // Round an oval a block is a wedge of the ring, between two rays.
+      const corner = Math.atan2(box.h / 2 + off.top + lowerRing.to / 2, box.w / 2 + off.left + lowerRing.to / 2);
+      const wedge = (ring: StandRing, from: number, to: number): Pt[] => {
+        const outer: Pt[] = [];
+        const inner: Pt[] = [];
+        for (let i = 0; i <= 8; i += 1) {
+          const a = from + ((to - from) * i) / 8;
+          outer.push(rayAt(ring.region, cx, cy, a));
+          inner.push(rayAt(ring.hole ?? ring.region, cx, cy, a));
+        }
+        return [...outer, ...inner.reverse()];
+      };
+      const place = (kind: StandSector["kind"], a0: number, a1: number, only?: StandRing): void => {
+        for (const ring of only === undefined ? tiers : [only]) stands.sectors.push({ ring: ring.id, kind, points: wedge(ring, a0, a1) });
+      };
+      const centre = side === "right" ? 0 : Math.PI;
+      if (crowd.awayEnd !== "none") place("away", centre - corner * 0.5, centre + corner * 0.5);
+      if (crowd.tifo !== undefined) {
+        const homeSideIsLeft = input.awaySide === "right";
+        const mk = (team: "home" | "away"): void => place(team === "home" ? "tifo-home" : "tifo-away", ((team === "home") === homeSideIsLeft ? Math.PI : 0) - corner * 0.42, ((team === "home") === homeSideIsLeft ? Math.PI : 0) + corner * 0.42, lowerRing);
+        if (crowd.tifo === "home" || crowd.tifo === "both") mk("home");
+        if (crowd.tifo === "away" || crowd.tifo === "both") mk("away");
+      }
     }
     if (crowd.gaps && shape !== "grandstand") {
       const bottom = box.y + box.h;
