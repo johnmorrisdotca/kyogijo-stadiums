@@ -1,7 +1,7 @@
 <h1 align="center">Kyogijo Stadiums <sub>競技場</sub></h1>
 
 <p align="center"><strong>Sports surfaces as SVG, drawn to scale, with the score on them.</strong><br>
-The NFL, CFL and IFAF football fields, the NHL rink, the NBA court, the soccer pitch and futsal court, and the baseball field of every MLB ballpark, current and past, and every NPB home park, each drawn from its rulebook or its published distances, with each team's name and logo on its side and the score in the middle. Wide or tall, light or dark, a compact badge for a list, a helper for React, a custom element and a frame for a page that runs no script. One function, no dependencies.</p>
+The NFL, CFL and IFAF football fields, the NHL rink, the NBA court, the soccer pitch and futsal court, the baseball field of every MLB ballpark, current and past, and every NPB home park, and the surfaces of curling, tennis, volleyball and beach volleyball, badminton, pickleball, table tennis, lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey and handball, each drawn from its rulebook or its published distances, with each team's name and logo on its side and the score in the middle. Wide or tall, light or dark, a compact badge for a list, a helper for React, a custom element and a frame for a page that runs no script. One function, no dependencies.</p>
 
 <p align="center">
   <a href="https://github.com/johnmorrisdotca/kyogijo-stadiums/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/johnmorrisdotca/kyogijo-stadiums/actions/workflows/ci.yml/badge.svg"></a>
@@ -20,14 +20,14 @@ The NFL, CFL and IFAF football fields, the NHL rink, the NBA court, the soccer p
 <td align="center" valign="top">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/hero-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/hero-desk-light.webp" alt="The demo on a desk, in English: the page header with the language chooser, five cloth patches and the Help switch, and an NHL rink drawn wide on green felt, with a made-up game on it, the Northern Owls and their owl emblem on the left, the Lakeshore Anchors and their anchor on the right, and a panel of the score 3 to 2, Final/OT, in the middle. The controls for the sport, the layout and the teams are on the right." width="640">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/hero-desk-light.webp" alt="The demo on a desk, in English: the heading Kyogijo Stadiums with the language chooser, the Docs and API reference links, five cloth patches and the Help switch, and an NHL rink drawn wide on green felt, with a made-up game on it, the Northern Owls and their owl emblem on the left, the Lakeshore Anchors and their anchor on the right, and a panel of the score 3 to 2, Final/OT, in the middle. The controls on the right list the sports, from the NFL and the NHL to handball, and then the layout and the teams." width="640">
 </picture>
 <br><em>The demo on a desk: a rink, with the teams on their sides and the score in the middle.</em>
 </td>
 <td align="center" valign="top">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/hero-phone-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/hero-phone-light.webp" alt="The demo on a phone: a football field turned a quarter to stand tall, the visiting team's blue end zone at the top and the home team's red end zone at the bottom, each with its logo and name written across it, the yard numbers upright, and a score panel at midfield reading 27 to 24, Final." width="240">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/hero-phone-light.webp" alt="The demo on a phone: the heading Kyogijo Stadiums over the page's controls, and under them a football field turned a quarter to stand tall, the visiting team's blue end zone at the top and the home team's red end zone at the bottom, each with its logo and name written across it, the yard numbers upright, and a score panel at midfield reading 27 to 24, Final." width="240">
 </picture>
 <br><em>On a phone the same surface stands tall, the words still upright.</em>
 </td>

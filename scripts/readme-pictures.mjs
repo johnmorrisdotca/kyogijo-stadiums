@@ -21,7 +21,7 @@ await takePictures({
       ready: READY,
       async prepare(page, { view }) {
         if (view === "phone") {
-          await page.goto("http://kyogijo.test/?lang=en&help=off&sport=nfl");
+          await page.goto(new URL(address("sport=nfl"), page.url()).href);
           await page.waitForSelector(READY);
         }
         await page.evaluate(() => window.scrollTo(0, 0));
