@@ -13,6 +13,7 @@ Kyogijo Stadiums draws sports surfaces as SVG, to scale, with the score on them.
 - [The situation of a game](./situation.md): hockey's strength, empty net and shootout, baseball's bases, outs and count, football's down, distance and drives, on the surface, in the badge and in the description.
 - [The pageant](./pageant.md): each team's flag or crest laid large over its half, as a carpet or on a round stage, with an emblem in the centre, and the score kept readable.
 - [Emblems](./emblems.md): trophies, medals, balls and crests from the sister package Dougu Sports, plugged in with one line (`useEmblems(renderEmblem)`) so that an id goes wherever a logo does.
+- [Flags](./flags.md): a team's country code drawn by Hata, plugged in with one line (`useFlags(render)`), in round marks, banners, badges, the pageant, swimmers' and players' badges and charts, with no dependency added.
 - [Layouts and backgrounds](./layouts.md): small multiples with a title, a key and a credit line, in a size for a card or a phone, and patterns or a photograph behind a drawing or a grid.
 - [Accessibility](./accessibility.md): what each drawing says to a screen reader.
 

@@ -31,6 +31,8 @@ export interface Swimmer {
   abbr?: string;
   /** The flag or crest, drawn small beside the name. */
   flag?: string;
+  /** A country code (`CA`, `jp`) for the flag, drawn by the renderer of flags plugged in with `useFlags` (or the drawing's `flags` option), in its own proportions, where `flag` is missing. */
+  country?: string;
   /** The swimmer's colour (a cap, a club), drawn as a stripe on the label. */
   color?: string;
   /** The entry time. */

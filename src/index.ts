@@ -5,6 +5,8 @@ export { inkOn, luminance, rgbOf, safeColour, safePicture } from "./colour.ts";
 export { safeLogo } from "./logo.ts";
 export { useEmblems } from "./emblems-source.ts";
 export type { EmblemDrawOptions, EmblemId, EmblemRef, EmblemRenderer, EmblemStyleName } from "./emblems-source.ts";
+export { useFlags } from "./flags-source.ts";
+export type { FlagRenderer, FlagRequest, FlagShape } from "./flags-source.ts";
 export { OUTCOMES, drawLayers, layerTable } from "./layers.ts";
 export { RANGES } from "./ranges.names.ts";
 export { BACKGROUND_OPACITY, BACKGROUND_PATTERNS, KYOGIJO_BACKGROUND_STYLE } from "./background.ts";

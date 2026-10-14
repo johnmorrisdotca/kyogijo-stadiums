@@ -17,7 +17,7 @@ console.log(svg.includes('data-pageant="carpet"'), svg.split("ky-pg-carpet").len
 // true 2
 ```
 
-`pageant` is `"carpet"`, `"stage"`, `true` (a carpet) or the options below. It needs a score (`home` and `away`) and the full or the compact size; a bare surface, a badge and a [special game](./special-games.md) are drawn as they were. The gallery draws [every surface with each style](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-pageant.html), and the demo has the controls (Look, "Flags on the halves"). The nations and flags in the examples are made up, and the package draws no real flag or crest. The package supplies none: for a team with no flag, and for the middle, plug in [Dougu Sports](./emblems.md), whose generic crests, trophies and medals are ids.
+`pageant` is `"carpet"`, `"stage"`, `true` (a carpet) or the options below. It needs a score (`home` and `away`) and the full or the compact size; a bare surface, a badge and a [special game](./special-games.md) are drawn as they were. The gallery draws [every surface with each style](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-pageant.html), and the demo has the controls (Look, "Flags on the halves"). The nations and flags in the examples are made up, and the package draws no real flag or crest. A real country's flag is a code (`flag: "CA"`) drawn by [Hata](./flags.md), plugged in with `useFlags`: a carpet asks for it at its own ratio and a stage for it round. For a team with no flag, and for the middle, plug in [Dougu Sports](./emblems.md), whose generic crests, trophies and medals are ids.
 
 ## The two styles
 

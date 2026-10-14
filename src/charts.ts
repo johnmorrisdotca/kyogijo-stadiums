@@ -9,8 +9,10 @@ import { zoneCounts } from "./heat.ts";
 import type { ZoneSetId } from "./heat.types.ts";
 import { isPortrait } from "./common.ts";
 import { envFor, isNum, place, unitOfLayer } from "./layers.env.ts";
+import { withFlags } from "./flags-source.ts";
 import { layerTable } from "./layers.ts";
 import type { Layer, LayerBase, LinesLayer, MarkDatum, OutcomeStyle, PointDatum, PointStyle, PointsLayer, TextLayer } from "./layers.types.ts";
+import { flagPicture } from "./logo.ts";
 import { outlineOf } from "./outline.ts";
 import { KYOGIJO_STRINGS, fill, type KyogijoWords } from "./strings.ts";
 import { textWidth } from "./text.ts";
@@ -135,6 +137,16 @@ export const isKey = (layer: Layer): boolean => layer.id === "key-marks" || laye
 /** The key of a chart as data, from its entries and looks. */
 export function keyItems(entries: readonly KeyEntry[], looks: Readonly<Record<string, Look>>): KeyItem[] {
   return entries.map((e) => ({ outcome: e.outcome ?? "", label: e.label, shape: looks[e.outcome ?? ""]?.shape ?? "circle", hollow: looks[e.outcome ?? ""]?.hollow === true }));
+}
+
+/**
+ * The picture of an entry's flag: the `flag` it gives, else the flag of its `country` code by the renderer of flags the chart's `surface.flags` (or `useFlags`) plugs in, in its own proportions;
+ * `undefined` where there is none, so that a chart without a renderer lays out as it always did.
+ */
+export function entryFlag(entry: { flag?: string; country?: string }, options: ChartOptions): string | undefined {
+  if (entry.flag !== undefined) return entry.flag;
+  if (entry.country === undefined) return undefined;
+  return withFlags(options.surface?.flags, () => flagPicture(entry.country, "rect", 24, options.surface?.theme));
 }
 
 /** Put a chart together: the options, the layers and the ways to draw them. */

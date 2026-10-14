@@ -2,6 +2,7 @@
 // (`useEmblems`, or the `emblems` option), the id of one (`"trophy:cup"`, `"crest:shield"`, `"sport:hockey/line"`). The result is an address that may be written into an image's `href`, or `undefined`.
 import { safePicture } from "./colour.ts";
 import { GROUPED_ID, emblemRenderer, renderedEmblem } from "./emblems-source.ts";
+import { flagDocument, flagTheme, type FlagShape } from "./flags-source.ts";
 
 /** What a caller says about the team an emblem stands for: its colours and letters, so a crest id takes them; and the theme of the drawing it goes in. */
 export interface EmblemContext {
@@ -51,4 +52,12 @@ export function safeLogo(value: unknown, context?: EmblemContext): string | unde
   const picture = safePicture(value);
   if (picture === undefined && emblemRenderer() === undefined) hint(value);
   return picture;
+}
+
+/**
+ * The picture of a country's flag as it may be written into an image's `href`, or `undefined` when no renderer of flags is plugged in (`useFlags`, or the `flags` option), it has no flag for the code, or
+ * `code` is not a code. `size` is the nominal width in pixels the renderer is told; `theme` is the drawing's.
+ */
+export function flagPicture(code: unknown, shape: FlagShape, size: number, theme?: unknown): string | undefined {
+  return safePicture(flagDocument(code, { shape, size, theme: flagTheme(theme) }));
 }

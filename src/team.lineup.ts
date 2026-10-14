@@ -1,7 +1,7 @@
 // The lineup layer: a team's players placed by position code on the surface, each as a disc or a jersey with the shirt number in it and the name under it, with a captain's
 // armband and a small flag where they are given. It reads where each position stands from a formation (formations.ts, formations.sports.ts) and so needs no coordinates; two
 // teams are two layers. Written for this package.
-import { safeLogo } from "./logo.ts";
+import { flagPicture, safeLogo } from "./logo.ts";
 import { esc, num } from "./format.ts";
 import { FRAMES } from "./frames.ts";
 import { positionName } from "./formations.ts";
@@ -156,7 +156,7 @@ export function drawLineup(layer: LineupLayer, env: Env): Made {
       badges.push(titled("circle", ` class="ky-lc" cx="${num(bx)}" cy="${num(by)}" r="${num(r)}"`, words.captainTip));
       text.push(`<text class="ky-cl" style="font-size:${num(r * 1.25)}px" x="${num(bx)}" y="${num(by + r * 0.45)}"${env.turned ? ` transform="rotate(-90 ${num(bx)} ${num(by)})"` : ""}>${esc(words.captainMark)}</text>`);
     }
-    const flag = safeLogo(player?.flag);
+    const flag = safeLogo(player?.flag) ?? flagPicture(player?.country, "rect", 24);
     if (flag !== undefined) {
       const h = size * 0.3;
       const w = h * 1.5;

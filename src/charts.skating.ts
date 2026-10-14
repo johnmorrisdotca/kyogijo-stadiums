@@ -2,7 +2,7 @@
 // with their medals, times and splits, a replay of the race (every skater on his own way round the track, the lane changed once a lap), and the elements of a figure skating programme as marks on the ice.
 // Written for this package from the ISU's Special Regulations and Technical Rules for speed skating (Rules 203, 227, 253, 254 and 280) and short track speed skating (Rule 280); nothing of any other package
 // is used. The flags are the caller's: an SVG document as text, or an address, as a team's logo is.
-import { assemble, clean, drawingOptions, languageOf, round, wordsOf } from "./charts.ts";
+import { assemble, clean, drawingOptions, entryFlag, languageOf, round, wordsOf } from "./charts.ts";
 import type { Chart, ChartOptions, KeyItem } from "./charts.types.ts";
 import { esc } from "./format.ts";
 import type { Layer, PointDatum, TextDatum } from "./layers.types.ts";
@@ -190,11 +190,12 @@ export function skatingPairs(pairs: readonly SkatingPair[], options: SkatingRace
     const back = (d: number): [number, number] => [base.x - fx * d, base.y - fy * d];
     const [bx, by] = back(1.6);
     bands.push({ x: bx, y: by, shape: "circle", size: 1.2, color: ARMBAND[laneName], title: laneName === "inner" ? w.data.lanes.inner : w.data.lanes.outer });
-    if (entry.flag !== undefined) {
+    const flag = entryFlag(entry, options);
+    if (flag !== undefined) {
       const [px, py] = back(3.6);
-      flags.push(clean({ x: px, y: py, shape: "logo" as const, logo: entry.flag, size: 1.6, title: entry.country }));
+      flags.push(clean({ x: px, y: py, shape: "logo" as const, logo: flag, size: 1.6, title: entry.country }));
     }
-    const [nx, ny] = back(entry.flag !== undefined ? 5.4 : 3);
+    const [nx, ny] = back(flag !== undefined ? 5.4 : 3);
     names.push(clean({ x: nx, y: ny, text: entry.name, anchor: fx < 0 ? ("start" as const) : ("end" as const), size: 1.9, title: entry.country === undefined ? undefined : `${entry.name}, ${entry.country}` }));
   }
   const layers: Layer[] = [];
@@ -254,8 +255,9 @@ export function skatingGrid(starters: readonly SkatingStarter[], options: Skatin
     const spot = spots[s.position - 1];
     // The skaters go left along the top straight and right along the bottom one: the names stand behind the line.
     const dir = top ? -1 : 1;
-    names.push(clean({ x: spot.x - dir * (s.flag === undefined ? 1.2 : 2.6), y: spot.y, text: s.name, anchor: top ? ("start" as const) : ("end" as const), size: 0.9, title: s.country === undefined ? undefined : `${s.name}, ${s.country}` }));
-    if (s.flag !== undefined) flags.push(clean({ x: spot.x - dir * 1.4, y: spot.y, shape: "logo" as const, logo: s.flag, size: 0.8, title: s.country }));
+    const flag = entryFlag(s, opts);
+    names.push(clean({ x: spot.x - dir * (flag === undefined ? 1.2 : 2.6), y: spot.y, text: s.name, anchor: top ? ("start" as const) : ("end" as const), size: 0.9, title: s.country === undefined ? undefined : `${s.name}, ${s.country}` }));
+    if (flag !== undefined) flags.push(clean({ x: spot.x - dir * 1.4, y: spot.y, shape: "logo" as const, logo: flag, size: 0.8, title: s.country }));
   }
   const layers: Layer[] = [];
   if (flags.length > 0) layers.push({ kind: "points", id: "flags", name: w.data.layers.flags, ...AT, clip: "none", data: flags, style: { shape: "logo", size: 0.8 } });

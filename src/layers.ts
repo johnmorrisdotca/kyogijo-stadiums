@@ -5,6 +5,7 @@
 // either is used.
 import { safeColour } from "./colour.ts";
 import { withEmblems } from "./emblems-source.ts";
+import { withFlags } from "./flags-source.ts";
 import { safeLogo } from "./logo.ts";
 import { FRAMES } from "./frames.ts";
 import { KYOGIJO_HEAT_STYLE, KYOGIJO_TEAM_STYLE } from "./style.ts";
@@ -379,7 +380,7 @@ function summarise(layer: Layer, made: Made, words: Words, stop: string, gap: st
 
 /** The layers of a drawing as markup, and a sentence for each. `turned` says whether the surface group is turned a quarter. */
 export function renderLayers(o: SurfaceOptions | ScoreOptions, layers: readonly Layer[] | undefined, turned?: boolean, range?: Box, upright?: number, zone?: Env["zone"]): RenderedLayers {
-  return withEmblems(o.emblems, () => renderedLayers(o, layers, turned, range, upright, zone));
+  return withEmblems(o.emblems, () => withFlags(o.flags, () => renderedLayers(o, layers, turned, range, upright, zone)));
 }
 
 function renderedLayers(o: SurfaceOptions | ScoreOptions, layers: readonly Layer[] | undefined, turned?: boolean, range?: Box, upright?: number, zone?: Env["zone"]): RenderedLayers {

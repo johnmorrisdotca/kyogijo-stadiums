@@ -39,6 +39,8 @@ export interface RaceRow {
   name: string;
   abbr: string;
   flag: string | undefined;
+  /** The country code of the flag, when the swimmer has one and no `flag` of its own. */
+  country: string | undefined;
   color: string | undefined;
   seed: string | undefined;
   /** The final time in seconds and as it is written (a time of text that cannot be read is written as it is). */
@@ -106,6 +108,7 @@ export function racePlan(race: PoolRace, lanes: readonly number[], defaults: { s
       name: clean(swimmer.name, 40) ?? "",
       abbr: (clean(swimmer.abbr, 5) ?? "").toLocaleUpperCase("en"),
       flag: typeof swimmer.flag === "string" ? swimmer.flag : undefined,
+      country: typeof swimmer.country === "string" ? swimmer.country : undefined,
       color: typeof swimmer.color === "string" ? swimmer.color : undefined,
       seed: typeof swimmer.seed === "number" ? (Number.isFinite(swimmer.seed) ? formatTime(swimmer.seed) : undefined) : clean(swimmer.seed, 12),
       time,

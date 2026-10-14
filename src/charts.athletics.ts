@@ -2,7 +2,7 @@
 // race (every runner on the curve of the lane, the stagger as the rules put it), and the attempts of a field event as marks in the sector or the pit with the best mark picked out. Written for this
 // package from the Track and Field Facilities Manual (2019, 2.2.1.6) and Book C2.1's Technical Rules (14, 17, 25 to 38); nothing of any other package is used. The flags are the caller's: an SVG
 // document as text, or an address, as a team's logo is.
-import { assemble, clean, drawingOptions, languageOf, round, wordsOf, type KeyEntry } from "./charts.ts";
+import { assemble, clean, drawingOptions, entryFlag, languageOf, round, wordsOf, type KeyEntry } from "./charts.ts";
 import type { Chart, ChartOptions, KeyItem } from "./charts.types.ts";
 import { athleticsPlan, type AthleticsPlan } from "./athletics/plan.ts";
 import { raceById, fieldEventById } from "./athletics/events.ts";
@@ -194,9 +194,10 @@ export function laneDraw(entries: readonly AthleticsEntry[], options: AthleticsR
     const back = (d: number): [number, number] => [start.x - fx * d, start.y - fy * d];
     const [nx, ny] = back(nameAt);
     names.push(clean({ x: nx, y: ny, text: e.name, anchor: "end" as const, size: nameSize, rotate: portrait ? -90 : 0, title: e.country === undefined ? undefined : `${e.name}, ${e.country}` }));
-    if (e.flag !== undefined) {
+    const flag = entryFlag(e, options);
+    if (flag !== undefined) {
       const [px, py] = back(flagAt);
-      flags.push(clean({ x: px, y: py, shape: "logo" as const, logo: e.flag, size: flagSide / 1.8, title: e.country }));
+      flags.push(clean({ x: px, y: py, shape: "logo" as const, logo: flag, size: flagSide / 1.8, title: e.country }));
     }
   }
   const at = { from: "athletics", units: "m" as const };

@@ -211,6 +211,8 @@ export interface LineupPlayer extends MarkDatum {
   number?: string | number;
   /** A flag or crest for a small badge on the mark: an SVG as text, an image `data:` address or a path or address of an image. The package draws no flag of its own. */
   flag?: string;
+  /** A country code (`CA`, `jp`) for the badge, drawn by the renderer of flags plugged in with `useFlags` (or the drawing's `flags` option), in its own proportions, where `flag` is missing. */
+  country?: string;
   /** The captain wears an armband: a small "C" on the mark. */
   captain?: boolean;
   /** 1 by default. Hockey's second line is `line: 2` with the same codes. */

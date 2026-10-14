@@ -1,7 +1,8 @@
 import { ballparkDrawn, ballparkFor, ballparkSentences } from "./ballpark.ts";
-import { inkOn, safeColour } from "./colour.ts";
+import { inkOn, safeColour, safePicture } from "./colour.ts";
 import { withEmblems } from "./emblems-source.ts";
-import { safeLogo } from "./logo.ts";
+import { flagPicture, safeLogo } from "./logo.ts";
+import { flagDocument, flagTheme, withFlags } from "./flags-source.ts";
 import { drawingId, feetFence, isPortrait, lengthUnit, safeClass } from "./common.ts";
 import { el, esc, num } from "./format.ts";
 import { fieldAttributes } from "./field.data.ts";
@@ -88,7 +89,7 @@ import { specialText } from "./events.ts";
 import { layoutOf, soccerSpec, type SoccerPitchId, type SoccerSize, type SoccerSpec } from "./surfaces/soccer-spec.ts";
 import type { BuildOptions, Surface } from "./surfaces/surface.ts";
 import { abbreviate, capitals } from "./text.ts";
-import type { Colors, CourtStyle, FieldSport, GoalStyle, Language, ScoreOptions, Side, Sport, StripePattern, SurfaceOptions, Team, TeamMark } from "./types.ts";
+import type { Colors, CourtStyle, FieldSport, GoalStyle, Language, PageantStyle, ScoreOptions, Side, Sport, StripePattern, SurfaceOptions, Team, TeamMark } from "./types.ts";
 import { VERSION } from "./version.ts";
 
 export { isPortrait };
@@ -541,10 +542,14 @@ function roundOf(team: Team, markShape: TeamMark | undefined): Pick<TeamView, "r
   return { round: true, fit: team.markFit === "contain" ? "contain" : undefined, color: safeColour(team.color), ink: safeColour(team.textColor) };
 }
 
+/** The width in pixels a flag is asked for in a team's mark (a nominal one: a drawing scales). */
+const FLAG_MARK_SIZE = 48;
+
 function teamView(team: Team, side: Side, role: "home" | "away", winner: "home" | "away" | "none", uppercase: boolean, sport: Sport, markShape?: TeamMark, theme?: "light" | "dark"): TeamView {
   const name = String(team.name ?? "");
   const abbr = (team.abbr !== undefined && team.abbr.trim() !== "" ? team.abbr.trim() : abbreviate(name)).slice(0, 5);
   const written = fieldScoreText(sport, team) ?? budoScoreText(sport, team);
+  const round = roundOf(team, markShape);
   const score = written ?? (team.score === undefined || team.score === null || String(team.score).trim() === "" ? "–" : String(team.score));
   return {
     side,
@@ -552,8 +557,9 @@ function teamView(team: Team, side: Side, role: "home" | "away", winner: "home" 
     name: uppercase ? capitals(name) : name,
     abbr,
     score,
-    logo: safeLogo(team.logo, { color: team.color, accent: team.textColor, initials: abbr.slice(0, 3), theme }),
-    ...roundOf(team, markShape),
+    // The flag a team's country code names, when a renderer of flags is plugged in, is its logo: round in a round mark, in its own proportions otherwise.
+    logo: flagPicture(team.flag, round === undefined ? "rect" : "round", FLAG_MARK_SIZE, theme) ?? safeLogo(team.logo, { color: team.color, accent: team.textColor, initials: abbr.slice(0, 3), theme }),
+    ...round,
     state: stateOf(winner, role),
     ends: Array.isArray(team.ends) ? team.ends.map(endText) : undefined,
     hammer: team.hammer === true ? true : undefined,
@@ -569,9 +575,15 @@ function teamView(team: Team, side: Side, role: "home" | "away", winner: "home" 
 }
 
 /** A team as the pageant lays it out. */
-function pageantTeam(view: TeamView, team: Team): PageantTeam {
-  return { side: view.side, role: view.role, name: view.name, abbr: view.abbr, state: view.state, href: view.logo, fit: team.markFit === "contain" ? "contain" : "cover", ratio: ratioOf(team), color: safeColour(team.color), ink: safeColour(team.textColor) };
+function pageantTeam(view: TeamView, team: Team, style: PageantStyle, theme?: unknown): PageantTeam {
+  // A carpet is a flag laid flat, in its own proportions; a stage is a round disc, so a flag is asked for round there.
+  const flag = flagDocument(team.flag, { shape: style === "stage" ? "round" : "rect", size: FLAG_PAGEANT_SIZE, theme: flagTheme(theme) });
+  const picture = safePicture(flag);
+  return { side: view.side, role: view.role, name: view.name, abbr: view.abbr, state: view.state, href: picture ?? view.logo, fit: team.markFit === "contain" ? "contain" : "cover", ratio: ratioOf({ logo: picture === undefined ? team.logo : flag, logoRatio: team.logoRatio }), color: safeColour(team.color), ink: safeColour(team.textColor) };
 }
+
+/** The width in pixels a flag is asked for when a pageant lays it out large (a nominal one: a drawing scales). */
+const FLAG_PAGEANT_SIZE = 240;
 
 /** True when the drawing is asked to be small: its `width` is under 320 pixels. The pageant then leaves out its fabric, hairlines and name pills. */
 function tiny(width: SurfaceOptions["width"]): boolean {
@@ -590,14 +602,14 @@ interface PageantParts {
 }
 
 /** The teams that fill the first and the second place of a surface: a diamond's outfield is the visitors' and its infield the home team's, whichever side each is on. */
-function pageantPair(surface: Surface, t: { left: TeamView; right: TeamView; leftTeam: Team; rightTeam: Team }): [PageantTeam, PageantTeam] {
-  const l = pageantTeam(t.left, t.leftTeam);
-  const r = pageantTeam(t.right, t.rightTeam);
+function pageantPair(surface: Surface, t: { left: TeamView; right: TeamView; leftTeam: Team; rightTeam: Team }, style: PageantStyle, theme?: unknown): [PageantTeam, PageantTeam] {
+  const l = pageantTeam(t.left, t.leftTeam, style, theme);
+  const r = pageantTeam(t.right, t.rightTeam, style, theme);
   return surface.pageant?.byRole === true && l.role === "home" ? [r, l] : [l, r];
 }
 
 function pageantParts(o: SurfaceOptions, surface: Surface, p: Pageant, t: { left: TeamView; right: TeamView; leftTeam: Team; rightTeam: Team; sport: Sport; id: string; plate: boolean; parts: boolean }): PageantParts | undefined {
-  const [first, second] = pageantPair(surface, t);
+  const [first, second] = pageantPair(surface, t, p.style, o.theme);
   const layout = pageantLayout({ pageant: p, surface, outline: outlineOf(o), left: first, right: second, turned: surface.turned, sport: t.sport, plate: t.plate });
   if (layout === undefined) return undefined;
   // Cropped to a range, an emblem that does not lie wholly in what is shown is left out.
@@ -836,7 +848,7 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
  * ```
  */
 export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
-  return withEmblems(o.emblems, () => drawnKyogijo(o));
+  return withEmblems(o.emblems, () => withFlags(o.flags, () => drawnKyogijo(o)));
 }
 
 function drawnKyogijo(o: SurfaceOptions | ScoreOptions): string {
@@ -927,7 +939,7 @@ function drawnKyogijo(o: SurfaceOptions | ScoreOptions): string {
     if (pageant !== undefined && pageant.score === "auto") {
       let score: "centre" | "strip" = stripped ? "strip" : "centre";
       if (!stripped && isScore(o) && left !== undefined && right !== undefined && leftTeam !== undefined && rightTeam !== undefined && sized === "full") {
-        const [first, second] = pageantPair(surface, { left, right, leftTeam, rightTeam });
+        const [first, second] = pageantPair(surface, { left, right, leftTeam, rightTeam }, pageant.style, o.theme);
         score = autoScore({ pageant, surface, outline: outlineOf(o), left: first, right: second, turned: surface.turned, sport, plate: true });
       }
       pageant = { ...pageant, score };

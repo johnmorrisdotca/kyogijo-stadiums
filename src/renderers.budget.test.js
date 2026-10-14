@@ -56,11 +56,13 @@ describe("the renderers' code", () => {
     expect([...read("png.ts").matchAll(/\bimport\s*\(/g)].length).toBe(1);
   });
 
-  it("adds no dependency to the package: resvg is an optional peer, and there is no other", () => {
+  it("adds no dependency to the package: resvg and Hata (the flags, plugged in with useFlags and never imported) are optional peers, and there is no other", () => {
     const pkg = JSON.parse(readFileSync("package.json", "utf8"));
     expect(pkg.dependencies).toBeUndefined();
-    expect(Object.keys(pkg.peerDependencies)).toEqual(["@resvg/resvg-js"]);
+    expect(Object.keys(pkg.peerDependencies)).toEqual(["@johnmorrisdotca/hata", "@resvg/resvg-js"]);
     expect(pkg.peerDependenciesMeta["@resvg/resvg-js"]).toEqual({ optional: true });
+    expect(pkg.peerDependenciesMeta["@johnmorrisdotca/hata"]).toEqual({ optional: true });
+    expect(readFileSync("src/flags-source.ts", "utf8")).not.toMatch(/^import\b|\bimport\s*\(/m);
     for (const name of ["scene", "canvas", "d3", "plot", "geojson", "png"]) expect(pkg.exports[`./${name}`].import, name).toBe(`./dist/${name}-entry.js`);
   });
 });

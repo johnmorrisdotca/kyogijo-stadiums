@@ -238,9 +238,13 @@
     "node": ">=22"
   },
   "peerDependencies": {
+    "@johnmorrisdotca/hata": ">=1.5.0 <2",
     "@resvg/resvg-js": ">=2.6.0"
   },
   "peerDependenciesMeta": {
+    "@johnmorrisdotca/hata": {
+      "optional": true
+    },
     "@resvg/resvg-js": {
       "optional": true
     }
@@ -275,6 +279,7 @@
     "@eslint/js": "^9.0.0",
     "@johnmorrisdotca/chizu": "1.4.0",
     "@johnmorrisdotca/dougu-sports": "0.2.0",
+    "@johnmorrisdotca/hata": "1.5.0",
     "@playwright/test": "^1.63.0",
     "eslint": "^9.0.0",
     "marked": "^18.1.1",

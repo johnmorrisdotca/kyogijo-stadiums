@@ -1,5 +1,6 @@
 import type { Background } from "./background.ts";
 import type { EmblemRef, EmblemRenderer } from "./emblems-source.ts";
+import type { FlagRenderer } from "./flags-source.ts";
 import type { Layer } from "./layers.types.ts";
 import type { Unit } from "./units.ts";
 import type { SoccerFrame, SoccerProviderId } from "./surfaces/soccer-providers.ts";
@@ -567,6 +568,11 @@ export interface Team {
   abbr?: string;
   /** The score. A number, or text such as "–" before the game. */
   score?: number | string;
+  /**
+   * A country code (`CA`, `jp`, `GB-ENG`) for the team's flag, drawn by the renderer of flags plugged in with `useFlags` (or the drawing's `flags` option): round in a round mark, in its own proportions on a
+   * plain mark, a carpet and a banner, round on a stage. It wins over `logo` where the renderer has a flag for the code. With no renderer, or none for the code, the `logo` is drawn, or the initials.
+   */
+  flag?: string;
   /** The logo: an `https:` or relative address, an image `data:` address, an SVG document as text, or, with a renderer of emblems plugged in (`useEmblems`), the id of a ready-made emblem: `"crest:shield"` takes the team's `color`, `textColor` and `abbr`. */
   logo?: EmblemRef;
   /**
@@ -656,6 +662,11 @@ export interface SurfaceOptions {
   id?: string;
   /** A renderer of ready-made emblems for this drawing alone, so that a `logo`, an `emblem` or a mark may be an emblem's id: `emblems: renderEmblem` from `@johnmorrisdotca/dougu-sports/emblems`. Over the one the page plugged in with `useEmblems`. */
   emblems?: EmblemRenderer;
+  /**
+   * A renderer of country flags for this drawing alone, so that a team's `flag` code is drawn: a synchronous function from a code and `{ shape, size, theme }` to an SVG string, such as a lookup of flags
+   * loaded from `@johnmorrisdotca/hata` first. Over the one the page plugged in with `useFlags`. See `docs/flags.md`.
+   */
+  flags?: FlagRenderer;
   /** The ground to draw round the playing surface, in `units` (feet by default). A default for each sport. */
   margin?: number;
   /**

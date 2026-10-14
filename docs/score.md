@@ -4,7 +4,7 @@ A game on a surface: each team's name and logo on its side, the score in the mid
 
 ## Score mode
 
-Pass `home` and `away`. Each team has a `name`, an optional `abbr`, `score`, `penalties` (a soccer shoot-out), `ends` and `hammer` (curling: the score of each end, and the last stone), `sets`, `tiebreaks`, `points` and `serving` (tennis, volleyball, badminton, pickleball, table tennis, padel, squash, racquetball, sepak takraw, teqball and roundnet: the score in each set or game, a tie-break's points, the game in progress and the server, [Net sports](./courts.md#a-score)), `goals`, `behinds` and `points` (Australian football's goals and behinds, written `10.12 (72)`; Gaelic games' goals and points, `2-14 (20)`), `wickets`, `overs` and `innings` (cricket: runs for wickets, the overs faced and each innings, [Field sports](./field-sports.md#a-score)), `logo`, `mark` and `markFit` ([round marks](#round-marks)), `color` and `textColor`.
+Pass `home` and `away`. Each team has a `name`, an optional `abbr`, `score`, `penalties` (a soccer shoot-out), `ends` and `hammer` (curling: the score of each end, and the last stone), `sets`, `tiebreaks`, `points` and `serving` (tennis, volleyball, badminton, pickleball, table tennis, padel, squash, racquetball, sepak takraw, teqball and roundnet: the score in each set or game, a tie-break's points, the game in progress and the server, [Net sports](./courts.md#a-score)), `goals`, `behinds` and `points` (Australian football's goals and behinds, written `10.12 (72)`; Gaelic games' goals and points, `2-14 (20)`), `wickets`, `overs` and `innings` (cricket: runs for wickets, the overs faced and each innings, [Field sports](./field-sports.md#a-score)), `logo`, `flag` (a country's code, drawn by [Hata](./flags.md)), `mark` and `markFit` ([round marks](#round-marks)), `color` and `textColor`.
 
 | Option | What it does |
 | --- | --- |
@@ -51,6 +51,8 @@ The default is by sport and by `league` only where a league's own convention dif
 
 A flag or a crest can be drawn round, as a broadcast graphic draws a country against a country: `mark: "round"` on a team, or `markShape: "round"` on the score for both (a team's own `mark`, `round` or `plain`, wins). The logo is clipped to a circle and ringed, on each side of the surface in the full drawing, in the badge and in the strip of a compact card. It is sized by the place the surface gives the team: the end zone of a pitch, the half of a court. Where the words are turned (along the ends of a wide pitch, and in a tall drawing) the mark turns with them, by the same angle and the same way, so that a flag and its team's name read as one: sideways along the end of a wide pitch, and the right way up in a tall drawing. A mark with no logo (the team's initials on its colour) turns the same way. In an end zone that is not turned, it is as it was.
 
+
+A real country's flag is a code: with [Hata](./flags.md) plugged in (`useFlags`), `flag: "CA"` on a team is drawn here as Hata's round frame of that flag, and in its own proportions where the mark is plain.
 ```ts
 import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
 

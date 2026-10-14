@@ -259,6 +259,7 @@ src/
 ├── colour.ts           safe colours and picture addresses
 ├── logo.ts             the one path a logo, flag, mark or emblem takes into a drawing: an address, a data address, an SVG document or, with a renderer plugged in, an emblem's id
 ├── emblems-source.ts   the plug-in for emblems (`useEmblems`, `emblems`): the renderer in use, what an id looks like and nothing of any emblem's art, which is Dougu Sports'
+├── flags-source.ts     the plug-in for country flags (`useFlags`, `flags`): the renderer in use, what a country code looks like and nothing of any flag's art, which is Hata's
 ├── format.ts           numbers, escaping and elements as text
 ├── types.ts            the options
 ├── turn.kit.ts         what the 3D view is built from: a plane (a flat rectangle placed by three vectors with a little SVG on it), a strip, a wall, a mesh

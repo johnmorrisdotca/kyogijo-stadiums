@@ -15,7 +15,7 @@ export const KYOGIJO_TAG = "kyogijo-field";
 export const KYOGIJO_ATTRIBUTES = [
   "sport", "league", "size", "theme", "language", "orientation", "park", "ground", "arena", "year", "detail", "margin", "stripes", "exact-lines", "uppercase",
   "pitch", "pitch-type", "half", "range", "range-end", "goals", "stripe-pattern", "corner-flags", "look", "line-width", "line-dash", "line-opacity", "landmarks", "walls", "quirks",
-  "home", "away", "home-abbr", "away-abbr", "home-score", "away-score", "home-penalties", "away-penalties", "score", "home-logo", "away-logo", "home-color", "away-color",
+  "home", "away", "home-abbr", "away-abbr", "home-score", "away-score", "home-penalties", "away-penalties", "score", "home-logo", "away-logo", "home-flag", "away-flag", "home-color", "away-color",
   "status", "competition", "date", "label", "winner", "home-side", "pageant", "description", "options",
   "loop", "speed", "autoplay", "controls", "trail",
   "turn", "turn-view", "turn-controls", "turn-uprights", "turn-score", "turn-touch", "turn-venue", "turn-roof", "turn-autoplay", "turn-speed",
@@ -168,6 +168,8 @@ export function optionsFromAttributes(read: (name: string) => string | null, bas
     if (penalties !== undefined) out.penalties = penalties;
     const logo = read(`${role}-logo`);
     if (logo !== null) out.logo = logo;
+    const flag = read(`${role}-flag`);
+    if (flag !== null) out.flag = flag;
     const color = read(`${role}-color`);
     if (color !== null) out.color = color;
     return out;

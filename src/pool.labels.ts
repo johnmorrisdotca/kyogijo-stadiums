@@ -2,7 +2,7 @@
 // split pace bars in the lanes. Drawn in feet in the frame of a pool lying wide; a pool lying tall turns it with the pool, so that the labels lie along the lanes, and only the numbers in the discs are
 // turned back upright. Nothing here is a rule of the sport: the sizes are ours.
 import { safeColour } from "./colour.ts";
-import { safeLogo } from "./logo.ts";
+import { flagPicture, safeLogo } from "./logo.ts";
 import { el, esc, num } from "./format.ts";
 import { feet, type SwimPlan } from "./pool.ts";
 import { STATUS_TEXT, formatTime, pacePer100, splitMetres, type RaceRow } from "./pool.race.ts";
@@ -66,8 +66,11 @@ function disc(o: Pick<BuildOptions, "portrait">, cx: number, cy: number, text: s
   return el("circle", { class: cls, cx, cy, r, fill }) + textOn(o.portrait, cx, cy + size * 0.36, text, { size, anchor: "middle", cls: "ky-pl-dn", weight: 800 });
 }
 
+/** The picture of a swimmer's flag: the `flag` given, else the flag of the `country` code (in its own proportions, by the renderer of flags in use). */
+const flagOf = (row: RaceRow): string | undefined => safeLogo(row.flag) ?? flagPicture(row.country, "rect", 24);
+
 function flagMarkup(row: RaceRow, x: number, cy: number, w: number, h: number): string {
-  const logo = safeLogo(row.flag);
+  const logo = flagOf(row);
   if (logo === undefined) return "";
   return el("image", { class: "ky-logo", href: logo, x, y: cy - h / 2, width: w, height: h, preserveAspectRatio: "xMidYMid slice" }) + el("rect", { class: "ky-pl-fb", x, y: cy - h / 2, width: w, height: h, rx: 0.25, fill: "none" });
 }
@@ -221,7 +224,7 @@ export function raceArt(plan: SwimPlan, o: Pick<BuildOptions, "portrait" | "feat
     name: show.names ? Math.min(nameMax, Math.max(14, longest)) : 0,
     abbr: show.names ? Math.max(0, ...race.rows.map((r) => tw(r.abbr, SMALL))) : 0,
     seed: show.seeds && race.rows.some((r) => r.seed !== undefined) ? Math.max(...race.rows.map((r) => tw(r.seed ?? "", SMALL * 0.9))) : 0,
-    flag: show.flags && race.rows.some((r) => safeLogo(r.flag) !== undefined) ? 4.5 : 0,
+    flag: show.flags && race.rows.some((r) => flagOf(r) !== undefined) ? 4.5 : 0,
   };
   let left = "";
   let reachLeft = 0;
