@@ -19,6 +19,7 @@ import {
   eyeDistance,
   fit,
   layoutOf,
+  nudge,
   planeMatrix,
   planesOf,
   presetOf,
@@ -605,6 +606,21 @@ describe("the eye", () => {
       // The top of a post leans toward the eye: it comes down the screen too.
       expect(project(top, down, at, 2000)[1]).toBeGreaterThan(project(top, view, at, 2000)[1]);
     }
+  });
+
+  it("a key and a button toward a side take the view the way a drag toward that side does", () => {
+    const v = { yaw: 0, pitch: 50, zoom: 1 };
+    const sign = (n: number): number => Math.sign(Math.round(n * 1e6) / 1e6);
+    // The deltas of one drag toward each side, and of one step toward it: the same sign, whatever the size.
+    const dragged = { left: drag(v, -30, 0), right: drag(v, 30, 0), up: drag(v, 0, -30), down: drag(v, 0, 30) };
+    for (const toward of ["left", "right", "up", "down"] as const) {
+      const moved = nudge(v, toward, 6);
+      expect(sign(moved.yaw - v.yaw), `${toward} yaw`).toBe(sign(dragged[toward].yaw - v.yaw));
+      expect(sign(moved.pitch - v.pitch), `${toward} pitch`).toBe(sign(dragged[toward].pitch - v.pitch));
+    }
+    // And a step toward one side undoes a step toward the other.
+    expect(nudge(nudge(v, "left", 6), "right", 6)).toEqual(v);
+    expect(nudge(nudge(v, "up", 4), "down", 4)).toEqual(v);
   });
 
   it("turns with a drag and steps with a key: across turns it, up and down tips it, and a touch that only turns leaves the tip", () => {

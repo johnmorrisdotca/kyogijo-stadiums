@@ -3,7 +3,7 @@
 // reduced motion gets jumps for glides, and where the browser cannot draw in 3D the flat drawing stays. Nothing is polled and nothing runs while the view is
 // still: the elements' `transform`s are written when the view changes, and a glide between viewpoints is a short run of animation frames.
 import { drawKyogijo } from "./draw.ts";
-import { STEP, TURN_PRESET_NAMES, clampView, drag, nearest, presetOf, presetView, step, type TurnPreset, type TurnView } from "./turn.camera.ts";
+import { STEP, TURN_PRESET_NAMES, clampView, drag, nearest, nudge, presetOf, presetView, step, type TurnPreset, type TurnView } from "./turn.camera.ts";
 import { buildTurn, floorOptions, openingView, turnWords, type TurnModel, type TurnSettings } from "./turn.model.ts";
 import { controlsMarkup, layoutOf, turnMarkupOf, worldMarkup, type Layout } from "./turn.markup.ts";
 import { KYOGIJO_TURN_STYLE } from "./turn.style.ts";
@@ -200,10 +200,11 @@ export function mountKyogijoTurn(host: HTMLElement, options: SurfaceOptions | Sc
     if (name !== undefined) return toPreset(name);
     const big = (event as MouseEvent).shiftKey === true;
     switch (target.dataset.act) {
-      case "turn-left": return go(step(view, { yaw: -(big ? STEP.yawBig : STEP.yaw * 2) }), 180);
-      case "turn-right": return go(step(view, { yaw: big ? STEP.yawBig : STEP.yaw * 2 }), 180);
-      case "raise": return go(step(view, { pitch: -(big ? STEP.pitchBig : STEP.pitch * 2) }), 180);
-      case "lower": return go(step(view, { pitch: big ? STEP.pitchBig : STEP.pitch * 2 }), 180);
+      // The buttons take the surface toward their side as a drag and the arrow keys do.
+      case "turn-left": return go(nudge(view, "left", big ? STEP.yawBig : STEP.yaw * 2), 180);
+      case "turn-right": return go(nudge(view, "right", big ? STEP.yawBig : STEP.yaw * 2), 180);
+      case "raise": return go(nudge(view, "up", big ? STEP.pitchBig : STEP.pitch * 2), 180);
+      case "lower": return go(nudge(view, "down", big ? STEP.pitchBig : STEP.pitch * 2), 180);
       case "zoom-in": return go(step(view, { zoom: STEP.zoom }), 180, "none");
       case "zoom-out": return go(step(view, { zoom: 1 / STEP.zoom }), 180, "none");
       case "reset": return toOpening();
@@ -220,11 +221,11 @@ export function mountKyogijoTurn(host: HTMLElement, options: SurfaceOptions | Sc
     const pitch = big ? STEP.pitchBig : STEP.pitch;
     event.preventDefault();
     switch (event.key) {
-      // A key turns the way a drag to that side does: the side nearest the eye goes to the right on ArrowRight.
-      case "ArrowLeft": return go(step(view, { yaw }), 120);
-      case "ArrowRight": return go(step(view, { yaw: -yaw }), 120);
-      case "ArrowUp": return go(step(view, { pitch: -pitch }), 120);
-      case "ArrowDown": return go(step(view, { pitch }), 120);
+      // A key takes the surface toward its side as a drag toward that side does: the side nearest the eye goes to the right on ArrowRight, and ArrowUp tips it as a drag up does.
+      case "ArrowLeft": return go(nudge(view, "left", yaw), 120);
+      case "ArrowRight": return go(nudge(view, "right", yaw), 120);
+      case "ArrowUp": return go(nudge(view, "up", pitch), 120);
+      case "ArrowDown": return go(nudge(view, "down", pitch), 120);
       case "+":
       case "=": return go(step(view, { zoom: STEP.zoom }), 120, "none");
       case "-":

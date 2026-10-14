@@ -187,6 +187,34 @@ test("the left and right arrows turn the way a drag to that side does", async ({
   expect((await where(page, part)).x).toBeLessThan(start.x - 0.5);
 });
 
+test("a drag, a key and a button toward one side all move the surface the same way", async ({ page }) => {
+  await open(page, "?sport=nhl&view=3d&lang=en&help=off&viewpoint=broadcast");
+  await page.locator(`${STAGE} .ky-turn-view`).focus();
+  const part = await nearestPart(page);
+  const button = (act) => page.locator(`${STAGE} .ky-turn-controls button[data-act="${act}"]`).click();
+  // Each way is set from the opening view: the near boards move on the screen one way for a drag, a key and a button toward the same side.
+  const moves = async (toward) => {
+    await page.keyboard.press("0");
+    const start = await where(page, part);
+    const [dx, dy] = { left: [-40, 0], right: [40, 0], up: [0, -30], down: [0, 30] }[toward];
+    await dragBy(page, dx, dy);
+    const dragged = await where(page, part);
+    await page.keyboard.press("0");
+    await page.locator(`${STAGE} .ky-turn-view`).focus();
+    await page.keyboard.press({ left: "ArrowLeft", right: "ArrowRight", up: "ArrowUp", down: "ArrowDown" }[toward]);
+    const keyed = await where(page, part);
+    await page.keyboard.press("0");
+    await button({ left: "turn-left", right: "turn-right", up: "raise", down: "lower" }[toward]);
+    const pressed = await where(page, part);
+    const sign = (a, b) => Math.sign(Math.round((a - b) * 100) / 100);
+    const axis = dx !== 0 ? "x" : "y";
+    expect(sign(keyed[axis], start[axis]), `${toward}: the key moves it as the drag does`).toBe(sign(dragged[axis], start[axis]));
+    expect(sign(pressed[axis], start[axis]), `${toward}: the button moves it as the drag does`).toBe(sign(dragged[axis], start[axis]));
+    expect(sign(dragged[axis], start[axis]), `${toward}: it moved`).not.toBe(0);
+  };
+  for (const toward of ["left", "right", "up", "down"]) await moves(toward);
+});
+
 test("a sideways touch turns the view and leaves a vertical swipe to the page", async ({ page }) => {
   await open(page, "?sport=nhl&view=3d&lang=en&help=off");
   const view = page.locator(`${STAGE} .ky-turn-view`);

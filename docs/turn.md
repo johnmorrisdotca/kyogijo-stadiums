@@ -50,8 +50,8 @@ A view is `{ yaw, pitch, zoom }`: the turn about the vertical in degrees, the ti
 - **Drag** with the mouse turns the view across and tips it up and down; **double click** puts it back.
 - **A finger** drags sideways to turn the view and leaves a vertical swipe to the page, so that a page of views can still be scrolled with a thumb. `touch: "turn"` keeps every touch for the view, which then also tips it; **two fingers** pinch to zoom.
 - **The wheel** is the page's, so that the page scrolls over a view. Ctrl and the wheel (a pinch on a trackpad) zoom; with the view focused, the wheel tips it and Shift with the wheel turns it.
-- **The keys**, with the view focused: the arrows turn and tip (Shift for bigger steps), plus and minus zoom, 1 to 4 pick a viewpoint, 0 or Home puts it back.
-- **The buttons** under the view are the four viewpoints, turn left and right, raise and lower, zoom in and out, and reset: each is 44 pixels square or more.
+- **The keys**, with the view focused: the arrows turn and tip the way a drag toward that side does (Left and Right carry the near side that way; Up tips as a drag up does, Down as a drag down; Shift for bigger steps), plus and minus zoom, 1 to 4 pick a viewpoint, 0 or Home puts it back.
+- **The buttons** under the view are the four viewpoints, turn left and right, the up and down arrows, zoom in and out, and reset: each is 44 pixels square or more, and a button takes the view toward its side as the arrow key does. `nudge(view, "left" | "right" | "up" | "down", degrees)` is that step, for a page with controls of its own.
 
 ## What stands on each surface
 

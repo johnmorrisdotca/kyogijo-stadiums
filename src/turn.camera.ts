@@ -106,6 +106,23 @@ export function step(view: TurnView, change: { yaw?: number; pitch?: number; zoo
   return clampView({ yaw: view.yaw + (change.yaw ?? 0), pitch: view.pitch + (change.pitch ?? 0), zoom: view.zoom * (change.zoom ?? 1) });
 }
 
+/** A side a key, a button or a drag takes the surface toward. */
+export type TurnToward = "left" | "right" | "up" | "down";
+
+/**
+ * The view after a step of `amount` degrees toward a side, the way a drag toward that side takes the view: left and right carry the near side to the left and to the right (the yaw rises and
+ * falls), up tips the surface as a drag up does and down as a drag down does (the pitch rises and falls). The arrow keys and the four turn buttons are this, so that a drag, a key and a button
+ * toward one side all move the surface the same way.
+ */
+export function nudge(view: TurnView, toward: TurnToward, amount: number): TurnView {
+  switch (toward) {
+    case "left": return step(view, { yaw: amount });
+    case "right": return step(view, { yaw: -amount });
+    case "up": return step(view, { pitch: amount });
+    default: return step(view, { pitch: -amount });
+  }
+}
+
 /**
  * The view after a drag of the pointer by (dx, dy) pixels, `degreesPerPixel` apart: the surface is taken hold of, so a drag to the right carries the side nearest the eye to the right (the
  * yaw falls) and a drag down tips the top toward the eye (the pitch falls).
