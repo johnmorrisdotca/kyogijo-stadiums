@@ -4,7 +4,7 @@ import type { Frame } from "./frames.ts";
 import type { HeatRamp } from "./heat.types.ts";
 import type { Layer, LayerTeam, MarkShape, TableOptions } from "./layers.types.ts";
 import type { SoccerProviderId } from "./surfaces/soccer-providers.ts";
-import type { Language, SurfaceOptions } from "./types.ts";
+import type { Language, SheetShow, SurfaceOptions } from "./types.ts";
 import type { Unit } from "./units.ts";
 
 /** What every chart gives back: the layers and the drawing options to put them on, a sentence, the totals, and the ways to draw them. */
@@ -379,6 +379,8 @@ export interface CurlingOptions extends ChartOptions {
   units?: Unit;
   /** Write each stone's number on it. On by default, for the stones that have one. */
   numbers?: boolean;
+  /** How much of the sheet to draw: `half` (the default, the free guard zone and the house at `house`), `house`, `sheet` (the whole sheet), or `folded` (the whole sheet as a strip with both houses enlarged beside it). `surface.sheet.show` says the same and wins. */
+  show?: SheetShow;
 }
 
 /** One stone as the chart judged it. */

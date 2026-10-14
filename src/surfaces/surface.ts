@@ -66,6 +66,12 @@ export interface Surface {
   plateFits?: boolean;
   /** For a surface set inside another (a special game): the transform that carries the surface's own frame to the drawing's, which data in the surface's frame (`layers`) is put through. */
   frame?: string;
+  /** A surface drawn in parts, one of which is shown again larger beside it (a folded curling sheet): for each copy, the transform that carries the surface's frame to it and the id of the clip that cuts it. The data layers are drawn in each. */
+  panels?: { transform: string; clip: string }[];
+  /** Markup drawn over the data layers: the labels of a surface's panels. */
+  over?: string;
+  /** True for a surface whose frame has parts the annotations (axes, direction, landmarks) have no margin to stand in. */
+  folded?: boolean;
   /** How wide the surface's ordinary line is drawn, in the units of the `lines` markup, and how many feet one of those units is: what `lineWidth` scales. */
   lineRef?: { width: number; feet: number };
 }

@@ -2,6 +2,7 @@ import { el, num } from "../format.ts";
 import type { SheetSpec } from "../leagues/curling.ts";
 import type { SheetShow } from "../types.ts";
 import { ft, quarterTurn, type BuildOptions, type Mark, type Surface } from "./surface.ts";
+import { foldClips, foldCopies, foldLabels, foldLinks, foldPlan } from "./curling.fold.ts";
 
 /** What a curling sheet is drawn with besides the figures of its rulebook. */
 export interface SheetLook {
@@ -14,6 +15,8 @@ export interface SheetLook {
   end: "left" | "right";
   /** Which league's marks to draw: the hack line and the courtesy lines are World Curling's. */
   figures: SheetSpec;
+  /** For `show: "folded"`: what each enlarged panel holds, the shape of the whole, and the words that label the panels (the left end's and the right end's). */
+  fold?: { panels: "half" | "house"; fit: number; labels: readonly [string, string] };
 }
 
 /** Where each tee is on the sheet, along it from the left backboard: the left tee and the right tee. */
@@ -40,7 +43,8 @@ export function curling(o: BuildOptions, look: SheetLook): Surface {
   const board = 0.7;
 
   let defs = "";
-  let base = el("rect", { class: ft(o, "apron", "ky-apron"), x: -m, y: -m, width: L + 2 * m, height: W + 2 * m });
+  const apron = (x: number, y: number, w: number, h: number): string => el("rect", { class: ft(o, "apron", "ky-apron"), x, y, width: w, height: h });
+  let base = "";
   base += el("path", { class: ft(o, "boards", "ky-boards"), "fill-rule": "evenodd", d: `M${num(-board)} ${num(-board)}H${num(L + board)}V${num(W + board)}H${num(-board)}ZM0 0V${num(W)}H${num(L)}V0Z` });
   base += el("rect", { class: ft(o, "ice", "ky-surface"), x: 0, y: 0, width: L, height: W });
   if (look.pebble) {
@@ -90,10 +94,19 @@ export function curling(o: BuildOptions, look: SheetLook): Surface {
     }
   }
 
-  // What is in view: all of the sheet, the half from the hog line to the back line, or the house, at one end.
+  // What is in view: all of the sheet, the half from the hog line to the back line, or the house, at one end; or all of it with its two houses enlarged beside it.
   const along = 1.5;
   let view0 = { x: -m, y: -m, w: L + 2 * m, h: W + 2 * m };
   const left = look.end !== "right";
+  const folded = look.show === "folded" ? foldPlan(spec, [tl, tr], { panels: look.fold?.panels ?? "half", fit: look.fold?.fit ?? 1, margin: m, turned: o.portrait, id: o.id }) : undefined;
+  if (folded !== undefined) {
+    view0 = folded.view;
+    base = `${apron(view0.x, view0.y, view0.w, view0.h)}${base}${foldCopies(folded, base)}`;
+    lines = `${lines}${foldCopies(folded, lines)}${foldLinks(folded, W)}`;
+    defs += foldClips(folded);
+  } else {
+    base = apron(-m, -m, L + 2 * m, W + 2 * m) + base;
+  }
   if (look.show === "half" || look.show === "house") {
     const outer = look.show === "half" ? spec.hogLine + hogW : twelve;
     const x0 = left ? tl - spec.backLine - along : tr - outer - along;
@@ -117,7 +130,13 @@ export function curling(o: BuildOptions, look: SheetLook): Surface {
   };
   surface.lineRef = { width: lineW, feet: 1 };
   surface.box = { x: 0, y: 0, w: L, h: W };
-  if (o.landmarks === true) {
+  if (folded !== undefined) {
+    // The panels hold the data of the strip again, larger; the labels go over it.
+    surface.panels = folded.panels.map((p) => ({ transform: p.transform, clip: p.clip }));
+    surface.over = foldLabels(folded, look.fold?.labels ?? ["", ""], o.portrait);
+    surface.folded = true;
+  }
+  if (o.landmarks === true && folded === undefined) {
     const marks: Mark[] = [
       { id: "hog-line", x: tl + spec.hogLine + hogW / 2, y: 0, side: "top" },
       { id: "hog-line", x: tr - spec.hogLine - hogW / 2, y: 0, side: "top" },

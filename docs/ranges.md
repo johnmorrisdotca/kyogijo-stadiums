@@ -45,6 +45,7 @@ console.log(drawKyogijo({ sport: "nhl", range: undefined }) === drawKyogijo({ sp
 | `curling` | `sheet` | the whole sheet | none |
 | `curling` | `half` | from the hog line to the back line at one end | `left` |
 | `curling` | `house` | the house at one end | `left` |
+| `curling` | `folded` | undefined | none |
 | `tennis`, `volleyball`, `badminton`, `pickleball`, `tabletennis` | `half-court` | one side of the net | `left` |
 | `lacrosse` | `half` | from an end line to the centre line | `left` |
 | `lacrosse` | `crease` | the crease (the goal circle in the women's game) and the ground round it | `right` |

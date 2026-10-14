@@ -37,6 +37,7 @@ src/
 │   ├── baseball.walls.ts  a park's walls and quirks drawn on the field: the bands of the walls, the hill, the overhang, the ivy, the poles, the backstop, the dugouts, the legend
 │   ├── soccer.ts       the soccer pitch
 │   ├── curling.ts      the curling sheet
+│   ├── curling.fold.ts the folded sheet: the whole sheet as a strip, its two houses enlarged beside it, the fan that joins them and their labels
 │   ├── net.ts          the court of tennis, volleyball, badminton, pickleball and table tennis
 │   ├── field.ts        a field sport's surface, drawn from its plan
 │   ├── soccer-spec.ts  the Laws' figures, the presets, futsal and the small-sided pitches

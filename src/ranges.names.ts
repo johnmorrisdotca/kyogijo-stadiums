@@ -29,7 +29,7 @@ export const RANGES: Readonly<Record<Sport, readonly RangeInfo[]>> = Object.free
   nba: Object.freeze([range("half-court", "left"), range("paint", "left")]),
   soccer: Object.freeze([range("half", "left"), range("final-third", "right"), range("defensive-third", "left"), range("middle-third"), range("penalty-area", "left")]),
   mlb: Object.freeze([range("infield"), range("outfield")]),
-  curling: Object.freeze([range("sheet"), range("half", "left"), range("house", "left")]),
+  curling: Object.freeze([range("sheet"), range("half", "left"), range("house", "left"), range("folded")]),
   tennis: NET,
   volleyball: NET,
   badminton: NET,
@@ -67,8 +67,10 @@ export function parseRange(o: Pick<SurfaceOptions, "sport" | "league" | "range">
     if (info === undefined) throw new RangeError(`The ${sport} surface has no range "${name}": use one of ${(RANGES[sport] ?? []).map((one) => one.id).join(", ")}, or a box { x0, x1, y0, y1 }`);
     const leagueId = league?.id ?? LEAGUES[sport]?.[0]?.id;
     if (info.leagues !== undefined && leagueId !== undefined && !info.leagues.includes(leagueId)) throw new RangeError(`The ${sport} league "${leagueId}" has no range "${name}": it is for ${info.leagues.join(" and ")}`);
-    if (end !== undefined && end !== "left" && end !== "right") throw new RangeError(`A range's end is "left" or "right", not "${String(end)}"`);
-    return { kind: "name", name: info.id, end: info.end === undefined ? undefined : ((end as Side | undefined) ?? info.end), asked: end as Side | undefined };
+    // A curling sheet's ends are also read as a tall sheet's: the top end is the left one and the bottom end the right.
+    const asked = sport === "curling" && end === "top" ? "left" : sport === "curling" && end === "bottom" ? "right" : end;
+    if (asked !== undefined && asked !== "left" && asked !== "right") throw new RangeError(`A range's end is "left" or "right", not "${String(end)}"`);
+    return { kind: "name", name: info.id, end: info.end === undefined ? undefined : ((asked as Side | undefined) ?? info.end), asked: asked as Side | undefined };
   }
   const box = given as Partial<RangeBox>;
   if (typeof given !== "object" || !isNumber(box.x0) || !isNumber(box.x1) || !isNumber(box.y0) || !isNumber(box.y1)) throw new TypeError(`range is the name of a range of the sport, or a box { x0, x1, y0, y1 } of numbers`);
