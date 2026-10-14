@@ -775,6 +775,7 @@ function pageantPage() {
         item("pageant-small", "A small drawing", call('sport: "nhl", width: 280, pageant: "carpet"')),
       ]),
       section("choices", "Borders, lines, fabric and names", "Each choice on its own: the border band (`dark`, `team` or a colour) and its width, the lines of the surface over, under or through the pictures, the fabric, a name on each flag, the score in the middle, a smaller picture, and a team with no flag.", [
+        item("pageant-ratio-fit", "Carpets at the flags' own ratio", call('sport: "soccer", pageant: { fit: "ratio", score: "strip" }'), "`fit: \"ratio\"` keeps each flag's own ratio and leaves the rest of the half bare."),
         item("pageant-border-team", "A border in each team's colour", call('sport: "soccer", pageant: { border: "team", borderWidth: 0.1 }')),
         item("pageant-border-gold", "A gold border", call('sport: "soccer", pageant: { border: "#c9a24a" }')),
         item("pageant-lines-over", "Lines over the carpets (the default)", call('sport: "soccer", pageant: { score: "strip" }')),

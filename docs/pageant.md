@@ -21,14 +21,14 @@ console.log(svg.includes('data-pageant="carpet"'), svg.split("ky-pg-carpet").len
 
 ## The two styles
 
-- **`carpet`** lays each team's flag or logo flat over its half, as a rectangle at the picture's own ratio, sized to the room the half gives it with a margin. A border band goes round it (dark by default, or `border: "team"` for each team's colour, or any colour), `borderWidth` is its share of the carpet's shorter side (0.02 to 0.15, 0.06 by default), a soft shadow lies under it, and, unless `fabric: false`, a gentle fixed wave of light and shade lies over it, so that a flag reads as cloth and keeps its colours. The ratio is `Team.logoRatio` if you give one, else the `viewBox` (or the `width` and `height`) of an SVG logo, else 3 to 2, held between a square and 3 to 1.
+- **`carpet`** lays each team's flag or logo flat over its half, filling the room the half gives it with a margin of about 5% of the surface's width (`fit: "fill"`, the default), as ceremony flags are made to the size of the half and not at a flag's legal ratio. The carpet's shape may differ from the flag's ratio by up to 1.75 to 1 either way, and the art is stretched a little and cropped a little, each by the square root of the difference, so that stripes stay stripes and a centred emblem stays nearly round. `fit: "ratio"` keeps the flag's own ratio and leaves the rest of the half bare. A logo shown whole on its team's colour (`markFit: "contain"`) is never stretched. A border band goes round it (dark by default, or `border: "team"` for each team's colour, or any colour), `borderWidth` is its share of the carpet's shorter side (0.02 to 0.15, 0.06 by default), a soft shadow lies under it, and, unless `fabric: false`, a gentle fixed wave of light and shade lies over it, so that a flag reads as cloth and keeps its colours. The flag's ratio is `Team.logoRatio` if you give one, else the `viewBox` (or the `width` and `height`) of an SVG logo, else 3 to 2, held between a square and 3 to 1.
 - **`stage`** puts each crest on a large round disc with a ring: gold by default, `ring: "team"` for each team's colour, or any colour. The crest is a [round mark](./score.md#round-marks) inside the disc: a flag is cut to the circle (`cover`), and `markFit: "contain"` on a team shows a crest whole on a plain disc.
 
 A team with no flag or logo is its colours as a carpet of two (its `color`, and its `textColor` or the ink that reads on it) with its name across a band, or its initials on its colour on a stage. `names: true` also writes each team's name in a pill on its flag; `names: false` leaves a bare-colour carpet nameless.
 
 ## Where the pictures go
 
-Each picture lies in its half of the playing surface, and is moved in until it is wholly inside the surface's outline: a rink's rounded corners, a ballpark's fence, an oval's curve. Where a surface has no halves:
+Each picture lies in its half of the playing surface, and is moved in until it is wholly inside the surface's outline (a filled carpet gives up some of its length along the surface at the outer end, so that it keeps its full breadth): a rink's rounded corners, a ballpark's fence, an oval's curve. Where a surface has no halves:
 
 | Surface | Where the pictures are |
 | --- | --- |
@@ -57,7 +57,7 @@ The score has to be readable over all this, so there are two places for it, chos
 
 - **`centre`**: the plate stays in the middle of the surface with its dark backing, a little smaller (85%), and the pictures are narrowed to keep clear of it.
 - **`strip`**: the compact strip under the drawing (`data-size` is `compact`), and the pictures have the whole of their halves. The strip carries each team's [round mark](./score.md#round-marks), as a compact card does.
-- **`auto`** (the default): the strip when there is an emblem (it takes the middle) or the sport's board is large (the net sports' and cricket's tables of sets and innings), and otherwise whichever leaves the pictures at least 78% of the width they would have without the plate: the plate stays on a rink, a diamond and a tall pitch, and goes to the strip on a wide pitch, field or court. A tall curling sheet keeps its board.
+- **`auto`** (the default): the strip when there is an emblem (it takes the middle) or the sport's board is large (the net sports' and cricket's tables of sets and innings), and otherwise whichever leaves the pictures at least 70% of the width they would have without the plate: the plate stays on a rink, a diamond and a tall pitch, and goes to the strip on a wide pitch, field or court. A tall curling sheet keeps its board.
 
 A `size: "compact"` card has the strip already and keeps the pictures.
 
@@ -98,6 +98,7 @@ A pageant is part of the drawing, so every [renderer](./renderers.md) draws it f
 | --- | --- |
 | `style` | `carpet` (the default) or `stage`. |
 | `border`, `borderWidth` | A carpet's border band: `dark` (the default), `team` or a colour; its share of the carpet's shorter side, 0.02 to 0.15. |
+| `fit` | `fill` (the default): a carpet takes the room its half gives it; `ratio`: it keeps its flag's ratio. |
 | `fabric` | A carpet's fabric of light and shade. On by default. |
 | `ring` | A stage's ring: `gold` (the default), `team` or a colour. |
 | `lines` | `over` (the default), `under` or `through`. |

@@ -102,9 +102,15 @@ describe("a carpet's ratio", () => {
     expect(ratioOf({ logoRatio: -3 })).toBe(PAGEANT_RATIO.usual);
   });
 
-  it("is the shape of the carpet drawn", () => {
+  it("is the shape of the carpet drawn when it keeps its ratio (`fit: ratio`), and within a factor of 2 of it when it fills the half", () => {
     for (const logoRatio of [1, 1.5, 2, 3]) {
-      const svg = drawKyogijo(game({ pageant: "carpet", home: { ...home, logoRatio }, away: { ...away, logoRatio } }));
+      for (const group of carpets(drawKyogijo(game({ pageant: "carpet", home: { ...home, logoRatio }, away: { ...away, logoRatio } })))) {
+        const r = rectOf(group).attrs;
+        const shape = Number(r.width) / Number(r.height);
+        expect(shape).toBeGreaterThanOrEqual(logoRatio / 2 - 0.01);
+        expect(shape).toBeLessThanOrEqual(logoRatio * 2 + 0.01);
+      }
+      const svg = drawKyogijo(game({ pageant: { fit: "ratio" }, home: { ...home, logoRatio }, away: { ...away, logoRatio } }));
       for (const group of carpets(svg)) {
         const r = rectOf(group).attrs;
         expect(Number(r.width) / Number(r.height)).toBeCloseTo(logoRatio, 1);
@@ -130,7 +136,7 @@ describe("a carpet on each half of every surface", () => {
           const [a, b, c, d] = picture.matrix;
           expect([a, b, c, d].map((v) => Math.abs(Math.round(v * 1000) / 1000)), `${sport} ${orientation}`).toEqual([1, 0, 0, 1]);
           const shape = picture as unknown as { width: number; height: number };
-          expect(shape.width / shape.height).toBeGreaterThan(1.3);
+          expect(shape.width / shape.height).toBeGreaterThan(0.5);
         }
       }
     }
@@ -484,5 +490,44 @@ describe("the renderers", () => {
     expect(withPageant.features.length).toBeLessThanOrEqual(without.features.length + 3);
     expect(withPageant.features.some((f) => String(f.properties.class).includes("ky-pg"))).toBe(false);
     expect(withPageant.features.some((f) => String(f.properties.class).includes("ky-mark"))).toBe(false);
+  });
+});
+
+describe("a carpet that fills its half", () => {
+  const area = (svg: string): number => carpets(svg).map((g) => Number(rectOf(g).attrs.width) * Number(rectOf(g).attrs.height)).reduce((a, b) => a + b, 0);
+
+  it("is the default, and takes much more of the half than a carpet at its flag's ratio does", () => {
+    expect(pageantOf(game({ pageant: true }))?.fit).toBe("fill");
+    expect(pageantOf(game({ pageant: { fit: "ratio" } }))?.fit).toBe("ratio");
+    expect(pageantOf(game({ pageant: { fit: "wide" as never } }))?.fit).toBe("fill");
+    for (const sport of ["soccer", "nba", "nfl", "rugby"] as Sport[]) {
+      const fill = drawKyogijo(game({ sport, pageant: { score: "strip" } }));
+      const ratio = drawKyogijo(game({ sport, pageant: { score: "strip", fit: "ratio" } }));
+      expect(area(fill), sport).toBeGreaterThan(area(ratio) * 1.15);
+    }
+  });
+
+  it("stretches and crops the art by the square root of the difference, and keeps a crest on its ground whole", () => {
+    const svg = drawKyogijo(game({ pageant: { score: "strip" } }));
+    const pictures = walk(parse(svg)).filter((n) => n.name === "image" && (n.attrs.class ?? "").includes("ky-pg-picture"));
+    expect(pictures.length).toBe(2);
+    expect(pictures.every((n) => n.attrs.preserveAspectRatio === "none")).toBe(true);
+    expect(drawKyogijo(game({ pageant: { score: "strip", fit: "ratio" } }))).toContain('preserveAspectRatio="xMidYMid slice"');
+    const crest = drawKyogijo(game({ home: { ...home, markFit: "contain" }, pageant: { score: "strip" } }));
+    expect(crest).toContain('preserveAspectRatio="xMidYMid meet"');
+  });
+
+  it("still keeps clear of the emblem and the plate, and inside the outline", () => {
+    for (const sport of ["nhl", "nba", "soccer"] as Sport[]) {
+      const scene = sceneOf(game({ sport, pageant: { emblem: CUP }, id: "f" }));
+      const emblem = scene.items.find((i) => i.kind === "circle" && i.class.includes("ky-pg-ringband") && i.matrix[4] !== 0) as unknown as { r: number; matrix: number[] };
+      const carpetBoxes = scene.items.filter((i) => i.kind === "rect" && i.class.includes("ky-pg-border")) as unknown as { x: number; width: number; matrix: number[] }[];
+      for (const box of carpetBoxes) {
+        const x0 = box.matrix[4] + box.x;
+        const x1 = x0 + box.width;
+        const ex = emblem.matrix[4];
+        expect(x1 <= ex - emblem.r + 0.01 || x0 >= ex + emblem.r - 0.01, sport).toBe(true);
+      }
+    }
   });
 });

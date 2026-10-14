@@ -399,6 +399,12 @@ export interface PageantOptions {
   emblemName?: string;
   /** Where the score goes: `centre` (the plate stays in the middle, a little smaller, and the pictures keep clear of it), `strip` (the compact strip under the drawing) or `auto` (the default: the centre, unless there is an emblem or the sport's board is large, which then go to the strip). */
   score?: "auto" | "centre" | "strip";
+  /**
+   * How a carpet fills its half: `fill` (the default) takes the room the half gives it with a margin, as a ceremony's flags are made to the size of the half, so its shape may differ from the
+   * flag's ratio by up to 2 to 1, and the art is stretched a little and cropped a little (each by the square root of the difference, so stripes stay stripes and a centred emblem stays nearly round);
+   * `ratio` keeps the flag's own ratio and leaves the rest of the half bare. A stage is round either way.
+   */
+  fit?: "fill" | "ratio";
   /** The size of a carpet or a stage, as a share of the room its half gives it. 0.4 to 1; 1 by default (the room less a margin). */
   scale?: number;
   /** Write each team's name on its picture. By default only a team with no flag or logo has its name (or its initials, when they would not fit). */

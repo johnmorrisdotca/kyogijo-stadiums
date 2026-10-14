@@ -17,6 +17,9 @@ export const PAGEANT_SCALE = { min: 0.4, max: 1 } as const;
 /** The ratio of a carpet's width over its height: a flag of 3 to 2 unless the team or its SVG says otherwise, held between a square and 3 to 1. */
 export const PAGEANT_RATIO = { min: 1, max: 3, usual: 1.5 } as const;
 
+/** How far a filled carpet's ratio may differ from its flag's, as a factor either way: the art is stretched and cropped by its square root. */
+export const PAGEANT_FILL_LIMIT = 1.75;
+
 /** What the plate is shrunk to when it stays in the middle of a pageant, so that the pictures have room. */
 const PLATE_SCALE = 0.85;
 
@@ -32,6 +35,7 @@ export interface Pageant {
   /** Where the score goes: the plate in the middle, the compact strip under the drawing, or `auto`, which the drawing decides once it has laid the pictures out (`autoScore`). */
   score: "auto" | "centre" | "strip";
   scale: number;
+  fit: "fill" | "ratio";
   names: boolean | undefined;
   animate: "none" | "unfurl" | "fade";
 }
@@ -76,6 +80,7 @@ export function pageantOf(o: SurfaceOptions & { home?: unknown; away?: unknown; 
     ...(href === undefined ? {} : { emblem: { href, shape: oneOf(p.emblemShape, ["round", "plain"] as const) ?? "round", fit: oneOf(p.emblemFit, ["contain", "cover"] as const) ?? "contain", name: typeof p.emblemName === "string" && p.emblemName.trim() !== "" ? p.emblemName.trim().slice(0, 60) : undefined } }),
     score,
     scale: finite(p.scale, PAGEANT_SCALE.min, PAGEANT_SCALE.max, PAGEANT_SCALE.max),
+    fit: oneOf(p.fit, ["fill", "ratio"] as const) ?? "fill",
     names: typeof p.names === "boolean" ? p.names : undefined,
     animate: oneOf(p.animate, ["none", "unfurl", "fade"] as const) ?? "none",
   };
@@ -136,6 +141,8 @@ export interface Placed {
   w: number;
   h: number;
   r?: number;
+  /** A carpet that fills its room: its art is fitted to it by stretching and cropping, not by its own ratio. */
+  filled?: boolean;
 }
 
 /** Where everything of a pageant goes. */
@@ -188,7 +195,7 @@ export function pageantLayout(input: LayoutInput): PageantLayout | undefined {
   const box = surface.whole ?? surface.box ?? outline.box;
   if (!(box.w > 0 && box.h > 0)) return undefined;
   const minDim = Math.min(box.w, box.h);
-  const margin = 0.03 * minDim;
+  const margin = (p.fit === "fill" ? 0.05 : 0.03) * minDim;
   const mid = box.x + box.w / 2;
   const plan = surface.pageant;
   const centre = plan?.centre ?? { cx: mid, cy: box.y + box.h / 2, r: surface.centreRadius ?? 0.14 * minDim };
@@ -212,16 +219,33 @@ export function pageantLayout(input: LayoutInput): PageantLayout | undefined {
       return { team, spot: which, cx, cy, w: 2 * r, h: 2 * r, r };
     }
     const ratio = team.ratio;
+    let ratioOfCarpet = ratio;
+    let filled = false;
     let w: number;
     // In a round room (a curling house) the rectangle's corners lie on the circle; in a box it is the box's own shape that limits it.
     if (spot.disc !== undefined) w = Math.min(((spot.disc * ratio) / Math.sqrt(1 + ratio * ratio)) * 0.94, roomW, roomH * ratio) * p.scale;
-    else w = Math.min(roomW, roomH * ratio) * p.scale;
-    let h = w / ratio;
-    for (let i = 0; i < 50 && !ring(cx, cy, w, h, margin * 0.5, eye).every(([x, y]) => outline.contains(x, y)); i += 1) {
-      w *= 0.96;
-      h *= 0.96;
+    else if (p.fit === "fill") {
+      // The carpet is the room's own shape, as far as its flag's ratio allows: not more than PAGEANT_FILL_LIMIT either way.
+      const shape = Math.min(Math.max(roomW / roomH, ratio / PAGEANT_FILL_LIMIT), ratio * PAGEANT_FILL_LIMIT);
+      w = Math.min(roomW, roomH * shape) * p.scale;
+      filled = true;
+      ratioOfCarpet = shape;
+    } else w = Math.min(roomW, roomH * ratio) * p.scale;
+    let h = w / ratioOfCarpet;
+    let px = cx;
+    for (let i = 0; i < 60 && !ring(px, cy, w, h, margin * 0.5, eye).every(([x, y]) => outline.contains(x, y)); i += 1) {
+      if (filled) {
+        // Pull in the outer edge, along the surface, so that a rink's rounded corner or a fence is cleared and the carpet keeps its full breadth across.
+        const cut = (turned ? h : w) * 0.03;
+        if (turned) h -= cut;
+        else w -= cut;
+        px += ((which === "left" ? 1 : -1) * cut) / 2;
+      } else {
+        w *= 0.96;
+        h *= 0.96;
+      }
     }
-    return { team, spot: which, cx, cy, w, h };
+    return { team, spot: which, cx: px, cy, w, h, ...(filled ? { filled } : {}) };
   };
   const spotOf = (side: Side): { x0: number; x1: number; y0: number; y1: number; disc?: number } => {
     const given = side === "left" ? plan?.left : plan?.right;
@@ -238,7 +262,7 @@ export function pageantLayout(input: LayoutInput): PageantLayout | undefined {
 }
 
 /** How much of their width the pictures must keep with the plate in the middle, against without it, before the plate in the middle gives way to the strip. */
-export const PLATE_COST = 0.78;
+export const PLATE_COST = 0.7;
 
 /**
  * Where the score goes when the options say `auto` and there is no emblem or board: the plate stays in the middle if the pictures lose little of their size to it, otherwise the score

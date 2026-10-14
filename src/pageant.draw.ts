@@ -89,7 +89,12 @@ function carpet(pl: Placed, p: Pageant, o: PageantDraw, names: boolean): { marku
   let picture = "";
   let top: string | undefined;
   if (team.href !== undefined && team.fit !== "contain") {
-    picture += el("image", { class: "ky-logo ky-pg-picture", href: team.href, x: num(x), y: num(y), width: num(iw), height: num(ih), preserveAspectRatio: "xMidYMid slice" });
+    if (pl.filled === true) {
+      // Made to the size of the half: the art is stretched and cropped to fit, each by the square root of how far the carpet's shape is from the flag's.
+      const shape = Math.sqrt(team.ratio * (iw / ih));
+      const wb = Math.max(iw, ih * shape);
+      picture += el("image", { class: "ky-logo ky-pg-picture", href: team.href, x: num(-wb / 2), y: num(-wb / shape / 2), width: num(wb), height: num(wb / shape), preserveAspectRatio: "none" });
+    } else picture += el("image", { class: "ky-logo ky-pg-picture", href: team.href, x: num(x), y: num(y), width: num(iw), height: num(ih), preserveAspectRatio: "xMidYMid slice" });
   } else if (team.href !== undefined) {
     const pad = Math.min(iw, ih) * 0.1;
     picture += el("rect", { class: "ky-pg-plain", x: num(x), y: num(y), width: num(iw), height: num(ih), style: colourVars(team)?.split(";")[0] });
