@@ -223,6 +223,12 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `charts.sumCurling` | {n} stones in play. {team} scores {points}. | プレー中のストーンは{n}個です。{team}が{points}点を取ります。 |
 | `charts.sumCurlingBlank` | {n} stones in play. No one scores: the end is blanked. | プレー中のストーンは{n}個です。どちらも得点できず、ブランクエンドになります。 |
 | `charts.curlingOut` | {n} out of play. | {n}個はプレー外です。 |
+| `charts.titleCurlingHeat` | Where the stones came to rest | ストーンが止まった位置 |
+| `charts.curlingHeatStat` | Stones | ストーン |
+| `charts.sumCurlingHeat` | {n} stones in play: {house} in the house and {guards} in the free guard zone. | プレー中のストーンは{n}個です。ハウス内が{house}個、フリーガードゾーン内が{guards}個です。 |
+| `charts.curlingHeatTeam` | Only {name}'s stones. | {name}のストーンのみです。 |
+| `charts.curlingHeatGuards` | Only the free guards. | フリーガードのみです。 |
+| `charts.curlingHeatHouse` | Only the stones in the house. | ハウス内のストーンのみです。 |
 | `charts.shots` | shots | シュート |
 | `charts.passes` | passes | パス |
 | `charts.balls` | balls in play | インプレー打球 |

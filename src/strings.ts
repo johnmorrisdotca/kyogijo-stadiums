@@ -140,6 +140,13 @@ export interface KyogijoWords {
     sumCurling: string;
     sumCurlingBlank: string;
     curlingOut: string;
+    /** The heat chart of stones at rest: its title, its legend's heading, the sum ({n} stones, {house} in the house, {guards} free guards), and the sentences that say which stones were kept ({name}). */
+    titleCurlingHeat: string;
+    curlingHeatStat: string;
+    sumCurlingHeat: string;
+    curlingHeatTeam: string;
+    curlingHeatGuards: string;
+    curlingHeatHouse: string;
     /** What the marks of each chart are, as a plural noun for a layer's title: "24 shots". */
     shots: string;
     passes: string;
@@ -606,6 +613,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       titleNba: "NBA shot chart", titleNhl: "NHL shot map", titleMlb: "Baseball spray chart", titleNfl: "NFL pass chart", titleSoccer: "Soccer shot map", titleGoal: "Goal mouth: where the shots crossed the goal line",
       titleCurling: "Curling stones", curlingEnd: "End {n}", curlingStone: "Stone", curlingCounting: "Counting stone", curlingShot: "Shot rock", curlingFrom: "{name}: {d} ft from the button", curlingNoteCounting: "counting", curlingNoteShot: "the shot rock",
       sumCurling: "{n} stones in play. {team} scores {points}.", sumCurlingBlank: "{n} stones in play. No one scores: the end is blanked.", curlingOut: "{n} out of play.",
+      titleCurlingHeat: "Where the stones came to rest", curlingHeatStat: "Stones", sumCurlingHeat: "{n} stones in play: {house} in the house and {guards} in the free guard zone.", curlingHeatTeam: "Only {name}'s stones.", curlingHeatGuards: "Only the free guards.", curlingHeatHouse: "Only the stones in the house.",
       shots: "shots", passes: "passes", balls: "balls in play", ballsBeyond: "balls beyond the fence", lineOfScrimmage: "line of scrimmage", key: "Key",
       made: "Made", missed: "Missed", missedNet: "Off target", goal: "Goal", saved: "Saved", blocked: "Blocked", shot: "Shot", post: "Hit the post",
       single: "Single", double: "Double", triple: "Triple", homeRun: "Home run", out: "Out", complete: "Complete", incomplete: "Incomplete", touchdown: "Touchdown", interception: "Interception",
@@ -816,6 +824,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       titleNba: "NBAのショットチャート", titleNhl: "NHLのシュートマップ", titleMlb: "野球の打球方向図", titleNfl: "NFLのパスチャート", titleSoccer: "サッカーのシュートマップ", titleGoal: "ゴールマウス：シュートがゴールラインを通過した位置",
       titleCurling: "カーリングのストーンの位置", curlingEnd: "第{n}エンド", curlingStone: "ストーン", curlingCounting: "得点になるストーン", curlingShot: "ナンバーワンストーン（ボタンに最も近いストーン）", curlingFrom: "{name}：ボタンから{d}フィート", curlingNoteCounting: "得点になるストーン", curlingNoteShot: "ナンバーワンストーン",
       sumCurling: "プレー中のストーンは{n}個です。{team}が{points}点を取ります。", sumCurlingBlank: "プレー中のストーンは{n}個です。どちらも得点できず、ブランクエンドになります。", curlingOut: "{n}個はプレー外です。",
+      titleCurlingHeat: "ストーンが止まった位置", curlingHeatStat: "ストーン", sumCurlingHeat: "プレー中のストーンは{n}個です。ハウス内が{house}個、フリーガードゾーン内が{guards}個です。", curlingHeatTeam: "{name}のストーンのみです。", curlingHeatGuards: "フリーガードのみです。", curlingHeatHouse: "ハウス内のストーンのみです。",
       shots: "シュート", passes: "パス", balls: "インプレー打球", ballsBeyond: "フェンス越えの打球", lineOfScrimmage: "スクリメージライン", key: "凡例",
       made: "成功", missed: "失敗", missedNet: "枠外", goal: "ゴール", saved: "セーブ", blocked: "ブロック", shot: "シュート", post: "ポスト直撃",
       single: "単打", double: "二塁打", triple: "三塁打", homeRun: "本塁打", out: "アウト", complete: "パス成功", incomplete: "パス不成功", touchdown: "タッチダウン", interception: "インターセプト",

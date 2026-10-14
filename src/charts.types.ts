@@ -44,7 +44,7 @@ export interface ChartOptions {
   id?: string;
   /** Draw the key (what each mark is) in the margin above the surface. On by default. */
   key?: boolean;
-  /** Draw the colour bar of the zones, hexagons or cells. On by default. */
+  /** Draw the colour bar of the zones, hexagons or cells. On by default (a curling heat chart of a folded sheet leaves it out unless asked, as it would be drawn at the strip's small scale). */
   legend?: boolean;
   /** The colour ramp of the zones, hexagons or cells: a built-in name, a list of stops or `{ light, dark }`. */
   ramp?: HeatRamp;
@@ -381,6 +381,44 @@ export interface CurlingOptions extends ChartOptions {
   numbers?: boolean;
   /** How much of the sheet to draw: `half` (the default, the free guard zone and the house at `house`), `house`, `sheet` (the whole sheet), or `folded` (the whole sheet as a strip with both houses enlarged beside it). `surface.sheet.show` says the same and wins. */
   show?: SheetShow;
+}
+
+/** What `curlingHeat` takes. */
+export interface CurlingHeatOptions extends ChartOptions {
+  /** The house the stones are at: the `left` one (the top house of a tall drawing, the default) or the `right`. */
+  house?: "left" | "right";
+  /** The unit of the stones' places: feet by default. */
+  units?: Unit;
+  /** Only this team's stones. Both by default. */
+  team?: "home" | "away";
+  /** Which stones: `all` of those in play (the default), `guards` (the free guards only: between the tee line and the hog line, outside the house) or `house` (those in or touching it). */
+  only?: "all" | "guards" | "house";
+  /** How the stones are drawn: `heatmap` (counts in square cells, the default), `hexbin`, `contour` (a density), `zones` (counted into the button, the rings and the free guard zone) or `discs` (each stone a translucent disc in its team's colour, so that stones that fall on each other build up colour). */
+  view?: "heatmap" | "hexbin" | "contour" | "zones" | "discs";
+  /** The width of a cell of the `heatmap`, or the radius of a hexagon of the `hexbin`, in feet. 1 foot by default. */
+  cell?: number;
+  /** How much of the sheet to draw, as for `curlingStones`: `half` by default. */
+  show?: SheetShow;
+  /** The teams' names, for the summary. */
+  names?: { home?: string; away?: string };
+  /** Write the number of stones in each cell, hexagon or zone. Off by default, except for the zones. */
+  labels?: boolean;
+}
+
+/** The numbers behind a heat chart of stones. */
+export interface CurlingHeatTotals {
+  /** Stones with a place, and the stones in play among them. */
+  stones: number;
+  inPlay: number;
+  /** The stones drawn: in play, and of the team and the kind asked for. */
+  drawn: number;
+  /** Of those in play, the free guards and the stones in the house, for each team. */
+  guards: { home: number; away: number };
+  house: { home: number; away: number };
+  /** Each zone of the house and the free guard zone, with the stones drawn that came to rest in it and their share of all drawn, as a percent. */
+  zones: { id: string; name: string; stones: number; share: number | null }[];
+  /** Rows left out for want of a place. */
+  skipped: number;
 }
 
 /** One stone as the chart judged it. */

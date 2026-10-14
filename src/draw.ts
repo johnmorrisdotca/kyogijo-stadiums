@@ -643,7 +643,8 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
     inner += surface.frame === undefined || layered.svg === "" ? layered.svg : el("g", { transform: surface.frame }, layered.svg);
     // A surface drawn in parts shows the data again in each enlarged part, with its own ids, hidden from a reader of the drawing (the strip says it).
     if (surface.panels !== undefined && layered.svg !== "" && o.layers !== undefined) {
-      const kept = o.layers.filter((layer) => layer.kind !== "legend");
+      // The legend of a heat layer is the strip's only: at the panel's scale it would be the size of the house.
+      const kept = o.layers.filter((layer) => layer.kind !== "legend").map((layer) => ("legend" in layer && layer.legend !== undefined && layer.legend !== false ? { ...layer, legend: false } : layer));
       surface.panels.forEach((panel, i) => {
         const copy = renderLayers({ ...o, id: `${id}-f${i}` }, kept, surface.turned);
         if (copy.svg !== "") inner += el("g", { class: "ky-fold-data", "aria-hidden": "true", transform: panel.transform, "clip-path": `url(#${panel.clip})` }, copy.svg);

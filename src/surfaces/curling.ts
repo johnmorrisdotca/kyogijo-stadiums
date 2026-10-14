@@ -25,6 +25,20 @@ export function teesOf(spec: Pick<SheetSpec, "length" | "teeFromMiddle">): [numb
 }
 
 /**
+ * The part of a bare sheet's ice that `show` and `end` show, in feet in the sheet's wide frame: all of it, or the half from the hog line to the back line, or the house, at one end,
+ * with a little ice beyond the lines. A folded sheet shows all of it, with its houses enlarged beside it.
+ */
+export function shownIce(spec: Pick<SheetSpec, "length" | "width" | "teeFromMiddle" | "backLine" | "hogLine" | "rings" | "lineWidths">, show: SheetShow, end: "left" | "right"): { x: number; y: number; w: number; h: number } {
+  if (show !== "half" && show !== "house") return { x: 0, y: 0, w: spec.length, h: spec.width };
+  const along = 1.5;
+  const [tl, tr] = teesOf(spec);
+  const outer = show === "half" ? spec.hogLine + spec.lineWidths.hog : spec.rings[0];
+  const x0 = end !== "right" ? tl - spec.backLine - along : tr - outer - along;
+  const x1 = end !== "right" ? tl + outer + along : tr + spec.backLine + along;
+  return { x: x0, y: 0, w: x1 - x0, h: spec.width };
+}
+
+/**
  * A curling sheet in the frame of a drawing lying wide: x along it from the left backboard, y across it from the top sideline. A house at
  * each end (the 12-, 8- and 4-foot circles and the button), the tee, back, hog and centre lines, the hacks, and, in World Curling's, the
  * hack lines and the courtesy lines. Every figure is the rulebook's (leagues/curling.ts).
