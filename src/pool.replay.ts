@@ -98,10 +98,8 @@ function timeAt(progress: Progress, d: number): number | undefined {
  * import { raceTimeline, drawFrame } from "@johnmorrisdotca/kyogijo-stadiums/replay";
  * const pool = { race: { distance: 100, swimmers: [{ lane: 4, name: "A. Swimmer", splits: [26, 54.2] }, { lane: 5, name: "B. Swimmer", splits: [26.4, 55] }] } };
  * const timeline = raceTimeline({ pool });
- * console.log(timeline.frames.length > 100, timeline.events.map((e) => e.kind).join());
- * // true turn,turn,finish,finish
- * console.log(drawFrame({ sport: "swimming", pool }, timeline, 20).startsWith("<svg"));
- * // true
+ * console.log(timeline.frames.length > 100, timeline.events.map((e) => e.kind).join(), drawFrame({ sport: "swimming", pool }, timeline, 20).startsWith("<svg"));
+ * // true start,turn,turn,finish,finish true
  * ```
  */
 export function raceTimeline(options: Pick<SurfaceOptions, "pool">, replay: RaceReplayOptions = {}): ReplayTimeline & { events: ReplayEvent[] } {
