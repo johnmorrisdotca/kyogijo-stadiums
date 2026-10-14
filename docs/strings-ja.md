@@ -191,6 +191,10 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `said.stop` | . | 。 |
 | `said.colon` | :  | ： |
 | `said.gap` |   |  |
+| `pageant.carpet` | Each team's flag or logo is laid out large over its own part of the surface, as a carpet. | 各チームの旗またはロゴが、競技場のチームごとの区域に、カーペットのように大きく広げられています。 |
+| `pageant.stage` | Each team's crest stands on a large round stage over its own part of the surface. | 各チームのエンブレムが、競技場のチームごとの区域にある大きな丸いステージの上に置かれています。 |
+| `pageant.emblem` | An emblem is in the middle. | 中央にエンブレムがあります。 |
+| `pageant.emblemNamed` | The {name} emblem is in the middle. | 中央に{name}のエンブレムがあります。 |
 | `special.guest.nfl` | football field | アメリカンフットボールのフィールド |
 | `special.guest.cfl` | football field | カナディアンフットボールのフィールド |
 | `special.guest.ifaf` | football field | アメリカンフットボールのフィールド |
@@ -911,6 +915,16 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `detail` | Markings | ライン表示 |
 | `detail_full` | All | すべて |
 | `detail_simple` | Simple | 簡略 |
+| `pageant` | Flags on the halves | ハーフに旗を広げる |
+| `pageant_off` | Off | なし |
+| `pageant_carpet` | Carpets | カーペット |
+| `pageant_stage` | Stages | ステージ |
+| `pageantLines` | Lines | ラインの位置 |
+| `pageantLines_over` | Over | 上 |
+| `pageantLines_under` | Under | 下 |
+| `pageantLines_through` | Through | 透過 |
+| `pageantEmblem` | Emblem in the centre | 中央のエンブレム |
+| `pageantEntrance` | Entrance | 登場の動き |
 | `stripes` | Mown stripes | 芝の縞模様 |
 | `exact` | True line widths | 実寸の線幅 |
 | `court` | Court | コート |
@@ -1181,6 +1195,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `annotations` | Annotations | 攻撃方向・目盛り・部位名の注釈 |
 | page `ranges` | Display ranges and zoom | 表示範囲とズーム |
 | page `layouts` | Layouts and backgrounds | レイアウトと背景 |
+| page `pageant` | The pageant: flags on the halves | ハーフに広げる旗とエンブレム |
 | page `accessibility` | Accessibility | アクセシビリティ |
 | group `places` | Sports and places | 競技と場所 |
 | page `soccer` | Soccer | サッカー |
@@ -1219,6 +1234,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `gallery-styling` | Gallery: looks and annotations | ギャラリー：スタイルと注釈 |
 | page `gallery-ranges` | Gallery: display ranges and zoom | ギャラリー：表示範囲とズーム |
 | page `gallery-layouts` | Gallery: layouts and backgrounds | ギャラリー：レイアウトと背景 |
+| page `gallery-pageant` | Gallery: flags on the halves | ギャラリー：ハーフに広げる旗 |
 | group `compare` | Compare | 比較 |
 | page `compare` | How it compares | 他のパッケージとの比較 |
 | group `reference` | Reference | リファレンス |

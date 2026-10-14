@@ -32,6 +32,10 @@ import { featureColours, featureStyle } from "./features.ts";
 import { isLook, lookStyle } from "./look.ts";
 import { lineLook, restyleLines } from "./restyle.ts";
 import { KYOGIJO_MARK_STYLE } from "./mark.ts";
+import { outlineOf } from "./outline.ts";
+import { autoScore, pageantLayout, pageantOf, ratioOf, type Pageant, type PageantTeam } from "./pageant.ts";
+import { emblemMarkup, picturesMarkup } from "./pageant.draw.ts";
+import { KYOGIJO_PAGEANT_MOTION, KYOGIJO_PAGEANT_STYLE } from "./pageant.style.ts";
 import { KYOGIJO_BASE_STYLE, KYOGIJO_CURLING_STYLE, KYOGIJO_FOLD_STYLE, KYOGIJO_NOTE_STYLE, KYOGIJO_WALLS_STYLE } from "./style.ts";
 import { convertLength, type Unit } from "./units.ts";
 import { baseball, fenceOutline } from "./surfaces/baseball.ts";
@@ -219,6 +223,8 @@ interface Extra {
   margin?: number;
   /** The ground the annotations need beyond the cut of a range, which is not the surface's own margin. */
   room?: number;
+  /** The drawing is a pageant: the teams' ends are not painted in their colours. */
+  pageant?: boolean;
 }
 
 /** One text for both ends or sides, or a pair of them. */
@@ -243,6 +249,7 @@ function buildWhole(o: SurfaceOptions, portrait: boolean, id: string, score: boo
     goals: GOALS.includes(o.goals as GoalStyle) ? (o.goals as GoalStyle) : undefined,
     goalMarkup: typeof o.goalMarkup === "function" ? o.goalMarkup : undefined,
     landmarks: o.landmarks === true,
+    pageant: extra.pageant === true ? true : undefined,
   };
   // A league's rulebook (`league`), else the markings of the season asked for (`year`), today's without one.
   const { sport, league } = chooseLeague(o);
@@ -444,6 +451,50 @@ function teamView(team: Team, side: Side, role: "home" | "away", winner: "home" 
   };
 }
 
+/** A team as the pageant lays it out. */
+function pageantTeam(view: TeamView, team: Team): PageantTeam {
+  return { side: view.side, role: view.role, name: view.name, abbr: view.abbr, state: view.state, href: view.logo, fit: team.markFit === "contain" ? "contain" : "cover", ratio: ratioOf(team), color: safeColour(team.color), ink: safeColour(team.textColor) };
+}
+
+/** True when the drawing is asked to be small: its `width` is under 320 pixels. The pageant then leaves out its fabric, hairlines and name pills. */
+function tiny(width: SurfaceOptions["width"]): boolean {
+  const px = typeof width === "number" ? width : typeof width === "string" && /^\d+(?:\.\d+)?(?:px)?$/.test(width.trim()) ? Number.parseFloat(width) : undefined;
+  return px !== undefined && Number.isFinite(px) && px < 320;
+}
+
+/** What a pageant adds to a drawing: the pictures (under or over the lines), the emblem, the ids they need, and how small the plate is drawn. */
+interface PageantParts {
+  pictures: string;
+  /** The names of the teams with no picture, written over the lines. */
+  names: string;
+  emblem: string;
+  defs: string;
+  plateScale: number;
+}
+
+/** The teams that fill the first and the second place of a surface: a diamond's outfield is the visitors' and its infield the home team's, whichever side each is on. */
+function pageantPair(surface: Surface, t: { left: TeamView; right: TeamView; leftTeam: Team; rightTeam: Team }): [PageantTeam, PageantTeam] {
+  const l = pageantTeam(t.left, t.leftTeam);
+  const r = pageantTeam(t.right, t.rightTeam);
+  return surface.pageant?.byRole === true && l.role === "home" ? [r, l] : [l, r];
+}
+
+function pageantParts(o: SurfaceOptions, surface: Surface, p: Pageant, t: { left: TeamView; right: TeamView; leftTeam: Team; rightTeam: Team; sport: Sport; id: string; plate: boolean; parts: boolean }): PageantParts | undefined {
+  const [first, second] = pageantPair(surface, t);
+  const layout = pageantLayout({ pageant: p, surface, outline: outlineOf(o), left: first, right: second, turned: surface.turned, sport: t.sport, plate: t.plate });
+  if (layout === undefined) return undefined;
+  // Cropped to a range, an emblem that does not lie wholly in what is shown is left out.
+  const shown = surface.whole === undefined ? undefined : surface.box;
+  if (layout.emblem !== undefined && shown !== undefined) {
+    const e = layout.emblem;
+    if (e.cx - e.r < shown.x || e.cx + e.r > shown.x + shown.w || e.cy - e.r < shown.y || e.cy + e.r > shown.y + shown.h) delete layout.emblem;
+  }
+  const draw = { id: t.id, turned: surface.turned, simple: o.detail === "simple" || tiny(o.width), parts: t.parts };
+  const pictures = picturesMarkup(layout, p, draw);
+  const emblem = emblemMarkup(layout, p, draw);
+  return { pictures: pictures.markup, names: pictures.names, emblem: emblem.markup, defs: pictures.defs + emblem.defs, plateScale: layout.plateScale };
+}
+
 const trimmed = (value: number): string => String(Math.round(value * 100) / 100);
 
 /** What a league's surface is, in a sentence fragment: its size or its bases, from the league's own figures in the unit its rulebook uses. */
@@ -538,6 +589,10 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
         : describeRange(o, language, hasData);
   if (!isScore(o)) return { title: o.title ?? special?.title ?? surfaceName, description: o.description ?? `${about}${parkLine}${eraLine}${rangeLine}` };
   const winner = winnerOf({ ...o, sport });
+  // A pageant says what lies on each half, and the emblem in the middle.
+  const pageant = pageantOf(o);
+  const pg = KYOGIJO_STRINGS[language].pageant;
+  const pageantLine = pageant === undefined ? "" : `${gap}${pageant.style === "stage" ? pg.stage : pg.carpet}${pageant.emblem === undefined ? "" : `${gap}${pageant.emblem.name === undefined ? pg.emblem : fill(pg.emblemNamed, { name: pageant.emblem.name })}`}`;
   const s = (t: Team): string => fieldScoreText(sport, t) ?? (t.score === undefined || String(t.score) === "" ? "–" : String(t.score));
   // The sentence follows the drawing: the team on the left is first. The words' {away} and {home} are the first and the second team named.
   const order: [Team, Team] = resolveHomeSide({ ...o, sport }) === "left" ? [o.home, o.away] : [o.away, o.home];
@@ -603,7 +658,7 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
         : "";
   return {
     title: o.title ?? (status === undefined ? line : `${line}${words.said.sep}${status}`),
-    description: o.description ?? `${extra === "" ? "" : `${sentence(extra)}${gap}`}${sentence(line)}${result}${tied}${curlingLine}${netLine}${fieldLine}${gap}${about}${parkLine}${eraLine}${rangeLine}`.trim(),
+    description: o.description ?? `${extra === "" ? "" : `${sentence(extra)}${gap}`}${sentence(line)}${result}${tied}${curlingLine}${netLine}${fieldLine}${gap}${about}${parkLine}${eraLine}${rangeLine}${pageantLine}`.trim(),
   };
 }
 
@@ -638,6 +693,12 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
   // A tall curling sheet is 30 feet wide on the page and a strip under it would be unreadable: its compact size is the board on the ice.
   const asked = isScore(o) ? (o.size === "compact" || o.size === "badge" ? o.size : "full") : "full";
   let sized = asked === "compact" && sport === "curling" && portrait ? "full" : asked;
+  // A pageant that sends the score to the strip makes the drawing compact; a tall curling sheet cannot have a strip, so its board stays in the middle and the emblem is left out.
+  let pageant: Pageant | undefined = isScore(o) ? pageantOf(o) : undefined;
+  if (pageant !== undefined && pageant.score === "strip") {
+    if (sport === "curling" && portrait) pageant = { ...pageant, score: "centre", emblem: undefined };
+    else if (sized === "full") sized = "compact";
+  }
   const id = drawingId(o);
   const parts = o.parts === true;
   const homeSide: Side = isScore(o) ? resolveHomeSide({ ...o, sport }) : "right";
@@ -680,6 +741,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
   let defs = "";
   let grounded = false;
   let foldedSheet = false;
+  let pg: PageantParts | undefined;
   if (isScore(o) && left !== undefined && right !== undefined && sized === "badge") {
     const badge = badgeMarkup(left, right, { sport, status, parts, id });
     viewBox = `0 0 ${badge.w} ${badge.h}`;
@@ -691,12 +753,25 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       const guest = buildSurface({ ...o, margin: 0 }, false, id, isScore(o) && sized === "full", isScore(o), more);
       return composeSpecial(o, guest, (host, hostId) => buildSurface(host, false, hostId, false, false, { features: undefined }), id);
     };
-    let surface = make({ features });
+    let surface = make({ features, pageant: pageant !== undefined });
+    // The score of a pageant with no emblem and no board: the plate stays in the middle if the pictures lose little to it, else it goes to the strip and the surface is built again.
+    if (pageant !== undefined && pageant.score === "auto") {
+      let score: "centre" | "strip" = "centre";
+      if (isScore(o) && left !== undefined && right !== undefined && leftTeam !== undefined && rightTeam !== undefined && sized === "full") {
+        const [first, second] = pageantPair(surface, { left, right, leftTeam, rightTeam });
+        score = autoScore({ pageant, surface, outline: outlineOf(o), left: first, right: second, turned: surface.turned, sport, plate: true });
+      }
+      pageant = { ...pageant, score };
+      if (score === "strip") {
+        sized = "compact";
+        surface = make({ features, pageant: true });
+      }
+    }
     foldedSheet = surface.folded === true;
     // A range too small to hold the score's panel: the score goes to the strip under the drawing, as a compact card does.
     if (surface.plateFits === false) {
       sized = "compact";
-      surface = buildSurface(o, portrait, id, false, true, { features });
+      surface = buildSurface(o, portrait, id, false, true, { features, pageant: pageant !== undefined });
     }
     // A folded sheet has no margin for the annotations to stand in: they are not drawn on it.
     if (annotated(o) && o.host === undefined && surface.folded !== true) {
@@ -707,7 +782,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       const have = surface.ground ?? (surface.box === undefined ? 0 : surface.box.y - wideView(surface).y);
       const roomed = surface.room ?? have;
       if (o.margin === undefined && (notes.need > have + 0.01 || notes.need > roomed + 0.01)) {
-        surface = make({ features, margin: notes.need > have + 0.01 ? notes.need : undefined, room: notes.need });
+        surface = make({ features, pageant: pageant !== undefined, margin: notes.need > have + 0.01 ? notes.need : undefined, room: notes.need });
         notes = annotate({ o, surface, turned: surface.turned, words: KYOGIJO_STRINGS[language], teams });
       }
     }
@@ -720,7 +795,15 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
     defs = surface.defs + ground.defs;
     let inner = ground.base;
     let teams = "";
-    if (isScore(o) && left !== undefined && right !== undefined && sized === "full") {
+    // A pageant lays each team's picture over its half, in place of the names painted at the ends.
+    if (pageant !== undefined && isScore(o) && left !== undefined && right !== undefined && leftTeam !== undefined && rightTeam !== undefined && (sized === "full" || sized === "compact")) {
+      pg = pageantParts(o, surface, pageant, { left, right, leftTeam, rightTeam, sport, id, plate: sized === "full", parts });
+      if (pg !== undefined) {
+        defs += pg.defs;
+        if (sized === "full" && pg.plateScale !== 1) surface.plate = { ...surface.plate, w: surface.plate.w * pg.plateScale, h: surface.plate.h * pg.plateScale };
+      }
+    }
+    if (isScore(o) && left !== undefined && right !== undefined && sized === "full" && pg === undefined) {
       const onColour = surface.onColour ?? (sport === "nfl" || sport === "cfl" || sport === "ifaf" || sport === "soccer");
       // A curling sheet, the net sports' courts and a cricket ground have no place for the names: the board names the teams.
       if (sport !== "curling" && !hasSetsBoard(sport) && sport !== "cricket") {
@@ -730,7 +813,12 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       }
     }
     // The teams are painted under the lines, unless the surface asks for them over (a panel that must hide them).
-    inner += surface.bannersOver === true ? surface.lines + teams : teams + surface.lines;
+    if (pg !== undefined && pageant !== undefined) {
+      // A surface cropped with room for its annotations is clipped to the cut; the pictures are cut with it.
+      const cut = surface.defs.includes(`id="${id}-rg"`);
+      const laid = cut ? el("g", { "clip-path": `url(#${id}-rg)` }, pg.pictures) : pg.pictures;
+      inner += pageant.lines !== "over" ? surface.lines + laid + pg.names + pg.emblem : laid + surface.lines + pg.names + pg.emblem;
+    } else inner += surface.bannersOver === true ? surface.lines + teams : teams + surface.lines;
     // Data goes over the markings and under the score's panel.
     const layered = renderLayers(o, o.layers, surface.turned, surface.whole === undefined ? undefined : surface.box);
     inner += surface.frame === undefined || layered.svg === "" ? layered.svg : el("g", { transform: surface.frame }, layered.svg);
@@ -797,6 +885,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       "data-theme": theme,
       "data-palette": palette,
       "data-winner": isScore(o) ? winner : undefined,
+      "data-pageant": pg === undefined ? undefined : pageant?.style,
       "data-version": VERSION,
       width: safeLength(o.width),
       height: safeLength(o.height),
@@ -804,7 +893,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       style: style === "" ? undefined : style,
     },
     `<title id="${titleId}">${esc(title)}</title><desc id="${descId}">${esc(description)}</desc>` +
-      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${left?.round === true || right?.round === true ? `\n${KYOGIJO_MARK_STYLE}` : ""}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}${foldedSheet ? `\n${KYOGIJO_FOLD_STYLE}` : ""}${plan === undefined ? "" : `\n${courtStyle(plan.sport, plan.look)}`}${fieldsStyle(sport) === "" ? "" : `\n${fieldsStyle(sport)}`}${palette === undefined ? "" : `\n${lookStyle(palette)}`}${walled ? `\n${KYOGIJO_WALLS_STYLE}` : ""}${hardwood ? `\n${KYOGIJO_HARDWOOD_STYLE}` : ""}${features === undefined ? "" : `\n${featureStyle(sport, features)}`}${notes === undefined || notes.svg === "" ? "" : `\n${KYOGIJO_NOTE_STYLE}`}${grounded ? `\n${KYOGIJO_BACKGROUND_STYLE}` : ""}${crowded ? `\n${KYOGIJO_CROWD_STYLE}` : ""}${o.host === undefined ? "" : `\n${specialStyle(hostSport(o.host))}`}</style>`) +
+      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${left?.round === true || right?.round === true || (pg !== undefined && pageant?.style === "stage") || (pg !== undefined && pageant?.emblem?.shape !== "plain" && pageant?.emblem !== undefined) ? `\n${KYOGIJO_MARK_STYLE}` : ""}${pg === undefined ? "" : `\n${KYOGIJO_PAGEANT_STYLE}${pageant?.animate === undefined || pageant.animate === "none" ? "" : `\n${KYOGIJO_PAGEANT_MOTION}`}`}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}${foldedSheet ? `\n${KYOGIJO_FOLD_STYLE}` : ""}${plan === undefined ? "" : `\n${courtStyle(plan.sport, plan.look)}`}${fieldsStyle(sport) === "" ? "" : `\n${fieldsStyle(sport)}`}${palette === undefined ? "" : `\n${lookStyle(palette)}`}${walled ? `\n${KYOGIJO_WALLS_STYLE}` : ""}${hardwood ? `\n${KYOGIJO_HARDWOOD_STYLE}` : ""}${features === undefined ? "" : `\n${featureStyle(sport, features)}`}${notes === undefined || notes.svg === "" ? "" : `\n${KYOGIJO_NOTE_STYLE}`}${grounded ? `\n${KYOGIJO_BACKGROUND_STYLE}` : ""}${crowded ? `\n${KYOGIJO_CROWD_STYLE}` : ""}${o.host === undefined ? "" : `\n${specialStyle(hostSport(o.host))}`}</style>`) +
       (defs === "" ? "" : `<defs>${defs}</defs>`) +
       body,
   );

@@ -471,6 +471,51 @@ export interface FieldStyle {
 /** The shape of a team's mark: its logo as it is (`plain`), or clipped to a circle with a ring (`round`). */
 export type TeamMark = "plain" | "round";
 
+/** How a pageant lays out each team's picture: `carpet` is its flag or logo laid flat over its half, as a rectangle with a border; `stage` is its crest on a large round disc with a ring. */
+export type PageantStyle = "carpet" | "stage";
+
+/**
+ * The pageant: each team's flag or logo laid out large over its own half of the surface, as a stadium lays giant flags and crests on the pitch for a final's
+ * ceremony, and an emblem or a trophy in the centre circle. Give `pageant: "carpet"`, `"stage"` or `true` (a carpet), or these options. Off by default, and a drawing without it is
+ * the same text as before. It needs a score (`home` and `away`) and the full or compact size.
+ */
+export interface PageantOptions {
+  /** `carpet` (the default) or `stage`. */
+  style?: PageantStyle;
+  /** A carpet's border band: `dark` (the default), `team` (each team's colour), or a colour. */
+  border?: "dark" | "team" | (string & {});
+  /** A carpet's border band as a share of its shorter side, 0.02 to 0.15. 0.06 by default. */
+  borderWidth?: number;
+  /** A carpet's fabric: a gentle, fixed wave of light and shade over it. On by default; left out at small sizes. */
+  fabric?: boolean;
+  /** Where the surface's lines lie: `over` the pictures (the default), `under` them (the pictures cover the lines), or `through` (under the pictures, which are a little see-through, so that the lines show faintly). */
+  lines?: "over" | "under" | "through";
+  /** A stage's ring: `gold` (the default), `team` (each team's colour), or a colour. */
+  ring?: "gold" | "team" | (string & {});
+  /** The picture in the centre circle, centre ice, centre court or at the mound: a competition's emblem or a trophy, as a logo is given (an address, an image `data:` address or an SVG document as text). Yours; none is supplied. */
+  emblem?: string;
+  /** `round` (the default): the emblem on a disc with a ring, as a team's mark. `plain`: the picture as it is, for a trophy with a cut-out outline. */
+  emblemShape?: "round" | "plain";
+  /** An emblem's fit on its disc: `contain` (the default: shown whole) or `cover` (it fills the disc). */
+  emblemFit?: "contain" | "cover";
+  /** What the emblem is, for the drawing's description: "World Cup". */
+  emblemName?: string;
+  /** Where the score goes: `centre` (the plate stays in the middle, a little smaller, and the pictures keep clear of it), `strip` (the compact strip under the drawing) or `auto` (the default: the centre, unless there is an emblem or the sport's board is large, which then go to the strip). */
+  score?: "auto" | "centre" | "strip";
+  /**
+   * How a carpet fills its half: `fill` (the default) takes the room the half gives it with a margin, as a ceremony's flags are made to the size of the half, so its shape may differ from the
+   * flag's ratio by up to 2 to 1, and the art is stretched a little and cropped a little (each by the square root of the difference, so stripes stay stripes and a centred emblem stays nearly round);
+   * `ratio` keeps the flag's own ratio and leaves the rest of the half bare. A stage is round either way.
+   */
+  fit?: "fill" | "ratio";
+  /** The size of a carpet or a stage, as a share of the room its half gives it. 0.4 to 1; 1 by default (the room less a margin). */
+  scale?: number;
+  /** Write each team's name on its picture. By default only a team with no flag or logo has its name (or its initials, when they would not fit). */
+  names?: boolean;
+  /** An entrance, in CSS only and for people who have not asked for less motion: `unfurl` (a carpet rolls out from its end, a stage grows) or `fade`. `none` by default. */
+  animate?: "none" | "unfurl" | "fade";
+}
+
 /** One team of a score. */
 export interface Team {
   /** The name, as it is to be written: "Harbour City Gulls". */
@@ -488,6 +533,8 @@ export interface Team {
   mark?: TeamMark;
   /** A round mark's fit: `cover` (the default) fills the circle with the picture, as a flag does; `contain` shows a crest whole on a plain disc. */
   markFit?: "cover" | "contain";
+  /** The pageant's carpet is as wide as it is tall by this ratio: 1.5 for a flag of 3 to 2. Read from an SVG logo's `viewBox` when missing, else 1.5; held between 1 and 3. */
+  logoRatio?: number;
   /** The goals it scored in a penalty shoot-out: shown with the status, and the winner of a level game. */
   penalties?: number | string;
   /** Curling: the points it scored in each end, in order (`null` for an end not played yet; `"X"` for a conceded one). */
@@ -659,6 +706,11 @@ export interface SurfaceOptions {
    * Unset, the drawing is byte for byte as before. See `BackgroundOptions`.
    */
   background?: Background;
+  /**
+   * The pageant: each team's flag or logo laid large over its half (a `carpet`) or on a round disc (a `stage`), with an emblem in the centre. `"carpet"`, `"stage"`, `true` (a carpet) or `PageantOptions`.
+   * Off by default; a score drawing only. See `PageantOptions`.
+   */
+  pageant?: PageantStyle | boolean | PageantOptions;
   /** A named look: the surface, the lines and the ground round it in one palette, light and dark. See `LOOKS`. Over the theme's colours, under `colors`. */
   look?: LookName;
   /** The width of the lines (see `LineWidth`): a multiple of the width they are drawn at, or an absolute width. */

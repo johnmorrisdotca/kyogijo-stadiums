@@ -38,6 +38,7 @@ export const NAV = [
       { slug: "annotations", ja: "攻撃方向・目盛り・部位名の注釈" },
       { slug: "ranges", ja: "表示範囲とズーム" },
       { slug: "layouts", ja: "レイアウトと背景" },
+      { slug: "pageant", ja: "ハーフに広げる旗とエンブレム" },
       { slug: "accessibility", ja: "アクセシビリティ" },
     ],
   },
@@ -94,6 +95,7 @@ export const NAV = [
       { slug: "gallery-styling", en: "Gallery: looks and annotations", ja: "ギャラリー：スタイルと注釈", site: true },
       { slug: "gallery-ranges", en: "Gallery: display ranges and zoom", ja: "ギャラリー：表示範囲とズーム", site: true },
       { slug: "gallery-layouts", en: "Gallery: layouts and backgrounds", ja: "ギャラリー：レイアウトと背景", site: true },
+      { slug: "gallery-pageant", en: "Gallery: flags on the halves", ja: "ギャラリー：ハーフに広げる旗", site: true },
     ],
   },
   {

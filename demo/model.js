@@ -2,7 +2,7 @@
 // choices every control offers, and which rows are shown. The page's script (demo.js) runs it in the browser; the build
 // (scripts/site.mjs) runs the same code to write the first view into the HTML, so what the script finds is what it would draw.
 import { COURT_THEMES, ERA_SPORTS, GROUNDS, LEAGUES, PARKS, SOCCER_PITCH_IDS, SOCCER_PROVIDER_IDS, SPORTS, eraRange, hasHistory, leagueChanges } from "./dist/index.js";
-import { EMBLEMS, FAMILIES, GAMES, TEAMS, TEAMS_JA } from "./examples.js";
+import { EMBLEMS, FAMILIES, GAMES, PAGEANT_EMBLEM, TEAMS, TEAMS_JA } from "./examples.js";
 
 export const SIZES = ["full", "compact", "badge", "surface"];
 export const ORIENTATIONS = ["landscape", "portrait", "auto"];
@@ -16,6 +16,8 @@ export const SHEETS = ["sheet", "top", "bottom", "folded"];
 export const WINNERS = ["auto", "leader", "none", "home", "away"];
 export const VIEWS = ["flat", "3d"];
 export const VIEWPOINTS = ["overhead", "broadcast", "end", "corner"];
+export const PAGEANTS = ["off", "carpet", "stage"];
+export const PAGEANT_LINES = ["over", "under", "through"];
 export const COURTS = ["default", "maple", "twoTone", "night", "sunburst", "tournament"];
 
 const pick = (value, list, fallback) => (list.includes(value) ? value : fallback);
@@ -44,6 +46,11 @@ export function makeState(params, kept = null) {
     label: "",
     winner: "auto",
     detail: "full",
+    // The pageant: each team's flag laid over its half (carpets) or on a round stage, with a cup in the centre and an entrance, if asked.
+    pageant: pick(params.get("pageant"), PAGEANTS, "off"),
+    pageantLines: pick(params.get("pageantlines"), PAGEANT_LINES, "over"),
+    pageantEmblem: params.get("emblem") === "1",
+    pageantEntrance: false,
     stripes: true,
     exact: false,
     court: pick(params.get("court"), COURTS, "default"),
@@ -178,6 +185,12 @@ export function optionsFor(s, lang, forCode = false) {
     if (s.date) o.date = s.date;
     if (s.label) o.label = s.label;
     if (s.winner !== "auto") o.winner = s.winner;
+    if (s.pageant !== "off") {
+      o.pageant = { style: s.pageant };
+      if (s.pageantLines !== "over") o.pageant.lines = s.pageantLines;
+      if (s.pageantEmblem) o.pageant.emblem = forCode ? "/logos/cup.svg" : PAGEANT_EMBLEM;
+      if (s.pageantEntrance) o.pageant.animate = "unfurl";
+    }
   }
   return o;
 }
@@ -192,6 +205,8 @@ export const labelOf = (say, s) => ({
   status: (v) => say(`status_${v.replace(/-/g, "_")}`),
   winner: (v) => (v === "away" && s.sport === "mlb" ? say("awayBaseball") : say(`winner_${v}`)),
   detail: (v) => say(`detail_${v}`),
+  pageant: (v) => say(`pageant_${v}`),
+  pageantLines: (v) => say(`pageantLines_${v}`),
   court: (v) => say(`court_${v}`),
   pattern: (v) => say(`pattern_${v}`),
   goals: (v) => say(`goals_${v}`),
@@ -215,6 +230,8 @@ export const SEGS = [
   { id: "status", kind: "status", values: STATUSES, get: (s) => s.status },
   { id: "winner", kind: "winner", values: WINNERS, get: (s) => s.winner },
   { id: "detail", kind: "detail", values: ["full", "simple"], get: (s) => s.detail },
+  { id: "pageant", kind: "pageant", values: PAGEANTS, get: (s) => s.pageant },
+  { id: "pageant-lines", kind: "pageantLines", values: PAGEANT_LINES, get: (s) => s.pageantLines },
   { id: "court", kind: "court", values: COURTS, get: (s) => s.court },
   { id: "pattern", kind: "pattern", values: PATTERNS, get: (s) => s.pattern },
   { id: "goals", kind: "goals", values: GOALS, get: (s) => s.goals },
@@ -234,6 +251,8 @@ export const TOGGLES = [
   { id: "crowd", get: (s) => s.crowd },
   { id: "crowd-tifo", get: (s) => s.crowdTifo },
   { id: "flags", get: (s) => s.flags },
+  { id: "pageant-emblem", get: (s) => s.pageantEmblem },
+  { id: "pageant-entrance", get: (s) => s.pageantEntrance },
 ];
 
 /** The text fields and what each holds. */
@@ -276,6 +295,7 @@ export function hiddenRows(s) {
     "era-notes": !(seasons && past),
     "court-group": s.sport !== "nba",
     "crowd-row": !s.crowd,
+    "pageant-group": s.pageant === "off" || s.size === "surface",
     "status-text": s.status !== "custom",
     "away-logo-url": s.away.logo !== "url",
     "home-logo-url": s.home.logo !== "url",

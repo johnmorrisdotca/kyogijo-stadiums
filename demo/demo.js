@@ -106,6 +106,8 @@ makeSeg("theme", (v) => { state.theme = v; keep.set("kyogijo-stadiums.theme", v)
 makeSeg("status", (v) => { state.status = v; });
 makeSeg("winner", (v) => { state.winner = v; });
 makeSeg("detail", (v) => { state.detail = v; });
+makeSeg("pageant", (v) => { state.pageant = v; });
+makeSeg("pageant-lines", (v) => { state.pageantLines = v; });
 makeSeg("court", (v) => { state.court = v; });
 makeSeg("pattern", (v) => { state.pattern = v; });
 makeSeg("goals", (v) => { state.goals = v; });
@@ -148,7 +150,7 @@ function renderEra() {
 function toggle(id, key) {
   $(id).addEventListener("click", () => { state[key] = !state[key]; $(id).setAttribute("aria-pressed", String(state[key])); change(); });
 }
-for (const [id, key] of [["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["crowd", "crowd"], ["crowd-tifo", "crowdTifo"], ["flags", "flags"]]) toggle(id, key);
+for (const [id, key] of [["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["crowd", "crowd"], ["crowd-tifo", "crowdTifo"], ["flags", "flags"], ["pageant-emblem", "pageantEmblem"], ["pageant-entrance", "pageantEntrance"]]) toggle(id, key);
 
 function fillFields() {
   for (const field of FIELDS) {
@@ -304,7 +306,7 @@ function render() {
   }
   renderEra();
   applyRows();
-  for (const toggleOf of [["flags", "flags"], ["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["crowd", "crowd"], ["crowd-tifo", "crowdTifo"]]) $(toggleOf[0]).setAttribute("aria-pressed", String(state[toggleOf[1]]));
+  for (const toggleOf of [["flags", "flags"], ["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["crowd", "crowd"], ["crowd-tifo", "crowdTifo"], ["pageant-emblem", "pageantEmblem"], ["pageant-entrance", "pageantEntrance"]]) $(toggleOf[0]).setAttribute("aria-pressed", String(state[toggleOf[1]]));
   $("crowd-density").value = String(state.crowdDensity);
   $("crowd-density-out").textContent = `${state.crowdDensity}%`;
   updateEmbed();
@@ -318,10 +320,12 @@ function syncUrl() {
   else q.delete("year");
   if (state.league !== null && !isOwnLeague(state.sport, state.league)) q.set("league", state.league);
   else q.delete("league");
-  for (const [key, value, base] of [["pitch", state.pitch, "fifa"], ["ground", state.ground, "none"], ["pitchtype", state.pitchType, "none"], ["park", state.park, "generic"], ["sheet", state.sport === "curling" ? state.sheet : "sheet", "sheet"], ["size", state.size, "full"], ["orientation", state.orientation, "auto"], ["view", state.view, "flat"], ["viewpoint", state.view === "3d" ? state.viewpoint : "corner", "corner"], ["theme", state.theme, "auto"]]) {
+  for (const [key, value, base] of [["pitch", state.pitch, "fifa"], ["ground", state.ground, "none"], ["pitchtype", state.pitchType, "none"], ["park", state.park, "generic"], ["sheet", state.sport === "curling" ? state.sheet : "sheet", "sheet"], ["size", state.size, "full"], ["orientation", state.orientation, "auto"], ["view", state.view, "flat"], ["viewpoint", state.view === "3d" ? state.viewpoint : "corner", "corner"], ["theme", state.theme, "auto"], ["pageant", state.pageant, "off"], ["pageantlines", state.pageantLines, "over"]]) {
     if (value === base) q.delete(key);
     else q.set(key, value);
   }
+  if (state.pageant !== "off" && state.pageantEmblem) q.set("emblem", "1");
+  else q.delete("emblem");
   history.replaceState(history.state, "", `${location.pathname}?${q.toString()}${location.hash}`);
 }
 
@@ -362,7 +366,7 @@ function code(kind) {
       for (const [key, attr] of [["status", "status"], ["competition", "competition"], ["date", "date"], ["label", "label"], ["winner", "winner"]]) if (o[key]) attrs.push(`${attr}="${escapeAttr(o[key])}"`);
     }
     // What has no attribute of its own goes in the `options` JSON.
-    const more = { ...(o.court ? { court: o.court } : {}), ...(o.sheet ? { sheet: o.sheet } : {}), ...(o.crowd ? { crowd: o.crowd } : {}) };
+    const more = { ...(o.court ? { court: o.court } : {}), ...(o.sheet ? { sheet: o.sheet } : {}), ...(o.crowd ? { crowd: o.crowd } : {}), ...(o.pageant ? { pageant: o.pageant } : {}) };
     if (Object.keys(more).length > 0) attrs.push(`options='${JSON.stringify(more).replace(/'/g, "&#39;")}'`);
     return `<script type="module" src="${CDN}/dist/element-define.js"></script>\n\n<kyogijo-field\n  ${attrs.join("\n  ")}\n></kyogijo-field>`;
   }

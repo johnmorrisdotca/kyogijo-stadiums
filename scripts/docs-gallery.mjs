@@ -834,7 +834,68 @@ function fieldsPage(lib) {
   };
 }
 
-export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, specialPage, dataPage, curlingPage, courtsPage, fieldsPage, stylingPage, rangesPage, layoutsPage];
+/** The made-up nations, flags and cup of the pageant's pictures: shapes drawn in code, none of them a real flag, crest or emblem. */
+const PAGEANT_CODE = String.raw`const flag = (a, b, c) => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 20"><rect width="30" height="20" fill="' + a + '"/><path d="M15 2L27 10L15 18L3 10Z" fill="' + b + '"/><circle cx="15" cy="10" r="3.4" fill="' + c + '"/></svg>';
+const stripes = (a, b, c) => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 20"><rect width="10.1" height="20" fill="' + a + '"/><rect x="10" width="10.1" height="20" fill="' + b + '"/><rect x="20" width="10" height="20" fill="' + c + '"/></svg>';
+const cup = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#14233f"/><path d="M33 26H67V42Q67 58 50 62Q33 58 33 42Z" fill="#f2c230"/><path d="M33 30H24Q24 46 36 50M67 30H76Q76 46 64 50" fill="none" stroke="#f2c230" stroke-width="4"/><path d="M46 62H54V72H62V78H38V72H46Z" fill="#f2c230"/></svg>';
+const aurelia = { name: "Aurelia", abbr: "AUR", score: 2, color: "#0f7a7a", logo: flag("#0f7a7a", "#f4f0e4", "#e07a1f") };
+const calvara = { name: "Calvara", abbr: "CAL", score: 1, color: "#6b2d5c", logo: stripes("#6b2d5c", "#f2c230", "#14233f") };`;
+
+function pageantPage() {
+  const sports = ["nfl", "cfl", "ifaf", "nhl", "nba", "soccer", "mlb", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis", "lacrosse", "rugby", "afl", "gaelic", "cricket", "fieldhockey", "handball"];
+  const call = (extra, more = "") => `import { drawKyogijo } from "${MAIN}";\n\n${PAGEANT_CODE}\nconst svg = drawKyogijo({ ${extra}, away: aurelia, home: calvara, status: "final", competition: "Northern Cup final"${more} });`;
+  return {
+    slug: "gallery-pageant",
+    title: "Gallery: flags on the halves",
+    ja: "ハーフに広げる旗",
+    intro: "Each team's flag or crest laid large over its half of the surface, as a stadium does for a final's ceremony: as a carpet, or on a round stage, with an emblem in the centre. The nations, flags and cup are made up, and drawn in the code under each picture.",
+    sections: [
+      section("carpets", "A carpet on every surface", "`pageant: \"carpet\"` lays each flag at its own ratio, with a dark border and a gentle fabric of light and shade. A diamond's home team is on the infield and the visitors are in the outfield; a curling sheet has a flag in each house. Where the plate would cost the carpets their size the score goes to the strip.", sports.map((sport) => item(`pageant-carpet-${sport}`, `${SPORT_TITLES[sport]}, carpets`, call(`sport: "${sport}", pageant: "carpet"`)))),
+      section("stages", "A stage on every surface", "`pageant: \"stage\"` puts each crest on a large round disc with a gold ring. A flag is cut to the circle; `markFit: \"contain\"` on a team shows a crest whole.", sports.map((sport) => item(`pageant-stage-${sport}`, `${SPORT_TITLES[sport]}, stages`, call(`sport: "${sport}", pageant: "stage"`)))),
+      section("emblem", "An emblem in the centre", "`emblem` is a competition's picture or a trophy, in the centre circle, centre ice or centre court. The score then goes to the strip under the drawing.", [
+        item("pageant-emblem-soccer", "Soccer pitch: carpets and the cup", call('sport: "soccer", pageant: { emblem: cup, emblemName: "Northern Cup" }')),
+        item("pageant-emblem-soccer-stage", "Soccer pitch: stages and the cup", call('sport: "soccer", pageant: { style: "stage", emblem: cup, emblemName: "Northern Cup" }')),
+        item("pageant-emblem-nhl", "NHL rink: stages and the cup at centre ice", call('sport: "nhl", pageant: { style: "stage", emblem: cup }')),
+        item("pageant-emblem-nba", "NBA court: carpets and the cup at centre court", call('sport: "nba", pageant: { emblem: cup }')),
+        item("pageant-emblem-nfl", "NFL field: carpets and the cup at midfield", call('sport: "nfl", pageant: { emblem: cup }')),
+        item("pageant-emblem-plain", "A trophy as it is, with no disc", `import { drawKyogijo } from "${MAIN}";\n\n${PAGEANT_CODE}\nconst trophy = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M30 14H70V40Q70 62 50 66Q30 62 30 40Z" fill="#d8ae4a"/><path d="M30 20H16Q16 44 34 50M70 20H84Q84 44 66 50" fill="none" stroke="#d8ae4a" stroke-width="5"/><path d="M44 66H56V80H68V88H32V80H44Z" fill="#a67a1d"/></svg>';\nconst svg = drawKyogijo({ sport: "soccer", away: aurelia, home: calvara, status: "final", pageant: { emblem: trophy, emblemShape: "plain" } });`, "`emblemShape: \"plain\"` draws a picture with a cut-out outline as it is, over a soft shadow."),
+        item("pageant-emblem-baseball", "Baseball field: the cup on the mound", call('sport: "mlb", pageant: { emblem: cup }')),
+      ]),
+      section("tall", "Tall, and small", "A tall drawing lays the halves one above the other, and each flag is turned back upright. Under 320 pixels wide, or with `detail: \"simple\"`, the fabric, the hairlines and the name pills are left out.", [
+        item("pageant-tall-soccer", "Soccer pitch, tall, with the cup", call('sport: "soccer", orientation: "portrait", pageant: { emblem: cup }')),
+        item("pageant-tall-nfl", "NFL field, tall", call('sport: "nfl", orientation: "portrait", pageant: "carpet"')),
+        item("pageant-tall-stage", "NBA court, tall, stages", call('sport: "nba", orientation: "portrait", pageant: "stage"')),
+        item("pageant-small", "A small drawing", call('sport: "nhl", width: 280, pageant: "carpet"')),
+      ]),
+      section("choices", "Borders, lines, fabric and names", "Each choice on its own: the border band (`dark`, `team` or a colour) and its width, the lines of the surface over, under or through the pictures, the fabric, a name on each flag, the score in the middle, a smaller picture, and a team with no flag.", [
+        item("pageant-ratio-fit", "Carpets at the flags' own ratio", call('sport: "soccer", pageant: { fit: "ratio", score: "strip" }'), "`fit: \"ratio\"` keeps each flag's own ratio and leaves the rest of the half bare."),
+        item("pageant-border-team", "A border in each team's colour", call('sport: "soccer", pageant: { border: "team", borderWidth: 0.1 }')),
+        item("pageant-border-gold", "A gold border", call('sport: "soccer", pageant: { border: "#c9a24a" }')),
+        item("pageant-lines-over", "Lines over the carpets (the default)", call('sport: "soccer", pageant: { score: "strip" }')),
+        item("pageant-lines-under", "Lines under the carpets", call('sport: "soccer", pageant: { lines: "under", score: "strip" }'), "The carpets cover the lines under them."),
+        item("pageant-lines-through", "Lines through the carpets", call('sport: "soccer", pageant: { lines: "through", score: "strip" }'), "The carpets are a little see-through, so the lines show faintly."),
+        item("pageant-no-fabric", "No fabric", call('sport: "nhl", pageant: { fabric: false }')),
+        item("pageant-names", "A name on each flag", call('sport: "nhl", pageant: { names: true }')),
+        item("pageant-centre", "The score in the middle", call('sport: "nhl", pageant: { score: "centre" }'), "The plate is a little smaller and the carpets keep clear of it."),
+        item("pageant-scale", "Smaller pictures", call('sport: "soccer", pageant: { scale: 0.7, score: "strip" }')),
+        item("pageant-stage-team", "A stage ringed in the team's colour", call('sport: "nhl", pageant: { style: "stage", ring: "team" }')),
+        item("pageant-no-flags", "No flags: the team's colours with its name", `import { drawKyogijo } from "${MAIN}";\n\nconst svg = drawKyogijo({\n  sport: "nhl",\n  away: { name: "Northern Owls", abbr: "NOW", score: 3, color: "#3a2d6b" },\n  home: { name: "Lakeshore Anchors", abbr: "LSA", score: 2, color: "#0f7a7a" },\n  status: "final-ot",\n  pageant: "carpet",\n});`),
+        item("pageant-no-flags-stage", "No flags, on stages", `import { drawKyogijo } from "${MAIN}";\n\nconst svg = drawKyogijo({\n  sport: "nhl",\n  away: { name: "Northern Owls", abbr: "NOW", score: 3, color: "#3a2d6b" },\n  home: { name: "Lakeshore Anchors", abbr: "LSA", score: 2, color: "#0f7a7a" },\n  status: "final-ot",\n  pageant: "stage",\n});`, "A team with no picture is its initials on its colour."),
+        item("pageant-ratio", "A flag of 2 to 1", `import { drawKyogijo } from "${MAIN}";\n\n${PAGEANT_CODE}\nconst long = { ...aurelia, logoRatio: 2, logo: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 20"><rect width="40" height="20" fill="#0f7a7a"/><rect y="7" width="40" height="6" fill="#f4f0e4"/></svg>' };\nconst svg = drawKyogijo({ sport: "soccer", away: long, home: calvara, status: "final", pageant: { score: "strip" } });`, "A carpet is at its flag's own ratio, read from an SVG's viewBox or given as `logoRatio`."),
+      ]),
+      section("themes", "Dark, a crop and an entrance", "In the dark theme the border, the hairline and the shadow change. A drawing cropped to a `range` shows the carpet in the part that is shown. `animate` is CSS only and for readers who have not asked for less motion; a picture here is the finished drawing.", [
+        item("pageant-dark", "Dark theme", call('sport: "soccer", theme: "dark", pageant: { emblem: cup }')),
+        item("pageant-dark-stage", "Dark theme, stages", call('sport: "nhl", theme: "dark", pageant: "stage"')),
+        item("pageant-range", "Cropped to the left half", call('sport: "soccer", range: { name: "half", end: "left" }, pageant: { score: "strip" }')),
+        item("pageant-compact", "A compact card", call('sport: "nba", size: "compact", pageant: "carpet"')),
+        item("pageant-round", "With round marks in the strip", call('sport: "soccer", markShape: "round", pageant: { style: "stage", emblem: cup }')),
+        item("pageant-animate", "With an entrance", call('sport: "soccer", pageant: { animate: "unfurl", emblem: cup }'), "The carpets roll out from their ends and the cup grows; the picture shows them finished."),
+      ]),
+    ],
+  };
+}
+
+export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, specialPage, dataPage, curlingPage, courtsPage, fieldsPage, stylingPage, rangesPage, layoutsPage, pageantPage];
 
 /** The sections of every page, with each item's picture made by running its code. */
 export function galleryData(lib) {

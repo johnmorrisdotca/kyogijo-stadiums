@@ -45,6 +45,11 @@ export function corpus(): Drawing[] {
     add(`${sport} Japanese, no stylesheet`, { sport, ...GAME, language: "ja", style: "none" });
     add(`${sport} parts`, { sport, ...GAME, parts: true, homeSide: "left" });
   }
+  for (const sport of SPORTS) {
+    add(`${sport} pageant carpet`, { sport, ...GAME, pageant: "carpet" });
+    add(`${sport} pageant stage, dark, with an emblem`, { sport, ...GAME, theme: "dark", pageant: { style: "stage", emblem: "https://example.com/cup.svg" } });
+    add(`${sport} pageant tall`, { sport, ...GAME, orientation: "portrait", pageant: { score: "centre", lines: "through" } });
+  }
   add("curling with pebble", { sport: "curling", id: "snap", sheet: { pebble: true } });
   for (const [sport, extra] of [
     ["nba", { league: "wnba" }],

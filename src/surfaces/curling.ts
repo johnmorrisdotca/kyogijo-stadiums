@@ -144,6 +144,8 @@ export function curling(o: BuildOptions, look: SheetLook): Surface {
   };
   surface.lineRef = { width: lineW, feet: 1 };
   surface.box = { x: 0, y: 0, w: L, h: W };
+  // A pageant: a picture in each house, the emblem in the middle of the sheet.
+  surface.pageant = { left: { cx: tl, cy, w: twelve * 2, h: twelve * 2, disc: twelve * 2 }, right: { cx: tr, cy, w: twelve * 2, h: twelve * 2, disc: twelve * 2 }, centre: { cx: L / 2, cy, r: W * 0.42 } };
   if (folded !== undefined) {
     // The panels hold the data of the strip again, larger; the labels go over it.
     surface.panels = folded.panels.map((p) => ({ transform: p.transform, clip: p.clip }));

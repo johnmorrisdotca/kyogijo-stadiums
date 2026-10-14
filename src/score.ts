@@ -242,6 +242,13 @@ export function stateOf(winner: "home" | "away" | "none", role: "home" | "away")
   return winner === role ? "win" : "lose";
 }
 
+/** The least gap between a team's code and its score in the badge, and the least size of the code and of the score before the flag is left out. */
+const BADGE_GAP = 10;
+const BADGE_MEASURE_SCORE = 1.12;
+const BADGE_MEASURE_CODE = 1.2;
+const BADGE_ABBR_LEAST = 12;
+const BADGE_SCORE_LEAST = 16;
+
 /** The badge: one strip, [logo abbreviation score] [picture and status] [score abbreviation logo]. */
 export function badgeMarkup(left: TeamView, right: TeamView, o: { sport: Sport; status: string | undefined; turned?: boolean; parts: boolean; id?: string }): { w: number; h: number; markup: string } {
   const W = 440;
@@ -254,17 +261,36 @@ export function badgeMarkup(left: TeamView, right: TeamView, o: { sport: Sport; 
     const isLeft = team.side === "left";
     const logoSize = 40;
     const logoX = isLeft ? 12 : W - 12 - logoSize;
-    const textStart = isLeft ? (team.logo === undefined ? 14 : 60) : W - (team.logo === undefined ? 14 : 60);
     const scoreEdge = isLeft ? block - 14 : W - block + 14;
-    const scoreSize = Math.min(32, (block * 0.42) / Math.max(1, textWidth(team.score)));
-    const room = Math.abs(scoreEdge - textStart) - textWidth(team.score) * scoreSize - 8;
-    const abbrSize = Math.max(8, Math.min(22, room / Math.max(1, textWidth(team.abbr))));
+    // The code and the score each keep to their own room, with a gap between them: the score is measured, and when the two do not fit the code shrinks to the least that reads, then the score does,
+    // and then the flag is left out to give them its room. A short score in a roomy block is laid out as it always was.
+    const fit = (withLogo: boolean): { textStart: number; scoreSize: number; abbrSize: number; ok: boolean } => {
+      const textStart = isLeft ? (withLogo ? 60 : 14) : W - (withLogo ? 60 : 14);
+      const avail = Math.abs(scoreEdge - textStart);
+      // The measure is an estimate, under what a bold face draws (by a tenth for digits, a fifth for capitals): the layout allows for that.
+      const ws = Math.max(1, textWidth(team.score) * BADGE_MEASURE_SCORE);
+      const wa = Math.max(1, textWidth(team.abbr) * BADGE_MEASURE_CODE);
+      let scoreSize = Math.min(32, (block * 0.42) / ws);
+      let abbrSize = Math.min(22, (avail - ws * scoreSize - BADGE_GAP) / wa);
+      if (abbrSize < BADGE_ABBR_LEAST) {
+        abbrSize = BADGE_ABBR_LEAST;
+        scoreSize = Math.min(scoreSize, (avail - BADGE_GAP - abbrSize * wa) / ws);
+      }
+      return { textStart, scoreSize, abbrSize, ok: scoreSize >= BADGE_SCORE_LEAST };
+    };
+    const withLogo = team.logo !== undefined;
+    let laid = fit(withLogo);
+    const logoShown = withLogo && (laid.ok || !fit(false).ok);
+    if (withLogo && !logoShown) laid = fit(false);
+    const { textStart } = laid;
+    const scoreSize = Math.max(laid.scoreSize, 8);
+    const abbrSize = Math.max(laid.abbrSize, 8);
     // The hammer: a small stone in the corner of the team's block.
     if (team.hammer === true) out += el("g", { class: `ky-badge-hammer ky-badge-hammer-${team.side}`, transform: `translate(${isLeft ? block - 11 : W - block + 11} 11)` }, el("circle", { class: "ky-hammer", r: 6 }) + el("circle", { class: "ky-hammer-in", r: 2.6 }));
     // The ball of the team that is serving, in the same corner.
     if (team.serving === true) out += el("g", { transform: `translate(${isLeft ? block - 11 : W - block + 11} 11)` }, el("circle", { class: "ky-serve", r: 6 }) + el("path", { class: "ky-serve-seam", d: "M-4.7 -1.8Q0 1.8 4.7 -1.8", "stroke-width": 0.9 }));
     out += el("g", { class: `ky-badge-team ky-badge-${team.side} ky-${team.state}`, part: part(o.parts, `team ${team.role}`) },
-      (team.logo === undefined
+      (!logoShown || team.logo === undefined
         ? ""
         : team.round === true
           ? roundMarkup({ id: `${o.id ?? "ky"}-mk-${team.role}`, cx: logoX + logoSize / 2, cy: 12 + logoSize / 2, r: logoSize / 2, href: team.logo, fit: team.fit, ring: 2 })

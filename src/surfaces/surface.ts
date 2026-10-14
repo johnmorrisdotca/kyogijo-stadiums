@@ -25,6 +25,24 @@ export interface PlateSpot {
   h: number;
 }
 
+/** A place on a surface for a pageant's picture, in the surface's frame in feet; a `disc` is the diameter of the round room the picture must lie in (a curling house). */
+export interface PageantSpot extends PlateSpot {
+  disc?: number;
+}
+
+/** What a surface says of where a pageant's pictures go, when it is not the plain halves and the middle. */
+export interface PageantPlan {
+  /** Where the first (left) team's picture goes, and the second's (right), when not in the halves: a diamond's outfield and infield, a sheet's two houses. */
+  left?: PageantSpot;
+  right?: PageantSpot;
+  /** The emblem's place: its centre and the radius of the circle it lies in; the middle of the surface, with the centre circle's radius, when missing. */
+  centre?: { cx: number; cy: number; r: number };
+  /** Half the length, along the surface, that the pictures keep clear in the middle (a cricket pitch's). */
+  clear?: number;
+  /** The first picture is the away team's and the second the home team's, whichever side each is on (a diamond's outfield is the visitors', its infield the home team's). */
+  byRole?: boolean;
+}
+
 /** The parts of a surface a drawing can be cropped to, by name: one box, or one at each end (`left` and `right` as the surface lies wide), in feet in the wide frame. */
 export type SurfaceRanges = Readonly<Record<string, Box | { left: Box; right: Box }>>;
 
@@ -73,6 +91,10 @@ export interface Surface {
   over?: string;
   /** True for a surface whose frame has parts the annotations (axes, direction, landmarks) have no margin to stand in. */
   folded?: boolean;
+  /** The radius of the centre circle in feet, where the surface has one: the emblem of a pageant lies in it. */
+  centreRadius?: number;
+  /** Where a pageant's pictures go, when the halves and the middle are not the place. */
+  pageant?: PageantPlan;
   /** How wide the surface's ordinary line is drawn, in the units of the `lines` markup, and how many feet one of those units is: what `lineWidth` scales. */
   lineRef?: { width: number; feet: number };
   /** For a surface with a crowd: the margin it was drawn with, which holds the stands. */
@@ -111,6 +133,8 @@ export interface BuildOptions {
   };
   /** True in a score drawing, so that panels are made room for. */
   score: boolean;
+  /** True when the drawing is a pageant: the teams' pictures lie over the halves, so the ends are not painted in the teams' colours. */
+  pageant?: boolean;
   /** The names of the features that have a colour of their own, so that their elements carry the class that colour is given to. */
   features?: ReadonlySet<string>;
   /** How the grass is mown, when the options say (a football field and a ballpark have their own default). */

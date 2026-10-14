@@ -138,6 +138,8 @@ export function sceneToGeoJSON(source: SceneSource, options: GeoJsonOptions = {}
     visit(g.coordinates);
   };
   scene.items.forEach((item, order) => {
+    // A pageant's pictures are a picture laid over the surface, not a part of it: they are left out.
+    if (item.data?.pg !== undefined) return;
     if (options.filter !== undefined && !options.filter(item)) return;
     const s = item.style;
     const properties: Feature["properties"] = {

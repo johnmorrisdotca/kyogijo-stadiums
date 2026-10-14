@@ -146,6 +146,8 @@ console.log(ice.features.length, ice.features[0].geometry.type, ice.bbox);
 - **A flat plane, not longitude and latitude.** The coordinates are in feet, or the frame's unit, which RFC 7946 does not allow of a position, and the file says so (`kyogijo.note`). Use a tool that takes a plane: Leaflet's `CRS.Simple`, d3's `geoIdentity()`, deck.gl's Cartesian coordinates, or QGIS with a local CRS. Putting a ballpark or a ground on the map in longitude and latitude, with the local projection of `@johnmorrisdotca/chizu`, is not done here yet.
 - **Clips are not applied.** A layer is cut to the surface's outline on the drawing; in GeoJSON its shapes are whole.
 
+A [pageant's](./pageant.md) carpets, stages and emblem are left out of the GeoJSON: it is of the surface, and a picture laid over it is not a part of it.
+
 ## PNG
 
 `toPNG(drawing, { width })` returns PNG bytes, by [resvg](https://github.com/yisibl/resvg-js), a Rust renderer. It is an optional peer dependency: `npm install @resvg/resvg-js` to use it, and without it `toPNG` throws an error that says what to install. It is loaded when `toPNG` is called, by name, so nothing that does not call it needs it, and it runs in Node only. It draws the stylesheet-free SVG of the scene (resvg does not read CSS variables).

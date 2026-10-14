@@ -23,6 +23,7 @@ export { KYOGIJO_CROWD_STYLE } from "./crowd.draw.ts";
 export { GRIDIRON_GROUNDS, WALL_SEATS, outlinePath, outlinePoints } from "./crowd.ts";
 export type { CrowdStands, StandGap, StandRing, StandSector, Outline as StandOutline } from "./crowd.ts";
 export { KYOGIJO_MARK_STYLE } from "./mark.ts";
+export { KYOGIJO_PAGEANT_MOTION, KYOGIJO_PAGEANT_STYLE } from "./pageant.style.ts";
 export { KYOGIJO_CURLING_STYLE, KYOGIJO_HEAT_STYLE, KYOGIJO_NOTE_STYLE, KYOGIJO_STYLE, KYOGIJO_TEAM_STYLE, KYOGIJO_WALLS_STYLE } from "./style.ts";
 export { KYOGIJO_LOOK_STYLE, LOOKS, LOOK_NAMES, LOOK_PAIRS, contrastOf, groupOf, lookPalette, lookStyle } from "./look.ts";
 export type { Group as LookGroup, Look, Palette as LookPalette, PaletteKey as LookPaletteKey } from "./look.ts";
@@ -73,6 +74,8 @@ export type {
   QuirkName,
   QuirkOptions,
   RangeBox,
+  PageantOptions,
+  PageantStyle,
   RangeName,
   RangeNamed,
   ScoreOptions,

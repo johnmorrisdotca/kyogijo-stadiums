@@ -175,6 +175,7 @@ export function basketball(o: BuildOptions, era?: NbaRules, court: CourtSpec = N
   };
   surface.lineRef = { width: thin, feet: 1 };
   surface.box = { x: 0, y: 0, w: L, h: W };
+  surface.centreRadius = court.centreRadius;
   // The paint: the lane from the baseline to the free-throw line and the circle beyond it, with a little floor round them.
   const paintDeep = keyW + R + 1.5;
   const paintHalf = Math.min(cy, Math.max(half, wide, R) + 2);

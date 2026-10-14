@@ -17,6 +17,8 @@ Pass `home` and `away`. Each team has a `name`, an optional `abbr`, `score`, `pe
 | `uppercase` | Names in capitals. On by default. |
 | `markShape` | `plain` (the default) or `round`: a flag or a logo in a circle with a ring, for both teams; a team's `mark` wins. |
 
+A flag or a crest can also be laid large over each half of the surface, with an emblem in the centre: [the pageant](./pageant.md).
+
 A team's logo is an `https:` or relative address, an image `data:` address, or the text of an SVG. It is drawn as an image, so it cannot run a script, and an address of any other kind is ignored. A team without a logo is its name alone.
 
 ### Which side the home team is on
