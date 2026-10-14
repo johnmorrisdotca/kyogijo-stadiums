@@ -33,6 +33,8 @@ src/
 │   ├── football.ts     the NFL, CFL and IFAF fields
 │   ├── hockey.ts       the NHL rink
 │   ├── basketball.ts   the NBA court
+│   ├── basketball.floor.ts  a hardwood floor's layers: the boards under the paint, the stained border, the seams and the sheen over it, the words in the border
+│   ├── basketball.gear.ts   what stands on a hardwood floor seen from above: the baskets and stanchions with their soft shadows, the coaching box, the table and the benches
 │   ├── baseball.ts     the baseball field and its fence
 │   ├── baseball.walls.ts  a park's walls and quirks drawn on the field: the bands of the walls, the hill, the overhang, the ivy, the poles, the backstop, the dugouts, the legend
 │   ├── soccer.ts       the soccer pitch
@@ -45,6 +47,7 @@ src/
 ├── layout.style.ts     the grid's rules: the ground colour and the ink of its words, light and dark
 ├── layouts-entry.ts    the layouts' entry
 ├── background.ts       the ground behind a drawing or a grid: SVG patterns, a colour and a photograph at an opacity
+├── hardwood.ts         the realistic basketball floor (`court.hardwood`): its options, the boards laid from a seed as two pattern tiles, and its rules
 ├── layers.ts           data layers: drawLayers, layerTable and the marks
 ├── layers.marks.ts     the shapes, curves, waves, heads and colour ramps of the marks
 ├── layers.types.ts     the types of a layer

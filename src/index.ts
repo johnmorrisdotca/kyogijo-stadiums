@@ -18,6 +18,7 @@ export type { ArrowsLayer, Comet, Layer, LayerBase, LayerKind, LayerTeam, LineDa
 export { KYOGIJO_STRINGS } from "./strings.ts";
 export type { KyogijoWords } from "./strings.ts";
 export { KYOGIJO_COURTS_STYLE } from "./courts.style.ts";
+export { HARDWOOD_SMALL, KYOGIJO_HARDWOOD_STYLE } from "./hardwood.ts";
 export { KYOGIJO_MARK_STYLE } from "./mark.ts";
 export { KYOGIJO_CURLING_STYLE, KYOGIJO_HEAT_STYLE, KYOGIJO_NOTE_STYLE, KYOGIJO_STYLE, KYOGIJO_TEAM_STYLE, KYOGIJO_WALLS_STYLE } from "./style.ts";
 export { KYOGIJO_LOOK_STYLE, LOOKS, LOOK_NAMES, LOOK_PAIRS, contrastOf, groupOf, lookPalette, lookStyle } from "./look.ts";
@@ -57,6 +58,7 @@ export type {
   Fence,
   GoalInfo,
   GoalStyle,
+  HardwoodOptions,
   Language,
   NetStyle,
   LineDash,

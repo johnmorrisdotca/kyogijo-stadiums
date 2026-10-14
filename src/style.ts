@@ -1,6 +1,7 @@
 import { KYOGIJO_BACKGROUND_STYLE } from "./background.ts";
 import { KYOGIJO_COURTS_STYLE } from "./courts.style.ts";
 import { KYOGIJO_FIELDS_STYLE } from "./fields.style.ts";
+import { KYOGIJO_HARDWOOD_STYLE } from "./hardwood.ts";
 import { KYOGIJO_FEATURE_STYLE } from "./features.ts";
 import { KYOGIJO_GRID_STYLE } from "./layout.style.ts";
 import { KYOGIJO_LOOK_STYLE } from "./look.ts";
@@ -182,4 +183,4 @@ export const KYOGIJO_NOTE_STYLE = `
 .kyogijo .ky-an-hd{fill:var(--c)}`.trim();
 
 /** Every rule of the package, for a page that draws with `style: "none"` and supplies the stylesheet itself. */
-export const KYOGIJO_STYLE = `${KYOGIJO_BASE_STYLE}\n${KYOGIJO_HEAT_STYLE}\n${KYOGIJO_TEAM_STYLE}\n${KYOGIJO_CURLING_STYLE}\n${KYOGIJO_WALLS_STYLE}\n${KYOGIJO_COURTS_STYLE}\n${KYOGIJO_FIELDS_STYLE}\n${KYOGIJO_LOOK_STYLE}\n${KYOGIJO_FEATURE_STYLE}\n${KYOGIJO_NOTE_STYLE}\n${KYOGIJO_SPECIAL_STYLE}\n${KYOGIJO_BACKGROUND_STYLE}\n${KYOGIJO_GRID_STYLE}\n${KYOGIJO_MARK_STYLE}\n${KYOGIJO_ROAD_STYLE}`;
+export const KYOGIJO_STYLE = `${KYOGIJO_BASE_STYLE}\n${KYOGIJO_HEAT_STYLE}\n${KYOGIJO_TEAM_STYLE}\n${KYOGIJO_CURLING_STYLE}\n${KYOGIJO_WALLS_STYLE}\n${KYOGIJO_COURTS_STYLE}\n${KYOGIJO_FIELDS_STYLE}\n${KYOGIJO_LOOK_STYLE}\n${KYOGIJO_HARDWOOD_STYLE}\n${KYOGIJO_FEATURE_STYLE}\n${KYOGIJO_NOTE_STYLE}\n${KYOGIJO_SPECIAL_STYLE}\n${KYOGIJO_BACKGROUND_STYLE}\n${KYOGIJO_GRID_STYLE}\n${KYOGIJO_MARK_STYLE}\n${KYOGIJO_ROAD_STYLE}`;
