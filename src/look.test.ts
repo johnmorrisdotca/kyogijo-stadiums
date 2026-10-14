@@ -3,8 +3,8 @@ import { SPORTS } from "./draw.ts";
 import { KYOGIJO_LOOK_STYLE, LOOKS, LOOK_NAMES, LOOK_PAIRS, contrastOf, groupOf, lookPalette, lookStyle } from "./look.ts";
 
 describe("the looks", () => {
-  it("are seven, each with a light and a dark palette", () => {
-    expect(LOOK_NAMES).toEqual(["grass", "night", "chalkboard", "blueprint", "print", "broadcast", "high-contrast"]);
+  it("are eight, each with a light and a dark palette", () => {
+    expect(LOOK_NAMES).toEqual(["grass", "night", "chalkboard", "blueprint", "print", "broadcast", "high-contrast", "line-drawing"]);
     for (const name of LOOK_NAMES) {
       expect(LOOKS[name].about.length, name).toBeGreaterThan(20);
       expect(Object.keys(LOOKS[name].light.base).length, name).toBeGreaterThan(15);

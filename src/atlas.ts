@@ -50,6 +50,8 @@ export interface Place {
   to?: number;
   /** The Wikidata item (`Q49136`): the key to join a place to other data. */
   wikidata: string;
+  /** True where Wikidata lists athletics among the sports of a soccer ground: a running track lies round its pitch (`drawKyogijo({ sport: "athletics", ground })`). Absent where Wikidata says nothing of it. */
+  track?: boolean;
 }
 
 /** What `placesBy` keeps: every field given must match. A list matches any of its members. */
@@ -119,6 +121,7 @@ const fromGround = (ground: Ground): Place => ({
   ...(ground.from === undefined ? {} : { from: ground.from }),
   ...(ground.status === "past" && ground.to !== undefined ? { to: ground.to } : {}),
   wikidata: ground.wikidata,
+  ...(ground.track === true ? { track: true } : {}),
 });
 
 /**

@@ -210,7 +210,29 @@ const cricketFrame = centreFrame("cricket", "Cricket ground, in yards from the m
 const fieldHockeyFrame = centreFrame("fieldhockey", "Field hockey pitch, in metres from the centre", "m", 45.7, 27.5);
 const handballFrame = centreFrame("handball", "Handball court, in metres from the centre", "m", 20, 10);
 
-for (const frame of [nhlApi, hockeyTech, nbaStats, nflTracking, mlbam, retrosheet, curling, tennisFrame, volleyballFrame, badmintonFrame, pickleballFrame, tableTennisFrame, lacrosseFrame, rugbyFrame, aflFrame, gaelicFrame, cricketFrame, fieldHockeyFrame, handballFrame]) if (!Object.prototype.hasOwnProperty.call(FRAMES, frame.name)) registerFrame(frame);
+/**
+ * The athletics stadium in the plain frame of its middle: the middle of the track as the origin, x along the straights (positive towards the right as the stadium is drawn wide), y across them, positive
+ * towards the bottom: the finish straight is at positive y, with the finish line at 42.195 m (half a straight) and the athletes running to the right along it. In metres. The frame is the plan's own
+ * (`athleticsPlan`), so a point of a lane (`pose`) is a point of the frame. It is fitted to the stadium's box, which is the oval's outer edge, so it is for a drawing of the stadium (the covered track
+ * too) and not for one field event alone at a large scale. This package's own frame: no tracking provider's format was read for athletics.
+ */
+const athleticsFrame: Frame = {
+  name: "athletics",
+  title: "Athletics stadium, in metres from the middle of the track",
+  sport: "athletics",
+  unit: "m",
+  x: [-100, 100],
+  y: [-60, 60],
+  origin: "the middle of the track",
+  yDirection: "down",
+  size: "variable",
+  ends: "none",
+  landmarks: (size: { length: number; width: number }): FrameMap => ({ x: span(-size.length / (1 / 0.3048) / 2, size.length / (1 / 0.3048) / 2, 0, size.length), y: span(-size.width / (1 / 0.3048) / 2, size.width / (1 / 0.3048) / 2, 0, size.width) }),
+  source: "this package's own frame: the middle of the track as the origin",
+  note: "Positive x is towards the right as the stadium is drawn wide, positive y towards the bottom, where the finish straight is. The athletes run counter-clockwise: to the right along the finish straight. The frame is fitted to the stadium's outer edge.",
+};
+
+for (const frame of [nhlApi, hockeyTech, nbaStats, nflTracking, mlbam, retrosheet, curling, tennisFrame, volleyballFrame, badmintonFrame, pickleballFrame, tableTennisFrame, lacrosseFrame, rugbyFrame, aflFrame, gaelicFrame, cricketFrame, fieldHockeyFrame, handballFrame, athleticsFrame]) if (!Object.prototype.hasOwnProperty.call(FRAMES, frame.name)) registerFrame(frame);
 
 // Retrosheet's hit-location diagram (Project Scoresheet's) draws the field in sectors: columns of the outfield from the left field
 // line to the right (7L, 7, 78, 8, 89, 9, 9L), each cut into rings of about 50 feet by depth (S shallow, none medium, D deep, XD

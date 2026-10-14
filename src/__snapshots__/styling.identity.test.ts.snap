@@ -2,6 +2,17 @@
 
 exports[`a drawing made without the styling options > is the same text as before they existed, drawing by drawing 1`] = `
 {
+  "athletics badge": "1clr4vq",
+  "athletics bare": "01j3rjr",
+  "athletics bare dark": "0fpfr0k",
+  "athletics colours": "0u8scvi",
+  "athletics compact": "1ql2hvl",
+  "athletics exact": "0ctoqcy",
+  "athletics layers": "01tdat7",
+  "athletics no style": "04e2421",
+  "athletics portrait": "1fexbxw",
+  "athletics score": "0qnrz85",
+  "athletics score tall": "1l9aoce",
   "badminton badge": "1s52xbm",
   "badminton bare": "011x8bg",
   "badminton bare dark": "1349huj",

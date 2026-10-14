@@ -8,13 +8,14 @@ import type { LookName, Sport } from "./types.ts";
 /** The parts of a palette, each a custom property of the stylesheet. */
 export type PaletteKey =
   | "ink" | "line" | "apron" | "surface" | "alt" | "zone" | "boards" | "red" | "blue" | "dirt" | "foul" | "infield" | "crease" | "key" | "court"
-  | "post" | "pylon" | "rgo" | "rgm" | "rgi" | "rgb" | "hog" | "hack" | "fgz" | "pebble" | "free" | "net" | "area";
+  | "post" | "pylon" | "rgo" | "rgm" | "rgi" | "rgb" | "hog" | "hack" | "fgz" | "pebble" | "free" | "net" | "area"
+  | "track" | "sand" | "mat" | "water" | "concrete" | "pad" | "markY" | "markB" | "markG" | "markR";
 
 /** Colours by part. */
 export type Palette = Partial<Record<PaletteKey, string>>;
 
 /** The surfaces that are painted alike: football's three fields are one. */
-export type Group = "football" | "nhl" | "nba" | "mlb" | "soccer" | "curling" | "net";
+export type Group = "football" | "nhl" | "nba" | "mlb" | "soccer" | "curling" | "net" | "athletics";
 
 /** One mode of a look: a palette for every sport, and what a group of sports changes in it. */
 export interface Mode {
@@ -35,10 +36,12 @@ const PROPERTY: Readonly<Record<PaletteKey, string>> = {
   red: "--ky-red", blue: "--ky-blue", dirt: "--ky-dirt", foul: "--ky-foul", infield: "--ky-infield", crease: "--ky-crease", key: "--ky-key", court: "--ky-court",
   post: "--ky-post", pylon: "--ky-pylon", rgo: "--ky-rg-o", rgm: "--ky-rg-m", rgi: "--ky-rg-i", rgb: "--ky-rg-b", hog: "--ky-hog", hack: "--ky-hack",
   fgz: "--ky-fgz", pebble: "--ky-pebble", free: "--ky-free", net: "--ky-net", area: "--ky-area",
+  track: "--ky-track", sand: "--ky-sand", mat: "--ky-mat", water: "--ky-water", concrete: "--ky-concrete", pad: "--ky-pad",
+  markY: "--ky-ath-y", markB: "--ky-ath-b", markG: "--ky-ath-g", markR: "--ky-ath-r",
 };
 
 /** The sports of each group. */
-const GROUP_SPORTS: Readonly<Record<Group, readonly string[]>> = { football: ["nfl", "cfl", "ifaf"], nhl: ["nhl"], nba: ["nba"], mlb: ["mlb"], soccer: ["soccer"], curling: ["curling"], net: ["tennis", "volleyball", "badminton", "pickleball", "tabletennis"] };
+const GROUP_SPORTS: Readonly<Record<Group, readonly string[]>> = { football: ["nfl", "cfl", "ifaf"], nhl: ["nhl"], nba: ["nba"], mlb: ["mlb"], soccer: ["soccer"], curling: ["curling"], net: ["tennis", "volleyball", "badminton", "pickleball", "tabletennis"], athletics: ["athletics"] };
 
 /** The group a sport is painted with, or `undefined` for a surface with no palette of its own (it takes the look's base). */
 export const groupOf = (sport: Sport | string): Group | undefined => (Object.keys(GROUP_SPORTS) as Group[]).find((group) => GROUP_SPORTS[group].includes(sport));
@@ -56,6 +59,7 @@ const GRASS: Look = {
       soccer: { surface: "#4c9b56", alt: "#438f4d", apron: "#c9d2bd" },
       curling: { surface: "#eaf3f9", apron: "#cfd8de", boards: "#8d98a0", line: "#23292d", rgo: "#2a5db0", rgm: "#ffffff", rgi: "#c8372d", rgb: "#ffffff", hog: "#c8372d", hack: "#3a4046", fgz: "rgba(42,93,176,.1)", pebble: "rgba(110,140,165,.4)" },
       net: { surface: "#3d78bd", alt: "#3d78bd", free: "#2f5f9a", apron: "#dcd8c9", area: "#4a86c8", net: "#20262b" },
+      athletics: { surface: "#4c9b56", alt: "#438f4d", apron: "#d9d6c8", track: "#c05a46", sand: "#e3cf9d", mat: "#3d6fb5", water: "#7cc4ee", concrete: "#a9adb0", pad: "#40454a" },
     },
   },
   dark: {
@@ -67,6 +71,7 @@ const GRASS: Look = {
       soccer: { surface: "#2d6c3e", alt: "#276136", apron: "#1b1f1c" },
       curling: { surface: "#8fa6b7", apron: "#1a2025", boards: "#4b5156", line: "#11171b", rgo: "#3f6cc0", rgm: "#dfe8ef", rgi: "#c9473e", rgb: "#dfe8ef", hog: "#8a1f19", hack: "#161b1f", fgz: "rgba(20,40,90,.18)", pebble: "rgba(80,105,125,.4)" },
       net: { surface: "#2f5f99", alt: "#2f5f99", free: "#244a78", apron: "#1b1f1c", area: "#3a6fae", net: "#e6e9ec" },
+      athletics: { surface: "#2d6c3e", alt: "#276136", apron: "#1b1f1c", track: "#9a4636", sand: "#a89568", mat: "#2c528a", water: "#4d8fb8", concrete: "#6e7377", pad: "#1f2326" },
     },
   },
 };
@@ -150,6 +155,16 @@ const HIGH_CONTRAST: Look = {
   },
 };
 
+const LINE_DRAWING: Look = {
+  about: "Ink only: black lines on white and nothing filled, for a plan that prints on any printer and copies cleanly (dark: white lines on black).",
+  light: {
+    base: { ink: "#000000", line: "#000000", apron: "#ffffff", surface: "#ffffff", alt: "#ffffff", zone: "#ffffff", boards: "#000000", red: "#000000", blue: "#000000", dirt: "#ffffff", foul: "#ffffff", infield: "#ffffff", crease: "#ffffff", key: "#ffffff", court: "#ffffff", post: "#000000", pylon: "#000000", rgo: "#ffffff", rgm: "#ffffff", rgi: "#ffffff", rgb: "#ffffff", hog: "#000000", hack: "#000000", fgz: "rgba(0,0,0,0)", pebble: "rgba(0,0,0,0)", markY: "#000000", markB: "#000000", markG: "#000000", markR: "#000000" },
+  },
+  dark: {
+    base: { ink: "#ffffff", line: "#ffffff", apron: "#000000", surface: "#000000", alt: "#000000", zone: "#000000", boards: "#ffffff", red: "#ffffff", blue: "#ffffff", dirt: "#000000", foul: "#000000", infield: "#000000", crease: "#000000", key: "#000000", court: "#000000", post: "#ffffff", pylon: "#ffffff", rgo: "#000000", rgm: "#000000", rgi: "#000000", rgb: "#000000", hog: "#ffffff", hack: "#ffffff", fgz: "rgba(0,0,0,0)", pebble: "rgba(0,0,0,0)", markY: "#ffffff", markB: "#ffffff", markG: "#ffffff", markR: "#ffffff" },
+  },
+};
+
 /**
  * The named looks. Each is a light and a dark palette for every sport, as custom properties on `.kyogijo[data-palette="<name>"]`; pass one as `look`.
  * @example
@@ -160,7 +175,7 @@ const HIGH_CONTRAST: Look = {
  * // 7 true
  * ```
  */
-export const LOOKS: Readonly<Record<LookName, Look>> = { grass: GRASS, night: NIGHT, chalkboard: CHALKBOARD, blueprint: BLUEPRINT, print: PRINT, broadcast: BROADCAST, "high-contrast": HIGH_CONTRAST };
+export const LOOKS: Readonly<Record<LookName, Look>> = { grass: GRASS, night: NIGHT, chalkboard: CHALKBOARD, blueprint: BLUEPRINT, print: PRINT, broadcast: BROADCAST, "high-contrast": HIGH_CONTRAST, "line-drawing": LINE_DRAWING };
 
 /** The names of the looks, in the order a menu lists them. */
 export const LOOK_NAMES = Object.freeze(Object.keys(LOOKS) as LookName[]);
@@ -171,12 +186,15 @@ export const isLook = (value: unknown): value is LookName => typeof value === "s
 /** What the net sports' courts paint besides the surface and the apron, when a look does not say: the free zone in the second tone, a painted area in the key's, the net in the line's. */
 const withNet = (palette: Palette): Palette => ({ free: palette.alt, area: palette.key, net: palette.line, ...palette });
 
+/** What an athletics stadium paints besides the surface and the apron, when a look does not say: the track in the dirt's colour, the sand and the concrete in the boards', the mat in the court's, the water in the crease's, the pads in the ink. */
+const withTrack = (palette: Palette): Palette => ({ track: palette.dirt, sand: palette.boards, mat: palette.court, water: palette.crease, concrete: palette.boards, pad: palette.ink, ...palette });
+
 /** A look's palette for a sport in one mode: the look's base with what the sport's group changes. */
 export function lookPalette(look: LookName, mode: "light" | "dark", sport: Sport | string): Palette {
   const m = LOOKS[look][mode];
   const group = groupOf(sport);
   const merged = { ...m.base, ...(group === undefined ? {} : m.groups?.[group]) };
-  return group === "net" ? withNet(merged) : merged;
+  return group === "net" ? withNet(merged) : group === "athletics" ? withTrack(merged) : merged;
 }
 
 /**
@@ -193,6 +211,7 @@ export const LOOK_PAIRS: Readonly<Record<Group | "all", readonly (readonly [Pale
   soccer: [["line", "surface", 3], ["line", "alt", 3], ["line", "court", 3]],
   curling: [["line", "surface", 3], ["hog", "surface", 3], ["hack", "surface", 3]],
   net: [["line", "surface", 3], ["line", "free", 3], ["line", "area", 3]],
+  athletics: [["line", "surface", 3], ["line", "track", 3]],
 };
 
 /** The contrast ratio of two colours (WCAG 2.2): 1 to 21, or `undefined` when a colour cannot be read without a browser. */
@@ -214,12 +233,13 @@ const declarations = (palette: Palette): string =>
 /** The rules of one mode of one look, for the base and each group, behind a selector that says which mode it is. */
 function modeRules(name: LookName, mode: Mode, wrap: (selector: string) => string): string[] {
   const out: string[] = [`${wrap(`.kyogijo[data-palette=${name}]`)}{${declarations(mode.base)}}`];
-  const groups = new Set<Group>([...(Object.keys(mode.groups ?? {}) as Group[]), "net"]);
+  const groups = new Set<Group>([...(Object.keys(mode.groups ?? {}) as Group[]), "net", "athletics"]);
   for (const group of groups) {
     const palette = mode.groups?.[group] ?? {};
     // A net sport's court has three colours the other surfaces have not: the group's rule carries them, made from the base where the look gives none.
     const net = group === "net" ? withNet({ ...mode.base, ...palette }) : {};
-    const written = group === "net" ? { ...palette, free: net.free, area: net.area, net: net.net } : palette;
+    const track = group === "athletics" ? withTrack({ ...mode.base, ...palette }) : {};
+    const written = group === "net" ? { ...palette, free: net.free, area: net.area, net: net.net } : group === "athletics" ? { ...palette, track: track.track, sand: track.sand, mat: track.mat, water: track.water, concrete: track.concrete, pad: track.pad } : palette;
     out.push(`${wrap(GROUP_SPORTS[group].map((sport) => `.kyogijo[data-palette=${name}][data-sport=${sport}]`).join(","))}{${declarations(written)}}`);
   }
   return out;

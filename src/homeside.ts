@@ -29,6 +29,8 @@ export const HOME_FIRST: Readonly<Record<Sport, boolean>> = Object.freeze({
   badminton: false,
   pickleball: false,
   tabletennis: false,
+  // A track meeting has no home and away.
+  athletics: false,
 });
 
 /** The leagues whose convention is not their sport's: the international federation's lacrosse lists the home team first. */

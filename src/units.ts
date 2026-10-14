@@ -45,6 +45,7 @@ export const SURFACE_UNITS: Readonly<Record<Sport, Unit>> = Object.freeze({
   cricket: "yd",
   fieldhockey: "m",
   handball: "m",
+  athletics: "m",
 });
 
 /** True when `unit` is one of the six. */

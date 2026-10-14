@@ -4,12 +4,13 @@ import type { Unit } from "./units.ts";
 import type { SoccerFrame, SoccerProviderId } from "./surfaces/soccer-providers.ts";
 import type { SoccerPitchId, SoccerSize } from "./surfaces/soccer-spec.ts";
 import type { Frame } from "./frames.ts";
+import type { AthleticsStyle } from "./athletics/types.ts";
 
 /** The field sports: lacrosse (the field and the box), rugby (union and league), Australian football, Gaelic football and hurling, cricket, field hockey and team handball. */
 export type FieldSport = "lacrosse" | "rugby" | "afl" | "gaelic" | "cricket" | "fieldhockey" | "handball";
 
-/** The surfaces: three football fields, a rink, a court, a ballpark, a soccer pitch, a curling sheet, five net sports (tennis, volleyball, badminton, pickleball and table tennis) and seven field sports (lacrosse, rugby, Australian football, Gaelic football and hurling, cricket, field hockey and handball). */
-export type Sport = "nfl" | "cfl" | "ifaf" | "nhl" | "nba" | "mlb" | "soccer" | "curling" | "tennis" | "volleyball" | "badminton" | "pickleball" | "tabletennis" | FieldSport;
+/** The surfaces: three football fields, a rink, a court, a ballpark, a soccer pitch, a curling sheet, five net sports (tennis, volleyball, badminton, pickleball and table tennis), seven field sports (lacrosse, rugby, Australian football, Gaelic football and hurling, cricket, field hockey and handball) and the athletics stadium (the 400 m track with its infield, and the covered 200 m track). */
+export type Sport = "nfl" | "cfl" | "ifaf" | "nhl" | "nba" | "mlb" | "soccer" | "curling" | "tennis" | "volleyball" | "badminton" | "pickleball" | "tabletennis" | FieldSport | "athletics";
 
 /** `auto` follows the device's light or dark setting (and `data-theme` on the page's root), the others force one. */
 export type Theme = "auto" | "light" | "dark";
@@ -100,7 +101,7 @@ export interface GoalInfo {
 }
 
 /** The looks a drawing can have, alongside `court` (a basketball court's own). See `LOOKS`. */
-export type LookName = "grass" | "night" | "chalkboard" | "blueprint" | "print" | "broadcast" | "high-contrast";
+export type LookName = "grass" | "night" | "chalkboard" | "blueprint" | "print" | "broadcast" | "high-contrast" | "line-drawing";
 
 /** The width of the lines: a multiple of the width they are drawn at (`2`, or `{ scale: 2 }`), or an absolute width in `units` (`{ width: 0.5 }`). */
 export type LineWidth = number | { scale: number } | { width: number };
@@ -233,7 +234,7 @@ export type SheetShow = "sheet" | "half" | "house";
  * The parts of a surface a drawing can be cropped to (`range`). Football: `red-zone`, `between-the-20s`, `end-zone`, `field-of-play`, `own-half`, `opponent-half`.
  * Hockey: `offensive-zone`, `defensive-zone`, `neutral-zone`, `half`. Basketball: `half-court`, `paint`. Soccer: `half`, `final-third`, `defensive-third`, `middle-third`,
  * `penalty-area`. Baseball: `infield`, `outfield`. The net sports: `half-court`. Curling: `sheet`, `half`, `house`. Rugby: `half`, `twenty-two` (union) or `twenty` (league), `in-goal`. Lacrosse: `half`, `crease`. Australian football: `half`, `forward-fifty`, `centre-square`.
- * Gaelic games: `half`, `large-rectangle`. Cricket: `pitch`, `circle`. Field hockey: `half`, `circle`, `twenty-three`. Handball: `half`, `goal-area`. `RANGES` lists them for each sport.
+ * Gaelic games: `half`, `large-rectangle`. Cricket: `pitch`, `circle`. Field hockey: `half`, `circle`, `twenty-three`. Handball: `half`, `goal-area`. Athletics: `bend`, `home-straight`, `back-straight`, `finish`, `start`, `infield`, a field event (`high-jump`, `pole-vault`, `long-jump`, `triple-jump`, `shot-put`, `discus-throw`, `hammer-throw`, `javelin-throw`) and `water-jump`. `RANGES` lists them for each sport.
  */
 export type RangeName =
   | "red-zone"
@@ -266,7 +267,22 @@ export type RangeName =
   | "pitch"
   | "circle"
   | "twenty-three"
-  | "goal-area";
+  | "goal-area"
+  | "bend"
+  | "home-straight"
+  | "back-straight"
+  | "finish"
+  | "start"
+  | "infield"
+  | "high-jump"
+  | "pole-vault"
+  | "long-jump"
+  | "triple-jump"
+  | "shot-put"
+  | "discus-throw"
+  | "hammer-throw"
+  | "javelin-throw"
+  | "water-jump";
 
 /** A named range at the end of your choice: `{ name: "offensive-zone", end: "left" }` is the offensive zone of a team that attacks the left. */
 export interface RangeNamed {
@@ -525,6 +541,8 @@ export interface SurfaceOptions {
   net?: NetStyle;
   /** The size and the variants of a lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey or handball surface. */
   field?: FieldStyle;
+  /** The athletics stadium: the number of lanes, the colour of the track, what is in the infield, the races and the field events marked. See `AthleticsStyle`. */
+  athletics?: AthleticsStyle;
   /** The soccer pitch: a preset (`fifa`, `uefa`, `mls`, `nwsl`, `ncaa`, `law-min`, `law-max`, `9-a-side`, `7-a-side`, `5-a-side`, `futsal`) or a size, `{ length, width, unit }`. The international 105 by 68 m by default. */
   pitch?: SoccerPitchId | SoccerSize;
   /** The soccer ground to draw: a key of `GROUNDS`. The pitch has the size its article publishes (the international 105 by 68 m where none is), and the drawing carries the ground's name for `year`. A `pitch` of your own wins over the ground's size. */

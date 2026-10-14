@@ -11,7 +11,7 @@ const game = (sport: Sport, more: Partial<ScoreOptions> = {}): ScoreOptions => (
 const abbrs = (svg: string): string[] => walk(parseXml(svg)).filter((n) => n.name === "text" && (n.attrs.class ?? "").includes("ky-name")).map((n) => n.text);
 
 const LEFT: Sport[] = ["soccer", "rugby", "afl", "gaelic", "fieldhockey", "handball", "cricket"];
-const RIGHT: Sport[] = ["nfl", "cfl", "ifaf", "nhl", "nba", "mlb", "curling", "lacrosse", "tennis", "volleyball", "badminton", "pickleball", "tabletennis"];
+const RIGHT: Sport[] = ["nfl", "cfl", "ifaf", "nhl", "nba", "mlb", "curling", "lacrosse", "tennis", "volleyball", "badminton", "pickleball", "tabletennis", "athletics"];
 
 describe("which side the home team is on by default", () => {
   it("is home first for soccer and the world codes, away first for the North American leagues and the net sports", () => {

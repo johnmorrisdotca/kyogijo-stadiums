@@ -66,6 +66,8 @@ export interface Surface {
   plateFits?: boolean;
   /** For a surface set inside another (a special game): the transform that carries the surface's own frame to the drawing's, which data in the surface's frame (`layers`) is put through. */
   frame?: string;
+  /** For a surface whose own frame is turned to an angle that is not a quarter (a close-up of an athletics start): the turn, in degrees, that a layer's texts and logos are given to read upright. */
+  upright?: number;
   /** How wide the surface's ordinary line is drawn, in the units of the `lines` markup, and how many feet one of those units is: what `lineWidth` scales. */
   lineRef?: { width: number; feet: number };
 }

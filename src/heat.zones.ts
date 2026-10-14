@@ -14,11 +14,12 @@ import type { Sport, SurfaceOptions } from "./types.ts";
 import { lengthUnit } from "./common.ts";
 import { courtFor, courtSize } from "./court.ts";
 import { fieldPlan } from "./fields.ts";
+import { athleticsLanes, athleticsLeague } from "./athletics/plan.ts";
 import { LEAGUES, chooseLeague, cricketOf } from "./leagues.ts";
 import type { CricketLeague } from "./leagues/cricket.ts";
 
 /** The zone sets. */
-export type ZoneSetId = "field-thirds" | "cricket-ground" | "soccer-positional" | "soccer-thirds" | "soccer-channels" | "soccer-18" | "nba-shot" | "nhl-slot" | "nhl-home-plate" | "baseball-spray" | "baseball-retrosheet" | "football-pass" | "curling-house" | "net-court";
+export type ZoneSetId = "field-thirds" | "cricket-ground" | "soccer-positional" | "soccer-thirds" | "soccer-channels" | "soccer-18" | "nba-shot" | "nhl-slot" | "nhl-home-plate" | "baseball-spray" | "baseball-retrosheet" | "football-pass" | "athletics-track" | "curling-house" | "net-court";
 
 type Pt = readonly [number, number];
 
@@ -50,7 +51,7 @@ export interface ZoneSet {
 
 /** What a zone set needs to know about the drawing and the layer. */
 export interface ZoneContext {
-  o: Pick<SurfaceOptions, "sport" | "pitch" | "units"> & Partial<Pick<SurfaceOptions, "league" | "net" | "field">>;
+  o: Pick<SurfaceOptions, "sport" | "pitch" | "units"> & Partial<Pick<SurfaceOptions, "league" | "net" | "field" | "athletics">>;
   outline: Outline;
   /** The way the team attacks as the surface is drawn wide: names the sides and counts the bands from the team's own end. `right` by default. */
   direction: "left" | "right";
@@ -77,6 +78,7 @@ export const ZONE_SETS: Readonly<Record<ZoneSetId, { sports: readonly Sport[]; t
   "curling-house": { sports: ["curling"], title: "The house: the button, the 4-, 8- and 12-foot rings, and the free guard zone", source: "docs/sources.md#zone-sets" },
   "net-court": { sports: ["tennis", "volleyball", "badminton", "pickleball", "tabletennis"], title: "Each side of the net: the front court and the back court, split by the court's own line", source: "docs/sources.md#zone-sets" },
   "field-thirds": { sports: ["lacrosse", "rugby", "afl", "gaelic", "fieldhockey", "handball"], title: "Thirds: defensive, middle and attacking", source: "docs/sources.md#zone-sets" },
+  "athletics-track": { sports: ["athletics"], title: "The track in parts: the finish straight, the first bend, the back straight, the second bend, and the infield", source: "docs/sources.md#zone-sets" },
   "cricket-ground": { sports: ["cricket"], title: "The pitch, the ground inside the fielding circle, and the outfield", source: "docs/sources.md#zone-sets" },
   "football-pass": { sports: ["nfl", "cfl", "ifaf"], title: "Pass grid: short and deep by left, middle and right", source: "https://nflreadr.nflverse.com/articles/dictionary_pbp.html" },
 });
@@ -484,6 +486,39 @@ function cricketZones(ctx: ZoneContext): ZoneShape[] {
   return out;
 }
 
+/**
+ * The athletics track in parts, each a part of the oval as the Manual lays it out (2.2.1.1): the finish straight and the back straight between the centres of the semicircles, the first bend (the right-hand one, which
+ * the athletes enter from the finish line) and the second, and the infield inside the kerb. The zones are ours: the rules name no area of the track. Lane by lane is the lane lines' business, not a zone's.
+ */
+function athleticsZones(ctx: ZoneContext): ZoneShape[] {
+  const league = athleticsLeague({ sport: "athletics", league: ctx.o.league });
+  const fig = league.dimensions;
+  const lanes = athleticsLanes({ sport: "athletics", league: ctx.o.league, athletics: ctx.o.athletics });
+  const k = FEET_PER_METRE;
+  const { box } = ctx.outline;
+  const cx = box.w / 2;
+  const cy = box.h / 2;
+  const S = fig.straight;
+  const R = fig.radius;
+  const Ro = R + lanes * fig.lane;
+  const w = ctx.words;
+  const p = (u: number, v: number): string => `${num(cx + u * k)} ${num(cy + v * k)}`;
+  const arc = (r: number, sweep: 0 | 1): string => `A${num(r * k)} ${num(r * k)} 0 0 ${sweep}`;
+  const inside = (u: number, v: number, r: number): boolean => Math.abs(v) <= r && (Math.abs(u) <= S / 2 || Math.hypot(Math.abs(u) - S / 2, v) <= r);
+  const m = (x: number, y: number): [number, number] => [(x - cx) / k, (y - cy) / k];
+  const onTrack = (u: number, v: number): boolean => inside(u, v, Ro) && !inside(u, v, R);
+  const stadium = (r: number): string => `M${p(-S / 2, -r)}H${num(cx + (S / 2) * k)}${arc(r, 1)} ${p(S / 2, r)}H${num(cx - (S / 2) * k)}${arc(r, 1)} ${p(-S / 2, -r)}Z`;
+  const east = `M${p(S / 2, -Ro)}${arc(Ro, 1)} ${p(S / 2, Ro)}V${num(cy + R * k)}${arc(R, 0)} ${p(S / 2, -R)}Z`;
+  const west = `M${p(-S / 2, Ro)}${arc(Ro, 1)} ${p(-S / 2, -Ro)}V${num(cy - R * k)}${arc(R, 0)} ${p(-S / 2, R)}Z`;
+  return [
+    { id: "infield", name: w.trackInfield, d: stadium(R), label: [cx, cy], room: [S * k, R * k], has: (x, y) => { const [u, v] = m(x, y); return inside(u, v, R); } },
+    { id: "home-straight", name: w.homeStraight, d: `M${p(-S / 2, R)}H${num(cx + (S / 2) * k)}V${num(cy + Ro * k)}H${num(cx - (S / 2) * k)}Z`, label: [cx, cy + ((R + Ro) / 2) * k], room: [S * k, (Ro - R) * k], has: (x, y) => { const [u, v] = m(x, y); return onTrack(u, v) && Math.abs(u) <= S / 2 && v > 0; } },
+    { id: "first-bend", name: w.firstBend, d: east, label: [cx + (S / 2 + (R + Ro) / 2) * k, cy], room: [(Ro - R) * k, R * k], has: (x, y) => { const [u, v] = m(x, y); return onTrack(u, v) && u > S / 2; } },
+    { id: "back-straight", name: w.backStraight, d: `M${p(-S / 2, -Ro)}H${num(cx + (S / 2) * k)}V${num(cy - R * k)}H${num(cx - (S / 2) * k)}Z`, label: [cx, cy - ((R + Ro) / 2) * k], room: [S * k, (Ro - R) * k], has: (x, y) => { const [u, v] = m(x, y); return onTrack(u, v) && Math.abs(u) <= S / 2 && v < 0; } },
+    { id: "second-bend", name: w.secondBend, d: west, label: [cx - (S / 2 + (R + Ro) / 2) * k, cy], room: [(Ro - R) * k, R * k], has: (x, y) => { const [u, v] = m(x, y); return onTrack(u, v) && u < -S / 2; } },
+  ];
+}
+
 /** The zones of a set on the surface the context describes. Throws for a set that is not for the surface's sport. */
 export function buildZoneSet(id: ZoneSetId, ctx: ZoneContext): ZoneSet {
   if (!Object.prototype.hasOwnProperty.call(ZONE_SETS, id)) throw new RangeError(`Unknown zone set "${String(id)}": use one of ${ZONE_SET_IDS.join(", ")}`);
@@ -493,6 +528,6 @@ export function buildZoneSet(id: ZoneSetId, ctx: ZoneContext): ZoneSet {
     const { zones, which } = retrosheetZones(ctx);
     return { id, zones, which };
   }
-  const zones = id === "field-thirds" ? fieldThirds(ctx) : id === "cricket-ground" ? cricketZones(ctx) : id.startsWith("soccer") ? soccerZones(id, ctx) : id === "nba-shot" ? nbaZones(ctx) : id.startsWith("nhl") ? nhlZones(id, ctx) : id === "baseball-spray" ? baseballSpray(ctx) : id === "curling-house" ? curlingZones(ctx) : id === "net-court" ? netZones(ctx) : footballPass(ctx);
+  const zones = id === "athletics-track" ? athleticsZones(ctx) : id === "field-thirds" ? fieldThirds(ctx) : id === "cricket-ground" ? cricketZones(ctx) : id.startsWith("soccer") ? soccerZones(id, ctx) : id === "nba-shot" ? nbaZones(ctx) : id.startsWith("nhl") ? nhlZones(id, ctx) : id === "baseball-spray" ? baseballSpray(ctx) : id === "curling-house" ? curlingZones(ctx) : id === "net-court" ? netZones(ctx) : footballPass(ctx);
   return { id, zones, which: lastWins(zones) };
 }

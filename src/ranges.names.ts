@@ -42,6 +42,24 @@ export const RANGES: Readonly<Record<Sport, readonly RangeInfo[]>> = Object.free
   cricket: Object.freeze([range("pitch"), range("circle", undefined, ["icc-men", "icc-women"])]),
   fieldhockey: Object.freeze([range("half", "left"), range("circle", "right"), range("twenty-three", "right")]),
   handball: Object.freeze([range("half", "left"), range("goal-area", "right")]),
+  // The bends are the first (right) and the second (left); the field events are at the end of the stadium where the standard layout puts them (a range with two ends has both, one with one has that end).
+  athletics: Object.freeze([
+    range("bend", "right"),
+    range("home-straight"),
+    range("back-straight"),
+    range("finish"),
+    range("start"),
+    range("infield"),
+    range("high-jump", "right"),
+    range("pole-vault", "left"),
+    range("long-jump"),
+    range("triple-jump"),
+    range("shot-put", "left"),
+    range("discus-throw", "right"),
+    range("hammer-throw", "right"),
+    range("javelin-throw", "left"),
+    range("water-jump", "left"),
+  ]),
 });
 
 /** What a drawing's `range` asks for, checked: a name (at an end, or at its default) or a box. */

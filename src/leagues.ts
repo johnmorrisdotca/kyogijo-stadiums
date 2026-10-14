@@ -12,6 +12,7 @@ import { BADMINTON_LEAGUES, PICKLEBALL_LEAGUES, TABLE_TENNIS_LEAGUES, TENNIS_LEA
 import { AFL_LEAGUES, aflInFeet, type AflLeague, type AflSpec } from "./leagues/aussie.ts";
 import { CRICKET_LEAGUES, cricketInFeet, type CricketLeague, type CricketSpec } from "./leagues/cricket.ts";
 import { FIELD_HOCKEY_LEAGUES, fieldHockeyInFeet, type FieldHockeyLeague, type FieldHockeySpec } from "./leagues/fieldhockey.ts";
+import { ATHLETICS_LEAGUES, athleticsInFeet, type AthleticsFigures, type AthleticsLeague } from "./leagues/athletics.ts";
 import { GAELIC_LEAGUES, gaelicInFeet, type GaelicLeague, type GaelicSpec } from "./leagues/gaelic.ts";
 import { HANDBALL_LEAGUES, handballInFeet, type HandballLeague, type HandballSpec } from "./leagues/handball.ts";
 import { LACROSSE_LEAGUES, lacrosseInFeet, type LacrosseLeague, type LacrosseSpec } from "./leagues/lacrosse.ts";
@@ -36,6 +37,8 @@ export type { HandballFigures, HandballLeague } from "./leagues/handball.ts";
 export type { LacrosseFigures, LacrosseLeague } from "./leagues/lacrosse.ts";
 export type { RugbyFigures, RugbyLeague } from "./leagues/rugby.ts";
 export type { Span } from "./leagues/fields.ts";
+export type { AthleticsFigures, AthleticsLeague } from "./leagues/athletics.ts";
+export { WA_STANDARD_TRACK, WA_SHORT_TRACK, WA_STAGGER_TABLE, WA_SHORT_STAGGER_TABLE } from "./leagues/athletics.ts";
 export type { BadmintonFigures, BadmintonLeague, FreeZone, FreeZones, NetFigures, NetLeague, NetSport, PickleballFigures, PickleballLeague, TableTennisFigures, TableTennisLeague, TennisFigures, TennisLeague, VolleyballFigures, VolleyballLeague } from "./leagues/courts.ts";
 export type { CourtFigures, CourtMarks } from "./leagues/basketball.ts";
 export type { RinkFigures } from "./leagues/hockey.ts";
@@ -44,10 +47,10 @@ export type { DiamondFigures } from "./leagues/baseball.ts";
 export type { Family, LeagueSpan, Named } from "./leagues/types.ts";
 
 /** A league: a variant of a family of surface. */
-export type League = BasketballLeague | HockeyLeague | FootballLeague | BaseballLeague | CurlingLeague | NetLeague | LacrosseLeague | RugbyLeague | AflLeague | GaelicLeague | CricketLeague | FieldHockeyLeague | HandballLeague;
+export type League = BasketballLeague | HockeyLeague | FootballLeague | BaseballLeague | CurlingLeague | NetLeague | LacrosseLeague | RugbyLeague | AflLeague | GaelicLeague | CricketLeague | FieldHockeyLeague | HandballLeague | AthleticsLeague;
 
 /** The family of surface each sport draws; soccer's variants are its pitches (`pitch`), not leagues. */
-export const FAMILY_OF: Readonly<Record<Sport, Family | undefined>> = Object.freeze({ nfl: "football", cfl: "football", ifaf: "football", nhl: "hockey", nba: "basketball", mlb: "baseball", soccer: undefined, curling: "curling", tennis: "tennis", volleyball: "volleyball", badminton: "badminton", pickleball: "pickleball", tabletennis: "tabletennis", lacrosse: "lacrosse", rugby: "rugby", afl: "afl", gaelic: "gaelic", cricket: "cricket", fieldhockey: "fieldhockey", handball: "handball" });
+export const FAMILY_OF: Readonly<Record<Sport, Family | undefined>> = Object.freeze({ nfl: "football", cfl: "football", ifaf: "football", nhl: "hockey", nba: "basketball", mlb: "baseball", soccer: undefined, curling: "curling", tennis: "tennis", volleyball: "volleyball", badminton: "badminton", pickleball: "pickleball", tabletennis: "tabletennis", lacrosse: "lacrosse", rugby: "rugby", afl: "afl", gaelic: "gaelic", cricket: "cricket", fieldhockey: "fieldhockey", handball: "handball", athletics: "athletics" });
 
 /**
  * The leagues each sport can draw, in the order a menu lists them, the sport's own first (the three football sports share their
@@ -74,10 +77,11 @@ export const LEAGUES: Readonly<Record<Sport, readonly League[]>> = Object.freeze
   cricket: CRICKET_LEAGUES,
   fieldhockey: FIELD_HOCKEY_LEAGUES,
   handball: HANDBALL_LEAGUES,
+  athletics: ATHLETICS_LEAGUES,
 });
 
 /** Every league of every family, once each. */
-export const VARIANTS: readonly League[] = Object.freeze([...BASKETBALL_LEAGUES, ...HOCKEY_LEAGUES, ...FOOTBALL_LEAGUES, ...BASEBALL_LEAGUES, ...CURLING_LEAGUES, ...TENNIS_LEAGUES, ...VOLLEYBALL_LEAGUES, ...BADMINTON_LEAGUES, ...PICKLEBALL_LEAGUES, ...TABLE_TENNIS_LEAGUES, ...LACROSSE_LEAGUES, ...RUGBY_LEAGUES, ...AFL_LEAGUES, ...GAELIC_LEAGUES, ...CRICKET_LEAGUES, ...FIELD_HOCKEY_LEAGUES, ...HANDBALL_LEAGUES]);
+export const VARIANTS: readonly League[] = Object.freeze([...BASKETBALL_LEAGUES, ...HOCKEY_LEAGUES, ...FOOTBALL_LEAGUES, ...BASEBALL_LEAGUES, ...CURLING_LEAGUES, ...TENNIS_LEAGUES, ...VOLLEYBALL_LEAGUES, ...BADMINTON_LEAGUES, ...PICKLEBALL_LEAGUES, ...TABLE_TENNIS_LEAGUES, ...LACROSSE_LEAGUES, ...RUGBY_LEAGUES, ...AFL_LEAGUES, ...GAELIC_LEAGUES, ...CRICKET_LEAGUES, ...FIELD_HOCKEY_LEAGUES, ...HANDBALL_LEAGUES, ...ATHLETICS_LEAGUES]);
 
 /** The ids of a sport's leagues. */
 export const leagueIds = (sport: Sport): string[] => LEAGUES[sport].map((league) => league.id);
@@ -235,6 +239,8 @@ export const gaelicOf = (league: GaelicLeague): GaelicSpec => gaelicInFeet(leagu
 export const cricketOf = (league: CricketLeague): CricketSpec => cricketInFeet(league.dimensions, figuresUnit(league));
 /** A field hockey pitch, in feet. */
 export const fieldHockeyOf = (league: FieldHockeyLeague): FieldHockeySpec => fieldHockeyInFeet(league.dimensions, figuresUnit(league));
+/** An athletics track of a league, in feet. */
+export const athleticsOf = (league: AthleticsLeague): AthleticsFigures => athleticsInFeet(league.dimensions, figuresUnit(league));
 /** A handball court, in feet. */
 export const handballOf = (league: HandballLeague): HandballSpec => handballInFeet(league.dimensions, figuresUnit(league));
 /** A football field of a league in a season: the spec, in feet. */
@@ -304,6 +310,13 @@ export function leagueSize(sport: Sport, id: string, unit?: Unit): { length: num
     case "cricket": {
       const f = cricketOf(league);
       feet = { length: 2 * f.boundary.drawn, width: 2 * f.boundary.drawn };
+      break;
+    }
+    case "athletics": {
+      // The oval's outer edge with its last lane drawn: two semicircles and a straight long, a diameter wide.
+      const f = athleticsOf(league);
+      const outer = f.radius + f.lanes.drawn * f.lane;
+      feet = { length: f.straight + 2 * outer, width: 2 * outer };
       break;
     }
     default:
@@ -493,6 +506,16 @@ export function leagueFigures(league: League): [string, string][] {
         ["23-metre lines", `${w(f.twentyThree)} from each back-line`],
         ["circle", `${w(f.circleRadius)} from the back-line`],
         ["goal", `${w(f.goalWidth)} wide and ${w(f.goalHeight)} high`],
+      ];
+    }
+    case "athletics": {
+      const f = athleticsOf(league);
+      return [
+        ["track", `two straights of ${w(f.straight)} and two bends of ${w(f.radius)} radius at the kerb`],
+        ["lanes", `${f.lanes.drawn} of ${w(f.lane)} (${f.lanes.min} to ${f.lanes.max})`],
+        ["running line", `${w(f.inner)} outside the kerb in lane 1, ${w(f.outer)} outside the line in the others`],
+        ["straight", `${f.straightLanes.min} to ${f.straightLanes.max} lanes of ${w(f.straightLane)}, a starting area of ${w(f.startArea)} and a run-out of ${w(f.runOut)}`],
+        ["banking", f.banking === null ? "none" : `${f.banking} degrees`],
       ];
     }
     case "handball": {
