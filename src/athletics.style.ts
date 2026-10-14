@@ -45,8 +45,8 @@ export const KYOGIJO_ATHLETICS_STYLE: string = [
   ".kyogijo .ky-ath-bank{fill:var(--ky-ath-k);fill-opacity:.12}",
   ".kyogijo .ky-ath-y{stroke:var(--ky-ath-y);fill:none}.kyogijo .ky-ath-b{stroke:var(--ky-ath-b);fill:none}.kyogijo .ky-ath-g{stroke:var(--ky-ath-g);fill:none}.kyogijo .ky-ath-k{stroke:var(--ky-ath-k);fill:none}.kyogijo .ky-ath-r{stroke:var(--ky-ath-r);fill:none}.kyogijo .ky-ath-s{stroke:var(--ky-line);stroke-opacity:.8;fill:none}",
   ".kyogijo .ky-ath-y-fill{fill:var(--ky-ath-y)}.kyogijo .ky-ath-b-fill{fill:var(--ky-ath-b)}.kyogijo .ky-ath-g-fill{fill:var(--ky-ath-g)}.kyogijo .ky-ath-k-fill{fill:var(--ky-ath-k)}.kyogijo .ky-ath-r-fill{fill:var(--ky-ath-r)}",
-  ".kyogijo .ky-ath-num{fill:none;stroke:var(--ky-line);stroke-linejoin:miter}",
-  ".kyogijo .ky-ath-tag{fill:var(--ky-plate)}.kyogijo .ky-ath-tagnum{fill:none;stroke:var(--ky-plate-ink);stroke-linejoin:miter}",
+  ".kyogijo .ky-ath-num{fill:none;stroke:var(--ky-line);stroke-linejoin:round}",
+  ".kyogijo .ky-ath-tag{fill:var(--ky-plate)}.kyogijo .ky-ath-tagnum{fill:none;stroke:var(--ky-plate-ink);stroke-linejoin:round}",
 ].join("\n");
 
 /** The rules of a named track: its colour in light and dark, and, on a blue track, red where the rules say blue (the 4 x 400 m's marks and the 110 m hurdles). */

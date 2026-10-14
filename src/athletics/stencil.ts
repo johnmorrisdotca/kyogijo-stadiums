@@ -1,6 +1,10 @@
 // Lane numbers painted on a track, as paths: a stencil face of our own, with no font and no file. A digit stands in a box 0.62 wide and 1 high (scaled by the figure's height `h`) and is a few thick
 // strokes with the gaps (bridges) a stencil has, so that it reads at a glance from far off. Written for this package; no typeface was used or looked at.
-import { num } from "../format.ts";
+/** A number to four places: a figure under a metre tall needs more than the drawing's two. */
+const num = (value: number): string => {
+  const rounded = Math.round(value * 10000) / 10000;
+  return Object.is(rounded, -0) || rounded === 0 ? "0" : String(rounded);
+};
 
 /** The width of a digit over its height, and the gap between two digits over the height. */
 export const DIGIT_WIDTH = 0.62;
@@ -15,16 +19,13 @@ const xm = 0.31;
 const yt = 0.09;
 const yb = 0.91;
 
-/** Half of an ellipse ring on each side of the vertical through its centre, leaving a bridge `g` either side of the top and the bottom: two strokes. */
-function ring(xc: number, yc: number, a: number, b: number, g: number): string[] {
-  const dy = b * Math.sqrt(1 - (g / a) ** 2);
+/** A closed ellipse as two half turns, with no bridge: the loops of a 6, an 8 and a 9. */
+function loop(xc: number, yc: number, a: number, b: number): string {
   const f = (n: number): string => String(Math.round(n * 1000) / 1000);
-  const left = `M${f(xc - g)} ${f(yc - dy)}A${f(a)} ${f(b)} 0 0 0 ${f(xc - g)} ${f(yc + dy)}`;
-  const right = `M${f(xc + g)} ${f(yc - dy)}A${f(a)} ${f(b)} 0 0 1 ${f(xc + g)} ${f(yc + dy)}`;
-  return [left, right];
+  return `M${f(xc - a)} ${f(yc)}A${f(a)} ${f(b)} 0 0 1 ${f(xc + a)} ${f(yc)}A${f(a)} ${f(b)} 0 0 1 ${f(xc - a)} ${f(yc)}`;
 }
 
-const SIX = [`M0.5 ${yt}H0.31A0.22 0.2 0 0 0 ${xl} 0.3V0.7A0.22 0.2 0 0 0 0.31 ${yb}`, `M0.37 ${yb}A0.17 0.2 0 0 0 ${xr} 0.7V0.65A0.17 0.2 0 0 0 0.37 0.45H0.2`];
+const SIX = [`M0.5 ${yt}H0.31A0.22 0.2 0 0 0 ${xl} 0.29V0.68`, loop(xm, 0.68, 0.22, 0.23)];
 
 /** A glyph turned half a turn about the middle of its box: a 6 is a 9. */
 const turned = (strokes: readonly string[]): string[] =>
@@ -48,14 +49,14 @@ const turned = (strokes: readonly string[]): string[] =>
 
 const GLYPHS: Readonly<Record<string, readonly string[]>> = {
   "0": [`M0.27 ${yt}A0.18 0.22 0 0 0 ${xl} 0.31V0.69A0.18 0.22 0 0 0 0.27 ${yb}`, `M0.35 ${yt}A0.18 0.22 0 0 1 ${xr} 0.31V0.69A0.18 0.22 0 0 1 0.35 ${yb}`],
-  "1": [`M0.2 0.30L${xm} ${yt}V0.43`, `M${xm} 0.53V${yb}`],
-  "2": [`M${xl} 0.28A0.22 0.19 0 0 1 ${xr} 0.28`, `M0.5 0.4L${xl} ${yb}`, `M${xl} ${yb}H${xr}`],
+  "1": [`M0.15 0.3L${xm} ${yt}V${yb}`],
+  "2": [`M${xl} 0.29A0.22 0.2 0 0 1 ${xr} 0.29L${xl} ${yb}H${xr}`],
   "3": [`M${xl} ${yt}H0.30A0.23 0.19 0 0 1 0.30 0.455H0.2`, `M0.2 0.545H0.30A0.23 0.19 0 0 1 0.30 ${yb}H${xl}`],
-  "4": [`M0.4 ${yt}L${xl} 0.62H${xr}`, `M0.4 ${yt}V0.5`, `M0.4 0.74V${yb}`],
+  "4": [`M0.4 ${yb}V${yt}L${xl} 0.65H0.55`],
   "5": [`M${xr} ${yt}H${xl}V0.4`, `M0.19 0.45H0.30A0.23 0.23 0 0 1 0.30 ${yb}H${xl}`],
   "6": SIX,
   "7": [`M${xl} ${yt}H${xr}`, `M${xr} 0.18L0.26 ${yb}`],
-  "8": [...ring(xm, 0.295, 0.19, 0.205, 0.04), ...ring(xm, 0.705, 0.22, 0.205, 0.04)],
+  "8": [loop(xm, 0.285, 0.2, 0.195), loop(xm, 0.715, 0.22, 0.195)],
   "9": turned(SIX),
 };
 

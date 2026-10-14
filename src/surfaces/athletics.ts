@@ -83,7 +83,7 @@ export function athleticsSurface(o: BuildOptions, plan: AthleticsPlan, embedded:
     lines += el("path", {
       class: ft(o, d.feature, d.tag === true ? "ky-ath-tagnum" : "ky-ath-num"),
       d: digitsD(d.text, h, d.x, d.y),
-      "stroke-width": num(strokeWidth(h)),
+      "stroke-width": String(Math.round(strokeWidth(h) * 10000) / 10000),
       transform: upright === 0 ? undefined : `rotate(${num(upright)} ${num(d.x)} ${num(d.y)})`,
     });
   }

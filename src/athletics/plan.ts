@@ -215,7 +215,7 @@ export function athleticsPlan(o: Pick<SurfaceOptions, "sport" | "league" | "athl
 
   // The races: the starts and marks of each.
   const raceMarks: RaceMarks[] = [];
-  const ctx = { oval, fig, lanes, straight, numbers, numberHeight: 0.85 };
+  const ctx = { oval, fig, lanes, straight, numbers, numberHeight: 0.95 };
   const sc = races.filter((r) => r.kind === "steeplechase");
   const raceIds = new Set<AthleticsRace>(races.map((r) => r.id));
   if (!raceIds.has(startRace) && (o.athletics?.start !== undefined || closeUp)) raceIds.add(startRace);
@@ -260,7 +260,8 @@ export function athleticsPlan(o: Pick<SurfaceOptions, "sport" | "league" | "athl
       }
       // On a bend the numbers painted on the track would be specks beside the fan of the starts: they become tags that read at the size of the view.
       if (marks.race.kind !== "straight") {
-        const tag = Math.max(0.85, Math.min(win.x1 - win.x0, win.y1 - win.y0) * 0.07);
+        // A tag's disc is 1.56 times its figure's height across and must sit inside a lane (1.22 m): the figure is 0.66 m, a disc of 1.03 m.
+        const tag = 0.66;
         for (const d of marks.parts.digits) {
           if (d.id !== "start-number") continue;
           const back = tag * 0.78 + 0.35;

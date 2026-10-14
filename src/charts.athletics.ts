@@ -480,7 +480,7 @@ export function raceReplay(runners: readonly AthleticsRunner[], options: RaceRep
   events.sort((a, b) => a.t - b.t);
   const timeline: ReplayTimeline = { frames, events, from: "athletics", units: "m" };
   const summary = fill(w.data.summaryReplay, { n: runners.length, race: raceName });
-  return { timeline, options: { ...o, title }, look: { trail: 0, scale: 0.8, numbers: true, hold: 2 }, title, summary, duration };
+  return { timeline, options: { ...o, title }, look: { trail: 0, scale: 0.5, numbers: true, hold: 2 }, title, summary, duration };
 }
 
 // ----- field events
