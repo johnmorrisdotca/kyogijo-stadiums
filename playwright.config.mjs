@@ -6,6 +6,8 @@ const phone = { viewport: { width: 390, height: 844 }, hasTouch: true, isMobile:
 export default defineConfig({
   testDir: "e2e",
   testMatch: "*.demo.mjs",
+  // Two tests draw every sport in turn (31 and counting): in WebKit on a slow runner that took 31 seconds against the default 30.
+  timeout: 90_000,
   fullyParallel: true,
   forbidOnly: true,
   reporter: "list",
