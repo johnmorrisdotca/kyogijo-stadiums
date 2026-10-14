@@ -47,7 +47,12 @@ export interface SituationContext {
   football?: { yards: number; downs: number };
   /** The teams' names, when the drawing has teams. */
   names?: { home: string; away: string };
+  /** The league's id as the options name it (`iihf`, `olympic`), when they name one. */
+  league?: string;
 }
+
+/** The hockey leagues whose rulebook calls the shootout the game winning shots (GWS): the IIHF's and the Olympic rink's. The Japanese leagues play to the IIHF's rules, but none is a league of its own here. */
+const GWS_LEAGUES: readonly string[] = ["iihf", "olympic"];
 
 /** Hockey, read. */
 export interface HockeyRead {
@@ -65,6 +70,8 @@ export interface HockeyRead {
   emptyNet?: SituationTeam;
   delayed?: SituationTeam;
   clock?: string;
+  /** The shootout is called the game winning shots (GWS) in this league. */
+  gws: boolean;
   shootout?: { rounds: [boolean | null, boolean | null][]; goals: [number, number]; sudden: number };
 }
 
@@ -150,7 +157,7 @@ function readHockey(s: HockeySituation, ctx: SituationContext): HockeyRead | und
   const pulled: SituationTeam | undefined = s.emptyNet === true ? more : team(s.emptyNet);
   const delayed = team(s.delayedPenalty);
   const rounds = isObject(s.shootout) && Array.isArray((s.shootout as { rounds?: unknown }).rounds) ? ((s.shootout as { rounds: unknown[] }).rounds) : undefined;
-  const base: HockeyRead = { kind: "hockey", away, home, powerPlay: false };
+  const base: HockeyRead = { kind: "hockey", away, home, powerPlay: false, gws: ctx.league !== undefined && GWS_LEAGUES.includes(ctx.league) };
   if (rounds !== undefined) {
     const read: [boolean | null, boolean | null][] = rounds.slice(0, SHOOTOUT_MAX).map((round) => {
       const pair = Array.isArray(round) ? round : [];
@@ -284,7 +291,7 @@ function baseballTag(read: BaseballRead, language: Language): string {
   const parts: string[] = [];
   if (read.inning !== undefined) parts.push(language === "ja" ? `${read.inning}回${read.half === undefined ? "" : w[read.half]}` : `${read.half === undefined ? "" : `${w[read.half]} `}${read.inning}`);
   else if (read.half !== undefined) parts.push(w[read.half]);
-  if (read.outs !== undefined) parts.push(language === "ja" ? `${read.outs}アウト` : `${read.outs} out`);
+  if (read.outs !== undefined) parts.push(language === "ja" ? (read.outs === 0 ? "ノーアウト" : `${read.outs}アウト`) : `${read.outs} out`);
   if (read.balls !== undefined && read.strikes !== undefined) parts.push(`${read.balls}-${read.strikes}`);
   return parts.join(" · ");
 }
@@ -292,7 +299,7 @@ function baseballTag(read: BaseballRead, language: Language): string {
 /** The strength of a hockey situation on the pill: `5v4 PP`, `6v5 EN`, `4v4`, `DEL PEN`, with the clock after it; `undefined` when there is nothing to say (5 against 5). */
 export function hockeyPill(read: HockeyRead, language: Language): string | undefined {
   const w = words(language);
-  if (read.shootout !== undefined) return `${w.shootout} ${read.shootout.goals[0]}–${read.shootout.goals[1]}`;
+  if (read.shootout !== undefined) return `${read.gws ? w.gws : w.shootout} ${read.shootout.goals[0]}–${read.shootout.goals[1]}`;
   const parts: string[] = [];
   const strength = read.strength;
   const plain = strength !== undefined && strength[0] === 5 && strength[1] === 5;
@@ -323,9 +330,9 @@ export function situationText(options: { sport: Sport; league?: string; homeSide
 }
 
 /** The reading context of options that name no teams: the sport's own football field, the side the home team stands on by default. */
-function contextOf(options: { sport: Sport; homeSide?: Side; direction?: DirectionOptions }): SituationContext {
+function contextOf(options: { sport: Sport; league?: string; homeSide?: Side; direction?: DirectionOptions }): SituationContext {
   const football = options.sport === "cfl" ? { yards: 110, downs: 3 } : options.sport === "nfl" || options.sport === "ifaf" ? { yards: 100, downs: 4 } : undefined;
-  return { sport: options.sport, homeSide: options.homeSide ?? "right", direction: options.direction, football };
+  return { sport: options.sport, homeSide: options.homeSide ?? "right", direction: options.direction, football, league: options.league };
 }
 
 /** The short label of a reading, in a language. */
@@ -353,7 +360,7 @@ function sentencesOf(read: SituationRead, language: Language, names?: { home: st
   if (read.kind === "hockey") {
     if (read.shootout !== undefined) {
       const { rounds, goals, sudden } = read.shootout;
-      out.push(fill(w.shootoutScore, { n: rounds.length, away: name("away"), awayGoals: goals[0], home: name("home"), homeGoals: goals[1] }));
+      out.push(fill(read.gws ? w.gwsScore : w.shootoutScore, { n: rounds.length, away: name("away"), awayGoals: goals[0], home: name("home"), homeGoals: goals[1] }));
       if (sudden > 0) out.push(w.suddenDeath);
       return out;
     }

@@ -368,13 +368,14 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `pageant.emblem` | An emblem is in the middle. | 中央にエンブレムがあります。 |
 | `pageant.emblemNamed` | The {name} emblem is in the middle. | 中央に{name}のエンブレムがあります。 |
 | `situation.home` | the home team | ホームチーム |
-| `situation.away` | the visitors | ビジターチーム |
+| `situation.away` | the visitors | アウェイチーム |
 | `situation.homeShort` | HOME | ホーム |
-| `situation.awayShort` | AWAY | ビジター |
+| `situation.awayShort` | AWAY | アウェイ |
 | `situation.pp` | PP | PP |
 | `situation.en` | EN | EN |
 | `situation.delayed` | DEL PEN | ディレード |
 | `situation.shootout` | SO | SO |
+| `situation.gws` | GWS | GWS |
 | `situation.sudden` | SD | SD |
 | `situation.powerPlay` | Power play: {team} have {a} skaters against {b}. | パワープレー：{team}が{a}人、相手は{b}人です。 |
 | `situation.strength` | {a} skaters against {b}. | スケーターは{a}人対{b}人です。 |
@@ -382,6 +383,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `situation.emptyNet` | {team} have pulled the goalkeeper, and the net is empty. | {team}はゴーリーを下げ、ゴールは無人です。 |
 | `situation.delayedPenalty` | A penalty to {team} is delayed. | {team}に対するディレードペナルティで、プレーは続いています。 |
 | `situation.shootoutScore` | Shootout after {n} rounds: {away} {awayGoals}, {home} {homeGoals}. | シュートアウト（{n}ラウンド終了時点）：{away} {awayGoals}、{home} {homeGoals}。 |
+| `situation.gwsScore` | Game winning shots after {n} rounds: {away} {awayGoals}, {home} {homeGoals}. | ゲームウイニングショット（{n}ラウンド終了時点）：{away} {awayGoals}、{home} {homeGoals}。 |
 | `situation.suddenDeath` | The rounds after the third are sudden death. | 4ラウンド目からはサドンデスです。 |
 | `situation.top` | Top | 表 |
 | `situation.bottom` | Bottom | 裏 |

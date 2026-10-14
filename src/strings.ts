@@ -13,6 +13,8 @@ export interface SituationWords {
   en: string;
   delayed: string;
   shootout: string;
+  /** The shootout's word where the rulebook calls it the game winning shots: the IIHF's, the Olympic and the Japanese leagues'. */
+  gws: string;
   sudden: string;
   /** Hockey sentences ({team}, {a}, {b}, {clock}, {n}, {away}, {home}, {awayGoals}, {homeGoals}). */
   powerPlay: string;
@@ -21,6 +23,7 @@ export interface SituationWords {
   emptyNet: string;
   delayedPenalty: string;
   shootoutScore: string;
+  gwsScore: string;
   suddenDeath: string;
   /** Baseball: {half} is `top` or `bottom`, {n} the inning, {nth} the inning as an ordinal ({list} the bases, {b} the balls, {s} the strikes). */
   top: string;
@@ -944,6 +947,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       en: "EN",
       delayed: "DEL PEN",
       shootout: "SO",
+      gws: "GWS",
       sudden: "SD",
       powerPlay: "Power play: {team} have {a} skaters against {b}.",
       strength: "{a} skaters against {b}.",
@@ -951,6 +955,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       emptyNet: "{team} have pulled the goalkeeper, and the net is empty.",
       delayedPenalty: "A penalty to {team} is delayed.",
       shootoutScore: "Shootout after {n} rounds: {away} {awayGoals}, {home} {homeGoals}.",
+      gwsScore: "Game winning shots after {n} rounds: {away} {awayGoals}, {home} {homeGoals}.",
       suddenDeath: "The rounds after the third are sudden death.",
       top: "Top",
       bottom: "Bottom",
@@ -1362,13 +1367,14 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
     pageant: { carpet: "各チームの旗またはロゴが、競技場のチームごとの区域に、カーペットのように大きく広げられています。", stage: "各チームのエンブレムが、競技場のチームごとの区域にある大きな丸いステージの上に置かれています。", emblem: "中央にエンブレムがあります。", emblemNamed: "中央に{name}のエンブレムがあります。" },
     situation: {
       home: "ホームチーム",
-      away: "ビジターチーム",
+      away: "アウェイチーム",
       homeShort: "ホーム",
-      awayShort: "ビジター",
+      awayShort: "アウェイ",
       pp: "PP",
       en: "EN",
       delayed: "ディレード",
       shootout: "SO",
+      gws: "GWS",
       sudden: "SD",
       powerPlay: "パワープレー：{team}が{a}人、相手は{b}人です。",
       strength: "スケーターは{a}人対{b}人です。",
@@ -1376,6 +1382,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       emptyNet: "{team}はゴーリーを下げ、ゴールは無人です。",
       delayedPenalty: "{team}に対するディレードペナルティで、プレーは続いています。",
       shootoutScore: "シュートアウト（{n}ラウンド終了時点）：{away} {awayGoals}、{home} {homeGoals}。",
+      gwsScore: "ゲームウイニングショット（{n}ラウンド終了時点）：{away} {awayGoals}、{home} {homeGoals}。",
       suddenDeath: "4ラウンド目からはサドンデスです。",
       top: "表",
       bottom: "裏",

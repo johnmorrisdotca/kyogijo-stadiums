@@ -179,8 +179,19 @@ function drawFootball(read: FootballRead, surface: Surface, env: SituationEnv): 
   const where = read.ballOn === undefined ? undefined : yardLineText(read.ballOn, read.yards, env.language);
   if (main !== undefined || where !== undefined) {
     const tag = tagWidget(main ?? where ?? "", main === undefined ? undefined : where, 5.6, headAngle(read.toward, surface.turned));
-    const beside = x === undefined ? vb.x + vb.w / 2 : x - dir * ((surface.turned ? tag.h : tag.w) / 2 + 4);
-    out.over += put(tag, ...inside(tag, surface.turned, vb, beside, vb.y + (surface.turned ? tag.w : tag.h) / 2 + 5), surface.turned);
+    const along = (surface.turned ? tag.h : tag.w) / 2;
+    const across = (surface.turned ? tag.w : tag.h) / 2;
+    const cy = vb.y + across + 5;
+    // Behind the line of scrimmage, 4 feet off it; nudged along the field, to the line first and then away from it, until it covers none of the yard numbers and the arrows beside them that point to a goal line.
+    // Where there is no such room it keeps off the arrows at least.
+    const clear = (cx: number, hide: readonly (readonly [number, number, number, number])[]): boolean => {
+      const [px, py] = inside(tag, surface.turned, vb, cx, cy);
+      return !hide.some(([ox, oy, hx, hy]) => Math.abs(ox - px) < along + hx + 0.8 && Math.abs(oy - py) < across + hy + 0.8);
+    };
+    const gaps = [4, 3, 2, 1, 0.5, ...Array.from({ length: 36 }, (_, i) => 5 + i)];
+    const gap = x === undefined ? undefined : (gaps.find((g) => clear(x - dir * (along + g), [...a.arrows, ...a.numerals])) ?? gaps.find((g) => clear(x - dir * (along + g), a.arrows)) ?? 4);
+    const beside = x === undefined || gap === undefined ? vb.x + vb.w / 2 : x - dir * (along + gap);
+    out.over += put(tag, ...inside(tag, surface.turned, vb, beside, cy), surface.turned);
   }
   return out;
 }

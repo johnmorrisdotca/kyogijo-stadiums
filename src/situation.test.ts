@@ -165,7 +165,7 @@ describe("baseball", () => {
 
   it("writes the label and the sentences", () => {
     expect(situationText({ sport: "mlb", situation: { inning: 7, half: "top", outs: 2, balls: 3, strikes: 2 } })).toBe("Top 7 · 2 out · 3-2");
-    expect(situationText({ sport: "mlb", language: "ja", situation: { inning: 7, half: "bottom", outs: 0 } })).toBe("7回裏 · 0アウト");
+    expect(situationText({ sport: "mlb", language: "ja", situation: { inning: 7, half: "bottom", outs: 0 } })).toBe("7回裏 · ノーアウト");
     const read = readSituation({ bases: [true, true, true], outs: 1, inning: 11, half: "top", balls: 0, strikes: 2 }, mlb) as never;
     expect(situationSentences(read, "en")).toEqual(["Top of the 11th inning.", "1 out.", "The bases are loaded.", "The count is 0 balls and 2 strikes."]);
     expect(situationSentences(readSituation({ bases: [true, false, true], outs: 3, inning: 2, half: "bottom" }, mlb) as never, "en")).toEqual(["Bottom of the 2nd inning.", "3 outs.", "Runners on first and third."]);
@@ -296,6 +296,19 @@ describe("the words", () => {
     expect(describeOf({ sport: "nhl", situation: { delayedPenalty: "home" } }).description).toContain("A penalty to the home team is delayed.");
     expect(describeOf({ sport: "nfl", situation: { possession: "home", ballOn: 88, down: 3, toGo: 7, drive: [{ from: 25, to: 40, result: "field-goal" }] } }).description).toContain("Drive by the home team, from own 25 to own 40: field goal.");
     expect(describeOf({ sport: "nhl", situation: { shootout: { rounds: [[true, false], [true, true], [false, true], [true, false]] } } }).description).toContain("Shootout after 4 rounds: the visitors 3, the home team 2. The rounds after the third are sudden death.");
+  });
+
+  it("calls the shootout by the league's word: SO in the NHL, GWS (the game winning shots) under the IIHF and at the Olympics", () => {
+    const rounds: [boolean, boolean][] = [[true, false], [true, true], [false, true]];
+    const text = (league: string | undefined, language: "en" | "ja"): string | undefined => situationText({ sport: "nhl", league, language, situation: { shootout: { rounds } } });
+    expect(text(undefined, "en")).toBe("SO 2–2");
+    expect(text("ahl", "en")).toBe("SO 2–2");
+    expect(text("iihf", "en")).toBe("GWS 2–2");
+    expect(text("olympic", "ja")).toBe("GWS 2–2");
+    const said = (league: string | undefined, language: "en" | "ja"): string => describeOf({ sport: "nhl", league, language, situation: { shootout: { rounds } } }).description;
+    expect(said(undefined, "ja")).toContain("シュートアウト（3ラウンド終了時点）：アウェイチーム");
+    expect(said("iihf", "ja")).toContain("ゲームウイニングショット（3ラウンド終了時点）：アウェイチーム 2、ホームチーム 2。");
+    expect(said("olympic", "en")).toContain("Game winning shots after 3 rounds: the visitors 2, the home team 2.");
   });
 
   it("have the same keys in English and in Japanese", () => {

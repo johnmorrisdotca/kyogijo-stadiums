@@ -52,7 +52,8 @@ export type SituationAnchors =
   /** The centre of each base, as the drawing has it (first, second, third), and half the diagonal of a base as drawn; where the backstop stands behind home plate. */
   | { kind: "baseball"; bases: readonly (readonly [number, number])[]; half: number; backstop: number }
   /** The field of play from goal line to goal line, with its end zones. */
-  | { kind: "football"; length: number; endZone: number; width: number };
+  /** `arrows` and `numerals`: what a tag must not cover, each as its centre and half its size along the field and across it (`[x, y, hx, hy]`): the arrows beside the yard numbers that point to a goal line, when the field draws them, and the numbers. */
+  | { kind: "football"; length: number; endZone: number; width: number; arrows: readonly (readonly [number, number, number, number])[]; numerals: readonly (readonly [number, number, number, number])[] };
 
 /** A surface, ready for the teams and the score to be laid on it. */
 export interface Surface {

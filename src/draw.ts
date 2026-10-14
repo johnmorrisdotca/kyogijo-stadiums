@@ -622,6 +622,7 @@ function situationOf(o: SurfaceOptions | ScoreOptions): SituationRead | undefine
     direction: o.direction,
     football: footballFieldOf(o, sport, league),
     names: isScore(o) ? { home: String(o.home.name ?? ""), away: String(o.away.name ?? "") } : undefined,
+    league: league?.id,
   };
   return readSituation(o.situation, ctx);
 }
