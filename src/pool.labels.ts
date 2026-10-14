@@ -29,8 +29,8 @@ const GAP = 1.1;
 /** The medal each of the first three places wins: gold, silver and bronze, in these colours whatever the look. */
 export const MEDALS: Readonly<Record<number, string>> = Object.freeze({ 1: "#d9a620", 2: "#aeb6c0", 3: "#b8733a" });
 
-/** The width of text in feet, with a margin of a tenth: the estimate is for a bold face, and the pages' fonts differ. */
-const tw = (text: string, size: number): number => textWidth(text) * size * 1.1;
+/** The width of text in feet, with a margin of a sixth: the estimate is for a bold face, and the pages' fonts differ. */
+const tw = (text: string, size: number): number => textWidth(text) * size * 1.18;
 
 /** The most splits a plate writes; a longer race has its splits in the pace bars. */
 const MOST_SPLITS = 8;
