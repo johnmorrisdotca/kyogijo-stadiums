@@ -1,0 +1,127 @@
+// The 3D view as markup: a box, and in it the floor (the flat drawing) and every plane that stands on it. Nothing is nested in 3D (no `preserve-3d`, no
+// `perspective` on a parent): every element carries its whole place on the screen in one `matrix3d`, worked out here from the way the scene is looked at, and
+// the elements are stacked far to near by `z-index`. A browser that cannot keep nested 3D layers (Safari on a phone can lose them) draws it as it is meant.
+// The same text is what a page is given from `turnMarkup` and what the mount writes; the mount then makes it turn.
+import { TURN_PRESET_NAMES, cameraMatrix, depthOf, eyeDistance, fit, matrix3d, multiply, presetOf, type Placement, type TurnView } from "./turn.camera.ts";
+import { cross, n, size, unit, type Plane } from "./turn.kit.ts";
+import { buildTurn, turnWords, type TurnModel, type TurnSettings } from "./turn.model.ts";
+import { KYOGIJO_TURN_STYLE } from "./turn.style.ts";
+import { esc } from "./format.ts";
+import type { ScoreOptions, SurfaceOptions } from "./types.ts";
+
+const px = (value: number): string => `${Math.round(value * 1000) / 1000}`;
+
+/**
+ * The matrix that stands a plane in the scene, before the camera: its x along `u`, its y along `v`, its corner `o`, in pixels from the middle of the scene
+ * (`centre`, in feet).
+ */
+export function planeMatrix(p: Plane, scale: number, centre: readonly [number, number] = [0, 0]): number[] {
+  const u = unit(p.u);
+  const v = unit(p.v);
+  const w = unit(cross(u, v));
+  return [u[0], u[1], u[2], 0, v[0], v[1], v[2], 0, w[0], w[1], w[2], 0, (p.o[0] - centre[0]) * scale, (p.o[1] - centre[1]) * scale, p.o[2] * scale, 1];
+}
+
+/** Where everything is for a view in a container: the placement, the matrix of each element and its place in the stack. */
+export interface Layout {
+  at: Placement;
+  /** The floor, then the planes in the model's order. */
+  transforms: string[];
+  /** The stack of each: 0 for the ground of a hall, 1 for the floor, then the planes far to near from 2. */
+  stack: number[];
+}
+
+/** Work a view out in a container `width` by `height` pixels. */
+export function layoutOf(model: TurnModel, view: TurnView, width: number, height: number, lens?: number): Layout {
+  const distance = eyeDistance(width, height, lens);
+  const at = fit(model.box, { ...view, zoom: 1 }, width, height, distance);
+  const camera = cameraMatrix(view, at, distance);
+  const s = model.scale;
+  const centre = model.centre;
+  const floor: Plane = { id: "floor", kind: "ground", o: [model.viewBox.x, model.viewBox.y, model.uprights.lift], u: [model.viewBox.w, 0, 0], v: [0, model.viewBox.h, 0], svg: "" };
+  const transforms = [floor, ...model.planes].map((p) => matrix3d(multiply(camera, planeMatrix(p, s, centre))));
+  // Far to near: a plane's depth is that of its middle. The ground of a hall is under everything, the floor next.
+  const order = model.planes
+    .map((p, i) => ({ i, ground: p.kind === "ground", depth: depthOf([(p.o[0] + (p.u[0] + p.v[0]) / 2 - centre[0]) * s, (p.o[1] + (p.u[1] + p.v[1]) / 2 - centre[1]) * s, (p.o[2] + (p.u[2] + p.v[2]) / 2) * s], view, at) }))
+    .filter((one) => !one.ground);
+  order.sort((a, b) => a.depth - b.depth);
+  const stack = new Array<number>(model.planes.length + 1).fill(0);
+  stack[0] = 1;
+  order.forEach((one, rank) => {
+    stack[one.i + 1] = rank + 2;
+  });
+  return { at, transforms, stack };
+}
+
+/** One plane as an element: its box in pixels and the SVG drawn on it in feet. */
+export function planeMarkup(p: Plane, scale: number, transform: string, stack: number): string {
+  const [w, h] = size(p);
+  return `<div class="ky-up ky-up-${p.kind}" data-part="${esc(p.id)}" style="width:${px(w * scale)}px;height:${px(h * scale)}px;transform:${transform};z-index:${stack}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n(w)} ${n(h)}" width="${px(w * scale)}" height="${px(h * scale)}" aria-hidden="true" focusable="false">${p.svg}</svg></div>`;
+}
+
+/** The floor as an element: the flat drawing, in the pixels of the scene. */
+export function floorMarkup(model: TurnModel, transform: string, stack: number): string {
+  const vb = model.viewBox;
+  return `<div class="ky-turn-floor" style="width:${px(vb.w * model.scale)}px;height:${px(vb.h * model.scale)}px;transform:${transform};z-index:${stack}">${model.floor}</div>`;
+}
+
+/** The floor and the planes of a model, laid out. */
+export function worldMarkup(model: TurnModel, layout: Layout): string {
+  return floorMarkup(model, layout.transforms[0], layout.stack[0]) + model.planes.map((p, i) => planeMarkup(p, model.scale, layout.transforms[i + 1], layout.stack[i + 1])).join("");
+}
+
+/** The buttons under the view. */
+export function controlsMarkup(model: TurnModel, view: TurnView): string {
+  const words = turnWords(model);
+  const here = presetOf(view, (model.options as SurfaceOptions).sport);
+  const presets = TURN_PRESET_NAMES.map((name, i) => `<button type="button" data-preset="${name}" aria-pressed="${here === name}" aria-keyshortcuts="${i + 1}">${esc(words[name])}</button>`).join("");
+  const tools: [string, string, string][] = [
+    ["turn-left", "↺", words.turnLeft],
+    ["turn-right", "↻", words.turnRight],
+    ["raise", "↑", words.raise],
+    ["lower", "↓", words.lower],
+    ["zoom-in", "+", words.zoomIn],
+    ["zoom-out", "−", words.zoomOut],
+  ];
+  const buttons = tools.map(([act, glyph, label]) => `<button type="button" data-act="${act}" aria-label="${esc(label)}" title="${esc(label)}">${glyph}</button>`).join("");
+  return `<div class="ky-turn-controls"><div class="ky-turn-group" role="group" aria-label="${esc(words.group)}">${presets}</div><div class="ky-turn-group">${buttons}<button type="button" data-act="reset" aria-keyshortcuts="0 Home">${esc(words.reset)}</button></div></div>`;
+}
+
+/** The size, in pixels, the first view is worked out for. */
+export const sizeOf = (settings: TurnSettings): { width: number; height: number } => settings.size ?? { width: 960, height: 600 };
+
+/** The 3D view of a model as markup, laid out for `settings.size`; a page's script then makes it turn. */
+export function turnMarkupOf(model: TurnModel, settings: TurnSettings = {}): string {
+  const words = turnWords(model);
+  const { width, height } = sizeOf(settings);
+  const view = model.view;
+  const layout = layoutOf(model, view, width, height, settings.lens);
+  const keys = `${words.keys}${model.standing === "" ? "" : ` ${model.standing}`}`;
+  const sheet = (model.options as SurfaceOptions).style === "none" ? "" : `<style>${KYOGIJO_TURN_STYLE}</style>`;
+  const theme = (model.options as SurfaceOptions).theme;
+  const sport = (model.options as SurfaceOptions).sport;
+  return (
+    `<div class="ky-turn" id="${esc(model.id)}" data-sport="${esc(String(sport))}" data-mode="3d" data-touch="${settings.touch === "turn" ? "turn" : "scroll"}" data-preset="${presetOf(view, sport) ?? "custom"}"${theme === "light" || theme === "dark" ? ` data-theme="${theme}"` : ""} lang="${model.language}">` +
+    sheet +
+    `<div class="ky-turn-view" tabindex="0" role="group" aria-roledescription="${esc(words.region)}" aria-label="${esc(model.title)}" aria-describedby="${esc(model.id)}-help" aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown + - 0 1 2 3 4 Home"><div class="ky-turn-world">${worldMarkup(model, layout)}</div></div>` +
+    `<p class="ky-turn-help" id="${esc(model.id)}-help">${esc(keys)}</p>` +
+    (settings.controls === false ? "" : controlsMarkup(model, view)) +
+    `<div class="ky-turn-live" role="status" aria-live="polite"></div>` +
+    `</div>`
+  );
+}
+
+/**
+ * A surface as a 3D view, as markup: the flat drawing for a floor, what stands on it as planes, and the controls under it. Pure, so it can be made on a
+ * server; it is a still picture until `mountKyogijoTurn` (or the element) makes it turn in a page.
+ * @example
+ * ```ts
+ * import { turnMarkup } from "@johnmorrisdotca/kyogijo-stadiums/turn";
+ * const html = turnMarkup({ sport: "volleyball" }, { preset: "end" });
+ * console.log(html.includes("ky-turn"), html.includes('data-part="net"'));
+ * // true true
+ * ```
+ */
+export function turnMarkup(options: SurfaceOptions | ScoreOptions, settings: TurnSettings = {}): string {
+  return turnMarkupOf(buildTurn(options, settings), settings);
+}

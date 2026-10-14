@@ -2,6 +2,9 @@ import { SPORTS } from "./draw.ts";
 import { leagueIds } from "./leagues.ts";
 import { parseRange } from "./ranges.names.ts";
 import { mountKyogijo, type KyogijoMount, type KyogijoReplay } from "./mount.ts";
+import { TURN_PRESET_NAMES, type TurnPreset } from "./turn.camera.ts";
+import { mountKyogijoTurn, type KyogijoTurn } from "./turn.dom.ts";
+import type { TurnSettings } from "./turn.model.ts";
 import type { ReplaySettings, ReplayTimeline } from "./replay.types.ts";
 import type { ScoreOptions, Side, Size, Sport, StatusWord, SurfaceOptions, Team } from "./types.ts";
 
@@ -15,10 +18,25 @@ export const KYOGIJO_ATTRIBUTES = [
   "home", "away", "home-abbr", "away-abbr", "home-score", "away-score", "home-penalties", "away-penalties", "score", "home-logo", "away-logo", "home-color", "away-color",
   "status", "competition", "date", "label", "winner", "home-side", "description", "options",
   "loop", "speed", "autoplay", "controls", "trail",
+  "turn", "turn-view", "turn-controls", "turn-uprights", "turn-touch",
 ] as const;
 
 /** The attributes that are about a replay and not about the drawing. */
 const REPLAY_ATTRIBUTES: readonly string[] = ["loop", "speed", "autoplay", "controls", "trail"];
+
+/** The settings of a 3D view an element's attributes make: `turn-view` names the viewpoint it opens on, `turn-controls="false"` and `turn-uprights="false"` leave the buttons and what stands on the surface out, `turn-touch="turn"` keeps every touch for the view. */
+export function turnSettingsFromAttributes(read: (name: string) => string | null, base: TurnSettings = {}): TurnSettings {
+  const out: TurnSettings = { ...base };
+  const view = read("turn-view");
+  if (view !== null && (TURN_PRESET_NAMES as readonly string[]).includes(view)) out.preset = view as TurnPreset;
+  if (read("turn-controls") === "false") out.controls = false;
+  if (read("turn-uprights") === "false") out.uprights = false;
+  if (read("turn-touch") === "turn") out.touch = "turn";
+  return out;
+}
+
+/** Whether an element's `turn` attribute asks for the 3D view: present, and not `false`. */
+export const turnWanted = (read: (name: string) => string | null): boolean => read("turn") !== null && read("turn") !== "false";
 
 /** The settings of a replay an element's attributes make: `loop`, `autoplay` and `controls="false"` are switches, `speed` and `trail` numbers. */
 export function replaySettingsFromAttributes(read: (name: string) => string | null, base: ReplaySettings = {}): ReplaySettings {
@@ -168,6 +186,8 @@ export class KyogijoField extends Base {
   #replaySettings: ReplaySettings | undefined;
   #replay: KyogijoReplay | undefined;
   #replayOf: ReplayTimeline | undefined;
+  #turn: KyogijoTurn | undefined;
+  #turnSettings: TurnSettings | undefined;
 
   /** The options given as a property: an object, laid under the attributes. */
   get options(): Partial<ScoreOptions> | undefined {
@@ -204,6 +224,23 @@ export class KyogijoField extends Base {
     return this.#replay;
   }
 
+  /** Settings of the 3D view beyond the attributes: `motion`, `lens`, `floor`, `onChange` and the rest of `TurnSettings`. */
+  get turnSettings(): TurnSettings | undefined {
+    return this.#turnSettings;
+  }
+
+  set turnSettings(value: TurnSettings | undefined) {
+    this.#turnSettings = value;
+    this.#turn?.destroy();
+    this.#turn = undefined;
+    this.#draw();
+  }
+
+  /** The 3D view while the element has the `turn` attribute: its viewpoints, `set`, `reset`. */
+  get turn(): KyogijoTurn | undefined {
+    return this.#turn;
+  }
+
   connectedCallback(): void {
     if (this.#host === undefined) {
       const root = this.shadowRoot ?? this.attachShadow({ mode: "open" });
@@ -220,12 +257,19 @@ export class KyogijoField extends Base {
     this.#theme?.disconnect();
     this.#mount?.destroy();
     this.#mount = undefined;
+    this.#turn?.destroy();
+    this.#turn = undefined;
     this.#replay = undefined;
     this.#replayOf = undefined;
   }
 
   attributeChangedCallback(name: string): void {
     if (!this.isConnected) return;
+    if (name === "turn-view" && this.#turn !== undefined) {
+      const view = this.getAttribute("turn-view");
+      if (view !== null && (TURN_PRESET_NAMES as readonly string[]).includes(view)) this.#turn.preset(view as TurnPreset);
+      return;
+    }
     if (REPLAY_ATTRIBUTES.includes(name) && this.#replay !== undefined) this.#attach(name !== "speed" && name !== "loop");
     else this.#draw();
   }
@@ -250,6 +294,23 @@ export class KyogijoField extends Base {
     const options = optionsFromAttributes((name) => this.getAttribute(name), this.#options);
     const page = document.documentElement.getAttribute("data-theme");
     if (options.theme === undefined && (page === "light" || page === "dark")) options.theme = page;
+    if (turnWanted((name) => this.getAttribute(name))) {
+      // The 3D view takes the container over from the flat drawing; a replay does not play on it.
+      if (this.#mount !== undefined) {
+        this.#mount.destroy();
+        this.#mount = undefined;
+        this.#replay = undefined;
+        this.#replayOf = undefined;
+      }
+      const settings = turnSettingsFromAttributes((name) => this.getAttribute(name), this.#turnSettings);
+      if (this.#turn === undefined) this.#turn = mountKyogijoTurn(this.#host, options, settings);
+      else this.#turn.update(options);
+      return;
+    }
+    if (this.#turn !== undefined) {
+      this.#turn.destroy();
+      this.#turn = undefined;
+    }
     if (this.#mount === undefined) this.#mount = mountKyogijo(this.#host, options);
     else this.#mount.update(options);
     if (this.#timeline === undefined) {

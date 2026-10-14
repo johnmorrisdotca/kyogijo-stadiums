@@ -174,6 +174,11 @@
       "import": "./dist/png-entry.js",
       "default": "./dist/png-entry.js"
     },
+    "./turn": {
+      "types": "./dist/turn-entry.d.ts",
+      "import": "./dist/turn-entry.js",
+      "default": "./dist/turn-entry.js"
+    },
     "./element/define": {
       "types": "./dist/element-define.d.ts",
       "import": "./dist/element-define.js",

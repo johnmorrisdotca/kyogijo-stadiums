@@ -182,7 +182,7 @@ const PATTERNS: readonly StripePattern[] = ["bands", "wide", "narrow", "lengthwi
 const GOALS: readonly GoalStyle[] = ["box", "line", "strip", "none"];
 
 /** The pitch the options ask for: a `pitch` of the caller's, else the size a `ground` publishes, else none (the international pitch). */
-function pitchOf(o: SurfaceOptions): SoccerPitchId | SoccerSize | undefined {
+export function pitchOf(o: SurfaceOptions): SoccerPitchId | SoccerSize | undefined {
   if (o.pitch !== undefined) return o.pitch;
   const ground = groundById(o.ground);
   return ground === undefined || ground.pitchSize === "default" ? undefined : { ...ground.pitch, unit: "m" };

@@ -17,6 +17,7 @@ The [API reference](https://johnmorrisdotca.github.io/kyogijo-stadiums/api.html)
 | `@johnmorrisdotca/kyogijo-stadiums/plot` | `surfaceMark`, `surfaceScales`: a drawing as a mark of an Observable Plot, with its scales |
 | `@johnmorrisdotca/kyogijo-stadiums/geojson` | `sceneToGeoJSON`: a drawing as a GeoJSON FeatureCollection, in feet or a provider's frame |
 | `@johnmorrisdotca/kyogijo-stadiums/png` | `toPNG`, `PNG_PEER_MISSING`: a drawing as PNG bytes in Node, through the optional peer `@resvg/resvg-js` |
+| `@johnmorrisdotca/kyogijo-stadiums/turn` | `mountKyogijoTurn`, `turnMarkup`, `turnSupported`, `uprightsFor`, `describeUprights`, `TURN_PRESETS`, `NET_PRESETS`, `KYOGIJO_TURN_STYLE`, the camera (`fit`, `project`, `cameraMatrix`, `clampView`, `drag`, `step`) and the 3D view's types: a surface as a floor that turns, with what stands on it |
 | `@johnmorrisdotca/kyogijo-stadiums/parks` | `PARKS`, `PARK_IDS`, `parkById`, `parkByWikidata`, `parkPointsIn`, `parkWallsIn`, `parkQuirksIn`, `parkSourceUrl`, `parkUnit`, `fenceFor` |
 | `@johnmorrisdotca/kyogijo-stadiums/eras` | `rulesFor`, `eraChanges`, `eraStates`, `eraRange`, `seasonLabel`, `footballIn`, `ERA_SPORTS`, `ERA_CURRENT`, `ERA_SOURCES` and the rule types |
 | `@johnmorrisdotca/kyogijo-stadiums/grounds` | `GROUNDS`, `GROUND_IDS`, `groundById`, `groundByWikidata`, `groundNameIn`, `groundsHosting`, `groundSourceUrl` |
