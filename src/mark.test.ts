@@ -48,13 +48,38 @@ describe("the round team mark in a score", () => {
     }
   });
 
-  it("keeps a flag upright where the words are turned: along a pitch's ends, and in a tall drawing", () => {
-    const wide = marks(drawKyogijo(game({ markShape: "round", orientation: "landscape" })));
-    expect(wide.map((m) => m.attrs.transform?.replace(/[\d.-]+ [\d.-]+\)$/, ")"))).toEqual(["rotate(90 )", "rotate(-90 )"]);
-    const tall = marks(drawKyogijo(game({ markShape: "round", orientation: "portrait" })));
-    expect(tall.every((m) => m.attrs.transform?.startsWith("rotate(90 "))).toBe(true);
-    // A rink's names lie flat: nothing to turn back.
-    expect(marks(drawKyogijo(game({ sport: "nhl", markShape: "round", orientation: "landscape" }))).every((m) => m.attrs.transform === undefined)).toBe(true);
+  it("turns a flag with the words: the mark and the team's name are turned by the same angle, along a pitch's ends and in a tall drawing", () => {
+    // The turn a node has on the screen: the `rotate` and `matrix` of every group it lies in (a tall drawing turns its surface by a matrix), summed.
+    const turnOf = (root: Node, target: Node): number => {
+      const path = (node: Node, trail: Node[]): Node[] | undefined => (node === target ? [...trail, node] : node.children.map((c) => path(c, [...trail, node])).find((p) => p !== undefined));
+      const angle = (t: string | undefined): number => {
+        const m = /matrix\((-?[\d.]+) (-?[\d.]+) /.exec(t ?? "");
+        if (m !== null) return (Math.atan2(Number(m[2]), Number(m[1])) * 180) / Math.PI;
+        return Number(/rotate\((-?[\d.]+)/.exec(t ?? "")?.[1] ?? 0);
+      };
+      return (path(root, []) ?? []).reduce((sum, n) => sum + angle(n.attrs.transform), 0);
+    };
+    // Along a pitch's ends the words read up the left end and down the right one; in a tall drawing they are upright. The flag does the same.
+    const wanted = { landscape: [-90, 90], portrait: [0, 0] } as const;
+    for (const orientation of ["landscape", "portrait"] as const) {
+      for (const extra of [{}, { home: { name: "Calvara", color: "#6b2d5c", score: 1 }, away: { name: "Aurelia", color: "#0f7a7a", score: 0 } }] as Partial<ScoreOptions>[]) {
+        const doc = parse(drawKyogijo(game({ markShape: "round", orientation, ...extra })));
+        const banners = withClass(doc, "ky-banner");
+        expect(banners.length).toBe(2);
+        const turns = banners.map((banner) => {
+          const mark = withClass(banner, "ky-mark")[0];
+          const name = withClass(banner, "ky-name")[0];
+          // The mark's group is not turned back: it lies in the banner's turn, as the name does, so the two read the same way.
+          expect(mark.attrs.transform).toBeUndefined();
+          expect(turnOf(doc, mark)).toBeCloseTo(turnOf(doc, name), 6);
+          return Math.round(turnOf(doc, mark));
+        });
+        expect(turns).toEqual(wanted[orientation]);
+      }
+    }
+    // A rink's names lie flat: the mark is not turned either.
+    const rink = parse(drawKyogijo(game({ sport: "nhl", markShape: "round", orientation: "landscape" })));
+    for (const banner of withClass(rink, "ky-banner")) expect(turnOf(rink, withClass(banner, "ky-mark")[0])).toBe(turnOf(rink, withClass(banner, "ky-name")[0]));
   });
 
   it("draws a team with no logo as its initials on its colour in the banner, and a bad address the same way", () => {

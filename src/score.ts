@@ -50,10 +50,11 @@ export function bannerMarkup(zone: Zone, team: TeamView, o: { turned: boolean; o
   if (zone.panel) inner += el("rect", { class: `ky-panel ky-panel-${team.side}`, x: -w / 2, y: -h / 2, width: w, height: h, rx: Math.min(h * 0.16, 8) });
   const ink = `ky-${o.onColour || zone.panel ? "ink" : "paint"}-${team.side}`;
   const logo = team.logo;
-  // A round mark is a picture even where the team has no logo (its initials on its colour), and stays upright in a zone that is turned.
+  // A round mark is a picture even where the team has no logo (its initials on its colour). It sits in the banner's group, so where the zone is turned it turns with the
+  // team's name, by the same angle, and the flag and the words read as one.
   const mark = (size: number, x: number, y: number): string =>
     team.round === true
-      ? roundMarkup({ id: `${o.id ?? "ky"}-mk-${team.role}`, cx: x + size / 2, cy: y + size / 2, r: size / 2, href: logo, fit: team.fit, initials: team.abbr, color: team.color, ink: team.ink, upright: rot })
+      ? roundMarkup({ id: `${o.id ?? "ky"}-mk-${team.role}`, cx: x + size / 2, cy: y + size / 2, r: size / 2, href: logo, fit: team.fit, initials: team.abbr, color: team.color, ink: team.ink })
       : el("image", { class: "ky-logo", href: logo, x, y, width: size, height: size, preserveAspectRatio: "xMidYMid meet" });
   const pictured = logo !== undefined || team.round === true;
   const row = pictured && w / h >= 2.6;

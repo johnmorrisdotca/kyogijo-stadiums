@@ -46,12 +46,14 @@ test("a road is round marks with their rings, the score between them, the rounds
   expect(ground).not.toBe(await card.locator("rect.ky-r-bg").evaluate((el) => getComputedStyle(el).fill));
 });
 
-test("the round mark on a pitch clips each flag and keeps it upright where the names are turned", async ({ page }) => {
+test("the round mark on a pitch clips each flag and turns it with the names where they are turned", async ({ page }) => {
   await open(page, "?lang=en&help=off");
   const wide = page.locator(`${at("road-cards")} figure[data-road="mark_wide"] svg.kyogijo`);
   await wide.scrollIntoViewIfNeeded();
   expect(await wide.locator("g.ky-mark").count()).toBe(2);
-  expect(await wide.locator("g.ky-mark").first().getAttribute("transform")).toContain("rotate(");
+  // The mark lies in its banner's turn and has none of its own: it turns with the name.
+  expect(await wide.locator("g.ky-mark").first().getAttribute("transform")).toBeNull();
+  expect(await wide.locator("g.ky-banner").first().getAttribute("transform")).toContain("rotate(-90)");
   expect(await wide.locator("image.ky-logo").count()).toBe(2);
   const badge = page.locator(`${at("road-cards")} figure[data-road="mark_badge"] svg.kyogijo`);
   await badge.scrollIntoViewIfNeeded();

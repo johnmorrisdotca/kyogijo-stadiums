@@ -49,7 +49,7 @@ The default is by sport and by `league` only where a league's own convention dif
 
 ### Round marks
 
-A flag or a crest can be drawn round, as a broadcast graphic draws a country against a country: `mark: "round"` on a team, or `markShape: "round"` on the score for both (a team's own `mark`, `round` or `plain`, wins). The logo is clipped to a circle and ringed, on each side of the surface in the full drawing, in the badge and in the strip of a compact card. It is sized by the place the surface gives the team: the end zone of a pitch, the half of a court. Where the words are turned (along the ends of a wide pitch, and in a tall drawing) the mark is turned back and stays upright.
+A flag or a crest can be drawn round, as a broadcast graphic draws a country against a country: `mark: "round"` on a team, or `markShape: "round"` on the score for both (a team's own `mark`, `round` or `plain`, wins). The logo is clipped to a circle and ringed, on each side of the surface in the full drawing, in the badge and in the strip of a compact card. It is sized by the place the surface gives the team: the end zone of a pitch, the half of a court. Where the words are turned (along the ends of a wide pitch, and in a tall drawing) the mark turns with them, by the same angle and the same way, so that a flag and its team's name read as one: sideways along the end of a wide pitch, and the right way up in a tall drawing. A mark with no logo (the team's initials on its colour) turns the same way. In an end zone that is not turned, it is as it was.
 
 ```ts
 import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";

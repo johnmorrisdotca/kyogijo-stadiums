@@ -38,7 +38,7 @@ export interface RoundMark {
   title?: string;
   /** The ring's width: nine hundredths of the radius by default. */
   ring?: number;
-  /** The mark is set in a group that is turned by this many degrees, so that it is turned back and stays upright. */
+  /** The mark's group is turned back by this many degrees: pass the turn of the group the mark is in to hold it upright there. The score does not use it: its mark turns with the zone's words. */
   upright?: number;
   /** A class added to the mark's group (the road chart's `ky-r-dim` for a team that did not advance). */
   className?: string;

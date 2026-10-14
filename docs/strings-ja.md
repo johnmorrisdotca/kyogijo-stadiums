@@ -1718,7 +1718,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `road_wide` | The wide card, 1200 by 675, before the final is played: the finalists at the two ends | 横長カード（1200×675）：決勝前の状態。決勝進出の2チームを両端に配置 |
 | `road_phone` | The phone, 390 wide, in the dark set: each round's name over its row | スマートフォン幅（390px）のダーク表示：各ラウンドの行の上にラウンド名を表示 |
 | `road_series` | A play-off series instead of a knockout: rounds named by the caller, the games won as the score, and a note under each | ノックアウトではなくプレーオフのシリーズ：ラウンド名は自由に付けられ、スコアは勝利数、各スコアの下に補足を表示 |
-| `road_mark_wide` | The round mark on a pitch: each country's flag in a circle with a ring, upright at its end | 丸いマークをピッチに：各国の国旗を円形に切り抜いてリングを付け、向きを変えずにそれぞれのゴール側に表示 |
+| `road_mark_wide` | The round mark on a pitch: each country's flag in a circle with a ring, turned with its name at its end | 丸いマークをピッチに：各国の国旗を円形に切り抜いてリングを付け、チーム名と同じ向きに回転させてそれぞれのゴール側に表示 |
 | `road_mark_tall` | The same game tall | 同じ試合を縦向きで表示 |
 | `road_mark_badge` | The same game as a badge | 同じ試合をバッジで表示 |
 | `poolLook` | Water | 水面 |
