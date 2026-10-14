@@ -334,6 +334,34 @@ const page = `<!doctype html>
                 <div class="setup fam-row">${toggle("baseline", "baseline")}${toggle("centre-logo", "centreLogo")}${toggle("hardwood", "hardwood")}</div>
               </div>
             </details>
+            <details class="fam-fold group" id="situation-group"${hid("situation-group")}>
+              <summary data-say="groupSituation"></summary>
+              <div class="setup fam-row" ${help("Show what is happening in the game: hockey's power play, empty net or shootout, baseball's runners, outs and count, football's down and distance. It is on the surface, in the badge and in the description.", "試合の状況を描きます。アイスホッケーはパワープレー・エンプティネット・シュートアウト、野球は走者・アウト・カウント、アメリカンフットボールはダウンと残りヤードです。競技場の上、バッジ、説明文に表示されます。")}>
+                ${toggle("situation", "situation")}
+              </div>
+              <div id="sit-hockey-row"${hid("sit-hockey-row")}>
+                ${seg("sit-hockey", "sitHockey", "A power play (5 against 4, with the clock), the goalkeeper pulled (6 against 5, the net ringed), a delayed penalty, or a shootout.", "パワープレー（5対4と残り時間）、ゴーリーを下げた状態（6対5でゴールを丸で囲む）、ディレードペナルティ、シュートアウトから選びます。")}
+              </div>
+              <div id="sit-baseball-row"${hid("sit-baseball-row")}>
+                <div class="setup fam-row" ${help("Which bases have a runner on them: they are lit on the diamond.", "走者がいる塁を選びます。ダイヤモンド上でその塁が強調されます。")}>
+                  ${toggle("sit-b1", "sitFirst")}${toggle("sit-b2", "sitSecond")}${toggle("sit-b3", "sitThird")}
+                </div>
+                ${seg("sit-outs", "sitOuts", "The outs, 0 to 2.", "アウトカウントです。0から2まで選べます。")}
+                ${seg("sit-count", "sitCount", "The count, balls then strikes.", "カウントです。ボール、ストライクの順に表します。")}
+              </div>
+              <div id="sit-football-row"${hid("sit-football-row")}>
+                ${seg("sit-down", "sitDown", "The down. The CFL has three.", "ダウンです。CFLは3ダウン制のため、4は表示されません。")}
+                ${seg("sit-togo", "sitToGo", "The yards to a first down, or goal to go.", "ファーストダウンまでの残りヤード、またはゴール前（ゴール・トゥ・ゴー）を選びます。")}
+                <div class="setup fam-row" ${help("Where the ball is, in yards from the offence's own goal line: 88 is the opponent's 12.", "ボールの位置です。攻撃側の自陣ゴールラインからのヤード数で表します。88なら敵陣12ヤードです。")}>
+                  <label class="fam-label" for="sit-ballon" data-say="sitBallOn"></label>
+                  <input type="range" class="fam-field era-range" id="sit-ballon" data-testid="sit-ballon" min="0" max="100" step="1" value="${first.sitBallOn}" />
+                  <output class="era-season" id="sit-ballon-out" data-testid="sit-ballon-out" for="sit-ballon">${first.sitBallOn}</output>
+                </div>
+                <div class="setup fam-row" ${help("A drive chart: an arrow for each drive, with how it ended.", "ドライブチャートです。各ドライブを矢印で描き、その結果を添えます。")}>
+                  ${toggle("sit-drive", "sitDrive")}
+                </div>
+              </div>
+            </details>
           </div>
         </div>
       </section>

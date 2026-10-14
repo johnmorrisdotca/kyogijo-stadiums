@@ -85,6 +85,8 @@ const CASES: Record<string, { before: number; after: number; sport: Sport; show:
   "nhl.blueLine.2005": { sport: "nhl", before: 2004, after: 2005, show: [73, 75] },
   "nhl.trapezoid.2005": { sport: "nhl", before: 2004, after: 2005, show: [undefined, 18] },
   "nhl.trapezoid.2014": { sport: "nhl", before: 2013, after: 2014, show: [18, 22] },
+  "nhl.twoLinePass.1943": { sport: "nhl", before: 1942, after: 1943, show: [0, 0] },
+  "nhl.twoLinePass.2005": { sport: "nhl", before: 2004, after: 2005, show: [0, 0] },
   "nhl.hashApart.2012": { sport: "nhl", before: 2011, after: 2012, show: [36, 36] },
   "nhl.hashApart.2014": { sport: "nhl", before: 2013, after: 2014, show: [36, 67] },
   "nba.keyWidth.1951": { sport: "nba", before: 1950, after: 1951, show: [6, 12] },
@@ -168,7 +170,7 @@ describe("the history of the surfaces: the data", () => {
   });
 
   it("agrees, for today, with the dimensions in geometry.ts", () => {
-    expect(rulesFor("nhl").rules).toEqual({ centreLine: true, goalLine: NHL.goalLine, blueLine: NHL.blueLine, trapezoid: NHL.trapezoid, hashApart: NHL.hashApart });
+    expect(rulesFor("nhl").rules).toEqual({ centreLine: true, goalLine: NHL.goalLine, blueLine: NHL.blueLine, trapezoid: NHL.trapezoid, hashApart: NHL.hashApart, twoLinePass: false });
     expect(rulesFor("nba").rules).toEqual({ keyWidth: NBA.lane, threePoint: { radius: NBA.threePoint.radius }, restrictedArea: true });
     for (const id of ["nfl", "cfl"] as const) expect(rulesFor(id).rules).toEqual({ length: FOOTBALL[id].length, endZone: FOOTBALL[id].endZone, hash: FOOTBALL[id].hash, posts: FOOTBALL[id].posts, postShape: "slingshot" });
     expect(rulesFor("mlb").rules.baseSize).toBe(MLB.baseSize);
@@ -243,6 +245,11 @@ describe("each change, in the data and on the drawing", () => {
       expect(after.approx.includes(feature)).toBe(change.approx);
       expect(after.planned).toBe(change.planned);
       // The drawing, where the marking is one a drawing shows.
+      // The two-line pass is a rule the centre line is used for: the lines are drawn the same.
+      if (feature === "twoLinePass") {
+        expect([marking(before), marking(after)]).toEqual(id.endsWith("1943") ? [false, true] : [true, false]);
+        return;
+      }
       if (feature === "moundHeight") {
         expect([marking(before), marking(after)]).toEqual(id.endsWith("1903") ? [15, 15] : [15, 10]);
         return;
@@ -310,7 +317,7 @@ describe("what a season leaves out, and what it says", () => {
     const nba = rulesFor("nba", 1995);
     expect(nba.differences.map((c) => c.id).sort()).toEqual(["nba.restrictedArea.start", "nba.threePoint.1994"]);
     const nhl = rulesFor("nhl", 1960);
-    expect(nhl.differences.map((c) => c.feature)).toEqual(["trapezoid"]);
+    expect(nhl.differences.map((c) => c.feature).sort()).toEqual(["trapezoid", "twoLinePass"]);
     expect(rulesFor("nhl", 1942).differences.map((c) => c.feature).sort()).toEqual(["centreLine", "trapezoid"]);
   });
 

@@ -96,6 +96,8 @@ export function football(spec: FootballSpec, o: BuildOptions, marks: FootballMar
   // The CFL marks its centre C; on a field whose middle is a ten-yard line (the 100 yards planned for 2027) the line is a 50, as the NFL's.
   if (numbered && spec.id === "cfl" && (yardsLong / 2) % 10 !== 0) positions.push({ x: e + (yardsLong / 2) * 3, label: spec.centre, pos: yardsLong / 2 });
   let numbers = "";
+  const arrows: [number, number, number, number][] = [];
+  const numerals: [number, number, number, number][] = [];
   for (const side of ["near", "far"] as const) {
     const y = side === "near" ? W - centreY : centreY;
     for (const p of positions) {
@@ -103,6 +105,9 @@ export function football(spec: FootballSpec, o: BuildOptions, marks: FootballMar
       const centre = p.label === spec.centre || p.pos === yardsLong / 2;
       const digits = [...p.label];
       const flip = side === "far";
+      // The numeral's box in the wide frame: the digits stand along the field, or across it when the field is turned.
+      const spread = digits.length === 1 ? 3 : 5.9;
+      numerals.push([p.x, y, turned ? DIGIT_HEIGHT / 2 : spread, turned ? spread : DIGIT_HEIGHT / 2]);
       if (digits.length === 1) numbers += textOn(turned, p.x, y + DIGIT_HEIGHT / 2, p.label, { size, anchor: "middle", cls: numCls, flip, weight: 700 });
       else {
         const dx = 3.4;
@@ -119,6 +124,7 @@ export function football(spec: FootballSpec, o: BuildOptions, marks: FootballMar
       if (full && !centre && Number(p.label) < 50) {
         const ax = nearGoalLeft ? p.x - 8.4 : p.x + 8.4;
         const dir = nearGoalLeft ? -1 : 1;
+        arrows.push([ax, y, 1.5, 1.6]);
         numbers += el("path", { class: ft(o, "numbers", "ky-fill-line"), d: `M${num(ax + dir * 1.5)} ${num(y)}L${num(ax - dir * 1.5)} ${num(y - 1.6)}V${num(y + 1.6)}Z` });
       }
     }
@@ -167,6 +173,7 @@ export function football(spec: FootballSpec, o: BuildOptions, marks: FootballMar
   };
   surface.lineRef = { width: lw, feet: 1 };
   surface.box = { x: 0, y: 0, w: L, h: W };
+  surface.anchors = { kind: "football", length: spec.length, endZone: e, width: W, arrows, numerals };
   // The red zone is the 20 yards before a goal line and the end zone behind it; the half is from an end line to midfield.
   const twenty = 60;
   const half = atEnds((end) => (end === "left" ? edges(0, 0, L / 2, W) : edges(L / 2, 0, L, W)));

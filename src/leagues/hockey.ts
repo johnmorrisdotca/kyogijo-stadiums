@@ -65,6 +65,29 @@ export const NHL_RINK: RinkFigures = {
   lineWidths: { goal: NHL.goalLineWidth, major: NHL.lineWidth, minor: 1 / 6 },
 };
 
+/**
+ * The IIHF rink, Rules 1.2 to 1.9 and Appendix VI of the IIHF Official Rule Book 2025/26, in metres. The rules give a range for the width (26 to 30 m) and the corner radius (7 to 8.5 m): the largest of each is drawn.
+ */
+const IIHF_RINK: RinkFigures = {
+  length: 60,
+  width: 30,
+  cornerRadius: 8.5,
+  goalLine: 4,
+  blueLine: 22.5,
+  circleRadius: 4.5,
+  endSpotFromGoalLine: 6,
+  spotOffset: 7,
+  spotRadius: 0.3,
+  neutralSpotFromBlue: 1.5,
+  centreSpotRadius: 0.15,
+  hash: { length: 0.6, apart: 1.7 },
+  crease: { radius: 1.83, depth: 1.36, halfWidth: 1.225, mark: null },
+  net: { width: 1.83, depth: 1 },
+  trapezoid: { atBoards: 8.6, atGoalLine: 6.8 },
+  refereeCrease: 3,
+  lineWidths: { goal: 0.05, major: 0.3, minor: 0.05 },
+};
+
 /** A league with an ice rink of its own. */
 export type HockeyLeague = LeagueBase<"hockey", RinkFigures>;
 
@@ -86,25 +109,7 @@ export const HOCKEY_LEAGUES: readonly HockeyLeague[] = [
     name: { en: "IIHF ice hockey rink", ja: "IIHF（国際アイスホッケー連盟）のアイスホッケーリンク" },
     unit: "m",
     // Rules 1.2 to 1.9 and Appendix VI of the IIHF Official Rule Book 2025/26 (the 2026/27 edition is the same), in metres. The rules give a range for the width (26 to 30 m) and the corner radius (7 to 8.5 m): the largest of each is drawn. The spots' places and the crease are read from the diagram; the goal's depth is the rules' none.
-    dimensions: {
-      length: 60,
-      width: 30,
-      cornerRadius: 8.5,
-      goalLine: 4,
-      blueLine: 22.5,
-      circleRadius: 4.5,
-      endSpotFromGoalLine: 6,
-      spotOffset: 7,
-      spotRadius: 0.3,
-      neutralSpotFromBlue: 1.5,
-      centreSpotRadius: 0.15,
-      hash: { length: 0.6, apart: 1.7 },
-      crease: { radius: 1.83, depth: 1.36, halfWidth: 1.225, mark: null },
-      net: { width: 1.83, depth: 1 },
-      trapezoid: { atBoards: 8.6, atGoalLine: 6.8 },
-      refereeCrease: 3,
-      lineWidths: { goal: 0.05, major: 0.3, minor: 0.05 },
-    },
+    dimensions: IIHF_RINK,
     sources: ["iihf-2025"],
     history: {
       blueLine: [
@@ -209,5 +214,23 @@ export const HOCKEY_LEAGUES: readonly HockeyLeague[] = [
     // Rule 1 of the PWHL Rulebook is the NHL's, with no restricted area for goalkeepers (1.8 and 27.8).
     dimensions: rink({ trapezoid: null }),
     sources: ["pwhl-2025"],
+  },
+  {
+    id: "olympic",
+    family: "hockey",
+    name: { en: "Olympic ice hockey rink (60 by 26 m)", ja: "オリンピックのアイスホッケーリンク（60×26m）" },
+    unit: "m",
+    // The IIHF rink at the narrowest width its rules allow (Rule 1.2: 26 to 30 m). The IIHF's statement of 9 December 2025 gives the ice of Milano Cortina 2026 as 60.0 by 26.0 m, "the rink size used at the Beijing 2022 Olympic Winter Games", and "fully consistent with" the NHL's Global Series arena specifications; it says nothing of the markings, which are the IIHF's own (the corner radius and the rest are the IIHF rink's).
+    dimensions: { ...IIHF_RINK, width: 26 },
+    sources: ["iihf-milan-2025", "iihf-2025"],
+  },
+  {
+    id: "boston-garden",
+    family: "hockey",
+    name: { en: "Boston Garden hockey rink", ja: "ボストン・ガーデンのアイスホッケーリンク" },
+    unit: "ft",
+    // Boston Garden (1928 to 1995, the Bruins' home) had an ice surface of 58.2 by 25.3 m (191 by 83 feet), "some nine feet shorter and two feet narrower than standard". Only the size is published; every other figure is the NHL rink's (the boards' corners, the lines and the circles are those of today's Rule 1), which is how it is drawn.
+    dimensions: rink({ length: 58.2 / 0.3048, width: 25.3 / 0.3048 }),
+    sources: ["wp-boston-garden"],
   },
 ];

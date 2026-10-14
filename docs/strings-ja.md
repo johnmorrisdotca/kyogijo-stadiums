@@ -367,6 +367,71 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `pageant.stage` | Each team's crest stands on a large round stage over its own part of the surface. | 各チームのエンブレムが、競技場のチームごとの区域にある大きな丸いステージの上に置かれています。 |
 | `pageant.emblem` | An emblem is in the middle. | 中央にエンブレムがあります。 |
 | `pageant.emblemNamed` | The {name} emblem is in the middle. | 中央に{name}のエンブレムがあります。 |
+| `situation.home` | the home team | ホームチーム |
+| `situation.away` | the visitors | アウェイチーム |
+| `situation.homeShort` | HOME | ホーム |
+| `situation.awayShort` | AWAY | アウェイ |
+| `situation.pp` | PP | PP |
+| `situation.en` | EN | EN |
+| `situation.delayed` | DEL PEN | ディレード |
+| `situation.shootout` | SO | SO |
+| `situation.gws` | GWS | GWS |
+| `situation.sudden` | SD | SD |
+| `situation.powerPlay` | Power play: {team} have {a} skaters against {b}. | パワープレー：{team}が{a}人、相手は{b}人です。 |
+| `situation.strength` | {a} skaters against {b}. | スケーターは{a}人対{b}人です。 |
+| `situation.penaltyTime` | {clock} left on the penalty. | ペナルティの残り時間は{clock}です。 |
+| `situation.emptyNet` | {team} have pulled the goalkeeper, and the net is empty. | {team}はゴーリーを下げ、ゴールは無人です。 |
+| `situation.delayedPenalty` | A penalty to {team} is delayed. | {team}に対するディレードペナルティで、プレーは続いています。 |
+| `situation.shootoutScore` | Shootout after {n} rounds: {away} {awayGoals}, {home} {homeGoals}. | シュートアウト（{n}ラウンド終了時点）：{away} {awayGoals}、{home} {homeGoals}。 |
+| `situation.gwsScore` | Game winning shots after {n} rounds: {away} {awayGoals}, {home} {homeGoals}. | ゲームウイニングショット（{n}ラウンド終了時点）：{away} {awayGoals}、{home} {homeGoals}。 |
+| `situation.suddenDeath` | The rounds after the third are sudden death. | 4ラウンド目からはサドンデスです。 |
+| `situation.top` | Top | 表 |
+| `situation.bottom` | Bottom | 裏 |
+| `situation.inning` | {half} of the {nth} inning. | {n}回{half}です。 |
+| `situation.inningOnly` | The {nth} inning. | {n}回です。 |
+| `situation.halfOnly` | {half} of the inning. | イニングの{half}です。 |
+| `situation.noOuts` | No outs. | ノーアウトです。 |
+| `situation.oneOut` | 1 out. | 1アウトです。 |
+| `situation.outs` | {n} outs. | {n}アウトです。 |
+| `situation.basesEmpty` | The bases are empty. | 走者はいません。 |
+| `situation.basesLoaded` | The bases are loaded. | 満塁です。 |
+| `situation.runnersOn` | Runners on {list}. | {list}に走者がいます。 |
+| `situation.bases.0` | first | 一塁 |
+| `situation.bases.1` | second | 二塁 |
+| `situation.bases.2` | third | 三塁 |
+| `situation.and` |  and  | と |
+| `situation.count` | The count is {b} balls and {s} strikes. | カウントは{b}ボール{s}ストライクです。 |
+| `situation.downs.0` | 1st | 第1ダウン |
+| `situation.downs.1` | 2nd | 第2ダウン |
+| `situation.downs.2` | 3rd | 第3ダウン |
+| `situation.downs.3` | 4th | 第4ダウン |
+| `situation.tag` | {ord} & {n} | {ord} {n}ヤード |
+| `situation.tagGoal` | {ord} & Goal | {ord} ゴール前 |
+| `situation.down` | {ord} down. | {ord}です。 |
+| `situation.downDistance` | {ord} and {n}. | {ord}、残り{n}ヤードです。 |
+| `situation.downGoal` | {ord} and goal. | {ord}、ゴール前（ゴール・トゥ・ゴー）です。 |
+| `situation.ballOwn` | The ball is on the offence's own {n}-yard line. | ボールは攻撃側の自陣{n}ヤードラインにあります。 |
+| `situation.ballOpp` | The ball is on the defence's {n}-yard line. | ボールは攻撃側の敵陣{n}ヤードラインにあります。 |
+| `situation.ballMid` | The ball is at midfield. | ボールはミッドフィールドにあります。 |
+| `situation.placeOwn` | own {n} | 自陣{n}ヤード |
+| `situation.placeOpp` | opponent's {n} | 敵陣{n}ヤード |
+| `situation.placeMid` | midfield | ミッドフィールド |
+| `situation.tagOwn` | OWN {n} | 自陣{n} |
+| `situation.tagOpp` | OPP {n} | 敵陣{n} |
+| `situation.redZone` | The ball is in the red zone. | ボールはレッドゾーンにあります。 |
+| `situation.possession` | {team} have the ball. | {team}がボールを持っています。 |
+| `situation.driveLine` | Drive by {team}, from {from} to {to}: {result}. | {team}のドライブ、{from}から{to}まで：{result}。 |
+| `situation.driveNoResult` | Drive by {team}, from {from} to {to}. | {team}のドライブ、{from}から{to}まで。 |
+| `situation.results.touchdown` | touchdown | タッチダウン |
+| `situation.results.field-goal` | field goal | フィールドゴール |
+| `situation.results.missed-field-goal` | missed field goal | フィールドゴール失敗 |
+| `situation.results.punt` | punt | パント |
+| `situation.results.turnover` | turnover | ターンオーバー |
+| `situation.results.interception` | interception | インターセプト |
+| `situation.results.fumble` | fumble | ファンブル |
+| `situation.results.downs` | turnover on downs | ダウン更新失敗によるターンオーバー |
+| `situation.results.safety` | safety | セーフティ |
+| `situation.results.end-of-half` | end of the half | ハーフ終了 |
 | `special.guest.skating` | rink | リンク |
 | `special.guest.nfl` | football field | アメリカンフットボールのフィールド |
 | `special.guest.cfl` | football field | カナディアンフットボールのフィールド |
@@ -1391,6 +1456,23 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `court_night` | Night | ナイト |
 | `court_sunburst` | Sunburst | サンバースト |
 | `court_tournament` | Tournament | トーナメント |
+| `groupSituation` | Situation | 試合の状況 |
+| `situation` | Show the situation | 状況を表示 |
+| `sitHockey` | Strength | 人数 |
+| `sithockey_pp` | Power play | パワープレー |
+| `sithockey_en` | Empty net | エンプティネット |
+| `sithockey_delayed` | Delayed penalty | ディレード |
+| `sithockey_shootout` | Shootout | シュートアウト |
+| `sitFirst` | Runner on first | 一塁に走者 |
+| `sitSecond` | Runner on second | 二塁に走者 |
+| `sitThird` | Runner on third | 三塁に走者 |
+| `sitOuts` | Outs | アウト |
+| `sitCount` | Count | カウント |
+| `sitDown` | Down | ダウン |
+| `sitToGo` | To go | 残りヤード |
+| `sitGoal` | Goal | ゴール前 |
+| `sitBallOn` | Ball on | ボールの位置 |
+| `sitDrive` | Drive chart | ドライブチャート |
 | `baseline` | Words on the baselines | ベースラインの文字 |
 | `centreLogo` | Logo at centre court | コート中央のロゴ |
 | `hardwood` | Real hardwood | リアルな木の床 |
@@ -1691,6 +1773,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `ranges` | Display ranges and zoom | 表示範囲とズーム |
 | page `layouts` | Layouts and backgrounds | レイアウトと背景 |
 | page `pageant` | The pageant: flags on the halves | ハーフに広げる旗とエンブレム |
+| page `situation` | The situation of a game | 試合の状況（人数・走者・ダウン） |
 | page `emblems` | Emblems: trophies, medals, balls and crests | トロフィー・メダル・ボール・エンブレム |
 | page `accessibility` | Accessibility | アクセシビリティ |
 | group `places` | Sports and places | 競技と場所 |
@@ -1740,6 +1823,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `gallery-ranges` | Gallery: display ranges and zoom | ギャラリー：表示範囲とズーム |
 | page `gallery-layouts` | Gallery: layouts and backgrounds | ギャラリー：レイアウトと背景 |
 | page `gallery-pageant` | Gallery: flags on the halves | ギャラリー：ハーフに広げる旗 |
+| page `gallery-situation` | Gallery: the situation of a game | ギャラリー：試合の状況 |
 | group `compare` | Compare | 比較 |
 | page `compare` | How it compares | 他のパッケージとの比較 |
 | group `reference` | Reference | リファレンス |
@@ -1777,13 +1861,16 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `cfl.posts.2027` | Planned: the goal posts move to the end line, the back of the end zone. | 予定：ゴールポストがエンドゾーンの奥、エンドラインの上に移ります。 |
 | `nhl.centreLine.start` | No centre red line: two blue lines divide the ice and nothing marks the middle. | センターレッドラインはなく、リンクを分けるのは2本のブルーラインだけで、中央に線はありません。 |
 | `nhl.trapezoid.start` | No trapezoid behind the net: the goaltender may play the puck anywhere. | ゴール裏にトラペゾイド（台形の区域）はなく、ゴーリーはどこでもパックを扱えます。 |
+| `nhl.twoLinePass.start` | No two-line pass rule: there is no centre line to judge it by. | ツーライン・パス（2本のラインをまたぐパス）の反則はありません。判定に使うセンターラインがまだないためです。 |
 | `nhl.centreLine.1943` | The centre red line is added, so that a team can pass out of its own zone up to it. | センターレッドラインが加わり、自陣ゾーンからこのラインまでのパスが認められるようになります。 |
+| `nhl.twoLinePass.1943` | The centre red line judges the two-line pass: a pass across both a team's own blue line and the centre line, to a team-mate who has not touched it, is an offside pass. | センターレッドラインでツーライン・パスを判定します。自陣のブルーラインとセンターラインの両方をまたぐパスを、まだ触れていない味方が受けると、オフサイドパスの反則になります。 |
 | `nhl.goalLine.1997` | Goal lines are 11 feet from the end boards. | ゴールラインはエンドボードから11フィート（約3.4m）です。 |
 | `nhl.blueLine.1998` | Blue lines are 73 feet from the end boards: a 54-foot neutral zone and 73-foot offensive zones. | ブルーラインはエンドボードから73フィート（約22.3m）で、ニュートラルゾーンは54フィート（約16.5m）です。 |
 | `nhl.goalLine.1998` | Goal lines move out to 13 feet from the end boards, for room behind the net. | ゴールラインがエンドボードから13フィート（約4.0m）の位置に移り、ゴール裏が広くなります。 |
 | `nhl.blueLine.2005` | Blue lines move out to 75 feet from the end boards, cutting the neutral zone to 50 feet. | ブルーラインがエンドボードから75フィート（約22.9m）に移り、ニュートラルゾーンが50フィート（約15.2m）に狭まります。 |
 | `nhl.goalLine.2005` | Goal lines move back to 11 feet from the end boards. | ゴールラインがエンドボードから11フィートの位置に戻ります。 |
 | `nhl.trapezoid.2005` | The goaltender's trapezoid is marked behind each net: 18 feet at the goal line, 28 feet at the end boards. | 各ゴールの裏に、ゴーリーがパックを扱える区域として台形（トラペゾイド）が引かれます。ゴールライン側が18フィート、エンドボード側が28フィートです。 |
+| `nhl.twoLinePass.2005` | The centre line no longer judges the offside pass, under the 2005 collective bargaining agreement, so a pass across two lines is legal. | 2005年の労使協定により、センターラインはオフサイドパスの判定に使われなくなり、ツーライン・パスは反則ではなくなります。 |
 | `nhl.hashApart.2012` | The two hash marks beside each end-zone face-off circle are 3 feet apart (Rule 1.9 of 2012-13; no earlier season is cited). | エンドゾーンのフェイスオフサークルの両脇にある2本のハッシュマークは、間隔が3フィート（約91cm）です（2012-13シーズンのルール1.9。それ以前のシーズンを示す資料は見つかっていません）。 |
 | `nhl.hashApart.2014` | The hash marks move apart to 5 feet 7 inches, more in line with the marks on international ice. | 2本のハッシュマークの間隔が5フィート7インチ（約1.7m）に広がり、国際大会のリンクにあるマークに近づきます。 |
 | `nhl.trapezoid.2014` | The trapezoid is widened to 22 feet at the goal line (2 feet each side). | トラペゾイドのゴールライン側が左右2フィートずつ広がり、22フィートになります。 |
@@ -1835,6 +1922,8 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `qmjhl` | QMJHL hockey rink | QMJHLのアイスホッケーリンク |
 | `ushl` | USHL hockey rink | USHLのアイスホッケーリンク |
 | `pwhl` | PWHL hockey rink | PWHLのアイスホッケーリンク |
+| `olympic` | Olympic ice hockey rink (60 by 26 m) | オリンピックのアイスホッケーリンク（60×26m） |
+| `boston-garden` | Boston Garden hockey rink | ボストン・ガーデンのアイスホッケーリンク |
 | `ncaa` | NCAA football field | NCAAのフィールド |
 | `nfhs` | High school (NFHS) football field, 11 players | 全米高校連盟（NFHS）の11人制フィールド |
 | `nfhs-9` | High school (NFHS) football field, 9 players | 全米高校連盟（NFHS）の9人制フィールド |

@@ -53,7 +53,7 @@ const wikipedia = (id: string, title: string, revision: number, note: string): E
 export const ERA_SOURCES: Readonly<Record<string, EraSource>> = Object.freeze(
   Object.fromEntries(
     [
-      wikipedia("wp-offside", "Offside (ice hockey)", 1366324643, "the two blue lines of 1928-29, the centre red line introduced in 1943-44"),
+      wikipedia("wp-offside", "Offside (ice hockey)", 1366324643, "the two blue lines of 1928-29, the centre red line introduced in 1943-44, the offside pass judged by it until the 2005 collective bargaining agreement"),
       wikipedia("wp-rink", "Ice hockey rink", 1369579112, "the NHL's blue lines at 75 feet and goal lines at 11 feet; the trapezoid from 2005-06, 18 feet at the goal line, 22 feet from 2014-15"),
       wikipedia("wp-nhl-rules", "National Hockey League rules", 1379666522, "the trapezoid since 2005-06, lengthened by 2 feet each side in 2014"),
       {
@@ -189,6 +189,8 @@ export interface NhlRules {
   trapezoid: { atGoalLine: number; atBoards: number } | null;
   /** The gap between the two hash marks beside an end-zone face-off circle (Rule 1.9). */
   hashApart: number;
+  /** The centre red line judges the offside pass: a pass from inside a team's own defensive zone across both its blue line and the centre line, to a team-mate who has not touched it, stops play. Data only: the lines are drawn the same. */
+  twoLinePass: boolean;
 }
 
 /** The NBA court's markings in a season. Lengths are feet. */
@@ -264,6 +266,11 @@ const NHL_SPANS: Spans<NhlRules> = {
     { from: null, value: null, what: "No trapezoid behind the net: the goaltender may play the puck anywhere.", ja: "ゴール裏にトラペゾイド（台形の区域）はなく、ゴーリーはどこでもパックを扱えます。", sources: ["wp-rink", "wp-nhl-rules"] },
     { from: 2005, value: { atGoalLine: 18, atBoards: 28 }, what: "The goaltender's trapezoid is marked behind each net: 18 feet at the goal line, 28 feet at the end boards.", ja: "各ゴールの裏に、ゴーリーがパックを扱える区域として台形（トラペゾイド）が引かれます。ゴールライン側が18フィート、エンドボード側が28フィートです。", sources: ["wp-rink", "wp-nhl-rules"] },
     { from: 2014, value: { atGoalLine: NHL.trapezoid.atGoalLine, atBoards: NHL.trapezoid.atBoards }, what: "The trapezoid is widened to 22 feet at the goal line (2 feet each side).", ja: "トラペゾイドのゴールライン側が左右2フィートずつ広がり、22フィートになります。", sources: ["wp-rink", "wp-nhl-rules"] },
+  ],
+  twoLinePass: [
+    { from: null, value: false, what: "No two-line pass rule: there is no centre line to judge it by.", ja: "ツーライン・パス（2本のラインをまたぐパス）の反則はありません。判定に使うセンターラインがまだないためです。", sources: ["wp-offside"] },
+    { from: 1943, value: true, what: "The centre red line judges the two-line pass: a pass across both a team's own blue line and the centre line, to a team-mate who has not touched it, is an offside pass.", ja: "センターレッドラインでツーライン・パスを判定します。自陣のブルーラインとセンターラインの両方をまたぐパスを、まだ触れていない味方が受けると、オフサイドパスの反則になります。", sources: ["wp-offside"] },
+    { from: 2005, value: false, what: "The centre line no longer judges the offside pass, under the 2005 collective bargaining agreement, so a pass across two lines is legal.", ja: "2005年の労使協定により、センターラインはオフサイドパスの判定に使われなくなり、ツーライン・パスは反則ではなくなります。", sources: ["wp-offside"] },
   ],
   hashApart: [
     { from: 2012, value: 3, what: "The two hash marks beside each end-zone face-off circle are 3 feet apart (Rule 1.9 of 2012-13; no earlier season is cited).", ja: "エンドゾーンのフェイスオフサークルの両脇にある2本のハッシュマークは、間隔が3フィート（約91cm）です（2012-13シーズンのルール1.9。それ以前のシーズンを示す資料は見つかっていません）。", sources: ["nhl-rules-2012", "nhl-hash-2014", "cbs-hash-2014"] },
@@ -379,7 +386,7 @@ const SPANS: { [S in EraSport]: Partial<Spans<EraRulesOf[S]>> } = {
 function present(sport: EraSport): EraRulesOf[EraSport] {
   switch (sport) {
     case "nhl":
-      return { centreLine: true, goalLine: NHL.goalLine, blueLine: NHL.blueLine, trapezoid: { atGoalLine: NHL.trapezoid.atGoalLine, atBoards: NHL.trapezoid.atBoards }, hashApart: NHL.hashApart };
+      return { centreLine: true, goalLine: NHL.goalLine, blueLine: NHL.blueLine, trapezoid: { atGoalLine: NHL.trapezoid.atGoalLine, atBoards: NHL.trapezoid.atBoards }, hashApart: NHL.hashApart, twoLinePass: false };
     case "nba":
       return { keyWidth: NBA.lane, threePoint: { radius: NBA.threePoint.radius }, restrictedArea: true };
     case "nfl":
@@ -439,7 +446,7 @@ const featuresOf = (sport: EraSport): [string, EraSpan<unknown>[]][] => Object.e
  * import { eraChanges } from "@johnmorrisdotca/kyogijo-stadiums/eras";
  * const nhl = eraChanges("nhl");
  * console.log(nhl.length, nhl[0].id, nhl[0].from);
- * // 10 nhl.centreLine.1943 1943
+ * // 12 nhl.centreLine.1943 1943
  * ```
  */
 export function eraChanges(sport: EraSport): EraChange[] {

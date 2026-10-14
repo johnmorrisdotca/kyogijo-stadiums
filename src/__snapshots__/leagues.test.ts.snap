@@ -1100,6 +1100,42 @@ exports[`the leagues' drawings > nhl ahl: what a score drawing is made of 1`] = 
 }
 `;
 
+exports[`the leagues' drawings > nhl boston-garden: what a score drawing is made of 1`] = `
+{
+  "circle.ky-blue": 1,
+  "circle.ky-blue-fill": 1,
+  "circle.ky-red": 4,
+  "circle.ky-red-fill": 8,
+  "desc": 1,
+  "g.ky-banner.ky-banner-left.ky-win": 1,
+  "g.ky-banner.ky-banner-right.ky-lose": 1,
+  "g.ky-plate": 1,
+  "g.ky-surface-group": 1,
+  "path.ky-blue": 1,
+  "path.ky-boards": 1,
+  "path.ky-crease": 2,
+  "path.ky-dash": 1,
+  "path.ky-net": 2,
+  "path.ky-red": 8,
+  "path.ky-surface": 1,
+  "rect.ky-apron": 1,
+  "rect.ky-plate-bg": 1,
+  "rect.ky-winbar.ky-winbar-left": 1,
+  "style": 1,
+  "svg.ky-nhl.kyogijo": 1,
+  "text.ky-abbr.ky-abbr-left.ky-text": 1,
+  "text.ky-abbr.ky-abbr-right.ky-text": 1,
+  "text.ky-comp.ky-text": 1,
+  "text.ky-dash-text.ky-text": 1,
+  "text.ky-foot.ky-text": 1,
+  "text.ky-lose.ky-score.ky-text": 1,
+  "text.ky-name.ky-paint-left.ky-text": 2,
+  "text.ky-name.ky-paint-right.ky-text": 2,
+  "text.ky-score.ky-text.ky-win": 1,
+  "title": 1,
+}
+`;
+
 exports[`the leagues' drawings > nhl echl: what a score drawing is made of 1`] = `
 {
   "circle.ky-blue": 1,
@@ -1261,6 +1297,42 @@ exports[`the leagues' drawings > nhl ohl: what a score drawing is made of 1`] = 
   "path.ky-dash": 1,
   "path.ky-net": 2,
   "path.ky-red": 8,
+  "path.ky-surface": 1,
+  "rect.ky-apron": 1,
+  "rect.ky-plate-bg": 1,
+  "rect.ky-winbar.ky-winbar-left": 1,
+  "style": 1,
+  "svg.ky-nhl.kyogijo": 1,
+  "text.ky-abbr.ky-abbr-left.ky-text": 1,
+  "text.ky-abbr.ky-abbr-right.ky-text": 1,
+  "text.ky-comp.ky-text": 1,
+  "text.ky-dash-text.ky-text": 1,
+  "text.ky-foot.ky-text": 1,
+  "text.ky-lose.ky-score.ky-text": 1,
+  "text.ky-name.ky-paint-left.ky-text": 2,
+  "text.ky-name.ky-paint-right.ky-text": 2,
+  "text.ky-score.ky-text.ky-win": 1,
+  "title": 1,
+}
+`;
+
+exports[`the leagues' drawings > nhl olympic: what a score drawing is made of 1`] = `
+{
+  "circle.ky-blue": 1,
+  "circle.ky-blue-fill": 1,
+  "circle.ky-red": 4,
+  "circle.ky-red-fill": 8,
+  "desc": 1,
+  "g.ky-banner.ky-banner-left.ky-win": 1,
+  "g.ky-banner.ky-banner-right.ky-lose": 1,
+  "g.ky-plate": 1,
+  "g.ky-surface-group": 1,
+  "path.ky-blue": 1,
+  "path.ky-boards": 1,
+  "path.ky-crease": 2,
+  "path.ky-dash": 1,
+  "path.ky-net": 2,
+  "path.ky-red": 6,
   "path.ky-surface": 1,
   "rect.ky-apron": 1,
   "rect.ky-plate-bg": 1,
@@ -1484,7 +1556,7 @@ exports[`the leagues' drawings > squash wsf-doubles-wide: what a score drawing i
 }
 `;
 
-exports[`the leagues' drawings > stay the same text unless a drawing was meant to change: one fingerprint for every league 1`] = `"0j1lynr"`;
+exports[`the leagues' drawings > stay the same text unless a drawing was meant to change: one fingerprint for every league 1`] = `"060cqfe"`;
 
 exports[`the leagues' drawings > stay the same text unless a drawing was meant to change: one fingerprint for the leagues added after the field sports 1`] = `"1pe0ply"`;
 

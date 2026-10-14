@@ -19,6 +19,13 @@ export const WINNERS = ["auto", "leader", "none", "home", "away"];
 export const VIEWS = ["flat", "3d"];
 export const VIEWPOINTS = ["overhead", "broadcast", "end", "corner"];
 export const PAGEANTS = ["off", "carpet", "stage"];
+/** The sports a game's situation is drawn for, and what each control of it offers. */
+export const SITUATION_SPORTS = ["nhl", "mlb", "nfl", "cfl", "ifaf"];
+export const SIT_HOCKEY = ["pp", "en", "delayed", "shootout"];
+export const SIT_OUTS = ["0", "1", "2"];
+export const SIT_COUNTS = ["0-0", "1-1", "3-2"];
+export const SIT_DOWNS = ["1", "2", "3", "4"];
+export const SIT_TOGO = ["1", "7", "10", "goal"];
 export const PAGEANT_LINES = ["over", "under", "through"];
 export const TRACKS = ["red", "blue", "terracotta", "green"];
 export const INFIELDS = ["pitch", "grass", "none"];
@@ -97,6 +104,16 @@ export function makeState(params, kept = null) {
     crowd: params.get("crowd") === "1",
     crowdDensity: /^\d{1,3}$/.test(params.get("crowddensity") || "") ? Math.min(100, Number(params.get("crowddensity"))) : 85,
     crowdTifo: params.get("crowdtifo") === "1",
+    // The situation of the game: hockey's strength, baseball's runners, outs and count, football's down, distance and ball.
+    situation: params.get("situation") === "1",
+    sitHockey: pick(params.get("sithockey"), SIT_HOCKEY, "pp"),
+    sitBases: /^[01]{3}$/.test(params.get("sitbases") || "") ? params.get("sitbases") : "101",
+    sitOuts: pick(params.get("sitouts"), SIT_OUTS, "2"),
+    sitCount: pick(params.get("sitcount"), SIT_COUNTS, "3-2"),
+    sitDown: pick(params.get("sitdown"), SIT_DOWNS, "3"),
+    sitToGo: pick(params.get("sittogo"), SIT_TOGO, "7"),
+    sitBallOn: /^\d{1,3}$/.test(params.get("sitballon") || "") ? Math.min(100, Number(params.get("sitballon"))) : 88,
+    sitDrive: params.get("sitdrive") === "1",
     touched: new Set(),
     embed: "module",
   };
@@ -187,6 +204,22 @@ function poolOptions(s, lang, forCode) {
   return Object.keys(pool).length === 0 ? undefined : pool;
 }
 
+/** The situation the state asks for, in the options' own words, for a sport that has one. */
+export function situationFor(s) {
+  if (s.sport === "nhl") {
+    if (s.sitHockey === "pp") return { awaySkaters: 5, homeSkaters: 4, clock: "1:42" };
+    if (s.sitHockey === "en") return { awaySkaters: 6, homeSkaters: 5, emptyNet: "away" };
+    if (s.sitHockey === "delayed") return { delayedPenalty: "home" };
+    return { shootout: { rounds: [[true, false], [true, true], [false, true], [false, false], [true, false]] } };
+  }
+  if (s.sport === "mlb") {
+    const [balls, strikes] = s.sitCount.split("-").map(Number);
+    return { bases: [...s.sitBases].map((c) => c === "1"), outs: Number(s.sitOuts), inning: 7, half: "top", balls, strikes };
+  }
+  const drive = [{ from: 25, to: 48, result: "punt" }, { from: 30, to: 100, result: "touchdown" }, { team: "home", from: 25, to: 40, result: "interception" }];
+  return { ballOn: s.sitBallOn, down: Number(s.sitDown), toGo: s.sitToGo === "goal" ? "goal" : Number(s.sitToGo), possession: "away", ...(s.sitDrive ? { drive } : {}) };
+}
+
 /** What the state asks the package to draw. */
 export function optionsFor(s, lang, forCode = false) {
   const o = { sport: s.sport, orientation: s.orientation, language: lang };
@@ -207,6 +240,7 @@ export function optionsFor(s, lang, forCode = false) {
   }
   // A curling sheet: a part of it, or folded. A drawing with teams always shows the whole sheet.
   if (s.sport === "curling" && s.sheet !== "sheet" && s.size === "surface") o.sheet = s.sheet === "folded" ? { show: "folded" } : { show: "half", end: s.sheet };
+  if (s.situation && SITUATION_SPORTS.includes(s.sport)) o.situation = situationFor(s);
   if (s.crowd) {
     // The stands and the people: every surface that has spectators; the share of seats taken from the slider, and a card display behind a goal on request.
     const crowd = {};
@@ -274,6 +308,9 @@ export const labelOf = (say, s) => ({
   detail: (v) => say(`detail_${v}`),
   pageant: (v) => say(`pageant_${v}`),
   pageantLines: (v) => say(`pageantLines_${v}`),
+  sithockey: (v) => say(`sithockey_${v}`),
+  sitplain: (v) => v,
+  sittogo: (v) => (v === "goal" ? say("sitGoal") : v),
   court: (v) => say(`court_${v}`),
   poollook: (v) => say(`poollook_${v}`),
   pooldeck: (v) => say(`pooldeck_${v}`),
@@ -308,6 +345,11 @@ export const SEGS = [
   { id: "detail", kind: "detail", values: ["full", "simple"], get: (s) => s.detail },
   { id: "pageant", kind: "pageant", values: PAGEANTS, get: (s) => s.pageant },
   { id: "pageant-lines", kind: "pageantLines", values: PAGEANT_LINES, get: (s) => s.pageantLines },
+  { id: "sit-hockey", kind: "sithockey", values: SIT_HOCKEY, get: (s) => s.sitHockey },
+  { id: "sit-outs", kind: "sitplain", values: SIT_OUTS, get: (s) => s.sitOuts },
+  { id: "sit-count", kind: "sitplain", values: SIT_COUNTS, get: (s) => s.sitCount },
+  { id: "sit-down", kind: "sitplain", values: SIT_DOWNS, get: (s) => s.sitDown },
+  { id: "sit-togo", kind: "sittogo", values: SIT_TOGO, get: (s) => s.sitToGo },
   { id: "court", kind: "court", values: COURTS, get: (s) => s.court },
   { id: "pool-look", kind: "poollook", values: POOL_LOOKS, get: (s) => s.poolLook },
   { id: "pool-deck", kind: "pooldeck", values: POOL_DECKS, get: (s) => s.poolDeck },
@@ -342,6 +384,11 @@ export const TOGGLES = [
   { id: "emblem-line", get: (s) => s.emblemLine },
   { id: "pageant-entrance", get: (s) => s.pageantEntrance },
   { id: "pool-section", get: (s) => s.poolSection },
+  { id: "situation", get: (s) => s.situation },
+  { id: "sit-b1", get: (s) => s.sitBases[0] === "1" },
+  { id: "sit-b2", get: (s) => s.sitBases[1] === "1" },
+  { id: "sit-b3", get: (s) => s.sitBases[2] === "1" },
+  { id: "sit-drive", get: (s) => s.sitDrive },
 ];
 
 /** The text fields and what each holds. */
@@ -384,6 +431,10 @@ export function hiddenRows(s) {
     "era-notes": !(seasons && past),
     "court-group": s.sport !== "nba",
     "crowd-row": !s.crowd,
+    "situation-group": !SITUATION_SPORTS.includes(s.sport),
+    "sit-hockey-row": !(s.situation && s.sport === "nhl"),
+    "sit-baseball-row": !(s.situation && s.sport === "mlb"),
+    "sit-football-row": !(s.situation && (s.sport === "nfl" || s.sport === "cfl" || s.sport === "ifaf")),
     "pageant-group": s.pageant === "off" || s.size === "surface",
     "pool-group": !isPool(s.sport),
     "swim-group": s.sport !== "swimming",

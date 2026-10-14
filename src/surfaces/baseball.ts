@@ -191,6 +191,8 @@ export function baseball(points: readonly FencePoint[], o: BuildOptions, era?: M
     Object.assign(right, { cx: (umax + m - 6 + 62) / 2, cy, w, h: 58 });
   }
   const surface: Surface = { sport: "mlb", view, base, lines, defs: clip, left, right, plate: { cx: 0, cy: -Math.round(vmax * 0.42), w: 150, h: 62 }, turned: false, lineRef: { width: thin, feet: 1 }, box: { x: umin, y: -vmax, w: umax - umin, h: vmax } };
+  // The bases as drawn (first, second, third) for a situation to light.
+  surface.anchors = { kind: "baseball", bases: bases.map(([u, v]): [number, number] => [u, -v]), half: h, backstop };
   // A pageant: the home team's picture on the infield, the visitors' in the outfield beyond the plate, and the emblem on the mound.
   {
     const inW = 2 * centreV * 0.6 * 0.95;

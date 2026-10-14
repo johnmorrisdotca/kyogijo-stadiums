@@ -1,6 +1,69 @@
 import type { RuleId } from "./rules.types.ts";
 import type { Language, RangeName, Sport } from "./types.ts";
 
+/** The words of a game's situation (`situation`): the short ones on the pills and tags, and the sentences of the description. */
+export interface SituationWords {
+  /** The teams when the drawing names none. */
+  home: string;
+  away: string;
+  /** The labels of the shootout's two rows when the drawing names no team. */
+  homeShort: string;
+  awayShort: string;
+  /** Hockey's short words on the pill: the power play, the empty net, a delayed penalty, the shootout and its sudden-death rounds. */
+  pp: string;
+  en: string;
+  delayed: string;
+  shootout: string;
+  /** The shootout's word where the rulebook calls it the game winning shots: the IIHF's, the Olympic and the Japanese leagues'. */
+  gws: string;
+  sudden: string;
+  /** Hockey sentences ({team}, {a}, {b}, {clock}, {n}, {away}, {home}, {awayGoals}, {homeGoals}). */
+  powerPlay: string;
+  strength: string;
+  penaltyTime: string;
+  emptyNet: string;
+  delayedPenalty: string;
+  shootoutScore: string;
+  gwsScore: string;
+  suddenDeath: string;
+  /** Baseball: {half} is `top` or `bottom`, {n} the inning, {nth} the inning as an ordinal ({list} the bases, {b} the balls, {s} the strikes). */
+  top: string;
+  bottom: string;
+  inning: string;
+  inningOnly: string;
+  halfOnly: string;
+  noOuts: string;
+  oneOut: string;
+  outs: string;
+  basesEmpty: string;
+  basesLoaded: string;
+  runnersOn: string;
+  bases: readonly [string, string, string];
+  and: string;
+  count: string;
+  /** Football: the down's ordinal (first to fourth), the tag ({ord}, {n}), the sentences ({ord}, {n}, {team}, {where}, {from}, {to}, {result}). */
+  downs: readonly [string, string, string, string];
+  tag: string;
+  tagGoal: string;
+  down: string;
+  downDistance: string;
+  downGoal: string;
+  ballOwn: string;
+  ballOpp: string;
+  ballMid: string;
+  /** A yard line in a drive's sentence and on the tag: {n}. */
+  placeOwn: string;
+  placeOpp: string;
+  placeMid: string;
+  tagOwn: string;
+  tagOpp: string;
+  redZone: string;
+  possession: string;
+  driveLine: string;
+  driveNoResult: string;
+  results: Readonly<Record<"touchdown" | "field-goal" | "missed-field-goal" | "punt" | "turnover" | "interception" | "fumble" | "downs" | "safety" | "end-of-half", string>>;
+}
+
 /** The words of a folded curling sheet: the labels of its enlarged ends and the sentences that say what is drawn. */
 export interface FoldedWords {
   top: string;
@@ -209,6 +272,8 @@ export interface KyogijoWords {
   };
   /** The pageant, in a drawing's description: what lies over each half ({carpet}, {stage}), and the emblem in the middle, with its name ({name}) or without. */
   pageant: { carpet: string; stage: string; emblem: string; emblemNamed: string };
+  /** A game's situation: hockey's skaters and shootout, baseball's bases, outs and count, football's down and distance and drives. */
+  situation: SituationWords;
   /**
    * A special game, one surface set inside another: the title ({guest} is the inner surface, {host} where it is), the sentence that names the game ({event}, {date}),
    * whether the surface lies wholly inside the host ({guest}, {host}) or reaches beyond it ({pct} percent of its area), how its place was decided, and the date.
@@ -901,6 +966,59 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
     scoreTitle: "{away} {awayScore}, {home} {homeScore}",
     said: { home: "home", away: "away", won: "{name} won.", tied: "The game is level.", park: "The outfield fence follows the figures published for {park}.", officially: "Its official name is {name}.", ground: "The pitch follows the size published for {ground}.", groundDefault: "No pitch size is published for {ground}, so the pitch has the international size of 105 by 68 metres.", era: "The markings are those of the {season} season.", hammer: "{name} has the hammer.", ends: "By end, {name}: {list}.", total: "Total", wonPens: "{name} won {a}-{b} on penalties.", pens: "{a}-{b} pens", on: "Drawn as", sep: ", ", stop: ".", colon: ": ", gap: " " },
     pageant: { carpet: "Each team's flag or logo is laid out large over its own part of the surface, as a carpet.", stage: "Each team's crest stands on a large round stage over its own part of the surface.", emblem: "An emblem is in the middle.", emblemNamed: "The {name} emblem is in the middle." },
+    situation: {
+      home: "the home team",
+      away: "the visitors",
+      homeShort: "HOME",
+      awayShort: "AWAY",
+      pp: "PP",
+      en: "EN",
+      delayed: "DEL PEN",
+      shootout: "SO",
+      gws: "GWS",
+      sudden: "SD",
+      powerPlay: "Power play: {team} have {a} skaters against {b}.",
+      strength: "{a} skaters against {b}.",
+      penaltyTime: "{clock} left on the penalty.",
+      emptyNet: "{team} have pulled the goalkeeper, and the net is empty.",
+      delayedPenalty: "A penalty to {team} is delayed.",
+      shootoutScore: "Shootout after {n} rounds: {away} {awayGoals}, {home} {homeGoals}.",
+      gwsScore: "Game winning shots after {n} rounds: {away} {awayGoals}, {home} {homeGoals}.",
+      suddenDeath: "The rounds after the third are sudden death.",
+      top: "Top",
+      bottom: "Bottom",
+      inning: "{half} of the {nth} inning.",
+      inningOnly: "The {nth} inning.",
+      halfOnly: "{half} of the inning.",
+      noOuts: "No outs.",
+      oneOut: "1 out.",
+      outs: "{n} outs.",
+      basesEmpty: "The bases are empty.",
+      basesLoaded: "The bases are loaded.",
+      runnersOn: "Runners on {list}.",
+      bases: ["first", "second", "third"],
+      and: " and ",
+      count: "The count is {b} balls and {s} strikes.",
+      downs: ["1st", "2nd", "3rd", "4th"],
+      tag: "{ord} & {n}",
+      tagGoal: "{ord} & Goal",
+      down: "{ord} down.",
+      downDistance: "{ord} and {n}.",
+      downGoal: "{ord} and goal.",
+      ballOwn: "The ball is on the offence's own {n}-yard line.",
+      ballOpp: "The ball is on the defence's {n}-yard line.",
+      ballMid: "The ball is at midfield.",
+      placeOwn: "own {n}",
+      placeOpp: "opponent's {n}",
+      placeMid: "midfield",
+      tagOwn: "OWN {n}",
+      tagOpp: "OPP {n}",
+      redZone: "The ball is in the red zone.",
+      possession: "{team} have the ball.",
+      driveLine: "Drive by {team}, from {from} to {to}: {result}.",
+      driveNoResult: "Drive by {team}, from {from} to {to}.",
+      results: { touchdown: "touchdown", "field-goal": "field goal", "missed-field-goal": "missed field goal", punt: "punt", turnover: "turnover", interception: "interception", fumble: "fumble", downs: "turnover on downs", safety: "safety", "end-of-half": "end of the half" },
+    },
     special: {
       guest: { skating: "rink", nfl: "football field", cfl: "football field", ifaf: "football field", nhl: "rink", nba: "court", mlb: "baseball field", soccer: "pitch", curling: "sheet", tennis: "court", volleyball: "court", badminton: "court", pickleball: "court", tabletennis: "table", padel: "court", squash: "court", racquetball: "court", sepaktakraw: "court", teqball: "court", roundnet: "court", netball: "court", lacrosse: "field", rugby: "field", afl: "ground", gaelic: "field", cricket: "ground", fieldhockey: "pitch", handball: "court", swimming: "pool", waterpolo: "pool", diving: "well", artisticswimming: "pool", athletics: "track" },
       title: "{guest} in {host}",
@@ -1351,6 +1469,59 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
     scoreTitle: "{away} {awayScore}、{home} {homeScore}",
     said: { home: "ホーム", away: "アウェイ", won: "{name}の勝ちです。", tied: "同点です。", park: "外野フェンスは、{park}の公表されている距離をもとに描かれています。", officially: "正式名称は{name}です。", ground: "ピッチは、{ground}の公表されている広さをもとに描かれています。", groundDefault: "{ground}のピッチの広さは公表されていないため、国際標準の105×68mで描かれています。", era: "ラインやマークは{season}シーズンのものです。", hammer: "{name}がハンマー（最後の1投）を持っています。", ends: "{name}のエンドごとの得点：{list}。", total: "合計", wonPens: "{name}がPK戦を{a}-{b}で制しました。", pens: "PK戦 {a}-{b}", on: "図の内容", sep: "、", stop: "。", colon: "：", gap: "" },
     pageant: { carpet: "各チームの旗またはロゴが、競技場のチームごとの区域に、カーペットのように大きく広げられています。", stage: "各チームのエンブレムが、競技場のチームごとの区域にある大きな丸いステージの上に置かれています。", emblem: "中央にエンブレムがあります。", emblemNamed: "中央に{name}のエンブレムがあります。" },
+    situation: {
+      home: "ホームチーム",
+      away: "アウェイチーム",
+      homeShort: "ホーム",
+      awayShort: "アウェイ",
+      pp: "PP",
+      en: "EN",
+      delayed: "ディレード",
+      shootout: "SO",
+      gws: "GWS",
+      sudden: "SD",
+      powerPlay: "パワープレー：{team}が{a}人、相手は{b}人です。",
+      strength: "スケーターは{a}人対{b}人です。",
+      penaltyTime: "ペナルティの残り時間は{clock}です。",
+      emptyNet: "{team}はゴーリーを下げ、ゴールは無人です。",
+      delayedPenalty: "{team}に対するディレードペナルティで、プレーは続いています。",
+      shootoutScore: "シュートアウト（{n}ラウンド終了時点）：{away} {awayGoals}、{home} {homeGoals}。",
+      gwsScore: "ゲームウイニングショット（{n}ラウンド終了時点）：{away} {awayGoals}、{home} {homeGoals}。",
+      suddenDeath: "4ラウンド目からはサドンデスです。",
+      top: "表",
+      bottom: "裏",
+      inning: "{n}回{half}です。",
+      inningOnly: "{n}回です。",
+      halfOnly: "イニングの{half}です。",
+      noOuts: "ノーアウトです。",
+      oneOut: "1アウトです。",
+      outs: "{n}アウトです。",
+      basesEmpty: "走者はいません。",
+      basesLoaded: "満塁です。",
+      runnersOn: "{list}に走者がいます。",
+      bases: ["一塁", "二塁", "三塁"],
+      and: "と",
+      count: "カウントは{b}ボール{s}ストライクです。",
+      downs: ["第1ダウン", "第2ダウン", "第3ダウン", "第4ダウン"],
+      tag: "{ord} {n}ヤード",
+      tagGoal: "{ord} ゴール前",
+      down: "{ord}です。",
+      downDistance: "{ord}、残り{n}ヤードです。",
+      downGoal: "{ord}、ゴール前（ゴール・トゥ・ゴー）です。",
+      ballOwn: "ボールは攻撃側の自陣{n}ヤードラインにあります。",
+      ballOpp: "ボールは攻撃側の敵陣{n}ヤードラインにあります。",
+      ballMid: "ボールはミッドフィールドにあります。",
+      placeOwn: "自陣{n}ヤード",
+      placeOpp: "敵陣{n}ヤード",
+      placeMid: "ミッドフィールド",
+      tagOwn: "自陣{n}",
+      tagOpp: "敵陣{n}",
+      redZone: "ボールはレッドゾーンにあります。",
+      possession: "{team}がボールを持っています。",
+      driveLine: "{team}のドライブ、{from}から{to}まで：{result}。",
+      driveNoResult: "{team}のドライブ、{from}から{to}まで。",
+      results: { touchdown: "タッチダウン", "field-goal": "フィールドゴール", "missed-field-goal": "フィールドゴール失敗", punt: "パント", turnover: "ターンオーバー", interception: "インターセプト", fumble: "ファンブル", downs: "ダウン更新失敗によるターンオーバー", safety: "セーフティ", "end-of-half": "ハーフ終了" },
+    },
     special: {
       guest: { skating: "リンク", nfl: "アメリカンフットボールのフィールド", cfl: "カナディアンフットボールのフィールド", ifaf: "アメリカンフットボールのフィールド", nhl: "リンク", nba: "コート", mlb: "野球のグラウンド", soccer: "ピッチ", curling: "シート", tennis: "コート", volleyball: "コート", badminton: "コート", pickleball: "コート", tabletennis: "卓球台", padel: "コート", squash: "コート", racquetball: "コート", sepaktakraw: "コート", teqball: "コート", roundnet: "コート", netball: "コート", lacrosse: "フィールド", rugby: "グラウンド", afl: "グラウンド", gaelic: "フィールド", cricket: "グラウンド", fieldhockey: "ピッチ", handball: "コート", swimming: "プール", waterpolo: "プール", diving: "プール", artisticswimming: "プール", athletics: "トラック" },
       title: "{host}の中の{guest}",

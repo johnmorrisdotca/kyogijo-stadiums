@@ -916,6 +916,81 @@ function pageantPage() {
   };
 }
 
+/** The made-up teams of the situation pages: the same two clubs on every surface. */
+const SIT_OWLS = { name: "Northern Owls", abbr: "NOW", score: 3, color: "#3a2d6b" };
+const SIT_ANCHORS = { name: "Lakeshore Anchors", abbr: "LSA", score: 2, color: "#0f7a7a" };
+const SIT_GULLS = { name: "Harbour City Gulls", abbr: "HCG", score: 27, color: "#1d4f91" };
+const SIT_BISON = { name: "Prairie Ridge Bison", abbr: "PRB", score: 24, color: "#a8452c" };
+
+/** The situation of a game: hockey's strength and shootout, baseball's bases and count, football's down and drives. */
+function situationPage() {
+  const rink = (situation, extra = {}) => drawing({ sport: "nhl", away: SIT_OWLS, home: SIT_ANCHORS, status: "live", ...extra, situation });
+  const park = (situation, extra = {}) => drawing({ sport: "mlb", away: { ...SIT_OWLS, score: 4 }, home: { ...SIT_ANCHORS, score: 4 }, status: "Top 7", ...extra, situation });
+  const field = (situation, extra = {}) => drawing({ sport: "nfl", away: SIT_GULLS, home: SIT_BISON, status: "live", ...extra, situation });
+  const pp = { awaySkaters: 5, homeSkaters: 4, clock: "1:42" };
+  const loaded = { bases: [true, true, true], outs: 2, inning: 7, half: "top", balls: 3, strikes: 2 };
+  const red = { ballOn: 88, toGo: 7, down: 3, possession: "away" };
+  const drive = [
+    { from: 25, to: 48, result: "punt" },
+    { from: 30, to: 100, result: "touchdown" },
+    { from: 20, to: 62, result: "field-goal" },
+    { team: "home", from: 25, to: 40, result: "interception" },
+  ];
+  return {
+    slug: "gallery-situation",
+    title: "Gallery: the situation of a game",
+    ja: "ギャラリー：試合の状況",
+    intro: "Hockey's skaters and shootout, baseball's runners, outs and count, and football's down, distance and drives, drawn on the surface, in the badge and in the compact card. The teams are made up.",
+    sections: [
+      section("hockey", "Hockey: the strength, the empty net and the shootout", "A pill says the strength (`5v4 PP`), the empty net (`EN`), a delayed penalty and the clock; the attacking zone is tinted in the attacking team's colour. A shootout is a strip of dots across centre ice: a goal filled, a miss hollow, and the rounds after the third apart, as sudden death.", [
+        item("situation-pp", "A power play, 5 against 4", rink(pp)),
+        item("situation-en", "The goalkeeper pulled, the net ringed", rink({ awaySkaters: 6, homeSkaters: 5, emptyNet: "away" })),
+        item("situation-delayed", "A delayed penalty", rink({ delayedPenalty: "home" })),
+        item("situation-4v4", "Four against four", rink({ awaySkaters: 4, homeSkaters: 4 })),
+        item("situation-so", "A shootout into sudden death", rink({ shootout: { rounds: [[true, false], [true, true], [false, true], [false, false], [true, false]] } }, { status: "final-so" })),
+        item("situation-pp-tall", "A power play, tall", rink(pp, { orientation: "portrait" })),
+        item("situation-pp-2000", "A power play on the rink of 2000-01", rink(pp, { year: 2000 }), "The blue lines are 73 feet from the end boards, the goal lines 13, and there is no trapezoid."),
+        item("situation-pp-zone", "Cropped to the offensive zone", rink(pp, { range: "offensive-zone" })),
+        item("situation-olympic", "The Olympic rink, 60 by 26 m", rink({ awaySkaters: 6, homeSkaters: 5, emptyNet: "away" }, { league: "olympic" })),
+        item("situation-pp-badge", "The badge", rink(pp, { size: "badge", status: "P3 1:12" })),
+        item("situation-pp-compact", "The compact card", rink(pp, { size: "compact", status: "P3 1:12" })),
+      ]),
+      section("baseball", "Baseball: the bases, the outs and the count", "The occupied bases are lit on the park's diamond, and a scorebug stands behind home plate: the diamond with its runners, the outs, the inning with an arrow for its half, and the count. In the badge and the compact card the scorebug takes the place of the picture of the field.", [
+        item("situation-bases-loaded", "Bases loaded, two out, a full count", park(loaded)),
+        item("situation-runners", "Runners on first and third", park({ bases: [true, false, true], outs: 1, inning: 3, half: "bottom", balls: 1, strikes: 1 }, { status: "Bottom 3" })),
+        item("situation-empty", "Nobody on, nobody out", park({ bases: [false, false, false], outs: 0, inning: 1, half: "top", balls: 0, strikes: 0 }, { status: "Top 1" })),
+        item("situation-fenway", "At Fenway Park", park(loaded, { park: "fenway-park" })),
+        item("situation-softball", "Softball", park(loaded, { league: "fastpitch" })),
+        item("situation-npb", "At Koshien", park(loaded, { park: "hanshin-koshien-stadium" })),
+        item("situation-infield", "Cropped to the infield", park(loaded, { range: "infield" })),
+        item("situation-bug-badge", "The badge", park(loaded, { size: "badge" })),
+        item("situation-bug-compact", "The compact card", park(loaded, { size: "compact" })),
+      ]),
+      section("football", "Football: the line of scrimmage, the first down and the drives", "The line of scrimmage is blue and the first-down line yellow, the red zone is tinted, and a tag says the down and distance and the yard line. `drive` draws a drive chart: an arrow for each drive, in a lane of its own, with how it ended. The CFL's field is 110 yards with end zones of 20, and a team has three downs.", [
+        item("situation-3rd-and-7", "Third and 7 in the red zone", field(red)),
+        item("situation-drive-chart", "With a drive chart", field({ ...red, drive })),
+        item("situation-goal", "First and goal", field({ ballOn: 96, toGo: "goal", down: 1, possession: "home" })),
+        item("situation-cfl", "The CFL: third down on a field of 110 yards", drawing({ sport: "cfl", away: SIT_GULLS, home: SIT_BISON, status: "live", situation: { ballOn: 98, toGo: 12, down: 3, possession: "home" } })),
+        item("situation-ifaf", "The IFAF's field", drawing({ sport: "ifaf", away: SIT_GULLS, home: SIT_BISON, status: "live", situation: red })),
+        item("situation-ncaa", "The NCAA's field", field(red, { league: "ncaa" })),
+        item("situation-1980", "The field of 1980", field(red, { year: 1980 })),
+        item("situation-tall", "Tall", field(red, { orientation: "portrait" })),
+        item("situation-red-zone", "Cropped to the red zone", field({ ...red, drive: drive.slice(1, 3) }, { range: "red-zone" })),
+        item("situation-night", "Under a night look", field(red, { look: "night" })),
+        item("situation-football-badge", "The badge", field(red, { size: "badge", status: "Q3 4:21" })),
+        item("situation-football-compact", "The compact card", field(red, { size: "compact", status: "Q3 4:21" })),
+      ]),
+      section("themes", "Dark, and in Japanese", "The pill, the scorebug and the tag take the score panel's colours, so they follow the theme; the words of the description follow `language`.", [
+        item("situation-dark-hockey", "Hockey, dark", rink(pp, { theme: "dark" })),
+        item("situation-dark-baseball", "Baseball, dark", park(loaded, { theme: "dark" })),
+        item("situation-dark-football", "Football, dark", field({ ...red, drive }, { theme: "dark" })),
+        item("situation-ja-badge", "The badge in Japanese", field(red, { size: "badge", language: "ja", status: "Q3 4:21" })),
+        item("situation-ja-field", "The field in Japanese", field(red, { language: "ja" })),
+      ]),
+    ],
+  };
+}
+
 /** The eight swimmers of the pool pages' races, in code: made-up names, nations that do not exist (a flag of bands in two colours) and the splits at 50, 100, 150 and 200 m. */
 const SWIMMERS_CODE = `const flag = (a, b) => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 20"><rect width="30" height="20" fill="' + a + '"/><rect y="7" width="30" height="6" fill="' + b + '"/></svg>';
 const swimmers = [
@@ -1154,7 +1229,7 @@ function skatingPage() {
   };
 }
 
-export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, specialPage, dataPage, curlingPage, courtsPage, fieldsPage, poolsPage, athleticsPage, skatingPage, stylingPage, rangesPage, layoutsPage, pageantPage];
+export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, specialPage, dataPage, curlingPage, courtsPage, fieldsPage, poolsPage, athleticsPage, skatingPage, stylingPage, rangesPage, layoutsPage, pageantPage, situationPage];
 
 /** The sections of every page, with each item's picture made by running its code. */
 export function galleryData(lib) {

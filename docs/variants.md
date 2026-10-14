@@ -62,6 +62,8 @@ History a source dates:
 | `qmjhl` | QMJHL hockey rink | QMJHLのアイスホッケーリンク | rink 200 ft by 85 ft; corner radius 28 ft; goal line 11 ft from the end boards; blue line 75 ft from the end boards; face-off circle 15 ft radius; trapezoid 22 ft at the goal line, 28 ft at the boards |
 | `ushl` | USHL hockey rink | USHLのアイスホッケーリンク | rink 200 ft by 85 ft; corner radius 28 ft; goal line 11 ft from the end boards; blue line 75 ft from the end boards; face-off circle 15 ft radius; trapezoid none |
 | `pwhl` | PWHL hockey rink | PWHLのアイスホッケーリンク | rink 200 ft by 85 ft; corner radius 28 ft; goal line 11 ft from the end boards; blue line 75 ft from the end boards; face-off circle 15 ft radius; trapezoid none |
+| `olympic` | Olympic ice hockey rink (60 by 26 m) | オリンピックのアイスホッケーリンク（60×26m） | rink 60 m by 26 m; corner radius 8.5 m; goal line 4 m from the end boards; blue line 22.5 m from the end boards; face-off circle 4.5 m radius; trapezoid 6.8 m at the goal line, 8.6 m at the boards |
+| `boston-garden` | Boston Garden hockey rink | ボストン・ガーデンのアイスホッケーリンク | rink 190 ft 11.34 in by 83 ft 0.06 in; corner radius 28 ft; goal line 11 ft from the end boards; blue line 75 ft from the end boards; face-off circle 15 ft radius; trapezoid 22 ft at the goal line, 28 ft at the boards |
 
 Sources:
 
@@ -77,6 +79,8 @@ Sources:
 - `usa-hockey-junior`: Official Rules of Ice Hockey, Junior Hockey Edition, Rules 101 to 105 and the rink diagrams, USA Hockey, 2025-29 (adopted 19 January 2025). <https://cdn3.sportngin.com/attachments/document/e6a1-3442852/2025-29_USAH_Playing_Rules_-_Junior.pdf>
 - `ushl-2021`: USHL Rules and Regulations, 9.2, United States Hockey League, 2021-22 (the only USHL document found). <https://cdn1.sportngin.com/attachments/document/69ff-2563252/USHL_Rules_and_Regulations_2021-22.pdf>
 - `pwhl-2025`: PWHL Official Rulebook, Rule 1, 1.8 and 27.8, Professional Women's Hockey League, 2025-26. <https://assets.contentstack.io/v3/assets/bltebdb4296e05d53db/bltb8440fe08a5e6dc5/69178cd0a582d7db321ad107/2025-2026_PWHL_Rulebook.pdf>
+- `iihf-milan-2025`: IIHF Issues Statement on Controversial Olympic Hockey Rink (the IIHF's statement of the ice of Milano Cortina 2026: 60.0 by 26.0 metres, the Beijing 2022 size, consistent with the NHL's Global Series arena specifications), Sports Illustrated, Seth Dowdle, 9 December 2025, quoting the IIHF, 2026 Olympic Winter Games. <https://www.si.com/onsi/breakaway/iihf-issues-statement-controversial-olympic-hockey-rink>
+- `wp-boston-garden`: Boston Garden, Wikipedia (CC BY-SA 4.0), revision 1379921964, read for facts only, revision 1379921964. <https://en.wikipedia.org/w/index.php?title=Boston_Garden&oldid=1379921964>
 
 History a source dates:
 

@@ -92,7 +92,7 @@ test("nothing on the drawing can be selected by accident, every control is a fin
 test("the controls' groups open and close, and the first two are open", async ({ page }) => {
   await open(page, "?lang=en&help=off");
   const open_ = await page.locator("details.group").evaluateAll((all) => all.map((d) => d.open));
-  expect(open_).toEqual([true, true, false, false]);
+  expect(open_).toEqual([true, true, false, false, false]);
 });
 
 test("a curling sheet has its own choice of the top house, the bottom house or folded, every button a finger wide, and folded fills a square", async ({ page }) => {

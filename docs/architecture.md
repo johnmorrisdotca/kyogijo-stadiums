@@ -12,6 +12,11 @@ src/
 ├── pageant.ts          the pageant: what the options ask for, the carpet's ratio, and where each team's picture and the emblem go on the surface
 ├── pageant.draw.ts     the pageant drawn: a carpet (a flag laid flat with a border and fabric), a stage (a crest on a round disc with a ring) and the emblem
 ├── pageant.style.ts    the pageant's colours, light and dark, and its entrance (CSS only, for readers who have not asked for less motion)
+├── situation.types.ts  what a game's situation is: hockey's skaters and shootout, baseball's bases, outs and count, football's down, distance and drives
+├── situation.ts        a situation read from the options (which team attacks, which end, what is lit) and its words
+├── situation.widgets.ts the pill, the scorebug, the down-and-distance tag and the shootout strip, each upright in a frame of its own
+├── situation.draw.ts   a situation drawn on a surface (the tinted zone, the lit bases, the line of scrimmage, the drive chart) and in the badge
+├── situation.style.ts  the situation's colours, light and dark
 ├── curling.board.ts    the curling scoreboard: each end, the total and the hammer
 ├── sets.board.ts       the net sports' scoreboard: each set or game, the points of the game, the sets won and the server's ball
 ├── court.ts            the net sports' court a set of options asks for: the look, the free zone, the lines, areas and fixtures as rectangles

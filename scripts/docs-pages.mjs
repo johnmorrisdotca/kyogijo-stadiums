@@ -39,6 +39,7 @@ export const NAV = [
       { slug: "ranges", ja: "表示範囲とズーム" },
       { slug: "layouts", ja: "レイアウトと背景" },
       { slug: "pageant", ja: "ハーフに広げる旗とエンブレム" },
+      { slug: "situation", ja: "試合の状況（人数・走者・ダウン）" },
       { slug: "emblems", ja: "トロフィー・メダル・ボール・エンブレム" },
       { slug: "accessibility", ja: "アクセシビリティ" },
     ],
@@ -106,6 +107,7 @@ export const NAV = [
       { slug: "gallery-ranges", en: "Gallery: display ranges and zoom", ja: "ギャラリー：表示範囲とズーム", site: true },
       { slug: "gallery-layouts", en: "Gallery: layouts and backgrounds", ja: "ギャラリー：レイアウトと背景", site: true },
       { slug: "gallery-pageant", en: "Gallery: flags on the halves", ja: "ギャラリー：ハーフに広げる旗", site: true },
+      { slug: "gallery-situation", en: "Gallery: the situation of a game", ja: "ギャラリー：試合の状況", site: true },
     ],
   },
   {

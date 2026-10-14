@@ -130,6 +130,7 @@ export function hockey(o: BuildOptions, era?: NhlRules, rink: RinkSpec = NHL_RIN
   surface.lineRef = { width: thin, feet: 1 };
   surface.box = { x: 0, y: 0, w: L, h: W };
   surface.centreRadius = rink.circleRadius;
+  surface.anchors = { kind: "hockey", length: L, width: W, blueLine, goalLine: g, cornerRadius: r, net: net_ };
   // The zones of the ice: from the end boards to a blue line, and between the blue lines.
   const zone = atEnds((end) => (end === "left" ? edges(0, 0, blueLine, W) : edges(L - blueLine, 0, L, W)));
   surface.ranges = {

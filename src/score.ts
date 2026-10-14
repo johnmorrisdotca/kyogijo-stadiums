@@ -268,7 +268,7 @@ const BADGE_ABBR_LEAST = 12;
 const BADGE_SCORE_LEAST = 16;
 
 /** The badge: one strip, [logo abbreviation score] [picture and status] [score abbreviation logo]. */
-export function badgeMarkup(left: TeamView, right: TeamView, o: { sport: Sport; status: string | undefined; turned?: boolean; parts: boolean; id?: string }): { w: number; h: number; markup: string } {
+export function badgeMarkup(left: TeamView, right: TeamView, o: { sport: Sport; status: string | undefined; turned?: boolean; parts: boolean; id?: string; situation?: string }): { w: number; h: number; markup: string } {
   const W = 440;
   const H = 64;
   const block = 182;
@@ -318,7 +318,9 @@ export function badgeMarkup(left: TeamView, right: TeamView, o: { sport: Sport; 
     );
   }
   const mid = W / 2;
-  out += el("path", { class: "ky-glyph", d: glyph(o.sport), transform: `translate(${mid} ${o.status ? 22 : 32}) scale(0.9)`, fill: "none" });
+  // A situation takes the place of the picture of the surface: the game's pill, scorebug or tag.
+  if (o.situation !== undefined) out += el("g", { class: "ky-badge-situation", transform: `translate(${mid} ${o.status ? 23 : 32})` }, o.situation);
+  else out += el("path", { class: "ky-glyph", d: glyph(o.sport), transform: `translate(${mid} ${o.status ? 22 : 32}) scale(0.9)`, fill: "none" });
   if (o.status) {
     const size = Math.min(11.5, 76 / Math.max(1, textWidth(o.status, false)));
     out += el("text", { class: "ky-text ky-badge-status", x: mid, y: 52 + size * 0.2, "font-size": size }, esc(o.status));

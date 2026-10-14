@@ -10,6 +10,7 @@ Kyogijo Stadiums draws sports surfaces as SVG, to scale, with the score on them.
 - [Theming](./theming.md): every colour, light and dark, the eight named looks, colours by feature, line widths and dashes, goal styles and mowing patterns.
 - [Annotations](./annotations.md): the direction each team attacks, axes in any frame, and the names of a surface's parts.
 - [Display ranges and zoom](./ranges.md): a drawing cropped to a zone, a half, the red zone, the penalty area, the infield, a curling house or a box of your own.
+- [The situation of a game](./situation.md): hockey's strength, empty net and shootout, baseball's bases, outs and count, football's down, distance and drives, on the surface, in the badge and in the description.
 - [The pageant](./pageant.md): each team's flag or crest laid large over its half, as a carpet or on a round stage, with an emblem in the centre, and the score kept readable.
 - [Emblems](./emblems.md): trophies, medals, balls and crests from the sister package Dougu Sports, plugged in with one line (`useEmblems(renderEmblem)`) so that an id goes wherever a logo does.
 - [Layouts and backgrounds](./layouts.md): small multiples with a title, a key and a credit line, in a size for a card or a phone, and patterns or a photograph behind a drawing or a grid.
