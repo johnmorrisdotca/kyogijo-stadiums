@@ -3,6 +3,7 @@
 // (scripts/site.mjs) runs the same code to write the first view into the HTML, so what the script finds is what it would draw.
 import { COURT_THEMES, ERA_SPORTS, GROUNDS, LEAGUES, PARKS, SOCCER_PITCH_IDS, SOCCER_PROVIDER_IDS, SPORTS, eraRange, hasHistory, leagueChanges } from "./dist/index.js";
 import { EMBLEMS, FAMILIES, GAMES, TEAMS, TEAMS_JA } from "./examples.js";
+import { poolRace, shortRace } from "./pool-data.js";
 
 export const SIZES = ["full", "compact", "badge", "surface"];
 export const ORIENTATIONS = ["landscape", "portrait", "auto"];
@@ -13,6 +14,13 @@ export const GOALS = ["box", "line", "strip", "none"];
 export const HALVES = ["none", "left", "right"];
 export const WINNERS = ["auto", "leader", "none", "home", "away"];
 export const COURTS = ["default", "maple", "twoTone", "night", "sunburst", "tournament"];
+export const POOL_LOOKS = ["flat", "water", "tiled"];
+export const POOL_DECKS = ["plain", "tiled"];
+export const POOL_COURSES = ["long", "short"];
+export const POOL_LANES = ["6", "8", "10"];
+export const POOL_RACES = ["none", "results", "pace"];
+/** The sports whose surface is a pool. */
+export const isPool = (sport) => sport === "swimming" || sport === "waterpolo" || sport === "diving" || sport === "artisticswimming";
 
 const pick = (value, list, fallback) => (list.includes(value) ? value : fallback);
 
@@ -40,6 +48,12 @@ export function makeState(params, kept = null) {
     stripes: true,
     exact: false,
     court: pick(params.get("court"), COURTS, "default"),
+    poolLook: pick(params.get("poollook"), POOL_LOOKS, "flat"),
+    poolDeck: pick(params.get("pooldeck"), POOL_DECKS, "plain"),
+    poolCourse: pick(params.get("poolcourse"), POOL_COURSES, "long"),
+    poolLanes: pick(params.get("poollanes"), POOL_LANES, "8"),
+    poolRace: pick(params.get("poolrace"), POOL_RACES, "none"),
+    poolSection: params.get("poolsection") === "1",
     pitch: pick(params.get("pitch"), SOCCER_PITCH_IDS, "fifa"),
     ground: params.get("ground") && GROUNDS[params.get("ground")] ? params.get("ground") : "none",
     pitchType: pick(params.get("pitchtype"), SOCCER_PROVIDER_IDS, "none"),
@@ -111,6 +125,28 @@ export function seasonRange(s) {
   return { from: Math.min(...years) - 1, to: 2026 };
 }
 
+/** A made-up race for the swimming playground: the lanes the pool has, and, for the code a reader copies, flags as addresses (the picture's are SVG in code). */
+function poolRaceFor(s, lang, forCode) {
+  const lanes = Number(s.poolLanes);
+  const base = s.poolCourse === "short" ? shortRace(lang) : poolRace(lang);
+  const swimmers = base.swimmers.filter((one) => lanes === 10 || one.lane <= lanes).map((one) => (forCode ? { ...one, flag: `/flags/${one.abbr}.svg` } : one));
+  return { ...base, swimmers, ...(s.poolRace === "pace" ? { pace: true } : {}) };
+}
+
+/** The pool the state asks for, or nothing when it asks for none of it. */
+function poolOptions(s, lang, forCode) {
+  const pool = {};
+  if (s.poolLook !== "flat") pool.look = s.poolLook;
+  if (s.poolDeck !== "plain") pool.deck = s.poolDeck;
+  if (s.sport === "swimming") {
+    if (s.poolCourse === "short") pool.course = "short";
+    if (s.poolLanes !== "8") pool.lanes = Number(s.poolLanes);
+    if (s.poolSection) pool.section = true;
+    if (s.poolRace !== "none") pool.race = poolRaceFor(s, lang, forCode);
+  }
+  return Object.keys(pool).length === 0 ? undefined : pool;
+}
+
 /** What the state asks the package to draw. */
 export function optionsFor(s, lang, forCode = false) {
   const o = { sport: s.sport, orientation: s.orientation, language: lang };
@@ -129,6 +165,8 @@ export function optionsFor(s, lang, forCode = false) {
     if (s.half !== "none" && s.size === "surface") o.half = s.half;
     if (!s.flags) o.cornerFlags = false;
   }
+  const pool = isPool(s.sport) ? poolOptions(s, lang, forCode) : undefined;
+  if (pool !== undefined) o.pool = pool;
   const names = [s.away.name, s.home.name];
   if (s.sport === "nba" && (s.court !== "default" || s.baseline || s.centreLogo)) {
     const court = s.court === "default" ? {} : { ...COURT_THEMES[s.court] };
@@ -136,7 +174,7 @@ export function optionsFor(s, lang, forCode = false) {
     if (s.centreLogo) court.centreLogo = forCode ? "/logos/centre.svg" : EMBLEMS[s.home.emblem];
     o.court = court;
   }
-  if (s.size !== "surface") {
+  if (s.size !== "surface" && !(pool?.race !== undefined)) {
     const team = (t, placeholder) => {
       const out = { name: t.name, abbr: t.abbr, score: /^-?\d+$/.test(t.score) ? Number(t.score) : t.score, color: t.color };
       if (s.sport === "soccer" && /^\d+$/.test(t.pens ?? "")) out.penalties = Number(t.pens);
@@ -170,6 +208,11 @@ export const labelOf = (say, s) => ({
   winner: (v) => (v === "away" && s.sport === "mlb" ? say("awayBaseball") : say(`winner_${v}`)),
   detail: (v) => say(`detail_${v}`),
   court: (v) => say(`court_${v}`),
+  poollook: (v) => say(`poollook_${v}`),
+  pooldeck: (v) => say(`pooldeck_${v}`),
+  poolcourse: (v) => say(`poolcourse_${v}`),
+  poollanes: (v) => v,
+  poolrace: (v) => say(`poolrace_${v}`),
   pattern: (v) => say(`pattern_${v}`),
   goals: (v) => say(`goals_${v}`),
   half: (v) => say(`half_${v}`),
@@ -191,6 +234,11 @@ export const SEGS = [
   { id: "winner", kind: "winner", values: WINNERS, get: (s) => s.winner },
   { id: "detail", kind: "detail", values: ["full", "simple"], get: (s) => s.detail },
   { id: "court", kind: "court", values: COURTS, get: (s) => s.court },
+  { id: "pool-look", kind: "poollook", values: POOL_LOOKS, get: (s) => s.poolLook },
+  { id: "pool-deck", kind: "pooldeck", values: POOL_DECKS, get: (s) => s.poolDeck },
+  { id: "pool-course", kind: "poolcourse", values: POOL_COURSES, get: (s) => s.poolCourse },
+  { id: "pool-lanes", kind: "poollanes", values: POOL_LANES, get: (s) => s.poolLanes },
+  { id: "pool-race", kind: "poolrace", values: POOL_RACES, get: (s) => s.poolRace },
   { id: "pattern", kind: "pattern", values: PATTERNS, get: (s) => s.pattern },
   { id: "goals", kind: "goals", values: GOALS, get: (s) => s.goals },
   { id: "half", kind: "half", values: HALVES, get: (s) => s.half },
@@ -205,6 +253,7 @@ export const TOGGLES = [
   { id: "baseline", get: (s) => s.baseline },
   { id: "centre-logo", get: (s) => s.centreLogo },
   { id: "flags", get: (s) => s.flags },
+  { id: "pool-section", get: (s) => s.poolSection },
 ];
 
 /** The text fields and what each holds. */
@@ -245,6 +294,8 @@ export function hiddenRows(s) {
     "era-year-row": !(seasons && past),
     "era-notes": !(seasons && past),
     "court-group": s.sport !== "nba",
+    "pool-group": !isPool(s.sport),
+    "swim-group": s.sport !== "swimming",
     "status-text": s.status !== "custom",
     "away-logo-url": s.away.logo !== "url",
     "home-logo-url": s.home.logo !== "url",

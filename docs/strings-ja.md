@@ -26,6 +26,10 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `surface.cricket` | Cricket ground | クリケットのグラウンド |
 | `surface.fieldhockey` | Field hockey pitch | フィールドホッケーのピッチ |
 | `surface.handball` | Handball court | ハンドボールのコート |
+| `surface.swimming` | Swimming pool | 競泳プール |
+| `surface.waterpolo` | Water polo field | 水球のフィールド |
+| `surface.diving` | Diving well | 飛込プール |
+| `surface.artisticswimming` | Artistic swimming pool | アーティスティックスイミングのプール |
 | `about.nfl` | an American football field, 120 by 53 and a third yards with its end zones, with a yard line every 5 yards, hash marks, numbers and goal posts | アメリカンフットボールのフィールド。エンドゾーンを含めて120×53⅓ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールポストがあります |
 | `about.cfl` | a Canadian football field, 150 by 65 yards with its 20-yard end zones, with a yard line every 5 yards, hash marks, numbers and goal posts on the goal lines | カナディアンフットボールのフィールド。20ヤードのエンドゾーンを含めて150×65ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールライン上のゴールポストがあります |
 | `about.ifaf` | an international (IFAF) football field, 120 by 53 and a third yards with its end zones, with a yard line every 5 yards, hash marks, numbers and goal posts | 国際アメリカンフットボール連盟（IFAF）規格のフィールド。エンドゾーンを含めて120×53⅓ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールポストがあります |
@@ -46,6 +50,10 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `about.cricket` | a cricket ground, with its boundary, the 30-yard circle, and the 22-yard pitch with its creases and wickets | クリケットのグラウンド。バウンダリー、30ヤードのサークル、クリースとウィケットのある22ヤードのピッチがあります |
 | `about.fieldhockey` | a field hockey pitch, 91.40 by 55.00 metres, with the centre line, the 23-metre lines, the circles, the penalty spots and the goals | フィールドホッケーのピッチ。91.40×55.00mで、センターライン、23メートルライン、サークル、ペナルティースポット、ゴールがあります |
 | `about.handball` | a handball court, 40 by 20 metres, with the centre line, the goal areas, the 6-, 7- and 9-metre lines, the 4-metre lines and the goals | ハンドボールのコート。40×20mで、センターライン、ゴールエリア、6m・7m・9mのライン、4mのライン、ゴールがあります |
+| `about.swimming` | a swimming pool, 50 by 25 metres, with eight lanes, lane ropes, the lane markings on the floor, starting blocks, touch panels, backstroke flags and a false start rope | 競泳用のプール。50×25mで、8レーン、コースロープ、プール底のレーンマーク、スタート台、タッチパネル、背泳ぎのターン用フラッグ、フォルススタートロープがあります |
+| `about.waterpolo` | a water polo field of play, 25 by 20 metres, with the goal lines, the 2, 5 and 6 metre marks, the half distance line, the goals and the re-entry areas | 水球の競技エリア。25×20mで、ゴールライン、2m・5m・6mの目印、ハーフウェイライン、ゴール、退水者の再入水エリアがあります |
+| `about.diving` | a diving well, with springboards at 1 and 3 metres and platforms at 5, 7.5 and 10 metres | 飛込のプール。1mと3mのスプリングボード、5m・7.5m・10mのプラットフォームがあります |
+| `about.artisticswimming` | an artistic swimming area, 30 by 20 metres, with the lines on the floor, the judges' platform and the starting platform | アーティスティックスイミングの競技エリア。30×20mで、プール底のライン、審判台、スタート台があります |
 | `status.final` | Final | 試合終了 |
 | `status.final-ot` | Final/OT | 試合終了（延長） |
 | `status.final-so` | Final/SO | 試合終了（SO） |
@@ -139,6 +147,60 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `net.sets` | Sets | セット |
 | `net.games` | Games | ゲーム |
 | `net.points` | Pts | ポイント |
+| `pool.size` | {length} by {width} metres | {length}×{width}m |
+| `pool.lanes` | {n} lanes | {n}レーン |
+| `pool.laneOne` | 1 lane | 1レーン |
+| `pool.aboutSwimming` | a swimming pool, {size}, with {lanes}, lane ropes, the lane markings on the floor, starting blocks, touch panels, backstroke flags and a false start rope | 競泳用のプール。{size}で、{lanes}、コースロープ、プール底のレーンマーク、スタート台、タッチパネル、背泳ぎのターン用フラッグ、フォルススタートロープがあります |
+| `pool.aboutWarmUp` | a warm-up pool, {size}, with {lanes} and lane ropes | ウォーミングアップ用のプール。{size}で、{lanes}とコースロープがあります |
+| `pool.aboutWaterPolo` | a water polo field of play, {size}, with the goal lines, the 2, 5 and 6 metre marks, the half distance line, the goals and the re-entry areas | 水球の競技エリア。{size}で、ゴールライン、2m・5m・6mの目印、ハーフウェイライン、ゴール、退水者の再入水エリアがあります |
+| `pool.aboutDiving` | a diving well, {size}, with {boards} | 飛込のプール。{size}で、{boards}があります |
+| `pool.aboutArtistic` | an artistic swimming area, {size}, with the lines on the floor, the judges' platform and the starting platform | アーティスティックスイミングの競技エリア。{size}で、プール底のライン、審判台、スタート台があります |
+| `pool.boards` | springboards at 1 and 3 metres | 1mと3mのスプリングボード |
+| `pool.platforms` | platforms at {list} metres | {list}mのプラットフォーム |
+| `pool.and` |  and  | と |
+| `pool.sep` | ,  | 、 |
+| `pool.last` |  and  | 、 |
+| `pool.deep` | , of which {size} is the deep part | （うち{size}は深い部分） |
+| `pool.venue` | A hall with {n} pools to scale: {list}. | {n}つのプールを縮尺どおりに並べた競技施設：{list}。 |
+| `pool.section` | A side section shows the water {depth} metres deep, the starting blocks, the backstroke flags 5 metres from each end and the false start rope 15 metres from the starting end. | 断面図は、水深{depth}m、スタート台、両端から5mの背泳ぎ用フラッグ、スタート側から15mのフォルススタートロープを示しています。 |
+| `pool.names.competition` | Competition pool | 競技用プール |
+| `pool.names.diving` | Diving well | 飛込プール |
+| `pool.names.warmUp` | Warm-up pool | ウォーミングアップ用プール |
+| `pool.names.waterPolo` | Water polo pool | 水球プール |
+| `pool.names.artistic` | Artistic swimming pool | アーティスティックスイミングのプール |
+| `pool.names.seating` | Spectators | 観客席 |
+| `pool.lane` | Lane {lane}: {name} | 第{lane}レーン：{name} |
+| `pool.abbr` |  ({abbr}) | （{abbr}） |
+| `pool.place` | place {n} | {n}位 |
+| `pool.medal.gold` | gold medal | 金メダル |
+| `pool.medal.silver` | silver medal | 銀メダル |
+| `pool.medal.bronze` | bronze medal | 銅メダル |
+| `pool.status.dq` | disqualified | 失格 |
+| `pool.status.dns` | did not start | 棄権（スタートせず） |
+| `pool.status.dnf` | did not finish | 途中棄権 |
+| `pool.seed` | entry time {time} | エントリータイム{time} |
+| `pool.time` | time {time} | タイム{time} |
+| `pool.reaction` | reaction time {rt} | 反応時間{rt} |
+| `pool.splits` | splits {list} | スプリットタイム{list} |
+| `pool.record` | record {record} | 記録：{record} |
+| `pool.pace` | The bars show the pace of each split, from the slowest split of the field to the fastest. | 棒は各スプリットのペースを示し、出場者の中で最も遅いものから最も速いものまでを色で表しています。 |
+| `pool.paceBar` | {time} for {metres} m | {metres}mを{time} |
+| `pool.event` | {event} | {event} |
+| `pool.joiner` | ,  | 、 |
+| `pool.chart.title` | Split pace | スプリットのペース |
+| `pool.chart.summary` | {n} swimmers. The fastest split was {name}'s {time}. | {n}人の選手。最も速いスプリットは{name}の{time}です。 |
+| `pool.chart.fastest` | fastest | 最速 |
+| `pool.chart.headLane` | Lane | レーン |
+| `pool.chart.headName` | Swimmer | 選手 |
+| `pool.chart.headTime` | Time | タイム |
+| `pool.chart.headSplit` | Split | スプリット |
+| `pool.chart.headPace` | Seconds per 100 m | 100mあたりの秒数 |
+| `pool.chart.headReaction` | Reaction | 反応時間 |
+| `pool.chart.caption` | {event}: the splits of each swimmer, with the pace of each in seconds per 100 metres. | {event}：各選手のスプリットと、100mあたりの秒数で表した各ペース。 |
+| `pool.chart.turn` | Turn | ターン |
+| `pool.chart.finish` | Finish | フィニッシュ |
+| `pool.chart.start` | Start | スタート |
+| `pool.chart.perHundred` | per 100 m | 100mあたり |
 | `field.aflScore` | {name} scored {goals} goals and {behinds} behinds. | {name}は{goals}ゴール{behinds}ビハインドです。 |
 | `field.gaelicScore` | {name} scored {goals} goals and {points} points. | {name}は{goals}ゴール{points}ポイントです。 |
 | `field.cricketScore` | {name}: {runs} runs for {wickets} wickets in {overs} overs. | {name}：{overs}オーバーで{runs}ラン（{wickets}ウィケット喪失）。 |
@@ -189,6 +251,10 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `special.guest.cricket` | ground | グラウンド |
 | `special.guest.fieldhockey` | pitch | ピッチ |
 | `special.guest.handball` | court | コート |
+| `special.guest.swimming` | pool | プール |
+| `special.guest.waterpolo` | pool | プール |
+| `special.guest.diving` | well | プール |
+| `special.guest.artisticswimming` | pool | プール |
 | `special.title` | {guest} in {host} | {host}の中の{guest} |
 | `special.game` | {event}, {date}. | {event}、{date}。 |
 | `special.inside` | The {guest} lies wholly inside the outline of {host}. | {guest}全体が{host}の輪郭の内側に収まっています。 |
@@ -341,6 +407,13 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `layers.zones.defensiveThird` | Defensive third | ディフェンディングサード |
 | `layers.zones.middleThird` | Middle third | ミドルサード |
 | `layers.zones.attackingThird` | Attacking third | アタッキングサード |
+| `layers.zones.poolLane` | Lane {n} | 第{n}レーン |
+| `layers.zones.poloGoalArea` | Goal area (to 2 m) | ゴールエリア（2mまで） |
+| `layers.zones.poloTwoToSix` | 2 to 6 m from the goal line | ゴールラインから2〜6m |
+| `layers.zones.poloBeyondSix` | Beyond 6 m | 6mより先 |
+| `layers.zones.poolNear` | Near third | 手前の3分の1 |
+| `layers.zones.poolMiddle` | Middle third | 真ん中の3分の1 |
+| `layers.zones.poolFar` | Far third | 奥の3分の1 |
 | `layers.zones.restricted` | Restricted area | リストリクテッドエリア |
 | `layers.zones.paint` | In the paint (non-RA) | ペイント内（リストリクテッドエリア外） |
 | `layers.zones.midRange` | Mid-range | ミッドレンジ |
@@ -542,6 +615,35 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `notes.names.wing-line` | Wing line | ウイングライン |
 | `notes.names.marking-area` | Marking area | マーキングエリア |
 | `notes.names.two-point-arc` | Two-point arc | 2ポイントアーク |
+| `notes.names.lane-rope` | Lane rope | コースロープ |
+| `notes.names.lane-line` | Lane marking on the floor | プール底のレーンマーク |
+| `notes.names.lane-end-cross` | Cross line at the end of the lane marking | レーンマークの端の横線 |
+| `notes.names.fifteen-metre-mark` | 15 m mark | 15mの目印 |
+| `notes.names.touch-pad` | Touch panel | タッチパネル |
+| `notes.names.starting-block` | Starting block | スタート台 |
+| `notes.names.backstroke-flags` | Backstroke flags | 背泳ぎのターン用フラッグ |
+| `notes.names.false-start-rope` | False start rope | フォルススタートロープ |
+| `notes.names.gutter` | Gutter | ガター |
+| `notes.names.two-metre-line` | 2 m line | 2mライン |
+| `notes.names.five-metre-mark` | 5 m mark | 5mの目印 |
+| `notes.names.six-metre-line` | 6 m line | 6mライン |
+| `notes.names.half-distance-line` | Half distance line | ハーフウェイライン |
+| `notes.names.re-entry-area` | Re-entry area | 再入水エリア |
+| `notes.names.referee-platform` | Referee platform | 審判の通路 |
+| `notes.names.official-table` | Official table | オフィシャルテーブル |
+| `notes.names.substitution-area` | Substitution area | 交代エリア |
+| `notes.names.springboard-1m` | 1 m springboard | 1mスプリングボード |
+| `notes.names.springboard-3m` | 3 m springboard | 3mスプリングボード |
+| `notes.names.platform-1m` | 1 m platform | 1mプラットフォーム |
+| `notes.names.platform-3m` | 3 m platform | 3mプラットフォーム |
+| `notes.names.platform-5m` | 5 m platform | 5mプラットフォーム |
+| `notes.names.platform-7-5m` | 7.5 m platform | 7.5mプラットフォーム |
+| `notes.names.platform-10m` | 10 m platform | 10mプラットフォーム |
+| `notes.names.diving-line` | Line across the well | プールを横切るライン |
+| `notes.names.deep-part` | Deep part | 深い部分 |
+| `notes.names.judges-platform` | Judges' platform | 審判台 |
+| `notes.names.starting-platform` | Starting platform | スタート台 |
+| `notes.names.floor-lines` | Lines on the floor | プール底のライン |
 | `ranges.shows` | Shows only the {name}. | 表示範囲は{name}です。 |
 | `ranges.showsEnd` | Shows only the {name} at the {side} end. | 表示範囲は{side}側の{name}です。 |
 | `ranges.box` | Shows only a part of the surface: x from {x0} to {x1}, y from {y0} to {y1}. | 競技場の一部だけを表示しています。xは{x0}から{x1}、yは{y0}から{y1}です。 |
@@ -578,6 +680,10 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `ranges.names.circle` | circle | サークル |
 | `ranges.names.twenty-three` | 23-metre area | 23メートルエリア |
 | `ranges.names.goal-area` | goal area | ゴールエリア |
+| `ranges.names.pool-end` | end of the pool, up to the 15 m mark | プールの端（15mの目印まで） |
+| `ranges.names.springboards` | springboards | スプリングボード |
+| `ranges.names.platforms` | platforms | プラットフォーム |
+| `ranges.names.centre-stage` | centre of the pool, the middle third | プールの中央（真ん中の3分の1） |
 | `grid.title` | A grid of drawings ({n}) | 図のグリッド（{n}枚） |
 | `grid.drawings` | Drawings ({n}): {list}. | 図（{n}枚）：{list}。 |
 | `grid.key` | Key: {list}. | 凡例：{list}。 |
@@ -678,6 +784,10 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `sport_badminton` | Badminton | バドミントン |
 | `sport_pickleball` | Pickleball | ピックルボール |
 | `sport_tabletennis` | Table tennis | 卓球 |
+| `sport_swimming` | Swimming | 競泳 |
+| `sport_waterpolo` | Water polo | 水球 |
+| `sport_diving` | Diving | 飛込 |
+| `sport_artisticswimming` | Artistic swimming | アーティスティックスイミング |
 | `sport_lacrosse` | Lacrosse | ラクロス |
 | `sport_rugby` | Rugby | ラグビー |
 | `sport_afl` | Australian football | オーストラリアンフットボール |
@@ -822,6 +932,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `galleryFamily_soccer` | Soccer | サッカー |
 | `galleryFamily_curling` | Curling | カーリング |
 | `galleryFamily_net` | Net sports | ネット球技 |
+| `galleryFamily_pool` | Pools | プール |
 | `galleryFamily_field` | Field sports | フィールド球技 |
 | `galleryCount` | {n} of {total} sports | {total}競技中{n}競技 |
 | `galleryMore` | Show all {n} sports | 全{n}競技を表示 |
@@ -860,6 +971,33 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `road_mark_wide` | The round mark on a pitch: each country's flag in a circle with a ring, upright at its end | 丸いマークをピッチに：各国の国旗を円形に切り抜いてリングを付け、向きを変えずにそれぞれのゴール側に表示 |
 | `road_mark_tall` | The same game tall | 同じ試合を縦向きで表示 |
 | `road_mark_badge` | The same game as a badge | 同じ試合をバッジで表示 |
+| `poolLook` | Water | 水面 |
+| `poollook_flat` | Flat | フラット |
+| `poollook_water` | Light | 光 |
+| `poollook_tiled` | Tiled | タイル |
+| `poolDeck` | Deck | デッキ |
+| `pooldeck_plain` | Plain | 無地 |
+| `pooldeck_tiled` | Tiled | タイル |
+| `poolCourse` | Course | コース |
+| `poolcourse_long` | 50 m | 50m |
+| `poolcourse_short` | 25 m | 25m |
+| `poolLanes` | Lanes | レーン数 |
+| `poolRace` | Race | レース |
+| `poolrace_none` | None | なし |
+| `poolrace_results` | Results | 結果 |
+| `poolrace_pace` | Pace | ペース |
+| `poolSection` | Side section | 断面図 |
+| `poolsTitle` | Pools | プール |
+| `poolsText` | Swimming, water polo, diving and artistic swimming, drawn from World Aquatics' regulations. A made-up race (swimmers and nations that do not exist, flags drawn in code) shows the lanes with names, flags, places, times, reaction times and splits, the split pace bars, a tall race and a natatorium of several pools. | 競泳、水球、飛込、アーティスティックスイミングを、ワールドアクアティクスの規則から描きます。架空のレース（実在しない選手と国、コードで描いた国旗）で、名前・国旗・順位・タイム・反応時間・スプリットを載せたレーン、スプリットのペースの棒、縦向きのレース、複数のプールを並べた競技施設を表示します。 |
+| `pools_results` | The results of a 200 m final: places (a medal for the first three), times, reaction times and splits, in the order of the lanes | 200m決勝の結果：順位（上位3人はメダル）、タイム、反応時間、スプリットを、レーンの順に表示 |
+| `pools_pace` | The same race as split pace bars: each lane the whole race laid flat, each split a bar in a colour from the slowest pace to the fastest | 同じレースをスプリットのペースの棒で表示：各レーンがレース全体を横に広げたもので、各スプリットの棒の色が最も遅いペースから最も速いペースまでを表します |
+| `pools_start` | A start list in the 25 m short course pool of six lanes: flags, names and entry times | 短水路（25m）6レーンのスタートリスト：国旗、名前、エントリータイム |
+| `pools_tall` | The results, tall: the names and times lie along the lanes | 同じ結果を縦向きで表示：名前とタイムはレーンに沿って並びます |
+| `pools_hall` | A natatorium: the competition pool, the diving well and a warm-up pool, to scale, 10 m apart | 競技施設：競技用プール、飛込プール、ウォーミングアップ用プールを縮尺どおりに10m離して配置 |
+| `pools_polo` | The water polo field: ropes red, yellow and green by distance from the goal line, the 2, 5 and 6 m lines, the goals and the re-entry areas | 水球の競技エリア：ゴールラインからの距離で赤・黄・緑に分けたロープ、2m・5m・6mのライン、ゴール、再入水エリア |
+| `pools_dive` | The diving well: the springboards and platforms at the distances of Appendix 2 | 飛込プール：付録2の距離に従って並べたスプリングボードとプラットフォーム |
+| `pools_art` | The artistic swimming area: floor lines, the deep part, the judges' platform and the starting platform | アーティスティックスイミングの競技エリア：プール底のライン、深い部分、審判台、スタート台 |
+| `replayPool` | A 200 m race by lane, played from its splits: each swimmer goes down the pool and back; in the pool's frame, in metres from the middle of the water | スプリットから再生する200mのレース：選手がプールを往復します。プールの座標系（水面の中心からのメートル）で表します |
 | `parksTitle` | Ballparks | 球場 |
 | `parksText` | Thirty current MLB parks and forty-four past ones, and the NPB's twelve home parks and eight other grounds, each fence drawn from the distances its article publishes. Press one to try it. Filter them by league, whether they are in use and era, or search any name they have had, in English or in Japanese. | 現在のMLB30球場と過去の44球場、NPBの本拠地12球場とその他8球場。外野フェンスは、各球場の記事で公表されている距離をもとに描いています。球場を選ぶと試せます。リーグ、使用状況、年代で絞り込めるほか、これまでの呼び名なら英語でも日本語でも検索できます。 |
 | `parksFilterLabel` | Filter the ballparks | 球場の絞り込み |
@@ -1027,6 +1165,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `curling` | Curling | カーリング |
 | page `courts` | Tennis, volleyball, badminton, pickleball and table tennis | ネット型競技のコート |
 | page `field-sports` | Lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey and handball | ラクロス、ラグビーなどのフィールド |
+| page `pools` | Swimming, water polo, diving and artistic swimming | 競泳・水球・飛込・アーティスティックスイミングのプール |
 | page `special-games` | Special games | 特設会場での試合 |
 | page `ballparks` | Ballparks | 球場 |
 | page `grounds` | The grounds | スタジアム |
@@ -1053,6 +1192,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `gallery-curling` | Gallery: curling | ギャラリー：カーリング |
 | page `gallery-courts` | Gallery: tennis, volleyball and other net sports | ギャラリー：ネット型競技のコート |
 | page `gallery-fields` | Gallery: lacrosse, rugby, Australian football, Gaelic games, cricket, hockey and handball | ギャラリー：ラクロス、ラグビー、オーストラリアンフットボール、ゲーリック・ゲームズ、クリケット、フィールドホッケー、ハンドボール |
+| page `gallery-pools` | Gallery: swimming, water polo, diving and artistic swimming | ギャラリー：競泳、水球、飛込、アーティスティックスイミング |
 | page `gallery-styling` | Gallery: looks and annotations | ギャラリー：スタイルと注釈 |
 | page `gallery-ranges` | Gallery: display ranges and zoom | ギャラリー：表示範囲とズーム |
 | page `gallery-layouts` | Gallery: layouts and backgrounds | ギャラリー：レイアウトと背景 |

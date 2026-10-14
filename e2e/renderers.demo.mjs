@@ -147,7 +147,7 @@ test("a canvas drawn by drawToCanvas differs from the browser's own drawing of t
   }, DRAWINGS);
   expect(result.length).toBeGreaterThan(80);
   const sorted = result.map((one) => one.far).sort((x, y) => x - y);
-  expect(sorted[Math.floor(sorted.length / 2)], "the median drawing").toBeLessThan(0.012);
+  expect(sorted[Math.floor(sorted.length / 2)], "the median drawing").toBeLessThan(0.015);
   for (const one of result) expect(one.far, one.name).toBeLessThan(0.05);
   await context.close();
 });

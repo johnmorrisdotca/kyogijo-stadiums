@@ -9,6 +9,12 @@ export function toParams(o) {
   if (o.league) q.set("league", o.league);
   for (const [key, param] of [["pitch", "pitch"], ["ground", "ground"], ["pitchType", "pitchtype"], ["half", "half"], ["goals", "goals"], ["stripePattern", "pattern"]]) if (typeof o[key] === "string") q.set(param, o[key]);
   if (o.cornerFlags === false) q.set("flags", "0");
+  // A pool's look and size travel in the address; the lanes of a race are data and do not.
+  if (o.pool && typeof o.pool === "object") {
+    for (const [key, param] of [["look", "poollook"], ["deck", "pooldeck"], ["course", "poolcourse"]]) if (typeof o.pool[key] === "string") q.set(param, o.pool[key]);
+    if (Number.isInteger(o.pool.lanes)) q.set("poollanes", String(o.pool.lanes));
+    if (o.pool.section === true) q.set("poolsection", "1");
+  }
   if (Number.isInteger(o.year)) q.set("year", String(o.year));
   if (o.size && o.size !== "full") q.set("size", o.size);
   if (o.orientation && o.orientation !== "auto") q.set("orientation", o.orientation);
@@ -35,6 +41,11 @@ export function fromParams(q) {
   for (const [param, key] of [["pitch", "pitch"], ["ground", "ground"], ["pitchtype", "pitchType"], ["half", "half"], ["goals", "goals"], ["pattern", "stripePattern"], ["park", "park"], ["league", "league"], ["size", "size"], ["theme", "theme"], ["lang", "language"], ["status", "status"], ["competition", "competition"], ["date", "date"], ["label", "label"], ["winner", "winner"]]) {
     if (q.get(param)) o[key] = q.get(param);
   }
+  const pool = {};
+  for (const [param, key] of [["poollook", "look"], ["pooldeck", "deck"], ["poolcourse", "course"]]) if (q.get(param)) pool[key] = q.get(param);
+  if (/^\d{1,2}$/.test(q.get("poollanes") || "")) pool.lanes = Number(q.get("poollanes"));
+  if (q.get("poolsection") === "1") pool.section = true;
+  if (Object.keys(pool).length > 0) o.pool = pool;
   if (/^\d{4}$/.test(q.get("year") || "")) o.year = Number(q.get("year"));
   for (const [role, short] of [["away", "a"], ["home", "h"]]) {
     if (!q.get(role)) continue;
