@@ -248,6 +248,14 @@ describe("badminton: the BWF's Laws of Badminton, Law 1 and Diagram A", () => {
     expect(has(g.lines, m(13.4 - 0.8, 0, 13.4 - 0.76, 6.1))).toBe(true);
   });
 
+  it("Diagram A: the back boundary line is the singles long service line, and the line 760 mm in from it is the doubles long service line: the labelled parts say so", () => {
+    const names = KYOGIJO_STRINGS.en.notes.names as Record<string, string>;
+    const svg = drawKyogijo({ sport: "badminton", landmarks: true });
+    expect(svg).toContain("Doubles long service line");
+    expect(svg).toContain("Back boundary line (the singles long service line)");
+    expect(names["long-service-line"]).toBeUndefined();
+  });
+
   it("Diagram A: the short service lines are 1 980 mm from the net, and the centre lines run from them to the back boundary lines", () => {
     expect(has(g.lines, m(6.7 - 1.98 - w, 0, 6.7 - 1.98, 6.1))).toBe(true);
     expect(has(g.lines, m(6.7 + 1.98, 0, 6.7 + 1.98 + w, 6.1))).toBe(true);

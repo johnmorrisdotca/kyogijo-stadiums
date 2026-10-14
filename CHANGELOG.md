@@ -12,6 +12,7 @@ All notable changes to this project are written here. The format follows
 - The name a reader sees is Kyogijo Stadiums (競技場 in Japanese): the demo's title, the docs site, the API page, the README and the package description. Code names (`drawKyogijo`, `<kyogijo-field>`) are unchanged.
 - The indoor volleyball court shows its centre line: it runs under the net (FIVB Rule 1.3.3) and the net was drawn over it, so only a dark bar showed. The line now shows between the net's edges. The court's other lines were already all there (the boundary, both attack lines, the attack lines' extensions and the service zone's marks in the full detail); the beach court has only its four boundary lines, as the beach rules say.
 - The demo's year switch in the atlas is a finger wide before its words arrive, in WebKit too.
+- The badminton court's labelled parts use the BWF's words: the line inside the back boundary is the "Doubles long service line" (it was "Long service line", which in singles is the back boundary line itself), and the back boundary line says it is the singles long service line (Diagram A). The short service line's label no longer runs into the net's. An audit of every net sport's figures against the current rulebooks (ITF 2026, FIVB 2025-2028, BWF as amended 26 April 2025, USA Pickleball 2026, ITTF 2026) found no figure to change.
 
 ## [0.4.0] - 2026-10-14
 

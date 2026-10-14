@@ -492,7 +492,8 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `notes.names.centre-mark` | Centre mark | センターマーク |
 | `notes.names.attack-line` | Attack line | アタックライン |
 | `notes.names.antenna` | Antenna | アンテナ |
-| `notes.names.long-service-line` | Long service line | ロングサービスライン |
+| `notes.names.back-boundary-line` | Back boundary line (the singles long service line) | バックバウンダリーライン（シングルスのロングサービスライン） |
+| `notes.names.doubles-long-service-line` | Doubles long service line | ダブルスのロングサービスライン |
 | `notes.names.short-service-line` | Short service line | ショートサービスライン |
 | `notes.names.non-volley-line` | Non-volley line | ノンボレーライン |
 | `notes.names.non-volley-zone` | Non-volley zone | ノンボレーゾーン |

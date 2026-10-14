@@ -123,11 +123,12 @@ function netMarks(plan: CourtPlan, L: number, W: number): Mark[] {
     case "badminton": {
       const f = plan.figures;
       return [
-        { id: "end-line", x: f.lineWidth / 2, y: W * 0.8, side: "bottom" },
+        // The back boundary line is the singles long service line too (Diagram A); the line inside it is the doubles long service line.
+        { id: "back-boundary-line", x: f.lineWidth / 2, y: W * 0.8, side: "bottom" },
         { id: "sideline", x: L * 0.12, y: 0, side: "top" },
         { id: "singles-sideline", x: L * 0.12, y: W - f.singlesInset, side: "bottom" },
-        { id: "long-service-line", x: f.doublesLongServiceInset + f.lineWidth / 2, y: W * 0.2, side: "top" },
-        { id: "short-service-line", x: cx - f.shortServiceLine - f.lineWidth / 2, y: W * 0.3, side: "top" },
+        { id: "doubles-long-service-line", x: f.doublesLongServiceInset + f.lineWidth / 2, y: W * 0.2, side: "top" },
+        { id: "short-service-line", x: cx - f.shortServiceLine - f.lineWidth / 2, y: W * 0.3, side: "bottom" },
         { id: "centre-line", x: L * 0.2, y: cy, side: "bottom" },
         net,
       ];
