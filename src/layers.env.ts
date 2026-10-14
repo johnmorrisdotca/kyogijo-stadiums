@@ -39,6 +39,8 @@ export interface Env {
   base: number;
   words: KyogijoWords;
   logos: { home?: string; away?: string };
+  /** Whether the layer being drawn writes `data-mark-id`, `data-index` and `data-zone` on its marks: set for each layer by `renderLayers`. */
+  marks: boolean;
   /** The finest zone of the surface a place (feet, the drawing's wide frame) lies in, by id: what a mark carries as `data-zone`. `undefined` where the sport has none there. */
   zone: (x: number, y: number) => string | undefined;
 }
@@ -63,6 +65,7 @@ function zonesOf(o: SurfaceOptions | ScoreOptions): Env["zone"] {
  * `data-index` (its place in the layer's data) and `data-zone` (the zone it lies in, from `zoneAt`'s rules). The place is in feet in the drawing's wide frame.
  */
 export function markAttrs(env: Env, id: unknown, index: number, at?: readonly [number, number], name = "data-zone"): string {
+  if (!env.marks) return "";
   const given = typeof id === "string" && id !== "" ? id : typeof id === "number" && Number.isFinite(id) ? String(id) : String(index);
   const zone = at === undefined ? undefined : env.zone(at[0], at[1]);
   return ` data-mark-id="${esc(given)}" data-index="${index}"${zone === undefined ? "" : ` ${name}="${esc(zone)}"`}`;
@@ -162,6 +165,7 @@ export function envFor(o: SurfaceOptions | ScoreOptions, turned: boolean | undef
     base: Math.max((range ?? outline.box).w, (range ?? outline.box).h) * 0.013,
     words: KYOGIJO_STRINGS[language],
     logos: { home: safeLogo(teams.home?.logo, { color: teams.home?.color, accent: teams.home?.textColor }), away: safeLogo(teams.away?.logo, { color: teams.away?.color, accent: teams.away?.textColor }) },
+    marks: o.marks === true || o.pointer === true,
     zone: zone ?? zonesOf(o),
   };
 }

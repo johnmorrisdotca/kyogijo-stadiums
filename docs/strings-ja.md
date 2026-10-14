@@ -1118,6 +1118,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `rules.between-the-hashes` | Between the hashes | ハッシュマークの間 |
 | `rules.outside-hashes-left` | Outside the hashes, left | ハッシュマークの外側（左） |
 | `rules.outside-hashes-right` | Outside the hashes, right | ハッシュマークの外側（右） |
+| `rulesFiba.restricted-area` | No-charge semicircle | ノーチャージセミサークル |
 | `target.sports.nhl` | Hockey net | アイスホッケーのゴール |
 | `target.sports.soccer` | Soccer goal | サッカーのゴール |
 | `target.sports.handball` | Handball goal | ハンドボールのゴール |

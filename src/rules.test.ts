@@ -109,6 +109,19 @@ describe("basketball, from the court's own figures", () => {
     expect(isThreePointer([0, 225], { frame: "nba-stats", year: 2020 })).toBe(false);
   });
 
+  it("names the restricted area by the league's own rule book: FIBA's no-charge semicircle, the NBA's restricted area, in English and Japanese", () => {
+    const hoop = (league?: string, language?: "en" | "ja") => zoneAt("nba", [0, 5], { frame: "nba-stats", ...(league === undefined ? {} : { league }), ...(language === undefined ? {} : { language }) });
+    expect(hoop().subzone).toBe("restricted-area");
+    expect(hoop().names["restricted-area"]).toBe("Restricted area");
+    expect(hoop("nba", "ja").names["restricted-area"]).toBe("リストリクテッドエリア");
+    expect(hoop("wnba", "ja").names["restricted-area"]).toBe("リストリクテッドエリア");
+    expect(hoop("fiba").names["restricted-area"]).toBe("No-charge semicircle");
+    expect(hoop("fiba", "ja").names["restricted-area"]).toBe("ノーチャージセミサークル");
+    expect(zoneName("restricted-area", "ja", "fiba")).toBe("ノーチャージセミサークル");
+    expect(zoneName("restricted-area", "ja")).toBe("リストリクテッドエリア");
+    expect(zoneName("paint", "ja", "fiba")).toBe(zoneName("paint", "ja"));
+  });
+
   it("agrees with the package's own shot zones on a grid", () => {
     const o = { sport: "nba" } as const;
     const set = buildZoneSet("nba-shot", { o, outline: outlineOf(o), direction: "right", end: "right", los: undefined, bats: undefined, words });

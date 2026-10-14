@@ -777,6 +777,8 @@ export interface SurfaceOptions {
    * season, the park, the pitch). Off by default, so that a drawing without data is the same text as ever; a page that asks where a click is turns it on.
    */
   pointer?: boolean;
+  /** Write `data-mark-id`, `data-index` and `data-zone` on every mark of every data layer, for one listener to link a mark to a table (about 55 bytes a mark). Off by default; a layer whose data has an `id` has them anyway, and `pointer: true` turns them on. */
+  marks?: boolean;
   /** `embed` (the default) writes the stylesheet into the drawing so that it stands alone; `none` leaves it to the page. */
   style?: "embed" | "none";
   /** An extra class on the `svg`. */

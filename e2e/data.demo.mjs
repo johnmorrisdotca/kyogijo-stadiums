@@ -80,7 +80,7 @@ test("the heat charts draw cells, zones and bands in a ramp, with a legend that 
     const layer = svg.locator(`g.ky-layer[data-kind="${kind}"]`).first();
     await expect(layer).toHaveAttribute("clip-path", /url\(#/);
     // Something is drawn, with a fill that is a colour and not none.
-    const fills = await layer.locator("path[style*='fill:var(--ky-hv'], g[style*='fill:var(--ky-hv'] > path").evaluateAll((all) => all.map((el) => getComputedStyle(el).fill));
+    const fills = await layer.locator("path[style*='fill:var(--ky-hv']").evaluateAll((all) => all.map((el) => getComputedStyle(el).fill));
     expect(fills.length).toBeGreaterThan(2);
     for (const fill of fills.filter((f) => f !== "none")) expect(fill).toMatch(/^rgb\(/);
     expect(new Set(fills).size).toBeGreaterThan(1);
@@ -108,7 +108,7 @@ test("the heat ramps change with the page's colour scheme: the same cells are li
   await open(page, "?lang=en&help=off&theme=light");
   const first = page.locator(`${at("data-cards")} svg.kyogijo`).nth(3);
   await first.scrollIntoViewIfNeeded();
-  const cell = first.locator("g.ky-layer[data-kind='heatmap'] path[style*='ky-hv'], g.ky-layer[data-kind='heatmap'] g[style*='ky-hv'] > path").last();
+  const cell = first.locator("g.ky-layer[data-kind='heatmap'] path[style*='ky-hv']").last();
   const light = await cell.evaluate((el) => getComputedStyle(el).fill);
   await page.evaluate(() => document.documentElement.setAttribute("data-theme", "dark"));
   const dark = await cell.evaluate((el) => getComputedStyle(el).fill);

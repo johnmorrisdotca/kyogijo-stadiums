@@ -2,29 +2,29 @@
 
 exports[`the same options always draw the same layers: fingerprints > are held for each kind on its own surface, in English and Japanese 1`] = `
 {
-  "delaunay en": "06dmcvm",
-  "delaunay ja": "18cqfsg",
+  "delaunay en": "1vurmwd",
+  "delaunay ja": "0ww3pi3",
   "flow en": "1ixe2pa",
   "flow ja": "1z0ghci",
-  "formation en": "1sgj0zc",
-  "formation ja": "0omp935",
-  "hull en": "1wrqv95",
-  "hull ja": "0kjppb1",
-  "network en": "0ikq5oh",
-  "network ja": "1hxvtl2",
+  "formation en": "16u1iol",
+  "formation ja": "0fqi9o6",
+  "hull en": "18t5pru",
+  "hull ja": "1rurvza",
+  "network en": "1joesx2",
+  "network ja": "003fu7n",
   "sonar en": "1sv84v9",
   "sonar ja": "0rpj9pe",
-  "voronoi en": "19bvadu",
-  "voronoi ja": "1vcv1kk",
+  "voronoi en": "1v5bzki",
+  "voronoi ja": "0ht1nw4",
 }
 `;
 
 exports[`the same options always draw the same layers: fingerprints > are held for each kind on its own surface, in English and Japanese 2`] = `
 {
-  "baseball": "0fx4ecn",
-  "basketball": "0wh0t5j",
-  "football": "0gi42vv",
-  "hockey": "0g8b490",
-  "rink": "1sovekb",
+  "baseball": "01p8f7s",
+  "basketball": "1f1y7mx",
+  "football": "13yybgi",
+  "hockey": "0uhh8al",
+  "rink": "0pfgzv1",
 }
 `;

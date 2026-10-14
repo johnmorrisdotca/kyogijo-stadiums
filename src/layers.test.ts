@@ -437,10 +437,10 @@ describe("the budgets", () => {
     return [{ kind: "points", name: "shots", data, style: { size: { range: [1, 3] } } }];
   };
 
-  it("1,000 points add under 130 kB to a drawing, about 120 bytes each with their data attributes", () => {
+  it("1,000 points add under 70 kB to a drawing, about 60 bytes each", () => {
     const bare = drawKyogijo({ sport: "nhl", id: "b" }).length;
     const withPoints = drawKyogijo({ sport: "nhl", id: "b", layers: cloud(1000) }).length;
-    expect(withPoints - bare).toBeLessThan(130_000);
+    expect(withPoints - bare).toBeLessThan(70_000);
   });
 
   it("10,000 points are drawn in under 250 ms (about 20 ms on a laptop), and 1,000 arrows with comets in under 250", () => {

@@ -24,6 +24,7 @@ import { fenceFor, parkById, parkWallsIn, PARKS, type Park } from "./parks.ts";
 import { frameSizeOf, outlineOf, type Outline } from "./outline.ts";
 import { soccerSpec } from "./surfaces/soccer-spec.ts";
 import { KYOGIJO_STRINGS } from "./strings.ts";
+import type { RuleId } from "./rules.types.ts";
 import type { Language, Sport, SurfaceOptions } from "./types.ts";
 import { FEET_PER, isUnit, type Unit } from "./units.ts";
 
@@ -73,6 +74,8 @@ type Judge = (x: number, y: number) => Verdict;
 
 interface Ruled {
   sport: Sport;
+  /** The league asked for, as given: it decides which of the governing bodies' words names a zone. */
+  league: string | undefined;
   o: SurfaceOptions;
   outline: Outline;
   judge: Judge;
@@ -380,7 +383,7 @@ function ruled(sport: Sport, options: ZoneOptions): Ruled {
     default:
       judge = setsJudge(lazy);
   }
-  const made: Ruled = { sport: drawn, o: { ...o, sport: drawn }, outline, judge, language, sets: lazy };
+  const made: Ruled = { sport: drawn, league: typeof options.league === "string" ? options.league : undefined, o: { ...o, sport: drawn }, outline, judge, language, sets: lazy };
   if (cache.size > 200) cache.clear();
   cache.set(key, made);
   return made;
@@ -402,7 +405,15 @@ function onSurface(r: Ruled, point: PlaceLike, options: ZoneOptions): [number, n
   return [x, y];
 }
 
-const nameOf = (id: string, language: Language, own?: Record<string, string>): string => own?.[id] ?? (KYOGIJO_STRINGS[language].rules as Record<string, string>)[id] ?? id;
+/** The leagues whose rule book words some zones another way than the NBA's: FIBA's, which the Japan Basketball Association follows. */
+const FIBA_WORDS: ReadonlySet<string> = new Set(["fiba"]);
+
+const nameOf = (id: string, language: Language, own?: Record<string, string>, league?: string): string => {
+  if (own?.[id] !== undefined) return own[id];
+  const words = KYOGIJO_STRINGS[language];
+  if (league !== undefined && FIBA_WORDS.has(league) && words.rulesFiba[id as RuleId] !== undefined) return words.rulesFiba[id as RuleId] as string;
+  return (words.rules as Record<string, string>)[id] ?? id;
+};
 
 /**
  * Where a point lies by the rules of a sport: the zone, the area in it and every other area that holds, each by id and name. Hockey answers in the
@@ -442,7 +453,7 @@ function answer(r: Ruled, at: [number, number]): ZoneAnswer {
     }
   }
   const names: Record<string, string> = {};
-  for (const id of zones) names[id] = nameOf(id, r.language, v.names);
+  for (const id of zones) names[id] = nameOf(id, r.language, v.names, r.league);
   return { sport: r.sport, at, inBounds, zone: v.zone, subzone: v.subzone, zones, sets, names };
 }
 
@@ -459,8 +470,11 @@ export function zoneResolver(sport: Sport, options: ZoneOptions = {}): (x: numbe
   };
 }
 
-/** The name of a zone id in a language: the rules engine's own ids have words in both; any other id (a zone set's) comes back as it is. */
-export const zoneName = (id: string, language: Language = "en"): string => nameOf(id, language === "ja" ? "ja" : "en");
+/**
+ * The name of a zone id in a language: the rules engine's own ids have words in both; any other id (a zone set's) comes back as it is. A court of `league: "fiba"` has the words of FIBA's rule book, which the
+ * Japan Basketball Association follows: the restricted area is the no-charge semicircle (ノーチャージセミサークル); in the NBA and the leagues that follow its words it is the restricted area (リストリクテッドエリア).
+ */
+export const zoneName = (id: string, language: Language = "en", league?: string): string => nameOf(id, language === "ja" ? "ja" : "en", undefined, league);
 
 const holds = (sport: Sport, id: string) => (point: PlaceLike, options: ZoneOptions = {}): boolean => zoneAt(sport, point, options).zones.includes(id);
 

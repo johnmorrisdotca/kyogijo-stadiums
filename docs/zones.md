@@ -42,6 +42,8 @@ A point off the surface (on the apron, in the stands) is in no zone: `inBounds` 
 | Football | `own-end-zone`, `own-half`, `opponent-half`, `red-zone`, `opponent-end-zone` | `end-zone`, `between-the-hashes`, `outside-hashes-left`, `outside-hashes-right` |
 | Every other sport | the first of its [zone sets](./layers.md#zone-sets) that the point is in | the rest, and `sets` has the zone of each set |
 
+**Names by league.** The restricted area is worded by the rule book of the league: in the NBA and the leagues that follow its words it is the restricted area (リストリクテッドエリア in Japanese); FIBA's rule book calls it the no-charge semicircle, and the Japan Basketball Association, which follows FIBA, ノーチャージセミサークル. A court of `league: "fiba"` is named in FIBA's words (`No-charge semicircle`, `ノーチャージセミサークル`), every other court in the NBA's; the id is `restricted-area` in both, and `zoneName(id, language, league)` gives the word for a league. The package has no Japanese league of its own: a court played under the JBA's rules is `league: "fiba"`.
+
 The `paint` flag holds for the whole key, the restricted area included, so `inPaint` is the key as a rulebook draws it; `subzone` is `restricted-area` there, as the NBA's shot zones have it. The slot is the package's definition (the zone sets' `nhl-slot`), because the NHL's rules do not define one. The red zone is the 20 yards before the opponent's goal line. The three-point test is the line's own geometry: the straight lines 3 feet from the sidelines (22 feet from the basket), the arc beyond.
 
 ## Yes or no
@@ -78,4 +80,4 @@ Where the park's article gives no wall height for the bearing, a decision that n
 
 ## Marks carry their zone
 
-Every mark of a data layer (and of a chart) is written with `data-mark-id`, `data-index` and `data-zone`, the zone being this engine's finest, so that one listener can tie a mark to a table: see [data layers](./layers.md#linking-marks-to-a-table).
+Add `marks: true` to a drawing and every mark of its data layers (and of a chart) is written with `data-mark-id`, `data-index` and `data-zone`, the zone being this engine's finest, so that one listener can tie a mark to a table: see [data layers](./layers.md#linking-marks-to-a-table). A layer whose data has an `id`, and a drawing made with `pointer: true`, have them without asking.

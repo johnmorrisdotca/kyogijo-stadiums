@@ -181,7 +181,7 @@ export function drawNetwork(layer: NetworkLayer, env: Env): Made {
     const cls = teamClass(l.team);
     const o = between(alpha, linkT(l), false);
     const names = { a: nodeName(l.a), b: nodeName(l.b), n: l.n };
-    const link = ` data-mark-id="${esc(`${idText(l.a.id)}-${idText(l.b.id)}`)}" data-index="${links.length}" data-from="${esc(idText(l.a.id))}" data-to="${esc(idText(l.b.id))}"`;
+    const link = !env.marks ? "" : ` data-mark-id="${esc(`${idText(l.a.id)}-${idText(l.b.id)}`)}" data-index="${links.length}" data-from="${esc(idText(l.a.id))}" data-to="${esc(idText(l.b.id))}"`;
     if (net.directed) {
       const curve = curveBetween(a, b, 0.14);
       const hl = Math.max(w * 3.4, base * 0.9);

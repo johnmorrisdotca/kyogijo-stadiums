@@ -2,7 +2,7 @@
 
 `clientPointToField(svg, clientX, clientY, { provider })` says where a pointer is on the field of a drawing: the place in a provider's numbers (NHL feet, Opta's 0 to 100, StatsBomb's 120 by 80, Statcast's, metres, and [every frame the package has](./frames.md)) and the [zone](./zones.md) the rules put it in. `fieldPointToClient` is the way back, for a marker. They are in their own entry, `@johnmorrisdotca/kyogijo-stadiums/pointer`, and need no dependency.
 
-A drawing says where its surface is on its surface group when it is made with `pointer: true`: the box of the playing surface and the few options that decide its rules. It is off by default, so that a drawing that nobody points at is the same text as ever.
+A drawing says where its surface is on its surface group when it is made with `pointer: true`: the box of the playing surface and the few options that decide its rules. It is off by default, so that a drawing that nobody points at is the same text as ever. `pointer: true` also writes `data-mark-id`, `data-index` and `data-zone` on every mark of the drawing's layers, as [`marks: true`](./layers.md#linking-marks-to-a-table) does.
 
 ```ts no-run
 import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";

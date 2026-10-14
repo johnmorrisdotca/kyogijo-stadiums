@@ -680,6 +680,8 @@ export interface KyogijoWords {
   };
   /** The names of the zones that `zoneAt` answers with (rules.ts), by id. */
   rules: Record<RuleId, string>;
+  /** The words of the rules that FIBA's rule book says another way than the NBA's, for a court of `league: "fiba"`: the restricted area is the no-charge semicircle. */
+  rulesFiba: Partial<Record<RuleId, string>>;
   /** The words of the targets seen end-on (target.ts): the goals, the stumps and the strike zone. */
   target: {
     sports: Record<"nhl" | "soccer" | "handball" | "waterpolo" | "lacrosse" | "fieldhockey" | "cricket" | "mlb", string>;
@@ -1112,6 +1114,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       "outside-hashes-left": "Outside the hashes, left",
       "outside-hashes-right": "Outside the hashes, right",
     },
+    rulesFiba: { "restricted-area": "No-charge semicircle" },
     target: {
       sports: {"nhl": "Hockey net", "soccer": "Soccer goal", "handball": "Handball goal", "waterpolo": "Water polo goal", "lacrosse": "Lacrosse goal", "fieldhockey": "Field hockey goal", "cricket": "Wicket", "mlb": "Strike zone"},
       titleGoal: "Goal mouth, {name}: where the shots crossed the goal line",
@@ -1561,6 +1564,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       "outside-hashes-left": "ハッシュマークの外側（左）",
       "outside-hashes-right": "ハッシュマークの外側（右）",
     },
+    rulesFiba: { "restricted-area": "ノーチャージセミサークル" },
     target: {
       sports: {"nhl": "アイスホッケーのゴール", "soccer": "サッカーのゴール", "handball": "ハンドボールのゴール", "waterpolo": "水球のゴール", "lacrosse": "ラクロスのゴール", "fieldhockey": "フィールドホッケーのゴール", "cricket": "ウィケット", "mlb": "ストライクゾーン"},
       titleGoal: "ゴールマウス（{name}）：シュートがゴールラインを通過した位置",

@@ -48,11 +48,6 @@ export interface HeatLegend {
 /** What the heat layers take beyond a layer's places. */
 export interface HeatBase extends LayerBase {
   data: readonly HeatDatum[];
-  /**
-   * Draw each cell or hexagon as a path of its own, with `data-mark-id`, `data-index` and `data-zone`, so that a listener can tell which one a pointer is on (the default). `false` merges the cells of one colour
-   * into a single path, about a third of the size, for a big grid nobody points at. A zone chart always has a path for each zone.
-   */
-  marks?: boolean;
   /** What each cell or zone shows: `count` (the default), `sum`, `mean`, `median`, `max` or `min` of the marks' `value`, `percent` (a share of all the marks, 0 to 100), `rate` (the percent of the marks whose `outcome` is a success; see `success`) or a function `(values, { count, hits, total }) => number | null`. */
   statistic?: HeatStatistic;
   /** The statistic's name in the legend and the summary, when it is a function of your own. */

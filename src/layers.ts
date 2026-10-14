@@ -283,7 +283,7 @@ function drawLines(layer: { kind: "lines" | "arrows"; data: readonly LineDatum[]
     const title = typeof d.title === "string" && d.title !== "" ? `<title>${esc(d.title)}</title>` : "";
     const opacity = opacityOf(d.opacity);
     // Where it starts is its zone; where it ends is `data-zone-end`.
-    const marks = markAttrs(env, d.id, i, first) + (env.zone(last[0], last[1]) === undefined ? "" : ` data-zone-end="${esc(env.zone(last[0], last[1]) as string)}"`);
+    const marks = env.marks ? markAttrs(env, d.id, i, first) + (env.zone(last[0], last[1]) === undefined ? "" : ` data-zone-end="${esc(env.zone(last[0], last[1]) as string)}"`) : "";
     // A line with a head is a group (its colour and opacity on the group); a line alone carries them itself.
     const wrap = headEl !== "";
     const pathClass = [shaftClass, wrap ? "" : cls].filter((c) => c !== "").join(" ");
@@ -339,6 +339,13 @@ function drawText(layer: { data: readonly TextDatum[]; style?: TextStyle } & Lay
   return made;
 }
 
+/**
+ * True when a datum of the layer has an `id`: the caller means to find its marks again. Not for the team layers, whose data have always had an `id` of their own (the player's, for a label and a table),
+ * so that a drawing made before the marks had ids is the same text now.
+ */
+const hasIds = (layer: Layer): boolean =>
+  !isTeamLayer(layer) && Array.isArray((layer as { data?: unknown }).data) && ((layer as { data: readonly unknown[] }).data).some((d) => typeof d === "object" && d !== null && (d as { id?: unknown }).id !== undefined);
+
 const plural = (words: Words, kind: Layer["kind"], n: number): string => words[`${kind === "lines" ? "line" : kind === "arrows" ? "arrow" : kind === "text" ? "text" : "point"}${n === 1 ? "One" : "Many"}` as "pointOne"];
 
 const tidy = (text: string): string => text.replace(/[.。]\s*$/, "");
@@ -379,6 +386,7 @@ function renderedLayers(o: SurfaceOptions | ScoreOptions, layers: readonly Layer
   if (layers === undefined || layers.length === 0) return { svg: "", summaries: [] };
   if (!Array.isArray(layers)) throw new TypeError("layers is a list of layers");
   const env = envFor(o, turned, range, upright, zone);
+  const markedBy = env.marks;
   const clipId = `${env.id}-lc`;
   const { stop, gap } = env.words.said;
   const said: string[] = [];
@@ -390,6 +398,8 @@ function renderedLayers(o: SurfaceOptions | ScoreOptions, layers: readonly Layer
   const slots: ((() => void) | undefined)[] = [];
   layers.forEach((layer, index) => {
     if (typeof layer !== "object" || layer === null) throw new TypeError(`layer ${index} is not a layer`);
+    // The marks are written with their ids, indexes and zones when the layer or the drawing asks, or when the caller gave a datum an id of its own.
+    env.marks = typeof layer.marks === "boolean" ? layer.marks : markedBy || hasIds(layer);
     const name = safeClass(layer.id).replace(/ /g, "-");
     const gid = name === "" ? `${env.id}-l${index}` : `${env.id}-${name}`;
     const finish = (made: Made): void => {

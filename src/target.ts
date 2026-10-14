@@ -468,6 +468,7 @@ export function drawTarget(shots: readonly TargetShot[], options: TargetOptions)
     from: frame,
     units: U,
     clip: "none",
+    marks: true,
     data: data.map((d) => Object.fromEntries(Object.entries(d).filter(([key, v]) => key !== "__order" && v !== undefined)) as never),
     style,
   };
@@ -480,6 +481,7 @@ export function drawTarget(shots: readonly TargetShot[], options: TargetOptions)
       from: frame,
       units: U,
       clip: "none",
+      marks: true,
       data: data.map((r) => ({ x: r.x, y: r.y, text: String(r.__order), id: r.id } as never)).filter((d: { x: number | null }) => d.x !== null),
       style: { size: markSize * 0.62, color: "var(--ky-layer-ink)" },
     };
