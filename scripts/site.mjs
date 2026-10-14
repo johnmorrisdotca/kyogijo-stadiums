@@ -444,6 +444,17 @@ const page = `<!doctype html>
           <div class="fam-actions"><button type="button" class="fam-button" id="conv-spot" data-testid="conv-spot" data-say="convSpot"></button></div>
           <p class="conv-result"><span data-say="convResult"></span> <output id="conv-out" data-testid="conv-out"></output></p>
         </div>
+        <h3 class="more-sub" data-say="pointTitle"></h3>
+        <p data-say="pointText"></p>
+        <div class="pointer" data-testid="pointer">
+          <label class="setup fam-row"><span class="fam-label" data-say="pointSport"></span><select class="fam-field" id="point-sport" data-testid="point-sport" data-say-label="pointSport"></select></label>
+          <div class="point-wrap">
+            <div class="point-stage" id="point-stage" data-testid="point-stage" tabindex="0" role="group" data-say-label="pointStage"></div>
+            <span class="point-marker" id="point-marker" data-testid="point-marker" aria-hidden="true" hidden></span>
+          </div>
+          <p class="point-zone" id="point-zone" data-testid="point-zone" aria-live="polite"></p>
+          <table class="point-table" id="point-table" data-testid="point-table"><tbody></tbody></table>
+        </div>
       </section>
 
       <section class="more" id="data" aria-labelledby="data-title">

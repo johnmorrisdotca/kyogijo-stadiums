@@ -1,6 +1,6 @@
 # Coordinate frames
 
-A data provider puts a point on a rink or a field in its own numbers: the NHL's feet from centre ice, HockeyTech's canvas of 600 by 300, the NBA's tenths of a foot from the hoop. A `Frame` says how those numbers lie on the surface (unit, range, origin, which way y grows, landmarks), and `toSurface` and `fromSurface` move points between a frame and the drawing's own coordinates. `convert(from, to)` goes from one provider's frame to another's. The module is `@johnmorrisdotca/kyogijo-stadiums/frames`; each frame is cited in [sources.md](./sources.md).
+A data provider puts a point on a rink or a field in its own numbers: the NHL's feet from centre ice, HockeyTech's canvas of 600 by 300, the NBA's tenths of a foot from the hoop. A `Frame` says how those numbers lie on the surface (unit, range, origin, which way y grows, landmarks), and `toSurface` and `fromSurface` move points between a frame and the drawing's own coordinates. `convert(from, to)` goes from one provider's frame to another's. The module is `@johnmorrisdotca/kyogijo-stadiums/frames`; each frame is cited in [sources.md](./sources.md). To ask where a point is by a sport's rules (which zone, which area) from a frame's numbers, see [zones](./zones.md); to ask where a click on a drawing is, in any frame, see [pointing](./pointer.md).
 
 ## Every frame
 

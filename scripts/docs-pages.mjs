@@ -72,8 +72,11 @@ export const NAV = [
     pages: [
       { slug: "units", ja: "単位" },
       { slug: "frames", ja: "座標系" },
+      { slug: "zones", ja: "ゾーンとルール" },
+      { slug: "pointer", ja: "図上の位置を調べる" },
       { slug: "layers", ja: "データレイヤー" },
       { slug: "charts", ja: "すぐ使えるチャート" },
+      { slug: "targets", ja: "ゴールマウス・ストライクゾーン・スタンプ" },
       { slug: "team-shape", ja: "チームの形" },
       { slug: "replay", ja: "リプレイ" },
       { slug: "turn", ja: "3D表示" },

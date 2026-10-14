@@ -267,7 +267,7 @@ function nhlZones(id: ZoneSetId, ctx: ZoneContext): ZoneShape[] {
 }
 
 /** The distance from home plate along a ray at `angle` (degrees, 0 straight out to centre field, negative to left) to the edge of the infield: the arc 95 feet round the pitcher's plate. */
-function infieldReach(angle: number): number {
+export function infieldReach(angle: number): number {
   const a = (angle * Math.PI) / 180;
   const along = MLB.pitcher * Math.cos(a);
   return along + Math.sqrt(along * along + MLB.skinRadius * MLB.skinRadius - MLB.pitcher * MLB.pitcher);

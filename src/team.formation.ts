@@ -3,7 +3,7 @@
 import { esc, num } from "./format.ts";
 import { FRAMES } from "./frames.ts";
 import { formationById, positionName } from "./formations.ts";
-import { isNum, newMade, opacityOf, place, unitOfLayer, type Env, type Made } from "./layers.env.ts";
+import { isNum, markAttrs, newMade, opacityOf, place, unitOfLayer, type Env, type Made } from "./layers.env.ts";
 import type { P } from "./layers.marks.ts";
 import { fill } from "./strings.ts";
 import { attrs, labelOf, paintOf, round, titled, type TeamTable } from "./team.common.ts";
@@ -84,7 +84,7 @@ export function drawFormation(layer: FormationLayer, env: Env): Made {
     const player = paintOf(s.player);
     const cls = [player.cls !== "" ? player.cls : mine.cls, lineup && s.player === undefined ? "ky-e" : ""].filter((c) => c !== "").join(" ");
     const tip = [s.name, s.player === undefined ? "" : [s.player.name, s.player.number].filter((t) => t !== undefined && t !== "").join(" ")].filter((t) => t !== "").join(env.words.said.colon);
-    marks.push(titled("circle", `${attrs(cls, player.css !== "" ? player.css : mine.css)} cx="${num(s.at[0])}" cy="${num(s.at[1])}" r="${num(size / 2)}"`, s.player?.title ?? tip));
+    marks.push(titled("circle", `${attrs(cls, player.css !== "" ? player.css : mine.css)} cx="${num(s.at[0])}" cy="${num(s.at[1])}" r="${num(size / 2)}"${markAttrs(env, s.player?.id ?? s.id, spots.indexOf(s), [s.at[0], s.at[1]])}`, s.player?.title ?? tip));
     let label = "";
     if (mode === "position") label = s.id;
     else if (mode === "number") label = s.player?.number === undefined ? (lineup ? "" : s.id) : String(s.player.number);

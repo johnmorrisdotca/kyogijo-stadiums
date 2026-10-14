@@ -28,7 +28,7 @@ import {
 } from "./heat.stats.ts";
 import type { ContourLayer, HeatBase, HeatLabels, HeatLegend, HeatmapLayer, HexbinLayer, LegendLayer, ZonesLayer } from "./heat.types.ts";
 import { buildZoneSet, type ZoneSet } from "./heat.zones.ts";
-import { clamp01, isNum, newMade, opacityOf, place, placeBack, toArray, unitOfLayer, type Env, type Made } from "./layers.env.ts";
+import { clamp01, isNum, markAttrs, newMade, opacityOf, place, placeBack, toArray, unitOfLayer, type Env, type Made } from "./layers.env.ts";
 import { rampColour, type P } from "./layers.marks.ts";
 import type { LayerBase } from "./layers.types.ts";
 import { fill } from "./strings.ts";
@@ -558,23 +558,31 @@ export function drawHeat(layer: HeatLayer, env: Env, gid: string, known?: Map<st
     colours.domain = spec.levels.length === 0 ? [0, 100] : [100 * spec.levels[0].label, 100 * spec.levels[spec.levels.length - 1].label];
     spec.levels.forEach((level, i) => {
       if (level.d === "") return;
-      marks.push(spec.filled ? `<path class="ky-cf" style="fill:${fillOf(colours, i)}" fill-rule="evenodd" d="${level.d}"/>` : `<path class="ky-cl" style="stroke:${fillOf(colours, i)}" d="${level.d}"/>`);
+      const mark = env.marks ? ` data-mark-id="${i}" data-index="${i}"` : "";
+      marks.push(spec.filled ? `<path class="ky-cf" style="fill:${fillOf(colours, i)}" fill-rule="evenodd" d="${level.d}"${mark}/>` : `<path class="ky-cl" style="stroke:${fillOf(colours, i)}" d="${level.d}"${mark}/>`);
     });
     made.style = `--w:${num(env.base * (spec.filled ? 0.1 : 0.32))}`;
   } else {
     colours = coloursFor(layer, present);
     const step = (v: number): number => stepOf(v, colours.domain, colours.steps);
     if (c.noun === "zones") {
-      for (const it of c.items) {
+      c.items.forEach((it, i) => {
         const title = `<title>${esc(`${it.name ?? ""}${it.value === null ? "" : `: ${fmt(it.value)}`} (${it.n})`)}</title>`;
-        marks.push(`<path class="ky-zn" d="${it.d}" fill-rule="evenodd" style="fill:${it.value === null ? "none" : fillOf(colours, step(it.value))}">${title}</path>`);
-      }
+        const zone = it.id === undefined || !env.marks ? "" : ` data-mark-id="${esc(it.id)}" data-index="${i}" data-zone="${esc(it.id)}"`;
+        marks.push(`<path class="ky-zn" d="${it.d}" fill-rule="evenodd" style="fill:${it.value === null ? "none" : fillOf(colours, step(it.value))}"${zone}>${title}</path>`);
+      });
       made.style = `--w:${num(env.base * 0.12)}`;
     } else {
+      // Each cell is a path of its own, so that a listener can tell which one it was on; the cells of a colour share a group that holds the fill.
       const byStep: string[][] = Array.from({ length: colours.steps }, () => []);
-      for (const it of c.items) if (it.value !== null) byStep[step(it.value)].push(it.d);
+      const pointable = env.marks;
+      c.items.forEach((it, i) => {
+        if (it.value === null) return;
+        byStep[step(it.value)].push(pointable ? `<path d="${it.d}"${markAttrs(env, undefined, i, [it.cx, it.cy])}/>` : it.d);
+      });
       byStep.forEach((list, k) => {
-        if (list.length > 0) marks.push(`<path style="fill:${fillOf(colours, k)}" d="${list.join("")}"/>`);
+        if (list.length === 0) return;
+        marks.push(pointable ? `<g style="fill:${fillOf(colours, k)}">${list.join("")}</g>` : `<path style="fill:${fillOf(colours, k)}" d="${list.join("")}"/>`);
       });
     }
   }

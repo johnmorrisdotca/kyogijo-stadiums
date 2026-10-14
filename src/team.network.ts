@@ -2,7 +2,7 @@
 // players sized and shaded by the passes between them. Written for this package from the plain arithmetic of counting and averaging; the idea
 // is that of mplsoccer's pass-network example (MIT), and no code of it is used.
 import { esc, num } from "./format.ts";
-import { isNum, newMade, opacityOf, place, toArray, unitOfLayer, type Env, type Made } from "./layers.env.ts";
+import { isNum, markAttrs, newMade, opacityOf, place, toArray, unitOfLayer, type Env, type Made } from "./layers.env.ts";
 import { curveBetween, curvePath, headPath, type P } from "./layers.marks.ts";
 import { fill } from "./strings.ts";
 import { attrs, frameNote, round, teamClass, teamKey, titled, type TeamTable } from "./team.common.ts";
@@ -181,19 +181,20 @@ export function drawNetwork(layer: NetworkLayer, env: Env): Made {
     const cls = teamClass(l.team);
     const o = between(alpha, linkT(l), false);
     const names = { a: nodeName(l.a), b: nodeName(l.b), n: l.n };
+    const link = !env.marks ? "" : ` data-mark-id="${esc(`${idText(l.a.id)}-${idText(l.b.id)}`)}" data-index="${links.length}" data-from="${esc(idText(l.a.id))}" data-to="${esc(idText(l.b.id))}"`;
     if (net.directed) {
       const curve = curveBetween(a, b, 0.14);
       const hl = Math.max(w * 3.4, base * 0.9);
       const stop = nodeWidth(l.b) / 2;
       const shaft = curve.trim(stop + hl * 0.9);
       const head = headPath(curve.at(Math.max(0, curve.length - stop)), curve.tangent(Math.max(0, curve.length - stop)), hl, hl * 0.5, false);
-      links.push(`<g${attrs(cls, "", o)}><title>${esc(fill(words.linkTitleDirected, names))}</title><path class="ky-ln" stroke-width="${num(w)}" d="${curvePath(shaft)}"/><path class="ky-ah" d="${head}"/></g>`);
-    } else links.push(titled("path", `${attrs(`ky-ln${cls === "" ? "" : ` ${cls}`}`, "", o)} stroke-width="${num(w)}" d="M${num(a[0])} ${num(a[1])}L${num(b[0])} ${num(b[1])}"`, fill(words.linkTitle, names)));
+      links.push(`<g${attrs(cls, "", o)}${link}><title>${esc(fill(words.linkTitleDirected, names))}</title><path class="ky-ln" stroke-width="${num(w)}" d="${curvePath(shaft)}"/><path class="ky-ah" d="${head}"/></g>`);
+    } else links.push(titled("path", `${attrs(`ky-ln${cls === "" ? "" : ` ${cls}`}`, "", o)}${link} stroke-width="${num(w)}" d="M${num(a[0])} ${num(a[1])}L${num(b[0])} ${num(b[1])}"`, fill(words.linkTitle, names)));
   }
-  const nodes = net.nodes.map((n) => {
+  const nodes = net.nodes.map((n, index) => {
     const at = n.at as P;
     const cls = teamClass(n.team);
-    return titled("circle", `${attrs(cls, "")} cx="${num(at[0])}" cy="${num(at[1])}" r="${num(nodeWidth(n) / 2)}"`, fill(words.nodeTitle, { name: nodeName(n), touches: n.touches, made: n.made, received: n.received }));
+    return titled("circle", `${attrs(cls, "")} cx="${num(at[0])}" cy="${num(at[1])}" r="${num(nodeWidth(n) / 2)}"${markAttrs(env, idText(n.id), index, [at[0], at[1]])}`, fill(words.nodeTitle, { name: nodeName(n), touches: n.touches, made: n.made, received: n.received }));
   });
   const mode = layer.labels === "name" || layer.labels === "id" || layer.labels === "none" || layer.labels === "number" ? layer.labels : "number";
   const text: string[] = [];

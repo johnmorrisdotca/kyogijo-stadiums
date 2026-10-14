@@ -2,7 +2,7 @@
 // put on the surface, and the shape of a table. Kept apart from the layers themselves so that each file of them is about one kind of layer.
 import { safeColour } from "./colour.ts";
 import { esc, num } from "./format.ts";
-import { isNum, place, type Env } from "./layers.env.ts";
+import { isNum, markAttrs, place, type Env } from "./layers.env.ts";
 import type { P } from "./layers.marks.ts";
 import { FRAMES } from "./frames.ts";
 import type { LayerBase, MarkDatum } from "./layers.types.ts";
@@ -96,10 +96,10 @@ export function groupByTeam<T extends { d: { team?: unknown } }>(items: readonly
 }
 
 /** The dots that mark players, as a group that the stylesheet's `ky-pts` rule draws. */
-export function dots(items: readonly Placed<{ team?: unknown; color?: unknown; title?: string; opacity?: number }>[], radius: number, titles: (item: Placed<{ team?: unknown }>) => string | undefined): string {
+export function dots(items: readonly Placed<{ team?: unknown; color?: unknown; title?: string; opacity?: number }>[], radius: number, titles: (item: Placed<{ team?: unknown }>) => string | undefined, env?: Env): string {
   const circles = items.map((item) => {
     const { cls, css } = paintOf(item.d as MarkDatum);
-    return titled("circle", `${attrs(cls, css, undefined)} cx="${num(item.x)}" cy="${num(item.y)}" r="${num(radius)}"`, titles(item));
+    return titled("circle", `${attrs(cls, css, undefined)} cx="${num(item.x)}" cy="${num(item.y)}" r="${num(radius)}"${env === undefined ? "" : markAttrs(env, (item.d as { id?: unknown }).id, item.index, [item.x, item.y])}`, titles(item));
   });
   return circles.length === 0 ? "" : `<g class="ky-pts" style="--w:${num(radius * 0.25)}">${circles.join("")}</g>`;
 }

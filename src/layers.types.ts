@@ -43,6 +43,8 @@ export interface OutcomeStyle {
 
 /** What every mark can carry. */
 export interface MarkDatum {
+  /** Your id for the mark: written on it as `data-mark-id`, so that a listener can link it to a row of your table. The mark's index is written when there is none. */
+  id?: string | number;
   /** The tooltip, and what a screen reader reads for the mark. */
   title?: string;
   /** `home`, `away` or another team. */
@@ -183,6 +185,11 @@ export interface LayerBase {
   clip?: "surface" | "none";
   /** Hide the layer. It is still in `layerTable`. */
   hidden?: boolean;
+  /**
+   * Write `data-mark-id`, `data-index` and `data-zone` on every mark of the layer (and draw each cell of a heat map or hexbin as a path of its own), so that one listener can link a mark to a table.
+   * Off by default, to keep a drawing compact; on by itself when a datum has an `id`, and when the drawing is made with `marks: true` or `pointer: true`. `false` turns it off for this layer.
+   */
+  marks?: boolean;
 }
 
 export interface PointsLayer extends LayerBase {

@@ -1,3 +1,4 @@
+import type { RuleId } from "./rules.types.ts";
 import type { Language, RangeName, Sport } from "./types.ts";
 
 /** The words of a folded curling sheet: the labels of its enlarged ends and the sentences that say what is drawn. */
@@ -677,6 +678,33 @@ export interface KyogijoWords {
     /** The names of what stands on the surface, by kind. */
     parts: Record<"scoreboard" | "net" | "antennae" | "goalposts" | "netposts" | "hoop" | "goal" | "boards" | "stumps" | "pylons" | "flags" | "fence" | "backstop" | "foul-poles" | "table-legs" | "walls" | "starting-blocks" | "backstroke-flags" | "false-start-rope" | "springboards" | "platforms" | "judges-stand" | "hurdles" | "steeplechase" | "high-jump" | "pole-vault" | "cage" | "padding" | "rink-boards", string>;
   };
+  /** The names of the zones that `zoneAt` answers with (rules.ts), by id. */
+  rules: Record<RuleId, string>;
+  /** The words of the rules that FIBA's rule book says another way than the NBA's, for a court of `league: "fiba"`: the restricted area is the no-charge semicircle. */
+  rulesFiba: Partial<Record<RuleId, string>>;
+  /** The words of the targets seen end-on (target.ts): the goals, the stumps and the strike zone. */
+  target: {
+    sports: Record<"nhl" | "soccer" | "handball" | "waterpolo" | "lacrosse" | "fieldhockey" | "cricket" | "mlb", string>;
+    /** Titles ({name}) and descriptions ({name} {w} {h} {unit}; {w} {bottom} {top} {side}). */
+    titleGoal: string;
+    descGoal: string;
+    titleStrike: string;
+    descStrike: string;
+    titleStumps: string;
+    descStumps: string;
+    left: string;
+    right: string;
+    units: Record<"m" | "ft" | "in" | "cm" | "yd", string>;
+    /** What became of a shot, a pitch or a delivery. */
+    outcomes: Record<string, string>;
+    /** The zones, by id. */
+    zones: Record<string, string>;
+    /** The length zones of a delivery, by id. */
+    lengths: Record<string, string>;
+    pitches: string;
+    deliveries: string;
+    numbers: string;
+  };
 }
 
 /** The words of the package, by language. */
@@ -1028,6 +1056,82 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       flat: "This browser cannot draw the 3D view, so the flat drawing is shown.",
       standing: "Standing on it, in the 3D view: {list}.", item: "{name} {h}", itemSag: "{name} {h} at the posts, {low} at the middle",
       parts: { scoreboard: "scoreboard (lower edge)", net: "net", antennae: "antennae", goalposts: "goal posts", netposts: "net posts", hoop: "baskets", goal: "goals", boards: "boards and glass", stumps: "stumps", pylons: "pylons", flags: "corner flags", fence: "fence", backstop: "backstop", "foul-poles": "foul poles", "table-legs": "table top", walls: "walls", "starting-blocks": "starting blocks", "backstroke-flags": "backstroke flags", "false-start-rope": "false start rope", springboards: "springboards", platforms: "platforms", "judges-stand": "judges' stand", hurdles: "hurdles", steeplechase: "steeplechase barriers", "high-jump": "high jump uprights and bar", "pole-vault": "pole vault uprights and bar", cage: "discus and hammer cage", padding: "padding", "rink-boards": "boards" },
+    },
+    rules: {
+      "defensive-zone": "Defensive zone",
+      "neutral-zone": "Neutral zone",
+      "offensive-zone": "Offensive zone",
+      "crease": "Crease",
+      "trapezoid": "Goalkeeper's trapezoid",
+      "behind-goal-line": "Behind the goal line",
+      "inner-slot": "Inner slot",
+      "outer-slot": "Outer slot",
+      "slot": "Slot",
+      "faceoff-circle": "Face-off circle",
+      "centre-circle": "Centre circle",
+      "frontcourt": "Frontcourt",
+      "backcourt": "Backcourt",
+      "restricted-area": "Restricted area",
+      "paint": "Paint (the key)",
+      "mid-range": "Mid-range",
+      "corner-three-left": "Left corner three",
+      "corner-three-right": "Right corner three",
+      "above-the-break": "Above the break three",
+      "three-point": "Three-point area",
+      "defensive-third": "Defensive third",
+      "middle-third": "Middle third",
+      "attacking-third": "Attacking third",
+      "six-yard-box": "Six-yard box (goal area)",
+      "own-six-yard-box": "Own six-yard box",
+      "penalty-area": "Penalty area",
+      "own-penalty-area": "Own penalty area",
+      "penalty-arc": "Penalty arc (the D)",
+      "own-penalty-arc": "Own penalty arc",
+      "wing-left": "Left wing",
+      "half-space-left": "Left half-space",
+      "central-corridor": "Central corridor",
+      "half-space-right": "Right half-space",
+      "wing-right": "Right wing",
+      "infield": "Infield",
+      "outfield": "Outfield",
+      "fair-territory": "Fair territory",
+      "foul-territory": "Foul territory",
+      "over-the-wall": "Over the wall",
+      "warning-track": "Warning track",
+      "left-field": "Left field",
+      "centre-field": "Centre field",
+      "right-field": "Right field",
+      "third-base-side": "Third-base side",
+      "middle-infield": "Middle infield",
+      "first-base-side": "First-base side",
+      "own-end-zone": "Own end zone",
+      "own-half": "Own half",
+      "opponent-half": "Opponent's half",
+      "red-zone": "Red zone",
+      "opponent-end-zone": "Opponent's end zone",
+      "end-zone": "End zone",
+      "between-the-hashes": "Between the hashes",
+      "outside-hashes-left": "Outside the hashes, left",
+      "outside-hashes-right": "Outside the hashes, right",
+    },
+    rulesFiba: { "restricted-area": "No-charge semicircle" },
+    target: {
+      sports: {"nhl": "Hockey net", "soccer": "Soccer goal", "handball": "Handball goal", "waterpolo": "Water polo goal", "lacrosse": "Lacrosse goal", "fieldhockey": "Field hockey goal", "cricket": "Wicket", "mlb": "Strike zone"},
+      titleGoal: "Goal mouth, {name}: where the shots crossed the goal line",
+      descGoal: "The {name}, {w} by {h} {unit}, seen from the front: the shooter's left is on the left.",
+      titleStrike: "Strike zone: where the pitches crossed the plate",
+      descStrike: "The strike zone seen from the catcher's position: the plate {w} inches wide, the zone from {bottom} to {top} feet above the ground. The batter stands on the {side}.",
+      titleStumps: "Stumps: where the deliveries reached the wicket",
+      descStumps: "The stumps seen from the bowler's end: three stumps across 9 inches (22.86 cm) and 28 inches (71.12 cm) high, with the bails.",
+      left: "left",
+      right: "right",
+      units: {"m": "metres", "ft": "feet", "in": "inches", "cm": "centimetres", "yd": "yards"},
+      outcomes: {"goal": "Goal", "saved": "Saved", "post": "Post", "crossbar": "Crossbar", "wide": "Wide", "high": "High", "blocked": "Blocked", "shot": "Shot", "missed": "Missed", "ball": "Ball", "called-strike": "Called strike", "swinging-strike": "Swinging strike", "foul": "Foul", "in-play": "In play", "hit-by-pitch": "Hit by pitch", "wicket": "Wicket", "runs": "Runs", "dot": "Dot ball"},
+      zones: {"top-left-corner": "Top left corner", "top-shelf": "Top shelf", "top-centre": "Top centre", "top-right-corner": "Top right corner", "mid-left": "Left side", "centre": "Centre", "mid-right": "Right side", "bottom-left-corner": "Bottom left corner", "five-hole": "Five-hole", "bottom-centre": "Bottom centre", "bottom-right-corner": "Bottom right corner", "wide-left": "Wide left", "wide-right": "Wide right", "over-the-bar": "Over the bar", "zone-1": "Zone 1", "zone-2": "Zone 2", "zone-3": "Zone 3", "zone-4": "Zone 4", "zone-5": "Zone 5", "zone-6": "Zone 6", "zone-7": "Zone 7", "zone-8": "Zone 8", "zone-9": "Zone 9", "zone-11": "Zone 11, high and left", "zone-12": "Zone 12, high and right", "zone-13": "Zone 13, low and left", "zone-14": "Zone 14, low and right", "outside": "Outside the zones", "outside-left": "Outside, left of the stumps", "on-stumps": "On the stumps", "over-stumps": "Over the stumps", "outside-right": "Outside, right of the stumps"},
+      lengths: {"yorker": "Yorker length", "full": "Full length", "good-length": "Good length", "short-of-a-length": "Short of a length", "short": "Short"},
+      pitches: "pitches",
+      deliveries: "deliveries",
+      numbers: "pitch numbers",
     },
   },
   // The Japanese of athletics and skating is each governing body's own word where its rule book has one (read 2026-10-14; the pages and files are in docs/references.md).
@@ -1402,6 +1506,82 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       flat: "このブラウザーでは3D表示ができないため、平面の図を表示しています。",
       standing: "3D表示で立って見えるもの：{list}。", item: "{name} {h}", itemSag: "{name} 支柱の位置で{h}（中央は{low}）",
       parts: { scoreboard: "スコアボードの下端", net: "ネット", antennae: "アンテナ", goalposts: "ゴールポスト", netposts: "支柱", hoop: "バスケットゴール", goal: "ゴール", boards: "ボードとガラス", stumps: "ウィケットのスタンプ", pylons: "パイロン", flags: "コーナーフラッグ", fence: "外野フェンス", backstop: "バックネット", "foul-poles": "ファウルポール", "table-legs": "天板", walls: "壁", "starting-blocks": "スタート台", "backstroke-flags": "背泳ぎ用フラッグ", "false-start-rope": "フォルススタートロープ", springboards: "飛板", platforms: "固定台", "judges-stand": "ジャッジ台", hurdles: "ハードル", steeplechase: "障害物", "high-jump": "走高跳の支柱とバー", "pole-vault": "棒高跳の支柱とバー", cage: "円盤投・ハンマー投の囲い", padding: "防護マット", "rink-boards": "フェンス" },
+    },
+    rules: {
+      "defensive-zone": "ディフェンディングゾーン",
+      "neutral-zone": "ニュートラルゾーン",
+      "offensive-zone": "アタッキングゾーン",
+      "crease": "ゴールクリース",
+      "trapezoid": "ゴールキーパーのトラペゾイド",
+      "behind-goal-line": "ゴール裏",
+      "inner-slot": "インナースロット",
+      "outer-slot": "アウタースロット",
+      "slot": "スロット",
+      "faceoff-circle": "フェイスオフサークル",
+      "centre-circle": "センターサークル",
+      "frontcourt": "フロントコート",
+      "backcourt": "バックコート",
+      "restricted-area": "リストリクテッドエリア",
+      "paint": "ペイントエリア",
+      "mid-range": "ミッドレンジ",
+      "corner-three-left": "左コーナースリー",
+      "corner-three-right": "右コーナースリー",
+      "above-the-break": "アバブ・ザ・ブレイク・スリー",
+      "three-point": "スリーポイントエリア",
+      "defensive-third": "ディフェンディングサード",
+      "middle-third": "ミドルサード",
+      "attacking-third": "アタッキングサード",
+      "six-yard-box": "ゴールエリア",
+      "own-six-yard-box": "自陣のゴールエリア",
+      "penalty-area": "ペナルティエリア",
+      "own-penalty-area": "自陣のペナルティエリア",
+      "penalty-arc": "ペナルティアーク",
+      "own-penalty-arc": "自陣のペナルティアーク",
+      "wing-left": "左サイド",
+      "half-space-left": "左ハーフスペース",
+      "central-corridor": "中央",
+      "half-space-right": "右ハーフスペース",
+      "wing-right": "右サイド",
+      "infield": "内野",
+      "outfield": "外野",
+      "fair-territory": "フェアグラウンド",
+      "foul-territory": "ファウルグラウンド",
+      "over-the-wall": "フェンス越え",
+      "warning-track": "ウォーニングトラック",
+      "left-field": "レフト",
+      "centre-field": "センター",
+      "right-field": "ライト",
+      "third-base-side": "三塁側",
+      "middle-infield": "二遊間",
+      "first-base-side": "一塁側",
+      "own-end-zone": "自陣のエンドゾーン",
+      "own-half": "自陣",
+      "opponent-half": "敵陣",
+      "red-zone": "レッドゾーン",
+      "opponent-end-zone": "敵陣のエンドゾーン",
+      "end-zone": "エンドゾーン",
+      "between-the-hashes": "ハッシュマークの間",
+      "outside-hashes-left": "ハッシュマークの外側（左）",
+      "outside-hashes-right": "ハッシュマークの外側（右）",
+    },
+    rulesFiba: { "restricted-area": "ノーチャージセミサークル" },
+    target: {
+      sports: {"nhl": "アイスホッケーのゴール", "soccer": "サッカーのゴール", "handball": "ハンドボールのゴール", "waterpolo": "水球のゴール", "lacrosse": "ラクロスのゴール", "fieldhockey": "フィールドホッケーのゴール", "cricket": "ウィケット", "mlb": "ストライクゾーン"},
+      titleGoal: "ゴールマウス（{name}）：シュートがゴールラインを通過した位置",
+      descGoal: "{name}（幅{w}×高さ{h}{unit}）を正面から見た図です。図の左側は、シュートを打つ選手から見た左側です。",
+      titleStrike: "ストライクゾーン：投球がホームプレートを通過した位置",
+      descStrike: "捕手の位置から見たストライクゾーンです。ホームプレートの幅は{w}インチ、ゾーンの高さは地面から{bottom}〜{top}フィートです。打者は図の{side}側に立ちます。",
+      titleStumps: "スタンプ：投球がウィケットに到達した位置",
+      descStumps: "ボウラー側から見たスタンプです。3本のスタンプの幅は9インチ（22.86cm）、高さは28インチ（71.12cm）で、ベイルが載っています。",
+      left: "左",
+      right: "右",
+      units: {"m": "メートル", "ft": "フィート", "in": "インチ", "cm": "センチメートル", "yd": "ヤード"},
+      outcomes: {"goal": "ゴール", "saved": "セーブ", "post": "ポスト", "crossbar": "クロスバー", "wide": "枠外（横）", "high": "枠外（上）", "blocked": "ブロック", "shot": "シュート", "missed": "外れ", "ball": "ボール", "called-strike": "見逃しストライク", "swinging-strike": "空振りストライク", "foul": "ファウル", "in-play": "インプレー", "hit-by-pitch": "死球", "wicket": "ウィケット", "runs": "得点", "dot": "ドットボール"},
+      zones: {"top-left-corner": "左上隅", "top-shelf": "トップシェルフ（ネット上部）", "top-centre": "上段中央", "top-right-corner": "右上隅", "mid-left": "左側", "centre": "中央", "mid-right": "右側", "bottom-left-corner": "左下隅", "five-hole": "ファイブホール（パッドの間）", "bottom-centre": "下段中央", "bottom-right-corner": "右下隅", "wide-left": "枠外（左）", "wide-right": "枠外（右）", "over-the-bar": "バーの上", "zone-1": "ゾーン1", "zone-2": "ゾーン2", "zone-3": "ゾーン3", "zone-4": "ゾーン4", "zone-5": "ゾーン5", "zone-6": "ゾーン6", "zone-7": "ゾーン7", "zone-8": "ゾーン8", "zone-9": "ゾーン9", "zone-11": "ゾーン11（左高め）", "zone-12": "ゾーン12（右高め）", "zone-13": "ゾーン13（左低め）", "zone-14": "ゾーン14（右低め）", "outside": "ゾーンの外", "outside-left": "スタンプの左外", "on-stumps": "スタンプのライン上", "over-stumps": "スタンプの上方", "outside-right": "スタンプの右外"},
+      lengths: {"yorker": "ヨーカー", "full": "フルレングス", "good-length": "グッドレングス", "short-of-a-length": "ショート・オブ・ア・レングス", "short": "ショート"},
+      pitches: "投球",
+      deliveries: "投球",
+      numbers: "投球番号",
     },
   },
 };

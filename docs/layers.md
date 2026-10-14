@@ -116,6 +116,52 @@ How they were checked: a test reads the surface colours of all the sports and th
 
 The layers entry exports what the layers use: `binGrid`, `hexBins`, `reduceBin` (the statistics), `densityGrid`, `scottBandwidth`, `massThresholds`, `contourRings`, `niceTicks` and `resolveRamp`, all pure functions of numbers. The density is a Gaussian kernel summed on a grid of nodes (each mark adds a bell to the nodes within four bandwidths, so the cost is the number of marks times a small window); Scott's rule sets each axis's bandwidth to its standard deviation times n^(-1/6) (Silverman's rule is the same number in two dimensions); the density is not folded back at the edges, so what lies beyond the box is lost; contours are marching squares on a grid padded with a border below every level, so every ring closes, drawn with the even-odd rule so that a hole is empty.
 
+## Linking marks to a table
+
+Add `marks: true` to get a link from every mark to your table. Every mark a layer draws is then written with three attributes: `data-mark-id` (the `id` you gave the datum, else its index), `data-index` (its place in the layer's `data`) and `data-zone` (the zone it lies in, the finest the [rules engine](./zones.md) names: `faceoff-circle`, `paint`, `penalty-area`). A line also has `data-zone-end`, where it ends. A cell of a heat map or a hexbin carries them, and so does each zone of a zone chart (`data-zone` is its id), each band of a contour, and a player, a link, a formation spot and a Voronoi cell of the team layers. A mark's `title` is its `<title>`, the tooltip. So one listener on the drawing is enough to tie a mark to a row of your table, and a row to a mark.
+
+They are off by default, so that a drawing stays compact. `marks: true` in the options of `drawKyogijo` turns them on for every layer; `marks: true` or `marks: false` on one layer decides for that layer alone; a layer is marked without being asked when any of its data has an `id` (the team layers, whose players have always had one, are not), and `pointer: true` (see [pointing](./pointer.md)) turns them on too. The charts pass an `id` on a shot through, so a chart whose shots have ids is marked; `surface: { marks: true }` marks one that has none.
+
+```ts no-run
+// Vanilla: one delegated listener, the row of the table by the mark's id.
+declare const host: HTMLElement;
+declare const table: HTMLElement;
+declare const zoneLabel: HTMLElement;
+const svg = host.querySelector<SVGSVGElement>("svg")!;
+svg.addEventListener("pointerover", (event) => {
+  const mark = (event.target as Element).closest("[data-mark-id]");
+  if (mark === null) return;
+  for (const row of table.querySelectorAll("tr.hot")) row.classList.remove("hot");
+  table.querySelector(`tr[data-id="${CSS.escape(mark.getAttribute("data-mark-id")!)}"]`)?.classList.add("hot");
+  zoneLabel.textContent = mark.getAttribute("data-zone") ?? "";
+});
+table.addEventListener("pointerover", (event) => {
+  const row = (event.target as Element).closest("tr[data-id]");
+  if (row === null) return;
+  svg.querySelector(`[data-mark-id="${CSS.escape(row.getAttribute("data-id")!)}"]`)?.classList.add("hot");
+});
+```
+
+```tsx no-run
+// React: the same listener on the wrapper; the drawing is a string, so it is set as HTML once. The ids make the layer marked.
+import { kyogijoHtml } from "@johnmorrisdotca/kyogijo-stadiums/react";
+
+function ShotChart({ shots, onPick }: { shots: { id: string; x: number; y: number }[]; onPick: (id: string, zone: string | null) => void }) {
+  const html = kyogijoHtml({ sport: "nhl", layers: [{ kind: "points", from: "nhl-api", data: shots }] });
+  return (
+    <div
+      dangerouslySetInnerHTML={{ __html: html }}
+      onPointerOver={(event) => {
+        const mark = (event.target as Element).closest("[data-mark-id]");
+        if (mark !== null) onPick(mark.getAttribute("data-mark-id")!, mark.getAttribute("data-zone"));
+      }}
+    />
+  );
+}
+```
+
+The attributes cost about 55 bytes a mark: 1,000 marked points add under 130 kB (70 without). A heat map is drawn with a path for each cell when it is marked, about 50 to 90 bytes more each (a 50 by 30 grid with every cell filled adds under 150 kB; 30 kB when it is not marked).
+
 ## Colours
 
 Marks use custom properties, set on the drawing's `svg` with a light and a dark set: `--ky-layer` (the plain colour), `--ky-layer-home` and `--ky-layer-away` (marks with a `team`; in a score drawing the teams' own colours), `--ky-layer-edge`, `--ky-layer-hollow`, `--ky-layer-ink` and `--ky-layer-halo`. `colors` in the options sets them from code (`layer`, `layerHome`, `layerAway`, `layerEdge`, `layerHollow`, `layerInk`, `layerHalo`). With `style: "none"` the page supplies the rules: put `KYOGIJO_STYLE` in the page once.
@@ -126,9 +172,9 @@ Each layer is a group with a `<title>` and a `<desc>`. Marks may carry a `title`
 
 ## Size and speed
 
-1,000 points add about 60 kB to a drawing, and 10,000 points are drawn in about 20 ms on a laptop; tests hold the first under 70 kB and the second under 250 ms. A line with a comet costs about 400 bytes, with the gradient of its own.
+1,000 points add about 60 kB to a drawing, and 10,000 points are drawn in about 20 ms on a laptop; tests hold the first under 70 kB and the second under 250 ms. With `marks: true` the first is under 130 kB. A line with a comet costs about 400 bytes, with the gradient of its own.
 
-A heat map on a grid of 50 by 30 adds under 30 kB to a drawing on any of the thirty-three sports (13 to 23 kB with the legend off, about 5 ms to draw), and under 100 kB with every cell labelled; a test holds both. A density of 10,000 marks takes about 25 ms on a laptop (a grid of 100 by 60 nodes; 40 ms at 200 by 100) and adds about 8 kB; the test holds it under 500 ms. Hexagons take 15 ms for 10,000 marks.
+A heat map on a grid of 50 by 30 adds under 30 kB to a drawing on any of the thirty-three sports (13 to 23 kB with the legend off, about 5 ms to draw), and under 100 kB with every cell labelled; a test holds both. With `marks: true` and a path for each cell it adds under 150 kB when every cell is filled. A density of 10,000 marks takes about 25 ms on a laptop (a grid of 100 by 60 nodes; 40 ms at 200 by 100) and adds about 8 kB; the test holds it under 500 ms. Hexagons take 15 ms for 10,000 marks.
 
 ## Ideas credited
 

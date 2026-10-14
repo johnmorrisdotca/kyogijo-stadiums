@@ -155,6 +155,17 @@ kyogijo-field::part(plate) { filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .25)); 
 .conv-result output { font-family: var(--mono); }
 .provider figcaption strong { font-weight: 700; }
 
+/* Point at the field: the drawing, a marker where it was pointed at, and the place in every provider's numbers. */
+.pointer { display: grid; gap: 8px; max-width: 46rem; }
+.point-wrap { position: relative; }
+.point-stage { touch-action: none; cursor: crosshair; border-radius: 8px; outline-offset: 3px; }
+.point-stage svg { display: block; }
+.point-marker { position: absolute; width: 18px; height: 18px; margin: -9px 0 0 -9px; border: 2px solid #fff; border-radius: 50%; background: rgba(217, 72, 15, .85); box-shadow: 0 0 0 2px rgba(0, 0, 0, .6); pointer-events: none; }
+.point-zone { margin: 0; font-weight: 700; min-height: 1.4em; }
+.point-table { border-collapse: collapse; font-size: .85rem; width: 100%; }
+.point-table td { padding: 2px 8px 2px 0; border-bottom: 1px solid color-mix(in srgb, currentColor 15%, transparent); }
+.point-table td:nth-child(n+2) { font-family: var(--mono); text-align: right; white-space: nowrap; }
+
 .data-table { margin-top: 8px; font-size: 0.85rem; }
 .data-table summary { cursor: pointer; padding: 6px 0; }
 .data-table-body { max-height: 260px; overflow: auto; }

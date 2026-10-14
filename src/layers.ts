@@ -10,7 +10,7 @@ import { FRAMES } from "./frames.ts";
 import { KYOGIJO_HEAT_STYLE, KYOGIJO_TEAM_STYLE } from "./style.ts";
 import { drawTeam, isTeamLayer, teamTables } from "./team.layers.ts";
 import { drawHeat, drawLegend, heatTable, type LegendInfo } from "./heat.ts";
-import { clamp01, envFor, isNum, newMade, opacityOf, own, place, toArray, unitOfLayer, type Env, type Made } from "./layers.env.ts";
+import { clamp01, envFor, isNum, markAttrs, newMade, opacityOf, own, place, toArray, unitOfLayer, type Env, type Made } from "./layers.env.ts";
 import { safeClass } from "./common.ts";
 import { esc, num } from "./format.ts";
 import {
@@ -172,7 +172,7 @@ function drawPoints(layer: { data: readonly PointDatum[]; style?: PointStyle } &
     const w = (isNum(d.size) && d.size > 0 ? d.size * k : sizeFn === undefined ? fixed : Math.max(0.05, sizeFn(d.value) * k)) * (outcome.scale ?? 1);
     const { cls, css } = colourAttrs(colourFor(style.fill, d, NEUTRAL, domain), layerExpr, NEUTRAL);
     const classes = `${cls}${outcome.hollow === true ? `${cls === "" ? "" : " "}ky-hol` : ""}`;
-    const open = attrs(classes, css, opacityOf(d.opacity));
+    const open = attrs(classes, css, opacityOf(d.opacity)) + markAttrs(env, d.id, i, [x, y]);
     const role = d.team === "home" ? "home" : d.team === "away" ? "away" : undefined;
     const logo = shape === "logo" ? safeLogo(d.logo) ?? (role === undefined ? undefined : safeLogo(style.logos?.[role]) ?? env.logos[role]) : undefined;
     if (logo !== undefined) {
@@ -282,12 +282,14 @@ function drawLines(layer: { kind: "lines" | "arrows"; data: readonly LineDatum[]
     const headEl = head === "" ? "" : `<path class="${headKind === "open" ? "ky-ln" : "ky-ah"}" d="${head}"${headKind === "open" ? ` stroke-width="${num(w)}"` : ""}/>`;
     const title = typeof d.title === "string" && d.title !== "" ? `<title>${esc(d.title)}</title>` : "";
     const opacity = opacityOf(d.opacity);
+    // Where it starts is its zone; where it ends is `data-zone-end`.
+    const marks = env.marks ? markAttrs(env, d.id, i, first) + (env.zone(last[0], last[1]) === undefined ? "" : ` data-zone-end="${esc(env.zone(last[0], last[1]) as string)}"`) : "";
     // A line with a head is a group (its colour and opacity on the group); a line alone carries them itself.
     const wrap = headEl !== "";
     const pathClass = [shaftClass, wrap ? "" : cls].filter((c) => c !== "").join(" ");
     const pathStyle = [wrap ? "" : css, gradient].filter((c) => c !== "").join(";");
-    const pathOpen = `${attrs(pathClass, pathStyle, wrap ? undefined : opacity)} d="${shaft}"${tapered === undefined ? strokeWidth + dashes : ""}`;
-    if (wrap) out.push(`<g${attrs(cls, css, opacity)}>${title}<path${pathOpen}/>${headEl}</g>`);
+    const pathOpen = `${attrs(pathClass, pathStyle, wrap ? undefined : opacity)}${wrap ? "" : marks} d="${shaft}"${tapered === undefined ? strokeWidth + dashes : ""}`;
+    if (wrap) out.push(`<g${attrs(cls, css, opacity)}${marks}>${title}<path${pathOpen}/>${headEl}</g>`);
     else out.push(title === "" ? `<path${pathOpen}/>` : `<path${pathOpen}>${title}</path>`);
   });
   made.marks = out.join("");
@@ -330,12 +332,19 @@ function drawText(layer: { data: readonly TextDatum[]; style?: TextStyle } & Lay
     // The letters are turned back by the quarter the surface was turned, so that they read upright, and by the caller's own turn on top.
     const angle = env.back + (isNum(d.rotate) ? d.rotate : 0);
     const classes = ["ky-lt", style.halo === false ? "ky-nh" : "", cls].filter((c) => c !== "").join(" ");
-    const open = `${attrs(classes, `${s === size ? "" : `font-size:${num(s)}px`}${s !== size && css !== "" ? ";" : ""}${css}`, opacityOf(d.opacity))}${anchor === base ? "" : ` text-anchor="${anchor}"`} x="${num(x)}" y="${num(y + s * 0.36)}"${angle === 0 ? "" : ` transform="rotate(${num(angle)} ${num(x)} ${num(y)})"`}`;
+    const open = `${attrs(classes, `${s === size ? "" : `font-size:${num(s)}px`}${s !== size && css !== "" ? ";" : ""}${css}`, opacityOf(d.opacity))}${markAttrs(env, d.id, i, [x, y])}${anchor === base ? "" : ` text-anchor="${anchor}"`} x="${num(x)}" y="${num(y + s * 0.36)}"${angle === 0 ? "" : ` transform="rotate(${num(angle)} ${num(x)} ${num(y)})"`}`;
     out.push(`<text${open}>${esc(String(d.text))}${typeof d.title === "string" && d.title !== "" ? `<title>${esc(d.title)}</title>` : ""}</text>`);
   });
   made.marks = out.join("");
   return made;
 }
+
+/**
+ * True when a datum of the layer has an `id`: the caller means to find its marks again. Not for the team layers, whose data have always had an `id` of their own (the player's, for a label and a table),
+ * so that a drawing made before the marks had ids is the same text now.
+ */
+const hasIds = (layer: Layer): boolean =>
+  !isTeamLayer(layer) && Array.isArray((layer as { data?: unknown }).data) && ((layer as { data: readonly unknown[] }).data).some((d) => typeof d === "object" && d !== null && (d as { id?: unknown }).id !== undefined);
 
 const plural = (words: Words, kind: Layer["kind"], n: number): string => words[`${kind === "lines" ? "line" : kind === "arrows" ? "arrow" : kind === "text" ? "text" : "point"}${n === 1 ? "One" : "Many"}` as "pointOne"];
 
@@ -369,14 +378,15 @@ function summarise(layer: Layer, made: Made, words: Words, stop: string, gap: st
 }
 
 /** The layers of a drawing as markup, and a sentence for each. `turned` says whether the surface group is turned a quarter. */
-export function renderLayers(o: SurfaceOptions | ScoreOptions, layers: readonly Layer[] | undefined, turned?: boolean, range?: Box, upright?: number): RenderedLayers {
-  return withEmblems(o.emblems, () => renderedLayers(o, layers, turned, range, upright));
+export function renderLayers(o: SurfaceOptions | ScoreOptions, layers: readonly Layer[] | undefined, turned?: boolean, range?: Box, upright?: number, zone?: Env["zone"]): RenderedLayers {
+  return withEmblems(o.emblems, () => renderedLayers(o, layers, turned, range, upright, zone));
 }
 
-function renderedLayers(o: SurfaceOptions | ScoreOptions, layers: readonly Layer[] | undefined, turned?: boolean, range?: Box, upright?: number): RenderedLayers {
+function renderedLayers(o: SurfaceOptions | ScoreOptions, layers: readonly Layer[] | undefined, turned?: boolean, range?: Box, upright?: number, zone?: Env["zone"]): RenderedLayers {
   if (layers === undefined || layers.length === 0) return { svg: "", summaries: [] };
   if (!Array.isArray(layers)) throw new TypeError("layers is a list of layers");
-  const env = envFor(o, turned, range, upright);
+  const env = envFor(o, turned, range, upright, zone);
+  const markedBy = env.marks;
   const clipId = `${env.id}-lc`;
   const { stop, gap } = env.words.said;
   const said: string[] = [];
@@ -388,6 +398,8 @@ function renderedLayers(o: SurfaceOptions | ScoreOptions, layers: readonly Layer
   const slots: ((() => void) | undefined)[] = [];
   layers.forEach((layer, index) => {
     if (typeof layer !== "object" || layer === null) throw new TypeError(`layer ${index} is not a layer`);
+    // The marks are written with their ids, indexes and zones when the layer or the drawing asks, or when the caller gave a datum an id of its own.
+    env.marks = typeof layer.marks === "boolean" ? layer.marks : markedBy || hasIds(layer);
     const name = safeClass(layer.id).replace(/ /g, "-");
     const gid = name === "" ? `${env.id}-l${index}` : `${env.id}-${name}`;
     const finish = (made: Made): void => {

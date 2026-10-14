@@ -4,6 +4,7 @@
 import { COURT_THEMES, GROUNDS, GROUND_IDS, KYOGIJO_STYLE, LEAGUES, PARKS, PARK_IDS, SOCCER_PITCH_IDS, SOCCER_PROVIDERS, SOCCER_PROVIDER_IDS, VERSION, drawKyogijo, fenceFor, rescale, layerTable, rulesFor, seasonLabel, leagueAt, leagueSeason } from "./dist/index.js";
 import { emblemName, renderEmblem } from "./emblems.js";
 import { mountKyogijo } from "./dist/mount-entry.js";
+import { clientPointToFrames, fieldPointToClient } from "./dist/pointer-entry.js";
 import { KYOGIJO_TURN_STYLE, mountKyogijoTurn } from "./dist/turn-entry.js";
 import "./dist/element-define.js";
 import { initAtlas } from "./atlas.js";
@@ -792,6 +793,78 @@ $("conv-spot").addEventListener("click", () => {
   convert();
 });
 
+// ----- Point at the field: a click or a drag on a drawing (made with `pointer: true`) is written in every provider's numbers of the sport, with the zone the rules put it in.
+const POINT_SPORTS = ["soccer", "nhl", "nba", "mlb", "nfl"];
+const point = { sport: params.get("pointsport") && POINT_SPORTS.includes(params.get("pointsport")) ? params.get("pointsport") : "nhl", at: null, down: false };
+const pointSvg = () => $("point-stage").querySelector("svg");
+const round3 = (n) => Math.round(n * 1000) / 1000;
+function pointMarker() {
+  const marker = $("point-marker");
+  const svg = pointSvg();
+  const at = point.at === null || svg === null ? null : fieldPointToClient(svg, [point.at.x, point.at.y]);
+  if (at === null) { marker.hidden = true; return; }
+  const box = $("point-stage").getBoundingClientRect();
+  marker.style.left = `${at.x - box.left}px`;
+  marker.style.top = `${at.y - box.top}px`;
+  marker.hidden = false;
+}
+function pointRead(x, y) {
+  const svg = pointSvg();
+  const out = svg === null ? null : clientPointToFrames(svg, x, y, { language: language.lang });
+  if (out === null) return;
+  point.at = { x: out.surface.x, y: out.surface.y };
+  const rows = [[say("pointSurface"), `${round3(out.surface.x)}, ${round3(out.surface.y)}`], ...out.points.map((p) => [`${p.title} (${p.unit})`, `${round3(p.x)}, ${round3(p.y)}`])];
+  $("point-table").tBodies[0].replaceChildren(...rows.map(([name, value]) => {
+    const tr = document.createElement("tr");
+    for (const text of [name, value]) { const td = document.createElement("td"); td.textContent = text; tr.append(td); }
+    return tr;
+  }));
+  const names = out.names;
+  $("point-zone").textContent = !out.inBounds && out.zone === undefined ? say("pointOff") : [out.zone === undefined ? "" : `${say("pointZone")}: ${names[out.zone]}`, out.subzone === undefined ? "" : `${say("pointArea")}: ${names[out.subzone]}`].filter(Boolean).join(" · ");
+  $("point-zone").dataset.zone = out.zone ?? "";
+  $("point-zone").dataset.subzone = out.subzone ?? "";
+  $("point-zone").dataset.inBounds = String(out.inBounds);
+  pointMarker();
+}
+function drawPoint() {
+  const stage = $("point-stage");
+  stage.innerHTML = drawKyogijo({ sport: point.sport, pointer: true, style: "none", orientation: "landscape", language: language.lang, margin: 4, id: "point" });
+  stage.dataset.sport = point.sport;
+  if (point.at === null) {
+    $("point-zone").textContent = say("pointNone");
+    $("point-table").tBodies[0].replaceChildren();
+    $("point-marker").hidden = true;
+  } else {
+    const svg = pointSvg();
+    const client = svg === null ? null : fieldPointToClient(svg, [point.at.x, point.at.y]);
+    if (client !== null) pointRead(client.x, client.y);
+  }
+}
+function fillPointSports() {
+  const select = $("point-sport");
+  select.replaceChildren(...POINT_SPORTS.map((id) => opt(id, say(`sport_${id}`))));
+  select.value = point.sport;
+}
+$("point-sport").addEventListener("change", (event) => { point.sport = event.target.value; point.at = null; drawPoint(); });
+$("point-stage").addEventListener("pointerdown", (event) => { point.down = true; $("point-stage").setPointerCapture?.(event.pointerId); pointRead(event.clientX, event.clientY); });
+$("point-stage").addEventListener("pointermove", (event) => { if (point.down) pointRead(event.clientX, event.clientY); });
+for (const name of ["pointerup", "pointercancel"]) $("point-stage").addEventListener(name, () => { point.down = false; });
+$("point-stage").addEventListener("keydown", (event) => {
+  const step = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[event.key];
+  if (step === undefined) return;
+  event.preventDefault();
+  const svg = pointSvg();
+  if (svg === null) return;
+  const from = point.at ?? { x: 0, y: 0 };
+  const start = point.at === null ? svg.querySelector(".ky-surface-group").getAttribute("data-box").split(" ").map(Number) : null;
+  const here = start === null ? from : { x: start[0] + start[2] / 2, y: start[1] + start[3] / 2 };
+  const k = event.shiftKey ? 10 : 1;
+  const next = { x: here.x + step[0] * k, y: here.y + step[1] * k };
+  const client = fieldPointToClient(svg, [next.x, next.y]);
+  if (client !== null) pointRead(client.x, client.y);
+});
+window.addEventListener("resize", pointMarker);
+
 // ----- The Every sport, The soccer pitch, Ballparks and Soccer grounds sections (demo/place-grid.js: short, with filters) and the atlas's map of every park and ground. Their places open in the playground above.
 function tryPlace(place, surface) {
   // A park's fence and a ground's pitch, or the surface of another sport that a club played in the place (a CFL field, an NFL field, a rugby league field).
@@ -822,6 +895,8 @@ function onLanguage() {
   fillLeagues();
   fillPitches();
   drawProviders();
+  fillPointSports();
+  drawPoint();
   if (!state.touched.has("away.name") && !state.touched.has("home.name")) {
     const family = FAMILIES[state.sport];
     for (const role of ["away", "home"]) state[role].name = language.lang === "ja" ? TEAMS_JA[family][role] : TEAMS[family][role].name;
@@ -844,6 +919,8 @@ fillGrounds();
 refreshSegs();
 buildExamples();
 drawProviders();
+fillPointSports();
+drawPoint();
 drawLive();
 drawReplays();
 render();

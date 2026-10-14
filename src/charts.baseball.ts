@@ -78,7 +78,7 @@ export function mlbSprayChart(balls: readonly Ball[], options: MlbSprayOptions =
       const at = zoneToPoint(b.zone);
       if (at !== undefined) [x, y] = toFrame === undefined ? at : toFrame([at])[0];
     }
-    return clean({ x: x ?? null, y: y ?? null, outcome: ballType(b.type), value: b.value, team: b.team, title: b.title });
+    return clean({ id: b.id, x: x ?? null, y: y ?? null, outcome: ballType(b.type), value: b.value, team: b.team, title: b.title });
   });
   const { counts, placed: count, skipped } = countOutcomes(rows);
   // The fence of the park in that season, and the balls that came down beyond it: each ball's distance and its angle from dead centre, from the surface's own feet.
