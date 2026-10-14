@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { nation } from "../demo/road-data.js";
+import { nation } from "../demo/nations.js";
 import { SPORTS, drawKyogijo } from "./draw.ts";
 import { KYOGIJO_STYLE } from "./style.ts";
 import { KYOGIJO_MARK_STYLE, roundMarkup } from "./mark.ts";

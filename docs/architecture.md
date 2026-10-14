@@ -161,11 +161,6 @@ src/
 ├── charts.skating.ts   the pairs, the starting positions, the results, the replay and the elements of a programme
 ├── charts.network.ts   the pass network chart
 ├── charts.types.ts     the charts' types
-├── road.ts             roadToFinal: the two finalists' road to the final, as round marks of both teams with the score between them
-├── road.model.ts       the road chart's data read and checked: scores, winners, rounds in order, the words, the summary and the table
-├── road.draw.ts        the road chart drawn: the card, square, wide and phone arrangements
-├── road.style.ts       the road chart's rules: the ground, the ink, the panels and the road, light and dark
-├── road.types.ts       the road chart's types
 ├── charts-entry.ts     the charts' entry
 ├── replay.ts           a replay's frame and its pure functions: interpolate, trails, possession, events, drawFrame
 ├── replay.control.ts   the replay's clock as a state machine: play, seek, step, speed, loop, reduced motion

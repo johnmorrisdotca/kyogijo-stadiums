@@ -7,6 +7,11 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Removed
+
+- **`roadToFinal` and the road-to-the-final chart moved to [`@johnmorrisdotca/taisen-brackets`](https://www.npmjs.com/package/@johnmorrisdotca/taisen-brackets)** (0.4.0 and later; its `/road` entry), where it is built on the bracket package and shares its look. There is no shim here: import it from taisen. Gone from `@johnmorrisdotca/kyogijo-stadiums/charts`: `roadToFinal`, `ROAD_SIZES`, `KYOGIJO_ROAD_STYLE` (and from `KYOGIJO_STYLE`) and the types `RoadChart`, `RoadDecided`, `RoadFinal`, `RoadFinalist`, `RoadGroupMatch`, `RoadMatch`, `RoadOptions`, `RoadRecord`, `RoadScore`, `RoadSize`, `RoadSizeInfo` and `RoadTotals`. The `road` words are gone from `KYOGIJO_STRINGS` (a custom set of words no longer has to give them), and the docs' section, the demo's "Road to the final" section, its gallery items and its tests went with it.
+- **The round mark stays.** `Team.mark`, `markShape` and `KYOGIJO_MARK_STYLE` are for surfaces and are unchanged. The demo's section for them is now "Round marks" (a pitch wide and tall, and a badge), with its own sixteen made-up nations in `demo/nations.js`, the same flags as before.
+
 ## [0.6.2] - 2026-10-14
 
 ### Fixed

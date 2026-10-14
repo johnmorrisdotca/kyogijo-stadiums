@@ -1,4 +1,4 @@
-// The ready-made charts: shot charts, shot maps, spray charts and pass charts built on the data layers, and the road to a final.
+// The ready-made charts: shot charts, shot maps, spray charts and pass charts built on the data layers.
 export { nbaShotChart, nflPassChart, nhlShotMap } from "./charts.ts";
 export { mlbSprayChart } from "./charts.baseball.ts";
 export { soccerGoalMouth, soccerShotMap } from "./charts.soccer.ts";
@@ -11,6 +11,3 @@ export type { SplitRow, SplitsOptions, SplitsTotals, SwimmerSplits } from "./cha
 export { passNetwork } from "./charts.network.ts";
 export type { PassNetworkOptions, PassNetworkPass, PassNetworkTotals } from "./charts.network.ts";
 export type { Ball, Chart, ChartOptions, CurlingHeatOptions, CurlingHeatTotals, CurlingOptions, CurlingStone, CurlingStoneResult, CurlingTotals, GoalMouth, GoalMouthOptions, KeyItem, MlbSprayOptions, MlbTotals, NbaShot, NbaShotOptions, NbaTotals, NflPass, NflPassOptions, NflTotals, NhlShot, NhlShotOptions, NhlTotals, SoccerChart, SoccerShot, SoccerShotOptions, SoccerTotals, ZoneTotal } from "./charts.types.ts";
-export { ROAD_SIZES, roadToFinal } from "./road.ts";
-export { KYOGIJO_ROAD_STYLE } from "./road.style.ts";
-export type { RoadChart, RoadDecided, RoadFinal, RoadFinalist, RoadGroupMatch, RoadMatch, RoadOptions, RoadRecord, RoadScore, RoadSize, RoadSizeInfo, RoadTotals } from "./road.types.ts";

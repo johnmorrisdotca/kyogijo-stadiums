@@ -8,7 +8,6 @@ import { drawKyogijo } from "./draw.ts";
 import { el, esc, hash, num } from "./format.ts";
 import { KYOGIJO_GRID_STYLE } from "./layout.style.ts";
 import { KYOGIJO_MARK_STYLE } from "./mark.ts";
-import { KYOGIJO_ROAD_STYLE } from "./road.style.ts";
 import { isPolygon, shapePath } from "./layers.marks.ts";
 import type { MarkShape } from "./layers.types.ts";
 import { elements, parseSvg, textOf, writeSvg, type SvgNode } from "./scene.xml.ts";
@@ -211,7 +210,7 @@ function renamed(root: SvgNode, prefix: string): { styles: string[] } {
 }
 
 /** The rules the package writes into a drawing, in the order it writes them: peeled off the front of a style so that each is said once however many drawings carry it. */
-const KNOWN = [KYOGIJO_BASE_STYLE, KYOGIJO_CURLING_STYLE, KYOGIJO_HEAT_STYLE, KYOGIJO_TEAM_STYLE, KYOGIJO_NOTE_STYLE, KYOGIJO_BACKGROUND_STYLE, KYOGIJO_MARK_STYLE, KYOGIJO_ROAD_STYLE];
+const KNOWN = [KYOGIJO_BASE_STYLE, KYOGIJO_CURLING_STYLE, KYOGIJO_HEAT_STYLE, KYOGIJO_TEAM_STYLE, KYOGIJO_NOTE_STYLE, KYOGIJO_BACKGROUND_STYLE, KYOGIJO_MARK_STYLE];
 
 /** A drawing's stylesheet as the pieces it is made of. */
 function pieces(css: string): string[] {

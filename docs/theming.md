@@ -125,6 +125,6 @@ Each property is listed with its light and dark value.
 | `--ky-layer`, `--ky-layer-home`, `--ky-layer-away`, `--ky-layer-edge`, `--ky-layer-hollow`, `--ky-layer-ink`, `--ky-layer-halo` | a data layer's marks (see [data layers](./layers.md)) | light set | lightened |
 | `--ky-font` | the face of every word | the system's, with Hiragino and Noto Sans JP | the same |
 
-## Marks and the road chart
+## Marks
 
-A round team mark (`mark: "round"`, and every mark of [the road to the final](./charts.md#the-road-to-the-final)) has three properties, each with a fallback so that a page need not set any: `--ky-mark-ring` (the ring inside the edge, `#fff`; `#e9ece6` in the road chart's dark set), `--ky-mark-edge` (the hairline outside it, `rgba(0,0,0,.32)`) and `--ky-mark-plain` (the disc under a crest shown whole, `#f4f5f6`). The road chart adds its own, set on `.kyogijo-road`: `--ky-road-bg` (the ground, `#f6f4ee` light and `#131716` dark), `--ky-road-ink`, `--ky-road-muted`, `--ky-road-panel` (the pill behind a round's name), `--ky-road-spine` (the dotted road), `--ky-road-left` and `--ky-road-right` (the colours of a finalist with none of its own) and `--ky-road-plain` (an opponent with none). `KYOGIJO_MARK_STYLE` and `KYOGIJO_ROAD_STYLE` have the rules; a drawing writes in the ones it uses, and `KYOGIJO_STYLE` has them all.
+A round team mark (`mark: "round"`) has three properties, each with a fallback so that a page need not set any: `--ky-mark-ring` (the ring inside the edge, `#fff`), `--ky-mark-edge` (the hairline outside it, `rgba(0,0,0,.32)`) and `--ky-mark-plain` (the disc under a crest shown whole, `#f4f5f6`). `KYOGIJO_MARK_STYLE` has the rules; a drawing writes in the ones it uses, and `KYOGIJO_STYLE` has them all.

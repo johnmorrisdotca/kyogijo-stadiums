@@ -1,6 +1,5 @@
-// Made-up data for the demo's "Road to the final" section, and for the tests and the docs of `roadToFinal` and of the round mark: sixteen nations that do not exist, each with a
-// simple geometric flag drawn here in code (bands, a diamond, a disc, a chevron: no real national flag, emblem or colour scheme is copied), and two sets of results. The same
-// call always gives the same data.
+// Made-up data for the demo, the tests and the docs of the round mark: sixteen nations that do not exist, each with a simple geometric flag drawn here in code (bands, a diamond,
+// a disc, a chevron: no real national flag, emblem or colour scheme is copied). The same call always gives the same data.
 
 const svg = (inner) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 20">${inner}</svg>`;
 const bands = (colours, across) => colours.map((c, i) => (across ? `<rect y="${(i * 20) / colours.length}" width="30" height="${20 / colours.length + 0.1}" fill="${c}"/>` : `<rect x="${(i * 30) / colours.length}" width="${30 / colours.length + 0.1}" height="20" fill="${c}"/>`)).join("");
@@ -41,71 +40,3 @@ export function nation(key, language = "en", extra = {}) {
   const n = NATIONS[key];
   return { name: language === "ja" ? n.ja : n.name, abbr: n.abbr, color: n.color, logo: n.flag, ...extra };
 }
-
-/** The two finalists of a made-up tournament with the matches on their way (a 48-team format: the group stage and four knockout rounds). */
-export function roadFinalists(language = "en") {
-  const t = (key) => nation(key, language);
-  const aurelia = {
-    ...nation("aurelia", language),
-    group: [
-      { opponent: t("isenmark"), score: [2, 0] },
-      { opponent: t("kestrel"), score: [1, 1] },
-      { opponent: t("lumeria"), score: [3, 0] },
-    ],
-    path: [
-      { round: "round-of-32", opponent: t("pellasia"), score: [3, 0] },
-      { round: "round-of-16", opponent: t("fenlund"), score: [2, 1] },
-      { round: "quarter-final", opponent: t("garrovia"), score: [1, 1], decidedBy: "pens", pens: [5, 4] },
-      { round: "semi-final", opponent: t("norvane"), score: [2, 1], decidedBy: "aet" },
-    ],
-  };
-  const calvara = {
-    ...nation("calvara", language),
-    group: [
-      { opponent: t("estria"), score: [4, 1] },
-      { opponent: t("rovana"), score: [0, 1] },
-      { opponent: t("borea"), score: [2, 2] },
-    ],
-    path: [
-      { round: "round-of-32", opponent: t("ostvale"), score: [2, 0] },
-      { round: "round-of-16", opponent: t("dornmark"), score: [1, 0] },
-      { round: "quarter-final", opponent: t("helmara"), score: [2, 2], decidedBy: "pens", pens: [3, 2] },
-      { round: "semi-final", opponent: t("valdor"), score: [3, 1] },
-    ],
-  };
-  return [aurelia, calvara];
-}
-
-/** The final of that tournament, level after extra time and won on penalties. */
-export const ROAD_FINAL = Object.freeze({ score: [2, 2], decidedBy: "pens", pens: [4, 3] });
-
-/** A play-off series instead of a knockout: a best-of-seven in each of three rounds, written as the games won (`4-2`) with a note under it. Two made-up hockey clubs, with emblems. */
-export function roadSeries(emblems) {
-  const gulls = { name: "Harbour City Gulls", abbr: "HCG", color: "#1f5fa8", logo: emblems.gull };
-  const owls = { name: "Northern Owls", abbr: "NOW", color: "#3a2d6b", logo: emblems.owl };
-  const club = (name, abbr, color, key) => ({ name, abbr, color, ...(emblems[key] === undefined ? {} : { logo: emblems[key] }) });
-  return [
-    {
-      ...gulls,
-      path: [
-        { round: "first-round", opponent: club("Metro Bolts", "MTB", "#c2410c", "bolt"), score: "4-1", note: "Game 5" },
-        { round: "second-round", opponent: club("Summit Peaks", "SMT", "#14233f", "peak"), score: "4-3", note: "Game 7" },
-        { round: "conference-final", opponent: club("Valley Stars", "VAL", "#c8102e", "star"), score: "4-2", note: "Game 6" },
-      ],
-    },
-    {
-      ...owls,
-      path: [
-        { round: "first-round", opponent: club("Coastal Pines", "CPN", "#1f6b3c", "pine"), score: "4-0", note: "Game 4" },
-        { round: "second-round", opponent: club("Lakeshore Anchors", "LSA", "#0f7a7a", "anchor"), score: "4-2", note: "Game 6" },
-        { round: "conference-final", opponent: club("Prairie Ridge Bison", "PRB", "#b5452c", "bison"), score: "4-3", note: "Game 7" },
-      ],
-    },
-  ];
-}
-
-/** The names of those rounds. */
-export const SERIES_LABELS = Object.freeze({ "first-round": "First round", "second-round": "Second round", "conference-final": "Conference final", final: "Cup final" });
-
-/** The names of those rounds in Japanese. */
-export const SERIES_LABELS_JA = Object.freeze({ "first-round": "1回戦", "second-round": "2回戦", "conference-final": "カンファレンス決勝", final: "カップ決勝" });

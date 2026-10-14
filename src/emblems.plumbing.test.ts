@@ -5,7 +5,6 @@ import { drawKyogijo } from "./draw.ts";
 import { useEmblems, type EmblemDrawOptions, type EmblemRenderer } from "./emblems-source.ts";
 import { drawLayers } from "./layers.ts";
 import { emblemDocument, safeLogo } from "./logo.ts";
-import { roadToFinal } from "./road.ts";
 
 const NAMES: Record<string, string> = {
   "trophy:cup": "Cup",
@@ -178,18 +177,9 @@ describe("everywhere a logo is taken", () => {
     expect(svg).toContain("data:image/svg+xml");
   });
 
-  it("a layer's mark and the road to the final", () => {
+  it("a layer's mark", () => {
     useEmblems(fake);
     const layers = drawLayers({ sport: "nhl" }, [{ kind: "points", id: "p", name: "Cups", data: [{ x: 0, y: 0, shape: "logo", logo: "trophy:cup" }] }]);
     expect(layers).toContain(encodeURIComponent("<title>Cup</title>"));
-    const road = roadToFinal(
-      [
-        { name: "Northern Owls", abbr: "NOW", logo: "crest:shield", color: "#1d4f91", path: [{ round: "semi-final", opponent: { name: "Summit Peaks", abbr: "SMT" }, score: [3, 1] }] },
-        { name: "Harbour City Gulls", abbr: "HCG", logo: "crest:roundel", color: "#c8102e", path: [{ round: "semi-final", opponent: { name: "Metro Bolts", abbr: "MTB" }, score: [2, 1] }] },
-      ],
-      { emblems: fake },
-    ).draw();
-    expect(road).toContain(encodeURIComponent(">NOW<"));
-    expect(road).toContain(encodeURIComponent(">HCG<"));
   });
 });

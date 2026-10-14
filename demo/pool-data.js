@@ -1,6 +1,6 @@
-// Made-up data for the demo's "Pools" section, and for the tests and the docs of the aquatic sports: a final of eight swimmers who do not exist, from the nations that do not exist of road-data.js with the
+// Made-up data for the demo's "Pools" section, and for the tests and the docs of the aquatic sports: a final of eight swimmers who do not exist, from the nations that do not exist of nations.js with the
 // flags drawn there in code, with their splits, reaction times and places. No real swimmer, race, time or national flag is behind it. The same call always gives the same data.
-import { NATIONS } from "./road-data.js";
+import { NATIONS } from "./nations.js";
 
 /** The eight lanes of a 200 m freestyle final: lane, nation, name, name in Japanese, the reaction time and the cumulative time at 50, 100, 150 and 200 m. */
 const FINAL = [

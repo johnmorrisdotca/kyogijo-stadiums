@@ -31,7 +31,7 @@ An id goes wherever a picture is taken, through the same safe path as an address
 
 - a team's `logo` in a score, a compact card and a badge, and the round marks (`markShape: "round"`);
 - the [pageant](./pageant.md)'s `emblem` (the centre circle, centre ice, centre court or the mound), and the pictures of a `carpet` or a `stage`;
-- a [layer](./layers.md)'s `logo`, the road to the final's `logo`, a swimmer's flag and a court's `centreLogo`;
+- a [layer](./layers.md)'s `logo`, a swimmer's flag and a court's `centreLogo`;
 - the custom element's `home-logo` and `away-logo` attributes.
 
 ```ts
@@ -57,7 +57,7 @@ An emblem is drawn as an image, so it cannot run a script, and its ink follows t
 
 ### For one drawing
 
-`emblems: render` in the options of a drawing, of a layer drawing or of a road chart plugs a renderer in for that drawing alone, over the page's own. It is the way for a library that draws with Kyogijo and must not change the page's setting.
+`emblems: render` in the options of a drawing or of a layer drawing plugs a renderer in for that drawing alone, over the page's own. It is the way for a library that draws with Kyogijo and must not change the page's setting.
 
 ```ts
 import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";

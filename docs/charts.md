@@ -1,6 +1,6 @@
 # Ready-made charts
 
-`@johnmorrisdotca/kyogijo-stadiums/charts` has one function for each of seven charts (`splitsChart` for a swimming race among them), `passNetwork` for an eighth, which [Team shape](./team-shape.md#pass-networks) describes, `curlingHeat` for an eighth, which [Curling](./curling.md#where-the-stones-of-many-ends-came-to-rest) describes with the statistics beside `curlingScore`, and `roadToFinal` for a ninth that is not drawn on a surface at all: [the road to the final](#the-road-to-the-final). Each takes plain data and returns the [data layers](./layers.md) and the drawing options to lay them on, so one call gives a good chart and every layer can still be changed.
+`@johnmorrisdotca/kyogijo-stadiums/charts` has one function for each of seven charts (`splitsChart` for a swimming race among them), `passNetwork` for an eighth, which [Team shape](./team-shape.md#pass-networks) describes, `curlingHeat` for an eighth, which [Curling](./curling.md#where-the-stones-of-many-ends-came-to-rest) describes with the statistics beside `curlingScore`. The road to a tournament's final is not here: it is in `@johnmorrisdotca/taisen-brackets` (its `/road` entry). Each takes plain data and returns the [data layers](./layers.md) and the drawing options to lay them on, so one call gives a good chart and every layer can still be changed.
 
 | Function | Chart | Reads |
 | --- | --- | --- |
@@ -11,7 +11,6 @@
 | `curlingStones(stones, options)` | the stones of a curling end on the house, with the stones that score ringed, the shot rock ringed twice and the end scored by the rules (`curlingScore`) | feet from the button (`curling`) |
 | `curlingHeat(stones, options)` | where the stones of many ends came to rest, as cells, hexagons, a density, the zones of the house or translucent discs in each team's colour, for one team, the free guards or the house, on the half, the strip or the folded sheet (see [Curling](./curling.md#where-the-stones-of-many-ends-came-to-rest)) | feet from the button (`curling`) |
 | `soccerShotMap(shots, options)` | shots on the pitch or the half it attacks, sized by expected goals, with the xG total, and `goalMouth()` for where they crossed the goal line | a soccer provider (`opta`, `statsbomb`, `wyscout` and the rest) |
-| `roadToFinal(finalists, options)` | the two finalists of a tournament and the matches each played on the way: round flags or crests of both teams with the score between them, the rounds named down the middle, the group stage as a row at the foot | the matches you give it, and flags or logos of your own (see [the road to the final](#the-road-to-the-final)) |
 
 The charts are made from the layers of [Data layers](./layers.md) (`points`, `lines`, `text`, `zones`, `hexbin` and their legends), the frames of [sources.md](./sources.md#coordinate-frames) and the zone sets of [sources.md](./sources.md#zone-sets). The data is yours and nothing is read from a network.
 
@@ -219,76 +218,10 @@ console.log(chart.draw().includes("A. Swimmer"), chart.table().includes('data-ki
 
 `chart.totals` has the swimmers, the distance, each swimmer's splits (the seconds, the cumulative time and the pace in seconds per 100 m) and the fastest and the slowest split of the field. `chart.table()` is an HTML table of every split with its pace, for a reader who cannot see the bars; the chart has no `layers`, because the pace bars are the pool's own. The same bars, with the lanes' names and results, are `pool: { race: { pace: true } }` in `drawKyogijo`.
 
-## The road to the final
-
-`roadToFinal(finalists, options)` draws the two finalists of a tournament and the way each came: the two large round marks at the top with their names; down the middle the rounds, the last at the top; on each finalist's side its matches, each as the round mark of both teams with the score between them in large type and FT, AET or the shoot-out under it; and the group stage as a compact row of small marks, three-letter codes and scores at the foot. It is the kind of graphic sports sites post for a World Cup final, drawn from your data: the arrangement, the type and the code are the package's own, and no one's artwork is used. Unlike the charts above it is not a surface with layers, so what it gives back has no `layers`; it has the rest of what a chart gives (`options`, `title`, `summary`, `totals`, `draw()` and `table()`).
-
-A finalist is a `Team` (`name`, `abbr`, `color`, and `logo` for its flag or crest) with a `path`, its matches before the final, the earliest first, and optionally a `group`. A match is `{ round, opponent, score, decidedBy, pens }`:
-
-| Field | What it is |
-| --- | --- |
-| `round` | A key. `round-of-32`, `round-of-16`, `quarter-final` and `semi-final` have words in English and Japanese; any other key is written as it is, or as `options.labels` names it (`{ "first-round": "First round" }`), so a play-off series reads as well as a knockout. |
-| `opponent` | A `Team`: its name, three letters, colour and flag or crest. |
-| `score` | The finalist's first: `[2, 1]`, or text, `"4-2"` for the games of a series, split at its dash. A text that has no dash (`walkover`) is written whole. |
-| `decidedBy`, `pens` | `ft` (the default), `aet` or `pens`, with the shoot-out `[4, 3]`, the finalist's first. FT, AET or the shoot-out is written under the score, in the order the two marks stand. |
-| `homeFirst` | `true` puts the finalist's mark first (on the left) of the pair, `false` its opponent's; it is how the match is listed, so `true` is a match the finalist played as the home team in a sport that lists the home team first (soccer: [Score](./score.md#which-side-the-home-team-is-on)). By default the finalist is at the outer edge of its side, so that the two paths mirror each other. |
-| `note` | Words under the score in place of FT, AET or the shoot-out: `Game 6`. An empty text writes nothing. |
-
-A group match is the same without `round`; its words under the score are left out unless `decidedBy` or `note` asks for them.
-
-```ts
-import { roadToFinal, type RoadFinalist } from "@johnmorrisdotca/kyogijo-stadiums/charts";
-
-const owls: RoadFinalist = {
-  name: "Northern Owls", abbr: "NOW", color: "#3a2d6b",
-  path: [
-    { round: "quarter-final", opponent: { name: "Coastal Pines", abbr: "CPN" }, score: [2, 0] },
-    { round: "semi-final", opponent: { name: "Valley Stars", abbr: "VAL" }, score: [1, 1], decidedBy: "pens", pens: [4, 3] },
-  ],
-  group: [{ opponent: { name: "Summit Peaks", abbr: "SMT" }, score: [3, 1] }],
-};
-const gulls: RoadFinalist = {
-  name: "Harbour City Gulls", abbr: "HCG", color: "#1d4f91",
-  path: [
-    { round: "quarter-final", opponent: { name: "Metro Bolts", abbr: "MTB" }, score: [3, 1] },
-    { round: "semi-final", opponent: { name: "Lakeshore Anchors", abbr: "LSA" }, score: [2, 1], decidedBy: "aet" },
-  ],
-};
-const chart = roadToFinal([owls, gulls], { title: "Northern Cup 2030", final: { score: [1, 2] }, size: "square" });
-console.log(chart.title);
-console.log(chart.summary);
-console.log(chart.totals.rounds.join(" "), chart.totals.champion, chart.totals.finalists[0].matches);
-// Northern Owls and Harbour City Gulls: Northern Cup 2030, Road to the final
-// Northern Owls played 3 matches on the way to the final and Harbour City Gulls played 2. The final: Northern Owls 1-2 Harbour City Gulls (FT). Harbour City Gulls won the final.
-// quarter-final semi-final Harbour City Gulls 3
-```
-
-The options:
-
-| Option | What it does |
-| --- | --- |
-| `title`, `subtitle` | The tournament, set large at the top, and the line under it (`Road to the final` once a title is given). |
-| `final` | `{ score, decidedBy, pens, note }` once the final is played: its score is written between the two large marks, the loser is quieter and the table has a row for it. Without it the middle says "v". |
-| `labels`, `groupLabel` | The names of the rounds by key, and of the group stage, over the package's own words. |
-| `size` | `card` (1080 by 1350, a tall post: the default), `square` (1080 by 1080), `wide` (1200 by 675, the finalists at the two ends) or `phone` (390 wide, as tall as the rounds need, each round's name over its row). `ROAD_SIZES` lists them. |
-| `winner` | `auto` (the default): the side that won each match is brighter and the other's mark and number are quiet; the winner of a shoot-out wins. `none` draws both alike. |
-| `codes` | Write the opponent's three letters under its mark. On by default. |
-| `language`, `theme`, `endnote`, `className`, `id`, `style` | The words (`en` or `ja`), `light` or `dark` (without it the drawing follows the device and the page), a foot line for a source or a credit, a class, a prefix for the ids, and `style: "none"` to leave the stylesheet to the page (`KYOGIJO_STYLE`). |
-
-`draw(extra)` lays options over the chart's own, so one chart gives every size: `chart.draw({ size: "phone", language: "ja" })`.
-
-Two to six rounds draw in every size, with or without a group row, and a round only one finalist played (a bye) is an empty place on the other's side. A name too long for its place is set on two lines in a smaller size (`fitLines`). The drawing is accessible by `role="img"`, a title and a description, and `table()` lists every match as text: a row for each group match, each round in order and the final, with the team, the round, the opponent, the score (the first column's team first), how it was decided and the result.
-
-### The marks
-
-Each team is a flag or a crest clipped to a circle with a thin ring. Give `logo` an SVG as text, an `https:` or relative address, or an image `data:` address; it goes through `safeLogo`, so an address that could run a script is dropped. A flag fills the circle (its edges are cut); a crest that must be seen whole takes `markFit: "contain"` and sits on a plain disc. A team with no `logo` is drawn as its initials, three letters at most, on its `color` (the left finalist's and the right's own colours when it has none): the chart never draws a hole. The same mark is on a soccer pitch or a rink in [score mode](./score.md#round-marks), as `mark: "round"`.
-
-Colours are custom properties on the chart, so a page sets them: `--ky-road-bg`, `--ky-road-ink`, `--ky-road-muted`, `--ky-road-panel`, `--ky-road-spine`, `--ky-road-left`, `--ky-road-right`, and for the marks `--ky-mark-ring`, `--ky-mark-edge` and `--ky-mark-plain` ([Theming](./theming.md#marks-and-the-road-chart)). A flag that repeats down a side is written into the SVG each time it is used (the scene and every renderer read it, and a `<use>` would not survive them), so keep a flag small: the demo's, made of three shapes, is about 250 bytes.
-
 ## Sizes, and what was checked
 
-A chart is one SVG string. Tests hold the road to the final, with flags, to under 40 kB at 1080 by 1350 and 390 wide, and 420 NBA shots with zones and legend to under 70 kB, 90 hockey shots to under 40 kB, 150 balls in play with zones to under 45 kB, 48 passes to under 35 kB, 28 soccer shots to under 25 kB and a goal mouth to under 16 kB, and that the same input gives the same drawing. Every example on this page is run by a test. The made-up data of the demo and the tests (`demo/charts-data.js`) is generated from fixed seeds and holds no real game, player or team.
+A chart is one SVG string. Tests hold 420 NBA shots with zones and legend to under 70 kB, 90 hockey shots to under 40 kB, 150 balls in play with zones to under 45 kB, 48 passes to under 35 kB, 28 soccer shots to under 25 kB and a goal mouth to under 16 kB, and that the same input gives the same drawing. Every example on this page is run by a test. The made-up data of the demo and the tests (`demo/charts-data.js`) is generated from fixed seeds and holds no real game, player or team.
 
 ## Ideas credited
 
-The road to the final follows the "road to the final" graphics that sports sites post for a World Cup: a finalist at each side, the rounds between, the score of each match between the two teams' flags. Only that idea was taken; no artwork, layout, type or code of any of them is used, and the demo's nations and flags are made up (see [references.md](./references.md#the-road-to-the-final)). See [references.md](./references.md) for the others: mplsoccer's shot maps, pass maps and goal-mouth plots (MIT) and sporty's charts (MIT) were read for the list of charts to match; GeomMLBStadiums' spray chart, sportypy, sportyR and hockey_rink (GPL) were not read for code, and no code of any of them is used. Where a figure or a convention is ours it is in [sources.md](./sources.md).
+See [references.md](./references.md): mplsoccer's shot maps, pass maps and goal-mouth plots (MIT) and sporty's charts (MIT) were read for the list of charts to match; GeomMLBStadiums' spray chart, sportypy, sportyR and hockey_rink (GPL) were not read for code, and no code of any of them is used. Where a figure or a convention is ours it is in [sources.md](./sources.md).

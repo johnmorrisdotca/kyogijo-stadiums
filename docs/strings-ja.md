@@ -1154,32 +1154,6 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `grid.key` | Key: {list}. | 凡例：{list}。 |
 | `grid.cell` | Drawing {n} of {total} | {total}枚中{n}枚目の図 |
 | `grid.listSep` | ;  | ； |
-| `road.title` | Road to the final | 決勝への道 |
-| `road.vs` | v | 対 |
-| `road.group` | Group stage | グループステージ |
-| `road.rounds.round-of-32` | Round of 32 | ラウンド32 |
-| `road.rounds.round-of-16` | Round of 16 | ラウンド16 |
-| `road.rounds.quarter-final` | Quarter-final | 準々決勝 |
-| `road.rounds.semi-final` | Semi-final | 準決勝 |
-| `road.rounds.final` | Final | 決勝 |
-| `road.ft` | FT | 90分 |
-| `road.aet` | AET | 延長 |
-| `road.pens` | {a}-{b} pens | PK {a}-{b} |
-| `road.won` | Won | 勝ち |
-| `road.lost` | Lost | 負け |
-| `road.drew` | Drew | 引き分け |
-| `road.tableTeam` | Team | チーム |
-| `road.tableRound` | Round | ラウンド |
-| `road.tableOpponent` | Opponent | 対戦相手 |
-| `road.tableScore` | Score | スコア |
-| `road.tableDecided` | Decided | 決着 |
-| `road.tableResult` | Result | 結果 |
-| `road.caption` | {a} and {b}: every match on the way to the final. Scores are written with the team in the first column first. | {a}と{b}：決勝までの全試合。スコアは「チーム」列のチームの得点を先に書いています。 |
-| `road.name` | {a} and {b}: {title} | {a}と{b}：{title} |
-| `road.summary` | {a} played {an} matches on the way to the final and {b} played {bn}. | {a}は決勝までに{an}試合、{b}は{bn}試合を戦いました。 |
-| `road.final` | The final: {a} {score} {b} ({how}). | 決勝は{a} {score} {b}（{how}）でした。 |
-| `road.champion` | {name} won the final. | {name}が優勝しました。 |
-| `road.toPlay` | The final is still to be played. | 決勝はまだ行われていません。 |
 | `replay.title` | Replay, {time} | リプレイ（再生時間{time}） |
 | `replay.objects` | {n} tracked objects | 追跡対象は{n}個 |
 | `replay.objectsOne` | {n} tracked object | 追跡対象は{n}個 |
@@ -1712,15 +1686,11 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `chart_nfl` | An NFL pass chart: where each pass came down, and the pass grid's completion percentages | NFLのパスチャート：各パスの到達地点と、区画ごとのパス成功率 |
 | `chart_soccer` | A soccer shot map: marks sized by expected goals, with the total | サッカーのシュートマップ：マークの大きさは期待ゴール数で、合計も表示 |
 | `chart_goal` | The goal-mouth view of the same shots: where each crossed the goal line | 同じシュートのゴールマウス図：ゴールラインを通過した位置 |
-| `roadTitle` | Road to the final | 決勝への道 |
-| `roadText` | The two finalists' way through a tournament: their flags large at the top, the rounds named down the middle, each finalist's matches on its side with both teams' round flags and the score between them, FT, AET or the shoot-out under it, and the group stage as a row at the foot. Four sizes, light and dark, in English and Japanese. The nations, their flags and the results are made up: no nation in it exists, and every flag is a few shapes drawn in code. | 決勝に進んだ2チームの道のりです。上に大きな国旗、中央にラウンド名、両側にそれぞれの試合（2チームの丸い国旗の間にスコア、その下に90分・延長・PK戦のどれで決まったか）、下にグループステージの結果を並べます。サイズは4種類で、ライトとダークに対応し、英語と日本語で表示できます。国名・国旗・結果はすべて架空で、実在する国はなく、国旗はコードで描いた数個の図形です。 |
-| `road_card` | The card, 1080 by 1350: a made-up final, level after extra time and won on penalties, with the side that won each match brighter | 縦長カード（1080×1350）：延長戦でも同点となりPK戦で決着した架空の決勝。各試合の勝者側を明るく表示 |
-| `road_wide` | The wide card, 1200 by 675, before the final is played: the finalists at the two ends | 横長カード（1200×675）：決勝前の状態。決勝進出の2チームを両端に配置 |
-| `road_phone` | The phone, 390 wide, in the dark set: each round's name over its row | スマートフォン幅（390px）のダーク表示：各ラウンドの行の上にラウンド名を表示 |
-| `road_series` | A play-off series instead of a knockout: rounds named by the caller, the games won as the score, and a note under each | ノックアウトではなくプレーオフのシリーズ：ラウンド名は自由に付けられ、スコアは勝利数、各スコアの下に補足を表示 |
-| `road_mark_wide` | The round mark on a pitch: each country's flag in a circle with a ring, turned with its name at its end | 丸いマークをピッチに：各国の国旗を円形に切り抜いてリングを付け、チーム名と同じ向きに回転させてそれぞれのゴール側に表示 |
-| `road_mark_tall` | The same game tall | 同じ試合を縦向きで表示 |
-| `road_mark_badge` | The same game as a badge | 同じ試合をバッジで表示 |
+| `marksTitle` | Round marks | 丸いマーク |
+| `marksText` | A flag or a crest clipped to a circle with a thin ring, as a broadcast graphic draws a country against a country: at the two ends of a pitch, turned with each team's name, tall, and in a badge. The nations and their flags are made up: no nation in it exists, and every flag is a few shapes drawn in code. | 国旗やエンブレムを円形に切り抜き、細いリングを付けたマークです。中継映像のグラフィックのように、国と国の対戦を表示します。ピッチの両端にチーム名と同じ向きで置く表示のほか、縦向きの表示とバッジにも対応します。国名と国旗はすべて架空で、実在する国はなく、国旗はコードで描いた数個の図形です。 |
+| `mark_wide` | The round mark on a pitch: each country's flag in a circle with a ring, turned with its name at its end | 丸いマークをピッチに：各国の国旗を円形に切り抜いてリングを付け、チーム名と同じ向きに回転させてそれぞれのゴール側に表示 |
+| `mark_tall` | The same game tall | 同じ試合を縦向きで表示 |
+| `mark_badge` | The same game as a badge | 同じ試合をバッジで表示 |
 | `poolLook` | Water | 水面 |
 | `poollook_flat` | Flat | フラット |
 | `poollook_water` | Light | 光の網目 |

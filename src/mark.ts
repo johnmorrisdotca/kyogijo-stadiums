@@ -1,5 +1,5 @@
 // The round team mark: a flag or a logo clipped to a circle with a thin ring, or, when a team has no picture, its initials on its colour. One function draws it for the
-// score on a surface (a banner at each end, the badge and the strip under a compact card) and for the road-to-the-final chart, so a country has the same mark everywhere.
+// score on a surface (a banner at each end, the badge and the strip under a compact card), so a country has the same mark everywhere.
 import { inkOn, safeColour } from "./colour.ts";
 import { el, esc, num } from "./format.ts";
 import { textWidth } from "./text.ts";
@@ -40,7 +40,7 @@ export interface RoundMark {
   ring?: number;
   /** The mark's group is turned back by this many degrees: pass the turn of the group the mark is in to hold it upright there. The score does not use it: its mark turns with the zone's words. */
   upright?: number;
-  /** A class added to the mark's group (the road chart's `ky-r-dim` for a team that did not advance). */
+  /** A class added to the mark's group. */
   className?: string;
 }
 

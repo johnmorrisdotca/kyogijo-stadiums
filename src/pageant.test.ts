@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { nation, FLAGS } from "../demo/road-data.js";
+import { nation, FLAGS } from "../demo/nations.js";
 import { drawToCanvas, type CanvasContext } from "./canvas.ts";
 import { SPORTS, describe as describeDrawing, drawKyogijo } from "./draw.ts";
 import { sceneToGeoJSON } from "./geojson.ts";
