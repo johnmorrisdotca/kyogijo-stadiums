@@ -15,11 +15,11 @@ const id = pkg.name.replace(/^@[^/]+\//, "");
 
 // The recorded hashes. The template's is the one that says every demo's header and footer, and every README's
 // list of the family, are the same text.
-// The template of 2026-10-14 lists twenty-five packages, Kyogijo included (as kyogijo-stadiums, the name it was renamed to in 0.4.0); it is Kyogijo's own copy until the other twenty-four are swept to match. The family's list is swept again, in every
+// The template of 2026-10-15 lists twenty-six packages: Kyogijo Stadiums (kyogijo-stadiums, the name it was renamed to in 0.4.0) and Taisen (taisen-brackets, not on npm yet, listed in FAMILY_NOT_ON_NPM). The family's list is swept again, in every
 // repository at once, when a package is added to it, and this hash is then the new one.
-const TEMPLATE = { version: "2026-10-14", sha256: "f6c6cef21038aab97889e8b5b5cdf7accbfcfa43c2af6a9c1bcce8db23abff97" };
+const TEMPLATE = { version: "2026-10-15", sha256: "cee03de7990c262dddb11c080c893d7a53623c13188314bb23b6d60a086ae96c" };
 const FILES = {
-  "scripts/family-readme.mjs": "3c9d5b2cbf17a92d31bced98edac7f544616edb0dff90bf2d141722a9d4516c5",
+  "scripts/family-readme.mjs": "6752eaa287a9007af87d9019e4cee4c36fe1d79b60bf24478e7851ebe75138c4",
   "scripts/release-notes.mjs": "efab0fb78ad05973a8885624c0d2ce3b458b55799c11eabaa5176603ce8cd1e9",
   "scripts/community/SECURITY.md": "ff6f650be7789396233671d2558439736efe7f96a1d1d39115dd5cf94d29275c",
   "scripts/community/CODE_OF_CONDUCT.md": "34da1f56f004ce8f7f95d4449b64d2ecb5827dd9f0d4eea1da351a20713ebe70",
@@ -38,10 +38,11 @@ describe("the family template", () => {
   it("lists every package of the family, in order, each with its Japanese name and a line on it", () => {
     expect(FAMILY.map((one) => one.id)).toEqual([
       "korokoro", "kyuubu", "hitotsu", "toranpu", "tane", "narabe", "tenka", "kumimoji", "tsunagi", "jarajara",
-      "suido", "domino", "kotoba", "sugoroku", "kazu", "meikyuu", "hikidashi", "chizu", "bushu", "tobiishi", "jirai", "gunjin", "karakuri", "houseki", "kyogijo-stadiums",
+      "suido", "domino", "kotoba", "sugoroku", "kazu", "meikyuu", "hikidashi", "chizu", "bushu", "tobiishi", "jirai", "gunjin", "karakuri", "houseki", "kyogijo-stadiums", "taisen-brackets",
     ]);
     for (const one of FAMILY) {
-      expect(one.id === one.name.toLowerCase() || one.id.startsWith(`${one.name.toLowerCase()}-`), one.id).toBe(true);
+      const slug = one.name.toLowerCase().replaceAll(" ", "-");
+      expect(one.id === slug || one.id.startsWith(`${slug}-`), one.id).toBe(true);
       expect(one.kana, one.id).toMatch(/\S/);
       expect(FAMILY_PITCH[one.id], one.id).toMatch(/^[^A-Z.].*[^.]$/);
     }

@@ -77,7 +77,7 @@ package, attaches the tarball to a GitHub release and publishes it to npm by
 trusted publishing, with provenance and no token. A version already on npm is
 not published again.
 
-## Particular to Kyogijo
+## Particular to Kyogijo Stadiums
 
 Bug reports and ideas go in the [issues](https://github.com/johnmorrisdotca/kyogijo-stadiums/issues).
 
