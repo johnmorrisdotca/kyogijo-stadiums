@@ -456,6 +456,31 @@ The 18 games of `EVENTS` ([special-games.md](./special-games.md)) are read from 
 - **A football stadium's field** is the CFL's, or the NCAA's at Notre Dame Stadium, whose field is the stadium's tenant's; BC Place's roof was closed for its game, and the drawing says so.
 - **What was looked for and not found:** a source for where the rink stood in each of the other ballparks, in the football stadiums, and for the court on the carrier's deck; the exact figures of the 2024 London fence; and the placement of the football fields at Wrigley Field, of which only directions are published (see [special-games.md](./special-games.md#what-is-not-drawn)).
 
+## Heights in the 3D view
+
+The [3D view](./turn.md) stands things up on a surface; where each stands is the drawing's own (the court's, the plan's and the figures' places above), and how high is below. A strip is drawn at least a thousandth of the surface's diagonal thick and a mesh at least a cell of that size, so a 3-inch post on a 500-foot ground stays in sight: those sizes are ours.
+
+**In the figures above, already read.** The volleyball net's top (2.43 m men, 2.24 m women, a strip 1 m wide), the antennae's length (1.8 m) and the posts' places; the tennis net (3 ft 6 in at the posts, 3 ft at the centre) and the singles sticks; the badminton net (1.55 m over the side lines, 1.524 m at the centre, 760 mm deep) and posts (1.55 m); the pickleball net (36 in at the sidelines, 34 in at the centre); the table (76 cm over the floor), its net and its posts (15.25 cm); a soccer goal's width and height (7.32 by 2.44 m) and depth; the hockey net's width (6 ft) and depth (40 in); the goals of handball, field hockey and lacrosse as the plans have them (their width and depth); the fence of a ballpark and the heights of its listed walls (`PARKS`).
+
+**New in the 3D view, and not read again for it.** These are the rule's well-known figure, typed in; the page of the rulebook that gives each has not yet been read on a date, and a reader who finds one wrong is asked to say so.
+
+| Part | Height drawn | Rule it stands for |
+| --- | --- | --- |
+| Volleyball posts | 2.55 m | FIVB Volleyball Rules, Rule 2, the posts. |
+| Volleyball antennae | 80 cm over the net | FIVB Volleyball Rules, Rule 2, the antennae. |
+| Hockey goal | 4 ft high | NHL Rule 1, the goal; the IIHF's is 1.22 m. |
+| Hockey boards and glass | 42 in of boards and 5 ft of glass | NHL Rule 1 gives the boards a range and the glass a least; the figures drawn are within them. The glass of the sides is higher in the NHL, and ours stands the same all round. |
+| Basketball rim and backboard | rim 10 ft; backboard from 9 ft to 12 ft 6 in, 42 in tall | NBA Rule 1, the baskets; the FIBA backboard is 1.05 m tall, drawn at the NBA's for every league. The stanchion's place behind the baseline is ours. |
+| Soccer corner flags | 1.5 m | IFAB Laws of the Game, Law 1, the least. |
+| Football posts | crossbar 10 ft; uprights to 35 ft over it (NFL) or 20 ft over it (the others) | NFL Rule 2, the goal posts (the NFL's least is 35 ft); the 20 ft of the CFL, the IFAF and the leagues is the figure used where a rule was not read. The pylons are 18 in high. |
+| Rugby posts | crossbar 3 m; uprights 3.4 m over it; flags 1.2 m | World Rugby Laws, Law 1, the least. |
+| Gaelic football posts | crossbar 2.5 m; posts 7 m; flags 1.5 m | GAA Official Guide Part 2, Rule 1, the least. |
+| Australian football posts | goal posts 6 m, behind posts 3 m | Laws of Australian Football, Law 2, the least. |
+| Cricket stumps | 28 in | MCC Laws of Cricket, Law 8. |
+| Lacrosse goal | 6 ft high on a field, 4 ft in a box | World Lacrosse and NCAA rules for the field; the box goal's height is 4 ft. |
+| Handball and field hockey goals | 2 m; 2.14 m | IHF Rules of the Game, Rule 1; FIH Rules of Hockey, Rule 1. |
+| Ballpark | fence 8 ft where no wall is listed; foul poles 30 ft; backstop 70 ft wide and 20 ft high, 60 ft behind home | Official Baseball Rules 2.02 prefer a fence of 8 ft and 2.04 sets the least distance of the backstop; the poles' height and the backstop's size are ours. |
+
 ## Coordinate frames
 
 `src/frames.providers.ts` holds the frames of the providers below, as landmarks on the drawing's own coordinates (feet; x along the surface from its left end, y across it from the top, a ballpark's x across and y minus out from home plate). Only facts were read: ranges, units, origins and conventions. No code of sportypy, sportyR or hockey_rink (all GPL) was read for them; the MIT projects sdv-plot, sporty and mplsoccer are credited in [references.md](./references.md) for ideas. Each page below was read on 2026-10-13.

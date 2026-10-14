@@ -8,6 +8,7 @@ import { takePictures } from "./readme-pictures-lib.mjs";
 
 const READY = '[data-testid="stage"][data-ready="true"] svg.kyogijo';
 const stage = '[data-testid="stage"]';
+const READY_TURN = '[data-testid="stage"][data-ready="true"] .ky-turn';
 const address = (query) => `/?lang=en&help=off&${query}`;
 
 await takePictures({
@@ -36,6 +37,10 @@ await takePictures({
     { subject: "ballpark", views: ["desk"], url: address("sport=mlb&park=hanshin-koshien-stadium&orientation=landscape"), ready: READY, target: stage },
     // The same game tall, for a phone: the words upright, the teams top and bottom.
     { subject: "tall", views: ["phone"], url: address("sport=nhl&orientation=portrait"), ready: READY, target: stage },
+    // The 3D view: a volleyball court from behind an end line with the net standing on it, a rink from a low corner with its boards, glass and goals, a court from the main camera with its baskets.
+    { subject: "turn-volleyball", views: ["desk"], url: address("sport=volleyball&view=3d&viewpoint=end"), ready: READY_TURN, target: stage },
+    { subject: "turn-rink", views: ["desk"], url: address("sport=nhl&view=3d&viewpoint=corner"), ready: READY_TURN, target: stage },
+    { subject: "turn-court", views: ["desk"], url: address("sport=nba&view=3d&viewpoint=broadcast"), ready: READY_TURN, target: stage },
     // The strips for a list of games.
     { subject: "badges", views: ["desk"], url: address("sport=nba"), ready: READY, target: '[data-testid="badge-list"]' },
   ],

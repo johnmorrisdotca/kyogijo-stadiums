@@ -69,6 +69,7 @@ export const NAV = [
       { slug: "charts", ja: "すぐ使えるチャート" },
       { slug: "team-shape", ja: "チームの形" },
       { slug: "replay", ja: "リプレイ" },
+      { slug: "turn", ja: "3D表示" },
       { slug: "renderers", ja: "レンダラー" },
     ],
   },
