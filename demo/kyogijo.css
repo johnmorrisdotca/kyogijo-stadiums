@@ -42,7 +42,7 @@ details.group > .setup:first-of-type { margin-top: 0; }
 .team-grid .fam-field { width: 100%; min-width: 0; }
 .fam-colour { padding: 2px 4px; width: 100%; }
 .logo-url { width: 100%; margin-top: 8px; }
-.fam-chip { cursor: pointer; font: inherit; font-size: .85rem; font-weight: 600; color: inherit; }
+.fam-chip { min-width: 44px; cursor: pointer; font: inherit; font-size: .85rem; font-weight: 600; color: inherit; }
 .fam-chip[aria-pressed="true"] { border-color: var(--ink); background: color-mix(in srgb, var(--accent) 18%, transparent); }
 
 /* The code. */
