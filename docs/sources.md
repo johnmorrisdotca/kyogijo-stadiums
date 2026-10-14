@@ -792,7 +792,7 @@ The [3D view](./turn.md) stands things up on a surface; where each stands is the
 
 | Id | Page | What was taken |
 | --- | --- | --- |
-| `wp-offside` | Wikipedia, "Offside (ice hockey)", revision 1366324643 ([Offside_(ice_hockey)](https://en.wikipedia.org/w/index.php?title=Offside_(ice_hockey)&oldid=1366324643)) | the two blue lines of 1928-29, the centre red line introduced in 1943-44 |
+| `wp-offside` | Wikipedia, "Offside (ice hockey)", revision 1366324643 ([Offside_(ice_hockey)](https://en.wikipedia.org/w/index.php?title=Offside_(ice_hockey)&oldid=1366324643)) | the two blue lines of 1928-29, the centre red line introduced in 1943-44, the offside pass judged by it until the 2005 collective bargaining agreement |
 | `wp-rink` | Wikipedia, "Ice hockey rink", revision 1369579112 ([Ice_hockey_rink](https://en.wikipedia.org/w/index.php?title=Ice_hockey_rink&oldid=1369579112)) | the NHL's blue lines at 75 feet and goal lines at 11 feet; the trapezoid from 2005-06, 18 feet at the goal line, 22 feet from 2014-15 |
 | `wp-nhl-rules` | Wikipedia, "National Hockey League rules", revision 1379666522 ([National_Hockey_League_rules](https://en.wikipedia.org/w/index.php?title=National_Hockey_League_rules&oldid=1379666522)) | the trapezoid since 2005-06, lengthened by 2 feet each side in 2014 |
 | `csm-1998` | The Christian Science Monitor, 16 October 1998, "Sports 101" (<https://proof.csmonitor.com/1998/1016/101698.feat.feat.11.html>) | the goal line 'increased from 11 to 13 feet' for 1998-99, the neutral zone 54 feet and the offensive zones 73 |
@@ -901,6 +901,8 @@ The named formations of `src/formations.ts`. A formation is a convention: coache
 | QMJHL | the same, with the hash marks 2 feet long and 5 feet apart | QMJHL Playing Rules 2025-26, 1 |
 | USHL | the USA Hockey Junior rink, which its rules name: 185 to 200 by 85 to 100 feet (200 by 85 drawn), goal line 11 feet, blue line 64 feet from the goal line, circles 30 feet across, hash marks 2 feet long and 4 apart, no trapezoid | USA Hockey Junior Rules 2025-29, 101 to 105 |
 | PWHL | the NHL's Rule 1 with no restricted area for goalkeepers | PWHL Rulebook 2025-26, 1.8 and 27.8 |
+| Olympic (`olympic`) | the IIHF rink at 60.0 by 26.0 m, the size the IIHF gives for the ice of Milano Cortina 2026, "the rink size used at the Beijing 2022 Olympic Winter Games" and "fully consistent with" the NHL's Global Series arena specifications; every other figure is the IIHF's | IIHF statement of 9 December 2025, as published by Sports Illustrated (read 2026-10-14); IIHF Rule Book 2025/26, 1.2 |
+| Boston Garden (`boston-garden`) | 58.2 by 25.3 m (191 by 83 feet), "some nine feet shorter and two feet narrower than standard"; every other figure is the NHL's Rule 1, since none is published | Wikipedia, "Boston Garden", revision 1379921964 (facts only) |
 
 **Dated history, drawn with `year`.** The IIHF's blue lines were 22.86 m (75 feet) from the end boards in the 2018-22 book and are 22.50 m in the 2022/23 diagram; the goalkeepers' restricted area came with the unified rule book of 2021/22 (IIHF news, 25 June 2021). The AHL moved its blue lines 4 feet towards centre ice for 2005-06 (so they stood at 71 feet); the NCAA men's trapezoid is from 2026-27.
 

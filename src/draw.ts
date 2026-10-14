@@ -50,6 +50,9 @@ import { featureColours, featureStyle } from "./features.ts";
 import { isLook, lookStyle } from "./look.ts";
 import { lineLook, restyleLines } from "./restyle.ts";
 import { KYOGIJO_MARK_STYLE } from "./mark.ts";
+import { readSituation, situationSentences, type SituationContext, type SituationRead } from "./situation.ts";
+import { badgeSituation, drawSituation } from "./situation.draw.ts";
+import { KYOGIJO_SITUATION_STYLE } from "./situation.style.ts";
 import { outlineOf } from "./outline.ts";
 import { autoScore, pageantLayout, pageantOf, ratioOf, type Pageant, type PageantTeam } from "./pageant.ts";
 import { emblemMarkup, picturesMarkup } from "./pageant.draw.ts";
@@ -602,6 +605,27 @@ function leagueAbout(league: League, year: number | undefined, language: Languag
   return fill(league.family === "volleyball" && league.id === "fivb-beach" ? words.beachVolleyball : league.family === "volleyball" && league.id === "wpv-sitting" ? words.sittingVolleyball : words[league.family], { size: text });
 }
 
+/** The football field a drawing is on, for a situation to know the yards between the goal lines and the downs a team has (the CFL's three). */
+function footballFieldOf(o: SurfaceOptions, sport: Sport, league: League | undefined): { yards: number; downs: number } | undefined {
+  if (sport !== "nfl" && sport !== "cfl" && sport !== "ifaf") return undefined;
+  const spec = league?.family === "football" ? fieldOf(league, o.year) : sport === "ifaf" ? FOOTBALL.ifaf : footballIn(sport, o.year);
+  return { yards: spec.length / 3, downs: spec.id === "cfl" ? 3 : 4 };
+}
+
+/** The situation the options ask for, read: which team attacks, which end, what is lit. `undefined` for none, for a sport that has no situation and for a special game. */
+function situationOf(o: SurfaceOptions | ScoreOptions): SituationRead | undefined {
+  if (o.situation === undefined || o.host !== undefined) return undefined;
+  const { sport, league } = chooseLeague(o);
+  const ctx: SituationContext = {
+    sport,
+    homeSide: resolveHomeSide({ ...o, sport }),
+    direction: o.direction,
+    football: footballFieldOf(o, sport, league),
+    names: isScore(o) ? { home: String(o.home.name ?? ""), away: String(o.away.name ?? "") } : undefined,
+  };
+  return readSituation(o.situation, ctx);
+}
+
 /** A drawing's title and description, in a language. */
 export function describe(o: SurfaceOptions | ScoreOptions): { title: string; description: string } {
   // A special game is drawn whole: a `range` is for a surface of its own.
@@ -660,7 +684,10 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
       : plan?.show === "folded"
         ? `${gap}${[foldedWords[isPortrait(o) ? "tall" : "wide"], foldedWords[plan.panels], hasData ? foldedWords.data : ""].filter((part) => part !== "").join(gap)}`
         : describeRange(o, language, hasData);
-  if (!isScore(o)) return { title: o.title ?? special?.title ?? surfaceName, description: o.description ?? `${about}${parkLine}${eraLine}${rangeLine}${poolLine}` };
+  // A situation says what the pill, the lit bases or the line of scrimmage show.
+  const read = situationOf(o);
+  const situationLine = read === undefined ? "" : situationSentences(read, language, isScore(o) ? { home: o.home.name, away: o.away.name } : undefined).map((line) => `${gap}${line}`).join("");
+  if (!isScore(o)) return { title: o.title ?? special?.title ?? surfaceName, description: o.description ?? `${about}${parkLine}${eraLine}${rangeLine}${situationLine}${poolLine}` };
   const winner = winnerOf({ ...o, sport });
   // A pageant says what lies on each half, and the emblem in the middle.
   const pageant = pageantOf(o);
@@ -731,7 +758,7 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
         : "";
   return {
     title: o.title ?? (status === undefined ? line : `${line}${words.said.sep}${status}`),
-    description: o.description ?? `${extra === "" ? "" : `${sentence(extra)}${gap}`}${sentence(line)}${result}${tied}${curlingLine}${netLine}${fieldLine}${gap}${about}${parkLine}${eraLine}${rangeLine}${pageantLine}${poolLine}`.trim(),
+    description: o.description ?? `${extra === "" ? "" : `${sentence(extra)}${gap}`}${sentence(line)}${result}${tied}${curlingLine}${netLine}${fieldLine}${gap}${about}${parkLine}${eraLine}${rangeLine}${situationLine}${pageantLine}${poolLine}`.trim(),
   };
 }
 
@@ -781,6 +808,8 @@ function drawnKyogijo(o: SurfaceOptions | ScoreOptions): string {
   const homeSide: Side = isScore(o) ? resolveHomeSide({ ...o, sport }) : "right";
   const awaySide: Side = homeSide === "left" ? "right" : "left";
   const uppercase = !isScore(o) || o.uppercase !== false;
+  // The situation of the game (hockey's skaters, baseball's runners, football's down), decided once: the surface, the badge and the description draw from it.
+  const situation = situationOf(o);
 
   let left: TeamView | undefined;
   let right: TeamView | undefined;
@@ -820,7 +849,7 @@ function drawnKyogijo(o: SurfaceOptions | ScoreOptions): string {
   let foldedSheet = false;
   let pg: PageantParts | undefined;
   if (isScore(o) && left !== undefined && right !== undefined && sized === "badge") {
-    const badge = badgeMarkup(left, right, { sport, status, parts, id });
+    const badge = badgeMarkup(left, right, { sport, status, parts, id, situation: situation === undefined ? undefined : badgeSituation(situation, language) });
     viewBox = `0 0 ${badge.w} ${badge.h}`;
     body = badge.markup;
   } else {
@@ -870,7 +899,20 @@ function drawnKyogijo(o: SurfaceOptions | ScoreOptions): string {
     const ground = laidOn(surface.base, o.background, id);
     grounded = ground.base !== surface.base;
     defs = surface.defs + ground.defs;
-    let inner = ground.base;
+    // The situation: a tint under the lines, and the rest over them and the data (cut with the surface when it is cropped).
+    const sit =
+      situation === undefined
+        ? undefined
+        : drawSituation(situation, surface, {
+            id,
+            language,
+            homeSide,
+            abbrs: left !== undefined && right !== undefined ? ({ [left.role]: left.abbr, [right.role]: right.abbr } as { home: string; away: string }) : undefined,
+            plate: isScore(o) && sized === "full" && o.plate !== false,
+          });
+    const cutSit = (markup: string): string => (markup !== "" && surface.defs.includes(`id="${id}-rg"`) ? el("g", { "clip-path": `url(#${id}-rg)` }, markup) : markup);
+    let inner = ground.base + (sit === undefined ? "" : cutSit(sit.under));
+    if (sit !== undefined) defs += sit.defs;
     let teams = "";
     // A pageant lays each team's picture over its half, in place of the names painted at the ends.
     if (pageant !== undefined && isScore(o) && left !== undefined && right !== undefined && leftTeam !== undefined && rightTeam !== undefined && (sized === "full" || sized === "compact")) {
@@ -911,6 +953,7 @@ function drawnKyogijo(o: SurfaceOptions | ScoreOptions): string {
       const { colon, gap } = KYOGIJO_STRINGS[language].said;
       description = `${said}${gap}${KYOGIJO_STRINGS[language].layers.data}${colon}${layered.summaries.join(gap)}`;
     }
+    if (sit !== undefined) inner += cutSit(sit.over);
     if (surface.over !== undefined) inner += surface.over;
     if (notes !== undefined && notes.svg !== "") {
       inner += notes.svg;
@@ -933,7 +976,7 @@ function drawnKyogijo(o: SurfaceOptions | ScoreOptions): string {
     const group = el("g", { class: "ky-surface-group", transform: surface.turn, part: parts ? "surface" : undefined }, inner);
     const v = surface.view;
     if (isScore(o) && left !== undefined && right !== undefined && sized === "compact") {
-      const badge = badgeMarkup(left, right, { sport, status, parts, id });
+      const badge = badgeMarkup(left, right, { sport, status, parts, id, situation: situation === undefined ? undefined : badgeSituation(situation, language) });
       const scale = v.w / badge.w;
       const gap = badge.h * scale * 0.12;
       body = group + el("g", { class: "ky-strip", transform: `translate(${num(v.x)} ${num(v.y + v.h + gap)}) scale(${scale.toFixed(4)})` }, badge.markup);
@@ -971,7 +1014,7 @@ function drawnKyogijo(o: SurfaceOptions | ScoreOptions): string {
       style: style === "" ? undefined : style,
     },
     `<title id="${titleId}">${esc(title)}</title><desc id="${descId}">${esc(description)}</desc>` +
-      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${left?.round === true || right?.round === true || (pg !== undefined && pageant?.style === "stage") || (pg !== undefined && pageant?.emblem?.shape !== "plain" && pageant?.emblem !== undefined) ? `\n${KYOGIJO_MARK_STYLE}` : ""}${pg === undefined ? "" : `\n${KYOGIJO_PAGEANT_STYLE}${pageant?.animate === undefined || pageant.animate === "none" ? "" : `\n${KYOGIJO_PAGEANT_MOTION}`}`}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}${foldedSheet ? `\n${KYOGIJO_FOLD_STYLE}` : ""}${isPoolSport(sport) ? `\n${o.pool?.venue !== undefined ? KYOGIJO_POOL_STYLE : poolStyle({ sport, ...commonOf(o.pool ?? {}), race: o.pool?.race !== undefined, section: o.pool?.section !== undefined && o.pool.section !== false })}` : ""}${plan === undefined ? "" : `\n${courtStyle(plan.sport, plan.look)}`}${fieldsStyle(sport) === "" ? "" : `\n${fieldsStyle(sport)}`}${athleticsStyle(sport) === "" ? "" : `\n${athleticsStyle(sport)}`}${skatingStyle(sport) === "" ? "" : `\n${skatingStyle(sport)}`}${palette === undefined ? "" : `\n${lookStyle(palette)}`}${athleticsTrackRules(sport, o.athletics?.track) === "" ? "" : `\n${athleticsTrackRules(sport, o.athletics?.track)}`}${walled ? `\n${KYOGIJO_WALLS_STYLE}` : ""}${hardwood ? `\n${KYOGIJO_HARDWOOD_STYLE}` : ""}${features === undefined ? "" : `\n${featureStyle(sport, features)}`}${notes === undefined || notes.svg === "" ? "" : `\n${KYOGIJO_NOTE_STYLE}`}${grounded ? `\n${KYOGIJO_BACKGROUND_STYLE}` : ""}${crowded ? `\n${KYOGIJO_CROWD_STYLE}` : ""}${o.host === undefined ? "" : `\n${specialStyle(hostSport(o.host))}`}</style>`) +
+      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${left?.round === true || right?.round === true || (pg !== undefined && pageant?.style === "stage") || (pg !== undefined && pageant?.emblem?.shape !== "plain" && pageant?.emblem !== undefined) ? `\n${KYOGIJO_MARK_STYLE}` : ""}${pg === undefined ? "" : `\n${KYOGIJO_PAGEANT_STYLE}${pageant?.animate === undefined || pageant.animate === "none" ? "" : `\n${KYOGIJO_PAGEANT_MOTION}`}`}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}${foldedSheet ? `\n${KYOGIJO_FOLD_STYLE}` : ""}${isPoolSport(sport) ? `\n${o.pool?.venue !== undefined ? KYOGIJO_POOL_STYLE : poolStyle({ sport, ...commonOf(o.pool ?? {}), race: o.pool?.race !== undefined, section: o.pool?.section !== undefined && o.pool.section !== false })}` : ""}${plan === undefined ? "" : `\n${courtStyle(plan.sport, plan.look)}`}${fieldsStyle(sport) === "" ? "" : `\n${fieldsStyle(sport)}`}${athleticsStyle(sport) === "" ? "" : `\n${athleticsStyle(sport)}`}${skatingStyle(sport) === "" ? "" : `\n${skatingStyle(sport)}`}${palette === undefined ? "" : `\n${lookStyle(palette)}`}${athleticsTrackRules(sport, o.athletics?.track) === "" ? "" : `\n${athleticsTrackRules(sport, o.athletics?.track)}`}${walled ? `\n${KYOGIJO_WALLS_STYLE}` : ""}${hardwood ? `\n${KYOGIJO_HARDWOOD_STYLE}` : ""}${features === undefined ? "" : `\n${featureStyle(sport, features)}`}${notes === undefined || notes.svg === "" ? "" : `\n${KYOGIJO_NOTE_STYLE}`}${grounded ? `\n${KYOGIJO_BACKGROUND_STYLE}` : ""}${crowded ? `\n${KYOGIJO_CROWD_STYLE}` : ""}${situation === undefined ? "" : `\n${KYOGIJO_SITUATION_STYLE}`}${o.host === undefined ? "" : `\n${specialStyle(hostSport(o.host))}`}</style>`) +
       (defs === "" ? "" : `<defs>${defs}</defs>`) +
       body,
   );

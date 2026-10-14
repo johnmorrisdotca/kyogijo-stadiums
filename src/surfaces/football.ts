@@ -167,6 +167,7 @@ export function football(spec: FootballSpec, o: BuildOptions, marks: FootballMar
   };
   surface.lineRef = { width: lw, feet: 1 };
   surface.box = { x: 0, y: 0, w: L, h: W };
+  surface.anchors = { kind: "football", length: spec.length, endZone: e, width: W };
   // The red zone is the 20 yards before a goal line and the end zone behind it; the half is from an end line to midfield.
   const twenty = 60;
   const half = atEnds((end) => (end === "left" ? edges(0, 0, L / 2, W) : edges(L / 2, 0, L, W)));

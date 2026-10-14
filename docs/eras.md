@@ -10,6 +10,7 @@ A change "from 1979" holds for 1979 and every season after, until another.
 | `nhl` | goal lines | 11 feet from the end boards in 1997–98, 13 from 1998–99, 11 again from 2005–06 |
 | `nhl` | blue lines | 73 feet from the end boards from 1998–99, 75 (a 50-foot neutral zone) from 2005–06 |
 | `nhl` | trapezoid | none before 2005–06; 18 feet at the goal line, 22 from 2014–15 |
+| `nhl` | two-line pass | none before 1943–44 (no centre line to judge it); judged by the centre line from 1943–44 to 2004–05, not from 2005–06: data only, the lines are drawn the same |
 | `nhl` | hash marks | 3 feet apart (cited from 2012–13), 5 feet 7 inches from 2014–15 |
 | `nba` | lane | 6 feet wide, 12 from 1951–52, 16 from 1964–65 |
 | `nba` | three-point line | none before 1979–80; 22 feet all round from 1994–95 to 1996–97; 23 feet 9 inches again from 1997–98 |
@@ -31,7 +32,7 @@ import { drawKyogijo, rulesFor } from "@johnmorrisdotca/kyogijo-stadiums";
 
 const rink = rulesFor("nhl", 1960);
 console.log(rink.season, rink.rules.centreLine, rink.rules.trapezoid, rink.differences.map((change) => change.feature));
-// 1960–61 true null [ 'trapezoid' ]
+// 1960–61 true null [ 'trapezoid', 'twoLinePass' ]
 console.log(drawKyogijo({ sport: "nba", year: 1978 }) === drawKyogijo({ sport: "nba", year: 1979 }));
 // false
 ```

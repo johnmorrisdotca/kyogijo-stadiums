@@ -8,6 +8,7 @@ import type { Frame } from "./frames.ts";
 import type { PoolSport, PoolStyle } from "./pool.types.ts";
 import type { AthleticsStyle } from "./athletics/types.ts";
 import type { SkatingStyle } from "./skating/types.ts";
+import type { Situation } from "./situation.types.ts";
 
 /** The field sports: lacrosse (the field and the box), rugby (union and league), Australian football, Gaelic football and hurling, cricket, field hockey and team handball. */
 export type FieldSport = "lacrosse" | "rugby" | "afl" | "gaelic" | "cricket" | "fieldhockey" | "handball";
@@ -772,6 +773,13 @@ export interface SurfaceOptions {
    * under a score's panel), cut to the surface's outline, and described in the drawing's description. See `drawLayers` and `layerTable`.
    */
   layers?: readonly Layer[];
+  /**
+   * The situation of the game, drawn on the surface, in the badge and in the compact card: hockey's skaters (a power play or an empty net as a pill, the attacking zone tinted) and its
+   * shootout as a strip of dots across centre ice; baseball's runners (the bases lit), outs, inning and count (a scorebug in the badge); football's down and distance (the line of scrimmage
+   * in blue, the first-down line in yellow, the red zone tinted, a tag) and a drive chart. For `nhl`, `mlb`, and the football fields; any other sport, and a special game, draws none.
+   * Off by default, and then the drawing is byte for byte as it was. See `docs/situation.md`.
+   */
+  situation?: Situation;
   /** `embed` (the default) writes the stylesheet into the drawing so that it stands alone; `none` leaves it to the page. */
   style?: "embed" | "none";
   /** An extra class on the `svg`. */

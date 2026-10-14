@@ -7,7 +7,7 @@ import { ERA_SOURCES, ERA_SPORTS, eraChanges } from "./eras.ts";
 describe("docs/eras.md, the table of the years", () => {
   const table = readFileSync("docs/eras.md", "utf8");
   const label = {
-    centreLine: "centre red line", goalLine: "goal lines", blueLine: "blue lines", trapezoid: "trapezoid", hashApart: "hash marks", keyWidth: "lane", threePoint: "three-point line",
+    centreLine: "centre red line", goalLine: "goal lines", blueLine: "blue lines", trapezoid: "trapezoid", hashApart: "hash marks", twoLinePass: "two-line pass", keyWidth: "lane", threePoint: "three-point line",
     restrictedArea: "restricted area", hash: "hash marks", posts: "goal posts", postShape: "goal posts", endZone: "end zones", length: "field", pitcher: "pitcher",
     battersBox: "batter's boxes", baseSize: "bases", plateShape: "home plate", platePlacement: "home plate", moundHeight: "mound height",
   };

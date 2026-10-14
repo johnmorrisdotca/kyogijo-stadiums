@@ -65,6 +65,8 @@ Each surface keeps the unit its rulebook states its figures in. The drawing itse
 | `nhl` | `qmjhl` | QMJHL hockey rink | `ft` (feet) |
 | `nhl` | `ushl` | USHL hockey rink | `ft` (feet) |
 | `nhl` | `pwhl` | PWHL hockey rink | `ft` (feet) |
+| `nhl` | `olympic` | Olympic ice hockey rink (60 by 26 m) | `m` (metres) |
+| `nhl` | `boston-garden` | Boston Garden hockey rink | `ft` (feet) |
 | `nfl`, `cfl`, `ifaf` | `ncaa` | NCAA football field | `yd` (yards) |
 | `nfl`, `cfl`, `ifaf` | `nfhs` | High school (NFHS) football field, 11 players | `yd` (yards) |
 | `nfl`, `cfl`, `ifaf` | `nfhs-9` | High school (NFHS) football field, 9 players | `yd` (yards) |

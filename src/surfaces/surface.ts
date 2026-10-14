@@ -46,6 +46,14 @@ export interface PageantPlan {
 /** The parts of a surface a drawing can be cropped to, by name: one box, or one at each end (`left` and `right` as the surface lies wide), in feet in the wide frame. */
 export type SurfaceRanges = Readonly<Record<string, Box | { left: Box; right: Box }>>;
 
+/** The places of a surface's own parts that a game's situation (`situation`) is drawn against, in the wide frame, in feet. */
+export type SituationAnchors =
+  | { kind: "hockey"; length: number; width: number; blueLine: number; goalLine: number; cornerRadius: number; net: { width: number; depth: number } }
+  /** The centre of each base, as the drawing has it (first, second, third), and half the diagonal of a base as drawn; where the backstop stands behind home plate. */
+  | { kind: "baseball"; bases: readonly (readonly [number, number])[]; half: number; backstop: number }
+  /** The field of play from goal line to goal line, with its end zones. */
+  | { kind: "football"; length: number; endZone: number; width: number };
+
 /** A surface, ready for the teams and the score to be laid on it. */
 export interface Surface {
   sport: Sport;
@@ -101,6 +109,8 @@ export interface Surface {
   lineRef?: { width: number; feet: number };
   /** For a surface with a crowd: the margin it was drawn with, which holds the stands. */
   crowdMargin?: number;
+  /** Where the parts a situation is drawn against are: a rink's lines and nets, a diamond's bases, a gridiron's goal lines. */
+  anchors?: SituationAnchors;
 }
 
 /** A part of a surface to label: its anchor on the surface in feet and the margin its label stands in (the top or the bottom as the surface lies wide). */
