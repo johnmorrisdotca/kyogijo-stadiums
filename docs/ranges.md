@@ -98,6 +98,22 @@ console.log(drawKyogijo({ sport: "nhl", range: undefined }) === drawKyogijo({ sp
 | `athletics` | `hammer-throw` | a hammer circle with its cage and the 34.92 degree sector | `right` |
 | `athletics` | `javelin-throw` | a javelin runway with its arc and sector | `left` |
 | `athletics` | `water-jump` | the steeplechase water jump and the bend round it | `left` |
+| `judo` | `contest-area` | the contest area of the first competition area, or of the last at the other end, with the safety area's edge round it | `left` |
+| `judo` | `start` | the middle of a contest area, with the tape where the contestants start | none |
+| `judo` | `half` | one half of the tatami, from its left edge to the middle | `left` |
+| `karate` | `contest-area` | the matted square inside the boundary band of the first area (or of the last, at the other end) | `left` |
+| `karate` | `start` | the middle of the area, with the two start mats | none |
+| `karate` | `half` | one half of the mats, from the left edge to the middle | `left` |
+| `kendo` | `start` | the middle of the shiai-jo, with the cross and the two kaishi-sen | none |
+| `kendo` | `half` | one half of the floor, from the left boundary line to the middle | `left` |
+| `sumo` | `ring` | the ring of tawara, the tokudawara and the sand round them | none |
+| `sumo` | `start` | the middle of the ring, with the two shikiri-sen | none |
+| `sumo` | `half` | one half of the dohyō, from the left edge to the middle | `left` |
+| `kyudo` | `shajo` | the shajō, the hall the archers shoot from, with the shooting positions and the honza | none |
+| `kyudo` | `yamichi` | the yamichi, the open ground between the shajō and the azuchi | none |
+| `kyudo` | `azuchi` | the azuchi with the targets, and a little ground round it | none |
+| `dojo` | `kamiza` | the end of the floor at the kamiza's wall | none |
+| `dojo` | `half` | one half of the floor, from the left wall to the middle | `left` |
 <!-- /made:ranges -->
 
 A range at an end takes `end`: `range: { name: "half", end: "right" }`. The end is as the surface is drawn wide: `left` or `right`, whichever way the drawing lies, so that a tall drawing's left end is its top. A range with no end (the neutral zone, the middle third, the infield) ignores one. The offensive ranges are at the right by default, as a frame's numbers are for a team that attacks the right (see [coordinate frames](./frames.md)), the defensive and own ranges at the left, and the others, such as a half, at the left, as a curling sheet's house is: `end` moves any of them.

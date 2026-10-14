@@ -37,7 +37,7 @@ export const TEAMS_JA = {
   net: { away: "港町ガルズ", home: "草原バイソンズ" },
 };
 
-export const FAMILIES = { nfl: "football", cfl: "football", ifaf: "football", nhl: "hockey", nba: "basketball", mlb: "baseball", soccer: "soccer", curling: "curling", tennis: "net", volleyball: "net", badminton: "net", pickleball: "net", tabletennis: "net", padel: "net", squash: "net", racquetball: "net", sepaktakraw: "net", teqball: "net", roundnet: "net", netball: "net", athletics: "football", skating: "hockey", lacrosse: "football", rugby: "football", afl: "football", gaelic: "football", cricket: "football", fieldhockey: "football", handball: "football", swimming: "football", waterpolo: "football", diving: "football", artisticswimming: "football" };
+export const FAMILIES = { nfl: "football", cfl: "football", ifaf: "football", nhl: "hockey", nba: "basketball", mlb: "baseball", soccer: "soccer", curling: "curling", tennis: "net", volleyball: "net", badminton: "net", pickleball: "net", tabletennis: "net", padel: "net", squash: "net", racquetball: "net", sepaktakraw: "net", teqball: "net", roundnet: "net", netball: "net", athletics: "football", skating: "hockey", lacrosse: "football", rugby: "football", afl: "football", gaelic: "football", cricket: "football", fieldhockey: "football", handball: "football", swimming: "football", waterpolo: "football", diving: "football", artisticswimming: "football", judo: "football", karate: "football", kendo: "football", sumo: "football", kyudo: "football", dojo: "football" };
 
 /** Typical scores and a competition line for each sport. */
 export const GAMES = {
@@ -79,4 +79,11 @@ export const GAMES = {
   waterpolo: { away: 9, home: 11, status: "final", competition: "Quarter-final", date: "Aug 9" },
   diving: { away: 146, home: 154, status: "final", competition: "Dual meet", date: "Feb 14" },
   artisticswimming: { away: 146, home: 154, status: "final", competition: "Team event", date: "Aug 7" },
+  // The budo: what each side scored as its sport counts it (`budo`, on the team): judo's waza-ari and yuko, karate's points, kendo's points by the target struck, sumo's winning technique, kyudo's hits and a dojo's team match.
+  judo: { away: 11, home: 10, status: "final", competition: "Final, 73 kg", date: "Aug 2", awayExtra: { budo: { wazaari: 1, yuko: 1, shido: 1 } }, homeExtra: { budo: { wazaari: 1, shido: 2 } } },
+  karate: { away: 5, home: 3, status: "final", competition: "Kumite final", date: "Aug 7", awayExtra: { budo: { wazaari: 2, yuko: 1, senshu: true } }, homeExtra: { budo: { wazaari: 1, yuko: 1 } } },
+  kendo: { away: 2, home: 1, status: "final", competition: "Final", date: "Nov 3", awayExtra: { budo: { techniques: ["men", "kote"] } }, homeExtra: { budo: { techniques: ["do"] } } },
+  sumo: { away: 1, home: 0, status: "final", competition: "Day 15", date: "Sep 28", awayExtra: { budo: { kimarite: "yorikiri" } } },
+  kyudo: { away: 17, home: 15, status: "final", competition: "Team final", date: "May 4" },
+  dojo: { away: 3, home: 2, status: "final", competition: "Kohaku team match", date: "Jan 11" },
 };

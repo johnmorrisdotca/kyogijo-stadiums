@@ -203,6 +203,8 @@ export interface KyogijoWords {
     dojoBorder: string;
     dojoKamiza: string;
     dojoShinzen: string;
+    dojoDais: string;
+    dojoBanner: string;
     dojoAreas: string;
     dojoWalls: string;
     /** The scoreboards: the heads and the sentences that say what each side scored. */
@@ -952,6 +954,8 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       dojoBorder: "a dojo of {jo} jō, {width} by {length} metres, laid with tatami of {mat} metres with a border of another colour",
       dojoKamiza: "The kamiza is at the {side}.",
       dojoShinzen: "The shinzen, the shrine, is at the kamiza.",
+      dojoDais: "A raised platform stands at the kamiza wall, the seat of honour.",
+      dojoBanner: "A plain dark banner hangs on the kamiza wall.",
       dojoAreas: "{n} contest areas of 8 metres are marked on the floor.",
       dojoWalls: "It has walls with {doors} and {windows}.",
       board: {
@@ -1056,7 +1060,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
         boundary: "Boundary", pitch: "Pitch", "bowling-crease": "Bowling crease", "popping-crease": "Popping crease", "return-crease": "Return crease", wicket: "Wicket", "thirty-yard-circle": "30-yard circle",
         "twenty-three-line": "23-metre line", "shooting-circle": "Shooting circle", "penalty-spot": "Penalty spot", "broken-circle-line": "Broken line round the circle", "goal-area-line": "Goal-area line",
         "finish-line": "Finish line", kerb: "Kerb", "lane-lines": "Lane lines", bend: "Bend", straight: "Straight", "infield-pitch": "Soccer pitch", "start-line": "Start line", breakline: "Breakline", "water-jump": "Water jump", "exchange-zone": "Takeover zone",
-        "referee-position": "Referee's place", "shiai-jo": "Shiai-jo", floorboard: "Floorboard", heri: "Heri, the mat's edge", "contest-area": "Contest area", "safety-area": "Safety area", "danger-zone": "Danger zone", "start-mark": "Start mark", "common-safe-zone": "Common safe zone", "free-zone": "Free zone", platform: "Platform", "technical-table": "Technical table", arena: "Arena floor", "competition-area": "Competition area", "boundary-band": "Boundary band", "start-mat": "Start mat", judge: "Judge", "between-areas": "Between the areas", "centre-cross": "Centre cross", "kaishi-sen": "Kaishi-sen", "outer-boundary": "Outer boundary", dohyo: "Dohyō", ring: "Ring", tawara: "Tawara", tokudawara: "Tokudawara", "shikiri-sen": "Shikiri-sen", "jano-me": "Jano-me", shajo: "Shajō", "shooting-position": "Shooting position", honza: "Honza", yamichi: "Yamichi", "yatori-michi": "Path for the arrows", azuchi: "Azuchi", mato: "Target", kamiza: "Kamiza", shimoza: "Shimoza", shinzen: "Shinzen", entrance: "Entrance", window: "Window", tatami: "Tatami", wall: "Wall", "inner-lane": "Inner lane", "outer-lane": "Outer lane", "crossing-straight": "Crossing straight", "warm-up-lane": "Warm-up lane", padding: "Padding", infield: "Infield", "coaches-area": "Coaches' area", blocks: "Blocks", "track-line": "Line of the track", "start-lines": "Starting lines", ice: "Ice", "technical-panel": "Technical panel", referee: "Referee", "kiss-and-cry": "Kiss and cry", judges: "Judges", runway: "Runway", "take-off-board": "Take-off board", "landing-area": "Landing area", "throwing-circle": "Throwing circle", sector: "Landing sector", "stop-board": "Stop board", cage: "Cage", "throwing-arc": "Throwing arc", crossbar: "Crossbar", "landing-mat": "Landing mat", "run-up": "Run-up", "zero-line": "Zero line", box: "Box",
+        "referee-position": "Referee's place", "shiai-jo": "Shiai-jo", floorboard: "Floorboard", heri: "Heri, the mat's edge", "contest-area": "Contest area", "safety-area": "Safety area", "danger-zone": "Danger zone", "start-mark": "Start mark", "common-safe-zone": "Common safe zone", "free-zone": "Free zone", platform: "Platform", "technical-table": "Technical table", arena: "Arena floor", "competition-area": "Competition area", "boundary-band": "Boundary band", "start-mat": "Start mat", judge: "Judge", "between-areas": "Between the areas", "centre-cross": "Centre cross", "kaishi-sen": "Kaishi-sen", "outer-boundary": "Outer boundary", dohyo: "Dohyō", ring: "Ring", tawara: "Tawara", tokudawara: "Tokudawara", "shikiri-sen": "Shikiri-sen", "jano-me": "Jano-me", shajo: "Shajō", "shooting-position": "Shooting position", honza: "Honza", yamichi: "Yamichi", "yatori-michi": "Path for the arrows", azuchi: "Azuchi", mato: "Target", kamiza: "Kamiza", shimoza: "Shimoza", shinzen: "Shinzen", dais: "Dais, the seat of honour", banner: "Banner", entrance: "Entrance", window: "Window", tatami: "Tatami", wall: "Wall", "inner-lane": "Inner lane", "outer-lane": "Outer lane", "crossing-straight": "Crossing straight", "warm-up-lane": "Warm-up lane", padding: "Padding", infield: "Infield", "coaches-area": "Coaches' area", blocks: "Blocks", "track-line": "Line of the track", "start-lines": "Starting lines", ice: "Ice", "technical-panel": "Technical panel", referee: "Referee", "kiss-and-cry": "Kiss and cry", judges: "Judges", runway: "Runway", "take-off-board": "Take-off board", "landing-area": "Landing area", "throwing-circle": "Throwing circle", sector: "Landing sector", "stop-board": "Stop board", cage: "Cage", "throwing-arc": "Throwing arc", crossbar: "Crossbar", "landing-mat": "Landing mat", "run-up": "Run-up", "zero-line": "Zero line", box: "Box",
         "seven-metre-line": "7-metre line", "four-metre-line": "4-metre line", "throw-off-area": "Throw-off area", "restraining-line": "Restraining line", "wing-line": "Wing line", "marking-area": "Marking area", "two-point-arc": "Two-point arc",
         "lane-rope": "Lane rope", "lane-line": "Lane marking on the floor", "lane-end-cross": "Cross line at the end of the lane marking", "fifteen-metre-mark": "15 m mark", "touch-pad": "Touch panel", "starting-block": "Starting block", "backstroke-flags": "Backstroke flags", "false-start-rope": "False start rope", gutter: "Gutter",
         "two-metre-line": "2 m line", "five-metre-mark": "5 m mark", "six-metre-line": "6 m line", "half-distance-line": "Half distance line", "re-entry-area": "Re-entry area", "referee-platform": "Referee platform", "official-table": "Official table", "substitution-area": "Substitution area",
@@ -1173,7 +1177,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       karate: "空手道の組手の試合場。一辺8mの正方形にマットを敷き、外側の1mは別の色で、幅2mの安全地帯があります",
       kendo: "剣道の試合場。10m四方の板張りで、白い境界線と2本の開始線があります",
       sumo: "相撲の土俵。一辺6.7mの粘土の正方形に、20俵でつくる直径4.55mの円があります",
-      kyudo: "近的の弓道場。射位が5つある射場から、安土の的まで28mあります",
+      kyudo: "近的の弓道場。射位が5か所ある射場から、安土の的まで28mあります",
       dojo: "20畳の道場",
     },
     status: { final: "試合終了", "final-ot": "試合終了（延長）", "final-so": "試合終了（SO）", "final-aet": "試合終了（延長戦）", "final-pens": "試合終了（PK戦）", live: "試合中", half: "ハーフタイム", "extra-time": "延長戦", "extra-end": "エキストラエンド", penalties: "PK戦", postponed: "延期", tiebreak: "タイブレーク", "match-tiebreak": "マッチタイブレーク", retired: "途中棄権", walkover: "不戦勝" },
@@ -1343,12 +1347,12 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
     budo: {
       sides: { north: "北", south: "南", east: "東", west: "西" },
       judo: "柔道の試合場。試合場内は{contest}m四方、幅{safety}mの安全地帯があり、{tatami}の畳を敷いています",
-      judoMany: "柔道の試合場。試合場内が{contest}m四方の試合場が{areas}面、間隔は{gap}mで、それぞれ幅{safety}mの安全地帯があり、{tatami}の畳を敷いています",
+      judoMany: "柔道の試合場。{contest}m四方の試合場内が{areas}面、間隔は{gap}mで、それぞれ幅{safety}mの安全地帯があり、{tatami}の畳を敷いています",
       judoKata: "柔道の形の試合場。{contest}m四方で、幅{safety}mの安全地帯があり、{tatami}の畳を敷いています",
-      danger: "各試合場内の内側には、畳1枚の幅の赤い危険地帯があります。",
-      platform: "畳は、畳より縦横とも1m大きい台の上にあります。",
-      start: "選手が開始する位置を示すテープが、中央に{apart}m離れて貼られています。",
-      officials: "係員席は上にあります。",
+      danger: "各試合場内の縁に沿って、畳1枚分の幅の赤い危険地帯があります。",
+      platform: "畳は、それより縦横とも1m大きい台の上にあります。",
+      start: "選手の開始位置を示すテープが、中央に{apart}m離れて貼られています。",
+      officials: "係員席は図の上側にあります。",
       tatami: "{length}×{width}m",
       karate: "空手道の組手の試合場。一辺{area}mの正方形にマットを敷き、外側の1mは別の色で、幅{safety}mの安全地帯があり、開始位置のマットが2枚あります",
       karateMany: "空手道の組手の試合場。一辺{area}mの正方形が{areas}面で、外側の1mは別の色、間隔は{gap}mで、それぞれ幅{safety}mの安全地帯があり、開始位置のマットが2枚あります",
@@ -1358,14 +1362,16 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       sumo: "相撲の土俵。一辺{platform}m、高さ{height}cmの粘土の正方形に、{count}俵でつくる直径{circle}mの円、蛇の目の砂、2本の仕切り線があります",
       sumoBare: "相撲の土俵。一辺{platform}m、高さ{height}cmの粘土の正方形に、直径{circle}mの円があります",
       tassels: "吊り屋根の四つの房は、四方の色です。東は青、南は赤、西は白、北は黒です。",
-      kyudo: "近的の弓道場。射位が{n}つある射場から、安土の的まで{distance}mあり、その間に矢道があり、横に矢を取りに行く道があります",
-      kyudoEnteki: "遠的の弓道場。射位が{n}つある射場から、安土の1mの的まで{distance}mあり、その間に矢道があり、横に矢を取りに行く道があります",
-      dojoTraditional: "{jo}畳の道場。{width}×{length}mで、{mat}mの畳を、四つ角が合わないように敷いています",
-      dojoCompetition: "{jo}畳の道場。{width}×{length}mで、{mat}mの畳を、試合場内と安全地帯の色に敷いています",
+      kyudo: "近的の弓道場。射位が{n}か所ある射場から、安土の的まで{distance}mあり、その間に矢道があり、横に矢取道があります",
+      kyudoEnteki: "遠的の弓道場。射位が{n}か所ある射場から、安土の直径1mの的まで{distance}mあり、その間に矢道があり、横に矢取道があります",
+      dojoTraditional: "{jo}畳の道場。{width}×{length}mで、{mat}mの畳を、4枚の角が1点に集まらないように敷いています",
+      dojoCompetition: "{jo}畳の道場。{width}×{length}mで、{mat}mの畳を、試合場内と安全地帯の色に分けて敷いています",
       dojoChecker: "{jo}畳の道場。{width}×{length}mで、{mat}mの畳を、二色が交互になるように敷いています",
-      dojoBorder: "{jo}畳の道場。{width}×{length}mで、{mat}mの畳を敷き、周りに別の色の縁があります",
+      dojoBorder: "{jo}畳の道場。{width}×{length}mで、{mat}mの畳を敷き、周りに別の色の帯があります",
       dojoKamiza: "上座は{side}にあります。",
-      dojoShinzen: "上座に神前があります。",
+      dojoShinzen: "上座に神棚があります。",
+      dojoDais: "上座に、一段高い台があります。",
+      dojoBanner: "上座側の壁に、無地の濃い色の垂れ幕が掛かっています。",
       dojoAreas: "床に、8m四方の試合場が{n}面示されています。",
       dojoWalls: "壁があり、{doors}と{windows}があります。",
       board: {
@@ -1469,7 +1475,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
         "distance-line": "距離を示すライン", "large-rectangle": "大きい長方形", "small-rectangle": "小さい長方形", "thirteen-metre-arc": "13メートルアーク", "forty-metre-arc": "40メートルアーク", "penalty-point": "ペナルティーマーク",
         boundary: "バウンダリー", pitch: "ピッチ", "bowling-crease": "ボウリングクリース", "popping-crease": "ポッピングクリース", "return-crease": "リターンクリース", wicket: "ウィケット", "thirty-yard-circle": "30ヤードサークル",
         "twenty-three-line": "23メートルライン", "shooting-circle": "シューティングサークル", "penalty-spot": "ペナルティースポット", "broken-circle-line": "サークルを囲む破線", "goal-area-line": "ゴールエリアライン",
-        "referee-position": "主審の位置", "shiai-jo": "試合場", floorboard: "床板", heri: "畳縁", "contest-area": "試合場内", "safety-area": "安全地帯", "danger-zone": "危険地帯", "start-mark": "開始線", "common-safe-zone": "共通の安全地帯", "free-zone": "フリーゾーン", platform: "競技台", "technical-table": "係員席", arena: "アリーナの床", "competition-area": "試合場", "boundary-band": "境界の帯", "start-mat": "開始位置のマット", judge: "副審", "between-areas": "試合場の間", "centre-cross": "中央の×印", "kaishi-sen": "開始線", "outer-boundary": "場外の余地", dohyo: "土俵", ring: "土俵の円", tawara: "俵", tokudawara: "徳俵", "shikiri-sen": "仕切り線", "jano-me": "蛇の目", shajo: "射場", "shooting-position": "射位", honza: "本座", yamichi: "矢道", "yatori-michi": "矢取道", azuchi: "安土", mato: "的", kamiza: "上座", shimoza: "下座", shinzen: "神前", entrance: "入口", window: "窓", tatami: "畳", wall: "壁", "inner-lane": "インレーン", "outer-lane": "アウトレーン", "crossing-straight": "交差ストレート", "warm-up-lane": "ウォームアップレーン", padding: "防護マット", infield: "インフィールド", "coaches-area": "コーチエリア", blocks: "ブロック", "track-line": "トラックのライン", "start-lines": "スタートライン", ice: "氷面", "technical-panel": "テクニカルパネル", referee: "レフェリー", "kiss-and-cry": "キス・アンド・クライ", judges: "ジャッジ席", runway: "助走路", "take-off-board": "踏切板", "landing-area": "砂場", "throwing-circle": "投てきサークル", sector: "着地場所", "stop-board": "足留材", cage: "囲い", "throwing-arc": "スターティング・ライン", crossbar: "バー", "landing-mat": "着地マット", "run-up": "助走路", "zero-line": "ゼロライン", box: "ボックス",
+        "referee-position": "主審の位置", "shiai-jo": "試合場", floorboard: "床板", heri: "畳縁", "contest-area": "試合場内", "safety-area": "安全地帯", "danger-zone": "危険地帯", "start-mark": "開始線", "common-safe-zone": "共通の安全地帯", "free-zone": "フリーゾーン", platform: "畳の台", "technical-table": "係員席", arena: "アリーナの床", "competition-area": "試合場", "boundary-band": "境界の帯", "start-mat": "開始位置のマット", judge: "副審", "between-areas": "試合場の間", "centre-cross": "中央の×印", "kaishi-sen": "開始線", "outer-boundary": "場外の余地", dohyo: "土俵", ring: "土俵の円", tawara: "俵", tokudawara: "徳俵", "shikiri-sen": "仕切り線", "jano-me": "蛇の目", shajo: "射場", "shooting-position": "射位", honza: "本座", yamichi: "矢道", "yatori-michi": "矢取道", azuchi: "安土", mato: "的", kamiza: "上座", shimoza: "下座", shinzen: "神棚", dais: "上座の台", banner: "垂れ幕", entrance: "入口", window: "窓", tatami: "畳", wall: "壁", "inner-lane": "インレーン", "outer-lane": "アウトレーン", "crossing-straight": "交差ストレート", "warm-up-lane": "ウォームアップレーン", padding: "防護マット", infield: "インフィールド", "coaches-area": "コーチエリア", blocks: "ブロック", "track-line": "トラックのライン", "start-lines": "スタートライン", ice: "氷面", "technical-panel": "テクニカルパネル", referee: "レフェリー", "kiss-and-cry": "キス・アンド・クライ", judges: "ジャッジ席", runway: "助走路", "take-off-board": "踏切板", "landing-area": "砂場", "throwing-circle": "投てきサークル", sector: "着地場所", "stop-board": "足留材", cage: "囲い", "throwing-arc": "スターティング・ライン", crossbar: "バー", "landing-mat": "着地マット", "run-up": "助走路", "zero-line": "ゼロライン", box: "ボックス",
         "finish-line": "フィニッシュライン", kerb: "縁石", "lane-lines": "レーンライン", bend: "曲走路", straight: "直走路", "infield-pitch": "サッカーのピッチ", "start-line": "スタートライン", breakline: "ブレイクライン", "water-jump": "水濠", "exchange-zone": "テークオーバーゾーン",
         "seven-metre-line": "7mスローライン", "four-metre-line": "4mライン", "throw-off-area": "スローオフエリア", "restraining-line": "リストレイニングライン", "wing-line": "ウイングライン", "marking-area": "マーキングエリア", "two-point-arc": "2ポイントアーク",
         "lane-rope": "レーンロープ", "lane-line": "床面のレーンライン", "lane-end-cross": "クロスライン", "fifteen-metre-mark": "15mマーク", "touch-pad": "タッチ板", "starting-block": "スタート台", "backstroke-flags": "背泳ぎ用フラッグ", "false-start-rope": "フォルススタートロープ", gutter: "ガター",

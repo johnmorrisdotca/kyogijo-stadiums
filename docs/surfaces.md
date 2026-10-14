@@ -1,6 +1,6 @@
 # The surfaces
 
-Twenty-seven-four-two surfaces, each drawn to scale from its rulebook. Every dimension is kept in feet in the code (`@johnmorrisdotca/kyogijo-stadiums/geometry`) and can be had in any unit (see [Units](./units.md)), and each is cited in [docs/sources.md](./sources.md).
+Thirty-nine surfaces, each drawn to scale from its rulebook. Every dimension is kept in feet in the code (`@johnmorrisdotca/kyogijo-stadiums/geometry`) and can be had in any unit (see [Units](./units.md)), and each is cited in [docs/sources.md](./sources.md).
 
 | `sport` | Surface | Size | Drawn |
 | --- | --- | --- | --- |
@@ -30,6 +30,12 @@ Twenty-seven-four-two surfaces, each drawn to scale from its rulebook. Every dim
 | `artisticswimming` | Artistic swimming area | 30 by 20 m, or 25 by 15 m with a deep part | the lines along the floor, the deep part, the judges' platform and the starting platform |
 | `athletics` | Athletics stadium | the 400 m standard track (8 lanes of 1.22 m) round a soccer pitch, or the covered 200 m track | the lanes, the finish, the stagger, curved and relay starts, the hurdles, the steeplechase and its water jump, each field event in its place, close-ups of a start and the finish ([The athletics stadium](./athletics.md)) |
 | `skating` | Skating rink | the standard 400 m speed skating track, the short track's oval of 111.12 m on 60 by 30 m, or the figure skating rink of 60 by 30 m | the lanes, the warm-up lane, the blocks, the lines of each race and the coaches' area; the short track's blocks, tracks and starting positions; the figure skating rink's boards and furniture ([The skating rinks](./skating.md)) |
+| `judo` | Judo competition area | a contest area of 8 m to 10 m (10 m drawn) in a safety area of 3 m or more (4 m drawn), tatami of 2 m by 1 m | the contest and safety areas in the IJF's yellow and red (or other looks), the common safe zone between areas, the free zone, the platform, the tape where the contestants start; the AJJF's red danger zone and 182 by 91 cm tatami; the kata area |
+| `karate` | Karate competition area | the WKF's matted square of 8 m with a safety area of 2 m | the outer metre of a kumite area in another colour, the two start mats, the referee and the judges, the officials' table; the kata area |
+| `kendo` | Kendo shiai-jo | a wooden floor of 9 m to 11 m a side (10 m drawn) | the boundary lines, the cross at the centre, the two kaishi-sen, the floorboards, the 1.5 m kept clear outside |
+| `sumo` | Sumo dohyō | the clay square of 6.7 m | the ring of 4.55 m made of 20 tawara with its four tokudawara, the jano-me, the two shikiri-sen, the four tassels of the roof; raised as a mound in 3D |
+| `kyudo` | Kyūdōjō | kinteki 28 m or enteki 60 m, from the shooting position to the target | the shajō with its shooting positions and honza, the yamichi, the azuchi with the targets, the path for the arrows, the roofs |
+| `dojo` | Dojo | a floor of tatami in jō (20 jō by default), in metres or in mats | the mats as real units (no four corners meet), the heri, the walls, doors and windows, the shrine and the kamiza, judo contest areas laid on it |
 | `lacrosse` | Lacrosse field or box floor | 100 by 60 m (World Lacrosse's men's), 110 by 60 yards (the NCAA's), a floor 200 by 85 feet | the goals, creases, restraining and wing lines; the women's goal circles, marking areas, arc and fan; the PLL's two-point arc; the floor's boards, face-off circle and spots ([Field sports](./field-sports.md)) |
 | `rugby` | Rugby field | 100 m between the try lines and 70 wide, with in-goal areas (union); 100 by 68 m (league) | the 22-metre lines, half-way line and dash lines of union; a line every 10 metres, the 20 and 40 metre lines red, of the NRL's league; goal posts and flag posts |
 | `afl` | Australian football ground | an oval 135 to 185 by 110 to 155 m, the MCG's 160 by 141 drawn, or a named ground | the goal and behind posts, the goal squares, the centre square and circles, the Fifty Metre Arcs |

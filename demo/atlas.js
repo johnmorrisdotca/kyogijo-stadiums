@@ -2,7 +2,7 @@
 // markers do (so a keyboard or a screen reader needs no marker), and the chosen place's surface drawn beside it by kyogijo.
 // The map's modules are chizu's own (copied into ./chizu by `pnpm site`) and the places are the package's `atlas` entry.
 import { GROUNDS, drawKyogijo } from "./dist/index.js";
-import { PLACES, atlasFacets, officialName, placeById, placesBy, plainName, surfaceOf, surfacesOf } from "./dist/atlas-entry.js";
+import { PLACES, atlasFacets, hallSurfaces, officialName, placeById, placesBy, plainName, surfaceOf, surfacesOf } from "./dist/atlas-entry.js";
 import { ATLAS_MARK_STYLE, markIcon, markSvg } from "./atlas-marks.js";
 
 const $ = (id) => document.getElementById(id);
@@ -180,7 +180,7 @@ export async function initAtlas({ say, lang, onTry }) {
       group.append(button);
     }
   }
-  makeSeg("atlas-sport", ["all", "baseball", "soccer"], (v) => say(v === "all" ? "atlasAll" : `atlasSport_${v}`), () => state.sport, (v) => { state.sport = v; });
+  makeSeg("atlas-sport", ["all", "baseball", "soccer", "budo"], (v) => say(v === "all" ? "atlasAll" : `atlasSport_${v}`), () => state.sport, (v) => { state.sport = v; });
   makeSeg("atlas-status", ["all", "current", "past"], (v) => say(v === "all" ? "atlasAll" : `atlasStatus_${v}`), () => state.status, (v) => { state.status = v; });
 
   function fillSelects() {
@@ -239,7 +239,7 @@ export async function initAtlas({ say, lang, onTry }) {
     $("atlas-search").placeholder = say("atlasSearchPlaceholder");
     $("atlas-list").setAttribute("aria-label", say("atlasListLabel"));
     // The key: the sport by colour and by the dot, the status by shape.
-    $("atlas-key").replaceChildren(...[["baseball", "current", "atlasKeyBaseball"], ["soccer", "current", "atlasKeySoccer"], ["baseball", "current", "atlasKeyCurrent"], ["baseball", "past", "atlasKeyPast"]].map(([sport, status, key]) => {
+    $("atlas-key").replaceChildren(...[["baseball", "current", "atlasKeyBaseball"], ["soccer", "current", "atlasKeySoccer"], ["budo", "current", "atlasKeyBudo"], ["baseball", "current", "atlasKeyCurrent"], ["baseball", "past", "atlasKeyPast"]].map(([sport, status, key]) => {
       const item = document.createElement("li");
       item.innerHTML = markIcon({ id: "", sport, status }, 16);
       item.append(document.createTextNode(` ${say(key)}`));
@@ -315,9 +315,12 @@ export async function initAtlas({ say, lang, onTry }) {
       ["atlasCoordinates", `${coordinate(place.lat, "N", "S")}, ${coordinate(place.lon, "E", "W")}`],
     ].filter(Boolean);
     const surfaces = surfacesOf(place);
+    // A hall (the Kodokan, the Budokan) has several floors, each with a name and a note of what a source gives and what is drawn as plausible.
+    const floors = place.kind === "hall" ? hallSurfaces(place) : [];
     box_.innerHTML = `<div class="fam-felt atlas-surface" data-testid="atlas-surface">${drawKyogijo(options)}</div>
       <h3 class="atlas-name"></h3>
       <dl class="atlas-facts">${rows.map(([key]) => `<div><dt>${key}</dt><dd></dd></div>`).join("")}</dl>
+      ${floors.length === 0 ? "" : '<ul class="atlas-tenants atlas-floors" data-testid="atlas-floors"></ul>'}
       ${place.tenants.length === 0 ? "" : '<h4 class="atlas-tenants-title"></h4><ul class="atlas-tenants" data-testid="atlas-tenants"></ul>'}
       <div class="fam-actions"><button type="button" class="fam-button" data-primary="true" id="atlas-try" data-testid="atlas-try"></button><a class="atlas-link" target="_blank" rel="noopener"></a></div>
       ${surfaces.length < 2 ? "" : '<div class="fam-actions atlas-also" data-testid="atlas-also"><span class="atlas-also-label"></span></div>'}`;
@@ -326,6 +329,20 @@ export async function initAtlas({ say, lang, onTry }) {
       row.querySelector("dt").textContent = say(rows[i][0]);
       row.querySelector("dd").textContent = rows[i][1];
     });
+    if (floors.length > 0) {
+      box_.querySelector(".atlas-floors").replaceChildren(...floors.map((floor) => {
+        const item = document.createElement("li");
+        item.dataset.basis = floor.basis;
+        const name = document.createElement("span");
+        name.className = "atlas-tenant-name";
+        name.textContent = floor.name[lang() === "ja" ? "ja" : "en"];
+        const meta = document.createElement("span");
+        meta.className = "atlas-tenant-meta";
+        meta.textContent = floor.note[lang() === "ja" ? "ja" : "en"];
+        item.append(name, " ", meta);
+        return item;
+      }));
+    }
     // The clubs that played there, the current ones first, each with its league and the years it was there.
     if (place.tenants.length > 0) {
       box_.querySelector(".atlas-tenants-title").textContent = say("atlasTenants");
@@ -351,15 +368,16 @@ export async function initAtlas({ say, lang, onTry }) {
     const also = box_.querySelector(".atlas-also");
     if (also !== null) {
       also.querySelector(".atlas-also-label").textContent = say("atlasTryAlso");
-      for (const surface of surfaces.slice(1)) {
+      surfaces.forEach((surface, k) => {
+        if (k === 0) return;
         const button = document.createElement("button");
         button.type = "button";
         button.className = "fam-button";
-        button.dataset.testid = `atlas-try-${surfaceKey(surface)}`;
-        button.textContent = say(SURFACE_WORDS[surfaceKey(surface)]);
+        button.dataset.testid = `atlas-try-${floors.length > 0 ? floors[k].id : surfaceKey(surface)}`;
+        button.textContent = floors.length > 0 ? floors[k].name[lang() === "ja" ? "ja" : "en"] : say(SURFACE_WORDS[surfaceKey(surface)]);
         button.addEventListener("click", () => onTry(place, surface));
         also.append(button);
-      }
+      });
     }
   }
 

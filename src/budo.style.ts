@@ -7,7 +7,7 @@ const CLASSES = `
 .kyogijo .ky-bud-t1{fill:var(--ky-surface)}
 .kyogijo .ky-bud-t2{fill:var(--ky-surface-alt,var(--ky-surface))}
 .kyogijo .ky-bud-t3{fill:var(--ky-red)}
-.kyogijo .ky-bud-heri{fill:var(--ky-ink);fill-opacity:.82}
+.kyogijo .ky-bud-heri{fill:var(--ky-bud-heri,var(--ky-ink));fill-opacity:.82}
 .kyogijo .ky-bud-seam{stroke:var(--ky-ink);stroke-opacity:.26;fill:none;stroke-linejoin:round}
 .kyogijo .ky-bud-line{stroke:var(--ky-line);fill:none}
 .kyogijo .ky-bud-ink{stroke:var(--ky-ink);fill:none}
@@ -20,6 +20,9 @@ const CLASSES = `
 .kyogijo .ky-bud-desk{fill:var(--ky-ink);fill-opacity:.55}
 .kyogijo .ky-bud-seat{fill:var(--ky-ink);fill-opacity:.42}
 .kyogijo .ky-bud-shrine{fill:var(--ky-red)}
+.kyogijo .ky-bud-edge{stroke:#fff;stroke-opacity:.2;stroke-width:.03;fill:none}
+.kyogijo .ky-bud-dais{fill:var(--ky-bud-floor,var(--ky-boards));stroke:var(--ky-ink);stroke-opacity:.5;stroke-width:.04}
+.kyogijo .ky-bud-banner{fill:var(--ky-ink);fill-opacity:.85}
 .kyogijo .ky-bud-clay{fill:var(--ky-dirt)}
 .kyogijo .ky-bud-sand{fill:var(--ky-sand,#e8dcc2)}
 .kyogijo .ky-bud-tawara{fill:var(--ky-bud-straw,#c8a45c);stroke:var(--ky-ink);stroke-opacity:.45;stroke-width:.03}

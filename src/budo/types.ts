@@ -12,7 +12,7 @@ export type Side4 = Compass | "top" | "bottom" | "left" | "right";
  * shiai-jo of 10 m, a dohyō of the Japan Sumo Association and a kyūdōjō of 28 m with five shooters, drawn without any.
  */
 export interface BudoStyle {
-  /** A named look: the colours of the mats and of the floor. Judo: `yellow-red` (the IJF's own, the default), `yellow-blue`, `blue-grey`, `green-beige` (the traditional tatami), `green-red` (green mats with a red danger zone) and `black-red`. Karate: `blue-red` (the default), `blue-black`, `green-beige`. Kendo: `wood` (the default), `blond`. Sumo: `clay`. Kyūdō: `wood`. Dojo: `green-beige` (the default), `yellow-red`, `blue-grey`, `blue-yellow`, `black-red`, `green-red`. */
+  /** A named look: the colours of the mats and of the floor. Judo: `yellow-red` (the IJF's own, the default), `yellow-blue`, `blue-grey`, `green-beige` (the traditional tatami), `green-red` (green mats with a red danger zone) and `black-red`. Karate: `blue-red` (the default), `blue-black`, `green-beige`. Kendo: `wood` (the default), `blond`. Sumo: `clay`. Kyūdō: `wood`. Dojo: `green-beige` (the default), `yellow-red`, `yellow-blue`, `blue-grey`, `black-red`, `green-red`. */
   look?: string;
   /** Judo and karate: how many competition areas lie side by side, 1 to 6 (1 by default), or `{ across, down }` for a block of them. They are as far apart as the rules ask, the common safety area. */
   areas?: number | { across: number; down: number };
@@ -32,6 +32,8 @@ export interface BudoStyle {
   officials?: boolean;
   /** Judo: draw the lines of the mats (the seams between them). On by default. */
   seams?: boolean;
+  /** Judo and dojo: `weave` draws the rice-straw weave of a mat as fine ridges along each mat's long side (they turn a quarter where a mat does), with a faint highlight on the mat edges; `none` leaves the mats plain. A traditional dojo has it by default, a judo area has none. It drops away at the simple detail. */
+  texture?: "weave" | "none";
   /** Karate: the referee's and the judges' places. On by default. */
   judges?: boolean;
   /** Sumo: the height of the clay square in metres, 0.34 to 0.60. 0.55 by default. Seen in 3D. */
@@ -88,6 +90,22 @@ export type DojoSize = number | readonly [number, number] | { width?: number; le
 /** The ways a dojo's mats are laid. */
 export type DojoPattern = "traditional" | "competition" | "checker" | "border";
 
+/** One look of a dojo's floor in its history. */
+export interface DojoEra {
+  /** The era's name, as `era` asks for it (`earlier`, `current`). */
+  name: string;
+  nameJa?: string;
+  /** The first and the last year it lasted, `null` where no source gives the year (an era with no years is picked by name, or as the last). */
+  from?: number | null;
+  to?: number | null;
+  look?: string;
+  colours?: DojoColours;
+  pattern?: DojoPattern;
+  areas?: number | { across: number; down: number };
+  areaSize?: number;
+  outline?: boolean;
+}
+
 /** The colours a dojo may be given, each a CSS colour. */
 export interface DojoColours {
   /** The mats. */
@@ -121,7 +139,7 @@ export interface DojoSpec {
   /** The colours. A named look in `look` sets all of them. */
   colours?: DojoColours;
   colors?: DojoColours;
-  /** A named look: `green-beige` (the default), `yellow-red`, `blue-grey`, `blue-yellow`, `black-red`, `green-red`. */
+  /** A named look: `green-beige` (the default), `yellow-red`, `yellow-blue`, `blue-grey`, `black-red`, `green-red`. */
   look?: string;
   /** The wall the kamiza (上座), the seat of honour, is at. North (the top of the drawing) by default. The shōmen is that wall. */
   kamiza?: Side4;
@@ -136,8 +154,30 @@ export interface DojoSpec {
   /** The dojo's name, for the title and the description. */
   label?: string;
   labelJa?: string;
-  /** Judo contest areas laid on the floor, 1 to 6 (none by default), of 8 m with a safety area where they fit. */
-  areas?: number;
+  /** Judo contest areas laid on the floor: 1 to 6 in a row (none by default), or `{ across, down }` for a block (`{ across: 2, down: 2 }` is four), of 8 m with a safety area where they fit. */
+  areas?: number | { across: number; down: number };
+  /** The side of a contest area laid on the floor, 8 m to 10 m (the IJF's, 8 m by default). In metres. */
+  areaSize?: number;
+  /** A band one mat wide round each contest area in the third colour (the border mats that outline an area on a floor of one colour). Off by default. */
+  outline?: boolean;
+  /** `weave` or `none`: the rice-straw weave of the mats (on by default for the traditional and border lays). */
+  texture?: "weave" | "none";
+  /** The wood round the mats, between them and the walls, in metres (none by default; the Kodokan's main dojo has a polished wood surround). */
+  surround?: number;
+  /** A spectators' balcony above the floor, as `dojoRoom()` gives it (it is not part of the plan's drawing; `crowd` draws the stands): `true` for all four sides, or the sides, depth in metres (3 by default), seat rows (5) and height above the mats (4 m). */
+  balcony?: boolean | { sides?: readonly Side4[]; depth?: number; rows?: number; height?: number };
+  /** The seat of honour's platform: a raised wooden dais at the middle of the kamiza wall (a chair stands on it in the Kodokan's main dojo). Off by default. */
+  dais?: boolean;
+  /** A plain dark vertical banner on the kamiza wall, over the dais or the shrine (a drawing of a banner, never any emblem). Off by default. */
+  banner?: boolean;
+  /**
+   * The history of the floor: the looks it has had, oldest first. Each era names itself and may say the years it lasted (`from` and `to`, both inclusive, `null` where the years are not known),
+   * and any of `look`, `colours`, `pattern`, `areas`, `areaSize` and `outline` it changes. `era` picks one by name; `year` picks the one that holds the year (the first whose years hold it);
+   * with neither, the last (the floor as it is now) is drawn.
+   */
+  eras?: readonly DojoEra[];
+  era?: string;
+  year?: number;
   /** The mat standard: a league of the `dojo` sport: `chukyoma` (the default), `kyoma`, `edoma`, `danchima` or `judo-2x1`; `league` says it too. */
   standard?: string;
 }

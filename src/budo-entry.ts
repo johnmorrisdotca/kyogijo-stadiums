@@ -2,6 +2,8 @@
 export { DOJO_STANDARDS, dojo, drawDojo } from "./budo/dojo.api.ts";
 export type { Dojo, Tatami } from "./budo/dojo.api.ts";
 export { DOJO_SIZES, floorOf, shapeOfJo } from "./budo/dojo.ts";
+export { dojoRoom, ROOM_HEIGHTS } from "./budo/room.ts";
+export type { DojoRoom, RoomBalcony, RoomBasis, RoomOpening, RoomWall } from "./budo/room.ts";
 export { budoLeague, budoPlan, BUDO_SPORTS, BUDOKAN_ARENA, isBudoSport } from "./budo/plan.ts";
 export type { BudoPlan, MBox, MMark, MRange } from "./budo/plan.ts";
 export { checker, fourCorners, kindOf, lay, matCount, tint } from "./budo/tatami.ts";
@@ -18,4 +20,4 @@ export { AJJF_CONTEST, BUDO_LEAGUES, DOJO_LEAGUES, ENTEKI, FIK_SHIAI_JO, IJF_CON
 export type { BudoFigures, BudoLeague, DojoFigures, DojoLeague, JudoFigures, JudoLeague, KarateFigures, KarateLeague, KendoFigures, KendoLeague, KyudoFigures, KyudoLeague, Mat, SumoFigures, SumoLeague } from "./leagues/budo.ts";
 export { HALLS } from "./halls.ts";
 export type { Hall, HallBasis, HallSurface } from "./halls.ts";
-export type { BudoKind, BudoScore, BudoStyle, Compass, DojoColours, DojoPattern, DojoSize, DojoSpec, DojoWindow, Entrance, Side4 } from "./budo/types.ts";
+export type { BudoKind, BudoScore, BudoStyle, Compass, DojoColours, DojoEra, DojoPattern, DojoSize, DojoSpec, DojoWindow, Entrance, Side4 } from "./budo/types.ts";

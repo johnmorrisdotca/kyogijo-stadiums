@@ -53,8 +53,15 @@ export function matOf(asked: BudoStyle["tatami"], fig: JudoFigures): MatSize {
   return mat;
 }
 
-/** A size rounded to a whole number of mats' widths, for mats that do not divide the rule's metres (the AJJF's 91 cm). */
-export const snapTo = (size: number, width: number): number => (Math.abs(width - 1) < 1e-9 ? size : Math.round(size / width) * width);
+/**
+ * A size made a whole number of mats' widths, for mats that do not divide the rule's metres (the AJJF's 91 cm): the next whole number of mats up, so that a least the rules give is kept, or the last that
+ * is within the greatest. 8 m of 91 cm mats is 9 mats, 8.19 m; 3 m is 4 mats, 3.64 m (two ken, as the AJJF's guidebook has it).
+ */
+export function snapTo(size: number, width: number, least: number, greatest: number): number {
+  if (Math.abs(width - 1) < 1e-9 || Math.abs(Math.round(size / width) * width - size) < 1e-9) return size;
+  const up = Math.ceil(size / width - 1e-9) * width;
+  return up <= greatest + 1e-9 ? up : Math.max(least, Math.floor(size / width + 1e-9) * width);
+}
 
 /** The areas across and down that the options ask for. @throws RangeError for a number outside 1 to 6. */
 export function gridOf(areas: BudoStyle["areas"]): { across: number; down: number } {

@@ -26,7 +26,38 @@ export function budoSurface(o: BuildOptions, plan: BudoPlan, margin: number): Su
   const turned = o.portrait;
   let base = el("rect", { class: ft(o, "apron", "ky-apron"), x: view0.x, y: view0.y, width: view0.w, height: view0.h });
   let ground = "";
-  for (const a of plan.areas) ground += el("path", { class: ft(o, a.feature, a.cls), d: areaD(a), "fill-rule": a.evenodd === true ? "evenodd" : undefined });
+  let defs = "";
+  // The weave of a mat, over the tones and under the heri and the seams: a ridge and its highlight, a repeating gradient that every mat shares (one `<defs>` entry, which a `<pattern>` would
+  // have to share with the background's), turned a quarter for a mat that lies across. Drawn only at full detail.
+  const pieces = plan.dojo?.pieces ?? plan.judo?.pieces ?? [];
+  const weave = full && plan.texture && pieces.length > 0;
+  const stripe = (at: number, colour: string, opacity: number, width: number): string => el("stop", { offset: at, "stop-color": colour, "stop-opacity": 0 }) + el("stop", { offset: at, "stop-color": colour, "stop-opacity": opacity }) + el("stop", { offset: at + width, "stop-color": colour, "stop-opacity": opacity }) + el("stop", { offset: at + width, "stop-color": colour, "stop-opacity": 0 });
+  const woven = (): string => {
+    defs += el("linearGradient", { id: `${o.id}-weave`, x1: 0, y1: 0, x2: 0, y2: 0.1, gradientUnits: "userSpaceOnUse", spreadMethod: "repeat" }, stripe(0.1, "#000000", 0.16, 0.22) + stripe(0.52, "#ffffff", 0.14, 0.16));
+    const rect = (p: MBox): string => `M${p.x0} ${p.y0}H${p.x1}V${p.y1}H${p.x0}Z`;
+    // A mat that lies across is drawn in a group turned a quarter, with its corners turned back, so that its ridges run along it.
+    const turned = (p: MBox): string => `M${p.y0} ${-p.x0}H${p.y1}V${-p.x1}H${p.y0}Z`;
+    const across = pieces.filter((p) => p.along === "x");
+    const down = pieces.filter((p) => p.along === "y");
+    let out = "";
+    if (across.length > 0) out += el("path", { class: "ky-bud-weave", d: across.map(rect).join(""), fill: `url(#${o.id}-weave)` });
+    if (down.length > 0) out += el("g", { transform: "rotate(90)" }, el("path", { class: "ky-bud-weave", d: down.map(turned).join(""), fill: `url(#${o.id}-weave)` }));
+    // A faint light line along the edge of each mat, where its rounded edge catches the light.
+    out += el("path", { class: "ky-bud-edge", d: pieces.map(rect).join(""), fill: "none" });
+    return out;
+  };
+  let pending = false;
+  let wove = false;
+  for (const a of plan.areas) {
+    const tone = a.cls === "ky-bud-t1" || a.cls === "ky-bud-t2" || a.cls === "ky-bud-t3";
+    if (weave && !wove && pending && !tone) {
+      wove = true;
+      ground += woven();
+    }
+    if (tone) pending = true;
+    ground += el("path", { class: ft(o, a.feature, a.cls), d: areaD(a), "fill-rule": a.evenodd === true ? "evenodd" : undefined });
+  }
+  if (weave && !wove) ground += woven();
   base += group(ground, "ky-bud-ground");
   const thick = o.exact ? plan.lineWidth : plan.drawnLine;
   // The seams are the plan's finest lines: left out of a drawing that asks for the simple detail.
@@ -46,7 +77,7 @@ export function budoSurface(o: BuildOptions, plan: BudoPlan, margin: number): Su
     view: view0,
     base,
     lines,
-    defs: "",
+    defs,
     left: places.left,
     right: places.right,
     plate: { cx, cy, w: plateW, h: plateW * 0.55 },

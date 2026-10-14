@@ -6,7 +6,7 @@ import { DOJO_LEAGUES } from "../leagues/budo.ts";
 import { boxD, rectArea } from "./kit.ts";
 import { emptyParts, grow, type MBox, type MMark, type Parts } from "./parts.ts";
 import { checker, heri, lay, matCount, seams, tatamiAreas, tint, type MatSize, type Piece } from "./tatami.ts";
-import type { Compass, DojoPattern, DojoSize, DojoSpec, Entrance, Side4 } from "./types.ts";
+import type { Compass, DojoEra, DojoPattern, DojoSize, DojoSpec, Entrance, Side4 } from "./types.ts";
 
 /** The usual sizes of a room counted in jō, in the mats' widths across and along: 8 jō is 4 by 4 widths (3.64 m square of Chūkyōma mats), 20 jō 5 by 8. */
 export const DOJO_SIZES: Readonly<Record<number, readonly [number, number]>> = Object.freeze({ 8: [4, 4], 12: [4, 6], 20: [5, 8], 50: [10, 10], 100: [10, 20], 200: [20, 20] });
@@ -84,11 +84,20 @@ export interface DojoLayout {
   counts: { full: number; half: number; cut: number };
   kamiza: Compass;
   wall: number;
+  /** The floor and the wood surround round it: the room inside the walls. */
+  room: MBox;
+  /** The width of the wood surround, 0 for none. */
+  surround: number;
   entrances: { wall: Compass; box: MBox }[];
   windows: { wall: Compass; box: MBox }[];
   shrine: MBox | undefined;
   /** The contest areas laid on the floor. */
   contests: MBox[];
+  /** The raised platform of the seat of honour, and the banner on its wall. */
+  dais: MBox | undefined;
+  banner: MBox | undefined;
+  /** The era of the floor, where it has them. */
+  era: DojoEra | undefined;
   marks: MMark[];
 }
 
@@ -111,8 +120,42 @@ function place(wall: Compass, box: MBox, at: number | undefined, width: number):
   return { at: Math.min(len - w / 2 - 0.1, Math.max(w / 2 + 0.1, t * len)), width: w };
 }
 
+/**
+ * The era a spec asks for, and the spec as it was then: the era's look, colours, pattern, contest areas and outline laid over the spec's own. `era` picks an era by name, `year` the first whose
+ * years hold it (an era with an unknown year, `null`, never holds one), and with neither the last era, the floor as it is now. A spec without eras is its own era.
+ * @throws Error for an `era` that no era is named, RangeError for a `year` no era holds.
+ */
+export function resolveEra(spec: DojoSpec | undefined): { spec: DojoSpec; era: DojoEra | undefined } {
+  const s = spec ?? {};
+  const eras = s.eras;
+  if (eras === undefined || eras.length === 0) return { spec: s, era: undefined };
+  let era: DojoEra | undefined;
+  if (s.era !== undefined) {
+    era = eras.find((e) => e.name === s.era);
+    if (era === undefined) throw new Error(`Unknown era "${String(s.era)}": use one of ${eras.map((e) => e.name).join(", ")}`);
+  } else if (s.year !== undefined) {
+    if (typeof s.year !== "number" || !Number.isFinite(s.year)) throw new RangeError("dojo.year is a year");
+    const year = s.year;
+    era = eras.find((e) => typeof e.from === "number" && year >= e.from && (typeof e.to !== "number" || year <= e.to));
+    if (era === undefined) throw new RangeError(`No era of this dojo holds the year ${year}: ${eras.map((e) => `${e.name} (${e.from ?? "?"} to ${e.to ?? "?"})`).join(", ")}`);
+  } else {
+    era = eras[eras.length - 1];
+  }
+  const without = <T extends object>(o: T, keys: readonly string[]): Record<string, unknown> => Object.fromEntries(Object.entries(o).filter(([k, v]) => !keys.includes(k) && v !== undefined));
+  const colours = era.colours;
+  const merged = { ...without(s, ["eras", "era", "year"]), ...without(era, ["name", "nameJa", "from", "to", "colours"]) } as DojoSpec;
+  const own = s.colours ?? s.colors;
+  if (colours !== undefined || own !== undefined) merged.colours = { ...own, ...colours };
+  delete merged.colors;
+  return { spec: merged, era };
+}
+
+/** The dojo's spec as drawn: the era's changes laid over it. */
+export const dojoSpecOf = (spec: DojoSpec | undefined): DojoSpec => resolveEra(spec).spec;
+
 /** The plan of the dojo a spec asks for. */
-export function dojoLayout(spec: DojoSpec, league: DojoFigures): DojoLayout {
+export function dojoLayout(asked: DojoSpec, league: DojoFigures): DojoLayout {
+  const spec = dojoSpecOf(asked);
   const mat = league.mat;
   const dims = floorOf(spec, mat);
   // The floor lies wide, as every surface does: its longer side is x, and the mats run along it.
@@ -129,25 +172,30 @@ export function dojoLayout(spec: DojoSpec, league: DojoFigures): DojoLayout {
   const raw = lay(floor, mat, alongAxis, pattern !== "checker");
   // Contest areas laid on the floor: squares of 8 m, centred along the longer side and 4 m apart, the mats inside them the first colour and the rest the second.
   const contests: MBox[] = [];
-  const n = spec.areas ?? 0;
-  if (n > 0) {
-    if (!Number.isInteger(n) || n < 1 || n > 6) throw new RangeError("dojo.areas is a whole number of 1 to 6");
-    const a = 8;
+  const grid = spec.areas === undefined ? undefined : typeof spec.areas === "number" ? { across: spec.areas, down: 1 } : spec.areas;
+  const a = spec.areaSize === undefined ? 8 : spec.areaSize;
+  if (typeof a !== "number" || !Number.isFinite(a) || a < 8 || a > 10) throw new RangeError("dojo.areaSize is 8 m to 10 m (the IJF's contest area)");
+  if (grid !== undefined && !(grid.across === 0 && grid.down === 0)) {
+    for (const k of [grid.across, grid.down]) if (!Number.isInteger(k) || k < 1 || k > 6) throw new RangeError("dojo.areas is a whole number of 1 to 6, or { across, down } of whole numbers of 1 to 6");
     const gap = 4;
-    const run = n * a + (n - 1) * gap;
-    const needLong = run + 6;
-    const needShort = a + 6;
-    const [long, short] = alongAxis === "y" ? [length, width] : [width, length];
-    if (long < needLong - 1e-9 || short < needShort - 1e-9) throw new RangeError(`A floor of ${Math.round(width * 100) / 100} m by ${Math.round(length * 100) / 100} m is too small for ${n} contest area${n === 1 ? "" : "s"}: it needs ${needLong} m by ${needShort} m (areas of 8 m, 4 m apart, a safety area of 3 m)`);
-    for (let i = 0; i < n; i += 1) {
-      const s0 = (long - run) / 2 + i * (a + gap);
-      const t0 = (short - a) / 2;
-      contests.push(alongAxis === "y" ? { x0: t0, y0: s0, x1: t0 + a, y1: s0 + a } : { x0: s0, y0: t0, x1: s0 + a, y1: t0 + a });
+    const margin = 3;
+    const runX = grid.across * a + (grid.across - 1) * gap;
+    const runY = grid.down * a + (grid.down - 1) * gap;
+    const needX = runX + 2 * margin;
+    const needY = runY + 2 * margin;
+    if (width < needX - 1e-9 || length < needY - 1e-9) throw new RangeError(`A floor of ${Math.round(width * 100) / 100} m by ${Math.round(length * 100) / 100} m is too small for ${grid.across * grid.down} contest area${grid.across * grid.down === 1 ? "" : "s"}: it needs ${needX} m by ${needY} m`);
+    for (let j = 0; j < grid.down; j += 1) {
+      for (let i = 0; i < grid.across; i += 1) {
+        const x0 = (width - runX) / 2 + i * (a + gap);
+        const y0 = (length - runY) / 2 + j * (a + gap);
+        contests.push({ x0, y0, x1: x0 + a, y1: y0 + a });
+      }
     }
   }
   // The tones: the contest areas laid on the floor are the first, the rest of the floor the second; a border puts a band of the third round the floor (and the floor inside it is the first, or the second when contest areas lie on it).
   let pieces: Piece[];
-  const zones: { box: MBox; tone: 1 | 2 | 3 }[] = contests.map((b) => ({ box: b, tone: 1 as const }));
+  // An outline puts a band one mat wide in the third colour round the inside of each contest area.
+  const zones: { box: MBox; tone: 1 | 2 | 3 }[] = spec.outline === true && contests.length > 0 ? [...contests.map((b) => ({ box: grow(b, -mat.width), tone: 1 as const })), ...contests.map((b) => ({ box: b, tone: 3 as const }))] : contests.map((b) => ({ box: b, tone: 1 as const }));
   let rest: 1 | 2 | 3 = contests.length > 0 ? 2 : 1;
   if (pattern === "border") {
     zones.push({ box: grow(floor, -mat.width), tone: contests.length > 0 ? 2 : 1 });
@@ -170,36 +218,57 @@ export function dojoLayout(spec: DojoSpec, league: DojoFigures): DojoLayout {
   const entrances: DojoLayout["entrances"] = [];
   const windows: DojoLayout["windows"] = [];
   const marks: MMark[] = [];
-  const frame = grow(floor, wall);
+  const surround = spec.surround === undefined ? 0 : spec.surround;
+  if (typeof surround !== "number" || !Number.isFinite(surround) || surround < 0 || surround > 5) throw new RangeError("dojo.surround is the wood round the mats, 0 m to 5 m");
+  const room = grow(floor, surround);
+  const frame = grow(room, wall);
+  if (surround > 0) parts.areas.unshift({ id: "surround", feature: "floor", cls: "ky-bud-floor", d: `${boxD(room)}${boxD(floor)}`, evenodd: true });
   if (wallsOn) {
-    parts.areas.push({ id: "walls", feature: "walls", cls: "ky-bud-wall", d: `${boxD(frame)}${boxD(floor)}`, evenodd: true });
+    parts.areas.push({ id: "walls", feature: "walls", cls: "ky-bud-wall", d: `${boxD(frame)}${boxD(room)}`, evenodd: true });
     const doors: readonly Entrance[] = spec.entrances ?? [{ wall: OPPOSITE[kamiza] }];
     doors.forEach((e, i) => {
       const w = compassOf(e.wall, OPPOSITE[kamiza]);
-      const p = place(w, floor, e.at, e.width ?? 1.8);
-      const b = along(w, floor, p.at, p.width, wall);
+      const p = place(w, room, e.at, e.width ?? 1.8);
+      const b = along(w, room, p.at, p.width, wall);
       entrances.push({ wall: w, box: b });
       parts.areas.push(rectArea(`door-${i + 1}`, "doors", "ky-bud-door", b));
     });
     const windowList = windowsOf(spec.windows, floor);
     windowList.forEach((e, i) => {
       const w = compassOf(e.wall, "east");
-      const p = place(w, floor, e.at, e.width ?? 1.8);
-      const b = along(w, floor, p.at, p.width, wall);
+      const p = place(w, room, e.at, e.width ?? 1.8);
+      const b = along(w, room, p.at, p.width, wall);
       const mid = wall / 2;
       const thin = w === "north" || w === "south" ? { x0: b.x0, y0: b.y0 + mid * 0.7, x1: b.x1, y1: b.y1 - mid * 0.7 } : { x0: b.x0 + mid * 0.7, y0: b.y0, x1: b.x1 - mid * 0.7, y1: b.y1 };
       windows.push({ wall: w, box: thin });
       parts.areas.push(rectArea(`window-${i + 1}`, "windows", "ky-bud-window", thin));
     });
   }
+  // The dais: the seat of honour's platform, against the middle of the kamiza wall, 1.5 m deep (ours: no source gives its size) and a third of the wall wide, up to 5 m.
+  let dais: MBox | undefined;
+  if (spec.dais === true) {
+    const w = Math.min(5, (kamiza === "north" || kamiza === "south" ? width : length) * 0.34);
+    const p = place(kamiza, room, 0.5, w);
+    const d = Math.min(1.5, (kamiza === "north" || kamiza === "south" ? length : width) * 0.2);
+    const edge = along(kamiza, room, p.at, w, d);
+    dais = kamiza === "north" ? { ...edge, y0: room.y0, y1: room.y0 + d } : kamiza === "south" ? { ...edge, y0: room.y1 - d, y1: room.y1 } : kamiza === "west" ? { ...edge, x0: room.x0, x1: room.x0 + d } : { ...edge, x0: room.x1 - d, x1: room.x1 };
+    parts.areas.push(rectArea("dais", "dais", "ky-bud-dais", dais));
+  }
+  // The banner: a plain dark band 0.9 m wide on the kamiza wall, in the wall's thickness, over the dais or the shrine.
+  let banner: MBox | undefined;
+  if (spec.banner === true && wallsOn) {
+    const p = place(kamiza, room, 0.5, 0.9);
+    banner = along(kamiza, room, p.at, 0.9, wall * 0.7);
+    parts.areas.push(rectArea("banner", "banner", "ky-bud-banner", banner));
+  }
   // The shinzen (神前): the shrine at the middle of the kamiza wall, on the floor against it.
   let shrine: MBox | undefined;
   if (spec.shinzen === true) {
     const w = Math.min(1.8, (kamiza === "north" || kamiza === "south" ? width : length) * 0.3);
-    const p = place(kamiza, floor, 0.5, w);
+    const p = place(kamiza, room, 0.5, w);
     const d = 0.35;
-    const edge = along(kamiza, floor, p.at, w, d);
-    shrine = kamiza === "north" ? { ...edge, y0: floor.y0, y1: floor.y0 + d } : kamiza === "south" ? { ...edge, y0: floor.y1 - d, y1: floor.y1 } : kamiza === "west" ? { ...edge, x0: floor.x0, x1: floor.x0 + d } : { ...edge, x0: floor.x1 - d, x1: floor.x1 };
+    const edge = along(kamiza, room, p.at, w, d);
+    shrine = kamiza === "north" ? { ...edge, y0: room.y0, y1: room.y0 + d } : kamiza === "south" ? { ...edge, y0: room.y1 - d, y1: room.y1 } : kamiza === "west" ? { ...edge, x0: room.x0, x1: room.x0 + d } : { ...edge, x0: room.x1 - d, x1: room.x1 };
     parts.areas.push(rectArea("shinzen", "shrine", "ky-bud-shrine", shrine));
   }
   const cx = width / 2;
@@ -209,6 +278,8 @@ export function dojoLayout(spec: DojoSpec, league: DojoFigures): DojoLayout {
   const s = inset(OPPOSITE[kamiza]);
   marks.push({ id: "kamiza", x: k.x, y: k.y, side: kamiza === "south" ? "bottom" : "top" });
   marks.push({ id: "shimoza", x: s.x, y: s.y, side: kamiza === "north" ? "bottom" : "top" });
+  if (dais !== undefined) marks.push({ id: "dais", x: (dais.x0 + dais.x1) / 2, y: (dais.y0 + dais.y1) / 2, side: kamiza === "south" ? "bottom" : "top" });
+  if (banner !== undefined) marks.push({ id: "banner", x: (banner.x0 + banner.x1) / 2, y: (banner.y0 + banner.y1) / 2, side: kamiza === "south" ? "bottom" : "top" });
   if (shrine !== undefined) marks.push({ id: "shinzen", x: (shrine.x0 + shrine.x1) / 2, y: (shrine.y0 + shrine.y1) / 2, side: kamiza === "south" ? "bottom" : "top" });
   const door = entrances[0];
   if (door !== undefined) marks.push({ id: "entrance", x: (door.box.x0 + door.box.x1) / 2, y: (door.box.y0 + door.box.y1) / 2, side: door.wall === "north" ? "top" : "bottom" });
@@ -220,7 +291,7 @@ export function dojoLayout(spec: DojoSpec, league: DojoFigures): DojoLayout {
   if (edge !== undefined && (pattern === "traditional" || pattern === "border")) marks.push({ id: "heri", x: (edge.x0 + edge.x1) / 2, y: edge.y0 + 0.02, side: "top" });
   if (wallsOn) marks.push({ id: "wall", x: cx * 0.4, y: -wall / 2, side: "top" });
   const counts = { full: pieces.filter((p) => p.kind === "full").length, half: pieces.filter((p) => p.kind === "half").length, cut: pieces.filter((p) => p.kind === "cut").length };
-  return { parts, floor, extent: grow(floor, wall + 0.2), width, length, mat, pattern, pieces, jo: Math.round(matCount(pieces, mat) * 100) / 100, counts, kamiza, wall, entrances, windows, shrine, contests, marks };
+  return { parts, floor, extent: grow(room, wall + 0.2), width, length, mat, pattern, pieces, jo: Math.round(matCount(pieces, mat) * 100) / 100, counts, kamiza, wall, entrances, windows, room, surround, shrine, contests, dais, banner, era: resolveEra(asked).era, marks };
 }
 
 /** The windows a spec asks for: the list, or `count` of them spread along the long walls. */

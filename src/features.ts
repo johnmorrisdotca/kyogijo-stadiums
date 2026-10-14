@@ -175,6 +175,8 @@ const DOJO: readonly Feature[] = [
   f("doors", "--ky-apron", "The doors."),
   f("windows", "--ky-blue", "The windows."),
   f("shrine", "--ky-red", "The shinzen, the shrine."),
+  f("dais", "--ky-bud-floor", "The raised platform of the seat of honour."),
+  f("banner", "--ky-ink", "The banner on the kamiza wall."),
 ];
 
 const KEY = ["--ky-key", "--ky-key-left", "--ky-key-right"];

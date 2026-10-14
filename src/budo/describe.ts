@@ -67,6 +67,8 @@ export function budoSentences(o: Opt, language: Language, plan: BudoPlan = budoP
   if (plan.dojo !== undefined) {
     const L = plan.dojo;
     out.push(fill(words.dojoKamiza, { side: words.sides[L.kamiza] }));
+    if (L.dais !== undefined) out.push(words.dojoDais);
+    if (L.banner !== undefined) out.push(words.dojoBanner);
     if (L.shrine !== undefined) out.push(words.dojoShinzen);
     if (L.contests.length > 0) out.push(fill(words.dojoAreas, { n: L.contests.length }));
   }

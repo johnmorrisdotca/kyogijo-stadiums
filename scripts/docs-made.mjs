@@ -79,7 +79,7 @@ export function limitsTable(lib) {
       ["Formations", `${Object.keys(FORMATIONS).length} named formations of 5 sports, ${Object.values(FORMATIONS).reduce((n, f) => n + f.positions.length, 0)} places in all`, "`FORMATIONS`"],
       ["The team layers", "a Voronoi diagram of 22 players adds under 12 kB; 1,000 points are triangulated in under 600 ms; a pass network of 600 passes adds under 16 kB", "`voronoi`, `delaunay`, `network`"],
       ["A layer's marks", "1,000 points add under 70 kB; 10,000 draw in under 250 ms", "`drawKyogijo`"],
-      ["A drawing's size", "under 22 kB for a football field, 15 kB for a soccer pitch with a score, 14 kB for a rink or a court, 17 kB for a ballpark, 17.5 kB for a curling sheet, a net sport's court with its board or a field sport's surface with its score, 19 kB for a swimming pool, 17.5 kB for a water polo pool, 15.5 kB for a diving well and 14 kB for an artistic swimming area, each with its 8 to 10 kB stylesheet (a test holds each)", "`drawKyogijo`"],
+      ["A drawing's size", "under 22 kB for a football field, 15 kB for a soccer pitch with a score, 14 kB for a rink or a court, 17 kB for a ballpark, 17.5 kB for a curling sheet, a net sport's court with its board or a field sport's surface with its score, 19 kB for a swimming pool, 17.5 kB for a water polo pool, 15.5 kB for a diving well 14 kB for an artistic swimming area, 22 kB for a judo area, 20 kB for a karate area, 18 kB for a dojo and 17.5 kB for a kendo shiai-jo, a dohyō or a kyūdōjō, each with its 8 to 10 kB stylesheet (a test holds each)", "`drawKyogijo`"],
     ],
   );
 }
@@ -135,6 +135,12 @@ const RANGE_COVERS = {
     judges: "the judges', the referee's and the technical panel's seats at the rinkboard",
     "kiss-and-cry": "the kiss and cry beside the rink",
   },
+  judo: { "contest-area": "the contest area of the first competition area, or of the last at the other end, with the safety area's edge round it", start: "the middle of a contest area, with the tape where the contestants start", half: "one half of the tatami, from its left edge to the middle" },
+  karate: { "contest-area": "the matted square inside the boundary band of the first area (or of the last, at the other end)", start: "the middle of the area, with the two start mats", half: "one half of the mats, from the left edge to the middle" },
+  kendo: { start: "the middle of the shiai-jo, with the cross and the two kaishi-sen", half: "one half of the floor, from the left boundary line to the middle" },
+  sumo: { ring: "the ring of tawara, the tokudawara and the sand round them", start: "the middle of the ring, with the two shikiri-sen", half: "one half of the dohyō, from the left edge to the middle" },
+  kyudo: { shajo: "the shajō, the hall the archers shoot from, with the shooting positions and the honza", yamichi: "the yamichi, the open ground between the shajō and the azuchi", azuchi: "the azuchi with the targets, and a little ground round it" },
+  dojo: { kamiza: "the end of the floor at the kamiza's wall", half: "one half of the floor, from the left wall to the middle" },
   lacrosse: { half: "from an end line to the centre line", crease: "the crease (the goal circle in the women's game) and the ground round it" },
   rugby: { half: "from a dead-ball line to the half-way line", "twenty-two": "from the try line to the 22-metre line (union)", twenty: "from the goal line to the 20-metre line (league)", "in-goal": "one in-goal area" },
   afl: { half: "from a goal line to the centre line", "forward-fifty": "the ground inside the Fifty Metre Arc at one end", "centre-square": "the centre square" },

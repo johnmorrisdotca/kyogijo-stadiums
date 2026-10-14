@@ -28,6 +28,14 @@ export const POOL_DECKS = ["plain", "tiled"];
 export const POOL_COURSES = ["long", "short"];
 export const POOL_LANES = ["6", "8", "10"];
 export const POOL_RACES = ["none", "results", "pace"];
+/** The budo: how the mats look (the sport's own, the traditional green and beige, a blue one or a black one), how many contest areas, and the size of a dojo in jo. */
+export const BUDO_LOOKS = ["default", "traditional", "blue", "black"];
+export const BUDO_AREAS = ["1", "2", "4"];
+export const DOJO_SIZES = ["8", "12", "20", "50", "100", "200"];
+/** The look of the package a choice means in a sport (judo, karate or a dojo), or nothing for the sport's own. */
+const BUDO_LOOK_OF = { traditional: { judo: "green-beige", karate: "green-beige", dojo: "green-beige" }, blue: { judo: "yellow-blue", karate: "blue-black", dojo: "yellow-blue" }, black: { judo: "black-red", dojo: "black-red" } };
+/** The sports of the budo family, the ones that have a contest area, a hall and a look. */
+export const isBudo = (sport) => ["judo", "karate", "kendo", "sumo", "kyudo", "dojo"].includes(sport);
 /** The sports whose surface is a pool. */
 export const isPool = (sport) => sport === "swimming" || sport === "waterpolo" || sport === "diving" || sport === "artisticswimming";
 
@@ -71,6 +79,15 @@ export function makeState(params, kept = null) {
     poolLanes: pick(params.get("poollanes"), POOL_LANES, "8"),
     poolRace: pick(params.get("poolrace"), POOL_RACES, "none"),
     poolSection: params.get("poolsection") === "1",
+    budoLook: pick(params.get("budolook"), BUDO_LOOKS, "default"),
+    budoAreas: pick(params.get("budoareas"), BUDO_AREAS, "1"),
+    dojoJo: /^\d{1,3}$/.test(params.get("dojojo") || "") && Number(params.get("dojojo")) >= 2 ? params.get("dojojo") : "20",
+    budoHall: params.get("budohall") === "1",
+    budoOfficials: params.get("budoofficials") === "1",
+    budoTassels: params.get("budotassels") === "1",
+    budoShinzen: params.get("dojoshinzen") === "1",
+    // What a place in the atlas draws that the choices do not say (a platform, a size, the seat of honour): kept while the sport stays.
+    budoBase: null,
     pitch: pick(params.get("pitch"), SOCCER_PITCH_IDS, "fifa"),
     ground: params.get("ground") && GROUNDS[params.get("ground")] ? params.get("ground") : "none",
     pitchType: pick(params.get("pitchtype"), SOCCER_PROVIDER_IDS, "none"),
@@ -172,6 +189,55 @@ function poolOptions(s, lang, forCode) {
   return Object.keys(pool).length === 0 ? undefined : pool;
 }
 
+/** The state a place's surface in the atlas asks for, in the budo's choices; what no choice says is kept in `budoBase`. */
+export function budoFromSurface(s, surface) {
+  s.budoLook = "default";
+  s.budoAreas = "1";
+  s.dojoJo = "20";
+  s.budoHall = false;
+  s.budoOfficials = false;
+  s.budoTassels = false;
+  s.budoShinzen = false;
+  s.budoBase = null;
+  if (!isBudo(surface?.sport)) return;
+  const { budo = {}, dojo = {} } = surface;
+  const look = budo.look ?? dojo.look;
+  for (const [choice, map] of Object.entries(BUDO_LOOK_OF)) if (look !== undefined && map[surface.sport] === look) s.budoLook = choice;
+  if (budo.hall === "budokan") s.budoHall = true;
+  const areas = typeof budo.areas === "number" ? String(budo.areas) : "1";
+  if (BUDO_AREAS.includes(areas)) s.budoAreas = areas;
+  if (budo.officials === true) s.budoOfficials = true;
+  if (budo.tassels === true) s.budoTassels = true;
+  if (dojo.shinzen === true) s.budoShinzen = true;
+  if (typeof dojo.jo === "number") s.dojoJo = String(dojo.jo);
+  const without = (o, keys) => Object.fromEntries(Object.entries(o).filter(([k]) => !keys.includes(k)));
+  const rest = without(budo, ["hall", "areas", "officials", "tassels", "look"]);
+  const restDojo = without(dojo, ["jo", "shinzen", "look"]);
+  s.budoBase = Object.keys(rest).length + Object.keys(restDojo).length === 0 ? null : { budo: rest, dojo: restDojo };
+}
+
+/** What the budo choices ask the package to draw: the `budo` options and, for a dojo, its `dojo`. */
+function budoOptions(s, o) {
+  const look = s.budoLook === "default" ? undefined : BUDO_LOOK_OF[s.budoLook]?.[s.sport];
+  const base = s.budoBase ?? { budo: {}, dojo: {} };
+  if (s.sport === "dojo") {
+    const dojo = { jo: Number(s.dojoJo), ...base.dojo };
+    if (look !== undefined) dojo.look = look;
+    if (s.budoShinzen) dojo.shinzen = true;
+    o.dojo = dojo;
+    return;
+  }
+  const budo = { ...base.budo };
+  if (look !== undefined) budo.look = look;
+  if (s.sport === "judo" || s.sport === "karate") {
+    if (s.budoAreas !== "1") budo.areas = Number(s.budoAreas);
+    if (s.budoOfficials) budo.officials = true;
+  }
+  if (s.sport === "judo" || s.sport === "karate" || s.sport === "kendo") if (s.budoHall) budo.hall = "budokan";
+  if (s.sport === "sumo" && s.budoTassels) budo.tassels = true;
+  if (Object.keys(budo).length > 0) o.budo = budo;
+}
+
 /** What the state asks the package to draw. */
 export function optionsFor(s, lang, forCode = false) {
   const o = { sport: s.sport, orientation: s.orientation, language: lang };
@@ -199,6 +265,7 @@ export function optionsFor(s, lang, forCode = false) {
     if (s.crowdTifo) crowd.tifo = "home";
     o.crowd = Object.keys(crowd).length === 0 ? true : crowd;
   }
+  if (isBudo(s.sport)) budoOptions(s, o);
   const pool = isPool(s.sport) ? poolOptions(s, lang, forCode) : undefined;
   if (pool !== undefined) o.pool = pool;
   if (s.sport === "skating" && s.races !== "none") o.skating = { races: s.races };
@@ -263,6 +330,9 @@ export const labelOf = (say, s) => ({
   pooldeck: (v) => say(`pooldeck_${v}`),
   poolcourse: (v) => say(`poolcourse_${v}`),
   poollanes: (v) => v,
+  budolook: (v) => say(`budoLook_${v}`),
+  budoareas: (v) => v,
+  dojojo: (v) => v,
   poolrace: (v) => say(`poolrace_${v}`),
   pattern: (v) => say(`pattern_${v}`),
   goals: (v) => say(`goals_${v}`),
@@ -304,6 +374,9 @@ export const SEGS = [
   { id: "track", kind: "track", values: TRACKS, get: (s) => s.track },
   { id: "infield", kind: "infield", values: INFIELDS, get: (s) => s.infield },
   { id: "races", kind: "races", values: RACE_MARKS, get: (s) => s.races },
+  { id: "budo-look", kind: "budolook", values: BUDO_LOOKS, get: (s) => s.budoLook },
+  { id: "budo-areas", kind: "budoareas", values: BUDO_AREAS, get: (s) => s.budoAreas },
+  { id: "dojo-jo", kind: "dojojo", values: DOJO_SIZES, get: (s) => s.dojoJo },
   { id: "away-logo", kind: "logo", values: ["none", "emblem", "url"], get: (s) => s.away.logo },
   { id: "home-logo", kind: "logo", values: ["none", "emblem", "url"], get: (s) => s.home.logo },
 ];
@@ -321,6 +394,10 @@ export const TOGGLES = [
   { id: "pageant-emblem", get: (s) => s.pageantEmblem },
   { id: "pageant-entrance", get: (s) => s.pageantEntrance },
   { id: "pool-section", get: (s) => s.poolSection },
+  { id: "budo-hall", get: (s) => s.budoHall },
+  { id: "budo-officials", get: (s) => s.budoOfficials },
+  { id: "budo-tassels", get: (s) => s.budoTassels },
+  { id: "dojo-shinzen", get: (s) => s.budoShinzen },
 ];
 
 /** The text fields and what each holds. */
@@ -368,6 +445,15 @@ export function hiddenRows(s) {
     "swim-group": s.sport !== "swimming",
     "athletics-group": s.sport !== "athletics",
     "races-group": s.sport !== "athletics" && s.sport !== "skating",
+    "budo-group": !isBudo(s.sport),
+    "budo-look-row": !["judo", "karate", "dojo"].includes(s.sport),
+    "budo-areas-row": s.sport !== "judo" && s.sport !== "karate",
+    "budo-chips": s.sport === "kyudo",
+    "budo-hall": !["judo", "karate", "kendo"].includes(s.sport),
+    "budo-officials": s.sport !== "judo" && s.sport !== "karate",
+    "budo-tassels": s.sport !== "sumo",
+    "dojo-row": s.sport !== "dojo",
+    "dojo-shinzen": s.sport !== "dojo",
     "status-text": s.status !== "custom",
     "away-logo-url": s.away.logo !== "url",
     "home-logo-url": s.home.logo !== "url",

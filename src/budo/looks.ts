@@ -53,11 +53,16 @@ const MATS = {
   "green-red": pair({ ...COMMON, surface: "#8bb561", alt: "#5a8a46", red: "#c0392b" }),
   "black-red": pair({ ...COMMON, surface: "#2d2f33", alt: "#b8323a", red: "#b8323a" }),
 };
+/** The dojo's own two: pale yellow contest areas on green mats (the Kodokan's main dojo as it is now), and green mats of one tone with red-orange border mats (as it was). Ours, from the owner's photographs. */
+const DOJO_ONLY = {
+  "yellow-green": pair({ ...COMMON, surface: "#e8d98e", alt: "#5f9a52", red: "#c8462a" }),
+  "green-orange": pair({ ...COMMON, surface: "#6fa352", alt: "#69a04f", red: "#d4572a" }),
+};
 
 /** The looks of each sport: the names, the default first, and the colours. */
 export const BUDO_LOOKS: Readonly<Record<BudoKind, Readonly<Record<string, Pair>>>> = Object.freeze({
   judo: MATS,
-  dojo: { "green-beige": MATS["green-beige"], "yellow-red": MATS["yellow-red"], "blue-grey": MATS["blue-grey"], "blue-yellow": MATS["yellow-blue"], "black-red": MATS["black-red"], "green-red": MATS["green-red"] },
+  dojo: { "green-beige": MATS["green-beige"], "yellow-red": MATS["yellow-red"], "yellow-blue": MATS["yellow-blue"], "blue-grey": MATS["blue-grey"], "black-red": MATS["black-red"], "green-red": MATS["green-red"], ...DOJO_ONLY },
   karate: {
     "blue-red": pair({ ...COMMON, surface: "#2b66b9", alt: "#1f4a85", red: "#c43a3a" }),
     "blue-black": pair({ ...COMMON, surface: "#2b66b9", alt: "#26282b", red: "#c43a3a" }),

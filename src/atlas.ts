@@ -245,7 +245,7 @@ export interface AtlasFacets {
  * import { atlasFacets } from "@johnmorrisdotca/kyogijo-stadiums/atlas";
  * const { sports, leagues, countries, years } = atlasFacets();
  * console.log(sports.join(), leagues.length, leagues.includes("CFL"), countries.length, years.min);
- * // baseball,soccer 83 true 23 1877
+ * // baseball,budo,soccer 88 true 23 1877
  * ```
  */
 export function atlasFacets(): AtlasFacets {
@@ -278,7 +278,7 @@ const hallOptions = (surface: HallSurface): PlaceSurface => ({ sport: surface.sp
  * ```ts
  * import { hallSurfaces, placeById } from "@johnmorrisdotca/kyogijo-stadiums/atlas";
  * console.log(hallSurfaces(placeById("kodokan")!).map((surface) => `${surface.id} ${surface.mats}`).join());
- * // main-dojo 420,school-dojo 240,international-dojo 192,womens-dojo 240,juniors-dojo 114
+ * // main-dojo 420,main-dojo-earlier 420,school-dojo 240,international-dojo 192,womens-dojo 240,boys-dojo 114
  * ```
  */
 export const hallSurfaces = (place: Place): readonly HallSurface[] => (place.kind === "hall" ? (place.hall?.surfaces ?? []) : []);

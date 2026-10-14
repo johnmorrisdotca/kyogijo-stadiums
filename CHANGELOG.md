@@ -7,6 +7,16 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **Six budo sports and the dojo** (`budo`, [docs/budo.md](./docs/budo.md)): judo (the IJF contest area of 8 to 10 m, its safety area, the common safe zone, the free zone, the platform, the start marks and the 2 by 1 m tatami, in the IJF's yellow and blue, red and blue, and green and beige looks; the AJJF's smaller mat and red danger band; kata), karate (WKF kumite and kata areas), kendo (the FIK's shiai-jo), sumo (the dohyo with its tawara, shikiri-sen and optional tassels) and kyudo (the 28 m kinteki and 60 m enteki ranges with the shajo, azuchi and yatori-michi). Every figure carries its rule number or address in [docs/sources.md](./docs/sources.md).
+- **`dojo({ mats, pattern, colours, kamiza, entrances, walls, windows, shinzen, label })`**: a dojo built from real tatami units, in jo or metres (generic 8, 12, 20, 50, 100 and 200 jo), laid so that no four corners meet, in the traditional green and beige or the competitive colours, with several contest areas.
+- **Halls in the atlas** (`Place.kind: "hall"`, `HALLS`, `hallSurfaces`): the Kodokan, the Nippon Budokan, the Ryogoku Kokugikan, the Kyoto Butokuden and the Budokwai, each with only facts that can be cited and a generic layout where the real one is not published (said so in the place's notes).
+- **The dojo builder grows a room and a history:** `areas: { across, down }` and `areaSize` for a block of contest areas, `outline` (border mats round each area), `surround` (wood round the mats), `dais`, `banner`, `balcony`, `eras` with `era` and `year` (a floor's looks over time, the years `null` where no source gives them), `colours` that really paint, and `texture: "weave"` (the rice-straw weave as one repeating gradient, turned a quarter on a mat that lies across; judo too). The dojo looks `yellow-green` and `green-orange` are new.
+- **`dojoRoom(options)`** (`/budo`): the room round any budo surface as plain data for a 3D view to raise (walls, surround, dais, banners, balconies, doors, windows, shrine, mat thickness, the Budokan's octagon), with the figures that are ours listed in `notes`.
+- **The Kodokan as a building:** the main dojo (420 jō, four contest areas, the dais, banner and gallery, in its earlier and its current colours), the Judo School, international, women's and boys' dojos, each drawable on its own.
+- Judo scores (ippon, waza-ari, shido), karate points, kendo ippon and the sumo kimarite (82), boards for them, crowd profiles for the Budokan (an octagonal hall) and the Kokugikan, a 3D view with the dohyo's mound and the azuchi, and Japanese names throughout.
+
 ## [0.5.0] - 2026-10-14
 
 Thirteen new sports (padel, squash, racquetball, sepak takraw, teqball, roundnet and netball, with sitting volleyball; swimming, water polo, diving and artistic swimming; athletics and skating), which makes 33. A 3D view that stands what a rulebook puts on a surface (nets, posts, goals, walls, blocks, boards, bars, hurdles, boards and platforms) on a floor that turns. A crowd in the stands, and a pageant of flags and crests over the halves. A folded curling sheet, with a heat chart and statistics. A realistic basketball floor. The clubs that played in each ballpark and ground, with their Japanese names as Japanese media say them.

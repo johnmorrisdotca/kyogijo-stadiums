@@ -167,7 +167,7 @@ interface Profile {
   /** Where the visitors sit by default. */
   away: "end" | "corner";
   /** The distances when the surface lies on an arena floor that already fills most of the hall (the Nippon Budokan's octagon): the stands close in and the corners are cut. */
-  arena?: { side: number; end: number; bench: number; corner: number };
+  arena?: { side: number; end: number; bench: number; corner: number; tiers?: readonly Tier[] };
 }
 
 const lower = (to: number, h0 = 5, h1 = 45): Tier => ({ id: "lower", from: 0, to, height: [h0, h1], fill: 1 });
@@ -215,12 +215,12 @@ const PROFILES: Readonly<Record<Sport, Profile>> = {
   // The budō (ours: no rule gives the stands). The competition areas of judo, karate and kendo stand in an arena's bowl, as the Nippon Budokan's does round its octagonal floor (the Budokan's leaflet: 2,946 temporary
   // seats on the arena, 2,959 to 3,199 on the first floor, 7,876 on the second and third); sumo's dohyō stands in the middle of a hall of box seats and a gallery (the Ryōgoku Kokugikan's); a kyūdōjō's
   // spectators stand along the yamichi; a dojo's gallery looks down on the mats from above, as the Kodokan's does from the eighth floor.
-  judo: { shape: "bowl", side: 36, end: 36, bench: 6, corner: 50, tiers: [lower(60, 3, 24), upper(67, 120, 32, 60)], away: "corner", arena: { side: 14, end: 14, bench: 0, corner: 90 } },
-  karate: { shape: "bowl", side: 36, end: 36, bench: 6, corner: 50, tiers: [lower(60, 3, 24), upper(67, 120, 32, 60)], away: "corner", arena: { side: 14, end: 14, bench: 0, corner: 90 } },
-  kendo: { shape: "bowl", side: 36, end: 36, bench: 6, corner: 50, tiers: [lower(60, 3, 24), upper(67, 120, 32, 60)], away: "corner", arena: { side: 14, end: 14, bench: 0, corner: 90 } },
+  judo: { shape: "bowl", side: 36, end: 36, bench: 6, corner: 50, tiers: [lower(60, 3, 24), upper(67, 120, 32, 60)], away: "corner", arena: { side: 8, end: 8, bench: 0, corner: 56, tiers: [lower(34, 3, 24), upper(40, 74, 32, 62)] } },
+  karate: { shape: "bowl", side: 36, end: 36, bench: 6, corner: 50, tiers: [lower(60, 3, 24), upper(67, 120, 32, 60)], away: "corner", arena: { side: 8, end: 8, bench: 0, corner: 56, tiers: [lower(34, 3, 24), upper(40, 74, 32, 62)] } },
+  kendo: { shape: "bowl", side: 36, end: 36, bench: 6, corner: 50, tiers: [lower(60, 3, 24), upper(67, 120, 32, 60)], away: "corner", arena: { side: 8, end: 8, bench: 0, corner: 56, tiers: [lower(34, 3, 24), upper(40, 74, 32, 62)] } },
   sumo: { shape: "bowl", side: 58, end: 58, bench: 0, corner: 56, tiers: [{ id: "lower", from: 0, to: 54, height: [1, 8], fill: 1 }, upper(62, 128, 26, 62)], away: "corner" },
   kyudo: { shape: "sides", side: 10, end: 8, bench: 0, corner: 6, tiers: [lower(24, 2, 8), upper(30, 52, 12, 22)], away: "corner" },
-  dojo: { shape: "sides", side: 10, end: 8, bench: 0, corner: 6, tiers: [lower(26, 2, 14), upper(32, 58, 20, 36)], away: "corner" },
+  dojo: { shape: "bowl", side: 5, end: 5, bench: 0, corner: 8, tiers: [lower(26, 2, 14), upper(32, 58, 20, 36)], away: "corner" },
 };
 
 /** The grounds of the package that are the home of an NFL or a CFL club, where a soccer pitch stands inside a gridiron's stands. From each ground's article. */
@@ -456,7 +456,7 @@ function offsets(p: Profile, box: Box, stadium: "purpose" | "nfl" | "cfl"): { le
 export function layoutOf(input: LayoutInput): CrowdStands {
   const { sport, box, crowd } = input;
   const base0 = PROFILES[sport];
-  const base: Profile = input.arena === true && base0.arena !== undefined ? { ...base0, ...base0.arena } : base0;
+  const base: Profile = input.arena === true && base0.arena !== undefined ? { ...base0, ...base0.arena, tiers: base0.arena.tiers ?? base0.tiers } : base0;
   const host = sport === "soccer" ? (crowd.stadium === "nfl" || crowd.stadium === "cfl" ? crowd.stadium : crowd.stadium === "auto" && input.ground !== undefined ? GRIDIRON_GROUNDS[input.ground] : undefined) : undefined;
   const stadium: "purpose" | "nfl" | "cfl" | undefined = sport === "soccer" ? host ?? "purpose" : undefined;
   const p = stadium === "nfl" || stadium === "cfl" ? { ...PROFILES[stadium], shape: base.shape, away: base.away } : base;

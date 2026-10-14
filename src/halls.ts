@@ -50,6 +50,21 @@ export interface Hall {
   note: { en: string; ja: string };
 }
 
+/** The Kodokan's main dojo as drawn: a square floor of 420 jō's area, four contest areas, the seat of honour, the banner, the wood and the gallery, in the two looks the owner's photographs show. The years of both are unknown. */
+const KODOKAN_MAIN: DojoSpec = {
+  mats: { width: 26.4, length: 26.4 },
+  surround: 1,
+  areas: { across: 2, down: 2 },
+  dais: true,
+  banner: true,
+  balcony: true,
+  kamiza: "north",
+  eras: [
+    { name: "earlier", nameJa: "以前", from: null, to: null, look: "green-orange", outline: true },
+    { name: "current", nameJa: "現在", from: null, to: null, look: "yellow-green" },
+  ],
+};
+
 const wp = (name: string, lang: string, source: string): PlaceAlias => ({ name, lang, kind: "wikipedia", source });
 const official = (name: string, lang: string, source: string): PlaceAlias => ({ name, lang, kind: "official", source });
 
@@ -67,17 +82,18 @@ export const HALLS: readonly Hall[] = Object.freeze([
     lon: 139.75344,
     wikidata: "Q1165384",
     from: 1882,
-    fromWhat: { en: "founded by Kanō Jigorō (the International Judo Center, the building the dojos are in, was completed in 1984)", ja: "嘉納治五郎が創設(道場のある講道館国際柔道センターは1984年に完成)" },
+    fromWhat: { en: "founded by Kanō Jigorō (the International Judo Center, the building the dojos are in, was completed in 1984)", ja: "嘉納治五郎が創設（道場のある講道館国際柔道センターは1984年に完成）" },
     leagues: [],
     surfaces: [
-      { id: "main-dojo", name: { en: "Main dojo, 7th floor", ja: "大道場(7階)" }, sport: "dojo", options: { dojo: { jo: 420, look: "green-beige", kamiza: "north", shinzen: true } }, basis: "count", mats: 420, note: { en: "420 jō on the 7th floor, with a gallery on the 8th that seats about 900. The shape of the floor and the colours are not documented: a floor of 24 by 35 mats' widths is drawn.", ja: "7階に420畳、8階に約900人が座れる見学席があります。床の形と色は分からないので、畳の幅24×35の床を描いています。" } },
-      { id: "school-dojo", name: { en: "School dojo, 6th floor", ja: "学校道場(6階)" }, sport: "dojo", options: { dojo: { jo: 240, look: "green-beige" } }, basis: "count", mats: 240, note: { en: "240 jō on the 6th floor; the shape is plausible.", ja: "6階に240畳。形は推定です。" } },
-      { id: "international-dojo", name: { en: "International department's dojo, 6th floor", ja: "国際部道場(6階)" }, sport: "dojo", options: { dojo: { jo: 192, look: "green-beige" } }, basis: "count", mats: 192, note: { en: "192 jō on the 6th floor; the shape is plausible.", ja: "6階に192畳。形は推定です。" } },
-      { id: "womens-dojo", name: { en: "Women's dojo, 5th floor", ja: "女子部道場(5階)" }, sport: "dojo", options: { dojo: { jo: 240, look: "green-beige" } }, basis: "count", mats: 240, note: { en: "240 jō on the 5th floor; the shape is plausible.", ja: "5階に240畳。形は推定です。" } },
-      { id: "juniors-dojo", name: { en: "Juniors' dojo, 5th floor", ja: "少年部道場(5階)" }, sport: "dojo", options: { dojo: { jo: 114, look: "green-beige" } }, basis: "count", mats: 114, note: { en: "114 jō on the 5th floor; the shape is plausible.", ja: "5階に114畳。形は推定です。" } },
+      { id: "main-dojo", name: { en: "Main dojo, 7th floor", ja: "大道場（7階）" }, sport: "dojo", options: { dojo: KODOKAN_MAIN }, basis: "count", mats: 420, note: { en: "420 jō on the 7th floor, four contest areas at once, with a gallery on the 8th that seats about 900. Per the owner's photographs: four contest areas in two rows, pale yellow mats on green safety bands and a green border, on a wood surround, a raised seat of honour with a dark banner at the front wall, a gallery on all four sides. The shape of the floor is not documented: a square of 26.4 m, the area of 420 jō, is drawn so that four areas of 8 m fit.", ja: "7階に420畳、同時に4面の試合ができ、8階に約900人が座れる見学席があります。提供された写真では、試合場が2列に4面並び、淡い黄色の畳の外側を緑の安全地帯と緑の縁取りが囲んでいます。周囲は板張りで、正面の上座には一段高い台と濃い色の垂れ幕があり、四方に見学席があります。床の形は資料にないので、420畳の広さにあたる26.4m四方の床に、8m四方の試合場4面が収まるように描いています。" } },
+      { id: "main-dojo-earlier", name: { en: "Main dojo, 7th floor (earlier colours)", ja: "大道場（7階・以前の色）" }, sport: "dojo", options: { dojo: { ...KODOKAN_MAIN, era: "earlier" } }, basis: "count", mats: 420, note: { en: "The same room in the colours of the owner's older photograph: all green mats, the four contest areas outlined by red-orange border mats. No source gives the years of either look, so the eras carry none.", ja: "提供された古い写真の色で描いた同じ部屋です。畳はすべて緑で、4面の試合場それぞれを赤橙色の縁の畳が囲んでいます。どちらの色だった時期も資料にないので、年は記していません。" } },
+      { id: "school-dojo", name: { en: "Judo School dojo, 6th floor", ja: "学校道場（6階）" }, sport: "dojo", options: { dojo: { jo: 240, look: "green-beige" } }, basis: "count", mats: 240, note: { en: "240 jō on the 6th floor; the shape is plausible.", ja: "6階に240畳。形は推定です。" } },
+      { id: "international-dojo", name: { en: "International dojo, 6th floor", ja: "国際部道場（6階）" }, sport: "dojo", options: { dojo: { jo: 192, look: "green-beige" } }, basis: "count", mats: 192, note: { en: "192 jō on the 6th floor; the shape is plausible.", ja: "6階に192畳。形は推定です。" } },
+      { id: "womens-dojo", name: { en: "Women's dojo, 5th floor", ja: "女子部道場（5階）" }, sport: "dojo", options: { dojo: { jo: 240, look: "green-beige" } }, basis: "count", mats: 240, note: { en: "240 jō on the 5th floor; the shape is plausible.", ja: "5階に240畳。形は推定です。" } },
+      { id: "boys-dojo", name: { en: "Boys' dojo, 5th floor", ja: "少年部道場（5階）" }, sport: "dojo", options: { dojo: { jo: 114, look: "green-beige" } }, basis: "count", mats: 114, note: { en: "114 jō on the 5th floor; the shape is plausible.", ja: "5階に114畳。形は推定です。" } },
     ],
-    sources: ["kodokan-facilities", "wikipedia-halls"],
-    note: { en: "The Kodokan moved to Kasuga, Bunkyō, in 1958. The Bunkyō ward's page counts the main dojo as 510 jō; the Kodokan's own page says 420.", ja: "講道館は1958年に文京区春日に移りました。文京区のページは大道場を510畳としていますが、講道館自身のページは420畳です。" },
+    sources: ["kodokan-facilities", "wikipedia-kodokan", "wikipedia-halls"],
+    note: { en: "The Kodokan moved to Kasuga, Bunkyō, in 1958. The Bunkyō ward's page counts the main dojo as 510 jō; the Kodokan's own page says 420, as English Wikipedia does (which also gives 1,206 mats in the five dojos, the sum of the five counts). The 5th floor also has a dojo for special techniques, with no count given, and it is not drawn.", ja: "講道館は1958年に文京区春日に移りました。文京区のページは大道場を510畳としていますが、講道館自身のページは420畳で、English Wikipediaも同じです（5つの道場の畳の合計は1,206畳としていて、これは5つの数の合計です）。5階には特殊技術のための道場もありますが、畳の数が示されていないので描いていません。" },
   },
   {
     id: "nippon-budokan",
@@ -95,10 +111,10 @@ export const HALLS: readonly Hall[] = Object.freeze([
     capacity: { value: 14501, source: "budokan-overview" },
     leagues: ["Olympic Games 1964", "Olympic Games 2020", "All Japan Judo Championships", "All Japan Karate Championships"],
     surfaces: [
-      { id: "judo-games", name: { en: "Judo at the Olympic Games, two contest areas", ja: "オリンピックの柔道(試合場2面)" }, sport: "judo", options: { league: "ijf", budo: { hall: "budokan", areas: 2, platform: true, officials: true } }, basis: "generic", note: { en: "The arena is an octagon 55 m across the flats (2,513 m²). That the Games laid mats on a raised platform is reported; how many contest areas, and their colours, were not found: two areas of 10 m on a platform are drawn.", ja: "アリーナは対辺55mの正八角形(2,513㎡)です。大会で畳を台の上に敷いたことは報じられていますが、試合場の数と色は分かりませんでした。10mの試合場2面を台の上に描いています。" } },
-      { id: "judo-championships", name: { en: "All Japan Judo Championships, one contest area", ja: "全日本柔道選手権大会(試合場1面)" }, sport: "judo", options: { league: "ajjf", budo: { hall: "budokan" } }, basis: "generic", note: { en: "The Championships are held at the Budokan on 29 April. The layout of the mats is not documented: one contest area with the AJJF's red danger zone is drawn.", ja: "選手権は4月29日に日本武道館で開かれます。畳の配置は分からないので、全柔連の赤い危険地帯のある試合場1面を描いています。" } },
-      { id: "karate", name: { en: "Karate at the Olympic Games", ja: "オリンピックの空手道" }, sport: "karate", options: { league: "wkf-kumite", budo: { hall: "budokan", officials: true } }, basis: "generic", note: { en: "Karate was held at the Budokan at the 2020 Games. The number of competition areas was not found: one WKF kumite area is drawn in the middle of the arena.", ja: "空手道は2020年大会で日本武道館で行われました。試合場の数は分からないので、アリーナの中央にWKFの組手の試合場1面を描いています。" } },
-      { id: "kendo", name: { en: "Kendo, one shiai-jo", ja: "剣道(試合場1面)" }, sport: "kendo", options: { budo: { hall: "budokan", size: 11 } }, basis: "generic", note: { en: "Kendo's national championships are held at the Budokan. The size of the shiai-jo used was not found: one of 11 m, the greatest the regulations allow, is drawn in the middle of the arena.", ja: "剣道の全国大会は日本武道館で開かれます。使う試合場の大きさは分からないので、規則が認める最大の11m四方を中央に描いています。" } },
+      { id: "judo-games", name: { en: "Judo at the Olympic Games, two contest areas", ja: "オリンピックの柔道（試合場2面）" }, sport: "judo", options: { league: "ijf", budo: { hall: "budokan", areas: 2, platform: true, officials: true } }, basis: "generic", note: { en: "The arena is an octagon 55 m across the flats (2,513 m²). That the Games laid mats on a raised platform is reported; how many contest areas, and their colours, were not found: two areas of 10 m on a platform are drawn.", ja: "アリーナは対辺55mの正八角形（2,513㎡）です。大会で畳を台の上に敷いたことは報じられていますが、試合場の数と色は分かりませんでした。10mの試合場2面を台の上に描いています。" } },
+      { id: "judo-championships", name: { en: "All Japan Judo Championships, one contest area", ja: "全日本柔道選手権大会（試合場1面）" }, sport: "judo", options: { league: "ajjf", budo: { hall: "budokan" } }, basis: "generic", note: { en: "The Championships are held at the Budokan on 29 April. The layout of the mats is not documented: one contest area with the AJJF's red danger zone is drawn.", ja: "選手権は4月29日に日本武道館で開かれます。畳の配置は分からないので、全柔連の赤い危険地帯のある試合場1面を描いています。" } },
+      { id: "karate", name: { en: "Karate at the Olympic Games", ja: "オリンピックの空手道" }, sport: "karate", options: { league: "wkf-kumite", budo: { hall: "budokan", officials: true } }, basis: "generic", note: { en: "Karate was held at the Budokan at the 2020 Games. The number of competition areas was not found: one WKF kumite area is drawn in the middle of the arena.", ja: "2020年大会では空手道が日本武道館で行われました。試合場の数は分からないので、アリーナの中央に世界空手連盟の組手の試合場1面を描いています。" } },
+      { id: "kendo", name: { en: "Kendo, one shiai-jo", ja: "剣道（試合場1面）" }, sport: "kendo", options: { budo: { hall: "budokan", size: 11 } }, basis: "generic", note: { en: "Kendo's national championships are held at the Budokan. The size of the shiai-jo used was not found: one of 11 m, the greatest the regulations allow, is drawn in the middle of the arena.", ja: "剣道の全国大会は日本武道館で開かれます。使う試合場の大きさは分からないので、規則が認める最大の11m四方を中央に描いています。" } },
     ],
     sources: ["budokan-overview", "wikipedia-halls"],
     note: { en: "The Budokan's own leaflet gives a maximum of 14,501 people; Wikidata and English Wikipedia give 14,471.", ja: "日本武道館のリーフレットは最大収容数を14,501人とし、WikidataとEnglish Wikipediaは14,471人としています。" },
@@ -118,9 +134,9 @@ export const HALLS: readonly Hall[] = Object.freeze([
     fromWhat: { en: "opened on 9 January 1985", ja: "1985年1月9日に開館" },
     capacity: { value: 11098, source: "wikipedia-halls" },
     leagues: ["Grand Sumo Tournament"],
-    surfaces: [{ id: "dohyo", name: { en: "The dohyō", ja: "土俵" }, sport: "sumo", options: { budo: { tassels: true } }, basis: "documented", note: { en: "The clay square of 6.7 m and the ring of 4.55 m are the Association's own figures (Sumo Rules, Dohyō Regulations, Article 1); the Kokugikan holds the Tokyo tournaments in January, May and September, and its ring is movable.", ja: "一辺6.7mの土の正方形と直径4.55mの円は日本相撲協会の規則(相撲規則 土俵規定 第一条)の数値です。国技館では1月、5月、9月の東京場所が開かれ、土俵は移動式です。" } }],
+    surfaces: [{ id: "dohyo", name: { en: "The dohyō", ja: "土俵" }, sport: "sumo", options: { budo: { tassels: true } }, basis: "documented", note: { en: "The clay square of 6.7 m and the ring of 4.55 m are the Association's own figures (Sumo Rules, Dohyō Regulations, Article 1); the Kokugikan holds the Tokyo tournaments in January, May and September, and its ring is movable.", ja: "一辺6.7mの土の正方形と直径4.55mの円は日本相撲協会の規則（相撲規則 土俵規定 第一条）の数値です。国技館では1月、5月、9月の東京場所が開かれ、土俵は移動式です。" } }],
     sources: ["jsa-dohyo", "jsa-quiz", "wikipedia-halls"],
-    note: { en: "The Kokugikan seats 11,098 (Wikidata, English Wikipedia).", ja: "国技館の収容人数は11,098人です(Wikidata、English Wikipedia)。" },
+    note: { en: "The Kokugikan seats 11,098 (Wikidata, English Wikipedia).", ja: "国技館の収容人数は11,098人です（Wikidata、English Wikipedia）。" },
   },
   {
     id: "kyu-butokuden",
@@ -136,7 +152,7 @@ export const HALLS: readonly Hall[] = Object.freeze([
     from: 1899,
     fromWhat: { en: "built as a hall for martial arts by the Dai Nippon Butokukai, designed by Matsumuro Shigemitsu; an Important Cultural Property since 1996", ja: "大日本武徳会が演武場として造営、設計は松室重光、1996年に国の重要文化財に指定" },
     leagues: [],
-    surfaces: [{ id: "hall", name: { en: "The hall", ja: "旧武徳殿の床" }, sport: "dojo", options: { dojo: { jo: 100, look: "green-beige", kamiza: "north", shinzen: true } }, basis: "generic", note: { en: "The hall seats 1,200 and is part of the Kyoto Municipal Budo Center. The size of its floor and its mats were not found in a source: a floor of 100 jō is drawn as plausible.", ja: "旧武徳殿は座席1,200席で、京都市武道センターの施設の一つです。床の大きさと畳の数は資料で確認できなかったので、100畳の床を推定して描いています。" } }],
+    surfaces: [{ id: "hall", name: { en: "The hall", ja: "旧武徳殿の床" }, sport: "dojo", options: { dojo: { jo: 100, look: "green-beige", kamiza: "north", shinzen: true } }, basis: "generic", note: { en: "The hall seats 1,200 and is part of the Kyoto Municipal Budo Center. The size of its floor and its mats were not found in a source: a floor of 100 jō is drawn as plausible.", ja: "旧武徳殿の座席は1,200席で、京都市武道センターの施設の一つです。床の大きさと畳の数は資料で確認できなかったので、100畳の床を推定して描いています。" } }],
     sources: ["butokuden-ja"],
     note: { en: "The hall was requisitioned after 1946 and used by the city's police school and art college, and is now a facility of the Kyoto Municipal Budo Center.", ja: "1946年以降は接収され、京都市警察学校や京都市立芸術大学が使い、今は京都市武道センターの施設です。" },
   },
@@ -151,7 +167,7 @@ export const HALLS: readonly Hall[] = Object.freeze([
     lon: -0.180556,
     wikidata: "Q3646473",
     from: 1918,
-    fromWhat: { en: "opened on 26 January 1918 by Gunji Koizumi, at 15 Lower Grosvenor Place; at 4 Gilston Road since 1954", ja: "1918年1月26日に小泉軍治が開設(最初はロウアー・グロブナー・プレイス15番地)、1954年から現在のギルストン・ロード4番地" },
+    fromWhat: { en: "opened on 26 January 1918 by Gunji Koizumi, at 15 Lower Grosvenor Place; at 4 Gilston Road since 1954", ja: "1918年1月26日に小泉軍治が開設（最初はロウアー・グロブナー・プレイス15番地）、1954年から現在のギルストン・ロード4番地" },
     leagues: [],
     surfaces: [{ id: "dojo", name: { en: "The dojo", ja: "道場" }, sport: "dojo", options: { dojo: { jo: 50, look: "green-beige" } }, basis: "generic", note: { en: "The size of the dojo and the number of its mats were not found in a source: a floor of 50 jō is drawn as plausible.", ja: "道場の大きさと畳の数は資料で確認できなかったので、50畳の床を推定して描いています。" } }],
     sources: ["wikipedia-halls"],

@@ -76,7 +76,7 @@ export function budoUprights(o: Pick<SurfaceOptions, "sport" | "league" | "budo"
     if (built.targets.length > 0) items.push({ id: "targets", kind: "targets", at: at(plan.kyudo.target, plan.kyudo.lanes[0]), height: Math.max(...built.targets.map((p) => p.o[2])), planes: built.targets });
   }
   if (plan.dojo !== undefined && plan.dojo.wall > 0) {
-    const f = plan.dojo.floor;
+    const f = plan.dojo.room;
     const h = DOJO_WALL * K;
     const w = plan.dojo.wall;
     const centre: readonly [number, number] = [area.x1 / 2, area.y1 / 2];

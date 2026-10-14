@@ -45,7 +45,7 @@ describe("feature colours", () => {
     skating: { skating: { races: "all" } },
     judo: { league: "ajjf", budo: { hall: "budokan", platform: true, officials: true } },
     karate: { budo: { hall: "budokan", officials: true } },
-    dojo: { dojo: { pattern: "border", jo: 200, areas: 1, shinzen: true, windows: 2 } },
+    dojo: { dojo: { pattern: "border", jo: 200, areas: 1, shinzen: true, windows: 2, dais: true, banner: true } },
   };
   for (const sport of SPORTS) {
     const names = FEATURES[sport] ?? [];

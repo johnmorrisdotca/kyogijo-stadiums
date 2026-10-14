@@ -5,7 +5,7 @@ import type { Area, Shape } from "../fields.types.ts";
 import { chooseLeague } from "../leagues.ts";
 import { BUDO_LEAGUES, DOJO_LEAGUES, JUDO_LEAGUES, KARATE_LEAGUES, KENDO_LEAGUES, KYUDO_LEAGUES, SUMO_LEAGUES, type BudoFigures, type BudoLeague, type JudoFigures, type KarateFigures } from "../leagues/budo.ts";
 import type { SurfaceOptions } from "../types.ts";
-import { dojoLayout, dojoLeague, type DojoLayout } from "./dojo.ts";
+import { dojoLayout, dojoLeague, dojoSpecOf, type DojoLayout } from "./dojo.ts";
 import { contestOf, gridOf, judoParts, matOf, safetyOf, snapTo, type JudoLayout } from "./judo.ts";
 import { karateParts, type KarateLayout } from "./karate.ts";
 import { kendoParts, kendoSide, type KendoLayout } from "./kendo.ts";
@@ -28,6 +28,8 @@ export interface BudoPlan {
   figures: BudoFigures;
   /** The look (the colours of the mats and the floor). */
   look: string;
+  /** The mats are drawn with the weave of rice straw. */
+  texture: boolean;
   /** The playing surface: the mats of a competition area, the shiai-jo's floor, the dohyō's clay, the whole range of a kyūdōjō, a dojo's floor. The data frame's own box. */
   box: MBox;
   /** Everything drawn: the box and what lies beyond it (the free zone, the furniture). */
@@ -66,7 +68,7 @@ const OWN = { judo: JUDO_LEAGUES, karate: KARATE_LEAGUES, kendo: KENDO_LEAGUES, 
 export function budoLeague(o: Pick<SurfaceOptions, "sport" | "league" | "budo" | "dojo">): BudoLeague {
   const sport = o.sport as BudoKind;
   // `budo.range` names a kyūdōjō's kind, and `dojo.standard` a dojo's mats, where `league` does not.
-  const asked = o.league === undefined || o.league === "" ? (sport === "kyudo" ? o.budo?.range : sport === "dojo" ? o.dojo?.standard : undefined) : o.league;
+  const asked = o.league === undefined || o.league === "" ? (sport === "kyudo" ? o.budo?.range : sport === "dojo" ? dojoSpecOf(o.dojo).standard : undefined) : o.league;
   if (asked !== undefined && asked !== "") {
     const found = (OWN[sport] as readonly BudoLeague[]).find((l) => l.id === asked);
     if (found === undefined) throw new Error(`Unknown league "${String(asked)}" for "${sport}": use one of ${OWN[sport].map((l) => l.id).join(", ")}`);
@@ -103,17 +105,19 @@ export function budoPlan(o: Pick<SurfaceOptions, "sport" | "league" | "budo" | "
   const league = budoLeague(o);
   const fig = league.dimensions;
   const style: BudoStyle = o.budo ?? {};
-  const look = lookOf(sport, style.look ?? (sport === "dojo" ? o.dojo?.look : undefined));
+  const look = lookOf(sport, style.look ?? (sport === "dojo" ? dojoSpecOf(o.dojo).look : undefined));
   const seams = flag(style.seams, true, "budo.seams");
-  const base = { sport, league: league.id, figures: fig, look };
-  const finish = (p: Omit<BudoPlan, "sport" | "league" | "figures" | "look" | "hall" | "drawnLine"> & { hall?: BudoPlan["hall"] }): BudoPlan => ({ ...base, hall: undefined, ...p, drawnLine: drawn(p.box) });
+  const dspec = sport === "dojo" ? dojoSpecOf(o.dojo) : undefined;
+  // The weave of the mats: asked for by `texture`, and a traditional dojo's by default.
+  const texture = dspec !== undefined ? dspec.texture === "weave" || (dspec.texture === undefined && (dspec.pattern === undefined || dspec.pattern === "traditional" || dspec.pattern === "border")) : sport === "judo" && style.texture === "weave";
+  const base = { sport, league: league.id, figures: fig, look, texture };
+  const finish = (p: Omit<BudoPlan, "sport" | "league" | "figures" | "look" | "texture" | "hall" | "drawnLine"> & { hall?: BudoPlan["hall"] }): BudoPlan => ({ ...base, hall: undefined, ...p, drawnLine: drawn(p.box) });
   switch (sport) {
     case "judo": {
       const f = fig as JudoFigures;
       const mat = matOf(style.tatami, f);
-      const snap = Math.abs(mat.width - 1) < 1e-9 ? 1 : mat.width;
-      const contest = snapTo(contestOf(style.size, f), snap);
-      const safety = snapTo(safetyOf(style.safety, f), snap);
+      const contest = snapTo(contestOf(style.size, f), mat.width, f.contest.min, f.contest.max);
+      const safety = snapTo(safetyOf(style.safety, f), mat.width, f.safety.min, f.safety.max);
       const { across, down } = gridOf(style.areas);
       const tape = league.id === "ajjf" ? (["red", "white"] as const) : league.id === "ijf-kata" ? (["white", "white"] as const) : (["blue", "white"] as const);
       const L = judoParts({ fig: f, contest, safety, across, down, mat, platform: flag(style.platform, false, "budo.platform"), officials: flag(style.officials, false, "budo.officials"), start: flag(style.start, true, "budo.start"), seams, tape });

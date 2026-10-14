@@ -49,7 +49,7 @@ export interface Dojo {
  * import { dojo } from "@johnmorrisdotca/kyogijo-stadiums/budo";
  * const d = dojo({ jo: 20 });
  * console.log(d.jo, d.width.toFixed(2), d.length.toFixed(2), d.counts.full, d.counts.half, d.pattern);
- * // 20 7.28 4.55 16 8 traditional
+ * // 20 7.28 4.55 18 4 traditional
  * ```
  */
 export function dojo(spec: DojoSpec = {}): Dojo {

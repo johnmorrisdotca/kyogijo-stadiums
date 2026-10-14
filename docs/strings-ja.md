@@ -39,6 +39,12 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `surface.diving` | Diving well | 飛込プール |
 | `surface.artisticswimming` | Artistic swimming pool | アーティスティックスイミングのプール |
 | `surface.athletics` | Athletics track | 陸上競技のトラック |
+| `surface.judo` | Judo contest area | 柔道の試合場 |
+| `surface.karate` | Karate competition area | 空手道の試合場 |
+| `surface.kendo` | Kendo shiai-jo | 剣道の試合場 |
+| `surface.sumo` | Sumo dohyō | 相撲の土俵 |
+| `surface.kyudo` | Kyūdō range | 弓道場 |
+| `surface.dojo` | Dojo | 道場 |
 | `about.nfl` | an American football field, 120 by 53 and a third yards with its end zones, with a yard line every 5 yards, hash marks, numbers and goal posts | アメリカンフットボールのフィールド。エンドゾーンを含めて120×53⅓ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールポストがあります |
 | `about.cfl` | a Canadian football field, 150 by 65 yards with its 20-yard end zones, with a yard line every 5 yards, hash marks, numbers and goal posts on the goal lines | カナディアンフットボールのフィールド。20ヤードのエンドゾーンを含めて150×65ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールライン上のゴールポストがあります |
 | `about.ifaf` | an international (IFAF) football field, 120 by 53 and a third yards with its end zones, with a yard line every 5 yards, hash marks, numbers and goal posts | 国際アメリカンフットボール連盟（IFAF）規格のフィールド。エンドゾーンを含めて120×53⅓ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールポストがあります |
@@ -72,6 +78,12 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `about.artisticswimming` | an artistic swimming area, 30 by 20 metres, with the lines on the floor, the judges' platform and the starting platform | アーティスティックスイミングの競技エリア。30×20mで、プール底のライン、ジャッジ台、スタート台があります |
 | `about.athletics` | an athletics track of 400 metres with eight lanes, the finish line and the lane numbers, with a soccer pitch inside it | 陸上競技の400mトラック。8レーンで、フィニッシュラインとレーン番号があり、内側にサッカーのピッチがあります |
 | `about.skating` | a speed skating track of 400 metres with two lanes, the warm-up lane, the blocks of the curves and the finishing line | 400mのスピードスケートリンク。インレーンとアウトレーン、ウォームアップレーン、カーブのブロック、フィニッシュラインがあります |
+| `about.judo` | a judo contest area of 10 by 10 metres in a safety area 4 metres wide, laid with tatami of 2 by 1 metres | 柔道の試合場。試合場内は10m四方、幅4mの安全地帯があり、2×1mの畳を敷いています |
+| `about.karate` | a karate kumite area: a matted square of 8 metres with its outer metre in another colour, in a safety area 2 metres wide | 空手道の組手の試合場。一辺8mの正方形にマットを敷き、外側の1mは別の色で、幅2mの安全地帯があります |
+| `about.kendo` | a kendo shiai-jo of 10 by 10 metres with a wooden floor, white boundary lines and the two kaishi-sen | 剣道の試合場。10m四方の板張りで、白い境界線と2本の開始線があります |
+| `about.sumo` | a sumo dohyō: a clay square of 6.7 metres with a ring of 4.55 metres made of 20 tawara | 相撲の土俵。一辺6.7mの粘土の正方形に、20俵でつくる直径4.55mの円があります |
+| `about.kyudo` | a kyūdōjō for kinteki: a shajō with five shooting positions, 28 metres from the targets at the azuchi | 近的の弓道場。射位が5か所ある射場から、安土の的まで28mあります |
+| `about.dojo` | a dojo of 20 jō of tatami | 20畳の道場 |
 | `status.final` | Final | 試合終了 |
 | `status.final-ot` | Final/OT | 試合終了（延長） |
 | `status.final-so` | Final/SO | 試合終了（SO） |
@@ -363,6 +375,55 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `said.stop` | . | 。 |
 | `said.colon` | :  | ： |
 | `said.gap` |   |  |
+| `budo.sides.north` | north | 北 |
+| `budo.sides.south` | south | 南 |
+| `budo.sides.east` | east | 東 |
+| `budo.sides.west` | west | 西 |
+| `budo.judo` | a judo contest area of {contest} by {contest} metres in a safety area {safety} metres wide, laid with tatami of {tatami} | 柔道の試合場。試合場内は{contest}m四方、幅{safety}mの安全地帯があり、{tatami}の畳を敷いています |
+| `budo.judoMany` | a judo competition area of {areas} contest areas of {contest} by {contest} metres, {gap} metres apart, each in a safety area {safety} metres wide, laid with tatami of {tatami} | 柔道の試合場。{contest}m四方の試合場内が{areas}面、間隔は{gap}mで、それぞれ幅{safety}mの安全地帯があり、{tatami}の畳を敷いています |
+| `budo.judoKata` | a judo kata area of {contest} by {contest} metres in a safety area {safety} metres wide, laid with tatami of {tatami} | 柔道の形の試合場。{contest}m四方で、幅{safety}mの安全地帯があり、{tatami}の畳を敷いています |
+| `budo.danger` | A red danger zone, one tatami wide, runs round the inside of each contest area. | 各試合場内の縁に沿って、畳1枚分の幅の赤い危険地帯があります。 |
+| `budo.platform` | The tatami lies on a platform one metre wider and longer than it. | 畳は、それより縦横とも1m大きい台の上にあります。 |
+| `budo.start` | The tape that marks where the contestants start lies at the centre, {apart} metres apart. | 選手の開始位置を示すテープが、中央に{apart}m離れて貼られています。 |
+| `budo.officials` | The technical table is at the top. | 係員席は図の上側にあります。 |
+| `budo.tatami` | {length} by {width} metres | {length}×{width}m |
+| `budo.karate` | a karate kumite area: a matted square of {area} metres with its outer metre in another colour, in a safety area {safety} metres wide, with the two start mats | 空手道の組手の試合場。一辺{area}mの正方形にマットを敷き、外側の1mは別の色で、幅{safety}mの安全地帯があり、開始位置のマットが2枚あります |
+| `budo.karateMany` | a karate kumite competition area of {areas} matted squares of {area} metres with their outer metre in another colour, {gap} metres apart, each in a safety area {safety} metres wide, with the two start mats | 空手道の組手の試合場。一辺{area}mの正方形が{areas}面で、外側の1mは別の色、間隔は{gap}mで、それぞれ幅{safety}mの安全地帯があり、開始位置のマットが2枚あります |
+| `budo.karateKata` | a karate kata area: a matted square of {area} metres in a safety area {safety} metres wide | 空手道の形の試合場。一辺{area}mの正方形にマットを敷き、幅{safety}mの安全地帯があります |
+| `budo.karateOfficials` | The table, the referee and the four judges are marked. | 係員席、主審、4人の副審の位置を示しています。 |
+| `budo.kendo` | a kendo shiai-jo: a wooden floor of {side} by {side} metres with white boundary lines, the cross at the centre and the two kaishi-sen, and 1.5 metres kept clear outside it | 剣道の試合場。{side}m四方の板張りで、白い境界線、中央の×印、2本の開始線があり、外側に1.5mの余地があります |
+| `budo.sumo` | a sumo dohyō: a clay square of {platform} metres, {height} centimetres high, with a ring of {circle} metres made of {count} tawara, the sand of the jano-me and the two shikiri-sen | 相撲の土俵。一辺{platform}m、高さ{height}cmの粘土の正方形に、{count}俵でつくる直径{circle}mの円、蛇の目の砂、2本の仕切り線があります |
+| `budo.sumoBare` | a sumo dohyō: a clay square of {platform} metres, {height} centimetres high, with a ring of {circle} metres | 相撲の土俵。一辺{platform}m、高さ{height}cmの粘土の正方形に、直径{circle}mの円があります |
+| `budo.tassels` | The four tassels of the roof are in the colours of the quarters: green east, red south, white west, black north. | 吊り屋根の四つの房は、四方の色です。東は青、南は赤、西は白、北は黒です。 |
+| `budo.kyudo` | a kyūdōjō for kinteki: a shajō with {n} shooting positions, {distance} metres from the targets at the azuchi, with the yamichi between them and the path for fetching the arrows beside it | 近的の弓道場。射位が{n}か所ある射場から、安土の的まで{distance}mあり、その間に矢道があり、横に矢取道があります |
+| `budo.kyudoEnteki` | a kyūdōjō for enteki: a shajō with {n} shooting positions, {distance} metres from the targets of 1 metre at the azuchi, with the yamichi between them and the path for fetching the arrows beside it | 遠的の弓道場。射位が{n}か所ある射場から、安土の直径1mの的まで{distance}mあり、その間に矢道があり、横に矢取道があります |
+| `budo.dojoTraditional` | a dojo of {jo} jō, {width} by {length} metres, laid with tatami of {mat} metres so that no four corners meet | {jo}畳の道場。{width}×{length}mで、{mat}mの畳を、4枚の角が1点に集まらないように敷いています |
+| `budo.dojoCompetition` | a dojo of {jo} jō, {width} by {length} metres, laid with tatami of {mat} metres in the colours of a contest area and its safety area | {jo}畳の道場。{width}×{length}mで、{mat}mの畳を、試合場内と安全地帯の色に分けて敷いています |
+| `budo.dojoChecker` | a dojo of {jo} jō, {width} by {length} metres, laid with tatami of {mat} metres in two tones that alternate | {jo}畳の道場。{width}×{length}mで、{mat}mの畳を、二色が交互になるように敷いています |
+| `budo.dojoBorder` | a dojo of {jo} jō, {width} by {length} metres, laid with tatami of {mat} metres with a border of another colour | {jo}畳の道場。{width}×{length}mで、{mat}mの畳を敷き、周りに別の色の帯があります |
+| `budo.dojoKamiza` | The kamiza is at the {side}. | 上座は{side}にあります。 |
+| `budo.dojoShinzen` | The shinzen, the shrine, is at the kamiza. | 上座に神棚があります。 |
+| `budo.dojoDais` | A raised platform stands at the kamiza wall, the seat of honour. | 上座に、一段高い台があります。 |
+| `budo.dojoBanner` | A plain dark banner hangs on the kamiza wall. | 上座側の壁に、無地の濃い色の垂れ幕が掛かっています。 |
+| `budo.dojoAreas` | {n} contest areas of 8 metres are marked on the floor. | 床に、8m四方の試合場が{n}面示されています。 |
+| `budo.dojoWalls` | It has walls with {doors} and {windows}. | 壁があり、{doors}と{windows}があります。 |
+| `budo.board.ippon` | Ippon | 一本 |
+| `budo.board.wazaari` | Waza-ari | 技あり |
+| `budo.board.yuko` | Yuko | 有効 |
+| `budo.board.shido` | Shido | 指導 |
+| `budo.board.senshu` | Senshu | 先取 |
+| `budo.board.chui` | Chui | 注意 |
+| `budo.board.points` | Points | ポイント |
+| `budo.board.kimarite` | Kimarite | 決まり手 |
+| `budo.board.techniques.men` | Men | 面 |
+| `budo.board.techniques.kote` | Kote | 小手 |
+| `budo.board.techniques.do` | Dō | 胴 |
+| `budo.board.techniques.tsuki` | Tsuki | 突き |
+| `budo.board.techniques.hansoku` | Hansoku | 反則 |
+| `budo.board.judoScore` | {name}: {list}. | {name}：{list}。 |
+| `budo.board.karateScore` | {name}: {list}. | {name}：{list}。 |
+| `budo.board.kendoScore` | {name}: {list}. | {name}：{list}。 |
+| `budo.board.sumoScore` | {name} won by {kimarite}. | {name}の勝ち。決まり手は{kimarite}。 |
 | `pageant.carpet` | Each team's flag or logo is laid out large over its own part of the surface, as a carpet. | 各チームの旗またはロゴが、競技場のチームごとの区域に、カーペットのように大きく広げられています。 |
 | `pageant.stage` | Each team's crest stands on a large round stage over its own part of the surface. | 各チームのエンブレムが、競技場のチームごとの区域にある大きな丸いステージの上に置かれています。 |
 | `pageant.emblem` | An emblem is in the middle. | 中央にエンブレムがあります。 |
@@ -400,6 +461,12 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `special.guest.diving` | well | プール |
 | `special.guest.artisticswimming` | pool | プール |
 | `special.guest.athletics` | track | トラック |
+| `special.guest.judo` | contest area | 試合場 |
+| `special.guest.karate` | competition area | 試合場 |
+| `special.guest.kendo` | shiai-jo | 試合場 |
+| `special.guest.sumo` | dohyō | 土俵 |
+| `special.guest.kyudo` | range | 弓道場 |
+| `special.guest.dojo` | dojo | 道場 |
 | `special.title` | {guest} in {host} | {host}の中の{guest} |
 | `special.game` | {event}, {date}. | {event}、{date}。 |
 | `special.inside` | The {guest} lies wholly inside the outline of {host}. | {guest}全体が{host}の輪郭の内側に収まっています。 |
@@ -616,6 +683,18 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `layers.zones.rinkLeft` | Left end | 左端 |
 | `layers.zones.rinkMiddle` | Middle | 中央 |
 | `layers.zones.rinkRight` | Right end | 右端 |
+| `layers.zones.budoContest` | Contest area | 試合場内 |
+| `layers.zones.budoSafety` | Safety area | 安全地帯 |
+| `layers.zones.budoBand` | Boundary band | 境界の帯 |
+| `layers.zones.budoFloor` | Floor | 床 |
+| `layers.zones.budoClay` | Clay | 土 |
+| `layers.zones.budoJano` | Jano-me | 蛇の目 |
+| `layers.zones.budoRing` | Ring | 土俵の円 |
+| `layers.zones.budoShajo` | Shajō | 射場 |
+| `layers.zones.budoYamichi` | Yamichi | 矢道 |
+| `layers.zones.budoAzuchi` | Azuchi | 安土 |
+| `layers.zones.budoKamiza` | Kamiza end | 上座側 |
+| `layers.zones.budoRest` | The rest of the floor | それ以外の床 |
 | `team.networkTitle` | Pass network: {players} players, {links} links from {passes} passes | パスネットワーク：選手{players}人、つながり{links}本（パス{passes}本） |
 | `team.networkNote` | Most touches: {name}, {touches}. Strongest link: {a} and {b}, {n} passes. | 最多タッチ：{name}（{touches}回）。パスが最も多いつながり：{a}と{b}、{n}本。 |
 | `team.networkNoteDirected` | Most touches: {name}, {touches}. Strongest link: {a} to {b}, {n} passes. | 最多タッチ：{name}（{touches}回）。パスが最も多いつながり：{a}から{b}へ、{n}本。 |
@@ -810,6 +889,49 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `notes.names.breakline` | Breakline | ブレイクライン |
 | `notes.names.water-jump` | Water jump | 水濠 |
 | `notes.names.exchange-zone` | Takeover zone | テークオーバーゾーン |
+| `notes.names.referee-position` | Referee's place | 主審の位置 |
+| `notes.names.shiai-jo` | Shiai-jo | 試合場 |
+| `notes.names.floorboard` | Floorboard | 床板 |
+| `notes.names.heri` | Heri, the mat's edge | 畳縁 |
+| `notes.names.contest-area` | Contest area | 試合場内 |
+| `notes.names.safety-area` | Safety area | 安全地帯 |
+| `notes.names.danger-zone` | Danger zone | 危険地帯 |
+| `notes.names.start-mark` | Start mark | 開始線 |
+| `notes.names.common-safe-zone` | Common safe zone | 共通の安全地帯 |
+| `notes.names.free-zone` | Free zone | フリーゾーン |
+| `notes.names.platform` | Platform | 畳の台 |
+| `notes.names.technical-table` | Technical table | 係員席 |
+| `notes.names.arena` | Arena floor | アリーナの床 |
+| `notes.names.competition-area` | Competition area | 試合場 |
+| `notes.names.boundary-band` | Boundary band | 境界の帯 |
+| `notes.names.start-mat` | Start mat | 開始位置のマット |
+| `notes.names.judge` | Judge | 副審 |
+| `notes.names.between-areas` | Between the areas | 試合場の間 |
+| `notes.names.centre-cross` | Centre cross | 中央の×印 |
+| `notes.names.kaishi-sen` | Kaishi-sen | 開始線 |
+| `notes.names.outer-boundary` | Outer boundary | 場外の余地 |
+| `notes.names.dohyo` | Dohyō | 土俵 |
+| `notes.names.ring` | Ring | 土俵の円 |
+| `notes.names.tawara` | Tawara | 俵 |
+| `notes.names.tokudawara` | Tokudawara | 徳俵 |
+| `notes.names.shikiri-sen` | Shikiri-sen | 仕切り線 |
+| `notes.names.jano-me` | Jano-me | 蛇の目 |
+| `notes.names.shajo` | Shajō | 射場 |
+| `notes.names.shooting-position` | Shooting position | 射位 |
+| `notes.names.honza` | Honza | 本座 |
+| `notes.names.yamichi` | Yamichi | 矢道 |
+| `notes.names.yatori-michi` | Path for the arrows | 矢取道 |
+| `notes.names.azuchi` | Azuchi | 安土 |
+| `notes.names.mato` | Target | 的 |
+| `notes.names.kamiza` | Kamiza | 上座 |
+| `notes.names.shimoza` | Shimoza | 下座 |
+| `notes.names.shinzen` | Shinzen | 神棚 |
+| `notes.names.dais` | Dais, the seat of honour | 上座の台 |
+| `notes.names.banner` | Banner | 垂れ幕 |
+| `notes.names.entrance` | Entrance | 入口 |
+| `notes.names.window` | Window | 窓 |
+| `notes.names.tatami` | Tatami | 畳 |
+| `notes.names.wall` | Wall | 壁 |
 | `notes.names.inner-lane` | Inner lane | インレーン |
 | `notes.names.outer-lane` | Outer lane | アウトレーン |
 | `notes.names.crossing-straight` | Crossing straight | 交差ストレート |
@@ -915,6 +1037,12 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `ranges.names.springboards` | springboards | 飛板 |
 | `ranges.names.platforms` | platforms | 固定台 |
 | `ranges.names.centre-stage` | centre of the pool, the middle third | プールの中央（真ん中の3分の1） |
+| `ranges.names.contest-area` | contest area | 試合場内 |
+| `ranges.names.ring` | ring | 土俵の円 |
+| `ranges.names.shajo` | shajō | 射場 |
+| `ranges.names.yamichi` | yamichi | 矢道 |
+| `ranges.names.azuchi` | azuchi | 安土 |
+| `ranges.names.kamiza` | kamiza | 上座 |
 | `ranges.names.crossing-straight` | crossing straight | 交差ストレート |
 | `ranges.names.first-bend` | first bend | 第1カーブ |
 | `ranges.names.second-bend` | second bend | 第2カーブ |
@@ -1063,6 +1191,9 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `turn.parts.cage` | discus and hammer cage | 円盤投・ハンマー投の囲い |
 | `turn.parts.padding` | padding | 防護マット |
 | `turn.parts.rink-boards` | boards | フェンス |
+| `turn.parts.mound` | clay mound | 土の台 |
+| `turn.parts.azuchi` | azuchi | 安土 |
+| `turn.parts.targets` | targets | 的 |
 
 ## The demo's words (`WORDS`)
 
@@ -1112,6 +1243,12 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `sport_cricket` | Cricket | クリケット |
 | `sport_fieldhockey` | Field hockey | フィールドホッケー |
 | `sport_handball` | Handball | ハンドボール |
+| `sport_judo` | Judo | 柔道 |
+| `sport_karate` | Karate | 空手 |
+| `sport_kendo` | Kendo | 剣道 |
+| `sport_sumo` | Sumo | 相撲 |
+| `sport_kyudo` | Kyudo | 弓道 |
+| `sport_dojo` | Dojo | 道場 |
 | `pitchLabel` | Pitch | ピッチ |
 | `pitch_fifa` | International, 105 × 68 m | 国際標準 105×68m |
 | `pitch_uefa` | UEFA, 105 × 68 m | UEFA 105×68m |
@@ -1138,6 +1275,20 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `pattern_checks` | Checks | 市松 |
 | `pattern_diagonal` | Diagonal | 斜め |
 | `pattern_none` | None | なし |
+| `budoLook` | Mats | 畳 |
+| `budoLook_default` | The sport's own | 標準 |
+| `budoLook_traditional` | Traditional | 伝統的な畳 |
+| `budoLook_blue` | Blue | 青 |
+| `budoLook_black` | Black | 黒 |
+| `budoAreas` | Contest areas | 試合場の数 |
+| `budoAreas_1` | 1 | 1 |
+| `budoAreas_2` | 2 | 2 |
+| `budoAreas_4` | 4 | 4 |
+| `dojoJo` | Size in jo | 畳数 |
+| `budoHall` | Budokan floor | 武道館の床 |
+| `budoOfficials` | Officials | 係員席 |
+| `budoTassels` | Tassels | 房 |
+| `dojoShinzen` | Shinzen | 神棚 |
 | `track` | Track | トラックの色 |
 | `track_red` | Red | 赤 |
 | `track_blue` | Blue | 青 |
@@ -1288,6 +1439,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `galleryFamily_pool` | Pools | 水泳競技 |
 | `galleryFamily_field` | Field sports | フィールド球技 |
 | `galleryFamily_track` | Athletics and skating | 陸上・スケート |
+| `galleryFamily_budo` | Budo and the dojo | 武道と道場 |
 | `galleryCount` | {n} of {total} sports | {total}競技中{n}競技 |
 | `galleryMore` | Show all {n} sports | 全{n}競技を表示 |
 | `sideTitle` | Wide and tall | 横と縦 |
@@ -1385,6 +1537,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `atlasAll` | All | すべて |
 | `atlasSport_baseball` | Baseball | 野球 |
 | `atlasSport_soccer` | Soccer | サッカー |
+| `atlasSport_budo` | Budo halls | 武道の会場 |
 | `atlasStatus` | In use | 使用状況 |
 | `atlasStatus_current` | Today | 現在 |
 | `atlasStatus_past` | Past | 過去 |
@@ -1407,6 +1560,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `atlasPick` | Choose a place on the map or in the list to see its surface. | 地図かリストから場所を選ぶと、その競技場が描かれます。 |
 | `atlasListLabel` | Places | 場所の一覧 |
 | `atlasHint` | The markers are for pointing and touch; the list beside the map does the same by keyboard and for a screen reader. Drag the map, or zoom with its buttons or Ctrl and the wheel. | 地図上のマーカーは、マウスやタッチ操作用です。キーボードやスクリーンリーダーでは、地図の横のリストで同じ操作ができます。地図はドラッグで動かせます。拡大・縮小は、ボタンか、Ctrlキーを押しながらホイールで行います。 |
+| `atlasKeyBudo` | Budo hall (square in the middle) | 武道の会場（中央に四角） |
 | `atlasKeyBaseball` | Baseball park | 野球場 |
 | `atlasKeySoccer` | Soccer ground (dot in the middle) | サッカー場（中央に点） |
 | `atlasKeyCurrent` | In use today (circle) | 現在使用中（丸） |
@@ -1554,6 +1708,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `pools` | Swimming, water polo, diving and artistic swimming | 競泳・水球・飛込・アーティスティックスイミングのプール |
 | page `athletics` | The athletics stadium | 陸上競技場 |
 | page `skating` | The skating rinks | スケートリンク |
+| page `budo` | The budō: judo, karate, kendo, sumo, kyūdō and the dojo | 武道 |
 | page `special-games` | Special games | 特設会場での試合 |
 | page `ballparks` | Ballparks | 球場 |
 | page `grounds` | The grounds | スタジアム |
@@ -1584,6 +1739,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `gallery-pools` | Gallery: swimming, water polo, diving and artistic swimming | ギャラリー：競泳、水球、飛込、アーティスティックスイミング |
 | page `gallery-athletics` | Gallery: the athletics stadium | ギャラリー：陸上競技場 |
 | page `gallery-skating` | Gallery: the skating rinks | ギャラリー：スケートリンク |
+| page `gallery-budo` | Gallery: the budō | ギャラリー：武道 |
 | page `gallery-styling` | Gallery: looks and annotations | ギャラリー：スタイルと注釈 |
 | page `gallery-ranges` | Gallery: display ranges and zoom | ギャラリー：表示範囲とズーム |
 | page `gallery-layouts` | Gallery: layouts and backgrounds | ギャラリー：レイアウトと背景 |

@@ -427,3 +427,91 @@ Sources:
 
 - `ihf-rules`: IX. Rules of the Game for Indoor Handball, Rule 1 The Playing Court (1:1 to 1:11) and the Guidelines for Playing Courts and Goals, V, International Handball Federation, 1 July 2025. <https://www.ihf.info/sites/default/files/2025-07/09A%20-%20Rules%20of%20the%20Game_Indoor%20Handball_E.pdf>
 
+## Judo
+
+`sport: "judo"`
+
+| `league` | Name | 日本語 | Key figures |
+| --- | --- | --- | --- |
+| `ijf` (the sport's own) | IJF contest area | 国際柔道連盟の試合場 | contest area 8 m to 10 m square (10 m drawn); safety area at least 3 m wide; at least 4 m between two areas; tatami 2 m by 1 m by 5 cm; free zone at least 50 cm round the competition area; platform 1 m wider and longer than the tatami; start tape 10 cm by 50 cm, 2 m from the centre |
+| `ajjf` | AJJF contest area | 全日本柔道連盟の試合場 | contest area 8 m to 10 m square (8 m drawn); safety area at least 3 m wide; at least 4 m between two areas; tatami 1.82 m by 0.91 m by 6 cm; free zone at least 50 cm round the competition area; platform 1 m wider and longer than the tatami; start tape 10 cm by 50 cm, 2 m from the centre |
+| `ijf-kata` | IJF kata area | 国際柔道連盟の形の試合場 | contest area 8 m to 10 m square (10 m drawn); safety area at least 2 m wide; at least 4 m between two areas; tatami 2 m by 1 m by 5 cm; free zone at least 50 cm round the competition area; platform 1 m wider and longer than the tatami; start tape 5 cm by 50 cm, 3 m from the centre |
+
+Sources:
+
+- `ijf-sor`: Sport and Organisation Rules of the International Judo Federation, 8.7 Field of Play and Competition Area, Article 9 and B1.8 (the kata area), International Judo Federation, version of 21 January 2026. <https://78884ca60822a34fb0e6-082b8fd5551e97bc65e327988b444396.ssl.cf3.rackcdn.com/up/2026/01/IJF_Sport_and_Organisation_Rul-1769443746.pdf>
+- `ijf-sor-2020`: Sports and Organization Rules of the International Judo Federation, 18.1 Competition Area, International Judo Federation, 2020 (the version of June 2020). <https://78884ca60822a34fb0e6-082b8fd5551e97bc65e327988b444396.ssl.cf3.rackcdn.com/up/2020/06/IJF_Sport_and_Organisation_Rul-1592329624.pdf>
+- `ajjf-guide`: 大会運営ガイドブック2023 (Tournament Management Guidebook 2023), 2-1 畳, 2-3 試合場 and 2-4 開始線と選手の位置, 公益財団法人全日本柔道連盟 (All Japan Judo Federation), 2023, as of 2023-12-15. <https://www.judo.or.jp/cms/wp-content/uploads/2021/03/%E5%A4%A7%E4%BC%9A%E9%81%8B%E5%96%B6%E3%82%AC%E3%82%A4%E3%83%89%E3%83%96%E3%83%83%E3%82%AF2023_20240229.pdf>
+
+## Karate
+
+`sport: "karate"`
+
+| `league` | Name | 日本語 | Key figures |
+| --- | --- | --- | --- |
+| `wkf-kumite` (the sport's own) | WKF kumite area | 世界空手連盟の組手の試合場 | area 8 m square, measured from the outside; boundary band the outer 1 m in another colour; safety area 2 m, and 2 m between areas; start mats 1 m from the centre; referee 2 m from the boundary; each judge 1.5 m off a corner |
+| `wkf-kata` | WKF kata area | 世界空手連盟の形の試合場 | area 8 m square, measured from the outside; boundary band none; safety area 2 m, and 2 m between areas; start mats none; referee 2 m from the boundary; each judge 1.5 m off a corner |
+
+Sources:
+
+- `wkf-kumite`: WKF Kumite Competition Rules, Article 1: Kumite Competition Area, and 8.6 (the scale of points), World Karate Federation, Rules version 2026.01. <https://www.wkf.net/files/pdf/documents/WKF_2026_Kumite_Competition_Rules_MASTER_COPY_V13FINAL.pdf>
+- `wkf-kata`: WKF Kata Competition Rules, Article 1: Kata Competition Area, World Karate Federation, valid from 1 January 2026. <https://www.wkf.net/files/pdf/documents/WKF%20Kata%20Competition%20Rules%202026%20MASTER%20COPY_V2.pdf>
+
+## Kendo
+
+`sport: "kendo"`
+
+| `league` | Name | 日本語 | Key figures |
+| --- | --- | --- | --- |
+| `fik` (the sport's own) | FIK shiai-jo | 国際剣道連盟の試合場 | shiai-jo 9 m to 11 m a side, wooden floor; lines 5 cm to 10 cm, white; centre cross 30 cm to 40 cm; kaishi-sen 50 cm long, 1.4 m from the centre; outside 1.5 m kept clear |
+
+Sources:
+
+- `fik-regulations`: Regulations of Kendo Shiai and Shinpan, Article 2 (Shiai-jo), the Subsidiary Rules' Article 1 and Figure 1, International Kendo Federation, with the All Japan Kendo Federation, the bilingual text of July 2021, as the Kendo Association of Serbia publishes it. <https://kendo.rs/files/202107-Regulations-of-Kendo-Shiai-and-Shinpan.pdf>
+
+## Sumo
+
+`sport: "sumo"`
+
+| `league` | Name | 日本語 | Key figures |
+| --- | --- | --- | --- |
+| `jsa` (the sport's own) | Japan Sumo Association dohyō | 日本相撲協会の土俵 | platform 6.7 m square, 34 cm to 60 cm high; ring 4.55 m across, 20 tawara (4 tokudawara); shikiri-sen 90 cm long, 6 cm wide, 70 cm apart |
+
+Sources:
+
+- `jsa-dohyo`: 相撲規則 土俵規定 第一条 (Sumo Rules, Dohyō Regulations, Article 1), as 笹川スポーツ財団 (Sasakawa Sports Foundation) quotes it: 高さ34から60センチ, 一辺6メートル70, 円の直径4メートル55, 二十俵, 日本相撲協会 (Japan Sumo Association), read in the Sasakawa Sports Foundation's sports dictionary, the page as read on the date given. <https://www.ssf.or.jp/knowledge/dictionary/sumo.html>
+- `jsa-quiz`: 大相撲クイズ No.355 (the 20 tawara of the circle: 4 tokudawara and 4 between each) and No.1091 (the shikiri-sen: 6 cm wide, 90 cm long, 70 cm apart), as ozumo.jp sets them out, 日本相撲協会 (Japan Sumo Association), read on ozumo.jp, the page as read on the date given. <https://ozumo.jp/dohyo-size/>
+- `wikipedia-dohyo`: Dohyō (English Wikipedia): the ring of 15 shaku, the square platform, the tokudawara, the shikiri-sen and the four tassels of the roof, Wikipedia contributors (CC BY-SA 4.0), the article as read on the date given. <https://en.wikipedia.org/wiki/Dohy%C5%8D>
+
+## Kyūdō
+
+`sport: "kyudo"`
+
+| `league` | Name | 日本語 | Key figures |
+| --- | --- | --- | --- |
+| `kinteki` (the sport's own) | Kyūdōjō for kinteki, 28 m | 近的の弓道場（28m） | distance 28 m from the shooting position to the target; target 36 cm across, its centre 27 cm up, tilted 5 degrees; shooters 1.8 m apart (1.6 m to 2 m), 2 m from the shooting position to the honza; shajō 9 m deep, 2.7 m from the end shooters to the walls, ceiling 4 m |
+| `enteki` | Kyūdōjō for enteki, 60 m | 遠的の弓道場（60m） | distance 60 m from the shooting position to the target; target 100 cm across, its centre 97 cm up, tilted 15 degrees; shooters 1.6 m apart (1.4 m to 1.8 m), 1.1 m from the shooting position to the honza; shajō 9 m deep, 2.2 m from the end shooters to the walls, ceiling 4 m |
+
+Sources:
+
+- `znkr-unei`: 弓道競技運営要領 (運営マニュアル), 第6条 射場の設営 and the figures of the appendix, 公益財団法人全日本弓道連盟 (All Nippon Kyudo Federation), revised 1 April 2016 (平成28年4月1日改訂). <https://www.kyudo.jp/pdf/documents/play_direction_manual.pdf>
+- `wakayama-kyudo-2015`: 国民体育大会 弓道競技実施要項 (Wakayama 2015), 競技種目: 近的競技 (射距離28m, 36cm霞的, 標的の中心は安土敷より27cm, 傾斜5度), 遠的競技 (射距離60m, 100cm得点的, 標的の中心は地上97cm, 傾斜15度), 和歌山県 (Wakayama Prefecture), applying the 全日本弓道連盟 rules, 2015. <https://www.pref.wakayama.lg.jp/prefg/wakayama2015/kokutai/files/2015/03/edf0b88c95044b1a821a6040e786c4b1.pdf>
+
+## Dojo mats
+
+`sport: "dojo"`
+
+| `league` | Name | 日本語 | Key figures |
+| --- | --- | --- | --- |
+| `chukyoma` (the sport's own) | Chūkyōma tatami, 1820 by 910 mm | 中京間の畳（1820×910mm） | tatami 1.82 m by 0.91 m (Nagoya and the Chūbu region); area of a mat 1.656 square metres |
+| `kyoma` | Kyōma tatami, 1910 by 955 mm | 京間の畳（1910×955mm） | tatami 1.91 m by 0.955 m (Kyoto and the Kansai region); area of a mat 1.824 square metres |
+| `edoma` | Edoma tatami, 1760 by 880 mm | 江戸間の畳（1760×880mm） | tatami 1.76 m by 0.88 m (Edo (Tokyo) and the Kantō region); area of a mat 1.549 square metres |
+| `danchima` | Danchima tatami, 1700 by 850 mm | 団地間の畳（1700×850mm） | tatami 1.7 m by 0.85 m (housing complexes); area of a mat 1.445 square metres |
+| `judo-2x1` | Judo tatami, 2 m by 1 m | 柔道畳（2m×1m） | tatami 2 m by 1 m (the IJF's standard); area of a mat 2 square metres |
+
+Sources:
+
+- `tatami-sizes`: Tatami (English Wikipedia) and 畳 (Japanese Wikipedia): the sizes of Kyōma 1910 by 955 mm, Chūkyōma 1820 by 910 mm, Edoma 1760 by 880 mm and Danchima 1700 by 850 mm, and the layouts in which four mats never meet at a corner, Wikipedia contributors (CC BY-SA 4.0), the articles as read on the date given. <https://ja.wikipedia.org/wiki/%E7%95%B3>
+- `ajjf-guide`: 大会運営ガイドブック2023 (Tournament Management Guidebook 2023), 2-1 畳, 2-3 試合場 and 2-4 開始線と選手の位置, 公益財団法人全日本柔道連盟 (All Japan Judo Federation), 2023, as of 2023-12-15. <https://www.judo.or.jp/cms/wp-content/uploads/2021/03/%E5%A4%A7%E4%BC%9A%E9%81%8B%E5%96%B6%E3%82%AC%E3%82%A4%E3%83%89%E3%83%96%E3%83%83%E3%82%AF2023_20240229.pdf>
+- `ijf-sor`: Sport and Organisation Rules of the International Judo Federation, 8.7 Field of Play and Competition Area, Article 9 and B1.8 (the kata area), International Judo Federation, version of 21 January 2026. <https://78884ca60822a34fb0e6-082b8fd5551e97bc65e327988b444396.ssl.cf3.rackcdn.com/up/2026/01/IJF_Sport_and_Organisation_Rul-1769443746.pdf>
+

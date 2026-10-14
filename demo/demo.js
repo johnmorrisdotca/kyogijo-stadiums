@@ -19,7 +19,7 @@ import { ROAD_FINAL, SERIES_LABELS, SERIES_LABELS_JA, nation, roadFinalists, roa
 import { roadToFinal } from "./dist/charts-entry.js";
 import { mlbSprayChart, nbaShotChart, nflPassChart, nhlShotMap, soccerShotMap } from "./dist/charts-entry.js";
 import { fenceAt } from "./dist/geometry-entry.js";
-import { FIELDS, SEGS, chosenLeague, hasSeasons, hiddenRows, hiddenStatus, isOwnLeague, labelOf as labelsFor, loadGame as loadGameInto, makeState, optionsFor as optionsOf, seasonRange } from "./model.js";
+import { FIELDS, SEGS, budoFromSurface, chosenLeague, hasSeasons, hiddenRows, hiddenStatus, isOwnLeague, labelOf as labelsFor, loadGame as loadGameInto, makeState, optionsFor as optionsOf, seasonRange } from "./model.js";
 import { WORDS } from "./words.js";
 
 const $ = (id) => document.getElementById(id);
@@ -99,7 +99,7 @@ function refreshSegs() {
   applyRows();
 }
 
-makeSeg("sport", (v) => { state.sport = v; state.league = null; loadGame(v); fillFields(); fillLeagues(); });
+makeSeg("sport", (v) => { state.sport = v; state.league = null; state.budoBase = null; loadGame(v); fillFields(); fillLeagues(); });
 makeSeg("era", (v) => { state.year = v === "today" ? null : (state.year ?? clampYear(1975)); });
 makeSeg("size", (v) => { state.size = v; });
 makeSeg("orientation", (v) => { state.orientation = v; });
@@ -124,6 +124,9 @@ makeSeg("sheet", (v) => { state.sheet = v; if (v !== "sheet" && state.size !== "
 makeSeg("track", (v) => { state.track = v; });
 makeSeg("infield", (v) => { state.infield = v; });
 makeSeg("races", (v) => { state.races = v; });
+makeSeg("budo-look", (v) => { state.budoLook = v; });
+makeSeg("budo-areas", (v) => { state.budoAreas = v; });
+makeSeg("dojo-jo", (v) => { state.dojoJo = v; });
 for (const role of ["away", "home"]) makeSeg(`${role}-logo`, (v) => { state[role].logo = v; });
 
 /** A season inside the range the surface's history covers. */
@@ -160,7 +163,7 @@ function renderEra() {
 function toggle(id, key) {
   $(id).addEventListener("click", () => { state[key] = !state[key]; $(id).setAttribute("aria-pressed", String(state[key])); change(); });
 }
-for (const [id, key] of [["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["crowd", "crowd"], ["crowd-tifo", "crowdTifo"], ["flags", "flags"], ["pageant-emblem", "pageantEmblem"], ["pageant-entrance", "pageantEntrance"], ["pool-section", "poolSection"]]) toggle(id, key);
+for (const [id, key] of [["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["crowd", "crowd"], ["crowd-tifo", "crowdTifo"], ["flags", "flags"], ["pageant-emblem", "pageantEmblem"], ["pageant-entrance", "pageantEntrance"], ["pool-section", "poolSection"], ["budo-hall", "budoHall"], ["budo-officials", "budoOfficials"], ["budo-tassels", "budoTassels"], ["dojo-shinzen", "budoShinzen"]]) toggle(id, key);
 
 function fillFields() {
   for (const field of FIELDS) {
@@ -316,7 +319,7 @@ function render() {
   }
   renderEra();
   applyRows();
-  for (const toggleOf of [["flags", "flags"], ["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["crowd", "crowd"], ["crowd-tifo", "crowdTifo"], ["pageant-emblem", "pageantEmblem"], ["pageant-entrance", "pageantEntrance"], ["pool-section", "poolSection"]]) $(toggleOf[0]).setAttribute("aria-pressed", String(state[toggleOf[1]]));
+  for (const toggleOf of [["flags", "flags"], ["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["crowd", "crowd"], ["crowd-tifo", "crowdTifo"], ["pageant-emblem", "pageantEmblem"], ["pageant-entrance", "pageantEntrance"], ["pool-section", "poolSection"], ["budo-hall", "budoHall"], ["budo-officials", "budoOfficials"], ["budo-tassels", "budoTassels"], ["dojo-shinzen", "budoShinzen"]]) $(toggleOf[0]).setAttribute("aria-pressed", String(state[toggleOf[1]]));
   $("crowd-density").value = String(state.crowdDensity);
   $("crowd-density-out").textContent = `${state.crowdDensity}%`;
   updateEmbed();
@@ -330,7 +333,7 @@ function syncUrl() {
   else q.delete("year");
   if (state.league !== null && !isOwnLeague(state.sport, state.league)) q.set("league", state.league);
   else q.delete("league");
-  for (const [key, value, base] of [["pitch", state.pitch, "fifa"], ["ground", state.ground, "none"], ["pitchtype", state.pitchType, "none"], ["park", state.park, "generic"], ["sheet", state.sport === "curling" ? state.sheet : "sheet", "sheet"], ["size", state.size, "full"], ["orientation", state.orientation, "auto"], ["view", state.view, "flat"], ["viewpoint", state.view === "3d" ? state.viewpoint : "corner", "corner"], ["theme", state.theme, "auto"], ["pageant", state.pageant, "off"], ["pageantlines", state.pageantLines, "over"], ["poollook", state.poolLook, "flat"], ["pooldeck", state.poolDeck, "plain"], ["poolcourse", state.poolCourse, "long"], ["poollanes", state.poolLanes, "8"], ["poolrace", state.poolRace, "none"], ["poolsection", state.poolSection ? "1" : "0", "0"], ["track", state.track, "red"], ["infield", state.infield, "pitch"], ["races", state.races, "none"]]) {
+  for (const [key, value, base] of [["pitch", state.pitch, "fifa"], ["ground", state.ground, "none"], ["pitchtype", state.pitchType, "none"], ["park", state.park, "generic"], ["sheet", state.sport === "curling" ? state.sheet : "sheet", "sheet"], ["size", state.size, "full"], ["orientation", state.orientation, "auto"], ["view", state.view, "flat"], ["viewpoint", state.view === "3d" ? state.viewpoint : "corner", "corner"], ["theme", state.theme, "auto"], ["pageant", state.pageant, "off"], ["pageantlines", state.pageantLines, "over"], ["poollook", state.poolLook, "flat"], ["pooldeck", state.poolDeck, "plain"], ["poolcourse", state.poolCourse, "long"], ["poollanes", state.poolLanes, "8"], ["poolrace", state.poolRace, "none"], ["poolsection", state.poolSection ? "1" : "0", "0"], ["track", state.track, "red"], ["infield", state.infield, "pitch"], ["races", state.races, "none"], ["budolook", state.budoLook, "default"], ["budoareas", state.budoAreas, "1"], ["dojojo", state.dojoJo, "20"], ["budohall", state.budoHall ? "1" : "0", "0"], ["budoofficials", state.budoOfficials ? "1" : "0", "0"], ["budotassels", state.budoTassels ? "1" : "0", "0"], ["dojoshinzen", state.budoShinzen ? "1" : "0", "0"]]) {
     if (value === base) q.delete(key);
     else q.set(key, value);
   }
@@ -376,7 +379,7 @@ function code(kind) {
       for (const [key, attr] of [["status", "status"], ["competition", "competition"], ["date", "date"], ["label", "label"], ["winner", "winner"]]) if (o[key]) attrs.push(`${attr}="${escapeAttr(o[key])}"`);
     }
     // What has no attribute of its own goes in the `options` JSON.
-    const more = { ...(o.court ? { court: o.court } : {}), ...(o.sheet ? { sheet: o.sheet } : {}), ...(o.crowd ? { crowd: o.crowd } : {}), ...(o.pageant ? { pageant: o.pageant } : {}), ...(o.pool ? { pool: o.pool } : {}), ...(o.athletics ? { athletics: o.athletics } : {}) };
+    const more = { ...(o.court ? { court: o.court } : {}), ...(o.sheet ? { sheet: o.sheet } : {}), ...(o.crowd ? { crowd: o.crowd } : {}), ...(o.pageant ? { pageant: o.pageant } : {}), ...(o.pool ? { pool: o.pool } : {}), ...(o.athletics ? { athletics: o.athletics } : {}), ...(o.budo ? { budo: o.budo } : {}), ...(o.dojo ? { dojo: o.dojo } : {}) };
     if (Object.keys(more).length > 0) attrs.push(`options='${JSON.stringify(more).replace(/'/g, "&#39;")}'`);
     return `<script type="module" src="${CDN}/dist/element-define.js"></script>\n\n<kyogijo-field\n  ${attrs.join("\n  ")}\n></kyogijo-field>`;
   }
@@ -773,6 +776,7 @@ function tryPlace(place, surface) {
   const sport = surface?.sport ?? (place.kind === "park" ? "mlb" : "soccer");
   state.sport = sport;
   state.league = surface?.league ?? null;
+  budoFromSurface(state, surface);
   if (sport === "mlb") state.park = place.id;
   else if (sport === "soccer") state.ground = surface?.ground ?? (surface === undefined && place.kind === "ground" ? place.id : "none");
   loadGame(state.sport);

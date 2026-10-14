@@ -13,6 +13,7 @@ import { skatingPlan } from "./skating/plan.ts";
 import { skatingAbout, skatingSentences } from "./skating/describe.ts";
 import { skatingStyle } from "./skating.style.ts";
 import { budoPlan, isBudoSport } from "./budo/plan.ts";
+import { dojoSpecOf } from "./budo/dojo.ts";
 import { budoAbout, budoScoreSentences, budoSentences } from "./budo/describe.ts";
 import { lookOf as budoLookOf } from "./budo/looks.ts";
 import { kimariteName } from "./budo/kimarite.ts";
@@ -469,6 +470,11 @@ function colourStyle(o: SurfaceOptions, teams: { left?: Team; right?: Team; home
     if (colour !== undefined) props.push(`${name}:${colour}`);
   };
   for (const [key, property] of Object.entries(COLOR_PROPERTIES)) set(property, o.colors?.[key as keyof Colors]);
+  // A dojo's own colours (and its era's): the mats, the second tone, the border, the heri, the wood and the walls.
+  if (o.sport === "dojo" && o.dojo !== undefined) {
+    const c = dojoSpecOf(o.dojo).colours;
+    if (c !== undefined) for (const [key, property] of [["mat", "--ky-surface"], ["alt", "--ky-surface-alt"], ["border", "--ky-red"], ["heri", "--ky-bud-heri"], ["floor", "--ky-bud-floor"], ["wall", "--ky-boards"]] as const) set(property, c[key]);
+  }
   if (o.court !== undefined) for (const [key, property] of Object.entries(COURT_PROPERTIES)) set(property, (o.court as Record<string, unknown>)[key]);
   if (o.sheet?.rings !== undefined) for (const [key, property] of Object.entries(SHEET_PROPERTIES)) set(property, (o.sheet.rings as Record<string, unknown>)[key]);
   for (const [name, colour] of features) props.push(`--ky-f-${name}:${colour}`);
@@ -826,7 +832,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
   const crowded = crowdOf(o) !== undefined;
   const style = colourStyle(o, { left: leftTeam, right: rightTeam, home: isScore(o) ? o.home : undefined, away: isScore(o) ? o.away : undefined }, featured);
   const palette = isLook(o.look) ? o.look : undefined;
-  const budoLook = isBudoSport(sport) ? budoLookOf(sport, o.budo?.look ?? (sport === "dojo" ? o.dojo?.look : undefined)) : undefined;
+  const budoLook = isBudoSport(sport) ? budoLookOf(sport, o.budo?.look ?? (sport === "dojo" ? dojoSpecOf(o.dojo).look : undefined)) : undefined;
   let notes: Notes | undefined;
   const theme = o.theme === "light" || o.theme === "dark" ? o.theme : undefined;
 

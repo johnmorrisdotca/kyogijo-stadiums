@@ -230,8 +230,8 @@ export const JUDO_LEAGUES: readonly JudoLeague[] = [
 ];
 
 export const KARATE_LEAGUES: readonly KarateLeague[] = [
-  { id: "wkf-kumite", family: "karate", name: { en: "WKF kumite area", ja: "WKFの組手の試合場" }, unit: "m", dimensions: WKF_KUMITE, sources: ["wkf-kumite"], builtIn: true },
-  { id: "wkf-kata", family: "karate", name: { en: "WKF kata area", ja: "WKFの形の試合場" }, unit: "m", dimensions: WKF_KATA, sources: ["wkf-kata"] },
+  { id: "wkf-kumite", family: "karate", name: { en: "WKF kumite area", ja: "世界空手連盟の組手の試合場" }, unit: "m", dimensions: WKF_KUMITE, sources: ["wkf-kumite"], builtIn: true },
+  { id: "wkf-kata", family: "karate", name: { en: "WKF kata area", ja: "世界空手連盟の形の試合場" }, unit: "m", dimensions: WKF_KATA, sources: ["wkf-kata"] },
 ];
 
 export const KENDO_LEAGUES: readonly KendoLeague[] = [{ id: "fik", family: "kendo", name: { en: "FIK shiai-jo", ja: "国際剣道連盟の試合場" }, unit: "m", dimensions: FIK_SHIAI_JO, sources: ["fik-regulations"], builtIn: true }];
@@ -239,16 +239,16 @@ export const KENDO_LEAGUES: readonly KendoLeague[] = [{ id: "fik", family: "kend
 export const SUMO_LEAGUES: readonly SumoLeague[] = [{ id: "jsa", family: "sumo", name: { en: "Japan Sumo Association dohyō", ja: "日本相撲協会の土俵" }, unit: "m", dimensions: JSA_DOHYO, sources: ["jsa-dohyo", "jsa-quiz", "wikipedia-dohyo"], builtIn: true }];
 
 export const KYUDO_LEAGUES: readonly KyudoLeague[] = [
-  { id: "kinteki", family: "kyudo", name: { en: "Kyūdōjō for kinteki, 28 m", ja: "近的の弓道場(28m)" }, unit: "m", dimensions: KINTEKI, sources: ["znkr-unei", "wakayama-kyudo-2015"], builtIn: true },
-  { id: "enteki", family: "kyudo", name: { en: "Kyūdōjō for enteki, 60 m", ja: "遠的の弓道場(60m)" }, unit: "m", dimensions: ENTEKI, sources: ["znkr-unei", "wakayama-kyudo-2015"] },
+  { id: "kinteki", family: "kyudo", name: { en: "Kyūdōjō for kinteki, 28 m", ja: "近的の弓道場（28m）" }, unit: "m", dimensions: KINTEKI, sources: ["znkr-unei", "wakayama-kyudo-2015"], builtIn: true },
+  { id: "enteki", family: "kyudo", name: { en: "Kyūdōjō for enteki, 60 m", ja: "遠的の弓道場（60m）" }, unit: "m", dimensions: ENTEKI, sources: ["znkr-unei", "wakayama-kyudo-2015"] },
 ];
 
 export const DOJO_LEAGUES: readonly DojoLeague[] = [
-  { id: "chukyoma", family: "dojo", name: { en: "Chūkyōma tatami, 1820 by 910 mm", ja: "中京間の畳(1820×910mm)" }, unit: "m", dimensions: mat(1.82, 0.91, "Nagoya and the Chūbu region", "名古屋・中部"), sources: ["tatami-sizes", "ajjf-guide"], builtIn: true },
-  { id: "kyoma", family: "dojo", name: { en: "Kyōma tatami, 1910 by 955 mm", ja: "京間の畳(1910×955mm)" }, unit: "m", dimensions: mat(1.91, 0.955, "Kyoto and the Kansai region", "京都・関西"), sources: ["tatami-sizes"] },
-  { id: "edoma", family: "dojo", name: { en: "Edoma tatami, 1760 by 880 mm", ja: "江戸間の畳(1760×880mm)" }, unit: "m", dimensions: mat(1.76, 0.88, "Edo (Tokyo) and the Kantō region", "江戸・関東"), sources: ["tatami-sizes"] },
-  { id: "danchima", family: "dojo", name: { en: "Danchima tatami, 1700 by 850 mm", ja: "団地間の畳(1700×850mm)" }, unit: "m", dimensions: mat(1.7, 0.85, "housing complexes", "団地"), sources: ["tatami-sizes"] },
-  { id: "judo-2x1", family: "dojo", name: { en: "Judo tatami, 2 m by 1 m", ja: "柔道畳(2m×1m)" }, unit: "m", dimensions: mat(2, 1, "the IJF's standard", "国際柔道連盟の標準"), sources: ["ijf-sor", "ajjf-guide"] },
+  { id: "chukyoma", family: "dojo", name: { en: "Chūkyōma tatami, 1820 by 910 mm", ja: "中京間の畳（1820×910mm）" }, unit: "m", dimensions: mat(1.82, 0.91, "Nagoya and the Chūbu region", "名古屋・中部"), sources: ["tatami-sizes", "ajjf-guide"], builtIn: true },
+  { id: "kyoma", family: "dojo", name: { en: "Kyōma tatami, 1910 by 955 mm", ja: "京間の畳（1910×955mm）" }, unit: "m", dimensions: mat(1.91, 0.955, "Kyoto and the Kansai region", "京都・関西"), sources: ["tatami-sizes"] },
+  { id: "edoma", family: "dojo", name: { en: "Edoma tatami, 1760 by 880 mm", ja: "江戸間の畳（1760×880mm）" }, unit: "m", dimensions: mat(1.76, 0.88, "Edo (Tokyo) and the Kantō region", "江戸・関東"), sources: ["tatami-sizes"] },
+  { id: "danchima", family: "dojo", name: { en: "Danchima tatami, 1700 by 850 mm", ja: "団地間の畳（1700×850mm）" }, unit: "m", dimensions: mat(1.7, 0.85, "housing complexes", "団地"), sources: ["tatami-sizes"] },
+  { id: "judo-2x1", family: "dojo", name: { en: "Judo tatami, 2 m by 1 m", ja: "柔道畳（2m×1m）" }, unit: "m", dimensions: mat(2, 1, "the IJF's standard", "国際柔道連盟の標準"), sources: ["ijf-sor", "ajjf-guide"] },
 ];
 
 /** Every budō league, once each. */
