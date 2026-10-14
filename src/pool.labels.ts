@@ -3,10 +3,8 @@
 // turned back upright. Nothing here is a rule of the sport: the sizes are ours.
 import { safeColour, safeLogo } from "./colour.ts";
 import { el, esc, num } from "./format.ts";
-import { feet } from "./pool.ts";
-import type { SwimPlan } from "./pool.ts";
-import { STATUS_TEXT, pacePer100, splitMetres, type RaceRow } from "./pool.race.ts";
-import { formatTime } from "./pool.race.ts";
+import { feet, type SwimPlan } from "./pool.ts";
+import { STATUS_TEXT, formatTime, pacePer100, splitMetres, type RaceRow } from "./pool.race.ts";
 import { textOn, ft, type BuildOptions } from "./surfaces/surface.ts";
 import { textWidth } from "./text.ts";
 

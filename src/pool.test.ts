@@ -428,7 +428,7 @@ describe("a race on the pool", () => {
     expect(description).toContain("Lane 3: Swimmer 3 (AUR), place 3, bronze medal");
     expect(description).toContain("pace of each split");
     const ja = describeDrawing({ sport: "swimming", language: "ja", pool: { race: race() } }).description;
-    expect(ja).toContain("第1レーン：Swimmer 1（AUR）、1位、金メダル、タイム1:47.00");
+    expect(ja).toContain("第1コース：Swimmer 1（AUR）、1位、金メダル、タイム1:47.00");
   });
 
   it("makes an unsafe name, flag or colour harmless", () => {
@@ -671,7 +671,8 @@ describe("the diving well", () => {
     }
     near(boards[0].y, 3.5, 6);
     near(boards[1].y - boards[0].y, 2.6, 6);
-    expect(plan.width).toBe(25);
+    // 25 m across, widened by 0.9 m so that the stands of the springboards and of the platforms stand 2 m apart.
+    near(plan.width, 25.9, 6);
     expect(plan.length).toBe(21);
   });
 
@@ -795,7 +796,7 @@ describe("what every pool shares with the other sports", () => {
     expect(isPoolSport("curling")).toBe(false);
     expect(() => poolPlan({ sport: "curling" as never, pool: {} })).toThrow(/not a pool sport/);
     expect(describeDrawing({ sport: "diving" }).description).toContain("platforms at 5, 7.5 and 10 metres");
-    expect(describeDrawing({ sport: "waterpolo", language: "ja" }).title).toBe("水球のフィールド");
+    expect(describeDrawing({ sport: "waterpolo", language: "ja" }).title).toBe("水球のコート");
   });
 
   it("counts a point in a zone: lanes for swimming, the goal area and the ground to 6 m for water polo, thirds for diving and artistic swimming", () => {

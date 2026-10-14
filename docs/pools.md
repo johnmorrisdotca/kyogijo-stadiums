@@ -184,7 +184,7 @@ The routine area of the Olympic Games and the World Championships is at least 30
 
 ## A natatorium
 
-`pool.venue` sets several pools in one hall, to scale, each drawn by its own sport's builder, with the deck drawn once, the paint of the water defined once and the names written under the pools. The pools stand at least 8 m apart (the rules' least distance between a swimming pool and a diving well, 10 m preferred and the default, CR 16.2.17). `"natatorium"` is a competition pool, a diving well and a warm-up pool, with seating along the top; your own is `{ pools, apart, labels, seating }`, each pool `{ sport, course, lanes, kind, name, x, y }` (`x` and `y`, in metres from the corner of the hall's water, or none to let the rows fall).
+`pool.venue` sets several pools in one hall, to scale, each drawn by its own sport's builder, with the deck drawn once, the paint of the water defined once and the names written under the pools. The pools stand at least 8 m apart (the rules' least distance between a swimming pool and a diving well, 10 m preferred and the default, CR 16.2.17). `"natatorium"` is a competition pool, a diving well and a warm-up pool side by side, with seating along the top; your own is `{ pools, apart, labels, seating }`, each pool `{ sport, course, lanes, kind, name, x, y }` (`x` and `y`, in metres from the corner of the hall's water, or none to let them fall: the pools stand in a line along the seating, top walls level, and a new row starts when a line would be longer than 125 m).
 
 ```ts
 import { venueLayout } from "@johnmorrisdotca/kyogijo-stadiums";
@@ -192,8 +192,8 @@ import { venueLayout } from "@johnmorrisdotca/kyogijo-stadiums";
 const hall = venueLayout({ venue: "natatorium" })!;
 console.log(hall.items.map((item) => `${item.plan.sport} at ${item.x}, ${item.y}`).join("; "));
 console.log(hall.width, hall.height);
-// swimming at 0, 0; diving at 60, 0; swimming at 0, 35
-// 81 56
+// swimming at 0, 0; diving at 60, 0; swimming at 91, 0
+// 116 25.9
 ```
 
 Two pools nearer than `apart` are an error that says the rule. The hall is a swimming drawing: its outline, `layers` and description are the whole hall's.

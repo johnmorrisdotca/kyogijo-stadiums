@@ -259,8 +259,8 @@ export function divePlan(o: Pick<SurfaceOptions, "pool">): DivePlan {
     return out;
   };
   let platforms = place(width);
-  // Room between the last springboard and the first platform: widen the well if they would crowd.
-  const clear = 1;
+  // Room between the last springboard and the first platform, so that their stands do not touch: widen the well if they would crowd.
+  const clear = 2;
   if (platforms.length > 0 && boards.length > 0) {
     const first = platforms[platforms.length - 1];
     const need = left + DIVING.springboard.width / 2 + clear + first.width / 2 - first.y;
@@ -324,7 +324,7 @@ export function reachOf(plan: PoolPlan): { left: number; right: number; top: num
     case "waterpolo":
       return { left: 0.6, right: 0.6, top: 1.8, bottom: 4.2 };
     case "diving":
-      return { left: plan.behind + 1.2, right: 0.5, top: 0.5, bottom: 0.5 };
+      return { left: plan.behind + 4, right: 0.5, top: 0.5, bottom: 0.5 };
     default:
       return { left: 0.5, right: 0.5, top: 2.8, bottom: 2.2 };
   }
@@ -351,11 +351,11 @@ export interface VenueLayout {
 }
 
 /** The most a row of pools is laid out to, in metres, when the pools have no places of their own. */
-const ROW = 100;
+const ROW = 125;
 
 /**
  * The pools of a hall (`pool.venue`) laid out to scale. A pool with an `x` and a `y` stands there; the others are set in rows, left to right, each `apart` metres (10, the distance the rules prefer between
- * a swimming pool and a diving well, CR 16.2.17; never less than the 8 they require) from the one before, and a new row when a row would be longer than 100 m.
+ * a swimming pool and a diving well, CR 16.2.17; never less than the 8 they require) from the one before, and a new row when a row would be longer than 125 m.
  * @throws RangeError when two pools are nearer each other than `apart`, for the pools given places.
  */
 export function venueLayout(style: PoolStyle): VenueLayout | undefined {

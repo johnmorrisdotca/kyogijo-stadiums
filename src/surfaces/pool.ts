@@ -39,6 +39,9 @@ export function swimBody(o: BuildOptions, plan: SwimPlan, ids: PoolIds): SwimBod
   let lines = "";
   const lw = leastWidth(o, SWIMMING.laneLine.width, 0.32);
   const marks: Mark[] = [];
+  // Under pace bars the lanes are the whole race laid flat, not one length of the pool: the furniture that belongs to a length (floor lines and crosses, the marks at 15 m and 25 m, the red ends of the ropes,
+  // flags, the false start rope, blocks and panels) is left off and the ropes are plain, so that the picture reads as a chart.
+  const neutral = plan.race?.pace !== null && plan.race?.pace !== undefined;
   // The lane markings and their cross lines on the floor: a line along the middle of each lane, 2 m short of each wall, ending in a cross line 1 m long.
   const gap = SWIMMING.laneLine.endGap;
   const half = SWIMMING.laneLine.cross / 2;
@@ -49,9 +52,9 @@ export function swimBody(o: BuildOptions, plan: SwimPlan, ids: PoolIds): SwimBod
     d += `M${num(feet(gap))} ${num(feet(lane.y - half))}V${num(feet(lane.y + half))}M${num(feet(L - gap))} ${num(feet(lane.y - half))}V${num(feet(lane.y + half))}`;
     if (full) for (const x of [SWIMMING.markAt15, L - SWIMMING.markAt15]) crosses += `M${num(feet(x))} ${num(feet(lane.y - SWIMMING.target.crossAt15 / 2))}V${num(feet(lane.y + SWIMMING.target.crossAt15 / 2))}`;
   }
-  lines += el("path", { class: ft(o, "lane-lines", "ky-line"), d: d + crosses, "stroke-width": lw, fill: "none" });
+  if (!neutral) lines += el("path", { class: ft(o, "lane-lines", "ky-line"), d: d + crosses, "stroke-width": lw, fill: "none" });
   // The touch panels on the end walls, 2.4 m wide in each lane, with the target line down the middle and its cross line.
-  if (plan.pads) {
+  if (plan.pads && !neutral) {
     const depth = o.exact ? 0.05 : 0.3;
     const pad = SWIMMING.pad.width;
     let pads = "";
@@ -74,6 +77,10 @@ export function swimBody(o: BuildOptions, plan: SwimPlan, ids: PoolIds): SwimBod
   const red = SWIMMING.redEnds;
   const run = SWIMMING.markRun / 2;
   for (const rope of plan.ropes) {
+    if (neutral) {
+      runs.push(["white", 0, L, rope.y]);
+      continue;
+    }
     runs.push([rope.colour, red, L - red, rope.y]);
     runs.push(["red", 0, red, rope.y], ["red", L - red, L, rope.y]);
     const at = [SWIMMING.markAt15, L - SWIMMING.markAt15, ...(plan.course === "long" ? [SWIMMING.markAt25] : [])];
@@ -81,7 +88,7 @@ export function swimBody(o: BuildOptions, plan: SwimPlan, ids: PoolIds): SwimBod
   }
   lines += ropeMarkup(o, runs, SWIMMING.floatDiameter, 0.45);
   // The marks on the deck at 15 m (and 25 m) from the walls, and the standards of the flags: on both sides of the pool (CR 16.1.10).
-  if (full) {
+  if (full && !neutral) {
     let ticks = "";
     for (const x of [SWIMMING.markAt15, L - SWIMMING.markAt15, ...(plan.course === "long" ? [SWIMMING.markAt25] : [])]) {
       for (const [y0, y1] of [[-GUTTER, 0], [W, W + GUTTER]] as const) ticks += `M${num(feet(x))} ${num(feet(y0))}V${num(feet(y1))}`;
@@ -89,13 +96,13 @@ export function swimBody(o: BuildOptions, plan: SwimPlan, ids: PoolIds): SwimBod
     lines += el("path", { class: ft(o, "lane-lines", "ky-line"), d: ticks, "stroke-width": feet(0.22), fill: "none" });
   }
   // The false start rope, 15 m from the starting end, on its standards.
-  if (plan.falseStart) {
+  if (plan.falseStart && !neutral) {
     const x = SWIMMING.falseStart.at;
     lines += el("path", { class: ft(o, "false-start-rope", "ky-pl-fs"), d: `M${num(feet(x))} ${num(feet(-0.7))}V${num(feet(W + 0.7))}`, "stroke-width": feet(0.1) * s, fill: "none", "stroke-dasharray": `${num(feet(0.5))} ${num(feet(0.3))}` });
     if (full) for (const y of [-0.7, W + 0.7]) lines += el("circle", { class: "ky-pl-st", cx: feet(x), cy: feet(y), r: feet(0.22) * s });
   }
   // The backstroke flags: a rope across the pool 5 m from each wall, flags of two colours hanging from it.
-  if (plan.flags) {
+  if (plan.flags && !neutral) {
     for (const x of [SWIMMING.flags.at, L - SWIMMING.flags.at]) {
       const fx = feet(x);
       lines += el("path", { class: ft(o, "backstroke-flags", "ky-pl-fa"), d: `M${num(fx)} ${num(feet(-0.6))}V${num(feet(W + 0.6))}`, "stroke-width": feet(0.26) * s, fill: "none", "stroke-dasharray": `${num(feet(0.4))} ${num(feet(0.4))}` });
@@ -104,7 +111,7 @@ export function swimBody(o: BuildOptions, plan: SwimPlan, ids: PoolIds): SwimBod
     }
   }
   // The starting blocks, 0.5 by 0.6 m, one in each lane at each end, numbered on the top (CR 16.2.8 and 16.2.9).
-  if (plan.blocks) {
+  if (plan.blocks && !neutral) {
     const bw = SWIMMING.block.width * s;
     const bl = SWIMMING.block.length * s;
     let blocks = "";
@@ -123,16 +130,18 @@ export function swimBody(o: BuildOptions, plan: SwimPlan, ids: PoolIds): SwimBod
     const top = plan.lanes[0];
     const mid = plan.lanes[Math.floor(plan.lanes.length / 2)];
     const ropeY = plan.ropes[1]?.y ?? plan.ropes[0].y;
-    marks.push(
-      { id: "lane-rope", x: feet(L * 0.62), y: feet(ropeY), side: "top" },
-      { id: "lane-line", x: feet(L * 0.35), y: feet(mid.y), side: "bottom" },
-      { id: "lane-end-cross", x: feet(SWIMMING.laneLine.endGap), y: feet(top.y), side: "top" },
-      { id: "fifteen-metre-mark", x: feet(SWIMMING.markAt15), y: 0, side: "top" },
-    );
-    if (plan.pads) marks.push({ id: "touch-pad", x: feet(0.15), y: feet(plan.lanes[plan.lanes.length - 1].y), side: "bottom" });
-    if (plan.blocks) marks.push({ id: "starting-block", x: feet(-0.6), y: feet(plan.lanes[plan.lanes.length - 1].y), side: "bottom" });
-    if (plan.flags) marks.push({ id: "backstroke-flags", x: feet(SWIMMING.flags.at), y: feet(W), side: "bottom" });
-    if (plan.falseStart) marks.push({ id: "false-start-rope", x: feet(SWIMMING.falseStart.at), y: feet(W), side: "bottom" });
+    marks.push({ id: "lane-rope", x: feet(L * 0.62), y: feet(ropeY), side: "top" });
+    if (!neutral) {
+      marks.push(
+        { id: "lane-line", x: feet(L * 0.35), y: feet(mid.y), side: "bottom" },
+        { id: "lane-end-cross", x: feet(SWIMMING.laneLine.endGap), y: feet(top.y), side: "top" },
+        { id: "fifteen-metre-mark", x: feet(SWIMMING.markAt15), y: 0, side: "top" },
+      );
+    }
+    if (plan.pads && !neutral) marks.push({ id: "touch-pad", x: feet(0.15), y: feet(plan.lanes[plan.lanes.length - 1].y), side: "bottom" });
+    if (plan.blocks && !neutral) marks.push({ id: "starting-block", x: feet(-0.6), y: feet(plan.lanes[plan.lanes.length - 1].y), side: "bottom" });
+    if (plan.flags && !neutral) marks.push({ id: "backstroke-flags", x: feet(SWIMMING.flags.at), y: feet(W), side: "bottom" });
+    if (plan.falseStart && !neutral) marks.push({ id: "false-start-rope", x: feet(SWIMMING.falseStart.at), y: feet(W), side: "bottom" });
     marks.push({ id: "gutter", x: feet(L * 0.8), y: feet(W + GUTTER / 2), side: "bottom" });
   }
   return { base, lines, marks, line: lw };
@@ -157,10 +166,9 @@ export function swimming(o: BuildOptions, plan: SwimPlan, ctx: PoolCtx = {}): Su
   const topExtra = Math.max(0, art.reachTop, plan.race?.event === undefined ? 0 : feet(1.6));
   const view0 = { x: -left, y: -m - topExtra, w: L + left + right, h: W + 2 * m + topExtra + (section.height > 0 ? section.height + feet(0.6) : 0) };
   const defs = ctx.bare === true ? "" : paintDefs(ids, plan.look, plan.deck, plan.seed) + section.defs;
-  let basis = (ctx.bare === true ? "" : deckMarkup(o, ids, plan.deck, view0.x, view0.y, view0.w, view0.h)) + body.base;
+  const basis = (ctx.bare === true ? "" : deckMarkup(o, ids, plan.deck, view0.x, view0.y, view0.w, view0.h)) + body.base;
   let lines = body.lines + art.pace + art.left + art.right + art.top;
   if (section.markup !== "") lines += section.markup;
-  basis += "";
   const turned = o.portrait;
   const cy = W / 2;
   // How far the blocks reach beyond the walls, in feet.

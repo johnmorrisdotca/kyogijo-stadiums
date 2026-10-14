@@ -21,9 +21,8 @@ export function diving(o: BuildOptions, plan: DivePlan, ctx: PoolCtx = {}): Surf
   const ids = ctx.ids ?? poolIds(o.id);
   const full = o.detail === "full";
   const m = ctx.bare === true ? 0 : (o.margin ?? feet(2.5));
-  const behind = plan.behind + 1.2;
-  const s = o.exact ? 1 : 1;
-  void s;
+  // The stands, and the names of the springboards on the deck behind them, stand in the room behind the wall.
+  const behind = plan.behind + 4;
   let base = box(o, "gutter", "ky-boards", -GUTTER, -GUTTER, L + GUTTER, W + GUTTER);
   base += waterMarkup(o, ids, plan.look, 0, 0, L, W);
   // The three lines across the well, under the plummet of the 3 m springboard and 2.5 m apart.
@@ -44,9 +43,12 @@ export function diving(o: BuildOptions, plan: DivePlan, ctx: PoolCtx = {}): Surf
     const xa = -Math.max(...platforms.map((b) => b.length - b.x)) - 0.4;
     stands += el("rect", { class: ft(o, "stands", "ky-pl-sd"), x: feet(xa), y: feet(ya), width: feet(-xa), height: feet(yb - ya), rx: feet(0.2) });
   }
-  for (const b of plan.boards.filter((one) => one.kind === "springboard")) {
-    const xa = b.x - b.length - 0.3;
-    stands += el("rect", { class: ft(o, "stands", "ky-pl-sd"), x: feet(xa), y: feet(b.y - 0.75), width: feet(-xa - 0.6), height: feet(1.5), rx: feet(0.15) });
+  const springboards = plan.boards.filter((one) => one.kind === "springboard");
+  const springStand = springboards.length === 0 ? 0 : Math.min(...springboards.map((b) => b.x - b.length)) - 0.4;
+  if (springboards.length > 0) {
+    const ya = Math.min(...springboards.map((b) => b.y)) - 1.1;
+    const yb = Math.max(...springboards.map((b) => b.y)) + 1.1;
+    stands += el("rect", { class: ft(o, "stands", "ky-pl-sd"), x: feet(springStand), y: feet(ya), width: feet(-springStand), height: feet(yb - ya), rx: feet(0.2) });
   }
   base += stands;
   // The boards: a platform is a rectangle with its front edge over the water; a springboard is a bar reaching out from its stand. Tall ones over the low.
@@ -65,9 +67,10 @@ export function diving(o: BuildOptions, plan: DivePlan, ctx: PoolCtx = {}): Surf
       labels += textOn(o.portrait, feet(b.x - Math.min(2.2, b.length * 0.4)), feet(b.y) + fit * 0.36, text, { size: fit, anchor: "middle", cls: "ky-pl-bt", weight: 800 });
     } else {
       boards += el("rect", { class: ft(o, "springboards", "ky-pl-spb"), x: feet(x0), y: feet(b.y - b.width / 2), width: feet(b.length), height: feet(b.width), rx: feet(0.12) });
+      // The name stands on the deck behind the springboards' stand, level with the board; turned upright on a tall drawing it is made to fit between two boards.
       const word = `${b.height} m`;
       const fit = o.portrait ? Math.min(size * 0.9, (feet(DIVING.C.springboard1[0]) * 0.92) / textWidth(word)) : size * 0.9;
-      labels += textOn(o.portrait, feet(x0 - 0.2), feet(b.y) - feet(0.9) * 0.55 - fit * 0.1, word, { size: fit, anchor: o.portrait ? "middle" : "end", cls: "ky-pl-bu", weight: 800 });
+      labels += textOn(o.portrait, feet(springStand - 0.4), feet(b.y) + fit * 0.36, word, { size: fit, anchor: o.portrait ? "middle" : "end", cls: "ky-pl-bu", weight: 800 });
     }
     // The plummet: the vertical line through the middle of the front edge.
     if (full) boards += el("circle", { class: "ky-pl-pm", cx: feet(b.x), cy: feet(b.y), r: feet(0.14) });

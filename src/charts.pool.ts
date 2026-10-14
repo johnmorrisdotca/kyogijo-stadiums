@@ -103,7 +103,7 @@ export function splitsChart(race: PoolRace, options: SplitsOptions = {}): Chart<
       return drawKyogijo({ ...merged, ...extra });
     },
     table(): string {
-      const head = [w.headLane, w.headName, ...Array.from({ length: columns }, (_, i) => `${w.headSplit} ${i + 1}`), w.headPace].map((text, i) => `<th scope="col"${i === 0 ? "" : ""}>${esc(text)}</th>`).join("");
+      const head = [w.headLane, w.headName, ...Array.from({ length: columns }, (_, i) => `${w.headSplit} ${i + 1}`), w.headPace].map((text) => `<th scope="col">${esc(text)}</th>`).join("");
       const body = rows
         .map((row) => {
           const cells = Array.from({ length: columns }, (_, i) => `<td>${row.splits[i] === undefined ? "" : `${formatTime(row.splits[i].seconds)} (${row.splits[i].pace.toFixed(2)})`}</td>`).join("");
