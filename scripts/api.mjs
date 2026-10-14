@@ -10,6 +10,7 @@ import { fileURLToPath } from "node:url";
 import ts from "typescript";
 
 import { FAMILY_SCRIPT, familyFooter, familyHead, familyHeader, familyUnreviewed } from "./family-template.mjs";
+import { iconLinks } from "./icon-links.mjs";
 import { RELEASE_PAGE, firstPaintHead, sayEnglish } from "./first-paint.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -132,13 +133,13 @@ export const API_CSS = `/* The API reference page: made by scripts/api.mjs. */
 .api-entry p.api-example { font-size: .8rem; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--muted, inherit); }
 `;
 
-/** The whole page, api.html: the family's header and footer around the reference. `name` is the package's name as written, `icon` its data: URI. */
+/** The whole page, api.html: the family's header and footer around the reference. `name` is the package's name as written, `icon` the address of its icon (the site's favicon.svg and apple-touch-icon.png by default). */
 export function apiPage({ id, name, icon, api = apiBody() }) {
   return sayEnglish(`<!doctype html>
 <html lang="en">
   <head>
     ${familyHead({ id, title: `${name} API reference: every export, with its signature`, description: `The API reference of the ${name} package: every export of every entry point, with its signature and its documentation, made from the source.` })}
-    <link rel="icon" href="${icon}" />
+    ${icon === undefined ? iconLinks("") : `<link rel="icon" href="${icon}" />`}
     ${firstPaintHead(id)}
     <link rel="stylesheet" href="family.css" />
     <link rel="stylesheet" href="api.css" />

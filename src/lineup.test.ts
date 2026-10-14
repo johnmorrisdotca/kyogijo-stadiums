@@ -81,7 +81,7 @@ describe("the text of a lineup", () => {
     expect(textWidth("MMM")).toBeGreaterThan(textWidth("nnn"));
     expect(textWidth("大谷翔平")).toBe(4);
   });
-  it("is cut short with an ellipsis when it cannot fit, and left out when not two letters fit", () => {
+  it("is cut short with an ellipsis when it cannot fit, and left out when not three letters fit", () => {
     expect(fit("Okafor", 10)).toBe("Okafor");
     expect(fit("van der Berg-Hoekstra", 4)).toMatch(/…$/);
     expect(textWidth(fit("van der Berg-Hoekstra", 4))).toBeLessThanOrEqual(4);
@@ -234,7 +234,7 @@ describe("a lineup layer", () => {
         const svg = draw(sport, [{ kind: "lineup", formation: f.id, players }], { language });
         parseXml(svg);
         expect(walk(withClass(parseXml(svg), "ky-fm")[0]).filter((n) => n.name === "circle")).toHaveLength(f.positions.length + (f.extra?.length ?? 0));
-        expect(svg).toContain(language === "ja" ? "ラインナップ（" : "Lineup in ");
+        expect(svg).toContain(language === "ja" ? "のラインナップ" : "Lineup in ");
       }
       expect(() => draw(sport === "nhl" ? "nba" : "nhl", [{ kind: "lineup", formation: f.id, players }])).toThrow(/is for/);
     }

@@ -18,7 +18,7 @@ Each is held by a test, and the ones with a name are exported. The counts are ma
 | A logo | an https or relative address, an image data address, or SVG text up to 200,000 characters | `safeLogo` |
 | A grid of drawings | 200 drawings at most, 120 to 8,000 wide; each drawing keeps its own ids, and the base stylesheet is written once | `drawGrid` |
 | A name | any length: it is set on one line or two, in the biggest size that fits its place | `fitLines` |
-| Formations | 21 named formations of 5 sports, 199 places in all | `FORMATIONS` |
+| Formations | 36 named formations of 13 sports, 346 places in all | `FORMATIONS` |
 | The team layers | a Voronoi diagram of 22 players adds under 12 kB; 1,000 points are triangulated in under 600 ms; a pass network of 600 passes adds under 16 kB | `voronoi`, `delaunay`, `network` |
 | A layer's marks | 1,000 points add under 70 kB; 10,000 draw in under 250 ms | `drawKyogijo` |
 | A drawing's size | under 22 kB for a football field, 15 kB for a soccer pitch with a score, 14 kB for a rink or a court, 17 kB for a ballpark, 17.5 kB for a curling sheet, a net sport's court with its board or a field sport's surface with its score, 19 kB for a swimming pool, 17.5 kB for a water polo pool, 15.5 kB for a diving well and 14 kB for an artistic swimming area, each with its 8 to 10 kB stylesheet (a test holds each) | `drawKyogijo` |

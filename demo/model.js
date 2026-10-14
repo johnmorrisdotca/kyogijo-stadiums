@@ -4,6 +4,7 @@
 import { COURT_THEMES, ERA_SPORTS, GROUNDS, LEAGUES, PARKS, SOCCER_PITCH_IDS, SOCCER_PROVIDER_IDS, SPORTS, eraRange, hasHistory, leagueChanges } from "./dist/index.js";
 import { EMBLEM_GROUPS } from "./emblems.js";
 import { EMBLEMS, FAMILIES, GAMES, TEAMS, TEAMS_JA } from "./examples.js";
+import { LINEUP_SPORTS, sampleLayers } from "./lineup-data.js";
 import { poolRace, shortRace } from "./pool-data.js";
 
 export const SIZES = ["full", "compact", "badge", "surface"];
@@ -23,6 +24,25 @@ export const PAGEANT_LINES = ["over", "under", "through"];
 export const TRACKS = ["red", "blue", "terracotta", "green"];
 export const INFIELDS = ["pitch", "grass", "none"];
 export const RACE_MARKS = ["none", "all"];
+/** A made-up lineup on the surface: none, discs or jerseys. */
+export const LINEUPS = ["off", "disc", "jersey"];
+/** The tabs of the code box. */
+export const EMBEDS = ["module", "element", "iframe", "svg"];
+/** The most points a reader can drop on the drawing. */
+export const MAX_SHOTS = 60;
+
+/** The points in an address (`shots=12.5,40~100,20`): numbers in feet from the surface's top left, as many as the page keeps. */
+export function parseShots(text) {
+  if (typeof text !== "string" || text === "") return [];
+  const out = [];
+  for (const pair of text.split("~")) {
+    const m = /^(-?\d{1,4}(?:\.\d{1,2})?),(-?\d{1,4}(?:\.\d{1,2})?)$/.exec(pair);
+    if (m !== null && out.length < MAX_SHOTS) out.push([Number(m[1]), Number(m[2])]);
+  }
+  return out;
+}
+/** The points as an address writes them. */
+export const shotsParam = (shots) => shots.map(([x, y]) => `${x},${y}`).join("~");
 export const COURTS = ["default", "maple", "twoTone", "night", "sunburst", "tournament"];
 export const POOL_LOOKS = ["flat", "water", "tiled"];
 export const POOL_DECKS = ["plain", "tiled"];
@@ -97,8 +117,11 @@ export function makeState(params, kept = null) {
     crowd: params.get("crowd") === "1",
     crowdDensity: /^\d{1,3}$/.test(params.get("crowddensity") || "") ? Math.min(100, Number(params.get("crowddensity"))) : 85,
     crowdTifo: params.get("crowdtifo") === "1",
+    lineup: pick(params.get("lineup"), LINEUPS, "off"),
+    place: params.get("drop") === "1",
+    shots: parseShots(params.get("shots")),
     touched: new Set(),
-    embed: "module",
+    embed: pick(params.get("code"), EMBEDS, "module"),
   };
 }
 
@@ -187,6 +210,14 @@ function poolOptions(s, lang, forCode) {
   return Object.keys(pool).length === 0 ? undefined : pool;
 }
 
+/** The data layers the state asks for: a made-up lineup for each side, and, with Click to place on, the points a reader dropped. Neither is drawn in the 3D view or on a badge. */
+export function layersFor(s) {
+  if (s.view === "3d" || s.size === "badge") return [];
+  const layers = s.lineup === "off" ? [] : sampleLayers(s.sport, s.lineup);
+  if (s.place) layers.push({ kind: "points", name: "points", team: "home", data: s.shots.map(([x, y]) => ({ x, y, title: `${x}, ${y}` })) });
+  return layers;
+}
+
 /** What the state asks the package to draw. */
 export function optionsFor(s, lang, forCode = false) {
   const o = { sport: s.sport, orientation: s.orientation, language: lang };
@@ -214,6 +245,8 @@ export function optionsFor(s, lang, forCode = false) {
     if (s.crowdTifo) crowd.tifo = "home";
     o.crowd = Object.keys(crowd).length === 0 ? true : crowd;
   }
+  const layers = layersFor(s);
+  if (layers.length > 0) o.layers = layers;
   const pool = isPool(s.sport) ? poolOptions(s, lang, forCode) : undefined;
   if (pool !== undefined) o.pool = pool;
   if (s.sport === "skating" && s.races !== "none") o.skating = { races: s.races };
@@ -290,6 +323,7 @@ export const labelOf = (say, s) => ({
   logo: (v) => say(`logo_${v}`),
   mark: (v) => v,
   era: (v) => say(`era_${v}`),
+  lineup: (v) => say(`lineup_${v}`),
 });
 
 /** Statuses that belong to one sport: after extra time and on penalties are soccer's, the overtime and the shoot-out the others'. */
@@ -321,6 +355,7 @@ export const SEGS = [
   { id: "track", kind: "track", values: TRACKS, get: (s) => s.track },
   { id: "infield", kind: "infield", values: INFIELDS, get: (s) => s.infield },
   { id: "races", kind: "races", values: RACE_MARKS, get: (s) => s.races },
+  { id: "lineup", kind: "lineup", values: LINEUPS, get: (s) => s.lineup },
   { id: "away-logo", kind: "logo", values: ["none", "emblem", "ready", "url"], get: (s) => s.away.logo },
   { id: "home-logo", kind: "logo", values: ["none", "emblem", "ready", "url"], get: (s) => s.home.logo },
   { id: "away-mark", kind: "mark", values: MARK_IDS, get: (s) => s.away.mark },
@@ -342,6 +377,7 @@ export const TOGGLES = [
   { id: "emblem-line", get: (s) => s.emblemLine },
   { id: "pageant-entrance", get: (s) => s.pageantEntrance },
   { id: "pool-section", get: (s) => s.poolSection },
+  { id: "place", get: (s) => s.place },
 ];
 
 /** The text fields and what each holds. */
@@ -384,6 +420,8 @@ export function hiddenRows(s) {
     "era-notes": !(seasons && past),
     "court-group": s.sport !== "nba",
     "crowd-row": !s.crowd,
+    "lineup-group": !LINEUP_SPORTS.includes(s.sport) || s.view === "3d" || s.size === "badge",
+    "place-group": s.view === "3d" || s.size === "badge",
     "pageant-group": s.pageant === "off" || s.size === "surface",
     "pool-group": !isPool(s.sport),
     "swim-group": s.sport !== "swimming",
@@ -397,4 +435,67 @@ export function hiddenRows(s) {
     "away-logo-url": s.away.logo !== "url",
     "home-logo-url": s.home.logo !== "url",
   };
+}
+
+// ----- The address: every control is in it, and what it names is restored from it.
+
+/** The team fields of the address: the key's letter (`a` for the away team, `h` for the home) and the state's field. */
+const TEAM_PARAMS = [["name", "name"], ["abbr", "abbr"], ["score", "score"], ["color", "color"], ["pens", "pens"], ["url", "url"]];
+const ROLE_LETTER = { away: "a", home: "h" };
+const text = (value, max) => (typeof value === "string" ? value.slice(0, max) : "");
+
+/** The game as the address names it, laid over the made-up game that `loadGame` put in the state (the address names only what differs from it). Call it right after `loadGame`. */
+export function applyParams(s, params) {
+  for (const role of ["away", "home"]) {
+    const letter = ROLE_LETTER[role];
+    for (const [field, key] of TEAM_PARAMS) {
+      const value = params.get(`${letter}${field}`);
+      if (value === null) continue;
+      if (field === "color" && !/^#[0-9a-f]{3,8}$/i.test(value)) continue;
+      s[role][key] = text(value, field === "url" ? 300 : field === "name" ? 40 : 20);
+      s.touched.add(`${role}.${key}`);
+    }
+    s[role].logo = pick(params.get(`${letter}logo`), ["none", "emblem", "ready", "url"], s[role].logo);
+    s[role].mark = pick(params.get(`${letter}mark`), MARK_IDS, s[role].mark);
+  }
+  s.status = pick(params.get("status"), STATUSES, s.status);
+  if (params.get("statustext") !== null) s.statusText = text(params.get("statustext"), 30);
+  s.winner = pick(params.get("winner"), WINNERS, "auto");
+  s.detail = pick(params.get("detail"), ["full", "simple"], "full");
+  for (const [key, param] of [["competition", "competition"], ["date", "date"], ["label", "label"]]) if (params.get(param) !== null) s[key] = text(params.get(param), key === "label" ? 60 : key === "date" ? 24 : 50);
+  s.stripes = params.get("stripes") !== "0";
+  s.exact = params.get("exact") === "1";
+  s.centreLogo = params.get("centrelogo") === "1";
+  s.pageantEntrance = params.get("entrance") === "1";
+}
+
+/**
+ * Every address parameter the page owns, with the value to write: `null` deletes it, because the state is at the control's start. A page reads these with `makeState` and `applyParams`,
+ * so the address a reader copies reproduces the view. The first block is the parameters the page has always had, with the same names and values.
+ */
+export function urlPairs(s, lang) {
+  const base = makeState(new URLSearchParams(""), null);
+  base.sport = s.sport;
+  loadGame(base, s.sport, lang);
+  const out = [["sport", s.sport]];
+  const put = (key, value, start) => out.push([key, value === start ? null : String(value)]);
+  out.push(["year", s.year !== null && hasSeasons(s) ? String(s.year) : null]);
+  out.push(["league", s.league !== null && !isOwnLeague(s.sport, s.league) ? s.league : null]);
+  for (const [key, value, start] of [["pitch", s.pitch, "fifa"], ["ground", s.ground, "none"], ["pitchtype", s.pitchType, "none"], ["park", s.park, "generic"], ["sheet", s.sport === "curling" ? s.sheet : "sheet", "sheet"], ["size", s.size, "full"], ["orientation", s.orientation, "auto"], ["view", s.view, "flat"], ["viewpoint", s.view === "3d" ? s.viewpoint : "corner", "corner"], ["theme", s.theme, "auto"], ["pageant", s.pageant, "off"], ["pageantlines", s.pageantLines, "over"], ["poollook", s.poolLook, "flat"], ["pooldeck", s.poolDeck, "plain"], ["poolcourse", s.poolCourse, "long"], ["poollanes", s.poolLanes, "8"], ["poolrace", s.poolRace, "none"], ["poolsection", s.poolSection ? "1" : "0", "0"], ["track", s.track, "red"], ["infield", s.infield, "pitch"], ["races", s.races, "none"]]) put(key, value, start);
+  out.push(["emblem", s.pageant !== "off" && s.pageantEmblem ? "1" : null]);
+  out.push(["emblemid", s.pageant !== "off" && s.pageantEmblem && s.pageantEmblemId !== "trophy:soccer-globe" ? s.pageantEmblemId : null]);
+  out.push(["emblemline", s.emblemLine ? "1" : null]);
+  // The looks of a surface, the stands, the lineup and the points.
+  for (const [key, value, start] of [["court", s.court, "default"], ["pattern", s.pattern, "bands"], ["goals", s.goals, "box"], ["half", s.half, "none"], ["flags", s.flags ? "1" : "0", "1"], ["baseline", s.baseline ? "1" : "0", "0"], ["hardwood", s.hardwood ? "1" : "0", "0"], ["crowd", s.crowd ? "1" : "0", "0"], ["crowddensity", s.crowdDensity, 85], ["crowdtifo", s.crowdTifo ? "1" : "0", "0"], ["lineup", s.lineup, "off"], ["drop", s.place ? "1" : "0", "0"], ["code", s.embed, "module"]]) put(key, value, start);
+  out.push(["shots", s.place && s.shots.length > 0 ? shotsParam(s.shots) : null]);
+  // The game: only what differs from the made-up one.
+  for (const role of ["away", "home"]) {
+    const letter = ROLE_LETTER[role];
+    for (const [field, key] of TEAM_PARAMS) out.push([`${letter}${field}`, (s[role][key] ?? "") === (base[role][key] ?? "") ? null : String(s[role][key])]);
+    put(`${letter}logo`, s[role].logo, base[role].logo);
+    put(`${letter}mark`, s[role].mark, base[role].mark);
+  }
+  for (const [key, value, start] of [["status", s.status, base.status], ["statustext", s.statusText, base.statusText], ["winner", s.winner, "auto"], ["detail", s.detail, "full"], ["competition", s.competition, base.competition], ["date", s.date, base.date], ["label", s.label, base.label], ["stripes", s.stripes ? "1" : "0", "1"], ["exact", s.exact ? "1" : "0", "0"], ["centrelogo", s.centreLogo ? "1" : "0", "0"], ["entrance", s.pageantEntrance ? "1" : "0", "0"]]) put(key, value, start);
+  // The made-up game's own names are in the page's language, so a name the reader did not type is never in the address; a field the reader emptied is `key=`.
+  return out;
 }

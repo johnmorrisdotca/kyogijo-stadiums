@@ -11,9 +11,9 @@ const at = (id: string, x: number, y: number, size?: number): FormationPosition 
 /** The names of the positions of the sports in this file, and of the places this file adds to the first five, by id. */
 export const MORE_NAMES: Readonly<Partial<Record<FormationSport, Readonly<Record<string, Named>>>>> = Object.freeze({
   nhl: {
-    LW2: named("Left wing on the second line", "第2ラインの左ウイング"),
+    LW2: named("Left wing on the second line", "第2ラインのレフトウイング"),
     C2: named("Centre on the second line", "第2ラインのセンター"),
-    RW2: named("Right wing on the second line", "第2ラインの右ウイング"),
+    RW2: named("Right wing on the second line", "第2ラインのライトウイング"),
     LD2: named("Left defenceman on the second pair", "第2ペアの左ディフェンス"),
     RD2: named("Right defenceman on the second pair", "第2ペアの右ディフェンス"),
   },
@@ -21,9 +21,9 @@ export const MORE_NAMES: Readonly<Partial<Record<FormationSport, Readonly<Record
     DH: named("Designated hitter", "指名打者"),
   },
   rugby: {
-    "1": named("Loosehead prop", "左プロップ"),
+    "1": named("Loosehead prop", "ルースヘッドプロップ"),
     "2": named("Hooker", "フッカー"),
-    "3": named("Tighthead prop", "右プロップ"),
+    "3": named("Tighthead prop", "タイトヘッドプロップ"),
     "4": named("Lock", "ロック（4番）"),
     "5": named("Lock", "ロック（5番）"),
     "6": named("Blindside flanker", "ブラインドサイドフランカー"),
@@ -53,8 +53,8 @@ export const MORE_NAMES: Readonly<Partial<Record<FormationSport, Readonly<Record
     FF: named("Full-forward", "フルフォワード"),
     FPL: named("Left forward pocket", "左フォワードポケット"),
     FPR: named("Right forward pocket", "右フォワードポケット"),
-    RUC: named("Ruck", "ルック"),
-    RR: named("Ruck-rover", "ルックローバー"),
+    RUC: named("Ruck", "ラック"),
+    RR: named("Ruck-rover", "ラックローバー"),
     ROV: named("Rover", "ローバー"),
   },
   cricket: {
@@ -87,12 +87,12 @@ export const MORE_NAMES: Readonly<Partial<Record<FormationSport, Readonly<Record
   },
   handball: {
     GK: named("Goalkeeper", "ゴールキーパー"),
-    LW: named("Left wing", "左ウイング"),
-    LB: named("Left back", "左バック"),
+    LW: named("Left wing", "レフトウイング"),
+    LB: named("Left back", "レフトバック"),
     CB: named("Centre back", "センターバック"),
-    RB: named("Right back", "右バック"),
-    RW: named("Right wing", "右ウイング"),
-    PV: named("Pivot", "ピボット"),
+    RB: named("Right back", "ライトバック"),
+    RW: named("Right wing", "ライトウイング"),
+    PV: named("Pivot", "ポスト"),
   },
   waterpolo: {
     GK: named("Goalkeeper", "ゴールキーパー"),
@@ -120,7 +120,7 @@ export const MORE_NAMES: Readonly<Partial<Record<FormationSport, Readonly<Record
     CF: named("Centre forward", "センターフォワード"),
   },
   netball: {
-    GS: named("Goal shooter", "ゴールシュート"),
+    GS: named("Goal shooter", "ゴールシューター"),
     GA: named("Goal attack", "ゴールアタック"),
     WA: named("Wing attack", "ウイングアタック"),
     C: named("Centre", "センター"),
@@ -139,7 +139,7 @@ const rugby15: Formation = {
   id: "rugby-15",
   sport: "rugby",
   frame: "rugby",
-  name: { en: "Rugby union, the fifteen", ja: "ラグビーユニオン（15人）" },
+  name: { en: "Rugby union, the fifteen", ja: "ラグビー（15人制）" },
   about: { en: "The fifteen in their numbers, 1 to 15: the pack of eight bound as for a scrum, the scrum-half beside it, the fly-half and the centres in a line behind, the wings wide and the full-back deep.", ja: "背番号1〜15の15人。スクラムを組む形のフォワード8人、その脇にスクラムハーフ、後方に斜めに並ぶスタンドオフとセンター、両端のウイング、最後方のフルバック。" },
   positions: [at("1", -6, 9), at("2", -6, 0), at("3", -6, -9), at("4", -14, 4.5), at("5", -14, -4.5), at("6", -14, 14), at("7", -14, -14), at("8", -22, 0), at("9", -23, -17), at("10", -27, 8), at("12", -30, 16), at("13", -34, 24), at("11", -40, 32), at("14", -40, -32), at("15", -46, -3)],
 };
@@ -160,8 +160,8 @@ const cricketTest: Formation = {
   id: "cricket-test-attacking",
   sport: "cricket",
   frame: "cricket",
-  name: { en: "Cricket, attacking field for a fast bowler", ja: "クリケット（速球投手に対する攻撃的な守備）" },
-  about: { en: "For a right-handed batter: three slips and a gully on the off side to catch an edge, point, cover, mid-off, mid-on and square leg all close, and the wicketkeeper standing back. Nobody is on the boundary.", ja: "右打者に対する守備。エッジを捕るために、オフ側にスリップ3人とガリー、近くにポイント、カバー、ミッドオフ、ミッドオン、スクエアレッグ、後ろに下がったウィケットキーパー。境界線付近には誰もいません。" },
+  name: { en: "Cricket, attacking field for a fast bowler", ja: "クリケット（ファストボウラー向けの攻撃的な守備）" },
+  about: { en: "For a right-handed batter: three slips and a gully on the off side to catch an edge, point, cover, mid-off, mid-on and square leg all close, and the wicketkeeper standing back. Nobody is on the boundary.", ja: "右打者向けの守備。バットの縁に当たった球を捕るため、オフ側にスリップ3人とガリーを置き、ポイント、カバー、ミッドオフ、ミッドオン、スクエアレッグも近くに立ちます。ウィケットキーパーは後ろに下がり、バウンダリー付近には誰もいません。" },
   positions: [at("BWL", -13, 0), at("WK", 19, -1.5), at("SL1", 18, 4), at("SL2", 16.5, 10), at("SL3", 15, 16), at("GU", 11.5, 22), at("PT", 11, 28), at("CV", -1, 28), at("MO", -15, 21), at("MN", -15, -21), at("SQ", 12, -22)],
 };
 const cricketPowerplay: Formation = {
@@ -176,8 +176,8 @@ const cricketDeath: Formation = {
   id: "cricket-boundary-defence",
   sport: "cricket",
   frame: "cricket",
-  name: { en: "Cricket, defending the boundary", ja: "クリケット（境界線を守る守備）" },
-  about: { en: "The last ten overs of a one-day international, when five fielders may be outside the circle: long-off, long-on, deep cover, deep mid-wicket and fine leg on the boundary, the rest close.", ja: "ワンデー国際試合の最後の10オーバー。サークルの外に5人置けるので、ロングオフ、ロングオン、ディープカバー、ディープミッドウィケット、ファインレッグが境界線付近に、残りは近くに立ちます。" },
+  name: { en: "Cricket, defending the boundary", ja: "クリケット（バウンダリーを守る守備）" },
+  about: { en: "The last ten overs of a one-day international, when five fielders may be outside the circle: long-off, long-on, deep cover, deep mid-wicket and fine leg on the boundary, the rest close.", ja: "ワンデー国際試合の最後の10オーバー。サークルの外に5人置けるので、ロングオフ、ロングオン、ディープカバー、ディープミッドウィケット、ファインレッグがバウンダリー付近に、残りは近くに立ちます。" },
   positions: [at("BWL", -13, 0), at("WK", 14, 0), at("PT", 11, 28), at("MO", -14, 20), at("MN", -14, -20), at("SQ", 11, -22), at("LO", -55, 20), at("LN", -55, -20), at("DC", -12, 58), at("DM", -2, -58), at("FL", 46, -36)],
 };
 
@@ -188,7 +188,7 @@ const volleyball: Formation = {
   sport: "volleyball",
   frame: "volleyball",
   name: { en: "Volleyball, the six places of the rotation", ja: "バレーボール（ローテーションの6つの位置）" },
-  about: { en: "The six places, numbered as the rules number them: 1 right back (the server), 2 right front, 3 centre front, 4 left front, 5 left back and 6 centre back. After each side-out the team moves one place clockwise.", ja: "ルールの番号どおりの6つの位置。1右後衛（サーバー）、2右前衛、3中央前衛、4左前衛、5左後衛、6中央後衛。サイドアウトのたびに1つずつ時計回りに移ります。" },
+  about: { en: "The six places, numbered as the rules number them: 1 right back (the server), 2 right front, 3 centre front, 4 left front, 5 left back and 6 centre back. After each side-out the team moves one place clockwise.", ja: "ルールどおりに番号が付いた6つの位置。1は右後衛（サーバー）、2は右前衛、3は中央前衛、4は左前衛、5は左後衛、6は中央後衛。サーブ権を得るたびに、チームは時計回りに1つ移ります。" },
   positions: [at("P4", -2.5, 3), at("P3", -2.5, 0), at("P2", -2.5, -3), at("P5", -6.5, 3), at("P6", -6.5, 0), at("P1", -7, -3)],
 };
 
@@ -198,7 +198,7 @@ const handballAttack: Formation = {
   sport: "handball",
   frame: "handball",
   name: { en: "Handball, attack", ja: "ハンドボール（攻撃）" },
-  about: { en: "The seven in attack: the three backs outside the 9 m line, a wing in each corner, the pivot on the 6 m line among the defenders, and the goalkeeper at home.", ja: "攻撃時の7人。9mラインの外側に3人のバック、両コーナーにウイング、6mライン付近で相手の守備の間に立つピボット、自陣のゴールキーパー。" },
+  about: { en: "The seven in attack: the three backs outside the 9 m line, a wing in each corner, the pivot on the 6 m line among the defenders, and the goalkeeper at home.", ja: "攻撃時の7人。9mラインの外側に3人のバック、両コーナーにウイング、6mライン付近で相手の守備の間に立つポスト、自陣のゴールキーパー。" },
   positions: [at("GK", -19, 0), at("LW", 16.5, 8.2), at("LB", 11.5, 6), at("CB", 10.5, 0), at("RB", 11.5, -6), at("RW", 16.5, -8.2), at("PV", 15, 0)],
 };
 const handball60: Formation = {
@@ -206,7 +206,7 @@ const handball60: Formation = {
   sport: "handball",
   frame: "handball",
   name: { en: "Handball, 6-0 defence", ja: "ハンドボール（6-0ディフェンス）" },
-  about: { en: "The six defenders in a line along the 6 m line of their own goal, the goalkeeper behind them. It is the commonest defence.", ja: "自分のゴールの6mラインに沿って6人が横一列に並び、その後ろにゴールキーパー。最もよく使われる守備です。" },
+  about: { en: "The six defenders in a line along the 6 m line of their own goal, the goalkeeper behind them. It is the commonest defence.", ja: "自陣のゴールの6mラインに沿って6人が横一列に並び、その後ろにゴールキーパー。最も一般的な守備です。" },
   positions: [at("GK", -19, 0), at("LW", -15.5, 6.8), at("LB", -14.5, 4), at("CB", -14, 1.3), at("RB", -14, -1.3), at("RW", -14.5, -4), at("PV", -15.5, -6.8)],
 };
 
@@ -216,7 +216,7 @@ const waterPolo: Formation = {
   sport: "waterpolo",
   frame: "waterpolo",
   name: { en: "Water polo, six on five", ja: "水球（6対5の攻撃）" },
-  about: { en: "A man-up attack of six: the centre forward on the 2 m line in front of the goal, a wing at each side of it, two drivers and the centre back at the point, with the goalkeeper at home.", ja: "数的優位の攻撃の形。ゴール前の2mライン上にセンターフォワード、その両脇にウイング、2人のドライバーと、後方のセンターバック。自陣にはゴールキーパー。" },
+  about: { en: "A man-up attack of six: the centre forward on the 2 m line in front of the goal, a wing at each side of it, two drivers and the centre back at the point, with the goalkeeper at home.", ja: "数的優位時の攻撃の形。ゴール前の2mライン上にセンターフォワード、その両脇にウイング、2人のドライバー、後方のセンターバック。自陣にはゴールキーパー。" },
   positions: [at("GK", -12, 0), at("CF", 10.2, 0), at("LW", 10.8, 7), at("RW", 10.8, -7), at("LD", 8.5, 3.6), at("RD", 8.5, -3.6), at("CB", 7, 0)],
 };
 
@@ -231,8 +231,8 @@ const netball: Formation = {
   sport: "netball",
   frame: "netball",
   name: { en: "Netball, the seven positions", ja: "ネットボール（7つのポジション）" },
-  about: { en: "The seven positions in the places they start from: the shooter and the attack in the goal third, the wing attack and the centre in the middle third, and the wing defence, goal defence and keeper behind them. Each may go only to her own zones.", ja: "スタート時の位置どおりに並んだ7つのポジション。ゴール側のサードにシューターとアタック、中央のサードにウイングアタックとセンター、その後ろにウイングディフェンス、ゴールディフェンス、キーパー。各選手は自分のゾーンにしか入れません。" },
-  positions: [at("GS", 12.8, 0), at("GA", 9.5, 3.5), at("WA", 5, -4.5), at("C", 0, 0), at("WD", -5, 4.5), at("GD", -9.5, -3.5), at("GK", -12.8, 0)],
+  about: { en: "The seven positions in the places they start from: the shooter and the attack in the goal third, the wing attack, the centre and the wing defence in the middle third, and the goal defence and the keeper in the defending third. Each may go only to her own zones.", ja: "スタート時の位置に並んだ7つのポジション。ゴールサードにゴールシューターとゴールアタック、センターサードにウイングアタック・センター・ウイングディフェンス、守備側のサードにゴールディフェンスとゴールキーパー。各選手が入れるのは自分のゾーンだけです。" },
+  positions: [at("GS", 12.8, 0), at("GA", 9.5, 3.5), at("WA", 4, -4.5), at("C", 0, 0), at("WD", -4, 4.5), at("GD", -9.5, -3.5), at("GK", -12.8, 0)],
 };
 
 // Hockey's second line, in the `nhl-api` frame (feet): the first line where `hockey-5v5` puts it, and the second unit in a row along the benches at the top of the page, smaller.
@@ -241,7 +241,7 @@ const hockeyLines: Formation = {
   sport: "nhl",
   frame: "nhl-api",
   name: { en: "Hockey, two lines", ja: "アイスホッケー（2つのライン）" },
-  about: { en: "The six on the ice and, in a row along the bench side, the next forward line and defence pair, each marked as the second unit. The codes of the second unit end in 2.", ja: "氷上の6人と、ベンチ側に一列に並ぶ次のフォワードラインとディフェンスペア（第2ユニットとして表示）。第2ユニットのコードは2で終わります。" },
+  about: { en: "The six on the ice and, in a row along the bench side, the next forward line and defence pair, each marked as the second unit. The codes of the second unit end in 2.", ja: "氷上の6人と、ベンチ側に一列に並ぶ次のフォワードラインとディフェンスペア（第2ユニットとして表示）。第2ユニットの略称は末尾に2が付きます。" },
   positions: [at("G", -87, 0), at("LD", -60, 16), at("RD", -60, -16), at("LW", -30, 28), at("C", -30, 0), at("RW", -30, -28), at("LD2", -66, 33, 0.8), at("RD2", -50, 33, 0.8), at("LW2", -16, 33, 0.8), at("C2", -2, 33, 0.8), at("RW2", 12, 33, 0.8)],
 };
 
@@ -261,7 +261,7 @@ const softball: Formation = {
   sport: "mlb",
   frame: "retrosheet",
   name: { en: "Softball, standard defence", ja: "ソフトボール（通常の守備位置）" },
-  about: { en: "The nine fielders of a 60-foot diamond where they usually stand, with the designated hitter listed beside home plate.", ja: "塁間60フィートのダイヤモンドでの9人の野手の定位置。指名打者はホームベースの脇に載せています。" },
+  about: { en: "The nine fielders of a 60-foot diamond where they usually stand, with the designated hitter listed beside home plate.", ja: "塁間60フィート（約18.3m）のダイヤモンドでの9人の野手の定位置。指名打者はホームベースの脇に表示しています。" },
   positions: [at("P", 0, 43), at("C", 0, -3), at("1B", 46, 52), at("2B", 24, 92), at("SS", -24, 92), at("3B", -46, 52), at("LF", -85, 165), at("CF", 0, 185), at("RF", 85, 165)],
   extra: DH,
 };

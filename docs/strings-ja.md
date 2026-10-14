@@ -627,6 +627,13 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `team.formationNote` | Positions: {list}. | ポジション：{list}。 |
 | `team.formationPlayers` | Players: {list}. | 選手：{list}。 |
 | `team.formationItem` | {who} ({position}) | {who}（{position}） |
+| `team.lineupTitle` | Lineup in {name}: {n} players | {name}のラインナップ：選手{n}人 |
+| `team.lineupCaptain` | Captain: {who}. | キャプテン：{who}。 |
+| `team.lineupRotation` | Rotation {n} of 6. | ローテーション：6つのうち{n}番目。 |
+| `team.lineupUnplaced` | With no place in the formation: {list}. | フォーメーションに配置されていない選手：{list}。 |
+| `team.captainTip` | Captain | キャプテン |
+| `team.captainMark` | C | C |
+| `team.tableCaptain` | Captain | キャプテン |
 | `team.voronoiTitle` | Space control of {n} players | 選手{n}人のスペース支配（ボロノイ図） |
 | `team.voronoiNote` | Share of the surface nearest each team's players: {list}. | 競技場のうち、各チームの選手が最も近い範囲の割合：{list}。 |
 | `team.shareItem` | {name} {pct}% | {name} {pct}％ |
@@ -1278,6 +1285,16 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `copy` | Copy | コピー |
 | `copied` | Copied | コピーしました |
 | `download` | Download SVG | SVGを保存 |
+| `copyLink` | Copy link | リンクをコピー |
+| `linkCopied` | Link copied: it opens this exact view | リンクをコピーしました。開くと今の表示がそのまま再現されます |
+| `lineup` | Lineup | ラインナップ |
+| `lineup_off` | Off | なし |
+| `lineup_disc` | Discs | 円形 |
+| `lineup_jersey` | Jerseys | ユニフォーム |
+| `place` | Click to place | クリックで配置 |
+| `placeClear` | Clear points | 点を消す |
+| `placeHint` | Click the drawing to drop a point | 図をクリックすると点を置けます |
+| `placeAt` | x {x} ft, y {y} ft ({xm} m, {ym} m) | x {x}フィート、y {y}フィート（{xm}m、{ym}m） |
 | `galleryTitle` | Every sport | すべての競技 |
 | `galleryText` | A made-up game on each surface, with the score on it. Filter them by family of sport. | それぞれの競技場に架空の試合を描き、得点を入れています。競技の種類で絞り込めます。 |
 | `galleryFilterLabel` | Filter the sports | 競技の絞り込み |
@@ -1959,12 +1976,27 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `basketball-5-out` | Basketball, five out. All five on the three-point line: the point guard at the top, wings and both corners. | バスケットボール（ファイブアウト）。5人全員がスリーポイントライン付近に立つ形。トップにポイントガード、両ウイングと両コーナー。 |
 | `basketball-4-out-1-in` | Basketball, four out and one in. Four players on the three-point line and the centre on the block. | バスケットボール（フォーアウト・ワンイン）。4人がスリーポイントライン付近、センターがブロック（ゴール近く）に立つ形。 |
 | `basketball-high-post` | Basketball, 1-4 high. The point guard at the top, two forwards at the elbows of the free-throw line and a guard on each wing. | バスケットボール（1-4ハイ）。トップにポイントガード、フリースローラインの両端（エルボー）にフォワード2人、両ウイングにガード。 |
-| `football-i-formation` | Football, I formation. Offence: the quarterback under centre with the fullback and the halfback in a line behind him, a tight end and two wide receivers. | アメリカンフットボール（Iフォーメーション）。オフェンス。センターの真後ろにクォーターバック、その後ろにフルバックとハーフバックが縦一列、タイトエンド1人とワイドレシーバー2人。 |
-| `football-shotgun` | Football, shotgun. Offence: the quarterback a few yards behind the centre with a halfback beside him, a tight end and three wide receivers. | アメリカンフットボール（ショットガン）。オフェンス。クォーターバックはセンターの数ヤード後ろに下がり、隣にハーフバック、タイトエンド1人とワイドレシーバー3人。 |
-| `football-4-3` | Football, 4-3 defence. Defence against an offence going right: four linemen, three linebackers, two cornerbacks and two safeties. Left and right are the defenders' own. | アメリカンフットボール（4-3ディフェンス）。右へ進むオフェンスに対するディフェンス。ディフェンスライン4人、ラインバッカー3人、コーナーバック2人、セーフティ2人。左右はディフェンス側から見たものです。 |
-| `football-3-4` | Football, 3-4 defence. Defence against an offence going right: three linemen, four linebackers, two cornerbacks and two safeties. Left and right are the defenders' own. | アメリカンフットボール（3-4ディフェンス）。右へ進むオフェンスに対するディフェンス。ディフェンスライン3人、ラインバッカー4人、コーナーバック2人、セーフティ2人。左右はディフェンス側から見たものです。 |
+| `football-i-formation` | Football, I formation. Offence: the quarterback under centre with the fullback and the halfback in a line behind him, a tight end and two wide receivers. | アメフト（Iフォーメーション）。オフェンス。センターの真後ろにクォーターバック、その後ろにフルバックとハーフバックが縦一列、タイトエンド1人とワイドレシーバー2人。 |
+| `football-shotgun` | Football, shotgun. Offence: the quarterback a few yards behind the centre with a halfback beside him, a tight end and three wide receivers. | アメフト（ショットガン）。オフェンス。クォーターバックはセンターの数ヤード後ろに下がり、隣にハーフバック、タイトエンド1人とワイドレシーバー3人。 |
+| `football-4-3` | Football, 4-3 defence. Defence against an offence going right: four linemen, three linebackers, two cornerbacks and two safeties. Left and right are the defenders' own. | アメフト（4-3ディフェンス）。右へ進むオフェンスに対するディフェンス。ディフェンスライン4人、ラインバッカー3人、コーナーバック2人、セーフティ2人。左右はディフェンス側から見たものです。 |
+| `football-3-4` | Football, 3-4 defence. Defence against an offence going right: three linemen, four linebackers, two cornerbacks and two safeties. Left and right are the defenders' own. | アメフト（3-4ディフェンス）。右へ進むオフェンスに対するディフェンス。ディフェンスライン3人、ラインバッカー4人、コーナーバック2人、セーフティ2人。左右はディフェンス側から見たものです。 |
 | `baseball-standard` | Baseball, standard defence. The nine fielders where they usually stand: a straight infield and the outfielders in their fields. | 野球（通常の守備位置）。9人の野手の定位置。内野はシフトなしで、外野手はそれぞれ自分の守備範囲に立ちます。 |
 | `baseball-shift` | Baseball, infield shift against a left-handed pull hitter. Three infielders on the right side of second base and the outfield turned the same way. Since 2023 MLB's Rule 5.02 requires two infielders on each side of second base, so this shift is not allowed there. | 野球（左打者の引っ張り対策の内野シフト）。二塁ベースの一塁側に内野手3人が寄り、外野手も同じ方向に寄った守備。2023年から、MLBの規則5.02は二塁ベースの一塁側と三塁側に内野手を2人ずつ置くことを求めているため、MLBではこのシフトは認められません。 |
+| `hockey-two-lines` | Hockey, two lines. The six on the ice and, in a row along the bench side, the next forward line and defence pair, each marked as the second unit. The codes of the second unit end in 2. | アイスホッケー（2つのライン）。氷上の6人と、ベンチ側に一列に並ぶ次のフォワードラインとディフェンスペア（第2ユニットとして表示）。第2ユニットの略称は末尾に2が付きます。 |
+| `basketball-traditional` | Basketball, the five positions. The five positions where they traditionally stand: the point guard at the top, the shooting guard and the small forward on the wings, the power forward and the centre near the blocks. | バスケットボール（5つのポジション）。5つのポジションの伝統的な位置。トップにポイントガード、両ウイングにシューティングガードとスモールフォワード、ゴール近くにパワーフォワードとセンター。 |
+| `softball-standard` | Softball, standard defence. The nine fielders of a 60-foot diamond where they usually stand, with the designated hitter listed beside home plate. | ソフトボール（通常の守備位置）。塁間60フィート（約18.3m）のダイヤモンドでの9人の野手の定位置。指名打者はホームベースの脇に表示しています。 |
+| `rugby-15` | Rugby union, the fifteen. The fifteen in their numbers, 1 to 15: the pack of eight bound as for a scrum, the scrum-half beside it, the fly-half and the centres in a line behind, the wings wide and the full-back deep. | ラグビー（15人制）。背番号1〜15の15人。スクラムを組む形のフォワード8人、その脇にスクラムハーフ、後方に斜めに並ぶスタンドオフとセンター、両端のウイング、最後方のフルバック。 |
+| `afl-18` | Australian football, the eighteen. The eighteen on the ground: three on each of the back, half-back, centre, half-forward and forward lines, and three followers at the centre. | オーストラリアンフットボール（18人）。グラウンド上の18人。バック、ハーフバック、センター、ハーフフォワード、フォワードの各ラインに3人ずつと、中央に立つフォロワー3人。 |
+| `cricket-test-attacking` | Cricket, attacking field for a fast bowler. For a right-handed batter: three slips and a gully on the off side to catch an edge, point, cover, mid-off, mid-on and square leg all close, and the wicketkeeper standing back. Nobody is on the boundary. | クリケット（ファストボウラー向けの攻撃的な守備）。右打者向けの守備。バットの縁に当たった球を捕るため、オフ側にスリップ3人とガリーを置き、ポイント、カバー、ミッドオフ、ミッドオン、スクエアレッグも近くに立ちます。ウィケットキーパーは後ろに下がり、バウンダリー付近には誰もいません。 |
+| `cricket-powerplay` | Cricket, one-day powerplay. The first ten overs of a one-day international, when no more than two fielders may be outside the 30-yard circle: nine close, with third man and fine leg deep. | クリケット（ワンデーのパワープレー）。ワンデー国際試合の最初の10オーバー。30ヤードサークルの外に置ける野手は2人までなので、9人はサークル内に、サードマンとファインレッグが外に立ちます。 |
+| `cricket-boundary-defence` | Cricket, defending the boundary. The last ten overs of a one-day international, when five fielders may be outside the circle: long-off, long-on, deep cover, deep mid-wicket and fine leg on the boundary, the rest close. | クリケット（バウンダリーを守る守備）。ワンデー国際試合の最後の10オーバー。サークルの外に5人置けるので、ロングオフ、ロングオン、ディープカバー、ディープミッドウィケット、ファインレッグがバウンダリー付近に、残りは近くに立ちます。 |
+| `volleyball-rotation` | Volleyball, the six places of the rotation. The six places, numbered as the rules number them: 1 right back (the server), 2 right front, 3 centre front, 4 left front, 5 left back and 6 centre back. After each side-out the team moves one place clockwise. | バレーボール（ローテーションの6つの位置）。ルールどおりに番号が付いた6つの位置。1は右後衛（サーバー）、2は右前衛、3は中央前衛、4は左前衛、5は左後衛、6は中央後衛。サーブ権を得るたびに、チームは時計回りに1つ移ります。 |
+| `handball-attack` | Handball, attack. The seven in attack: the three backs outside the 9 m line, a wing in each corner, the pivot on the 6 m line among the defenders, and the goalkeeper at home. | ハンドボール（攻撃）。攻撃時の7人。9mラインの外側に3人のバック、両コーナーにウイング、6mライン付近で相手の守備の間に立つポスト、自陣のゴールキーパー。 |
+| `handball-6-0` | Handball, 6-0 defence. The six defenders in a line along the 6 m line of their own goal, the goalkeeper behind them. It is the commonest defence. | ハンドボール（6-0ディフェンス）。自陣のゴールの6mラインに沿って6人が横一列に並び、その後ろにゴールキーパー。最も一般的な守備です。 |
+| `waterpolo-attack` | Water polo, six on five. A man-up attack of six: the centre forward on the 2 m line in front of the goal, a wing at each side of it, two drivers and the centre back at the point, with the goalkeeper at home. | 水球（6対5の攻撃）。数的優位時の攻撃の形。ゴール前の2mライン上にセンターフォワード、その両脇にウイング、2人のドライバー、後方のセンターバック。自陣にはゴールキーパー。 |
+| `fieldhockey-4-3-3` | Field hockey, 4-3-3. The goalkeeper, four defenders, three midfielders and three forwards. | フィールドホッケー（4-3-3）。ゴールキーパー、ディフェンダー4人、ミッドフィールダー3人、フォワード3人。 |
+| `fieldhockey-3-4-3` | Field hockey, 3-4-3. The goalkeeper, three defenders, four midfielders and three forwards. | フィールドホッケー（3-4-3）。ゴールキーパー、ディフェンダー3人、ミッドフィールダー4人、フォワード3人。 |
+| `netball-start` | Netball, the seven positions. The seven positions in the places they start from: the shooter and the attack in the goal third, the wing attack, the centre and the wing defence in the middle third, and the goal defence and the keeper in the defending third. Each may go only to her own zones. | ネットボール（7つのポジション）。スタート時の位置に並んだ7つのポジション。ゴールサードにゴールシューターとゴールアタック、センターサードにウイングアタック・センター・ウイングディフェンス、守備側のサードにゴールディフェンスとゴールキーパー。各選手が入れるのは自分のゾーンだけです。 |
 
 ## The positions' names (`POSITION_NAMES`)
 
@@ -2000,6 +2032,11 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `nhl.LW` | Left wing | レフトウイング |
 | `nhl.C` | Centre | センター |
 | `nhl.RW` | Right wing | ライトウイング |
+| `nhl.LW2` | Left wing on the second line | 第2ラインのレフトウイング |
+| `nhl.C2` | Centre on the second line | 第2ラインのセンター |
+| `nhl.RW2` | Right wing on the second line | 第2ラインのライトウイング |
+| `nhl.LD2` | Left defenceman on the second pair | 第2ペアの左ディフェンス |
+| `nhl.RD2` | Right defenceman on the second pair | 第2ペアの右ディフェンス |
 | `nba.PG` | Point guard | ポイントガード |
 | `nba.SG` | Shooting guard | シューティングガード |
 | `nba.SF` | Small forward | スモールフォワード |
@@ -2042,3 +2079,96 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `mlb.LF` | Left fielder | レフト |
 | `mlb.CF` | Centre fielder | センター |
 | `mlb.RF` | Right fielder | ライト |
+| `mlb.DH` | Designated hitter | 指名打者 |
+| `rugby.1` | Loosehead prop | ルースヘッドプロップ |
+| `rugby.2` | Hooker | フッカー |
+| `rugby.3` | Tighthead prop | タイトヘッドプロップ |
+| `rugby.4` | Lock | ロック（4番） |
+| `rugby.5` | Lock | ロック（5番） |
+| `rugby.6` | Blindside flanker | ブラインドサイドフランカー |
+| `rugby.7` | Openside flanker | オープンサイドフランカー |
+| `rugby.8` | Number eight | ナンバーエイト |
+| `rugby.9` | Scrum-half | スクラムハーフ |
+| `rugby.10` | Fly-half | スタンドオフ |
+| `rugby.11` | Left wing | 左ウイング |
+| `rugby.12` | Inside centre | インサイドセンター |
+| `rugby.13` | Outside centre | アウトサイドセンター |
+| `rugby.14` | Right wing | 右ウイング |
+| `rugby.15` | Full-back | フルバック |
+| `afl.FB` | Full-back | フルバック |
+| `afl.BPL` | Left back pocket | 左バックポケット |
+| `afl.BPR` | Right back pocket | 右バックポケット |
+| `afl.CHB` | Centre half-back | センターハーフバック |
+| `afl.HBFL` | Left half-back flank | 左ハーフバックフランク |
+| `afl.HBFR` | Right half-back flank | 右ハーフバックフランク |
+| `afl.C` | Centre | センター |
+| `afl.WL` | Left wing | 左ウイング |
+| `afl.WR` | Right wing | 右ウイング |
+| `afl.CHF` | Centre half-forward | センターハーフフォワード |
+| `afl.HFFL` | Left half-forward flank | 左ハーフフォワードフランク |
+| `afl.HFFR` | Right half-forward flank | 右ハーフフォワードフランク |
+| `afl.FF` | Full-forward | フルフォワード |
+| `afl.FPL` | Left forward pocket | 左フォワードポケット |
+| `afl.FPR` | Right forward pocket | 右フォワードポケット |
+| `afl.RUC` | Ruck | ラック |
+| `afl.RR` | Ruck-rover | ラックローバー |
+| `afl.ROV` | Rover | ローバー |
+| `cricket.BWL` | Bowler | ボウラー |
+| `cricket.WK` | Wicketkeeper | ウィケットキーパー |
+| `cricket.SL1` | First slip | ファーストスリップ |
+| `cricket.SL2` | Second slip | セカンドスリップ |
+| `cricket.SL3` | Third slip | サードスリップ |
+| `cricket.GU` | Gully | ガリー |
+| `cricket.PT` | Point | ポイント |
+| `cricket.CV` | Cover | カバー |
+| `cricket.MO` | Mid-off | ミッドオフ |
+| `cricket.MN` | Mid-on | ミッドオン |
+| `cricket.MW` | Mid-wicket | ミッドウィケット |
+| `cricket.SQ` | Square leg | スクエアレッグ |
+| `cricket.FL` | Fine leg | ファインレッグ |
+| `cricket.TM` | Third man | サードマン |
+| `cricket.LO` | Long-off | ロングオフ |
+| `cricket.LN` | Long-on | ロングオン |
+| `cricket.DC` | Deep cover | ディープカバー |
+| `cricket.DM` | Deep mid-wicket | ディープミッドウィケット |
+| `volleyball.P1` | Position 1, right back | ポジション1（右後衛） |
+| `volleyball.P2` | Position 2, right front | ポジション2（右前衛） |
+| `volleyball.P3` | Position 3, centre front | ポジション3（中央前衛） |
+| `volleyball.P4` | Position 4, left front | ポジション4（左前衛） |
+| `volleyball.P5` | Position 5, left back | ポジション5（左後衛） |
+| `volleyball.P6` | Position 6, centre back | ポジション6（中央後衛） |
+| `handball.GK` | Goalkeeper | ゴールキーパー |
+| `handball.LW` | Left wing | レフトウイング |
+| `handball.LB` | Left back | レフトバック |
+| `handball.CB` | Centre back | センターバック |
+| `handball.RB` | Right back | ライトバック |
+| `handball.RW` | Right wing | ライトウイング |
+| `handball.PV` | Pivot | ポスト |
+| `waterpolo.GK` | Goalkeeper | ゴールキーパー |
+| `waterpolo.LW` | Left wing | 左ウイング |
+| `waterpolo.RW` | Right wing | 右ウイング |
+| `waterpolo.LD` | Left flat | 左ドライバー |
+| `waterpolo.RD` | Right flat | 右ドライバー |
+| `waterpolo.CF` | Centre forward | センターフォワード |
+| `waterpolo.CB` | Centre back | センターバック |
+| `fieldhockey.GK` | Goalkeeper | ゴールキーパー |
+| `fieldhockey.RB` | Right back | 右フルバック |
+| `fieldhockey.LB` | Left back | 左フルバック |
+| `fieldhockey.RCB` | Right centre-back | 右センターバック |
+| `fieldhockey.LCB` | Left centre-back | 左センターバック |
+| `fieldhockey.CB` | Centre-back | センターバック |
+| `fieldhockey.RM` | Right midfielder | 右ミッドフィールダー |
+| `fieldhockey.LM` | Left midfielder | 左ミッドフィールダー |
+| `fieldhockey.CM` | Central midfielder | センターミッドフィールダー |
+| `fieldhockey.RCM` | Right central midfielder | 右センターミッドフィールダー |
+| `fieldhockey.LCM` | Left central midfielder | 左センターミッドフィールダー |
+| `fieldhockey.RW` | Right winger | 右フォワード |
+| `fieldhockey.LW` | Left winger | 左フォワード |
+| `fieldhockey.CF` | Centre forward | センターフォワード |
+| `netball.GS` | Goal shooter | ゴールシューター |
+| `netball.GA` | Goal attack | ゴールアタック |
+| `netball.WA` | Wing attack | ウイングアタック |
+| `netball.C` | Centre | センター |
+| `netball.WD` | Wing defence | ウイングディフェンス |
+| `netball.GD` | Goal defence | ゴールディフェンス |
+| `netball.GK` | Goal keeper | ゴールキーパー |

@@ -18,6 +18,7 @@ import { Marked } from "marked";
 
 import { DOCS_CSS, DOCS_JS } from "./docs-assets.mjs";
 import { FAMILY_SCRIPT, familyFooter, familyHead, familyHeader, familyUnreviewed } from "./family-template.mjs";
+import { iconLinks } from "./icon-links.mjs";
 import { RELEASE_PAGE, firstPaintHead, sayEnglish } from "./first-paint.mjs";
 
 export const SITE_ORIGIN = "https://johnmorrisdotca.github.io/kyogijo-stadiums/";
@@ -345,7 +346,7 @@ export function docsPage({ id, name, icon, slug, title, description, article, he
 <html lang="en">
   <head>
     ${familyHead({ id, title: `${title} · ${name} documentation`, description })}
-    <link rel="icon" href="${icon}" />
+    ${icon === undefined ? iconLinks("../") : `<link rel="icon" href="${icon}" />`}
     ${firstPaintHead(id)}
     <link rel="stylesheet" href="../family.css" />
     <link rel="stylesheet" href="docs.css" />

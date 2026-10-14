@@ -1,7 +1,7 @@
 // The lineup layer: a team's players placed by position code on the surface, each as a disc or a jersey with the shirt number in it and the name under it, with a captain's
 // armband and a small flag where they are given. It reads where each position stands from a formation (formations.ts, formations.sports.ts) and so needs no coordinates; two
 // teams are two layers. Written for this package.
-import { safeLogo } from "./colour.ts";
+import { safeLogo } from "./logo.ts";
 import { esc, num } from "./format.ts";
 import { FRAMES } from "./frames.ts";
 import { positionName } from "./formations.ts";
@@ -30,12 +30,12 @@ export function textWidth(text: string): number {
   return width;
 }
 
-/** A name cut to fit `ems` of width, with an ellipsis; nothing when not even two letters fit. */
+/** A name cut to fit `ems` of width, with an ellipsis; nothing when not even three letters fit. */
 export function fit(name: string, ems: number): string {
   if (textWidth(name) <= ems) return name;
   const letters = [...name];
   while (letters.length > 0 && textWidth(`${letters.join("").trimEnd()}…`) > ems) letters.pop();
-  return letters.length < 2 ? "" : `${letters.join("").trimEnd()}…`;
+  return letters.length < 3 ? "" : `${letters.join("").trimEnd()}…`;
 }
 
 /** The jersey as a path through its corners, `size` wide, centred on `(x, y)`: sleeves, shoulders, a neckline and the body. */
@@ -107,7 +107,9 @@ export function drawLineup(layer: LineupLayer, env: Env): Made {
   const first = spots.filter((s) => (rel.get(s.id) ?? 1) >= 1);
   let nearest = Infinity;
   first.forEach((a, i) => first.forEach((b, j) => (j > i ? (nearest = Math.min(nearest, Math.hypot(a.at[0] - b.at[0], a.at[1] - b.at[1]))) : undefined)));
-  const base = isNum(layer.size) && layer.size > 0 ? layer.size * k : Math.min(env.base * 3.4, Math.max(env.base * 2, (Number.isFinite(nearest) ? nearest : env.base * 2) * 0.9));
+  // A football line stands shoulder to shoulder, so sizing by the nearest neighbour would shrink the offence and not the defence: both teams get one size.
+  const football = env.o.sport === "nfl" || env.o.sport === "ifaf";
+  const base = isNum(layer.size) && layer.size > 0 ? layer.size * k : football ? env.base * 2.4 : Math.min(env.base * 3.4, Math.max(env.base * 2, (Number.isFinite(nearest) ? nearest : env.base * 2) * 0.9));
   const jersey = layer.shape === "jersey";
   const mode = layer.labels === "position" || layer.labels === "number" || layer.labels === "name" || layer.labels === "none" ? layer.labels : "number";
   const showNames = layer.names !== false && mode !== "name";
@@ -139,10 +141,10 @@ export function drawLineup(layer: LineupLayer, env: Env): Made {
     if (showNames && player?.name !== undefined && player.name !== "") {
       let neighbour = Infinity;
       for (const other of spots) if (other !== s) neighbour = Math.min(neighbour, Math.hypot(other.at[0] - cx, other.at[1] - cy));
-      const room = Math.max(size * 1.05, Math.min(size * 3.4, (Number.isFinite(neighbour) ? neighbour : size * 3) * 0.98));
-      // The name shrinks to fit, down to a fifth of the mark's width; a name still too long is cut short with an ellipsis, and one that cannot keep two letters is left out
+      const room = Math.max(size * 1.05, Math.min(size * 3.4, (Number.isFinite(neighbour) ? neighbour : size * 3) * 0.92));
+      // The name shrinks to fit, down to a quarter of the mark's width; a name still too long is cut short with an ellipsis, and one that cannot keep three letters is left out
       // (a football line stands shoulder to shoulder). The whole name is in the tooltip, the description and the table.
-      const fs = Math.min(size * 0.4, Math.max(size * 0.2, room / textWidth(player.name)));
+      const fs = Math.min(size * 0.4, Math.max(size * 0.26, room / textWidth(player.name)));
       const shown = fit(player.name, room / fs);
       if (shown !== "") text.push(`<text class="ky-lt" style="font-size:${num(fs)}px" x="${num(cx)}" y="${num(cy + size * (jersey ? 0.54 : 0.5) + fs * 1.05)}"${turn}>${esc(shown)}</text>`);
     }
