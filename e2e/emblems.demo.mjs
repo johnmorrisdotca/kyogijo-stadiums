@@ -47,7 +47,7 @@ test("every tile has a name for a screen reader, in the page's language", async 
   await page.locator('[data-lang="ja"]').click();
   const ja = await page.locator(`${at("home-mark")} button`).evaluateAll((all) => all.map((b) => b.getAttribute("aria-label")));
   expect(ja.every((name) => /[぀-ヿ一-鿿]/.test(name))).toBe(true);
-  await expect(page.locator(`${at("home-logo")} button[data-value="ready"]`)).toHaveText("既製のもの");
+  await expect(page.locator(`${at("home-logo")} button[data-value="ready"]`)).toHaveText("プリセット");
 });
 
 test("the middle of a pageant is a ready-made trophy, in the metal or the line style", async ({ page }) => {

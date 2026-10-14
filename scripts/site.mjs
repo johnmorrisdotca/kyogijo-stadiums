@@ -189,7 +189,7 @@ const team = (role) => `<div class="team" data-role="${role}">
             <label class="setup fam-row"><span class="fam-label" data-say="teamColour"></span><input class="fam-field fam-colour" type="color" id="${role}-color" data-testid="${role}-color" data-say-label="teamColour" value="${escapeAttr(fieldValue[`${role}-color`])}" /></label>
           </div>
           ${seg(`${role}-logo`, "teamLogo", "Pick a made-up emblem, or give the address of a logo of your own. A logo may be an https address, a path, an image data address or the text of an SVG.", "架空のエンブレムを選ぶか、お持ちのロゴのURLを入力します。ロゴには、httpsのURL、パス、画像のデータURI、SVGのコードを使えます。")}
-          ${tiles(`${role}-mark`, `${role}-mark-row`, "teamMark", "A ready-made emblem for this team's mark: a crest that takes the team's colour and initials, the icon of a sport, a trophy or a medal. In your own code it is only its id, such as crest:shield.", "このチームのマークに使う既製のエンブレムです。チームの色と頭文字が入るクレスト、競技のアイコン、トロフィー、メダルから選べます。コードでは「crest:shield」のようなIDだけで指定します。")}
+          ${tiles(`${role}-mark`, `${role}-mark-row`, "teamMark", "A ready-made emblem for this team's mark: a crest that takes the team's colour and initials, the icon of a sport, a trophy or a medal. In your own code it is only its id, such as crest:shield.", "このチームのマークに使うプリセットのエンブレムです。チームの色と頭文字が入るエンブレム、競技のアイコン、トロフィー、メダルから選べます。コードでは「crest:shield」のようなIDだけで指定します。")}
           <input class="fam-field logo-url" id="${role}-logo-url" data-testid="${role}-logo-url" data-say-label="logoUrl" data-say-placeholder="logoUrl" autocomplete="off" value="${escapeAttr(fieldValue[`${role}-logo-url`])}"${hid(`${role}-logo-url`)} />
         </div>`;
 
@@ -282,13 +282,13 @@ const page = `<!doctype html>
               ${seg("pageant", "pageant", "Lay each team's flag or logo large over its half of the surface, as a stadium does for a final's ceremony: as a carpet with a border, or on a round stage with a ring. The score stays on the surface, or goes to the strip when the pictures need the room.", "決勝前のセレモニーのように、各チームの旗やロゴを競技場のそれぞれのハーフに大きく広げます。縁取りのあるカーペットか、金色の輪のついた丸いステージを選べます。得点は競技場の上に残るか、旗やロゴに場所が要るときは下の帯に移ります。")}
               <div id="pageant-group"${hid("pageant-group")}>
                 ${seg("pageant-lines", "pageantLines", "Where the surface's lines lie: over the pictures, under them (the pictures cover the lines), or through them (under, and the pictures a little see-through).", "競技場のラインの位置を選びます。「上」は旗やロゴの上、「下」は旗やロゴの下（ラインは隠れます）、「透過」は下に置いて旗やロゴを少し透かし、ラインをうっすら見せます。")}
-                <div class="setup fam-row" ${help("A ready-made trophy or medal (picked below) in the centre circle, centre ice or centre court, and an entrance: the carpets roll out and the stages grow, for readers who have not asked for less motion.", "センターサークルやリンク中央、コート中央に、トロフィーやメダルの既製エンブレムを置きます（種類は下で選びます）。「登場の動き」は、カーペットが広がり、ステージが現れる動きです。端末で動きを減らす設定にしている場合は、動きは再生されません。")}>
+                <div class="setup fam-row" ${help("A ready-made trophy or medal (picked below) in the centre circle, centre ice or centre court, and an entrance: the carpets roll out and the stages grow, for readers who have not asked for less motion.", "センターサークルやリンク中央、コート中央に、トロフィーやメダルのプリセットを置きます（種類は下で選びます）。「登場の動き」は、カーペットが広がり、ステージが現れる動きです。端末で動きを減らす設定にしている場合は、動きは再生されません。")}>
                   ${toggle("pageant-emblem", "pageantEmblem")}
                   ${toggle("pageant-entrance", "pageantEntrance")}
                 </div>
-                ${tiles("pageant-emblem-id", "pageant-emblem-row", "pageantEmblemPick", "The trophy or medal in the centre. Each is a ready-made emblem; in your own code it is only its id, such as trophy:soccer-globe.", "中央に置くトロフィーまたはメダルです。どれも既製のエンブレムで、コードでは「trophy:soccer-globe」のようなIDだけで指定します。")}
+                ${tiles("pageant-emblem-id", "pageant-emblem-row", "pageantEmblemPick", "The trophy or medal in the centre. Each is a ready-made emblem; in your own code it is only its id, such as trophy:soccer-globe.", "中央に置くトロフィーまたはメダルです。どれもプリセットのエンブレムで、コードでは「trophy:soccer-globe」のようなIDだけで指定します。")}
               </div>
-              <div class="setup fam-row" id="emblem-line-row"${hid("emblem-line-row")} ${help("Draw the ready-made emblems as one outline in the page's colour instead of full-colour metal: it reads at 14 pixels, next to text. In code it is /line after the id.", "既製のエンブレムを、金属調のフルカラーではなく、ページの文字色の線画で描きます。14ピクセルほどの小ささでも、文字の横で見分けやすくなります。コードではIDの後ろに「/line」を付けます。")}>
+              <div class="setup fam-row" id="emblem-line-row"${hid("emblem-line-row")} ${help("Draw the ready-made emblems as one outline in the page's colour instead of full-colour metal: it reads at 14 pixels, next to text. In code it is /line after the id.", "プリセットのエンブレムを、金属調のフルカラーではなく、ページの文字色の線画で描きます。14ピクセルほどの小ささでも、文字の横で見分けやすくなります。コードではIDの後ろに「/line」を付けます。")}>
                 ${toggle("emblem-line", "emblemLine")}
               </div>
               <div class="setup fam-row" ${help("Mown stripes on the grass, and true line widths: lines are drawn thicker than painted so that they stay in view when small.", "芝の縞模様と、実寸どおりの線幅です。通常は、小さくても見えるよう線を実際より太く描きます。")}>

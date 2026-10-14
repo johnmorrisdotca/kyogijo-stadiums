@@ -241,7 +241,7 @@ export const WORDS = {
     theme_auto: "端末に合わせる", theme_light: "ライト", theme_dark: "ダーク",
     away: "アウェイ", awayBaseball: "ビジター", home: "ホーム",
     teamName: "名前", teamAbbr: "略称", teamScore: "得点", teamColour: "色", teamLogo: "ロゴ",
-    logo_none: "なし", logo_emblem: "エンブレム", logo_ready: "既製のもの", logo_url: "URL",
+    logo_none: "なし", logo_emblem: "エンブレム", logo_ready: "プリセット", logo_url: "URL",
     teamMark: "マーク", pageantEmblemPick: "エンブレム", emblemLine: "線画のスタイル",
     logoUrl: "ロゴのURL（https）",
     swap: "左右を入れ替える",

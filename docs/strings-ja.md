@@ -1206,7 +1206,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `teamLogo` | Logo | ロゴ |
 | `logo_none` | None | なし |
 | `logo_emblem` | Emblem | エンブレム |
-| `logo_ready` | Ready-made | 既製のもの |
+| `logo_ready` | Ready-made | プリセット |
 | `logo_url` | Address | URL |
 | `teamMark` | Mark | マーク |
 | `pageantEmblemPick` | Emblem | エンブレム |
@@ -1547,7 +1547,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `ranges` | Display ranges and zoom | 表示範囲とズーム |
 | page `layouts` | Layouts and backgrounds | レイアウトと背景 |
 | page `pageant` | The pageant: flags on the halves | ハーフに広げる旗とエンブレム |
-| page `emblems` | Emblems: trophies, medals, balls and crests | トロフィー・メダル・ボール・クレスト |
+| page `emblems` | Emblems: trophies, medals, balls and crests | トロフィー・メダル・ボール・エンブレム |
 | page `accessibility` | Accessibility | アクセシビリティ |
 | group `places` | Sports and places | 競技と場所 |
 | page `soccer` | Soccer | サッカー |
