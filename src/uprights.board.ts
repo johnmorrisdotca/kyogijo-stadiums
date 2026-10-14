@@ -4,7 +4,7 @@
 import { plane, n, type Upright } from "./turn.kit.ts";
 
 /** The sports that hang their board over the middle: the indoor ones with a floor in the middle of a hall. */
-const HUNG: readonly string[] = ["nba", "nhl", "volleyball", "badminton", "handball", "tennis", "pickleball"];
+const HUNG: readonly string[] = ["nba", "nhl", "volleyball", "badminton", "handball", "tennis", "pickleball", "sepaktakraw", "netball"];
 
 /** Where the board goes: `hung` over the middle, or `standing` behind an end (behind centre field in a ballpark). */
 export const boardKind = (sport: string): "hung" | "standing" => (HUNG.includes(sport) ? "hung" : "standing");

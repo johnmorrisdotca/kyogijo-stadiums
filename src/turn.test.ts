@@ -73,7 +73,7 @@ describe("what stands on the courts of the net sports", () => {
   });
 
   it("puts the net in the middle of the court, across it, between its posts", () => {
-    for (const sport of ["tennis", "volleyball", "badminton", "pickleball", "tabletennis"] as const) {
+    for (const sport of ["tennis", "volleyball", "badminton", "pickleball", "tabletennis", "padel", "sepaktakraw"] as const) {
       const { by } = find(sport);
       const net = by("net").planes[0];
       // A net stands over one line across the court: its length runs along y and its x is constant.
@@ -114,6 +114,69 @@ describe("what stands on the courts of the net sports", () => {
     expect(metres(heights(by("net"))[1] - u.lift)).toBe(0.153);
     expect(heights(by("table"))[0]).toBeCloseTo(0, 5);
     expect(heights(by("table"))[1]).toBeCloseTo(u.lift, 5);
+  });
+
+  it("hangs a padel net 0.92 m at the ends and 0.88 m at the centre on posts 1.05 m high, inside walls of 4 m at the ends and 3 m at the sides", () => {
+    const { by } = find("padel");
+    expect(metres(by("net").height)).toBe(0.92);
+    expect(metres(by("net").low ?? 0)).toBe(0.88);
+    expect(metres(heights(by("posts"))[1])).toBe(1.05);
+    expect(metres(by("walls").height)).toBe(4);
+    const tops = by("walls").planes.map((p) => metres(Math.max(p.o[2], p.o[2] + p.v[2])));
+    expect(Math.max(...tops)).toBe(4);
+    expect(tops).toContain(3);
+    expect(find("padel", {}, { boards: false }).u.items.some((i) => i.kind === "walls")).toBe(false);
+  });
+
+  it("stands squash and racquetball in walls: the out lines of a squash court, 20 ft round a racquetball court", () => {
+    const squash = find("squash");
+    const front = squash.by("walls").planes.find((p) => p.id === "wall-front")!;
+    expect(metres(front.o[2])).toBe(4.57);
+    expect(metres(squash.by("walls").planes.find((p) => p.id === "wall-back")!.o[2])).toBe(2.13);
+    expect(squash.u.items.map((i) => i.kind)).toEqual(["walls"]);
+    const racquetball = find("racquetball");
+    expect(racquetball.by("walls").height).toBe(20);
+    expect(racquetball.by("walls").planes).toHaveLength(4);
+  });
+
+  it("hangs a sepak takraw net 1.52 m high at the centre (men) or 1.42 m (women), on posts of 1.55 m or 1.45 m", () => {
+    const men = find("sepaktakraw");
+    expect(metres(men.by("net").low ?? 0)).toBe(1.52);
+    expect(metres(men.by("net").height)).toBe(1.55);
+    expect(metres(heights(men.by("posts"))[1])).toBe(1.55);
+    const women = find("sepaktakraw", {}, { netHeight: "women" });
+    expect(metres(women.by("net").low ?? 0)).toBe(1.42);
+    expect(metres(heights(women.by("posts"))[1])).toBe(1.45);
+    // The net is 0.7 m wide.
+    const net = men.by("net").planes[0];
+    expect(metres(Math.abs(net.v[2]) - 0.03)).toBeGreaterThan(0.6);
+  });
+
+  it("stands a sitting volleyball net 1.15 m high (1.05 m for women), 80 cm wide, with antennae 1.6 m long", () => {
+    const men = find("volleyball", { league: "wpv-sitting" });
+    expect(metres(men.by("net").height)).toBe(1.15);
+    expect(metres(heights(men.by("net"))[0])).toBe(0.35);
+    expect(metres(heights(men.by("antennae"))[1] - heights(men.by("antennae"))[0])).toBe(1.6);
+    expect(metres(heights(men.by("posts"))[1])).toBe(1.27);
+    expect(metres(find("volleyball", { league: "wpv-sitting" }, { netHeight: "women" }).by("net").height)).toBe(1.05);
+  });
+
+  it("stands a teqball table 76 cm up on its legs, with the net 14 cm over it, on a floor that is not raised", () => {
+    const { u, by } = find("teqball");
+    expect(u.lift).toBe(0);
+    expect(metres(by("table").height)).toBe(0.76);
+    expect(metres(by("net").height)).toBe(0.9);
+    expect(heights(by("table"))[0]).toBeCloseTo(0, 5);
+    expect(by("table").planes.some((p) => p.id === "table-top")).toBe(true);
+  });
+
+  it("stands a roundnet set 20.3 cm high and 91.4 cm across, and a netball goalpost 3.05 m high with its ring", () => {
+    const set = find("roundnet").by("net");
+    expect(metres(set.height)).toBe(0.203);
+    expect(metres(Math.hypot(...set.planes[0].u))).toBe(0.914);
+    const posts = find("netball").by("goalposts");
+    expect(metres(posts.height)).toBe(3.05);
+    expect(posts.planes.filter((p) => p.kind === "rim")).toHaveLength(2);
   });
 });
 

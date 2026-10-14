@@ -30,7 +30,7 @@ const named: { sport: Sport; id: RangeName; end?: "left" | "right" }[] = SPORTS.
 
 describe("the ranges of each sport", () => {
   it("are listed for every sport, each with a name in both languages", () => {
-    expect(SPORTS.length).toBe(20);
+    expect(SPORTS.length).toBe(27);
     for (const sport of SPORTS) {
       expect(RANGES[sport].length, sport).toBeGreaterThan(0);
       for (const info of RANGES[sport]) {
@@ -45,7 +45,7 @@ describe("the ranges of each sport", () => {
     for (const sport of ["nfl", "cfl", "ifaf"] as const) expect(ids(sport)).toEqual(expect.arrayContaining(["red-zone", "between-the-20s", "own-half"]));
     expect(ids("soccer")).toEqual(expect.arrayContaining(["half", "final-third", "penalty-area"]));
     expect(ids("mlb")).toEqual(["infield", "outfield"]);
-    for (const sport of ["tennis", "volleyball", "badminton", "pickleball", "tabletennis"] as const) expect(ids(sport)).toEqual(["half-court"]);
+    for (const sport of ["tennis", "volleyball", "badminton", "pickleball", "tabletennis", "padel", "squash", "racquetball", "sepaktakraw", "teqball", "roundnet", "netball"] as const) expect(ids(sport)).toEqual(["half-court"]);
     expect(ids("curling")).toEqual(["sheet", "half", "house", "folded"]);
   });
 
@@ -98,7 +98,7 @@ describe("every named range, wide and tall", () => {
         }
         expect(box[2]).toBeGreaterThan(0);
         // A tall drawing is the wide one turned a quarter: the same part of the surface, on its side.
-        if (orientation === "portrait" && sport !== "mlb" && sport !== "curling") {
+        if (orientation === "portrait" && sport !== "mlb" && sport !== "curling" && sport !== "roundnet") {
           const wide = view(drawKyogijo({ sport, range } as SurfaceOptions));
           expect(box[2]).toBeCloseTo(wide[3], 1);
           expect(box[3]).toBeCloseTo(wide[2], 1);

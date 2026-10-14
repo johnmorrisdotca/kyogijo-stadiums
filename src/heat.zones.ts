@@ -18,7 +18,7 @@ import { LEAGUES, chooseLeague, cricketOf } from "./leagues.ts";
 import type { CricketLeague } from "./leagues/cricket.ts";
 
 /** The zone sets. */
-export type ZoneSetId = "field-thirds" | "cricket-ground" | "soccer-positional" | "soccer-thirds" | "soccer-channels" | "soccer-18" | "nba-shot" | "nhl-slot" | "nhl-home-plate" | "baseball-spray" | "baseball-retrosheet" | "football-pass" | "curling-house" | "net-court";
+export type ZoneSetId = "field-thirds" | "cricket-ground" | "soccer-positional" | "soccer-thirds" | "soccer-channels" | "soccer-18" | "nba-shot" | "nhl-slot" | "nhl-home-plate" | "baseball-spray" | "baseball-retrosheet" | "football-pass" | "curling-house" | "net-court" | "wall-court" | "roundnet-rings";
 
 type Pt = readonly [number, number];
 
@@ -75,8 +75,10 @@ export const ZONE_SETS: Readonly<Record<ZoneSetId, { sports: readonly Sport[]; t
   "baseball-spray": { sports: ["mlb"], title: "Spray zones: pull, centre, opposite by infield and outfield", source: "docs/sources.md#zone-sets" },
   "baseball-retrosheet": { sports: ["mlb"], title: "Retrosheet hit locations as the nearest sector", source: "https://www.retrosheet.org/location.htm" },
   "curling-house": { sports: ["curling"], title: "The house: the button, the 4-, 8- and 12-foot rings, and the free guard zone", source: "docs/sources.md#zone-sets" },
-  "net-court": { sports: ["tennis", "volleyball", "badminton", "pickleball", "tabletennis"], title: "Each side of the net: the front court and the back court, split by the court's own line", source: "docs/sources.md#zone-sets" },
-  "field-thirds": { sports: ["lacrosse", "rugby", "afl", "gaelic", "fieldhockey", "handball"], title: "Thirds: defensive, middle and attacking", source: "docs/sources.md#zone-sets" },
+  "net-court": { sports: ["tennis", "volleyball", "badminton", "pickleball", "tabletennis", "padel", "sepaktakraw", "teqball"], title: "Each side of the net: the front court and the back court, split by the court's own line", source: "docs/sources.md#zone-sets" },
+  "wall-court": { sports: ["squash", "racquetball"], title: "The front court and the back court, split by the short line", source: "docs/sources.md#zone-sets" },
+  "roundnet-rings": { sports: ["roundnet"], title: "The no hit zone, the ring out to the serving line, and the rest of the court", source: "docs/sources.md#zone-sets" },
+  "field-thirds": { sports: ["lacrosse", "rugby", "afl", "gaelic", "fieldhockey", "handball", "netball"], title: "Thirds: defensive, middle and attacking", source: "docs/sources.md#zone-sets" },
   "cricket-ground": { sports: ["cricket"], title: "The pitch, the ground inside the fielding circle, and the outfield", source: "docs/sources.md#zone-sets" },
   "football-pass": { sports: ["nfl", "cfl", "ifaf"], title: "Pass grid: short and deep by left, middle and right", source: "https://nflreadr.nflverse.com/articles/dictionary_pbp.html" },
 });
@@ -422,14 +424,15 @@ function curlingZones(ctx: ZoneContext): ZoneShape[] {
 
 /**
  * The court of a net sport on each side of the net: the front court, between the net and the line that the sport's own rules draw there, and the back court behind it.
- * That line is tennis's service line (21 ft), volleyball's attack line (3 m), badminton's short service line (1.98 m) and pickleball's non-volley zone line (7 ft); beach
- * volleyball and table tennis have none, so each side is one zone. The zones are ours: the rules name the lines, not the areas.
+ * That line is tennis's service line (21 ft), volleyball's attack line (3 m; sitting volleyball's 2 m), badminton's short service line (1.98 m), pickleball's non-volley zone
+ * line (7 ft), padel's service line (6.95 m) and teqball's service line (3.5 m); beach volleyball, table tennis and sepak takraw have none, so each side is one zone. The
+ * zones are ours: the rules name the lines, not the areas.
  */
 function netZones(ctx: ZoneContext): ZoneShape[] {
   const plan = courtFor({ sport: ctx.o.sport, league: ctx.o.league, net: ctx.o.net });
   const { length: L, width: W } = courtSize(plan);
   const w = ctx.words;
-  const front: number | null = plan.sport === "tennis" ? plan.figures.serviceLine : plan.sport === "volleyball" ? plan.figures.attackLine : plan.sport === "badminton" ? plan.figures.shortServiceLine : plan.sport === "pickleball" ? plan.figures.nonVolley : null;
+  const front: number | null = plan.sport === "tennis" || plan.sport === "padel" || plan.sport === "teqball" ? plan.figures.serviceLine : plan.sport === "volleyball" ? plan.figures.attackLine : plan.sport === "badminton" ? plan.figures.shortServiceLine : plan.sport === "pickleball" ? plan.figures.nonVolley : null;
   const cx = L / 2;
   const both = ctx.end === "both";
   const ends: ("left" | "right")[] = ctx.end === "both" ? ["left", "right"] : [ctx.end];
@@ -448,6 +451,38 @@ function netZones(ctx: ZoneContext): ZoneShape[] {
     else out.push(band(0, front, "front-court", w.frontCourt), band(front, cx, "back-court", w.backCourt));
   }
   return out;
+}
+
+/**
+ * A squash or racquetball court in two: the front court, from the front wall to the short line, and the back court behind it. The split is the short line's axis. The zones are
+ * ours: the rules name the lines, not the areas.
+ */
+function wallZones(ctx: ZoneContext): ZoneShape[] {
+  const plan = courtFor({ sport: ctx.o.sport, league: ctx.o.league, net: ctx.o.net });
+  const { length: L, width: W } = courtSize(plan);
+  const w = ctx.words;
+  const split = plan.sport === "squash" || plan.sport === "racquetball" ? L - plan.figures.shortLine - plan.figures.lineWidth / 2 : L / 2;
+  return [rect("front-court", w.frontCourt, 0, 0, split, W, false, true), rect("back-court", w.backCourt, split, 0, L, W, true, true)];
+}
+
+/**
+ * A roundnet court in three: the no hit zone (the circle of 0.9 m), the ring from it out to the serving line (the circle of 2.6 m), and the rest of the court. The zones are ours:
+ * the rules name the lines, not the areas.
+ */
+function roundnetZones(ctx: ZoneContext): ZoneShape[] {
+  const plan = courtFor({ sport: "roundnet", league: ctx.o.league, net: ctx.o.net });
+  const { length: L, width: W } = courtSize(plan);
+  if (plan.sport !== "roundnet") return [];
+  const [cx, cy] = [L / 2, W / 2];
+  const { noHitRadius: n, servingRadius: R } = plan.figures;
+  const w = ctx.words;
+  const circle = (r: number): string => `M${num(cx - r)} ${num(cy)}a${num(r)} ${num(r)} 0 1 0 ${num(2 * r)} 0a${num(r)} ${num(r)} 0 1 0 ${num(-2 * r)} 0Z`;
+  const dist = (x: number, y: number): number => Math.hypot(x - cx, y - cy);
+  return [
+    { id: "outside-circles", name: w.outsideCircles, d: rectPath(0, 0, L, W) + circle(R), label: [cx, (cy + R + W) / 2], room: [L * 0.8, W / 2 - R], has: (x, y) => x >= 0 && x <= L && y >= 0 && y <= W && dist(x, y) > R },
+    { id: "serving-ring", name: w.servingRing, d: circle(R) + circle(n), label: [cx, cy - (R + n) / 2], room: [R - n, R - n], has: (x, y) => dist(x, y) > n && dist(x, y) <= R },
+    { id: "no-hit-zone", name: w.noHitZone, d: circle(n), label: [cx, cy], room: [2 * n, 2 * n], has: (x, y) => dist(x, y) <= n },
+  ];
 }
 
 /** The surface in thirds along it, counted from the team's own end: the same for every field sport with ends. */
@@ -493,6 +528,6 @@ export function buildZoneSet(id: ZoneSetId, ctx: ZoneContext): ZoneSet {
     const { zones, which } = retrosheetZones(ctx);
     return { id, zones, which };
   }
-  const zones = id === "field-thirds" ? fieldThirds(ctx) : id === "cricket-ground" ? cricketZones(ctx) : id.startsWith("soccer") ? soccerZones(id, ctx) : id === "nba-shot" ? nbaZones(ctx) : id.startsWith("nhl") ? nhlZones(id, ctx) : id === "baseball-spray" ? baseballSpray(ctx) : id === "curling-house" ? curlingZones(ctx) : id === "net-court" ? netZones(ctx) : footballPass(ctx);
+  const zones = id === "field-thirds" ? fieldThirds(ctx) : id === "cricket-ground" ? cricketZones(ctx) : id.startsWith("soccer") ? soccerZones(id, ctx) : id === "nba-shot" ? nbaZones(ctx) : id.startsWith("nhl") ? nhlZones(id, ctx) : id === "baseball-spray" ? baseballSpray(ctx) : id === "curling-house" ? curlingZones(ctx) : id === "net-court" ? netZones(ctx) : id === "wall-court" ? wallZones(ctx) : id === "roundnet-rings" ? roundnetZones(ctx) : footballPass(ctx);
   return { id, zones, which: lastWins(zones) };
 }

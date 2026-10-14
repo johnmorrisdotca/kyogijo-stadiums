@@ -1,9 +1,11 @@
 // What a net sport's court is for a set of options: the league's figures in feet, the look, the free zone, and the lines, areas and fixtures that follow from
-// them, as plain rectangles in the frame of a drawing lying wide (x along the court from the left end line, y across it from the top side line, both in feet).
+// them, as plain rectangles (and, for the circles of a few sports, rings) in the frame of a drawing lying wide (x along the court from the left end line, y across it from
+// the top side line, both in feet).
 // Kept apart from the drawing so that the outline, the description, the tests and the drawing agree. Every length that is a rulebook's figure is cited in
 // docs/sources.md; the sizes of the symbols (a post, an antenna, the net's line) are ours and are said to be.
-import { chooseLeague, netOf } from "./leagues.ts";
-import { BADMINTON_LEAGUES, PICKLEBALL_LEAGUES, TABLE_TENNIS_LEAGUES, TENNIS_LEAGUES, VOLLEYBALL_LEAGUES, type BadmintonFigures, type BadmintonLeague, type FreeZone, type NetSport, type PickleballFigures, type PickleballLeague, type TableTennisFigures, type TableTennisLeague, type TennisFigures, type TennisLeague, type VolleyballFigures, type VolleyballLeague } from "./leagues/courts.ts";
+import { chooseLeague, netOf, type League } from "./leagues.ts";
+import { BADMINTON_LEAGUES, NETBALL_LEAGUES, PADEL_LEAGUES, PICKLEBALL_LEAGUES, RACQUETBALL_LEAGUES, ROUNDNET_LEAGUES, SEPAK_TAKRAW_LEAGUES, SQUASH_LEAGUES, TABLE_TENNIS_LEAGUES, TENNIS_LEAGUES, TEQBALL_LEAGUES, VOLLEYBALL_LEAGUES, type BadmintonFigures, type BadmintonLeague, type FreeZone, type NetLeague, type NetSport, type NetballFigures, type NetballLeague, type PadelFigures, type PadelLeague, type PickleballFigures, type PickleballLeague, type RacquetballFigures, type RacquetballLeague, type RoundnetFigures, type RoundnetLeague, type SepakTakrawFigures, type SepakTakrawLeague, type SquashFigures, type SquashLeague, type TableTennisFigures, type TableTennisLeague, type TennisFigures, type TennisLeague, type TeqballFigures, type TeqballLeague, type VolleyballFigures, type VolleyballLeague } from "./leagues/courts.ts";
+import { netballGeometry, none, padelGeometry, racquetballGeometry, roundnetGeometry, sepakTakrawGeometry, squashGeometry, teqballGeometry } from "./court.more.ts";
 import type { SurfaceOptions } from "./types.ts";
 import { convertLength } from "./units.ts";
 
@@ -26,6 +28,31 @@ export interface NetLine {
   y1: number;
 }
 
+/**
+ * A line drawn as a circle or an arc of one: `r` is the outer radius (the rulebooks measure to the outside of a line), `w` the line's width and `a0` to `a1` the arc,
+ * in radians from the +x axis towards +y (down the page), the whole circle when they are missing.
+ */
+export interface Ring {
+  cx: number;
+  cy: number;
+  r: number;
+  w: number;
+  a0?: number;
+  a1?: number;
+}
+
+/**
+ * Something that stands round or beside the court, as a rectangle: a wall (solid), the metal fence between a padel court's walls (`mesh`), the front wall of a squash court
+ * laid out flat beside it (`face`) with its tin (`tin`).
+ */
+export interface Band {
+  rect: Rect;
+  kind: "wall" | "mesh" | "face" | "tin";
+}
+
+/** A solid object on the court: a teqball table (a rectangle) or a roundnet set (a disc). */
+export type Solid = { kind: "table"; rect: Rect } | { kind: "set"; cx: number; cy: number; r: number };
+
 /** The looks each sport has, the sport's default first. */
 export const LOOKS: Readonly<Record<NetSport, readonly string[]>> = Object.freeze({
   tennis: ["hard-blue", "hard-green", "clay", "grass"],
@@ -33,10 +60,39 @@ export const LOOKS: Readonly<Record<NetSport, readonly string[]>> = Object.freez
   badminton: ["green", "blue", "wood"],
   pickleball: ["blue-green", "green", "red"],
   tabletennis: ["blue", "green"],
+  padel: ["blue", "green", "terracotta"],
+  squash: ["wood", "blue"],
+  racquetball: ["wood", "convertible"],
+  sepaktakraw: ["blue", "green", "wood"],
+  teqball: ["grey", "blue", "green"],
+  roundnet: ["grass", "sand", "indoor"],
+  netball: ["wood", "blue", "green"],
+});
+
+/** How each sport's board counts: in sets, in games, or (netball) as one total, as any other score is drawn. */
+export const BOARD: Readonly<Record<NetSport, "sets" | "games" | "total">> = Object.freeze({
+  tennis: "sets",
+  volleyball: "sets",
+  badminton: "games",
+  pickleball: "games",
+  tabletennis: "games",
+  padel: "sets",
+  squash: "games",
+  racquetball: "games",
+  sepaktakraw: "sets",
+  teqball: "sets",
+  roundnet: "games",
+  netball: "total",
 });
 
 /** True for a sport whose court is one of these. */
-export const isNetSport = (sport: string): sport is NetSport => sport === "tennis" || sport === "volleyball" || sport === "badminton" || sport === "pickleball" || sport === "tabletennis";
+export const isNetSport = (sport: string): sport is NetSport => Object.prototype.hasOwnProperty.call(BOARD, sport);
+
+/** True for a league of one of these courts. */
+export const isNetLeague = (league: League): league is NetLeague => isNetSport(league.family);
+
+/** True for a sport whose score is a board of sets or games (all of these courts but netball's). */
+export const hasSetsBoard = (sport: string): sport is NetSport => isNetSport(sport) && BOARD[sport] !== "total";
 
 interface Common {
   /** The look: a name from `LOOKS`. */
@@ -55,7 +111,14 @@ export type CourtPlan =
   | (Common & { sport: "volleyball"; league: VolleyballLeague; figures: VolleyballFigures })
   | (Common & { sport: "badminton"; league: BadmintonLeague; figures: BadmintonFigures })
   | (Common & { sport: "pickleball"; league: PickleballLeague; figures: PickleballFigures })
-  | (Common & { sport: "tabletennis"; league: TableTennisLeague; figures: TableTennisFigures });
+  | (Common & { sport: "tabletennis"; league: TableTennisLeague; figures: TableTennisFigures })
+  | (Common & { sport: "padel"; league: PadelLeague; figures: PadelFigures })
+  | (Common & { sport: "squash"; league: SquashLeague; figures: SquashFigures })
+  | (Common & { sport: "racquetball"; league: RacquetballLeague; figures: RacquetballFigures })
+  | (Common & { sport: "sepaktakraw"; league: SepakTakrawLeague; figures: SepakTakrawFigures })
+  | (Common & { sport: "teqball"; league: TeqballLeague; figures: TeqballFigures })
+  | (Common & { sport: "roundnet"; league: RoundnetLeague; figures: RoundnetFigures })
+  | (Common & { sport: "netball"; league: NetballLeague; figures: NetballFigures });
 
 const FREE = ["official", "least", "none"] as const;
 
@@ -72,7 +135,8 @@ export function courtFor(o: Pick<SurfaceOptions, "sport" | "league" | "net">): C
   const free = asked.free === undefined ? "official" : (FREE as readonly string[]).includes(asked.free) ? asked.free : undefined;
   if (free === undefined) throw new Error(`Unknown free zone "${String(asked.free)}": use one of ${FREE.join(", ")}`);
   const beach = picked?.family === "volleyball" && picked.id === "fivb-beach";
-  const names = LOOKS[sport];
+  // World ParaVolley asks for a light indoor floor and white lines (Rule 1.2.2): of the volleyball looks only the wooden floor, and not the beach's sand.
+  const names = picked?.id === "wpv-sitting" ? LOOKS.volleyball.slice(0, 1) : LOOKS[sport];
   const look = asked.look === undefined ? (beach ? "sand" : names[0]) : asked.look;
   if (!names.includes(look)) throw new Error(`Unknown look "${String(look)}" for ${sport}: use one of ${names.join(", ")}`);
   const common = { look, free, sticks: sport === "tennis" && asked.sticks === true };
@@ -98,10 +162,45 @@ export function courtFor(o: Pick<SurfaceOptions, "sport" | "league" | "net">): C
       const figures = netOf(league);
       return { ...common, sport, league, figures, zone: zoneOf(figures.free) };
     }
-    default: {
+    case "tabletennis": {
       const league = picked?.family === "tabletennis" ? picked : TABLE_TENNIS_LEAGUES[0];
       const figures = netOf(league);
-      return { ...common, sport: "tabletennis", league, figures, zone: zoneOf(figures.free) };
+      return { ...common, sport, league, figures, zone: zoneOf(figures.free) };
+    }
+    case "padel": {
+      const league = picked?.family === "padel" ? picked : PADEL_LEAGUES[0];
+      const figures = netOf(league);
+      return { ...common, sport, league, figures, zone: zoneOf(figures.free) };
+    }
+    case "squash": {
+      const league = picked?.family === "squash" ? picked : SQUASH_LEAGUES[0];
+      const figures = netOf(league);
+      return { ...common, sport, league, figures, zone: zoneOf(figures.free) };
+    }
+    case "racquetball": {
+      const league = picked?.family === "racquetball" ? picked : RACQUETBALL_LEAGUES[0];
+      const figures = netOf(league);
+      return { ...common, sport, league, figures, zone: zoneOf(figures.free) };
+    }
+    case "sepaktakraw": {
+      const league = picked?.family === "sepaktakraw" ? picked : SEPAK_TAKRAW_LEAGUES[0];
+      const figures = netOf(league);
+      return { ...common, sport, league, figures, zone: zoneOf(figures.free) };
+    }
+    case "teqball": {
+      const league = picked?.family === "teqball" ? picked : TEQBALL_LEAGUES[0];
+      const figures = netOf(league);
+      return { ...common, sport, league, figures, zone: zoneOf(figures.free) };
+    }
+    case "roundnet": {
+      const league = picked?.family === "roundnet" ? picked : ROUNDNET_LEAGUES[0];
+      const figures = netOf(league);
+      return { ...common, sport, league, figures, zone: zoneOf(figures.free) };
+    }
+    default: {
+      const league = picked?.family === "netball" ? picked : NETBALL_LEAGUES[0];
+      const figures = netOf(league);
+      return { ...common, sport: "netball", league, figures, zone: zoneOf(figures.free) };
     }
   }
 }
@@ -122,11 +221,23 @@ export interface CourtGeometry {
   areas: Rect[];
   /** Short lines outside the court (the attack line's extension, the service zone's limits), a part of `lines` that is drawn only in the full detail. */
   small: Rect[];
-  net: NetLine;
+  /** The net across the middle, or `null` for a court without one (squash, racquetball, roundnet's circle, netball). */
+  net: NetLine | null;
   posts: Fixture[];
   antennae: Fixture[];
   sticks: Fixture[];
+  /** Lines drawn as circles and arcs (sepak takraw, netball, roundnet). */
+  rings: Ring[];
+  /** Walls, fences and the like round or beside the court, outside its rectangle. */
+  bands: Band[];
+  /** A table or a set standing on the court. */
+  solids: Solid[];
+  /** Lines painted on a wall, laid flat beside the court (squash's front wall): they may be another colour than the floor's. */
+  wallLines: Rect[];
+  /** The width of a line that runs beneath the net from side to side (volleyball's and sepak takraw's centre line): it shows between the net's edges. */
+  underNet: number | null;
 }
+
 
 const feet = (metres: number): number => convertLength(metres, "m", "ft");
 
@@ -145,8 +256,22 @@ export function courtGeometry(plan: CourtPlan): CourtGeometry {
       return badmintonGeometry(plan.figures);
     case "pickleball":
       return pickleballGeometry(plan.figures);
-    default:
+    case "tabletennis":
       return tableGeometry(plan.figures);
+    case "padel":
+      return padelGeometry(plan.figures);
+    case "squash":
+      return squashGeometry(plan.figures);
+    case "racquetball":
+      return racquetballGeometry(plan.figures);
+    case "sepaktakraw":
+      return sepakTakrawGeometry(plan.figures);
+    case "teqball":
+      return teqballGeometry(plan.figures);
+    case "roundnet":
+      return roundnetGeometry(plan.figures);
+    default:
+      return netballGeometry(plan.figures);
   }
 }
 
@@ -180,6 +305,7 @@ function tennisGeometry(f: TennisFigures, sticks: boolean): CourtGeometry {
     posts: [{ x: cx, y: -out, size: f.net.postSize, shape: "square" }, { x: cx, y: W + out, size: f.net.postSize, shape: "square" }],
     antennae: [],
     sticks: sticks ? [{ x: cx, y: inset - f.net.sticksOutside, size: f.net.stickSize, shape: "square" }, { x: cx, y: W - inset + f.net.sticksOutside, size: f.net.stickSize, shape: "square" }] : [],
+    ...none(),
   };
 }
 
@@ -225,6 +351,8 @@ function volleyballGeometry(f: VolleyballFigures, free: "official" | "least" | "
     // An antenna is fixed at the outer edge of a side band, which stands directly over the side line: at the outer edge of the side line.
     antennae: [{ x: cx, y: 0, size: antenna, shape: "round" }, { x: cx, y: W, size: antenna, shape: "round" }],
     sticks: [],
+    ...none(),
+    underNet: f.attackLine === null ? null : w,
   };
 }
 
@@ -255,6 +383,7 @@ function badmintonGeometry(f: BadmintonFigures): CourtGeometry {
     posts: [{ x: cx, y: w - post / 2, size: post, shape: "round" }, { x: cx, y: W - w + post / 2, size: post, shape: "round" }],
     antennae: [],
     sticks: [],
+    ...none(),
   };
 }
 
@@ -281,6 +410,7 @@ function pickleballGeometry(f: PickleballFigures): CourtGeometry {
     posts: [{ x: cx, y: -gap - d / 2, size: d, shape: "round" }, { x: cx, y: W + gap + d / 2, size: d, shape: "round" }],
     antennae: [],
     sticks: [],
+    ...none(),
   };
 }
 
@@ -300,6 +430,7 @@ function tableGeometry(f: TableTennisFigures): CourtGeometry {
     posts: [{ x: cx, y: -out + post / 2, size: post, shape: "square" }, { x: cx, y: W + out - post / 2, size: post, shape: "square" }],
     antennae: [],
     sticks: [],
+    ...none(),
   };
 }
 
@@ -307,5 +438,17 @@ function tableGeometry(f: TableTennisFigures): CourtGeometry {
 export function sideReach(geometry: CourtGeometry): number {
   let reach = 0;
   for (const post of [...geometry.posts, ...geometry.antennae, ...geometry.sticks]) reach = Math.max(reach, -(post.y - post.size / 2), post.y + post.size / 2 - geometry.width);
+  return reach;
+}
+
+/** How far the walls, fences and the like stand beyond each edge of the court's rectangle: nothing for a court without any. */
+export function bandReach(geometry: CourtGeometry): { left: number; right: number; top: number; bottom: number } {
+  const reach = { left: 0, right: 0, top: 0, bottom: 0 };
+  for (const { rect } of geometry.bands) {
+    reach.left = Math.max(reach.left, -rect[0]);
+    reach.right = Math.max(reach.right, rect[2] - geometry.length);
+    reach.top = Math.max(reach.top, -rect[1]);
+    reach.bottom = Math.max(reach.bottom, rect[3] - geometry.width);
+  }
   return reach;
 }

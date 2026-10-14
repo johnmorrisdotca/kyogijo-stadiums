@@ -29,6 +29,14 @@ export const HOME_FIRST: Readonly<Record<Sport, boolean>> = Object.freeze({
   badminton: false,
   pickleball: false,
   tabletennis: false,
+  padel: false,
+  squash: false,
+  racquetball: false,
+  sepaktakraw: false,
+  teqball: false,
+  roundnet: false,
+  // Netball is scored as a goals sport, not in sets, and is listed "home v away" in the Commonwealth countries where it is played most: the home team is first, on the left.
+  netball: true,
 });
 
 /** The leagues whose convention is not their sport's: the international federation's lacrosse lists the home team first. */

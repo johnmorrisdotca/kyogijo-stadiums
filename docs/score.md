@@ -4,7 +4,7 @@ A game on a surface: each team's name and logo on its side, the score in the mid
 
 ## Score mode
 
-Pass `home` and `away`. Each team has a `name`, an optional `abbr`, `score`, `penalties` (a soccer shoot-out), `ends` and `hammer` (curling: the score of each end, and the last stone), `sets`, `tiebreaks`, `points` and `serving` (tennis, volleyball, badminton, pickleball and table tennis: the score in each set or game, a tie-break's points, the game in progress and the server, [Net sports](./courts.md#a-score)), `goals`, `behinds` and `points` (Australian football's goals and behinds, written `10.12 (72)`; Gaelic games' goals and points, `2-14 (20)`), `wickets`, `overs` and `innings` (cricket: runs for wickets, the overs faced and each innings, [Field sports](./field-sports.md#a-score)), `logo`, `mark` and `markFit` ([round marks](#round-marks)), `color` and `textColor`.
+Pass `home` and `away`. Each team has a `name`, an optional `abbr`, `score`, `penalties` (a soccer shoot-out), `ends` and `hammer` (curling: the score of each end, and the last stone), `sets`, `tiebreaks`, `points` and `serving` (tennis, volleyball, badminton, pickleball, table tennis, padel, squash, racquetball, sepak takraw, teqball and roundnet: the score in each set or game, a tie-break's points, the game in progress and the server, [Net sports](./courts.md#a-score)), `goals`, `behinds` and `points` (Australian football's goals and behinds, written `10.12 (72)`; Gaelic games' goals and points, `2-14 (20)`), `wickets`, `overs` and `innings` (cricket: runs for wickets, the overs faced and each innings, [Field sports](./field-sports.md#a-score)), `logo`, `mark` and `markFit` ([round marks](#round-marks)), `color` and `textColor`.
 
 | Option | What it does |
 | --- | --- |
@@ -32,13 +32,14 @@ The side decides everything that follows the drawing: the banners and the plate,
 | `afl` | home on the left | The AFL fixture lists the home team first ("Home v Away"). |
 | `gaelic` | home on the left | GAA fixtures and results name the home team first. |
 | `fieldhockey`, `handball` | home on the left | FIH and IHF fixtures and results are written home v away, as other European and international team sports are. |
+| `netball` | home on the left | World Netball's fixtures, and those of the Commonwealth countries where the sport is played most, name the home team first ("Home v Away"). Netball is scored in goals, so it has the usual score, not a board of sets. |
 | `cricket` | home on the left | Fixtures are written "Home v Away" ("England v Australia"). The board's rows are the two teams; a scorecard in batting order is `homeSide: "right"` or the teams passed the other way round. |
 | `lacrosse` | home on the right; home on the left for `world-men`, `world-women` and `world-box` | The leagues of North America (the NCAA, the PLL and the NLL, which writes "Buffalo at Toronto") list the visitor first. The leagues of World Lacrosse, an international federation, follow the international fixture convention. |
 | `nfl`, `cfl` | home on the right | North American football lists the visitor first in schedules ("at"), box scores and line scores. |
 | `ifaf` | home on the right | Kept as it was. International American football has no single order: one IFAF event schedule is marked "home team listed first" ([2016 U-19 championship](https://www.americanfootballinternational.com/?p=39465)), others list seeds or no home team at all, and most data feeds follow the NFL's box score. Pass `homeSide: "left"` for a listing that is home first. |
 | `nhl`, `nba`, `mlb` | home on the right | The North American leagues list the visitor first ("away at home"); a baseball line score has the visitor, who bats first, on top. |
 | `curling` | home on the right | A curling game has no home team: the board's rows follow the draw sheet, and the layout is the one it has always had. |
-| `tennis`, `volleyball`, `badminton`, `pickleball`, `tabletennis` | home on the right | The board lists the two sides in the order of the draw, not home against away; the layout is the one it has always had. |
+| `tennis`, `volleyball`, `badminton`, `pickleball`, `tabletennis`, `padel`, `squash`, `racquetball`, `sepaktakraw`, `teqball`, `roundnet` | home on the right | The board lists the two sides in the order of the draw, not home against away; the layout is the one it has always had. |
 
 The default is by sport and by `league` only where a league's own convention differs from its sport's (today the lacrosse leagues above); the hockey and basketball leagues of other federations (`iihf`, `fiba`) keep their sport's default. A league that is a sport of its own (`league: "cfl"` on an `nfl`) takes that sport's.
 

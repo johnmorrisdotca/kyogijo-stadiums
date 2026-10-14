@@ -12,6 +12,7 @@ src/
 ├── curling.board.ts    the curling scoreboard: each end, the total and the hammer
 ├── sets.board.ts       the net sports' scoreboard: each set or game, the points of the game, the sets won and the server's ball
 ├── court.ts            the net sports' court a set of options asks for: the look, the free zone, the lines, areas and fixtures as rectangles
+├── court.more.ts       the geometry of padel, squash, racquetball, sepak takraw, teqball, roundnet and netball: rectangles, rings, walls and fixtures
 ├── courts.style.ts     the net sports' rules and the colours of each look, in light and dark
 ├── cricket.board.ts    the cricket scoreboard: runs and wickets, the overs and each innings
 ├── field.score.ts      the scores the field sports write their own way: goals and behinds, goals and points, and the total
@@ -40,7 +41,7 @@ src/
 │   ├── soccer.ts       the soccer pitch
 │   ├── curling.ts      the curling sheet
 │   ├── curling.fold.ts the folded sheet: the whole sheet as a strip, its two houses enlarged beside it, the fan that joins them and their labels
-│   ├── net.ts          the court of tennis, volleyball, badminton, pickleball and table tennis
+│   ├── net.ts          the court of every net, racket and court sport: the ground, the walls, the lines, the rings, the net, the board's place
 │   ├── field.ts        a field sport's surface, drawn from its plan
 │   ├── soccer-spec.ts  the Laws' figures, the presets, futsal and the small-sided pitches
 │   └── soccer-providers.ts  the data providers' coordinates, registered as frames, and rescale
@@ -118,7 +119,7 @@ src/
 │   ├── basketball.ts   the courts
 │   ├── hockey.ts       the rinks
 │   ├── curling.ts      the sheets
-│   ├── courts.ts       the courts of the net sports
+│   ├── courts.ts       the courts of the net sports, sitting volleyball and the sports added after the first five
 │   ├── fields.ts       a range of sizes: what the field sports' leagues share
 │   ├── lacrosse.ts     the lacrosse fields and floor
 │   ├── rugby.ts        the rugby fields
@@ -175,6 +176,8 @@ src/
 ├── uprights.ts         what stands on a surface: read from the options as the drawing is, with its heights and its sentence
 ├── uprights.goal.ts    the parts several sports share: a goal with its net, a pair of posts, a flag on a pole
 ├── uprights.net.ts     the net sports: the net, its posts and antennae, the table tennis table on its legs
+├── uprights.netkit.ts  what the net sports' uprights share: a net hung between a top and a bottom line, its sag, a table on its legs
+├── uprights.more.ts    padel's walls and fence, squash's and racquetball's walls, sepak takraw's net, teqball's table, roundnet's set, netball's goalposts
 ├── uprights.rinks.ts   the hockey rink's boards and glass and goals, the basketball court's baskets and stanchions
 ├── uprights.board.ts   the score stood up: its badge on a board that faces the eye, hung over the middle of a court or a rink and standing behind an end of a field
 ├── uprights.fields.ts  football's posts and pylons, a soccer pitch's goals and flags, the posts of rugby, Gaelic and Australian football, stumps, a ballpark's fence, poles and backstop

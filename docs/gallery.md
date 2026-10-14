@@ -4,7 +4,7 @@ Every picture the package draws, each with the code that draws it, a button to c
 
 The gallery is made when the site is built (`pnpm site`), so its pages are on the [docs site](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery.html) and not in this repository:
 
-- [Surfaces and scores](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-surfaces.html): the twenty surfaces bare, with a game on each, wide and tall, as a strip and a compact card, the court's looks, light and dark.
+- [Surfaces and scores](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-surfaces.html): the twenty-seven surfaces bare, with a game on each, wide and tall, as a strip and a compact card, the court's looks, light and dark.
 - [The soccer pitch](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-soccer.html): a pitch of every preset size, the mowing patterns, the goal styles, one half, a shoot-out.
 - [Every league's surface](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-leagues.html): each league that marks a court, rink, field or diamond its own way.
 - [Surfaces through the years](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-years.html): each sport in the seasons before and after its markings changed.
@@ -20,4 +20,4 @@ The gallery is made when the site is built (`pnpm site`), so its pages are on th
 
 Every picture in these pages is an SVG string, and each can be put somewhere else without drawing it again: pass the same options (or the SVG, or a chart's `options`) to `drawToCanvas`, `appendSurface`, `surfaceMark`, `sceneToGeoJSON` or `toPNG`, as [the renderers](./renderers.md) say. A picture here and the canvas drawn from the same scene differ in a few pixels: the edges of the letters, and a logo the canvas was not given.
 
-The same site draws one surface in each of the twenty-nine [coordinate frames](./frames.md), side by side, and puts every ballpark and ground on [a map](./atlas.md).
+The same site draws one surface in each of the thirty-six [coordinate frames](./frames.md), side by side, and puts every ballpark and ground on [a map](./atlas.md).

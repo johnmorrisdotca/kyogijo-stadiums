@@ -4,7 +4,7 @@
 
 import { SURFACE_UNITS, convertLength, lengthsIn, type Scaled, type Unit } from "./units.ts";
 import { SOCCER, soccerSpec } from "./surfaces/soccer-spec.ts";
-import { BWF_BADMINTON, FIVB_BEACH, FIVB_INDOOR, ITF_TENNIS, ITTF_TABLE, USAP_PICKLEBALL, netInFeet } from "./leagues/courts.ts";
+import { BWF_BADMINTON, FIP_PADEL, FITEQ_TEQBALL, FIVB_BEACH, FIVB_INDOOR, IRF_RACQUETBALL, IRF_ROUNDNET, ISTAF_SEPAK_TAKRAW, ITF_TENNIS, ITTF_TABLE, USAP_PICKLEBALL, WN_NETBALL, WPV_SITTING, WSF_SQUASH, netInFeet } from "./leagues/courts.ts";
 import { AFL_GROUND } from "./leagues/aussie.ts";
 import { ICC_MEN_GROUND } from "./leagues/cricket.ts";
 import { FIH_PITCH } from "./leagues/fieldhockey.ts";
@@ -169,6 +169,14 @@ export const BEACH_VOLLEYBALL = netInFeet(FIVB_BEACH, "m");
 export const BADMINTON = netInFeet(BWF_BADMINTON, "m");
 export const PICKLEBALL = netInFeet(USAP_PICKLEBALL, "ft");
 export const TABLE_TENNIS = netInFeet(ITTF_TABLE, "m");
+export const SITTING_VOLLEYBALL = netInFeet(WPV_SITTING, "m");
+export const PADEL = netInFeet(FIP_PADEL, "m");
+export const SQUASH = netInFeet(WSF_SQUASH, "m");
+export const RACQUETBALL = netInFeet(IRF_RACQUETBALL, "ft");
+export const SEPAK_TAKRAW = netInFeet(ISTAF_SEPAK_TAKRAW, "m");
+export const TEQBALL = netInFeet(FITEQ_TEQBALL, "m");
+export const ROUNDNET = netInFeet(IRF_ROUNDNET, "m");
+export const NETBALL = netInFeet(WN_NETBALL, "m");
 
 /** The baseball field, from rules 2.01 to 2.05 of the Official Baseball Rules. */
 export const MLB = {
@@ -326,6 +334,34 @@ export function surfaceSize(sport: SizedSport, unit: Unit = SURFACE_UNITS[sport]
       length = TABLE_TENNIS.length;
       width = TABLE_TENNIS.width;
       break;
+    case "padel":
+      length = PADEL.length;
+      width = PADEL.width;
+      break;
+    case "squash":
+      length = SQUASH.length;
+      width = SQUASH.width;
+      break;
+    case "racquetball":
+      length = RACQUETBALL.length;
+      width = RACQUETBALL.width;
+      break;
+    case "sepaktakraw":
+      length = SEPAK_TAKRAW.length;
+      width = SEPAK_TAKRAW.width;
+      break;
+    case "teqball":
+      length = TEQBALL.length;
+      width = TEQBALL.width;
+      break;
+    case "roundnet":
+      length = ROUNDNET.length;
+      width = ROUNDNET.width;
+      break;
+    case "netball":
+      length = NETBALL.length;
+      width = NETBALL.width;
+      break;
     case "lacrosse":
       length = convertLength(WORLD_MEN_FIELD.length.drawn, "m", "ft");
       width = convertLength(WORLD_MEN_FIELD.width.drawn, "m", "ft");
@@ -377,6 +413,13 @@ export function dimensionsOf(sport: "volleyball", unit?: Unit): Scaled<typeof VO
 export function dimensionsOf(sport: "badminton", unit?: Unit): Scaled<typeof BADMINTON>;
 export function dimensionsOf(sport: "pickleball", unit?: Unit): Scaled<typeof PICKLEBALL>;
 export function dimensionsOf(sport: "tabletennis", unit?: Unit): Scaled<typeof TABLE_TENNIS>;
+export function dimensionsOf(sport: "padel", unit?: Unit): Scaled<typeof PADEL>;
+export function dimensionsOf(sport: "squash", unit?: Unit): Scaled<typeof SQUASH>;
+export function dimensionsOf(sport: "racquetball", unit?: Unit): Scaled<typeof RACQUETBALL>;
+export function dimensionsOf(sport: "sepaktakraw", unit?: Unit): Scaled<typeof SEPAK_TAKRAW>;
+export function dimensionsOf(sport: "teqball", unit?: Unit): Scaled<typeof TEQBALL>;
+export function dimensionsOf(sport: "roundnet", unit?: Unit): Scaled<typeof ROUNDNET>;
+export function dimensionsOf(sport: "netball", unit?: Unit): Scaled<typeof NETBALL>;
 export function dimensionsOf(sport: "lacrosse", unit?: Unit): Scaled<typeof WORLD_MEN_FIELD>;
 export function dimensionsOf(sport: "rugby", unit?: Unit): Scaled<typeof WORLD_RUGBY_FIELD>;
 export function dimensionsOf(sport: "afl", unit?: Unit): Scaled<typeof AFL_GROUND>;
@@ -412,6 +455,20 @@ export function dimensionsOf(sport: Sport, unit: Unit = SURFACE_UNITS[sport]): u
       return lengthsIn(PICKLEBALL, unit);
     case "tabletennis":
       return lengthsIn(TABLE_TENNIS, unit);
+    case "padel":
+      return lengthsIn(PADEL, unit);
+    case "squash":
+      return lengthsIn(SQUASH, unit);
+    case "racquetball":
+      return lengthsIn(RACQUETBALL, unit);
+    case "sepaktakraw":
+      return lengthsIn(SEPAK_TAKRAW, unit);
+    case "teqball":
+      return lengthsIn(TEQBALL, unit);
+    case "roundnet":
+      return lengthsIn(ROUNDNET, unit);
+    case "netball":
+      return lengthsIn(NETBALL, unit);
     // The field sports: the figures of the league a drawing has without a `league` (`LEAGUES` has the others), kept in the unit their rulebook prints them in.
     case "lacrosse":
       return lengthsIn(WORLD_MEN_FIELD, unit, "m");

@@ -92,8 +92,8 @@ describe("the round team mark in a score", () => {
     expect(KYOGIJO_STYLE).toContain(KYOGIJO_MARK_STYLE);
   });
 
-  it("draws on every surface that has a place for the teams, well formed, with ids that are unique; curling, the net sports and cricket have the board, so no mark", () => {
-    const boards = new Set(["curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis", "cricket"]);
+  it("draws on every surface that has a place for the teams, well formed, with ids that are unique; curling, the net sports (netball excepted: its score is the usual one) and cricket have the board, so no mark", () => {
+    const boards = new Set(["curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis", "padel", "squash", "racquetball", "sepaktakraw", "teqball", "roundnet", "cricket"]);
     for (const sport of SPORTS as readonly Sport[]) {
       const svg = drawKyogijo(game({ sport, markShape: "round", status: "final" }));
       const doc = parse(svg);

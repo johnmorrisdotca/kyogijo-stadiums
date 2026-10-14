@@ -100,8 +100,10 @@ How they were checked: a test reads the surface colours of all the sports and th
 | `baseball-spray` | MLB | Pull, centre, opposite (or left, centre, right with `bats: "none"`) by infield and outfield. |
 | `baseball-retrosheet` | MLB | Retrosheet's 68 hit-location sectors, each point in the sector with the nearest centre (the same as `zoneAt`). |
 | `curling-house` | curling | The button, the 4-, 8- and 12-foot rings and the free guard zone, at each end (`end`). |
-| `net-court` | tennis, volleyball, badminton, pickleball, table tennis | Each side of the net (`end`): the front court and the back court, split at the sport's own line (the service line, the attack line, the short service line, the non-volley zone line), or one half court where there is none. |
-| `field-thirds` | lacrosse, rugby, Australian football, Gaelic games, field hockey, handball | The surface in thirds along it, counted from the team's own end (`direction`). |
+| `net-court` | tennis, volleyball, badminton, pickleball, table tennis, padel, sepak takraw, teqball | Each side of the net (`end`): the front court and the back court, split at the sport's own line (the service line, the attack line, the short service line, the non-volley zone line), or one half court where there is none. |
+| `wall-court` | squash, racquetball | The front court, from the front wall to the short line, and the back court behind it. |
+| `roundnet-rings` | roundnet | The no hit zone (the circle of 0.9 m), the ring out to the serving line (2.6 m) and the rest of the court. |
+| `field-thirds` | lacrosse, rugby, Australian football, Gaelic games, field hockey, handball, netball | The surface in thirds along it, counted from the team's own end (`direction`). |
 | `cricket-ground` | cricket | The pitch, the ground inside the fielding circle (where the league has one) and the outfield. |
 | `football-pass` | NFL, CFL, IFAF | Short and deep (15 yards past the line of scrimmage, `los`) by left, middle (between the hash marks) and right. |
 
@@ -123,7 +125,7 @@ Each layer is a group with a `<title>` and a `<desc>`. Marks may carry a `title`
 
 1,000 points add about 60 kB to a drawing, and 10,000 points are drawn in about 20 ms on a laptop; tests hold the first under 70 kB and the second under 250 ms. A line with a comet costs about 400 bytes, with the gradient of its own.
 
-A heat map on a grid of 50 by 30 adds under 30 kB to a drawing on any of the twenty sports (13 to 23 kB with the legend off, about 5 ms to draw), and under 100 kB with every cell labelled; a test holds both. A density of 10,000 marks takes about 25 ms on a laptop (a grid of 100 by 60 nodes; 40 ms at 200 by 100) and adds about 8 kB; the test holds it under 500 ms. Hexagons take 15 ms for 10,000 marks.
+A heat map on a grid of 50 by 30 adds under 30 kB to a drawing on any of the twenty-seven sports (13 to 23 kB with the legend off, about 5 ms to draw), and under 100 kB with every cell labelled; a test holds both. A density of 10,000 marks takes about 25 ms on a laptop (a grid of 100 by 60 nodes; 40 ms at 200 by 100) and adds about 8 kB; the test holds it under 500 ms. Hexagons take 15 ms for 10,000 marks.
 
 ## Ideas credited
 

@@ -191,6 +191,27 @@ export function glyph(sport: Sport): string {
     case "tabletennis":
       // A table: the net across it and the centre line.
       return "M-16 -8H16V8H-16ZM0 -10V10M-16 0H16";
+    case "padel":
+      // A court: the net, the service lines and the central service line.
+      return "M-18 -10H18V10H-18ZM0 -10V10M-12.5 -10V10M12.5 -10V10M-12.5 0H12.5";
+    case "squash":
+      // A court, the front wall at the left: the short line, the half court line and the two service boxes.
+      return "M-18 -10H18V10H-18ZM2.3 -10V10M2.3 0H18M8.2 -10V-5H2.3M8.2 10V5H2.3";
+    case "racquetball":
+      // A court, the front wall at the left: the short line, the service line and the broken receiving line.
+      return "M-18 -10H18V10H-18ZM0 -10V10M-4.5 -10V10M4.5 -10V-8M4.5 -6V-4M4.5 -2V0M4.5 2V4M4.5 6V8";
+    case "sepaktakraw":
+      // A court: the centre line, the quarter circles at its ends and the service circles.
+      return "M-18 -10H18V10H-18ZM0 -10V10M-3 -10A3 3 0 0 0 0 -7A3 3 0 0 0 3 -10M-3 10A3 3 0 0 1 0 7A3 3 0 0 1 3 10M-12.9 0A1.5 1.5 0 1 0 -9.9 0A1.5 1.5 0 1 0 -12.9 0M9.9 0A1.5 1.5 0 1 0 12.9 0A1.5 1.5 0 1 0 9.9 0";
+    case "teqball":
+      // A court: the halfway line and the service lines, and the table.
+      return "M-18 -10H18V10H-18ZM0 -10V10M-7.9 -10V10M7.9 -10V10M-3.4 -1.3H3.4V1.3H-3.4Z";
+    case "roundnet":
+      // A court: the serving line and the no hit zone line round the set, and the marks at the four service positions.
+      return "M-10 -10H10V10H-10ZM-8 0A8 8 0 1 0 8 0A8 8 0 1 0 -8 0M-2.8 0A2.8 2.8 0 1 0 2.8 0A2.8 2.8 0 1 0 -2.8 0M-1.2 0A1.2 1.2 0 1 0 1.2 0A1.2 1.2 0 1 0 -1.2 0M-9 0H-7M7 0H9M0 -9V-7M0 7V9";
+    case "netball":
+      // A court: the transverse lines, the centre circle and the goal circles.
+      return "M-18 -10H18V10H-18ZM-6 -10V10M6 -10V10M-1 0A1 1 0 1 0 1 0A1 1 0 1 0 -1 0M-18 -6.4A6.4 6.4 0 0 1 -18 6.4M18 -6.4A6.4 6.4 0 0 0 18 6.4";
     case "lacrosse":
       // A field: the centre line, the goal circles and the restraining lines.
       return "M-18 -10H18V10H-18ZM0 -10V10M-12 0A3 3 0 1 0 -6 0A3 3 0 1 0 -12 0M12 0A3 3 0 1 0 6 0A3 3 0 1 0 12 0M-7 -10V10M7 -10V10";

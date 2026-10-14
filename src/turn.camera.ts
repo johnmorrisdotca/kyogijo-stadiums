@@ -57,7 +57,7 @@ export const CURLING_PRESETS: Readonly<Record<TurnPreset, TurnView>> = {
 };
 
 /** The sports whose net runs across the court and whose viewpoints are `NET_PRESETS`. */
-const NET_SPORTS: readonly string[] = ["tennis", "volleyball", "badminton", "pickleball", "tabletennis"];
+const NET_SPORTS: readonly string[] = ["tennis", "volleyball", "badminton", "pickleball", "tabletennis", "padel", "sepaktakraw", "teqball"];
 
 /** The four viewpoints of a sport. */
 export const presetsFor = (sport?: string): Readonly<Record<TurnPreset, TurnView>> => (sport === "curling" ? CURLING_PRESETS : sport !== undefined && NET_SPORTS.includes(sport) ? NET_PRESETS : sport !== undefined && LONG_SPORTS.includes(sport) ? LONG_PRESETS : TURN_PRESETS);

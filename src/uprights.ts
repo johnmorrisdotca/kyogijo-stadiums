@@ -30,7 +30,7 @@ export interface UprightOptions {
   netHeight?: "men" | "women";
   /** Where the score of a score drawing goes: `board` (the default) hangs it up as a scoreboard (over the middle of a court or a rink, behind an end of a field) and takes the panel off the floor; `floor` leaves it on the floor. */
   score?: "board" | "floor";
-  /** Leave the boards and the glass off a rink, so that the ice can be seen into. On by default. */
+  /** Leave the boards and the glass off a rink, and the walls and fence off a padel, squash or racquetball court, so that it can be seen into. On by default. */
   boards?: boolean;
   /** Only these kinds of thing; every kind the surface has when missing. */
   only?: readonly UprightKind[];
@@ -51,7 +51,7 @@ export interface Uprights {
 export const planesOf = (u: Pick<Uprights, "items">): Plane[] => u.items.flatMap((item) => item.planes);
 
 /** The unit each sport's rulebook gives its heights in, when the options name none. */
-const RULEBOOK_UNIT: Partial<Record<string, Unit>> = { volleyball: "m", badminton: "m", tabletennis: "m", soccer: "m", handball: "m", fieldhockey: "m", rugby: "m", afl: "m", gaelic: "m" };
+const RULEBOOK_UNIT: Partial<Record<string, Unit>> = { volleyball: "m", badminton: "m", tabletennis: "m", padel: "m", squash: "m", sepaktakraw: "m", teqball: "m", roundnet: "m", netball: "m", soccer: "m", handball: "m", fieldhockey: "m", rugby: "m", afl: "m", gaelic: "m" };
 
 /** What stands on the surface the options draw: nothing on a curling sheet, which is flat. */
 export function uprightsFor(o: SurfaceOptions, settings: UprightOptions = {}): Uprights {
@@ -98,7 +98,7 @@ export function uprightsFor(o: SurfaceOptions, settings: UprightOptions = {}): U
     const geo = courtGeometry(plan);
     thin = thinnest(geo.length, geo.width);
     area = { x0: 0, y0: 0, x1: geo.length, y1: geo.width };
-    const built = netUprights(plan, geo, { netHeight: settings.netHeight }, thin);
+    const built = netUprights(plan, geo, { netHeight: settings.netHeight, boards: settings.boards }, thin);
     items = built.items;
     lift = built.lift;
   } else if (isFieldSport(sport)) {

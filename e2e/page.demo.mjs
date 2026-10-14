@@ -5,8 +5,8 @@ import { expect, test } from "@playwright/test";
 import { at, open, openGroups, svg, tap } from "./demo.mjs";
 
 // A wide court is a strip on a phone, and a court has fewer parts than a ballpark or a pitch.
-const NET = ["tennis", "volleyball", "badminton", "pickleball", "tabletennis", "lacrosse", "rugby", "afl", "gaelic", "cricket", "fieldhockey", "handball"];
-const SPORTS = ["nfl", "cfl", "ifaf", "nhl", "nba", "mlb", "soccer", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis"];
+const NET = ["tennis", "volleyball", "badminton", "pickleball", "tabletennis", "padel", "squash", "racquetball", "sepaktakraw", "teqball", "roundnet", "netball", "lacrosse", "rugby", "afl", "gaelic", "cricket", "fieldhockey", "handball"];
+const SPORTS = ["nfl", "cfl", "ifaf", "nhl", "nba", "mlb", "soccer", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis", "padel", "squash", "racquetball", "sepaktakraw", "teqball", "roundnet", "netball"];
 
 test("opens on the rink with no complaint from the page, and says what it shows", async ({ page }) => {
   const errors = await open(page, "?sport=nhl&lang=en&help=off");
@@ -162,7 +162,7 @@ test("the examples are all there: every sport, wide and tall, badges, compact ca
   await open(page, "?lang=en&help=off");
   // The sports open short (see compact.demo.mjs for the filters): every card is in the page, drawn when the grid comes near the screen.
   await page.locator(at("gallery-more")).scrollIntoViewIfNeeded();
-  await expect(page.locator(`${at("gallery-cards")} svg.kyogijo`)).toHaveCount(20);
+  await expect(page.locator(`${at("gallery-cards")} svg.kyogijo`)).toHaveCount(27);
   expect(await page.locator(`${at("side-cards")} svg.kyogijo`).count()).toBe(4);
   expect(await page.locator(`${at("badge-list")} svg.kyogijo`).count()).toBe(8);
   expect(await page.locator(`${at("compact-cards")} svg.kyogijo`).count()).toBe(3);

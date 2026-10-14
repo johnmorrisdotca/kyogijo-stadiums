@@ -7,7 +7,7 @@ import { at, noSidewaysScroll, open, tap } from "./demo.mjs";
 const STAGE = at("stage");
 const turn = (page) => page.locator(`${STAGE} .ky-turn`);
 const floorMatrix = (page) => page.locator(`${STAGE} .ky-turn-floor`).evaluate((el) => el.style.transform);
-const SPORTS = ["nfl", "cfl", "ifaf", "nhl", "nba", "mlb", "soccer", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis", "lacrosse", "rugby", "afl", "gaelic", "cricket", "fieldhockey", "handball"];
+const SPORTS = ["nfl", "cfl", "ifaf", "nhl", "nba", "mlb", "soccer", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis", "lacrosse", "rugby", "afl", "gaelic", "cricket", "fieldhockey", "handball", "padel", "squash", "racquetball", "sepaktakraw", "teqball", "roundnet", "netball"];
 
 test("opens in 3D from the address, with the flat drawing for a floor and the net standing on it", async ({ page }) => {
   const errors = await open(page, "?sport=volleyball&view=3d&lang=en&help=off");

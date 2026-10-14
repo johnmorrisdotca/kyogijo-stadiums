@@ -60,10 +60,18 @@ Heights are the rulebooks', read from the current rulebooks and cited by rule nu
 | Surface | What stands up |
 | --- | --- |
 | Volleyball, beach volleyball | The net, 2.43 m (men) or 2.24 m (women, `netHeight: "women"`), a metre wide with its tape and side bands; posts 2.55 m; antennae 1.8 m long, the top 80 cm over the net, in bands of red and white (FIVB 2.1, 2.2, 2.4, 2.5.1). |
+| Sitting volleyball | The net, 1.15 m (men) or 1.05 m (women), 80 cm wide; antennae 1.6 m long, the top 80 cm over the net; posts 12 cm over the men's net (World ParaVolley 2.1.1, 2.2, 2.4; the posts' height is ours). |
 | Tennis | The net, 3 ft 6 in at the posts and 3 ft at the centre, with its strap; the posts; singles sticks (`net: { sticks: true }`). |
 | Badminton | The net, 1.55 m at the posts and 1.524 m at the centre, 76 cm deep; the posts. |
 | Pickleball | The net, 36 in at the posts and 34 in at the centre; the posts. |
 | Table tennis | The table lifted 76 cm on four legs, the net 15.25 cm over it, the clamps. |
+| Padel | The net, 0.92 m at the ends and 0.88 m at the centre, on posts 1.05 m high; the enclosure: end walls of 3 m of glass with 1 m of metal fence over them (4 m), side walls 3 m high at each end with fence between (FIP, The Court; `boards: false` leaves the walls out). |
+| Squash | The walls up to their out lines: the front wall 4.57 m, the back wall 2.13 m, the side walls sloping from the one to the other (World Squash 5.02, 5.03; `boards: false` leaves them out). |
+| Racquetball | The walls, 20 ft high all round, the front wall solid (IRF 2.1(a); `boards: false` leaves them out). |
+| Sepak takraw | The net, 1.52 m (men) or 1.42 m (women, `netHeight: "women"`) at the centre and 1.55 m or 1.45 m at the posts, 0.7 m wide (ISTAF Laws 2 and 3). |
+| Teqball | The table, its top 76 cm up (900 mm with the net) on four legs, and the net 14 cm over it (FITEQ 1.1, 1.2). |
+| Roundnet | The set: a net in a ring 91.4 cm across, its rim 20.3 cm up, on four legs (International Roundnet Federation 1.1.2). |
+| Netball | A goalpost at the middle of each goal line, 3.05 m high, with its ring on a bar 150 mm long (World Netball, Rule 1, items 13 and 14). |
 | Basketball | Each basket: the backboard (6 ft by 3 1/2 ft, FIBA 1.80 by 1.05 m, its lower edge 150 mm under the ring's top), the ring at 10 ft (FIBA 3.05 m) with its 18 in net, and the padded stanchion, its padding 2 m behind the end line. |
 | Hockey | The boards (42 in) with glass over them, 8 ft at the ends and 6 ft along the sides (NHL 1.3), and a goal 6 ft wide and 4 ft high on each goal line (NHL 2.1; `boards: false` leaves the boards out). |
 | Soccer | A goal 7.32 by 2.44 m (the pitch's own size) on each goal line, and a corner flag 1.5 m high at each corner (`cornerFlags: false`). |

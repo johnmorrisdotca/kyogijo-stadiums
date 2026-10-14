@@ -1,6 +1,6 @@
 # Display ranges and zoom
 
-`range` crops a drawing to a part of its surface: the offensive zone of a rink, a half court, the red zone, the penalty area, the infield, the house of a curling sheet, or a box of your own. It is what sportypy calls `display_range` and what hockey_rink does with its partial rinks, for every one of the twenty surfaces and in one option. The view is cut to the range with a small margin, the data and the heat of the layers are cut to it, the annotations stand against what is shown, a score's panel is put inside it, and `orientation` is kept: a tall drawing shows the same part on its side. Without `range` the whole surface is drawn, byte for byte as it was.
+`range` crops a drawing to a part of its surface: the offensive zone of a rink, a half court, the red zone, the penalty area, the infield, the house of a curling sheet, or a box of your own. It is what sportypy calls `display_range` and what hockey_rink does with its partial rinks, for every one of the twenty-seven surfaces and in one option. The view is cut to the range with a small margin, the data and the heat of the layers are cut to it, the annotations stand against what is shown, a score's panel is put inside it, and `orientation` is kept: a tall drawing shows the same part on its side. Without `range` the whole surface is drawn, byte for byte as it was.
 
 ```ts
 import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
@@ -46,7 +46,7 @@ console.log(drawKyogijo({ sport: "nhl", range: undefined }) === drawKyogijo({ sp
 | `curling` | `half` | from the hog line to the back line at one end | `left` |
 | `curling` | `house` | the house at one end | `left` |
 | `curling` | `folded` | undefined | none |
-| `tennis`, `volleyball`, `badminton`, `pickleball`, `tabletennis` | `half-court` | one side of the net | `left` |
+| `tennis`, `volleyball`, `badminton`, `pickleball`, `tabletennis`, `padel`, `squash`, `racquetball`, `sepaktakraw`, `teqball`, `roundnet`, `netball` | `half-court` | one side of the net | `left` |
 | `lacrosse` | `half` | from an end line to the centre line | `left` |
 | `lacrosse` | `crease` | the crease (the goal circle in the women's game) and the ground round it | `right` |
 | `rugby` | `half` | from a dead-ball line to the half-way line | `left` |

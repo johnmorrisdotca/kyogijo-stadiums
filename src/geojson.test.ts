@@ -78,7 +78,7 @@ describe("sceneToGeoJSON", () => {
       expect(problems(collection), d.name).toEqual([]);
       expect(JSON.parse(JSON.stringify(collection))).toEqual(collection);
     }
-  });
+  }, 30_000);
 
   it("has a feature for each shape, in paint order, with how it is painted in its properties", () => {
     const scene = sceneOf({ sport: "nhl", ...GAME });

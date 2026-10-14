@@ -109,7 +109,7 @@ The MLB parks of the past are read the same way, from the English article of eac
 
 ## The net sports
 
-Tennis, volleyball and beach volleyball, badminton, pickleball and table tennis ([the page](./courts.md)). Each rulebook's figures are in `src/leagues/courts.ts` in the unit it prints first and are held by `src/courts.test.ts`, one test for each rule below. A court is measured, as each book measures it, to the outside edge of its lines. The documents, with the edition and the address read on 2026-10-13, are in `LEAGUE_SOURCES` (`itf-rules`, `fivb-volleyball`, `fivb-beach`, `bwf-laws`, `usap-rulebook`, `ittf-laws`).
+Tennis, volleyball (indoor, beach and sitting), badminton, pickleball, table tennis, padel, squash, racquetball, sepak takraw, teqball, roundnet and netball ([the page](./courts.md)). Each rulebook's figures are in `src/leagues/courts.ts` in the unit it prints first and are held by `src/courts.test.ts`, one test for each rule below. A court is measured, as each book measures it, to the outside edge of its lines. The documents, with the edition and the address read on 2026-10-13, are in `LEAGUE_SOURCES` (`itf-rules`, `fivb-volleyball`, `fivb-beach`, `bwf-laws`, `usap-rulebook`, `ittf-laws`, `wpv-sitting`, `fip-padel`, `wsf-court-specs`, `wsf-singles-rules`, `irf-racquetball-rules`, `irf-racquetball-courts`, `istaf-law`, `fiteq-rules`, `roundnet-rules`, `world-netball-rules`). Only dimensions and the rules of scoring are taken from them, as facts; no text and no diagram of any is copied. Where a rulebook is copyrighted (the IRF's, the FITEQ's, World Netball's, the FIP's by its footer) that is the whole of the use; the licence notes are in [references](./references.md#padel-squash-racquetball-sepak-takraw-teqball-roundnet-and-netball).
 
 ### Tennis
 
@@ -199,6 +199,143 @@ Tennis, volleyball and beach volleyball, badminton, pickleball and table tennis 
 | The score | a game to 11 points unless both reach 10; a match the best of any odd number of games | Laws 2.11.1, 2.12.1 |
 
 **Ours.** The colours; the post's width (a mark of a least size). The playing area round a table is in the ITTF's regulations, not in the Laws, and was not read: no free zone is drawn.
+
+
+### Sitting volleyball
+
+*Official Sitting Volleyball Rules 2025-2028*, World ParaVolley, the English text of 25 July 2025 (https://worldparavolley.org/wp-content/uploads/2025/09/2025-2028-WPV-Official-Sitting-Volleyball-Rules-English-2025-07-25.pdf). It is `league: "wpv-sitting"` of `volleyball`, drawn by the same code as the FIVB's court with these figures.
+
+| Figure | Value | Source |
+| --- | --- | --- |
+| The court | 10 by 6 m, a free zone of at least 3 m on all sides; for World ParaVolley, World and Official Competitions 4 m beside the side lines and 6 m behind the end lines | Rule 1.1 |
+| The lines | all 5 cm wide, boundary lines drawn inside the dimensions; the centre line's axis divides the court into two of 6 by 5 m | Rules 1.3.1 to 1.3.3 |
+| The attack line | the rear edge 2 m from the axis of the centre line; for those competitions extended by five 15 cm lines 5 cm wide, 20 cm apart, to 1.75 m | Rule 1.3.4 |
+| The service zone | 6 m wide behind each end line, limited by two 15 cm lines 20 cm behind the end line | Rule 1.4.2 |
+| The net | 1.15 m high for men and 1.05 m for women; 0.80 m wide, 6.5 to 7 m long (7 m for those competitions) | Rules 2.1.1, 2.2 |
+| The antennae and the posts | an antenna 1.60 m long and 10 mm across at the outer edge of each side band; the posts 0.5 to 1.0 m outside the side lines, 1 m for those competitions | Rules 2.4, 2.5.1 |
+| The colours | an indoor floor of a light colour; for World ParaVolley, World and Official Competitions white lines, and other colours, unlike each other, for the court and the free zone; the court may be of two colours, the front zone and the back | Rules 1.2.2, 1.3.1 |
+| The score | as volleyball: five sets | the Rules' chapters on the play, as the FIVB's |
+
+**Ours.** The same as the FIVB's indoor court, but for the look: the wooden floor is the only one offered, since the Rules ask for a light floor and white lines (no blue floor, no sand with its blue lines). The front zone painted a little apart, the marks for the posts and antennae, the `official` and `least` figures (4 and 6 m, and 3 m all round; the posts 1 and 0.5 m out).
+
+### Padel
+
+*Rules of Padel*, International Padel Federation (FIP), review of application 1 January 2026 (https://www.padelfip.com/wp-content/uploads/2025/12/FIP_Rules-of-Padel.pdf). The part of the Rules that describes the court is headed, not numbered ("The Court": "Dimensions", "Net", "Enclosures", "Ground surface").
+
+| Figure | Value | Source |
+| --- | --- | --- |
+| The court | a rectangle 10 m wide by 20 m long, interior measurements, with a 0.5% tolerance | The Court: Dimensions |
+| The lines | the service lines 6.95 m from the net on either side; the central service line between the net and each, extending at least 20 cm beyond the service line; all lines 5 cm wide, preferably white or black | The Court: Dimensions |
+| The net | 10 m long, 0.88 m high at the centre and 0.92 m at the ends (a tolerance of 0.005 m); on two posts at most 1.05 m high, or a part of the court's structure; the outer side of the posts coinciding with the lateral limits of the court | The Court: Net, 1, 2 and 4 |
+| The enclosure | the court completely enclosed; the ends 4 m high, 3 m of wall and 1 m of metal fence; each side either stepped (a wall 3 m high by 2 m long, then 2 m high by 2 m, at each end) or "crystal" (a wall 3 m high by 4 m long at each end), the fence between | The Court: Enclosures, Ends and Sides |
+| The floor | cement, synthetic material or artificial grass, in green, blue or terracotta, one colour for the whole floor and unlike the wall's | The Court: Ground surface, 1 and 2 |
+| The colours | lines preferably white or black | The Court: Dimensions |
+| The score | points 15, 30, 40, with advantage, the star point or the golden point; a set to six games, a tie-break at six all; a match the best of three sets | Rule 1 |
+
+**Ours.** The colours (the three the Rules prefer, with white lines, which they prefer too). The service line is placed with its outside edge 6.95 m from the net (the Rules do not say which edge). The thickness of the walls and of the fence, and the size of the post's mark. Both side-wall variants have a wall 4 m long at each end of each side, so that is what is drawn; the steps' heights and the doors (The Court: Access) are not.
+
+### Squash
+
+*Specifications for Squash Courts*, World Squash Federation (World Squash), 28 November 2017 (https://www.worldsquash.sport/wp-content/uploads/2021/08/171128_Court-Specifications.pdf), which World Squash's page says applies in 2026, a transition year in which new specifications for each product are being published. The scoring is in *World Squash Singles Rules 2024* (effective 1 January 2024), read in Squash Ireland's copy (https://www.squashireland.ie/wp-content/uploads/2025/04/Rules-of-Singles-Squash-2024-V1.2.pdf), because World Squash's own copy was not found.
+
+| Figure | Value | Source |
+| --- | --- | --- |
+| The courts | singles 9,750 by 6,400 mm; doubles 9,750 by 7,620 mm; international competition width doubles 9,750 by 8,420 mm (for WSF recognised World and Regional events and the Commonwealth Games), measured between the playing surfaces | Clauses 4.01 to 4.03; Appendices 1 and 2 |
+| The markings | all 50 mm wide | Clause 5.01.01 |
+| The front wall | the front wall line 4,570 mm up and the service line 1,780 mm up, each to the underside; the tin 480 mm to its top (330 mm for the competition width; 430 mm is preferred in PSA events), its upper 50 mm a marking | Clauses 5.02.01 to 5.02.03; Appendix 2 note 8 |
+| The back wall | the back wall line 2,130 mm up, to the underside | Clause 5.03 |
+| The short line | parallel to the front and back walls, the nearest edge 4,260 mm from the back wall, marked for the full width | Clause 5.05.01 |
+| The half court line | parallel to and equidistant from the side walls, from the back wall to the short line | Clause 5.05.02 |
+| The service boxes | one each side behind the short line, square with internal sides of 1,600 mm, bounded on three sides by lines and on the fourth by a side wall | Clause 5.05.03 |
+| The colours | markings contrast in colour with the surfaces beside them, all wall markings one colour and all floor markings one colour; the lines may be any colour that contrasts, the wall's lines unlike the floor's; the tin below its top 50 mm of any colour; a floor of natural wood or another colour of at least 50% reflectance | Clauses 5.01.01, 8.06, 10.13, 10.12; Appendix 4 |
+| The score | a game to 11 points, to a lead of two from 10-all; a match normally the best of five games | Rules 2.2, 2.3 of the singles rules |
+
+**Ours.** The colours: the specification does not ask for red lines (it asks that markings contrast, 5.01.01 and 10.13), so red is ours, as the colour squash lines are painted, a dark red on the light floor and a pale red on the dark one, drawn on the floor and on the front wall in the wooden look, and on the front wall alone in the blue look (white on the floor). The thickness of the walls drawn round the court, and the front wall laid flat beside it (its lines at their heights, to the left of the court). The side wall line and the back wall line are not drawn.
+
+### Racquetball
+
+*Official Rules 2026-2028, Indoor Racquetball*, International Racquetball Federation (IRF), March 2026 (https://www.internationalracquetball.com/wp-content/uploads/2026/06/1-irf-rulebook_mar26-1.pdf), and the IRF's *Racquetball Court Specifications* (2025: https://www.internationalracquetball.com/wp-content/uploads/2026/07/IRF_Courts-specifications-2025.pdf). The IRF's rules are copyrighted: only these dimensions are used.
+
+| Figure | Value | Source |
+| --- | --- | --- |
+| The court | 20 feet wide, 40 feet long and 20 feet high, with a ceiling; the back wall at least 12 feet high | Rule 2.1(a); Specifications, Section Two |
+| The lines | 1 to 1 1/2 inches wide (1 1/2 inches, bright red, recommended; black or bright blue on a convertible court) | Rule 2.1(b); Specifications, Section Three, Application |
+| The short line | its back edge midway between the front and back walls (20 feet from the back wall) | Rule 2.1(b)1 |
+| The service line and zone | the service line's front edge 5 feet in front of the short line's back edge; the service zone the 5 by 20 foot area between their outer edges | Rule 2.1(b)2, 3 |
+| The service boxes and drive serve lines | at each end of the service zone, a line whose edge nearest the centre is 18 inches from the side wall; the drive serve lines 3 feet from the side wall | Rule 2.1(b)4, 5 |
+| The receiving line | broken, its back edge 5 feet from the short line's back edge: a 21 inch segment from each wall, joined by sixteen 6 inch lines and seventeen 6 inch spaces | Rule 2.1(b)6 |
+| The safety zone | the 5 by 20 foot area between the back edges of the short line and the receiving line | Rule 2.1(b)7 |
+| The out-of-court line | its upper edge on the back wall, 12 feet up (144 inches) | Rule 2.1(b)8; Specifications, Section Three |
+| The score | a match three games of five, every game to 11, to a lead of two | Rule 1.5 |
+
+**Ours.** The colours of the floor (a light wood, so that the red lines read at 3:1; the lines are the IRF's recommended red, blue on the convertible look), the thickness of the walls, the line width of 1 1/2 inches (the greatest of the Rules' 1 to 1 1/2). The out-of-court line and the screen lines are not drawn.
+
+### Sepak takraw
+
+*Law of the Game* (Regu team event), International Sepaktakraw Federation (ISTAF), 2013, dated 9 December 2013, in the copy Sepaktakraw India hosts (https://sepaktakrawindia.com/wp-content/uploads/2022/04/REGU_TEAM-EVENT.pdf). ISTAF's own site refused a connection from a program (it serves a certificate that is not its own), so no later edition was read; Bernama reported in 2025 that ISTAF keeps the court of 13.4 by 6.1 m, and that a committee was reviewing the service circle's rule (the foot, not the circle's size).
+
+| Figure | Value | Source |
+| --- | --- | --- |
+| The court | 13.4 by 6.1 m, free of obstacles to 8 m; the boundary lines at most 0.04 m wide, measured and drawn inwards | Law 1.1 |
+| The centre line | 0.02 m, across the middle of the court | Law 1.2 |
+| The quarter circles | at both ends of the centre line, drawn from the sidelines, of 0.9 m radius | Law 1.3 |
+| The service circle | 0.3 m radius, one each side, its centre 2.45 m from the back line and 3.05 m from the sidelines; its line 0.04 m wide | Law 1.4 |
+| The free zone | at least 3.0 m from the sidelines and the baselines | Law 1.5 |
+| The posts | 1.55 m (men) or 1.45 m (women) high, at most 0.04 m in radius, 0.3 m from the sidelines, in line with the centre line | Laws 2.1, 2.2 |
+| The net | 0.7 m wide, at least 6.1 m long, over the axis of the centre line; 1.52 m (men) or 1.42 m (women) high at the centre and 1.55 or 1.45 m at the posts | Laws 3.2, 3.5 |
+| The colours | none given | Laws 1 to 3 |
+| The score | a match the best of three sets | Law 12.4 |
+
+**Ours.** The colours, the radius of a circle taken to the outside of its line (the Law gives none), and the quarter circles' line width (the service circle's, 0.04 m). Each quarter circle is drawn inside the court on its side of the net, so there are four.
+
+### Teqball
+
+*The Official Rules and Regulations of Teqball*, FITEQ (the International Teqball Federation), 2026 (https://cdn.buttercms.com/s6Mb1gRkRJuFP38kpMTh). The rules are copyrighted: only these dimensions are used.
+
+| Figure | Value | Source |
+| --- | --- | --- |
+| The table | 3,000 mm long, 1,500 mm wide (1,700 mm with the net), 900 mm high with the net | 1.1.1 to 1.1.4 |
+| The net | 1,700 mm wide, 20 mm thick, 140 mm high above the table | 1.2.1 to 1.2.3 |
+| The court | rectangular, marked with surrounds 500 to 1,500 mm high; the table in the exact middle, the net parallel to the shorter sides; at least 12 m (the sides parallel to the net) by 16 m by 7 m high | 2.1.1.1, 2.1.1.3, 2.1.4 |
+| The halfway line | in the middle of the court, dividing it into two equal halves, 20 to 50 mm wide | 2.1.2 |
+| The service line | parallel to the net and 3.5 m from the middle of the table (2 m from the table's end), 20 to 50 mm wide | 2.1.3 |
+| The colours | the table, the floor, the court surrounds and the ball all unlike each other; the halfway line and the service line in a colour unlike the floor's | 2.1.1.4, 2.1.2.2, 2.1.3.2 |
+| The score | a set to 12 points, a decisive set by a lead of two; a match the best of three sets | 6.2.1 to 6.2.3 |
+
+**Ours.** The colours (the rules ask only that the table, floor, surrounds and ball differ), the greatest line width of 50 mm, the service line's axis at 3.5 m (the rules give no edge), and the thickness of the surrounds. The court drawn is the least, 16 by 12 m, which is what the rules fix.
+
+### Roundnet
+
+*International Roundnet Federation Rules*, adopted 21 October 2022 (https://www.roundnetfederation.org/s/IRF-Rules-10212021docx-1.pdf), Chapter 1.
+
+| Figure | Value | Source |
+| --- | --- | --- |
+| The set | 91.4 cm across and 20.3 cm high | Rule 1.1.2 |
+| The court | a set, service lines, a no hit zone line and a playing space; a least of 10 by 10 m (33 by 33 feet) recommended, and there are no out of bounds | Rules 1.2.1, 1.2.2 |
+| The serving line | a circle drawn 2.6 m (8.5 feet) from the centre of the set, 2.13 m (7 feet) from its edge; marks at the four starting service positions | Rule 1.2.3 |
+| The service positions | four, 90 degrees apart, typically parallel and perpendicular to the field | Rules 3.8.1, 3.8.2 |
+| The no hit zone line | a circle 90 cm (3 feet) from the centre of the set | Rule 1.2.4 |
+| The colours | none given | Chapter 1 |
+| The score | a game to the designated number of points, typically 15 or 21, by a lead of two; a match typically two games | Rules 3.4, 3.5 |
+
+**Ours.** The colours, the widths of the lines and of the marks (the rules give none), the set drawn as a disc with its rim, and the court as the recommended square (a square has no sides, so `orientation: "portrait"` draws it the same).
+
+### Netball
+
+*Rules of Netball*, World Netball, 2024 edition (https://netball.sport/wp-content/uploads/2024/01/World-Netball-Rules-Book-2024.pdf), Rule 1 Technical specifications, Court and related areas. The rules are copyrighted: only these dimensions are used; World Netball's facilities page (https://netball.sport/game/facilities-and-equipment/) gives the same figures.
+
+| Figure | Value | Source |
+| --- | --- | --- |
+| The court | side lines 30.5 m (100 ft), goal lines 15.25 m (50 ft) | Items 2, 3 |
+| The thirds | two transverse lines parallel to the goal lines divide the court into three equal areas | Item 4 |
+| The centre circle | 0.9 m (3 ft) across, in the centre of the court | Item 5 |
+| The goal circles | a semicircle at each end, of radius 4.9 m (16 ft), centred on the middle of the outside of the goal line | Item 6 |
+| The lines | all 50 mm wide, preferably white, part of the areas they outline; a line that bounds two areas is common to both | Item 7 |
+| The court surround | 3.05 m (10 ft) from the goal lines and side lines | Item 8 |
+| The colours | all lines preferably white; a surface preferably wooden (and sprung); a goal net preferably white | Items 1, 7, 14d |
+| The goalposts | at the middle of each goal line, the back of the pole at its outer edge; a pole 65 to 100 mm across and 3.05 m high, with padding up to 50 mm; a ring of 380 mm inside diameter, 15 mm rod, on a bar 150 mm long | Items 13, 14 |
+
+**Ours.** The colours, the radii taken to the outside of the lines, the transverse lines centred on the thirds (the line is common to both areas), the pole drawn at its greatest, 100 mm, the ring seen from above, and a score that is the usual one, not a board.
 
 ## The field sports
 
@@ -348,8 +485,8 @@ Lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey and ha
 | NHL, NBA | feet | NHL rulebook, Rule 1 and NBA rulebook, Rule 1 |
 | Baseball | feet | Official Baseball Rules, 2.01 to 2.05 |
 | Curling | metres for World Curling (the unit it prints first, with feet beside it), feet for Curling Canada (which prints feet first) | R1 of the World Curling rules; Rule 3 of Curling Canada's |
-| Tennis, pickleball | feet (each also gives metres beside it) | Rule 1 of the ITF's Rules of Tennis ("78 feet (23.77 m)"); Rule 3.A.1 of USA Pickleball's rulebook ("20 feet (6.10 m)") |
-| Volleyball, badminton, table tennis | metres | Rule 1.1 of the FIVB's rules; Law 1 and Diagram A of the BWF's (millimetres on the diagram); Law 2.1 of the ITTF's |
+| Tennis, pickleball, racquetball | feet (each also gives metres beside it) | Rule 1 of the ITF's Rules of Tennis ("78 feet (23.77 m)"); Rule 3.A.1 of USA Pickleball's rulebook ("20 feet (6.10 m)"); Rule 2.1 of the IRF's ("20 feet wide, 40 feet long") |
+| Volleyball (indoor, beach and sitting), badminton, table tennis, padel, squash, sepak takraw, teqball, roundnet, netball | metres | Rule 1.1 of the FIVB's and World ParaVolley's rules; Law 1 and Diagram A of the BWF's (millimetres on the diagram); Law 2.1 of the ITTF's; the FIP's "The Court"; clause 4 of World Squash's (millimetres); Law 1 of the ISTAF's; 1 and 2 of the FITEQ's (millimetres); Rule 1.2 of the Roundnet Federation's ("10 x 10 m (33 x 33 feet)"); Rule 1 of World Netball's ("30.5 m (100 ft)") |
 | NPB parks | metres | the Japanese Wikipedia article of each park gives 両翼, 中堅 and 左右中間 in metres; they are converted once, at 0.3048 metres to the international foot (3.280839895 feet to the metre), rounded to a tenth of a foot |
 
 ## Soccer
@@ -466,6 +603,15 @@ The [3D view](./turn.md) stands things up on a surface; where each stands is the
 | Volleyball posts | 2.55 m | the same, 2.5.1: "They are 2.55 m high" |
 | Volleyball antennae | 1.80 m long, the top 80 cm over the net, 10 cm stripes | the same, 2.4 |
 | Tennis, badminton, pickleball, table tennis | as in the figures above | the figures above |
+| Sitting volleyball net, antennae, posts | net 1.15 m (men) or 1.05 m (women), 0.80 m wide; antennae 1.60 m long, the top 0.80 m over the net (which makes the antenna as long as the net is wide plus the 0.80 m, as the FIVB's does) | World ParaVolley Official Sitting Volleyball Rules 2025-2028, 2.1.1, 2.2, 2.4. **Ours:** the rules read give the posts' distance from the side lines (2.5.1) and not their height; they are drawn 12 cm over the men's net, as the FIVB's 2.55 m is over 2.43 m, and the antennae's 0.80 m over the net is the FIVB's. |
+| Padel net and posts | 0.92 m at the ends and 0.88 m at the centre; posts 1.05 m | FIP Rules of Padel, The Court: Net, 1, 2 and 4 ("at most 1.05 m"; the greatest is drawn). The net is drawn down to the floor and its mesh is ours. |
+| Padel enclosure | the end walls 4 m (3 m of wall, 1 m of metal fence); the side walls 3 m high, 4 m long at each end, fence between | The Court: Enclosures, Ends and Sides. **Ours:** the Rules read give the fence along the sides no height of its own; it is drawn as high as the side walls, 3 m. |
+| Squash walls | front wall 4.57 m, back wall 2.13 m (the heights of their out lines), the side walls straight between | World Squash Specifications for Squash Courts, clauses 5.02.01 and 5.03. **Ours:** the straight line of the side wall line (clause 5.04 was not read); the walls' full height above the out lines is not drawn. |
+| Racquetball walls | 20 ft high on all four sides | IRF Official Rules 2026-2028, 2.1(a) (the back wall at least 12 ft, the court 20 ft high) |
+| Sepak takraw net and posts | the net 1.52 m (men) or 1.42 m (women) at the centre, 0.7 m wide; the posts 1.55 m or 1.45 m, the net's top at the posts | ISTAF Law of the Game 2013, Laws 2.1, 2.2, 3.2, 3.5. **Ours:** the net's top is drawn at the post's height at the posts and sags to the centre; its mesh. |
+| Teqball table and net | table 900 mm high with its net, the net 140 mm over the table (top 760 mm), 1,700 mm wide | FITEQ Official Rules and Regulations of Teqball 2026, 1.1.1 to 1.1.4, 1.2.1 to 1.2.3. The court surrounds (500 to 1,500 mm) are a range and are not drawn. The table's legs are ours. |
+| Roundnet set | 91.4 cm across, 20.3 cm high | International Roundnet Federation Rules, 1.1.2. The legs and the mesh are ours. |
+| Netball goalpost | 3.05 m high, the pole 100 mm across (the greatest of 65 to 100 mm), the ring 380 mm inside, its rod 15 mm, on a bar 150 mm long | World Netball Rules of Netball 2024, Rule 1, items 13 and 14 |
 | Basketball ring | upper edge 10 ft (FIBA 3,050 mm); inside diameter 18 in; net 18 in long (FIBA 400 to 450 mm) | NBA Rule 1 Section II (<https://official.nba.com/rule-no-1-court-dimensions-equipment/>); FIBA Official Basketball Rules 2026, Equipment, 1.2.1, 1.2.4, 1.3.1 (<https://assets.fiba.basketball/image/upload/documents-corporate-fiba-official-rules-2026-equipment-v1-0.pdf>) |
 | Basketball backboard | 6 ft by 3 1/2 ft (FIBA 1,800 by 1,050 mm); its face 4 ft in from the baseline in the NBA's diagram, 1,200 mm in FIBA's | NBA Rule 1 Section II; FIBA 1.1.3 and 1.1.8 |
 | Basketball backboard's lower edge | 150 mm under the ring's top (2,900 mm in FIBA's) | FIBA 1.1.5 ("150 mm above the bottom edge of the backboard"). **Ours for the NBA:** Rule 1 gives the board's size and the ring's height, not the lower edge, so the NBA's is drawn as FIBA's. |
@@ -498,7 +644,8 @@ The [3D view](./turn.md) stands things up on a surface; where each stands is the
 | `nfl-tracking` | nfl-football-ops/Big-Data-Bowl, `schema.md` (x "along the long axis of the field, 0 - 120 yards", y "along the short axis of the field, 0 - 53.3 yards") | x counts the end zones (the goal lines at 10 and 110 yards), y spans the field's width |
 | `mlbam` | Beanumber, "Analyzing Baseball Data with R", 3rd ed., Appendix C (`hc_x` and `hc_y` are "x location" and "y location of batted ball when it lands"; the spray angle is atan((hc_x - 125.42) / (198.27 - hc_y))); Baseball Savant, "Statcast Search CSV Documentation" (`hc_x`, `hc_y` "Hit coordinate X/Y of batted ball", no unit given); MLBAnalytic, "Build a Spray Chart from Statcast" (the origin is the top left of a pixel image; 125.42 and 198.27 are home plate's place; a unit is "roughly 2.5 feet", the ratio to `hit_distance_sc` clustering at 2.48); yasumorishima/baseball-field-viz README (the same transform with a scale of 2.5) | home plate at (125.42, 198.27), x growing to right field, y growing down the image |
 | `curling` | this package's own frame: the button of the house the stones are played to as the origin, feet, x across (positive to the thrower's right), y along (positive towards the back line) | the rules score a stone by its distance from the tee (World Curling R12(d), Curling Canada Rule 14), so the tee is the origin; no data provider's format was read |
-| `tennis`, `volleyball`, `badminton`, `pickleball`, `tabletennis` | this package's own frames: the centre of the net, on the court, as the origin; x along the court (positive towards the end drawn at the right), y across it (positive towards the top as the court is drawn wide); feet for tennis and pickleball, metres for the others | each rulebook measures its court from the net (the service line, the attack line, the short service line and the non-volley zone line from it); no tracking provider's format was read (Hawk-Eye's and the others' are not published) |
+| `tennis`, `volleyball`, `badminton`, `pickleball`, `tabletennis`, `padel`, `sepaktakraw`, `teqball` | this package's own frames: the centre of the net, on the court, as the origin; x along the court (positive towards the end drawn at the right), y across it (positive towards the top as the court is drawn wide); feet for tennis and pickleball, metres for the others | each rulebook measures its court from the net (the service line, the attack line, the short service line and the non-volley zone line from it); no tracking provider's format was read (Hawk-Eye's and the others' are not published) |
+| `squash`, `racquetball`, `roundnet`, `netball` | this package's own frames: the centre of the court as the origin (the centre of the set, for roundnet); x along the court (positive towards the end drawn at the right, the back wall for squash and racquetball), y across it (positive towards the top as the court is drawn wide); feet for racquetball, metres for the others | these courts have no net; squash's size is variable (singles, doubles or wide doubles), so its frame is fitted to the size it is drawn at; no data provider's format was read |
 | `lacrosse`, `rugby`, `afl`, `gaelic`, `cricket`, `fieldhockey`, `handball` | this package's own frames: the centre of the surface as the origin; x along it (positive towards the end drawn at the right), y across it (positive towards the top as it is drawn wide); metres, and yards for cricket, whose origin is the middle of the pitch | each of these surfaces has a range of sizes, so the frame is fitted to the size the surface is drawn at; no data provider's format was read |
 | `retrosheet` | Retrosheet, "Hit Location Diagram" (retrosheet.org/location.htm and its diagram hitloc.jpg: the Project Scoresheet batted ball location codes, to scale for a park of 330 feet down each line and 405 to centre, outfield sectors about 50 feet deep, the infield sectors by the fielders' numbers) | the codes of the diagram, which `RETROSHEET_ZONES` places at the centre of each sector |
 
@@ -571,8 +718,10 @@ The named zones that `zones` layers count into (`src/heat.zones.ts`). Each zone 
 | `baseball-spray` | Fair ground cut at 15 degrees either side of the line from home plate to centre field into three equal thirds (the foul lines are at 45); infield is within 95 feet of the pitcher's plate (the infield's dirt arc, Rule 2.01), outfield beyond. Pull is left field for a right-handed batter and right field for a left-handed one; `bats: "none"` calls the thirds left, centre and right field. Foul ground is in no zone. | Ours, on the figures of the Baseball section above. |
 | `baseball-retrosheet` | Retrosheet's 68 hit-location sectors, as the cells of the nearest-centre partition of the field: a point belongs to the sector whose centre is nearest, the same rule as `zoneAt` in the frames. The centres are our reading of the diagram (see the Retrosheet frame above). | Retrosheet, "Hit Location Diagram" (https://www.retrosheet.org/location.htm). The cell edges are ours. |
 | `curling-house` | At each end: the button (radius 6 in), the 4-foot ring (to a radius of 2 ft), the 8-foot ring (4 ft) and the 12-foot ring (6 ft), by the centre of the stone; and the free guard zone, between the tee line and the hog line (the hog line's inside edge, 21 ft), outside the 12-foot ring. | R1(d) and R6(a) of the World Curling rules; Rule 3(4) and Rule 12(1) of Curling Canada's. The zones are ours: the rules name the rings and the zone, and do not count stones into them. |
-| `net-court` | On each side of the net: the front court, between the net and the line the sport's own rules draw there, and the back court behind it. The line is tennis's service line (21 ft from the net), volleyball's attack line (3 m), badminton's short service line (1.98 m) and pickleball's non-volley zone line (7 ft); beach volleyball and table tennis have no such line, so each side is one half court. | Rule 1 of the ITF's rules; Rule 1.3.4 of the FIVB's; Diagram A of the BWF's; Rule 3.A.4.c of USA Pickleball's. The zones are ours: the rules name the lines and not the areas. |
-| `field-thirds` | The surface cut in three equal parts along its length, counted from the team's own end, for lacrosse, rugby, Australian football, Gaelic games, field hockey and handball. | Common usage; the cut is equal. |
+| `net-court` | On each side of the net: the front court, between the net and the line the sport's own rules draw there, and the back court behind it. The line is tennis's service line (21 ft from the net), volleyball's attack line (3 m; 2 m in sitting volleyball), badminton's short service line (1.98 m), pickleball's non-volley zone line (7 ft), padel's service line (6.95 m) and teqball's (3.5 m from the middle of the table); beach volleyball, table tennis and sepak takraw have no such line, so each side is one half court. | Rule 1 of the ITF's rules; Rule 1.3.4 of the FIVB's; Diagram A of the BWF's; Rule 3.A.4.c of USA Pickleball's; Rule 1.3.4 of World ParaVolley's; the FIP's "The Court: Dimensions"; 2.1.3 of the FITEQ's. The zones are ours: the rules name the lines and not the areas. |
+| `wall-court` | The front court, from the front wall to the short line's axis, and the back court behind it, for squash (the short line's nearest edge 4.26 m from the back wall) and racquetball (its back edge 20 ft from the back wall). | Clause 5.05.01 of World Squash's specifications; Rule 2.1(b)1 of the IRF's. The zones are ours: the rules name the lines and not the areas. |
+| `roundnet-rings` | Three zones from the centre of the set: the no hit zone, within the circle of 0.9 m; the ring from it out to the serving line, the circle of 2.6 m; and the rest of the court. | Rules 1.2.3 and 1.2.4 of the Roundnet Federation's. The zones are ours: the rules name the lines and not the areas. |
+| `field-thirds` | The surface cut in three equal parts along its length, counted from the team's own end, for lacrosse, rugby, Australian football, Gaelic games, field hockey, handball and netball (its two goal thirds and its centre third, Rule 1 item 4). | Common usage; the cut is equal. |
 | `cricket-ground` | The pitch (22 yards by 10 feet, Laws 6.1); the rest of the ground inside the fielding restriction's circle (the ICC's two semicircles of 30 yards, or 25.15 for the women, about the middle stumps, joined by two lines, 28.7.2.1), where the league has one; and the outfield. | MCC Law 6.1; ICC 28.7.2.1. The zones are ours: the rules name the lines and not the areas. |
 | `football-pass` | Short: up to 15 yards past the line of scrimmage, a pass thrown behind it included; deep: more than 15. Left, middle and right across the field: middle is between the hash marks; left and right are the passer's, facing the way the offence attacks. The line of scrimmage is the layer's `los`. | The field names are nflverse's `pass_length` (short or deep) and `pass_location` (left, middle or right) in the [nflreadr play-by-play dictionary](https://nflreadr.nflverse.com/articles/dictionary_pbp.html). That dictionary does not give the edges (nflverse takes them from the play's text, not from air yards), so the 15 yards and the hash marks are ours. |
 

@@ -1,8 +1,8 @@
 # League variants
 
-`league` in the options draws a surface as one league's rulebook marks it; `sport` names the family (`nba` for basketball, `nhl` for hockey, `nfl`, `cfl` or `ifaf` for football, `mlb` for baseball and softball, `curling` for a curling sheet, `tennis`, `volleyball`, `badminton`, `pickleball` and `tabletennis` for the net sports, `lacrosse`, `rugby`, `afl`, `gaelic`, `cricket`, `fieldhockey` and `handball` for the field sports). This page is made from `src/leagues/` by `pnpm docs:make`; a test holds it to them. Each figure is the rulebook's, in its own unit, and each league's sources, with the edition and the address read on 2026-10-13, are listed under its table. What a figure is and where it is ours is in [sources.md](./sources.md#league-variants); what could not be cited is in [references.md](./references.md#league-variants-not-drawn).
+`league` in the options draws a surface as one league's rulebook marks it; `sport` names the family (`nba` for basketball, `nhl` for hockey, `nfl`, `cfl` or `ifaf` for football, `mlb` for baseball and softball, `curling` for a curling sheet, `tennis`, `volleyball`, `badminton`, `pickleball`, `tabletennis`, `padel`, `squash`, `racquetball`, `sepaktakraw`, `teqball`, `roundnet` and `netball` for the net, racket and court sports, `lacrosse`, `rugby`, `afl`, `gaelic`, `cricket`, `fieldhockey` and `handball` for the field sports). This page is made from `src/leagues/` by `pnpm docs:make`; a test holds it to them. Each figure is the rulebook's, in its own unit, and each league's sources, with the edition and the address read on 2026-10-13, are listed under its table. What a figure is and where it is ours is in [sources.md](./sources.md#league-variants); what could not be cited is in [references.md](./references.md#league-variants-not-drawn).
 
-A `year` draws a league's markings of that season only where a source dates a change (the history under each table); for any other league it is ignored, and the drawing is of the rulebook as it is now. The sport's own league (the NBA, the NHL, the NFL, the CFL, the IFAF, MLB, World Curling, the ITF, the FIVB's indoor court, the BWF, USA Pickleball and the ITTF) keeps the history of [`year`](./eras.md).
+A `year` draws a league's markings of that season only where a source dates a change (the history under each table); for any other league it is ignored, and the drawing is of the rulebook as it is now. The sport's own league (the NBA, the NHL, the NFL, the CFL, the IFAF, MLB, World Curling, the ITF, the FIVB's indoor court, the BWF, USA Pickleball, the ITTF, the FIP, World Squash's singles court, the IRF, the ISTAF, the FITEQ, the International Roundnet Federation and World Netball) keeps the history of [`year`](./eras.md).
 
 ## Basketball
 
@@ -182,7 +182,7 @@ Sources:
 
 - `itf-rules`: Rules of Tennis, Rule 1 The Court, Rule 5 Score in a Game, Rule 6 Score in a Set and Appendix X, International Tennis Federation, 2026. <https://www.itftennis.com/media/7221/2026-rules-of-tennis-english.pdf>
 
-## Volleyball and beach volleyball
+## Volleyball, beach volleyball and sitting volleyball
 
 `sport: "volleyball"`
 
@@ -190,11 +190,13 @@ Sources:
 | --- | --- | --- | --- |
 | `fivb` (the sport's own) | FIVB volleyball court | FIVBのバレーボールコート | court 18 m by 9 m; attack line 3 m from the centre line; net 10 m long, 2.43 m high (women's 2.24 m); posts 1 m outside the side lines; free zone 6.5 m behind the end lines, 5 m beside the side lines |
 | `fivb-beach` | FIVB beach volleyball court | FIVBのビーチバレーボールコート | court 16 m by 8 m; attack line none; net 8.5 m long, 2.43 m high (women's 2.24 m); posts 1 m outside the side lines; free zone 5 m behind the end lines, 5 m beside the side lines |
+| `wpv-sitting` | World ParaVolley sitting volleyball court | ワールドパラバレーのシッティングバレーボールコート | court 10 m by 6 m; attack line 2 m from the centre line; net 7 m long, 1.15 m high (women's 1.05 m); posts 1 m outside the side lines; free zone 6 m behind the end lines, 4 m beside the side lines |
 
 Sources:
 
 - `fivb-volleyball`: Official Volleyball Rules 2025-2028, Rules 1 Playing Area and 2 Net and Posts, and Diagram 2, FIVB, 2025-2028 (approved by the 39th FIVB World Congress 2024, in force from 1 January 2025). <https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf>
 - `fivb-beach`: Official Beach Volleyball Rules 2025-2028, Rules 1 Playing Area and 2 Net and Posts, and Diagram 2, FIVB, 2025-2028 (approved by the 39th FIVB World Congress 2024, in force from 1 January 2025). <https://www.fivb.com/wp-content/uploads/2025/02/FIVB-BeachVolleyball_Rules2025_2028-EN-v01.pdf>
+- `wpv-sitting`: Official Sitting Volleyball Rules 2025-2028, Rules 1 Playing Area and 2 Net and Posts, World ParaVolley, 2025-2028 (the English text of 25 July 2025). <https://worldparavolley.org/wp-content/uploads/2025/09/2025-2028-WPV-Official-Sitting-Volleyball-Rules-English-2025-07-25.pdf>
 
 ## Badminton
 
@@ -231,6 +233,94 @@ Sources:
 Sources:
 
 - `ittf-laws`: Laws of Table Tennis, 2.1 The Table, 2.2 The Net Assembly, 2.11 A Game and 2.12 A Match, International Table Tennis Federation, 2026 statutes, as reproduced by Table Tennis England (issue 1, July 2026). <https://www.tabletennisengland.co.uk/content/uploads/2026/07/Laws-of-Table-Tennis-2026-27.pdf>
+
+## Padel
+
+`sport: "padel"`
+
+| `league` | Name | 日本語 | Key figures |
+| --- | --- | --- | --- |
+| `fip` (the sport's own) | FIP padel court | FIPのパデルコート | court 20 m by 10 m, inside its walls; service line 6.95 m from the net; net 0.88 m at the centre, 0.92 m at the ends, 10 m long; walls the end walls 4 m high, the side walls 4 m long at each end |
+
+Sources:
+
+- `fip-padel`: Rules of Padel, The Court: Dimensions, Net and Enclosures, and Rule 1 Score in a Game, International Padel Federation, review of application 1 January 2026. <https://www.padelfip.com/wp-content/uploads/2025/12/FIP_Rules-of-Padel.pdf>
+
+## Squash
+
+`sport: "squash"`
+
+| `league` | Name | 日本語 | Key figures |
+| --- | --- | --- | --- |
+| `wsf` (the sport's own) | World Squash singles court | ワールドスカッシュのシングルスコート | court 9.75 m by 6.4 m; short line 4.26 m from the back wall to its nearest edge; service box 1.6 m square inside its lines; front wall the tin 0.48 m, the service line 1.78 m and the front wall line 4.57 m up |
+| `wsf-doubles` | World Squash doubles court | ワールドスカッシュのダブルスコート | court 9.75 m by 7.62 m; short line 4.26 m from the back wall to its nearest edge; service box 1.6 m square inside its lines; front wall the tin 0.48 m, the service line 1.78 m and the front wall line 4.57 m up |
+| `wsf-doubles-wide` | World Squash international competition width doubles court | ワールドスカッシュの国際大会規格のダブルスコート | court 9.75 m by 8.42 m; short line 4.26 m from the back wall to its nearest edge; service box 1.6 m square inside its lines; front wall the tin 0.33 m, the service line 1.78 m and the front wall line 4.57 m up |
+
+Sources:
+
+- `wsf-court-specs`: Specifications for Squash Courts, clauses 4.01 to 4.03 and 5, and Appendices 1 and 2, World Squash Federation (World Squash), 28 November 2017, the full specification that applies in World Squash's 2026 transition year. <https://www.worldsquash.sport/wp-content/uploads/2021/08/171128_Court-Specifications.pdf>
+- `wsf-singles-rules`: World Squash Singles Rules, Rule 2 Scoring (2.1 to 2.3), World Squash, 2024, effective 1 January 2024 (updated November 2023). <https://www.squashireland.ie/wp-content/uploads/2025/04/Rules-of-Singles-Squash-2024-V1.2.pdf>
+
+## Racquetball
+
+`sport: "racquetball"`
+
+| `league` | Name | 日本語 | Key figures |
+| --- | --- | --- | --- |
+| `irf` (the sport's own) | IRF racquetball court | IRFのラケットボールコート | court 40 ft by 20 ft, 20 ft high; short line 20 ft from the back wall to its back edge; service line 5 ft in front of the short line; receiving line 5 ft behind the short line |
+
+Sources:
+
+- `irf-racquetball-rules`: Official Rules 2026-2028, Indoor Racquetball, Rule 1.5 Match, Games, Tiebreaker and Rule 2.1 Court Specifications, International Racquetball Federation, March 2026 (the 2024 Official Rules of Racquetball, copyright IRF, reprinted for 2026-2028). <https://www.internationalracquetball.com/wp-content/uploads/2026/06/1-irf-rulebook_mar26-1.pdf>
+- `irf-racquetball-courts`: Racquetball Court Specifications, Section Two Court Dimensions and Tolerances and Section Three Court Markings, International Racquetball Federation, 2025 (revised 1988, 1997, 2013, 2014 and 2024). <https://www.internationalracquetball.com/wp-content/uploads/2026/07/IRF_Courts-specifications-2025.pdf>
+
+## Sepak takraw
+
+`sport: "sepaktakraw"`
+
+| `league` | Name | 日本語 | Key figures |
+| --- | --- | --- | --- |
+| `istaf` (the sport's own) | ISTAF sepak takraw court | ISTAFのセパタクローコート | court 13.4 m by 6.1 m; quarter circles 0.9 m radius, at the ends of the centre line; service circles 0.3 m radius, 2.45 m from the back line; net 1.52 m high at the centre (women's 1.42 m) |
+
+Sources:
+
+- `istaf-law`: Law of the Game (Regu team event), Laws 1 The Court, 2 The Posts and 3 The Net, International Sepaktakraw Federation, 2013, dated 9 December 2013. <https://sepaktakrawindia.com/wp-content/uploads/2022/04/REGU_TEAM-EVENT.pdf>
+
+## Teqball
+
+`sport: "teqball"`
+
+| `league` | Name | 日本語 | Key figures |
+| --- | --- | --- | --- |
+| `fiteq` (the sport's own) | FITEQ teqball court | FITEQのテックボールコート | court at least 16 m by 12 m; table 3 m by 1.5 m; service line 3.5 m from the middle of the table; net 1.7 m wide, 0.14 m high |
+
+Sources:
+
+- `fiteq-rules`: The Official Rules and Regulations of Teqball, 1 The official TEQ table, 2 The teqball court and 6.2 Scoring system, FITEQ (the International Teqball Federation), 2026. <https://cdn.buttercms.com/s6Mb1gRkRJuFP38kpMTh>
+
+## Roundnet
+
+`sport: "roundnet"`
+
+| `league` | Name | 日本語 | Key figures |
+| --- | --- | --- | --- |
+| `irf-roundnet` (the sport's own) | International Roundnet Federation court | 国際ラウンドネット連盟のコート | court at least 10 m by 10 m, with no out of bounds; set 0.914 m across; serving line a circle of 2.6 m radius; no hit zone a circle of 0.9 m radius |
+
+Sources:
+
+- `roundnet-rules`: International Roundnet Federation Rules, Chapter 1 Equipment and Court (1.1.2, 1.2.1 to 1.2.4) and 3.4 and 3.5, International Roundnet Federation, adopted 21 October 2022. <https://www.roundnetfederation.org/s/IRF-Rules-10212021docx-1.pdf>
+
+## Netball
+
+`sport: "netball"`
+
+| `league` | Name | 日本語 | Key figures |
+| --- | --- | --- | --- |
+| `wn` (the sport's own) | World Netball court | ワールドネットボールのコート | court 30.5 m by 15.25 m; centre circle 0.9 m across; goal circles semicircles of 4.9 m radius; goalposts 3.05 m high, at the middle of each goal line |
+
+Sources:
+
+- `world-netball-rules`: Rules of Netball, Rule 1 Technical specifications (Court and related areas, items 1 to 14), World Netball, 2024 edition (copyright World Netball). <https://netball.sport/wp-content/uploads/2024/01/World-Netball-Rules-Book-2024.pdf>
 
 ## Lacrosse
 

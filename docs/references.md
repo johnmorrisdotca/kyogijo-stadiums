@@ -194,6 +194,21 @@ The links John has sent, and the ones the package's figures were read from: what
 - **Not used:** sporty's code, and sportypy's and sportyR's (GPL-3.0), which were not read for this.
 - **Ours:** the zone set `net-court`, the board of sets and games, the frames, the colours of every look, and the sizes of the marks that stand for posts, antennae and the net.
 
+## Padel, squash, racquetball, sepak takraw, teqball, roundnet and netball
+
+Each of these is drawn from its governing body's own rules, read on 2026-10-13 (the documents, editions and rule numbers are in [sources.md](./sources.md#the-net-sports)); sitting volleyball is drawn from World ParaVolley's *Official Sitting Volleyball Rules 2025-2028*. Only dimensions and the rules of scoring are used, which are facts; no text and no diagram of any is copied, and the drawings are our own.
+
+- **Padel:** the FIP's *Rules of Padel* (review of application 1 January 2026). *Licence:* none printed in the document; used for its dimensions only.
+- **Squash:** World Squash's *Specifications for Squash Courts* (28 November 2017), and the *World Squash Singles Rules 2024* in the copy Squash Ireland hosts. *Licence:* none printed in either; used for dimensions and the scoring only.
+- **Racquetball:** the IRF's *Official Rules 2026-2028* and *Racquetball Court Specifications* (2025). *Licence:* the rules say "copyrighted. All rights reserved. These rules may not be reproduced, electronically scanned, or downloaded, either in whole or in part, without the written permission of the publisher": nothing of their text is reproduced, and the use is of the court's dimensions, which are facts.
+- **Sepak takraw:** the ISTAF's *Law of the Game* (2013), in the copy Sepaktakraw India hosts, because the ISTAF's own site could not be read (it refused a program's connection). No later edition was read, so a change since 2013 would not be here. *Licence:* none printed; used for dimensions only.
+- **Teqball:** the FITEQ's *Official Rules and Regulations of Teqball* (2026), "Copyright © 2026 FITEQ". Nothing of its text is reproduced; used for dimensions and the scoring only. The copy was read at its CDN address, which FITEQ's own site links.
+- **Roundnet:** the International Roundnet Federation's *Rules* (adopted 21 October 2022). *Licence:* none printed; used for dimensions only. The sport's own names (Spikeball is a trademark of its maker) are not used.
+- **Netball:** World Netball's *Rules of Netball* (2024 edition), "Copyright 2024 World Netball. All rights reserved", with no reproduction of any part without permission: nothing of its text is reproduced; used for the court's dimensions, which World Netball's facilities page also gives.
+- **Sitting volleyball:** World ParaVolley's rules (2025-2028). *Licence:* none printed; used for dimensions and the net's heights only.
+- **Not drawn, and why:** footvolley, because the only rulebook found that gives its dimensions is the European Footvolley League's (version 2, 1 January 2025: 16 by 8 m, "All Rights Reserved"), a league and not an international governing body; the international federation's own rules were not found, and the figures people quote (18 by 9 m) differ. Futsal is already in the package, as a pitch of `soccer` (`pitch: "futsal"`, 40 by 20 m).
+- **Ours:** the colours of every look, the drawing of the walls, the front wall laid flat, the sizes of the marks that stand for posts, the net and a roundnet set's rim, the board of sets and games and the zone sets `wall-court` and `roundnet-rings`.
+
 ## Lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey and handball
 
 - **What was read:** the seventeen rulebooks of [sources.md](./sources.md#the-field-sports), each as text from the governing body's own PDF, the diagrams read as pictures where a figure is only on one: World Rugby's *Laws of the Game* 2026, the NRL's *Rugby League Laws of the Game* 2023 and the IRL's 2024, the AFL's *Laws of Australian Football* 2026 and its venue pages, the GAA's *Official Guide Part 2* (March 2026), the MCC's *Laws of Cricket* (4th Edition 2026) and the ICC's playing conditions (October 2026), the FIH's *Rules of Hockey* (March 2026), the IHF's *Rules of the Game for Indoor Handball* (1 July 2025), and, for lacrosse, World Lacrosse's three books, the NCAA's two, the PLL's of 2024 and the NLL's of 2025-26.

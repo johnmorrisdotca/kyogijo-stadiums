@@ -1,6 +1,6 @@
 # The surfaces
 
-Twenty surfaces, each drawn to scale from its rulebook. Every dimension is kept in feet in the code (`@johnmorrisdotca/kyogijo-stadiums/geometry`) and can be had in any unit (see [Units](./units.md)), and each is cited in [docs/sources.md](./sources.md).
+Twenty-seven surfaces, each drawn to scale from its rulebook. Every dimension is kept in feet in the code (`@johnmorrisdotca/kyogijo-stadiums/geometry`) and can be had in any unit (see [Units](./units.md)), and each is cited in [docs/sources.md](./sources.md).
 
 | `sport` | Surface | Size | Drawn |
 | --- | --- | --- | --- |
@@ -13,10 +13,17 @@ Twenty surfaces, each drawn to scale from its rulebook. Every dimension is kept 
 | `mlb` | Baseball field | 90-foot bases, a fence from the park's distances | foul lines, the infield cut by a 95-foot arc round the mound, bases, the plate, batter's boxes, the running lane, warning track and fence |
 | `curling` | Curling sheet | 150 by 15 feet 7 inches (45.72 by 4.75 m), 146 to 150 feet long and 14 feet 2 inches to 15 feet 7 inches wide by the rules | a house at each end (the 12-, 8- and 4-foot circles and the button), the tee, back, hog and centre lines, the hacks, and World Curling's hack and courtesy lines; tall by default ([Curling](./curling.md)) |
 | `tennis` | Tennis court | 78 by 36 feet, 27 feet wide for singles | baselines, doubles and singles sidelines, service lines 21 feet from the net, the centre service line, centre marks, the net with its posts (and singles sticks) ([Tennis and the other net sports](./courts.md)) |
-| `volleyball` | Volleyball court | 18 by 9 m, or 16 by 8 m with `league: "fivb-beach"` | the centre line and attack lines (not on the beach), the front zones, the attack line's extension and the service zone's limits for the FIVB's competitions, the net with its posts and antennae, the free zone |
+| `volleyball` | Volleyball court | 18 by 9 m, 16 by 8 m with `league: "fivb-beach"`, or 10 by 6 m with `league: "wpv-sitting"` | the centre line and attack lines (not on the beach), the front zones, the attack line's extension and the service zone's limits for the FIVB's competitions, the net with its posts and antennae, the free zone |
 | `badminton` | Badminton court | 13.40 by 6.10 m, 5.18 m wide for singles | singles and doubles side lines, short and doubles long service lines, centre lines, the net and its posts |
 | `pickleball` | Pickleball court | 44 by 20 feet | the non-volley zones, the centerlines, the net and its posts, the playing surface round it |
 | `tabletennis` | Table tennis table | 2.74 by 1.525 m | the white edge lines, the centre line, the net and its posts |
+| `padel` | Padel court | 20 by 10 m inside its walls | the service lines 6.95 m from the net, the central service line, the net and its posts, the walls and the metal fence of the enclosure |
+| `squash` | Squash court | 9.75 by 6.4 m (singles), 7.62 or 8.42 m wide (doubles) | the short line, the half court line and the service boxes on the floor; the front wall laid flat beside the court with its tin, service line and front wall line; the walls |
+| `racquetball` | Racquetball court | 40 by 20 feet | the short line, the service line, the service boxes, the drive serve lines, the broken receiving line, the walls |
+| `sepaktakraw` | Sepak takraw court | 13.4 by 6.1 m | the centre line, the four quarter circles, the two service circles, the net and its posts |
+| `teqball` | Teqball court | at least 16 by 12 m, with a table of 3 by 1.5 m | the table and its net, the halfway line, the service lines, the court surrounds |
+| `roundnet` | Roundnet court | at least 10 by 10 m, with no out of bounds | the set, the no hit zone line, the serving line and the marks of the four service positions |
+| `netball` | Netball court | 30.5 by 15.25 m | the transverse lines, the centre circle, the goal circles, the goalposts with their rings, the court surround |
 | `lacrosse` | Lacrosse field or box floor | 100 by 60 m (World Lacrosse's men's), 110 by 60 yards (the NCAA's), a floor 200 by 85 feet | the goals, creases, restraining and wing lines; the women's goal circles, marking areas, arc and fan; the PLL's two-point arc; the floor's boards, face-off circle and spots ([Field sports](./field-sports.md)) |
 | `rugby` | Rugby field | 100 m between the try lines and 70 wide, with in-goal areas (union); 100 by 68 m (league) | the 22-metre lines, half-way line and dash lines of union; a line every 10 metres, the 20 and 40 metre lines red, of the NRL's league; goal posts and flag posts |
 | `afl` | Australian football ground | an oval 135 to 185 by 110 to 155 m, the MCG's 160 by 141 drawn, or a named ground | the goal and behind posts, the goal squares, the centre square and circles, the Fifty Metre Arcs |
@@ -25,7 +32,7 @@ Twenty surfaces, each drawn to scale from its rulebook. Every dimension is kept 
 | `fieldhockey` | Field hockey pitch | 91.40 by 55.00 m | the centre line, the 23-metre lines, the circles with their broken lines, the penalty spots, the goals, the marks outside |
 | `handball` | Handball court | 40 by 20 m | the centre line, the goal areas, the 6-, 7- and 9-metre lines, the 4-metre lines, the goals, the throw-off area |
 
-`league` draws a surface as one league's rulebook marks it, `sport` naming the family (`drawKyogijo({ sport: "nba", league: "fiba" })`): the WNBA, FIBA, the NCAA, the IIHF, the AHL, the CHL, high school, Little League, PONY, softball, Curling Canada, FIVB's beach volleyball, rugby league, the NLL's box lacrosse and the rest, in [docs/variants.md](./variants.md).
+`league` draws a surface as one league's rulebook marks it, `sport` naming the family (`drawKyogijo({ sport: "nba", league: "fiba" })`): the WNBA, FIBA, the NCAA, the IIHF, the AHL, the CHL, high school, Little League, PONY, softball, Curling Canada, FIVB's beach volleyball, World ParaVolley's sitting volleyball, World Squash's doubles courts, rugby league, the NLL's box lacrosse and the rest, in [docs/variants.md](./variants.md).
 
 `range` crops a drawing to a part of its surface (`range: "offensive-zone"`, `"half-court"`, `"red-zone"`, `"penalty-area"`, `"infield"`, a curling `"house"`, or a box of your own), with its data, annotations and score following: [Display ranges and zoom](./ranges.md).
 

@@ -29,6 +29,13 @@ Each surface keeps the unit its rulebook states its figures in. The drawing itse
 | `badminton` | the sport's own | badminton | `m` (metres) |
 | `pickleball` | the sport's own | pickleball | `ft` (feet) |
 | `tabletennis` | the sport's own | table tennis | `m` (metres) |
+| `padel` | the sport's own | padel | `m` (metres) |
+| `squash` | the sport's own | squash | `m` (metres) |
+| `racquetball` | the sport's own | racquetball | `ft` (feet) |
+| `sepaktakraw` | the sport's own | sepak takraw | `m` (metres) |
+| `teqball` | the sport's own | teqball | `m` (metres) |
+| `roundnet` | the sport's own | roundnet | `m` (metres) |
+| `netball` | the sport's own | netball | `m` (metres) |
 | `lacrosse` | the sport's own | lacrosse | `m` (metres) |
 | `rugby` | the sport's own | rugby | `m` (metres) |
 | `afl` | the sport's own | Australian football | `m` (metres) |
@@ -74,6 +81,7 @@ Each surface keeps the unit its rulebook states its figures in. The drawing itse
 | `mlb` | `slowpitch-wbsc` | WBSC slow-pitch softball field | `ft` (feet) |
 | `curling` | `curling-canada` | Curling Canada sheet | `ft` (feet) |
 | `volleyball` | `fivb-beach` | FIVB beach volleyball court | `m` (metres) |
+| `volleyball` | `wpv-sitting` | World ParaVolley sitting volleyball court | `m` (metres) |
 | `lacrosse` | `world-women` | World Lacrosse women's field | `m` (metres) |
 | `lacrosse` | `ncaa-men` | NCAA men's lacrosse field | `yd` (yards) |
 | `lacrosse` | `ncaa-women` | NCAA women's lacrosse field | `m` (metres) |

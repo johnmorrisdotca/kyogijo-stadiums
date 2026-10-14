@@ -10,7 +10,7 @@ const LINES: ReadonlySet<string> = new Set(["ky-line", "ky-red", "ky-blue", "ky-
 /** The dashes in the centre line of a rink are lines too, but they are dashes already. */
 const WIDTH: ReadonlySet<string> = new Set([...LINES, "ky-dash"]);
 /** The classes of marks painted as a fill, which take an opacity. */
-const FILLS: ReadonlySet<string> = new Set(["ky-fill-line", "ky-red-fill", "ky-blue-fill", "ky-num"]);
+const FILLS: ReadonlySet<string> = new Set(["ky-fill-line", "ky-wall-line", "ky-red-fill", "ky-blue-fill", "ky-num"]);
 
 /** What the options ask of the lines, in the units of the markup they are applied to. */
 export interface LineLook {
