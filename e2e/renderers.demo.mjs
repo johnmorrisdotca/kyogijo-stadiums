@@ -23,6 +23,8 @@ const DRAWINGS = `
   }
   drawings.push({ name: "hardwood floor", svg: drawKyogijo({ sport: "nba", id: "e2e", court: { hardwood: true, baselineText: ["North", "South"], sidelineText: "League" } }) });
   drawings.push({ name: "hardwood floor, plain, tall, with a score", svg: drawKyogijo({ sport: "nba", ...game, orientation: "portrait", court: { hardwood: { detail: "plain" } } }) });
+  drawings.push({ name: "crowd round a pitch", svg: drawKyogijo({ sport: "soccer", id: "e2e", crowd: { tifo: "both" }, leftColor: "#1d4f91", rightColor: "#b5452c" }) });
+  drawings.push({ name: "crowd in a ballpark, thumbnail", svg: drawKyogijo({ sport: "mlb", id: "e2e", park: "fenway-park", crowd: { detail: "plain" } }) });
   drawings.push({ name: "rink with shots", svg: drawKyogijo({ sport: "nhl", id: "e2e", layers: shotMap() }) });
   drawings.push({ name: "rink heat map", svg: drawKyogijo({ sport: "nhl", id: "e2e", layers: shotHeat(500) }) });
   drawings.push({ name: "spray chart", svg: drawKyogijo({ sport: "mlb", id: "e2e", layers: sprayChart() }) });

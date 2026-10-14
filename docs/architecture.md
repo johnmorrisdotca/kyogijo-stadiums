@@ -50,6 +50,9 @@ src/
 ├── layouts-entry.ts    the layouts' entry
 ├── background.ts       the ground behind a drawing or a grid: SVG patterns, a colour and a photograph at an opacity
 ├── hardwood.ts         the realistic basketball floor (`court.hardwood`): its options, the boards laid from a seed as two pattern tiles, and its rules
+├── crowd.ts            the stands round a surface as data (`crowd`): the options, each sport's venue, the rings with their outlines, heights and rake, the visitors' blocks and the places left open
+├── crowd.park.ts       a ballpark's stands, laid from the park's own wall outline: the grandstands along the foul lines and the bleachers behind the fence
+├── crowd.draw.ts       the stands and the people as SVG: tiles of heads and shoulders, seeded, empty seats, aisles, shade, and the rules
 ├── layers.ts           data layers: drawLayers, layerTable and the marks
 ├── layers.marks.ts     the shapes, curves, waves, heads and colour ramps of the marks
 ├── layers.types.ts     the types of a layer

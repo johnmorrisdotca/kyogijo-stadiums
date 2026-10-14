@@ -58,6 +58,9 @@ export function makeState(params, kept = null) {
     baseline: params.get("baseline") === "1",
     centreLogo: false,
     hardwood: params.get("hardwood") === "1",
+    crowd: params.get("crowd") === "1",
+    crowdDensity: /^\d{1,3}$/.test(params.get("crowddensity") || "") ? Math.min(100, Number(params.get("crowddensity"))) : 85,
+    crowdTifo: params.get("crowdtifo") === "1",
     touched: new Set(),
     embed: "module",
   };
@@ -140,6 +143,13 @@ export function optionsFor(s, lang, forCode = false) {
   }
   // A curling sheet: a part of it, or folded. A drawing with teams always shows the whole sheet.
   if (s.sport === "curling" && s.sheet !== "sheet" && s.size === "surface") o.sheet = s.sheet === "folded" ? { show: "folded" } : { show: "half", end: s.sheet };
+  if (s.crowd) {
+    // The stands and the people: every surface that has spectators; the share of seats taken from the slider, and a card display behind a goal on request.
+    const crowd = {};
+    if (s.crowdDensity !== 85) crowd.density = s.crowdDensity / 100;
+    if (s.crowdTifo) crowd.tifo = "home";
+    o.crowd = Object.keys(crowd).length === 0 ? true : crowd;
+  }
   const names = [s.away.name, s.home.name];
   if (s.sport === "nba" && (s.court !== "default" || s.baseline || s.centreLogo || s.hardwood)) {
     const court = s.court === "default" ? {} : { ...COURT_THEMES[s.court] };
@@ -221,6 +231,8 @@ export const TOGGLES = [
   { id: "baseline", get: (s) => s.baseline },
   { id: "centre-logo", get: (s) => s.centreLogo },
   { id: "hardwood", get: (s) => s.hardwood },
+  { id: "crowd", get: (s) => s.crowd },
+  { id: "crowd-tifo", get: (s) => s.crowdTifo },
   { id: "flags", get: (s) => s.flags },
 ];
 
@@ -263,6 +275,7 @@ export function hiddenRows(s) {
     "era-year-row": !(seasons && past),
     "era-notes": !(seasons && past),
     "court-group": s.sport !== "nba",
+    "crowd-row": !s.crowd,
     "status-text": s.status !== "custom",
     "away-logo-url": s.away.logo !== "url",
     "home-logo-url": s.home.logo !== "url",

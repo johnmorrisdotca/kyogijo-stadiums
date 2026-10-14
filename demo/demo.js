@@ -121,6 +121,7 @@ function clampYear(year) {
   return Math.min(to, Math.max(from, year));
 }
 $("era-year").addEventListener("input", (event) => { state.year = Number(event.target.value); change(); });
+$("crowd-density").addEventListener("input", (event) => { state.crowdDensity = Number(event.target.value); $("crowd-density-out").textContent = `${state.crowdDensity}%`; change(); });
 
 /** The season control's contents: the markings that differed from today's, for the sports that have a history (`hiddenRows` shows the rows). */
 function renderEra() {
@@ -147,7 +148,7 @@ function renderEra() {
 function toggle(id, key) {
   $(id).addEventListener("click", () => { state[key] = !state[key]; $(id).setAttribute("aria-pressed", String(state[key])); change(); });
 }
-for (const [id, key] of [["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["flags", "flags"]]) toggle(id, key);
+for (const [id, key] of [["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["crowd", "crowd"], ["crowd-tifo", "crowdTifo"], ["flags", "flags"]]) toggle(id, key);
 
 function fillFields() {
   for (const field of FIELDS) {
@@ -303,7 +304,9 @@ function render() {
   }
   renderEra();
   applyRows();
-  for (const toggleOf of [["flags", "flags"], ["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"]]) $(toggleOf[0]).setAttribute("aria-pressed", String(state[toggleOf[1]]));
+  for (const toggleOf of [["flags", "flags"], ["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["crowd", "crowd"], ["crowd-tifo", "crowdTifo"]]) $(toggleOf[0]).setAttribute("aria-pressed", String(state[toggleOf[1]]));
+  $("crowd-density").value = String(state.crowdDensity);
+  $("crowd-density-out").textContent = `${state.crowdDensity}%`;
   updateEmbed();
   syncUrl();
 }
@@ -359,7 +362,7 @@ function code(kind) {
       for (const [key, attr] of [["status", "status"], ["competition", "competition"], ["date", "date"], ["label", "label"], ["winner", "winner"]]) if (o[key]) attrs.push(`${attr}="${escapeAttr(o[key])}"`);
     }
     // What has no attribute of its own goes in the `options` JSON.
-    const more = { ...(o.court ? { court: o.court } : {}), ...(o.sheet ? { sheet: o.sheet } : {}) };
+    const more = { ...(o.court ? { court: o.court } : {}), ...(o.sheet ? { sheet: o.sheet } : {}), ...(o.crowd ? { crowd: o.crowd } : {}) };
     if (Object.keys(more).length > 0) attrs.push(`options='${JSON.stringify(more).replace(/'/g, "&#39;")}'`);
     return `<script type="module" src="${CDN}/dist/element-define.js"></script>\n\n<kyogijo-field\n  ${attrs.join("\n  ")}\n></kyogijo-field>`;
   }

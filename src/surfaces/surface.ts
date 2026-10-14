@@ -75,6 +75,8 @@ export interface Surface {
   folded?: boolean;
   /** How wide the surface's ordinary line is drawn, in the units of the `lines` markup, and how many feet one of those units is: what `lineWidth` scales. */
   lineRef?: { width: number; feet: number };
+  /** For a surface with a crowd: the margin it was drawn with, which holds the stands. */
+  crowdMargin?: number;
 }
 
 /** A part of a surface to label: its anchor on the surface in feet and the margin its label stands in (the top or the bottom as the surface lies wide). */

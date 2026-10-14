@@ -51,6 +51,7 @@ export const NAV = [
       { slug: "courts", ja: "ネット型・ラケット型などのコート競技" },
       { slug: "hardwood", ja: "リアルなバスケットボールコートの床" },
       { slug: "field-sports", ja: "ラクロス、ラグビーなどのフィールド" },
+      { slug: "crowd", ja: "スタンドと観客" },
       { slug: "special-games", ja: "特設会場での試合" },
       { slug: "ballparks", ja: "球場" },
       { slug: "grounds", ja: "スタジアム" },

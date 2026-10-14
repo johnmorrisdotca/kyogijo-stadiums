@@ -20,6 +20,7 @@ Kyogijo Stadiums draws sports surfaces as SVG, to scale, with the score on them.
 - [Net, racket and court sports](./courts.md): the courts of tennis, volleyball (beach and sitting), badminton, pickleball, table tennis, padel, squash, racquetball, sepak takraw, teqball, roundnet and netball from their rulebooks, their looks, the board of sets and games with the server's ball.
 - [A realistic basketball floor](./hardwood.md): maple boards with staggered ends, grain and tone, stained paint, the baskets and their shadows from above, and a satin sheen, in every league, with the detail dropping at small sizes.
 - [Lacrosse, rugby, Australian football and the other field sports](./field-sports.md): lacrosse (the field and the box), rugby union and league, Australian football, Gaelic football and hurling, cricket, field hockey and handball from their rulebooks, with goals and behinds, goals and points, and a board of runs and wickets.
+- [The stands and the crowd](./crowd.md): the seating bowls, sides, horseshoes and ballpark grandstands round a surface, the seeded crowd in the home and visitors' colours with the empty seats showing, a soccer pitch inside a gridiron stadium, and the stands as data.
 - [Special games](./special-games.md): a rink in a ballpark, a court on a carrier's deck, baseball over a stadium's pitch: 18 games to scale, each with its sources.
 - [Ballparks](./ballparks.md): 94 parks, each with its own fence, and the past ones by season.
 - [The grounds](./grounds.md): 64 soccer grounds, each pitch at its published size.

@@ -94,6 +94,40 @@ test("the court's real hardwood chip is a finger wide, draws the boards and the 
   await expect(svg(page).locator("pattern")).toHaveCount(2);
 });
 
+test("the crowd chip draws the stands on any sport, its slider sets how full they are, both a finger wide, and the address can ask for them", async ({ page }, testInfo) => {
+  await open(page, "?sport=soccer&lang=en&help=off&size=surface&orientation=landscape");
+  await openGroups(page);
+  const chip = page.locator(at("crowd"));
+  await expect(chip).toHaveText("Crowd");
+  await expect(chip).toHaveAttribute("aria-pressed", "false");
+  await expect(page.locator("#crowd-row")).toBeHidden();
+  await expect(svg(page).locator("g.ky-crowd")).toHaveCount(0);
+  const box = await chip.boundingBox();
+  expect(box.width).toBeGreaterThanOrEqual(43.5);
+  expect(box.height).toBeGreaterThanOrEqual(43.5);
+  await tap(page, chip, testInfo);
+  await expect(chip).toHaveAttribute("aria-pressed", "true");
+  await expect(svg(page).locator("g.ky-crowd")).toHaveCount(1);
+  await expect(page.locator("#crowd-row")).toBeVisible();
+  const slider = page.locator(at("crowd-density"));
+  expect((await slider.boundingBox()).height).toBeGreaterThanOrEqual(43.5);
+  const full = await svg(page).locator("pattern").first().innerHTML();
+  await slider.fill("100");
+  await expect(page.locator(at("crowd-density-out"))).toHaveText("100%");
+  const packed = await svg(page).locator("pattern").first().innerHTML();
+  expect(packed).not.toBe(full);
+  expect(packed).not.toContain("ky-cr-seat");
+  expect(await page.locator(at("embed-code")).textContent()).toContain("crowd");
+  // It is for every sport: the rink has stands too.
+  await page.locator(`${at("sport")} button[data-value="nhl"]`).click();
+  await expect(svg(page).locator("g.ky-crowd")).toHaveCount(1);
+  await tap(page, chip, testInfo);
+  await expect(svg(page).locator("g.ky-crowd")).toHaveCount(0);
+  await open(page, "?sport=mlb&lang=en&help=off&size=surface&crowd=1&crowddensity=40");
+  await expect(svg(page).locator("g.ky-crowd")).toHaveCount(1);
+  await expect(page.locator(at("crowd-density-out"))).toHaveText("40%");
+});
+
 test("editing a team's name, score and colour redraws the drawing", async ({ page }) => {
   await open(page, "?sport=nhl&lang=en&help=off&orientation=landscape");
   await page.locator(at("home-name")).fill("Ice Kings");

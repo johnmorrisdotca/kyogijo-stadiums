@@ -68,6 +68,12 @@ export function corpus(): Drawing[] {
   add("a hardwood floor", { sport: "nba", id: "snap", court: { hardwood: true, baselineText: ["North", "South"], sidelineText: "League", baselineColor: ["#1d4f91", "#8a2432"] } });
   add("a hardwood floor, tall and plain, with a score", { sport: "nba", ...GAME, orientation: "portrait", theme: "dark", court: { hardwood: { detail: "plain", seed: 5 }, sidelineText: ["Top", "Bottom"] } });
   add("a hardwood floor with shots", { sport: "nba", id: "snap", league: "fiba", court: { hardwood: true }, layers: [{ kind: "points", data: [{ x: 20, y: 25 }, { x: 70, y: 10 }] } as Layer] });
+  // The stands and the crowd: round a pitch with a card display, a tall football field with a score in the dark, a ballpark, an arena with data over it, and a thumbnail.
+  add("a crowd round a pitch", { sport: "soccer", id: "snap", crowd: { tifo: "both" }, leftColor: "#1d4f91", rightColor: "#b5452c" });
+  add("a crowd, tall, with a score, dark", { sport: "nfl", ...GAME, orientation: "portrait", theme: "dark", crowd: true });
+  add("a crowd in a ballpark", { sport: "mlb", id: "snap", park: "fenway-park", crowd: { shape: "bowl" } });
+  add("a crowd in an arena, with shots", { sport: "nba", id: "snap", crowd: { density: 0.6 }, layers: [{ kind: "points", data: [{ x: 20, y: 25 }, { x: 70, y: 10 }] } as Layer] });
+  add("a crowd as blocks, for a thumbnail", { sport: "nhl", id: "snap", crowd: true, width: 300 });
 
   const layer = (l: object): Layer => l as Layer;
   add("rink with shots, arrows, text and a key", { sport: "nhl", id: "snap", layers: shotMap().map(layer) });
