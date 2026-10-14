@@ -59,6 +59,13 @@ export const SURFACE_UNITS: Readonly<Record<Sport, Unit>> = Object.freeze({
   artisticswimming: "m",
   athletics: "m",
   skating: "m",
+  // The budō: the federations print their figures in metres (the kyūdōjō's and the dohyō's too), and a dojo is counted in mats of metres.
+  judo: "m",
+  karate: "m",
+  kendo: "m",
+  sumo: "m",
+  kyudo: "m",
+  dojo: "m",
 });
 
 /** True when `unit` is one of the six. */

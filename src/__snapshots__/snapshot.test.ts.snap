@@ -460,6 +460,66 @@ exports[`the drawings' structure > diving: what a tall bare surface is made of 1
 }
 `;
 
+exports[`the drawings' structure > dojo: what a score drawing is made of 1`] = `
+{
+  "defs": 1,
+  "desc": 1,
+  "g.ky-banner.ky-banner-left.ky-win": 1,
+  "g.ky-banner.ky-banner-right.ky-lose": 1,
+  "g.ky-bud-ground": 1,
+  "g.ky-bud-lines": 1,
+  "g.ky-plate": 1,
+  "g.ky-surface-group": 1,
+  "linearGradient": 1,
+  "path.ky-bud-door": 1,
+  "path.ky-bud-edge": 1,
+  "path.ky-bud-heri": 1,
+  "path.ky-bud-seam": 1,
+  "path.ky-bud-t1": 1,
+  "path.ky-bud-wall": 1,
+  "path.ky-bud-weave": 1,
+  "rect.ky-apron": 1,
+  "rect.ky-plate-bg": 1,
+  "rect.ky-winbar.ky-winbar-left": 1,
+  "stop": 8,
+  "style": 1,
+  "svg.ky-dojo.kyogijo": 1,
+  "text.ky-abbr.ky-abbr-left.ky-text": 1,
+  "text.ky-abbr.ky-abbr-right.ky-text": 1,
+  "text.ky-comp.ky-text": 1,
+  "text.ky-dash-text.ky-text": 1,
+  "text.ky-foot.ky-text": 1,
+  "text.ky-lose.ky-score.ky-text": 1,
+  "text.ky-name.ky-paint-left.ky-text": 2,
+  "text.ky-name.ky-paint-right.ky-text": 2,
+  "text.ky-score.ky-text.ky-win": 1,
+  "title": 1,
+}
+`;
+
+exports[`the drawings' structure > dojo: what a tall bare surface is made of 1`] = `
+{
+  "defs": 1,
+  "desc": 1,
+  "g.ky-bud-ground": 1,
+  "g.ky-bud-lines": 1,
+  "g.ky-surface-group": 1,
+  "linearGradient": 1,
+  "path.ky-bud-door": 1,
+  "path.ky-bud-edge": 1,
+  "path.ky-bud-heri": 1,
+  "path.ky-bud-seam": 1,
+  "path.ky-bud-t1": 1,
+  "path.ky-bud-wall": 1,
+  "path.ky-bud-weave": 1,
+  "rect.ky-apron": 1,
+  "stop": 8,
+  "style": 1,
+  "svg.ky-dojo.kyogijo": 1,
+  "title": 1,
+}
+`;
+
 exports[`the drawings' structure > fieldhockey: what a score drawing is made of 1`] = `
 {
   "circle.ky-fill-line": 2,
@@ -660,6 +720,211 @@ exports[`the drawings' structure > ifaf: what a tall bare surface is made of 1`]
   "style": 1,
   "svg.ky-ifaf.kyogijo": 1,
   "text.ky-num.ky-text": 36,
+  "title": 1,
+}
+`;
+
+exports[`the drawings' structure > judo: what a score drawing is made of 1`] = `
+{
+  "desc": 1,
+  "g": 1,
+  "g.ky-bud-ground": 1,
+  "g.ky-bud-lines": 1,
+  "g.ky-lose.ky-total": 1,
+  "g.ky-plate.ky-scoreboard": 1,
+  "g.ky-surface-group": 1,
+  "g.ky-total.ky-win": 1,
+  "path.ky-bud-blue-fill": 1,
+  "path.ky-bud-free": 1,
+  "path.ky-bud-seam": 1,
+  "path.ky-bud-t1": 1,
+  "path.ky-bud-t2": 1,
+  "path.ky-bud-white-fill": 1,
+  "rect.ky-apron": 1,
+  "rect.ky-panel-left": 1,
+  "rect.ky-panel-right": 1,
+  "rect.ky-plate-bg": 1,
+  "rect.ky-winbar.ky-winbar-left": 1,
+  "style": 1,
+  "svg.ky-judo.kyogijo": 1,
+  "text.ky-comp.ky-text": 1,
+  "text.ky-foot.ky-text": 4,
+  "text.ky-ink-left.ky-text": 2,
+  "text.ky-ink-right.ky-text": 2,
+  "text.ky-score.ky-text": 2,
+  "title": 1,
+}
+`;
+
+exports[`the drawings' structure > judo: what a tall bare surface is made of 1`] = `
+{
+  "desc": 1,
+  "g.ky-bud-ground": 1,
+  "g.ky-bud-lines": 1,
+  "g.ky-surface-group": 1,
+  "path.ky-bud-blue-fill": 1,
+  "path.ky-bud-free": 1,
+  "path.ky-bud-seam": 1,
+  "path.ky-bud-t1": 1,
+  "path.ky-bud-t2": 1,
+  "path.ky-bud-white-fill": 1,
+  "rect.ky-apron": 1,
+  "style": 1,
+  "svg.ky-judo.kyogijo": 1,
+  "title": 1,
+}
+`;
+
+exports[`the drawings' structure > karate: what a score drawing is made of 1`] = `
+{
+  "desc": 1,
+  "g": 1,
+  "g.ky-bud-ground": 1,
+  "g.ky-bud-lines": 1,
+  "g.ky-lose.ky-total": 1,
+  "g.ky-plate.ky-scoreboard": 1,
+  "g.ky-surface-group": 1,
+  "g.ky-total.ky-win": 1,
+  "path.ky-bud-seam": 1,
+  "path.ky-bud-seat": 5,
+  "path.ky-bud-t1": 1,
+  "path.ky-bud-t2": 1,
+  "path.ky-bud-t3": 3,
+  "rect.ky-apron": 1,
+  "rect.ky-panel-left": 1,
+  "rect.ky-panel-right": 1,
+  "rect.ky-plate-bg": 1,
+  "rect.ky-winbar.ky-winbar-left": 1,
+  "style": 1,
+  "svg.ky-karate.kyogijo": 1,
+  "text.ky-comp.ky-text": 1,
+  "text.ky-foot.ky-text": 3,
+  "text.ky-ink-left.ky-text": 2,
+  "text.ky-ink-right.ky-text": 2,
+  "text.ky-score.ky-text": 2,
+  "title": 1,
+}
+`;
+
+exports[`the drawings' structure > karate: what a tall bare surface is made of 1`] = `
+{
+  "desc": 1,
+  "g.ky-bud-ground": 1,
+  "g.ky-bud-lines": 1,
+  "g.ky-surface-group": 1,
+  "path.ky-bud-seam": 1,
+  "path.ky-bud-seat": 5,
+  "path.ky-bud-t1": 1,
+  "path.ky-bud-t2": 1,
+  "path.ky-bud-t3": 3,
+  "rect.ky-apron": 1,
+  "style": 1,
+  "svg.ky-karate.kyogijo": 1,
+  "title": 1,
+}
+`;
+
+exports[`the drawings' structure > kendo: what a score drawing is made of 1`] = `
+{
+  "desc": 1,
+  "g": 1,
+  "g.ky-bud-ground": 1,
+  "g.ky-bud-lines": 1,
+  "g.ky-lose.ky-total": 1,
+  "g.ky-plate.ky-scoreboard": 1,
+  "g.ky-surface-group": 1,
+  "g.ky-total.ky-win": 1,
+  "path.ky-bud-floor": 1,
+  "path.ky-bud-free": 1,
+  "path.ky-bud-ink": 1,
+  "path.ky-bud-line": 3,
+  "path.ky-bud-seam": 1,
+  "rect.ky-apron": 1,
+  "rect.ky-panel-left": 1,
+  "rect.ky-panel-right": 1,
+  "rect.ky-plate-bg": 1,
+  "rect.ky-winbar.ky-winbar-left": 1,
+  "style": 1,
+  "svg.ky-kendo.kyogijo": 1,
+  "text.ky-comp.ky-text": 1,
+  "text.ky-foot.ky-text": 3,
+  "text.ky-ink-left.ky-text": 2,
+  "text.ky-ink-right.ky-text": 2,
+  "text.ky-score.ky-text": 2,
+  "title": 1,
+}
+`;
+
+exports[`the drawings' structure > kendo: what a tall bare surface is made of 1`] = `
+{
+  "desc": 1,
+  "g.ky-bud-ground": 1,
+  "g.ky-bud-lines": 1,
+  "g.ky-surface-group": 1,
+  "path.ky-bud-floor": 1,
+  "path.ky-bud-free": 1,
+  "path.ky-bud-ink": 1,
+  "path.ky-bud-line": 3,
+  "path.ky-bud-seam": 1,
+  "rect.ky-apron": 1,
+  "style": 1,
+  "svg.ky-kendo.kyogijo": 1,
+  "title": 1,
+}
+`;
+
+exports[`the drawings' structure > kyudo: what a score drawing is made of 1`] = `
+{
+  "circle.ky-fill-line": 10,
+  "desc": 1,
+  "g.ky-banner.ky-banner-left.ky-win": 1,
+  "g.ky-banner.ky-banner-right.ky-lose": 1,
+  "g.ky-bud-ground": 1,
+  "g.ky-bud-lines": 1,
+  "g.ky-plate": 1,
+  "g.ky-surface-group": 1,
+  "path.ky-bud-azuchi": 1,
+  "path.ky-bud-floor": 1,
+  "path.ky-bud-ink": 3,
+  "path.ky-bud-lane": 1,
+  "path.ky-bud-line": 2,
+  "path.ky-bud-mato": 5,
+  "path.ky-bud-yamichi": 1,
+  "rect.ky-apron": 1,
+  "rect.ky-plate-bg": 1,
+  "rect.ky-winbar.ky-winbar-left": 1,
+  "style": 1,
+  "svg.ky-kyudo.kyogijo": 1,
+  "text.ky-abbr.ky-abbr-left.ky-text": 1,
+  "text.ky-abbr.ky-abbr-right.ky-text": 1,
+  "text.ky-comp.ky-text": 1,
+  "text.ky-dash-text.ky-text": 1,
+  "text.ky-foot.ky-text": 1,
+  "text.ky-lose.ky-score.ky-text": 1,
+  "text.ky-name.ky-paint-left.ky-text": 2,
+  "text.ky-name.ky-paint-right.ky-text": 1,
+  "text.ky-score.ky-text.ky-win": 1,
+  "title": 1,
+}
+`;
+
+exports[`the drawings' structure > kyudo: what a tall bare surface is made of 1`] = `
+{
+  "circle.ky-fill-line": 10,
+  "desc": 1,
+  "g.ky-bud-ground": 1,
+  "g.ky-bud-lines": 1,
+  "g.ky-surface-group": 1,
+  "path.ky-bud-azuchi": 1,
+  "path.ky-bud-floor": 1,
+  "path.ky-bud-ink": 3,
+  "path.ky-bud-lane": 1,
+  "path.ky-bud-line": 2,
+  "path.ky-bud-mato": 5,
+  "path.ky-bud-yamichi": 1,
+  "rect.ky-apron": 1,
+  "style": 1,
+  "svg.ky-kyudo.kyogijo": 1,
   "title": 1,
 }
 `;
@@ -1451,6 +1716,53 @@ exports[`the drawings' structure > squash: what a tall bare surface is made of 1
 exports[`the drawings' structure > stays the same text unless a drawing was meant to change: one fingerprint for every sport 1`] = `"10wgsxn"`;
 
 exports[`the drawings' structure > stays the same text unless a drawing was meant to change: one fingerprint for the sports added after the field sports 1`] = `"1aymnxi"`;
+
+exports[`the drawings' structure > sumo: what a score drawing is made of 1`] = `
+{
+  "desc": 1,
+  "g": 1,
+  "g.ky-bud-ground": 1,
+  "g.ky-bud-lines": 1,
+  "g.ky-lose.ky-total": 1,
+  "g.ky-plate.ky-scoreboard": 1,
+  "g.ky-surface-group": 1,
+  "g.ky-total.ky-win": 1,
+  "path.ky-bud-clay": 1,
+  "path.ky-bud-sand": 1,
+  "path.ky-bud-tawara": 1,
+  "path.ky-bud-white-fill": 1,
+  "rect.ky-apron": 1,
+  "rect.ky-panel-left": 1,
+  "rect.ky-panel-right": 1,
+  "rect.ky-plate-bg": 1,
+  "rect.ky-winbar.ky-winbar-left": 1,
+  "style": 1,
+  "svg.ky-sumo.kyogijo": 1,
+  "text.ky-comp.ky-text": 1,
+  "text.ky-foot.ky-text": 2,
+  "text.ky-ink-left.ky-text": 2,
+  "text.ky-ink-right.ky-text": 2,
+  "text.ky-score.ky-text": 2,
+  "title": 1,
+}
+`;
+
+exports[`the drawings' structure > sumo: what a tall bare surface is made of 1`] = `
+{
+  "desc": 1,
+  "g.ky-bud-ground": 1,
+  "g.ky-bud-lines": 1,
+  "g.ky-surface-group": 1,
+  "path.ky-bud-clay": 1,
+  "path.ky-bud-sand": 1,
+  "path.ky-bud-tawara": 1,
+  "path.ky-bud-white-fill": 1,
+  "rect.ky-apron": 1,
+  "style": 1,
+  "svg.ky-sumo.kyogijo": 1,
+  "title": 1,
+}
+`;
 
 exports[`the drawings' structure > swimming: what a score drawing is made of 1`] = `
 {

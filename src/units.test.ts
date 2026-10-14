@@ -21,8 +21,8 @@ describe("units", () => {
     expect(() => lengthsIn({ a: 1 }, "furlong")).toThrow(/Unknown unit/);
   });
 
-  it("keep each surface's rulebook unit: NFL and CFL in yards, NHL, NBA and baseball in feet, soccer, curling, volleyball, badminton, table tennis, padel, squash, sepak takraw, teqball, roundnet and netball in metres, tennis, pickleball and racquetball in feet, athletics in metres, the field sports in metres and cricket in yards", () => {
-    expect(SURFACE_UNITS).toEqual({ nfl: "yd", cfl: "yd", ifaf: "yd", nhl: "ft", nba: "ft", mlb: "ft", soccer: "m", curling: "m", tennis: "ft", volleyball: "m", badminton: "m", pickleball: "ft", tabletennis: "m", padel: "m", squash: "m", racquetball: "ft", sepaktakraw: "m", teqball: "m", roundnet: "m", netball: "m", athletics: "m", skating: "m", lacrosse: "m", rugby: "m", afl: "m", gaelic: "m", cricket: "yd", fieldhockey: "m", handball: "m", swimming: "m", waterpolo: "m", diving: "m", artisticswimming: "m" });
+  it("keep each surface's rulebook unit: NFL and CFL in yards, NHL, NBA and baseball in feet, soccer, curling, volleyball, badminton, table tennis, padel, squash, sepak takraw, teqball, roundnet and netball in metres, tennis, pickleball and racquetball in feet, athletics in metres, the field sports and the budō in metres and cricket in yards", () => {
+    expect(SURFACE_UNITS).toEqual({ nfl: "yd", cfl: "yd", ifaf: "yd", nhl: "ft", nba: "ft", mlb: "ft", soccer: "m", curling: "m", tennis: "ft", volleyball: "m", badminton: "m", pickleball: "ft", tabletennis: "m", padel: "m", squash: "m", racquetball: "ft", sepaktakraw: "m", teqball: "m", roundnet: "m", netball: "m", athletics: "m", skating: "m", lacrosse: "m", rugby: "m", afl: "m", gaelic: "m", cricket: "yd", fieldhockey: "m", handball: "m", swimming: "m", waterpolo: "m", diving: "m", artisticswimming: "m", judo: "m", karate: "m", kendo: "m", sumo: "m", kyudo: "m", dojo: "m" });
     expect(FROM_MAIN).toBe(SURFACE_UNITS);
   });
 

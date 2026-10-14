@@ -46,6 +46,13 @@ export const HOME_FIRST: Readonly<Record<Sport, boolean>> = Object.freeze({
   athletics: false,
   // A skating race has no home and away.
   skating: false,
+  // A budō contest is between the first contestant called and the second (judo: blue to the referee's right, white to his left; karate: aka and ao; kendo: aka and shiro; sumo: east and west): no home side.
+  judo: false,
+  karate: false,
+  kendo: false,
+  sumo: false,
+  kyudo: false,
+  dojo: false,
 });
 
 /** The leagues whose convention is not their sport's: the international federation's lacrosse lists the home team first. */

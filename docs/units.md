@@ -42,6 +42,12 @@ Each surface keeps the unit its rulebook states its figures in. The drawing itse
 | `artisticswimming` | the sport's own | artistic swimming | `m` (metres) |
 | `athletics` | the sport's own | athletics | `m` (metres) |
 | `skating` | the sport's own | ice skating | `m` (metres) |
+| `judo` | the sport's own | undefined | `m` (metres) |
+| `karate` | the sport's own | undefined | `m` (metres) |
+| `kendo` | the sport's own | undefined | `m` (metres) |
+| `sumo` | the sport's own | undefined | `m` (metres) |
+| `kyudo` | the sport's own | undefined | `m` (metres) |
+| `dojo` | the sport's own | undefined | `m` (metres) |
 | `lacrosse` | the sport's own | lacrosse | `m` (metres) |
 | `rugby` | the sport's own | rugby | `m` (metres) |
 | `afl` | the sport's own | Australian football | `m` (metres) |

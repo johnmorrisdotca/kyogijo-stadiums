@@ -33,7 +33,7 @@ const tiles = (name, rowId, label, en, ja) => {
   const buttons = values.map((value) => `<button type="button" data-value="${value}" aria-pressed="${get(first) === value}" aria-label="${escape(emblemName(value, "en"))}" title="${escape(emblemName(value, "en"))}">${renderEmblem(first.emblemLine ? `${value}/line` : value, { size: 34 })}</button>`).join("");
   return `<div class="setup fam-row tiles-row" id="${rowId}"${hid(rowId)} ${help(en, ja)}><span class="fam-label" data-say="${label}"></span><div class="fam-seg emblem-tiles" role="group" data-say-label="${label}" id="${name}" data-testid="${name}">${buttons}</div></div>`;
 };
-const toggle = (name, label) => `<button type="button" class="fam-chip" id="${name}" data-testid="${name}" aria-pressed="${toggled[name]}" data-say="${label}"></button>`;
+const toggle = (name, label) => `<button type="button" class="fam-chip" id="${name}" data-testid="${name}" aria-pressed="${toggled[name]}" data-say="${label}"${name in hidden && hidden[name] ? " hidden" : ""}></button>`;
 
 // ----- The site's files, and the first view of the playground: what its script would draw first, written into the HTML.
 rmSync("site", { recursive: true, force: true });
@@ -226,7 +226,7 @@ const page = `<!doctype html>
           <div class="try-controls">
             <details class="fam-fold group" open>
               <summary data-say="groupSurface"></summary>
-              ${seg("sport", "sport", "Choose the surface: three football fields (NFL, CFL, IFAF), a hockey rink, a basketball court, a baseball field, a soccer pitch, a curling sheet, the court of tennis, volleyball, badminton, pickleball, table tennis, padel, squash, racquetball, sepak takraw, teqball, roundnet or netball, an athletics stadium, an ice skating rink, or the field of lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey or handball, or the pool of swimming, water polo, diving or artistic swimming.", "競技場を選びます。アメリカンフットボール場3種類（NFL・CFL・IFAF）、アイスホッケーのリンク、バスケットボールのコート、野球場、サッカーのピッチ、カーリングのシート、テニス・バレーボール・バドミントン・ピックルボール・パデル・スカッシュ・ラケットボール・セパタクロー・テックボール・ラウンドネット・ネットボールのコート、卓球台、陸上競技場、スケートリンクのほか、ラクロス、ラグビー、オーストラリアンフットボール、ゲーリック・ゲームズ、クリケット、フィールドホッケーのフィールド、ハンドボールのコート、競泳・水球・飛込・アーティスティックスイミングのプールから選べます。")}
+              ${seg("sport", "sport", "Choose the surface: three football fields (NFL, CFL, IFAF), a hockey rink, a basketball court, a baseball field, a soccer pitch, a curling sheet, the court of tennis, volleyball, badminton, pickleball, table tennis, padel, squash, racquetball, sepak takraw, teqball, roundnet or netball, an athletics stadium, an ice skating rink, or the field of lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey or handball, or the pool of swimming, water polo, diving or artistic swimming, or the contest area of judo, karate, kendo, sumo or kyudo, or a dojo.", "競技場を選びます。アメリカンフットボール場3種類（NFL・CFL・IFAF）、アイスホッケーのリンク、バスケットボールのコート、野球場、サッカーのピッチ、カーリングのシート、テニス・バレーボール・バドミントン・ピックルボール・パデル・スカッシュ・ラケットボール・セパタクロー・テックボール・ラウンドネット・ネットボールのコート、卓球台、陸上競技場、スケートリンクのほか、ラクロス、ラグビー、オーストラリアンフットボール、ゲーリック・ゲームズ、クリケット、フィールドホッケーのフィールド、ハンドボールのコート、競泳・水球・飛込・アーティスティックスイミングのプール、柔道・空手・剣道の試合場、相撲の土俵、弓道場、道場から選べます。")}
               <div class="setup fam-row" id="league-row"${hid("league-row")} ${help("Choose the league whose rulebook marks the surface: FIBA, the WNBA or the NCAA for the court; the IIHF, the NCAA, the AHL or the CHL for the rink; the NCAA, the high schools or arena football for the field; Little League, PONY or softball for the diamond; World Curling or Curling Canada for the sheet; beach volleyball for the volleyball court. Each is drawn from its own rulebook.", "どのリーグのルールブックに沿って描くかを選びます。コートならFIBA・WNBA・NCAA、リンクならIIHF・NCAA・AHL・CHL、フィールドならNCAA・全米高校連盟（NFHS）・インドアフットボール、野球場とソフトボール場ならリトルリーグ・PONY・USAソフトボール、カーリングのシートならワールドカーリングやカーリング・カナダ、バレーボールのコートならビーチバレーボールなど。どれもそのリーグ自身のルールブックに基づいて描きます。")}>
                 <span class="fam-label" data-say="leagueLabel"></span>
                 <select class="fam-field" id="league" data-testid="league" data-say-label="leagueLabel"></select>
@@ -336,6 +336,18 @@ const page = `<!doctype html>
               </div>
               <div id="races-group"${hid("races-group")}>
                 ${seg("races", "races", "Mark the starting and finishing lines of every race (an athletics track's relay zones and hurdles too), or none.", "すべての種目のスタートラインとフィニッシュライン（陸上競技ではリレーゾーンとハードルも）を描くか、描かないかを選びます。")}
+              </div>
+              <div id="budo-group"${hid("budo-group")}>
+                <div id="budo-look-row"${hid("budo-look-row")}>
+                  ${seg("budo-look", "budoLook", "The mats: the sport's own colours (the IJF's yellow and red for judo, the WKF's blue and red for karate, traditional green and beige for a dojo), the traditional green and beige tatami, a blue floor or a black one.", "畳の色を選びます。競技の標準（柔道は黄と赤、空手は青と赤、道場は伝統的な緑と薄茶）、伝統的な緑と薄茶の畳、青い床、黒い床から選べます。")}
+                </div>
+                <div id="budo-areas-row"${hid("budo-areas-row")}>
+                  ${seg("budo-areas", "budoAreas", "How many contest areas lie side by side on the floor, with the common safe zone between them.", "床に並べる試合場の数を選びます。試合場の間には共通の安全地帯が入ります。")}
+                </div>
+                <div id="dojo-row"${hid("dojo-row")}>
+                  ${seg("dojo-jo", "dojoJo", "The size of the floor in jo (one jo is one mat): the usual 8, 12, 20, 50, 100 and 200.", "床の広さを畳数で選びます。一般的な8畳、12畳、20畳、50畳、100畳、200畳から選べます。")}
+                </div>
+                <div class="setup fam-row" id="budo-chips"${hid("budo-chips")} ${help("Budokan floor: the contest area in the middle of the Nippon Budokan's octagonal hall. Officials: the technical table. Tassels: the four tassels of the dohyo's roof. Shinzen: the shrine on the dojo's wall of honour.", "武道館の床は、日本武道館の八角形のホールの中央に試合場を置きます。係員席は、競技の係員の席です。房は、土俵の屋根の四隅の房です。神棚は、道場の上座の壁の中央に置かれます。")}>${toggle("budo-hall", "budoHall")}${toggle("budo-officials", "budoOfficials")}${toggle("budo-tassels", "budoTassels")}${toggle("dojo-shinzen", "dojoShinzen")}</div>
               </div>
               <div id="court-group"${hid("court-group")}>
                 ${seg("court", "court", "Five looks for the basketball court, in plain colours: the paint, the border, the wood and the words on the baselines.", "バスケットボールのコートの見た目を5種類から選べます。無地の色で、ペイント、縁取り、床の木目、ベースラインの文字を変えます。")}

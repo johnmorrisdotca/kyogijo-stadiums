@@ -9,14 +9,20 @@ import type { PoolSport, PoolStyle } from "./pool.types.ts";
 import type { AthleticsStyle } from "./athletics/types.ts";
 import type { SkatingStyle } from "./skating/types.ts";
 import type { Situation } from "./situation.types.ts";
+import type { BudoStyle, DojoSpec, BudoScore } from "./budo/types.ts";
 
 /** The field sports: lacrosse (the field and the box), rugby (union and league), Australian football, Gaelic football and hurling, cricket, field hockey and team handball. */
 export type FieldSport = "lacrosse" | "rugby" | "afl" | "gaelic" | "cricket" | "fieldhockey" | "handball";
 
 export type { PoolSport, PoolStyle };
 
+/** The budō: the contest areas of judo and karate, the kendo shiai-jo, the sumo dohyō, the kyūdōjō, and a dojo of tatami. */
+export type BudoSport = "judo" | "karate" | "kendo" | "sumo" | "kyudo" | "dojo";
+
+export type { BudoStyle, DojoSpec, BudoScore };
+
 /** The surfaces: three football fields, a rink, a court, a ballpark, a soccer pitch, a curling sheet, twelve net, racket and court sports (tennis, volleyball, badminton, pickleball, table tennis, padel, squash, racquetball, sepak takraw, teqball, roundnet and netball), four pools (swimming, water polo, diving and artistic swimming), seven field sports (lacrosse, rugby, Australian football, Gaelic football and hurling, cricket, field hockey and handball) and the athletics stadium (the 400 m track with its infield, and the covered 200 m track). */
-export type Sport = "nfl" | "cfl" | "ifaf" | "nhl" | "nba" | "mlb" | "soccer" | "curling" | "tennis" | "volleyball" | "badminton" | "pickleball" | "tabletennis" | "padel" | "squash" | "racquetball" | "sepaktakraw" | "teqball" | "roundnet" | "netball" | PoolSport | FieldSport | "athletics" | "skating";
+export type Sport = "nfl" | "cfl" | "ifaf" | "nhl" | "nba" | "mlb" | "soccer" | "curling" | "tennis" | "volleyball" | "badminton" | "pickleball" | "tabletennis" | "padel" | "squash" | "racquetball" | "sepaktakraw" | "teqball" | "roundnet" | "netball" | PoolSport | FieldSport | "athletics" | "skating" | BudoSport;
 
 /** `auto` follows the device's light or dark setting (and `data-theme` on the page's root), the others force one. */
 export type Theme = "auto" | "light" | "dark";
@@ -323,7 +329,7 @@ export interface CrowdOptions {
  * The parts of a surface a drawing can be cropped to (`range`). Football: `red-zone`, `between-the-20s`, `end-zone`, `field-of-play`, `own-half`, `opponent-half`.
  * Hockey: `offensive-zone`, `defensive-zone`, `neutral-zone`, `half`. Basketball: `half-court`, `paint`. Soccer: `half`, `final-third`, `defensive-third`, `middle-third`,
  * `penalty-area`. Baseball: `infield`, `outfield`. The net sports: `half-court`. Curling: `sheet`, `half`, `house`, `folded`. Rugby: `half`, `twenty-two` (union) or `twenty` (league), `in-goal`. Lacrosse: `half`, `crease`. Australian football: `half`, `forward-fifty`, `centre-square`.
- * Gaelic games: `half`, `large-rectangle`. Cricket: `pitch`, `circle`. Field hockey: `half`, `circle`, `twenty-three`. Handball: `half`, `goal-area`. Swimming: `half`, `pool-end`. Water polo: `half`, `goal-area`. Diving: `springboards`, `platforms`. Artistic swimming: `half`, `centre-stage`. Athletics: `bend`, `home-straight`, `back-straight`, `finish`, `start`, `infield`, a field event (`high-jump`, `pole-vault`, `long-jump`, `triple-jump`, `shot-put`, `discus-throw`, `hammer-throw`, `javelin-throw`) and `water-jump`. `RANGES` lists them for each sport.
+ * Gaelic games: `half`, `large-rectangle`. Cricket: `pitch`, `circle`. Field hockey: `half`, `circle`, `twenty-three`. Handball: `half`, `goal-area`. Swimming: `half`, `pool-end`. Water polo: `half`, `goal-area`. Diving: `springboards`, `platforms`. Artistic swimming: `half`, `centre-stage`. Judo and karate: `contest-area`, `start`. Sumo: `ring`. Kyudo: `shajo`, `yamichi`, `azuchi`. Dojo: `kamiza`, `half`. Athletics: `bend`, `home-straight`, `back-straight`, `finish`, `start`, `infield`, a field event (`high-jump`, `pole-vault`, `long-jump`, `triple-jump`, `shot-put`, `discus-throw`, `hammer-throw`, `javelin-throw`) and `water-jump`. `RANGES` lists them for each sport.
  */
 export type RangeName =
   | "red-zone"
@@ -381,7 +387,13 @@ export type RangeName =
   | "first-bend"
   | "second-bend"
   | "judges"
-  | "kiss-and-cry";
+  | "kiss-and-cry"
+  | "contest-area"
+  | "ring"
+  | "shajo"
+  | "yamichi"
+  | "azuchi"
+  | "kamiza";
 
 /** A named range at the end of your choice: `{ name: "offensive-zone", end: "left" }` is the offensive zone of a team that attacks the left. */
 export interface RangeNamed {
@@ -587,6 +599,8 @@ export interface Team {
   wickets?: number | string;
   overs?: number | string;
   innings?: readonly (number | string | null | undefined)[];
+  /** Judo, karate, kendo and sumo: what the team has scored, as the sport counts it (see `BudoScore`). */
+  budo?: BudoScore;
   /** The team's colour, for its end, key or dugout. */
   color?: string;
   /** The colour of the words on that colour. Black or white by the colour's lightness when missing. */
@@ -719,6 +733,10 @@ export interface SurfaceOptions {
   athletics?: AthleticsStyle;
   /** The skating rink: the long track's radius and lanes, the short track's tracks, the figure skating rink's size and furniture, the races marked. See `SkatingStyle`; the discipline is the `league`. */
   skating?: SkatingStyle;
+  /** The budō surfaces (judo, karate, kendo, sumo, kyudo): the size of the area, the marks, the number of areas, the look. See `BudoStyle`; the rulebook is the `league`. */
+  budo?: BudoStyle;
+  /** A dojo of tatami (`sport: "dojo"`): the mats, the pattern, the walls, the kamiza. See `DojoSpec` and `dojo()`. */
+  dojo?: DojoSpec;
   /** The soccer pitch: a preset (`fifa`, `uefa`, `mls`, `nwsl`, `ncaa`, `law-min`, `law-max`, `9-a-side`, `7-a-side`, `5-a-side`, `futsal`) or a size, `{ length, width, unit }`. The international 105 by 68 m by default. */
   pitch?: SoccerPitchId | SoccerSize;
   /** The soccer ground to draw: a key of `GROUNDS`. The pitch has the size its article publishes (the international 105 by 68 m where none is), and the drawing carries the ground's name for `year`. A `pitch` of your own wins over the ground's size. */

@@ -18,7 +18,7 @@ export type Outline =
 export interface StandRing {
   /** `lower`, `upper`, `courtside`, `grandstand` or `bleachers`, with the tier's number where a ring has parts. */
   id: string;
-  tier: "courtside" | "lower" | "upper" | "grandstand" | "bleachers" | "wall";
+  tier: "courtside" | "gallery" | "lower" | "upper" | "grandstand" | "bleachers" | "wall";
   /** The band is `region` less `hole` (nothing for a polygon that is the band itself). */
   region: Outline;
   /** Further pieces of the band that are apart from `region` (a ballpark's bleachers either side of the batter's eye). */
@@ -72,6 +72,8 @@ export interface CrowdStands {
   reach: { left: number; right: number; top: number; bottom: number };
   /** The seats of all the stands, from the model: what a density is a share of when no capacity is given. */
   seats: number;
+  /** The stands are a hall's gallery (a dojo's balcony): a thin band close to the walls, plain seats, a few neutral people and no sides. */
+  gallery?: boolean;
 }
 
 // ---- The options. ----
@@ -147,7 +149,7 @@ export function generator(seed: number): () => number {
 // ---- The profiles. ----
 
 interface Tier {
-  id: "courtside" | "lower" | "upper";
+  id: "courtside" | "lower" | "upper" | "gallery";
   from: number;
   to: number;
   height: [number, number];
@@ -166,6 +168,8 @@ interface Profile {
   oval?: boolean;
   /** Where the visitors sit by default. */
   away: "end" | "corner";
+  /** The distances when the surface lies on an arena floor that already fills most of the hall (the Nippon Budokan's octagon): the stands close in and the corners are cut. */
+  arena?: { side: number; end: number; bench: number; corner: number; tiers?: readonly Tier[] };
 }
 
 const lower = (to: number, h0 = 5, h1 = 45): Tier => ({ id: "lower", from: 0, to, height: [h0, h1], fill: 1 });
@@ -210,6 +214,15 @@ const PROFILES: Readonly<Record<Sport, Profile>> = {
   cricket: { shape: "bowl", side: 30, end: 30, bench: 0, corner: 0, tiers: [lower(66), upper(73, 125)], oval: true, away: "end" },
   fieldhockey: { shape: "bowl", side: 20, end: 26, bench: 5, corner: 30, tiers: [lower(46, 3, 24), upper(53, 87, 32, 54)], away: "end" },
   handball: { shape: "bowl", side: 14, end: 18, bench: 4, corner: 16, tiers: [courtside(6), { id: "lower", from: 10, to: 46, height: [3, 22], fill: 1 }, upper(53, 97, 30, 56)], away: "corner" },
+  // The budō (ours: no rule gives the stands). The competition areas of judo, karate and kendo stand in an arena's bowl, as the Nippon Budokan's does round its octagonal floor (the Budokan's leaflet: 2,946 temporary
+  // seats on the arena, 2,959 to 3,199 on the first floor, 7,876 on the second and third); sumo's dohyō stands in the middle of a hall of box seats and a gallery (the Ryōgoku Kokugikan's); a kyūdōjō's
+  // spectators stand along the yamichi; a dojo's gallery looks down on the mats from above, as the Kodokan's does from the eighth floor.
+  judo: { shape: "bowl", side: 36, end: 36, bench: 6, corner: 50, tiers: [lower(60, 3, 24), upper(67, 120, 32, 60)], away: "corner", arena: { side: 8, end: 8, bench: 0, corner: 56, tiers: [lower(34, 3, 24), upper(40, 74, 32, 62)] } },
+  karate: { shape: "bowl", side: 36, end: 36, bench: 6, corner: 50, tiers: [lower(60, 3, 24), upper(67, 120, 32, 60)], away: "corner", arena: { side: 8, end: 8, bench: 0, corner: 56, tiers: [lower(34, 3, 24), upper(40, 74, 32, 62)] } },
+  kendo: { shape: "bowl", side: 36, end: 36, bench: 6, corner: 50, tiers: [lower(60, 3, 24), upper(67, 120, 32, 60)], away: "corner", arena: { side: 8, end: 8, bench: 0, corner: 56, tiers: [lower(34, 3, 24), upper(40, 74, 32, 62)] } },
+  sumo: { shape: "bowl", side: 58, end: 58, bench: 0, corner: 56, tiers: [{ id: "lower", from: 0, to: 54, height: [1, 8], fill: 1 }, upper(62, 128, 26, 62)], away: "corner" },
+  kyudo: { shape: "sides", side: 10, end: 8, bench: 0, corner: 6, tiers: [lower(24, 2, 8), upper(30, 52, 12, 22)], away: "corner" },
+  dojo: { shape: "bowl", side: 5, end: 5, bench: 0, corner: 8, tiers: [lower(26, 2, 14), upper(32, 58, 20, 36)], away: "corner" },
 };
 
 /** The grounds of the package that are the home of an NFL or a CFL club, where a soccer pitch stands inside a gridiron's stands. From each ground's article. */
@@ -421,6 +434,10 @@ export interface LayoutInput {
   awaySide: Side;
   /** A ground's key, for the stadium a soccer pitch stands in. */
   ground?: string;
+  /** The surface lies on an arena floor that fills most of the hall: the sport's closer stands, where it has them. */
+  arena?: boolean;
+  /** A hall's gallery instead of the sport's stands (a dojo's balcony, from `dojoRoom`): the distance of its first row from the surface, its depth and the heights of its first and last rows, in feet. */
+  gallery?: { offset: number; depth: number; height: [number, number] };
   /** The ballpark's fence as points on the field, for a ballpark (see `parkLayout`). */
   fence?: readonly Pt[];
   /** The foul lines' length at the poles and the backstop's distance, for a ballpark. */
@@ -441,8 +458,12 @@ function offsets(p: Profile, box: Box, stadium: "purpose" | "nfl" | "cfl"): { le
 
 /** The layout of a sport's stands round its surface: rings, covers, sectors and gaps. For a ballpark see `parkLayout`. */
 export function layoutOf(input: LayoutInput): CrowdStands {
-  const { sport, box, crowd } = input;
-  const base = PROFILES[sport];
+  const { sport, box } = input;
+  const gal = input.gallery;
+  // A gallery has no home and no visitors, no card display and no tunnel, camera or benches.
+  const crowd: Crowd = gal === undefined ? input.crowd : { ...input.crowd, awayEnd: "none", tifo: undefined, gaps: false, shape: input.crowd.shape === "sides" ? "sides" : "bowl" };
+  const base0: Profile = gal === undefined ? PROFILES[sport] : { shape: "bowl", side: gal.offset, end: gal.offset, bench: 0, corner: 0, tiers: [{ id: "gallery", from: 0, to: gal.depth, height: gal.height, fill: 1 }], away: "corner" };
+  const base: Profile = input.arena === true && base0.arena !== undefined ? { ...base0, ...base0.arena, tiers: base0.arena.tiers ?? base0.tiers } : base0;
   const host = sport === "soccer" ? (crowd.stadium === "nfl" || crowd.stadium === "cfl" ? crowd.stadium : crowd.stadium === "auto" && input.ground !== undefined ? GRIDIRON_GROUNDS[input.ground] : undefined) : undefined;
   const stadium: "purpose" | "nfl" | "cfl" | undefined = sport === "soccer" ? host ?? "purpose" : undefined;
   const p = stadium === "nfl" || stadium === "cfl" ? { ...PROFILES[stadium], shape: base.shape, away: base.away } : base;
@@ -498,6 +519,7 @@ export function layoutOf(input: LayoutInput): CrowdStands {
   });
   const stands: CrowdStands = { sport, shape, box, rings, covers, concourses, sectors: [], gaps: [], reach: reachOf, seats: rings.reduce((n, r) => n + r.seats, 0) };
   if (stadium !== undefined) stands.stadium = stadium;
+  if (gal !== undefined) stands.gallery = true;
   if (stadium === "nfl" || stadium === "cfl") {
     const f = gridiron(stadium);
     const field: Box = { x: cx - f.length / 2, y: cy - f.width / 2, w: f.length, h: f.width };

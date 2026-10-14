@@ -1,6 +1,6 @@
 // The small functions the field sports' plans are made of: a shape in one call, a size held to the range a rulebook allows, and the places of the names and the score.
 // Nothing here draws.
-import type { AthleticsMark, SkatingMark, ArcShape, BarShape, BoxShape, Dash, DotShape, LineShape, Outline, PathShape, PolyShape, RingShape } from "./fields.types.ts";
+import type { AthleticsMark, SkatingMark, BudoMark, ArcShape, BarShape, BoxShape, Dash, DotShape, LineShape, Outline, PathShape, PolyShape, RingShape } from "./fields.types.ts";
 import { num } from "./format.ts";
 import type { Span } from "./leagues/fields.ts";
 import { edges, type PlateSpot, type Zone } from "./surfaces/surface.ts";
@@ -12,7 +12,7 @@ interface Style {
   dash?: Dash;
   /** The least this shape is drawn at, in feet, when the drawing is not at the true widths (a crease on a pitch has to stay thin beside a ground). */
   least?: number;
-  cls?: "ky-line" | "ky-red" | AthleticsMark | SkatingMark;
+  cls?: "ky-line" | "ky-red" | AthleticsMark | SkatingMark | BudoMark;
 }
 
 /** A line from one point to another. */

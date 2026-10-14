@@ -14,7 +14,7 @@ describe("the atlas's picture", () => {
   it("is the one docs/atlas.md shows, made by `pnpm site` from the places", async () => {
     const made = atlasMapSvg({ places: PLACES, world: (await load("world-entry.js")).default, drawChizu: (await load("draw-entry.js")).drawChizu, projectPoint: (await load("index.js")).projectPoint });
     expect(readFileSync("docs/atlas-map.svg", "utf8")).toBe(made);
-    expect(made.match(/class="atlas-mark /g)).toHaveLength(PLACES.length + 4);
+    expect(made.match(/class="atlas-mark /g)).toHaveLength(PLACES.length + 5);
     expect(made).toContain("<title>");
     expect(readFileSync("docs/atlas.md", "utf8")).toContain("./atlas-map.svg");
   });

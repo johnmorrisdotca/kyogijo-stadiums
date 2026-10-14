@@ -38,8 +38,8 @@ describe("every surface", () => {
       // A curling sheet, 150 feet by 15, lies tall unless it is asked to lie wide.
       const wide = box(parse(drawKyogijo({ sport, orientation: "landscape" })));
       const tall = box(parse(drawKyogijo({ sport, orientation: "portrait" })));
-      // A ballpark and a cricket ground (a circle unless its boundary says otherwise) are as high as they are wide, and so is a roundnet court (a square, with no sides).
-      if (sport === "mlb" || sport === "cricket" || sport === "roundnet") expect(tall[3] / tall[2]).toBeGreaterThan(0.9);
+      // A ballpark and a cricket ground (a circle unless its boundary says otherwise) are as high as they are wide, and so are a roundnet court, a judo or karate area, a kendo shiai-jo and a dohyō (squares, with no sides).
+      if (sport === "mlb" || sport === "cricket" || sport === "roundnet" || sport === "judo" || sport === "karate" || sport === "kendo" || sport === "sumo") expect(tall[3] / tall[2]).toBeGreaterThan(0.9);
       else {
         expect(wide[2]).toBeGreaterThan(wide[3]);
         expect(tall[3]).toBeGreaterThan(tall[2]);
@@ -184,7 +184,7 @@ describe("the baseball field", () => {
   });
 });
 
-const NET_SPORTS: readonly string[] = ["tennis", "volleyball", "badminton", "pickleball", "tabletennis", "padel", "squash", "racquetball", "sepaktakraw", "teqball", "roundnet", "cricket"];
+const NET_SPORTS: readonly string[] = ["tennis", "volleyball", "badminton", "pickleball", "tabletennis", "padel", "squash", "racquetball", "sepaktakraw", "teqball", "roundnet", "cricket", "judo", "karate", "kendo", "sumo"];
 
 describe("a score", () => {
   it("writes both teams' names, the scores, the abbreviations and the status on the surface", () => {

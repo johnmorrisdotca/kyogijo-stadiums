@@ -4,7 +4,7 @@ Every picture the package draws, each with the code that draws it, a button to c
 
 The gallery is made when the site is built (`pnpm site`), so its pages are on the [docs site](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery.html) and not in this repository:
 
-- [Surfaces and scores](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-surfaces.html): the thirty-three surfaces bare, with a game on each, wide and tall, as a strip and a compact card, the court's looks, light and dark.
+- [Surfaces and scores](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-surfaces.html): the thirty-nine surfaces bare, with a game on each, wide and tall, as a strip and a compact card, the court's looks, light and dark.
 - [The soccer pitch](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-soccer.html): a pitch of every preset size, the mowing patterns, the goal styles, one half, a shoot-out.
 - [Every league's surface](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-leagues.html): each league that marks a court, rink, field or diamond its own way.
 - [Surfaces through the years](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-years.html): each sport in the seasons before and after its markings changed.

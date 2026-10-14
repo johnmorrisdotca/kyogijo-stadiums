@@ -89,6 +89,17 @@ const POOL_AWAY = { name: "Harbour City Gulls", abbr: "HCG", score: 146, color: 
 const POOL_HOME = { name: "Prairie Ridge Bison", abbr: "PRB", score: 154, color: "#a8452c" };
 const POLO_AWAY = { name: "Harbour City Gulls", abbr: "HCG", score: 9, color: "#1d4f91" };
 const POLO_HOME = { name: "Prairie Ridge Bison", abbr: "PRB", score: 11, color: "#a8452c" };
+// The budō: a judo side's waza-ari, yuko and shido, a karate side's points and warnings, a kendo side's points by the target, and a sumo winner's kimarite.
+const JUDO_AWAY = { name: "Harbour City Gulls", abbr: "HCG", color: "#1d4f91", budo: { wazaari: 1, yuko: 2, shido: 1 } };
+const JUDO_HOME = { name: "Prairie Ridge Bison", abbr: "PRB", color: "#a8452c", budo: { wazaari: 1, shido: 2 } };
+const KARATE_AWAY = { name: "Harbour City Gulls", abbr: "HCG", color: "#1d4f91", budo: { ippon: 1, wazaari: 1, senshu: true, shido: 1 } };
+const KARATE_HOME = { name: "Prairie Ridge Bison", abbr: "PRB", color: "#a8452c", budo: { wazaari: 2, yuko: 1 } };
+const KENDO_AWAY = { name: "Harbour City Gulls", abbr: "HCG", color: "#1d4f91", budo: { techniques: ["men", "kote"] } };
+const KENDO_HOME = { name: "Prairie Ridge Bison", abbr: "PRB", color: "#a8452c", budo: { techniques: ["do"] } };
+const SUMO_EAST = { name: "Harbour City Gulls", abbr: "HCG", score: 1, color: "#1d4f91", budo: { kimarite: "yorikiri" } };
+const SUMO_WEST = { name: "Prairie Ridge Bison", abbr: "PRB", score: 0, color: "#a8452c" };
+const KYUDO_AWAY = { name: "Harbour City Gulls", abbr: "HCG", score: 14, color: "#1d4f91" };
+const KYUDO_HOME = { name: "Prairie Ridge Bison", abbr: "PRB", score: 12, color: "#a8452c" };
 const SOCCER_AWAY = { name: "Northern Owls", abbr: "NOW", score: 2, penalties: 4, color: "#3a2d6b" };
 const SOCCER_HOME = { name: "Lakeshore Anchors", abbr: "LSA", score: 2, penalties: 2, color: "#0f7a7a" };
 
@@ -115,6 +126,12 @@ const GAMES = {
   netball: { away: NETBALL_AWAY, home: NETBALL_HOME, status: "final", competition: "Final" },
   athletics: { away: GULLS, home: BISON, status: "final", competition: "Relay final" },
   skating: { away: GULLS, home: BISON, status: "final", competition: "Team pursuit final" },
+  judo: { away: JUDO_AWAY, home: JUDO_HOME, status: "final", competition: "Final, 73 kg" },
+  karate: { away: KARATE_AWAY, home: KARATE_HOME, status: "final", competition: "Kumite final" },
+  kendo: { away: KENDO_AWAY, home: KENDO_HOME, status: "final", competition: "Final" },
+  sumo: { away: SUMO_EAST, home: SUMO_WEST, status: "final", competition: "Day 15" },
+  kyudo: { away: KYUDO_AWAY, home: KYUDO_HOME, status: "final", competition: "Team final" },
+  dojo: { away: GULLS, home: BISON, status: "final", competition: "Open day" },
   lacrosse: { away: RUGBY_AWAY, home: RUGBY_HOME, status: "final", competition: "Final" },
   rugby: { away: RUGBY_AWAY, home: RUGBY_HOME, status: "final", competition: "Final" },
   afl: { away: AFL_AWAY, home: AFL_HOME, status: "final", competition: "Grand Final" },
@@ -127,7 +144,7 @@ const GAMES = {
   diving: { away: POOL_AWAY, home: POOL_HOME, status: "final", competition: "Dual meet" },
   artisticswimming: { away: POOL_AWAY, home: POOL_HOME, status: "final", competition: "Team event" },
 };
-const SPORT_TITLES = { nfl: "NFL field", cfl: "CFL field", ifaf: "IFAF field", nhl: "NHL rink", nba: "NBA court", soccer: "Soccer pitch", mlb: "Baseball field", curling: "Curling sheet", tennis: "Tennis court", volleyball: "Volleyball court", badminton: "Badminton court", pickleball: "Pickleball court", tabletennis: "Table tennis table", padel: "Padel court", squash: "Squash court", racquetball: "Racquetball court", sepaktakraw: "Sepak takraw court", teqball: "Teqball court", roundnet: "Roundnet court", netball: "Netball court", athletics: "Athletics stadium", skating: "Skating rink", lacrosse: "Lacrosse field", rugby: "Rugby field", afl: "Australian football ground", gaelic: "Gaelic games field", cricket: "Cricket ground", fieldhockey: "Field hockey pitch", handball: "Handball court", swimming: "Swimming pool", waterpolo: "Water polo field", diving: "Diving well", artisticswimming: "Artistic swimming area" };
+const SPORT_TITLES = { nfl: "NFL field", cfl: "CFL field", ifaf: "IFAF field", nhl: "NHL rink", nba: "NBA court", soccer: "Soccer pitch", mlb: "Baseball field", curling: "Curling sheet", tennis: "Tennis court", volleyball: "Volleyball court", badminton: "Badminton court", pickleball: "Pickleball court", tabletennis: "Table tennis table", padel: "Padel court", squash: "Squash court", racquetball: "Racquetball court", sepaktakraw: "Sepak takraw court", teqball: "Teqball court", roundnet: "Roundnet court", netball: "Netball court", athletics: "Athletics stadium", skating: "Skating rink", lacrosse: "Lacrosse field", rugby: "Rugby field", afl: "Australian football ground", gaelic: "Gaelic games field", cricket: "Cricket ground", fieldhockey: "Field hockey pitch", handball: "Handball court", swimming: "Swimming pool", waterpolo: "Water polo field", diving: "Diving well", artisticswimming: "Artistic swimming area", judo: "Judo competition area", karate: "Karate competition area", kendo: "Kendo shiai-jo", sumo: "Sumo dohyō", kyudo: "Kyūdōjō", dojo: "Dojo" };
 
 /** A repeatable list of points for the data snippets: no random numbers, so that the same code always draws the same marks. */
 const SPOTS = "Array.from({ length: 36 }, (_, i) => ({ x: 20 + ((i * 53) % 160), y: 8 + ((i * 29) % 70), team: i % 2 ? \"away\" : \"home\", outcome: i % 5 === 0 ? \"goal\" : \"shot\", value: 0.05 + (i % 7) / 20 }))";
@@ -179,13 +196,13 @@ const section = (id, title, intro, items) => ({ id, title, intro, items });
 // ---- The pages. Each is a list of sections, and each section a list of items. ----
 
 function surfacesPage(lib) {
-  const sports = ["nfl", "cfl", "ifaf", "nhl", "nba", "soccer", "mlb", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis", "padel", "squash", "racquetball", "sepaktakraw", "teqball", "roundnet", "netball", "athletics", "skating", "lacrosse", "rugby", "afl", "gaelic", "cricket", "fieldhockey", "handball", "swimming", "waterpolo", "diving", "artisticswimming"];
+  const sports = ["nfl", "cfl", "ifaf", "nhl", "nba", "soccer", "mlb", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis", "padel", "squash", "racquetball", "sepaktakraw", "teqball", "roundnet", "netball", "athletics", "skating", "lacrosse", "rugby", "afl", "gaelic", "cricket", "fieldhockey", "handball", "swimming", "waterpolo", "diving", "artisticswimming", "judo", "karate", "kendo", "sumo", "kyudo", "dojo"];
   const themes = lib[MAIN].COURT_THEMES;
   return {
     slug: "gallery-surfaces",
     title: "Gallery: surfaces and scores",
     ja: "競技場と得点",
-    intro: "The thirty-three surfaces bare, with a game on each, wide and tall, as a strip and as a compact card, and the court's looks. Every picture is drawn by the build from the code under it.",
+    intro: "The thirty-nine surfaces bare, with a game on each, wide and tall, as a strip and as a compact card, and the court's looks. Every picture is drawn by the build from the code under it.",
     sections: [
       section("bare", "Each surface, bare", "`drawKyogijo` with a `sport` and nothing else.", sports.map((sport) => item(`bare-${sport}`, SPORT_TITLES[sport], drawing({ sport })))),
       section("scores", "A game on each surface", "The teams on their sides and the score in the middle.", sports.map((sport) => item(`score-${sport}`, `${SPORT_TITLES[sport]}, with a score`, drawing({ sport, ...GAMES[sport] })))),
@@ -1236,7 +1253,7 @@ function skatingPage() {
   };
 }
 
-export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, specialPage, dataPage, curlingPage, courtsPage, fieldsPage, poolsPage, athleticsPage, skatingPage, stylingPage, rangesPage, layoutsPage, pageantPage, situationPage];
+export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, specialPage, dataPage, curlingPage, courtsPage, fieldsPage, poolsPage, athleticsPage, skatingPage, budoPage, stylingPage, rangesPage, layoutsPage, pageantPage, situationPage];
 
 /** The sections of every page, with each item's picture made by running its code. */
 export function galleryData(lib) {
@@ -1345,6 +1362,93 @@ export function galleryPageHtml(page, style) {
 
 // ---- The coordinate frames, each drawing the same spot on the same surface in its own numbers. ----
 
+/** The budō: judo and karate competition areas, the kendo shiai-jo, the sumo dohyō, the kyūdōjō, the dojo builder, the halls on the atlas and the scores. */
+function budoPage() {
+  const judo = (opts) => drawing({ sport: "judo", ...opts });
+  const karate = (opts) => drawing({ sport: "karate", ...opts });
+  const kendo = (opts) => drawing({ sport: "kendo", ...opts });
+  const sumo = (opts) => drawing({ sport: "sumo", ...opts });
+  const kyudo = (opts) => drawing({ sport: "kyudo", ...opts });
+  const dojo = (opts) => drawing({ sport: "dojo", dojo: opts });
+  const hall = (id, sport) => `import { drawKyogijo } from "${MAIN}";\nimport { placeById, surfaceOf } from "${MAIN}/atlas";\n\nconst svg = drawKyogijo({ ...surfaceOf(placeById("${id}")${sport === undefined ? "" : `, "${sport}"`}), crowd: true });`;
+  return {
+    slug: "gallery-budo",
+    title: "Gallery: the budō",
+    ja: "武道",
+    intro: "The IJF's judo competition area in its looks, with two or three areas, the platform and the AJJF's layout; the WKF's karate areas; the kendo shiai-jo; the sumo dohyō; the kyūdōjō for kinteki and enteki; the dojo builder at every size and in every lay; the five halls of the atlas; and the scores. Every picture is drawn by the build from the code under it.",
+    sections: [
+      section("judo", "Judo", "`sport: \"judo\"`: a contest area of 10 m in a safety area of 4 m, laid with tatami of 2 m by 1 m. The IJF's official colours are yellow and red; the other looks are ours.", [
+        item("budo-judo", "The IJF's competition area", judo({}), "The contest area in yellow and the safety area in red, the tape where the contestants start 4 m apart."),
+        item("budo-judo-blue", "Yellow and blue", judo({ budo: { look: "yellow-blue" } })),
+        item("budo-judo-grey", "Blue and grey", judo({ budo: { look: "blue-grey" } })),
+        item("budo-judo-green", "Green and beige, the traditional tatami", judo({ budo: { look: "green-beige" } })),
+        item("budo-judo-black", "Black and red", judo({ budo: { look: "black-red" } })),
+        item("budo-judo-8", "The smallest: 8 m in a safety area of 3 m", judo({ budo: { size: 8, safety: 3 } })),
+        item("budo-judo-two", "Two areas side by side, with the technical tables", judo({ budo: { areas: 2, officials: true } }), "A common safe zone of 4 m between them."),
+        item("budo-judo-three", "Three areas on a platform", judo({ budo: { areas: 3, platform: true } }), "The platform is a metre wider and longer than the tatami, and a free zone of 50 cm lies round it."),
+        item("budo-judo-ajjf", "The All Japan Judo Federation's layout", judo({ league: "ajjf", budo: { look: "green-red" } }), "Tatami of 182 cm by 91 cm, the red danger zone one tatami wide, the red and white tape 4 m apart; the sizes made a whole number of mats."),
+        item("budo-judo-kata", "A kata area", judo({ league: "ijf-kata" }), "Two white tapes 3 m from the centre either side, a safety area of 2 m."),
+        item("budo-judo-start", "Close up: the start", judo({ range: "start" })),
+        item("budo-judo-half", "Tatami of 1 m by 1 m, half the area", judo({ budo: { tatami: "1x1" }, range: "half" })),
+        item("budo-judo-score", "A score: waza-ari, yuko and shido on the board", drawing({ sport: "judo", ...GAMES.judo })),
+      ]),
+      section("karate", "Karate", "`sport: \"karate\"`: the WKF's matted square of 8 m, its outer metre in another colour, a safety area of 2 m, the two start mats, the referee and the judges.", [
+        item("budo-karate", "The kumite area", karate({}), "The referee 2 m inside the near boundary, a judge about 1.5 m off each corner."),
+        item("budo-karate-officials", "With the officials' table", karate({ budo: { officials: true } })),
+        item("budo-karate-black", "Blue and black", karate({ budo: { look: "blue-black" } })),
+        item("budo-karate-kata", "The kata area", karate({ league: "wkf-kata" }), "The same square with no band and no start mats."),
+        item("budo-karate-two", "Two areas, 2 m apart", karate({ budo: { areas: 2 } })),
+        item("budo-karate-score", "A score: points, the senshu and the warnings", drawing({ sport: "karate", ...GAMES.karate })),
+      ]),
+      section("kendo", "Kendo", "`sport: \"kendo\"`: a wooden floor of 9 m to 11 m a side with its white lines, the cross at the centre and the two kaishi-sen, and 1.5 m kept clear outside.", [
+        item("budo-kendo", "The shiai-jo, 10 m", kendo({})),
+        item("budo-kendo-9", "The smallest, 9 m", kendo({ budo: { size: 9 } })),
+        item("budo-kendo-11", "The largest, 11 m", kendo({ budo: { size: 11, look: "blond" } })),
+        item("budo-kendo-score", "A score: the points by the target struck", drawing({ sport: "kendo", ...GAMES.kendo })),
+      ]),
+      section("sumo", "Sumo", "`sport: \"sumo\"`: the clay square of 6.7 m, the ring of 4.55 m made of 20 tawara with its four tokudawara, the sand of the jano-me and the two shikiri-sen; the tassels of the roof in the colours of the quarters.", [
+        item("budo-sumo", "The dohyō", sumo({})),
+        item("budo-sumo-tassels", "With the four tassels", sumo({ budo: { tassels: true } }), "Green east, red south, white west, black north."),
+        item("budo-sumo-bare", "The clay alone", sumo({ budo: { tawara: false } })),
+        item("budo-sumo-ring", "Close up: the ring", sumo({ range: "ring", budo: { tassels: true } })),
+        item("budo-sumo-score", "A score: the kimarite of the winner", drawing({ sport: "sumo", ...GAMES.sumo })),
+      ]),
+      section("kyudo", "Kyūdō", "`sport: \"kyudo\"`: the shajō with its shooting positions and honza, the yamichi, the azuchi with its targets, and the path for the arrows.", [
+        item("budo-kyudo", "Kinteki, 28 m", kyudo({}), "Five shooters 1.8 m apart, a target of 36 cm each."),
+        item("budo-kyudo-enteki", "Enteki, 60 m", kyudo({ league: "enteki" }), "Targets of 1 m, shooters 1.6 m apart."),
+        item("budo-kyudo-three", "Three shooters, no roofs", kyudo({ budo: { shooters: 3, roof: false } })),
+        item("budo-kyudo-shajo", "Close up: the shajō", kyudo({ range: "shajo" })),
+        item("budo-kyudo-azuchi", "Close up: the azuchi", kyudo({ range: "azuchi" })),
+        item("budo-kyudo-score", "A score: hits", drawing({ sport: "kyudo", ...GAMES.kyudo })),
+      ]),
+      section("dojo", "The dojo builder", "`sport: \"dojo\"` or `dojo(spec)`: the floor in mats, laid as real units. A number is the area in jō.", [
+        item("budo-dojo-8", "8 jō", dojo({ jo: 8 })),
+        item("budo-dojo-12", "12 jō", dojo({ jo: 12 })),
+        item("budo-dojo-20", "20 jō, with a shrine and four windows", dojo({ jo: 20, shinzen: true, windows: 4 }), "Eighteen whole mats and four half mats, laid so that no four corners meet."),
+        item("budo-dojo-50", "50 jō: a school club's dojo", dojo({ jo: 50, shinzen: true, windows: 4 })),
+        item("budo-dojo-100", "100 jō", dojo({ jo: 100, kamiza: "west", shinzen: true, windows: 6 })),
+        item("budo-dojo-200", "200 jō with a judo contest area laid on it", dojo({ jo: 200, areas: 1, pattern: "border" }), "A contest area of 8 m with the safety area round it, and a border."),
+        item("budo-dojo-checker", "A checker floor in yellow and red", dojo({ mats: [5, 4], pattern: "checker", look: "yellow-red", walls: false })),
+        item("budo-dojo-competition", "A floor in the colours of a contest area", dojo({ jo: 100, pattern: "competition", look: "yellow-blue" })),
+        item("budo-dojo-weave", "The weave of the mats, on a competition floor", dojo({ jo: 50, pattern: "competition", look: "yellow-blue", texture: "weave" }), "Ridges along each mat, a faint light edge; the traditional lay has them by default (`texture: \"none\"` leaves them out)."),
+        item("budo-dojo-kodokan", "A dojo of four contest areas, a dais, a banner and a wood surround", dojo({ mats: { width: 26.4, length: 26.4 }, surround: 1, areas: { across: 2, down: 2 }, dais: true, banner: true, look: "yellow-green" }), "`areas: { across, down }`, `surround`, `dais` and `banner`; the Kodokan's main dojo is drawn this way."),
+        item("budo-dojo-eras", "A floor with two eras", dojo({ mats: { width: 26.4, length: 26.4 }, areas: { across: 2, down: 2 }, outline: true, eras: [{ name: "earlier", look: "green-orange", outline: true }, { name: "current", look: "yellow-green" }], era: "earlier" }), "`eras` carry a floor's history; `era` picks one by name and `year` the one that holds the year."),
+        item("budo-dojo-edo", "Edoma tatami (1760 by 880 mm), in metres", drawing({ sport: "dojo", league: "edoma", dojo: { mats: { width: 6, length: 9, unit: "m" } } }), "A floor in metres is made a whole number of mats where it can, and cut at its edges where it cannot."),
+        item("budo-dojo-code", "The builder as data", `import { dojo, drawDojo } from "${MAIN}/budo";\n\nconst hall = dojo({ jo: 20, kamiza: "east", entrances: [{ wall: "west" }] });\nconsole.log(hall.jo, hall.counts, hall.mats.length);\nconst svg = drawDojo({ jo: 20, kamiza: "east", entrances: [{ wall: "west" }] });`, "`dojo()` returns every mat in metres with its tone, the floor's size, where the doors and windows are, and the options that draw it."),
+      ]),
+      section("halls", "The halls of the atlas", "`surfaceOf(placeById(id))`: the Kodokan's main dojo, the Nippon Budokan's octagon, the Kokugikan's dohyō, the old Butokuden and the Budokwai, each with only what a source gives; a floor whose size is not known is drawn at a plausible one.", [
+        item("budo-hall-kodokan", "The Kodokan's main dojo: 420 jō", hall("kodokan"), "The mat count is the Kodokan's own; the shape of the floor and the colours are not documented."),
+        item("budo-hall-kodokan-earlier", "The Kodokan's main dojo in its earlier colours", `import { drawKyogijo } from "${MAIN}";\nimport { hallSurfaces, placeById } from "${MAIN}/atlas";\n\nconst earlier = hallSurfaces(placeById("kodokan")).find((floor) => floor.id === "main-dojo-earlier");\nconst svg = drawKyogijo({ sport: earlier.sport, ...earlier.options, crowd: true });`, "All green mats, the four contest areas outlined by red-orange border mats (the owner's older photograph). The years of the two looks are not known, so the eras carry none."),
+        item("budo-hall-budokan", "The Nippon Budokan: judo on the octagon", hall("nippon-budokan"), "The arena is an octagon 55 m across the flats; two contest areas on a platform are plausible, not the Games' own plan."),
+        item("budo-hall-budokan-karate", "The Budokan: karate", hall("nippon-budokan", "karate")),
+        item("budo-hall-kokugikan", "The Ryōgoku Kokugikan: the dohyō", hall("ryogoku-kokugikan")),
+        item("budo-hall-butokuden", "The old Butokuden", hall("kyu-butokuden"), "The size of its floor was not found: 100 jō is plausible."),
+        item("budo-hall-budokwai", "The Budokwai", hall("budokwai"), "The size of its dojo was not found: 50 jō is plausible."),
+      ]),
+    ],
+  };
+}
+
 /** The spot every frame of a sport marks, in the numbers of a frame that all of them can convert from. */
 const REFERENCE = {
   nhl: { frame: "nhl-api", spot: [69, 22], what: "the right end-zone face-off dot" },
@@ -1366,6 +1470,12 @@ const REFERENCE = {
   roundnet: { frame: "roundnet", spot: [2.6, 0], what: "the right service position" },
   netball: { frame: "netball", spot: [5.08, 0], what: "the middle of the right transverse line" },
   skating: { frame: "skating", spot: [43.2, 25.5], what: "the finishing line on the inner lane's line (the long track)" },
+  judo: { frame: "judo", spot: [2, 0], what: "the middle of the tape where the contestant to the referee's right starts" },
+  karate: { frame: "karate", spot: [1.5, 0], what: "the middle of the right start mat" },
+  kendo: { frame: "kendo", spot: [1.4, 0], what: "the middle of the right kaishi-sen" },
+  sumo: { frame: "sumo", spot: [0.38, 0], what: "the middle of the right shikiri-sen" },
+  kyudo: { frame: "kyudo", spot: [17.5, 5.4], what: "the face of the first target on the azuchi" },
+  dojo: { frame: "dojo", spot: [0, 0], what: "the middle of the floor" },
   athletics: { frame: "athletics", spot: [42.195, 40.3], what: "the finish line on lane 1's running line" },
   lacrosse: { frame: "lacrosse", spot: [16, 0], what: "the middle of the right restraining line" },
   rugby: { frame: "rugby", spot: [28, 0], what: "the middle of the right 22-metre line" },
@@ -1392,7 +1502,11 @@ export function framesItems(lib) {
       const plan = lib[MAIN].fieldPlan({ sport });
       return { length: plan.length, width: plan.width, unit: "ft" };
     };
-    const size = frame.size === "variable" ? (frame.sport === "curling" ? { length: 150, width: 15.58, unit: "ft" } : frame.sport === "volleyball" ? { length: 18, width: 9, unit: "m" } : frame.sport === "squash" ? { length: 9.75, width: 6.4, unit: "m" } : lib[MAIN].FIELD_SPORTS.includes(frame.sport) ? fieldSize(frame.sport) : lib[MAIN].POOL_SPORTS.includes(frame.sport) ? { length: lib[MAIN].poolPlan({ sport: frame.sport, pool: {} }).length, width: lib[MAIN].poolPlan({ sport: frame.sport, pool: {} }).width, unit: "m" } : { length: 105, width: 68, unit: "m" }) : undefined;
+    const budoSize = (sport) => {
+      const box = lib[`${MAIN}/budo`].budoPlan({ sport }).box;
+      return { length: round2(box.x1 - box.x0), width: round2(box.y1 - box.y0), unit: "m" };
+    };
+    const size = frame.size === "variable" ? (frame.sport === "curling" ? { length: 150, width: 15.58, unit: "ft" } : frame.sport === "volleyball" ? { length: 18, width: 9, unit: "m" } : frame.sport === "squash" ? { length: 9.75, width: 6.4, unit: "m" } : lib[MAIN].FIELD_SPORTS.includes(frame.sport) ? fieldSize(frame.sport) : lib[MAIN].POOL_SPORTS.includes(frame.sport) ? { length: lib[MAIN].poolPlan({ sport: frame.sport, pool: {} }).length, width: lib[MAIN].poolPlan({ sport: frame.sport, pool: {} }).width, unit: "m" } : lib[`${MAIN}/budo`].isBudoSport(frame.sport) ? budoSize(frame.sport) : { length: 105, width: 68, unit: "m" }) : undefined;
     const [spot] = convert(reference.frame, frame.name, size ? { size } : {})([reference.spot]);
     const x = round2(spot[0]);
     const y = round2(spot[1]);
@@ -1436,7 +1550,7 @@ export function framesFiles(lib) {
 
 /** The package's entry points as `runSnippet` wants them, read from a folder of built (`.js`) or source (`.ts`) files. */
 export async function libraryFrom(dir, ext, importer) {
-  const entries = { "": "index", "/charts": "charts-entry", "/frames": "frames-entry", "/layers": "layers-entry", "/leagues": "leagues-entry", "/eras": "eras-entry", "/grounds": "grounds-entry", "/parks": "parks-entry", "/atlas": "atlas-entry", "/events": "events-entry", "/geometry": "geometry-entry", "/replay": "replay-entry", "/layouts": "layouts-entry", "/turn": "turn-entry", "/athletics": "athletics-entry", "/skating": "skating-entry", "/target": "target-entry", "/zones": "zones-entry", "/pointer": "pointer-entry" };
+  const entries = { "": "index", "/charts": "charts-entry", "/frames": "frames-entry", "/layers": "layers-entry", "/leagues": "leagues-entry", "/eras": "eras-entry", "/grounds": "grounds-entry", "/parks": "parks-entry", "/atlas": "atlas-entry", "/events": "events-entry", "/geometry": "geometry-entry", "/replay": "replay-entry", "/layouts": "layouts-entry", "/turn": "turn-entry", "/athletics": "athletics-entry", "/skating": "skating-entry", "/target": "target-entry", "/zones": "zones-entry", "/pointer": "pointer-entry", "/budo": "budo-entry" };
   const lib = {};
   for (const [suffix, file] of Object.entries(entries)) lib[`${MAIN}${suffix}`] = await importer(`${dir}/${file}${ext}`);
   return lib;

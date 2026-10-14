@@ -251,7 +251,7 @@ test("the examples are all there: every sport, wide and tall, badges, compact ca
   await open(page, "?lang=en&help=off");
   // The sports open short (see compact.demo.mjs for the filters): every card is in the page, drawn when the grid comes near the screen.
   await page.locator(at("gallery-more")).scrollIntoViewIfNeeded();
-  await expect(page.locator(`${at("gallery-cards")} svg.kyogijo`)).toHaveCount(33);
+  await expect(page.locator(`${at("gallery-cards")} svg.kyogijo`)).toHaveCount(39);
   expect(await page.locator(`${at("side-cards")} svg.kyogijo`).count()).toBe(4);
   expect(await page.locator(`${at("badge-list")} svg.kyogijo`).count()).toBe(8);
   expect(await page.locator(`${at("compact-cards")} svg.kyogijo`).count()).toBe(3);

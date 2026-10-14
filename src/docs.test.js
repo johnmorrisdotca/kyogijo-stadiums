@@ -70,7 +70,7 @@ function stringsDocument() {
   return `${lines.join("\n")}\n`;
 }
 
-const FAMILY_TITLES = { basketball: ["Basketball", "nba"], hockey: ["Ice hockey", "nhl"], football: ["Football", "nfl"], baseball: ["Baseball and softball", "mlb"], curling: ["Curling", "curling"], tennis: ["Tennis", "tennis"], volleyball: ["Volleyball, beach volleyball and sitting volleyball", "volleyball"], badminton: ["Badminton", "badminton"], pickleball: ["Pickleball", "pickleball"], tabletennis: ["Table tennis", "tabletennis"], padel: ["Padel", "padel"], squash: ["Squash", "squash"], racquetball: ["Racquetball", "racquetball"], sepaktakraw: ["Sepak takraw", "sepaktakraw"], teqball: ["Teqball", "teqball"], roundnet: ["Roundnet", "roundnet"], netball: ["Netball", "netball"], lacrosse: ["Lacrosse", "lacrosse"], rugby: ["Rugby", "rugby"], afl: ["Australian football", "afl"], gaelic: ["Gaelic football and hurling", "gaelic"], cricket: ["Cricket", "cricket"], fieldhockey: ["Field hockey", "fieldhockey"], handball: ["Handball", "handball"] };
+const FAMILY_TITLES = { basketball: ["Basketball", "nba"], hockey: ["Ice hockey", "nhl"], football: ["Football", "nfl"], baseball: ["Baseball and softball", "mlb"], curling: ["Curling", "curling"], tennis: ["Tennis", "tennis"], volleyball: ["Volleyball, beach volleyball and sitting volleyball", "volleyball"], badminton: ["Badminton", "badminton"], pickleball: ["Pickleball", "pickleball"], tabletennis: ["Table tennis", "tabletennis"], padel: ["Padel", "padel"], squash: ["Squash", "squash"], racquetball: ["Racquetball", "racquetball"], sepaktakraw: ["Sepak takraw", "sepaktakraw"], teqball: ["Teqball", "teqball"], roundnet: ["Roundnet", "roundnet"], netball: ["Netball", "netball"], lacrosse: ["Lacrosse", "lacrosse"], rugby: ["Rugby", "rugby"], afl: ["Australian football", "afl"], gaelic: ["Gaelic football and hurling", "gaelic"], cricket: ["Cricket", "cricket"], fieldhockey: ["Field hockey", "fieldhockey"], handball: ["Handball", "handball"], judo: ["Judo", "judo"], karate: ["Karate", "karate"], kendo: ["Kendo", "kendo"], sumo: ["Sumo", "sumo"], kyudo: ["Kyūdō", "kyudo"], dojo: ["Dojo mats", "dojo"] };
 
 /** docs/variants.md: every league, its figures and its sources, made from the source. */
 function variantsDocument() {
@@ -192,13 +192,13 @@ describe("the package's own numbers", () => {
   it("have a help text for the demo's sport selector that names all the sports, in both languages", () => {
     const page = readFileSync("scripts/site.mjs", "utf8");
     const line = page.split("\n").find((text) => text.includes('seg("sport", "sport"')) ?? "";
-    const en = ["football fields", "hockey rink", "basketball court", "baseball field", "soccer pitch", "curling sheet", "tennis", "volleyball", "badminton", "pickleball", "table tennis", "athletics", "ice skating", "padel", "squash", "racquetball", "sepak takraw", "teqball", "roundnet", "netball", "lacrosse", "rugby", "Australian football", "Gaelic", "cricket", "field hockey", "handball", "swimming", "water polo", "diving", "artistic swimming"];
-    const ja = ["アメリカンフットボール", "アイスホッケー", "バスケットボール", "野球", "サッカー", "カーリング", "テニス", "バレーボール", "バドミントン", "ピックルボール", "パデル", "スカッシュ", "ラケットボール", "セパタクロー", "テックボール", "ラウンドネット", "ネットボール", "卓球", "陸上競技", "スケート", "ラクロス", "ラグビー", "オーストラリアンフットボール", "ゲーリック", "クリケット", "フィールドホッケー", "ハンドボール", "競泳", "水球", "飛込", "アーティスティックスイミング"];
+    const en = ["football fields", "hockey rink", "basketball court", "baseball field", "soccer pitch", "curling sheet", "tennis", "volleyball", "badminton", "pickleball", "table tennis", "athletics", "ice skating", "padel", "squash", "racquetball", "sepak takraw", "teqball", "roundnet", "netball", "lacrosse", "rugby", "Australian football", "Gaelic", "cricket", "field hockey", "handball", "swimming", "water polo", "diving", "artistic swimming", "judo", "karate", "kendo", "sumo", "kyudo", "dojo"];
+    const ja = ["アメリカンフットボール", "アイスホッケー", "バスケットボール", "野球", "サッカー", "カーリング", "テニス", "バレーボール", "バドミントン", "ピックルボール", "パデル", "スカッシュ", "ラケットボール", "セパタクロー", "テックボール", "ラウンドネット", "ネットボール", "卓球", "陸上競技", "スケート", "ラクロス", "ラグビー", "オーストラリアンフットボール", "ゲーリック", "クリケット", "フィールドホッケー", "ハンドボール", "競泳", "水球", "飛込", "アーティスティックスイミング", "柔道", "空手", "剣道", "相撲", "弓道", "道場"];
     for (const word of en) expect(line, word).toContain(word);
     for (const word of ja) expect(line, word).toContain(word);
     // Twenty-seven-four-two sports on the selector, and each is in the words of the help.
     expect(WORDS.en).toHaveProperty("sport_handball");
-    expect(Object.keys(WORDS.en).filter((key) => key.startsWith("sport_"))).toHaveLength(33);
+    expect(Object.keys(WORDS.en).filter((key) => key.startsWith("sport_"))).toHaveLength(39);
   });
 
   it("have a sentence in docs/references.md for each reference John sent", () => {

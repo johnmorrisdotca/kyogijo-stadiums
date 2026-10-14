@@ -42,6 +42,28 @@ src/
 │   ├── figure.ts       the figure skating rink with its boards and furniture
 │   ├── plan.ts         the plan a set of options asks for, with the ranges
 │   └── describe.ts     the sentences that describe a rink
+├── budo.style.ts       the budō surfaces' rules (the mats in three tones, the heri, the floor, the clay, the straw, the tape) in the sheet's properties, and the colours of each look in light and dark
+├── budo.score.ts       what a judo, karate or kendo side has scored, as its sport counts it: the total and the cleaned numbers a board draws
+├── budo.board.ts       the budō scoreboards: judo's waza-ari, yuko and shido, karate's warnings and senshu, kendo's techniques, sumo's kimarite
+├── budo-entry.ts       the budō entry (`@johnmorrisdotca/kyogijo-stadiums/budo`): the plans, the dojo builder, the tatami layout, the kimarite, the looks and the halls
+├── halls.ts            the five famous halls of the budō, with only the facts a source gives and what each surface offers
+├── budo/
+│   ├── types.ts        the options of a budō drawing, the score of a side, and the dojo spec
+│   ├── parts.ts        what a part of a plan adds (areas and shapes), and the boxes a plan is laid out with
+│   ├── kit.ts          the small pieces plans are made of: a painted box, a tape, a ring, a size held to its range
+│   ├── tatami.ts       mats as real units: the traditional lay in which no four corners meet, cutting where a colour changes, the heri, the seams and the count in jō
+│   ├── judo.ts         a judo competition area: contest and safety areas, the common safe zone, the free zone, the platform, the tape and the technical table
+│   ├── karate.ts       a karate competition area: the matted square, its boundary band, the safety area, the start mats, the referee and the judges
+│   ├── kendo.ts        a kendo shiai-jo: the floor and its boards, the boundary lines, the cross, the kaishi-sen and the space outside
+│   ├── sumo.ts         a sumo dohyō: the clay, the 20 tawara, the jano-me, the shikiri-sen and the four tassels
+│   ├── kyudo.ts        a kyūdōjō: the shajō with its shooting positions and honza, the yamichi, the azuchi with its targets, the path for the arrows
+│   ├── room.ts         the room round a budō surface as data: walls, surround, dais, banner, balconies, doors and windows, for a 3D view to raise
+│   ├── dojo.ts         the dojo builder's layout: the floor in jō, metres or mats, the lay, the walls, doors, windows, shrine and kamiza
+│   ├── dojo.api.ts     `dojo()` and `drawDojo()`: the floor as data, and drawn
+│   ├── plan.ts         the plan a set of options asks for, with the ranges, and the Budokan's octagonal arena floor
+│   ├── looks.ts        the colours of the budō looks, light and dark
+│   ├── kimarite.ts     the 82 winning techniques of sumo, the five non-techniques and the two other results
+│   └── describe.ts     the sentences that describe a budō surface and its score
 ├── athletics/
 │   ├── types.ts        the options, the races and the field events
 │   ├── events.ts       the races and the field events, with their names in three languages
@@ -86,6 +108,7 @@ src/
 │   ├── soccer.ts       the soccer pitch
 │   ├── athletics.ts    the athletics stadium and its close-ups of a start or the finish
 │   ├── skating.ts      the skating rink: the ice, the lines and the furniture
+│   ├── budo.ts         the budō surfaces lying wide: the floor and the mats, the heri and the seams, the walls, the clay, the targets
 │   ├── curling.ts      the curling sheet
 │   ├── curling.fold.ts the folded sheet: the whole sheet as a strip, its two houses enlarged beside it, the fan that joins them and their labels
 │   ├── pool.ts         the swimming pool, lying wide: the ropes, floor markings, blocks, panels, flags and rope, the race on it
@@ -191,6 +214,7 @@ src/
 │   ├── handball.ts     the handball court
 │   ├── athletics.ts    the World Athletics tracks and their stagger tables
 │   ├── skating.ts      the ISU's long track, short track and figure skating rink
+│   ├── budo.ts         the IJF's, the AJJF's, the WKF's, the FIK's, the Japan Sumo Association's and the ANKF's figures, and the tatami standards
 │   ├── football.ts     the fields
 │   └── baseball.ts     the diamonds
 ├── geometry-entry.ts   the geometry's entry
@@ -253,6 +277,7 @@ src/
 ├── uprights.more.ts    padel's walls and fence, squash's and racquetball's walls, sepak takraw's net, teqball's table, roundnet's set, netball's goalposts
 ├── uprights.pools.ts   the pools' starting blocks, flags and false start rope, springboards and platforms, water polo goals, judges' and starting platforms
 ├── uprights.track.ts   an athletics stadium's hurdles, steeplechase barriers, jumps' uprights and bars and cage; a skating rink's padding and boards
+├── uprights.budo.ts    the dohyō's clay mound, a kyūdōjō's azuchi and its tilted targets, a dojo's walls
 ├── uprights.rinks.ts   the hockey rink's boards and glass and goals, the basketball court's baskets and stanchions
 ├── uprights.board.ts   the score stood up: its badge on a board that faces the eye, hung over the middle of a court or a rink and standing behind an end of a field
 ├── uprights.fields.ts  football's posts and pylons, a soccer pitch's goals and flags, the posts of rugby, Gaelic and Australian football, stumps, a ballpark's fence, poles and backstop

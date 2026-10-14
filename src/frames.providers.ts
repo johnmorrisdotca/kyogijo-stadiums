@@ -4,6 +4,7 @@
 // hockey_rink is used.
 import { isPoolSport } from "./pool.ts";
 import type { PoolSport } from "./pool.types.ts";
+import type { BudoSport } from "./types.ts";
 import { CURLING, FOOTBALL, NBA, NHL, footballLength, surfaceSize } from "./geometry.ts";
 import { FRAMES, registerFrame, span, type Frame, type FrameMap } from "./frames.ts";
 import type { Point } from "./units.ts";
@@ -191,7 +192,7 @@ const netballFrame = netFrame("netball", "Netball court, in metres from the cent
  * The unit is the one the sport's rulebook prints first (metres; yards for cricket, whose frame is measured from the middle of the pitch, which is the middle of the ground). The size of these surfaces is a range, so the frame
  * fits the size of the surface it is placed on. This package's own frame: no tracking provider's format was read for these sports, and each rulebook measures a field from its lines (the figures of `LEAGUES`).
  */
-function centreFrame(sport: "lacrosse" | "rugby" | "afl" | "gaelic" | "cricket" | "fieldhockey" | "handball" | PoolSport, title: string, unit: "m" | "yd", x: number, y: number): Frame {
+function centreFrame(sport: "lacrosse" | "rugby" | "afl" | "gaelic" | "cricket" | "fieldhockey" | "handball" | PoolSport | BudoSport, title: string, unit: "m" | "yd", x: number, y: number): Frame {
   const per = unit === "m" ? 1 / 0.3048 : 3;
   const map = (size: { length: number; width: number }): FrameMap => ({ x: span(-size.length / per / 2, size.length / per / 2, 0, size.length), y: span(-size.width / per / 2, size.width / per / 2, size.width, 0) });
   return {
@@ -224,6 +225,14 @@ const swimmingFrame = centreFrame("swimming", "Swimming pool, in metres from the
 const waterPoloFrame = centreFrame("waterpolo", "Water polo pool, in metres from the centre of the water", "m", 12.8, 10);
 const divingFrame = centreFrame("diving", "Diving well, in metres from the centre of the water", "m", 10.5, 13.5);
 const artisticFrame = centreFrame("artisticswimming", "Artistic swimming area, in metres from the centre of the water", "m", 15, 10);
+// The budō: the centre of the surface (the mats of a competition area, the shiai-jo's floor, the dohyō's clay, the whole range of a kyūdōjō, a dojo's floor), x along it, y positive towards the top. The size of a
+// competition area, a dojo and a range varies with the options, so each frame fits the size of the surface it is placed on.
+const judoFrame = centreFrame("judo", "Judo competition area, in metres from the centre of the tatami", "m", 9, 9);
+const karateFrame = centreFrame("karate", "Karate competition area, in metres from the centre of the mats", "m", 6, 6);
+const kendoFrame = centreFrame("kendo", "Kendo shiai-jo, in metres from the centre", "m", 5, 5);
+const sumoFrame = centreFrame("sumo", "Sumo dohyō, in metres from the centre of the ring", "m", 3.35, 3.35);
+const kyudoFrame = centreFrame("kyudo", "Kyūdōjō, in metres from the middle of the range", "m", 18.9, 8.1);
+const dojoFrame = centreFrame("dojo", "Dojo, in metres from the centre of the floor", "m", 3.64, 2.28);
 
 /**
  * The athletics stadium in the plain frame of its middle: the middle of the track as the origin, x along the straights (positive towards the right as the stadium is drawn wide), y across them, positive
@@ -268,7 +277,7 @@ const skatingFrame: Frame = {
   note: "Positive x is towards the right as the rink is drawn wide, positive y towards the bottom. The skaters go counter-clockwise: to the right along the finishing straight at the bottom. The frame is fitted to the rink's box.",
 };
 
-for (const frame of [nhlApi, hockeyTech, nbaStats, nflTracking, mlbam, retrosheet, curling, tennisFrame, volleyballFrame, badmintonFrame, pickleballFrame, tableTennisFrame, padelFrame, squashFrame, racquetballFrame, sepakTakrawFrame, teqballFrame, roundnetFrame, netballFrame, lacrosseFrame, rugbyFrame, aflFrame, gaelicFrame, cricketFrame, fieldHockeyFrame, handballFrame, swimmingFrame, waterPoloFrame, divingFrame, artisticFrame, athleticsFrame, skatingFrame]) if (!Object.prototype.hasOwnProperty.call(FRAMES, frame.name)) registerFrame(frame);
+for (const frame of [nhlApi, hockeyTech, nbaStats, nflTracking, mlbam, retrosheet, curling, tennisFrame, volleyballFrame, badmintonFrame, pickleballFrame, tableTennisFrame, padelFrame, squashFrame, racquetballFrame, sepakTakrawFrame, teqballFrame, roundnetFrame, netballFrame, lacrosseFrame, rugbyFrame, aflFrame, gaelicFrame, cricketFrame, fieldHockeyFrame, handballFrame, swimmingFrame, waterPoloFrame, divingFrame, artisticFrame, athleticsFrame, skatingFrame, judoFrame, karateFrame, kendoFrame, sumoFrame, kyudoFrame, dojoFrame]) if (!Object.prototype.hasOwnProperty.call(FRAMES, frame.name)) registerFrame(frame);
 
 // Retrosheet's hit-location diagram (Project Scoresheet's) draws the field in sectors: columns of the outfield from the left field
 // line to the right (7L, 7, 78, 8, 89, 9, 9L), each cut into rings of about 50 feet by depth (S shallow, none medium, D deep, XD

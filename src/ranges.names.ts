@@ -84,6 +84,12 @@ export const RANGES: Readonly<Record<Sport, readonly RangeInfo[]>> = Object.free
     range("javelin-throw", "left"),
     range("water-jump", "left"),
   ]),
+  judo: Object.freeze([range("contest-area", "left"), range("start"), range("half", "left")]),
+  karate: Object.freeze([range("contest-area", "left"), range("start"), range("half", "left")]),
+  kendo: Object.freeze([range("start"), range("half", "left")]),
+  sumo: Object.freeze([range("ring"), range("start"), range("half", "left")]),
+  kyudo: Object.freeze([range("shajo"), range("yamichi"), range("azuchi")]),
+  dojo: Object.freeze([range("kamiza"), range("half", "left")]),
 });
 
 /** What a drawing's `range` asks for, checked: a name (at an end, or at its default) or a box. */

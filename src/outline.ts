@@ -17,6 +17,7 @@ import { sheetFor } from "./sheet.ts";
 import { isPoolSport, poolBox } from "./pool.ts";
 import { athleticsPlan } from "./athletics/plan.ts";
 import { skatingPlan } from "./skating/plan.ts";
+import { budoPlan, isBudoSport } from "./budo/plan.ts";
 import type { SurfaceOptions } from "./types.ts";
 
 /** A surface's outline as a path, with the box round it. */
@@ -48,10 +49,10 @@ function inPolygon(points: readonly (readonly [number, number])[], x: number, y:
 
 /** The size a provider's frame is fitted to: the drawn surface's own `box`, for a soccer pitch, a curling sheet, a net sport's court and a league's surface; none for a sport's own fixed one. */
 export const frameSizeOf = (o: Pick<SurfaceOptions, "sport" | "league">, box: { w: number; h: number }): { length: number; width: number; unit: "ft" } | undefined =>
-  o.sport === "soccer" || o.sport === "curling" || isNetSport(o.sport) || isFieldSport(o.sport) || isPoolSport(o.sport) || o.sport === "athletics" || o.sport === "skating" || chooseLeague(o).league !== undefined ? { length: box.w, width: box.h, unit: "ft" as const } : undefined;
+  o.sport === "soccer" || o.sport === "curling" || isNetSport(o.sport) || isFieldSport(o.sport) || isPoolSport(o.sport) || o.sport === "athletics" || o.sport === "skating" || isBudoSport(o.sport) || chooseLeague(o).league !== undefined ? { length: box.w, width: box.h, unit: "ft" as const } : undefined;
 
 /** The outline of the surface the options draw. */
-export function outlineOf(o: Pick<SurfaceOptions, "sport" | "park" | "fence" | "units" | "pitch" | "league" | "year" | "sheet" | "net"> & Partial<Pick<SurfaceOptions, "field" | "detail" | "pool" | "athletics" | "skating">>): Outline {
+export function outlineOf(o: Pick<SurfaceOptions, "sport" | "park" | "fence" | "units" | "pitch" | "league" | "year" | "sheet" | "net"> & Partial<Pick<SurfaceOptions, "field" | "detail" | "pool" | "athletics" | "skating" | "budo" | "dojo">>): Outline {
   const { sport, league } = chooseLeague(o);
   switch (sport) {
     case "nfl":
@@ -137,6 +138,16 @@ export function outlineOf(o: Pick<SurfaceOptions, "sport" | "park" | "fence" | "
     }
     case "skating": {
       const plan = skatingPlan(o as Pick<SurfaceOptions, "sport" | "league" | "skating" | "detail">);
+      const k = 1 / 0.3048;
+      return rect((plan.box.x1 - plan.box.x0) * k, (plan.box.y1 - plan.box.y0) * k);
+    }
+    case "judo":
+    case "karate":
+    case "kendo":
+    case "sumo":
+    case "kyudo":
+    case "dojo": {
+      const plan = budoPlan({ ...o, sport, detail: o.detail } as Pick<SurfaceOptions, "sport" | "league" | "budo" | "dojo" | "range" | "detail">);
       const k = 1 / 0.3048;
       return rect((plan.box.x1 - plan.box.x0) * k, (plan.box.y1 - plan.box.y0) * k);
     }

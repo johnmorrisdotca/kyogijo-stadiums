@@ -33,6 +33,8 @@ export interface TeamView {
   wickets?: string;
   overs?: string;
   innings?: string[];
+  /** Judo, karate, kendo and sumo: what the side scored, as the sport counts it. */
+  budo?: import("./budo.score.ts").BudoView;
 }
 
 const part = (on: boolean, names: string): string | undefined => (on ? names : undefined);
@@ -248,6 +250,24 @@ export function glyph(sport: Sport): string {
     case "skating":
       // A rink: the oval of a track inside the boards, and the finishing line.
       return "M-18 -10H18V10H-18ZM-9 -6H9A6 6 0 0 1 9 6H-9A6 6 0 0 1 -9 -6ZM-9 -3.5H9A3.5 3.5 0 0 1 9 3.5H-9A3.5 3.5 0 0 1 -9 -3.5ZM4 3.5V10";
+    case "judo":
+      // A contest area: the safety area, the contest area inside it and the two start marks.
+      return "M-10 -10H10V10H-10ZM-6 -6H6V6H-6ZM-3 -1.5V1.5M3 -1.5V1.5";
+    case "karate":
+      // A competition area: the square, the outer band and the two start mats.
+      return "M-10 -10H10V10H-10ZM-7 -7H7V7H-7ZM-4.5 -1.5H-2.5V1.5H-4.5ZM2.5 -1.5H4.5V1.5H2.5Z";
+    case "kendo":
+      // A shiai-jo: the boundary, the cross at the centre and the two start lines.
+      return "M-10 -10H10V10H-10ZM-1.5 0H1.5M0 -1.5V1.5M-4 -1.5V1.5M4 -1.5V1.5";
+    case "sumo":
+      // A dohyō: the clay square, the ring and the two shikiri-sen.
+      return "M-10 -10H10V10H-10ZM-7 0A7 7 0 1 0 7 0A7 7 0 1 0 -7 0M-1.5 -2V2M1.5 -2V2";
+    case "kyudo":
+      // A range: the shajō, the line to the targets and the mound.
+      return "M-18 -5H-9V5H-18ZM-9 0H13M13 -6V6H16V-6ZM14.5 -1.5V1.5";
+    case "dojo":
+      // A dojo: a floor of mats laid so that no four corners meet.
+      return "M-14 -10H14V10H-14ZM-14 0H14M-5 -10V0M5 0V10";
     case "athletics":
       // A track: the oval's outer edge, a lane line and the kerb, and the finish line across the straight.
       return "M-9 -10H9A10 10 0 0 1 9 10H-9A10 10 0 0 1 -9 -10ZM-9 -8.2H9A8.2 8.2 0 0 1 9 8.2H-9A8.2 8.2 0 0 1 -9 -8.2ZM-9 -6.4H9A6.4 6.4 0 0 1 9 6.4H-9A6.4 6.4 0 0 1 -9 -6.4ZM9 6.4V10";

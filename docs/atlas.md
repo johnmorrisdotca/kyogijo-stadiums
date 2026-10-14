@@ -1,8 +1,8 @@
 # The atlas
 
-Every ballpark and soccer ground the package draws, on one map: 158 places in 23 countries, and the 443 clubs (333 of them different) that played their home matches in 155 of them. See the Atlas section of [the demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/#atlas) and [Tenants](#tenants) below.
+Every ballpark and soccer ground the package draws, and the famous halls of the budō, on one map: 163 places in 23 countries, and the 443 clubs (333 of them different) that played their home matches in 155 of them. The five halls (the Kodokan, the Nippon Budokan, the Ryōgoku Kokugikan, the old Butokuden and the Budokwai) are in [the budō page](./budo.md#famous-halls-on-the-atlas). See the Atlas section of [the demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/#atlas) and [Tenants](#tenants) below.
 
-![A world map with a marker on each of 158 places: a circle for a place in use today, a diamond for one of the past, baseball parks solid and soccer grounds with a dot in the middle. Most are in the United States, Japan and western Europe.](./atlas-map.svg)
+![A world map with a marker on each of 163 places: a circle for a place in use today, a diamond for one of the past, baseball parks solid, soccer grounds with a dot in the middle and halls of the budō with a small square. Most are in the United States, Japan and western Europe.](./atlas-map.svg)
 
 *The map is made by `pnpm site` with [chizu](https://github.com/johnmorrisdotca/chizu) from Natural Earth (public domain), with a marker on each place; the same markers are on the demo's interactive map.*
 
@@ -10,19 +10,21 @@ Every ballpark and soccer ground the package draws, on one map: 158 places in 23
 | --- | --- | --- | --- |
 | Ballpark (`PARKS`) | baseball | 44 (30 MLB, 14 NPB) | 50 (44 MLB, 6 NPB) |
 | Ground (`GROUNDS`) | soccer | 60 | 4 |
+| Hall (`HALLS`) | budō | 5 | 0 |
 
 ## The data
 
-`@johnmorrisdotca/kyogijo-stadiums/atlas` joins the two lists into one, `PLACES`, and needs nothing else (no dependency, no network).
+`@johnmorrisdotca/kyogijo-stadiums/atlas` joins the three lists into one, `PLACES`, and needs nothing else (no dependency, no network).
 
 | Field | What it is |
 | --- | --- |
-| `id` | The key in `PARKS` or `GROUNDS`: unique across both (`fenway-park`, `maracana`). |
-| `kind` | `park` or `ground`. |
+| `id` | The key in `PARKS`, `GROUNDS` or `HALLS`: unique across all three (`fenway-park`, `maracana`, `kodokan`). |
+| `kind` | `park`, `ground` or `hall`. |
 | `name`, `nameJa`, `readingJa` | The everyday name in English and in Japanese, and the reading of the Japanese one in kana where it has kanji (every place has both names). |
 | `localName`, `localLanguage` | The everyday name in the language of the place, where it is not English (`San Siro`, `it`; `Maracanã`, `pt`). |
 | `aliases`, `names` | Every other name, each with where it was read and the years it was used (`{ name, lang, kind, from?, to?, source? }`), and the names a ground had for some years. See [names](./ballparks.md#names). |
-| `sport` | `baseball` or `soccer`. |
+| `sport` | `baseball`, `soccer` or `budo`. |
+| `hall` | A hall of the budō: its capacity, how it came to be, the surfaces it offers each with what is documented of it (`basis`), and its sources: see [the budō](./budo.md#famous-halls-on-the-atlas). Absent for a park or a ground. |
 | `leagues` | The leagues of the club of a park (`MLB` or `NPB`) and of every club that played its home matches in the place (`CFL` and `MLS` for BC Place, `MLB` and `CFL` for the Olympic Stadium in Montreal), then `FIFA World Cup` and `FIFA Women's World Cup` for a ground that staged matches of one. A ground with no tenant that staged none has none. |
 | `tenants` | The clubs that play, or played, their home matches there, each with its league, its sport and the years it was there: see [Tenants](#tenants). Empty for a place no club is known to have called home. |
 | `country`, `city` | ISO 3166-1 alpha-2, and the city the data names. |
@@ -43,7 +45,7 @@ console.log(polo.from, polo.to, drawKyogijo({ ...surfaceOf(polo), style: "none" 
 ```
 
 ```text
-158 14 23
+163 14 23
 1891 1963 true
 ```
 
@@ -100,7 +102,7 @@ console.log(placesByClub("whitecaps")[0]?.id, placesByClub("ブリティッシ�
 
 ### One place, several surfaces
 
-`surfacesOf(place)` lists the surfaces a place offers, the place's own first: a park's fence (`mlb` with the park) or a ground's pitch at its own size (`soccer` with the ground), then one for each sport a tenant plays that the package draws. `surfaceOf(place)` is still the place's own, and with a sport it is the surface the place offers for it, else `undefined`.
+`surfacesOf(place)` lists the surfaces a place offers (a hall's are its floors, see `hallSurfaces`), the place's own first: a park's fence (`mlb` with the park) or a ground's pitch at its own size (`soccer` with the ground), then one for each sport a tenant plays that the package draws. `surfaceOf(place)` is still the place's own, and with a sport it is the surface the place offers for it, else `undefined`.
 
 | A tenant plays | The surface | Options |
 | --- | --- | --- |

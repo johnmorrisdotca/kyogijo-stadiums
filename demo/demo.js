@@ -21,7 +21,7 @@ import { ROAD_FINAL, SERIES_LABELS, SERIES_LABELS_JA, nation, roadFinalists, roa
 import { roadToFinal } from "./dist/charts-entry.js";
 import { mlbSprayChart, nbaShotChart, nflPassChart, nhlShotMap, soccerShotMap } from "./dist/charts-entry.js";
 import { fenceAt } from "./dist/geometry-entry.js";
-import { FIELDS, MAX_SHOTS, SEGS, applyParams, chosenLeague, hasSeasons, hiddenRows, hiddenStatus, labelOf as labelsFor, loadGame as loadGameInto, makeState, optionsFor as optionsOf, seasonRange, urlPairs, usesEmblems } from "./model.js";
+import { FIELDS, MAX_SHOTS, SEGS, applyParams, budoFromSurface, chosenLeague, hasSeasons, hiddenRows, hiddenStatus, labelOf as labelsFor, loadGame as loadGameInto, makeState, optionsFor as optionsOf, seasonRange, urlPairs, usesEmblems } from "./model.js";
 import { WORDS } from "./words.js";
 
 const $ = (id) => document.getElementById(id);
@@ -113,7 +113,7 @@ function refreshSegs() {
   applyRows();
 }
 
-makeSeg("sport", (v) => { state.sport = v; state.league = null; loadGame(v); fillFields(); fillLeagues(); });
+makeSeg("sport", (v) => { state.sport = v; state.league = null; state.budoBase = null; loadGame(v); fillFields(); fillLeagues(); });
 makeSeg("era", (v) => { state.year = v === "today" ? null : (state.year ?? clampYear(1975)); });
 makeSeg("size", (v) => { state.size = v; });
 makeSeg("orientation", (v) => { state.orientation = v; });
@@ -144,6 +144,9 @@ makeSeg("track", (v) => { state.track = v; });
 makeSeg("infield", (v) => { state.infield = v; });
 makeSeg("races", (v) => { state.races = v; });
 makeSeg("lineup", (v) => { state.lineup = v; });
+makeSeg("budo-look", (v) => { state.budoLook = v; });
+makeSeg("budo-areas", (v) => { state.budoAreas = v; });
+makeSeg("dojo-jo", (v) => { state.dojoJo = v; });
 for (const role of ["away", "home"]) makeSeg(`${role}-logo`, (v) => { state[role].logo = v; });
 // The pickers of a ready-made emblem: a grid of tiles, each the emblem itself, for a team's mark and for the middle of a pageant.
 for (const role of ["away", "home"]) makeSeg(`${role}-mark`, (v) => { state[role].mark = v; });
@@ -193,7 +196,7 @@ function renderEra() {
 function toggle(id, key) {
   $(id).addEventListener("click", () => { state[key] = !state[key]; $(id).setAttribute("aria-pressed", String(state[key])); change(); });
 }
-for (const [id, key] of [["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["crowd", "crowd"], ["crowd-tifo", "crowdTifo"], ["flags", "flags"], ["pageant-emblem", "pageantEmblem"], ["emblem-line", "emblemLine"], ["pageant-entrance", "pageantEntrance"], ["pool-section", "poolSection"], ["situation", "situation"], ["sit-drive", "sitDrive"], ["place", "place"]]) toggle(id, key);
+for (const [id, key] of [["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["crowd", "crowd"], ["crowd-tifo", "crowdTifo"], ["flags", "flags"], ["pageant-emblem", "pageantEmblem"], ["emblem-line", "emblemLine"], ["pageant-entrance", "pageantEntrance"], ["pool-section", "poolSection"], ["situation", "situation"], ["sit-drive", "sitDrive"], ["place", "place"], ["budo-hall", "budoHall"], ["budo-officials", "budoOfficials"], ["budo-tassels", "budoTassels"], ["dojo-shinzen", "budoShinzen"]]) toggle(id, key);
 $("emblem-line").addEventListener("click", () => refreshSegs());
 $("pageant-emblem").addEventListener("click", () => refreshSegs());
 
@@ -351,7 +354,7 @@ function render() {
   }
   renderEra();
   applyRows();
-  for (const toggleOf of [["flags", "flags"], ["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["crowd", "crowd"], ["crowd-tifo", "crowdTifo"], ["pageant-emblem", "pageantEmblem"], ["emblem-line", "emblemLine"], ["pageant-entrance", "pageantEntrance"], ["pool-section", "poolSection"], ["situation", "situation"], ["sit-drive", "sitDrive"], ["place", "place"]]) $(toggleOf[0]).setAttribute("aria-pressed", String(state[toggleOf[1]]));
+  for (const toggleOf of [["flags", "flags"], ["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["crowd", "crowd"], ["crowd-tifo", "crowdTifo"], ["pageant-emblem", "pageantEmblem"], ["emblem-line", "emblemLine"], ["pageant-entrance", "pageantEntrance"], ["pool-section", "poolSection"], ["situation", "situation"], ["sit-drive", "sitDrive"], ["place", "place"], ["budo-hall", "budoHall"], ["budo-officials", "budoOfficials"], ["budo-tassels", "budoTassels"], ["dojo-shinzen", "budoShinzen"]]) $(toggleOf[0]).setAttribute("aria-pressed", String(state[toggleOf[1]]));
   for (const [i, id] of ["sit-b1", "sit-b2", "sit-b3"].entries()) $(id).setAttribute("aria-pressed", String(state.sitBases[i] === "1"));
   $("sit-ballon").value = String(state.sitBallOn);
   $("sit-ballon-out").textContent = String(state.sitBallOn);
@@ -410,7 +413,7 @@ function code(kind) {
       for (const [key, attr] of [["status", "status"], ["competition", "competition"], ["date", "date"], ["label", "label"], ["winner", "winner"]]) if (o[key]) attrs.push(`${attr}="${escapeAttr(o[key])}"`);
     }
     // What has no attribute of its own goes in the `options` JSON.
-    const more = { ...(o.court ? { court: o.court } : {}), ...(o.sheet ? { sheet: o.sheet } : {}), ...(o.crowd ? { crowd: o.crowd } : {}), ...(o.pageant ? { pageant: o.pageant } : {}), ...(o.pool ? { pool: o.pool } : {}), ...(o.athletics ? { athletics: o.athletics } : {}), ...(o.situation ? { situation: o.situation } : {}) };
+    const more = { ...(o.court ? { court: o.court } : {}), ...(o.sheet ? { sheet: o.sheet } : {}), ...(o.crowd ? { crowd: o.crowd } : {}), ...(o.pageant ? { pageant: o.pageant } : {}), ...(o.pool ? { pool: o.pool } : {}), ...(o.athletics ? { athletics: o.athletics } : {}), ...(o.situation ? { situation: o.situation } : {}), ...(o.budo ? { budo: o.budo } : {}), ...(o.dojo ? { dojo: o.dojo } : {}) };
     if (Object.keys(more).length > 0) attrs.push(`options='${JSON.stringify(more).replace(/'/g, "&#39;")}'`);
     const plug = usesEmblems(state) ? `<script type="module">\n  import { useEmblems } from "${CDN}/dist/element-entry.js";\n  import { renderEmblem } from "${DOUGU}/dist/emblems-entry.js";\n  useEmblems(renderEmblem);\n</script>\n` : "";
     return `<script type="module" src="${CDN}/dist/element-define.js"></script>\n${plug}\n<kyogijo-field\n  ${attrs.join("\n  ")}\n></kyogijo-field>`;
@@ -887,6 +890,7 @@ function tryPlace(place, surface) {
   const sport = surface?.sport ?? (place.kind === "park" ? "mlb" : "soccer");
   state.sport = sport;
   state.league = surface?.league ?? null;
+  budoFromSurface(state, surface);
   if (sport === "mlb") state.park = place.id;
   else if (sport === "soccer") state.ground = surface?.ground ?? (surface === undefined && place.kind === "ground" ? place.id : "none");
   loadGame(state.sport);
