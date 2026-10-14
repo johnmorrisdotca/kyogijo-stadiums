@@ -49,6 +49,7 @@ export const NAV = [
       { slug: "soccer", ja: "サッカー" },
       { slug: "curling", ja: "カーリング" },
       { slug: "courts", ja: "ネット型競技のコート" },
+      { slug: "hardwood", ja: "リアルなバスケットボールコートの床" },
       { slug: "field-sports", ja: "ラクロス、ラグビーなどのフィールド" },
       { slug: "special-games", ja: "特設会場での試合" },
       { slug: "ballparks", ja: "球場" },

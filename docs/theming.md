@@ -15,7 +15,7 @@ console.log(rink.includes("<style>"), KYOGIJO_STYLE.includes("--ky-surface"), ri
 
 ## A court's look
 
-A court's own look is `court: { wood, woodAlt, apron, border, key, keyLeft, keyRight, line, centreCircle, centreLogo, baselineText, baselineInk, paintThreePoint }`; `COURT_THEMES` has five to start from: `maple`, `twoTone`, `night`, `sunburst` and `tournament` (a floor painted edge to edge, with no wood).
+A court's own look is `court: { wood, woodAlt, apron, border, key, keyLeft, keyRight, line, centreCircle, centreLogo, baselineText, baselineInk, paintThreePoint }`; `COURT_THEMES` has five to start from: `maple`, `twoTone`, `night`, `sunburst` and `tournament` (a floor painted edge to edge, with no wood). `hardwood` draws the floor itself as maple boards with grain, stain, shadows and sheen: [a realistic basketball floor](./hardwood.md).
 
 ```ts
 import { COURT_THEMES, drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";

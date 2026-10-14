@@ -143,7 +143,7 @@ function renderEra() {
 function toggle(id, key) {
   $(id).addEventListener("click", () => { state[key] = !state[key]; $(id).setAttribute("aria-pressed", String(state[key])); change(); });
 }
-for (const [id, key] of [["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["flags", "flags"]]) toggle(id, key);
+for (const [id, key] of [["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["flags", "flags"]]) toggle(id, key);
 
 function fillFields() {
   for (const field of FIELDS) {
@@ -276,7 +276,7 @@ function render() {
   stage.removeAttribute("data-pending");
   renderEra();
   applyRows();
-  for (const toggleOf of [["flags", "flags"], ["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"]]) $(toggleOf[0]).setAttribute("aria-pressed", String(state[toggleOf[1]]));
+  for (const toggleOf of [["flags", "flags"], ["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"]]) $(toggleOf[0]).setAttribute("aria-pressed", String(state[toggleOf[1]]));
   updateEmbed();
   syncUrl();
 }
@@ -419,11 +419,14 @@ const examples = {
     [gameOf("nfl", { orientation: "portrait" }), `${say("sport_nfl")} · ${say("orientation_portrait")}`],
   ],
   compact: () => ["nba", "nfl", "nhl"].map((sport) => [gameOf(sport, { size: "compact", orientation: "auto" }), say(`sport_${sport}`)]),
-  courts: () =>
-    ["maple", "twoTone", "night", "sunburst", "tournament"].map((theme) => {
-      const names = TEAMS.basketball;
-      return [gameOf("nba", { orientation: "auto", court: { ...COURT_THEMES[theme], baselineText: [names.away.name.toUpperCase(), names.home.name.toUpperCase()] } }), say(`court_${theme}`)];
-    }),
+  courts: () => {
+    const names = TEAMS.basketball;
+    const themes = ["maple", "twoTone", "night", "sunburst", "tournament"].map((theme) => [gameOf("nba", { orientation: "auto", court: { ...COURT_THEMES[theme], baselineText: [names.away.name.toUpperCase(), names.home.name.toUpperCase()] } }), say(`court_${theme}`)]);
+    // The real floors are bare, so that the boards show: no teams in the way, the teams' colours on the ends and the paint.
+    const bare = { orientation: "auto", away: undefined, home: undefined, status: undefined, competition: undefined, date: undefined, leftColor: names.away.color, rightColor: names.home.color };
+    const own = { border: "#16263f", key: names.away.color, keyLeft: names.away.color, keyRight: names.home.color, centreCircle: names.home.color, baselineText: [names.away.name.toUpperCase(), names.home.name.toUpperCase()] };
+    return [...themes, [gameOf("nba", { ...bare, court: { ...own, hardwood: true } }), say("court_hardwood")], [gameOf("nba", { ...bare, court: { ...own, hardwood: { detail: "plain" } } }), say("court_hardwoodPlain")]];
+  },
 };
 
 // The Data section: made-up shots, passes and balls in play (layers-data.js, from fixed seeds) on a bare surface each, with the

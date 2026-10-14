@@ -49,6 +49,7 @@ export function makeState(params, kept = null) {
     flags: params.get("flags") !== "0",
     baseline: params.get("baseline") === "1",
     centreLogo: false,
+    hardwood: params.get("hardwood") === "1",
     touched: new Set(),
     embed: "module",
   };
@@ -130,8 +131,9 @@ export function optionsFor(s, lang, forCode = false) {
     if (!s.flags) o.cornerFlags = false;
   }
   const names = [s.away.name, s.home.name];
-  if (s.sport === "nba" && (s.court !== "default" || s.baseline || s.centreLogo)) {
+  if (s.sport === "nba" && (s.court !== "default" || s.baseline || s.centreLogo || s.hardwood)) {
     const court = s.court === "default" ? {} : { ...COURT_THEMES[s.court] };
+    if (s.hardwood) court.hardwood = true;
     if (s.baseline) court.baselineText = names.map((n) => n.toUpperCase().slice(0, 18));
     if (s.centreLogo) court.centreLogo = forCode ? "/logos/centre.svg" : EMBLEMS[s.home.emblem];
     o.court = court;
@@ -204,6 +206,7 @@ export const TOGGLES = [
   { id: "exact", get: (s) => s.exact },
   { id: "baseline", get: (s) => s.baseline },
   { id: "centre-logo", get: (s) => s.centreLogo },
+  { id: "hardwood", get: (s) => s.hardwood },
   { id: "flags", get: (s) => s.flags },
 ];
 

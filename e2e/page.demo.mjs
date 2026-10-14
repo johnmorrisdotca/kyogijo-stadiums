@@ -2,7 +2,7 @@
 // the demo draws is blank.
 import { expect, test } from "@playwright/test";
 
-import { at, open, openGroups, svg } from "./demo.mjs";
+import { at, open, openGroups, svg, tap } from "./demo.mjs";
 
 // A wide court is a strip on a phone, and a court has fewer parts than a ballpark or a pitch.
 const NET = ["tennis", "volleyball", "badminton", "pickleball", "tabletennis", "lacrosse", "rugby", "afl", "gaelic", "cricket", "fieldhockey", "handball"];
@@ -70,6 +70,28 @@ test("the park picker appears for baseball only, and the court's looks for baske
   await expect(page.locator("#court-group")).toBeHidden();
   await openGroups(page);
   await expect(page.locator("#court-group")).toBeVisible();
+});
+
+test("the court's real hardwood chip is a finger wide, draws the boards and the address can ask for them", async ({ page }, testInfo) => {
+  await open(page, "?sport=nba&lang=en&help=off&size=surface&orientation=landscape");
+  await openGroups(page);
+  const chip = page.locator(at("hardwood"));
+  await expect(chip).toHaveText("Real hardwood");
+  await expect(chip).toHaveAttribute("aria-pressed", "false");
+  await expect(svg(page).locator("pattern")).toHaveCount(0);
+  const box = await chip.boundingBox();
+  expect(box.width).toBeGreaterThanOrEqual(43.5);
+  expect(box.height).toBeGreaterThanOrEqual(43.5);
+  await tap(page, chip, testInfo);
+  await expect(chip).toHaveAttribute("aria-pressed", "true");
+  await expect(svg(page).locator("pattern")).toHaveCount(2);
+  expect(await svg(page).locator("rect.ky-hw").count()).toBeGreaterThan(5);
+  expect(await page.locator(at("embed-code")).textContent()).toContain("hardwood");
+  await tap(page, chip, testInfo);
+  await expect(svg(page).locator("pattern")).toHaveCount(0);
+  // The address can ask for it too.
+  await open(page, "?sport=nba&lang=en&help=off&size=surface&hardwood=1");
+  await expect(svg(page).locator("pattern")).toHaveCount(2);
 });
 
 test("editing a team's name, score and colour redraws the drawing", async ({ page }) => {
@@ -144,7 +166,7 @@ test("the examples are all there: every sport, wide and tall, badges, compact ca
   expect(await page.locator(`${at("side-cards")} svg.kyogijo`).count()).toBe(4);
   expect(await page.locator(`${at("badge-list")} svg.kyogijo`).count()).toBe(8);
   expect(await page.locator(`${at("compact-cards")} svg.kyogijo`).count()).toBe(3);
-  expect(await page.locator(`${at("court-cards")} svg.kyogijo`).count()).toBe(5);
+  expect(await page.locator(`${at("court-cards")} svg.kyogijo`).count()).toBe(7);
   // The parks open on the MLB parks in use today (see places.demo.mjs for the filters).
   await page.locator(at("parks-more")).scrollIntoViewIfNeeded();
   await expect(page.locator(`${at("park-grid")} .park`)).toHaveCount(30);
