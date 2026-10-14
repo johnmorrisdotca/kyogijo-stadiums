@@ -14,9 +14,9 @@ afterEach(() => useEmblems(undefined));
 
 describe("Dougu Sports plugged in", () => {
   it("has an icon for every sport the package draws", () => {
-    // Dougu Sports 0.1.0 has no icon for the budo sports (judo, karate, kendo, sumo, kyudo and the dojo) yet: they are named here so that a new sport without one still fails.
-    const budo = ["judo", "karate", "kendo", "sumo", "kyudo", "dojo"];
-    for (const sport of SPORTS.filter((one) => !budo.includes(one))) expect(SPORT_NAMES, sport).toContain(sport);
+    // The dojo is a room for every budo, not a sport of its own in Dougu Sports: its icon is the judo one (`sport:judo`), the budo a dojo is most often built for and whose mats it is drawn with.
+    const icon = (sport: string): string => (sport === "dojo" ? "judo" : sport);
+    for (const sport of SPORTS) expect(SPORT_NAMES, sport).toContain(icon(sport));
   });
 
   it("every emblem is an image that holds the emblem and nothing that runs", () => {
