@@ -86,7 +86,11 @@ function drawHockey(read: HockeyRead, surface: Surface, env: SituationEnv): Situ
   }
   if (label !== undefined) {
     const pill = pillWidget(label, size, read.attacker === undefined ? undefined : sideOf(read.attacker, env.homeSide));
-    out.over += put(pill, ...inside(pill, surface.turned, vb, vb.x + vb.w / 2, vb.y + (surface.turned ? pill.w : pill.h) / 2 + 3), surface.turned);
+    // Wide, at the top of the ice in the middle; tall, just inside the top blue line, in the middle across.
+    const at = surface.turned
+      ? inside(pill, true, vb, (vb.x <= a.blueLine ? a.blueLine : vb.x) + pill.h / 2 + 3, vb.y + vb.h / 2)
+      : inside(pill, false, vb, vb.x + vb.w / 2, vb.y + pill.h / 2 + 3);
+    out.over += put(pill, ...at, surface.turned);
   }
   return out;
 }
@@ -151,8 +155,11 @@ function drawFootball(read: FootballRead, surface: Surface, env: SituationEnv): 
   // The drive chart: an arrow for each drive, in a lane of its own across the field.
   const n = read.drive.length;
   if (n > 0) {
-    const step = Math.min(10, (W - 20) / n);
-    const top = (W - step * n) / 2;
+    // The lanes lie across the field; the score's panel stands over the middle of it, so they go in the band below it.
+    const y0 = env.plate ? surface.plate.cy + surface.plate.h / 2 + 3 : 10;
+    const y1 = env.plate ? W - 6 : W - 10;
+    const step = Math.min(10, Math.max(2.4, (y1 - y0) / n));
+    const top = y0 + (y1 - y0 - step * n) / 2;
     read.drive.forEach((leg, i) => {
       const y = top + step * (i + 0.5);
       const x0 = at(leg.from, leg.toward);

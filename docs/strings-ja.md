@@ -1319,6 +1319,23 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `court_night` | Night | ナイト |
 | `court_sunburst` | Sunburst | サンバースト |
 | `court_tournament` | Tournament | トーナメント |
+| `groupSituation` | Situation | 試合の状況 |
+| `situation` | Show the situation | 状況を表示 |
+| `sitHockey` | Strength | 人数 |
+| `sithockey_pp` | Power play | パワープレー |
+| `sithockey_en` | Empty net | エンプティネット |
+| `sithockey_delayed` | Delayed penalty | ディレードペナルティ |
+| `sithockey_shootout` | Shootout | シュートアウト |
+| `sitFirst` | Runner on first | 一塁に走者 |
+| `sitSecond` | Runner on second | 二塁に走者 |
+| `sitThird` | Runner on third | 三塁に走者 |
+| `sitOuts` | Outs | アウト |
+| `sitCount` | Count | カウント |
+| `sitDown` | Down | ダウン |
+| `sitToGo` | To go | 残り |
+| `sitGoal` | Goal | ゴール前 |
+| `sitBallOn` | Ball on | ボールの位置 |
+| `sitDrive` | Drive chart | ドライブチャート |
 | `baseline` | Words on the baselines | ベースラインの文字 |
 | `centreLogo` | Logo at centre court | コート中央のロゴ |
 | `hardwood` | Real hardwood | リアルな木の床 |
@@ -1610,6 +1627,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `ranges` | Display ranges and zoom | 表示範囲とズーム |
 | page `layouts` | Layouts and backgrounds | レイアウトと背景 |
 | page `pageant` | The pageant: flags on the halves | ハーフに広げる旗とエンブレム |
+| page `situation` | The situation of a game | 試合の状況（人数・走者・ダウン） |
 | page `emblems` | Emblems: trophies, medals, balls and crests | トロフィー・メダル・ボール・エンブレム |
 | page `accessibility` | Accessibility | アクセシビリティ |
 | group `places` | Sports and places | 競技と場所 |
@@ -1656,6 +1674,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `gallery-ranges` | Gallery: display ranges and zoom | ギャラリー：表示範囲とズーム |
 | page `gallery-layouts` | Gallery: layouts and backgrounds | ギャラリー：レイアウトと背景 |
 | page `gallery-pageant` | Gallery: flags on the halves | ギャラリー：ハーフに広げる旗 |
+| page `gallery-situation` | Gallery: the situation of a game | ギャラリー：試合の状況 |
 | group `compare` | Compare | 比較 |
 | page `compare` | How it compares | 他のパッケージとの比較 |
 | group `reference` | Reference | リファレンス |

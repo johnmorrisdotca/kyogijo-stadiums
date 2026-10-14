@@ -4,7 +4,7 @@
 import { attackingIn } from "./frames.ts";
 import { KYOGIJO_STRINGS, fill, type SituationWords } from "./strings.ts";
 import type { DirectionOptions, Language, Side, Sport } from "./types.ts";
-import type { BaseballSituation, DriveLeg, DriveResult, FootballSituation, HockeySituation, Situation, SituationTeam } from "./situation.types.ts";
+import type { BaseballSituation, DriveResult, FootballSituation, HockeySituation, Situation, SituationTeam } from "./situation.types.ts";
 
 export type { BaseballSituation, DriveLeg, DriveResult, FootballSituation, HockeySituation, ShootoutAttempt, ShootoutRound, Situation, SituationTeam } from "./situation.types.ts";
 
@@ -164,6 +164,8 @@ function readHockey(s: HockeySituation, ctx: SituationContext): HockeyRead | und
   // The team that attacks: the one with the goalkeeper pulled, else the one with more skaters, else the one that has the puck in a delayed penalty.
   const attacker = pulled ?? more ?? (delayed === undefined ? undefined : other(delayed));
   if (away === undefined && home === undefined && pulled === undefined && delayed === undefined && clock === undefined) return undefined;
+  // Five against five and nothing else to say: there is nothing to draw.
+  if (away === 5 && home === 5 && pulled === undefined && delayed === undefined && clock === undefined) return undefined;
   const toward = s.toward === "left" || s.toward === "right" ? s.toward : attacker === undefined ? undefined : headingOf(attacker, ctx);
   const strength: [number, number] | undefined =
     away !== undefined && home !== undefined ? (attacker === "home" ? [home, away] : attacker === "away" ? [away, home] : [away, home]) : undefined;
@@ -339,8 +341,12 @@ export function tagOf(read: SituationRead, language: Language): string | undefin
   return parts.length === 0 ? undefined : parts.join(" · ");
 }
 
-/** The sentences a description adds for a situation. */
+/** The sentences a description adds for a situation, each beginning with a capital. */
 export function situationSentences(read: SituationRead, language: Language, names?: { home: string; away: string }): string[] {
+  return sentencesOf(read, language, names).map((line) => line.charAt(0).toLocaleUpperCase("en") + line.slice(1));
+}
+
+function sentencesOf(read: SituationRead, language: Language, names?: { home: string; away: string }): string[] {
   const w = words(language);
   const out: string[] = [];
   const name = (t: SituationTeam): string => names?.[t] ?? w[t];

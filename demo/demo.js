@@ -20,7 +20,7 @@ import { ROAD_FINAL, SERIES_LABELS, SERIES_LABELS_JA, nation, roadFinalists, roa
 import { roadToFinal } from "./dist/charts-entry.js";
 import { mlbSprayChart, nbaShotChart, nflPassChart, nhlShotMap, soccerShotMap } from "./dist/charts-entry.js";
 import { fenceAt } from "./dist/geometry-entry.js";
-import { FIELDS, SEGS, chosenLeague, hasSeasons, hiddenRows, hiddenStatus, isOwnLeague, labelOf as labelsFor, loadGame as loadGameInto, makeState, optionsFor as optionsOf, seasonRange, usesEmblems } from "./model.js";
+import { FIELDS, SEGS, SITUATION_SPORTS, chosenLeague, hasSeasons, hiddenRows, hiddenStatus, isOwnLeague, labelOf as labelsFor, loadGame as loadGameInto, makeState, optionsFor as optionsOf, seasonRange, usesEmblems } from "./model.js";
 import { WORDS } from "./words.js";
 
 const $ = (id) => document.getElementById(id);
@@ -122,6 +122,11 @@ makeSeg("winner", (v) => { state.winner = v; });
 makeSeg("detail", (v) => { state.detail = v; });
 makeSeg("pageant", (v) => { state.pageant = v; });
 makeSeg("pageant-lines", (v) => { state.pageantLines = v; });
+makeSeg("sit-hockey", (v) => { state.sitHockey = v; });
+makeSeg("sit-outs", (v) => { state.sitOuts = v; });
+makeSeg("sit-count", (v) => { state.sitCount = v; });
+makeSeg("sit-down", (v) => { state.sitDown = v; });
+makeSeg("sit-togo", (v) => { state.sitToGo = v; });
 makeSeg("court", (v) => { state.court = v; });
 makeSeg("pool-look", (v) => { state.poolLook = v; });
 makeSeg("pool-deck", (v) => { state.poolDeck = v; });
@@ -148,6 +153,16 @@ function clampYear(year) {
   return Math.min(to, Math.max(from, year));
 }
 $("era-year").addEventListener("input", (event) => { state.year = Number(event.target.value); change(); });
+$("sit-ballon").addEventListener("input", (event) => { state.sitBallOn = Number(event.target.value); $("sit-ballon-out").textContent = String(state.sitBallOn); change(); });
+// A base is a character of the runners' string: 1 for a runner on it.
+for (const [i, id] of ["sit-b1", "sit-b2", "sit-b3"].entries()) {
+  $(id).addEventListener("click", () => {
+    const bases = [...state.sitBases];
+    bases[i] = bases[i] === "1" ? "0" : "1";
+    state.sitBases = bases.join("");
+    change();
+  });
+}
 $("crowd-density").addEventListener("input", (event) => { state.crowdDensity = Number(event.target.value); $("crowd-density-out").textContent = `${state.crowdDensity}%`; change(); });
 
 /** The season control's contents: the markings that differed from today's, for the sports that have a history (`hiddenRows` shows the rows). */
@@ -175,7 +190,7 @@ function renderEra() {
 function toggle(id, key) {
   $(id).addEventListener("click", () => { state[key] = !state[key]; $(id).setAttribute("aria-pressed", String(state[key])); change(); });
 }
-for (const [id, key] of [["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["crowd", "crowd"], ["crowd-tifo", "crowdTifo"], ["flags", "flags"], ["pageant-emblem", "pageantEmblem"], ["emblem-line", "emblemLine"], ["pageant-entrance", "pageantEntrance"], ["pool-section", "poolSection"]]) toggle(id, key);
+for (const [id, key] of [["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["crowd", "crowd"], ["crowd-tifo", "crowdTifo"], ["flags", "flags"], ["pageant-emblem", "pageantEmblem"], ["emblem-line", "emblemLine"], ["pageant-entrance", "pageantEntrance"], ["pool-section", "poolSection"], ["situation", "situation"], ["sit-drive", "sitDrive"]]) toggle(id, key);
 $("emblem-line").addEventListener("click", () => refreshSegs());
 $("pageant-emblem").addEventListener("click", () => refreshSegs());
 
@@ -333,7 +348,10 @@ function render() {
   }
   renderEra();
   applyRows();
-  for (const toggleOf of [["flags", "flags"], ["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["crowd", "crowd"], ["crowd-tifo", "crowdTifo"], ["pageant-emblem", "pageantEmblem"], ["emblem-line", "emblemLine"], ["pageant-entrance", "pageantEntrance"], ["pool-section", "poolSection"]]) $(toggleOf[0]).setAttribute("aria-pressed", String(state[toggleOf[1]]));
+  for (const toggleOf of [["flags", "flags"], ["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["crowd", "crowd"], ["crowd-tifo", "crowdTifo"], ["pageant-emblem", "pageantEmblem"], ["emblem-line", "emblemLine"], ["pageant-entrance", "pageantEntrance"], ["pool-section", "poolSection"], ["situation", "situation"], ["sit-drive", "sitDrive"]]) $(toggleOf[0]).setAttribute("aria-pressed", String(state[toggleOf[1]]));
+  for (const [i, id] of ["sit-b1", "sit-b2", "sit-b3"].entries()) $(id).setAttribute("aria-pressed", String(state.sitBases[i] === "1"));
+  $("sit-ballon").value = String(state.sitBallOn);
+  $("sit-ballon-out").textContent = String(state.sitBallOn);
   $("crowd-density").value = String(state.crowdDensity);
   $("crowd-density-out").textContent = `${state.crowdDensity}%`;
   updateEmbed();
@@ -357,6 +375,16 @@ function syncUrl() {
   else q.delete("emblemid");
   if (state.emblemLine) q.set("emblemline", "1");
   else q.delete("emblemline");
+  // The situation: only what the sport on show uses is written.
+  const sit = state.situation && SITUATION_SPORTS.includes(state.sport);
+  for (const [key, value, base, used] of [["sithockey", state.sitHockey, "pp", state.sport === "nhl"], ["sitbases", state.sitBases, "101", state.sport === "mlb"], ["sitouts", state.sitOuts, "2", state.sport === "mlb"], ["sitcount", state.sitCount, "3-2", state.sport === "mlb"], ["sitdown", state.sitDown, "3", !(state.sport === "nhl" || state.sport === "mlb")], ["sittogo", state.sitToGo, "7", !(state.sport === "nhl" || state.sport === "mlb")], ["sitballon", String(state.sitBallOn), "88", !(state.sport === "nhl" || state.sport === "mlb")]]) {
+    if (sit && used && value !== base) q.set(key, value);
+    else q.delete(key);
+  }
+  if (sit) q.set("situation", "1");
+  else q.delete("situation");
+  if (sit && state.sitDrive && !(state.sport === "nhl" || state.sport === "mlb")) q.set("sitdrive", "1");
+  else q.delete("sitdrive");
   history.replaceState(history.state, "", `${location.pathname}?${q.toString()}${location.hash}`);
 }
 
@@ -400,7 +428,7 @@ function code(kind) {
       for (const [key, attr] of [["status", "status"], ["competition", "competition"], ["date", "date"], ["label", "label"], ["winner", "winner"]]) if (o[key]) attrs.push(`${attr}="${escapeAttr(o[key])}"`);
     }
     // What has no attribute of its own goes in the `options` JSON.
-    const more = { ...(o.court ? { court: o.court } : {}), ...(o.sheet ? { sheet: o.sheet } : {}), ...(o.crowd ? { crowd: o.crowd } : {}), ...(o.pageant ? { pageant: o.pageant } : {}), ...(o.pool ? { pool: o.pool } : {}), ...(o.athletics ? { athletics: o.athletics } : {}) };
+    const more = { ...(o.court ? { court: o.court } : {}), ...(o.sheet ? { sheet: o.sheet } : {}), ...(o.crowd ? { crowd: o.crowd } : {}), ...(o.pageant ? { pageant: o.pageant } : {}), ...(o.pool ? { pool: o.pool } : {}), ...(o.athletics ? { athletics: o.athletics } : {}), ...(o.situation ? { situation: o.situation } : {}) };
     if (Object.keys(more).length > 0) attrs.push(`options='${JSON.stringify(more).replace(/'/g, "&#39;")}'`);
     const plug = usesEmblems(state) ? `<script type="module">\n  import { useEmblems } from "${CDN}/dist/element-entry.js";\n  import { renderEmblem } from "${DOUGU}/dist/emblems-entry.js";\n  useEmblems(renderEmblem);\n</script>\n` : "";
     return `<script type="module" src="${CDN}/dist/element-define.js"></script>\n${plug}\n<kyogijo-field\n  ${attrs.join("\n  ")}\n></kyogijo-field>`;

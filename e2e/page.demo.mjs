@@ -128,6 +128,61 @@ test("the crowd chip draws the stands on any sport, its slider sets how full the
   await expect(page.locator(at("crowd-density-out"))).toHaveText("40%");
 });
 
+test("the situation's controls are a finger wide, draw a power play, the lit bases and the line of scrimmage, and the address can ask for them", async ({ page }, testInfo) => {
+  const finger = async (locator) => {
+    const box = await locator.boundingBox();
+    expect(box.width).toBeGreaterThanOrEqual(43.5);
+    expect(box.height).toBeGreaterThanOrEqual(43.5);
+  };
+  await open(page, "?sport=nhl&lang=en&help=off&size=surface&orientation=landscape");
+  await openGroups(page);
+  const chip = page.locator(at("situation"));
+  await expect(chip).toHaveText("Show the situation");
+  await expect(chip).toHaveAttribute("aria-pressed", "false");
+  await expect(page.locator("#sit-hockey-row")).toBeHidden();
+  await expect(svg(page).locator("g.ky-sit-pill")).toHaveCount(0);
+  await finger(chip);
+  await tap(page, chip, testInfo);
+  await expect(chip).toHaveAttribute("aria-pressed", "true");
+  await expect(svg(page).locator("g.ky-sit-pill")).toHaveCount(1);
+  await expect(svg(page).locator("rect.ky-sit-zone")).toHaveCount(1);
+  expect(await page.locator(at("embed-code")).textContent()).toContain("situation");
+  for (const button of await page.locator(`${at("sit-hockey")} button`).all()) await finger(button);
+  await tap(page, `${at("sit-hockey")} button[data-value="shootout"]`, testInfo);
+  await expect(svg(page).locator("g.ky-sit-strip")).toHaveCount(1);
+  expect(new URL(page.url()).searchParams.get("sithockey")).toBe("shootout");
+  // Baseball: the bases are chips, a finger wide, and the ones that are on are lit.
+  await page.locator(`${at("sport")} button[data-value="mlb"]`).click();
+  await expect(page.locator("#sit-baseball-row")).toBeVisible();
+  await expect(svg(page).locator("path.ky-sit-lit")).toHaveCount(2);
+  for (const id of ["sit-b1", "sit-b2", "sit-b3"]) await finger(page.locator(at(id)));
+  await tap(page, at("sit-b2"), testInfo);
+  await expect(svg(page).locator("path.ky-sit-lit")).toHaveCount(3);
+  await expect(svg(page).locator("g.ky-sit-bug")).toHaveCount(1);
+  // Football: the line of scrimmage and the red zone follow the slider, a finger tall, and a drive chart is a chip.
+  await page.locator(`${at("sport")} button[data-value="nfl"]`).click();
+  await expect(page.locator("#sit-football-row")).toBeVisible();
+  await expect(svg(page).locator("path.ky-sit-los")).toHaveCount(1);
+  await expect(svg(page).locator("rect.ky-sit-red")).toHaveCount(1);
+  const slider = page.locator(at("sit-ballon"));
+  expect((await slider.boundingBox()).height).toBeGreaterThanOrEqual(43.5);
+  await slider.fill("40");
+  await expect(page.locator(at("sit-ballon-out"))).toHaveText("40");
+  await expect(svg(page).locator("rect.ky-sit-red")).toHaveCount(0);
+  await finger(page.locator(at("sit-drive")));
+  await tap(page, at("sit-drive"), testInfo);
+  await expect(svg(page).locator("path.ky-sit-dr")).toHaveCount(3);
+  for (const button of await page.locator(`${at("sit-down")} button, ${at("sit-togo")} button`).all()) await finger(button);
+  // The sports that have none do not show the group, and the address can ask for a situation.
+  await page.locator(`${at("sport")} button[data-value="nba"]`).click();
+  await expect(page.locator("#situation-group")).toBeHidden();
+  await open(page, "?sport=mlb&lang=en&help=off&size=surface&situation=1&sitbases=111&sitouts=1&sitcount=1-1");
+  await expect(svg(page).locator("path.ky-sit-lit")).toHaveCount(3);
+  await expect(page.locator(at("sit-b3"))).toHaveAttribute("aria-pressed", "true");
+  await open(page, "?sport=cfl&lang=en&help=off&size=surface&situation=1&sitdown=3&sitballon=98");
+  expect(await svg(page).locator("desc").textContent()).toContain("3rd and 7");
+});
+
 test("editing a team's name, score and colour redraws the drawing", async ({ page }) => {
   await open(page, "?sport=nhl&lang=en&help=off&orientation=landscape");
   await page.locator(at("home-name")).fill("Ice Kings");

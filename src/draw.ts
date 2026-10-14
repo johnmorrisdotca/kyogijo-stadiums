@@ -803,13 +803,14 @@ function drawnKyogijo(o: SurfaceOptions | ScoreOptions): string {
     if (sport === "curling" && portrait) pageant = { ...pageant, score: "centre", emblem: undefined };
     else if (sized === "full") sized = "compact";
   }
-  const id = drawingId(o);
+  // The situation of the game (hockey's skaters, baseball's runners, football's down), decided once: the surface, the badge and the description draw from it.
+  const situation = situationOf(o);
+  // A situation that is not drawn (a sport that has none, nothing the sport can have in it) leaves the drawing, its ids included, as it was.
+  const id = drawingId(o.situation !== undefined && situation === undefined ? { ...o, situation: undefined } : o);
   const parts = o.parts === true;
   const homeSide: Side = isScore(o) ? resolveHomeSide({ ...o, sport }) : "right";
   const awaySide: Side = homeSide === "left" ? "right" : "left";
   const uppercase = !isScore(o) || o.uppercase !== false;
-  // The situation of the game (hockey's skaters, baseball's runners, football's down), decided once: the surface, the badge and the description draw from it.
-  const situation = situationOf(o);
 
   let left: TeamView | undefined;
   let right: TeamView | undefined;
