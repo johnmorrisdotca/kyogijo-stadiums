@@ -42,6 +42,10 @@ export const RANGES: Readonly<Record<Sport, readonly RangeInfo[]>> = Object.free
   cricket: Object.freeze([range("pitch"), range("circle", undefined, ["icc-men", "icc-women"])]),
   fieldhockey: Object.freeze([range("half", "left"), range("circle", "right"), range("twenty-three", "right")]),
   handball: Object.freeze([range("half", "left"), range("goal-area", "right")]),
+  swimming: Object.freeze([range("half", "left"), range("pool-end", "left")]),
+  waterpolo: Object.freeze([range("half", "left"), range("goal-area", "right")]),
+  diving: Object.freeze([range("springboards", "left"), range("platforms", "right")]),
+  artisticswimming: Object.freeze([range("half", "left"), range("centre-stage")]),
 });
 
 /** What a drawing's `range` asks for, checked: a name (at an end, or at its default) or a box. */

@@ -30,6 +30,10 @@ const AREA: Record<Sport, { x: [number, number]; y: [number, number] }> = {
   cricket: { x: [0, 450], y: [0, 450] },
   fieldhockey: { x: [0, 299.87], y: [0, 180.45] },
   handball: { x: [0, 131.23], y: [0, 65.62] },
+  swimming: { x: [0, 164.04], y: [0, 82.02] },
+  waterpolo: { x: [0, 83.99], y: [0, 65.62] },
+  diving: { x: [0, 68.9], y: [0, 82.02] },
+  artisticswimming: { x: [0, 98.43], y: [0, 65.62] },
 };
 
 /** Made-up marks spread over a surface: a cluster of normal deviates round its middle, from a fixed seed. */
@@ -73,6 +77,10 @@ const ZONE_FOR: Record<Sport, Layer> = {
   cricket: { kind: "zones", zones: "cricket-ground", data: cloud("cricket", 200) },
   fieldhockey: { kind: "zones", zones: "field-thirds", data: cloud("fieldhockey", 200) },
   handball: { kind: "zones", zones: "field-thirds", data: cloud("handball", 200) },
+  swimming: { kind: "zones", zones: "pool-lanes", data: cloud("swimming", 200) },
+  waterpolo: { kind: "zones", zones: "water-polo-areas", data: cloud("waterpolo", 200) },
+  diving: { kind: "zones", zones: "pool-thirds", data: cloud("diving", 200) },
+  artisticswimming: { kind: "zones", zones: "pool-thirds", data: cloud("artisticswimming", 200) },
 };
 
 describe("every heat layer on every surface", () => {

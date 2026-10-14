@@ -14,6 +14,11 @@ export const HOME_FIRST: Readonly<Record<Sport, boolean>> = Object.freeze({
   fieldhockey: true,
   handball: true,
   cricket: true,
+  // Water polo lists the home team first. A swimming, diving or artistic swimming dual meet follows the North American convention: the visitor is listed first.
+  waterpolo: true,
+  swimming: false,
+  diving: false,
+  artisticswimming: false,
   // North American professional and college leagues, and the leagues that follow them: the visitor is listed first.
   lacrosse: false,
   nfl: false,

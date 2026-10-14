@@ -8,13 +8,14 @@ import type { LookName, Sport } from "./types.ts";
 /** The parts of a palette, each a custom property of the stylesheet. */
 export type PaletteKey =
   | "ink" | "line" | "apron" | "surface" | "alt" | "zone" | "boards" | "red" | "blue" | "dirt" | "foul" | "infield" | "crease" | "key" | "court"
-  | "post" | "pylon" | "rgo" | "rgm" | "rgi" | "rgb" | "hog" | "hack" | "fgz" | "pebble" | "free" | "net" | "area";
+  | "post" | "pylon" | "rgo" | "rgm" | "rgi" | "rgb" | "hog" | "hack" | "fgz" | "pebble" | "free" | "net" | "area"
+  | "ropeg" | "ropeb" | "ropey" | "roper" | "ropew" | "pad" | "block";
 
 /** Colours by part. */
 export type Palette = Partial<Record<PaletteKey, string>>;
 
 /** The surfaces that are painted alike: football's three fields are one. */
-export type Group = "football" | "nhl" | "nba" | "mlb" | "soccer" | "curling" | "net";
+export type Group = "football" | "nhl" | "nba" | "mlb" | "soccer" | "curling" | "net" | "pool";
 
 /** One mode of a look: a palette for every sport, and what a group of sports changes in it. */
 export interface Mode {
@@ -35,10 +36,11 @@ const PROPERTY: Readonly<Record<PaletteKey, string>> = {
   red: "--ky-red", blue: "--ky-blue", dirt: "--ky-dirt", foul: "--ky-foul", infield: "--ky-infield", crease: "--ky-crease", key: "--ky-key", court: "--ky-court",
   post: "--ky-post", pylon: "--ky-pylon", rgo: "--ky-rg-o", rgm: "--ky-rg-m", rgi: "--ky-rg-i", rgb: "--ky-rg-b", hog: "--ky-hog", hack: "--ky-hack",
   fgz: "--ky-fgz", pebble: "--ky-pebble", free: "--ky-free", net: "--ky-net", area: "--ky-area",
+  ropeg: "--ky-pg", ropeb: "--ky-pb", ropey: "--ky-py", roper: "--ky-pr", ropew: "--ky-pw", pad: "--ky-pd", block: "--ky-pk",
 };
 
 /** The sports of each group. */
-const GROUP_SPORTS: Readonly<Record<Group, readonly string[]>> = { football: ["nfl", "cfl", "ifaf"], nhl: ["nhl"], nba: ["nba"], mlb: ["mlb"], soccer: ["soccer"], curling: ["curling"], net: ["tennis", "volleyball", "badminton", "pickleball", "tabletennis"] };
+const GROUP_SPORTS: Readonly<Record<Group, readonly string[]>> = { football: ["nfl", "cfl", "ifaf"], nhl: ["nhl"], nba: ["nba"], mlb: ["mlb"], soccer: ["soccer"], curling: ["curling"], net: ["tennis", "volleyball", "badminton", "pickleball", "tabletennis"], pool: ["swimming", "waterpolo", "diving", "artisticswimming"] };
 
 /** The group a sport is painted with, or `undefined` for a surface with no palette of its own (it takes the look's base). */
 export const groupOf = (sport: Sport | string): Group | undefined => (Object.keys(GROUP_SPORTS) as Group[]).find((group) => GROUP_SPORTS[group].includes(sport));
@@ -56,6 +58,7 @@ const GRASS: Look = {
       soccer: { surface: "#4c9b56", alt: "#438f4d", apron: "#c9d2bd" },
       curling: { surface: "#eaf3f9", apron: "#cfd8de", boards: "#8d98a0", line: "#23292d", rgo: "#2a5db0", rgm: "#ffffff", rgi: "#c8372d", rgb: "#ffffff", hog: "#c8372d", hack: "#3a4046", fgz: "rgba(42,93,176,.1)", pebble: "rgba(110,140,165,.4)" },
       net: { surface: "#3d78bd", alt: "#3d78bd", free: "#2f5f9a", apron: "#dcd8c9", area: "#4a86c8", net: "#20262b" },
+      pool: { surface: "#3fb4e6", alt: "#2a9bd2", apron: "#e3e1d9", boards: "#f7f6f1", line: "#0c3a5c", ropeg: "#1fa35a", ropeb: "#1b66d3", ropey: "#f4c514", roper: "#e0392f", ropew: "#fbfcfd", pad: "#f3d32c", block: "#454f59" },
     },
   },
   dark: {
@@ -67,6 +70,7 @@ const GRASS: Look = {
       soccer: { surface: "#2d6c3e", alt: "#276136", apron: "#1b1f1c" },
       curling: { surface: "#8fa6b7", apron: "#1a2025", boards: "#4b5156", line: "#11171b", rgo: "#3f6cc0", rgm: "#dfe8ef", rgi: "#c9473e", rgb: "#dfe8ef", hog: "#8a1f19", hack: "#161b1f", fgz: "rgba(20,40,90,.18)", pebble: "rgba(80,105,125,.4)" },
       net: { surface: "#2f5f99", alt: "#2f5f99", free: "#244a78", apron: "#1b1f1c", area: "#3a6fae", net: "#e6e9ec" },
+      pool: { surface: "#1d7aa8", alt: "#176b97", apron: "#1f252a", boards: "#3a434b", line: "#031118", ropeg: "#2bb169", ropeb: "#3d86ea", ropey: "#efc22a", roper: "#e65248", ropew: "#e9eef2", pad: "#dcc23a", block: "#6a7683" },
     },
   },
 };
@@ -79,6 +83,7 @@ const NIGHT_DARK: Mode = {
     mlb: { surface: "#1d4a2c" },
     soccer: { surface: "#1d4a2c" },
     curling: { surface: "#2a3a47", boards: "#3a4652", line: "#e6eef5", rgo: "#6a97ff", rgm: "#dfe8ef", rgi: "#ff6b5e", rgb: "#dfe8ef", hog: "#ff7a6e", hack: "#c9d3da", fgz: "rgba(120,160,255,.12)", pebble: "rgba(190,210,225,.35)" },
+    pool: { surface: "#14587a", alt: "#104a68", apron: "#070a10", boards: "#232b38", line: "#d4e9f5", ropeg: "#2bb169", ropeb: "#3d86ea", ropey: "#efc22a", roper: "#e65248", ropew: "#e9eef2", pad: "#dcc23a", block: "#6a7683" },
   },
 };
 
@@ -90,6 +95,7 @@ const NIGHT: Look = {
 
 const chalkboard = (surface: string, alt: string, apron: string): Mode => ({
   base: { ink: "#eef0e6", line: "#f4f1e6", apron, surface, alt, zone: "#26332d", boards: "#4a5a52", red: "#f1a8a0", blue: "#a5c8ee", dirt: "#3e4a42", foul: "#26312b", infield: "#34423a", crease: "#3b4d58", key: "#3a463f", court: "#2e4655", post: "#f2e6a8", pylon: "#f1b98a", rgo: "#a5c8ee", rgm: "#f4f1e6", rgi: "#f1a8a0", rgb: "#f4f1e6", hog: "#f1a8a0", hack: "#d8d4c4", fgz: "rgba(165,200,238,.12)", pebble: "rgba(244,241,230,.25)" },
+  groups: { pool: { ropeg: "#9fd8a8", ropeb: "#a5c8ee", ropey: "#f2e6a8", roper: "#f1a8a0", ropew: "#f4f1e6", pad: "#f2e6a8", block: "#5d6e65" } },
 });
 
 const CHALKBOARD: Look = {
@@ -100,6 +106,7 @@ const CHALKBOARD: Look = {
 
 const blueprint = (surface: string, alt: string, apron: string, boards: string): Mode => ({
   base: { ink: "#e6f1ff", line: "#e6f1ff", apron, surface, alt, zone: alt, boards, red: "#ffd1c9", blue: "#bfe0ff", dirt: "#2a64a8", foul: alt, infield: "#2358a0", crease: "#2f6aae", key: "#164277", court: surface, post: "#ffe08a", pylon: "#ffb86b", rgo: "#8ec1ff", rgm: "#e6f1ff", rgi: "#ffd1c9", rgb: "#e6f1ff", hog: "#ffd1c9", hack: "#cfe3fb", fgz: "rgba(190,224,255,.14)", pebble: "rgba(230,241,255,.25)" },
+  groups: { pool: { ropeg: "#8fe0c0", ropeb: "#8ec1ff", ropey: "#ffe08a", roper: "#ffd1c9", ropew: "#e6f1ff", pad: "#ffe08a", block: "#2c63a6" } },
 });
 
 const BLUEPRINT: Look = {
@@ -112,9 +119,11 @@ const PRINT: Look = {
   about: "Black on white with greys for the parts a colour would tell apart: for a printer that has no colour (dark: the same as white on black).",
   light: {
     base: { ink: "#111111", line: "#111111", apron: "#ffffff", surface: "#ffffff", alt: "#f0f0f0", zone: "#d9d9d9", boards: "#888888", red: "#444444", blue: "#111111", dirt: "#d6d6d6", foul: "#fafafa", infield: "#ececec", crease: "#e4e4e4", key: "#d4d4d4", court: "#e8e8e8", post: "#333333", pylon: "#333333", rgo: "#666666", rgm: "#eeeeee", rgi: "#999999", rgb: "#ffffff", hog: "#444444", hack: "#222222", fgz: "rgba(0,0,0,.08)", pebble: "rgba(0,0,0,.18)" },
+    groups: { pool: { ropeg: "#555555", ropeb: "#8a8a8a", ropey: "#bdbdbd", roper: "#333333", ropew: "#ffffff", pad: "#dddddd", block: "#444444" } },
   },
   dark: {
     base: { ink: "#f2f2f2", line: "#f2f2f2", apron: "#000000", surface: "#111111", alt: "#1a1a1a", zone: "#2a2a2a", boards: "#777777", red: "#cfcfcf", blue: "#ffffff", dirt: "#333333", foul: "#0a0a0a", infield: "#1e1e1e", crease: "#262626", key: "#2e2e2e", court: "#1c1c1c", post: "#dddddd", pylon: "#dddddd", rgo: "#aaaaaa", rgm: "#222222", rgi: "#777777", rgb: "#000000", hog: "#cfcfcf", hack: "#eeeeee", fgz: "rgba(255,255,255,.1)", pebble: "rgba(255,255,255,.2)" },
+    groups: { pool: { ropeg: "#cfcfcf", ropeb: "#8f8f8f", ropey: "#5c5c5c", roper: "#e6e6e6", ropew: "#ffffff", pad: "#777777", block: "#cfcfcf" } },
   },
 };
 
@@ -124,6 +133,7 @@ const BROADCAST_LIGHT: Mode = {
     nhl: { surface: "#f4f9ff", alt: "#ecf3fb", boards: "#3b4d66", red: "#d11f17", blue: "#1a49c4" },
     nba: { surface: "#b97a2e", alt: "#af7228", key: "#1d4ed8", boards: "#6b4318" },
     curling: { surface: "#f4f9ff", boards: "#3b4d66", line: "#0d1b2e", rgo: "#1a49c4", rgm: "#ffffff", rgi: "#d11f17", rgb: "#ffffff", hog: "#d11f17", hack: "#1a2a40", fgz: "rgba(26,73,196,.12)", pebble: "rgba(80,110,150,.4)" },
+    pool: { surface: "#1b9ad6", alt: "#1480b8", apron: "#0d1b2e", boards: "#1a2a40", line: "#06243a", ropeg: "#17b45e", ropeb: "#1f56d6", ropey: "#ffd21f", roper: "#e0342b", ropew: "#ffffff", pad: "#ffd21f", block: "#2c3a50" },
   },
 };
 
@@ -136,6 +146,7 @@ const BROADCAST: Look = {
       nhl: { surface: "#2f4e6e", alt: "#2a4766", boards: "#223047", red: "#ff8a80", blue: "#8db6ff" },
       nba: { surface: "#8f5b1f", alt: "#865418", key: "#1d4ed8", boards: "#4a2f10" },
       curling: { surface: "#7f9db8", boards: "#223047", line: "#0d1b2e", rgo: "#1a49c4", rgm: "#e6eef5", rgi: "#b3140d", rgb: "#e6eef5", hog: "#8f0f09", hack: "#0d1b2e", fgz: "rgba(26,73,196,.15)", pebble: "rgba(40,70,100,.35)" },
+      pool: { surface: "#1479ad", alt: "#10688f", apron: "#060d18", boards: "#223047", line: "#021018", ropeg: "#17b45e", ropeb: "#3d86ea", ropey: "#ffd21f", roper: "#e0342b", ropew: "#ffffff", pad: "#ffd21f", block: "#2c3a50" },
     },
   },
 };
@@ -144,9 +155,11 @@ const HIGH_CONTRAST: Look = {
   about: "Black on white, or white on black: every line at the highest contrast the colours allow (WCAG AAA), for low vision and for projectors.",
   light: {
     base: { ink: "#000000", line: "#000000", apron: "#ffffff", surface: "#ffffff", alt: "#e6e6e6", zone: "#e6e6e6", boards: "#000000", red: "#b00020", blue: "#0030c0", dirt: "#d0d0d0", foul: "#f2f2f2", infield: "#e0e0e0", crease: "#dcdcdc", key: "#cfcfcf", court: "#e6e6e6", post: "#000000", pylon: "#000000", rgo: "#0030c0", rgm: "#ffffff", rgi: "#b00020", rgb: "#ffffff", hog: "#b00020", hack: "#000000", fgz: "rgba(0,48,192,.12)", pebble: "rgba(0,0,0,.25)" },
+    groups: { pool: { ropeg: "#006b2d", ropeb: "#0030c0", ropey: "#7a5c00", roper: "#b00020", ropew: "#000000", pad: "#e0e0e0", block: "#000000" } },
   },
   dark: {
     base: { ink: "#ffffff", line: "#ffffff", apron: "#000000", surface: "#000000", alt: "#141414", zone: "#141414", boards: "#ffffff", red: "#ff6b6b", blue: "#7fb2ff", dirt: "#3a3a3a", foul: "#0a0a0a", infield: "#222222", crease: "#1a2a40", key: "#333333", court: "#0a0a0a", post: "#ffeb3b", pylon: "#ffeb3b", rgo: "#7fb2ff", rgm: "#000000", rgi: "#ff6b6b", rgb: "#000000", hog: "#ff6b6b", hack: "#ffffff", fgz: "rgba(127,178,255,.18)", pebble: "rgba(255,255,255,.3)" },
+    groups: { pool: { ropeg: "#4ade80", ropeb: "#7fb2ff", ropey: "#ffeb3b", roper: "#ff6b6b", ropew: "#ffffff", pad: "#444444", block: "#ffffff" } },
   },
 };
 
@@ -193,6 +206,7 @@ export const LOOK_PAIRS: Readonly<Record<Group | "all", readonly (readonly [Pale
   soccer: [["line", "surface", 3], ["line", "alt", 3], ["line", "court", 3]],
   curling: [["line", "surface", 3], ["hog", "surface", 3], ["hack", "surface", 3]],
   net: [["line", "surface", 3], ["line", "free", 3], ["line", "area", 3]],
+  pool: [["line", "surface", 3], ["line", "alt", 3]],
 };
 
 /** The contrast ratio of two colours (WCAG 2.2): 1 to 21, or `undefined` when a colour cannot be read without a browser. */

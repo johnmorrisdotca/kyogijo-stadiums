@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { COURT_THEMES } from "./themes.ts";
 import { SPORTS, drawKyogijo } from "./draw.ts";
 import { isFieldSport } from "./fields.ts";
+import { isPoolSport } from "./pool.ts";
 import { hash } from "./format.ts";
 import type { ScoreOptions, SurfaceOptions } from "./types.ts";
 
@@ -19,8 +20,8 @@ const game: Omit<ScoreOptions, "sport"> = {
 /** Every drawing the fingerprint is made of: name and options. */
 function matrix(): [string, SurfaceOptions | ScoreOptions][] {
   const out: [string, SurfaceOptions | ScoreOptions][] = [];
-  // The sports that were there before the field sports: the fingerprint is theirs.
-  for (const sport of SPORTS.filter((one) => !isFieldSport(one))) {
+  // The sports that were there before the field sports and the pools: the fingerprint is theirs.
+  for (const sport of SPORTS.filter((one) => !isFieldSport(one) && !isPoolSport(one))) {
     out.push([`${sport} bare`, { sport, id: "same" }]);
     out.push([`${sport} bare dark`, { sport, id: "same", theme: "dark" }]);
     out.push([`${sport} portrait`, { sport, id: "same", orientation: "portrait" }]);

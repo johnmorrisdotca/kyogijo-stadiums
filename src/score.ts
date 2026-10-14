@@ -212,6 +212,18 @@ export function glyph(sport: Sport): string {
     case "handball":
       // A court: the centre line, and the goal areas with their arcs.
       return "M-18 -10H18V10H-18ZM0 -10V10M-18 -6A6 6 0 0 1 -12 0A6 6 0 0 1 -18 6M18 -6A6 6 0 0 0 12 0A6 6 0 0 0 18 6";
+    case "swimming":
+      // A pool: the lane ropes, and the cross lines at the ends of the lane markings.
+      return "M-18 -10H18V10H-18ZM-18 -5H18M-18 0H18M-18 5H18M-14 -7.5V-2.5M14 -7.5V-2.5M-14 2.5V7.5M14 2.5V7.5";
+    case "waterpolo":
+      // A field: the half distance line, the 2 and 6 metre lines, and a goal at each end.
+      return "M-18 -10H18V10H-18ZM0 -10V10M-14 -10V10M14 -10V10M-18 -3H-21V3H-18M18 -3H21V3H18M-9 -10V10M9 -10V10";
+    case "diving":
+      // A well: the boards along one wall, and the lines across the well.
+      return "M-18 -10H18V10H-18ZM-18 -7H-9V-5H-18ZM-18 -1H-12V1H-18ZM-18 5H-9V7H-18ZM0 -9V9M6 -9V9M12 -9V9";
+    case "artisticswimming":
+      // An area: the lines along the floor, and the judges' platform on one side.
+      return "M-18 -10H18V10H-18ZM-18 -5H18M-18 0H18M-18 5H18M-10 -13H10";
   }
 }
 

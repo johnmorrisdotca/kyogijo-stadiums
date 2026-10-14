@@ -17,6 +17,14 @@ import { diamondFence } from "./leagues/baseball.ts";
 import { fenceFor, parkById, parkNameIn, parkOfficialName } from "./parks.ts";
 import { boardMarkup, endText } from "./curling.board.ts";
 import { sheetFor } from "./sheet.ts";
+import { commonOf, isPoolSport, swimPlan, poloPlan, divePlan, artisticPlan } from "./pool.ts";
+import { natatorium } from "./surfaces/venue.ts";
+import { poolDescription } from "./pool.words.ts";
+import { KYOGIJO_POOL_STYLE, poolStyle } from "./pool.style.ts";
+import { swimming } from "./surfaces/pool.ts";
+import { waterPolo } from "./surfaces/polo.ts";
+import { diving } from "./surfaces/dive.ts";
+import { artistic } from "./surfaces/artistic.ts";
 import { cropToRange, describeRange, rangeLabel, shows } from "./ranges.ts";
 import { badgeMarkup, bannerMarkup, plateMarkup, stateOf, type TeamView } from "./score.ts";
 import { setsBoardMarkup } from "./sets.board.ts";
@@ -51,7 +59,7 @@ import { VERSION } from "./version.ts";
 export { isPortrait };
 
 /** The sports that can be drawn, in the order a menu lists them. */
-export const SPORTS: readonly Sport[] = ["nfl", "cfl", "ifaf", "nhl", "nba", "mlb", "soccer", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis", "lacrosse", "rugby", "afl", "gaelic", "cricket", "fieldhockey", "handball"];
+export const SPORTS: readonly Sport[] = ["nfl", "cfl", "ifaf", "nhl", "nba", "mlb", "soccer", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis", "swimming", "waterpolo", "diving", "artisticswimming", "lacrosse", "rugby", "afl", "gaelic", "cricket", "fieldhockey", "handball"];
 
 /** The CSS custom property each colour of `Colors` sets. */
 export const COLOR_PROPERTIES: Readonly<Record<keyof Colors, string>> = {
@@ -271,6 +279,15 @@ function buildWhole(o: SurfaceOptions, portrait: boolean, id: string, score: boo
     case "pickleball":
     case "tabletennis":
       return netCourt(common, courtFor({ ...o, sport }));
+    case "swimming":
+      if (o.pool?.venue !== undefined) return natatorium(common, o.pool, commonOf(o.pool), o.language === "ja" ? "ja" : "en");
+      return swimming(common, swimPlan({ ...o, sport }));
+    case "waterpolo":
+      return waterPolo(common, poloPlan(o));
+    case "diving":
+      return diving(common, divePlan(o));
+    case "artisticswimming":
+      return artistic(common, artisticPlan(o));
     case "lacrosse":
     case "rugby":
     case "afl":
@@ -412,7 +429,9 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
   const plan = sport === "curling" ? sheetFor(o) : undefined;
   // A field sport: the surface as drawn, at the size the options ask for.
   const field = isFieldSport(sport) ? fieldPlan({ ...o, sport }) : undefined;
-  const aboutText = field !== undefined ? leagueAbout(league ?? LEAGUES[sport as FieldSport][0], o.year, language, { length: field.length, width: field.width }) : plan !== undefined ? leagueAbout(plan.league, o.year, language, plan.spec) : league !== undefined ? leagueAbout(league, o.year, language) : pitch === undefined ? words.about[sport] : fill(pitch.format === "futsal" ? words.soccer.aboutFutsal : words.about.soccer, { length: metres(pitch.length), width: metres(pitch.width) });
+  const pools = isPoolSport(sport) ? poolDescription({ sport, pool: o.pool }, language) : undefined;
+  const poolLine = pools === undefined ? "" : pools.after.map((line) => `${gap}${line}`).join("");
+  const aboutText = pools !== undefined ? pools.about : field !== undefined ? leagueAbout(league ?? LEAGUES[sport as FieldSport][0], o.year, language, { length: field.length, width: field.width }) : plan !== undefined ? leagueAbout(plan.league, o.year, language, plan.spec) : league !== undefined ? leagueAbout(league, o.year, language) : pitch === undefined ? words.about[sport] : fill(pitch.format === "futsal" ? words.soccer.aboutFutsal : words.about.soccer, { length: metres(pitch.length), width: metres(pitch.width) });
   const about = `${words.said.on}${colon}${aboutText}${stop}`;
   const halfLine = pitch !== undefined && !isScore(o) && (o.half === "left" || o.half === "right") ? `${gap}${words.soccer.half}` : "";
   // What the ground says about the size: that it is the published one, or that the ground has none and the international pitch is drawn.
@@ -437,7 +456,7 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
         : "";
   // A range says what is shown; a curling score shows all of the sheet, whatever the range.
   const rangeLine = isScore(o) && sport === "curling" ? "" : describeRange(o, language, o.layers !== undefined && o.layers.length > 0);
-  if (!isScore(o)) return { title: o.title ?? special?.title ?? surfaceName, description: o.description ?? `${about}${parkLine}${eraLine}${rangeLine}` };
+  if (!isScore(o)) return { title: o.title ?? special?.title ?? surfaceName, description: o.description ?? `${about}${parkLine}${eraLine}${rangeLine}${poolLine}` };
   const winner = winnerOf({ ...o, sport });
   const s = (t: Team): string => fieldScoreText(sport, t) ?? (t.score === undefined || String(t.score) === "" ? "–" : String(t.score));
   // The sentence follows the drawing: the team on the left is first. The words' {away} and {home} are the first and the second team named.
@@ -504,7 +523,7 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
         : "";
   return {
     title: o.title ?? (status === undefined ? line : `${line}${words.said.sep}${status}`),
-    description: o.description ?? `${extra === "" ? "" : `${sentence(extra)}${gap}`}${sentence(line)}${result}${tied}${curlingLine}${netLine}${fieldLine}${gap}${about}${parkLine}${eraLine}${rangeLine}`.trim(),
+    description: o.description ?? `${extra === "" ? "" : `${sentence(extra)}${gap}`}${sentence(line)}${result}${tied}${curlingLine}${netLine}${fieldLine}${gap}${about}${parkLine}${eraLine}${rangeLine}${poolLine}`.trim(),
   };
 }
 
@@ -689,7 +708,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       style: style === "" ? undefined : style,
     },
     `<title id="${titleId}">${esc(title)}</title><desc id="${descId}">${esc(description)}</desc>` +
-      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${left?.round === true || right?.round === true ? `\n${KYOGIJO_MARK_STYLE}` : ""}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}${plan === undefined ? "" : `\n${courtStyle(plan.sport, plan.look)}`}${fieldsStyle(sport) === "" ? "" : `\n${fieldsStyle(sport)}`}${palette === undefined ? "" : `\n${lookStyle(palette)}`}${walled ? `\n${KYOGIJO_WALLS_STYLE}` : ""}${features === undefined ? "" : `\n${featureStyle(sport, features)}`}${notes === undefined || notes.svg === "" ? "" : `\n${KYOGIJO_NOTE_STYLE}`}${grounded ? `\n${KYOGIJO_BACKGROUND_STYLE}` : ""}${o.host === undefined ? "" : `\n${specialStyle(hostSport(o.host))}`}</style>`) +
+      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${left?.round === true || right?.round === true ? `\n${KYOGIJO_MARK_STYLE}` : ""}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}${isPoolSport(sport) ? `\n${o.pool?.venue !== undefined ? KYOGIJO_POOL_STYLE : poolStyle({ sport, ...commonOf(o.pool ?? {}), race: o.pool?.race !== undefined, section: o.pool?.section !== undefined && o.pool.section !== false })}` : ""}${plan === undefined ? "" : `\n${courtStyle(plan.sport, plan.look)}`}${fieldsStyle(sport) === "" ? "" : `\n${fieldsStyle(sport)}`}${palette === undefined ? "" : `\n${lookStyle(palette)}`}${walled ? `\n${KYOGIJO_WALLS_STYLE}` : ""}${features === undefined ? "" : `\n${featureStyle(sport, features)}`}${notes === undefined || notes.svg === "" ? "" : `\n${KYOGIJO_NOTE_STYLE}`}${grounded ? `\n${KYOGIJO_BACKGROUND_STYLE}` : ""}${o.host === undefined ? "" : `\n${specialStyle(hostSport(o.host))}`}</style>`) +
       (defs === "" ? "" : `<defs>${defs}</defs>`) +
       body,
   );
