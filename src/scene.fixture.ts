@@ -64,6 +64,12 @@ export function corpus(): Drawing[] {
   add("styled: a look, direction, axes and landmarks", { sport: "soccer", id: "snap", look: "night", direction: {}, axes: { frame: "opta", size: { length: 105, width: 68, unit: "m" } }, landmarks: true } as never);
   add("styled: football with axes and mowing", { sport: "nfl", id: "snap", direction: {}, landmarks: true, ...GAME } as never);
   add("an unusual unit and a text label", { sport: "nba", id: "snap", units: "m", court: { baselineText: ["North", "South"] } });
+  // The stands and the crowd: round a pitch with a card display, a tall football field with a score in the dark, a ballpark, an arena with data over it, and a thumbnail.
+  add("a crowd round a pitch", { sport: "soccer", id: "snap", crowd: { tifo: "both" }, leftColor: "#1d4f91", rightColor: "#b5452c" });
+  add("a crowd, tall, with a score, dark", { sport: "nfl", ...GAME, orientation: "portrait", theme: "dark", crowd: true });
+  add("a crowd in a ballpark", { sport: "mlb", id: "snap", park: "fenway-park", crowd: { shape: "bowl" } });
+  add("a crowd in an arena, with shots", { sport: "nba", id: "snap", crowd: { density: 0.6 }, layers: [{ kind: "points", data: [{ x: 20, y: 25 }, { x: 70, y: 10 }] } as Layer] });
+  add("a crowd as blocks, for a thumbnail", { sport: "nhl", id: "snap", crowd: true, width: 300 });
 
   const layer = (l: object): Layer => l as Layer;
   add("rink with shots, arrows, text and a key", { sport: "nhl", id: "snap", layers: shotMap().map(layer) });

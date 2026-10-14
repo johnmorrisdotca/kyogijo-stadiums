@@ -13,7 +13,7 @@ import { fieldScoreText, fieldTotal } from "./field.score.ts";
 import { fieldsStyle } from "./fields.style.ts";
 import { resolveHomeSide } from "./homeside.ts";
 import { LEAGUES, chooseLeague, courtOf, diamondOf, fieldOf, hasHistory, leagueSeason, leagueSize, netOf, rinkOf, sheetOf, type League } from "./leagues.ts";
-import { diamondFence } from "./leagues/baseball.ts";
+import { MLB_DIAMOND, diamondFence } from "./leagues/baseball.ts";
 import { fenceFor, parkById, parkNameIn, parkOfficialName } from "./parks.ts";
 import { boardMarkup, endText } from "./curling.board.ts";
 import { sheetFor } from "./sheet.ts";
@@ -24,13 +24,16 @@ import { KYOGIJO_STRINGS, fill } from "./strings.ts";
 import { courtStyle } from "./courts.style.ts";
 import { annotate, annotated, wideView, type Notes } from "./annotate.ts";
 import { KYOGIJO_BACKGROUND_STYLE, laidOn } from "./background.ts";
+import { densityOf, layoutOf as crowdLayout, resolveCrowd, type Crowd, type CrowdStands } from "./crowd.ts";
+import { drawCrowd, KYOGIJO_CROWD_STYLE } from "./crowd.draw.ts";
+import { parkLayout } from "./crowd.park.ts";
 import { featureColours, featureStyle } from "./features.ts";
 import { isLook, lookStyle } from "./look.ts";
 import { lineLook, restyleLines } from "./restyle.ts";
 import { KYOGIJO_MARK_STYLE } from "./mark.ts";
 import { KYOGIJO_BASE_STYLE, KYOGIJO_CURLING_STYLE, KYOGIJO_NOTE_STYLE, KYOGIJO_WALLS_STYLE } from "./style.ts";
 import { convertLength, type Unit } from "./units.ts";
-import { baseball } from "./surfaces/baseball.ts";
+import { baseball, fenceOutline } from "./surfaces/baseball.ts";
 import { curling } from "./surfaces/curling.ts";
 import { netCourt } from "./surfaces/net.ts";
 import { fieldSurface } from "./surfaces/field.ts";
@@ -286,11 +289,67 @@ function buildWhole(o: SurfaceOptions, portrait: boolean, id: string, score: boo
 
 /** The surface the options ask for, cropped to their `range` when they have one (a curling sheet's named ranges are its builder's own: `sheet.show`). */
 function buildSurface(o: SurfaceOptions, portrait: boolean, id: string, score: boolean, scored: boolean, extra: Extra): Surface {
-  const surface = buildWhole(o, portrait, id, score, scored, extra);
+  const crowd = o.host === undefined ? resolveCrowd(o.crowd) : undefined;
+  const surface = crowd === undefined ? buildWhole(o, portrait, id, score, scored, extra) : buildCrowded(o, portrait, id, score, scored, extra, crowd);
   // A score on a curling sheet shows all of it, for the board's sake.
   if (o.range === undefined || (scored && chooseLeague(o).sport === "curling")) return surface;
   const given = typeof o.margin === "number" && Number.isFinite(o.margin) && o.margin >= 0 ? convertLength(o.margin, lengthUnit(o), "ft") : undefined;
-  return cropToRange(surface, o, { id, margin: extra.room ?? extra.margin ?? given, panel: score });
+  return cropToRange(surface, o, { id, margin: extra.room ?? extra.margin ?? given ?? surface.crowdMargin, panel: score });
+}
+
+/** The fence of the ballpark the options ask for, as the drawing has it, and how far behind home plate the backstop stands. */
+function parkFence(o: SurfaceOptions): { points: ReturnType<typeof fenceFor>; backstop: number } {
+  const unit = lengthUnit(o);
+  const { league } = chooseLeague(o);
+  if (league?.family === "baseball") {
+    const diamond = diamondOf(league, o.year);
+    return { points: fenceFor(parkById(o.park), feetFence(o.fence, unit), o.year, diamondFence(diamond)), backstop: diamond.backstop };
+  }
+  return { points: fenceFor(parkById(o.park), feetFence(o.fence, unit), o.year), backstop: MLB_DIAMOND.backstop };
+}
+
+/** The stands round a surface, laid out from its box (or, for a ballpark, from its fence). */
+function standsFor(o: SurfaceOptions, surface: Surface, crowd: Crowd): CrowdStands {
+  const { sport } = chooseLeague(o);
+  const awaySide: Side = resolveHomeSide({ ...o, sport }) === "left" ? "right" : "left";
+  if (sport === "mlb") {
+    const { points, backstop } = parkFence(o);
+    return parkLayout({ fence: fenceOutline(points), backstop, crowd });
+  }
+  return crowdLayout({ sport, box: surface.whole ?? surface.box ?? { x: 0, y: 0, w: 100, h: 100 }, crowd, awaySide, ground: o.ground });
+}
+
+/** True when the drawing is asked to be small: `detail: "simple"` or a `width` under 480 pixels. */
+const smallDrawing = (o: SurfaceOptions): boolean => {
+  const w = typeof o.width === "number" ? o.width : typeof o.width === "string" && /^\s*\d+(?:\.\d+)?(?:px)?\s*$/.test(o.width) ? parseFloat(o.width) : undefined;
+  return o.detail === "simple" || (w !== undefined && w < 480);
+};
+
+/** A surface with the stands and the crowd round it: the ground is made as wide as the stands need, then the stands are laid on it under the surface. */
+function buildCrowded(o: SurfaceOptions, portrait: boolean, id: string, score: boolean, scored: boolean, extra: Extra, crowd: Crowd): Surface {
+  let margin = extra.margin;
+  if (!(typeof o.margin === "number" && Number.isFinite(o.margin) && o.margin >= 0)) {
+    // How much ground the stands need beyond what the surface has with none, then the surface is made again with it.
+    const probe = buildWhole({ ...o, margin: 0 }, portrait, id, score, scored, { ...extra, margin: undefined });
+    const stands = standsFor(o, probe, crowd);
+    const view = wideView(probe);
+    const have = { left: stands.box.x - view.x, right: view.x + view.w - stands.box.x - stands.box.w, top: stands.box.y - view.y, bottom: view.y + view.h - stands.box.y - stands.box.h };
+    const need = Math.max(stands.reach.left - have.left, stands.reach.right - have.right, stands.reach.top - have.top, stands.reach.bottom - have.bottom);
+    margin = Math.max(margin ?? 0, need + 6);
+  }
+  const surface = buildWhole(o, portrait, id, score, scored, { ...extra, margin });
+  const stands = standsFor(o, surface, crowd);
+  const seats = stands.seats;
+  const ground = groundById(o.ground)?.capacity;
+  const fine = crowd.detail === "fine" || (crowd.detail === "auto" && !smallDrawing(o));
+  const first = /^<[^>]*\/>/.exec(surface.base)?.[0] ?? "";
+  const bg = /class="([^"]*)"/.exec(first)?.[1] ?? "ky-apron";
+  const drawn = drawCrowd(stands, { id, crowd, density: densityOf(crowd, seats, ground), fine, ground: bg });
+  surface.base = first + drawn.markup + surface.base.slice(first.length);
+  surface.defs += drawn.defs;
+  surface.lines += drawn.over;
+  surface.crowdMargin = margin;
+  return surface;
 }
 
 /** The custom properties a drawing sets on its root, from the options' colours. */
@@ -318,6 +377,13 @@ function colourStyle(o: SurfaceOptions, teams: { left?: Team; right?: Team; home
   const rightInk = safeColour(teams.right?.textColor) ?? (right === undefined ? undefined : inkOn(right));
   if (leftInk !== undefined) props.push(`--ky-left-ink:${leftInk}`);
   if (rightInk !== undefined) props.push(`--ky-right-ink:${rightInk}`);
+  // The crowd's colours: the home fans in the home team's colour and the visitors in the other's, or the colours the crowd names.
+  const crowd = o.host === undefined ? resolveCrowd(o.crowd) : undefined;
+  if (crowd !== undefined) {
+    const homeLeft = resolveHomeSide({ ...o, sport: chooseLeague(o).sport }) === "left";
+    props.push(`--ky-cr-home:${safeColour(crowd.home) ?? (homeLeft ? left : right) ?? `var(--ky-${homeLeft ? "left" : "right"})`}`);
+    props.push(`--ky-cr-away:${safeColour(crowd.away) ?? (homeLeft ? right : left) ?? `var(--ky-${homeLeft ? "right" : "left"})`}`);
+  }
   return props.join(";");
 }
 
@@ -526,6 +592,8 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
  */
 export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
   if (o.host !== undefined && o.range !== undefined) return drawKyogijo({ ...o, range: undefined });
+  // A special game is a surface set inside another, drawn to scale with no stands.
+  if (o.host !== undefined && o.crowd !== undefined) return drawKyogijo({ ...o, crowd: undefined });
   const language: Language = o.language === "ja" ? "ja" : "en";
   // The sport as drawn: a league that is a sport of its own (`league: "cfl"` on an `nfl`) is that sport.
   const { sport } = chooseLeague(o);
@@ -567,6 +635,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
   const featured = featureColours(sport, o.featureColors);
   const features = featured.length === 0 ? undefined : new Set(featured.map(([name]) => name));
   const walled = sport === "mlb" && ballparkDrawn(ballparkFor(o));
+  const crowded = o.host === undefined && resolveCrowd(o.crowd) !== undefined;
   const style = colourStyle(o, { left: leftTeam, right: rightTeam, home: isScore(o) ? o.home : undefined, away: isScore(o) ? o.away : undefined }, featured);
   const palette = isLook(o.look) ? o.look : undefined;
   let notes: Notes | undefined;
@@ -689,7 +758,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       style: style === "" ? undefined : style,
     },
     `<title id="${titleId}">${esc(title)}</title><desc id="${descId}">${esc(description)}</desc>` +
-      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${left?.round === true || right?.round === true ? `\n${KYOGIJO_MARK_STYLE}` : ""}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}${plan === undefined ? "" : `\n${courtStyle(plan.sport, plan.look)}`}${fieldsStyle(sport) === "" ? "" : `\n${fieldsStyle(sport)}`}${palette === undefined ? "" : `\n${lookStyle(palette)}`}${walled ? `\n${KYOGIJO_WALLS_STYLE}` : ""}${features === undefined ? "" : `\n${featureStyle(sport, features)}`}${notes === undefined || notes.svg === "" ? "" : `\n${KYOGIJO_NOTE_STYLE}`}${grounded ? `\n${KYOGIJO_BACKGROUND_STYLE}` : ""}${o.host === undefined ? "" : `\n${specialStyle(hostSport(o.host))}`}</style>`) +
+      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${left?.round === true || right?.round === true ? `\n${KYOGIJO_MARK_STYLE}` : ""}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}${plan === undefined ? "" : `\n${courtStyle(plan.sport, plan.look)}`}${fieldsStyle(sport) === "" ? "" : `\n${fieldsStyle(sport)}`}${palette === undefined ? "" : `\n${lookStyle(palette)}`}${walled ? `\n${KYOGIJO_WALLS_STYLE}` : ""}${features === undefined ? "" : `\n${featureStyle(sport, features)}`}${notes === undefined || notes.svg === "" ? "" : `\n${KYOGIJO_NOTE_STYLE}`}${grounded ? `\n${KYOGIJO_BACKGROUND_STYLE}` : ""}${crowded ? `\n${KYOGIJO_CROWD_STYLE}` : ""}${o.host === undefined ? "" : `\n${specialStyle(hostSport(o.host))}`}</style>`) +
       (defs === "" ? "" : `<defs>${defs}</defs>`) +
       body,
   );
@@ -712,4 +781,22 @@ export function drawScore(options: ScoreOptions): string {
 /** Draw a score as one compact strip, for a list. The same as `drawScore` with `size: "badge"`. */
 export function drawBadge(options: ScoreOptions): string {
   return drawKyogijo({ ...options, size: "badge" });
+}
+
+/**
+ * The stands round a surface as data: the rings of seats with their outlines, heights and rake, the blocks of visitors and the places left open, in feet in the surface's
+ * wide frame, so that another view (a 3D one) can raise them. `undefined` when the options ask for no crowd (or for a special game, which has none).
+ * @example
+ * ```ts
+ * import { crowdStands } from "@johnmorrisdotca/kyogijo-stadiums";
+ * const stands = crowdStands({ sport: "soccer", crowd: true });
+ * console.log(stands?.rings.map((ring) => ring.id).join(" "), stands?.shape, stands?.stadium);
+ * // lower upper bowl purpose
+ * ```
+ */
+export function crowdStands(o: SurfaceOptions): CrowdStands | undefined {
+  const crowd = o.host === undefined ? resolveCrowd(o.crowd) : undefined;
+  if (crowd === undefined) return undefined;
+  const probe = buildWhole({ ...o, margin: 0 }, false, drawingId(o), false, false, { features: undefined });
+  return standsFor(o, probe, crowd);
 }

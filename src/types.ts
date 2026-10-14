@@ -226,6 +226,48 @@ export interface CourtStyle {
   paintThreePoint?: boolean;
 }
 
+/** The shape of a venue's stands round the playing surface. */
+export type CrowdShape = "bowl" | "sides" | "horseshoe" | "grandstand";
+
+/**
+ * The stands and the crowd round a surface (`crowd`). Every part is optional. `true` is the sport's usual venue, 85 percent full, with an away end, drawn in detail.
+ * See `docs/crowd.md`.
+ */
+export interface CrowdOptions {
+  /**
+   * The venue: `bowl` (stands on every side), `sides` (the long sides only), `horseshoe` (three sides, the open end at the right, or at the left with `open: "left"`; a
+   * ballpark's outfield with a gap at the batter's eye) or `grandstand` (a ballpark's infield stands only). Each sport has its usual one.
+   */
+  shape?: CrowdShape;
+  /** The end of a `horseshoe` that is open: `right` (the usual) or `left`. */
+  open?: "left" | "right";
+  /**
+   * What a soccer pitch is inside. `auto` (the default) is a stadium of its own for most grounds and a gridiron stadium for the NFL's and the CFL's, where the stands keep a
+   * football field's footprint and the pitch stands inside it; `purpose`, `nfl` and `cfl` choose. The footprint is drawn faintly so that the gap is seen.
+   */
+  stadium?: "auto" | "purpose" | "nfl" | "cfl";
+  /** How full the stands are, 0 to 1: the share of seats with someone in them. 0.85 by default. Over `attendance`. */
+  density?: number;
+  /** The people in the stands, with `capacity` the seats: the density is their quotient. A ground's `capacity` is the default for soccer; without one, the seats the drawing's stands have. */
+  attendance?: number;
+  capacity?: number;
+  /** The seed of the crowd: the same seed is always the same crowd. 1 by default. */
+  seed?: number;
+  /** The home fans' colour and the visitors': the teams' colours of a score, else the sides' colours. */
+  home?: string;
+  away?: string;
+  /** Where the visitors sit: `auto` (the sport's usual place), `left`, `right`, `corner` (a block in a corner), or `none`. */
+  awayEnd?: "auto" | "left" | "right" | "corner" | "none";
+  /** A tifo or card display in the colours of a team, in a block of the lower stands behind a goal: `home`, `away`, `both` or `false`. Off by default. */
+  tifo?: boolean | "home" | "away" | "both";
+  /** `stripes` (the usual) or `checks`. */
+  tifoDesign?: "stripes" | "checks";
+  /** Tunnels, the benches' places and the camera platform of the media side. On by default. */
+  gaps?: boolean;
+  /** How much is drawn: `fine` (the crowd as heads and shoulders, empty seats, aisles), `plain` (blocks of colour), or `auto` (`plain` for `detail: "simple"` or a `width` under 480 pixels). */
+  detail?: "auto" | "fine" | "plain";
+}
+
 /** How much of a curling sheet is shown: all of it, the half from the hog line to the back line, or just the house. */
 export type SheetShow = "sheet" | "half" | "house";
 
@@ -519,6 +561,11 @@ export interface SurfaceOptions {
   quirks?: boolean | QuirkOptions;
   /** The look of an NBA court. */
   court?: CourtStyle;
+  /**
+   * The stands and the crowd round the surface, for a venue that has spectators: a bowl, two sides, a horseshoe or a ballpark's grandstands, with the people as heads and
+   * shoulders in the home colours and a visitors' end. `true` for the defaults, or `CrowdOptions`. Off by default, and then the drawing is byte for byte as it was.
+   */
+  crowd?: boolean | CrowdOptions;
   /** The size and look of a curling sheet. */
   sheet?: SheetStyle;
   /** The look and the variants of a tennis, volleyball, badminton, pickleball or table tennis court. */
