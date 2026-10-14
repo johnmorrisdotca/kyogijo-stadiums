@@ -176,23 +176,51 @@ export function covered(b: Box3, view: TurnView, at: Placement, distance: number
   return { x0: Math.min(...shown.map((p) => p[0])), x1: Math.max(...shown.map((p) => p[0])), y0: Math.min(...shown.map((p) => p[1])), y1: Math.max(...shown.map((p) => p[1])) };
 }
 
+/** The turns the fit looks at: the whole circle in steps of five degrees. The pad round the scene is many times the little the extent can grow between two of them (a tenth of a percent). */
+const FIT_YAWS: readonly number[] = Array.from({ length: 72 }, (_, i) => i * 5);
+
+/** The rectangle on the screen that a box covers over every turn of the circle, at this pitch. */
+function coveredAround(b: Box3, pitch: number, at: Placement, distance: number): { x0: number; y0: number; x1: number; y1: number } {
+  const all = corners(b);
+  let x0 = Infinity;
+  let y0 = Infinity;
+  let x1 = -Infinity;
+  let y1 = -Infinity;
+  for (const yaw of FIT_YAWS) {
+    for (const c of all) {
+      const [x, y] = project(c, { yaw, pitch, zoom: 1 }, at, distance);
+      if (x < x0) x0 = x;
+      if (x > x1) x1 = x;
+      if (y < y0) y0 = y;
+      if (y > y1) y1 = y;
+    }
+  }
+  return { x0, y0, x1, y1 };
+}
+
+let lastFit: { key: string; at: Placement } | undefined;
+
 /**
- * The placement that fits the scene in a container of width `w` and height `h` pixels, centred, with `pad` of its width and height left round it. The
- * perspective bends the sum, so it is found by a few rounds of scaling and re-centring; six is plenty.
+ * The placement that fits the scene in a container of width `w` and height `h` pixels, centred, with `pad` of its width and height left round it. It fits the scene at every turn about the
+ * vertical at the view's pitch, not at the view's own turn (its `yaw` is not used): the scale and the place are one for the whole circle, so that turning never zooms in and out or sways, and
+ * nothing is cut off at any angle. (A turn used to fit each angle alone, so a long floor was drawn up to 1.8 times as large side-on as end-on.) Tipping the view still rescales it, since the
+ * extent of the scene on the screen changes with the pitch. The perspective bends the sum, so it is found by a few rounds of scaling and re-centring; six is plenty.
  */
 export function fit(b: Box3, view: TurnView, w: number, h: number, distance: number, pad = 0.03): Placement {
+  const key = `${b.x0},${b.y0},${b.x1},${b.y1},${b.z0},${b.z1}|${view.pitch}|${w}|${h}|${distance}|${pad}`;
+  if (lastFit?.key === key) return { ...lastFit.at };
   const at: Placement = { k: 0.5, tx: 0, ty: 0 };
-  const flat = { ...view, zoom: 1 };
   for (let i = 0; i < 8; i += 1) {
-    const r = covered(b, flat, at, distance);
+    const r = coveredAround(b, view.pitch, at, distance);
     const cw = r.x1 - r.x0;
     const ch = r.y1 - r.y0;
     if (cw <= 0 || ch <= 0) break;
     at.k *= Math.min((w * (1 - 2 * pad)) / cw, (h * (1 - 2 * pad)) / ch);
-    const c = covered(b, flat, at, distance);
+    const c = coveredAround(b, view.pitch, at, distance);
     at.tx -= (c.x0 + c.x1) / 2;
     at.ty -= (c.y0 + c.y1) / 2;
   }
+  lastFit = { key, at: { ...at } };
   return at;
 }
 

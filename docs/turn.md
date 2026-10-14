@@ -41,7 +41,15 @@ Or the custom element, with no script of your own:
 
 The end and corner views look from the side opposite the scoreboard of a field (see below), so that it stands behind the far end.
 
-A view is `{ yaw, pitch, zoom }`: the turn about the vertical in degrees, the tip back from straight overhead in degrees (0 to 84, so the eye never goes below the floor), and the zoom (0.5 to 4). The scene is fitted to the box at every view, so every viewpoint and every turn shows the whole surface. `TURN_PRESETS`, `LONG_PRESETS`, `NET_PRESETS` and `CURLING_PRESETS` are the viewpoints as numbers.
+A view is `{ yaw, pitch, zoom }`: the turn about the vertical in degrees, the tip back from straight overhead in degrees (0 to 84, so the eye never goes below the floor), and the zoom (0.5 to 4). The scene is fitted to the box once for the whole turn at the view's pitch, so every viewpoint and every turn shows the whole surface, and turning never changes the zoom (see below). `TURN_PRESETS`, `LONG_PRESETS`, `NET_PRESETS` and `CURLING_PRESETS` are the viewpoints as numbers.
+
+### A steady zoom
+
+The fit looks at the scene at **every angle of the circle** at the view's pitch (every 5 degrees, with a margin of 3 percent of the box round it) and takes the one scale and the one centre that hold all of them. So the scale does not change while the view turns, by hand or by itself, and the surface does not sway: at no angle is any of it outside the box, and the floor is the same size side-on as end-on. The fit used to be made for each angle alone, which kept every angle in the box but zoomed the surface in and out as it turned: the largest scale was about 1.7 to 1.9 times the smallest overhead, 1.5 times at 30 degrees and 1.15 to 1.65 times from 60 to 80, for a long floor.
+
+The steady scale is the smallest the old fit used over the turn, so the floor is never larger than it was at its tightest angle, and it is smaller than it was at the angles where it had room (down to 0.55 of its old size overhead and 0.5 to 0.7 at the low views, at the angle where it used to be largest).
+
+**Tipping the view still rescales it**: the pitch changes how much of the box the scene covers, so the placement is worked out again for each pitch (a floor is drawn about 1.6 times as large at a tip of 84 degrees as overhead). Fitting over every pitch as well was tried and not kept: it fits the scene at the overhead view, where a long floor has to fit the box's height, so at a tip of 60 degrees the floor would be 0.64 of the size it can have. Zoom (`+` and `-`, the buttons, a pinch or Ctrl and the wheel) is laid on top of the fit and does not change it. `fit(box, view, width, height, distance)` takes the view's pitch and not its yaw.
 
 ![A hockey rink from a low corner: the boards, the glass and a goal at each end](./images/turn-rink-desk-light.webp)
 

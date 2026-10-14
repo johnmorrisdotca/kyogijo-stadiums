@@ -527,7 +527,8 @@ describe("the score, stood up", () => {
     const at0 = layoutOf(model, { yaw: 0, pitch: 60, zoom: 1 }, 900, 560).transforms;
     const at90 = layoutOf(model, { yaw: 90, pitch: 60, zoom: 1 }, 900, 560).transforms;
     const i = model.planes.indexOf(plane) + 1;
-    expect(at0[i]).not.toBe(at90[i]);
+    // It faces the eye and hangs over the middle of the court, so a turn moves nothing of it: it is drawn the same at both angles (the scale is one for the whole turn).
+    expect(at0[i]).toBe(at90[i]);
     // Faced to the eye, its width runs along the screen's x: (cos yaw, -sin yaw, 0).
     const faced = facing(plane, 90);
     expect(faced.u[0]).toBeCloseTo(0, 5);
@@ -651,21 +652,25 @@ describe("the eye", () => {
     }
   });
 
-  it("fits the scene in the box at every viewpoint and every turn, centred", () => {
+  it("fits the scene in the box at every viewpoint and every turn, centred over the whole turn", () => {
     const box = { x0: -400, x1: 400, y0: -150, y1: 150, z0: 0, z1: 300 };
     for (const name of TURN_PRESET_NAMES) {
-      for (const yaw of [0, 33, 90, 135, 180]) {
+      const d = eyeDistance(800, 500);
+      const xs: number[] = [];
+      const ys: number[] = [];
+      for (const yaw of [0, 33, 90, 135, 180, 270]) {
         const view = { ...TURN_PRESETS[name], yaw };
-        const d = eyeDistance(800, 500);
         const at = fit(box, view, 800, 500, d);
         const corners = [-400, 400].flatMap((x) => [-150, 150].flatMap((y) => [0, 300].map((z) => project([x, y, z], view, at, d))));
-        const xs = corners.map((c) => c[0]);
-        const ys = corners.map((c) => c[1]);
-        expect(Math.max(...xs) - Math.min(...xs), `${name} ${yaw}`).toBeLessThanOrEqual(800 + 1);
-        expect(Math.max(...ys) - Math.min(...ys), `${name} ${yaw}`).toBeLessThanOrEqual(500 + 1);
-        expect((Math.max(...xs) + Math.min(...xs)) / 2, `${name} ${yaw}`).toBeCloseTo(0, 0);
-        expect((Math.max(...ys) + Math.min(...ys)) / 2, `${name} ${yaw}`).toBeCloseTo(0, 0);
+        // At every angle the scene is inside the container ...
+        expect(Math.max(...corners.map((c) => c[0])) - Math.min(...corners.map((c) => c[0])), `${name} ${yaw}`).toBeLessThanOrEqual(800 + 1);
+        expect(Math.max(...corners.map((c) => c[1])) - Math.min(...corners.map((c) => c[1])), `${name} ${yaw}`).toBeLessThanOrEqual(500 + 1);
+        xs.push(...corners.map((c) => c[0]));
+        ys.push(...corners.map((c) => c[1]));
       }
+      // ... and the placement is the one that centres the scene over all of them.
+      expect((Math.max(...xs) + Math.min(...xs)) / 2, name).toBeCloseTo(0, -1);
+      expect(Math.max(...xs) - Math.min(...xs), name).toBeLessThanOrEqual(800 + 1);
     }
   });
 });
