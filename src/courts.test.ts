@@ -3,7 +3,7 @@
 // Section 3) and the ITTF's Laws of Table Tennis (2026 statutes, 2.1 and 2.2). Each figure is the rule's, read off the geometry the drawing is made from and, for a few,
 // off the drawing; the rule numbers are in docs/sources.md.
 import { describe, expect, it } from "vitest";
-import { courtFor, courtGeometry, courtSize, isNetSport, LOOKS, type CourtGeometry, type Rect } from "./court.ts";
+import { courtFor, courtGeometry, courtSize, isNetSport, LOOKS, type CourtGeometry, type NetLine, type Rect } from "./court.ts";
 import { COURT_LOOKS, KYOGIJO_COURTS_STYLE } from "./courts.style.ts";
 import { describe as describeDrawing, drawKyogijo, statusLabel, winnerOf } from "./draw.ts";
 import { convert, fromSurface, toSurface } from "./frames.ts";
@@ -12,7 +12,7 @@ import { BEACH_VOLLEYBALL, PICKLEBALL, TABLE_TENNIS, TENNIS, dimensionsOf, surfa
 import { buildZoneSet } from "./heat.zones.ts";
 import { layerTable } from "./layers.ts";
 import { LEAGUES, LEAGUE_SOURCES, chooseLeague, leagueById, leagueFigures, leagueSize, netOf } from "./leagues.ts";
-import { BWF_BADMINTON, FIVB_BEACH, FIVB_INDOOR, ITF_TENNIS, ITTF_TABLE, USAP_PICKLEBALL } from "./leagues/courts.ts";
+import { BWF_BADMINTON, FIP_PADEL, FITEQ_TEQBALL, FIVB_BEACH, FIVB_INDOOR, IRF_RACQUETBALL, IRF_ROUNDNET, ISTAF_SEPAK_TAKRAW, ITF_TENNIS, ITTF_TABLE, USAP_PICKLEBALL, WN_NETBALL, WPV_SITTING, WSF_SQUASH, WSF_SQUASH_DOUBLES, WSF_SQUASH_WIDE } from "./leagues/courts.ts";
 import { outlineOf } from "./outline.ts";
 import { setCount } from "./sets.board.ts";
 import { KYOGIJO_STRINGS } from "./strings.ts";
@@ -23,7 +23,14 @@ import { parseXml, walk, withClass, type Node } from "./xml.fixture.ts";
 const FT_PER_M = 1 / 0.3048;
 const parse = (svg: string): Node => parseXml(svg);
 const viewBox = (svg: Node): number[] => svg.attrs.viewBox.split(" ").map(Number);
-const geometry = (o: Pick<SurfaceOptions, "sport" | "league" | "net">): CourtGeometry => courtGeometry(courtFor(o));
+/** The geometry of a court that has a net. */
+const geometry = (o: Pick<SurfaceOptions, "sport" | "league" | "net">): CourtGeometry & { net: NetLine } => {
+  const g = courtGeometry(courtFor(o));
+  if (g.net === null) throw new Error(`${String(o.sport)} has no net`);
+  return g as CourtGeometry & { net: NetLine };
+};
+/** The geometry of any court, with or without a net. */
+const anyGeometry = (o: Pick<SurfaceOptions, "sport" | "league" | "net">): CourtGeometry => courtGeometry(courtFor(o));
 /** True when a rectangle (feet) is among the lines, to a hundredth of an inch. */
 const near = (a: Rect, b: Rect): boolean => a.every((v, i) => Math.abs(v - b[i]) < 0.0009);
 const has = (rects: readonly Rect[], r: Rect): boolean => rects.some((x) => near(x, r));
@@ -218,7 +225,7 @@ describe("beach volleyball: the FIVB's Official Beach Volleyball Rules 2025-2028
   });
 
   it("is the volleyball league `fivb-beach`, and the indoor court is the sport's own", () => {
-    expect(LEAGUES.volleyball.map((l) => l.id)).toEqual(["fivb", "fivb-beach"]);
+    expect(LEAGUES.volleyball.map((l) => l.id)).toEqual(["fivb", "fivb-beach", "wpv-sitting"]);
     expect(chooseLeague({ sport: "volleyball", league: "fivb-beach" }).league?.id).toBe("fivb-beach");
     expect(chooseLeague({ sport: "volleyball", league: "fivb" }).league).toBeUndefined();
     expect(() => drawKyogijo({ sport: "volleyball", league: "bwf" })).toThrow(/is a badminton league/);
@@ -356,6 +363,385 @@ describe("table tennis: the ITTF's Laws of Table Tennis, 2.1 and 2.2", () => {
     expect(ITTF_TABLE.net).toEqual({ height: 0.1525, postHeight: 0.1525, postOutside: 0.1525 });
     const outside = g.posts.map((p) => (p.y < 0.76 * FT_PER_M ? -(p.y - p.size / 2) : p.y + p.size / 2 - 1.525 * FT_PER_M));
     for (const reach of outside) expect(reach).toBeCloseTo(0.1525 * FT_PER_M, 6);
+  });
+});
+
+describe("sitting volleyball: World ParaVolley's Official Sitting Volleyball Rules 2025-2028, Rules 1 and 2", () => {
+  const sitting = { sport: "volleyball", league: "wpv-sitting" } as const;
+  const g = geometry(sitting);
+
+  it("is the volleyball league `wpv-sitting`, drawn as a volleyball court", () => {
+    expect(chooseLeague(sitting).league?.id).toBe("wpv-sitting");
+    expect(courtFor(sitting).sport).toBe("volleyball");
+    expect(drawKyogijo(sitting)).toContain('data-league="wpv-sitting"');
+  });
+
+  it("1.1: the court is 10 by 6 m, a free zone of at least 3 m (4 m beside the side lines and 6 m behind the end lines for World ParaVolley's competitions)", () => {
+    expect(courtSize(courtFor(sitting)).length).toBeCloseTo(10 * FT_PER_M, 6);
+    expect(courtSize(courtFor(sitting)).width).toBeCloseTo(6 * FT_PER_M, 6);
+    expect(courtFor(sitting).zone?.side).toBeCloseTo(4 * FT_PER_M, 6);
+    expect(courtFor(sitting).zone?.end).toBeCloseTo(6 * FT_PER_M, 6);
+    expect(courtFor({ ...sitting, net: { free: "least" } }).zone?.side).toBeCloseTo(3 * FT_PER_M, 6);
+  });
+
+  it("1.3.3 and 1.3.4: the centre line's axis halves the court (6 by 5 m) and each attack line's rear edge is 2 m from it, extended for those competitions by five 15 cm lines to 1.75 m", () => {
+    expect(has(g.lines, m(5 - 0.025, 0, 5.025, 6))).toBe(true);
+    expect(has(g.lines, m(3, 0, 3.05, 6))).toBe(true);
+    expect(has(g.lines, m(6.95, 0, 7, 6))).toBe(true);
+    expect(g.small.filter((r) => r[0] < 3.05 * FT_PER_M && r[2] > 3 * FT_PER_M && (r[3] < 0 || r[1] > 6 * FT_PER_M))).toHaveLength(10);
+  });
+
+  it("1.4.2: the service zone is 6 m wide, limited by two 15 cm lines 20 cm behind each end line", () => {
+    expect(has(g.small, m(-0.35, 0, -0.2, 0.05))).toBe(true);
+    expect(has(g.small, m(-0.35, 6 - 0.05, -0.2, 6))).toBe(true);
+  });
+
+  it("2.1 to 2.5: the net is 0.80 m wide and 7 m long, 1.15 m (men) or 1.05 m (women) high; antennae 1.60 m long; posts 1 m outside the side lines (0.5 m at the least)", () => {
+    expect([FIVB_INDOOR.net.heightMen, WPV_SITTING.net.heightMen, WPV_SITTING.net.heightWomen, WPV_SITTING.net.width, WPV_SITTING.net.length, WPV_SITTING.net.antenna.length]).toEqual([2.43, 1.15, 1.05, 0.8, 7, 1.6]);
+    expect(g.net.y1 - g.net.y0).toBeCloseTo(7 * FT_PER_M, 6);
+    expect(g.posts[0].y).toBeCloseTo(-1 * FT_PER_M, 6);
+    expect(geometry({ ...sitting, net: { free: "least" } }).posts[0].y).toBeCloseTo(-0.5 * FT_PER_M, 6);
+  });
+});
+
+describe("padel: the FIP's Rules of Padel (review of application 1 January 2026), The Court", () => {
+  const g = geometry({ sport: "padel" });
+
+  it("Dimensions: 10 m wide by 20 m long inside the walls, lines 5 cm wide, with no line round the court", () => {
+    expect([FIP_PADEL.length, FIP_PADEL.width, FIP_PADEL.lineWidth]).toEqual([20, 10, 0.05]);
+    expect(courtSize(courtFor({ sport: "padel" })).length).toBeCloseTo(20 * FT_PER_M, 6);
+    expect(g.lines).toHaveLength(3);
+  });
+
+  it("Dimensions: the service lines are 6.95 m from the net, and the central service line runs between them, 20 cm past each", () => {
+    expect(has(g.lines, m(10 - 6.95, 0, 10 - 6.95 + 0.05, 10))).toBe(true);
+    expect(has(g.lines, m(10 + 6.95 - 0.05, 0, 10 + 6.95, 10))).toBe(true);
+    expect(has(g.lines, m(10 - 7.15, 5 - 0.025, 10 + 7.15, 5 + 0.025))).toBe(true);
+  });
+
+  it("Net: 10 m long, 0.88 m high at the centre and 0.92 m at the ends, on posts at most 1.05 m high whose outer sides are the court's lateral limits", () => {
+    expect(FIP_PADEL.net).toEqual({ length: 10, heightCentre: 0.88, heightEnds: 0.92, postHeight: 1.05 });
+    expect(g.net.y1 - g.net.y0).toBeCloseTo(10 * FT_PER_M, 6);
+    for (const post of g.posts) expect(post.y - post.size / 2 >= -1e-9 && post.y + post.size / 2 <= g.width + 1e-9).toBe(true);
+  });
+
+  it("Enclosures: the end walls and a wall 4 m long at each end of each side are solid, the fence between them is 12 m", () => {
+    const solid = g.bands.filter((b) => b.kind === "wall");
+    const mesh = g.bands.filter((b) => b.kind === "mesh");
+    expect(solid).toHaveLength(6);
+    expect(mesh).toHaveLength(2);
+    for (const b of mesh) expect(b.rect[2] - b.rect[0]).toBeCloseTo(12 * FT_PER_M, 6);
+    expect(solid.filter((b) => b.rect[2] - b.rect[0] <= 1).length).toBe(2);
+    expect(solid.filter((b) => Math.abs(b.rect[2] - b.rect[0] - 4 * FT_PER_M) < 1e-6)).toHaveLength(4);
+  });
+
+  it("Ground surface: green, blue or terracotta, the first the default", () => {
+    expect(LOOKS.padel).toEqual(["blue", "green", "terracotta"]);
+  });
+});
+
+describe("squash: World Squash's Specifications for Squash Courts (28 November 2017), clauses 4 and 5 and Appendices 1 and 2", () => {
+  const g = anyGeometry({ sport: "squash" });
+  const L = 9.75;
+  const w = 0.05;
+
+  it("4.01 to 4.03: a singles court 9,750 by 6,400 mm, a doubles court 7,620 mm wide and the competition width 8,420 mm", () => {
+    expect([WSF_SQUASH.length, WSF_SQUASH.width, WSF_SQUASH_DOUBLES.width, WSF_SQUASH_WIDE.width]).toEqual([9.75, 6.4, 7.62, 8.42]);
+    expect(courtSize(courtFor({ sport: "squash" })).width).toBeCloseTo(6.4 * FT_PER_M, 6);
+    expect(courtSize(courtFor({ sport: "squash", league: "wsf-doubles" })).width).toBeCloseTo(7.62 * FT_PER_M, 6);
+    expect(courtSize(courtFor({ sport: "squash", league: "wsf-doubles-wide" })).width).toBeCloseTo(8.42 * FT_PER_M, 6);
+    expect(LEAGUES.squash.map((l) => l.id)).toEqual(["wsf", "wsf-doubles", "wsf-doubles-wide"]);
+  });
+
+  it("5.05.01: the short line's nearest edge is 4,260 mm from the back wall, across the whole width", () => {
+    expect(has(g.lines, m(L - 4.26 - w, 0, L - 4.26, 6.4))).toBe(true);
+  });
+
+  it("5.05.02: the half court line runs from the back wall to the short line, equidistant from the side walls", () => {
+    expect(has(g.lines, m(L - 4.26 - w, 3.2 - w / 2, L, 3.2 + w / 2))).toBe(true);
+  });
+
+  it("5.05.03: each service box is a square of 1,600 mm inside its lines, behind the short line and against a side wall", () => {
+    const near = L - 4.26;
+    expect(has(g.lines, m(near + 1.6, 0, near + 1.6 + w, 1.6 + w))).toBe(true);
+    expect(has(g.lines, m(near, 1.6, near + 1.6 + w, 1.6 + w))).toBe(true);
+    expect(has(g.lines, m(near + 1.6, 6.4 - 1.6 - w, near + 1.6 + w, 6.4))).toBe(true);
+    expect(has(g.lines, m(near, 6.4 - 1.6 - w, near + 1.6 + w, 6.4 - 1.6))).toBe(true);
+  });
+
+  it("5.02: the front wall is laid flat beside the court: the front wall line 4,570 mm and the service line 1,780 mm up, the tin 480 mm (330 mm for the competition width)", () => {
+    expect(WSF_SQUASH.wall).toEqual({ tin: 0.48, serviceLine: 1.78, frontWallLine: 4.57, backWallLine: 2.13 });
+    expect(WSF_SQUASH_WIDE.wall.tin).toBe(0.33);
+    expect(has(g.lines, m(-4.57 - w, 0, -4.57, 6.4))).toBe(true);
+    expect(has(g.lines, m(-1.78 - w, 0, -1.78, 6.4))).toBe(true);
+    expect(has(g.lines, m(-0.48, 0, -0.43, 6.4))).toBe(true);
+    expect(g.bands.find((b) => b.kind === "tin")?.rect[0]).toBeCloseTo(-0.48 * FT_PER_M, 6);
+    expect(g.net).toBeNull();
+  });
+
+  it("5.01.01: every marking is 50 mm wide, and the other three walls stand round the court", () => {
+    expect(WSF_SQUASH.lineWidth).toBe(0.05);
+    expect(g.bands.filter((b) => b.kind === "wall")).toHaveLength(3);
+  });
+});
+
+describe("racquetball: the IRF's Official Rules 2026-2028, Rule 2.1, and its Court Specifications (2025)", () => {
+  const g = anyGeometry({ sport: "racquetball" });
+  const w = 1.5 / 12;
+
+  it("2.1(a): 20 feet wide, 40 feet long and 20 feet high; the lines 1 1/2 inches wide", () => {
+    expect([IRF_RACQUETBALL.length, IRF_RACQUETBALL.width, IRF_RACQUETBALL.height, IRF_RACQUETBALL.lineWidth]).toEqual([40, 20, 20, w]);
+    expect(courtSize(courtFor({ sport: "racquetball" }))).toEqual({ length: 40, width: 20 });
+  });
+
+  it("2.1(b)1 and 2: the short line's back edge is 20 feet from the back wall, the service line's front edge 5 feet in front of it", () => {
+    expect(has(g.lines, [20 - w, 0, 20, 20])).toBe(true);
+    expect(has(g.lines, [15, 0, 15 + w, 20])).toBe(true);
+  });
+
+  it("2.1(b)4 and 5: a service box's line is 18 inches from the side wall and a drive serve line 3 feet, to the edge nearest the centre, across the service zone", () => {
+    expect(has(g.lines, [15, 1.5 - w, 20, 1.5])).toBe(true);
+    expect(has(g.lines, [15, 20 - 1.5, 20, 20 - 1.5 + w])).toBe(true);
+    expect(has(g.lines, [15, 3 - w, 20, 3])).toBe(true);
+    expect(has(g.lines, [15, 17, 20, 17 + w])).toBe(true);
+  });
+
+  it("2.1(b)6: the receiving line's back edge is 5 feet behind the short line's, a 21 inch segment from each wall and sixteen 6 inch lines between 6 inch spaces", () => {
+    const rear = g.lines.filter((r) => Math.abs(r[2] - 25) < 1e-9);
+    expect(rear).toHaveLength(18);
+    expect(rear.filter((r) => Math.abs(r[3] - r[1] - 21 / 12) < 1e-9)).toHaveLength(2);
+    expect(rear.filter((r) => Math.abs(r[3] - r[1] - 0.5) < 1e-9)).toHaveLength(16);
+    const total = rear.reduce((sum, r) => sum + (r[3] - r[1]), 0);
+    expect(total + 17 * 0.5).toBeCloseTo(20, 9);
+  });
+
+  it("has no net, and the walls stand round the court", () => {
+    expect(g.net).toBeNull();
+    expect(g.bands).toHaveLength(4);
+    expect(COURT_LOOKS.racquetball.wood.light.line).toBe("#c8372d");
+  });
+});
+
+describe("sepak takraw: the ISTAF's Law of the Game (2013), Laws 1 to 3", () => {
+  const g = geometry({ sport: "sepaktakraw" });
+  const w = 0.04;
+
+  it("1.1: the court is 13.4 by 6.1 m, the boundary lines drawn inwards and at most 0.04 m wide", () => {
+    expect([ISTAF_SEPAK_TAKRAW.length, ISTAF_SEPAK_TAKRAW.width, ISTAF_SEPAK_TAKRAW.lineWidth]).toEqual([13.4, 6.1, 0.04]);
+    expect(has(g.lines, m(0, 0, w, 6.1))).toBe(true);
+    expect(has(g.lines, m(13.4 - w, 0, 13.4, 6.1))).toBe(true);
+    expect(has(g.lines, m(0, 6.1 - w, 13.4, 6.1))).toBe(true);
+  });
+
+  it("1.2: the centre line is 0.02 m wide, across the middle of the court under the net", () => {
+    expect(has(g.lines, m(6.7 - 0.01, 0, 6.7 + 0.01, 6.1))).toBe(true);
+    expect(g.underNet).toBeCloseTo(0.02 * FT_PER_M, 9);
+  });
+
+  it("1.3: a quarter circle of 0.9 m radius at each end of the centre line, inside the court on each side of the net", () => {
+    const quarters = g.rings.filter((r) => r.a0 !== undefined);
+    expect(quarters).toHaveLength(4);
+    for (const q of quarters) expect([q.r, (q.a1 as number) - (q.a0 as number)]).toEqual([0.9 * FT_PER_M, Math.PI / 2]);
+    expect(quarters.map((q) => q.cy).sort()).toEqual([0, 0, 6.1 * FT_PER_M, 6.1 * FT_PER_M]);
+  });
+
+  it("1.4: a service circle of 0.3 m radius and 0.04 m width on each side, its centre 2.45 m from the back line and 3.05 m from the sidelines", () => {
+    const circles = g.rings.filter((r) => r.a0 === undefined);
+    expect(circles).toHaveLength(2);
+    expect(circles.map((c) => c.cx).sort((a, b) => a - b)).toEqual([2.45 * FT_PER_M, (13.4 - 2.45) * FT_PER_M].map((v) => v));
+    for (const c of circles) expect([c.r, c.w, c.cy]).toEqual([0.3 * FT_PER_M, 0.04 * FT_PER_M, 3.05 * FT_PER_M]);
+  });
+
+  it("1.5, 2 and 3: a free zone of 3.0 m; the posts 0.3 m from the sidelines, in line with the centre line; the net 0.7 m wide and at least 6.1 m long, 1.52 m (men) or 1.42 m (women) high", () => {
+    expect(courtFor({ sport: "sepaktakraw" }).zone?.side).toBeCloseTo(3 * FT_PER_M, 6);
+    expect(g.posts.map((p) => p.y)).toEqual([-0.3 * FT_PER_M, (6.1 + 0.3) * FT_PER_M]);
+    expect(g.posts[0].x).toBeCloseTo(6.7 * FT_PER_M, 9);
+    expect(ISTAF_SEPAK_TAKRAW.net).toMatchObject({ width: 0.7, length: 6.1, heightMen: 1.52, heightWomen: 1.42, postMen: 1.55, postWomen: 1.45 });
+    expect(g.net.y1 - g.net.y0).toBeGreaterThanOrEqual(6.1 * FT_PER_M);
+  });
+});
+
+describe("teqball: the FITEQ's Official Rules and Regulations of Teqball (2026), sections 1 and 2", () => {
+  const g = geometry({ sport: "teqball" });
+
+  it("1.1 and 1.2: the table is 3,000 by 1,500 mm and the net 1,700 mm wide, 20 mm thick and 140 mm high", () => {
+    expect(FITEQ_TEQBALL.table).toEqual({ length: 3, width: 1.5, widthWithNet: 1.7, height: 0.9 });
+    expect(FITEQ_TEQBALL.net).toEqual({ width: 1.7, thickness: 0.02, height: 0.14 });
+    expect(g.net.y1 - g.net.y0).toBeCloseTo(1.7 * FT_PER_M, 9);
+  });
+
+  it("2.1.1.3 and 2.1.4: the table is in the exact middle of a court of 16 by 12 m, with the net parallel to the shorter sides (it runs across the 12 m)", () => {
+    expect([FITEQ_TEQBALL.length, FITEQ_TEQBALL.width]).toEqual([16, 12]);
+    const table = g.solids[0];
+    expect(table.kind).toBe("table");
+    if (table.kind === "table") expect(table.rect.map((v) => v / FT_PER_M).map((v) => Math.round(v * 1e6) / 1e6)).toEqual([6.5, 5.25, 9.5, 6.75]);
+    expect(g.net.x).toBeCloseTo(8 * FT_PER_M, 9);
+  });
+
+  it("2.1.2 and 2.1.3: the halfway line is in the middle, and a service line each side is 3.5 m from the middle of the table; each is 20 to 50 mm wide", () => {
+    expect(has(g.lines, m(8 - 0.025, 0, 8 + 0.025, 12))).toBe(true);
+    expect(has(g.lines, m(8 - 3.5 - 0.025, 0, 8 - 3.5 + 0.025, 12))).toBe(true);
+    expect(has(g.lines, m(8 + 3.5 - 0.025, 0, 8 + 3.5 + 0.025, 12))).toBe(true);
+    expect(FITEQ_TEQBALL.lineWidth).toBeGreaterThanOrEqual(0.02);
+    expect(FITEQ_TEQBALL.lineWidth).toBeLessThanOrEqual(0.05);
+  });
+});
+
+describe("roundnet: the International Roundnet Federation's Rules (adopted 21 October 2022), Chapter 1", () => {
+  const g = anyGeometry({ sport: "roundnet" });
+
+  it("1.1.2 and 1.2.2: a set 91.4 cm across and 20.3 cm high, in a court of at least 10 by 10 m with no out of bounds", () => {
+    expect(IRF_ROUNDNET.set).toEqual({ diameter: 0.914, height: 0.203 });
+    expect(courtSize(courtFor({ sport: "roundnet" })).length).toBeCloseTo(10 * FT_PER_M, 6);
+    const set = g.solids[0];
+    expect(set.kind === "set" && set.r).toBeCloseTo(0.457 * FT_PER_M, 9);
+  });
+
+  it("1.2.3 and 1.2.4: the serving line is a circle 2.6 m from the centre of the set (2.13 m from its edge), the no hit zone line one of 0.9 m", () => {
+    expect(g.rings.map((r) => r.r)).toEqual([0.9 * FT_PER_M, 2.6 * FT_PER_M]);
+    expect(2.6 - 0.914 / 2).toBeCloseTo(2.13, 1);
+    for (const r of g.rings) expect([r.cx, r.cy]).toEqual([5 * FT_PER_M, 5 * FT_PER_M]);
+  });
+
+  it("3.8.1 and 3.8.2: a mark at each of four service positions, 90 degrees apart, along the court's axes", () => {
+    expect(g.lines).toHaveLength(4);
+    const centre = 5 * FT_PER_M;
+    const at = g.lines.map((r) => [(r[0] + r[2]) / 2 - centre, (r[1] + r[3]) / 2 - centre].map((v) => Math.round((v / FT_PER_M) * 1e6) / 1e6));
+    expect(at.sort()).toEqual([[-2.6, 0], [0, -2.6], [0, 2.6], [2.6, 0]]);
+  });
+
+  it("has no net and no sides: it lies the same tall or wide, and the board lies below the circles", () => {
+    expect(g.net).toBeNull();
+    const view = (o: SurfaceOptions): number[] => viewBox(parse(drawKyogijo(o)));
+    expect(view({ sport: "roundnet", orientation: "portrait" })).toEqual(view({ sport: "roundnet" }));
+  });
+});
+
+describe("netball: World Netball's Rules of Netball (2024 edition), Rule 1", () => {
+  const g = anyGeometry({ sport: "netball" });
+
+  it("items 2 and 3: the side lines are 30.5 m (100 ft) and the goal lines 15.25 m (50 ft)", () => {
+    expect([WN_NETBALL.length, WN_NETBALL.width]).toEqual([30.5, 15.25]);
+    expect(courtSize(courtFor({ sport: "netball" })).length).toBeCloseTo(100.0656, 3);
+  });
+
+  it("item 4 and 7: two transverse lines divide the court into three equal areas, and all lines are 50 mm wide", () => {
+    const third = (30.5 / 3) * FT_PER_M;
+    expect(g.lines.filter((r) => Math.abs((r[0] + r[2]) / 2 - third) < 1e-6 || Math.abs((r[0] + r[2]) / 2 - 2 * third) < 1e-6)).toHaveLength(2);
+    expect(WN_NETBALL.lineWidth).toBe(0.05);
+  });
+
+  it("items 5 and 6: a centre circle 0.9 m across, and goal circles of 4.9 m radius, semicircles centred on the middle of the outside of each goal line", () => {
+    const centre = g.rings.find((r) => r.a0 === undefined && Math.abs(r.cx - (30.5 / 2) * FT_PER_M) < 1e-9);
+    expect(centre?.r).toBeCloseTo(0.45 * FT_PER_M, 9);
+    const goals = g.rings.filter((r) => Math.abs(r.r - 4.9 * FT_PER_M) < 1e-9);
+    expect(goals).toHaveLength(2);
+    expect(goals.map((r) => r.cx).sort((a, b) => a - b)).toEqual([0, 30.5 * FT_PER_M]);
+    for (const r of goals) expect((r.a1 as number) - (r.a0 as number)).toBeCloseTo(Math.PI, 12);
+  });
+
+  it("items 8, 13 and 14: a court surround of 3.05 m, and a goalpost at the middle of each goal line with the back of its pole at the outer edge", () => {
+    expect(courtFor({ sport: "netball" }).zone?.side).toBeCloseTo(3.05 * FT_PER_M, 9);
+    expect(g.posts).toHaveLength(2);
+    expect(g.posts[0].x - g.posts[0].size / 2).toBeCloseTo(0, 9);
+    expect(g.posts[0].y).toBeCloseTo((15.25 / 2) * FT_PER_M, 9);
+    expect(WN_NETBALL.post.height).toBe(3.05);
+  });
+
+  it("is scored as a goals sport: the usual score, the teams named in the goal thirds, the home team on the left", () => {
+    const svg = drawKyogijo({ sport: "netball", away: { name: "Harbour City Gulls", abbr: "HCG", score: 41, color: "#1d4f91" }, home: { name: "Prairie Ridge Bison", abbr: "PRB", score: 38, color: "#a8452c" }, status: "final", id: "n" });
+    const root = parse(svg);
+    expect(withClass(root, "ky-banner").length).toBe(2);
+    expect(svg).not.toContain("ky-scoreboard");
+    expect(courtFor({ sport: "netball" }).sport).toBe("netball");
+  });
+});
+
+describe("the sports added after the first five", () => {
+  const ADDED = ["padel", "squash", "racquetball", "sepaktakraw", "teqball", "roundnet", "netball"] as const;
+
+  it("are net sports with a family and a league of their own, the sport's own first, each with sources that are listed", () => {
+    for (const sport of ADDED) {
+      expect(isNetSport(sport), sport).toBe(true);
+      expect(LEAGUES[sport].length, sport).toBeGreaterThan(0);
+      expect(LEAGUES[sport][0].builtIn, sport).toBe(true);
+      for (const league of LEAGUES[sport]) for (const id of league.sources) expect(LEAGUE_SOURCES[id], `${sport} ${id}`).toBeDefined();
+    }
+    for (const id of LEAGUES.volleyball.find((l) => l.id === "wpv-sitting")?.sources ?? []) expect(LEAGUE_SOURCES[id]).toBeDefined();
+  });
+
+  it("keep the unit of their rulebooks: feet for the IRF's racquetball, metres for the rest", () => {
+    for (const sport of ADDED) expect(SURFACE_UNITS[sport], sport).toBe(sport === "racquetball" ? "ft" : "m");
+  });
+
+  it("have every look in light and in dark, with the looks of the sport named, and refuse another", () => {
+    for (const sport of ADDED) {
+      expect(Object.keys(COURT_LOOKS[sport]), sport).toEqual(LOOKS[sport]);
+      for (const look of LOOKS[sport]) {
+        const svg = drawKyogijo({ sport, net: { look } });
+        expect(svg, `${sport} ${look}`).toContain(`data-look="${look}"`);
+        expect(KYOGIJO_COURTS_STYLE).toContain(`[data-sport=${sport}][data-look=${look}]`);
+      }
+      expect(() => drawKyogijo({ sport, net: { look: "nothing" } }), sport).toThrow(/Unknown look/);
+    }
+  });
+
+  it("describe the court in English and in Japanese, with the same words for the same options", () => {
+    for (const sport of ADDED) {
+      const en = describeDrawing({ sport });
+      const ja = describeDrawing({ sport, language: "ja" });
+      expect(en.title, sport).toBe(KYOGIJO_STRINGS.en.surface[sport]);
+      expect(ja.title, sport).toBe(KYOGIJO_STRINGS.ja.surface[sport]);
+      expect(ja.description, sport).toMatch(/[぀-ヿ一-鿿]/u);
+      expect(drawKyogijo({ sport })).toBe(drawKyogijo({ sport }));
+    }
+    expect(describeDrawing({ sport: "volleyball", league: "wpv-sitting" }).description).toContain("sitting volleyball court, 10 by 6 metres");
+    expect(describeDrawing({ sport: "squash", league: "wsf-doubles", language: "ja" }).description).toContain("7.62");
+  });
+
+  it("lie wide, and tall when asked (but for the square roundnet court), each as its true shape", () => {
+    for (const sport of ADDED) {
+      const wide = viewBox(parse(drawKyogijo({ sport })));
+      const tall = viewBox(parse(drawKyogijo({ sport, orientation: "portrait" })));
+      if (sport === "roundnet") expect(wide).toEqual(tall);
+      else {
+        expect(wide[2], sport).toBeGreaterThan(wide[3]);
+        expect(tall[3], sport).toBeGreaterThan(tall[2]);
+        expect(tall[2], sport).toBeCloseTo(wide[3], 1);
+      }
+    }
+  });
+
+  it("make room for their walls beyond the court: the squash court's front wall, laid flat, on its left only", () => {
+    const view = viewBox(parse(drawKyogijo({ sport: "squash" })));
+    const length = 9.75 * FT_PER_M;
+    const left = -view[0];
+    const right = view[0] + view[2] - length;
+    expect(left - right).toBeGreaterThan(4.4 * FT_PER_M);
+    expect(anyGeometry({ sport: "squash" }).bands.some((band) => band.rect[0] < -4 * FT_PER_M)).toBe(true);
+    expect(courtFor({ sport: "squash" }).zone).toBeNull();
+  });
+
+  it("write the board of a score for each with its columns: the best of five games for squash and racquetball", () => {
+    for (const sport of ["padel", "sepaktakraw", "teqball", "roundnet", "squash", "racquetball"] as const) {
+      const svg = drawKyogijo(match(sport, { status: "final", away: { ...GULLS, sets: [11, 7] }, home: { ...BISON, sets: [8, 11] } }));
+      expect(svg, sport).toContain("ky-scoreboard");
+      const columns = withClass(parse(svg), "ky-foot").map((n) => n.text);
+      expect(columns, sport).toContain(String(sport === "squash" || sport === "racquetball" ? 5 : 3));
+      expect(columns, sport).toContain(sport === "padel" || sport === "sepaktakraw" || sport === "teqball" ? "Sets" : "Games");
+    }
+  });
+
+  it("have zones: the net-court zones for padel, sepak takraw and teqball, the wall-court zones for squash and racquetball, the rings of roundnet and thirds for netball", () => {
+    const zones = (sport: "padel" | "squash" | "roundnet" | "netball" | "teqball" | "sepaktakraw" | "racquetball", id: "net-court" | "wall-court" | "roundnet-rings" | "field-thirds"): string[] =>
+      buildZoneSet(id, { o: { sport }, outline: outlineOf({ sport }), direction: "right", end: "both", los: undefined, bats: undefined, words: KYOGIJO_STRINGS.en.layers.zones }).zones.map((zone) => zone.id);
+    expect(zones("padel", "net-court")).toEqual(["front-court-left", "back-court-left", "front-court-right", "back-court-right"]);
+    expect(zones("teqball", "net-court")).toEqual(["front-court-left", "back-court-left", "front-court-right", "back-court-right"]);
+    expect(zones("sepaktakraw", "net-court")).toEqual(["half-court-left", "half-court-right"]);
+    expect(zones("squash", "wall-court")).toEqual(["front-court", "back-court"]);
+    expect(zones("racquetball", "wall-court")).toEqual(["front-court", "back-court"]);
+    expect(zones("roundnet", "roundnet-rings")).toEqual(["outside-circles", "serving-ring", "no-hit-zone"]);
+    expect(zones("netball", "field-thirds")).toHaveLength(3);
   });
 });
 

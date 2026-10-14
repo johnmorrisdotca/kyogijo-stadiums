@@ -7,8 +7,23 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **Seven more court sports, and sitting volleyball** ([docs/courts.md](./docs/courts.md)), each drawn to scale from its governing body's own current rules, with its named looks (light and dark), a free zone where the rulebook gives one, simple and full detail, wide and tall, an outline, a description and labelled parts in English and Japanese, a frame, ranges, a score and a badge (`SPORTS` is now 27):
+  - **`padel`** (the FIP's Rules of Padel, review of 1 January 2026): 20 by 10 m inside its walls, the service lines at 6.95 m, the central service line, the net, and the walls and metal fence of the enclosure.
+  - **`squash`** (World Squash's Specifications for Squash Courts, 28 November 2017): the short line, half court line and service boxes of the floor, with the front wall laid flat beside it to show its tin, service line and front wall line; `league: "wsf-doubles"` and `"wsf-doubles-wide"` for the doubles courts.
+  - **`racquetball`** (the IRF's Official Rules 2026-2028 and Court Specifications): 40 by 20 feet, the short line, service line, service boxes, drive serve lines and the broken receiving line.
+  - **`sepaktakraw`** (the ISTAF's Law of the Game, 2013 edition, the one that could be read): 13.4 by 6.1 m, the centre line, four quarter circles, two service circles, the net.
+  - **`teqball`** (the FITEQ's rules, 2026): the 3 by 1.5 m table and its net in the middle of a court of 16 by 12 m, the halfway line, the service lines, the surrounds.
+  - **`roundnet`** (the International Roundnet Federation's rules, 2022): the set, the no hit zone line, the serving line and the four service positions, on a square with no out of bounds.
+  - **`netball`** (World Netball's Rules of Netball, 2024): 30.5 by 15.25 m, the transverse lines, centre circle, goal circles and goalposts with their rings; scored as a goals sport, with the usual score and the home team on the left.
+  - **`league: "wpv-sitting"`** of `volleyball` (World ParaVolley's Official Sitting Volleyball Rules 2025-2028): 10 by 6 m, the attack line at 2 m, a 7 m net 1.15 m high.
+  - New zone sets `wall-court` (squash, racquetball) and `roundnet-rings`; `net-court` now covers padel, sepak takraw and teqball, and `field-thirds` netball. 36 coordinate frames (7 more), 7 more `half-court` ranges, and 7 more sports in the demo's picker, its gallery and the docs gallery, with the sources and licence notes in [docs/sources.md](./docs/sources.md) and [docs/references.md](./docs/references.md).
+  - Footvolley is not drawn: the only rulebook found that gives its dimensions is a European league's, not an international governing body's. Futsal is `pitch: "futsal"` of `soccer`, as before.
+
 ### Changed
 
+- The named looks (`look: "night"` and the others) write one more selector for each sport of the court group into the drawing's style, so a drawing with a look has a longer style text than before; the drawing itself is unchanged.
 - The name a reader sees is Kyogijo Stadiums (競技場 in Japanese): the demo's title, the docs site, the API page, the README and the package description. Code names (`drawKyogijo`, `<kyogijo-field>`) are unchanged.
 - The indoor volleyball court shows its centre line: it runs under the net (FIVB Rule 1.3.3) and the net was drawn over it, so only a dark bar showed. The line now shows between the net's edges. The court's other lines were already all there (the boundary, both attack lines, the attack lines' extensions and the service zone's marks in the full detail); the beach court has only its four boundary lines, as the beach rules say.
 - The demo's year switch in the atlas is a finger wide before its words arrive, in WebKit too.

@@ -8,8 +8,8 @@ import type { Frame } from "./frames.ts";
 /** The field sports: lacrosse (the field and the box), rugby (union and league), Australian football, Gaelic football and hurling, cricket, field hockey and team handball. */
 export type FieldSport = "lacrosse" | "rugby" | "afl" | "gaelic" | "cricket" | "fieldhockey" | "handball";
 
-/** The surfaces: three football fields, a rink, a court, a ballpark, a soccer pitch, a curling sheet, five net sports (tennis, volleyball, badminton, pickleball and table tennis) and seven field sports (lacrosse, rugby, Australian football, Gaelic football and hurling, cricket, field hockey and handball). */
-export type Sport = "nfl" | "cfl" | "ifaf" | "nhl" | "nba" | "mlb" | "soccer" | "curling" | "tennis" | "volleyball" | "badminton" | "pickleball" | "tabletennis" | FieldSport;
+/** The surfaces: three football fields, a rink, a court, a ballpark, a soccer pitch, a curling sheet, twelve net, racket and court sports (tennis, volleyball, badminton, pickleball, table tennis, padel, squash, racquetball, sepak takraw, teqball, roundnet and netball) and seven field sports (lacrosse, rugby, Australian football, Gaelic football and hurling, cricket, field hockey and handball). */
+export type Sport = "nfl" | "cfl" | "ifaf" | "nhl" | "nba" | "mlb" | "soccer" | "curling" | "tennis" | "volleyball" | "badminton" | "pickleball" | "tabletennis" | "padel" | "squash" | "racquetball" | "sepaktakraw" | "teqball" | "roundnet" | "netball" | FieldSport;
 
 /** `auto` follows the device's light or dark setting (and `data-theme` on the page's root), the others force one. */
 export type Theme = "auto" | "light" | "dark";
@@ -330,17 +330,32 @@ export type BadmintonLook = "green" | "blue" | "wood";
 export type PickleballLook = "blue-green" | "green" | "red";
 /** The named looks of a table tennis table. */
 export type TableTennisLook = "blue" | "green";
+/** The named looks of a padel court: the colours the FIP's rules prefer for the floor. */
+export type PadelLook = "blue" | "green" | "terracotta";
+/** The named looks of a squash court. */
+export type SquashLook = "wood" | "blue";
+/** The named looks of a racquetball court: the lines are the IRF's recommended red, or blue on a convertible court. */
+export type RacquetballLook = "wood" | "convertible";
+/** The named looks of a sepak takraw court. */
+export type SepakTakrawLook = "blue" | "green" | "wood";
+/** The named looks of a teqball court. */
+export type TeqballLook = "grey" | "blue" | "green";
+/** The named looks of a roundnet court. */
+export type RoundnetLook = "grass" | "sand" | "indoor";
+/** The named looks of a netball court. */
+export type NetballLook = "wood" | "blue" | "green";
 
 /**
- * The look and the variants of a net sport's court (tennis, volleyball, badminton, pickleball, table tennis). Every part is optional.
+ * The look and the variants of a net sport's court (tennis, volleyball, badminton, pickleball, table tennis, padel, squash, racquetball, sepak takraw, teqball, roundnet
+ * and netball). Every part is optional.
  * The lines and the sizes are the rulebook's whatever the look; a look is the colour of the ground and of the surface.
  */
 export interface NetStyle {
-  /** A named look: for tennis `hard-blue` (the default), `hard-green`, `clay` or `grass`; volleyball `wood` (the default for indoors) or `blue`, and `sand` for the beach; badminton `green` (the default), `blue` or `wood`; pickleball `blue-green` (the default), `green` or `red`; table tennis `blue` (the default) or `green`. An unknown name is an error that lists them. */
+  /** A named look: for tennis `hard-blue` (the default), `hard-green`, `clay` or `grass`; volleyball `wood` (the default for indoors) or `blue`, and `sand` for the beach; badminton `green` (the default), `blue` or `wood`; pickleball `blue-green` (the default), `green` or `red`; table tennis `blue` (the default) or `green`; padel `blue` (the default), `green` or `terracotta`; squash `wood` (the default) or `blue`; racquetball `wood` (the default) or `convertible`; sepak takraw `blue` (the default), `green` or `wood`; teqball `grey` (the default), `blue` or `green`; roundnet `grass` (the default), `sand` or `indoor`; netball `wood` (the default), `blue` or `green`. An unknown name is an error that lists them. */
   look?: string;
   /**
    * The free zone drawn round the court: `official` (the default: the figure a rulebook gives for its own competitions, where it gives one), `least` (the least it allows
-   * or recommends) or `none`. Tennis (Appendix X), volleyball and beach volleyball (Rule 1.1) and pickleball (Rule 3.A.3) give figures; badminton and table tennis do not.
+   * or recommends) or `none`. Tennis (Appendix X), volleyball, beach volleyball and sitting volleyball (Rule 1.1), pickleball (Rule 3.A.3), sepak takraw (Law 1.5) and netball (Rule 1, item 8) give figures; badminton, table tennis, padel, squash, racquetball, teqball and roundnet do not.
    */
   free?: "official" | "least" | "none";
   /** Tennis: draw the two singles sticks that hold a doubles net up for a singles match, 3 feet outside the singles court (Rule 1). Off by default. */
@@ -391,7 +406,7 @@ export interface Team {
   ends?: readonly (number | string | null | undefined)[];
   /** Curling: the team has the hammer, the last stone of the end. A marker is drawn beside its name. */
   hammer?: boolean;
-  /** Tennis, volleyball, badminton, pickleball and table tennis: what it scored in each set (tennis: its games; pickleball and table tennis: each game's points), in order; `null` for one not played yet. The set in progress is the last one given. */
+  /** The net and racket sports (not netball): what it scored in each set (tennis and padel: its games; the others: each game's or set's points), in order; `null` for one not played yet. The set in progress is the last one given. */
   sets?: readonly (number | string | null | undefined)[];
   /** Tennis: the points of a tie-break in each set (the same places as `sets`; `null` where the set had none), written small beside the games. */
   tiebreaks?: readonly (number | string | null | undefined)[];
@@ -521,7 +536,7 @@ export interface SurfaceOptions {
   court?: CourtStyle;
   /** The size and look of a curling sheet. */
   sheet?: SheetStyle;
-  /** The look and the variants of a tennis, volleyball, badminton, pickleball or table tennis court. */
+  /** The look and the variants of a tennis, volleyball, badminton, pickleball, table tennis, padel, squash, racquetball, sepak takraw, teqball, roundnet or netball court. */
   net?: NetStyle;
   /** The size and the variants of a lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey or handball surface. */
   field?: FieldStyle;

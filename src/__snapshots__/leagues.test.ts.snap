@@ -1424,7 +1424,67 @@ exports[`the leagues' drawings > nhl whl: what a score drawing is made of 1`] = 
 }
 `;
 
+exports[`the leagues' drawings > squash wsf-doubles: what a score drawing is made of 1`] = `
+{
+  "desc": 1,
+  "g": 1,
+  "g.ky-lose.ky-total": 1,
+  "g.ky-plate.ky-scoreboard": 1,
+  "g.ky-surface-group": 1,
+  "g.ky-total.ky-win": 1,
+  "path.ky-face": 1,
+  "path.ky-fill-line": 1,
+  "path.ky-tin": 1,
+  "path.ky-wall": 3,
+  "rect.ky-apron": 1,
+  "rect.ky-panel-left": 1,
+  "rect.ky-panel-right": 1,
+  "rect.ky-plate-bg": 1,
+  "rect.ky-surface": 1,
+  "rect.ky-winbar.ky-winbar-left": 1,
+  "style": 1,
+  "svg.ky-squash.kyogijo": 1,
+  "text.ky-comp.ky-text": 1,
+  "text.ky-foot.ky-text": 7,
+  "text.ky-ink-left.ky-text": 2,
+  "text.ky-ink-right.ky-text": 2,
+  "text.ky-score.ky-text": 2,
+  "title": 1,
+}
+`;
+
+exports[`the leagues' drawings > squash wsf-doubles-wide: what a score drawing is made of 1`] = `
+{
+  "desc": 1,
+  "g": 1,
+  "g.ky-lose.ky-total": 1,
+  "g.ky-plate.ky-scoreboard": 1,
+  "g.ky-surface-group": 1,
+  "g.ky-total.ky-win": 1,
+  "path.ky-face": 1,
+  "path.ky-fill-line": 1,
+  "path.ky-tin": 1,
+  "path.ky-wall": 3,
+  "rect.ky-apron": 1,
+  "rect.ky-panel-left": 1,
+  "rect.ky-panel-right": 1,
+  "rect.ky-plate-bg": 1,
+  "rect.ky-surface": 1,
+  "rect.ky-winbar.ky-winbar-left": 1,
+  "style": 1,
+  "svg.ky-squash.kyogijo": 1,
+  "text.ky-comp.ky-text": 1,
+  "text.ky-foot.ky-text": 7,
+  "text.ky-ink-left.ky-text": 2,
+  "text.ky-ink-right.ky-text": 2,
+  "text.ky-score.ky-text": 2,
+  "title": 1,
+}
+`;
+
 exports[`the leagues' drawings > stay the same text unless a drawing was meant to change: one fingerprint for every league 1`] = `"1b32yjz"`;
+
+exports[`the leagues' drawings > stay the same text unless a drawing was meant to change: one fingerprint for the leagues added after the field sports 1`] = `"0cvvoh5"`;
 
 exports[`the leagues' drawings > volleyball fivb-beach: what a score drawing is made of 1`] = `
 {
@@ -1449,6 +1509,38 @@ exports[`the leagues' drawings > volleyball fivb-beach: what a score drawing is 
   "svg.ky-volleyball.kyogijo": 1,
   "text.ky-comp.ky-text": 1,
   "text.ky-foot.ky-text": 5,
+  "text.ky-ink-left.ky-text": 2,
+  "text.ky-ink-right.ky-text": 2,
+  "text.ky-score.ky-text": 2,
+  "title": 1,
+}
+`;
+
+exports[`the leagues' drawings > volleyball wpv-sitting: what a score drawing is made of 1`] = `
+{
+  "circle.ky-nt-post": 2,
+  "circle.ky-red-fill": 2,
+  "desc": 1,
+  "g": 1,
+  "g.ky-lose.ky-total": 1,
+  "g.ky-plate.ky-scoreboard": 1,
+  "g.ky-surface-group": 1,
+  "g.ky-total.ky-win": 1,
+  "path.ky-area": 1,
+  "path.ky-fill-line": 1,
+  "rect.ky-apron": 1,
+  "rect.ky-fill-line": 1,
+  "rect.ky-free": 1,
+  "rect.ky-nt-line": 1,
+  "rect.ky-panel-left": 1,
+  "rect.ky-panel-right": 1,
+  "rect.ky-plate-bg": 1,
+  "rect.ky-surface": 1,
+  "rect.ky-winbar.ky-winbar-left": 1,
+  "style": 1,
+  "svg.ky-volleyball.kyogijo": 1,
+  "text.ky-comp.ky-text": 1,
+  "text.ky-foot.ky-text": 7,
   "text.ky-ink-left.ky-text": 2,
   "text.ky-ink-right.ky-text": 2,
   "text.ky-score.ky-text": 2,

@@ -7,7 +7,7 @@
 const MAIN = "@johnmorrisdotca/kyogijo-stadiums";
 
 const UNIT_WORDS = { ft: "feet", yd: "yards", m: "metres", cm: "centimetres", in: "inches", mm: "millimetres", px: "pixels", "tenth-ft": "tenths of a foot", percent: "percent of the pitch", fraction: "fractions of the pitch" };
-const SPORT_NAMES = { nfl: "NFL", cfl: "CFL", ifaf: "IFAF", nhl: "NHL", nba: "NBA", mlb: "MLB", soccer: "soccer", curling: "curling", tennis: "tennis", volleyball: "volleyball", badminton: "badminton", pickleball: "pickleball", tabletennis: "table tennis", lacrosse: "lacrosse", rugby: "rugby", afl: "Australian football", gaelic: "Gaelic games", cricket: "cricket", fieldhockey: "field hockey", handball: "handball" };
+const SPORT_NAMES = { nfl: "NFL", cfl: "CFL", ifaf: "IFAF", nhl: "NHL", nba: "NBA", mlb: "MLB", soccer: "soccer", curling: "curling", tennis: "tennis", volleyball: "volleyball", badminton: "badminton", pickleball: "pickleball", tabletennis: "table tennis", padel: "padel", squash: "squash", racquetball: "racquetball", sepaktakraw: "sepak takraw", teqball: "teqball", roundnet: "roundnet", netball: "netball", lacrosse: "lacrosse", rugby: "rugby", afl: "Australian football", gaelic: "Gaelic games", cricket: "cricket", fieldhockey: "field hockey", handball: "handball" };
 const ENDS = { fixed: "fixed to the surface", shooter: "the basket or house attacked", none: "none" };
 const cell = (text) => String(text).replace(/\|/g, "\\|").replace(/\n/g, " ");
 const num = (n) => String(Math.round(n * 100) / 100);

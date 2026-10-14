@@ -140,6 +140,20 @@ const NET: readonly Feature[] = [
   f("antennae", "--ky-red", "The antennae of a volleyball net."),
 ];
 
+const APRON_COURT: readonly Feature[] = [f("apron", "--ky-apron", "The ground round the court."), f("court", "--ky-surface", "The court."), f("lines", LINE, "The painted lines.")];
+/** A padel court: the net's features, and the walls and the metal fence of its enclosure. */
+const PADEL: readonly Feature[] = [...NET, f("walls", "--ky-wall", "The walls of the enclosure."), f("fence", "--ky-mesh", "The metal fence between the walls.")];
+/** A squash court: no net, walls round it, and its front wall laid flat beside it, with its tin. */
+const SQUASH: readonly Feature[] = [...APRON_COURT, f("walls", "--ky-wall", "The walls round the court."), f("wall-face", "--ky-face", "The front wall, laid flat beside the court."), f("tin", "--ky-tin", "The tin, on the front wall.")];
+/** A racquetball court: no net, and walls round it. */
+const RACQUETBALL: readonly Feature[] = [...APRON_COURT, f("walls", "--ky-wall", "The walls round the court.")];
+/** A teqball court: the net, the table, and the court surrounds. */
+const TEQBALL: readonly Feature[] = [...APRON_COURT, f("net", "--ky-net", "The net."), f("table", "--ky-table", "The teqball table."), f("walls", "--ky-wall", "The court surrounds.")];
+/** A roundnet court: the ground, the lines (the circles and the service marks), and the set. */
+const ROUNDNET: readonly Feature[] = [...APRON_COURT, f("net", "--ky-net", "The set: its rim.")];
+/** A netball court: the ground and free zone, the lines and circles, and the goalposts. */
+const NETBALL: readonly Feature[] = [f("apron", "--ky-apron", "The ground round the court."), f("free-zone", "--ky-free", "The court surround."), f("court", "--ky-surface", "The court."), f("lines", LINE, "The painted lines and circles."), f("posts", "--ky-net", "The goalposts.")];
+
 
 const TURF: readonly Feature[] = [f("apron", "--ky-apron", "The ground round the surface."), f("turf", "--ky-surface", "The grass."), f("mowing", "--ky-surface-alt", "The lighter tone of the mown pattern.")];
 const POST = "--ky-post";
@@ -254,6 +268,13 @@ export const FEATURE_INFO: Readonly<Record<string, readonly Feature[]>> = Object
   badminton: NET,
   pickleball: NET,
   tabletennis: NET,
+  padel: PADEL,
+  squash: SQUASH,
+  racquetball: RACQUETBALL,
+  sepaktakraw: NET,
+  teqball: TEQBALL,
+  roundnet: ROUNDNET,
+  netball: NETBALL,
   lacrosse: LACROSSE,
   rugby: RUGBY,
   afl: AFL,

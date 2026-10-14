@@ -114,6 +114,7 @@ Each property is listed with its light and dark value.
 | `--ky-rg-o`, `--ky-rg-m`, `--ky-rg-i`, `--ky-rg-b` | a curling house: the 12-foot band, the 8-foot, the 4-foot and the button | `#2a5db0`, `#fff`, `#c8372d`, `#fff` | `#3f6cc0`, `#dfe8ef`, `#c9473e`, `#dfe8ef` |
 | `--ky-hog`, `--ky-hack`, `--ky-fgz`, `--ky-pebble` | a curling sheet's hog lines, hacks, free guard zone and ice pebble | `#c8372d`, `#3a4046`, a blue tint, a grey-blue speck | darker |
 | `--ky-free`, `--ky-area`, `--ky-net` | the net sports' courts: the free zone round the court (the court itself is `--ky-surface`), a painted area on it (a non-volley zone, a volleyball front zone) and the net with its posts | by look | by look |
+| `--ky-wall`, `--ky-mesh`, `--ky-face`, `--ky-tin`, `--ky-table`, `--ky-setnet` | the courts that have them: the walls (padel, squash, racquetball) and the surrounds (teqball), padel's metal fence, a squash court's front wall laid flat and its tin, a teqball table, and the net of a roundnet set | by look | by look |
 | `--ky-serve` | the ball that marks the server | `#d8e33b` | the same |
 | `--ky-dirt`, `--ky-foul`, `--ky-infield` | the baseball field | `#c28e5c`, `#3a8148`, `#58a05d` | `#8a6040`, `#275a31`, `#367a42` |
 | `--ky-left`, `--ky-right` | the teams' colours | `#2f6db0`, `#b5452c` | the same |

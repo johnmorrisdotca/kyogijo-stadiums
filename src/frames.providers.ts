@@ -151,7 +151,7 @@ const curling: Frame = {
  * size of the court it is placed on. This package's own frame: no
  * tracking provider's format was read (Hawk-Eye's and the others' are not published), and a rulebook measures a court from the net.
  */
-function netFrame(sport: "tennis" | "volleyball" | "badminton" | "pickleball" | "tabletennis", title: string, unit: "ft" | "m", x: number, y: number, what: string): Frame {
+function netFrame(sport: "tennis" | "volleyball" | "badminton" | "pickleball" | "tabletennis" | "padel" | "squash" | "racquetball" | "sepaktakraw" | "teqball" | "roundnet" | "netball", title: string, unit: "ft" | "m", x: number, y: number, what: string, origin = `the centre of the net, on ${what}`): Frame {
   const per = unit === "ft" ? 1 : 0.3048;
   const map = (size: { length: number; width: number }): FrameMap => ({ x: span(-(size.length * per) / 2, (size.length * per) / 2, 0, size.length), y: span(-(size.width * per) / 2, (size.width * per) / 2, size.width, 0) });
   return {
@@ -161,13 +161,13 @@ function netFrame(sport: "tennis" | "volleyball" | "badminton" | "pickleball" | 
     unit,
     x: [-x, x],
     y: [-y, y],
-    origin: `the centre of the net, on ${what}`,
+    origin,
     yDirection: "up",
-    size: sport === "volleyball" ? "variable" : "fixed",
+    size: sport === "volleyball" || sport === "squash" ? "variable" : "fixed",
     ends: "fixed",
-    landmarks: sport === "volleyball" ? map : map(surfaceSize(sport, "ft")),
-    source: "this package's own frame: the centre of the net as the origin, as the rulebook measures the court from the net",
-    note: "Positive x is towards the end drawn at the right, positive y towards the top as the court is drawn wide. The frame is not a data provider's: it is the plain reading of the rules, which measure everything from the net.",
+    landmarks: sport === "volleyball" || sport === "squash" ? map : map(surfaceSize(sport, "ft")),
+    source: sport === "squash" || sport === "racquetball" || sport === "roundnet" || sport === "netball" ? "this package's own frame: the centre of the court as the origin" : "this package's own frame: the centre of the net as the origin, as the rulebook measures the court from the net",
+    note: "Positive x is towards the end drawn at the right, positive y towards the top as the court is drawn wide. The frame is not a data provider's: it is the plain reading of the rules, which measure everything from the net (or, on a court without one, from its lines).",
   };
 }
 
@@ -176,6 +176,13 @@ const volleyballFrame = netFrame("volleyball", "Volleyball court, in metres from
 const badmintonFrame = netFrame("badminton", "Badminton court, in metres from the centre of the net", "m", 6.7, 3.05, "the court");
 const pickleballFrame = netFrame("pickleball", "Pickleball court, in feet from the centre of the net", "ft", 22, 10, "the court");
 const tableTennisFrame = netFrame("tabletennis", "Table tennis table, in metres from the centre of the net", "m", 1.37, 0.7625, "the table");
+const padelFrame = netFrame("padel", "Padel court, in metres from the centre of the net", "m", 10, 5, "the court");
+const squashFrame = netFrame("squash", "Squash court, in metres from the centre of the court", "m", 4.875, 4.21, "the court", "the centre of the court; the front wall is at the left");
+const racquetballFrame = netFrame("racquetball", "Racquetball court, in feet from the centre of the court", "ft", 20, 10, "the court", "the centre of the court; the front wall is at the left");
+const sepakTakrawFrame = netFrame("sepaktakraw", "Sepak takraw court, in metres from the centre of the net", "m", 6.7, 3.05, "the court");
+const teqballFrame = netFrame("teqball", "Teqball court, in metres from the centre of the table and its net", "m", 8, 6, "the court");
+const roundnetFrame = netFrame("roundnet", "Roundnet court, in metres from the centre of the set", "m", 5, 5, "the court", "the centre of the set, the middle of the court");
+const netballFrame = netFrame("netball", "Netball court, in metres from the centre of the court", "m", 15.25, 7.625, "the court", "the centre of the court, on the centre circle");
 
 /**
  * A field sport's surface in the plain frame of its middle: the centre of the surface as the origin, x along it, positive towards the end drawn at the right, y across it, positive towards the top as it is drawn wide.
@@ -210,7 +217,7 @@ const cricketFrame = centreFrame("cricket", "Cricket ground, in yards from the m
 const fieldHockeyFrame = centreFrame("fieldhockey", "Field hockey pitch, in metres from the centre", "m", 45.7, 27.5);
 const handballFrame = centreFrame("handball", "Handball court, in metres from the centre", "m", 20, 10);
 
-for (const frame of [nhlApi, hockeyTech, nbaStats, nflTracking, mlbam, retrosheet, curling, tennisFrame, volleyballFrame, badmintonFrame, pickleballFrame, tableTennisFrame, lacrosseFrame, rugbyFrame, aflFrame, gaelicFrame, cricketFrame, fieldHockeyFrame, handballFrame]) if (!Object.prototype.hasOwnProperty.call(FRAMES, frame.name)) registerFrame(frame);
+for (const frame of [nhlApi, hockeyTech, nbaStats, nflTracking, mlbam, retrosheet, curling, tennisFrame, volleyballFrame, badmintonFrame, pickleballFrame, tableTennisFrame, padelFrame, squashFrame, racquetballFrame, sepakTakrawFrame, teqballFrame, roundnetFrame, netballFrame, lacrosseFrame, rugbyFrame, aflFrame, gaelicFrame, cricketFrame, fieldHockeyFrame, handballFrame]) if (!Object.prototype.hasOwnProperty.call(FRAMES, frame.name)) registerFrame(frame);
 
 // Retrosheet's hit-location diagram (Project Scoresheet's) draws the field in sectors: columns of the outfield from the left field
 // line to the right (7L, 7, 78, 8, 89, 9, 9L), each cut into rings of about 50 feet by depth (S shallow, none medium, D deep, XD

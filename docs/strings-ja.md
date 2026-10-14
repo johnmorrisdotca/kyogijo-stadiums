@@ -19,6 +19,13 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `surface.badminton` | Badminton court | バドミントンコート |
 | `surface.pickleball` | Pickleball court | ピックルボールコート |
 | `surface.tabletennis` | Table tennis table | 卓球台 |
+| `surface.padel` | Padel court | パデルコート |
+| `surface.squash` | Squash court | スカッシュコート |
+| `surface.racquetball` | Racquetball court | ラケットボールコート |
+| `surface.sepaktakraw` | Sepak takraw court | セパタクローコート |
+| `surface.teqball` | Teqball court | テックボールコート |
+| `surface.roundnet` | Roundnet court | ラウンドネットコート |
+| `surface.netball` | Netball court | ネットボールコート |
 | `surface.lacrosse` | Lacrosse field | ラクロスのフィールド |
 | `surface.rugby` | Rugby union field | ラグビーユニオンのグラウンド |
 | `surface.afl` | Australian football ground | オーストラリアンフットボールのグラウンド |
@@ -39,6 +46,13 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `about.badminton` | a badminton court, 13.4 by 6.1 metres, with its singles and doubles lines, short and long service lines, centre lines and the net | バドミントンコート。13.4×6.1mで、シングルスとダブルスのライン、ショートサービスライン、ロングサービスライン、センターライン、ネットがあります |
 | `about.pickleball` | a pickleball court, 44 by 20 feet, with its non-volley zones, centre lines and the net | ピックルボールコート。44フィート（約13.4m）×20フィート（約6.1m）で、ノンボレーゾーン、センターライン、ネットがあります |
 | `about.tabletennis` | a table tennis table, 2.74 by 1.525 metres, with its side lines, end lines, centre line and the net | 卓球台。2.74×1.525mで、サイドライン、エンドライン、センターライン、ネットがあります |
+| `about.padel` | a padel court, 20 by 10 metres, with its service lines, central service lines, the net, and the walls and metal fence of its enclosure | パデルコート。20×10mで、サービスライン、センターサービスライン、ネット、囲いの壁と金網があります |
+| `about.squash` | a squash court, 9.75 by 6.4 metres, with its short line, half court line and service boxes, the front wall laid flat beside it with its tin, service line and front wall line, and the walls round it | スカッシュコート。9.75×6.4mで、ショートライン、ハーフコートライン、サービスボックスがあり、横に広げて描いた前壁にはティン、サービスライン、フロントウォールラインがあり、周囲に壁があります |
+| `about.racquetball` | a racquetball court, 40 by 20 feet, with its short line, service line, service boxes, drive serve lines and broken receiving line, and the walls round it | ラケットボールコート。40フィート（約12.2m）×20フィート（約6.1m）で、ショートライン、サービスライン、サービスボックス、ドライブサーブライン、破線のレシービングラインがあり、周囲に壁があります |
+| `about.sepaktakraw` | a sepak takraw court, 13.4 by 6.1 metres, with its centre line, quarter circles, service circles and the net | セパタクローコート。13.4×6.1mで、センターライン、クォーターサークル、サービスサークル、ネットがあります |
+| `about.teqball` | a teqball court, 16 by 12 metres at the least, with the table and its net in the middle, the halfway line, the service lines and the court surrounds | テックボールコート。16×12m以上で、中央にテーブルとネット、ハーフウェーライン、サービスライン、コート周囲のエリアがあります |
+| `about.roundnet` | a roundnet court, 10 by 10 metres at the least, with the set at its centre, the no hit zone line, the serving line and its four service positions | ラウンドネットコート。10×10m以上で、中央にセット（丸いネット）、ノーヒットゾーンの円、サーブの円、4か所のサーブ位置があります |
+| `about.netball` | a netball court, 30.5 by 15.25 metres, with its transverse lines, centre circle, goal circles and goalposts | ネットボールコート。30.5×15.25mで、トランスバースライン、センターサークル、ゴールサークル、ゴールポストがあります |
 | `about.lacrosse` | a lacrosse field, with its end lines, goals, creases, restraining lines, wing lines and the centre line | ラクロスのフィールド。エンドライン、ゴール、クリース、リストレイニングライン、ウイングライン、センターラインがあります |
 | `about.rugby` | a rugby union field, 94 to 100 metres between the try lines and 68 to 70 metres wide, with its in-goal areas, the 22-metre lines, the half-way line, the dash lines and the goal posts | ラグビーユニオンのグラウンド。トライライン間が94〜100m、幅が68〜70mで、インゴール、22メートルライン、ハーフウェイライン、破線、ゴールポストがあります |
 | `about.afl` | an Australian football ground, an oval 135 to 185 metres long and 110 to 155 metres wide, with the goal squares, the centre square and circles, the fifty metre arcs, and the goal posts and behind posts | オーストラリアンフットボールのグラウンド。長さ135〜185m、幅110〜155mの楕円形で、ゴールスクエア、センタースクエアとサークル、50メートルアーク、ゴールポストとビハインドポストがあります |
@@ -79,6 +93,14 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `league.badminton` | a badminton court, {size}, with its singles and doubles lines, short and long service lines, centre lines and the net | バドミントンコート。{size}で、シングルスとダブルスのライン、ショートサービスライン、ロングサービスライン、センターライン、ネットがあります |
 | `league.pickleball` | a pickleball court, {size}, with its non-volley zones, centre lines and the net | ピックルボールコート。{size}で、ノンボレーゾーン、センターライン、ネットがあります |
 | `league.tabletennis` | a table tennis table, {size}, with its side lines, end lines, centre line and the net | 卓球台。{size}で、サイドライン、エンドライン、センターライン、ネットがあります |
+| `league.sittingVolleyball` | a sitting volleyball court, {size}, with its centre line, attack lines, the net and its antennae | シッティングバレーボールコート。{size}で、センターライン、アタックライン、ネット、アンテナがあります |
+| `league.padel` | a padel court, {size}, with its service lines, central service lines, the net, and the walls and metal fence of its enclosure | パデルコート。{size}で、サービスライン、センターサービスライン、ネット、囲いの壁と金網があります |
+| `league.squash` | a squash court, {size}, with its short line, half court line and service boxes, the front wall laid flat beside it with its tin, service line and front wall line, and the walls round it | スカッシュコート。{size}で、ショートライン、ハーフコートライン、サービスボックスがあり、横に広げて描いた前壁にはティン、サービスライン、フロントウォールラインがあり、周囲に壁があります |
+| `league.racquetball` | a racquetball court, {size}, with its short line, service line, service boxes, drive serve lines and broken receiving line, and the walls round it | ラケットボールコート。{size}で、ショートライン、サービスライン、サービスボックス、ドライブサーブライン、破線のレシービングラインがあり、周囲に壁があります |
+| `league.sepaktakraw` | a sepak takraw court, {size}, with its centre line, quarter circles, service circles and the net | セパタクローコート。{size}で、センターライン、クォーターサークル、サービスサークル、ネットがあります |
+| `league.teqball` | a teqball court, {size} at the least, with the table and its net in the middle, the halfway line, the service lines and the court surrounds | テックボールコート。{size}以上で、中央にテーブルとネット、ハーフウェーライン、サービスライン、コート周囲のエリアがあります |
+| `league.roundnet` | a roundnet court, {size} at the least, with the set at its centre, the no hit zone line, the serving line and its four service positions | ラウンドネットコート。{size}以上で、中央にセット（丸いネット）、ノーヒットゾーンの円、サーブの円、4か所のサーブ位置があります |
+| `league.netball` | a netball court, {size}, with its transverse lines, centre circle, goal circles and goalposts | ネットボールコート。{size}で、トランスバースライン、センターサークル、ゴールサークル、ゴールポストがあります |
 | `league.lacrosse` | a lacrosse field, {size}, with its goals, creases and lines | ラクロスのフィールド。{size}で、ゴール、クリース、各種のラインがあります |
 | `league.lacrosseBox` | a box lacrosse floor with rounded corners, {size}, with its goals, creases, restraining lines and face-off circle | 角が丸いボックスラクロスのフロア。{size}で、ゴール、クリース、リストレイニングライン、フェイスオフサークルがあります |
 | `league.rugby` | a rugby union field, {size} with its in-goal areas, with the 22-metre lines, the half-way line, the dash lines and the goal posts | ラグビーユニオンのグラウンド。インゴールを含めて{size}で、22メートルライン、ハーフウェイライン、破線、ゴールポストがあります |
@@ -182,6 +204,13 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `special.guest.badminton` | court | コート |
 | `special.guest.pickleball` | court | コート |
 | `special.guest.tabletennis` | table | 卓球台 |
+| `special.guest.padel` | court | コート |
+| `special.guest.squash` | court | コート |
+| `special.guest.racquetball` | court | コート |
+| `special.guest.sepaktakraw` | court | コート |
+| `special.guest.teqball` | court | コート |
+| `special.guest.roundnet` | court | コート |
+| `special.guest.netball` | court | コート |
 | `special.guest.lacrosse` | field | フィールド |
 | `special.guest.rugby` | field | グラウンド |
 | `special.guest.afl` | ground | グラウンド |
@@ -371,6 +400,9 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `layers.zones.frontCourt` | Front court | フロントコート |
 | `layers.zones.backCourt` | Back court | バックコート |
 | `layers.zones.halfCourt` | Half court | ハーフコート |
+| `layers.zones.outsideCircles` | Outside the circles | サーブの円の外側 |
+| `layers.zones.servingRing` | Serving ring | ノーヒットゾーンとサーブの円の間 |
+| `layers.zones.noHitZone` | No hit zone | ノーヒットゾーン |
 | `layers.zones.sideLeft` | left | 左 |
 | `layers.zones.sideMiddle` | middle | 中央 |
 | `layers.zones.sideRight` | right | 右 |
@@ -498,6 +530,31 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `notes.names.non-volley-line` | Non-volley line | ノンボレーライン |
 | `notes.names.non-volley-zone` | Non-volley zone | ノンボレーゾーン |
 | `notes.names.court-net` | Net | ネット |
+| `notes.names.back-wall` | Back wall | バックウォール |
+| `notes.names.side-wall` | Side wall | サイドウォール |
+| `notes.names.metal-fence` | Metal fence | 金網 |
+| `notes.names.front-wall` | Front wall | フロントウォール |
+| `notes.names.tin` | Tin | ティン |
+| `notes.names.wall-service-line` | Service line (front wall) | サービスライン（前壁） |
+| `notes.names.front-wall-line` | Front wall line | フロントウォールライン |
+| `notes.names.short-line` | Short line | ショートライン |
+| `notes.names.squash-half-court-line` | Half-court line | ハーフコートライン |
+| `notes.names.service-box` | Service box | サービスボックス |
+| `notes.names.service-zone` | Service zone | サービスゾーン |
+| `notes.names.drive-serve-line` | Drive serve line | ドライブサーブライン |
+| `notes.names.receiving-line` | Receiving line | レシービングライン |
+| `notes.names.safety-zone` | Safety zone | セーフティーゾーン |
+| `notes.names.quarter-circle` | Quarter circle | クォーターサークル |
+| `notes.names.service-circle` | Service circle | サービスサークル |
+| `notes.names.table` | Table | テーブル |
+| `notes.names.court-surround` | Court surround | コート周囲のエリア |
+| `notes.names.roundnet-set` | Roundnet set | ラウンドネットのセット |
+| `notes.names.no-hit-zone` | No hit zone | ノーヒットゾーン |
+| `notes.names.service-position` | Service position | サーブ位置 |
+| `notes.names.transverse-line` | Transverse line | トランスバースライン |
+| `notes.names.goal-circle` | Goal circle | ゴールサークル |
+| `notes.names.goalpost` | Goalpost | ゴールポスト |
+| `notes.names.goal-ring` | Goal ring | ゴールリング |
 | `notes.names.hog-line` | Hog line | ホッグライン |
 | `notes.names.tee-line` | Tee line | ティーライン |
 | `notes.names.back-line` | Back line | バックライン |
@@ -679,6 +736,13 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `sport_badminton` | Badminton | バドミントン |
 | `sport_pickleball` | Pickleball | ピックルボール |
 | `sport_tabletennis` | Table tennis | 卓球 |
+| `sport_padel` | Padel | パデル |
+| `sport_squash` | Squash | スカッシュ |
+| `sport_racquetball` | Racquetball | ラケットボール |
+| `sport_sepaktakraw` | Sepak takraw | セパタクロー |
+| `sport_teqball` | Teqball | テックボール |
+| `sport_roundnet` | Roundnet | ラウンドネット |
+| `sport_netball` | Netball | ネットボール |
 | `sport_lacrosse` | Lacrosse | ラクロス |
 | `sport_rugby` | Rugby | ラグビー |
 | `sport_afl` | Australian football | オーストラリアンフットボール |
@@ -822,7 +886,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `galleryFamily_baseball` | Baseball | 野球 |
 | `galleryFamily_soccer` | Soccer | サッカー |
 | `galleryFamily_curling` | Curling | カーリング |
-| `galleryFamily_net` | Net sports | ネット球技 |
+| `galleryFamily_net` | Net and court sports | ネット球技・コート球技 |
 | `galleryFamily_field` | Field sports | フィールド球技 |
 | `galleryCount` | {n} of {total} sports | {total}競技中{n}競技 |
 | `galleryMore` | Show all {n} sports | 全{n}競技を表示 |
@@ -1026,7 +1090,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | group `places` | Sports and places | 競技と場所 |
 | page `soccer` | Soccer | サッカー |
 | page `curling` | Curling | カーリング |
-| page `courts` | Tennis, volleyball, badminton, pickleball and table tennis | ネット型競技のコート |
+| page `courts` | Net, racket and court sports | ネット型・ラケット型などのコート競技 |
 | page `field-sports` | Lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey and handball | ラクロス、ラグビーなどのフィールド |
 | page `special-games` | Special games | 特設会場での試合 |
 | page `ballparks` | Ballparks | 球場 |
@@ -1052,7 +1116,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `gallery-special` | Gallery: special games | ギャラリー：特設会場での試合 |
 | page `gallery-data` | Gallery: data on a surface | ギャラリー：競技場の上のデータ |
 | page `gallery-curling` | Gallery: curling | ギャラリー：カーリング |
-| page `gallery-courts` | Gallery: tennis, volleyball and other net sports | ギャラリー：ネット型競技のコート |
+| page `gallery-courts` | Gallery: net, racket and court sports | ギャラリー：ネット型・ラケット型などのコート競技 |
 | page `gallery-fields` | Gallery: lacrosse, rugby, Australian football, Gaelic games, cricket, hockey and handball | ギャラリー：ラクロス、ラグビー、オーストラリアンフットボール、ゲーリック・ゲームズ、クリケット、フィールドホッケー、ハンドボール |
 | page `gallery-styling` | Gallery: looks and annotations | ギャラリー：スタイルと注釈 |
 | page `gallery-ranges` | Gallery: display ranges and zoom | ギャラリー：表示範囲とズーム |
@@ -1174,6 +1238,9 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `slowpitch-wbsc` | WBSC slow-pitch softball field | WBSC（スローピッチ）のソフトボール場 |
 | `curling-canada` | Curling Canada sheet | カーリング・カナダのシート |
 | `fivb-beach` | FIVB beach volleyball court | FIVBのビーチバレーボールコート |
+| `wpv-sitting` | World ParaVolley sitting volleyball court | ワールドパラバレーのシッティングバレーボールコート |
+| `wsf-doubles` | World Squash doubles court | ワールドスカッシュのダブルスコート |
+| `wsf-doubles-wide` | World Squash international competition width doubles court | ワールドスカッシュの国際大会規格のダブルスコート |
 
 ## The leagues' dated changes (`leagueChanges`)
 

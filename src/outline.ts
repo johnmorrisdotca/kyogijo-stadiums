@@ -103,7 +103,14 @@ export function outlineOf(o: Pick<SurfaceOptions, "sport" | "park" | "fence" | "
     case "volleyball":
     case "badminton":
     case "pickleball":
-    case "tabletennis": {
+    case "tabletennis":
+    case "padel":
+    case "squash":
+    case "racquetball":
+    case "sepaktakraw":
+    case "teqball":
+    case "roundnet":
+    case "netball": {
       const { length, width } = courtSize(courtFor({ ...o, sport }));
       return rect(length, width);
     }

@@ -640,6 +640,54 @@ exports[`the drawings' structure > nba: what a tall bare surface is made of 1`] 
 }
 `;
 
+exports[`the drawings' structure > netball: what a score drawing is made of 1`] = `
+{
+  "circle.ky-line": 3,
+  "circle.ky-nt-post": 2,
+  "desc": 1,
+  "g.ky-banner.ky-banner-left.ky-lose": 1,
+  "g.ky-banner.ky-banner-right.ky-win": 1,
+  "g.ky-plate": 1,
+  "g.ky-surface-group": 1,
+  "path.ky-fill-line": 1,
+  "path.ky-line": 2,
+  "rect.ky-apron": 1,
+  "rect.ky-free": 1,
+  "rect.ky-plate-bg": 1,
+  "rect.ky-surface": 1,
+  "rect.ky-winbar.ky-winbar-right": 1,
+  "style": 1,
+  "svg.ky-netball.kyogijo": 1,
+  "text.ky-abbr.ky-abbr-left.ky-text": 1,
+  "text.ky-abbr.ky-abbr-right.ky-text": 1,
+  "text.ky-comp.ky-text": 1,
+  "text.ky-dash-text.ky-text": 1,
+  "text.ky-foot.ky-text": 1,
+  "text.ky-lose.ky-score.ky-text": 1,
+  "text.ky-name.ky-paint-left.ky-text": 2,
+  "text.ky-name.ky-paint-right.ky-text": 2,
+  "text.ky-score.ky-text.ky-win": 1,
+  "title": 1,
+}
+`;
+
+exports[`the drawings' structure > netball: what a tall bare surface is made of 1`] = `
+{
+  "circle.ky-line": 3,
+  "circle.ky-nt-post": 2,
+  "desc": 1,
+  "g.ky-surface-group": 1,
+  "path.ky-fill-line": 1,
+  "path.ky-line": 2,
+  "rect.ky-apron": 1,
+  "rect.ky-free": 1,
+  "rect.ky-surface": 1,
+  "style": 1,
+  "svg.ky-netball.kyogijo": 1,
+  "title": 1,
+}
+`;
+
 exports[`the drawings' structure > nfl: what a score drawing is made of 1`] = `
 {
   "circle.ky-post-end": 4,
@@ -762,6 +810,53 @@ exports[`the drawings' structure > nhl: what a tall bare surface is made of 1`] 
 }
 `;
 
+exports[`the drawings' structure > padel: what a score drawing is made of 1`] = `
+{
+  "desc": 1,
+  "g": 1,
+  "g.ky-lose.ky-total": 1,
+  "g.ky-plate.ky-scoreboard": 1,
+  "g.ky-surface-group": 1,
+  "g.ky-total.ky-win": 1,
+  "path.ky-fill-line": 1,
+  "path.ky-mesh": 2,
+  "path.ky-wall": 6,
+  "rect.ky-apron": 1,
+  "rect.ky-nt-line": 1,
+  "rect.ky-nt-post": 2,
+  "rect.ky-panel-left": 1,
+  "rect.ky-panel-right": 1,
+  "rect.ky-plate-bg": 1,
+  "rect.ky-surface": 1,
+  "rect.ky-winbar.ky-winbar-left": 1,
+  "style": 1,
+  "svg.ky-padel.kyogijo": 1,
+  "text.ky-comp.ky-text": 1,
+  "text.ky-foot.ky-text": 5,
+  "text.ky-ink-left.ky-text": 2,
+  "text.ky-ink-right.ky-text": 2,
+  "text.ky-score.ky-text": 2,
+  "title": 1,
+}
+`;
+
+exports[`the drawings' structure > padel: what a tall bare surface is made of 1`] = `
+{
+  "desc": 1,
+  "g.ky-surface-group": 1,
+  "path.ky-fill-line": 1,
+  "path.ky-mesh": 2,
+  "path.ky-wall": 6,
+  "rect.ky-apron": 1,
+  "rect.ky-nt-line": 1,
+  "rect.ky-nt-post": 2,
+  "rect.ky-surface": 1,
+  "style": 1,
+  "svg.ky-padel.kyogijo": 1,
+  "title": 1,
+}
+`;
+
 exports[`the drawings' structure > pickleball: what a score drawing is made of 1`] = `
 {
   "circle.ky-nt-post": 2,
@@ -809,6 +904,92 @@ exports[`the drawings' structure > pickleball: what a tall bare surface is made 
 }
 `;
 
+exports[`the drawings' structure > racquetball: what a score drawing is made of 1`] = `
+{
+  "desc": 1,
+  "g": 1,
+  "g.ky-lose.ky-total": 1,
+  "g.ky-plate.ky-scoreboard": 1,
+  "g.ky-surface-group": 1,
+  "g.ky-total.ky-win": 1,
+  "path.ky-fill-line": 1,
+  "path.ky-wall": 4,
+  "rect.ky-apron": 1,
+  "rect.ky-panel-left": 1,
+  "rect.ky-panel-right": 1,
+  "rect.ky-plate-bg": 1,
+  "rect.ky-surface": 1,
+  "rect.ky-winbar.ky-winbar-left": 1,
+  "style": 1,
+  "svg.ky-racquetball.kyogijo": 1,
+  "text.ky-comp.ky-text": 1,
+  "text.ky-foot.ky-text": 7,
+  "text.ky-ink-left.ky-text": 2,
+  "text.ky-ink-right.ky-text": 2,
+  "text.ky-score.ky-text": 2,
+  "title": 1,
+}
+`;
+
+exports[`the drawings' structure > racquetball: what a tall bare surface is made of 1`] = `
+{
+  "desc": 1,
+  "g.ky-surface-group": 1,
+  "path.ky-fill-line": 1,
+  "path.ky-wall": 4,
+  "rect.ky-apron": 1,
+  "rect.ky-surface": 1,
+  "style": 1,
+  "svg.ky-racquetball.kyogijo": 1,
+  "title": 1,
+}
+`;
+
+exports[`the drawings' structure > roundnet: what a score drawing is made of 1`] = `
+{
+  "circle.ky-line": 2,
+  "circle.ky-nt-post": 1,
+  "circle.ky-set-net": 1,
+  "desc": 1,
+  "g": 1,
+  "g.ky-lose.ky-total": 1,
+  "g.ky-plate.ky-scoreboard": 1,
+  "g.ky-surface-group": 1,
+  "g.ky-total.ky-win": 1,
+  "path.ky-fill-line": 1,
+  "rect.ky-apron": 1,
+  "rect.ky-panel-left": 1,
+  "rect.ky-panel-right": 1,
+  "rect.ky-plate-bg": 1,
+  "rect.ky-surface": 1,
+  "rect.ky-winbar.ky-winbar-left": 1,
+  "style": 1,
+  "svg.ky-roundnet.kyogijo": 1,
+  "text.ky-comp.ky-text": 1,
+  "text.ky-foot.ky-text": 5,
+  "text.ky-ink-left.ky-text": 2,
+  "text.ky-ink-right.ky-text": 2,
+  "text.ky-score.ky-text": 2,
+  "title": 1,
+}
+`;
+
+exports[`the drawings' structure > roundnet: what a tall bare surface is made of 1`] = `
+{
+  "circle.ky-line": 2,
+  "circle.ky-nt-post": 1,
+  "circle.ky-set-net": 1,
+  "desc": 1,
+  "g.ky-surface-group": 1,
+  "path.ky-fill-line": 1,
+  "rect.ky-apron": 1,
+  "rect.ky-surface": 1,
+  "style": 1,
+  "svg.ky-roundnet.kyogijo": 1,
+  "title": 1,
+}
+`;
+
 exports[`the drawings' structure > rugby: what a score drawing is made of 1`] = `
 {
   "circle.ky-post-end": 18,
@@ -851,6 +1032,57 @@ exports[`the drawings' structure > rugby: what a tall bare surface is made of 1`
   "rect.ky-surface": 1,
   "style": 1,
   "svg.ky-rugby.kyogijo": 1,
+  "title": 1,
+}
+`;
+
+exports[`the drawings' structure > sepaktakraw: what a score drawing is made of 1`] = `
+{
+  "circle.ky-line": 2,
+  "circle.ky-nt-post": 2,
+  "desc": 1,
+  "g": 1,
+  "g.ky-lose.ky-total": 1,
+  "g.ky-plate.ky-scoreboard": 1,
+  "g.ky-surface-group": 1,
+  "g.ky-total.ky-win": 1,
+  "path.ky-fill-line": 1,
+  "path.ky-line": 4,
+  "rect.ky-apron": 1,
+  "rect.ky-fill-line": 1,
+  "rect.ky-free": 1,
+  "rect.ky-nt-line": 1,
+  "rect.ky-panel-left": 1,
+  "rect.ky-panel-right": 1,
+  "rect.ky-plate-bg": 1,
+  "rect.ky-surface": 1,
+  "rect.ky-winbar.ky-winbar-left": 1,
+  "style": 1,
+  "svg.ky-sepaktakraw.kyogijo": 1,
+  "text.ky-comp.ky-text": 1,
+  "text.ky-foot.ky-text": 5,
+  "text.ky-ink-left.ky-text": 2,
+  "text.ky-ink-right.ky-text": 2,
+  "text.ky-score.ky-text": 2,
+  "title": 1,
+}
+`;
+
+exports[`the drawings' structure > sepaktakraw: what a tall bare surface is made of 1`] = `
+{
+  "circle.ky-line": 2,
+  "circle.ky-nt-post": 2,
+  "desc": 1,
+  "g.ky-surface-group": 1,
+  "path.ky-fill-line": 1,
+  "path.ky-line": 4,
+  "rect.ky-apron": 1,
+  "rect.ky-fill-line": 1,
+  "rect.ky-free": 1,
+  "rect.ky-nt-line": 1,
+  "rect.ky-surface": 1,
+  "style": 1,
+  "svg.ky-sepaktakraw.kyogijo": 1,
   "title": 1,
 }
 `;
@@ -917,7 +1149,54 @@ exports[`the drawings' structure > soccer: what a tall bare surface is made of 1
 }
 `;
 
+exports[`the drawings' structure > squash: what a score drawing is made of 1`] = `
+{
+  "desc": 1,
+  "g": 1,
+  "g.ky-lose.ky-total": 1,
+  "g.ky-plate.ky-scoreboard": 1,
+  "g.ky-surface-group": 1,
+  "g.ky-total.ky-win": 1,
+  "path.ky-face": 1,
+  "path.ky-fill-line": 1,
+  "path.ky-tin": 1,
+  "path.ky-wall": 3,
+  "rect.ky-apron": 1,
+  "rect.ky-panel-left": 1,
+  "rect.ky-panel-right": 1,
+  "rect.ky-plate-bg": 1,
+  "rect.ky-surface": 1,
+  "rect.ky-winbar.ky-winbar-left": 1,
+  "style": 1,
+  "svg.ky-squash.kyogijo": 1,
+  "text.ky-comp.ky-text": 1,
+  "text.ky-foot.ky-text": 7,
+  "text.ky-ink-left.ky-text": 2,
+  "text.ky-ink-right.ky-text": 2,
+  "text.ky-score.ky-text": 2,
+  "title": 1,
+}
+`;
+
+exports[`the drawings' structure > squash: what a tall bare surface is made of 1`] = `
+{
+  "desc": 1,
+  "g.ky-surface-group": 1,
+  "path.ky-face": 1,
+  "path.ky-fill-line": 1,
+  "path.ky-tin": 1,
+  "path.ky-wall": 3,
+  "rect.ky-apron": 1,
+  "rect.ky-surface": 1,
+  "style": 1,
+  "svg.ky-squash.kyogijo": 1,
+  "title": 1,
+}
+`;
+
 exports[`the drawings' structure > stays the same text unless a drawing was meant to change: one fingerprint for every sport 1`] = `"122i1gi"`;
+
+exports[`the drawings' structure > stays the same text unless a drawing was meant to change: one fingerprint for the sports added after the field sports 1`] = `"040bjfv"`;
 
 exports[`the drawings' structure > tabletennis: what a score drawing is made of 1`] = `
 {
@@ -1003,6 +1282,51 @@ exports[`the drawings' structure > tennis: what a tall bare surface is made of 1
   "rect.ky-surface": 1,
   "style": 1,
   "svg.ky-tennis.kyogijo": 1,
+  "title": 1,
+}
+`;
+
+exports[`the drawings' structure > teqball: what a score drawing is made of 1`] = `
+{
+  "desc": 1,
+  "g": 1,
+  "g.ky-lose.ky-total": 1,
+  "g.ky-plate.ky-scoreboard": 1,
+  "g.ky-surface-group": 1,
+  "g.ky-total.ky-win": 1,
+  "path.ky-fill-line": 1,
+  "path.ky-table": 1,
+  "path.ky-wall": 4,
+  "rect.ky-apron": 1,
+  "rect.ky-nt-line": 1,
+  "rect.ky-panel-left": 1,
+  "rect.ky-panel-right": 1,
+  "rect.ky-plate-bg": 1,
+  "rect.ky-surface": 1,
+  "rect.ky-winbar.ky-winbar-left": 1,
+  "style": 1,
+  "svg.ky-teqball.kyogijo": 1,
+  "text.ky-comp.ky-text": 1,
+  "text.ky-foot.ky-text": 5,
+  "text.ky-ink-left.ky-text": 2,
+  "text.ky-ink-right.ky-text": 2,
+  "text.ky-score.ky-text": 2,
+  "title": 1,
+}
+`;
+
+exports[`the drawings' structure > teqball: what a tall bare surface is made of 1`] = `
+{
+  "desc": 1,
+  "g.ky-surface-group": 1,
+  "path.ky-fill-line": 1,
+  "path.ky-table": 1,
+  "path.ky-wall": 4,
+  "rect.ky-apron": 1,
+  "rect.ky-nt-line": 1,
+  "rect.ky-surface": 1,
+  "style": 1,
+  "svg.ky-teqball.kyogijo": 1,
   "title": 1,
 }
 `;
