@@ -654,8 +654,8 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `turn.keys` | A 3D view you can turn. Drag, or use the arrow keys, to turn and tilt it; plus and minus zoom; 1 to 4 pick a viewpoint; 0 or Home puts it back. Pinch, or hold Ctrl and scroll, to zoom. | 回して見られる3D表示です。ドラッグするか矢印キーで回転と傾きを変え、プラスとマイナスのキーで拡大と縮小、1から4のキーで視点を選び、0キーまたはHomeキーで元に戻します。ピンチ操作、またはCtrlキーを押しながらのスクロールでも拡大・縮小できます。 |
 | `turn.overhead` | Overhead | 真上 |
 | `turn.broadcast` | Broadcast | 中継カメラ |
-| `turn.end` | End-on | 端から |
-| `turn.corner` | Low corner | 低いコーナー |
+| `turn.end` | End-on | エンド側から |
+| `turn.corner` | Low corner | 低い角度から |
 | `turn.reset` | Reset the view | 元に戻す |
 | `turn.turnLeft` | Turn left | 左へ回す |
 | `turn.turnRight` | Turn right | 右へ回す |
@@ -668,14 +668,16 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `turn.flat` | This browser cannot draw the 3D view, so the flat drawing is shown. | このブラウザーでは3D表示ができないため、平面の図を表示しています。 |
 | `turn.standing` | Standing on it, in the 3D view: {list}. | 3D表示で立って見えるもの：{list}。 |
 | `turn.item` | {name} {h} | {name} {h} |
-| `turn.itemSag` | {name} {h} at the posts, {low} at the middle | {name} 支柱の高さ{h}、中央の高さ{low} |
+| `turn.itemSag` | {name} {h} at the posts, {low} at the middle | {name} 支柱の位置で{h}（中央は{low}） |
+| `turn.parts.scoreboard` | scoreboard (lower edge) | スコアボードの下端 |
 | `turn.parts.net` | net | ネット |
 | `turn.parts.antennae` | antennae | アンテナ |
-| `turn.parts.posts` | posts | ポスト |
+| `turn.parts.goalposts` | goal posts | ゴールポスト |
+| `turn.parts.netposts` | net posts | 支柱 |
 | `turn.parts.hoop` | baskets | バスケットゴール |
 | `turn.parts.goal` | goals | ゴール |
 | `turn.parts.boards` | boards and glass | ボードとガラス |
-| `turn.parts.stumps` | stumps | スタンプ |
+| `turn.parts.stumps` | stumps | ウィケットのスタンプ |
 | `turn.parts.pylons` | pylons | パイロン |
 | `turn.parts.flags` | corner flags | コーナーフラッグ |
 | `turn.parts.fence` | fence | 外野フェンス |

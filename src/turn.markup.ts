@@ -3,7 +3,7 @@
 // the elements are stacked far to near by `z-index`. A browser that cannot keep nested 3D layers (Safari on a phone can lose them) draws it as it is meant.
 // The same text is what a page is given from `turnMarkup` and what the mount writes; the mount then makes it turn.
 import { TURN_PRESET_NAMES, cameraMatrix, depthOf, eyeDistance, fit, matrix3d, multiply, presetOf, type Placement, type TurnView } from "./turn.camera.ts";
-import { cross, n, size, unit, type Plane } from "./turn.kit.ts";
+import { cross, facing, n, size, unit, type Plane } from "./turn.kit.ts";
 import { buildTurn, turnWords, type TurnModel, type TurnSettings } from "./turn.model.ts";
 import { KYOGIJO_TURN_STYLE } from "./turn.style.ts";
 import { esc } from "./format.ts";
@@ -39,9 +39,11 @@ export function layoutOf(model: TurnModel, view: TurnView, width: number, height
   const s = model.scale;
   const centre = model.centre;
   const floor: Plane = { id: "floor", kind: "ground", o: [model.viewBox.x, model.viewBox.y, model.uprights.lift], u: [model.viewBox.w, 0, 0], v: [0, model.viewBox.h, 0], svg: "" };
-  const transforms = [floor, ...model.planes].map((p) => matrix3d(multiply(camera, planeMatrix(p, s, centre))));
+  // A billboard faces the eye at this view.
+  const planes = model.planes.map((p) => facing(p, view.yaw));
+  const transforms = [floor, ...planes].map((p) => matrix3d(multiply(camera, planeMatrix(p, s, centre))));
   // Far to near: a plane's depth is that of its middle. The ground of a hall is under everything, the floor next.
-  const order = model.planes
+  const order = planes
     .map((p, i) => ({ i, ground: p.kind === "ground", depth: depthOf([(p.o[0] + (p.u[0] + p.v[0]) / 2 - centre[0]) * s, (p.o[1] + (p.u[1] + p.v[1]) / 2 - centre[1]) * s, (p.o[2] + (p.u[2] + p.v[2]) / 2) * s], view, at) }))
     .filter((one) => !one.ground);
   order.sort((a, b) => a.depth - b.depth);

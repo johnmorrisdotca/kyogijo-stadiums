@@ -3,6 +3,7 @@ import { KYOGIJO_ATTRIBUTES, turnSettingsFromAttributes, turnWanted } from "./el
 import { SPORTS, drawKyogijo } from "./index.ts";
 import { FEET_PER_METRE } from "./geometry.ts";
 import {
+  CURLING_PRESETS,
   NET_PRESETS,
   PITCH_MAX,
   TURN_PRESETS,
@@ -27,6 +28,7 @@ import {
   uprightsFor,
 } from "./turn-entry.ts";
 import { nearest, wrap } from "./turn.camera.ts";
+import { facing } from "./turn.kit.ts";
 import { KYOGIJO_STRINGS } from "./strings.ts";
 import type { Upright } from "./turn.kit.ts";
 import type { SurfaceOptions } from "./types.ts";
@@ -115,30 +117,50 @@ describe("what stands on the courts of the net sports", () => {
 });
 
 describe("what stands on a rink, a court and a pitch", () => {
-  it("stands the NBA's baskets 10 ft up, in front of a backboard from 9 ft to 12 ft 6 in, with a stanchion behind each baseline", () => {
+  it("stands the NBA's baskets with the ring's top 10 ft up, in front of a board 3 1/2 ft tall whose lower edge is 150 mm under the ring's top, with a stanchion 2 m behind each baseline", () => {
     const { by, u } = find("nba");
     for (const end of ["left", "right"]) {
       const hoop = by(`hoop-${end}`);
       expect(hoop.height).toBe(10);
       const board = hoop.planes.find((p) => p.id.endsWith("backboard"))!;
-      expect(board.o[2]).toBe(12.5);
-      expect(board.o[2] + board.v[2]).toBe(9);
+      expect(board.o[2] + board.v[2]).toBeCloseTo(10 - 0.15 * M, 5);
+      expect(Math.abs(board.v[2])).toBe(3.5);
+      expect(hoop.planes.find((p) => p.id.endsWith("net-a"))!.v[2]).toBe(-1.5);
       const rim = hoop.planes.find((p) => p.id.endsWith("rim"))!;
       expect(rim.o[2]).toBe(10);
       expect(rim.u[0]).toBeCloseTo(1.5, 5);
     }
     const left = by("hoop-left").planes.find((p) => p.id.endsWith("pad"))!;
     const right = by("hoop-right").planes.find((p) => p.id.endsWith("pad"))!;
-    expect(left.o[0]).toBeLessThan(0);
-    expect(right.o[0]).toBeGreaterThan(94);
+    // The front of the padding is 2 m behind the end line (FIBA 1.4.3).
+    expect(left.o[0] + left.v[0] / 2 + Math.hypot(...left.v) / 2).toBeCloseTo(-2 * M, 3);
+    expect(right.o[0] + right.v[0] / 2 - Math.hypot(...right.v) / 2).toBeCloseTo(94 + 2 * M, 3);
     expect(u.items).toHaveLength(2);
   });
 
-  it("puts the NHL's boards 42 in high with 5 ft of glass, and a goal 6 ft wide and 4 ft high on each goal line", () => {
+  it("draws FIBA's board 1.80 by 1.05 m with its ring at 3.05 m and the board's lower edge at 2.90 m, 1.20 m in from the end line", () => {
+    const { by } = find("nba", { league: "fiba" });
+    const hoop = by("hoop-left");
+    const board = hoop.planes.find((p) => p.id.endsWith("backboard"))!;
+    expect(metres(Math.hypot(...board.u))).toBe(1.8);
+    expect(metres(Math.abs(board.v[2]))).toBe(1.05);
+    expect(metres(board.o[2] + board.v[2])).toBe(2.9);
+    expect(metres(hoop.height)).toBe(3.05);
+    expect(metres(board.o[0])).toBe(1.2);
+  });
+
+  it("puts the NHL's boards 42 in high with glass 8 ft over them at the ends and 6 ft along the sides, and a goal 6 ft wide and 4 ft high on each goal line", () => {
     const { by } = find("nhl");
     expect(by("boards").height).toBe(3.5);
-    expect(by("boards").low).toBe(8.5);
-    expect(heights(by("boards"))[1]).toBe(8.5);
+    expect(by("boards").low).toBe(11.5);
+    expect(heights(by("boards"))[1]).toBe(11.5);
+    const tops = by("boards").planes.map((p) => p.o[2]);
+    expect(new Set(tops)).toEqual(new Set([9.5, 11.5]));
+    // The straight sides carry the lower glass, the end boards and the corners the higher.
+    const side = by("boards").planes.find((p) => p.u[1] === 0 && p.u[0] > 100 && p.o[1] === 0)!;
+    expect(side.o[2]).toBe(9.5);
+    const end = by("boards").planes.find((p) => p.u[0] === 0 && p.u[1] > 20)!;
+    expect(end.o[2]).toBe(11.5);
     const goal = by("goal-left");
     expect(goal.height).toBe(4);
     expect(goal.at[0]).toBe(11);
@@ -164,14 +186,15 @@ describe("what stands on a rink, a court and a pitch", () => {
     expect(u.thin).toBeGreaterThan(0);
   });
 
-  it("stands football's posts with a crossbar 10 ft up and uprights 18 ft 6 in apart: 35 ft over it in the NFL, 20 in the CFL", () => {
+  it("stands football's posts with a crossbar 10 ft up and uprights 18 ft 6 in apart: 35 ft over it in the NFL, 40 ft above the ground in the CFL, at least 30 in the NCAA", () => {
     const nfl = find("nfl").by("posts-left");
     expect(nfl.low).toBe(10);
     expect(nfl.height).toBe(45);
     const bar = nfl.planes.find((p) => p.id === "posts-left-bar")!;
     expect(Math.hypot(...bar.u)).toBeCloseTo(18.5, 5);
     expect(nfl.at[0]).toBe(0);
-    expect(find("cfl").by("posts-left").height).toBe(30);
+    expect(find("cfl").by("posts-left").height).toBe(40);
+    expect(find("ifaf").by("posts-left").height).toBe(30);
     // The CFL's posts are on the goal line, 20 yards... 60 feet from the end line.
     expect(find("cfl").by("posts-left").at[0]).toBe(60);
     expect(find("nfl").u.items.find((item) => item.kind === "pylons")!.planes).toHaveLength(16);
@@ -193,7 +216,8 @@ describe("what stands on a rink, a court and a pitch", () => {
 });
 
 describe("what stands on the other fields", () => {
-  it("puts rugby's crossbar 3 m up, with the uprights 3.4 m over it, 5.6 m apart on each try line", () => {
+  it("puts rugby league's posts 16 m high, and rugby union's crossbar 3 m up with the uprights 3.4 m over it, 5.6 m apart on each try line", () => {
+    expect(metres(find("rugby", { league: "nrl" }).by("posts-left").height)).toBe(16);
     const left = find("rugby").by("posts-left");
     expect(metres(left.low ?? 0)).toBe(3);
     expect(metres(left.height)).toBe(6.4);
@@ -250,7 +274,7 @@ describe("what stands on the other fields", () => {
 
   it("says what stands on the surface, with heights in the rulebook's own unit, in English and Japanese", () => {
     const vb = { sport: "volleyball" } as const;
-    expect(describeUprights(vb, uprightsFor(vb))).toBe("Standing on it, in the 3D view: net 2.43 metres, posts 2.55 metres, antennae 3.23 metres.");
+    expect(describeUprights(vb, uprightsFor(vb))).toBe("Standing on it, in the 3D view: net 2.43 metres, net posts 2.55 metres, antennae 3.23 metres.");
     expect(describeUprights(vb, uprightsFor(vb), "ja")).toContain("ネット 2.43 m");
     const nfl = { sport: "nfl" } as const;
     expect(describeUprights(nfl, uprightsFor(nfl))).toContain("posts 45 feet");
@@ -265,12 +289,79 @@ describe("what stands on the other fields", () => {
   });
 });
 
+describe("the score, stood up", () => {
+  const game = { home: { name: "Prairie Ridge Bison", abbr: "PRB", score: 2, color: "#a8452c" }, away: { name: "Northern Owls", abbr: "NOW", score: 3, color: "#3a2d6b" }, status: "final" } as const;
+
+  it("hangs a board over the middle of a court or a rink, and stands one behind an end of a field", () => {
+    for (const sport of ["nba", "nhl", "volleyball", "tennis"] as const) {
+      const board = uprightsFor({ sport, ...game }).items.find((item) => item.kind === "scoreboard")!;
+      expect(board, sport).toBeDefined();
+      expect(board.at[1], sport).toBeCloseTo(uprightsFor({ sport }).area!.y1 / 2, 3);
+      expect(board.height, sport).toBeGreaterThan(10);
+    }
+    const nfl = uprightsFor({ sport: "nfl", ...game });
+    const board = nfl.items.find((item) => item.kind === "scoreboard")!;
+    expect(board.at[0]).toBeGreaterThan(nfl.area!.x1);
+    // Behind centre field in a ballpark: past the far fence.
+    expect(uprightsFor({ sport: "mlb", ...game }).items.find((item) => item.kind === "scoreboard")!.at[1]).toBeLessThan(-300);
+  });
+
+  it("is the badge of the score on a plane that turns to face the eye", () => {
+    const model = buildTurn({ sport: "nba", ...game }, { preset: "broadcast" });
+    const plane = model.planes.find((p) => p.id === "scoreboard")!;
+    expect(plane.billboard).toBe(true);
+    expect(plane.svg).toContain("NOW");
+    expect(plane.svg).toContain("PRB");
+    const at0 = layoutOf(model, { yaw: 0, pitch: 60, zoom: 1 }, 900, 560).transforms;
+    const at90 = layoutOf(model, { yaw: 90, pitch: 60, zoom: 1 }, 900, 560).transforms;
+    const i = model.planes.indexOf(plane) + 1;
+    expect(at0[i]).not.toBe(at90[i]);
+    // Faced to the eye, its width runs along the screen's x: (cos yaw, -sin yaw, 0).
+    const faced = facing(plane, 90);
+    expect(faced.u[0]).toBeCloseTo(0, 5);
+    expect(faced.u[1]).toBeCloseTo(-Math.hypot(...plane.u), 5);
+    expect(Math.hypot(...faced.u)).toBeCloseTo(Math.hypot(...plane.u), 5);
+    expect(faced.v).toEqual(plane.v);
+    expect(facing({ ...plane, billboard: undefined }, 90)).toEqual({ ...plane, billboard: undefined });
+  });
+
+  it("takes the score's panel off the floor, and leaves it there with `score: \"floor\"`, in a drawing with no score and where there is no board to hang", () => {
+    const board = buildTurn({ sport: "nhl", ...game });
+    const plate = /class="ky-plate/;
+    expect(board.floor).not.toMatch(plate);
+    expect(board.floor).toContain("NORTHERN");
+    const floor = buildTurn({ sport: "nhl", ...game }, { score: "floor" });
+    expect(floor.floor).toMatch(plate);
+    expect(floor.planes.some((p) => p.id === "scoreboard")).toBe(false);
+    expect(buildTurn({ sport: "nhl" }).planes.some((p) => p.id === "scoreboard")).toBe(false);
+    expect(buildTurn({ sport: "nhl", ...game }, { uprights: false }).floor).toMatch(plate);
+    // A compact card's strip is the board now.
+    expect(buildTurn({ sport: "nhl", ...game, size: "compact" }).floor).not.toMatch(/class="ky-strip/);
+  });
+
+  it("is said in the view's description, and a board is not in the way of the fit: it is inside the scene's box", () => {
+    expect(describeUprights({ sport: "nba", ...game }, uprightsFor({ sport: "nba", ...game }))).toContain("scoreboard (lower edge)");
+    const model = buildTurn({ sport: "nfl", ...game });
+    const board = model.planes.find((p) => p.id === "scoreboard")!;
+    expect(board.o[0] * model.scale - model.centre[0] * model.scale).toBeLessThanOrEqual(model.box.x1 + 1e-6);
+    expect(model.box.z1 / model.scale).toBeGreaterThanOrEqual(Math.max(...[board.o[2]]) - 1e-6);
+  });
+
+  it("has a board for a curling sheet too, behind its end", () => {
+    expect(uprightsFor({ sport: "curling", ...game }).items.map((i) => i.kind)).toEqual(["scoreboard"]);
+  });
+});
+
 describe("the eye", () => {
   it("has four named viewpoints, the net sports' lower and from the end, and a sport that is not one gets the usual", () => {
     expect(TURN_PRESET_NAMES).toEqual(["overhead", "broadcast", "end", "corner"]);
     expect(TURN_PRESETS.overhead.pitch).toBe(0);
     expect(presetView("broadcast", "volleyball")).toEqual(NET_PRESETS.broadcast);
     expect(presetView("broadcast", "nhl")).toEqual(TURN_PRESETS.broadcast);
+    expect(presetView("broadcast", "curling")).toEqual(CURLING_PRESETS.broadcast);
+    // The end and corner views look from the side the score stands on the far side of.
+    expect(TURN_PRESETS.end.yaw).toBe(-90);
+    expect(TURN_PRESETS.corner.yaw).toBeLessThan(0);
     expect(presetView("nonsense")).toBeUndefined();
     for (const name of TURN_PRESET_NAMES) expect(presetOf(presetView(name, "tennis")!, "tennis")).toBe(name);
     expect(presetOf({ yaw: 12, pitch: 33, zoom: 1 })).toBeUndefined();
@@ -331,14 +422,14 @@ describe("the eye", () => {
 });
 
 describe("the markup", () => {
-  const html = turnMarkup({ sport: "volleyball", home: { name: "Harbour City Gulls", score: 3 }, away: { name: "Prairie Ridge Bison", score: 2 }, status: "final" }, { preset: "end" });
+  const html = turnMarkup({ sport: "volleyball", home: { name: "Harbour City Gulls", score: 3 }, away: { name: "Prairie Ridge Bison", score: 2 }, status: "final" }, { preset: "end", score: "floor" });
 
   it("holds the flat drawing for a floor and a plane for every part, each with its whole place in one matrix", () => {
     expect(html).toContain('class="ky-turn-floor"');
     expect(html).toContain("<svg");
     expect(html).toContain('data-part="net"');
     expect(html).toContain('data-part="post-a"');
-    const model = buildTurn({ sport: "volleyball" }, { preset: "end" });
+    const model = buildTurn({ sport: "volleyball", home: { name: "Harbour City Gulls", score: 3 }, away: { name: "Prairie Ridge Bison", score: 2 }, status: "final" }, { preset: "end", score: "floor" });
     expect((html.match(/class="ky-up /g) ?? []).length).toBe(model.planes.length);
     expect((html.match(/transform:matrix3d\(/g) ?? []).length).toBe(model.planes.length + 1);
   });
@@ -391,11 +482,12 @@ describe("the markup", () => {
     const model = buildTurn({ sport: "nhl" }, { preset: "end" });
     const layout = layoutOf(model, model.view, 900, 560);
     const rank = (prefix: string): number => layout.stack[model.planes.findIndex((p) => p.id.startsWith(prefix)) + 1];
-    // Yaw 90 turns the right end of the rink to the near side.
-    expect(rank("goal-right-post")).toBeGreaterThan(rank("goal-left-post"));
-    const other = layoutOf(model, { ...model.view, yaw: -90 }, 900, 560);
+    // Yaw -90 turns the left end of the rink to the near side.
+    expect(model.view.yaw).toBe(-90);
+    expect(rank("goal-left-post")).toBeGreaterThan(rank("goal-right-post"));
+    const other = layoutOf(model, { ...model.view, yaw: 90 }, 900, 560);
     const rank2 = (prefix: string): number => other.stack[model.planes.findIndex((p) => p.id.startsWith(prefix)) + 1];
-    expect(rank2("goal-left-post")).toBeGreaterThan(rank2("goal-right-post"));
+    expect(rank2("goal-right-post")).toBeGreaterThan(rank2("goal-left-post"));
   });
 
   it("keeps the floor under everything and a hall's ground under the floor", () => {
@@ -415,13 +507,13 @@ describe("the element's 3D attributes", () => {
     expect(turnWanted(read({ turn: "" }))).toBe(true);
     expect(turnWanted(read({ turn: "false" }))).toBe(false);
     expect(turnWanted(read({}))).toBe(false);
-    expect(turnSettingsFromAttributes(read({ "turn-view": "end", "turn-controls": "false", "turn-uprights": "false", "turn-touch": "turn" }))).toEqual({ preset: "end", controls: false, uprights: false, touch: "turn" });
+    expect(turnSettingsFromAttributes(read({ "turn-view": "end", "turn-controls": "false", "turn-uprights": "false", "turn-score": "floor", "turn-touch": "turn" }))).toEqual({ preset: "end", controls: false, uprights: false, score: "floor", touch: "turn" });
     expect(turnSettingsFromAttributes(read({ "turn-view": "sideways" }))).toEqual({});
     expect(turnSettingsFromAttributes(read({ "turn-view": "end" }), { motion: "none" })).toEqual({ preset: "end", motion: "none" });
   });
 
   it("lists the attributes once each", () => {
-    for (const name of ["turn", "turn-view", "turn-controls", "turn-uprights", "turn-touch"]) expect(KYOGIJO_ATTRIBUTES).toContain(name);
+    for (const name of ["turn", "turn-view", "turn-controls", "turn-uprights", "turn-score", "turn-touch"]) expect(KYOGIJO_ATTRIBUTES).toContain(name);
     expect(new Set(KYOGIJO_ATTRIBUTES).size).toBe(KYOGIJO_ATTRIBUTES.length);
   });
 });

@@ -18,14 +18,14 @@ export type TurnPreset = "overhead" | "broadcast" | "end" | "corner";
 export const TURN_PRESET_NAMES: readonly TurnPreset[] = ["overhead", "broadcast", "end", "corner"];
 
 /**
- * The four viewpoints. `overhead` looks straight down; `broadcast` is the main camera, high on one side line; `end` stands behind an end line, along the
+ * The four viewpoints. `overhead` looks straight down; `broadcast` is the main camera, high on one side line and turned a little towards the near end so that the boards, the nets and the goals show their faces; `end` stands behind an end line, along the
  * surface, which is where a net, a goal or a basket is best seen; `corner` is low, from a corner, with the nearest net or goal in front.
  */
 export const TURN_PRESETS: Readonly<Record<TurnPreset, TurnView>> = {
   overhead: { yaw: 0, pitch: 0, zoom: 1 },
-  broadcast: { yaw: 0, pitch: 56, zoom: 1 },
-  end: { yaw: 90, pitch: 66, zoom: 1 },
-  corner: { yaw: 38, pitch: 70, zoom: 1 },
+  broadcast: { yaw: -20, pitch: 62, zoom: 1 },
+  end: { yaw: -90, pitch: 68, zoom: 1 },
+  corner: { yaw: -38, pitch: 70, zoom: 1 },
 };
 
 /**
@@ -34,16 +34,27 @@ export const TURN_PRESETS: Readonly<Record<TurnPreset, TurnView>> = {
  */
 export const NET_PRESETS: Readonly<Record<TurnPreset, TurnView>> = {
   overhead: TURN_PRESETS.overhead,
-  broadcast: { yaw: 90, pitch: 50, zoom: 1 },
-  end: { yaw: 90, pitch: 72, zoom: 1 },
+  broadcast: { yaw: -90, pitch: 54, zoom: 1 },
+  end: { yaw: -90, pitch: 74, zoom: 1 },
   corner: TURN_PRESETS.corner,
+};
+
+/**
+ * The same four for a curling sheet, which is ten times as long as it is wide: from the side it is a strip across the box, so the broadcast and the corner views
+ * stay nearly square on to it, and the end view looks along it.
+ */
+export const CURLING_PRESETS: Readonly<Record<TurnPreset, TurnView>> = {
+  overhead: TURN_PRESETS.overhead,
+  broadcast: { yaw: 0, pitch: 62, zoom: 1 },
+  end: { yaw: -90, pitch: 70, zoom: 1 },
+  corner: { yaw: -24, pitch: 62, zoom: 1 },
 };
 
 /** The sports whose net runs across the court and whose viewpoints are `NET_PRESETS`. */
 const NET_SPORTS: readonly string[] = ["tennis", "volleyball", "badminton", "pickleball", "tabletennis"];
 
 /** The four viewpoints of a sport. */
-export const presetsFor = (sport?: string): Readonly<Record<TurnPreset, TurnView>> => (sport !== undefined && NET_SPORTS.includes(sport) ? NET_PRESETS : TURN_PRESETS);
+export const presetsFor = (sport?: string): Readonly<Record<TurnPreset, TurnView>> => (sport === "curling" ? CURLING_PRESETS : sport !== undefined && NET_SPORTS.includes(sport) ? NET_PRESETS : TURN_PRESETS);
 
 /** The view a mount opens on. */
 export const TURN_DEFAULT: TurnPreset = "corner";
@@ -143,7 +154,7 @@ export function covered(b: Box3, view: TurnView, at: Placement, distance: number
  * The placement that fits the scene in a container of width `w` and height `h` pixels, centred, with `pad` of its width and height left round it. The
  * perspective bends the sum, so it is found by a few rounds of scaling and re-centring; six is plenty.
  */
-export function fit(b: Box3, view: TurnView, w: number, h: number, distance: number, pad = 0.06): Placement {
+export function fit(b: Box3, view: TurnView, w: number, h: number, distance: number, pad = 0.03): Placement {
   const at: Placement = { k: 0.5, tx: 0, ty: 0 };
   const flat = { ...view, zoom: 1 };
   for (let i = 0; i < 8; i += 1) {
@@ -205,4 +216,4 @@ export function depthOf(point: readonly [number, number, number], view: TurnView
 }
 
 /** How far the eye is from the screen, in pixels, for a container: a long lens, so that the floor keeps its shape and the heights lean a little. */
-export const eyeDistance = (w: number, h: number, lens = 2.4): number => lens * Math.max(w, h);
+export const eyeDistance = (w: number, h: number, lens = 1.7): number => lens * Math.max(w, h);

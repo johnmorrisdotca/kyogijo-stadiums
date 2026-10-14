@@ -323,7 +323,7 @@ import { turnMarkup, uprightsFor } from "@johnmorrisdotca/kyogijo-stadiums/turn"
 const { items } = uprightsFor({ sport: "volleyball" }, { netHeight: "women" });
 const html = turnMarkup({ sport: "volleyball" }, { preset: "end" });
 console.log(items.map((item) => item.kind).join(), html.includes("preserve-3d"));
-// net,posts,antennae false
+// net,netposts,antennae false
 ```
 
 The flat drawing is the floor, turned by a drag, a swipe, the keys or four viewpoints (overhead, broadcast, end-on, low corner), and what the rulebook stands on the surface is built up on it at its height. Each part is a flat rectangle placed by one `matrix3d`, so there is no 3D context for a phone to lose; where 3D is not drawn the flat drawing stays. In the element it is `<kyogijo-field sport="nhl" turn turn-view="broadcast">`. [The 3D view](./docs/turn.md).

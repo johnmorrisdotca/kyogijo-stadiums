@@ -518,7 +518,7 @@ export interface KyogijoWords {
     item: string;
     itemSag: string;
     /** The names of what stands on the surface, by kind. */
-    parts: Record<"net" | "antennae" | "posts" | "hoop" | "goal" | "boards" | "stumps" | "pylons" | "flags" | "fence" | "backstop" | "foul-poles" | "table-legs", string>;
+    parts: Record<"scoreboard" | "net" | "antennae" | "goalposts" | "netposts" | "hoop" | "goal" | "boards" | "stumps" | "pylons" | "flags" | "fence" | "backstop" | "foul-poles" | "table-legs", string>;
   };
 }
 
@@ -733,7 +733,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       announce: "{name} view", announceAngle: "Turned to {yaw} degrees, raised {pitch} degrees.",
       flat: "This browser cannot draw the 3D view, so the flat drawing is shown.",
       standing: "Standing on it, in the 3D view: {list}.", item: "{name} {h}", itemSag: "{name} {h} at the posts, {low} at the middle",
-      parts: { net: "net", antennae: "antennae", posts: "posts", hoop: "baskets", goal: "goals", boards: "boards and glass", stumps: "stumps", pylons: "pylons", flags: "corner flags", fence: "fence", backstop: "backstop", "foul-poles": "foul poles", "table-legs": "table top" },
+      parts: { scoreboard: "scoreboard (lower edge)", net: "net", antennae: "antennae", goalposts: "goal posts", netposts: "net posts", hoop: "baskets", goal: "goals", boards: "boards and glass", stumps: "stumps", pylons: "pylons", flags: "corner flags", fence: "fence", backstop: "backstop", "foul-poles": "foul poles", "table-legs": "table top" },
     },
   },
   ja: {
@@ -940,12 +940,12 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
     turn: {
       region: "3D表示", group: "視点",
       keys: "回して見られる3D表示です。ドラッグするか矢印キーで回転と傾きを変え、プラスとマイナスのキーで拡大と縮小、1から4のキーで視点を選び、0キーまたはHomeキーで元に戻します。ピンチ操作、またはCtrlキーを押しながらのスクロールでも拡大・縮小できます。",
-      overhead: "真上", broadcast: "中継カメラ", end: "端から", corner: "低いコーナー",
+      overhead: "真上", broadcast: "中継カメラ", end: "エンド側から", corner: "低い角度から",
       reset: "元に戻す", turnLeft: "左へ回す", turnRight: "右へ回す", raise: "視点を上げる", lower: "視点を下げる", zoomIn: "拡大", zoomOut: "縮小",
       announce: "{name}の視点", announceAngle: "向き{yaw}度、床面から{pitch}度の角度。",
       flat: "このブラウザーでは3D表示ができないため、平面の図を表示しています。",
-      standing: "3D表示で立って見えるもの：{list}。", item: "{name} {h}", itemSag: "{name} 支柱の高さ{h}、中央の高さ{low}",
-      parts: { net: "ネット", antennae: "アンテナ", posts: "ポスト", hoop: "バスケットゴール", goal: "ゴール", boards: "ボードとガラス", stumps: "スタンプ", pylons: "パイロン", flags: "コーナーフラッグ", fence: "外野フェンス", backstop: "バックネット", "foul-poles": "ファウルポール", "table-legs": "天板" },
+      standing: "3D表示で立って見えるもの：{list}。", item: "{name} {h}", itemSag: "{name} 支柱の位置で{h}（中央は{low}）",
+      parts: { scoreboard: "スコアボードの下端", net: "ネット", antennae: "アンテナ", goalposts: "ゴールポスト", netposts: "支柱", hoop: "バスケットゴール", goal: "ゴール", boards: "ボードとガラス", stumps: "ウィケットのスタンプ", pylons: "パイロン", flags: "コーナーフラッグ", fence: "外野フェンス", backstop: "バックネット", "foul-poles": "ファウルポール", "table-legs": "天板" },
     },
   },
 };

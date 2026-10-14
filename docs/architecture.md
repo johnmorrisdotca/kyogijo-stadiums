@@ -168,6 +168,7 @@ src/
 ├── uprights.goal.ts    the parts several sports share: a goal with its net, a pair of posts, a flag on a pole
 ├── uprights.net.ts     the net sports: the net, its posts and antennae, the table tennis table on its legs
 ├── uprights.rinks.ts   the hockey rink's boards and glass and goals, the basketball court's baskets and stanchions
+├── uprights.board.ts   the score stood up: its badge on a board that faces the eye, hung over the middle of a court or a rink and standing behind an end of a field
 ├── uprights.fields.ts  football's posts and pylons, a soccer pitch's goals and flags, the posts of rugby, Gaelic and Australian football, stumps, a ballpark's fence, poles and backstop
 ├── mount.ts            drawing into a container, and following its shape
 ├── mount-entry.ts      the mount's entry

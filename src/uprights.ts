@@ -2,8 +2,8 @@
 // surface, where and how high, as planes in the drawing's own frame (x along the surface and y across it, in feet, z the height above it). Pure: no page, no
 // stylesheet. `describeUprights` says the same in words, for a reader who cannot see it.
 import { courtFor, courtGeometry, isNetSport } from "./court.ts";
-import { feetFence, lengthUnit } from "./common.ts";
-import { pitchOf } from "./draw.ts";
+import { drawingId, feetFence, lengthUnit } from "./common.ts";
+import { drawKyogijo, pitchOf } from "./draw.ts";
 import { rulesFor, footballIn } from "./eras.ts";
 import { fieldPlan, isFieldSport } from "./fields.ts";
 import { footballLength } from "./geometry.ts";
@@ -16,16 +16,20 @@ import { fenceOutline } from "./surfaces/baseball.ts";
 import { KYOGIJO_STRINGS, fill } from "./strings.ts";
 import { soccerSpec } from "./surfaces/soccer-spec.ts";
 import { thinnest, type Plane, type Upright, type UprightKind } from "./turn.kit.ts";
+import { scoreboard } from "./uprights.board.ts";
 import { ballparkUprights, fieldUprights, footballUprights, soccerUprights } from "./uprights.fields.ts";
 import { netUprights } from "./uprights.net.ts";
 import { courtUprights, rinkUprights } from "./uprights.rinks.ts";
 import { convertLength, type Unit } from "./units.ts";
-import type { Language, SurfaceOptions } from "./types.ts";
+import { sheetFor } from "./sheet.ts";
+import type { Language, ScoreOptions, SurfaceOptions } from "./types.ts";
 
 /** What can be asked of the uprights. */
 export interface UprightOptions {
   /** Volleyball: the net at the men's height (2.43 m, the default) or the women's (2.24 m). */
   netHeight?: "men" | "women";
+  /** Where the score of a score drawing goes: `board` (the default) hangs it up as a scoreboard (over the middle of a court or a rink, behind an end of a field) and takes the panel off the floor; `floor` leaves it on the floor. */
+  score?: "board" | "floor";
   /** Leave the boards and the glass off a rink, so that the ice can be seen into. On by default. */
   boards?: boolean;
   /** Only these kinds of thing; every kind the surface has when missing. */
@@ -62,7 +66,8 @@ export function uprightsFor(o: SurfaceOptions, settings: UprightOptions = {}): U
     const shape = league?.family === "football" || sport === "ifaf" ? "slingshot" : rulesFor(sport, o.year).rules.postShape;
     thin = thinnest(footballLength(spec), spec.width);
     area = { x0: 0, y0: 0, x1: footballLength(spec), y1: spec.width };
-    items = footballUprights(spec, shape, sport === "nfl" && league === undefined ? 35 : 20, thin);
+    // Over the ground: the NFL's 10 + 35 ft, the CFL's 40 ft, and the NCAA's least 30 ft for the rest.
+    items = footballUprights(spec, shape, league !== undefined ? 30 : sport === "nfl" ? 45 : sport === "cfl" ? 40 : 30, thin);
   } else if (sport === "nhl") {
     const rink = league?.family === "hockey" ? rinkOf(league, o.year) : NHL_RINK;
     const goalLine = league?.family === "hockey" ? rink.goalLine : rulesFor("nhl", o.year).rules.goalLine;
@@ -73,7 +78,7 @@ export function uprightsFor(o: SurfaceOptions, settings: UprightOptions = {}): U
     const court = league?.family === "basketball" ? courtOf(league, o.year) : NBA_COURT;
     thin = thinnest(court.length, court.width);
     area = { x0: 0, y0: 0, x1: court.length, y1: court.width };
-    items = courtUprights(court, thin);
+    items = courtUprights(court, thin, league?.id === "fiba");
   } else if (sport === "mlb") {
     const diamond = league?.family === "baseball" ? diamondOf(league, o.year) : undefined;
     const park = parkById(o.park);
@@ -101,6 +106,17 @@ export function uprightsFor(o: SurfaceOptions, settings: UprightOptions = {}): U
     thin = thinnest(plan.length, plan.width);
     area = { x0: 0, y0: 0, x1: plan.length, y1: plan.width };
     items = fieldUprights(plan, thin);
+  }
+  if (sport === "curling") {
+    const sheet = sheetFor(o).spec;
+    thin = thinnest(sheet.length, sheet.width);
+    area = { x0: 0, y0: 0, x1: sheet.length, y1: sheet.width };
+  }
+  // The score, hung up: the badge on a board that turns to face the eye.
+  const scored = (o as Partial<ScoreOptions>).home !== undefined && (o as Partial<ScoreOptions>).away !== undefined && (o as Partial<ScoreOptions>).size !== "badge";
+  if (scored && settings.score !== "floor" && area !== undefined) {
+    const board = scoreboard(drawKyogijo({ ...o, size: "badge", style: "none", id: `${drawingId(o)}-board` }), sport, area, thin);
+    if (board !== undefined) items.push(board);
   }
   if (settings.only !== undefined) items = items.filter((item) => settings.only!.includes(item.kind));
   return { items, lift, thin, area };

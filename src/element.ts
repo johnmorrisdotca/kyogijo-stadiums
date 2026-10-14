@@ -18,19 +18,20 @@ export const KYOGIJO_ATTRIBUTES = [
   "home", "away", "home-abbr", "away-abbr", "home-score", "away-score", "home-penalties", "away-penalties", "score", "home-logo", "away-logo", "home-color", "away-color",
   "status", "competition", "date", "label", "winner", "home-side", "description", "options",
   "loop", "speed", "autoplay", "controls", "trail",
-  "turn", "turn-view", "turn-controls", "turn-uprights", "turn-touch",
+  "turn", "turn-view", "turn-controls", "turn-uprights", "turn-score", "turn-touch",
 ] as const;
 
 /** The attributes that are about a replay and not about the drawing. */
 const REPLAY_ATTRIBUTES: readonly string[] = ["loop", "speed", "autoplay", "controls", "trail"];
 
-/** The settings of a 3D view an element's attributes make: `turn-view` names the viewpoint it opens on, `turn-controls="false"` and `turn-uprights="false"` leave the buttons and what stands on the surface out, `turn-touch="turn"` keeps every touch for the view. */
+/** The settings of a 3D view an element's attributes make: `turn-view` names the viewpoint it opens on, `turn-controls="false"` and `turn-uprights="false"` leave the buttons and what stands on the surface out, `turn-score="floor"` leaves the score panel on the floor, `turn-touch="turn"` keeps every touch for the view. */
 export function turnSettingsFromAttributes(read: (name: string) => string | null, base: TurnSettings = {}): TurnSettings {
   const out: TurnSettings = { ...base };
   const view = read("turn-view");
   if (view !== null && (TURN_PRESET_NAMES as readonly string[]).includes(view)) out.preset = view as TurnPreset;
   if (read("turn-controls") === "false") out.controls = false;
   if (read("turn-uprights") === "false") out.uprights = false;
+  if (read("turn-score") === "floor") out.score = "floor";
   if (read("turn-touch") === "turn") out.touch = "turn";
   return out;
 }

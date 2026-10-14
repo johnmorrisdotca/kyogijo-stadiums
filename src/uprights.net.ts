@@ -78,7 +78,7 @@ export function netUprights(plan: CourtPlan, geo: CourtGeometry, settings: { net
   const items: Upright[] = [];
   const posts = (height: number, cls = "u-pole"): Upright => ({
     id: "posts",
-    kind: "posts",
+    kind: "netposts",
     at: [x, (y0 + y1) / 2],
     height,
     planes: geo.posts.flatMap((p, i) => pole(`post-${i === 0 ? "a" : "b"}`, "post", p.x, p.y, 0, height, Math.max(p.size, thin * 1.4), cls)),
@@ -90,7 +90,7 @@ export function netUprights(plan: CourtPlan, geo: CourtGeometry, settings: { net
       const cell = Math.max(0.25, thin * 6);
       items.push({ id: "net", kind: "net", at: [x, (y0 + y1) / 2], height: p, low: c, planes: [netPlane({ id: "net", x, y0, y1, top: sag(y0, y1, c, p), bottom: () => 0, cell, tape: Math.max(0.17, thin) }, 0)] });
       items.push(posts(p));
-      if (geo.sticks.length > 0) items.push({ id: "sticks", kind: "posts", at: [x, (y0 + y1) / 2], height: p, planes: geo.sticks.flatMap((s, i) => pole(`stick-${i === 0 ? "a" : "b"}`, "post", s.x, s.y, 0, p, Math.max(s.size, thin * 1.1), "u-tape")) });
+      if (geo.sticks.length > 0) items.push({ id: "sticks", kind: "netposts", at: [x, (y0 + y1) / 2], height: p, planes: geo.sticks.flatMap((s, i) => pole(`stick-${i === 0 ? "a" : "b"}`, "post", s.x, s.y, 0, p, Math.max(s.size, thin * 1.1), "u-tape")) });
       return { items, lift: 0 };
     }
     case "volleyball": {
@@ -156,7 +156,7 @@ export function netUprights(plan: CourtPlan, geo: CourtGeometry, settings: { net
       items.push({ id: "net", kind: "net", at: [x, (y0 + y1) / 2], height: lift + h, planes: [netPlane({ id: "net", x, y0, y1, top: () => h, bottom: () => 0, cell, tape: Math.max(0.03, thin * 0.8) }, lift)] });
       items.push({
         id: "clamps",
-        kind: "posts",
+        kind: "netposts",
         at: [x, (y0 + y1) / 2],
         height: lift + postHeight,
         planes: geo.posts.flatMap((p, i) => pole(`post-${i === 0 ? "a" : "b"}`, "post", p.x, p.y, lift, lift + postHeight, Math.max(p.size, thin * 1.6), "u-pole")),

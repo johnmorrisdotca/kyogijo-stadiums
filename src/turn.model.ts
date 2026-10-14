@@ -19,13 +19,15 @@ export interface TurnSettings {
   controls?: boolean;
   /** What stands on the surface: `false` for the floor alone, or which kinds, whether the boards and the glass are drawn, the height of a volleyball net. True when left out. */
   uprights?: boolean | UprightOptions;
+  /** Where the score of a score drawing goes: `board` (the default) hangs it up as a scoreboard that faces the eye (over the middle of a court or a rink, behind an end of a field, behind centre field in a ballpark) and takes the panel off the floor; `floor` leaves the panel on the floor. */
+  score?: "board" | "floor";
   /** What a finger does on the view: `scroll` (the default) lets a vertical swipe scroll the page and a sideways one turn the view; `turn` keeps every touch for the view, which then also tips it. */
   touch?: "scroll" | "turn";
   /** `smooth` glides between viewpoints, `none` jumps; `auto` (the default) glides unless the reader prefers reduced motion. */
   motion?: "auto" | "smooth" | "none";
   /** The drawing the floor is, in place of `drawKyogijo`: a chart's `draw`, for instance. It is given the options with the view's own changes (the whole surface, lying wide). */
   floor?: (options: SurfaceOptions | ScoreOptions) => string;
-  /** How long a lens the eye has, as a multiple of the view's longer side: 2.4 by default, and the larger it is the flatter the picture. */
+  /** How long a lens the eye has, as a multiple of the view's longer side: 1.7 by default, and the larger it is the flatter the picture. */
   lens?: number;
   /** The size the first view is worked out for, in pixels, when the markup is made away from a page. 960 by 600 by default. */
   size?: { width: number; height: number };
@@ -82,15 +84,19 @@ export const openingView = (settings: Pick<TurnSettings, "preset" | "view">, spo
 
 /** Work out a 3D view from the options of a drawing. */
 export function buildTurn(options: SurfaceOptions | ScoreOptions, settings: TurnSettings = {}): TurnModel {
-  const o = floorOptions(options);
-  const language: Language = o.language === "ja" ? "ja" : "en";
+  const asked = floorOptions(options);
+  const language: Language = asked.language === "ja" ? "ja" : "en";
+  const wanted = settings.uprights;
+  const badge = (asked as Partial<ScoreOptions>).size === "badge";
+  const upOptions: UprightOptions = wanted === false || wanted === true || wanted === undefined ? {} : wanted;
+  const uprights: Uprights = wanted === false || badge ? { items: [], lift: 0, thin: 0.2 } : uprightsFor(asked, { ...upOptions, score: settings.score ?? upOptions.score });
+  // The score hung up as a scoreboard is not on the floor too.
+  const boarded = uprights.items.some((item) => item.kind === "scoreboard");
+  const o: SurfaceOptions | ScoreOptions = boarded ? { ...asked, plate: false, size: (asked as Partial<ScoreOptions>).size === "compact" ? "full" : (asked as Partial<ScoreOptions>).size } : asked;
   const floor = settings.floor === undefined ? drawKyogijo(o) : settings.floor(o);
   const found = VIEWBOX.exec(floor);
   if (found === null) throw new Error("the floor of a 3D view must be an SVG with a viewBox");
   const [vx, vy, vw, vh] = found.slice(1).map(Number);
-  const wanted = settings.uprights;
-  const badge = (o as Partial<ScoreOptions>).size === "badge";
-  const uprights: Uprights = wanted === false || badge ? { items: [], lift: 0, thin: 0.2 } : uprightsFor(o, wanted === true || wanted === undefined ? {} : wanted);
   const planes = planesOf(uprights);
   const scale = WORLD_PX / Math.max(vw, vh);
   const centre: [number, number] = [vx + vw / 2, vy + vh / 2];
@@ -100,8 +106,19 @@ export function buildTurn(options: SurfaceOptions | ScoreOptions, settings: Turn
   let [x0, y0, x1, y1] = [area.x0, area.y0, area.x1, area.y1];
   let top = uprights.lift;
   for (const p of planes) {
+    // A billboard turns about its middle: whichever way it faces, it lies within a circle as wide as it is.
+    const reach = p.billboard === true ? Math.hypot(...p.u) / 2 : 0;
     for (const [a, b] of [[0, 0], [1, 0], [0, 1], [1, 1]] as const) {
       const point = [p.o[0] + a * p.u[0] + b * p.v[0], p.o[1] + a * p.u[1] + b * p.v[1], p.o[2] + a * p.u[2] + b * p.v[2]];
+      if (reach > 0) {
+        const middle = [p.o[0] + (p.u[0] + p.v[0]) / 2, p.o[1] + (p.u[1] + p.v[1]) / 2];
+        x0 = Math.min(x0, middle[0] - reach);
+        x1 = Math.max(x1, middle[0] + reach);
+        y0 = Math.min(y0, middle[1] - reach);
+        y1 = Math.max(y1, middle[1] + reach);
+        top = Math.max(top, point[2]);
+        continue;
+      }
       if (p.kind !== "ground") {
         x0 = Math.min(x0, point[0]);
         x1 = Math.max(x1, point[0]);

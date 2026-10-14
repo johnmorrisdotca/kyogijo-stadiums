@@ -95,7 +95,7 @@ export function postPair(p: PostPair): Upright {
     const sx = x + p.out * (p.stem ?? 4);
     planes.push(...pole(`${id}-stem`, "stanchion", sx, y, 0, crossbar, post * 1.4, cls), ...bar(`${id}-neck`, "stanchion", [sx, y, crossbar], [x, y, crossbar], post, cls));
   } else if (p.support === "centre") planes.push(...pole(`${id}-stem`, "stanchion", x, y, 0, crossbar, post * 1.4, cls));
-  return { id, kind: "posts", at: [x, y], height: top, low: crossbar, planes };
+  return { id, kind: "goalposts", at: [x, y], height: top, low: crossbar, planes };
 }
 
 /** A flag on a pole, the flag lying along x. */

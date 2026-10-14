@@ -612,4 +612,6 @@ export interface ScoreOptions extends SurfaceOptions {
   uppercase?: boolean;
   /** The shape of both teams' marks, unless a team's own `mark` says otherwise: `plain` (the default) or `round`, a flag or logo in a circle with a ring. */
   markShape?: TeamMark;
+  /** Draw the score's panel (or board) on the surface. On by default; `false` leaves the teams' names and the rest and no panel, as the 3D view does when it hangs the score up as a scoreboard. */
+  plate?: boolean;
 }

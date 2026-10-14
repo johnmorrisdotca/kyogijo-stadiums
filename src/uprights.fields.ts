@@ -11,11 +11,18 @@ import { mesh, n, pole, threads, wall, type Plane, type Upright } from "./turn.k
 
 const M = FEET_PER_METRE;
 
-/** The height of a football post's crossbar, 10 feet, and how far the uprights reach over it: the NFL's 35 feet, the others' 20 (the rules give the least). */
+/**
+ * The crossbar of a football post is 10 ft over the ground (NFL 2026 Rule 1-3-1: "the top face of which is 10 feet above the ground"; CFL 2026 Rule 1-1-1:
+ * "a height of 10 feet"; NCAA 2025 Rule 1-2-5-a: "the top of which is 10 feet above the ground"). The uprights reach 35 ft over the bar in the NFL (Rule 1-3-2: 45 ft
+ * in all), 40 ft above the ground in the CFL (Rule 1-1-1: "extend 40 feet above ground level"), and at least 30 ft above the ground in the NCAA (Rule 1-2-5-a), the
+ * figure drawn for every other league.
+ */
 export const FOOTBALL_CROSSBAR = 10;
+/** The pylon is 18 in high: the NFL's Rule 1-2-3 names pylons but not their size; BAFA's Appendix D (14) recommends 4 in by 4 in and 18 in. */
+export const PYLON_HEIGHT = 1.5;
 
-/** A football field's uprights: the post at each end and the eight pylons. `shape` is the post of the season, `above` how far the uprights reach over the crossbar. */
-export function footballUprights(spec: FootballSpec, shape: "h" | "slingshot", above: number, thin: number): Upright[] {
+/** A football field's uprights: the post at each end and the eight pylons. `shape` is the post of the season, `top` the height of the uprights above the ground. */
+export function footballUprights(spec: FootballSpec, shape: "h" | "slingshot", top: number, thin: number): Upright[] {
   const L = footballLength(spec);
   const W = spec.width;
   const e = spec.endZone;
@@ -24,13 +31,13 @@ export function footballUprights(spec: FootballSpec, shape: "h" | "slingshot", a
   for (const end of ["left", "right"] as const) {
     const left = end === "left";
     const x = spec.posts === "end-line" ? (left ? 0 : L) : left ? e : L - e;
-    items.push(postPair({ id: `posts-${end}`, x, y: W / 2, out: left ? -1 : 1, gap: spec.postWidth ?? 18.5, crossbar: FOOTBALL_CROSSBAR, top: FOOTBALL_CROSSBAR + above, post, support: shape === "slingshot" ? "slingshot" : "centre", stem: 4, cls: "u-yellow" }));
+    items.push(postPair({ id: `posts-${end}`, x, y: W / 2, out: left ? -1 : 1, gap: spec.postWidth ?? 18.5, crossbar: FOOTBALL_CROSSBAR, top, post, support: shape === "slingshot" ? "slingshot" : "centre", stem: 4, cls: "u-yellow" }));
   }
   if (spec.pylons !== false) {
-    // Eight pylons, 18 inches high and 4 across: at the four corners of each end zone.
+    // Eight pylons: at the four corners of the goal lines and two on each end line (NFL Rule 1-2-3), as the drawing puts them.
     const corners: [number, number][] = [[e, 0], [e, W], [L - e, 0], [L - e, W], [0, 0], [0, W], [L, 0], [L, W]];
     const side = Math.max(thin * 1.6, 0.33);
-    items.push({ id: "pylons", kind: "pylons", at: [L / 2, W / 2], height: 1.5, planes: corners.flatMap(([x, y], i) => pole(`pylon-${i}`, "pylon", x, y, 0, 1.5, side, "u-orange")) });
+    items.push({ id: "pylons", kind: "pylons", at: [L / 2, W / 2], height: PYLON_HEIGHT, planes: corners.flatMap(([x, y], i) => pole(`pylon-${i}`, "pylon", x, y, 0, PYLON_HEIGHT, side, "u-orange")) });
   }
   return items;
 }
@@ -46,7 +53,7 @@ export function soccerUprights(spec: SoccerSpec, flags: boolean, thin: number): 
     items.push(goalCage({ id: `goal-${end}`, x: left ? 0 : L, y: W / 2, out: left ? -1 : 1, width: spec.goalWidth * M, height: spec.goalHeight * M, depth, top: depth * 0.55, post: Math.max(thin * 1.3, 0.35), cell: Math.max(thin * 6, 0.9), tone: "white" }));
   }
   if (flags) {
-    // A corner flag is at least 1.5 metres high.
+    // A corner flagpost is at least 1.5 m (5 ft) high (IFAB Laws of the Game 2025/26, Law 1, section 8); the goal is 7.32 m wide and 2.44 m to the crossbar's lower edge (section 10).
     const planes: Plane[] = [[0, 0], [L, 0], [0, W], [L, W]].flatMap(([x, y], i) => flagPole(`flag-${i}`, x, y, 1.5 * M, Math.max(thin * 0.9, 0.15)));
     items.push({ id: "flags", kind: "flags", at: [L / 2, W / 2], height: 1.5 * M, planes });
   }
@@ -75,19 +82,22 @@ export function fieldUprights(plan: FieldPlan, thin: number): Upright[] {
   };
   switch (plan.sport) {
     case "rugby": {
-      // The crossbar is 3 metres over the ground and the uprights reach at least 3.4 metres over it.
-      for (const p of pairs(dots(plan, "goal-post"))) items.push(postPair({ id: p.x < midX ? "posts-left" : "posts-right", x: p.x, y: p.y, out: outOf(p.x), gap: p.gap, crossbar: 3 * M, top: 3 * M + 3.4 * M, post, support: "none", cls: "u-white" }));
+      // Union (World Rugby 2026 Law 1, goal posts and crossbar): the crossbar's top edge 3 m over the ground, a minimum post height of 3.4 m, which the Law's diagram
+      // draws over the bar and is drawn so (6.4 m); the flag posts at least 1.2 m (Law 1, flag posts 8). League (NRL Section 18, IRL Section 1): posts 16 m high.
+      const league = plan.league === "nrl" || plan.league === "irl";
+      for (const p of pairs(dots(plan, "goal-post"))) items.push(postPair({ id: p.x < midX ? "posts-left" : "posts-right", x: p.x, y: p.y, out: outOf(p.x), gap: p.gap, crossbar: 3 * M, top: league ? 16 * M : 3 * M + 3.4 * M, post, support: "none", cls: "u-white" }));
       flags(dots(plan, "flag-post", "corner-post"), 1.2 * M, "flags");
       break;
     }
     case "gaelic": {
-      // The crossbar is 2.5 metres over the ground; the posts are at least 7 metres high.
+      // GAA Official Guide Part 2 (2026) Rule 1.3 (i), (ii): posts not less than 7 m above the ground and 6.5 m apart, the crossbar 2.5 m above the ground. Rule 1.7 gives
+      // the flags no height; 1.5 m is ours.
       for (const p of pairs(dots(plan, "goalpost"))) items.push(postPair({ id: p.x < midX ? "posts-left" : "posts-right", x: p.x, y: p.y, out: outOf(p.x), gap: p.gap, crossbar: 2.5 * M, top: 7 * M, post, support: "none", cls: "u-white" }));
       flags(dots(plan, "flag"), 1.5 * M, "flags");
       break;
     }
     case "afl": {
-      // Two goal posts at least 6 metres high, and a behind post at least 3 metres high either side of them.
+      // Laws of Australian Football 2026, Law 3.3.1: goal posts 6 to 15 m high and 6.4 m apart, behind posts 3 to 10 m high, 6.4 m either side of them: the least is drawn.
       const goals = dots(plan, "goal-post");
       const behinds = dots(plan, "behind-post");
       for (const end of ["left", "right"] as const) {
@@ -97,12 +107,12 @@ export function fieldUprights(plan: FieldPlan, thin: number): Upright[] {
           ...goals.filter(mine).flatMap((p, i) => pole(`goal-post-${i}`, "post", p.x, p.y, 0, 6 * M, post, "u-white")),
           ...behinds.filter(mine).flatMap((p, i) => pole(`behind-post-${i}`, "post", p.x, p.y, 0, 3 * M, post, "u-white")),
         ];
-        items.push({ id: `posts-${end}`, kind: "posts", at: [left ? 0 : plan.length, plan.width / 2], height: 6 * M, low: 3 * M, planes });
+        items.push({ id: `posts-${end}`, kind: "goalposts", at: [left ? 0 : plan.length, plan.width / 2], height: 6 * M, low: 3 * M, planes });
       }
       break;
     }
     case "cricket": {
-      // Three stumps, 28 inches high, across a wicket 9 inches wide.
+      // MCC Laws of Cricket, Law 8.1 and 8.2: three stumps across a wicket 9 in wide, their tops 28 in over the playing surface.
       for (const s of plan.shapes) {
         if (s.kind !== "bar" || s.id !== "wicket") continue;
         const x = (s.x0 + s.x1) / 2;
@@ -114,7 +124,7 @@ export function fieldUprights(plan: FieldPlan, thin: number): Upright[] {
     case "lacrosse":
     case "fieldhockey":
     case "handball": {
-      // The goal: lacrosse 6 by 6 feet on a field and 4 high in a box; field hockey 3.66 by 2.14 metres; handball 3 by 2.
+      // The goal: World Lacrosse 6 ft apart and high on a field, 4 ft high in a box; FIH 2.14 m to the crossbar's lower edge; IHF interior height 2 m (docs/sources.md).
       const box = plan.league === "nll" || plan.league === "world-box";
       for (const g of plan.goals) {
         const height = plan.sport === "lacrosse" ? (box ? 4 : 6) : plan.sport === "handball" ? 2 * M : 2.14 * M;
@@ -149,7 +159,11 @@ export function fencePlanes(points: readonly FencePoint[], walls: readonly ParkW
   return planes;
 }
 
-/** A ballpark's uprights: the fence, the two foul poles where the foul lines meet it, and the backstop behind home plate. */
+/**
+ * A ballpark's uprights: the fence, the two foul poles where the foul lines meet it, and the backstop behind home plate. Official Baseball Rules 2025, 2.01, gives no height
+ * for a fence or a foul pole, and only recommends the backstop 60 ft or more from home base: the 8 ft of the fence where no wall is listed, the poles' 30 ft and the
+ * screen's 70 ft by 20 ft are ours.
+ */
 export function ballparkUprights(points: readonly FencePoint[], walls: readonly ParkWall[], thin: number): Upright[] {
   const items: Upright[] = [];
   const fence = fencePlanes(points, walls, thin);

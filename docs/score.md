@@ -62,6 +62,10 @@ console.log(svg.split('class="ky-mark"').length - 1, svg.includes("<clipPath"), 
 
 A round mark with no logo (Calvara above) is the team's initials on its colour; in the badge, which already writes the three letters, a team with no logo has no mark. `markFit: "contain"` shows a crest whole on a plain disc where `cover` (the default) fills the circle and cuts the edges of a flag. Curling, the net sports and cricket put the teams on the board, not on the surface, so they have no mark. The mark's ring and hairline are `--ky-mark-ring` and `--ky-mark-edge`.
 
+### Without the panel
+
+`plate: false` draws a score with the teams' names and the rest of the surface and no score panel (or board, for curling, cricket and the net sports). It is what the [3D view](./turn.md#the-score) does when it hangs the score up as a scoreboard; the drawing without it is the same text as before.
+
 ## Layout
 
 `orientation` is `landscape` (the default), `portrait` or `auto`. Portrait turns the surface a quarter clockwise, so the away team is at the top and the home team at the bottom; every name, number and score is turned back so that it reads upright. `auto` follows `aspect`, the container's width over its height: in a string it is landscape unless `aspect` is given, and the browser helpers measure the container, draw again when its shape changes, and treat a container that is as tall as its content and under 560 pixels wide as tall.

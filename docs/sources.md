@@ -458,28 +458,33 @@ The 18 games of `EVENTS` ([special-games.md](./special-games.md)) are read from 
 
 ## Heights in the 3D view
 
-The [3D view](./turn.md) stands things up on a surface; where each stands is the drawing's own (the court's, the plan's and the figures' places above), and how high is below. A strip is drawn at least a thousandth of the surface's diagonal thick and a mesh at least a cell of that size, so a 3-inch post on a 500-foot ground stays in sight: those sizes are ours.
+The [3D view](./turn.md) stands things up on a surface; where each stands is the drawing's own (the court's, the plan's and the figures' places above), and how high is below. Every figure was read from the rulebook named, on 2026-10-13 (the rule numbers are those of the edition named; the page or PDF is given for each). A strip is drawn at least a thousandth of the surface's diagonal thick and a mesh at least a cell of that size, so a 3-inch post on a 500-foot ground stays in sight: those sizes are ours. What a rule leaves open is said as **ours**.
 
-**In the figures above, already read.** The volleyball net's top (2.43 m men, 2.24 m women, a strip 1 m wide), the antennae's length (1.8 m) and the posts' places; the tennis net (3 ft 6 in at the posts, 3 ft at the centre) and the singles sticks; the badminton net (1.55 m over the side lines, 1.524 m at the centre, 760 mm deep) and posts (1.55 m); the pickleball net (36 in at the sidelines, 34 in at the centre); the table (76 cm over the floor), its net and its posts (15.25 cm); a soccer goal's width and height (7.32 by 2.44 m) and depth; the hockey net's width (6 ft) and depth (40 in); the goals of handball, field hockey and lacrosse as the plans have them (their width and depth); the fence of a ballpark and the heights of its listed walls (`PARKS`).
-
-**New in the 3D view, and not read again for it.** These are the rule's well-known figure, typed in; the page of the rulebook that gives each has not yet been read on a date, and a reader who finds one wrong is asked to say so.
-
-| Part | Height drawn | Rule it stands for |
+| Part | Height drawn | Rule |
 | --- | --- | --- |
-| Volleyball posts | 2.55 m | FIVB Volleyball Rules, Rule 2, the posts. |
-| Volleyball antennae | 80 cm over the net | FIVB Volleyball Rules, Rule 2, the antennae. |
-| Hockey goal | 4 ft high | NHL Rule 1, the goal; the IIHF's is 1.22 m. |
-| Hockey boards and glass | 42 in of boards and 5 ft of glass | NHL Rule 1 gives the boards a range and the glass a least; the figures drawn are within them. The glass of the sides is higher in the NHL, and ours stands the same all round. |
-| Basketball rim and backboard | rim 10 ft; backboard from 9 ft to 12 ft 6 in, 42 in tall | NBA Rule 1, the baskets; the FIBA backboard is 1.05 m tall, drawn at the NBA's for every league. The stanchion's place behind the baseline is ours. |
-| Soccer corner flags | 1.5 m | IFAB Laws of the Game, Law 1, the least. |
-| Football posts | crossbar 10 ft; uprights to 35 ft over it (NFL) or 20 ft over it (the others) | NFL Rule 2, the goal posts (the NFL's least is 35 ft); the 20 ft of the CFL, the IFAF and the leagues is the figure used where a rule was not read. The pylons are 18 in high. |
-| Rugby posts | crossbar 3 m; uprights 3.4 m over it; flags 1.2 m | World Rugby Laws, Law 1, the least. |
-| Gaelic football posts | crossbar 2.5 m; posts 7 m; flags 1.5 m | GAA Official Guide Part 2, Rule 1, the least. |
-| Australian football posts | goal posts 6 m, behind posts 3 m | Laws of Australian Football, Law 2, the least. |
-| Cricket stumps | 28 in | MCC Laws of Cricket, Law 8. |
-| Lacrosse goal | 6 ft high on a field, 4 ft in a box | World Lacrosse and NCAA rules for the field; the box goal's height is 4 ft. |
-| Handball and field hockey goals | 2 m; 2.14 m | IHF Rules of the Game, Rule 1; FIH Rules of Hockey, Rule 1. |
-| Ballpark | fence 8 ft where no wall is listed; foul poles 30 ft; backstop 70 ft wide and 20 ft high, 60 ft behind home | Official Baseball Rules 2.02 prefer a fence of 8 ft and 2.04 sets the least distance of the backstop; the poles' height and the backstop's size are ours. |
+| Volleyball net | top 2.43 m (men) or 2.24 m (women), a strip 1 m wide | FIVB Official Volleyball Rules 2025-2028, 2.1.1 and 2.2 (<https://www.fivb.com/wp-content/uploads/2025/01/FIVB-Volleyball_Rules2025_2028-EN-v05.pdf>) |
+| Volleyball posts | 2.55 m | the same, 2.5.1: "They are 2.55 m high" |
+| Volleyball antennae | 1.80 m long, the top 80 cm over the net, 10 cm stripes | the same, 2.4 |
+| Tennis, badminton, pickleball, table tennis | as in the figures above | the figures above |
+| Basketball ring | upper edge 10 ft (FIBA 3,050 mm); inside diameter 18 in; net 18 in long (FIBA 400 to 450 mm) | NBA Rule 1 Section II (<https://official.nba.com/rule-no-1-court-dimensions-equipment/>); FIBA Official Basketball Rules 2026, Equipment, 1.2.1, 1.2.4, 1.3.1 (<https://assets.fiba.basketball/image/upload/documents-corporate-fiba-official-rules-2026-equipment-v1-0.pdf>) |
+| Basketball backboard | 6 ft by 3 1/2 ft (FIBA 1,800 by 1,050 mm); its face 4 ft in from the baseline in the NBA's diagram, 1,200 mm in FIBA's | NBA Rule 1 Section II; FIBA 1.1.3 and 1.1.8 |
+| Basketball backboard's lower edge | 150 mm under the ring's top (2,900 mm in FIBA's) | FIBA 1.1.5 ("150 mm above the bottom edge of the backboard"). **Ours for the NBA:** Rule 1 gives the board's size and the ring's height, not the lower edge, so the NBA's is drawn as FIBA's. |
+| Basketball stanchion | the front of its padding 2,000 mm behind the end line | FIBA 1.4.3, Level 1. **Ours:** the NBA's Rule 1 does not give it; its arm and mast are drawn to carry the board. |
+| Hockey goal | 4 ft high, 6 ft between the posts, 11 ft from the end boards | NHL Official Rules 2025-2026, 2.1 and 1.5 (<https://media.nhl.com/site/asset/public/ext/2025-26/2025-26Rules.pdf>) |
+| Hockey boards and glass | boards 42 in (40 to 48 in allowed), glass 8 ft over them at each end and 6 ft along the sides (not less than 6 ft) | NHL 1.3. The glass is drawn 8 ft in the corners, as at the ends; the IIHF's figures were not read. |
+| Soccer goal and flags | 7.32 m between the posts, the crossbar's lower edge 2.44 m over the ground; a corner flagpost at least 1.5 m high | IFAB Laws of the Game 2025/26, Law 1 sections 10 and 8 (<https://www.thefa.com/-/media/files/thefaportal/governance-docs/laws-of-the-game/2025-26/law-1---the-field-of-play.ashx>) |
+| NFL goal posts | the crossbar's top face 10 ft over the ground, 18 ft 6 in long; the uprights 35 ft over the bar (45 ft in all) | NFL 2026 Official Playing Rules, Rule 1, Section 3, Articles 1 and 2 (<https://static.www.nfl.com/image/upload/fl_attachment/league/tqivdkzt9mu6wdgsh1ku.pdf>) |
+| CFL goal posts | on each goal line, 18 ft 6 in apart, 40 ft over the ground, the crossbar at 10 ft; a wishbone or single shaft with its base within 75 in of the goal line | CFL Official Playing Rules 2026, Rule 1, Section 1, Article 1 (<https://static.cfl.ca/wp-content/uploads/2026_Rule-Book.pdf>) |
+| College and other football goal posts | the crossbar's top 10 ft over the ground, the uprights at least 30 ft over the ground, 18 ft 6 in apart | NCAA Football Rules and Interpretations 2025, Rule 1-2-5 (a copy at <https://taso.org/wp-content/uploads/2025/06/2025-NCAA-FB-Rule-Book.pdf>); BAFA Rulebook 2024, Appendix D, 13 (<https://rules.bafra.info/rulebook/bafa2024/D.pdf>). The IFAF's own rulebook was not read: its field is drawn at these. |
+| Football pylons | 18 in high, eight: four at the goal line corners and two on each end line | NFL Rule 1, Section 2, Article 3 names the eight and gives no size; BAFA Appendix D, 14 recommends 4 in by 4 in and 18 in overall. The height is **ours**. |
+| Rugby union posts | the crossbar's top edge 3 m over the ground, 5.6 m apart; "minimum height 3.4 m"; flag posts at least 1.2 m | World Rugby Laws of the Game 2026, Law 1, goal posts and crossbar 7 and flag posts 8, and the diagram on page 28 (<https://passport.world.rugby/media/jxrnmptk/2026en-laws-of-the-game-compressed.pdf>). The Law does not say whether the 3.4 m is from the ground or over the bar; it is drawn over the bar (6.4 m), as the diagram sets it beside "3m to top edge of bar". |
+| Rugby league posts | 16 m high, 5.5 m apart, the crossbar at 3 m | NRL Section 18 and IRL Section 1, as in the field sports' tables below |
+| Gaelic football posts | not less than 7 m over the ground, 6.5 m apart, the crossbar 2.5 m over the ground | GAA Official Guide Part 2 (2026), Rule 1.3 (i) and (ii) (<https://www.galwaygaa.ie/wp-content/uploads/2026/02/Official-Guide-Part-2.pdf>). Rule 1.7 gives the corner flags no height: 1.5 m is **ours**. |
+| Australian football posts | goal posts 6 to 15 m high and 6.4 m apart; behind posts 3 to 10 m high and 6.4 m either side | Laws of Australian Football 2026, Law 3.3.1 (<https://play.afl/sites/default/files/2026-02/Laws%20of%20Australian%20Football%202026.pdf>); the least is drawn. |
+| Cricket stumps | three, across 9 in; their tops 28 in over the playing surface | MCC Laws of Cricket, Law 8.1 and 8.2 (<https://www.lords.org/mcc/laws/the-wickets>, read through the Internet Archive's copy of 2025) |
+| Handball, field hockey and lacrosse goals | interior height 2 m; 2.14 m to the crossbar's lower edge; 6 ft on a field and 4 ft in a box | as cited for each sport in the field sports' tables below |
+| Ballpark | the fence at the height of its listed walls, **8 ft** where none is listed; the foul poles **30 ft**; the backstop a screen **70 ft by 20 ft**, 60 ft behind home | Official Baseball Rules 2025, 2.01 give no height for a fence or a foul pole and only recommend the backstop "60 feet or more" from home base (<https://mktg.mlbstatic.com/mlb/official-information/2025-official-baseball-rules.pdf>); the 8 ft, 30 ft and the screen's size are **ours**. A listed wall's height is the park article's ([references.md](./references.md#walls-quirks-and-the-extra-points)). |
+| Scoreboard | hung 12 to 30 ft over a court or rink, standing on legs behind an end of a field | **Ours** throughout: no rulebook gives one. |
 
 ## Coordinate frames
 

@@ -28,16 +28,18 @@ Or the custom element, with no script of your own:
 <kyogijo-field sport="nhl" turn turn-view="broadcast"></kyogijo-field>
 ```
 
-`turn` switches the 3D view on, `turn-view` names the viewpoint it opens on, `turn-controls="false"` leaves the buttons out, `turn-uprights="false"` leaves out what stands on the surface, and `turn-touch="turn"` keeps every touch for the view. Take it off and the flat drawing comes back. The element's `turn` property is the handle, and `turnSettings` takes the settings the attributes cannot say.
+`turn` switches the 3D view on, `turn-view` names the viewpoint it opens on, `turn-controls="false"` leaves the buttons out, `turn-uprights="false"` leaves out what stands on the surface, `turn-score="floor"` leaves the score panel on the floor, and `turn-touch="turn"` keeps every touch for the view. Take it off and the flat drawing comes back. The element's `turn` property is the handle, and `turnSettings` takes the settings the attributes cannot say.
 
 ## The viewpoints
 
 | Viewpoint | Key | Looks from |
 | --- | --- | --- |
 | `overhead` | 1 | Straight down. |
-| `broadcast` | 2 | High on one side line, as the main camera. For the net sports, whose net runs across the court, high behind an end line, as a television camera: from the side line a net is a stick. |
+| `broadcast` | 2 | High on one side line, as the main camera, turned a little towards one end so that the boards, nets and goals show their faces. For the net sports, whose net runs across the court, high behind an end line, as a television camera: from the side line a net is a stick. A curling sheet is seen square on from the side. |
 | `end` | 3 | Low, behind an end line, along the surface: where a net, a goal or a basket is best seen. |
 | `corner` | 4 | Low, from a corner, with the nearest net or goal in front. The view a mount opens on. |
+
+The end and corner views look from the side opposite the scoreboard of a field (see below), so that it stands behind the far end.
 
 A view is `{ yaw, pitch, zoom }`: the turn about the vertical in degrees, the tip back from straight overhead in degrees (0 to 84, so the eye never goes below the floor), and the zoom (0.5 to 4). The scene is fitted to the box at every view, so every viewpoint and every turn shows the whole surface. `TURN_PRESETS` and `NET_PRESETS` are the viewpoints as numbers.
 
@@ -53,28 +55,33 @@ A view is `{ yaw, pitch, zoom }`: the turn about the vertical in degrees, the ti
 
 ## What stands on each surface
 
-Heights are the rulebooks' and are cited in [Sources](./sources.md); where the rules give a least (a post's height, the glass above a rink's boards) the least is drawn, and where the rules leave the size to the maker (the mesh of a net, the thickness of a strip) it is ours. A strip is never thinner than a thousandth of the surface's diagonal, so that a 3-inch post on a 500-foot ground stays in sight.
+Heights are the rulebooks', read from the current rulebooks and cited by rule number in [Sources](./sources.md#heights-in-the-3d-view); where the rules give a range or a least (a post's height, the glass above a rink's boards) the least is drawn, and where the rules leave a size open (the mesh of a net, the thickness of a strip, a baseball fence's height, a corner flag's) it is ours and is said to be. A strip is never thinner than a thousandth of the surface's diagonal, so that a 3-inch post on a 500-foot ground stays in sight.
 
 | Surface | What stands up |
 | --- | --- |
-| Volleyball, beach volleyball | The net, 2.43 m (men) or 2.24 m (women, `netHeight: "women"`), a metre wide with its tape and side bands; posts 2.55 m; antennae 1.8 m long, 80 cm over the net, in bands of red and white. |
+| Volleyball, beach volleyball | The net, 2.43 m (men) or 2.24 m (women, `netHeight: "women"`), a metre wide with its tape and side bands; posts 2.55 m; antennae 1.8 m long, the top 80 cm over the net, in bands of red and white (FIVB 2.1, 2.2, 2.4, 2.5.1). |
 | Tennis | The net, 3 ft 6 in at the posts and 3 ft at the centre, with its strap; the posts; singles sticks (`net: { sticks: true }`). |
 | Badminton | The net, 1.55 m at the posts and 1.524 m at the centre, 76 cm deep; the posts. |
 | Pickleball | The net, 36 in at the posts and 34 in at the centre; the posts. |
 | Table tennis | The table lifted 76 cm on four legs, the net 15.25 cm over it, the clamps. |
-| Basketball | Each basket: the backboard (9 ft to 12 ft 6 in), the rim at 10 ft with its net, and the padded stanchion behind the baseline. |
-| Hockey | The boards (42 in) with 5 ft of glass above them, and a goal 6 ft wide and 4 ft high on each goal line (`boards: false` leaves the boards out). |
+| Basketball | Each basket: the backboard (6 ft by 3 1/2 ft, FIBA 1.80 by 1.05 m, its lower edge 150 mm under the ring's top), the ring at 10 ft (FIBA 3.05 m) with its 18 in net, and the padded stanchion, its padding 2 m behind the end line. |
+| Hockey | The boards (42 in) with glass over them, 8 ft at the ends and 6 ft along the sides (NHL 1.3), and a goal 6 ft wide and 4 ft high on each goal line (NHL 2.1; `boards: false` leaves the boards out). |
 | Soccer | A goal 7.32 by 2.44 m (the pitch's own size) on each goal line, and a corner flag 1.5 m high at each corner (`cornerFlags: false`). |
 | Handball, field hockey, lacrosse | The goal: 3 by 2 m; 3.66 by 2.14 m; 6 by 6 ft (4 by 4 ft in a box). |
-| NFL, CFL, IFAF | The goal posts: a crossbar at 10 ft and uprights 18 ft 6 in apart, reaching 35 ft over the bar in the NFL and 20 ft elsewhere, on a slingshot support or an H; the eight pylons. |
-| Rugby | The posts: a crossbar at 3 m, uprights 5.6 m apart reaching 3.4 m over it; the flags. |
-| Gaelic games | The posts: a crossbar at 2.5 m, uprights 6.5 m apart and 7 m high; the corner flags. |
+| NFL, CFL, IFAF | The goal posts: a crossbar at 10 ft and uprights 18 ft 6 in apart, 45 ft high in the NFL (35 ft over the bar), 40 ft in the CFL and at least 30 ft in the NCAA and the rest, on a slingshot support or an H; the eight pylons. |
+| Rugby | Union: a crossbar at 3 m, uprights 5.6 m apart, drawn 3.4 m over the bar; league: posts 16 m high; the flag posts, 1.2 m. |
+| Gaelic games | The posts: a crossbar at 2.5 m, uprights 6.5 m apart and 7 m high; the corner flags (1.5 m, ours). |
 | Australian football | Two goal posts 6 m high and two behind posts 3 m high at each end. |
 | Cricket | Three stumps 28 in high at each end of the pitch. |
 | Baseball | The fence as high as its walls (the Green Monster's 37 ft at Fenway Park; 8 ft where no wall is listed), a foul pole at each line, and the backstop. |
-| Curling | Nothing: a sheet is flat. |
+| Curling | Nothing but the scoreboard: a sheet is flat. |
+| Any score drawing | The scoreboard: see below. |
 
 `uprightsFor(options, { only: ["net"] })` says what stands on a surface as planes in the drawing's frame (x along the surface, y across it, z the height, in feet), and `describeUprights(options, uprights, "ja")` says it in a sentence: the view's description ends with it, so a reader who cannot see the view hears what stands in it.
+
+## The score
+
+In a drawing with a score the 3D view does not lay the score's panel on the floor: it hangs it up. The badge of the score (the strip `size: "badge"` draws) is put on a dark board that turns to face the eye, so that it reads from wherever the view is. A court or a rink (basketball, hockey, volleyball, badminton, handball, tennis, pickleball) has it hung on cables over the middle; a field, a pitch, a table and a curling sheet have it standing on legs behind an end, and a ballpark behind centre field. The floor keeps the teams' names and everything else, and loses the panel: the drawing option `plate: false`, which any drawing takes, is how. `score: "floor"` in the settings leaves the panel on the floor and the board off; so does `uprights: false`, since the board is one of the things that stand up. The sizes and heights of the board are ours: no rulebook gives a scoreboard.
 
 ## Settings
 
@@ -83,11 +90,12 @@ Heights are the rulebooks' and are cited in [Sources](./sources.md); where the r
 | `preset` | The viewpoint it opens on: `overhead`, `broadcast`, `end` or `corner` (the default). |
 | `view` | An exact opening view, `{ yaw, pitch, zoom }`, laid over the preset. |
 | `controls` | `false` leaves the buttons out; the keys and the pointer work either way. |
-| `uprights` | `false` for the floor alone, or `{ netHeight, boards, only }`. |
+| `uprights` | `false` for the floor alone, or `{ netHeight, boards, only, score }`. |
+| `score` | `board` (the default) hangs the score up as a scoreboard; `floor` leaves the panel on the floor. |
 | `touch` | `scroll` (the default) or `turn`. |
 | `motion` | `auto` (the default) glides between viewpoints unless the reader prefers reduced motion; `smooth` or `none` say it for them. |
 | `floor` | A function that draws the floor in place of `drawKyogijo`: pass a chart's `draw` to turn a shot chart. |
-| `lens` | How long a lens the eye has, as a multiple of the view's longer side: 2.4 by default; the larger, the flatter. |
+| `lens` | How long a lens the eye has, as a multiple of the view's longer side: 1.7 by default; the larger, the flatter. |
 | `size` | For `turnMarkup`, the box the first view is worked out for: 960 by 600. |
 | `id` | The prefix of the ids in the view, for a page with more than one. |
 | `onChange` | Called with the view and the viewpoint it is (`undefined` when it was turned by hand). |

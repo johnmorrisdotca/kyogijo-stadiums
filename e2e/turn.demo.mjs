@@ -159,7 +159,7 @@ for (const sport of SPORTS) {
 test("speaks Japanese, and says what stands on the surface in it", async ({ page }) => {
   await open(page, "?sport=volleyball&view=3d&lang=ja&help=off");
   const bar = page.locator(`${STAGE} .ky-turn-controls`);
-  for (const name of ["真上", "中継カメラ", "端から", "低いコーナー", "元に戻す"]) await expect(bar.getByRole("button", { name })).toBeVisible();
+  for (const name of ["真上", "中継カメラ", "エンド側から", "低い角度から", "元に戻す"]) await expect(bar.getByRole("button", { name })).toBeVisible();
   expect(await page.locator(`${STAGE} .ky-turn-help`).textContent()).toContain("ネット 2.43 m");
   await expect(page.locator(`${STAGE} .ky-turn-view`)).toHaveAttribute("aria-roledescription", "3D表示");
 });
@@ -167,7 +167,10 @@ test("speaks Japanese, and says what stands on the surface in it", async ({ page
 test("keeps the score, the teams and the layers on the floor", async ({ page }) => {
   await open(page, "?sport=nhl&view=3d&lang=en&help=off");
   expect(await page.locator(`${STAGE} .ky-turn-floor svg text`).allTextContents()).toContain("NORTHERN OWLS");
-  await expect(page.locator(`${STAGE} .ky-turn-floor .ky-plate`)).toHaveCount(1);
+  // The score is hung up as a scoreboard, not laid on the floor.
+  await expect(page.locator(`${STAGE} .ky-turn-floor .ky-plate`)).toHaveCount(0);
+  await expect(page.locator(`${STAGE} [data-part="scoreboard"]`)).toHaveCount(1);
+  expect(await page.locator(`${STAGE} [data-part="scoreboard"] text`).allTextContents()).toContain("NOW");
 });
 
 test("the element turns with the `turn` attribute, takes a viewpoint by `turn-view`, and gives the flat drawing back", async ({ page }) => {

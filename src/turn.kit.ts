@@ -20,10 +20,15 @@ export interface Plane {
   u: V3;
   v: V3;
   svg: string;
+  /**
+   * A plane that turns to face the eye, about the vertical through its middle: a scoreboard is read from wherever the view is. `u` and `v` give its size and its
+   * place as it lies at a yaw of 0; `v` must be vertical.
+   */
+  billboard?: boolean;
 }
 
 /** What stands on the surface as a thing a reader would name: a net, a basket, a goal, a pair of posts. */
-export type UprightKind = "net" | "antennae" | "posts" | "hoop" | "goal" | "boards" | "stumps" | "pylons" | "flags" | "fence" | "backstop" | "foul-poles" | "table-legs";
+export type UprightKind = "scoreboard" | "net" | "antennae" | "goalposts" | "netposts" | "hoop" | "goal" | "boards" | "stumps" | "pylons" | "flags" | "fence" | "backstop" | "foul-poles" | "table-legs";
 
 /** A thing that stands on the surface: where, how high, and the planes it is made of. */
 export interface Upright {
@@ -53,6 +58,17 @@ export const cross = (a: V3, b: V3): V3 => [a[1] * b[2] - a[2] * b[1], a[2] * b[
 
 /** A number for markup: millimetres of a foot, no more. */
 export const n = (value: number): string => String(Math.round(value * 1000) / 1000);
+
+/** A billboard turned to face an eye whose view is turned `yaw` degrees: its width runs along the screen's x, which in the scene is (cos yaw, -sin yaw, 0). */
+export function facing(p: Plane, yaw: number): Plane {
+  if (p.billboard !== true) return p;
+  const [w, h] = size(p);
+  const a = (yaw * Math.PI) / 180;
+  const u: V3 = [w * Math.cos(a), -w * Math.sin(a), 0];
+  const middle: V3 = [p.o[0] + (p.u[0] + p.v[0]) / 2, p.o[1] + (p.u[1] + p.v[1]) / 2, p.o[2] + (p.u[2] + p.v[2]) / 2];
+  const v: V3 = [0, 0, p.v[2] < 0 ? -h : h];
+  return { ...p, o: [middle[0] - (u[0] + v[0]) / 2, middle[1] - (u[1] + v[1]) / 2, middle[2] - (u[2] + v[2]) / 2], u, v };
+}
 
 /** A plane. */
 export const plane = (id: string, kind: PartKind, o: V3, u: V3, v: V3, svg: string): Plane => ({ id, kind, o, u, v, svg });
