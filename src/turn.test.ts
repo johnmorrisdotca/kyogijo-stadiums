@@ -353,6 +353,18 @@ describe("what stands on the other fields", () => {
   });
 });
 
+describe("a crowd and a pageant under the 3D view", () => {
+  const game = { home: { name: "Prairie Ridge Bison", abbr: "PRB", score: 2, color: "#a8452c" }, away: { name: "Northern Owls", abbr: "NOW", score: 3, color: "#3a2d6b" }, status: "final" } as const;
+
+  it("draws a drawing with a crowd and a pageant as its floor, with the goals still standing on it", () => {
+    const html = turnMarkup({ sport: "soccer", ...game, crowd: true, pageant: "carpet" } as SurfaceOptions);
+    expect(html).toContain("ky-crowd");
+    expect(html).toContain("data-pageant");
+    expect(html).toContain("ky-up");
+    expect(uprightsFor({ sport: "soccer", ...game, crowd: true }).items.map((i) => i.kind)).toEqual(expect.arrayContaining(["goal", "flags"]));
+  });
+});
+
 describe("the score, stood up", () => {
   const game = { home: { name: "Prairie Ridge Bison", abbr: "PRB", score: 2, color: "#a8452c" }, away: { name: "Northern Owls", abbr: "NOW", score: 3, color: "#3a2d6b" }, status: "final" } as const;
 
