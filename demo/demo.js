@@ -1,13 +1,14 @@
 // The demo page's own script: a surface to try (the package's own `mountKyogijo`), the code that draws it in four ways,
 // and a page of examples: every sport, wide and tall, badges, compact cards, court looks, a live score, every ballpark,
 // and the custom element. The words are in words.js, the made-up teams in examples.js.
-import { COURT_THEMES, GROUNDS, GROUND_IDS, KYOGIJO_STYLE, LEAGUES, PARKS, PARK_IDS, SOCCER_PITCH_IDS, SOCCER_PROVIDERS, SOCCER_PROVIDER_IDS, SPORTS, VERSION, drawKyogijo, fenceFor, rescale, layerTable, rulesFor, seasonLabel, leagueAt, leagueSeason } from "./dist/index.js";
+import { COURT_THEMES, GROUNDS, GROUND_IDS, KYOGIJO_STYLE, LEAGUES, PARKS, PARK_IDS, SOCCER_PITCH_IDS, SOCCER_PROVIDERS, SOCCER_PROVIDER_IDS, VERSION, drawKyogijo, fenceFor, rescale, layerTable, rulesFor, seasonLabel, leagueAt, leagueSeason } from "./dist/index.js";
 import { mountKyogijo } from "./dist/mount-entry.js";
 import "./dist/element-define.js";
 import { initAtlas } from "./atlas.js";
 import { mountPlaceGrid } from "./place-grid.js";
 import { toParams } from "./embed-params.js";
-import { EMBLEMS, FAMILIES, GAMES, TEAMS, TEAMS_JA } from "./examples.js";
+import { EMBLEMS, FAMILIES, TEAMS, TEAMS_JA } from "./examples.js";
+import { gameOf as gameFor, teamOf } from "./games.js";
 import { nbaZones, passMap, shotHeat, shotMap, sprayChart, sprayDensity, touchZones } from "./layers-data.js";
 import { mlbBalls, nbaShots, nflPasses, nhlShots, soccerShots } from "./charts-data.js";
 import { replayPlay } from "./replay-data.js";
@@ -15,7 +16,7 @@ import { ROAD_FINAL, SERIES_LABELS, SERIES_LABELS_JA, nation, roadFinalists, roa
 import { roadToFinal } from "./dist/charts-entry.js";
 import { mlbSprayChart, nbaShotChart, nflPassChart, nhlShotMap, soccerShotMap } from "./dist/charts-entry.js";
 import { fenceAt } from "./dist/geometry-entry.js";
-import { FIELDS, SEGS, chosenLeague, curlingExtras, fieldExtras, netExtras, hasSeasons, hiddenRows, hiddenStatus, isOwnLeague, labelOf as labelsFor, loadGame as loadGameInto, makeState, optionsFor as optionsOf, seasonRange } from "./model.js";
+import { FIELDS, SEGS, chosenLeague, hasSeasons, hiddenRows, hiddenStatus, isOwnLeague, labelOf as labelsFor, loadGame as loadGameInto, makeState, optionsFor as optionsOf, seasonRange } from "./model.js";
 import { WORDS } from "./words.js";
 
 const $ = (id) => document.getElementById(id);
@@ -393,12 +394,8 @@ $("embed-download").addEventListener("click", () => {
 });
 
 // ----- The examples.
-const team = (sport, role, score) => {
-  const base = TEAMS[FAMILIES[sport]][role];
-  return { name: language.lang === "ja" ? TEAMS_JA[FAMILIES[sport]][role] : base.name, abbr: base.abbr, color: base.color, logo: EMBLEMS[base.emblem], score, ...(sport === "curling" ? curlingExtras(role, score) : {}), ...(GAMES[sport].awaySets !== undefined ? netExtras(sport, role, score) : {}), ...fieldExtras(sport, role, score) };
-};
-const withPens = (t, pens) => (pens === undefined ? t : { ...t, penalties: pens });
-const gameOf = (sport, extra = {}) => ({ sport, away: withPens(team(sport, "away", GAMES[sport].away), GAMES[sport].awayPens), home: withPens(team(sport, "home", GAMES[sport].home), GAMES[sport].homePens), status: GAMES[sport].status, competition: GAMES[sport].competition, date: GAMES[sport].date, language: language.lang, style: "none", ...extra });
+const team = (sport, role, score) => teamOf(sport, role, score, language.lang);
+const gameOf = (sport, extra = {}) => gameFor(sport, extra, language.lang);
 
 const mounts = [];
 function figure(host, options, caption) {
@@ -415,7 +412,6 @@ function figure(host, options, caption) {
 }
 
 const examples = {
-  gallery: () => SPORTS.map((sport) => [gameOf(sport, { orientation: "auto", ...(sport === "mlb" ? { park: "fenway-park" } : {}) }), say(`sport_${sport}`)]),
   sides: () => [
     [gameOf("nhl", { orientation: "landscape" }), `${say("sport_nhl")} · ${say("orientation_landscape")}`],
     [gameOf("nhl", { orientation: "portrait" }), `${say("sport_nhl")} · ${say("orientation_portrait")}`],
@@ -423,22 +419,6 @@ const examples = {
     [gameOf("nfl", { orientation: "portrait" }), `${say("sport_nfl")} · ${say("orientation_portrait")}`],
   ],
   compact: () => ["nba", "nfl", "nhl"].map((sport) => [gameOf(sport, { size: "compact", orientation: "auto" }), say(`sport_${sport}`)]),
-  pitches: () => {
-    const named = (id, extra = {}) => [gameOf("soccer", { orientation: "auto", pitch: id, ...extra }), say(`pitch_${id.replace(/-/g, "_")}`)];
-    return [
-      named("fifa"),
-      named("ncaa"),
-      named("7-a-side"),
-      named("futsal"),
-      ...["anfield", "maracana"].map((id) => {
-        const g = GROUNDS[id];
-        return [gameOf("soccer", { orientation: "auto", ground: id }), `${language.lang === "ja" ? g.nameJa : g.name} · ${g.pitch.length} × ${g.pitch.width} m`];
-      }),
-      [gameOf("soccer", { orientation: "auto", size: "compact", status: "final-aet", away: team("soccer", "away", 1), home: team("soccer", "home", 2) }), say("pitchCompact")],
-      [{ sport: "soccer", language: language.lang, style: "none", orientation: "auto", half: "left", stripePattern: "checks", goals: "strip", title: say("pitchHalf") }, say("pitchHalf")],
-    ];
-  },
-  patterns: () => ["bands", "wide", "narrow", "lengthwise", "checks", "diagonal"].map((pattern) => [{ sport: "soccer", language: language.lang, style: "none", orientation: "auto", stripePattern: pattern, goals: pattern === "checks" ? "line" : pattern === "diagonal" ? "strip" : "box", title: say(`pattern_${pattern}`) }, say(`pattern_${pattern}`)]),
   courts: () =>
     ["maple", "twoTone", "night", "sunburst", "tournament"].map((theme) => {
       const names = TEAMS.basketball;
@@ -576,7 +556,7 @@ function buildRoad() {
 function buildExamples() {
   for (const m of mounts) m.handle?.destroy();
   mounts.length = 0;
-  for (const [id, key] of [["gallery-cards", "gallery"], ["side-cards", "sides"], ["compact-cards", "compact"], ["court-cards", "courts"], ["pitch-cards", "pitches"], ["pattern-cards", "patterns"]]) {
+  for (const [id, key] of [["side-cards", "sides"], ["compact-cards", "compact"], ["court-cards", "courts"]]) {
     const host = $(id);
     host.replaceChildren();
     for (const [options, caption] of examples[key]()) figure(host, options, caption);
@@ -701,7 +681,7 @@ $("conv-spot").addEventListener("click", () => {
   convert();
 });
 
-// ----- The Ballparks and Soccer grounds sections and the atlas's map of every park and ground. Their places open in the playground above.
+// ----- The Every sport, The soccer pitch, Ballparks and Soccer grounds sections (demo/place-grid.js: short, with filters) and the atlas's map of every park and ground. Their places open in the playground above.
 function tryPlace(place) {
   if (place.kind === "park") {
     state.sport = "mlb";
@@ -720,7 +700,7 @@ function tryPlace(place) {
 }
 let atlas = { relabel() {} };
 const pick = (kind, id) => tryPlace({ kind, id });
-const grids = [mountPlaceGrid("parks", { say, lang: () => language.lang, onPick: pick }), mountPlaceGrid("grounds", { say, lang: () => language.lang, onPick: pick })];
+const grids = ["gallery", "pitches", "parks", "grounds"].map((name) => mountPlaceGrid(name, { say, lang: () => language.lang, onPick: pick }));
 
 // ----- A change of language redraws the words that were drawn in it.
 function onLanguage() {

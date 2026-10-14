@@ -103,9 +103,34 @@ kyogijo-field::part(plate) { filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .25)); 
 .pf-empty { grid-column: 1 / -1; margin: 0; padding: 14px 4px; color: var(--muted); }
 .park { text-align: left; font: inherit; color: inherit; border: 1px solid var(--rule); background: var(--surface); border-radius: 12px; padding: 8px; display: grid; gap: 2px; align-content: start; cursor: pointer; min-height: 44px; min-width: 0; }
 .park:hover { border-color: var(--ink); }
-.park svg { width: 100%; height: auto; margin-bottom: 4px; }
+.park .pf-img { display: block; width: 100%; margin-bottom: 4px; }
+.park .pf-img svg { display: block; width: 100%; height: auto; }
 .park-name { font-size: .78rem; font-weight: 700; line-height: 1.2; overflow-wrap: anywhere; }
 .park-sub { font-size: .7rem; color: var(--muted); }
+
+/* Every sport and The soccer pitch (the same grid, with cards of made-up games): the cards lie wide in boxes of one shape, which the page holds from the
+   first byte, whether the drawing is in it yet or not. Shut, a phone shows one row that scrolls sideways with the next card peeking, a tablet two rows of two
+   and a desk two rows of three; "show all" opens a grid of every card, one, two or three across. The chips scroll sideways on a phone. */
+.pf-cards { gap: 12px; grid-template-columns: minmax(0, 1fr); --cap: 4; }
+.pf-cards[data-open="false"] > .card { flex: 0 0 78%; scroll-snap-align: start; }
+.pf-cards .card-stage { position: relative; aspect-ratio: 8 / 5; padding: 0; }
+.pf-cards .card-stage svg { position: absolute; inset: 6px; width: calc(100% - 12px); height: calc(100% - 12px); max-width: none; }
+.pf-cards .card figcaption { margin-top: 4px; }
+.pf-chips { position: relative; }
+@media (max-width: 559px) {
+  .pf-chips { flex-wrap: nowrap; overflow-x: auto; max-width: 100%; scrollbar-width: none; }
+  .pf-chips button { flex: none; }
+}
+@media (min-width: 560px) {
+  .pf-cards, .pf-cards[data-open="false"] { grid-template-columns: repeat(2, minmax(0, 1fr)); --cap: 4; }
+  .pf-cards[data-open="false"] > .card { flex: none; }
+  .pf-cards[data-open="false"] > .card:nth-child(n + 5) { display: none; }
+}
+@media (min-width: 900px) {
+  .pf-cards, .pf-cards[data-open="false"] { grid-template-columns: repeat(3, minmax(0, 1fr)); --cap: 6; }
+  .pf-cards[data-open="false"] > .card:nth-child(n + 5) { display: block; }
+  .pf-cards[data-open="false"] > .card:nth-child(n + 7) { display: none; }
+}
 
 .uses { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
 .uses code { font-family: var(--mono); font-size: .82rem; overflow-wrap: anywhere; }

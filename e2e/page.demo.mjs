@@ -138,7 +138,9 @@ test("a live score moves when asked", async ({ page }) => {
 
 test("the examples are all there: every sport, wide and tall, badges, compact cards, courts and the parks", async ({ page }) => {
   await open(page, "?lang=en&help=off");
-  expect(await page.locator(`${at("gallery-cards")} svg.kyogijo`).count()).toBe(20);
+  // The sports open short (see compact.demo.mjs for the filters): every card is in the page, drawn when the grid comes near the screen.
+  await page.locator(at("gallery-more")).scrollIntoViewIfNeeded();
+  await expect(page.locator(`${at("gallery-cards")} svg.kyogijo`)).toHaveCount(20);
   expect(await page.locator(`${at("side-cards")} svg.kyogijo`).count()).toBe(4);
   expect(await page.locator(`${at("badge-list")} svg.kyogijo`).count()).toBe(8);
   expect(await page.locator(`${at("compact-cards")} svg.kyogijo`).count()).toBe(3);

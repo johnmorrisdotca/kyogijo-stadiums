@@ -115,7 +115,7 @@ for (const mode of ["wide", "tall", "landscape", "portrait"]) {
   FIRST.use[mode] = svg === WIDE ? "wide" : svg === TALL ? "tall" : null;
 }
 
-/** The Ballparks and Soccer grounds sections' filters and first cards, in their default view (demo/place-grid.js): what the script would draw first. */
+/** The filters and first cards of the Every sport, The soccer pitch, Ballparks and Soccer grounds sections, in their default view (demo/place-grid.js): what the script would draw first. */
 const placeBody = (name) => {
   const { attributes, html } = places.prerender(name, say);
   return `<div class="pf-body" id="${name}-body" data-testid="${name}-body" ${attributes}>${html}</div>`;
@@ -339,7 +339,7 @@ const page = `<!doctype html>
       <section class="more" id="gallery" aria-labelledby="gallery-title">
         <h2 id="gallery-title" data-say="galleryTitle"></h2>
         <p data-say="galleryText"></p>
-        <div class="cards" id="gallery-cards" data-testid="gallery-cards"></div>
+        ${placeBody("gallery")}
       </section>
 
       <section class="more" id="sides" aria-labelledby="sides-title">
@@ -369,9 +369,7 @@ const page = `<!doctype html>
       <section class="more" id="pitches" aria-labelledby="pitches-title">
         <h2 id="pitches-title" data-say="pitchesTitle"></h2>
         <p data-say="pitchesText"></p>
-        <div class="cards" id="pitch-cards" data-testid="pitch-cards"></div>
-        <h3 class="more-sub" data-say="patternsTitle"></h3>
-        <div class="cards cards-small" id="pattern-cards" data-testid="pattern-cards"></div>
+        ${placeBody("pitches")}
       </section>
 
       <section class="more" id="providers" aria-labelledby="providers-title">

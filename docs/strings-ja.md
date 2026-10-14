@@ -812,7 +812,19 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `copied` | Copied | コピーしました |
 | `download` | Download SVG | SVGを保存 |
 | `galleryTitle` | Every sport | すべての競技 |
-| `galleryText` | A score on each surface, each laid out for the box it is in. | それぞれの競技場に得点を載せ、枠に合わせて配置しています。 |
+| `galleryText` | A made-up game on each surface, with the score on it. Filter them by family of sport. | それぞれの競技場に架空の試合を描き、得点を入れています。競技の種類で絞り込めます。 |
+| `galleryFilterLabel` | Filter the sports | 競技の絞り込み |
+| `galleryFamily` | Family | 種類 |
+| `galleryFamily_football` | Football codes | アメリカンフットボール |
+| `galleryFamily_hockey` | Hockey | アイスホッケー |
+| `galleryFamily_basketball` | Basketball | バスケットボール |
+| `galleryFamily_baseball` | Baseball | 野球 |
+| `galleryFamily_soccer` | Soccer | サッカー |
+| `galleryFamily_curling` | Curling | カーリング |
+| `galleryFamily_net` | Net sports | ネット球技 |
+| `galleryFamily_field` | Field sports | フィールド球技 |
+| `galleryCount` | {n} of {total} sports | {total}競技中{n}競技 |
+| `galleryMore` | Show all {n} sports | 全{n}競技を表示 |
 | `sideTitle` | Wide and tall | 横と縦 |
 | `sideText` | The same game, turned a quarter for a phone. The words stay upright and the teams go top and bottom. | 同じ試合を、スマートフォン向けに90度回しました。文字は回転せず水平のまま、チームは上下に並びます。 |
 | `badgeTitle` | Badges for a list | 一覧用のバッジ |
@@ -930,7 +942,16 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `pitchesText` | A pitch from the Laws of the Game at any size, with the presets of UEFA, the MLS, the NCAA, the FA and FIFA's futsal, the size of sixty-four famous grounds, half pitches, and a score that ends after extra time or on penalties. | 競技規則に基づくピッチを、好きな広さで描けます。UEFA、MLS、NCAA、FA、FIFAフットサルの規格、有名な64のスタジアムの広さ、半面表示に対応し、延長戦やPK戦で決着した試合の得点も表示できます。 |
 | `pitchCompact` | Compact card, after extra time | 延長戦後のコンパクトなカード |
 | `pitchHalf` | Half a pitch, in checks | 半面を市松模様で |
-| `patternsTitle` | Mowing and goals | 芝の模様とゴール |
+| `pitchesFilterLabel` | Filter the pitches | ピッチの絞り込み |
+| `pitchesGroup` | Kind | 種類 |
+| `pitchesGroup_presets` | Presets | 規格 |
+| `pitchesGroup_small` | Small-sided | 5・7・9人制 |
+| `pitchesGroup_futsal` | Futsal | フットサル |
+| `pitchesGroup_grounds` | Famous grounds | 有名なスタジアム |
+| `pitchesGroup_layouts` | Layouts | 表示形式 |
+| `pitchesGroup_mowing` | Mowing and goals | 芝の模様とゴール |
+| `pitchesCount` | {n} of {total} pitches | {total}種中{n}種 |
+| `pitchesMore` | Show all {n} pitches | 全{n}種を表示 |
 | `providersTitle` | Data providers' pitches | データ提供元ごとのピッチ |
 | `providersText` | Each provider writes the pitch in its own numbers. Drawn in its own frame, the lines stand where the provider puts them and raw data plots without converting. | データ提供元ごとに、ピッチの座標の取り方が違います。提供元の座標系で描くと、ラインは提供元の定める位置に引かれ、生のデータを変換せずにそのまま描き込めます。 |
 | `providerFixed` | fixed figures | 固定値 |

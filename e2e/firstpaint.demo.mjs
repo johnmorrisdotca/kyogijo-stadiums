@@ -133,8 +133,11 @@ test.describe("with JavaScript off", () => {
     // The default views, drawn into the page: the MLB parks in use today and the grounds of the World Cup finals.
     await expect(page.locator("#parks-body .park")).toHaveCount(30);
     await expect(page.locator("#grounds-body .park")).toHaveCount(28);
-    expect(await page.locator("#parks-body .park svg.kyogijo").count()).toBe(30);
-    expect(await page.locator("#grounds-body .park svg.kyogijo").count()).toBe(28);
+    // The cards a desk shows are drawn in the page; the rest are boxes with their names, which the script draws when the grid comes near the screen.
+    expect(await page.locator("#parks-body .park svg.kyogijo").count()).toBe(16);
+    expect(await page.locator("#grounds-body .park svg.kyogijo").count()).toBe(16);
+    expect(await page.locator("#parks-body .park .pf-img[data-late]").count()).toBe(14);
+    expect(await page.locator("#grounds-body .park .pf-img[data-late]").count()).toBe(12);
     await expect(page.locator(at("parks-count"))).toHaveText("30 of 94 parks");
     await expect(page.locator(at("grounds-count"))).toHaveText("28 of 64 grounds");
     await expect(page.locator(`${at("parks-league")} button[aria-pressed="true"]`)).toHaveText("MLB");
@@ -154,6 +157,35 @@ test.describe("with JavaScript off", () => {
     const shut = await page.locator("#parks-body .park").evaluateAll((all) => all.filter((el) => getComputedStyle(el).display === "none").length);
     expect(shut === 0 || shut === 14 || shut === 22).toBe(true);
     expect((await page.locator("#parks").boundingBox()).height).toBeLessThan(page.viewportSize().width < 560 ? 700 : 760);
+  });
+
+  test("the sports and the pitches have their chips, their count and their first cards", async ({ page }) => {
+    await serve(page);
+    await page.goto("http://kyogijo.test/");
+    // Every card is in the page, with its name; the six a desk shows first are drawn, and each of the others is a box of the same size.
+    await expect(page.locator("#gallery-body figure.card")).toHaveCount(20);
+    await expect(page.locator("#pitches-body figure.card")).toHaveCount(16);
+    expect(await page.locator("#gallery-body figure svg.kyogijo").count()).toBe(6);
+    expect(await page.locator("#pitches-body figure svg.kyogijo").count()).toBe(6);
+    expect(await page.locator("#gallery-body figure .pf-img[data-late]").count()).toBe(14);
+    expect(await page.locator("#pitches-body figure .pf-img[data-late]").count()).toBe(10);
+    const boxes = await page.locator("#gallery-body figure .card-stage").evaluateAll((all) => new Set(all.filter((el) => el.getClientRects().length > 0).map((el) => `${Math.round(el.getBoundingClientRect().width)}x${Math.round(el.getBoundingClientRect().height)}`)).size);
+    expect(boxes).toBe(1);
+    await expect(page.locator(at("gallery-count"))).toHaveText("20 of 20 sports");
+    await expect(page.locator(at("pitches-count"))).toHaveText("16 of 16 pitches");
+    await expect(page.locator(`${at("gallery-family")} button`)).toHaveCount(9);
+    await expect(page.locator(`${at("gallery-family")} button[aria-pressed="true"]`)).toHaveText("All");
+    await expect(page.locator(`${at("pitches-group")} button`)).toHaveCount(7);
+    await expect(page.locator(at("gallery-more"))).toHaveText("Show all 20 sports");
+    await expect(page.locator(at("pitches-more"))).toHaveText("Show all 16 pitches");
+    await expect(page.locator(at("gallery-reset"))).toBeHidden();
+    await expect(page.locator("#gallery h2")).toHaveText("Every sport");
+    await expect(page.locator("#pitches h2")).toHaveText("The soccer pitch");
+    // The page is short already: the stylesheet shuts the rest of the cards away, not the script (a phone's row scrolls sideways, so shuts none).
+    const shut = (id) => page.locator(`#${id}-body figure.card`).evaluateAll((all) => all.filter((el) => getComputedStyle(el).display === "none").length);
+    const phone = page.viewportSize().width < 560;
+    expect([await shut("gallery"), await shut("pitches")]).toEqual(phone ? [0, 0] : [14, 10]);
+    for (const id of ["gallery", "pitches"]) expect((await page.locator(`#${id}`).boundingBox()).height).toBeLessThan(phone ? 700 : 900);
   });
 
   for (const path of ["docs/", "docs/getting-started.html", "docs/gallery-fields.html", "api.html"]) {
@@ -198,37 +230,46 @@ for (const [name, query] of [["by default", ""], ["at the address the owner used
   });
 }
 
-// The parks and the grounds: the script takes over the cards that are in the page, and moves nothing. The rest of the page is put aside
-// (the sections above them are drawn by the script, so with the reader down at the Ballparks they would push them about and hide whether the
-// sections themselves moved), and the two sections sit at the top of the screen where a shift is one the browser counts.
+// The sports, the pitches, the parks and the grounds: the script takes over the cards that are in the page, draws the ones that were boxes, and moves
+// nothing. The rest of the page is put aside (the sections above them are drawn by the script, so with the reader down at the Ballparks they would push
+// them about and hide whether the sections themselves moved), and the four sections sit at the top of the screen where a shift is one the browser counts.
+const SECTIONS = ["gallery", "pitches", "parks", "grounds"];
 async function onlyThePlaces(page, delay) {
   await serveSlowly(page, delay);
   await page.goto("http://kyogijo.test/", { waitUntil: "commit" });
   await page.waitForSelector("#grounds-body .park", { state: "attached" });
-  await page.addStyleTag({ content: "main > :not(#parks):not(#grounds) { display: none !important; }" });
+  await page.addStyleTag({ content: `main > :not(${SECTIONS.map((id) => `#${id}`).join("):not(")}) { display: none !important; }` });
   // Putting the rest aside moved the two sections itself: count from here.
   await page.evaluate(() => new Promise((done) => requestAnimationFrame(() => requestAnimationFrame(() => { window.__shift = 0; window.__shifts = []; done(); }))));
 }
 
-test("the parks and the grounds keep their box and their cards when the script takes over", async ({ page }) => {
+test("the sports, pitches, parks and grounds keep their box and their cards when the script takes over", async ({ page }) => {
   await onlyThePlaces(page, 700);
   expect(await page.locator("#parks-body").getAttribute("data-ready")).toBeNull();
   const boxes = async () => {
-    const [parks, grounds] = await Promise.all(["parks", "grounds"].map((id) => page.locator(`#${id}`).boundingBox()));
-    return { parks: Math.round(parks.height), grounds: Math.round(grounds.height), gap: Math.round(grounds.y - parks.y) };
+    const all = await Promise.all(SECTIONS.map((id) => page.locator(`#${id}`).boundingBox()));
+    return { heights: all.map((box) => Math.round(box.height)), gaps: all.map((box) => Math.round(box.y - all[0].y)) };
   };
   const before = await boxes();
-  await page.evaluate(() => { for (const id of ["park-grid", "ground-grid"]) document.getElementById(id).firstElementChild.firstDrawing = true; });
-  await page.waitForSelector('#grounds-body[data-ready="true"]');
-  await page.waitForSelector('#parks-body[data-ready="true"]');
+  const grids = ["gallery-cards", "pitch-cards", "park-grid", "ground-grid"];
+  await page.evaluate((ids) => { for (const id of ids) document.getElementById(id).firstElementChild.firstDrawing = true; }, grids);
+  for (const id of SECTIONS) await page.waitForSelector(`#${id}-body[data-ready="true"]`);
   expect(await boxes()).toEqual(before);
   // The cards are the ones that were in the page, not drawn again; and the script has taken them over.
-  expect(await page.evaluate(() => ["park-grid", "ground-grid"].map((id) => document.getElementById(id).firstElementChild.firstDrawing === true))).toEqual([true, true]);
+  expect(await page.evaluate((ids) => ids.map((id) => document.getElementById(id).firstElementChild.firstDrawing === true), grids)).toEqual([true, true, true, true]);
+  // The cards that were boxes are drawn when their grid comes within a screen of the window, in the boxes they had: the lower ones wait for the reader to come down.
+  for (const id of ["pitch-cards", "park-grid", "ground-grid"]) await page.locator(at(id)).scrollIntoViewIfNeeded();
+  await expect(page.locator("#gallery-body figure svg.kyogijo")).toHaveCount(20);
+  await expect(page.locator("#pitches-body figure svg.kyogijo")).toHaveCount(16);
+  await expect(page.locator("#parks-body .park svg.kyogijo")).toHaveCount(30);
+  await expect(page.locator("#grounds-body .park svg.kyogijo")).toHaveCount(28);
+  expect(await page.locator("[data-late]").count()).toBe(0);
+  expect(await boxes()).toEqual(before);
   await page.locator(at("parks-more")).click();
   await expect(page.locator(at("parks-more"))).toHaveText("Show fewer");
 });
 
-test("the parks and the grounds do not jump when the script runs", async ({ page, browserName }, testInfo) => {
+test("the sports, pitches, parks and grounds do not jump when the script runs", async ({ page, browserName }, testInfo) => {
   test.skip(browserName !== "chromium", "only Chromium reports layout shifts");
   await page.emulateMedia({ colorScheme: "dark" });
   await watchShifts(page);
@@ -236,7 +277,7 @@ test("the parks and the grounds do not jump when the script runs", async ({ page
   await page.waitForSelector('#grounds-body[data-ready="true"]');
   await page.waitForTimeout(1200);
   const [total, shifts] = await page.evaluate(() => [window.__shift, window.__shifts]);
-  console.log(`${testInfo.project.name} parks and grounds: CLS ${total?.toFixed(4)} ${JSON.stringify(shifts)}`);
+  console.log(`${testInfo.project.name} sports, pitches, parks and grounds: CLS ${total?.toFixed(4)} ${JSON.stringify(shifts)}`);
   expect(total).toBeLessThan(0.01);
 });
 
