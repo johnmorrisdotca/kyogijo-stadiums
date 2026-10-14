@@ -138,7 +138,7 @@ console.log(toSurface([[28, 0]], { from: "rugby", size: { length: 393.7, width: 
 
 ## The looks and the features
 
-A field sport is painted from the look's base, so the seven named looks apply to it ([theming](./theming.md)): `grass` (the default), `night`, `chalkboard`, `blueprint`, `print`, `broadcast` and `high-contrast`, each held to the same contrast as the others. Handball's floor and a hockey pitch's turf are our blues, with the goal areas in orange: no rulebook prints a colour. `featureColors` names each part: `FEATURES.rugby` has the try lines, the 22-metre lines and the dash lines, `FEATURES.cricket` the pitch, the creases and the circle, and so on.
+A field sport is painted from the look's base, so the eight named looks apply to it ([theming](./theming.md)): `grass` (the default), `night`, `chalkboard`, `blueprint`, `print`, `broadcast`, `high-contrast` and `line-drawing`, each held to the same contrast as the others. Handball's floor and a hockey pitch's turf are our blues, with the goal areas in orange: no rulebook prints a colour. `featureColors` names each part: `FEATURES.rugby` has the try lines, the 22-metre lines and the dash lines, `FEATURES.cricket` the pitch, the creases and the circle, and so on.
 
 ## What is not drawn
 

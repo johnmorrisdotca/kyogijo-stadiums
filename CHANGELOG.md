@@ -7,6 +7,10 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-10-14
+
+Thirteen new sports (padel, squash, racquetball, sepak takraw, teqball, roundnet and netball, with sitting volleyball; swimming, water polo, diving and artistic swimming; athletics and skating), which makes 33. A 3D view that stands what a rulebook puts on a surface (nets, posts, goals, walls, blocks, boards, bars, hurdles, boards and platforms) on a floor that turns. A crowd in the stands, and a pageant of flags and crests over the halves. A folded curling sheet, with a heat chart and statistics. A realistic basketball floor. The clubs that played in each ballpark and ground, with their Japanese names as Japanese media say them.
+
 ### Added
 
 - **Athletics and skating in the 3D view** ([docs/turn.md](./docs/turn.md#what-stands-on-each-surface)). An athletics stadium has the high jump's uprights 4.02 m apart with a bar, the pole vault's 5.20 m apart with a bar, the discus and hammer cage with its netting 4 m high and 6 m at the front of each side (Facilities Manual 2.4.1.3), the hurdles of the races a drawing marks at their heights (1.067, 0.838 and 0.914 m) in every lane, and the steeplechase's five barriers with the water jump's pit; a skating rink has the padding round a long or short track, 0.80 m high (ISU Rule 228.2), or a figure skating rink's boards, which are cut away on the eye's side like a hockey rink's. New upright kinds `hurdles`, `steeplechase`, `high-jump`, `pole-vault`, `cage`, `padding` and `rink-boards`, in English and Japanese. The javelin, the finish posts and the skating blocks have no height among the figures and are not drawn. Athletics gets a crowd profile (an oval bowl) and skating one (an arena's two tiers); both are in the e2e list.
