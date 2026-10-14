@@ -1775,7 +1775,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `groundsFound` | {n} of {total} grounds match your search | {total}会場中{n}会場が見つかりました |
 | `groundsNone` | No ground matches. Try another name, or reset the filters. | 条件に合うスタジアムがありません。別の名前を試すか、絞り込みをリセットしてください。 |
 | `groundsMore` | Show all {n} grounds | 全{n}会場を表示 |
-| `atlasTitle` | Atlas | 球場・スタジアムマップ |
+| `atlasTitle` | Atlas | 競技場マップ |
 | `atlasText` | Every ballpark, soccer ground, budō hall and NHL, NBA, WNBA and PWHL arena in the package on one map: choose a place to see its surface drawn to scale. Filter by sport, league, country, today or the past, and pick a year to keep the places that were in use then. | このパッケージにある野球場、サッカー場、武道の会場、NHL・NBA・WNBA・PWHLのアリーナをすべて1枚の地図に載せました。場所を選ぶと、その競技場を縮尺どおりに描きます。競技、リーグ、国、現在か過去かで絞り込めます。年を選ぶと、その年に使われていた場所だけが残ります。 |
 | `atlasSport` | Sport | 競技 |
 | `atlasAll` | All | すべて |

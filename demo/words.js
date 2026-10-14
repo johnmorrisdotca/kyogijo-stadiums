@@ -349,7 +349,7 @@ export const WORDS = {
     groundsCount: "{total}会場中{n}会場", groundsFound: "{total}会場中{n}会場が見つかりました",
     groundsNone: "条件に合うスタジアムがありません。別の名前を試すか、絞り込みをリセットしてください。",
     groundsMore: "全{n}会場を表示",
-    atlasTitle: "球場・スタジアムマップ",
+    atlasTitle: "競技場マップ",
     atlasText: "このパッケージにある野球場、サッカー場、武道の会場、NHL・NBA・WNBA・PWHLのアリーナをすべて1枚の地図に載せました。場所を選ぶと、その競技場を縮尺どおりに描きます。競技、リーグ、国、現在か過去かで絞り込めます。年を選ぶと、その年に使われていた場所だけが残ります。",
     atlasSport: "競技", atlasAll: "すべて", atlasSport_baseball: "野球", atlasSport_soccer: "サッカー", atlasSport_hockey: "アイスホッケー", atlasSport_basketball: "バスケットボール", atlasSport_budo: "武道",
     atlasStatus: "使用状況", atlasStatus_current: "現在", atlasStatus_past: "過去",
