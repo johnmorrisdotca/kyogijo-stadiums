@@ -44,9 +44,16 @@ export function netCourt(o: BuildOptions, plan: CourtPlan): Surface {
   const lineRects = [...geometry.lines, ...(full ? geometry.small : [])].map(thick);
   let lines = el("path", { class: ft(o, "lines", "ky-fill-line"), d: lineRects.map(box).join("") });
   // The net: a line across the court at its middle, from post to post; its posts and, in volleyball, the antennae at the side lines.
-  const nw = Math.max(L * 0.004, 0.02);
+  const centre = plan.sport === "volleyball" && plan.figures.attackLine !== null;
+  // Over a centre line the net is drawn a little wider than the line, so that the line shows between its edges.
+  const nw = centre ? Math.max(plan.figures.lineWidth, least) * 2.4 : Math.max(L * 0.004, 0.02);
   const net = geometry.net;
   lines += el("rect", { class: ft(o, "net", "ky-nt-line"), x: net.x - nw / 2, y: net.y0, width: nw, height: net.y1 - net.y0 });
+  // Indoors the centre line runs under the net (Rule 1.3.3): the net is drawn over it, so the line is drawn again over the net, in a narrower stroke, to show through.
+  if (centre && plan.sport === "volleyball") {
+    const core = Math.max(plan.figures.lineWidth, least);
+    lines += el("rect", { class: ft(o, "lines", "ky-fill-line"), x: net.x - core / 2, y: 0, width: core, height: W });
+  }
   for (const post of geometry.posts) lines += mark(post, ft(o, "posts", "ky-nt-post"));
   if (full) {
     for (const stick of geometry.sticks) lines += mark(stick, ft(o, "posts", "ky-nt-post"));
