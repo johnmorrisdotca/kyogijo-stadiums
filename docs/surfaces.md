@@ -1,6 +1,6 @@
 # The surfaces
 
-Twenty surfaces, each drawn to scale from its rulebook. Every dimension is kept in feet in the code (`@johnmorrisdotca/kyogijo-stadiums/geometry`) and can be had in any unit (see [Units](./units.md)), and each is cited in [docs/sources.md](./sources.md).
+Twenty-four surfaces, each drawn to scale from its rulebook. Every dimension is kept in feet in the code (`@johnmorrisdotca/kyogijo-stadiums/geometry`) and can be had in any unit (see [Units](./units.md)), and each is cited in [docs/sources.md](./sources.md).
 
 | `sport` | Surface | Size | Drawn |
 | --- | --- | --- | --- |
@@ -17,6 +17,10 @@ Twenty surfaces, each drawn to scale from its rulebook. Every dimension is kept 
 | `badminton` | Badminton court | 13.40 by 6.10 m, 5.18 m wide for singles | singles and doubles side lines, short and doubles long service lines, centre lines, the net and its posts |
 | `pickleball` | Pickleball court | 44 by 20 feet | the non-volley zones, the centerlines, the net and its posts, the playing surface round it |
 | `tabletennis` | Table tennis table | 2.74 by 1.525 m | the white edge lines, the centre line, the net and its posts |
+| `swimming` | Swimming pool | 50 by 25 m with eight lanes (25 by 21 m short course), one to ten lanes | the lane ropes in green, blue and yellow with red floats within 5 m of the walls, the lane markings and their cross lines, the starting blocks, the touch panels, the backstroke flags at 5 m, the false start rope at 15 m, a side section, the lanes of a race ([Pools](./pools.md)) |
+| `waterpolo` | Water polo field | 25 by 20 m between the goal lines | the ropes and the referees' platforms in red, yellow and green by distance from the goal line, the 2, 5 and 6 metre marks and the half distance line, the goals, the goal areas, the re-entry areas, the table and the substitution areas |
+| `diving` | Diving well | 25 m across, 21 m deep | the 1 and 3 m springboards and the 5, 7.5 and 10 m platforms (and the 1 and 3 m platforms) at the distances of Appendix 2, their plummets, the three lines across the well |
+| `artisticswimming` | Artistic swimming area | 30 by 20 m, or 25 by 15 m with a deep part | the lines along the floor, the deep part, the judges' platform and the starting platform |
 | `lacrosse` | Lacrosse field or box floor | 100 by 60 m (World Lacrosse's men's), 110 by 60 yards (the NCAA's), a floor 200 by 85 feet | the goals, creases, restraining and wing lines; the women's goal circles, marking areas, arc and fan; the PLL's two-point arc; the floor's boards, face-off circle and spots ([Field sports](./field-sports.md)) |
 | `rugby` | Rugby field | 100 m between the try lines and 70 wide, with in-goal areas (union); 100 by 68 m (league) | the 22-metre lines, half-way line and dash lines of union; a line every 10 metres, the 20 and 40 metre lines red, of the NRL's league; goal posts and flag posts |
 | `afl` | Australian football ground | an oval 135 to 185 by 110 to 155 m, the MCG's 160 by 141 drawn, or a named ground | the goal and behind posts, the goal squares, the centre square and circles, the Fifty Metre Arcs |

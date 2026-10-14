@@ -65,6 +65,14 @@ The links John has sent, and the ones the package's figures were read from: what
     - *What:* an interactive map of the stadiums and arenas of the NFL, NBA, MLB, NHL and MLS across North America (32, 30, 30, 32 and 30 teams by its own page text), with search, a filter by league, team logos and venue details.
     - *Useful for:* a comparison of what a map of venues holds, and the idea of filtering one by league (the atlas filters by sport, league, country and year).
     - *May use:* nothing. The site has no licence statement on its page, so its data and design are not used; the facts in [the comparison](./compare.md) are read from its public page.
+16. **Four pictures of swimming pools** (sent as images, 2026-10-13, with no address)
+    - *What:* a flat top-down diagram of a pool with lane ropes and wavy water; a realistic, tiled pool; a dimensioned diagram of a 50 m long course pool with the backstroke flags at 5 m, a false-start rope at 15 m and a side section showing a depth of 2 m at least; and the plan of a natatorium with a warm-up pool and a diving pool.
+    - *Useful for:* what a pool graphic holds, and the look to match or better: ropes in colour, the lane markings with their cross lines, the flags and the rope at their distances, a section with the depth, several pools in one hall, flat and tiled looks.
+    - *May use:* the descriptions only. No picture was copied or traced; every figure is read again from the regulations ([sources.md](./sources.md#the-pools)).
+17. **[Anatomy of a Competition Swimming Pool, an Instagram post by thetrackstart.in](https://www.instagram.com/p/DTP6K_VDjG9/)**
+    - *What:* an infographic of the standards of a competition pool (lane width, depth, water temperature), saved for coaches and students.
+    - *Useful for:* the list of what a pool diagram is expected to show.
+    - *May use:* nothing. The page could not be read beyond its caption (the post's picture and the labels in it are not in what the page gives), and a post's picture is its maker's. The figures it names are the regulations' (CR 16.1.4, 16.2.4, 16.1.13), read from the regulations.
 
 ## Where the figures were read
 
@@ -184,6 +192,13 @@ The links John has sent, and the ones the package's figures were read from: what
 - **Not used:** sportyR's and sportypy's code (GPL-3.0), and the tables of `@sportsdataverse/sporty` (MIT), which has lacrosse: every figure was read again from the rulebooks.
 - **Not found:** the PLL's 2025 and 2026 rulebooks (its 2024 book is cited, and named as the newest); the ground diagrams of the GAA's Guide (an image) and of the IHF's rules (images), where a figure was only there; the width of any crease line in the Laws of Cricket.
 - **Ours:** the plans of every sport (the shapes in feet), the oval's reading as an ellipse cut at its ends, the field sports' scores and the cricket board, the zone sets `field-thirds` and `cricket-ground`, the frames, the colours (the floor of a handball court, the pitch of a hockey match, the pitch strip of a cricket ground), and the sizes of the marks that stand for posts and flags.
+
+## Swimming, water polo, diving and artistic swimming
+
+- **What was read:** World Aquatics' *Competition Regulations* in force as from 25 June 2025, as text from the governing body's own PDF: Part Two Article 16 (the swimming pool), Part Four Article 13 and Appendix 2 (diving), Part Six Article 18 and Appendices 3 and 4 (water polo) and Part Seven Article 27 (artistic swimming); and the *Facilities Rules* 2017-2021 (version of 19 December 2017) and 2021-2025 (5 August 2021), which number the same rules FR 2 to FR 8. The documents' addresses and pages are in [sources.md](./sources.md#the-pools). The regulations' annexes (the diagrams) are pictures and were not read.
+- **Not used:** sportypy, sportyR and hockey_rink (GPL-3.0) and `@sportsdataverse/sporty` (MIT): none was read for the pools; the pools of those packages were not looked at. No drawing of any pool, diagram or federation graphic is copied: the diagrams of the regulations are not drawn from, and the stock pictures of item 16 are descriptions only.
+- **Ours:** the plans of the four pools (the shapes, in metres); the colours and the look of the water, the light on it (seeded curves), the tiles and the deck; the sizes of the fixtures where the rules give none (the run of distinct floats, the starting platform and the judges' platform of artistic swimming, the official table, the stands, the diving well's length and width); the lanes of a race (the plates, the medals' colours, the discs, the pace bars and their colour scale), the race replay (`raceTimeline`), the split pace chart, the zone sets `pool-lanes`, `water-polo-areas` and `pool-thirds`, the frames and the natatorium's layout.
+- **Not found:** no figure for a swimming warm-up pool: the rules ask only for a practice pool for artistic swimming (CR 27.2.9), so the warm-up pool is a swimming pool without its competition fixtures; no size for the diving well, only the clearances of Appendix 2.
 
 ## The soccer pitch and its providers
 

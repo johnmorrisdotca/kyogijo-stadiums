@@ -138,6 +138,10 @@ How it moves: the drawing is written once. Each animation frame moves only the m
 
 The keys work with the focus on the drawing or on a button; the slider and the speed keep their own.
 
+## A swimming race
+
+`raceTimeline` makes a timeline of a swimming race from the splits of its swimmers: each goes down the first length and back the next at the speed of each split, and the events are the turns and the finishes. It is described with the pool in [a race replay](./pools.md#a-race-replay); the timeline it gives is in the `swimming` frame, in metres, and every function of this page plays it.
+
 ## The clock
 
 The controller is a state machine that knows nothing of the page: the caller tells it how many seconds went by. A test, a server and a page that has its own loop can use it as it is.

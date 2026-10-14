@@ -28,6 +28,16 @@ src/
 │   ├── fieldhockey.ts  the field hockey pitch: the circles, the broken lines, the marks outside
 │   └── handball.ts     the handball court: the goal areas, the free-throw line, the small lines
 ├── sheet.ts            the curling sheet a set of options asks for, held to the rules' range
+├── pool.ts             the pool a set of options asks for (swimming, water polo, diving, artistic swimming): the lanes and ropes, the boards, the area, the hall of several pools
+├── pool.figures.ts     the pools' figures in metres, each with its rule in World Aquatics' Competition Regulations
+├── pool.types.ts       the options of a pool: the look, the race and its swimmers, the section, the venue
+├── pool.race.ts        a race read and checked: times, places, splits and pace
+├── pool.kit.ts         what every pool is painted with: the light on the water, the tiles, the floats of a rope
+├── pool.labels.ts      a race on the pool: the plates of names, flags and results, the medals and the pace bars
+├── pool.section.ts     the side section of a swimming pool
+├── pool.style.ts       the pools' colours and rules, light and dark, only what a drawing uses
+├── pool.words.ts       what a pool says of itself in the description
+├── pool.replay.ts      a race replay by lane: the splits as swimmers going down their lanes and back
 ├── surfaces/
 │   ├── surface.ts      what a surface is, and the quarter turn
 │   ├── football.ts     the NFL, CFL and IFAF fields
@@ -37,6 +47,11 @@ src/
 │   ├── baseball.walls.ts  a park's walls and quirks drawn on the field: the bands of the walls, the hill, the overhang, the ivy, the poles, the backstop, the dugouts, the legend
 │   ├── soccer.ts       the soccer pitch
 │   ├── curling.ts      the curling sheet
+│   ├── pool.ts         the swimming pool, lying wide: the ropes, floor markings, blocks, panels, flags and rope, the race on it
+│   ├── polo.ts         the water polo field: the ropes and platforms, the lines, the goals, the re-entry areas
+│   ├── dive.ts         the diving well seen from above: the springboards and platforms at the distances of Appendix 2
+│   ├── artistic.ts     the artistic swimming area: the floor lines, the deep part, the platforms
+│   ├── venue.ts        several pools in one hall, to scale
 │   ├── net.ts          the court of tennis, volleyball, badminton, pickleball and table tennis
 │   ├── field.ts        a field sport's surface, drawn from its plan
 │   ├── soccer-spec.ts  the Laws' figures, the presets, futsal and the small-sided pitches
@@ -68,6 +83,7 @@ src/
 ├── charts.baseball.ts  the spray chart
 ├── charts.soccer.ts    the soccer shot map and goal mouth
 ├── charts.curling.ts   the curling stones chart and the score of an end
+├── charts.pool.ts      the splits of a swimming race as pace bars in the lanes, with a table
 ├── charts.network.ts   the pass network chart
 ├── charts.types.ts     the charts' types
 ├── road.ts             roadToFinal: the two finalists' road to the final, as round marks of both teams with the score between them

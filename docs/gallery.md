@@ -4,7 +4,7 @@ Every picture the package draws, each with the code that draws it, a button to c
 
 The gallery is made when the site is built (`pnpm site`), so its pages are on the [docs site](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery.html) and not in this repository:
 
-- [Surfaces and scores](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-surfaces.html): the twenty surfaces bare, with a game on each, wide and tall, as a strip and a compact card, the court's looks, light and dark.
+- [Surfaces and scores](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-surfaces.html): the twenty-four surfaces bare, with a game on each, wide and tall, as a strip and a compact card, the court's looks, light and dark.
 - [The soccer pitch](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-soccer.html): a pitch of every preset size, the mowing patterns, the goal styles, one half, a shoot-out.
 - [Every league's surface](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-leagues.html): each league that marks a court, rink, field or diamond its own way.
 - [Surfaces through the years](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-years.html): each sport in the seasons before and after its markings changed.
@@ -14,10 +14,11 @@ The gallery is made when the site is built (`pnpm site`), so its pages are on th
 - [Curling](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-curling.html): the sheet of each rule book, its display ranges and house colours, the board and the badge, and the stones of an end.
 - [Net sports](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-courts.html): each court wide and tall, every look, the free zone, the singles sticks, the board of sets and games with its serving ball, and the zones of each side of the net.
 - [Field sports](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-fields.html): each surface and league of lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey and handball, the scores they write their own way, the AFL's named grounds, a cricket boundary of your own, and a part of each surface.
+- [Pools](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-pools.html): the swimming pool in 50 and 25 m and in ten lanes, a warm-up pool, the water polo field, the diving well and the artistic swimming area, the looks of the water and the deck, a side section, the lanes of a race with flags, medals, splits and pace bars, a frame of a race replay, the split pace chart and a natatorium.
 - [Looks and annotations](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-styling.html): the seven named looks, colours by feature, line widths and dashes, goal styles, mowing patterns, and the arrows, axes and labels that mark a surface for teaching.
 - [Display ranges and zoom](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-ranges.html): a drawing cropped to a zone, a half court, the red zone, the penalty area, the infield or a box of your own, at either end, wide and tall, with data, labels and a score.
 - [Layouts and backgrounds](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-layouts.html): small multiples in the size of a social card, a square post and a phone, with a title, a key and a credit line; seven patterns and a photograph behind a drawing or a grid.
 
 Every picture in these pages is an SVG string, and each can be put somewhere else without drawing it again: pass the same options (or the SVG, or a chart's `options`) to `drawToCanvas`, `appendSurface`, `surfaceMark`, `sceneToGeoJSON` or `toPNG`, as [the renderers](./renderers.md) say. A picture here and the canvas drawn from the same scene differ in a few pixels: the edges of the letters, and a logo the canvas was not given.
 
-The same site draws one surface in each of the twenty-nine [coordinate frames](./frames.md), side by side, and puts every ballpark and ground on [a map](./atlas.md).
+The same site draws one surface in each of the thirty-three [coordinate frames](./frames.md), side by side, and puts every ballpark and ground on [a map](./atlas.md).

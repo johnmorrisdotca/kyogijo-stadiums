@@ -191,13 +191,13 @@ describe("the package's own numbers", () => {
   it("have a help text for the demo's sport selector that names all the sports, in both languages", () => {
     const page = readFileSync("scripts/site.mjs", "utf8");
     const line = page.split("\n").find((text) => text.includes('seg("sport", "sport"')) ?? "";
-    const en = ["football fields", "hockey rink", "basketball court", "baseball field", "soccer pitch", "curling sheet", "tennis", "volleyball", "badminton", "pickleball", "table tennis", "lacrosse", "rugby", "Australian football", "Gaelic", "cricket", "field hockey", "handball"];
-    const ja = ["アメリカンフットボール", "アイスホッケー", "バスケットボール", "野球", "サッカー", "カーリング", "テニス", "バレーボール", "バドミントン", "ピックルボール", "卓球", "ラクロス", "ラグビー", "オーストラリアンフットボール", "ゲーリック", "クリケット", "フィールドホッケー", "ハンドボール"];
+    const en = ["football fields", "hockey rink", "basketball court", "baseball field", "soccer pitch", "curling sheet", "tennis", "volleyball", "badminton", "pickleball", "table tennis", "lacrosse", "rugby", "Australian football", "Gaelic", "cricket", "field hockey", "handball", "swimming", "water polo", "diving", "artistic swimming"];
+    const ja = ["アメリカンフットボール", "アイスホッケー", "バスケットボール", "野球", "サッカー", "カーリング", "テニス", "バレーボール", "バドミントン", "ピックルボール", "卓球", "ラクロス", "ラグビー", "オーストラリアンフットボール", "ゲーリック", "クリケット", "フィールドホッケー", "ハンドボール", "競泳", "水球", "飛込", "アーティスティックスイミング"];
     for (const word of en) expect(line, word).toContain(word);
     for (const word of ja) expect(line, word).toContain(word);
-    // Twenty sports on the selector, and each is in the words of the help.
+    // Twenty-four sports on the selector, and each is in the words of the help.
     expect(WORDS.en).toHaveProperty("sport_handball");
-    expect(Object.keys(WORDS.en).filter((key) => key.startsWith("sport_"))).toHaveLength(20);
+    expect(Object.keys(WORDS.en).filter((key) => key.startsWith("sport_"))).toHaveLength(24);
   });
 
   it("have a sentence in docs/references.md for each reference John sent", () => {
