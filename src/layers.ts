@@ -175,7 +175,7 @@ function drawPoints(layer: { data: readonly PointDatum[]; style?: PointStyle } &
     const logo = shape === "logo" ? safeLogo(d.logo) ?? (role === undefined ? undefined : safeLogo(style.logos?.[role]) ?? env.logos[role]) : undefined;
     if (logo !== undefined) {
       const side = w * 1.8;
-      out.push(titled("image", `${open} href="${esc(logo)}" x="${num(x - side / 2)}" y="${num(y - side / 2)}" width="${num(side)}" height="${num(side)}" preserveAspectRatio="xMidYMid meet"${env.turned ? ` transform="rotate(-90 ${num(x)} ${num(y)})"` : ""}`, d.title));
+      out.push(titled("image", `${open} href="${esc(logo)}" x="${num(x - side / 2)}" y="${num(y - side / 2)}" width="${num(side)}" height="${num(side)}" preserveAspectRatio="xMidYMid meet"${env.back !== 0 ? ` transform="rotate(${num(env.back)} ${num(x)} ${num(y)})"` : ""}`, d.title));
     } else if (shape !== "logo" && isPolygon(shape)) out.push(titled("path", `${open} d="${shapePath(shape, x, y, w, env.turned)}"`, d.title));
     else out.push(titled("circle", `${open} cx="${num(x)}" cy="${num(y)}" r="${num(w / 2)}"`, d.title));
   });
@@ -326,7 +326,7 @@ function drawText(layer: { data: readonly TextDatum[]; style?: TextStyle } & Lay
     const { cls, css } = colourAttrs(colourFor(style.color, d, INK, domain), layerExpr, INK);
     const anchor = d.anchor === "start" || d.anchor === "middle" || d.anchor === "end" ? d.anchor : base;
     // The letters are turned back by the quarter the surface was turned, so that they read upright, and by the caller's own turn on top.
-    const angle = (env.turned ? -90 : 0) + (isNum(d.rotate) ? d.rotate : 0);
+    const angle = env.back + (isNum(d.rotate) ? d.rotate : 0);
     const classes = ["ky-lt", style.halo === false ? "ky-nh" : "", cls].filter((c) => c !== "").join(" ");
     const open = `${attrs(classes, `${s === size ? "" : `font-size:${num(s)}px`}${s !== size && css !== "" ? ";" : ""}${css}`, opacityOf(d.opacity))}${anchor === base ? "" : ` text-anchor="${anchor}"`} x="${num(x)}" y="${num(y + s * 0.36)}"${angle === 0 ? "" : ` transform="rotate(${num(angle)} ${num(x)} ${num(y)})"`}`;
     out.push(`<text${open}>${esc(String(d.text))}${typeof d.title === "string" && d.title !== "" ? `<title>${esc(d.title)}</title>` : ""}</text>`);
@@ -367,10 +367,10 @@ function summarise(layer: Layer, made: Made, words: Words, stop: string, gap: st
 }
 
 /** The layers of a drawing as markup, and a sentence for each. `turned` says whether the surface group is turned a quarter. */
-export function renderLayers(o: SurfaceOptions | ScoreOptions, layers: readonly Layer[] | undefined, turned?: boolean, range?: Box): RenderedLayers {
+export function renderLayers(o: SurfaceOptions | ScoreOptions, layers: readonly Layer[] | undefined, turned?: boolean, range?: Box, upright?: number): RenderedLayers {
   if (layers === undefined || layers.length === 0) return { svg: "", summaries: [] };
   if (!Array.isArray(layers)) throw new TypeError("layers is a list of layers");
-  const env = envFor(o, turned, range);
+  const env = envFor(o, turned, range, upright);
   const clipId = `${env.id}-lc`;
   const { stop, gap } = env.words.said;
   const said: string[] = [];

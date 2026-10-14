@@ -353,6 +353,8 @@
  },
  {
   "id": "olympiastadion-munich",
+  "track": true,
+  "trackSource": "Wikidata, property P641 (sport) lists athletics",
   "wikidata": "Q131610",
   "name": "Munich Olympic Stadium",
   "nameJa": "ミュンヘン・オリンピアシュタディオン",
@@ -467,6 +469,8 @@
  },
  {
   "id": "stadio-olimpico-rome",
+  "track": true,
+  "trackSource": "Wikidata, property P641 (sport) lists athletics",
   "wikidata": "Q159884",
   "name": "Stadio Olimpico",
   "names": [
@@ -535,6 +539,8 @@
  },
  {
   "id": "stade-de-france",
+  "track": true,
+  "trackSource": "Wikidata, property P641 (sport) lists athletics",
   "wikidata": "Q13205",
   "name": "Stade de France",
   "nameJa": "スタッド・ド・フランス",
@@ -564,6 +570,8 @@
  },
  {
   "id": "nissan-stadium-yokohama",
+  "track": true,
+  "trackSource": "Wikidata, property P641 (sport) lists athletics",
   "wikidata": "Q116601",
   "name": "Nissan Stadium",
   "names": [
@@ -677,6 +685,8 @@
  },
  {
   "id": "luzhniki",
+  "track": true,
+  "trackSource": "Wikidata, property P641 (sport) lists athletics",
   "wikidata": "Q202163",
   "name": "Luzhniki Stadium",
   "names": [
@@ -1274,6 +1284,8 @@
  },
  {
   "id": "dignity-health-sports-park",
+  "track": true,
+  "trackSource": "Wikidata, property P641 (sport) lists athletics",
   "wikidata": "Q200684",
   "name": "Dignity Health Sports Park",
   "names": [

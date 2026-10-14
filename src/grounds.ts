@@ -60,6 +60,10 @@ export interface GroundData {
   /** The year it opened, and for a past ground the year it closed. */
   from?: number;
   to?: number;
+  /** True where Wikidata lists athletics among the ground's sports (property P641): a running track lies round the pitch, which `drawKyogijo({ sport: "athletics", ground })` draws. Absent for a ground Wikidata says nothing of, which may still have one. */
+  track?: boolean;
+  /** Where `track` was read. */
+  trackSource?: string;
   /** The first capacity the article's infobox gives, when it gives a number. */
   capacity?: number;
   /** `published` when the article gives the pitch's length and width, `default` when it does not: the ground is then drawn at the international 105 by 68 m. */

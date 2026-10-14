@@ -15,6 +15,8 @@ import { fieldPlan, isFieldSport } from "./fields.ts";
 import { inOutline, outlineD } from "./fields.kit.ts";
 import { sheetFor } from "./sheet.ts";
 import { isPoolSport, poolBox } from "./pool.ts";
+import { athleticsPlan } from "./athletics/plan.ts";
+import { skatingPlan } from "./skating/plan.ts";
 import type { SurfaceOptions } from "./types.ts";
 
 /** A surface's outline as a path, with the box round it. */
@@ -46,10 +48,10 @@ function inPolygon(points: readonly (readonly [number, number])[], x: number, y:
 
 /** The size a provider's frame is fitted to: the drawn surface's own `box`, for a soccer pitch, a curling sheet, a net sport's court and a league's surface; none for a sport's own fixed one. */
 export const frameSizeOf = (o: Pick<SurfaceOptions, "sport" | "league">, box: { w: number; h: number }): { length: number; width: number; unit: "ft" } | undefined =>
-  o.sport === "soccer" || o.sport === "curling" || isNetSport(o.sport) || isFieldSport(o.sport) || isPoolSport(o.sport) || chooseLeague(o).league !== undefined ? { length: box.w, width: box.h, unit: "ft" as const } : undefined;
+  o.sport === "soccer" || o.sport === "curling" || isNetSport(o.sport) || isFieldSport(o.sport) || isPoolSport(o.sport) || o.sport === "athletics" || o.sport === "skating" || chooseLeague(o).league !== undefined ? { length: box.w, width: box.h, unit: "ft" as const } : undefined;
 
 /** The outline of the surface the options draw. */
-export function outlineOf(o: Pick<SurfaceOptions, "sport" | "park" | "fence" | "units" | "pitch" | "league" | "year" | "sheet" | "net"> & Partial<Pick<SurfaceOptions, "field" | "detail" | "pool">>): Outline {
+export function outlineOf(o: Pick<SurfaceOptions, "sport" | "park" | "fence" | "units" | "pitch" | "league" | "year" | "sheet" | "net"> & Partial<Pick<SurfaceOptions, "field" | "detail" | "pool" | "athletics" | "skating">>): Outline {
   const { sport, league } = chooseLeague(o);
   switch (sport) {
     case "nfl":
@@ -132,6 +134,16 @@ export function outlineOf(o: Pick<SurfaceOptions, "sport" | "park" | "fence" | "
       // The water of the pool: the deck round it is the margin. A natatorium's is the whole hall.
       const { w, h } = poolBox({ ...o, sport });
       return rect(w, h);
+    }
+    case "skating": {
+      const plan = skatingPlan(o as Pick<SurfaceOptions, "sport" | "league" | "skating" | "detail">);
+      const k = 1 / 0.3048;
+      return rect((plan.box.x1 - plan.box.x0) * k, (plan.box.y1 - plan.box.y0) * k);
+    }
+    case "athletics": {
+      const plan = athleticsPlan(o as Pick<SurfaceOptions, "sport" | "league" | "athletics" | "units" | "pitch" | "detail">);
+      const k = 1 / 0.3048;
+      return rect((plan.box.x1 - plan.box.x0) * k, (plan.box.y1 - plan.box.y0) * k);
     }
     default: {
       // A surface added later with one size is a rectangle until it says otherwise.

@@ -212,7 +212,7 @@ const page = `<!doctype html>
           <div class="try-controls">
             <details class="fam-fold group" open>
               <summary data-say="groupSurface"></summary>
-              ${seg("sport", "sport", "Choose the surface: three football fields (NFL, CFL, IFAF), a hockey rink, a basketball court, a baseball field, a soccer pitch, a curling sheet, the court of tennis, volleyball, badminton, pickleball, table tennis, padel, squash, racquetball, sepak takraw, teqball, roundnet or netball, or the field of lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey or handball, or the pool of swimming, water polo, diving or artistic swimming.", "競技場を選びます。アメリカンフットボール場3種類（NFL・CFL・IFAF）、アイスホッケーのリンク、バスケットボールのコート、野球場、サッカーのピッチ、カーリングのシート、テニス・バレーボール・バドミントン・ピックルボール・パデル・スカッシュ・ラケットボール・セパタクロー・テックボール・ラウンドネット・ネットボールのコート、卓球台のほか、ラクロス、ラグビー、オーストラリアンフットボール、ゲーリック・ゲームズ、クリケット、フィールドホッケーのフィールド、ハンドボールのコート、競泳・水球・飛込・アーティスティックスイミングのプールから選べます。")}
+              ${seg("sport", "sport", "Choose the surface: three football fields (NFL, CFL, IFAF), a hockey rink, a basketball court, a baseball field, a soccer pitch, a curling sheet, the court of tennis, volleyball, badminton, pickleball, table tennis, padel, squash, racquetball, sepak takraw, teqball, roundnet or netball, an athletics stadium, an ice skating rink, or the field of lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey or handball, or the pool of swimming, water polo, diving or artistic swimming.", "競技場を選びます。アメリカンフットボール場3種類（NFL・CFL・IFAF）、アイスホッケーのリンク、バスケットボールのコート、野球場、サッカーのピッチ、カーリングのシート、テニス・バレーボール・バドミントン・ピックルボール・パデル・スカッシュ・ラケットボール・セパタクロー・テックボール・ラウンドネット・ネットボールのコート、卓球台、陸上競技場、スケートリンクのほか、ラクロス、ラグビー、オーストラリアンフットボール、ゲーリック・ゲームズ、クリケット、フィールドホッケーのフィールド、ハンドボールのコート、競泳・水球・飛込・アーティスティックスイミングのプールから選べます。")}
               <div class="setup fam-row" id="league-row"${hid("league-row")} ${help("Choose the league whose rulebook marks the surface: FIBA, the WNBA or the NCAA for the court; the IIHF, the NCAA, the AHL or the CHL for the rink; the NCAA, the high schools or arena football for the field; Little League, PONY or softball for the diamond; World Curling or Curling Canada for the sheet; beach volleyball for the volleyball court. Each is drawn from its own rulebook.", "どのリーグのルールブックに沿って描くかを選びます。コートならFIBA・WNBA・NCAA、リンクならIIHF・NCAA・AHL・CHL、フィールドならNCAA・全米高校連盟（NFHS）・インドアフットボール、野球場とソフトボール場ならリトルリーグ・PONY・USAソフトボール、カーリングのシートならワールドカーリングやカーリング・カナダ、バレーボールのコートならビーチバレーボールなど。どれもそのリーグ自身のルールブックに基づいて描きます。")}>
                 <span class="fam-label" data-say="leagueLabel"></span>
                 <select class="fam-field" id="league" data-testid="league" data-say-label="leagueLabel"></select>
@@ -303,6 +303,13 @@ const page = `<!doctype html>
                   ${seg("pool-race", "poolRace", "A made-up race on the pool: none, the results with places, times, reaction times and splits, or the split pace bars.", "プールに架空のレースを載せます。なし、順位・タイム・反応時間・途中時間を載せた結果、途中時間のペースの棒から選べます。")}
                   <div class="setup fam-row" ${help("A side section under the plan: the depth, the blocks, the flags and the false start rope.", "平面図の下に断面図を付けます。水深、スタート台、背泳ぎ用フラッグ、フォルススタートロープを示します。")}>${toggle("pool-section", "poolSection")}</div>
                 </div>
+              </div>
+              <div id="athletics-group"${hid("athletics-group")}>
+                ${seg("track", "track", "The colour of the track: Mondo red, Berlin's blue, a club's terracotta or green.", "トラックの色です。標準の赤、ベルリンの青、クラブのテラコッタ、緑から選べます。")}
+                ${seg("infield", "infield", "What is inside the track: the soccer pitch, plain mown grass or nothing.", "トラックの内側です。サッカーのピッチ、芝だけ、何もなし、から選べます。")}
+              </div>
+              <div id="races-group"${hid("races-group")}>
+                ${seg("races", "races", "Mark the starting and finishing lines of every race (an athletics track's relay zones and hurdles too), or none.", "すべての種目のスタートラインとフィニッシュライン（陸上競技ではリレーゾーンとハードルも）を描くか、描かないかを選びます。")}
               </div>
               <div id="court-group"${hid("court-group")}>
                 ${seg("court", "court", "Five looks for the basketball court, in plain colours: the paint, the border, the wood and the words on the baselines.", "バスケットボールのコートの見た目を5種類から選べます。無地の色で、ペイント、縁取り、床の木目、ベースラインの文字を変えます。")}

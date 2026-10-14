@@ -23,6 +23,33 @@ src/
 ├── fields.types.ts     what a plan is: the shapes in feet, the areas, the goals, the places of the names, the ranges and the landmarks
 ├── fields.kit.ts       the small functions a plan is made of: a line, an arc, a ring, a size held to a range, the outline's path
 ├── fields.style.ts     the colours of the field sports that are not grass: a handball floor, a hockey pitch
+├── athletics.style.ts  the athletics stadium's rules and the track looks: red, blue, terracotta and green, the lanes' lines, the infield's mowing
+├── athletics-entry.ts  the athletics entry (`@johnmorrisdotca/kyogijo-stadiums/athletics`): the plan, the track's geometry, the events and the charts
+├── skating.style.ts    the skating rinks' colours: the ice, the floor, the warm-up lane, the padding, the furniture and the blue and red lines
+├── skating-entry.ts    the skating entry (`@johnmorrisdotca/kyogijo-stadiums/skating`): the plan, the track's geometry, the races and the charts
+├── skating/
+│   ├── types.ts        the disciplines, the races, the furniture and the options
+│   ├── events.ts       the races and the kinds of element of a programme, with their names in three languages
+│   ├── track.ts        the long track: its radii and straight from a lap of 400 m, a skater's way round it, the start of a race
+│   ├── parts.ts        what a part adds (areas and shapes), the stadium's path, the blocks of a curve as dots
+│   ├── long.ts         the long track's ice, lanes, blocks, coaches' area, finishing lines and the starting lines of each race
+│   ├── short.ts        the short track's oval, blocks, tracks, starting lines and starting positions
+│   ├── figure.ts       the figure skating rink with its boards and furniture
+│   ├── plan.ts         the plan a set of options asks for, with the ranges
+│   └── describe.ts     the sentences that describe a rink
+├── athletics/
+│   ├── types.ts        the options, the races and the field events
+│   ├── events.ts       the races and the field events, with their names in three languages
+│   ├── track.ts        the oval: the lane radii, the poses along a running line, the staggers and the breakline
+│   ├── oval.ts         the oval's outline, its lane lines, the finish straight and the covered track's straight
+│   ├── races.ts        each race's marks: the starts, the curved lines, the zones, the hurdles and the lane numbers
+│   ├── steeplechase.ts the steeplechase lap with the water jump inside or outside, and its hurdles
+│   ├── facilities.ts   the field events' facilities: circles, cages, sectors, runways, pits and the high jump fan
+│   ├── infield.ts      where the Marking Plan puts each facility in the stadium
+│   ├── layout.ts       one field event alone at a large scale
+│   ├── plan.ts         the plan a set of options asks for, with the ranges
+│   ├── stencil.ts      the lane numbers as stroked paths, with no font
+│   └── describe.ts     the sentences that describe a track
 ├── fields/
 │   ├── lacrosse.ts     the lacrosse plans: the box floor and the fields of World Lacrosse, the NCAA and the PLL
 │   ├── rugby.ts        the rugby plans: union's dash lines and league's lines every 10 metres
@@ -52,6 +79,8 @@ src/
 │   ├── baseball.ts     the baseball field and its fence
 │   ├── baseball.walls.ts  a park's walls and quirks drawn on the field: the bands of the walls, the hill, the overhang, the ivy, the poles, the backstop, the dugouts, the legend
 │   ├── soccer.ts       the soccer pitch
+│   ├── athletics.ts    the athletics stadium and its close-ups of a start or the finish
+│   ├── skating.ts      the skating rink: the ice, the lines and the furniture
 │   ├── curling.ts      the curling sheet
 │   ├── curling.fold.ts the folded sheet: the whole sheet as a strip, its two houses enlarged beside it, the fan that joins them and their labels
 │   ├── pool.ts         the swimming pool, lying wide: the ropes, floor markings, blocks, panels, flags and rope, the race on it
@@ -97,6 +126,8 @@ src/
 ├── charts.curling.heat.ts  the curling heat chart: where the stones of many ends came to rest, as cells, hexagons, a density, zones or discs
 ├── curling.stats.ts    curling's statistics: the free guards, the stones in play, the ends (hammer, steals, forced ends) and the shots
 ├── charts.pool.ts      the splits of a swimming race as pace bars in the lanes, with a table
+├── charts.athletics.ts the lane draw, the results, the race replay and the marks of throws and jumps
+├── charts.skating.ts   the pairs, the starting positions, the results, the replay and the elements of a programme
 ├── charts.network.ts   the pass network chart
 ├── charts.types.ts     the charts' types
 ├── road.ts             roadToFinal: the two finalists' road to the final, as round marks of both teams with the score between them
@@ -150,6 +181,8 @@ src/
 │   ├── cricket.ts      the cricket grounds
 │   ├── fieldhockey.ts  the field hockey pitch
 │   ├── handball.ts     the handball court
+│   ├── athletics.ts    the World Athletics tracks and their stagger tables
+│   ├── skating.ts      the ISU's long track, short track and figure skating rink
 │   ├── football.ts     the fields
 │   └── baseball.ts     the diamonds
 ├── geometry-entry.ts   the geometry's entry

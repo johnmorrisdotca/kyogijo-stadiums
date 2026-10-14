@@ -56,6 +56,56 @@ const HOCKEY: readonly Feature[] = [
   f("referee-crease", "--ky-red", "The referee's crease at the boards."),
 ];
 
+const ATHLETICS: readonly Feature[] = [
+  f("apron", "--ky-apron", "The ground round the stadium."),
+  f("track", "--ky-track", "The synthetic surface of the track, the straights and the segments."),
+  f("infield", "--ky-surface", "The turf inside the track."),
+  f("mowing", "--ky-surface-alt", "The lighter tone of the mown turf."),
+  f("kerb", LINE, "The kerb on the inside edge of the track."),
+  f("lane-lines", LINE, "The lines between the lanes and the track's outer edge."),
+  f("lane-numbers", LINE, "The lane numbers painted before the finish and the starts."),
+  f("finish-line", LINE, "The finish line and the short lines 1 m before it."),
+  f("start-lines", LINE, "The start lines: straight, staggered and curved."),
+  f("breakline", "--ky-ath-g", "The breakline of the 800 m and the 4 x 400 m."),
+  f("relay-zones", ["--ky-ath-y", "--ky-ath-b", LINE], "The takeover zones' marks and the scratch lines."),
+  f("hurdle-marks", ["--ky-ath-y", "--ky-ath-b", "--ky-ath-g"], "The marks of the hurdles on the track."),
+  f("steeplechase-hurdles", "--ky-ath-k", "The steeplechase's hurdles."),
+  f("water-jump", ["--ky-water", LINE, "--ky-ath-k"], "The water jump: its pit, its border and its hurdle."),
+  f("high-jump", ["--ky-mat", LINE, "--ky-ath-k"], "The high jump: the mat, the crossbar and the lines."),
+  f("pole-vault", ["--ky-mat", "--ky-pad", LINE], "The pole vault: the mats, the boxes and the runways."),
+  f("long-jump", ["--ky-sand", LINE], "The long jump's pits, boards and runways."),
+  f("triple-jump", ["--ky-sand", LINE], "The triple jump's pits, boards and runways."),
+  f("shot-put", ["--ky-concrete", LINE], "The shot put's circles, stop boards and sectors."),
+  f("discus-throw", ["--ky-concrete", LINE], "The discus throw's circle and sector."),
+  f("hammer-throw", ["--ky-concrete", LINE], "The hammer throw's circle and sector."),
+  f("javelin-throw", LINE, "The javelin's runway, arc and sector."),
+  f("cage", "--ky-ath-k", "The discus and hammer cage."),
+  f("banking", "--ky-ath-k", "The shade of the covered track's banked bends."),
+];
+
+const SKATING: readonly Feature[] = [
+  f("apron", "--ky-apron", "The ground round the rink."),
+  f("ice", "--ky-surface", "The ice."),
+  f("infield", "--ky-surface-alt", "The floor or the ice inside the track."),
+  f("warm-up", "--ky-surface-alt", "The warm-up lane of the long track."),
+  f("padding", "--ky-boards", "The padding round the track."),
+  f("boards", "--ky-boards", "The boards of a figure skating rink."),
+  f("lane-lines", "--ky-blue", "The lines that demarcate the lanes of the long track."),
+  f("track-line", ["--ky-blue", "--ky-ink"], "The line of the short track and the line between its blocks."),
+  f("blocks", "--ky-ink", "The blocks of a curve."),
+  f("cones", "--ky-red", "The cones at the entrance of a curve."),
+  f("finish-line", "--ky-red", "The finishing line."),
+  f("finish-marks", "--ky-blue", "The lines 1 m apart in the last 5 m before the finishing line."),
+  f("start-lines", "--ky-red", "The starting lines of the races marked."),
+  f("pre-start-lines", "--ky-blue", "The pre-start line 2 m before each starting line."),
+  f("start-positions", "--ky-ink", "The starting positions of the short track's 500 m and 1000 m."),
+  f("coaches-area", "--ky-red", "The coaches' area on the crossing straight."),
+  f("judges", "--ky-ink", "The judges' seats at the rinkboard."),
+  f("referee", "--ky-ink", "The referee's seat."),
+  f("technical-panel", "--ky-ink", "The technical panel's table."),
+  f("kiss-and-cry", "--ky-red", "The kiss and cry."),
+];
+
 const KEY = ["--ky-key", "--ky-key-left", "--ky-key-right"];
 const BASKETBALL: readonly Feature[] = [
   f("apron", "--ky-apron", "The ground round the court."),
@@ -348,6 +398,8 @@ export const FEATURE_INFO: Readonly<Record<string, readonly Feature[]>> = Object
   cricket: CRICKET,
   fieldhockey: FIELD_HOCKEY,
   handball: HANDBALL,
+  athletics: ATHLETICS,
+  skating: SKATING,
 });
 
 /**

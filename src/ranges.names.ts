@@ -53,6 +53,37 @@ export const RANGES: Readonly<Record<Sport, readonly RangeInfo[]>> = Object.free
   waterpolo: Object.freeze([range("half", "left"), range("goal-area", "right")]),
   diving: Object.freeze([range("springboards", "left"), range("platforms", "right")]),
   artisticswimming: Object.freeze([range("half", "left"), range("centre-stage")]),
+  // The bends are the first (right) and the second (left); the field events are at the end of the stadium where the standard layout puts them (a range with two ends has both, one with one has that end).
+  // The long track, the short track and the figure skating rink share a sport: a range is for the leagues that have it.
+  skating: Object.freeze([
+    range("home-straight", undefined, ["isu-long-track", "isu-short-track"]),
+    range("crossing-straight", undefined, ["isu-long-track", "isu-short-track"]),
+    range("first-bend", "right", ["isu-long-track", "isu-short-track"]),
+    range("second-bend", "left", ["isu-long-track", "isu-short-track"]),
+    range("finish", undefined, ["isu-long-track", "isu-short-track"]),
+    range("start", undefined, ["isu-long-track", "isu-short-track"]),
+    range("infield", undefined, ["isu-long-track", "isu-short-track"]),
+    range("half", "left", ["isu-figure"]),
+    range("judges", undefined, ["isu-figure"]),
+    range("kiss-and-cry", "left", ["isu-figure"]),
+  ]),
+  athletics: Object.freeze([
+    range("bend", "right"),
+    range("home-straight"),
+    range("back-straight"),
+    range("finish"),
+    range("start"),
+    range("infield"),
+    range("high-jump", "right"),
+    range("pole-vault", "left"),
+    range("long-jump"),
+    range("triple-jump"),
+    range("shot-put", "left"),
+    range("discus-throw", "right"),
+    range("hammer-throw", "right"),
+    range("javelin-throw", "left"),
+    range("water-jump", "left"),
+  ]),
 });
 
 /** What a drawing's `range` asks for, checked: a name (at an end, or at its default) or a box. */

@@ -245,6 +245,12 @@ export function glyph(sport: Sport): string {
     case "artisticswimming":
       // An area: the lines along the floor, and the judges' platform on one side.
       return "M-18 -10H18V10H-18ZM-18 -5H18M-18 0H18M-18 5H18M-10 -13H10";
+    case "skating":
+      // A rink: the oval of a track inside the boards, and the finishing line.
+      return "M-18 -10H18V10H-18ZM-9 -6H9A6 6 0 0 1 9 6H-9A6 6 0 0 1 -9 -6ZM-9 -3.5H9A3.5 3.5 0 0 1 9 3.5H-9A3.5 3.5 0 0 1 -9 -3.5ZM4 3.5V10";
+    case "athletics":
+      // A track: the oval's outer edge, a lane line and the kerb, and the finish line across the straight.
+      return "M-9 -10H9A10 10 0 0 1 9 10H-9A10 10 0 0 1 -9 -10ZM-9 -8.2H9A8.2 8.2 0 0 1 9 8.2H-9A8.2 8.2 0 0 1 -9 -8.2ZM-9 -6.4H9A6.4 6.4 0 0 1 9 6.4H-9A6.4 6.4 0 0 1 -9 -6.4ZM9 6.4V10";
   }
 }
 

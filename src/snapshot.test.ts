@@ -43,8 +43,8 @@ describe("the drawings' structure", () => {
   const NEWER: readonly string[] = ["padel", "squash", "racquetball", "sepaktakraw", "teqball", "roundnet", "netball"];
 
   it("stays the same text unless a drawing was meant to change: one fingerprint for every sport", () => {
-    // The sports that were there before the field sports and the pools: their drawings are the same text as before, whatever was added after.
-    const all = SPORTS.filter((sport) => !isFieldSport(sport) && !NEWER.includes(sport) && !isPoolSport(sport)).map((sport) => drawKyogijo({ sport, ...game })).join("\n");
+    // The sports that were there before the field sports and the pools and athletics: their drawings are the same text as before, whatever was added after.
+    const all = SPORTS.filter((sport) => !isFieldSport(sport) && !NEWER.includes(sport) && !isPoolSport(sport) && sport !== "athletics" && sport !== "skating").map((sport) => drawKyogijo({ sport, ...game })).join("\n");
     expect(hash(all)).toMatchSnapshot();
   });
 
@@ -55,7 +55,7 @@ describe("the drawings' structure", () => {
 
 describe("the size of a drawing", () => {
   it("is within the budget, with the stylesheet in it", () => {
-    const budget: Record<string, number> = { nfl: 22_000, cfl: 21_000, ifaf: 22_000, nhl: 14_000, nba: 14_000, mlb: 17_000, soccer: 15_000, curling: 17_500, tennis: 17_500, volleyball: 17_500, badminton: 17_500, pickleball: 17_500, tabletennis: 17_500, padel: 17_500, squash: 17_500, racquetball: 17_500, sepaktakraw: 17_500, teqball: 17_500, roundnet: 17_500, netball: 17_500, lacrosse: 17_500, rugby: 17_500, afl: 17_500, gaelic: 17_500, cricket: 17_500, fieldhockey: 17_500, handball: 17_500, swimming: 19_000, waterpolo: 17_500, diving: 15_500, artisticswimming: 14_000 };
+    const budget: Record<string, number> = { nfl: 22_000, cfl: 21_000, ifaf: 22_000, nhl: 14_000, nba: 14_000, mlb: 17_000, soccer: 15_000, curling: 17_500, tennis: 17_500, volleyball: 17_500, badminton: 17_500, pickleball: 17_500, tabletennis: 17_500, padel: 17_500, squash: 17_500, racquetball: 17_500, sepaktakraw: 17_500, teqball: 17_500, roundnet: 17_500, netball: 17_500, lacrosse: 17_500, rugby: 17_500, afl: 17_500, gaelic: 17_500, cricket: 17_500, fieldhockey: 17_500, handball: 17_500, swimming: 19_000, waterpolo: 17_500, diving: 15_500, artisticswimming: 14_000, athletics: 30_000, skating: 20_000 };
     for (const sport of SPORTS) expect(drawKyogijo({ sport, ...game }).length, sport).toBeLessThan(budget[sport]);
   });
 });

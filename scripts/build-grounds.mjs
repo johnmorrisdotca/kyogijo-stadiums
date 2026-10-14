@@ -45,6 +45,9 @@ for (const g of grounds) {
   if (g.status === "past" && g.to === undefined) fail(`${g.id}: a past ground gives the year it closed`);
   if (g.status === "current" && g.to !== undefined) fail(`${g.id}: a current ground has no closing year`);
   if (g.capacity !== undefined && !(Number.isInteger(g.capacity) && g.capacity > 1000 && g.capacity < 200000)) fail(`${g.id}: capacity`);
+  // A running track round the pitch, where Wikidata (property P641, sport) lists athletics for the ground: drawn by the athletics stadium (`sport: "athletics"`, `ground`).
+  if (g.track !== undefined && (g.track !== true || typeof g.trackSource !== "string" || g.trackSource === "")) fail(`${g.id}: track is true and says where it was read`);
+  if (g.trackSource !== undefined && g.track !== true) fail(`${g.id}: trackSource without track`);
   if (!g.en?.title || !(g.en.revision > 1000)) fail(`${g.id} cites no English article`);
   if (g.ja !== undefined && !(g.ja.title && g.ja.revision > 1000)) fail(`${g.id}: the Japanese article`);
   if (g.nameJa === undefined || g.ja === undefined) fail(`${g.id} needs its name in Japanese and the article it was read from`);
@@ -89,7 +92,7 @@ const data = grounds.map((g) => {
 
 const line = (value) => JSON.stringify(value).replace(/":/g, '": ').replace(/,"/g, ', "').replace(/\},\{/g, "}, {");
 const field = (key, value) => `    "${key}": ${(key === "names" || key === "tournaments" || key === "aliases") && value.length > 0 ? `[\n${value.map((v) => `      ${line(v)}`).join(",\n")}\n    ]` : line(value)}`;
-const KEYS = ["id", "wikidata", "name", "names", "nameJa", "readingJa", "localName", "localLanguage", "aliases", "city", "country", "lat", "lon", "status", "from", "to", "capacity", "pitchSize", "pitch", "pitchNote", "note", "en", "ja", "tournaments"];
+const KEYS = ["id", "wikidata", "track", "trackSource", "name", "names", "nameJa", "readingJa", "localName", "localLanguage", "aliases", "city", "country", "lat", "lon", "status", "from", "to", "capacity", "pitchSize", "pitch", "pitchNote", "note", "en", "ja", "tournaments"];
 const entry = (g) => {
   for (const key of Object.keys(g)) if (!KEYS.includes(key)) fail(`${g.id}: unknown field ${key}`);
   return `  {\n${KEYS.filter((key) => g[key] !== undefined && !(key === "names" && g[key].length === 0)).map((key) => field(key, g[key])).join(",\n")},\n  }`;

@@ -200,6 +200,9 @@ const PROFILES: Readonly<Record<Sport, Profile>> = {
   waterpolo: { shape: "sides", side: 22, end: 18, bench: 0, corner: 10, tiers: [lower(36, 3, 18), upper(43, 79, 26, 48)], away: "corner" },
   diving: { shape: "sides", side: 26, end: 20, bench: 0, corner: 10, tiers: [lower(40, 3, 20), upper(47, 87, 28, 52)], away: "corner" },
   artisticswimming: { shape: "sides", side: 26, end: 20, bench: 0, corner: 10, tiers: [lower(40, 3, 20), upper(47, 87, 28, 52)], away: "corner" },
+  // Athletics: an oval bowl round the track, a stadium's two tiers (ours); skating: an arena's, close to the ice as a hockey rink is, rounded at the corners.
+  athletics: { shape: "bowl", side: 30, end: 30, bench: 0, corner: 0, tiers: [lower(70), upper(77, 135)], oval: true, away: "end" },
+  skating: { shape: "bowl", side: 12, end: 14, bench: 0, corner: 60, tiers: [lower(58, 3, 28), upper(65, 121, 38, 74)], away: "corner" },
   lacrosse: { shape: "bowl", side: 24, end: 30, bench: 6, corner: 40, tiers: [lower(70), upper(77, 125, 58, 100)], away: "end" },
   rugby: { shape: "bowl", side: 26, end: 36, bench: 6, corner: 48, tiers: [lower(78), upper(85, 145)], away: "end" },
   afl: { shape: "bowl", side: 30, end: 30, bench: 0, corner: 0, tiers: [lower(70), upper(77, 135)], oval: true, away: "end" },

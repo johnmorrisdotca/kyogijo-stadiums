@@ -19,6 +19,9 @@ export const VIEWS = ["flat", "3d"];
 export const VIEWPOINTS = ["overhead", "broadcast", "end", "corner"];
 export const PAGEANTS = ["off", "carpet", "stage"];
 export const PAGEANT_LINES = ["over", "under", "through"];
+export const TRACKS = ["red", "blue", "terracotta", "green"];
+export const INFIELDS = ["pitch", "grass", "none"];
+export const RACE_MARKS = ["none", "all"];
 export const COURTS = ["default", "maple", "twoTone", "night", "sunburst", "tournament"];
 export const POOL_LOOKS = ["flat", "water", "tiled"];
 export const POOL_DECKS = ["plain", "tiled"];
@@ -75,6 +78,9 @@ export function makeState(params, kept = null) {
     goals: pick(params.get("goals"), GOALS, "box"),
     half: pick(params.get("half"), HALVES, "none"),
     sheet: pick(params.get("sheet"), SHEETS, "sheet"),
+    track: pick(params.get("track"), TRACKS, "red"),
+    infield: pick(params.get("infield"), INFIELDS, "pitch"),
+    races: pick(params.get("races"), RACE_MARKS, "none"),
     flags: params.get("flags") !== "0",
     baseline: params.get("baseline") === "1",
     centreLogo: false,
@@ -195,6 +201,13 @@ export function optionsFor(s, lang, forCode = false) {
   }
   const pool = isPool(s.sport) ? poolOptions(s, lang, forCode) : undefined;
   if (pool !== undefined) o.pool = pool;
+  if (s.sport === "skating" && s.races !== "none") o.skating = { races: s.races };
+  if (s.sport === "athletics" && (s.track !== "red" || s.infield !== "pitch" || s.races !== "none")) {
+    o.athletics = {};
+    if (s.track !== "red") o.athletics.track = s.track;
+    if (s.infield !== "pitch") o.athletics.infield = s.infield;
+    if (s.races !== "none") o.athletics.races = s.races;
+  }
   const names = [s.away.name, s.home.name];
   if (s.sport === "nba" && (s.court !== "default" || s.baseline || s.centreLogo || s.hardwood)) {
     const court = s.court === "default" ? {} : { ...COURT_THEMES[s.court] };
@@ -255,6 +268,9 @@ export const labelOf = (say, s) => ({
   goals: (v) => say(`goals_${v}`),
   half: (v) => say(`half_${v}`),
   sheet: (v) => say(`sheet_${v}`),
+  track: (v) => say(`track_${v}`),
+  infield: (v) => say(`infield_${v}`),
+  races: (v) => say(`races_${v}`),
   logo: (v) => say(`logo_${v}`),
   era: (v) => say(`era_${v}`),
 });
@@ -285,6 +301,9 @@ export const SEGS = [
   { id: "goals", kind: "goals", values: GOALS, get: (s) => s.goals },
   { id: "half", kind: "half", values: HALVES, get: (s) => s.half },
   { id: "sheet", kind: "sheet", values: SHEETS, get: (s) => s.sheet },
+  { id: "track", kind: "track", values: TRACKS, get: (s) => s.track },
+  { id: "infield", kind: "infield", values: INFIELDS, get: (s) => s.infield },
+  { id: "races", kind: "races", values: RACE_MARKS, get: (s) => s.races },
   { id: "away-logo", kind: "logo", values: ["none", "emblem", "url"], get: (s) => s.away.logo },
   { id: "home-logo", kind: "logo", values: ["none", "emblem", "url"], get: (s) => s.home.logo },
 ];
@@ -347,6 +366,8 @@ export function hiddenRows(s) {
     "pageant-group": s.pageant === "off" || s.size === "surface",
     "pool-group": !isPool(s.sport),
     "swim-group": s.sport !== "swimming",
+    "athletics-group": s.sport !== "athletics",
+    "races-group": s.sport !== "athletics" && s.sport !== "skating",
     "status-text": s.status !== "custom",
     "away-logo-url": s.away.logo !== "url",
     "home-logo-url": s.home.logo !== "url",

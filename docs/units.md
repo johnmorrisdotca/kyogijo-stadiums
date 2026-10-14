@@ -40,6 +40,8 @@ Each surface keeps the unit its rulebook states its figures in. The drawing itse
 | `waterpolo` | the sport's own | water polo | `m` (metres) |
 | `diving` | the sport's own | diving | `m` (metres) |
 | `artisticswimming` | the sport's own | artistic swimming | `m` (metres) |
+| `athletics` | the sport's own | athletics | `m` (metres) |
+| `skating` | the sport's own | ice skating | `m` (metres) |
 | `lacrosse` | the sport's own | lacrosse | `m` (metres) |
 | `rugby` | the sport's own | rugby | `m` (metres) |
 | `afl` | the sport's own | Australian football | `m` (metres) |

@@ -73,6 +73,31 @@ console.log(drawKyogijo({ sport: "nhl", range: undefined }) === drawKyogijo({ sp
 | `diving` | `platforms` | the side of the well the platforms are on | `right` |
 | `artisticswimming` | `half` | from an end of the pool to its middle | `left` |
 | `artisticswimming` | `centre-stage` | the middle third of the pool, where the athletes enter | none |
+| `skating` | `home-straight` | the finishing straight with its lanes (the long track) or the finishing line's straight (the short track) | none |
+| `skating` | `crossing-straight` | the straight where the lanes are changed, with the coaches' area (the long track) | none |
+| `skating` | `first-bend` | the right-hand curve, entered from the finishing straight (with its seven blocks on the short track) | `right` |
+| `skating` | `second-bend` | the left-hand curve, entered from the crossing straight | `left` |
+| `skating` | `finish` | the finishing line, with the lines 1 m apart before it | none |
+| `skating` | `start` | the starting lines of the race in `skating.start` | none |
+| `skating` | `infield` | the warm-up lane and the ground inside the track | none |
+| `skating` | `half` | one half of the figure skating rink, from the end boards to the middle | `left` |
+| `skating` | `judges` | the judges', the referee's and the technical panel's seats at the rinkboard | none |
+| `skating` | `kiss-and-cry` | the kiss and cry beside the rink | `left` |
+| `athletics` | `bend` | one bend of the track, with the lanes across it | `right` |
+| `athletics` | `home-straight` | the finish straight, from the end of the second bend to the end of the first, with the finish line | none |
+| `athletics` | `back-straight` | the straight opposite the finish | none |
+| `athletics` | `finish` | the finish line with its lanes, close enough to read the lane numbers | none |
+| `athletics` | `start` | a close-up of the start of the race in `athletics.start`, turned so that the athletes run to the right (or up the page in portrait) | none |
+| `athletics` | `infield` | the ground inside the track, with the field events' facilities | none |
+| `athletics` | `high-jump` | a high jump: the fan and the landing area | `right` |
+| `athletics` | `pole-vault` | a pole vault: the runway, the box and the landing area | `left` |
+| `athletics` | `long-jump` | the long jump's runways, boards and pits | none |
+| `athletics` | `triple-jump` | the triple jump's runways, boards and pits | none |
+| `athletics` | `shot-put` | a shot put circle with its stop board and sector | `left` |
+| `athletics` | `discus-throw` | a discus circle with its cage and the 34.92 degree sector | `right` |
+| `athletics` | `hammer-throw` | a hammer circle with its cage and the 34.92 degree sector | `right` |
+| `athletics` | `javelin-throw` | a javelin runway with its arc and sector | `left` |
+| `athletics` | `water-jump` | the steeplechase water jump and the bend round it | `left` |
 <!-- /made:ranges -->
 
 A range at an end takes `end`: `range: { name: "half", end: "right" }`. The end is as the surface is drawn wide: `left` or `right`, whichever way the drawing lies, so that a tall drawing's left end is its top. A range with no end (the neutral zone, the middle third, the infield) ignores one. The offensive ranges are at the right by default, as a frame's numbers are for a team that attacks the right (see [coordinate frames](./frames.md)), the defensive and own ranges at the left, and the others, such as a half, at the left, as a curling sheet's house is: `end` moves any of them.

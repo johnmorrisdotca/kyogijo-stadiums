@@ -22,6 +22,8 @@ export interface Env {
   o: SurfaceOptions | ScoreOptions;
   id: string;
   turned: boolean;
+  /** The turn, in degrees, that texts and logos are given to read upright: the quarter back (-90) when the surface is turned a quarter, else 0, or the surface's own (a close-up of an athletics start is turned to any angle). */
+  back: number;
   unit: Unit;
   outline: Outline;
   /**
@@ -114,14 +116,16 @@ export function newMade(): Made {
   return { marks: "", defs: "", style: "", attr: "", opacity: undefined, drawn: 0, skipped: 0, outcomes: new Map(), teams: new Map(), low: Infinity, high: -Infinity };
 }
 
-export function envFor(o: SurfaceOptions | ScoreOptions, turned: boolean | undefined, range?: Box): Env {
+export function envFor(o: SurfaceOptions | ScoreOptions, turned: boolean | undefined, range?: Box, upright?: number): Env {
   const language = o.language === "ja" ? "ja" : "en";
   const outline = outlineOf(o);
   const teams = o as Partial<ScoreOptions>;
+  const quarter = turned ?? (isPortrait(o) && o.sport !== "mlb");
   return {
     o,
     id: drawingId(o),
-    turned: turned ?? (isPortrait(o) && o.sport !== "mlb"),
+    turned: quarter,
+    back: upright ?? (quarter ? -90 : 0),
     unit: lengthUnit(o),
     outline,
     shown: range ?? outline.box,

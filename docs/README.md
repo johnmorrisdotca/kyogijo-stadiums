@@ -5,7 +5,7 @@ Kyogijo Stadiums draws sports surfaces as SVG, to scale, with the score on them.
 ## Start here
 
 - [Getting started](./getting-started.md): install, the four ways in, the element and the frame.
-- [The surfaces](./surfaces.md): the twenty-seven-four surfaces and how a league's rules change one.
+- [The surfaces](./surfaces.md): the twenty-seven-four-two surfaces and how a league's rules change one.
 - [Score and layout](./score.md): the teams, the score, the strip for a list, wide and tall.
 - [Theming](./theming.md): every colour, light and dark, the seven named looks, colours by feature, line widths and dashes, goal styles and mowing patterns.
 - [Annotations](./annotations.md): the direction each team attacks, axes in any frame, and the names of a surface's parts.
@@ -23,6 +23,8 @@ Kyogijo Stadiums draws sports surfaces as SVG, to scale, with the score on them.
 - [Lacrosse, rugby, Australian football and the other field sports](./field-sports.md): lacrosse (the field and the box), rugby union and league, Australian football, Gaelic football and hurling, cricket, field hockey and handball from their rulebooks, with goals and behinds, goals and points, and a board of runs and wickets.
 - [The stands and the crowd](./crowd.md): the seating bowls, sides, horseshoes and ballpark grandstands round a surface, the seeded crowd in the home and visitors' colours with the empty seats showing, a soccer pitch inside a gridiron stadium, and the stands as data.
 - [Swimming, water polo, diving and artistic swimming](./pools.md): the four pools from World Aquatics' Competition Regulations: the swimming pool in lanes (50 and 25 m, ropes, floor markings, blocks, panels, flags, a side section), the water polo field, the diving well and the artistic swimming area, the look of the water and the deck, the lanes of a race with flags, places, times, reaction times, splits and pace, a race replay and a natatorium of several pools.
+- [The athletics stadium](./athletics.md): the 400 m track of World Athletics with its staggers, curved starts, relay zones, hurdles and steeplechase, every field event, a close-up of each start and the finish, the covered track, and lane draws, results, a race replay and the marks of throws and jumps.
+- [The skating rinks](./skating.md): the ISU's 400 m speed skating track with the lines of every race, the short track oval and the figure skating rink, with pairs, starting positions, results, a race replay and the elements of a programme.
 - [Special games](./special-games.md): a rink in a ballpark, a court on a carrier's deck, baseball over a stadium's pitch: 18 games to scale, each with its sources.
 - [Ballparks](./ballparks.md): 94 parks, each with its own fence, and the past ones by season.
 - [The grounds](./grounds.md): 64 soccer grounds, each pitch at its published size.

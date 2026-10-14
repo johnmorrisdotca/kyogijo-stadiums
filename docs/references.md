@@ -82,6 +82,11 @@ The links John has sent, and the ones the package's figures were read from: what
     - *Useful for:* the list of what a pool diagram is expected to show.
     - *May use:* nothing. The page could not be read beyond its caption (the post's picture and the labels in it are not in what the page gives), and a post's picture is its maker's. The figures it names are the regulations' (CR 16.1.4, 16.2.4, 16.1.13), read from the regulations.
 
+16. **Three stock photographs of an Olympic track meet and a black-and-white diagram of a start** (descriptions only, sent by John)
+    - *What:* a red six-lane oval round a green infield; an eight-lane oval with a soccer pitch inside; the straight that runs on beyond the oval with lane numbers painted on it; and a line drawing of the lanes 1 to 9 side by side with the numbers at the left edge and the curved lines of a waterfall start.
+    - *Useful for:* what a reader expects of an athletics stadium: the colours, the pitch inside the track, the lane numbers just behind a start line, the waterfall.
+    - *May use:* the descriptions only. No photograph or drawing is copied or traced: the stadium is drawn from World Athletics' Manual, and the curves of every start line are computed from the Rule (an involute), not read off a picture.
+
 ## Where the figures were read
 
 - **NFL rulebook, Rule 1; CFL rulebook, "The Field"** ([cfldb.ca](https://cfldb.ca/rulebook/conduct-of-the-game/the-field/), and the [2015 edition](https://cfldb.ca/rulebook/2015/conduct-of-the-game/the-field/)); **NHL rulebook, Rule 1; NBA rulebook, Rule 1** ([official.nba.com](https://official.nba.com/rule-no-1-court-dimensions/)); **Official Baseball Rules**, 2.01 to 2.05. Dimensions are facts, cited in [sources.md](./sources.md).
@@ -230,6 +235,22 @@ Each of these is drawn from its governing body's own rules, read on 2026-10-13 (
 - **Not used:** sportypy, sportyR and hockey_rink (GPL-3.0) and `@sportsdataverse/sporty` (MIT): none was read for the pools; the pools of those packages were not looked at. No drawing of any pool, diagram or federation graphic is copied: the diagrams of the regulations are not drawn from, and the stock pictures of item 16 are descriptions only.
 - **Ours:** the plans of the four pools (the shapes, in metres); the colours and the look of the water, the light on it (seeded curves), the tiles and the deck; the sizes of the fixtures where the rules give none (the run of distinct floats, the starting platform and the judges' platform of artistic swimming, the official table, the stands, the diving well's length and width); the lanes of a race (the plates, the medals' colours, the discs, the pace bars and their colour scale), the race replay (`raceTimeline`), the split pace chart, the zone sets `pool-lanes`, `water-polo-areas` and `pool-thirds`, the frames and the natatorium's layout.
 - **Not found:** no figure for a swimming warm-up pool: the rules ask only for a practice pool for artistic swimming (CR 27.2.9), so the warm-up pool is a swimming pool without its competition fixtures; no size for the diving well, only the clearances of Appendix 2.
+
+## The athletics stadium
+
+- **What was read:** World Athletics' *Track and Field Facilities Manual*, 2019 edition (Chapters 1 to 3: the 400 m standard track, its running lines, Table 2.2.1.6a, the breakline and the curved starts, the hurdles, the steeplechase, the facilities of the jumps and the throws, the standard arena), its *400 Metre Standard Track Marking Plan*, Books C1.1 and C2.1 of the *Competition and Technical Rules* in force from 1 July 2026, and the *Marking Plan for the Standard Short Track* of 1 January 2026, each as text from World Athletics' own PDF and the Marking Plan as a picture: for facts only (lengths, radii, angles, places), all named in [sources.md](./sources.md#athletics). No text, table or diagram is copied, and the stagger table was not copied but worked out from the running lines' radii and the breakline's construction, then held to the printed numbers by a test.
+- **Licence:** the documents are World Athletics' and carry its copyright; a dimension is a fact, so the figures are used and the documents are not reproduced. The credit is here and in [NOTICE.md](../NOTICE.md).
+- **Not used:** any stadium plan, template or stock image of a track: none was copied or traced.
+- **The Japanese words** were read in the Japan Association of Athletics Federations' *競技規則* 2026 (https://www.jaaf.or.jp/about/rule/: the chapters of the Technical Rules in Japanese, 陸上競技場公認に関する細則 and 室内陸上競技場公認に関する細則), for the words only. Read-only, over ordinary TLS.
+- **Ours:** the stencil digits, which are a face of our own written as strokes (no typeface was used or looked at), the lane tags, the colours of the tracks and of the looks, the plans' reading of the Marking Plan to the metre, the covered track's bends drawn as one circle, the zone set `athletics-track` and the frame `athletics`.
+
+## The skating rinks
+
+- **What was read:** the International Skating Union's *Sports Rules - Speed Skating* (the Special Regulations and Technical Rules, effective 12 June 2026: Rules 203 to 206, 226 to 228 and 253 to 257, and "H. Track", the layout plan and the measurements of standard 400 m tracks), its *Special Regulations and Technical Rules Short Track Speed Skating* (2024: Rule 280 and the diagram of the tracks, a copy kept by the Dutch federation) and its *Sports Rules - Figure Skating* (effective 12 June 2026: Rule 342), each as text from the ISU's own PDF and the plans and diagrams as pictures: for facts only (lengths, radii, places), all named in [sources.md](./sources.md#ice-skating). No text, table or diagram is copied, and the starting lines of the long track were worked out from the track's measurements and then held by a test to the layout plan's own dimensions (k, j, i and the 12.57 m between the lanes).
+- **Licence:** the documents are the ISU's and carry its copyright; a dimension is a fact, so the figures are used and the documents are not reproduced. The credit is here and in [NOTICE.md](../NOTICE.md).
+- **Not used:** any rink plan, template or image of a rink: none was copied or traced. The ISU Media Guide was not used.
+- **The Japanese words** were read in the Japanese translation of the ISU's Special Regulations and Technical Rules Speed Skating, 2018 (http://aomoriskate.ec-net.jp/lt/yoko/2018-2019/rule2018ss.pdf), the Japan Skating Federation's スピードスケート指導教本 (skatingjapan.or.jp), its 大会要項 and viewing guide (as summarised by a search; the guide itself answers 403 to a program), and the JOC's page on short track (https://www.joc.or.jp/sports/shorttrack/): for the words only.
+- **Ours:** the colours, the corner and the furniture of the figure skating rink, the padding's place, the spacing of the short track's blocks, the zone set `skating-track`, the frame `skating` and the kinds of element of a programme.
 
 ## The soccer pitch and its providers
 

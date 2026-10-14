@@ -7,7 +7,7 @@
 const MAIN = "@johnmorrisdotca/kyogijo-stadiums";
 
 const UNIT_WORDS = { ft: "feet", yd: "yards", m: "metres", cm: "centimetres", in: "inches", mm: "millimetres", px: "pixels", "tenth-ft": "tenths of a foot", percent: "percent of the pitch", fraction: "fractions of the pitch" };
-const SPORT_NAMES = { nfl: "NFL", cfl: "CFL", ifaf: "IFAF", nhl: "NHL", nba: "NBA", mlb: "MLB", soccer: "soccer", curling: "curling", tennis: "tennis", volleyball: "volleyball", badminton: "badminton", pickleball: "pickleball", tabletennis: "table tennis", padel: "padel", squash: "squash", racquetball: "racquetball", sepaktakraw: "sepak takraw", teqball: "teqball", roundnet: "roundnet", netball: "netball", lacrosse: "lacrosse", rugby: "rugby", afl: "Australian football", gaelic: "Gaelic games", cricket: "cricket", fieldhockey: "field hockey", handball: "handball", swimming: "swimming", waterpolo: "water polo", diving: "diving", artisticswimming: "artistic swimming" };
+const SPORT_NAMES = { nfl: "NFL", cfl: "CFL", ifaf: "IFAF", nhl: "NHL", nba: "NBA", mlb: "MLB", soccer: "soccer", curling: "curling", tennis: "tennis", volleyball: "volleyball", badminton: "badminton", pickleball: "pickleball", tabletennis: "table tennis", padel: "padel", squash: "squash", racquetball: "racquetball", sepaktakraw: "sepak takraw", teqball: "teqball", roundnet: "roundnet", netball: "netball", athletics: "athletics", skating: "ice skating", lacrosse: "lacrosse", rugby: "rugby", afl: "Australian football", gaelic: "Gaelic games", cricket: "cricket", fieldhockey: "field hockey", handball: "handball", swimming: "swimming", waterpolo: "water polo", diving: "diving", artisticswimming: "artistic swimming" };
 const ENDS = { fixed: "fixed to the surface", shooter: "the basket or house attacked", none: "none" };
 const cell = (text) => String(text).replace(/\|/g, "\\|").replace(/\n/g, " ");
 const num = (n) => String(Math.round(n * 100) / 100);
@@ -106,6 +106,35 @@ const RANGE_COVERS = {
   mlb: { infield: "the dirt out to the arc round the mound, and the ground behind home plate", outfield: "the grass from the fence in to second base" },
   net: { "half-court": "one side of the net" },
   curling: { sheet: "the whole sheet", half: "from the hog line to the back line at one end", house: "the house at one end" },
+  athletics: {
+    bend: "one bend of the track, with the lanes across it",
+    "home-straight": "the finish straight, from the end of the second bend to the end of the first, with the finish line",
+    "back-straight": "the straight opposite the finish",
+    finish: "the finish line with its lanes, close enough to read the lane numbers",
+    start: "a close-up of the start of the race in `athletics.start`, turned so that the athletes run to the right (or up the page in portrait)",
+    infield: "the ground inside the track, with the field events' facilities",
+    "high-jump": "a high jump: the fan and the landing area",
+    "pole-vault": "a pole vault: the runway, the box and the landing area",
+    "long-jump": "the long jump's runways, boards and pits",
+    "triple-jump": "the triple jump's runways, boards and pits",
+    "shot-put": "a shot put circle with its stop board and sector",
+    "discus-throw": "a discus circle with its cage and the 34.92 degree sector",
+    "hammer-throw": "a hammer circle with its cage and the 34.92 degree sector",
+    "javelin-throw": "a javelin runway with its arc and sector",
+    "water-jump": "the steeplechase water jump and the bend round it",
+  },
+  skating: {
+    "home-straight": "the finishing straight with its lanes (the long track) or the finishing line's straight (the short track)",
+    "crossing-straight": "the straight where the lanes are changed, with the coaches' area (the long track)",
+    "first-bend": "the right-hand curve, entered from the finishing straight (with its seven blocks on the short track)",
+    "second-bend": "the left-hand curve, entered from the crossing straight",
+    finish: "the finishing line, with the lines 1 m apart before it",
+    start: "the starting lines of the race in `skating.start`",
+    infield: "the warm-up lane and the ground inside the track",
+    half: "one half of the figure skating rink, from the end boards to the middle",
+    judges: "the judges', the referee's and the technical panel's seats at the rinkboard",
+    "kiss-and-cry": "the kiss and cry beside the rink",
+  },
   lacrosse: { half: "from an end line to the centre line", crease: "the crease (the goal circle in the women's game) and the ground round it" },
   rugby: { half: "from a dead-ball line to the half-way line", "twenty-two": "from the try line to the 22-metre line (union)", twenty: "from the goal line to the 20-metre line (league)", "in-goal": "one in-goal area" },
   afl: { half: "from a goal line to the centre line", "forward-fifty": "the ground inside the Fifty Metre Arc at one end", "centre-square": "the centre square" },

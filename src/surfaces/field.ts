@@ -8,7 +8,7 @@ import { ft, quarterTurn, type BuildOptions, type Surface } from "./surface.ts";
 const RAD = Math.PI / 180;
 
 /** The path of one shape that is drawn as a line, or of one filled bar. */
-function pathOf(shape: Shape): string {
+export function pathOf(shape: Shape): string {
   switch (shape.kind) {
     case "line":
       return shape.y0 === shape.y1 ? `M${num(shape.x0)} ${num(shape.y0)}H${num(shape.x1)}` : shape.x0 === shape.x1 ? `M${num(shape.x0)} ${num(shape.y0)}V${num(shape.y1)}` : `M${num(shape.x0)} ${num(shape.y0)}L${num(shape.x1)} ${num(shape.y1)}`;
@@ -32,7 +32,7 @@ function pathOf(shape: Shape): string {
   }
 }
 
-const areaD = (a: Area): string => {
+export const areaD = (a: Area): string => {
   if (a.d !== undefined) return a.d;
   if (a.frame !== undefined) {
     const f = a.frame;
@@ -47,7 +47,7 @@ const areaD = (a: Area): string => {
 };
 
 /** The painted lines of a plan: the shapes drawn with the line's paint, those alike in feature, width and dash put in one path. */
-export function strokes(plan: FieldPlan, o: Pick<BuildOptions, "exact" | "features">): string {
+export function strokes(plan: Pick<FieldPlan, "shapes" | "lineWidth" | "drawnLine">, o: Pick<BuildOptions, "exact" | "features">): string {
   const groups = new Map<string, { feature: string; w: number; dash: Dash | undefined; cls: string; d: string[] }>();
   const base = o.exact ? plan.lineWidth : plan.drawnLine;
   for (const shape of plan.shapes) {
@@ -66,16 +66,19 @@ export function strokes(plan: FieldPlan, o: Pick<BuildOptions, "exact" | "featur
 }
 
 /** The filled marks of a plan: the bars in one path to a feature, the dots one each. */
-function marks(plan: FieldPlan, o: Pick<BuildOptions, "exact" | "features">): string {
+export function marks(plan: Pick<FieldPlan, "shapes">, o: Pick<BuildOptions, "exact" | "features">): string {
   const bars = new Map<string, string[]>();
   let dots = "";
   const lift = o.exact ? 1 : 1.6;
   for (const shape of plan.shapes) {
-    if (shape.kind === "bar") bars.set(shape.feature, [...(bars.get(shape.feature) ?? []), pathOf(shape)]);
-    else if (shape.kind === "dot") dots += el("circle", { class: ft(o, shape.feature, shape.paint === "post" ? "ky-post-end" : "ky-fill-line"), cx: shape.cx, cy: shape.cy, r: shape.r * lift });
+    if (shape.kind === "bar") bars.set(`${shape.feature}|${shape.cls ?? ""}`, [...(bars.get(`${shape.feature}|${shape.cls ?? ""}`) ?? []), pathOf(shape)]);
+    else if (shape.kind === "dot") dots += el("circle", { class: ft(o, shape.feature, shape.paint === "post" ? "ky-post-end" : shape.paint === "block" ? "ky-ska-block" : shape.paint === "cone" ? "ky-ska-cone" : "ky-fill-line"), cx: shape.cx, cy: shape.cy, r: shape.r * lift });
   }
   let out = "";
-  for (const [feature, d] of bars) out += el("path", { class: ft(o, feature, "ky-fill-line"), d: d.join("") });
+  for (const [key, d] of bars) {
+    const [feature, cls] = key.split("|");
+    out += el("path", { class: ft(o, feature, cls === "" ? "ky-fill-line" : cls), d: d.join("") });
+  }
   return out + dots;
 }
 
@@ -118,7 +121,7 @@ export function fieldSurface(o: BuildOptions, plan: FieldPlan, style: { goals?: 
       base += el("path", { class: ft(o, "mowing", "ky-stripe"), d: mown.path, "fill-rule": mown.evenodd ? "evenodd" : undefined, "clip-path": clip ? `url(#${o.id}-turf)` : undefined });
     }
   }
-  for (const area of plan.areas) base += el("path", { class: ft(o, area.feature, area.cls), d: areaD(area), "fill-rule": area.frame === undefined ? undefined : "evenodd" });
+  for (const area of plan.areas) base += el("path", { class: ft(o, area.feature, area.cls), d: areaD(area), "fill-rule": area.frame === undefined && area.evenodd !== true ? undefined : "evenodd" });
   const ends = o.score && o.pageant !== true && plan.ends !== undefined ? plan.ends : undefined;
   if (ends !== undefined) {
     for (const side of ["left", "right"] as const) {

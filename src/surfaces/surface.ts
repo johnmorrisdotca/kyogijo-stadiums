@@ -95,6 +95,8 @@ export interface Surface {
   centreRadius?: number;
   /** Where a pageant's pictures go, when the halves and the middle are not the place. */
   pageant?: PageantPlan;
+  /** For a surface whose own frame is turned to an angle that is not a quarter (a close-up of an athletics start): the turn, in degrees, that a layer's texts and logos are given to read upright. */
+  upright?: number;
   /** How wide the surface's ordinary line is drawn, in the units of the `lines` markup, and how many feet one of those units is: what `lineWidth` scales. */
   lineRef?: { width: number; feet: number };
   /** For a surface with a crowd: the margin it was drawn with, which holds the stands. */

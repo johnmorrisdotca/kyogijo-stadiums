@@ -37,7 +37,7 @@ export const TEAMS_JA = {
   net: { away: "港町ガルズ", home: "草原バイソンズ" },
 };
 
-export const FAMILIES = { nfl: "football", cfl: "football", ifaf: "football", nhl: "hockey", nba: "basketball", mlb: "baseball", soccer: "soccer", curling: "curling", tennis: "net", volleyball: "net", badminton: "net", pickleball: "net", tabletennis: "net", padel: "net", squash: "net", racquetball: "net", sepaktakraw: "net", teqball: "net", roundnet: "net", netball: "net", lacrosse: "football", rugby: "football", afl: "football", gaelic: "football", cricket: "football", fieldhockey: "football", handball: "football", swimming: "football", waterpolo: "football", diving: "football", artisticswimming: "football" };
+export const FAMILIES = { nfl: "football", cfl: "football", ifaf: "football", nhl: "hockey", nba: "basketball", mlb: "baseball", soccer: "soccer", curling: "curling", tennis: "net", volleyball: "net", badminton: "net", pickleball: "net", tabletennis: "net", padel: "net", squash: "net", racquetball: "net", sepaktakraw: "net", teqball: "net", roundnet: "net", netball: "net", athletics: "football", skating: "hockey", lacrosse: "football", rugby: "football", afl: "football", gaelic: "football", cricket: "football", fieldhockey: "football", handball: "football", swimming: "football", waterpolo: "football", diving: "football", artisticswimming: "football" };
 
 /** Typical scores and a competition line for each sport. */
 export const GAMES = {
@@ -62,6 +62,10 @@ export const GAMES = {
   teqball: { away: 2, home: 1, status: "final", competition: "Final", date: "Sep 20", awaySets: [12, 9, 12], homeSets: [10, 12, 7], serving: "away" },
   roundnet: { away: 2, home: 1, status: "final", competition: "Final", date: "Jul 6", awaySets: [21, 18, 21], homeSets: [15, 21, 17], serving: "away" },
   netball: { away: 52, home: 49, status: "final", competition: "Final", date: "Aug 3" },
+  // Athletics: a team match, scored in points.
+  athletics: { away: 103, home: 96, status: "final", competition: "Team match", date: "Aug 2" },
+  // Ice skating: a team meeting, scored in points.
+  skating: { away: 41, home: 38, status: "final", competition: "Team pursuit final", date: "Feb 14" },
   // The field sports: a plain score, except Australian football's goals and behinds, Gaelic games' goals and points and cricket's wickets, overs and innings, which an edited score does not keep.
   lacrosse: { away: 11, home: 9, status: "final", competition: "Final", date: "Jun 1" },
   rugby: { away: 27, home: 24, status: "final", competition: "Final", date: "Oct 31" },

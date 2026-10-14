@@ -1,7 +1,9 @@
 // A drawing as a PNG, in Node, through resvg (the optional peer `@resvg/resvg-js`). The SVG is first written without a stylesheet (see `sceneToSvg`),
 // because resvg does not read CSS variables. In a browser, draw to a canvas (`drawToCanvas`) and ask it for a PNG instead.
 import { sceneToSvg } from "./scene.flat.ts";
-import type { SceneOptions, SceneSource } from "./scene.types.ts";
+import { boundsOf } from "./scene.path.ts";
+import { sceneOf } from "./scene.ts";
+import type { Scene, SceneItem, SceneOptions, SceneSource } from "./scene.types.ts";
 
 /** The members of resvg-js that are used. */
 interface ResvgModule {
@@ -17,6 +19,24 @@ export interface PngOptions extends SceneOptions {
   background?: string;
   /** Options for resvg's font handling, passed as its `font` option (`{ fontFiles: [...], loadSystemFonts: false }`). */
   font?: Record<string, unknown>;
+}
+
+/**
+ * A shape wholly outside the drawing's frame, stroke included. resvg (the PNG renderer) stops the whole process, with a panic in its geometry code, on a shape with an opacity below 1 that lies wholly outside the
+ * viewBox (a goal's net beyond a soccer pitch's penalty area, seen through a range), and such a shape paints nothing, so it is left out of the picture. Text and images are kept.
+ */
+export function isOutside(item: SceneItem, view: Scene["viewBox"]): boolean {
+  if (item.kind === "text" || item.kind === "image") return false;
+  const box = boundsOf(item, item.matrix);
+  if (box === undefined) return false;
+  const [a, b, c, d] = item.matrix;
+  const pad = (item.style.stroke === "none" ? 0 : item.style.strokeWidth * Math.sqrt(Math.abs(a * d - b * c)) * 1.5) + 0.5;
+  return box.x + box.w + pad < view.x || box.x - pad > view.x + view.w || box.y + box.h + pad < view.y || box.y - pad > view.y + view.h;
+}
+
+/** The scene without the shapes that lie wholly outside its frame. */
+export function cullOutside(scene: Scene): Scene {
+  return { ...scene, items: scene.items.filter((item) => !isOutside(item, scene.viewBox)) };
 }
 
 /** The message of the error thrown when the peer is not there. */
@@ -45,7 +65,7 @@ export async function toPNG(source: SceneSource, options: PngOptions = {}): Prom
     throw new Error(PNG_PEER_MISSING);
   }
   const wide = options.width === undefined && options.height === undefined ? 1200 : options.width;
-  const svg = sceneToSvg(source, { theme: options.theme, css: options.css });
+  const svg = sceneToSvg(cullOutside(sceneOf(source, { theme: options.theme, css: options.css })), { theme: options.theme, css: options.css });
   const resvg = new mod.Resvg(svg, {
     fitTo: wide !== undefined ? { mode: "width", value: wide } : { mode: "height", value: options.height },
     ...(options.background === undefined ? {} : { background: options.background }),

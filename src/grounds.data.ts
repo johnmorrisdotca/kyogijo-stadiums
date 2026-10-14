@@ -302,6 +302,8 @@ export const GROUND_DATA: GroundData[] = [
   {
     "id": "olympiastadion-munich",
     "wikidata": "Q131610",
+    "track": true,
+    "trackSource": "Wikidata, property P641 (sport) lists athletics",
     "name": "Munich Olympic Stadium",
     "nameJa": "ミュンヘン・オリンピアシュタディオン",
     "localName": "Olympiastadion München",
@@ -395,6 +397,8 @@ export const GROUND_DATA: GroundData[] = [
   {
     "id": "stadio-olimpico-rome",
     "wikidata": "Q159884",
+    "track": true,
+    "trackSource": "Wikidata, property P641 (sport) lists athletics",
     "name": "Stadio Olimpico",
     "names": [
       {"name": "Stadio dei Cipressi", "from": 1928, "to": 1953},
@@ -454,6 +458,8 @@ export const GROUND_DATA: GroundData[] = [
   {
     "id": "stade-de-france",
     "wikidata": "Q13205",
+    "track": true,
+    "trackSource": "Wikidata, property P641 (sport) lists athletics",
     "name": "Stade de France",
     "nameJa": "スタッド・ド・フランス",
     "localName": "Stade de France",
@@ -480,6 +486,8 @@ export const GROUND_DATA: GroundData[] = [
   {
     "id": "nissan-stadium-yokohama",
     "wikidata": "Q116601",
+    "track": true,
+    "trackSource": "Wikidata, property P641 (sport) lists athletics",
     "name": "Nissan Stadium",
     "names": [
       {"name": "International Stadium Yokohama", "from": 1998, "to": 2004}
@@ -574,6 +582,8 @@ export const GROUND_DATA: GroundData[] = [
   {
     "id": "luzhniki",
     "wikidata": "Q202163",
+    "track": true,
+    "trackSource": "Wikidata, property P641 (sport) lists athletics",
     "name": "Luzhniki Stadium",
     "names": [
       {"name": "Central Lenin Stadium", "from": 1956, "to": 1992}
@@ -1096,6 +1106,8 @@ export const GROUND_DATA: GroundData[] = [
   {
     "id": "dignity-health-sports-park",
     "wikidata": "Q200684",
+    "track": true,
+    "trackSource": "Wikidata, property P641 (sport) lists athletics",
     "name": "Dignity Health Sports Park",
     "names": [
       {"name": "Home Depot Center", "from": 2003, "to": 2013},

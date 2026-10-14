@@ -14,6 +14,66 @@ export interface FoldedWords {
   data: string;
 }
 
+/** The words of the skating data: the pairs of a race, its results, its replay and the elements of a programme as marks. */
+export interface SkatingData {
+  /** Titles ({race}). */
+  draw: string;
+  results: string;
+  replay: string;
+  elements: string;
+  /** Sentences ({n}, {race}, {winner}, {time}, {who}, {inner}, {outer}). */
+  summaryDraw: string;
+  summaryGrid: string;
+  summaryResults: string;
+  summaryReplay: string;
+  summaryElements: string;
+  /** The heads of the tables, a pair ({n}) and a lane. */
+  columns: { place: string; pair: string; lane: string; skater: string; country: string; time: string; splits: string; laps: string; note: string; element: string; kind: string; order: string };
+  pair: string;
+  lanes: { inner: string; outer: string };
+  medals: { gold: string; silver: string; bronze: string };
+  /** A split ({d}, {t}) and a lap ({n}, {t}). */
+  split: string;
+  lap: string;
+  /** What a layer is called. */
+  layers: { names: string; flags: string; medals: string; splits: string; elements: string; paths: string };
+  gun: string;
+  finish: string;
+  seconds: string;
+  metres: string;
+}
+
+/** The words of the athletics data: the lane draw, the results, the replay and the marks of a field event. */
+export interface AthleticsData {
+  /** Titles ({race}, {event}). */
+  draw: string;
+  results: string;
+  replay: string;
+  marks: string;
+  /** Sentences ({n}, {race}, {first}, {last}, {winner}, {time}, {best}, {who}, {event}). */
+  summaryDraw: string;
+  summaryResults: string;
+  summaryMarks: string;
+  summaryReplay: string;
+  /** The heads of the results table, and the medals, a reaction time ({t}) and a split ({d}, {t}). */
+  columns: { place: string; lane: string; athlete: string; country: string; time: string; reaction: string; splits: string; note: string; distance: string; round: string; valid: string };
+  medals: { gold: string; silver: string; bronze: string };
+  reaction: string;
+  split: string;
+  foul: string;
+  best: string;
+  yes: string;
+  no: string;
+  /** What a layer is called ({name} of an athlete): the flags, the names, the medals, the splits, the reaction times, the marks. */
+  layers: { names: string; flags: string; medals: string; splits: string; reactions: string; attempts: string; best: string };
+  /** The start of a replay: the gun; a finish ({name}, {time}). */
+  gun: string;
+  finish: string;
+  /** The unit and the abbreviations used in the table: seconds and metres. */
+  seconds: string;
+  metres: string;
+}
+
 /** The words the drawing says itself, in English and Japanese. */
 export interface KyogijoWords {
   /** The name of each surface. */
@@ -33,7 +93,7 @@ export interface KyogijoWords {
    * The league surfaces (`league` in the options): what each family of surface is, for the description, with the surface's `{size}`
    * (written with `size`, `{length}` and `{width}` in a `{unit}`) or a diamond's `{base}` and `{pitch}` in feet.
    */
-  league: { basketball: string; hockey: string; football: string; baseball: string; softball: string; curling: string; tennis: string; volleyball: string; beachVolleyball: string; badminton: string; pickleball: string; tabletennis: string; sittingVolleyball: string; padel: string; squash: string; racquetball: string; sepaktakraw: string; teqball: string; roundnet: string; netball: string; lacrosse: string; lacrosseBox: string; rugby: string; rugbyLeague: string; afl: string; gaelic: string; hurling: string; cricket: string; fieldhockey: string; handball: string; size: string; units: { ft: string; yd: string; m: string } };
+  league: { basketball: string; hockey: string; football: string; baseball: string; softball: string; curling: string; tennis: string; volleyball: string; beachVolleyball: string; badminton: string; pickleball: string; tabletennis: string; sittingVolleyball: string; padel: string; squash: string; racquetball: string; sepaktakraw: string; teqball: string; roundnet: string; netball: string; lacrosse: string; lacrosseBox: string; rugby: string; rugbyLeague: string; afl: string; gaelic: string; hurling: string; cricket: string; fieldhockey: string; handball: string; athletics: string; skating: string; size: string; units: { ft: string; yd: string; m: string } };
   /**
    * A ballpark's walls and quirks (`walls` and `quirks`): the words of the legend and the labels, of where a wall stands, and the sentences of the description.
    * `{unit}` is `unit.ft` or `unit.m`; `{name}` is the name the park's article gives a wall or a quirk, else the kind's own name.
@@ -103,6 +163,16 @@ export interface KyogijoWords {
     /** The split pace chart and the race replay: the title, the summary ({n} swimmers, {name}, {time}), the table's heads and the replay's events. */
     chart: { title: string; summary: string; fastest: string; headLane: string; headName: string; headTime: string; headSplit: string; headPace: string; headReaction: string; caption: string; turn: string; finish: string; start: string; perHundred: string };
   };
+  /**
+   * The athletics track's description: the track of 400 metres ({lanes}) and the covered one of 200, what is inside the track, which field events and races are marked ({list}), a close-up of a start ({race})
+   * and a field event alone ({event}), and where the water jump is ({where}).
+   */
+  /**
+   * The skating rink's description: the long track ({radius}, {outer}, {straight}), the short track ({length}, {width}, {tracks}) and the figure skating rink ({length}, {width}), the races marked ({list}),
+   * the furniture ({list}), a close-up of a start ({race}) and of the finish.
+   */
+  skating: { longTrack: string; shortTrack: string; figure: string; races: string; furniture: string; furnitureNames: Record<"judges" | "referee" | "technical-panel" | "kiss-and-cry", string>; start: string; finish: string; data: SkatingData };
+  athletics: { track400: string; track200: string; infieldPitch: string; infieldGrass: string; infieldNone: string; events: string; races: string; start: string; finish: string; layout: string; waterJump: string; inside: string; outside: string; lane: string; ground: string; data: AthleticsData };
   /** The title of a score: placeholders {away}, {awayScore}, {home} and {homeScore}. */
   scoreTitle: string;
   /** The sentences of a description. */
@@ -376,6 +446,20 @@ export interface KyogijoWords {
       pitchZone: string;
       insideCircle: string;
       outfieldGround: string;
+      /** The athletics track's zones: the infield, the finish straight, the first bend, the back straight and the second bend. */
+      trackInfield: string;
+      homeStraight: string;
+      firstBend: string;
+      backStraight: string;
+      secondBend: string;
+      /** The skating rink's zones: the crossing straight, and the left end, the middle and the right end of a figure skating rink. */
+      crossingStraight: string;
+      firstCurve: string;
+      secondCurve: string;
+      finishStraight: string;
+      rinkLeft: string;
+      rinkMiddle: string;
+      rinkRight: string;
       sideRight: string;
     };
   };
@@ -598,7 +682,7 @@ export interface KyogijoWords {
 /** The words of the package, by language. */
 export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
   en: {
-    surface: { nfl: "NFL football field", cfl: "CFL football field", ifaf: "IFAF football field", nhl: "NHL hockey rink", nba: "NBA basketball court", mlb: "Baseball field", soccer: "Soccer pitch", curling: "Curling sheet", tennis: "Tennis court", volleyball: "Volleyball court", badminton: "Badminton court", pickleball: "Pickleball court", tabletennis: "Table tennis table", padel: "Padel court", squash: "Squash court", racquetball: "Racquetball court", sepaktakraw: "Sepak takraw court", teqball: "Teqball court", roundnet: "Roundnet court", netball: "Netball court", lacrosse: "Lacrosse field", rugby: "Rugby union field", afl: "Australian football ground", gaelic: "Gaelic football field", cricket: "Cricket ground", fieldhockey: "Field hockey pitch", handball: "Handball court", swimming: "Swimming pool", waterpolo: "Water polo field", diving: "Diving well", artisticswimming: "Artistic swimming pool" },
+    surface: { skating: "Skating rink", nfl: "NFL football field", cfl: "CFL football field", ifaf: "IFAF football field", nhl: "NHL hockey rink", nba: "NBA basketball court", mlb: "Baseball field", soccer: "Soccer pitch", curling: "Curling sheet", tennis: "Tennis court", volleyball: "Volleyball court", badminton: "Badminton court", pickleball: "Pickleball court", tabletennis: "Table tennis table", padel: "Padel court", squash: "Squash court", racquetball: "Racquetball court", sepaktakraw: "Sepak takraw court", teqball: "Teqball court", roundnet: "Roundnet court", netball: "Netball court", lacrosse: "Lacrosse field", rugby: "Rugby union field", afl: "Australian football ground", gaelic: "Gaelic football field", cricket: "Cricket ground", fieldhockey: "Field hockey pitch", handball: "Handball court", swimming: "Swimming pool", waterpolo: "Water polo field", diving: "Diving well", artisticswimming: "Artistic swimming pool", athletics: "Athletics track" },
     about: {
       nfl: "an American football field, 120 by 53 and a third yards with its end zones, with a yard line every 5 yards, hash marks, numbers and goal posts",
       cfl: "a Canadian football field, 150 by 65 yards with its 20-yard end zones, with a yard line every 5 yards, hash marks, numbers and goal posts on the goal lines",
@@ -631,6 +715,8 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       waterpolo: "a water polo field of play, 25 by 20 metres, with the goal lines, the 2, 5 and 6 metre marks, the half distance line, the goals and the re-entry areas",
       diving: "a diving well, with springboards at 1 and 3 metres and platforms at 5, 7.5 and 10 metres",
       artisticswimming: "an artistic swimming area, 30 by 20 metres, with the lines on the floor, the judges' platform and the starting platform",
+      athletics: "an athletics track of 400 metres with eight lanes, the finish line and the lane numbers, with a soccer pitch inside it",
+      skating: "a speed skating track of 400 metres with two lanes, the warm-up lane, the blocks of the curves and the finishing line",
     },
     status: { final: "Final", "final-ot": "Final/OT", "final-so": "Final/SO", "final-aet": "Final/AET", "final-pens": "Final/Pens", live: "Live", half: "Halftime", "extra-time": "Extra time", "extra-end": "Extra end", penalties: "Penalties", postponed: "Postponed", tiebreak: "Tiebreak", "match-tiebreak": "Match tiebreak", retired: "Retired", walkover: "Walkover" },
     endStatus: "End {n}",
@@ -668,6 +754,8 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       cricket: "a cricket ground, {size}, with its boundary, the pitch with its creases and wickets, and the fielding restriction's circle where the rules have one",
       fieldhockey: "a field hockey pitch, {size}, with the centre line, the 23-metre lines, the circles, the penalty spots and the goals",
       handball: "a handball court, {size}, with the centre line, the goal areas, the 6-, 7- and 9-metre lines, the 4-metre lines and the goals",
+      athletics: "an athletics track, {size}, with its lanes, the finish line and the lane numbers",
+      skating: "a skating rink, {size}, with its lines",
       size: "{length} by {width} {unit}",
       units: { ft: "feet", yd: "yards", m: "metres" },
     },
@@ -709,11 +797,84 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       chart: { title: "Split pace", summary: "{n} swimmers. The fastest split was {name}'s {time}.", fastest: "fastest", headLane: "Lane", headName: "Swimmer", headTime: "Time", headSplit: "Split", headPace: "Seconds per 100 m", headReaction: "Reaction", caption: "{event}: the splits of each swimmer, with the pace of each in seconds per 100 metres.", turn: "Turn", finish: "Finish", start: "Start", perHundred: "per 100 m" },
     },
     field: { aflScore: "{name} scored {goals} goals and {behinds} behinds.", gaelicScore: "{name} scored {goals} goals and {points} points.", cricketScore: "{name}: {runs} runs for {wickets} wickets in {overs} overs.", cricketInnings: "By innings, {name}: {list}.", inningsStatus: "Innings {n}", innings: "Inn", runs: "Runs", wickets: "Wkts", overs: "Ov", total: "Total" },
+    skating: {
+      longTrack: "a speed skating track of 400 metres, its inner lane and its outer lane, the inner curve of {radius} metres radius, the outer lane {outer} metres wide and the straights {straight} metres long, with the warm-up lane, the blocks of the curves and the finishing line",
+      shortTrack: "a short track speed skating oval of 111.12 metres on a rink of {length} by {width} metres, with {tracks} tracks, seven blocks in each curve, the finishing line and the starting lines",
+      figure: "a figure skating rink of {length} by {width} metres, with its boards",
+      races: "Races marked: {list}.",
+      furniture: "Beside the rink: {list}.",
+      furnitureNames: { judges: "the judges", referee: "the referee", "technical-panel": "the technical panel", "kiss-and-cry": "the kiss and cry" },
+      start: "A close-up of the start of the {race}.",
+      finish: "A close-up of the finishing line.",
+      data: {
+        draw: "Pairs, {race}",
+        results: "Results, {race}",
+        replay: "Replay of the {race}",
+        elements: "The elements of the programme",
+        summaryDraw: "{n} skaters in the {race}, last pair: {last}.",
+        summaryGrid: "{n} starters in the {race}.",
+        summaryResults: "{winner} won the {race} in {time}.",
+        summaryReplay: "{n} skaters skate the {race}.",
+        summaryElements: "{n} elements on the ice, {who}.",
+        columns: { place: "Place", pair: "Pair", lane: "Lane", skater: "Skater", country: "Country", time: "Time", splits: "Splits", laps: "Laps", note: "Note", element: "Element", kind: "Kind", order: "No." },
+        pair: "Pair {n}",
+        lanes: { inner: "inner lane", outer: "outer lane" },
+        medals: { gold: "Gold", silver: "Silver", bronze: "Bronze" },
+        split: "{d} m: {t} s",
+        lap: "Lap {n}: {t} s",
+        layers: { names: "Names", flags: "Flags", medals: "Places", splits: "Splits", elements: "Elements", paths: "Paths" },
+        gun: "Start",
+        finish: "{name} finishes in {time}",
+        seconds: "s",
+        metres: "m",
+      },
+    },
+    athletics: {
+      track400: "an athletics track of 400 metres with {lanes} lanes, its bends of 36.50 metres radius at the kerb and its straights of 84.39 metres, with the finish line and the lane numbers",
+      track200: "a covered athletics track of 200 metres with {lanes} lanes, its banked bends of 17.205 metres radius at the kerb and its straights of 44.983 metres, with the finish line and the lane numbers",
+      infieldPitch: "A soccer pitch lies inside the track.",
+      infieldGrass: "Mown grass lies inside the track.",
+      infieldNone: "Nothing lies inside the track.",
+      events: "Field events marked: {list}.",
+      races: "Races marked: {list}.",
+      start: "A close-up of the start of the {race}.",
+      finish: "A close-up of the finish line.",
+      layout: "The {event}, drawn alone at a large scale.",
+      waterJump: "The steeplechase's water jump is {where} the second bend.",
+      inside: "inside",
+      outside: "outside",
+      lane: "lane {n}",
+      ground: "{ground}, athletics track",
+      data: {
+        draw: "Lane draw, {race}",
+        results: "Results, {race}",
+        replay: "Replay of the {race}",
+        marks: "{event}: the attempts",
+        summaryDraw: "{n} athletes in the {race}, from lane {first} to lane {last}.",
+        summaryResults: "{winner} won the {race} in {time}.",
+        summaryMarks: "{n} attempts, the best {best} by {who}.",
+        summaryReplay: "{n} athletes run the {race}.",
+        columns: { place: "Place", lane: "Lane", athlete: "Athlete", country: "Country", time: "Time", reaction: "Reaction", splits: "Splits", note: "Note", distance: "Mark", round: "Round", valid: "Valid" },
+        medals: { gold: "Gold", silver: "Silver", bronze: "Bronze" },
+        reaction: "Reaction {t} s",
+        split: "{d} m: {t} s",
+        foul: "foul",
+        best: "best mark",
+        yes: "yes",
+        no: "no",
+        layers: { names: "Names", flags: "Flags", medals: "Places", splits: "Splits", reactions: "Reaction times", attempts: "Attempts", best: "Best mark" },
+        gun: "Gun",
+        finish: "{name} finishes in {time}",
+        seconds: "s",
+        metres: "m",
+      },
+
+    },
     scoreTitle: "{away} {awayScore}, {home} {homeScore}",
     said: { home: "home", away: "away", won: "{name} won.", tied: "The game is level.", park: "The outfield fence follows the figures published for {park}.", officially: "Its official name is {name}.", ground: "The pitch follows the size published for {ground}.", groundDefault: "No pitch size is published for {ground}, so the pitch has the international size of 105 by 68 metres.", era: "The markings are those of the {season} season.", hammer: "{name} has the hammer.", ends: "By end, {name}: {list}.", total: "Total", wonPens: "{name} won {a}-{b} on penalties.", pens: "{a}-{b} pens", on: "Drawn as", sep: ", ", stop: ".", colon: ": ", gap: " " },
     pageant: { carpet: "Each team's flag or logo is laid out large over its own part of the surface, as a carpet.", stage: "Each team's crest stands on a large round stage over its own part of the surface.", emblem: "An emblem is in the middle.", emblemNamed: "The {name} emblem is in the middle." },
     special: {
-      guest: { nfl: "football field", cfl: "football field", ifaf: "football field", nhl: "rink", nba: "court", mlb: "baseball field", soccer: "pitch", curling: "sheet", tennis: "court", volleyball: "court", badminton: "court", pickleball: "court", tabletennis: "table", padel: "court", squash: "court", racquetball: "court", sepaktakraw: "court", teqball: "court", roundnet: "court", netball: "court", lacrosse: "field", rugby: "field", afl: "ground", gaelic: "field", cricket: "ground", fieldhockey: "pitch", handball: "court", swimming: "pool", waterpolo: "pool", diving: "well", artisticswimming: "pool" },
+      guest: { skating: "rink", nfl: "football field", cfl: "football field", ifaf: "football field", nhl: "rink", nba: "court", mlb: "baseball field", soccer: "pitch", curling: "sheet", tennis: "court", volleyball: "court", badminton: "court", pickleball: "court", tabletennis: "table", padel: "court", squash: "court", racquetball: "court", sepaktakraw: "court", teqball: "court", roundnet: "court", netball: "court", lacrosse: "field", rugby: "field", afl: "ground", gaelic: "field", cricket: "ground", fieldhockey: "pitch", handball: "court", swimming: "pool", waterpolo: "pool", diving: "well", artisticswimming: "pool", athletics: "track" },
       title: "{guest} in {host}",
       game: "{event}, {date}.",
       inside: "The {guest} lies wholly inside the outline of {host}.",
@@ -769,6 +930,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
         pull: "Pull", opposite: "Opposite", sprayCentre: "Centre", leftField: "Left field", centreField: "Centre field", rightField: "Right field", infield: "infield", outfield: "outfield",
         lengthShort: "Short", lengthDeep: "Deep", houseButton: "Button", houseFour: "4-foot ring", houseEight: "8-foot ring", houseTwelve: "12-foot ring", guardZone: "Free guard zone", frontCourt: "Front court", backCourt: "Back court", halfCourt: "Half court", outsideCircles: "Outside the circles", servingRing: "Serving ring", noHitZone: "No hit zone", sideLeft: "left", sideMiddle: "middle", sideRight: "right",
         pitchZone: "Pitch", insideCircle: "Inside the circle", outfieldGround: "Outfield",
+        trackInfield: "Infield", homeStraight: "Finish straight", firstBend: "First bend", backStraight: "Back straight", secondBend: "Second bend", crossingStraight: "Crossing straight", firstCurve: "First curve", secondCurve: "Second curve", finishStraight: "Finish straight", rinkLeft: "Left end", rinkMiddle: "Middle", rinkRight: "Right end",
       },
     },
     team: {
@@ -805,6 +967,8 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
         "distance-line": "Distance line", "large-rectangle": "Large rectangle", "small-rectangle": "Small rectangle", "thirteen-metre-arc": "13 m arc", "forty-metre-arc": "40 m arc", "penalty-point": "Penalty point",
         boundary: "Boundary", pitch: "Pitch", "bowling-crease": "Bowling crease", "popping-crease": "Popping crease", "return-crease": "Return crease", wicket: "Wicket", "thirty-yard-circle": "30-yard circle",
         "twenty-three-line": "23-metre line", "shooting-circle": "Shooting circle", "penalty-spot": "Penalty spot", "broken-circle-line": "Broken line round the circle", "goal-area-line": "Goal-area line",
+        "finish-line": "Finish line", kerb: "Kerb", "lane-lines": "Lane lines", bend: "Bend", straight: "Straight", "infield-pitch": "Soccer pitch", "start-line": "Start line", breakline: "Breakline", "water-jump": "Water jump", "exchange-zone": "Takeover zone",
+        "inner-lane": "Inner lane", "outer-lane": "Outer lane", "crossing-straight": "Crossing straight", "warm-up-lane": "Warm-up lane", padding: "Padding", infield: "Infield", "coaches-area": "Coaches' area", blocks: "Blocks", "track-line": "Line of the track", "start-lines": "Starting lines", ice: "Ice", "technical-panel": "Technical panel", referee: "Referee", "kiss-and-cry": "Kiss and cry", judges: "Judges", runway: "Runway", "take-off-board": "Take-off board", "landing-area": "Landing area", "throwing-circle": "Throwing circle", sector: "Landing sector", "stop-board": "Stop board", cage: "Cage", "throwing-arc": "Throwing arc", crossbar: "Crossbar", "landing-mat": "Landing mat", "run-up": "Run-up", "zero-line": "Zero line", box: "Box",
         "seven-metre-line": "7-metre line", "four-metre-line": "4-metre line", "throw-off-area": "Throw-off area", "restraining-line": "Restraining line", "wing-line": "Wing line", "marking-area": "Marking area", "two-point-arc": "Two-point arc",
         "lane-rope": "Lane rope", "lane-line": "Lane marking on the floor", "lane-end-cross": "Cross line at the end of the lane marking", "fifteen-metre-mark": "15 m mark", "touch-pad": "Touch panel", "starting-block": "Starting block", "backstroke-flags": "Backstroke flags", "false-start-rope": "False start rope", gutter: "Gutter",
         "two-metre-line": "2 m line", "five-metre-mark": "5 m mark", "six-metre-line": "6 m line", "half-distance-line": "Half distance line", "re-entry-area": "Re-entry area", "referee-platform": "Referee platform", "official-table": "Official table", "substitution-area": "Substitution area",
@@ -824,6 +988,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
         "in-goal": "in-goal area", "twenty-two": "area between the try line and the 22-metre line", twenty: "area between the goal line and the 20-metre line", crease: "crease", "forward-fifty": "area inside the fifty metre arc", "centre-square": "centre square",
         "large-rectangle": "large rectangle", pitch: "pitch", circle: "circle", "twenty-three": "23-metre area", "goal-area": "goal area",
         "pool-end": "end of the pool, up to the 15 m mark", springboards: "springboards", platforms: "platforms", "centre-stage": "centre of the pool, the middle third",
+        "crossing-straight": "crossing straight", "first-bend": "first bend", "second-bend": "second bend", judges: "judges", "kiss-and-cry": "kiss and cry", bend: "bend", "home-straight": "finish straight", "back-straight": "back straight", finish: "finish line", start: "start", "high-jump": "high jump", "pole-vault": "pole vault", "long-jump": "long jump", "triple-jump": "triple jump", "shot-put": "shot put", "discus-throw": "discus throw", "hammer-throw": "hammer throw", "javelin-throw": "javelin throw", "water-jump": "water jump",
       },
       folded: {
         top: "Top house", bottom: "Bottom house", left: "Left house", right: "Right house",
@@ -865,8 +1030,23 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       parts: { scoreboard: "scoreboard (lower edge)", net: "net", antennae: "antennae", goalposts: "goal posts", netposts: "net posts", hoop: "baskets", goal: "goals", boards: "boards and glass", stumps: "stumps", pylons: "pylons", flags: "corner flags", fence: "fence", backstop: "backstop", "foul-poles": "foul poles", "table-legs": "table top", walls: "walls", "starting-blocks": "starting blocks", "backstroke-flags": "backstroke flags", "false-start-rope": "false start rope", springboards: "springboards", platforms: "platforms", "judges-stand": "judges' stand" },
     },
   },
+  // The Japanese of athletics and skating is each governing body's own word where its rule book has one (read 2026-10-14; the pages and files are in docs/references.md).
+  // Athletics, 日本陸上競技連盟 競技規則 2026年度版 (JAAF; the World Athletics Technical Rules in Japanese) and 陸上競技場公認に関する細則:
+  //   ボックス (pole vault, TR28.8), 踏切板 and 砂場 (long jump and triple jump, TR29.3 and TR30), 着地場所 and 着地場所の範囲 (the landing area of a throw, TR32.12; no 落下区域 or 有効区画 in the book),
+  //   足留材 (a shot put's stop board, TR33.2), 囲い (the discus and hammer cage, TR35 and TR37), スターティング・ライン (the javelin's arc of 8 m, TR32.9: no 投てき弧), 助走路, ゼロライン (TR28),
+  //   着地マット, 直走路 and 曲走路 (TR14.1), 第1曲走路 (TR17.5.1), バック・ストレート (TR17.5.1's note on the 800 m start), メイン側 (細則 第10条: the finishing straight, not ホームストレート),
+  //   縁石, レーンライン, ブレイクライン (TR17.5.1), テーク・オーバー・ゾーン (細則 第10条), 水濠 and 障害物競走 (TR17.5.2: 3000m障害物競走), 1マイル, インフィールド (細則),
+  //   200mトラック（ショート・トラック） (競技規則 第5部) and 室内陸上競技場 (細則).
+  //   Television's words are aliases in docs/athletics.md: ホームストレート, コーナー, 落下区域, 有効区域, ストップボード, ケージ, 投てき弧, 障害, テイクオーバーゾーン, 室内200mトラック.
+  // Skating, the Japanese translation of the ISU Special Regulations and Technical Rules Speed Skating (2018 edition, kept by the Aomori skating association: the Japan Skating Federation's own rule
+  // books are not on the web) and the Federation's own teaching text (スピードスケート指導教本, 強化部) and viewing guide:
+  //   インレーン and アウトレーン (Rules 253.3.1 and 254; the teaching text too), ウォームアップレーン (Rule 205), 交差ストレート and 交差エリア (Rules 203.2 and 254.5), フィニッシュ側ストレート (Rule 227.2),
+  //   カーブ (not コーナー), ブロック and コーン (Rule 226), 防護マット (Rule 228.2), コーチエリア (Rule 227.3), プレ-スタートライン (Rule 227.2), 組, マススタート, チームパシュート, チームスプリント,
+  //   トラック for a short track's tracks (the Federation's 大会要項: 標準ショートトラック), 直線 and カーブ (its guide: 直線28.85m, カーブの半径8m); the relays 3000mリレー, 5000mリレー and 2000m混合リレー
+  //   (ISU Rule 281.1a; the JOC's usage). Television's インコース, アウトコース, バックストレート and ホームストレート are aliases in docs/skating.md. No rule book words were found for the figure skating
+  //   furniture (ジャッジ席, テクニカルパネル, レフェリー, キス・アンド・クライ): they are the usual words.
   ja: {
-    surface: { nfl: "NFLのフィールド", cfl: "CFLのフィールド", ifaf: "IFAFのフィールド", nhl: "NHLのアイスホッケーリンク", nba: "NBAのバスケットボールコート", mlb: "野球場", soccer: "サッカーのピッチ", curling: "カーリングのシート", tennis: "テニスコート", volleyball: "バレーボールコート", badminton: "バドミントンコート", pickleball: "ピックルボールコート", tabletennis: "卓球台", padel: "パデルコート", squash: "スカッシュコート", racquetball: "ラケットボールコート", sepaktakraw: "セパタクローコート", teqball: "テックボールコート", roundnet: "ラウンドネットコート", netball: "ネットボールコート", lacrosse: "ラクロスのフィールド", rugby: "ラグビーユニオンのグラウンド", afl: "オーストラリアンフットボールのグラウンド", gaelic: "ゲーリック・フットボールのフィールド", cricket: "クリケットのグラウンド", fieldhockey: "フィールドホッケーのピッチ", handball: "ハンドボールのコート", swimming: "競泳プール", waterpolo: "水球のフィールド", diving: "飛込プール", artisticswimming: "アーティスティックスイミングのプール" },
+    surface: { skating: "スケートリンク", nfl: "NFLのフィールド", cfl: "CFLのフィールド", ifaf: "IFAFのフィールド", nhl: "NHLのアイスホッケーリンク", nba: "NBAのバスケットボールコート", mlb: "野球場", soccer: "サッカーのピッチ", curling: "カーリングのシート", tennis: "テニスコート", volleyball: "バレーボールコート", badminton: "バドミントンコート", pickleball: "ピックルボールコート", tabletennis: "卓球台", padel: "パデルコート", squash: "スカッシュコート", racquetball: "ラケットボールコート", sepaktakraw: "セパタクローコート", teqball: "テックボールコート", roundnet: "ラウンドネットコート", netball: "ネットボールコート", lacrosse: "ラクロスのフィールド", rugby: "ラグビーユニオンのグラウンド", afl: "オーストラリアンフットボールのグラウンド", gaelic: "ゲーリック・フットボールのフィールド", cricket: "クリケットのグラウンド", fieldhockey: "フィールドホッケーのピッチ", handball: "ハンドボールのコート", swimming: "競泳プール", waterpolo: "水球のフィールド", diving: "飛込プール", artisticswimming: "アーティスティックスイミングのプール", athletics: "陸上競技のトラック" },
     about: {
       nfl: "アメリカンフットボールのフィールド。エンドゾーンを含めて120×53⅓ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールポストがあります",
       cfl: "カナディアンフットボールのフィールド。20ヤードのエンドゾーンを含めて150×65ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールライン上のゴールポストがあります",
@@ -899,6 +1079,8 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       waterpolo: "水球のフィールド。25×20mで、ゴールライン、2mライン、6mライン、5mの標識、ハーフライン、ゴール、退水者の再入水エリアがあります",
       diving: "飛込のプール。1mと3mの飛板、5m・7.5m・10mの固定台があります",
       artisticswimming: "アーティスティックスイミングの競技エリア。30×20mで、プール底のライン、ジャッジ台、スタート台があります",
+      athletics: "陸上競技の400mトラック。8レーンで、フィニッシュラインとレーン番号があり、内側にサッカーのピッチがあります",
+      skating: "400mのスピードスケートリンク。インレーンとアウトレーン、ウォームアップレーン、カーブのブロック、フィニッシュラインがあります",
     },
     status: { final: "試合終了", "final-ot": "試合終了（延長）", "final-so": "試合終了（SO）", "final-aet": "試合終了（延長戦）", "final-pens": "試合終了（PK戦）", live: "試合中", half: "ハーフタイム", "extra-time": "延長戦", "extra-end": "エキストラエンド", penalties: "PK戦", postponed: "延期", tiebreak: "タイブレーク", "match-tiebreak": "マッチタイブレーク", retired: "途中棄権", walkover: "不戦勝" },
     endStatus: "第{n}エンド",
@@ -936,6 +1118,8 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       cricket: "クリケットのグラウンド。{size}で、バウンダリー、クリースとウィケットのあるピッチ、規則によっては守備制限のサークルがあります",
       fieldhockey: "フィールドホッケーのピッチ。{size}で、センターライン、23メートルライン、サークル、ペナルティースポット、ゴールがあります",
       handball: "ハンドボールのコート。{size}で、センターライン、ゴールエリア、6m・7m・9mのライン、4mのライン、ゴールがあります",
+      athletics: "陸上競技のトラック。{size}で、レーン、フィニッシュライン、レーン番号があります",
+      skating: "スケートリンク。{size}で、ラインがあります",
       size: "{length}×{width}{unit}",
       units: { ft: "フィート", yd: "ヤード", m: "m" },
     },
@@ -987,11 +1171,84 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       chart: { title: "途中時間のペース", summary: "{n}人の選手。最も速い途中時間は{name}の{time}です。", fastest: "最速", headLane: "レーン", headName: "選手", headTime: "タイム", headSplit: "途中時間", headPace: "100mあたりの秒数", headReaction: "反応時間", caption: "{event}：各選手の途中時間と、100mあたりの秒数で表したペース。", turn: "ターン", finish: "フィニッシュ", start: "スタート", perHundred: "100mあたり" },
     },
     field: { aflScore: "{name}は{goals}ゴール{behinds}ビハインドです。", gaelicScore: "{name}は{goals}ゴール{points}ポイントです。", cricketScore: "{name}：{overs}オーバーで{runs}ラン（{wickets}ウィケット喪失）。", cricketInnings: "{name}のイニングごとのスコア：{list}。", inningsStatus: "第{n}イニング", innings: "イニング", runs: "ラン", wickets: "ウィケット", overs: "オーバー", total: "合計" },
+    skating: {
+      longTrack: "400mのスピードスケートリンク。インレーンとアウトレーンがあり、内側のカーブの半径は{radius}m、アウトレーンの幅は{outer}m、ストレートは{straight}mで、ウォームアップレーン、カーブのブロック、フィニッシュラインがあります",
+      shortTrack: "1周111.12mのショートトラック。{length}m×{width}mのリンクに、{tracks}本のトラック、各カーブ7個のブロック、フィニッシュラインとスタートラインがあります",
+      figure: "{length}m×{width}mのフィギュアスケートのリンク。フェンスがあります",
+      races: "表示している種目：{list}。",
+      furniture: "リンクのそばにあるもの：{list}。",
+      furnitureNames: { judges: "ジャッジ席", referee: "レフェリー", "technical-panel": "テクニカルパネル", "kiss-and-cry": "キス・アンド・クライ" },
+      start: "{race}のスタートの拡大図。",
+      finish: "フィニッシュラインの拡大図。",
+      data: {
+        draw: "{race}の組み合わせ",
+        results: "{race}の結果",
+        replay: "{race}のリプレイ",
+        elements: "プログラムのエレメント",
+        summaryDraw: "{race}は{n}選手が出場し、最終組は第{last}組です。",
+        summaryGrid: "{race}は{n}選手がスタートします。",
+        summaryResults: "{race}は{winner}が記録{time}で優勝しました。",
+        summaryReplay: "{race}を{n}選手が滑ります。",
+        summaryElements: "氷上のエレメントは{n}個です：{who}。",
+        columns: { place: "順位", pair: "組", lane: "レーン", skater: "選手", country: "国", time: "記録", splits: "スプリット", laps: "周回", note: "備考", element: "エレメント", kind: "種類", order: "順番" },
+        pair: "第{n}組",
+        lanes: { inner: "インレーン", outer: "アウトレーン" },
+        medals: { gold: "金", silver: "銀", bronze: "銅" },
+        split: "{d}m：{t}秒",
+        lap: "{n}周目：{t}秒",
+        layers: { names: "選手名", flags: "国旗", medals: "順位", splits: "スプリット", elements: "エレメント", paths: "軌跡" },
+        gun: "スタート",
+        finish: "{name}が{time}でフィニッシュ",
+        seconds: "秒",
+        metres: "m",
+      },
+    },
+    athletics: {
+      track400: "{lanes}レーンの陸上競技400mトラック。曲走路の縁石の半径は36.50m、直走路は84.39mで、フィニッシュラインとレーン番号があります",
+      track200: "{lanes}レーンの200mトラック（ショート・トラック）。バンクのある曲走路の縁石の半径は17.205m、直走路は44.983mで、フィニッシュラインとレーン番号があります",
+      infieldPitch: "トラックの内側にはサッカーのピッチがあります。",
+      infieldGrass: "トラックの内側は芝生です。",
+      infieldNone: "トラックの内側には何もありません。",
+      events: "表示しているフィールド種目：{list}。",
+      races: "表示しているトラック種目：{list}。",
+      start: "{race}のスタートの拡大図。",
+      finish: "フィニッシュラインの拡大図。",
+      layout: "{event}を大きく表示しています。",
+      waterJump: "障害物競走の水濠は第2曲走路の{where}にあります。",
+      inside: "内側",
+      outside: "外側",
+      lane: "第{n}レーン",
+      ground: "{ground}の陸上競技トラック",
+      data: {
+        draw: "{race}のレーン抽選",
+        results: "{race}の結果",
+        replay: "{race}のリプレイ",
+        marks: "{event}の試技",
+        summaryDraw: "{race}は{n}選手が出場し、第{first}レーンから第{last}レーンに入ります。",
+        summaryResults: "{race}は{winner}が記録{time}で優勝しました。",
+        summaryMarks: "試技は{n}回で、最高記録は{who}の{best}です。",
+        summaryReplay: "{race}を{n}選手が走ります。",
+        columns: { place: "順位", lane: "レーン", athlete: "選手", country: "国", time: "記録", reaction: "反応時間", splits: "スプリット", note: "備考", distance: "記録", round: "試技", valid: "有効" },
+        medals: { gold: "金", silver: "銀", bronze: "銅" },
+        reaction: "反応時間 {t}秒",
+        split: "{d}m：{t}秒",
+        foul: "ファウル",
+        best: "最高記録",
+        yes: "はい",
+        no: "いいえ",
+        layers: { names: "選手名", flags: "国旗", medals: "順位", splits: "スプリット", reactions: "反応時間", attempts: "試技", best: "最高記録" },
+        gun: "号砲",
+        finish: "{name}が{time}でフィニッシュ",
+        seconds: "秒",
+        metres: "m",
+      },
+
+    },
     scoreTitle: "{away} {awayScore}、{home} {homeScore}",
     said: { home: "ホーム", away: "アウェイ", won: "{name}の勝ちです。", tied: "同点です。", park: "外野フェンスは、{park}の公表されている距離をもとに描かれています。", officially: "正式名称は{name}です。", ground: "ピッチは、{ground}の公表されている広さをもとに描かれています。", groundDefault: "{ground}のピッチの広さは公表されていないため、国際標準の105×68mで描かれています。", era: "ラインやマークは{season}シーズンのものです。", hammer: "{name}がハンマー（最後の1投）を持っています。", ends: "{name}のエンドごとの得点：{list}。", total: "合計", wonPens: "{name}がPK戦を{a}-{b}で制しました。", pens: "PK戦 {a}-{b}", on: "図の内容", sep: "、", stop: "。", colon: "：", gap: "" },
     pageant: { carpet: "各チームの旗またはロゴが、競技場のチームごとの区域に、カーペットのように大きく広げられています。", stage: "各チームのエンブレムが、競技場のチームごとの区域にある大きな丸いステージの上に置かれています。", emblem: "中央にエンブレムがあります。", emblemNamed: "中央に{name}のエンブレムがあります。" },
     special: {
-      guest: { nfl: "アメリカンフットボールのフィールド", cfl: "カナディアンフットボールのフィールド", ifaf: "アメリカンフットボールのフィールド", nhl: "リンク", nba: "コート", mlb: "野球のグラウンド", soccer: "ピッチ", curling: "シート", tennis: "コート", volleyball: "コート", badminton: "コート", pickleball: "コート", tabletennis: "卓球台", padel: "コート", squash: "コート", racquetball: "コート", sepaktakraw: "コート", teqball: "コート", roundnet: "コート", netball: "コート", lacrosse: "フィールド", rugby: "グラウンド", afl: "グラウンド", gaelic: "フィールド", cricket: "グラウンド", fieldhockey: "ピッチ", handball: "コート", swimming: "プール", waterpolo: "プール", diving: "プール", artisticswimming: "プール" },
+      guest: { skating: "リンク", nfl: "アメリカンフットボールのフィールド", cfl: "カナディアンフットボールのフィールド", ifaf: "アメリカンフットボールのフィールド", nhl: "リンク", nba: "コート", mlb: "野球のグラウンド", soccer: "ピッチ", curling: "シート", tennis: "コート", volleyball: "コート", badminton: "コート", pickleball: "コート", tabletennis: "卓球台", padel: "コート", squash: "コート", racquetball: "コート", sepaktakraw: "コート", teqball: "コート", roundnet: "コート", netball: "コート", lacrosse: "フィールド", rugby: "グラウンド", afl: "グラウンド", gaelic: "フィールド", cricket: "グラウンド", fieldhockey: "ピッチ", handball: "コート", swimming: "プール", waterpolo: "プール", diving: "プール", artisticswimming: "プール", athletics: "トラック" },
       title: "{host}の中の{guest}",
       game: "{event}、{date}。",
       inside: "{guest}全体が{host}の輪郭の内側に収まっています。",
@@ -1047,6 +1304,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
         pull: "引っ張り方向", opposite: "逆方向", sprayCentre: "センター方向", leftField: "レフト方向", centreField: "センター方向", rightField: "ライト方向", infield: "内野", outfield: "外野",
         lengthShort: "ショートパス", lengthDeep: "ディープパス", houseButton: "ボタン", houseFour: "4フィートの円", houseEight: "8フィートの円", houseTwelve: "12フィートの円", guardZone: "フリーガードゾーン", frontCourt: "フロントコート", backCourt: "バックコート", halfCourt: "ハーフコート", outsideCircles: "サーブの円の外側", servingRing: "ノーヒットゾーンとサーブの円の間", noHitZone: "ノーヒットゾーン", sideLeft: "左", sideMiddle: "中央", sideRight: "右",
         pitchZone: "ピッチ", insideCircle: "サークルの内側", outfieldGround: "アウトフィールド",
+        trackInfield: "インフィールド", homeStraight: "メイン側直走路", firstBend: "第1曲走路", backStraight: "バック・ストレート", secondBend: "第2曲走路", crossingStraight: "交差ストレート", firstCurve: "第1カーブ", secondCurve: "第2カーブ", finishStraight: "フィニッシュ側ストレート", rinkLeft: "左端", rinkMiddle: "中央", rinkRight: "右端",
       },
     },
     team: {
@@ -1083,6 +1341,8 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
         "distance-line": "距離を示すライン", "large-rectangle": "大きい長方形", "small-rectangle": "小さい長方形", "thirteen-metre-arc": "13メートルアーク", "forty-metre-arc": "40メートルアーク", "penalty-point": "ペナルティーマーク",
         boundary: "バウンダリー", pitch: "ピッチ", "bowling-crease": "ボウリングクリース", "popping-crease": "ポッピングクリース", "return-crease": "リターンクリース", wicket: "ウィケット", "thirty-yard-circle": "30ヤードサークル",
         "twenty-three-line": "23メートルライン", "shooting-circle": "シューティングサークル", "penalty-spot": "ペナルティースポット", "broken-circle-line": "サークルを囲む破線", "goal-area-line": "ゴールエリアライン",
+        "inner-lane": "インレーン", "outer-lane": "アウトレーン", "crossing-straight": "交差ストレート", "warm-up-lane": "ウォームアップレーン", padding: "防護マット", infield: "インフィールド", "coaches-area": "コーチエリア", blocks: "ブロック", "track-line": "トラックのライン", "start-lines": "スタートライン", ice: "氷面", "technical-panel": "テクニカルパネル", referee: "レフェリー", "kiss-and-cry": "キス・アンド・クライ", judges: "ジャッジ席", runway: "助走路", "take-off-board": "踏切板", "landing-area": "砂場", "throwing-circle": "投てきサークル", sector: "着地場所", "stop-board": "足留材", cage: "囲い", "throwing-arc": "スターティング・ライン", crossbar: "バー", "landing-mat": "着地マット", "run-up": "助走路", "zero-line": "ゼロライン", box: "ボックス",
+        "finish-line": "フィニッシュライン", kerb: "縁石", "lane-lines": "レーンライン", bend: "曲走路", straight: "直走路", "infield-pitch": "サッカーのピッチ", "start-line": "スタートライン", breakline: "ブレイクライン", "water-jump": "水濠", "exchange-zone": "テークオーバーゾーン",
         "seven-metre-line": "7mスローライン", "four-metre-line": "4mライン", "throw-off-area": "スローオフエリア", "restraining-line": "リストレイニングライン", "wing-line": "ウイングライン", "marking-area": "マーキングエリア", "two-point-arc": "2ポイントアーク",
         "lane-rope": "レーンロープ", "lane-line": "床面のレーンライン", "lane-end-cross": "クロスライン", "fifteen-metre-mark": "15mマーク", "touch-pad": "タッチ板", "starting-block": "スタート台", "backstroke-flags": "背泳ぎ用フラッグ", "false-start-rope": "フォルススタートロープ", gutter: "ガター",
         "two-metre-line": "2mライン", "five-metre-mark": "5mの標識", "six-metre-line": "6mライン", "half-distance-line": "ハーフライン", "re-entry-area": "再入水エリア", "referee-platform": "審判台", "official-table": "オフィシャル席", "substitution-area": "交代エリア",
@@ -1102,6 +1362,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
         "in-goal": "インゴール", "twenty-two": "トライラインから22メートルラインまでのエリア", twenty: "ゴールラインから20メートルラインまでのエリア", crease: "クリース", "forward-fifty": "50メートルアークの内側", "centre-square": "センタースクエア",
         "large-rectangle": "大きい長方形", pitch: "ピッチ", circle: "サークル", "twenty-three": "23メートルエリア", "goal-area": "ゴールエリア",
         "pool-end": "プールの端（15mの目印まで）", springboards: "飛板", platforms: "固定台", "centre-stage": "プールの中央（真ん中の3分の1）",
+        "crossing-straight": "交差ストレート", "first-bend": "第1カーブ", "second-bend": "第2カーブ", judges: "ジャッジ席", "kiss-and-cry": "キス・アンド・クライ", bend: "曲走路", "home-straight": "メイン側直走路", "back-straight": "バック・ストレート", finish: "フィニッシュライン", start: "スタート", "high-jump": "走高跳", "pole-vault": "棒高跳", "long-jump": "走幅跳", "triple-jump": "三段跳", "shot-put": "砲丸投", "discus-throw": "円盤投", "hammer-throw": "ハンマー投", "javelin-throw": "やり投", "water-jump": "水濠",
       },
       folded: {
         top: "上のハウス", bottom: "下のハウス", left: "左のハウス", right: "右のハウス",

@@ -8,6 +8,14 @@ import { renderLayers } from "./layers.ts";
 import { groundById, groundNameIn, groundOfficialName } from "./grounds.ts";
 import { BOARD, courtFor, hasSetsBoard, isNetLeague, isNetSport, type CourtPlan } from "./court.ts";
 import { cricketBoardMarkup } from "./cricket.board.ts";
+import { athleticsPlan } from "./athletics/plan.ts";
+import { skatingPlan } from "./skating/plan.ts";
+import { skatingAbout, skatingSentences } from "./skating/describe.ts";
+import { skatingStyle } from "./skating.style.ts";
+import { skatingSurface } from "./surfaces/skating.ts";
+import { athleticsAbout, athleticsSentences } from "./athletics/describe.ts";
+import { athleticsStyle, athleticsTrackRules } from "./athletics.style.ts";
+import { athleticsSurface, pitchGroup, type Embedded } from "./surfaces/athletics.ts";
 import { fieldPlan, isFieldSport } from "./fields.ts";
 import { fieldScoreText, fieldTotal } from "./field.score.ts";
 import { fieldsStyle } from "./fields.style.ts";
@@ -67,7 +75,7 @@ import { VERSION } from "./version.ts";
 export { isPortrait };
 
 /** The sports that can be drawn, in the order a menu lists them. */
-export const SPORTS: readonly Sport[] = ["nfl", "cfl", "ifaf", "nhl", "nba", "mlb", "soccer", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis", "padel", "squash", "racquetball", "sepaktakraw", "teqball", "roundnet", "netball", "swimming", "waterpolo", "diving", "artisticswimming", "lacrosse", "rugby", "afl", "gaelic", "cricket", "fieldhockey", "handball"];
+export const SPORTS: readonly Sport[] = ["nfl", "cfl", "ifaf", "nhl", "nba", "mlb", "soccer", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis", "padel", "squash", "racquetball", "sepaktakraw", "teqball", "roundnet", "netball", "swimming", "waterpolo", "diving", "artisticswimming", "athletics", "skating", "lacrosse", "rugby", "afl", "gaelic", "cricket", "fieldhockey", "handball"];
 
 /** The CSS custom property each colour of `Colors` sets. */
 export const COLOR_PROPERTIES: Readonly<Record<keyof Colors, string>> = {
@@ -225,6 +233,29 @@ function buildSoccer(o: SurfaceOptions, common: BuildOptions, scored: boolean, u
   );
 }
 
+/** The athletics stadium: its plan, with the soccer pitch laid inside the track as the soccer builder draws it. */
+function buildAthletics(o: SurfaceOptions, common: BuildOptions): Surface {
+  const plan = athleticsPlan({ ...o, detail: common.detail });
+  let embedded: Embedded | undefined;
+  if (plan.pitch !== undefined) {
+    const spec = plan.pitch.spec;
+    const goals = common.goals ?? "box";
+    const pitch = soccer(
+      { spec, layout: layoutOf(spec), half: undefined, pattern: "bands", goals, flags: common.detail === "full", frame: undefined },
+      { ...common, portrait: false, margin: 0, score: false, landmarks: false, id: `${common.id}-pitch` },
+    );
+    embedded = { base: pitchGroup(pitch.base), lines: pitch.lines, defs: pitch.defs };
+  }
+  // A cropped view has less ground round it than the stadium whole.
+  return athleticsSurface(common, plan, embedded, common.margin ?? (o.range === undefined ? 20 : 5));
+}
+
+/** The skating rink: its plan, drawn as it lies. */
+function buildSkating(o: SurfaceOptions, common: BuildOptions): Surface {
+  const plan = skatingPlan({ ...o, detail: common.detail });
+  return skatingSurface(common, plan, common.margin ?? (o.range === undefined ? 20 : 5));
+}
+
 /** What a drawing adds to what the builders are given: the features with a colour of their own, and a margin the annotations ask for. */
 interface Extra {
   features: ReadonlySet<string> | undefined;
@@ -320,6 +351,10 @@ function buildWhole(o: SurfaceOptions, portrait: boolean, id: string, score: boo
     case "fieldhockey":
     case "handball":
       return fieldSurface(common, fieldPlan({ ...o, sport, detail: common.detail }), { goals: common.goals });
+    case "athletics":
+      return buildAthletics({ ...o, sport }, common);
+    case "skating":
+      return buildSkating({ ...o, sport }, common);
     default:
       throw new Error(`Unknown sport "${String(o.sport)}": use one of ${SPORTS.join(", ")}`);
   }
@@ -341,6 +376,8 @@ function buildSurface(o: SurfaceOptions, portrait: boolean, id: string, score: b
   const surface = crowd === undefined ? buildWhole(o, portrait, id, score, scored, extra) : buildCrowded(o, portrait, id, score, scored, extra, crowd);
   // A score on a curling sheet shows all of it, for the board's sake.
   if (o.range === undefined || (scored && chooseLeague(o).sport === "curling")) return surface;
+  // A close-up of a start is the athletics builder's own view, turned to the start's line.
+  if (chooseLeague(o).sport === "athletics" && rangeLabel(o) === "start") return surface;
   const given = typeof o.margin === "number" && Number.isFinite(o.margin) && o.margin >= 0 ? convertLength(o.margin, lengthUnit(o), "ft") : undefined;
   return cropToRange(surface, o, { id, margin: extra.room ?? extra.margin ?? given ?? surface.crowdMargin, panel: score });
 }
@@ -527,6 +564,8 @@ const trimmed = (value: number): string => String(Math.round(value * 100) / 100)
 /** What a league's surface is, in a sentence fragment: its size or its bases, from the league's own figures in the unit its rulebook uses. */
 function leagueAbout(league: League, year: number | undefined, language: Language, sheet?: { length: number; width: number }): string {
   const words = KYOGIJO_STRINGS[language].league;
+  if (league.family === "skating") return skatingAbout({ sport: "skating", league: league.id }, language);
+  if (league.family === "athletics") return athleticsAbout({ sport: "athletics", league: league.id, athletics: sheet === undefined ? undefined : undefined }, language);
   // The field sports: their size is the surface drawn (the one the options ask for), in the unit their rulebook prints first.
   if (league.family === "lacrosse" || league.family === "rugby" || league.family === "afl" || league.family === "gaelic" || league.family === "cricket" || league.family === "fieldhockey" || league.family === "handball") {
     const sized = sheet ?? leagueSize(league.family, league.id);
@@ -574,7 +613,9 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
   const ground = pitch?.format === "11" ? groundById(o.ground) : undefined;
   const groundName = ground === undefined ? undefined : groundNameIn(ground, o.year, language);
   // A league other than the sport's own is named by its rulebook's, and its description is made from its figures.
-  const surfaceName = groundName !== undefined ? (language === "ja" ? `${groundName}のピッチ` : `${groundName}, soccer pitch`) : league !== undefined && parkName === undefined ? league.name[language] : parkName === undefined ? (pitch?.format === "futsal" ? words.soccer.futsal : words.surface[sport]) : language === "ja" ? `${parkName}のグラウンド` : `${parkName}, baseball field`;
+  const trackGround = sport === "athletics" ? groundById(o.ground) : undefined;
+  const trackGroundName = trackGround === undefined ? undefined : groundNameIn(trackGround, o.year, language);
+  const surfaceName = trackGroundName !== undefined ? fill(words.athletics.ground, { ground: trackGroundName }) : groundName !== undefined ? (language === "ja" ? `${groundName}のピッチ` : `${groundName}, soccer pitch`) : league !== undefined && parkName === undefined ? league.name[language] : parkName === undefined ? (pitch?.format === "futsal" ? words.soccer.futsal : words.surface[sport]) : language === "ja" ? `${parkName}のグラウンド` : `${parkName}, baseball field`;
   const { stop, colon, gap } = words.said;
   const sentence = (text: string): string => (/[.。]$/.test(text) ? text : `${text}${stop}`);
   const metres = (value: number): string => String(Math.round(value * 10) / 10);
@@ -583,8 +624,8 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
   const field = isFieldSport(sport) ? fieldPlan({ ...o, sport }) : undefined;
   const pools = isPoolSport(sport) ? poolDescription({ sport, pool: o.pool }, language) : undefined;
   const poolLine = pools === undefined ? "" : pools.after.map((line) => `${gap}${line}`).join("");
-  const aboutText = pools !== undefined ? pools.about : field !== undefined ? leagueAbout(league ?? LEAGUES[sport as FieldSport][0], o.year, language, { length: field.length, width: field.width }) : plan !== undefined ? leagueAbout(plan.league, o.year, language, plan.spec) : league !== undefined ? leagueAbout(league, o.year, language) : pitch === undefined ? words.about[sport] : fill(pitch.format === "futsal" ? words.soccer.aboutFutsal : words.about.soccer, { length: metres(pitch.length), width: metres(pitch.width) });
-  const about = `${words.said.on}${colon}${aboutText}${stop}`;
+  const aboutText = pools !== undefined ? pools.about : sport === "skating" ? skatingAbout(o, language) : sport === "athletics" ? athleticsAbout(o, language) : field !== undefined ? leagueAbout(league ?? LEAGUES[sport as FieldSport][0], o.year, language, { length: field.length, width: field.width }) : plan !== undefined ? leagueAbout(plan.league, o.year, language, plan.spec) : league !== undefined ? leagueAbout(league, o.year, language) : pitch === undefined ? words.about[sport] : fill(pitch.format === "futsal" ? words.soccer.aboutFutsal : words.about.soccer, { length: metres(pitch.length), width: metres(pitch.width) });
+  const about = `${words.said.on}${colon}${aboutText}${stop}${sport === "athletics" ? athleticsSentences(o, language) : sport === "skating" ? skatingSentences(o, language) : ""}`;
   const halfLine = pitch !== undefined && !isScore(o) && (o.half === "left" || o.half === "right") ? `${gap}${words.soccer.half}` : "";
   // What the ground says about the size: that it is the published one, or that the ground has none and the international pitch is drawn.
   const year = typeof o.year === "number" && Number.isFinite(o.year) ? o.year : undefined;
@@ -849,7 +890,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       inner += pageant.lines !== "over" ? surface.lines + laid + pg.names + pg.emblem : laid + surface.lines + pg.names + pg.emblem;
     } else inner += surface.bannersOver === true ? surface.lines + teams : teams + surface.lines;
     // Data goes over the markings and under the score's panel.
-    const layered = renderLayers(o, o.layers, surface.turned, surface.whole === undefined ? undefined : surface.box);
+    const layered = renderLayers(o, o.layers, surface.turned, surface.whole === undefined ? undefined : surface.box, surface.upright);
     inner += surface.frame === undefined || layered.svg === "" ? layered.svg : el("g", { transform: surface.frame }, layered.svg);
     // A surface drawn in parts shows the data again in each enlarged part, with its own ids, hidden from a reader of the drawing (the strip says it). A colour bar sized
     // against the whole sheet falls outside the panels' part of it and is cut away there; one given a `region` inside a panel's part is drawn there, large.
@@ -913,6 +954,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       "data-orientation": portrait ? "portrait" : "landscape",
       "data-theme": theme,
       "data-palette": palette,
+      "data-track": sport === "athletics" ? o.athletics?.track : undefined,
       "data-winner": isScore(o) ? winner : undefined,
       "data-pageant": pg === undefined ? undefined : pageant?.style,
       "data-version": VERSION,
@@ -922,7 +964,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       style: style === "" ? undefined : style,
     },
     `<title id="${titleId}">${esc(title)}</title><desc id="${descId}">${esc(description)}</desc>` +
-      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${left?.round === true || right?.round === true || (pg !== undefined && pageant?.style === "stage") || (pg !== undefined && pageant?.emblem?.shape !== "plain" && pageant?.emblem !== undefined) ? `\n${KYOGIJO_MARK_STYLE}` : ""}${pg === undefined ? "" : `\n${KYOGIJO_PAGEANT_STYLE}${pageant?.animate === undefined || pageant.animate === "none" ? "" : `\n${KYOGIJO_PAGEANT_MOTION}`}`}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}${foldedSheet ? `\n${KYOGIJO_FOLD_STYLE}` : ""}${isPoolSport(sport) ? `\n${o.pool?.venue !== undefined ? KYOGIJO_POOL_STYLE : poolStyle({ sport, ...commonOf(o.pool ?? {}), race: o.pool?.race !== undefined, section: o.pool?.section !== undefined && o.pool.section !== false })}` : ""}${plan === undefined ? "" : `\n${courtStyle(plan.sport, plan.look)}`}${fieldsStyle(sport) === "" ? "" : `\n${fieldsStyle(sport)}`}${palette === undefined ? "" : `\n${lookStyle(palette)}`}${walled ? `\n${KYOGIJO_WALLS_STYLE}` : ""}${hardwood ? `\n${KYOGIJO_HARDWOOD_STYLE}` : ""}${features === undefined ? "" : `\n${featureStyle(sport, features)}`}${notes === undefined || notes.svg === "" ? "" : `\n${KYOGIJO_NOTE_STYLE}`}${grounded ? `\n${KYOGIJO_BACKGROUND_STYLE}` : ""}${crowded ? `\n${KYOGIJO_CROWD_STYLE}` : ""}${o.host === undefined ? "" : `\n${specialStyle(hostSport(o.host))}`}</style>`) +
+      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${left?.round === true || right?.round === true || (pg !== undefined && pageant?.style === "stage") || (pg !== undefined && pageant?.emblem?.shape !== "plain" && pageant?.emblem !== undefined) ? `\n${KYOGIJO_MARK_STYLE}` : ""}${pg === undefined ? "" : `\n${KYOGIJO_PAGEANT_STYLE}${pageant?.animate === undefined || pageant.animate === "none" ? "" : `\n${KYOGIJO_PAGEANT_MOTION}`}`}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}${foldedSheet ? `\n${KYOGIJO_FOLD_STYLE}` : ""}${isPoolSport(sport) ? `\n${o.pool?.venue !== undefined ? KYOGIJO_POOL_STYLE : poolStyle({ sport, ...commonOf(o.pool ?? {}), race: o.pool?.race !== undefined, section: o.pool?.section !== undefined && o.pool.section !== false })}` : ""}${plan === undefined ? "" : `\n${courtStyle(plan.sport, plan.look)}`}${fieldsStyle(sport) === "" ? "" : `\n${fieldsStyle(sport)}`}${athleticsStyle(sport) === "" ? "" : `\n${athleticsStyle(sport)}`}${skatingStyle(sport) === "" ? "" : `\n${skatingStyle(sport)}`}${palette === undefined ? "" : `\n${lookStyle(palette)}`}${athleticsTrackRules(sport, o.athletics?.track) === "" ? "" : `\n${athleticsTrackRules(sport, o.athletics?.track)}`}${walled ? `\n${KYOGIJO_WALLS_STYLE}` : ""}${hardwood ? `\n${KYOGIJO_HARDWOOD_STYLE}` : ""}${features === undefined ? "" : `\n${featureStyle(sport, features)}`}${notes === undefined || notes.svg === "" ? "" : `\n${KYOGIJO_NOTE_STYLE}`}${grounded ? `\n${KYOGIJO_BACKGROUND_STYLE}` : ""}${crowded ? `\n${KYOGIJO_CROWD_STYLE}` : ""}${o.host === undefined ? "" : `\n${specialStyle(hostSport(o.host))}`}</style>`) +
       (defs === "" ? "" : `<defs>${defs}</defs>`) +
       body,
   );

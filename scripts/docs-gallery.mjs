@@ -113,6 +113,8 @@ const GAMES = {
   teqball: { away: GULLS_TEQ, home: BISON_TEQ, status: "final", competition: "Final" },
   roundnet: { away: GULLS_ROUND, home: BISON_ROUND, status: "final", competition: "Final" },
   netball: { away: NETBALL_AWAY, home: NETBALL_HOME, status: "final", competition: "Final" },
+  athletics: { away: GULLS, home: BISON, status: "final", competition: "Relay final" },
+  skating: { away: GULLS, home: BISON, status: "final", competition: "Team pursuit final" },
   lacrosse: { away: RUGBY_AWAY, home: RUGBY_HOME, status: "final", competition: "Final" },
   rugby: { away: RUGBY_AWAY, home: RUGBY_HOME, status: "final", competition: "Final" },
   afl: { away: AFL_AWAY, home: AFL_HOME, status: "final", competition: "Grand Final" },
@@ -125,7 +127,7 @@ const GAMES = {
   diving: { away: POOL_AWAY, home: POOL_HOME, status: "final", competition: "Dual meet" },
   artisticswimming: { away: POOL_AWAY, home: POOL_HOME, status: "final", competition: "Team event" },
 };
-const SPORT_TITLES = { nfl: "NFL field", cfl: "CFL field", ifaf: "IFAF field", nhl: "NHL rink", nba: "NBA court", soccer: "Soccer pitch", mlb: "Baseball field", curling: "Curling sheet", tennis: "Tennis court", volleyball: "Volleyball court", badminton: "Badminton court", pickleball: "Pickleball court", tabletennis: "Table tennis table", padel: "Padel court", squash: "Squash court", racquetball: "Racquetball court", sepaktakraw: "Sepak takraw court", teqball: "Teqball court", roundnet: "Roundnet court", netball: "Netball court", lacrosse: "Lacrosse field", rugby: "Rugby field", afl: "Australian football ground", gaelic: "Gaelic games field", cricket: "Cricket ground", fieldhockey: "Field hockey pitch", handball: "Handball court", swimming: "Swimming pool", waterpolo: "Water polo field", diving: "Diving well", artisticswimming: "Artistic swimming area" };
+const SPORT_TITLES = { nfl: "NFL field", cfl: "CFL field", ifaf: "IFAF field", nhl: "NHL rink", nba: "NBA court", soccer: "Soccer pitch", mlb: "Baseball field", curling: "Curling sheet", tennis: "Tennis court", volleyball: "Volleyball court", badminton: "Badminton court", pickleball: "Pickleball court", tabletennis: "Table tennis table", padel: "Padel court", squash: "Squash court", racquetball: "Racquetball court", sepaktakraw: "Sepak takraw court", teqball: "Teqball court", roundnet: "Roundnet court", netball: "Netball court", athletics: "Athletics stadium", skating: "Skating rink", lacrosse: "Lacrosse field", rugby: "Rugby field", afl: "Australian football ground", gaelic: "Gaelic games field", cricket: "Cricket ground", fieldhockey: "Field hockey pitch", handball: "Handball court", swimming: "Swimming pool", waterpolo: "Water polo field", diving: "Diving well", artisticswimming: "Artistic swimming area" };
 
 /** A repeatable list of points for the data snippets: no random numbers, so that the same code always draws the same marks. */
 const SPOTS = "Array.from({ length: 36 }, (_, i) => ({ x: 20 + ((i * 53) % 160), y: 8 + ((i * 29) % 70), team: i % 2 ? \"away\" : \"home\", outcome: i % 5 === 0 ? \"goal\" : \"shot\", value: 0.05 + (i % 7) / 20 }))";
@@ -177,13 +179,13 @@ const section = (id, title, intro, items) => ({ id, title, intro, items });
 // ---- The pages. Each is a list of sections, and each section a list of items. ----
 
 function surfacesPage(lib) {
-  const sports = ["nfl", "cfl", "ifaf", "nhl", "nba", "soccer", "mlb", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis", "padel", "squash", "racquetball", "sepaktakraw", "teqball", "roundnet", "netball", "lacrosse", "rugby", "afl", "gaelic", "cricket", "fieldhockey", "handball", "swimming", "waterpolo", "diving", "artisticswimming"];
+  const sports = ["nfl", "cfl", "ifaf", "nhl", "nba", "soccer", "mlb", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis", "padel", "squash", "racquetball", "sepaktakraw", "teqball", "roundnet", "netball", "athletics", "skating", "lacrosse", "rugby", "afl", "gaelic", "cricket", "fieldhockey", "handball", "swimming", "waterpolo", "diving", "artisticswimming"];
   const themes = lib[MAIN].COURT_THEMES;
   return {
     slug: "gallery-surfaces",
     title: "Gallery: surfaces and scores",
     ja: "競技場と得点",
-    intro: "The twenty-seven-four surfaces bare, with a game on each, wide and tall, as a strip and as a compact card, and the court's looks. Every picture is drawn by the build from the code under it.",
+    intro: "The twenty-seven-four-two surfaces bare, with a game on each, wide and tall, as a strip and as a compact card, and the court's looks. Every picture is drawn by the build from the code under it.",
     sections: [
       section("bare", "Each surface, bare", "`drawKyogijo` with a `sport` and nothing else.", sports.map((sport) => item(`bare-${sport}`, SPORT_TITLES[sport], drawing({ sport })))),
       section("scores", "A game on each surface", "The teams on their sides and the score in the middle.", sports.map((sport) => item(`score-${sport}`, `${SPORT_TITLES[sport]}, with a score`, drawing({ sport, ...GAMES[sport] })))),
@@ -982,7 +984,167 @@ function poolsPage() {
   };
 }
 
-export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, specialPage, dataPage, curlingPage, courtsPage, fieldsPage, poolsPage, stylingPage, rangesPage, layoutsPage, pageantPage];
+
+const ATH_FLAGS = `const flag = (a, b, c) => \`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 2"><rect width="1" height="2" fill="\${a}"/><rect x="1" width="1" height="2" fill="\${b}"/><rect x="2" width="1" height="2" fill="\${c}"/></svg>\`;
+const field = [
+  { lane: 1, name: "Bromell", country: "USA", flag: flag("#b22234", "#fff", "#3c3b6e") },
+  { lane: 2, name: "Hughes", country: "GBR", flag: flag("#012169", "#fff", "#c8102e") },
+  { lane: 3, name: "Jacobs", country: "ITA", flag: flag("#009246", "#fff", "#ce2b37") },
+  { lane: 4, name: "Kerley", country: "USA", flag: flag("#b22234", "#fff", "#3c3b6e") },
+  { lane: 5, name: "Thompson", country: "JAM", flag: flag("#009b3a", "#000", "#fed100") },
+  { lane: 6, name: "Simbine", country: "RSA", flag: flag("#007749", "#e03c31", "#001489") },
+];`;
+
+/** The athletics stadium: the oval, its starts and finish, the field events, the covered track, the looks and the data. */
+function athleticsPage() {
+  const a = (opts) => drawing({ sport: "athletics", ...opts });
+  const start = (race, extra = {}) => a({ range: "start", athletics: { start: race, ...extra } });
+  const layoutOf = (event) => a({ athletics: { layout: event } });
+  return {
+    slug: "gallery-athletics",
+    title: "Gallery: the athletics stadium",
+    ja: "陸上競技場",
+    intro: "The 400 m track of World Athletics' Facilities Manual with its staggers, curved starts, relay zones and hurdles, the steeplechase's water jump, every field event, a close-up of each start and the finish, the covered 200 m track and the data: lane draws, results, a race replay and the marks of throws and jumps.",
+    sections: [
+      section("stadium", "The stadium", "`sport: \"athletics\"`: eight lanes of 1.22 m, a grass infield with the soccer pitch inside it, and each field event where the Marking Plan puts it.", [
+        item("ath-stadium", "The stadium", a({})),
+        item("ath-stadium-tall", "The stadium, tall", a({ orientation: "portrait" })),
+        item("ath-blue", "A blue track, nine lanes", a({ athletics: { track: "blue", lanes: 9 } })),
+        item("ath-grass", "Grass inside, no pitch", a({ athletics: { infield: "grass" } })),
+        item("ath-ground", "A stadium that has a track", a({ ground: "stade-de-france" }), "The pitch is the ground's own size."),
+        item("ath-score", "A relay final, with a score", drawing({ sport: "athletics", ...GAMES.athletics })),
+        item("ath-line", "Line drawing, for a printer", a({ look: "line-drawing", athletics: { races: "all" } }), "Black lines on white, with no colour on the track."),
+        item("ath-night", "Night", a({ look: "night" })),
+      ]),
+      section("races", "Staggers, hurdles and relays", "`races` marks the start lines, the breakline, the exchange zones and the hurdles of the races you name, or of `\"all\"`.", [
+        item("ath-200", "200 m: the stagger is half of 400 m's", a({ athletics: { races: ["200m"] } }), "Lane 8 starts 26.515 m ahead of lane 1 (Table 2.2.1.6a)."),
+        item("ath-400", "400 m: a stagger of 7.037 to 53.030 m", a({ athletics: { races: ["400m"] } })),
+        item("ath-800", "800 m: the breakline", a({ athletics: { races: ["800m"] } }), "The runners keep their lanes to the line across the track at the end of the first bend."),
+        item("ath-4x100", "4 x 100 m: the exchange zones", a({ athletics: { races: ["4x100m"] } })),
+        item("ath-4x400", "4 x 400 m: zones and breakline", a({ athletics: { races: ["4x400m"] } })),
+        item("ath-hurdles", "The hurdles: 100 m, 110 m and 400 m", a({ athletics: { races: ["100m-hurdles", "110m-hurdles", "400m-hurdles"] } })),
+        item("ath-1500", "1500 m: the curved start line", a({ athletics: { races: ["1500m"] } })),
+        item("ath-all", "Every race at once", a({ athletics: { races: "all" } })),
+        item("ath-straight", "A ten-lane straight", a({ athletics: { races: ["100m"], straightLanes: 10 } })),
+      ]),
+      section("steeplechase", "The steeplechase", "`waterJump` puts the pit inside the bend or outside it; the lap, the hurdles and the start of the 3000 m follow.", [
+        item("ath-sc-inside", "Water jump inside", a({ athletics: { races: ["3000m-steeplechase"], waterJump: "inside" } })),
+        item("ath-sc-outside", "Water jump outside", a({ athletics: { races: ["3000m-steeplechase"], waterJump: "outside" } })),
+        item("ath-sc-pit", "The water jump", a({ range: "water-jump", athletics: { races: ["3000m-steeplechase"] } })),
+      ]),
+      section("starts", "A close-up of each start, and the finish", "`range: \"start\"` with `athletics.start` turns the track so that the athletes run to the right (up the page in portrait), with the lane numbers painted behind the line.", [
+        item("ath-start-100", "100 m", start("100m")),
+        item("ath-start-110h", "110 m hurdles", start("110m-hurdles")),
+        item("ath-start-200", "200 m", start("200m")),
+        item("ath-start-400", "400 m", start("400m")),
+        item("ath-start-800", "800 m", start("800m")),
+        item("ath-start-1500", "1500 m: the waterfall", start("1500m"), "The curved line is an involute of lane 1's circle, so every runner is as far from the finish by the shortest way."),
+        item("ath-start-400-tall", "400 m, tall", a({ range: "start", orientation: "portrait", athletics: { start: "400m" } })),
+        item("ath-start-line", "A start in ink", a({ range: "start", look: "line-drawing", athletics: { start: "400m" } }), "The same close-up in `look: \"line-drawing\"`."),
+        item("ath-finish", "The finish", a({ range: "finish" })),
+        item("ath-finish-tall", "The finish, tall", a({ range: "finish", orientation: "portrait" })),
+      ]),
+      section("events", "The field events", "`events` switches each one on or off; `layout` draws one alone at a large scale.", [
+        item("ath-events-two", "Two events only", a({ athletics: { events: ["shot-put", "high-jump"] } })),
+        item("ath-events-none", "The track alone", a({ athletics: { events: false } })),
+        item("ath-hj", "High jump", layoutOf("high-jump")),
+        item("ath-pv", "Pole vault", layoutOf("pole-vault")),
+        item("ath-lj", "Long jump", layoutOf("long-jump")),
+        item("ath-tj", "Triple jump", layoutOf("triple-jump")),
+        item("ath-sp", "Shot put", layoutOf("shot-put")),
+        item("ath-dt", "Discus throw", layoutOf("discus-throw"), "The cage, and the 34.92 degree sector."),
+        item("ath-ht", "Hammer throw", layoutOf("hammer-throw")),
+        item("ath-jt", "Javelin throw", layoutOf("javelin-throw"), "The runway, the 8 m arc and the 28.96 degree sector."),
+      ]),
+      section("indoor", "The covered track", "`league: \"world-athletics-short\"`: a 200 m banked track of six lanes with a 60 m straight.", [
+        item("ath-indoor", "The covered track", a({ league: "world-athletics-short" })),
+        item("ath-indoor-400", "The covered 400 m", a({ league: "world-athletics-short", athletics: { races: ["400m"] } })),
+        item("ath-indoor-60h", "60 m hurdles", a({ league: "world-athletics-short", athletics: { races: ["60m-hurdles"] } })),
+      ]),
+      section("parts", "A part of the track", "`range` crops to a named part.", [
+        item("ath-bend", "A bend", a({ range: "bend" })),
+        item("ath-home", "The home straight", a({ range: "home-straight" })),
+        item("ath-infield", "The infield", a({ range: "infield" })),
+      ]),
+      section("data", "The data", "`@johnmorrisdotca/kyogijo-stadiums/athletics`: the lane draw, the results, a replay and the marks of throws and jumps.", [
+        item("ath-lane-draw", "A lane draw", `import { laneDraw } from "${MAIN}/athletics";\n\n${ATH_FLAGS}\nconst svg = laneDraw(field, { race: "100m" }).draw();`, "Names and flags behind the start line; the caller passes the flags as SVG."),
+        item("ath-lane-draw-400", "A lane draw, 400 m", `import { laneDraw } from "${MAIN}/athletics";\n\n${ATH_FLAGS}\nconst svg = laneDraw(field, { race: "400m" }).draw();`, "Each athlete stands at the stagger of the lane."),
+        item("ath-results", "Results", `import { raceResults } from "${MAIN}/athletics";\n\n${ATH_FLAGS}\nconst results = field.map((entry, i) => ({ ...entry, place: [4, 5, 2, 1, 3, 6][i], time: 9.8 + [3, 5, 1, 0, 2, 6][i] * 0.03, reaction: 0.13 + i * 0.01, splits: [{ distance: 50, time: 5.6 + i * 0.01 }] }));\nconst svg = raceResults(results, { race: "100m" }).draw();`, "The medals, the times, the reaction times and the splits."),
+        item("ath-replay", "A race replay, the 400 m", `import { raceReplay } from "${MAIN}/athletics";\nimport { drawFrame } from "${MAIN}/replay";\n\nconst runners = Array.from({ length: 8 }, (_, i) => ({ lane: i + 1, name: "Runner " + (i + 1), time: 44.2 + i * 0.25, reaction: 0.14 }));\nconst replay = raceReplay(runners, { race: "400m" });\nconst svg = drawFrame(replay.options, replay.timeline, 20, replay.look);`, "Each runner is on the curve of the lane, starting at its stagger; at 20 seconds the field is on the back straight."),
+        item("ath-marks", "Throws: the best mark", `import { fieldMarks } from "${MAIN}/athletics";\n\nconst attempts = [{ athlete: "A", distance: 84.2, across: 2 }, { athlete: "A", distance: 88.1, across: -4 }, { athlete: "A", valid: false }, { athlete: "A", distance: 90.7, across: 6 }, { athlete: "A", distance: 86, across: -1 }];\nconst svg = fieldMarks("javelin-throw", attempts, { surface: { athletics: { layout: "javelin-throw" } } }).draw();`, "A foul is marked where it was thrown; the best valid mark is picked out."),
+        item("ath-marks-lj", "Jumps in the pit", `import { fieldMarks } from "${MAIN}/athletics";\n\nconst jumps = [{ athlete: "B", distance: 8.1 }, { athlete: "B", distance: 8.46, across: 0.3 }, { athlete: "B", distance: 8.28, across: -0.2 }];\nconst svg = fieldMarks("long-jump", jumps, { surface: { athletics: { layout: "long-jump" } }, labels: true }).draw();`),
+      ]),
+    ],
+  };
+}
+
+const SKATE_FLAGS = `const flag = (a, b, c) => \`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 2"><rect width="1" height="2" fill="\${a}"/><rect x="1" width="1" height="2" fill="\${b}"/><rect x="2" width="1" height="2" fill="\${c}"/></svg>\`;
+const ned = flag("#ae1c28", "#fff", "#21468b");
+const nor = flag("#ba0c2f", "#00205b", "#fff");`;
+
+/** The skating rinks: the long track, the short track and the figure skating rink, their lines and the data. */
+function skatingPage() {
+  const a = (opts) => drawing({ sport: "skating", ...opts });
+  const short = (opts) => a({ league: "isu-short-track", ...opts });
+  const figure = (opts) => a({ league: "isu-figure", ...opts });
+  return {
+    slug: "gallery-skating",
+    title: "Gallery: the skating rinks",
+    ja: "スケートリンク",
+    intro: "The standard 400 m speed skating track with its two lanes, warm-up lane, blocks and the lines of every race, the 111.12 m short track oval on its rink, the figure skating rink with its judges' seats, and the data: pairs, starting positions, results, a race replay and the elements of a programme.",
+    sections: [
+      section("long", "The long track", "`sport: \"skating\"`, the long track by default: an inner lane of 4 m and an outer lane of at least 4 m, the warm-up lane inside, the blocks of the curves, the coaches' area on the crossing straight and the finishing line.", [
+        item("ska-long", "The standard 400 m track", a({})),
+        item("ska-long-tall", "The track, tall", a({ orientation: "portrait" })),
+        item("ska-long-races", "The lines of every race", a({ skating: { races: "all" } }), "The 500 m on the 300 m mark, the 1000 m's finish in the middle of the straight, the 1500 m, 3000 m and 5000 m on the crossing straight, the mass start and the team races in the middle of the straights."),
+        item("ska-long-26", "An inner curve of 26 m, an outer lane of 5 m", a({ skating: { innerRadius: 26, laneWidth: 5 } }), "The straight follows, so that a lap stays 400 m (110.43 m for 26 m)."),
+        item("ska-long-bare", "Without the warm-up lane, blocks and padding", a({ skating: { warmUp: false, blocks: false, coaches: false, padding: false } })),
+        item("ska-long-ice", "The infield iced", a({ skating: { infield: "ice" } })),
+        item("ska-long-line", "Line drawing", a({ look: "line-drawing", skating: { races: "all" } })),
+        item("ska-long-night", "Night", a({ look: "night" })),
+        item("ska-long-score", "A team race, with a score", drawing({ sport: "skating", ...GAMES.skating })),
+      ]),
+      section("starts", "A close-up of each start, and the finish", "`range: \"start\"` with `skating.start` shows the starting lines of the race, each lane's at the distance from the finish its own curve makes.", [
+        item("ska-start-500", "500 m", a({ range: "start", skating: { start: "500m" } })),
+        item("ska-start-1000", "1000 m", a({ range: "start", skating: { start: "1000m" } }), "The lane's lines stand 6.25 m and 6.32 m from the middle of the crossing straight: no lane is changed on its first straight."),
+        item("ska-start-1500", "1500 m", a({ range: "start", skating: { start: "1500m" } })),
+        item("ska-start-3000", "3000 m and 5000 m", a({ range: "start", skating: { start: "3000m" } }), "The two lanes' lines are 12.57 m apart, the difference of the curves."),
+        item("ska-start-mass", "Mass start", a({ range: "start", skating: { start: "mass-start" } })),
+        item("ska-start-team", "Team pursuit", a({ range: "start", skating: { start: "team-pursuit" } })),
+        item("ska-finish", "The finish", a({ range: "finish" })),
+        item("ska-crossing", "The crossing straight", a({ range: "crossing-straight" })),
+        item("ska-bend", "A curve", a({ range: "first-bend" })),
+      ]),
+      section("short", "The short track", "`league: \"isu-short-track\"`: an oval of 111.12 m on a rink of 60 by 30 m, seven blocks in each curve, five or seven tracks laid out beside the standard one.", [
+        item("ska-short", "The short track", short({})),
+        item("ska-short-races", "The starting lines of the half-lap races", short({ skating: { races: ["500m", "1000m", "1500m"] } }), "The 500 m and the 1500 m start on the straight opposite the finishing line, the others at it; the five dots of the 500 m and the 1000 m are the starting positions."),
+        item("ska-short-seven", "Seven tracks", short({ skating: { tracks: 7, races: ["500m"] } })),
+        item("ska-short-start", "A close-up of the 500 m's start", short({ range: "start", skating: { start: "500m" } })),
+        item("ska-short-finish", "The finishing line", short({ range: "finish" })),
+        item("ska-short-bend", "A curve with its seven blocks", short({ range: "first-bend" })),
+        item("ska-short-line", "Line drawing", short({ look: "line-drawing", skating: { races: ["500m"] } })),
+      ]),
+      section("figure", "The figure skating rink", "`league: \"isu-figure\"`: 60 m by 30 m if possible and never less than 56 m by 26 m, with the judges and the referee at the rinkboard, the technical panel and the kiss and cry.", [
+        item("ska-figure", "The rink", figure({})),
+        item("ska-figure-small", "The smallest rink: 56 m by 26 m", figure({ skating: { rink: { length: 56, width: 26 } } })),
+        item("ska-figure-bare", "The ice alone", figure({ skating: { furniture: false } })),
+        item("ska-figure-judges", "The judges", figure({ range: "judges" })),
+        item("ska-figure-half", "One half", figure({ range: "half" })),
+        item("ska-figure-tall", "The rink, tall", figure({ orientation: "portrait" })),
+      ]),
+      section("data", "The data", "`@johnmorrisdotca/kyogijo-stadiums/skating`: the pairs of a race, the starting positions, the results, a replay and the elements of a programme.", [
+        item("ska-pairs", "A pair on the start of the 1000 m", `import { skatingPairs } from "${MAIN}/skating";\n\n${SKATE_FLAGS}\nconst svg = skatingPairs([{ pair: 1, inner: { name: "Nuis", country: "NED", flag: ned }, outer: { name: "Stolz", country: "NED", flag: ned } }, { pair: 2, inner: { name: "Kulizhnikov" }, outer: { name: "Lundin", country: "NOR", flag: nor } }], { race: "1000m" }).draw();`, "The inner lane's armband is white and the outer's red (Rule 253.3.1)."),
+        item("ska-grid", "The starting positions of a short track race", `import { skatingGrid } from "${MAIN}/skating";\n\nconst svg = skatingGrid([{ position: 1, name: "Hwang" }, { position: 2, name: "Liu" }, { position: 4, name: "Shaoang" }], { race: "500m" }).draw();`),
+        item("ska-results", "Results", `import { skatingResults } from "${MAIN}/skating";\n\nconst results = [\n  { name: "Nuis", place: 1, time: 67.8, lane: "inner", pair: 1, splits: [{ distance: 200, time: 17.3 }, { distance: 600, time: 45.1 }] },\n  { name: "Stolz", place: 2, time: 68.2, lane: "outer" },\n  { name: "Kulizhnikov", place: 3, time: 68.9 },\n  { name: "Lundin", place: 4, time: 69.1 },\n];\nconst svg = skatingResults(results, { race: "1000m" }).draw();`, "The medals and the times in the middle of the ice, and the splits along the lane."),
+        item("ska-replay", "A race replay, the 1000 m", `import { skatingReplay } from "${MAIN}/skating";\nimport { drawFrame } from "${MAIN}/replay";\n\nconst replay = skatingReplay([{ name: "A", lane: "inner", time: 68 }, { name: "B", lane: "outer", time: 69 }], { race: "1000m" });\nconst svg = drawFrame(replay.options, replay.timeline, 30, replay.look);`, "Each skater is on his own way: the first straight of the 1000 m in one lane, then a lane changed on every crossing."),
+        item("ska-replay-short", "A short track replay", `import { skatingReplay } from "${MAIN}/skating";\nimport { drawFrame } from "${MAIN}/replay";\n\nconst replay = skatingReplay([{ name: "A", position: 1, time: 40 }, { name: "B", position: 3, time: 41 }, { name: "C", position: 5, time: 41.4 }], { race: "500m", surface: { league: "isu-short-track" } });\nconst svg = drawFrame(replay.options, replay.timeline, 10, replay.look);`),
+        item("ska-elements", "The elements of a programme on the ice", `import { figureElements } from "${MAIN}/skating";\n\nconst svg = figureElements([\n  { kind: "jump", name: "3Lz", x: -18, y: 5, order: 1 },\n  { kind: "spin", name: "CCoSp4", x: 2, y: -4, order: 2 },\n  { kind: "step-sequence", name: "StSq3", x: -24, y: -9, x2: 22, y2: -9, order: 3 },\n  { kind: "jump", name: "3F", x: 20, y: 6, order: 4 },\n]).draw();`, "A mark for each element where it starts, a shape for its kind, the track of a sequence as a dashed line."),
+      ]),
+    ],
+  };
+}
+
+export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, specialPage, dataPage, curlingPage, courtsPage, fieldsPage, poolsPage, athleticsPage, skatingPage, stylingPage, rangesPage, layoutsPage, pageantPage];
 
 /** The sections of every page, with each item's picture made by running its code. */
 export function galleryData(lib) {
@@ -1111,6 +1273,8 @@ const REFERENCE = {
   teqball: { frame: "teqball", spot: [3.5, 0], what: "the middle of the right service line" },
   roundnet: { frame: "roundnet", spot: [2.6, 0], what: "the right service position" },
   netball: { frame: "netball", spot: [5.08, 0], what: "the middle of the right transverse line" },
+  skating: { frame: "skating", spot: [43.2, 25.5], what: "the finishing line on the inner lane's line (the long track)" },
+  athletics: { frame: "athletics", spot: [42.195, 40.3], what: "the finish line on lane 1's running line" },
   lacrosse: { frame: "lacrosse", spot: [16, 0], what: "the middle of the right restraining line" },
   rugby: { frame: "rugby", spot: [28, 0], what: "the middle of the right 22-metre line" },
   afl: { frame: "afl", spot: [30, 0], what: "the middle of the right Fifty Metre Arc" },
@@ -1180,7 +1344,7 @@ export function framesFiles(lib) {
 
 /** The package's entry points as `runSnippet` wants them, read from a folder of built (`.js`) or source (`.ts`) files. */
 export async function libraryFrom(dir, ext, importer) {
-  const entries = { "": "index", "/charts": "charts-entry", "/frames": "frames-entry", "/layers": "layers-entry", "/leagues": "leagues-entry", "/eras": "eras-entry", "/grounds": "grounds-entry", "/parks": "parks-entry", "/atlas": "atlas-entry", "/events": "events-entry", "/geometry": "geometry-entry", "/replay": "replay-entry", "/layouts": "layouts-entry", "/turn": "turn-entry" };
+  const entries = { "": "index", "/charts": "charts-entry", "/frames": "frames-entry", "/layers": "layers-entry", "/leagues": "leagues-entry", "/eras": "eras-entry", "/grounds": "grounds-entry", "/parks": "parks-entry", "/atlas": "atlas-entry", "/events": "events-entry", "/geometry": "geometry-entry", "/replay": "replay-entry", "/layouts": "layouts-entry", "/turn": "turn-entry", "/athletics": "athletics-entry", "/skating": "skating-entry" };
   const lib = {};
   for (const [suffix, file] of Object.entries(entries)) lib[`${MAIN}${suffix}`] = await importer(`${dir}/${file}${ext}`);
   return lib;
