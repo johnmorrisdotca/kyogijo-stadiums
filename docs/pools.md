@@ -44,7 +44,7 @@ console.log(ten.ropes.map((rope) => rope.colour[0]).join(""));
 | Lane markings on the floor 0.2 to 0.3 m wide, 46 m (21 m) long, ending 2 m from the wall in a cross line 1 m long | Part Two 15.13.1 and 15.13.2, was FR 2.14 (June 2025: CR 16.2.15) | a line in each lane with a cross line at each end |
 | A cross line 0.5 m long at 15 m from each wall | Part Two 15.13.4 (June 2025: CR 16.2.15) | a small cross on each lane marking |
 | Touch panels 2.4 m wide, 0.3 m above the water and 0.6 m below, with a target line down the middle | Part Two 15.16.4 and 15.13.3 (June 2025: CR 16.3.4, 16.2.15) | a yellow panel on each wall, in every lane, with the target line and its cross line |
-| Starting blocks 0.5 by 0.6 m, 0.5 to 0.75 m above the water, numbered on top | Part Two 15.8.1 and 15.8.6 (June 2025: CR 16.2.8, 16.2.9); the 0.6 m length is the June 2025 edition's, February 2026 says at least 0.5 by 0.5 m | a block behind each wall, in every lane, with the lane number |
+| Starting blocks at least 0.5 by 0.5 m, 0.5 to 0.75 m above the water, numbered on top | Part Two 15.8.1 and 15.8.6 (June 2025: CR 16.2.8, 16.2.9; that edition asked 0.5 by 0.6 m at the Olympic Games and the World Championships) | a block behind each wall, in every lane, with the lane number |
 | Backstroke flags on a rope 1.8 m above the water, 5.0 m from each wall | Part Two 15.9.1 and 15.9.2, was FR 2.9 (June 2025: CR 16.1.10) | a rope of alternating flags across the pool, on standards at both sides |
 | The false start rope 15.0 m from the starting end, at least 1.2 m up | unverified: no clause in the February 2026 text; was FR 2.11, June 2025: CR 16.1.12 | a dashed line across the pool |
 | Depth: 1.35 m from 1.0 to at least 6.0 m from a wall with blocks; 2.5 m at the Olympic Games and World Championships, 2.0 m for the 25 m World Championships | Part Two 15.4.1 to 15.4.3 and 15.8.4 (June 2025: CR 16.1.4, 16.2.4) | the side section |
@@ -62,7 +62,7 @@ The blocks, the flags and the false start rope make a *competition* pool. `pool.
 | `pool.race` | The lanes of a race: see below. |
 | `pool.venue` | Several pools in one hall: see [the natatorium](#a-natatorium). |
 | `detail: "simple"` | Leaves out the crosses at 15 m, the marks on the deck, the standards and the numbers on the blocks. |
-| `exactLines: true` | Draws the lines, ropes and fixtures at their true sizes: a rope 0.15 m across and a block 0.5 by 0.6 m, which on a page are thin. |
+| `exactLines: true` | Draws the lines, ropes and fixtures at their true sizes: a rope 0.15 m across and a block 0.5 by 0.5 m, which on a page are thin. |
 
 Lines are drawn a little thicker than they are painted, as the other surfaces' are, and the small fixtures (blocks, flags, standards) about half as large again. The ropes are rows of round floats drawn as dots in one path each, so a pool with nine ropes stays under 19 kB with its stylesheet.
 
@@ -223,12 +223,12 @@ The Japanese text of the pools uses the words of the Japan Swimming Federation (
 | warm-up pool | 練習用プール | ウォーミングアッププール, サブプール | 公認プール施設要領 (練習用ウォームアッププール) |
 | natatorium | プール施設 | 水泳場 | 公認プール施設要領 |
 | water polo field | フィールド | コート | 水球競技ハンドブック (フィールド, 競技場) |
-| half way line | ハーフライン | ハーフウェイライン | 水球競技ハンドブック 1.10 |
-| the 5 m mark | 5mの標識 | | 水球競技ハンドブック 1.5 |
-| referees' platform | 審判台 | | 水球競技ハンドブック 18.3.2 |
-| officials' table | オフィシャル席 | オフィシャルテーブル | 水球競技ハンドブック 1.2 (セクレタリーテーブル is the secretary's own, 18.3.6) |
-| artistic swimming judges' platform | ジャッジ台 | 審判台 | アーティスティックスイミング競技規則 27.2.8 |
-| artistic swimming starting platform | スタート台 | スターティングプラットフォーム | 27.2.7 |
+| half way line | ハーフライン | ハーフウェイライン | 水球競技ハンドブック 1.10 (a definition) |
+| the 5 m mark | 5mの標識 | | 水球競技ハンドブック 18.3.1 (標識; 1.8 defines the 5mライン) |
+| referees' platform | 審判台 | | 水球競技ハンドブック 18.3.2 (the book's own number, read on 2026-10-14; February 2026: Part Six 21.9) |
+| officials' table | オフィシャル席 | オフィシャルテーブル | 水球競技ハンドブック 1.2 (a definition; セクレタリーテーブル is the secretary's own, 18.3.6) |
+| artistic swimming judges' platform | ジャッジ台 | 審判台 | アーティスティックスイミング競技規則 27.2.8 (the book's own number, read on 2026-10-14, the same as World Aquatics' June 2025 edition; February 2026: Part Seven 12.2.5) |
+| artistic swimming starting platform | スタート台 | スターティングプラットフォーム | アーティスティックスイミング競技規則 27.2.7 (February 2026: Part Seven 12.2.4) |
 
 The federation's books are, with the dates in their file names: 競泳競技規則 (2023-04-01), 飛込競技規則 (2026-04-01), 水球競技ハンドブック (2023-04-01), アーティスティックスイミング競技規則 (2026-04-23), プール公認規則 (2026-07-01) and 公認プール施設要領 (2025-04-01).
 

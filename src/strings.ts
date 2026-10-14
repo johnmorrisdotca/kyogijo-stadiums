@@ -1280,8 +1280,8 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       region: "3D view", group: "Viewpoint",
       keys: "A 3D view you can turn. Drag, or use the arrow keys, to turn and tilt it; plus and minus zoom; 1 to 4 pick a viewpoint; 0 or Home puts it back. Pinch, or hold Ctrl and scroll, to zoom.",
       overhead: "Overhead", broadcast: "Broadcast", end: "End-on", corner: "Low corner",
-      reset: "Reset the view", turnLeft: "Turn left", turnRight: "Turn right", raise: "Raise the view", lower: "Lower the view", zoomIn: "Zoom in", zoomOut: "Zoom out",
-      announce: "{name} view", announceAngle: "Turned to {yaw} degrees, raised {pitch} degrees.",
+      reset: "Reset the view", turnLeft: "Turn left", turnRight: "Turn right", raise: "Tip the surface away", lower: "Tip the surface toward you", zoomIn: "Zoom in", zoomOut: "Zoom out",
+      announce: "{name} view", announceAngle: "Turned to {yaw} degrees, seen from {pitch} degrees above the floor.",
       flat: "This browser cannot draw the 3D view, so the flat drawing is shown.",
       standing: "Standing on it, in the 3D view: {list}.", item: "{name} {h}", itemSag: "{name} {h} at the posts, {low} at the middle",
       parts: { scoreboard: "scoreboard (lower edge)", net: "net", antennae: "antennae", goalposts: "goal posts", netposts: "net posts", hoop: "baskets", goal: "goals", boards: "boards and glass", stumps: "stumps", pylons: "pylons", flags: "corner flags", fence: "fence", backstop: "backstop", "foul-poles": "foul poles", "table-legs": "table top", walls: "walls", "starting-blocks": "starting blocks", "backstroke-flags": "backstroke flags", "false-start-rope": "false start rope", springboards: "springboards", platforms: "platforms", "judges-stand": "judges' stand", hurdles: "hurdles", steeplechase: "steeplechase barriers", "high-jump": "high jump uprights and bar", "pole-vault": "pole vault uprights and bar", cage: "discus and hammer cage", padding: "padding", "rink-boards": "boards", mound: "clay mound", azuchi: "azuchi", targets: "targets" },
@@ -1487,8 +1487,8 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
     //   床面のレーンライン, クロスライン (第22条, 第23条), 背泳ぎ用ターン標識 (第28条), タッチ板 (第29条), 飛込プールのレーンマーク (第87条), 飛板, 固定台, 競泳プール, 飛込プール, 水球プール ... プール公認規則 (2026-07-01).
     //   練習用プール, プール施設, 観客席 ... 公認プール施設要領 (2025-04-01).
     //   飛板 and 固定台 ... 飛込競技規則 (2026-04-01), 1.2, 3.7.3 (飛板飛込, 高飛込 are the events).
-    //   フィールド, ハーフライン (1.10), 2mライン and 6mライン, 標識 (the 5 m mark), ゴールエリア, 再入水エリア, 審判台 (18.3.2), オフィシャル席 (1.2) ... 水球競技ハンドブック (2023-04-01).
-    //   ジャッジ台 (27.2.8), スタート台 (27.2.7), 競技エリア ... アーティスティックスイミング競技規則 (2026-04-23).
+    //   フィールド, ハーフライン (definition 1.10), 2mライン and 6mライン, 標識 (18.3.1, where the 5 m mark is; 1.8 defines the 5mライン), ゴールエリア, 再入水エリア, 審判台 (18.3.2), オフィシャル席 (definition 1.2) ... 水球競技ハンドブック (2023-04-01), read again on 2026-10-14: those are its own numbers.
+    //   ジャッジ台 (27.2.8), スタート台 (27.2.7), 競技エリア ... アーティスティックスイミング競技規則 (2026-04-23), read again on 2026-10-14: its own numbers, the same as World Aquatics' June 2025 edition (the February 2026 edition has 12.2.5 and 12.2.4).
     // No word in those books, so the common one stays: フォルススタートロープ (the false start rope is World Aquatics', not in the federation's books), 反応時間 (reaction time).
     // Everyday words the books do not use, kept as aliases in docs/pools.md: コース for a lane, バックストロークフラッグ, タッチパッド, スプリット and ラップ, スプリングボード, プラットフォーム, 水泳場.
     pool: {
@@ -1826,8 +1826,8 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       region: "3D表示", group: "視点",
       keys: "回して見られる3D表示です。ドラッグするか矢印キーで回転と傾きを変え、プラスとマイナスのキーで拡大と縮小、1から4のキーで視点を選び、0キーまたはHomeキーで元に戻します。ピンチ操作、またはCtrlキーを押しながらのスクロールでも拡大・縮小できます。",
       overhead: "真上", broadcast: "中継カメラ", end: "エンド側から", corner: "低い角度から",
-      reset: "元に戻す", turnLeft: "左へ回す", turnRight: "右へ回す", raise: "視点を上げる", lower: "視点を下げる", zoomIn: "拡大", zoomOut: "縮小",
-      announce: "{name}の視点", announceAngle: "向き{yaw}度、床面から{pitch}度の角度。",
+      reset: "元に戻す", turnLeft: "左へ回す", turnRight: "右へ回す", raise: "床面を奥へ傾ける", lower: "床面を手前へ傾ける", zoomIn: "拡大", zoomOut: "縮小",
+      announce: "{name}の視点", announceAngle: "向きは{yaw}度、見下ろす角度は{pitch}度です。",
       flat: "このブラウザーでは3D表示ができないため、平面の図を表示しています。",
       standing: "3D表示で立って見えるもの：{list}。", item: "{name} {h}", itemSag: "{name} 支柱の位置で{h}（中央は{low}）",
       parts: { scoreboard: "スコアボードの下端", net: "ネット", antennae: "アンテナ", goalposts: "ゴールポスト", netposts: "支柱", hoop: "バスケットゴール", goal: "ゴール", boards: "ボードとガラス", stumps: "ウィケットのスタンプ", pylons: "パイロン", flags: "コーナーフラッグ", fence: "外野フェンス", backstop: "バックネット", "foul-poles": "ファウルポール", "table-legs": "天板", walls: "壁", "starting-blocks": "スタート台", "backstroke-flags": "背泳ぎ用フラッグ", "false-start-rope": "フォルススタートロープ", springboards: "飛板", platforms: "固定台", "judges-stand": "ジャッジ台", hurdles: "ハードル", steeplechase: "障害物", "high-jump": "走高跳の支柱とバー", "pole-vault": "棒高跳の支柱とバー", cage: "円盤投・ハンマー投の囲い", padding: "防護マット", "rink-boards": "フェンス", mound: "土の台", azuchi: "安土", targets: "的" },

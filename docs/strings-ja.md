@@ -1230,12 +1230,12 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `turn.reset` | Reset the view | 元に戻す |
 | `turn.turnLeft` | Turn left | 左へ回す |
 | `turn.turnRight` | Turn right | 右へ回す |
-| `turn.raise` | Raise the view | 視点を上げる |
-| `turn.lower` | Lower the view | 視点を下げる |
+| `turn.raise` | Tip the surface away | 床面を奥へ傾ける |
+| `turn.lower` | Tip the surface toward you | 床面を手前へ傾ける |
 | `turn.zoomIn` | Zoom in | 拡大 |
 | `turn.zoomOut` | Zoom out | 縮小 |
 | `turn.announce` | {name} view | {name}の視点 |
-| `turn.announceAngle` | Turned to {yaw} degrees, raised {pitch} degrees. | 向き{yaw}度、床面から{pitch}度の角度。 |
+| `turn.announceAngle` | Turned to {yaw} degrees, seen from {pitch} degrees above the floor. | 向きは{yaw}度、見下ろす角度は{pitch}度です。 |
 | `turn.flat` | This browser cannot draw the 3D view, so the flat drawing is shown. | このブラウザーでは3D表示ができないため、平面の図を表示しています。 |
 | `turn.standing` | Standing on it, in the 3D view: {list}. | 3D表示で立って見えるもの：{list}。 |
 | `turn.item` | {name} {h} | {name} {h} |
@@ -1783,7 +1783,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `atlasSport_soccer` | Soccer | サッカー |
 | `atlasSport_hockey` | Hockey | アイスホッケー |
 | `atlasSport_basketball` | Basketball | バスケットボール |
-| `atlasSport_budo` | Budo halls | 武道の会場 |
+| `atlasSport_budo` | Budo halls | 武道 |
 | `atlasStatus` | In use | 使用状況 |
 | `atlasStatus_current` | Today | 現在 |
 | `atlasStatus_past` | Past | 過去 |

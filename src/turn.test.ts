@@ -706,7 +706,7 @@ describe("the markup", () => {
   });
 
   it("has a button for each viewpoint, one of them pressed, and the controls a finger can hit, and can leave them out", () => {
-    for (const word of ["Overhead", "Broadcast", "End-on", "Low corner", "Reset the view", "Zoom in", "Raise the view"]) expect(html).toContain(word);
+    for (const word of ["Overhead", "Broadcast", "End-on", "Low corner", "Reset the view", "Zoom in", "Tip the surface away"]) expect(html).toContain(word);
     expect(html).toContain('data-preset="end" aria-pressed="true"');
     expect(html).toContain('data-preset="corner" aria-pressed="false"');
     expect(turnMarkup({ sport: "nhl" }, { controls: false })).not.toContain('class="ky-turn-controls"');

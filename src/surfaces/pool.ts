@@ -110,7 +110,7 @@ export function swimBody(o: BuildOptions, plan: SwimPlan, ids: PoolIds): SwimBod
       if (full) for (const y of [-0.6, W + 0.6]) lines += el("circle", { class: "ky-pl-st", cx: fx, cy: feet(y), r: feet(0.22) * s });
     }
   }
-  // The starting blocks, 0.5 by 0.6 m (the length is the June 2025 edition's; Part Two 15.8.1 of February 2026 says at least 0.5 by 0.5 m), one in each lane at each end, numbered on the top (Part Two 15.8.1 and 15.8.6).
+  // The starting blocks, 0.5 by 0.5 m (Part Two 15.8.1 asks at least that; the June 2025 edition asked 0.6 m long at the Olympic Games and the World Championships), one in each lane at each end, numbered on the top (Part Two 15.8.1 and 15.8.6).
   if (plan.blocks && !neutral) {
     const bw = SWIMMING.block.width * s;
     const bl = SWIMMING.block.length * s;

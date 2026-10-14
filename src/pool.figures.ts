@@ -37,8 +37,8 @@ export const SWIMMING = {
   laneLine: { width: 0.25, longLength: 46, shortLength: 21, endGap: 2, cross: 1 },
   /** Target lines on the end walls: the width of the lane line, down the wall to 3 m at most, with a cross line 0.5 m long 0.3 m below the water (Part Two 15.13.3); cross lines 0.5 m long at 15 m from each end (Part Two 15.13.4, pools built from 1 January 2006). */
   target: { width: 0.25, maxDepth: 3, cross: 0.5, crossBelowSurface: 0.3, crossAt15: 0.5 },
-  /** The starting platform: at least 0.5 m by 0.5 m, 0.5 to 0.75 m above the water (Part Two 15.8.1). The length 0.6 m is the June 2025 edition value (0.5 by 0.6 m at the Olympic Games and the World Championships, CR 16.2.8); February 2026 says at least 0.5 by 0.5 m everywhere. */
-  block: { width: 0.5, length: 0.6, heightLeast: 0.5, heightMost: 0.75, height: 0.7 },
+  /** The starting platform: at least 0.5 m by 0.5 m, 0.5 to 0.75 m above the water (Part Two 15.8.1). The June 2025 edition asked 0.5 by 0.6 m at the Olympic Games and the World Championships (CR 16.2.8); February 2026 asks at least 0.5 by 0.5 m everywhere, which is what is drawn. */
+  block: { width: 0.5, length: 0.5, heightLeast: 0.5, heightMost: 0.75, height: 0.7 },
   /** Touch panels: 2.4 m wide and 0.9 m high, 0.3 m above the water and 0.6 m below it, with a 0.025 m black border (Part Two 15.16.4.1, 15.16.4.2 and 15.16.4.5; June 2025: CR 16.3.4). */
   pad: { width: 2.4, height: 0.9, above: 0.3, below: 0.6, border: 0.025 },
   /** Backstroke turn flags: flagged ropes 1.8 m above the water on standards 5.0 m from each end wall; a flag is a triangle of 0.40 m sides, 0.25 m apart (Part Two 15.9.1 and 15.9.2, was FR 2.9; June 2025: CR 16.1.10). */
@@ -61,14 +61,12 @@ export const SWIMMING_WIDTHS = { permanent: 25, temporary: 26, shortEight: 21 } 
 
 /**
  * The water polo field of play, in metres (Part Six, Articles 20 and 21). The field is 25.00 by 20.00 m, the distance between the two goal lines and between the two side lines (Part Six 20.2.2.1 and 20.2.2.2);
- * the water at least 2.00 m deep everywhere (Part Six 20.2.4 and 20.8.2.1). `depth` 1.8 m is the June 2025 edition value (1.80 m, 2.00 m at the Olympic Games and the World Championships, CR 18.1.3 and 18.2.2);
- * February 2026 says 2.00 m.
+ * the water at least 2.00 m deep everywhere (Part Six 20.2.4 and 20.8.2.1). The June 2025 edition asked 1.80 m, and 2.00 m at the Olympic Games and the World Championships (CR 18.1.3 and 18.2.2).
  */
 export const WATER_POLO = {
   length: 25,
   width: 20,
-  depth: 1.8,
-  depthOlympic: 2,
+  depth: 2,
   /** The marks on both sides of the field: white for the goal line and the half distance line, red 2 m from each goal line, yellow 6 m from it, and a red mark 5 m from it for the penalty throw (Part Six 21.7.1.1 to 21.7.1.5; June 2025: Appendix 4, 20.4.1.5). */
   twoMetre: 2,
   fiveMetre: 5,
@@ -101,8 +99,8 @@ export const DIVING_LINES = 3;
  * (Part Four 15.3.2), 1 m or 3 m above the water (Appendix 2); a platform of the length, width and height of the table (Part Four 15.4.3 and Appendix 2). Every distance is measured from the plummet, the vertical line
  * through the middle of the front edge of the springboard or platform (Part Four 15.1.1). `A` is from the plummet back to the pool wall (for a platform on concrete: how far its front edge projects beyond the wall, Part Four 15.4.9),
  * `B` to the pool wall at the side, `C` to the next plummet (the platforms' widths: Part Four 15.2.2), `D` to the wall ahead, `H` the depth of water at the plummet; each as [minimum, preferred]. A depth of 5 m under the boards is
- * what a pool built after 1 January 2025 should have if possible (Part Four 15.1.2.1). The minima of `H` are the June 2025 edition's values (3.50, 3.80, 3.30, 3.60, 3.80, 4.30 and 5.00 m, Appendix 2 of Part Four, "Table Diving Facilities");
- * February 2026 gives 3.40, 3.70, 3.20, 3.50, 3.70, 4.10 and 4.50 m, and the same 5.00 m preferred. The other figures of the table, A to D, are the same in both editions.
+ * what a pool built after 1 January 2025 should have if possible (Part Four 15.1.2.1). The minima of `H` are the February 2026 table's (3.40, 3.70, 3.20, 3.50, 3.70, 4.10 and 4.50 m, with 5.00 m preferred everywhere); the June 2025 edition
+ * had 3.50, 3.80, 3.30, 3.60, 3.80, 4.30 and 5.00 m ("Table Diving Facilities"). The other figures of the table, A to D, are the same in both editions.
  */
 export const DIVING = {
   springboard: { length: 4.88, width: 0.5 },
@@ -122,8 +120,8 @@ export const DIVING = {
   C: { springboard1: [2, 2], springboard3: [2.2, 2.6], platform1: [1.85, 2.15], platform3: [2.2, 2.35], platform5: [2.85, 2.85], platform75: [2.75, 2.75], platform10: [3, 3] },
   /** D, from the plummet to the pool wall ahead: 9.00 (1 m), 10.25 (3 m), 8.00, 9.50, 10.25, 11.00 and 13.50 m for the platforms. */
   D: { springboard1: [9, 9], springboard3: [10.25, 10.25], platform1: [8, 8], platform3: [9.5, 9.5], platform5: [10.25, 10.25], platform75: [11, 11], platform10: [13.5, 13.5] },
-  /** H, the depth of water at the plummet, minimum: June 2025 edition value 3.50 m (1 m), 3.80 (3 m), 3.30, 3.60, 3.80, 4.30 and 5.00 m; February 2026 says 3.40, 3.70, 3.20, 3.50, 3.70, 4.10 and 4.50 m (Part Four, Appendix 2). 5.00 m is preferred everywhere in both. */
-  H: { springboard1: [3.5, 5], springboard3: [3.8, 5], platform1: [3.3, 5], platform3: [3.6, 5], platform5: [3.8, 5], platform75: [4.3, 5], platform10: [5, 5] },
+  /** H, the depth of water at the plummet, minimum and preferred: February 2026 gives 3.40 m (1 m board), 3.70 (3 m), 3.20 (1 m platform), 3.50 (3 m), 3.70 (5 m), 4.10 (7.5 m) and 4.50 m (10 m), with 5.00 m preferred (Part Four, Appendix 2); the June 2025 edition's minima were 3.50, 3.80, 3.30, 3.60, 3.80, 4.30 and 5.00 m. */
+  H: { springboard1: [3.4, 5], springboard3: [3.7, 5], platform1: [3.2, 5], platform3: [3.5, 5], platform5: [3.7, 5], platform75: [4.1, 5], platform10: [4.5, 5] },
   /** The depth of water is never less than 1.8 m anywhere in the diving pool (Part Four 15.1.3; June 2025: 13.1.3.9); 5 m under the boards for facilities built after 1 January 2025, if possible (Part Four 15.1.2.1). The June 2025 edition also made 5 m the rule at the Olympic Games and the World Championships (13.1.3.1); unverified in February 2026, whose Article 15.6 only applies Articles 15.2 to 15.5 there, with the minima of Appendix 2. */
   depthLeast: 1.8,
   depthBoards: 5,

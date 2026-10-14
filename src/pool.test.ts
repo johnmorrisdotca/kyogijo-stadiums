@@ -43,10 +43,10 @@ describe("the figures of the rules", () => {
     expect(SWIMMING.shortCourse - 2 * SWIMMING.laneLine.endGap).toBe(SWIMMING.laneLine.shortLength);
   });
 
-  it("Part Two 15.9.1, 15.8.1, 15.16.4.1: flags 5 m from the walls, 1.8 m up; blocks 0.5 m wide; panels 2.4 by 0.9 m; and, from the June 2025 edition, the false start rope 15 m from the start, 1.2 m up (unverified in February 2026) and blocks 0.6 m long (February 2026: at least 0.5 by 0.5 m)", () => {
+  it("Part Two 15.9.1, 15.8.1, 15.16.4.1: flags 5 m from the walls, 1.8 m up; blocks 0.5 m wide; panels 2.4 by 0.9 m; blocks at least 0.5 by 0.5 m (the June 2025 edition asked 0.6 m long at the Olympic Games and the World Championships); and, from the June 2025 edition, the false start rope 15 m from the start, 1.2 m up (unverified in February 2026)", () => {
     expect(SWIMMING.flags).toEqual({ at: 5, height: 1.8, side: 0.4, apart: 0.25 });
     expect(SWIMMING.falseStart).toEqual({ at: 15, height: 1.2 });
-    expect([SWIMMING.block.width, SWIMMING.block.length]).toEqual([0.5, 0.6]);
+    expect([SWIMMING.block.width, SWIMMING.block.length]).toEqual([0.5, 0.5]);
     expect([SWIMMING.block.heightLeast, SWIMMING.block.heightMost]).toEqual([0.5, 0.75]);
     expect(SWIMMING.pad).toMatchObject({ width: 2.4, height: 0.9, above: 0.3, below: 0.6 });
     expect(SWIMMING.pad.above + SWIMMING.pad.below).toBeCloseTo(SWIMMING.pad.height, 10);
@@ -59,7 +59,7 @@ describe("the figures of the rules", () => {
   });
 
   it("Part Six 20.2.2, 21.6.3.2, 21.6.4.2, 20.7.2, 21.9.3.2: a water polo field of 25 by 20 m, 3 m between the posts, the crossbar 0.9 m up, a re-entry area of 2.0 by 1.08 m (1.0 to 1.1 m long), platforms 1 m wide", () => {
-    expect([WATER_POLO.length, WATER_POLO.width]).toEqual([25, 20]);
+    expect([WATER_POLO.length, WATER_POLO.width, WATER_POLO.depth]).toEqual([25, 20, 2]);
     expect(WATER_POLO.goal).toMatchObject({ width: 3, crossbarHeight: 0.9, netClear: 0.3 });
     expect(WATER_POLO.reEntry).toMatchObject({ length: 2, depth: 1.08 });
     expect([WATER_POLO.twoMetre, WATER_POLO.fiveMetre, WATER_POLO.sixMetre]).toEqual([2, 5, 6]);
@@ -67,7 +67,7 @@ describe("the figures of the rules", () => {
     expect(WATER_POLO.platform.width).toBe(1);
   });
 
-  it("Part Four 15.3.2, 15.4.3 and Appendix 2: the springboard 4.88 by 0.50 m, the platforms' lengths and widths, the distances A to D, H = 5 m under every board at most (the June 2025 table's minima for H differ from February 2026's, see pool.figures.ts)", () => {
+  it("Part Four 15.3.2, 15.4.3 and Appendix 2: the springboard 4.88 by 0.50 m, the platforms' lengths and widths, the distances A to D, H, the depth at the plummet, with February 2026's minima (the June 2025 table's were higher)", () => {
     expect(DIVING.springboard).toEqual({ length: 4.88, width: 0.5 });
     expect(DIVING.platforms["10"]).toMatchObject({ length: 6, height: 10 });
     expect(DIVING.platforms["10"].width[0]).toBe(3);
@@ -78,7 +78,8 @@ describe("the figures of the rules", () => {
     expect(DIVING.B.platform10[0]).toBe(5.75);
     expect(DIVING.C.platform75[0]).toBe(2.75);
     expect(DIVING.D.platform10[0]).toBe(13.5);
-    expect(DIVING.H.platform10).toEqual([5, 5]);
+    expect(Object.values(DIVING.H).map(([least]) => least)).toEqual([3.4, 3.7, 3.2, 3.5, 3.7, 4.1, 4.5]);
+    expect(Object.values(DIVING.H).every(([, preferred]) => preferred === 5)).toBe(true);
     expect(DIVING.lines).toMatchObject({ length: 21, apart: 2.5 });
   });
 
