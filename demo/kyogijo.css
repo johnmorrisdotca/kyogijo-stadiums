@@ -22,6 +22,9 @@ select.fam-field { min-width: min(100%, 20rem); }
 #stage svg { max-width: 100%; }
 #stage[data-orientation="portrait"] { min-height: min(78vh, 880px); }
 #stage[data-orientation="portrait"] svg { width: auto; height: min(78vh, 880px); }
+/* A folded curling sheet is a square when tall too: the stage is as tall as it is wide, not as tall as most of the screen. */
+#stage[data-orientation="portrait"]:has(.ky-fold-frame) { min-height: min(78vh, 880px, calc(100cqw / var(--r, 1))); }
+#stage[data-orientation="portrait"]:has(.ky-fold-frame) svg { height: min(78vh, 880px, calc(100cqw / var(--r, 1))); }
 #stage[data-pending] svg { visibility: hidden; }
 @media (min-width: 700px) { .stage-felt { padding: 18px 16px; } }
 

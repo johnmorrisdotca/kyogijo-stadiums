@@ -1,7 +1,7 @@
 // How the demo looks and holds still: no sideways scroll, finger-sized buttons, light and dark, tall and wide.
 import { expect, test } from "@playwright/test";
 
-import { at, noSidewaysScroll, open, svg } from "./demo.mjs";
+import { at, noSidewaysScroll, open, openGroups, svg } from "./demo.mjs";
 
 const SPORTS = ["nfl", "cfl", "ifaf", "nhl", "nba", "mlb", "soccer", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis", "lacrosse", "rugby", "afl", "gaelic", "cricket", "fieldhockey", "handball"];
 
@@ -93,4 +93,43 @@ test("the controls' groups open and close, and the first two are open", async ({
   await open(page, "?lang=en&help=off");
   const open_ = await page.locator("details.group").evaluateAll((all) => all.map((d) => d.open));
   expect(open_).toEqual([true, true, false, false]);
+});
+
+test("a curling sheet has its own choice of the top house, the bottom house or folded, every button a finger wide, and folded fills a square", async ({ page }) => {
+  const errors = await open(page, "?sport=curling&lang=en&help=off&orientation=portrait");
+  expect(errors).toEqual([]);
+  await openGroups(page);
+  await expect(page.locator("#curling-group")).toBeVisible();
+  const small = await page.evaluate(() =>
+    [...document.querySelectorAll("#curling-group .fam-seg button")]
+      .filter((one) => one.offsetParent !== null)
+      .map((one) => ({ name: one.textContent.trim(), ...one.getBoundingClientRect().toJSON() }))
+      .filter((one) => one.width < 43.5 || one.height < 43.5),
+  );
+  expect(small).toEqual([]);
+  await expect(page.locator(`${at("sheet")} button`)).toHaveText(["Whole sheet", "Top house", "Bottom house", "Folded"]);
+  const whole = await svg(page).getAttribute("viewBox");
+  // Choosing a part turns the teams off (a score shows the whole sheet), and the choice is in the address.
+  await page.locator(`${at("sheet")} button[data-value="top"]`).click();
+  await expect(page.locator(`${at("size")} button[data-value="surface"]`)).toHaveAttribute("aria-pressed", "true");
+  expect(await svg(page).getAttribute("viewBox")).not.toBe(whole);
+  expect(new URL(page.url()).searchParams.get("sheet")).toBe("top");
+  await page.locator(`${at("sheet")} button[data-value="folded"]`).click();
+  await expect(page.locator(`${at("stage")} .ky-fold-frame`)).toHaveCount(2);
+  const [, , w, h] = (await svg(page).getAttribute("viewBox")).split(" ").map(Number);
+  expect(w / h).toBeCloseTo(1, 1);
+  const box = await svg(page).boundingBox();
+  expect(box.width).toBeLessThanOrEqual(page.viewportSize().width);
+  expect(Math.abs(box.width - box.height)).toBeLessThan(2);
+  await noSidewaysScroll(page);
+  // Wide, the same drawing lies the other way and keeps its shape; the words are Japanese too.
+  await page.locator(`${at("orientation")} button[data-value="landscape"]`).click();
+  const wide = await svg(page).getAttribute("viewBox");
+  expect(wide.split(" ").slice(2)).toEqual([String(w), String(h)]);
+  await page.locator('[data-lang="ja"]').click();
+  await expect(page.locator(`${at("sheet")} button`)).toHaveText(["シート全体", "上のハウス", "下のハウス", "折りたたみ"]);
+  // Another sport has no such choice.
+  await page.locator(`${at("sport")} button[data-value="nhl"]`).click();
+  await expect(page.locator("#curling-group")).toBeHidden();
+  expect(new URL(page.url()).searchParams.has("sheet")).toBe(false);
 });

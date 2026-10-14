@@ -11,6 +11,8 @@ export const STATUSES = ["final", "final-ot", "final-so", "final-aet", "final-pe
 export const PATTERNS = ["bands", "wide", "narrow", "lengthwise", "checks", "diagonal", "none"];
 export const GOALS = ["box", "line", "strip", "none"];
 export const HALVES = ["none", "left", "right"];
+/** How much of a curling sheet: all of it, only the top end, only the bottom end, or the whole sheet folded with both houses enlarged beside it. */
+export const SHEETS = ["sheet", "top", "bottom", "folded"];
 export const WINNERS = ["auto", "leader", "none", "home", "away"];
 export const COURTS = ["default", "maple", "twoTone", "night", "sunburst", "tournament"];
 
@@ -46,6 +48,7 @@ export function makeState(params, kept = null) {
     pattern: pick(params.get("pattern"), PATTERNS, "bands"),
     goals: pick(params.get("goals"), GOALS, "box"),
     half: pick(params.get("half"), HALVES, "none"),
+    sheet: pick(params.get("sheet"), SHEETS, "sheet"),
     flags: params.get("flags") !== "0",
     baseline: params.get("baseline") === "1",
     centreLogo: false,
@@ -129,6 +132,8 @@ export function optionsFor(s, lang, forCode = false) {
     if (s.half !== "none" && s.size === "surface") o.half = s.half;
     if (!s.flags) o.cornerFlags = false;
   }
+  // A curling sheet: a part of it, or folded. A drawing with teams always shows the whole sheet.
+  if (s.sport === "curling" && s.sheet !== "sheet" && s.size === "surface") o.sheet = s.sheet === "folded" ? { show: "folded" } : { show: "half", end: s.sheet };
   const names = [s.away.name, s.home.name];
   if (s.sport === "nba" && (s.court !== "default" || s.baseline || s.centreLogo)) {
     const court = s.court === "default" ? {} : { ...COURT_THEMES[s.court] };
@@ -173,6 +178,7 @@ export const labelOf = (say, s) => ({
   pattern: (v) => say(`pattern_${v}`),
   goals: (v) => say(`goals_${v}`),
   half: (v) => say(`half_${v}`),
+  sheet: (v) => say(`sheet_${v}`),
   logo: (v) => say(`logo_${v}`),
   era: (v) => say(`era_${v}`),
 });
@@ -194,6 +200,7 @@ export const SEGS = [
   { id: "pattern", kind: "pattern", values: PATTERNS, get: (s) => s.pattern },
   { id: "goals", kind: "goals", values: GOALS, get: (s) => s.goals },
   { id: "half", kind: "half", values: HALVES, get: (s) => s.half },
+  { id: "sheet", kind: "sheet", values: SHEETS, get: (s) => s.sheet },
   { id: "away-logo", kind: "logo", values: ["none", "emblem", "url"], get: (s) => s.away.logo },
   { id: "home-logo", kind: "logo", values: ["none", "emblem", "url"], get: (s) => s.home.logo },
 ];
@@ -239,6 +246,7 @@ export function hiddenRows(s) {
     "ground-row": !soccer,
     "pitch-type-row": !soccer,
     "soccer-group": !soccer,
+    "curling-group": s.sport !== "curling",
     "away-pens-row": !soccer,
     "home-pens-row": !soccer,
     "era-group": !seasons,

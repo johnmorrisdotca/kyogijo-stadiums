@@ -9,6 +9,9 @@ export function toParams(o) {
   if (o.league) q.set("league", o.league);
   for (const [key, param] of [["pitch", "pitch"], ["ground", "ground"], ["pitchType", "pitchtype"], ["half", "half"], ["goals", "goals"], ["stripePattern", "pattern"]]) if (typeof o[key] === "string") q.set(param, o[key]);
   if (o.cornerFlags === false) q.set("flags", "0");
+  // A curling sheet's part: `folded`, or its `top` or `bottom` end.
+  if (o.sheet?.show === "folded") q.set("sheet", "folded");
+  else if (o.sheet?.show === "half" && (o.sheet.end === "top" || o.sheet.end === "bottom")) q.set("sheet", o.sheet.end);
   if (Number.isInteger(o.year)) q.set("year", String(o.year));
   if (o.size && o.size !== "full") q.set("size", o.size);
   if (o.orientation && o.orientation !== "auto") q.set("orientation", o.orientation);
@@ -32,6 +35,8 @@ export function toParams(o) {
 export function fromParams(q) {
   const o = { sport: q.get("sport") || "nhl", orientation: q.get("orientation") || "auto" };
   if (q.get("flags") === "0") o.cornerFlags = false;
+  if (q.get("sheet") === "folded") o.sheet = { show: "folded" };
+  else if (q.get("sheet") === "top" || q.get("sheet") === "bottom") o.sheet = { show: "half", end: q.get("sheet") };
   for (const [param, key] of [["pitch", "pitch"], ["ground", "ground"], ["pitchtype", "pitchType"], ["half", "half"], ["goals", "goals"], ["pattern", "stripePattern"], ["park", "park"], ["league", "league"], ["size", "size"], ["theme", "theme"], ["lang", "language"], ["status", "status"], ["competition", "competition"], ["date", "date"], ["label", "label"], ["winner", "winner"]]) {
     if (q.get(param)) o[key] = q.get(param);
   }
