@@ -39,7 +39,8 @@ function tile(seed: number, density: number, share: number, team: "ky-cr-h" | "k
         empty.push(`M${n1(x)} ${n1(y)}h.01`);
         continue;
       }
-      put(shirts, shirt < share ? team : `#${SHIRTS[Math.floor(next() * SHIRTS.length)].slice(1)}`, x, y);
+      // A team's fans are in its colour, some of them in a darker shade of it (a jacket, a shadow), the rest in neutrals.
+      put(shirts, shirt < share * 0.72 ? team : shirt < share ? `${team}-d` : `#${SHIRTS[Math.floor(next() * SHIRTS.length)].slice(1)}`, x, y);
       put(heads, HAIR[Math.floor(hair * HAIR.length)], x, y);
     }
   }
@@ -53,7 +54,7 @@ function tile(seed: number, density: number, share: number, team: "ky-cr-h" | "k
 /** The tiles a crowd needs: the home tile, the home tile of the upper tiers (emptier) and the visitors', and the display tiles. */
 function patterns(id: string, crowd: Crowd, density: number, tifo: { home: boolean; away: boolean } | undefined): string {
   const make = (suffix: string, body: string, size = TILE): string => el("pattern", { id: `${id}-cr-${suffix}`, width: size, height: size, patternUnits: "userSpaceOnUse" }, body);
-  let out = make("h", tile(crowd.seed * 7 + 1, density, 0.8, "ky-cr-h")) + make("a", tile(crowd.seed * 7 + 3, Math.min(1, density * 1.04), 0.9, "ky-cr-a"));
+  let out = make("h", tile(crowd.seed * 7 + 1, density, 0.88, "ky-cr-h")) + make("a", tile(crowd.seed * 7 + 3, Math.min(1, density * 1.04), 0.94, "ky-cr-a"));
   if (tifo !== undefined) {
     const stripes = (cls: string): string => el("rect", { class: cls, width: 3, height: 6 }) + el("rect", { class: "ky-cr-tw", x: 3, width: 3, height: 6 });
     const checks = (cls: string): string => el("rect", { class: cls, width: 3, height: 3 }) + el("rect", { class: cls, x: 3, y: 3, width: 3, height: 3 }) + el("rect", { class: "ky-cr-tw", x: 3, width: 3, height: 3 }) + el("rect", { class: "ky-cr-tw", y: 3, width: 3, height: 3 });
@@ -161,6 +162,8 @@ export const KYOGIJO_CROWD_STYLE = `
 .kyogijo .ky-cr-seat{fill:none;stroke:var(--ky-cr-empty);stroke-width:1.3;stroke-opacity:.65}
 .kyogijo .ky-cr-h{stroke:var(--ky-cr-home,var(--ky-right))}
 .kyogijo .ky-cr-a{stroke:var(--ky-cr-away,var(--ky-left))}
+.kyogijo .ky-cr-h-d{stroke:var(--ky-cr-home,var(--ky-right));stroke-opacity:.6}
+.kyogijo .ky-cr-a-d{stroke:var(--ky-cr-away,var(--ky-left));stroke-opacity:.6}
 .kyogijo .ky-cr-blk{fill:var(--ky-cr-home,var(--ky-right))}
 .kyogijo .ky-cr-blk-a{fill:var(--ky-cr-away,var(--ky-left))}
 .kyogijo .ky-cr-th{fill:var(--ky-cr-home,var(--ky-right))}

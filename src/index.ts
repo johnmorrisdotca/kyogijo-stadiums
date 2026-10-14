@@ -19,7 +19,7 @@ export { KYOGIJO_STRINGS } from "./strings.ts";
 export type { KyogijoWords } from "./strings.ts";
 export { KYOGIJO_COURTS_STYLE } from "./courts.style.ts";
 export { KYOGIJO_CROWD_STYLE } from "./crowd.draw.ts";
-export { GRIDIRON_GROUNDS } from "./crowd.ts";
+export { GRIDIRON_GROUNDS, outlinePath, outlinePoints } from "./crowd.ts";
 export type { CrowdStands, StandGap, StandRing, StandSector, Outline as StandOutline } from "./crowd.ts";
 export { KYOGIJO_MARK_STYLE } from "./mark.ts";
 export { KYOGIJO_CURLING_STYLE, KYOGIJO_HEAT_STYLE, KYOGIJO_NOTE_STYLE, KYOGIJO_STYLE, KYOGIJO_TEAM_STYLE, KYOGIJO_WALLS_STYLE } from "./style.ts";
@@ -53,6 +53,8 @@ export type {
   Box,
   Colors,
   CourtStyle,
+  CrowdOptions,
+  CrowdShape,
   Detail,
   DirectionOptions,
   FieldSport,

@@ -49,6 +49,9 @@ export function makeState(params, kept = null) {
     flags: params.get("flags") !== "0",
     baseline: params.get("baseline") === "1",
     centreLogo: false,
+    crowd: params.get("crowd") === "1",
+    crowdDensity: /^\d{1,3}$/.test(params.get("crowddensity") || "") ? Math.min(100, Number(params.get("crowddensity"))) : 85,
+    crowdTifo: params.get("crowdtifo") === "1",
     touched: new Set(),
     embed: "module",
   };
@@ -129,6 +132,13 @@ export function optionsFor(s, lang, forCode = false) {
     if (s.half !== "none" && s.size === "surface") o.half = s.half;
     if (!s.flags) o.cornerFlags = false;
   }
+  if (s.crowd) {
+    // The stands and the people: every surface that has spectators; the share of seats taken from the slider, and a card display behind a goal on request.
+    const crowd = {};
+    if (s.crowdDensity !== 85) crowd.density = s.crowdDensity / 100;
+    if (s.crowdTifo) crowd.tifo = "home";
+    o.crowd = Object.keys(crowd).length === 0 ? true : crowd;
+  }
   const names = [s.away.name, s.home.name];
   if (s.sport === "nba" && (s.court !== "default" || s.baseline || s.centreLogo)) {
     const court = s.court === "default" ? {} : { ...COURT_THEMES[s.court] };
@@ -204,6 +214,8 @@ export const TOGGLES = [
   { id: "exact", get: (s) => s.exact },
   { id: "baseline", get: (s) => s.baseline },
   { id: "centre-logo", get: (s) => s.centreLogo },
+  { id: "crowd", get: (s) => s.crowd },
+  { id: "crowd-tifo", get: (s) => s.crowdTifo },
   { id: "flags", get: (s) => s.flags },
 ];
 
@@ -245,6 +257,7 @@ export function hiddenRows(s) {
     "era-year-row": !(seasons && past),
     "era-notes": !(seasons && past),
     "court-group": s.sport !== "nba",
+    "crowd-row": !s.crowd,
     "status-text": s.status !== "custom",
     "away-logo-url": s.away.logo !== "url",
     "home-logo-url": s.home.logo !== "url",

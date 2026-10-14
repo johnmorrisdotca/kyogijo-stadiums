@@ -797,6 +797,9 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `court_tournament` | Tournament | トーナメント |
 | `baseline` | Words on the baselines | ベースラインの文字 |
 | `centreLogo` | Logo at centre court | コート中央のロゴ |
+| `crowd` | Crowd | 観客 |
+| `crowdTifo` | Card display | カード演出（コレオ） |
+| `crowdDensity` | Seats taken | 観客の入り |
 | `usesTitle` | Everything is one call | どれも1回の呼び出し |
 | `embedTitle` | Put it in your page | ページに組み込む |
 | `embedText` | Four ways, from one line of HTML to a string of SVG. Each shows the call for what you have set above. | 1行のHTMLからSVG文字列まで、4つの方法があります。上の設定に合わせた呼び出しコードを、それぞれ表示します。 |
@@ -1027,6 +1030,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `curling` | Curling | カーリング |
 | page `courts` | Tennis, volleyball, badminton, pickleball and table tennis | ネット型競技のコート |
 | page `field-sports` | Lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey and handball | ラクロス、ラグビーなどのフィールド |
+| page `crowd` | The stands and the crowd | スタンドと観客 |
 | page `special-games` | Special games | 特設会場での試合 |
 | page `ballparks` | Ballparks | 球場 |
 | page `grounds` | The grounds | スタジアム |

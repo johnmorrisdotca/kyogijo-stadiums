@@ -265,6 +265,14 @@ const page = `<!doctype html>
                 ${toggle("stripes", "stripes")}
                 ${toggle("exact", "exact")}
               </div>
+              <div class="setup fam-row" ${help("Draw the stands round the surface and the people in them: a bowl, two sides, a horseshoe or a ballpark's grandstands, in the home colours with the visitors at an end. Every surface that has spectators takes it.", "競技場の周りにスタンドと観客を描きます。ボウル型、両サイド型、馬蹄形、球場型など、会場に合わせた形で、観客はホームチームの色、ビジターの観客は片方の端に集まります。スタンドのある競技場すべてで使えます。")}>
+                ${toggle("crowd", "crowd")}${toggle("crowd-tifo", "crowdTifo")}
+              </div>
+              <div class="setup fam-row" id="crowd-row"${hid("crowd-row")} ${help("How full the stands are: the share of seats with someone in them. The empty seats show.", "スタンドの埋まり具合です。人が座っている席の割合で、空席もそのまま描かれます。")}>
+                <label class="fam-label" for="crowd-density" data-say="crowdDensity"></label>
+                <input type="range" class="fam-field era-range" id="crowd-density" data-testid="crowd-density" min="0" max="100" step="5" value="${first.crowdDensity}" />
+                <output class="era-season" id="crowd-density-out" data-testid="crowd-density-out" for="crowd-density">${first.crowdDensity}%</output>
+              </div>
               <div id="soccer-group"${hid("soccer-group")}>
                 ${seg("pattern", "stripePattern", "How the grass is mown: bands across the pitch, wide or narrow, along it, in checks or on the diagonal.", "芝の刈り方です。ピッチを横切る縞（標準・太い・細い）、縦方向の縞、市松模様、斜めの縞から選べます。")}
                 ${seg("goals", "goalStyle", "How the goals are drawn from above: the net as a box, a line on the goal line, a solid strip or nothing.", "ゴールを真上から見た描き方です。ネットを四角で描く、ゴールライン上の線にする、塗りつぶした帯にする、描かない、の4つから選べます。")}
