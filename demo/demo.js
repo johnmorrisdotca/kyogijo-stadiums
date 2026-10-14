@@ -1,7 +1,7 @@
 // The demo page's own script: a surface to try (the package's own `mountKyogijo`), the code that draws it in four ways,
 // and a page of examples: every sport, wide and tall, badges, compact cards, court looks, a live score, every ballpark,
 // and the custom element. The words are in words.js, the made-up teams in examples.js.
-import { COURT_THEMES, ERA_SPORTS, GROUNDS, GROUND_IDS, KYOGIJO_STYLE, LEAGUES, PARKS, PARK_IDS, SOCCER_PITCH_IDS, SOCCER_PROVIDERS, SOCCER_PROVIDER_IDS, SPORTS, VERSION, drawKyogijo, fenceFor, rescale, layerTable, eraRange, rulesFor, seasonLabel, hasHistory, leagueAt, leagueChanges, leagueSeason } from "./dist/index.js";
+import { COURT_THEMES, GROUNDS, GROUND_IDS, KYOGIJO_STYLE, LEAGUES, PARKS, PARK_IDS, SOCCER_PITCH_IDS, SOCCER_PROVIDERS, SOCCER_PROVIDER_IDS, SPORTS, VERSION, drawKyogijo, fenceFor, rescale, layerTable, rulesFor, seasonLabel, leagueAt, leagueSeason } from "./dist/index.js";
 import { mountKyogijo } from "./dist/mount-entry.js";
 import "./dist/element-define.js";
 import { initAtlas } from "./atlas.js";
@@ -12,6 +12,7 @@ import { mlbBalls, nbaShots, nflPasses, nhlShots, soccerShots } from "./charts-d
 import { replayPlay } from "./replay-data.js";
 import { mlbSprayChart, nbaShotChart, nflPassChart, nhlShotMap, soccerShotMap } from "./dist/charts-entry.js";
 import { fenceAt } from "./dist/geometry-entry.js";
+import { FIELDS, SEGS, chosenLeague, curlingExtras, fieldExtras, netExtras, hasSeasons, hiddenRows, hiddenStatus, isOwnLeague, labelOf as labelsFor, loadGame as loadGameInto, makeState, optionsFor as optionsOf, seasonRange } from "./model.js";
 import { WORDS } from "./words.js";
 
 const $ = (id) => document.getElementById(id);
@@ -23,10 +24,13 @@ const language = familyLanguage({ id: "kyogijo", words: WORDS, onChange: () => o
 const say = (key) => WORDS[language.lang][key];
 
 // The stylesheet once for the whole page: every drawing here is made with style: "none".
-const sheet = document.createElement("style");
-sheet.id = "kyogijo-style";
-sheet.textContent = KYOGIJO_STYLE;
-document.head.append(sheet);
+// The build wrote it into the page's head, so that the first view is drawn before this script runs; it is made here only when it is not there.
+if (document.getElementById("kyogijo-style") === null) {
+  const sheet = document.createElement("style");
+  sheet.id = "kyogijo-style";
+  sheet.textContent = KYOGIJO_STYLE;
+  document.head.append(sheet);
+}
 
 const keep = {
   get(key) {
@@ -37,219 +41,71 @@ const keep = {
   },
 };
 
-const pick = (value, list, fallback) => (list.includes(value) ? value : fallback);
-const SIZES = ["full", "compact", "badge", "surface"];
-const ORIENTATIONS = ["landscape", "portrait", "auto"];
-const THEMES = ["auto", "light", "dark"];
-const STATUSES = ["final", "final-ot", "final-so", "final-aet", "final-pens", "live", "half", "custom"];
-const PATTERNS = ["bands", "wide", "narrow", "lengthwise", "checks", "diagonal", "none"];
-const GOALS = ["box", "line", "strip", "none"];
-const HALVES = ["none", "left", "right"];
-const WINNERS = ["auto", "leader", "none", "home", "away"];
-const COURTS = ["default", "maple", "twoTone", "night", "sunburst", "tournament"];
-
-const state = {
-  sport: pick(params.get("sport"), SPORTS, "nhl"),
-  // The league whose rulebook marks the surface: the sport's own (its first) unless the address names another.
-  league: params.get("league") || null,
-  park: params.get("park") && (PARKS[params.get("park")] || params.get("park") === "generic") ? params.get("park") : "generic",
-  // The season to draw the surface in, or null for today's (a year in the address turns it on).
-  year: /^\d{4}$/.test(params.get("year") || "") ? Number(params.get("year")) : null,
-  size: pick(params.get("size"), SIZES, "full"),
-  orientation: pick(params.get("orientation"), ORIENTATIONS, "auto"),
-  theme: pick(params.get("theme") ?? keep.get("kyogijo.theme"), THEMES, "auto"),
-  away: {},
-  home: {},
-  status: "final",
-  statusText: "",
-  competition: "",
-  date: "",
-  label: "",
-  winner: "auto",
-  detail: "full",
-  stripes: true,
-  exact: false,
-  court: pick(params.get("court"), COURTS, "default"),
-  pitch: pick(params.get("pitch"), SOCCER_PITCH_IDS, "fifa"),
-  ground: params.get("ground") && GROUNDS[params.get("ground")] ? params.get("ground") : "none",
-  pitchType: pick(params.get("pitchtype"), SOCCER_PROVIDER_IDS, "none"),
-  pattern: pick(params.get("pattern"), PATTERNS, "bands"),
-  goals: pick(params.get("goals"), GOALS, "box"),
-  half: pick(params.get("half"), HALVES, "none"),
-  flags: params.get("flags") !== "0",
-  baseline: params.get("baseline") === "1",
-  centreLogo: false,
-  touched: new Set(),
-  embed: "module",
-};
+const state = makeState(params, keep.get("kyogijo.theme"));
 
 /** The made-up game for a sport, laid into the state (names in the page's language until a name is typed). */
-function loadGame(sport) {
-  const family = FAMILIES[sport];
-  const game = GAMES[sport];
-  for (const role of ["away", "home"]) {
-    const base = TEAMS[family][role];
-    state[role] = { name: language.lang === "ja" ? TEAMS_JA[family][role] : base.name, abbr: base.abbr, score: String(game[role]), color: base.color, logo: "emblem", emblem: base.emblem, url: "" };
-  }
-  state.away.pens = game.awayPens === undefined ? "" : String(game.awayPens);
-  state.home.pens = game.homePens === undefined ? "" : String(game.homePens);
-  state.status = STATUSES.includes(game.status) ? game.status : "custom";
-  state.statusText = STATUSES.includes(game.status) ? "" : game.status;
-  state.competition = game.competition;
-  state.date = game.date;
-  state.label = "";
-  state.touched.clear();
-}
+const loadGame = (sport) => loadGameInto(state, sport, language.lang);
 loadGame(state.sport);
 
-/** A curling team's score in each end and the hammer, while the total is still the made-up game's: an edited score has no ends to show. */
-function curlingExtras(role, score) {
-  const game = GAMES.curling;
-  const ends = role === "away" ? game.awayEnds : game.homeEnds;
-  const total = ends.reduce((sum, value) => sum + (typeof value === "number" ? value : 0), 0);
-  return score === total ? { ends, ...(game.hammer === role ? { hammer: true } : {}) } : {};
-}
-
-/** A net sport's team's score in each set and the server, while the total is still the made-up game's: an edited score has no sets to show. */
-function netExtras(sport, role, score) {
-  const game = GAMES[sport];
-  if (score !== game[role]) return {};
-  const out = { sets: game[`${role}Sets`] };
-  if (game[`${role}Tiebreaks`] !== undefined) out.tiebreaks = game[`${role}Tiebreaks`];
-  if (game[`${role}Points`] !== undefined) out.points = game[`${role}Points`];
-  if (game.serving === role) out.serving = true;
-  return out;
-}
-
-/** What a field sport writes beside the score (goals and behinds, goals and points, wickets and overs), while the total is still the made-up game's: an edited score has none. */
-function fieldExtras(sport, role, score) {
-  const game = GAMES[sport];
-  return game[`${role}Extra`] !== undefined && score === game[role] ? game[`${role}Extra`] : {};
-}
-
 /** What the state asks the package to draw. */
-function optionsFor(s, forCode = false) {
-  const o = { sport: s.sport, orientation: s.orientation, language: language.lang };
-  if (s.detail !== "full") o.detail = s.detail;
-  if (!s.stripes) o.stripes = false;
-  if (s.exact) o.exactLines = true;
-  if (s.sport === "mlb" && s.park !== "generic") o.park = s.park;
-  if (s.league !== null && !isOwnLeague(s.sport, s.league)) o.league = s.league;
-  if (s.year !== null && hasSeasons(s)) o.year = s.year;
-  if (s.sport === "soccer") {
-    if (s.pitch !== "fifa") o.pitch = s.pitch;
-    if (s.ground !== "none") o.ground = s.ground;
-    if (s.pitchType !== "none") o.pitchType = s.pitchType;
-    if (s.pattern !== "bands") o.stripePattern = s.pattern;
-    if (s.goals !== "box") o.goals = s.goals;
-    if (s.half !== "none" && s.size === "surface") o.half = s.half;
-    if (!s.flags) o.cornerFlags = false;
-  }
-  const names = [s.away.name, s.home.name];
-  if (s.sport === "nba" && (s.court !== "default" || s.baseline || s.centreLogo)) {
-    const court = s.court === "default" ? {} : { ...COURT_THEMES[s.court] };
-    if (s.baseline) court.baselineText = names.map((n) => n.toUpperCase().slice(0, 18));
-    if (s.centreLogo) court.centreLogo = forCode ? "/logos/centre.svg" : EMBLEMS[s.home.emblem];
-    o.court = court;
-  }
-  if (s.size !== "surface") {
-    const team = (t, placeholder) => {
-      const out = { name: t.name, abbr: t.abbr, score: /^-?\d+$/.test(t.score) ? Number(t.score) : t.score, color: t.color };
-      if (s.sport === "soccer" && /^\d+$/.test(t.pens ?? "")) out.penalties = Number(t.pens);
-      if (s.sport === "curling") Object.assign(out, curlingExtras(t === s.away ? "away" : "home", out.score));
-      if (GAMES[s.sport].awaySets !== undefined) Object.assign(out, netExtras(s.sport, t === s.away ? "away" : "home", out.score));
-      Object.assign(out, fieldExtras(s.sport, t === s.away ? "away" : "home", out.score));
-      if (t.logo === "emblem") out.logo = forCode ? placeholder : EMBLEMS[t.emblem];
-      else if (t.logo === "url" && t.url) out.logo = t.url;
-      return out;
-    };
-    o.away = team(s.away, "/logos/away.svg");
-    o.home = team(s.home, "/logos/home.svg");
-    o.size = s.size;
-    const status = s.status === "custom" ? s.statusText : s.status;
-    if (status) o.status = status;
-    if (s.competition) o.competition = s.competition;
-    if (s.date) o.date = s.date;
-    if (s.label) o.label = s.label;
-    if (s.winner !== "auto") o.winner = s.winner;
-  }
-  return o;
-}
+const optionsFor = (s, forCode = false) => optionsOf(s, language.lang, forCode);
 
 // ----- The controls.
-const labelOf = {
-  sport: (v) => say(`sport_${v}`),
-  size: (v) => say(`size_${v}`),
-  orientation: (v) => say(`orientation_${v}`),
-  theme: (v) => say(`theme_${v}`),
-  status: (v) => say(`status_${v.replace(/-/g, "_")}`),
-  winner: (v) => (v === "away" && state.sport === "mlb" ? say("awayBaseball") : say(`winner_${v}`)),
-  detail: (v) => say(`detail_${v}`),
-  court: (v) => say(`court_${v}`),
-  pattern: (v) => say(`pattern_${v}`),
-  goals: (v) => say(`goals_${v}`),
-  half: (v) => say(`half_${v}`),
-  logo: (v) => say(`logo_${v}`),
-  era: (v) => say(`era_${v}`),
-};
+const labelOf = labelsFor(say, state);
+/** Show and hide the rows the state asks for (see `hiddenRows`). */
+function applyRows() {
+  for (const [id, hidden] of Object.entries(hiddenRows(state))) $(id).hidden = hidden;
+}
 
 const segs = {};
-/** Fill a segmented choice with buttons; `get` says which is on and `set` what a press does. */
-function makeSeg(id, kind, values, get, set) {
+/**
+ * Take over a segmented choice: its buttons are in the page already (the build wrote them), so each keeps its place and gets its press;
+ * one that is not there (a page made another way) is made. `get` says which is on and `set` what a press does.
+ */
+function makeSeg(id, set) {
+  const { kind, values, get } = SEGS.find((one) => one.id === id);
   const host = $(id);
-  segs[id] = { host, kind, values, get };
-  host.replaceChildren();
-  for (const value of values) {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.dataset.value = value;
-    button.addEventListener("click", () => { set(value); refreshSegs(); change(); });
-    host.append(button);
+  segs[id] = { host, kind, values, get: () => get(state) };
+  const have = [...host.children].map((button) => button.dataset.value);
+  if (have.join() !== values.join()) {
+    host.replaceChildren();
+    for (const value of values) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.dataset.value = value;
+      host.append(button);
+    }
   }
+  for (const button of host.children) button.addEventListener("click", () => { set(button.dataset.value); refreshSegs(); change(); });
 }
-/** Statuses that belong to one sport: after extra time and on penalties are soccer's, the overtime and the shoot-out the others'. */
-const hiddenStatus = (value) => (state.sport === "soccer" ? value === "final-ot" || value === "final-so" : value === "final-aet" || value === "final-pens");
 function refreshSegs() {
   for (const seg of Object.values(segs)) {
     for (const button of seg.host.children) {
-      button.hidden = seg.kind === "status" && hiddenStatus(button.dataset.value);
-      button.textContent = labelOf[seg.kind](button.dataset.value);
+      button.hidden = seg.kind === "status" && hiddenStatus(state.sport, button.dataset.value);
+      const text = labelOf[seg.kind](button.dataset.value);
+      if (button.textContent !== text) button.textContent = text;
       button.setAttribute("aria-pressed", String(seg.get() === button.dataset.value));
     }
   }
   // Baseball says ビジター for the away team in Japanese; the other sports say アウェイ.
   document.querySelector('.team[data-role="away"] h3').textContent = say(state.sport === "mlb" ? "awayBaseball" : "away");
-  for (const role of ["away", "home"]) $(`${role}-logo-url`).hidden = state[role].logo !== "url";
-  $("status-text").hidden = state.status !== "custom";
+  applyRows();
 }
 
-makeSeg("sport", "sport", SPORTS, () => state.sport, (v) => { state.sport = v; state.league = null; loadGame(v); fillFields(); fillLeagues(); });
-makeSeg("era", "era", ["today", "past"], () => (state.year === null ? "today" : "past"), (v) => { state.year = v === "today" ? null : (state.year ?? clampYear(1975)); });
-makeSeg("size", "size", SIZES, () => state.size, (v) => { state.size = v; });
-makeSeg("orientation", "orientation", ORIENTATIONS, () => state.orientation, (v) => { state.orientation = v; });
-makeSeg("theme", "theme", THEMES, () => state.theme, (v) => { state.theme = v; keep.set("kyogijo.theme", v); applyTheme(); });
-makeSeg("status", "status", STATUSES, () => state.status, (v) => { state.status = v; });
-makeSeg("winner", "winner", WINNERS, () => state.winner, (v) => { state.winner = v; });
-makeSeg("detail", "detail", ["full", "simple"], () => state.detail, (v) => { state.detail = v; });
-makeSeg("court", "court", COURTS, () => state.court, (v) => { state.court = v; });
-makeSeg("pattern", "pattern", PATTERNS, () => state.pattern, (v) => { state.pattern = v; });
-makeSeg("goals", "goals", GOALS, () => state.goals, (v) => { state.goals = v; });
-makeSeg("half", "half", HALVES, () => state.half, (v) => { state.half = v; });
-for (const role of ["away", "home"]) makeSeg(`${role}-logo`, "logo", ["none", "emblem", "url"], () => state[role].logo, (v) => { state[role].logo = v; });
+makeSeg("sport", (v) => { state.sport = v; state.league = null; loadGame(v); fillFields(); fillLeagues(); });
+makeSeg("era", (v) => { state.year = v === "today" ? null : (state.year ?? clampYear(1975)); });
+makeSeg("size", (v) => { state.size = v; });
+makeSeg("orientation", (v) => { state.orientation = v; });
+makeSeg("theme", (v) => { state.theme = v; keep.set("kyogijo.theme", v); applyTheme(); });
+makeSeg("status", (v) => { state.status = v; });
+makeSeg("winner", (v) => { state.winner = v; });
+makeSeg("detail", (v) => { state.detail = v; });
+makeSeg("court", (v) => { state.court = v; });
+makeSeg("pattern", (v) => { state.pattern = v; });
+makeSeg("goals", (v) => { state.goals = v; });
+makeSeg("half", (v) => { state.half = v; });
+for (const role of ["away", "home"]) makeSeg(`${role}-logo`, (v) => { state[role].logo = v; });
 
-/** True when a league is the sport's own (the first of its list: the NBA for `nba`), which has the sport's history. */
-const isOwnLeague = (sport, league) => LEAGUES[sport].length === 0 || league === LEAGUES[sport].find((l) => l.builtIn && (l.family !== "football" || l.id === sport))?.id;
-/** The league chosen, when it is not the sport's own. */
-const chosenLeague = (s) => (s.league === null || isOwnLeague(s.sport, s.league) ? undefined : LEAGUES[s.sport].find((l) => l.id === s.league));
-/** True when the surface chosen has a history to slide through: the sport's own league's, or a league's cited one. */
-const hasSeasons = (s) => (chosenLeague(s) === undefined ? ERA_SPORTS.includes(s.sport) : hasHistory(chosenLeague(s)));
-/** The seasons the surface chosen has a history for. */
-function seasonRange(s) {
-  const league = chosenLeague(s);
-  if (league === undefined) return eraRange(s.sport);
-  const years = leagueChanges(s.sport, league.id).map((c) => c.from).filter((y) => y !== null);
-  return { from: Math.min(...years) - 1, to: 2026 };
-}
 /** A season inside the range the surface's history covers. */
 function clampYear(year) {
   if (!hasSeasons(state)) return year;
@@ -258,16 +114,12 @@ function clampYear(year) {
 }
 $("era-year").addEventListener("input", (event) => { state.year = Number(event.target.value); change(); });
 
-/** The season control: shown for the sports that have a history, with the markings that differed from today's. */
+/** The season control's contents: the markings that differed from today's, for the sports that have a history (`hiddenRows` shows the rows). */
 function renderEra() {
-  const has = hasSeasons(state);
-  $("era-group").hidden = !has;
-  if (!has) return;
+  if (!hasSeasons(state)) return;
   if (state.year !== null) state.year = clampYear(state.year);
   const past = state.year !== null;
-  $("era-year-row").hidden = !past;
   const notes = $("era-notes");
-  notes.hidden = !past;
   if (!past) return;
   const { from, to } = seasonRange(state);
   const slider = $("era-year");
@@ -287,25 +139,13 @@ function renderEra() {
 function toggle(id, key) {
   $(id).addEventListener("click", () => { state[key] = !state[key]; $(id).setAttribute("aria-pressed", String(state[key])); change(); });
 }
-toggle("stripes", "stripes");
-toggle("exact", "exact");
-toggle("baseline", "baseline");
-toggle("centre-logo", "centreLogo");
-toggle("flags", "flags");
+for (const [id, key] of [["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["flags", "flags"]]) toggle(id, key);
 
 function fillFields() {
-  for (const role of ["away", "home"]) {
-    $(`${role}-name`).value = state[role].name;
-    $(`${role}-abbr`).value = state[role].abbr;
-    $(`${role}-score`).value = state[role].score;
-    $(`${role}-color`).value = state[role].color;
-    $(`${role}-logo-url`).value = state[role].url;
-    $(`${role}-pens`).value = state[role].pens ?? "";
+  for (const field of FIELDS) {
+    const value = field.get(state);
+    if ($(field.id).value !== value) $(field.id).value = value;
   }
-  $("status-text").value = state.statusText;
-  $("competition").value = state.competition;
-  $("date").value = state.date;
-  $("label").value = state.label;
 }
 for (const role of ["away", "home"]) {
   for (const [field, key] of [["name", "name"], ["abbr", "abbr"], ["score", "score"], ["color", "color"], ["logo-url", "url"], ["pens", "pens"]]) {
@@ -313,7 +153,6 @@ for (const role of ["away", "home"]) {
   }
 }
 for (const [id, key] of [["status-text", "statusText"], ["competition", "competition"], ["date", "date"], ["label", "label"]]) $(id).addEventListener("input", (event) => { state[key] = event.target.value; change(); });
-for (const role of ["away", "home"]) $(`${role}-pens-row`).hidden = true;
 $("swap").addEventListener("click", () => {
   [state.away, state.home] = [state.home, state.away];
   fillFields();
@@ -416,8 +255,13 @@ let mount;
 function render() {
   const o = optionsFor(state);
   o.style = "none";
-  if (mount === undefined) mount = mountKyogijo(stage, o);
-  else mount.update(o);
+  if (mount === undefined) {
+    // The first drawing is in the page already (the build drew it): when it is the one this state asks for, it stays, node for node.
+    const drawn = stage.firstElementChild;
+    mount = mountKyogijo(stage, o);
+    const again = stage.firstElementChild;
+    if (drawn !== null && again !== null && drawn !== again && drawn.outerHTML === again.outerHTML) stage.replaceChildren(drawn);
+  } else mount.update(o);
   const svg = stage.querySelector("svg");
   const box = svg.viewBox.baseVal;
   stage.style.setProperty("--r", String(box.width / box.height));
@@ -425,21 +269,10 @@ function render() {
   stage.dataset.sport = state.sport;
   stage.dataset.size = state.size;
   stage.dataset.ready = "true";
-  $("park-row").hidden = state.sport !== "mlb";
-  $("league-row").hidden = LEAGUES[state.sport].length < 2;
-  const soccer = state.sport === "soccer";
-  $("pitch-row").hidden = !soccer;
-  $("ground-row").hidden = !soccer;
-  $("pitch-type-row").hidden = !soccer;
-  $("soccer-group").hidden = !soccer;
-  for (const role of ["away", "home"]) $(`${role}-pens-row`).hidden = !soccer;
-  $("flags").setAttribute("aria-pressed", String(state.flags));
+  stage.removeAttribute("data-pending");
   renderEra();
-  $("court-group").hidden = state.sport !== "nba";
-  $("stripes").setAttribute("aria-pressed", String(state.stripes));
-  $("exact").setAttribute("aria-pressed", String(state.exact));
-  $("baseline").setAttribute("aria-pressed", String(state.baseline));
-  $("centre-logo").setAttribute("aria-pressed", String(state.centreLogo));
+  applyRows();
+  for (const toggleOf of [["flags", "flags"], ["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"]]) $(toggleOf[0]).setAttribute("aria-pressed", String(state[toggleOf[1]]));
   updateEmbed();
   syncUrl();
 }
@@ -902,4 +735,6 @@ drawLive();
 drawReplays();
 render();
 document.documentElement.dataset.kyogijoVersion = VERSION;
+// The page is its own words and its own drawing now; a page held back for a Japanese reader (see scripts/first-paint.mjs) shows.
+document.documentElement.removeAttribute("data-first");
 initAtlas({ say, lang: () => language.lang, onTry: tryPlace }).then((started) => { atlas = started; });

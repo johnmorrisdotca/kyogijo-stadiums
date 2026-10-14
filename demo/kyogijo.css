@@ -12,11 +12,17 @@ select.fam-field { min-width: min(100%, 20rem); }
   .try-stage { position: sticky; top: 12px; }
 }
 
-/* The stage: the surface on the family's felt, as big as the box allows, and no taller than most of the screen when tall. */
-.stage-felt { padding: 12px 8px; }
-#stage { display: flex; justify-content: center; align-items: center; }
+/* The stage: the surface on the family's felt, as big as the box allows, and no taller than most of the screen when tall.
+   Its box is kept from the first paint: as tall as the drawing will be, by the drawing's shape (--r, its width over its height) and
+   the width the felt gives it, or as tall as a tall drawing is. A drawing the script has yet to make leaves the box as it is
+   (data-pending hides the one in its place), and an empty stage, or a drawing that has not come, never collapses to a bar.
+   The mount measures a stage with no content and its own least height set to 0, so the box does not decide the drawing's way round. */
+.stage-felt { padding: 12px 8px; container-type: inline-size; }
+#stage { display: flex; justify-content: center; align-items: center; min-height: calc(100cqw / var(--r, 2.1386)); }
 #stage svg { max-width: 100%; }
+#stage[data-orientation="portrait"] { min-height: min(78vh, 880px); }
 #stage[data-orientation="portrait"] svg { width: auto; height: min(78vh, 880px); }
+#stage[data-pending] svg { visibility: hidden; }
 @media (min-width: 700px) { .stage-felt { padding: 18px 16px; } }
 
 .try-controls { display: grid; gap: 10px; min-width: 0; }

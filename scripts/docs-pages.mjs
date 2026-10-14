@@ -18,6 +18,7 @@ import { Marked } from "marked";
 
 import { DOCS_CSS, DOCS_JS } from "./docs-assets.mjs";
 import { FAMILY_SCRIPT, familyFooter, familyHead, familyHeader, familyUnreviewed } from "./family-template.mjs";
+import { RELEASE_PAGE, firstPaintHead, sayEnglish } from "./first-paint.mjs";
 
 export const SITE_ORIGIN = "https://johnmorrisdotca.github.io/kyogijo/";
 export const REPO = "https://github.com/johnmorrisdotca/kyogijo";
@@ -328,11 +329,12 @@ export function docsPage({ id, name, icon, slug, title, description, article, he
   const prev = order[at - 1];
   const next = order[at + 1];
   const edit = editFile ? `<p class="docs-edit"><a href="${REPO}/edit/main/${editFile}" data-say="docsEdit" rel="noopener"></a></p>` : "";
-  return `<!doctype html>
+  return sayEnglish(`<!doctype html>
 <html lang="en">
   <head>
     ${familyHead({ id, title: `${title} · ${name} documentation`, description })}
     <link rel="icon" href="${icon}" />
+    ${firstPaintHead(id)}
     <link rel="stylesheet" href="../family.css" />
     <link rel="stylesheet" href="docs.css" />
   </head>
@@ -366,10 +368,10 @@ ${article}
     <script>${FAMILY_SCRIPT}</script>
     <script src="search-index.js"></script>
     <script src="docs.js"></script>
-    <script>familyLanguage({ id: ${JSON.stringify(id)}, words: window.KYOGIJO_DOCS_WORDS, onChange: window.kyDocs.setLanguage });window.kyDocs.setLanguage(document.documentElement.lang);</script>
+    <script>familyLanguage({ id: ${JSON.stringify(id)}, words: window.KYOGIJO_DOCS_WORDS, onChange: window.kyDocs.setLanguage });window.kyDocs.setLanguage(document.documentElement.lang);${RELEASE_PAGE}</script>
   </body>
 </html>
-`;
+`, DOCS_WORDS.en);
 }
 
 /**

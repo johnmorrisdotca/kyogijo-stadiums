@@ -1,0 +1,206 @@
+// The first paint: the page is whole before its script runs (the drawing and every word are in the HTML), and it does not
+// jump when the script takes over (layout shift, as the browser measures it).
+import { existsSync, readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+import { expect, test } from "@playwright/test";
+
+import { at, serve } from "./demo.mjs";
+
+const site = join(dirname(fileURLToPath(import.meta.url)), "..", "site");
+const TYPES = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".json": "application/json", ".svg": "image/svg+xml" };
+// The URL the owner saw jump (Chrome, dark mode), and the page as it opens with nothing asked.
+const JOHN = "?sport=nba&league=gleague&place=mazda-stadium-hiroshima";
+
+/**
+ * Serve `site/` slowly, as a network does: the page and its stylesheets at once, every script after a pause, so that the
+ * browser paints what the HTML holds before the script can change anything.
+ */
+async function serveSlowly(page, delay = 400) {
+  await page.route("http://kyogijo.test/**", async (route) => {
+    const { pathname } = new URL(route.request().url());
+    const file = join(site, pathname.endsWith("/") ? `${pathname}index.html` : pathname);
+    if (!existsSync(file)) return route.fulfill({ status: 404, body: "" });
+    const type = TYPES[file.slice(file.lastIndexOf("."))] ?? "application/octet-stream";
+    if (type === "text/javascript") await new Promise((done) => setTimeout(done, delay));
+    return route.fulfill({ body: readFileSync(file), contentType: type });
+  });
+}
+
+/** Add up the layout shifts of the page from its first byte, as the browser reports them (a shift that follows the reader's own input does not count). */
+async function watchShifts(page) {
+  await page.addInitScript(() => {
+    window.__shift = 0;
+    window.__shifts = [];
+    try {
+      new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+          if (entry.hadRecentInput) continue;
+          window.__shift += entry.value;
+          window.__shifts.push({ value: entry.value, at: Math.round(entry.startTime), sources: entry.sources.map((s) => `${s.node?.nodeName}#${s.node?.id ?? ""}.${s.node?.className?.baseVal ?? s.node?.className ?? ""}`) });
+        }
+      }).observe({ type: "layout-shift", buffered: true });
+    } catch {
+      window.__shift = null;
+    }
+  });
+}
+
+for (const [name, query] of [["by default", ""], ["at the address the owner used", JOHN]]) {
+  test(`does not jump when the script takes over, ${name}`, async ({ page, browserName }, testInfo) => {
+    test.skip(browserName !== "chromium", "only Chromium reports layout shifts");
+    await page.emulateMedia({ colorScheme: "dark" });
+    await watchShifts(page);
+    await serveSlowly(page);
+    await page.goto(`http://kyogijo.test/${query}`);
+    await page.waitForSelector(`${at("stage")}[data-ready="true"] svg.kyogijo`);
+    // The map, the examples and the rest come in after the first view; give them time to land.
+    await page.waitForFunction(() => document.querySelectorAll("#atlas-list li").length > 0, null, { timeout: 15000 });
+    await page.waitForTimeout(1500);
+    const [total, shifts] = await page.evaluate(() => [window.__shift, window.__shifts]);
+    testInfo.annotations.push({ type: "cls", description: `${total}` });
+    console.log(`${testInfo.project.name} ${name}: CLS ${total?.toFixed(4)} ${JSON.stringify(shifts)}`);
+    expect(total).toBeLessThan(0.05);
+  });
+}
+
+for (const path of ["docs/", "docs/getting-started.html", "docs/gallery-fields.html", "api.html"]) {
+  test(`${path} does not jump when its script runs`, async ({ page, browserName }, testInfo) => {
+    test.skip(browserName !== "chromium", "only Chromium reports layout shifts");
+    await page.emulateMedia({ colorScheme: "dark" });
+    await watchShifts(page);
+    await serveSlowly(page, 250);
+    await page.goto(`http://kyogijo.test/${path}`);
+    await page.waitForLoadState("load");
+    await page.waitForTimeout(1500);
+    const [total, shifts] = await page.evaluate(() => [window.__shift, window.__shifts]);
+    console.log(`${testInfo.project.name} ${path}: CLS ${total?.toFixed(4)} ${JSON.stringify(shifts)}`);
+    expect(total).toBeLessThan(0.05);
+  });
+}
+
+// ----- Before the script runs, the page is whole: the drawing is in it, and so is every word.
+
+test.describe("with JavaScript off", () => {
+  test.use({ javaScriptEnabled: false });
+
+  test("the demo has its drawing, its words and its controls", async ({ page }) => {
+    await serve(page);
+    await page.goto("http://kyogijo.test/");
+    // The drawing: the rink, with both teams and the score, in a box that has not collapsed.
+    const drawing = page.locator(`${at("stage")} svg.kyogijo`);
+    await expect(drawing).toHaveAttribute("data-sport", "nhl");
+    expect(await drawing.locator("title").textContent()).toContain("Northern Owls 3, Lakeshore Anchors 2");
+    expect(await page.locator(`${at("stage")} svg *`).count()).toBeGreaterThan(40);
+    const box = await page.locator(at("stage")).boundingBox();
+    expect(box.height).toBeGreaterThan(150);
+    expect(box.width).toBeGreaterThan(200);
+    const drawn = await drawing.boundingBox();
+    expect(Math.abs(drawn.height - box.height)).toBeLessThanOrEqual(1);
+    // The words: nothing the page says is left to its script.
+    const empty = await page.evaluate(() => [...document.querySelectorAll("[data-say]")].filter((el) => el.textContent.trim() === "").map((el) => el.dataset.say));
+    expect(empty).toEqual([]);
+    const unlabelled = await page.evaluate(() => [...document.querySelectorAll("[data-say-label]")].filter((el) => !el.getAttribute("aria-label")).map((el) => el.id || el.dataset.sayLabel));
+    expect(unlabelled).toEqual([]);
+    await expect(page.locator("h1")).toContainText("Kyogijo");
+    await expect(page.locator("#try-title")).toHaveText("Try it");
+    await expect(page.locator("details.group > summary").first()).toHaveText("Surface");
+    await expect(page.locator("footer")).toContainText("Every dimension is from a rulebook");
+    // The controls: every choice has its buttons, the one that is on is pressed, and the fields hold their values.
+    await expect(page.locator(`${at("sport")} button`)).toHaveCount(20);
+    await expect(page.locator(`${at("sport")} button[aria-pressed="true"]`)).toHaveText("NHL");
+    await expect(page.locator(`${at("orientation")} button[aria-pressed="true"]`)).toHaveText("Fit the box");
+    await expect(page.locator(`${at("size")} button[aria-pressed="true"]`)).toHaveText("On the surface");
+    await expect(page.locator(at("away-name"))).toHaveValue("Northern Owls");
+    await expect(page.locator(at("home-score"))).toHaveValue("2");
+    await expect(page.locator(at("away-color"))).toHaveValue("#3a2d6b");
+    await expect(page.locator(`${at("status")} button[aria-pressed="true"]`)).toHaveText("Final/OT");
+    await expect(page.locator(at("stripes"))).toHaveAttribute("aria-pressed", "true");
+    await expect(page.locator(at("stripes"))).toHaveText("Mown stripes");
+    // The rows that belong to other sports are not shown.
+    await expect(page.locator("#park-row")).toBeHidden();
+    await expect(page.locator("#court-group")).toBeHidden();
+    await expect(page.locator("#soccer-group")).toBeHidden();
+    await expect(page.locator("#era-group")).toBeVisible();
+    // Every section has its heading and its line, though the examples under them are drawn by the script.
+    for (const section of ["atlas", "embed", "gallery", "badges", "replay", "elements"]) await expect(page.locator(`#${section} h2`)).not.toBeEmpty();
+  });
+
+  for (const path of ["docs/", "docs/getting-started.html", "docs/gallery-fields.html", "api.html"]) {
+    test(`${path} has its header, its words and its footer`, async ({ page }) => {
+      await serve(page);
+      await page.goto(`http://kyogijo.test/${path}`);
+      const empty = await page.evaluate(() => [...document.querySelectorAll("[data-say]")].filter((el) => el.textContent.trim() === "" && el.dataset.say !== "name").map((el) => el.dataset.say));
+      expect(empty).toEqual([]);
+      await expect(page.locator("header .intro p").first()).not.toBeEmpty();
+      await expect(page.locator("header nav a").first()).not.toBeEmpty();
+      await expect(page.locator("footer")).toContainText("Made from the package's own");
+      await expect(page.locator("main h1, main h2").first()).not.toBeEmpty();
+      if (path.includes("gallery-")) expect(await page.locator("main svg.kyogijo").count()).toBeGreaterThan(5);
+    });
+  }
+});
+
+// ----- When the script runs it takes the page over, and moves nothing.
+
+for (const [name, query] of [["by default", ""], ["at the address the owner used", JOHN]]) {
+  test(`keeps the stage's box and the drawing in it, ${name}`, async ({ page }) => {
+    await serveSlowly(page, 700);
+    await page.goto(`http://kyogijo.test/${query}`, { waitUntil: "commit" });
+    await page.waitForSelector("#atlas", { state: "attached" });
+    expect(await page.locator(at("stage")).getAttribute("data-ready")).toBe("false");
+    const before = await page.locator(at("stage")).boundingBox();
+    const hadDrawing = await page.evaluate(() => {
+      const svg = document.querySelector("#stage svg");
+      if (svg === null || getComputedStyle(svg).visibility === "hidden") return false;
+      svg.firstDrawing = true;
+      return true;
+    });
+    await page.waitForSelector(`${at("stage")}[data-ready="true"] svg.kyogijo`);
+    const after = await page.locator(at("stage")).boundingBox();
+    // The box is the one the script's drawing fills: not a pixel taller or shorter, wherever the page was opened.
+    expect(Math.abs(after.height - before.height)).toBeLessThanOrEqual(1);
+    expect(Math.abs(after.y - before.y)).toBeLessThanOrEqual(1);
+    // The default drawing is the very one in the page; another is made by the script, and the wrong one was never shown.
+    expect(hadDrawing).toBe(query === "");
+    expect(await page.evaluate(() => document.querySelector("#stage svg").firstDrawing === true)).toBe(query === "");
+    await expect(page.locator(at("stage"))).not.toHaveAttribute("data-pending", "");
+  });
+}
+
+// ----- A reader of Japanese is not shown English first.
+
+for (const [name, setup, query] of [
+  ["asked for in the address", () => {}, "?lang=ja"],
+  ["kept on the device", () => window.localStorage.setItem("kyogijo.page.lang", "ja"), ""],
+]) {
+  test(`a page in Japanese is held back, then shown in Japanese, with no jump: ${name}`, async ({ page, browserName }) => {
+    await page.emulateMedia({ colorScheme: "dark" });
+    if (browserName === "chromium") await watchShifts(page);
+    await page.addInitScript(setup);
+    await serveSlowly(page, 500);
+    await page.goto(`http://kyogijo.test/${query}`, { waitUntil: "commit" });
+    await page.waitForSelector("#atlas", { state: "attached" });
+    // The language is known before anything is drawn, and the English the page is written in is not shown.
+    await expect(page.locator("html")).toHaveAttribute("lang", "ja");
+    expect(await page.evaluate(() => getComputedStyle(document.body).visibility)).toBe("hidden");
+    await page.waitForSelector(`${at("stage")}[data-ready="true"] svg.kyogijo`);
+    expect(await page.evaluate(() => getComputedStyle(document.body).visibility)).toBe("visible");
+    await expect(page.locator("html")).not.toHaveAttribute("data-first", /./);
+    await expect(page.locator("#try-title")).toHaveText("試してみる");
+    if (browserName === "chromium") {
+      await page.waitForTimeout(800);
+      expect(await page.evaluate(() => window.__shift)).toBeLessThan(0.05);
+    }
+  });
+}
+
+test("a page whose script never comes is shown after three seconds, in English", async ({ page }) => {
+  await serve(page);
+  await page.route("**/demo.js", (route) => route.abort());
+  await page.goto("http://kyogijo.test/?lang=ja");
+  expect(await page.evaluate(() => getComputedStyle(document.body).visibility)).toBe("hidden");
+  await page.waitForFunction(() => getComputedStyle(document.body).visibility === "visible", null, { timeout: 6000 });
+  await expect(page.locator("#try-title")).toHaveText("Try it");
+});

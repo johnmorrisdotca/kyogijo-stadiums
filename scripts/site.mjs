@@ -12,15 +12,149 @@ import { atlasMapSvg } from "./atlas-map.mjs";
 import { buildDocs } from "./docs-pages.mjs";
 import { framesBlockHtml, framesFiles, galleryData, galleryPageHtml, libraryFrom } from "./docs-gallery.mjs";
 import { FAMILY_SCRIPT, familyFooter, familyHead, familyHeader, familyUnreviewed } from "./family-template.mjs";
+import { firstPaintHead, sayEnglish } from "./first-paint.mjs";
+import { WORDS } from "../demo/words.js";
 
 const id = "kyogijo";
 const ICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%232f5d4a'/%3E%3Ctext x='50' y='72' font-size='60' text-anchor='middle' fill='%23f3efe4'%3E場%3C/text%3E%3C/svg%3E";
 
 const escape = (text) => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const help = (en, ja) => `data-help-en="${escape(en)}" data-help-ja="${escape(ja)}"`;
-const seg = (name, label, en, ja) => `<div class="setup fam-row" ${help(en, ja)}><span class="fam-label" data-say="${label}"></span><div class="fam-seg" role="group" data-say-label="${label}" id="${name}" data-testid="${name}"></div></div>`;
-const field = (name, label, attrs = "") => `<label class="setup fam-row"><span class="fam-label" data-say="${label}"></span><input class="fam-field" id="${name}" data-testid="${name}" data-say-label="${label}" autocomplete="off" ${attrs} /></label>`;
-const toggle = (name, label) => `<button type="button" class="fam-chip" id="${name}" data-testid="${name}" aria-pressed="false" data-say="${label}"></button>`;
+// The playground's controls, in their first state: a choice has its buttons with the one that is on pressed, a field has its value.
+const seg = (name, label, en, ja) => {
+  const { kind, values, get } = SEGS.find((one) => one.id === name);
+  const buttons = values.map((value) => `<button type="button" data-value="${value}" aria-pressed="${get(first) === value}"${kind === "status" && model.hiddenStatus(first.sport, value) ? " hidden" : ""}>${escape(labels[kind](value))}</button>`).join("");
+  return `<div class="setup fam-row" ${help(en, ja)}><span class="fam-label" data-say="${label}"></span><div class="fam-seg" role="group" data-say-label="${label}" id="${name}" data-testid="${name}">${buttons}</div></div>`;
+};
+const field = (name, label, attrs = "") => `<label class="setup fam-row"><span class="fam-label" data-say="${label}"></span><input class="fam-field" id="${name}" data-testid="${name}" data-say-label="${label}" autocomplete="off" ${attrs} value="${escapeAttr(fieldValue[name])}" /></label>`;
+const toggle = (name, label) => `<button type="button" class="fam-chip" id="${name}" data-testid="${name}" aria-pressed="${toggled[name]}" data-say="${label}"></button>`;
+
+// ----- The site's files, and the first view of the playground: what its script would draw first, written into the HTML.
+rmSync("site", { recursive: true, force: true });
+mkdirSync("site", { recursive: true });
+cpSync("demo", "site", { recursive: true });
+// The declarations are for editors, not for a browser.
+cpSync("dist", "site/dist", { recursive: true, filter: (from) => !/\.d\.ts$/.test(from) });
+// The map of the Atlas is chizu's: the few files of its build that the page loads (the world and the mounted map, not the
+// countries, regions or features it loads only on request), with its licence and notice, and the same world drawn as a
+// picture of every place for docs/atlas.md.
+const chizu = dirname(dirname(createRequire(import.meta.url).resolve("@johnmorrisdotca/chizu")));
+cpSync(join(chizu, "dist"), "site/chizu", { recursive: true, filter: (from) => !/\.d\.ts$/.test(from) && !/[\\/]data[\\/](countries|divisions|features)(?:[\\/]|$)/.test(from) && !/world-detail/.test(from) && !/loaders/.test(from) });
+cpSync(join(chizu, "LICENSE"), "site/chizu/LICENSE");
+cpSync(join(chizu, "NOTICE.md"), "site/chizu/NOTICE.md");
+
+const lib = await libraryFrom(join(process.cwd(), "dist"), ".js", (file) => import(pathToFileURL(file).href));
+const style = lib["@johnmorrisdotca/kyogijo"].KYOGIJO_STYLE;
+// The playground's own code, from the copy in site/ (which finds the package beside it), run here as the page runs it.
+const here = (file) => import(pathToFileURL(join(process.cwd(), "site", file)).href);
+const { SPORTS, LEAGUES, drawKyogijo } = await here("dist/index.js");
+const model = await here("model.js");
+const { FIELDS, SEGS, TOGGLES, SIZES } = model;
+const say = (key) => {
+  if (!(key in WORDS.en)) throw new Error(`demo/words.js has no English word for "${key}"`);
+  return WORDS.en[key];
+};
+
+/** A state for a sport: the address asks for nothing else, and the page speaks English. */
+const stateFor = (sport) => {
+  const one = model.makeState(new URLSearchParams(""), null);
+  one.sport = sport;
+  model.loadGame(one, sport, "en");
+  return one;
+};
+const first = stateFor("nhl");
+const hidden = model.hiddenRows(first);
+const fieldValue = Object.fromEntries(FIELDS.map((one) => [one.id, one.get(first)]));
+const toggled = Object.fromEntries(TOGGLES.map((one) => [one.id, one.get(first)]));
+const labels = model.labelOf(say, first);
+
+/** The drawing a state asks for at a width (the playground's "auto" turns tall below 560 px, wide above) or a way round. */
+const drawn = (one, mode) => {
+  const options = { ...model.optionsFor(one, "en"), style: "none" };
+  if (mode === "wide") Object.assign(options, { orientation: "auto", aspect: 1.5 });
+  else if (mode === "tall") Object.assign(options, { orientation: "auto", aspect: 0.75 });
+  else options.orientation = mode;
+  return drawKyogijo(options);
+};
+const WIDE = drawn(first, "wide");
+const TALL = drawn(first, "tall");
+
+/**
+ * What the page needs to know before its script runs, to keep a box the right size for the address it was opened at: for each sport
+ * and size, the shape of the drawing in each mode, and the rows that differ from the default sport's.
+ */
+const shape = (svg) => {
+  const [, , width, height] = /viewBox="([^"]+)"/.exec(svg)[1].split(" ").map(Number);
+  return [Math.round((width / height) * 10000) / 10000, /data-orientation="portrait"/.test(svg) ? 1 : 0];
+};
+const FIRST = { sport: first.sport, sports: SPORTS, sizes: SIZES, shapes: {}, rows: {}, eras: {}, statuses: {}, use: {} };
+const hiddenStatuses = (sport) => model.STATUSES.filter((value) => model.hiddenStatus(sport, value));
+for (const sport of SPORTS) {
+  const one = stateFor(sport);
+  FIRST.shapes[sport] = {};
+  for (const size of SIZES) {
+    one.size = size;
+    FIRST.shapes[sport][size] = Object.fromEntries(["wide", "tall", "landscape", "portrait"].map((mode) => [mode, shape(drawn(one, mode))]));
+  }
+  const rows = model.hiddenRows(one);
+  FIRST.rows[sport] = Object.fromEntries(Object.entries(rows).filter(([id, value]) => value !== hidden[id]));
+  // The rows that change with the league named: only the season rows, by whether the league has a history.
+  FIRST.eras[sport] = {};
+  for (const league of LEAGUES[sport]) {
+    one.league = league.id;
+    const off = model.hiddenRows(one)["era-group"];
+    if (off !== rows["era-group"]) FIRST.eras[sport][league.id] = off;
+  }
+  if (Object.keys(FIRST.eras[sport]).length === 0) delete FIRST.eras[sport];
+  if (hiddenStatuses(sport).join() !== hiddenStatuses(first.sport).join()) FIRST.statuses[sport] = hiddenStatuses(sport);
+}
+// Which of the two drawings in the page each mode of the default sport already is (null: neither, and the script draws it).
+for (const mode of ["wide", "tall", "landscape", "portrait"]) {
+  const svg = drawn(first, mode);
+  FIRST.use[mode] = svg === WIDE ? "wide" : svg === TALL ? "tall" : null;
+}
+
+const escapeAttr = (text) => String(text).replace(/&/g, "&amp;").replace(/"/g, "&quot;");
+const hid = (id) => {
+  if (!(id in hidden)) throw new Error(`hiddenRows has no row "${id}"`);
+  return hidden[id] ? " hidden" : "";
+};
+
+/**
+ * The first thing the page does, as it is parsed and before anything is drawn: look at the address, and make the playground the shape it
+ * will be (the rows it shows, the choices that are on, the box of the stage and the drawing in it) so that the module script, which comes
+ * later, finds a page that is already right and moves nothing. The drawing in the page is the default sport's, wide; its tall twin waits
+ * in a template for a narrow box; any other drawing waits for the script, the box kept for it and the wrong one hidden.
+ */
+const FIRST_SCRIPT = `(function () {
+  var F = ${JSON.stringify(FIRST)};
+  var $ = function (id) { return document.getElementById(id); };
+  var q = new URLSearchParams(location.search);
+  var stage = $("stage");
+  var sport = F.sports.indexOf(q.get("sport")) >= 0 ? q.get("sport") : F.sport;
+  var size = F.sizes.indexOf(q.get("size")) >= 0 ? q.get("size") : "full";
+  var way = q.get("orientation");
+  // The same rule as the stage's own: "auto" is tall in a box narrower than 560 pixels and wide in any other.
+  var mode = way === "landscape" || way === "portrait" ? way : stage.clientWidth < 560 ? "tall" : "wide";
+  var shape = F.shapes[sport][size][mode];
+  var rows = F.rows[sport] || {};
+  Object.keys(rows).forEach(function (id) { $(id).hidden = rows[id]; });
+  var eras = F.eras[sport] || {};
+  var league = q.get("league");
+  if (league !== null && Object.prototype.hasOwnProperty.call(eras, league)) $("era-group").hidden = eras[league];
+  var off = F.statuses[sport];
+  if (off) Array.prototype.forEach.call($("status").children, function (button) { button.hidden = off.indexOf(button.dataset.value) >= 0; });
+  [["sport", sport], ["size", size], ["orientation", way === "landscape" || way === "portrait" ? way : "auto"]].forEach(function (one) {
+    Array.prototype.forEach.call($(one[0]).children, function (button) { button.setAttribute("aria-pressed", String(button.dataset.value === one[1])); });
+  });
+  stage.dataset.orientation = shape[1] ? "portrait" : "landscape";
+  stage.dataset.sport = sport;
+  stage.dataset.size = size;
+  stage.style.setProperty("--r", String(shape[0]));
+  var use = sport === F.sport && size === "full" ? F.use[mode] : null;
+  if (use === "tall") stage.replaceChildren($("stage-tall").content.cloneNode(true));
+  else if (use === null) stage.setAttribute("data-pending", "");
+})();`;
 
 const team = (role) => `<div class="team" data-role="${role}">
           <h3 data-say="${role}"></h3>
@@ -28,11 +162,11 @@ const team = (role) => `<div class="team" data-role="${role}">
             ${field(`${role}-name`, "teamName", 'maxlength="40"')}
             ${field(`${role}-abbr`, "teamAbbr", 'maxlength="5"')}
             ${field(`${role}-score`, "teamScore", 'type="text" inputmode="numeric" maxlength="3"')}
-            <label class="setup fam-row" id="${role}-pens-row" hidden><span class="fam-label" data-say="teamPens"></span><input class="fam-field" id="${role}-pens" data-testid="${role}-pens" data-say-label="teamPens" autocomplete="off" type="text" inputmode="numeric" maxlength="2" /></label>
-            <label class="setup fam-row"><span class="fam-label" data-say="teamColour"></span><input class="fam-field fam-colour" type="color" id="${role}-color" data-testid="${role}-color" data-say-label="teamColour" /></label>
+            <label class="setup fam-row" id="${role}-pens-row"${hid(`${role}-pens-row`)}><span class="fam-label" data-say="teamPens"></span><input class="fam-field" id="${role}-pens" data-testid="${role}-pens" data-say-label="teamPens" autocomplete="off" type="text" inputmode="numeric" maxlength="2" value="${escapeAttr(fieldValue[`${role}-pens`])}" /></label>
+            <label class="setup fam-row"><span class="fam-label" data-say="teamColour"></span><input class="fam-field fam-colour" type="color" id="${role}-color" data-testid="${role}-color" data-say-label="teamColour" value="${escapeAttr(fieldValue[`${role}-color`])}" /></label>
           </div>
           ${seg(`${role}-logo`, "teamLogo", "Pick a made-up emblem, or give the address of a logo of your own. A logo may be an https address, a path, an image data address or the text of an SVG.", "架空のエンブレムを選ぶか、お持ちのロゴのURLを入力します。ロゴには、httpsのURL、パス、画像のデータURI、SVGのコードを使えます。")}
-          <input class="fam-field logo-url" id="${role}-logo-url" data-testid="${role}-logo-url" data-say-label="logoUrl" data-say-placeholder="logoUrl" autocomplete="off" hidden />
+          <input class="fam-field logo-url" id="${role}-logo-url" data-testid="${role}-logo-url" data-say-label="logoUrl" data-say-placeholder="logoUrl" autocomplete="off" value="${escapeAttr(fieldValue[`${role}-logo-url`])}"${hid(`${role}-logo-url`)} />
         </div>`;
 
 const page = `<!doctype html>
@@ -46,8 +180,10 @@ const page = `<!doctype html>
       ogDescription: "Fields, rinks, courts and ballparks drawn to scale as SVG, with the score on them: wide or tall, light or dark.",
     })}
     <link rel="icon" href="${ICON}" />
+    ${firstPaintHead(id, { theme: true })}
     <link rel="stylesheet" href="family.css" />
     <link rel="stylesheet" href="kyogijo.css" />
+    <style id="kyogijo-style">${style}</style>
   </head>
   <body>
     <main>
@@ -60,40 +196,41 @@ const page = `<!doctype html>
         </div>
         <div class="try-grid">
           <div class="try-stage">
-            <div class="fam-felt stage-felt" id="felt"><div id="stage" data-testid="stage" data-ready="false"></div></div>
+            <div class="fam-felt stage-felt" id="felt"><div id="stage" data-testid="stage" data-ready="false" data-orientation="landscape" data-sport="${first.sport}" data-size="${first.size}" style="--r:${shape(WIDE)[0]}">${WIDE}</div></div>
+            <template id="stage-tall">${TALL}</template>
           </div>
           <div class="try-controls">
             <details class="fam-fold group" open>
               <summary data-say="groupSurface"></summary>
               ${seg("sport", "sport", "Choose the surface: three football fields (NFL, CFL, IFAF), a hockey rink, a basketball court, a baseball field, a soccer pitch, a curling sheet, the court of tennis, volleyball, badminton, pickleball or table tennis, or the field of lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey or handball.", "競技場を選びます。アメリカンフットボール場3種類（NFL・CFL・IFAF）、アイスホッケーのリンク、バスケットボールのコート、野球場、サッカーのピッチ、カーリングのシート、テニス・バレーボール・バドミントン・ピックルボールのコート、卓球台のほか、ラクロス、ラグビー、オーストラリアンフットボール、ゲーリック・ゲームズ、クリケット、フィールドホッケーのフィールド、ハンドボールのコートから選べます。")}
-              <div class="setup fam-row" id="league-row" hidden ${help("Choose the league whose rulebook marks the surface: FIBA, the WNBA or the NCAA for the court; the IIHF, the NCAA, the AHL or the CHL for the rink; the NCAA, the high schools or arena football for the field; Little League, PONY or softball for the diamond; World Curling or Curling Canada for the sheet; beach volleyball for the volleyball court. Each is drawn from its own rulebook.", "どのリーグのルールブックに沿って描くかを選びます。コートならFIBA・WNBA・NCAA、リンクならIIHF・NCAA・AHL・CHL、フィールドならNCAA・全米高校連盟（NFHS）・インドアフットボール、野球場とソフトボール場ならリトルリーグ・PONY・USAソフトボール、カーリングのシートならワールドカーリングやカーリング・カナダ、バレーボールのコートならビーチバレーボールなど。どれもそのリーグ自身のルールブックに基づいて描きます。")}>
+              <div class="setup fam-row" id="league-row"${hid("league-row")} ${help("Choose the league whose rulebook marks the surface: FIBA, the WNBA or the NCAA for the court; the IIHF, the NCAA, the AHL or the CHL for the rink; the NCAA, the high schools or arena football for the field; Little League, PONY or softball for the diamond; World Curling or Curling Canada for the sheet; beach volleyball for the volleyball court. Each is drawn from its own rulebook.", "どのリーグのルールブックに沿って描くかを選びます。コートならFIBA・WNBA・NCAA、リンクならIIHF・NCAA・AHL・CHL、フィールドならNCAA・全米高校連盟（NFHS）・インドアフットボール、野球場とソフトボール場ならリトルリーグ・PONY・USAソフトボール、カーリングのシートならワールドカーリングやカーリング・カナダ、バレーボールのコートならビーチバレーボールなど。どれもそのリーグ自身のルールブックに基づいて描きます。")}>
                 <span class="fam-label" data-say="leagueLabel"></span>
                 <select class="fam-field" id="league" data-testid="league" data-say-label="leagueLabel"></select>
               </div>
-              <div class="setup fam-row" id="pitch-row" hidden ${help("Choose the pitch: the international 105 by 68 metres, the sizes UEFA, the MLS and the NCAA publish, the least and most the Laws allow, the FA's small-sided pitches or FIFA's futsal court.", "ピッチを選びます。国際標準の105×68m、UEFA・MLS・NCAAの公表する広さ、競技規則が認める最小と最大、FAの少人数制ピッチ、FIFAのフットサルのコートがあります。")}>
+              <div class="setup fam-row" id="pitch-row"${hid("pitch-row")} ${help("Choose the pitch: the international 105 by 68 metres, the sizes UEFA, the MLS and the NCAA publish, the least and most the Laws allow, the FA's small-sided pitches or FIFA's futsal court.", "ピッチを選びます。国際標準の105×68m、UEFA・MLS・NCAAの公表する広さ、競技規則が認める最小と最大、FAの少人数制ピッチ、FIFAのフットサルのコートがあります。")}>
                 <span class="fam-label" data-say="pitchLabel"></span>
                 <select class="fam-field" id="pitch" data-testid="pitch" data-say-label="pitchLabel"></select>
               </div>
-              <div class="setup fam-row" id="ground-row" hidden ${help("Choose a famous ground: the pitch is drawn at the size its article publishes, or at the international 105 by 68 metres where none is. A pitch other than the international one, chosen above, wins over the ground's size.", "有名なスタジアムを選びます。ピッチは、そのスタジアムの記事で公表されている広さで描かれ、公表されていない場合は国際標準の105×68mで描かれます。上で国際標準以外のピッチを選んだ場合は、そちらが優先されます。")}>
+              <div class="setup fam-row" id="ground-row"${hid("ground-row")} ${help("Choose a famous ground: the pitch is drawn at the size its article publishes, or at the international 105 by 68 metres where none is. A pitch other than the international one, chosen above, wins over the ground's size.", "有名なスタジアムを選びます。ピッチは、そのスタジアムの記事で公表されている広さで描かれ、公表されていない場合は国際標準の105×68mで描かれます。上で国際標準以外のピッチを選んだ場合は、そちらが優先されます。")}>
                 <span class="fam-label" data-say="groundLabel"></span>
                 <select class="fam-field" id="ground" data-testid="ground" data-say-label="groundLabel"></select>
               </div>
-              <div class="setup fam-row" id="pitch-type-row" hidden ${help("Draw the pitch in a data provider's own coordinates: the lines stand where the provider puts them, and an empty group in the drawing takes the provider's raw x and y.", "データ提供元の座標系でピッチを描きます。ラインは提供元が定める位置に引かれ、図の中の空のグループに、提供元の生のx・y座標をそのまま描き込めます。")}>
+              <div class="setup fam-row" id="pitch-type-row"${hid("pitch-type-row")} ${help("Draw the pitch in a data provider's own coordinates: the lines stand where the provider puts them, and an empty group in the drawing takes the provider's raw x and y.", "データ提供元の座標系でピッチを描きます。ラインは提供元が定める位置に引かれ、図の中の空のグループに、提供元の生のx・y座標をそのまま描き込めます。")}>
                 <span class="fam-label" data-say="pitchTypeLabel"></span>
                 <select class="fam-field" id="pitch-type" data-testid="pitch-type" data-say-label="pitchTypeLabel"></select>
               </div>
-              <div class="setup fam-row" id="park-row" ${help("Choose the ballpark: each MLB and NPB park has its own fence, drawn from the distances published for it.", "球場を選びます。MLBとNPBの各球場には、公表されている距離をもとに描いた、その球場固有のフェンスがあります。")}>
+              <div class="setup fam-row" id="park-row"${hid("park-row")} ${help("Choose the ballpark: each MLB and NPB park has its own fence, drawn from the distances published for it.", "球場を選びます。MLBとNPBの各球場には、公表されている距離をもとに描いた、その球場固有のフェンスがあります。")}>
                 <span class="fam-label" data-say="park"></span>
                 <select class="fam-field" id="park" data-testid="park" data-say-label="park"></select>
               </div>
-              <div id="era-group">
+              <div id="era-group"${hid("era-group")}>
                 ${seg("era", "era", "Draw the surface as it is today, or as the rules marked it in a past season: the NHL's centre line from 1943, the NBA's three-point line from 1979, the NFL's hash marks as they moved, and more. Each change is cited.", "競技場を現在の姿で描くか、過去のシーズンのルールに従った姿で描くかを選びます。例：NHLのセンターレッドライン（1943年から）、NBAのスリーポイントライン（1979年から）、何度も位置が変わったNFLのハッシュマークなど。どの変更にも出典があります。")}
-                <div class="setup fam-row" id="era-year-row" hidden ${help("Slide to a season. A season is named by the year it starts in: 1979 is the 1979–80 season of the NHL and the NBA.", "スライダーでシーズンを選びます。シーズンは開幕する年で表します。NHLとNBAでは、「1979」は1979–80シーズンを指します。")}>
+                <div class="setup fam-row" id="era-year-row"${hid("era-year-row")} ${help("Slide to a season. A season is named by the year it starts in: 1979 is the 1979–80 season of the NHL and the NBA.", "スライダーでシーズンを選びます。シーズンは開幕する年で表します。NHLとNBAでは、「1979」は1979–80シーズンを指します。")}>
                   <label class="fam-label" for="era-year" data-say="eraYear"></label>
                   <input type="range" class="fam-field era-range" id="era-year" data-testid="era-year" step="1" />
                   <output class="era-season" id="era-season" data-testid="era-season" for="era-year"></output>
                 </div>
-                <ul class="era-notes" id="era-notes" data-testid="era-notes" hidden></ul>
+                <ul class="era-notes" id="era-notes" data-testid="era-notes"${hid("era-notes")}></ul>
               </div>
               ${seg("size", "size", "On the surface puts the names and the score on the field; compact puts a strip under it; a badge is the strip alone, for lists.", "「競技場に重ねる」は名前と得点を競技場の上に表示し、「コンパクト」は下に帯を付け、「バッジ」は帯だけにします。一覧向けです。")}
               ${seg("orientation", "orientation", "Wide is the usual way round. Tall turns the surface a quarter, with the words upright and the teams top and bottom. Fit the box chooses by the shape of the space.", "「横」は通常の向きです。「縦」は競技場を90度回し、文字は水平のまま、チームを上下に並べます。「枠に合わせる」は表示領域の形に合わせて自動で選びます。")}
@@ -108,7 +245,7 @@ const page = `<!doctype html>
             <details class="fam-fold group">
               <summary data-say="game"></summary>
               ${seg("status", "status", "The state of the game: a standard one is translated, or write your own, such as 2nd period or Bottom 9th.", "試合の状況です。標準のものは表示言語に合わせて表示され、「自由入力」では「第2ピリオド」「9回裏」などを自分で書けます。")}
-              <input class="fam-field" id="status-text" data-testid="status-text" data-say-label="statusCustom" data-say-placeholder="statusCustom" autocomplete="off" maxlength="30" hidden />
+              <input class="fam-field" id="status-text" data-testid="status-text" data-say-label="statusCustom" data-say-placeholder="statusCustom" autocomplete="off" maxlength="30" value="${escapeAttr(fieldValue["status-text"])}"${hid("status-text")} />
               ${field("competition", "competition", 'maxlength="50"')}
               ${field("date", "date", 'maxlength="24"')}
               ${field("label", "label", 'maxlength="60"')}
@@ -121,13 +258,13 @@ const page = `<!doctype html>
                 ${toggle("stripes", "stripes")}
                 ${toggle("exact", "exact")}
               </div>
-              <div id="soccer-group" hidden>
+              <div id="soccer-group"${hid("soccer-group")}>
                 ${seg("pattern", "stripePattern", "How the grass is mown: bands across the pitch, wide or narrow, along it, in checks or on the diagonal.", "芝の刈り方です。ピッチを横切る縞（標準・太い・細い）、縦方向の縞、市松模様、斜めの縞から選べます。")}
                 ${seg("goals", "goalStyle", "How the goals are drawn from above: the net as a box, a line on the goal line, a solid strip or nothing.", "ゴールを真上から見た描き方です。ネットを四角で描く、ゴールライン上の線にする、塗りつぶした帯にする、描かない、の4つから選べます。")}
                 ${seg("half", "half", "Show the whole pitch or one half. A drawing with teams always shows the whole pitch.", "ピッチ全体か、片側の半面を表示します。チームを載せた図では常にピッチ全体を表示します。")}
                 <div class="setup fam-row">${toggle("flags", "cornerFlags")}</div>
               </div>
-              <div id="court-group">
+              <div id="court-group"${hid("court-group")}>
                 ${seg("court", "court", "Five looks for the basketball court, in plain colours: the paint, the border, the wood and the words on the baselines.", "バスケットボールのコートの見た目を5種類から選べます。無地の色で、ペイント、縁取り、床の木目、ベースラインの文字を変えます。")}
                 <div class="setup fam-row">${toggle("baseline", "baseline")}${toggle("centre-logo", "centreLogo")}</div>
               </div>
@@ -135,6 +272,7 @@ const page = `<!doctype html>
           </div>
         </div>
       </section>
+      <script>${FIRST_SCRIPT}</script>
 
       <section class="more atlas" id="atlas" aria-labelledby="atlas-title" data-testid="atlas">
         <h2 id="atlas-title" data-say="atlasTitle"></h2>
@@ -317,29 +455,15 @@ const page = `<!doctype html>
 </html>
 `;
 
-rmSync("site", { recursive: true, force: true });
-mkdirSync("site", { recursive: true });
-cpSync("demo", "site", { recursive: true });
-// The declarations are for editors, not for a browser.
-cpSync("dist", "site/dist", { recursive: true, filter: (from) => !/\.d\.ts$/.test(from) });
-// The map of the Atlas is chizu's: the few files of its build that the page loads (the world and the mounted map, not the
-// countries, regions or features it loads only on request), with its licence and notice, and the same world drawn as a
-// picture of every place for docs/atlas.md.
-const chizu = dirname(dirname(createRequire(import.meta.url).resolve("@johnmorrisdotca/chizu")));
-cpSync(join(chizu, "dist"), "site/chizu", { recursive: true, filter: (from) => !/\.d\.ts$/.test(from) && !/[\\/]data[\\/](countries|divisions|features)(?:[\\/]|$)/.test(from) && !/world-detail/.test(from) && !/loaders/.test(from) });
-cpSync(join(chizu, "LICENSE"), "site/chizu/LICENSE");
-cpSync(join(chizu, "NOTICE.md"), "site/chizu/NOTICE.md");
 const load = (path) => import(pathToFileURL(join(chizu, "dist", path)).href);
 const { PLACES } = await import(pathToFileURL(join(process.cwd(), "dist", "atlas-entry.js")).href);
 const picture = atlasMapSvg({ places: PLACES, world: (await load("world-entry.js")).default, drawChizu: (await load("draw-entry.js")).drawChizu, projectPoint: (await load("index.js")).projectPoint });
 writeFileSync("site/atlas-map.svg", picture);
 writeFileSync("docs/atlas-map.svg", picture);
-writeFileSync("site/index.html", page);
+writeFileSync("site/index.html", sayEnglish(page, WORDS.en));
 writeFileSync("site/api.css", API_CSS);
 writeFileSync("site/api.html", apiPage({ id, name: "Kyogijo", icon: ICON }));
 // The documentation pages: docs/*.md as pages, and the gallery, drawn from code by the built package.
-const lib = await libraryFrom(join(process.cwd(), "dist"), ".js", (file) => import(pathToFileURL(file).href));
-const style = lib["@johnmorrisdotca/kyogijo"].KYOGIJO_STYLE;
 const made = buildDocs({
   root: process.cwd(),
   outDir: "site/docs",

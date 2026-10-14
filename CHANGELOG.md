@@ -7,6 +7,10 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Fixed
+
+- **The demo's first paint is whole.** The stage was a thin bar and every panel an empty box until the script ran, then the page jumped (a layout shift of 0.5). The build now draws the playground's first view into the HTML: the default rink, every English word, and the controls in their first state, so the page reads and shows its drawing with scripts off, and the script takes over the nodes that are there. The stage keeps its box from the first byte (its shape, by the drawing's width over its height), and an address that asks for another sport, size or way round has its box, rows and pressed choices set by a small inline script before anything is drawn, so the drawing swaps in place; a page opened in Japanese (the address, a kept choice or the browser) is held back, invisible but laid out, and shown in Japanese rather than English first. The docs, the gallery and the API reference have their header, footer and search words in the HTML too, and set `lang` before paint. The layout shift on load is 0 at every address and width tried (0.003 at most, for a past season whose notes are drawn by the script), and the e2e tests hold it under 0.05. The package is unchanged.
+
 ## [0.3.0] - 2026-10-14
 
 ### Added
