@@ -14,7 +14,7 @@ test("a team's mark can be a ready-made emblem: its tiles are a finger wide, a t
   await page.locator(`${at("away-logo")} button[data-value="ready"]`).click();
   await expect(page.locator(at("away-mark"))).toBeVisible();
   await expect(page.locator(at("home-mark"))).toBeHidden();
-  await expect(page.locator(`${at("away-mark")} button`)).toHaveCount(148);
+  await expect(page.locator(`${at("away-mark")} button`)).toHaveCount(166);
   await page.locator(`${at("away-mark")} button[data-value="crest:diamond"]`).scrollIntoViewIfNeeded();
   await page.locator(`${at("away-mark")} button[data-value="crest:diamond"]`).click();
   await expect(page.locator(`${at("away-mark")} button[data-value="crest:diamond"]`)).toHaveAttribute("aria-pressed", "true");
@@ -40,7 +40,7 @@ test("every tile has a name for a screen reader, in the page's language", async 
   await openGroups(page);
   await page.locator(`${at("home-logo")} button[data-value="ready"]`).click();
   const names = await page.locator(`${at("home-mark")} button`).evaluateAll((all) => all.map((b) => b.getAttribute("aria-label")));
-  expect(names).toHaveLength(148);
+  expect(names).toHaveLength(166);
   expect(names.every((name) => name.length > 2)).toBe(true);
   // Dougu Sports names a few emblems alike (two kinds of ball in the same picture): the names are not unique, but none is empty.
   expect(new Set(names).size).toBeGreaterThan(130);
@@ -58,14 +58,14 @@ test("the middle of a pageant is a ready-made trophy, in the metal or the line s
   await expect(page.locator(at("pageant-emblem-id"))).toBeHidden();
   await page.locator(at("pageant-emblem")).click();
   await expect(page.locator(at("pageant-emblem-id"))).toBeVisible();
-  await expect(page.locator(`${at("pageant-emblem-id")} button`)).toHaveCount(78);
+  await expect(page.locator(`${at("pageant-emblem-id")} button`)).toHaveCount(82);
   await page.locator(`${at("pageant-emblem-id")} button[data-value="trophy:hockey-cup"]`).scrollIntoViewIfNeeded();
   await page.locator(`${at("pageant-emblem-id")} button[data-value="trophy:hockey-cup"]`).click();
-  await expect.poll(async () => (await images(page)).some((doc) => doc.includes("<title>Tall banded silver cup</title>") && doc.includes("linearGradient"))).toBe(true);
+  await expect.poll(async () => (await images(page)).some((doc) => doc.includes("<title>Banded silver cup</title>") && doc.includes("linearGradient"))).toBe(true);
   expect(page.url()).toContain("emblemid=trophy%3Ahockey-cup");
   await expect(page.locator(at("emblem-line"))).toBeVisible();
   await page.locator(at("emblem-line")).click();
-  await expect.poll(async () => (await images(page)).some((doc) => doc.includes("<title>Tall banded silver cup</title>") && !doc.includes("linearGradient"))).toBe(true);
+  await expect.poll(async () => (await images(page)).some((doc) => doc.includes("<title>Banded silver cup</title>") && !doc.includes("linearGradient"))).toBe(true);
   expect(page.url()).toContain("emblemline=1");
   await page.locator(at("embed-tabs")).locator("button").first().click();
   await expect(page.locator(at("embed-code"))).toContainText('"emblem": "trophy:hockey-cup/line"');
