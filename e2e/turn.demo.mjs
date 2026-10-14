@@ -127,6 +127,66 @@ test("turns by a drag of the pointer, and a plain wheel leaves the page to scrol
   expect(zoomed).toBe(true);
 });
 
+/** The part of the scene nearest the eye (the lowest on the screen), by name, and where its middle is on the screen now. */
+const nearestPart = async (page) =>
+  page.locator(`${STAGE} .ky-up`).evaluateAll((all) => {
+    let best;
+    for (const el of all) {
+      const b = el.getBoundingClientRect();
+      const y = b.y + b.height / 2;
+      if (best === undefined || y > best.y) best = { part: el.dataset.part, y };
+    }
+    return best.part;
+  });
+const where = (page, part) =>
+  page.locator(`${STAGE} [data-part="${part}"]`).evaluate((el) => {
+    const b = el.getBoundingClientRect();
+    return { x: b.x + b.width / 2, y: b.y + b.height / 2 };
+  });
+async function dragBy(page, dx, dy) {
+  const view = page.locator(`${STAGE} .ky-turn-view`);
+  await view.scrollIntoViewIfNeeded();
+  const box = await view.boundingBox();
+  const [x, y] = [box.x + box.width / 2, box.y + box.height / 3];
+  await page.mouse.move(x, y);
+  await page.mouse.down();
+  await page.mouse.move(x + dx, y + dy, { steps: 8 });
+  await page.mouse.up();
+}
+
+test("a drag takes hold of the surface: right moves the near side right, down tips the top toward the eye", async ({ page }) => {
+  await open(page, "?sport=nhl&view=3d&lang=en&help=off&viewpoint=broadcast");
+  // The near boards: the part of the surface closest to the reader. Turning about the vertical sweeps it across the screen, in the direction of the hand.
+  const part = await nearestPart(page);
+  const start = await where(page, part);
+  await dragBy(page, 40, 0);
+  const right = await where(page, part);
+  expect(right.x).toBeGreaterThan(start.x + 1);
+  await dragBy(page, -80, 0);
+  const left = await where(page, part);
+  expect(left.x).toBeLessThan(right.x - 1);
+  // Down tips the top toward the eye: the near edge comes down the screen, as the overhead view is approached.
+  const before = await where(page, part);
+  await dragBy(page, 0, 30);
+  const down = await where(page, part);
+  expect(down.y).toBeGreaterThan(before.y + 1);
+  await dragBy(page, 0, -60);
+  expect((await where(page, part)).y).toBeLessThan(down.y - 1);
+});
+
+test("the left and right arrows turn the way a drag to that side does", async ({ page }) => {
+  await open(page, "?sport=nhl&view=3d&lang=en&help=off&viewpoint=broadcast");
+  await page.locator(`${STAGE} .ky-turn-view`).focus();
+  const part = await nearestPart(page);
+  const start = await where(page, part);
+  await page.keyboard.press("ArrowRight");
+  const right = await where(page, part);
+  expect(right.x).toBeGreaterThan(start.x + 0.5);
+  await page.keyboard.press("ArrowLeft");
+  await page.keyboard.press("ArrowLeft");
+  expect((await where(page, part)).x).toBeLessThan(start.x - 0.5);
+});
+
 test("a sideways touch turns the view and leaves a vertical swipe to the page", async ({ page }) => {
   await open(page, "?sport=nhl&view=3d&lang=en&help=off");
   const view = page.locator(`${STAGE} .ky-turn-view`);

@@ -106,9 +106,12 @@ export function step(view: TurnView, change: { yaw?: number; pitch?: number; zoo
   return clampView({ yaw: view.yaw + (change.yaw ?? 0), pitch: view.pitch + (change.pitch ?? 0), zoom: view.zoom * (change.zoom ?? 1) });
 }
 
-/** The view after a drag of the pointer by (dx, dy) pixels: across turns the scene, up and down tips it, `degreesPerPixel` apart. */
+/**
+ * The view after a drag of the pointer by (dx, dy) pixels, `degreesPerPixel` apart: the surface is taken hold of, so a drag to the right carries the side nearest the eye to the right (the
+ * yaw falls) and a drag down tips the top toward the eye (the pitch falls).
+ */
 export function drag(view: TurnView, dx: number, dy: number, tilt = true, degreesPerPixel = 0.4): TurnView {
-  return clampView({ ...view, yaw: view.yaw + dx * degreesPerPixel, pitch: tilt ? view.pitch - dy * degreesPerPixel * 0.75 : view.pitch });
+  return clampView({ ...view, yaw: view.yaw - dx * degreesPerPixel, pitch: tilt ? view.pitch - dy * degreesPerPixel * 0.75 : view.pitch });
 }
 
 /** A box in the scene, in pixels from the scene's middle, the floor at `z0` and the highest thing at `z1`. */

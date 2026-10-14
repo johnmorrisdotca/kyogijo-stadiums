@@ -589,9 +589,29 @@ describe("the eye", () => {
     expect(nearest(-170, 170)).toBe(-190);
   });
 
+  it("a drag takes hold of what it moves: right carries the near side right and a drag down brings the near edge down the screen", () => {
+    const at = { k: 1, tx: 0, ty: 0 };
+    const top: [number, number, number] = [0, 0, 100];
+    for (const view of [{ yaw: -38, pitch: 70, zoom: 1 }, { yaw: 0, pitch: 50, zoom: 1 }, { yaw: 120, pitch: 30, zoom: 1 }]) {
+      // The point of the floor that faces the eye in this view, straight below the middle of the screen.
+      const a = (view.yaw * Math.PI) / 180;
+      const near: [number, number, number] = [100 * Math.sin(a), 100 * Math.cos(a), 0];
+      const [x0, y0] = project(near, view, at, 2000);
+      const right = drag(view, 20, 0);
+      expect(project(near, right, at, 2000)[0]).toBeGreaterThan(x0);
+      expect(project(near, drag(view, -20, 0), at, 2000)[0]).toBeLessThan(x0);
+      const down = drag(view, 0, 20);
+      expect(project(near, down, at, 2000)[1]).toBeGreaterThan(y0);
+      // The top of a post leans toward the eye: it comes down the screen too.
+      expect(project(top, down, at, 2000)[1]).toBeGreaterThan(project(top, view, at, 2000)[1]);
+    }
+  });
+
   it("turns with a drag and steps with a key: across turns it, up and down tips it, and a touch that only turns leaves the tip", () => {
     const v = { yaw: 0, pitch: 50, zoom: 1 };
-    expect(drag(v, 100, 0).yaw).toBeCloseTo(40, 5);
+    // The surface is taken hold of: a drag to the right carries the near side to the right, which is a fall of the yaw (project() turns the scene by +yaw clockwise from above).
+    expect(drag(v, 100, 0).yaw).toBeCloseTo(-40, 5);
+    expect(drag(v, -100, 0).yaw).toBeCloseTo(40, 5);
     expect(drag(v, 0, -40).pitch).toBeGreaterThan(50);
     expect(drag(v, 0, 40).pitch).toBeLessThan(50);
     expect(drag(v, 50, 50, false).pitch).toBe(50);

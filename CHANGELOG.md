@@ -7,6 +7,10 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Fixed
+
+- **The 3D view turned the wrong way across.** A drag to the right (mouse, or a finger with `touch: "turn"` or a sideways swipe) carried the side of the surface nearest the eye to the left. The drag now takes hold of the surface, as the cube of kyuubu and most 3D viewers do: right carries the near side to the right and left to the left, and the Right and Left arrow keys turn the same way as a drag to that side. Dragging up and down was already right (down tips the top toward the eye) and is unchanged, as are the viewpoints, `set` and the buttons. `drag()` in `/turn` has the opposite sign for `dx`. A browser test drags a marker on the near boards and a unit test holds the signs.
+
 ### Added
 
 - **Trophies, medals, balls and crests by id, from Dougu Sports** ([docs/emblems.md](./docs/emblems.md)). `useEmblems(render)` (from the main entry and from `/element`) plugs a renderer of ready-made emblems into the package, which keeps zero dependencies and bundles no art: `import { renderEmblem } from "@johnmorrisdotca/dougu-sports/emblems"; useEmblems(renderEmblem);`. After that an emblem's id is accepted wherever a logo, a flag or a mark was: a team's `logo` in a score, a compact card, a badge and a pageant, the pageant's `emblem`, the road to the final, a layer's `logo`, a swimmer's flag, a court's `centreLogo`, and the element's `home-logo` and `away-logo`. `logo: "crest:shield"` takes the team's `color`, `textColor` and the first letters of its `abbr`; `"cup"` is `"trophy:cup"`, and `/line` after an id gives the outline style.

@@ -220,8 +220,9 @@ export function mountKyogijoTurn(host: HTMLElement, options: SurfaceOptions | Sc
     const pitch = big ? STEP.pitchBig : STEP.pitch;
     event.preventDefault();
     switch (event.key) {
-      case "ArrowLeft": return go(step(view, { yaw: -yaw }), 120);
-      case "ArrowRight": return go(step(view, { yaw }), 120);
+      // A key turns the way a drag to that side does: the side nearest the eye goes to the right on ArrowRight.
+      case "ArrowLeft": return go(step(view, { yaw }), 120);
+      case "ArrowRight": return go(step(view, { yaw: -yaw }), 120);
       case "ArrowUp": return go(step(view, { pitch: -pitch }), 120);
       case "ArrowDown": return go(step(view, { pitch }), 120);
       case "+":
