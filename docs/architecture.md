@@ -165,6 +165,19 @@ src/
 ├── colour.ts           safe colours and logo addresses
 ├── format.ts           numbers, escaping and elements as text
 ├── types.ts            the options
+├── turn.kit.ts         what the 3D view is built from: a plane (a flat rectangle placed by three vectors with a little SVG on it), a strip, a wall, a mesh
+├── turn.camera.ts      the eye: the four viewpoints, a drag or a key as a new view, the fit of the scene in a box, and the one matrix that places a plane
+├── turn.model.ts       a 3D view as data: the flat floor, what stands on it, the sizes and the words
+├── turn.markup.ts      a 3D view as markup: every element carries its place in one `matrix3d`, stacked far to near; the buttons
+├── turn.style.ts       the 3D view's colours, light and dark, and its rules
+├── turn.dom.ts         the 3D view in a page: the pointer, the touch, the wheel, the keys, the glide, the live region, and the flat fallback
+├── turn-entry.ts       the 3D view's entry
+├── uprights.ts         what stands on a surface: read from the options as the drawing is, with its heights and its sentence
+├── uprights.goal.ts    the parts several sports share: a goal with its net, a pair of posts, a flag on a pole
+├── uprights.net.ts     the net sports: the net, its posts and antennae, the table tennis table on its legs
+├── uprights.rinks.ts   the hockey rink's boards and glass and goals, the basketball court's baskets and stanchions
+├── uprights.board.ts   the score stood up: its badge on a board that faces the eye, hung over the middle of a court or a rink and standing behind an end of a field
+├── uprights.fields.ts  football's posts and pylons, a soccer pitch's goals and flags, the posts of rugby, Gaelic and Australian football, stumps, a ballpark's fence, poles and backstop
 ├── mount.ts            drawing into a container, and following its shape
 ├── mount-entry.ts      the mount's entry
 ├── react.ts            props and a component for React, without React

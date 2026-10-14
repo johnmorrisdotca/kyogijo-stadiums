@@ -14,6 +14,8 @@ export const HALVES = ["none", "left", "right"];
 /** How much of a curling sheet: all of it, only the top end, only the bottom end, or the whole sheet folded with both houses enlarged beside it. */
 export const SHEETS = ["sheet", "top", "bottom", "folded"];
 export const WINNERS = ["auto", "leader", "none", "home", "away"];
+export const VIEWS = ["flat", "3d"];
+export const VIEWPOINTS = ["overhead", "broadcast", "end", "corner"];
 export const COURTS = ["default", "maple", "twoTone", "night", "sunburst", "tournament"];
 
 const pick = (value, list, fallback) => (list.includes(value) ? value : fallback);
@@ -30,6 +32,9 @@ export function makeState(params, kept = null) {
     size: pick(params.get("size"), SIZES, "full"),
     orientation: pick(params.get("orientation"), ORIENTATIONS, "auto"),
     theme: pick(params.get("theme") ?? kept, THEMES, "auto"),
+    // How the surface is looked at: the flat drawing, or the 3D view that turns, and the viewpoint it is on.
+    view: pick(params.get("view"), VIEWS, "flat"),
+    viewpoint: pick(params.get("viewpoint"), VIEWPOINTS, "corner"),
     away: {},
     home: {},
     status: "final",
@@ -173,6 +178,7 @@ export const labelOf = (say, s) => ({
   size: (v) => say(`size_${v}`),
   orientation: (v) => say(`orientation_${v}`),
   theme: (v) => say(`theme_${v}`),
+  view: (v) => say(`view_${v}`),
   status: (v) => say(`status_${v.replace(/-/g, "_")}`),
   winner: (v) => (v === "away" && s.sport === "mlb" ? say("awayBaseball") : say(`winner_${v}`)),
   detail: (v) => say(`detail_${v}`),
@@ -194,6 +200,7 @@ export const SEGS = [
   { id: "era", kind: "era", values: ["today", "past"], get: (s) => (s.year === null ? "today" : "past") },
   { id: "size", kind: "size", values: SIZES, get: (s) => s.size },
   { id: "orientation", kind: "orientation", values: ORIENTATIONS, get: (s) => s.orientation },
+  { id: "view", kind: "view", values: VIEWS, get: (s) => s.view },
   { id: "theme", kind: "theme", values: THEMES, get: (s) => s.theme },
   { id: "status", kind: "status", values: STATUSES, get: (s) => s.status },
   { id: "winner", kind: "winner", values: WINNERS, get: (s) => s.winner },

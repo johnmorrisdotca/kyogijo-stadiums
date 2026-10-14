@@ -90,6 +90,7 @@ console.log(svg.startsWith("<svg"), svg.includes("Northern Owls 3, Lakeshore Anc
 - **Data on the surface.** Points, lines, arrows, text, heat maps, hexagons, zone charts and density contours over any surface, in its feet or a data provider's frame, cut to its outline, with a table for each layer; ready-made shot and pass charts, and the road to a tournament's final (`roadToFinal`: the two finalists' matches as round flags with the scores, in four sizes). [Data layers](./docs/layers.md), [charts](./docs/charts.md).
 - **Small multiples and backgrounds.** `drawGrid` puts many drawings in one SVG, under a title and a subtitle, over a credit line, with a key they share, in a size for a social card, a square post or a phone; `background` lays a quiet pattern (felt, grass, wood, ice, paper, a grid, dots) or a photograph behind a drawing or a grid. [Layouts and backgrounds](./docs/layouts.md).
 - **Replay.** Tracking data played on any surface: the players with their numbers, the ball and its trail, and the passes, shots and goals as they happen, with controls, the keyboard and a live region, steps for a reader who prefers reduced motion, and a pause when the page is hidden. [Replay](./docs/replay.md).
+- **A 3D view.** Any surface as a floor that turns by mouse, touch, wheel or keys, with four viewpoints (overhead, broadcast, end-on, low corner) and a reset, and what the rulebook stands on it at its height: the net and antennae of volleyball, the nets of tennis, badminton, pickleball and table tennis, baskets and stanchions, rink boards and glass, goals, the posts of football, rugby, Gaelic and Australian football, stumps, a ballpark's fence. Plain DOM and CSS over the same SVG, flat where 3D is not drawn. [The 3D view](./docs/turn.md).
 - **Renderers.** The same drawing as plain data (a scene), on a canvas (a browser's or a Node canvas), in a d3 selection, as a mark of an Observable Plot, as GeoJSON and as a PNG in Node, each an entry of its own that imports nothing from outside the package. [Renderers](./docs/renderers.md).
 - **Units and frames.** Each surface in its rulebook's unit and any other, and 29 coordinate frames (ten soccer providers, the NHL API, HockeyTech, NBA stats, NFL tracking, MLBAM, Retrosheet, a curling stone's place from the button, a place from the net in each net sport, the centre of each field sport's surface) to move a provider's points onto a surface. [Units](./docs/units.md), [coordinate frames](./docs/frames.md).
 - **A compact badge and a compact card.** One strip for a list, or the surface with that strip under it.
@@ -110,6 +111,7 @@ console.log(svg.startsWith("<svg"), svg.includes("Northern Owls 3, Lakeshore Anc
 | `EVENTS`, `eventOptions` | The 18 special games: a rink in a ballpark, a court on a carrier's deck, with `host` and `placement` in the options. |
 | `./geometry`, `./frames`, `./layers`, `./charts`, `./replay` | The dimensions in any unit; the providers' frames; data layers; ready-made charts; tracking data played on a surface. |
 | `./parks`, `./grounds`, `./atlas`, `./eras`, `./leagues`, `./events` | The ballparks, the grounds, every place, the markings of a season, each league's rulebook, the special games. |
+| `./turn` | A surface as a 3D view that turns, with the net, basket, goal or posts standing on it. |
 | `./scene`, `./canvas`, `./d3`, `./plot`, `./geojson`, `./png` | The drawing as data; on a canvas; in a d3 selection; as an Observable Plot mark; as GeoJSON; as a PNG (the optional peer `@resvg/resvg-js`). |
 | `./layouts` | `drawGrid` and `GRID_PRESETS`: small multiples with a title, a subtitle, a key and a credit line; the grounds behind a drawing or a grid. |
 | `./mount`, `./react`, `./element`, `./element/define` | Draw into a container; React props; the `<kyogijo-field>` element and its registration. |
@@ -307,6 +309,50 @@ console.log(svg.includes("--ky-key:#1e4f8f"), svg.includes("METRO BOLTS"));
 
 The five court looks, the seven looks of every sport and every colour property are in [theming](./docs/theming.md).
 
+### Turn it, and see the net
+
+```ts no-run
+import { mountKyogijoTurn } from "@johnmorrisdotca/kyogijo-stadiums/turn";
+
+const view = mountKyogijoTurn(document.querySelector("#court")!, { sport: "volleyball", status: "live" }, { preset: "end" });
+view.preset("corner");
+```
+
+```ts
+import { turnMarkup, uprightsFor } from "@johnmorrisdotca/kyogijo-stadiums/turn";
+
+const { items } = uprightsFor({ sport: "volleyball" }, { netHeight: "women" });
+const html = turnMarkup({ sport: "volleyball" }, { preset: "end" });
+console.log(items.map((item) => item.kind).join(), html.includes("preserve-3d"));
+// net,netposts,antennae false
+```
+
+The flat drawing is the floor, turned by a drag, a swipe, the keys or four viewpoints (overhead, broadcast, end-on, low corner), and what the rulebook stands on the surface is built up on it at its height. Each part is a flat rectangle placed by one `matrix3d`, so there is no 3D context for a phone to lose; where 3D is not drawn the flat drawing stays. In the element it is `<kyogijo-field sport="nhl" turn turn-view="broadcast">`. [The 3D view](./docs/turn.md).
+
+<p align="center">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turn-volleyball-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turn-volleyball-desk-light.webp" alt="A volleyball court from behind an end line, turned in the demo: the net at 2.43 metres on its posts with the red and white antennae, and under it the buttons for the four viewpoints, turning, raising, zooming and resetting." width="640">
+</picture>
+<br><em>A volleyball net at its rulebook height, with its posts and antennae.</em>
+</p>
+
+<p align="center">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turn-rink-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turn-rink-desk-light.webp" alt="An ice rink from a low corner, turned in the demo: the boards with their glass round the ice, a goal at each end, and the score on the ice." width="640">
+</picture>
+<br><em>A rink with its boards, glass and goals.</em>
+</p>
+
+<p align="center">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turn-court-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turn-court-desk-light.webp" alt="A basketball court from the main camera, turned in the demo: a basket on its backboard and padded stanchion at each end of the floor." width="640">
+</picture>
+<br><em>A court with a basket at each end, the rim at 10 feet.</em>
+</p>
+
 ### A shoot-out, and a famous ground
 
 ```ts
@@ -470,7 +516,7 @@ A page that moves (`mountKyogijo`), a file written on a server and a frame for a
 
 ## API
 
-The [API reference](https://johnmorrisdotca.github.io/kyogijo-stadiums/api.html) lists every export of every entry point with its signature and its doc comment. It is made from the source by `pnpm site`, so it cannot fall behind the code. [Entry points](./docs/entry-points.md) says what each of the 15 holds: the main one draws; `/geometry`, `/frames`, `/layers`, `/charts`, `/replay`, `/parks`, `/eras`, `/leagues`, `/grounds` and `/atlas` stand apart and need nothing else; `/mount`, `/react`, `/element` and `/element/define` put a drawing in a page.
+The [API reference](https://johnmorrisdotca.github.io/kyogijo-stadiums/api.html) lists every export of every entry point with its signature and its doc comment. It is made from the source by `pnpm site`, so it cannot fall behind the code. [Entry points](./docs/entry-points.md) says what each of the 15 holds: the main one draws; `/geometry`, `/frames`, `/layers`, `/charts`, `/replay`, `/parks`, `/eras`, `/leagues`, `/grounds` and `/atlas` stand apart and need nothing else; `/mount`, `/turn`, `/react`, `/element` and `/element/define` put a drawing in a page.
 
 Every function is pure: it returns new values and never changes what it was given.
 

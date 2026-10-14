@@ -665,6 +665,41 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `replay.keys` | Replay of the play. Space plays or pauses, the left and right arrow keys step by a frame, Shift with an arrow key moves 5 seconds, and Home and End go to the ends. | プレーのリプレイです。スペースキーで再生と一時停止、左右の矢印キーで1コマずつ前後に移動、Shiftキーを押しながら矢印キーで5秒ずつ移動、Homeキーで最初、Endキーで最後に移動します。 |
 | `replay.keysStep` | Replay of the play, in steps. Space or the right arrow key moves on, the left arrow key goes back, and Home and End go to the ends. | プレーのリプレイです。コマ送りで表示しています。スペースキーまたは右矢印キーで進み、左矢印キーで戻り、Homeキーで最初、Endキーで最後に移動します。 |
 | `replay.region` | Replay | リプレイ |
+| `turn.region` | 3D view | 3D表示 |
+| `turn.group` | Viewpoint | 視点 |
+| `turn.keys` | A 3D view you can turn. Drag, or use the arrow keys, to turn and tilt it; plus and minus zoom; 1 to 4 pick a viewpoint; 0 or Home puts it back. Pinch, or hold Ctrl and scroll, to zoom. | 回して見られる3D表示です。ドラッグするか矢印キーで回転と傾きを変え、プラスとマイナスのキーで拡大と縮小、1から4のキーで視点を選び、0キーまたはHomeキーで元に戻します。ピンチ操作、またはCtrlキーを押しながらのスクロールでも拡大・縮小できます。 |
+| `turn.overhead` | Overhead | 真上 |
+| `turn.broadcast` | Broadcast | 中継カメラ |
+| `turn.end` | End-on | エンド側から |
+| `turn.corner` | Low corner | 低い角度から |
+| `turn.reset` | Reset the view | 元に戻す |
+| `turn.turnLeft` | Turn left | 左へ回す |
+| `turn.turnRight` | Turn right | 右へ回す |
+| `turn.raise` | Raise the view | 視点を上げる |
+| `turn.lower` | Lower the view | 視点を下げる |
+| `turn.zoomIn` | Zoom in | 拡大 |
+| `turn.zoomOut` | Zoom out | 縮小 |
+| `turn.announce` | {name} view | {name}の視点 |
+| `turn.announceAngle` | Turned to {yaw} degrees, raised {pitch} degrees. | 向き{yaw}度、床面から{pitch}度の角度。 |
+| `turn.flat` | This browser cannot draw the 3D view, so the flat drawing is shown. | このブラウザーでは3D表示ができないため、平面の図を表示しています。 |
+| `turn.standing` | Standing on it, in the 3D view: {list}. | 3D表示で立って見えるもの：{list}。 |
+| `turn.item` | {name} {h} | {name} {h} |
+| `turn.itemSag` | {name} {h} at the posts, {low} at the middle | {name} 支柱の位置で{h}（中央は{low}） |
+| `turn.parts.scoreboard` | scoreboard (lower edge) | スコアボードの下端 |
+| `turn.parts.net` | net | ネット |
+| `turn.parts.antennae` | antennae | アンテナ |
+| `turn.parts.goalposts` | goal posts | ゴールポスト |
+| `turn.parts.netposts` | net posts | 支柱 |
+| `turn.parts.hoop` | baskets | バスケットゴール |
+| `turn.parts.goal` | goals | ゴール |
+| `turn.parts.boards` | boards and glass | ボードとガラス |
+| `turn.parts.stumps` | stumps | ウィケットのスタンプ |
+| `turn.parts.pylons` | pylons | パイロン |
+| `turn.parts.flags` | corner flags | コーナーフラッグ |
+| `turn.parts.fence` | fence | 外野フェンス |
+| `turn.parts.backstop` | backstop | バックネット |
+| `turn.parts.foul-poles` | foul poles | ファウルポール |
+| `turn.parts.table-legs` | table top | 天板 |
 
 ## The demo's words (`WORDS`)
 
@@ -766,6 +801,9 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `orientation_landscape` | Wide | 横 |
 | `orientation_portrait` | Tall | 縦 |
 | `orientation_auto` | Fit the box | 枠に合わせる |
+| `view` | View | 表示 |
+| `view_flat` | Flat | 平面 |
+| `view_3d` | 3D | 3D |
 | `theme` | Page theme | ページのテーマ |
 | `theme_auto` | Device | 端末に合わせる |
 | `theme_light` | Light | ライト |
@@ -1094,6 +1132,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `charts` | Ready-made charts | すぐ使えるチャート |
 | page `team-shape` | Team shape | チームの形 |
 | page `replay` | Replay | リプレイ |
+| page `turn` | The 3D view | 3D表示 |
 | page `renderers` | Renderers | レンダラー |
 | group `gallery` | Gallery | ギャラリー |
 | page `gallery` | Gallery | ギャラリーの案内 |

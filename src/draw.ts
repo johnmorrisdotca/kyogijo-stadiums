@@ -183,7 +183,7 @@ const PATTERNS: readonly StripePattern[] = ["bands", "wide", "narrow", "lengthwi
 const GOALS: readonly GoalStyle[] = ["box", "line", "strip", "none"];
 
 /** The pitch the options ask for: a `pitch` of the caller's, else the size a `ground` publishes, else none (the international pitch). */
-function pitchOf(o: SurfaceOptions): SoccerPitchId | SoccerSize | undefined {
+export function pitchOf(o: SurfaceOptions): SoccerPitchId | SoccerSize | undefined {
   if (o.pitch !== undefined) return o.pitch;
   const ground = groundById(o.ground);
   return ground === undefined || ground.pitchSize === "default" ? undefined : { ...ground.pitch, unit: "m" };
@@ -671,7 +671,7 @@ export function drawKyogijo(o: SurfaceOptions | ScoreOptions): string {
       inner += notes.svg;
       if (notes.summaries.length > 0 && o.description === undefined) description = `${description}${KYOGIJO_STRINGS[language].said.gap}${notes.summaries.join(KYOGIJO_STRINGS[language].said.gap)}`;
     }
-    if (isScore(o) && left !== undefined && right !== undefined && sized === "full") {
+    if (isScore(o) && left !== undefined && right !== undefined && sized === "full" && o.plate !== false) {
       const foot = o.label !== undefined && o.label !== "" ? o.label : [status, o.date].filter((part): part is string => part !== undefined && part !== "").join(" · ");
       if (sport === "curling") {
         const board = boardMarkup(surface.plate, left, right, { competition: o.competition, foot: foot === "" ? undefined : foot, total: KYOGIJO_STRINGS[language].said.total }, { turned: surface.turned, parts });

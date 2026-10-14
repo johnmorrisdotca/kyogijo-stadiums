@@ -508,6 +508,39 @@ export interface KyogijoWords {
     keysStep: string;
     region: string;
   };
+  /** The words of the 3D view: its name, the keys, the viewpoints, the controls, what is announced, and the names of what stands on the surface. */
+  turn: {
+    /** What the view is called, for a screen reader's role description, and the name of its row of controls. */
+    region: string;
+    group: string;
+    /** What the view is and the keys it answers to. */
+    keys: string;
+    /** The four viewpoints. */
+    overhead: string;
+    broadcast: string;
+    end: string;
+    corner: string;
+    /** The other controls. */
+    reset: string;
+    turnLeft: string;
+    turnRight: string;
+    raise: string;
+    lower: string;
+    zoomIn: string;
+    zoomOut: string;
+    /** What is announced after a key or a button: {name} for a viewpoint, and the angles: {yaw} and {pitch} in degrees. */
+    announce: string;
+    announceAngle: string;
+    /** The sentence when the 3D view cannot be drawn and the flat drawing is shown. */
+    flat: string;
+    /** The sentence about what stands on the surface: {list}. */
+    standing: string;
+    /** One item of that list: {name} {h}; and a net with a lower height at its middle: {name} {h} {low}. */
+    item: string;
+    itemSag: string;
+    /** The names of what stands on the surface, by kind. */
+    parts: Record<"scoreboard" | "net" | "antennae" | "goalposts" | "netposts" | "hoop" | "goal" | "boards" | "stumps" | "pylons" | "flags" | "fence" | "backstop" | "foul-poles" | "table-legs", string>;
+  };
 }
 
 /** The words of the package, by language. */
@@ -722,6 +755,16 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       keysStep: "Replay of the play, in steps. Space or the right arrow key moves on, the left arrow key goes back, and Home and End go to the ends.",
       region: "Replay",
     },
+    turn: {
+      region: "3D view", group: "Viewpoint",
+      keys: "A 3D view you can turn. Drag, or use the arrow keys, to turn and tilt it; plus and minus zoom; 1 to 4 pick a viewpoint; 0 or Home puts it back. Pinch, or hold Ctrl and scroll, to zoom.",
+      overhead: "Overhead", broadcast: "Broadcast", end: "End-on", corner: "Low corner",
+      reset: "Reset the view", turnLeft: "Turn left", turnRight: "Turn right", raise: "Raise the view", lower: "Lower the view", zoomIn: "Zoom in", zoomOut: "Zoom out",
+      announce: "{name} view", announceAngle: "Turned to {yaw} degrees, raised {pitch} degrees.",
+      flat: "This browser cannot draw the 3D view, so the flat drawing is shown.",
+      standing: "Standing on it, in the 3D view: {list}.", item: "{name} {h}", itemSag: "{name} {h} at the posts, {low} at the middle",
+      parts: { scoreboard: "scoreboard (lower edge)", net: "net", antennae: "antennae", goalposts: "goal posts", netposts: "net posts", hoop: "baskets", goal: "goals", boards: "boards and glass", stumps: "stumps", pylons: "pylons", flags: "corner flags", fence: "fence", backstop: "backstop", "foul-poles": "foul poles", "table-legs": "table top" },
+    },
   },
   ja: {
     surface: { nfl: "NFLのフィールド", cfl: "CFLのフィールド", ifaf: "IFAFのフィールド", nhl: "NHLのアイスホッケーリンク", nba: "NBAのバスケットボールコート", mlb: "野球場", soccer: "サッカーのピッチ", curling: "カーリングのシート", tennis: "テニスコート", volleyball: "バレーボールコート", badminton: "バドミントンコート", pickleball: "ピックルボールコート", tabletennis: "卓球台", lacrosse: "ラクロスのフィールド", rugby: "ラグビーユニオンのグラウンド", afl: "オーストラリアンフットボールのグラウンド", gaelic: "ゲーリック・フットボールのフィールド", cricket: "クリケットのグラウンド", fieldhockey: "フィールドホッケーのピッチ", handball: "ハンドボールのコート" },
@@ -932,6 +975,16 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       keys: "プレーのリプレイです。スペースキーで再生と一時停止、左右の矢印キーで1コマずつ前後に移動、Shiftキーを押しながら矢印キーで5秒ずつ移動、Homeキーで最初、Endキーで最後に移動します。",
       keysStep: "プレーのリプレイです。コマ送りで表示しています。スペースキーまたは右矢印キーで進み、左矢印キーで戻り、Homeキーで最初、Endキーで最後に移動します。",
       region: "リプレイ",
+    },
+    turn: {
+      region: "3D表示", group: "視点",
+      keys: "回して見られる3D表示です。ドラッグするか矢印キーで回転と傾きを変え、プラスとマイナスのキーで拡大と縮小、1から4のキーで視点を選び、0キーまたはHomeキーで元に戻します。ピンチ操作、またはCtrlキーを押しながらのスクロールでも拡大・縮小できます。",
+      overhead: "真上", broadcast: "中継カメラ", end: "エンド側から", corner: "低い角度から",
+      reset: "元に戻す", turnLeft: "左へ回す", turnRight: "右へ回す", raise: "視点を上げる", lower: "視点を下げる", zoomIn: "拡大", zoomOut: "縮小",
+      announce: "{name}の視点", announceAngle: "向き{yaw}度、床面から{pitch}度の角度。",
+      flat: "このブラウザーでは3D表示ができないため、平面の図を表示しています。",
+      standing: "3D表示で立って見えるもの：{list}。", item: "{name} {h}", itemSag: "{name} 支柱の位置で{h}（中央は{low}）",
+      parts: { scoreboard: "スコアボードの下端", net: "ネット", antennae: "アンテナ", goalposts: "ゴールポスト", netposts: "支柱", hoop: "バスケットゴール", goal: "ゴール", boards: "ボードとガラス", stumps: "ウィケットのスタンプ", pylons: "パイロン", flags: "コーナーフラッグ", fence: "外野フェンス", backstop: "バックネット", "foul-poles": "ファウルポール", "table-legs": "天板" },
     },
   },
 };
