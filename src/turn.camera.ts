@@ -28,6 +28,12 @@ export const TURN_PRESETS: Readonly<Record<TurnPreset, TurnView>> = {
   corner: { yaw: -38, pitch: 70, zoom: 1 },
 };
 
+/** The same four for a long, narrow surface (a football field, a hockey rink): turned less, because a diagonal view would shrink it in the box. */
+export const LONG_PRESETS: Readonly<Record<TurnPreset, TurnView>> = { ...TURN_PRESETS, broadcast: { yaw: -9, pitch: 62, zoom: 1 } };
+
+/** The sports with surfaces more than twice as long as they are wide, whose viewpoints are `LONG_PRESETS`. */
+const LONG_SPORTS: readonly string[] = ["nfl", "cfl", "ifaf", "nhl"];
+
 /**
  * The same four for the net sports, whose net runs across the court: seen from the side line it is a stick, so the broadcast view stands high behind an end line, as a
  * television camera does, and the end-on view is lower behind it. The corner view is the same.
@@ -54,7 +60,7 @@ export const CURLING_PRESETS: Readonly<Record<TurnPreset, TurnView>> = {
 const NET_SPORTS: readonly string[] = ["tennis", "volleyball", "badminton", "pickleball", "tabletennis"];
 
 /** The four viewpoints of a sport. */
-export const presetsFor = (sport?: string): Readonly<Record<TurnPreset, TurnView>> => (sport === "curling" ? CURLING_PRESETS : sport !== undefined && NET_SPORTS.includes(sport) ? NET_PRESETS : TURN_PRESETS);
+export const presetsFor = (sport?: string): Readonly<Record<TurnPreset, TurnView>> => (sport === "curling" ? CURLING_PRESETS : sport !== undefined && NET_SPORTS.includes(sport) ? NET_PRESETS : sport !== undefined && LONG_SPORTS.includes(sport) ? LONG_PRESETS : TURN_PRESETS);
 
 /** The view a mount opens on. */
 export const TURN_DEFAULT: TurnPreset = "corner";

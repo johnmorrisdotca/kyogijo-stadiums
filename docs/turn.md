@@ -35,13 +35,13 @@ Or the custom element, with no script of your own:
 | Viewpoint | Key | Looks from |
 | --- | --- | --- |
 | `overhead` | 1 | Straight down. |
-| `broadcast` | 2 | High on one side line, as the main camera, turned a little towards one end so that the boards, nets and goals show their faces. For the net sports, whose net runs across the court, high behind an end line, as a television camera: from the side line a net is a stick. A curling sheet is seen square on from the side. |
+| `broadcast` | 2 | High on one side line, as the main camera, turned a little towards one end so that the boards, nets and goals show their faces. For the net sports, whose net runs across the court, high behind an end line, as a television camera: from the side line a net is a stick. A football field and a hockey rink are turned less, and a curling sheet is seen square on from the side. |
 | `end` | 3 | Low, behind an end line, along the surface: where a net, a goal or a basket is best seen. |
 | `corner` | 4 | Low, from a corner, with the nearest net or goal in front. The view a mount opens on. |
 
 The end and corner views look from the side opposite the scoreboard of a field (see below), so that it stands behind the far end.
 
-A view is `{ yaw, pitch, zoom }`: the turn about the vertical in degrees, the tip back from straight overhead in degrees (0 to 84, so the eye never goes below the floor), and the zoom (0.5 to 4). The scene is fitted to the box at every view, so every viewpoint and every turn shows the whole surface. `TURN_PRESETS` and `NET_PRESETS` are the viewpoints as numbers.
+A view is `{ yaw, pitch, zoom }`: the turn about the vertical in degrees, the tip back from straight overhead in degrees (0 to 84, so the eye never goes below the floor), and the zoom (0.5 to 4). The scene is fitted to the box at every view, so every viewpoint and every turn shows the whole surface. `TURN_PRESETS`, `LONG_PRESETS`, `NET_PRESETS` and `CURLING_PRESETS` are the viewpoints as numbers.
 
 ![A hockey rink from a low corner: the boards, the glass and a goal at each end](./images/turn-rink-desk-light.webp)
 

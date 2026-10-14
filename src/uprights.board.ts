@@ -35,7 +35,7 @@ export function scoreboard(badge: string, sport: string, area: { x0: number; y0:
   const W = area.y1 - area.y0;
   const kind = boardKind(sport);
   // The board: as wide as a third of a court's length or nearly half a field's width, and a third as tall, with the badge inside a margin.
-  const wide = kind === "hung" ? Math.min(0.3 * L, 44) : sport === "tabletennis" ? 0.6 * L : sport === "mlb" ? 0.24 * L : Math.min(0.45 * W, 100);
+  const wide = kind === "hung" ? Math.min(0.3 * L, 44) : sport === "tabletennis" ? 0.6 * L : sport === "mlb" ? 0.24 * L : Math.min(0.36 * W, 80);
   const tall = wide * 0.32;
   const margin = wide * 0.025;
   const scale = (wide - 2 * margin) / parts.w;

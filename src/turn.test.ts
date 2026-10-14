@@ -4,6 +4,7 @@ import { SPORTS, drawKyogijo } from "./index.ts";
 import { FEET_PER_METRE } from "./geometry.ts";
 import {
   CURLING_PRESETS,
+  LONG_PRESETS,
   NET_PRESETS,
   PITCH_MAX,
   TURN_PRESETS,
@@ -357,7 +358,9 @@ describe("the eye", () => {
     expect(TURN_PRESET_NAMES).toEqual(["overhead", "broadcast", "end", "corner"]);
     expect(TURN_PRESETS.overhead.pitch).toBe(0);
     expect(presetView("broadcast", "volleyball")).toEqual(NET_PRESETS.broadcast);
-    expect(presetView("broadcast", "nhl")).toEqual(TURN_PRESETS.broadcast);
+    expect(presetView("broadcast", "soccer")).toEqual(TURN_PRESETS.broadcast);
+    expect(presetView("broadcast", "nhl")).toEqual(LONG_PRESETS.broadcast);
+    expect(LONG_PRESETS.broadcast.yaw).toBeGreaterThan(TURN_PRESETS.broadcast.yaw);
     expect(presetView("broadcast", "curling")).toEqual(CURLING_PRESETS.broadcast);
     // The end and corner views look from the side the score stands on the far side of.
     expect(TURN_PRESETS.end.yaw).toBe(-90);

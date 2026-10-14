@@ -148,7 +148,8 @@ for (const sport of SPORTS) {
     expect(errors).toEqual([]);
     await expect(turn(page)).toHaveAttribute("data-mode", "3d");
     const parts = await page.locator(`${STAGE} .ky-up`).count();
-    if (sport === "curling") expect(parts).toBe(0);
+    // A curling sheet is flat: only its scoreboard stands up.
+    if (sport === "curling") expect(parts).toBe(1);
     else expect(parts).toBeGreaterThan(4);
     const box = await page.locator(`${STAGE} .ky-turn-view`).boundingBox();
     expect(box.width).toBeGreaterThan(200);
