@@ -144,7 +144,7 @@ const APRON_COURT: readonly Feature[] = [f("apron", "--ky-apron", "The ground ro
 /** A padel court: the net's features, and the walls and the metal fence of its enclosure. */
 const PADEL: readonly Feature[] = [...NET, f("walls", "--ky-wall", "The walls of the enclosure."), f("fence", "--ky-mesh", "The metal fence between the walls.")];
 /** A squash court: no net, walls round it, and its front wall laid flat beside it, with its tin. */
-const SQUASH: readonly Feature[] = [...APRON_COURT, f("walls", "--ky-wall", "The walls round the court."), f("wall-face", "--ky-face", "The front wall, laid flat beside the court."), f("tin", "--ky-tin", "The tin, on the front wall.")];
+const SQUASH: readonly Feature[] = [...APRON_COURT, f("walls", "--ky-wall", "The walls round the court."), f("wall-face", "--ky-face", "The front wall, laid flat beside the court."), f("tin", "--ky-tin", "The tin, on the front wall."), f("wall-lines", "--ky-wall-line", "The lines on the front wall.")];
 /** A racquetball court: no net, and walls round it. */
 const RACQUETBALL: readonly Feature[] = [...APRON_COURT, f("walls", "--ky-wall", "The walls round the court.")];
 /** A teqball court: the net, the table, and the court surrounds. */

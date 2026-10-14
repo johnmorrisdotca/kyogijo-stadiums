@@ -78,6 +78,7 @@ export function netCourt(o: BuildOptions, plan: CourtPlan): Surface {
   let lines = el("path", { class: ft(o, "lines", "ky-fill-line"), d: lineRects.map(box).join("") });
   // Circles and arcs are lines too, drawn at least as thick as the others.
   for (const ring of geometry.rings) lines += ringMarkup(o, { ...ring, w: Math.max(ring.w, least) });
+  if (geometry.wallLines.length > 0) lines += el("path", { class: ft(o, "wall-lines", "ky-wall-line"), d: geometry.wallLines.map(thick).map(box).join("") });
   for (const s of geometry.solids) lines += solid(o, s);
   // The net: a line across the court at its middle, from post to post; its posts and, in volleyball, the antennae at the side lines. A court without a net has none.
   const net = geometry.net;

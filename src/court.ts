@@ -135,7 +135,8 @@ export function courtFor(o: Pick<SurfaceOptions, "sport" | "league" | "net">): C
   const free = asked.free === undefined ? "official" : (FREE as readonly string[]).includes(asked.free) ? asked.free : undefined;
   if (free === undefined) throw new Error(`Unknown free zone "${String(asked.free)}": use one of ${FREE.join(", ")}`);
   const beach = picked?.family === "volleyball" && picked.id === "fivb-beach";
-  const names = LOOKS[sport];
+  // World ParaVolley asks for a light indoor floor and white lines (Rule 1.2.2): of the volleyball looks only the wooden floor, and not the beach's sand.
+  const names = picked?.id === "wpv-sitting" ? LOOKS.volleyball.slice(0, 1) : LOOKS[sport];
   const look = asked.look === undefined ? (beach ? "sand" : names[0]) : asked.look;
   if (!names.includes(look)) throw new Error(`Unknown look "${String(look)}" for ${sport}: use one of ${names.join(", ")}`);
   const common = { look, free, sticks: sport === "tennis" && asked.sticks === true };
@@ -231,6 +232,8 @@ export interface CourtGeometry {
   bands: Band[];
   /** A table or a set standing on the court. */
   solids: Solid[];
+  /** Lines painted on a wall, laid flat beside the court (squash's front wall): they may be another colour than the floor's. */
+  wallLines: Rect[];
   /** The width of a line that runs beneath the net from side to side (volleyball's and sepak takraw's centre line): it shows between the net's edges. */
   underNet: number | null;
 }

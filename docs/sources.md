@@ -213,9 +213,10 @@ Tennis, volleyball (indoor, beach and sitting), badminton, pickleball, table ten
 | The service zone | 6 m wide behind each end line, limited by two 15 cm lines 20 cm behind the end line | Rule 1.4.2 |
 | The net | 1.15 m high for men and 1.05 m for women; 0.80 m wide, 6.5 to 7 m long (7 m for those competitions) | Rules 2.1.1, 2.2 |
 | The antennae and the posts | an antenna 1.60 m long and 10 mm across at the outer edge of each side band; the posts 0.5 to 1.0 m outside the side lines, 1 m for those competitions | Rules 2.4, 2.5.1 |
+| The colours | an indoor floor of a light colour; for World ParaVolley, World and Official Competitions white lines, and other colours, unlike each other, for the court and the free zone; the court may be of two colours, the front zone and the back | Rules 1.2.2, 1.3.1 |
 | The score | as volleyball: five sets | the Rules' chapters on the play, as the FIVB's |
 
-**Ours.** The same as the FIVB's indoor court: the colours, the front zone painted a little apart, the marks for the posts and antennae, the `official` and `least` figures (4 and 6 m, and 3 m all round; the posts 1 and 0.5 m out).
+**Ours.** The same as the FIVB's indoor court, but for the look: the wooden floor is the only one offered, since the Rules ask for a light floor and white lines (no blue floor, no sand with its blue lines). The front zone painted a little apart, the marks for the posts and antennae, the `official` and `least` figures (4 and 6 m, and 3 m all round; the posts 1 and 0.5 m out).
 
 ### Padel
 
@@ -227,10 +228,11 @@ Tennis, volleyball (indoor, beach and sitting), badminton, pickleball, table ten
 | The lines | the service lines 6.95 m from the net on either side; the central service line between the net and each, extending at least 20 cm beyond the service line; all lines 5 cm wide, preferably white or black | The Court: Dimensions |
 | The net | 10 m long, 0.88 m high at the centre and 0.92 m at the ends (a tolerance of 0.005 m); on two posts at most 1.05 m high, or a part of the court's structure; the outer side of the posts coinciding with the lateral limits of the court | The Court: Net, 1, 2 and 4 |
 | The enclosure | the court completely enclosed; the ends 4 m high, 3 m of wall and 1 m of metal fence; each side either stepped (a wall 3 m high by 2 m long, then 2 m high by 2 m, at each end) or "crystal" (a wall 3 m high by 4 m long at each end), the fence between | The Court: Enclosures, Ends and Sides |
-| The floor | cement, synthetic material or artificial grass, in green, blue or terracotta | The Court: Ground surface, 1 and 2 |
+| The floor | cement, synthetic material or artificial grass, in green, blue or terracotta, one colour for the whole floor and unlike the wall's | The Court: Ground surface, 1 and 2 |
+| The colours | lines preferably white or black | The Court: Dimensions |
 | The score | points 15, 30, 40, with advantage, the star point or the golden point; a set to six games, a tie-break at six all; a match the best of three sets | Rule 1 |
 
-**Ours.** The colours (the three the Rules prefer). The service line is placed with its outside edge 6.95 m from the net (the Rules do not say which edge). The thickness of the walls and of the fence, and the size of the post's mark. Both side-wall variants have a wall 4 m long at each end of each side, so that is what is drawn; the steps' heights and the doors (The Court: Access) are not.
+**Ours.** The colours (the three the Rules prefer, with white lines, which they prefer too). The service line is placed with its outside edge 6.95 m from the net (the Rules do not say which edge). The thickness of the walls and of the fence, and the size of the post's mark. Both side-wall variants have a wall 4 m long at each end of each side, so that is what is drawn; the steps' heights and the doors (The Court: Access) are not.
 
 ### Squash
 
@@ -245,9 +247,10 @@ Tennis, volleyball (indoor, beach and sitting), badminton, pickleball, table ten
 | The short line | parallel to the front and back walls, the nearest edge 4,260 mm from the back wall, marked for the full width | Clause 5.05.01 |
 | The half court line | parallel to and equidistant from the side walls, from the back wall to the short line | Clause 5.05.02 |
 | The service boxes | one each side behind the short line, square with internal sides of 1,600 mm, bounded on three sides by lines and on the fourth by a side wall | Clause 5.05.03 |
+| The colours | markings contrast in colour with the surfaces beside them, all wall markings one colour and all floor markings one colour; the lines may be any colour that contrasts, the wall's lines unlike the floor's; the tin below its top 50 mm of any colour; a floor of natural wood or another colour of at least 50% reflectance | Clauses 5.01.01, 8.06, 10.13, 10.12; Appendix 4 |
 | The score | a game to 11 points, to a lead of two from 10-all; a match normally the best of five games | Rules 2.2, 2.3 of the singles rules |
 
-**Ours.** The colours, the thickness of the walls drawn round the court, and the front wall laid flat beside it (its lines at their heights, to the left of the court). The side wall line and the back wall line are not drawn.
+**Ours.** The colours: the specification does not ask for red lines (it asks that markings contrast, 5.01.01 and 10.13), so red is ours, as the colour squash lines are painted, a dark red on the light floor and a pale red on the dark one, drawn on the floor and on the front wall in the wooden look, and on the front wall alone in the blue look (white on the floor). The thickness of the walls drawn round the court, and the front wall laid flat beside it (its lines at their heights, to the left of the court). The side wall line and the back wall line are not drawn.
 
 ### Racquetball
 
@@ -256,7 +259,7 @@ Tennis, volleyball (indoor, beach and sitting), badminton, pickleball, table ten
 | Figure | Value | Source |
 | --- | --- | --- |
 | The court | 20 feet wide, 40 feet long and 20 feet high, with a ceiling; the back wall at least 12 feet high | Rule 2.1(a); Specifications, Section Two |
-| The lines | 1 to 1 1/2 inches wide (1 1/2 inches, bright red, recommended; black or bright blue on a convertible court) | Rule 2.1(b); Specifications, Section Three |
+| The lines | 1 to 1 1/2 inches wide (1 1/2 inches, bright red, recommended; black or bright blue on a convertible court) | Rule 2.1(b); Specifications, Section Three, Application |
 | The short line | its back edge midway between the front and back walls (20 feet from the back wall) | Rule 2.1(b)1 |
 | The service line and zone | the service line's front edge 5 feet in front of the short line's back edge; the service zone the 5 by 20 foot area between their outer edges | Rule 2.1(b)2, 3 |
 | The service boxes and drive serve lines | at each end of the service zone, a line whose edge nearest the centre is 18 inches from the side wall; the drive serve lines 3 feet from the side wall | Rule 2.1(b)4, 5 |
@@ -265,7 +268,7 @@ Tennis, volleyball (indoor, beach and sitting), badminton, pickleball, table ten
 | The out-of-court line | its upper edge on the back wall, 12 feet up (144 inches) | Rule 2.1(b)8; Specifications, Section Three |
 | The score | a match three games of five, every game to 11, to a lead of two | Rule 1.5 |
 
-**Ours.** The colours, the thickness of the walls, the line width of 1 1/2 inches (the greatest of the Rules' 1 to 1 1/2). The out-of-court line and the screen lines are not drawn.
+**Ours.** The colours of the floor (a light wood, so that the red lines read at 3:1; the lines are the IRF's recommended red, blue on the convertible look), the thickness of the walls, the line width of 1 1/2 inches (the greatest of the Rules' 1 to 1 1/2). The out-of-court line and the screen lines are not drawn.
 
 ### Sepak takraw
 
@@ -280,6 +283,7 @@ Tennis, volleyball (indoor, beach and sitting), badminton, pickleball, table ten
 | The free zone | at least 3.0 m from the sidelines and the baselines | Law 1.5 |
 | The posts | 1.55 m (men) or 1.45 m (women) high, at most 0.04 m in radius, 0.3 m from the sidelines, in line with the centre line | Laws 2.1, 2.2 |
 | The net | 0.7 m wide, at least 6.1 m long, over the axis of the centre line; 1.52 m (men) or 1.42 m (women) high at the centre and 1.55 or 1.45 m at the posts | Laws 3.2, 3.5 |
+| The colours | none given | Laws 1 to 3 |
 | The score | a match the best of three sets | Law 12.4 |
 
 **Ours.** The colours, the radius of a circle taken to the outside of its line (the Law gives none), and the quarter circles' line width (the service circle's, 0.04 m). Each quarter circle is drawn inside the court on its side of the net, so there are four.
@@ -295,6 +299,7 @@ Tennis, volleyball (indoor, beach and sitting), badminton, pickleball, table ten
 | The court | rectangular, marked with surrounds 500 to 1,500 mm high; the table in the exact middle, the net parallel to the shorter sides; at least 12 m (the sides parallel to the net) by 16 m by 7 m high | 2.1.1.1, 2.1.1.3, 2.1.4 |
 | The halfway line | in the middle of the court, dividing it into two equal halves, 20 to 50 mm wide | 2.1.2 |
 | The service line | parallel to the net and 3.5 m from the middle of the table (2 m from the table's end), 20 to 50 mm wide | 2.1.3 |
+| The colours | the table, the floor, the court surrounds and the ball all unlike each other; the halfway line and the service line in a colour unlike the floor's | 2.1.1.4, 2.1.2.2, 2.1.3.2 |
 | The score | a set to 12 points, a decisive set by a lead of two; a match the best of three sets | 6.2.1 to 6.2.3 |
 
 **Ours.** The colours (the rules ask only that the table, floor, surrounds and ball differ), the greatest line width of 50 mm, the service line's axis at 3.5 m (the rules give no edge), and the thickness of the surrounds. The court drawn is the least, 16 by 12 m, which is what the rules fix.
@@ -310,6 +315,7 @@ Tennis, volleyball (indoor, beach and sitting), badminton, pickleball, table ten
 | The serving line | a circle drawn 2.6 m (8.5 feet) from the centre of the set, 2.13 m (7 feet) from its edge; marks at the four starting service positions | Rule 1.2.3 |
 | The service positions | four, 90 degrees apart, typically parallel and perpendicular to the field | Rules 3.8.1, 3.8.2 |
 | The no hit zone line | a circle 90 cm (3 feet) from the centre of the set | Rule 1.2.4 |
+| The colours | none given | Chapter 1 |
 | The score | a game to the designated number of points, typically 15 or 21, by a lead of two; a match typically two games | Rules 3.4, 3.5 |
 
 **Ours.** The colours, the widths of the lines and of the marks (the rules give none), the set drawn as a disc with its rim, and the court as the recommended square (a square has no sides, so `orientation: "portrait"` draws it the same).
@@ -326,6 +332,7 @@ Tennis, volleyball (indoor, beach and sitting), badminton, pickleball, table ten
 | The goal circles | a semicircle at each end, of radius 4.9 m (16 ft), centred on the middle of the outside of the goal line | Item 6 |
 | The lines | all 50 mm wide, preferably white, part of the areas they outline; a line that bounds two areas is common to both | Item 7 |
 | The court surround | 3.05 m (10 ft) from the goal lines and side lines | Item 8 |
+| The colours | all lines preferably white; a surface preferably wooden (and sprung); a goal net preferably white | Items 1, 7, 14d |
 | The goalposts | at the middle of each goal line, the back of the pole at its outer edge; a pole 65 to 100 mm across and 3.05 m high, with padding up to 50 mm; a ring of 380 mm inside diameter, 15 mm rod, on a bar 150 mm long | Items 13, 14 |
 
 **Ours.** The colours, the radii taken to the outside of the lines, the transverse lines centred on the thirds (the line is common to both areas), the pole drawn at its greatest, 100 mm, the ring seen from above, and a score that is the usual one, not a board.

@@ -9,7 +9,7 @@ import { convertLength } from "./units.ts";
 const feet = (metres: number): number => convertLength(metres, "m", "ft");
 
 /** The empty parts of a geometry, which each court fills in as it needs. */
-export const none = (): Pick<CourtGeometry, "rings" | "bands" | "solids" | "underNet"> => ({ rings: [], bands: [], solids: [], underNet: null });
+export const none = (): Pick<CourtGeometry, "rings" | "bands" | "solids" | "wallLines" | "underNet"> => ({ rings: [], bands: [], solids: [], wallLines: [], underNet: null });
 
 /** The four edges of a court's boundary lines, drawn inside its dimensions: each line's width inwards. */
 const boundary = (L: number, W: number, w: number): Rect[] => [[0, 0, w, W], [L - w, 0, L, W], [0, 0, L, w], [0, W - w, L, W]];
@@ -77,9 +77,9 @@ export function squashGeometry(f: SquashFigures): CourtGeometry {
   }
   // The front wall laid flat beside the court: distances to the left of the wall are heights up it. Each line's lower edge is at its height, and it is 50 mm tall.
   const high = wall.frontWallLine + w;
-  lines.push([-(wall.serviceLine + w), 0, -wall.serviceLine, W], [-(wall.frontWallLine + w), 0, -wall.frontWallLine, W], [-wall.tin, 0, -(wall.tin - w), W]);
+  const wallLines: Rect[] = [[-(wall.serviceLine + w), 0, -wall.serviceLine, W], [-(wall.frontWallLine + w), 0, -wall.frontWallLine, W], [-wall.tin, 0, -(wall.tin - w), W]];
   const bands: Band[] = [{ rect: [-high, 0, 0, W], kind: "face" }, { rect: [-wall.tin, 0, 0, W], kind: "tin" }, ...walls(L, W, t, ["left"])];
-  return { length: L, width: W, lines, areas: [], small: [], net: null, posts: [], antennae: [], sticks: [], ...none(), bands };
+  return { length: L, width: W, lines, areas: [], small: [], net: null, posts: [], antennae: [], sticks: [], ...none(), bands, wallLines };
 }
 
 /**

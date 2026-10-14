@@ -85,17 +85,17 @@ The colours are ours: no rulebook prints a colour for a tennis court or a pickle
 | `sport` | `net.look` (the first is the default) |
 | --- | --- |
 | `tennis` | `hard-blue`, `hard-green`, `clay`, `grass` |
-| `volleyball` | `wood`, `blue`, `sand` (the default for `fivb-beach`, with its lines in blue) |
+| `volleyball` | `wood`, `blue`, `sand` (the default for `fivb-beach`, with its lines in blue); `wpv-sitting` has `wood` only, since World ParaVolley asks for a light indoor floor and white lines (Rule 1.2.2) |
 | `badminton` | `green`, `blue`, `wood` |
 | `pickleball` | `blue-green` (a blue court on green ground, the non-volley zone lighter), `green`, `red` |
 | `tabletennis` | `blue`, `green` |
-| `padel` | `blue`, `green`, `terracotta` (the FIP's rules prefer a floor in green, blue or terracotta) |
-| `squash` | `wood`, `blue` (the front wall, laid flat, is drawn pale) |
-| `racquetball` | `wood` (the IRF's recommended bright red lines), `convertible` (blue lines, which the IRF recommends on a convertible court with a movable glass back wall) |
+| `padel` | `blue`, `green`, `terracotta` (the FIP's rules prefer a floor in green, blue or terracotta, and lines white or black: white here) |
+| `squash` | `wood` (red lines), `blue` (white lines on the floor, red on the wall); the front wall, laid flat, is drawn pale. World Squash's specification asks only that markings contrast with the surfaces beside them (5.01.01) and lets them be any colour that does, the wall's lines unlike the floor's (10.13); red is ours, as the colour squash lines are painted |
+| `racquetball` | `wood` (the IRF's recommended bright red lines), `convertible` (blue lines, which the IRF recommends, with black, on a convertible court with a movable glass back wall); the floor is light, so the lines read at 3:1 |
 | `sepaktakraw` | `blue`, `green`, `wood` |
 | `teqball` | `grey` (a blue table on a grey floor), `blue`, `green` (the FITEQ asks that the table, the floor, the surrounds and the ball all differ in colour) |
 | `roundnet` | `grass`, `sand`, `indoor` |
-| `netball` | `wood` (the Rules say a wooden surface, preferably sprung), `blue`, `green` |
+| `netball` | `wood` (the Rules say a wooden surface, preferably sprung), `blue`, `green`; the lines are white, which the Rules prefer |
 
 The look is the drawing's `data-look`, and its rules are written into the drawing for that look only. `KYOGIJO_COURTS_STYLE` has every look for a page that draws with `style: "none"` (and is part of `KYOGIJO_STYLE`).
 

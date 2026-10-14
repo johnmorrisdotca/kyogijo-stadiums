@@ -1436,6 +1436,7 @@ exports[`the leagues' drawings > squash wsf-doubles: what a score drawing is mad
   "path.ky-fill-line": 1,
   "path.ky-tin": 1,
   "path.ky-wall": 3,
+  "path.ky-wall-line": 1,
   "rect.ky-apron": 1,
   "rect.ky-panel-left": 1,
   "rect.ky-panel-right": 1,
@@ -1465,6 +1466,7 @@ exports[`the leagues' drawings > squash wsf-doubles-wide: what a score drawing i
   "path.ky-fill-line": 1,
   "path.ky-tin": 1,
   "path.ky-wall": 3,
+  "path.ky-wall-line": 1,
   "rect.ky-apron": 1,
   "rect.ky-panel-left": 1,
   "rect.ky-panel-right": 1,
@@ -1484,7 +1486,7 @@ exports[`the leagues' drawings > squash wsf-doubles-wide: what a score drawing i
 
 exports[`the leagues' drawings > stay the same text unless a drawing was meant to change: one fingerprint for every league 1`] = `"1b32yjz"`;
 
-exports[`the leagues' drawings > stay the same text unless a drawing was meant to change: one fingerprint for the leagues added after the field sports 1`] = `"0cvvoh5"`;
+exports[`the leagues' drawings > stay the same text unless a drawing was meant to change: one fingerprint for the leagues added after the field sports 1`] = `"0j6hg07"`;
 
 exports[`the leagues' drawings > volleyball fivb-beach: what a score drawing is made of 1`] = `
 {

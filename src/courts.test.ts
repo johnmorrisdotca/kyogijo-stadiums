@@ -472,9 +472,9 @@ describe("squash: World Squash's Specifications for Squash Courts (28 November 2
   it("5.02: the front wall is laid flat beside the court: the front wall line 4,570 mm and the service line 1,780 mm up, the tin 480 mm (330 mm for the competition width)", () => {
     expect(WSF_SQUASH.wall).toEqual({ tin: 0.48, serviceLine: 1.78, frontWallLine: 4.57, backWallLine: 2.13 });
     expect(WSF_SQUASH_WIDE.wall.tin).toBe(0.33);
-    expect(has(g.lines, m(-4.57 - w, 0, -4.57, 6.4))).toBe(true);
-    expect(has(g.lines, m(-1.78 - w, 0, -1.78, 6.4))).toBe(true);
-    expect(has(g.lines, m(-0.48, 0, -0.43, 6.4))).toBe(true);
+    expect(has(g.wallLines, m(-4.57 - w, 0, -4.57, 6.4))).toBe(true);
+    expect(has(g.wallLines, m(-1.78 - w, 0, -1.78, 6.4))).toBe(true);
+    expect(has(g.wallLines, m(-0.48, 0, -0.43, 6.4))).toBe(true);
     expect(g.bands.find((b) => b.kind === "tin")?.rect[0]).toBeCloseTo(-0.48 * FT_PER_M, 6);
     expect(g.net).toBeNull();
   });
@@ -482,6 +482,56 @@ describe("squash: World Squash's Specifications for Squash Courts (28 November 2
   it("5.01.01: every marking is 50 mm wide, and the other three walls stand round the court", () => {
     expect(WSF_SQUASH.lineWidth).toBe(0.05);
     expect(g.bands.filter((b) => b.kind === "wall")).toHaveLength(3);
+  });
+});
+
+/** The contrast ratio of two #rrggbb colours (WCAG 2). */
+function contrast(a: string, b: string): number {
+  const lum = (hex: string): number => {
+    const [r, g, bl] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255).map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+    return 0.2126 * r + 0.7152 * g + 0.0722 * bl;
+  };
+  const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x);
+  return (hi + 0.05) / (lo + 0.05);
+}
+
+describe("the colours the rulebooks ask for", () => {
+  it("squash: markings contrast with the surfaces beside them (5.01.01, 10.13), and the lines of the front wall may differ from the floor's: red, and 3:1 on the floor, the wall and the tin in both modes", () => {
+    for (const [name, pair] of Object.entries(COURT_LOOKS.squash)) {
+      for (const mode of ["light", "dark"] as const) {
+        const look = pair[mode];
+        expect(look.wallLine, `${name} ${mode}`).toBeDefined();
+        expect(contrast(look.wallLine as string, look.face as string), `${name} ${mode} wall`).toBeGreaterThanOrEqual(3);
+        expect(contrast(look.wallLine as string, look.tin as string), `${name} ${mode} tin`).toBeGreaterThanOrEqual(3);
+        const floor = look.line ?? (mode === "light" ? "#ffffff" : "#e9ece6");
+        expect(contrast(floor, look.surface), `${name} ${mode} floor`).toBeGreaterThanOrEqual(3);
+      }
+    }
+    expect(COURT_LOOKS.squash.wood.light.line).toBe(COURT_LOOKS.squash.wood.light.wallLine);
+    const svg = drawKyogijo({ sport: "squash", id: "c" });
+    expect(svg).toContain("--ky-wall-line:#a8201a");
+    expect(svg).toContain("ky-wall-line");
+  });
+
+  it("racquetball: bright red lines, blue (or black) on a convertible court (the IRF's court specifications, Section Three, Application), 3:1 on the floor", () => {
+    expect(COURT_LOOKS.racquetball.wood.light.line).toBe("#c8372d");
+    expect(COURT_LOOKS.racquetball.convertible.light.line).toBe("#2a5db0");
+    for (const [name, pair] of Object.entries(COURT_LOOKS.racquetball)) for (const mode of ["light", "dark"] as const) expect(contrast(pair[mode].line as string, pair[mode].surface), `${name} ${mode}`).toBeGreaterThanOrEqual(3);
+  });
+
+  it("padel (lines preferably white or black), netball (lines preferably white), teqball (lines unlike the floor; table, floor and surrounds all unlike) and sitting volleyball (white lines, a light floor, a free zone unlike it): white lines and the differences asked for", () => {
+    for (const sport of ["padel", "netball", "teqball", "sepaktakraw"] as const) for (const pair of Object.values(COURT_LOOKS[sport])) expect(pair.light.line, sport).toBeUndefined();
+    for (const pair of Object.values(COURT_LOOKS.teqball)) for (const mode of ["light", "dark"] as const) {
+      const look = pair[mode];
+      expect(new Set([look.surface, look.table, look.wall]).size).toBe(3);
+      expect(contrast("#ffffff", look.surface)).toBeGreaterThanOrEqual(3);
+    }
+    const sitting = { sport: "volleyball", league: "wpv-sitting" } as const;
+    expect(courtFor(sitting).look).toBe("wood");
+    expect(() => courtFor({ ...sitting, net: { look: "sand" } })).toThrow(/use one of wood/);
+    expect(() => courtFor({ ...sitting, net: { look: "blue" } })).toThrow(/Unknown look/);
+    expect(COURT_LOOKS.volleyball.wood.light.line).toBeUndefined();
+    expect(COURT_LOOKS.volleyball.wood.light.surface).not.toBe(COURT_LOOKS.volleyball.wood.light.free);
   });
 });
 

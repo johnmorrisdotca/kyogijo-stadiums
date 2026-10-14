@@ -14,6 +14,8 @@ interface Look {
   apron: string;
   area?: string;
   line?: string;
+  /** The lines on a squash court's front wall, which the specification lets differ from the floor's (clause 10.13). */
+  wallLine?: string;
   wall?: string;
   mesh?: string;
   face?: string;
@@ -23,7 +25,9 @@ interface Look {
 }
 
 const WALL = { light: { wall: "#4f575f", mesh: "#98a1a9" }, dark: { wall: "#8b949c", mesh: "#59626a" } };
-const FACE = { light: { face: "#efeadf", tin: "#8a9199" }, dark: { face: "#454b52", tin: "#7a828a" } };
+// World Squash's specification asks that court markings contrast with the surfaces beside them (5.01.01) and lets them be any colour that does (10.13), the walls' lines
+// differing from the floor's if need be. Red is the colour squash lines are painted in: ours, a red dark enough on the light floor and pale enough on the dark one to read at 3:1.
+const FACE = { light: { face: "#efeadf", tin: "#c3c8cd", wallLine: "#a8201a" }, dark: { face: "#454b52", tin: "#34393f", wallLine: "#ffb3a8" } };
 
 interface Pair {
   light: Look;
@@ -65,12 +69,12 @@ export const COURT_LOOKS: Readonly<Record<NetSport, Readonly<Record<string, Pair
     terracotta: { light: { surface: "#c0623f", free: "#c0623f", apron: "#d9cdb8", ...WALL.light }, dark: { surface: "#8f4630", free: "#8f4630", apron: "#1b1f1c", ...WALL.dark } },
   },
   squash: {
-    wood: { light: { surface: "#d7a766", free: "#d7a766", apron: "#c9c3b4", ...WALL.light, ...FACE.light }, dark: { surface: "#8a6638", free: "#8a6638", apron: "#1a1c1b", ...WALL.dark, ...FACE.dark } },
+    wood: { light: { surface: "#d7a766", free: "#d7a766", apron: "#c9c3b4", line: "#a8201a", ...WALL.light, ...FACE.light }, dark: { surface: "#8a6638", free: "#8a6638", apron: "#1a1c1b", line: "#ffb3a8", ...WALL.dark, ...FACE.dark } },
     blue: { light: { surface: "#4a7fb8", free: "#4a7fb8", apron: "#d3d8df", ...WALL.light, ...FACE.light }, dark: { surface: "#35608f", free: "#35608f", apron: "#1a1c1b", ...WALL.dark, ...FACE.dark } },
   },
   racquetball: {
-    wood: { light: { surface: "#d9ab6a", free: "#d9ab6a", apron: "#c9c3b4", line: "#c8372d", ...WALL.light }, dark: { surface: "#8f6a3c", free: "#8f6a3c", apron: "#1a1c1b", line: "#e0564c", ...WALL.dark } },
-    convertible: { light: { surface: "#d9ab6a", free: "#d9ab6a", apron: "#c9c3b4", line: "#2a5db0", ...WALL.light }, dark: { surface: "#8f6a3c", free: "#8f6a3c", apron: "#1a1c1b", line: "#7aa3e6", ...WALL.dark } },
+    wood: { light: { surface: "#efd9ae", free: "#efd9ae", apron: "#c9c3b4", line: "#c8372d", ...WALL.light }, dark: { surface: "#55401f", free: "#55401f", apron: "#1a1c1b", line: "#ff6b5e", ...WALL.dark } },
+    convertible: { light: { surface: "#efd9ae", free: "#efd9ae", apron: "#c9c3b4", line: "#2a5db0", ...WALL.light }, dark: { surface: "#55401f", free: "#55401f", apron: "#1a1c1b", line: "#7aa3e6", ...WALL.dark } },
   },
   sepaktakraw: {
     blue: { light: { surface: "#3a73b5", free: "#2c5a91", apron: "#d3d8df" }, dark: { surface: "#2e5c92", free: "#234875", apron: "#1a1c1b" } },
@@ -84,7 +88,7 @@ export const COURT_LOOKS: Readonly<Record<NetSport, Readonly<Record<string, Pair
   },
   roundnet: {
     grass: { light: { surface: "#68a653", free: "#68a653", apron: "#cfd6bd", setnet: "#e9efe4" }, dark: { surface: "#3f6e32", free: "#3f6e32", apron: "#1b1f1c", setnet: "#a9b8a2" } },
-    sand: { light: { surface: "#e3cf9a", free: "#e3cf9a", apron: "#cdbf9c", setnet: "#f6efd9" }, dark: { surface: "#a08c5e", free: "#a08c5e", apron: "#1d1c17", setnet: "#c9bd9a" } },
+    sand: { light: { surface: "#e3cf9a", free: "#e3cf9a", apron: "#cdbf9c", line: "#2a5db0", setnet: "#f6efd9" }, dark: { surface: "#8a784d", free: "#8a784d", apron: "#1d1c17", setnet: "#c9bd9a" } },
     indoor: { light: { surface: "#b9b2a2", free: "#b9b2a2", apron: "#d3d0c8", setnet: "#ece9e1" }, dark: { surface: "#6f6a5f", free: "#6f6a5f", apron: "#1b1b19", setnet: "#a9a597" } },
   },
   netball: {
@@ -94,7 +98,7 @@ export const COURT_LOOKS: Readonly<Record<NetSport, Readonly<Record<string, Pair
   },
 };
 
-const OPTIONAL: readonly (readonly [keyof Look, string])[] = [["area", "--ky-area"], ["line", "--ky-line"], ["wall", "--ky-wall"], ["mesh", "--ky-mesh"], ["face", "--ky-face"], ["tin", "--ky-tin"], ["table", "--ky-table"], ["setnet", "--ky-setnet"]];
+const OPTIONAL: readonly (readonly [keyof Look, string])[] = [["area", "--ky-area"], ["line", "--ky-line"], ["wallLine", "--ky-wall-line"], ["wall", "--ky-wall"], ["mesh", "--ky-mesh"], ["face", "--ky-face"], ["tin", "--ky-tin"], ["table", "--ky-table"], ["setnet", "--ky-setnet"]];
 
 const vars = (look: Look, net: string): string => `--ky-surface:${look.surface};--ky-free:${look.free};--ky-apron:${look.apron};--ky-net:${net}${OPTIONAL.map(([key, name]) => (look[key] === undefined ? "" : `;${name}:${look[key]}`)).join("")}`;
 
@@ -118,12 +122,13 @@ const CLASSES = `
 .kyogijo .ky-serve-seam{fill:none;stroke:rgba(0,0,0,.45)}
 .kyogijo .ky-tb{font-weight:700;opacity:.9}`.trim();
 
-/** The rules of the classes only some courts have: walls and fences, the front wall of a squash court, a teqball table and a roundnet set's net. */
+/** The rules of the classes only some courts have: walls and fences, the front wall of a squash court and its lines, a teqball table and a roundnet set's net. */
 const FIXTURES = `
 .kyogijo .ky-wall{fill:var(--ky-wall)}
 .kyogijo .ky-mesh{fill:var(--ky-mesh)}
 .kyogijo .ky-face{fill:var(--ky-face)}
 .kyogijo .ky-tin{fill:var(--ky-tin)}
+.kyogijo .ky-wall-line{fill:var(--ky-wall-line,var(--ky-line))}
 .kyogijo .ky-table{fill:var(--ky-table)}
 .kyogijo .ky-set-net{fill:var(--ky-setnet)}`.trim();
 
