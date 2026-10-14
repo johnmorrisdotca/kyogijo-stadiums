@@ -1,12 +1,16 @@
 // A budō surface lying wide, from its plan (budo/plan.ts): the floor and the free zone, the mats in their tones with their heri and their seams, the walls, the clay and the straw of a dohyō, the tape,
 // the targets. The plan is in metres; the drawing is in feet, as every surface lies, so the whole is drawn inside a group that scales metres to feet and moves the surface's box to the origin.
-import { el } from "../format.ts";
+import { el, num } from "../format.ts";
+import { floorTiles, type Hardwood } from "../hardwood.ts";
 import { areaD, marks, strokes } from "./field.ts";
 import type { BudoPlan, MBox, MRange } from "../budo/plan.ts";
 import { atEnds, edges, ft, quarterTurn, type BuildOptions, type Mark, type Surface, type SurfaceRanges } from "./surface.ts";
 
 /** Feet in a metre. */
 export const K = 1 / 0.3048;
+
+/** The hardwood of a dojo's surround, laid as the basketball floor is (`hardwood.ts`): strip boards of 0.3 ft, each with a tone of its own and a little grain, seams that are only just there. */
+const SURROUND_WOOD: Hardwood = { seed: 11, fine: true, board: 0.3, stain: 0, sheen: 0, hoops: false, bench: false };
 
 const feetBox = (b: MBox, ox: number, oy: number): { x: number; y: number; w: number; h: number } => edges((b.x0 - ox) * K, (b.y0 - oy) * K, (b.x1 - ox) * K, (b.y1 - oy) * K);
 
@@ -33,7 +37,7 @@ export function budoSurface(o: BuildOptions, plan: BudoPlan, margin: number): Su
   const weave = full && plan.texture && pieces.length > 0;
   const stripe = (at: number, colour: string, opacity: number, width: number): string => el("stop", { offset: at, "stop-color": colour, "stop-opacity": 0 }) + el("stop", { offset: at, "stop-color": colour, "stop-opacity": opacity }) + el("stop", { offset: at + width, "stop-color": colour, "stop-opacity": opacity }) + el("stop", { offset: at + width, "stop-color": colour, "stop-opacity": 0 });
   const woven = (): string => {
-    defs += el("linearGradient", { id: `${o.id}-weave`, x1: 0, y1: 0, x2: 0, y2: 0.1, gradientUnits: "userSpaceOnUse", spreadMethod: "repeat" }, stripe(0.1, "#000000", 0.16, 0.22) + stripe(0.52, "#ffffff", 0.14, 0.16));
+    defs += el("linearGradient", { id: `${o.id}-weave`, x1: 0, y1: 0, x2: 0, y2: 0.1, gradientUnits: "userSpaceOnUse", spreadMethod: "repeat" }, stripe(0.1, "#000000", 0.03, 0.22) + stripe(0.52, "#000000", 0.015, 0.16));
     const rect = (p: MBox): string => `M${p.x0} ${p.y0}H${p.x1}V${p.y1}H${p.x0}Z`;
     // A mat that lies across is drawn in a group turned a quarter, with its corners turned back, so that its ridges run along it.
     const turned = (p: MBox): string => `M${p.y0} ${-p.x0}H${p.y1}V${-p.x1}H${p.y0}Z`;
@@ -46,6 +50,19 @@ export function budoSurface(o: BuildOptions, plan: BudoPlan, margin: number): Su
     out += el("path", { class: "ky-bud-edge", d: pieces.map(rect).join(""), fill: "none" });
     return out;
   };
+  // The surround is polished hardwood: the boards (under) and their seams (over) as two tiles of the basketball floor's code, in feet and turned to metres, and a warm satin sheen in a few
+  // broad diagonal glints over them. Drawn only at full detail.
+  let polished = false;
+  const polish = (d: string): string => {
+    const tiles = floorTiles(SURROUND_WOOD);
+    const tile = (suffix: string, body: string): string => el("pattern", { id: `${o.id}-wood-${suffix}`, width: 96, height: num(tiles.height), patternUnits: "userSpaceOnUse", patternTransform: `scale(${(1 / K).toFixed(6)})` }, body);
+    const b = plan.box;
+    const glint = (at: number, w: number, a: number): string => el("stop", { offset: at - w, "stop-color": "#fff1cf", "stop-opacity": 0 }) + el("stop", { offset: at, "stop-color": "#fff1cf", "stop-opacity": a }) + el("stop", { offset: at + w, "stop-color": "#fff1cf", "stop-opacity": 0 });
+    defs += tile("a", tiles.under) + tile("b", tiles.over) + el("linearGradient", { id: `${o.id}-wood-s`, gradientUnits: "userSpaceOnUse", x1: b.x0, y1: b.y0, x2: b.x1, y2: b.y1 }, glint(0.22, 0.06, 0.1) + glint(0.5, 0.08, 0.13) + glint(0.78, 0.05, 0.08));
+    const layer = (suffix: string, opacity?: number): string => el("path", { class: "ky-bud-wood", d, "fill-rule": "evenodd", fill: `url(#${o.id}-wood-${suffix})`, opacity });
+    // The boards are meant to be seen only when looked for: the tones and the seams are laid at half strength.
+    return layer("a", 0.5) + layer("b", 0.45) + layer("s");
+  };
   let pending = false;
   let wove = false;
   for (const a of plan.areas) {
@@ -56,6 +73,10 @@ export function budoSurface(o: BuildOptions, plan: BudoPlan, margin: number): Su
     }
     if (tone) pending = true;
     ground += el("path", { class: ft(o, a.feature, a.cls), d: areaD(a), "fill-rule": a.evenodd === true ? "evenodd" : undefined });
+    if (full && a.id === "surround" && !polished) {
+      polished = true;
+      ground += polish(areaD(a));
+    }
   }
   if (weave && !wove) ground += woven();
   base += group(ground, "ky-bud-ground");

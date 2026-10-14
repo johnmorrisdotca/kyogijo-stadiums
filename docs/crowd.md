@@ -157,7 +157,7 @@ A page that draws with `style: "none"` and supplies the stylesheet itself gets t
 
 ## The stands as data
 
-`crowdStands(options)` gives the stands as data, in feet in the surface's wide frame, without drawing them: the `rings` (each with `region` and `hole` outlines, `from` and `to` its distance from the surface, `height` of its first and last row, `rake` in degrees, `fill`, `seats` and its `aisles`), the `concourses`, `covers`, the `sectors` of visitors and of the card display, the `gaps`, the gridiron `footprint`, the `reach` the stands need beyond the surface on each side, and the `seats` the model holds. `outlinePath` and `outlinePoints` turn an outline into a path or a polygon. This is what a view that raises the stands needs, such as the 3D view of the `work/turn` branch: a follow-up, not done here.
+`crowdStands(options)` gives the stands as data, in feet in the surface's wide frame, without drawing them: the `rings` (each with `region` and `hole` outlines, `from` and `to` its distance from the surface, `height` of its first and last row, `rake` in degrees, `fill`, `seats` and its `aisles`), the `concourses`, `covers`, the `sectors` of visitors and of the card display, the `gaps`, the gridiron `footprint`, the `reach` the stands need beyond the surface on each side, and the `seats` the model holds. `outlinePath` and `outlinePoints` turn an outline into a path or a polygon. This is what the [3D view](./turn.md#the-venue) raises: every ring a strip of raked planes with the crowd's pattern on them, the walks between the tiers, and, with `venue: { roof: true }`, a roof or canopy.
 
 ## What is not drawn
 

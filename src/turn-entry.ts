@@ -10,4 +10,6 @@ export { CURLING_PRESETS, LONG_PRESETS, NET_PRESETS, PITCH_MAX, STEP, TURN_DEFAU
 export type { Box3, Mat4, Placement, TurnPreset, TurnToward, TurnView } from "./turn.camera.ts";
 export { describeUprights, heightUnit, planesOf, uprightsFor } from "./uprights.ts";
 export type { UprightOptions, Uprights } from "./uprights.ts";
+export { ROOF } from "./venue.ts";
+export type { Venue, VenueBuild, VenueSettings } from "./venue.ts";
 export type { Plane, PartKind, Upright, UprightKind, V3 } from "./turn.kit.ts";

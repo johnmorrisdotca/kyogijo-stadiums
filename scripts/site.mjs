@@ -298,6 +298,9 @@ const page = `<!doctype html>
               <div class="setup fam-row" ${help("Draw the stands round the surface and the people in them: a bowl, two sides, a horseshoe or a ballpark's grandstands, in the home colours with the visitors at an end. Every surface that has spectators takes it.", "競技場の周りにスタンドと観客を描きます。ボウル型、両サイド型、馬蹄形、球場型など、会場に合わせた形で、観客はホームチームの色、ビジターの観客は片方の端に集まります。スタンドのある競技場すべてで使えます。")}>
                 ${toggle("crowd", "crowd")}${toggle("crowd-tifo", "crowdTifo")}
               </div>
+              <div class="setup fam-row" id="venue-row"${hid("venue-row")} ${help("In the 3D view the stands rise round the surface, raked as the data gives them, and fade on the side nearest you so that the surface is never hidden. A roof or canopy goes over the top tier.", "3D表示では、スタンドがデータに基づく傾斜で競技面のまわりに立ち上がります。手前側は透けて見えるので、競技面が隠れることはありません。最上段の上に屋根（キャノピー）をかけることもできます。")}>
+                ${toggle("venue-roof", "venueRoof")}
+              </div>
               <div id="lineup-group"${hid("lineup-group")}>
                 ${seg("lineup", "lineup", "Draw a made-up team on each side of the surface, placed by position code in a formation of the sport: the six on the ice and a second line for hockey, the nine fielders and the designated hitter for baseball, the fifteen for rugby, the eighteen of Australian football, and so on. A disc or a jersey holds the number, the name is under it.", "競技ごとのフォーメーションに従って、架空のチームを競技場の両側に配置します。ポジションのコードで位置が決まり、アイスホッケーは氷上の6人と第2ライン、野球は9人の野手と指名打者、ラグビーは15人、オーストラリアンフットボールは18人などです。円形またはユニフォームの中に番号、その下に名前が入ります。")}
               </div>

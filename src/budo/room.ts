@@ -42,6 +42,16 @@ export interface RoomBalcony {
   rowRise: number;
   /** The height of the rail along the front edge. */
   rail: number;
+  /** The seats in each block of a row, from one end of the side to the other: an aisle lies between one block and the next. The same in every row. */
+  sections: number[];
+  /** How wide a seat is, in metres: the side's length less its aisles, over its seats (a seat is 0.6 m or a little more). */
+  seatWidth: number;
+  /** The width of an aisle, in metres (ours). */
+  aisle: number;
+  /** Where the aisles' middles lie along the side, as shares of its length from 0 to 1. */
+  aisles: number[];
+  /** Whether the blocks of seats are the options' (`given`) or cut by us from the side's length. */
+  sectionsBasis: "given" | "ours";
 }
 
 /** The room round a budō surface. */
@@ -62,6 +72,10 @@ export interface DojoRoom {
   balconies: RoomBalcony[];
   doors: RoomOpening[];
   windows: RoomOpening[];
+  /** The windows high in the wall behind a gallery (a clerestory): the side, the stretch along the wall from its start (metres), the sill and the head, ours. */
+  upperWindows: { side: Compass; from: number; to: number; sill: number; head: number }[];
+  /** How high the room goes above a gallery's floor, for a ceiling over the gallery, and the height of that floor: undefined for a room with no gallery (ours). */
+  ceiling: { gallery: number; height: number } | undefined;
   /** The shrine of a dojo (the shinzen), with its height. */
   shrine: { box: MBox; height: number } | undefined;
   /** The Budokan's octagon floor: its centre, apothem and corners, going round. */
@@ -75,11 +89,22 @@ export interface DojoGallery {
   offset: number;
   depth: number;
   rows: number;
+  /** The seats in each block of a row, and where the aisles lie along a side (shares of its length). */
+  sections: number[];
+  aisles: number[];
   height: [number, number];
 }
 
 /** Our heights, in metres, where no source gives one. */
-export const ROOM_HEIGHTS = Object.freeze({ wall: 3, dais: 0.3, bannerBottom: 1, bannerTop: 3, door: 2, windowSill: 1, windowHead: 2.4, shrine: 1.2, rail: 1, balcony: 4, mat: 0.05, rowRise: 0.4, rowDepth: 0.8, balconyDepth: 2.4, balconyRows: 4 });
+export const ROOM_HEIGHTS = Object.freeze({ wall: 3, dais: 0.3, bannerBottom: 1, bannerTop: 3, door: 2, windowSill: 1, windowHead: 2.4, shrine: 1.2, rail: 1, balcony: 4.5, ceiling: 4.5, mat: 0.05, rowRise: 0.4, rowDepth: 0.8, balconyDepth: 2.4, balconyRows: 3, aisle: 1.2, seat: 0.6, blockLength: 9.14 });
+
+/** The blocks of a row along a side `length` metres long: the options' `given`, else as many as a block of about 9 m allows (two at least), each as many seats as fit at 0.6 m with the aisles between. */
+export function sectionsFor(length: number, given?: readonly number[]): number[] {
+  if (given !== undefined && given.length > 0 && given.every((k) => Number.isInteger(k) && k > 0)) return [...given];
+  const blocks = Math.max(2, Math.round(length / ROOM_HEIGHTS.blockLength));
+  const seats = Math.max(1, Math.floor((length - (blocks - 1) * ROOM_HEIGHTS.aisle) / blocks / ROOM_HEIGHTS.seat));
+  return Array.from({ length: blocks }, () => seats);
+}
 
 const SIDES: readonly Compass[] = ["north", "east", "south", "west"];
 const COMPASS: Readonly<Record<string, Compass>> = { north: "north", south: "south", east: "east", west: "west", top: "north", bottom: "south", left: "west", right: "east" };
@@ -103,7 +128,7 @@ export function dojoRoom(o: Pick<SurfaceOptions, "sport" | "league" | "budo" | "
   const mv = (b: MBox): MBox => ({ x0: b.x0 - ox, y0: b.y0 - oy, x1: b.x1 - ox, y1: b.y1 - oy });
   const floor = mv(plan.box);
   const notes: string[] = [];
-  const room: DojoRoom = { sport: o.sport, unit: "m", floor, mats: undefined, surround: undefined, walls: [], platforms: [], banners: [], balconies: [], doors: [], windows: [], shrine: undefined, hall: undefined, notes };
+  const room: DojoRoom = { sport: o.sport, unit: "m", floor, mats: undefined, surround: undefined, walls: [], platforms: [], banners: [], balconies: [], doors: [], windows: [], upperWindows: [], ceiling: undefined, shrine: undefined, hall: undefined, notes };
   if (plan.judo !== undefined) {
     const fig = plan.figures as { tatami: { thickness: number } };
     room.mats = { thickness: fig.tatami.thickness, edge: "rounded", basis: "source" };
@@ -113,6 +138,10 @@ export function dojoRoom(o: Pick<SurfaceOptions, "sport" | "league" | "budo" | "
     const spec = dojoSpecOf(o.dojo);
     room.mats = { thickness: ROOM_HEIGHTS.mat, edge: "square", basis: "ours" };
     if (L.surround > 0) room.surround = { outer: mv(L.room), inner: mv(L.floor), width: L.surround, material: "wood" };
+    // A dojo with a gallery is a storey high: the gallery's floor is level with the top of the walls, and the walls are as high as the gallery's floor (4.5 m, ours).
+    const gallery = spec.balcony !== undefined && spec.balcony !== false;
+    const galleryOwn = typeof spec.balcony === "object" && spec.balcony !== null ? spec.balcony : {};
+    const wallHeight = gallery ? galleryOwn.height ?? ROOM_HEIGHTS.balcony : ROOM_HEIGHTS.wall;
     if (L.wall > 0) {
       const r = mv(L.room);
       const w = L.wall;
@@ -122,8 +151,8 @@ export function dojoRoom(o: Pick<SurfaceOptions, "sport" | "league" | "budo" | "
         ["south", [r.x1 + w / 2, r.y1 + w / 2], [r.x0 - w / 2, r.y1 + w / 2]],
         ["west", [r.x0 - w / 2, r.y1 + w / 2], [r.x0 - w / 2, r.y0 - w / 2]],
       ];
-      for (const [side, from, to] of ring) room.walls.push({ id: `wall-${side}`, side, from, to, thickness: w, height: ROOM_HEIGHTS.wall, basis: "ours" });
-      notes.push(`The walls are ${ROOM_HEIGHTS.wall} m high (ours).`);
+      for (const [side, from, to] of ring) room.walls.push({ id: `wall-${side}`, side, from, to, thickness: w, height: wallHeight, basis: "ours" });
+      notes.push(`The walls are ${wallHeight} m high (ours)${gallery ? ", a storey: the gallery's floor is level with their tops" : ""}.`);
     }
     if (L.dais !== undefined) {
       room.platforms.push({ id: "dais", box: mv(L.dais), height: ROOM_HEIGHTS.dais, basis: "ours" });
@@ -146,9 +175,28 @@ export function dojoRoom(o: Pick<SurfaceOptions, "sport" | "league" | "budo" | "
       for (const side of sides) {
         const box: MBox = side === "north" ? { x0: outer.x0 - depth, y0: outer.y0 - depth, x1: outer.x1 + depth, y1: outer.y0 } : side === "south" ? { x0: outer.x0 - depth, y0: outer.y1, x1: outer.x1 + depth, y1: outer.y1 + depth } : side === "west" ? { x0: outer.x0 - depth, y0: outer.y0, x1: outer.x0, y1: outer.y1 } : { x0: outer.x1, y0: outer.y0, x1: outer.x1 + depth, y1: outer.y1 };
         const rows = own.rows ?? ROOM_HEIGHTS.balconyRows;
-        room.balconies.push({ side, box, height: own.height ?? ROOM_HEIGHTS.balcony, depth, rows, rowDepth: depth / rows, rowRise: ROOM_HEIGHTS.rowRise, rail: ROOM_HEIGHTS.rail });
+        // The blocks of seats along the side, the seats spread over its length with an aisle between the blocks.
+        const length = side === "north" || side === "south" ? box.x1 - box.x0 : box.y1 - box.y0;
+        const sections = sectionsFor(length, own.sections);
+        const seats = sections.reduce((a, k) => a + k, 0);
+        const aisle = ROOM_HEIGHTS.aisle;
+        const seatWidth = (length - (sections.length - 1) * aisle) / seats;
+        let run = 0;
+        const aisles = sections.slice(0, -1).map((k, i) => {
+          run += k * seatWidth;
+          return (run + i * aisle + aisle / 2) / length;
+        });
+        room.balconies.push({ side, box, height: own.height ?? ROOM_HEIGHTS.balcony, depth, rows, rowDepth: depth / rows, rowRise: ROOM_HEIGHTS.rowRise, rail: ROOM_HEIGHTS.rail, sections, seatWidth, aisle, aisles, sectionsBasis: own.sections === undefined ? "ours" : "given" });
       }
-      notes.push("The balcony's height, depth and rows are ours; where a source gives its seats (the Kodokan's gallery, about 900) the atlas hall says so.");
+      // The windows above the gallery, on the east side (ours): three tall panes high in the wall behind its last row.
+      const east = room.balconies.find((x) => x.side === "east");
+      if (east !== undefined) {
+        const along = east.box.y1 - east.box.y0;
+        const top = east.height + east.rows * east.rowRise + east.rail;
+        for (let i = 0; i < 3; i += 1) room.upperWindows.push({ side: "east", from: along * (0.12 + i * 0.29), to: along * (0.12 + i * 0.29 + 0.25), sill: top + 0.4, head: top + ROOM_HEIGHTS.ceiling - 0.6 });
+      }
+      room.ceiling = { gallery: own.height ?? ROOM_HEIGHTS.balcony, height: (own.height ?? ROOM_HEIGHTS.balcony) + (own.rows ?? ROOM_HEIGHTS.balconyRows) * ROOM_HEIGHTS.rowRise + ROOM_HEIGHTS.rail + ROOM_HEIGHTS.ceiling };
+      notes.push("The balcony's height (4.5 m, a storey), depth and its 3 rows are ours, as are the windows above it and the ceiling, 4.5 m over its last row; where a source gives its seats (the Kodokan's gallery, about 900) the atlas hall says so.");
     }
   }
   if (plan.sumo !== undefined) room.platforms.push({ id: "dohyo", box: floor, height: plan.sumo.height, basis: "source" });
@@ -179,5 +227,5 @@ export function dojoGallery(o: Pick<SurfaceOptions, "sport" | "league" | "budo" 
   if (room === undefined || b === undefined) return undefined;
   const f = room.floor;
   const offset = Math.min(...room.balconies.map((x) => (x.side === "north" ? f.y0 - x.box.y1 : x.side === "south" ? x.box.y0 - f.y1 : x.side === "west" ? f.x0 - x.box.x1 : x.box.x0 - f.x1)));
-  return { offset, depth: b.depth, rows: b.rows, height: [b.height, b.height + b.rows * b.rowRise] };
+  return { offset, depth: b.depth, rows: b.rows, sections: b.sections, aisles: b.aisles, height: [b.height, b.height + b.rows * b.rowRise] };
 }

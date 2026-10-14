@@ -164,8 +164,12 @@ export interface DojoSpec {
   texture?: "weave" | "none";
   /** The wood round the mats, between them and the walls, in metres (none by default; the Kodokan's main dojo has a polished wood surround). */
   surround?: number;
-  /** A spectators' balcony above the floor, as `dojoRoom()` gives it (it is not part of the plan's drawing; `crowd` draws the stands): `true` for all four sides, or the sides, depth in metres (3 by default), seat rows (5) and height above the mats (4 m). */
-  balcony?: boolean | { sides?: readonly Side4[]; depth?: number; rows?: number; height?: number };
+  /**
+   * A spectators' balcony above the floor, a storey up, as `dojoRoom()` gives it (it is not part of the plan's drawing; `crowd` draws the stands): `true` for all four sides, or the sides, depth in metres (2.4 by
+   * default), seat rows (3) and height above the mats (4.5 m). `sections` is the number of seats in each block of a row, from one end of a side to the other, with an aisle between blocks (the same on every side): `[5, 8, 8, 8, 5]`
+   * is the Kodokan's, 34 to a row; without it a side is cut into blocks of about 9 m. The seats are spread over the side's length, so a seat is as wide as that makes it.
+   */
+  balcony?: boolean | { sides?: readonly Side4[]; depth?: number; rows?: number; height?: number; sections?: readonly number[] };
   /** The seat of honour's platform: a raised wooden dais at the middle of the kamiza wall (a chair stands on it in the Kodokan's main dojo). Off by default. */
   dais?: boolean;
   /** A plain dark vertical banner on the kamiza wall, over the dais or the shrine (a drawing of a banner, never any emblem). Off by default. */

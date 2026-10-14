@@ -24,6 +24,14 @@ export interface KyogijoTurn {
   reset(): void;
   /** Draw again with new options (a score that moved, a look that changed), keeping the view. */
   update(options: SurfaceOptions | ScoreOptions): void;
+  /** Whether the auto-turn is running. */
+  readonly playing: boolean;
+  /** Start the auto-turn, a slow turn of the whole view. It gives whether it is running (a surface that cannot turn gives `false`). Nothing turns by itself until this, the Play button or Space starts it, unless `autoPlay` asked. */
+  play(): boolean;
+  /** Stop the auto-turn. */
+  pause(): void;
+  /** Start the auto-turn if it is stopped and stop it if it is running; it gives whether it is running now. */
+  togglePlay(): boolean;
   /** The flat drawing that is the floor, or `null` after `destroy`. */
   svg(): SVGSVGElement | null;
   /** Stop listening and empty the container. */
@@ -37,7 +45,7 @@ export function turnSupported(win: { CSS?: { supports?: (property: string, value
   return css.supports("transform", "matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1)");
 }
 
-const KEYS: Record<string, true> = { ArrowLeft: true, ArrowRight: true, ArrowUp: true, ArrowDown: true, "+": true, "=": true, "-": true, _: true, "0": true, Home: true, "1": true, "2": true, "3": true, "4": true };
+const KEYS: Record<string, true> = { " ": true, ArrowLeft: true, ArrowRight: true, ArrowUp: true, ArrowDown: true, "+": true, "=": true, "-": true, _: true, "0": true, Home: true, "1": true, "2": true, "3": true, "4": true };
 
 /** The view part of the way from one to another, `t` from 0 to 1, the turn taken the short way round. */
 const between = (from: TurnView, to: TurnView, t: number): TurnView => ({ yaw: from.yaw + (nearest(from.yaw, to.yaw) - from.yaw) * t, pitch: from.pitch + (to.pitch - from.pitch) * t, zoom: from.zoom * Math.pow(to.zoom / from.zoom, t) });
@@ -73,6 +81,10 @@ export function mountKyogijoTurn(host: HTMLElement, options: SurfaceOptions | Sc
       set: () => undefined,
       preset: () => undefined,
       reset: () => undefined,
+      playing: false,
+      play: () => false,
+      pause: () => undefined,
+      togglePlay: () => false,
       update: (next) => {
         model = buildTurn(next, settings);
         flat(next);
@@ -97,6 +109,12 @@ export function mountKyogijoTurn(host: HTMLElement, options: SurfaceOptions | Sc
   let opening = model.view;
   let flight: { from: TurnView; to: TurnView; start: number; ms: number; frame: number } | undefined;
   let spoken: ReturnType<typeof setTimeout> | undefined;
+  // The auto-turn: whether it is on, the frame that will advance it, the time of the last one, and whether it has moved the view since the page was last told.
+  let playing = false;
+  let tickFrame: number | undefined;
+  let lastTick: number | undefined;
+  let advanced = false;
+  const speed = typeof settings.speed === "number" && Number.isFinite(settings.speed) ? settings.speed : 12;
 
   const calm = (): boolean => settings.motion === "none" || (settings.motion !== "smooth" && media?.matches === true);
 
@@ -114,6 +132,16 @@ export function mountKyogijoTurn(host: HTMLElement, options: SurfaceOptions | Sc
   gather();
 
   const buttons = (): NodeListOf<HTMLButtonElement> => root.querySelectorAll<HTMLButtonElement>("button[data-preset]");
+  /** The Play button says what it is and what it does: pressed while the view turns. */
+  const syncPlay = (): void => {
+    const button = root.querySelector<HTMLButtonElement>("button[data-act=play]");
+    if (button === null) return;
+    const words = turnWords(model);
+    button.setAttribute("aria-pressed", String(playing));
+    button.title = playing ? words.playOff : words.playOn;
+    const glyph = button.querySelector("[data-glyph]");
+    if (glyph !== null) glyph.textContent = playing ? "❚❚" : "▶";
+  };
   /** Put a view on the screen. */
   const paint = (now: TurnView): void => {
     const width = stage.clientWidth || 960;
@@ -177,7 +205,9 @@ export function mountKyogijoTurn(host: HTMLElement, options: SurfaceOptions | Sc
 
   const changed = (): void => settings.onChange?.(view, presetOf(view, sport()));
   /** Move to a view the controls asked for: glide, say where it is, tell the page. */
-  const go = (next: TurnView, ms: number, speak: "preset" | "angle" | "none" = "angle"): void => {
+  const go = (next: TurnView, ms: number, speak: "preset" | "angle" | "none" = "angle", keepPlaying = false): void => {
+    // Anything the reader (or the page) asks of the view takes it over from the auto-turn, but a zoom, which does not turn it.
+    if (!keepPlaying) setPlaying(false, true);
     // A turn takes the short way round, even from 170 degrees to -170.
     show(clampView({ ...next, yaw: nearest(view.yaw, next.yaw) }), ms);
     if (speak === "preset") {
@@ -192,6 +222,77 @@ export function mountKyogijoTurn(host: HTMLElement, options: SurfaceOptions | Sc
     say(turnWords(model).reset);
   };
 
+  // ---- The auto-turn: a trophy case's slow turn. It runs only when asked, holds while the pointer holds the view, and does nothing while the page is hidden. ----
+  const hidden = (): boolean => doc.hidden === true;
+  const stopTick = (): void => {
+    if (tickFrame !== undefined) win?.cancelAnimationFrame(tickFrame);
+    tickFrame = undefined;
+    lastTick = undefined;
+  };
+  const tick = (stamp: number): void => {
+    tickFrame = undefined;
+    if (!playing || !alive) return;
+    // Hidden, off the screen or held: the loop ends here, and the visibility change, the scroll back or the pointer's release starts it again.
+    if (hidden() || !onScreen || down.size > 0) {
+      lastTick = undefined;
+      return;
+    }
+    // About thirty frames a second are plenty for a slow turn, and every plane is written at each.
+    if (lastTick !== undefined && stamp - lastTick < 30) {
+      loop();
+      return;
+    }
+    const dt = lastTick === undefined ? 0 : Math.min(0.1, (stamp - lastTick) / 1000);
+    lastTick = stamp;
+    if (dt > 0) {
+      stop();
+      view = clampView({ ...view, yaw: view.yaw - speed * dt });
+      shown = view;
+      advanced = true;
+      paint(shown);
+      label();
+    }
+    loop();
+  };
+  const loop = (): void => {
+    if (tickFrame === undefined && playing && alive && win !== null) tickFrame = win.requestAnimationFrame(tick);
+  };
+  /** Start or stop the auto-turn. `quiet` leaves the live region alone (a key or a drag stopped it, and says its own thing). */
+  const setPlaying = (next: boolean, quiet = false): void => {
+    if (playing === next) return;
+    playing = next;
+    stopTick();
+    syncPlay();
+    if (next) loop();
+    else if (advanced) {
+      // The page is told where the view ended up, once, not at every frame.
+      advanced = false;
+      changed();
+    }
+    if (!quiet) say(next ? turnWords(model).announcePlay : turnWords(model).announcePause);
+    settings.onPlayChange?.(next);
+  };
+  // A view scrolled out of sight does not turn.
+  let onScreen = true;
+  let seen: IntersectionObserver | undefined;
+  if (typeof IntersectionObserver === "function") {
+    seen = new IntersectionObserver((entries) => {
+      onScreen = entries[entries.length - 1]?.isIntersecting !== false;
+      if (onScreen && playing) {
+        lastTick = undefined;
+        loop();
+      }
+    });
+    seen.observe(stage);
+  }
+  const onVisible = (): void => {
+    if (playing && !hidden()) {
+      lastTick = undefined;
+      loop();
+    }
+  };
+  doc.addEventListener("visibilitychange", onVisible);
+
   // ---- Buttons. ----
   const onClick = (event: Event): void => {
     const target = (event.target as Element | null)?.closest<HTMLButtonElement>("button");
@@ -205,8 +306,9 @@ export function mountKyogijoTurn(host: HTMLElement, options: SurfaceOptions | Sc
       case "turn-right": return go(nudge(view, "right", big ? STEP.yawBig : STEP.yaw * 2), 180);
       case "raise": return go(nudge(view, "up", big ? STEP.pitchBig : STEP.pitch * 2), 180);
       case "lower": return go(nudge(view, "down", big ? STEP.pitchBig : STEP.pitch * 2), 180);
-      case "zoom-in": return go(step(view, { zoom: STEP.zoom }), 180, "none");
-      case "zoom-out": return go(step(view, { zoom: 1 / STEP.zoom }), 180, "none");
+      case "zoom-in": return go(step(view, { zoom: STEP.zoom }), 180, "none", true);
+      case "zoom-out": return go(step(view, { zoom: 1 / STEP.zoom }), 180, "none", true);
+      case "play": return void setPlaying(!playing);
       case "reset": return toOpening();
       default:
     }
@@ -227,9 +329,10 @@ export function mountKyogijoTurn(host: HTMLElement, options: SurfaceOptions | Sc
       case "ArrowUp": return go(nudge(view, "up", pitch), 120);
       case "ArrowDown": return go(nudge(view, "down", pitch), 120);
       case "+":
-      case "=": return go(step(view, { zoom: STEP.zoom }), 120, "none");
+      case "=": return go(step(view, { zoom: STEP.zoom }), 120, "none", true);
       case "-":
-      case "_": return go(step(view, { zoom: 1 / STEP.zoom }), 120, "none");
+      case "_": return go(step(view, { zoom: 1 / STEP.zoom }), 120, "none", true);
+      case " ": return void setPlaying(!playing);
       case "0":
       case "Home": return toOpening();
       default: toPreset(TURN_PRESET_NAMES[Number(event.key) - 1]);
@@ -257,6 +360,8 @@ export function mountKyogijoTurn(host: HTMLElement, options: SurfaceOptions | Sc
     }
     moved = false;
     grab();
+    // The auto-turn holds while the pointer does.
+    stopTick();
     if (down.size === 1) root.setAttribute("data-dragging", "");
     if (down.size === 2) {
       const [a, b] = [...down.values()];
@@ -284,6 +389,7 @@ export function mountKyogijoTurn(host: HTMLElement, options: SurfaceOptions | Sc
     if (down.size === 0) {
       root.removeAttribute("data-dragging");
       label();
+      if (playing) loop();
       if (moved) {
         say(angles(), 450);
         changed();
@@ -320,6 +426,9 @@ export function mountKyogijoTurn(host: HTMLElement, options: SurfaceOptions | Sc
     observer.observe(stage);
   }
 
+  // Nothing moves until the reader asks, unless the page did: `autoPlay` starts it, but not for a reader who prefers reduced motion (`"force"` does).
+  if (settings.autoPlay === "force" || (settings.autoPlay === true && !calm())) setPlaying(true, true);
+
   return {
     mode: "3d",
     view: () => ({ ...view }),
@@ -334,7 +443,17 @@ export function mountKyogijoTurn(host: HTMLElement, options: SurfaceOptions | Sc
       view = clampView(view);
       opening = openingView(settings, sport());
       const layout = layoutOf(model, shown, stage.clientWidth || 960, stage.clientHeight || 600, settings.lens);
-      root.querySelector(".ky-turn-world")!.innerHTML = worldMarkup(model, layout);
+      const world = root.querySelector<HTMLElement>(".ky-turn-world")!;
+      world.innerHTML = worldMarkup(model, layout);
+      // The look the floor is painted in (and the theme) are attributes of the world.
+      for (const name of ["data-sport", "data-look", "data-theme"]) world.removeAttribute(name);
+      world.className = model.look === undefined ? "ky-turn-world" : "ky-turn-world kyogijo";
+      if (model.look !== undefined) {
+        world.setAttribute("data-sport", model.look.sport);
+        world.setAttribute("data-look", model.look.look);
+        const forced = (model.options as SurfaceOptions).theme;
+        if (forced === "light" || forced === "dark") world.setAttribute("data-theme", forced);
+      }
       gather();
       stage.setAttribute("aria-label", model.title);
       root.querySelector(".ky-turn-help")!.textContent = `${turnWords(model).keys}${model.standing === "" ? "" : ` ${model.standing}`}`;
@@ -342,15 +461,32 @@ export function mountKyogijoTurn(host: HTMLElement, options: SurfaceOptions | Sc
       if (theme === "light" || theme === "dark") root.dataset.theme = theme;
       else root.removeAttribute("data-theme");
       const controls = root.querySelector(".ky-turn-controls");
-      if (controls !== null) controls.outerHTML = controlsMarkup(model, view);
+      if (controls !== null) controls.outerHTML = controlsMarkup(model, view, playing);
       paint(shown);
       label();
+    },
+    get playing() {
+      return playing;
+    },
+    play() {
+      setPlaying(true);
+      return playing;
+    },
+    pause() {
+      setPlaying(false);
+    },
+    togglePlay() {
+      setPlaying(!playing);
+      return playing;
     },
     svg: () => (alive ? root.querySelector<SVGSVGElement>(".ky-turn-floor svg.kyogijo") : null),
     destroy() {
       if (!alive) return;
       alive = false;
       stop();
+      stopTick();
+      seen?.disconnect();
+      doc.removeEventListener("visibilitychange", onVisible);
       clearTimeout(spoken);
       observer?.disconnect();
       host.replaceChildren();

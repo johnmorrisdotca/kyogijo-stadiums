@@ -2,7 +2,7 @@
 // context of the browser's is needed, with controls a finger can hit, in both languages.
 import { expect, test } from "@playwright/test";
 
-import { at, noSidewaysScroll, open, tap } from "./demo.mjs";
+import { at, noSidewaysScroll, open, openGroups, tap } from "./demo.mjs";
 
 const STAGE = at("stage");
 const turn = (page) => page.locator(`${STAGE} .ky-turn`);
@@ -63,7 +63,8 @@ test("a viewpoint is a button, and moves the scene", async ({ page }, testInfo) 
 test("every control is a finger wide and no wider than the page", async ({ page }) => {
   await open(page, "?sport=tennis&view=3d&lang=en&help=off");
   const sizes = await page.locator(`${STAGE} .ky-turn-controls button`).evaluateAll((all) => all.map((b) => [Math.round(b.getBoundingClientRect().width), Math.round(b.getBoundingClientRect().height)]));
-  expect(sizes.length).toBe(11);
+  // Four viewpoints, six moves, the reset and the auto-turn.
+  expect(sizes.length).toBe(12);
   for (const [w, h] of sizes) {
     expect(w).toBeGreaterThanOrEqual(44);
     expect(h).toBeGreaterThanOrEqual(44);
@@ -315,4 +316,117 @@ test.describe("with motion", () => {
     expect(await floorMatrix(page)).toBe(settled);
     await expect(turn(page)).toHaveAttribute("data-preset", "overhead");
   });
+});
+
+/** Where the view is turned now, from the element the page keeps it in. */
+const playButton = (page) => page.locator(`${STAGE} .ky-turn-controls button[data-act="play"]`);
+const worldCount = (page) => page.locator(`${STAGE} .ky-turn *`).count();
+
+test("a drawing with a crowd has its stands raised in 3D, each tier a few planes and no seat an element", async ({ page }) => {
+  const errors = await open(page, "?sport=soccer&crowd=1&view=3d&lang=en&help=off");
+  expect(errors).toEqual([]);
+  const seats = page.locator(`${STAGE} .ky-up-seats`);
+  expect(await seats.count()).toBeGreaterThan(30);
+  // The floor keeps no crowd of its own, and the patterns are there once.
+  await expect(page.locator(`${STAGE} .ky-turn-floor .ky-crowd`)).toHaveCount(0);
+  await expect(page.locator(`${STAGE} .ky-turn-defs`)).toHaveCount(1);
+  // A full soccer bowl is a few hundred nodes, with every seat a texture.
+  expect(await worldCount(page)).toBeLessThan(650);
+  await expect(page.locator(`${STAGE} .ky-turn-view`)).toHaveAccessibleDescription(/stands/);
+  // The near stands give way to the eye: some planes are cut away, and the far ones are whole.
+  const opacities = await seats.evaluateAll((all) => all.map((el) => Number(el.style.opacity || 1)));
+  expect(opacities.some((o) => o < 0.2)).toBe(true);
+  expect(opacities.some((o) => o === 1)).toBe(true);
+  await noSidewaysScroll(page);
+});
+
+test("a dojo has its room in 3D: its walls and the edge of the mats", async ({ page }) => {
+  await open(page, "?sport=dojo&view=3d&lang=en&help=off");
+  for (const part of ["wall-north", "mat-edge-1"]) await expect(page.locator(`${STAGE} [data-part="${part}"]`)).toHaveCount(1);
+  await expect(page.locator(`${STAGE} .ky-up-matedge`)).toHaveCount(4);
+  await noSidewaysScroll(page);
+});
+
+test("the roof is a toggle of the 3D view over the stands, and is in the address and the code", async ({ page }, testInfo) => {
+  await open(page, "?sport=nhl&crowd=1&view=3d&lang=en&help=off");
+  await openGroups(page);
+  await expect(page.locator(`${STAGE} .ky-up-roof`)).toHaveCount(0);
+  await tap(page, page.locator(at("venue-roof")), testInfo);
+  expect(await page.locator(`${STAGE} .ky-up-roof`).count()).toBeGreaterThan(8);
+  expect(new URL(page.url()).searchParams.get("roof")).toBe("1");
+  await tap(page, page.locator(at("venue-roof")), testInfo);
+  await expect(page.locator(`${STAGE} .ky-up-roof`)).toHaveCount(0);
+});
+
+test("the auto-turn: nothing moves until Play, the button is pressed while it turns, Space toggles it", async ({ page }, testInfo) => {
+  await open(page, "?sport=nhl&view=3d&lang=en&help=off");
+  const button = playButton(page);
+  await expect(button).toHaveAttribute("aria-pressed", "false");
+  const box = await button.boundingBox();
+  expect(box.width).toBeGreaterThanOrEqual(44);
+  expect(box.height).toBeGreaterThanOrEqual(44);
+  const first = await floorMatrix(page);
+  await page.waitForTimeout(500);
+  expect(await floorMatrix(page)).toBe(first);
+  await tap(page, button, testInfo);
+  await expect(button).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator(`${STAGE} .ky-turn-live`)).toHaveText("Auto-turn on");
+  await expect.poll(() => floorMatrix(page)).not.toBe(first);
+  await tap(page, button, testInfo);
+  await expect(button).toHaveAttribute("aria-pressed", "false");
+  await expect(page.locator(`${STAGE} .ky-turn-live`)).toHaveText("Auto-turn paused");
+  const stopped = await floorMatrix(page);
+  await page.waitForTimeout(400);
+  expect(await floorMatrix(page)).toBe(stopped);
+  // Space, with the view focused.
+  await page.locator(`${STAGE} .ky-turn-view`).focus();
+  await page.keyboard.press("Space");
+  await expect(button).toHaveAttribute("aria-pressed", "true");
+  await expect.poll(() => floorMatrix(page)).not.toBe(stopped);
+  await page.keyboard.press("Space");
+  await expect(button).toHaveAttribute("aria-pressed", "false");
+});
+
+test("the auto-turn holds while the pointer holds the view, stops for the keys, and does nothing on a hidden page", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.use.hasTouch === true, "a mouse holds the view");
+  await open(page, "?sport=nba&view=3d&lang=en&help=off");
+  const button = playButton(page);
+  await button.click();
+  await expect(button).toHaveAttribute("aria-pressed", "true");
+  const view = page.locator(`${STAGE} .ky-turn-view`);
+  const box = await view.boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 3);
+  await page.mouse.down();
+  await page.waitForTimeout(150);
+  const held = await floorMatrix(page);
+  await page.waitForTimeout(450);
+  expect(await floorMatrix(page)).toBe(held);
+  await page.mouse.up();
+  // It goes on after the release.
+  await expect(button).toHaveAttribute("aria-pressed", "true");
+  await expect.poll(() => floorMatrix(page)).not.toBe(held);
+  // A hidden page does not turn; a visible one does again.
+  await page.evaluate(() => {
+    Object.defineProperty(document, "hidden", { value: true, configurable: true });
+    document.dispatchEvent(new Event("visibilitychange"));
+  });
+  await page.waitForTimeout(150);
+  const hidden = await floorMatrix(page);
+  await page.waitForTimeout(400);
+  expect(await floorMatrix(page)).toBe(hidden);
+  await page.evaluate(() => {
+    Object.defineProperty(document, "hidden", { value: false, configurable: true });
+    document.dispatchEvent(new Event("visibilitychange"));
+  });
+  await expect.poll(() => floorMatrix(page)).not.toBe(hidden);
+  // An arrow key takes the view over.
+  await view.focus();
+  await page.keyboard.press("ArrowLeft");
+  await expect(button).toHaveAttribute("aria-pressed", "false");
+});
+
+test("the auto-turn speaks Japanese", async ({ page }) => {
+  await open(page, "?sport=nhl&view=3d&lang=ja&help=off");
+  await expect(playButton(page)).toHaveText(/自動回転/);
+  await expect(playButton(page)).toHaveAttribute("aria-pressed", "false");
 });

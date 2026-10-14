@@ -27,6 +27,8 @@ import { isBudoSport } from "./budo/plan.ts";
 import { courtUprights, rinkUprights } from "./uprights.rinks.ts";
 import { convertLength, type Unit } from "./units.ts";
 import { sheetFor } from "./sheet.ts";
+import { roomVenue } from "./venue.room.ts";
+import { NO_VENUE, standsVenue, type VenueBuild } from "./venue.ts";
 import type { Language, ScoreOptions, SurfaceOptions } from "./types.ts";
 
 /** What can be asked of the uprights. */
@@ -39,6 +41,8 @@ export interface UprightOptions {
   boards?: boolean;
   /** Only these kinds of thing; every kind the surface has when missing. */
   only?: readonly UprightKind[];
+  /** The venue round the surface: the stands of its crowd raised, their roof if asked, a dojo's walls with their doors and windows, its dais, banner, balconies and the edge of its mats. Off here when missing: `buildTurn` turns it on for a drawing with a crowd or a dojo. `id` is the prefix of the ids of the patterns it uses. */
+  venue?: VenueBuild;
 }
 
 /** What stands on a surface. */
@@ -50,6 +54,10 @@ export interface Uprights {
   thin: number;
   /** The playing surface itself in feet, the part the view is fitted to (the ground round it may run out of the picture): `undefined` for a surface with no uprights, which is fitted whole. */
   area?: { x0: number; y0: number; x1: number; y1: number };
+  /** The patterns the venue's planes are drawn with (the contents of an SVG `defs`), when it has any. */
+  defs?: string;
+  /** How far the venue reaches beyond the surface, in feet, when it has one: the ground a floor needs for it to stand on. */
+  reach?: number;
 }
 
 /** All the planes of all the things. */
@@ -139,6 +147,17 @@ export function uprightsFor(o: SurfaceOptions, settings: UprightOptions = {}): U
     thin = thinnest(sheet.length, sheet.width);
     area = { x0: 0, y0: 0, x1: sheet.length, y1: sheet.width };
   }
+  // The venue: the stands and the room, raised. A dojo's own walls are the room's, with their doors and windows.
+  let defs = "";
+  let reach = 0;
+  if (settings.venue !== undefined) {
+    const stands = standsVenue(o, settings.venue, lift);
+    const room = isBudoSport(sport) ? roomVenue({ ...o, sport } as SurfaceOptions, settings.venue, lift) : NO_VENUE;
+    if (room.items.some((item) => item.kind === "walls")) items = items.filter((item) => item.kind !== "walls");
+    items.push(...stands.items, ...room.items);
+    defs = stands.defs + room.defs;
+    reach = Math.max(stands.reach, room.reach);
+  }
   // The score, hung up: the badge on a board that turns to face the eye.
   const scored = (o as Partial<ScoreOptions>).home !== undefined && (o as Partial<ScoreOptions>).away !== undefined && (o as Partial<ScoreOptions>).size !== "badge";
   if (scored && settings.score !== "floor" && area !== undefined) {
@@ -146,7 +165,7 @@ export function uprightsFor(o: SurfaceOptions, settings: UprightOptions = {}): U
     if (board !== undefined) items.push(board);
   }
   if (settings.only !== undefined) items = items.filter((item) => settings.only!.includes(item.kind));
-  return { items, lift, thin, area };
+  return { items, lift, thin, area, ...(defs === "" ? {} : { defs }), ...(reach === 0 ? {} : { reach }) };
 }
 
 /** A length in feet as a rulebook would print it in `unit`: metres to the centimetre, feet to a tenth. */

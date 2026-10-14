@@ -278,6 +278,9 @@ src/
 ├── uprights.budo.ts    the dohyō's clay mound, a kyūdōjō's azuchi and its tilted targets, a dojo's walls
 ├── uprights.rinks.ts   the hockey rink's boards and glass and goals, the basketball court's baskets and stanchions
 ├── uprights.board.ts   the score stood up: its badge on a board that faces the eye, hung over the middle of a court or a rink and standing behind an end of a field
+├── venue.ts            the stands raised: every ring of `crowdStands()` a strip of raked planes with the crowd's pattern, the walks, the low walls, a ballpark's wall seats, the roof
+├── venue.geom.ts       what the venue is cut with: a ring sampled into quads, polygons clipped to the places left open, a planar polygon as one plane
+├── venue.room.ts       a dojo's room raised from `dojoRoom()`: walls with doors and windows, dais, banner, shrine, balconies, the edge of the mats
 ├── uprights.fields.ts  football's posts and pylons, a soccer pitch's goals and flags, the posts of rugby, Gaelic and Australian football, stumps, a ballpark's fence, poles and backstop
 ├── mount.ts            drawing into a container, and following its shape
 ├── mount-entry.ts      the mount's entry

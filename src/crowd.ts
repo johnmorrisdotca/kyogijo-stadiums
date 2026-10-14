@@ -32,6 +32,8 @@ export interface StandRing {
   rake: number;
   /** The share of its seats that are taken, relative to the stands' (the upper tier is emptier). */
   fill: number;
+  /** A hall's gallery: the rows of seats the band holds. */
+  rows?: number;
   /** The seats the band holds, at a seat's 2 by 2.3 feet. */
   seats: number;
   /** The aisles and vomitories across the band, each from a point on its inner edge to its outer: across the sides, fanning round the corners. */
@@ -414,6 +416,11 @@ function aislesOf(region: Outline, hole: Outline | null): [Pt, Pt][] {
   return [];
 }
 
+/** The aisles of a hall's gallery: on each straight side, one across the band at each of the `shares` (0 to 1) of the side's length, from the first side's left end. */
+function galleryAisles(region: Extract<Outline, { kind: "rrect" }>, hole: Extract<Outline, { kind: "rrect" }>, shares: readonly number[]): [Pt, Pt][] {
+  return [0, 2, 4, 6].flatMap((side) => shares.map((f): [Pt, Pt] => [rrectAt(hole, side + f).p, rrectAt(region, side + f).p]));
+}
+
 /** The polygon of a band between two aisle parameters: along the outer edge, then back along the inner. */
 function sectionBetween(region: Extract<Outline, { kind: "rrect" }>, hole: Extract<Outline, { kind: "rrect" }>, u0: number, u1: number): Pt[] {
   const us: number[] = [u0];
@@ -437,7 +444,7 @@ export interface LayoutInput {
   /** The surface lies on an arena floor that fills most of the hall: the sport's closer stands, where it has them. */
   arena?: boolean;
   /** A hall's gallery instead of the sport's stands (a dojo's balcony, from `dojoRoom`): the distance of its first row from the surface, its depth and the heights of its first and last rows, in feet. */
-  gallery?: { offset: number; depth: number; height: [number, number] };
+  gallery?: { offset: number; depth: number; height: [number, number]; rows?: number; aisles?: readonly number[] };
   /** The ballpark's fence as points on the field, for a ballpark (see `parkLayout`). */
   fence?: readonly Pt[];
   /** The foul lines' length at the poles and the backstop's distance, for a ballpark. */
@@ -492,7 +499,8 @@ export function layoutOf(input: LayoutInput): CrowdStands {
       rake: Math.round((Math.atan2(rise, Math.max(1, t.to - t.from)) * 180) / Math.PI * 10) / 10,
       fill: t.fill,
       seats: seatsIn(region, hole),
-      aisles: aislesOf(region, hole),
+      aisles: gal?.aisles !== undefined && region.kind === "rrect" && hole.kind === "rrect" ? galleryAisles(region, hole, gal.aisles) : aislesOf(region, hole),
+      ...(gal?.rows === undefined ? {} : { rows: gal.rows }),
     });
     reachOf.left = Math.max(reachOf.left, off.left + t.to);
     reachOf.right = Math.max(reachOf.right, off.right + t.to);

@@ -9,7 +9,7 @@
 export type V3 = readonly [number, number, number];
 
 /** What a plane is a part of: it is the class of its element (`ky-up-<kind>`) and what a test finds it by. */
-export type PartKind = "post" | "net" | "tape" | "antenna" | "board" | "glass" | "rim" | "stanchion" | "frame" | "goal" | "flag" | "stump" | "leg" | "table" | "pylon" | "wall" | "screen" | "pole" | "ground" | "target";
+export type PartKind = "post" | "net" | "tape" | "antenna" | "board" | "glass" | "rim" | "stanchion" | "frame" | "goal" | "flag" | "stump" | "leg" | "table" | "pylon" | "wall" | "screen" | "pole" | "ground" | "target" | "seats" | "concourse" | "fascia" | "roof" | "banner" | "platform" | "rail" | "matedge" | "shrine";
 
 /** One flat rectangle. Its own x runs along `u` (its whole length) and its own y along `v`; `o` is the corner both start from. `svg` is what is drawn on it, in feet along `u` and `v`. */
 export interface Plane {
@@ -30,10 +30,12 @@ export interface Plane {
    * wall. The nearer the eye is to that side, and the lower it is, the more the wall is cut away (see `fadeOf`), so that the court is never hidden behind its own glass.
    */
   shy?: readonly [number, number];
+  /** How much of a `shy` plane is left when it is cut away altogether: 0.08 when missing. A plane that others lie over on the screen (the steps of a gallery) takes less, so that they do not add up to a veil. */
+  fadeTo?: number;
 }
 
 /** What stands on the surface as a thing a reader would name: a net, a basket, a goal, a pair of posts. */
-export type UprightKind = "scoreboard" | "net" | "antennae" | "goalposts" | "netposts" | "hoop" | "goal" | "boards" | "stumps" | "pylons" | "flags" | "fence" | "backstop" | "foul-poles" | "table-legs" | "walls" | "starting-blocks" | "backstroke-flags" | "false-start-rope" | "springboards" | "platforms" | "judges-stand" | "hurdles" | "steeplechase" | "high-jump" | "pole-vault" | "cage" | "padding" | "rink-boards" | "mound" | "azuchi" | "targets";
+export type UprightKind = "scoreboard" | "net" | "antennae" | "goalposts" | "netposts" | "hoop" | "goal" | "boards" | "stumps" | "pylons" | "flags" | "fence" | "backstop" | "foul-poles" | "table-legs" | "walls" | "starting-blocks" | "backstroke-flags" | "false-start-rope" | "springboards" | "platforms" | "judges-stand" | "hurdles" | "steeplechase" | "high-jump" | "pole-vault" | "cage" | "padding" | "rink-boards" | "mound" | "azuchi" | "targets" | "stands" | "wall-seats" | "roof" | "gallery" | "dais" | "banner" | "shrine" | "mat-edge";
 
 /** A thing that stands on the surface: where, how high, and the planes it is made of. */
 export interface Upright {
@@ -151,12 +153,12 @@ export function shy(p: Plane, centre: readonly [number, number]): Plane {
  * How much of a wall is left (1 whole, down to 0.08) at a view: none is cut away unless the wall is on the eye's side of the surface, and then more the lower the eye is, because a wall seen
  * from straight above hides nothing. `yaw` and `pitch` are the view's, in degrees.
  */
-export function fadeOf(p: Pick<Plane, "shy">, yaw: number, pitch: number): number {
+export function fadeOf(p: Pick<Plane, "shy" | "fadeTo">, yaw: number, pitch: number): number {
   if (p.shy === undefined) return 1;
   const a = (yaw * Math.PI) / 180;
   // The horizontal direction from the surface to the eye (the same sum as the depth of a point).
   const toward = p.shy[0] * Math.sin(a) + p.shy[1] * Math.cos(a);
   const hides = toward * Math.sin((pitch * Math.PI) / 180);
   const t = Math.min(1, Math.max(0, (hides - 0.1) / 0.25));
-  return Math.round((1 - 0.92 * t) * 1000) / 1000;
+  return Math.round((1 - (1 - (p.fadeTo ?? 0.08)) * t) * 1000) / 1000;
 }

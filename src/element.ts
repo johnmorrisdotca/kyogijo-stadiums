@@ -18,13 +18,13 @@ export const KYOGIJO_ATTRIBUTES = [
   "home", "away", "home-abbr", "away-abbr", "home-score", "away-score", "home-penalties", "away-penalties", "score", "home-logo", "away-logo", "home-color", "away-color",
   "status", "competition", "date", "label", "winner", "home-side", "pageant", "description", "options",
   "loop", "speed", "autoplay", "controls", "trail",
-  "turn", "turn-view", "turn-controls", "turn-uprights", "turn-score", "turn-touch",
+  "turn", "turn-view", "turn-controls", "turn-uprights", "turn-score", "turn-touch", "turn-venue", "turn-roof", "turn-autoplay", "turn-speed",
 ] as const;
 
 /** The attributes that are about a replay and not about the drawing. */
 const REPLAY_ATTRIBUTES: readonly string[] = ["loop", "speed", "autoplay", "controls", "trail"];
 
-/** The settings of a 3D view an element's attributes make: `turn-view` names the viewpoint it opens on, `turn-controls="false"` and `turn-uprights="false"` leave the buttons and what stands on the surface out, `turn-score="floor"` leaves the score panel on the floor, `turn-touch="turn"` keeps every touch for the view. */
+/** The settings of a 3D view an element's attributes make: `turn-view` names the viewpoint it opens on, `turn-controls="false"` and `turn-uprights="false"` leave the buttons and what stands on the surface out, `turn-score="floor"` leaves the score panel on the floor, `turn-touch="turn"` keeps every touch for the view, `turn-venue="false"` leaves out the stands and the room (they are raised for a drawing with a crowd and for a dojo), `turn-roof` puts a roof or canopy over the stands, `turn-autoplay` starts the auto-turn (`force` even for a reader who prefers reduced motion) and `turn-speed` is its degrees a second. */
 export function turnSettingsFromAttributes(read: (name: string) => string | null, base: TurnSettings = {}): TurnSettings {
   const out: TurnSettings = { ...base };
   const view = read("turn-view");
@@ -33,6 +33,15 @@ export function turnSettingsFromAttributes(read: (name: string) => string | null
   if (read("turn-uprights") === "false") out.uprights = false;
   if (read("turn-score") === "floor") out.score = "floor";
   if (read("turn-touch") === "turn") out.touch = "turn";
+  // The venue: off with `false`; `turn-roof` (present, and not `false`) asks for the roof.
+  const roof = read("turn-roof") !== null && read("turn-roof") !== "false";
+  if (read("turn-venue") === "false") out.venue = false;
+  else if (roof) out.venue = { ...(typeof out.venue === "object" ? out.venue : {}), roof: true };
+  const auto = read("turn-autoplay");
+  if (auto === "force") out.autoPlay = "force";
+  else if (auto !== null && auto !== "false") out.autoPlay = true;
+  const speed = Number(read("turn-speed"));
+  if (read("turn-speed") !== null && Number.isFinite(speed)) out.speed = speed;
   return out;
 }
 

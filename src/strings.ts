@@ -770,6 +770,12 @@ export interface KyogijoWords {
     lower: string;
     zoomIn: string;
     zoomOut: string;
+    /** The auto-turn: the button's name (its state is `aria-pressed`), what its tooltip says to press for, and what is announced when it starts and stops. */
+    play: string;
+    playOn: string;
+    playOff: string;
+    announcePlay: string;
+    announcePause: string;
     /** What is announced after a key or a button: {name} for a viewpoint, and the angles: {yaw} and {pitch} in degrees. */
     announce: string;
     announceAngle: string;
@@ -781,7 +787,7 @@ export interface KyogijoWords {
     item: string;
     itemSag: string;
     /** The names of what stands on the surface, by kind. */
-    parts: Record<"scoreboard" | "net" | "antennae" | "goalposts" | "netposts" | "hoop" | "goal" | "boards" | "stumps" | "pylons" | "flags" | "fence" | "backstop" | "foul-poles" | "table-legs" | "walls" | "starting-blocks" | "backstroke-flags" | "false-start-rope" | "springboards" | "platforms" | "judges-stand" | "hurdles" | "steeplechase" | "high-jump" | "pole-vault" | "cage" | "padding" | "rink-boards" | "mound" | "azuchi" | "targets", string>;
+    parts: Record<"scoreboard" | "net" | "antennae" | "goalposts" | "netposts" | "hoop" | "goal" | "boards" | "stumps" | "pylons" | "flags" | "fence" | "backstop" | "foul-poles" | "table-legs" | "walls" | "starting-blocks" | "backstroke-flags" | "false-start-rope" | "springboards" | "platforms" | "judges-stand" | "hurdles" | "steeplechase" | "high-jump" | "pole-vault" | "cage" | "padding" | "rink-boards" | "mound" | "azuchi" | "targets" | "stands" | "wall-seats" | "roof" | "gallery" | "dais" | "banner" | "shrine" | "mat-edge", string>;
   };
   /** The names of the zones that `zoneAt` answers with (rules.ts), by id. */
   rules: Record<RuleId, string>;
@@ -1240,13 +1246,14 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
     },
     turn: {
       region: "3D view", group: "Viewpoint",
-      keys: "A 3D view you can turn. Drag, or use the arrow keys, to turn and tilt it; plus and minus zoom; 1 to 4 pick a viewpoint; 0 or Home puts it back. Pinch, or hold Ctrl and scroll, to zoom.",
+      keys: "A 3D view you can turn. Drag, or use the arrow keys, to turn and tilt it; plus and minus zoom; 1 to 4 pick a viewpoint; 0 or Home puts it back; Space starts and stops the auto-turn. Pinch, or hold Ctrl and scroll, to zoom.",
       overhead: "Overhead", broadcast: "Broadcast", end: "End-on", corner: "Low corner",
       reset: "Reset the view", turnLeft: "Turn left", turnRight: "Turn right", raise: "Tip the surface away", lower: "Tip the surface toward you", zoomIn: "Zoom in", zoomOut: "Zoom out",
+      play: "Auto-turn", playOn: "Start the auto-turn", playOff: "Pause the auto-turn", announcePlay: "Auto-turn on", announcePause: "Auto-turn paused",
       announce: "{name} view", announceAngle: "Turned to {yaw} degrees, seen from {pitch} degrees above the floor.",
       flat: "This browser cannot draw the 3D view, so the flat drawing is shown.",
       standing: "Standing on it, in the 3D view: {list}.", item: "{name} {h}", itemSag: "{name} {h} at the posts, {low} at the middle",
-      parts: { scoreboard: "scoreboard (lower edge)", net: "net", antennae: "antennae", goalposts: "goal posts", netposts: "net posts", hoop: "baskets", goal: "goals", boards: "boards and glass", stumps: "stumps", pylons: "pylons", flags: "corner flags", fence: "fence", backstop: "backstop", "foul-poles": "foul poles", "table-legs": "table top", walls: "walls", "starting-blocks": "starting blocks", "backstroke-flags": "backstroke flags", "false-start-rope": "false start rope", springboards: "springboards", platforms: "platforms", "judges-stand": "judges' stand", hurdles: "hurdles", steeplechase: "steeplechase barriers", "high-jump": "high jump uprights and bar", "pole-vault": "pole vault uprights and bar", cage: "discus and hammer cage", padding: "padding", "rink-boards": "boards", mound: "clay mound", azuchi: "azuchi", targets: "targets" },
+      parts: { scoreboard: "scoreboard (lower edge)", net: "net", antennae: "antennae", goalposts: "goal posts", netposts: "net posts", hoop: "baskets", goal: "goals", boards: "boards and glass", stumps: "stumps", pylons: "pylons", flags: "corner flags", fence: "fence", backstop: "backstop", "foul-poles": "foul poles", "table-legs": "table top", walls: "walls", "starting-blocks": "starting blocks", "backstroke-flags": "backstroke flags", "false-start-rope": "false start rope", springboards: "springboards", platforms: "platforms", "judges-stand": "judges' stand", hurdles: "hurdles", steeplechase: "steeplechase barriers", "high-jump": "high jump uprights and bar", "pole-vault": "pole vault uprights and bar", cage: "discus and hammer cage", padding: "padding", "rink-boards": "boards", mound: "clay mound", azuchi: "azuchi", targets: "targets", stands: "stands", "wall-seats": "seats on top of the wall", roof: "roof", gallery: "gallery", dais: "dais", banner: "banner", shrine: "shrine", "mat-edge": "mat thickness" },
     },
     rules: {
       "defensive-zone": "Defensive zone",
@@ -1776,13 +1783,14 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
     },
     turn: {
       region: "3D表示", group: "視点",
-      keys: "回して見られる3D表示です。ドラッグするか矢印キーで回転と傾きを変え、プラスとマイナスのキーで拡大と縮小、1から4のキーで視点を選び、0キーまたはHomeキーで元に戻します。ピンチ操作、またはCtrlキーを押しながらのスクロールでも拡大・縮小できます。",
+      keys: "回して見られる3D表示です。ドラッグするか矢印キーで回転と傾きを変え、プラスとマイナスのキーで拡大と縮小、1から4のキーで視点を選び、0キーまたはHomeキーで元に戻し、スペースキーで自動回転を始めたり止めたりします。ピンチ操作、またはCtrlキーを押しながらのスクロールでも拡大・縮小できます。",
       overhead: "真上", broadcast: "中継カメラ", end: "エンド側から", corner: "低い角度から",
       reset: "元に戻す", turnLeft: "左へ回す", turnRight: "右へ回す", raise: "床面を奥へ傾ける", lower: "床面を手前へ傾ける", zoomIn: "拡大", zoomOut: "縮小",
+      play: "自動回転", playOn: "自動回転を始める", playOff: "自動回転を一時停止する", announcePlay: "自動回転を始めました", announcePause: "自動回転を一時停止しました",
       announce: "{name}の視点", announceAngle: "向きは{yaw}度、見下ろす角度は{pitch}度です。",
       flat: "このブラウザーでは3D表示ができないため、平面の図を表示しています。",
       standing: "3D表示で立って見えるもの：{list}。", item: "{name} {h}", itemSag: "{name} 支柱の位置で{h}（中央は{low}）",
-      parts: { scoreboard: "スコアボードの下端", net: "ネット", antennae: "アンテナ", goalposts: "ゴールポスト", netposts: "支柱", hoop: "バスケットゴール", goal: "ゴール", boards: "ボードとガラス", stumps: "ウィケットのスタンプ", pylons: "パイロン", flags: "コーナーフラッグ", fence: "外野フェンス", backstop: "バックネット", "foul-poles": "ファウルポール", "table-legs": "天板", walls: "壁", "starting-blocks": "スタート台", "backstroke-flags": "背泳ぎ用フラッグ", "false-start-rope": "フォルススタートロープ", springboards: "飛板", platforms: "固定台", "judges-stand": "ジャッジ台", hurdles: "ハードル", steeplechase: "障害物", "high-jump": "走高跳の支柱とバー", "pole-vault": "棒高跳の支柱とバー", cage: "円盤投・ハンマー投の囲い", padding: "防護マット", "rink-boards": "フェンス", mound: "土の台", azuchi: "安土", targets: "的" },
+      parts: { scoreboard: "スコアボードの下端", net: "ネット", antennae: "アンテナ", goalposts: "ゴールポスト", netposts: "支柱", hoop: "バスケットゴール", goal: "ゴール", boards: "ボードとガラス", stumps: "ウィケットのスタンプ", pylons: "パイロン", flags: "コーナーフラッグ", fence: "外野フェンス", backstop: "バックネット", "foul-poles": "ファウルポール", "table-legs": "天板", walls: "壁", "starting-blocks": "スタート台", "backstroke-flags": "背泳ぎ用フラッグ", "false-start-rope": "フォルススタートロープ", springboards: "飛板", platforms: "固定台", "judges-stand": "ジャッジ台", hurdles: "ハードル", steeplechase: "障害物", "high-jump": "走高跳の支柱とバー", "pole-vault": "棒高跳の支柱とバー", cage: "円盤投・ハンマー投の囲い", padding: "防護マット", "rink-boards": "フェンス", mound: "土の台", azuchi: "安土", targets: "的", stands: "スタンド", "wall-seats": "壁の上の観客席", roof: "屋根", gallery: "見学席", dais: "上座の台", banner: "垂れ幕", shrine: "神棚", "mat-edge": "畳の厚み" },
     },
     rules: {
       "defensive-zone": "ディフェンディングゾーン",

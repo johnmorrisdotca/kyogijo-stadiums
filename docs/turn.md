@@ -59,7 +59,8 @@ The steady scale is the smallest the old fit used over the turn, so the floor is
 - **A finger** drags sideways to turn the view and leaves a vertical swipe to the page, so that a page of views can still be scrolled with a thumb. `touch: "turn"` keeps every touch for the view, which then also tips it; **two fingers** pinch to zoom.
 - **The wheel** is the page's, so that the page scrolls over a view. Ctrl and the wheel (a pinch on a trackpad) zoom; with the view focused, the wheel tips it and Shift with the wheel turns it.
 - **The keys**, with the view focused: the arrows turn and tip the way a drag toward that side does (Left and Right carry the near side that way; Up tips as a drag up does, Down as a drag down; Shift for bigger steps), plus and minus zoom, 1 to 4 pick a viewpoint, 0 or Home puts it back.
-- **The buttons** under the view are the four viewpoints, turn left and right, the up and down arrows, zoom in and out, and reset: each is 44 pixels square or more, and a button takes the view toward its side as the arrow key does. `nudge(view, "left" | "right" | "up" | "down", degrees)` is that step, for a page with controls of its own.
+- **Space**, with the view focused, starts and stops the [auto-turn](#the-auto-turn).
+- **The buttons** under the view are the four viewpoints, turn left and right, the up and down arrows, zoom in and out, reset, and the Auto-turn toggle: each is 44 pixels square or more, and a button takes the view toward its side as the arrow key does. `nudge(view, "left" | "right" | "up" | "down", degrees)` is that step, for a page with controls of its own.
 
 ## What stands on each surface
 
@@ -103,6 +104,56 @@ Heights are the rulebooks', read from the current rulebooks and cited by rule nu
 
 `uprightsFor(options, { only: ["net"] })` says what stands on a surface as planes in the drawing's frame (x along the surface, y across it, z the height, in feet), and `describeUprights(options, uprights, "ja")` says it in a sentence: the view's description ends with it, so a reader who cannot see the view hears what stands in it.
 
+## The venue
+
+A surface with spectators or walls does not stand in a void. The 3D view raises what the package already knows about the room round it, from `crowdStands()` and `dojoRoom()`, as more planes of the same kind: nothing new is drawn, and no seat is an element.
+
+| What | Made of |
+| --- | --- |
+| Stands | Each tier of `crowdStands().rings` is a strip of raked planes between its inner and its outer outline: one to each straight side and three to each corner of a rounded rectangle (a ring round an oval is cut into 28, a ballpark's grandstand into its own points). A plane runs from the height of the tier's first row to that of its last, which is the rake the data gives, and wears the crowd's own pattern: the people, the empty seats, the lines of the rows, the aisles and the visitors' block and the tifo, all one texture to a plane. The places the stands are left open (the ends of two sides, the open end of a horseshoe) are left open. |
+| Walks and low walls | A plane from the top of one tier up to the first row of the next, and a low wall from the floor to the first row of the lowest. |
+| A ballpark | The grandstands and the bleachers behind the fence, with the gap at the batter's eye, and, where the park has them (Fenway Park's Green Monster), the seats on top of the wall, starting at the wall's own height (37 feet 2 inches). The outfield walls are the fence's own planes, at the heights the park's data gives. |
+| Roofs | `roof: true` puts a canopy over the back of the top tier in the open air (62 per cent of its depth, 26 feet over its last row, dropping 6 feet towards the pitch) and a lid over a hall's (rising 26 feet over its inner edge). The heights are ours: no rule gives them. The drawing's own `crowd: { roof: false }` says no. |
+| A dojo | The walls, 3 m high (ours), or 4.5 m, a storey, where the dojo has a gallery: honey wood panelling the whole height under a gallery, a cream wall over a belt-high wainscot where there is none, in the floor's own look, with the doors and windows of `dojoRoom()` in them. On the kamiza's wall, a recessed alcove of darker wood with a white-framed shrine and a scroll, a plain purple banner beside it, the dais of the seat of honour (0.3 m) as a block, the dark banner (1 m to 3 m up the wall) and the shrine of `shinzen`. The balconies on the upper level: each a floor slab (0.35 m thick, ours) that projects over the room a wall's thickness and half a metre beyond the first row, a white rail on its edge, and behind it three rows as steps, a dark tread with the blocks of seats on it (each seat a cushion and its back) and the aisles between the blocks in lighter wood, with their stairs in the risers, from the gallery's floor, level with the top of the walls at 4.5 m, up to 5.7 m (ours). Above the seats a plain off-white wall with, on the kamiza's side, a round clock at the middle and a door at each end, and three large windows on the east side; `roof: true` adds a pale grey ceiling band over the galleries with a box light every 6 m (open over the floor). The seats are empty: a crowd is only drawn when `density` or `attendance` asks for one. And the edge of the mats: a competition area's mat is 5 cm thick (the IJF's tatami), a dojo's ours, drawn at least 0.12 feet thick so that it stays in sight. The floor is the drawing's own, so its look (the era of a hall, `budo.look`) is the room's: a floor painted in a look gives the world the drawing's class, sport and look, and the wood and walls follow it. The Kodokan's main dojo has the gallery as its owner counts it: 3 rows, in blocks of 5, 8, 8, 8 and 5 seats (`balcony: { rows: 3, sections: [5, 8, 8, 8, 5] }`). |
+| A dohyō | The clay mound at the plan's height, as before: the stands round it stand over the hall's floor. |
+
+**The stands give way.** Every plane of the venue knows the way it faces out of the room (`Plane.shy`), so the stands and the gallery on the side nearest the eye fade as the walls of a padel court and the boards of a rink do (`fadeOf`): the nearer the eye is to a side, and the lower, the less is left of it (down to 0.08, and to 0.01 for a dojo's room, whose steps and walls lie over one another on the screen and would add up to a veil: `Plane.fadeTo`), and the surface is never hidden. Seen from straight overhead, or from the far side, they are whole.
+
+**It is light.** A venue is planes and textures: the patterns are written once, in one `defs`, and each plane reads them by id. A full soccer bowl with a roof is about 110 planes and 500 elements in all, the biggest ones (an athletics stadium, Fenway Park) under 1,000, and the count does not change with the seats taken or the capacity. `detail` sets how finely the curves are cut: `low` gives each corner one facet, `auto` three, `high` six.
+
+```ts
+import { turnMarkup, uprightsFor } from "@johnmorrisdotca/kyogijo-stadiums/turn";
+
+const options = { sport: "soccer", crowd: true } as const;
+const kinds = uprightsFor(options, { venue: { id: "bowl" } }).items.map((item) => item.kind);
+console.log(kinds.filter((kind) => kind === "stands" || kind === "roof").join(" "));
+// stands
+const html = turnMarkup(options, { venue: { roof: true } });
+console.log(html.includes("ky-up-roof"), html.includes("ky-crowd"));
+// true false
+```
+
+The venue is on when the drawing has a `crowd` or is a dojo, and `venue: false` leaves it out (the floor then draws the flat crowd as before). With it on the floor draws no crowd, only the ground the stands stand on. `uprights: false` leaves the venue out too, unless `venue: true` asks for it. A badge has none.
+
+## The auto-turn
+
+A trophy case's slow turn of the whole view. Nothing moves until the reader presses the **Auto-turn** button (a toggle, `aria-pressed` while it turns, named for what it is in either language, with a tooltip that says what pressing it does) or **Space**, with the view focused. The page can ask for more:
+
+```ts no-run
+import { mountKyogijoTurn } from "@johnmorrisdotca/kyogijo-stadiums/turn";
+
+const view = mountKyogijoTurn(document.querySelector("#hall")!, { sport: "dojo", dojo: { jo: 20, dais: true, balcony: true } }, { autoPlay: true, speed: 10 });
+view.pause();
+view.togglePlay();      // true: it turns again
+console.log(view.playing);
+```
+
+- `autoPlay: true` starts it when the view is mounted, and not for a reader who prefers reduced motion (it starts paused, and the button is there for the reader to press); `autoPlay: "force"` starts it anyway.
+- `speed` is degrees of yaw a second, 12 by default; a positive number turns it as a drag to the right does (the near side goes to the right), a negative one the other way.
+- It holds while the pointer holds the view and goes on when it lets go. It does nothing while the page is hidden or the view is scrolled out of sight, and starts again when it is back. The arrow keys, a viewpoint, the reset or a call to `set` or `preset` take the view over and stop it; zooming does not.
+- About thirty frames a second are drawn, each a write of the planes' `matrix3d` and nothing else; nothing is polled and nothing runs while it is stopped. `onPlayChange(playing)` says when it starts and stops, and `onChange` is called once when it stops, with the view it ended on, and not at every frame.
+- The handle has `playing`, `play()`, `pause()` and `togglePlay()`, each of which gives whether it is turning now.
+
 ## The score
 
 In a drawing with a score the 3D view does not lay the score's panel on the floor: it hangs it up. The badge of the score (the strip `size: "badge"` draws) is put on a dark board that turns to face the eye, so that it reads from wherever the view is. A court or a rink (basketball, hockey, volleyball, badminton, handball, tennis, pickleball) has it hung on cables over the middle; a field, a pitch, a table and a curling sheet have it standing on legs behind an end, and a ballpark behind centre field. The floor keeps the teams' names and everything else, and loses the panel: the drawing option `plate: false`, which any drawing takes, is how. `score: "floor"` in the settings leaves the panel on the floor and the board off; so does `uprights: false`, since the board is one of the things that stand up. The sizes and heights of the board are ours: no rulebook gives a scoreboard.
@@ -115,6 +166,10 @@ In a drawing with a score the 3D view does not lay the score's panel on the floo
 | `view` | An exact opening view, `{ yaw, pitch, zoom }`, laid over the preset. |
 | `controls` | `false` leaves the buttons out; the keys and the pointer work either way. |
 | `uprights` | `false` for the floor alone, or `{ netHeight, boards, only, score }`. |
+| `venue` | `true`, `false` or `{ roof, detail }`: the stands and the room, raised. On when the drawing has a `crowd` or is a dojo. `roof: true` adds a roof or canopy; `detail` is `low`, `auto` or `high`. |
+| `autoPlay` | `true` starts the auto-turn at once, unless the reader prefers reduced motion; `"force"` starts it anyway. Left out, nothing moves until Play. |
+| `speed` | The auto-turn's degrees of yaw a second: 12 by default. |
+| `onPlayChange` | Called with `true` when the auto-turn starts and `false` when it stops. |
 | `score` | `board` (the default) hangs the score up as a scoreboard; `floor` leaves the panel on the floor. |
 | `touch` | `scroll` (the default) or `turn`. |
 | `motion` | `auto` (the default) glides between viewpoints unless the reader prefers reduced motion; `smooth` or `none` say it for them. |
@@ -124,7 +179,7 @@ In a drawing with a score the 3D view does not lay the score's panel on the floo
 | `id` | The prefix of the ids in the view, for a page with more than one. |
 | `onChange` | Called with the view and the viewpoint it is (`undefined` when it was turned by hand). |
 
-The handle `mountKyogijoTurn` gives back has `view()`, `set(view, glide?)`, `preset(name)`, `reset()`, `update(options)`, `svg()` (the flat drawing that is the floor), `destroy()` and `mode`.
+The handle `mountKyogijoTurn` gives back has `view()`, `set(view, glide?)`, `preset(name)`, `reset()`, `update(options)`, `svg()` (the flat drawing that is the floor), `destroy()`, `mode`, and for the auto-turn `playing`, `play()`, `pause()` and `togglePlay()`.
 
 The 3D view always shows the whole surface, lying wide: a `range`, a `half` and a tall `orientation` are left to the flat drawing, and a badge is not a surface and stays a badge.
 
@@ -147,7 +202,7 @@ A page with no script keeps the flat drawing: render `drawKyogijo(options)` into
 - The view is a `group` named by the drawing's title, with the role description "3D view" (3D表示), focusable, with `aria-keyshortcuts` and a description that gives the keys and what stands on the surface, with its heights in the rulebook's own unit.
 - The flat drawing keeps its own `role="img"`, title and description. The parts that stand up are decoration and hidden from a screen reader.
 - A viewpoint, a reset and the end of a drag or a run of keys are said in a polite live region ("End-on view", "Turned to 40 degrees, seen from 34 degrees above the floor"); a drag is not said as it goes.
-- With `prefers-reduced-motion` the view jumps between viewpoints instead of gliding, and nothing ever moves by itself. Nothing is polled: the elements' transforms are written when the view changes, and a glide is half a second of animation frames.
+- With `prefers-reduced-motion` the view jumps between viewpoints instead of gliding, and nothing ever moves by itself: the auto-turn runs only after the reader presses Play or Space, or when the page's `autoPlay` asks (not for a reader who prefers reduced motion, whose view starts paused). Nothing is polled: the elements' transforms are written when the view changes, and a glide is half a second of animation frames.
 - Focus is shown with a 3 px outline, and the controls are 44 pixels or more.
 
 ## Looks

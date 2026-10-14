@@ -70,13 +70,27 @@ export function floorMarkup(model: TurnModel, transform: string, stack: number):
   return `<div class="ky-turn-floor" style="width:${px(vb.w * model.scale)}px;height:${px(vb.h * model.scale)}px;transform:${transform};z-index:${stack}">${model.floor}</div>`;
 }
 
+/** The patterns the venue's planes are drawn with, once, in a box of no size: every plane's SVG reads them by id, and the crowd's colours are on this element. */
+export function defsMarkup(model: TurnModel): string {
+  return model.defs === "" ? "" : `<svg class="ky-turn-defs" xmlns="http://www.w3.org/2000/svg" width="0" height="0"${model.crowdStyle === "" ? "" : ` style="${esc(model.crowdStyle)}"`} aria-hidden="true" focusable="false"><defs>${model.defs}</defs></svg>`;
+}
+
+/**
+ * The attributes of the element the planes stand in. A floor painted in a look (a dojo's mats) gets the drawing's own class, sport and look, so that the stylesheet's rules for the look set
+ * its custom properties here too, and the walls and the wood of the room are the colours of the floor. A theme the options force goes with them.
+ */
+export function worldAttributes(model: TurnModel): string {
+  const theme = (model.options as SurfaceOptions).theme;
+  return model.look === undefined ? 'class="ky-turn-world"' : `class="ky-turn-world kyogijo" data-sport="${esc(model.look.sport)}" data-look="${esc(model.look.look)}"${theme === "light" || theme === "dark" ? ` data-theme="${theme}"` : ""}`;
+}
+
 /** The floor and the planes of a model, laid out. */
 export function worldMarkup(model: TurnModel, layout: Layout): string {
-  return floorMarkup(model, layout.transforms[0], layout.stack[0]) + model.planes.map((p, i) => planeMarkup(p, model.scale, layout.transforms[i + 1], layout.stack[i + 1], layout.fade[i + 1])).join("");
+  return defsMarkup(model) + floorMarkup(model, layout.transforms[0], layout.stack[0]) + model.planes.map((p, i) => planeMarkup(p, model.scale, layout.transforms[i + 1], layout.stack[i + 1], layout.fade[i + 1])).join("");
 }
 
 /** The buttons under the view. */
-export function controlsMarkup(model: TurnModel, view: TurnView): string {
+export function controlsMarkup(model: TurnModel, view: TurnView, playing = false): string {
   const words = turnWords(model);
   const here = presetOf(view, (model.options as SurfaceOptions).sport);
   const presets = TURN_PRESET_NAMES.map((name, i) => `<button type="button" data-preset="${name}" aria-pressed="${here === name}" aria-keyshortcuts="${i + 1}">${esc(words[name])}</button>`).join("");
@@ -89,7 +103,9 @@ export function controlsMarkup(model: TurnModel, view: TurnView): string {
     ["zoom-out", "−", words.zoomOut],
   ];
   const buttons = tools.map(([act, glyph, label]) => `<button type="button" data-act="${act}" aria-label="${esc(label)}" title="${esc(label)}">${glyph}</button>`).join("");
-  return `<div class="ky-turn-controls"><div class="ky-turn-group" role="group" aria-label="${esc(words.group)}">${presets}</div><div class="ky-turn-group">${buttons}<button type="button" data-act="reset" aria-keyshortcuts="0 Home">${esc(words.reset)}</button></div></div>`;
+  // The auto-turn: a toggle named for what it is, pressed while the view turns; its glyph and tooltip say what pressing it does.
+  const play = `<button type="button" data-act="play" data-wide aria-pressed="${playing}" aria-keyshortcuts="Space" title="${esc(playing ? words.playOff : words.playOn)}"><span data-glyph aria-hidden="true">${playing ? "❚❚" : "▶"}</span>${esc(words.play)}</button>`;
+  return `<div class="ky-turn-controls"><div class="ky-turn-group" role="group" aria-label="${esc(words.group)}">${presets}</div><div class="ky-turn-group">${buttons}<button type="button" data-act="reset" aria-keyshortcuts="0 Home">${esc(words.reset)}</button>${play}</div></div>`;
 }
 
 /** The size, in pixels, the first view is worked out for. */
@@ -108,7 +124,7 @@ export function turnMarkupOf(model: TurnModel, settings: TurnSettings = {}): str
   return (
     `<div class="ky-turn" id="${esc(model.id)}" data-sport="${esc(String(sport))}" data-mode="3d" data-touch="${settings.touch === "turn" ? "turn" : "scroll"}" data-preset="${presetOf(view, sport) ?? "custom"}"${theme === "light" || theme === "dark" ? ` data-theme="${theme}"` : ""} lang="${model.language}">` +
     sheet +
-    `<div class="ky-turn-view" tabindex="0" role="group" aria-roledescription="${esc(words.region)}" aria-label="${esc(model.title)}" aria-describedby="${esc(model.id)}-help" aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown + - 0 1 2 3 4 Home"><div class="ky-turn-world">${worldMarkup(model, layout)}</div></div>` +
+    `<div class="ky-turn-view" tabindex="0" role="group" aria-roledescription="${esc(words.region)}" aria-label="${esc(model.title)}" aria-describedby="${esc(model.id)}-help" aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown + - 0 1 2 3 4 Home Space"><div ${worldAttributes(model)}>${worldMarkup(model, layout)}</div></div>` +
     `<p class="ky-turn-help" id="${esc(model.id)}-help">${esc(keys)}</p>` +
     (settings.controls === false ? "" : controlsMarkup(model, view)) +
     `<div class="ky-turn-live" role="status" aria-live="polite"></div>` +

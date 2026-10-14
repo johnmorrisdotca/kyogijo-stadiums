@@ -53,11 +53,12 @@ export interface Hall {
 /** The Kodokan's main dojo as drawn: a square floor of 420 jō's area, four contest areas, the seat of honour, the banner, the wood and the gallery, in the two looks the owner's photographs show. The years of both are unknown. */
 const KODOKAN_MAIN: DojoSpec = {
   mats: { width: 26.4, length: 26.4 },
-  surround: 1,
+  surround: 4,
   areas: { across: 2, down: 2 },
   dais: true,
   banner: true,
-  balcony: true,
+  // Per the owner, with his photographs: a gallery of 3 rows of seats on each side, the blocks of a row 5, 8, 8, 8 and 5 seats (34 to a row, 102 to a side) with an aisle between them.
+  balcony: { rows: 3, sections: [5, 8, 8, 8, 5] },
   kamiza: "north",
   eras: [
     { name: "earlier", nameJa: "以前", from: null, to: null, look: "green-orange", outline: true },
@@ -85,7 +86,7 @@ export const HALLS: readonly Hall[] = Object.freeze([
     fromWhat: { en: "founded by Kanō Jigorō (the International Judo Center, the building the dojos are in, was completed in 1984)", ja: "嘉納治五郎が創設（道場のある講道館国際柔道センターは1984年に完成）" },
     leagues: [],
     surfaces: [
-      { id: "main-dojo", name: { en: "Main dojo, 7th floor", ja: "大道場（7階）" }, sport: "dojo", options: { dojo: KODOKAN_MAIN }, basis: "count", mats: 420, note: { en: "420 jō on the 7th floor, four contest areas at once, with a gallery on the 8th that seats about 900. Per the owner's photographs: four contest areas in two rows, pale yellow mats on green safety bands and a green border, on a wood surround, a raised seat of honour with a dark banner at the front wall, a gallery on all four sides. The shape of the floor is not documented: a square of 26.4 m, the area of 420 jō, is drawn so that four areas of 8 m fit.", ja: "7階に420畳、同時に4面の試合ができ、8階に約900人が座れる見学席があります。提供された写真では、試合場が2列に4面並び、淡い黄色の畳の外側を緑の安全地帯と緑の縁取りが囲んでいます。周囲は板張りで、正面の上座には一段高い台と濃い色の垂れ幕があり、四方に見学席があります。床の形は資料にないので、420畳の広さにあたる26.4m四方の床に、8m四方の試合場4面が収まるように描いています。" } },
+      { id: "main-dojo", name: { en: "Main dojo, 7th floor", ja: "大道場（7階）" }, sport: "dojo", options: { dojo: KODOKAN_MAIN }, basis: "count", mats: 420, note: { en: "420 jō on the 7th floor, four contest areas at once, with a gallery on the 8th that seats about 900. Per the owner's photographs: four contest areas in two rows, pale yellow mats on green safety bands and a green border, on a wide wood floor all round (about 4 m, ours), a raised seat of honour with a dark banner at the front wall, a gallery on all four sides. The shape of the floor is not documented: a square of 26.4 m, the area of 420 jō, is drawn so that four areas of 8 m fit. Per the owner and his photographs: the gallery has 3 rows of seats on each side, in blocks of 5, 8, 8, 8 and 5 seats (34 a row, 102 a side) divided by aisles, behind a white rail; the lower wall is honey wood panelling and the upper wall plain off-white.", ja: "7階に420畳、同時に4面の試合ができ、8階に約900人が座れる見学席があります。提供された写真では、試合場が2列に4面並び、淡い黄色の畳の外側を緑の安全地帯と緑の縁取りが囲んでいます。周囲は板張りで、正面の上座には一段高い台と濃い色の垂れ幕があり、四方に見学席があります。床の形は資料にないので、420畳の広さにあたる26.4m四方の床に、8m四方の試合場4面が収まるように描いています。提供者の数え方と写真によると、見学席は各辺3列で、1列は5席・8席・8席・8席・5席のブロック（1列34席、1辺102席）に通路で区切られ、白い手すりの奥に並びます。下の壁は蜂蜜色の板張り、上の壁は無地のオフホワイトです。" } },
       { id: "main-dojo-earlier", name: { en: "Main dojo, 7th floor (earlier colours)", ja: "大道場（7階・以前の色）" }, sport: "dojo", options: { dojo: { ...KODOKAN_MAIN, era: "earlier" } }, basis: "count", mats: 420, note: { en: "The same room in the colours of the owner's older photograph: all green mats, the four contest areas outlined by red-orange border mats. No source gives the years of either look, so the eras carry none.", ja: "提供された古い写真の色で描いた同じ部屋です。畳はすべて緑で、4面の試合場それぞれを赤橙色の縁の畳が囲んでいます。どちらの色だった時期も資料にないので、年は記していません。" } },
       { id: "school-dojo", name: { en: "Judo School dojo, 6th floor", ja: "学校道場（6階）" }, sport: "dojo", options: { dojo: { jo: 240, look: "green-beige" } }, basis: "count", mats: 240, note: { en: "240 jō on the 6th floor; the shape is plausible.", ja: "6階に240畳。形は推定です。" } },
       { id: "international-dojo", name: { en: "International dojo, 6th floor", ja: "国際部道場（6階）" }, sport: "dojo", options: { dojo: { jo: 192, look: "green-beige" } }, basis: "count", mats: 192, note: { en: "192 jō on the 6th floor; the shape is plausible.", ja: "6階に192畳。形は推定です。" } },

@@ -445,7 +445,7 @@ function standsFor(o: SurfaceOptions, surface: Surface, crowd: Crowd): CrowdStan
   }
   // A dojo's crowd sits in its gallery, from the room's balcony data (in feet here); the arenas (the Budokan, the Kokugikan) keep their bowls.
   const hall = sport === "dojo" ? dojoGallery(o) : undefined;
-  const gallery = hall === undefined ? undefined : { offset: hall.offset / 0.3048, depth: hall.depth / 0.3048, height: [hall.height[0] / 0.3048, hall.height[1] / 0.3048] as [number, number] };
+  const gallery = hall === undefined ? undefined : { offset: hall.offset / 0.3048, depth: hall.depth / 0.3048, height: [hall.height[0] / 0.3048, hall.height[1] / 0.3048] as [number, number], rows: hall.rows, aisles: hall.aisles };
   return crowdLayout({ sport, box: surface.whole ?? surface.box ?? { x: 0, y: 0, w: 100, h: 100 }, crowd, awaySide, ground: o.ground, arena: o.budo?.hall === "budokan", ...(gallery === undefined ? {} : { gallery }) });
 }
 
@@ -474,8 +474,8 @@ function buildCrowded(o: SurfaceOptions, portrait: boolean, id: string, score: b
   const fine = crowd.detail === "fine" || (crowd.detail === "auto" && !smallDrawing(o));
   const first = /^<[^>]*\/>/.exec(surface.base)?.[0] ?? "";
   const bg = /class="([^"]*)"/.exec(first)?.[1] ?? "ky-apron";
-  // A gallery is sparsely taken unless the options say how full.
-  const taken = stands.gallery === true && crowd.density === undefined && crowd.attendance === undefined ? 0.4 : densityOf(crowd, seats, ground);
+  // A gallery is empty unless the options say how full: its seats are the detail.
+  const taken = stands.gallery === true && crowd.density === undefined && crowd.attendance === undefined ? 0 : densityOf(crowd, seats, ground);
   const drawn = drawCrowd(stands, { id, crowd, density: taken, fine, ground: bg });
   surface.base = first + drawn.markup + surface.base.slice(first.length);
   surface.defs += drawn.defs;
@@ -496,6 +496,8 @@ function colourStyle(o: SurfaceOptions, teams: { left?: Team; right?: Team; home
   if (o.sport === "dojo" && o.dojo !== undefined) {
     const c = dojoSpecOf(o.dojo).colours;
     if (c !== undefined) for (const [key, property] of [["mat", "--ky-surface"], ["alt", "--ky-surface-alt"], ["border", "--ky-red"], ["heri", "--ky-bud-heri"], ["floor", "--ky-bud-floor"], ["wall", "--ky-boards"]] as const) set(property, c[key]);
+    // A heri the dojo's colours name is drawn as a cloth edge; the stylesheet's own is a faint seam.
+    if (safeColour(c?.heri) !== undefined) props.push("--ky-bud-hop:.82");
   }
   if (o.court !== undefined) for (const [key, property] of Object.entries(COURT_PROPERTIES)) set(property, (o.court as Record<string, unknown>)[key]);
   if (o.sheet?.rings !== undefined) for (const [key, property] of Object.entries(SHEET_PROPERTIES)) set(property, (o.sheet.rings as Record<string, unknown>)[key]);

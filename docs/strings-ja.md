@@ -1196,7 +1196,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `replay.region` | Replay | リプレイ |
 | `turn.region` | 3D view | 3D表示 |
 | `turn.group` | Viewpoint | 視点 |
-| `turn.keys` | A 3D view you can turn. Drag, or use the arrow keys, to turn and tilt it; plus and minus zoom; 1 to 4 pick a viewpoint; 0 or Home puts it back. Pinch, or hold Ctrl and scroll, to zoom. | 回して見られる3D表示です。ドラッグするか矢印キーで回転と傾きを変え、プラスとマイナスのキーで拡大と縮小、1から4のキーで視点を選び、0キーまたはHomeキーで元に戻します。ピンチ操作、またはCtrlキーを押しながらのスクロールでも拡大・縮小できます。 |
+| `turn.keys` | A 3D view you can turn. Drag, or use the arrow keys, to turn and tilt it; plus and minus zoom; 1 to 4 pick a viewpoint; 0 or Home puts it back; Space starts and stops the auto-turn. Pinch, or hold Ctrl and scroll, to zoom. | 回して見られる3D表示です。ドラッグするか矢印キーで回転と傾きを変え、プラスとマイナスのキーで拡大と縮小、1から4のキーで視点を選び、0キーまたはHomeキーで元に戻し、スペースキーで自動回転を始めたり止めたりします。ピンチ操作、またはCtrlキーを押しながらのスクロールでも拡大・縮小できます。 |
 | `turn.overhead` | Overhead | 真上 |
 | `turn.broadcast` | Broadcast | 中継カメラ |
 | `turn.end` | End-on | エンド側から |
@@ -1208,6 +1208,11 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `turn.lower` | Tip the surface toward you | 床面を手前へ傾ける |
 | `turn.zoomIn` | Zoom in | 拡大 |
 | `turn.zoomOut` | Zoom out | 縮小 |
+| `turn.play` | Auto-turn | 自動回転 |
+| `turn.playOn` | Start the auto-turn | 自動回転を始める |
+| `turn.playOff` | Pause the auto-turn | 自動回転を一時停止する |
+| `turn.announcePlay` | Auto-turn on | 自動回転を始めました |
+| `turn.announcePause` | Auto-turn paused | 自動回転を一時停止しました |
 | `turn.announce` | {name} view | {name}の視点 |
 | `turn.announceAngle` | Turned to {yaw} degrees, seen from {pitch} degrees above the floor. | 向きは{yaw}度、見下ろす角度は{pitch}度です。 |
 | `turn.flat` | This browser cannot draw the 3D view, so the flat drawing is shown. | このブラウザーでは3D表示ができないため、平面の図を表示しています。 |
@@ -1246,6 +1251,14 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `turn.parts.mound` | clay mound | 土の台 |
 | `turn.parts.azuchi` | azuchi | 安土 |
 | `turn.parts.targets` | targets | 的 |
+| `turn.parts.stands` | stands | スタンド |
+| `turn.parts.wall-seats` | seats on top of the wall | 壁の上の観客席 |
+| `turn.parts.roof` | roof | 屋根 |
+| `turn.parts.gallery` | gallery | 見学席 |
+| `turn.parts.dais` | dais | 上座の台 |
+| `turn.parts.banner` | banner | 垂れ幕 |
+| `turn.parts.shrine` | shrine | 神棚 |
+| `turn.parts.mat-edge` | mat thickness | 畳の厚み |
 | `rules.defensive-zone` | Defensive zone | ディフェンディングゾーン |
 | `rules.neutral-zone` | Neutral zone | ニュートラルゾーン |
 | `rules.offensive-zone` | Offensive zone | アタッキングゾーン |
@@ -1618,6 +1631,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `court_hardwoodPlain` | Real hardwood, plain for small sizes | リアルな木の床（小サイズ向けの簡略版） |
 | `crowd` | Crowd | 観客 |
 | `crowdTifo` | Card display | カード演出（コレオ） |
+| `venueRoof` | Roof (3D) | 屋根（3D） |
 | `crowdDensity` | Seats taken | 観客の入り |
 | `usesTitle` | Everything is one call | どれも1回の呼び出し |
 | `embedTitle` | Put it in your page | ページに組み込む |

@@ -143,6 +143,8 @@ export function makeState(params, kept = null) {
     crowd: params.get("crowd") === "1",
     crowdDensity: /^\d{1,3}$/.test(params.get("crowddensity") || "") ? Math.min(100, Number(params.get("crowddensity"))) : 85,
     crowdTifo: params.get("crowdtifo") === "1",
+    // The roof over the stands, in the 3D view.
+    venueRoof: params.get("roof") === "1",
     // The situation of the game: hockey's strength, baseball's runners, outs and count, football's down, distance and ball.
     situation: params.get("situation") === "1",
     sitHockey: pick(params.get("sithockey"), SIT_HOCKEY, "pp"),
@@ -492,6 +494,7 @@ export const TOGGLES = [
   { id: "hardwood", get: (s) => s.hardwood },
   { id: "crowd", get: (s) => s.crowd },
   { id: "crowd-tifo", get: (s) => s.crowdTifo },
+  { id: "venue-roof", get: (s) => s.venueRoof },
   { id: "flags", get: (s) => s.flags },
   { id: "pageant-emblem", get: (s) => s.pageantEmblem },
   { id: "emblem-line", get: (s) => s.emblemLine },
@@ -573,6 +576,8 @@ export function hiddenRows(s) {
     "away-mark-row": s.away.logo !== "ready",
     "home-mark-row": s.home.logo !== "ready",
     "pageant-emblem-row": s.pageant === "off" || s.size === "surface" || !s.pageantEmblem,
+    // The roof is a setting of the 3D view, over the stands of a crowd.
+    "venue-row": !(s.view === "3d" && s.crowd),
     "emblem-line-row": !(s.away.logo === "ready" || s.home.logo === "ready" || (s.pageant !== "off" && s.size !== "surface" && s.pageantEmblem)),
     "away-logo-url": s.away.logo !== "url",
     "home-logo-url": s.home.logo !== "url",
@@ -636,7 +641,7 @@ export function urlPairs(s, lang) {
   // The budo: how the mats look, the contest areas, the size of a dojo and the hall, officials, tassels and shrine of the sport on show.
   for (const [key, value, start] of [["budolook", s.budoLook, "default"], ["budoareas", s.budoAreas, "1"], ["dojojo", s.dojoJo, "20"], ["budohall", s.budoHall ? "1" : "0", "0"], ["budoofficials", s.budoOfficials ? "1" : "0", "0"], ["budotassels", s.budoTassels ? "1" : "0", "0"], ["dojoshinzen", s.budoShinzen ? "1" : "0", "0"]]) put(key, value, start);
   // The looks of a surface, the stands, the lineup and the points.
-  for (const [key, value, start] of [["court", s.court, "default"], ["pattern", s.pattern, "bands"], ["goals", s.goals, "box"], ["half", s.half, "none"], ["flags", s.flags ? "1" : "0", "1"], ["baseline", s.baseline ? "1" : "0", "0"], ["hardwood", s.hardwood ? "1" : "0", "0"], ["crowd", s.crowd ? "1" : "0", "0"], ["crowddensity", s.crowdDensity, 85], ["crowdtifo", s.crowdTifo ? "1" : "0", "0"], ["lineup", s.lineup, "off"], ["drop", s.place ? "1" : "0", "0"], ["code", s.embed, "module"]]) put(key, value, start);
+  for (const [key, value, start] of [["court", s.court, "default"], ["pattern", s.pattern, "bands"], ["goals", s.goals, "box"], ["half", s.half, "none"], ["flags", s.flags ? "1" : "0", "1"], ["baseline", s.baseline ? "1" : "0", "0"], ["hardwood", s.hardwood ? "1" : "0", "0"], ["crowd", s.crowd ? "1" : "0", "0"], ["crowddensity", s.crowdDensity, 85], ["crowdtifo", s.crowdTifo ? "1" : "0", "0"], ["roof", s.venueRoof ? "1" : "0", "0"], ["lineup", s.lineup, "off"], ["drop", s.place ? "1" : "0", "0"], ["code", s.embed, "module"]]) put(key, value, start);
   out.push(["shots", s.place && s.shots.length > 0 ? shotsParam(s.shots) : null]);
   // The game: only what differs from the made-up one.
   for (const role of ["away", "home"]) {

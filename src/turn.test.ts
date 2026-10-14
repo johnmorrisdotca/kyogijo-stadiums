@@ -493,8 +493,13 @@ describe("a crowd and a pageant under the 3D view", () => {
   const game = { home: { name: "Prairie Ridge Bison", abbr: "PRB", score: 2, color: "#a8452c" }, away: { name: "Northern Owls", abbr: "NOW", score: 3, color: "#3a2d6b" }, status: "final" } as const;
 
   it("draws a drawing with a crowd and a pageant as its floor, with the goals still standing on it", () => {
+    // With the stands standing the floor draws no crowd (the planes are the crowd); without them it is the flat crowd.
+    const flat = turnMarkup({ sport: "soccer", ...game, crowd: true, pageant: "carpet" } as SurfaceOptions, { venue: false });
+    expect(flat).toContain("ky-crowd");
+    expect(flat).toContain("data-pageant");
     const html = turnMarkup({ sport: "soccer", ...game, crowd: true, pageant: "carpet" } as SurfaceOptions);
-    expect(html).toContain("ky-crowd");
+    expect(html).not.toContain("ky-crowd");
+    expect(html).toContain("ky-up-seats");
     expect(html).toContain("data-pageant");
     expect(html).toContain("ky-up");
     expect(uprightsFor({ sport: "soccer", ...game, crowd: true }).items.map((i) => i.kind)).toEqual(expect.arrayContaining(["goal", "flags"]));
@@ -769,5 +774,46 @@ describe("the element's 3D attributes", () => {
   it("lists the attributes once each", () => {
     for (const name of ["turn", "turn-view", "turn-controls", "turn-uprights", "turn-score", "turn-touch"]) expect(KYOGIJO_ATTRIBUTES).toContain(name);
     expect(new Set(KYOGIJO_ATTRIBUTES).size).toBe(KYOGIJO_ATTRIBUTES.length);
+  });
+});
+
+describe("the auto-turn's controls", () => {
+  const html = turnMarkup({ sport: "volleyball" });
+  const button = /<button[^>]*data-act="play"[^>]*>.*?<\/button>/.exec(html)?.[0] ?? "";
+
+  it("is a toggle button, not pressed, that names the auto-turn and says what pressing it does", () => {
+    expect(button).toContain('aria-pressed="false"');
+    expect(button).toContain('aria-keyshortcuts="Space"');
+    expect(button).toContain('title="Start the auto-turn"');
+    expect(button).toContain(">Auto-turn</button>");
+    expect(button).toContain('aria-hidden="true"');
+    expect(turnMarkup({ sport: "volleyball", language: "ja" })).toContain(">自動回転</button>");
+  });
+
+  it("is in the controls only, and Space is a key of the view", () => {
+    expect(turnMarkup({ sport: "volleyball" }, { controls: false })).not.toContain('data-act="play"');
+    expect(html).toMatch(/class="ky-turn-view"[^>]*aria-keyshortcuts="[^"]*\bSpace\b/);
+    expect(html).toContain("Space starts and stops the auto-turn.");
+    expect(turnMarkup({ sport: "volleyball", language: "ja" })).toContain("スペースキーで自動回転を始めたり止めたりします");
+  });
+
+  it("is as tall and wide as a finger in the stylesheet, and its glyph is not read", () => {
+    expect(KYOGIJO_STRINGS.en.turn.play).toBe("Auto-turn");
+    expect(html).toContain("min-width:44px;min-height:44px");
+    expect(html).toContain("[data-glyph]");
+    expect(html).toContain('data-glyph aria-hidden="true">▶');
+  });
+
+  it("is read from the element's attributes: the venue, its roof, the auto-turn and its speed", () => {
+    const read = (attrs: Record<string, string>) => (name: string): string | null => attrs[name] ?? null;
+    expect(turnSettingsFromAttributes(read({ "turn-venue": "false" })).venue).toBe(false);
+    expect(turnSettingsFromAttributes(read({ "turn-roof": "" })).venue).toEqual({ roof: true });
+    expect(turnSettingsFromAttributes(read({ "turn-roof": "false" })).venue).toBeUndefined();
+    expect(turnSettingsFromAttributes(read({ "turn-autoplay": "" })).autoPlay).toBe(true);
+    expect(turnSettingsFromAttributes(read({ "turn-autoplay": "force" })).autoPlay).toBe("force");
+    expect(turnSettingsFromAttributes(read({ "turn-autoplay": "false" })).autoPlay).toBeUndefined();
+    expect(turnSettingsFromAttributes(read({ "turn-speed": "-20" })).speed).toBe(-20);
+    expect(turnSettingsFromAttributes(read({ "turn-speed": "fast" })).speed).toBeUndefined();
+    for (const name of ["turn-venue", "turn-roof", "turn-autoplay", "turn-speed"]) expect(KYOGIJO_ATTRIBUTES).toContain(name);
   });
 });

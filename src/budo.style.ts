@@ -7,8 +7,8 @@ const CLASSES = `
 .kyogijo .ky-bud-t1{fill:var(--ky-surface)}
 .kyogijo .ky-bud-t2{fill:var(--ky-surface-alt,var(--ky-surface))}
 .kyogijo .ky-bud-t3{fill:var(--ky-red)}
-.kyogijo .ky-bud-heri{fill:var(--ky-bud-heri,var(--ky-ink));fill-opacity:.82}
-.kyogijo .ky-bud-seam{stroke:var(--ky-ink);stroke-opacity:.26;fill:none;stroke-linejoin:round}
+.kyogijo .ky-bud-heri{fill:var(--ky-bud-heri,var(--ky-ink));fill-opacity:var(--ky-bud-hop,.07)}
+.kyogijo .ky-bud-seam{stroke:var(--ky-ink);stroke-opacity:.12;fill:none;stroke-linejoin:round}
 .kyogijo .ky-bud-line{stroke:var(--ky-line);fill:none}
 .kyogijo .ky-bud-ink{stroke:var(--ky-ink);fill:none}
 .kyogijo .ky-bud-floor{fill:var(--ky-bud-floor,var(--ky-boards))}
@@ -20,7 +20,7 @@ const CLASSES = `
 .kyogijo .ky-bud-desk{fill:var(--ky-ink);fill-opacity:.55}
 .kyogijo .ky-bud-seat{fill:var(--ky-ink);fill-opacity:.42}
 .kyogijo .ky-bud-shrine{fill:var(--ky-red)}
-.kyogijo .ky-bud-edge{stroke:#fff;stroke-opacity:.2;stroke-width:.03;fill:none}
+.kyogijo .ky-bud-edge{stroke:var(--ky-ink);stroke-opacity:.04;stroke-width:.03;fill:none}
 .kyogijo .ky-bud-dais{fill:var(--ky-bud-floor,var(--ky-boards));stroke:var(--ky-ink);stroke-opacity:.5;stroke-width:.04}
 .kyogijo .ky-bud-banner{fill:var(--ky-ink);fill-opacity:.85}
 .kyogijo .ky-bud-clay{fill:var(--ky-dirt)}
@@ -60,6 +60,9 @@ export const KYOGIJO_BUDO_GALLERY_STYLE = `
 .kyogijo .ky-bud-gbed.ky-bud-gbed{fill:var(--ky-bud-gal,#7a5a3c)}
 .kyogijo .ky-bud-gblk.ky-bud-gblk{fill:var(--ky-bud-gpeople,#a89a86)}
 .kyogijo .ky-bud-gseat.ky-bud-gseat{stroke:var(--ky-bud-grail,#3a2c1f);stroke-opacity:.3}
+.kyogijo .ky-bud-grow{stroke:var(--ky-bud-grail,#3a2c1f);stroke-opacity:.42}
+.kyogijo .ky-bud-gback{stroke:var(--ky-bud-grail,#3a2c1f);stroke-opacity:.75}
+.kyogijo .ky-bud-gaisle{stroke:var(--ky-bud-gaisle,#a98863)}
 .kyogijo .ky-bud-rail{stroke:var(--ky-bud-grail,#3a2c1f);stroke-width:1.6;stroke-opacity:.85}
 `;
 

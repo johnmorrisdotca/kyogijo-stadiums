@@ -52,8 +52,10 @@ function tile(seed: number, density: number, share: number, team: "ky-cr-h" | "k
 }
 
 /** The tiles a crowd needs: the home tile, the home tile of the upper tiers (emptier) and the visitors', and the display tiles. */
-function patterns(id: string, crowd: Crowd, density: number, tifo: { home: boolean; away: boolean } | undefined, neutral = false): string {
-  const make = (suffix: string, body: string, size = TILE): string => el("pattern", { id: `${id}-cr-${suffix}`, width: size, height: size, patternUnits: "userSpaceOnUse" }, body);
+export function patterns(id: string, crowd: Crowd, density: number, tifo: { home: boolean; away: boolean } | undefined, neutral = false, rows = false): string {
+  // A 3D view's tiles carry the lines of the rows too (a row every third of a tile, along the tile's x), so that a raked plane is textured and not drawn seat by seat.
+  const rowLines = rows ? el("path", { class: "ky-cr-row", d: `M0 .3H${TILE}M0 ${TILE / 3 + 0.3}H${TILE}M0 ${(2 * TILE) / 3 + 0.3}H${TILE}`, fill: "none" }) : "";
+  const make = (suffix: string, body: string, size = TILE): string => el("pattern", { id: `${id}-cr-${suffix}`, width: size, height: size, patternUnits: "userSpaceOnUse" }, size === TILE ? body + rowLines : body);
   let out = make("h", tile(crowd.seed * 7 + 1, density, neutral ? 0 : 0.88, "ky-cr-h", neutral)) + make("a", tile(crowd.seed * 7 + 3, Math.min(1, density * 1.04), 0.94, "ky-cr-a"));
   if (tifo !== undefined) {
     const stripes = (cls: string): string => el("rect", { class: cls, width: 3, height: 6 }) + el("rect", { class: "ky-cr-tw", x: 3, width: 3, height: 6 });
@@ -106,6 +108,32 @@ function rows(ring: StandRing): string {
   return d.length === 0 ? "" : el("path", { class: "ky-cr-row", d: d.join("") });
 }
 
+/**
+ * The seats of a hall's gallery seen from above: its band stepped into rows (a gallery's rows are about 0.8 m, 2.6 feet, deep), each row a dashed line for the cushions with a thinner, darker one behind
+ * it for the backs, and the aisles across the band as lighter stripes between the blocks of seats. Plain seats and empty: the people, when asked for, are laid over.
+ */
+function galleryRows(ring: StandRing): string {
+  const h = ring.hole;
+  const depth = ring.to - ring.from;
+  const rows = ring.rows ?? Math.max(1, Math.round(depth / 2.62));
+  if (h === null || h.kind !== "rrect") return "";
+  const step = depth / rows;
+  const line = (k: number): string => outlinePath({ kind: "rrect", x0: h.x0 - k, y0: h.y0 - k, x1: h.x1 + k, y1: h.y1 + k, r: h.r + k });
+  const cushions: string[] = [];
+  const backs: string[] = [];
+  for (let i = 0; i < rows; i += 1) {
+    const k = (i + 0.5) * step;
+    cushions.push(line(k - step * 0.12));
+    backs.push(line(k + step * 0.32));
+  }
+  const gaps = ring.aisles.map(([[x0, y0], [x1, y1]]) => `M${n1(x0)} ${n1(y0)}L${n1(x1)} ${n1(y1)}`).join("");
+  return (
+    el("path", { class: "ky-bud-grow", d: cushions.join(""), fill: "none", "stroke-width": num(step * 0.5), "stroke-dasharray": "1.5 .5" }) +
+    el("path", { class: "ky-bud-gback", d: backs.join(""), fill: "none", "stroke-width": num(step * 0.16), "stroke-dasharray": "1.5 .5" }) +
+    (gaps === "" ? "" : el("path", { class: "ky-bud-gaisle", d: gaps, fill: "none", "stroke-width": 3.4 }))
+  );
+}
+
 const poly = (points: readonly Pt[]): string => `M${points.map(([x, y]) => `${Math.round(x)} ${Math.round(y)}`).join("L")}Z`;
 
 /** How the crowd is drawn: the prefix of ids, the options read, the share of seats taken, the detail, and the class of the ground the stands stand on. */
@@ -141,12 +169,14 @@ export function drawCrowd(stands: CrowdStands, o: DrawInput): { defs: string; ma
     // The upper tiers are a little emptier: their paint is the same tile with the empty seats' bed showing through a veil.
     // The bed of seats under the tile, so that no seam of the pattern shows light.
     const bed = stands.gallery === true ? "ky-cr-bed ky-bud-gbed" : "ky-cr-bed";
-    if (fine) body += el("path", { class: bed, d: path(ring) }) + el("path", { class: "ky-cr-people", d: path(ring), fill: `url(#${id}-cr-h)` });
+    // A hall's gallery, seen from above, is neat rows of seats along its band (a few people are not drawn: it is subtle).
+    if (stands.gallery === true && fine) body += el("path", { class: bed, d: path(ring) }) + galleryRows(ring) + (density > 0 ? el("path", { class: "ky-cr-people", d: path(ring), fill: `url(#${id}-cr-h)` }) : "");
+    else if (fine) body += el("path", { class: bed, d: path(ring) }) + el("path", { class: "ky-cr-people", d: path(ring), fill: `url(#${id}-cr-h)` });
     else body += el("path", { class: bed, d: path(ring) }) + el("path", { class: stands.gallery === true ? "ky-cr-blk ky-bud-gblk" : "ky-cr-blk", d: path(ring), "fill-opacity": num(0.28 + 0.6 * density * ring.fill) });
     if (fine && ring.fill < 0.95) body += el("path", { class: "ky-cr-bed", d: path(ring), "fill-opacity": num(Math.min(0.5, (1 - ring.fill) * 1.6)) });
   }
   for (const s of stands.sectors) body += sector(s, id, fine, density);
-  if (fine) for (const ring of stands.rings) body += rows(ring) + (stands.gallery === true ? "" : aisles(ring));
+  if (fine) for (const ring of stands.rings) body += stands.gallery === true ? "" : rows(ring) + aisles(ring);
   // Depth: the front wall of a tier throws a shade on its first rows (and the ground in front of it), the roof's edge on the last rows of the upper tier.
   // A gallery's railing: a line along its front edge, over the seats.
   if (stands.gallery === true) for (const ring of stands.rings) if (ring.hole !== null) body += el("path", { class: "ky-bud-rail", d: outlinePath(ring.hole), fill: "none" });
@@ -161,7 +191,7 @@ export function drawCrowd(stands: CrowdStands, o: DrawInput): { defs: string; ma
     const [x0, y0, x1, y1] = g.box;
     body += el("rect", { class: `ky-cr-${g.kind}`, x: n1(x0), y: n1(y0), width: n1(x1 - x0), height: n1(y1 - y0), rx: g.kind === "bench" ? 1 : undefined });
   }
-  return { defs: (fine ? patterns(id, crowd, density, tifo.home || tifo.away ? tifo : undefined, stands.gallery === true) : ""), markup: el("g", { class: "ky-crowd" }, body), over };
+  return { defs: (fine && (stands.gallery !== true || density > 0) ? patterns(id, crowd, density, tifo.home || tifo.away ? tifo : undefined, stands.gallery === true) : ""), markup: el("g", { class: "ky-crowd" }, body), over };
 }
 
 /** A block of visitors or a card display, a polygon over the band it is in. */

@@ -195,7 +195,7 @@ function renderEra() {
 function toggle(id, key) {
   $(id).addEventListener("click", () => { state[key] = !state[key]; $(id).setAttribute("aria-pressed", String(state[key])); change(); });
 }
-for (const [id, key] of [["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["crowd", "crowd"], ["crowd-tifo", "crowdTifo"], ["flags", "flags"], ["pageant-emblem", "pageantEmblem"], ["emblem-line", "emblemLine"], ["pageant-entrance", "pageantEntrance"], ["pool-section", "poolSection"], ["situation", "situation"], ["sit-drive", "sitDrive"], ["place", "place"], ["budo-hall", "budoHall"], ["budo-officials", "budoOfficials"], ["budo-tassels", "budoTassels"], ["dojo-shinzen", "budoShinzen"]]) toggle(id, key);
+for (const [id, key] of [["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["crowd", "crowd"], ["crowd-tifo", "crowdTifo"], ["venue-roof", "venueRoof"], ["flags", "flags"], ["pageant-emblem", "pageantEmblem"], ["emblem-line", "emblemLine"], ["pageant-entrance", "pageantEntrance"], ["pool-section", "poolSection"], ["situation", "situation"], ["sit-drive", "sitDrive"], ["place", "place"], ["budo-hall", "budoHall"], ["budo-officials", "budoOfficials"], ["budo-tassels", "budoTassels"], ["dojo-shinzen", "budoShinzen"]]) toggle(id, key);
 $("emblem-line").addEventListener("click", () => refreshSegs());
 $("pageant-emblem").addEventListener("click", () => refreshSegs());
 
@@ -312,17 +312,24 @@ const stage = $("stage");
 let mount;
 /** The 3D view, while the playground is on it: it takes the stage over from the flat drawing, and gives it back. */
 let turn;
+/** The roof the 3D view was mounted with: it is a setting of the mount, so a change of it mounts the view again. */
+let turnRoof = false;
 function render() {
   const o = optionsFor(state);
   o.style = "none";
   stage.dataset.view = state.view;
   if (state.view === "3d") {
+    if (turn !== undefined && turnRoof !== state.venueRoof) {
+      turn.destroy();
+      turn = undefined;
+    }
     if (turn === undefined) {
       mount?.destroy();
       mount = undefined;
       stage.replaceChildren();
       // The page's own light or dark is the stylesheet's to follow; the turn's own rules are written once into the page, like the drawing's.
-      turn = mountKyogijoTurn(stage, o, { preset: state.viewpoint, onChange: (_, preset) => { if (preset !== undefined) state.viewpoint = preset; syncUrl(); } });
+      turnRoof = state.venueRoof;
+      turn = mountKyogijoTurn(stage, o, { preset: state.viewpoint, ...(state.venueRoof ? { venue: { roof: true } } : {}), onChange: (_, preset) => { if (preset !== undefined) state.viewpoint = preset; syncUrl(); } });
     } else turn.update(o);
     stage.dataset.orientation = "landscape";
     stage.dataset.sport = state.sport;
@@ -353,7 +360,7 @@ function render() {
   }
   renderEra();
   applyRows();
-  for (const toggleOf of [["flags", "flags"], ["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["crowd", "crowd"], ["crowd-tifo", "crowdTifo"], ["pageant-emblem", "pageantEmblem"], ["emblem-line", "emblemLine"], ["pageant-entrance", "pageantEntrance"], ["pool-section", "poolSection"], ["situation", "situation"], ["sit-drive", "sitDrive"], ["place", "place"], ["budo-hall", "budoHall"], ["budo-officials", "budoOfficials"], ["budo-tassels", "budoTassels"], ["dojo-shinzen", "budoShinzen"]]) $(toggleOf[0]).setAttribute("aria-pressed", String(state[toggleOf[1]]));
+  for (const toggleOf of [["flags", "flags"], ["stripes", "stripes"], ["exact", "exact"], ["baseline", "baseline"], ["centre-logo", "centreLogo"], ["hardwood", "hardwood"], ["crowd", "crowd"], ["crowd-tifo", "crowdTifo"], ["venue-roof", "venueRoof"], ["pageant-emblem", "pageantEmblem"], ["emblem-line", "emblemLine"], ["pageant-entrance", "pageantEntrance"], ["pool-section", "poolSection"], ["situation", "situation"], ["sit-drive", "sitDrive"], ["place", "place"], ["budo-hall", "budoHall"], ["budo-officials", "budoOfficials"], ["budo-tassels", "budoTassels"], ["dojo-shinzen", "budoShinzen"]]) $(toggleOf[0]).setAttribute("aria-pressed", String(state[toggleOf[1]]));
   for (const [i, id] of ["sit-b1", "sit-b2", "sit-b3"].entries()) $(id).setAttribute("aria-pressed", String(state.sitBases[i] === "1"));
   $("sit-ballon").value = String(state.sitBallOn);
   $("sit-ballon-out").textContent = String(state.sitBallOn);
@@ -384,7 +391,7 @@ const tidy = (value) => JSON.stringify(value, null, 2);
 function code(kind) {
   const o = optionsFor(state, true);
   if (kind === "module" && state.view === "3d") {
-    return `import { mountKyogijoTurn } from "${CDN}/dist/turn-entry.js";\n// or, from npm: import { mountKyogijoTurn } from "@johnmorrisdotca/kyogijo-stadiums/turn";\n\nmountKyogijoTurn(document.querySelector("#game"), ${tidy(o)}, { preset: "${state.viewpoint}" });`;
+    return `import { mountKyogijoTurn } from "${CDN}/dist/turn-entry.js";\n// or, from npm: import { mountKyogijoTurn } from "@johnmorrisdotca/kyogijo-stadiums/turn";\n\nmountKyogijoTurn(document.querySelector("#game"), ${tidy(o)}, { preset: "${state.viewpoint}"${state.venueRoof && state.crowd ? ", venue: { roof: true }" : ""} });`;
   }
   if (kind === "module") {
     // An emblem's id is drawn by Dougu Sports, which the page plugs in once.
@@ -399,6 +406,7 @@ function code(kind) {
     if (o.size && o.size !== "full") attrs.push(`size="${o.size}"`);
     attrs.push(`orientation="${o.orientation}"`);
     if (state.view === "3d") attrs.push("turn", `turn-view="${state.viewpoint}"`);
+    if (state.view === "3d" && state.crowd && state.venueRoof) attrs.push("turn-roof");
     if (o.language !== "en") attrs.push(`language="${o.language}"`);
     if (o.detail) attrs.push(`detail="${o.detail}"`);
     for (const [key, attr] of [["pitch", "pitch"], ["ground", "ground"], ["pitchType", "pitch-type"], ["half", "half"], ["goals", "goals"], ["stripePattern", "stripe-pattern"]]) if (o[key]) attrs.push(`${attr}="${o[key]}"`);

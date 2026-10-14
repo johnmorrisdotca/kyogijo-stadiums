@@ -43,7 +43,7 @@ function pair(light: BudoLook, k = 0.34): Pair {
 }
 
 const FLOOR = "#c9a26a";
-const WALLS = "#7d756a";
+const WALLS = "#d8d0bd";
 const COMMON = { apron: "#d6d3cb", free: "#e8e4d8", floor: FLOOR, boards: WALLS };
 const MATS = {
   "yellow-red": pair({ ...COMMON, surface: "#f4c430", alt: "#c9343b", red: "#b32a2f" }),
