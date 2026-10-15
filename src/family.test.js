@@ -5,7 +5,7 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { familyBlockOf, familyReadmeBlock } from "../scripts/family-readme.mjs";
-import { FAMILY, FAMILY_PITCH, FAMILY_TEMPLATE_VERSION } from "../scripts/family-template.mjs";
+import { FAMILY, FAMILY_GROUPS, FAMILY_PITCH, FAMILY_TEMPLATE_VERSION, familyRepo } from "../scripts/family-template.mjs";
 import { releaseNotes } from "../scripts/release-notes.mjs";
 
 const read = (path) => readFileSync(path, "utf8").replace(/\r\n/g, "\n");
@@ -15,11 +15,11 @@ const id = pkg.name.replace(/^@[^/]+\//, "");
 
 // The recorded hashes. The template's is the one that says every demo's header and footer, and every README's
 // list of the family, are the same text.
-// The template of 2026-10-15c lists twenty-eight packages, Dougu Sports (dougu-sports, on npm since 0.2.0) and Senshu Jerseys (senshu-jerseys, on npm since 0.1.0) among them, after Kyogijo Stadiums (kyogijo-stadiums, the name it was renamed to in 0.4.0) and Taisen Brackets (taisen-brackets, on npm since 0.1.0, so FAMILY_NOT_ON_NPM is empty). The family's list is swept again, in every
+// The template of 2026-10-15d lists thirty-two packages, in eight groups. The family's list is swept again, in every
 // repository at once, when a package is added to it, and this hash is then the new one.
-const TEMPLATE = { version: "2026-10-15c", sha256: "6fd8dcbdf819abcaeec890f75ee77e553ffab4ea9b0e2df40674d9b99da4a906" };
+const TEMPLATE = { version: "2026-10-15d", sha256: "fcc192026cf284303344e108b20e6181126607c670a881a6b3bf8479da26ab03" };
 const FILES = {
-  "scripts/family-readme.mjs": "6752eaa287a9007af87d9019e4cee4c36fe1d79b60bf24478e7851ebe75138c4",
+  "scripts/family-readme.mjs": "0ca8badd4d54e393f723b5a625e76caf4b96a01bb79d087448748a358e834afc",
   "scripts/release-notes.mjs": "efab0fb78ad05973a8885624c0d2ce3b458b55799c11eabaa5176603ce8cd1e9",
   "scripts/community/SECURITY.md": "ff6f650be7789396233671d2558439736efe7f96a1d1d39115dd5cf94d29275c",
   "scripts/community/CODE_OF_CONDUCT.md": "34da1f56f004ce8f7f95d4449b64d2ecb5827dd9f0d4eea1da351a20713ebe70",
@@ -36,10 +36,9 @@ describe("the family template", () => {
   });
 
   it("lists every package of the family, in order, each with its Japanese name and a line on it", () => {
-    expect(FAMILY.map((one) => one.id)).toEqual([
-      "korokoro", "kyuubu", "hitotsu", "toranpu", "tane", "narabe", "tenka", "kumimoji", "tsunagi", "jarajara",
-      "suido", "domino", "kotoba", "sugoroku", "kazu", "meikyuu", "hikidashi", "chizu", "bushu", "tobiishi", "jirai", "gunjin", "karakuri", "houseki", "kyogijo-stadiums", "taisen-brackets", "dougu-sports", "senshu-jerseys",
-    ]);
+    expect(FAMILY).toHaveLength(32);
+    expect(FAMILY_GROUPS.flatMap((group) => group.members)).toEqual(FAMILY.map((one) => one.id));
+    for (const group of FAMILY_GROUPS) expect(group.members).toEqual([...group.members].sort());
     for (const one of FAMILY) {
       const slug = one.name.toLowerCase().replaceAll(" ", "-");
       expect(one.id === slug || one.id.startsWith(`${slug}-`), one.id).toBe(true);
@@ -106,7 +105,7 @@ describe("the README's family", () => {
 
   it("names every package once, as a link", () => {
     const block = familyBlockOf(readme);
-    for (const one of FAMILY) expect(block.split(`](https://github.com/johnmorrisdotca/${one.id})`).length - 1, one.id).toBe(1);
+    for (const one of FAMILY) expect(block.split(`](${familyRepo(one.id)})`).length - 1, one.id).toBe(1);
   });
 });
 
