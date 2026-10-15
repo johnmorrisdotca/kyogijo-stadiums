@@ -64,7 +64,7 @@ export interface Surface {
   turn?: string;
   /** Ground, fills, stripes and the end zones: under the teams' paint. */
   base: string;
-  /** Painted lines, marks and fixtures: over the teams' paint. */
+  /** Painted lines, marks and fixtures: under the teams' marks and names, which are drawn over them. */
   lines: string;
   /** Things the markup refers to (clip paths). */
   defs: string;
@@ -73,8 +73,6 @@ export interface Surface {
   plate: PlateSpot;
   /** True when the whole drawing is turned a quarter, so that the words must be turned back. */
   turned: boolean;
-  /** The teams' places are drawn over the lines (panels that must hide them), not under. */
-  bannersOver?: boolean;
   /** The teams' places are painted in the teams' colours, so their names are written in the ink that reads on them (a football end zone), not painted over the grass. The sport's default when missing. */
   onColour?: boolean;
   /** The playing surface itself, without the ground round it, in the wide frame and in feet: where the margin starts, and what the axes and the labels are placed against. */

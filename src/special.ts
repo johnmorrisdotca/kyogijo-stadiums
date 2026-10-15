@@ -211,7 +211,6 @@ export function composeSpecial(o: SurfaceOptions, guest: Surface, build: (option
     right: moved(guest.right, to, placement.angle),
     plate: { ...guest.plate, cx: px, cy: py },
     turned: false,
-    bannersOver: guest.bannersOver,
     box: outline.box,
     frame,
   };

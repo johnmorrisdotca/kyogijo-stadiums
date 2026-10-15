@@ -102,7 +102,6 @@ export function athleticsSurface(o: BuildOptions, plan: AthleticsPlan, embedded:
     right: { cx: W * 0.73, cy: H / 2, w: W * 0.2, h: H * 0.11, rot: 0 },
     plate: { cx: W / 2, cy: H / 2, w: Math.min(W * 0.34, 140), h: Math.min(W * 0.34, 140) * 0.52 },
     turned,
-    bannersOver: true,
     onColour: false,
   };
   surface.box = { x: 0, y: 0, w: W, h: H };

@@ -103,7 +103,6 @@ export function budoSurface(o: BuildOptions, plan: BudoPlan, margin: number): Su
     right: places.right,
     plate: { cx, cy, w: plateW, h: plateW * 0.55 },
     turned,
-    bannersOver: true,
     onColour: false,
     centreRadius: plan.centre.r * K,
   };

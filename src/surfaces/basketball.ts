@@ -171,7 +171,6 @@ export function basketball(o: BuildOptions, era?: NbaRules, court: CourtSpec = N
     right: { cx: L - 16.5 * kx, cy, w: 27 * kx, h: 25 * ky, rot: 0, panel: true },
     plate: { cx: L / 2, cy, w: 34 * kx, h: 20 * ky },
     turned,
-    bannersOver: true,
   };
   surface.lineRef = { width: thin, feet: 1 };
   surface.box = { x: 0, y: 0, w: L, h: W };

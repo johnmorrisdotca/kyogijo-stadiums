@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`the heat layers are the same every time, and safe > the same options draw the same string, and each kind has one fingerprint for the structure it is made of 1`] = `"0qqn7o3"`;
+exports[`the heat layers are the same every time, and safe > the same options draw the same string, and each kind has one fingerprint for the structure it is made of 1`] = `"1rs9a0e"`;
 
 exports[`what each heat layer is made of > contour, filled: the elements and classes it is drawn with 1`] = `
 {

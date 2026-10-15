@@ -226,7 +226,6 @@ export function soccer(b: SoccerBuild, o: BuildOptions): Surface {
     right: { cx: Lf - deep / 2, cy: Wf / 2, w: long * 0.94, h: zoneH, rot: 90 },
     plate: { cx: Lf / 2, cy: Wf / 2, w: plateW, h: plateW * 0.52 },
     turned,
-    bannersOver: true,
   };
   surface.lineRef = { width: lw, feet: K };
   surface.box = { x: 0, y: 0, w: Lf, h: Wf };

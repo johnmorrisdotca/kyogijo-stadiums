@@ -7,6 +7,16 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.10.2] - 2026-10-14
+
+### Fixed
+
+- **A team's round mark and its name are painted over the surface's lines.** A hockey rink's face-off circles, red and blue lines and creases, and the lines of the football fields, the ballpark, the lacrosse, rugby, Australian football, Gaelic games, field hockey, handball and netball surfaces and the pools (swimming, water polo, diving, artistic swimming), were written after the team marks and names, so they ran across a logo and a name. The marks and the names now come after every line, and so do the data layers, the lineup, the annotations, the pageant's names and the score's panel, for every sport, look and size. The courts, the pitch, the athletics track, the skating rinks and the budō surfaces already did. The drawing is the same string as before apart from that order, and the internal `bannersOver` flag that chose it is gone.
+
+### Added
+
+- **A test holds the order for every sport:** `src/overlay.order.test.ts` reads the drawing's leaves in paint order and fails when a marking of the surface comes after the first mark, name, layer, lineup, situation widget, annotation, pageant word or score panel, for every sport and every look, wide, tall, with the panel and without it, with layers, landmarks, a situation, a crowd, a special game and every pageant.
+
 ## [0.10.1] - 2026-10-14
 
 The docs are one language to a page. No change to the package or its pictures.

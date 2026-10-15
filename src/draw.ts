@@ -1007,13 +1007,13 @@ function drawnKyogijo(o: SurfaceOptions | ScoreOptions): string {
         if (shows(surface, surface.right)) teams += bannerMarkup(surface.right, right, { turned: surface.turned, onColour, parts, id });
       }
     }
-    // The teams are painted under the lines, unless the surface asks for them over (a panel that must hide them).
+    // The teams' marks and names are painted over the surface's lines, so that no line runs across a logo or a name.
     if (pg !== undefined && pageant !== undefined) {
       // A surface cropped with room for its annotations is clipped to the cut; the pictures are cut with it.
       const cut = surface.defs.includes(`id="${id}-rg"`);
       const laid = cut ? el("g", { "clip-path": `url(#${id}-rg)` }, pg.pictures) : pg.pictures;
       inner += pageant.lines !== "over" ? surface.lines + laid + pg.names + pg.emblem : laid + surface.lines + pg.names + pg.emblem;
-    } else inner += surface.bannersOver === true ? surface.lines + teams : teams + surface.lines;
+    } else inner += surface.lines + teams;
     // A lineup's players stand over what the situation lights (a runner's base, a drive's arrows), so that none of them is hidden; any other data goes over it.
     if (sit !== undefined && lineupped) inner += cutSit(sit.over);
     // Data goes over the markings and under the score's panel.
