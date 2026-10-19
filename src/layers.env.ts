@@ -71,6 +71,18 @@ export function markAttrs(env: Env, id: unknown, index: number, at?: readonly [n
   return ` data-mark-id="${esc(given)}" data-index="${index}"${zone === undefined ? "" : ` ${name}="${esc(zone)}"`}`;
 }
 
+/**
+ * The tooltip of a mark: the caller's own `title`, else (only when the layer writes `data-mark-id` and friends, for a listener that reads the mark's name)
+ * a short one made from what the datum says: its outcome, its team and its place in the data ("goal, home, 3"). Nothing is added when the marks are not
+ * written, so a drawing that nobody points at is the same text as ever.
+ */
+export function markTitle(env: Env, d: { title?: unknown; outcome?: unknown; team?: unknown }, index: number): string | undefined {
+  if (typeof d.title === "string" && d.title !== "") return d.title;
+  if (!env.marks) return undefined;
+  const word = (v: unknown): string => (typeof v === "string" ? v.trim() : "");
+  return [word(d.outcome), word(d.team), String(index + 1)].filter((part) => part !== "").join(", ");
+}
+
 /** What a layer made. */
 export interface Made {
   /** The elements of the layer, and its gradients as `defs`. */

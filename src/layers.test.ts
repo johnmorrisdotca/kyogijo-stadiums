@@ -197,6 +197,21 @@ describe("marks", () => {
   });
 });
 
+describe("a title on every mark when the marks are written", () => {
+  const data: PointDatum[] = [{ x: 1, y: 1, outcome: "goal", team: "home" }, { x: 2, y: 2, title: "Own words" }, { x: 3, y: 3 }];
+  const titles = (svg: string, tag: string): (string | undefined)[] => walk(parse(svg)).filter((n) => n.name === tag && n.attrs["data-index"] !== undefined).map((n) => n.children.find((c) => c.name === "title")?.text);
+  it("names a mark from its outcome, team and place, and keeps a title the caller gave", () => {
+    const svg = drawKyogijo({ sport: "nhl", id: "t", marks: true, layers: [{ kind: "points", data }, { kind: "arrows", data: [{ x: 1, y: 1, x2: 9, y2: 9, outcome: "complete" }] }] });
+    expect(titles(svg, "circle")).toEqual(["goal, home, 1", "Own words", "3"]);
+    expect(titles(svg, "g")).toEqual(["complete, 1"]);
+  });
+  it("adds nothing when the marks are not written", () => {
+    const svg = drawKyogijo({ sport: "nhl", id: "t", layers: [{ kind: "points", data }] });
+    expect(svg).not.toContain("goal, home");
+    expect(svg).not.toContain("<title>3</title>");
+  });
+});
+
 describe("lines and arrows", () => {
   const lines = (layer: Layer): Node => withClass(parse(drawKyogijo({ sport: "nhl", id: "n", layers: [layer] })), "ky-lns")[0];
 

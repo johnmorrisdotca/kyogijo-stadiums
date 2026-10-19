@@ -11,7 +11,7 @@ import { FRAMES } from "./frames.ts";
 import { KYOGIJO_HEAT_STYLE, KYOGIJO_TEAM_STYLE } from "./style.ts";
 import { drawTeam, isTeamLayer, teamTables } from "./team.layers.ts";
 import { drawHeat, drawLegend, heatTable, type LegendInfo } from "./heat.ts";
-import { clamp01, envFor, isNum, markAttrs, newMade, opacityOf, own, place, toArray, unitOfLayer, type Env, type Made } from "./layers.env.ts";
+import { clamp01, envFor, isNum, markAttrs, markTitle, newMade, opacityOf, own, place, toArray, unitOfLayer, type Env, type Made } from "./layers.env.ts";
 import { safeClass } from "./common.ts";
 import { esc, num } from "./format.ts";
 import {
@@ -178,9 +178,9 @@ function drawPoints(layer: { data: readonly PointDatum[]; style?: PointStyle } &
     const logo = shape === "logo" ? safeLogo(d.logo) ?? (role === undefined ? undefined : safeLogo(style.logos?.[role]) ?? env.logos[role]) : undefined;
     if (logo !== undefined) {
       const side = w * 1.8;
-      out.push(titled("image", `${open} href="${esc(logo)}" x="${num(x - side / 2)}" y="${num(y - side / 2)}" width="${num(side)}" height="${num(side)}" preserveAspectRatio="xMidYMid meet"${env.back !== 0 ? ` transform="rotate(${num(env.back)} ${num(x)} ${num(y)})"` : ""}`, d.title));
-    } else if (shape !== "logo" && isPolygon(shape)) out.push(titled("path", `${open} d="${shapePath(shape, x, y, w, env.turned)}"`, d.title));
-    else out.push(titled("circle", `${open} cx="${num(x)}" cy="${num(y)}" r="${num(w / 2)}"`, d.title));
+      out.push(titled("image", `${open} href="${esc(logo)}" x="${num(x - side / 2)}" y="${num(y - side / 2)}" width="${num(side)}" height="${num(side)}" preserveAspectRatio="xMidYMid meet"${env.back !== 0 ? ` transform="rotate(${num(env.back)} ${num(x)} ${num(y)})"` : ""}`, markTitle(env, d, i)));
+    } else if (shape !== "logo" && isPolygon(shape)) out.push(titled("path", `${open} d="${shapePath(shape, x, y, w, env.turned)}"`, markTitle(env, d, i)));
+    else out.push(titled("circle", `${open} cx="${num(x)}" cy="${num(y)}" r="${num(w / 2)}"`, markTitle(env, d, i)));
   });
   made.marks = out.join("");
   return made;
@@ -281,7 +281,8 @@ function drawLines(layer: { kind: "lines" | "arrows"; data: readonly LineDatum[]
       } else gradient = `stroke:url(#${gid})`;
     }
     const headEl = head === "" ? "" : `<path class="${headKind === "open" ? "ky-ln" : "ky-ah"}" d="${head}"${headKind === "open" ? ` stroke-width="${num(w)}"` : ""}/>`;
-    const title = typeof d.title === "string" && d.title !== "" ? `<title>${esc(d.title)}</title>` : "";
+    const named = markTitle(env, d, i);
+    const title = named === undefined ? "" : `<title>${esc(named)}</title>`;
     const opacity = opacityOf(d.opacity);
     // Where it starts is its zone; where it ends is `data-zone-end`.
     const marks = env.marks ? markAttrs(env, d.id, i, first) + (env.zone(last[0], last[1]) === undefined ? "" : ` data-zone-end="${esc(env.zone(last[0], last[1]) as string)}"`) : "";

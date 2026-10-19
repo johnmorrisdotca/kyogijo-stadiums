@@ -7,6 +7,10 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **A `<title>` on every point and line when the marks are written** (`marks: true`, `pointer: true`): a datum with no `title` of its own is named from its outcome, its team and its place in the data ("goal, home, 3"), so a delegated listener, a hover and a screen reader reach every mark. Nothing is added without `marks`, so a drawing nobody points at is the same string as ever. Heat cells stay without one (size budget; their numbers are in the layer's table).
+
 ## [0.10.2] - 2026-10-14
 
 ### Fixed
