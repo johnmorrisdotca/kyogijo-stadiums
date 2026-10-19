@@ -1256,7 +1256,7 @@ function multiPage() {
     sections: [
       section("tabletennis", "Table tennis", "Areas of 14 m by 7 m (ITTF Handbook, 3.2.3.1), each enclosed by barriers about 75 cm high, with an umpire's chair and a score table, and one scoreboard hung over the middle for all of them, as at the Worlds in London in 2026.", [
         item("multi-tt4", "Four areas on one floor (2 x 2)", multi({ preset: "tabletennis-4" })),
-        item("multi-tt8", "Eight areas (4 x 2)", multi({ preset: "tabletennis-8" })),
+        item("multi-tt8", "Eight areas (2 x 4)", multi({ preset: "tabletennis-8" })),
         item("multi-tt-staggered", "A staggered grid", multi({ preset: "tabletennis-4", rows: 3, columns: 3, stagger: 0.5 }), "Every other row is moved along by half a bay."),
       ]),
       section("pickleball", "Pickleball", "A playing surface of 34 by 64 feet to each court, the rulebook's recommendation for tournament play (3.A.3); the rulebook names no gap between courts.", [
@@ -1271,8 +1271,8 @@ function multiPage() {
         item("multi-karate6", "Karate, six tatami (2 x 3)", multi({ preset: "karate-2x3" }), "The WKF's Karate1 Series A lays six areas in two rows of three on one carpet."),
         item("multi-karate8", "Karate, eight tatami (2 x 4)", multi({ preset: "karate-2x4" })),
       ]),
-      section("rackets", "Badminton and tennis", "Badminton courts always lie side by side, with 4 m between them at Grade 1 and 2 events and at least 1.5 m (BWF 5.3.4); tennis courts 7.32 m apart (a secondary source).", [
-        item("multi-badminton4", "Four courts, Grade 1 and 2 spacing", multi({ preset: "badminton-1x4" })),
+      section("rackets", "Badminton and tennis", "Badminton courts always lie side by side, at least 1.5 m apart (BWF 5.3.4) and 4 m recommended at Grade 1 and 2 events; tennis courts 7.32 m apart (a secondary source).", [
+        item("multi-badminton4", "Four courts, the spacing recommended for Grade 1 and 2", multi({ preset: "badminton-1x4" })),
         item("multi-badminton4-min", "Four courts, the least spacing", multi({ preset: "badminton-1x4-min" })),
         item("multi-tennis3", "Three tennis courts", multi({ preset: "tennis-1x3" })),
       ]),

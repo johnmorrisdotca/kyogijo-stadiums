@@ -27,6 +27,8 @@ export interface MultiEvent {
   city: string;
   /** ISO 3166-1 alpha-2. */
   country: string;
+  /** The event, the hall and the city as Japanese writes them, for the Japanese output (the English names are used where this is missing). */
+  ja?: { name: string; venue: string; city: string };
   /** A key of `MULTI_VENUES`, when the hall's floor is published. */
   floor?: string;
   /** What is known of the arrangement, and what is only read from a picture. */
@@ -75,6 +77,8 @@ export interface MultiSpec {
   bay?: MultiSize;
   /** The space from the outermost surface's edge to the edge of the floor: along the layout at each end (`length`) and across it at each side (`width`). Half of what the bay has beyond the surface, when missing. */
   edge?: MultiSize;
+  /** Each surface is turned a quarter: the surfaces stand across the layout instead of along it (curling sheets and badminton courts side by side), so a row of N is `rows: 1, columns: N`. `bay` and `edge` are then in the layout's own frame (along it, across it). */
+  turn?: 90;
   /** Every other row moved along the layout by this share of the bay's length (0 to 1): a staggered grid. */
   stagger?: number;
   /** What each surface is called on the plan. */
@@ -103,6 +107,8 @@ export interface MultiCell {
   y: number;
   w: number;
   h: number;
+  /** True when the surface is turned a quarter in the layout (see `MultiSpec.turn`): `w` and `h` are then the turned size. */
+  turn: boolean;
   /** The space the surface is given: the bay. */
   bay: { x: number; y: number; w: number; h: number };
 }

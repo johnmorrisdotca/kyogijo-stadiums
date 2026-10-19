@@ -8,7 +8,7 @@ import { densityOf, layoutOf, resolveCrowd, type Crowd } from "./crowd.ts";
 import { drawCrowd, KYOGIJO_CROWD_STYLE } from "./crowd.draw.ts";
 import { el, esc, hash, num } from "./format.ts";
 import { FEET_PER_METRE } from "./geometry.ts";
-import { fitSentence, multiFit, multiLayout, needsSentence, venueOf } from "./multi.ts";
+import { fitSentence, multiFit, multiLayout, multiNumber, needsSentence, venueOf } from "./multi.ts";
 import { KYOGIJO_MULTI_STYLE } from "./multi.style.ts";
 import { MULTI_WORDS } from "./multi.words.ts";
 import type { MultiFit, MultiLayout, MultiOptions, MultiSlot, MultiVenue } from "./multi.types.ts";
@@ -104,7 +104,9 @@ export function drawMulti(options: MultiOptions = {}): string {
         style = drawn.style;
         look = drawn.look;
       }
-      cellsMarkup += el("g", { class: "ky-mu-cell", "data-cell": cell.n, transform: `translate(${num(cell.x - surfaceBox.x)} ${num(cell.y - surfaceBox.y)})` }, drawn.body);
+      // A surface turned a quarter stands across the layout: the drawing's own top left goes to the cell's top right, and the drawing is turned.
+      const place = cell.turn ? `translate(${num(cell.x + cell.w)} ${num(cell.y)}) rotate(90) translate(${num(-surfaceBox.x)} ${num(-surfaceBox.y)})` : `translate(${num(cell.x - surfaceBox.x)} ${num(cell.y - surfaceBox.y)})`;
+      cellsMarkup += el("g", { class: "ky-mu-cell", "data-cell": cell.n, transform: place }, drawn.body);
     });
   }
 
@@ -115,6 +117,13 @@ export function drawMulti(options: MultiOptions = {}): string {
   if (spec.parts.barriers === true) for (const c of layout.cells) over += el("rect", { class: "ky-mu-barrier", x: num(c.bay.x + 0.5), y: num(c.bay.y + 0.5), width: num(c.bay.w - 1), height: num(c.bay.h - 1), rx: 0.4 });
   if (spec.parts.officials === true) {
     for (const c of layout.cells) {
+      if (c.turn) {
+        // Beside the net, on the right of a surface that stands across the layout.
+        const cy = c.y + c.h / 2;
+        over += el("rect", { class: "ky-mu-chair", x: num(c.x + c.w + 1.8), y: num(cy - 3.2), width: 1.6, height: 1.6, rx: 0.3 });
+        over += el("rect", { class: "ky-mu-desk", x: num(c.x + c.w + 1.5), y: num(cy - 0.8), width: 1.1, height: 3.6, rx: 0.2 });
+        continue;
+      }
       const cx = c.x + c.w / 2;
       over += el("rect", { class: "ky-mu-chair", x: num(cx + 1.6), y: num(c.y - 3.4), width: 1.6, height: 1.6, rx: 0.3 });
       over += el("rect", { class: "ky-mu-desk", x: num(cx - 5), y: num(c.y - 3.1), width: 3.6, height: 1.1, rx: 0.2 });
@@ -215,13 +224,16 @@ export function drawMulti(options: MultiOptions = {}): string {
   const vw = view.x1 - view.x;
   const vh = view.y1 - view.y;
   const sentences: string[] = [
-    fill(words.say.drawn, { name: spec.name[language], surfaces: layout.needs.surfaces, length: layout.needs.length, width: layout.needs.width, area: layout.needs.area }),
+    fill(words.say.drawn, { name: spec.name[language], surfaces: layout.needs.surfaces, length: multiNumber(layout.needs.length, language), width: multiNumber(layout.needs.width, language), area: multiNumber(layout.needs.area, language) }),
     fill(words.say.grid, { rows: spec.rows, columns: spec.columns }),
   ];
   if (spec.stagger !== undefined && spec.stagger > 0) sentences.push(fill(words.say.stagger, { share: `${Math.round(spec.stagger * 100)}%` }));
   if (layout.shared !== undefined) sentences.push(words.say.shared);
   if (withSlots && layout.slots.some((s) => s.kind !== "board")) sentences.push(fill(words.say.slots, { n: layout.slots.filter((s) => s.kind !== "board").length }));
-  if (spec.event !== undefined) sentences.push(fill(words.say.event, { event: spec.event.name, year: spec.event.year, venue: spec.event.venue, city: spec.event.city }));
+  if (spec.event !== undefined) {
+    const named = language === "ja" ? spec.event.ja : undefined;
+    sentences.push(fill(words.say.event, { event: named?.name ?? spec.event.name, year: spec.event.year, venue: named?.venue ?? spec.event.venue, city: named?.city ?? spec.event.city }));
+  }
   sentences.push(spec.basis === "event" ? words.say.basisEvent : words.say.basisRulebook);
   if (venue !== undefined && fit !== undefined) sentences.push(fill(words.say.venue, { venue: venue.name[language], fit: fitSentence(fit, language) }));
   if (stadium !== undefined) sentences.push(words.say.stadium);
@@ -255,6 +267,24 @@ export function drawMulti(options: MultiOptions = {}): string {
   return root;
 }
 
+/** Where an empty place is, in words: the surface it belongs to, the side or end it is at, and whether it is on the mats. */
+function slotWhere(slot: MultiSlot, layout: MultiLayout, words: (typeof MULTI_WORDS)["en"]): string {
+  const where = words.table.where;
+  const parts: string[] = [];
+  const cell = /^(?:text|logo)-(\d+)(?:-(top|bottom|start|end))?$/.exec(slot.id);
+  const common = /^logo-common-(\d+)$/.exec(slot.id);
+  const side = /^(?:board|text)-(top|bottom|left|right)$/.exec(slot.id) ?? /^text-(\d+)-(top|bottom)$/.exec(slot.id);
+  if (common !== null) parts.push(layout.cells[Number(common[1]) - 1].label, where.common);
+  else if (cell !== null) {
+    parts.push(layout.cells[Number(cell[1]) - 1].label);
+    if (cell[2] !== undefined) parts.push(where[cell[2] as "top" | "bottom" | "start" | "end"]);
+  } else if (side !== null) parts.push(where[side[side.length - 1] as "top" | "bottom" | "left" | "right"]);
+  else if (slot.id === "logo-start") parts.push(where.start);
+  else if (slot.id === "logo-end") parts.push(where.end);
+  if (slot.onMat) parts.push(words.table.onMat);
+  return parts.join(words === MULTI_WORDS.ja ? "、" : ", ");
+}
+
 /**
  * The same thing as the picture, as a table: each playing surface with its row, column, place and size in metres, and each empty place for the event's words and marks, under a caption that gives
  * what the layout needs. For a reader who cannot see the drawing, and for a page that wants the figures.
@@ -271,10 +301,10 @@ export function multiTable(options: MultiOptions = {}): string {
   const words = MULTI_WORDS[language];
   const layout = multiLayout(options);
   const t = words.table;
-  const m = (ft: number): string => String(Math.round(metres(ft) * 100) / 100);
+  const m = (ft: number): string => multiNumber(metres(ft), language);
   const head = `<thead><tr><th scope="col">${esc(t.surface)}</th><th scope="col">${esc(t.row)}</th><th scope="col">${esc(t.column)}</th><th scope="col">${esc(t.x)}</th><th scope="col">${esc(t.y)}</th><th scope="col">${esc(t.size)}</th></tr></thead>`;
   const rows = layout.cells.map((c) => `<tr><th scope="row">${esc(c.label)}</th><td>${c.row + 1}</td><td>${c.column + 1}</td><td>${m(c.x)}</td><td>${m(c.y)}</td><td>${m(c.w)} × ${m(c.h)}</td></tr>`).join("");
-  const slotRows = options.slots === false ? "" : layout.slots.map((s) => `<tr><th scope="row">${esc(t.slot)}: ${esc(s.id)}</th><td colspan="2">${esc(t.kind)}: ${esc(s.kind)}${s.onMat ? " (mat)" : ""}</td><td>${m(s.x)}</td><td>${m(s.y)}</td><td>${m(s.w)} × ${m(s.h)}</td></tr>`).join("");
+  const slotRows = options.slots === false ? "" : layout.slots.map((s) => `<tr><th scope="row">${esc(t.slot)}: ${esc(slotText(s, words))}</th><td colspan="2">${esc(slotWhere(s, layout, words))}</td><td>${m(s.x)}</td><td>${m(s.y)}</td><td>${m(s.w)} × ${m(s.h)}</td></tr>`).join("");
   const caption = language === "ja" ? `${fill(t.caption, { name: layout.spec.name[language] })}。必要な床：${needsSentence(layout.needs, language)}` : `${fill(t.caption, { name: layout.spec.name[language] })} ${needsSentence(layout.needs, language)}`;
   return `<table class="ky-table" data-kind="multi"><caption>${esc(caption)}</caption>${head}<tbody>${rows}${slotRows}</tbody></table>`;
 }

@@ -5,7 +5,7 @@ import { hash } from "./format.ts";
 import { LEAGUE_SOURCES } from "./leagues.ts";
 import { MULTI_PRESETS, MULTI_SOURCES, MULTI_VENUES, multiPreset, multiSource, multiVenueById } from "./multi.data.ts";
 import { drawMulti, multiSetting, multiTable } from "./multi.draw.ts";
-import { fitSentence, multiFit, multiLayout, specOf } from "./multi.ts";
+import { fitSentence, multiFit, multiLayout, multiNumber, needsSentence, specOf } from "./multi.ts";
 import { KYOGIJO_MULTI_STYLE } from "./multi.style.ts";
 import { MULTI_WORDS } from "./multi.words.ts";
 import { outlineOf } from "./outline.ts";
@@ -20,10 +20,10 @@ describe("the tournament layouts' figures", () => {
     expect(multiLayout({ preset: "tabletennis-4" }).needs).toEqual({ length: 28, width: 14, area: 392, surfaces: 4 });
     expect(multiLayout({ preset: "tabletennis-8" }).needs).toMatchObject({ length: 56, width: 14, surfaces: 8 });
     // Four courts side by side: 6.1 m each, three gaps of 4 m (Grade 1 and 2) or 1.5 m, and 1.5 m beside the outer side lines; 2 m behind each baseline.
-    expect(multiLayout({ preset: "badminton-1x4" }).needs).toMatchObject({ length: 17.4, width: 39.4 });
-    expect(multiLayout({ preset: "badminton-1x4-min" }).needs).toMatchObject({ length: 17.4, width: 31.9 });
+    expect(multiLayout({ preset: "badminton-1x4" }).needs).toMatchObject({ length: 39.4, width: 17.4 });
+    expect(multiLayout({ preset: "badminton-1x4-min" }).needs).toMatchObject({ length: 31.9, width: 17.4 });
     // Four sheets of at most 4.75 m, at least 45.72 m long.
-    expect(multiLayout({ preset: "curling-1x4" }).needs).toMatchObject({ length: 45.72, width: 19 });
+    expect(multiLayout({ preset: "curling-1x4" }).needs).toMatchObject({ length: 19, width: 45.72 });
     // Three areas of 10 m with a safety area of 4 m, 4 m common between them, and a free zone of 0.5 m all round: 3 x 10 + 2 x 4 + 2 x 4 + 1 by 18 + 1.
     expect(multiLayout({ preset: "judo-1x3" }).needs).toMatchObject({ length: 47, width: 19, surfaces: 3 });
     expect(multiLayout({ preset: "judo-1x4" }).needs).toMatchObject({ length: 61, width: 19, surfaces: 4 });
@@ -35,7 +35,8 @@ describe("the tournament layouts' figures", () => {
     expect(pb.floor.w).toBeCloseTo(2 * 64, 4);
     expect(pb.floor.h).toBeCloseTo(2 * 34, 4);
     // Tennis: 6.40 m behind, 3.66 m beside, 7.32 m between: 23.77 + 12.8 by 3 x 10.97 + 2 x 7.32 + 2 x 3.66.
-    expect(multiLayout({ preset: "tennis-1x3" }).needs.length).toBeCloseTo(36.57, 1);
+    expect(multiLayout({ preset: "tennis-1x3" }).needs.length).toBeCloseTo(54.87, 1);
+    expect(multiLayout({ preset: "tennis-1x3" }).needs.width).toBeCloseTo(36.57, 1);
   });
 
   it("keep every surface exactly as large as the package draws it, and inside its bay", () => {
@@ -43,8 +44,9 @@ describe("the tournament layouts' figures", () => {
       const box = outlineOf(spec.surface).box;
       const layout = multiLayout({ preset: spec.id });
       for (const cell of layout.cells) {
-        expect(cell.w, spec.id).toBeCloseTo(box.w, 6);
-        expect(cell.h, spec.id).toBeCloseTo(box.h, 6);
+        // A surface turned a quarter stands across the layout: its width is the drawing's height.
+        expect(cell.w, spec.id).toBeCloseTo(spec.turn === 90 ? box.h : box.w, 6);
+        expect(cell.h, spec.id).toBeCloseTo(spec.turn === 90 ? box.w : box.h, 6);
         expect(cell.x, spec.id).toBeGreaterThanOrEqual(cell.bay.x - 1e-6);
         expect(cell.x + cell.w, spec.id).toBeLessThanOrEqual(cell.bay.x + cell.bay.w + 1e-6);
         expect(cell.y, spec.id).toBeGreaterThanOrEqual(cell.bay.y - 1e-6);
@@ -84,6 +86,26 @@ describe("the tournament layouts' figures", () => {
     expect(() => specOf({ preset: "tabletennis-4", stagger: 2 })).toThrow(/share/);
     expect(() => specOf({ preset: "nope" })).toThrow(/Unknown preset "nope"/);
     expect(() => specOf({})).toThrow(TypeError);
+  });
+
+  it("count rows and columns the same way everywhere: a row of N areas is 1 x N, and a key that names a grid says rows x columns", () => {
+    for (const spec of MULTI_PRESETS) {
+      const named = /(\d+)x(\d+)$/.exec(spec.id) ?? /(\d+)x(\d+)-min$/.exec(spec.id);
+      if (named !== null) expect([spec.rows, spec.columns], spec.id).toEqual([Number(named[1]), Number(named[2])]);
+      const shown = /\((\d+) x (\d+)\)/.exec(spec.name.en);
+      if (shown !== null) expect([Number(shown[1]), Number(shown[2])], spec.id).toEqual([spec.rows, spec.columns]);
+      const shownJa = /（(\d+)×(\d+)）/.exec(spec.name.ja);
+      if (shownJa !== null) expect([Number(shownJa[1]), Number(shownJa[2])], spec.id).toEqual([spec.rows, spec.columns]);
+    }
+    for (const id of ["curling-1x4", "badminton-1x4", "badminton-1x4-min", "tennis-1x3", "judo-1x3", "judo-1x4"]) {
+      const layout = multiLayout({ preset: id });
+      expect(layout.spec.rows, id).toBe(1);
+      // One row: every surface at the same height, side by side.
+      expect(new Set(layout.cells.map((c) => c.y)).size, id).toBe(1);
+    }
+    // The sheets and the courts stand across the layout, so each is as wide as the drawing is tall.
+    expect(multiLayout({ preset: "curling-1x4" }).cells[0]).toMatchObject({ turn: true });
+    expect(multiLayout({ preset: "tabletennis-4" }).cells[0]).toMatchObject({ turn: false });
   });
 
   it("have a layout of the caller's own", () => {
@@ -153,24 +175,25 @@ describe("the halls and the fit", () => {
   it("say that four curling sheets fit an NHL ice pad, turned a quarter or not, and six do not", () => {
     const four = multiFit(multiLayout({ preset: "curling-1x4" }), "nhl-ice-pad");
     expect(four.fits).toBe(true);
-    expect(four.turned).toBe(false);
+    // The sheets stand across the layout, 19 m by 45.72 m, and the ice is 60.96 m by 25.91 m: they fit turned.
+    expect(four.turned).toBe(true);
     expect(four.by).toBe("size");
     // 200 ft is 60.96 m and 85 ft is 25.91 m: 45.72 by 19 leaves 15.24 by 6.91.
     expect(four.spare).toMatchObject({ length: 15.24, width: 6.91 });
-    expect(multiFit(multiLayout({ preset: "curling-1x4", rows: 5 }), "nhl-ice-pad").fits).toBe(true);
-    const six = multiFit(multiLayout({ preset: "curling-1x4", rows: 6 }), "nhl-ice-pad");
+    expect(multiFit(multiLayout({ preset: "curling-1x4", columns: 5 }), "nhl-ice-pad").fits).toBe(true);
+    const six = multiFit(multiLayout({ preset: "curling-1x4", columns: 6 }), "nhl-ice-pad");
     expect(six.fits).toBe(false);
     expect((six.spare as { width: number }).width).toBeLessThan(0);
-    expect(fitSentence(six)).toMatch(/does not fit: it is short by 0 metres along and 2\.\d+ metres across/);
+    expect(fitSentence(six)).toMatch(/does not fit: it is short by 0 metres along and 2\.\d+ metres across, turned a quarter/);
   });
 
   it("turn a layout a quarter when that is the way it fits, and say so", () => {
-    const tall = multiFit(multiLayout({ preset: "badminton-1x4" }), { length: 40, width: 18, unit: "m" });
+    const tall = multiFit(multiLayout({ preset: "badminton-1x4" }), { length: 18, width: 40, unit: "m" });
     expect(tall.fits).toBe(true);
     expect(tall.turned).toBe(true);
     expect(fitSentence(tall)).toContain("turned a quarter");
     expect(fitSentence(tall, "ja")).toContain("90度");
-    expect(multiFit(multiLayout({ preset: "badminton-1x4" }), { length: 40, width: 18, unit: "m" }).fits).toBe(true);
+    expect(multiFit(multiLayout({ preset: "badminton-1x4" }), { length: 40, width: 18, unit: "m" })).toMatchObject({ fits: true, turned: false });
     expect(multiFit(multiLayout({ preset: "tabletennis-4" }), { length: 80, width: 40, unit: "ft" }).fits).toBe(false);
   });
 
@@ -179,7 +202,7 @@ describe("the halls and the fit", () => {
     expect(multiFit(multiLayout({ preset: "judo-1x4", rows: 3 }), "nippon-budokan").fits).toBe(false);
     const wembley = multiFit(multiLayout({ preset: "tabletennis-4" }), "ovo-arena-wembley");
     expect(wembley).toMatchObject({ fits: null, by: "area", floor: { area: 2655 } });
-    expect(fitSentence(wembley)).toMatch(/may fit: it needs 392 of its 2655 square metres/);
+    expect(fitSentence(wembley)).toMatch(/may fit: it needs 392 of its 2,655 square metres/);
     const big = multiFit(multiLayout({ preset: "tabletennis-8", rows: 6, columns: 6 }), "ovo-arena-wembley");
     expect(big.fits).toBe(false);
     expect(fitSentence(big)).toMatch(/does not fit/);
@@ -263,7 +286,10 @@ describe("the drawing", () => {
     expect(table).toContain("28 by 14 metres");
     for (let n = 1; n <= 4; n += 1) expect(table).toContain(`Table ${n}`);
     expect(table).toContain('scope="col"');
-    expect(table).toContain("Empty place: logo-1-start");
+    expect(table).toContain("Empty place: Logo");
+    expect(table).toContain("Table 1, first end");
+    expect(table).toContain("Empty place: Board");
+    expect(table).not.toMatch(/logo-1-start|board-top|floor-text|floor-logo/);
     expect((table.match(/<tr>/g) ?? []).length).toBeGreaterThan(4);
     expect(multiTable({ preset: "tabletennis-4", slots: false })).not.toContain("Empty place");
     const ja = multiTable({ preset: "tabletennis-4", language: "ja" });
@@ -299,6 +325,36 @@ describe("the drawing", () => {
     expect(ja).toContain("大会名・年・開催地");
     expect(ja).toContain("縮尺どおりに描いています");
     expect(drawMulti({ preset: "curling-1x4", venue: "nhl-ice-pad", language: "ja" })).toContain("収まります");
+  });
+
+  it("writes the events, halls and cities as Japanese writes them, and numbers with thousands separated", () => {
+    const judo = drawMulti({ preset: "judo-1x3", language: "ja" });
+    for (const name of ["世界柔道選手権", "バクー", "ナショナル・ジムナスティクス・アリーナ"]) expect(judo, name).toContain(name);
+    expect(judo).not.toContain("Baku");
+    const wembley = drawMulti({ preset: "tabletennis-4", language: "ja", venue: "ovo-arena-wembley" });
+    for (const name of ["ロンドン", "OVOアリーナ・ウェンブリー", "世界卓球選手権団体戦ファイナルズ"]) expect(wembley, name).toContain(name);
+    expect(drawMulti({ preset: "curling-1x4", language: "ja" })).toContain("北京");
+    expect(drawMulti({ preset: "karate-2x3", language: "ja" })).toContain("クアラルンプール");
+    // The English keeps the English names.
+    expect(drawMulti({ preset: "judo-1x3" })).toContain("Baku");
+    expect(multiNumber(3234.5)).toBe("3,234.5");
+    expect(multiNumber(3234.5, "ja")).toBe("3,234.5");
+    expect(multiNumber(392)).toBe("392");
+    expect(needsSentence(multiLayout({ preset: "pickleball-4x4" }).needs)).toBe("78.03 by 41.45 metres (3,234.5 square metres)");
+    expect(needsSentence(multiLayout({ preset: "pickleball-4x4" }).needs, "ja")).toBe("横78.03m×縦41.45m（3,234.5平方メートル）");
+    expect(multiTable({ preset: "pickleball-4x4" })).toContain("3,234.5 square metres");
+  });
+
+  it("says what an empty place is in words, in both languages, and never prints an id", () => {
+    for (const language of ["en", "ja"] as const) {
+      for (const id of ["judo-1x3", "tabletennis-4", "badminton-1x4"]) {
+        const table = multiTable({ preset: id, language });
+        expect(table, `${id} ${language}`).not.toMatch(/\b(?:board|logo|text)-[\w-]+|floor-text|floor-logo|\(mat\)/);
+      }
+    }
+    expect(multiTable({ preset: "judo-1x3", language: "ja" })).toContain("マット上");
+    expect(multiTable({ preset: "judo-1x3" })).toContain("on the mats");
+    expect(multiTable({ preset: "judo-1x3", language: "ja" })).toContain("試合場の間");
   });
 
   it("makes every value from outside safe: a hostile title, description, id and class cannot break the markup", () => {

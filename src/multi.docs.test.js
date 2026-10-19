@@ -9,14 +9,12 @@ const page = readFileSync("docs/multi.md", "utf8");
 const lines = page.split("\n");
 
 describe("the page of tournament layouts", () => {
-  it("has a row for every preset: its grid as the sport counts it, the surfaces, the floor it needs and its basis", () => {
+  it("has a row for every preset: its rows and columns, the surfaces, the floor it needs and its basis", () => {
     for (const spec of MULTI_PRESETS) {
       const { needs } = multiLayout({ preset: spec.id });
       const row = lines.find((line) => line.startsWith(`| \`${spec.id}\` |`));
       expect(row, spec.id).toBeDefined();
-      // The key names the grid as the sport counts it (`curling-1x4`); a key with no grid in it (`tabletennis-4`) is the preset's own rows and columns.
-      const named = /(\d+)x(\d+)/.exec(spec.id);
-      const grid = named === null ? `${spec.rows} x ${spec.columns}` : `${named[1]} x ${named[2]}`;
+      const grid = `${spec.rows} x ${spec.columns}`;
       expect(row, spec.id).toContain(`| ${grid} | ${needs.surfaces} | ${needs.length} by ${needs.width} | ${needs.area} | ${spec.basis} |`);
     }
   });

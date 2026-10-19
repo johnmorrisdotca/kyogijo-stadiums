@@ -16,7 +16,6 @@ export interface MultiWords {
     drawn: string;
     grid: string;
     stagger: string;
-    floor: string;
     shared: string;
     slots: string;
     venue: string;
@@ -28,7 +27,7 @@ export interface MultiWords {
   /** The fit's sentences. */
   fit: { fits: string; short: string; maybe: string; tooSmall: string; turned: string; spare: string; area: string };
   /** The table that says the same as the picture. */
-  table: { caption: string; surface: string; row: string; column: string; x: string; y: string; size: string; slot: string; kind: string; what: string };
+  table: { caption: string; surface: string; row: string; column: string; x: string; y: string; size: string; slot: string; onMat: string; where: { top: string; bottom: string; left: string; right: string; start: string; end: string; common: string } };
 }
 
 export const MULTI_WORDS: Record<Language, MultiWords> = {
@@ -41,7 +40,6 @@ export const MULTI_WORDS: Record<Language, MultiWords> = {
       drawn: "Drawn as: {name}, {surfaces} playing surfaces to scale on one floor of {length} by {width} metres ({area} square metres).",
       grid: "They are laid {rows} by {columns}: {rows} rows of {columns}.",
       stagger: "Every other row is moved along by {share} of a bay.",
-      floor: "The floor is {look}.",
       shared: "One scoreboard for all is hung over the middle of the floor.",
       slots: "The empty places for the event's own words and marks are drawn dashed: {n}.",
       venue: "Set in {venue}: {fit}",
@@ -59,7 +57,7 @@ export const MULTI_WORDS: Record<Language, MultiWords> = {
       spare: "{length} by {width} metres",
       area: "{area} square metres",
     },
-    table: { caption: "{name}: the playing surfaces and the empty places", surface: "Surface", row: "Row", column: "Column", x: "Left (m)", y: "Top (m)", size: "Size (m)", slot: "Empty place", kind: "Kind", what: "For" },
+    table: { caption: "{name}: the playing surfaces and the empty places", surface: "Surface", row: "Row", column: "Column", x: "Left (m)", y: "Top (m)", size: "Size (m)", slot: "Empty place", onMat: "on the mats", where: { top: "top", bottom: "bottom", left: "left", right: "right", start: "first end", end: "far end", common: "between areas" } },
   },
   ja: {
     names: { table: "第{n}台", court: "第{n}コート", sheet: "第{n}シート", area: "第{n}試合場" },
@@ -70,7 +68,6 @@ export const MULTI_WORDS: Record<Language, MultiWords> = {
       drawn: "{name}。競技面を{surfaces}面、横{length}m×縦{width}m（{area}平方メートル）の床1枚の上に縮尺どおりに描いています。",
       grid: "{rows}行×{columns}列に並べています。",
       stagger: "1行おきに、1区画の{share}だけずらしています。",
-      floor: "床は{look}です。",
       shared: "床の中央の上に、全面共用のスコアボードを1台吊るしています。",
       slots: "大会の文字やマークを入れる空き枠を破線で描いています：{n}か所。",
       venue: "{venue}に置いた場合：{fit}",
@@ -88,6 +85,6 @@ export const MULTI_WORDS: Record<Language, MultiWords> = {
       spare: "横{length}m×縦{width}m",
       area: "{area}平方メートル",
     },
-    table: { caption: "{name}：競技面と空き枠の一覧", surface: "競技面", row: "行", column: "列", x: "左（m）", y: "上（m）", size: "大きさ（m）", slot: "空き枠", kind: "種類", what: "用途" },
+    table: { caption: "{name}：競技面と空き枠の一覧", surface: "競技面", row: "行", column: "列", x: "左（m）", y: "上（m）", size: "大きさ（m）", slot: "空き枠", onMat: "マット上", where: { top: "上", bottom: "下", left: "左", right: "右", start: "一方の端", end: "反対の端", common: "試合場の間" } },
   },
 };

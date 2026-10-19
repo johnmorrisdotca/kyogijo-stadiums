@@ -66,13 +66,13 @@
 
       const WORDS = {
         en: {
-          title: "Tournament layouts", lede: "Several surfaces laid out together for one large event, to scale, on one floor. Set the layout in a hall to see whether it fits, and switch the stadium on to see it inside real stands.",
+          title: "Tournament layouts", pageTitle: "Kyogijo Stadiums: tournament layouts", pageDescription: "Several surfaces laid out together for one large event, to scale, in a hall, with a real stadium round them that can be switched on.", formLabel: "Layout choices", lede: "Several surfaces laid out together for one large event, to scale, on one floor. Set the layout in a hall to see whether it fits, and switch the stadium on to see it inside real stands.",
           preset: "Layout", venue: "Hall", none: "No hall (the floor the layout needs)", rows: "Rows", columns: "Columns", language: "Language", theme: "Theme", auto: "Follow the device", light: "Light", dark: "Dark",
           stadium: "Stadium round the floor", slots: "Empty places for the event's words and marks", labels: "Names of the surfaces", table: "The same as a table", docs: "The tournament layouts page of the docs",
           needs: "This layout needs {size}.", event: "Tied to {name}, {year}, {venue}, {city}: {note}", basisRulebook: "The spacing is the rulebook's; no event's plan is drawn.", basisEvent: "The arrangement is what the event used, read from reports and photographs: not a measured plan.",
         },
         ja: {
-          title: "大会向けレイアウト", lede: "複数の競技面を、大会向けに1枚の床の上へ縮尺どおりに並べます。会場を選ぶと収まるかどうかがわかり、スタジアムをオンにすると実際のスタンドの中に置いた様子を確認できます。",
+          title: "大会向けレイアウト", pageTitle: "競技場 Kyogijo Stadiums：大会向けレイアウト", pageDescription: "複数の競技面を、大会向けに1枚の床の上へ縮尺どおりに並べます。会場を選ぶと収まるかどうかがわかり、スタジアムをオンにすると実際のスタンドの中に置いた様子を確認できます。", formLabel: "レイアウトの選択", lede: "複数の競技面を、大会向けに1枚の床の上へ縮尺どおりに並べます。会場を選ぶと収まるかどうかがわかり、スタジアムをオンにすると実際のスタンドの中に置いた様子を確認できます。",
           preset: "レイアウト", venue: "会場", none: "会場なし（レイアウトに必要な床）", rows: "行", columns: "列", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク",
           stadium: "床の周りのスタジアム", slots: "大会の文字やマークを入れる空き枠", labels: "競技面の名前", table: "表で見る", docs: "ドキュメントの「大会向けレイアウト」ページ",
           needs: "このレイアウトに必要な床：{size}。", event: "関連する大会：{name}（{year}年、{venue}、{city}）。{note}", basisRulebook: "間隔は競技規則のとおりです。特定の大会の図面は描いていません。", basisEvent: "並べ方は大会で実際に使われたものを報道や写真から読み取ったもので、実測の図面ではありません。",
@@ -110,6 +110,9 @@
         const themeSelect = $("theme");
         for (const option of themeSelect.options) option.textContent = w[option.value];
         document.documentElement.lang = language;
+        document.title = w.pageTitle;
+        document.querySelector('meta[name="description"]').setAttribute("content", w.pageDescription);
+        $("controls").setAttribute("aria-label", w.formLabel);
       }
 
       function draw() {
@@ -146,7 +149,7 @@
         $("fit").textContent = needs + fit;
         $("fit").dataset.fit = setting.fit === undefined ? "" : String(setting.fit.fits);
         $("rule").textContent = spec.rule[language];
-        $("event").textContent = spec.event === undefined ? (spec.basis === "event" ? w.basisEvent : w.basisRulebook) : `${fill(w.event, { name: spec.event.name, year: spec.event.year, venue: spec.event.venue, city: spec.event.city, note: spec.event.note[language] })}${ja ? "" : " "}${spec.basis === "event" ? w.basisEvent : w.basisRulebook}`;
+        $("event").textContent = spec.event === undefined ? (spec.basis === "event" ? w.basisEvent : w.basisRulebook) : `${fill(w.event, { name: (ja && spec.event.ja?.name) || spec.event.name, year: spec.event.year, venue: (ja && spec.event.ja?.venue) || spec.event.venue, city: (ja && spec.event.ja?.city) || spec.event.city, note: spec.event.note[language] })}${ja ? "" : " "}${spec.basis === "event" ? w.basisEvent : w.basisRulebook}`;
         $("table").innerHTML = multiTable(options);
         const next = new URLSearchParams();
         next.set("preset", spec.id);

@@ -19,6 +19,8 @@ const round = (v: number, places = 2): number => {
   const k = 10 ** places;
   return Math.round(v * k) / k;
 };
+/** A number as a language writes it: thousands separated, two decimals at most (`3,234.5`). */
+export const multiNumber = (value: number, language: Language = "en"): string => new Intl.NumberFormat(language === "ja" ? "ja-JP" : "en-US", { maximumFractionDigits: 2 }).format(value);
 const finite = (v: unknown): v is number => typeof v === "number" && Number.isFinite(v);
 
 /** A whole number of 1 to `max`, or an error that says which option it is. */
@@ -73,21 +75,36 @@ function slotsFor(spec: MultiSpec, cells: readonly MultiCell[], floor: { w: numb
       out.push({ id: `logo-common-${cell.n}`, kind: "floor-logo", onMat: true, x: gx - mark / 2, y: cell.y + cell.h / 2 - mark / 2, w: mark, h: mark });
     });
   } else if (brand === "floor") {
-    // Each surface has two places for a mark at its ends (the ITTF's rule allows up to 6 advertisements on the floor of an area) and one for words above it.
+    // Each surface has two places for a mark at its ends (the ITTF's rule allows up to 6 advertisements on the floor of an area) and one for words beside it. A surface turned a quarter has its ends above and below it.
     for (const cell of cells) {
-      const along = (cell.bay.w - cell.w) / 2;
-      const across = (cell.bay.h - cell.h) / 2;
-      const room = Math.min(along, cell.bay.h * 0.5);
+      const mx = (cell.bay.w - cell.w) / 2;
+      const my = (cell.bay.h - cell.h) / 2;
+      if (cell.turn) {
+        const room = Math.min(my, cell.bay.w * 0.5);
+        if (room >= 3) {
+          const m = room * 0.6;
+          out.push({ id: `logo-${cell.n}-start`, kind: "floor-logo", onMat: false, x: cell.x + cell.w / 2 - m / 2, y: cell.y - room / 2 - m / 2, w: m, h: m });
+          out.push({ id: `logo-${cell.n}-end`, kind: "floor-logo", onMat: false, x: cell.x + cell.w / 2 - m / 2, y: cell.y + cell.h + room / 2 - m / 2, w: m, h: m });
+        }
+        // The words stand along the left side, the officials' chair being on the right.
+        if (mx >= 4) {
+          const w = Math.min(mx * 0.4, 3.5);
+          const h = cell.bay.h * 0.55;
+          out.push({ id: `text-${cell.n}`, kind: "floor-text", onMat: false, x: cell.x - mx / 2 - w / 2, y: cell.y + cell.h / 2 - h / 2, w, h });
+        }
+        continue;
+      }
+      const room = Math.min(mx, cell.bay.h * 0.5);
       if (room >= 3) {
         const m = room * 0.6;
         out.push({ id: `logo-${cell.n}-start`, kind: "floor-logo", onMat: false, x: cell.x - room / 2 - m / 2, y: cell.y + cell.h / 2 - m / 2, w: m, h: m });
         out.push({ id: `logo-${cell.n}-end`, kind: "floor-logo", onMat: false, x: cell.x + cell.w + room / 2 - m / 2, y: cell.y + cell.h / 2 - m / 2, w: m, h: m });
       }
-      if (across >= 4) {
-        const h = Math.min(across * 0.4, 3.5);
+      if (my >= 4) {
+        const h = Math.min(my * 0.4, 3.5);
         const w = cell.bay.w * 0.55;
         // The words go on the side of the surface that the officials' chair is not on.
-        const y = spec.parts.officials === true ? cell.y + cell.h + across / 2 - h / 2 : cell.y - across / 2 - h / 2;
+        const y = spec.parts.officials === true ? cell.y + cell.h + my / 2 - h / 2 : cell.y - my / 2 - h / 2;
         out.push({ id: `text-${cell.n}`, kind: "floor-text", onMat: false, x: cell.x + cell.w / 2 - w / 2, y, w, h });
       }
     }
@@ -141,13 +158,14 @@ export function multiLayout(options: Pick<MultiOptions, "preset" | "layout" | "r
         const y = feet(free + s + j * (c + gap), "m");
         const w = feet(c, "m");
         const b = feet(gap / 2, "m");
-        cells.push({ n: cells.length + 1, label: name(cells.length + 1), row: j, column: i, x, y, w, h: w, bay: { x: x - b, y: y - b, w: w + 2 * b, h: w + 2 * b } });
+        cells.push({ n: cells.length + 1, label: name(cells.length + 1), row: j, column: i, x, y, w, h: w, turn: false, bay: { x: x - b, y: y - b, w: w + 2 * b, h: w + 2 * b } });
       }
     }
   } else {
     const box = outlineOf(spec.surface).box;
-    const sw = box.w;
-    const sh = box.h;
+    const turn = spec.turn === 90;
+    const sw = turn ? box.h : box.w;
+    const sh = turn ? box.w : box.h;
     const bay = spec.bay === undefined ? { length: sw, width: sh } : size(spec.bay);
     const edge = spec.edge === undefined ? { length: (bay.length - sw) / 2, width: (bay.width - sh) / 2 } : size(spec.edge);
     const shift = spec.stagger === undefined ? 0 : spec.stagger * bay.length;
@@ -157,7 +175,7 @@ export function multiLayout(options: Pick<MultiOptions, "preset" | "layout" | "r
         const y = edge.width + j * bay.width;
         const mx = (bay.length - sw) / 2;
         const my = (bay.width - sh) / 2;
-        cells.push({ n: cells.length + 1, label: name(cells.length + 1), row: j, column: i, x, y, w: sw, h: sh, bay: { x: x - mx, y: y - my, w: bay.length, h: bay.width } });
+        cells.push({ n: cells.length + 1, label: name(cells.length + 1), row: j, column: i, x, y, w: sw, h: sh, turn, bay: { x: x - mx, y: y - my, w: bay.length, h: bay.width } });
       }
     }
     floor = { w: 2 * edge.length + (spec.columns - 1) * bay.length + sw + (spec.rows > 1 ? shift : 0), h: 2 * edge.width + (spec.rows - 1) * bay.width + sh };
@@ -205,9 +223,9 @@ export function venueOf(venue: MultiOptions["venue"]): MultiVenue | undefined {
  * ```ts
  * import { multiFit, multiLayout } from "@johnmorrisdotca/kyogijo-stadiums/multi";
  * const four = multiFit(multiLayout({ preset: "curling-1x4" }), "nhl-ice-pad");
- * const six = multiFit(multiLayout({ preset: "curling-1x4", rows: 6 }), "nhl-ice-pad");
+ * const six = multiFit(multiLayout({ preset: "curling-1x4", columns: 6 }), "nhl-ice-pad");
  * console.log(four.fits, four.turned, six.fits);
- * // true false false
+ * // true true false
  * ```
  */
 export function multiFit(layout: MultiLayout, venue: MultiOptions["venue"]): MultiFit {
@@ -251,12 +269,17 @@ export function fitSentence(fit: MultiFit, language: Language = "en"): string {
   const turned = fit.turned ? w.turned : "";
   if (fit.by === "area") {
     const spare = fit.spare as { area: number };
-    return spare.area >= 0 ? fill(w.maybe, { need: fit.needs.area, have: fit.floor.area }) : fill(w.tooSmall, { need: fit.needs.area, have: fit.floor.area });
+    const n = (v: number): string => multiNumber(v, language);
+    return spare.area >= 0 ? fill(w.maybe, { need: n(fit.needs.area), have: n(fit.floor.area) }) : fill(w.tooSmall, { need: n(fit.needs.area), have: n(fit.floor.area) });
   }
   const spare = fit.spare as { length: number; width: number };
-  if (fit.fits === true) return fill(w.fits, { length: spare.length, width: spare.width, turned });
-  return fill(w.short, { length: round(Math.max(0, -spare.length)), width: round(Math.max(0, -spare.width)), turned });
+  const n = (v: number): string => multiNumber(v, language);
+  if (fit.fits === true) return fill(w.fits, { length: n(spare.length), width: n(spare.width), turned });
+  return fill(w.short, { length: n(round(Math.max(0, -spare.length))), width: n(round(Math.max(0, -spare.width))), turned });
 }
 
-/** The size of a layout as words, in a language: `28 by 14 metres`. */
-export const needsSentence = (needs: MultiNeeds, language: Language = "en"): string => (language === "ja" ? `横${needs.length}m×縦${needs.width}m（${needs.area}平方メートル）` : `${needs.length} by ${needs.width} metres (${needs.area} square metres)`);
+/** The size of a layout as words, in a language: `28 by 14 metres (392 square metres)`; along the layout first, then across it. */
+export const needsSentence = (needs: MultiNeeds, language: Language = "en"): string => {
+  const n = (v: number): string => multiNumber(v, language);
+  return language === "ja" ? `横${n(needs.length)}m×縦${n(needs.width)}m（${n(needs.area)}平方メートル）` : `${n(needs.length)} by ${n(needs.width)} metres (${n(needs.area)} square metres)`;
+};

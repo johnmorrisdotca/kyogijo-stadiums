@@ -55,9 +55,14 @@ test("the choices change the grid, the places and the names, and the table says 
 test("it follows light and dark and speaks Japanese", async ({ page }) => {
   await open(page, "?preset=judo-1x3&lang=ja");
   await expect(page.locator("h1")).toHaveText("大会向けレイアウト");
+  await expect(page).toHaveTitle("競技場 Kyogijo Stadiums：大会向けレイアウト");
+  await expect(page.locator("#controls")).toHaveAttribute("aria-label", "レイアウトの選択");
+  await expect(page.locator("#event")).toContainText("バクー");
   await expect(page.locator(`${at("stage")} svg`)).toContainText("第1試合場");
   await page.locator("#theme").selectOption("dark");
   await expect(page.locator(`${at("stage")} svg.kyogijo`)).toHaveAttribute("data-theme", "dark");
   await page.locator("#language").selectOption("en");
   await expect(page.locator("h1")).toHaveText("Tournament layouts");
+  await expect(page).toHaveTitle("Kyogijo Stadiums: tournament layouts");
+  await expect(page.locator("#controls")).toHaveAttribute("aria-label", "Layout choices");
 });

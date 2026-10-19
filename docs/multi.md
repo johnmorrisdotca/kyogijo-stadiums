@@ -19,7 +19,7 @@ The [tournament layouts demo](https://johnmorrisdotca.github.io/kyogijo-stadiums
 
 ## The presets
 
-A preset is a real configuration, with the rule it is laid out by. `rows x columns` is the grid as the sport counts it (curling's "1 x 4" is four sheets side by side, so its grid is four rows of one in the wide frame). "Floor" is what the layout needs, in metres, along it and across it, from the rule. The basis says how sure the arrangement is:
+A preset is a real configuration, with the rule it is laid out by. `rows x columns` is counted the same way everywhere: a row of N areas is 1 x N (curling sheets and badminton and tennis courts stand across the layout, turned a quarter, so four sheets are 1 x 4). "Floor" is what the layout needs, in metres, along the layout and then across it, from the rule. The basis says how sure the arrangement is:
 
 - **rulebook**: the spacing is what a rulebook or a federation's specification asks for (the least, or the recommendation it names), laid out in the grid it allows. No event's plan is drawn.
 - **event**: the numbers are a rulebook's, and the arrangement (how many areas, one floor, one scoreboard) is what an event used, read from reports and from photographs. The event's own plan was not seen, so it is not drawn as measured.
@@ -31,14 +31,14 @@ A preset is a real configuration, with the rule it is laid out by. `rows x colum
 | `pickleball-2x2` | 2 x 2 | 4 | 39.01 by 20.73 | 808.6 | rulebook | none sourced |
 | `pickleball-2x4` | 2 x 4 | 8 | 78.03 by 20.73 | 1617.3 | rulebook | none sourced |
 | `pickleball-4x4` | 4 x 4 | 16 | 78.03 by 41.45 | 3234.5 | rulebook | none sourced (the PPA Tour asks a host for at least 16 courts) |
-| `curling-1x4` | 1 x 4 | 4 | 45.72 by 19 | 868.7 | event | Olympic Winter Games 2022, Beijing National Aquatics Centre |
+| `curling-1x4` | 1 x 4 | 4 | 19 by 45.72 | 868.7 | event | Olympic Winter Games 2022, Beijing National Aquatics Centre |
 | `judo-1x3` | 1 x 3 | 3 | 47 by 19 | 893 | event | World Judo Championships 2018, National Gymnastics Arena, Baku |
 | `judo-1x4` | 1 x 4 | 4 | 61 by 19 | 1159 | rulebook | none sourced |
 | `karate-2x3` | 2 x 3 | 6 | 32 by 22 | 704 | rulebook | Karate1 Series A 2025 (the league's six; that event's own count is not published) |
 | `karate-2x4` | 2 x 4 | 8 | 42 by 22 | 924 | rulebook | none sourced |
-| `badminton-1x4` | 1 x 4 | 4 | 17.4 by 39.4 | 685.6 | rulebook | none sourced (Grade 1 and 2 spacing: 4 m between courts) |
-| `badminton-1x4-min` | 1 x 4 | 4 | 17.4 by 31.9 | 555.1 | rulebook | none sourced (the least: 1.5 m between courts) |
-| `tennis-1x3` | 1 x 3 | 3 | 36.57 by 54.87 | 2006.9 | rulebook | none sourced |
+| `badminton-1x4` | 1 x 4 | 4 | 39.4 by 17.4 | 685.6 | rulebook | none sourced (4 m between courts: only recommended at Grade 1 and 2) |
+| `badminton-1x4-min` | 1 x 4 | 4 | 31.9 by 17.4 | 555.1 | rulebook | none sourced (the required least: 1.5 m between courts) |
+| `tennis-1x3` | 1 x 3 | 3 | 54.87 by 36.57 | 2006.9 | rulebook | none sourced |
 
 Every figure, with the rule and the document it is from, is in [the sources](./sources.md#tournament-layouts), which also says plainly what is ours and what was not found. The rest of the sports that run several surfaces at once, with the ones left out and why, are in [the research note](../docs/research/multi-surface-research.md).
 
@@ -74,20 +74,20 @@ A layout is drawn to true scale, so it needs a real amount of floor, and only a 
 | `iihf-ice-pad` | 60 by 30 m: an IIHF rink at the widest the rules allow | the IIHF's Rule 1 |
 | `nippon-budokan` | an octagon 55 m across the flats, 2,513 m² | the Budokan's own leaflet |
 
-A floor that is a rectangle takes a layout if it fits, as drawn or turned. An octagon takes it if its four corners are inside. A floor of which only the area is published is compared by area, and the answer is "it may fit" or "it does not": the shape could still refuse it. A floor of your own is `{ length, width, unit }`. The package holds only floors it could source; for any other hall, give the size.
+A floor that is a rectangle takes a layout if it fits, as drawn or turned a quarter (four curling sheets stand across the layout and fit an NHL ice pad turned). An octagon takes it if its four corners are inside. A floor of which only the area is published is compared by area, and the answer is "it may fit" or "it does not": the shape could still refuse it. A floor of your own is `{ length, width, unit }`. The package holds only floors it could source; for any other hall, give the size.
 
 ```ts
 import { fitSentence, multiFit, multiLayout } from "@johnmorrisdotca/kyogijo-stadiums/multi";
 
 const four = multiFit(multiLayout({ preset: "curling-1x4" }), "nhl-ice-pad");
-const six = multiFit(multiLayout({ preset: "curling-1x4", rows: 6 }), "nhl-ice-pad");
+const six = multiFit(multiLayout({ preset: "curling-1x4", columns: 6 }), "nhl-ice-pad");
 console.log(four.fits, four.turned, six.fits);
-// true false false
+// true true false
 console.log(fitSentence(four));
-// it fits, with 15.24 by 6.91 metres to spare.
+// it fits, with 15.24 by 6.91 metres to spare, turned a quarter.
 const maybe = multiFit(multiLayout({ preset: "tabletennis-4" }), "ovo-arena-wembley");
 console.log(maybe.fits, maybe.by, fitSentence(maybe));
-// null area it may fit: it needs 392 of its 2655 square metres, and the shape of the floor is not published.
+// null area it may fit: it needs 392 of its 2,655 square metres, and the shape of the floor is not published.
 ```
 
 The presets tie to the halls where a source ties them: the table tennis four to OVO Arena Wembley (an area-only floor, so a "may fit"), the curling four to the ice an arena lays. A layout that does not fit is still drawn, hanging over the hall's floor in a dashed red line, so that the shortfall is seen.
@@ -125,4 +125,5 @@ console.log(table.startsWith('<table class="ky-table"'), table.includes("Table 4
 
 - **Not sourced, so left out.** Beach volleyball's centre court with side courts (the free zone is read only from secondary pages), small-sided football pitches marked inside one pitch (an overlay, not a grid), kendo's shiai-jo in rows (no event with a count was found), padel (the FIP's rules name no gap), squash banks (courts in a bank share walls and are not a flat marked area), 3x3 basketball (no multi-court event layout was found), indoor volleyball.
 - **Needs a surface the package does not draw yet:** fencing's pistes around a raised final piste, wrestling, taekwondo, snooker and pool tables, lawn bowls, pétanque, tenpin. [The research note](../docs/research/multi-surface-research.md) ranks them with their sources.
+- **The London table tennis hall's staggered arrangement is not a preset.** The owner's photographs show the Worlds hall of 2026 with its areas stepped or staggered, but no source read gives that hall's count of areas, their spacing or the floor (only the 2,655 m² of OVO Arena Wembley and the 60 by 40 m of the Copper Box Arena, where the other stage was held), so only the Handbook's 2 x 2 and 2 x 4 grids are presets. `stagger` is in the engine (`stagger: 0.5` moves every other row along by half a bay) for a layout of your own.
 - **No event's own plan.** The photographs behind the table tennis, judo and curling arrangements are the owner's, are not in this repository (their licences are not known), and show an arrangement, not a measured floor; the figures drawn are the rules'.
