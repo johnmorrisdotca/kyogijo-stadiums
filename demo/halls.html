@@ -72,10 +72,10 @@
           needs: "This layout needs {size}.", event: "Tied to {name}, {year}, {venue}, {city}: {note}", basisRulebook: "The spacing is the rulebook's; no event's plan is drawn.", basisEvent: "The arrangement is what the event used, read from reports and photographs: not a measured plan.",
         },
         ja: {
-          title: "大会向けレイアウト", lede: "複数の競技面を、1つの大会のために1枚の床の上に縮尺どおりに並べます。会場に置くと収まるかどうかが分かり、スタジアムを切り替えると本物の客席の中で見られます。",
+          title: "大会向けレイアウト", lede: "複数の競技面を、大会向けに1枚の床の上へ縮尺どおりに並べます。会場を選ぶと収まるかどうかがわかり、スタジアムをオンにすると実際のスタンドの中に置いた様子を確認できます。",
           preset: "レイアウト", venue: "会場", none: "会場なし（レイアウトに必要な床）", rows: "行", columns: "列", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク",
-          stadium: "床の周りのスタジアム", slots: "大会の文字やマークのための空欄", labels: "競技面の名前", table: "表で見る", docs: "ドキュメントの大会向けレイアウトのページ",
-          needs: "このレイアウトに必要な床：{size}。", event: "{name}（{year}年、{venue}、{city}）に対応：{note}", basisRulebook: "間隔はルールブックのものです。特定の大会の図面は描いていません。", basisEvent: "並べ方は大会が用いたもので、報道や写真から読み取ったものです。実測の図面ではありません。",
+          stadium: "床の周りのスタジアム", slots: "大会の文字やマークを入れる空き枠", labels: "競技面の名前", table: "表で見る", docs: "ドキュメントの「大会向けレイアウト」ページ",
+          needs: "このレイアウトに必要な床：{size}。", event: "関連する大会：{name}（{year}年、{venue}、{city}）。{note}", basisRulebook: "間隔は競技規則のとおりです。特定の大会の図面は描いていません。", basisEvent: "並べ方は大会で実際に使われたものを報道や写真から読み取ったもので、実測の図面ではありません。",
         },
       };
       const $ = (id) => document.getElementById(id);
@@ -141,11 +141,12 @@
         }
         $("stage").innerHTML = svg;
         const needs = fill(w.needs, { size: needsSentence(setting.layout.needs, language) });
-        const fit = setting.fit === undefined || setting.venue === undefined ? "" : ` ${setting.venue.name[language]}: ${fitSentence(setting.fit, language)}`;
+        const ja = language === "ja";
+        const fit = setting.fit === undefined || setting.venue === undefined ? "" : `${ja ? "" : " "}${setting.venue.name[language]}${ja ? "：" : ": "}${fitSentence(setting.fit, language)}`;
         $("fit").textContent = needs + fit;
         $("fit").dataset.fit = setting.fit === undefined ? "" : String(setting.fit.fits);
         $("rule").textContent = spec.rule[language];
-        $("event").textContent = spec.event === undefined ? (spec.basis === "event" ? w.basisEvent : w.basisRulebook) : `${fill(w.event, { name: spec.event.name, year: spec.event.year, venue: spec.event.venue, city: spec.event.city, note: spec.event.note[language] })} ${spec.basis === "event" ? w.basisEvent : w.basisRulebook}`;
+        $("event").textContent = spec.event === undefined ? (spec.basis === "event" ? w.basisEvent : w.basisRulebook) : `${fill(w.event, { name: spec.event.name, year: spec.event.year, venue: spec.event.venue, city: spec.event.city, note: spec.event.note[language] })}${ja ? "" : " "}${spec.basis === "event" ? w.basisEvent : w.basisRulebook}`;
         $("table").innerHTML = multiTable(options);
         const next = new URLSearchParams();
         next.set("preset", spec.id);

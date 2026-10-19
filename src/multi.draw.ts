@@ -226,7 +226,7 @@ export function drawMulti(options: MultiOptions = {}): string {
   if (venue !== undefined && fit !== undefined) sentences.push(fill(words.say.venue, { venue: venue.name[language], fit: fitSentence(fit, language) }));
   if (stadium !== undefined) sentences.push(words.say.stadium);
   const title = o.title ?? fill(words.say.title, { name: spec.name[language] });
-  const description = o.description ?? sentences.join(" ");
+  const description = o.description ?? sentences.join(language === "ja" ? "" : " ");
   const titleId = `${gid}-t`;
   const descId = `${gid}-d`;
   const css = o.style === "none" ? "" : `<style>${style}\n${KYOGIJO_MULTI_STYLE}${crowdStyle === "" ? "" : `\n${crowdStyle}`}</style>`;
@@ -275,7 +275,7 @@ export function multiTable(options: MultiOptions = {}): string {
   const head = `<thead><tr><th scope="col">${esc(t.surface)}</th><th scope="col">${esc(t.row)}</th><th scope="col">${esc(t.column)}</th><th scope="col">${esc(t.x)}</th><th scope="col">${esc(t.y)}</th><th scope="col">${esc(t.size)}</th></tr></thead>`;
   const rows = layout.cells.map((c) => `<tr><th scope="row">${esc(c.label)}</th><td>${c.row + 1}</td><td>${c.column + 1}</td><td>${m(c.x)}</td><td>${m(c.y)}</td><td>${m(c.w)} × ${m(c.h)}</td></tr>`).join("");
   const slotRows = options.slots === false ? "" : layout.slots.map((s) => `<tr><th scope="row">${esc(t.slot)}: ${esc(s.id)}</th><td colspan="2">${esc(t.kind)}: ${esc(s.kind)}${s.onMat ? " (mat)" : ""}</td><td>${m(s.x)}</td><td>${m(s.y)}</td><td>${m(s.w)} × ${m(s.h)}</td></tr>`).join("");
-  const caption = `${fill(t.caption, { name: layout.spec.name[language] })} ${needsSentence(layout.needs, language)}`;
+  const caption = language === "ja" ? `${fill(t.caption, { name: layout.spec.name[language] })}。必要な床：${needsSentence(layout.needs, language)}` : `${fill(t.caption, { name: layout.spec.name[language] })} ${needsSentence(layout.needs, language)}`;
   return `<table class="ky-table" data-kind="multi"><caption>${esc(caption)}</caption>${head}<tbody>${rows}${slotRows}</tbody></table>`;
 }
 

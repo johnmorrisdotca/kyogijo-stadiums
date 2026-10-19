@@ -259,4 +259,4 @@ export function fitSentence(fit: MultiFit, language: Language = "en"): string {
 }
 
 /** The size of a layout as words, in a language: `28 by 14 metres`. */
-export const needsSentence = (needs: MultiNeeds, language: Language = "en"): string => (language === "ja" ? `${needs.length}m×${needs.width}m（${needs.area}平方メートル）` : `${needs.length} by ${needs.width} metres (${needs.area} square metres)`);
+export const needsSentence = (needs: MultiNeeds, language: Language = "en"): string => (language === "ja" ? `横${needs.length}m×縦${needs.width}m（${needs.area}平方メートル）` : `${needs.length} by ${needs.width} metres (${needs.area} square metres)`);
