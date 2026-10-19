@@ -464,6 +464,7 @@ const page = `<!doctype html>
       <section class="more" id="gallery" aria-labelledby="gallery-title">
         <h2 id="gallery-title" data-say="galleryTitle"></h2>
         <p data-say="galleryText"></p>
+        <p><a href="halls.html" data-say="hallsLink"></a></p>
         ${placeBody("gallery")}
       </section>
 

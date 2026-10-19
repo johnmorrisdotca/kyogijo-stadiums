@@ -1662,6 +1662,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `placeAt` | x {x} ft, y {y} ft ({xm} m, {ym} m) | x {x}フィート、y {y}フィート（{xm}m、{ym}m） |
 | `galleryTitle` | Every sport | すべての競技 |
 | `galleryText` | A made-up game on each surface, with the score on it. Filter them by family of sport. | それぞれの競技場に架空の試合を描き、得点を入れています。競技の種類で絞り込めます。 |
+| `hallsLink` | Tournament layouts: several surfaces on one floor, in a hall, with a stadium round them | 大会向けレイアウト：複数の競技面を1つのフロアに並べ、会場の中に置き、周りにスタンドを描きます |
 | `galleryFilterLabel` | Filter the sports | 競技の絞り込み |
 | `galleryFamily` | Family | 種類 |
 | `galleryFamily_football` | Football codes | アメリカンフットボール |
