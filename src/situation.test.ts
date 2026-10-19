@@ -189,6 +189,17 @@ describe("football", () => {
     expect(classes(svg, "ky-text").some((n) => n.text === "3rd &amp; 7")).toBe(true);
   });
 
+  it("draws the IFAF's field as the NFL's: 100 yards, four downs, the same marks", () => {
+    const nflSvg = drawKyogijo({ sport: "nfl", ...game, situation: some });
+    const svg = drawKyogijo({ sport: "ifaf", ...game, situation: some });
+    expect(classes(svg, "ky-sit-tag")).toHaveLength(1);
+    expect(classes(svg, "ky-sit-los")).toHaveLength(1);
+    expect(classes(svg, "ky-sit-red")).toHaveLength(1);
+    expect(classes(svg, "ky-text").some((n) => n.text === "3rd &amp; 7")).toBe(true);
+    expect(readSituation({ ...some, down: 4 }, { sport: "ifaf", homeSide: "right", football: { yards: 100, downs: 4 } })).toMatchObject({ down: 4 });
+    expect(nflSvg).not.toBe("");
+  });
+
   it("heads for the other end when the home team has the ball, and when `toward` or `direction` say so", () => {
     expect(readSituation({ ...some, possession: "home" }, nfl)).toMatchObject({ toward: "left" });
     expect(readSituation({ ...some, toward: "left" }, nfl)).toMatchObject({ toward: "left" });

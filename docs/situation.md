@@ -1,6 +1,6 @@
 # The situation of a game
 
-`situation` says what is happening in a game, and the drawing shows it where a reader looks: on the surface, in the [badge and the compact card](./score.md), and in the description a screen reader hears. It is for hockey, baseball (softball and the NPB too) and football. Nothing about it changes a drawing that has none: the same options without it give the same text, to the byte.
+`situation` says what is happening in a game, and the drawing shows it where a reader looks: on the surface, in the [badge and the compact card](./score.md), and in the description a screen reader hears. It is for hockey, baseball (softball and the NPB too) and football (the NFL's, the CFL's and the IFAF's fields, `sport: "nfl"`, `"cfl"` and `"ifaf"`). Nothing about it changes a drawing that has none: the same options without it give the same text, to the byte.
 
 ```ts
 import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
@@ -85,7 +85,7 @@ The **line of scrimmage** is blue and the **first-down line** yellow, each acros
 
 A **drive chart** draws an arrow for each drive, from where it began to where it ended, in a lane of its own across the field, coloured by how it ended and labelled with a short code: `touchdown` (`TD`), `field-goal` (`FG`), `missed-field-goal` (`MFG`), `punt` (`PUNT`), `turnover` (`TO`), `interception` (`INT`), `fumble` (`FUM`), `downs` (`DOWNS`), `safety` (`SAF`) and `end-of-half` (`END`). With the score's panel in the middle the lanes lie in the band under it; at most 24 drives are drawn.
 
-The field is the drawing's own: the CFL's is 110 yards between the goal lines with end zones of 20 yards, and a team has three downs; a `league` (the NCAA's) or a `year` changes the field as it does without a situation.
+The field is the drawing's own: the NFL's and the IFAF's are 100 yards between the goal lines with end zones of 10 yards, and a team has four downs; the CFL's is 110 yards with end zones of 20 yards, and a team has three downs; a `league` (the NCAA's) or a `year` changes the field as it does without a situation.
 
 ```ts
 import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
