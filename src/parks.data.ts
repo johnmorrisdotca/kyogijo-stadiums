@@ -922,6 +922,9 @@ export const PARK_DATA: ParkData[] = [
       ]
     ],
     "backstop_ft": 55,
+    "dugouts": {
+      "home": "third"
+    },
     "walls": [
       {
         "from": -45,
@@ -2006,6 +2009,16 @@ export const PARK_DATA: ParkData[] = [
     },
     "note": "The infobox's final figures.",
     "backstop_ft": 61,
+    "quirks": [
+      {
+        "kind": "bullpen",
+        "label": "Left-field bullpen",
+        "angle": -45,
+        "feet": 388,
+        "first": 1956,
+        "last": 1961
+      }
+    ],
     "walls": [
       {
         "from": 22.5,

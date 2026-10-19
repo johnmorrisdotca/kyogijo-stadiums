@@ -161,7 +161,7 @@ A page that draws with `style: "none"` and supplies the stylesheet itself gets t
 
 ## What is not drawn
 
-The roof and its shadow on the stands beyond the shade of its edge, the concourse's food and stairs, the scoreboard, the cameras and the crowd's movement, the pitch's advertising boards and a ballpark's dugouts and bullpens (a park's `quirks` draw them on the field), the seating of a curling hall beyond its two sides, the tenants of the atlas's places. They are left for another change, not for want of a rule.
+The roof and its shadow on the stands beyond the shade of its edge, the concourse's food and stairs, the scoreboard, the cameras and the crowd's movement, the pitch's advertising boards and a ballpark's dugouts and bullpens in the stands (a park's `quirks` draw them on the field, only where an article places them: [ballparks](./ballparks.md#quirks); none is made up for the other parks), the seating of a curling hall beyond its two sides, the tenants of the atlas's places. They are left for another change, not for want of a rule.
 
 ## Where it is not drawn
 

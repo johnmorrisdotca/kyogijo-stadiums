@@ -259,7 +259,8 @@ describe("the quirks", () => {
     expect(kinds("wrigley-field")).toEqual(["ivy", "basket"]);
     expect(kinds("polo-grounds")).toEqual(["overhang", "bullpen", "bullpen"]);
     expect(kinds("tiger-stadium")).toEqual(["overhang", "flagpole"]);
-    expect(PARK_IDS.filter((id) => PARKS[id].quirks !== undefined).sort()).toEqual(["daikin-park", "fenway-park", "polo-grounds", "tiger-stadium", "wrigley-field"]);
+    expect(kinds("griffith-stadium")).toEqual(["bullpen"]);
+    expect(PARK_IDS.filter((id) => PARKS[id].quirks !== undefined).sort()).toEqual(["daikin-park", "fenway-park", "griffith-stadium", "polo-grounds", "tiger-stadium", "wrigley-field"]);
   });
 
   it("hold Tal's Hill's 90 feet, 30 degrees and seasons, Pesky's Pole at 302 feet and the Tiger Stadium flagpole near the 440 mark", () => {
@@ -293,6 +294,17 @@ describe("the quirks", () => {
     expect(PARKS["pnc-park"].dugouts).toEqual({ home: "third" });
     expect(PARKS["candlestick-park"].dugouts).toEqual({ home: "first", visitors: "third" });
     expect(PARKS["loandepot-park"].dugouts).toEqual({ home: "third" });
+    expect(PARKS["wrigley-field"].dugouts).toEqual({ home: "third" });
+  });
+
+  it("hold the one bullpen and the one dugout added where the article gives a place and a figure, and no generic ones", () => {
+    // Griffith Stadium: "a fenced-in bullpen at the end of the left field line", the fence reduced to 388 feet (revision 1379220233); Wrigley Field: "the home (third base) dugout" (revision 1377918987).
+    expect(PARKS["griffith-stadium"].quirks?.[0]).toMatchObject({ kind: "bullpen", angle: -45, feet: 388, first: 1956, last: 1961 });
+    expect(draw("griffith-stadium", { quirks: true, year: 1958 })).toContain('class="ky-bullpen"');
+    expect(draw("griffith-stadium", { quirks: true, year: 1950 })).not.toContain('class="ky-bullpen"');
+    expect(draw("wrigley-field", { quirks: true })).toContain('class="ky-dugout"');
+    expect(draw("wrigley-field", { quirks: true })).not.toContain('class="ky-dugout ky-dugout-away"');
+    for (const id of PARK_IDS) if (!["progressive-field", "pnc-park", "candlestick-park", "loandepot-park", "wrigley-field"].includes(id)) expect(PARKS[id].dugouts, id).toBeUndefined();
   });
 });
 

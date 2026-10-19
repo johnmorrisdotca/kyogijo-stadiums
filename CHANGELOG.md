@@ -7,6 +7,10 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **Two more parks place a dugout or a bullpen, where their articles do:** `wrigley-field`'s home dugout (third base line) and `griffith-stadium`'s left-field bullpen (388 feet, 1956 to 1961). No generic dugout or bullpen is drawn for the others; `docs/ballparks.md` and `docs/references.md` list what was read and left out and why.
+
 ### Changed
 
 - **Docs only:** `docs/situation.md` says plainly what is left undrawn for want of a source (the NHL's older creases, an Olympic hybrid sheet, Buffalo Memorial Auditorium's rink) and what would be needed; `docs/team-shape.md` says the lineup's `jersey` is a flat marker of our own and where full jerseys are drawn.

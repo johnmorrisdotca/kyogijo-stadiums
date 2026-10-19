@@ -121,12 +121,14 @@ console.log(svg.includes("Green Monster 37.2 ft"), svg.includes("Wall height"), 
 | `hill` | An incline against the fence, as wide as the article says (Tal's Hill, 90 feet wide at 30 degrees, from 2000 to 2016) | `daikin-park` |
 | `overhang` | A stand that hangs over the fence into the field, by the depth the article gives | `polo-grounds` (21 feet in left), `tiger-stadium` (10 feet in right, from 1936) |
 | `pole`, `flagpole` | A foul pole or a flagpole at its angle and distance (Pesky's Pole at 302 feet; the Tiger Stadium flagpole near the 440 mark) | `fenway-park`, `tiger-stadium` |
-| `bullpen` | The bullpens, where the article puts them (the Polo Grounds', roughly 450 feet out in the gaps) | `polo-grounds` |
+| `bullpen` | The bullpens, where the article puts them and gives a figure (the Polo Grounds', roughly 450 feet out in the gaps; Griffith Stadium's fenced-in bullpen at the end of the left field line, 388 feet out, 1956 to 1961) | `polo-grounds`, `griffith-stadium` |
 | `ivy`, `basket` | The ivy on the wall (from 1937) and the basket on top of it (from 1970) | `wrigley-field` |
 | `backstop` | A bar from home plate to the backstop, at the distance the article gives (the infobox's "backstop") | 43 parks |
-| `dugouts` | The dugouts on the lines the article names, the home one solid and the visitors' outlined | `progressive-field`, `pnc-park`, `candlestick-park`, `loandepot-park` |
+| `dugouts` | The dugouts on the lines the article names, the home one solid and the visitors' outlined | `progressive-field`, `pnc-park`, `candlestick-park`, `loandepot-park`, `wrigley-field` (the home dugout only: its article names the third base line) |
 
 `quirks: { only: ["hill", "backstop"] }` draws some of them and `quirks: { labels: true }` names them. The sizes of a dugout, a bullpen and a pole are for the eye and not measured: the articles give only where they are.
+
+**No generic dugouts or bullpens.** A park gets one only where its article says which line a dugout is on (and whose) or where a bullpen stands with a distance. The other parks' articles name a bullpen only in words ("behind right-center field", "in foul territory") or a dugout without its side, which would have to be turned into a figure by guessing, so those parks have none. Read and left out: the bullpens of Progressive Field, Petco Park, Oracle Park, Tropicana Field, Camden Yards, Yankee Stadium (all words, no distance), Griffith Stadium's right-center bullpen (the article gives the distances of its corners, 438 and 401 feet, and no angle) and the dugouts of Nationals Park, Dodger Stadium, Hilltop Park and Griffith Stadium (first and third base, no side given for the home team).
 
 ```ts
 import { PARKS, parkQuirksIn, drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
