@@ -166,6 +166,11 @@
       "import": "./dist/layouts-entry.js",
       "default": "./dist/layouts-entry.js"
     },
+    "./multi": {
+      "types": "./dist/multi-entry.d.ts",
+      "import": "./dist/multi-entry.js",
+      "default": "./dist/multi-entry.js"
+    },
     "./replay": {
       "types": "./dist/replay-entry.d.ts",
       "import": "./dist/replay-entry.js",
