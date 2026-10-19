@@ -7,6 +7,10 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Changed
+
+- **Docs only:** `docs/situation.md` says plainly what is left undrawn for want of a source (the NHL's older creases, an Olympic hybrid sheet, Buffalo Memorial Auditorium's rink) and what would be needed; `docs/team-shape.md` says the lineup's `jersey` is a flat marker of our own and where full jerseys are drawn.
+
 ## [0.11.0] - 2026-10-19
 
 ### Added

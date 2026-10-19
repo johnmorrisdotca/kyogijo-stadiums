@@ -168,6 +168,8 @@ The home team above has no `formation`: the one of the surface's sport that plac
 | `rotation` | Volleyball: how many rotations on, 1 to 6. Players are listed in the serving order, `P1` to `P6`, and each moves one place clockwise for each rotation. |
 | `los`, `attacking` | As for a `formation`. |
 
+The `jersey` shape is a **flat marker of our own**: one outline (sleeves, shoulders, a neckline and the body, `jerseyPath` in `src/team.lineup.ts`) in the team's colour with the number inside, a few hundred bytes for a whole team. It is not a kit: no stripes, collar, sleeve patterns or sponsor. A full jersey, front and back, with a style per sport, is drawn by [Senshu Jerseys](https://github.com/johnmorrisdotca/senshu-jerseys), which this package does not depend on; a lineup this size would be many times heavier with it.
+
 A lineup is not cut to the surface's outline, so that a fielder at the foul line keeps his whole jersey (`clip: "surface"` cuts it).
 
 **Position codes.** A code is a position's id in the formation (`GK`, `SS`, `QB`, `LW`) or a short one that stands for several; the first free place that fits is taken, and a code that names a place has it before a short one. `LINEUP_CODES` (in the layers entry) lists them all. Case, spaces, dots and hyphens do not matter.

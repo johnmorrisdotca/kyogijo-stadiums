@@ -111,4 +111,16 @@ The pill, the scorebug and the tag take the score panel's colours (`--ky-plate`,
 
 A basketball shot clock and bonus, and soccer's stoppage time, are not drawn: they are a number beside the score that would sit well in the badge, and were left for a later release. Hockey's penalty box, football's timeouts and the yard line of a kick are not either.
 
+## Left undrawn because no source could be read
+
+These were looked for and not found in a form that can be cited, so they are **not drawn**, and nothing is guessed. The surface keeps today's marking (or the nearest cited season) and `gaps` says so. The full account, with what was read, is in [references.md](./references.md#league-variants-not-drawn).
+
+| Not drawn | Why | What would be needed |
+| --- | --- | --- |
+| **The NHL's older goal creases** (the L-shaped crease of 1933-34, the rectangles of 1939-40 and 1951-52, the semicircle of the late 1980s, the half circle of 1991-92) | Only blogs and fan sites tell it, and they disagree on the years and on the depth (4 or 4.5 feet). No rulebook or news report of the changes was read. | A rulebook for each of those seasons, or a news report of each change, giving the season and the figures. |
+| **An Olympic "hybrid" sheet of ice** (the Milano Cortina 2026 sheet is drawn as `olympic`, 60.0 by 26.0 m, from the IIHF's statement) | No source gives a hybrid sheet's size, corner radius or markings, and the sizes of the NHL Global Series arenas' sheets were not found. | The IIHF's or the NHL's published specification of the sheet, with its dimensions. |
+| **Buffalo Memorial Auditorium's rink size** | Wikipedia says the rink fell short of 200 by 85 feet but neither it nor a source it cites gives the figures; Wikidata has no ice size. | A published length and width (an arena document or a contemporary report), with the season. |
+
+A rink given no figure is never drawn from a neighbour's: `boston-garden` is drawn at 58.2 by 25.3 m because Wikipedia's revision 1379921964 gives it, and Buffalo's Auditorium has no such entry.
+
 The [gallery](./gallery.md) draws each of these.
