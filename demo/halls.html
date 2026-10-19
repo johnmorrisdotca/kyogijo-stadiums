@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Kyogijo Stadiums: tournament layouts</title>
+    <meta name="description" content="Several surfaces laid out together for one large event, to scale, in a hall, with a real stadium round them that can be switched on." />
+    <style>
+      :root { color-scheme: light dark; --bg: #f6f4ee; --ink: #1d2320; --muted: #5b625e; --card: #fff; --line: #cfcabb; --accent: #1f5fa8; }
+      @media (prefers-color-scheme: dark) { :root { --bg: #141816; --ink: #ecebe5; --muted: #a2a8a3; --card: #1d2220; --line: #39403c; --accent: #7fb2ee; } }
+      :root[data-theme="light"] { color-scheme: light; --bg: #f6f4ee; --ink: #1d2320; --muted: #5b625e; --card: #fff; --line: #cfcabb; --accent: #1f5fa8; }
+      :root[data-theme="dark"] { color-scheme: dark; --bg: #141816; --ink: #ecebe5; --muted: #a2a8a3; --card: #1d2220; --line: #39403c; --accent: #7fb2ee; }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.45 system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif; }
+      main { max-width: 1100px; margin: 0 auto; padding: 16px; }
+      h1 { font-size: 1.5rem; margin: 0 0 4px; }
+      p.lede { margin: 0 0 16px; color: var(--muted); }
+      .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr)); gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px; }
+      label { display: grid; gap: 4px; min-width: 0; font-size: .9rem; color: var(--muted); }
+      select, input[type="number"] { width: 100%; min-width: 0; font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 8px; min-height: 44px; }
+      .check { display: flex; align-items: center; gap: 8px; min-height: 44px; color: var(--ink); }
+      .check input { width: 22px; height: 22px; }
+      :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+      #fit { margin: 12px 0; padding: 10px 12px; border-left: 4px solid var(--accent); background: var(--card); border-radius: 6px; }
+      #fit[data-fit="false"] { border-left-color: #c0392b; }
+      #stage { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 8px; }
+      #stage svg { display: block; width: 100%; height: auto; max-height: 80vh; }
+      .rule, .note { color: var(--muted); font-size: .9rem; margin: 8px 0; }
+      details { margin-top: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; }
+      summary { cursor: pointer; min-height: 32px; }
+      table { border-collapse: collapse; font-size: .85rem; width: 100%; }
+      th, td { border: 1px solid var(--line); padding: 4px 8px; text-align: left; }
+      caption { text-align: left; padding: 4px 0; color: var(--muted); }
+      .table-wrap { overflow-x: auto; }
+      a { color: var(--accent); }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1 id="title"></h1>
+      <p class="lede" id="lede"></p>
+      <form class="controls" id="controls" aria-label="Layout">
+        <label><span id="l-preset"></span><select id="preset"></select></label>
+        <label><span id="l-venue"></span><select id="venue"></select></label>
+        <label><span id="l-rows"></span><input id="rows" type="number" min="1" max="12" inputmode="numeric" /></label>
+        <label><span id="l-columns"></span><input id="columns" type="number" min="1" max="12" inputmode="numeric" /></label>
+        <label><span id="l-language"></span><select id="language"><option value="en">English</option><option value="ja">日本語</option></select></label>
+        <label><span id="l-theme"></span><select id="theme"><option value="auto"></option><option value="light"></option><option value="dark"></option></select></label>
+        <label class="check"><input id="stadium" type="checkbox" /><span id="l-stadium"></span></label>
+        <label class="check"><input id="slots" type="checkbox" checked /><span id="l-slots"></span></label>
+        <label class="check"><input id="labels" type="checkbox" checked /><span id="l-labels"></span></label>
+      </form>
+      <p id="fit" role="status" aria-live="polite"></p>
+      <div id="stage" data-testid="stage"></div>
+      <p class="rule" id="rule"></p>
+      <p class="note" id="event"></p>
+      <details>
+        <summary id="l-table"></summary>
+        <div class="table-wrap" id="table"></div>
+      </details>
+      <p class="note"><a href="./docs/multi.html" id="docs"></a></p>
+    </main>
+    <script type="module">
+      // Tournament layouts: pick a preset, set it in a hall, switch the real stadium on or off. The package draws everything; this page only passes the options.
+      import { MULTI_PRESETS, MULTI_VENUES, drawMulti, multiSetting, multiTable, fitSentence, needsSentence } from "./dist/multi-entry.js";
+
+      const WORDS = {
+        en: {
+          title: "Tournament layouts", lede: "Several surfaces laid out together for one large event, to scale, on one floor. Set the layout in a hall to see whether it fits, and switch the stadium on to see it inside real stands.",
+          preset: "Layout", venue: "Hall", none: "No hall (the floor the layout needs)", rows: "Rows", columns: "Columns", language: "Language", theme: "Theme", auto: "Follow the device", light: "Light", dark: "Dark",
+          stadium: "Stadium round the floor", slots: "Empty places for the event's words and marks", labels: "Names of the surfaces", table: "The same as a table", docs: "The tournament layouts page of the docs",
+          needs: "This layout needs {size}.", event: "Tied to {name}, {year}, {venue}, {city}: {note}", basisRulebook: "The spacing is the rulebook's; no event's plan is drawn.", basisEvent: "The arrangement is what the event used, read from reports and photographs: not a measured plan.",
+        },
+        ja: {
+          title: "大会向けレイアウト", lede: "複数の競技面を、1つの大会のために1枚の床の上に縮尺どおりに並べます。会場に置くと収まるかどうかが分かり、スタジアムを切り替えると本物の客席の中で見られます。",
+          preset: "レイアウト", venue: "会場", none: "会場なし（レイアウトに必要な床）", rows: "行", columns: "列", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク",
+          stadium: "床の周りのスタジアム", slots: "大会の文字やマークのための空欄", labels: "競技面の名前", table: "表で見る", docs: "ドキュメントの大会向けレイアウトのページ",
+          needs: "このレイアウトに必要な床：{size}。", event: "{name}（{year}年、{venue}、{city}）に対応：{note}", basisRulebook: "間隔はルールブックのものです。特定の大会の図面は描いていません。", basisEvent: "並べ方は大会が用いたもので、報道や写真から読み取ったものです。実測の図面ではありません。",
+        },
+      };
+      const $ = (id) => document.getElementById(id);
+      const params = new URLSearchParams(location.search);
+      const state = { language: params.get("lang") === "ja" ? "ja" : "en" };
+
+      const presetSelect = $("preset");
+      const venueSelect = $("venue");
+      for (const p of MULTI_PRESETS) presetSelect.append(new Option("", p.id));
+      venueSelect.append(new Option("", ""));
+      for (const v of MULTI_VENUES) venueSelect.append(new Option("", v.id));
+      presetSelect.value = MULTI_PRESETS.some((p) => p.id === params.get("preset")) ? params.get("preset") : "tabletennis-4";
+      $("language").value = state.language;
+      $("stadium").checked = params.get("stadium") === "on";
+      if (MULTI_VENUES.some((v) => v.id === params.get("venue"))) venueSelect.value = params.get("venue");
+
+      function fill(text, values) { return text.replace(/\{(\w+)\}/g, (_, k) => values[k]); }
+      function words() { return WORDS[$("language").value]; }
+
+      function syncGrid() {
+        const spec = MULTI_PRESETS.find((p) => p.id === presetSelect.value);
+        $("rows").value = String(spec.rows);
+        $("columns").value = String(spec.columns);
+      }
+
+      function labelOptions() {
+        const w = words();
+        const language = $("language").value;
+        for (const option of presetSelect.options) option.textContent = MULTI_PRESETS.find((p) => p.id === option.value).name[language];
+        for (const option of venueSelect.options) option.textContent = option.value === "" ? w.none : MULTI_VENUES.find((v) => v.id === option.value).name[language];
+        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["l-preset", "preset"], ["l-venue", "venue"], ["l-rows", "rows"], ["l-columns", "columns"], ["l-language", "language"], ["l-theme", "theme"], ["l-stadium", "stadium"], ["l-slots", "slots"], ["l-labels", "labels"], ["l-table", "table"], ["docs", "docs"]]) $(id).textContent = w[key];
+        const themeSelect = $("theme");
+        for (const option of themeSelect.options) option.textContent = w[option.value];
+        document.documentElement.lang = language;
+      }
+
+      function draw() {
+        const w = words();
+        const language = $("language").value;
+        const theme = $("theme").value;
+        document.documentElement.dataset.theme = theme === "auto" ? "" : theme;
+        if (theme === "auto") delete document.documentElement.dataset.theme;
+        const spec = MULTI_PRESETS.find((p) => p.id === presetSelect.value);
+        const options = {
+          preset: spec.id,
+          rows: Number($("rows").value) || spec.rows,
+          columns: Number($("columns").value) || spec.columns,
+          language,
+          stadium: $("stadium").checked,
+          slots: $("slots").checked,
+          labels: $("labels").checked,
+          ...(theme === "auto" ? {} : { theme }),
+          ...(venueSelect.value === "" ? {} : { venue: venueSelect.value }),
+        };
+        let svg;
+        let setting;
+        try {
+          svg = drawMulti(options);
+          setting = multiSetting(options);
+        } catch (error) {
+          $("fit").textContent = String(error.message);
+          return;
+        }
+        $("stage").innerHTML = svg;
+        const needs = fill(w.needs, { size: needsSentence(setting.layout.needs, language) });
+        const fit = setting.fit === undefined || setting.venue === undefined ? "" : ` ${setting.venue.name[language]}: ${fitSentence(setting.fit, language)}`;
+        $("fit").textContent = needs + fit;
+        $("fit").dataset.fit = setting.fit === undefined ? "" : String(setting.fit.fits);
+        $("rule").textContent = spec.rule[language];
+        $("event").textContent = spec.event === undefined ? (spec.basis === "event" ? w.basisEvent : w.basisRulebook) : `${fill(w.event, { name: spec.event.name, year: spec.event.year, venue: spec.event.venue, city: spec.event.city, note: spec.event.note[language] })} ${spec.basis === "event" ? w.basisEvent : w.basisRulebook}`;
+        $("table").innerHTML = multiTable(options);
+        const next = new URLSearchParams();
+        next.set("preset", spec.id);
+        if (venueSelect.value !== "") next.set("venue", venueSelect.value);
+        if ($("stadium").checked) next.set("stadium", "on");
+        if (language === "ja") next.set("lang", "ja");
+        history.replaceState(null, "", `?${next}`);
+        document.body.dataset.ready = "true";
+      }
+
+      presetSelect.addEventListener("change", () => { syncGrid(); draw(); });
+      $("language").addEventListener("change", () => { labelOptions(); draw(); });
+      for (const id of ["venue", "rows", "columns", "theme", "stadium", "slots", "labels"]) $(id).addEventListener("change", draw);
+      syncGrid();
+      labelOptions();
+      draw();
+    </script>
+  </body>
+</html>

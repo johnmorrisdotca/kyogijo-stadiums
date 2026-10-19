@@ -1964,6 +1964,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `athletics` | The athletics stadium | 陸上競技場 |
 | page `skating` | The skating rinks | スケートリンク |
 | page `budo` | The budō: judo, karate, kendo, sumo, kyūdō and the dojo | 武道 |
+| page `multi` | Tournament layouts | 大会向けレイアウト（複数の競技面） |
 | page `special-games` | Special games | 特設会場での試合 |
 | page `ballparks` | Ballparks | 球場 |
 | page `grounds` | The grounds | スタジアム |
@@ -2002,6 +2003,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `gallery-styling` | Gallery: looks and annotations | ギャラリー：スタイルと注釈 |
 | page `gallery-ranges` | Gallery: display ranges and zoom | ギャラリー：表示範囲とズーム |
 | page `gallery-layouts` | Gallery: layouts and backgrounds | ギャラリー：レイアウトと背景 |
+| page `gallery-multi` | Gallery: tournament layouts | ギャラリー：大会向けレイアウト |
 | page `gallery-pageant` | Gallery: flags on the halves | ギャラリー：ハーフに広げる旗 |
 | page `gallery-situation` | Gallery: the situation of a game | ギャラリー：試合の状況 |
 | group `compare` | Compare | 比較 |

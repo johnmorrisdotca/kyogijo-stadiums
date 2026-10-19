@@ -129,6 +129,7 @@ console.log(svg.startsWith("<svg"), svg.includes("USA 3, Canada 2"));
 | `./parks`, `./grounds`, `./arenas`, `./atlas`, `./eras`, `./leagues`, `./events` | The ballparks, the grounds, the arenas, every place, the markings of a season, each league's rulebook, the special games. |
 | `./turn` | A surface as a 3D view that turns, with the net, basket, goal or posts standing on it. |
 | `./scene`, `./canvas`, `./d3`, `./plot`, `./geojson`, `./png` | The drawing as data; on a canvas; in a d3 selection; as an Observable Plot mark; as GeoJSON; as a PNG (the optional peer `@resvg/resvg-js`). |
+| `./multi` | `drawMulti`, `multiFit`: several surfaces laid out for one event, to scale, in a hall ([docs](./docs/multi.md)). |
 | `./layouts` | `drawGrid` and `GRID_PRESETS`: small multiples with a title, a subtitle, a key and a credit line; the grounds behind a drawing or a grid. |
 | `./mount`, `./react`, `./element`, `./element/define` | Draw into a container; React props; the `<kyogijo-field>` element and its registration. |
 

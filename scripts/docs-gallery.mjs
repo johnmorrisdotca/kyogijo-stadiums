@@ -1244,7 +1244,54 @@ function skatingPage() {
   };
 }
 
-export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, specialPage, dataPage, curlingPage, courtsPage, fieldsPage, poolsPage, athleticsPage, skatingPage, budoPage, stylingPage, rangesPage, layoutsPage, pageantPage, situationPage];
+/** A snippet that draws a tournament layout. */
+const multi = (options) => `import { drawMulti } from "${MAIN}/multi";\n\nconst svg = drawMulti(${literal(options)});`;
+
+function multiPage() {
+  return {
+    slug: "gallery-multi",
+    title: "Gallery: tournament layouts",
+    ja: "大会向けレイアウト",
+    intro: "Several of the package's surfaces laid out together for one large event, to scale, on one floor: table tennis, pickleball, curling, judo, karate, badminton and tennis, each from its rule; then the same layouts set in a hall whose floor is published, with the real stadium round them switched on. The empty dashed places are for the event's own words and marks: nothing real is printed in them.",
+    sections: [
+      section("tabletennis", "Table tennis", "Areas of 14 m by 7 m (ITTF Handbook, 3.2.3.1), each enclosed by barriers about 75 cm high, with an umpire's chair and a score table, and one scoreboard hung over the middle for all of them, as at the Worlds in London in 2026.", [
+        item("multi-tt4", "Four areas on one floor (2 x 2)", multi({ preset: "tabletennis-4" })),
+        item("multi-tt8", "Eight areas (4 x 2)", multi({ preset: "tabletennis-8" })),
+        item("multi-tt-staggered", "A staggered grid", multi({ preset: "tabletennis-4", rows: 3, columns: 3, stagger: 0.5 }), "Every other row is moved along by half a bay."),
+      ]),
+      section("pickleball", "Pickleball", "A playing surface of 34 by 64 feet to each court, the rulebook's recommendation for tournament play (3.A.3); the rulebook names no gap between courts.", [
+        item("multi-pb22", "Four courts (2 x 2)", multi({ preset: "pickleball-2x2" })),
+        item("multi-pb24", "Eight courts (2 x 4)", multi({ preset: "pickleball-2x4" })),
+        item("multi-pb44", "Sixteen courts (4 x 4)", multi({ preset: "pickleball-4x4" }), "Sixteen is the least the PPA Tour asks a host to provide."),
+      ]),
+      section("curling", "Curling", "Sheets at most 4.75 m wide, at least 45.72 m long (World Curling R1), side by side.", [item("multi-curling", "Four sheets (1 x 4)", multi({ preset: "curling-1x4" }))]),
+      section("budo", "Judo and karate", "One coloured floor of mats with the contest areas laid on it in a row (judo) or in rows (karate); the branding is printed on the mats themselves, so the empty places are on the mat.", [
+        item("multi-judo3", "Judo, three areas in a row (1 x 3)", multi({ preset: "judo-1x3" }), "10 m areas, a safety area of 4 m, 4 m common between them (IJF 8.7), as at the Worlds in Baku in 2018."),
+        item("multi-judo4", "Judo, four areas (1 x 4)", multi({ preset: "judo-1x4" })),
+        item("multi-karate6", "Karate, six tatami (2 x 3)", multi({ preset: "karate-2x3" }), "The WKF's Karate1 Series A lays six areas in two rows of three on one carpet."),
+        item("multi-karate8", "Karate, eight tatami (2 x 4)", multi({ preset: "karate-2x4" })),
+      ]),
+      section("rackets", "Badminton and tennis", "Badminton courts always lie side by side, with 4 m between them at Grade 1 and 2 events and at least 1.5 m (BWF 5.3.4); tennis courts 7.32 m apart (a secondary source).", [
+        item("multi-badminton4", "Four courts, Grade 1 and 2 spacing", multi({ preset: "badminton-1x4" })),
+        item("multi-badminton4-min", "Four courts, the least spacing", multi({ preset: "badminton-1x4-min" })),
+        item("multi-tennis3", "Three tennis courts", multi({ preset: "tennis-1x3" })),
+      ]),
+      section("halls", "In a hall, and whether it fits", "`venue` sets the layout in a hall whose floor is published and says whether it fits; `stadium: true` draws the real stands and crowd round it, to the same scale. Off by default.", [
+        item("multi-hall-ice", "Four curling sheets on an NHL-size ice pad", multi({ preset: "curling-1x4", venue: "nhl-ice-pad" }), "200 by 85 feet: the four sheets fit."),
+        item("multi-hall-ice-stadium", "The same, in the arena", multi({ preset: "curling-1x4", venue: "nhl-ice-pad", stadium: true }), "The stands and the crowd are the package's own for a hockey arena."),
+        item("multi-hall-wembley", "Four table tennis areas in a hall known only by its area", multi({ preset: "tabletennis-4", venue: "ovo-arena-wembley", stadium: true }), "2,655 m² and no published length or width: the answer is that it may fit."),
+        item("multi-hall-copper", "Sixteen pickleball courts in the Copper Box Arena", multi({ preset: "pickleball-4x4", venue: "copper-box-arena" }), "The floor is 60 by 40 m; sixteen courts need 78 by 41.5 m, so the layout hangs over, in dashes."),
+        item("multi-hall-budokan", "Three judo areas in the Nippon Budokan", multi({ preset: "judo-1x3", venue: "nippon-budokan", stadium: true }), "An octagon 55 m across the flats: the four corners of the layout are inside it."),
+      ]),
+      section("themes", "Dark and Japanese", "Every colour is a custom property with a value for dark; the words come in English and Japanese.", [
+        item("multi-dark", "Dark", multi({ preset: "tabletennis-4", theme: "dark" })),
+        item("multi-ja", "In Japanese", multi({ preset: "judo-1x3", language: "ja" })),
+      ]),
+    ],
+  };
+}
+
+export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, specialPage, dataPage, curlingPage, courtsPage, fieldsPage, poolsPage, athleticsPage, skatingPage, budoPage, stylingPage, rangesPage, layoutsPage, multiPage, pageantPage, situationPage];
 
 /** The sections of every page, with each item's picture made by running its code. */
 export function galleryData(lib) {
@@ -1541,7 +1588,7 @@ export function framesFiles(lib) {
 
 /** The package's entry points as `runSnippet` wants them, read from a folder of built (`.js`) or source (`.ts`) files. */
 export async function libraryFrom(dir, ext, importer) {
-  const entries = { "": "index", "/charts": "charts-entry", "/frames": "frames-entry", "/layers": "layers-entry", "/leagues": "leagues-entry", "/eras": "eras-entry", "/grounds": "grounds-entry", "/arenas": "arenas-entry", "/parks": "parks-entry", "/atlas": "atlas-entry", "/events": "events-entry", "/geometry": "geometry-entry", "/replay": "replay-entry", "/layouts": "layouts-entry", "/turn": "turn-entry", "/athletics": "athletics-entry", "/skating": "skating-entry", "/target": "target-entry", "/zones": "zones-entry", "/pointer": "pointer-entry", "/budo": "budo-entry" };
+  const entries = { "": "index", "/charts": "charts-entry", "/frames": "frames-entry", "/layers": "layers-entry", "/leagues": "leagues-entry", "/eras": "eras-entry", "/grounds": "grounds-entry", "/arenas": "arenas-entry", "/parks": "parks-entry", "/atlas": "atlas-entry", "/events": "events-entry", "/geometry": "geometry-entry", "/replay": "replay-entry", "/layouts": "layouts-entry", "/multi": "multi-entry", "/turn": "turn-entry", "/athletics": "athletics-entry", "/skating": "skating-entry", "/target": "target-entry", "/zones": "zones-entry", "/pointer": "pointer-entry", "/budo": "budo-entry" };
   const lib = {};
   for (const [suffix, file] of Object.entries(entries)) lib[`${MAIN}${suffix}`] = await importer(`${dir}/${file}${ext}`);
   return lib;
