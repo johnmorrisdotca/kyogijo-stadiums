@@ -311,6 +311,7 @@ export type PlaceSurface =
   | { sport: BudoSport; league?: string; budo?: BudoStyle; dojo?: DojoSpec }
   | { sport: "mlb"; park: string }
   | { sport: "soccer"; ground?: string }
+  | { sport: "athletics"; ground?: string }
   | { sport: "nhl" | "nba"; arena?: string }
   | { sport: "nfl" | "cfl" | "afl" | "cricket" }
   | { sport: "rugby"; league?: "nrl" };
@@ -334,7 +335,8 @@ export const hallSurfaces = (place: Place): readonly HallSurface[] => (place.kin
 
 /**
  * Every surface a place offers, the place's own first: a park's fence (`mlb` with the park) or a ground's pitch at its size (`soccer` with the ground), then one for each
- * sport a tenant plays that the package draws (a CFL field for BC Place, an NFL field for MetLife Stadium, the rugby league field for Stadium Australia), each once. A ground
+ * sport a tenant plays that the package draws (a CFL field for BC Place, an NFL field for MetLife Stadium, the rugby league field for Stadium Australia), each once, and the
+ * athletics stadium (`athletics` with the ground) of a ground whose `track` is set. A ground
  * offers no ballpark, since its fence is not known; a park that a soccer club has played in offers the pitch at the international size, since its length and width are not known.
  * @example
  * ```ts
@@ -360,6 +362,8 @@ export function surfacesOf(place: Place): PlaceSurface[] {
     if (out.some((have) => have.sport === surface.sport && (have.sport !== "rugby" || (have as { league?: string }).league === (surface as { league?: string }).league))) continue;
     out.push(surface);
   }
+  // A ground with a running track round its pitch (`track`) also offers the athletics stadium: the track and its field events round the ground's own pitch.
+  if (place.kind === "ground" && place.track === true && !out.some((have) => have.sport === "athletics")) out.push({ sport: "athletics", ground: place.id });
   return out;
 }
 

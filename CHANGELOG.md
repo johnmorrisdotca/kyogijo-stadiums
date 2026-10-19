@@ -9,6 +9,7 @@ All notable changes to this project are written here. The format follows
 
 ### Added
 
+- **A ground with a running track offers the athletics stadium in the atlas:** `surfacesOf(place)` lists `{ sport: "athletics", ground }` for a ground whose `track` is set, and `surfaceOf(place, "athletics")` returns it; the six grounds Wikidata marks with a track are linked, no other place.
 - **A `<title>` on every point and line when the marks are written** (`marks: true`, `pointer: true`): a datum with no `title` of its own is named from its outcome, its team and its place in the data ("goal, home, 3"), so a delegated listener, a hover and a screen reader reach every mark. Nothing is added without `marks`, so a drawing nobody points at is the same string as ever. Heat cells stay without one (size budget; their numbers are in the layer's table).
 
 ## [0.10.2] - 2026-10-14

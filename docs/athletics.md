@@ -56,7 +56,7 @@ Everything is optional. `athletics` takes:
 | `waterJump` | `inside` (the default), `outside` or `none`, with the steeplechase. |
 | `numbers` | The lane numbers painted on the track: on by default. |
 
-The `league` is `world-athletics` (the standard track, the default) or `world-athletics-short` (the covered 200 m track: bends of radius 17.205 m at the kerb, banked 10 degrees, their centres 44.983 m apart, up to six lanes of 1.00 m, a straight of six lanes of 1.22 m through the middle for the 60 m and its hurdles, and its own stagger table; the plan's transitions are drawn as one circular bend, which is ours). A `ground` that has a track (`track: true` in the atlas, the six grounds Wikidata marks with one) draws the stadium with that ground's pitch.
+The `league` is `world-athletics` (the standard track, the default) or `world-athletics-short` (the covered 200 m track: bends of radius 17.205 m at the kerb, banked 10 degrees, their centres 44.983 m apart, up to six lanes of 1.00 m, a straight of six lanes of 1.22 m through the middle for the 60 m and its hurdles, and its own stagger table; the plan's transitions are drawn as one circular bend, which is ours). A `ground` that has a track (`track: true` in the atlas, the six grounds Wikidata marks with one) draws the stadium with that ground's pitch. The [atlas](./atlas.md) links them: `surfacesOf(place)` of such a ground lists `{ sport: "athletics", ground }` after its other surfaces.
 
 `look` is any look; `line-drawing` is ink only (black lines on white, with the track, the pits and the mats as outlines), for a printer or a plan to colour in. `detail`, `exactLines`, `landmarks` and `theme` are as for every sport; a start close-up and a finish close-up work in every renderer and in portrait.
 

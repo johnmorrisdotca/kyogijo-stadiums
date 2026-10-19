@@ -103,7 +103,7 @@ console.log(placesByClub("whitecaps")[0]?.id, placesByClub("ブリティッシ�
 
 ### One place, several surfaces
 
-`surfacesOf(place)` lists the surfaces a place offers (a hall's are its floors, see `hallSurfaces`), the place's own first: a park's fence (`mlb` with the park) or a ground's pitch at its own size (`soccer` with the ground), then one for each sport a tenant plays that the package draws. `surfaceOf(place)` is still the place's own, and with a sport it is the surface the place offers for it, else `undefined`.
+`surfacesOf(place)` lists the surfaces a place offers (a hall's are its floors, see `hallSurfaces`), the place's own first: a park's fence (`mlb` with the park) or a ground's pitch at its own size (`soccer` with the ground), then one for each sport a tenant plays that the package draws. A ground whose `track` is set (Wikidata lists athletics among its sports) offers one more, `{ sport: "athletics", ground }`: the running track and its field events round the ground's own pitch (`surfaceOf(place, "athletics")`). `surfaceOf(place)` is still the place's own, and with a sport it is the surface the place offers for it, else `undefined`.
 
 | A tenant plays | The surface | Options |
 | --- | --- | --- |

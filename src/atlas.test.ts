@@ -175,6 +175,22 @@ describe("surfaceOf with a sport", () => {
     expect(surfacesOf(placeById("oriole-park-at-camden-yards")!)).toEqual([{ sport: "mlb", park: "oriole-park-at-camden-yards" }]);
   });
 
+  it("offers the athletics stadium of a ground with a track, round that ground's pitch, and of no other place", () => {
+    const withTrack = PLACES.filter((place) => place.track === true);
+    expect(withTrack.length).toBeGreaterThan(0);
+    for (const place of PLACES) {
+      const offered = surfacesOf(place).filter((surface) => surface.sport === "athletics");
+      expect(offered, place.id).toEqual(place.kind === "ground" && place.track === true ? [{ sport: "athletics", ground: place.id }] : []);
+    }
+    const luzhniki = placeById("luzhniki")!;
+    expect(surfaceOf(luzhniki, "athletics")).toEqual({ sport: "athletics", ground: "luzhniki" });
+    expect(surfaceOf(luzhniki)).toEqual({ sport: "soccer", ground: "luzhniki" });
+    const svg = drawKyogijo({ ...surfaceOf(luzhniki, "athletics")!, style: "none" });
+    expect(svg).toContain('data-sport="athletics"');
+    expect(svg).not.toBe(drawKyogijo({ sport: "athletics", style: "none" }));
+    expect(surfaceOf(placeById("anfield")!, "athletics")).toBeUndefined();
+  });
+
   it("draws every surface every place offers", () => {
     for (const place of PLACES) {
       for (const surface of surfacesOf(place)) {
