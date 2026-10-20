@@ -70,6 +70,7 @@ export const NAV = [
       { slug: "grounds", ja: "スタジアム" },
       { slug: "arenas", ja: "アリーナ" },
       { slug: "venues", ja: "実在の会場" },
+      { slug: "flythrough", ja: "フライスルー" },
       { slug: "variants", ja: "リーグごとの違い" },
       { slug: "eras", ja: "年ごとの競技場" },
       { slug: "atlas", ja: "球場とスタジアムの地図" },

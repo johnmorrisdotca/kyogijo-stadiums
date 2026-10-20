@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Kyogijo Stadiums: fly-through of a real arena</title>
+    <meta name="description" content="One smooth camera from a map, down to the city and the real building of an arena, which rises into 3D and turns. The map is drawn with chizu, the building's outline is OpenStreetMap's." />
+    <style>
+      :root { color-scheme: light dark; --bg: #f6f4ee; --ink: #10151b; --muted: #434b54; --card: #fff; --line: #b9b3a3; --accent: #1f5fa8; --tab: #10151b; --tab-ink: #fff; }
+      @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #0d1218; --ink: #f6f3ea; --muted: #bcc3cb; --card: #18212a; --line: #475463; --accent: #7fb2ee; --tab: #f6f3ea; --tab-ink: #0d1218; } }
+      :root[data-theme="dark"] { color-scheme: dark; --bg: #0d1218; --ink: #f6f3ea; --muted: #bcc3cb; --card: #18212a; --line: #475463; --accent: #7fb2ee; --tab: #f6f3ea; --tab-ink: #0d1218; }
+      :root[data-theme="light"] { color-scheme: light; }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.45 system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif; }
+      main { max-width: 1280px; margin: 0 auto; padding: 12px 16px 24px; }
+      h1 { font-size: 1.4rem; margin: 0 0 2px; }
+      p.lede { margin: 0 0 12px; color: var(--muted); }
+      .back { margin: 0 0 6px; }
+      a { color: var(--accent); }
+      [hidden] { display: none !important; }
+      :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+      #tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; }
+      #tabs button { font: inherit; font-size: 1rem; font-weight: 800; min-height: 48px; padding: 0 14px; border-radius: 12px; border: 2px solid var(--tab); background: var(--card); color: var(--ink); cursor: pointer; }
+      #tabs button[aria-selected="true"] { background: var(--tab); color: var(--tab-ink); }
+      #trip { background: var(--card); border-radius: 12px; padding: 8px; border: 1px solid var(--line); }
+      .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr)); gap: 12px; margin: 10px 0 0; }
+      label { display: grid; gap: 4px; min-width: 0; font-size: .9rem; color: var(--muted); }
+      select { width: 100%; min-width: 0; font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px; min-height: 44px; }
+      details { margin-top: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 8px 12px; }
+      summary { cursor: pointer; min-height: 36px; font-weight: 700; display: flex; align-items: center; }
+      .note { color: var(--muted); font-size: .9rem; margin: 8px 0; }
+      #error { color: #c0392b; font-weight: 700; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="back"><a href="./" id="back" data-testid="back"></a></p>
+      <h1 id="title"></h1>
+      <p class="lede" id="lede"></p>
+      <div id="tabs" role="group" data-testid="tabs"></div>
+      <p id="error" role="alert" hidden></p>
+      <div id="trip" data-testid="trip"></div>
+      <details id="edit">
+        <summary id="l-edit"></summary>
+        <div class="controls">
+          <label><span id="l-language"></span><select id="language"><option value="en">English</option><option value="ja">日本語</option></select></label>
+          <label><span id="l-theme"></span><select id="theme"><option value="auto"></option><option value="light"></option><option value="dark"></option></select></label>
+          <label><span id="l-map"></span><select id="map"><option value="chizu"></option><option value="plain"></option></select></label>
+        </div>
+      </details>
+      <p class="note"><a href="./docs/flythrough.html" id="docs"></a> · <a href="./venues.html" id="venues"></a></p>
+    </main>
+    <script type="module">
+      // The fly-through of a real arena: the page hands the package chizu's world map, its drawing and its projection (the package has no dependency of its own) and asks for `mountFlythrough`.
+      // What is chosen lives in the address (`?arena=`, `?lang=`, `?theme=`, `?map=plain`, `?speed=`, `?stages=`); nothing is sent anywhere and nothing is stored.
+      import { VENUE_IDS, arenaById, arenaNameIn } from "./dist/index.js";
+      import { mountFlythrough } from "./dist/flythrough-entry.js";
+      import WORLD from "./chizu/world-entry.js";
+      import { drawChizu } from "./chizu/draw-entry.js";
+      import { projectPoint } from "./chizu/index.js";
+      import { quietTitles } from "./quiet.js";
+      quietTitles();
+
+      const WORDS = {
+        en: {
+          title: "Fly-through of a real arena",
+          pageTitle: "Kyogijo Stadiums: fly-through of a real arena",
+          lede: "One smooth camera: it starts on a map, falls to the city and the building of the arena, which rises into 3D and turns. Play, pause, step back or choose a stage. The building's outline is OpenStreetMap's; no team or league mark is drawn.",
+          back: "Back to the Kyogijo Stadiums demo", docs: "The fly-through page of the docs", venues: "The real venues page",
+          edit: "Look", language: "Language", theme: "Theme", auto: "Follow the device", light: "Light", dark: "Dark", map: "Map", chizu: "chizu's world map", plain: "Plain graticule (no map)", group: "The arenas",
+        },
+        ja: {
+          title: "実在のアリーナへのフライスルー",
+          pageTitle: "競技場 Kyogijo Stadiums：実在のアリーナへのフライスルー",
+          lede: "ひとつながりのカメラ移動です。地図から始まり、都市とアリーナの建物へ近づき、建物は3Dに立ち上がって回転します。再生・一時停止・戻る・場面の選択ができます。建物の輪郭はOpenStreetMapのもので、チームやリーグのマークはありません。",
+          back: "競技場 Kyogijo Stadiums のデモに戻る", docs: "ドキュメントの「フライスルー」ページ", venues: "「実在の会場」ページ",
+          edit: "表示", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク", map: "地図", chizu: "chizuの世界地図", plain: "経緯線のみ（地図なし）", group: "アリーナ",
+        },
+      };
+      const $ = (id) => document.getElementById(id);
+      const params = new URLSearchParams(location.search);
+      const words = () => WORDS[$("language").value];
+      const setSelect = (id, value, allowed) => { if (allowed.includes(value)) $(id).value = value; };
+      const state = { arena: VENUE_IDS.includes(params.get("arena")) ? params.get("arena") : VENUE_IDS[0] };
+      const speed = Number(params.get("speed")) > 0 ? Number(params.get("speed")) : 1;
+      const stages = (params.get("stages") ?? "").split(",").filter((s) => ["map", "city", "arena"].includes(s));
+      let trip;
+
+      setSelect("theme", params.get("theme"), ["light", "dark"]);
+      setSelect("language", params.get("lang"), ["en", "ja"]);
+      setSelect("map", params.get("map"), ["plain"]);
+      const nameOf = (id) => arenaNameIn(arenaById(id), undefined, $("language").value);
+
+      function labelPage() {
+        const w = words();
+        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["back", "back"], ["docs", "docs"], ["venues", "venues"], ["l-edit", "edit"], ["l-language", "language"], ["l-theme", "theme"], ["l-map", "map"]]) $(id).textContent = w[key];
+        for (const select of ["theme", "map"]) for (const option of $(select).options) option.textContent = w[option.value];
+        document.documentElement.lang = $("language").value;
+        document.title = w.pageTitle;
+        $("tabs").setAttribute("aria-label", w.group);
+        $("tabs").replaceChildren(...VENUE_IDS.map((id) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.dataset.arena = id;
+          button.textContent = nameOf(id);
+          button.setAttribute("aria-pressed", String(id === state.arena));
+          button.setAttribute("aria-selected", String(id === state.arena));
+          return button;
+        }));
+      }
+
+      function syncUrl() {
+        const next = new URLSearchParams();
+        if (state.arena !== VENUE_IDS[0]) next.set("arena", state.arena);
+        if ($("language").value === "ja") next.set("lang", "ja");
+        if ($("theme").value !== "auto") next.set("theme", $("theme").value);
+        if ($("map").value === "plain") next.set("map", "plain");
+        if (speed !== 1) next.set("speed", String(speed));
+        if (stages.length > 0) next.set("stages", stages.join(","));
+        history.replaceState(null, "", next.size === 0 ? location.pathname : `?${next}`);
+      }
+
+      function draw(keep) {
+        const theme = $("theme").value;
+        if (theme === "auto") delete document.documentElement.dataset.theme;
+        else document.documentElement.dataset.theme = theme;
+        $("error").hidden = true;
+        trip?.destroy();
+        try {
+          trip = mountFlythrough($("trip"), {
+            arena: state.arena,
+            language: $("language").value,
+            ...(theme === "auto" ? {} : { theme }),
+            ...($("map").value === "chizu" ? { start: { map: WORLD, draw: drawChizu, project: projectPoint } } : {}),
+            ...(stages.length > 0 ? { stages } : {}),
+          }, { speed, id: "trip-flight", onStage: (stage) => { document.body.dataset.stage = stage; } });
+          if (keep !== undefined && trip.stages.includes(keep)) trip.goTo(keep);
+        } catch (error) {
+          $("error").textContent = String(error.message);
+          $("error").hidden = false;
+        }
+        syncUrl();
+        const back = new URLSearchParams({ sport: "nhl", arena: state.arena });
+        if ($("language").value === "ja") back.set("lang", "ja");
+        $("back").href = `./?${back}`;
+        document.body.dataset.ready = "true";
+        window.flythrough = trip;
+      }
+
+      labelPage();
+      $("tabs").addEventListener("click", (event) => {
+        const button = event.target.closest("button[data-arena]");
+        if (button === null) return;
+        state.arena = button.dataset.arena;
+        for (const other of $("tabs").children) { other.setAttribute("aria-pressed", String(other === button)); other.setAttribute("aria-selected", String(other === button)); }
+        draw();
+      });
+      for (const id of ["theme", "map"]) $(id).addEventListener("input", () => draw(trip?.stage));
+      $("language").addEventListener("input", () => { labelPage(); draw(trip?.stage); });
+      draw();
+    </script>
+  </body>
+</html>

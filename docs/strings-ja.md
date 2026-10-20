@@ -2056,6 +2056,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `grounds` | The grounds | スタジアム |
 | page `arenas` | The arenas | アリーナ |
 | page `venues` | The real venues | 実在の会場 |
+| page `flythrough` | The fly-through | フライスルー |
 | page `variants` | League variants | リーグごとの違い |
 | page `eras` | Surfaces through the years | 年ごとの競技場 |
 | page `atlas` | The atlas | 球場とスタジアムの地図 |

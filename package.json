@@ -238,6 +238,11 @@
       "import": "./dist/turn-entry.js",
       "default": "./dist/turn-entry.js"
     },
+    "./flythrough": {
+      "types": "./dist/flythrough-entry.d.ts",
+      "import": "./dist/flythrough-entry.js",
+      "default": "./dist/flythrough-entry.js"
+    },
     "./element/define": {
       "types": "./dist/element-define.d.ts",
       "import": "./dist/element-define.js",
