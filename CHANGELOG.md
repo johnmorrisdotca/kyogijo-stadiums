@@ -19,6 +19,8 @@ All notable changes to this project are written here. The format follows
 
 - **A box with the picture's words no longer pops up over the mat.** A `<title>` that is a direct child of the root `<svg>` is the browser's tooltip for the whole drawing, so resting the pointer on the 2D plan showed "Judging assignments: Kata, 5 judges, 2 mats" in a box on top of the mat, and on a score on a surface "Mexico 11, USA 10, Final" over its top left. A judging picture now keeps its title and description in a `<defs>` (the picture is still named by them: `aria-labelledby` points at them), and the demo's pages move the title of every drawing they show into a `<defs>` the same way (`demo/quiet.js`); a surface's own markup is unchanged byte for byte, so a page that wants no tooltip does the same with its drawings.
 
+- **Chart lines stay inside their rows in a wide face.** The chart's name and ID lines were fitted to an estimate of the face's width, and in a wider face (Verdana on Windows, DejaVu Sans on Linux, where the demo's browser test of 0.18.1 failed) the last words of a long name crossed the row's right edge by a few pixels. The chart now fits its lines to 94 % of the room, and a browser test sets the board and the chart in Verdana and DejaVu Sans.
+
 ### Changed
 
 - The plan view of a judging assignment moved its title and description into a `<defs>` (see above); everything else it draws is as it was. The plan's drawing code is in `judging.plan.ts` and the words in `judging.text.ts`, shared by both views.

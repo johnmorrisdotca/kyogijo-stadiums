@@ -42,7 +42,8 @@ interface Row {
 /** The rows of one mat's chart, each as tall as its name and ID need, set in a chart `width` wide. */
 function chartRows(mat: JudgingResolved, width: number, m: Metrics, setting: Pick<JudgingSetting, "language">): Row[] {
   const words = JUDGING_WORDS[setting.language];
-  const textW = width - m.rowPad * 1.6 - m.badge - m.gap * 0.6;
+  // `textWidth` is an estimate, and a face wider than the one it estimates (the DejaVu and Verdana of a Linux or Windows screen) would put a line across the row's edge: a margin of 6 % keeps every line inside it.
+  const textW = (width - m.rowPad * 1.6 - m.badge - m.gap * 0.6) * 0.94;
   return mat.seats.map((a): Row => {
     if (!a.assigned) return { a, fit: undefined, height: Math.max(m.badge + 2 * m.rowPad, m.rowPad * 2 + m.role * LINE_HEIGHT + 6 * m.k + m.nameMin * LINE_HEIGHT) };
     const fit = fitChart({ name: a.name, id: a.id, idLabel: words.chart.idLabel, width: textW, max: m.nameMax, min: m.nameMin });

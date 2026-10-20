@@ -389,3 +389,24 @@ test("printing: every mat is a page of the chosen paper, one to a page, in the p
     expect(text).toMatch(/\/MediaBox\s*\[0 0 612 792\]/);
   }
 });
+
+test("in a wide face (Verdana, DejaVu Sans) every line of the board stays inside its chip or its plate, however long, and so does the chart of the plan view", async ({ page }) => {
+  await open(page, `?view=broadcast&dim=2d&mat=1&${data([{ l: "", o: [["Maximilian Alexander Friedrich von Hohenlohe-Schillingsfürst und Waldenburg zu Bartenstein", "0123456789-0123456789-0123456789-0123456789-0123456789-abcd"], ["Li Wei", "J-1"], ["", ""], ["山田太郎".repeat(8), ""], ["Sofia Lindqvist-Hernandez", "J-2210"]] }])}`);
+  await page.addStyleTag({ content: '.kyogijo{--ky-font:Verdana,"DejaVu Sans",sans-serif !important}' });
+  const out = await page.locator(`${STAGE} .ky-ju-board-row`).evaluateAll((all) => all.flatMap((row) => {
+    const chip = (row.querySelector(".ky-ju-chip") ?? row.querySelector(".ky-ju-chip-empty")).getBoundingClientRect();
+    const plate = row.closest(".ky-ju-board").querySelector(".ky-plate-bg").getBoundingClientRect();
+    return [...row.querySelectorAll("text")].map((t) => { const r = t.getBoundingClientRect(); const box = t.classList.contains("ky-ink-left") ? chip : plate; return { text: t.textContent, ok: r.right <= box.right + 0.5 && r.left >= box.left - 0.5 }; });
+  }));
+  expect(out.length).toBeGreaterThan(8);
+  for (const item of out) expect(item.ok, item.text).toBe(true);
+  // The chart of the plan view, in the same face.
+  await page.locator("#view").selectOption("flat");
+  await page.addStyleTag({ content: '.kyogijo .ky-ju-id{font-family:"Courier New","DejaVu Sans Mono",monospace !important}' });
+  const rows = await page.locator(`${STAGE} .ky-ju-chart-row`).evaluateAll((all) => all.flatMap((row) => {
+    const box = row.querySelector("rect").getBoundingClientRect();
+    return [...row.querySelectorAll("text")].map((t) => { const r = t.getBoundingClientRect(); return { text: t.textContent, ok: r.right <= box.right + 0.5 && r.left >= box.left - 0.5 }; });
+  }));
+  expect(rows.length).toBeGreaterThan(8);
+  for (const item of rows) expect(item.ok, item.text).toBe(true);
+});
