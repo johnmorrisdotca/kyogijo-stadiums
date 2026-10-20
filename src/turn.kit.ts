@@ -47,7 +47,7 @@ export interface Plane {
 }
 
 /** What stands on the surface as a thing a reader would name: a net, a basket, a goal, a pair of posts. */
-export type UprightKind = "scoreboard" | "net" | "antennae" | "goalposts" | "netposts" | "hoop" | "goal" | "boards" | "stumps" | "pylons" | "flags" | "fence" | "backstop" | "foul-poles" | "table-legs" | "walls" | "starting-blocks" | "backstroke-flags" | "false-start-rope" | "springboards" | "platforms" | "judges-stand" | "hurdles" | "steeplechase" | "high-jump" | "pole-vault" | "cage" | "padding" | "rink-boards" | "mound" | "azuchi" | "targets" | "stands" | "wall-seats" | "roof" | "gallery" | "dais" | "banner" | "shrine" | "mat-edge" | "surrounds" | "officials" | "judges" | "deck" | "cage-fence" | "cage-posts";
+export type UprightKind = "scoreboard" | "net" | "antennae" | "goalposts" | "netposts" | "hoop" | "goal" | "boards" | "stumps" | "pylons" | "flags" | "fence" | "backstop" | "foul-poles" | "table-legs" | "walls" | "starting-blocks" | "backstroke-flags" | "false-start-rope" | "springboards" | "platforms" | "judges-stand" | "hurdles" | "steeplechase" | "high-jump" | "pole-vault" | "cage" | "padding" | "rink-boards" | "mound" | "azuchi" | "targets" | "stands" | "wall-seats" | "roof" | "gallery" | "dais" | "banner" | "shrine" | "mat-edge" | "surrounds" | "officials" | "judges" | "deck" | "cage-fence" | "cage-posts" | "ring-ropes" | "ring-posts";
 
 /** A thing that stands on the surface: where, how high, and the planes it is made of. */
 export interface Upright {

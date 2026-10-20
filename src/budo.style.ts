@@ -45,11 +45,19 @@ const COMBAT_CLASSES = `
 .kyogijo .ky-bud-step{fill:color-mix(in srgb,var(--ky-bud-floor,#43484e) 76%,#fff);stroke:var(--ky-ink);stroke-opacity:.35;stroke-width:.03}
 .kyogijo .ky-bud-pad{fill:var(--ky-ink);fill-opacity:.82}`.trim();
 
-const COMBAT: readonly string[] = ["mma"];
+/** The rules of a ring's own classes: the ropes and the corner pads in the boxers' colours. */
+const RING_CLASSES = `
+.kyogijo .ky-bud-rope{stroke:var(--ky-bud-rope,#f4f1e8);fill:none;stroke-linecap:round}
+.kyogijo .ky-bud-corner-red{fill:var(--ky-red)}
+.kyogijo .ky-bud-corner-blue{fill:var(--ky-blue,#2a5db0)}
+.kyogijo .ky-bud-corner-white{fill:#f4f1e8;stroke:var(--ky-ink);stroke-opacity:.45;stroke-width:.03}`.trim();
+
+const COMBAT: readonly string[] = ["mma", "boxing"];
+const RING: readonly string[] = ["boxing"];
 
 /** The custom properties of a look. */
 const vars = (l: BudoLook): string =>
-  `--ky-surface:${l.surface};--ky-surface-alt:${l.alt};--ky-red:${l.red};--ky-apron:${l.apron};--ky-free:${l.free};--ky-bud-floor:${l.floor};--ky-boards:${l.boards}${l.dirt === undefined ? "" : `;--ky-dirt:${l.dirt}`}${l.sand === undefined ? "" : `;--ky-sand:${l.sand}`}${l.straw === undefined ? "" : `;--ky-bud-straw:${l.straw}`}`;
+  `--ky-surface:${l.surface};--ky-surface-alt:${l.alt};--ky-red:${l.red};--ky-apron:${l.apron};--ky-free:${l.free};--ky-bud-floor:${l.floor};--ky-boards:${l.boards}${l.dirt === undefined ? "" : `;--ky-dirt:${l.dirt}`}${l.sand === undefined ? "" : `;--ky-sand:${l.sand}`}${l.straw === undefined ? "" : `;--ky-bud-straw:${l.straw}`}${l.rope === undefined ? "" : `;--ky-bud-rope:${l.rope}`}`;
 
 /** The three rules of one look: light, dark by the device's setting, and dark by the page's `data-theme`. */
 function lookRules(sport: BudoKind, name: string): string {
@@ -77,8 +85,8 @@ export const KYOGIJO_BUDO_GALLERY_STYLE = `
 export function budoStyle(sport: string, look?: string): string {
   const kind = sport as BudoKind;
   if (BUDO_LOOKS[kind] === undefined) return "";
-  return `${CLASSES}${COMBAT.includes(sport) ? `\n${COMBAT_CLASSES}` : ""}\n${look === undefined ? lookRules(kind, Object.keys(BUDO_LOOKS[kind])[0]) : lookRules(kind, look)}`;
+  return `${CLASSES}${COMBAT.includes(sport) ? `\n${COMBAT_CLASSES}` : ""}${RING.includes(sport) ? `\n${RING_CLASSES}` : ""}\n${look === undefined ? lookRules(kind, Object.keys(BUDO_LOOKS[kind])[0]) : lookRules(kind, look)}`;
 }
 
 /** Every budō sport's rules and every look, for a page that draws with `style: "none"` and supplies the stylesheet itself. */
-export const KYOGIJO_BUDO_STYLE: string = `${CLASSES}\n${COMBAT_CLASSES}${KYOGIJO_BUDO_GALLERY_STYLE}\n${(Object.keys(BUDO_LOOKS) as BudoKind[]).flatMap((sport) => Object.keys(BUDO_LOOKS[sport]).map((name) => lookRules(sport, name))).join("\n")}`;
+export const KYOGIJO_BUDO_STYLE: string = `${CLASSES}\n${COMBAT_CLASSES}\n${RING_CLASSES}${KYOGIJO_BUDO_GALLERY_STYLE}\n${(Object.keys(BUDO_LOOKS) as BudoKind[]).flatMap((sport) => Object.keys(BUDO_LOOKS[sport]).map((name) => lookRules(sport, name))).join("\n")}`;

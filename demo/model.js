@@ -69,9 +69,9 @@ export const DOJO_SIZES = ["8", "12", "20", "50", "100", "200"];
 /** The MMA cage's width across the flats in feet: the larger cage of 30 feet and the smaller of 25 (the rules allow 20 to 32). */
 export const CAGE_SIZES = ["30", "25"];
 /** The look of the package a choice means in a sport (judo, karate or a dojo), or nothing for the sport's own. */
-const BUDO_LOOK_OF = { traditional: { judo: "green-beige", karate: "green-beige", dojo: "green-beige" }, blue: { judo: "yellow-blue", karate: "blue-black", dojo: "yellow-blue", mma: "blue" }, black: { judo: "black-red", dojo: "black-red", mma: "black" } };
+const BUDO_LOOK_OF = { traditional: { judo: "green-beige", karate: "green-beige", dojo: "green-beige" }, blue: { judo: "yellow-blue", karate: "blue-black", dojo: "yellow-blue", mma: "blue", boxing: "blue" }, black: { judo: "black-red", dojo: "black-red", mma: "black", boxing: "black" } };
 /** The sports of the budo family, the ones that have a contest area, a hall and a look. */
-export const isBudo = (sport) => ["judo", "karate", "kendo", "sumo", "kyudo", "dojo", "mma"].includes(sport);
+export const isBudo = (sport) => ["judo", "karate", "kendo", "sumo", "kyudo", "dojo", "mma", "boxing"].includes(sport);
 /** The sports whose surface is a pool. */
 export const isPool = (sport) => sport === "swimming" || sport === "waterpolo" || sport === "diving" || sport === "artisticswimming";
 
@@ -584,10 +584,10 @@ export function hiddenRows(s) {
     "athletics-group": s.sport !== "athletics",
     "races-group": s.sport !== "athletics" && s.sport !== "skating",
     "budo-group": !isBudo(s.sport),
-    "budo-look-row": !["judo", "karate", "dojo", "mma"].includes(s.sport),
+    "budo-look-row": !["judo", "karate", "dojo", "mma", "boxing"].includes(s.sport),
     "cage-size-row": s.sport !== "mma",
     "budo-areas-row": s.sport !== "judo" && s.sport !== "karate",
-    "budo-chips": s.sport === "kyudo" || s.sport === "mma",
+    "budo-chips": s.sport === "kyudo" || s.sport === "mma" || s.sport === "boxing",
     "budo-hall": !["judo", "karate", "kendo"].includes(s.sport),
     "budo-officials": s.sport !== "judo" && s.sport !== "karate",
     "budo-tassels": s.sport !== "sumo",

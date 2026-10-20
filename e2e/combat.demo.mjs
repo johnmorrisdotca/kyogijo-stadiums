@@ -56,3 +56,20 @@ test("the cage stands up in 3D: a solid platform, eight padded posts and a fence
   await noSidewaysScroll(page);
   expect(errors).toEqual([]);
 });
+
+test("the ring shows the look and the league, and draws its ropes and four corners; in 3D it has a solid platform, four posts and the ropes", async ({ page }) => {
+  const errors = await open(page, "?sport=boxing&lang=en&help=off");
+  await openGroups(page);
+  await expect(page.locator(at("budo-look"))).toBeVisible();
+  await expect(page.locator(at("cage-size"))).toBeHidden();
+  await expect(page.locator(at("budo-areas"))).toBeHidden();
+  expect(await svg(page).evaluate((node) => ["red", "blue", "white"].map((c) => node.querySelectorAll(`.ky-bud-corner-${c}`).length))).toEqual([1, 1, 2]);
+  expect(await svg(page).evaluate((node) => node.querySelectorAll(".ky-bud-rope").length)).toBeGreaterThan(0);
+  await open(page, "?sport=boxing&league=wbc-amateur&view=3d&lang=en&help=off");
+  const stage = '[data-testid="stage"]';
+  await expect(page.locator(`${stage} [data-part="deck-top"]`)).toHaveCount(1);
+  await expect(page.locator(`${stage} .ky-up-post`)).toHaveCount(8);
+  expect(await page.locator(`${stage} .ky-up-rail`).count()).toBeGreaterThan(60);
+  await noSidewaysScroll(page);
+  expect(errors).toEqual([]);
+});

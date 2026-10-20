@@ -174,7 +174,7 @@ Each layer is a group with a `<title>` and a `<desc>`. Marks may carry a `title`
 
 1,000 points add about 60 kB to a drawing, and 10,000 points are drawn in about 20 ms on a laptop; tests hold the first under 70 kB and the second under 250 ms. With `marks: true` the first is under 130 kB. A line with a comet costs about 400 bytes, with the gradient of its own.
 
-A heat map on a grid of 50 by 30 adds under 30 kB to a drawing on any of the forty sports (13 to 23 kB with the legend off, about 5 ms to draw), and under 100 kB with every cell labelled; a test holds both. With `marks: true` and a path for each cell it adds under 150 kB when every cell is filled. A density of 10,000 marks takes about 25 ms on a laptop (a grid of 100 by 60 nodes; 40 ms at 200 by 100) and adds about 8 kB; the test holds it under 500 ms. Hexagons take 15 ms for 10,000 marks.
+A heat map on a grid of 50 by 30 adds under 30 kB to a drawing on any of the forty-one sports (13 to 23 kB with the legend off, about 5 ms to draw), and under 100 kB with every cell labelled; a test holds both. With `marks: true` and a path for each cell it adds under 150 kB when every cell is filled. A density of 10,000 marks takes about 25 ms on a laptop (a grid of 100 by 60 nodes; 40 ms at 200 by 100) and adds about 8 kB; the test holds it under 500 ms. Hexagons take 15 ms for 10,000 marks.
 
 ## Ideas credited
 

@@ -5,9 +5,9 @@ Each is held by a test, and the ones with a name are exported. The counts are ma
 <!-- made:limits -->
 | Limit | Value | Where |
 | --- | --- | --- |
-| Sports | 40 | `SPORTS` |
+| Sports | 41 | `SPORTS` |
 | Soccer pitches and providers | 10 presets, 10 providers (90 maps between them, each landmark to its landmark) | `SOCCER_PITCHES`, `SOCCER_PROVIDERS` |
-| League variants | 80 leagues of 33 families, besides each sport's own | `LEAGUES` |
+| League variants | 82 leagues of 34 families, besides each sport's own | `LEAGUES` |
 | Ballparks | 94 (30 current MLB, 44 past MLB, 12 NPB home parks, 8 other NPB grounds) | `PARKS` |
 | Grounds | 64 | `GROUNDS` |
 | Arenas | 167 | `ARENAS` |

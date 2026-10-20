@@ -4,7 +4,7 @@
 import type { Area, Shape } from "../fields.types.ts";
 import { chooseLeague } from "../leagues.ts";
 import { BUDO_LEAGUES, DOJO_LEAGUES, JUDO_LEAGUES, KARATE_LEAGUES, KENDO_LEAGUES, KYUDO_LEAGUES, SUMO_LEAGUES, type BudoFigures, type BudoLeague, type JudoFigures, type KarateFigures } from "../leagues/budo.ts";
-import { MMA_LEAGUES, type MmaFigures } from "../leagues/combat.ts";
+import { BOXING_LEAGUES, MMA_LEAGUES, type BoxingFigures, type MmaFigures } from "../leagues/combat.ts";
 import type { SurfaceOptions } from "../types.ts";
 import { dojoLayout, dojoLeague, dojoSpecOf, type DojoLayout } from "./dojo.ts";
 import { contestOf, gridOf, judoParts, matOf, safetyOf, snapTo, type JudoLayout } from "./judo.ts";
@@ -13,6 +13,7 @@ import { kendoParts, kendoSide, type KendoLayout } from "./kendo.ts";
 import { kyudoParts, shootersOf, type KyudoLayout } from "./kyudo.ts";
 import { boxD } from "./kit.ts";
 import { cageHeight, cageParts, cageWidth, fenceHeight, type CageLayout } from "./cage.ts";
+import { ringHeight, ringParts, ringSize, type RingLayout } from "./ring.ts";
 import { emptyParts, grow, union, type MBox, type MMark, type MRange } from "./parts.ts";
 import { dohyoHeight, sumoParts, type SumoLayout } from "./sumo.ts";
 import { lookOf } from "./looks.ts";
@@ -55,6 +56,7 @@ export interface BudoPlan {
   kyudo?: KyudoLayout;
   dojo?: DojoLayout;
   mma?: CageLayout;
+  boxing?: RingLayout;
 }
 
 const isBudoLeague = (l: unknown): l is BudoLeague => typeof l === "object" && l !== null && BUDO_LEAGUES.includes(l as BudoLeague);
@@ -65,8 +67,8 @@ export const BUDO_SPORTS: readonly BudoKind[] = Object.freeze(["judo", "karate",
 /** True for a sport of the budō family. */
 export const isBudoSport = (sport: string): sport is Exclude<BudoKind, CombatKind> => (BUDO_SPORTS as readonly string[]).includes(sport);
 
-/** The combat sports the engine of the budō also draws: the MMA cage. */
-export const COMBAT_SPORTS: readonly CombatKind[] = Object.freeze(["mma"]);
+/** The combat sports the engine of the budō also draws: the MMA cage and the boxing ring. */
+export const COMBAT_SPORTS: readonly CombatKind[] = Object.freeze(["mma", "boxing"]);
 
 /** True for a combat sport (the MMA cage). */
 export const isCombatSport = (sport: string): sport is CombatKind => (COMBAT_SPORTS as readonly string[]).includes(sport);
@@ -74,7 +76,7 @@ export const isCombatSport = (sport: string): sport is CombatKind => (COMBAT_SPO
 /** True for a sport this engine draws: a sport of the budō or a combat sport. */
 export const isMatSport = (sport: string): sport is BudoKind => isBudoSport(sport) || isCombatSport(sport);
 
-const OWN = { judo: JUDO_LEAGUES, karate: KARATE_LEAGUES, kendo: KENDO_LEAGUES, sumo: SUMO_LEAGUES, kyudo: KYUDO_LEAGUES, dojo: DOJO_LEAGUES, mma: MMA_LEAGUES } as const;
+const OWN = { judo: JUDO_LEAGUES, karate: KARATE_LEAGUES, kendo: KENDO_LEAGUES, sumo: SUMO_LEAGUES, kyudo: KYUDO_LEAGUES, dojo: DOJO_LEAGUES, mma: MMA_LEAGUES, boxing: BOXING_LEAGUES } as const;
 
 /** What `budo.style` asks of a judo area: true for a kata area, false for a contest area, undefined for neither said. @throws TypeError for a value that is not `shiai` or `kata`. */
 function kataOf(style: unknown): boolean | undefined {
@@ -183,6 +185,13 @@ export function budoPlan(o: Pick<SurfaceOptions, "sport" | "league" | "budo" | "
       const L = cageParts(f, { width: cageWidth(style.size, f), height: cageHeight(style.height, f), fence: fenceHeight(style.fence, f), gates: flag(style.gates, true, "budo.gates"), steps: flag(style.steps, true, "budo.steps") });
       const ranges: Record<string, MRange> = { ...L.ranges, half: halves(L.platform) };
       return finish({ box: L.platform, extent: L.extent, areas: L.parts.areas, shapes: L.parts.shapes, lineWidth: f.post.diameter, ranges, marks: L.marks, centre: { x: L.centre[0], y: L.centre[1], r: L.apothem * 0.35 }, mma: L });
+    }
+    case "boxing": {
+      const f = fig as BoxingFigures;
+      const rule = `the rules of ${league.id === "wbc-amateur" ? "the WBC Amateur" : league.id === "wisconsin" ? "Wisconsin" : "Nevada"}`;
+      const L = ringParts(f, { size: ringSize(style.size, f, rule), height: ringHeight(style.height, f, rule), steps: flag(style.steps, true, "budo.steps"), corners: flag(style.corners, true, "budo.corners") });
+      const ranges: Record<string, MRange> = { ...L.ranges, half: halves(L.platform) };
+      return finish({ box: L.platform, extent: L.extent, areas: L.parts.areas, shapes: L.parts.shapes, lineWidth: f.ropes.diameter.drawn, ranges, marks: L.marks, centre: { x: L.centre[0], y: L.centre[1], r: L.size * 0.2 }, boxing: L });
     }
     default: {
       const L = dojoLayout(o.dojo ?? {}, dojoLeague(league.id));

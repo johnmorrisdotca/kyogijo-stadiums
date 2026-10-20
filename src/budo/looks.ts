@@ -18,6 +18,8 @@ export interface BudoLook {
   dirt?: string;
   sand?: string;
   straw?: string;
+  /** The ropes of a ring. */
+  rope?: string;
 }
 
 interface Pair {
@@ -81,6 +83,12 @@ export const BUDO_LOOKS: Readonly<Record<BudoKind, Readonly<Record<string, Pair>
     grey: lifted(pair({ ...COMMON, surface: "#8d949b", alt: "#6f767d", red: "#b32a2f", floor: "#43484e" }), "#444a52"),
     black: lifted(pair({ ...COMMON, surface: "#2b2e33", alt: "#1f2226", red: "#b32a2f", floor: "#24272b" }), "#3b3f45"),
     blue: lifted(pair({ ...COMMON, surface: "#3a68ad", alt: "#2b528d", red: "#b32a2f", floor: "#2c3440" }), "#3a4452"),
+  },
+  // The ring's canvas over the dark skirt of its platform: a pale canvas with dark red ropes (the default), a blue one and a black one with white ropes. Ours: the rules do not paint a ring.
+  boxing: {
+    white: lifted(pair({ ...COMMON, surface: "#e6e3da", alt: "#d4d0c4", red: "#b32a2f", floor: "#2d3a56", rope: "#b32a2f" }), "#3b4a6e"),
+    blue: lifted(pair({ ...COMMON, surface: "#3a68ad", alt: "#2b528d", red: "#b32a2f", floor: "#1f3358", rope: "#f4f1e8" }), "#324a78"),
+    black: lifted(pair({ ...COMMON, surface: "#2b2e33", alt: "#1f2226", red: "#b32a2f", floor: "#17191c", rope: "#f4f1e8" }), "#3b3f45"),
   },
   kyudo: { wood: pair({ ...COMMON, surface: "#9db57d", alt: "#d8cfb0", red: "#b32a2f", floor: "#b98c58", dirt: "#c9ad7a" }) },
 });

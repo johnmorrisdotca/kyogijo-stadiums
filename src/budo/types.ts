@@ -4,7 +4,7 @@
 export type BudoKind = "judo" | "karate" | "kendo" | "sumo" | "kyudo" | "dojo" | CombatKind;
 
 /** The combat sports the engine of the budō also draws: the MMA cage. */
-export type CombatKind = "mma";
+export type CombatKind = "mma" | "boxing";
 
 /** The sides of a hall, as a plan has them: north is the top of the drawing. `top`, `bottom`, `left` and `right` say the same. */
 export type Compass = "north" | "south" | "east" | "west";
@@ -23,7 +23,7 @@ export interface BudoStyle {
   hall?: "budokan";
   /** Judo: `shiai` (the contest area, the default) or `kata` (the IJF's kata area, `league: "ijf-kata"`: a centre tape, two white tapes 3 m from it either side, a safety area of 2 m; with `officials`, the five judges' seats on the shomen side and the coach's chair opposite). */
   style?: "shiai" | "kata";
-  /** Judo: the contest area's side, 8 m to 10 m. Kendo: the shiai-jo's side, 9 m to 11 m. MMA cage: the width across the flats, 6.096 m to 9.754 m (20 to 32 feet), 9.144 m (30 feet) by default; 7.62 m is the smaller cage of 25 feet. In metres. */
+  /** Judo: the contest area's side, 8 m to 10 m. Kendo: the shiai-jo's side, 9 m to 11 m. MMA cage: the width across the flats, 6.096 m to 9.754 m (20 to 32 feet), 9.144 m (30 feet) by default; 7.62 m is the smaller cage of 25 feet. Boxing ring: the side inside the ropes, within what the league allows (20 feet for the Nevada rule, 16 to 20 feet for Wisconsin, 4.5 to 6.1 m for the WBC Amateur rules). In metres. */
   size?: number;
   /** Judo: the width of the safety area, 3 m or more (4 m by default). In metres. */
   safety?: number;
@@ -41,7 +41,7 @@ export interface BudoStyle {
   texture?: "weave" | "none";
   /** Karate: the referee's and the judges' places. On by default. */
   judges?: boolean;
-  /** Sumo: the height of the clay square in metres, 0.34 to 0.60. 0.55 by default. MMA cage: the platform's height over the floor of the building, 0 to 1.219 m (4 feet), 1.219 m by default. Seen in 3D. */
+  /** Sumo: the height of the clay square in metres, 0.34 to 0.60. 0.55 by default. MMA cage: the platform's height over the floor of the building, 0 to 1.219 m (4 feet), 1.219 m by default. Boxing ring: the same, 0 to what the league allows (5 feet in Nevada, 4 feet in Wisconsin, 1.2 m for the amateurs). Seen in 3D. */
   height?: number;
   /** Sumo: the four tassels of the roof, in the colours of the four quarters (green east, red south, white west, black north). Off by default. */
   tassels?: boolean;
@@ -51,8 +51,10 @@ export interface BudoStyle {
   fence?: number;
   /** MMA cage: the two gates, opposite each other (the fence is whole without them). On by default. */
   gates?: boolean;
-  /** MMA cage: the steps up to the platform at each gate, three treads. On by default. */
+  /** MMA cage: the steps up to the platform at each gate, three treads. Boxing ring: the three sets of steps, one in each boxer's corner and one in a neutral corner. On by default. */
   steps?: boolean;
+  /** Boxing ring: the posts and their pads in the corner colours (the red and the blue corner of the boxers, two neutral ones in white). On by default. */
+  corners?: boolean;
   /** Kyūdō: the number of shooters in a line, 1 to 12 (5 by default). */
   shooters?: number;
   /** Kyūdō: the kind of range, `kinteki` (28 m, the default) or `enteki` (60 m); `league` says it too. */

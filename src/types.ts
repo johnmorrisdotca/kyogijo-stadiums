@@ -21,7 +21,7 @@ export type { PoolSport, PoolStyle };
 export type BudoSport = "judo" | "karate" | "kendo" | "sumo" | "kyudo" | "dojo";
 
 /** The combat sports' rings, cages and mats, drawn by the same engine as the budō: the MMA cage (eight-sided, as a generic cage), and as they are added the boxing ring, the wrestling mats and the professional wrestling ring. */
-export type CombatSport = "mma";
+export type CombatSport = "mma" | "boxing";
 
 export type { BudoStyle, DojoSpec, BudoScore };
 
@@ -399,7 +399,9 @@ export type RangeName =
   | "azuchi"
   | "kamiza"
   | "cage"
-  | "gate";
+  | "gate"
+  | "ropes"
+  | "corner";
 
 /** A named range at the end of your choice: `{ name: "offensive-zone", end: "left" }` is the offensive zone of a team that attacks the left. */
 export interface RangeNamed {

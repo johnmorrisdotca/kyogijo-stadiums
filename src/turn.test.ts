@@ -335,7 +335,8 @@ describe("what stands on the other fields", () => {
   });
 
   it("keeps each sport's planes few: a scene is a handful of elements, not a model", () => {
-    for (const sport of SPORTS) expect(planesOf(uprightsFor({ sport })).length, sport).toBeLessThan(80);
+    // A ring has four ropes along each side and at each corner, each a bar of two crossed strips: it takes more than the rest.
+    for (const sport of SPORTS) expect(planesOf(uprightsFor({ sport })).length, sport).toBeLessThan(sport === "boxing" ? 150 : 80);
   });
 
   it("says what stands on the surface, with heights in the rulebook's own unit, in English and Japanese", () => {

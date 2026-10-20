@@ -5,7 +5,7 @@ import { expect, test } from "@playwright/test";
 import { at, noSidewaysScroll, open, tap } from "./demo.mjs";
 
 const SECTIONS = {
-  gallery: { grid: "gallery-cards", chips: "gallery-family", card: "figure.card", total: 40, noun: "sports", param: "galleryfamily", all: "galleryall" },
+  gallery: { grid: "gallery-cards", chips: "gallery-family", card: "figure.card", total: 41, noun: "sports", param: "galleryfamily", all: "galleryall" },
   pitches: { grid: "pitch-cards", chips: "pitches-group", card: "figure.card", total: 16, noun: "pitches", param: "pitchesgroup", all: "pitchesall" },
 };
 const FAMILIES = { football: 3, hockey: 1, basketball: 1, baseball: 1, soccer: 1, curling: 1, net: 12, pool: 4, field: 7, track: 2 };
@@ -80,7 +80,7 @@ test("the sports narrow to a family, every count is in a polite live region, and
   await expect(count).toHaveAttribute("aria-live", "polite");
   for (const [family, n] of Object.entries(FAMILIES)) {
     await press(page, "gallery", family, testInfo);
-    await expect(count).toHaveText(`${n} of 40 sports`);
+    await expect(count).toHaveText(`${n} of 41 sports`);
     await expect(cards(page, "gallery")).toHaveCount(n);
     expect(param(page, "galleryfamily")).toBe(family);
     // The cards are drawn at once when they are asked for.
@@ -95,7 +95,7 @@ test("the sports narrow to a family, every count is in a polite live region, and
   await press(page, "gallery", "football", testInfo);
   expect(await page.locator(`${at("gallery-cards")} figcaption`).allTextContents()).toEqual(["NFL", "CFL", "IFAF"]);
   await tap(page, at("gallery-reset"), testInfo);
-  await expect(count).toHaveText("40 of 40 sports");
+  await expect(count).toHaveText("41 of 41 sports");
   await expect(pressed(page, "gallery")).toHaveText("All");
   await expect(page.locator(at("gallery-reset"))).toBeHidden();
   expect(param(page, "galleryfamily")).toBeNull();
@@ -140,7 +140,7 @@ test("the chips are in the address under names of their own, and an address rest
   expect(url.searchParams.get("parkleague")).toBeNull();
   // The address opens the same view, show all included.
   await open(page, "?lang=en&help=off&galleryfamily=field&galleryall=1&pitchesgroup=small");
-  await expect(page.locator(at("gallery-count"))).toHaveText("7 of 40 sports");
+  await expect(page.locator(at("gallery-count"))).toHaveText("7 of 41 sports");
   await expect(pressed(page, "gallery")).toHaveText("Field sports");
   await expect(page.locator(at("gallery-more"))).toHaveAttribute("aria-expanded", "true");
   await expect(cards(page, "gallery")).toHaveCount(7);
@@ -157,7 +157,7 @@ test("the chips are in the address under names of their own, and an address rest
   expect(inSight).toBe(true);
   // A value the section does not have is the default, and the other section is not touched.
   await open(page, "?lang=en&help=off&galleryfamily=rugby&pitchesgroup=none&galleryall=2");
-  await expect(page.locator(at("gallery-count"))).toHaveText("40 of 40 sports");
+  await expect(page.locator(at("gallery-count"))).toHaveText("41 of 41 sports");
   await expect(page.locator(at("pitches-count"))).toHaveText("16 of 16 pitches");
   await expect(page.locator(at("gallery-more"))).toHaveAttribute("aria-expanded", "false");
   url = new URL(page.url());
@@ -172,14 +172,14 @@ test("the chips and the show-all button work from the keyboard", async ({ page, 
   await hockey.focus();
   await page.keyboard.press("Enter");
   await expect(hockey).toHaveAttribute("aria-pressed", "true");
-  await expect(page.locator(at("gallery-count"))).toHaveText("1 of 40 sports");
+  await expect(page.locator(at("gallery-count"))).toHaveText("1 of 41 sports");
   await expect(hockey).toBeFocused();
   const net = page.locator(`${at("gallery-family")} button[data-value="net"]`);
   await page.keyboard.press("Tab");
   await net.focus();
   await page.keyboard.press("Space");
   await expect(net).toHaveAttribute("aria-pressed", "true");
-  await expect(page.locator(at("gallery-count"))).toHaveText("12 of 40 sports");
+  await expect(page.locator(at("gallery-count"))).toHaveText("12 of 41 sports");
   // Show all, and show fewer.
   const pitches = page.locator(at("pitches-more"));
   await pitches.focus();
@@ -225,8 +225,8 @@ test("the controls are labelled for a screen reader", async ({ page }) => {
 test("in Japanese the sections say everything in Japanese, and a change of language keeps the chips", async ({ page }, testInfo) => {
   await open(page, "?lang=ja&help=off");
   await expect(page.locator("#gallery-title")).toHaveText("すべての競技");
-  await expect(page.locator(at("gallery-count"))).toHaveText("40競技中40競技");
-  await expect(page.locator(at("gallery-more"))).toHaveText("全40競技を表示");
+  await expect(page.locator(at("gallery-count"))).toHaveText("41競技中41競技");
+  await expect(page.locator(at("gallery-more"))).toHaveText("全41競技を表示");
   await expect(page.locator("#pitches-title")).toHaveText("サッカーのピッチ");
   await expect(page.locator(at("pitches-count"))).toHaveText("16種中16種");
   await expect(page.locator(at("pitches-more"))).toHaveText("全16種を表示");
@@ -241,9 +241,9 @@ test("in Japanese the sections say everything in Japanese, and a change of langu
   await expect(page.locator(`${at("pitch-cards")} figcaption`).first()).toContainText("アンフィールド");
   expect(await page.locator(`${at("pitch-cards")} svg.kyogijo`).first().locator("title").textContent()).toMatch(/[぀-ヿ一-鿿]/);
   await press(page, "gallery", "net", testInfo);
-  await expect(page.locator(at("gallery-count"))).toHaveText("40競技中12競技");
+  await expect(page.locator(at("gallery-count"))).toHaveText("41競技中12競技");
   await page.locator('[data-lang="en"]').click();
-  await expect(page.locator(at("gallery-count"))).toHaveText("12 of 40 sports");
+  await expect(page.locator(at("gallery-count"))).toHaveText("12 of 41 sports");
   await expect(pressed(page, "gallery")).toHaveText("Net and court sports");
   await expect(pressed(page, "pitches")).toHaveText("Famous grounds");
   await noSidewaysScroll(page);

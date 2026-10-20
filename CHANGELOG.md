@@ -7,6 +7,13 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **The boxing ring** (`sport: "boxing"`, [the combat sports page](./docs/combat.md)): a square raised platform with its canvas, four ropes that turn to a post at each corner by an extension, the posts and their pads in red, blue and white, an apron and three sets of steps, to scale from the Nevada Rules of Unarmed Combat (2.050), Wisconsin's SPS 192.38 and the WBC Amateur rules, with Ontario's amateur rules beside them. The leagues are `nruc-ring` (20 feet within the ropes), `wisconsin` (16 to 20 feet) and `wbc-amateur` (4.5 to 6.1 m); `budo.size` and `budo.height` stay within each league's range and refuse a number outside it, `budo.steps` and `budo.corners` take the steps away and make the corners plain; the looks are `white`, `blue` and `black`, light and dark. `RANGES.boxing` has `ropes`, `corner` and `half`; the parts are named for `landmarks` and the features for `featureColors`, in English and Japanese. A figure that is the rule's, one that is typical and one that is ours are told apart in [Sources](./docs/sources.md#the-combat-sports). It is the forty-first sport.
+- **The ring in 3D:** the platform is a solid block as the cage's is, the four posts are solid in their corner's colour at 58 inches over the ring floor, each of the four ropes is a thin round bar along each side and out to its post at each corner so that the canvas stays in sight, two ties a side hold the ropes in line, and the steps are three blocks each. Tests hold the order the parts are drawn in from every side, the size of the view as it turns and the scene inside its box at every angle.
+- **The demo** has the ring in its sport picker, with its league, its looks, the score of a bout and the 3D view.
+
+
 ## [0.20.0] - 2026-10-20
 
 ### Added

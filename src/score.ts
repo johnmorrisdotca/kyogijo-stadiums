@@ -269,6 +269,9 @@ export function glyph(sport: Sport): string {
     case "dojo":
       // A dojo: a floor of mats laid so that no four corners meet.
       return "M-14 -10H14V10H-14ZM-14 0H14M-5 -10V0M5 0V10";
+    case "boxing":
+      // A ring: the platform's square, the ropes and the four posts.
+      return "M-10 -10H10V10H-10ZM-6 -6H6V6H-6ZM-8 -8L-6 -6M8 -8L6 -6M-8 8L-6 6M8 8L6 6";
     case "mma":
       // An eight-sided cage on its platform: the platform's square, the octagon of the fence and the two gates.
       return "M-10 -10H10V10H-10ZM-3 -7L3 -7L7 -3L7 3L3 7L-3 7L-7 3L-7 -3ZM-2 -7V-10M2 -7V-10M-2 7V10M2 7V10";

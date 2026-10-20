@@ -5,7 +5,7 @@ Kyogijo Stadiums draws sports surfaces as SVG, to scale, with the score on them.
 ## Start here
 
 - [Getting started](./getting-started.md): install, the four ways in, the element and the frame.
-- [The surfaces](./surfaces.md): the forty surfaces and how a league's rules change one.
+- [The surfaces](./surfaces.md): the forty-one surfaces and how a league's rules change one.
 - [Score and layout](./score.md): the teams, the score, the strip for a list, wide and tall.
 - [Theming](./theming.md): every colour, light and dark, the eight named looks, colours by feature, line widths and dashes, goal styles and mowing patterns.
 - [Annotations](./annotations.md): the direction each team attacks, axes in any frame, and the names of a surface's parts.

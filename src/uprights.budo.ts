@@ -5,6 +5,7 @@
 import { budoPlan, type BudoPlan } from "./budo/plan.ts";
 import { flat, n, plane, shy, wall, type Plane, type Upright } from "./turn.kit.ts";
 import { cageUprights } from "./uprights.cage.ts";
+import { ringUprights } from "./uprights.ring.ts";
 import type { SurfaceOptions } from "./types.ts";
 
 const K = 1 / 0.3048;
@@ -81,6 +82,7 @@ export function budoUprights(o: Pick<SurfaceOptions, "sport" | "league" | "budo"
     items.push({ id: "mound", kind: "mound", at: at(plan.sumo.centre[0], plan.sumo.centre[1]), height, planes: moundPlanes(plan, at, height) });
   }
   if (plan.mma !== undefined) items.push(...cageUprights(plan, at, thin));
+  if (plan.boxing !== undefined) items.push(...ringUprights(plan, plan.boxing, at));
   if (plan.kyudo !== undefined) {
     const built = azuchiPlanes(plan, at);
     items.push({ id: "azuchi", kind: "azuchi", at: at(plan.kyudo.target, plan.kyudo.lanes[0]), height: built.height, planes: built.mound });
@@ -103,5 +105,5 @@ export function budoUprights(o: Pick<SurfaceOptions, "sport" | "league" | "budo"
     });
     items.push({ id: "walls", kind: "walls", at: centre, height: h, planes });
   }
-  return { items, lift, area, whole: plan.sumo !== undefined || plan.mma !== undefined };
+  return { items, lift, area, whole: plan.sumo !== undefined || plan.mma !== undefined || plan.boxing !== undefined };
 }

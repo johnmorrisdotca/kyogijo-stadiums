@@ -540,3 +540,21 @@
 - `wp-mma-cage`: <https://en.wikipedia.org/w/index.php?title=Mixed_martial_arts_cage&oldid=1377260922>
 - `immaf-amateur`: <https://immaf.org/wp-content/uploads/2025/11/MMA-UNIFIED-RULES-FOR-AMATEUR-JUNIOR-SENIOR-January-2021.pdf>
 
+## ボクシングのリング
+
+`sport: "boxing"`
+
+| `league` | 名前 |
+| --- | --- |
+| `nruc-ring`（その競技の標準） | ボクシングのリング（ネバダ州の規則） |
+| `wisconsin` | ボクシングのリング（ウィスコンシン州の規則） |
+| `wbc-amateur` | ボクシングのリング（WBCアマチュア規則） |
+
+出典の URL：
+
+- `nruc`: <https://boxing.nv.gov/uploadedFiles/boxingnvgov/content/faq/sections/2024-11-20-NRUC-OFFICIAL-FINAL.pdf>
+- `wp-boxing-ring`: <https://en.wikipedia.org/w/index.php?title=Boxing_ring&oldid=1370389178>
+- `wi-sps-192`: <https://docs.legis.wisconsin.gov/document/administrativecode/SPS%20192.38>
+- `wbc-amateur`: <https://wbcboxing.com/amateur/esp/wp-content/uploads/2025/10/WBC-AMATEUR-RULES-UPDATED-2026.pdf>
+- `ontario-amateur-boxing`: <https://www.ontario.ca/document/amateur-combative-sport-rules-boxing/part-ii-competitive-field-play>
+

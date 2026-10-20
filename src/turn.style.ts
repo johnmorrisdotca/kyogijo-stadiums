@@ -37,6 +37,11 @@ export const KYOGIJO_TURN_STYLE = `
 .ky-turn .u-clay{fill:var(--ky-up-clay)}
 .ky-turn .u-cagepad{fill:var(--ky-up-cagepad)}
 .ky-turn .u-gateframe{stroke:var(--ky-up-cagepad)}
+.ky-turn .u-corner-red{fill:var(--ky-red,#b32a2f)}
+.ky-turn .u-corner-blue{fill:var(--ky-blue,#2a5db0)}
+.ky-turn .u-corner-white{fill:#f4f1e8}
+.ky-turn .u-rope{fill:var(--ky-bud-rope,#f4f1e8)}
+.ky-turn .u-rope-tie{fill:color-mix(in srgb,var(--ky-bud-rope,#f4f1e8) 60%,#808080)}
 .ky-turn .u-deck-side{fill:color-mix(in srgb,var(--ky-bud-floor,#43484e) 70%,#000)}
 .ky-turn .u-step{fill:color-mix(in srgb,var(--ky-bud-floor,#43484e) 76%,#fff)}
 .ky-turn .u-step-side{fill:color-mix(in srgb,var(--ky-bud-floor,#43484e) 58%,#000)}

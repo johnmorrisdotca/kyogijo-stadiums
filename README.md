@@ -1,7 +1,7 @@
 <h1 align="center">Kyogijo Stadiums <sub>競技場</sub></h1>
 
 <p align="center"><strong>Sports surfaces as SVG, drawn to scale, with the score on them.</strong><br>
-The surfaces of forty sports, from football and curling to the budō and the MMA cage, each drawn from its rulebook or its published distances, with each team's name and logo on its side and the score in the middle, a lineup and the situation of the game on them, with stands and a crowd, a pageant of flags and a 3D view. Wide or tall, light or dark, a badge for a list, a helper for React, a custom element and a frame for a page that runs no script. One function, no dependencies.</p>
+The surfaces of forty-one sports, from football and curling to the budō and the combat sports, each drawn from its rulebook or its published distances, with each team's name and logo on its side and the score in the middle, a lineup, stands and a crowd, a pageant of flags and a 3D view. Wide or tall, light or dark, a badge for a list, a helper for React, a custom element and a frame for a page that runs no script. One function, no dependencies.</p>
 
 <p align="center">
   <a href="https://github.com/johnmorrisdotca/kyogijo-stadiums/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/johnmorrisdotca/kyogijo-stadiums/actions/workflows/ci.yml/badge.svg"></a>
@@ -34,7 +34,7 @@ The surfaces of forty sports, from football and curling to the budō and the MMA
 </tr>
 </table>
 
-Kyogijo Stadiums draws the places a game is played on, and puts a game on them. It was made to show the score of a game or a championship on the surface it was played on: the teams at their ends, the score in the middle, a label for what it was. The surfaces are drawn to scale from the rulebooks, so that a football field has its hash marks where the rules put them and a ballpark has its fence where its published distances put it.
+Kyogijo Stadiums draws the places a game is played on, with the score of the game on them: the teams at their ends, the score in the middle, a label for what it was. The surfaces are drawn to scale from the rulebooks: a football field has its hash marks where the rules put them, a ballpark its fence where its published distances put it.
 
 ## In 30 seconds
 
@@ -72,7 +72,7 @@ console.log(svg.startsWith("<svg"), svg.includes("USA 3, Canada 2"));
 
 ## Features
 
-- **Forty surfaces, to scale.** The NFL, CFL and IFAF fields, the NHL rink, the NBA court, the soccer pitch and futsal court, the baseball field, the curling sheet, twelve net and racket sports, the pools, the athletics stadium, the skating rinks, seven field sports, the budō and the MMA cage. Every figure is cited in [sources](./docs/sources.md). [The surfaces](./docs/surfaces.md).
+- **Forty-one surfaces, to scale.** The NFL, CFL and IFAF fields, the NHL rink, the NBA court, the soccer pitch and futsal court, the baseball field, the curling sheet, twelve net and racket sports, the pools, the athletics stadium, the skating rinks, seven field sports, the budō, the MMA cage and the boxing ring. Every figure is cited in [sources](./docs/sources.md). [The surfaces](./docs/surfaces.md).
 - **Each league's rulebook.** `league: "fiba"` draws a court as FIBA marks it: 48 variants, from the WNBA, the NCAA and the IIHF to Little League, PONY, softball, Curling Canada, FIVB's beach volleyball, rugby league and the NLL's box lacrosse, each cited. [League variants](./docs/variants.md).
 - **A realistic basketball floor.** `court: { hardwood: true }` draws maple boards that run the length of the court with staggered ends, grain, stained keys, the baskets and stanchions with soft shadows, a coaching box and benches, and a satin sheen, in every league and renderer. The clean floor stays the default. [Hardwood](./docs/hardwood.md).
 - **The stands and the crowd.** `crowd: true` draws the seating round any surface that has spectators: a bowl, two sides, a horseshoe, courtside rows or a ballpark's grandstands, with the people as seeded heads and shoulders in the home colours and the empty seats showing (`density`, or `attendance` over `capacity`). [The crowd](./docs/crowd.md).
@@ -119,7 +119,7 @@ console.log(svg.startsWith("<svg"), svg.includes("USA 3, Canada 2"));
 | Part | What it is |
 | --- | --- |
 | `drawKyogijo`, `drawSurface`, `drawScore`, `drawBadge` | The drawing, as a string of SVG. |
-| `SPORTS`, `PARKS`, `PARK_IDS`, `COURT_THEMES` | The forty sports, the 94 ballparks, the court looks. |
+| `SPORTS`, `PARKS`, `PARK_IDS`, `COURT_THEMES` | The forty-one sports, the 94 ballparks, the court looks. |
 | `SOCCER_PITCHES`, `SOCCER_PROVIDERS`, `rescale`, `soccerSpec` | The soccer pitches, the data providers' coordinate systems and the map between them. |
 | `GROUNDS`, `groundById` | The 64 soccer grounds, each pitch at its own size. |
 | `EVENTS`, `eventOptions` | The 18 special games: a rink in a ballpark, a court on a carrier's deck, with `host` and `placement` in the options. |
@@ -233,7 +233,7 @@ console.log(box(wide), box(tall));
 <br><em>The same game tall: the teams top and bottom, every word upright.</em>
 </p>
 
-[The surfaces](./docs/surfaces.md) lists the forty, with their sizes and what is drawn; [score and layout](./docs/score.md) has the options of a score, a strip and a compact card.
+[The surfaces](./docs/surfaces.md) lists the forty-one, with their sizes and what is drawn; [score and layout](./docs/score.md) has the options of a score, a strip and a compact card.
 
 ### A league's rulebook
 
@@ -613,14 +613,14 @@ A table in the ITTF's playing area, 14 m by 7 m, with surrounds and chairs ([cou
 <br><em>Close up: the centre tape and the two starting tapes.</em>
 </p>
 
-### An MMA cage
+### The combat sports
 
-[The combat sports page](./docs/combat.md).
+An MMA cage and a boxing ring ([the combat sports page](./docs/combat.md)).
 
 <p align="center">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/mma-cage-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/mma-cage-desk-light.webp" alt="An MMA cage from above, with a score" width="660">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/mma-cage-desk-light.webp" alt="An MMA cage from above with a score" width="660">
 </picture>
 <br><em>With a score.</em>
 </p>
@@ -631,6 +631,14 @@ A table in the ITTF's playing area, 14 m by 7 m, with surrounds and chairs ([cou
 <img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/mma-cage-3d-desk-light.webp" alt="The cage in 3D: a mesh fence on a solid platform" width="660">
 </picture>
 <br><em>The cage in 3D.</em>
+</p>
+
+<p align="center">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/boxing-ring-3d-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/boxing-ring-3d-desk-light.webp" alt="The boxing ring in 3D: coloured corner posts, ropes and steps" width="660">
+</picture>
+<br><em>The ring in 3D.</em>
 </p>
 
 ### The element in a page
@@ -696,17 +704,17 @@ A page that moves (`mountKyogijo`), a file written on a server and a frame for a
 
 ## API
 
-The [API reference](https://johnmorrisdotca.github.io/kyogijo-stadiums/api.html) lists every export of every entry point with its signature and its doc comment. It is made from the source by `pnpm site`, so it cannot fall behind the code. [Entry points](./docs/entry-points.md) says what each of the 15 holds: the main one draws; `/geometry`, `/frames`, `/layers`, `/charts`, `/replay`, `/parks`, `/eras`, `/leagues`, `/grounds` and `/atlas` stand apart and need nothing else; `/mount`, `/turn`, `/react`, `/element` and `/element/define` put a drawing in a page.
+The [API reference](https://johnmorrisdotca.github.io/kyogijo-stadiums/api.html) lists every export of every entry point with its signature and its doc comment. It is made from the source by `pnpm site`. [Entry points](./docs/entry-points.md) says what each of the 15 holds: the main one draws; `/geometry`, `/frames`, `/layers`, `/charts`, `/replay`, `/parks`, `/eras`, `/leagues`, `/grounds` and `/atlas` stand apart; `/mount`, `/turn`, `/react`, `/element` and `/element/define` put a drawing in a page.
 
 Every function is pure: it returns new values and never changes what it was given.
 
 ## Theming
 
-Nothing is branded. The drawing is coloured by custom properties on its `svg`, with a light set and a dark set that follow the device (or `data-theme` on the page's root, or `theme` in the options); a page sets only the ones it wants different, and its own rule always wins. Each property is listed with its light and dark value, with the court's five looks, in [theming](./docs/theming.md).
+Nothing is branded. The drawing is coloured by custom properties on its `svg`, with a light set and a dark set that follow the device (or `data-theme` on the page's root, or `theme` in the options); a page's own rule always wins. Each property is listed with its light and dark value, with the court's five looks, in [theming](./docs/theming.md).
 
 ## Limits
 
-Each is held by a test: forty sports, ten soccer pitches and ten providers, 94 ballparks, 64 grounds, six units, forty-eight frames, a drawing of under 22 kB. The table, made from the code, is [limits](./docs/limits.md).
+Each is held by a test: forty-one sports, ten soccer pitches and ten providers, 94 ballparks, 64 grounds, six units, forty-eight frames, a drawing of under 22 kB. The table, made from the code, is [limits](./docs/limits.md).
 
 ## Accessibility
 
@@ -718,7 +726,7 @@ The rest, with the contrast and what is not yet done, is in [accessibility](./do
 
 ## Browser and runtime support
 
-Any browser with ES modules, `:where()` and SVG 2's `href` on images: Chrome and Edge 88, Safari 14, Firefox 78, all from 2021 on. The custom element needs shadow DOM and `part`, in every browser of 2021 on. The drawing function runs on Node 22 or later and in any other JavaScript runtime: it touches no DOM. The demo is played in a real browser, at a phone's width and a desk's, in Chromium and WebKit, before every release.
+Any browser with ES modules, `:where()` and SVG 2's `href` on images: Chrome and Edge 88, Safari 14, Firefox 78, all from 2021 on. The custom element needs shadow DOM and `part`. The drawing function runs on Node 22 or later and in any other JavaScript runtime: it touches no DOM. The demo is played in Chromium and WebKit, at a phone's width and a desk's, before every release.
 
 ## Languages
 
@@ -741,7 +749,7 @@ The drawing is plain functions over plain data with no DOM and no dependency. Th
 
 ## The name
 
-*Kyogijo* (競技場, kyōgijō, きょうぎじょう) is Japanese for a sports ground: the place a contest is held. "Stadiums" is added in English, so that the name says what it draws; in Japanese the name stays 競技場. It is written with 競技, "contest" or "competition", and 場, "place", and said in five beats, *kyo-u-gi-jo-u*. In Japanese it is the general word for a place where sport is played, a stadium or a ground; the package uses it as a name for every surface it draws, the field, the rink, the court and the diamond. The long vowels are written without a macron in the package's name, as in the other packages of the family.
+*Kyogijo* (競技場, kyōgijō, きょうぎじょう) is Japanese for a sports ground, the place a contest is held, written with 競技, "contest", and 場, "place", and said *kyo-u-gi-jo-u*. "Stadiums" is added in English so that the name says what it draws; the package uses the word for every surface it draws. The long vowels are written without a macron, as in the other packages of the family.
 
 ## Where it comes from, and where it is used
 

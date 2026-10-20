@@ -56,11 +56,79 @@ export const MMA_LEAGUES: readonly MmaLeague[] = [
   { id: "immaf", family: "mma", name: { en: "MMA cage, IMMAF amateur rules", ja: "総合格闘技のケージ（IMMAFのアマチュア規則）" }, unit: "ft", figuresUnit: "m", dimensions: IMMAF_CAGE, sources: ["immaf-amateur", "nruc"] },
 ];
 
+/**
+ * The figures of a ring, in metres: the boxing ring and, with its own figures, the professional wrestling ring. A ring is a raised square platform whose canvas is bounded by ropes held by a post at each corner, with the apron
+ * beyond the ropes and steps up to it.
+ */
+export interface RingFigures {
+  /** The ring, a square, measured inside the ropes. */
+  size: Span;
+  /** The platform: the most it may stand over the floor of the building, and the least it is drawn (0 puts the ring on the floor). */
+  platform: { height: Span; steps: { sets: number; treads: number; tread: number; width: number } };
+  /** The apron, the canvas beyond the ropes: the least the rules ask (the drawn width is the least unless said), and the thickness of the padding under the canvas. */
+  apron: Span;
+  foam: Span;
+  /** The ropes: how many, their heights over the ring floor, and their thickness. */
+  ropes: { count: number; heights: readonly number[]; diameter: Span };
+  /** The corner posts: their height over the ring floor, their thickness, and how far each stands from the ropes (the ropes reach it by an extension). */
+  post: { height: number; diameter: number; fromRopes: number; pad: number };
+}
+
+/** The figures of a boxing ring, in metres. */
+export interface BoxingFigures extends RingFigures {
+  kind: "boxing";
+}
+
+/** A boxing league: a regulation's ring. */
+export type BoxingLeague = LeagueBase<"boxing", BoxingFigures>;
+
+const STEPS = { sets: 3, treads: 3, tread: 0.3, width: 1.2 };
+
+/** The ring of the Nevada Rules of Unarmed Combat (NRUC 2.050): 20 feet within the ropes, a floor 18 inches beyond them, a platform of at most 5 feet, posts of 58 inches over the ring floor at least 18 inches from the ropes, at least four ropes of at least 1 inch, the lowest 18 inches up. */
+export const NRUC_RING: BoxingFigures = {
+  kind: "boxing",
+  size: span(20 * FT, 20 * FT, 20 * FT),
+  platform: { height: span(0, 5 * FT, 4 * FT), steps: STEPS },
+  apron: span(18 * IN, 4 * FT, 2 * FT),
+  foam: span(1 * IN, 1.5 * IN, 1 * IN),
+  ropes: { count: 4, heights: [18 * IN, 30 * IN, 42 * IN, 54 * IN], diameter: span(1 * IN, 2 * IN, 1 * IN) },
+  post: { height: 58 * IN, diameter: 3 * IN, fromRopes: 18 * IN, pad: 0.3 },
+};
+
+/** The ring of Wisconsin's rule (SPS 192.38): 16 to 20 feet within the ropes, an apron of at least 18 inches, a platform of at most 4 feet with three sets of steps, ropes at 18, 30, 42 and 54 inches, posts at least 3 inches across and 58 inches high. */
+export const WISCONSIN_RING: BoxingFigures = {
+  kind: "boxing",
+  size: span(16 * FT, 20 * FT, 20 * FT),
+  platform: { height: span(0, 4 * FT, 4 * FT), steps: STEPS },
+  apron: span(18 * IN, 4 * FT, 2 * FT),
+  foam: span(1 * IN, 1 * IN, 1 * IN),
+  ropes: { count: 4, heights: [18 * IN, 30 * IN, 42 * IN, 54 * IN], diameter: span(1 * IN, 2 * IN, 1 * IN) },
+  post: { height: 58 * IN, diameter: 3 * IN, fromRopes: 18 * IN, pad: 0.3 },
+};
+
+/** The amateur ring of the WBC Amateur rules (Rule 1, 2026): 4.50 to 6.10 m within the ropes, a platform of 0.90 to 1.20 m, an apron of at least 0.50 m, ropes of 3 to 5 cm at 41, 71, 102 and 132 cm, three sets of steps. Ontario's amateur rules agree (4.9 to 6.1 m, ropes at 40, 70, 100 and 130 cm, an apron of at least 45 cm, a platform of at most 1.2 m). */
+export const WBC_AMATEUR_RING: BoxingFigures = {
+  kind: "boxing",
+  size: span(4.5, 6.1, 6.1),
+  platform: { height: span(0.9, 1.2, 1.2), steps: STEPS },
+  apron: span(0.5, 1.5, 0.5),
+  foam: span(0.01, 0.025, 0.02),
+  ropes: { count: 4, heights: [0.41, 0.71, 1.02, 1.32], diameter: span(0.03, 0.05, 0.04) },
+  post: { height: 1.5, diameter: 0.076, fromRopes: 0.45, pad: 0.3 },
+};
+
+/** The boxing leagues: the Nevada commission's first. */
+export const BOXING_LEAGUES: readonly BoxingLeague[] = [
+  { id: "nruc-ring", family: "boxing", name: { en: "Boxing ring, Nevada Rules of Unarmed Combat", ja: "ボクシングのリング（ネバダ州の規則）" }, unit: "ft", figuresUnit: "m", dimensions: NRUC_RING, sources: ["nruc", "wp-boxing-ring"], builtIn: true },
+  { id: "wisconsin", family: "boxing", name: { en: "Boxing ring, Wisconsin", ja: "ボクシングのリング（ウィスコンシン州の規則）" }, unit: "ft", figuresUnit: "m", dimensions: WISCONSIN_RING, sources: ["wi-sps-192", "wp-boxing-ring"] },
+  { id: "wbc-amateur", family: "boxing", name: { en: "Boxing ring, WBC Amateur rules", ja: "ボクシングのリング（WBCアマチュア規則）" }, unit: "m", dimensions: WBC_AMATEUR_RING, sources: ["wbc-amateur", "ontario-amateur-boxing"] },
+];
+
 /** The figures of a combat league. */
-export type CombatFigures = MmaFigures;
+export type CombatFigures = MmaFigures | BoxingFigures;
 
 /** A league with a combat surface of its own. */
-export type CombatLeague = MmaLeague;
+export type CombatLeague = MmaLeague | BoxingLeague;
 
 /** Every combat league, once each. */
-export const COMBAT_LEAGUES: readonly CombatLeague[] = Object.freeze([...MMA_LEAGUES]);
+export const COMBAT_LEAGUES: readonly CombatLeague[] = Object.freeze([...MMA_LEAGUES, ...BOXING_LEAGUES]);

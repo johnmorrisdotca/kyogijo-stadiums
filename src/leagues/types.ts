@@ -9,7 +9,7 @@ export interface Named {
 }
 
 /** The families of surface a league is a variant of. */
-export type Family = "basketball" | "hockey" | "football" | "baseball" | "curling" | "tennis" | "volleyball" | "badminton" | "pickleball" | "tabletennis" | "padel" | "squash" | "racquetball" | "sepaktakraw" | "teqball" | "roundnet" | "netball" | "lacrosse" | "rugby" | "afl" | "gaelic" | "cricket" | "fieldhockey" | "handball" | "athletics" | "skating" | "judo" | "karate" | "kendo" | "sumo" | "kyudo" | "dojo" | "mma";
+export type Family = "basketball" | "hockey" | "football" | "baseball" | "curling" | "tennis" | "volleyball" | "badminton" | "pickleball" | "tabletennis" | "padel" | "squash" | "racquetball" | "sepaktakraw" | "teqball" | "roundnet" | "netball" | "lacrosse" | "rugby" | "afl" | "gaelic" | "cricket" | "fieldhockey" | "handball" | "athletics" | "skating" | "judo" | "karate" | "kendo" | "sumo" | "kyudo" | "dojo" | "mma" | "boxing";
 
 /** The state of one marking from a season on, in a league's own history: the season it began, what it was, and its sources. */
 export interface LeagueSpan<T> {

@@ -1,6 +1,6 @@
-# The combat sports: the MMA cage
+# The combat sports: the MMA cage and the boxing ring
 
-The first of the combat sports' surfaces, drawn to scale from the rules a commission or a federation writes: `sport: "mma"`, an eight-sided cage on its platform, with its padded posts, its two gates, its steps and its fence of mesh. The ring and the mats of boxing and wrestling follow it. The cage is named for what it is, a cage with eight sides: it is not any promotion's own cage, and no promotion's name or mark is used.
+The combat sports' surfaces, drawn to scale from the rules a commission or a federation writes: `sport: "mma"`, an eight-sided cage on its platform with its padded posts, its two gates, its steps and its fence of mesh, and `sport: "boxing"`, the square ring with its ropes and its four corners. The mats of wrestling follow them. The cage is named for what it is, a cage with eight sides: it is not any promotion's own cage, and no promotion's name or mark is used.
 
 ```ts
 import { drawKyogijo, RANGES } from "@johnmorrisdotca/kyogijo-stadiums";
@@ -62,6 +62,38 @@ console.log(model.planes.filter((plane) => plane.kind === "net").length, model.u
 // 12 0
 ```
 
+## The boxing ring
+
+`sport: "boxing"`: a square raised platform with a post and a pad in each corner, four ropes, an apron and steps. `league` picks the rule: `nruc-ring` (the default) is the Nevada Rules of Unarmed Combat (2.050), `wisconsin` is Wisconsin's SPS 192.38, and `wbc-amateur` is the WBC Amateur rules (Rule 1), with Ontario's amateur rules beside them.
+
+| What | Nevada (`nruc-ring`) | Wisconsin (`wisconsin`) | WBC Amateur (`wbc-amateur`) |
+| --- | --- | --- | --- |
+| The ring | 20 feet square within the ropes | 16 to 20 feet within the ropes (20 drawn) | 4.50 to 6.10 m inside the ropes (6.10 drawn) |
+| The platform | at most 5 feet over the floor of the building, with steps (4 feet drawn, **typical**) | at most 4 feet, three sets of steps | 0.90 to 1.20 m high, three sets of steps |
+| The apron | the floor reaches at least 18 inches beyond the ropes (2 feet drawn, **typical**) | at least 18 inches | at least 0.50 m |
+| The ropes | at least four, at least 1 inch across and wrapped in soft material, the lowest 18 inches up (30, 42 and 54 are **typical**) | at least four of at least 1 inch, at 18, 30, 42 and 54 inches, two spacer ties a side | four of 3 to 5 cm at 41, 71, 102 and 132 cm, held by two tapes a side |
+| The posts | metal, at most 3 inches across, 58 inches over the ring floor, at least 18 inches from the ropes | at least 3 inches across, 58 inches high, the ropes reaching them by an extension of at least 18 inches | four well-padded posts (the height is **ours**: 1.5 m) |
+| The corners | red and blue for the two boxers, white for the neutral ones | the steps: one in each boxer's corner, one in a neutral corner | red and blue (or green and gold) for the boxers, white for the neutral ones; the red corner at the left, nearest the table (Ontario) |
+
+**Ours.** The width of a post's pad (0.3 m), the thickness drawn for a rope, the spacer ties' places (a third and two thirds along each side), the steps (three treads of 30 cm, 1.2 m wide, beside the posts of the red corner, the blue corner and the neutral corner at the bottom right), the colours of the looks (`white`, the default, `blue` and `black`), and the red corner at the bottom left. The canvas is drawn over the whole platform, the ring and the apron alike.
+
+`budo.size` sets the side inside the ropes in metres and refuses a number outside the league's range; `budo.height` sets the platform's height, 0 to the league's greatest; `budo.steps` and `budo.corners` (true by default) take the steps away and make the corners plain. `RANGES.boxing` has `ropes` (the ring and the ground just round it), `corner` (the red corner) and `half`.
+
+```ts
+import { budoPlan } from "@johnmorrisdotca/kyogijo-stadiums/budo";
+
+const ring = budoPlan({ sport: "boxing" });
+console.log(ring.boxing?.size.toFixed(3), ring.boxing?.corners.map((corner) => corner.colour).join(" "));
+// 6.096 white blue white red
+const small = budoPlan({ sport: "boxing", league: "wisconsin", budo: { size: 4.8768 } });
+console.log(small.boxing?.size.toFixed(2), small.boxing?.steps.length);
+// 4.88 3
+```
+
+In 3D the platform is a solid block as the cage's is. The four posts are solid and stand in their corner's colour, 58 inches over the ring floor; each of the four ropes is a thin round bar along each side and, at each corner, out to its post by its extension, so that the canvas is in sight through them, and two ties a side hold the ropes in line. The steps are three blocks each. The same tests hold the size of the view as it turns, the order the parts are drawn in from every side and the scene inside its box (`src/boxing.test.ts`).
+
+![The ring in 3D from a low corner: a solid platform on the floor of the hall, four posts in red, blue and white with four ropes between them, and the steps](./images/boxing-ring-3d-desk-light.webp)
+
 ## The demo
 
-The [demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/?sport=mma) has the cage in its sport picker, with the three looks, the cage's width (30 or 25 feet), the 3D view and the score. The address says all of it: `?sport=mma&view=3d&viewpoint=corner&cagesize=25`.
+The [demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/?sport=mma) has the cage and the ring in its sport picker, with the looks, the league of the ring, the cage's width (30 or 25 feet), the 3D view and the score. The address says all of it: `?sport=mma&view=3d&viewpoint=corner&cagesize=25`, `?sport=boxing&league=wbc-amateur`.

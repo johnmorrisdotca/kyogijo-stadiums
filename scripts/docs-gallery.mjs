@@ -145,6 +145,7 @@ const GAMES = {
   kyudo: { away: KYUDO_AWAY, home: KYUDO_HOME, status: "final", competition: "Team final" },
   dojo: { away: side("japan", 27), home: side("canada", 24), status: "final", competition: "Open day" },
   mma: { away: side("mexico", 0), home: side("usa", 1), status: "final", competition: "Welterweight bout" },
+  boxing: { away: side("japan", 0), home: side("canada", 1), status: "final", competition: "Middleweight bout" },
   lacrosse: { away: side("canada", 27), home: side("usa", 24), status: "final", competition: "Final" },
   rugby: { away: RUGBY_AWAY, home: RUGBY_HOME, status: "final", competition: "Final" },
   afl: { away: AFL_AWAY, home: AFL_HOME, status: "final", competition: "Grand Final" },
@@ -1567,11 +1568,12 @@ function budoPage() {
 /** The combat sports: the MMA cage (the boxing ring and the mats of wrestling follow). */
 function combatPage() {
   const mma = (opts) => drawing({ sport: "mma", ...opts });
+  const boxing = (opts) => drawing({ sport: "boxing", ...opts });
   return {
     slug: "gallery-combat",
     title: "Gallery: the combat sports",
     ja: "格闘技（総合格闘技のケージ）",
-    intro: "The MMA cage: an eight-sided fence on its platform at 30 feet and at the smaller 25, in its three looks, without its gates and steps, close up on a gate, with its parts named, and with a score. Every picture is drawn by the code beside it.",
+    intro: "The MMA cage: an eight-sided fence on its platform at 30 feet and at the smaller 25, in its three looks, without its gates and steps, close up on a gate, with its parts named, and with a score. The boxing ring: Nevada's, Wisconsin's and the amateurs' rings in their looks, with and without steps, a corner close up and a score. Every picture is drawn by the code beside it.",
     sections: [
       section("mma", "The MMA cage", "`sport: \"mma\"`: an eight-sided fenced area on a platform with steps, from the commissions' and the IMMAF's rules. The cage's size is the rules' (20 to 32 feet); the platform's height, the gates' width and the colours are marked as typical or ours in [Sources](./sources.md#the-combat-sports).", [
         item("mma-cage", "The cage, 30 feet across", mma({}), "The canvas inside the fence, eight padded posts, two gates opposite each other with their swing, and steps up to the platform at each gate."),
@@ -1584,6 +1586,21 @@ function combatPage() {
         item("mma-cage-labels", "With its parts named", mma({ landmarks: true })),
         item("mma-cage-score", "A score", drawing({ sport: "mma", ...GAMES.mma }), "A bout between a red corner and a blue corner has no home side."),
         item("mma-cage-ja", "In Japanese", mma({ language: "ja" })),
+      ]),
+      section("boxing", "The boxing ring", "`sport: \"boxing\"`: a square raised platform with a post and a pad in each corner and four ropes, from Nevada's rules (20 feet within the ropes), Wisconsin's (16 to 20 feet) and the WBC Amateur rules (4.5 to 6.1 m). The platform's height, the apron, the steps and the colours are marked as typical or ours in [Sources](./sources.md#the-combat-sports).", [
+        item("boxing-ring", "The ring, 20 feet within the ropes", boxing({}), "The red corner at the bottom left and the blue at the top right, a white pad in each neutral corner, the ropes turning to their posts, and three sets of steps: one in each boxer's corner and one in a neutral corner."),
+        item("boxing-ring-16", "The smallest ring Wisconsin allows, 16 feet", boxing({ league: "wisconsin", budo: { size: 4.8768 } })),
+        item("boxing-ring-amateur", "The amateurs' ring, 6.1 m", boxing({ league: "wbc-amateur" }), "An apron of 0.5 m and a platform of 1.2 m."),
+        item("boxing-ring-amateur-small", "The amateurs' smallest ring, 4.5 m", boxing({ league: "wbc-amateur", budo: { size: 4.5 } })),
+        item("boxing-ring-blue", "A blue canvas", boxing({ budo: { look: "blue" } })),
+        item("boxing-ring-black", "A black canvas", boxing({ budo: { look: "black" } })),
+        item("boxing-ring-plain", "Plain corners, no steps", boxing({ budo: { corners: false, steps: false } })),
+        item("boxing-ring-floor", "On the floor of the hall", boxing({ budo: { height: 0 } }), "A platform of 0 puts the ring on the floor, and with it no steps."),
+        item("boxing-ring-corner", "Close up: the red corner", boxing({ range: "corner" })),
+        item("boxing-ring-ropes", "Close up: inside the ropes", boxing({ range: "ropes" })),
+        item("boxing-ring-labels", "With its parts named", boxing({ landmarks: true })),
+        item("boxing-ring-score", "A score", drawing({ sport: "boxing", ...GAMES.boxing }), "A bout between a red corner and a blue corner has no home side."),
+        item("boxing-ring-ja", "In Japanese", boxing({ language: "ja" })),
       ]),
     ],
   };

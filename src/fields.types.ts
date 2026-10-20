@@ -36,7 +36,7 @@ export type SkatingMark = "ky-ska-b" | "ky-ska-r" | "ky-ska-k" | "ky-ska-blocks"
 /** The fills of a budō surface's tape: blue, white, red and ink. */
 export type BudoFill = "ky-bud-blue-fill" | "ky-bud-white-fill" | "ky-bud-red-fill" | "ky-bud-ink-fill";
 
-export type BudoMark = "ky-bud-line" | "ky-bud-blue" | "ky-bud-white" | "ky-bud-red" | "ky-bud-seam" | "ky-bud-ink";
+export type BudoMark = "ky-bud-line" | "ky-bud-blue" | "ky-bud-white" | "ky-bud-red" | "ky-bud-seam" | "ky-bud-ink" | "ky-bud-rope";
 
 /** A line from one point to another. */
 export interface LineShape extends Stroked {
@@ -117,7 +117,7 @@ export type Shape = LineShape | ArcShape | RingShape | BoxShape | PolyShape | Do
 export type SkatingArea = "ky-ska-ice" | "ky-ska-floor" | "ky-ska-warm" | "ky-ska-pad" | "ky-ska-desk" | "ky-ska-kiss";
 
 /** The areas of a budō surface: the mats in three tones, the heri of a mat, the floor, the walls, the platform and the furniture, the clay and the sand and the straw of a dohyō, the azuchi and the yamichi. */
-export type BudoArea = "ky-bud-t1" | "ky-bud-t2" | "ky-bud-t3" | "ky-bud-heri" | "ky-bud-floor" | "ky-bud-wall" | "ky-bud-window" | "ky-bud-door" | "ky-bud-platform" | "ky-bud-free" | "ky-bud-desk" | "ky-bud-clay" | "ky-bud-sand" | "ky-bud-tawara" | "ky-bud-azuchi" | "ky-bud-roof" | "ky-bud-yamichi" | "ky-bud-shrine" | "ky-bud-dais" | "ky-bud-banner" | "ky-bud-lane" | "ky-bud-mato" | "ky-bud-tassel-e" | "ky-bud-tassel-s" | "ky-bud-tassel-w" | "ky-bud-tassel-n" | "ky-bud-seat" | "ky-bud-step" | "ky-bud-pad";
+export type BudoArea = "ky-bud-t1" | "ky-bud-t2" | "ky-bud-t3" | "ky-bud-heri" | "ky-bud-floor" | "ky-bud-wall" | "ky-bud-window" | "ky-bud-door" | "ky-bud-platform" | "ky-bud-free" | "ky-bud-desk" | "ky-bud-clay" | "ky-bud-sand" | "ky-bud-tawara" | "ky-bud-azuchi" | "ky-bud-roof" | "ky-bud-yamichi" | "ky-bud-shrine" | "ky-bud-dais" | "ky-bud-banner" | "ky-bud-lane" | "ky-bud-mato" | "ky-bud-tassel-e" | "ky-bud-tassel-s" | "ky-bud-tassel-w" | "ky-bud-tassel-n" | "ky-bud-seat" | "ky-bud-step" | "ky-bud-pad" | "ky-bud-corner-red" | "ky-bud-corner-blue" | "ky-bud-corner-white";
 
 export type AthleticsArea = "ky-ath-track" | "ky-ath-grass" | "ky-ath-sand" | "ky-ath-mat" | "ky-ath-water" | "ky-ath-concrete" | "ky-ath-pad" | "ky-ath-board" | "ky-ath-bank";
 
