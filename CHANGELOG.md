@@ -7,6 +7,8 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.28.0] - 2026-10-20
+
 ### Added
 
 - **The fly-through goes into the bowl** (`bowl` and `rink`, two stages after `arena`): the roof lifts away, and the camera comes in over the stands, tipping lower and nearer and through a shorter lens, to a seat's viewpoint inside the bowl, from where the rink turns. The 3D arena's own `lens` setting does it (a long lens from outside, about 1 from the seat, so that the eye is inside the building and the bowl has a real perspective), and the roof is dissolved with a CSS `filter: opacity()`, so that it composes with the 3D view's own cutting away of the walls. The seat is a place and a height of our own choosing (a pitch, a zoom and a lens, `seat` of `flightPlan`), said to be so, never a real seat; the bowl's words give the venue's seats and tiers.
