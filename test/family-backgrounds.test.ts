@@ -9,8 +9,8 @@ import { backgroundOptions } from "../scripts/backgrounds.mjs";
 import { BACKGROUND_PRESETS, FAMILY_BACKGROUNDS_VERSION, backgroundSvg, contrastRatio, parseColor } from "../scripts/family-backgrounds.ts";
 
 /** The sha256 of scripts/family-backgrounds.ts at FAMILY_BACKGROUNDS_VERSION: the same as in taisen-brackets' test/family-backgrounds.test.ts. */
-const SHA256 = "23e1ce89ed072365813df6255414aa51b056fb582f4b253d041e78c4d16b57d0";
-const VERSION = "1.0.0";
+const SHA256 = "584b1c6f5dea2c1e395e3f0d29f69b378039d1adc13eaac136b2ec02ee40c503";
+const VERSION = "1.0.1";
 const rgb = (text: string) => parseColor(text)!;
 
 test("family-backgrounds.ts is the file the family shares: its version and its sha256 are pinned", () => {
@@ -40,4 +40,25 @@ test("the package depends on nothing and ships none of the background module", (
   const pkg = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
   expect(pkg.dependencies ?? {}).toEqual({});
   expect(pkg.files).not.toContain("scripts");
+});
+
+test("a hostile id cannot reach the markup: only letters, digits, _ and - are written, and a safe id is used as written", () => {
+  const hostile = [`x"><script>alert(7)</script>`, `a}</style><script>alert(7)</script><style>b{`, `x" onload="alert(7)`, `1 starts with a digit`, `.x{fill:red}`, `a\nb`, `url(#x)`, ``];
+  for (const name of BACKGROUND_PRESETS) {
+    for (const id of hostile) {
+      const made = backgroundSvg(name, { width: 1080, height: 1350, id });
+      const svg = made.defs + made.body;
+      expect(/<script|\sonload=|\(7\)/.test(svg), `${name} ${JSON.stringify(id)}: nothing of the id's markup`).toBe(false);
+      const ids = [...made.defs.matchAll(/ id="([^"]*)"/g)].map((m) => m[1]);
+      expect(ids.length).toBeGreaterThan(0);
+      for (const written of ids) expect(written, `${name} ${JSON.stringify(id)}: element id`).toMatch(/^[A-Za-z][\w-]*$/);
+      for (const ref of made.body.matchAll(/url\(#([^)]*)\)/g)) expect(ids, `${name} ${JSON.stringify(id)}: ${ref[1]} is defined`).toContain(ref[1]);
+    }
+  }
+  expect(backgroundSvg("midnight", { width: 100, height: 100, id: "x\"y" }).defs).toContain('id="x-yg"');
+  expect(backgroundSvg("midnight", { width: 100, height: 100, id: "7 mat" }).defs).toContain('id="bg-7-matg"');
+  const plain = backgroundSvg("midnight", { width: 100, height: 100, id: "my-board_2" });
+  expect(plain.defs).toContain('id="my-board_2g"');
+  expect(plain.body).toContain("url(#my-board_2g)");
+  expect(backgroundSvg("midnight", { width: 100, height: 100, id: "my-board_2" })).toEqual(plain);
 });
