@@ -72,3 +72,5 @@ Neither Wikidata nor OpenStreetMap says how many seating levels an arena has or 
 - The outline is OpenStreetMap's: where it takes in a plaza or a wing of the building (Rogers Place's, the Crypto.com Arena's), so does the drawing, and the 3D walls and roof stand on the hall only.
 - The tiers are fitted to the outline and the seats; real bowls have sections, overhangs, sightline corners and a suite level that are not drawn. The 3D heights are ours.
 - The seats are the hockey configuration's, from the sources named; they change with a renovation (the Rogers Arena's 18,871 are its seats since 2018).
+
+See also the [world venue checklist](./research/venue-checklist.md), which ranks the districts and single venues worth drawing next.
