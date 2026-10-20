@@ -83,10 +83,24 @@ describe("a kata area's picture", () => {
     expect(middles[1][0]).toBeCloseTo(cx, 1);
     expect(middles[2][0]).toBeCloseTo(cx + 3, 1);
     for (const [, y] of middles) expect(y).toBeCloseTo(cy, 1);
-    for (const t of tapes) {
+    for (const t of tapes) expect(t.y1 - t.y0).toBeCloseTo(0.5, 1);
+  });
+
+  it("are drawn at their true 5 cm by 50 cm with `exactLines`, and at least 0.75 % of the plan's width across, their length the rule's, without it", () => {
+    const exact = boxes(drawKyogijo({ ...kata, exactLines: true }), "ky-bud-white-fill");
+    for (const t of exact) {
       expect(t.x1 - t.x0).toBeCloseTo(0.05, 1);
       expect(t.y1 - t.y0).toBeCloseTo(0.5, 1);
     }
+    // A plan of 14 m: the floor is 10.5 cm, about 4 pixels on a plan 560 pixels across.
+    for (const [i, t] of tapes.entries()) {
+      expect(t.x1 - t.x0).toBeCloseTo(0.14 * 0.75, 1);
+      expect(t.y1 - t.y0).toBeCloseTo(0.5, 6);
+      expect(centreOf(t)[0]).toBeCloseTo(centreOf(exact[i])[0], 1);
+      expect(centreOf(t)[1]).toBeCloseTo(centreOf(exact[i])[1], 1);
+    }
+    // A contest's start tapes get the same floor.
+    for (const t of boxes(drawKyogijo({ sport: "judo" }), "ky-bud-white-fill")) expect(t.x1 - t.x0).toBeGreaterThanOrEqual(0.18 * 0.75 - 0.006);
   });
 
   it("has no blue tape, where a contest area's two tapes are blue and white", () => {

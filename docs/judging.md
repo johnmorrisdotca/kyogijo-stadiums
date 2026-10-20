@@ -1,6 +1,6 @@
 # Judging assignments
 
-Who judges where. An organiser sets how many mat areas a judo tournament has, the style each is officiated in (`kata` or `shiai`, the contest) and, for each mat, who sits in which seat, with a name and an ID. `drawJudging` draws that as one picture for a tablet that the judges read live: each mat's area with a badge at every judge's seat, the name and ID in the seat where they fit, and beside it a chart of mat, seat, name and ID whose rows grow until every name and ID is whole. The same assignment is also a [3D view](#in-3d) that turns.
+Who judges where. An organiser sets how many mat areas a judo tournament has, the style each is officiated in (`kata` or `shiai`, the contest) and, for each mat, who sits in which seat, with a name and an ID. `drawJudging` draws that as one picture for a tablet that the judges read live: each mat's area with a round numbered badge at every seat, and beside it the chart that is the key: a row for each seat with its number, its role, its name and, under the name, its ID, in rows that grow until every name and ID is whole. A name can also be put on its seat (`seatNames: true`). The same assignment is also a [3D view](#in-3d) that turns.
 
 ```ts
 import { drawJudging, judgingChart, judgingTable } from "@johnmorrisdotca/kyogijo-stadiums/judging";
@@ -56,21 +56,20 @@ The rules do not number the judges: **the numbers are ours**, counted from the l
 **What is ours:** the numbers; which of the three chairs at the table is whose (timekeeper, scorekeeper, supervisor, from the left, 1 m apart); the place of the side judges (the Rules give none: two opposite corners of the contest area, 2 m out from them); the chairs (0.5 m) and the table (3 m by 0.8 m); and the cards' sizes. Referees who are not officiating are "seated at the technical table" (Article 3) and are not given seats here, since how many there are is the event's. The referee and the side judges are on the mat and its corners, so the close-up of the bench (`focus: "bench"`) shows the table's three only and the others' names are in the chart; in 3D the referee's and a side judge's cards stand on posts.
 
 
-## Names in the seats, and the chart
+## The seats, the chart and the names on the seats
 
-A name goes in its seat when it fits there, and the chart is for the rest:
+- **The seats are numbers.** By default every seat shows only its number on a round badge, the same badge the chart's rows have, drawn large; the chart beside the plan is the key. Nothing on the plan is squeezed to fit a name.
+- **The chart.** One row for each seat of each mat, in order: the badge, the role (`Judge 3, central`), the name in a large heavy face (up to 34 units, wrapped to three lines before it shrinks to 22) and the ID under it in a fixed-width face. A name that is still too long for the row at 22 units is wrapped as often as it takes and a word wider than the row is broken inside, and the row grows to hold it, so that **nothing is ever truncated**: a name of 120 characters and an ID of 64 are whole. A seat with nobody in it says "Not assigned".
+- **Names on the seats, on request.** `seatNames: true` also puts each name and ID on a card at its seat. The type is the chart's own face and weight, scaled evenly (never stretched or condensed: no `textLength`, no horizontal scaling anywhere), set in the biggest size that fits the card, one size for all the cards of a mat so that the row reads evenly, and **never below a floor** of 1.2 % of the picture's width (12 units in the default 1000): a name that fits only below it does not fit, and its seat shows its number alone, as every seat does without the option.
 
-- **A card in the seat.** The seat is a card as wide as the seats are apart and as deep as the chair and the table in front of it, with the number on a round badge on its top edge, the name on one line or wrapped at its spaces over two or three, and the ID under it. The name is set in the biggest size that fits, one size for all five cards of a mat so that the row reads evenly, and **never below a floor** of 1.2 % of the picture's width (12 units in the default 1000): a name that fits only below it does not fit.
-- **The badge.** A seat whose name does not fit, or that has a name too long for any card, shows its number alone on the badge (hollow and dashed when nobody is in the seat). Nothing is cut and nothing is shrunk past the floor.
-- **The chart.** One row for each seat of each mat, in order: the number, the role (`Judge 3, central`), the name in a large heavy face (up to 34 units, wrapped to three lines before it shrinks to 22) and the ID under it in a fixed-width face. A name that is still too long for the row at 22 units is wrapped as often as it takes and a word wider than the row is broken inside, and the row grows to hold it, so that **nothing is ever truncated**: a name of 120 characters and an ID of 64 are whole. A seat with nobody in it says "Not assigned".
-
-`chart` says when the chart is drawn: `auto` (the default) when any name or ID does not fit in its seat, `always`, or `never`. With `auto`, the plan is given the room the chart would have taken first, and the chart is drawn only if a name still does not fit.
+`chart` says when the chart is drawn: `auto` (the default) always, unless `seatNames` is on and every name fits its seat (the plan is then first given the room the chart would have taken), `always`, or `never`.
 
 | Option | What it does |
 | --- | --- |
 | `style` | `"kata"` (five judges) or `"shiai"` (a referee and the technical table). |
 | `mats` | The mat areas, 1 to 6. Each `{ label?, officials? }`; `label` is `Mat 1`, `Mat 2` (`第1試合場`, `第2試合場` in Japanese) when missing, at most 40 characters. |
 | `officials` of a mat | Each `{ seat, name?, id? }`: the seat, a name (at most 120 characters) and an ID (text or a number, at most 64 characters). A seat named twice is an error; a seat not named is not assigned. |
+| `seatNames` | Put the names on the seats too (off by default: the seats are numbers and the chart is the key). |
 | `sideJudges` | Shiai: draw the two side judges' seats too (off by default; a side judge a mat names is drawn anyway, on every mat). |
 | `mat` | Draws one mat alone (counting from 1): one tab of a page that has a tab for each mat. All of them, one under another, when missing. |
 | `chart` | `auto`, `always` or `never`. |
@@ -83,28 +82,28 @@ A name goes in its seat when it fits there, and the chart is for the rest:
 
 ## The judges' bench close up
 
-`focus: "bench"` crops the plan to the five seats, their table and a few rows of mats, so that the same seats are drawn about twice as large and the names of ordinary length fit them.
+`focus: "bench"` crops the plan to the five seats, their table and a few rows of mats, so that the same seats are drawn about twice as large (the numbers larger, and with `seatNames` the names of ordinary length fit).
 
 ```ts
 import { judgingDrawing } from "@johnmorrisdotca/kyogijo-stadiums/judging";
 
 const mats = [{ officials: [{ seat: 1, name: "Li Wei", id: "J-1" }, { seat: 2, name: "Ana Ruiz", id: "J-2" }] }];
-// With the chart beside the plan, the plan is half the width and the seats are too small for any but the shortest names:
-console.log(judgingDrawing({ style: "kata", mats, chart: "always" }).cards.map((card) => card.fits).join());
+// Names on the seats, with the chart beside the plan: the plan is half the width and the seats are too small for any but the shortest names:
+console.log(judgingDrawing({ style: "kata", mats, seatNames: true, chart: "always" }).cards.map((card) => card.fits).join());
 // false,false,true,true,true
-console.log(judgingDrawing({ style: "kata", mats, chart: "always", focus: "bench" }).cards.map((card) => card.fits).join());
+console.log(judgingDrawing({ style: "kata", mats, seatNames: true, chart: "always", focus: "bench" }).cards.map((card) => card.fits).join());
 // true,true,true,true,true
 ```
 
-A seat with nobody in it counts as fitting. With `chart: "auto"` the plan is first given the whole width, and short names like these then fit even on the whole mat, so no chart is drawn.
+A seat with nobody in it counts as fitting. With `seatNames: true` and `chart: "auto"` the plan is first given the whole width, and short names like these then fit even on the whole mat, so no chart is drawn.
 
 ## In 3D
 
-`mountJudgingTurn(host, options, settings)` mounts the assignment as the package's [3D view](./turn.md): the same controls, keys, pointer, auto-turn and camera as every other, over the judo floor (one area for each mat side by side, or the one `mat` names). The judges' table and the five chairs stand on it (the table 75 cm high and the chairs 45 cm, ours), **a name card stands on the table in front of each judge** and turns to face the eye, so that it is read from wherever the view is, and the mat's name is on a sign over the table. A seat whose name does not fit a card has a badge instead; the chart goes beside the view (`judgingChart`). `judgingTurnMarkup` is the still markup, for a server; `buildJudgingTurn` is the model.
+`mountJudgingTurn(host, options, settings)` mounts the assignment as the package's [3D view](./turn.md): the same controls, keys, pointer, auto-turn and camera as every other, over the judo floor (one area for each mat side by side, or the one `mat` names). The judges' table and the five chairs stand on it (the table 75 cm high and the chairs 45 cm, ours), **a large numbered badge stands on the table in front of each judge** (a name card with `seatNames: true`; a badge where a name does not fit), and the mat's name is on a sign over the table. Badges, cards and sign **lean back to face the eye squarely** as the view is tipped (`Plane.lean`): a card that stands upright is seen foreshortened from above, and its type looks squeezed, so they are turned and never stretched, and read the same from every angle. The chart goes beside the view (`judgingChart`). `judgingTurnMarkup` is the still markup, for a server; `buildJudgingTurn` is the model.
 
 ![The judges' table of a kata area in 3D, with a name card in front of each of the five judges and the mat's name on a sign over them, and the chart beside the view](./images/judging-3d-desk-light.webp)
 
-The view opens from the mat's side at a pitch of 42 degrees (`JUDGING_PRESETS.broadcast`), where an upright card's type is still two thirds as tall as it is wide; a high eye would squash it. `focus: "bench"` fits the view to the judges' bench and makes the scene turn about it, so the cards are about three times larger on the screen than in the view of the whole floor. The cards keep the same floor: type no smaller than 0.19 m on the floor, about 11 pixels at the opening view of a 960-pixel box. The view keeps its size through a whole turn, as every 3D view does: the camera's fit is one scale and one place for every angle, tested for the whole floor and for the bench. With several benches in view the scene turns about the middle of them and the view has a longer lens of its own (`TurnModel.lens`), so that a bench several metres off the axis does not swell as it swings toward the eye; `lens` in the settings overrides it.
+The view opens from the mat's side at a pitch of 42 degrees (`JUDGING_PRESETS.broadcast`), (the cards lean to face the eye, so the pitch does not squash their type). `focus: "bench"` fits the view to the judges' bench and makes the scene turn about it, so the cards are about three times larger on the screen than in the view of the whole floor. A name on a card keeps the same floor: type no smaller than 0.19 m on the floor, about 11 pixels at the opening view of a 960-pixel box. The view keeps its size through a whole turn, as every 3D view does: the camera's fit is one scale and one place for every angle, tested for the whole floor and for the bench. With several benches in view the scene turns about the middle of them and the view has a longer lens of its own (`TurnModel.lens`), so that a bench several metres off the axis does not swell as it swings toward the eye; `lens` in the settings overrides it.
 
 ## On a tablet
 

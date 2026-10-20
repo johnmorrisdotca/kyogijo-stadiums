@@ -55,6 +55,8 @@ export interface JudgingSetting {
   orientation: "landscape" | "portrait";
   focus: "mat" | "bench";
   width: number;
+  /** Whether the names are on the seats (`seatNames`). */
+  seatNames: boolean;
 }
 
 const oneOf = <T extends string>(value: unknown, allowed: readonly T[], fallback: T, label: string): T => {
@@ -90,6 +92,7 @@ export function judgingSetting(options: JudgingOptions): JudgingSetting {
     return byId;
   });
   if (options.sideJudges !== undefined && typeof options.sideJudges !== "boolean") throw new TypeError("sideJudges is true or false");
+  if (options.seatNames !== undefined && typeof options.seatNames !== "boolean") throw new TypeError("seatNames is true or false");
   // The seats that are drawn: every one that is not optional, and an optional one when asked for or when a mat names it.
   const shown = seats.filter((seat) => seat.optional !== true || options.sideJudges === true || given.some((m) => m.has(seat.id)));
   const all: JudgingResolved[] = options.mats.map((mat, i): JudgingResolved => ({ n: i + 1, label: matLabel(mat, i + 1, language), seats: shown.map((seat) => given[i].get(seat.id) ?? { seat, name: "", id: "", assigned: false }) }));
@@ -109,6 +112,7 @@ export function judgingSetting(options: JudgingOptions): JudgingSetting {
     orientation: oneOf(options.orientation, ["landscape", "portrait"], "landscape", "orientation"),
     focus: oneOf(options.focus, ["mat", "bench"], "mat", "focus"),
     width,
+    seatNames: options.seatNames === true,
   };
 }
 

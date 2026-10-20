@@ -7,7 +7,7 @@ import { JUDGING_HEIGHTS, JUDGING_PRESETS, buildJudgingTurn, judgingTurnMarkup }
 import { judgingPlan } from "./judging.ts";
 import type { JudgingOptions } from "./judging.types.ts";
 import { FEET_PER_METRE as M } from "./geometry.ts";
-import { PITCH_MAX, eyeDistance, fit, layoutOf, presetOf, TURN_PRESET_NAMES, type TurnModel } from "./turn-entry.ts";
+import { PITCH_MAX, eyeDistance, fit, layoutOf, presetOf, project, TURN_PRESET_NAMES, type TurnModel } from "./turn-entry.ts";
 import { covered } from "./turn.camera.ts";
 import { facing, size, type Plane } from "./turn.kit.ts";
 import { depthOf } from "./turn.camera.ts";
@@ -20,7 +20,7 @@ const FIVE = [
   { seat: 5, name: "Marta Kowalczyk", id: "J-1555" },
 ] as const;
 const TWO: JudgingOptions["mats"] = [{ officials: FIVE }, { label: "Final", officials: [{ seat: 1, name: "Li Wei", id: "J-3001" }, { seat: "central", name: "Priya Raman", id: "J-0042" }] }];
-const kata = (mats: JudgingOptions["mats"] = [{ officials: FIVE }], rest: Partial<JudgingOptions> = {}): JudgingOptions => ({ style: "kata", mats, ...rest });
+const kata = (mats: JudgingOptions["mats"] = [{ officials: FIVE }], rest: Partial<JudgingOptions> = {}): JudgingOptions => ({ style: "kata", mats, seatNames: true, ...rest });
 const byId = (model: TurnModel, id: string): Plane => {
   const found = model.planes.find((p) => p.id === id);
   if (found === undefined) throw new Error(`no plane ${id}`);
@@ -247,7 +247,7 @@ describe("the view keeps its size through a whole turn", () => {
     ["six mats", buildJudgingTurn(kata(Array.from({ length: 6 }, () => ({ officials: FIVE.slice(0, 2) }))))],
     ["the bench", buildJudgingTurn(kata(TWO, { focus: "bench" }))],
     ["one mat's bench", buildJudgingTurn(kata(undefined, { mat: 1, focus: "bench" }))],
-    ["a contest", buildJudgingTurn({ style: "shiai", mats: [{ officials: [{ seat: "referee", name: "Hana Ito" }, { seat: "side-judge-2", name: "Kim Park" }] }, {}], sideJudges: true })],
+    ["a contest", buildJudgingTurn({ style: "shiai", mats: [{ officials: [{ seat: "referee", name: "Hana Ito" }, { seat: "side-judge-2", name: "Kim Park" }] }, {}], sideJudges: true, seatNames: true })],
     ["a contest's bench", buildJudgingTurn({ style: "shiai", mats: [{ officials: [{ seat: "timekeeper", name: "Sam Cole" }] }], focus: "bench" })],
   ];
   const CONTAINERS: readonly (readonly [number, number])[] = [[1280, 900], [1180, 820], [390, 700]];
@@ -318,7 +318,7 @@ describe("the view keeps its size through a whole turn", () => {
 
 describe("a contest in 3D", () => {
   const officials = [{ seat: "referee", name: "Hana Ito", id: "R-204" }, { seat: "timekeeper", name: "Sam Cole", id: "T-11" }, { seat: "scorekeeper", name: "Ana Ruiz", id: "T-12" }, { seat: "supervisor", name: "Peter Lindqvist-Haraldsson", id: "S-3" }, { seat: "side-judge-1", name: "Kim Park", id: "J-7" }];
-  const contest = (rest: Partial<JudgingOptions> = {}): JudgingOptions => ({ style: "shiai", mats: [{ officials }], ...rest });
+  const contest = (rest: Partial<JudgingOptions> = {}): JudgingOptions => ({ style: "shiai", mats: [{ officials }], seatNames: true, ...rest });
   const model = buildJudgingTurn(contest());
 
   it("stands the technical table with its chairs, a card on it for each official at it, the referee's card on a post on the mat and a side judge's in the corner", () => {
@@ -369,9 +369,65 @@ describe("a contest in 3D", () => {
   });
 
   it("has mats side by side, each with its own seats, and the side judges on every mat when one names them", () => {
-    const two = buildJudgingTurn({ style: "shiai", mats: [{ officials }, { officials: [{ seat: "referee", name: "Li Wei" }] }] });
+    const two = buildJudgingTurn({ style: "shiai", mats: [{ officials }, { officials: [{ seat: "referee", name: "Li Wei" }] }], seatNames: true });
     expect(has(two, "m2-card-1")).toBe(true);
     expect(has(two, "m2-badge-5")).toBe(true);
     expect(byId(two, "m2-table-top").o[0]).toBeGreaterThan(byId(two, "m1-table-top").o[0] + 10 * M);
+  });
+});
+
+describe("nothing is squeezed in 3D", () => {
+  const model = buildJudgingTurn({ style: "kata", mats: [{ officials: FIVE }], seatNames: true });
+  const badges = buildJudgingTurn({ style: "kata", mats: [{ officials: FIVE }] });
+
+  it("leans each badge, card and sign back to face the eye squarely, turned and never stretched, at every turn and tip", () => {
+    for (const m of [model, badges]) {
+      for (const p of m.planes.filter((q) => /-(card|badge)-\d+$|-sign$/.test(q.id))) expect(p.lean, p.id).toBe(true);
+      for (const pitch of [0, 20, 42, 62, PITCH_MAX]) {
+        for (const yaw of range(0, 345, 15)) {
+          const view = { yaw, pitch, zoom: 1 };
+          const at = layoutOf(m, view, 960, 600).at;
+          const d = eyeDistance(960, 600);
+          for (const p of m.planes.filter((q) => q.lean === true)) {
+            const f = facing(p, yaw, pitch);
+            const [w, h] = size(p);
+            expect(Math.hypot(...f.u), p.id).toBeCloseTo(w, 6);
+            expect(Math.hypot(...f.v), p.id).toBeCloseTo(h, 6);
+            // Square to the eye: its sides are at right angles, and its normal is the way to the eye.
+            expect(f.u[0] * f.v[0] + f.u[1] * f.v[1] + f.u[2] * f.v[2], p.id).toBeCloseTo(0, 6);
+            const eye = [Math.sin((pitch * Math.PI) / 180) * Math.sin((yaw * Math.PI) / 180), Math.sin((pitch * Math.PI) / 180) * Math.cos((yaw * Math.PI) / 180), Math.cos((pitch * Math.PI) / 180)];
+            const normal = [f.u[1] * f.v[2] - f.u[2] * f.v[1], f.u[2] * f.v[0] - f.u[0] * f.v[2], f.u[0] * f.v[1] - f.u[1] * f.v[0]];
+            const len = Math.hypot(...normal);
+            expect(Math.abs((normal[0] * eye[0] + normal[1] * eye[1] + normal[2] * eye[2]) / len), `${p.id} ${pitch}/${yaw}`).toBeCloseTo(1, 6);
+            // Its shape on the screen is its shape: the width and the height on the screen are in the proportion of its own (the perspective, with a long lens, changes it by a few percent at most).
+            const corner = (a: number, b: number): [number, number] => {
+              const point: [number, number, number] = [(f.o[0] + a * f.u[0] + b * f.v[0] - m.centre[0]) * m.scale, (f.o[1] + a * f.u[1] + b * f.v[1] - m.centre[1]) * m.scale, (f.o[2] + a * f.u[2] + b * f.v[2]) * m.scale];
+              const q = project(point, view, at, d);
+              return [q[0], q[1]];
+            };
+            const [p0, px, py] = [corner(0, 0), corner(1, 0), corner(0, 1)];
+            const across = Math.hypot(px[0] - p0[0], px[1] - p0[1]);
+            const down = Math.hypot(py[0] - p0[0], py[1] - p0[1]);
+            if (pitch === 0 && p.id.includes("sign")) continue;
+            expect((down / across) / (h / w), `${p.id} ${pitch}/${yaw}`).toBeGreaterThan(0.95);
+            expect((down / across) / (h / w), `${p.id} ${pitch}/${yaw}`).toBeLessThan(1.05);
+          }
+        }
+      }
+    }
+  });
+
+  it("has no squeezing in its markup either: no textLength, no lengthAdjust, no scale of two numbers on a plane's drawing", () => {
+    for (const html of [judgingTurnMarkup({ style: "kata", mats: [{ officials: FIVE }], seatNames: true }), judgingTurnMarkup({ style: "shiai", mats: [{ officials: [{ seat: "referee", name: "Hana Ito" }] }] })]) {
+      expect(html).not.toMatch(/textLength|lengthAdjust|scaleX|scaleY/);
+      for (const m of html.matchAll(/scale\(([^)]*)\)/g)) expect(m[1].trim().split(/[ ,]+/), m[0]).toHaveLength(1);
+    }
+  });
+
+  it("makes the badges large: a seat's badge is bigger than the 0.55 foot of the first release, and the descriptions say a badge stands there", () => {
+    expect(size(byId(badges, "m1-badge-1"))[0]).toBeGreaterThanOrEqual(1.7);
+    expect(badges.description).toContain("numbered badge");
+    expect(model.description).toContain("name card");
+    expect(buildJudgingTurn({ style: "kata", mats: [{ officials: FIVE }], language: "ja" }).description).toContain("番号の丸い札");
   });
 });

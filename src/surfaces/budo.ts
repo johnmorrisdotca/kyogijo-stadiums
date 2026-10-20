@@ -20,6 +20,18 @@ function rangeOf(r: MRange, ox: number, oy: number): SurfaceRanges[string] {
 }
 
 /** The surface of the plan lying wide. `margin` is the ground round what is drawn, in feet. */
+/** The least width a tape is drawn at, as a share of the plan's width (0.75 %: about 4 pixels on a plan 560 pixels across), unless `exactLines` is set. */
+export const TAPE_LEAST = 0.0075;
+
+/** A bar widened across its shorter side to at least `least` metres, evenly about its middle; a bar that is wide enough is the same bar. */
+function widen<T extends { x0: number; y0: number; x1: number; y1: number }>(bar: T, least: number): T {
+  const w = bar.x1 - bar.x0;
+  const h = bar.y1 - bar.y0;
+  if (Math.min(w, h) >= least) return bar;
+  if (w < h) return { ...bar, x0: (bar.x0 + bar.x1) / 2 - least / 2, x1: (bar.x0 + bar.x1) / 2 + least / 2 };
+  return { ...bar, y0: (bar.y0 + bar.y1) / 2 - least / 2, y1: (bar.y0 + bar.y1) / 2 + least / 2 };
+}
+
 export function budoSurface(o: BuildOptions, plan: BudoPlan, margin: number): Surface {
   const ox = plan.box.x0;
   const oy = plan.box.y0;
@@ -83,7 +95,11 @@ export function budoSurface(o: BuildOptions, plan: BudoPlan, margin: number): Su
   const thick = o.exact ? plan.lineWidth : plan.drawnLine;
   // The seams are the plan's finest lines: left out of a drawing that asks for the simple detail.
   const shown = full ? plan : { ...plan, shapes: plan.shapes.filter((s) => s.feature !== "seams" && s.feature !== "boards") };
-  const lines = group(strokes(shown, o) + marks(shown, o), "ky-bud-lines");
+  // A tape is 5 cm to 6 cm wide: at the size of a drawing that is a hairline. Unless the lines are asked for at their true widths (`exactLines`), a tape is drawn at least `TAPE_LEAST` of the plan's width across (a readability floor,
+  // not a measurement: its length is always the rule's), widened evenly about its middle.
+  const floor = (plan.box.x1 - plan.box.x0) * TAPE_LEAST;
+  const taped = o.exact ? shown : { ...shown, shapes: shown.shapes.map((s) => (s.kind === "bar" ? widen(s, floor) : s)) };
+  const lines = group(strokes(taped, o) + marks(taped, o), "ky-bud-lines");
   const W = (plan.box.x1 - plan.box.x0) * K;
   const H = (plan.box.y1 - plan.box.y0) * K;
   const cx = (plan.centre.x - ox) * K;

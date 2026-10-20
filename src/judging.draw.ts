@@ -60,7 +60,7 @@ export function judgingText(setting: JudgingSetting, options: Pick<JudgingOption
   const mats = setting.total === 1 ? words.say.matsOne : fill(words.say.matsMany, { n: setting.total });
   const title = options.title ?? fill(words.say.title, { style, mats });
   const sentences = setting.mats.map((m) => fill(words.say.mat, { label: m.label, seats: m.seats.map((a) => seatSentence(a, setting)).join(words.say.join) }));
-  const description = options.description ?? [...sentences, chart ? words.say.names : words.say.chartOnly].join(setting.language === "ja" ? "" : " ");
+  const description = options.description ?? [...sentences, chart && setting.seatNames ? words.say.names : words.say.chartOnly].join(setting.language === "ja" ? "" : " ");
   return { title, description };
 }
 
@@ -176,7 +176,8 @@ function planMarkup(
     const r = clamp(cw * 0.2, 6 * m.k, 14 * m.k);
     return { cw, ch, pad, r, width: cw - 2 * pad, height: ch - 2 * pad - r, max: Math.min(cw * 0.3, 26 * m.k) };
   });
-  const fitted = fitSeats(mat.seats, boxes, { min: m.cardMin, idLabel: words.chart.idLabel });
+  // The names are on the seats only when asked for; otherwise every seat is its number, and the chart is the key.
+  const fitted = setting.seatNames ? fitSeats(mat.seats, boxes, { min: m.cardMin, idLabel: words.chart.idLabel }) : mat.seats.map(() => undefined);
   // A seat outside the picture (the referee in a close-up of the bench) has its name in the chart only: it does not fit.
   const shown = mat.seats.map((a) => seatIn(geom.places[a.seat.n - 1], region));
   const fits = mat.seats.map((a, i) => !a.assigned || (shown[i] && fitted[i] !== undefined));
@@ -188,7 +189,7 @@ function planMarkup(
     let g = "";
     if (fit !== undefined) g += card(PLAN_CARD, fit, a.seat.n, X(place.card.x0), Y(place.card.y0), b.cw, b.ch, b.pad, b.r, 3 * m.k);
     else {
-      const br = clamp(Math.min(b.cw, 1.25 * s) * 0.3, 7 * m.k, 16 * m.k);
+      const br = clamp(Math.min(b.cw, 1.25 * s) * 0.42, 10 * m.k, 30 * m.k);
       g += badge(PLAN_CARD, X((place.chair.x0 + place.chair.x1) / 2), Y((place.chair.y0 + place.chair.y1) / 2), br, a.seat.n, a.assigned);
     }
     markup += el("g", { class: "ky-ju-seat", "data-mat": mat.n, "data-seat": a.seat.id, "data-card": fit === undefined ? "no" : "yes" }, g);
@@ -230,7 +231,8 @@ export function judgingDrawing(options: JudgingOptions, mode: "full" | "chart" =
     return setting.mats.flatMap((mat, i) => planMarkup(mat, surfaces[i], geom, region, { x: 0, y: 0, ...box }, m, setting, "t").fits);
   };
   let chart = mode === "chart" || setting.chart === "always";
-  if (mode === "full" && setting.chart === "auto") chart = !trial(false).every(Boolean);
+  // `auto`: the chart is the key to the numbers, so it is drawn unless the names are on the seats and every one fits there.
+  if (mode === "full" && setting.chart === "auto") chart = !setting.seatNames || !trial(false).every(Boolean);
   if (mode === "full" && setting.chart === "never") chart = false;
   const cardsFit = mode === "chart" ? [] : trial(chart);
 

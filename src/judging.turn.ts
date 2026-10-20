@@ -98,15 +98,15 @@ export function buildJudgingTurn(options: JudgingOptions, settings: TurnSettings
       const cy = atTable ? ft((table.y0 + table.y1) / 2) : ft((place.card.y0 + place.card.y1) / 2);
       const base = atTable ? tableTop : ft(H.post);
       if (!atTable) stands.push(...pole(`m${mat.n}-post-${a.seat.n}`, "pole", cx, cy, 0, base, ft(0.06), "u-pole"));
-      const fit = fitted[si];
+      const fit = setting.seatNames ? fitted[si] : undefined;
       if (fit !== undefined) {
         const p = plane(`m${mat.n}-card-${a.seat.n}`, "card", [cx - b.w / 2, cy, base + cardH], [b.w, 0, 0], [0, 0, -cardH], card(TURN_CARD, fit, a.seat.n, 0, 0, b.w, cardH, b.pad, b.r, 0.1));
-        cards.push({ ...p, billboard: true });
+        cards.push({ ...p, billboard: true, lean: true });
       } else {
-        // Nobody in the seat, or a name that does not fit a card: the seat's number alone, on a small badge, with the name in the chart.
-        const br = 0.55;
+        // The names are not on the seats, or this one does not fit a card: the seat's number alone, on a round badge like the chart's, with the name in the chart.
+        const br = 0.9;
         const p = plane(`m${mat.n}-badge-${a.seat.n}`, "card", [cx - br, cy, base + 2 * br], [2 * br, 0, 0], [0, 0, -2 * br], badge(TURN_CARD, br, br, br * 0.92, a.seat.n, a.assigned));
-        cards.push({ ...p, billboard: true });
+        cards.push({ ...p, billboard: true, lean: true });
       }
     });
     // The mat's name on a sign over the whole table, on a pole at each end of it.
@@ -119,7 +119,7 @@ export function buildJudgingTurn(options: JudgingOptions, settings: TurnSettings
     const lines = text?.name ?? [mat.label];
     const size = text?.nameSize ?? signH * 0.3;
     const label = lines.map((line, i) => `<text class="u-sign-text" x="${n(signW / 2)}" y="${n(signH / 2 + (i - (lines.length - 1) / 2) * size * 1.1 + size * 0.34)}" font-size="${n(size)}">${line.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}</text>`).join("");
-    const sign: Plane = { ...plane(`m${mat.n}-sign`, "sign", [midX - signW / 2, midY, signBottom + signH], [signW, 0, 0], [0, 0, -signH], `<rect class="u-sign" width="${n(signW)}" height="${n(signH)}" rx="${n(signH * 0.12)}"/>${label}`), billboard: true };
+    const sign: Plane = { ...plane(`m${mat.n}-sign`, "sign", [midX - signW / 2, midY, signBottom + signH], [signW, 0, 0], [0, 0, -signH], `<rect class="u-sign" width="${n(signW)}" height="${n(signH)}" rx="${n(signH * 0.12)}"/>${label}`), billboard: true, lean: true };
     const poles = [table.x0, table.x1].flatMap((px, k) => pole(`m${mat.n}-sign-pole-${k + 1}`, "pole", ft(px), midY, tableTop, signBottom + signH * 0.5, ft(0.06), "u-pole"));
     items.push({ id: `m${mat.n}-furniture`, kind: "officials", at: [midX, midY], height: tableTop, planes: furniture });
     items.push({ id: `m${mat.n}-judges`, kind: "judges", at: [midX, midY], height: tableTop + cardH, planes: [...cards, ...stands, ...poles, sign] });
@@ -139,8 +139,8 @@ export function buildJudgingTurn(options: JudgingOptions, settings: TurnSettings
     language,
     options: surfaceLike,
     title,
-    description: `${description}${language === "ja" ? "" : " "}${words.turn.standing}`,
-    standing: words.turn.standing,
+    description: `${description}${language === "ja" ? "" : " "}${setting.seatNames ? words.turn.standing : words.turn.standingBadges}`,
+    standing: setting.seatNames ? words.turn.standing : words.turn.standingBadges,
     floor,
     viewBox: { x: vx, y: vy, w: vw, h: vh },
     scale,

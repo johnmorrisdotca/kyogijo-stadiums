@@ -26,6 +26,11 @@ export interface Plane {
    */
   billboard?: boolean;
   /**
+   * A billboard that also leans back to face the eye squarely, as the pitch tips the view: a card that stands upright is seen foreshortened from above, and its type looks squeezed, so a plane that carries type leans
+   * till its face is square to the eye. It is turned only (never stretched): its width and height stay what they are. At an overhead view it lies flat. `v` must be vertical, as for a billboard.
+   */
+  lean?: boolean;
+  /**
    * A wall round the surface that gives way when it is between the eye and what it surrounds: the horizontal direction (x, y, a unit vector) that points from the surface out through the
    * wall. The nearer the eye is to that side, and the lower it is, the more the wall is cut away (see `fadeOf`), so that the court is never hidden behind its own glass.
    */
@@ -74,13 +79,17 @@ export const cross = (a: V3, b: V3): V3 => [a[1] * b[2] - a[2] * b[1], a[2] * b[
 export const n = (value: number): string => String(Math.round(value * 1000) / 1000);
 
 /** A billboard turned to face an eye whose view is turned `yaw` degrees: its width runs along the screen's x, which in the scene is (cos yaw, -sin yaw, 0). */
-export function facing(p: Plane, yaw: number): Plane {
+export function facing(p: Plane, yaw: number, pitch = 0): Plane {
   if (p.billboard !== true) return p;
   const [w, h] = size(p);
   const a = (yaw * Math.PI) / 180;
   const u: V3 = [w * Math.cos(a), -w * Math.sin(a), 0];
   const middle: V3 = [p.o[0] + (p.u[0] + p.v[0]) / 2, p.o[1] + (p.u[1] + p.v[1]) / 2, p.o[2] + (p.u[2] + p.v[2]) / 2];
-  const v: V3 = [0, 0, p.v[2] < 0 ? -h : h];
+  // A plane that leans has its height along the screen's vertical, which at a pitch tips back from the vertical: (cos p sin yaw, cos p cos yaw, -sin p) is the way down the screen, in the scene.
+  const b = (pitch * Math.PI) / 180;
+  const down: V3 = p.lean === true ? [Math.cos(b) * Math.sin(a), Math.cos(b) * Math.cos(a), -Math.sin(b)] : [0, 0, -1];
+  const sign = p.v[2] < 0 ? 1 : -1;
+  const v: V3 = [down[0] * h * sign, down[1] * h * sign, down[2] * h * sign];
   return { ...p, o: [middle[0] - (u[0] + v[0]) / 2, middle[1] - (u[1] + v[1]) / 2, middle[2] - (u[2] + v[2]) / 2], u, v };
 }
 

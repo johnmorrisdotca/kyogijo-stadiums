@@ -81,7 +81,7 @@ test("on a tablet the type is large: the names are at least 20 pixels tall on a 
 });
 
 test("typing a name changes the picture and the address, a long one goes to the chart, and nothing is stored", async ({ page }) => {
-  await open(page, `?mat=1&focus=bench&${data([{ l: "", o: FIVE.map(([n, i]) => [n.split(" ")[0], i]) }])}`);
+  await open(page, `?mat=1&focus=bench&seatnames=1&${data([{ l: "", o: FIVE.map(([n, i]) => [n.split(" ")[0], i]) }])}`);
   await expect(page.locator(`${STAGE} [data-card="yes"]`)).toHaveCount(5);
   const field = page.locator('#officials input[data-mat="0"][data-seat="1"][data-field="name"]');
   await field.fill("Daniel");
@@ -127,7 +127,7 @@ test("a tab for each mat, and one for all of them; a mat is added and taken away
 });
 
 test("the same assignment in 3D: the judges' table, a name card on it, the chart beside the view, and a view that turns", async ({ page }) => {
-  const { errors } = await open(page, `?view=3d&focus=bench&mat=1&${data([{ l: "", o: FIVE.map(([n, i]) => [n.split(" ")[0], i]) }])}`);
+  const { errors } = await open(page, `?view=3d&focus=bench&mat=1&seatnames=1&${data([{ l: "", o: FIVE.map(([n, i]) => [n.split(" ")[0], i]) }])}`);
   await expect(page.locator(`${STAGE} .ky-turn`)).toHaveAttribute("data-mode", "3d");
   const view = page.locator(`${STAGE} .ky-turn-view`);
   await expect(view).toHaveAttribute("aria-roledescription", "3D view");
@@ -215,4 +215,45 @@ test("Japanese contest words", async ({ page }) => {
   await open(page, "?style=shiai&mat=1&lang=ja&chart=always");
   await expect(page.locator(`${STAGE} .ky-ju-role`).first()).toHaveText("主審");
   await expect(page.locator("#style option:checked")).toHaveText("試合（主審と各係）");
+});
+
+test("by default the seats are numbers on round badges and the chart is the key; the names go on the seats only when asked for, in the chart's own face", async ({ page }) => {
+  await open(page, "?mat=1");
+  await expect(page.locator("#seatnames")).not.toBeChecked();
+  await expect(page.locator(`${STAGE} svg.kyogijo`)).toHaveAttribute("data-chart", "yes");
+  await expect(page.locator(`${STAGE} [data-card="yes"]`)).toHaveCount(0);
+  await expect(page.locator(`${STAGE} .ky-ju-seat .ky-ju-badge`)).toHaveCount(5);
+  await expect(page.locator(`${STAGE} .ky-ju-card-name`)).toHaveCount(0);
+  await page.locator("#focus").selectOption("bench");
+  await page.locator("#seatnames").check();
+  expect(new URL(page.url()).searchParams.get("seatnames")).toBe("1");
+  await expect(page.locator(`${STAGE} .ky-ju-card-name`).first()).toBeVisible();
+  // The type on a card is the chart's own face and weight.
+  const faces = await page.evaluate(() => {
+    const of = (selector) => { const s = getComputedStyle(document.querySelector(selector)); return [s.fontFamily, s.fontWeight]; };
+    return [of(".ky-ju-card-name"), of(".ky-ju-name")];
+  });
+  expect(faces[0]).toEqual(faces[1]);
+  // Nothing is stretched or condensed: every text is scaled evenly on the screen, in 2D.
+  const uneven = await page.evaluate(() => [...document.querySelectorAll('[data-testid="stage"] svg text')].filter((t) => { const m = t.getScreenCTM(); return Math.abs(Math.hypot(m.a, m.b) / Math.hypot(m.c, m.d) - 1) > 0.001 || t.hasAttribute("textLength") || t.hasAttribute("lengthAdjust"); }).length);
+  expect(uneven).toBe(0);
+});
+
+test("in 3D the badges and the sign are not squeezed at any viewpoint: their shape on the screen is their shape", async ({ page }) => {
+  await open(page, "?view=3d&mat=1");
+  const view = page.locator(`${STAGE} .ky-turn-view`);
+  for (const name of ["Overhead", "Broadcast", "End-on", "Low corner"]) {
+    await page.getByRole("button", { name }).click();
+    await page.waitForTimeout(150);
+    const ratios = await page.evaluate(() => [...document.querySelectorAll('[data-part^="m1-badge-"], [data-part="m1-sign"]')].map((el) => {
+      const m = new DOMMatrix(getComputedStyle(el).transform);
+      const w = Number.parseFloat(el.style.width);
+      const h = Number.parseFloat(el.style.height);
+      const p = (x, y) => { const q = m.transformPoint(new DOMPoint(x, y)); return [q.x / q.w, q.y / q.w]; };
+      const [a, b, c] = [p(0, 0), p(w, 0), p(0, h)];
+      return (Math.hypot(c[0] - a[0], c[1] - a[1]) / h) / (Math.hypot(b[0] - a[0], b[1] - a[1]) / w);
+    }));
+    for (const r of ratios) expect(Math.abs(r - 1), name).toBeLessThan(0.08);
+  }
+  await expect(view).toBeVisible();
 });

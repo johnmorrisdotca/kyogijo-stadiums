@@ -139,7 +139,7 @@ export function sceneBox(planes: readonly Plane[], area: { x0: number; y0: numbe
   let top = lift;
   for (const p of planes) {
     // A billboard turns about its middle: whichever way it faces, it lies within a circle as wide as it is.
-    const reach = p.billboard === true ? Math.hypot(...p.u) / 2 : 0;
+    const reach = p.billboard === true ? (p.lean === true ? Math.hypot(...p.u, ...p.v) / 2 : Math.hypot(...p.u) / 2) : 0;
     for (const [a, b] of [[0, 0], [1, 0], [0, 1], [1, 1]] as const) {
       const point = [p.o[0] + a * p.u[0] + b * p.v[0], p.o[1] + a * p.u[1] + b * p.v[1], p.o[2] + a * p.u[2] + b * p.v[2]];
       if (reach > 0) {

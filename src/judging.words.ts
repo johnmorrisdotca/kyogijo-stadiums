@@ -14,7 +14,7 @@ export interface JudgingWords {
   /** The table that says the same as the picture. */
   table: { caption: string; mat: string; seat: string; name: string; id: string };
   /** What the 3D view says of the seats' name cards. */
-  turn: { standing: string; board: string };
+  turn: { standing: string; standingBadges: string; board: string };
 }
 
 export const JUDGING_WORDS: Record<Language, JudgingWords> = {
@@ -35,7 +35,7 @@ export const JUDGING_WORDS: Record<Language, JudgingWords> = {
       join: "; ",
     },
     table: { caption: "{title}", mat: "Mat", seat: "Seat", name: "Name", id: "ID" },
-    turn: { standing: "A name card stands at each judge's seat, turned to face the eye, and the name of each mat stands over its judges' table.", board: "Mat" },
+    turn: { standing: "A name card stands at each judge's seat, turned to face the eye, and the name of each mat stands over its judges' table.", standingBadges: "A numbered badge stands at each judge's seat, leaning back to face the eye, and the name of each mat stands over its judges' table.", board: "Mat" },
   },
   ja: {
     mat: "第{n}試合場",
@@ -54,6 +54,6 @@ export const JUDGING_WORDS: Record<Language, JudgingWords> = {
       join: "、",
     },
     table: { caption: "{title}", mat: "試合場", seat: "席", name: "氏名", id: "ID" },
-    turn: { standing: "各審判員の席に名札を置き、見ている方向に向くようにしています。各試合場の名前は審判員席の上に掲げています。", board: "試合場" },
+    turn: { standing: "各審判員の席に名札を置き、見ている方向に向くようにしています。各試合場の名前は審判員席の上に掲げています。", standingBadges: "各審判員の席に番号の丸い札を置き、見ている方向に向くようにしています。各試合場の名前は審判員席の上に掲げています。", board: "試合場" },
   },
 };

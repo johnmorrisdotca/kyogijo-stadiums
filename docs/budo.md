@@ -55,7 +55,7 @@ console.log(ajjf.judo!.contests[0].x1 - ajjf.judo!.contests[0].x0, ajjf.judo!.da
 
 ![The IJF's kata area: a yellow area in a red safety area of 2 m with three white tapes across its centre, and the five judges' seats behind a table on the shomen side at the top](./images/judo-kata-desk-light.webp)
 
-Close up, the line across the centre: the centre tape and the two starting tapes 3 m from it, each 5 cm by 50 cm.
+Close up, the line across the centre: the centre tape and the two starting tapes 3 m from it, each 5 cm by 50 cm. **A readability floor:** at the size of a drawing a 5 cm tape is a hairline, so unless `exactLines` is set a tape (the kata and contest tapes, the sumo's shikiri-sen) is drawn at least 0.75 % of the plan's width across (10.5 cm on a kata area's 14 m, about 4 pixels on a plan 560 pixels across), widened about its middle; its length is always the rule's, and `exactLines: true` draws the 5 cm.
 
 ![The line across the middle of a kata area: three short white tapes 3 m apart on yellow mats](./images/judo-kata-tapes-desk-light.webp)
 

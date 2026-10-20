@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Kyogijo Stadiums: judging assignments</title>
-    <meta name="description" content="Who judges where: the officials of each judo mat area by seat, with their names and IDs, in the seat where they fit and in a chart that lists everyone, in 2D and 3D, for a tablet." />
+    <meta name="description" content="Who judges where: the officials of each judo mat area by seat, with their names and IDs, as numbers on the seats and in a chart with every name and ID, in 2D and 3D, for a tablet." />
     <style>
       :root { color-scheme: light dark; --bg: #f6f4ee; --ink: #10151b; --muted: #434b54; --card: #fff; --line: #b9b3a3; --accent: #1f5fa8; --tab: #10151b; --tab-ink: #fff; }
       @media (prefers-color-scheme: dark) { :root { --bg: #0d1218; --ink: #f6f3ea; --muted: #bcc3cb; --card: #18212a; --line: #475463; --accent: #7fb2ee; --tab: #f6f3ea; --tab-ink: #0d1218; } }
@@ -61,6 +61,7 @@
         <summary id="l-edit"></summary>
         <div class="controls">
           <label><span id="l-style"></span><select id="style"><option value="kata"></option><option value="shiai"></option></select></label>
+          <label class="check"><input id="seatnames" type="checkbox" /><span id="l-seatnames"></span></label>
           <label class="check" id="side-row"><input id="sidejudges" type="checkbox" /><span id="l-sidejudges"></span></label>
           <label><span id="l-mats"></span><input id="mats" type="number" min="1" max="6" inputmode="numeric" /></label>
           <label><span id="l-view"></span><select id="view"><option value="flat">2D</option><option value="3d">3D</option></select></label>
@@ -81,25 +82,25 @@
       <p class="note"><a href="./docs/judging.html" id="docs"></a></p>
     </main>
     <script type="module">
-      // Judging assignments: set the mats and who sits in which seat; the names are in the seats where they fit and in the chart where they do not, in 2D and in 3D. Everything is in this page and its address: nothing is
+      // Judging assignments: set the mats and who sits in which seat; the seats are numbers and the chart is the key (names can go on the seats too), in 2D and in 3D. Everything is in this page and its address: nothing is
       // sent anywhere and nothing is stored.
       import { JUDGING_SEATS, JUDGING_WORDS, drawJudging, judgingChart, judgingTable, mountJudgingTurn } from "./dist/judging-entry.js";
       import { TURN_PRESET_NAMES } from "./dist/turn-entry.js";
 
       const WORDS = {
         en: {
-          title: "Judging assignments", pageTitle: "Kyogijo Stadiums: judging assignments", pageDescription: "Who judges where: the officials of each judo mat area by seat, with their names and IDs, in the seat where they fit and in a chart that lists everyone, in 2D and 3D, for a tablet.",
-          lede: "Who sits where on each mat. A name is in its seat when it fits there, and always in the chart of seat, name and ID. Everything stays in this page and its address.",
-          back: "Back to the Kyogijo Stadiums demo", docs: "The judging assignments page of the docs", edit: "Mats and officials", style: "Style", kata: "Kata (five judges)", shiai: "Shiai (referee and officials)", sidejudges: "Show the side judges' seats too", mats: "Mats", view: "View", focus: "Shows", focusMat: "The whole mat", focusBench: "The judges' bench", chart: "Chart",
-          auto: "When a name does not fit", always: "Always", never: "Never", orientation: "Layout", landscape: "Beside (landscape)", portrait: "Under (portrait)", language: "Language", theme: "Theme", light: "Light", dark: "Dark", follow: "Follow the device",
+          title: "Judging assignments", pageTitle: "Kyogijo Stadiums: judging assignments", pageDescription: "Who judges where: the officials of each judo mat area by seat, with their names and IDs, as numbers on the seats and in a chart with names and IDs, in 2D and 3D, for a tablet.",
+          lede: "Who sits where on each mat. The seats are numbers, and the chart of seat, name and ID is the key; names can go on the seats too. Everything stays in this page and its address.",
+          back: "Back to the Kyogijo Stadiums demo", docs: "The judging assignments page of the docs", edit: "Mats and officials", style: "Style", kata: "Kata (five judges)", shiai: "Shiai (referee and officials)", sidejudges: "Show the side judges' seats too", seatnames: "Names on the seats too (the chart has them anyway)", mats: "Mats", view: "View", focus: "Shows", focusMat: "The whole mat", focusBench: "The judges' bench", chart: "Chart",
+          auto: "Automatic", always: "Always", never: "Never", orientation: "Layout", landscape: "Beside (landscape)", portrait: "Under (portrait)", language: "Language", theme: "Theme", light: "Light", dark: "Dark", follow: "Follow the device",
           all: "All mats", label: "Mat name", name: "Name", id: "ID", reset: "Back to the sample names", table: "The same as a table", privacy: "The names here are invented. The page sends nothing and stores nothing: the address holds what you typed, so a copy of the address is a copy of the assignment.",
           formLabel: "Mats and officials",
         },
         ja: {
-          title: "審判員の配置", pageTitle: "競技場 Kyogijo Stadiums：審判員の配置", pageDescription: "どの試合場を誰が担当するか。柔道の各試合場の審判員を席ごとに、氏名とIDとともに表示します。席に収まる氏名は席の中に表示し、一覧表にはすべての氏名を載せます。2Dと3Dに対応し、タブレットでの閲覧を想定しています。",
-          lede: "各試合場で誰がどの席に座るかを表示します。氏名は、席に収まる場合は席の中に表示し、席・氏名・IDの一覧表には常に載せます。入力した内容は、このページとURLの中だけに保持されます。",
-          back: "競技場 Kyogijo Stadiums のデモに戻る", docs: "ドキュメントの「審判員の配置」ページ", edit: "試合場と審判員", style: "種目", kata: "形（5人制）", shiai: "試合（主審と各係）", sidejudges: "副審の席も表示する", mats: "試合場の数", view: "表示", focus: "表示する範囲", focusMat: "試合場全体", focusBench: "審判員席", chart: "一覧表",
-          auto: "氏名が席に収まらないとき", always: "常に表示", never: "表示しない", orientation: "並べ方", landscape: "横に並べる", portrait: "下に並べる", language: "言語", theme: "テーマ", light: "ライト", dark: "ダーク", follow: "端末に合わせる",
+          title: "審判員の配置", pageTitle: "競技場 Kyogijo Stadiums：審判員の配置", pageDescription: "どの試合場を誰が担当するか。柔道の各試合場の審判員を席ごとに、氏名とIDとともに表示します。席は番号で表し、一覧表にはすべての氏名とIDを載せます。2Dと3Dに対応し、タブレットでの閲覧を想定しています。",
+          lede: "各試合場で誰がどの席に座るかを表示します。席は番号で表し、席・氏名・IDの一覧表がその見方になります。氏名を席にも表示できます。入力した内容は、このページとURLの中だけに保持されます。",
+          back: "競技場 Kyogijo Stadiums のデモに戻る", docs: "ドキュメントの「審判員の配置」ページ", edit: "試合場と審判員", style: "種目", kata: "形（5人制）", shiai: "試合（主審と各係）", sidejudges: "副審の席も表示する", seatnames: "席にも氏名を表示する（一覧表には常に載ります）", mats: "試合場の数", view: "表示", focus: "表示する範囲", focusMat: "試合場全体", focusBench: "審判員席", chart: "一覧表",
+          auto: "自動", always: "常に表示", never: "表示しない", orientation: "並べ方", landscape: "横に並べる", portrait: "下に並べる", language: "言語", theme: "テーマ", light: "ライト", dark: "ダーク", follow: "端末に合わせる",
           all: "すべての試合場", label: "試合場の名前", name: "氏名", id: "ID", reset: "サンプルの氏名に戻す", table: "表で見る", privacy: "ここに載せている氏名は架空のものです。このページは何も送信せず、何も保存しません。入力した内容はURLに含まれるので、URLをコピーすると配置もコピーされます。",
           formLabel: "試合場と審判員",
         },
@@ -137,6 +138,7 @@
       function setSelect(id, value, allowed) { if (allowed.includes(value)) $(id).value = value; }
       setSelect("style", params.get("style"), ["kata", "shiai"]);
       $("sidejudges").checked = params.get("sidejudges") === "1";
+      $("seatnames").checked = params.get("seatnames") === "1";
       setSelect("view", params.get("view"), ["flat", "3d"]);
       setSelect("focus", params.get("focus"), ["mat", "bench"]);
       setSelect("chart", params.get("chart"), ["auto", "always", "never"]);
@@ -148,7 +150,7 @@
       function labelPage() {
         const w = words();
         const language = $("language").value;
-        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["back", "back"], ["docs", "docs"], ["l-edit", "edit"], ["l-style", "style"], ["l-sidejudges", "sidejudges"], ["l-mats", "mats"], ["l-view", "view"], ["l-focus", "focus"], ["l-chart", "chart"], ["l-orientation", "orientation"], ["l-language", "language"], ["l-theme", "theme"], ["reset", "reset"], ["l-table", "table"], ["privacy", "privacy"]]) $(id).textContent = w[key];
+        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["back", "back"], ["docs", "docs"], ["l-edit", "edit"], ["l-style", "style"], ["l-sidejudges", "sidejudges"], ["l-seatnames", "seatnames"], ["l-mats", "mats"], ["l-view", "view"], ["l-focus", "focus"], ["l-chart", "chart"], ["l-orientation", "orientation"], ["l-language", "language"], ["l-theme", "theme"], ["reset", "reset"], ["l-table", "table"], ["privacy", "privacy"]]) $(id).textContent = w[key];
         const names = { style: { kata: "kata", shiai: "shiai" }, focus: { mat: "focusMat", bench: "focusBench" }, chart: { auto: "auto", always: "always", never: "never" }, orientation: { auto: "follow", landscape: "landscape", portrait: "portrait" }, theme: { auto: "follow", light: "light", dark: "dark" } };
         for (const [select, map] of Object.entries(names)) for (const option of $(select).options) option.textContent = w[map[option.value]];
         document.documentElement.lang = language;
@@ -235,6 +237,7 @@
         return {
           style: $("style").value,
           sideJudges: $("sidejudges").checked,
+          seatNames: $("seatnames").checked,
           mats: state.mats.map((m) => ({ ...(m.l === "" ? {} : { label: m.l }), officials: slot(m).flatMap(([name, id], i) => (name === "" && id === "" ? [] : [{ seat: i + 1, name, id }])) })),
           ...(state.tab > 0 ? { mat: state.tab } : {}),
           focus: $("focus").value,
@@ -251,6 +254,7 @@
         if (!empty) next.set("d", JSON.stringify(state.mats.map((m) => ({ l: m.l, o: m.o, s: m.s }))));
         if ($("style").value !== "kata") next.set("style", $("style").value);
         if ($("sidejudges").checked) next.set("sidejudges", "1");
+        if ($("seatnames").checked) next.set("seatnames", "1");
         if (state.tab !== 1) next.set("mat", String(state.tab));
         if ($("view").value === "3d") {
           next.set("view", "3d");
@@ -322,7 +326,7 @@
       $("reset").addEventListener("click", () => { state.mats = samples(state.mats.length); buildTabs(); buildOfficials(); draw(); });
       $("language").addEventListener("change", () => { labelPage(); buildTabs(); buildOfficials(); draw(); });
       $("style").addEventListener("change", () => { $("side-row").hidden = $("style").value === "kata"; buildOfficials(); draw(); });
-      for (const id of ["view", "focus", "chart", "orientation", "theme", "sidejudges"]) $(id).addEventListener("change", draw);
+      for (const id of ["view", "focus", "chart", "orientation", "theme", "sidejudges", "seatnames"]) $(id).addEventListener("change", draw);
       // The layout follows the screen: a tablet turned on its side puts the chart beside the plan, held upright under it.
       let resizing = 0;
       window.addEventListener("resize", () => { cancelAnimationFrame(resizing); resizing = requestAnimationFrame(() => { if ($("orientation").value === "auto") draw(); }); });

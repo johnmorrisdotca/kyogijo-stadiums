@@ -42,7 +42,7 @@ export function layoutOf(model: TurnModel, view: TurnView, width: number, height
   const centre = model.centre;
   const floor: Plane = { id: "floor", kind: "ground", o: [model.viewBox.x, model.viewBox.y, model.uprights.lift], u: [model.viewBox.w, 0, 0], v: [0, model.viewBox.h, 0], svg: "" };
   // A billboard faces the eye at this view.
-  const planes = model.planes.map((p) => facing(p, view.yaw));
+  const planes = model.planes.map((p) => facing(p, view.yaw, view.pitch));
   const transforms = [floor, ...planes].map((p) => matrix3d(multiply(camera, planeMatrix(p, s, centre))));
   // Far to near: a plane's depth is that of its middle. The ground of a hall is under everything. The floor is next, unless it stands raised on something (a table tennis table's top, on its legs): then it is
   // sorted with the rest, by its middle, so that the legs and the skirt on the far side are drawn under it and the ones on the near side over it, and nothing under the top shows through it.

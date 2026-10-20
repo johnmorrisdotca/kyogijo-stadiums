@@ -19,7 +19,7 @@ const FIVE = [
   { seat: 4, name: "Kenji Watanabe", id: "J-0918" },
   { seat: 5, name: "Marta Kowalczyk", id: "J-1555" },
 ] as const;
-const kata = (mats: JudgingOptions["mats"] = [{ officials: FIVE }], rest: Partial<JudgingOptions> = {}): JudgingOptions => ({ style: "kata", mats, ...rest });
+const kata = (mats: JudgingOptions["mats"] = [{ officials: FIVE }], rest: Partial<JudgingOptions> = {}): JudgingOptions => ({ style: "kata", mats, seatNames: true, ...rest });
 /** The text of every `<text>` of a drawing, in order. */
 const texts = (svg: string, cls: string): string[] => [...svg.matchAll(new RegExp(`<text class="${cls}"[^>]*>([^<]*)</text>`, "g"))].map((m) => m[1]);
 const unescape = (s: string): string => s.replace(/&quot;/g, '"').replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/&amp;/g, "&");
@@ -350,7 +350,7 @@ const SHIAI = [
   { seat: "scorekeeper", name: "Ana Ruiz", id: "T-12" },
   { seat: "supervisor", name: "Peter Lindqvist-Haraldsson", id: "S-3" },
 ] as const;
-const shiai = (mats: JudgingOptions["mats"] = [{ officials: SHIAI }], rest: Partial<JudgingOptions> = {}): JudgingOptions => ({ style: "shiai", mats, ...rest });
+const shiai = (mats: JudgingOptions["mats"] = [{ officials: SHIAI }], rest: Partial<JudgingOptions> = {}): JudgingOptions => ({ style: "shiai", mats, seatNames: true, ...rest });
 
 describe("the seats of a contest", () => {
   it("are the referee, the timekeeper, the scorekeeper and the referee supervisor, and two side judges that are drawn only when asked for or named", () => {
@@ -460,5 +460,41 @@ describe("a contest's picture", () => {
   it("says the same as a table, a row for every seat", () => {
     expect(judgingTable(shiai()).match(/<tbody>[\s\S]*<\/tbody>/)![0].match(/<tr>/g)).toHaveLength(4);
     expect(judgingTable(shiai(undefined, { sideJudges: true })).match(/<tbody>[\s\S]*<\/tbody>/)![0].match(/<tr>/g)).toHaveLength(6);
+  });
+});
+
+describe("the seats are numbers by default, and a name is on a seat only when asked for", () => {
+  const plain = (rest: Partial<JudgingOptions> = {}): JudgingOptions => ({ style: "kata", mats: [{ officials: FIVE }], ...rest });
+
+  it("shows every seat as its number on a round badge, large, with the chart drawn as the key, however short the names", () => {
+    const short = judgingDrawing({ style: "kata", mats: [{ officials: [{ seat: 1, name: "Li Wei", id: "J-1" }] }], focus: "bench" });
+    expect(short.chart).toBe(true);
+    expect(short.svg).not.toContain('data-card="yes"');
+    expect(short.svg).not.toContain('class="ky-ju-card"');
+    expect(short.cards.map((c) => c.fits)).toEqual([false, true, true, true, true]);
+    const badge = (svg: string): number => Number(/<circle class="ky-ju-badge" cx="[\d.]+" cy="[\d.]+" r="([\d.]+)"\/><text class="ky-ju-badge-n"/.exec(svg.slice(svg.indexOf('class="ky-ju-seat"')))![1]);
+    expect(badge(short.svg)).toBeGreaterThanOrEqual(10);
+    // Larger than the badge of the chart's rows? The chart's is 30; the plan's is as large as the seats allow, at least 10 units and at most 30.
+    expect(badge(short.svg)).toBeLessThanOrEqual(30);
+    expect(drawJudging(plain())).toContain("The names are in the chart of mat, seat, name and ID.");
+    expect(judgingDrawing(plain()).description).not.toContain("in the seats where they fit");
+    expect(judgingDrawing(plain({ chart: "never" })).chart).toBe(false);
+  });
+
+  it("puts a name on the seat with `seatNames`, in the chart's own face (the same classes' family and weight), and says so", () => {
+    const d = judgingDrawing(plain({ seatNames: true, focus: "bench" }));
+    expect(d.svg).toContain('data-card="yes"');
+    expect(d.description).toContain("in the seats where they fit");
+    expect(KYOGIJO_JUDGING_STYLE).toContain(".kyogijo .ky-ju-card-name{fill:var(--ky-ju-card-ink);font-family:var(--ky-font);font-weight:800;text-anchor:middle}");
+    expect(KYOGIJO_JUDGING_STYLE).toContain(".kyogijo .ky-ju-name{fill:var(--ky-ju-ink);font-family:var(--ky-font);font-weight:800}");
+    expect(() => judgingSetting(plain({ seatNames: "yes" as never }))).toThrow(TypeError);
+  });
+
+  it("never stretches or condenses a text: no textLength, no lengthAdjust, no scale of two numbers, in any picture", () => {
+    const pictures = [drawJudging(plain()), drawJudging(plain({ seatNames: true, focus: "bench" })), drawJudging(plain({ orientation: "portrait", seatNames: true })), drawJudging(shiai(undefined, { seatNames: true })), judgingChart(plain())];
+    for (const svg of pictures) {
+      expect(svg).not.toMatch(/textLength|lengthAdjust|scaleX|scaleY/);
+      for (const m of svg.matchAll(/scale\(([^)]*)\)/g)) expect(m[1].trim().split(/[ ,]+/), m[0]).toHaveLength(1);
+    }
   });
 });

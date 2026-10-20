@@ -34,6 +34,11 @@ export interface JudgingOptions {
   chart?: "auto" | "always" | "never";
   /** Shiai: draw the two side judges' seats too (the IJF's rules for an event with no CARE system use them; its other events have none), as not assigned where nobody is named. A seat a mat names is drawn whatever this says. Off by default. */
   sideJudges?: boolean;
+  /**
+   * Put the names on the seats as well as in the chart. Off by default: a seat then shows its number alone, on the round badge the chart's rows have, and the chart is the key. On, a name is set in the chart's own face, scaled
+   * evenly (never stretched or condensed), in the biggest size that fits its card and no smaller than a readable one; a seat whose name does not fit shows its number alone.
+   */
+  seatNames?: boolean;
   /** Where the chart is laid: beside the plan (`landscape`, the default) or under it (`portrait`). */
   orientation?: "landscape" | "portrait";
   /** What the plan shows: the whole `mat` (the default) or the judges' `bench`, close up, so that the names in the seats are as large as they can be. */

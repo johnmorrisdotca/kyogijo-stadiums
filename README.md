@@ -550,9 +550,9 @@ The [demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/halls.html) turns 
 <p align="center">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/judging-3d-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/judging-3d-desk-light.webp" alt="A kata area's judges' table in 3D, with a name card before each judge." width="640">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/judging-3d-desk-light.webp" alt="A kata area's judges' table in 3D, numbered badges, and the chart." width="640">
 </picture>
-<br><em>Judges in 3D.</em>
+<br><em>Judges, in 3D.</em>
 </p>
 
 

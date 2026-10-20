@@ -7,6 +7,17 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.18.1] - 2026-10-20
+
+### Changed
+
+- **The seats show their number, and the names are in the chart.** By default every seat of a judging assignment is a large round numbered badge (the chart's own), in 2D and in 3D, and the chart beside it is the key (`chart: "auto"` now always draws it, unless `seatNames` is on and every name fits). Putting the names on the seats is the new option `seatNames: true` (off by default), which sets them in the chart's own face and weight, scaled evenly, in the biggest size that fits and never below a readable floor, and falls back to the number alone when a name does not fit. The demo has a "Names on the seats too" box (`seatnames=1`).
+
+### Fixed
+
+- **Nothing is squeezed or stretched in a judging picture.** The 3D badges, cards and the mat's sign stood upright, so a tipped view foreshortened them and their type looked squeezed: they now lean back to face the eye squarely (`Plane.lean`, turned and never stretched), at every viewpoint. A test measures each one's shape on the screen against its own, and that no text anywhere has `textLength`, `lengthAdjust` or a two-number `scale`.
+- **The tapes of a judo area were hairlines.** The kata area's centre and starting tapes (5 cm by 50 cm) and a contest area's two start tapes, and the sumo's shikiri-sen, are drawn at least 0.75 % of the plan's width across (10.5 cm on a kata area's 14 m, about 4 pixels on a plan 560 pixels across) unless `exactLines: true`, which draws the rule's 5 cm. The floor is a readability aid, not a measurement: a tape's length is always the rule's, and it is widened about its middle. In 3D (the same floor) and in tournament layouts too.
+
 ## [0.18.0] - 2026-10-20
 
 ### Added
