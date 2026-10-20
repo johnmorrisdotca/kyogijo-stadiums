@@ -22,6 +22,8 @@
       #tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; }
       #tabs button { font: inherit; font-size: 1rem; font-weight: 800; min-height: 48px; padding: 0 14px; border-radius: 12px; border: 2px solid var(--tab); background: var(--card); color: var(--ink); cursor: pointer; }
       #tabs button[aria-selected="true"] { background: var(--tab); color: var(--tab-ink); }
+      /* Sixteen arenas are one row that scrolls on a phone, so that the view stays in sight (the fly-through waits while it is off screen). */
+      @media (max-width: 600px) { #tabs { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; } #tabs button { flex: none; white-space: nowrap; } }
       #trip { background: var(--card); border-radius: 12px; padding: 8px; border: 1px solid var(--line); }
       .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr)); gap: 12px; margin: 10px 0 0; }
       label { display: grid; gap: 4px; min-width: 0; font-size: .9rem; color: var(--muted); }

@@ -10,6 +10,7 @@ import { KYOGIJO_TURN_STYLE } from "./turn.style.ts";
 import { esc } from "./format.ts";
 import { turnBoardMarkup } from "./overlay.ts";
 import type { ScoreOptions, SurfaceOptions } from "./types.ts";
+import type { VenueSettings } from "./venue.ts";
 
 /** What `mountKyogijoTurn` gives back. `O` is what `update` takes: the options of a drawing, or (for `mountMultiTurn`) of a tournament layout. */
 export interface KyogijoTurn<O = SurfaceOptions | ScoreOptions> {
@@ -23,8 +24,11 @@ export interface KyogijoTurn<O = SurfaceOptions | ScoreOptions> {
   preset(name: TurnPreset): void;
   /** Back to the opening view. */
   reset(): void;
-  /** Draw again with new options (a score that moved, a look that changed), keeping the view. */
-  update(options: O): void;
+  /**
+   * Draw again with new options (a score that moved, a look that changed), keeping the view and the auto-turn: the view goes on turning. `change` alters what the venue's walls and roof stand on (the settings `venue` was
+   * mounted with, the parts given), so that a page can switch them on and off without mounting the view again.
+   */
+  update(options: O, change?: { venue?: VenueSettings }): void;
   /** Whether the auto-turn is running. */
   readonly playing: boolean;
   /** Start the auto-turn, a slow turn of the whole view. It gives whether it is running (a surface that cannot turn gives `false`). Nothing turns by itself until this, the Play button or Space starts it, unless `autoPlay` asked. */
@@ -73,6 +77,8 @@ export function mountKyogijoTurn(host: HTMLElement, options: SurfaceOptions | Sc
 export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettings, build: (options: O, settings: TurnSettings) => TurnModel): KyogijoTurn<O> {
   const doc = host.ownerDocument;
   const win = doc.defaultView;
+  /** The venue's settings as they are now: the mounted ones, altered by `update`. */
+  let venue: boolean | VenueSettings | undefined = settings.venue;
   let model: TurnModel = build(options, settings);
   /** What names the four viewpoints: the model's own table (a tournament layout has one), else the sport's. */
   const sport = (): string | PresetTable | undefined => model.presets ?? (model.options as SurfaceOptions).sport;
@@ -95,8 +101,9 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
       play: () => false,
       pause: () => undefined,
       togglePlay: () => false,
-      update: (next) => {
-        model = build(next, settings);
+      update: (next, change) => {
+        if (change?.venue !== undefined) venue = { ...(typeof venue === "object" ? venue : {}), ...change.venue };
+        model = build(next, { ...settings, id: settings.id ?? model.id, venue });
         flat(next);
       },
       svg: () => (alive ? host.querySelector<SVGSVGElement>("svg.kyogijo") : null),
@@ -447,9 +454,10 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
     },
     preset: toPreset,
     reset: toOpening,
-    update(next) {
+    update(next, change) {
       if (!alive) return;
-      model = build(next, { ...settings, preset: undefined, view });
+      if (change?.venue !== undefined) venue = { ...(typeof venue === "object" ? venue : {}), ...change.venue };
+      model = build(next, { ...settings, id: settings.id ?? model.id, venue, preset: undefined, view });
       view = clampView(view);
       opening = openingView(settings, sport());
       const layout = layoutOf(model, shown, stage.clientWidth || 960, stage.clientHeight || 600, settings.lens);

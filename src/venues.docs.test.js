@@ -3,8 +3,8 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { ARENAS } from "./arenas.ts";
-import { VENUES, VENUE_IDS } from "./venues.ts";
-import { areaOf, edgeDistance, metresFrom, middleOf } from "./venues.geo.ts";
+import { VENUES, VENUE_CONFERENCES, VENUE_IDS } from "./venues.ts";
+import { areaOf, edgeDistance, metresFrom, middleOf, outerRingOf } from "./venues.geo.ts";
 
 const venues = VENUE_IDS.map((id) => VENUES[id]);
 const lonLat = (ring) => ring.map(([lon, lat]) => [lon, lat]);
@@ -25,13 +25,15 @@ describe("the real venues' files", () => {
   it("keep the raw answers they were made from, dated, and the outline is that way simplified to a metre", () => {
     for (const v of venues) {
       const raw = JSON.parse(readFileSync(`data-sources/venues/${v.osm.read}/osm-${v.id}.json`, "utf8"));
+      expect(raw.query, v.id).toContain(v.wikidata);
       expect(raw.wikidata).toBe(v.wikidata);
       expect(raw.osmBase).toBe(v.osm.base);
       expect(raw.licence).toContain("ODbL");
       const way = raw.elements.find((e) => `${e.type}/${e.id}` === v.osm.source);
       expect(way, v.id).toBeDefined();
       expect(way.tags.wikidata).toBe(v.wikidata);
-      const all = way.geometry.slice(0, -1).map((p) => [p.lon, p.lat]);
+      // A way's own points, or the outer ways of a building's relation joined into its ring.
+      const all = outerRingOf(way).slice(0, -1).map((p) => [p.lon, p.lat]);
       const origin = middleOf(all);
       const raws = metresFrom(origin, all);
       const kept = metresFrom(origin, lonLat(v.osm.ring));
@@ -41,7 +43,7 @@ describe("the real venues' files", () => {
       expect(Math.abs(areaOf(kept) - areaOf(raws)) / areaOf(raws), v.id).toBeLessThan(0.01);
       expect(v.osm.ring.length, v.id).toBeLessThan(all.length + 1);
       // The facts were read at the revision the archive holds, from the article the arena names.
-      const articles = JSON.parse(readFileSync(`data-sources/venues/${v.osm.read}/wikipedia.json`, "utf8")).articles;
+      const articles = JSON.parse(readFileSync(`data-sources/venues/${v.osm.read}/wikipedia-${v.division}.json`, "utf8")).articles;
       expect(articles[v.id].revision, v.id).toBe(v.en.revision);
       expect(articles[v.id].title, v.id).toBe(ARENAS[v.id].en.title);
     }
@@ -73,6 +75,14 @@ describe("the real venues' files", () => {
   it("make the files from the same data again: the generated tables are the ones the build writes", () => {
     const data = JSON.parse(readFileSync("scripts/venues.data.json", "utf8"));
     expect(data.venues.map((v) => v.id)).toEqual([...VENUE_IDS]);
-    expect(data.division).toBe("pacific");
+    // Each division lists its venues in the order of the data, and sits in the conference the league has it in.
+    expect(Object.keys(data.divisions)).toEqual(["pacific", "central"]);
+    for (const [division, entry] of Object.entries(data.divisions)) {
+      expect(entry.venues, division).toEqual(venues.filter((v) => v.division === division).map((v) => v.id));
+      expect(VENUE_CONFERENCES[entry.conference], division).toContain(division);
+      expect(readFileSync(`data-sources/venues/2026-10-20/wikidata-${division}.json`, "utf8")).toContain("Wikidata, CC0");
+    }
+    // Every venue names the day it was read, and the files of that day are there.
+    for (const v of data.venues) expect(v.read, v.id).toBe(VENUES[v.id].osm.read);
   });
 });

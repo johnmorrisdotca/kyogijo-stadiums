@@ -17,6 +17,8 @@ export interface VenueSettings {
   roof?: boolean;
   /** A retractable roof (a real venue's: BC Place's) drawn open, the fabric gathered into its pod, instead of closed over the opening. Closed by default. */
   roofOpen?: boolean;
+  /** The walls of a real venue's building (`crowd: { real: true }`), raised on its outline: they follow `roof` where left out (a roof and walls together, as before), and `walls: true` with `roof` off raises the walls alone, `roof: true` with `walls: false` the roof alone. */
+  walls?: boolean;
   /** How finely the curves are cut: `low` a facet to each corner, `auto` (the default) three, `high` six; an oval is 12, 28 or 56 facets round. */
   detail?: Cut;
 }
@@ -169,7 +171,8 @@ export function standsVenueOf(stands: CrowdStands, crowd: Crowd, o: Pick<Surface
   if (wallSeats.length > 0) items.push({ id: "wall-seats", kind: "wall-seats", at: centre, height: topOf(wallSeats), planes: wallSeats });
 
   // The roof: a canopy over the back of the top tier, or a lid over it in a hall. A real venue has its own: the walls of its building and a roof of its kind over them.
-  if (stands.real !== undefined && v.roof === true) items.push(...realBuilding(stands.real, topRing(stands), centre, lift, ARC_STEPS[cut].oval * 2, v.roofOpen === true));
+  const [walls, roof] = [v.walls ?? v.roof === true, v.roof === true];
+  if (stands.real !== undefined && (walls || roof)) items.push(...realBuilding(stands.real, topRing(stands), centre, lift, ARC_STEPS[cut].oval * 2, v.roofOpen === true, { walls, roof }));
   const top = v.roof === true && crowd.roof && stands.real === undefined ? topRing(stands) : undefined;
   if (top !== undefined) {
     const lid = INDOOR.includes(String(o.sport));

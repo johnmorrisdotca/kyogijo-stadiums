@@ -1,0 +1,174 @@
+{
+ "read": "2026-10-20",
+ "licence": "ODbL 1.0, (c) OpenStreetMap contributors, openstreetmap.org/copyright",
+ "gateway": "https://overpass-api.de/api/interpreter",
+ "query": "[out:json][timeout:60];(nwr[\"wikidata\"=\"Q82294\"];nwr(around:300,40.76833,-111.90111)[\"sport\"=\"ice_hockey\"];nwr(around:300,40.76833,-111.90111)[\"leisure\"=\"ice_rink\"];);out geom tags;",
+ "osmBase": "2026-10-20T21:39:17Z",
+ "wikidata": "Q82294",
+ "elements": [
+  {
+   "type": "way",
+   "id": 23335190,
+   "bounds": {
+    "minlat": 40.7675474,
+    "minlon": -111.9020622,
+    "maxlat": 40.769069,
+    "maxlon": -111.9000452
+   },
+   "geometry": [
+    {
+     "lat": 40.7689726,
+     "lon": -111.9010614
+    },
+    {
+     "lat": 40.7688504,
+     "lon": -111.9009006
+    },
+    {
+     "lat": 40.7689136,
+     "lon": -111.9008167
+    },
+    {
+     "lat": 40.769069,
+     "lon": -111.9006108
+    },
+    {
+     "lat": 40.7686388,
+     "lon": -111.9000452
+    },
+    {
+     "lat": 40.7684824,
+     "lon": -111.9002525
+    },
+    {
+     "lat": 40.7684947,
+     "lon": -111.9002687
+    },
+    {
+     "lat": 40.7684392,
+     "lon": -111.9003424
+    },
+    {
+     "lat": 40.768297,
+     "lon": -111.9001555
+    },
+    {
+     "lat": 40.7681619,
+     "lon": -111.9003391
+    },
+    {
+     "lat": 40.7681034,
+     "lon": -111.9002631
+    },
+    {
+     "lat": 40.7679335,
+     "lon": -111.9004885
+    },
+    {
+     "lat": 40.7678591,
+     "lon": -111.9003907
+    },
+    {
+     "lat": 40.7677104,
+     "lon": -111.900588
+    },
+    {
+     "lat": 40.7677853,
+     "lon": -111.9006865
+    },
+    {
+     "lat": 40.7676155,
+     "lon": -111.9009118
+    },
+    {
+     "lat": 40.76768,
+     "lon": -111.9009942
+    },
+    {
+     "lat": 40.7675474,
+     "lon": -111.9011744
+    },
+    {
+     "lat": 40.7676737,
+     "lon": -111.9013421
+    },
+    {
+     "lat": 40.7676204,
+     "lon": -111.9014091
+    },
+    {
+     "lat": 40.7675529,
+     "lon": -111.901494
+    },
+    {
+     "lat": 40.7679722,
+     "lon": -111.9020449
+    },
+    {
+     "lat": 40.7680348,
+     "lon": -111.9019618
+    },
+    {
+     "lat": 40.7680871,
+     "lon": -111.9018925
+    },
+    {
+     "lat": 40.7682162,
+     "lon": -111.9020622
+    },
+    {
+     "lat": 40.7683577,
+     "lon": -111.9018745
+    },
+    {
+     "lat": 40.7684191,
+     "lon": -111.9019552
+    },
+    {
+     "lat": 40.7685812,
+     "lon": -111.9017402
+    },
+    {
+     "lat": 40.7686582,
+     "lon": -111.9018413
+    },
+    {
+     "lat": 40.7688088,
+     "lon": -111.9016415
+    },
+    {
+     "lat": 40.7687329,
+     "lon": -111.9015418
+    },
+    {
+     "lat": 40.7688989,
+     "lon": -111.9013218
+    },
+    {
+     "lat": 40.7688373,
+     "lon": -111.9012408
+    },
+    {
+     "lat": 40.7689726,
+     "lon": -111.9010614
+    }
+   ],
+   "tags": {
+    "addr:city": "Salt Lake City",
+    "addr:housenumber": "301",
+    "addr:postcode": "84101",
+    "addr:state": "UT",
+    "addr:street": "West South Temple",
+    "building": "stadium",
+    "leisure": "stadium",
+    "name": "Delta Center",
+    "old_name": "Vivint Arena;EnergySolutions Arena;Salt Lake Ice Center;Vivint Smart Home Arena",
+    "operator": "Smith Entertainment Group",
+    "phone": "+1 801-325-2000",
+    "sport": "basketball;ice_hockey",
+    "website": "https://www.deltacenter.com/",
+    "wikidata": "Q82294"
+   }
+  }
+ ]
+}

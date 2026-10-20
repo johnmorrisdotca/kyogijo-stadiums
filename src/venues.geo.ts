@@ -19,6 +19,46 @@ export function lonLatFrom(origin: LonLat, [east, north]: Pt): LonLat {
   return [origin[0] + east / (RAD * EARTH * Math.cos(origin[1] * RAD)), origin[1] + north / (RAD * EARTH)];
 }
 
+/** A point as OpenStreetMap's Overpass API returns it. */
+export interface OsmPoint {
+  lat: number;
+  lon: number;
+}
+
+/** An element as Overpass returns it with its geometry (`out geom`): a way's points, or a relation's members, each with theirs. */
+export interface OsmElement {
+  type: string;
+  id: number;
+  geometry?: readonly OsmPoint[];
+  members?: readonly { type: string; ref: number; role: string; geometry?: readonly OsmPoint[] }[];
+}
+
+const same = (a: OsmPoint, b: OsmPoint): boolean => a.lat === b.lat && a.lon === b.lon;
+
+/**
+ * The closed outline an OpenStreetMap element is, as its points with the first repeated at the end, or `undefined`: a closed way is its own; a multipolygon relation is its outer members joined end to end into one
+ * ring (a building drawn in two or more ways); a relation with two outer rings or an outer way that does not close is not an outline (the caller says what rule it needs). Inner members are courtyards and are left out.
+ */
+export function outerRingOf(element: OsmElement): OsmPoint[] | undefined {
+  if (element.type === "way") {
+    const g = element.geometry;
+    return g !== undefined && g.length > 3 && same(g[0], g[g.length - 1]) ? [...g] : undefined;
+  }
+  if (element.type !== "relation" || element.members === undefined) return undefined;
+  const parts = element.members.filter((m) => m.type === "way" && m.role === "outer" && m.geometry !== undefined && m.geometry.length > 1).map((m) => [...(m.geometry as OsmPoint[])]);
+  if (parts.length === 0) return undefined;
+  const ring = parts.shift() as OsmPoint[];
+  while (!same(ring[0], ring[ring.length - 1]) && parts.length > 0) {
+    const tail = ring[ring.length - 1];
+    const next = parts.findIndex((part) => same(part[0], tail) || same(part[part.length - 1], tail));
+    if (next < 0) return undefined;
+    const [part] = parts.splice(next, 1);
+    if (!same(part[0], tail)) part.reverse();
+    ring.push(...part.slice(1));
+  }
+  return parts.length === 0 && ring.length > 3 && same(ring[0], ring[ring.length - 1]) ? ring : undefined;
+}
+
 /** The mean of a ring's longitudes and latitudes: a point to measure from. */
 export const middleOf = (ring: readonly LonLat[]): LonLat => [ring.reduce((s, p) => s + p[0], 0) / ring.length, ring.reduce((s, p) => s + p[1], 0) / ring.length];
 

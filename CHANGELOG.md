@@ -7,6 +7,21 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.29.0] - 2026-10-20
+
+### Added
+
+- **The real venues of the Central Division**: the United Center, the Ball Arena, the American Airlines Center, the Grand Casino Arena, the Bridgestone Arena, the Enterprise Center, the Delta Center and the Canada Life Centre, drawn the way the Pacific Division's were: the outline of the building from OpenStreetMap (read on 2026-10-20), a plausible bowl of the seats, tiers and roof the sources give, each fact labelled `documented` or `plausible`. With the Pacific Division that is sixteen arenas, the Western Conference's. The Grand Casino Arena is the first of three seating tiers (its article counts four levels, one of them suites) and its building is a relation of two ways in OpenStreetMap; the Canada Life Centre's lower bowl has the 8,812 of its 15,225 seats its article gives. The rink's orientation is inferred from the main hall for twelve of the sixteen and not known for four (the Ball Arena is the new one); none is mapped. A Wikidata capacity for ice hockey that changed over the years (the Grand Casino Arena's 18,064 from 2000 and 17,954 from 2012) is read as the latest. The Eastern Conference follows.
+- **Divisions and conferences in the data and the API**: every venue has a `division`, `VENUE_DIVISIONS` and `VENUE_CONFERENCES` give the league's order, and `venuesIn`, `venuesInConference` and `conferenceOf` list and place them. The raw reads are kept per division (`data-sources/venues/<date>/wikidata-<division>.json`, `wikipedia-<division>.json`, which now also keeps the infobox's capacity line, and `osm-<arena>.json`; `pnpm venues:fetch <date> <division>`), and `pnpm venues` also writes the table of `NOTICE.md`.
+- **The 3D view's walls and roof apart**: `venue: { walls, roof }` (`walls` follows `roof` when it is left out, so the old `roof: true` is unchanged), and `turn.update(options, { venue })` changes them on a view that is mounted, which goes on turning from where it is.
+- **The demo's venues page by division**, with a conference and division chooser, and **the controls on the view**: the stands, walls, roof, building, markings and labels are buttons beside the view (they never stop or restart the turn: the first three draw the scene again through `update`, the others are a style), flat or 3D, the view's own viewpoints, turn, tilt, zoom and Play under it (the 3D view turns by itself when it opens), a compact scrolling bar on a phone, and the choice in the address (`?stands=0&walls=1&roof=1&building=0&markings=0&labels=0&viewpoint=end&spin=off`; an old `roof=1` still means walls and roof).
+- **The demo's home page leads with a real arena that turns by itself** (Climate Pledge Arena, any of the sixteen from a list), with the same buttons on it, in the address under `f` (`fv`, `fstands`, `froof`...), and links to the venues page, the tournament layouts in 3D and the judging page's broadcast view.
+- **Two moving pictures at the head of the README** (a real arena and a tournament layout turning once round, animated WebP in a light and a dark file, 0.5 to 0.8 MB each) and a "Look at these first" table with one picture of the real venues, the tournament layouts, the judging broadcast view and the combat sports; the other pictures of those sections are on their docs pages. `pnpm screenshots:animation` makes the moving pictures from the demo (`scripts/readme-animation.mjs`, frames from Playwright and the few lines of RIFF in `scripts/webp-animated.mjs`, no other tool). The README lint (`scripts/readme-lint.mjs`) gives a `turning-*` picture a budget of its own and counts a picture a docs page shows as used.
+
+### Changed
+
+- The fly-through demo page's arena tabs (now the sixteen venues) are one row that scrolls on a phone, so that the view stays in sight.
+
 ## [0.28.0] - 2026-10-20
 
 ### Added

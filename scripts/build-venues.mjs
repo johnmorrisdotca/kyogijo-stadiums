@@ -1,31 +1,32 @@
-// Writes src/venues.data.ts, src/venues.osm.data.ts and docs/venues.md from scripts/venues.data.json and the dated files under data-sources/venues/ (`pnpm venues`).
+// Writes src/venues.data.ts, src/venues.osm.data.ts, the tables of docs/venues.md and NOTICE.md from scripts/venues.data.json and the dated files under data-sources/venues/ (`pnpm venues`).
 //
 // The two data files are kept apart because their licences are: src/venues.data.ts holds facts (a number of seats, a number of seating levels, a kind of roof) with the Wikidata item or the English
 // Wikipedia article and revision each was read from, and no text; src/venues.osm.data.ts holds what was read from OpenStreetMap (a building's outline, the ice where it is mapped, the building's height),
 // which is ODbL 1.0 data, "(c) OpenStreetMap contributors", and says so at its head and on every entry. The outline is the way OpenStreetMap tags with the venue's Wikidata item, simplified to a metre
 // and written to six decimals of a degree; nothing else is copied. The axis is worked out from it (`coreOf`, src/venues.geo.ts) and is a derived fact of the same data. See docs/venues.md and NOTICE.md.
 //
-// The raw responses (`pnpm venues:fetch`) stay in data-sources/venues/<date>/ as they were returned, and this script reads the newest date (or the one given: `pnpm venues 2026-10-20`).
-import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
-import process from "node:process";
+// The raw responses (`pnpm venues:fetch <date> <division>`) stay in data-sources/venues/<date>/ as they were returned; each venue names the day it was read (`read`) and this script reads that day's files, the
+// division's `wikidata-<division>.json` and `wikipedia-<division>.json` and the venue's own `osm-<id>.json`.
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { URL } from "node:url";
-import { areaOf, centroidOf, coreOf, inside, lonLatFrom, metresFrom, middleOf, simplified, smallestBox } from "../src/venues.geo.ts";
+import { areaOf, centroidOf, coreOf, inside, lonLatFrom, metresFrom, middleOf, outerRingOf, simplified, smallestBox } from "../src/venues.geo.ts";
 
 const read = (name) => JSON.parse(readFileSync(new URL(`./${name}`, import.meta.url), "utf8"));
 const source = read("venues.data.json");
 const arenas = read("arenas.data.json");
 const root = new URL("../data-sources/venues/", import.meta.url);
-const day = process.argv[2] ?? readdirSync(root).filter((name) => /^\d{4}-\d{2}-\d{2}$/.test(name)).sort().at(-1);
-if (day === undefined) throw new Error("no data-sources/venues/<date>/ to read: run `pnpm venues:fetch` first");
-const dir = new URL(`${day}/`, root);
-const load = (name) => JSON.parse(readFileSync(new URL(name, dir), "utf8"));
-const wikidata = load("wikidata.json").entities;
-const wikipedia = load("wikipedia.json").articles;
 const fail = (message) => {
   throw new Error(message);
 };
+const loadFrom = (day, name) => {
+  const file = new URL(`${day}/${name}`, root);
+  if (!existsSync(file)) fail(`${name} is not in data-sources/venues/${day}/: run \`pnpm venues:fetch ${day} <division>\``);
+  return JSON.parse(readFileSync(file, "utf8"));
+};
+const days = new Set();
 
-const DIVISIONS = ["pacific"];
+const DIVISIONS = ["pacific", "central", "atlantic", "metropolitan"];
+const CONFERENCES = { pacific: "western", central: "western", atlantic: "eastern", metropolitan: "eastern" };
 /** How much of a direction the building must have (the largest rectangle's area in its best direction over its smallest) and how much longer than wide its main hall must be, for its axis to be said. */
 const STRENGTH = 1.25;
 const ELONGATION = 1.1;
@@ -33,10 +34,15 @@ const BASES = ["documented", "plausible"];
 const ROOFS = ["fixed", "saddle"];
 const SOURCES = ["wikipedia", "wikidata"];
 const venues = source.venues;
-if (!DIVISIONS.includes(source.division)) fail(`division ${source.division}`);
+for (const [name, division] of Object.entries(source.divisions)) {
+  if (!DIVISIONS.includes(name) || CONFERENCES[name] !== division.conference) fail(`division ${name}`);
+  const listed = venues.filter((v) => v.division === name).map((v) => v.id);
+  if (JSON.stringify(listed) !== JSON.stringify(division.venues)) fail(`${name}: the venues are ${listed.join(", ")}, the division lists ${division.venues.join(", ")}`);
+}
+if (venues.some((v) => source.divisions[v.division] === undefined)) fail("a venue of a division the file does not list");
 
 /** The capacities of an item as Wikidata gives them: the numbers of P1083, with the sport each applies to (P641) where it has one. */
-const capacities = (entity) => (entity.claims?.P1083 ?? []).map((claim) => ({ amount: Number(claim.mainsnak?.datavalue?.value?.amount), sport: claim.qualifiers?.P641?.[0]?.datavalue?.value?.id }));
+const capacities = (entity) => (entity.claims?.P1083 ?? []).map((claim) => ({ amount: Number(claim.mainsnak?.datavalue?.value?.amount), sport: claim.qualifiers?.P641?.[0]?.datavalue?.value?.id, from: claim.qualifiers?.P580?.[0]?.datavalue?.value?.time ?? "" }));
 const ICE_HOCKEY = "Q41466";
 
 const ids = new Set();
@@ -48,6 +54,10 @@ for (const v of venues) {
   if (arena.wikidata !== v.wikidata) fail(`${v.id}: ${v.wikidata} is not the arena's item (${arena.wikidata})`);
   if (arena.status !== "current") fail(`${v.id}: a venue is a current arena`);
   if (Math.abs(arena.lat - v.lat) > 1e-4 || Math.abs(arena.lon - v.lon) > 1e-4) fail(`${v.id}: the coordinates are not the arena's`);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(v.read)) fail(`${v.id}: read`);
+  days.add(v.read);
+  const wikidata = loadFrom(v.read, `wikidata-${v.division}.json`).entities;
+  const wikipedia = loadFrom(v.read, `wikipedia-${v.division}.json`).articles;
   const item = wikidata[v.wikidata];
   if (item === undefined || item.missing !== undefined) fail(`${v.id}: Wikidata has no ${v.wikidata}`);
   if (item.sitelinks?.enwiki?.title !== v.en.title) fail(`${v.id}: the item's English article is ${item.sitelinks?.enwiki?.title}, not ${v.en.title}`);
@@ -60,7 +70,8 @@ for (const v of venues) {
   const given = capacities(item);
   if (!given.some((c) => c.amount === seats.wikidata)) fail(`${v.id}: Wikidata gives ${given.map((c) => c.amount).join(", ")}, not ${seats.wikidata}`);
   // Wikidata's own figure for ice hockey wins where the item has one; else the figure is the article's.
-  const hockey = given.find((c) => c.sport === ICE_HOCKEY);
+  // Where it has several (a capacity changed in some year: P580 says from when), the latest is the present one.
+  const hockey = given.filter((c) => c.sport === ICE_HOCKEY).sort((a, b) => b.from.localeCompare(a.from))[0];
   if (seats.source === "wikidata" ? hockey?.amount !== seats.hockey : hockey !== undefined) fail(`${v.id}: ${seats.source} is not where the hockey seats come from`);
   if (typeof seats.read !== "string" || seats.read === "") fail(`${v.id}: seats say what was read`);
   if (![1, 2, 3].includes(tiers.count) || !BASES.includes(tiers.basis) || typeof tiers.read !== "string") fail(`${v.id}: tiers`);
@@ -72,13 +83,13 @@ for (const v of venues) {
 const osm = {};
 for (const v of venues) {
   const file = `osm-${v.id}.json`;
-  if (!existsSync(new URL(file, dir))) fail(`${v.id}: ${file} is not in ${day}: run \`pnpm venues:fetch\``);
-  const raw = load(file);
+  const raw = loadFrom(v.read, file);
   if (raw.wikidata !== v.wikidata) fail(`${v.id}: ${file} is for ${raw.wikidata}`);
-  const closed = (e) => e.type === "way" && Array.isArray(e.geometry) && e.geometry.length > 3 && e.geometry[0].lat === e.geometry.at(-1).lat && e.geometry[0].lon === e.geometry.at(-1).lon;
-  const ringOf = (e) => e.geometry.slice(0, -1).map((p) => [p.lon, p.lat]);
+  // A closed way, or a multipolygon relation whose outer ways join into one ring (a building drawn in two ways), is an outline.
+  const closed = (e) => outerRingOf(e) !== undefined;
+  const ringOf = (e) => outerRingOf(e).slice(0, -1).map((p) => [p.lon, p.lat]);
   const building = raw.elements.filter((e) => e.tags?.wikidata === v.wikidata && closed(e));
-  if (building.length !== 1) fail(`${v.id}: ${building.length} closed ways carry ${v.wikidata}; a relation or a split building needs a rule of its own`);
+  if (building.length !== 1) fail(`${v.id}: ${building.length} outlines carry ${v.wikidata}; a split building needs a rule of its own`);
   const outline = building[0];
   const origin = middleOf(ringOf(outline));
   const metres = metresFrom(origin, ringOf(outline));
@@ -104,24 +115,25 @@ for (const v of venues) {
     axis = { heading: basis === "none" ? 90 : round(core.heading, 1), basis, strength: round(core.strength, 2), elongation: round(core.length / core.width, 2), centre: lonLatFrom(origin, core.centre) };
   }
   axis.centre = axis.centre.map((v) => round(v, 6));
-  osm[v.id] = { source: `way/${outline.id}`, read: raw.read, base: raw.osmBase, ring, height: Number.isFinite(height) && height > 5 && height < 120 ? height : undefined, ice: ice.length === 1 ? { source: ice[0].id, ring: ice[0].ring } : undefined, axis };
+  osm[v.id] = { source: `${outline.type}/${outline.id}`, read: raw.read, base: raw.osmBase, ring, height: Number.isFinite(height) && height > 5 && height < 120 ? height : undefined, ice: ice.length === 1 ? { source: ice[0].id, ring: ice[0].ring } : undefined, axis };
 }
 
 // ---- The data files. ----
 const q = (value) => JSON.stringify(value).replace(/":/g, '": ').replace(/,"/g, ', "');
 const FACT_KEYS = ["id", "wikidata", "division", "en", "seats", "tiers", "roof"];
+const readDays = [...days].sort().join(", ");
 const factsText = `// Made by scripts/build-venues.mjs from scripts/venues.data.json: do not edit by hand.
 // The facts are those of the Wikidata items and the English Wikipedia articles (revisions) each entry cites, in our own words; see docs/venues.md and NOTICE.md. Wikidata is CC0; the facts read from
 // English Wikipedia are numbers and words of ours, not its text (CC BY-SA 4.0). What OpenStreetMap gave is in venues.osm.data.ts, apart, because it is ODbL.
 import type { RealVenueData } from "./venues.ts";
 
 export const VENUE_DATA: RealVenueData[] = [
-${venues.map((v) => `  {\n${FACT_KEYS.map((key) => `    "${key}": ${q(key === "division" ? source.division : v[key])},`).join("\n")}\n  },`).join("\n")}
+${venues.map((v) => `  {\n${FACT_KEYS.map((key) => `    "${key}": ${q(v[key])},`).join("\n")}\n  },`).join("\n")}
 ];
 `;
 writeFileSync(new URL("../src/venues.data.ts", import.meta.url), factsText);
 
-const osmText = `// Made by scripts/build-venues.mjs from the files of data-sources/venues/${day}/: do not edit by hand.
+const osmText = `// Made by scripts/build-venues.mjs from the files of data-sources/venues/ (read ${readDays}): do not edit by hand.
 //
 // THIS FILE IS ODbL 1.0 DATA FROM OPENSTREETMAP: "(c) OpenStreetMap contributors", https://www.openstreetmap.org/copyright. It holds each venue's building outline (the way OpenStreetMap tags with the
 // venue's Wikidata item, simplified to a metre, longitude and latitude to six decimals), the building's height where OpenStreetMap maps one, and the ice where OpenStreetMap maps it. The package is MIT;
@@ -147,16 +159,25 @@ writeFileSync(new URL("../src/venues.osm.data.ts", import.meta.url), osmText);
 const COUNTRY = { US: "United States", CA: "Canada" };
 const m2 = (o) => Math.round(areaOf(metresFrom(middleOf(o.ring), o.ring)));
 const how = (a) => (a.basis === "none" ? "not known" : `along ${a.heading}° (${a.basis === "mapped" ? "mapped" : "inferred"})`);
-const table = `| Key | Arena | City | Wikidata | Seats for hockey | Tiers | Roof | The rink | Outline |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+const table = `| Key | Arena | Division | City | Wikidata | Seats for hockey | Tiers | Roof | The rink | Outline |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 ${venues.map((v) => {
   const arena = arenas.find((a) => a.id === v.id);
   const seats = `${v.seats.hockey.toLocaleString("en-US")} (${v.seats.source === "wikidata" ? "Wikidata" : "Wikipedia"}; Wikidata's capacity ${v.seats.wikidata.toLocaleString("en-US")})`;
-  return `| \`${v.id}\` | ${arena.name} | ${arena.city}, ${COUNTRY[arena.country] ?? arena.country} | ${v.wikidata} | ${seats} | ${v.tiers.count}, ${v.tiers.basis} | ${v.roof.kind}, ${v.roof.basis} | ${how(osm[v.id].axis)} | ${osm[v.id].source.replace("way/", "way ")}, ${m2(osm[v.id]).toLocaleString("en-US")} m² |`;
+  return `| \`${v.id}\` | ${arena.name} | ${v.division[0].toUpperCase()}${v.division.slice(1)} | ${arena.city}, ${COUNTRY[arena.country] ?? arena.country} | ${v.wikidata} | ${seats} | ${v.tiers.count}, ${v.tiers.basis} | ${v.roof.kind}, ${v.roof.basis} | ${how(osm[v.id].axis)} | ${osm[v.id].source.replace("/", " ")}, ${m2(osm[v.id]).toLocaleString("en-US")} m² |`;
 }).join("\n")}`;
 const page = new URL("../docs/venues.md", import.meta.url);
 const text = readFileSync(page, "utf8");
 const marked = /<!-- venues-table -->[\s\S]*?<!-- \/venues-table -->/;
 if (!marked.test(text)) fail("docs/venues.md has no <!-- venues-table --> markers");
 writeFileSync(page, text.replace(marked, () => `<!-- venues-table -->\n${table}\n<!-- /venues-table -->`));
-console.log(`src/venues.data.ts, src/venues.osm.data.ts: ${venues.length} venues of the ${source.division} division, read ${day}`);
+// NOTICE.md: the table of what each venue was read from, between its markers.
+const notice = new URL("../NOTICE.md", import.meta.url);
+const noticeText = readFileSync(notice, "utf8");
+const noticeMarked = /<!-- venues-notice -->[\s\S]*?<!-- \/venues-notice -->/;
+if (!noticeMarked.test(noticeText)) fail("NOTICE.md has no <!-- venues-notice --> markers");
+const noticeTable = `| Arena | Wikidata item | OpenStreetMap element | English article and revision |
+| --- | --- | --- | --- |
+${venues.map((v) => `| ${arenas.find((a) => a.id === v.id).name} | ${v.wikidata} | ${osm[v.id].source} | ${v.en.title}, ${v.en.revision} |`).join("\n")}`;
+writeFileSync(notice, noticeText.replace(noticeMarked, () => `<!-- venues-notice -->\n${noticeTable}\n<!-- /venues-notice -->`));
+console.log(`src/venues.data.ts, src/venues.osm.data.ts: ${venues.length} venues of the ${Object.keys(source.divisions).join(", ")} divisions, read ${readDays}`);

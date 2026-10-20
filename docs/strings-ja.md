@@ -1490,6 +1490,19 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `pageDocs` | Docs | ドキュメント |
 | `groupSurface` | Surface | 競技場 |
 | `groupTeams` | Teams | チーム |
+| `featureTitle` | The real arenas of the NHL | 実在のアリーナ：NHL |
+| `featureText` | Each arena is drawn in the outline of its building, as OpenStreetMap maps it, with a plausible bowl of the seats the sources give. It turns by itself: press any button while it does, drag it to take hold, or pause it. | 各アリーナは、OpenStreetMapに記録された建物の輪郭の内側に、公表されている座席数から推定したスタンドを重ねて描いています。自動で回転しますが、回転中でもボタンを押せます。ドラッグで操作でき、一時停止もできます。 |
+| `featureArena` | Arena | アリーナ |
+| `featureVenues` | All the real arenas, by division, with their facts | 実在のアリーナの一覧（ディビジョン別・情報つき） |
+| `featureHalls` | Tournament layouts in 3D | 3Dで見る大会向けレイアウト |
+| `featureJudging` | Who judges where: the broadcast view | 審判の配置：中継ビュー |
+| `featureGroup` | What to show | 表示する要素 |
+| `p_stands` | Stands | 客席 |
+| `p_walls` | Walls | 壁 |
+| `p_roof` | Roof | 屋根 |
+| `p_building` | Building | 建物 |
+| `p_markings` | Markings | ライン |
+| `p_labels` | Labels | ラベル |
 | `tryTitle` | Try it | 試してみる |
 | `tryText` | Pick a surface, give it two teams and a score, and copy the line that draws it. Everything here runs in your browser. | 競技場を選び、2チームと得点を入力すると、その図を描く1行のコードをコピーできます。すべてブラウザー上で動作します。 |
 | `sport` | Sport | 競技 |

@@ -29,6 +29,17 @@ describe("the standard's checks catch what they are for", () => {
     expect(faultsFor("# T\n\n```\nx\n```\n\n```pascal\nx\n```\n").join("\n")).toMatch(/no language[\s\S]*pascal/);
   });
 
+  it("holds a moving picture (turning-*) to a budget of its own outside the stills' 2 MB, and counts a picture that a page of docs/ shows as used", () => {
+    const pic = (file, bytes) => ({ file, bytes });
+    const faults = faultsFor("# T\n", [pic("turning-x-desk-light.webp", 1_100_000), pic("turning-x-desk-dark.webp", 900_000)]).join("\n");
+    expect(faults).toMatch(/turning-x-desk-light\.webp is 1074 KB; the budget for it is 1024 KB/);
+    expect(faults).not.toMatch(/turning-x-desk-dark\.webp is \d+ KB/);
+    expect(faults).not.toMatch(/The pictures come to/);
+    expect(faults).toMatch(/not used in the README or in a page of docs\//);
+    const used = lintReadme({ readme: "# T\n", pkg, pictures: [pic("y-desk-light.webp", 1000), pic("y-desk-dark.webp", 1000)], minSubjects: 0, docsText: "![a](./images/y-desk-light.webp)" }).join("\n");
+    expect(used).not.toMatch(/not used in the README/);
+  });
+
   it("refuses a picture that is not this repository's docs/images, has no alt text, or has no dark twin", () => {
     const readme = `# T\n\n<picture><img src="docs/a.webp" alt="x" width="1"></picture>\n\n<picture><source media="(prefers-color-scheme: dark)" srcset="${raw}z-desk-dark.webp"><img src="${raw}z-desk-light.webp" alt="" width="1"></picture>\n`;
     const faults = faultsFor(readme, [ok("z-desk-light.webp")]).join("\n");

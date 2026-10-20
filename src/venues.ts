@@ -17,8 +17,13 @@ export type VenueBasis = "documented" | "plausible";
 /** The kinds of roof the venues have: `fixed` is a lid over the bowl, `saddle` a roof that rises at the two ends and falls at the two sides (the Scotiabank Saddledome's). */
 export type VenueRoof = "fixed" | "saddle";
 
-/** The NHL's divisions that have venues so far. */
-export type VenueDivision = "pacific";
+/** The NHL's divisions, in the order of the league's own listing: the Western Conference's two, then the Eastern's. A division none of whose arenas has a venue yet has no venues in `venuesIn`. */
+export const VENUE_DIVISIONS = ["pacific", "central", "atlantic", "metropolitan"] as const;
+export type VenueDivision = (typeof VENUE_DIVISIONS)[number];
+
+/** The NHL's two conferences, and the divisions of each. */
+export const VENUE_CONFERENCES = { western: ["pacific", "central"], eastern: ["atlantic", "metropolitan"] } as const satisfies Record<string, readonly VenueDivision[]>;
+export type VenueConference = keyof typeof VENUE_CONFERENCES;
 
 /** The facts of a venue: the seats and the number of seating levels and the kind of roof, each with what a source says. No text of an article is kept. */
 export interface RealVenueData {
@@ -85,7 +90,7 @@ export interface VenueOrientation {
   north: number;
 }
 
-/** The venues by key: every arena of the Pacific division of the NHL, with its facts and its outline. */
+/** The venues by key: the arenas of the NHL's divisions that have been drawn, with their facts and their outlines. */
 export const VENUES: Readonly<Record<string, RealVenue>> = Object.freeze(Object.fromEntries(VENUE_DATA.map((data) => [data.id, Object.freeze({ ...data, osm: VENUE_OSM[data.id] })])));
 
 /** The keys of `VENUES`, in the order of the data. */
@@ -99,6 +104,12 @@ export const venueByWikidata = (wikidata: string | undefined): RealVenue | undef
 
 /** The venues of a division of the NHL, in the order of the data. */
 export const venuesIn = (division: VenueDivision): RealVenue[] => Object.values(VENUES).filter((venue) => venue.division === division);
+
+/** The conference a division of the NHL is in. */
+export const conferenceOf = (division: VenueDivision): VenueConference => (VENUE_CONFERENCES.western as readonly VenueDivision[]).includes(division) ? "western" : "eastern";
+
+/** The venues of a conference of the NHL, division by division, in the order of the data. */
+export const venuesInConference = (conference: VenueConference): RealVenue[] => VENUE_CONFERENCES[conference].flatMap((division) => venuesIn(division));
 
 /** The arena a venue is of. */
 export const arenaOfVenue = (venue: RealVenue): Arena => {

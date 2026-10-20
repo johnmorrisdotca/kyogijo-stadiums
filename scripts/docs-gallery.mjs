@@ -378,9 +378,9 @@ function placesPage() {
   };
 }
 
-/** The real venues: each arena of the Pacific Division in the outline of its building, with what the sources say of it under the picture. */
+/** The real venues: each arena of the divisions drawn so far in the outline of its building, with what the sources say of it under the picture. */
 function venuesPage(lib) {
-  const { VENUES, VENUE_IDS, venuesIn } = lib[`${MAIN}/venues`];
+  const { VENUES, VENUE_DIVISIONS, VENUE_IDS, conferenceOf, venuesIn } = lib[`${MAIN}/venues`];
   const { ARENAS } = lib[`${MAIN}/arenas`];
   const HOW = { mapped: "mapped in OpenStreetMap", building: "inferred from the building's long axis", none: "not known, drawn east-west with north at the top" };
   const note = (id) => {
@@ -393,9 +393,11 @@ function venuesPage(lib) {
     slug: "gallery-venues",
     title: "Gallery: the real venues",
     ja: "実在の会場",
-    intro: `The ${venuesIn("pacific").length} arenas of the NHL's Pacific Division, each in the outline of its building as OpenStreetMap maps it ((c) OpenStreetMap contributors, ODbL 1.0), with a plausible bowl of the seats, tiers and roof the sources give. A small arrow says where north is where the rink's orientation is known. Never a seat map, and no mark of a team or a league. Every picture is drawn by the build from the code under it.`,
+    intro: `The ${VENUE_IDS.length} arenas of the NHL's divisions drawn so far (the Pacific and the Central, the Western Conference), each in the outline of its building as OpenStreetMap maps it ((c) OpenStreetMap contributors, ODbL 1.0), with a plausible bowl of the seats, tiers and roof the sources give. A small arrow says where north is where the rink's orientation is known. Never a seat map, and no mark of a team or a league. Every picture is drawn by the build from the code under it.`,
     sections: [
-      section("pacific", "The Pacific Division", "`crowd: { real: true }` with an `arena` that has a venue.", VENUE_IDS.map((id) => item(`venue-${id}`, ARENAS[id].name, real(id), note(id)))),
+      ...VENUE_DIVISIONS.filter((division) => venuesIn(division).length > 0).map((division) =>
+        section(division, `The ${division[0].toUpperCase()}${division.slice(1)} Division`, `${conferenceOf(division) === "western" ? "Western" : "Eastern"} Conference. \`crowd: { real: true }\` with an \`arena\` that has a venue.`, venuesIn(division).map(({ id }) => item(`venue-${id}`, ARENAS[id].name, real(id), note(id)))),
+      ),
       section("themes", "Dark and Japanese", "The outline and the stands follow the theme and the language; the description is in Japanese.", [
         item("venue-dark", "Honda Center, dark", real("honda-center", '{"theme":"dark"}'), note("honda-center")),
         item("venue-ja", "Scotiabank Saddledome, in Japanese", real("scotiabank-saddledome", '{"language":"ja"}'), note("scotiabank-saddledome")),

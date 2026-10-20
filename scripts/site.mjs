@@ -227,6 +227,17 @@ const page = `<!doctype html>
     <main>
       ${familyHeader({ id, links: [{ href: "docs/", say: "pageDocs" }, { href: "api.html", say: "pageApi" }, { href: "halls.html", say: "pageHalls" }] })}
 
+      <section class="feature" id="feature" aria-labelledby="feature-title">
+        <div class="try-head">
+          <h2 id="feature-title" data-say="featureTitle"></h2>
+          <p data-say="featureText"></p>
+        </div>
+        <div class="rv-bar" id="feature-bar" data-testid="feature-bar"></div>
+        <div class="rv-bar" id="feature-pick"><select class="fam-field" id="feature-venue" data-testid="feature-venue"></select></div>
+        <div id="feature-stage" data-testid="feature-stage"></div>
+        <p class="feature-links"><a href="venues.html" data-say="featureVenues"></a> · <a href="halls.html?preset=tabletennis-4&amp;view=3d" data-say="featureHalls"></a> · <a href="judging.html?mat=1&amp;view=broadcast" data-say="featureJudging"></a></p>
+      </section>
+
       <section class="try" id="try" aria-labelledby="try-title">
         <div class="try-head">
           <h2 id="try-title" data-say="tryTitle"></h2>

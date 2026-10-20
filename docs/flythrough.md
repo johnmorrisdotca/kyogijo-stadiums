@@ -2,9 +2,9 @@
 
 One smooth camera from a map to a real arena and into its bowl. It starts on a map drawn with [chizu](https://github.com/johnmorrisdotca/chizu), falls to the city and to the building of an arena as OpenStreetMap maps it, and the building rises into the [3D arena](./turn.md), which turns. Then the roof lifts away, the camera comes in over the stands and down to the ice, and settles at a seat's viewpoint, from where the rink turns. `@johnmorrisdotca/kyogijo-stadiums/flythrough` has one function for a page, `mountFlythrough`, and the plain path it flies, which can be worked out and tested in Node.
 
-The arena is one of the [real venues](./venues.md) (so far the eight of the NHL's Pacific Division). No team's or league's mark is drawn: the map is land and sea, the building is an outline, and the arena is the same plausible bowl as the venues page's, never a seat map. The seat's viewpoint is a place and a height of our own choosing, not a real seat's. A later release puts a game on the rink.
+The arena is one of the [real venues](./venues.md) (so far the sixteen of the NHL's Pacific and Central Divisions). No team's or league's mark is drawn: the map is land and sea, the building is an outline, and the arena is the same plausible bowl as the venues page's, never a seat map. The seat's viewpoint is a place and a height of our own choosing, not a real seat's. A later release puts a game on the rink.
 
-The demo's [fly-through page](https://johnmorrisdotca.github.io/kyogijo-stadiums/flythrough.html) flies each of the eight; `flythrough.html?arena=honda-center` opens it on one (`lang=ja`, `theme=dark`, `map=plain` and `stages=city,arena` are in the address too).
+The demo's [fly-through page](https://johnmorrisdotca.github.io/kyogijo-stadiums/flythrough.html) flies each of the sixteen; `flythrough.html?arena=honda-center` opens it on one (`lang=ja`, `theme=dark`, `map=plain` and `stages=city,arena` are in the address too).
 
 ```ts no-run
 import { mountFlythrough } from "@johnmorrisdotca/kyogijo-stadiums/flythrough";

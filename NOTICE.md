@@ -43,7 +43,7 @@ picture or code of the sources is copied; each source is named here so that the 
 | `grounds`: the World Cups each ground staged matches of, and where each final was played | The venue section of the English Wikipedia article of each men's and Women's World Cup, at the revision cited below; FIFA's own pages are not used | Facts, CC BY-SA 4.0 articles as above |
 | `grounds`: the Wikidata item and the coordinates of each ground (`wikidata`, `lat`, `lon`) | The item that each cited article is linked to, its coordinates (P625) and its country (P17), read with the Wikidata API and checked against the item's labels by `scripts/check-grounds.mjs` | Wikidata's data is CC0 (https://creativecommons.org/publicdomain/zero/1.0/) |
 | `arenas`: each arena's names, years, city, seats, rink sizes, Wikidata item and coordinates | The infobox and the text of the English Wikipedia article of each arena, at the revision cited below (the names with the years the article dates them, the year it opened, closed and was pulled down, the seats for ice hockey and for basketball, a rink's length and width where the article gives them in a sentence of its own); the name in Japanese from the title of its Japanese article or written for the package; the Wikidata item (CC0) that each article is linked to and its coordinates (P625) | Facts. The articles are CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/); none of their text, tables or images is used |
-| `venues`: the outline of each NHL arena's building, how its rink lies in it and the building's height (`VENUE_OSM`, `src/venues.osm.data.ts`) | OpenStreetMap, through the Overpass API: the closed way tagged with the venue's Wikidata item (and the ice, where it is mapped), read on 2026-10-20, with the raw answers kept in `data-sources/venues/2026-10-20/`; the outline is simplified to a metre, and the way the rink lies is worked out from it (`coreOf`, `src/venues.geo.ts`) | ODbL 1.0, (c) OpenStreetMap contributors (https://www.openstreetmap.org/copyright): a derived database, kept in its own file and offered under the ODbL; a drawing made from it is a produced work and carries the credit (`VENUE_ATTRIBUTION`) |
+| `venues`: the outline of each NHL arena's building, how its rink lies in it and the building's height (`VENUE_OSM`, `src/venues.osm.data.ts`) | OpenStreetMap, through the Overpass API: the closed way (or the relation of a building drawn in two ways) tagged with the venue's Wikidata item (and the ice, where it is mapped), read on 2026-10-20, with the raw answers kept in `data-sources/venues/2026-10-20/`; the outline is simplified to a metre, and the way the rink lies is worked out from it (`coreOf`, `src/venues.geo.ts`) | ODbL 1.0, (c) OpenStreetMap contributors (https://www.openstreetmap.org/copyright): a derived database, kept in its own file and offered under the ODbL; a drawing made from it is a produced work and carries the credit (`VENUE_ATTRIBUTION`) |
 | `venues`: each venue's seats for ice hockey, number of seating tiers and kind of roof (`VENUE_DATA`, `src/venues.data.ts`) | The item of Wikidata (the capacity P1083 and the sport it applies to P641) and the English Wikipedia article of each arena, at the revision cited below, in `data-sources/venues/2026-10-20/` as read; the facts are numbers and words of our own, with what was read in a few words | Wikidata's data is CC0; the facts read from the articles are facts, with the articles credited here (CC BY-SA 4.0) |
 | `stadiums`: the outline of each stadium's building, the roof OpenStreetMap maps over it (its heights and the opening in it) and how the field lies, worked out from the opening (`STADIUM_OSM`, `src/stadiums.osm.data.ts`) | OpenStreetMap, through the Overpass API: the closed way tagged with the stadium's Wikidata item and the multipolygon of its roof, read on 2026-10-20, with the raw answers kept in `data-sources/stadiums/2026-10-20/`; the outline is simplified to a metre, and the way the field lies is worked out from the opening (`smallestBox`, `src/venues.geo.ts`) | ODbL 1.0, (c) OpenStreetMap contributors (https://www.openstreetmap.org/copyright): a derived database, kept in its own file and offered under the ODbL; a drawing made from it is a produced work and carries the credit (`VENUE_ATTRIBUTION`) |
 | `stadiums`: each stadium's seats for each configuration, number of seating bowls, kind of roof and the size of its opening (`STADIUM_DATA`, `src/stadiums.data.ts`) | The item of Wikidata (the capacity P1083) and the English Wikipedia article of each stadium, at the revision cited below, in `data-sources/stadiums/2026-10-20/` as read; the facts are numbers and words of our own, with what was read in a few words | Wikidata's data is CC0; the facts read from the article are facts, with the article credited here (CC BY-SA 4.0) |
@@ -411,9 +411,10 @@ The Japanese Wikipedia articles read for the names, with their revisions, are li
 
 ## The venues' sources
 
-The eight arenas of the NHL's Pacific Division, read on 2026-10-20 (`pnpm venues:fetch`; the files are in `data-sources/venues/2026-10-20/`: `osm-<arena>.json` as Overpass returned them, `wikidata.json` and `wikipedia.json`). The outline of a building is OpenStreetMap's, ODbL 1.0, (c) OpenStreetMap contributors, and lives in `src/venues.osm.data.ts` alone. The seats, the tiers and the roof are in `src/venues.data.ts`, with what each cites. No seat map of a team, a ticket seller or a venue is read or copied, and no mark of a team or a league is drawn.
+The arenas of the NHL's Pacific and Central Divisions, read on 2026-10-20 (`pnpm venues:fetch <date> <division>`; the files are in `data-sources/venues/2026-10-20/`: `osm-<arena>.json` as Overpass returned them, and `wikidata-<division>.json` and `wikipedia-<division>.json`). The outline of a building is OpenStreetMap's, ODbL 1.0, (c) OpenStreetMap contributors, and lives in `src/venues.osm.data.ts` alone. The seats, the tiers and the roof are in `src/venues.data.ts`, with what each cites. No seat map of a team, a ticket seller or a venue is read or copied, and no mark of a team or a league is drawn.
 
-| Arena | Wikidata item | OpenStreetMap way | English article and revision |
+<!-- venues-notice -->
+| Arena | Wikidata item | OpenStreetMap element | English article and revision |
 | --- | --- | --- | --- |
 | Honda Center | Q774138 | way/120623151 | Honda Center, 1380000927 |
 | Scotiabank Saddledome | Q1140083 | way/4397328 | Scotiabank Saddledome, 1377341466 |
@@ -423,6 +424,15 @@ The eight arenas of the NHL's Pacific Division, read on 2026-10-20 (`pnpm venues
 | Climate Pledge Arena | Q977529 | way/25123756 | Climate Pledge Arena, 1380851727 |
 | Rogers Arena | Q517318 | way/24705911 | Rogers Arena, 1379918849 |
 | T-Mobile Arena | Q3338973 | way/364489406 | T-Mobile Arena, 1379155307 |
+| United Center | Q639975 | way/205221993 | United Center, 1380672233 |
+| Ball Arena | Q795470 | way/25312645 | Ball Arena, 1379560431 |
+| American Airlines Center | Q463345 | way/25312698 | American Airlines Center, 1379833787 |
+| Grand Casino Arena | Q1421388 | relation/20658401 | Grand Casino Arena, 1379407082 |
+| Bridgestone Arena | Q302869 | way/130905914 | Bridgestone Arena, 1380457078 |
+| Enterprise Center | Q1067700 | way/42369176 | Enterprise Center, 1372086380 |
+| Delta Center | Q82294 | way/23335190 | Delta Center, 1379043310 |
+| Canada Life Centre | Q656928 | way/14869890 | Canada Life Centre, 1379717047 |
+<!-- /venues-notice -->
 
 ## The stadiums' sources
 

@@ -168,7 +168,7 @@ In a drawing with a score the 3D view does not lay the score's panel on the floo
 | `view` | An exact opening view, `{ yaw, pitch, zoom }`, laid over the preset. |
 | `controls` | `false` leaves the buttons out; the keys and the pointer work either way. |
 | `uprights` | `false` for the floor alone, or `{ netHeight, boards, only, score }`. |
-| `venue` | `true`, `false` or `{ roof, detail }`: the stands and the room, raised. On when the drawing has a `crowd` or is a dojo. `roof: true` adds a roof or canopy; `detail` is `low`, `auto` or `high`. |
+| `venue` | `true`, `false` or `{ roof, walls, detail }`: the stands and the room, raised. On when the drawing has a `crowd` or is a dojo. `roof: true` adds a roof or canopy; `walls` is the walls of a real venue's building, which follow `roof` when left out (`walls: true` alone raises the walls, `roof: true, walls: false` the roof alone); `detail` is `low`, `auto` or `high`. |
 | `autoPlay` | `true` starts the auto-turn at once, unless the reader prefers reduced motion; `"force"` starts it anyway. Left out, nothing moves until Play. |
 | `speed` | The auto-turn's degrees of yaw a second: 12 by default. |
 | `onPlayChange` | Called with `true` when the auto-turn starts and `false` when it stops. |
@@ -181,7 +181,9 @@ In a drawing with a score the 3D view does not lay the score's panel on the floo
 | `id` | The prefix of the ids in the view, for a page with more than one. |
 | `onChange` | Called with the view and the viewpoint it is (`undefined` when it was turned by hand). |
 
-The handle `mountKyogijoTurn` gives back has `view()`, `set(view, glide?)`, `preset(name)`, `reset()`, `update(options)`, `svg()` (the flat drawing that is the floor), `destroy()`, `mode`, and for the auto-turn `playing`, `play()`, `pause()` and `togglePlay()`.
+The handle `mountKyogijoTurn` gives back has `view()`, `set(view, glide?)`, `preset(name)`, `reset()`, `update(options, change?)`, `svg()` (the flat drawing that is the floor), `destroy()`, `mode`, and for the auto-turn `playing`, `play()`, `pause()` and `togglePlay()`.
+
+`update(options)` draws the scene again with new options and keeps the view and the auto-turn: a turning view goes on turning from where it is. `update(options, { venue: { roof, walls } })` also changes what the venue's walls and roof stand on, so that a page can switch them on and off without mounting the view again (the demo's venues page does, with a button for each).
 
 The 3D view always shows the whole surface, lying wide: a `range`, a `half` and a tall `orientation` are left to the flat drawing, and a badge is not a surface and stays a badge.
 

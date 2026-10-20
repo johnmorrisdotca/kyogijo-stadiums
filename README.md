@@ -13,6 +13,25 @@ The surfaces of forty-three sports, from football and curling to the budō and t
 
 <p align="center"><a href="https://johnmorrisdotca.github.io/kyogijo-stadiums/"><strong>Open the demo →</strong></a> · <a href="https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/">Documentation</a> · <a href="https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery.html">Gallery</a> · <a href="./docs/compare.md">How it compares</a> · <a href="https://johnmorrisdotca.github.io/kyogijo-stadiums/api.html">API reference</a></p>
 
+<table align="center">
+<tr>
+<td align="center" valign="top">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turning-venue-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turning-venue-desk-light.webp" alt="A real arena turning once round in 3D: Climate Pledge Arena in the outline of its building, two tiers of seats round the rink." width="410">
+</picture>
+<br><em>A real arena, turning: Climate Pledge Arena in the outline of its building (OpenStreetMap).</em>
+</td>
+<td align="center" valign="top">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turning-hall-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turning-hall-desk-light.webp" alt="A tournament layout turning once round in 3D: four table tennis areas on one floor, a surround round each and a scoreboard hung over them." width="410">
+</picture>
+<br><em>A tournament layout, turning: four table tennis areas under one scoreboard.</em>
+</td>
+</tr>
+</table>
+
 > **Renamed.** Previously `@johnmorrisdotca/kyogijo`; renamed in 0.4.0 to `@johnmorrisdotca/kyogijo-stadiums`. The product is still Kyogijo Stadiums (競技場); only the package and the repository names changed. See the [changelog](./CHANGELOG.md).
 
 <table align="center">
@@ -35,6 +54,43 @@ The surfaces of forty-three sports, from football and curling to the budō and t
 </table>
 
 Kyogijo Stadiums draws the places a game is played on, with the score of the game on them: the teams at their ends, the score in the middle, a label for what it was. The surfaces are drawn to scale from the rulebooks: a football field has its hash marks where the rules put them, a ballpark its fence where its published distances put it.
+
+## Look at these first
+
+<table align="center">
+<tr>
+<td align="center" valign="top">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/venues-saddledome-3d-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/venues-saddledome-3d-desk-light.webp" alt="The Scotiabank Saddledome in 3D: two tiers of seats under its saddle roof." width="400">
+</picture>
+<br><strong><a href="./docs/venues.md">Real arenas</a></strong>: the NHL's Western Conference, each in the outline of its building with a plausible bowl of the seats, tiers and roof the sources give; 2D and 3D, with the stands, walls and roof to switch.
+</td>
+<td align="center" valign="top">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/multi-tabletennis-3d-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/multi-tabletennis-3d-desk-light.webp" alt="Four table tennis areas on one floor in 3D, with a hung scoreboard." width="400">
+</picture>
+<br><strong><a href="./docs/multi.md">Tournament layouts</a></strong>: judo, table tennis and other areas on one floor, to scale, in a hall or a stadium, flat or in 3D.
+</td>
+</tr>
+<tr>
+<td align="center" valign="top">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/judging-broadcast-3d-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/judging-broadcast-3d-desk-light.webp" alt="A kata mat in 3D from the broadcast camera, with a board at its side listing each judge." width="400">
+</picture>
+<br><strong><a href="./docs/judging.md">Who judges where</a></strong>: each judo mat's officials by seat, a broadcast view with the officials on a board, and a page to print.
+</td>
+<td align="center" valign="top">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/mma-cage-3d-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/mma-cage-3d-desk-light.webp" alt="An MMA cage in 3D: a mesh fence on a solid platform." width="400">
+</picture>
+<br><strong><a href="./docs/combat.md">The combat sports</a></strong>: an MMA cage, boxing and wrestling rings and mats, flat and in 3D.
+</td>
+</tr>
+</table>
 
 ## In 30 seconds
 
@@ -505,38 +561,6 @@ console.log(layout.needs.length, layout.needs.width);
 // 47 19
 ```
 
-<p align="center">
-<picture>
-<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/multi-judo-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/multi-judo-desk-light.webp" alt="Three judo contest areas in a row on one red floor of mats, dressed with a sample event's name, simple emblems and boards." width="640">
-</picture>
-<br><em>Three judo contest areas on one floor of mats: 47 by 19 metres, with sample content.</em>
-</p>
-
-<p align="center">
-<picture>
-<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/multi-tabletennis-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/multi-tabletennis-desk-light.webp" alt="Four table tennis areas in two rows of two on one blue floor, with sample words and emblems, a hung scoreboard and boards." width="640">
-</picture>
-<br><em>Four table tennis areas under one scoreboard.</em>
-</p>
-
-<p align="center">
-<picture>
-<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/multi-tabletennis-3d-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/multi-tabletennis-3d-desk-light.webp" alt="Four table tennis areas in 3D: tables on legs, a surround round each, a hung scoreboard." width="640">
-</picture>
-<br><em>The same four in 3D.</em>
-</p>
-
-<p align="center">
-<picture>
-<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/multi-judo-empty-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/multi-judo-empty-desk-light.webp" alt="The three judo areas with the places for the event's words and marks left empty and dashed." width="640">
-</picture>
-<br><em>Without `sample`: the empty places an organiser fills.</em>
-</p>
-
 ### Boards over a surface
 
 `board` lays a results board, a bout presentation or a medal table, any SVG, over a surface in 2D and 3D, off its middle and never stretched ([boards](./docs/boards.md)).
@@ -567,23 +591,16 @@ console.log(layout.needs.length, layout.needs.width);
 
 ### The real venues
 
-`crowd: { real: true }` draws an NHL arena in its building ([the real venues](./docs/venues.md)).
+`crowd: { real: true }` draws an NHL arena in its building: the outline from OpenStreetMap, the rink lying along the building where it says so, and a plausible bowl of the seats, tiers and roof the sources give. Sixteen arenas so far, the Western Conference's (Pacific and Central Divisions); the Eastern Conference follows ([the real venues](./docs/venues.md)). In 3D the demo's [venues page](https://johnmorrisdotca.github.io/kyogijo-stadiums/venues.html) turns by itself, with the stands, walls, roof, building, markings and labels switched on the view while it turns.
 
-<p align="center">
-<picture>
-<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/venues-honda-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/venues-honda-desk-light.webp" alt="The Honda Center's rink in its building's outline: two tiers of seats and a north arrow." width="640">
-</picture>
-<br><em>The Honda Center.</em>
-</p>
+```ts
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
+import { planVenue, venueById } from "@johnmorrisdotca/kyogijo-stadiums/venues";
 
-<p align="center">
-<picture>
-<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/venues-saddledome-3d-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/venues-saddledome-3d-desk-light.webp" alt="The Saddledome in 3D: two tiers of seats under its roof." width="640">
-</picture>
-<br><em>The Saddledome, in 3D.</em>
-</p>
+const svg = drawKyogijo({ sport: "nhl", arena: "climate-pledge-arena", crowd: { real: true } });
+console.log(svg.includes("ky-cr-shell"), planVenue(venueById("climate-pledge-arena")!).total);
+// true 17151
+```
 
 ### A real stadium, and a district
 
@@ -609,31 +626,7 @@ console.log(layout.needs.length, layout.needs.width);
 
 `drawJudging` puts each judo mat's officials by seat in the picture and in a chart ([judging](./docs/judging.md)).
 
-<p align="center">
-<picture>
-<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/judging-3d-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/judging-3d-desk-light.webp" alt="A kata area's judges' table in 3D, numbered badges, and the chart." width="640">
-</picture>
-<br><em>Judges, in 3D.</em>
-</p>
-
 The broadcast view puts the mat large, with the officials on a board at its side; `judgingPrint` prints one mat to an A4 or US letter page.
-
-<p align="center">
-<picture>
-<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/judging-broadcast-3d-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/judging-broadcast-3d-desk-light.webp" alt="A kata mat in 3D from the Broadcast camera, with a dark board at its side listing each judge's number, name and ID." width="640">
-</picture>
-<br><em>The broadcast view.</em>
-</p>
-
-<p align="center">
-<picture>
-<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/judging-print-a4-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/judging-print-a4-desk-light.webp" alt="An A4 page with the plan of one kata mat and the chart of its five judges under it." width="640">
-</picture>
-<br><em>One mat to an A4 page.</em>
-</p>
 
 ### A table tennis area
 
@@ -678,46 +671,6 @@ A table in the ITTF's playing area, 14 m by 7 m, with surrounds and chairs ([cou
 ### The combat sports
 
 An MMA cage, rings and wrestling mats ([the combat sports page](./docs/combat.md)).
-
-<p align="center">
-<picture>
-<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/mma-cage-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/mma-cage-desk-light.webp" alt="An MMA cage from above with a score" width="660">
-</picture>
-<br><em>With a score.</em>
-</p>
-
-<p align="center">
-<picture>
-<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/mma-cage-3d-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/mma-cage-3d-desk-light.webp" alt="The cage in 3D: a mesh fence on a solid platform" width="660">
-</picture>
-<br><em>The cage in 3D.</em>
-</p>
-
-<p align="center">
-<picture>
-<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/boxing-ring-3d-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/boxing-ring-3d-desk-light.webp" alt="The boxing ring in 3D: coloured corner posts, ropes and steps" width="660">
-</picture>
-<br><em>The ring in 3D.</em>
-</p>
-
-<p align="center">
-<picture>
-<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/wrestling-mat-3d-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/wrestling-mat-3d-desk-light.webp" alt="The UWW's wrestling mat in 3D on its platform" width="660">
-</picture>
-<br><em>The UWW's mat in 3D.</em>
-</p>
-
-<p align="center">
-<picture>
-<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/prowrestling-ring-3d-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/prowrestling-ring-3d-desk-light.webp" alt="A professional wrestling ring in 3D with three ropes" width="660">
-</picture>
-<br><em>A wrestling ring in 3D.</em>
-</p>
 
 ### The element in a page
 
@@ -815,7 +768,7 @@ English and Japanese: the title, the description and the statuses of a drawing, 
 Not here yet, each welcome as an [issue](https://github.com/johnmorrisdotca/kyogijo-stadiums/issues):
 
 - **More surfaces**: the FIBA and college courts, the international rink, rugby pitches, soccer's beach and street formats.
-- **More real venues**: the other divisions' arenas, then the NBA's, NFL's and MLB's, and more districts.
+- **More real venues**: the Eastern Conference's arenas, then the NBA's, NFL's and MLB's, and more districts.
 - **More parks of the past**: the 19th-century grounds, and the parks whose articles give no distances yet.
 - **More charts on data layers**: a formation chart, a pass sonar chart and a Voronoi chart of their own (the layers exist; see [team shape](./docs/team-shape.md)).
 - **Football in a different standard**: the college and high-school hash marks.

@@ -1,7 +1,7 @@
 // The demo page's own script: a surface to try (the package's own `mountKyogijo`), the code that draws it in four ways,
 // and a page of examples: every sport, wide and tall, badges, compact cards, court looks, a live score, every ballpark,
 // and the custom element. The words are in words.js, the made-up teams in examples.js.
-import { COURT_THEMES, GROUNDS, GROUND_IDS, KYOGIJO_STYLE, LEAGUES, PARKS, PARK_IDS, SOCCER_PITCH_IDS, SOCCER_PROVIDERS, SOCCER_PROVIDER_IDS, VERSION, drawKyogijo, fenceFor, rescale, layerTable, rulesFor, seasonLabel, leagueAt, leagueSeason } from "./dist/index.js";
+import { COURT_THEMES, GROUNDS, GROUND_IDS, KYOGIJO_STYLE, LEAGUES, PARKS, PARK_IDS, SOCCER_PITCH_IDS, SOCCER_PROVIDERS, SOCCER_PROVIDER_IDS, VENUES, VENUE_IDS, VERSION, arenaById, arenaNameIn, drawKyogijo, fenceFor, rescale, layerTable, rulesFor, seasonLabel, leagueAt, leagueSeason } from "./dist/index.js";
 import { emblemName, renderEmblem } from "./emblems.js";
 import "./flags.js";
 import { mountKyogijo } from "./dist/mount-entry.js";
@@ -9,6 +9,7 @@ import { clientPointToField, clientPointToFrames, fieldPointToClient } from "./d
 import { KYOGIJO_TURN_STYLE, mountKyogijoTurn } from "./dist/turn-entry.js";
 import "./dist/element-define.js";
 import { initAtlas } from "./atlas.js";
+import { mountRealView } from "./real-view.js";
 import { mountPlaceGrid } from "./place-grid.js";
 import { toParams } from "./embed-params.js";
 import { quiet, quietTitles } from "./quiet.js";
@@ -317,6 +318,7 @@ $("pitch-type").addEventListener("change", (event) => { state.pitchType = event.
 function applyTheme() {
   if (state.theme === "auto") document.documentElement.removeAttribute("data-theme");
   else document.documentElement.setAttribute("data-theme", state.theme);
+  featured?.refresh();
   paintBackground();
 }
 
@@ -965,6 +967,8 @@ const grids = ["gallery", "pitches", "parks", "grounds"].map((name) => mountPlac
 // ----- A change of language redraws the words that were drawn in it.
 function onLanguage() {
   atlas.relabel();
+  fillFeatured();
+  featured.refresh();
   for (const grid of grids) grid.relabel();
   fillParks();
   fillGrounds();
@@ -1008,6 +1012,33 @@ stage.addEventListener("click", (event) => {
 });
 $("place-clear").addEventListener("click", () => { state.shots = []; change(); });
 $("place").addEventListener("click", () => showPlace(null));
+
+// ----- The featured real arena at the head of the page: it turns by itself, and its buttons work while it turns.
+const FEATURED = "climate-pledge-arena";
+const featuredKey = new URLSearchParams(location.search).get("fv");
+const featured = mountRealView({
+  stage: $("feature-stage"),
+  bar: $("feature-bar"),
+  venue: Object.hasOwn(VENUES, featuredKey) ? featuredKey : FEATURED,
+  prefix: "f",
+  flat: false,
+  chipClass: "fam-chip",
+  page: () => ({ lang: language.lang, words: { ...WORDS[language.lang], group: say("featureGroup") }, theme: state.theme === "light" || state.theme === "dark" ? state.theme : undefined }),
+  onChange: (own) => {
+    const next = new URLSearchParams(location.search);
+    if (own.venue === FEATURED) next.delete("fv");
+    else next.set("fv", own.venue);
+    history.replaceState(history.state, "", `${location.pathname}${next.size === 0 ? "" : `?${next}`}${location.hash}`);
+  },
+});
+/** The arenas to choose from, by name in the page's language. */
+function fillFeatured() {
+  const select = $("feature-venue");
+  select.setAttribute("aria-label", say("featureArena"));
+  select.replaceChildren(...VENUE_IDS.map((id) => Object.assign(document.createElement("option"), { value: id, textContent: arenaNameIn(arenaById(id), undefined, language.lang), selected: id === featured.state.venue })));
+}
+$("feature-venue").addEventListener("input", (event) => featured.setVenue(event.target.value));
+fillFeatured();
 
 // ----- Start.
 applyTheme();

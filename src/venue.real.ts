@@ -56,10 +56,10 @@ function slopeThrough(points: readonly V3[]): Slope {
 }
 
 /**
- * The walls and the roof of a real venue. The hall is the building's outline cut to the bowl's wall and a margin (`RealShell.hall`): its rim is where a ray from the middle meets the one or the other first, in `steps`
+ * The walls and the roof of a real venue (`parts` says which are made). The hall is the building's outline cut to the bowl's wall and a margin (`RealShell.hall`): its rim is where a ray from the middle meets the one or the other first, in `steps`
  * rays. A wall stands on each stretch of the rim, up to the roof's height over it; the roof is a band from the rim in to the inner edge of the top tier (the middle stays open, as the 3D view's roofs are).
  */
-export function realBuilding(real: RealShell, top: StandRing | undefined, centre: readonly [number, number], lift: number, steps: number, open = false): Items {
+export function realBuilding(real: RealShell, top: StandRing | undefined, centre: readonly [number, number], lift: number, steps: number, open = false, parts: { walls: boolean; roof: boolean } = { walls: true, roof: true }): Items {
   const items: Upright[] = [];
   const c: Pt = [centre[0], centre[1]];
   const rim = Array.from({ length: steps }, (_, k): Pt => {
@@ -76,9 +76,9 @@ export function realBuilding(real: RealShell, top: StandRing | undefined, centre
     const high = lift + roofAt(real, [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2]);
     planes.push({ ...shy(wall(`shell-${i}`, "wall", a[0], a[1], b[0], b[1], 0, high, `<rect class="u-shell" width="${n(long)}" height="${n(high)}"/>`), centre), fadeTo: 0.02 });
   });
-  if (planes.length > 0) items.push({ id: "shell", kind: "walls", at: centre, height: Math.max(...planes.map((p) => p.o[2])), planes });
+  if (parts.walls && planes.length > 0) items.push({ id: "shell", kind: "walls", at: centre, height: Math.max(...planes.map((p) => p.o[2])), planes });
   const crown = real.roof === "cable" ? real.crown : undefined;
-  if (top?.hole == null && crown === undefined) return items;
+  if (!parts.roof || (top?.hole == null && crown === undefined)) return items;
   const roof: Plane[] = [];
   // A cable roof rises from the rim of the hall to the opening over the surface; any other is a band from the rim in to the inner edge of the top tier.
   const inner = rim.map((_, k) => {

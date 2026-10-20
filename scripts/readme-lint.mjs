@@ -47,6 +47,11 @@ export const BANNED = [
 export const BUDGET_DESK = 200 * 1024;
 export const BUDGET_OTHER = 120 * 1024;
 export const BUDGET_TOTAL = 2 * 1024 * 1024;
+// Kyogijo Stadiums only (John, 2026-10-20, for the README's turning arena): a moving picture is an animated WebP named `turning-<what>-desk-<light|dark>.webp`. It has a budget of its own (1 MB a file, 3 MB together) and is not
+// counted in the 2 MB of the still pictures. A picture is also used when a page of docs/ shows it (the README keeps one picture of each feature near its head and the others are in the docs).
+export const MOVING = /^turning-/;
+export const BUDGET_MOVING = 1024 * 1024;
+export const BUDGET_MOVING_TOTAL = 3 * 1024 * 1024;
 /** npm keeps and shows only the first 65,536 characters of a README: anything after is cut off, mid-sentence. */
 export const BUDGET_README = 64_000;
 export const MIN_EXAMPLE_BLOCKS = 6;
@@ -58,7 +63,9 @@ export function readInputs(root) {
   const pkg = JSON.parse(readFileSync(join(root, "package.json"), "utf8"));
   const images = join(root, "docs", "images");
   const pictures = existsSync(images) ? readdirSync(images).filter((file) => !file.startsWith(".")).map((file) => ({ file, bytes: statSync(join(images, file)).size })) : [];
-  return { readme: readFileSync(join(root, "README.md"), "utf8").replace(/\r\n/g, "\n"), pkg, pictures };
+  const docs = join(root, "docs");
+  const docsText = existsSync(docs) ? readdirSync(docs).filter((file) => file.endsWith(".md")).map((file) => readFileSync(join(docs, file), "utf8")).join("\n") : "";
+  return { readme: readFileSync(join(root, "README.md"), "utf8").replace(/\r\n/g, "\n"), pkg, pictures, docsText };
 }
 
 /** The README split into its fenced blocks and the prose between them: [{ type: "code", info, body, line } | { type: "prose", text, line }]. */
@@ -128,7 +135,7 @@ const imageUrls = (readme) => {
 const isBadge = (src) => /^https:\/\/(img\.shields\.io|github\.com\/[^/]+\/[^/]+\/actions\/workflows\/[^/]+\/badge\.svg)/.test(src ?? "");
 
 /** Every fault in the README, as sentences that say where and what. */
-export function lintReadme({ readme, pkg, pictures, minSubjects = MIN_SUBJECTS, apiUrl }) {
+export function lintReadme({ readme, pkg, pictures, minSubjects = MIN_SUBJECTS, apiUrl, docsText = "" }) {
   const faults = [];
   const fault = (message) => faults.push(message);
   const repo = pkg.name.split("/")[1];
@@ -258,14 +265,16 @@ export function lintReadme({ readme, pkg, pictures, minSubjects = MIN_SUBJECTS, 
     const match = NAME.exec(picture.file);
     if (!match) { fault(`docs/images/${picture.file} is not named <subject>-<desk|phone>-<light|dark>.<webp|png>.`); continue; }
     named.push({ subject: match[1], view: match[2], scheme: match[3], ...picture });
-    if (!referenced.has(picture.file)) fault(`docs/images/${picture.file} is not used in the README.`);
+    if (!referenced.has(picture.file) && !docsText.includes(`images/${picture.file.replace(/-(?:light|dark)\.\w+$/, "")}-`)) fault(`docs/images/${picture.file} is not used in the README or in a page of docs/.`);
     const twin = picture.file.replace(/-(light|dark)\./, (_, scheme) => `-${scheme === "light" ? "dark" : "light"}.`);
     if (!byFile.has(twin)) fault(`docs/images/${picture.file} has no ${match[3] === "light" ? "dark" : "light"} twin (${twin}).`);
-    const budget = match[2] === "desk" ? BUDGET_DESK : BUDGET_OTHER;
+    const budget = MOVING.test(match[1]) ? BUDGET_MOVING : match[2] === "desk" ? BUDGET_DESK : BUDGET_OTHER;
     if (picture.bytes > budget) fault(`docs/images/${picture.file} is ${Math.round(picture.bytes / 1024)} KB; the budget for it is ${budget / 1024} KB.`);
   }
-  const total = pictures.reduce((sum, picture) => sum + picture.bytes, 0);
+  const total = pictures.filter((picture) => !MOVING.test(picture.file)).reduce((sum, picture) => sum + picture.bytes, 0);
   if (total > BUDGET_TOTAL) fault(`The pictures come to ${(total / 1048576).toFixed(2)} MB; the budget is ${BUDGET_TOTAL / 1048576} MB.`);
+  const movingTotal = pictures.filter((picture) => MOVING.test(picture.file)).reduce((sum, picture) => sum + picture.bytes, 0);
+  if (movingTotal > BUDGET_MOVING_TOTAL) fault(`The moving pictures come to ${(movingTotal / 1048576).toFixed(2)} MB; the budget is ${BUDGET_MOVING_TOTAL / 1048576} MB.`);
   // Each light image is the img of a picture with its dark twin as a dark source, and a caption follows.
   for (const match of readme.matchAll(/<picture>([\s\S]*?)<\/picture>/g)) {
     const inner = match[1];
