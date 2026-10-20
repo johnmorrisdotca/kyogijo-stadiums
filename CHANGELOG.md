@@ -7,6 +7,18 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.12.2] - 2026-10-20
+
+### Added
+
+- **The demo leads to the tournament layouts.** A "Tournament layouts" link in the demo's header; under the surface of a sport that has layouts (table tennis, pickleball, curling, judo, karate, badminton, tennis) a "See it as a tournament floor" link to `halls.html` with that sport's first layout chosen (and the page's language and theme); and a link back to the demo from `halls.html`. `halls.html` also takes `theme=light|dark` in its address.
+
+### Fixed
+
+- **A dohyō in the 3D view is a solid block, not a hollow tray, and the floor round it is not cut off.** The whole floor was lifted to the mound's height and always drawn under the mound's four walls, so the walls on the far side showed over the clay and the clay looked sunk in a tray, with the grey hall floor raised level with it. Now the floor lies on the hall's floor, the mound is four sides (a tone darker than the top) and a flat top (the drawing's own clay and straw bales, cropped to the mound's square and lifted to its height), and the sides on the far side are drawn before the top and the ones on the near side after it at every turn. The view is fitted to the whole floor, so no part of it is cut off at any angle, and the stands of a crowd stand on the hall's floor.
+- **A table tennis table's far legs no longer show through its top, and its legs stand on something.** The raised floor (the table's top) was always drawn under every plane, so the legs and skirt on the far side were drawn over it. A raised floor now takes its turn among the planes by its middle, like any other, and a soft shadow under the table on the hall's floor seats the legs.
+- **The 3D view no longer swells and shrinks as it turns.** A surface going round, by hand or by the auto-turn, grew and shrank rhythmically, and in steps, instead of turning smoothly. There were two causes, both in the camera. The matrix written to each plane (`matrix3d`) rounded every number to four decimals, but its perspective terms are a few ten-thousandths and are multiplied by the pixels of a whole floor, so the rounding bent the perspective by tens of percent and by jumps as the angle changed (a floor's area on the screen jumped by up to a quarter between two views a few degrees apart); the numbers are now written to ten decimals. And the lens was short (1.7 times the box's longer side), so the nearer end of the floor swelled as it swung toward the eye (about a tenth of the area over a turn); the default is now 8 (`lens` still takes any value, and a smaller one brings the swelling back). The scale and the centre were already one for the whole turn (0.10.0); now the floor's area on the screen varies by about one percent over a turn, smoothly, for every sport and a tournament layout used as a floor, light and dark, desk and phone. New tests (`src/turn.size.test.ts`, and one in `e2e/turn.demo.mjs` in a real browser) sample the floor's area over a full turn, as the browser draws the written matrix, and fail on the old camera.
+
 ## [0.12.1] - 2026-10-19
 
 The npm page shows the tournament layouts. No change to the package's code.
