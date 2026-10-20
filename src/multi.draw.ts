@@ -4,18 +4,19 @@
 import { octagonD } from "./budo/plan.ts";
 import { drawKyogijo } from "./draw.ts";
 import { safeClass } from "./common.ts";
-import { densityOf, layoutOf, resolveCrowd, type Crowd } from "./crowd.ts";
+import { densityOf, layoutOf, resolveCrowd, type Crowd, type CrowdStands } from "./crowd.ts";
 import { drawCrowd, KYOGIJO_CROWD_STYLE } from "./crowd.draw.ts";
 import { el, esc, hash, num } from "./format.ts";
 import { FEET_PER_METRE } from "./geometry.ts";
 import { fitSentence, multiFit, multiLayout, multiNumber, needsSentence, venueOf } from "./multi.ts";
 import { KYOGIJO_MULTI_STYLE } from "./multi.style.ts";
 import { MULTI_WORDS } from "./multi.words.ts";
-import type { MultiFit, MultiLayout, MultiOptions, MultiSlot, MultiVenue } from "./multi.types.ts";
+import type { MultiCell, MultiFit, MultiLayout, MultiOptions, MultiSlot, MultiVenue } from "./multi.types.ts";
 import { outlineOf } from "./outline.ts";
 import { fill } from "./strings.ts";
 import { textWidth } from "./text.ts";
-import type { Language } from "./types.ts";
+import type { Language, SurfaceOptions } from "./types.ts";
+import { uprightsFor } from "./uprights.ts";
 import { VERSION } from "./version.ts";
 
 const metres = (ft: number): number => ft / FEET_PER_METRE;
@@ -53,6 +54,44 @@ const floorClass = (layout: MultiLayout): string => (layout.spec.kind === "budo"
  * ```
  */
 export function drawMulti(options: MultiOptions = {}): string {
+  return multiDrawing(options, false).svg;
+}
+
+/** Where the layout stands in the picture, so that something else can be put in the same frame (the 3D view's planes): the hall's size, where the layout is set in it, and the map from the layout's own frame to the picture's. */
+export interface MultiFrame {
+  layout: MultiLayout;
+  /** The hall's size and the layout's size as set in it (turned a quarter when the hall asks), in feet; the layout's top left corner is at (`ox`, `oy`). */
+  hall: { w: number; h: number };
+  lw: number;
+  lh: number;
+  ox: number;
+  oy: number;
+  turned: boolean;
+  /** A point of the layout's own frame (feet from the top left of its floor) in the picture's frame. */
+  to(x: number, y: number): [number, number];
+}
+
+/** A layout's drawing, and what was worked out to make it. */
+export interface MultiDrawing {
+  svg: string;
+  frame: MultiFrame;
+  fit: MultiFit | undefined;
+  /** The stands of the stadium round the hall, when it is on (in the picture's frame), and the crowd they are of. */
+  stands?: { stands: CrowdStands; crowd: Crowd; standsLike: string };
+  /** For a drawing made to be raised (`raise`): the surfaces that stand over the floor (a table tennis table), each with its cell and its own drawing, which the floor does not carry. */
+  lifted: { cell: MultiCell; body: string; box: { x: number; y: number; w: number; h: number }; lift: number }[];
+  /** The width and height of the picture and where it starts, in feet (its viewBox). */
+  view: { x: number; y: number; w: number; h: number };
+  title: string;
+  description: string;
+}
+
+/**
+ * The drawing of a layout, with what it was worked out from. `raise` makes the floor of a 3D view instead of the flat picture: the barriers, the officials' chairs, the scoreboard and the stands are left out (the 3D
+ * view stands them up), and a surface that stands over the floor (a table tennis table) is left off it too, with a soft shadow in its place. Everything else is the same string. With `uprights` false the 3D view stands
+ * nothing but the stands up, so the barriers and the rest stay on the floor.
+ */
+export function multiDrawing(options: MultiOptions, raise: boolean, uprights = true): MultiDrawing {
   const o = options;
   const language: Language = o.language === "ja" ? "ja" : "en";
   const words = MULTI_WORDS[language];
@@ -88,8 +127,13 @@ export function drawMulti(options: MultiOptions = {}): string {
   let style = "";
   let look: string | undefined;
   let cellsMarkup = "";
+  const lifted: MultiDrawing["lifted"] = [];
   const surfaceBox = outlineOf(spec.surface).box;
   const common = { ...spec.surface, margin: 0, language } as const;
+  // A surface that stands over the floor (a table tennis table's top, 76 cm up) is raised by the 3D view as a plane of its own.
+  const up = raise && uprights;
+  const lift = up && spec.kind === "cells" ? uprightsFor(common as SurfaceOptions).lift : 0;
+  const raised = lift > 0;
   if (spec.kind === "budo") {
     const drawn = inner(drawKyogijo({ ...common, id: `${gid}-s`, ...(o.style === "none" ? { style: "none" as const } : {}) }));
     style = drawn.style;
@@ -104,6 +148,13 @@ export function drawMulti(options: MultiOptions = {}): string {
         style = drawn.style;
         look = drawn.look;
       }
+      if (raised) {
+        // The floor has its shadow, soft and a little larger; the top is a plane of the 3D view.
+        const grow = 0.8;
+        cellsMarkup += el("rect", { class: "ky-mu-shadow", x: num(cell.x - grow / 2), y: num(cell.y - grow / 2), width: num(cell.w + grow), height: num(cell.h + grow), rx: num(grow) });
+        lifted.push({ cell, body: drawn.body, box: { x: surfaceBox.x, y: surfaceBox.y, w: surfaceBox.w, h: surfaceBox.h }, lift });
+        return;
+      }
       // A surface turned a quarter stands across the layout: the drawing's own top left goes to the cell's top right, and the drawing is turned.
       const place = cell.turn ? `translate(${num(cell.x + cell.w)} ${num(cell.y)}) rotate(90) translate(${num(-surfaceBox.x)} ${num(-surfaceBox.y)})` : `translate(${num(cell.x - surfaceBox.x)} ${num(cell.y - surfaceBox.y)})`;
       cellsMarkup += el("g", { class: "ky-mu-cell", "data-cell": cell.n, transform: place }, drawn.body);
@@ -114,8 +165,8 @@ export function drawMulti(options: MultiOptions = {}): string {
   let floorMarkup = "";
   floorMarkup += el("rect", { class: floorClass(layout), x: 0, y: 0, width: num(layout.floor.w), height: num(layout.floor.h) });
   let over = "";
-  if (spec.parts.barriers === true) for (const c of layout.cells) over += el("rect", { class: "ky-mu-barrier", x: num(c.bay.x + 0.5), y: num(c.bay.y + 0.5), width: num(c.bay.w - 1), height: num(c.bay.h - 1), rx: 0.4 });
-  if (spec.parts.officials === true) {
+  if (!up && spec.parts.barriers === true) for (const c of layout.cells) over += el("rect", { class: "ky-mu-barrier", x: num(c.bay.x + 0.5), y: num(c.bay.y + 0.5), width: num(c.bay.w - 1), height: num(c.bay.h - 1), rx: 0.4 });
+  if (!up && spec.parts.officials === true) {
     for (const c of layout.cells) {
       if (c.turn) {
         // Beside the net, on the right of a surface that stands across the layout.
@@ -129,8 +180,8 @@ export function drawMulti(options: MultiOptions = {}): string {
       over += el("rect", { class: "ky-mu-desk", x: num(cx - 5), y: num(c.y - 3.1), width: 3.6, height: 1.1, rx: 0.2 });
     }
   }
-  if (spec.parts.scoreboard === "each") for (const c of layout.cells) over += el("rect", { class: "ky-mu-sb", x: num(c.x + c.w / 2 - 2), y: num(c.y + c.h + 1.2), width: 4, height: 1.4, rx: 0.2 });
-  const sb = layout.shared;
+  if (!up && spec.parts.scoreboard === "each") for (const c of layout.cells) over += el("rect", { class: "ky-mu-sb", x: num(c.x + c.w / 2 - 2), y: num(c.y + c.h + 1.2), width: 4, height: 1.4, rx: 0.2 });
+  const sb = up ? undefined : layout.shared;
   if (sb !== undefined) {
     over += el("rect", { class: "ky-mu-sb", x: num(sb.x), y: num(sb.y), width: num(sb.w), height: num(sb.h), rx: 0.5 });
     // One scoreboard for all: a quarter of it for each of four areas, or one panel for each when they are fewer or more.
@@ -186,6 +237,7 @@ export function drawMulti(options: MultiOptions = {}): string {
   let reach = { left: 0, right: 0, top: 0, bottom: 0 };
   let defs = "";
   let crowdStyle = "";
+  let standing: MultiDrawing["stands"];
   const wide = { x: 0, y: 0, w: hall.w, h: hall.h };
   const boards = layout.slots.filter((s) => s.kind === "board");
   const boardsMargin = withSlots && boards.length > 0 ? 5 : 0;
@@ -200,13 +252,17 @@ export function drawMulti(options: MultiOptions = {}): string {
     const standsLike = venue?.standsLike ?? spec.sport;
     const crowd: Crowd = resolveCrowd({ gaps: false, awayEnd: "none", roof: stadium.roof, shape: stadium.shape, density: stadium.density, detail: stadium.detail === "plain" ? "plain" : "fine" }) as Crowd;
     const stands = layoutOf({ sport: standsLike, box: wide, crowd, awaySide: "right", arena: venue?.shape === "octagon" });
-    const density = stadium.crowd === false ? 0 : densityOf(crowd, stands.seats, undefined);
-    const drawn = drawCrowd(stands, { id: `${gid}-cr`, crowd, density, fine: crowd.detail !== "plain", ground: "ky-mu-apron" });
-    defs += drawn.defs;
     const wall = venue?.shape === "octagon" ? el("path", { class: "ky-mu-wall", d: octagonD(hall.w / 2, hall.w / 2, hall.w / 2) }) : el("rect", { class: "ky-mu-wall", x: 0, y: 0, width: num(hall.w), height: num(hall.h), rx: 0.5 });
-    hallMarkup = drawn.markup + hallMarkup + wall;
+    if (raise) hallMarkup += wall;
+    else {
+      const density = stadium.crowd === false ? 0 : densityOf(crowd, stands.seats, undefined);
+      const drawn = drawCrowd(stands, { id: `${gid}-cr`, crowd, density, fine: crowd.detail !== "plain", ground: "ky-mu-apron" });
+      defs += drawn.defs;
+      hallMarkup = drawn.markup + hallMarkup + wall;
+      crowdStyle = KYOGIJO_CROWD_STYLE;
+    }
     reach = stands.reach;
-    crowdStyle = KYOGIJO_CROWD_STYLE;
+    standing = { stands, crowd, standsLike };
   } else if (venue !== undefined) {
     hallMarkup += el("rect", { class: "ky-mu-hall", x: 0, y: 0, width: num(hall.w), height: num(hall.h) });
   }
@@ -264,7 +320,8 @@ export function drawMulti(options: MultiOptions = {}): string {
     },
     `<title id="${titleId}">${esc(title)}</title><desc id="${descId}">${esc(description)}</desc>` + css + (defs === "" ? "" : `<defs>${defs}</defs>`) + el("rect", { class: "ky-mu-apron", x: num(view.x), y: num(view.y), width: num(vw), height: num(vh) }) + hallLayer + group + overhang + slotTexts + labelsMarkup,
   );
-  return root;
+  const frame: MultiFrame = { layout, hall, lw, lh, ox, oy, turned, to };
+  return { svg: root, frame, fit, ...(standing === undefined ? {} : { stands: standing }), lifted, view: { x: view.x, y: view.y, w: vw, h: vh }, title, description };
 }
 
 /** Where an empty place is, in words: the surface it belongs to, the side or end it is at, and whether it is on the mats. */

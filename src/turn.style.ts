@@ -99,6 +99,10 @@ export const KYOGIJO_TURN_STYLE = `
 .ky-turn .u-seatback{fill:var(--ky-up-seatb)}
 .ky-turn .u-railline{stroke:var(--ky-up-railw);stroke-width:.3;stroke-linecap:square}
 .ky-turn .u-matedge{fill:var(--ky-up-matedge)}
+.ky-turn .u-surround{fill:var(--ky-mu-barrier,#161a1f);fill-opacity:.92}
+.ky-turn .u-surround-rim{fill:var(--ky-mu-chair,#ece7da);fill-opacity:.55}
+.ky-turn .u-chair{fill:var(--ky-mu-chair,#ece7da);stroke:var(--ky-mu-chair-edge,#4a4f56);stroke-width:.06}
+.ky-turn .u-chair-side{fill:color-mix(in srgb,var(--ky-mu-chair,#ece7da) 62%,#000);stroke:var(--ky-mu-chair-edge,#4a4f56);stroke-width:.04}
 .ky-turn-controls{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:center}
 .ky-turn-group{display:flex;flex-wrap:wrap;gap:6px}
 .ky-turn-controls button{font:inherit;font-size:.9rem;font-weight:600;min-width:44px;min-height:44px;padding:0 12px;border-radius:999px;border:1px solid var(--ky-turn-rule);background:var(--ky-turn-chip);color:var(--ky-turn-ink);cursor:pointer;display:inline-flex;align-items:center;justify-content:center}

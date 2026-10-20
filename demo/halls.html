@@ -20,11 +20,12 @@
       select, input[type="number"] { width: 100%; min-width: 0; font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 8px; min-height: 44px; }
       .check { display: flex; align-items: center; gap: 8px; min-height: 44px; color: var(--ink); }
       .check input { width: 22px; height: 22px; }
+      [hidden] { display: none !important; }
       :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
       #fit { margin: 12px 0; padding: 10px 12px; border-left: 4px solid var(--accent); background: var(--card); border-radius: 6px; }
       #fit[data-fit="false"] { border-left-color: #c0392b; }
       #stage { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 8px; }
-      #stage svg { display: block; width: 100%; height: auto; max-height: 80vh; }
+      #stage > svg { display: block; width: 100%; height: auto; max-height: 80vh; }
       .rule, .note { color: var(--muted); font-size: .9rem; margin: 8px 0; }
       details { margin-top: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; }
       summary { cursor: pointer; min-height: 32px; }
@@ -48,7 +49,9 @@
         <label><span id="l-columns"></span><input id="columns" type="number" min="1" max="12" inputmode="numeric" /></label>
         <label><span id="l-language"></span><select id="language"><option value="en">English</option><option value="ja">日本語</option></select></label>
         <label><span id="l-theme"></span><select id="theme"><option value="auto"></option><option value="light"></option><option value="dark"></option></select></label>
+        <label><span id="l-view"></span><select id="view"><option value="flat">2D</option><option value="3d">3D</option></select></label>
         <label class="check"><input id="stadium" type="checkbox" /><span id="l-stadium"></span></label>
+        <label class="check" id="roof-row" hidden><input id="roof" type="checkbox" /><span id="l-roof"></span></label>
         <label class="check"><input id="slots" type="checkbox" checked /><span id="l-slots"></span></label>
         <label class="check"><input id="labels" type="checkbox" checked /><span id="l-labels"></span></label>
       </form>
@@ -63,26 +66,30 @@
       <p class="note"><a href="./docs/multi.html" id="docs"></a></p>
     </main>
     <script type="module">
-      // Tournament layouts: pick a preset, set it in a hall, switch the real stadium on or off. The package draws everything; this page only passes the options.
-      import { MULTI_PRESETS, MULTI_VENUES, drawMulti, multiSetting, multiTable, fitSentence, needsSentence } from "./dist/multi-entry.js";
+      // Tournament layouts: pick a preset, set it in a hall, switch the real stadium on or off, and turn the whole floor in 3D. The package draws everything; this page only passes the options.
+      import { MULTI_PRESETS, MULTI_VENUES, drawMulti, mountMultiTurn, multiSetting, multiTable, fitSentence, needsSentence } from "./dist/multi-entry.js";
+      import { TURN_PRESET_NAMES } from "./dist/turn-entry.js";
 
       const WORDS = {
         en: {
           title: "Tournament layouts", pageTitle: "Kyogijo Stadiums: tournament layouts", pageDescription: "Several surfaces laid out together for one large event, to scale, in a hall, with a real stadium round them that can be switched on.", formLabel: "Layout choices", lede: "Several surfaces laid out together for one large event, to scale, on one floor. Set the layout in a hall to see whether it fits, and switch the stadium on to see it inside real stands.",
           preset: "Layout", venue: "Hall", none: "No hall (the floor the layout needs)", rows: "Rows", columns: "Columns", language: "Language", theme: "Theme", auto: "Follow the device", light: "Light", dark: "Dark",
-          stadium: "Stadium round the floor", slots: "Empty places for the event's words and marks", labels: "Names of the surfaces", table: "The same as a table", docs: "The tournament layouts page of the docs", back: "Back to the Kyogijo Stadiums demo",
+          view: "View", roof: "Roof (3D)", stadium: "Stadium round the floor", slots: "Empty places for the event's words and marks", labels: "Names of the surfaces", table: "The same as a table", docs: "The tournament layouts page of the docs", back: "Back to the Kyogijo Stadiums demo",
           needs: "This layout needs {size}.", event: "Tied to {name}, {year}, {venue}, {city}: {note}", basisRulebook: "The spacing is the rulebook's; no event's plan is drawn.", basisEvent: "The arrangement is what the event used, read from reports and photographs: not a measured plan.",
         },
         ja: {
           title: "大会向けレイアウト", pageTitle: "競技場 Kyogijo Stadiums：大会向けレイアウト", pageDescription: "複数の競技面を、大会向けに1枚の床の上へ縮尺どおりに並べます。会場を選ぶと収まるかどうかがわかり、スタジアムをオンにすると実際のスタンドの中に置いた様子を確認できます。", formLabel: "レイアウトの選択", lede: "複数の競技面を、大会向けに1枚の床の上へ縮尺どおりに並べます。会場を選ぶと収まるかどうかがわかり、スタジアムをオンにすると実際のスタンドの中に置いた様子を確認できます。",
           preset: "レイアウト", venue: "会場", none: "会場なし（レイアウトに必要な床）", rows: "行", columns: "列", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク",
-          stadium: "床の周りのスタジアム", slots: "大会の文字やマークを入れる空き枠", labels: "競技面の名前", table: "表で見る", docs: "ドキュメントの「大会向けレイアウト」ページ", back: "競技場 Kyogijo Stadiums のデモに戻る",
+          view: "表示", roof: "屋根（3D）", stadium: "床の周りのスタジアム", slots: "大会の文字やマークを入れる空き枠", labels: "競技面の名前", table: "表で見る", docs: "ドキュメントの「大会向けレイアウト」ページ", back: "競技場 Kyogijo Stadiums のデモに戻る",
           needs: "このレイアウトに必要な床：{size}。", event: "関連する大会：{name}（{year}年、{venue}、{city}）。{note}", basisRulebook: "間隔は競技規則のとおりです。特定の大会の図面は描いていません。", basisEvent: "並べ方は大会で実際に使われたものを報道や写真から読み取ったもので、実測の図面ではありません。",
         },
       };
       const $ = (id) => document.getElementById(id);
       const params = new URLSearchParams(location.search);
-      const state = { language: params.get("lang") === "ja" ? "ja" : "en" };
+      const state = { language: params.get("lang") === "ja" ? "ja" : "en", viewpoint: TURN_PRESET_NAMES.includes(params.get("viewpoint")) ? params.get("viewpoint") : "corner" };
+      // The 3D view while the page is on it: it takes the stage over from the flat drawing, and gives it back. The roof is a setting of the mount, so a change of it mounts the view again.
+      let turn;
+      let turnRoof = false;
 
       const presetSelect = $("preset");
       const venueSelect = $("venue");
@@ -93,6 +100,8 @@
       if (["light", "dark"].includes(params.get("theme"))) $("theme").value = params.get("theme");
       $("language").value = state.language;
       $("stadium").checked = params.get("stadium") === "on";
+      $("view").value = params.get("view") === "3d" ? "3d" : "flat";
+      $("roof").checked = params.get("roof") === "1";
       if (MULTI_VENUES.some((v) => v.id === params.get("venue"))) venueSelect.value = params.get("venue");
 
       function fill(text, values) { return text.replace(/\{(\w+)\}/g, (_, k) => values[k]); }
@@ -109,13 +118,28 @@
         const language = $("language").value;
         for (const option of presetSelect.options) option.textContent = MULTI_PRESETS.find((p) => p.id === option.value).name[language];
         for (const option of venueSelect.options) option.textContent = option.value === "" ? w.none : MULTI_VENUES.find((v) => v.id === option.value).name[language];
-        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["l-preset", "preset"], ["l-venue", "venue"], ["l-rows", "rows"], ["l-columns", "columns"], ["l-language", "language"], ["l-theme", "theme"], ["l-stadium", "stadium"], ["l-slots", "slots"], ["l-labels", "labels"], ["l-table", "table"], ["docs", "docs"], ["back", "back"]]) $(id).textContent = w[key];
+        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["l-preset", "preset"], ["l-venue", "venue"], ["l-rows", "rows"], ["l-columns", "columns"], ["l-language", "language"], ["l-theme", "theme"], ["l-view", "view"], ["l-roof", "roof"], ["l-stadium", "stadium"], ["l-slots", "slots"], ["l-labels", "labels"], ["l-table", "table"], ["docs", "docs"], ["back", "back"]]) $(id).textContent = w[key];
         const themeSelect = $("theme");
         for (const option of themeSelect.options) option.textContent = w[option.value];
         document.documentElement.lang = language;
         document.title = w.pageTitle;
         document.querySelector('meta[name="description"]').setAttribute("content", w.pageDescription);
         $("controls").setAttribute("aria-label", w.formLabel);
+      }
+
+      /** The address says what the page shows: the layout, the hall, the stadium (and its roof), the language, the 3D view and the viewpoint it is on. */
+      function syncUrl() {
+        const next = new URLSearchParams();
+        next.set("preset", presetSelect.value);
+        if (venueSelect.value !== "") next.set("venue", venueSelect.value);
+        if ($("stadium").checked) next.set("stadium", "on");
+        if ($("language").value === "ja") next.set("lang", "ja");
+        if ($("view").value === "3d") {
+          next.set("view", "3d");
+          if (state.viewpoint !== "corner") next.set("viewpoint", state.viewpoint);
+          if ($("stadium").checked && $("roof").checked) next.set("roof", "1");
+        }
+        history.replaceState(null, "", `?${next}`);
       }
 
       function draw() {
@@ -145,7 +169,19 @@
           $("fit").textContent = String(error.message);
           return;
         }
-        $("stage").innerHTML = svg;
+        const three = $("view").value === "3d";
+        $("roof-row").hidden = !(three && $("stadium").checked);
+        const roof = three && $("stadium").checked && $("roof").checked;
+        if (three) {
+          if (turn !== undefined && turnRoof !== roof) { turn.destroy(); turn = undefined; }
+          if (turn === undefined) {
+            turnRoof = roof;
+            turn = mountMultiTurn($("stage"), options, { preset: state.viewpoint, ...(roof ? { venue: { roof: true } } : {}), onChange: (_, preset) => { if (preset !== undefined) state.viewpoint = preset; syncUrl(); } });
+          } else turn.update(options);
+        } else {
+          if (turn !== undefined) { turn.destroy(); turn = undefined; }
+          $("stage").innerHTML = svg;
+        }
         const needs = fill(w.needs, { size: needsSentence(setting.layout.needs, language) });
         const ja = language === "ja";
         const fit = setting.fit === undefined || setting.venue === undefined ? "" : `${ja ? "" : " "}${setting.venue.name[language]}${ja ? "：" : ": "}${fitSentence(setting.fit, language)}`;
@@ -154,21 +190,17 @@
         $("rule").textContent = spec.rule[language];
         $("event").textContent = spec.event === undefined ? (spec.basis === "event" ? w.basisEvent : w.basisRulebook) : `${fill(w.event, { name: (ja && spec.event.ja?.name) || spec.event.name, year: spec.event.year, venue: (ja && spec.event.ja?.venue) || spec.event.venue, city: (ja && spec.event.ja?.city) || spec.event.city, note: spec.event.note[language] })}${ja ? "" : " "}${spec.basis === "event" ? w.basisEvent : w.basisRulebook}`;
         $("table").innerHTML = multiTable(options);
-        const next = new URLSearchParams();
-        next.set("preset", spec.id);
-        if (venueSelect.value !== "") next.set("venue", venueSelect.value);
-        if ($("stadium").checked) next.set("stadium", "on");
-        if (language === "ja") next.set("lang", "ja");
-        history.replaceState(null, "", `?${next}`);
+        syncUrl();
         const back = new URLSearchParams({ sport: spec.sport });
         if (language === "ja") back.set("lang", "ja");
         $("back").href = `./?${back}`;
         document.body.dataset.ready = "true";
       }
 
-      presetSelect.addEventListener("change", () => { syncGrid(); draw(); });
+      // Another layout opens the 3D view afresh, on the viewpoint chosen: its surfaces may stand across the picture, so the angles of the last one would not mean the same.
+      presetSelect.addEventListener("change", () => { syncGrid(); if (turn !== undefined) { turn.destroy(); turn = undefined; } draw(); });
       $("language").addEventListener("change", () => { labelOptions(); draw(); });
-      for (const id of ["venue", "rows", "columns", "theme", "stadium", "slots", "labels"]) $(id).addEventListener("change", draw);
+      for (const id of ["venue", "rows", "columns", "theme", "stadium", "slots", "labels", "view", "roof"]) $(id).addEventListener("change", draw);
       syncGrid();
       labelOptions();
       draw();

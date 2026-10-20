@@ -120,11 +120,12 @@ src/
 │   ├── field.ts        a field sport's surface, drawn from its plan
 │   ├── soccer-spec.ts  the Laws' figures, the presets, futsal and the small-sided pitches
 │   └── soccer-providers.ts  the data providers' coordinates, registered as frames, and rescale
-├── multi-entry.ts      the tournament layouts entry (`@johnmorrisdotca/kyogijo-stadiums/multi`): `drawMulti`, `multiLayout`, `multiFit`, `multiTable`, the presets, the halls and the sources
+├── multi-entry.ts      the tournament layouts entry (`@johnmorrisdotca/kyogijo-stadiums/multi`): `drawMulti`, `multiLayout`, `multiFit`, `multiTable`, `mountMultiTurn`, the presets, the halls and the sources
 ├── multi.types.ts      what a layout, a preset, a hall, a fit and the options are
 ├── multi.data.ts       the presets (each with its rule, its event and its sources), the halls whose floors are published, and the documents the figures were read from
 ├── multi.ts            a layout laid out: where each surface stands, the floor it needs, the empty places, and whether it fits a hall
-├── multi.draw.ts       a layout drawn: each surface by `drawKyogijo`, moved to its place, with the floor, the barriers, the scoreboard, the boards, the places, and the hall and stadium round it
+├── multi.draw.ts       a layout drawn: each surface by `drawKyogijo`, moved to its place, with the floor, the barriers, the scoreboard, the boards, the places, and the hall and stadium round it (or, for the 3D view, the floor alone)
+├── multi.turn.ts       a layout in 3D: each surface as it stands on its own page, moved to its cell, with the table tops, the surrounds, the chairs and score tables, the scoreboards and the stands of the stadium, as a `TurnModel` for the 3D view; `mountMultiTurn`
 ├── multi.style.ts      the layout's rules, light and dark: the floors' colours, the barriers, the boards, the empty places and the colour of a layout that does not fit
 ├── multi.words.ts      the words of a layout in English and Japanese
 ├── layout.ts           drawGrid: many drawings in one SVG, with a title, a subtitle, a key and a credit line, in a size for a card or a phone

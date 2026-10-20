@@ -11,8 +11,8 @@ const FLOORS: Readonly<Record<MultiFloor, { light: readonly [string, string]; da
   ice: { light: ["#e4eef5", "#1d2b36"], dark: ["#a9bccb", "#10181f"] },
 };
 
-const COMMON_LIGHT = "--ky-mu-neutral:#bdb9ad;--ky-mu-barrier:#161a1f;--ky-mu-board:#1d2430;--ky-mu-board-ink:#f4f1ea;--ky-mu-chair:#ece7da;--ky-mu-chair-edge:#4a4f56;--ky-mu-sb:#10151b;--ky-mu-sb-ink:#f6f6f6;--ky-mu-wall:#3a4048;--ky-mu-hall:#d9d5c8;--ky-mu-over:#c0392b";
-const COMMON_DARK = "--ky-mu-neutral:#2b2f2c;--ky-mu-barrier:#05070a;--ky-mu-board:#0d1218;--ky-mu-board-ink:#e8e4da;--ky-mu-chair:#b9b4a6;--ky-mu-chair-edge:#050607;--ky-mu-sb:#05080b;--ky-mu-sb-ink:#e9e9e9;--ky-mu-wall:#0a0c0f;--ky-mu-hall:#1b1f1c;--ky-mu-over:#e0614f";
+const COMMON_LIGHT = "--ky-mu-neutral:#bdb9ad;--ky-mu-barrier:#161a1f;--ky-mu-board:#1d2430;--ky-mu-board-ink:#f4f1ea;--ky-mu-chair:#ece7da;--ky-mu-chair-edge:#4a4f56;--ky-mu-sb:#10151b;--ky-mu-sb-ink:#f6f6f6;--ky-mu-wall:#3a4048;--ky-mu-hall:#d9d5c8;--ky-mu-over:#c0392b;--ky-mu-shadow:rgba(0,0,0,.2)";
+const COMMON_DARK = "--ky-mu-neutral:#2b2f2c;--ky-mu-barrier:#05070a;--ky-mu-board:#0d1218;--ky-mu-board-ink:#e8e4da;--ky-mu-chair:#b9b4a6;--ky-mu-chair-edge:#050607;--ky-mu-sb:#05080b;--ky-mu-sb-ink:#e9e9e9;--ky-mu-wall:#0a0c0f;--ky-mu-hall:#1b1f1c;--ky-mu-over:#e0614f;--ky-mu-shadow:rgba(0,0,0,.45)";
 
 const hallVars = (which: "light" | "dark"): string => Object.entries(FLOORS).map(([name, f]) => `--ky-mu-f-${name}:${f[which][0]}`).join(";");
 const looks = (which: "light" | "dark"): string => Object.entries(FLOORS).map(([name, f]) => `.kyogijo.ky-multi[data-floor=${name}]{--ky-mu-floor:${f[which][0]};--ky-mu-slot:${f[which][1]}}`).join("");
@@ -34,6 +34,7 @@ ${Object.entries(FLOORS).map(([name, f]) => `html[data-theme=dark] .kyogijo.ky-m
 .kyogijo .ky-mu-hallfloor{fill:var(--ky-mu-neutral);stroke:var(--ky-mu-wall);stroke-width:.8}
 ${Object.keys(FLOORS).map((name) => `.kyogijo .ky-mu-hf-${name}{fill:var(--ky-mu-f-${name})}`).join("\n")}
 .kyogijo .ky-mu-wall{fill:none;stroke:var(--ky-mu-wall);stroke-width:2.2;stroke-linejoin:round}
+.kyogijo .ky-mu-shadow{fill:var(--ky-mu-shadow)}
 .kyogijo .ky-mu-over{fill:none;stroke:var(--ky-mu-over);stroke-width:1.4;stroke-dasharray:5 3}
 .kyogijo .ky-mu-barrier{fill:none;stroke:var(--ky-mu-barrier);stroke-width:1;stroke-opacity:.9}
 .kyogijo .ky-mu-board{fill:var(--ky-mu-board)}

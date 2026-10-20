@@ -19,7 +19,7 @@ console.log(layout.needs.length, layout.needs.width, layout.needs.area);
 
 Each surface is the one `drawKyogijo` draws (a table, a court, a sheet, the sport's own several judo or karate areas), with its own lines, moved to its place: nothing is drawn a second way. The layout adds the floor, and, where the sport has them, the barriers, the officials' chairs, a scoreboard hung over the middle of the floor, the boards along its edges and the empty places for the event's own words and marks. It is one picture, with a title and a description for a screen reader, light and dark like every drawing, and [`multiTable`](#the-text-alternative) says the same thing as a table.
 
-The [tournament layouts demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/halls.html) lets you pick a preset, set it in a hall, and switch the stadium on and off; [the gallery](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-multi.html) shows every preset.
+The [tournament layouts demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/halls.html) lets you pick a preset, set it in a hall, switch the stadium on and off, and turn the whole floor in [3D](#in-3d) (`view=3d` in its address); [the gallery](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-multi.html) shows every preset.
 
 ## The presets
 
@@ -110,6 +110,45 @@ console.log(plain.includes('class="ky-crowd"'), inArena.includes('class="ky-crow
 ```
 
 `stadium` takes `{ crowd, density, roof, shape, detail }` too: `crowd: false` leaves the seats empty, `density` is the share of seats taken, `detail: "plain"` draws blocks for a small picture. The distances between the floor and the first row, and the depth of the tiers, are the package's conventions for a venue of the sport (no rulebook gives them; see [the crowd page](./crowd.md)), not a published plan of any of the halls above.
+
+## In 3D
+
+![Four table tennis areas in 3D from a low corner: each table on its legs with its net, a surround of 75 centimetres round each area, a chair and a score table at each table and one scoreboard hung over the middle of the floor, with the 3D view's controls under it](./images/multi-tabletennis-3d-desk-light.webp)
+
+`mountMultiTurn` turns a layout, as [the 3D view](./turn.md) turns one surface: the same four viewpoints (overhead, broadcast, end-on and low corner), the same drag, keys, pinch, zoom, reset and auto-turn, and the same camera, whose scale is fixed for the whole turn so that the floor never swells or shrinks as it goes round and none of it is cut off at any angle. It is the 3D view and not a second renderer: the layout's model is a `TurnModel`, so the camera, the controls and the tests are the ones every surface has.
+
+```ts no-run
+import { mountMultiTurn } from "@johnmorrisdotca/kyogijo-stadiums/multi";
+
+const view = mountMultiTurn(document.querySelector("#hall")!, { preset: "tabletennis-4", stadium: true }, { preset: "broadcast", venue: { roof: true } });
+view.preset("end");                                   // glide to a viewpoint
+view.update({ preset: "tabletennis-8", stadium: true }); // draw another layout, keeping the view
+```
+
+`multiTurnMarkup(options, settings)` is the same view as a string, for a server; `buildMultiTurn(options, settings)` is its model. The options are `drawMulti`'s, and the settings are the 3D view's (`preset`, `view`, `controls`, `uprights`, `venue`, `touch`, `motion`, `lens`, `autoPlay`, `speed`, `onChange`): `uprights: false` leaves everything flat on the floor, and `uprights: { boards: false }` leaves the surrounds out.
+
+```ts
+import { multiTurnMarkup } from "@johnmorrisdotca/kyogijo-stadiums/multi";
+
+const html = multiTurnMarkup({ preset: "tabletennis-4" }, { preset: "end" });
+console.log(html.includes('data-part="c1-net"'), html.includes('data-part="c4-table-top"'));
+// true true
+console.log(html.includes('data-part="scoreboard"'), html.includes("ky-up-surround"));
+// true true
+```
+
+What stands up is what the flat drawing draws, each at a height from the rules or, where a rule gives none, ours:
+
+| What | In 3D |
+| --- | --- |
+| Each surface | As on its own page ([the 3D view](./turn.md#what-stands-on-each-surface)): the nets and posts of every net sport, and a table tennis table as a top 76 cm over the floor (with the table's own drawing on it) on its skirt and four legs, with the net and clamps over it and a soft shadow on the floor. A court turned across the layout is turned with its net. The parts are named for their cell: `c1-net`, `c3-table-top`. |
+| The surrounds | A wall of 75 cm round each area's bay, in pieces of at most 3 m (the ITTF Handbook, 3.2.3.3: "about 75 cm"). They are whole from overhead and from a high tip, and give way a little (to 35 per cent at the most) to an eye low on their side, since a low wall there would hide the table behind it. |
+| Chairs and score tables | An umpire's chair (seat 45 cm, ours) and a score table (top 76 cm, 2.5 feet, ours) as solid blocks where the flat drawing has them. |
+| Scoreboards | The one hung over the middle of the floor, its lower edge 4 m up on cables (ours), facing the eye, divided into the panels of the areas; or one on legs at each surface. |
+| The stadium | `stadium: true` raises the stands of [the crowd model](./crowd.md) round the hall: every tier a few raked planes with the crowd on it, the walks between the tiers, and, with `venue: { roof: true }` (or `stadium: { roof: true }`), a lid over a hall or a canopy in the open air. They give way to the eye as the walls of every other 3D view do. |
+| Judo, karate, curling | Flat, as on their own pages: a judo or karate floor of mats has nothing standing on it; the stands round it can. |
+
+The viewpoints are turned to the layout: a net sport's end-on view looks along its surfaces, where the nets are seen whole (so a layout of badminton courts turned across the floor looks along them the other way), and a floor taller than it is wide is turned a quarter so that its long way runs across the screen (`multiPresets`).
 
 ## The text alternative
 

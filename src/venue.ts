@@ -2,7 +2,7 @@
 // open), and this makes of it what the 3D view stands on the floor: every tier a strip of raked planes (a quad to every straight side and a few to every corner, so that a whole bowl is a few dozen
 // elements, however many seats it has), textured with the crowd's own pattern and the lines of its rows, the concourses between the tiers, the low wall under the first row, the seats on top of a
 // ballpark's wall, and, when asked, the roof or canopy over the top tier. Pure: data in, planes out.
-import { densityOf, resolveCrowd, type CrowdStands, type Pt, type StandRing } from "./crowd.ts";
+import { densityOf, resolveCrowd, type Crowd, type CrowdStands, type Pt, type StandRing } from "./crowd.ts";
 import { patterns } from "./crowd.draw.ts";
 import { crowdStands } from "./draw.ts";
 import { groundById } from "./grounds.ts";
@@ -60,6 +60,14 @@ export function standsVenue(o: SurfaceOptions, v: VenueBuild, lift: number): Ven
   const stands = crowdStands(o);
   const crowd = resolveCrowd(o.crowd);
   if (stands === undefined || crowd === undefined || stands.gallery === true) return NO_VENUE;
+  return standsVenueOf(stands, crowd, { sport: o.sport, detail: o.detail, ground: o.ground }, v, lift);
+}
+
+/**
+ * The stands the model says (`crowdStands`, or the stands of a tournament layout's hall) as planes: what `standsVenue` makes of a surface's, for stands that were worked out some other way. `o` is the little of the
+ * drawing's options it reads: the sport (whether a roof is a lid), the detail (`simple` is the plain crowd) and the ground (whose capacity sets the density).
+ */
+export function standsVenueOf(stands: CrowdStands, crowd: Crowd, o: Pick<SurfaceOptions, "sport" | "detail" | "ground">, v: VenueBuild, lift: number): Venue {
   const cut: Cut = v.detail ?? "auto";
   const fine = crowd.detail !== "plain" && o.detail !== "simple";
   const density = densityOf(crowd, stands.seats, groundById(o.ground)?.capacity);

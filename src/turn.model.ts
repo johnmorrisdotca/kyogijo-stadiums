@@ -5,7 +5,7 @@ import { hash } from "./format.ts";
 import { lengthUnit } from "./common.ts";
 import { convertLength } from "./units.ts";
 import { KYOGIJO_STRINGS } from "./strings.ts";
-import { TURN_DEFAULT, clampView, presetView, type TurnPreset, type TurnView } from "./turn.camera.ts";
+import { TURN_DEFAULT, clampView, presetView, type PresetTable, type TurnPreset, type TurnView } from "./turn.camera.ts";
 import type { Plane } from "./turn.kit.ts";
 import { describeUprights, planesOf, uprightsFor, type UprightOptions, type Uprights } from "./uprights.ts";
 import { resolveCrowd } from "./crowd.ts";
@@ -93,6 +93,10 @@ export interface TurnModel {
   view: TurnView;
   /** False when there is nothing to turn: a badge is a strip, not a surface. */
   turnable: boolean;
+  /** The four viewpoints, when the model has its own (a tournament layout's); the sport's when missing. */
+  presets?: PresetTable;
+  /** The flat drawing to show where the 3D view cannot be drawn, when it is not `drawKyogijo`'s of `options` (a tournament layout's). */
+  flat?: string;
 }
 
 /** The options with what makes the floor of a 3D view: the whole surface, lying wide, at its full size. */
@@ -122,7 +126,40 @@ function crowdVars(floor: string): string {
 }
 
 /** The view a set of settings opens on. */
-export const openingView = (settings: Pick<TurnSettings, "preset" | "view">, sport?: string): TurnView => clampView({ ...(presetView(settings.preset, sport) ?? presetView(TURN_DEFAULT, sport)!), ...settings.view });
+export const openingView = (settings: Pick<TurnSettings, "preset" | "view">, sport?: string | PresetTable): TurnView => clampView({ ...(presetView(settings.preset, sport) ?? presetView(TURN_DEFAULT, sport)!), ...settings.view });
+
+/**
+ * The scene's extent in pixels from its middle: the area it is fitted to (in feet, in the drawing's frame) widened to take in every plane that is not the ground, and as high as the highest of them (or of `lift`, the height
+ * of the floor itself).
+ */
+export function sceneBox(planes: readonly Plane[], area: { x0: number; y0: number; x1: number; y1: number }, lift: number, centre: readonly [number, number], scale: number): Box3 {
+  let [x0, y0, x1, y1] = [area.x0, area.y0, area.x1, area.y1];
+  let top = lift;
+  for (const p of planes) {
+    // A billboard turns about its middle: whichever way it faces, it lies within a circle as wide as it is.
+    const reach = p.billboard === true ? Math.hypot(...p.u) / 2 : 0;
+    for (const [a, b] of [[0, 0], [1, 0], [0, 1], [1, 1]] as const) {
+      const point = [p.o[0] + a * p.u[0] + b * p.v[0], p.o[1] + a * p.u[1] + b * p.v[1], p.o[2] + a * p.u[2] + b * p.v[2]];
+      if (reach > 0) {
+        const middle = [p.o[0] + (p.u[0] + p.v[0]) / 2, p.o[1] + (p.u[1] + p.v[1]) / 2];
+        x0 = Math.min(x0, middle[0] - reach);
+        x1 = Math.max(x1, middle[0] + reach);
+        y0 = Math.min(y0, middle[1] - reach);
+        y1 = Math.max(y1, middle[1] + reach);
+        top = Math.max(top, point[2]);
+        continue;
+      }
+      if (p.kind !== "ground") {
+        x0 = Math.min(x0, point[0]);
+        x1 = Math.max(x1, point[0]);
+        y0 = Math.min(y0, point[1]);
+        y1 = Math.max(y1, point[1]);
+      }
+      top = Math.max(top, point[2]);
+    }
+  }
+  return { x0: (x0 - centre[0]) * scale, x1: (x1 - centre[0]) * scale, y0: (y0 - centre[1]) * scale, y1: (y1 - centre[1]) * scale, z0: 0, z1: top * scale };
+}
 
 /** Work out a 3D view from the options of a drawing. */
 export function buildTurn(options: SurfaceOptions | ScoreOptions, settings: TurnSettings = {}): TurnModel {
@@ -157,32 +194,7 @@ export function buildTurn(options: SurfaceOptions | ScoreOptions, settings: Turn
   // The scene's extent: the playing surface (the whole floor where it has no uprights), and whatever stands beyond it (a net behind a goal line). The ground
   // round the surface is not counted, so that the view is fitted to what is played on and the ground runs out of the picture.
   const area = uprights.whole === true || uprights.area === undefined ? { x0: vx, y0: vy, x1: vx + vw, y1: vy + vh } : uprights.area;
-  let [x0, y0, x1, y1] = [area.x0, area.y0, area.x1, area.y1];
-  let top = uprights.lift;
-  for (const p of planes) {
-    // A billboard turns about its middle: whichever way it faces, it lies within a circle as wide as it is.
-    const reach = p.billboard === true ? Math.hypot(...p.u) / 2 : 0;
-    for (const [a, b] of [[0, 0], [1, 0], [0, 1], [1, 1]] as const) {
-      const point = [p.o[0] + a * p.u[0] + b * p.v[0], p.o[1] + a * p.u[1] + b * p.v[1], p.o[2] + a * p.u[2] + b * p.v[2]];
-      if (reach > 0) {
-        const middle = [p.o[0] + (p.u[0] + p.v[0]) / 2, p.o[1] + (p.u[1] + p.v[1]) / 2];
-        x0 = Math.min(x0, middle[0] - reach);
-        x1 = Math.max(x1, middle[0] + reach);
-        y0 = Math.min(y0, middle[1] - reach);
-        y1 = Math.max(y1, middle[1] + reach);
-        top = Math.max(top, point[2]);
-        continue;
-      }
-      if (p.kind !== "ground") {
-        x0 = Math.min(x0, point[0]);
-        x1 = Math.max(x1, point[0]);
-        y0 = Math.min(y0, point[1]);
-        y1 = Math.max(y1, point[1]);
-      }
-      top = Math.max(top, point[2]);
-    }
-  }
-  const box: Box3 = { x0: (x0 - centre[0]) * scale, x1: (x1 - centre[0]) * scale, y0: (y0 - centre[1]) * scale, y1: (y1 - centre[1]) * scale, z0: 0, z1: top * scale };
+  const box = sceneBox(planes, area, uprights.lift, centre, scale);
   const { title, description } = describe(o);
   const standing = describeUprights(o, uprights, language);
   return {

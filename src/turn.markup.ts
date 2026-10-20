@@ -110,7 +110,7 @@ export function worldMarkup(model: TurnModel, layout: Layout): string {
 /** The buttons under the view. */
 export function controlsMarkup(model: TurnModel, view: TurnView, playing = false): string {
   const words = turnWords(model);
-  const here = presetOf(view, (model.options as SurfaceOptions).sport);
+  const here = presetOf(view, model.presets ?? (model.options as SurfaceOptions).sport);
   const presets = TURN_PRESET_NAMES.map((name, i) => `<button type="button" data-preset="${name}" aria-pressed="${here === name}" aria-keyshortcuts="${i + 1}">${esc(words[name])}</button>`).join("");
   const tools: [string, string, string][] = [
     ["turn-left", "↺", words.turnLeft],
@@ -140,7 +140,7 @@ export function turnMarkupOf(model: TurnModel, settings: TurnSettings = {}): str
   const theme = (model.options as SurfaceOptions).theme;
   const sport = (model.options as SurfaceOptions).sport;
   return (
-    `<div class="ky-turn" id="${esc(model.id)}" data-sport="${esc(String(sport))}" data-mode="3d" data-touch="${settings.touch === "turn" ? "turn" : "scroll"}" data-preset="${presetOf(view, sport) ?? "custom"}"${theme === "light" || theme === "dark" ? ` data-theme="${theme}"` : ""} lang="${model.language}">` +
+    `<div class="ky-turn" id="${esc(model.id)}" data-sport="${esc(String(sport))}" data-mode="3d" data-touch="${settings.touch === "turn" ? "turn" : "scroll"}" data-preset="${presetOf(view, model.presets ?? sport) ?? "custom"}"${theme === "light" || theme === "dark" ? ` data-theme="${theme}"` : ""} lang="${model.language}">` +
     sheet +
     `<div class="ky-turn-view" tabindex="0" role="group" aria-roledescription="${esc(words.region)}" aria-label="${esc(model.title)}" aria-describedby="${esc(model.id)}-help" aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown + - 0 1 2 3 4 Home Space"><div ${worldAttributes(model)}>${worldMarkup(model, layout)}</div></div>` +
     `<p class="ky-turn-help" id="${esc(model.id)}-help">${esc(keys)}</p>` +

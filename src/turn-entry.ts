@@ -1,5 +1,5 @@
 // The 3D view: a surface as a floor that turns, with a net, a basket, a goal or a pair of posts standing on it.
-export { mountKyogijoTurn, turnSupported } from "./turn.dom.ts";
+export { mountKyogijoTurn, mountTurn, turnSupported } from "./turn.dom.ts";
 export type { KyogijoTurn } from "./turn.dom.ts";
 export { buildTurn, floorOptions, openingView } from "./turn.model.ts";
 export type { TurnModel, TurnSettings } from "./turn.model.ts";

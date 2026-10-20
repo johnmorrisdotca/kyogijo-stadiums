@@ -3,7 +3,7 @@
 // swell and shrink rhythmically, in jumps, because the perspective terms of that text were rounded to four decimals (they are a few ten-thousandths) and the lens was short.
 import { describe, expect, it } from "vitest";
 import { SPORTS } from "./index.ts";
-import { drawMulti } from "./multi-entry.ts";
+import { buildMultiTurn } from "./multi-entry.ts";
 import { MULTI_PRESET_IDS } from "./multi.data.ts";
 import { PITCH_MAX, buildTurn, layoutOf, presetsFor, type TurnModel } from "./turn-entry.ts";
 import type { SurfaceOptions } from "./types.ts";
@@ -37,20 +37,20 @@ const spread = (list: readonly number[]): number => Math.max(...list) / Math.min
 /** The largest ratio between neighbours, the circle closed. */
 const jump = (list: readonly number[]): number => Math.max(...list.map((a, i) => Math.max(a, list[(i + 1) % list.length]) / Math.min(a, list[(i + 1) % list.length])));
 
-/** Every sport's surface (the whole floor, the stands and walls raised where it has them), and a tournament layout of several surfaces as the floor of a 3D view. */
+/** Every sport's surface (the whole floor, the stands and walls raised where it has them), and every tournament layout in 3D (its surfaces, surrounds and scoreboards standing on the floor, and with the stadium round it). */
 const MODELS: readonly (readonly [string, TurnModel])[] = [
   ...SPORTS.flatMap((sport): [string, TurnModel][] => [
     [sport, buildTurn({ sport }, {})],
     [`${sport} with a crowd`, buildTurn({ sport, crowd: true } as SurfaceOptions, {})],
   ]),
-  ...MULTI_PRESET_IDS.slice(0, 4).map((preset): [string, TurnModel] => [`layout ${preset}`, buildTurn({ sport: "judo" }, { floor: () => drawMulti({ preset }) })]),
+  ...MULTI_PRESET_IDS.flatMap((preset): [string, TurnModel][] => [[`layout ${preset}`, buildMultiTurn({ preset })], [`layout ${preset} in a stadium`, buildMultiTurn({ preset, stadium: true })]]),
 ];
 
 describe("a turning surface keeps its size", () => {
   it("has one area at every turn, for every sport and surface, at every tip, in desk and phone boxes", () => {
     for (const [name, model] of MODELS) {
       const sport = (model.options as SurfaceOptions).sport;
-      const pitches = [...new Set([...Object.values(presetsFor(sport)).map((view) => view.pitch), 45, PITCH_MAX])].filter((pitch) => pitch > 0);
+      const pitches = [...new Set([...Object.values(presetsFor(model.presets ?? sport)).map((view) => view.pitch), 45, PITCH_MAX])].filter((pitch) => pitch > 0);
       for (const container of CONTAINERS) for (const pitch of pitches) {
         expect(spread(areas(model, pitch, container, 10)), `${name} ${container.join("x")} pitch ${pitch}`).toBeLessThan(TURN_TOLERANCE);
       }
@@ -58,7 +58,7 @@ describe("a turning surface keeps its size", () => {
   });
 
   it("changes smoothly: no step between two views three degrees apart", () => {
-    for (const [name, model] of MODELS.filter(([label]) => !label.endsWith("crowd"))) {
+    for (const [name, model] of MODELS.filter(([label]) => !label.endsWith("crowd") && !label.endsWith("stadium"))) {
       for (const container of CONTAINERS) for (const pitch of [62, PITCH_MAX]) {
         expect(jump(areas(model, pitch, container, 3)), `${name} ${container.join("x")} pitch ${pitch}`).toBeLessThan(STEP_TOLERANCE);
       }

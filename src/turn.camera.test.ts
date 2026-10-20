@@ -2,6 +2,8 @@
 // by itself, and at no angle is any of it outside the container. (It used to fit each angle alone: a long floor was drawn up to 1.8 times as large side-on as end-on.)
 import { describe, expect, it } from "vitest";
 import { SPORTS } from "./index.ts";
+import { buildMultiTurn } from "./multi-entry.ts";
+import { MULTI_PRESET_IDS } from "./multi.data.ts";
 import { PITCH_MAX, buildTurn, eyeDistance, fit, layoutOf, project } from "./turn-entry.ts";
 import { covered, type Box3 } from "./turn.camera.ts";
 
@@ -9,9 +11,10 @@ const CONTAINERS: readonly (readonly [number, number])[] = [[960, 600], [390, 30
 const PITCHES = [0, 15, 30, 45, 60, 70, PITCH_MAX];
 const range = (from: number, to: number, by: number): number[] => Array.from({ length: Math.floor((to - from) / by) + 1 }, (_, i) => from + i * by);
 
-/** The boxes of every sport's scene, and three that stand for their shapes: a long floor, a square one with a tall thing on it, and a strip. */
+/** The boxes of every sport's scene, of every tournament layout (with and without its stadium), and three that stand for their shapes: a long floor, a square one with a tall thing on it, and a strip. */
 const BOXES: readonly (readonly [string, Box3])[] = [
   ...SPORTS.map((sport): [string, Box3] => [sport, buildTurn({ sport }, {}).box]),
+  ...MULTI_PRESET_IDS.flatMap((preset): [string, Box3][] => [[`layout ${preset}`, buildMultiTurn({ preset }).box], [`layout ${preset} in a stadium`, buildMultiTurn({ preset, stadium: true }).box]]),
   ["long", { x0: -400, x1: 400, y0: -150, y1: 150, z0: 0, z1: 60 }],
   ["tall", { x0: -200, x1: 200, y0: -200, y1: 200, z0: 0, z1: 500 }],
   ["strip", { x0: -670, x1: 670, y0: -70, y1: 70, z0: 0, z1: 0 }],

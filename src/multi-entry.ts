@@ -2,6 +2,7 @@
 // officials' chairs, a scoreboard hung over the middle, the boards and the empty places for the event's own words and marks; the real configurations of events as presets, each with its rule; the halls whose
 // floors are published, and whether a layout fits one; and a real stadium round the floor at the same scale. `multiTable` is the text alternative.
 export { drawMulti, multiSetting, multiTable } from "./multi.draw.ts";
+export { SURROUND_HEIGHT, buildMultiTurn, mountMultiTurn, multiPresets, multiTurnMarkup } from "./multi.turn.ts";
 export { MULTI_MAX, fitSentence, multiFit, multiLayout, needsSentence, specOf, venueOf } from "./multi.ts";
 export { MULTI_PRESETS, MULTI_PRESET_IDS, MULTI_SOURCES, MULTI_VENUES, multiPreset, multiSource, multiVenueById } from "./multi.data.ts";
 export { KYOGIJO_MULTI_STYLE } from "./multi.style.ts";

@@ -59,8 +59,11 @@ export const CURLING_PRESETS: Readonly<Record<TurnPreset, TurnView>> = {
 /** The sports whose net runs across the court and whose viewpoints are `NET_PRESETS`. */
 const NET_SPORTS: readonly string[] = ["tennis", "volleyball", "badminton", "pickleball", "tabletennis", "padel", "sepaktakraw", "teqball"];
 
-/** The four viewpoints of a sport. */
-export const presetsFor = (sport?: string): Readonly<Record<TurnPreset, TurnView>> => (sport === "curling" ? CURLING_PRESETS : sport !== undefined && NET_SPORTS.includes(sport) ? NET_PRESETS : sport !== undefined && LONG_SPORTS.includes(sport) ? LONG_PRESETS : TURN_PRESETS);
+/** The four viewpoints as a table. */
+export type PresetTable = Readonly<Record<TurnPreset, TurnView>>;
+
+/** The four viewpoints of a sport, or the table itself when it is given one (a tournament layout has its own). */
+export const presetsFor = (sport?: string | PresetTable): PresetTable => typeof sport === "object" ? sport : (sport === "curling" ? CURLING_PRESETS : sport !== undefined && NET_SPORTS.includes(sport) ? NET_PRESETS : sport !== undefined && LONG_SPORTS.includes(sport) ? LONG_PRESETS : TURN_PRESETS);
 
 /** The view a mount opens on. */
 export const TURN_DEFAULT: TurnPreset = "corner";
@@ -88,10 +91,10 @@ export function clampView(view: TurnView, fallback: TurnView = TURN_PRESETS[TURN
 export const nearest = (from: number, to: number): number => from + wrap(to - from);
 
 /** The view a viewpoint name stands for in a sport, or `undefined` for a name that is not one. */
-export const presetView = (name: string | undefined, sport?: string): TurnView | undefined => (name !== undefined && (TURN_PRESET_NAMES as readonly string[]).includes(name) ? { ...presetsFor(sport)[name as TurnPreset] } : undefined);
+export const presetView = (name: string | undefined, sport?: string | PresetTable): TurnView | undefined => (name !== undefined && (TURN_PRESET_NAMES as readonly string[]).includes(name) ? { ...presetsFor(sport)[name as TurnPreset] } : undefined);
 
 /** The name of the viewpoint a view is in a sport, or `undefined` when it is none of them (it has been turned by hand). */
-export function presetOf(view: TurnView, sport?: string): TurnPreset | undefined {
+export function presetOf(view: TurnView, sport?: string | PresetTable): TurnPreset | undefined {
   return TURN_PRESET_NAMES.find((name) => {
     const p = presetsFor(sport)[name];
     return Math.abs(wrap(view.yaw - p.yaw)) < 0.5 && Math.abs(view.pitch - p.pitch) < 0.5 && Math.abs(view.zoom - p.zoom) < 0.01;

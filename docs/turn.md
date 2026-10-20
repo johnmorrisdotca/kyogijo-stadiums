@@ -6,6 +6,8 @@ A surface drawn flat hides what stands on it: a net, a basket, a goal, the posts
 
 It is plain DOM and CSS, with no dependency and no canvas. Each part that stands up (a net, a pane of glass, a backboard, the two strips that make a post) is a flat rectangle with a little SVG on it, and each carries its whole place on the screen in one `matrix3d`; the parts are stacked far to near by `z-index`. Nothing is nested in 3D (no `preserve-3d`, no `perspective` on a parent), so a browser that cannot keep nested 3D layers, as Safari on a phone sometimes cannot, draws it as it is meant. The drawing it is made from is the one `drawKyogijo` draws, so the 3D view is an enhancement over the static SVG, which stays what a server renders.
 
+A tournament layout (several surfaces on one floor) turns the same way: `mountMultiTurn` of [the layouts page](./multi.md#in-3d) gives it these viewpoints, controls and camera.
+
 ## Put one in a page
 
 ```ts no-run

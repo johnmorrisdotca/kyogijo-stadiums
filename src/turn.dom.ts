@@ -3,15 +3,15 @@
 // reduced motion gets jumps for glides, and where the browser cannot draw in 3D the flat drawing stays. Nothing is polled and nothing runs while the view is
 // still: the elements' `transform`s are written when the view changes, and a glide between viewpoints is a short run of animation frames.
 import { drawKyogijo } from "./draw.ts";
-import { STEP, TURN_PRESET_NAMES, clampView, drag, nearest, nudge, presetOf, presetView, step, type TurnPreset, type TurnView } from "./turn.camera.ts";
+import { STEP, TURN_PRESET_NAMES, clampView, drag, nearest, nudge, presetOf, presetView, step, type PresetTable, type TurnPreset, type TurnView } from "./turn.camera.ts";
 import { buildTurn, floorOptions, openingView, turnWords, type TurnModel, type TurnSettings } from "./turn.model.ts";
 import { controlsMarkup, layoutOf, turnMarkupOf, worldMarkup, type Layout } from "./turn.markup.ts";
 import { KYOGIJO_TURN_STYLE } from "./turn.style.ts";
 import { esc } from "./format.ts";
 import type { ScoreOptions, SurfaceOptions } from "./types.ts";
 
-/** What `mountKyogijoTurn` gives back. */
-export interface KyogijoTurn {
+/** What `mountKyogijoTurn` gives back. `O` is what `update` takes: the options of a drawing, or (for `mountMultiTurn`) of a tournament layout. */
+export interface KyogijoTurn<O = SurfaceOptions | ScoreOptions> {
   /** `3d`, or `flat` where the browser cannot draw the 3D view (or there is nothing to turn): the flat drawing is shown and the rest of this does nothing. */
   readonly mode: "3d" | "flat";
   /** The view now: where it is going if it is gliding. */
@@ -23,7 +23,7 @@ export interface KyogijoTurn {
   /** Back to the opening view. */
   reset(): void;
   /** Draw again with new options (a score that moved, a look that changed), keeping the view. */
-  update(options: SurfaceOptions | ScoreOptions): void;
+  update(options: O): void;
   /** Whether the auto-turn is running. */
   readonly playing: boolean;
   /** Start the auto-turn, a slow turn of the whole view. It gives whether it is running (a surface that cannot turn gives `false`). Nothing turns by itself until this, the Play button or Space starts it, unless `autoPlay` asked. */
@@ -62,17 +62,26 @@ const between = (from: TurnView, to: TurnView, t: number): TurnView => ({ yaw: f
  * ```
  */
 export function mountKyogijoTurn(host: HTMLElement, options: SurfaceOptions | ScoreOptions, settings: TurnSettings = {}): KyogijoTurn {
+  return mountTurn(host, options, settings, buildTurn);
+}
+
+/**
+ * Mount any 3D model (`mountKyogijoTurn` is this with the model of one surface; `mountMultiTurn` with a tournament layout's): `build` makes the model from what `update` is given, and the rest, the controls, the pointer, the keys
+ * and the auto-turn, is the same.
+ */
+export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettings, build: (options: O, settings: TurnSettings) => TurnModel): KyogijoTurn<O> {
   const doc = host.ownerDocument;
   const win = doc.defaultView;
-  let model: TurnModel = buildTurn(options, settings);
-  const sport = (): string | undefined => (model.options as SurfaceOptions).sport;
+  let model: TurnModel = build(options, settings);
+  /** What names the four viewpoints: the model's own table (a tournament layout has one), else the sport's. */
+  const sport = (): string | PresetTable | undefined => model.presets ?? (model.options as SurfaceOptions).sport;
   const supported = turnSupported(win ?? undefined) && model.turnable;
   let alive = true;
 
   if (!supported) {
     // The flat drawing, with a sentence that says why it does not turn when the browser is the reason.
-    const flat = (next: SurfaceOptions | ScoreOptions): void => {
-      host.innerHTML = `<div class="ky-turn" data-mode="flat"><style>${KYOGIJO_TURN_STYLE}</style>${drawKyogijo(floorOptions(next))}${model.turnable ? `<p class="ky-turn-flat">${esc(turnWords(model).flat)}</p>` : ""}</div>`;
+    const flat = (next: O): void => {
+      host.innerHTML = `<div class="ky-turn" data-mode="flat"><style>${KYOGIJO_TURN_STYLE}</style>${model.flat ?? drawKyogijo(floorOptions(next as SurfaceOptions | ScoreOptions))}${model.turnable ? `<p class="ky-turn-flat">${esc(turnWords(model).flat)}</p>` : ""}</div>`;
     };
     flat(options);
     return {
@@ -86,7 +95,7 @@ export function mountKyogijoTurn(host: HTMLElement, options: SurfaceOptions | Sc
       pause: () => undefined,
       togglePlay: () => false,
       update: (next) => {
-        model = buildTurn(next, settings);
+        model = build(next, settings);
         flat(next);
       },
       svg: () => (alive ? host.querySelector<SVGSVGElement>("svg.kyogijo") : null),
@@ -439,7 +448,7 @@ export function mountKyogijoTurn(host: HTMLElement, options: SurfaceOptions | Sc
     reset: toOpening,
     update(next) {
       if (!alive) return;
-      model = buildTurn(next, { ...settings, preset: undefined, view });
+      model = build(next, { ...settings, preset: undefined, view });
       view = clampView(view);
       opening = openingView(settings, sport());
       const layout = layoutOf(model, shown, stage.clientWidth || 960, stage.clientHeight || 600, settings.lens);

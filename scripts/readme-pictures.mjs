@@ -13,6 +13,7 @@ const READY = '[data-testid="stage"][data-ready="true"] svg.kyogijo';
 const stage = "#felt";
 const READY_HALLS = 'body[data-ready="true"] #stage svg';
 const READY_TURN = '[data-testid="stage"][data-ready="true"] .ky-turn';
+const READY_HALLS_TURN = 'body[data-ready="true"] #stage .ky-turn';
 const address = (query) => `/?lang=en&help=off&${query}`;
 
 /** Wait for the page to be at rest: two frames, so that a picture drawn at the felt's shape has been laid in. */
@@ -64,6 +65,20 @@ await takePictures({
     // Tournament layouts (0.12.0): several surfaces on one floor, to scale, as the demo's halls page draws them (its stage, cropped; the page follows the colour scheme).
     { subject: "multi-tabletennis", views: ["desk"], url: "/halls.html?preset=tabletennis-4", ready: READY_HALLS, target: "#stage" },
     { subject: "multi-judo", views: ["desk"], url: "/halls.html?preset=judo-1x3", ready: READY_HALLS, target: "#stage" },
+    // The same layouts in 3D (0.13.0): the tables on their legs with the nets, the surrounds, the chairs and the scoreboard, zoomed in a little.
+    {
+      subject: "multi-tabletennis-3d",
+      views: ["desk"],
+      url: "/halls.html?preset=tabletennis-4&view=3d&viewpoint=corner",
+      ready: READY_HALLS_TURN,
+      target: "#stage",
+      prepare: async (page) => {
+        await page.locator("#stage .ky-turn-view").focus();
+        for (let i = 0; i < 4; i += 1) await page.keyboard.press("+");
+        await settle(page);
+        await page.locator("#stage .ky-turn-view").blur();
+      },
+    },
     // The strips for a list of games, on midnight. They are a list and not a surface, so the background is laid behind the list itself, by the same module and in the same way as behind the felt.
     {
       subject: "badges",

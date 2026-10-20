@@ -1259,6 +1259,8 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `turn.parts.banner` | banner | 垂れ幕 |
 | `turn.parts.shrine` | shrine | 神棚 |
 | `turn.parts.mat-edge` | mat thickness | 畳の厚み |
+| `turn.parts.surrounds` | surrounds | 競技エリアのフェンス |
+| `turn.parts.officials` | umpires' chairs and score tables | 審判席と記録台 |
 | `rules.defensive-zone` | Defensive zone | ディフェンディングゾーン |
 | `rules.neutral-zone` | Neutral zone | ニュートラルゾーン |
 | `rules.offensive-zone` | Offensive zone | アタッキングゾーン |
