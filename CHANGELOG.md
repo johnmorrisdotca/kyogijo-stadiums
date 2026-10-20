@@ -7,6 +7,8 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.26.0] - 2026-10-20
+
 ### Added
 
 - **The fly-through** (`mountFlythrough`, [the fly-through](./docs/flythrough.md), entry `@johnmorrisdotca/kyogijo-stadiums/flythrough`): one smooth camera from a map to a real arena. It starts on a map drawn with chizu (handed over as `start: { map, draw, project }`, so the package keeps no dependency; a plain graticule without one), falls to the city and to the building of the arena as OpenStreetMap maps it, and the building rises into the 3D arena, which tips to the sport's main camera and turns. `mountFlythrough(host, { arena, start?, stages?, language?, theme? }, settings?)` gives back `play`, `pause`, `toggle`, `next`, `back`, `goTo(stage)`, `seek(seconds)`, `camera()` and `destroy`. This first release ends on the turning arena; into the bowl, down to the rink and a game on it are the next ones.
