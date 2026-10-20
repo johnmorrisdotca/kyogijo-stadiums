@@ -4,6 +4,7 @@ export type { Flythrough, FlythroughOptions, FlythroughSettings, FlythroughStart
 export { CHANNELS, PACE, RAMP, STAGE_IDS, cameraAt, flightPlan, foldTime, glide, glideSeconds, mainView, mapBox, mapFrame, monotoneSlopes, nextRate, stageAt, startOf, stagesOf } from "./flythrough.path.ts";
 export type { Camera, Channel, Flight, FlightInput, Keyframe, MapFrame, StageId } from "./flythrough.path.ts";
 export { flythroughMarkup, graticuleMarkup, mapMarkup } from "./flythrough.markup.ts";
+export { ILLUSTRATIVE_PLAY, PLAY_LOOK, PLAY_PERIOD, PLAY_SECONDS, PLAY_STILL, playAlpha, playMarkup, playMoment } from "./flythrough.game.ts";
 export { FLYTHROUGH_STYLE } from "./flythrough.style.ts";
 export { FLYTHROUGH_WORDS } from "./flythrough.words.ts";
 export type { FlythroughWords } from "./flythrough.words.ts";

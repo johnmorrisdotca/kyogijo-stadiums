@@ -1,8 +1,8 @@
 # The fly-through
 
-One smooth camera from a map to a real arena and into its bowl. It starts on a map drawn with [chizu](https://github.com/johnmorrisdotca/chizu), falls to the city and to the building of an arena as OpenStreetMap maps it, and the building rises into the [3D arena](./turn.md), which turns. Then the roof lifts away, the camera comes in over the stands and down to the ice, and settles at a seat's viewpoint, from where the rink turns. `@johnmorrisdotca/kyogijo-stadiums/flythrough` has one function for a page, `mountFlythrough`, and the plain path it flies, which can be worked out and tested in Node.
+One smooth camera from a map to a real arena, into its bowl and onto a game. It starts on a map drawn with [chizu](https://github.com/johnmorrisdotca/chizu), falls to the city and to the building of an arena as OpenStreetMap maps it, and the building rises into the [3D arena](./turn.md), which turns. Then the roof lifts away, the camera comes in over the stands and down to the ice, and settles at a seat's viewpoint, from where the rink turns, and a short play comes onto the ice: skaters and a puck, moving. `@johnmorrisdotca/kyogijo-stadiums/flythrough` has one function for a page, `mountFlythrough`, and the plain path it flies, which can be worked out and tested in Node.
 
-The arena is one of the [real venues](./venues.md) (so far the sixteen of the NHL's Pacific and Central Divisions). No team's or league's mark is drawn: the map is land and sea, the building is an outline, and the arena is the same plausible bowl as the venues page's, never a seat map. The seat's viewpoint is a place and a height of our own choosing, not a real seat's. A later release puts a game on the rink.
+The arena is one of the [real venues](./venues.md) (so far the sixteen of the NHL's Pacific and Central Divisions). No team's or league's mark is drawn: the map is land and sea, the building is an outline, and the arena is the same plausible bowl as the venues page's, never a seat map. The seat's viewpoint is a place and a height of our own choosing, not a real seat's, and the play is made up for the picture (a replay's own timeline, see [the game](#the-game)): it says so on the screen and in its words, and it is no real game's data.
 
 The demo's [fly-through page](https://johnmorrisdotca.github.io/kyogijo-stadiums/flythrough.html) flies each of the sixteen; `flythrough.html?arena=honda-center` opens it on one (`lang=ja`, `theme=dark`, `map=plain` and `stages=city,arena` are in the address too).
 
@@ -28,7 +28,7 @@ trip.pause();
 | --- | --- |
 | `arena` | The arena's key in `ARENAS`, one of the venues. |
 | `start` | The map to start on: `{ map, draw, project, span?, centre? }`. See [the map](#the-map). Without one the start is a plain graticule. |
-| `stages` | Which stages to fly, in the order of the path: `map`, `city`, `arena`, `bowl`, `rink`; all by default. A stage left out keeps its seconds, and the camera crosses them in one smooth run, so a list of `["city", "arena"]` starts at the city. |
+| `stages` | Which stages to fly, in the order of the path: `map`, `city`, `arena`, `bowl`, `rink`, `game`; all by default. A stage left out keeps its seconds, and the camera crosses them in one smooth run, so a list of `["city", "arena"]` starts at the city. |
 | `language` | `en` (the default) or `ja`. |
 | `theme` | `light` or `dark`; without one the device's setting decides. |
 
@@ -51,13 +51,14 @@ The handle: `play()`, `pause()`, `toggle()`, `next()`, `back()`, `goTo(stage)` (
 | `city` | The map has given way to the building's plan, from OpenStreetMap, on a plain ground with a grid, the map having turned to the venue's own orientation. The camera comes in until the plan is as large as the arena will be. | 6.6 s |
 | `arena` | The arena rises out of the plan, tips from straight above to the sport's main camera and turns, at 12 degrees a second, with its roof on. | 10.6 s |
 | `bowl` | The camera comes in over the stands as the roof dissolves away, tipping lower, nearer, and through a shorter lens as it goes: a plausible bowl of the venue's seats in its tiers, and the walls nearest the eye give way as the 3D view's own rule has them. | 17.3 s |
-| `rink` | The camera has settled at a seat's viewpoint, inside the bowl, looking across the ice at the stands opposite, and the rink turns for as long as it is left, at 8 degrees a second. | 21.7 s |
+| `rink` | The camera has settled at a seat's viewpoint, inside the bowl, looking across the ice at the stands opposite, and the rink turns, at 8 degrees a second. | 21.7 s |
+| `game` | The play comes onto the ice (it fades in over a moment), with a label that says it is illustrative: six a side as dots with their shirt numbers, the puck and its trail, the passes, the shot and the goal. It runs for ten seconds, holds for one and a half, fades out and starts again, for as long as it is left, and the rink goes on turning. | 23.7 s |
 
 The controls are Back, Play or Pause, Next, and a button for each stage. Space plays and pauses, the arrow keys go back and forward a stage, the number keys choose one and Home starts again. Back, as a media player's, goes to the start of the stage once the stage has run a moment, and from its start to the stage before. A skip is not a cut: the clock glides to the stage's start along the path, quickly (under two seconds), so that the camera still never jumps.
 
 ## One path, no jumps
 
-The camera is twelve numbers: how far in it is (the metres the stage's width shows, as a logarithm), where the arena stands on the screen, how far the map is turned, how much of the map, the plan, the 3D arena and its roof shows, and the 3D view's turn, tip, zoom and lens. The path is a short list of keyframes, and each number runs through them as a monotone cubic (Fritsch and Carlson). That makes it smooth where it passes a keyframe (its speed does not jump), still at its first keyframe, and never an overshoot between two: a layer's share stays between none and all. The turn carries on at the speed the path ends with, so the end is not a stop. It slows from 12 degrees a second for the arena to 8 for the rink, never stopping or reversing, and the path's last stage keeps turning for ever.
+The camera is thirteen numbers: how far in it is (the metres the stage's width shows, as a logarithm), where the arena stands on the screen, how far the map is turned, how much of the map, the plan, the 3D arena, its roof and the play shows, and the 3D view's turn, tip, zoom and lens. The path is a short list of keyframes, and each number runs through them as a monotone cubic (Fritsch and Carlson). That makes it smooth where it passes a keyframe (its speed does not jump), still at its first keyframe, and never an overshoot between two: a layer's share stays between none and all. The turn carries on at the speed the path ends with, so the end is not a stop. It slows from 12 degrees a second for the arena to 8 for the rink, never stopping or reversing, and the path's last stage keeps turning for ever.
 
 The three layers are one picture of one place at one scale:
 
@@ -72,12 +73,20 @@ import { cameraAt, flightPlan } from "@johnmorrisdotca/kyogijo-stadiums/flythrou
 
 const flight = flightPlan({ north: 0, siteSpan: 400 });
 console.log(flight.stages.map((stage) => `${stage.id} ${stage.start.toFixed(1)}`).join(", "));
-// map 0.0, city 6.6, arena 10.6, bowl 17.3, rink 21.7
+// map 0.0, city 6.6, arena 10.6, bowl 17.3, rink 21.7, game 23.7
 console.log(cameraAt(flight, 0).map, cameraAt(flight, flight.end).arena);
 // 1 1
 ```
 
 The tests walk it frame by frame, at 60 frames a second, for every list of stages: no number changes by more than a small step from one frame to the next, nor changes its speed with a jump; every stage is reachable and the stages come in order; and in a browser the plan and the arena, the pin and the scale bar are checked on the screen at 30 frames a second, with the plan and the arena's floor the same size where they hand over.
+
+## The game
+
+The play is `ILLUSTRATIVE_PLAY`, a [replay](./replay.md) timeline in the surface's own feet: 101 frames a tenth of a second apart, six a side (five skaters and a goalie, who are only shirt numbers: no name, no team, no league, no real player or play), a puck, two passes, a shot and a goal. The home team carries it up the ice to the right and scores. The dots, their numbers, the puck's trail and the events' marks are drawn by the replay's own layers (`replayLayers` through `renderLayers`), so the play looks as the [replay](./replay.md) does; `playMarkup(moment, { id })` is a moment of it as the layers' SVG, pure and the same every time, and `playAlpha(moment)` how much of it shows (it fades at the ends of a run, so that the dots never jump back in view).
+
+The dots are drawn on a plane that lies on the floor of the 3D arena: the plane takes the floor's own transform after each paint, and stands in the same layer of the stack as the floor, above it and under everything that stands up, so the glass, the boards and the stands in front of the ice hide the play as they hide the ice. Its moment is worked out from the seconds the clock has run, not from the folded time of the turn, so the play does not jump when the turn comes round. A reader who prefers reduced motion gets the moment after the shot, as a still.
+
+The play is the only thing in the fly-through that is not a fact or an inference from one, which is why it is labelled on the screen (`Illustrative play`), in the stage's words and here. A page that wants a real play uses [the replay](./replay.md) itself with its own tracking data.
 
 ## The map
 
@@ -89,7 +98,7 @@ The world map is Natural Earth's 1:110 million, so a coast is coarse at the city
 
 ## Reduced motion
 
-A reader who prefers reduced motion (or a page that sets `motion: "none"`) gets each stage as a still picture, not a flight: the map, the plan, the arena at the main camera, the bowl with the roof lifted away and the rink from the seat, with nothing half-faded and nothing turning. Next, Back, the stage buttons and the keys show the next still at once, Play steps to the next one every five seconds and stops at the last, and a sentence under the buttons says why. A change of the setting while the page is open takes effect at once.
+A reader who prefers reduced motion (or a page that sets `motion: "none"`) gets each stage as a still picture, not a flight: the map, the plan, the arena at the main camera, the bowl with the roof lifted away, the rink from the seat and the play on the ice a moment after the shot, with nothing half-faded and nothing turning. Next, Back, the stage buttons and the keys show the next still at once, Play steps to the next one every five seconds and stops at the last, and a sentence under the buttons says why. A change of the setting while the page is open takes effect at once.
 
 ## Light, dark, phone and desk
 
@@ -105,4 +114,4 @@ The building's outline is OpenStreetMap's, ODbL 1.0, `(c) OpenStreetMap contribu
 
 ## What it does not do yet
 
-A game with moving players on the rink is the next release. The seat's viewpoint is one view for every arena (a pitch, a zoom and a lens), not a place worked out from each building's seats, and the walls nearest the eye are cut away by the 3D view's own rule, so the stands in front of the eye are not drawn. Only the venues of the package can be flown to, which are NHL arenas so far, and the city is a plain ground with a grid: there is no street map.
+The play is one made-up sequence for every arena, not a real game and not worked out for each building. The seat's viewpoint is one view for every arena (a pitch, a zoom and a lens), not a place worked out from each building's seats, and the walls nearest the eye are cut away by the 3D view's own rule, so the stands in front of the eye are not drawn. Where the browser cannot draw the 3D view the arena is the flat drawing and the play is not drawn. Only the venues of the package can be flown to, which are NHL arenas so far, and the city is a plain ground with a grid: there is no street map.

@@ -34,6 +34,9 @@ export const FLYTHROUGH_STYLE = `.kf{${LIGHT};color:var(--kf-ink);font:16px/1.45
 .kf-caption{position:absolute;right:12px;top:12px;max-width:min(26rem,calc(100% - 24px));padding:8px 12px;border-radius:10px;background:var(--kf-panel);color:var(--kf-ink);pointer-events:none}
 .kf-title{display:block;font-weight:800}
 .kf-text{display:block;font-size:.92rem;color:var(--kf-muted)}
+.kf-badge{position:absolute;left:12px;top:12px;padding:3px 10px;border-radius:999px;background:var(--kf-panel);border:1px solid var(--kf-line);font-size:.8rem;font-weight:700;color:var(--kf-ink);pointer-events:none;opacity:0;visibility:hidden}
+.kf-game{position:absolute;left:0;top:0;transform-origin:0 0;pointer-events:none;z-index:1}
+.kf-game svg{display:block;width:100%;height:100%;overflow:visible}
 .kf-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0 0}
 .kf-group{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
 .kf button{font:inherit;font-size:1rem;font-weight:700;min-height:44px;min-width:44px;padding:0 14px;border-radius:12px;border:2px solid var(--kf-ink);background:var(--kf-button);color:var(--kf-ink);cursor:pointer}

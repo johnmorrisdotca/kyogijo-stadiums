@@ -272,6 +272,7 @@ src/
 ├── venues-entry.ts     the venues' entry
 ├── venue.real.ts       a real venue's walls and roof, raised in 3D
 ├── flythrough.path.ts  the fly-through's camera as plain numbers: the keyframes, the monotone cubic through them, the stages, the clock, the map's frame and the scale bar
+├── flythrough.game.ts  the fly-through's play on the ice, made up for the picture: a replay's timeline of five skaters and a goalie a side and a puck, and the layers' markup of a moment
 ├── flythrough.markup.ts the fly-through as markup: the stage and its three layers, the controls and the credit, and the map as a layer
 ├── flythrough.style.ts the fly-through's colours, light and dark, and its rules
 ├── flythrough.words.ts the fly-through's words, in English and Japanese

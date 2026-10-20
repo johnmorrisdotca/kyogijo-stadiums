@@ -32,9 +32,9 @@ import { FLYTHROUGH_STYLE } from "./flythrough.style.ts";
 
 const FRAME = 1 / 60;
 /** The most a channel may change in one frame at 60 a second, in its own units. The path's own is a good deal less than these. */
-const STEP: Record<Channel, number> = { logSpan: 0.05, ax: 0.01, ay: 0.01, north: 1.2, map: 0.05, site: 0.05, arena: 0.05, yaw: 0.4, pitch: 0.8, logZoom: 0.01, logLens: 0.03, roof: 0.05 };
+const STEP: Record<Channel, number> = { logSpan: 0.05, ax: 0.01, ay: 0.01, north: 1.2, map: 0.05, site: 0.05, arena: 0.05, yaw: 0.4, pitch: 0.8, logZoom: 0.01, logLens: 0.03, roof: 0.05, game: 0.05 };
 /** The most the change itself may change from one frame to the next: no jump of speed. */
-const BEND: Record<Channel, number> = { logSpan: 0.003, ax: 0.002, ay: 0.002, north: 0.05, map: 0.006, site: 0.006, arena: 0.006, yaw: 0.01, pitch: 0.02, logZoom: 0.002, logLens: 0.002, roof: 0.006 };
+const BEND: Record<Channel, number> = { logSpan: 0.003, ax: 0.002, ay: 0.002, north: 0.05, map: 0.006, site: 0.006, arena: 0.006, yaw: 0.01, pitch: 0.02, logZoom: 0.002, logLens: 0.002, roof: 0.006, game: 0.006 };
 
 /** Every frame of a path at 60 a second, from the start to `after` seconds past its end. */
 function frames(flight: Flight, after = 40): Camera[] {
@@ -44,6 +44,7 @@ function frames(flight: Flight, after = 40): Camera[] {
 }
 
 const SUBSETS: StageId[][] = [
+  ["map", "city", "arena", "bowl", "rink", "game"],
   ["map", "city", "arena", "bowl", "rink"],
   ["map", "city", "arena"],
   ["map", "city"],
@@ -53,6 +54,10 @@ const SUBSETS: StageId[][] = [
   ["map", "bowl"],
   ["city", "rink"],
   ["bowl", "rink"],
+  ["rink", "game"],
+  ["map", "game"],
+  ["bowl", "game"],
+  ["game"],
   ["map"],
   ["city"],
   ["arena"],
@@ -64,12 +69,12 @@ const input = (stages?: StageId[]) => ({ north: 90, siteSpan: 420, anchorStart: 
 describe("the fly-through's path", () => {
   it("flies the stages in order, from the map to the turning arena, and says when each starts", () => {
     const flight = flightPlan(input());
-    expect(stagesOf(flight)).toEqual(["map", "city", "arena", "bowl", "rink"]);
+    expect(stagesOf(flight)).toEqual(["map", "city", "arena", "bowl", "rink", "game"]);
     expect(startOf(flight, "map")).toBe(0);
     const starts = STAGE_IDS.map((id) => startOf(flight, id)!);
     expect(starts).toEqual([...starts].sort((a, b) => a - b));
-    expect(new Set(starts).size).toBe(5);
-    expect(flight.end).toBeGreaterThan(starts[4]);
+    expect(new Set(starts).size).toBe(6);
+    expect(flight.end).toBeGreaterThan(starts[5]);
     // The path ends on the rink turning from the seat, more slowly than the arena turned.
     expect(flight.tail).toBeLessThan(0);
     expect(Math.abs(flight.tail)).toBeLessThan(flight.input.turn);
@@ -78,14 +83,25 @@ describe("the fly-through's path", () => {
   it("never jumps: from frame to frame no channel changes by more than a small step, at 60 frames a second, over the whole path and the turning after it", () => {
     for (const stages of SUBSETS) {
       const all = frames(flightPlan(input(stages)));
-      for (let i = 1; i < all.length; i += 1) for (const channel of CHANNELS) expect(Math.abs(all[i][channel] - all[i - 1][channel]), `${stages.join()} ${channel} at frame ${i}`).toBeLessThanOrEqual(STEP[channel]);
+      // The worst frame of each channel, as a share of what it may change by: one assertion for the path, naming the worst.
+      const worst = { ratio: 0, where: "" };
+      for (let i = 1; i < all.length; i += 1) for (const channel of CHANNELS) {
+        const ratio = Math.abs(all[i][channel] - all[i - 1][channel]) / STEP[channel];
+        if (ratio > worst.ratio) Object.assign(worst, { ratio, where: `${stages.join()} ${channel} at frame ${i}` });
+      }
+      expect(worst.ratio, worst.where).toBeLessThanOrEqual(1);
     }
   });
 
   it("never changes speed with a jump either: the change of each channel changes smoothly, at every keyframe too", () => {
     for (const stages of SUBSETS) {
       const all = frames(flightPlan(input(stages)));
-      for (let i = 2; i < all.length; i += 1) for (const channel of CHANNELS) expect(Math.abs(all[i][channel] - 2 * all[i - 1][channel] + all[i - 2][channel]), `${stages.join()} ${channel} at frame ${i}`).toBeLessThanOrEqual(BEND[channel]);
+      const worst = { ratio: 0, where: "" };
+      for (let i = 2; i < all.length; i += 1) for (const channel of CHANNELS) {
+        const ratio = Math.abs(all[i][channel] - 2 * all[i - 1][channel] + all[i - 2][channel]) / BEND[channel];
+        if (ratio > worst.ratio) Object.assign(worst, { ratio, where: `${stages.join()} ${channel} at frame ${i}` });
+      }
+      expect(worst.ratio, worst.where).toBeLessThanOrEqual(1);
     }
   });
 
@@ -101,7 +117,7 @@ describe("the fly-through's path", () => {
 
   it("keeps every layer's share between none and all, and shows the layers in order: the map, then the plan, then the arena", () => {
     const flight = flightPlan(input());
-    for (const camera of frames(flight, 5)) for (const layer of ["map", "site", "arena", "roof"] as const) {
+    for (const camera of frames(flight, 5)) for (const layer of ["map", "site", "arena", "roof", "game"] as const) {
       expect(camera[layer]).toBeGreaterThanOrEqual(-1e-9);
       expect(camera[layer]).toBeLessThanOrEqual(1 + 1e-9);
     }
@@ -112,6 +128,11 @@ describe("the fly-through's path", () => {
     // The roof is on for the arena turning and lifted away by the time the camera is in the bowl.
     expect(at("arena").roof).toBe(1);
     expect(at("rink").roof).toBe(0);
+    // The play is not on the ice until the game stage, comes onto it there, and stays.
+    for (const id of ["map", "city", "arena", "bowl", "rink", "game"] as const) expect(at(id).game, id).toBe(0);
+    expect(cameraAt(flight, flight.end).game).toBe(1);
+    const entering = frames(flight, 0).filter((camera) => camera.game > 0 && camera.game < 1);
+    expect(entering.length).toBeGreaterThan(20);
     // The map is gone before the arena shows, and the plan is under the arena when the arena is whole.
     for (const camera of frames(flight, 5)) expect(camera.map === 0 || camera.arena === 0).toBe(true);
   });
@@ -195,6 +216,9 @@ describe("the fly-through's path", () => {
     expect(flight.rest.arena).toMatchObject({ arena: 1, yaw: mainView("nhl").yaw, pitch: mainView("nhl").pitch, roof: 1 });
     // The bowl is seen with the roof lifted away and the rink from the seat, nearer and through a shorter lens, each still and whole.
     expect(flight.rest.bowl.roof).toBe(0);
+    // The play is on the ice in the game's still only.
+    expect(flight.rest.game.game).toBe(1);
+    for (const id of ["map", "city", "arena", "bowl", "rink"] as const) expect(flight.rest[id].game, id).toBe(0);
     expect(flight.rest.rink).toMatchObject({ roof: 0, pitch: 77 });
     expect(Math.exp(flight.rest.rink.logZoom)).toBeCloseTo(2.8, 9);
     expect(Math.exp(flight.rest.rink.logLens)).toBeCloseTo(1, 9);
@@ -429,7 +453,7 @@ describe("the markup", () => {
         expect(said.text).not.toContain("{");
         // The words say what is seen: the arena where it is the subject, the seats and the tiers where the bowl is.
         if (id === "bowl") expect(said.text).toContain("17,174");
-        else if (id !== "rink") expect(said.text).toContain("Honda Center");
+        else if (id !== "rink" && id !== "game") expect(said.text).toContain("Honda Center");
       }
       expect(ja.stage[id].name).toMatch(/[぀-ヿ一-鿿]/);
       expect(ja.stage[id].text).toMatch(/[぀-ヿ一-鿿]/);

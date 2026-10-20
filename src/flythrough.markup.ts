@@ -106,6 +106,7 @@ export function flythroughMarkup(input: MarkupInput): string {
     `<div class="kf-layer kf-3d" inert></div>` +
     `<div class="kf-pin" aria-hidden="true"></div>` +
     `<div class="kf-scale" aria-hidden="true"><span class="kf-scale-bar"></span><span class="kf-scale-text"></span></div>` +
+    `<div class="kf-badge" aria-hidden="true">${esc(words.illustrative)}</div>` +
     `<div class="kf-caption" aria-hidden="true"><span class="kf-title">${esc(intro.name)}</span><span class="kf-text">${esc(intro.text)}</span></div>` +
     `</div>` +
     `<p class="kf-help" id="${esc(input.id)}-help">${esc(words.keys)}</p>` +

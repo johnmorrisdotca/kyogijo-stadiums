@@ -7,6 +7,13 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **The fly-through ends on a game** (`game`, the sixth stage, after `rink`): a short play comes onto the ice while the rink goes on turning from the seat, with a label on the picture that says `Illustrative play`. It is a [replay](./docs/replay.md) timeline of the package's own (`ILLUSTRATIVE_PLAY`, entry `@johnmorrisdotca/kyogijo-stadiums/flythrough`): 101 frames a tenth of a second apart, five skaters and a goalie a side (shirt numbers only, no name, team or league), a puck, two passes, a shot and a goal, and the dots, numbers, trail and events are drawn by the replay's own layers (`replayLayers` through `renderLayers`). It is made up for the picture and says so on the screen, in the stage's words (English and Japanese) and in the docs; it is no real game's data.
+- **The play lies on the floor of the 3D arena**: a plane that takes the floor's own transform after each paint and stands in the floor's layer of the stack, so the glass, the boards and the stands in front of the ice hide it as they hide the ice. It runs ten seconds, holds one and a half, fades out and starts again (the dots never jump back in view); its moment is worked out from the clock and not from the turn's folded time, so it does not jump when the turn comes round. A reader who prefers reduced motion gets the moment after the shot as a still.
+- **The camera has one more channel** (`game`, how much of the play shows), still one path with no jumps; `playMarkup(moment, { id })`, `playAlpha`, `playMoment` and `PLAY_LOOK` are the rest of the play's API, pure and the same every time. `cameraAt` is a good deal faster (the path's tables are made once).
+- Tests for the play (thirteen objects a frame, all on the ice, no skater faster than 40 feet a second and none that jumps, the puck on the stick of whoever has it, the events in order, the same markup for the same moment, no label of a team or a league, said to be made up in both languages) and, in a real browser, that the play is on the ice from the game stage on only, lies where the floor lies at every frame, and its dots move.
+
 ## [0.29.0] - 2026-10-20
 
 ### Added

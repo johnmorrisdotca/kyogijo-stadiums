@@ -104,7 +104,7 @@ const atlas = all[names.indexOf(${JSON.stringify(`${pkg.name}/atlas`)})];
 if (atlas.PLACES.length !== 330 || atlas.placesBy({ sport: "baseball", country: "JP" }).length !== 20 || atlas.placeById("fenway-park").lat !== 42.34639) throw new Error("the atlas is wrong");
 const flythrough = all[names.indexOf(${JSON.stringify(`${pkg.name}/flythrough`)})];
 const trip = flythrough.flightPlan({ north: 0, siteSpan: 400 });
-if (flythrough.stagesOf(trip).join() !== "map,city,arena,bowl,rink" || flythrough.cameraAt(trip, 0).map !== 1 || typeof flythrough.mountFlythrough !== "function") throw new Error("the fly-through is wrong");
+if (flythrough.stagesOf(trip).join() !== "map,city,arena,bowl,rink,game" || flythrough.cameraAt(trip, 0).map !== 1 || typeof flythrough.mountFlythrough !== "function") throw new Error("the fly-through is wrong");
 const entry = (name) => all[names.indexOf(${JSON.stringify(pkg.name + "/")} + name)];
 const athletics = entry("athletics");
 if (typeof athletics.laneDraw !== "function" || athletics.WA_STANDARD_TRACK.straight !== 84.39 || athletics.RACE_IDS.length !== 20) throw new Error("the athletics entry is wrong");

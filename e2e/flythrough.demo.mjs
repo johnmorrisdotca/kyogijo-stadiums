@@ -32,7 +32,7 @@ test("opens on the map for a reader who prefers reduced motion, as a still, with
   const root = page.locator(`${TRIP} .kf`);
   await expect(root).toHaveAttribute("data-mode", "stages");
   await expect(root).toHaveAttribute("data-stage", "map");
-  await expect(page.locator(`${TRIP} button[data-stage]`)).toHaveText(["1. Map", "2. City", "3. Arena", "4. Bowl", "5. Rink"]);
+  await expect(page.locator(`${TRIP} button[data-stage]`)).toHaveText(["1. Map", "2. City", "3. Arena", "4. Bowl", "5. Rink", "6. Game"]);
   await expect(page.locator(`${TRIP} button[data-stage="map"]`)).toHaveAttribute("aria-current", "step");
   await expect(page.locator(`${TRIP} .kf-still`)).toContainText("reduce motion");
   await expect(page.locator(`${TRIP} .kf-credit`)).toContainText("(c) OpenStreetMap contributors, ODbL 1.0");
@@ -67,7 +67,7 @@ test("steps from stage to stage with the buttons and the keys, each a still: the
   expect((await box(page, `${TRIP} .kf-site`)).shown).toBe(false);
   await expect(page.locator(`${TRIP} .kf-3d .ky-turn[data-mode="3d"]`)).toHaveCount(1);
   await expect(page.locator(`${TRIP} .kf-3d .ky-turn`)).toHaveAttribute("data-preset", "broadcast");
-  await expect(page.locator(`${TRIP} .kf-live`)).toContainText("Stage 3 of 5: Arena.");
+  await expect(page.locator(`${TRIP} .kf-live`)).toContainText("Stage 3 of 6: Arena.");
   // Into the bowl with the roof lifted away, then the rink from the seat, through a shorter lens and nearer.
   await page.keyboard.press("ArrowRight");
   await expect(root).toHaveAttribute("data-stage", "bowl");
@@ -82,11 +82,29 @@ test("steps from stage to stage with the buttons and the keys, each a still: the
   expect(seat.logLens).toBeLessThan(bowl.logLens);
   expect(seat.logZoom).toBeGreaterThan(bowl.logZoom);
   expect(seat.pitch).toBeGreaterThan(bowl.pitch);
-  await expect(page.locator(`${TRIP} .kf-live`)).toContainText("Stage 5 of 5: Rink.");
+  await expect(page.locator(`${TRIP} .kf-live`)).toContainText("Stage 5 of 6: Rink.");
+  expect((await box(page, `${TRIP} .kf-game`)).shown).toBe(false);
+  // The game: a play made up for the picture, said to be, on the ice: the dots with their numbers, the puck, and the label.
+  await page.keyboard.press("ArrowRight");
+  await expect(root).toHaveAttribute("data-stage", "game");
+  await expect(page.locator(`${TRIP} .kf-caption`)).toContainText("illustrative, not a real game's data");
+  expect((await box(page, `${TRIP} .kf-game`)).shown).toBe(true);
+  await expect(page.locator(`${TRIP} .kf-badge`)).toBeVisible();
+  await expect(page.locator(`${TRIP} .kf-badge`)).toHaveText("Illustrative play");
+  await expect(page.locator(`${TRIP} .kf-game g.ky-layers`)).toHaveCount(1);
+  expect(await page.locator(`${TRIP} .kf-game [id$="replay-players"] > *:not(title):not(desc)`).count()).toBe(12);
+  expect(await page.locator(`${TRIP} .kf-game [id$="replay-numbers"] text`).count()).toBe(12);
+  // It lies on the floor: the same place on the screen as the floor, the same transform.
+  const same = await page.evaluate(() => document.querySelector(".kf-game").style.transform === document.querySelector(".kf-3d .ky-turn-floor").style.transform);
+  expect(same).toBe(true);
+  await expect(page.locator(`${TRIP} .kf-live`)).toContainText("Stage 6 of 6: Game.");
   // The last stage stays: next does nothing, back goes to the stage before, a number key and a stage button go to any.
   await page.locator(`${TRIP} button[data-act="next"]`).click();
-  await expect(root).toHaveAttribute("data-stage", "rink");
+  await expect(root).toHaveAttribute("data-stage", "game");
   await page.locator(`${TRIP} button[data-act="back"]`).click();
+  await expect(root).toHaveAttribute("data-stage", "rink");
+  await page.locator(`${STAGE}`).focus();
+  await page.keyboard.press("4");
   await expect(root).toHaveAttribute("data-stage", "bowl");
   await page.locator(`${STAGE}`).focus();
   await page.keyboard.press("2");
@@ -103,10 +121,10 @@ test("steps from stage to stage with the buttons and the keys, each a still: the
 
 test("plays by stages for a reader who prefers reduced motion: Play steps to the next still on its own, and stops at the last", async ({ page }) => {
   await open(page, "");
-  await page.evaluate(() => { window.flythrough.goTo("bowl"); });
+  await page.evaluate(() => { window.flythrough.goTo("rink"); });
   await page.locator(`${TRIP} button[data-act="play"]`).click();
   await expect(page.locator(`${TRIP} button[data-act="play"]`)).toHaveAttribute("aria-pressed", "true");
-  await expect(page.locator(`${TRIP} .kf`)).toHaveAttribute("data-stage", "rink", { timeout: 9000 });
+  await expect(page.locator(`${TRIP} .kf`)).toHaveAttribute("data-stage", "game", { timeout: 9000 });
   await expect(page.locator(`${TRIP} button[data-act="play"]`)).toHaveAttribute("aria-pressed", "false", { timeout: 7000 });
 });
 
@@ -138,12 +156,12 @@ test("flies for a reader who does not prefer reduced motion: one smooth camera, 
     const out = [];
     for (let t = 0; t <= end + 4; t += 1 / 30) {
       trip.seek(t);
-      out.push({ t, stage: trip.stage, cam: trip.camera(), pin: rect(".kf-pin"), plan: rect(".kf-plan .ky-apron"), floor: rect(".kf-3d .ky-turn-floor svg"), corners: corners(), view: document.querySelector(".kf-3d .ky-turn-view").getBoundingClientRect().width, bar: document.querySelector(".kf-scale-bar").getBoundingClientRect().width, hidden3d: getComputedStyle(document.querySelector(".kf-3d")).visibility });
+      out.push({ t, stage: trip.stage, cam: trip.camera(), pin: rect(".kf-pin"), plan: rect(".kf-plan .ky-apron"), floor: rect(".kf-3d .ky-turn-floor svg"), corners: corners(), gameOn: getComputedStyle(document.querySelector(".kf-game")).visibility === "visible", gameLies: document.querySelector(".kf-game").style.transform === document.querySelector(".kf-3d .ky-turn-floor").style.transform, dots: [...document.querySelectorAll('.kf-game [id$="replay-players"] > *:not(title):not(desc)')].map((el) => el.getAttribute("transform") ?? el.getAttribute("cx") ?? ""), view: document.querySelector(".kf-3d .ky-turn-view").getBoundingClientRect().width, bar: document.querySelector(".kf-scale-bar").getBoundingClientRect().width, hidden3d: getComputedStyle(document.querySelector(".kf-3d")).visibility });
     }
     return out;
   }, { end });
   const stages = trace.map((f) => f.stage).filter((s, i, all) => all.indexOf(s) === i);
-  expect(stages).toEqual(["map", "city", "arena", "bowl", "rink"]);
+  expect(stages).toEqual(["map", "city", "arena", "bowl", "rink", "game"]);
   for (let i = 1; i < trace.length; i += 1) {
     const [a, b] = [trace[i - 1], trace[i]];
     // The pin stays where the arena is, within a few pixels a frame; the plan and the 3D floor change size by a few percent a frame, and their middles move little.
@@ -172,6 +190,13 @@ test("flies for a reader who does not prefer reduced motion: one smooth camera, 
   expect(Math.abs(hand.plan.w / hand.floor.w - 1)).toBeLessThan(0.015);
   expect(Math.abs(hand.plan.cx - hand.floor.cx)).toBeLessThan(3);
   expect(Math.abs(hand.plan.cy - hand.floor.cy)).toBeLessThan(3);
+  // The play is on the ice from the game stage on, lies where the floor lies at every frame, and its dots move.
+  const played = trace.filter((f) => f.gameOn);
+  expect(played.length).toBeGreaterThan(30);
+  expect(played.every((f) => f.stage === "game")).toBe(true);
+  expect(played.every((f) => f.gameLies)).toBe(true);
+  expect(trace.filter((f) => f.stage !== "game").every((f) => !f.gameOn)).toBe(true);
+  expect(new Set(played.map((f) => f.dots.join("|"))).size).toBeGreaterThan(20);
   // The rink turns for ever after the end: the turn goes on, and the camera does nothing else.
   const [x, y] = [trace[trace.length - 30].cam, trace[trace.length - 1].cam];
   expect(Math.abs(y.yaw - x.yaw)).toBeGreaterThan(5);
@@ -256,7 +281,7 @@ test("draws light and dark, forced or following the device, with the credit and 
 
 test("speaks Japanese with the same stages, and a plain graticule when no map is given", async ({ page }) => {
   const { errors } = await open(page, "?lang=ja&map=plain");
-  await expect(page.locator(`${TRIP} button[data-stage]`)).toHaveText(["1. 地図", "2. 都市", "3. アリーナ", "4. 客席", "5. リンク"]);
+  await expect(page.locator(`${TRIP} button[data-stage]`)).toHaveText(["1. 地図", "2. 都市", "3. アリーナ", "4. 客席", "5. リンク", "6. 試合"]);
   await expect(page.locator(`${TRIP} .kf-credit`)).toContainText("OpenStreetMap contributors");
   await expect(page.locator(`${TRIP} .kf-credit`)).not.toContainText("Natural Earth");
   await expect(page.locator(`${TRIP} .kf-caption`)).toContainText("にあります");

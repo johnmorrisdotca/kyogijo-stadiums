@@ -26,6 +26,7 @@ import {
   type StageId,
 } from "./flythrough.path.ts";
 import { flythroughMarkup, graticuleMarkup, gridPath, mapMarkup, stageWords } from "./flythrough.markup.ts";
+import { PLAY_STILL, playAlpha, playMarkup, playMoment } from "./flythrough.game.ts";
 import { FLYTHROUGH_WORDS, say } from "./flythrough.words.ts";
 import { LENS } from "./turn.camera.ts";
 import { mountKyogijoTurn, type KyogijoTurn } from "./turn.dom.ts";
@@ -180,6 +181,7 @@ export function mountFlythrough<M extends { width: number; height: number }>(hos
   const scaleBar = root.querySelector<HTMLElement>(".kf-scale-bar")!;
   const scaleText = root.querySelector<HTMLElement>(".kf-scale-text")!;
   const caption = root.querySelector<HTMLElement>(".kf-caption")!;
+  const badge = root.querySelector<HTMLElement>(".kf-badge")!;
   const live = root.querySelector<HTMLElement>(".kf-live")!;
   const media = win?.matchMedia?.("(prefers-reduced-motion: reduce)");
   const calm = (): boolean => settings.motion === "none" || (settings.motion !== "smooth" && media?.matches === true);
@@ -189,8 +191,25 @@ export function mountFlythrough<M extends { width: number; height: number }>(hos
   let turn: KyogijoTurn | undefined;
   // The settings object is kept: the view reads its `lens` at every paint, and the path shortens the lens as the camera comes into the bowl.
   const turnSettings: TurnSettings = { preset: "overhead", controls: false, venue: { roof: true }, motion: "none", id: `${id}-turn`, lens: LENS };
-  if (stageList.some((one) => one === "arena" || one === "bowl" || one === "rink")) turn = mountKyogijoTurn(turnHost, drawing, turnSettings);
+  if (stageList.some((one) => one === "arena" || one === "bowl" || one === "rink" || one === "game")) turn = mountKyogijoTurn(turnHost, drawing, turnSettings);
 
+  // ---- The game: a plane that lies on the floor of the 3D arena, with the play's dots drawn on it by the replay's own layers. It takes the floor's own transform after every paint, and stands in the same layer of the stack
+  // as the floor, above it and under everything that stands up (the glass, the boards, the stands), so that what is in front of the ice hides the play as it hides the ice. ----
+  let gameEl: HTMLElement | undefined;
+  let gameLayers: Element | null = null;
+  let floorEl: HTMLElement | null = null;
+  if (turn?.mode === "3d" && stageList.includes("game")) {
+    const world = turnHost.querySelector<HTMLElement>(".ky-turn-world");
+    floorEl = world?.querySelector<HTMLElement>(".ky-turn-floor") ?? null;
+    const box = turn.svg()?.getAttribute("viewBox");
+    if (world !== null && floorEl !== null && box !== null && box !== undefined) {
+      gameEl = doc.createElement("div");
+      gameEl.className = "kf-game";
+      gameEl.innerHTML = `<svg class="kyogijo ky-nhl" data-sport="nhl" xmlns="http://www.w3.org/2000/svg" viewBox="${box}" aria-hidden="true" focusable="false"${options.theme === undefined ? "" : ` data-theme="${options.theme}"`}><g class="kf-game-layers"></g></svg>`;
+      floorEl.after(gameEl);
+      gameLayers = gameEl.querySelector("g.kf-game-layers");
+    }
+  }
   // ---- The site plan: the building's outline and the rink, in the drawing's own feet; the sheet under it is the floor's. ----
   const plan = planVenue(venue);
   const rink = venueRink(venue);
@@ -264,8 +283,8 @@ export function mountFlythrough<M extends { width: number; height: number }>(hos
   };
   const num = (value: number, places = 2): string => String(Math.round(value * 10 ** places) / 10 ** places);
 
-  /** Put a camera on the screen. */
-  const render = (cam: Camera): void => {
+  /** Put a camera on the screen; `clockAt` is the seconds the clock has run, from which the play's moment is worked out. */
+  const render = (cam: Camera, clockAt: number): void => {
     current = cam;
     const W = width;
     const H = height;
@@ -316,6 +335,27 @@ export function mountFlythrough<M extends { width: number; height: number }>(hos
       }
     }
 
+    // The play on the ice, drawn again a thirtieth of a second at a time, and the label that says it is made up.
+    const gameAt = startOf(flight, "game");
+    const gameShown = cam.game > 0.003 && live3d && gameEl !== undefined && floorEl !== null && gameAt !== undefined;
+    if (gameEl !== undefined) put("game", gameEl, "visibility", gameShown ? "visible" : "hidden");
+    put("badge", badge, "visibility", gameShown ? "visible" : "hidden");
+    if (gameShown && gameEl !== undefined && floorEl !== null && gameAt !== undefined) {
+      const moment = playMoment(clockAt - gameAt);
+      const alpha = cam.game * playAlpha(moment);
+      put("game", gameEl, "opacity", num(alpha, 3));
+      put("badge", badge, "opacity", num(alpha, 3));
+      put("game", gameEl, "width", floorEl.style.width);
+      put("game", gameEl, "height", floorEl.style.height);
+      // The 3D view has just been painted: the plane takes the floor's place.
+      gameEl.style.transform = floorEl.style.transform;
+      const frame = String(Math.round(moment * 30));
+      if (written["game:frame"] !== frame && gameLayers !== null) {
+        written["game:frame"] = frame;
+        gameLayers.innerHTML = playMarkup(moment, { id: `${id}-play`, language });
+      }
+    }
+
     // The pin, the scale bar (true on the map and the plan, not in perspective) and the stage's words.
     put("pin", pin, "visibility", mapOn ? "visible" : "hidden");
     put("pin", pin, "opacity", num(cam.map, 3));
@@ -349,6 +389,8 @@ export function mountFlythrough<M extends { width: number; height: number }>(hos
 
   // ---- The clock. ----
   let time = 0;
+  /** The seconds the clock has run, not folded back by the turn's period as `time` is: the play's moment is worked out from it, so that the play does not jump when the turn comes round. */
+  let clock = 0;
   let rate = 0;
   let playing = false;
   let journey: { from: number; to: number; elapsed: number; seconds: number } | undefined;
@@ -369,7 +411,7 @@ export function mountFlythrough<M extends { width: number; height: number }>(hos
   const show = (at: number, announce = true): void => {
     time = foldTime(flight, at);
     const cam = cameraAt(flight, time);
-    render(cam);
+    render(cam, clock);
     enter(stageAt(flight, time), announce);
   };
   const stopLoop = (): void => {
@@ -390,10 +432,12 @@ export function mountFlythrough<M extends { width: number; height: number }>(hos
       journey.elapsed += dt;
       const done = journey.elapsed >= journey.seconds;
       time = done ? journey.to : glide(journey.from, journey.to, journey.elapsed, journey.seconds);
+      clock = time;
       if (done) journey = undefined;
     } else {
       rate = nextRate(rate, playing, dt);
       time += rate * dt * speed;
+      clock += rate * dt * speed;
     }
     show(time, true);
     if (busy()) loop();
@@ -417,7 +461,8 @@ export function mountFlythrough<M extends { width: number; height: number }>(hos
   };
   const stillStage = (to: StageId, announce = true): void => {
     time = startOf(flight, to) ?? 0;
-    render(flight.rest[to]);
+    clock = time;
+    render(flight.rest[to], to === "game" ? time + PLAY_STILL : time);
     enter(to, announce);
   };
   const scheduleStill = (): void => {
@@ -577,7 +622,8 @@ export function mountFlythrough<M extends { width: number; height: number }>(hos
       stopLoop();
       journey = undefined;
       rate = 0;
-      show(Math.max(0, seconds), false);
+      clock = Math.max(0, seconds);
+      show(clock, false);
     },
     destroy() {
       if (!alive) return;

@@ -6,20 +6,21 @@
 import { LENS, LONG_PRESETS, presetView } from "./turn.camera.ts";
 
 /** The stages of the fly-through, in order. */
-export type StageId = "map" | "city" | "arena" | "bowl" | "rink";
+export type StageId = "map" | "city" | "arena" | "bowl" | "rink" | "game";
 
 /** The stages that exist, in the order of the path. */
-export const STAGE_IDS: readonly StageId[] = ["map", "city", "arena", "bowl", "rink"];
+export const STAGE_IDS: readonly StageId[] = ["map", "city", "arena", "bowl", "rink", "game"];
 
 /** The channels of the camera. */
-export const CHANNELS = ["logSpan", "ax", "ay", "north", "map", "site", "arena", "yaw", "pitch", "logZoom", "logLens", "roof"] as const;
+export const CHANNELS = ["logSpan", "ax", "ay", "north", "map", "site", "arena", "yaw", "pitch", "logZoom", "logLens", "roof", "game"] as const;
 export type Channel = (typeof CHANNELS)[number];
 
 /**
  * Where the camera is. `logSpan` is the natural logarithm of the metres the container's width shows (so that a zoom is a straight line); `ax` and `ay` are where the arena stands on the screen, as a
  * share of the width and of the height from the middle; `north` is how far the map and the site plan are turned, in degrees clockwise (the rink's long side lies along the page when it reaches the
  * venue's); `map`, `site` and `arena` are how much of the map, of the site plan and of the 3D arena shows (0 to 1); `yaw`, `pitch` and `logZoom` are the 3D view's turn and tip in degrees and the natural logarithm of its zoom;
- * `logLens` is the natural logarithm of the eye's lens, as a multiple of the stage's longer side (a long lens looks from far outside, a short one from inside the bowl) and `roof` is how much of the building's roof shows (0 to 1).
+ * `logLens` is the natural logarithm of the eye's lens, as a multiple of the stage's longer side (a long lens looks from far outside, a short one from inside the bowl), `roof` is how much of the building's roof shows and `game` how much of the
+ * play on the ice shows (each 0 to 1).
  */
 export type Camera = Record<Channel, number>;
 
@@ -114,32 +115,37 @@ function hermite(times: readonly number[], values: readonly number[], slopes: re
   return (2 * s3 - 3 * s2 + 1) * values[i] + (s3 - 2 * s2 + s) * h * slopes[i] + (-2 * s3 + 3 * s2) * values[i + 1] + (s3 - s2) * h * slopes[i + 1];
 }
 
-/** The speeds of every channel at every keyframe, worked out once for a path. */
-const SLOPES = new WeakMap<readonly Keyframe[], Record<Channel, number[]>>();
-function slopesOf(keys: readonly Keyframe[]): Record<Channel, number[]> {
-  const known = SLOPES.get(keys);
+/** The times, the values and the speeds of every channel at every keyframe, worked out once for a path. */
+interface Table {
+  times: number[];
+  values: Record<Channel, number[]>;
+  slopes: Record<Channel, number[]>;
+}
+const TABLES = new WeakMap<readonly Keyframe[], Table>();
+function tableOf(keys: readonly Keyframe[]): Table {
+  const known = TABLES.get(keys);
   if (known !== undefined) return known;
   const times = keys.map((key) => key.t);
-  const made = {} as Record<Channel, number[]>;
+  const values = {} as Record<Channel, number[]>;
+  const slopes = {} as Record<Channel, number[]>;
   for (const channel of CHANNELS) {
-    const slopes = monotoneSlopes(times, keys.map((key) => key.camera[channel]));
+    values[channel] = keys.map((key) => key.camera[channel]);
+    slopes[channel] = monotoneSlopes(times, values[channel]);
     keys.forEach((key, i) => {
       const own = key.slope?.[channel];
-      if (own !== undefined) slopes[i] = own;
+      if (own !== undefined) slopes[channel][i] = own;
     });
-    made[channel] = slopes;
   }
-  SLOPES.set(keys, made);
+  const made = { times, values, slopes };
+  TABLES.set(keys, made);
   return made;
 }
 
 /** The camera at a moment of a path. After the last keyframe the arena goes on turning and nothing else moves. Before the first, the first. */
 export function cameraAt(flight: Flight, time: number): Camera {
-  const { keys } = flight;
-  const slopes = slopesOf(keys);
-  const times = keys.map((key) => key.t);
+  const { times, values, slopes } = tableOf(flight.keys);
   const out = {} as Camera;
-  for (const channel of CHANNELS) out[channel] = hermite(times, keys.map((key) => key.camera[channel]), slopes[channel], time);
+  for (const channel of CHANNELS) out[channel] = hermite(times, values[channel], slopes[channel], time);
   if (time > flight.end) out.yaw += flight.tail * (time - flight.end);
   return out;
 }
@@ -168,7 +174,7 @@ export function foldTime(flight: Flight, time: number): number {
 }
 
 /** The camera's defaults: the map, from far above, with nothing of the arena showing. */
-const BASE: Camera = { logSpan: 0, ax: 0, ay: 0, north: 0, map: 1, site: 0, arena: 0, yaw: 0, pitch: 0, logZoom: 0, logLens: Math.log(LENS), roof: 1 };
+const BASE: Camera = { logSpan: 0, ax: 0, ay: 0, north: 0, map: 1, site: 0, arena: 0, yaw: 0, pitch: 0, logZoom: 0, logLens: Math.log(LENS), roof: 1, game: 0 };
 
 /** The keyframes of each stage in order. Each stage's first key is where it starts (and is the last key of the stage before it, the one that arrives). `dt` is the seconds from the key before. */
 interface Block {
@@ -176,8 +182,8 @@ interface Block {
   keys: { dt: number; camera: Partial<Camera>; slope?: Partial<Camera> }[];
 }
 
-/** How a path is paced: the seconds of each part. `hold` is how long the arena turns, whole, before the camera goes in; `over` and `settle` the two parts of the way into the bowl; `stay` how long a still run of the rink's turn is kept before the end. */
-export const PACE = { dwell: 1.6, step: 1.25, cityDwell: 0.9, approach: 1.6, rise: 0.8, hand: 0.7, tilt: 3.2, hold: 3.5, over: 2.2, settle: 2.2, stay: 2 } as const;
+/** How a path is paced: the seconds of each part. `hold` is how long the arena turns, whole, before the camera goes in; `over` and `settle` the two parts of the way into the bowl; `stay` how long the rink turns bare before the play comes onto it, and `fade` how long the play takes to show. */
+export const PACE = { dwell: 1.6, step: 1.25, cityDwell: 0.9, approach: 1.6, rise: 0.8, hand: 0.7, tilt: 3.2, hold: 3.5, over: 2.2, settle: 2.2, stay: 2, fade: 0.6 } as const;
 
 /**
  * The path from the map to the rink, for the stages asked (all by default): the map holds a moment, then the camera falls to the city in four even steps of the logarithm of the distance (the
@@ -217,7 +223,7 @@ export function flightPlan(input: FlightInput): Flight {
   // Where the turn has got to at each key of the arena, the bowl and the rink: the speed changes from `turn` to `rinkTurn` along the way, and each yaw is the one the two speeds either side of it come to.
   const yaws: number[] = [];
   let yaw = 0;
-  for (const [from, to, seconds] of [[0, turn, PACE.tilt], [turn, turn, PACE.hold], [turn, (turn + rinkTurn) / 2, PACE.over], [(turn + rinkTurn) / 2, rinkTurn, PACE.settle], [rinkTurn, rinkTurn, PACE.stay]] as const) {
+  for (const [from, to, seconds] of [[0, turn, PACE.tilt], [turn, turn, PACE.hold], [turn, (turn + rinkTurn) / 2, PACE.over], [(turn + rinkTurn) / 2, rinkTurn, PACE.settle], [rinkTurn, rinkTurn, PACE.stay], [rinkTurn, rinkTurn, PACE.fade]] as const) {
     yaw -= ((from + to) / 2) * seconds;
     yaws.push(yaw);
   }
@@ -240,9 +246,13 @@ export function flightPlan(input: FlightInput): Flight {
     },
     {
       id: "rink",
+      keys: [{ dt: PACE.settle, camera: { ...near, arena: 1, site: 0, yaw: yaws[3], pitch: seat.pitch, logZoom: ln(seat.zoom), logLens: ln(seat.lens), roof: 0, game: 0 }, slope: { yaw: -rinkTurn } }],
+    },
+    {
+      id: "game",
       keys: [
-        { dt: PACE.settle, camera: { ...near, arena: 1, site: 0, yaw: yaws[3], pitch: seat.pitch, logZoom: ln(seat.zoom), logLens: ln(seat.lens), roof: 0 }, slope: { yaw: -rinkTurn } },
-        { dt: PACE.stay, camera: { ...near, arena: 1, site: 0, yaw: yaws[4], pitch: seat.pitch, logZoom: ln(seat.zoom), logLens: ln(seat.lens), roof: 0 }, slope: { yaw: -rinkTurn } },
+        { dt: PACE.stay, camera: { ...near, arena: 1, site: 0, yaw: yaws[4], pitch: seat.pitch, logZoom: ln(seat.zoom), logLens: ln(seat.lens), roof: 0, game: 0 }, slope: { yaw: -rinkTurn } },
+        { dt: PACE.fade, camera: { ...near, arena: 1, site: 0, yaw: yaws[5], pitch: seat.pitch, logZoom: ln(seat.zoom), logLens: ln(seat.lens), roof: 0, game: 1 }, slope: { yaw: -rinkTurn } },
       ],
     },
   ];
@@ -274,7 +284,8 @@ export function flightPlan(input: FlightInput): Flight {
     city: { ...BASE, ...arrive },
     arena: { ...BASE, ...near, map: 0, site: 0, arena: 1, yaw: view.yaw, pitch: view.pitch, logZoom: 0 },
     bowl: { ...BASE, ...near, map: 0, site: 0, arena: 1, yaw: view.yaw, pitch: lerp(view.pitch, seat.pitch, 0.5), logZoom: ln(seat.zoom) * 0.55, logLens: lerp(ln(LENS), ln(seat.lens), 0.6), roof: 0 },
-    rink: { ...BASE, ...near, map: 0, site: 0, arena: 1, yaw: view.yaw, pitch: seat.pitch, logZoom: ln(seat.zoom), logLens: ln(seat.lens), roof: 0 },
+    rink: { ...BASE, ...near, map: 0, site: 0, arena: 1, yaw: view.yaw, pitch: seat.pitch, logZoom: ln(seat.zoom), logLens: ln(seat.lens), roof: 0, game: 0 },
+    game: { ...BASE, ...near, map: 0, site: 0, arena: 1, yaw: view.yaw, pitch: seat.pitch, logZoom: ln(seat.zoom), logLens: ln(seat.lens), roof: 0, game: 1 },
   };
   return {
     keys,
