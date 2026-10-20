@@ -524,3 +524,19 @@
 - `ajjf-guide`: <https://www.judo.or.jp/cms/wp-content/uploads/2021/03/%E5%A4%A7%E4%BC%9A%E9%81%8B%E5%96%B6%E3%82%AC%E3%82%A4%E3%83%89%E3%83%96%E3%83%83%E3%82%AF2023_20240229.pdf>
 - `ijf-sor`: <https://78884ca60822a34fb0e6-082b8fd5551e97bc65e327988b444396.ssl.cf3.rackcdn.com/up/2026/01/IJF_Sport_and_Organisation_Rul-1769443746.pdf>
 
+## 総合格闘技のケージ
+
+`sport: "mma"`
+
+| `league` | 名前 |
+| --- | --- |
+| `nruc`（その競技の標準） | 総合格闘技のケージ（ネバダ州の規則） |
+| `immaf` | 総合格闘技のケージ（IMMAFのアマチュア規則） |
+
+出典の URL：
+
+- `nruc`: <https://boxing.nv.gov/uploadedFiles/boxingnvgov/content/faq/sections/2024-11-20-NRUC-OFFICIAL-FINAL.pdf>
+- `oar-230-070-0025`: <https://oregon.public.law/rules/oar_230-070-0025>
+- `wp-mma-cage`: <https://en.wikipedia.org/w/index.php?title=Mixed_martial_arts_cage&oldid=1377260922>
+- `immaf-amateur`: <https://immaf.org/wp-content/uploads/2025/11/MMA-UNIFIED-RULES-FOR-AMATEUR-JUNIOR-SENIOR-January-2021.pdf>
+

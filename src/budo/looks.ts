@@ -42,6 +42,9 @@ function pair(light: BudoLook, k = 0.34): Pair {
   return { light, dark };
 }
 
+/** A look whose dark platform is a lighter one than the plain dimming makes, so that it stands out from the dark floor of the hall under it. */
+const lifted = (p: Pair, floor: string): Pair => ({ light: p.light, dark: { ...p.dark, floor } });
+
 const FLOOR = "#c9a26a";
 const WALLS = "#d8d0bd";
 const COMMON = { apron: "#d6d3cb", free: "#e8e4d8", floor: FLOOR, boards: WALLS };
@@ -73,6 +76,12 @@ export const BUDO_LOOKS: Readonly<Record<BudoKind, Readonly<Record<string, Pair>
     blond: pair({ ...COMMON, surface: "#e0bf8a", alt: "#d3b27c", red: "#b32a2f", floor: "#e0bf8a", free: "#ece4d3" }),
   },
   sumo: { clay: pair({ ...COMMON, surface: "#b0794a", alt: "#a06c40", red: "#b32a2f", dirt: "#b0794a", sand: "#e8dcc2", straw: "#c8a45c" }) },
+  // The cage's canvas, over the platform's dark deck: a grey canvas (the default), black, and blue. Ours: no rule paints a cage.
+  mma: {
+    grey: lifted(pair({ ...COMMON, surface: "#8d949b", alt: "#6f767d", red: "#b32a2f", floor: "#43484e" }), "#444a52"),
+    black: lifted(pair({ ...COMMON, surface: "#2b2e33", alt: "#1f2226", red: "#b32a2f", floor: "#24272b" }), "#3b3f45"),
+    blue: lifted(pair({ ...COMMON, surface: "#3a68ad", alt: "#2b528d", red: "#b32a2f", floor: "#2c3440" }), "#3a4452"),
+  },
   kyudo: { wood: pair({ ...COMMON, surface: "#9db57d", alt: "#d8cfb0", red: "#b32a2f", floor: "#b98c58", dirt: "#c9ad7a" }) },
 });
 

@@ -1,6 +1,7 @@
 // The surfaces of the budō (武道): the contest areas of judo and karate, the shiai-jo of kendo, the dohyō of sumo, the kyūdōjō, and the tatami of a dojo, each from the rulebook or the
 // federation's own page it was read in, with every figure in metres. A figure that no rule gives is said so in its comment (ours). Nothing here draws.
 import { span, type Span } from "./fields.ts";
+import { COMBAT_LEAGUES, type CombatFigures, type CombatLeague } from "./combat.ts";
 import type { LeagueBase } from "./types.ts";
 
 /** A mat: its length and width in metres. */
@@ -126,7 +127,7 @@ export interface DojoFigures {
 }
 
 /** The figures of a budō league. */
-export type BudoFigures = JudoFigures | KarateFigures | KendoFigures | SumoFigures | KyudoFigures | DojoFigures;
+export type BudoFigures = JudoFigures | KarateFigures | KendoFigures | SumoFigures | KyudoFigures | DojoFigures | CombatFigures;
 
 /** The leagues of each budō sport. */
 export type JudoLeague = LeagueBase<"judo", JudoFigures>;
@@ -137,7 +138,7 @@ export type KyudoLeague = LeagueBase<"kyudo", KyudoFigures>;
 export type DojoLeague = LeagueBase<"dojo", DojoFigures>;
 
 /** A league with a budō surface of its own. */
-export type BudoLeague = JudoLeague | KarateLeague | KendoLeague | SumoLeague | KyudoLeague | DojoLeague;
+export type BudoLeague = JudoLeague | KarateLeague | KendoLeague | SumoLeague | KyudoLeague | DojoLeague | CombatLeague;
 
 /** The IJF's contest area (Sport and Organisation Rules 8.7, version of 21 January 2026) as drawn for the Games, the Worlds and the Masters. */
 export const IJF_CONTEST: JudoFigures = {
@@ -264,4 +265,4 @@ export const DOJO_LEAGUES: readonly DojoLeague[] = [
 ];
 
 /** Every budō league, once each. */
-export const BUDO_LEAGUES: readonly BudoLeague[] = Object.freeze([...JUDO_LEAGUES, ...KARATE_LEAGUES, ...KENDO_LEAGUES, ...SUMO_LEAGUES, ...KYUDO_LEAGUES, ...DOJO_LEAGUES]);
+export const BUDO_LEAGUES: readonly BudoLeague[] = Object.freeze([...JUDO_LEAGUES, ...KARATE_LEAGUES, ...KENDO_LEAGUES, ...SUMO_LEAGUES, ...KYUDO_LEAGUES, ...DOJO_LEAGUES, ...COMBAT_LEAGUES]);

@@ -20,10 +20,13 @@ export type { PoolSport, PoolStyle };
 /** The budō: the contest areas of judo and karate, the kendo shiai-jo, the sumo dohyō, the kyūdōjō, and a dojo of tatami. */
 export type BudoSport = "judo" | "karate" | "kendo" | "sumo" | "kyudo" | "dojo";
 
+/** The combat sports' rings, cages and mats, drawn by the same engine as the budō: the MMA cage (eight-sided, as a generic cage), and as they are added the boxing ring, the wrestling mats and the professional wrestling ring. */
+export type CombatSport = "mma";
+
 export type { BudoStyle, DojoSpec, BudoScore };
 
 /** The surfaces: three football fields, a rink, a court, a ballpark, a soccer pitch, a curling sheet, twelve net, racket and court sports (tennis, volleyball, badminton, pickleball, table tennis, padel, squash, racquetball, sepak takraw, teqball, roundnet and netball), four pools (swimming, water polo, diving and artistic swimming), seven field sports (lacrosse, rugby, Australian football, Gaelic football and hurling, cricket, field hockey and handball) and the athletics stadium (the 400 m track with its infield, and the covered 200 m track). */
-export type Sport = "nfl" | "cfl" | "ifaf" | "nhl" | "nba" | "mlb" | "soccer" | "curling" | "tennis" | "volleyball" | "badminton" | "pickleball" | "tabletennis" | "padel" | "squash" | "racquetball" | "sepaktakraw" | "teqball" | "roundnet" | "netball" | PoolSport | FieldSport | "athletics" | "skating" | BudoSport;
+export type Sport = "nfl" | "cfl" | "ifaf" | "nhl" | "nba" | "mlb" | "soccer" | "curling" | "tennis" | "volleyball" | "badminton" | "pickleball" | "tabletennis" | "padel" | "squash" | "racquetball" | "sepaktakraw" | "teqball" | "roundnet" | "netball" | PoolSport | FieldSport | "athletics" | "skating" | BudoSport | CombatSport;
 
 /** `auto` follows the device's light or dark setting (and `data-theme` on the page's root), the others force one. */
 export type Theme = "auto" | "light" | "dark";
@@ -394,7 +397,9 @@ export type RangeName =
   | "shajo"
   | "yamichi"
   | "azuchi"
-  | "kamiza";
+  | "kamiza"
+  | "cage"
+  | "gate";
 
 /** A named range at the end of your choice: `{ name: "offensive-zone", end: "left" }` is the offensive zone of a team that attacks the left. */
 export interface RangeNamed {

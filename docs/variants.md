@@ -524,3 +524,19 @@ Sources:
 - `ajjf-guide`: 大会運営ガイドブック2023 (Tournament Management Guidebook 2023), 2-1 畳, 2-3 試合場 and 2-4 開始線と選手の位置, 公益財団法人全日本柔道連盟 (All Japan Judo Federation), 2023, as of 2023-12-15. <https://www.judo.or.jp/cms/wp-content/uploads/2021/03/%E5%A4%A7%E4%BC%9A%E9%81%8B%E5%96%B6%E3%82%AC%E3%82%A4%E3%83%89%E3%83%96%E3%83%83%E3%82%AF2023_20240229.pdf>
 - `ijf-sor`: Sport and Organisation Rules of the International Judo Federation, 8.7 Field of Play and Competition Area, Article 9 and B1.8 (the kata area), International Judo Federation, version of 21 January 2026. <https://78884ca60822a34fb0e6-082b8fd5551e97bc65e327988b444396.ssl.cf3.rackcdn.com/up/2026/01/IJF_Sport_and_Organisation_Rul-1769443746.pdf>
 
+## The MMA cage
+
+`sport: "mma"`
+
+| `league` | Name | Key figures |
+| --- | --- | --- |
+| `nruc` (the sport's own) | MMA cage, Nevada Rules of Unarmed Combat | width 20 ft to 32 ft across, 8 sides drawn; platform at most 4 ft high, with steps; fence posts 5 ft to 7 ft over the canvas; gates 2, with secure locks |
+| `immaf` | MMA cage, IMMAF amateur rules | width 20 ft to 32 ft across, 8 sides drawn; platform at most 4 ft high, with steps; fence posts 5 ft to 7 ft over the canvas; gates 2, with secure locks |
+
+Sources:
+
+- `nruc`: Nevada Rules of Unarmed Combat, NRUC 5.010 (requirements for a ring or fenced area for mixed martial arts: a fenced area of 20 to 32 feet, a platform of at most 4 feet with steps, metal posts of at most 6 inches reaching 5 to 7 feet over the fenced floor, padding, a fence that cannot be broken through, two entrances) and NRUC 2.050 (a boxing ring), Nevada Athletic Commission, adopted 20 September 2022, amended 29 October 2024 (the file of 20 November 2024). <https://boxing.nv.gov/uploadedFiles/boxingnvgov/content/faq/sections/2024-11-20-NRUC-OFFICIAL-FINAL.pdf>
+- `oar-230-070-0025`: Oregon Administrative Rule 230-070-0025, Mixed Martial Arts Fenced Area or Ring, Oregon Department of Consumer and Business Services, the rule as read on the date given. <https://oregon.public.law/rules/oar_230-070-0025>
+- `wp-mma-cage`: Mixed martial arts cage (English Wikipedia), and Mixed martial arts, Fighting area: the cage called a cage or an eight-sided cage; the larger cage of 30 feet across with a 6 foot fence on a 4 foot platform, the smaller of 25 feet, foam padding along the top of the fence and between its eight sections, two gates opposite each other, Wikipedia contributors (CC BY-SA 4.0), read for facts only, revision 1377260922 (Mixed martial arts cage) and revision 1381048799 (Mixed martial arts). <https://en.wikipedia.org/w/index.php?title=Mixed_martial_arts_cage&oldid=1377260922>
+- `immaf-amateur`: IMMAF Mixed Martial Arts Unified Rules for amateur, junior and senior competition: the fighting area and the fence, International Mixed Martial Arts Federation, January 2021. <https://immaf.org/wp-content/uploads/2025/11/MMA-UNIFIED-RULES-FOR-AMATEUR-JUNIOR-SENIOR-January-2021.pdf>
+

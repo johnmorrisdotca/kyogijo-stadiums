@@ -40,6 +40,13 @@ const CLASSES = `
 .kyogijo .ky-bud-tassel-w{fill:#f4f1e8;stroke:var(--ky-ink);stroke-opacity:.5;stroke-width:.03}
 .kyogijo .ky-bud-tassel-n{fill:#232323;stroke:var(--ky-ink);stroke-opacity:.5;stroke-width:.03}`.trim();
 
+/** The rules of the combat sports' classes, added to a combat drawing only, so that the budō drawings are the text they were: the steps up to a platform and the padding of a post. */
+const COMBAT_CLASSES = `
+.kyogijo .ky-bud-step{fill:color-mix(in srgb,var(--ky-bud-floor,#43484e) 76%,#fff);stroke:var(--ky-ink);stroke-opacity:.35;stroke-width:.03}
+.kyogijo .ky-bud-pad{fill:var(--ky-ink);fill-opacity:.82}`.trim();
+
+const COMBAT: readonly string[] = ["mma"];
+
 /** The custom properties of a look. */
 const vars = (l: BudoLook): string =>
   `--ky-surface:${l.surface};--ky-surface-alt:${l.alt};--ky-red:${l.red};--ky-apron:${l.apron};--ky-free:${l.free};--ky-bud-floor:${l.floor};--ky-boards:${l.boards}${l.dirt === undefined ? "" : `;--ky-dirt:${l.dirt}`}${l.sand === undefined ? "" : `;--ky-sand:${l.sand}`}${l.straw === undefined ? "" : `;--ky-bud-straw:${l.straw}`}`;
@@ -70,8 +77,8 @@ export const KYOGIJO_BUDO_GALLERY_STYLE = `
 export function budoStyle(sport: string, look?: string): string {
   const kind = sport as BudoKind;
   if (BUDO_LOOKS[kind] === undefined) return "";
-  return `${CLASSES}\n${look === undefined ? lookRules(kind, Object.keys(BUDO_LOOKS[kind])[0]) : lookRules(kind, look)}`;
+  return `${CLASSES}${COMBAT.includes(sport) ? `\n${COMBAT_CLASSES}` : ""}\n${look === undefined ? lookRules(kind, Object.keys(BUDO_LOOKS[kind])[0]) : lookRules(kind, look)}`;
 }
 
 /** Every budō sport's rules and every look, for a page that draws with `style: "none"` and supplies the stylesheet itself. */
-export const KYOGIJO_BUDO_STYLE: string = `${CLASSES}${KYOGIJO_BUDO_GALLERY_STYLE}\n${(Object.keys(BUDO_LOOKS) as BudoKind[]).flatMap((sport) => Object.keys(BUDO_LOOKS[sport]).map((name) => lookRules(sport, name))).join("\n")}`;
+export const KYOGIJO_BUDO_STYLE: string = `${CLASSES}\n${COMBAT_CLASSES}${KYOGIJO_BUDO_GALLERY_STYLE}\n${(Object.keys(BUDO_LOOKS) as BudoKind[]).flatMap((sport) => Object.keys(BUDO_LOOKS[sport]).map((name) => lookRules(sport, name))).join("\n")}`;

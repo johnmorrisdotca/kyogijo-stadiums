@@ -105,10 +105,11 @@ export function budoSurface(o: BuildOptions, plan: BudoPlan, margin: number): Su
   const cx = (plan.centre.x - ox) * K;
   const cy = (plan.centre.y - oy) * K;
   // The score's board lies on the middle of the surface; the teams are named on it, not painted on the mats.
-  const plateW = Math.min(W * 0.52, 190);
+  // A cage is small beside its platform: its board is narrower, and the names stand either side of it on the canvas.
+  const plateW = Math.min(W * (plan.mma === undefined ? 0.52 : 0.36), 190);
   // The names a score paints (kyūdō's and a dojo's: the others have a board): on the shajō's floor and over the yamichi, or either side of the middle.
   const kyu = plan.kyudo;
-  const places = kyu === undefined ? { left: { cx: W * 0.27, cy: H / 2, w: W * 0.2, h: H * 0.11, rot: 0 }, right: { cx: W * 0.73, cy: H / 2, w: W * 0.2, h: H * 0.11, rot: 0 } } : { left: { cx: ((kyu.shajo.x0 + kyu.shajo.x1) / 2 - ox) * K, cy: H * 0.3, w: (kyu.shajo.x1 - kyu.shajo.x0) * K * 0.5, h: H * 0.09, rot: 0 }, right: { cx: ((kyu.yamichi.x0 + kyu.yamichi.x1) / 2 + (kyu.yamichi.x1 - kyu.yamichi.x0) / 4 - ox) * K, cy: (((kyu.yamichi.y0 + kyu.yamichi.y1) / 2) - oy) * K, w: (kyu.yamichi.x1 - kyu.yamichi.x0) * K * 0.3, h: H * 0.09, rot: 0 } };
+  const places = plan.mma !== undefined ? { left: { cx: W * 0.2, cy: H / 2, w: W * 0.16, h: H * 0.11, rot: 0 }, right: { cx: W * 0.8, cy: H / 2, w: W * 0.16, h: H * 0.11, rot: 0 } } : kyu === undefined ? { left: { cx: W * 0.27, cy: H / 2, w: W * 0.2, h: H * 0.11, rot: 0 }, right: { cx: W * 0.73, cy: H / 2, w: W * 0.2, h: H * 0.11, rot: 0 } } : { left: { cx: ((kyu.shajo.x0 + kyu.shajo.x1) / 2 - ox) * K, cy: H * 0.3, w: (kyu.shajo.x1 - kyu.shajo.x0) * K * 0.5, h: H * 0.09, rot: 0 }, right: { cx: ((kyu.yamichi.x0 + kyu.yamichi.x1) / 2 + (kyu.yamichi.x1 - kyu.yamichi.x0) / 4 - ox) * K, cy: (((kyu.yamichi.y0 + kyu.yamichi.y1) / 2) - oy) * K, w: (kyu.yamichi.x1 - kyu.yamichi.x0) * K * 0.3, h: H * 0.09, rot: 0 } };
   const surface: Surface = {
     sport: plan.sport,
     view: view0,

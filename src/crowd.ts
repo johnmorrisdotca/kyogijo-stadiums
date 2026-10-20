@@ -225,6 +225,8 @@ const PROFILES: Readonly<Record<Sport, Profile>> = {
   sumo: { shape: "bowl", side: 58, end: 58, bench: 0, corner: 56, tiers: [{ id: "lower", from: 0, to: 54, height: [1, 8], fill: 1 }, upper(62, 128, 26, 62)], away: "corner" },
   kyudo: { shape: "sides", side: 10, end: 8, bench: 0, corner: 6, tiers: [lower(24, 2, 8), upper(30, 52, 12, 22)], away: "corner" },
   dojo: { shape: "bowl", side: 5, end: 5, bench: 0, corner: 8, tiers: [lower(26, 2, 14), upper(32, 58, 20, 36)], away: "corner" },
+  // An MMA cage stands in the middle of an arena, with the seats rising from the ring of the floor.
+  mma: { shape: "bowl", side: 40, end: 40, bench: 0, corner: 56, tiers: [lower(60, 3, 24), upper(67, 120, 32, 60)], away: "corner" },
 };
 
 /** The grounds of the package that are the home of an NFL or a CFL club, where a soccer pitch stands inside a gridiron's stands. From each ground's article. */

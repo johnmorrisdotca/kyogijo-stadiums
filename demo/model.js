@@ -66,10 +66,12 @@ const MARKS = { away: "crest:shield", home: "crest:roundel" };
 export const BUDO_LOOKS = ["default", "traditional", "blue", "black"];
 export const BUDO_AREAS = ["1", "2", "4"];
 export const DOJO_SIZES = ["8", "12", "20", "50", "100", "200"];
+/** The MMA cage's width across the flats in feet: the larger cage of 30 feet and the smaller of 25 (the rules allow 20 to 32). */
+export const CAGE_SIZES = ["30", "25"];
 /** The look of the package a choice means in a sport (judo, karate or a dojo), or nothing for the sport's own. */
-const BUDO_LOOK_OF = { traditional: { judo: "green-beige", karate: "green-beige", dojo: "green-beige" }, blue: { judo: "yellow-blue", karate: "blue-black", dojo: "yellow-blue" }, black: { judo: "black-red", dojo: "black-red" } };
+const BUDO_LOOK_OF = { traditional: { judo: "green-beige", karate: "green-beige", dojo: "green-beige" }, blue: { judo: "yellow-blue", karate: "blue-black", dojo: "yellow-blue", mma: "blue" }, black: { judo: "black-red", dojo: "black-red", mma: "black" } };
 /** The sports of the budo family, the ones that have a contest area, a hall and a look. */
-export const isBudo = (sport) => ["judo", "karate", "kendo", "sumo", "kyudo", "dojo"].includes(sport);
+export const isBudo = (sport) => ["judo", "karate", "kendo", "sumo", "kyudo", "dojo", "mma"].includes(sport);
 /** The sports whose surface is a pool. */
 export const isPool = (sport) => sport === "swimming" || sport === "waterpolo" || sport === "diving" || sport === "artisticswimming";
 
@@ -119,6 +121,7 @@ export function makeState(params, kept = null) {
     poolSection: params.get("poolsection") === "1",
     budoLook: pick(params.get("budolook"), BUDO_LOOKS, "default"),
     budoAreas: pick(params.get("budoareas"), BUDO_AREAS, "1"),
+    cageSize: pick(params.get("cagesize"), CAGE_SIZES, "30"),
     dojoJo: /^\d{1,3}$/.test(params.get("dojojo") || "") && Number(params.get("dojojo")) >= 2 ? params.get("dojojo") : "20",
     budoHall: params.get("budohall") === "1",
     budoOfficials: params.get("budoofficials") === "1",
@@ -288,6 +291,7 @@ export function layersFor(s) {
 export function budoFromSurface(s, surface) {
   s.budoLook = "default";
   s.budoAreas = "1";
+  s.cageSize = "30";
   s.dojoJo = "20";
   s.budoHall = false;
   s.budoOfficials = false;
@@ -330,6 +334,7 @@ function budoOptions(s, o) {
   }
   if (s.sport === "judo" || s.sport === "karate" || s.sport === "kendo") if (s.budoHall) budo.hall = "budokan";
   if (s.sport === "sumo" && s.budoTassels) budo.tassels = true;
+  if (s.sport === "mma" && s.cageSize !== "30") budo.size = Number(s.cageSize) * 0.3048;
   if (Object.keys(budo).length > 0) o.budo = budo;
 }
 
@@ -438,6 +443,7 @@ export const labelOf = (say, s) => ({
   poollanes: (v) => v,
   budolook: (v) => say(`budoLook_${v}`),
   budoareas: (v) => v,
+  cagesize: (v) => say(`cageSize_${v}`),
   dojojo: (v) => v,
   poolrace: (v) => say(`poolrace_${v}`),
   pattern: (v) => say(`pattern_${v}`),
@@ -490,6 +496,7 @@ export const SEGS = [
   { id: "lineup", kind: "lineup", values: LINEUPS, get: (s) => s.lineup },
   { id: "budo-look", kind: "budolook", values: BUDO_LOOKS, get: (s) => s.budoLook },
   { id: "budo-areas", kind: "budoareas", values: BUDO_AREAS, get: (s) => s.budoAreas },
+  { id: "cage-size", kind: "cagesize", values: CAGE_SIZES, get: (s) => s.cageSize },
   { id: "dojo-jo", kind: "dojojo", values: DOJO_SIZES, get: (s) => s.dojoJo },
   { id: "away-logo", kind: "logo", values: ["none", "flag", "emblem", "ready", "url"], get: (s) => s.away.logo },
   { id: "home-logo", kind: "logo", values: ["none", "flag", "emblem", "ready", "url"], get: (s) => s.home.logo },
@@ -577,9 +584,10 @@ export function hiddenRows(s) {
     "athletics-group": s.sport !== "athletics",
     "races-group": s.sport !== "athletics" && s.sport !== "skating",
     "budo-group": !isBudo(s.sport),
-    "budo-look-row": !["judo", "karate", "dojo"].includes(s.sport),
+    "budo-look-row": !["judo", "karate", "dojo", "mma"].includes(s.sport),
+    "cage-size-row": s.sport !== "mma",
     "budo-areas-row": s.sport !== "judo" && s.sport !== "karate",
-    "budo-chips": s.sport === "kyudo",
+    "budo-chips": s.sport === "kyudo" || s.sport === "mma",
     "budo-hall": !["judo", "karate", "kendo"].includes(s.sport),
     "budo-officials": s.sport !== "judo" && s.sport !== "karate",
     "budo-tassels": s.sport !== "sumo",
@@ -653,7 +661,7 @@ export function urlPairs(s, lang) {
   for (const [key, value, start, used] of [["sithockey", s.sitHockey, "pp", s.sport === "nhl"], ["sitbases", s.sitBases, "101", s.sport === "mlb"], ["sitouts", s.sitOuts, "2", s.sport === "mlb"], ["sitcount", s.sitCount, "3-2", s.sport === "mlb"], ["sitdown", s.sitDown, "3", football], ["sittogo", s.sitToGo, "7", football], ["sitballon", String(s.sitBallOn), "88", football]]) out.push([key, sit && used && value !== start ? value : null]);
   out.push(["sitdrive", sit && s.sitDrive && football ? "1" : null]);
   // The budo: how the mats look, the contest areas, the size of a dojo and the hall, officials, tassels and shrine of the sport on show.
-  for (const [key, value, start] of [["budolook", s.budoLook, "default"], ["budoareas", s.budoAreas, "1"], ["dojojo", s.dojoJo, "20"], ["budohall", s.budoHall ? "1" : "0", "0"], ["budoofficials", s.budoOfficials ? "1" : "0", "0"], ["budotassels", s.budoTassels ? "1" : "0", "0"], ["dojoshinzen", s.budoShinzen ? "1" : "0", "0"]]) put(key, value, start);
+  for (const [key, value, start] of [["budolook", s.budoLook, "default"], ["budoareas", s.budoAreas, "1"], ["cagesize", s.sport === "mma" ? s.cageSize : "30", "30"], ["dojojo", s.dojoJo, "20"], ["budohall", s.budoHall ? "1" : "0", "0"], ["budoofficials", s.budoOfficials ? "1" : "0", "0"], ["budotassels", s.budoTassels ? "1" : "0", "0"], ["dojoshinzen", s.budoShinzen ? "1" : "0", "0"]]) put(key, value, start);
   // The looks of a surface, the stands, the lineup and the points.
   for (const [key, value, start] of [["court", s.court, "default"], ["pattern", s.pattern, "bands"], ["goals", s.goals, "box"], ["half", s.half, "none"], ["flags", s.flags ? "1" : "0", "1"], ["baseline", s.baseline ? "1" : "0", "0"], ["hardwood", s.hardwood ? "1" : "0", "0"], ["crowd", s.crowd ? "1" : "0", "0"], ["crowddensity", s.crowdDensity, 85], ["crowdtifo", s.crowdTifo ? "1" : "0", "0"], ["roof", s.venueRoof ? "1" : "0", "0"], ["lineup", s.lineup, "off"], ["drop", s.place ? "1" : "0", "0"], ["code", s.embed, "module"]]) put(key, value, start);
   out.push(["shots", s.place && s.shots.length > 0 ? shotsParam(s.shots) : null]);

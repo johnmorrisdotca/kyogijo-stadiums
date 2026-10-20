@@ -156,6 +156,7 @@ makeSeg("races", (v) => { state.races = v; });
 makeSeg("lineup", (v) => { state.lineup = v; });
 makeSeg("budo-look", (v) => { state.budoLook = v; });
 makeSeg("budo-areas", (v) => { state.budoAreas = v; });
+makeSeg("cage-size", (v) => { state.cageSize = v; });
 makeSeg("dojo-jo", (v) => { state.dojoJo = v; });
 for (const role of ["away", "home"]) makeSeg(`${role}-logo`, (v) => { state[role].logo = v; });
 // The pickers of a ready-made emblem: a grid of tiles, each the emblem itself, for a team's mark and for the middle of a pageant.

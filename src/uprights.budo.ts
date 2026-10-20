@@ -4,6 +4,7 @@
 // box, so every point goes through `at`. The mound's height is the option's; the azuchi's (1.5 m or 1.8 m) and a dojo wall's (3 m) are ours: no rule gives them.
 import { budoPlan, type BudoPlan } from "./budo/plan.ts";
 import { flat, n, plane, shy, wall, type Plane, type Upright } from "./turn.kit.ts";
+import { cageUprights } from "./uprights.cage.ts";
 import type { SurfaceOptions } from "./types.ts";
 
 const K = 1 / 0.3048;
@@ -79,6 +80,7 @@ export function budoUprights(o: Pick<SurfaceOptions, "sport" | "league" | "budo"
     const height = plan.sumo.height * K;
     items.push({ id: "mound", kind: "mound", at: at(plan.sumo.centre[0], plan.sumo.centre[1]), height, planes: moundPlanes(plan, at, height) });
   }
+  if (plan.mma !== undefined) items.push(...cageUprights(plan, at, thin));
   if (plan.kyudo !== undefined) {
     const built = azuchiPlanes(plan, at);
     items.push({ id: "azuchi", kind: "azuchi", at: at(plan.kyudo.target, plan.kyudo.lanes[0]), height: built.height, planes: built.mound });
@@ -101,6 +103,5 @@ export function budoUprights(o: Pick<SurfaceOptions, "sport" | "league" | "budo"
     });
     items.push({ id: "walls", kind: "walls", at: centre, height: h, planes });
   }
-  void thin;
-  return { items, lift, area, whole: plan.sumo !== undefined };
+  return { items, lift, area, whole: plan.sumo !== undefined || plan.mma !== undefined };
 }

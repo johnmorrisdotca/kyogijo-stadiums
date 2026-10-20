@@ -100,6 +100,9 @@ await takePictures({
         }),
       ),
     },
+    // The MMA cage: the eight-sided cage on its platform with a bout's score, as the demo draws it, and the same in 3D from a low corner.
+    { subject: "mma-cage", views: ["desk"], url: address("sport=mma&orientation=landscape"), ready: READY, target: stage, prepare: behind("spotlight") },
+    { subject: "mma-cage-3d", views: ["desk"], url: address("sport=mma&size=surface&view=3d&viewpoint=corner"), ready: READY_TURN, target: stage, prepare: behind("spotlight") },
     // Judging assignments (0.17.0): the judges' table of a kata area in 3D with a name card in front of each judge and the mat's name on a sign, close up on the bench, with the chart beside the view (invented names; the judging page's stage).
     { subject: "judging-3d", views: ["desk"], url: `/judging.html?mat=1&view=3d&focus=bench&orientation=landscape&d=${encodeURIComponent(JUDGING_SHORT)}`, ready: READY_HALLS_TURN, target: "#stage" },
     // The broadcast view (0.19.0): the mat large from the Broadcast camera, with the officials on a board at its side like a television graphic (invented names; the judging page's stage). The 2D picture, a contest area and Japanese are in the docs gallery, drawn by the build.

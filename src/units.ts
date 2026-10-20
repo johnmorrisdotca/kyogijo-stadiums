@@ -66,6 +66,8 @@ export const SURFACE_UNITS: Readonly<Record<Sport, Unit>> = Object.freeze({
   sumo: "m",
   kyudo: "m",
   dojo: "m",
+  // The cage: the commissions' rules are written in feet and inches.
+  mma: "ft",
 });
 
 /** True when `unit` is one of the six. */

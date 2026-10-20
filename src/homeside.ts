@@ -53,6 +53,8 @@ export const HOME_FIRST: Readonly<Record<Sport, boolean>> = Object.freeze({
   sumo: false,
   kyudo: false,
   dojo: false,
+  // A cage fight is between a red corner and a blue corner: no home side.
+  mma: false,
 });
 
 /** The leagues whose convention is not their sport's: the international federation's lacrosse lists the home team first. */

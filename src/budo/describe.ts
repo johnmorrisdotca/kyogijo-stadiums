@@ -38,6 +38,11 @@ export function budoAbout(o: Opt, language: Language, plan: BudoPlan = budoPlan(
     const bare = !L.parts.areas.some((a) => a.id === "tawara");
     return fill(bare ? words.sumoBare : words.sumo, { platform: trim(fig.platform), height: cm(L.height), circle: trim(fig.circle), count: fig.tawara.count });
   }
+  if (plan.mma !== undefined) {
+    const L = plan.mma;
+    const platform = L.height > 0.0005 ? fill(words.mmaPlatform, { height: cm(L.height) }) : words.mmaFloor;
+    return fill(words.mma, { width: trim(L.width), feet: trim(L.width / 0.3048), fence: cm(L.fence), platform });
+  }
   if (plan.kyudo !== undefined) {
     const L = plan.kyudo;
     const fig = plan.figures as { distance: number };
@@ -64,6 +69,10 @@ export function budoSentences(o: Opt, language: Language, plan: BudoPlan = budoP
   }
   if (plan.karate !== undefined && plan.areas.some((a) => a.feature === "judges" || a.feature === "referee")) out.push(words.karateOfficials);
   if (plan.sumo !== undefined && plan.areas.some((a) => a.feature === "tassels")) out.push(words.tassels);
+  if (plan.mma !== undefined) {
+    if (plan.mma.gates.length > 0) out.push(words.mmaGates);
+    if (plan.mma.steps.length > 0) out.push(words.mmaSteps);
+  }
   if (plan.dojo !== undefined) {
     const L = plan.dojo;
     out.push(fill(words.dojoKamiza, { side: words.sides[L.kamiza] }));

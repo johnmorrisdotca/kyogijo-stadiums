@@ -40,6 +40,8 @@ describe("every surface", () => {
       const tall = box(parse(drawKyogijo({ sport, orientation: "portrait" })));
       // A ballpark and a cricket ground (a circle unless its boundary says otherwise) are as high as they are wide, and so are a roundnet court, a judo or karate area, a kendo shiai-jo and a dohyō (squares, with no sides).
       if (sport === "mlb" || sport === "cricket" || sport === "roundnet" || sport === "judo" || sport === "karate" || sport === "kendo" || sport === "sumo") expect(tall[3] / tall[2]).toBeGreaterThan(0.9);
+      // A cage on its platform, with the steps at the two gates, is a little longer than it is wide.
+      else if (sport === "mma") expect(tall[3] / tall[2]).toBeGreaterThan(0.8);
       else {
         expect(wide[2]).toBeGreaterThan(wide[3]);
         expect(tall[3]).toBeGreaterThan(tall[2]);

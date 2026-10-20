@@ -7,6 +7,12 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **The MMA cage** (`sport: "mma"`, [the combat sports page](./docs/combat.md)): an eight-sided fenced area on its platform, to scale, from the Nevada Rules of Unarmed Combat (5.010 3) and the IMMAF's rules for amateur competition: 20 to 32 feet across the flats (`budo.size`, 30 feet drawn and 25 feet the smaller cage), a platform of at most 4 feet (`budo.height`) with steps up at each gate, a fence of 5 to 7 feet (`budo.fence`, 6 feet drawn), eight padded posts, two gates opposite each other and a canvas over foam, with a grey, a black and a blue look in light and dark. The leagues are `nruc` and `immaf`; `RANGES.mma` has `cage`, `gate` and `half`; the parts are named for `landmarks` and the features for `featureColors`, in English and Japanese. The cage is named for what it is, an eight-sided cage: no promotion's name or mark is used. It is a sport of the package (40 now), with `SPORTS`, a unit of feet, no home side, a badge glyph, a crowd profile and its sources in `LEAGUE_SOURCES` (the figure of the rule, the figure that is typical and the figure that is ours are told apart).
+- **The cage in 3D** (`buildTurn({ sport: "mma" })`): the platform is a solid block (four sides to the floor of the hall and a top that is the drawing's own canvas, lifted), the fence is wire mesh on each of its eight flats with a pad along the top and the foot so that the canvas stays in sight, and gives way to an eye that has it in front of the cage, the posts are solid, the gates are frames of padded rails, and the steps are three blocks each. Tests hold the order the parts are drawn in from every side, the size of the view as it turns and the scene inside its box at every angle.
+- **The demo** has the cage in its sport picker, with the looks, the cage's width (30 or 25 feet, `cagesize` in the address), the score of a bout and the 3D view; the docs have a page for it and a gallery of its own.
+
 ## [0.19.0] - 2026-10-20
 
 ### Added

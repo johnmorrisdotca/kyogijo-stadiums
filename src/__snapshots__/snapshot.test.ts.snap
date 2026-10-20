@@ -1043,6 +1043,56 @@ exports[`the drawings' structure > mlb: what a tall bare surface is made of 1`] 
 }
 `;
 
+exports[`the drawings' structure > mma: what a score drawing is made of 1`] = `
+{
+  "desc": 1,
+  "g.ky-banner.ky-banner-left.ky-win": 1,
+  "g.ky-banner.ky-banner-right.ky-lose": 1,
+  "g.ky-bud-ground": 1,
+  "g.ky-bud-lines": 1,
+  "g.ky-plate": 1,
+  "g.ky-surface-group": 1,
+  "path.ky-bud-ink": 2,
+  "path.ky-bud-pad": 8,
+  "path.ky-bud-platform": 1,
+  "path.ky-bud-step": 6,
+  "path.ky-bud-t1": 1,
+  "rect.ky-apron": 1,
+  "rect.ky-plate-bg": 1,
+  "rect.ky-winbar.ky-winbar-left": 1,
+  "style": 1,
+  "svg.ky-mma.kyogijo": 1,
+  "text.ky-abbr.ky-abbr-left.ky-text": 1,
+  "text.ky-abbr.ky-abbr-right.ky-text": 1,
+  "text.ky-comp.ky-text": 1,
+  "text.ky-dash-text.ky-text": 1,
+  "text.ky-foot.ky-text": 1,
+  "text.ky-lose.ky-score.ky-text": 1,
+  "text.ky-name.ky-paint-left.ky-text": 2,
+  "text.ky-name.ky-paint-right.ky-text": 2,
+  "text.ky-score.ky-text.ky-win": 1,
+  "title": 1,
+}
+`;
+
+exports[`the drawings' structure > mma: what a tall bare surface is made of 1`] = `
+{
+  "desc": 1,
+  "g.ky-bud-ground": 1,
+  "g.ky-bud-lines": 1,
+  "g.ky-surface-group": 1,
+  "path.ky-bud-ink": 2,
+  "path.ky-bud-pad": 8,
+  "path.ky-bud-platform": 1,
+  "path.ky-bud-step": 6,
+  "path.ky-bud-t1": 1,
+  "rect.ky-apron": 1,
+  "style": 1,
+  "svg.ky-mma.kyogijo": 1,
+  "title": 1,
+}
+`;
+
 exports[`the drawings' structure > nba: what a score drawing is made of 1`] = `
 {
   "circle.ky-centre": 1,

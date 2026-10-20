@@ -22,6 +22,7 @@ export function toParams(o) {
   if (o.budo && typeof o.budo === "object") {
     if (typeof o.budo.look === "string") q.set("budolook", o.budo.look);
     if (Number.isInteger(o.budo.areas)) q.set("budoareas", String(o.budo.areas));
+    if (typeof o.budo.size === "number" && Number.isFinite(o.budo.size)) q.set("budosize", String(o.budo.size));
     if (o.budo.hall === "budokan") q.set("budohall", "1");
     if (o.budo.officials === true) q.set("budoofficials", "1");
     if (o.budo.tassels === true) q.set("budotassels", "1");
@@ -69,6 +70,7 @@ export function fromParams(q) {
   const budo = {};
   if (q.get("budolook")) budo.look = q.get("budolook");
   if (/^\d$/.test(q.get("budoareas") || "")) budo.areas = Number(q.get("budoareas"));
+  if (/^\d{1,2}(\.\d{1,4})?$/.test(q.get("budosize") || "")) budo.size = Number(q.get("budosize"));
   if (q.get("budohall") === "1") budo.hall = "budokan";
   if (q.get("budoofficials") === "1") budo.officials = true;
   if (q.get("budotassels") === "1") budo.tassels = true;

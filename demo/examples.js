@@ -45,7 +45,7 @@ export const TEAMS_JA = {
   net: { away: ja("korea"), home: ja("germany") },
 };
 
-export const FAMILIES = { nfl: "football", cfl: "football", ifaf: "football", nhl: "hockey", nba: "basketball", mlb: "baseball", soccer: "soccer", curling: "curling", tennis: "net", volleyball: "net", badminton: "net", pickleball: "net", tabletennis: "net", padel: "net", squash: "net", racquetball: "net", sepaktakraw: "net", teqball: "net", roundnet: "net", netball: "net", athletics: "football", skating: "hockey", lacrosse: "football", rugby: "football", afl: "football", gaelic: "football", cricket: "football", fieldhockey: "football", handball: "football", swimming: "football", waterpolo: "football", diving: "football", artisticswimming: "football", judo: "football", karate: "football", kendo: "football", sumo: "football", kyudo: "football", dojo: "football" };
+export const FAMILIES = { nfl: "football", cfl: "football", ifaf: "football", nhl: "hockey", nba: "basketball", mlb: "baseball", soccer: "soccer", curling: "curling", tennis: "net", volleyball: "net", badminton: "net", pickleball: "net", tabletennis: "net", padel: "net", squash: "net", racquetball: "net", sepaktakraw: "net", teqball: "net", roundnet: "net", netball: "net", athletics: "football", skating: "hockey", lacrosse: "football", rugby: "football", afl: "football", gaelic: "football", cricket: "football", fieldhockey: "football", handball: "football", swimming: "football", waterpolo: "football", diving: "football", artisticswimming: "football", judo: "football", karate: "football", kendo: "football", sumo: "football", kyudo: "football", dojo: "football", mma: "football" };
 
 /** Typical scores and a competition line for each sport. */
 export const GAMES = {
@@ -94,4 +94,6 @@ export const GAMES = {
   sumo: { away: 1, home: 0, status: "final", competition: "Day 15", date: "Sep 28", awayExtra: { budo: { kimarite: "yorikiri" } } },
   kyudo: { away: 17, home: 15, status: "final", competition: "Team final", date: "May 4" },
   dojo: { away: 3, home: 2, status: "final", competition: "Kohaku team match", date: "Jan 11" },
+  // A cage: a bout between a red corner and a blue corner (the first called and the second).
+  mma: { away: 0, home: 1, status: "final", competition: "Welterweight bout", date: "Oct 18" },
 };

@@ -45,6 +45,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `surface.sumo` | Sumo dohyō | 相撲の土俵 |
 | `surface.kyudo` | Kyūdō range | 弓道場 |
 | `surface.dojo` | Dojo | 道場 |
+| `surface.mma` | MMA cage | 総合格闘技のケージ |
 | `about.nfl` | an American football field, 120 by 53 and a third yards with its end zones, with a yard line every 5 yards, hash marks, numbers and goal posts | アメリカンフットボールのフィールド。エンドゾーンを含めて120×53⅓ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールポストがあります |
 | `about.cfl` | a Canadian football field, 150 by 65 yards with its 20-yard end zones, with a yard line every 5 yards, hash marks, numbers and goal posts on the goal lines | カナディアンフットボールのフィールド。20ヤードのエンドゾーンを含めて150×65ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールライン上のゴールポストがあります |
 | `about.ifaf` | an international (IFAF) football field, 120 by 53 and a third yards with its end zones, with a yard line every 5 yards, hash marks, numbers and goal posts | 国際アメリカンフットボール連盟（IFAF）規格のフィールド。エンドゾーンを含めて120×53⅓ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールポストがあります |
@@ -84,6 +85,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `about.sumo` | a sumo dohyō: a clay square of 6.7 metres with a ring of 4.55 metres made of 20 tawara | 相撲の土俵。一辺6.7mの粘土の正方形に、20俵でつくる直径4.55mの円があります |
 | `about.kyudo` | a kyūdōjō for kinteki: a shajō with five shooting positions, 28 metres from the targets at the azuchi | 近的の弓道場。射位が5か所ある射場から、安土の的まで28mあります |
 | `about.dojo` | a dojo of 20 jō of tatami | 20畳の道場 |
+| `about.mma` | an MMA cage: an eight-sided fenced area 9.14 metres (30 feet) across, on a platform 122 centimetres high | 総合格闘技のケージ。金網で囲まれた、対辺間の距離が30フィート（約9.1m）の八角形で、高さ122cmの台の上にあります |
 | `status.final` | Final | 試合終了 |
 | `status.final-ot` | Final/OT | 試合終了（延長） |
 | `status.final-so` | Final/SO | 試合終了（SO） |
@@ -413,6 +415,11 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `budo.dojoBanner` | A plain dark banner hangs on the kamiza wall. | 上座側の壁に、無地の濃い色の垂れ幕が掛かっています。 |
 | `budo.dojoAreas` | {n} contest areas of 8 metres are marked on the floor. | 床に、8m四方の試合場が{n}面示されています。 |
 | `budo.dojoWalls` | It has walls with {doors} and {windows}. | 壁があり、{doors}と{windows}があります。 |
+| `budo.mma` | an MMA cage: an eight-sided fenced area {width} metres across ({feet} feet), with a fence {fence} centimetres high and eight padded posts, {platform} | 総合格闘技のケージ。対辺間の距離が{feet}フィート（約{width}m）の八角形で、高さ{fence}cmの金網と、パッド付き支柱8本があります。{platform} |
+| `budo.mmaPlatform` | on a platform {height} centimetres high | ケージは高さ{height}cmの台の上にあります |
+| `budo.mmaFloor` | at floor level | ケージは床と同じ高さにあります |
+| `budo.mmaGates` | It has two gates, opposite each other. | 出入口は向かい合う2か所にあります。 |
+| `budo.mmaSteps` | Steps lead up to the platform at each gate. | 各出入口に、台へ上がる階段があります。 |
 | `budo.board.ippon` | Ippon | 一本 |
 | `budo.board.wazaari` | Waza-ari | 技あり |
 | `budo.board.yuko` | Yuko | 有効 |
@@ -538,6 +545,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `special.guest.sumo` | dohyō | 土俵 |
 | `special.guest.kyudo` | range | 弓道場 |
 | `special.guest.dojo` | dojo | 道場 |
+| `special.guest.mma` | cage | ケージ |
 | `special.title` | {guest} in {host} | {host}の中の{guest} |
 | `special.game` | {event}, {date}. | {event}、{date}。 |
 | `special.inside` | The {guest} lies wholly inside the outline of {host}. | {guest}全体が{host}の輪郭の内側に収まっています。 |
@@ -1006,6 +1014,12 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `notes.names.azuchi` | Azuchi | 安土 |
 | `notes.names.mato` | Target | 的 |
 | `notes.names.kamiza` | Kamiza | 上座 |
+| `notes.names.cage-canvas` | Canvas | キャンバス |
+| `notes.names.cage-fence` | Fence | 金網 |
+| `notes.names.cage-post` | Padded post | パッド付き支柱 |
+| `notes.names.cage-gate` | Gate | 出入口 |
+| `notes.names.cage-steps` | Steps | 階段 |
+| `notes.names.cage-platform` | Platform | 台 |
 | `notes.names.shimoza` | Shimoza | 下座 |
 | `notes.names.shinzen` | Shinzen | 神棚 |
 | `notes.names.dais` | Dais, the seat of honour | 上座の台 |
@@ -1125,6 +1139,8 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `ranges.names.yamichi` | yamichi | 矢道 |
 | `ranges.names.azuchi` | azuchi | 安土 |
 | `ranges.names.kamiza` | kamiza | 上座 |
+| `ranges.names.cage` | cage | ケージ |
+| `ranges.names.gate` | gate | 出入口 |
 | `ranges.names.crossing-straight` | crossing straight | 交差ストレート |
 | `ranges.names.first-bend` | first bend | 第1カーブ |
 | `ranges.names.second-bend` | second bend | 第2カーブ |
@@ -1266,6 +1282,9 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `turn.parts.surrounds` | surrounds | 競技エリアのフェンス |
 | `turn.parts.officials` | umpires' chairs and score tables | 審判席と記録台 |
 | `turn.parts.judges` | name cards on the judges' table | 審判員席の名札 |
+| `turn.parts.deck` | platform | 台 |
+| `turn.parts.cage-fence` | fence | 金網 |
+| `turn.parts.cage-posts` | padded posts | パッド付き支柱 |
 | `rules.defensive-zone` | Defensive zone | ディフェンディングゾーン |
 | `rules.neutral-zone` | Neutral zone | ニュートラルゾーン |
 | `rules.offensive-zone` | Offensive zone | アタッキングゾーン |
@@ -1458,6 +1477,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `sport_sumo` | Sumo | 相撲 |
 | `sport_kyudo` | Kyudo | 弓道 |
 | `sport_dojo` | Dojo | 道場 |
+| `sport_mma` | MMA cage | 総合格闘技 |
 | `pitchLabel` | Pitch | ピッチ |
 | `pitch_fifa` | International, 105 × 68 m | 国際標準 105×68m |
 | `pitch_uefa` | UEFA, 105 × 68 m | UEFA 105×68m |
@@ -1494,6 +1514,9 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `budoAreas_2` | 2 | 2 |
 | `budoAreas_4` | 4 | 4 |
 | `dojoJo` | Size in jo | 畳数 |
+| `cageSize` | Cage width | ケージの幅 |
+| `cageSize_30` | 30 ft | 30フィート |
+| `cageSize_25` | 25 ft | 25フィート |
 | `budoHall` | Budokan floor | 武道館の床 |
 | `budoOfficials` | Officials | 係員席 |
 | `budoTassels` | Tassels | 房 |
@@ -1974,6 +1997,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `athletics` | The athletics stadium | 陸上競技場 |
 | page `skating` | The skating rinks | スケートリンク |
 | page `budo` | The budō: judo, karate, kendo, sumo, kyūdō and the dojo | 武道 |
+| page `combat` | The combat sports: the MMA cage | 格闘技（総合格闘技のケージ） |
 | page `multi` | Tournament layouts | 大会向けレイアウト（複数の競技面） |
 | page `judging` | Judging assignments | 審判員の配置 |
 | page `special-games` | Special games | 特設会場での試合 |
@@ -2011,6 +2035,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `gallery-athletics` | Gallery: the athletics stadium | ギャラリー：陸上競技場 |
 | page `gallery-skating` | Gallery: the skating rinks | ギャラリー：スケートリンク |
 | page `gallery-budo` | Gallery: the budō | ギャラリー：武道 |
+| page `gallery-combat` | Gallery: the combat sports | ギャラリー：格闘技（総合格闘技のケージ） |
 | page `gallery-styling` | Gallery: looks and annotations | ギャラリー：スタイルと注釈 |
 | page `gallery-ranges` | Gallery: display ranges and zoom | ギャラリー：表示範囲とズーム |
 | page `gallery-layouts` | Gallery: layouts and backgrounds | ギャラリー：レイアウトと背景 |

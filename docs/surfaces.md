@@ -1,6 +1,6 @@
 # The surfaces
 
-Thirty-nine surfaces, each drawn to scale from its rulebook. Every dimension is kept in feet in the code (`@johnmorrisdotca/kyogijo-stadiums/geometry`) and can be had in any unit (see [Units](./units.md)), and each is cited in [docs/sources.md](./sources.md).
+Forty surfaces, each drawn to scale from its rulebook. Every dimension is kept in feet in the code (`@johnmorrisdotca/kyogijo-stadiums/geometry`) and can be had in any unit (see [Units](./units.md)), and each is cited in [docs/sources.md](./sources.md).
 
 | `sport` | Surface | Size | Drawn |
 | --- | --- | --- | --- |
@@ -36,6 +36,7 @@ Thirty-nine surfaces, each drawn to scale from its rulebook. Every dimension is 
 | `sumo` | Sumo dohyō | the clay square of 6.7 m | the ring of 4.55 m made of 20 tawara with its four tokudawara, the jano-me, the two shikiri-sen, the four tassels of the roof; raised as a mound in 3D |
 | `kyudo` | Kyūdōjō | kinteki 28 m or enteki 60 m, from the shooting position to the target | the shajō with its shooting positions and honza, the yamichi, the azuchi with the targets, the path for the arrows, the roofs |
 | `dojo` | Dojo | a floor of tatami in jō (20 jō by default), in metres or in mats | the mats as real units (no four corners meet), the heri, the walls, doors and windows, the shrine and the kamiza, judo contest areas laid on it |
+| `mma` | MMA cage | an eight-sided fenced area of 20 to 32 feet across the flats (30 feet drawn; 25 feet is the smaller cage) on a platform of at most 4 feet | the canvas, the eight padded posts, the fence, the two gates and their swing, the steps up to the platform, the apron; in 3D the platform as a solid block and the fence in mesh |
 | `lacrosse` | Lacrosse field or box floor | 100 by 60 m (World Lacrosse's men's), 110 by 60 yards (the NCAA's), a floor 200 by 85 feet | the goals, creases, restraining and wing lines; the women's goal circles, marking areas, arc and fan; the PLL's two-point arc; the floor's boards, face-off circle and spots ([Field sports](./field-sports.md)) |
 | `rugby` | Rugby field | 100 m between the try lines and 70 wide, with in-goal areas (union); 100 by 68 m (league) | the 22-metre lines, half-way line and dash lines of union; a line every 10 metres, the 20 and 40 metre lines red, of the NRL's league; goal posts and flag posts |
 | `afl` | Australian football ground | an oval 135 to 185 by 110 to 155 m, the MCG's 160 by 141 drawn, or a named ground | the goal and behind posts, the goal squares, the centre square and circles, the Fifty Metre Arcs |

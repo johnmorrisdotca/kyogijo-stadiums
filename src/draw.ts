@@ -17,7 +17,7 @@ import { athleticsPlan } from "./athletics/plan.ts";
 import { skatingPlan } from "./skating/plan.ts";
 import { skatingAbout, skatingSentences } from "./skating/describe.ts";
 import { skatingStyle } from "./skating.style.ts";
-import { budoPlan, isBudoSport } from "./budo/plan.ts";
+import { budoPlan, isBudoSport, isMatSport } from "./budo/plan.ts";
 import { dojoSpecOf } from "./budo/dojo.ts";
 import { dojoGallery } from "./budo/room.ts";
 import { budoAbout, budoScoreSentences, budoSentences } from "./budo/describe.ts";
@@ -95,7 +95,7 @@ import { VERSION } from "./version.ts";
 export { isPortrait };
 
 /** The sports that can be drawn, in the order a menu lists them. */
-export const SPORTS: readonly Sport[] = ["nfl", "cfl", "ifaf", "nhl", "nba", "mlb", "soccer", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis", "padel", "squash", "racquetball", "sepaktakraw", "teqball", "roundnet", "netball", "swimming", "waterpolo", "diving", "artisticswimming", "athletics", "skating", "judo", "karate", "kendo", "sumo", "kyudo", "dojo", "lacrosse", "rugby", "afl", "gaelic", "cricket", "fieldhockey", "handball"];
+export const SPORTS: readonly Sport[] = ["nfl", "cfl", "ifaf", "nhl", "nba", "mlb", "soccer", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis", "padel", "squash", "racquetball", "sepaktakraw", "teqball", "roundnet", "netball", "swimming", "waterpolo", "diving", "artisticswimming", "athletics", "skating", "judo", "karate", "kendo", "sumo", "kyudo", "dojo", "mma", "lacrosse", "rugby", "afl", "gaelic", "cricket", "fieldhockey", "handball"];
 
 /** The CSS custom property each colour of `Colors` sets. */
 export const COLOR_PROPERTIES: Readonly<Record<keyof Colors, string>> = {
@@ -279,7 +279,7 @@ function buildSkating(o: SurfaceOptions, common: BuildOptions): Surface {
 /** The budō surface: its plan, drawn as it lies. A hall, a kyūdōjō and a range of mats have little ground round them. */
 function buildBudo(o: SurfaceOptions, common: BuildOptions): Surface {
   const plan = budoPlan({ ...o, detail: common.detail });
-  return budoSurface(common, plan, common.margin ?? (o.range === undefined ? 12 : 4));
+  return budoSurface(common, plan, common.margin ?? (o.range === undefined ? (plan.mma === undefined ? 12 : 5) : 4));
 }
 
 /** What a drawing adds to what the builders are given: the features with a colour of their own, and a margin the annotations ask for. */
@@ -394,6 +394,7 @@ function buildWhole(o: SurfaceOptions, portrait: boolean, id: string, score: boo
     case "sumo":
     case "kyudo":
     case "dojo":
+    case "mma":
       return buildBudo({ ...o, sport }, common);
     default:
       throw new Error(`Unknown sport "${String(o.sport)}": use one of ${SPORTS.join(", ")}`);
@@ -630,7 +631,7 @@ const trimmed = (value: number): string => String(Math.round(value * 100) / 100)
 function leagueAbout(league: League, year: number | undefined, language: Language, sheet?: { length: number; width: number }): string {
   const words = KYOGIJO_STRINGS[language].league;
   if (league.family === "skating") return skatingAbout({ sport: "skating", league: league.id }, language);
-  if (league.family === "judo" || league.family === "karate" || league.family === "kendo" || league.family === "sumo" || league.family === "kyudo" || league.family === "dojo") return budoAbout({ sport: league.family, league: league.id }, language);
+  if (league.family === "judo" || league.family === "karate" || league.family === "kendo" || league.family === "sumo" || league.family === "kyudo" || league.family === "dojo" || league.family === "mma") return budoAbout({ sport: league.family, league: league.id }, language);
   if (league.family === "athletics") return athleticsAbout({ sport: "athletics", league: league.id, athletics: sheet === undefined ? undefined : undefined }, language);
   // The field sports: their size is the surface drawn (the one the options ask for), in the unit their rulebook prints first.
   if (league.family === "lacrosse" || league.family === "rugby" || league.family === "afl" || league.family === "gaelic" || league.family === "cricket" || league.family === "fieldhockey" || league.family === "handball") {
@@ -718,8 +719,8 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
   const poolLine = pools === undefined ? "" : pools.after.map((line) => `${gap}${line}`).join("");
   // An arena of a size of its own says what it is at that size.
   const arenaAbout = arenaSize === undefined ? undefined : fill(sport === "nhl" ? words.said.arenaRinkAbout : words.said.arenaCourtAbout, { length: metres(arenaSize.length), width: metres(arenaSize.width), lengthM: metres(arenaSize.length * 0.3048), widthM: metres(arenaSize.width * 0.3048) });
-  const aboutText = arenaAbout !== undefined ? arenaAbout : pools !== undefined ? pools.about : isBudoSport(sport) ? budoAbout(o, language) : sport === "skating" ? skatingAbout(o, language) : sport === "athletics" ? athleticsAbout(o, language) : field !== undefined ? leagueAbout(league ?? LEAGUES[sport as FieldSport][0], o.year, language, { length: field.length, width: field.width }) : plan !== undefined ? leagueAbout(plan.league, o.year, language, plan.spec) : league !== undefined ? leagueAbout(league, o.year, language) : pitch === undefined ? words.about[sport] : fill(pitch.format === "futsal" ? words.soccer.aboutFutsal : words.about.soccer, { length: metres(pitch.length), width: metres(pitch.width) });
-  const about = `${words.said.on}${colon}${aboutText}${stop}${sport === "athletics" ? athleticsSentences(o, language) : sport === "skating" ? skatingSentences(o, language) : isBudoSport(sport) ? budoSentences(o, language) : ""}`;
+  const aboutText = arenaAbout !== undefined ? arenaAbout : pools !== undefined ? pools.about : isMatSport(sport) ? budoAbout(o, language) : sport === "skating" ? skatingAbout(o, language) : sport === "athletics" ? athleticsAbout(o, language) : field !== undefined ? leagueAbout(league ?? LEAGUES[sport as FieldSport][0], o.year, language, { length: field.length, width: field.width }) : plan !== undefined ? leagueAbout(plan.league, o.year, language, plan.spec) : league !== undefined ? leagueAbout(league, o.year, language) : pitch === undefined ? words.about[sport] : fill(pitch.format === "futsal" ? words.soccer.aboutFutsal : words.about.soccer, { length: metres(pitch.length), width: metres(pitch.width) });
+  const about = `${words.said.on}${colon}${aboutText}${stop}${sport === "athletics" ? athleticsSentences(o, language) : sport === "skating" ? skatingSentences(o, language) : isMatSport(sport) ? budoSentences(o, language) : ""}`;
   const halfLine = pitch !== undefined && !isScore(o) && (o.half === "left" || o.half === "right") ? `${gap}${words.soccer.half}` : "";
   // What the ground says about the size: that it is the published one, or that the ground has none and the international pitch is drawn.
   const year = typeof o.year === "number" && Number.isFinite(o.year) ? o.year : undefined;
@@ -913,7 +914,7 @@ function drawnKyogijo(o: SurfaceOptions | ScoreOptions): string {
   const crowded = crowdOf(o) !== undefined;
   const style = colourStyle(o, { left: leftTeam, right: rightTeam, home: isScore(o) ? o.home : undefined, away: isScore(o) ? o.away : undefined }, featured);
   const palette = isLook(o.look) ? o.look : undefined;
-  const budoLook = isBudoSport(sport) ? budoLookOf(sport, o.budo?.look ?? (sport === "dojo" ? dojoSpecOf(o.dojo).look : undefined)) : undefined;
+  const budoLook = isMatSport(sport) ? budoLookOf(sport, o.budo?.look ?? (sport === "dojo" ? dojoSpecOf(o.dojo).look : undefined)) : undefined;
   let notes: Notes | undefined;
   const theme = o.theme === "light" || o.theme === "dark" ? o.theme : undefined;
 

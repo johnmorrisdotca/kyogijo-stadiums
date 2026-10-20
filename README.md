@@ -1,7 +1,7 @@
 <h1 align="center">Kyogijo Stadiums <sub>競技場</sub></h1>
 
 <p align="center"><strong>Sports surfaces as SVG, drawn to scale, with the score on them.</strong><br>
-The NFL, CFL and IFAF football fields, the NHL rink, the NBA court, the soccer pitch and futsal court, the baseball field of every MLB ballpark, current and past, and every NPB home park, the rink and court of 167 NHL, NBA, WNBA and PWHL arenas, and the surfaces of curling, athletics, speed, short track and figure skating, swimming, water polo, diving, artistic swimming, tennis, volleyball (indoor, beach and sitting), badminton, pickleball, table tennis, padel, squash, racquetball, sepak takraw, teqball, roundnet, netball, lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey, handball, judo, karate, kendo, sumo, kyūdō and a dojo of tatami, thirty-nine sports in all, each drawn from its rulebook or its published distances, with each team's name and logo on its side and the score in the middle, a lineup and the situation of the game on them, with stands and a crowd, a pageant of flags and a 3D view. Wide or tall, light or dark, a badge for a list, a helper for React, a custom element and a frame for a page that runs no script. One function, no dependencies.</p>
+The football fields, the hockey rink, the basketball court, the soccer pitch, every MLB and NPB ballpark, 167 arenas, and the surfaces of curling, athletics, skating, swimming, water polo, diving, artistic swimming, twelve net and racket sports, seven field sports, the budō and the MMA cage, forty sports in all, each drawn from its rulebook or its published distances, with each team's name and logo on its side and the score in the middle, a lineup and the situation of the game on them, with stands and a crowd, a pageant of flags and a 3D view. Wide or tall, light or dark, a badge for a list, a helper for React, a custom element and a frame for a page that runs no script. One function, no dependencies.</p>
 
 <p align="center">
   <a href="https://github.com/johnmorrisdotca/kyogijo-stadiums/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/johnmorrisdotca/kyogijo-stadiums/actions/workflows/ci.yml/badge.svg"></a>
@@ -72,7 +72,7 @@ console.log(svg.startsWith("<svg"), svg.includes("USA 3, Canada 2"));
 
 ## Features
 
-- **Thirty-nine surfaces, to scale.** The NFL, CFL and IFAF fields, the NHL rink, the NBA court, the soccer pitch and futsal court, the baseball field, the curling sheet, twelve net and racket sports, the pools, the athletics stadium, the skating rinks, seven field sports and the budō. Every figure is cited in [sources](./docs/sources.md). [The surfaces](./docs/surfaces.md).
+- **Forty surfaces, to scale.** The NFL, CFL and IFAF fields, the NHL rink, the NBA court, the soccer pitch and futsal court, the baseball field, the curling sheet, the courts of twelve net and racket sports, the pools, the athletics stadium, the skating rinks, the fields of seven field sports, the budō and the MMA cage. Every figure is cited in [sources](./docs/sources.md). [The surfaces](./docs/surfaces.md).
 - **Each league's rulebook.** `league: "fiba"` draws a court as FIBA marks it: 48 variants, from the WNBA, the NCAA and the IIHF to Little League, PONY, softball, Curling Canada, FIVB's beach volleyball, rugby league and the NLL's box lacrosse, each cited. [League variants](./docs/variants.md).
 - **A realistic basketball floor.** `court: { hardwood: true }` draws maple boards that run the length of the court with staggered ends, grain, stained keys, the baskets and stanchions with soft shadows, a coaching box and benches, and a satin sheen, in every league and renderer. The clean floor stays the default. [Hardwood](./docs/hardwood.md).
 - **The stands and the crowd.** `crowd: true` draws the seating round any surface that has spectators: a bowl, two sides, a horseshoe, courtside rows or a ballpark's grandstands, with the people as seeded heads and shoulders in the home colours and the empty seats showing (`density`, or `attendance` over `capacity`). [The crowd](./docs/crowd.md).
@@ -119,7 +119,7 @@ console.log(svg.startsWith("<svg"), svg.includes("USA 3, Canada 2"));
 | Part | What it is |
 | --- | --- |
 | `drawKyogijo`, `drawSurface`, `drawScore`, `drawBadge` | The drawing, as a string of SVG. |
-| `SPORTS`, `PARKS`, `PARK_IDS`, `COURT_THEMES` | The thirty-nine sports, the 94 ballparks, the court looks. |
+| `SPORTS`, `PARKS`, `PARK_IDS`, `COURT_THEMES` | The forty sports, the 94 ballparks, the court looks. |
 | `SOCCER_PITCHES`, `SOCCER_PROVIDERS`, `rescale`, `soccerSpec` | The soccer pitches, the data providers' coordinate systems and the map between them. |
 | `GROUNDS`, `groundById` | The 64 soccer grounds, each pitch at its own size. |
 | `EVENTS`, `eventOptions` | The 18 special games: a rink in a ballpark, a court on a carrier's deck, with `host` and `placement` in the options. |
@@ -233,7 +233,7 @@ console.log(box(wide), box(tall));
 <br><em>The same game tall: the teams top and bottom, every word upright.</em>
 </p>
 
-[The surfaces](./docs/surfaces.md) lists the thirty-nine, with their sizes and what is drawn; [score and layout](./docs/score.md) has the options of a score, a strip and a compact card.
+[The surfaces](./docs/surfaces.md) lists the forty, with their sizes and what is drawn; [score and layout](./docs/score.md) has the options of a score, a strip and a compact card.
 
 ### A league's rulebook
 
@@ -580,7 +580,7 @@ A table is drawn in the ITTF's playing area, 14 m by 7 m (`net.area` for Masters
 <p align="center">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/tabletennis-area-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/tabletennis-area-desk-light.webp" alt="A table tennis table in its 14 m by 7 m playing area, with dark surrounds, chairs and table for the umpires" width="660">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/tabletennis-area-desk-light.webp" alt="A table tennis table in its playing area, with surrounds and the umpires' chairs" width="660">
 </picture>
 <br><em>The table in its playing area.</em>
 </p>
@@ -588,7 +588,7 @@ A table is drawn in the ITTF's playing area, 14 m by 7 m (`net.area` for Masters
 <p align="center">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/tabletennis-area-3d-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/tabletennis-area-3d-desk-light.webp" alt="The same area in 3D: the surrounds round the floor, the table on its legs" width="660">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/tabletennis-area-3d-desk-light.webp" alt="The same table area in 3D, from a low corner" width="660">
 </picture>
 <br><em>The same area in 3D.</em>
 </p>
@@ -600,7 +600,7 @@ A table is drawn in the ITTF's playing area, 14 m by 7 m (`net.area` for Masters
 <p align="center">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/judo-kata-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/judo-kata-desk-light.webp" alt="The IJF's kata area with the five judges' seats above it and the coach's chair below" width="660">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/judo-kata-desk-light.webp" alt="The IJF's kata area with the judges' seats above and the coach's chair below" width="660">
 </picture>
 <br><em>The kata area, its judges and the coach's chair.</em>
 </p>
@@ -608,9 +608,29 @@ A table is drawn in the ITTF's playing area, 14 m by 7 m (`net.area` for Masters
 <p align="center">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/judo-kata-tapes-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/judo-kata-tapes-desk-light.webp" alt="Three short white tapes 3 m apart across the middle of a kata area" width="660">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/judo-kata-tapes-desk-light.webp" alt="Three short white tapes across the middle of a kata area" width="660">
 </picture>
 <br><em>Close up: the centre tape and the two starting tapes.</em>
+</p>
+
+### An MMA cage
+
+`sport: "mma"`: an eight-sided cage on its platform, with the fence in mesh in 3D ([the combat sports page](./docs/combat.md)).
+
+<p align="center">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/mma-cage-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/mma-cage-desk-light.webp" alt="An MMA cage from above on its platform, with a score on the canvas" width="660">
+</picture>
+<br><em>The cage, with a score.</em>
+</p>
+
+<p align="center">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/mma-cage-3d-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/mma-cage-3d-desk-light.webp" alt="The cage in 3D: a solid platform, a mesh fence and padded posts" width="660">
+</picture>
+<br><em>The same cage in 3D.</em>
 </p>
 
 ### The element in a page
@@ -686,7 +706,7 @@ Nothing is branded. The drawing is coloured by custom properties on its `svg`, w
 
 ## Limits
 
-Each is held by a test: thirty-nine sports, ten soccer pitches and ten providers, 94 ballparks, 64 grounds, six units, forty-eight frames, a drawing of under 22 kB. The table, made from the code, is [limits](./docs/limits.md).
+Each is held by a test: forty sports, ten soccer pitches and ten providers, 94 ballparks, 64 grounds, six units, forty-eight frames, a drawing of under 22 kB. The table, made from the code, is [limits](./docs/limits.md).
 
 ## Accessibility
 

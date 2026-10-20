@@ -57,6 +57,7 @@ src/
 │   ├── kendo.ts        a kendo shiai-jo: the floor and its boards, the boundary lines, the cross, the kaishi-sen and the space outside
 │   ├── sumo.ts         a sumo dohyō: the clay, the 20 tawara, the jano-me, the shikiri-sen and the four tassels
 │   ├── kyudo.ts        a kyūdōjō: the shajō with its shooting positions and honza, the yamichi, the azuchi with its targets, the path for the arrows
+│   ├── cage.ts         an MMA cage: the platform and its steps, the canvas, the eight-sided fence with its gates, the padded posts
 │   ├── room.ts         the room round a budō surface as data: walls, surround, dais, banner, balconies, doors and windows, for a 3D view to raise
 │   ├── dojo.ts         the dojo builder's layout: the floor in jō, metres or mats, the lay, the walls, doors, windows, shrine and kamiza
 │   ├── dojo.api.ts     `dojo()` and `drawDojo()`: the floor as data, and drawn
@@ -234,6 +235,7 @@ src/
 │   ├── athletics.ts    the World Athletics tracks and their stagger tables
 │   ├── skating.ts      the ISU's long track, short track and figure skating rink
 │   ├── budo.ts         the IJF's, the AJJF's, the WKF's, the FIK's, the Japan Sumo Association's and the ANKF's figures, and the tatami standards
+│   ├── combat.ts       the MMA cage's figures: the Nevada commission's and the IMMAF's
 │   ├── football.ts     the fields
 │   └── baseball.ts     the diamonds
 ├── geometry-entry.ts   the geometry's entry
@@ -301,6 +303,7 @@ src/
 ├── uprights.pools.ts   the pools' starting blocks, flags and false start rope, springboards and platforms, water polo goals, judges' and starting platforms
 ├── uprights.track.ts   an athletics stadium's hurdles, steeplechase barriers, jumps' uprights and bars and cage; a skating rink's padding and boards
 ├── uprights.budo.ts    the dohyō's clay mound, a kyūdōjō's azuchi and its tilted targets, a dojo's walls
+├── uprights.cage.ts    an MMA cage in 3D: the platform as a solid block, the steps, the padded posts, the fence in mesh with its gates
 ├── uprights.rinks.ts   the hockey rink's boards and glass and goals, the basketball court's baskets and stanchions
 ├── uprights.board.ts   the score stood up: its badge on a board that faces the eye, hung over the middle of a court or a rink and standing behind an end of a field
 ├── venue.ts            the stands raised: every ring of `crowdStands()` a strip of raked planes with the crowd's pattern, the walks, the low walls, a ballpark's wall seats, the roof

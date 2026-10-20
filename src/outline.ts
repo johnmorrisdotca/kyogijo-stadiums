@@ -149,6 +149,7 @@ export function outlineOf(o: Pick<SurfaceOptions, "sport" | "park" | "fence" | "
     case "kendo":
     case "sumo":
     case "kyudo":
+    case "mma":
     case "dojo": {
       const plan = budoPlan({ ...o, sport, detail: o.detail } as Pick<SurfaceOptions, "sport" | "league" | "budo" | "dojo" | "range" | "detail">);
       const k = 1 / 0.3048;

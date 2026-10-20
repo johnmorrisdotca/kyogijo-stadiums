@@ -152,6 +152,16 @@ const SUMO: readonly Feature[] = [
   f("shikiri-sen", "--ky-line", "The two shikiri-sen."),
 ];
 
+const MMA: readonly Feature[] = [
+  f("apron", "--ky-apron", "The floor of the hall round the platform."),
+  f("platform", "--ky-bud-floor", "The platform the cage stands on."),
+  f("steps", "--ky-bud-floor", "The steps up to the platform."),
+  f("canvas", "--ky-surface", "The canvas inside the fence."),
+  f("fence", "--ky-ink", "The fence, one line on each flat."),
+  f("gates", "--ky-ink", "The swing of the two gates."),
+  f("posts", "--ky-ink", "The eight padded posts."),
+];
+
 const KYUDO: readonly Feature[] = [
   f("apron", "--ky-apron", "The ground round the range."),
   f("shajo", "--ky-bud-floor", "The floor of the shajō."),
@@ -481,6 +491,7 @@ export const FEATURE_INFO: Readonly<Record<string, readonly Feature[]>> = Object
   sumo: SUMO,
   kyudo: KYUDO,
   dojo: DOJO,
+  mma: MMA,
 });
 
 /**

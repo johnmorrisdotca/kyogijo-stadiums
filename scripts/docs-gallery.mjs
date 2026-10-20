@@ -144,6 +144,7 @@ const GAMES = {
   sumo: { away: SUMO_EAST, home: SUMO_WEST, status: "final", competition: "Day 15" },
   kyudo: { away: KYUDO_AWAY, home: KYUDO_HOME, status: "final", competition: "Team final" },
   dojo: { away: side("japan", 27), home: side("canada", 24), status: "final", competition: "Open day" },
+  mma: { away: side("mexico", 0), home: side("usa", 1), status: "final", competition: "Welterweight bout" },
   lacrosse: { away: side("canada", 27), home: side("usa", 24), status: "final", competition: "Final" },
   rugby: { away: RUGBY_AWAY, home: RUGBY_HOME, status: "final", competition: "Final" },
   afl: { away: AFL_AWAY, home: AFL_HOME, status: "final", competition: "Grand Final" },
@@ -1366,7 +1367,7 @@ function judgingPage() {
   };
 }
 
-export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, specialPage, dataPage, curlingPage, courtsPage, fieldsPage, poolsPage, athleticsPage, skatingPage, budoPage, stylingPage, rangesPage, layoutsPage, multiPage, judgingPage, pageantPage, situationPage];
+export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, specialPage, dataPage, curlingPage, courtsPage, fieldsPage, poolsPage, athleticsPage, skatingPage, budoPage, combatPage, stylingPage, rangesPage, layoutsPage, multiPage, judgingPage, pageantPage, situationPage];
 
 /** The sections of every page, with each item's picture made by running its code. */
 export function galleryData(lib) {
@@ -1558,6 +1559,31 @@ function budoPage() {
         item("budo-hall-kokugikan", "The Ryōgoku Kokugikan: the dohyō", hall("ryogoku-kokugikan")),
         item("budo-hall-butokuden", "The old Butokuden", hall("kyu-butokuden"), "The size of its floor was not found: 100 jō is plausible."),
         item("budo-hall-budokwai", "The Budokwai", hall("budokwai"), "The size of its dojo was not found: 50 jō is plausible."),
+      ]),
+    ],
+  };
+}
+
+/** The combat sports: the MMA cage (the boxing ring and the mats of wrestling follow). */
+function combatPage() {
+  const mma = (opts) => drawing({ sport: "mma", ...opts });
+  return {
+    slug: "gallery-combat",
+    title: "Gallery: the combat sports",
+    ja: "格闘技（総合格闘技のケージ）",
+    intro: "The MMA cage: an eight-sided fence on its platform at 30 feet and at the smaller 25, in its three looks, without its gates and steps, close up on a gate, with its parts named, and with a score. Every picture is drawn by the code beside it.",
+    sections: [
+      section("mma", "The MMA cage", "`sport: \"mma\"`: an eight-sided fenced area on a platform with steps, from the commissions' and the IMMAF's rules. The cage's size is the rules' (20 to 32 feet); the platform's height, the gates' width and the colours are marked as typical or ours in [Sources](./sources.md#the-combat-sports).", [
+        item("mma-cage", "The cage, 30 feet across", mma({}), "The canvas inside the fence, eight padded posts, two gates opposite each other with their swing, and steps up to the platform at each gate."),
+        item("mma-cage-25", "The smaller cage, 25 feet", mma({ budo: { size: 7.62 } }), "`size` is in metres: 25 feet is 7.62 m."),
+        item("mma-cage-20", "The smallest the rules allow, 20 feet", mma({ budo: { size: 6.096 } })),
+        item("mma-cage-black", "A black canvas", mma({ budo: { look: "black" } })),
+        item("mma-cage-blue", "A blue canvas", mma({ budo: { look: "blue" } })),
+        item("mma-cage-bare", "No gates, no steps", mma({ budo: { gates: false, steps: false } }), "The fence is then whole."),
+        item("mma-cage-gate", "Close up: a gate", mma({ range: "gate" })),
+        item("mma-cage-labels", "With its parts named", mma({ landmarks: true })),
+        item("mma-cage-score", "A score", drawing({ sport: "mma", ...GAMES.mma }), "A bout between a red corner and a blue corner has no home side."),
+        item("mma-cage-ja", "In Japanese", mma({ language: "ja" })),
       ]),
     ],
   };
