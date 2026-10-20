@@ -51,7 +51,7 @@ export interface Band {
 }
 
 /** A solid object on the court: a teqball table (a rectangle) or a roundnet set (a disc). */
-export type Solid = { kind: "table"; rect: Rect } | { kind: "set"; cx: number; cy: number; r: number };
+export type Solid = { kind: "table"; rect: Rect } | { kind: "set"; cx: number; cy: number; r: number } | { kind: "chair"; rect: Rect } | { kind: "desk"; rect: Rect };
 
 /** The looks each sport has, the sport's default first. */
 export const LOOKS: Readonly<Record<NetSport, readonly string[]>> = Object.freeze({
@@ -101,6 +101,10 @@ interface Common {
   zone: FreeZone;
   /** How the free zone was asked for. */
   free: "official" | "least" | "none";
+  /** Table tennis: the kind of event the playing area is for, and whether its surrounds and its umpires' places are drawn. */
+  area: "standard" | "masters" | "wheelchair";
+  surrounds: boolean;
+  umpires: boolean;
   /** Tennis: the singles sticks are drawn. */
   sticks: boolean;
 }
@@ -121,6 +125,7 @@ export type CourtPlan =
   | (Common & { sport: "netball"; league: NetballLeague; figures: NetballFigures });
 
 const FREE = ["official", "least", "none"] as const;
+const AREAS = ["standard", "masters", "wheelchair"] as const;
 
 /**
  * The court the options ask for. A `league` picks the rulebook (the sport's own by default; `fivb-beach` for beach volleyball); `net.look` a named look, `net.free`
@@ -139,7 +144,10 @@ export function courtFor(o: Pick<SurfaceOptions, "sport" | "league" | "net">): C
   const names = picked?.id === "wpv-sitting" ? LOOKS.volleyball.slice(0, 1) : LOOKS[sport];
   const look = asked.look === undefined ? (beach ? "sand" : names[0]) : asked.look;
   if (!names.includes(look)) throw new Error(`Unknown look "${String(look)}" for ${sport}: use one of ${names.join(", ")}`);
-  const common = { look, free, sticks: sport === "tennis" && asked.sticks === true };
+  const area = asked.area === undefined ? (free === "least" ? "masters" : "standard") : (AREAS as readonly string[]).includes(asked.area) ? asked.area : undefined;
+  if (area === undefined) throw new Error(`Unknown area "${String(asked.area)}": use one of ${AREAS.join(", ")}`);
+  if (asked.area !== undefined && sport !== "tabletennis") throw new Error(`net.area is for table tennis, not "${sport}"`);
+  const common = { look, free, sticks: sport === "tennis" && asked.sticks === true, area, surrounds: asked.surrounds !== false, umpires: asked.umpires !== false };
   const zoneOf = (zones: { official: FreeZone; least: FreeZone }): FreeZone => (free === "none" ? null : zones[free]);
   switch (sport) {
     case "tennis": {
@@ -165,7 +173,10 @@ export function courtFor(o: Pick<SurfaceOptions, "sport" | "league" | "net">): C
     case "tabletennis": {
       const league = picked?.family === "tabletennis" ? picked : TABLE_TENNIS_LEAGUES[0];
       const figures = netOf(league);
-      return { ...common, sport, league, figures, zone: zoneOf(figures.free) };
+      // The playing area is the space of the event's kind, the table centred in it; `free` says whether one is drawn at all.
+      const space = figures.space[area];
+      const zone: FreeZone = free === "none" ? null : { side: (space.width - figures.width) / 2, end: (space.length - figures.length) / 2 };
+      return { ...common, sport, league, figures, zone };
     }
     case "padel": {
       const league = picked?.family === "padel" ? picked : PADEL_LEAGUES[0];
@@ -257,7 +268,7 @@ export function courtGeometry(plan: CourtPlan): CourtGeometry {
     case "pickleball":
       return pickleballGeometry(plan.figures);
     case "tabletennis":
-      return tableGeometry(plan.figures);
+      return tableGeometry(plan.figures, plan);
     case "padel":
       return padelGeometry(plan.figures);
     case "squash":
@@ -414,11 +425,30 @@ function pickleballGeometry(f: PickleballFigures): CourtGeometry {
   };
 }
 
-function tableGeometry(f: TableTennisFigures): CourtGeometry {
+function tableGeometry(f: TableTennisFigures, plan: Pick<Common, "zone" | "surrounds" | "umpires">): CourtGeometry {
   const { length: L, width: W, edgeLine: e, centreLine: c } = f;
   const cx = L / 2;
   const out = f.net.postOutside;
   const post = Math.max(feet(0.03), L * 0.01);
+  const bands: Band[] = [];
+  const solids: Solid[] = [];
+  const zone = plan.zone;
+  if (zone !== null) {
+    // The playing area is enclosed by surrounds, which are part of it (3.2.3.2 and 3.2.3.3): four boards along the edge of the space, inside it.
+    if (plan.surrounds) {
+      const t = f.surround.thickness;
+      const [x0, y0, x1, y1] = [-zone.end, -zone.side, L + zone.end, W + zone.side];
+      bands.push({ kind: "wall", rect: [x0, y0, x1, y0 + t] }, { kind: "wall", rect: [x0, y1 - t, x1, y1] }, { kind: "wall", rect: [x0, y0 + t, x0 + t, y1 - t] }, { kind: "wall", rect: [x1 - t, y0 + t, x1, y1 - t] });
+    }
+    // The umpire sits or stands in line with the net and the assistant umpire directly facing him or her at the other side of the table (3.3.2.2); the umpires' table is beside the umpire's chair.
+    if (plan.umpires) {
+      const half = f.umpires.chair / 2;
+      const { length: dl, width: dw } = f.umpires.desk;
+      solids.push({ kind: "chair", rect: [cx - half, -f.umpires.away - half, cx + half, -f.umpires.away + half] });
+      solids.push({ kind: "chair", rect: [cx - half, W + f.umpires.away - half, cx + half, W + f.umpires.away + half] });
+      solids.push({ kind: "desk", rect: [cx + half + dl * 0.1, -f.umpires.away - dw / 2, cx + half + dl * 1.1, -f.umpires.away + dw / 2] });
+    }
+  }
   return {
     length: L,
     width: W,
@@ -431,6 +461,8 @@ function tableGeometry(f: TableTennisFigures): CourtGeometry {
     antennae: [],
     sticks: [],
     ...none(),
+    bands,
+    solids,
   };
 }
 

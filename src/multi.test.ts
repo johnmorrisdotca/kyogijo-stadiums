@@ -247,7 +247,7 @@ describe("a stadium round the layout", () => {
   it("is one the package already has: the stands are the crowd model's, and the surfaces are drawKyogijo's own markup", () => {
     const svg = drawMulti({ preset: "tabletennis-4", stadium: { density: 0 }, id: "t" });
     expect(svg).toContain("ky-cr-bed");
-    const cell = drawKyogijo({ sport: "tabletennis", id: "t-s1", margin: 0, style: "none" });
+    const cell = drawKyogijo({ sport: "tabletennis", net: { free: "none" }, id: "t-s1", margin: 0, style: "none" });
     const body = cell.slice(cell.indexOf('<g class="ky-surface-group">'), cell.lastIndexOf("</svg>")).replace(/<rect class="ky-apron"[^>]*\/>/, "");
     expect(svg).toContain(body);
     expect(drawMulti({ preset: "tabletennis-4", stadium: { crowd: false } })).toContain("ky-cr-bed");

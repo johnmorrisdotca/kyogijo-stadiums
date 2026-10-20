@@ -487,9 +487,18 @@ export interface NetStyle {
   look?: string;
   /**
    * The free zone drawn round the court: `official` (the default: the figure a rulebook gives for its own competitions, where it gives one), `least` (the least it allows
-   * or recommends) or `none`. Tennis (Appendix X), volleyball, beach volleyball and sitting volleyball (Rule 1.1), pickleball (Rule 3.A.3), sepak takraw (Law 1.5) and netball (Rule 1, item 8) give figures; badminton, table tennis, padel, squash, racquetball, teqball and roundnet do not.
+   * or recommends) or `none`. Tennis (Appendix X), volleyball, beach volleyball and sitting volleyball (Rule 1.1), pickleball (Rule 3.A.3), sepak takraw (Law 1.5), netball (Rule 1, item 8) and table tennis (the ITTF's 3.2.3.1, the playing space) give figures; badminton, padel, squash, racquetball, teqball and roundnet do not.
    */
   free?: "official" | "least" | "none";
+  /**
+   * Table tennis: the kind of event the playing area is for (the ITTF's Regulations for International Competitions, 3.2.3.1): `standard` (the default: a space of at least 14 m by 7 m by 5 m, for the Worlds and every international event),
+   * `masters` (10 m by 5 m, the least a Masters event allows) or `wheelchair` (8 m by 6 m). It sets the free zone round the table (`free: "none"` still draws none); the standard one is `free: "official"` and the Masters one `free: "least"`.
+   */
+  area?: "standard" | "masters" | "wheelchair";
+  /** Table tennis: draw the surrounds that enclose the playing area, 75 cm high (ours, within the 50 cm to 100 cm of 3.2.3.3), of one dark colour. On by default where a playing area is drawn. */
+  surrounds?: boolean;
+  /** Table tennis: draw the umpire's chair in line with the net, the assistant umpire's chair facing it across the table, and the umpires' table (3.3.2.2; their sizes are ours). On by default where a playing area is drawn. */
+  umpires?: boolean;
   /** Tennis: draw the two singles sticks that hold a doubles net up for a singles match, 3 feet outside the singles court (Rule 1). Off by default. */
   sticks?: boolean;
 }

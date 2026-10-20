@@ -22,6 +22,8 @@ interface Look {
   tin?: string;
   table?: string;
   setnet?: string;
+  /** The umpires' chairs of a table tennis area. */
+  chair?: string;
 }
 
 const WALL = { light: { wall: "#4f575f", mesh: "#98a1a9" }, dark: { wall: "#8b949c", mesh: "#59626a" } };
@@ -33,6 +35,8 @@ interface Pair {
   light: Look;
   dark: Look;
 }
+
+const TT = { light: { wall: "#161a1f", table: "#d8d4c8", chair: "#ece7da" }, dark: { wall: "#05070a", table: "#8f8b80", chair: "#b9b4a6" } };
 
 const NET = { light: "#20262b", dark: "#e6e9ec" };
 
@@ -59,9 +63,10 @@ export const COURT_LOOKS: Readonly<Record<NetSport, Readonly<Record<string, Pair
     green: { light: { surface: "#4f9a5c", free: "#3a7a47", apron: "#cdd6c8", area: "#82c28d" }, dark: { surface: "#386f43", free: "#2b5835", apron: "#1a1c1b", area: "#4e8c59" } },
     red: { light: { surface: "#b5503a", free: "#8f3b2b", apron: "#d6cdc4", area: "#d27a62" }, dark: { surface: "#8a3d2c", free: "#6c2e21", apron: "#1a1c1b", area: "#a8523d" } },
   },
+  // The surrounds are of one dark colour (the ITTF's 3.2.3.3), and the floor is not light (3.2.3.8): both looks are dark blues and greens. The surrounds, the umpires' table and the chairs are ours.
   tabletennis: {
-    blue: { light: { surface: "#1f4f8f", free: "#1f4f8f", apron: "#cfd6df" }, dark: { surface: "#1a4079", free: "#1a4079", apron: "#1a1d21" } },
-    green: { light: { surface: "#2f6f4f", free: "#2f6f4f", apron: "#cdd6c8" }, dark: { surface: "#25583f", free: "#25583f", apron: "#1a1d1b" } },
+    blue: { light: { surface: "#1f4f8f", free: "#1f4f8f", apron: "#cfd6df", ...TT.light }, dark: { surface: "#1a4079", free: "#1a4079", apron: "#1a1d21", ...TT.dark } },
+    green: { light: { surface: "#2f6f4f", free: "#2f6f4f", apron: "#cdd6c8", ...TT.light }, dark: { surface: "#25583f", free: "#25583f", apron: "#1a1d1b", ...TT.dark } },
   },
   padel: {
     blue: { light: { surface: "#2f6fb5", free: "#2f6fb5", apron: "#d3d9d0", ...WALL.light }, dark: { surface: "#2a5a93", free: "#2a5a93", apron: "#1a1c1b", ...WALL.dark } },
@@ -98,7 +103,7 @@ export const COURT_LOOKS: Readonly<Record<NetSport, Readonly<Record<string, Pair
   },
 };
 
-const OPTIONAL: readonly (readonly [keyof Look, string])[] = [["area", "--ky-area"], ["line", "--ky-line"], ["wallLine", "--ky-wall-line"], ["wall", "--ky-wall"], ["mesh", "--ky-mesh"], ["face", "--ky-face"], ["tin", "--ky-tin"], ["table", "--ky-table"], ["setnet", "--ky-setnet"]];
+const OPTIONAL: readonly (readonly [keyof Look, string])[] = [["area", "--ky-area"], ["line", "--ky-line"], ["wallLine", "--ky-wall-line"], ["wall", "--ky-wall"], ["mesh", "--ky-mesh"], ["face", "--ky-face"], ["tin", "--ky-tin"], ["table", "--ky-table"], ["setnet", "--ky-setnet"], ["chair", "--ky-chair"]];
 
 const vars = (look: Look, net: string): string => `--ky-surface:${look.surface};--ky-free:${look.free};--ky-apron:${look.apron};--ky-net:${net}${OPTIONAL.map(([key, name]) => (look[key] === undefined ? "" : `;${name}:${look[key]}`)).join("")}`;
 
@@ -130,6 +135,7 @@ const FIXTURES = `
 .kyogijo .ky-tin{fill:var(--ky-tin)}
 .kyogijo .ky-wall-line{fill:var(--ky-wall-line,var(--ky-line))}
 .kyogijo .ky-table{fill:var(--ky-table)}
+.kyogijo .ky-chair{fill:var(--ky-chair)}
 .kyogijo .ky-set-net{fill:var(--ky-setnet)}`.trim();
 
 /** The rules of a drawing of this sport in this look: the shared rules, the rules of the fixtures its sport has, and the look's colours. */

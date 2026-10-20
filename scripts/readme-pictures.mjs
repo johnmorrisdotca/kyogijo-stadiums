@@ -96,6 +96,10 @@ await takePictures({
         }),
       ),
     },
+    // The table tennis playing area (0.15.0): the table in its 14 m by 7 m area, enclosed by surrounds, with the umpires' chairs, as the demo draws it (its own surface, no score).
+    { subject: "tabletennis-area", views: ["desk"], url: address("sport=tabletennis&size=surface&orientation=landscape"), ready: READY, target: stage, prepare: behind("spotlight") },
+    // The same area in 3D from a low corner.
+    { subject: "tabletennis-area-3d", views: ["desk"], url: address("sport=tabletennis&size=surface&view=3d&viewpoint=corner"), ready: READY_TURN, target: stage, prepare: behind("spotlight") },
     // The strips for a list of games, on midnight. They are a list and not a surface, so the background is laid behind the list itself, by the same module and in the same way as behind the felt.
     {
       subject: "badges",

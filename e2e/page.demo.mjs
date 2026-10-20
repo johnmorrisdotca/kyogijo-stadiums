@@ -33,7 +33,8 @@ for (const sport of SPORTS) {
     // Not blank: the drawing has many parts and its picture is more than a flat colour.
     expect(await page.locator(`${at("stage")} svg *`).count()).toBeGreaterThan(NET.includes(sport) ? 25 : 40);
     const shot = await page.locator(at("stage")).screenshot();
-    expect(shot.length).toBeGreaterThan(sport === "curling" || NET.includes(sport) ? 3000 : 8000);
+    // A table tennis area is one floor colour round a small table (14 m by 7 m round 2.74 m by 1.525 m), so its picture compresses further.
+    expect(shot.length).toBeGreaterThan(sport === "tabletennis" ? 2000 : sport === "curling" || NET.includes(sport) ? 3000 : 8000);
   });
 }
 

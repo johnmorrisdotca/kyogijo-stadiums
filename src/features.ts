@@ -328,6 +328,8 @@ const NET: readonly Feature[] = [
 const APRON_COURT: readonly Feature[] = [f("apron", "--ky-apron", "The ground round the court."), f("court", "--ky-surface", "The court."), f("lines", LINE, "The painted lines.")];
 /** A padel court: the net's features, and the walls and the metal fence of its enclosure. */
 const PADEL: readonly Feature[] = [...NET, f("walls", "--ky-wall", "The walls of the enclosure."), f("fence", "--ky-mesh", "The metal fence between the walls.")];
+/** A table tennis area: the net's features, the surrounds round the playing area, the umpires' table and their chairs. */
+const TABLE_TENNIS: readonly Feature[] = [...NET, f("walls", "--ky-wall", "The surrounds that enclose the playing area."), f("umpires-table", "--ky-table", "The umpires' table."), f("chairs", "--ky-chair", "The umpire's chair and the assistant umpire's.")];
 /** A squash court: no net, walls round it, and its front wall laid flat beside it, with its tin. */
 const SQUASH: readonly Feature[] = [...APRON_COURT, f("walls", "--ky-wall", "The walls round the court."), f("wall-face", "--ky-face", "The front wall, laid flat beside the court."), f("tin", "--ky-tin", "The tin, on the front wall."), f("wall-lines", "--ky-wall-line", "The lines on the front wall.")];
 /** A racquetball court: no net, and walls round it. */
@@ -456,7 +458,7 @@ export const FEATURE_INFO: Readonly<Record<string, readonly Feature[]>> = Object
   volleyball: NET,
   badminton: NET,
   pickleball: NET,
-  tabletennis: NET,
+  tabletennis: TABLE_TENNIS,
   padel: PADEL,
   squash: SQUASH,
   racquetball: RACQUETBALL,

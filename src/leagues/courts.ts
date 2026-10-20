@@ -133,7 +133,24 @@ export interface TableTennisFigures {
     /** The outside limits of a post are this far outside the side line. */
     postOutside: number;
   };
+  /**
+   * The playing space of each kind of event (the ITTF's Regulations for International Competitions, 3.2.3.1): a cuboid of at least 14 m by 7 m by 5 m; for wheelchair events it may be reduced to
+   * 8 m by 6 m, and for Masters events to 10 m by 5 m. The height is the cuboid's, which no reduction touches.
+   */
+  space: { standard: PlayingSpace; masters: PlayingSpace; wheelchair: PlayingSpace };
+  /** The surrounds that enclose the playing area: 50 cm to 100 cm high, all of one dark colour, the corners may be left open (3.2.3.3); `drawn` is the height drawn and `thickness` the board's, both ours within the rule. */
+  surround: { least: number; greatest: number; drawn: number; thickness: number };
+  /** The umpires' chairs and table, part of the playing area (3.2.3.2). The umpire sits or stands in line with the net, the assistant umpire directly facing him or her at the other side of the table (3.3.2.2); the sizes and the distance from the table are ours. */
+  umpires: { chair: number; desk: { length: number; width: number }; away: number };
+  /** The playing area is `standard` for the international events, `masters` the least a Masters event allows (the least for any event but a wheelchair one). The `official` zone is the standard space and the `least` the Masters one. */
   free: FreeZones;
+}
+
+/** A playing space: the cuboid's length, width and height. */
+export interface PlayingSpace {
+  length: number;
+  width: number;
+  height: number;
 }
 
 /**
@@ -403,7 +420,8 @@ export const USAP_PICKLEBALL: PickleballFigures = {
 /**
  * The ITTF's table, from Laws 2.1 and 2.2 of the Laws of Table Tennis (the 2026 statutes), in metres: 2.74 by 1.525 m and 76 cm above the floor; a white side line
  * and end line 2 cm wide, a white centre line 3 mm wide; the net 15.25 cm above the playing surface, hung from posts 15.25 cm high whose outside limits are 15.25 cm
- * outside the side lines.
+ * outside the side lines. The playing area round it is the ITTF's Regulations for International Competitions, 3.2.3 (ITTF Statutes 2026, chapter 3): a space of 14 m by 7 m by 5 m (8 m by 6 m
+ * for wheelchair events, 10 m by 5 m for Masters events), enclosed by surrounds 50 cm to 100 cm high, all of one dark colour, with the umpires' chairs and tables inside it.
  */
 export const ITTF_TABLE: TableTennisFigures = {
   length: 2.74,
@@ -412,7 +430,11 @@ export const ITTF_TABLE: TableTennisFigures = {
   edgeLine: 0.02,
   centreLine: 0.003,
   net: { height: 0.1525, postHeight: 0.1525, postOutside: 0.1525 },
-  free: { official: null, least: null },
+  space: { standard: { length: 14, width: 7, height: 5 }, masters: { length: 10, width: 5, height: 5 }, wheelchair: { length: 8, width: 6, height: 5 } },
+  surround: { least: 0.5, greatest: 1, drawn: 0.75, thickness: 0.05 },
+  umpires: { chair: 0.5, desk: { length: 1.2, width: 0.5 }, away: 0.9 },
+  // The table is centred in the space: what lies beyond its end lines and its side lines is half of what the space has over the table.
+  free: { official: { side: (7 - 1.525) / 2, end: (14 - 2.74) / 2 }, least: { side: (5 - 1.525) / 2, end: (10 - 2.74) / 2 } },
 };
 
 /**

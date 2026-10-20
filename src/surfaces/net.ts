@@ -33,6 +33,8 @@ const BAND: Readonly<Record<Band["kind"], readonly [feature: string, cls: string
 /** A solid on the court: a table is a rectangle, a roundnet set a rim round a net. */
 function solid(o: BuildOptions, s: Solid): string {
   if (s.kind === "table") return el("path", { class: ft(o, "table", "ky-table"), d: box(s.rect) });
+  if (s.kind === "chair") return el("path", { class: ft(o, "chairs", "ky-chair"), d: box(s.rect) });
+  if (s.kind === "desk") return el("path", { class: ft(o, "umpires-table", "ky-table"), d: box(s.rect) });
   return el("circle", { class: ft(o, "net", "ky-nt-post"), cx: s.cx, cy: s.cy, r: s.r }) + el("circle", { class: ft(o, "net", "ky-set-net"), cx: s.cx, cy: s.cy, r: s.r * 0.84 });
 }
 

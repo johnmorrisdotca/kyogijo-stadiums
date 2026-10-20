@@ -3,9 +3,9 @@
 // figures how high; what the rules leave to the maker (a post's height in tennis, the size of the mesh) is said where it is chosen.
 import type { CourtGeometry, CourtPlan } from "./court.ts";
 import type { TennisFigures, VolleyballFigures, BadmintonFigures, PickleballFigures, TableTennisFigures } from "./leagues/courts.ts";
-import { bar, flat, n, pole, type Upright } from "./turn.kit.ts";
+import { bar, flat, n, pole, type Plane, type Upright } from "./turn.kit.ts";
 import { moreUprights } from "./uprights.more.ts";
-import { netPlane, sag, tableBody } from "./uprights.netkit.ts";
+import { netPlane, sag, standingBox, surroundWalls, tableBody } from "./uprights.netkit.ts";
 import { convertLength } from "./units.ts";
 
 export interface NetEnd {
@@ -112,16 +112,22 @@ export function netUprights(plan: CourtPlan, geo: CourtGeometry, settings: { net
       const room = Math.max(L, W) * 5;
       // Under the table lies its shadow on that floor, so that the legs stand on something.
       const grow = Math.max(convertLength(0.25, "m", "ft"), thin * 4);
-      items.push({
-        id: "ground",
-        kind: "table-legs",
-        at: [L / 2, W / 2],
-        height: 0,
-        planes: [
-          flat("ground", "ground", -room, -room, L + room, W + room, 0, `<rect width="${n(L + 2 * room)}" height="${n(W + 2 * room)}" class="u-ground"/>`),
-          flat("table-shadow", "ground", -grow / 2, -grow / 2, L + grow / 2, W + grow / 2, 0.005, `<rect width="${n(L + grow)}" height="${n(W + grow)}" rx="${n(grow)}" class="u-shadow"/>`),
-        ],
-      });
+      const ground: Plane[] = [flat("ground", "ground", -room, -room, L + room, W + room, 0, `<rect width="${n(L + 2 * room)}" height="${n(W + 2 * room)}" class="u-ground"/>`)];
+      // The playing area has its own floor, in the look's colour, and is enclosed by its surrounds, with the umpires' chairs and table inside (the same figures as the flat drawing's).
+      const zone = plan.zone;
+      if (zone !== null) {
+        const [ax0, ay0, ax1, ay1] = [-zone.end, -zone.side, L + zone.end, W + zone.side];
+        ground.push(flat("area-floor", "ground", ax0, ay0, ax1, ay1, 0.003, `<rect width="${n(ax1 - ax0)}" height="${n(ay1 - ay0)}" class="ky-free"/>`));
+        if (plan.surrounds) items.push({ id: "surrounds", kind: "surrounds", at: [L / 2, W / 2], height: f.surround.drawn, planes: surroundWalls("surround", [ax0, ay0, ax1, ay1], f.surround.drawn) });
+        const chairs = geo.solids.filter((one) => one.kind === "chair" || one.kind === "desk");
+        if (chairs.length > 0) {
+          // An umpire's chair is 40 cm to the seat and the table 75 cm (ours: the rules give no height).
+          const planes = chairs.flatMap((one, i) => (one.kind === "chair" || one.kind === "desk" ? standingBox(`${one.kind}-${i + 1}`, one.kind, one.rect, convertLength(one.kind === "chair" ? 0.45 : 0.75, "m", "ft"), "u-chair") : []));
+          items.push({ id: "officials", kind: "officials", at: [L / 2, W / 2], height: convertLength(0.75, "m", "ft"), planes });
+        }
+      }
+      ground.push(flat("table-shadow", "ground", -grow / 2, -grow / 2, L + grow / 2, W + grow / 2, 0.005, `<rect width="${n(L + grow)}" height="${n(W + grow)}" rx="${n(grow)}" class="u-shadow"/>`));
+      items.push({ id: "ground", kind: "table-legs", at: [L / 2, W / 2], height: 0, planes: ground });
       return { items, lift };
     }
     default:

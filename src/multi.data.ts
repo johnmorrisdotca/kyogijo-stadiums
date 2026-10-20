@@ -1,5 +1,6 @@
 // The tournament layouts and the halls they are set in, as data. Every figure is a rulebook's or a federation's specification, or a venue's published floor, and says where in `sources`; docs/sources.md
 // (Tournament layouts) has the rule for each and says plainly what is ours. Nothing here draws.
+import { ITTF_TABLE } from "./leagues/courts.ts";
 import { LEAGUE_SOURCES, type LeagueSource } from "./leagues/sources.ts";
 import type { MultiSpec, MultiVenue } from "./multi.types.ts";
 
@@ -10,13 +11,22 @@ const source = (s: LeagueSource): [string, Readonly<LeagueSource>] => [s.id, Obj
 export const MULTI_SOURCES: Readonly<Record<string, Readonly<LeagueSource>>> = Object.freeze(
   Object.fromEntries([
     source({
+      id: "ittf-statutes-2026",
+      title: "ITTF Statutes 2026 (clean version), chapter 3 Regulations for International Competitions (the Handbook's chapter 3): 3.2.3 Playing Conditions, 3.2.5.5 and 3.3.2.2",
+      by: "International Table Tennis Federation",
+      edition: "2026 (effective 1 January 2026)",
+      url: "https://db.ittf.com/sites/default/files/public/2026-02/2026_Statutes_v1_consolidated_clean.pdf",
+      read: "2026-10-20",
+      note: "the playing space a cuboid of at least 14 m by 7 m by 5 m, for wheelchair events at least 8 m by 6 m and for Masters events at least 10 m by 5 m (3.2.3.1); the equipment and fittings that are part of each playing area: the table, the flooring, the umpires' tables and chairs, the score indicators, the surrounds (3.2.3.2); surrounds enclosing the playing area, 50 cm to 100 cm high, all of the same dark colour, the corners may be left open (3.2.3.3); the flooring not light-coloured, not brightly reflecting or slippery, resilient, and in World, Olympic and Paralympic title competitions wood or a rollable synthetic material the ITTF authorises (3.2.3.8); up to 6 advertisements on the floor of the playing area (3.2.5.5); the umpire sits or stands in line with the net and the assistant umpire directly facing him or her at the other side of the table (3.3.2.2)",
+    }),
+    source({
       id: "ittf-handbook",
       title: "The ITTF Handbook 2022, Section 3 Regulations for International Competitions, 3.2.3 Playing Conditions and 3.2.5.5 (advertisements on the floor)",
       by: "International Table Tennis Federation",
       edition: "2022 (v1.0, clean)",
       url: "https://documents.ittf.sport/sites/default/files/public/2022-02/ITTF_HB_2022_clean_v1_0.pdf",
       read: READ,
-      note: "the playing space at least 14 m by 7 m by 5 m, the four corners may be covered by surrounds of at most 1.5 m (3.2.3.1); each playing area enclosed by surrounds about 75 cm high, of one dark colour, separating it from its neighbours and from the spectators (3.2.3.3); the umpire's table and chair and the score indicators are part of the area (3.2.3.2); up to 6 advertisements on the floor of the area (3.2.5.5). A later edition (the 2024 Statutes) was seen only in a search summary, which says the space may be of any shape within a rectangle of the same size; the 2022 text is the one drawn.",
+      note: "(superseded by the 2026 Statutes' chapter 3, which has no 1.5 m for the corners and 50 cm to 100 cm for the surrounds) the playing space at least 14 m by 7 m by 5 m, the four corners may be covered by surrounds of at most 1.5 m (3.2.3.1); each playing area enclosed by surrounds about 75 cm high, of one dark colour, separating it from its neighbours and from the spectators (3.2.3.3); the umpire's table and chair and the score indicators are part of the area (3.2.3.2); up to 6 advertisements on the floor of the area (3.2.5.5). A later edition (the 2024 Statutes) was seen only in a search summary, which says the space may be of any shape within a rectangle of the same size; the 2022 text is the one drawn.",
     }),
     source({
       id: "bwf-facilities",
@@ -204,11 +214,12 @@ export const MULTI_PRESETS: readonly MultiSpec[] = Object.freeze([
     id: "tabletennis-4",
     name: { en: "Table tennis, four areas (2 x 2)", ja: "卓球 4面（2×2）" },
     sport: "tabletennis",
-    surface: { sport: "tabletennis" },
+    // The area is the unit: each bay below is the playing space the table stands centred in (the single surface's own `net.free`), so the layout draws that area itself, with its surrounds and chairs, and the surface only the table.
+    surface: { sport: "tabletennis", net: { free: "none" } },
     kind: "cells",
     rows: 2,
     columns: 2,
-    bay: { length: 14, width: 7, unit: "m" },
+    bay: { length: ITTF_TABLE.space.standard.length, width: ITTF_TABLE.space.standard.width, unit: "m" },
     word: "table",
     parts: TT_PARTS,
     floor: "blue",
@@ -222,35 +233,36 @@ export const MULTI_PRESETS: readonly MultiSpec[] = Object.freeze([
       ja: { name: "世界卓球選手権団体戦ファイナルズ", venue: "OVOアリーナ・ウェンブリー", city: "ロンドン" },
       floor: "ovo-arena-wembley",
       note: {
-        en: "Four playing areas on one blue floor with seats round the perimeter, one scoreboard for all four hung over their middle, barriers and an umpire's chair at each (read from the owner's photographs; no plan was seen). Each area is drawn at the Handbook's least, 14 m by 7 m.",
+        en: "Four playing areas on one blue floor with seats round the perimeter, one scoreboard for all four hung over their middle, barriers and an umpire's chair at each (read from the owner's photographs; no plan was seen). Each area is drawn at the Statutes' least, 14 m by 7 m.",
         ja: "青い床1枚の上に競技エリアが4面あり、周囲に客席があります。4面の中央の真上に共用のスコアボードが1台吊るされ、各エリアにフェンスと審判席があります（提供された写真から読み取りました。図面は見ていません）。各エリアは規則の最小値14m×7mで描いています。",
       },
-      sources: ["ittf-london-2026", "ittf-handbook", "ovo-arena"],
+      sources: ["ittf-london-2026", "ittf-statutes-2026", "ovo-arena"],
     },
     rule: {
-      en: "ITTF Handbook 2022, 3.2.3.1: a playing space of at least 14 m by 7 m for each area; 3.2.3.3: surrounds about 75 cm high between neighbouring areas and the spectators.",
-      ja: "ITTFハンドブック2022 3.2.3.1：各エリアは14m×7m以上の競技空間。3.2.3.3：隣のエリアや観客との間に高さ約75cmのフェンス。",
+      en: "ITTF Statutes 2026, chapter 3 (the Handbook), 3.2.3.1: a playing space of at least 14 m by 7 m by 5 m for each area; 3.2.3.3: surrounds 50 cm to 100 cm high, all of one dark colour, enclosing each area (75 cm drawn: ours, within the rule).",
+      ja: "ITTF規程2026 第3章（ハンドブック）3.2.3.1：各エリアは14m×7m×5m以上の競技空間。3.2.3.3：各エリアを囲むフェンスは高さ50cm〜100cmで、すべて同じ濃い色（描画は75cm：このパッケージの判断で、規則の範囲内）。",
     },
-    sources: ["ittf-handbook", "ittf-london-2026", "ovo-arena"],
+    sources: ["ittf-statutes-2026", "ittf-london-2026", "ovo-arena"],
   },
   {
     id: "tabletennis-8",
     name: { en: "Table tennis, eight areas (2 x 4)", ja: "卓球 8面（2×4）" },
     sport: "tabletennis",
-    surface: { sport: "tabletennis" },
+    // The area is the unit: each bay below is the playing space the table stands centred in (the single surface's own `net.free`), so the layout draws that area itself, with its surrounds and chairs, and the surface only the table.
+    surface: { sport: "tabletennis", net: { free: "none" } },
     kind: "cells",
     rows: 2,
     columns: 4,
-    bay: { length: 14, width: 7, unit: "m" },
+    bay: { length: ITTF_TABLE.space.standard.length, width: ITTF_TABLE.space.standard.width, unit: "m" },
     word: "table",
     parts: TT_PARTS,
     floor: "blue",
     basis: "rulebook",
     rule: {
-      en: "ITTF Handbook 2022, 3.2.3.1 and 3.2.3.3: eight areas of 14 m by 7 m, in two rows. No event's count of areas was sourced for this one; it is the grid the rule allows.",
-      ja: "ITTFハンドブック2022 3.2.3.1と3.2.3.3：14m×7mのエリア8面を2行4列に並べます。特定の大会の面数は確認できていません。規則が認める並べ方です。",
+      en: "ITTF Statutes 2026, chapter 3 (the Handbook), 3.2.3.1 and 3.2.3.3: eight areas of 14 m by 7 m, in two rows. No event's count of areas was sourced for this one; it is the grid the rule allows.",
+      ja: "ITTF規程2026 第3章（ハンドブック）3.2.3.1と3.2.3.3：14m×7mのエリア8面を2行4列に並べます。特定の大会の面数は確認できていません。規則が認める並べ方です。",
     },
-    sources: ["ittf-handbook"],
+    sources: ["ittf-statutes-2026"],
   },
   {
     id: "pickleball-2x2",

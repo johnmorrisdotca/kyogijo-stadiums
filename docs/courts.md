@@ -63,7 +63,9 @@ ATP and WTA matches are played by the ITF's rules, so there is one tennis league
 | --- | --- |
 | `league` | Volleyball: `fivb` (the default), `fivb-beach` or `wpv-sitting`; squash: `wsf` (the default, singles), `wsf-doubles` or `wsf-doubles-wide`. The other sports have one rulebook each. |
 | `net.look` | A named look (below): the colour of the court and of the ground round it. The lines and the sizes are the rulebook's whatever the look. An unknown name is an error that lists the ones the sport has. |
-| `net.free` | The free zone drawn round the court: `official` (the default), `least` or `none`. Where a rulebook gives figures: tennis's Appendix X recommends 21 ft behind the baselines and 12 ft beside the sidelines for international play (`official`) and 18 ft and 10 ft for clubs (`least`); volleyball's Rule 1.1 asks 5 m beside the side lines and 6.5 m behind the end lines for the FIVB's competitions (`official`, with its extension of the attack line and its posts 1 m out) and 3 m all round at least (`least`, with the posts 0.5 m out and no extension); beach volleyball's 5 and 3 m; pickleball's 3.A.3 recommends a playing surface of 34 by 64 ft for tournaments (`official`) and asks at least 30 by 60 (`least`); sitting volleyball's Rule 1.1 asks 4 m beside the side lines and 6 m behind the end lines for World ParaVolley's competitions (`official`) and 3 m at least (`least`); sepak takraw's Law 1.5 asks 3.0 m round the court and netball's Rule 1 (item 8) a court surround of 3.05 m (one figure each, so `official` and `least` are the same). Badminton's Laws, the ITTF's, the FIP's, World Squash's, the IRF's, the FITEQ's and the Roundnet Federation's give no figure, so there is no zone to draw. |
+| `net.free` | The free zone drawn round the court: `official` (the default), `least` or `none`. Where a rulebook gives figures: tennis's Appendix X recommends 21 ft behind the baselines and 12 ft beside the sidelines for international play (`official`) and 18 ft and 10 ft for clubs (`least`); volleyball's Rule 1.1 asks 5 m beside the side lines and 6.5 m behind the end lines for the FIVB's competitions (`official`, with its extension of the attack line and its posts 1 m out) and 3 m all round at least (`least`, with the posts 0.5 m out and no extension); beach volleyball's 5 and 3 m; pickleball's 3.A.3 recommends a playing surface of 34 by 64 ft for tournaments (`official`) and asks at least 30 by 60 (`least`); sitting volleyball's Rule 1.1 asks 4 m beside the side lines and 6 m behind the end lines for World ParaVolley's competitions (`official`) and 3 m at least (`least`); sepak takraw's Law 1.5 asks 3.0 m round the court and netball's Rule 1 (item 8) a court surround of 3.05 m (one figure each, so `official` and `least` are the same). table tennis's playing space (the ITTF's 3.2.3.1, below: 14 by 7 m for `official` and 10 by 5 m for Masters events as `least`). Badminton's Laws, the FIP's, World Squash's, the IRF's, the FITEQ's and the Roundnet Federation's give no figure, so there is no zone to draw. |
+| `net.area` | Table tennis: the kind of event the playing area is for: `standard` (the default, 14 m by 7 m), `masters` (10 m by 5 m) or `wheelchair` (8 m by 6 m), the ITTF's 3.2.3.1. |
+| `net.surrounds`, `net.umpires` | Table tennis: the surrounds that enclose the playing area, and the umpires' chairs and table inside it. On by default where an area is drawn; `net.free: "none"` draws neither. |
 | `net.sticks` | Tennis: draw the two singles sticks that hold a doubles net up for a singles match, 3 ft outside the singles court (Rule 1). Off by default. |
 | `orientation` | `landscape` (the default for these sports), `portrait` or `auto`. |
 | `detail: "simple"` | Leaves out the singles sticks, the antennae and the short lines outside a volleyball court (the extension of the attack line, the service zone's limits). |
@@ -98,6 +100,31 @@ The colours are ours: no rulebook prints a colour for a tennis court or a pickle
 | `netball` | `wood` (the Rules say a wooden surface, preferably sprung), `blue`, `green`; the lines are white, which the Rules prefer |
 
 The look is the drawing's `data-look`, and its rules are written into the drawing for that look only. `KYOGIJO_COURTS_STYLE` has every look for a page that draws with `style: "none"` (and is part of `KYOGIJO_STYLE`).
+
+### The table tennis playing area
+
+![A table tennis table in the middle of its playing area of 14 m by 7 m, enclosed by dark surrounds, with the umpire's chair in line with the net, the assistant umpire's chair opposite it and the umpires' table beside the first](./images/tabletennis-area-desk-light.webp)
+
+`sport: "tabletennis"` draws the table in the playing area the ITTF's Regulations for International Competitions ask for (3.2.3, chapter 3 of the ITTF Statutes 2026, read on 2026-10-20), as the default:
+
+| What | Figure | Rule |
+| --- | --- | --- |
+| The playing space | a cuboid of at least 14 m by 7 m by 5 m; for wheelchair events at least 8 m by 6 m, for Masters events at least 10 m by 5 m (`net.area`); the table stands in the middle | 3.2.3.1 |
+| What is part of the area | the table with its net, the flooring, the umpires' tables and chairs, the score indicators, the surrounds | 3.2.3.2 |
+| The surrounds | enclose the area, 50 cm to 100 cm high, all of the same dark background colour, the corners may be left open (75 cm drawn, closed: ours, within the rule) | 3.2.3.3 |
+| The floor | not light-coloured, not brightly reflecting or slippery, resilient; at World, Olympic and Paralympic titles wood or a rollable synthetic the ITTF authorises. The package's two looks (`blue`, `green`) are dark; the colours are ours | 3.2.3.8 |
+| The umpires | the umpire sits or stands in line with the net, the assistant umpire directly facing him or her on the other side of the table | 3.3.2.2 |
+
+The sizes of the chairs (0.5 m), of the umpires' table (1.2 m by 0.5 m) and their distance from the table (0.9 m), and the thickness of a surround (5 cm), are ours: no rule gives them. The height of the light (at least 5 m) and its strength are not drawn. In [3D](./turn.md) the area has its own floor, the surrounds stand 75 cm round it (they give way a little to an eye low on their side) and the chairs and the table are solid blocks. `net.free: "none"` draws the table alone, as before 0.15.0. [A tournament layout](./multi.md) gives each table this space as its bay: 14 m by 7 m.
+
+```ts
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
+
+const masters = drawKyogijo({ sport: "tabletennis", net: { area: "masters" } });
+const bare = drawKyogijo({ sport: "tabletennis", net: { free: "none" } });
+console.log(masters.includes('class="ky-chair"'), bare.includes('class="ky-chair"'));
+// true false
+```
 
 ## A score
 

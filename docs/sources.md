@@ -188,7 +188,7 @@ Tennis, volleyball (indoor, beach and sitting), badminton, pickleball, table ten
 
 ### Table tennis
 
-*Laws of Table Tennis*, International Table Tennis Federation, 2026 statutes, as reproduced by Table Tennis England in *The Laws of Table Tennis*, issue 1, July 2026 (https://www.tabletennisengland.co.uk/content/uploads/2026/07/Laws-of-Table-Tennis-2026-27.pdf). The ITTF Handbook itself was not read.
+*Laws of Table Tennis*, International Table Tennis Federation, 2026 statutes, as reproduced by Table Tennis England in *The Laws of Table Tennis*, issue 1, July 2026 (https://www.tabletennisengland.co.uk/content/uploads/2026/07/Laws-of-Table-Tennis-2026-27.pdf). The playing area is from the ITTF's *Regulations for International Competitions*, chapter 3 of the ITTF Statutes 2026 (https://db.ittf.com/sites/default/files/public/2026-02/2026_Statutes_v1_consolidated_clean.pdf, read on 2026-10-20; the 2025 text is the same but for "a rectangle" where 2026 says "a cuboid").
 
 | Figure | Value | Source |
 | --- | --- | --- |
@@ -197,8 +197,13 @@ Tennis, volleyball (indoor, beach and sitting), badminton, pickleball, table ten
 | The net | divides the surface into two equal courts, parallel with the end lines; its top 15.25 cm above the playing surface | Laws 2.1.5, 2.2.3 |
 | The posts | 15.25 cm high, the outside limits of each 15.25 cm outside the side line | Law 2.2.2 |
 | The score | a game to 11 points unless both reach 10; a match the best of any odd number of games | Laws 2.11.1, 2.12.1 |
+| The playing space | a cuboid of at least 14 m by 7 m by 5 m; wheelchair events at least 8 m by 6 m; Masters events at least 10 m by 5 m | Regulations 3.2.3.1 |
+| The playing area | the table with its net, printed numbers, flooring, umpires' tables and chairs, score indicators, towel and ball boxes, surrounds and boards on the surrounds are part of each area | 3.2.3.2 |
+| The surrounds | enclose the area, a minimum of 50 cm and a maximum of 100 cm high, all of the same dark background colour, corners may be left open; the background of advertisements on them stays dark | 3.2.3.3, 3.2.5.3 |
+| The floor | not light-coloured, brightly reflecting or slippery, and resilient (rigid for wheelchair events); wood or an authorised rollable synthetic at World, Olympic and Paralympic titles; up to 6 advertisements on it | 3.2.3.8, 3.2.3.8.1, 3.2.5.5 |
+| The umpires | the umpire sits or stands in line with the net, the assistant umpire directly facing at the other side of the table | 3.3.2.2 |
 
-**Ours.** The colours; the post's width (a mark of a least size). The playing area round a table is in the ITTF's regulations, not in the Laws, and was not read: no free zone is drawn.
+**Ours.** The colours; the post's width (a mark of a least size); the height drawn for the surrounds (75 cm, within 50 to 100) and their thickness (5 cm); the chairs' size (0.5 m), the umpires' table (1.2 m by 0.5 m) and their distance from the table (0.9 m); the umpire's table's place beside the chair. Not drawn: the lighting (at least 1800 lux vertical and 2000 horizontal for the major events, a source at least 5 m up) and the dark background of the hall (3.2.3.4 to 3.2.3.7).
 
 
 ### Sitting volleyball
@@ -620,7 +625,7 @@ Several of the surfaces above laid out together for one event ([the page](./mult
 
 | Figure | Value | Source |
 | --- | --- | --- |
-| Table tennis: the playing area | at least 14 m long, 7 m wide and 5 m high, the four corners may be covered by surrounds of at most 1.5 m; each area enclosed by surrounds about 75 cm high of one dark colour, separating it from adjacent areas and the spectators; the umpire's table and chair and the score indicators are part of the area; up to 6 advertisements on the floor of an area | ITTF Handbook 2022, 3.2.3.1 to 3.2.3.3 and 3.2.5.5 (rulebook) |
+| Table tennis: the playing area | a cuboid of at least 14 m by 7 m by 5 m (wheelchair events 8 m by 6 m, Masters events 10 m by 5 m); each area enclosed by surrounds 50 cm to 100 cm high, all of one dark colour, the corners may be left open; the umpires' tables and chairs and the score indicators are part of the area; up to 6 advertisements on the floor of an area | ITTF Statutes 2026, chapter 3 (the Handbook), 3.2.3.1 to 3.2.3.3 and 3.2.5.5 (rulebook). The Handbook 2022, read first, had "the four corners may be covered by surrounds of at most 1.5 m" and "about 75 cm": the current text has neither |
 | Table tennis: the grid | 14 m by 7 m to each area, tiled: four areas in 2 x 2 need 28 m by 14 m, eight in 2 x 4 need 56 m by 14 m | the same, arithmetic |
 | Table tennis: London 2026 | the World Team Championships Finals, 28 April to 10 May 2026; Stage 1B at the Copper Box Arena, Stage 1A and the knockout rounds at OVO Arena Wembley; four areas on one blue floor with seats round the perimeter, one scoreboard for all four hung over their middle, barriers and an umpire's chair at each (**what the event used**) | ITTF event page and Wembley Park's listing for the dates and halls; the arrangement from the owner's photographs |
 | Pickleball: the space to a court | a playing surface of 34 by 64 feet is recommended for tournament play (at least 30 by 60); the courts are laid edge to edge, the rulebook naming no gap between adjoining courts | USA Pickleball Official Rulebook 2026, 3.A.3 (rulebook) |
