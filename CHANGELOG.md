@@ -7,6 +7,17 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.16.1] - 2026-10-20
+
+### Added
+
+- **Sample content for a tournament layout** (`drawMulti({ sample: true })`, or `sample: { event, year, city }`). The places for the event's words and marks are filled as an event would dress them: an invented event name, year and city on the floor and the boards ("Kyogijo Open 2026 · Osaka", in Japanese `競技場杯 2026 · 大阪`) and, in each logo place, a simple emblem of the package's own (a ring with a star, a diamond or waves), in place of the dashed empty places. Nothing real is named or drawn: no event, brand, federation, sponsor or league (a test holds every preset in both languages to that). Off by default, so a layout is still drawn as it is configured; with `slots: false` nothing is drawn. The 3D view carries it on its floor. New `MultiSample` and `MultiWords.sample`.
+
+### Changed
+
+- **The demo's tournament layouts page and every picture of a layout are dressed with sample content.** `halls.html` has a "Sample event content" box, on by default (`sample=0` in its address turns it off and brings the empty places back); the README's and the docs' pictures of layouts (three judo areas, four table tennis areas, the same four in 3D, the gallery) show the invented event, and one picture shows the empty places with a caption (what an organiser configures): `docs/images/multi-judo-empty-*`, `ONLY=multi-judo-empty` takes it. The README gives up some prose to stay under its size budget.
+- **Docs only:** the gallery's table tennis text gives the surrounds' range (50 to 100 cm) of the ITTF Statutes 2026.
+
 ## [0.16.0] - 2026-10-20
 
 ### Added
