@@ -982,7 +982,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `notes.names.centre-tape` | Centre tape | 中央のテープ |
 | `notes.names.kata-judges` | Judges, shomen side | 審判員席（正面側） |
 | `notes.names.coach-chair` | Coach's chair | コーチ席 |
-| `notes.names.kata-entry` | Entry and exit, opposite shomen | 入退場（正面の反対側） |
+| `notes.names.kata-entry` | Entry and exit, opposite shomen | 入退場口（正面の反対側） |
 | `notes.names.arena` | Arena floor | アリーナの床 |
 | `notes.names.competition-area` | Competition area | 試合場 |
 | `notes.names.boundary-band` | Boundary band | 境界の帯 |

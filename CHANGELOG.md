@@ -7,6 +7,16 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.14.0] - 2026-10-20
+
+### Added
+
+- **The judo kata area, with its centre tape and its judges** (`budo: { style: "kata" }`, which says `league: "ijf-kata"`; `style: "shiai"` is the contest area, the default). From the IJF's Sport and Organisation Rules of 21 January 2026 (B1.8, the judges' article, B1.10), the Kata Commission's Tournament Handbook of 2024 and its Criteria for the Evaluation of January 2025: an area of 10 m (World Championships) or 8 m, a safety area of at least 2 m, two white tapes of 5 cm by 50 cm 3 m from the centre either side, **and now the tape of the same colour at the centre** (the area had the two only); with `officials`, **the five judges' seats 1.25 m apart on the shomen side, the central judge at the centre, with their table, and the coach's chair at the centre on the opposite side**, where the pair enters (a label says so), and no referee's place. A new `JudoFigures.centre` and `JudoFigures.panel`, four new labels (`centre-tape`, `kata-judges`, `coach-chair`, `kata-entry`, English and Japanese), the two sources in `LEAGUE_SOURCES`, 2D and 3D, light and dark. Docs: a kata section with two pictures in [the budō page](./docs/budo.md#the-kata-area); the gallery has the area with and without its judges. The rules do not say which tape is tori's and which is uke's, nor which way a tape lies, so none is assigned.
+
+### Fixed
+
+- **Two kata areas side by side are 2 m apart, not 4 m.** The kata area took the contest area's 4 m common safe zone, but the Handbook asks for "a common safety area of minimum 2 meters" between adjoining kata areas and B1.8 for a safety area "between and around the mat" of at least 2 m. `IJF_KATA.common` is 2 (`docs/variants.md` said 4).
+
 ## [0.13.0] - 2026-10-20
 
 ### Added
