@@ -288,14 +288,14 @@ export function describeDistrict(options: DistrictOptions, plan: DistrictPlan = 
   const language: Language = options.language === "ja" ? "ja" : "en";
   const names = plan.members.map((p) => p.member.name[language]);
   const words = KYOGIJO_STRINGS[language].said;
-  const list = language === "ja" ? names.join("、") : names.length > 1 ? `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}` : names[0];
+  const list = language === "ja" ? (names.length > 1 ? `${names.slice(0, -1).join("、")}と${names[names.length - 1]}` : names[0]) : names.length > 1 ? `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}` : names[0];
   const title = language === "ja" ? `${list}の位置関係` : `${list}: where they stand`;
   const gap = language === "ja" ? "" : " ";
   const first = plan.between[0];
   const nameOf = (key: string): string => plan.members.find((p) => p.member.key === key)!.member.name[language];
   const apart = first === undefined ? "" : language === "ja" ? `${gap}${nameOf(first.a)}と${nameOf(first.b)}の中心は約${Math.round(first.metres)}m離れています。` : `${gap}The middles of ${nameOf(first.a)} and ${nameOf(first.b)} are about ${Math.round(first.metres)} metres apart.`;
   const text = fillWords(words.district, { count: String(plan.members.length), mode: words[plan.mode === "city" ? "districtCity" : "districtNeighbours"] });
-  return { title, description: `${text}${apart}${gap}${words.districtCredit}${gap}${VENUE_ATTRIBUTION}.` };
+  return { title, description: `${text}${apart}${gap}${words.districtCredit}${gap}${VENUE_ATTRIBUTION}${language === "ja" ? "。" : "."}` };
 }
 
 const fillWords = (text: string, values: Record<string, string>): string => text.replace(/\{(\w+)\}/g, (_, key: string) => values[key] ?? "");

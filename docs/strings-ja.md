@@ -382,7 +382,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `said.realBuilding` | The rink lies along the building's long axis, which is an inference, and the arrow points north. | リンクは建物の長い軸に沿って置いており（推定）、矢印は北を指します。 |
 | `said.realMapped` | The rink lies as OpenStreetMap maps the ice, and the arrow points north. | リンクの向きはOpenStreetMapに記録された氷面のとおりで、矢印は北を指します。 |
 | `said.realNone` | The rink's orientation is not known, so it is drawn east-west with north at the top. | リンクの向きは分かっていないため、東西に置き、北を上にしています。 |
-| `said.stadium` | The stands are a plausible bowl of {seats} seats in {tiers} bowls, fitted inside the outline of the building of {stadium} from OpenStreetMap ((c) OpenStreetMap contributors); it is not the stadium's plan. | スタンドは、OpenStreetMapの建物の輪郭（(c) OpenStreetMap contributors）の内側に収まるように、{stadium}の{seats}席・{tiers}層を推定して描いたもので、スタジアムの設計図ではありません。 |
+| `said.stadium` | The stands are a plausible bowl of {seats} seats in {tiers} bowls, fitted inside the outline of the building of {stadium} from OpenStreetMap ((c) OpenStreetMap contributors); it is not the stadium's plan. | {stadium}の建物の輪郭（OpenStreetMap、(c) OpenStreetMap contributors）の内側に、{seats}席・{tiers}層のスタンドを推定して描いています。スタジアムの設計図ではありません。 |
 | `said.stadiumOpening` | The field lies along the opening in the roof, which is the size of the field, and the arrow points north. | フィールドは屋根の開口部（フィールドと同じ大きさ）に沿って置いており、矢印は北を指します。 |
 | `said.stadiumBuilding` | The field lies along the building's long axis, which is an inference, and the arrow points north. | フィールドは建物の長い軸に沿って置いており（推定）、矢印は北を指します。 |
 | `said.stadiumNone` | The field's orientation is not known, so it is drawn east-west with north at the top. | フィールドの向きは分かっていないため、東西に置き、北を上にしています。 |
@@ -2090,7 +2090,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `gallery-years` | Gallery: surfaces through the years | ギャラリー：年ごとの競技場 |
 | page `gallery-places` | Gallery: ballparks, grounds and arenas | ギャラリー：球場、スタジアム、アリーナ |
 | page `gallery-venues` | Gallery: the real venues | ギャラリー：実在の会場 |
-| page `gallery-stadiums` | Gallery: the real stadiums and a district | ギャラリー：実在のスタジアムと地区 |
+| page `gallery-stadiums` | Gallery: the real stadiums and a district | ギャラリー：実在のスタジアムと会場の地区 |
 | page `gallery-special` | Gallery: special games | ギャラリー：特設会場での試合 |
 | page `gallery-data` | Gallery: data on a surface | ギャラリー：競技場の上のデータ |
 | page `gallery-curling` | Gallery: curling | ギャラリー：カーリング |

@@ -416,7 +416,7 @@ function stadiumsPage(lib) {
   return {
     slug: "gallery-stadiums",
     title: "Gallery: the real stadiums and a district",
-    ja: "実在のスタジアムと地区",
+    ja: "実在のスタジアムと会場の地区",
     intro: "BC Place in Vancouver in the outline of its building as OpenStreetMap maps it ((c) OpenStreetMap contributors, ODbL 1.0), for football and for soccer, with a plausible bowl of the seats the sources give for each; then districts, venues of one city on one plan at their real positions and orientations. A small arrow says where north is. Never a seat map, never a street map, and no mark of a club, a league or a tournament.",
     sections: [
       section("bc-place", "BC Place", "`crowd: { real: true }` with a `stadium`, for `sport: \"cfl\"` or `sport: \"soccer\"`.", [
@@ -1495,8 +1495,7 @@ export function galleryData(lib) {
 }
 
 /** The base stylesheet is in the page once; a drawing carries it too, which is 8 kB each. The gallery leaves it out of each and says so. */
-const STYLE_RE = /<style>[\s\S]*?<\/style>/;
-/** Every style block of a drawing that holds several (a district's nested drawings): each that is the base stylesheet is left out of the item. */
+/** Every style block of a drawing (a district's nested drawings carry several): each that is the base stylesheet is left out of the item. */
 const STYLE_ALL = /<style>[\s\S]*?<\/style>/g;
 
 /** Where a gallery item's own files are, beside the pages: its drawing as an SVG file, and a page that draws it from the published package. */

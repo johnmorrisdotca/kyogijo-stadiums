@@ -108,7 +108,7 @@ export const NAV = [
       { slug: "gallery-years", en: "Gallery: surfaces through the years", ja: "ギャラリー：年ごとの競技場", site: true },
       { slug: "gallery-places", en: "Gallery: ballparks, grounds and arenas", ja: "ギャラリー：球場、スタジアム、アリーナ", site: true },
       { slug: "gallery-venues", en: "Gallery: the real venues", ja: "ギャラリー：実在の会場", site: true },
-      { slug: "gallery-stadiums", en: "Gallery: the real stadiums and a district", ja: "ギャラリー：実在のスタジアムと地区", site: true },
+      { slug: "gallery-stadiums", en: "Gallery: the real stadiums and a district", ja: "ギャラリー：実在のスタジアムと会場の地区", site: true },
       { slug: "gallery-special", en: "Gallery: special games", ja: "ギャラリー：特設会場での試合", site: true },
       { slug: "gallery-data", en: "Gallery: data on a surface", ja: "ギャラリー：競技場の上のデータ", site: true },
       { slug: "gallery-curling", en: "Gallery: curling", ja: "ギャラリー：カーリング", site: true },

@@ -190,7 +190,7 @@ describe("a district drawn in 2D", () => {
     expect(en.description).toContain("metres apart");
     expect(en.description).toContain(VENUE_ATTRIBUTION);
     const ja = describeDistrict({ ...PAIR, language: "ja" });
-    expect(ja.title).toBe(`${districtMember("bc-place").name.ja}、${districtMember("rogers-arena").name.ja}の位置関係`);
+    expect(ja.title).toBe(`${districtMember("bc-place").name.ja}と${districtMember("rogers-arena").name.ja}の位置関係`);
     expect(ja.description).toContain("OpenStreetMap");
     expect(ja.description).toContain("m離れています");
     for (const word of ["FIFA", "World Cup", "Lions", "Canucks", "Whitecaps", "NHL", "Grey Cup"]) expect(svg, word).not.toContain(word);
