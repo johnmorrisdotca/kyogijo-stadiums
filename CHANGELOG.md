@@ -7,6 +7,16 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.16.0] - 2026-10-20
+
+### Added
+
+- **A badminton court has the space round it drawn.** The BWF's Specifications for International Standard Facilities (Statutes 5.3.4, 2.1.3 and 2.2.3) ask for at least 2 m clear behind the baselines and 1.5 m clear from the side lines, so the court's free zone is that (17.4 m by 9.1 m round the 13.4 m by 6.1 m court), where it was none: the Laws of Badminton give no figure, which is why none was drawn. It is one figure for every tournament, so `net.free: "official"` and `"least"` agree, and `"none"` draws the court alone, as before. The 4 m between courts the BWF recommends at Grade 1 and 2 is the layouts' (`badminton-1x4`); the 1.5 m least between courts is `badminton-1x4-min`. The layouts draw the court alone in their bays (`net: { free: "none" }`), as before, since the bays are that space.
+
+### Checked
+
+- **The run-off of the other net sports is what their rulebooks give, and the tournament layouts are built from it.** Tennis (ITF Appendix X: 21 ft behind the baselines and 12 ft beside the side lines, so two courts side by side are 2 x 12 ft = 7.32 m apart, as `tennis-1x3` has them), pickleball (USA Pickleball 3.A.3: a playing surface of 34 by 64 ft recommended, 30 by 60 ft at least, edge to edge) and volleyball (FIVB Rule 1.1: 3 m all round at least, 5 m beside the side lines and 6.5 m behind the end lines in the FIVB's competitions; beach 3 m and 5 m; World ParaVolley's sitting court 3 m, and 4 m and 6 m) were compared figure by figure with their free zones and the `tennis-1x3` and `pickleball-*` bays; nothing needed changing. Volleyball has no layout preset: no source gives an event's arrangement.
+
 ## [0.15.0] - 2026-10-20
 
 ### Added
