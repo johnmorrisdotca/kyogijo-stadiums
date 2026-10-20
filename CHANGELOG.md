@@ -7,6 +7,20 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.15.0] - 2026-10-20
+
+### Added
+
+- **A table tennis table in its playing area.** The default drawing of `sport: "tabletennis"` is no longer a table on a generic floor: it is the table in the ITTF's playing area, from the Regulations for International Competitions (3.2.3, chapter 3 of the ITTF Statutes 2026, read on 2026-10-20): a space of 14 m by 7 m (5 m high), **enclosed by four dark surrounds** (50 cm to 100 cm high, all one dark colour, 3.2.3.3), **with the umpire's chair in line with the net, the assistant umpire's chair facing it across the table and the umpires' table beside the first** (3.2.3.2, 3.3.2.2), on a floor that is not light (3.2.3.8; both looks are dark blues and greens). New `net.area` picks the kind of event, `standard` (14 m by 7 m), `masters` (10 m by 5 m) or `wheelchair` (8 m by 6 m) (3.2.3.1), and `net.surrounds` and `net.umpires` leave the surrounds or the umpires out; `net.free: "none"` draws the table alone, as before, and `free: "least"` is the Masters area. In 3D (all viewpoints) the area has its own floor, the surrounds stand 75 cm round it (they give way to an eye low on their side, as every wall does) and the chairs and the table are solid blocks. New in `TableTennisFigures`: `space`, `surround`, `umpires`; the features `walls`, `umpires-table` and `chairs` can be restyled. Sizes the rules do not give (a chair 0.5 m, the umpires' table 1.2 m by 0.5 m, 0.9 m from the table, a surround 5 cm thick, 75 cm high) are ours and said so. Docs: [the table tennis playing area](./docs/courts.md#the-table-tennis-playing-area), with pictures.
+
+### Changed
+
+- **The tournament layouts' table tennis areas are that same space.** The bay of each table in `tabletennis-4` and `tabletennis-8` is `ITTF_TABLE.space.standard` (14 m by 7 m, the table in its middle), and the layouts draw the table alone in it (`net: { free: "none" }`: the layout draws the surrounds and the chairs of its bays), so the layouts are byte for byte what they were. A test holds the bay to the space.
+
+### Fixed
+
+- **The surrounds of a table tennis area are 50 cm to 100 cm high, not "about 75 cm", and the corners need no 1.5 m limit.** The layouts' rule text and the sources page quoted the Handbook of 2022; the current text (2025 and 2026) says "a minimum of 50cm and a maximum of 100 cm in height, all of the same dark background colour, but corners may be left open". The 75 cm drawn stays, as a choice of ours inside the rule. The 2026 Statutes are now the preset's source (`ittf-statutes-2026`); the 2022 Handbook's entry says it was superseded.
+
 ## [0.14.0] - 2026-10-20
 
 ### Added
