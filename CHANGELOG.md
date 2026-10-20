@@ -7,6 +7,8 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.30.0] - 2026-10-20
+
 ### Added
 
 - **The fly-through ends on a game** (`game`, the sixth stage, after `rink`): a short play comes onto the ice while the rink goes on turning from the seat, with a label on the picture that says `Illustrative play`. It is a [replay](./docs/replay.md) timeline of the package's own (`ILLUSTRATIVE_PLAY`, entry `@johnmorrisdotca/kyogijo-stadiums/flythrough`): 101 frames a tenth of a second apart, five skaters and a goalie a side (shirt numbers only, no name, team or league), a puck, two passes, a shot and a goal, and the dots, numbers, trail and events are drawn by the replay's own layers (`replayLayers` through `renderLayers`). It is made up for the picture and says so on the screen, in the stage's words (English and Japanese) and in the docs; it is no real game's data.
