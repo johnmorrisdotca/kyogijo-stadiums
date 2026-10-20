@@ -20,14 +20,14 @@ The NFL, CFL and IFAF football fields, the NHL rink, the NBA court, the soccer p
 <td align="center" valign="top">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/hero-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/hero-desk-light.webp" alt="The demo on a desk, in English: the heading Kyogijo Stadiums with the language chooser, the Docs and API reference links, five cloth patches and the Help switch, and an NHL rink drawn wide on an ice-blue background of faint skate marks and rink lines, with a made-up game on it, the USA and its flag on the left, Canada and its flag on the right, and a panel of the score 3 to 2, Final/OT, in the middle. The controls on the right list the sports, from the NFL and the NHL to handball, and then the layout and the teams." width="640">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/hero-desk-light.webp" alt="The demo on a desk, in English: the heading, the language chooser and links, and an NHL rink drawn wide on an ice-blue background with a made-up game on it, the USA on the left, Canada on the right and the score 3 to 2, Final/OT, in the middle. The controls on the right list the sports, the layout and the teams." width="640">
 </picture>
 <br><em>The demo on a desk: a rink, with the teams on their sides and the score in the middle.</em>
 </td>
 <td align="center" valign="top">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/hero-phone-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/hero-phone-light.webp" alt="The demo on a phone: the heading Kyogijo Stadiums over the page's controls, and under them, on a background of floodlight beams, a football field turned a quarter to stand tall, Mexico's green end zone at the top and the USA's navy end zone at the bottom, each with its flag and name written across it, the yard numbers upright, and a score panel at midfield reading 27 to 24, Final." width="240">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/hero-phone-light.webp" alt="The demo on a phone: the heading and controls, and under them, on a background of floodlight beams, a football field standing tall, Mexico's green end zone at the top and the USA's navy one at the bottom, each with its flag and name, and a score panel at midfield reading 27 to 24, Final." width="240">
 </picture>
 <br><em>On a phone the same surface stands tall, the words still upright.</em>
 </td>
@@ -65,27 +65,27 @@ console.log(svg.startsWith("<svg"), svg.includes("USA 3, Canada 2"));
 
 ## Who it is for
 
-- **A results page or a stats site** that has the score of a game and wants a picture of where it was played: the teams, the score, the round and the date, with the winner clear.
+- **A results page or a stats site** that has a game's score and wants a picture of where it was played.
 - **A list of games** that needs a compact strip for each, small enough for a phone.
-- **Anyone drawing a rink, a field, a court or a ballpark** for a poster, a diagram or a lesson, who wants the dimensions right and the colours their own.
+- **Anyone drawing a rink, field, court or ballpark** for a poster or a lesson, with the dimensions right and the colours their own.
 - **A site that uses a framework or none**: the drawing is a string, so it works from a server, a build step, a framework, a custom element or a frame.
 
 ## Features
 
-- **Thirty-nine surfaces, to scale.** The NFL, CFL and IFAF fields, the NHL rink, the NBA court, the soccer pitch and futsal court, the baseball field, the curling sheet, the courts of twelve net and racket sports, the pools, the athletics stadium, the skating rinks, the fields of seven field sports, and the budō. Every figure is cited in [sources](./docs/sources.md). [The surfaces](./docs/surfaces.md).
+- **Thirty-nine surfaces, to scale.** The NFL, CFL and IFAF fields, the NHL rink, the NBA court, the soccer pitch and futsal court, the baseball field, the curling sheet, twelve net and racket sports, the pools, the athletics stadium, the skating rinks, seven field sports and the budō. Every figure is cited in [sources](./docs/sources.md). [The surfaces](./docs/surfaces.md).
 - **Each league's rulebook.** `league: "fiba"` draws a court as FIBA marks it: 48 variants, from the WNBA, the NCAA and the IIHF to Little League, PONY, softball, Curling Canada, FIVB's beach volleyball, rugby league and the NLL's box lacrosse, each cited. [League variants](./docs/variants.md).
 - **A realistic basketball floor.** `court: { hardwood: true }` draws maple boards that run the length of the court with staggered ends, grain, stained keys, the baskets and stanchions with soft shadows, a coaching box and benches, and a satin sheen, in every league and renderer. The clean floor stays the default. [Hardwood](./docs/hardwood.md).
 - **The stands and the crowd.** `crowd: true` draws the seating round any surface that has spectators: a bowl, two sides, a horseshoe, courtside rows or a ballpark's grandstands, with the people as seeded heads and shoulders in the home colours and the empty seats showing (`density`, or `attendance` over `capacity`). [The crowd](./docs/crowd.md).
 - **Curling, from the rule books.** A sheet from World Curling's and Curling Canada's rules, tall by default, with the board and the hammer in a score, `curlingStones` for the stones of an end, scored by the rules, `show: "folded"` for the whole sheet with both houses enlarged beside it, and a heat map and statistics for many ends. [Curling](./docs/curling.md).
 - **Net, racket and court sports, from their rulebooks.** The ITF's, FIVB's (indoor, beach, sitting), BWF's, USA Pickleball's and ITTF's courts and table, the padel, squash, racquetball, sepak takraw, teqball, roundnet and netball courts, each in its look (hard court, clay, grass, wood, sand), with a board of sets and games. [Net, racket and court sports](./docs/courts.md).
-- **Swimming, water polo, diving and artistic swimming, from World Aquatics' regulations.** The competition pool of 50 or 25 m with its lanes, ropes, blocks and touch panels; the water polo field; the diving well; the artistic swimming area; several pools in a natatorium. A race's lanes carry names, flags, places, times and splits, with a replay (`raceTimeline`) and a `splitsChart`. [Pools](./docs/pools.md).
+- **Swimming, water polo, diving and artistic swimming, from World Aquatics' regulations.** The 50 or 25 m pool with its lanes, ropes, blocks and touch panels; the water polo field; the diving well; the artistic swimming area; several pools in a natatorium. A race's lanes carry names, flags, places, times and splits, with a replay and a `splitsChart`. [Pools](./docs/pools.md).
 - **Lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey and handball, from their rulebooks.** The fields and floors of World Lacrosse, World Rugby, the NRL, the AFL, the GAA, the FIH and the IHF, and a cricket ground with a boundary of your own. A score is goals and behinds, goals and points or a board of runs, wickets and overs. [Field sports](./docs/field-sports.md).
 - **The athletics stadium, from World Athletics' rules.** The 400 m track with its lanes and staggers worked out from the running lines, curved and relay starts, hurdles, the steeplechase, every field event, a close-up of each start, the covered 200 m track, and lane draws, results, a race replay and the marks of throws and jumps. [The athletics stadium](./docs/athletics.md).
 - **The skating rinks, from the ISU's rules.** The 400 m speed skating track with its lanes, blocks and the lines of every race worked out lane by lane; the short track's oval; the figure skating rink of 60 by 30 m with its judges' seats; and pairs, results, a race replay and the elements of a programme on the ice. [The skating rinks](./docs/skating.md).
-- **The budō, from the federations' rules.** The IJF's and the All Japan Judo Federation's judo areas, the WKF's karate areas, the kendo shiai-jo, the sumo dohyō, the kyūdōjō, and **a dojo builder**: a floor of tatami laid as real units, in jō or metres, with its walls, doors, windows and shrine. Five famous halls are on the atlas, and the scores are judo's ippon, waza-ari and shido, karate's and kendo's points and sumo's kimarite. [The budō](./docs/budo.md).
+- **The budō, from the federations' rules.** The IJF's and the All Japan Judo Federation's judo areas, the WKF's karate areas, the kendo shiai-jo, the sumo dohyō, the kyūdōjō, and **a dojo builder**: a floor of tatami laid as real units, in jō or metres, with its walls, doors, windows and shrine. Scores are judo's ippon, waza-ari and shido, karate's and kendo's points and sumo's kimarite. [The budō](./docs/budo.md).
 - **Soccer, to the Laws.** A pitch from Law 1 of the IFAB Laws of the Game of any size, with presets (international, UEFA, MLS, NCAA, the FA's 9-, 7- and 5-a-side, FIFA's futsal), half pitches, five mowing patterns, four goal styles, penalties and extra time in a score. [Soccer](./docs/soccer.md).
 - **Every ballpark.** The 30 current MLB parks and 44 that MLB clubs have left, and the 12 home parks of Nippon Professional Baseball with eight other NPB grounds, each with its fence drawn from the distances published for it, as it stood in a season. [Ballparks](./docs/ballparks.md).
-- **Soccer grounds, arenas and an atlas.** 64 soccer grounds, each pitch at its published size, and 167 NHL, NBA, WNBA and PWHL arenas (`drawKyogijo({ sport: "nhl", arena: "boston-garden" })`), and every park, ground, arena and budō hall (330 places) on a map, by sport, league, country and year, each found by any of its names. [The grounds](./docs/grounds.md), [the arenas](./docs/arenas.md), [the atlas](./docs/atlas.md), [names](./docs/ballparks.md#names).
+- **Soccer grounds, arenas and an atlas.** 64 soccer grounds at their published sizes, 167 NHL, NBA, WNBA and PWHL arenas (`drawKyogijo({ sport: "nhl", arena: "boston-garden" })`), and every park, ground, arena and budō hall (330 places) on a map, found by any of its names. [The grounds](./docs/grounds.md), [the arenas](./docs/arenas.md), [the atlas](./docs/atlas.md), [names](./docs/ballparks.md#names).
 - **Walls and quirks.** How high the fence stands, stretch by stretch and season by season (the Green Monster at 37 feet 2 inches), drawn as a band outside the fence whose width and shade say the height, with a key (`walls`); and Tal's Hill, Wrigley Field's ivy and basket, poles, bullpens and dugouts (`quirks`), each from the park's article, none guessed: [ballparks](./docs/ballparks.md).
 - **Special games.** A surface set inside another, to scale: an NHL rink on a ballpark's infield or a football stadium's field, a college basketball court on the deck of a carrier, a baseball field laid over a London stadium's pitch. 18 games, each with its day, its venue and its sources. [Special games](./docs/special-games.md).
 - **Surfaces through the years.** `year: 1975` draws a surface as its league's rules marked it that season, each change cited. [Surfaces through the years](./docs/eras.md).
@@ -104,7 +104,7 @@ console.log(svg.startsWith("<svg"), svg.includes("USA 3, Canada 2"));
 - **Tournament layouts.** Several surfaces laid out together for one large event, to scale, on one floor, as one SVG: thirteen presets from table tennis, pickleball, curling, judo, karate, badminton and tennis, each with its rule and sources, whether it fits a hall, and a real stadium round it. [Tournament layouts](./docs/multi.md).
 - **Judging assignments.** Who judges where. [Judging](./docs/judging.md).
 - **Replay.** Tracking data played on any surface: the players with their numbers, the ball and its trail, and the passes, shots and goals as they happen, with controls, the keyboard and a live region, steps for a reader who prefers reduced motion, and a pause when the page is hidden. [Replay](./docs/replay.md).
-- **A 3D view.** Any surface as a floor that turns by mouse, touch, wheel or keys, with four viewpoints (overhead, broadcast, end-on, low corner), and what the rulebook stands on it at its height (nets, baskets, rink boards and glass, goals, a ballpark's fence, the walls of padel and squash, a pool's blocks, a table tennis area's surrounds); and the venue round it (raked stands, roofs on request, a dojo's walls and gallery). Plain DOM and CSS. [The 3D view](./docs/turn.md).
+- **A 3D view.** Any surface as a floor that turns by mouse, touch, wheel or keys, with four viewpoints (overhead, broadcast, end-on, low corner), and what the rulebook stands on it at its height (nets, baskets, rink boards and glass, goals, a ballpark's fence, a pool's blocks, a table tennis area's surrounds) and the venue round it (raked stands, roofs, a dojo's walls). Plain DOM and CSS. [The 3D view](./docs/turn.md).
 - **Renderers.** The same drawing as plain data (a scene), on a canvas (a browser's or a Node canvas), in a d3 selection, as a mark of an Observable Plot, as GeoJSON and as a PNG in Node, each an entry of its own that imports nothing from outside the package. [Renderers](./docs/renderers.md).
 - **Units and frames.** Each surface in its rulebook's unit and any other, and 48 coordinate frames (ten soccer providers, the NHL API, HockeyTech, NBA stats, NFL tracking, MLBAM, Retrosheet, and a place from the net, the centre or the middle of the water of each other surface) to move a provider's points onto a surface. [Units](./docs/units.md), [coordinate frames](./docs/frames.md).
 - **A compact badge and a compact card.** One strip for a list, or the surface with that strip under it.
@@ -132,7 +132,7 @@ console.log(svg.startsWith("<svg"), svg.includes("USA 3, Canada 2"));
 | `./turn` | A surface as a 3D view that turns, with the net, basket, goal or posts standing on it. |
 | `./scene`, `./canvas`, `./d3`, `./plot`, `./geojson`, `./png` | The drawing as data; on a canvas; in a d3 selection; as an Observable Plot mark; as GeoJSON; as a PNG (the optional peer `@resvg/resvg-js`). |
 | `./multi` | `drawMulti`, `multiFit`: several surfaces laid out for one event, in a hall ([docs](./docs/multi.md), [demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/halls.html)). |
-| `./judging` | `drawJudging`: who judges where ([docs](./docs/judging.md)). |
+| `./judging` | `drawJudging`, `judgingBoard`, `mountJudgingBroadcast`, `judgingPrint`: who judges where, as a plan, on a broadcast board or on paper ([docs](./docs/judging.md)). |
 | `./layouts` | `drawGrid` and `GRID_PRESETS`: small multiples with a title, a subtitle, a key and a credit line; the grounds behind a drawing or a grid. |
 | `./mount`, `./react`, `./element`, `./element/define` | Draw into a container; React props; the `<kyogijo-field>` element and its registration. |
 
@@ -183,7 +183,7 @@ console.log(svg.includes("Cup Final, Game 7"), svg.includes("Final/OT"));
 <p align="center">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/football-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/football-desk-light.webp" alt="A football field drawn wide on a background of floodlight beams: Mexico's green end zone on the left with its flag and its name written along it, the USA's navy end zone on the right with its flag, the yard lines, hash marks and upright and upside-down yard numbers between them, and the score panel at midfield reading 27 to 24, Final, Championship Game." width="720">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/football-desk-light.webp" alt="A football field drawn wide on a background of floodlight beams: Mexico's green end zone on the left with its flag and name, the USA's navy one on the right, the yard lines and numbers between them, and the score panel at midfield reading 27 to 24, Final, Championship Game." width="720">
 </picture>
 <br><em>A football field: the end zones in the teams' colours, the score at midfield.</em>
 </p>
@@ -228,7 +228,7 @@ console.log(box(wide), box(tall));
 <p align="center">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/tall-phone-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/tall-phone-light.webp" alt="A hockey rink standing tall on a phone, on an ice-blue background, the same game as on the desk: the USA's flag and name in the upper zone, Canada's in the lower, each reading upright, the score panel between them over the centre line." width="240">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/tall-phone-light.webp" alt="A hockey rink standing tall on a phone, on ice blue: the USA's flag and name in the upper zone, Canada's in the lower, each upright, the score panel between them." width="240">
 </picture>
 <br><em>The same game tall: the teams top and bottom, every word upright.</em>
 </p>
@@ -263,7 +263,7 @@ console.log(svg.includes("甲子園球場のグラウンド"), svg.includes("阪
 <p align="center">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/ballpark-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/ballpark-desk-light.webp" alt="The baseball field of Hanshin Koshien Stadium on a royal purple background, with the outfield fence drawn through its published distances, 95 metres at the lines and 118 metres in the alleys and the middle, with mown arcs on the grass, the warning track, the infield dirt, and a red and a navy panel in the foul ground at the bottom for the teams' dugouts, each with its country's flag, Japan's and the USA's." width="640">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/ballpark-desk-light.webp" alt="The baseball field of Hanshin Koshien Stadium on a royal purple background: the outfield fence at its published distances, 95 metres at the lines and 118 in the alleys, the infield dirt, and a red and a navy dugout panel with Japan's and the USA's flags." width="640">
 </picture>
 <br><em>A ballpark's fence, drawn through the distances its article publishes.</em>
 </p>
@@ -368,7 +368,7 @@ console.log(items.map((item) => item.kind).join(), html.includes("preserve-3d"))
 // net,netposts,antennae false
 ```
 
-The flat drawing is the floor, turned by a drag, a swipe, the keys or four viewpoints, with what the rulebook stands on it at its height; each part is a flat rectangle placed by one `matrix3d`, so there is no 3D context for a phone to lose. In the element it is `<kyogijo-field sport="nhl" turn turn-view="broadcast">`. [The 3D view](./docs/turn.md).
+The flat drawing is the floor, turned by a drag, a swipe, the keys or four viewpoints, with what the rulebook stands on it at its height; each part is one `matrix3d`, so there is no 3D context for a phone to lose. In the element: `<kyogijo-field sport="nhl" turn turn-view="broadcast">`. [The 3D view](./docs/turn.md).
 
 <p align="center">
 <picture>
@@ -496,7 +496,7 @@ console.log(svg.includes('viewBox="0 0 1200 675"'), svg.includes("Three ballpark
 
 ### Several surfaces on one floor
 
-`drawMulti` lays the package's own surfaces out together for one large event, to scale, on one floor, with the officials' chairs and boards, and places for the event's words and marks (`sample: true` fills them with an invented event; [tournament layouts](./docs/multi.md)). Thirteen presets with their rules and sources; `multiFit` says whether a layout fits a hall, `stadium: true` sets it inside real stands, and `mountMultiTurn` turns the floor in 3D.
+`drawMulti` lays the package's own surfaces out together for one large event, to scale, on one floor, with the officials' chairs and boards, and places for the event's words and marks (`sample: true` fills them with an invented event; [tournament layouts](./docs/multi.md)). Thirteen presets; `multiFit` says whether a layout fits a hall, `stadium: true` sets it inside real stands, and `mountMultiTurn` turns it in 3D.
 
 ```ts
 import { drawMulti, multiLayout } from "@johnmorrisdotca/kyogijo-stadiums/multi";
@@ -555,6 +555,23 @@ The [demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/halls.html) turns 
 <br><em>Judges, in 3D.</em>
 </p>
 
+The broadcast view puts the mat large, with the officials on a board at its side; `judgingPrint` prints one mat to an A4 or US letter page.
+
+<p align="center">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/judging-broadcast-3d-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/judging-broadcast-3d-desk-light.webp" alt="A kata mat in 3D from the Broadcast camera, with a dark board at its side listing each judge's number, name and ID." width="640">
+</picture>
+<br><em>The broadcast view.</em>
+</p>
+
+<p align="center">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/judging-print-a4-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/judging-print-a4-desk-light.webp" alt="An A4 page with the plan of one kata mat and the chart of its five judges under it." width="640">
+</picture>
+<br><em>One mat to an A4 page.</em>
+</p>
 
 ### A table tennis area
 
@@ -692,8 +709,7 @@ English and Japanese: the title, the description and the standard statuses of a 
 Not here yet, and each welcome as an [issue](https://github.com/johnmorrisdotca/kyogijo-stadiums/issues):
 
 - **More surfaces**: the FIBA and college courts, the international rink, rugby pitches, a stadium's seating, soccer's beach and street formats.
-- **Wall heights and quirks** in a ballpark: the Green Monster, Tal's Hill, the walls of Japan's parks.
-- **More parks of the past**: the grounds of the 19th century, and the parks whose articles give no distances yet (the Kingdome, Joe Robbie Stadium, the Los Angeles Coliseum), when they do.
+- **More parks of the past**: the 19th-century grounds, and the parks whose articles give no distances yet (the Kingdome, Joe Robbie Stadium).
 - **More charts on data layers**: a formation chart, a pass sonar chart and a Voronoi chart of their own (the layers exist; see [team shape](./docs/team-shape.md)).
 - **Football in a different standard**: the college and high-school hash marks.
 
@@ -702,8 +718,6 @@ Left out on purpose: statistics, rosters and schedules. Kyogijo Stadiums draws t
 ## Architecture
 
 The drawing is plain functions over plain data with no DOM and no dependency. The dimensions are in one file, the ballparks are generated from a reviewed list, and each surface is a function that returns its markup and the places the teams and the score go. Every entry point stands apart, so that importing the geometry, the parks or the grounds loads nothing else. The files and what each is for are in [architecture](./docs/architecture.md).
-
-Tests sit beside the code. `scripts/` builds the demo and the docs site, checks the packed package and the README's examples, and takes the README's pictures; `demo/` is the page and the frame; `e2e/` plays the demo and the docs in a real browser.
 
 ## The name
 

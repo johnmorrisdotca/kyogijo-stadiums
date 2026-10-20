@@ -46,6 +46,12 @@
       .table-wrap { overflow-x: auto; }
       .note { color: var(--muted); font-size: .9rem; margin: 8px 0; }
       #error { color: #c0392b; font-weight: 700; }
+      #stage[data-broadcast] { background: transparent; border: 0; padding: 0; }
+      #stage[data-broadcast] > svg.kyogijo { max-width: calc((100vh - 230px) * 16 / 9); min-width: min(100%, 520px); margin: 0 auto; }
+      #stage[data-broadcast] #three { max-width: calc((100vh - 300px) * 16 / 9); min-width: min(100%, 520px); margin: 0 auto; }
+      body[data-view="broadcast"] main { max-width: 1680px; }
+      #print { display: none; }
+      @media print { body { margin: 0; background: #fff; } body > main { display: none !important; } #print { display: block; } }
       @media (max-width: 640px) { .seat { grid-template-columns: minmax(0, 1fr); } #stage .pair { grid-template-columns: minmax(0, 1fr); } }
     </style>
   </head>
@@ -64,15 +70,24 @@
           <label class="check"><input id="seatnames" type="checkbox" /><span id="l-seatnames"></span></label>
           <label class="check" id="side-row"><input id="sidejudges" type="checkbox" /><span id="l-sidejudges"></span></label>
           <label><span id="l-mats"></span><input id="mats" type="number" min="1" max="6" inputmode="numeric" /></label>
-          <label><span id="l-view"></span><select id="view"><option value="flat">2D</option><option value="3d">3D</option></select></label>
+          <label><span id="l-view"></span><select id="view"><option value="flat">2D</option><option value="3d">3D</option><option value="broadcast"></option></select></label>
+          <label id="dim-row"><span id="l-dim"></span><select id="dim"><option value="3d">3D</option><option value="2d">2D</option></select></label>
           <label><span id="l-focus"></span><select id="focus"><option value="mat"></option><option value="bench"></option></select></label>
-          <label><span id="l-chart"></span><select id="chart"><option value="auto"></option><option value="always"></option><option value="never"></option></select></label>
-          <label><span id="l-orientation"></span><select id="orientation"><option value="auto"></option><option value="landscape"></option><option value="portrait"></option></select></label>
+          <label id="chart-row"><span id="l-chart"></span><select id="chart"><option value="auto"></option><option value="always"></option><option value="never"></option></select></label>
+          <label id="orientation-row"><span id="l-orientation"></span><select id="orientation"><option value="auto"></option><option value="landscape"></option><option value="portrait"></option></select></label>
           <label><span id="l-language"></span><select id="language"><option value="en">English</option><option value="ja">日本語</option></select></label>
           <label><span id="l-theme"></span><select id="theme"><option value="auto"></option><option value="light"></option><option value="dark"></option></select></label>
         </div>
         <div id="officials"></div>
         <div class="actions"><button type="button" id="reset"></button></div>
+      </details>
+      <details id="print-box">
+        <summary id="l-print"></summary>
+        <div class="controls">
+          <label><span id="l-paper"></span><select id="paper"><option value="a4">A4</option><option value="letter"></option></select></label>
+        </div>
+        <p class="note" id="print-note"></p>
+        <div class="actions"><button type="button" id="print-btn"></button></div>
       </details>
       <details>
         <summary id="l-table"></summary>
@@ -81,17 +96,21 @@
       <p class="note" id="privacy"></p>
       <p class="note"><a href="./docs/judging.html" id="docs"></a></p>
     </main>
+    <style id="print-css"></style>
+    <div id="print" aria-hidden="true"></div>
     <script type="module">
       // Judging assignments: set the mats and who sits in which seat; the seats are numbers and the chart is the key (names can go on the seats too), in 2D and in 3D. Everything is in this page and its address: nothing is
       // sent anywhere and nothing is stored.
-      import { JUDGING_SEATS, JUDGING_WORDS, drawJudging, judgingChart, judgingTable, mountJudgingTurn } from "./dist/judging-entry.js";
+      import { JUDGING_SEATS, JUDGING_WORDS, drawJudging, judgingChart, judgingPrintSheets, judgingPrintStyle, judgingTable, mountJudgingBroadcast, mountJudgingTurn } from "./dist/judging-entry.js";
+      import { quietTitles } from "./quiet.js";
+      quietTitles();
       import { TURN_PRESET_NAMES } from "./dist/turn-entry.js";
 
       const WORDS = {
         en: {
           title: "Judging assignments", pageTitle: "Kyogijo Stadiums: judging assignments", pageDescription: "Who judges where: the officials of each judo mat area by seat, with their names and IDs, as numbers on the seats and in a chart with names and IDs, in 2D and 3D, for a tablet.",
           lede: "Who sits where on each mat. The seats are numbers, and the chart of seat, name and ID is the key; names can go on the seats too. Everything stays in this page and its address.",
-          back: "Back to the Kyogijo Stadiums demo", docs: "The judging assignments page of the docs", edit: "Mats and officials", style: "Style", kata: "Kata (five judges)", shiai: "Shiai (referee and officials)", sidejudges: "Show the side judges' seats too", seatnames: "Names on the seats too (the chart has them anyway)", mats: "Mats", view: "View", focus: "Shows", focusMat: "The whole mat", focusBench: "The judges' bench", chart: "Chart",
+          back: "Back to the Kyogijo Stadiums demo", docs: "The judging assignments page of the docs", edit: "Mats and officials", style: "Style", kata: "Kata (five judges)", shiai: "Shiai (referee and officials)", sidejudges: "Show the side judges' seats too", seatnames: "Names on the seats too (the chart has them anyway)", mats: "Mats", view: "View", broadcast: "Broadcast", dim: "Broadcast picture", line: "Line under the board (round, pool)", print: "Print", paper: "Paper", letter: "US letter", printNote: "One mat to a page, in the plan-and-chart layout, light, on the paper you choose.", printBtn: "Print or save as PDF", focus: "Shows", focusMat: "The whole mat", focusBench: "The judges' bench", chart: "Chart",
           auto: "Automatic", always: "Always", never: "Never", orientation: "Layout", landscape: "Beside (landscape)", portrait: "Under (portrait)", language: "Language", theme: "Theme", light: "Light", dark: "Dark", follow: "Follow the device",
           all: "All mats", label: "Mat name", name: "Name", id: "ID", reset: "Back to the sample names", table: "The same as a table", privacy: "The names here are invented. The page sends nothing and stores nothing: the address holds what you typed, so a copy of the address is a copy of the assignment.",
           formLabel: "Mats and officials",
@@ -99,7 +118,7 @@
         ja: {
           title: "審判員の配置", pageTitle: "競技場 Kyogijo Stadiums：審判員の配置", pageDescription: "どの試合場を誰が担当するか。柔道の各試合場の審判員を席ごとに、氏名とIDとともに表示します。席は番号で表し、一覧表にはすべての氏名とIDを載せます。2Dと3Dに対応し、タブレットでの閲覧を想定しています。",
           lede: "各試合場で誰がどの席に座るかを表示します。席は番号で表し、席・氏名・IDの一覧表がその見方になります。氏名を席にも表示できます。入力した内容は、このページとURLの中だけに保持されます。",
-          back: "競技場 Kyogijo Stadiums のデモに戻る", docs: "ドキュメントの「審判員の配置」ページ", edit: "試合場と審判員", style: "種目", kata: "形（5人制）", shiai: "試合（主審と各係）", sidejudges: "副審の席も表示する", seatnames: "席にも氏名を表示する（一覧表には常に載ります）", mats: "試合場の数", view: "表示", focus: "表示する範囲", focusMat: "試合場全体", focusBench: "審判員席", chart: "一覧表",
+          back: "競技場 Kyogijo Stadiums のデモに戻る", docs: "ドキュメントの「審判員の配置」ページ", edit: "試合場と審判員", style: "種目", kata: "形（5人制）", shiai: "試合（主審と各係）", sidejudges: "副審の席も表示する", seatnames: "席にも氏名を表示する（一覧表には常に載ります）", mats: "試合場の数", view: "表示", broadcast: "放送用", dim: "放送用の画面", line: "表示板の補足（ラウンド・プールなど）", print: "印刷", paper: "用紙", letter: "USレター", printNote: "1ページに試合場1面、配置図と一覧表の形式、ライト配色で、選んだ用紙に印刷します。", printBtn: "印刷またはPDFで保存", focus: "表示する範囲", focusMat: "試合場全体", focusBench: "審判員席", chart: "一覧表",
           auto: "自動", always: "常に表示", never: "表示しない", orientation: "並べ方", landscape: "横に並べる", portrait: "下に並べる", language: "言語", theme: "テーマ", light: "ライト", dark: "ダーク", follow: "端末に合わせる",
           all: "すべての試合場", label: "試合場の名前", name: "氏名", id: "ID", reset: "サンプルの氏名に戻す", table: "表で見る", privacy: "ここに載せている氏名は架空のものです。このページは何も送信せず、何も保存しません。入力した内容はURLに含まれるので、URLをコピーすると配置もコピーされます。",
           formLabel: "試合場と審判員",
@@ -107,8 +126,8 @@
       };
       // Invented names, for the page to open on: the assignment is whatever is typed in, and lives in the address.
       const SAMPLE = [
-        { l: "", o: [["Aiko Mori", "J-1042"], ["Daniel Okafor", "J-0377"], ["Sofia Lindqvist-Hernandez", "J-2210"], ["Kenji Watanabe", "J-0918"], ["Marta Kowalczyk", "J-1555"]], s: [["Hana Ito", "R-204"], ["Sam Cole", "T-011"], ["Ana Ruiz", "T-012"], ["Peter Lindqvist-Haraldsson", "S-003"], ["Kim Park", "J-707"], ["", ""]] },
-        { l: "", o: [["Li Wei", "J-3001"], ["山田 花子", "J-3077"], ["Priya Raman", "J-0042"], ["Tomás Ferreira", "J-2764"], ["Hannah Brooks", "J-1888"]], s: [["Tomás Ferreira", "R-310"], ["Yui Tanaka", "T-021"], ["Omar Haddad", "T-022"], ["Eva Roth", "S-004"], ["", ""], ["", ""]] },
+        { l: "", r: "Round 2", o: [["Aiko Mori", "J-1042"], ["Daniel Okafor", "J-0377"], ["Sofia Lindqvist-Hernandez", "J-2210"], ["Kenji Watanabe", "J-0918"], ["Marta Kowalczyk", "J-1555"]], s: [["Hana Ito", "R-204"], ["Sam Cole", "T-011"], ["Ana Ruiz", "T-012"], ["Peter Lindqvist-Haraldsson", "S-003"], ["Kim Park", "J-707"], ["", ""]] },
+        { l: "", r: "Round 2, Pool B", o: [["Li Wei", "J-3001"], ["山田 花子", "J-3077"], ["Priya Raman", "J-0042"], ["Tomás Ferreira", "J-2764"], ["Hannah Brooks", "J-1888"]], s: [["Tomás Ferreira", "R-310"], ["Yui Tanaka", "T-021"], ["Omar Haddad", "T-022"], ["Eva Roth", "S-004"], ["", ""], ["", ""]] },
       ];
       const $ = (id) => document.getElementById(id);
       const params = new URLSearchParams(location.search);
@@ -123,12 +142,12 @@
         try {
           const raw = JSON.parse(params.get("d") ?? "null");
           if (Array.isArray(raw) && raw.length >= 1 && raw.length <= 6) {
-            return raw.map((m) => ({ l: typeof m.l === "string" ? m.l.slice(0, 40) : "", o: pairs(m.o, 5), s: pairs(m.s, 6) }));
+            return raw.map((m) => ({ l: typeof m.l === "string" ? m.l.slice(0, 40) : "", r: typeof m.r === "string" ? m.r.slice(0, 60) : "", o: pairs(m.o, 5), s: pairs(m.s, 6) }));
           }
         } catch { /* a damaged address opens on the samples */ }
         return null;
       }
-      const blank = () => ({ l: "", o: pairs([], 5), s: pairs([], 6) });
+      const blank = () => ({ l: "", r: "", o: pairs([], 5), s: pairs([], 6) });
       function samples(count) { return Array.from({ length: count }, (_, i) => structuredClone(SAMPLE[i] ?? blank())); }
       state.mats = readMats() ?? samples(2);
       const wantTab = params.has("mat") ? Number(params.get("mat")) : 1;
@@ -139,7 +158,9 @@
       setSelect("style", params.get("style"), ["kata", "shiai"]);
       $("sidejudges").checked = params.get("sidejudges") === "1";
       $("seatnames").checked = params.get("seatnames") === "1";
-      setSelect("view", params.get("view"), ["flat", "3d"]);
+      setSelect("view", params.get("view"), ["flat", "3d", "broadcast"]);
+      setSelect("dim", params.get("dim"), ["3d", "2d"]);
+      setSelect("paper", params.get("paper"), ["a4", "letter"]);
       setSelect("focus", params.get("focus"), ["mat", "bench"]);
       setSelect("chart", params.get("chart"), ["auto", "always", "never"]);
       setSelect("orientation", params.get("orientation"), ["auto", "landscape", "portrait"]);
@@ -150,9 +171,9 @@
       function labelPage() {
         const w = words();
         const language = $("language").value;
-        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["back", "back"], ["docs", "docs"], ["l-edit", "edit"], ["l-style", "style"], ["l-sidejudges", "sidejudges"], ["l-seatnames", "seatnames"], ["l-mats", "mats"], ["l-view", "view"], ["l-focus", "focus"], ["l-chart", "chart"], ["l-orientation", "orientation"], ["l-language", "language"], ["l-theme", "theme"], ["reset", "reset"], ["l-table", "table"], ["privacy", "privacy"]]) $(id).textContent = w[key];
-        const names = { style: { kata: "kata", shiai: "shiai" }, focus: { mat: "focusMat", bench: "focusBench" }, chart: { auto: "auto", always: "always", never: "never" }, orientation: { auto: "follow", landscape: "landscape", portrait: "portrait" }, theme: { auto: "follow", light: "light", dark: "dark" } };
-        for (const [select, map] of Object.entries(names)) for (const option of $(select).options) option.textContent = w[map[option.value]];
+        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["back", "back"], ["docs", "docs"], ["l-edit", "edit"], ["l-style", "style"], ["l-sidejudges", "sidejudges"], ["l-seatnames", "seatnames"], ["l-mats", "mats"], ["l-view", "view"], ["l-dim", "dim"], ["l-print", "print"], ["l-paper", "paper"], ["print-note", "printNote"], ["print-btn", "printBtn"], ["l-focus", "focus"], ["l-chart", "chart"], ["l-orientation", "orientation"], ["l-language", "language"], ["l-theme", "theme"], ["reset", "reset"], ["l-table", "table"], ["privacy", "privacy"]]) $(id).textContent = w[key];
+        const names = { view: { flat: "", "3d": "", broadcast: "broadcast" }, paper: { a4: "", letter: "letter" }, style: { kata: "kata", shiai: "shiai" }, focus: { mat: "focusMat", bench: "focusBench" }, chart: { auto: "auto", always: "always", never: "never" }, orientation: { auto: "follow", landscape: "landscape", portrait: "portrait" }, theme: { auto: "follow", light: "light", dark: "dark" } };
+        for (const [select, map] of Object.entries(names)) for (const option of $(select).options) if (map[option.value] !== "") option.textContent = w[map[option.value]];
         document.documentElement.lang = language;
         document.title = w.pageTitle;
         document.querySelector('meta[name="description"]').setAttribute("content", w.pageDescription);
@@ -182,6 +203,18 @@
           input.autocomplete = "off";
           label.append(text, input);
           set.append(label);
+          const lineLabel = document.createElement("label");
+          const lineText = document.createElement("span");
+          lineText.textContent = w.line;
+          const lineInput = document.createElement("input");
+          lineInput.type = "text";
+          lineInput.maxLength = 60;
+          lineInput.value = mat.r;
+          lineInput.dataset.mat = String(mi);
+          lineInput.dataset.field = "line";
+          lineInput.autocomplete = "off";
+          lineLabel.append(lineText, lineInput);
+          set.append(lineLabel);
           seatsOf().forEach((seat, si) => {
             const row = document.createElement("div");
             row.className = "seat";
@@ -236,9 +269,10 @@
         const portraitWanted = $("orientation").value === "auto" ? window.innerWidth < window.innerHeight * 1.05 : $("orientation").value === "portrait";
         return {
           style: $("style").value,
+          ...($("view").value === "broadcast" ? { view: "broadcast" } : {}),
           sideJudges: $("sidejudges").checked,
           seatNames: $("seatnames").checked,
-          mats: state.mats.map((m) => ({ ...(m.l === "" ? {} : { label: m.l }), officials: slot(m).flatMap(([name, id], i) => (name === "" && id === "" ? [] : [{ seat: i + 1, name, id }])) })),
+          mats: state.mats.map((m) => ({ ...(m.l === "" ? {} : { label: m.l }), ...(m.r === "" ? {} : { line: m.r }), officials: slot(m).flatMap(([name, id], i) => (name === "" && id === "" ? [] : [{ seat: i + 1, name, id }])) })),
           ...(state.tab > 0 ? { mat: state.tab } : {}),
           focus: $("focus").value,
           chart: $("chart").value,
@@ -251,15 +285,20 @@
       function syncUrl() {
         const next = new URLSearchParams();
         const empty = JSON.stringify(state.mats) === JSON.stringify(samples(state.mats.length));
-        if (!empty) next.set("d", JSON.stringify(state.mats.map((m) => ({ l: m.l, o: m.o, s: m.s }))));
+        if (!empty) next.set("d", JSON.stringify(state.mats.map((m) => ({ l: m.l, r: m.r, o: m.o, s: m.s }))));
         if ($("style").value !== "kata") next.set("style", $("style").value);
         if ($("sidejudges").checked) next.set("sidejudges", "1");
         if ($("seatnames").checked) next.set("seatnames", "1");
         if (state.tab !== 1) next.set("mat", String(state.tab));
-        if ($("view").value === "3d") {
-          next.set("view", "3d");
+        if ($("view").value === "3d" || ($("view").value === "broadcast" && $("dim").value === "3d")) {
+          if ($("view").value === "3d") next.set("view", "3d");
           if (state.viewpoint !== "broadcast") next.set("viewpoint", state.viewpoint);
         }
+        if ($("view").value === "broadcast") {
+          next.set("view", "broadcast");
+          if ($("dim").value === "2d") next.set("dim", "2d");
+        }
+        if ($("paper").value !== "a4") next.set("paper", $("paper").value);
         if ($("focus").value !== "mat") next.set("focus", $("focus").value);
         if ($("chart").value !== "auto") next.set("chart", $("chart").value);
         if ($("orientation").value !== "auto") next.set("orientation", $("orientation").value);
@@ -275,9 +314,27 @@
         const o = options();
         const stage = $("stage");
         stage.toggleAttribute("data-one", state.tab > 0);
+        const broadcast = $("view").value === "broadcast";
+        stage.toggleAttribute("data-broadcast", broadcast);
+        document.body.dataset.view = $("view").value;
+        $("dim-row").hidden = !broadcast;
+        $("chart-row").hidden = broadcast;
+        $("orientation-row").hidden = broadcast;
         $("error").hidden = true;
         try {
-          if ($("view").value === "3d") {
+          if (broadcast && $("dim").value === "3d") {
+            // The broadcast view: the mat in 3D from the Broadcast camera, with the officials' board over it at its side.
+            const key = JSON.stringify(["broadcast", o.mat, state.mats.length]);
+            if (turn !== undefined && turnKey !== key) { turn.destroy(); turn = undefined; }
+            if (turn === undefined) {
+              stage.innerHTML = '<div id="three"></div>';
+              turnKey = key;
+              turn = mountJudgingBroadcast($("three"), o, { preset: state.viewpoint, onChange: (_, preset) => { if (preset !== undefined) state.viewpoint = preset; syncUrl(); } });
+            } else turn.update(o);
+          } else if (broadcast) {
+            if (turn !== undefined) { turn.destroy(); turn = undefined; }
+            stage.innerHTML = drawJudging(o);
+          } else if ($("view").value === "3d") {
             const html = judgingChart({ ...o, chart: undefined, focus: undefined, orientation: undefined });
             const key = JSON.stringify([o.mat, state.mats.length]);
             if (turn !== undefined && turnKey !== key) { turn.destroy(); turn = undefined; }
@@ -309,6 +366,7 @@
         if (!(t instanceof HTMLInputElement)) return;
         const mat = state.mats[Number(t.dataset.mat)];
         if (t.dataset.field === "label") mat.l = t.value;
+        else if (t.dataset.field === "line") mat.r = t.value;
         else slot(mat)[Number(t.dataset.seat)][t.dataset.field === "name" ? 0 : 1] = t.value;
         if (t.dataset.field === "label") buildTabs();
         draw();
@@ -326,7 +384,16 @@
       $("reset").addEventListener("click", () => { state.mats = samples(state.mats.length); buildTabs(); buildOfficials(); draw(); });
       $("language").addEventListener("change", () => { labelPage(); buildTabs(); buildOfficials(); draw(); });
       $("style").addEventListener("change", () => { $("side-row").hidden = $("style").value === "kata"; buildOfficials(); draw(); });
-      for (const id of ["view", "focus", "chart", "orientation", "theme", "sidejudges", "seatnames"]) $(id).addEventListener("change", draw);
+      for (const id of ["view", "dim", "focus", "chart", "orientation", "theme", "sidejudges", "seatnames"]) $(id).addEventListener("change", draw);
+      $("paper").addEventListener("change", syncUrl);
+      // Print: every mat, one to a page, in the plan-and-chart layout and the light colours, on the chosen paper; the page's own contents are hidden for print.
+      $("print-btn").addEventListener("click", () => {
+        const paper = $("paper").value;
+        const o = { ...options(), mat: undefined, view: "plan" };
+        $("print-css").textContent = judgingPrintStyle({ paper });
+        $("print").innerHTML = judgingPrintSheets(o, { paper });
+        window.print();
+      });
       // The layout follows the screen: a tablet turned on its side puts the chart beside the plan, held upright under it.
       let resizing = 0;
       window.addEventListener("resize", () => { cancelAnimationFrame(resizing); resizing = requestAnimationFrame(() => { if ($("orientation").value === "auto") draw(); }); });

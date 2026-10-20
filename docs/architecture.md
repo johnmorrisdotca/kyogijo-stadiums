@@ -128,13 +128,19 @@ src/
 ├── multi.turn.ts       a layout in 3D: each surface as it stands on its own page, moved to its cell, with the table tops, the surrounds, the chairs and score tables, the scoreboards and the stands of the stadium, as a `TurnModel` for the 3D view; `mountMultiTurn`
 ├── multi.style.ts      the layout's rules, light and dark: the floors' colours, the barriers, the boards, the empty places and the colour of a layout that does not fit
 ├── multi.words.ts      the words of a layout in English and Japanese
-├── judging-entry.ts    the judging assignments entry (`@johnmorrisdotca/kyogijo-stadiums/judging`): `drawJudging`, `judgingChart`, `judgingTable`, `mountJudgingTurn`, the seats and the words
+├── judging-entry.ts    the judging assignments entry (`@johnmorrisdotca/kyogijo-stadiums/judging`): `drawJudging`, `judgingChart`, `judgingTable`, `judgingBoard`, `mountJudgingTurn`, `mountJudgingBroadcast`, `judgingPrint`, the seats and the words
 ├── judging.types.ts    what an assignment, a mat, an official and a seat are
 ├── judging.data.ts     the seats of each style (a kata area's five judges, the central one in the middle) and the sources they are read from
 ├── judging.ts          an assignment worked out: the options held to what they may be, each official put in a seat, and where the seats are on the judo plan
 ├── judging.fit.ts      a name and an ID set in a box without cutting either: the biggest size that fits, wrapped at its spaces, and the chart's rows that grow
 ├── judging.card.ts     the name card of a seat and the badge of its number, as markup for the plan and for the 3D view
+├── judging.plan.ts     the plan of a mat as both views draw it: the judo area clipped to what is shown, a badge or a card at every seat, and the sizes a picture is laid out in
+├── judging.text.ts     what a judging picture says in words: its title and description
 ├── judging.draw.ts     an assignment drawn: each mat's judo area with a badge or a card at every seat and the chart of seat, name and ID; `judgingTable`, the text alternative
+├── judging.board.ts    the officials' board of the broadcast view, the score panel's look for officials: seat badges, names on chips, IDs, the mat's name and its style; `judgingBoard`
+├── judging.broadcast.ts the broadcast picture: the mat large, 16:9, with the board at its side and never over the contest area
+├── judging.mount.ts    the broadcast view in a page: the 3D view of the mat with the board laid over it; `mountJudgingBroadcast`
+├── judging.print.ts    an assignment on paper: one mat to a page, A4 or US letter, the plan-and-chart layout; `judgingPrint`
 ├── judging.turn.ts     an assignment in 3D: the judges' table and chairs, a name card on the table, the mat's name on a sign, as a `TurnModel` for the 3D view; `mountJudgingTurn`
 ├── judging.style.ts    the rules of an assignment, light and dark: the ground, the chart's rows, the badges and the cards
 ├── judging.words.ts    the words of an assignment in English and Japanese

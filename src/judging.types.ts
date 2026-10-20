@@ -20,6 +20,8 @@ export interface JudgingMat {
   label?: string;
   /** Who sits where. A seat that is not named is shown as not assigned. */
   officials?: readonly JudgingOfficial[];
+  /** A line for the broadcast board's foot, before the style: `Round 2`, `Pool B`, `Final block`. At most 60 characters. */
+  line?: string;
 }
 
 /** A judging assignment as the drawing asks for it. */
@@ -39,6 +41,11 @@ export interface JudgingOptions {
    * evenly (never stretched or condensed), in the biggest size that fits its card and no smaller than a readable one; a seat whose name does not fit shows its number alone.
    */
   seatNames?: boolean;
+  /**
+   * What is drawn: the `plan` with its chart (the default, the layout to print) or the `broadcast` picture: the mat large, as a television would show it, with the officials on a board at its side like a graphic, the seats' number
+   * badges where the officials sit, and no chart. The picture is 16:9 and scales as a whole, type and all, so it is as sharp on a tablet as on a television.
+   */
+  view?: "plan" | "broadcast";
   /** Where the chart is laid: beside the plan (`landscape`, the default) or under it (`portrait`). */
   orientation?: "landscape" | "portrait";
   /** What the plan shows: the whole `mat` (the default) or the judges' `bench`, close up, so that the names in the seats are as large as they can be. */
@@ -85,5 +92,7 @@ export interface JudgingResolved {
   /** From 1. */
   n: number;
   label: string;
+  /** The line for the broadcast board's foot; empty when there is none. */
+  line: string;
   seats: JudgingAssignment[];
 }

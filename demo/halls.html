@@ -70,6 +70,8 @@
       // Tournament layouts: pick a preset, set it in a hall, switch the real stadium on or off, and turn the whole floor in 3D. The package draws everything; this page only passes the options.
       import { MULTI_PRESETS, MULTI_VENUES, drawMulti, mountMultiTurn, multiSetting, multiTable, fitSentence, needsSentence } from "./dist/multi-entry.js";
       import { TURN_PRESET_NAMES } from "./dist/turn-entry.js";
+      import { quietTitles } from "./quiet.js";
+      quietTitles();
 
       const WORDS = {
         en: {

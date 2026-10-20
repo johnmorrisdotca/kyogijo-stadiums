@@ -102,6 +102,27 @@ await takePictures({
     },
     // Judging assignments (0.17.0): the judges' table of a kata area in 3D with a name card in front of each judge and the mat's name on a sign, close up on the bench, with the chart beside the view (invented names; the judging page's stage).
     { subject: "judging-3d", views: ["desk"], url: `/judging.html?mat=1&view=3d&focus=bench&orientation=landscape&d=${encodeURIComponent(JUDGING_SHORT)}`, ready: READY_HALLS_TURN, target: "#stage" },
+    // The broadcast view (0.19.0): the mat large from the Broadcast camera, with the officials on a board at its side like a television graphic (invented names; the judging page's stage). The 2D picture, a contest area and Japanese are in the docs gallery, drawn by the build.
+    { subject: "judging-broadcast-3d", views: ["desk"], url: "/judging.html?view=broadcast&mat=1", ready: READY_HALLS_TURN, target: "#stage" },
+    // The printout (0.19.0): one mat to an A4 page in the plan-and-chart layout, as the document `judgingPrint` makes opens on a screen (the page laid on a grey desk).
+    {
+      subject: "judging-print-a4",
+      views: ["desk"],
+      url: "/judging.html?mat=1",
+      ready: READY_HALLS,
+      target: "#stage",
+      prepare: async (page) => {
+        await page.evaluate(async () => {
+          const { judgingPrintSheets, judgingPrintStyle } = await import("/dist/judging-entry.js");
+          const mats = [{ label: "Mat 1", line: "Round 2", officials: [["Aiko Mori", "J-1042"], ["Daniel Okafor", "J-0377"], ["Sofia Lindqvist-Hernandez", "J-2210"], ["Kenji Watanabe", "J-0918"], ["Marta Kowalczyk", "J-1555"]].map(([name, id], i) => ({ seat: i + 1, name, id })) }];
+          // The page as it is printed (the printout's own sheets and stylesheet), laid on a grey desk at a little over half its size.
+          const desk = "background:#cfd3d6;padding:24px 0";
+          const sheet = ".ky-ju-sheet{background:#fff;box-sizing:content-box;padding:12mm;margin:0 auto;box-shadow:0 2px 12px rgba(0,0,0,.3)}";
+          document.querySelector("#stage").innerHTML = `<style>${judgingPrintStyle({ paper: "a4" })}\n${sheet}</style><div style="${desk}"><div style="zoom:.58">${judgingPrintSheets({ style: "kata", mats }, { paper: "a4" })}</div></div>`;
+        });
+        await settle(page);
+      },
+    },
     // The table tennis playing area (0.15.0): the table in its 14 m by 7 m area, enclosed by surrounds, with the umpires' chairs, as the demo draws it (its own surface, no score).
     { subject: "tabletennis-area", views: ["desk"], url: address("sport=tabletennis&size=surface&orientation=landscape"), ready: READY, target: stage, prepare: behind("spotlight") },
     // The same area in 3D from a low corner.

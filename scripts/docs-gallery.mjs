@@ -1342,6 +1342,14 @@ function judgingPage() {
         item("judging-shiai-bench", "The technical table close up", judging({ style: "shiai", mats: [{ label: "Mat 1", officials: [{ seat: "timekeeper", name: "Sam Cole", id: "T-011" }, { seat: "scorekeeper", name: "Ana Ruiz", id: "T-012" }, { seat: "supervisor", name: "Eva Roth", id: "S-003" }] }], focus: "bench", seatNames: true }), "The referee and the side judges are on the mat and its corners: only the table's seats are in the picture of the bench."),
         item("judging-shiai-side", "With both side judges", judging({ style: "shiai", mats: [{ label: "Mat 1", officials: OFFICIALS }], sideJudges: true })),
       ]),
+      section("broadcast", "The broadcast view", "The mat large, 16:9, with the officials on a board at its side like a television graphic: the score panel's look, a number badge, a name chip and an ID for each seat. The board never lies over the contest area; the seats keep their badges.", [
+        item("judging-broadcast", "A kata area", judging({ style: "kata", view: "broadcast", mats: [{ ...mat1, line: "Round 2" }] }), "`view: \"broadcast\"`: the board stands beside the mat, and the line `Round 2` comes before the style at its foot."),
+        item("judging-broadcast-shiai", "A contest area", judging({ style: "shiai", view: "broadcast", sideJudges: true, mats: [{ label: "Mat 1", line: "Final block", officials: OFFICIALS }] }), "The referee on the mat, the technical table's three at the top, a side judge at a corner and the other seat with nobody in it (a hollow badge and a dashed chip)."),
+        item("judging-broadcast-dark", "Dark", judging({ style: "kata", view: "broadcast", theme: "dark", mats: [{ ...mat1, line: "Round 2" }] })),
+        item("judging-broadcast-ja", "In Japanese", judging({ style: "kata", view: "broadcast", language: "ja", mats: [{ officials: [{ seat: 1, name: "森 愛子", id: "J-1042" }, { seat: 2, name: "山田 花子", id: "J-0377" }, { seat: 3, name: "ダニエル・オカフォー", id: "J-2210" }] }] })),
+        item("judging-broadcast-bench", "The bench close up", judging({ style: "kata", view: "broadcast", focus: "bench", seatNames: true, mats: [{ label: "Mat 1", officials: JUDGES_SHORT }] }), "`focus: \"bench\"` with `seatNames: true`: the names on the seats as well as on the board."),
+        item("judging-board", "The board alone", judging({ style: "kata", mats: [{ ...mat1, line: "Round 2" }] }, "judgingBoard"), "`judgingBoard`: for a page of your own to lay over a picture of the mat, as `mountJudgingBroadcast` does over the 3D view."),
+      ]),
       section("mats", "Several mats", "One panel for each mat, one under another; a page with a tab for each mat draws one with `mat`.", [
         item("judging-two", "Two mats", judging({ style: "kata", mats: [mat1, mat2] })),
         item("judging-one-of-two", "The second mat alone", judging({ style: "kata", mats: [mat1, mat2], mat: 2 }), "`mat: 2`: one tab of the page."),

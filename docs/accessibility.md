@@ -1,6 +1,6 @@
 # Accessibility
 
-- **Each drawing says what it is.** The `svg` has `role="img"`, a `<title>` (the teams and the score, or the surface) and a `<desc>` (the competition, the status, the result, and what the surface is), linked by `aria-labelledby`. The words are in English or Japanese by `language`.
+- **Each drawing says what it is.** The `svg` has `role="img"`, a `<title>` (the teams and the score, or the surface) and a `<desc>` (the competition, the status, the result, and what the surface is), linked by `aria-labelledby`. The words are in English or Japanese by `language`. A `<title>` that is a direct child of the `svg` is also the browser's tooltip for the whole drawing, a box with the same words over wherever the pointer rests; a page that does not want it moves the `<title>` into a `<defs>` (the label still works: `aria-labelledby` finds it there), as the demo does (`demo/quiet.js`) and as a [judging](./judging.md#no-box-over-the-mat) picture is drawn.
 - **A score is also text.** The names, scores and statuses in a drawing are text elements, so they can be selected and found in a page. Pass `title` and `description` to say it your own way.
 - **Words stay upright.** In a tall drawing the text is turned back, and a football field's numbers are upright on both sides.
 - **Colour is not the only sign.** The winner is marked by a bar under the score and the loser's side is lighter, as well as by the colours.

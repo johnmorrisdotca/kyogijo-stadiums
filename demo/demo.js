@@ -11,6 +11,7 @@ import "./dist/element-define.js";
 import { initAtlas } from "./atlas.js";
 import { mountPlaceGrid } from "./place-grid.js";
 import { toParams } from "./embed-params.js";
+import { quiet, quietTitles } from "./quiet.js";
 import { FAMILIES, TEAMS, TEAMS_JA } from "./examples.js";
 import { gameOf as gameFor, teamOf } from "./games.js";
 import { nbaZones, passMap, shotHeat, shotMap, sprayChart, sprayDensity, touchZones } from "./layers-data.js";
@@ -23,6 +24,9 @@ import { mlbSprayChart, nbaShotChart, nflPassChart, nhlShotMap, soccerShotMap } 
 import { fenceAt } from "./dist/geometry-entry.js";
 import { FIELDS, MAX_SHOTS, SEGS, applyParams, budoFromSurface, chosenLeague, hasSeasons, hiddenRows, hiddenStatus, labelOf as labelsFor, loadGame as loadGameInto, makeState, optionsFor as optionsOf, seasonRange, urlPairs, usesEmblems, usesFlags, flagCodes } from "./model.js";
 import { WORDS } from "./words.js";
+
+// No box with the drawing's words over the mat when the pointer rests on it (the title stays, for screen readers).
+quietTitles();
 
 const $ = (id) => document.getElementById(id);
 const params = new URLSearchParams(location.search);
@@ -399,6 +403,7 @@ function render() {
       const drawn = stage.firstElementChild;
       mount = mountKyogijo(stage, o);
       const again = stage.firstElementChild;
+      if (again !== null && again.matches("svg.kyogijo")) quiet(again);
       if (drawn !== null && again !== null && drawn !== again && drawn.outerHTML === again.outerHTML) stage.replaceChildren(drawn);
     } else mount.update(o);
     const svg = stage.querySelector("svg");

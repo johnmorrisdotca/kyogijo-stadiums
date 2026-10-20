@@ -7,6 +7,22 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.19.0] - 2026-10-20
+
+### Added
+
+- **A broadcast view of a judging assignment** (`view: "broadcast"`). The mat large and prominent as a television would show it, 16:9, with the officials superimposed on a board at its side: the package's own score panel drawn for officials (the same dark rounded plate, the mat's name where a score panel has the competition, column heads, a row for each seat with its number on the round badge the seats wear, the name on a coloured chip, the ID where a score would be, and the style at the foot). The board lies beside the contest area and never over it (a test holds the board clear of the mat's picture and of the middle of the contest area for kata and shiai, a bench close up, six long names, and every width), the seat badges stay on the seats, and the whole picture scales evenly: no text is stretched (a test: every font size is in proportion at twice the width). A mat takes a `line` (`Round 2`, `Pool B`, at most 60 characters) shown before the style at the board's foot. `drawJudging` draws it in 2D; `mountJudgingBroadcast` mounts the 3D view from the Broadcast camera with the board laid over it (a share of the view's width so it scales with it, under the view where that is narrower than 640 px, and never taking the pointer); `judgingBoard` is the board alone for a page of your own. Light and dark, English and Japanese. The demo opens it with `?view=broadcast` (3D) or `?view=broadcast&dim=2d`.
+- **Printing the plan-and-chart layout** (`judgingPrint`, `judgingPrintSheets`, `judgingPrintStyle`, `JUDGING_PAPER`). One mat to a page on A4 or US letter, portrait or landscape, in the light colours, the picture scaled evenly to the page and anchored at its top; `judgingPrint` is a whole HTML document that opens as the pages on a grey desk and prints as they are (Save as PDF for a file). The demo has a "Print or save as PDF" button with a choice of paper (`?paper=letter`).
+- `JudgingDrawing.boards` (where each mat's board, the part of the mat shown and the middle of the contest area are), `matLine`, `KYOGIJO_JUDGING_BOARD_STYLE`, `KYOGIJO_JUDGING_BROADCAST_STYLE`, `BOARD_BASE`, `BROADCAST_RATIO`, `boardFoot`.
+
+### Fixed
+
+- **A box with the picture's words no longer pops up over the mat.** A `<title>` that is a direct child of the root `<svg>` is the browser's tooltip for the whole drawing, so resting the pointer on the 2D plan showed "Judging assignments: Kata, 5 judges, 2 mats" in a box on top of the mat, and on a score on a surface "Mexico 11, USA 10, Final" over its top left. A judging picture now keeps its title and description in a `<defs>` (the picture is still named by them: `aria-labelledby` points at them), and the demo's pages move the title of every drawing they show into a `<defs>` the same way (`demo/quiet.js`); a surface's own markup is unchanged byte for byte, so a page that wants no tooltip does the same with its drawings.
+
+### Changed
+
+- The plan view of a judging assignment moved its title and description into a `<defs>` (see above); everything else it draws is as it was. The plan's drawing code is in `judging.plan.ts` and the words in `judging.text.ts`, shared by both views.
+
 ## [0.18.1] - 2026-10-20
 
 ### Changed

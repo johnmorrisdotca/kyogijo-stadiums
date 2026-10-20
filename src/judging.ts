@@ -8,7 +8,7 @@ import { fill } from "./strings.ts";
 import type { Language } from "./types.ts";
 
 /** The longest name, ID and mat label that are taken, in characters. */
-export const JUDGING_LIMITS = Object.freeze({ name: 120, id: 64, label: 40 });
+export const JUDGING_LIMITS = Object.freeze({ name: 120, id: 64, label: 40, line: 60 });
 
 /** Text made safe to show: control characters become spaces, runs of spaces one, the ends trimmed. */
 const clean = (text: string): string => text.replace(/\p{Cc}/gu, " ").replace(/\s+/g, " ").trim();
@@ -43,6 +43,15 @@ export function matLabel(mat: JudgingMat, n: number, language: Language): string
   return label === "" ? fill(JUDGING_WORDS[language].mat, { n }) : label;
 }
 
+/** The line of a mat's broadcast board: the caller's, held to its length, or nothing. */
+export function matLine(mat: JudgingMat): string {
+  if (mat.line === undefined) return "";
+  if (typeof mat.line !== "string") throw new TypeError("a mat's line is text");
+  const line = clean(mat.line);
+  if ([...line].length > JUDGING_LIMITS.line) throw new RangeError(`A mat's line is at most ${JUDGING_LIMITS.line} characters`);
+  return line;
+}
+
 /** What `drawJudging` and the 3D view work from: the options held to what they may be, and every mat with all of its seats. */
 export interface JudgingSetting {
   style: JudgingStyle;
@@ -52,6 +61,8 @@ export interface JudgingSetting {
   /** How many mats the assignment has altogether. */
   total: number;
   chart: "auto" | "always" | "never";
+  /** `plan`: the plan with its chart; `broadcast`: the mat large with the board at its side. */
+  view: "plan" | "broadcast";
   orientation: "landscape" | "portrait";
   focus: "mat" | "bench";
   width: number;
@@ -95,7 +106,7 @@ export function judgingSetting(options: JudgingOptions): JudgingSetting {
   if (options.seatNames !== undefined && typeof options.seatNames !== "boolean") throw new TypeError("seatNames is true or false");
   // The seats that are drawn: every one that is not optional, and an optional one when asked for or when a mat names it.
   const shown = seats.filter((seat) => seat.optional !== true || options.sideJudges === true || given.some((m) => m.has(seat.id)));
-  const all: JudgingResolved[] = options.mats.map((mat, i): JudgingResolved => ({ n: i + 1, label: matLabel(mat, i + 1, language), seats: shown.map((seat) => given[i].get(seat.id) ?? { seat, name: "", id: "", assigned: false }) }));
+  const all: JudgingResolved[] = options.mats.map((mat, i): JudgingResolved => ({ n: i + 1, label: matLabel(mat, i + 1, language), line: matLine(mat), seats: shown.map((seat) => given[i].get(seat.id) ?? { seat, name: "", id: "", assigned: false }) }));
   let mats = all;
   if (options.mat !== undefined) {
     if (!Number.isInteger(options.mat) || options.mat < 1 || options.mat > all.length) throw new RangeError(`mat is a whole number from 1 to ${all.length}`);
@@ -109,6 +120,7 @@ export function judgingSetting(options: JudgingOptions): JudgingSetting {
     mats,
     total: all.length,
     chart: oneOf(options.chart, ["auto", "always", "never"], "auto", "chart"),
+    view: oneOf(options.view, ["plan", "broadcast"], "plan", "view"),
     orientation: oneOf(options.orientation, ["landscape", "portrait"], "landscape", "orientation"),
     focus: oneOf(options.focus, ["mat", "bench"], "mat", "focus"),
     width,

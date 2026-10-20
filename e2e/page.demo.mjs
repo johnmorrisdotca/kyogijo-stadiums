@@ -18,6 +18,17 @@ test("opens on the rink with no complaint from the page, and says what it shows"
   expect(await page.title()).toContain("Kyogijo");
 });
 
+test("no box with the score's words pops up over the surface: the title is not a direct child of the drawing, now or after the drawing changes, and still names it", async ({ page }) => {
+  await open(page, "?sport=nhl&lang=en&help=off");
+  const direct = () => svg(page).evaluate((el) => [el.querySelectorAll(":scope > title").length, el.querySelectorAll("defs > title").length]);
+  expect(await direct()).toEqual([0, 1]);
+  await expect(svg(page)).toHaveAccessibleName(/USA 3, Canada 2/);
+  // A new drawing (another sport, another language) is quiet too.
+  await page.goto(page.url().replace("sport=nhl", "sport=nfl").replace("lang=en", "lang=ja"));
+  await page.waitForSelector(`${at("stage")}[data-ready="true"] svg.kyogijo`);
+  expect(await direct()).toEqual([0, 1]);
+});
+
 for (const sport of SPORTS) {
   test(`${sport} draws, on a surface with both teams and a score, and is not blank`, async ({ page }) => {
     const errors = await open(page, `?sport=${sport}&lang=en&help=off&orientation=landscape`);

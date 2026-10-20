@@ -10,7 +10,7 @@ export interface JudgingWords {
   /** The chart: its heading, its columns, the word before an ID and what a seat with nobody in it says. */
   chart: { heading: string; seat: string; name: string; id: string; idLabel: string; vacant: string };
   /** The sentences of the title and the description. */
-  say: { title: string; matsOne: string; matsMany: string; mat: string; seat: string; seatNoId: string; seatVacant: string; names: string; chartOnly: string; join: string };
+  say: { title: string; matsOne: string; matsMany: string; mat: string; seat: string; seatNoId: string; seatVacant: string; names: string; chartOnly: string; board: string; join: string };
   /** The table that says the same as the picture. */
   table: { caption: string; mat: string; seat: string; name: string; id: string };
   /** What the 3D view says of the seats' name cards. */
@@ -32,6 +32,7 @@ export const JUDGING_WORDS: Record<Language, JudgingWords> = {
       seatVacant: "{seat} not assigned",
       names: "The names are in the seats where they fit, and in the chart of mat, seat, name and ID.",
       chartOnly: "The names are in the chart of mat, seat, name and ID.",
+      board: "The officials are listed on a board at the side of the mat, each with the number of the seat, name and ID; the numbers are on the seats.",
       join: "; ",
     },
     table: { caption: "{title}", mat: "Mat", seat: "Seat", name: "Name", id: "ID" },
@@ -51,6 +52,7 @@ export const JUDGING_WORDS: Record<Language, JudgingWords> = {
       seatVacant: "{seat}は未定",
       names: "氏名は、席に収まる場合は各席の中に表示し、試合場・席・氏名・IDの一覧表にも載せています。",
       chartOnly: "氏名は、試合場・席・氏名・IDの一覧表に載せています。",
+      board: "審判員は、席の番号・氏名・IDとともに試合場の横の表示板に載せ、席の番号は各席に表示しています。",
       join: "、",
     },
     table: { caption: "{title}", mat: "試合場", seat: "席", name: "氏名", id: "ID" },
