@@ -81,6 +81,10 @@ not published again.
 
 Bug reports and ideas go in the [issues](https://github.com/johnmorrisdotca/kyogijo-stadiums/issues).
 
+### Releasing a visual feature
+
+A release that adds something a reader can see (a new surface or event type, a look, a preset) is not finished until the npm page shows it. New visual feature? Update the README images (`pnpm screenshots:readme`, or `ONLY=<subject> node scripts/readme-pictures.mjs` for one) and add a showcase section to the README and the docs if the current examples do not show it well. A small fix or an internal change needs neither.
+
 ### Commands and rules
 
 ```sh

@@ -13,6 +13,10 @@ console.log(layout.needs.length, layout.needs.width, layout.needs.area);
 // 28 14 392
 ```
 
+![Three judo contest areas in a row on one red floor of mats, with boards along the edges and empty places for the event's name and logos](./images/multi-judo-desk-light.webp)
+
+![Four table tennis areas in two rows of two under one scoreboard](./images/multi-tabletennis-desk-light.webp)
+
 Each surface is the one `drawKyogijo` draws (a table, a court, a sheet, the sport's own several judo or karate areas), with its own lines, moved to its place: nothing is drawn a second way. The layout adds the floor, and, where the sport has them, the barriers, the officials' chairs, a scoreboard hung over the middle of the floor, the boards along its edges and the empty places for the event's own words and marks. It is one picture, with a title and a description for a screen reader, light and dark like every drawing, and [`multiTable`](#the-text-alternative) says the same thing as a table.
 
 The [tournament layouts demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/halls.html) lets you pick a preset, set it in a hall, and switch the stadium on and off; [the gallery](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-multi.html) shows every preset.

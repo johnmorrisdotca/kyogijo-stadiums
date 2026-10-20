@@ -6,10 +6,12 @@
 // Every picture stands on one of the family's shared backgrounds (scripts/family-backgrounds.ts, chosen in the demo's own Background menu, so the picture is the page as a reader can make it): the
 // surface is the drawing as the package makes it, and the background is the felt around it, in the dark or the light variant of the picture's scheme. Which background, and why, is at each shot.
 // Output: docs/images/<subject>-<desk|phone>-<light|dark>.webp.
+import process from "node:process";
 import { takePictures } from "./readme-pictures-lib.mjs";
 
 const READY = '[data-testid="stage"][data-ready="true"] svg.kyogijo';
 const stage = "#felt";
+const READY_HALLS = 'body[data-ready="true"] #stage svg';
 const READY_TURN = '[data-testid="stage"][data-ready="true"] .ky-turn';
 const address = (query) => `/?lang=en&help=off&${query}`;
 
@@ -25,7 +27,9 @@ const behind = (names, before, after) => async (page, state) => {
   if (after) await after(page, state);
 };
 
+// ONLY=multi-judo,multi-curling takes just those subjects and leaves the other pictures as they are.
 await takePictures({
+  only: process.env.ONLY?.split(","),
   shots: [
     // The rink on a desk, from the top of the page. On a phone: the football field, turned a quarter to fit.
     {
@@ -57,6 +61,9 @@ await takePictures({
     { subject: "turn-volleyball", views: ["desk"], url: address("sport=volleyball&view=3d&viewpoint=end"), ready: READY_TURN, target: stage, prepare: behind("spotlight") },
     { subject: "turn-rink", views: ["desk"], url: address("sport=nhl&view=3d&viewpoint=corner"), ready: READY_TURN, target: stage, prepare: behind("ice") },
     { subject: "turn-court", views: ["desk"], url: address("sport=nba&view=3d&viewpoint=broadcast"), ready: READY_TURN, target: stage, prepare: behind("glow") },
+    // Tournament layouts (0.12.0): several surfaces on one floor, to scale, as the demo's halls page draws them (its stage, cropped; the page follows the colour scheme).
+    { subject: "multi-tabletennis", views: ["desk"], url: "/halls.html?preset=tabletennis-4", ready: READY_HALLS, target: "#stage" },
+    { subject: "multi-judo", views: ["desk"], url: "/halls.html?preset=judo-1x3", ready: READY_HALLS, target: "#stage" },
     // The strips for a list of games, on midnight. They are a list and not a surface, so the background is laid behind the list itself, by the same module and in the same way as behind the felt.
     {
       subject: "badges",

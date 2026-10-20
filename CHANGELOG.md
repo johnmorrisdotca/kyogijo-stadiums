@@ -7,6 +7,15 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.12.1] - 2026-10-19
+
+The npm page shows the tournament layouts. No change to the package's code.
+
+### Changed
+
+- **README: a showcase for the tournament layouts of 0.12.0.** A new example section, "Several surfaces on one floor", with a short tested example and two pictures in a light and a dark twin (three judo areas, four table tennis areas), and a Features entry; the same pictures are on [the layouts page](./docs/multi.md). Made by `pnpm screenshots:readme` (`ONLY=<subject>` takes just one subject). Several long Features entries of the README (the budō, the 3D view, the surfaces, zones, pools, athletics) are shortened to stay under the README size budget; the detail is on the page each links to.
+- **`CONTRIBUTING.md` has a release-checklist line for visual features:** new visual feature? update the README images and add a showcase section if the examples do not show it well.
+
 ## [0.12.0] - 2026-10-19
 
 ### Added
