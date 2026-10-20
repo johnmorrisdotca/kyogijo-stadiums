@@ -215,6 +215,7 @@
 出典の URL：
 
 - `bwf-laws`: <https://worldbadminton.com/laws/rules_2025.htm>
+- `bwf-facilities`: <https://www.badmintonpanam.org/wp-content/uploads/2023/01/3.3.4-Specs-for-Int_l-Standard-Facilities-14-October-2019-V1.1.pdf>
 
 ## ピックルボール
 

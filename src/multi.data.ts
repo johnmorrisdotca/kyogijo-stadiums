@@ -29,15 +29,6 @@ export const MULTI_SOURCES: Readonly<Record<string, Readonly<LeagueSource>>> = O
       note: "(superseded by the 2026 Statutes' chapter 3, which has no 1.5 m for the corners and 50 cm to 100 cm for the surrounds) the playing space at least 14 m by 7 m by 5 m, the four corners may be covered by surrounds of at most 1.5 m (3.2.3.1); each playing area enclosed by surrounds about 75 cm high, of one dark colour, separating it from its neighbours and from the spectators (3.2.3.3); the umpire's table and chair and the score indicators are part of the area (3.2.3.2); up to 6 advertisements on the floor of the area (3.2.5.5). A later edition (the 2024 Statutes) was seen only in a search summary, which says the space may be of any shape within a rectangle of the same size; the 2022 text is the one drawn.",
     }),
     source({
-      id: "bwf-facilities",
-      title: "BWF Statutes, Section 5.3.4 Specifications for International Standard Facilities, 2.1.3, 2.1.4 and 2.2.3 (the space round and between courts)",
-      by: "Badminton World Federation",
-      edition: "in force 14 October 2019, version 1.1",
-      url: "https://www.badmintonpanam.org/wp-content/uploads/2023/01/3.3.4-Specs-for-Int_l-Standard-Facilities-14-October-2019-V1.1.pdf",
-      read: READ,
-      note: "at least 2 m clear behind the baselines and 1.5 m from the side lines, and 1.5 m between any two courts marked out side by side; at Grade 1 and Grade 2 tournaments at least 4 m between courts is recommended, for A-boards and the officials' chairs; competition courts are always laid side by side. The copy read is Badminton Panam's, a continental confederation's; the BWF's own current text was not read.",
-    }),
-    source({
       id: "ppa-host",
       title: "Host a PPA Tour tournament: what the host provides (a minimum of 16 courts, a championship court that seats at least 250)",
       by: "Professional Pickleball Association",
@@ -456,7 +447,8 @@ export const MULTI_PRESETS: readonly MultiSpec[] = Object.freeze([
     id: "badminton-1x4",
     name: { en: "Badminton, four courts side by side (1 x 4), the spacing recommended for Grade 1 and 2", ja: "バドミントン 4面を横並び（1×4）、グレード1・2の推奨間隔" },
     sport: "badminton",
-    surface: { sport: "badminton" },
+    // The space round a court is the BWF's (2 m behind the baselines, 1.5 m beside the side lines): the bays below are that space and the spacing between courts, so the layout draws the court alone.
+    surface: { sport: "badminton", net: { free: "none" } },
     kind: "cells",
     rows: 1,
     columns: 4,
@@ -477,7 +469,8 @@ export const MULTI_PRESETS: readonly MultiSpec[] = Object.freeze([
     id: "badminton-1x4-min",
     name: { en: "Badminton, four courts side by side (1 x 4), the least spacing", ja: "バドミントン 4面を横並び（1×4）、最小の間隔" },
     sport: "badminton",
-    surface: { sport: "badminton" },
+    // The space round a court is the BWF's (2 m behind the baselines, 1.5 m beside the side lines): the bays below are that space and the spacing between courts, so the layout draws the court alone.
+    surface: { sport: "badminton", net: { free: "none" } },
     kind: "cells",
     rows: 1,
     columns: 4,

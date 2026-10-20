@@ -215,6 +215,7 @@ Sources:
 Sources:
 
 - `bwf-laws`: Laws of Badminton, Law 1 Court and Court Equipment and Diagram A, Law 7 Scoring System, Badminton World Federation, as amended and adopted by the BWF 26 April 2025 (the 2026 amendments take effect on 4 January 2027 and could not be read). <https://worldbadminton.com/laws/rules_2025.htm>
+- `bwf-facilities`: BWF Statutes, Section 5.3.4 Specifications for International Standard Facilities, 2.1.3, 2.1.4 and 2.2.3 (the space round and between courts), Badminton World Federation, in force 14 October 2019, version 1.1. <https://www.badmintonpanam.org/wp-content/uploads/2023/01/3.3.4-Specs-for-Int_l-Standard-Facilities-14-October-2019-V1.1.pdf>
 
 ## Pickleball
 

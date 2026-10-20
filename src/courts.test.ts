@@ -278,7 +278,9 @@ describe("badminton: the BWF's Laws of Badminton, Law 1 and Diagram A", () => {
       const inner = post.y < 3.05 * FT_PER_M ? post.y + post.size / 2 : post.y - post.size / 2;
       expect(post.y < 3.05 * FT_PER_M ? inner <= w * FT_PER_M + 1e-9 : inner >= (6.1 - w) * FT_PER_M - 1e-9).toBe(true);
     }
-    expect(courtFor({ sport: "badminton" }).zone).toBeNull();
+    // The space round the court is the BWF's facilities specification's (the Laws give none): 2 m behind the baselines, 1.5 m beside the side lines.
+    expect(courtFor({ sport: "badminton" }).zone).toEqual({ side: 1.5 * FT_PER_M, end: 2 * FT_PER_M });
+    expect(courtFor({ sport: "badminton", net: { free: "none" } }).zone).toBeNull();
   });
 });
 
@@ -892,7 +894,7 @@ describe("the drawings", () => {
     expect(free).toHaveLength(1);
     expect([free[0].attrs.x, free[0].attrs.y, free[0].attrs.width, free[0].attrs.height].map(Number)).toEqual([-21, -12, 120, 60]);
     expect(withClass(draw({ sport: "tennis", net: { free: "none" } }), "ky-free")).toHaveLength(0);
-    expect(withClass(draw({ sport: "badminton" }), "ky-free")).toHaveLength(0);
+    expect(withClass(draw({ sport: "badminton", net: { free: "none" } }), "ky-free")).toHaveLength(0);
     const lines = withClass(svg, "ky-fill-line");
     expect(lines).toHaveLength(1);
     expect(lines[0].attrs.d.split("Z").length - 1).toBe(geometry({ sport: "tennis" }).lines.length);

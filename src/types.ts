@@ -487,7 +487,7 @@ export interface NetStyle {
   look?: string;
   /**
    * The free zone drawn round the court: `official` (the default: the figure a rulebook gives for its own competitions, where it gives one), `least` (the least it allows
-   * or recommends) or `none`. Tennis (Appendix X), volleyball, beach volleyball and sitting volleyball (Rule 1.1), pickleball (Rule 3.A.3), sepak takraw (Law 1.5), netball (Rule 1, item 8) and table tennis (the ITTF's 3.2.3.1, the playing space) give figures; badminton, padel, squash, racquetball, teqball and roundnet do not.
+   * or recommends) or `none`. Tennis (Appendix X), volleyball, beach volleyball and sitting volleyball (Rule 1.1), pickleball (Rule 3.A.3), sepak takraw (Law 1.5), netball (Rule 1, item 8) table tennis (the ITTF's 3.2.3.1, the playing space) and badminton (the BWF's facilities specification, 5.3.4: 2 m behind the baselines and 1.5 m beside the side lines) give figures; padel, squash, racquetball, teqball and roundnet do not.
    */
   free?: "official" | "least" | "none";
   /**

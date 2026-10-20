@@ -166,8 +166,9 @@ Tennis, volleyball (indoor, beach and sitting), badminton, pickleball, table ten
 | The posts | 1.55 m high from the surface, on the doubles side lines whether singles or doubles is played, not extending into the court beyond the side lines | Laws 1.4, 1.5 |
 | The net | 760 mm deep, at least 6.1 m wide; the top 1.524 m at the centre and 1.55 m over the side lines | Laws 1.7, 1.10 |
 | The score | a match the best of three games; a game to 21, at 20-all a two-point lead, at 29-all the 30th point | Laws 7.1, 7.2, 7.4, 7.5 |
+| The space round the court | at least 2 m clear behind the baselines and 1.5 m clear from the side lines, which is also the least between two courts side by side; at Grade 1 and 2 tournaments at least 4 m between courts is recommended (not required) | BWF Statutes 5.3.4, Specifications for International Standard Facilities, 2.1.3, 2.2.3 (the copy hosted by Badminton Panam, version 1.1 of 14 October 2019; the BWF's own current text was not found) |
 
-**Ours.** The colours; the sizes of the posts' marks; the figures of the net's depth and height are held and not drawn (a plan view). The BWF's Laws give no figure for the ground round the court, so none is drawn.
+**Ours.** The colours; the sizes of the posts' marks; the figures of the net's depth and height are held and not drawn (a plan view). The Laws give no figure for the ground round the court: the free zone drawn is the facilities specification's 2 m and 1.5 m, one figure for every tournament (so `official` and `least` agree); the recommended 4 m between courts is in [the tournament layouts](#tournament-layouts).
 
 ### Pickleball
 

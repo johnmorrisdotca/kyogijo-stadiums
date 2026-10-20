@@ -389,7 +389,8 @@ export const FIVB_BEACH: VolleyballFigures = {
  * The BWF's court, from Law 1 of the Laws of Badminton (as amended 26 April 2025) and its Diagram A, in metres: 13.40 by 6.10 m, lines 40 mm wide; the singles
  * side lines 460 mm inside the doubles side lines (so 5.18 m apart, outside to outside); the short service lines 1.98 m from the net; the doubles long service
  * lines 760 mm inside the back boundary lines; the net 1.524 m high at the centre and 1.55 m over the doubles side lines, 760 mm deep and at least 6.1 m
- * wide; the posts 1.55 m high, on the doubles side lines.
+ * wide; the posts 1.55 m high, on the doubles side lines. The space round the court is from the BWF's Specifications for International Standard Facilities (5.3.4, 2.1.3 and 2.2.3 of the
+ * Statutes): at least 2 m clear behind the baselines and 1.5 m from the side lines.
  */
 export const BWF_BADMINTON: BadmintonFigures = {
   length: 13.4,
@@ -399,7 +400,8 @@ export const BWF_BADMINTON: BadmintonFigures = {
   doublesLongServiceInset: 0.76,
   shortServiceLine: 1.98,
   net: { postHeight: 1.55, heightCentre: 1.524, heightSides: 1.55, depth: 0.76, widthMin: 6.1 },
-  free: { official: null, least: null },
+  // The BWF's Specifications for International Standard Facilities, 5.3.4, 2.1.3 and 2.2.3: "at least two-metres clear space behind the baselines and 1.5 metre clear space from the side-lines", the same for every sanctioned tournament (one figure, so `official` and `least` agree).
+  free: { official: { side: 1.5, end: 2 }, least: { side: 1.5, end: 2 } },
 };
 
 /**
@@ -593,7 +595,7 @@ export const VOLLEYBALL_LEAGUES: readonly VolleyballLeague[] = [
 ];
 
 /** The badminton leagues: the BWF's. */
-export const BADMINTON_LEAGUES: readonly BadmintonLeague[] = [{ id: "bwf", family: "badminton", name: { en: "BWF badminton court", ja: "BWFのバドミントンコート" }, unit: "m", dimensions: BWF_BADMINTON, sources: ["bwf-laws"], builtIn: true }];
+export const BADMINTON_LEAGUES: readonly BadmintonLeague[] = [{ id: "bwf", family: "badminton", name: { en: "BWF badminton court", ja: "BWFのバドミントンコート" }, unit: "m", dimensions: BWF_BADMINTON, sources: ["bwf-laws", "bwf-facilities"], builtIn: true }];
 
 /** The pickleball leagues: USA Pickleball's. */
 export const PICKLEBALL_LEAGUES: readonly PickleballLeague[] = [{ id: "usap", family: "pickleball", name: { en: "USA Pickleball court", ja: "USA Pickleballのコート" }, unit: "ft", dimensions: USAP_PICKLEBALL, sources: ["usap-rulebook"], builtIn: true }];
