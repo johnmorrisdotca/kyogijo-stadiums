@@ -38,7 +38,7 @@ export interface TurnSettings {
   motion?: "auto" | "smooth" | "none";
   /** The drawing the floor is, in place of `drawKyogijo`: a chart's `draw`, for instance. It is given the options with the view's own changes (the whole surface, lying wide). */
   floor?: (options: SurfaceOptions | ScoreOptions) => string;
-  /** How long a lens the eye has, as a multiple of the view's longer side: 1.7 by default, and the larger it is the flatter the picture. */
+  /** How long a lens the eye has, as a multiple of the view's longer side: 8 by default (`LENS`), and the larger it is the flatter the picture; a short lens makes the near end of a turning floor swell. */
   lens?: number;
   /** The size the first view is worked out for, in pixels, when the markup is made away from a page. 960 by 600 by default. */
   size?: { width: number; height: number };
@@ -156,7 +156,7 @@ export function buildTurn(options: SurfaceOptions | ScoreOptions, settings: Turn
   const centre: [number, number] = [vx + vw / 2, vy + vh / 2];
   // The scene's extent: the playing surface (the whole floor where it has no uprights), and whatever stands beyond it (a net behind a goal line). The ground
   // round the surface is not counted, so that the view is fitted to what is played on and the ground runs out of the picture.
-  const area = uprights.area ?? { x0: vx, y0: vy, x1: vx + vw, y1: vy + vh };
+  const area = uprights.whole === true || uprights.area === undefined ? { x0: vx, y0: vy, x1: vx + vw, y1: vy + vh } : uprights.area;
   let [x0, y0, x1, y1] = [area.x0, area.y0, area.x1, area.y1];
   let top = uprights.lift;
   for (const p of planes) {

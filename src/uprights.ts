@@ -54,6 +54,8 @@ export interface Uprights {
   thin: number;
   /** The playing surface itself in feet, the part the view is fitted to (the ground round it may run out of the picture): `undefined` for a surface with no uprights, which is fitted whole. */
   area?: { x0: number; y0: number; x1: number; y1: number };
+  /** True when the view is fitted to the whole floor drawing, not to `area` (which is then only where the score board goes): a raised platform stands in a floor that must not be cut at any angle. */
+  whole?: boolean;
   /** The patterns the venue's planes are drawn with (the contents of an SVG `defs`), when it has any. */
   defs?: string;
   /** How far the venue reaches beyond the surface, in feet, when it has one: the ground a floor needs for it to stand on. */
@@ -74,6 +76,7 @@ export function uprightsFor(o: SurfaceOptions, settings: UprightOptions = {}): U
   let lift = 0;
   let thin = 0.2;
   let area: Uprights["area"];
+  let whole = false;
   if (sport === "nfl" || sport === "cfl" || sport === "ifaf") {
     const spec = league?.family === "football" ? fieldOf(league, o.year) : footballIn(sport, o.year);
     const shape = league?.family === "football" || sport === "ifaf" ? "slingshot" : rulesFor(sport, o.year).rules.postShape;
@@ -136,6 +139,7 @@ export function uprightsFor(o: SurfaceOptions, settings: UprightOptions = {}): U
     thin = thinnest(area.x1, area.y1);
     items = budoUprights({ ...o, sport }, thin).items;
     lift = built.lift;
+    whole = built.whole;
   } else if (isFieldSport(sport)) {
     const plan = fieldPlan({ ...o, sport });
     thin = thinnest(plan.length, plan.width);
@@ -165,7 +169,7 @@ export function uprightsFor(o: SurfaceOptions, settings: UprightOptions = {}): U
     if (board !== undefined) items.push(board);
   }
   if (settings.only !== undefined) items = items.filter((item) => settings.only!.includes(item.kind));
-  return { items, lift, thin, area, ...(defs === "" ? {} : { defs }), ...(reach === 0 ? {} : { reach }) };
+  return { items, lift, thin, area, ...(whole ? { whole } : {}), ...(defs === "" ? {} : { defs }), ...(reach === 0 ? {} : { reach }) };
 }
 
 /** A length in feet as a rulebook would print it in `unit`: metres to the centimetre, feet to a tenth. */

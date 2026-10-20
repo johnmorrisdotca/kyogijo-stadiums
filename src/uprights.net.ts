@@ -110,7 +110,18 @@ export function netUprights(plan: CourtPlan, geo: CourtGeometry, settings: { net
       items.push({ id: "table", kind: "table-legs", at: [L / 2, W / 2], height: lift, planes: tableBody(0, 0, L, W, lift, thin, false) });
       // The floor of the hall, under the table.
       const room = Math.max(L, W) * 5;
-      items.push({ id: "ground", kind: "table-legs", at: [L / 2, W / 2], height: 0, planes: [flat("ground", "ground", -room, -room, L + room, W + room, 0, `<rect width="${n(L + 2 * room)}" height="${n(W + 2 * room)}" class="u-ground"/>`)] });
+      // Under the table lies its shadow on that floor, so that the legs stand on something.
+      const grow = Math.max(convertLength(0.25, "m", "ft"), thin * 4);
+      items.push({
+        id: "ground",
+        kind: "table-legs",
+        at: [L / 2, W / 2],
+        height: 0,
+        planes: [
+          flat("ground", "ground", -room, -room, L + room, W + room, 0, `<rect width="${n(L + 2 * room)}" height="${n(W + 2 * room)}" class="u-ground"/>`),
+          flat("table-shadow", "ground", -grow / 2, -grow / 2, L + grow / 2, W + grow / 2, 0.005, `<rect width="${n(L + grow)}" height="${n(W + grow)}" rx="${n(grow)}" class="u-shadow"/>`),
+        ],
+      });
       return { items, lift };
     }
     default:

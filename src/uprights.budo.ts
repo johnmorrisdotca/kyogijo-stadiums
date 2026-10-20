@@ -3,7 +3,7 @@
 // (a judo platform's height is not in the rules: "it depends on the sightlines"). The plans are in metres in the frame of their own origin, and the drawing's frame is feet from the corner of the plan's
 // box, so every point goes through `at`. The mound's height is the option's; the azuchi's (1.5 m or 1.8 m) and a dojo wall's (3 m) are ours: no rule gives them.
 import { budoPlan, type BudoPlan } from "./budo/plan.ts";
-import { n, plane, shy, wall, type Plane, type Upright } from "./turn.kit.ts";
+import { flat, n, plane, shy, wall, type Plane, type Upright } from "./turn.kit.ts";
 import type { SurfaceOptions } from "./types.ts";
 
 const K = 1 / 0.3048;
@@ -13,12 +13,18 @@ export interface BudoUprights {
   items: Upright[];
   lift: number;
   area: { x0: number; y0: number; x1: number; y1: number };
+  /** The view is fitted to the whole floor (a platform stands in it), not to `area`. */
+  whole: boolean;
 }
 
 /** The walls of a dojo, 3 m high (ours). */
 export const DOJO_WALL = 3;
 
-/** The planes of the dohyō's clay mound: its four sides, from the floor of the hall up to the clay. */
+/**
+ * The planes of the dohyō's clay mound, a solid block: its four sides, from the floor of the hall up to the clay, and its flat top, which is the drawing's own clay with the ring of straw bales on it, lifted to the
+ * mound's height (the floor itself lies on the hall's floor, so that the ground round the mound stays low). The sides are one tone darker than the top, so that top and sides are lit the same way; whichever way
+ * the view is turned, the sides on the far side are drawn first and the top over them (see `layoutOf`), so the mound never looks hollow.
+ */
 function moundPlanes(plan: BudoPlan, at: (x: number, y: number) => readonly [number, number], height: number): Plane[] {
   const L = plan.sumo;
   if (L === undefined) return [];
@@ -27,8 +33,10 @@ function moundPlanes(plan: BudoPlan, at: (x: number, y: number) => readonly [num
   const planes: Plane[] = [];
   corners.forEach((a, i) => {
     const c = corners[(i + 1) % 4];
-    planes.push(wall(`mound-${i + 1}`, "wall", a[0], a[1], c[0], c[1], 0, height, `<rect width="${n(Math.hypot(c[0] - a[0], c[1] - a[1]))}" height="${n(height)}" class="u-clay"/>`));
+    planes.push(wall(`mound-${i + 1}`, "wall", a[0], a[1], c[0], c[1], 0, height, `<rect width="${n(Math.hypot(c[0] - a[0], c[1] - a[1]))}" height="${n(height)}" class="u-clay u-clay-side"/>`));
   });
+  const [a, c] = [corners[0], corners[2]];
+  planes.push({ ...flat("mound-top", "platform", a[0], a[1], c[0], c[1], height, ""), crop: true });
   return planes;
 }
 
@@ -65,10 +73,11 @@ export function budoUprights(o: Pick<SurfaceOptions, "sport" | "league" | "budo"
   const at = (x: number, y: number): readonly [number, number] => [(x - ox) * K, (y - oy) * K];
   const area = { x0: 0, y0: 0, x1: (plan.box.x1 - ox) * K, y1: (plan.box.y1 - oy) * K };
   const items: Upright[] = [];
-  let lift = 0;
+  // The floor lies on the hall's floor (`lift` is 0): the mound is a block standing on it, with its own top.
+  const lift = 0;
   if (plan.sumo !== undefined) {
-    lift = plan.sumo.height * K;
-    items.push({ id: "mound", kind: "mound", at: at(plan.sumo.centre[0], plan.sumo.centre[1]), height: lift, planes: moundPlanes(plan, at, lift) });
+    const height = plan.sumo.height * K;
+    items.push({ id: "mound", kind: "mound", at: at(plan.sumo.centre[0], plan.sumo.centre[1]), height, planes: moundPlanes(plan, at, height) });
   }
   if (plan.kyudo !== undefined) {
     const built = azuchiPlanes(plan, at);
@@ -93,5 +102,5 @@ export function budoUprights(o: Pick<SurfaceOptions, "sport" | "league" | "budo"
     items.push({ id: "walls", kind: "walls", at: centre, height: h, planes });
   }
   void thin;
-  return { items, lift, area };
+  return { items, lift, area, whole: plan.sumo !== undefined };
 }

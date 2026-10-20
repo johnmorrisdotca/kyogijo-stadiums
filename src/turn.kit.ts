@@ -30,6 +30,11 @@ export interface Plane {
    * wall. The nearer the eye is to that side, and the lower it is, the more the wall is cut away (see `fadeOf`), so that the court is never hidden behind its own glass.
    */
   shy?: readonly [number, number];
+  /**
+   * A plane that is the floor's own drawing seen through its rectangle, not a drawing of its own: the top of a raised platform (a dohyō's clay with its bales). The floor lies on the ground, so
+   * that the ground round the platform stays low, and this plane lifts the part of it that is the platform's top to the platform's height. Its `u` and `v` must be flat and along x and y.
+   */
+  crop?: boolean;
   /** How much of a `shy` plane is left when it is cut away altogether: 0.08 when missing. A plane that others lie over on the screen (the steps of a gallery) takes less, so that they do not add up to a veil. */
   fadeTo?: number;
 }

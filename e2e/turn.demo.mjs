@@ -140,7 +140,7 @@ const nearestPart = async (page) =>
     return best.part;
   });
 const where = (page, part) =>
-  page.locator(`${STAGE} [data-part="${part}"]`).evaluate((el) => {
+  page.locator(part === "floor" ? `${STAGE} .ky-turn-floor` : `${STAGE} [data-part="${part}"]`).evaluate((el) => {
     const b = el.getBoundingClientRect();
     return { x: b.x + b.width / 2, y: b.y + b.height / 2 };
   });
@@ -167,12 +167,16 @@ test("a drag takes hold of the surface: right moves the near side right, down ti
   const left = await where(page, part);
   expect(left.x).toBeLessThan(right.x - 1);
   // Down tips the top toward the eye: the near edge comes down the screen, as the overhead view is approached.
-  const before = await where(page, part);
+  // Measured from the middle of the floor, since the fit moves the whole picture a little as the surface is tipped: the near part is further below the middle the nearer to overhead the view is.
+  // (The part nearest the eye is picked again: the turns above carried the first one round the surface.)
+  const near = await nearestPart(page);
+  const below = async () => (await where(page, near)).y - (await where(page, "floor")).y;
+  const before = await below();
   await dragBy(page, 0, 30);
-  const down = await where(page, part);
-  expect(down.y).toBeGreaterThan(before.y + 1);
+  const down = await below();
+  expect(down).toBeGreaterThan(before + 1);
   await dragBy(page, 0, -60);
-  expect((await where(page, part)).y).toBeLessThan(down.y - 1);
+  expect(await below()).toBeLessThan(down - 1);
 });
 
 test("the left and right arrows turn the way a drag to that side does", async ({ page }) => {
@@ -429,4 +433,78 @@ test("the auto-turn speaks Japanese", async ({ page }) => {
   await open(page, "?sport=nhl&view=3d&lang=ja&help=off");
   await expect(playButton(page)).toHaveText(/自動回転/);
   await expect(playButton(page)).toHaveAttribute("aria-pressed", "false");
+});
+
+/** The area the floor covers on the screen, as the browser has drawn its matrix (perspective included). */
+const floorArea = (page) =>
+  page.locator(`${STAGE} .ky-turn-floor`).evaluate((el) => {
+    const m = new DOMMatrix(getComputedStyle(el).transform);
+    const w = Number.parseFloat(el.style.width) || el.offsetWidth;
+    const h = Number.parseFloat(el.style.height) || el.offsetHeight;
+    const p = [[0, 0], [w, 0], [w, h], [0, h]].map(([x, y]) => {
+      const q = m.transformPoint(new DOMPoint(x, y));
+      // transformPoint leaves the perspective to the caller: x and y are divided by w.
+      return [q.x / q.w, q.y / q.w];
+    });
+    return Math.abs(p.reduce((sum, a, i) => sum + a[0] * p[(i + 1) % 4][1] - p[(i + 1) % 4][0] * a[1], 0)) / 2;
+  });
+
+test("a surface keeps its size as it goes once round: no swelling, in light and dark, on the desk and the phone", async ({ page }) => {
+  for (const query of ["sport=athletics&galleryfamily=budo&size=surface&theme=light", "sport=judo&theme=dark", "sport=dojo&theme=light", "sport=nba&theme=dark", "sport=nfl&theme=light", "sport=curling&theme=light"]) {
+    await open(page, `?${query}&view=3d&lang=en&help=off`);
+    await page.locator(`${STAGE} .ky-turn-view`).focus();
+    const areas = [];
+    for (let i = 0; i < 60; i += 1) {
+      areas.push(await floorArea(page));
+      await page.keyboard.press("ArrowLeft");
+    }
+    expect(Math.max(...areas) / Math.min(...areas), query).toBeLessThan(1.02);
+    const step = Math.max(...areas.map((a, i) => Math.max(a, areas[(i + 1) % 60]) / Math.min(a, areas[(i + 1) % 60])));
+    expect(step, query).toBeLessThan(1.01);
+  }
+});
+
+test("a dohyō is a solid block with its clay and bales on top, and the whole floor round it stays in the view as it turns; a table's legs stay under its top", async ({ page }) => {
+  await open(page, "?sport=sumo&view=3d&lang=en&help=off&viewpoint=broadcast");
+  const top = page.locator(`${STAGE} [data-part="mound-top"]`);
+  await expect(top).toHaveCount(1);
+  await expect(top.locator("svg .ky-bud-tawara").first()).toBeAttached();
+  await expect(page.locator(`${STAGE} [data-part^="mound-"]:not([data-part="mound-top"])`)).toHaveCount(4);
+  const view = page.locator(`${STAGE} .ky-turn-view`);
+  await view.focus();
+  for (let i = 0; i < 30; i += 1) {
+    // The floor's corners are inside the view (a 1 px slack for the rounding of the box).
+    const inside = await page.evaluate((stage) => {
+      const v = document.querySelector(`${stage} .ky-turn-view`).getBoundingClientRect();
+      const f = document.querySelector(`${stage} .ky-turn-floor`).getBoundingClientRect();
+      return f.left >= v.left - 1 && f.right <= v.right + 1 && f.top >= v.top - 1 && f.bottom <= v.bottom + 1;
+    }, STAGE);
+    expect(inside, `sumo turn ${i}`).toBe(true);
+    // The sides facing away are under the top: the top's z-index is above that of the farthest side, and below that of the nearest.
+    const z = await page.evaluate((stage) => {
+      const stack = (selector) => Number(document.querySelector(`${stage} ${selector}`).style.zIndex);
+      const sides = [1, 2, 3, 4].map((k) => stack(`[data-part="mound-${k}"]`));
+      return { top: stack('[data-part="mound-top"]'), low: Math.min(...sides), high: Math.max(...sides) };
+    }, STAGE);
+    expect(z.low, `sumo turn ${i}`).toBeLessThan(z.top);
+    expect(z.high, `sumo turn ${i}`).toBeGreaterThan(z.top);
+    await page.keyboard.press("ArrowLeft");
+    await page.keyboard.press("ArrowLeft");
+  }
+  await open(page, "?sport=tabletennis&view=3d&lang=en&help=off");
+  for (let i = 0; i < 12; i += 1) {
+    const z = await page.evaluate((stage) => {
+      const stack = (selector) => Number(document.querySelector(`${stage} ${selector}`).style.zIndex);
+      const legs = [...document.querySelectorAll(`${stage} .ky-up-leg`)].map((el) => Number(el.style.zIndex));
+      return { floor: stack(".ky-turn-floor"), low: Math.min(...legs), high: Math.max(...legs) };
+    }, STAGE);
+    // Some legs are behind the top and some in front of it, whichever way the table is turned.
+    expect(z.low, `table turn ${i}`).toBeLessThan(z.floor);
+    expect(z.high, `table turn ${i}`).toBeGreaterThan(z.floor);
+    await page.locator(`${STAGE} .ky-turn-view`).focus();
+    await page.keyboard.press("ArrowLeft");
+    await page.keyboard.press("ArrowLeft");
+    await page.keyboard.press("ArrowLeft");
+    await page.keyboard.press("ArrowLeft");
+  }
 });

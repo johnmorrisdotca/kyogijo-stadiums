@@ -255,7 +255,15 @@ export function cameraMatrix(view: TurnView, at: Placement, distance: number): n
   return multiply(m, scale);
 }
 
-const num = (value: number): string => String(Math.round(value * 10000) / 10000);
+/**
+ * A number of a matrix as CSS writes it: to ten decimals, with no exponent. The perspective terms of a camera matrix are tiny (a few ten-thousandths) and are multiplied by
+ * the pixels of a whole floor, so rounding them to four decimals, as every other term could be, bent the perspective by tens of percent and by jumps as the turn went on: the
+ * surface swelled and shrank in steps.
+ */
+const num = (value: number): string => {
+  const text = value.toFixed(10).replace(/\.?0+$/, "");
+  return text === "-0" || text === "" ? "0" : text;
+};
 
 /** A matrix as the CSS `transform` that applies it. */
 export const matrix3d = (m: Mat4): string => `matrix3d(${m.map(num).join(",")})`;
@@ -269,5 +277,11 @@ export function depthOf(point: readonly [number, number, number], view: TurnView
   return y2 * Math.sin(view.pitch * RAD) + z * Math.cos(view.pitch * RAD);
 }
 
-/** How far the eye is from the screen, in pixels, for a container: a long lens, so that the floor keeps its shape and the heights lean a little. */
-export const eyeDistance = (w: number, h: number, lens = 1.7): number => lens * Math.max(w, h);
+/** The lens of the eye, as a multiple of the container's longer side. */
+export const LENS = 8;
+
+/**
+ * How far the eye is from the screen, in pixels, for a container: a long lens, so that the floor keeps its shape and the heights lean a little. The lens is long enough that the
+ * nearer end of a floor is hardly larger than the farther one: with a short lens (it was 1.7) the floor swelled by up to a quarter as its near end swung toward the eye in a turn.
+ */
+export const eyeDistance = (w: number, h: number, lens = LENS): number => lens * Math.max(w, h);

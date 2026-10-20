@@ -44,15 +44,16 @@ export function layoutOf(model: TurnModel, view: TurnView, width: number, height
   // A billboard faces the eye at this view.
   const planes = model.planes.map((p) => facing(p, view.yaw));
   const transforms = [floor, ...planes].map((p) => matrix3d(multiply(camera, planeMatrix(p, s, centre))));
-  // Far to near: a plane's depth is that of its middle. The ground of a hall is under everything, the floor next.
-  const order = planes
-    .map((p, i) => ({ i, ground: p.kind === "ground", depth: depthOf([(p.o[0] + (p.u[0] + p.v[0]) / 2 - centre[0]) * s, (p.o[1] + (p.u[1] + p.v[1]) / 2 - centre[1]) * s, (p.o[2] + (p.u[2] + p.v[2]) / 2) * s], view, at) }))
-    .filter((one) => !one.ground);
+  // Far to near: a plane's depth is that of its middle. The ground of a hall is under everything. The floor is next, unless it stands raised on something (a table tennis table's top, on its legs): then it is
+  // sorted with the rest, by its middle, so that the legs and the skirt on the far side are drawn under it and the ones on the near side over it, and nothing under the top shows through it.
+  const depth = (p: Plane): number => depthOf([(p.o[0] + (p.u[0] + p.v[0]) / 2 - centre[0]) * s, (p.o[1] + (p.u[1] + p.v[1]) / 2 - centre[1]) * s, (p.o[2] + (p.u[2] + p.v[2]) / 2) * s], view, at);
+  const raised = model.uprights.lift > 0;
+  const order = [...planes.map((p, i) => ({ i: i + 1, ground: p.kind === "ground", depth: depth(p) })), ...(raised ? [{ i: 0, ground: false, depth: depth(floor) }] : [])].filter((one) => !one.ground);
   order.sort((a, b) => a.depth - b.depth);
   const stack = new Array<number>(model.planes.length + 1).fill(0);
   stack[0] = 1;
   order.forEach((one, rank) => {
-    stack[one.i + 1] = rank + 2;
+    stack[one.i] = rank + 2;
   });
   const fade = [1, ...model.planes.map((p) => fadeOf(p, view.yaw, view.pitch))];
   return { at, transforms, stack, fade };
@@ -62,6 +63,23 @@ export function layoutOf(model: TurnModel, view: TurnView, width: number, height
 export function planeMarkup(p: Plane, scale: number, transform: string, stack: number, fade = 1): string {
   const [w, h] = size(p);
   return `<div class="ky-up ky-up-${p.kind}" data-part="${esc(p.id)}" style="width:${px(w * scale)}px;height:${px(h * scale)}px;transform:${transform};z-index:${stack}${fade < 1 ? `;opacity:${n(fade)}` : ""}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n(w)} ${n(h)}" width="${px(w * scale)}" height="${px(h * scale)}" aria-hidden="true" focusable="false">${p.svg}</svg></div>`;
+}
+
+/**
+ * A plane that is the floor's own drawing seen through its rectangle (`Plane.crop`): the floor's SVG again, its viewBox cut down to the plane's rectangle, in the plane's own box. It is a picture, not a second
+ * description: it carries no role, title or description of its own.
+ */
+export function cropMarkup(model: TurnModel, p: Plane, transform: string, stack: number, fade = 1): string {
+  const [w, h] = size(p);
+  const box = `${px(p.o[0])} ${px(p.o[1])} ${px(w)} ${px(h)}`;
+  const picture = model.floor
+    .replace(/^<svg([^>]*?)\sviewBox="[^"]*"/, `<svg$1 viewBox="${box}"`)
+    .replace(/^<svg([^>]*?)\swidth="[^"]*"/, "<svg$1")
+    .replace(/^<svg([^>]*?)\sheight="[^"]*"/, "<svg$1")
+    .replace(/^<svg([^>]*?)\srole="img"/, '<svg$1 aria-hidden="true"')
+    .replace(/^<svg([^>]*?)\saria-labelledby="[^"]*"/, "<svg$1")
+    .replace(/<title\b[^>]*>[\s\S]*?<\/title>|<desc\b[^>]*>[\s\S]*?<\/desc>/g, "");
+  return `<div class="ky-up ky-up-${p.kind}" data-part="${esc(p.id)}" data-crop="floor" style="width:${px(w * model.scale)}px;height:${px(h * model.scale)}px;transform:${transform};z-index:${stack}${fade < 1 ? `;opacity:${n(fade)}` : ""}">${picture}</div>`;
 }
 
 /** The floor as an element: the flat drawing, in the pixels of the scene. */
@@ -86,7 +104,7 @@ export function worldAttributes(model: TurnModel): string {
 
 /** The floor and the planes of a model, laid out. */
 export function worldMarkup(model: TurnModel, layout: Layout): string {
-  return defsMarkup(model) + floorMarkup(model, layout.transforms[0], layout.stack[0]) + model.planes.map((p, i) => planeMarkup(p, model.scale, layout.transforms[i + 1], layout.stack[i + 1], layout.fade[i + 1])).join("");
+  return defsMarkup(model) + floorMarkup(model, layout.transforms[0], layout.stack[0]) + model.planes.map((p, i) => (p.crop === true ? cropMarkup(model, p, layout.transforms[i + 1], layout.stack[i + 1], layout.fade[i + 1]) : planeMarkup(p, model.scale, layout.transforms[i + 1], layout.stack[i + 1], layout.fade[i + 1]))).join("");
 }
 
 /** The buttons under the view. */

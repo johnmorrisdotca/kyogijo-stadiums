@@ -15,6 +15,7 @@ export const KYOGIJO_TURN_STYLE = `
 .ky-turn-floor,.ky-up{position:absolute;left:0;top:0;transform-origin:0 0;pointer-events:none}
 .ky-turn-floor>svg{display:block;width:100%;height:auto}
 .ky-up>svg{display:block;overflow:visible}
+.ky-up[data-crop]>svg{width:100%;height:100%;overflow:hidden}
 @media (max-width:560px){.ky-turn-view{--ky-turn-ratio:5/4}.ky-turn-controls button{padding:0 10px;font-size:.85rem}}
 .ky-turn .u-sbframe{fill:var(--ky-up-sbframe);stroke:var(--ky-up-sbedge);stroke-width:.25}
 .ky-turn .u-sbline{stroke:var(--ky-up-sbline)}
@@ -29,8 +30,10 @@ export const KYOGIJO_TURN_STYLE = `
 .ky-turn .u-table{fill:var(--ky-up-table)}
 .ky-turn .u-foot{fill:var(--ky-up-foot)}
 .ky-turn .u-ground{fill:var(--ky-up-ground)}
+.ky-turn .u-shadow{fill:#000;fill-opacity:.16}
 .ky-turn .u-wall{fill:var(--ky-up-wall)}
 .ky-turn .u-clay{fill:var(--ky-up-clay)}
+.ky-turn .u-clay-side{fill:color-mix(in srgb,var(--ky-dirt,var(--ky-up-clay)) 74%,#000)}
 .ky-turn .u-cap{fill:var(--ky-up-cap)}
 .ky-turn .u-board{fill:var(--ky-up-board)}
 .ky-turn .u-glass{fill:var(--ky-up-glass)}

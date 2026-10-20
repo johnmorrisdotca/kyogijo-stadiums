@@ -327,7 +327,8 @@ describe("what stands on the other fields", () => {
         expect(long, `${sport} ${p.id}`).toBeGreaterThan(0);
         expect(wide, `${sport} ${p.id}`).toBeGreaterThan(0);
         for (const [a, b] of [[0, 0], [1, 1]] as const) expect(p.o[2] + a * p.u[2] + b * p.v[2], `${sport} ${p.id}`).toBeGreaterThanOrEqual(-1e-9);
-        expect(p.svg.length).toBeGreaterThan(0);
+        // (A plane that is the floor's own picture, seen through its rectangle, carries none of its own.)
+        if (p.crop !== true) expect(p.svg.length).toBeGreaterThan(0);
         expect(p.svg, `${sport} ${p.id}`).not.toMatch(/NaN|undefined|Infinity/);
       }
     }
@@ -749,13 +750,17 @@ describe("the markup", () => {
     expect(rank2("goal-right-post")).toBeGreaterThan(rank2("goal-left-post"));
   });
 
-  it("keeps the floor under everything and a hall's ground under the floor", () => {
+  it("keeps a floor on the ground under everything, and a hall's ground under the floor", () => {
     const model = buildTurn({ sport: "tabletennis" });
+    const ground = model.planes.findIndex((p) => p.id === "ground");
     const layout = layoutOf(model, model.view, 900, 560);
-    const ground = model.planes.findIndex((p) => p.kind === "ground");
     expect(layout.stack[ground + 1]).toBe(0);
-    expect(layout.stack[0]).toBe(1);
-    expect(Math.min(...layout.stack.filter((_, i) => i !== 0 && i !== ground + 1))).toBeGreaterThan(1);
+    // A table tennis table's top is raised: it takes its turn among the planes by its middle, but is over the hall's ground.
+    expect(layout.stack[0]).toBeGreaterThan(0);
+    const flat = buildTurn({ sport: "volleyball" });
+    const flatLayout = layoutOf(flat, flat.view, 900, 560);
+    expect(flatLayout.stack[0]).toBe(1);
+    expect(Math.min(...flatLayout.stack.filter((_, i) => i !== 0))).toBeGreaterThan(1);
     expect(planeMatrix(model.planes[0], 2)).toHaveLength(16);
   });
 });

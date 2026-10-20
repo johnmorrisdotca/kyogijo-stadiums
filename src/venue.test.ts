@@ -194,11 +194,11 @@ describe("the stands raised round a pitch", () => {
     expect(raise({ sport: "soccer", crowd: { roof: false } }, { roof: true }).items.some((i) => i.kind === "roof")).toBe(false);
   });
 
-  it("lifts the stands with a surface that stands over the ground", () => {
+  it("stands the stands on the hall's floor, not on the raised clay of a dohyō (the floor stays on the ground and the mound is a block on it)", () => {
     const sumo = raise({ sport: "sumo", crowd: true });
     const ring = crowdStands({ sport: "sumo", crowd: true })!.rings[0];
     const lift = uprightsFor({ sport: "sumo" }).lift;
-    expect(lift).toBeGreaterThan(0.5);
+    expect(lift).toBe(0);
     expect(zRange(item(sumo.items, "stands").planes.filter((p) => p.kind === "seats" && p.id.startsWith(`${ring.id}-`)))[0]).toBeCloseTo(lift + ring.height[0], 3);
   });
 });
