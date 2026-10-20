@@ -13,7 +13,7 @@ console.log(layout.needs.length, layout.needs.width, layout.needs.area);
 // 28 14 392
 ```
 
-![Three judo contest areas in a row on one red floor of mats, with boards along the edges and empty places for the event's name and logos](./images/multi-judo-desk-light.webp)
+![Three judo contest areas in a row on one red floor of mats, dressed with a sample event's name, year and city, simple emblems and boards along the edges](./images/multi-judo-desk-light.webp)
 
 ![Four table tennis areas in two rows of two under one scoreboard](./images/multi-tabletennis-desk-light.webp)
 
@@ -62,6 +62,12 @@ console.log(staggered.needs.length, staggered.cells[2].x > staggered.cells[0].x)
 ## The branding places
 
 Every place for the event's own words and marks is an empty, dashed rectangle with what it is for written in it ("Event name, year and city", "Logo", "Board"): nothing real is printed and the package holds no brand, sponsor or event's marks. `slots: false` draws neither the places nor the boards.
+
+`sample: true` dresses the places as an event would: an invented event, "Kyogijo Open 2026 · Osaka" (in Japanese `競技場杯 2026 · 大阪`), on the floor and the boards, and a simple emblem of the package's own (a ring with a star, a diamond or waves) in each logo place; `sample: { event, year, city }` is your own. Nothing real is named or drawn: no event, brand, federation, sponsor or league. The demo's pictures and its default view are dressed this way, and its "Sample event content" box (`sample=0` in its address) shows the empty places again.
+
+![Three judo contest areas in a row on one red floor of mats with the places for the event's words and marks left empty and dashed, and dark boards along the edges](./images/multi-judo-empty-desk-light.webp)
+
+The same three areas with the places left empty: the words and marks in the places, and the boards, are what an organiser configures.
 
 - On a **judo or karate** floor the places are on the mats themselves, because that is where those sports print them: the event's words in the safety area above and below each contest area, and a mark in the end safety areas and in the common safe zones between areas. They sit inside the tatami and never over a contest area.
 - On a **table tennis, pickleball, badminton, curling or tennis** floor there are two places for a mark at the ends of each surface and one for words beside it (the ITTF's Handbook allows up to six advertisements on the floor of a playing area, 3.2.5.5), and boards along the four edges of the floor.

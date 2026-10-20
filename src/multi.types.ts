@@ -37,6 +37,13 @@ export interface MultiEvent {
   sources: readonly string[];
 }
 
+/** The words of a sample event: any part left out is the package's own. */
+export interface MultiSample {
+  event?: string;
+  year?: string | number;
+  city?: string;
+}
+
 /** What stands on or beside each playing surface, and over the floor. */
 export interface MultiParts {
   /** The barriers (surrounds) that enclose each playing area, drawn round the area's bay. */
@@ -205,6 +212,12 @@ export interface MultiOptions {
   stadium?: boolean | { crowd?: boolean; density?: number; roof?: boolean; shape?: "bowl" | "sides"; detail?: "fine" | "plain" };
   /** The empty places for the event's words and marks, and the boards: on by default; `false` draws neither. */
   slots?: boolean;
+  /**
+   * Fill the places for the event's words and marks with sample content, to show a layout as an event would dress it: an invented event name, year and city on the floor and the boards, and simple emblems of the package's own
+   * (a ring with a star, a diamond or waves) in the logo places, in place of the dashed empty places. `true` for "Kyogijo Open 2026, Osaka" (in Japanese, 競技場杯 2026, 大阪), or the event's name, year and city of
+   * your own. It names no real event, brand, federation or sponsor. Off by default: the places are drawn empty, as a layout is configured.
+   */
+  sample?: boolean | MultiSample;
   /** The names of the surfaces over them. On by default. */
   labels?: boolean;
   language?: "en" | "ja";

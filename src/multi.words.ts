@@ -10,6 +10,8 @@ export interface MultiWords {
   parts: { chair: string; table: string; scoreboard: string; shared: string; barrier: string; board: string; floor: string; hall: string; stands: string };
   /** What an empty place says: it is a place to be filled by the event, and nothing is printed in it. */
   slots: { floorText: string; floorLogo: string; board: string };
+  /** The invented event of the sample content (`sample: true`): its name, its year and its city. */
+  sample: { event: string; year: string; city: string };
   /** The sentences of the title and the description. */
   say: {
     title: string;
@@ -18,6 +20,7 @@ export interface MultiWords {
     stagger: string;
     shared: string;
     slots: string;
+    sample: string;
     venue: string;
     stadium: string;
     event: string;
@@ -35,6 +38,7 @@ export const MULTI_WORDS: Record<Language, MultiWords> = {
     names: { table: "Table {n}", court: "Court {n}", sheet: "Sheet {n}", area: "Area {n}" },
     parts: { chair: "Umpire's chair", table: "Score table", scoreboard: "Scoreboard", shared: "One scoreboard for all, hung over the middle", barrier: "Barrier", board: "Board", floor: "Floor", hall: "Hall floor", stands: "Stands" },
     slots: { floorText: "Event name, year and city", floorLogo: "Logo", board: "Board" },
+    sample: { event: "Kyogijo Open", year: "2026", city: "Osaka" },
     say: {
       title: "{name}",
       drawn: "Drawn as: {name}, {surfaces} playing surfaces to scale on one floor of {length} by {width} metres ({area} square metres).",
@@ -42,6 +46,7 @@ export const MULTI_WORDS: Record<Language, MultiWords> = {
       stagger: "Every other row is moved along by {share} of a bay.",
       shared: "One scoreboard for all is hung over the middle of the floor.",
       slots: "The empty places for the event's own words and marks are drawn dashed: {n}.",
+      sample: "The places for the event's words and marks carry sample content: an invented event, {event}, {year}, {city}, and simple emblems. Nothing real is printed.",
       venue: "Set in {venue}: {fit}",
       stadium: "Drawn inside a stadium to the same scale: walls, stands and crowd.",
       event: "Tied to {event}, {year}, {venue}, {city}.",
@@ -63,6 +68,7 @@ export const MULTI_WORDS: Record<Language, MultiWords> = {
     names: { table: "第{n}台", court: "第{n}コート", sheet: "第{n}シート", area: "第{n}試合場" },
     parts: { chair: "審判席", table: "記録台", scoreboard: "スコアボード", shared: "中央の真上に吊るした全面共用のスコアボード", barrier: "フェンス", board: "ボード", floor: "床", hall: "会場の床", stands: "スタンド" },
     slots: { floorText: "大会名・年・開催地", floorLogo: "ロゴ", board: "ボード" },
+    sample: { event: "競技場杯", year: "2026", city: "大阪" },
     say: {
       title: "{name}",
       drawn: "{name}。競技面を{surfaces}面、横{length}m×縦{width}m（{area}平方メートル）の床1枚の上に縮尺どおりに描いています。",
@@ -70,6 +76,7 @@ export const MULTI_WORDS: Record<Language, MultiWords> = {
       stagger: "1行おきに、1区画の{share}だけずらしています。",
       shared: "床の中央の上に、全面共用のスコアボードを1台吊るしています。",
       slots: "大会の文字やマークを入れる空き枠を破線で描いています：{n}か所。",
+      sample: "大会名やマークを入れる枠には、見本として架空の大会「{event}」（{year}年・{city}）と簡単なエンブレムを入れています。実在の大会や団体のものは含まれていません。",
       venue: "{venue}に置いた場合：{fit}",
       stadium: "同じ縮尺で、壁・スタンド・観客を備えたスタジアムの中に描いています。",
       event: "関連する大会：{event}（{year}年、{venue}、{city}）。",

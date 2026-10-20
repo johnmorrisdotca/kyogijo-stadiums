@@ -272,3 +272,25 @@ test("the 3D view of a layout fits a phone: nothing beyond the page's width", as
   const box = await page.locator(`${STAGE} .ky-turn-view`).boundingBox();
   expect(box.width).toBeGreaterThan(300);
 });
+
+test("the places are dressed with a sample event unless the box is cleared, and the address keeps the choice", async ({ page }) => {
+  const errors = await open(page, "?preset=judo-1x3");
+  const stage = page.locator(at("stage"));
+  // Sample content is the default: the event's line on the mats and the boards, an emblem in each logo place, no dashed place on the floor.
+  await expect(page.locator("#sample")).toBeChecked();
+  await expect(stage.locator(".ky-mu-sample-text").first()).toContainText("Kyogijo Open 2026");
+  expect(await stage.locator(".ky-mu-emblems").count()).toBeGreaterThan(0);
+  await expect(stage.locator(".ky-mu-slot")).toHaveCount(0);
+  // Cleared: the empty places come back, and the address says so.
+  await page.locator("#sample").uncheck();
+  await expect(stage.locator(".ky-mu-slot").first()).toBeAttached();
+  await expect(stage.locator(".ky-mu-sample-text")).toHaveCount(0);
+  expect(new URL(page.url()).searchParams.get("sample")).toBe("0");
+  // The address alone brings the empty places, and Japanese has its own invented event.
+  await open(page, "?preset=judo-1x3&sample=0");
+  await expect(page.locator("#sample")).not.toBeChecked();
+  await expect(page.locator(`${at("stage")} .ky-mu-slot`).first()).toBeAttached();
+  await open(page, "?preset=judo-1x3&lang=ja");
+  await expect(page.locator(`${at("stage")} .ky-mu-sample-text`).first()).toContainText("競技場杯");
+  expect(errors).toEqual([]);
+});

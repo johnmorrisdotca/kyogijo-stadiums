@@ -65,6 +65,8 @@ await takePictures({
     // Tournament layouts (0.12.0): several surfaces on one floor, to scale, as the demo's halls page draws them (its stage, cropped; the page follows the colour scheme).
     { subject: "multi-tabletennis", views: ["desk"], url: "/halls.html?preset=tabletennis-4", ready: READY_HALLS, target: "#stage" },
     { subject: "multi-judo", views: ["desk"], url: "/halls.html?preset=judo-1x3", ready: READY_HALLS, target: "#stage" },
+    // The same three areas with the places for the event's words and marks left empty (`sample=0`): what an organiser fills. Every other layout picture is dressed with sample content, the demo's default.
+    { subject: "multi-judo-empty", views: ["desk"], url: "/halls.html?preset=judo-1x3&sample=0", ready: READY_HALLS, target: "#stage" },
     // The same layouts in 3D (0.13.0): the tables on their legs with the nets, the surrounds, the chairs and the scoreboard, zoomed in a little.
     {
       subject: "multi-tabletennis-3d",

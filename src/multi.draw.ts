@@ -11,7 +11,7 @@ import { FEET_PER_METRE } from "./geometry.ts";
 import { fitSentence, multiFit, multiLayout, multiNumber, needsSentence, venueOf } from "./multi.ts";
 import { KYOGIJO_MULTI_STYLE } from "./multi.style.ts";
 import { MULTI_WORDS } from "./multi.words.ts";
-import type { MultiCell, MultiFit, MultiLayout, MultiOptions, MultiSlot, MultiVenue } from "./multi.types.ts";
+import type { MultiCell, MultiFit, MultiLayout, MultiOptions, MultiSample, MultiSlot, MultiVenue } from "./multi.types.ts";
 import { outlineOf } from "./outline.ts";
 import { fill } from "./strings.ts";
 import { textWidth } from "./text.ts";
@@ -30,6 +30,44 @@ function inner(svg: string): { body: string; style: string; look: string | undef
   body = body.slice(body.indexOf("</desc>") + "</desc>".length, body.lastIndexOf("</svg>"));
   body = body.replace(/<rect class="ky-(?:apron|free)(?: [^"]*)?"[^>]*\/>/g, "");
   return { body, style, look };
+}
+
+/** The invented event of a layout's sample content: the options' own, or the package's (`Kyogijo Open 2026, Osaka`). */
+function sampleOf(o: MultiOptions, words: (typeof MULTI_WORDS)["en"]): { event: string; year: string; city: string } | undefined {
+  if (o.sample === undefined || o.sample === false) return undefined;
+  const given: MultiSample = o.sample === true ? {} : o.sample;
+  return { event: given.event ?? words.sample.event, year: String(given.year ?? words.sample.year), city: given.city ?? words.sample.city };
+}
+
+/** The line of a sample event: its name, year and city. */
+const sampleLine = (e: { event: string; year: string; city: string }): string => `${e.event} ${e.year} · ${e.city}`;
+
+/**
+ * A simple emblem of the package's own, in a square of `size` feet centred on (cx, cy): a ring with a star, a diamond or waves, by `kind`. Plain geometry: no real mark, brand, federation or sponsor is drawn, and no one's logo is
+ * imitated.
+ */
+function emblem(cx: number, cy: number, size: number, kind: number): string {
+  const r = size / 2;
+  const ring = el("circle", { class: "ky-mu-emblem", cx: num(cx), cy: num(cy), r: num(r * 0.92) });
+  const k = ((kind % 3) + 3) % 3;
+  if (k === 0) {
+    const pts = Array.from({ length: 10 }, (_, i) => {
+      const a = -Math.PI / 2 + (i * Math.PI) / 5;
+      const rr = i % 2 === 0 ? r * 0.6 : r * 0.26;
+      return `${num(cx + rr * Math.cos(a))} ${num(cy + rr * Math.sin(a))}`;
+    });
+    return ring + el("path", { class: "ky-mu-emblem-fill", d: `M${pts.join("L")}Z` });
+  }
+  if (k === 1) {
+    const d = r * 0.5;
+    return ring + el("path", { class: "ky-mu-emblem-fill", d: `M${num(cx)} ${num(cy - d)}L${num(cx + d)} ${num(cy)}L${num(cx)} ${num(cy + d)}L${num(cx - d)} ${num(cy)}Z` });
+  }
+  let waves = "";
+  for (const dy of [-0.28, 0, 0.28]) {
+    const y = cy + r * dy;
+    waves += `M${num(cx - r * 0.55)} ${num(y)}Q${num(cx - r * 0.275)} ${num(y - r * 0.2)} ${num(cx)} ${num(y)}T${num(cx + r * 0.55)} ${num(y)}`;
+  }
+  return ring + el("path", { class: "ky-mu-emblem", d: waves, fill: "none" });
 }
 
 /** The text of an empty place, sized to fit it. */
@@ -195,12 +233,19 @@ export function multiDrawing(options: MultiOptions, raise: boolean, uprights = t
   }
   let slotsMarkup = "";
   let slotTexts = "";
+  const sample = sampleOf(o, words);
   if (withSlots) {
-    for (const slot of layout.slots) {
+    layout.slots.forEach((slot, index) => {
       const board = slot.kind === "board";
-      slotsMarkup += el("rect", { class: board ? "ky-mu-board" : "ky-mu-slot", x: num(slot.x), y: num(slot.y), width: num(slot.w), height: num(slot.h), "data-slot": slot.id });
-      if (board) slotsMarkup += el("rect", { class: "ky-mu-slot ky-mu-slot-board", x: num(slot.x + 0.3), y: num(slot.y + 0.3), width: num(slot.w - 0.6), height: num(slot.h - 0.6) });
-      const text = slotText(slot, words);
+      // With sample content a floor's places carry an invented event's words and emblems and are not drawn dashed; the boards keep their dark panels.
+      if (sample === undefined || board) slotsMarkup += el("rect", { class: board ? "ky-mu-board" : "ky-mu-slot", x: num(slot.x), y: num(slot.y), width: num(slot.w), height: num(slot.h), "data-slot": slot.id });
+      if (board && sample === undefined) slotsMarkup += el("rect", { class: "ky-mu-slot ky-mu-slot-board", x: num(slot.x + 0.3), y: num(slot.y + 0.3), width: num(slot.w - 0.6), height: num(slot.h - 0.6) });
+      if (sample !== undefined && slot.kind === "floor-logo") {
+        const [ex, ey] = to(slot.x + slot.w / 2, slot.y + slot.h / 2);
+        slotsMarkup += el("g", { class: "ky-mu-emblems", "data-slot": slot.id }, emblem(ex, ey, Math.min(slot.w, slot.h) * 0.9, index));
+        return;
+      }
+      const text = sample === undefined ? slotText(slot, words) : board ? sampleLine(sample).toUpperCase() : sampleLine(sample);
       const horizontal = slot.w >= slot.h;
       const long = horizontal ? slot.w : slot.h;
       const short = horizontal ? slot.h : slot.w;
@@ -208,8 +253,9 @@ export function multiDrawing(options: MultiOptions, raise: boolean, uprights = t
       const [tx, ty] = to(slot.x + slot.w / 2, slot.y + slot.h / 2);
       // The words of a slot on a long side are laid along it; in a turned layout they turn back to read from the left.
       const rot = (horizontal ? 0 : -90) + 0;
-      slotTexts += el("text", { class: `ky-mu-slot-text${board ? " ky-mu-slot-text-board" : ""}`, x: num(tx), y: num(ty + size * 0.34), "font-size": num(size), transform: rot === 0 ? undefined : `rotate(${rot} ${num(tx)} ${num(ty)})` }, esc(text));
-    }
+      const cls = sample === undefined ? "ky-mu-slot-text" : "ky-mu-sample-text";
+      slotTexts += el("text", { class: `${cls}${board ? ` ${cls}-board` : ""}`, x: num(tx), y: num(ty + size * 0.34), "font-size": num(size), transform: rot === 0 ? undefined : `rotate(${rot} ${num(tx)} ${num(ty)})` }, esc(text));
+    });
   }
   let labelsMarkup = "";
   if (withLabels) {
@@ -285,7 +331,10 @@ export function multiDrawing(options: MultiOptions, raise: boolean, uprights = t
   ];
   if (spec.stagger !== undefined && spec.stagger > 0) sentences.push(fill(words.say.stagger, { share: `${Math.round(spec.stagger * 100)}%` }));
   if (layout.shared !== undefined) sentences.push(words.say.shared);
-  if (withSlots && layout.slots.some((s) => s.kind !== "board")) sentences.push(fill(words.say.slots, { n: layout.slots.filter((s) => s.kind !== "board").length }));
+  if (withSlots && layout.slots.some((s) => s.kind !== "board")) {
+    const filled = sampleOf(o, words);
+    sentences.push(filled === undefined ? fill(words.say.slots, { n: layout.slots.filter((s) => s.kind !== "board").length }) : fill(words.say.sample, filled));
+  }
   if (spec.event !== undefined) {
     const named = language === "ja" ? spec.event.ja : undefined;
     sentences.push(fill(words.say.event, { event: named?.name ?? spec.event.name, year: spec.event.year, venue: named?.venue ?? spec.event.venue, city: named?.city ?? spec.event.city }));

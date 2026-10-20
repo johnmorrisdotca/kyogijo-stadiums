@@ -47,6 +47,10 @@ ${Object.keys(FLOORS).map((name) => `.kyogijo .ky-mu-hf-${name}{fill:var(--ky-mu
 .kyogijo .ky-mu-slot-board{stroke:var(--ky-mu-board-ink)}
 .kyogijo .ky-mu-slot-text{fill:var(--ky-mu-slot);fill-opacity:.8;font-family:var(--ky-font);font-weight:700;text-anchor:middle}
 .kyogijo .ky-mu-slot-text-board{fill:var(--ky-mu-board-ink)}
+.kyogijo .ky-mu-sample-text{fill:var(--ky-mu-slot);font-family:var(--ky-font);font-weight:700;text-anchor:middle}
+.kyogijo .ky-mu-sample-text-board{fill:var(--ky-mu-board-ink)}
+.kyogijo .ky-mu-emblem{fill:none;stroke:var(--ky-mu-slot);stroke-width:.35;stroke-linejoin:round;stroke-linecap:round}
+.kyogijo .ky-mu-emblem-fill{fill:var(--ky-mu-slot);stroke:none}
 .kyogijo .ky-mu-label{fill:var(--ky-ink);font-family:var(--ky-font);font-weight:800;paint-order:stroke;stroke:var(--ky-halo);stroke-width:.5;stroke-linejoin:round}
 .kyogijo .ky-mu-caption{fill:var(--ky-mu-sb-ink);font-family:var(--ky-font);font-weight:700;text-anchor:middle}
 .kyogijo.ky-multi{--ky-cr-home:#8b94a3;--ky-cr-away:#8b94a3}

@@ -1245,7 +1245,8 @@ function skatingPage() {
 }
 
 /** A snippet that draws a tournament layout. */
-const multi = (options) => `import { drawMulti } from "${MAIN}/multi";\n\nconst svg = drawMulti(${literal(options)});`;
+// The gallery dresses each layout with sample content (an invented event, `sample: true`); the one picture of the empty places is `multi(options, false)`.
+const multi = (options, sample = true) => `import { drawMulti } from "${MAIN}/multi";\n\nconst svg = drawMulti(${literal(sample ? { ...options, sample: true } : options)});`;
 
 function multiPage() {
   return {
@@ -1254,9 +1255,10 @@ function multiPage() {
     ja: "大会向けレイアウト",
     intro: "Several of the package's surfaces laid out together for one large event, to scale, on one floor: table tennis, pickleball, curling, judo, karate, badminton and tennis, each from its rule; then the same layouts set in a hall whose floor is published, with the real stadium round them switched on. The empty dashed places are for the event's own words and marks: nothing real is printed in them.",
     sections: [
-      section("tabletennis", "Table tennis", "Areas of 14 m by 7 m (ITTF Handbook, 3.2.3.1), each enclosed by barriers about 75 cm high, with an umpire's chair and a score table, and one scoreboard hung over the middle for all of them, as at the Worlds in London in 2026.", [
+      section("tabletennis", "Table tennis", "Areas of 14 m by 7 m (ITTF Statutes 2026, chapter 3, 3.2.3.1), each enclosed by barriers (50 to 100 cm high in the rule, 75 cm drawn), with an umpire's chair and a score table, and one scoreboard hung over the middle for all of them, as at the Worlds in London in 2026.", [
         item("multi-tt4", "Four areas on one floor (2 x 2)", multi({ preset: "tabletennis-4" })),
         item("multi-tt8", "Eight areas (2 x 4)", multi({ preset: "tabletennis-8" })),
+        item("multi-tt4-empty", "The same four areas with the places left empty", multi({ preset: "tabletennis-4" }, false), "Without `sample`, the places for the event's words and marks are dashed and empty: what an organiser fills."),
         item("multi-tt-staggered", "A staggered grid", multi({ preset: "tabletennis-4", rows: 3, columns: 3, stagger: 0.5 }), "Every other row is moved along by half a bay."),
       ]),
       section("pickleball", "Pickleball", "A playing surface of 34 by 64 feet to each court, the rulebook's recommendation for tournament play (3.A.3); the rulebook names no gap between courts.", [
