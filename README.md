@@ -622,6 +622,18 @@ console.log(svg.includes("ky-cr-shell"), planVenue(venueById("climate-pledge-are
 <br><em>BC Place and Rogers Arena.</em>
 </p>
 
+### A fly-through
+
+`mountFlythrough` flies one camera from a map to a real arena: the map falls to the city and the building, which rises into 3D, the roof lifts away, and the camera comes in to a seat, where a made-up play runs on the ice ([the fly-through](./docs/flythrough.md)).
+
+<p align="center">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turning-flythrough-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turning-flythrough-desk-light.webp" alt="The fly-through, sped up: a map of North America with a pin on Seattle, the building's outline in the city, Climate Pledge Arena rising into 3D and turning, the roof lifting away, a seat's view across the rink and a play on the ice." width="640">
+</picture>
+<br><em>The fly-through to Climate Pledge Arena, sped up.</em>
+</p>
+
 ### Who judges where
 
 `drawJudging` puts each judo mat's officials by seat in the picture and in a chart ([judging](./docs/judging.md)).

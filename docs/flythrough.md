@@ -4,6 +4,8 @@ One smooth camera from a map to a real arena, into its bowl and onto a game. It 
 
 The arena is one of the [real venues](./venues.md) (so far the sixteen of the NHL's Pacific and Central Divisions). No team's or league's mark is drawn: the map is land and sea, the building is an outline, and the arena is the same plausible bowl as the venues page's, never a seat map. The seat's viewpoint is a place and a height of our own choosing, not a real seat's, and the play is made up for the picture (a replay's own timeline, see [the game](#the-game)): it says so on the screen and in its words, and it is no real game's data.
 
+![The fly-through, sped up: a map of North America with a pin on Seattle, the building's outline in the city, Climate Pledge Arena rising into 3D and turning, the roof lifting away, a seat's view across the rink and a play on the ice.](./images/turning-flythrough-desk-light.webp)
+
 The demo's [fly-through page](https://johnmorrisdotca.github.io/kyogijo-stadiums/flythrough.html) flies each of the sixteen; `flythrough.html?arena=honda-center` opens it on one (`lang=ja`, `theme=dark`, `map=plain` and `stages=city,arena` are in the address too).
 
 ```ts no-run
@@ -106,7 +108,7 @@ The colours are custom properties of `.kf` (`--kf-bg`, `--kf-sea`, `--kf-land` a
 
 ## Accessibility
 
-The stage is a focusable group with a name and a description, and the layers are hidden from a screen reader: it is told the stage's words instead, in a polite live region at each change (`Stage 2 of 3: City. The building of Honda Center from above, as OpenStreetMap maps it.`). The 3D layer is inert, so a reader cannot be caught in it. The credit is on the page under the stage whatever the stage.
+The stage is a focusable group with a name and a description, and the layers are hidden from a screen reader: it is told the stage's words instead, in a polite live region at each change (`Stage 2 of 6: City. The building of Honda Center from above, as OpenStreetMap maps it.`). The 3D layer is inert, so a reader cannot be caught in it. The credit is on the page under the stage whatever the stage.
 
 ## Credits and licences
 

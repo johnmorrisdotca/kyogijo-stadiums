@@ -7,6 +7,10 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **A picture of the fly-through** in the README and in [its page](./docs/flythrough.md): the whole run to Climate Pledge Arena, sped up, as an animated WebP in a light and a dark variant (`turning-flythrough-desk-<light|dark>.webp`, 40 frames, about 300 KB each; `pnpm screenshots:flythrough` makes it from the demo's page by `seek`, without waiting on a clock).
+
 ## [0.30.0] - 2026-10-20
 
 ### Added
