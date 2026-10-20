@@ -109,14 +109,21 @@ export function fitChart(ask: Omit<CardAsk, "maxLines" | "breakWords" | "height"
   return fit;
 }
 
+/** The box a card gives a seat's name and ID, and the biggest size its name may be set in. */
+export interface SeatBox {
+  width: number;
+  height: number;
+  max: number;
+}
+
 /**
- * Fit the name and ID of every seat of a mat into a card of one size, as one size for all of them, so that the row of cards reads evenly: each seat that has a name is fitted alone, the smallest size any of them needs is
- * taken, and each is fitted again at that size. A seat whose name does not fit at the floor, or that has nobody in it, has no card (undefined).
+ * Fit the name and ID of every seat of a mat into its card, as one size for all of them, so that the row of cards reads evenly: each seat that has a name is fitted alone, the smallest size any of them needs is taken, and
+ * each is fitted again at that size. A seat whose name does not fit at the floor, or that has nobody in it, has no card (undefined). `boxes` has the card box of each seat, in order.
  */
-export function fitSeats(seats: readonly JudgingAssignment[], box: { width: number; height: number; max: number; min: number; idLabel: string }): (CardFit | undefined)[] {
-  const ask = (a: JudgingAssignment, max: number): CardFit | undefined => (a.assigned ? fitCard({ name: a.name, id: a.id, idLabel: box.idLabel, width: box.width, height: box.height, max, min: box.min, maxLines: 3, breakWords: false }) : undefined);
-  const alone = seats.map((a) => ask(a, box.max));
+export function fitSeats(seats: readonly JudgingAssignment[], boxes: readonly SeatBox[], limits: { min: number; idLabel: string }): (CardFit | undefined)[] {
+  const ask = (a: JudgingAssignment, i: number, max: number): CardFit | undefined => (a.assigned ? fitCard({ name: a.name, id: a.id, idLabel: limits.idLabel, width: boxes[i].width, height: boxes[i].height, max, min: limits.min, maxLines: 3, breakWords: false }) : undefined);
+  const alone = seats.map((a, i) => ask(a, i, boxes[i].max));
   const sizes = alone.filter((f): f is CardFit => f !== undefined).map((f) => f.nameSize);
-  const common = sizes.length === 0 ? box.max : Math.min(...sizes);
-  return seats.map((a, i) => (alone[i] === undefined ? undefined : ask(a, common)));
+  const common = sizes.length === 0 ? Infinity : Math.min(...sizes);
+  return seats.map((a, i) => (alone[i] === undefined ? undefined : ask(a, i, Math.min(common, boxes[i].max))));
 }

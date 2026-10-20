@@ -45,6 +45,10 @@ export interface JudoLayout {
   danger: number;
   /** A kata area's officials: the judges' tables (ours: the length of the seats), the five judges' seats of each and the coach's chairs, each as the rule places them; empty for a contest area. */
   judges: { tables: MBox[]; seats: MBox[]; coaches: MBox[] };
+  /** A contest area's technical tables (ours: 3 m by 0.8 m), one for each area of the top row; empty for a kata area. */
+  desks: MBox[];
+  /** The free zone round the whole competition area. */
+  free: MBox;
 }
 
 /** The mats of a `tatami` option, or the league's own when none. @throws Error for a name that is not a size of mat. */
@@ -168,7 +172,7 @@ export function judoParts(o: JudoOptions): JudoLayout {
   if (judges.tables.length > 0) marks.push({ id: "kata-judges", x: (judges.tables[0].x0 + judges.tables[0].x1) / 2, y: judges.tables[0].y0 + TABLE.depth / 2, side: "top" });
   if (judges.coaches.length > 0) marks.push({ id: "coach-chair", x: (judges.coaches[0].x0 + judges.coaches[0].x1) / 2, y: (judges.coaches[0].y0 + judges.coaches[0].y1) / 2, side: "bottom" });
   const extent = union([free, ...desks.map((d) => grow(d, 0.3)), ...[...judges.tables, ...judges.seats, ...judges.coaches].map((d) => grow(d, 0.3))]);
-  return { parts, tatami, extent, contests, gap, pieces, mat, marks, danger: band, judges };
+  return { parts, tatami, extent, contests, gap, pieces, mat, marks, danger: band, judges, desks, free };
 }
 
 /** The number of mats of the competition area: a half mat counts a half. */

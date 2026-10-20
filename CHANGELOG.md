@@ -7,6 +7,17 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.18.0] - 2026-10-20
+
+### Added
+
+- **Shiai judging assignments** (`style: "shiai"` of `@johnmorrisdotca/kyogijo-stadiums/judging`). A contest area's officials by seat, with a name and an ID, drawn as the kata area's are (a card in the seat where the name fits, the chart of seat, role, name and ID that never cuts a name, 2D and 3D, light and dark, English and Japanese, `mat`, `focus`, `chart`, `orientation`, `judgingTable`). From the IJF Sport and Organisation Rules of 21 January 2026: **the referee**, on the tatami at its centre 2 m back from the line the athletes start on, facing the technical table (Article 9; the Refereeing Rules' Article 2); **the timekeeper and the scorekeeper**, the two technical officials a tatami should have for timing and scoring (the Refereeing Rules' opening article); **the referee supervisor**, on the technical table with the CARE replay system (the same article); and **two side judges**, for an event with no CARE system (Article 13, 5), drawn only with the new `sideJudges: true` or when a mat names them. Which chair at the table is whose, the side judges' places (two opposite corners of the contest area, 2 m out: the Rules give none), the chairs, the table and the cards are ours. In the close-up of the bench (`focus: "bench"`) only the table's seats are drawn and the referee's and side judges' names are in the chart; in 3D the referee's and a side judge's cards stand on posts. Seat words: `referee`, `timekeeper`, `scorekeeper`, `supervisor`, `side-judge-1`, `side-judge-2` (or their numbers 1 to 6, or `judge-1`, `scorer`, `jury`...). The demo, [judging assignments](https://johnmorrisdotca.github.io/kyogijo-stadiums/judging.html), has a Style choice (`style=shiai`), the side judges' checkbox and a row in its editor for each seat; the docs have [a section](./docs/judging.md#the-seats-of-a-contest) and the gallery [a contest](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-judging.html#shiai).
+
+### Changed
+
+- `JudgingStyle` is `"kata" | "shiai"`; `JudgingSeat` has `where` (`table`, `mat` or `corner`) and `optional`, and its `role` the contest's roles; `seatsOf(style, "listed")` leaves out the optional seats; `judgingPlan(style, count)` gives each mat's `places` (a chair and a card for each seat, in metres) and its bench; `fitSeats` takes a box for each seat. A kata assignment draws byte for byte what it did.
+- `JudoLayout` (the judo plan) also gives `desks` (the technical tables) and `free` (the free zone), as data only: no drawing changes.
+
 ## [0.17.0] - 2026-10-20
 
 ### Added

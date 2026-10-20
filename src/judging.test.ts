@@ -6,7 +6,7 @@ import { budoPlan } from "./budo/plan.ts";
 import { JUDGING_SEATS, JUDGING_SEAT_COUNT, JUDGING_STYLES } from "./judging.data.ts";
 import { drawJudging, judgingChart, judgingDrawing, judgingTable, judgingText } from "./judging.draw.ts";
 import { fitCard, fitChart, fitSeats, wrapText } from "./judging.fit.ts";
-import { JUDGING_LIMITS, judgingPlan, judgingSetting, matLabel, seatOf, seatsOf } from "./judging.ts";
+import { JUDGING_LIMITS, judgingPlan, judgingSetting, matLabel, seatIn, seatOf, seatsOf } from "./judging.ts";
 import { KYOGIJO_JUDGING_STYLE } from "./judging.style.ts";
 import type { JudgingAssignment, JudgingOptions } from "./judging.types.ts";
 import { JUDGING_WORDS } from "./judging.words.ts";
@@ -26,7 +26,7 @@ const unescape = (s: string): string => s.replace(/&quot;/g, '"').replace(/&gt;/
 
 describe("the seats of a kata area", () => {
   it("are five, the central judge in the middle, numbered from the left as the plan lies with the shomen at the top", () => {
-    expect(JUDGING_STYLES).toEqual(["kata"]);
+    expect(JUDGING_STYLES).toEqual(["kata", "shiai"]);
     const seats = seatsOf("kata");
     expect(seats.map((s) => s.id)).toEqual(["judge-1", "judge-2", "judge-3", "judge-4", "judge-5"]);
     expect(JUDGING_SEAT_COUNT.kata).toBe(5);
@@ -65,8 +65,8 @@ describe("the seats of a kata area", () => {
     expect(() => seatOf("kata", 9)).toThrow(/judge-1, judge-2, judge-3, judge-4, judge-5/);
   });
 
-  it("refuse a style that is not one (shiai is the next release)", () => {
-    expect(() => seatsOf("shiai")).toThrow(TypeError);
+  it("refuse a style that is not one", () => {
+    expect(() => seatsOf("kumite")).toThrow(TypeError);
     expect(() => drawJudging({ style: "kumite" as never, mats: [{}] })).toThrow(TypeError);
   });
 });
@@ -160,7 +160,8 @@ describe("setting a name in a box", () => {
   it("gives every card of a mat one size, the smallest any of them needs, and none to a name that does not fit", () => {
     const seat = (n: number, name: string, id = ""): JudgingAssignment => ({ seat: seatsOf("kata")[n - 1], name, id, assigned: name !== "" || id !== "" });
     const seats = [seat(1, "Li Wei", "J-1"), seat(2, "Aiko Mori"), seat(3, "Sofia Lindqvist-Hernandez"), seat(4, ""), seat(5, "Ana Ruiz")];
-    const fits = fitSeats(seats, { width: 70, height: 60, max: 26, min: 12, idLabel: "ID" });
+    const boxes = seats.map(() => ({ width: 70, height: 60, max: 26 }));
+    const fits = fitSeats(seats, boxes, { min: 12, idLabel: "ID" });
     expect(fits.map((f) => f !== undefined)).toEqual([true, true, false, false, true]);
     const sizes = new Set(fits.filter((f) => f !== undefined).map((f) => f!.nameSize));
     expect(sizes.size).toBe(1);
@@ -339,5 +340,125 @@ describe("the drawing", () => {
     expect(table).toContain("<td>Judge 3, central</td><td>Sofia Lindqvist-Hernandez</td><td>J-2210</td>");
     expect(table).toContain("<td>Not assigned</td><td></td>");
     expect(table).toContain("<caption>Judging assignments: Kata, 5 judges, 2 mats</caption>");
+  });
+});
+
+// ---- Shiai: a contest's referee, its technical table, and the side judges of an event with no CARE system (IJF SOR 21 January 2026: Article 9, the Refereeing Rules' Articles 2 and 3 and 13, 5). ----
+const SHIAI = [
+  { seat: "referee", name: "Hana Ito", id: "R-204" },
+  { seat: "timekeeper", name: "Sam Cole", id: "T-11" },
+  { seat: "scorekeeper", name: "Ana Ruiz", id: "T-12" },
+  { seat: "supervisor", name: "Peter Lindqvist-Haraldsson", id: "S-3" },
+] as const;
+const shiai = (mats: JudgingOptions["mats"] = [{ officials: SHIAI }], rest: Partial<JudgingOptions> = {}): JudgingOptions => ({ style: "shiai", mats, ...rest });
+
+describe("the seats of a contest", () => {
+  it("are the referee, the timekeeper, the scorekeeper and the referee supervisor, and two side judges that are drawn only when asked for or named", () => {
+    const seats = seatsOf("shiai");
+    expect(seats.map((s) => s.id)).toEqual(["referee", "timekeeper", "scorekeeper", "supervisor", "side-judge-1", "side-judge-2"]);
+    expect(seats.map((s) => s.where)).toEqual(["mat", "table", "table", "table", "corner", "corner"]);
+    expect(seats.filter((s) => s.optional === true).map((s) => s.id)).toEqual(["side-judge-1", "side-judge-2"]);
+    expect(seats[0].label).toEqual({ en: "Referee", ja: "主審" });
+    expect(seatsOf("shiai", "listed")).toHaveLength(4);
+    expect(judgingSetting(shiai()).mats[0].seats.map((a) => a.seat.id)).toEqual(["referee", "timekeeper", "scorekeeper", "supervisor"]);
+    expect(judgingSetting(shiai(undefined, { sideJudges: true })).mats[0].seats).toHaveLength(6);
+    // A side judge a mat names is drawn without asking, and on every mat, so that the mats read alike.
+    const named = judgingSetting(shiai([{ officials: [{ seat: "side-judge-2", name: "Kim Park" }] }, {}]));
+    expect(named.mats.map((m) => m.seats.map((a) => a.seat.id))).toEqual(Array.from({ length: 2 }, () => ["referee", "timekeeper", "scorekeeper", "supervisor", "side-judge-2"]));
+    expect(() => judgingSetting(shiai(undefined, { sideJudges: 1 as never }))).toThrow(TypeError);
+  });
+
+  it("are found by number, key or word", () => {
+    expect(seatOf("shiai", 1).id).toBe("referee");
+    expect(seatOf("shiai", "Timekeeper").id).toBe("timekeeper");
+    expect(seatOf("shiai", "scorer").id).toBe("scorekeeper");
+    expect(seatOf("shiai", "referee supervisor").id).toBe("supervisor");
+    expect(seatOf("shiai", "judge 1").id).toBe("side-judge-1");
+    expect(seatOf("shiai", "side-judge-2").id).toBe("side-judge-2");
+    expect(seatOf("shiai", 6).id).toBe("side-judge-2");
+    expect(() => seatOf("shiai", "central")).toThrow(RangeError);
+    expect(() => seatOf("shiai", 7)).toThrow(/referee, timekeeper/);
+    // A kata area's central judge is still the third.
+    expect(seatOf("kata", "central").id).toBe("judge-3");
+  });
+
+  it("are where the plan and the Rules put them: the referee at the centre 2 m back from the line the athletes start on, three chairs behind the technical table, side judges at opposite corners", () => {
+    const g = judgingPlan("shiai");
+    const plan = g.plan.judo!;
+    const c = plan.contests[0];
+    const cx = (c.x0 + c.x1) / 2;
+    const cy = (c.y0 + c.y1) / 2;
+    const [referee, timekeeper, scorekeeper, supervisor, side1, side2] = g.places;
+    expect((referee.chair.x0 + referee.chair.x1) / 2).toBeCloseTo(cx, 9);
+    expect((referee.chair.y0 + referee.chair.y1) / 2).toBeCloseTo(cy + 2, 9);
+    expect(g.plan.marks.find((m) => m.id === "referee-position")).toMatchObject({ x: cx, y: cy + 2 });
+    expect(g.table).toEqual(plan.desks[0]);
+    for (const p of [timekeeper, scorekeeper, supervisor]) {
+      expect(p.chair.y1).toBeLessThanOrEqual(g.table.y0 + 1e-9);
+      expect(p.card.y1).toBeCloseTo(g.table.y1, 9);
+      expect(p.chair.x0).toBeGreaterThan(g.table.x0);
+      expect(p.chair.x1).toBeLessThan(g.table.x1);
+    }
+    expect([timekeeper, scorekeeper, supervisor].map((p) => (p.chair.x0 + p.chair.x1) / 2 - cx)).toEqual([-1, 0, 1]);
+    expect((side1.chair.x0 + side1.chair.x1) / 2).toBeLessThan(c.x0);
+    expect((side2.chair.x0 + side2.chair.x1) / 2).toBeGreaterThan(c.x1);
+    expect((side1.chair.y0 + side1.chair.y1) / 2).toBeLessThan(c.y0);
+    expect((side2.chair.y0 + side2.chair.y1) / 2).toBeGreaterThan(c.y1);
+    // Every seat, with its card, is inside the picture of the whole mat; the bench is the table's seats only.
+    for (const p of g.places) {
+      expect(p.card.x0).toBeGreaterThanOrEqual(g.extent.x0);
+      expect(p.card.x1).toBeLessThanOrEqual(g.extent.x1);
+      expect(p.card.y0).toBeGreaterThanOrEqual(g.extent.y0);
+      expect(p.card.y1).toBeLessThanOrEqual(g.extent.y1);
+    }
+    expect(g.places.map((p) => seatIn(p, g.bench))).toEqual([false, true, true, true, false, false]);
+    // Several mats: each has its own seats, a mat's width apart.
+    const two = judgingPlan("shiai", 2);
+    expect(two.mats).toHaveLength(2);
+    expect(two.mats[1].places[0].chair.x0 - two.mats[0].places[0].chair.x0).toBeCloseTo(plan.contests[0].x1 - plan.contests[0].x0 + two.plan.judo!.gap, 9);
+  });
+});
+
+describe("a contest's picture", () => {
+  it("has the chart of every seat with its name and ID whole, the referee first, and the title and description say who is where", () => {
+    const d = judgingDrawing(shiai());
+    expect(d.title).toBe("Judging assignments: Shiai, 4 officials, 1 mat");
+    expect(d.description).toContain("Referee Hana Ito, ID R-204; Timekeeper Sam Cole, ID T-11; Scorekeeper Ana Ruiz, ID T-12; Referee supervisor Peter Lindqvist-Haraldsson, ID S-3.");
+    expect(texts(d.svg, "ky-ju-role")).toEqual(["Referee", "Timekeeper", "Scorekeeper", "Referee supervisor"]);
+    expect(d.svg).toContain('data-judging="shiai"');
+    expect(d.cards.map((c) => c.seat)).toEqual(["referee", "timekeeper", "scorekeeper", "supervisor"]);
+    expect(d.svg).toContain("ky-bud-white-fill");
+  });
+
+  it("puts a name in its seat when it fits, as for a kata judge, and a side judge's card stands in the corner", () => {
+    const names = [{ seat: "timekeeper", name: "Sam Cole", id: "T-1" }, { seat: "scorekeeper", name: "Ana Ruiz", id: "T-2" }, { seat: "supervisor", name: "Li Wei", id: "S-3" }, { seat: "side-judge-1", name: "Kim Park", id: "J-7" }];
+    const d = judgingDrawing(shiai([{ officials: [{ seat: "referee", name: "Hana Ito", id: "R-2" }, ...names] }], { chart: "never" }));
+    expect(d.cards.every((c) => c.fits)).toBe(true);
+    expect(d.svg.match(/data-card="yes"/g)).toHaveLength(5);
+    expect(d.cards.map((c) => c.seat)).toContain("side-judge-1");
+    expect(d.cards.map((c) => c.seat)).not.toContain("side-judge-2");
+  });
+
+  it("keeps the referee's and the side judges' names in the chart when the picture is the bench close up, and says so by not fitting them", () => {
+    const d = judgingDrawing(shiai([{ officials: [...SHIAI, { seat: "side-judge-1", name: "Kim", id: "J" }] }], { focus: "bench" }));
+    expect(d.cards.find((c) => c.seat === "referee")!.fits).toBe(false);
+    expect(d.cards.find((c) => c.seat === "side-judge-1")!.fits).toBe(false);
+    expect(d.chart).toBe(true);
+    expect(d.svg).not.toMatch(/class="ky-ju-seat" data-mat="1" data-seat="referee"/);
+    expect(texts(d.svg, "ky-ju-name")).toEqual(expect.arrayContaining(["Hana Ito", "Kim"]));
+    // Where nobody is named at the referee, there is nothing to lose: the bench alone, no chart needed when the names fit.
+    const quiet = judgingDrawing(shiai([{ officials: [{ seat: "timekeeper", name: "Li Wei", id: "T-1" }] }], { focus: "bench" }));
+    expect(quiet.chart).toBe(false);
+  });
+
+  it("speaks Japanese: the seats and the style", () => {
+    const svg = drawJudging(shiai(undefined, { language: "ja", sideJudges: true }));
+    for (const word of ["主審", "計時係", "記録係", "審判委員", "副審1", "副審2", "試合（6人体制）"]) expect(svg, word).toContain(word);
+    expect(judgingTable(shiai(undefined, { language: "ja" }))).toContain("<td>主審</td>");
+  });
+
+  it("says the same as a table, a row for every seat", () => {
+    expect(judgingTable(shiai()).match(/<tbody>[\s\S]*<\/tbody>/)![0].match(/<tr>/g)).toHaveLength(4);
+    expect(judgingTable(shiai(undefined, { sideJudges: true })).match(/<tbody>[\s\S]*<\/tbody>/)![0].match(/<tr>/g)).toHaveLength(6);
   });
 });

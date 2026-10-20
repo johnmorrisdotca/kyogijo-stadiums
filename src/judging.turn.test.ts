@@ -247,6 +247,8 @@ describe("the view keeps its size through a whole turn", () => {
     ["six mats", buildJudgingTurn(kata(Array.from({ length: 6 }, () => ({ officials: FIVE.slice(0, 2) }))))],
     ["the bench", buildJudgingTurn(kata(TWO, { focus: "bench" }))],
     ["one mat's bench", buildJudgingTurn(kata(undefined, { mat: 1, focus: "bench" }))],
+    ["a contest", buildJudgingTurn({ style: "shiai", mats: [{ officials: [{ seat: "referee", name: "Hana Ito" }, { seat: "side-judge-2", name: "Kim Park" }] }, {}], sideJudges: true })],
+    ["a contest's bench", buildJudgingTurn({ style: "shiai", mats: [{ officials: [{ seat: "timekeeper", name: "Sam Cole" }] }], focus: "bench" })],
   ];
   const CONTAINERS: readonly (readonly [number, number])[] = [[1280, 900], [1180, 820], [390, 700]];
   const parse = (t: string): number[] => t.slice("matrix3d(".length, -1).split(",").map(Number);
@@ -270,7 +272,7 @@ describe("the view keeps its size through a whole turn", () => {
 
   // The scene turns about the middle of what it is fitted to. The whole floor is that, so its area is steady to the little the perspective adds. Close up on the benches the floor is mostly out of view and what is seen is
   // the tables: it is the table of the first bench that is measured. With several benches it stands off the axis, so that the view has a longer lens of its own (`TurnModel.lens`), which flattens what swings toward the eye.
-  const LIMITS: Record<string, readonly [number, number]> = { "one mat's bench": [1.03, 1.004], "the bench": [1.03, 1.004] };
+  const LIMITS: Record<string, readonly [number, number]> = { "one mat's bench": [1.03, 1.004], "the bench": [1.03, 1.004], "a contest's bench": [1.03, 1.004] };
   it("has one area of the floor at every turn, at every tip, in desk, tablet and phone boxes (close up, the table's top)", () => {
     for (const [name, model] of MODELS) {
       const pitches = [...new Set([...Object.values(JUDGING_PRESETS).map((v) => v.pitch), 45, PITCH_MAX])].filter((p) => p > 0);
@@ -311,5 +313,65 @@ describe("the view keeps its size through a whole turn", () => {
         }
       }
     }
+  });
+});
+
+describe("a contest in 3D", () => {
+  const officials = [{ seat: "referee", name: "Hana Ito", id: "R-204" }, { seat: "timekeeper", name: "Sam Cole", id: "T-11" }, { seat: "scorekeeper", name: "Ana Ruiz", id: "T-12" }, { seat: "supervisor", name: "Peter Lindqvist-Haraldsson", id: "S-3" }, { seat: "side-judge-1", name: "Kim Park", id: "J-7" }];
+  const contest = (rest: Partial<JudgingOptions> = {}): JudgingOptions => ({ style: "shiai", mats: [{ officials }], ...rest });
+  const model = buildJudgingTurn(contest());
+
+  it("stands the technical table with its chairs, a card on it for each official at it, the referee's card on a post on the mat and a side judge's in the corner", () => {
+    const ids = model.planes.map((p) => p.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    for (const id of ["m1-table-top", "m1-chair-2-top", "m1-chair-3-top", "m1-chair-4-top", "m1-chair-5-top", "m1-card-1", "m1-card-2", "m1-card-3", "m1-badge-4", "m1-card-5", "m1-post-1", "m1-post-5", "m1-sign"]) expect(has(model, id), id).toBe(true);
+    // The referee stands: no chair.
+    expect(has(model, "m1-chair-1-top")).toBe(false);
+    const g = judgingPlan("shiai");
+    const table = byId(model, "m1-table-top");
+    expect(byId(model, "m1-card-2").o[2] + byId(model, "m1-card-2").v[2]).toBeCloseTo(table.o[2], 9);
+    // The referee's card is on a post at 1 m, over the place 2 m back from the line the athletes start on.
+    const card = byId(model, "m1-card-1");
+    expect(card.billboard).toBe(true);
+    expect(card.o[2] + card.v[2]).toBeCloseTo(JUDGING_HEIGHTS.post * M, 9);
+    expect((card.o[0] + card.u[0] / 2) / M).toBeCloseTo((g.places[0].card.x0 + g.places[0].card.x1) / 2, 6);
+    expect((card.o[1]) / M).toBeCloseTo((g.places[0].card.y0 + g.places[0].card.y1) / 2, 6);
+    for (const p of model.planes) expect(Math.min(...corners(p).map((c) => c[2])), p.id).toBeGreaterThanOrEqual(-1e-9);
+    expect(model.floor).toContain('data-league="ijf"');
+    expect(model.flat).toBe(drawJudging(contest()));
+    expect(model.description).toContain("Referee Hana Ito, ID R-204");
+  });
+
+  it("is drawn in the right order from every side, and keeps its size through a turn, whole floor and close up", () => {
+    for (const m of [model, buildJudgingTurn(contest({ focus: "bench" }))]) {
+      for (const pitch of [0, 42, 62, PITCH_MAX]) {
+        for (const yaw of range(0, 355, 15)) {
+          const view = { yaw, pitch, zoom: 1 };
+          const layout = layoutOf(m, view, 960, 600);
+          const order = m.planes.map((p, i) => ({ stack: layout.stack[i + 1], depth: depthOf(middle(facing(p, yaw), m), view, layout.at) })).sort((a, b) => a.stack - b.stack);
+          for (let i = 1; i < order.length; i += 1) expect(order[i].depth).toBeGreaterThanOrEqual(order[i - 1].depth - 1e-6);
+        }
+      }
+    }
+    const d = eyeDistance(1180, 820, model.lens);
+    const first = fit(model.box, { yaw: 0, pitch: 42, zoom: 1 }, 1180, 820, d);
+    for (const yaw of range(-180, 175, 5)) expect(fit(model.box, { yaw, pitch: 42, zoom: 1 }, 1180, 820, d)).toEqual(first);
+  });
+
+  it("is close up on the table alone: the referee and the side judges are not stood up (their names are in the chart), and the box is the bench", () => {
+    const near = buildJudgingTurn(contest({ focus: "bench" }));
+    expect(near.planes.some((p) => p.id.startsWith("m1-post-"))).toBe(false);
+    expect(has(near, "m1-card-1") || has(near, "m1-badge-1")).toBe(false);
+    expect(has(near, "m1-card-2")).toBe(true);
+    expect(near.box.x1 - near.box.x0).toBeLessThan(model.box.x1 - model.box.x0);
+    const g = judgingPlan("shiai");
+    expect(near.centre[0] / M).toBeCloseTo((g.bench.x0 + g.bench.x1) / 2, 0);
+  });
+
+  it("has mats side by side, each with its own seats, and the side judges on every mat when one names them", () => {
+    const two = buildJudgingTurn({ style: "shiai", mats: [{ officials }, { officials: [{ seat: "referee", name: "Li Wei" }] }] });
+    expect(has(two, "m2-card-1")).toBe(true);
+    expect(has(two, "m2-badge-5")).toBe(true);
+    expect(byId(two, "m2-table-top").o[0]).toBeGreaterThan(byId(two, "m1-table-top").o[0] + 10 * M);
   });
 });

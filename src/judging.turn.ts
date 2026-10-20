@@ -1,14 +1,14 @@
 // A judging assignment in 3D: the 3D view of `turn.ts` over the package's own judo floor (`drawKyogijo`, with as many areas side by side as there are mats), with each judge's chair and the judges' table stood up, a name
 // card on the table in front of every judge who has a name (turned to face the eye, so that it is read from wherever the view is) and the name of each mat on a sign over its judges' table. Nothing is drawn a second
 // way: the card is the plan's card (`judging.card.ts`), fitted by the same rule. The model it makes is a `TurnModel`, so the camera, the controls, the pointer, the auto-turn and the tests of every other 3D view are this one's.
-import { budoPlan } from "./budo/plan.ts";
+import type { MBox } from "./budo/plan.ts";
 import { drawKyogijo } from "./draw.ts";
 import { hash } from "./format.ts";
 import { FEET_PER_METRE as FT } from "./geometry.ts";
 import { TURN_CARD, badge, card } from "./judging.card.ts";
 import { JUDGING_LEAGUE } from "./judging.data.ts";
 import { fitCard, fitSeats } from "./judging.fit.ts";
-import { benchOf, judgingSetting, type JudgingSetting } from "./judging.ts";
+import { benchOf, judgingPlan, judgingSetting, seatIn, type JudgingPlan, type JudgingSetting } from "./judging.ts";
 import { judgingDrawing, judgingText } from "./judging.draw.ts";
 import type { JudgingOptions } from "./judging.types.ts";
 import { JUDGING_WORDS } from "./judging.words.ts";
@@ -21,10 +21,20 @@ import { planesOf, type Uprights } from "./uprights.ts";
 import type { Language, SurfaceOptions } from "./types.ts";
 
 /** How high things stand, in metres (ours: no rule gives them): the table's top, a chair's seat, a name card on the table, the sign over it. */
-export const JUDGING_HEIGHTS = Object.freeze({ table: 0.75, chair: 0.45, card: 0.95, sign: 0.7, signAbove: 0.25 });
+export const JUDGING_HEIGHTS = Object.freeze({ table: 0.75, chair: 0.45, card: 0.95, sign: 0.7, signAbove: 0.25, post: 1.0 });
 
 /** The lens of a view close up on several benches at once: the scene turns about the middle of them, and a bench several metres from it would swell as it swung toward the eye, so the lens is long (the default is 8). */
 const BENCHES_LENS = 60;
+
+/** The bench the 3D view is fitted to when it is close up: a kata's seats at their tables, a contest's technical tables and referees, all mats in one box, reaching as little of the floor in front as will do. */
+function benchNear(style: JudgingSetting["style"], geom: JudgingPlan, count: number): MBox {
+  if (style === "shiai") {
+    const b = geom.mats.slice(0, count).map((m) => m.bench);
+    return { x0: Math.min(...b.map((x) => x.x0)), y0: Math.min(...b.map((x) => x.y0)), x1: Math.max(...b.map((x) => x.x1)), y1: Math.max(...b.map((x) => x.y1)) };
+  }
+  const chairs = geom.mats.slice(0, count).flatMap((m) => m.places.map((p) => p.chair));
+  return benchOf(chairs, geom.table, geom.pitch, geom.plan.judo!.contests[0].y0, 2.2);
+}
 
 const clamp = (v: number, lo: number, hi: number): number => Math.min(hi, Math.max(lo, v));
 
@@ -50,50 +60,59 @@ export function buildJudgingTurn(options: JudgingOptions, settings: TurnSettings
   const found = /viewBox="(-?[\d.]+) (-?[\d.]+) ([\d.]+) ([\d.]+)"/.exec(floor);
   if (found === null) throw new Error("the floor of a 3D view must be an SVG with a viewBox");
   const [vx, vy, vw, vh] = found.slice(1).map(Number);
-  const plan = budoPlan({ sport: "judo", league, budo: { style: setting.style, officials: true, areas: count } });
-  const judges = plan.judo!.judges;
-  const seatsPerMat = setting.mats[0].seats.length;
+  const geom = judgingPlan(setting.style, count);
   // The plan's own frame is metres from the top left of the tatami, and the drawing's is feet from the same corner.
   const ft = (m: number): number => m * FT;
   const H = JUDGING_HEIGHTS;
   const items: Upright[] = [];
   const tableTop = ft(H.table);
-
-  const pitch = judges.seats.length > 1 ? judges.seats[1].x0 - judges.seats[0].x0 : 1.25;
-  const cardW = ft(pitch - 0.06);
   const cardH = ft(H.card);
-  const pad = Math.max(0.08, cardW * 0.05);
-  const r = clamp(cardW * 0.2, 0.2, 0.45);
-  const innerW = cardW - 2 * pad;
-  const innerH = cardH - 2 * pad - r;
   const minName = 0.62;
+  // Close up on the bench, only the seats at it stand (the referee and the side judges of a contest are out of the picture, and in the chart).
+  const near = setting.focus === "bench" ? benchNear(setting.style, geom, count) : undefined;
 
   setting.mats.forEach((mat, mi) => {
-    const table = judges.tables[mi];
-    const fitted = fitSeats(mat.seats, { width: innerW, height: innerH, max: Math.min(cardW * 0.3, 0.75), min: minName, idLabel: words.chart.idLabel });
+    const places = geom.mats[mi];
+    const table = places.table;
+    const boxes = mat.seats.map((a) => {
+      const c = places.places[a.seat.n - 1].card;
+      const w = ft(c.x1 - c.x0);
+      const pad = Math.max(0.08, w * 0.05);
+      const r = clamp(w * 0.2, 0.2, 0.45);
+      return { w, pad, r, width: w - 2 * pad, height: cardH - 2 * pad - r, max: Math.min(w * 0.3, 0.75) };
+    });
+    const fitted = fitSeats(mat.seats, boxes, { min: minName, idLabel: words.chart.idLabel });
     const furniture: Plane[] = [];
     furniture.push(...box(`m${mat.n}-table`, "desk", rect(ft(table.x0), ft(table.y0), ft(table.x1 - table.x0), ft(table.y1 - table.y0)), tableTop, "u-bench"));
     const cards: Plane[] = [];
+    const stands: Plane[] = [];
     mat.seats.forEach((a, si) => {
-      const chair = judges.seats[mi * seatsPerMat + si];
-      furniture.push(...box(`m${mat.n}-chair-${a.seat.n}`, "chair", rect(ft(chair.x0), ft(chair.y0), ft(chair.x1 - chair.x0), ft(chair.y1 - chair.y0)), ft(H.chair), "u-bench"));
-      const cx = ft((chair.x0 + chair.x1) / 2);
-      const cy = ft((table.y0 + table.y1) / 2);
+      const place = places.places[a.seat.n - 1];
+      if (near !== undefined && !seatIn(place, near)) return;
+      const b = boxes[si];
+      // A chair for the seats that have one (the referee stands on the mat).
+      if (a.seat.role !== "referee") furniture.push(...box(`m${mat.n}-chair-${a.seat.n}`, "chair", rect(ft(place.chair.x0), ft(place.chair.y0), ft(place.chair.x1 - place.chair.x0), ft(place.chair.y1 - place.chair.y0)), ft(H.chair), "u-bench"));
+      const cx = ft((place.card.x0 + place.card.x1) / 2);
+      // A card at a table stands on the table; any other on a post, at the height of a standing official's chest.
+      const atTable = a.seat.where === "table";
+      const cy = atTable ? ft((table.y0 + table.y1) / 2) : ft((place.card.y0 + place.card.y1) / 2);
+      const base = atTable ? tableTop : ft(H.post);
+      if (!atTable) stands.push(...pole(`m${mat.n}-post-${a.seat.n}`, "pole", cx, cy, 0, base, ft(0.06), "u-pole"));
       const fit = fitted[si];
       if (fit !== undefined) {
-        const p = plane(`m${mat.n}-card-${a.seat.n}`, "card", [cx - cardW / 2, cy, tableTop + cardH], [cardW, 0, 0], [0, 0, -cardH], card(TURN_CARD, fit, a.seat.n, 0, 0, cardW, cardH, pad, r, 0.1));
+        const p = plane(`m${mat.n}-card-${a.seat.n}`, "card", [cx - b.w / 2, cy, base + cardH], [b.w, 0, 0], [0, 0, -cardH], card(TURN_CARD, fit, a.seat.n, 0, 0, b.w, cardH, b.pad, b.r, 0.1));
         cards.push({ ...p, billboard: true });
       } else {
         // Nobody in the seat, or a name that does not fit a card: the seat's number alone, on a small badge, with the name in the chart.
         const br = 0.55;
-        const p = plane(`m${mat.n}-badge-${a.seat.n}`, "card", [cx - br, cy, tableTop + 2 * br], [2 * br, 0, 0], [0, 0, -2 * br], badge(TURN_CARD, br, br, br * 0.92, a.seat.n, a.assigned));
+        const p = plane(`m${mat.n}-badge-${a.seat.n}`, "card", [cx - br, cy, base + 2 * br], [2 * br, 0, 0], [0, 0, -2 * br], badge(TURN_CARD, br, br, br * 0.92, a.seat.n, a.assigned));
         cards.push({ ...p, billboard: true });
       }
     });
-    // The mat's name on a sign over the whole bench, on a pole at each end of the table.
+    // The mat's name on a sign over the whole table, on a pole at each end of it.
     const midX = ft((table.x0 + table.x1) / 2);
     const midY = ft((table.y0 + table.y1) / 2);
-    const signW = ft(pitch * seatsPerMat);
+    const signW = ft(table.x1 - table.x0);
     const signH = ft(H.sign);
     const signBottom = tableTop + cardH + ft(H.signAbove);
     const text = fitCard({ name: mat.label, id: "", idLabel: "", width: signW * 0.9, height: signH * 0.86, max: signH * 0.62, min: signH * 0.3, maxLines: 2, breakWords: true });
@@ -103,11 +122,10 @@ export function buildJudgingTurn(options: JudgingOptions, settings: TurnSettings
     const sign: Plane = { ...plane(`m${mat.n}-sign`, "sign", [midX - signW / 2, midY, signBottom + signH], [signW, 0, 0], [0, 0, -signH], `<rect class="u-sign" width="${n(signW)}" height="${n(signH)}" rx="${n(signH * 0.12)}"/>${label}`), billboard: true };
     const poles = [table.x0, table.x1].flatMap((px, k) => pole(`m${mat.n}-sign-pole-${k + 1}`, "pole", ft(px), midY, tableTop, signBottom + signH * 0.5, ft(0.06), "u-pole"));
     items.push({ id: `m${mat.n}-furniture`, kind: "officials", at: [midX, midY], height: tableTop, planes: furniture });
-    items.push({ id: `m${mat.n}-judges`, kind: "judges", at: [midX, midY], height: tableTop + cardH, planes: [...cards, ...poles, sign] });
+    items.push({ id: `m${mat.n}-judges`, kind: "judges", at: [midX, midY], height: tableTop + cardH, planes: [...cards, ...stands, ...poles, sign] });
   });
 
-  // The view is fitted to the whole floor, or to the judges' bench close up (the scene then turns about the bench, so that the cards stay where they are read).
-  const near = setting.focus === "bench" ? benchOf(judges.seats.slice(0, count * seatsPerMat), judges.tables[0], pitch, plan.judo!.contests[0].y0, 2.2) : undefined;
+  // The view is fitted to the whole floor, or to the officials' bench close up (the scene then turns about the bench, so that the cards stay where they are read).
   const area = near === undefined ? { x0: vx, y0: vy, x1: vx + vw, y1: vy + vh } : { x0: ft(near.x0), y0: ft(near.y0), x1: ft(near.x1), y1: ft(near.y1) };
   const uprights: Uprights = { items, lift: 0, thin: thinnest(vw, vh), area, whole: true };
   const planes = planesOf(uprights);

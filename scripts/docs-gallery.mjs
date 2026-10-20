@@ -1305,6 +1305,13 @@ const JUDGES_ONE = [
   { seat: 5, name: "Marta Kowalczyk", id: "J-1555" },
 ];
 const JUDGES_TWO = [{ seat: 1, name: "Li Wei", id: "J-3001" }, { seat: 3, name: "Priya Raman", id: "J-0042" }, { seat: 5, name: "Tomás Ferreira", id: "J-2764" }];
+const OFFICIALS = [
+  { seat: "referee", name: "Hana Ito", id: "R-204" },
+  { seat: "timekeeper", name: "Sam Cole", id: "T-011" },
+  { seat: "scorekeeper", name: "Ana Ruiz", id: "T-012" },
+  { seat: "supervisor", name: "Peter Lindqvist-Haraldsson", id: "S-003" },
+  { seat: "side-judge-1", name: "Kim Park", id: "J-707" },
+];
 const JUDGES_SHORT = [
   { seat: 1, name: "Aiko Mori", id: "J-1042" },
   { seat: 2, name: "Dan Okafor", id: "J-0377" },
@@ -1327,6 +1334,12 @@ function judgingPage() {
         item("judging-bench", "The judges' bench close up", judging({ style: "kata", mats: [{ label: "Mat 1", officials: JUDGES_SHORT }], focus: "bench" }), "With short names every name is in its seat, and the chart is not drawn."),
         item("judging-bench-chart", "The bench close up, with the chart", judging({ style: "kata", mats: [mat1], focus: "bench" }), "Four names fit their cards; the fifth is in the chart."),
         item("judging-chart", "The chart alone", judging({ style: "kata", mats: [mat1] }, "judgingChart"), "For a page that puts the chart beside the 3D view."),
+      ]),
+      section("shiai", "A contest", "A referee on the mat, the timekeeper, the scorekeeper and the referee supervisor at the technical table, and the side judges of an event with no CARE system.", [
+        item("judging-shiai", "A contest area", judging({ style: "shiai", mats: [{ label: "Mat 1", officials: OFFICIALS }] }), "The referee's seat is on the mat, 2 m back from the line the athletes start on; the side judge's, at a corner of the contest area (the place is ours)."),
+        item("judging-shiai-names", "Names in the seats", judging({ style: "shiai", mats: [{ label: "Mat 1", officials: [{ seat: "referee", name: "Hana Ito", id: "R-204" }, { seat: "timekeeper", name: "Sam Cole", id: "T-011" }, { seat: "scorekeeper", name: "Ana Ruiz", id: "T-012" }, { seat: "supervisor", name: "Eva Roth", id: "S-003" }] }], chart: "never" }), "Every name fits its seat, so no chart is needed."),
+        item("judging-shiai-bench", "The technical table close up", judging({ style: "shiai", mats: [{ label: "Mat 1", officials: [{ seat: "timekeeper", name: "Sam Cole", id: "T-011" }, { seat: "scorekeeper", name: "Ana Ruiz", id: "T-012" }, { seat: "supervisor", name: "Eva Roth", id: "S-003" }] }], focus: "bench" }), "The referee and the side judges are on the mat and its corners: only the table's seats are in the picture of the bench."),
+        item("judging-shiai-side", "With both side judges", judging({ style: "shiai", mats: [{ label: "Mat 1", officials: OFFICIALS }], sideJudges: true })),
       ]),
       section("mats", "Several mats", "One panel for each mat, one under another; a page with a tab for each mat draws one with `mat`.", [
         item("judging-two", "Two mats", judging({ style: "kata", mats: [mat1, mat2] })),

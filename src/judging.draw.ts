@@ -7,7 +7,7 @@ import { el, esc, hash, num } from "./format.ts";
 import { PLAN_CARD, badge, card } from "./judging.card.ts";
 import { fitChart, fitSeats, type CardFit } from "./judging.fit.ts";
 import { JUDGING_LEAGUE } from "./judging.data.ts";
-import { judgingPlan, judgingSetting, type JudgingPlan, type JudgingSetting } from "./judging.ts";
+import { judgingPlan, judgingSetting, seatIn, type JudgingPlan, type JudgingSetting } from "./judging.ts";
 import { KYOGIJO_JUDGING_STYLE } from "./judging.style.ts";
 import type { JudgingAssignment, JudgingOptions, JudgingResolved } from "./judging.types.ts";
 import { JUDGING_WORDS } from "./judging.words.ts";
@@ -167,25 +167,29 @@ function planMarkup(
   markup += el("rect", { class: "ky-apron", x, y, width: w, height: h });
   markup += el("g", { class: "ky-ju-plan", "clip-path": `url(#${clip})`, transform: `translate(${num(x - region.x0 * FT * sf)} ${num(y - region.y0 * FT * sf)}) scale(${(sf).toFixed(5)})` }, surface.body);
   markup += el("rect", { class: "ky-ju-plan-frame", x, y, width: w, height: h });
-  // The card of a seat is its chair and the table in front of it: a seat wide and as deep as both.
-  const cardW = (geom.pitch - 0.06) * s;
-  const cardH = (geom.table.y1 - (geom.chairs[0].y0 - 0.05)) * s;
-  const pad = Math.max(2 * m.k, cardW * 0.05);
-  const r = clamp(cardW * 0.2, 6 * m.k, 14 * m.k);
-  const innerW = cardW - 2 * pad;
-  const innerH = cardH - 2 * pad - r;
-  const fitted = fitSeats(mat.seats, { width: innerW, height: innerH, max: Math.min(cardW * 0.3, 26 * m.k), min: m.cardMin, idLabel: words.chart.idLabel });
-  const fits = mat.seats.map((a, i) => !a.assigned || fitted[i] !== undefined);
+  // The card of a seat is the place the plan gives it: for a kata judge its chair and the table in front of it, for a contest's referee and side judges a card of their own.
+  const boxes = mat.seats.map((a) => {
+    const c = geom.places[a.seat.n - 1].card;
+    const cw = (c.x1 - c.x0) * s;
+    const ch = (c.y1 - c.y0) * s;
+    const pad = Math.max(2 * m.k, cw * 0.05);
+    const r = clamp(cw * 0.2, 6 * m.k, 14 * m.k);
+    return { cw, ch, pad, r, width: cw - 2 * pad, height: ch - 2 * pad - r, max: Math.min(cw * 0.3, 26 * m.k) };
+  });
+  const fitted = fitSeats(mat.seats, boxes, { min: m.cardMin, idLabel: words.chart.idLabel });
+  // A seat outside the picture (the referee in a close-up of the bench) has its name in the chart only: it does not fit.
+  const shown = mat.seats.map((a) => seatIn(geom.places[a.seat.n - 1], region));
+  const fits = mat.seats.map((a, i) => !a.assigned || (shown[i] && fitted[i] !== undefined));
   mat.seats.forEach((a, i) => {
-    const chair = geom.chairs[i];
-    const cx = X((chair.x0 + chair.x1) / 2);
-    const top = Y(chair.y0 - 0.05);
+    if (!shown[i]) return;
+    const place = geom.places[a.seat.n - 1];
+    const b = boxes[i];
     const fit = fitted[i];
     let g = "";
-    if (fit !== undefined) g += card(PLAN_CARD, fit, a.seat.n, cx - cardW / 2, top, cardW, cardH, pad, r, 3 * m.k);
+    if (fit !== undefined) g += card(PLAN_CARD, fit, a.seat.n, X(place.card.x0), Y(place.card.y0), b.cw, b.ch, b.pad, b.r, 3 * m.k);
     else {
-      const br = clamp(geom.pitch * s * 0.3, 7 * m.k, 16 * m.k);
-      g += badge(PLAN_CARD, cx, Y((chair.y0 + chair.y1) / 2), br, a.seat.n, a.assigned);
+      const br = clamp(Math.min(b.cw, 1.25 * s) * 0.3, 7 * m.k, 16 * m.k);
+      g += badge(PLAN_CARD, X((place.chair.x0 + place.chair.x1) / 2), Y((place.chair.y0 + place.chair.y1) / 2), br, a.seat.n, a.assigned);
     }
     markup += el("g", { class: "ky-ju-seat", "data-mat": mat.n, "data-seat": a.seat.id, "data-card": fit === undefined ? "no" : "yes" }, g);
   });

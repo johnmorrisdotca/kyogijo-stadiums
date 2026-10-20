@@ -181,3 +181,38 @@ test("a damaged address opens on the sample names, and the table says the same a
   await expect(page.locator("#table tbody tr")).toHaveCount(10);
   expect(errors).toEqual([]);
 });
+
+test("a contest: the referee, the technical table's three and, when asked for, the side judges, in the chart, on the plan and in 3D", async ({ page }) => {
+  const { errors } = await open(page, "?style=shiai&mat=1");
+  await expect(page.locator("#style")).toHaveValue("shiai");
+  await expect(page.locator(`${STAGE} svg.kyogijo`)).toHaveAttribute("data-judging", "shiai");
+  await expect(page.locator(`${STAGE} .ky-ju-role`)).toHaveText(["Referee", "Timekeeper", "Scorekeeper", "Referee supervisor", "Side judge 1"]);
+  await expect(page.locator(`${STAGE} .ky-ju-name`).first()).toHaveText("Hana Ito");
+  // The editor has a row for each seat, side judges included; a side judge who is named is drawn, and the other when asked for.
+  await expect(page.locator('#officials input[data-mat="0"][data-field="name"]')).toHaveCount(6);
+  await page.locator("#sidejudges").check();
+  await expect(page.locator(`${STAGE} .ky-ju-chart-row`)).toHaveCount(6);
+  await expect(page.locator(`${STAGE} .ky-ju-role`).nth(5)).toHaveText("Side judge 2");
+  expect(new URL(page.url()).searchParams.get("sidejudges")).toBe("1");
+  expect(new URL(page.url()).searchParams.get("style")).toBe("shiai");
+  // Typing a referee changes the picture; the kata names are kept apart from the contest's.
+  await page.locator('#officials input[data-mat="0"][data-seat="0"][data-field="name"]').fill("Yui");
+  await expect(page.locator(`${STAGE} .ky-ju-name`).first()).toHaveText("Yui");
+  await page.locator("#style").selectOption("kata");
+  await expect(page.locator(`${STAGE} .ky-ju-name`).first()).toHaveText("Aiko Mori");
+  await page.locator("#style").selectOption("shiai");
+  await expect(page.locator(`${STAGE} .ky-ju-name`).first()).toHaveText("Yui");
+  // In 3D the referee's card is on a post on the mat, the table's cards on the table.
+  await page.locator("#view").selectOption("3d");
+  await expect(page.locator(`${STAGE} [data-part="m1-post-1"]`).first()).toBeAttached();
+  await expect(page.locator(`${STAGE} [data-part="m1-table-top"]`)).toHaveCount(1);
+  await expect(page.locator(`${STAGE} .ky-turn-view`)).toHaveAccessibleName(/Shiai/);
+  expect(errors).toEqual([]);
+  await noSidewaysScroll(page);
+});
+
+test("Japanese contest words", async ({ page }) => {
+  await open(page, "?style=shiai&mat=1&lang=ja&chart=always");
+  await expect(page.locator(`${STAGE} .ky-ju-role`).first()).toHaveText("主審");
+  await expect(page.locator("#style option:checked")).toHaveText("試合（主審と各係）");
+});

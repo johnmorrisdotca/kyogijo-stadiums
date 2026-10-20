@@ -60,7 +60,8 @@
       <details id="edit" open>
         <summary id="l-edit"></summary>
         <div class="controls">
-          <label><span id="l-style"></span><select id="style"><option value="kata"></option></select></label>
+          <label><span id="l-style"></span><select id="style"><option value="kata"></option><option value="shiai"></option></select></label>
+          <label class="check" id="side-row"><input id="sidejudges" type="checkbox" /><span id="l-sidejudges"></span></label>
           <label><span id="l-mats"></span><input id="mats" type="number" min="1" max="6" inputmode="numeric" /></label>
           <label><span id="l-view"></span><select id="view"><option value="flat">2D</option><option value="3d">3D</option></select></label>
           <label><span id="l-focus"></span><select id="focus"><option value="mat"></option><option value="bench"></option></select></label>
@@ -89,7 +90,7 @@
         en: {
           title: "Judging assignments", pageTitle: "Kyogijo Stadiums: judging assignments", pageDescription: "Who judges where: the officials of each judo mat area by seat, with their names and IDs, in the seat where they fit and in a chart that lists everyone, in 2D and 3D, for a tablet.",
           lede: "Who sits where on each mat. A name is in its seat when it fits there, and always in the chart of seat, name and ID. Everything stays in this page and its address.",
-          back: "Back to the Kyogijo Stadiums demo", docs: "The judging assignments page of the docs", edit: "Mats and officials", style: "Style", kata: "Kata (five judges)", mats: "Mats", view: "View", focus: "Shows", focusMat: "The whole mat", focusBench: "The judges' bench", chart: "Chart",
+          back: "Back to the Kyogijo Stadiums demo", docs: "The judging assignments page of the docs", edit: "Mats and officials", style: "Style", kata: "Kata (five judges)", shiai: "Shiai (referee and officials)", sidejudges: "Show the side judges' seats too", mats: "Mats", view: "View", focus: "Shows", focusMat: "The whole mat", focusBench: "The judges' bench", chart: "Chart",
           auto: "When a name does not fit", always: "Always", never: "Never", orientation: "Layout", landscape: "Beside (landscape)", portrait: "Under (portrait)", language: "Language", theme: "Theme", light: "Light", dark: "Dark", follow: "Follow the device",
           all: "All mats", label: "Mat name", name: "Name", id: "ID", reset: "Back to the sample names", table: "The same as a table", privacy: "The names here are invented. The page sends nothing and stores nothing: the address holds what you typed, so a copy of the address is a copy of the assignment.",
           formLabel: "Mats and officials",
@@ -97,7 +98,7 @@
         ja: {
           title: "審判員の配置", pageTitle: "競技場 Kyogijo Stadiums：審判員の配置", pageDescription: "どの試合場を誰が担当するか。柔道の各試合場の審判員を席ごとに、氏名とIDとともに表示します。席に収まる氏名は席の中に表示し、一覧表にはすべての氏名を載せます。2Dと3Dに対応し、タブレットでの閲覧を想定しています。",
           lede: "各試合場で誰がどの席に座るかを表示します。氏名は、席に収まる場合は席の中に表示し、席・氏名・IDの一覧表には常に載せます。入力した内容は、このページとURLの中だけに保持されます。",
-          back: "競技場 Kyogijo Stadiums のデモに戻る", docs: "ドキュメントの「審判員の配置」ページ", edit: "試合場と審判員", style: "種目", kata: "形（5人制）", mats: "試合場の数", view: "表示", focus: "表示する範囲", focusMat: "試合場全体", focusBench: "審判員席", chart: "一覧表",
+          back: "競技場 Kyogijo Stadiums のデモに戻る", docs: "ドキュメントの「審判員の配置」ページ", edit: "試合場と審判員", style: "種目", kata: "形（5人制）", shiai: "試合（主審と各係）", sidejudges: "副審の席も表示する", mats: "試合場の数", view: "表示", focus: "表示する範囲", focusMat: "試合場全体", focusBench: "審判員席", chart: "一覧表",
           auto: "氏名が席に収まらないとき", always: "常に表示", never: "表示しない", orientation: "並べ方", landscape: "横に並べる", portrait: "下に並べる", language: "言語", theme: "テーマ", light: "ライト", dark: "ダーク", follow: "端末に合わせる",
           all: "すべての試合場", label: "試合場の名前", name: "氏名", id: "ID", reset: "サンプルの氏名に戻す", table: "表で見る", privacy: "ここに載せている氏名は架空のものです。このページは何も送信せず、何も保存しません。入力した内容はURLに含まれるので、URLをコピーすると配置もコピーされます。",
           formLabel: "試合場と審判員",
@@ -105,12 +106,14 @@
       };
       // Invented names, for the page to open on: the assignment is whatever is typed in, and lives in the address.
       const SAMPLE = [
-        { l: "", o: [["Aiko Mori", "J-1042"], ["Daniel Okafor", "J-0377"], ["Sofia Lindqvist-Hernandez", "J-2210"], ["Kenji Watanabe", "J-0918"], ["Marta Kowalczyk", "J-1555"]] },
-        { l: "", o: [["Li Wei", "J-3001"], ["山田 花子", "J-3077"], ["Priya Raman", "J-0042"], ["Tomás Ferreira", "J-2764"], ["Hannah Brooks", "J-1888"]] },
+        { l: "", o: [["Aiko Mori", "J-1042"], ["Daniel Okafor", "J-0377"], ["Sofia Lindqvist-Hernandez", "J-2210"], ["Kenji Watanabe", "J-0918"], ["Marta Kowalczyk", "J-1555"]], s: [["Hana Ito", "R-204"], ["Sam Cole", "T-011"], ["Ana Ruiz", "T-012"], ["Peter Lindqvist-Haraldsson", "S-003"], ["Kim Park", "J-707"], ["", ""]] },
+        { l: "", o: [["Li Wei", "J-3001"], ["山田 花子", "J-3077"], ["Priya Raman", "J-0042"], ["Tomás Ferreira", "J-2764"], ["Hannah Brooks", "J-1888"]], s: [["Tomás Ferreira", "R-310"], ["Yui Tanaka", "T-021"], ["Omar Haddad", "T-022"], ["Eva Roth", "S-004"], ["", ""], ["", ""]] },
       ];
       const $ = (id) => document.getElementById(id);
       const params = new URLSearchParams(location.search);
-      const SEATS = JUDGING_SEATS.kata;
+      const seatsOf = () => JUDGING_SEATS[$("style").value];
+      const slot = (mat) => ($("style").value === "kata" ? mat.o : mat.s);
+      const pairs = (list, n) => Array.from({ length: n }, (_, i) => { const x = Array.isArray(list) && Array.isArray(list[i]) ? list[i] : []; return [String(x[0] ?? "").slice(0, 120), String(x[1] ?? "").slice(0, 64)]; });
       const state = { mats: [], tab: 1, viewpoint: TURN_PRESET_NAMES.includes(params.get("viewpoint")) ? params.get("viewpoint") : "broadcast" };
       let turn;
       let turnKey = "";
@@ -119,12 +122,12 @@
         try {
           const raw = JSON.parse(params.get("d") ?? "null");
           if (Array.isArray(raw) && raw.length >= 1 && raw.length <= 6) {
-            return raw.map((m) => ({ l: typeof m.l === "string" ? m.l.slice(0, 40) : "", o: SEATS.map((_, i) => { const x = Array.isArray(m.o) && Array.isArray(m.o[i]) ? m.o[i] : []; return [String(x[0] ?? "").slice(0, 120), String(x[1] ?? "").slice(0, 64)]; }) }));
+            return raw.map((m) => ({ l: typeof m.l === "string" ? m.l.slice(0, 40) : "", o: pairs(m.o, 5), s: pairs(m.s, 6) }));
           }
         } catch { /* a damaged address opens on the samples */ }
         return null;
       }
-      const blank = () => ({ l: "", o: SEATS.map(() => ["", ""]) });
+      const blank = () => ({ l: "", o: pairs([], 5), s: pairs([], 6) });
       function samples(count) { return Array.from({ length: count }, (_, i) => structuredClone(SAMPLE[i] ?? blank())); }
       state.mats = readMats() ?? samples(2);
       const wantTab = params.has("mat") ? Number(params.get("mat")) : 1;
@@ -132,6 +135,8 @@
 
       function words() { return WORDS[$("language").value]; }
       function setSelect(id, value, allowed) { if (allowed.includes(value)) $(id).value = value; }
+      setSelect("style", params.get("style"), ["kata", "shiai"]);
+      $("sidejudges").checked = params.get("sidejudges") === "1";
       setSelect("view", params.get("view"), ["flat", "3d"]);
       setSelect("focus", params.get("focus"), ["mat", "bench"]);
       setSelect("chart", params.get("chart"), ["auto", "always", "never"]);
@@ -143,8 +148,8 @@
       function labelPage() {
         const w = words();
         const language = $("language").value;
-        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["back", "back"], ["docs", "docs"], ["l-edit", "edit"], ["l-style", "style"], ["l-mats", "mats"], ["l-view", "view"], ["l-focus", "focus"], ["l-chart", "chart"], ["l-orientation", "orientation"], ["l-language", "language"], ["l-theme", "theme"], ["reset", "reset"], ["l-table", "table"], ["privacy", "privacy"]]) $(id).textContent = w[key];
-        const names = { style: { kata: "kata" }, focus: { mat: "focusMat", bench: "focusBench" }, chart: { auto: "auto", always: "always", never: "never" }, orientation: { auto: "follow", landscape: "landscape", portrait: "portrait" }, theme: { auto: "follow", light: "light", dark: "dark" } };
+        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["back", "back"], ["docs", "docs"], ["l-edit", "edit"], ["l-style", "style"], ["l-sidejudges", "sidejudges"], ["l-mats", "mats"], ["l-view", "view"], ["l-focus", "focus"], ["l-chart", "chart"], ["l-orientation", "orientation"], ["l-language", "language"], ["l-theme", "theme"], ["reset", "reset"], ["l-table", "table"], ["privacy", "privacy"]]) $(id).textContent = w[key];
+        const names = { style: { kata: "kata", shiai: "shiai" }, focus: { mat: "focusMat", bench: "focusBench" }, chart: { auto: "auto", always: "always", never: "never" }, orientation: { auto: "follow", landscape: "landscape", portrait: "portrait" }, theme: { auto: "follow", light: "light", dark: "dark" } };
         for (const [select, map] of Object.entries(names)) for (const option of $(select).options) option.textContent = w[map[option.value]];
         document.documentElement.lang = language;
         document.title = w.pageTitle;
@@ -175,7 +180,7 @@
           input.autocomplete = "off";
           label.append(text, input);
           set.append(label);
-          SEATS.forEach((seat, si) => {
+          seatsOf().forEach((seat, si) => {
             const row = document.createElement("div");
             row.className = "seat";
             const name = document.createElement("span");
@@ -183,7 +188,7 @@
             const nameInput = document.createElement("input");
             nameInput.type = "text";
             nameInput.maxLength = 120;
-            nameInput.value = mat.o[si][0];
+            nameInput.value = slot(mat)[si][0];
             nameInput.setAttribute("aria-label", `${legend.textContent}, ${seat.label[language]}, ${w.name}`);
             nameInput.dataset.mat = String(mi);
             nameInput.dataset.seat = String(si);
@@ -192,7 +197,7 @@
             const idInput = document.createElement("input");
             idInput.type = "text";
             idInput.maxLength = 64;
-            idInput.value = mat.o[si][1];
+            idInput.value = slot(mat)[si][1];
             idInput.setAttribute("aria-label", `${legend.textContent}, ${seat.label[language]}, ${w.id}`);
             idInput.dataset.mat = String(mi);
             idInput.dataset.seat = String(si);
@@ -228,8 +233,9 @@
         const theme = $("theme").value;
         const portraitWanted = $("orientation").value === "auto" ? window.innerWidth < window.innerHeight * 1.05 : $("orientation").value === "portrait";
         return {
-          style: "kata",
-          mats: state.mats.map((m) => ({ ...(m.l === "" ? {} : { label: m.l }), officials: m.o.flatMap(([name, id], i) => (name === "" && id === "" ? [] : [{ seat: i + 1, name, id }])) })),
+          style: $("style").value,
+          sideJudges: $("sidejudges").checked,
+          mats: state.mats.map((m) => ({ ...(m.l === "" ? {} : { label: m.l }), officials: slot(m).flatMap(([name, id], i) => (name === "" && id === "" ? [] : [{ seat: i + 1, name, id }])) })),
           ...(state.tab > 0 ? { mat: state.tab } : {}),
           focus: $("focus").value,
           chart: $("chart").value,
@@ -242,7 +248,9 @@
       function syncUrl() {
         const next = new URLSearchParams();
         const empty = JSON.stringify(state.mats) === JSON.stringify(samples(state.mats.length));
-        if (!empty) next.set("d", JSON.stringify(state.mats.map((m) => ({ l: m.l, o: m.o }))));
+        if (!empty) next.set("d", JSON.stringify(state.mats.map((m) => ({ l: m.l, o: m.o, s: m.s }))));
+        if ($("style").value !== "kata") next.set("style", $("style").value);
+        if ($("sidejudges").checked) next.set("sidejudges", "1");
         if (state.tab !== 1) next.set("mat", String(state.tab));
         if ($("view").value === "3d") {
           next.set("view", "3d");
@@ -297,7 +305,7 @@
         if (!(t instanceof HTMLInputElement)) return;
         const mat = state.mats[Number(t.dataset.mat)];
         if (t.dataset.field === "label") mat.l = t.value;
-        else mat.o[Number(t.dataset.seat)][t.dataset.field === "name" ? 0 : 1] = t.value;
+        else slot(mat)[Number(t.dataset.seat)][t.dataset.field === "name" ? 0 : 1] = t.value;
         if (t.dataset.field === "label") buildTabs();
         draw();
       });
@@ -313,11 +321,13 @@
       });
       $("reset").addEventListener("click", () => { state.mats = samples(state.mats.length); buildTabs(); buildOfficials(); draw(); });
       $("language").addEventListener("change", () => { labelPage(); buildTabs(); buildOfficials(); draw(); });
-      for (const id of ["view", "focus", "chart", "orientation", "theme"]) $(id).addEventListener("change", draw);
+      $("style").addEventListener("change", () => { $("side-row").hidden = $("style").value === "kata"; buildOfficials(); draw(); });
+      for (const id of ["view", "focus", "chart", "orientation", "theme", "sidejudges"]) $(id).addEventListener("change", draw);
       // The layout follows the screen: a tablet turned on its side puts the chart beside the plan, held upright under it.
       let resizing = 0;
       window.addEventListener("resize", () => { cancelAnimationFrame(resizing); resizing = requestAnimationFrame(() => { if ($("orientation").value === "auto") draw(); }); });
       labelPage();
+      $("side-row").hidden = $("style").value === "kata";
       buildTabs();
       buildOfficials();
       draw();

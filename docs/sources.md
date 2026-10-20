@@ -659,7 +659,10 @@ Who sits where at a judo mat ([the page](./judging.md)). The seats are the kata 
 | Kata: the judges | five, on the shomen side about 1.25 m apart, the central judge at the centre of the area; no referee | SOR 21 January 2026, the judges' article; Kata Commission Tournament Handbook 2024 |
 | The numbering of the seats | **ours**: 1 to 5 from the left of the plan with the shomen at the top, so the central judge is 3; no rule numbers the judges | |
 | The cards, the badges, the chart, the heights in 3D (a table 75 cm, a chair 45 cm, a card 95 cm), the smallest type | **ours**: a name card is as wide as the seats are apart; the type is no smaller than 1.2 % of the picture's width (0.19 m in 3D) | |
-| Shiai (contest) seats | not yet: the next release | |
+| Shiai: the referee | on the tatami at its centre, 2 m back from the line the athletes start on, facing the technical table | SOR 21 January 2026, Refereeing Rules Article 9 (page 144) and Article 2 (page 128) |
+| Shiai: the technical table | two experienced technical officials a tatami for timing and scoring; the IJF Referee Supervisor(s) on the technical table with a radio to the referee and the CARE replay system; referees not officiating seated at it | the Refereeing Rules' opening article (page 128) and Article 3 |
+| Shiai: side judges | for non-IJF events with no CARE system, two side judges and a majority of three; no place is given | Article 13, 5 (page 156) |
+| Shiai: the seats' places | **ours**: which chair is whose (the timekeeper, the scorekeeper, the supervisor, 1 m apart), the side judges at two opposite corners 2 m out from the contest area, the cards | |
 
 ## Surface units
 

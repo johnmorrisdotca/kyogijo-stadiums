@@ -1,6 +1,6 @@
 # Judging assignments
 
-Who judges where. An organiser sets how many mat areas a judo tournament has, the style each is judged in and, for each mat, who sits in which seat, with a name and an ID. `drawJudging` draws that as one picture for a tablet that the judges read live: each mat's area with a badge at every judge's seat, the name and ID in the seat where they fit, and beside it a chart of mat, seat, name and ID whose rows grow until every name and ID is whole. The same assignment is also a [3D view](#in-3d) that turns.
+Who judges where. An organiser sets how many mat areas a judo tournament has, the style each is officiated in (`kata` or `shiai`, the contest) and, for each mat, who sits in which seat, with a name and an ID. `drawJudging` draws that as one picture for a tablet that the judges read live: each mat's area with a badge at every judge's seat, the name and ID in the seat where they fit, and beside it a chart of mat, seat, name and ID whose rows grow until every name and ID is whole. The same assignment is also a [3D view](#in-3d) that turns.
 
 ```ts
 import { drawJudging, judgingChart, judgingTable } from "@johnmorrisdotca/kyogijo-stadiums/judging";
@@ -39,7 +39,22 @@ A kata area is judged by five judges on the shomen side, about 1.25 m apart, the
 | `judge-4` | 4 | Judge 4 | |
 | `judge-5` | 5 | Judge 5 | right of the table |
 
-The rules do not number the judges: **the numbers are ours**, counted from the left of the plan with the shomen at the top. `seat` takes the number (`3`, `"3"`), the key (`"judge-3"`, `"Judge 3"`) or `"central"`, and nothing else: another seat is a `RangeError` that names the seats there are. The table's size (0.8 m deep and as long as the seats) and the chairs (0.5 m) are ours too. A tournament's other officials (the table's scorer and timekeeper) and the shiai style, a referee and judges by the IJF's refereeing positions, are not here yet: shiai is the next release.
+The rules do not number the judges: **the numbers are ours**, counted from the left of the plan with the shomen at the top. `seat` takes the number (`3`, `"3"`), the key (`"judge-3"`, `"Judge 3"`) or `"central"`, and nothing else: another seat is a `RangeError` that names the seats there are. The table's size (0.8 m deep and as long as the seats) and the chairs (0.5 m) are ours too.
+
+## The seats of a contest
+
+`style: "shiai"` is a contest area. The Sport and Organisation Rules of 21 January 2026 give it a referee on the tatami, two technical officials for timing and scoring, the IJF Referee Supervisor(s) on the technical table, and, for an event with no CARE system, two side judges:
+
+| Seat | Number | Role | Where, and the source |
+| --- | --- | --- | --- |
+| `referee` | 1 | Referee | on the tatami at its centre, 2 m back from the line the athletes start on, facing the technical table (Article 9; the Refereeing Rules' Article 2) |
+| `timekeeper` | 2 | Timekeeper | at the technical table, one of the two technical officials a tatami should have for timing and scoring (the Refereeing Rules' opening article, 2026 page 128) |
+| `scorekeeper` | 3 | Scorekeeper | the other, at the table |
+| `supervisor` | 4 | Referee supervisor | on the technical table, with the CARE replay system and a radio to the referee (the same article) |
+| `side-judge-1`, `side-judge-2` | 5, 6 | Side judge 1, 2 | for non-IJF events with no CARE system, "two (2) side judges can be used and a majority of three rule applied" (Article 13, 5); drawn only with `sideJudges: true` or when a mat names them |
+
+**What is ours:** the numbers; which of the three chairs at the table is whose (timekeeper, scorekeeper, supervisor, from the left, 1 m apart); the place of the side judges (the Rules give none: two opposite corners of the contest area, 2 m out from them); the chairs (0.5 m) and the table (3 m by 0.8 m); and the cards' sizes. Referees who are not officiating are "seated at the technical table" (Article 3) and are not given seats here, since how many there are is the event's. The referee and the side judges are on the mat and its corners, so the close-up of the bench (`focus: "bench"`) shows the table's three only and the others' names are in the chart; in 3D the referee's and a side judge's cards stand on posts.
+
 
 ## Names in the seats, and the chart
 
@@ -53,9 +68,10 @@ A name goes in its seat when it fits there, and the chart is for the rest:
 
 | Option | What it does |
 | --- | --- |
-| `style` | `"kata"`: five judges. |
+| `style` | `"kata"` (five judges) or `"shiai"` (a referee and the technical table). |
 | `mats` | The mat areas, 1 to 6. Each `{ label?, officials? }`; `label` is `Mat 1`, `Mat 2` (`第1試合場`, `第2試合場` in Japanese) when missing, at most 40 characters. |
 | `officials` of a mat | Each `{ seat, name?, id? }`: the seat, a name (at most 120 characters) and an ID (text or a number, at most 64 characters). A seat named twice is an error; a seat not named is not assigned. |
+| `sideJudges` | Shiai: draw the two side judges' seats too (off by default; a side judge a mat names is drawn anyway, on every mat). |
 | `mat` | Draws one mat alone (counting from 1): one tab of a page that has a tab for each mat. All of them, one under another, when missing. |
 | `chart` | `auto`, `always` or `never`. |
 | `orientation` | `landscape` (the default) puts the chart beside the plan, `portrait` under it. |
