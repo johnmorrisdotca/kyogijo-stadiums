@@ -7,6 +7,21 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.31.0] - 2026-10-20
+
+### Added
+
+- **Seattle's stadiums** ([the real stadiums](./docs/stadiums.md), `stadium: "lumen-field"` and `park: "t-mobile-park"` with `crowd: { real: true }`): **Lumen Field** for football (`sport: "nfl"`, 68,740 seats) and soccer (37,722), and **T-Mobile Park** for baseball (`sport: "mlb"`, 47,368), each in the outline of its building as OpenStreetMap maps it, with the roof and a plausible bowl of the seats the sources give. A soccer drawing whose `ground` is `lumen-field` needs no `stadium`; any other sport, a `league` of your own and `crowd: { real: false }` are drawn as before.
+- **Lumen Field.** OpenStreetMap maps both its pitches inside the building, lying north and south, so the field's orientation is mapped and not inferred. One bowl of three levels holds the 68,740 seats; a configuration opens its seats from the lowest bowl up (`bowlSeats`, `StadiumPlan.open`), so the soccer pitch closes the upper bowl and part of the middle one, drawn empty. Its roof is the article's canopy over 70 percent of the seats, drawn from the two roof parts OpenStreetMap maps (heights 36 metres, rise 10): strips of triangles from the low edge over the field's side to the high edge over the back of the stands, the bowl lowered to stand under it, the walls to just over the top row, the field and the ends open (`RealShell.roof: "canopy"`, `canopies`).
+- **T-Mobile Park, a ballpark.** The usual ballpark stands (`parkLayout`) with each band as deep as its seats need (`planPark`): the Main Level's 20,521 seats the lower bowl, the Club, Suite and View levels' 22,075 the upper, the bleachers' 3,666, all from the article's layout, held to within two percent of 47,368. OpenStreetMap maps the infield but not home plate, so the way out to centre field is the one of the four the infield allows where the park's fence and the stands behind it lie inside the building's outline: 49.4 degrees, north-east (the build refuses to choose where the outline does not decide). The roof is the article's retractable one in four sections, 217 to 269 feet over the field, far over the 21-metre walls: closed, a band to a crown with the fabric across it; open (`roofOpen`), the sections rest over the east side, over the railway where the article says they rest (`RealShell.roof: "panels"`, `panels`, `wall`).
+- **The district takes any of them** (`districtMember`, `planDistrict`): a ballpark's key is a venue (`t-mobile-park`, its one configuration `mlb`), its drawing turned about home plate by the heading of the way out to centre field (`stadiumFrameHeading`), and a stadium with several configurations takes the one named (`lumen-field:soccer`). Seattle is two presets of the demo's district page: `["t-mobile-park", "lumen-field"]` as neighbours (459 metres apart, Lumen Field to the north) and, with `mode: "city"`, the same two and `climate-pledge-arena` (3.4 to 3.8 kilometres off) at their real distances, with a grid of kilometres and a name beside each.
+- **Data, kept apart as before.** `pnpm stadiums:fetch` now takes the building, the pitches, the infield and the roof parts a stadium names (`osm` in `scripts/stadiums.data.json`) where OpenStreetMap does not tag them with the Wikidata item, joins the outer ways of a relation into one ring, and puts a stadium added later beside the ones already archived; `pnpm stadiums` makes the data files and refuses a figure the sources do not give (a tier's seats not in the article, pitches that do not lie the same way, an outline that does not choose the way out to centre field). The raw answers are in `data-sources/stadiums/2026-10-20/`.
+- **The demo's stadiums page** has the three stadiums as tabs and each one's configurations, with the facts of its roof; its district page has the Seattle presets. **The docs** have a section for each stadium, a Seattle section in [the district page](./docs/district.md) and items in [the gallery](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-stadiums.html).
+
+### Fixed
+
+- The 3D view gave two bands of a ballpark's bleachers (the left and the right) the same plane ids (`bleachers-front-0` for both); a second strip's planes now have an id of their own.
+
 ## [0.30.1] - 2026-10-20
 
 ### Added

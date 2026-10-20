@@ -55,7 +55,7 @@ The same keys give a second district, of three different venues: `["t-mobile-par
 import { planDistrict } from "@johnmorrisdotca/kyogijo-stadiums/district";
 
 const sodo = planDistrict({ venues: ["t-mobile-park", "lumen-field"] });
-console.log(sodo.mode, Math.round(sodo.between[0].metres), sodo.members[0].angle);
+console.log(sodo.mode, Math.round(sodo.between[0].metres), sodo.members[0].angle.toFixed(1));
 // neighbours 459 49.4
 const city = planDistrict({ venues: ["t-mobile-park", "lumen-field", "climate-pledge-arena"], mode: "city" });
 console.log(city.mode, city.between.map((b) => Math.round(b.metres)).join(" "));
