@@ -79,6 +79,23 @@ await takePictures({
         await page.locator("#stage .ky-turn-view").blur();
       },
     },
+    // The judo kata area (0.14.0): the IJF's kata area with its three tapes, the judges on the shomen side and the coach's chair, as the demo draws it.
+    { subject: "judo-kata", views: ["desk"], url: address("sport=judo&league=ijf-kata&budoofficials=1&size=surface&orientation=landscape"), ready: READY, target: stage, prepare: behind("spotlight") },
+    // The same area close up: the viewBox is narrowed to the line across the centre, so the three tapes (5 cm by 50 cm, 3 m apart) can be seen.
+    {
+      subject: "judo-kata-tapes",
+      views: ["desk"],
+      url: address("sport=judo&league=ijf-kata&size=surface&orientation=landscape"),
+      ready: READY,
+      target: stage,
+      prepare: behind("spotlight", undefined, (page) =>
+        page.evaluate(() => {
+          const svg = document.querySelector('[data-testid="stage"] svg.kyogijo');
+          const k = 3.28084;
+          svg.setAttribute("viewBox", `${(7 - 5.5) * k} ${(7 - 1.6) * k} ${11 * k} ${3.2 * k}`);
+        }),
+      ),
+    },
     // The strips for a list of games, on midnight. They are a list and not a surface, so the background is laid behind the list itself, by the same module and in the same way as behind the felt.
     {
       subject: "badges",

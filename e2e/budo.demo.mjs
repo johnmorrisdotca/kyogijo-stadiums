@@ -55,3 +55,14 @@ test("the Kodokan is on the atlas with its floors, and tries its main dojo in th
   expect(await svg(page).evaluate((node) => node.querySelectorAll(".ky-bud-banner").length)).toBe(1);
   expect(errors).toEqual([]);
 });
+
+test("the judo kata area is in the playground: the league in the address draws its three tapes and the judges' seats", async ({ page }) => {
+  const errors = await open(page, "?sport=judo&league=ijf-kata&budoofficials=1&size=surface&lang=en&help=off");
+  const count = (cls) => svg(page).evaluate((node, c) => node.querySelectorAll(`.${c}`).length, cls);
+  // The centre tape and the two starting tapes, all white; the five judges' seats and the coach's chair; no blue tape.
+  expect(await count("ky-bud-white-fill")).toBe(3);
+  expect(await count("ky-bud-blue-fill")).toBe(0);
+  expect(await count("ky-bud-seat")).toBe(6);
+  expect(await svg(page).getAttribute("data-league")).toBe("ijf-kata");
+  expect(errors).toEqual([]);
+});

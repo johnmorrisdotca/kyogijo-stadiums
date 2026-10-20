@@ -64,11 +64,20 @@ export const isBudoSport = (sport: string): sport is BudoKind => (BUDO_SPORTS as
 
 const OWN = { judo: JUDO_LEAGUES, karate: KARATE_LEAGUES, kendo: KENDO_LEAGUES, sumo: SUMO_LEAGUES, kyudo: KYUDO_LEAGUES, dojo: DOJO_LEAGUES } as const;
 
+/** What `budo.style` asks of a judo area: true for a kata area, false for a contest area, undefined for neither said. @throws TypeError for a value that is not `shiai` or `kata`. */
+function kataOf(style: unknown): boolean | undefined {
+  if (style === undefined) return undefined;
+  if (style !== "shiai" && style !== "kata") throw new TypeError(`budo.style is "shiai" or "kata"`);
+  return style === "kata";
+}
+
 /** The league a set of options asks for: a rulebook's, else the sport's own. */
 export function budoLeague(o: Pick<SurfaceOptions, "sport" | "league" | "budo" | "dojo">): BudoLeague {
   const sport = o.sport as BudoKind;
   // `budo.range` names a kyūdōjō's kind, and `dojo.standard` a dojo's mats, where `league` does not.
-  const asked = o.league === undefined || o.league === "" ? (sport === "kyudo" ? o.budo?.range : sport === "dojo" ? dojoSpecOf(o.dojo).standard : undefined) : o.league;
+  const kata = sport === "judo" ? kataOf(o.budo?.style) : undefined;
+  if (kata !== undefined && o.league !== undefined && o.league !== "" && (o.league === "ijf-kata") !== kata) throw new Error(`budo.style "${kata ? "kata" : "shiai"}" does not go with league "${o.league}": a kata area is the league "ijf-kata"`);
+  const asked = o.league === undefined || o.league === "" ? (sport === "kyudo" ? o.budo?.range : sport === "dojo" ? dojoSpecOf(o.dojo).standard : kata ? "ijf-kata" : undefined) : o.league;
   if (asked !== undefined && asked !== "") {
     const found = (OWN[sport] as readonly BudoLeague[]).find((l) => l.id === asked);
     if (found === undefined) throw new Error(`Unknown league "${String(asked)}" for "${sport}": use one of ${OWN[sport].map((l) => l.id).join(", ")}`);

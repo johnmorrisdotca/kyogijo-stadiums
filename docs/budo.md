@@ -32,7 +32,7 @@ The options are `budo` (`BudoStyle`) for judo, karate, kendo, sumo and kyūdō, 
 | The platform | at the Games, of wood, 1 m wider and longer than the tatami, the exterior safety area 4 m | 8.7 |
 | The start tape | a blue and a white tape of 10 cm by 50 cm at the centre of the contest area, 4 m apart, the blue to the referee's right (the 2026 version no longer marks them) | SOR 2020, 18.1 |
 | The referee | at the centre, 2 m back from the line the contestants start on, facing the technical table | Article 9 |
-| The kata area | 10 m for the World Championships, 8 m for the other events; a safety area of at least 2 m; two white tapes of 5 cm by 50 cm, 3 m from the centre either side | B1.8 (`league: "ijf-kata"`) |
+| The kata area | 10 m for the World Championships, 8 m for the other events; a safety area of at least 2 m between and round the areas; two white tapes of 5 cm by 50 cm, 3 m from the centre either side, and a tape of the same colour at the centre; five judges on the shomen side, 1.25 m apart | B1.8 and the judges' article (`budo.style: "kata"`, or `league: "ijf-kata"`; [below](#the-kata-area)) |
 
 The tatami's colours are the IJF's yellow for the contest area and red for the safety area, which the rule does not say which is which; the other looks (`yellow-blue`, `blue-grey`, `green-beige`, `green-red`, `black-red`) are **ours**, not the rulebook's: the rule names only the two official colours and lets an organiser propose others. The AJJF's own guidebook shows a yellow contest area in a safety area of another colour and recommends the IJF's.
 
@@ -47,6 +47,36 @@ console.log(plan.judo?.contests.length, plan.judo?.gap, plan.box.x1, plan.box.y1
 const ajjf = budoPlan({ sport: "judo", league: "ajjf" });
 console.log(ajjf.judo!.contests[0].x1 - ajjf.judo!.contests[0].x0, ajjf.judo!.danger);
 // 8.19 0.91
+```
+
+### The kata area
+
+`budo: { style: "kata" }` (or `league: "ijf-kata"`, which says the same) draws the IJF's kata area, from the Sport and Organisation Rules of 21 January 2026 (B1.8, the judges' article and B1.10), the Kata Commission's Tournament Handbook of 2024 and its Criteria for the Evaluation of January 2025. `style: "shiai"` is the contest area, and the default.
+
+![The IJF's kata area: a yellow area in a red safety area of 2 m with three white tapes across its centre, and the five judges' seats behind a table on the shomen side at the top](./images/judo-kata-desk-light.webp)
+
+Close up, the line across the centre: the centre tape and the two starting tapes 3 m from it, each 5 cm by 50 cm.
+
+![The line across the middle of a kata area: three short white tapes 3 m apart on yellow mats](./images/judo-kata-tapes-desk-light.webp)
+
+| What | Figure | Source |
+| --- | --- | --- |
+| The area | 10 m by 10 m for the World Championships (drawn), 8 m by 8 m for other events; the Kata Commission Chair may change it | B1.8 |
+| The safety area | at least 2 m between the areas and round them (drawn: 2 m) | B1.8; Handbook: "a common safety area of minimum 2 meters" |
+| The starting places | two white tapes of about 5 cm by 50 cm, 3 m from the centre either side, on the line across the area (the "6 m line" of the Criteria) | B1.8 |
+| The centre | a tape of the same colour and size | B1.8 |
+| The judges | five, on the shomen side (the top of the drawing), about 1.25 m apart, the central judge at the centre of the area | the judges' article |
+| The coach's chair | at the centre on the side opposite the shomen; the pair enters and leaves there | B1.10; the judges' article |
+| No referee | the pair is judged by the five judges, so no referee's place is marked | |
+
+`budo.officials` draws the judges' table with its five seats and the coach's chair; with several areas each area of the top row has a panel and each of the bottom row a chair. The rules do not say which of the two tapes is tori's and which is uke's, nor which way a tape lies, so the drawing assigns neither (the tapes lie across the line between them, as the contest tapes do: ours). The table (0.8 m deep and as long as the seats), the chairs (0.5 m) and their distance from the free zone are ours as well. Where the Handbook reads "6 m apart from the centre tape on both sides" it is taken as the same 6 m line as the SOR's "3 m apart from the centre", because the Criteria's closing ceremony is "behind the 6 m line" and an 8 m area is no wider than that. In the 3D view the area, its tapes and the seats are drawn like any other judo area's. Light and dark, English and Japanese, and as an area of a [tournament layout](./multi.md) are as for the contest area (a layout's judo areas are contest areas: no source gives an event that mixes the two).
+
+```ts
+import { budoPlan } from "@johnmorrisdotca/kyogijo-stadiums/budo";
+
+const plan = budoPlan({ sport: "judo", budo: { style: "kata", officials: true } });
+console.log(plan.league, plan.judo?.gap, plan.judo?.judges.seats.length);
+// ijf-kata 2 5
 ```
 
 ## Karate

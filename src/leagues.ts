@@ -131,9 +131,11 @@ const figuresUnit = (league: League): Unit => league.figuresUnit ?? league.unit;
  * // FIBA basketball court cfl
  * ```
  */
-export function chooseLeague(o: Pick<SurfaceOptions, "sport" | "league">): { sport: Sport; league: League | undefined } {
-  if (o.league === undefined || o.league === "") return { sport: o.sport, league: undefined };
-  const id = String(o.league);
+export function chooseLeague(o: Pick<SurfaceOptions, "sport" | "league"> & Partial<Pick<SurfaceOptions, "budo">>): { sport: Sport; league: League | undefined } {
+  // A judo area asked for in the kata style is the IJF's kata area when no league is named (`budo.style`).
+  const asked = (o.league === undefined || o.league === "") && o.sport === "judo" && o.budo?.style === "kata" ? "ijf-kata" : o.league;
+  if (asked === undefined || asked === "") return { sport: o.sport, league: undefined };
+  const id = String(asked);
   const family = FAMILY_OF[o.sport];
   if (family === undefined) throw new Error(`"${String(o.sport)}" has no leagues: a soccer pitch is chosen with pitch`);
   const found = leagueById(o.sport, id);

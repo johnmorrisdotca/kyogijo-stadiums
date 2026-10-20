@@ -3,7 +3,7 @@
 // the origin at the top left of the tatami: x along the tatami, y across it, the technical table at the top. Nothing here draws SVG.
 import type { JudoFigures } from "../leagues/budo.ts";
 import { boxD, rectArea, tapeBar, within } from "./kit.ts";
-import { emptyParts, grow, union, type MBox, type MMark, type Parts } from "./parts.ts";
+import { boxOf, emptyParts, grow, union, type MBox, type MMark, type Parts } from "./parts.ts";
 import { lay, matCount, seams, tatamiAreas, tint, type MatSize, type Piece } from "./tatami.ts";
 import type { BudoStyle } from "./types.ts";
 
@@ -43,6 +43,8 @@ export interface JudoLayout {
   marks: MMark[];
   /** The width of the red band of a danger zone, or 0. */
   danger: number;
+  /** A kata area's officials: the judges' tables (ours: the length of the seats), the five judges' seats of each and the coach's chairs, each as the rule places them; empty for a contest area. */
+  judges: { tables: MBox[]; seats: MBox[]; coaches: MBox[] };
 }
 
 /** The mats of a `tatami` option, or the league's own when none. @throws Error for a name that is not a size of mat. */
@@ -79,6 +81,9 @@ export const safetyOf = (asked: number | undefined, fig: JudoFigures): number =>
 /** The technical table: 3 m by 0.8 m (ours: the rules give no size), centred on its contest area and set well outside the free zone. */
 const TABLE = { length: 3, depth: 0.8, clear: 1.5 };
 
+/** A kata area's chairs: 0.5 m square (ours: no rule gives a chair's size), the judges' table 0.8 m deep (ours) and the gap between a table and the free zone round the area, as for the technical table. */
+const CHAIR = 0.5;
+
 /** The plan of the competition area the options ask for. */
 export function judoParts(o: JudoOptions): JudoLayout {
   const { fig, contest: c, safety: s, across, down, mat } = o;
@@ -112,9 +117,31 @@ export function judoParts(o: JudoOptions): JudoLayout {
       parts.shapes.push(tapeBar(`start-${k + 1}-left`, "start-left", `ky-bud-${o.tape[1]}-fill`, at(cx - m.fromCentre)));
     });
   }
+  // A kata area's centre: a strip of tape of the same colour as the two starting tapes (SOR B1.8).
+  if (o.start && fig.centre !== null) {
+    const m = fig.centre;
+    contests.forEach((b, k) => parts.shapes.push(tapeBar(`centre-${k + 1}`, "centre-tape", "ky-bud-white-fill", boxOf((b.x0 + b.x1) / 2, (b.y0 + b.y1) / 2, m.width, m.length))));
+  }
   // The technical table of each area, outside the free zone, at the top.
   const desks: MBox[] = [];
-  if (o.officials) {
+  const judges: JudoLayout["judges"] = { tables: [], seats: [], coaches: [] };
+  if (o.officials && fig.panel !== null) {
+    // A kata area has no technical table: the five judges sit on the shomen side (the top), `apart` metres from each other, the central one at the centre of the area, and the coach's chair is at the centre on the
+    // opposite side (SOR, Kata judges and B1.10). The table and the chairs are drawn outside the free zone.
+    const { count, apart } = fig.panel;
+    const lastRow = contests.filter((_, k) => k >= (down - 1) * across);
+    for (const b of contests.filter((_, k) => k < across)) {
+      const cx = (b.x0 + b.x1) / 2;
+      const y1 = free.y0 - TABLE.clear;
+      const table = { x0: cx - (count * apart) / 2, y0: y1 - TABLE.depth, x1: cx + (count * apart) / 2, y1 };
+      judges.tables.push(table);
+      for (let i = 0; i < count; i += 1) judges.seats.push(boxOf(cx + (i - (count - 1) / 2) * apart, table.y0 - 0.1 - CHAIR / 2, CHAIR, CHAIR));
+    }
+    for (const b of lastRow) judges.coaches.push(boxOf((b.x0 + b.x1) / 2, free.y1 + TABLE.clear + CHAIR / 2, CHAIR, CHAIR));
+    judges.tables.forEach((d, k) => parts.areas.push(rectArea(`judges-table-${k + 1}`, "officials", "ky-bud-desk", d)));
+    judges.seats.forEach((d, k) => parts.areas.push(rectArea(`judge-${k + 1}`, "judges-seat", "ky-bud-seat", d)));
+    judges.coaches.forEach((d, k) => parts.areas.push(rectArea(`coach-${k + 1}`, "coach-chair", "ky-bud-seat", d)));
+  } else if (o.officials) {
     for (const b of contests.filter((_, k) => k < across)) {
       const cx = (b.x0 + b.x1) / 2;
       const y1 = free.y0 - TABLE.clear;
@@ -130,13 +157,18 @@ export function judoParts(o: JudoOptions): JudoLayout {
   if (o.start && fig.marks !== null) marks.push({ id: "start-mark", x: fx + fig.marks.fromCentre, y: (first.y0 + first.y1) / 2, side: "bottom" });
   if (across > 1) marks.push({ id: "common-safe-zone", x: first.x1 + gap / 2, y: (first.y0 + first.y1) / 2, side: "bottom" });
   marks.push({ id: "free-zone", x: width * 0.12, y: free.y0 + fig.freeZone / 2, side: "top" });
-  // The referee stands at the middle of the tatami, 2 m back from the line the contestants start on, facing the table (Article 9).
-  marks.push({ id: "referee-position", x: fx, y: (first.y0 + first.y1) / 2 + 2, side: "bottom" });
+  // The referee stands at the middle of the tatami, 2 m back from the line the contestants start on, facing the table (Article 9). A kata area has none.
+  if (!fig.kata) marks.push({ id: "referee-position", x: fx, y: (first.y0 + first.y1) / 2 + 2, side: "bottom" });
+  if (fig.centre !== null && o.start) marks.push({ id: "centre-tape", x: fx, y: (first.y0 + first.y1) / 2, side: "top" });
+  // The pair enters and leaves the mat on the side opposite the shomen (SOR, Kata judges): the bottom of the plan.
+  if (fig.kata) marks.push({ id: "kata-entry", x: first.x0 + c * 0.2, y: first.y1 - 0.5, side: "bottom" });
   marks.push({ id: "tatami", x: first.x0 + 0.5 * c, y: first.y0 + c * 0.7, side: "bottom" });
   if (platform !== undefined) marks.push({ id: "platform", x: width * 0.88, y: platform.y1 - fig.platform / 2, side: "bottom" });
   if (desks.length > 0) marks.push({ id: "technical-table", x: (desks[0].x0 + desks[0].x1) / 2, y: desks[0].y0 + TABLE.depth / 2, side: "top" });
-  const extent = union([free, ...desks.map((d) => grow(d, 0.3))]);
-  return { parts, tatami, extent, contests, gap, pieces, mat, marks, danger: band };
+  if (judges.tables.length > 0) marks.push({ id: "kata-judges", x: (judges.tables[0].x0 + judges.tables[0].x1) / 2, y: judges.tables[0].y0 + TABLE.depth / 2, side: "top" });
+  if (judges.coaches.length > 0) marks.push({ id: "coach-chair", x: (judges.coaches[0].x0 + judges.coaches[0].x1) / 2, y: (judges.coaches[0].y0 + judges.coaches[0].y1) / 2, side: "bottom" });
+  const extent = union([free, ...desks.map((d) => grow(d, 0.3)), ...[...judges.tables, ...judges.seats, ...judges.coaches].map((d) => grow(d, 0.3))]);
+  return { parts, tatami, extent, contests, gap, pieces, mat, marks, danger: band, judges };
 }
 
 /** The number of mats of the competition area: a half mat counts a half. */

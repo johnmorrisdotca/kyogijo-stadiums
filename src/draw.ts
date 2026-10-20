@@ -1078,7 +1078,7 @@ function drawnKyogijo(o: SurfaceOptions | ScoreOptions): string {
       role: "img",
       "aria-labelledby": `${titleId} ${descId}`,
       "data-sport": sport,
-      "data-league": o.league === undefined || o.league === "" ? undefined : o.league,
+      "data-league": o.league === undefined || o.league === "" ? (chooseLeague(o).league?.id ?? undefined) : o.league,
       "data-range": isScore(o) && sport === "curling" ? undefined : rangeLabel(o),
       "data-event": o.host !== undefined && typeof o.event === "string" ? safeClass(o.event) : undefined,
       "data-look": look ?? budoLook,

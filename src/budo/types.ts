@@ -18,6 +18,8 @@ export interface BudoStyle {
   areas?: number | { across: number; down: number };
   /** Judo, karate and kendo: the arena floor under the surface. `budokan` is the Nippon Budokan's, an octagon 55 m across the flats (the Budokan's leaflet), with the surface in the middle; it must fit. */
   hall?: "budokan";
+  /** Judo: `shiai` (the contest area, the default) or `kata` (the IJF's kata area, `league: "ijf-kata"`: a centre tape, two white tapes 3 m from it either side, a safety area of 2 m; with `officials`, the five judges' seats on the shomen side and the coach's chair opposite). */
+  style?: "shiai" | "kata";
   /** Judo: the contest area's side, 8 m to 10 m. Kendo: the shiai-jo's side, 9 m to 11 m. In metres. */
   size?: number;
   /** Judo: the width of the safety area, 3 m or more (4 m by default). In metres. */
@@ -28,7 +30,7 @@ export interface BudoStyle {
   start?: boolean;
   /** Judo: a solid platform under the tatami, one metre wider and longer than it. Off by default. */
   platform?: boolean;
-  /** Judo and karate: the technical table, the officials' seats and the judges, outside the safety area. Off by default. */
+  /** Judo and karate: the technical table, the officials' seats and the judges, outside the safety area (a judo kata area: the judges' table with the five judges' seats, and the coach's chair). Off by default. */
   officials?: boolean;
   /** Judo: draw the lines of the mats (the seams between them). On by default. */
   seams?: boolean;

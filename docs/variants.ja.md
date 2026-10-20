@@ -448,6 +448,8 @@
 - `ijf-sor`: <https://78884ca60822a34fb0e6-082b8fd5551e97bc65e327988b444396.ssl.cf3.rackcdn.com/up/2026/01/IJF_Sport_and_Organisation_Rul-1769443746.pdf>
 - `ijf-sor-2020`: <https://78884ca60822a34fb0e6-082b8fd5551e97bc65e327988b444396.ssl.cf3.rackcdn.com/up/2020/06/IJF_Sport_and_Organisation_Rul-1592329624.pdf>
 - `ajjf-guide`: <https://www.judo.or.jp/cms/wp-content/uploads/2021/03/%E5%A4%A7%E4%BC%9A%E9%81%8B%E5%96%B6%E3%82%AC%E3%82%A4%E3%83%89%E3%83%96%E3%83%83%E3%82%AF2023_20240229.pdf>
+- `ijf-kata-handbook`: <https://78884ca60822a34fb0e6-082b8fd5551e97bc65e327988b444396.ssl.cf3.rackcdn.com/up/2024/01/2024_IJF_kata_commission_Tourn-1706106608.pdf>
+- `ijf-kata-criteria`: <https://78884ca60822a34fb0e6-082b8fd5551e97bc65e327988b444396.ssl.cf3.rackcdn.com/up/2025/01/IJF_KATA_EVALUATION_Jan_2025-E-1737012784.pdf>
 
 ## 空手
 

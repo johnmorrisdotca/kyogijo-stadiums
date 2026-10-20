@@ -30,6 +30,10 @@ export interface JudoFigures {
   danger: boolean;
   /** A kata area: two white tapes 5 cm by 50 cm, 3 m from the centre either side, and a safety area of 2 m (SOR B1.8). */
   kata: boolean;
+  /** A kata area: the strip of tape of the same colour at the centre of the area, 5 cm by 50 cm (SOR B1.8; the Kata Commission's Tournament Handbook 2024). None in a contest area. */
+  centre: { width: number; length: number } | null;
+  /** A kata area: the panel of judges, `count` of them on the shomen side, sitting about `apart` metres from each other, the central one at the centre of the area (SOR, Kata judges and the system of judging). None in a contest area. */
+  panel: { count: number; apart: number } | null;
 }
 
 /** The figures of a karate competition area, in metres. */
@@ -147,6 +151,8 @@ export const IJF_CONTEST: JudoFigures = {
   marks: { width: 0.1, length: 0.5, fromCentre: 2 },
   danger: false,
   kata: false,
+  centre: null,
+  panel: null,
 };
 
 /** The All Japan Judo Federation's: the tatami of 182 cm by 91 cm, the red tatami of the danger zone, and the red and white tape 4 m (2 ken) apart (Tournament Management Guidebook 2023, 2-1, 2-3, 2-4). */
@@ -158,13 +164,19 @@ export const AJJF_CONTEST: JudoFigures = {
   danger: true,
 };
 
-/** The kata area (SOR B1.8): 10 m for the World Championships and 8 m for other events, a safety area of 2 m, two white tapes of 5 cm by 50 cm, 3 m from the centre. */
+/**
+ * The kata area (SOR 21 January 2026, B1.8; the Kata Commission's Tournament Handbook 2024): 10 m for the World Championships and 8 m for other events, a safety area of at least 2 m between and round the
+ * areas, two white tapes of 5 cm by 50 cm 3 m from the centre either side (the 6 m line), a tape of the same colour at the centre, five judges on the shomen side 1.25 m apart with the central judge at the centre.
+ */
 export const IJF_KATA: JudoFigures = {
   ...IJF_CONTEST,
   contest: span(8, 10, 10),
   safety: span(2, 6, 2),
+  common: 2,
   marks: { width: 0.05, length: 0.5, fromCentre: 3 },
   kata: true,
+  centre: { width: 0.05, length: 0.5 },
+  panel: { count: 5, apart: 1.25 },
 };
 
 /** The WKF's kumite area (Kumite Competition Rules 2026.01, Article 1). */
@@ -226,7 +238,7 @@ const mat = (length: number, width: number, en: string, ja: string): DojoFigures
 export const JUDO_LEAGUES: readonly JudoLeague[] = [
   { id: "ijf", family: "judo", name: { en: "IJF contest area", ja: "国際柔道連盟の試合場" }, unit: "m", dimensions: IJF_CONTEST, sources: ["ijf-sor", "ijf-sor-2020"], builtIn: true },
   { id: "ajjf", family: "judo", name: { en: "AJJF contest area", ja: "全日本柔道連盟の試合場" }, unit: "m", dimensions: AJJF_CONTEST, sources: ["ajjf-guide", "ijf-sor"] },
-  { id: "ijf-kata", family: "judo", name: { en: "IJF kata area", ja: "国際柔道連盟の形の試合場" }, unit: "m", dimensions: IJF_KATA, sources: ["ijf-sor"] },
+  { id: "ijf-kata", family: "judo", name: { en: "IJF kata area", ja: "国際柔道連盟の形の試合場" }, unit: "m", dimensions: IJF_KATA, sources: ["ijf-sor", "ijf-kata-handbook", "ijf-kata-criteria"] },
 ];
 
 export const KARATE_LEAGUES: readonly KarateLeague[] = [

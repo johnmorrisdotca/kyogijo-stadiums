@@ -441,13 +441,15 @@ Sources:
 | --- | --- | --- |
 | `ijf` (the sport's own) | IJF contest area | contest area 8 m to 10 m square (10 m drawn); safety area at least 3 m wide; at least 4 m between two areas; tatami 2 m by 1 m by 5 cm; free zone at least 50 cm round the competition area; platform 1 m wider and longer than the tatami; start tape 10 cm by 50 cm, 2 m from the centre |
 | `ajjf` | AJJF contest area | contest area 8 m to 10 m square (8 m drawn); safety area at least 3 m wide; at least 4 m between two areas; tatami 1.82 m by 0.91 m by 6 cm; free zone at least 50 cm round the competition area; platform 1 m wider and longer than the tatami; start tape 10 cm by 50 cm, 2 m from the centre |
-| `ijf-kata` | IJF kata area | contest area 8 m to 10 m square (10 m drawn); safety area at least 2 m wide; at least 4 m between two areas; tatami 2 m by 1 m by 5 cm; free zone at least 50 cm round the competition area; platform 1 m wider and longer than the tatami; start tape 5 cm by 50 cm, 3 m from the centre |
+| `ijf-kata` | IJF kata area | contest area 8 m to 10 m square (10 m drawn); safety area at least 2 m wide; at least 2 m between two areas; tatami 2 m by 1 m by 5 cm; free zone at least 50 cm round the competition area; platform 1 m wider and longer than the tatami; start tape 5 cm by 50 cm, 3 m from the centre |
 
 Sources:
 
 - `ijf-sor`: Sport and Organisation Rules of the International Judo Federation, 8.7 Field of Play and Competition Area, Article 9 and B1.8 (the kata area), International Judo Federation, version of 21 January 2026. <https://78884ca60822a34fb0e6-082b8fd5551e97bc65e327988b444396.ssl.cf3.rackcdn.com/up/2026/01/IJF_Sport_and_Organisation_Rul-1769443746.pdf>
 - `ijf-sor-2020`: Sports and Organization Rules of the International Judo Federation, 18.1 Competition Area, International Judo Federation, 2020 (the version of June 2020). <https://78884ca60822a34fb0e6-082b8fd5551e97bc65e327988b444396.ssl.cf3.rackcdn.com/up/2020/06/IJF_Sport_and_Organisation_Rul-1592329624.pdf>
 - `ajjf-guide`: 大会運営ガイドブック2023 (Tournament Management Guidebook 2023), 2-1 畳, 2-3 試合場 and 2-4 開始線と選手の位置, 公益財団法人全日本柔道連盟 (All Japan Judo Federation), 2023, as of 2023-12-15. <https://www.judo.or.jp/cms/wp-content/uploads/2021/03/%E5%A4%A7%E4%BC%9A%E9%81%8B%E5%96%B6%E3%82%AC%E3%82%A4%E3%83%89%E3%83%96%E3%83%83%E3%82%AF2023_20240229.pdf>
+- `ijf-kata-handbook`: IJF Kata Commission Tournament Handbook, Competition Area, International Judo Federation, Kata Commission, 2024. <https://78884ca60822a34fb0e6-082b8fd5551e97bc65e327988b444396.ssl.cf3.rackcdn.com/up/2024/01/2024_IJF_kata_commission_Tourn-1706106608.pdf>
+- `ijf-kata-criteria`: Kata Competition, Criteria for the Evaluation, General elements, International Judo Federation, Kata Commission, January 2025. <https://78884ca60822a34fb0e6-082b8fd5551e97bc65e327988b444396.ssl.cf3.rackcdn.com/up/2025/01/IJF_KATA_EVALUATION_Jan_2025-E-1737012784.pdf>
 
 ## Karate
 
