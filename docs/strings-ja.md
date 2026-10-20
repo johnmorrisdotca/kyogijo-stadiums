@@ -1404,6 +1404,8 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `nameLink` | About the name | 名前の由来（英語） |
 | `foot` | Every dimension is from a rulebook or a published figure; the sources are in the repository. | 寸法はすべて、ルールブックまたは公表されている数値に基づいています。出典はリポジトリに載っています。 |
 | `pageApi` | API reference | APIリファレンス（英語） |
+| `pageHalls` | Tournament layouts | 大会向けレイアウト |
+| `hallLink` | See it as a tournament floor | 大会のフロアとして見る |
 | `pageDocs` | Docs | ドキュメント |
 | `groupSurface` | Surface | 競技場 |
 | `groupTeams` | Teams | チーム |

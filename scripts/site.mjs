@@ -225,7 +225,7 @@ const page = `<!doctype html>
   </head>
   <body>
     <main>
-      ${familyHeader({ id, links: [{ href: "docs/", say: "pageDocs" }, { href: "api.html", say: "pageApi" }] })}
+      ${familyHeader({ id, links: [{ href: "docs/", say: "pageDocs" }, { href: "api.html", say: "pageApi" }, { href: "halls.html", say: "pageHalls" }] })}
 
       <section class="try" id="try" aria-labelledby="try-title">
         <div class="try-head">
@@ -235,6 +235,7 @@ const page = `<!doctype html>
         <div class="try-grid">
           <div class="try-stage">
             <div class="fam-felt stage-felt" id="felt"><div id="stage" data-testid="stage" data-ready="false" data-orientation="landscape" data-sport="${first.sport}" data-size="${first.size}" style="--r:${shape(WIDE)[0]}">${WIDE}</div></div>
+            <p class="hall-link" id="hall-link" hidden><a id="hall-link-a" data-testid="hall-link" href="halls.html" data-say="hallLink"></a></p>
             <template id="stage-tall">${TALL}</template>
           </div>
           <div class="try-controls">

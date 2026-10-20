@@ -419,7 +419,28 @@ function render() {
   $("crowd-density").value = String(state.crowdDensity);
   $("crowd-density-out").textContent = `${state.crowdDensity}%`;
   updateEmbed();
+  updateHallLink();
   syncUrl();
+}
+
+/** The sports that have a tournament layout, each with its first preset, read once from the layouts entry. */
+let hallPresets;
+import("./dist/multi-entry.js").then(({ MULTI_PRESETS }) => {
+  hallPresets = new Map();
+  for (const preset of MULTI_PRESETS) if (!hallPresets.has(preset.sport)) hallPresets.set(preset.sport, preset.id);
+  updateHallLink();
+});
+
+/** Under the surface of a sport that has tournament layouts: a link to the layouts page, with that sport's first preset chosen and the page's language and theme. */
+function updateHallLink() {
+  const holder = $("hall-link");
+  const preset = hallPresets?.get(state.sport);
+  holder.hidden = preset === undefined;
+  if (preset === undefined) return;
+  const query = new URLSearchParams({ preset });
+  if (language.lang === "ja") query.set("lang", "ja");
+  if (state.theme === "light" || state.theme === "dark") query.set("theme", state.theme);
+  $("hall-link-a").href = `halls.html?${query}`;
 }
 
 function syncUrl() {

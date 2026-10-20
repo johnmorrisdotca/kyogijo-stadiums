@@ -33,10 +33,12 @@
       caption { text-align: left; padding: 4px 0; color: var(--muted); }
       .table-wrap { overflow-x: auto; }
       a { color: var(--accent); }
+      .back { margin: 0 0 8px; }
     </style>
   </head>
   <body>
     <main>
+      <p class="back"><a href="./" id="back" data-testid="back"></a></p>
       <h1 id="title"></h1>
       <p class="lede" id="lede"></p>
       <form class="controls" id="controls" aria-label="Layout">
@@ -68,13 +70,13 @@
         en: {
           title: "Tournament layouts", pageTitle: "Kyogijo Stadiums: tournament layouts", pageDescription: "Several surfaces laid out together for one large event, to scale, in a hall, with a real stadium round them that can be switched on.", formLabel: "Layout choices", lede: "Several surfaces laid out together for one large event, to scale, on one floor. Set the layout in a hall to see whether it fits, and switch the stadium on to see it inside real stands.",
           preset: "Layout", venue: "Hall", none: "No hall (the floor the layout needs)", rows: "Rows", columns: "Columns", language: "Language", theme: "Theme", auto: "Follow the device", light: "Light", dark: "Dark",
-          stadium: "Stadium round the floor", slots: "Empty places for the event's words and marks", labels: "Names of the surfaces", table: "The same as a table", docs: "The tournament layouts page of the docs",
+          stadium: "Stadium round the floor", slots: "Empty places for the event's words and marks", labels: "Names of the surfaces", table: "The same as a table", docs: "The tournament layouts page of the docs", back: "Back to the Kyogijo Stadiums demo",
           needs: "This layout needs {size}.", event: "Tied to {name}, {year}, {venue}, {city}: {note}", basisRulebook: "The spacing is the rulebook's; no event's plan is drawn.", basisEvent: "The arrangement is what the event used, read from reports and photographs: not a measured plan.",
         },
         ja: {
           title: "大会向けレイアウト", pageTitle: "競技場 Kyogijo Stadiums：大会向けレイアウト", pageDescription: "複数の競技面を、大会向けに1枚の床の上へ縮尺どおりに並べます。会場を選ぶと収まるかどうかがわかり、スタジアムをオンにすると実際のスタンドの中に置いた様子を確認できます。", formLabel: "レイアウトの選択", lede: "複数の競技面を、大会向けに1枚の床の上へ縮尺どおりに並べます。会場を選ぶと収まるかどうかがわかり、スタジアムをオンにすると実際のスタンドの中に置いた様子を確認できます。",
           preset: "レイアウト", venue: "会場", none: "会場なし（レイアウトに必要な床）", rows: "行", columns: "列", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク",
-          stadium: "床の周りのスタジアム", slots: "大会の文字やマークを入れる空き枠", labels: "競技面の名前", table: "表で見る", docs: "ドキュメントの「大会向けレイアウト」ページ",
+          stadium: "床の周りのスタジアム", slots: "大会の文字やマークを入れる空き枠", labels: "競技面の名前", table: "表で見る", docs: "ドキュメントの「大会向けレイアウト」ページ", back: "競技場 Kyogijo Stadiums のデモに戻る",
           needs: "このレイアウトに必要な床：{size}。", event: "関連する大会：{name}（{year}年、{venue}、{city}）。{note}", basisRulebook: "間隔は競技規則のとおりです。特定の大会の図面は描いていません。", basisEvent: "並べ方は大会で実際に使われたものを報道や写真から読み取ったもので、実測の図面ではありません。",
         },
       };
@@ -88,6 +90,7 @@
       venueSelect.append(new Option("", ""));
       for (const v of MULTI_VENUES) venueSelect.append(new Option("", v.id));
       presetSelect.value = MULTI_PRESETS.some((p) => p.id === params.get("preset")) ? params.get("preset") : "tabletennis-4";
+      if (["light", "dark"].includes(params.get("theme"))) $("theme").value = params.get("theme");
       $("language").value = state.language;
       $("stadium").checked = params.get("stadium") === "on";
       if (MULTI_VENUES.some((v) => v.id === params.get("venue"))) venueSelect.value = params.get("venue");
@@ -106,7 +109,7 @@
         const language = $("language").value;
         for (const option of presetSelect.options) option.textContent = MULTI_PRESETS.find((p) => p.id === option.value).name[language];
         for (const option of venueSelect.options) option.textContent = option.value === "" ? w.none : MULTI_VENUES.find((v) => v.id === option.value).name[language];
-        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["l-preset", "preset"], ["l-venue", "venue"], ["l-rows", "rows"], ["l-columns", "columns"], ["l-language", "language"], ["l-theme", "theme"], ["l-stadium", "stadium"], ["l-slots", "slots"], ["l-labels", "labels"], ["l-table", "table"], ["docs", "docs"]]) $(id).textContent = w[key];
+        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["l-preset", "preset"], ["l-venue", "venue"], ["l-rows", "rows"], ["l-columns", "columns"], ["l-language", "language"], ["l-theme", "theme"], ["l-stadium", "stadium"], ["l-slots", "slots"], ["l-labels", "labels"], ["l-table", "table"], ["docs", "docs"], ["back", "back"]]) $(id).textContent = w[key];
         const themeSelect = $("theme");
         for (const option of themeSelect.options) option.textContent = w[option.value];
         document.documentElement.lang = language;
@@ -157,6 +160,9 @@
         if ($("stadium").checked) next.set("stadium", "on");
         if (language === "ja") next.set("lang", "ja");
         history.replaceState(null, "", `?${next}`);
+        const back = new URLSearchParams({ sport: spec.sport });
+        if (language === "ja") back.set("lang", "ja");
+        $("back").href = `./?${back}`;
         document.body.dataset.ready = "true";
       }
 

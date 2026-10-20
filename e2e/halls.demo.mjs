@@ -66,3 +66,33 @@ test("it follows light and dark and speaks Japanese", async ({ page }) => {
   await expect(page).toHaveTitle("Kyogijo Stadiums: tournament layouts");
   await expect(page.locator("#controls")).toHaveAttribute("aria-label", "Layout choices");
 });
+
+test("the main demo leads to the layouts: a link in its header, and under a sport that has layouts a link that chooses its preset; the page leads back", async ({ page }) => {
+  await serve(page);
+  await page.goto("http://kyogijo.test/?sport=judo&lang=en&help=off");
+  await page.waitForSelector(`${at("stage")}[data-ready="true"] svg.kyogijo`);
+  await expect(page.locator('header nav a[href="halls.html"]')).toHaveText("Tournament layouts");
+  const link = page.locator(at("hall-link"));
+  await expect(link).toBeVisible();
+  await expect(link).toHaveText("See it as a tournament floor");
+  await expect(link).toHaveAttribute("href", "halls.html?preset=judo-1x3");
+  // A sport with no layout has no link.
+  await page.goto("http://kyogijo.test/?sport=nhl&lang=en&help=off");
+  await page.waitForSelector(`${at("stage")}[data-ready="true"] svg.kyogijo`);
+  await expect(page.locator("#hall-link")).toBeHidden();
+  // The link in Japanese carries the language, and the layouts page leads back to the demo with the sport of its layout.
+  await page.goto("http://kyogijo.test/?sport=tabletennis&lang=ja&help=off");
+  await page.waitForSelector(`${at("stage")}[data-ready="true"] svg.kyogijo`);
+  await expect(page.locator(at("hall-link"))).toHaveAttribute("href", "halls.html?preset=tabletennis-4&lang=ja");
+  await page.locator(at("hall-link")).click();
+  await page.waitForSelector('body[data-ready="true"] svg.kyogijo');
+  await expect(page.locator("svg.kyogijo")).toHaveAttribute("data-layout", "tabletennis-4");
+  await expect(page.locator(at("back"))).toHaveAttribute("href", "./?sport=tabletennis&lang=ja");
+  await page.locator("#language").selectOption("en");
+  await expect(page.locator(at("back"))).toHaveText("Back to the Kyogijo Stadiums demo");
+  await expect(page.locator(at("back"))).toHaveAttribute("href", "./?sport=tabletennis");
+  await page.locator(at("back")).click();
+  await page.waitForSelector(`${at("stage")}[data-ready="true"] svg.kyogijo`);
+  expect(new URL(page.url()).searchParams.get("sport")).toBe("tabletennis");
+  await noSidewaysScroll(page);
+});
