@@ -7,6 +7,8 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.22.0] - 2026-10-20
+
 ### Added
 
 - **The wrestling mats** (`sport: "wrestling"`, [the combat sports page](./docs/combat.md)): the UWW's mat (freestyle, Greco-Roman and women's wrestling are wrestled on the same one: a circle of 9 m with a protection area of 1.5 m, an orange passivity band of 1 m inside the circle, a central circle of 1 m, a platform of 0.80 to 1.10 m), the NCAA's folkstyle mat (a competition circle of 32 to 42 feet with a 2 inch line, a matted area of at least 5 feet, two starting lines closed by a green and a red line) and the high schools' (a circle of at least 28 feet, a safety mat of about 5 feet, the circle of 10 feet, optional from 2024-25, the same starting lines), to scale. The leagues are `uww`, `ncaa-wrestling` and `nfhs-wrestling`; `budo.size` (the circle), `budo.height` (the platform), `budo.circle` and `budo.start` stay within each league and refuse a number outside it; the looks are `blue-red`, `green-beige` and `yellow-blue`; `RANGES.wrestling` has `start`, `passivity` (the UWW's) and `half`. In 3D the UWW's platform is a solid block with the mat as its top, and a folkstyle mat lies on the floor. A figure that is the rule's, one that is typical and one that is ours are told apart in [Sources](./docs/sources.md#the-combat-sports). It is the forty-second sport.
