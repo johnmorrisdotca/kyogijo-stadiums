@@ -6,7 +6,8 @@ import { densityOf, resolveCrowd, type Crowd, type CrowdStands, type Pt, type St
 import { patterns } from "./crowd.draw.ts";
 import { crowdStands } from "./draw.ts";
 import { groundById } from "./grounds.ts";
-import { clipAround, clipConvex, clipSegment, areaOf, pointList, raked, slopeOf, stripsOf, tidy, type Cut, type Strip } from "./venue.geom.ts";
+import { ARC_STEPS, clipAround, clipConvex, clipSegment, areaOf, pointList, raked, slopeOf, stripsOf, tidy, type Cut, type Strip } from "./venue.geom.ts";
+import { realBuilding } from "./venue.real.ts";
 import { n, shy, wall, type Plane, type Upright } from "./turn.kit.ts";
 import type { SurfaceOptions } from "./types.ts";
 
@@ -73,7 +74,7 @@ export function standsVenueOf(stands: CrowdStands, crowd: Crowd, o: Pick<Surface
   const density = densityOf(crowd, stands.seats, groundById(o.ground)?.capacity);
   const tifo = { home: stands.sectors.some((s) => s.kind === "tifo-home"), away: stands.sectors.some((s) => s.kind === "tifo-away") };
   const pid = `${v.id}-v`;
-  const defs = fine ? patterns(pid, crowd, density, tifo.home || tifo.away ? tifo : undefined, false, true) : "";
+  const defs = fine ? patterns(pid, crowd, density, tifo.home || tifo.away ? tifo : undefined, stands.real !== undefined, true) : "";
   const centre: [number, number] = [stands.box.x + stands.box.w / 2, stands.box.y + stands.box.h / 2];
   const covers = stands.covers;
   const inCover = (p: Pt): boolean => covers.some(([x0, y0, x1, y1]) => p[0] >= x0 && p[0] <= x1 && p[1] >= y0 && p[1] <= y1);
@@ -165,8 +166,9 @@ export function standsVenueOf(stands: CrowdStands, crowd: Crowd, o: Pick<Surface
   if (seatPlanes.length > 0) items.push({ id: "stands", kind: "stands", at: centre, height: topOf(seatPlanes), planes: seatPlanes });
   if (wallSeats.length > 0) items.push({ id: "wall-seats", kind: "wall-seats", at: centre, height: topOf(wallSeats), planes: wallSeats });
 
-  // The roof: a canopy over the back of the top tier, or a lid over it in a hall.
-  const top = v.roof === true && crowd.roof ? topRing(stands) : undefined;
+  // The roof: a canopy over the back of the top tier, or a lid over it in a hall. A real venue has its own: the walls of its building and a roof of its kind over them.
+  if (stands.real !== undefined && v.roof === true) items.push(...realBuilding(stands.real, topRing(stands), centre, lift, ARC_STEPS[cut].oval * 2));
+  const top = v.roof === true && crowd.roof && stands.real === undefined ? topRing(stands) : undefined;
   if (top !== undefined) {
     const lid = INDOOR.includes(String(o.sport));
     const reach = lid ? 1 : ROOF.canopyReach;

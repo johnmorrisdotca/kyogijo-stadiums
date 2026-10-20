@@ -67,6 +67,7 @@ export const KYOGIJO_TURN_STYLE = `
 .ky-turn .u-th{fill:var(--ky-cr-home)}
 .ky-turn .u-conc{fill:var(--ky-cr-conc)}
 .ky-turn .u-fascia{fill:var(--ky-up-fascia)}
+.ky-turn .u-shell{fill:var(--ky-up-fascia);stroke:var(--ky-up-roofline);stroke-width:.6}
 .ky-turn .u-roof{fill:var(--ky-up-roof);stroke:var(--ky-up-roofline);stroke-width:.8;stroke-linejoin:round}
 .ky-turn .ky-up-seats svg{opacity:var(--ky-cr-dim)}
 .ky-turn .ky-cr-seat{fill:none;stroke:var(--ky-cr-empty);stroke-width:1.3;stroke-opacity:.65}

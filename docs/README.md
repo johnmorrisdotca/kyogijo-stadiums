@@ -37,6 +37,7 @@ Kyogijo Stadiums draws sports surfaces as SVG, to scale, with the score on them.
 - [Ballparks](./ballparks.md): 94 parks, each with its own fence, and the past ones by season.
 - [The grounds](./grounds.md): 64 soccer grounds, each pitch at its published size.
 - [The arenas](./arenas.md): 167 arenas of the NHL, the NBA, the WNBA and the PWHL, with the size of a rink where an article gives one.
+- [The real venues](./venues.md): the eight arenas of the NHL's Pacific Division drawn in the outline of their buildings (OpenStreetMap) with a plausible bowl of the seats, tiers and roof the sources give, in 2D and 3D.
 - [League variants](./variants.md): the WNBA, FIBA, the NCAA, the IIHF, Little League and more, each from its rulebook.
 - [Surfaces through the years](./eras.md): the markings of a season, each change cited.
 - [The atlas](./atlas.md): every park, ground and arena on a map.

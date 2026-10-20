@@ -1,0 +1,79 @@
+// Made by scripts/build-venues.mjs from scripts/venues.data.json: do not edit by hand.
+// The facts are those of the Wikidata items and the English Wikipedia articles (revisions) each entry cites, in our own words; see docs/venues.md and NOTICE.md. Wikidata is CC0; the facts read from
+// English Wikipedia are numbers and words of ours, not its text (CC BY-SA 4.0). What OpenStreetMap gave is in venues.osm.data.ts, apart, because it is ODbL.
+import type { RealVenueData } from "./venues.ts";
+
+export const VENUE_DATA: RealVenueData[] = [
+  {
+    "id": "honda-center",
+    "wikidata": "Q774138",
+    "division": "pacific",
+    "en": {"title": "Honda Center", "revision": 1380000927},
+    "seats": {"hockey": 17174, "source": "wikipedia", "wikidata": 17174, "read": "the article's seating line for the Ducks, 17,174, which the infobox gives for ice hockey too; Wikidata's one capacity (P1083) is the same"},
+    "tiers": {"count": 2, "basis": "plausible", "read": "no source says how many seating levels there are: two bowls (a lower and an upper) are drawn, the usual for an arena of 17,000 seats; the article speaks of two full levels of ribbon displays, one on each bowl's fascia, which agrees"},
+    "roof": {"kind": "fixed", "basis": "plausible", "read": "an indoor arena: a fixed roof, as nothing says otherwise"},
+  },
+  {
+    "id": "scotiabank-saddledome",
+    "wikidata": "Q1140083",
+    "division": "pacific",
+    "en": {"title": "Scotiabank Saddledome", "revision": 1377341466},
+    "seats": {"hockey": 19289, "source": "wikipedia", "wikidata": 16605, "read": "the infobox's present figure for hockey (19,289, from 1995), which the article's amenities line gives too; Wikidata's 16,605 is the 1983 figure and the first the infobox lists"},
+    "tiers": {"count": 2, "basis": "documented", "read": "the article speaks of the lower bowl, a second level and upper loges above it: two seating levels with suites at the top of the lower bowl"},
+    "roof": {"kind": "saddle", "basis": "documented", "read": "the article says the roof is a reverse hyperbolic paraboloid, shaped like a horse saddle; which way the saddle lies over the ice is not given: it is drawn high at the two ends"},
+  },
+  {
+    "id": "rogers-place",
+    "wikidata": "Q5339036",
+    "division": "pacific",
+    "en": {"title": "Rogers Place", "revision": 1380110483},
+    "seats": {"hockey": 18641, "source": "wikidata", "wikidata": 18641, "read": "Wikidata's capacity for ice hockey (P1083 with the sport P641 ice hockey); the article's own line gives 18,347 for a hockey arena, 1.6 percent fewer, and OpenStreetMap has 18,641"},
+    "tiers": {"count": 2, "basis": "plausible", "read": "no source says how many seating levels there are: two bowls are drawn"},
+    "roof": {"kind": "fixed", "basis": "plausible", "read": "an indoor arena: a fixed roof, as nothing says otherwise"},
+  },
+  {
+    "id": "crypto-com-arena",
+    "wikidata": "Q186080",
+    "division": "pacific",
+    "en": {"title": "Crypto.com Arena", "revision": 1380458624},
+    "seats": {"hockey": 18145, "source": "wikipedia", "wikidata": 19060, "read": "the article's figure for ice hockey, 18,145, which the infobox gives too; Wikidata's one capacity (19,060) is not for hockey"},
+    "tiers": {"count": 2, "basis": "documented", "lowerShare": 0.667, "read": "the article says two thirds of the seating, with the club seats, is in the lower bowl, and that three levels of suites lie between the lower and upper bowls"},
+    "roof": {"kind": "fixed", "basis": "plausible", "read": "an indoor arena: a fixed roof, as nothing says otherwise"},
+  },
+  {
+    "id": "sap-center",
+    "wikidata": "Q261863",
+    "division": "pacific",
+    "en": {"title": "SAP Center", "revision": 1380804230},
+    "seats": {"hockey": 17435, "source": "wikipedia", "wikidata": 19190, "read": "the article says the hockey capacity changed from 17,562 to 17,435 when the new premium seating was finished (2023); Wikidata's one capacity (19,190) is the concert one"},
+    "tiers": {"count": 2, "basis": "plausible", "read": "no source says how many seating levels there are: two bowls are drawn; the article speaks of club levels and a penthouse, which are not seating bowls"},
+    "roof": {"kind": "fixed", "basis": "plausible", "read": "an indoor arena: a fixed roof, as nothing says otherwise"},
+  },
+  {
+    "id": "climate-pledge-arena",
+    "wikidata": "Q977529",
+    "division": "pacific",
+    "en": {"title": "Climate Pledge Arena", "revision": 1380851727},
+    "seats": {"hockey": 17151, "source": "wikipedia", "wikidata": 18000, "read": "the article's seating capacity for ice hockey, 17,151, which the infobox gives too; Wikidata's one capacity (18,000) is near the basketball one (18,300)"},
+    "tiers": {"count": 2, "basis": "documented", "read": "the article tells of the upper level and the lower level, most of the lower level being below street level since the 2021 rebuild: two seating levels"},
+    "roof": {"kind": "fixed", "basis": "documented", "read": "the article says the original 1962 roof's shape was kept and carried on a fixed roof of steel trusses (the first, cable-hung, roof being taken down), and that the roof is landmarked"},
+  },
+  {
+    "id": "rogers-arena",
+    "wikidata": "Q517318",
+    "division": "pacific",
+    "en": {"title": "Rogers Arena", "revision": 1379918849},
+    "seats": {"hockey": 18871, "source": "wikipedia", "wikidata": 18422, "read": "the infobox's present figure for ice hockey (18,871, from 2018); Wikidata's 18,422 is the 1995 figure and the first the infobox lists"},
+    "tiers": {"count": 2, "basis": "plausible", "read": "no source says how many seating levels there are: two bowls are drawn; the article speaks of a lower bowl; OpenStreetMap maps four building levels, which are floors, not seating bowls"},
+    "roof": {"kind": "fixed", "basis": "plausible", "read": "an indoor arena: a fixed roof, as nothing says otherwise"},
+  },
+  {
+    "id": "t-mobile-arena",
+    "wikidata": "Q3338973",
+    "division": "pacific",
+    "en": {"title": "T-Mobile Arena", "revision": 1379155307},
+    "seats": {"hockey": 17500, "source": "wikipedia", "wikidata": 20000, "read": "the infobox's figure for ice hockey, 17,500 (20,000 with standing room); Wikidata's one capacity (20,000) is the one with standing room"},
+    "tiers": {"count": 2, "basis": "plausible", "read": "no source says how many seating levels there are: two bowls are drawn"},
+    "roof": {"kind": "fixed", "basis": "plausible", "read": "an indoor arena: a fixed roof, as nothing says otherwise"},
+  },
+];

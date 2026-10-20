@@ -378,6 +378,10 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `said.arenaCourtAbout` | a basketball court, {length} by {width} feet ({lengthM} by {widthM} metres), with its keys, three-point lines, free-throw circles and the centre circle | バスケットボールのコート。{length}フィート（約{lengthM}m）×{width}フィート（約{widthM}m）で、ペイントエリア、スリーポイントライン、フリースローサークル、センターサークルがあります |
 | `said.arenaSize` | The size is the one published for {arena}. | 広さは、{arena}の公表されている数値をもとに描かれています。 |
 | `said.arenaUnknown` | The article says the rink of {arena} was shorter than the NHL's but gives no size, so the NHL's is drawn. | {arena}のリンクはNHLの規格より短かったとされていますが、広さが示されていないため、NHLの規格で描かれています。 |
+| `said.real` | The stands are a plausible bowl of {seats} seats in {tiers} tiers, fitted inside the outline of the building of {arena} from OpenStreetMap ((c) OpenStreetMap contributors); it is not the arena's plan. | スタンドは、OpenStreetMapの建物の輪郭（(c) OpenStreetMap contributors）の内側に収まるように、{arena}の{seats}席・{tiers}層を推定して描いたもので、アリーナの設計図ではありません。 |
+| `said.realBuilding` | The rink lies along the building's long axis, which is an inference, and the arrow points north. | リンクは建物の長い軸に沿って置いており（推定）、矢印は北を指します。 |
+| `said.realMapped` | The rink lies as OpenStreetMap maps the ice, and the arrow points north. | リンクの向きはOpenStreetMapに記録された氷面のとおりで、矢印は北を指します。 |
+| `said.realNone` | The rink's orientation is not known, so it is drawn east-west with north at the top. | リンクの向きは分かっていないため、東西に置き、北を上にしています。 |
 | `said.era` | The markings are those of the {season} season. | ラインやマークは{season}シーズンのものです。 |
 | `said.hammer` | {name} has the hammer. | {name}がハンマー（最後の1投）を持っています。 |
 | `said.ends` | By end, {name}: {list}. | {name}のエンドごとの得点：{list}。 |
@@ -2051,6 +2055,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `ballparks` | Ballparks | 球場 |
 | page `grounds` | The grounds | スタジアム |
 | page `arenas` | The arenas | アリーナ |
+| page `venues` | The real venues | 実在の会場 |
 | page `variants` | League variants | リーグごとの違い |
 | page `eras` | Surfaces through the years | 年ごとの競技場 |
 | page `atlas` | The atlas | 球場とスタジアムの地図 |
@@ -2073,6 +2078,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `gallery-leagues` | Gallery: every league's surface | ギャラリー：リーグごとの競技場 |
 | page `gallery-years` | Gallery: surfaces through the years | ギャラリー：年ごとの競技場 |
 | page `gallery-places` | Gallery: ballparks, grounds and arenas | ギャラリー：球場、スタジアム、アリーナ |
+| page `gallery-venues` | Gallery: the real venues | ギャラリー：実在の会場 |
 | page `gallery-special` | Gallery: special games | ギャラリー：特設会場での試合 |
 | page `gallery-data` | Gallery: data on a surface | ギャラリー：競技場の上のデータ |
 | page `gallery-curling` | Gallery: curling | ギャラリー：カーリング |

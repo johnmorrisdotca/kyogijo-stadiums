@@ -189,7 +189,9 @@ export function buildTurn(options: SurfaceOptions | ScoreOptions, settings: Turn
   const reach = uprights.reach;
   const margin = reach === undefined ? undefined : convertLength(reach, "ft", lengthUnit(asked as SurfaceOptions));
   const own = (asked as SurfaceOptions).margin;
-  const base: SurfaceOptions | ScoreOptions = reach !== undefined && crowdOpt !== undefined && crowdOpt !== false ? { ...asked, crowd: undefined, margin: Math.max(margin ?? 0, typeof own === "number" && Number.isFinite(own) ? own : 0) } : asked;
+  // (A real venue's building stays on the floor, with the arrow that says where north is: the crowd drawn without its seats.)
+  const keep = resolveCrowd(crowdOpt)?.real === true ? { real: true, stands: false } : undefined;
+  const base: SurfaceOptions | ScoreOptions = reach !== undefined && crowdOpt !== undefined && crowdOpt !== false ? { ...asked, crowd: keep, margin: Math.max(margin ?? 0, typeof own === "number" && Number.isFinite(own) ? own : 0) } : asked;
   const o: SurfaceOptions | ScoreOptions = boarded ? { ...base, plate: false, size: (asked as Partial<ScoreOptions>).size === "compact" ? "full" : (asked as Partial<ScoreOptions>).size } : base;
   const floor = settings.floor === undefined ? drawKyogijo(o) : settings.floor(o);
   const found = VIEWBOX.exec(floor);

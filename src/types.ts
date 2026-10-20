@@ -297,6 +297,14 @@ export interface CrowdOptions {
    * ballpark's outfield with a gap at the batter's eye) or `grandstand` (a ballpark's infield stands only). Each sport has its usual one.
    */
   shape?: CrowdShape;
+  /**
+   * The stands of the arena's real venue, for an NHL `arena` the package has one of (`VENUES`, `@johnmorrisdotca/kyogijo-stadiums/venues`): the outline of its building from OpenStreetMap, the rink lying along
+   * the building as it does in the world (a small arrow says where north is), and a bowl of the number of tiers and the seats the sources give, fitted inside the building, under its kind of roof. An arena with no venue
+   * is drawn with the usual stands. Off by default. The drawing needs the credit `VENUE_ATTRIBUTION`. See `docs/venues.md`.
+   */
+  real?: boolean;
+  /** `false` draws no seats: of a real venue (`real`) only its building and the arrow that says where north is, which is what the floor of the 3D view needs under the stands it raises. On by default. */
+  stands?: boolean;
   /** The end of a `horseshoe` that is open: `right` (the usual) or `left`. */
   open?: "left" | "right";
   /**

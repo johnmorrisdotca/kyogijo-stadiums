@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Kyogijo Stadiums: the real arenas of the NHL's Pacific Division</title>
+    <meta name="description" content="The eight arenas of the NHL's Pacific Division drawn inside the real outline of their buildings from OpenStreetMap, with a plausible bowl of the seats, tiers and roof the sources give, in 2D and in 3D." />
+    <style>
+      :root { color-scheme: light dark; --bg: #f6f4ee; --ink: #10151b; --muted: #434b54; --card: #fff; --line: #b9b3a3; --accent: #1f5fa8; --tab: #10151b; --tab-ink: #fff; }
+      @media (prefers-color-scheme: dark) { :root { --bg: #0d1218; --ink: #f6f3ea; --muted: #bcc3cb; --card: #18212a; --line: #475463; --accent: #7fb2ee; --tab: #f6f3ea; --tab-ink: #0d1218; } }
+      :root[data-theme="light"] { color-scheme: light; --bg: #f6f4ee; --ink: #10151b; --muted: #434b54; --card: #fff; --line: #b9b3a3; --accent: #1f5fa8; --tab: #10151b; --tab-ink: #fff; }
+      :root[data-theme="dark"] { color-scheme: dark; --bg: #0d1218; --ink: #f6f3ea; --muted: #bcc3cb; --card: #18212a; --line: #475463; --accent: #7fb2ee; --tab: #f6f3ea; --tab-ink: #0d1218; }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.45 system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif; }
+      main { max-width: 1280px; margin: 0 auto; padding: 12px 16px 24px; }
+      h1 { font-size: 1.4rem; margin: 0 0 2px; }
+      p.lede { margin: 0 0 12px; color: var(--muted); }
+      .back { margin: 0 0 6px; }
+      a { color: var(--accent); }
+      [hidden] { display: none !important; }
+      :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+      #tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; }
+      #tabs button { font: inherit; font-size: 1rem; font-weight: 800; min-height: 48px; padding: 0 14px; border-radius: 12px; border: 2px solid var(--tab); background: var(--card); color: var(--ink); cursor: pointer; }
+      #tabs button[aria-selected="true"] { background: var(--tab); color: var(--tab-ink); }
+      #stage { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 8px; }
+      #stage > svg.kyogijo { display: block; width: 100%; height: auto; max-height: calc(100vh - 190px); }
+      .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr)); gap: 12px; margin: 10px 0 0; }
+      label { display: grid; gap: 4px; min-width: 0; font-size: .9rem; color: var(--muted); }
+      label.check { grid-template-columns: auto 1fr; align-items: center; gap: 8px; }
+      select { width: 100%; min-width: 0; font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px; min-height: 44px; }
+      input[type="checkbox"] { width: 22px; height: 22px; }
+      details { margin-top: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 8px 12px; }
+      summary { cursor: pointer; min-height: 36px; font-weight: 700; display: flex; align-items: center; }
+      dl { display: grid; grid-template-columns: max-content 1fr; gap: 4px 14px; margin: 8px 0; }
+      dt { color: var(--muted); }
+      dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+      .note { color: var(--muted); font-size: .9rem; margin: 8px 0; }
+      #error { color: #c0392b; font-weight: 700; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="back"><a href="./" id="back" data-testid="back"></a></p>
+      <h1 id="title"></h1>
+      <p class="lede" id="lede"></p>
+      <div id="tabs" role="tablist" data-testid="tabs"></div>
+      <p id="error" role="alert" hidden></p>
+      <div id="stage" data-testid="stage"></div>
+      <details id="facts" open>
+        <summary id="l-facts"></summary>
+        <dl id="list" data-testid="facts"></dl>
+      </details>
+      <details id="edit" open>
+        <summary id="l-edit"></summary>
+        <div class="controls">
+          <label><span id="l-view"></span><select id="view"><option value="2d">2D</option><option value="3d">3D</option></select></label>
+          <label id="viewpoint-row"><span id="l-viewpoint"></span><select id="viewpoint"><option value="overhead"></option><option value="broadcast"></option><option value="end"></option><option value="corner"></option></select></label>
+          <label class="check" id="roof-row"><input id="roof" type="checkbox" /><span id="l-roof"></span></label>
+          <label><span id="l-language"></span><select id="language"><option value="en">English</option><option value="ja">日本語</option></select></label>
+          <label><span id="l-theme"></span><select id="theme"><option value="auto"></option><option value="light"></option><option value="dark"></option></select></label>
+        </div>
+      </details>
+      <p class="note" id="credit" data-testid="credit"></p>
+      <p class="note"><a href="./docs/venues.html" id="docs"></a></p>
+    </main>
+    <script type="module">
+      // The real arenas of the NHL's Pacific Division: each drawn inside the outline of its building (OpenStreetMap, ODbL 1.0) with a plausible bowl of the seats, tiers and roof the sources give, in 2D and in 3D.
+      // The page only asks the package to draw: `crowd: { real: true }` in the options. What is chosen lives in the address; nothing is sent anywhere and nothing is stored.
+      import { VENUES, VENUE_ATTRIBUTION, VENUE_IDS, arenaById, arenaNameIn, drawKyogijo } from "./dist/index.js";
+      import { mountKyogijoTurn } from "./dist/turn-entry.js";
+      import { quietTitles } from "./quiet.js";
+      quietTitles();
+
+      const WORDS = {
+        en: {
+          title: "The real arenas of the NHL's Pacific Division",
+          pageTitle: "Kyogijo Stadiums: the real arenas of the NHL's Pacific Division",
+          pageDescription: "The eight arenas of the NHL's Pacific Division drawn inside the real outline of their buildings from OpenStreetMap, with a plausible bowl of the seats, tiers and roof the sources give, in 2D and in 3D.",
+          lede: "Each arena is drawn inside the outline of its building, as OpenStreetMap maps it, with a bowl of the seats, the tiers and the kind of roof the sources give. The bowl is a plausible one, never a seat map: no section, row or seat of a real plan is drawn, and no mark of a team or a league.",
+          back: "Back to the Kyogijo Stadiums demo", docs: "The real venues page of the docs",
+          factsTitle: "What the drawing is made from", edit: "View", view: "View", viewpoint: "Viewpoint", roof: "Roof and walls (3D)", language: "Language", theme: "Theme", auto: "Follow the device", light: "Light", dark: "Dark",
+          overhead: "Overhead", broadcast: "Broadcast", end: "End", corner: "Corner", formLabel: "How the venue is shown",
+          arena: "Arena", city: "City", seats: "Seats for ice hockey", tiers: "Seating tiers", roofKind: "Roof", orientation: "How the rink lies", outline: "Building outline",
+          documented: "a source says so", plausible: "ours, plausible", fixed: "fixed", saddle: "saddle-shaped",
+          mapped: "from the ice OpenStreetMap maps", building: "inferred from the building's long axis", none: "not known: drawn east-west, north at the top",
+          seatsText: "{seats} (Wikidata's own figure {wikidata})", tiersText: "{count} ({basis})", roofText: "{kind} ({basis})", orientationText: "{how}, the rink along {heading} degrees from north",
+          outlineText: "OpenStreetMap {way}, read {read}",
+          credit: "Building outlines: (c) OpenStreetMap contributors, ODbL 1.0, openstreetmap.org/copyright. Seats, tiers and roofs: Wikidata (CC0) and the English Wikipedia article each venue cites, in our own words.",
+        },
+        ja: {
+          title: "実在のアリーナ：NHLパシフィック・ディビジョン",
+          pageTitle: "競技場 Kyogijo Stadiums：実在のアリーナ（NHLパシフィック・ディビジョン）",
+          pageDescription: "NHLパシフィック・ディビジョンの8つのアリーナを、OpenStreetMapの建物の輪郭の内側に描き、公表されている座席数・層の数・屋根の種類から推定したスタンドを重ねます。2Dと3Dに対応しています。",
+          lede: "各アリーナは、OpenStreetMapに記録された建物の輪郭の内側に、公表されている座席数・層の数・屋根の種類からスタンドを推定して描いています。座席表ではなく、実際の区画・列・座席は描いておらず、チームやリーグのマークもありません。",
+          back: "競技場 Kyogijo Stadiums のデモに戻る", docs: "ドキュメントの「実在の会場」ページ",
+          factsTitle: "この図の元になった情報", edit: "表示", view: "表示", viewpoint: "視点", roof: "屋根と壁（3D）", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク",
+          overhead: "真上", broadcast: "中継", end: "エンド", corner: "コーナー", formLabel: "会場の見せ方",
+          arena: "アリーナ", city: "都市", seats: "アイスホッケーの座席数", tiers: "客席の層", roofKind: "屋根", orientation: "リンクの向き", outline: "建物の輪郭",
+          documented: "資料に記載あり", plausible: "推定", fixed: "固定屋根", saddle: "鞍形（サドル）屋根",
+          mapped: "OpenStreetMapに記録された氷面から", building: "建物の長軸から推定", none: "不明のため東西に配置し、北を上にしています",
+          seatsText: "{seats}席（Wikidata自体の数値は{wikidata}）", tiersText: "{count}層（{basis}）", roofText: "{kind}（{basis}）", orientationText: "{how}（リンクは北から{heading}度の向き）",
+          outlineText: "OpenStreetMap {way}（{read}に取得）",
+          credit: "建物の輪郭：(c) OpenStreetMap contributors（ODbL 1.0、openstreetmap.org/copyright）。座席数・層の数・屋根：Wikidata（CC0）と、各会場が示すEnglish Wikipediaの記事（独自の言葉で記述）。",
+        },
+      };
+      const $ = (id) => document.getElementById(id);
+      const params = new URLSearchParams(location.search);
+      const words = () => WORDS[$("language").value];
+      const setSelect = (id, value, allowed) => { if (allowed.includes(value)) $(id).value = value; };
+      const fillIn = (text, values) => text.replace(/\{(\w+)\}/g, (_, key) => String(values[key]));
+      const state = { venue: Object.hasOwn(VENUES, params.get("venue")) ? params.get("venue") : VENUE_IDS[0] };
+      let turn;
+      let turnKey = "";
+
+      setSelect("view", params.get("view"), ["2d", "3d"]);
+      setSelect("viewpoint", params.get("viewpoint"), ["overhead", "broadcast", "end", "corner"]);
+      setSelect("theme", params.get("theme"), ["light", "dark"]);
+      setSelect("language", params.get("lang"), ["en", "ja"]);
+      $("roof").checked = params.get("roof") === "1";
+
+      /** The name of an arena in the page's language. */
+      const nameOf = (id) => arenaNameIn(arenaById(id), undefined, $("language").value);
+
+      function labelPage() {
+        const w = words();
+        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["back", "back"], ["docs", "docs"], ["l-facts", "factsTitle"], ["l-edit", "edit"], ["l-view", "view"], ["l-viewpoint", "viewpoint"], ["l-roof", "roof"], ["l-language", "language"], ["l-theme", "theme"], ["credit", "credit"]]) $(id).textContent = w[key];
+        for (const select of ["viewpoint", "theme"]) for (const option of $(select).options) option.textContent = w[option.value];
+        document.documentElement.lang = $("language").value;
+        document.title = w.pageTitle;
+        document.querySelector('meta[name="description"]').setAttribute("content", w.pageDescription);
+        $("edit").setAttribute("aria-label", w.formLabel);
+        $("tabs").replaceChildren(...VENUE_IDS.map((id) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.role = "tab";
+          button.dataset.venue = id;
+          button.textContent = nameOf(id);
+          button.setAttribute("aria-selected", String(id === state.venue));
+          return button;
+        }));
+      }
+
+      /** What the drawing is made from, as a list: the seats, the tiers, the roof, how the rink lies and the outline's source. */
+      function listFacts() {
+        const w = words();
+        const v = VENUES[state.venue];
+        const arena = arenaById(v.id);
+        const orientation = v.osm.axis;
+        const rows = [
+          [w.arena, `${nameOf(v.id)} (${v.wikidata})`],
+          [w.city, arena.city],
+          [w.seats, fillIn(w.seatsText, { seats: v.seats.hockey.toLocaleString($("language").value), wikidata: v.seats.wikidata.toLocaleString($("language").value) })],
+          [w.tiers, fillIn(w.tiersText, { count: v.tiers.count, basis: w[v.tiers.basis] })],
+          [w.roofKind, fillIn(w.roofText, { kind: w[v.roof.kind], basis: w[v.roof.basis] })],
+          [w.orientation, orientation.basis === "none" ? w.none : fillIn(w.orientationText, { how: w[orientation.basis], heading: orientation.heading })],
+          [w.outline, fillIn(w.outlineText, { way: v.osm.source, read: v.osm.read })],
+        ];
+        $("list").replaceChildren(...rows.flatMap(([term, text]) => {
+          const dt = document.createElement("dt");
+          const dd = document.createElement("dd");
+          dt.textContent = term;
+          dd.textContent = text;
+          return [dt, dd];
+        }));
+      }
+
+      function syncUrl() {
+        const next = new URLSearchParams();
+        if (state.venue !== VENUE_IDS[0]) next.set("venue", state.venue);
+        if ($("view").value === "3d") next.set("view", "3d");
+        if ($("viewpoint").value !== "corner") next.set("viewpoint", $("viewpoint").value);
+        if ($("roof").checked) next.set("roof", "1");
+        if ($("language").value === "ja") next.set("lang", "ja");
+        if ($("theme").value !== "auto") next.set("theme", $("theme").value);
+        history.replaceState(null, "", next.size === 0 ? location.pathname : `?${next}`);
+      }
+
+      function draw() {
+        const theme = $("theme").value;
+        if (theme === "auto") delete document.documentElement.dataset.theme;
+        else document.documentElement.dataset.theme = theme;
+        const three = $("view").value === "3d";
+        $("viewpoint-row").hidden = !three;
+        $("roof-row").hidden = !three;
+        const stage = $("stage");
+        $("error").hidden = true;
+        const options = { sport: "nhl", arena: state.venue, crowd: { real: true }, language: $("language").value, ...(theme === "auto" ? {} : { theme }) };
+        document.body.dataset.view = $("view").value;
+        try {
+          if (three) {
+            const settings = { preset: $("viewpoint").value, ...($("roof").checked ? { venue: { roof: true } } : {}) };
+            const key = JSON.stringify([state.venue, $("roof").checked]);
+            if (turn !== undefined && turnKey !== key) { turn.destroy(); turn = undefined; }
+            if (turn === undefined) {
+              stage.innerHTML = '<div id="three"></div>';
+              turnKey = key;
+              turn = mountKyogijoTurn($("three"), options, settings);
+            } else {
+              turn.update(options);
+              turn.preset($("viewpoint").value);
+            }
+          } else {
+            if (turn !== undefined) { turn.destroy(); turn = undefined; }
+            stage.innerHTML = drawKyogijo(options);
+          }
+        } catch (error) {
+          $("error").textContent = String(error.message);
+          $("error").hidden = false;
+        }
+        listFacts();
+        syncUrl();
+        const back = new URLSearchParams({ sport: "nhl", arena: state.venue });
+        if ($("language").value === "ja") back.set("lang", "ja");
+        $("back").href = `./?${back}`;
+        document.body.dataset.ready = "true";
+      }
+
+      labelPage();
+      $("tabs").addEventListener("click", (event) => {
+        const button = event.target.closest("button[data-venue]");
+        if (button === null) return;
+        state.venue = button.dataset.venue;
+        for (const other of $("tabs").children) other.setAttribute("aria-selected", String(other === button));
+        draw();
+      });
+      for (const id of ["view", "viewpoint", "roof", "theme"]) $(id).addEventListener("input", draw);
+      $("language").addEventListener("input", () => { labelPage(); draw(); });
+      draw();
+    </script>
+  </body>
+</html>

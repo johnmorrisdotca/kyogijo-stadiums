@@ -10,6 +10,7 @@ import { ERA_SPORTS, footballIn, rulesFor, seasonLabel, type EraSport } from "./
 import { FOOTBALL } from "./geometry.ts";
 import { renderLayers } from "./layers.ts";
 import { arenaById, arenaCourtIn, arenaNameIn, arenaOfficialName, arenaRinkIn } from "./arenas.ts";
+import { venueById, venueBowl } from "./venues.ts";
 import { groundById, groundNameIn, groundOfficialName } from "./grounds.ts";
 import { BOARD, courtFor, hasSetsBoard, isNetLeague, isNetSport, type CourtPlan } from "./court.ts";
 import { cricketBoardMarkup } from "./cricket.board.ts";
@@ -449,10 +450,15 @@ function standsFor(o: SurfaceOptions, surface: Surface, crowd: Crowd): CrowdStan
     const walls = park === undefined || crowd.wallSeats === false ? [] : parkWallsIn(park, o.year).filter((w) => (crowd.wallSeats === true ? w.height_ft >= 25 : w.label !== undefined && WALL_SEATS[park.id] === w.label));
     return parkLayout({ fence: fenceOutline(points), backstop, crowd, seatsOnWalls: walls.map((w) => ({ from: w.from, to: w.to, height: w.height_ft })) });
   }
+  // An arena's real venue: the building it stands in and a bowl fitted to it, where the package has one for the arena and no league of the caller's own sets the surface.
+  const box = surface.whole ?? surface.box ?? { x: 0, y: 0, w: 100, h: 100 };
+  const venue = crowd.real && sport === "nhl" && chooseLeague(o).league === undefined ? venueById(o.arena) : undefined;
+  // (No visitors' block: no source says where a real arena puts them.)
+  if (venue !== undefined) return crowdLayout({ sport, box, crowd: crowd.awayEnd === "auto" ? { ...crowd, awayEnd: "none" } : crowd, awaySide, real: venueBowl(venue, box) });
   // A dojo's crowd sits in its gallery, from the room's balcony data (in feet here); the arenas (the Budokan, the Kokugikan) keep their bowls.
   const hall = sport === "dojo" ? dojoGallery(o) : undefined;
   const gallery = hall === undefined ? undefined : { offset: hall.offset / 0.3048, depth: hall.depth / 0.3048, height: [hall.height[0] / 0.3048, hall.height[1] / 0.3048] as [number, number], rows: hall.rows, aisles: hall.aisles };
-  return crowdLayout({ sport, box: surface.whole ?? surface.box ?? { x: 0, y: 0, w: 100, h: 100 }, crowd, awaySide, ground: o.ground, arena: o.budo?.hall === "budokan", ...(gallery === undefined ? {} : { gallery }) });
+  return crowdLayout({ sport, box, crowd, awaySide, ground: o.ground, arena: o.budo?.hall === "budokan", ...(gallery === undefined ? {} : { gallery }) });
 }
 
 /** True when the drawing is asked to be small: `detail: "simple"` or a `width` under 480 pixels. */
@@ -737,7 +743,11 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
   const special = specialText(o, language, surfaceName);
   // What the arena says about the size: that it is the one its sources publish, or that its rink is said to have been shorter and no size is given.
   const arenaLine = arenaName === undefined ? "" : `${arenaSize !== undefined ? `${gap}${fill(words.said.arenaSize, { arena: arenaName })}` : sport === "nhl" && arena?.rinkUnknown === true ? `${gap}${fill(words.said.arenaUnknown, { arena: arenaName })}` : ""}${officially(arena === undefined ? undefined : arenaOfficialName(arena, language, year))}`;
-  const parkLine = (parkName === undefined ? `${groundLine}${halfLine}${arenaLine}` : `${gap}${fill(words.said.park, { park: parkName })}${officially(parkOfficial)}${ballpark === undefined ? "" : ballparkSentences(ballpark).map((line) => `${gap}${line}`).join("")}`) + (special === undefined ? "" : `${gap}${special.text}`);
+  // The stands of a real venue say what they are: a plausible bowl, and how the rink lies in the building.
+  const realCrowd = o.crowd === undefined || o.crowd === false ? undefined : resolveCrowd(o.crowd);
+  const venue = sport === "nhl" && league === undefined && realCrowd?.real === true ? venueById(o.arena) : undefined;
+  const realLine = venue === undefined || arenaName === undefined ? "" : `${gap}${fill(words.said.real, { arena: arenaName, seats: String(venue.seats.hockey), tiers: String(venue.tiers.count) })}${gap}${words.said[venue.osm.axis.basis === "mapped" ? "realMapped" : venue.osm.axis.basis === "building" ? "realBuilding" : "realNone"]}`;
+  const parkLine = (parkName === undefined ? `${groundLine}${halfLine}${arenaLine}${realLine}` : `${gap}${fill(words.said.park, { park: parkName })}${officially(parkOfficial)}${ballpark === undefined ? "" : ballparkSentences(ballpark).map((line) => `${gap}${line}`).join("")}`) + (special === undefined ? "" : `${gap}${special.text}`);
   // A drawing of a past season says which: the markings are those of that season.
   const dated = typeof o.year === "number" && Number.isFinite(o.year);
   const eraLine =

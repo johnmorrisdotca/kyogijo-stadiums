@@ -30,10 +30,12 @@ describe("the option", () => {
   });
 
   it("is read once: every part has its value and a part out of range is held to it", () => {
-    expect(resolveCrowd(true)).toEqual({ shape: undefined, open: "right", stadium: "auto", density: undefined, attendance: undefined, capacity: undefined, seed: 1, home: undefined, away: undefined, awayEnd: "auto", tifo: undefined, tifoDesign: "stripes", gaps: true, roof: true, wallSeats: undefined, detail: "auto" });
+    expect(resolveCrowd(true)).toEqual({ shape: undefined, open: "right", stadium: "auto", density: undefined, attendance: undefined, capacity: undefined, seed: 1, home: undefined, away: undefined, awayEnd: "auto", tifo: undefined, tifoDesign: "stripes", gaps: true, roof: true, wallSeats: undefined, real: false, stands: true, detail: "auto" });
     const held = resolveCrowd({ density: 7, seed: 2.9, shape: "oval" as never, awayEnd: "up" as never, tifo: true, tifoDesign: "checks", open: "left", gaps: false, stadium: "nfl", capacity: -3, attendance: -1 });
     expect(held).toMatchObject({ density: 1, seed: 2, shape: undefined, awayEnd: "auto", tifo: "home", tifoDesign: "checks", open: "left", gaps: false, stadium: "nfl", capacity: undefined, attendance: undefined });
     expect(resolveCrowd({ density: -1 })?.density).toBe(0);
+    expect(resolveCrowd({ real: true, stands: false })).toMatchObject({ real: true, stands: false });
+    expect(resolveCrowd({ real: "yes" as never })?.real).toBe(false);
   });
 
   it("gets its density from `density`, else attendance over capacity (the ground's, else the model's seats), else 0.85", () => {

@@ -378,6 +378,34 @@ function placesPage() {
   };
 }
 
+/** The real venues: each arena of the Pacific Division in the outline of its building, with what the sources say of it under the picture. */
+function venuesPage(lib) {
+  const { VENUES, VENUE_IDS, venuesIn } = lib[`${MAIN}/venues`];
+  const { ARENAS } = lib[`${MAIN}/arenas`];
+  const HOW = { mapped: "mapped in OpenStreetMap", building: "inferred from the building's long axis", none: "not known, drawn east-west with north at the top" };
+  const note = (id) => {
+    const v = VENUES[id];
+    const roof = v.roof.kind === "saddle" ? "a saddle roof" : "a fixed roof";
+    return `${v.seats.hockey.toLocaleString("en-US")} seats in ${v.tiers.count} tiers (${v.tiers.basis}), ${roof} (${v.roof.basis}); the rink is ${HOW[v.osm.axis.basis]}.`;
+  };
+  const real = (id, extra = "") => drawing({ sport: "nhl", arena: id, crowd: { real: true }, ...(extra === "" ? {} : JSON.parse(extra)) });
+  return {
+    slug: "gallery-venues",
+    title: "Gallery: the real venues",
+    ja: "実在の会場",
+    intro: `The ${venuesIn("pacific").length} arenas of the NHL's Pacific Division, each in the outline of its building as OpenStreetMap maps it ((c) OpenStreetMap contributors, ODbL 1.0), with a plausible bowl of the seats, tiers and roof the sources give. A small arrow says where north is where the rink's orientation is known. Never a seat map, and no mark of a team or a league. Every picture is drawn by the build from the code under it.`,
+    sections: [
+      section("pacific", "The Pacific Division", "`crowd: { real: true }` with an `arena` that has a venue.", VENUE_IDS.map((id) => item(`venue-${id}`, ARENAS[id].name, real(id), note(id)))),
+      section("themes", "Dark and Japanese", "The outline and the stands follow the theme and the language; the description is in Japanese.", [
+        item("venue-dark", "Honda Center, dark", real("honda-center", '{"theme":"dark"}'), note("honda-center")),
+        item("venue-ja", "Scotiabank Saddledome, in Japanese", real("scotiabank-saddledome", '{"language":"ja"}'), note("scotiabank-saddledome")),
+        item("venue-small", "Climate Pledge Arena, small", real("climate-pledge-arena", '{"width":320}'), "Under 480 pixels wide the crowd is plain blocks and the outline and the arrow stay."),
+        item("venue-tall", "Rogers Place, tall", real("rogers-place", '{"orientation":"portrait"}'), "A tall drawing turns the surface a quarter."),
+      ]),
+    ],
+  };
+}
+
 function specialPage(lib) {
   const { EVENTS, EVENT_IDS } = lib[`${MAIN}/events`];
   const teams = (sport) => (sport === "nba" ? [PEAKS, BOLTS, "Finals, Game 6"] : sport === "mlb" ? [STARS, PINES, "Game 5"] : [OWLS, ANCHORS, "Cup Final, Game 7"]);
@@ -1425,7 +1453,7 @@ function boardsPage() {
   };
 }
 
-export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, specialPage, dataPage, curlingPage, courtsPage, fieldsPage, poolsPage, athleticsPage, skatingPage, budoPage, combatPage, stylingPage, rangesPage, layoutsPage, multiPage, judgingPage, boardsPage, pageantPage, situationPage];
+export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, venuesPage, specialPage, dataPage, curlingPage, courtsPage, fieldsPage, poolsPage, athleticsPage, skatingPage, budoPage, combatPage, stylingPage, rangesPage, layoutsPage, multiPage, judgingPage, boardsPage, pageantPage, situationPage];
 
 /** The sections of every page, with each item's picture made by running its code. */
 export function galleryData(lib) {
@@ -1794,7 +1822,7 @@ export function framesFiles(lib) {
 
 /** The package's entry points as `runSnippet` wants them, read from a folder of built (`.js`) or source (`.ts`) files. */
 export async function libraryFrom(dir, ext, importer) {
-  const entries = { "": "index", "/charts": "charts-entry", "/frames": "frames-entry", "/layers": "layers-entry", "/leagues": "leagues-entry", "/eras": "eras-entry", "/grounds": "grounds-entry", "/arenas": "arenas-entry", "/parks": "parks-entry", "/atlas": "atlas-entry", "/events": "events-entry", "/geometry": "geometry-entry", "/replay": "replay-entry", "/layouts": "layouts-entry", "/multi": "multi-entry", "/turn": "turn-entry", "/athletics": "athletics-entry", "/skating": "skating-entry", "/target": "target-entry", "/zones": "zones-entry", "/pointer": "pointer-entry", "/budo": "budo-entry", "/judging": "judging-entry" };
+  const entries = { "": "index", "/charts": "charts-entry", "/frames": "frames-entry", "/layers": "layers-entry", "/leagues": "leagues-entry", "/eras": "eras-entry", "/grounds": "grounds-entry", "/arenas": "arenas-entry", "/venues": "venues-entry", "/parks": "parks-entry", "/atlas": "atlas-entry", "/events": "events-entry", "/geometry": "geometry-entry", "/replay": "replay-entry", "/layouts": "layouts-entry", "/multi": "multi-entry", "/turn": "turn-entry", "/athletics": "athletics-entry", "/skating": "skating-entry", "/target": "target-entry", "/zones": "zones-entry", "/pointer": "pointer-entry", "/budo": "budo-entry", "/judging": "judging-entry" };
   const lib = {};
   for (const [suffix, file] of Object.entries(entries)) lib[`${MAIN}${suffix}`] = await importer(`${dir}/${file}${ext}`);
   // The boards of the boards gallery are drawn by Taisen Brackets, a development dependency of this repository.

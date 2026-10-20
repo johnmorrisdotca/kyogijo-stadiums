@@ -64,6 +64,8 @@ export { ERA_CURRENT, ERA_SOURCES, ERA_SPORTS, eraChanges, eraRange, eraStates, 
 export type { EraChange, EraRules, EraRulesOf, EraSource, EraSpan, EraSport, FootballRules, MlbRules, NbaRules, NhlRules } from "./eras.ts";
 export { ARENA_IDS, ARENAS, arenaById, arenaByName, arenaByWikidata, arenaCourtIn, arenaNameIn, arenaOfficialName, arenaRinkIn, arenaSourceUrl, arenasByName } from "./arenas.ts";
 export type { Arena, ArenaCapacity, ArenaData, ArenaName, ArenaSize, ArenaSource } from "./arenas.ts";
+export { VENUE_ATTRIBUTION, VENUE_IDS, VENUES, arenaOfVenue, bowlInside, planVenue, venueBowl, venueById, venueByWikidata, venueOrientation, venueRink, venuesIn } from "./venues.ts";
+export type { RealVenue, RealVenueData, VenueBasis, VenueDivision, VenueOrientation, VenueOsm, VenuePlan, VenueRoof } from "./venues.ts";
 export { GROUND_IDS, GROUNDS, groundById, groundByName, groundByWikidata, groundNameIn, groundOfficialName, groundSourceUrl, groundsByName, groundsHosting } from "./grounds.ts";
 export type { Ground, GroundCompetition, GroundData, GroundName, GroundSource, GroundTournament } from "./grounds.ts";
 export { AFL_GROUNDS, FAMILY_OF, LEAGUES, LEAGUE_SOURCES, VARIANTS, chooseLeague, hasHistory, leagueAt, leagueById, leagueChanges, leagueFigures, leagueIds, leagueSeason, leagueSize } from "./leagues.ts";

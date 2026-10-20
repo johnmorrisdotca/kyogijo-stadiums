@@ -113,6 +113,9 @@ await takePictures({
     { subject: "judging-3d", views: ["desk"], url: `/judging.html?mat=1&view=3d&focus=bench&orientation=landscape&d=${encodeURIComponent(JUDGING_SHORT)}`, ready: READY_HALLS_TURN, target: "#stage" },
     // The broadcast view (0.19.0): the mat large from the Broadcast camera, with the officials on a board at its side like a television graphic (invented names; the judging page's stage). The 2D picture, a contest area and Japanese are in the docs gallery, drawn by the build.
     { subject: "judging-broadcast-3d", views: ["desk"], url: "/judging.html?view=broadcast&mat=1", ready: READY_HALLS_TURN, target: "#stage" },
+    // The real venues (0.25.0): the Honda Center in the outline of its building, and the Saddledome under its saddle roof in 3D (the venues page's stage).
+    { subject: "venues-honda", views: ["desk"], url: "/venues.html?venue=honda-center", ready: READY_HALLS, target: "#stage" },
+    { subject: "venues-saddledome-3d", views: ["desk"], url: "/venues.html?venue=scotiabank-saddledome&view=3d&viewpoint=broadcast&roof=1", ready: READY_HALLS_TURN, target: "#stage" },
     // Boards over a surface (0.24.0): a results board over a pool, a bout presentation over a judo mat in 3D, a medal table in the corner of the athletics stadium (invented names; the boards page's stage).
     { subject: "boards-swimming", views: ["desk"], url: "/boards.html?example=swimming", ready: READY_HALLS, target: "#stage" },
     { subject: "boards-judo-3d", views: ["desk"], url: "/boards.html?example=judo&view=3d", ready: READY_HALLS_TURN, target: "#stage" },

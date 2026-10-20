@@ -3,7 +3,7 @@
 // All of it is patterns, paths and rectangles, which every renderer of the package reads. The tiles are made from a seed with a generator of our own, so the same options give
 // the same crowd. Written for this package; no photograph or other drawing was copied.
 import { el, num } from "./format.ts";
-import { generator, outlinePath, type Crowd, type CrowdStands, type Pt, type StandRing, type StandSector } from "./crowd.ts";
+import { NORTH_AT, generator, outlinePath, type Crowd, type CrowdStands, type Pt, type RealShell, type StandRing, type StandSector } from "./crowd.ts";
 
 /** The width and the height of a tile of the crowd, in feet, and the seats' pitch. */
 const TILE = 14.4;
@@ -145,11 +145,32 @@ export interface DrawInput {
   ground: string;
 }
 
+/** The building of a real venue and, where its rink's orientation is known, a small arrow with an N that says where north lies. The N is a path of three strokes, so that no font is needed. */
+export function realMarkup(real: RealShell): string {
+  const fp = real.footprint;
+  let svg = el("path", { class: "ky-cr-shell", d: `M${fp.map(([x, y]) => `${n1(x)} ${n1(y)}`).join("L")}Z` });
+  if (real.north !== undefined) {
+    const top = Math.min(...fp.map((p) => p[1]));
+    const right = Math.max(...fp.map((p) => p[0]));
+    const [cx, cy] = [right - 34, top - NORTH_AT];
+    const a = (real.north * Math.PI) / 180;
+    const [dx, dy] = [Math.sin(a), -Math.cos(a)];
+    const at = (along: number, across = 0): string => `${n1(cx + dx * along - dy * across)} ${n1(cy + dy * along + dx * across)}`;
+    svg += el("path", { class: "ky-cr-north", d: `M${at(-13)}L${at(14)}M${at(14)}L${at(6, 4.5)}L${at(6, -4.5)}Z` });
+    const [gx, gy] = [cx + dx * 24, cy + dy * 24];
+    svg += el("path", { class: "ky-cr-north-n", d: `M${n1(gx - 3.5)} ${n1(gy + 4.5)}V${n1(gy - 4.5)}L${n1(gx + 3.5)} ${n1(gy + 4.5)}V${n1(gy - 4.5)}` });
+  }
+  return el("g", { class: "ky-cr-real" }, svg);
+}
+
 /** The stands and the crowd as markup and the defs it uses. The markup is laid over the ground and under the surface. */
 export function drawCrowd(stands: CrowdStands, o: DrawInput): { defs: string; markup: string; over: string } {
   const { id, crowd, density, fine } = o;
   const tifo = { home: stands.sectors.some((s) => s.kind === "tifo-home"), away: stands.sectors.some((s) => s.kind === "tifo-away") };
-  let body = "";
+  // A real venue's building lies under its stands; with `stands: false` it is all there is.
+  const building = stands.real === undefined ? "" : realMarkup(stands.real);
+  if (!crowd.stands && stands.real !== undefined) return { defs: "", markup: el("g", { class: "ky-crowd" }, building), over: "" };
+  let body = building;
   // A ballpark's stands stand on a plaza of their own, not on the grass of the foul ground.
   if (stands.sport === "mlb") for (const ring of stands.rings) body += el("path", { class: "ky-cr-plaza", d: path(ring) });
   // The walks between the tiers: a thin darker band.
@@ -191,7 +212,7 @@ export function drawCrowd(stands: CrowdStands, o: DrawInput): { defs: string; ma
     const [x0, y0, x1, y1] = g.box;
     body += el("rect", { class: `ky-cr-${g.kind}`, x: n1(x0), y: n1(y0), width: n1(x1 - x0), height: n1(y1 - y0), rx: g.kind === "bench" ? 1 : undefined });
   }
-  return { defs: (fine && (stands.gallery !== true || density > 0) ? patterns(id, crowd, density, tifo.home || tifo.away ? tifo : undefined, stands.gallery === true) : ""), markup: el("g", { class: "ky-crowd" }, body), over };
+  return { defs: (fine && (stands.gallery !== true || density > 0) ? patterns(id, crowd, density, tifo.home || tifo.away ? tifo : undefined, stands.gallery === true || stands.real !== undefined) : ""), markup: el("g", { class: "ky-crowd" }, body), over };
 }
 
 /** A block of visitors or a card display, a polygon over the band it is in. */
@@ -225,6 +246,9 @@ export const KYOGIJO_CROWD_STYLE = `
 .kyogijo .ky-cr-bench{fill:#1c2127;fill-opacity:.55}
 .kyogijo .ky-cr-media{fill:#1c2127;fill-opacity:.4}
 .kyogijo .ky-cr-camera{fill:#1c2127;fill-opacity:.75}
+.kyogijo .ky-cr-shell{fill:var(--ky-cr-conc);fill-opacity:.55;stroke:var(--ky-cr-rim);stroke-width:1.6;stroke-linejoin:round}
+.kyogijo .ky-cr-north{fill:var(--ky-cr-rim);stroke:var(--ky-cr-rim);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.kyogijo .ky-cr-north-n{fill:none;stroke:var(--ky-cr-rim);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 .kyogijo .ky-cr-plaza{fill:var(--ky-apron);stroke:var(--ky-apron);stroke-width:8;stroke-linejoin:round}
 .kyogijo .ky-cr-ez{fill:var(--ky-line);fill-opacity:.16}
 .kyogijo .ky-cr-yard{stroke:var(--ky-line);stroke-opacity:.5;fill:none}`.trim();

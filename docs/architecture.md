@@ -265,6 +265,12 @@ src/
 ├── arenas.ts           the hockey and basketball arenas: their names, seats and the rink or court sizes the sources publish
 ├── arenas.data.ts      made by scripts/build-arenas.mjs from scripts/arenas.data.json
 ├── arenas-entry.ts     the arenas' entry
+├── venues.ts           the real venues of the NHL's arenas: the building, how the rink lies, and a bowl fitted inside it from the seats, tiers and roof the sources give
+├── venues.geo.ts       the plane geometry of a building's outline: its metres, its main hall and axis, and the drawing's frame
+├── venues.data.ts      made by scripts/build-venues.mjs from scripts/venues.data.json: the facts, with their sources
+├── venues.osm.data.ts  made by scripts/build-venues.mjs from data-sources/venues/: what OpenStreetMap gave, ODbL 1.0, kept apart
+├── venues-entry.ts     the venues' entry
+├── venue.real.ts       a real venue's walls and roof, raised in 3D
 ├── atlas.ts            every park, ground and arena with its place, its tenants and the surfaces it offers, and the filters
 ├── tenants.ts          the clubs that played in a place: their types, the sport each draws as and the leagues that ask for no surface
 ├── tenants.data.ts     made by scripts/build-tenants.mjs from scripts/tenants.wikidata.json

@@ -94,6 +94,8 @@ const grounds = all[names.indexOf(${JSON.stringify(`${pkg.name}/grounds`)})];
 if (Object.keys(grounds.GROUNDS).length !== 64 || grounds.groundById("maracana").pitchSize !== "published") throw new Error("the grounds are wrong");
 const arenas = all[names.indexOf(${JSON.stringify(`${pkg.name}/arenas`)})];
 if (Object.keys(arenas.ARENAS).length !== 167 || arenas.arenaRinkIn(arenas.arenaById("boston-garden")).length !== 190.9) throw new Error("the arenas are wrong");
+const venues = all[names.indexOf(${JSON.stringify(`${pkg.name}/venues`)})];
+if (venues.VENUE_IDS.length !== 8 || venues.planVenue(venues.venueById("honda-center")).total !== 17174 || !venues.VENUE_ATTRIBUTION.includes("OpenStreetMap")) throw new Error("the venues are wrong");
 const atlas = all[names.indexOf(${JSON.stringify(`${pkg.name}/atlas`)})];
 if (atlas.PLACES.length !== 330 || atlas.placesBy({ sport: "baseball", country: "JP" }).length !== 20 || atlas.placeById("fenway-park").lat !== 42.34639) throw new Error("the atlas is wrong");
 const entry = (name) => all[names.indexOf(${JSON.stringify(pkg.name + "/")} + name)];

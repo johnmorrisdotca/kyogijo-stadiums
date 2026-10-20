@@ -1,0 +1,188 @@
+{
+ "read": "2026-10-20",
+ "licence": "ODbL 1.0, (c) OpenStreetMap contributors, openstreetmap.org/copyright",
+ "gateway": "https://lambert.openstreetmap.de/api/interpreter",
+ "query": "[out:json][timeout:60];(nwr[\"wikidata\"=\"Q517318\"];nwr(around:300,49.27778,-123.10889)[\"sport\"=\"ice_hockey\"];nwr(around:300,49.27778,-123.10889)[\"leisure\"=\"ice_rink\"];);out geom tags;",
+ "osmBase": "2026-10-20T19:40:35Z",
+ "wikidata": "Q517318",
+ "elements": [
+  {
+   "type": "way",
+   "id": 24705911,
+   "bounds": {
+    "minlat": 49.2773545,
+    "minlon": -123.1101435,
+    "maxlat": 49.2784909,
+    "maxlon": -123.1078218
+   },
+   "geometry": [
+    {
+     "lat": 49.278442,
+     "lon": -123.109011
+    },
+    {
+     "lat": 49.2784532,
+     "lon": -123.1089659
+    },
+    {
+     "lat": 49.2784909,
+     "lon": -123.1088138
+    },
+    {
+     "lat": 49.2783815,
+     "lon": -123.1087926
+    },
+    {
+     "lat": 49.2783615,
+     "lon": -123.1086124
+    },
+    {
+     "lat": 49.2783551,
+     "lon": -123.1085548
+    },
+    {
+     "lat": 49.2782151,
+     "lon": -123.1082628
+    },
+    {
+     "lat": 49.2781795,
+     "lon": -123.1081886
+    },
+    {
+     "lat": 49.2781275,
+     "lon": -123.10808
+    },
+    {
+     "lat": 49.278089,
+     "lon": -123.1080109
+    },
+    {
+     "lat": 49.2780322,
+     "lon": -123.1079627
+    },
+    {
+     "lat": 49.277975,
+     "lon": -123.1079325
+    },
+    {
+     "lat": 49.2779747,
+     "lon": -123.1079139
+    },
+    {
+     "lat": 49.2779732,
+     "lon": -123.1078218
+    },
+    {
+     "lat": 49.2773545,
+     "lon": -123.1078392
+    },
+    {
+     "lat": 49.277355,
+     "lon": -123.1079247
+    },
+    {
+     "lat": 49.2773577,
+     "lon": -123.1084398
+    },
+    {
+     "lat": 49.2773581,
+     "lon": -123.1085124
+    },
+    {
+     "lat": 49.2774457,
+     "lon": -123.1092219
+    },
+    {
+     "lat": 49.2774702,
+     "lon": -123.109354
+    },
+    {
+     "lat": 49.2774995,
+     "lon": -123.1094455
+    },
+    {
+     "lat": 49.2775507,
+     "lon": -123.1095315
+    },
+    {
+     "lat": 49.2775823,
+     "lon": -123.1096773
+    },
+    {
+     "lat": 49.2776062,
+     "lon": -123.1097365
+    },
+    {
+     "lat": 49.2776293,
+     "lon": -123.1097938
+    },
+    {
+     "lat": 49.2777301,
+     "lon": -123.1100435
+    },
+    {
+     "lat": 49.277768,
+     "lon": -123.1101221
+    },
+    {
+     "lat": 49.2778145,
+     "lon": -123.1101435
+    },
+    {
+     "lat": 49.2778563,
+     "lon": -123.1101257
+    },
+    {
+     "lat": 49.2778752,
+     "lon": -123.1101057
+    },
+    {
+     "lat": 49.2778934,
+     "lon": -123.1100865
+    },
+    {
+     "lat": 49.2779236,
+     "lon": -123.1100331
+    },
+    {
+     "lat": 49.2780861,
+     "lon": -123.1097118
+    },
+    {
+     "lat": 49.2782036,
+     "lon": -123.1094796
+    },
+    {
+     "lat": 49.2782347,
+     "lon": -123.1094184
+    },
+    {
+     "lat": 49.278442,
+     "lon": -123.109011
+    }
+   ],
+   "tags": {
+    "addr:city": "Vancouver",
+    "addr:housenumber": "800",
+    "addr:province": "BC",
+    "addr:street": "Griffiths Way",
+    "building": "stadium",
+    "building:levels": "4",
+    "leisure": "stadium",
+    "name": "Rogers Arena",
+    "name:en": "Rogers Arena",
+    "name:ko": "로저스 아레나",
+    "name:uk": "Роджерс-арена",
+    "old_name": "GM Place, General Motors Place, Canada Hockey Place",
+    "phone": "+1-604-899-7400",
+    "roof:colour": "#cdd1d2",
+    "sport": "hockey",
+    "start_date": "1995",
+    "website": "https://rogersarena.com/",
+    "wheelchair": "yes",
+    "wikidata": "Q517318",
+    "wikipedia": "en:Rogers Arena"
+   }
+  }
+ ]
+}

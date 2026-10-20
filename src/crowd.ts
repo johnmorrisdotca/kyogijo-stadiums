@@ -16,9 +16,9 @@ export type Outline =
 
 /** A tier of the stands: a band of seats between two outlines. */
 export interface StandRing {
-  /** `lower`, `upper`, `courtside`, `grandstand` or `bleachers`, with the tier's number where a ring has parts. */
+  /** `lower`, `middle`, `upper`, `courtside`, `grandstand` or `bleachers`, with the tier's number where a ring has parts. */
   id: string;
-  tier: "courtside" | "gallery" | "lower" | "upper" | "grandstand" | "bleachers" | "wall";
+  tier: "courtside" | "gallery" | "lower" | "middle" | "upper" | "grandstand" | "bleachers" | "wall";
   /** The band is `region` less `hole` (nothing for a polygon that is the band itself). */
   region: Outline;
   /** Further pieces of the band that are apart from `region` (a ballpark's bleachers either side of the batter's eye). */
@@ -76,6 +76,36 @@ export interface CrowdStands {
   seats: number;
   /** The stands are a hall's gallery (a dojo's balcony): a thin band close to the walls, plain seats, a few neutral people and no sides. */
   gallery?: boolean;
+  /** The stands are a real venue's (see `src/venues.ts`): the outline of its building, the way north lies on the page and the roof. */
+  real?: RealShell;
+}
+
+/** The room above a real venue's building that the arrow saying where north is takes, in feet, and how far above the building's box the middle of the arrow stands. */
+export const NORTH_ROOM = 60;
+export const NORTH_AT = 32;
+
+/** What a real venue adds to the stands round a surface: the building they stand in, in feet in the wide frame, and the roof over them. */
+export interface RealShell {
+  /** The outline of the building, a polygon (OpenStreetMap's, turned so that the rink lies along x). */
+  footprint: Pt[];
+  /** The hall the stands are in: the bowl's outer wall, a rounded rectangle inside the building, and what the 3D view raises walls and a roof on (the building's annexes, which the outline has, are left as ground). */
+  hall: Extract<Outline, { kind: "rrect" }>;
+  /** The way north points on the page, in degrees clockwise from the top; absent where the rink's real orientation is not known. */
+  north?: number;
+  /** `fixed` is a lid; `saddle` a roof that rises at the two ends and falls at the two sides. */
+  roof: "fixed" | "saddle";
+  /** The height of the roof's lowest edge above the surface, in feet. */
+  edge: number;
+}
+
+/** The stands of a real venue, worked out from its building (`venueBowl`): what `layoutOf` takes in place of a sport's usual tiers. */
+export interface RealBowl {
+  rings: StandRing[];
+  /** How far the first row stands from the surface's edge at each side, in feet (the bench side has more). */
+  off: { left: number; right: number; top: number; bottom: number };
+  /** The ground the venue needs beyond the surface on each side, in feet: the building's, and room for the arrow that says where north is. */
+  reach: { left: number; right: number; top: number; bottom: number };
+  shell: RealShell;
 }
 
 // ---- The options. ----
@@ -97,6 +127,10 @@ export interface Crowd {
   gaps: boolean;
   roof: boolean;
   wallSeats: boolean | undefined;
+  /** The stands of the arena's real venue, where the package has one for the `arena` asked for. */
+  real: boolean;
+  /** Whether the seats are drawn (a real venue's building is, without them, when this is false). */
+  stands: boolean;
   detail: "auto" | "fine" | "plain";
 }
 
@@ -125,6 +159,8 @@ export function resolveCrowd(value: SurfaceOptions["crowd"]): Crowd | undefined 
     gaps: o.gaps !== false,
     roof: o.roof !== false,
     wallSeats: typeof o.wallSeats === "boolean" ? o.wallSeats : undefined,
+    real: o.real === true,
+    stands: o.stands !== false,
     detail: o.detail === "fine" || o.detail === "plain" ? o.detail : "auto",
   };
 }
@@ -347,7 +383,8 @@ export function outlinePoints(o: Outline): Pt[] {
   return out;
 }
 
-const area = (o: Outline): number => {
+/** The area of an outline, in square feet. */
+export const areaOfOutline = (o: Outline): number => {
   if (o.kind === "ellipse") return Math.PI * o.rx * o.ry;
   if (o.kind === "rrect") {
     const r = Math.min(o.r, (o.x1 - o.x0) / 2, (o.y1 - o.y0) / 2);
@@ -362,7 +399,7 @@ const area = (o: Outline): number => {
 };
 
 /** The seats of a band of the stands: its area at a seat's 2 by 2.3 feet. */
-export const seatsIn = (region: Outline, hole: Outline | null): number => Math.round((area(region) - (hole === null ? 0 : area(hole))) / 4.6);
+export const seatsIn = (region: Outline, hole: Outline | null): number => Math.round((areaOfOutline(region) - (hole === null ? 0 : areaOfOutline(hole))) / 4.6);
 
 
 /** A point of a rounded rectangle and the outward normal there, by its parameter `u` (any real number, taken modulo 8): the four straight sides are the even whole numbers (the top from left to right, the right from top to bottom and so on round) and the four corners the odd ones. Concentric outlines (the same corners' centres) have the same parameter at the points an aisle joins. */
@@ -413,7 +450,7 @@ function aisleParameters(hole: Extract<Outline, { kind: "rrect" }>): { us: numbe
 }
 
 /** The aisles of a band as lines from its inner edge to its outer. */
-function aislesOf(region: Outline, hole: Outline | null): [Pt, Pt][] {
+export function aislesOf(region: Outline, hole: Outline | null): [Pt, Pt][] {
   if (region.kind === "rrect" && hole !== null && hole.kind === "rrect") return aisleParameters(hole).us.map((u): [Pt, Pt] => [rrectAt(hole, u).p, rrectAt(region, u).p]);
   if (region.kind === "ellipse" && hole !== null && hole.kind === "ellipse") {
     return Array.from({ length: 48 }, (_, i): [Pt, Pt] => {
@@ -453,6 +490,8 @@ export interface LayoutInput {
   arena?: boolean;
   /** A hall's gallery instead of the sport's stands (a dojo's balcony, from `dojoRoom`): the distance of its first row from the surface, its depth and the heights of its first and last rows, in feet. */
   gallery?: { offset: number; depth: number; height: [number, number]; rows?: number; aisles?: readonly number[] };
+  /** A real venue's stands in place of the sport's usual tiers (see `venueBowl`). */
+  real?: RealBowl;
   /** The ballpark's fence as points on the field, for a ballpark (see `parkLayout`). */
   fence?: readonly Pt[];
   /** The foul lines' length at the poles and the backstop's distance, for a ballpark. */
@@ -482,13 +521,13 @@ export function layoutOf(input: LayoutInput): CrowdStands {
   const host = sport === "soccer" ? (crowd.stadium === "nfl" || crowd.stadium === "cfl" ? crowd.stadium : crowd.stadium === "auto" && input.ground !== undefined ? GRIDIRON_GROUNDS[input.ground] : undefined) : undefined;
   const stadium: "purpose" | "nfl" | "cfl" | undefined = sport === "soccer" ? host ?? "purpose" : undefined;
   const p = stadium === "nfl" || stadium === "cfl" ? { ...PROFILES[stadium], shape: base.shape, away: base.away } : base;
-  const shape = crowd.shape ?? p.shape;
-  const off = offsets(base, box, stadium ?? "purpose");
+  const shape = input.real !== undefined ? "bowl" : crowd.shape ?? p.shape;
+  const off = input.real?.off ?? offsets(base, box, stadium ?? "purpose");
   const cx = box.x + box.w / 2;
   const cy = box.y + box.h / 2;
-  const rings: StandRing[] = [];
-  const reachOf = { left: 0, right: 0, top: 0, bottom: 0 };
-  for (const t of p.tiers) {
+  const rings: StandRing[] = input.real === undefined ? [] : input.real.rings.map((ring) => ({ ...ring }));
+  const reachOf = input.real === undefined ? { left: 0, right: 0, top: 0, bottom: 0 } : { ...input.real.reach };
+  for (const t of input.real === undefined ? p.tiers : []) {
     const at = (k: number): Outline => {
       if (base.oval === true) return { kind: "ellipse", cx, cy, rx: box.w / 2 + (off.left + off.right) / 2 + k, ry: box.h / 2 + (off.top + off.bottom) / 2 + k };
       return { kind: "rrect", x0: box.x - off.left - k, y0: box.y - off.top - k, x1: box.x + box.w + off.right + k, y1: box.y + box.h + off.bottom + k, r: p.corner + k };
@@ -534,6 +573,7 @@ export function layoutOf(input: LayoutInput): CrowdStands {
     if (before !== undefined && ring.hole !== null && ring.from > before.to) concourses.push({ region: ring.hole, hole: before.region });
   });
   const stands: CrowdStands = { sport, shape, box, rings, covers, concourses, sectors: [], gaps: [], reach: reachOf, seats: rings.reduce((n, r) => n + r.seats, 0) };
+  if (input.real !== undefined) stands.real = input.real.shell;
   if (stadium !== undefined) stands.stadium = stadium;
   if (gal !== undefined) stands.gallery = true;
   if (stadium === "nfl" || stadium === "cfl") {
@@ -552,7 +592,7 @@ export function layoutOf(input: LayoutInput): CrowdStands {
     const side = crowd.awayEnd === "left" || crowd.awayEnd === "right" ? crowd.awayEnd : input.awaySide;
     const sign = side === "right" ? 1 : -1;
     const mode = crowd.awayEnd === "auto" ? (p.away === "end" ? "end" : "corner") : crowd.awayEnd === "corner" ? "corner" : "end";
-    const tiers = rings.filter((r) => r.tier === "lower" || r.tier === "upper");
+    const tiers = rings.filter((r) => r.tier === "lower" || r.tier === "middle" || r.tier === "upper");
     const hole = lowerRing.hole;
     if (lowerRing.region.kind === "rrect" && hole !== null && hole.kind === "rrect") {
       // Round a rectangle a block is whole sections: it starts and ends on aisles, so that it is a section of the stands and not a wedge.
