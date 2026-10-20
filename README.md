@@ -102,6 +102,7 @@ console.log(svg.startsWith("<svg"), svg.includes("USA 3, Canada 2"));
 - **Data on the surface.** Points, lines, arrows, text, heat maps, hexagons, zone charts and density contours over any surface, in its feet or a data provider's frame, cut to its outline, with a table for each layer; ready-made shot and pass charts. [Data layers](./docs/layers.md), [charts](./docs/charts.md).
 - **Small multiples and backgrounds.** `drawGrid` puts many drawings in one SVG, under a title and a subtitle, over a credit line, with a key they share, in a size for a social card, a square post or a phone; `background` lays a quiet pattern (felt, grass, wood, ice, paper, a grid, dots) or a photograph behind a drawing or a grid. [Layouts and backgrounds](./docs/layouts.md).
 - **Tournament layouts.** Several surfaces laid out together for one large event, to scale, on one floor, as one SVG: thirteen presets from table tennis, pickleball, curling, judo, karate, badminton and tennis, each with its rule and sources, whether it fits a hall, and a real stadium round it. [Tournament layouts](./docs/multi.md).
+- **Judging assignments.** Who judges where. [Judging](./docs/judging.md).
 - **Replay.** Tracking data played on any surface: the players with their numbers, the ball and its trail, and the passes, shots and goals as they happen, with controls, the keyboard and a live region, steps for a reader who prefers reduced motion, and a pause when the page is hidden. [Replay](./docs/replay.md).
 - **A 3D view.** Any surface as a floor that turns by mouse, touch, wheel or keys, with four viewpoints (overhead, broadcast, end-on, low corner), and what the rulebook stands on it at its height (nets, baskets, rink boards and glass, goals, a ballpark's fence, the walls of padel and squash, a pool's blocks, a table tennis area's surrounds); and the venue round it (raked stands, roofs on request, a dojo's walls and gallery). Plain DOM and CSS. [The 3D view](./docs/turn.md).
 - **Renderers.** The same drawing as plain data (a scene), on a canvas (a browser's or a Node canvas), in a d3 selection, as a mark of an Observable Plot, as GeoJSON and as a PNG in Node, each an entry of its own that imports nothing from outside the package. [Renderers](./docs/renderers.md).
@@ -131,6 +132,7 @@ console.log(svg.startsWith("<svg"), svg.includes("USA 3, Canada 2"));
 | `./turn` | A surface as a 3D view that turns, with the net, basket, goal or posts standing on it. |
 | `./scene`, `./canvas`, `./d3`, `./plot`, `./geojson`, `./png` | The drawing as data; on a canvas; in a d3 selection; as an Observable Plot mark; as GeoJSON; as a PNG (the optional peer `@resvg/resvg-js`). |
 | `./multi` | `drawMulti`, `multiFit`: several surfaces laid out for one event, in a hall ([docs](./docs/multi.md), [demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/halls.html)). |
+| `./judging` | `drawJudging`: who judges where ([docs](./docs/judging.md)). |
 | `./layouts` | `drawGrid` and `GRID_PRESETS`: small multiples with a title, a subtitle, a key and a credit line; the grounds behind a drawing or a grid. |
 | `./mount`, `./react`, `./element`, `./element/define` | Draw into a container; React props; the `<kyogijo-field>` element and its registration. |
 
@@ -366,12 +368,12 @@ console.log(items.map((item) => item.kind).join(), html.includes("preserve-3d"))
 // net,netposts,antennae false
 ```
 
-The flat drawing is the floor, turned by a drag, a swipe, the keys or four viewpoints (overhead, broadcast, end-on, low corner), and what the rulebook stands on the surface is built up on it at its height. Each part is a flat rectangle placed by one `matrix3d`, so there is no 3D context for a phone to lose; where 3D is not drawn the flat drawing stays. In the element it is `<kyogijo-field sport="nhl" turn turn-view="broadcast">`. [The 3D view](./docs/turn.md).
+The flat drawing is the floor, turned by a drag, a swipe, the keys or four viewpoints, with what the rulebook stands on it at its height; each part is a flat rectangle placed by one `matrix3d`, so there is no 3D context for a phone to lose. In the element it is `<kyogijo-field sport="nhl" turn turn-view="broadcast">`. [The 3D view](./docs/turn.md).
 
 <p align="center">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turn-volleyball-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turn-volleyball-desk-light.webp" alt="A volleyball court from behind an end line under a spotlight, turned in the demo: the net at 2.43 metres on its posts with the red and white antennae, and under it the buttons for the four viewpoints, turning, raising, zooming and resetting." width="640">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turn-volleyball-desk-light.webp" alt="A volleyball court from behind an end line, turned in the demo: the net at 2.43 metres on its posts with the antennae, and the viewpoint buttons under it." width="640">
 </picture>
 <br><em>A volleyball net at its rulebook height, with its posts and antennae.</em>
 </p>
@@ -379,7 +381,7 @@ The flat drawing is the floor, turned by a drag, a swipe, the keys or four viewp
 <p align="center">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turn-rink-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turn-rink-desk-light.webp" alt="An ice rink from a low corner on an ice-blue background, turned in the demo: the boards with their glass round the ice, a goal at each end, and the score on the ice." width="640">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turn-rink-desk-light.webp" alt="An ice rink from a low corner: the boards and glass round the ice, a goal at each end, and the score on the ice." width="640">
 </picture>
 <br><em>A rink with its boards, glass and goals.</em>
 </p>
@@ -387,7 +389,7 @@ The flat drawing is the floor, turned by a drag, a swipe, the keys or four viewp
 <p align="center">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turn-court-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turn-court-desk-light.webp" alt="A basketball court from the main camera in a warm glow, turned in the demo: a basket on its backboard and padded stanchion at each end of the floor." width="640">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turn-court-desk-light.webp" alt="A basketball court from the main camera: a basket on its backboard and padded stanchion at each end." width="640">
 </picture>
 <br><em>A court with a basket at each end, the rim at 10 feet.</em>
 </p>
@@ -465,7 +467,7 @@ console.log(svg.includes("3 shots"), svg.includes("By outcome: goal 1, shot 1, b
 // true true
 ```
 
-Zoom to a part of the surface with `range`: the data, the heat and the labels follow the crop ([display ranges](./docs/ranges.md)).
+Zoom to a part with `range`: the data follows the crop ([display ranges](./docs/ranges.md)).
 
 ```ts
 import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
@@ -475,7 +477,7 @@ console.log(zone.includes('data-range="offensive-zone"'), zone.includes("Shows o
 // true true
 ```
 
-Lines, arrows, text, heat maps, hexagons, zones and contours are in [data layers](./docs/layers.md); a shot chart, a shot map, a spray chart, a pass chart and a soccer shot map are one call each in [charts](./docs/charts.md). Pass networks, formations, lineups (a team's players placed by position code, as discs or jerseys), Voronoi cells, Delaunay triangles, hulls, flow fields and sonars are layers too: [team shape](./docs/team-shape.md). Every kind is drawn, with its code, in the [gallery](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery.html).
+Lines, arrows, text, heat maps, hexagons, zones and contours are in [data layers](./docs/layers.md); shot, spray and pass charts are one call each in [charts](./docs/charts.md); pass networks, formations, lineups, Voronoi cells and flow fields are layers too ([team shape](./docs/team-shape.md)).
 
 ### Small multiples on a card
 
@@ -539,7 +541,20 @@ console.log(layout.needs.length, layout.needs.width);
 <br><em>Without `sample`: the empty places an organiser fills.</em>
 </p>
 
-The [demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/halls.html) picks a preset, sets it in a hall, switches the stadium on and off, and turns it in 3D.
+The [demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/halls.html) turns it in 3D.
+
+### Who judges where
+
+`drawJudging` puts each judo mat's officials by seat in the picture and in a chart ([judging](./docs/judging.md)).
+
+<p align="center">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/judging-3d-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/judging-3d-desk-light.webp" alt="A kata area's judges' table in 3D, with a name card before each judge." width="640">
+</picture>
+<br><em>Judges in 3D.</em>
+</p>
+
 
 ### A table tennis area
 

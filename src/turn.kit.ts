@@ -9,7 +9,7 @@
 export type V3 = readonly [number, number, number];
 
 /** What a plane is a part of: it is the class of its element (`ky-up-<kind>`) and what a test finds it by. */
-export type PartKind = "post" | "net" | "tape" | "antenna" | "board" | "glass" | "rim" | "stanchion" | "frame" | "goal" | "flag" | "stump" | "leg" | "table" | "pylon" | "wall" | "screen" | "pole" | "ground" | "target" | "seats" | "concourse" | "fascia" | "roof" | "banner" | "platform" | "rail" | "matedge" | "shrine" | "surround" | "chair" | "desk";
+export type PartKind = "post" | "net" | "tape" | "antenna" | "board" | "glass" | "rim" | "stanchion" | "frame" | "goal" | "flag" | "stump" | "leg" | "table" | "pylon" | "wall" | "screen" | "pole" | "ground" | "target" | "seats" | "concourse" | "fascia" | "roof" | "banner" | "platform" | "rail" | "matedge" | "shrine" | "surround" | "chair" | "desk" | "card" | "sign";
 
 /** One flat rectangle. Its own x runs along `u` (its whole length) and its own y along `v`; `o` is the corner both start from. `svg` is what is drawn on it, in feet along `u` and `v`. */
 export interface Plane {
@@ -42,7 +42,7 @@ export interface Plane {
 }
 
 /** What stands on the surface as a thing a reader would name: a net, a basket, a goal, a pair of posts. */
-export type UprightKind = "scoreboard" | "net" | "antennae" | "goalposts" | "netposts" | "hoop" | "goal" | "boards" | "stumps" | "pylons" | "flags" | "fence" | "backstop" | "foul-poles" | "table-legs" | "walls" | "starting-blocks" | "backstroke-flags" | "false-start-rope" | "springboards" | "platforms" | "judges-stand" | "hurdles" | "steeplechase" | "high-jump" | "pole-vault" | "cage" | "padding" | "rink-boards" | "mound" | "azuchi" | "targets" | "stands" | "wall-seats" | "roof" | "gallery" | "dais" | "banner" | "shrine" | "mat-edge" | "surrounds" | "officials";
+export type UprightKind = "scoreboard" | "net" | "antennae" | "goalposts" | "netposts" | "hoop" | "goal" | "boards" | "stumps" | "pylons" | "flags" | "fence" | "backstop" | "foul-poles" | "table-legs" | "walls" | "starting-blocks" | "backstroke-flags" | "false-start-rope" | "springboards" | "platforms" | "judges-stand" | "hurdles" | "steeplechase" | "high-jump" | "pole-vault" | "cage" | "padding" | "rink-boards" | "mound" | "azuchi" | "targets" | "stands" | "wall-seats" | "roof" | "gallery" | "dais" | "banner" | "shrine" | "mat-edge" | "surrounds" | "officials" | "judges";
 
 /** A thing that stands on the surface: where, how high, and the planes it is made of. */
 export interface Upright {
@@ -169,4 +169,18 @@ export function fadeOf(p: Pick<Plane, "shy" | "fadeTo" | "fadeAt">, yaw: number,
   const from = p.fadeAt ?? 0.1;
   const t = Math.min(1, Math.max(0, (hides - from) / 0.25));
   return Math.round((1 - (1 - (p.fadeTo ?? 0.08)) * t) * 1000) / 1000;
+}
+
+/** A rectangle on the surface, in feet: its corners. */
+export type Rect = { x0: number; y0: number; x1: number; y1: number };
+
+/** A rectangle from its corner and its size. */
+export const rect = (x: number, y: number, w: number, h: number): Rect => ({ x0: x, y0: y, x1: x + w, y1: y + h });
+
+/** A solid box on the floor: four sides up to `z1` and a flat top. `cls` paints the top; the sides are one tone darker (`cls-side`). */
+export function box(id: string, kind: Plane["kind"], r: Rect, z1: number, cls: string): Plane[] {
+  const sides: [number, number, number, number][] = [[r.x0, r.y0, r.x1, r.y0], [r.x1, r.y0, r.x1, r.y1], [r.x1, r.y1, r.x0, r.y1], [r.x0, r.y1, r.x0, r.y0]];
+  const planes = sides.map(([a, b, c, d], i) => wall(`${id}-${i + 1}`, kind, a, b, c, d, 0, z1, `<rect width="${n(Math.hypot(c - a, d - b))}" height="${n(z1)}" class="${cls}-side"/>`));
+  planes.push(flat(`${id}-top`, kind, r.x0, r.y0, r.x1, r.y1, z1, `<rect width="${n(r.x1 - r.x0)}" height="${n(r.y1 - r.y0)}" class="${cls}"/>`));
+  return planes;
 }

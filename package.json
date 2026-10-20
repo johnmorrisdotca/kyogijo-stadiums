@@ -156,6 +156,11 @@
       "import": "./dist/budo-entry.js",
       "default": "./dist/budo-entry.js"
     },
+    "./judging": {
+      "types": "./dist/judging-entry.d.ts",
+      "import": "./dist/judging-entry.js",
+      "default": "./dist/judging-entry.js"
+    },
     "./charts": {
       "types": "./dist/charts-entry.d.ts",
       "import": "./dist/charts-entry.js",

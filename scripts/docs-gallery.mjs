@@ -1293,7 +1293,58 @@ function multiPage() {
   };
 }
 
-export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, specialPage, dataPage, curlingPage, courtsPage, fieldsPage, poolsPage, athleticsPage, skatingPage, budoPage, stylingPage, rangesPage, layoutsPage, multiPage, pageantPage, situationPage];
+/** A snippet that draws a judging assignment. */
+const judging = (options, fn = "drawJudging") => `import { ${fn} } from "${MAIN}/judging";\n\nconst svg = ${fn}(${literal(options)});`;
+
+/** Invented names for the judging pictures: five judges, one name too long for its seat, and a second mat with two seats empty. */
+const JUDGES_ONE = [
+  { seat: 1, name: "Aiko Mori", id: "J-1042" },
+  { seat: 2, name: "Daniel Okafor", id: "J-0377" },
+  { seat: 3, name: "Sofia Lindqvist-Hernandez", id: "J-2210" },
+  { seat: 4, name: "Kenji Watanabe", id: "J-0918" },
+  { seat: 5, name: "Marta Kowalczyk", id: "J-1555" },
+];
+const JUDGES_TWO = [{ seat: 1, name: "Li Wei", id: "J-3001" }, { seat: 3, name: "Priya Raman", id: "J-0042" }, { seat: 5, name: "Tomás Ferreira", id: "J-2764" }];
+const JUDGES_SHORT = [
+  { seat: 1, name: "Aiko Mori", id: "J-1042" },
+  { seat: 2, name: "Dan Okafor", id: "J-0377" },
+  { seat: 3, name: "Sofia Berg", id: "J-2210" },
+  { seat: 4, name: "Ken Sato", id: "J-0918" },
+  { seat: 5, name: "Marta Nowak", id: "J-1555" },
+];
+
+function judgingPage() {
+  const mat1 = { label: "Mat 1", officials: JUDGES_ONE };
+  const mat2 = { label: "Mat 2", officials: JUDGES_TWO };
+  return {
+    slug: "gallery-judging",
+    title: "Gallery: judging assignments",
+    ja: "審判員の配置",
+    intro: "The officials of each judo mat by seat, with a name and an ID: in the seat where they fit, and in a chart whose rows grow until nothing is cut. The names are invented. Every picture is drawn by the build from the code under it.",
+    sections: [
+      section("mat", "One mat", "A kata area's five judges. A name that does not fit its seat is in the chart, and a seat with nobody in it says so.", [
+        item("judging-mat", "A mat with the chart beside it", judging({ style: "kata", mats: [mat1] }), "Judge 3's name is too long for the seat (it would be below the floor of the type), so it is in the chart, wrapped, and the seat shows its number."),
+        item("judging-bench", "The judges' bench close up", judging({ style: "kata", mats: [{ label: "Mat 1", officials: JUDGES_SHORT }], focus: "bench" }), "With short names every name is in its seat, and the chart is not drawn."),
+        item("judging-bench-chart", "The bench close up, with the chart", judging({ style: "kata", mats: [mat1], focus: "bench" }), "Four names fit their cards; the fifth is in the chart."),
+        item("judging-chart", "The chart alone", judging({ style: "kata", mats: [mat1] }, "judgingChart"), "For a page that puts the chart beside the 3D view."),
+      ]),
+      section("mats", "Several mats", "One panel for each mat, one under another; a page with a tab for each mat draws one with `mat`.", [
+        item("judging-two", "Two mats", judging({ style: "kata", mats: [mat1, mat2] })),
+        item("judging-one-of-two", "The second mat alone", judging({ style: "kata", mats: [mat1, mat2], mat: 2 }), "`mat: 2`: one tab of the page."),
+      ]),
+      section("tablet", "A tablet, both ways up", "Landscape puts the chart beside the plan; portrait puts it under, full width.", [
+        item("judging-portrait", "Portrait", judging({ style: "kata", mats: [mat1], orientation: "portrait", width: 768 })),
+        item("judging-limits", "The longest name and ID", judging({ style: "kata", mats: [{ label: "A mat with a long name of its own", officials: [{ seat: 1, name: "Maximilian Alexander Friedrich von Hohenlohe-Schillingsfürst und Waldenburg zu Bartenstein", id: "0123456789-0123456789-0123456789-0123456789-0123456789-abcd" }, { seat: 2, name: "Li", id: "J-1" }] }] }), "A name of ninety characters and an ID of sixty are whole: the row grows."),
+      ]),
+      section("themes", "Dark and Japanese", "Every colour is a custom property with a value for dark; the words come in English and Japanese, and the names are as they were given.", [
+        item("judging-dark", "Dark", judging({ style: "kata", mats: [mat1], theme: "dark" })),
+        item("judging-ja", "In Japanese", judging({ style: "kata", language: "ja", mats: [{ officials: [{ seat: 1, name: "森 愛子", id: "J-1042" }, { seat: 2, name: "山田 花子", id: "J-0377" }, { seat: 3, name: "ダニエル・オカフォー", id: "J-2210" }] }] })),
+      ]),
+    ],
+  };
+}
+
+export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, specialPage, dataPage, curlingPage, courtsPage, fieldsPage, poolsPage, athleticsPage, skatingPage, budoPage, stylingPage, rangesPage, layoutsPage, multiPage, judgingPage, pageantPage, situationPage];
 
 /** The sections of every page, with each item's picture made by running its code. */
 export function galleryData(lib) {
@@ -1591,7 +1642,7 @@ export function framesFiles(lib) {
 
 /** The package's entry points as `runSnippet` wants them, read from a folder of built (`.js`) or source (`.ts`) files. */
 export async function libraryFrom(dir, ext, importer) {
-  const entries = { "": "index", "/charts": "charts-entry", "/frames": "frames-entry", "/layers": "layers-entry", "/leagues": "leagues-entry", "/eras": "eras-entry", "/grounds": "grounds-entry", "/arenas": "arenas-entry", "/parks": "parks-entry", "/atlas": "atlas-entry", "/events": "events-entry", "/geometry": "geometry-entry", "/replay": "replay-entry", "/layouts": "layouts-entry", "/multi": "multi-entry", "/turn": "turn-entry", "/athletics": "athletics-entry", "/skating": "skating-entry", "/target": "target-entry", "/zones": "zones-entry", "/pointer": "pointer-entry", "/budo": "budo-entry" };
+  const entries = { "": "index", "/charts": "charts-entry", "/frames": "frames-entry", "/layers": "layers-entry", "/leagues": "leagues-entry", "/eras": "eras-entry", "/grounds": "grounds-entry", "/arenas": "arenas-entry", "/parks": "parks-entry", "/atlas": "atlas-entry", "/events": "events-entry", "/geometry": "geometry-entry", "/replay": "replay-entry", "/layouts": "layouts-entry", "/multi": "multi-entry", "/turn": "turn-entry", "/athletics": "athletics-entry", "/skating": "skating-entry", "/target": "target-entry", "/zones": "zones-entry", "/pointer": "pointer-entry", "/budo": "budo-entry", "/judging": "judging-entry" };
   const lib = {};
   for (const [suffix, file] of Object.entries(entries)) lib[`${MAIN}${suffix}`] = await importer(`${dir}/${file}${ext}`);
   return lib;

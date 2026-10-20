@@ -14,6 +14,8 @@ const stage = "#felt";
 const READY_HALLS = 'body[data-ready="true"] #stage svg';
 const READY_TURN = '[data-testid="stage"][data-ready="true"] .ky-turn';
 const READY_HALLS_TURN = 'body[data-ready="true"] #stage .ky-turn';
+/** Short invented names, so that every name fits its seat when the picture is close up on the bench. */
+const JUDGING_SHORT = JSON.stringify([{ l: "", o: [["Aiko Mori", "J-1042"], ["Dan Okafor", "J-0377"], ["Sofia Berg", "J-2210"], ["Ken Sato", "J-0918"], ["Marta Nowak", "J-1555"]] }]);
 const address = (query) => `/?lang=en&help=off&${query}`;
 
 /** Wait for the page to be at rest: two frames, so that a picture drawn at the felt's shape has been laid in. */
@@ -98,6 +100,8 @@ await takePictures({
         }),
       ),
     },
+    // Judging assignments (0.17.0): the judges' table of a kata area in 3D with a name card in front of each judge and the mat's name on a sign, close up on the bench, with the chart beside the view (invented names; the judging page's stage).
+    { subject: "judging-3d", views: ["desk"], url: `/judging.html?mat=1&view=3d&focus=bench&orientation=landscape&d=${encodeURIComponent(JUDGING_SHORT)}`, ready: READY_HALLS_TURN, target: "#stage" },
     // The table tennis playing area (0.15.0): the table in its 14 m by 7 m area, enclosed by surrounds, with the umpires' chairs, as the demo draws it (its own surface, no score).
     { subject: "tabletennis-area", views: ["desk"], url: address("sport=tabletennis&size=surface&orientation=landscape"), ready: READY, target: stage, prepare: behind("spotlight") },
     // The same area in 3D from a low corner.

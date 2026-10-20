@@ -35,7 +35,7 @@ export interface Layout {
 
 /** Work a view out in a container `width` by `height` pixels. */
 export function layoutOf(model: TurnModel, view: TurnView, width: number, height: number, lens?: number): Layout {
-  const distance = eyeDistance(width, height, lens);
+  const distance = eyeDistance(width, height, lens ?? model.lens);
   const at = fit(model.box, { ...view, zoom: 1 }, width, height, distance);
   const camera = cameraMatrix(view, at, distance);
   const s = model.scale;

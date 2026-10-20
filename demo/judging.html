@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Kyogijo Stadiums: judging assignments</title>
+    <meta name="description" content="Who judges where: the officials of each judo mat area by seat, with their names and IDs, in the seat where they fit and in a chart that lists everyone, in 2D and 3D, for a tablet." />
+    <style>
+      :root { color-scheme: light dark; --bg: #f6f4ee; --ink: #10151b; --muted: #434b54; --card: #fff; --line: #b9b3a3; --accent: #1f5fa8; --tab: #10151b; --tab-ink: #fff; }
+      @media (prefers-color-scheme: dark) { :root { --bg: #0d1218; --ink: #f6f3ea; --muted: #bcc3cb; --card: #18212a; --line: #475463; --accent: #7fb2ee; --tab: #f6f3ea; --tab-ink: #0d1218; } }
+      :root[data-theme="light"] { color-scheme: light; --bg: #f6f4ee; --ink: #10151b; --muted: #434b54; --card: #fff; --line: #b9b3a3; --accent: #1f5fa8; --tab: #10151b; --tab-ink: #fff; }
+      :root[data-theme="dark"] { color-scheme: dark; --bg: #0d1218; --ink: #f6f3ea; --muted: #bcc3cb; --card: #18212a; --line: #475463; --accent: #7fb2ee; --tab: #f6f3ea; --tab-ink: #0d1218; }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.45 system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif; }
+      main { max-width: 1280px; margin: 0 auto; padding: 12px 16px 24px; }
+      h1 { font-size: 1.4rem; margin: 0 0 2px; }
+      p.lede { margin: 0 0 12px; color: var(--muted); }
+      .back { margin: 0 0 6px; }
+      a { color: var(--accent); }
+      [hidden] { display: none !important; }
+      :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+      #tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; }
+      #tabs button { font: inherit; font-size: 1.15rem; font-weight: 800; min-height: 52px; min-width: 96px; padding: 0 18px; border-radius: 12px; border: 2px solid var(--tab); background: var(--card); color: var(--ink); cursor: pointer; }
+      #tabs button[aria-selected="true"] { background: var(--tab); color: var(--tab-ink); }
+      #stage { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 8px; }
+      #stage > svg.kyogijo { display: block; width: 100%; height: auto; }
+      #stage[data-one] > svg.kyogijo { max-height: calc(100vh - 170px); }
+      #stage .pair { display: grid; gap: 12px; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); align-items: start; }
+      #stage .pair #three .ky-turn-view { --ky-turn-ratio: 4 / 3; }
+      #stage .pair[data-orientation="portrait"] { grid-template-columns: minmax(0, 1fr); }
+      #stage .pair svg.kyogijo { display: block; width: 100%; height: auto; }
+      .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr)); gap: 12px; margin: 10px 0 0; }
+      label { display: grid; gap: 4px; min-width: 0; font-size: .9rem; color: var(--muted); }
+      select, input[type="number"], input[type="text"] { width: 100%; min-width: 0; font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px; min-height: 44px; }
+      details { margin-top: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 8px 12px; }
+      summary { cursor: pointer; min-height: 36px; font-weight: 700; display: flex; align-items: center; }
+      fieldset { border: 1px solid var(--line); border-radius: 10px; margin: 12px 0 0; padding: 8px 12px 12px; min-width: 0; }
+      legend { font-weight: 800; padding: 0 6px; }
+      .seat { display: grid; grid-template-columns: minmax(0, 9rem) minmax(0, 2fr) minmax(0, 1fr); gap: 8px; align-items: center; margin-top: 8px; }
+      .seat > span { font-weight: 700; }
+      .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+      .actions button { font: inherit; min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+      table { border-collapse: collapse; font-size: .9rem; width: 100%; }
+      th, td { border: 1px solid var(--line); padding: 4px 8px; text-align: left; }
+      caption { text-align: left; padding: 4px 0; color: var(--muted); }
+      .table-wrap { overflow-x: auto; }
+      .note { color: var(--muted); font-size: .9rem; margin: 8px 0; }
+      #error { color: #c0392b; font-weight: 700; }
+      @media (max-width: 640px) { .seat { grid-template-columns: minmax(0, 1fr); } #stage .pair { grid-template-columns: minmax(0, 1fr); } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="back"><a href="./" id="back" data-testid="back"></a></p>
+      <h1 id="title"></h1>
+      <p class="lede" id="lede"></p>
+      <div id="tabs" role="tablist" data-testid="tabs"></div>
+      <p id="error" role="alert" hidden></p>
+      <div id="stage" data-testid="stage"></div>
+      <details id="edit" open>
+        <summary id="l-edit"></summary>
+        <div class="controls">
+          <label><span id="l-style"></span><select id="style"><option value="kata"></option></select></label>
+          <label><span id="l-mats"></span><input id="mats" type="number" min="1" max="6" inputmode="numeric" /></label>
+          <label><span id="l-view"></span><select id="view"><option value="flat">2D</option><option value="3d">3D</option></select></label>
+          <label><span id="l-focus"></span><select id="focus"><option value="mat"></option><option value="bench"></option></select></label>
+          <label><span id="l-chart"></span><select id="chart"><option value="auto"></option><option value="always"></option><option value="never"></option></select></label>
+          <label><span id="l-orientation"></span><select id="orientation"><option value="auto"></option><option value="landscape"></option><option value="portrait"></option></select></label>
+          <label><span id="l-language"></span><select id="language"><option value="en">English</option><option value="ja">日本語</option></select></label>
+          <label><span id="l-theme"></span><select id="theme"><option value="auto"></option><option value="light"></option><option value="dark"></option></select></label>
+        </div>
+        <div id="officials"></div>
+        <div class="actions"><button type="button" id="reset"></button></div>
+      </details>
+      <details>
+        <summary id="l-table"></summary>
+        <div class="table-wrap" id="table"></div>
+      </details>
+      <p class="note" id="privacy"></p>
+      <p class="note"><a href="./docs/judging.html" id="docs"></a></p>
+    </main>
+    <script type="module">
+      // Judging assignments: set the mats and who sits in which seat; the names are in the seats where they fit and in the chart where they do not, in 2D and in 3D. Everything is in this page and its address: nothing is
+      // sent anywhere and nothing is stored.
+      import { JUDGING_SEATS, JUDGING_WORDS, drawJudging, judgingChart, judgingTable, mountJudgingTurn } from "./dist/judging-entry.js";
+      import { TURN_PRESET_NAMES } from "./dist/turn-entry.js";
+
+      const WORDS = {
+        en: {
+          title: "Judging assignments", pageTitle: "Kyogijo Stadiums: judging assignments", pageDescription: "Who judges where: the officials of each judo mat area by seat, with their names and IDs, in the seat where they fit and in a chart that lists everyone, in 2D and 3D, for a tablet.",
+          lede: "Who sits where on each mat. A name is in its seat when it fits there, and always in the chart of seat, name and ID. Everything stays in this page and its address.",
+          back: "Back to the Kyogijo Stadiums demo", docs: "The judging assignments page of the docs", edit: "Mats and officials", style: "Style", kata: "Kata (five judges)", mats: "Mats", view: "View", focus: "Shows", focusMat: "The whole mat", focusBench: "The judges' bench", chart: "Chart",
+          auto: "When a name does not fit", always: "Always", never: "Never", orientation: "Layout", landscape: "Beside (landscape)", portrait: "Under (portrait)", language: "Language", theme: "Theme", light: "Light", dark: "Dark", follow: "Follow the device",
+          all: "All mats", label: "Mat name", name: "Name", id: "ID", reset: "Back to the sample names", table: "The same as a table", privacy: "The names here are invented. The page sends nothing and stores nothing: the address holds what you typed, so a copy of the address is a copy of the assignment.",
+          formLabel: "Mats and officials",
+        },
+        ja: {
+          title: "審判員の配置", pageTitle: "競技場 Kyogijo Stadiums：審判員の配置", pageDescription: "どの試合場を誰が担当するか。柔道の各試合場の審判員を席ごとに、氏名とIDとともに表示します。席に収まる氏名は席の中に表示し、一覧表にはすべての氏名を載せます。2Dと3Dに対応し、タブレットでの閲覧を想定しています。",
+          lede: "各試合場で誰がどの席に座るかを表示します。氏名は、席に収まる場合は席の中に表示し、席・氏名・IDの一覧表には常に載せます。入力した内容は、このページとURLの中だけに保持されます。",
+          back: "競技場 Kyogijo Stadiums のデモに戻る", docs: "ドキュメントの「審判員の配置」ページ", edit: "試合場と審判員", style: "種目", kata: "形（5人制）", mats: "試合場の数", view: "表示", focus: "表示する範囲", focusMat: "試合場全体", focusBench: "審判員席", chart: "一覧表",
+          auto: "氏名が席に収まらないとき", always: "常に表示", never: "表示しない", orientation: "並べ方", landscape: "横に並べる", portrait: "下に並べる", language: "言語", theme: "テーマ", light: "ライト", dark: "ダーク", follow: "端末に合わせる",
+          all: "すべての試合場", label: "試合場の名前", name: "氏名", id: "ID", reset: "サンプルの氏名に戻す", table: "表で見る", privacy: "ここに載せている氏名は架空のものです。このページは何も送信せず、何も保存しません。入力した内容はURLに含まれるので、URLをコピーすると配置もコピーされます。",
+          formLabel: "試合場と審判員",
+        },
+      };
+      // Invented names, for the page to open on: the assignment is whatever is typed in, and lives in the address.
+      const SAMPLE = [
+        { l: "", o: [["Aiko Mori", "J-1042"], ["Daniel Okafor", "J-0377"], ["Sofia Lindqvist-Hernandez", "J-2210"], ["Kenji Watanabe", "J-0918"], ["Marta Kowalczyk", "J-1555"]] },
+        { l: "", o: [["Li Wei", "J-3001"], ["山田 花子", "J-3077"], ["Priya Raman", "J-0042"], ["Tomás Ferreira", "J-2764"], ["Hannah Brooks", "J-1888"]] },
+      ];
+      const $ = (id) => document.getElementById(id);
+      const params = new URLSearchParams(location.search);
+      const SEATS = JUDGING_SEATS.kata;
+      const state = { mats: [], tab: 1, viewpoint: TURN_PRESET_NAMES.includes(params.get("viewpoint")) ? params.get("viewpoint") : "broadcast" };
+      let turn;
+      let turnKey = "";
+
+      function readMats() {
+        try {
+          const raw = JSON.parse(params.get("d") ?? "null");
+          if (Array.isArray(raw) && raw.length >= 1 && raw.length <= 6) {
+            return raw.map((m) => ({ l: typeof m.l === "string" ? m.l.slice(0, 40) : "", o: SEATS.map((_, i) => { const x = Array.isArray(m.o) && Array.isArray(m.o[i]) ? m.o[i] : []; return [String(x[0] ?? "").slice(0, 120), String(x[1] ?? "").slice(0, 64)]; }) }));
+          }
+        } catch { /* a damaged address opens on the samples */ }
+        return null;
+      }
+      const blank = () => ({ l: "", o: SEATS.map(() => ["", ""]) });
+      function samples(count) { return Array.from({ length: count }, (_, i) => structuredClone(SAMPLE[i] ?? blank())); }
+      state.mats = readMats() ?? samples(2);
+      const wantTab = params.has("mat") ? Number(params.get("mat")) : 1;
+      state.tab = Number.isInteger(wantTab) && wantTab >= 0 && wantTab <= state.mats.length ? wantTab : 1;
+
+      function words() { return WORDS[$("language").value]; }
+      function setSelect(id, value, allowed) { if (allowed.includes(value)) $(id).value = value; }
+      setSelect("view", params.get("view"), ["flat", "3d"]);
+      setSelect("focus", params.get("focus"), ["mat", "bench"]);
+      setSelect("chart", params.get("chart"), ["auto", "always", "never"]);
+      setSelect("orientation", params.get("orientation"), ["auto", "landscape", "portrait"]);
+      setSelect("theme", params.get("theme"), ["light", "dark"]);
+      setSelect("language", params.get("lang"), ["en", "ja"]);
+      $("mats").value = String(state.mats.length);
+
+      function labelPage() {
+        const w = words();
+        const language = $("language").value;
+        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["back", "back"], ["docs", "docs"], ["l-edit", "edit"], ["l-style", "style"], ["l-mats", "mats"], ["l-view", "view"], ["l-focus", "focus"], ["l-chart", "chart"], ["l-orientation", "orientation"], ["l-language", "language"], ["l-theme", "theme"], ["reset", "reset"], ["l-table", "table"], ["privacy", "privacy"]]) $(id).textContent = w[key];
+        const names = { style: { kata: "kata" }, focus: { mat: "focusMat", bench: "focusBench" }, chart: { auto: "auto", always: "always", never: "never" }, orientation: { auto: "follow", landscape: "landscape", portrait: "portrait" }, theme: { auto: "follow", light: "light", dark: "dark" } };
+        for (const [select, map] of Object.entries(names)) for (const option of $(select).options) option.textContent = w[map[option.value]];
+        document.documentElement.lang = language;
+        document.title = w.pageTitle;
+        document.querySelector('meta[name="description"]').setAttribute("content", w.pageDescription);
+        $("edit").setAttribute("aria-label", w.formLabel);
+      }
+
+      function buildOfficials() {
+        const w = words();
+        const language = $("language").value;
+        const host = $("officials");
+        host.replaceChildren();
+        state.mats.forEach((mat, mi) => {
+          const set = document.createElement("fieldset");
+          const legend = document.createElement("legend");
+          legend.textContent = mat.l === "" ? JUDGING_WORDS[language].mat.replace("{n}", String(mi + 1)) : mat.l;
+          set.append(legend);
+          const label = document.createElement("label");
+          const text = document.createElement("span");
+          text.textContent = w.label;
+          const input = document.createElement("input");
+          input.type = "text";
+          input.maxLength = 40;
+          input.value = mat.l;
+          input.placeholder = JUDGING_WORDS[language].mat.replace("{n}", String(mi + 1));
+          input.dataset.mat = String(mi);
+          input.dataset.field = "label";
+          input.autocomplete = "off";
+          label.append(text, input);
+          set.append(label);
+          SEATS.forEach((seat, si) => {
+            const row = document.createElement("div");
+            row.className = "seat";
+            const name = document.createElement("span");
+            name.textContent = seat.label[language];
+            const nameInput = document.createElement("input");
+            nameInput.type = "text";
+            nameInput.maxLength = 120;
+            nameInput.value = mat.o[si][0];
+            nameInput.setAttribute("aria-label", `${legend.textContent}, ${seat.label[language]}, ${w.name}`);
+            nameInput.dataset.mat = String(mi);
+            nameInput.dataset.seat = String(si);
+            nameInput.dataset.field = "name";
+            nameInput.autocomplete = "off";
+            const idInput = document.createElement("input");
+            idInput.type = "text";
+            idInput.maxLength = 64;
+            idInput.value = mat.o[si][1];
+            idInput.setAttribute("aria-label", `${legend.textContent}, ${seat.label[language]}, ${w.id}`);
+            idInput.dataset.mat = String(mi);
+            idInput.dataset.seat = String(si);
+            idInput.dataset.field = "id";
+            idInput.autocomplete = "off";
+            row.append(name, nameInput, idInput);
+            set.append(row);
+          });
+          host.append(set);
+        });
+      }
+
+      function buildTabs() {
+        const w = words();
+        const language = $("language").value;
+        const host = $("tabs");
+        host.replaceChildren();
+        const make = (index, text) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.role = "tab";
+          button.textContent = text;
+          button.dataset.tab = String(index);
+          button.setAttribute("aria-selected", String(state.tab === index));
+          button.addEventListener("click", () => { state.tab = index; buildTabs(); draw(); });
+          host.append(button);
+        };
+        state.mats.forEach((mat, i) => make(i + 1, mat.l === "" ? JUDGING_WORDS[language].mat.replace("{n}", String(i + 1)) : mat.l));
+        if (state.mats.length > 1) make(0, w.all);
+      }
+
+      function options() {
+        const theme = $("theme").value;
+        const portraitWanted = $("orientation").value === "auto" ? window.innerWidth < window.innerHeight * 1.05 : $("orientation").value === "portrait";
+        return {
+          style: "kata",
+          mats: state.mats.map((m) => ({ ...(m.l === "" ? {} : { label: m.l }), officials: m.o.flatMap(([name, id], i) => (name === "" && id === "" ? [] : [{ seat: i + 1, name, id }])) })),
+          ...(state.tab > 0 ? { mat: state.tab } : {}),
+          focus: $("focus").value,
+          chart: $("chart").value,
+          orientation: portraitWanted ? "portrait" : "landscape",
+          language: $("language").value,
+          ...(theme === "auto" ? {} : { theme }),
+        };
+      }
+
+      function syncUrl() {
+        const next = new URLSearchParams();
+        const empty = JSON.stringify(state.mats) === JSON.stringify(samples(state.mats.length));
+        if (!empty) next.set("d", JSON.stringify(state.mats.map((m) => ({ l: m.l, o: m.o }))));
+        if (state.tab !== 1) next.set("mat", String(state.tab));
+        if ($("view").value === "3d") {
+          next.set("view", "3d");
+          if (state.viewpoint !== "broadcast") next.set("viewpoint", state.viewpoint);
+        }
+        if ($("focus").value !== "mat") next.set("focus", $("focus").value);
+        if ($("chart").value !== "auto") next.set("chart", $("chart").value);
+        if ($("orientation").value !== "auto") next.set("orientation", $("orientation").value);
+        if ($("language").value === "ja") next.set("lang", "ja");
+        if ($("theme").value !== "auto") next.set("theme", $("theme").value);
+        history.replaceState(null, "", next.size === 0 ? location.pathname : `?${next}`);
+      }
+
+      function draw() {
+        const theme = $("theme").value;
+        if (theme === "auto") delete document.documentElement.dataset.theme;
+        else document.documentElement.dataset.theme = theme;
+        const o = options();
+        const stage = $("stage");
+        stage.toggleAttribute("data-one", state.tab > 0);
+        $("error").hidden = true;
+        try {
+          if ($("view").value === "3d") {
+            const html = judgingChart({ ...o, chart: undefined, focus: undefined, orientation: undefined });
+            const key = JSON.stringify([o.mat, state.mats.length]);
+            if (turn !== undefined && turnKey !== key) { turn.destroy(); turn = undefined; }
+            if (turn === undefined) {
+              stage.innerHTML = '<div class="pair"><div id="three"></div><div id="chart-side"></div></div>';
+              turnKey = key;
+              turn = mountJudgingTurn($("three"), o, { preset: state.viewpoint, onChange: (_, preset) => { if (preset !== undefined) state.viewpoint = preset; syncUrl(); } });
+            } else turn.update(o);
+            stage.querySelector(".pair").dataset.orientation = o.orientation;
+            $("chart-side").innerHTML = html;
+          } else {
+            if (turn !== undefined) { turn.destroy(); turn = undefined; }
+            stage.innerHTML = drawJudging(o);
+          }
+          $("table").innerHTML = judgingTable({ ...o, mat: undefined });
+        } catch (error) {
+          $("error").textContent = String(error.message);
+          $("error").hidden = false;
+        }
+        syncUrl();
+        const back = new URLSearchParams({ sport: "judo" });
+        if ($("language").value === "ja") back.set("lang", "ja");
+        $("back").href = `./?${back}`;
+        document.body.dataset.ready = "true";
+      }
+
+      $("officials").addEventListener("input", (event) => {
+        const t = event.target;
+        if (!(t instanceof HTMLInputElement)) return;
+        const mat = state.mats[Number(t.dataset.mat)];
+        if (t.dataset.field === "label") mat.l = t.value;
+        else mat.o[Number(t.dataset.seat)][t.dataset.field === "name" ? 0 : 1] = t.value;
+        if (t.dataset.field === "label") buildTabs();
+        draw();
+      });
+      $("mats").addEventListener("change", () => {
+        const count = Math.min(6, Math.max(1, Math.round(Number($("mats").value)) || 1));
+        $("mats").value = String(count);
+        while (state.mats.length > count) state.mats.pop();
+        while (state.mats.length < count) state.mats.push(structuredClone(SAMPLE[state.mats.length] ?? blank()));
+        if (state.tab > count) state.tab = count;
+        buildTabs();
+        buildOfficials();
+        draw();
+      });
+      $("reset").addEventListener("click", () => { state.mats = samples(state.mats.length); buildTabs(); buildOfficials(); draw(); });
+      $("language").addEventListener("change", () => { labelPage(); buildTabs(); buildOfficials(); draw(); });
+      for (const id of ["view", "focus", "chart", "orientation", "theme"]) $(id).addEventListener("change", draw);
+      // The layout follows the screen: a tablet turned on its side puts the chart beside the plan, held upright under it.
+      let resizing = 0;
+      window.addEventListener("resize", () => { cancelAnimationFrame(resizing); resizing = requestAnimationFrame(() => { if ($("orientation").value === "auto") draw(); }); });
+      labelPage();
+      buildTabs();
+      buildOfficials();
+      draw();
+    </script>
+  </body>
+</html>

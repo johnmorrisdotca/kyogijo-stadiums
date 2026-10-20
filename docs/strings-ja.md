@@ -1265,6 +1265,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `turn.parts.mat-edge` | mat thickness | 畳の厚み |
 | `turn.parts.surrounds` | surrounds | 競技エリアのフェンス |
 | `turn.parts.officials` | umpires' chairs and score tables | 審判席と記録台 |
+| `turn.parts.judges` | name cards on the judges' table | 審判員席の名札 |
 | `rules.defensive-zone` | Defensive zone | ディフェンディングゾーン |
 | `rules.neutral-zone` | Neutral zone | ニュートラルゾーン |
 | `rules.offensive-zone` | Offensive zone | アタッキングゾーン |
@@ -1974,6 +1975,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `skating` | The skating rinks | スケートリンク |
 | page `budo` | The budō: judo, karate, kendo, sumo, kyūdō and the dojo | 武道 |
 | page `multi` | Tournament layouts | 大会向けレイアウト（複数の競技面） |
+| page `judging` | Judging assignments | 審判員の配置 |
 | page `special-games` | Special games | 特設会場での試合 |
 | page `ballparks` | Ballparks | 球場 |
 | page `grounds` | The grounds | スタジアム |
@@ -2013,6 +2015,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `gallery-ranges` | Gallery: display ranges and zoom | ギャラリー：表示範囲とズーム |
 | page `gallery-layouts` | Gallery: layouts and backgrounds | ギャラリー：レイアウトと背景 |
 | page `gallery-multi` | Gallery: tournament layouts | ギャラリー：大会向けレイアウト |
+| page `gallery-judging` | Gallery: judging assignments | ギャラリー：審判員の配置 |
 | page `gallery-pageant` | Gallery: flags on the halves | ギャラリー：ハーフに広げる旗 |
 | page `gallery-situation` | Gallery: the situation of a game | ギャラリー：試合の状況 |
 | group `compare` | Compare | 比較 |

@@ -128,6 +128,16 @@ src/
 ├── multi.turn.ts       a layout in 3D: each surface as it stands on its own page, moved to its cell, with the table tops, the surrounds, the chairs and score tables, the scoreboards and the stands of the stadium, as a `TurnModel` for the 3D view; `mountMultiTurn`
 ├── multi.style.ts      the layout's rules, light and dark: the floors' colours, the barriers, the boards, the empty places and the colour of a layout that does not fit
 ├── multi.words.ts      the words of a layout in English and Japanese
+├── judging-entry.ts    the judging assignments entry (`@johnmorrisdotca/kyogijo-stadiums/judging`): `drawJudging`, `judgingChart`, `judgingTable`, `mountJudgingTurn`, the seats and the words
+├── judging.types.ts    what an assignment, a mat, an official and a seat are
+├── judging.data.ts     the seats of each style (a kata area's five judges, the central one in the middle) and the sources they are read from
+├── judging.ts          an assignment worked out: the options held to what they may be, each official put in a seat, and where the seats are on the judo plan
+├── judging.fit.ts      a name and an ID set in a box without cutting either: the biggest size that fits, wrapped at its spaces, and the chart's rows that grow
+├── judging.card.ts     the name card of a seat and the badge of its number, as markup for the plan and for the 3D view
+├── judging.draw.ts     an assignment drawn: each mat's judo area with a badge or a card at every seat and the chart of seat, name and ID; `judgingTable`, the text alternative
+├── judging.turn.ts     an assignment in 3D: the judges' table and chairs, a name card on the table, the mat's name on a sign, as a `TurnModel` for the 3D view; `mountJudgingTurn`
+├── judging.style.ts    the rules of an assignment, light and dark: the ground, the chart's rows, the badges and the cards
+├── judging.words.ts    the words of an assignment in English and Japanese
 ├── layout.ts           drawGrid: many drawings in one SVG, with a title, a subtitle, a key and a credit line, in a size for a card or a phone
 ├── layout.style.ts     the grid's rules: the ground colour and the ink of its words, light and dark
 ├── layouts-entry.ts    the layouts' entry

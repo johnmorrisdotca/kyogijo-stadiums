@@ -8,7 +8,7 @@ import type { MultiCell, MultiOptions } from "./multi.types.ts";
 import { outlineOf } from "./outline.ts";
 import { hash } from "./format.ts";
 import { TURN_PRESETS, NET_PRESETS, wrap, type PresetTable } from "./turn.camera.ts";
-import { flat, n, plane, shy, thinnest, wall, type Plane, type Upright } from "./turn.kit.ts";
+import { box, flat, n, plane, rect, shy, thinnest, wall, type Plane, type Rect, type Upright } from "./turn.kit.ts";
 import { mountTurn, type KyogijoTurn } from "./turn.dom.ts";
 import { turnMarkupOf } from "./turn.markup.ts";
 import { openingView, sceneBox, type TurnModel, type TurnSettings } from "./turn.model.ts";
@@ -30,9 +30,6 @@ const DESK = 2.5;
 /** Where the scoreboards hang (ours): the one over the middle of the floor has its lower edge 13 feet up and its cables run 8 feet above its top; the one at each surface stands 2.6 feet off the floor. */
 const HUNG = { bottom: 13, cables: 8 } as const;
 const STANDING = { legs: 2.6, tall: 1.4 } as const;
-
-/** A point of the layout's frame or the picture's: feet. */
-type Rect = { x0: number; y0: number; x1: number; y1: number };
 
 /** A map of the plane that is a turn by a quarter or none, and a shift: (x, y) goes to (a x + b y + e, c x + d y + f). */
 interface Map2 {
@@ -70,16 +67,6 @@ function place(p: Plane, m: Map2, id: string): Plane {
     moved.v = [0, y1 - y0, 0];
   }
   return moved;
-}
-
-const rect = (x: number, y: number, w: number, h: number): Rect => ({ x0: x, y0: y, x1: x + w, y1: y + h });
-
-/** A solid box on the floor: four sides up to `z1` and a flat top. `cls` paints the top; the sides are one tone darker (`cls-side`). */
-function box(id: string, kind: Plane["kind"], r: Rect, z1: number, cls: string): Plane[] {
-  const sides: [number, number, number, number][] = [[r.x0, r.y0, r.x1, r.y0], [r.x1, r.y0, r.x1, r.y1], [r.x1, r.y1, r.x0, r.y1], [r.x0, r.y1, r.x0, r.y0]];
-  const planes = sides.map(([a, b, c, d], i) => wall(`${id}-${i + 1}`, kind, a, b, c, d, 0, z1, `<rect width="${n(Math.hypot(c - a, d - b))}" height="${n(z1)}" class="${cls}-side"/>`));
-  planes.push(flat(`${id}-top`, kind, r.x0, r.y0, r.x1, r.y1, z1, `<rect width="${n(r.x1 - r.x0)}" height="${n(r.y1 - r.y0)}" class="${cls}"/>`));
-  return planes;
 }
 
 /** The surround of one area: four sides over the rectangle, each in pieces of at most `SURROUND_PIECE`, facing out from the area's middle (it gives way to a nearly level eye, as the glass of a rink does, but only then). */

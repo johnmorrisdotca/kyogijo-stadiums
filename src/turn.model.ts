@@ -95,6 +95,8 @@ export interface TurnModel {
   turnable: boolean;
   /** The four viewpoints, when the model has its own (a tournament layout's); the sport's when missing. */
   presets?: PresetTable;
+  /** A lens of the model's own, as a multiple of the view's longer side, used when the settings give none: a scene that turns about a point far from some of what it shows wants a longer one, so that what swings toward the eye does not swell. */
+  lens?: number;
   /** The flat drawing to show where the 3D view cannot be drawn, when it is not `drawKyogijo`'s of `options` (a tournament layout's). */
   flat?: string;
 }

@@ -19,7 +19,7 @@ console.log(layout.needs.length, layout.needs.width, layout.needs.area);
 
 Each surface is the one `drawKyogijo` draws (a table, a court, a sheet, the sport's own several judo or karate areas), with its own lines, moved to its place: nothing is drawn a second way. The layout adds the floor, and, where the sport has them, the barriers, the officials' chairs, a scoreboard hung over the middle of the floor, the boards along its edges and the empty places for the event's own words and marks. It is one picture, with a title and a description for a screen reader, light and dark like every drawing, and [`multiTable`](#the-text-alternative) says the same thing as a table.
 
-The [tournament layouts demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/halls.html) lets you pick a preset, set it in a hall, switch the stadium on and off, and turn the whole floor in [3D](#in-3d) (`view=3d` in its address); [the gallery](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-multi.html) shows every preset.
+The [tournament layouts demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/halls.html) lets you pick a preset, set it in a hall, switch the stadium on and off, and turn the whole floor in [3D](#in-3d) (`view=3d` in its address); [the gallery](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-multi.html) shows every preset. Who judges at each mat of a judo layout is [judging assignments](./judging.md).
 
 ## The presets
 

@@ -650,6 +650,17 @@ Several of the surfaces above laid out together for one event ([the page](./mult
 
 **Not found (unsourced), so left out of the presets.** The size of the floor of OVO Arena Wembley (only its area), the Beijing 2022 Ice Cube's ice, the Baku, Tokyo, Astana and Budapest halls' floors, the number of contest areas of the judo events (only photographs), the count of tables of any table tennis event other than the photographed four, a court count and a layout for any pickleball event, 3x3 basketball's multi-court layouts, beach volleyball's centre court with side courts, small-sided football, kendo's rows, padel, squash banks. The rest of the sports that run several surfaces at once are in [the research note](../docs/research/multi-surface-research.md).
 
+## Judging assignments
+
+Who sits where at a judo mat ([the page](./judging.md)). The seats are the kata area's, read for [the kata area](#judo-karate-kendo-sumo-kyudo-and-the-dojo) (`ijf-sor`, `ijf-kata-handbook`, `ijf-kata-criteria` in `LEAGUE_SOURCES`) and drawn by its plan, so that a seat named is a seat drawn; nothing is copied from a document, and no name, ID or person is real.
+
+| Figure | Value | Source |
+| --- | --- | --- |
+| Kata: the judges | five, on the shomen side about 1.25 m apart, the central judge at the centre of the area; no referee | SOR 21 January 2026, the judges' article; Kata Commission Tournament Handbook 2024 |
+| The numbering of the seats | **ours**: 1 to 5 from the left of the plan with the shomen at the top, so the central judge is 3; no rule numbers the judges | |
+| The cards, the badges, the chart, the heights in 3D (a table 75 cm, a chair 45 cm, a card 95 cm), the smallest type | **ours**: a name card is as wide as the seats are apart; the type is no smaller than 1.2 % of the picture's width (0.19 m in 3D) | |
+| Shiai (contest) seats | not yet: the next release | |
+
 ## Surface units
 
 `SURFACE_UNITS` (`src/units.ts`) is the unit each rulebook states its principal figures in. The drawing is made in feet and a figure is one conversion from the rulebook's own.
