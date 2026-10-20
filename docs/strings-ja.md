@@ -47,6 +47,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `surface.dojo` | Dojo | 道場 |
 | `surface.mma` | MMA cage | 総合格闘技のケージ |
 | `surface.boxing` | Boxing ring | ボクシングのリング |
+| `surface.wrestling` | Wrestling mat | レスリングのマット |
 | `about.nfl` | an American football field, 120 by 53 and a third yards with its end zones, with a yard line every 5 yards, hash marks, numbers and goal posts | アメリカンフットボールのフィールド。エンドゾーンを含めて120×53⅓ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールポストがあります |
 | `about.cfl` | a Canadian football field, 150 by 65 yards with its 20-yard end zones, with a yard line every 5 yards, hash marks, numbers and goal posts on the goal lines | カナディアンフットボールのフィールド。20ヤードのエンドゾーンを含めて150×65ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールライン上のゴールポストがあります |
 | `about.ifaf` | an international (IFAF) football field, 120 by 53 and a third yards with its end zones, with a yard line every 5 yards, hash marks, numbers and goal posts | 国際アメリカンフットボール連盟（IFAF）規格のフィールド。エンドゾーンを含めて120×53⅓ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールポストがあります |
@@ -88,6 +89,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `about.dojo` | a dojo of 20 jō of tatami | 20畳の道場 |
 | `about.mma` | an MMA cage: an eight-sided fenced area 9.14 metres (30 feet) across, on a platform 122 centimetres high | 総合格闘技のケージ。金網で囲まれた、対辺間の距離が30フィート（約9.1m）の八角形で、高さ122cmの台の上にあります |
 | `about.boxing` | a boxing ring: a square of 6.1 metres (20 feet) inside the ropes, on a platform 122 centimetres high | ボクシングのリング。ロープの内側は一辺20フィート（約6.1m）の正方形で、リングは高さ122cmの台の上にあります |
+| `about.wrestling` | a wrestling mat of the UWW: a circle 9 metres across in a protection area 1.5 metres wide, with an orange passivity band inside the circle, on a platform 1 metre high | UWWのレスリングマット。直径9mの円の外側に幅1.5mのプロテクションエリアがあり、円の内側にオレンジ色のパッシビティゾーンがあります。マットは高さ1mの台の上にあります |
 | `status.final` | Final | 試合終了 |
 | `status.final-ot` | Final/OT | 試合終了（延長） |
 | `status.final-so` | Final/SO | 試合終了（SO） |
@@ -427,6 +429,12 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `budo.boxingFloor` | at floor level | リングは床と同じ高さにあります |
 | `budo.boxingCorners` | The corners are red and blue for the two boxers and white for the neutral ones. | コーナーの色は、ボクサー用が赤と青、中立コーナーが白です。 |
 | `budo.boxingSteps` | Three sets of steps lead up to the platform: one in each boxer's corner and one in a neutral corner. | 台へ上がる階段は3か所で、各ボクサーのコーナーに1か所ずつと、中立コーナーに1か所あります。 |
+| `budo.wrestlingUww` | a wrestling mat of the UWW, for freestyle and Greco-Roman wrestling: a circle {circle} metres across in a protection area {border} metres wide, with an orange passivity band {band} metre wide inside the circle, {platform} | UWWのレスリングマット（フリースタイルとグレコローマン）。直径{circle}mの円の外側に幅{border}mのプロテクションエリアがあり、円の内側には幅{band}mのオレンジ色のパッシビティゾーンがあります。{platform} |
+| `budo.wrestlingFolk` | a folkstyle wrestling mat: a circle {feet} feet ({circle} metres) across in a matted area {border} feet wide, {platform} | フォークスタイルのレスリングマット。直径{feet}フィート（約{circle}m）の円の外側に、幅{border}フィートのマットが敷かれています。{platform} |
+| `budo.wrestlingPlatform` | on a platform {height} metres high | マットは高さ{height}mの台の上にあります |
+| `budo.wrestlingFloor` | on the floor of the hall | マットは会場の床に敷かれています |
+| `budo.wrestlingCentre` | A circle {d} metres across marks the middle. | 中央には直径{d}mの円があります。 |
+| `budo.wrestlingLines` | Two parallel starting lines at the middle are closed at their ends by a green line and a red line. | 中央の平行な2本のスタートラインは、一方の端が緑の線、もう一方の端が赤の線で閉じられています。 |
 | `budo.board.ippon` | Ippon | 一本 |
 | `budo.board.wazaari` | Waza-ari | 技あり |
 | `budo.board.yuko` | Yuko | 有効 |
@@ -554,6 +562,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `special.guest.dojo` | dojo | 道場 |
 | `special.guest.mma` | cage | ケージ |
 | `special.guest.boxing` | ring | リング |
+| `special.guest.wrestling` | mat | マット |
 | `special.title` | {guest} in {host} | {host}の中の{guest} |
 | `special.game` | {event}, {date}. | {event}、{date}。 |
 | `special.inside` | The {guest} lies wholly inside the outline of {host}. | {guest}全体が{host}の輪郭の内側に収まっています。 |
@@ -1035,6 +1044,13 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `notes.names.ring-blue-corner` | Blue corner | 青コーナー |
 | `notes.names.ring-apron` | Apron | エプロン |
 | `notes.names.ring-steps` | Steps | 階段 |
+| `notes.names.mat-circle` | Wrestling area | レスリングエリア |
+| `notes.names.mat-central` | Central surface | 中央の競技面 |
+| `notes.names.mat-border` | Border of the mat | マットの外周部 |
+| `notes.names.mat-passivity` | Passivity zone | パッシビティゾーン |
+| `notes.names.mat-centre-circle` | Centre circle | センターサークル |
+| `notes.names.mat-starting-lines` | Starting lines | スタートライン |
+| `notes.names.mat-platform` | Platform | 台 |
 | `notes.names.shimoza` | Shimoza | 下座 |
 | `notes.names.shinzen` | Shinzen | 神棚 |
 | `notes.names.dais` | Dais, the seat of honour | 上座の台 |
@@ -1158,6 +1174,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `ranges.names.gate` | gate | 出入口 |
 | `ranges.names.ropes` | ring inside the ropes | ロープの内側 |
 | `ranges.names.corner` | corner | コーナー |
+| `ranges.names.passivity` | passivity zone | パッシビティゾーン |
 | `ranges.names.crossing-straight` | crossing straight | 交差ストレート |
 | `ranges.names.first-bend` | first bend | 第1カーブ |
 | `ranges.names.second-bend` | second bend | 第2カーブ |
@@ -1498,6 +1515,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `sport_dojo` | Dojo | 道場 |
 | `sport_mma` | MMA cage | 総合格闘技 |
 | `sport_boxing` | Boxing ring | ボクシング |
+| `sport_wrestling` | Wrestling mat | レスリング |
 | `pitchLabel` | Pitch | ピッチ |
 | `pitch_fifa` | International, 105 × 68 m | 国際標準 105×68m |
 | `pitch_uefa` | UEFA, 105 × 68 m | UEFA 105×68m |
@@ -2017,7 +2035,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `athletics` | The athletics stadium | 陸上競技場 |
 | page `skating` | The skating rinks | スケートリンク |
 | page `budo` | The budō: judo, karate, kendo, sumo, kyūdō and the dojo | 武道 |
-| page `combat` | The combat sports: the MMA cage and the boxing ring | 格闘技（総合格闘技のケージ） |
+| page `combat` | The combat sports: the MMA cage, the boxing ring and the wrestling mats | 格闘技 |
 | page `multi` | Tournament layouts | 大会向けレイアウト（複数の競技面） |
 | page `judging` | Judging assignments | 審判員の配置 |
 | page `special-games` | Special games | 特設会場での試合 |
@@ -2055,7 +2073,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `gallery-athletics` | Gallery: the athletics stadium | ギャラリー：陸上競技場 |
 | page `gallery-skating` | Gallery: the skating rinks | ギャラリー：スケートリンク |
 | page `gallery-budo` | Gallery: the budō | ギャラリー：武道 |
-| page `gallery-combat` | Gallery: the combat sports | ギャラリー：格闘技（総合格闘技のケージ） |
+| page `gallery-combat` | Gallery: the combat sports | ギャラリー：格闘技 |
 | page `gallery-styling` | Gallery: looks and annotations | ギャラリー：スタイルと注釈 |
 | page `gallery-ranges` | Gallery: display ranges and zoom | ギャラリー：表示範囲とズーム |
 | page `gallery-layouts` | Gallery: layouts and backgrounds | ギャラリー：レイアウトと背景 |

@@ -90,6 +90,12 @@ export const BUDO_LOOKS: Readonly<Record<BudoKind, Readonly<Record<string, Pair>
     blue: lifted(pair({ ...COMMON, surface: "#3a68ad", alt: "#2b528d", red: "#b32a2f", floor: "#1f3358", rope: "#f4f1e8" }), "#324a78"),
     black: lifted(pair({ ...COMMON, surface: "#2b2e33", alt: "#1f2226", red: "#b32a2f", floor: "#17191c", rope: "#f4f1e8" }), "#3b3f45"),
   },
+  // The wrestling mat's colours: the circle over the border (a UWW mat's protection area is a different colour from the mat, as its rules say), with the passivity band orange in every look. Ours.
+  wrestling: {
+    "blue-red": lifted(pair({ ...COMMON, surface: "#2f6db0", alt: "#c0392b", red: "#f07a1a", floor: "#2e3138" }), "#3b3f48"),
+    "green-beige": lifted(pair({ ...COMMON, surface: "#4f9560", alt: "#d6c595", red: "#f07a1a", floor: "#2e3138" }), "#3b3f48"),
+    "yellow-blue": lifted(pair({ ...COMMON, surface: "#e6c02e", alt: "#2f5fa6", red: "#f07a1a", floor: "#2e3138" }), "#3b3f48"),
+  },
   kyudo: { wood: pair({ ...COMMON, surface: "#9db57d", alt: "#d8cfb0", red: "#b32a2f", floor: "#b98c58", dirt: "#c9ad7a" }) },
 });
 

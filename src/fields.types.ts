@@ -34,7 +34,7 @@ export type SkatingMark = "ky-ska-b" | "ky-ska-r" | "ky-ska-k" | "ky-ska-blocks"
 
 /** The coloured marks of a budō surface: the white line, the blue, white and red tape, the seam between mats. */
 /** The fills of a budō surface's tape: blue, white, red and ink. */
-export type BudoFill = "ky-bud-blue-fill" | "ky-bud-white-fill" | "ky-bud-red-fill" | "ky-bud-ink-fill";
+export type BudoFill = "ky-bud-blue-fill" | "ky-bud-white-fill" | "ky-bud-red-fill" | "ky-bud-ink-fill" | "ky-bud-green-fill";
 
 export type BudoMark = "ky-bud-line" | "ky-bud-blue" | "ky-bud-white" | "ky-bud-red" | "ky-bud-seam" | "ky-bud-ink" | "ky-bud-rope";
 

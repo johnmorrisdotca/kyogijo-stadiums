@@ -73,3 +73,19 @@ test("the ring shows the look and the league, and draws its ropes and four corne
   await noSidewaysScroll(page);
   expect(errors).toEqual([]);
 });
+
+test("the wrestling mat shows its league, draws the UWW's band and a folkstyle mat's starting lines, and stands the UWW's mat on a platform in 3D", async ({ page }) => {
+  const errors = await open(page, "?sport=wrestling&lang=en&help=off");
+  await openGroups(page);
+  await expect(page.locator(at("budo-look"))).toBeVisible();
+  await expect(page.locator(at("cage-size"))).toBeHidden();
+  expect(await svg(page).evaluate((node) => node.querySelectorAll(".ky-bud-t3").length)).toBe(1);
+  await open(page, "?sport=wrestling&league=ncaa-wrestling&lang=en&help=off");
+  expect(await svg(page).evaluate((node) => node.querySelectorAll(".ky-bud-green-fill").length)).toBeGreaterThan(0);
+  await open(page, "?sport=wrestling&view=3d&lang=en&help=off");
+  const stage = '[data-testid="stage"]';
+  await expect(page.locator(`${stage} [data-part="deck-top"]`)).toHaveCount(1);
+  await expect(page.locator(`${stage} [data-part^="deck-"]`)).toHaveCount(5);
+  await noSidewaysScroll(page);
+  expect(errors).toEqual([]);
+});

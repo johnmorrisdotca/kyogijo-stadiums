@@ -48,6 +48,13 @@ export function budoAbout(o: Opt, language: Language, plan: BudoPlan = budoPlan(
     const platform = L.height > 0.0005 ? fill(words.boxingPlatform, { height: cm(L.height) }) : words.boxingFloor;
     return fill(words.boxing, { size: trim(L.size), feet: trim(L.size / 0.3048), apron: cm(L.apron), platform });
   }
+  if (plan.wrestling !== undefined) {
+    const L = plan.wrestling;
+    const fig = plan.figures as { passivity: number; border: { drawn: number } };
+    const platform = L.height > 0.0005 ? fill(words.wrestlingPlatform, { height: trim(L.height) }) : words.wrestlingFloor;
+    if (fig.passivity > 0) return fill(words.wrestlingUww, { circle: trim(L.circle), border: trim(L.border), band: trim(fig.passivity), platform });
+    return fill(words.wrestlingFolk, { feet: trim(L.circle / 0.3048), circle: trim(L.circle), border: trim(L.border / 0.3048), platform });
+  }
   if (plan.kyudo !== undefined) {
     const L = plan.kyudo;
     const fig = plan.figures as { distance: number };
@@ -77,6 +84,11 @@ export function budoSentences(o: Opt, language: Language, plan: BudoPlan = budoP
   if (plan.mma !== undefined) {
     if (plan.mma.gates.length > 0) out.push(words.mmaGates);
     if (plan.mma.steps.length > 0) out.push(words.mmaSteps);
+  }
+  if (plan.wrestling !== undefined) {
+    const fig = plan.figures as { centre: { diameter: number } | null; lines: unknown };
+    if (fig.centre !== null && o.budo?.circle !== false) out.push(fill(words.wrestlingCentre, { d: trim(fig.centre.diameter) }));
+    if (fig.lines !== null && plan.wrestling.start !== undefined) out.push(words.wrestlingLines);
   }
   if (plan.boxing !== undefined) {
     if (o.budo?.corners !== false) out.push(words.boxingCorners);

@@ -58,7 +58,7 @@ describe("feature colours", () => {
       const drawn = isFieldSport(sport) || sport === "skating" ? LEAGUES[sport as keyof typeof LEAGUES].flatMap((league) => [drawKyogijo({ sport, league: league.id, id: "f", featureColors, ...(extras[sport] ?? {}) }), drawKyogijo({ sport, league: league.id, id: "f", featureColors, ...(extras[sport] ?? {}), ...game })]).map(root) : [root(svg)];
       const missing = names.filter((name) => drawn.every((tree) => withClass(tree, `ky-f-${name}`).length === 0));
       // A feature a drawing may not have by default: the curling hack lines and courtesy lines belong to World Curling's sheet and the crease marks to some rinks.
-      const optional = new Set(["courtesy-lines", "crease-marks", "trapezoid", "referee-crease", "running-lane", "batters-boxes", "centre-dashes", "hash-marks", "areas", "antennae", "free-zone", "pace-bars", "banking"]);
+      const optional = new Set(["courtesy-lines", "crease-marks", "trapezoid", "referee-crease", "running-lane", "batters-boxes", "centre-dashes", "hash-marks", "areas", "antennae", "free-zone", "pace-bars", "banking", "rim", "starting-lines"]);
       expect(missing.filter((name) => !optional.has(name)), `${sport} has no element for`).toEqual([]);
       for (const name of names) expect(svg, name).toContain(`--ky-f-${name}:`);
       expect(svg).toContain(".ky-f-");

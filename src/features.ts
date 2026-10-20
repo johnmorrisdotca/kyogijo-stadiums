@@ -170,6 +170,17 @@ const BOXING: readonly Feature[] = [
   f("corners", "--ky-ink", "The four corner posts with their pads."),
 ];
 
+const WRESTLING: readonly Feature[] = [
+  f("apron", "--ky-apron", "The floor of the hall round the mat."),
+  f("platform", "--ky-bud-floor", "The platform the mat stands on."),
+  f("border", "--ky-surface-alt", "The matted area round the circle (the UWW's protection area)."),
+  f("circle", "--ky-surface", "The wrestling area, inside the circle."),
+  f("passivity", "--ky-red", "The orange passivity band of the UWW's mat."),
+  f("rim", "--ky-line", "The line that outlines a folkstyle circle."),
+  f("centre-circle", "--ky-line", "The circle in the middle of the mat."),
+  f("starting-lines", "--ky-line", "The two starting lines of a folkstyle mat with their green and red ends."),
+];
+
 const KYUDO: readonly Feature[] = [
   f("apron", "--ky-apron", "The ground round the range."),
   f("shajo", "--ky-bud-floor", "The floor of the shajō."),
@@ -501,6 +512,7 @@ export const FEATURE_INFO: Readonly<Record<string, readonly Feature[]>> = Object
   dojo: DOJO,
   mma: MMA,
   boxing: BOXING,
+  wrestling: WRESTLING,
 });
 
 /**

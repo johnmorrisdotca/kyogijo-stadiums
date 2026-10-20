@@ -1,6 +1,6 @@
-# The combat sports: the MMA cage and the boxing ring
+# The combat sports: the MMA cage, the boxing ring and the wrestling mats
 
-The combat sports' surfaces, drawn to scale from the rules a commission or a federation writes: `sport: "mma"`, an eight-sided cage on its platform with its padded posts, its two gates, its steps and its fence of mesh, and `sport: "boxing"`, the square ring with its ropes and its four corners. The mats of wrestling follow them. The cage is named for what it is, a cage with eight sides: it is not any promotion's own cage, and no promotion's name or mark is used.
+The combat sports' surfaces, drawn to scale from the rules a commission or a federation writes: `sport: "mma"`, an eight-sided cage on its platform with its padded posts, its two gates, its steps and its fence of mesh, `sport: "boxing"`, the square ring with its ropes and its four corners, and `sport: "wrestling"`, the circle of the UWW's mat and the folkstyle mats of the NCAA and the high schools. The professional wrestling ring follows them. The cage is named for what it is, a cage with eight sides: it is not any promotion's own cage, and no promotion's name or mark is used.
 
 ```ts
 import { drawKyogijo, RANGES } from "@johnmorrisdotca/kyogijo-stadiums";
@@ -94,6 +94,38 @@ In 3D the platform is a solid block as the cage's is. The four posts are solid a
 
 ![The ring in 3D from a low corner: a solid platform on the floor of the hall, four posts in red, blue and white with four ropes between them, and the steps](./images/boxing-ring-3d-desk-light.webp)
 
+## Wrestling
+
+`sport: "wrestling"`: a circle on a square of mat, in three leagues. `uww` (the default) is the United World Wrestling's mat, the one on which freestyle, Greco-Roman and women's wrestling are all wrestled (Wrestling Rules, Article 4, January 2026); `ncaa-wrestling` is the NCAA's folkstyle mat (Rule 1, 2025-26 and 2026-27); `nfhs-wrestling` is the high schools' (NFHS Rule 2-1).
+
+| What | UWW (`uww`) | NCAA (`ncaa-wrestling`) | High school (`nfhs-wrestling`) |
+| --- | --- | --- | --- |
+| The wrestling area | a circle of 9 m, whose central surface is 7 m inside the band | a competition circle of 32 to 42 feet (32 drawn), its edge a 2 inch line that is in bounds | a circle of at least 28 feet (28 drawn) |
+| Round it | a protection area 1.50 m wide, of a colour different from the mat's (the mat is a square of 12 m, **typical**) | a matted area of at least 5 feet, in a colour or a 2 inch line that differs from the circle's | a safety mat of about 5 feet |
+| The passivity zone | an orange band 1 m wide inside the 9 m circle, part of the wrestling area | none | none |
+| The middle | a central circle, 1 m inside with a band of 10 cm | none (two starting lines) | a circle of 10 feet, optional from 2024-25; two starting lines |
+| The starting lines | none | two 1 inch lines 3 feet long and 10 inches apart, closed at their ends by a 1 inch green line (the home team's) and a red one (the visitors') | the same: 3 feet long and 12 inches from outside to outside, closed by a green and a red line |
+| The platform | at the Games and the world and continental championships, 0.80 to 1.10 m high, at least 1 m round the mat; 1 m drawn | none given (ours: none drawn, up to 1.10 m) | none given |
+
+**Ours.** The colours of the three looks (`blue-red`, the default, `green-beige` and `yellow-blue`), the orange of the passivity band in every look, the red and green of the starting lines' ends at the left and the right, the starting lines centred on the middle of the mat (the NFHS text puts the front line on the circle's diameter, five inches off the middle), the line round an NFHS circle (2 inches), the mat's square for the folkstyle leagues (circle and matted area), and the platform of a folkstyle mat when one is asked for. The wrestlers' places and the scorer's table are not drawn.
+
+`budo.size` is the circle's diameter in metres within the league's range (9 m only for the UWW); `budo.height` is the platform's height (none, or 0.80 to 1.10 m for the UWW; 0 to 1.10 m for the others); `budo.circle` and `budo.start` (true by default) take the circle in the middle and the starting lines away. `RANGES.wrestling` has `start` (the middle of the mat), `passivity` (the UWW's wrestling area with its band) and `half`.
+
+```ts
+import { budoPlan } from "@johnmorrisdotca/kyogijo-stadiums/budo";
+
+const uww = budoPlan({ sport: "wrestling" });
+console.log(uww.wrestling?.circle, uww.wrestling?.inner, uww.wrestling?.border, uww.wrestling?.height);
+// 9 7 1.5 1
+const college = budoPlan({ sport: "wrestling", league: "ncaa-wrestling" });
+console.log((college.wrestling!.circle / 0.3048).toFixed(0), college.wrestling?.platform === undefined);
+// 32 true
+```
+
+In 3D the UWW's platform is a solid block with the mat as its top, in the order the other platforms are; a folkstyle mat lies on the floor and nothing stands on it.
+
+![The UWW's mat in 3D: a red protection area, an orange passivity band round a blue wrestling surface with the central circle, on a solid platform](./images/wrestling-mat-3d-desk-light.webp)
+
 ## The demo
 
-The [demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/?sport=mma) has the cage and the ring in its sport picker, with the looks, the league of the ring, the cage's width (30 or 25 feet), the 3D view and the score. The address says all of it: `?sport=mma&view=3d&viewpoint=corner&cagesize=25`, `?sport=boxing&league=wbc-amateur`.
+The [demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/?sport=mma) has the cage, the ring and the mats in its sport picker, with the looks, the league of the ring, the cage's width (30 or 25 feet), the 3D view and the score. The address says all of it: `?sport=mma&view=3d&viewpoint=corner&cagesize=25`, `?sport=boxing&league=wbc-amateur`, `?sport=wrestling&league=ncaa-wrestling`.

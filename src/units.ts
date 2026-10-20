@@ -70,6 +70,8 @@ export const SURFACE_UNITS: Readonly<Record<Sport, Unit>> = Object.freeze({
   mma: "ft",
   // The ring: the commissions' rules are written in feet and inches (the amateurs' in metres, in their own league).
   boxing: "ft",
+  // The mat: the UWW's rules are in metres (the folkstyle leagues' in feet, in their own league).
+  wrestling: "m",
 });
 
 /** True when `unit` is one of the six. */

@@ -558,3 +558,19 @@
 - `wbc-amateur`: <https://wbcboxing.com/amateur/esp/wp-content/uploads/2025/10/WBC-AMATEUR-RULES-UPDATED-2026.pdf>
 - `ontario-amateur-boxing`: <https://www.ontario.ca/document/amateur-combative-sport-rules-boxing/part-ii-competitive-field-play>
 
+## レスリングのマット
+
+`sport: "wrestling"`
+
+| `league` | 名前 |
+| --- | --- |
+| `uww`（その競技の標準） | レスリングのマット（UWW：フリースタイルとグレコローマン） |
+| `ncaa-wrestling` | レスリングのマット（NCAA：フォークスタイル） |
+| `nfhs-wrestling` | レスリングのマット（NFHS：アメリカの高校のフォークスタイル） |
+
+出典の URL：
+
+- `uww-wrestling-rules`: <https://cdn.uww.org/2026-01/wrestling_rules.pdf>
+- `ncaa-wrestling`: <https://ncaaorg.s3.amazonaws.com/championships/sports/wrestling/rules/PRMWR_RulesBook.pdf>
+- `nfhs-wrestling-mat`: <https://khsaa.org/?p=14520>
+

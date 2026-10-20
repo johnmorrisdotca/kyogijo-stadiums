@@ -124,11 +124,78 @@ export const BOXING_LEAGUES: readonly BoxingLeague[] = [
   { id: "wbc-amateur", family: "boxing", name: { en: "Boxing ring, WBC Amateur rules", ja: "ボクシングのリング（WBCアマチュア規則）" }, unit: "m", dimensions: WBC_AMATEUR_RING, sources: ["wbc-amateur", "ontario-amateur-boxing"] },
 ];
 
+/**
+ * The figures of a wrestling mat, in metres. The UWW's mat (freestyle and Greco-Roman, which are wrestled on the same one) is a circle of 9 m with a central circle, an orange passivity band 1 m wide inside the circle and a
+ * protection area 1.5 m wide round it, on a platform at the great events; the folkstyle mats of the NCAA and the high schools (NFHS) are a competition circle with a matted area round it and two parallel starting lines at the middle.
+ */
+export interface WrestlingFigures {
+  kind: "wrestling";
+  /** The wrestling area: the circle's diameter (the UWW's is fixed at 9 m; the NCAA's is 32 to 42 feet; the NFHS's is at least 28 feet). */
+  circle: Span;
+  /** The matted area round the circle (the UWW's protection area 1.5 m; the NCAA's at least 5 feet; the NFHS's about 5 feet). */
+  border: Span;
+  /** The orange passivity band inside the circle, 1 m wide (the UWW's only), and the line that outlines the circle (the NCAA's 2 inch line, which is in bounds). */
+  passivity: number;
+  rim: number;
+  /** The circle in the middle: the UWW's central circle of 1 m inside with a band of 10 cm; the NFHS's optional circle of 10 feet; none for the NCAA. */
+  centre: { diameter: number; band: number } | null;
+  /** The starting lines: two parallel lines of `width` and `length`, `apart` between them, closed at the ends by a green and a red line (folkstyle); null for the UWW. */
+  lines: { length: number; width: number; apart: number } | null;
+  /** The platform the mat is installed on at the great events (the UWW: 0.80 m to 1.10 m, and at least 1 m round each side of the mat; a mat on the floor is also allowed, at the other events); the folkstyle rules give none (ours: 0 drawn, up to the UWW's greatest). `least` is the lowest a platform may be when there is one. */
+  platform: { height: Span; around: number; least: number };
+}
+
+/** A wrestling league: a rule's mat. */
+export type WrestlingLeague = LeagueBase<"wrestling", WrestlingFigures>;
+
+/** The UWW's mat (Wrestling Rules, Article 4, January 2026), for freestyle, Greco-Roman and women's wrestling alike: 9 m, a 1.50 m border, an orange band of 1 m, a central circle of 1 m with a band of 10 cm, a platform of 0.80 to 1.10 m. */
+export const UWW_MAT: WrestlingFigures = {
+  kind: "wrestling",
+  circle: span(9, 9, 9),
+  border: span(1.5, 1.5, 1.5),
+  passivity: 1,
+  rim: 0,
+  centre: { diameter: 1, band: 0.1 },
+  lines: null,
+  platform: { height: span(0, 1.1, 1), around: 1, least: 0.8 },
+};
+
+/** The NCAA's mat (Wrestling Rules 2025-26 and 2026-27, Rule 1, Section 1): a competition circle of 32 to 42 feet, a matted area of at least 5 feet round it, the circle's edge a 2 inch line in bounds, two down-position starting lines of 1 inch, 3 feet long and 10 inches apart, closed by a green and a red neutral line. */
+export const NCAA_MAT: WrestlingFigures = {
+  kind: "wrestling",
+  circle: span(32 * FT, 42 * FT, 32 * FT),
+  border: span(5 * FT, 10 * FT, 5 * FT),
+  passivity: 0,
+  rim: 2 * IN,
+  centre: null,
+  lines: { length: 3 * FT, width: 1 * IN, apart: 10 * IN },
+  platform: { height: span(0, 1.1, 0), around: 1, least: 0 },
+};
+
+/** The high schools' mat (NFHS Rule 2-1): a wrestling area of at least 28 feet, a safety mat of about 5 feet round it, a 10 foot circle (optional from 2024-25) and the two starting lines of 1 inch, 3 feet long and 12 inches outside to outside, closed by a green and a red line. */
+export const NFHS_MAT: WrestlingFigures = {
+  kind: "wrestling",
+  circle: span(28 * FT, 42 * FT, 28 * FT),
+  border: span(5 * FT, 10 * FT, 5 * FT),
+  passivity: 0,
+  rim: 2 * IN,
+  centre: { diameter: 10 * FT, band: 2 * IN },
+  lines: { length: 3 * FT, width: 1 * IN, apart: 10 * IN },
+  platform: { height: span(0, 1.1, 0), around: 1, least: 0 },
+};
+
+/** The wrestling leagues: the UWW's first. */
+export const WRESTLING_LEAGUES: readonly WrestlingLeague[] = [
+  { id: "uww", family: "wrestling", name: { en: "Wrestling mat, UWW (freestyle and Greco-Roman)", ja: "レスリングのマット（UWW：フリースタイルとグレコローマン）" }, unit: "m", dimensions: UWW_MAT, sources: ["uww-wrestling-rules"], builtIn: true },
+  { id: "ncaa-wrestling", family: "wrestling", name: { en: "Wrestling mat, NCAA folkstyle", ja: "レスリングのマット（NCAA：フォークスタイル）" }, unit: "ft", figuresUnit: "m", dimensions: NCAA_MAT, sources: ["ncaa-wrestling"] },
+  { id: "nfhs-wrestling", family: "wrestling", name: { en: "Wrestling mat, high school folkstyle (NFHS)", ja: "レスリングのマット（NFHS：アメリカの高校のフォークスタイル）" }, unit: "ft", figuresUnit: "m", dimensions: NFHS_MAT, sources: ["nfhs-wrestling-mat", "ncaa-wrestling"] },
+];
+
 /** The figures of a combat league. */
-export type CombatFigures = MmaFigures | BoxingFigures;
+export type CombatFigures = MmaFigures | BoxingFigures | WrestlingFigures;
 
 /** A league with a combat surface of its own. */
-export type CombatLeague = MmaLeague | BoxingLeague;
+export type CombatLeague = MmaLeague | BoxingLeague | WrestlingLeague;
 
 /** Every combat league, once each. */
-export const COMBAT_LEAGUES: readonly CombatLeague[] = Object.freeze([...MMA_LEAGUES, ...BOXING_LEAGUES]);
+export const COMBAT_LEAGUES: readonly CombatLeague[] = Object.freeze([...MMA_LEAGUES, ...BOXING_LEAGUES, ...WRESTLING_LEAGUES]);

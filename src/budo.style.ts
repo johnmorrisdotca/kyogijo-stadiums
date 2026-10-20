@@ -54,6 +54,9 @@ const RING_CLASSES = `
 
 const COMBAT: readonly string[] = ["mma", "boxing"];
 const RING: readonly string[] = ["boxing"];
+/** The rules of a wrestling mat's own class: the green neutral line of a folkstyle mat's starting lines. */
+const WRESTLING_CLASSES = `.kyogijo .ky-bud-green-fill{fill:#2f9e63}`;
+const WRESTLING: readonly string[] = ["wrestling"];
 
 /** The custom properties of a look. */
 const vars = (l: BudoLook): string =>
@@ -85,8 +88,8 @@ export const KYOGIJO_BUDO_GALLERY_STYLE = `
 export function budoStyle(sport: string, look?: string): string {
   const kind = sport as BudoKind;
   if (BUDO_LOOKS[kind] === undefined) return "";
-  return `${CLASSES}${COMBAT.includes(sport) ? `\n${COMBAT_CLASSES}` : ""}${RING.includes(sport) ? `\n${RING_CLASSES}` : ""}\n${look === undefined ? lookRules(kind, Object.keys(BUDO_LOOKS[kind])[0]) : lookRules(kind, look)}`;
+  return `${CLASSES}${COMBAT.includes(sport) ? `\n${COMBAT_CLASSES}` : ""}${RING.includes(sport) ? `\n${RING_CLASSES}` : ""}${WRESTLING.includes(sport) ? `\n${WRESTLING_CLASSES}` : ""}\n${look === undefined ? lookRules(kind, Object.keys(BUDO_LOOKS[kind])[0]) : lookRules(kind, look)}`;
 }
 
 /** Every budō sport's rules and every look, for a page that draws with `style: "none"` and supplies the stylesheet itself. */
-export const KYOGIJO_BUDO_STYLE: string = `${CLASSES}\n${COMBAT_CLASSES}\n${RING_CLASSES}${KYOGIJO_BUDO_GALLERY_STYLE}\n${(Object.keys(BUDO_LOOKS) as BudoKind[]).flatMap((sport) => Object.keys(BUDO_LOOKS[sport]).map((name) => lookRules(sport, name))).join("\n")}`;
+export const KYOGIJO_BUDO_STYLE: string = `${CLASSES}\n${COMBAT_CLASSES}\n${RING_CLASSES}\n${WRESTLING_CLASSES}${KYOGIJO_BUDO_GALLERY_STYLE}\n${(Object.keys(BUDO_LOOKS) as BudoKind[]).flatMap((sport) => Object.keys(BUDO_LOOKS[sport]).map((name) => lookRules(sport, name))).join("\n")}`;

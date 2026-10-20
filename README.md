@@ -1,7 +1,7 @@
 <h1 align="center">Kyogijo Stadiums <sub>競技場</sub></h1>
 
 <p align="center"><strong>Sports surfaces as SVG, drawn to scale, with the score on them.</strong><br>
-The surfaces of forty-one sports, from football and curling to the budō and the combat sports, each drawn from its rulebook or its published distances, with each team's name and logo on its side and the score in the middle, a lineup, stands and a crowd, a pageant of flags and a 3D view. Wide or tall, light or dark, a badge for a list, a helper for React, a custom element and a frame for a page that runs no script. One function, no dependencies.</p>
+The surfaces of forty-two sports, from football and curling to the budō and the combat sports, each drawn from its rulebook or its published distances, with each team's name and logo on its side and the score in the middle, a lineup, stands and a crowd, a pageant of flags and a 3D view. Wide or tall, light or dark, a badge for a list, a helper for React, a custom element and a frame for a page that runs no script. One function, no dependencies.</p>
 
 <p align="center">
   <a href="https://github.com/johnmorrisdotca/kyogijo-stadiums/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/johnmorrisdotca/kyogijo-stadiums/actions/workflows/ci.yml/badge.svg"></a>
@@ -72,29 +72,29 @@ console.log(svg.startsWith("<svg"), svg.includes("USA 3, Canada 2"));
 
 ## Features
 
-- **Forty-one surfaces, to scale.** The NFL, CFL and IFAF fields, the NHL rink, the NBA court, the soccer pitch and futsal court, the baseball field, the curling sheet, twelve net and racket sports, the pools, the athletics stadium, the skating rinks, seven field sports, the budō, the MMA cage and the boxing ring. Every figure is cited in [sources](./docs/sources.md). [The surfaces](./docs/surfaces.md).
+- **Forty-two surfaces, to scale.** The NFL, CFL and IFAF fields, the NHL rink, the NBA court, the soccer pitch and futsal court, the baseball field, the curling sheet, twelve net and racket sports, the pools, the athletics stadium, the skating rinks, seven field sports, the budō, the MMA cage, the boxing ring and the wrestling mats. Every figure is cited in [sources](./docs/sources.md). [The surfaces](./docs/surfaces.md).
 - **Each league's rulebook.** `league: "fiba"` draws a court as FIBA marks it: 48 variants, from the WNBA, the NCAA and the IIHF to Little League, PONY, softball, Curling Canada, FIVB's beach volleyball, rugby league and the NLL's box lacrosse, each cited. [League variants](./docs/variants.md).
 - **A realistic basketball floor.** `court: { hardwood: true }` draws maple boards that run the length of the court with staggered ends, grain, stained keys, the baskets and stanchions with soft shadows, a coaching box and benches, and a satin sheen, in every league and renderer. The clean floor stays the default. [Hardwood](./docs/hardwood.md).
 - **The stands and the crowd.** `crowd: true` draws the seating round any surface that has spectators: a bowl, two sides, a horseshoe, courtside rows or a ballpark's grandstands, with the people as seeded heads and shoulders in the home colours and the empty seats showing (`density`, or `attendance` over `capacity`). [The crowd](./docs/crowd.md).
-- **Curling, from the rule books.** A sheet from World Curling's and Curling Canada's rules, tall by default, with the board and the hammer in a score, `curlingStones` for the stones of an end, scored by the rules, `show: "folded"` for the whole sheet with both houses enlarged beside it, and a heat map and statistics for many ends. [Curling](./docs/curling.md).
-- **Net, racket and court sports, from their rulebooks.** The ITF's, FIVB's (indoor, beach, sitting), BWF's, USA Pickleball's and ITTF's courts and table, the padel, squash, racquetball, sepak takraw, teqball, roundnet and netball courts, each in its look (hard court, clay, grass, wood, sand), with a board of sets and games. [Net, racket and court sports](./docs/courts.md).
-- **Swimming, water polo, diving and artistic swimming, from World Aquatics' regulations.** The 50 or 25 m pool with its lanes, ropes, blocks and touch panels; the water polo field; the diving well; the artistic swimming area; several pools in a natatorium. A race's lanes carry names, flags, places, times and splits, with a replay and a `splitsChart`. [Pools](./docs/pools.md).
-- **Lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey and handball, from their rulebooks.** The fields and floors of World Lacrosse, World Rugby, the NRL, the AFL, the GAA, the FIH and the IHF, and a cricket ground with a boundary of your own. A score is goals and behinds, goals and points or a board of runs, wickets and overs. [Field sports](./docs/field-sports.md).
-- **The athletics stadium, from World Athletics' rules.** The 400 m track with its lanes and staggers worked out from the running lines, curved and relay starts, hurdles, the steeplechase, every field event, a close-up of each start, the covered 200 m track, and lane draws, results, a race replay and the marks of throws and jumps. [The athletics stadium](./docs/athletics.md).
-- **The skating rinks, from the ISU's rules.** The 400 m speed skating track with its lanes, blocks and the lines of every race worked out lane by lane; the short track's oval; the figure skating rink of 60 by 30 m with its judges' seats; and pairs, results, a race replay and the elements of a programme on the ice. [The skating rinks](./docs/skating.md).
+- **Curling, from the rule books.** A sheet from World Curling's and Curling Canada's rules, tall by default, with the board and the hammer in a score, `curlingStones` for the stones of an end, `show: "folded"` for the whole sheet with both houses enlarged beside it. [Curling](./docs/curling.md).
+- **Net, racket and court sports, from their rulebooks.** The ITF's, FIVB's (indoor, beach, sitting), BWF's, USA Pickleball's and ITTF's courts and table, the padel, squash, racquetball, sepak takraw, teqball, roundnet and netball courts, each in its look, with a board of sets and games. [Net, racket and court sports](./docs/courts.md).
+- **Swimming, water polo, diving and artistic swimming, from World Aquatics' regulations.** The 50 or 25 m pool with its lanes, ropes, blocks and touch panels; the water polo field; the diving well; the artistic swimming area. A race's lanes carry names, flags, places and times, with a replay. [Pools](./docs/pools.md).
+- **Lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey and handball, from their rulebooks.** The fields and floors of World Lacrosse, World Rugby, the NRL, the AFL, the GAA, the FIH and the IHF, and a cricket ground with a boundary of your own. A score is goals and behinds, goals and points, or runs, wickets and overs. [Field sports](./docs/field-sports.md).
+- **The athletics stadium, from World Athletics' rules.** The 400 m track with its lanes and staggers worked out from the running lines, curved and relay starts, hurdles, the steeplechase, every field event, a close-up of each start, the covered 200 m track, with lane draws, results and a race replay. [The athletics stadium](./docs/athletics.md).
+- **The skating rinks, from the ISU's rules.** The 400 m speed skating track with its lanes, blocks and the lines of every race worked out lane by lane; the short track's oval; the figure skating rink with its judges' seats; and results, a race replay and the elements of a programme. [The skating rinks](./docs/skating.md).
 - **The budō, from the federations' rules.** The IJF's and the All Japan Judo Federation's judo areas, the WKF's karate areas, the kendo shiai-jo, the sumo dohyō, the kyūdōjō, and **a dojo builder**: a floor of tatami laid as real units, in jō or metres, with its walls, doors, windows and shrine. Scores are judo's ippon, waza-ari and shido, karate's and kendo's points and sumo's kimarite. [The budō](./docs/budo.md).
 - **Soccer, to the Laws.** A pitch from Law 1 of the IFAB Laws of the Game of any size, with presets (international, UEFA, MLS, NCAA, the FA's 9-, 7- and 5-a-side, FIFA's futsal), half pitches, five mowing patterns, four goal styles, penalties and extra time in a score. [Soccer](./docs/soccer.md).
 - **Every ballpark.** The 30 current MLB parks and 44 that MLB clubs have left, and the 12 home parks of Nippon Professional Baseball with eight other NPB grounds, each with its fence drawn from the distances published for it, as it stood in a season. [Ballparks](./docs/ballparks.md).
 - **Soccer grounds, arenas and an atlas.** 64 soccer grounds at their published sizes, 167 NHL, NBA, WNBA and PWHL arenas (`drawKyogijo({ sport: "nhl", arena: "boston-garden" })`), and every park, ground, arena and budō hall (330 places) on a map, found by any of its names. [The grounds](./docs/grounds.md), [the arenas](./docs/arenas.md), [the atlas](./docs/atlas.md), [names](./docs/ballparks.md#names).
-- **Walls and quirks.** How high the fence stands, stretch by stretch and season by season (the Green Monster at 37 feet 2 inches), drawn as a band outside the fence whose width and shade say the height, with a key (`walls`); and Tal's Hill, Wrigley Field's ivy and basket, poles, bullpens and dugouts (`quirks`), each from the park's article, none guessed: [ballparks](./docs/ballparks.md).
-- **Special games.** A surface set inside another, to scale: an NHL rink on a ballpark's infield or a football stadium's field, a college basketball court on the deck of a carrier, a baseball field laid over a London stadium's pitch. 18 games, each with its day, its venue and its sources. [Special games](./docs/special-games.md).
+- **Walls and quirks.** How high the fence stands, stretch by stretch and season by season (the Green Monster at 37 feet 2 inches) (`walls`); and Tal's Hill, Wrigley Field's ivy and basket, poles, bullpens and dugouts (`quirks`), each from the park's article, none guessed: [ballparks](./docs/ballparks.md).
+- **Special games.** A surface set inside another, to scale: an NHL rink on a ballpark's infield or a football stadium's field or a baseball field laid over a London stadium's pitch. 18 games, each cited. [Special games](./docs/special-games.md).
 - **Surfaces through the years.** `year: 1975` draws a surface as its league's rules marked it that season, each change cited. [Surfaces through the years](./docs/eras.md).
 - **Score mode.** Each team's name and logo on its side (the end zones, the ends of the ice, the halves of the court, the dugouts) and the score large in the middle, with the competition, the status and the date, and the winner emphasised; a flag or a crest can be round, in a circle with a ring (`markShape: "round"`). [Score and layout](./docs/score.md#round-marks).
 - **The situation of a game.** `situation` draws what is happening: hockey's power play or empty net and a shootout; baseball's runners lit on the diamond with a scorebug; football's line of scrimmage, first-down line, red zone and down-and-distance tag, with a drive chart; in the badge and the compact card too. [The situation](./docs/situation.md).
-- **Lineups.** A `lineup` layer places a team's players by position code (`GK`, `CB`, `HK`, `C`) with no coordinates: it reads where each stands from a formation (36 of them, in 13 sports), draws a disc or a jersey with the shirt number and the name under it, a captain's C and a flag, and puts the visitors at the other end. [Lineups](./docs/team-shape.md#lineups).
-- **A pageant.** Each team's flag or crest laid large over its half of the surface: `pageant: "carpet"` (a flag at its own ratio with a border) or `"stage"` (a crest on a round disc with a gold ring), an emblem or a trophy in the centre circle, the score in the middle or in the strip, with an entrance in CSS for readers who have not asked for less motion. [The pageant](./docs/pageant.md).
-- **Trophies, medals, balls and crests, by id.** `useEmblems(renderEmblem)` plugs in the sister package [Dougu Sports](https://johnmorrisdotca.github.io/dougu-sports/) in one line, and an id goes wherever a logo, a flag or a mark is taken: `logo: "crest:shield"`, `pageant: { emblem: "trophy:hockey-cup" }`, `"ball:puck"`. Kyogijo bundles no emblem and keeps zero dependencies. [Emblems](./docs/emblems.md).
-- **Country flags, by code.** `useFlags(render)` plugs in the sister package [Hata](https://github.com/johnmorrisdotca/hata) through a small adapter, and a team's `flag: "CA"` is its flag: round in a round mark, at its own proportions on a banner, a badge or a carpet. Kyogijo bundles no flag and keeps zero dependencies. [Flags](./docs/flags.md).
+- **Lineups.** A `lineup` layer places a team's players by position code (`GK`, `CB`, `HK`, `C`) with no coordinates: it reads where each stands from a formation (36 of them, in 13 sports), draws a disc or a jersey with the shirt number and the name under it, a captain's C and a flag. [Lineups](./docs/team-shape.md#lineups).
+- **A pageant.** Each team's flag or crest laid large over its half of the surface: `pageant: "carpet"` (a flag at its own ratio with a border) or `"stage"` (a crest on a round disc with a gold ring), an emblem or a trophy in the centre circle, the score in the middle or in the strip; an entrance in CSS for readers who have not asked for less motion. [The pageant](./docs/pageant.md).
+- **Trophies, medals, balls and crests, by id.** `useEmblems(renderEmblem)` plugs in the sister package [Dougu Sports](https://johnmorrisdotca.github.io/dougu-sports/) in one line, and an id goes wherever a logo, a flag or a mark is taken: `logo: "crest:shield"`, `pageant: { emblem: "trophy:hockey-cup" }`, `"ball:puck"`. [Emblems](./docs/emblems.md).
+- **Country flags, by code.** `useFlags(render)` plugs in the sister package [Hata](https://github.com/johnmorrisdotca/hata) through a small adapter, and a team's `flag: "CA"` is its flag: round in a round mark, at its own proportions on a banner, a badge or a carpet. [Flags](./docs/flags.md).
 - **Zoom to a part of a surface.** `range: "offensive-zone"` crops a drawing to a rink's zone, a half court, the paint, the red zone, a soccer half, third or penalty area, the infield, a curling house, or a box of your own in any frame, with its data, heat, labels and score following. [Display ranges](./docs/ranges.md).
 - **Wide, tall or fit the box.** Every surface lies wide or tall: tall turns it a quarter, keeps every word upright and puts the teams top and bottom. With `orientation: "auto"` the browser helpers follow the box.
 - **Where a point lies, by the rules, and a click as a place.** `zoneAt("nhl", [69, 22], { frame: "nhl-api" })` names the zone and the area in it from the surface's own figures, with `isThreePointer`, `inSlot`, `isFair`, `isHomeRun` and the like; `clientPointToField(svg, x, y, { provider })` is a pointer's place in any of the frames, with the zone. [Zones](./docs/zones.md), [pointing](./docs/pointer.md).
@@ -119,7 +119,7 @@ console.log(svg.startsWith("<svg"), svg.includes("USA 3, Canada 2"));
 | Part | What it is |
 | --- | --- |
 | `drawKyogijo`, `drawSurface`, `drawScore`, `drawBadge` | The drawing, as a string of SVG. |
-| `SPORTS`, `PARKS`, `PARK_IDS`, `COURT_THEMES` | The forty-one sports, the 94 ballparks, the court looks. |
+| `SPORTS`, `PARKS`, `PARK_IDS`, `COURT_THEMES` | The forty-two sports, the 94 ballparks, the court looks. |
 | `SOCCER_PITCHES`, `SOCCER_PROVIDERS`, `rescale`, `soccerSpec` | The soccer pitches, the data providers' coordinate systems and the map between them. |
 | `GROUNDS`, `groundById` | The 64 soccer grounds, each pitch at its own size. |
 | `EVENTS`, `eventOptions` | The 18 special games: a rink in a ballpark, a court on a carrier's deck, with `host` and `placement` in the options. |
@@ -233,7 +233,7 @@ console.log(box(wide), box(tall));
 <br><em>The same game tall: the teams top and bottom, every word upright.</em>
 </p>
 
-[The surfaces](./docs/surfaces.md) lists the forty-one, with their sizes and what is drawn; [score and layout](./docs/score.md) has the options of a score, a strip and a compact card.
+[The surfaces](./docs/surfaces.md) lists the forty-two, with their sizes and what is drawn; [score and layout](./docs/score.md) has the options of a score, a strip and a compact card.
 
 ### A league's rulebook
 
@@ -615,7 +615,7 @@ A table in the ITTF's playing area, 14 m by 7 m, with surrounds and chairs ([cou
 
 ### The combat sports
 
-An MMA cage and a boxing ring ([the combat sports page](./docs/combat.md)).
+An MMA cage, a boxing ring and wrestling mats ([the combat sports page](./docs/combat.md)).
 
 <p align="center">
 <picture>
@@ -639,6 +639,14 @@ An MMA cage and a boxing ring ([the combat sports page](./docs/combat.md)).
 <img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/boxing-ring-3d-desk-light.webp" alt="The boxing ring in 3D: coloured corner posts, ropes and steps" width="660">
 </picture>
 <br><em>The ring in 3D.</em>
+</p>
+
+<p align="center">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/wrestling-mat-3d-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/wrestling-mat-3d-desk-light.webp" alt="The UWW's wrestling mat in 3D on its platform" width="660">
+</picture>
+<br><em>The UWW's mat in 3D.</em>
 </p>
 
 ### The element in a page
@@ -714,7 +722,7 @@ Nothing is branded. The drawing is coloured by custom properties on its `svg`, w
 
 ## Limits
 
-Each is held by a test: forty-one sports, ten soccer pitches and ten providers, 94 ballparks, 64 grounds, six units, forty-eight frames, a drawing of under 22 kB. The table, made from the code, is [limits](./docs/limits.md).
+Each is held by a test: forty-two sports, ten soccer pitches and ten providers, 94 ballparks, 64 grounds, six units, forty-eight frames, a drawing of under 22 kB. The table, made from the code, is [limits](./docs/limits.md).
 
 ## Accessibility
 

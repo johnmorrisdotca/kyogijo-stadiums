@@ -558,3 +558,19 @@ Sources:
 - `wbc-amateur`: WBC Amateur competition rules, Rule 1, The Ring (4.50 to 6.10 m inside the ropes, a platform of 0.90 to 1.20 m, an apron of at least 0.50 m, ropes of 3 to 5 cm at 41, 71, 102 and 132 cm, three sets of steps, corner colours), World Boxing Council Amateur, updated 2026 (the file of October 2025). <https://wbcboxing.com/amateur/esp/wp-content/uploads/2025/10/WBC-AMATEUR-RULES-UPDATED-2026.pdf>
 - `ontario-amateur-boxing`: Amateur combative sport rules: Boxing, Part II: Competitive field of play, 1.1 to 1.1.6 (4.9 to 6.1 m inside the ropes, a platform of at most 1.2 m, an apron of at least 45 cm, ropes of 2 to 5 cm at 40, 70, 100 and 130 cm, padding of 2.5 to 3.75 cm under a canvas, the red corner on the left nearest the jury table), Ontario Ministry of Sport, published 17 December 2024, updated 22 May 2025. <https://www.ontario.ca/document/amateur-combative-sport-rules-boxing/part-ii-competitive-field-play>
 
+## The wrestling mats
+
+`sport: "wrestling"`
+
+| `league` | Name | Key figures |
+| --- | --- | --- |
+| `uww` (the sport's own) | Wrestling mat, UWW (freestyle and Greco-Roman) | wrestling area a circle of 9 m; matted area 1.5 m round the circle; passivity band 1 m wide inside the circle; centre circle 1 m across |
+| `ncaa-wrestling` | Wrestling mat, NCAA folkstyle | wrestling area a circle of 32 ft to 42 ft; matted area at least 5 ft round the circle; starting lines two of 1 inch, 3 ft long, 10 inches apart |
+| `nfhs-wrestling` | Wrestling mat, high school folkstyle (NFHS) | wrestling area a circle of 28 ft to 42 ft; matted area at least 5 ft round the circle; centre circle 10 ft across; starting lines two of 1 inch, 3 ft long, 10 inches apart |
+
+Sources:
+
+- `uww-wrestling-rules`: Wrestling Rules, Article 4 The Mat (a 9 m mat with a 1.50 m border of the same thickness; an orange band of 1 m inside the 9 m circle; the central circle of 1 m with a band of 10 cm; the central surface of 7 m; the platform of 0.80 to 1.10 m with at least 1 m round the mat) and Article 45 Passivity Zone, United World Wrestling, January 2026. <https://cdn.uww.org/2026-01/wrestling_rules.pdf>
+- `ncaa-wrestling`: NCAA Wrestling Rules 2025-26 and 2026-27, Rule 1, Section 1 Mats (Art. 1 mat specifications: a competition circle of 32 to 42 feet, a matted area of at least 5 feet round it, the circle's edge a 2 inch line in bounds; Art. 3 mat markings: two 1 inch down-position starting lines 3 feet long and 10 inches apart, closed by a green and a red neutral line) and Diagram 1, NCAA, Men's Wrestling Rules Committee, August 2025. <https://ncaaorg.s3.amazonaws.com/championships/sports/wrestling/rules/PRMWR_RulesBook.pdf>
+- `nfhs-wrestling-mat`: Required Wrestling Mat Area (quoting NFHS Wrestling Rule 2-1-2: a wrestling area of a minimum of 28 feet in diameter with a safety mat area of approximately 5 feet wide round it), Kentucky High School Athletic Association, notice of 21 November 2014, 2014 notice of the NFHS rule. <https://khsaa.org/?p=14520>
+

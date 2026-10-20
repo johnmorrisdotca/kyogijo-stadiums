@@ -4,7 +4,7 @@
 export type BudoKind = "judo" | "karate" | "kendo" | "sumo" | "kyudo" | "dojo" | CombatKind;
 
 /** The combat sports the engine of the budō also draws: the MMA cage. */
-export type CombatKind = "mma" | "boxing";
+export type CombatKind = "mma" | "boxing" | "wrestling";
 
 /** The sides of a hall, as a plan has them: north is the top of the drawing. `top`, `bottom`, `left` and `right` say the same. */
 export type Compass = "north" | "south" | "east" | "west";
@@ -23,13 +23,13 @@ export interface BudoStyle {
   hall?: "budokan";
   /** Judo: `shiai` (the contest area, the default) or `kata` (the IJF's kata area, `league: "ijf-kata"`: a centre tape, two white tapes 3 m from it either side, a safety area of 2 m; with `officials`, the five judges' seats on the shomen side and the coach's chair opposite). */
   style?: "shiai" | "kata";
-  /** Judo: the contest area's side, 8 m to 10 m. Kendo: the shiai-jo's side, 9 m to 11 m. MMA cage: the width across the flats, 6.096 m to 9.754 m (20 to 32 feet), 9.144 m (30 feet) by default; 7.62 m is the smaller cage of 25 feet. Boxing ring: the side inside the ropes, within what the league allows (20 feet for the Nevada rule, 16 to 20 feet for Wisconsin, 4.5 to 6.1 m for the WBC Amateur rules). In metres. */
+  /** Judo: the contest area's side, 8 m to 10 m. Kendo: the shiai-jo's side, 9 m to 11 m. MMA cage: the width across the flats, 6.096 m to 9.754 m (20 to 32 feet), 9.144 m (30 feet) by default; 7.62 m is the smaller cage of 25 feet. Boxing ring: the side inside the ropes, within what the league allows (20 feet for the Nevada rule, 16 to 20 feet for Wisconsin, 4.5 to 6.1 m for the WBC Amateur rules). Wrestling: the diameter of the wrestling area (9 m for the UWW, 32 to 42 feet for the NCAA, at least 28 feet for the NFHS). In metres. */
   size?: number;
   /** Judo: the width of the safety area, 3 m or more (4 m by default). In metres. */
   safety?: number;
   /** Judo: the tatami's size. `2x1` (the IJF's, 2 m by 1 m, the default of an IJF area), `1x1` (the half tatami) or `182x91` (the AJJF's own, the default of an AJJF area). */
   tatami?: "2x1" | "1x1" | "182x91";
-  /** Judo: the tape that marks where the contestants start. On by default for the AJJF's area and the kata area, and for the IJF's (the 2020 rules' blue and white tape). */
+  /** Wrestling: the starting lines of a folkstyle mat (the UWW's mat has none). On by default. Judo: the tape that marks where the contestants start. On by default for the AJJF's area and the kata area, and for the IJF's (the 2020 rules' blue and white tape). */
   start?: boolean;
   /** Judo: a solid platform under the tatami, one metre wider and longer than it. Off by default. */
   platform?: boolean;
@@ -41,7 +41,7 @@ export interface BudoStyle {
   texture?: "weave" | "none";
   /** Karate: the referee's and the judges' places. On by default. */
   judges?: boolean;
-  /** Sumo: the height of the clay square in metres, 0.34 to 0.60. 0.55 by default. MMA cage: the platform's height over the floor of the building, 0 to 1.219 m (4 feet), 1.219 m by default. Boxing ring: the same, 0 to what the league allows (5 feet in Nevada, 4 feet in Wisconsin, 1.2 m for the amateurs). Seen in 3D. */
+  /** Sumo: the height of the clay square in metres, 0.34 to 0.60. 0.55 by default. MMA cage: the platform's height over the floor of the building, 0 to 1.219 m (4 feet), 1.219 m by default. Boxing ring: the same, 0 to what the league allows (5 feet in Nevada, 4 feet in Wisconsin, 1.2 m for the amateurs). Wrestling: the platform the mat stands on, none or 0.80 to 1.10 m for the UWW's mat (1 m drawn) and 0 to 1.10 m for the others (none drawn). Seen in 3D. */
   height?: number;
   /** Sumo: the four tassels of the roof, in the colours of the four quarters (green east, red south, white west, black north). Off by default. */
   tassels?: boolean;
@@ -53,6 +53,8 @@ export interface BudoStyle {
   gates?: boolean;
   /** MMA cage: the steps up to the platform at each gate, three treads. Boxing ring: the three sets of steps, one in each boxer's corner and one in a neutral corner. On by default. */
   steps?: boolean;
+  /** Wrestling: the circle in the middle of the mat (the UWW's central circle, the NFHS's circle of 10 feet; the NCAA has none). On by default. */
+  circle?: boolean;
   /** Boxing ring: the posts and their pads in the corner colours (the red and the blue corner of the boxers, two neutral ones in white). On by default. */
   corners?: boolean;
   /** Kyūdō: the number of shooters in a line, 1 to 12 (5 by default). */

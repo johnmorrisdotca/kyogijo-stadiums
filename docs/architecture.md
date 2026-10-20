@@ -57,6 +57,7 @@ src/
 │   ├── kendo.ts        a kendo shiai-jo: the floor and its boards, the boundary lines, the cross, the kaishi-sen and the space outside
 │   ├── sumo.ts         a sumo dohyō: the clay, the 20 tawara, the jano-me, the shikiri-sen and the four tassels
 │   ├── kyudo.ts        a kyūdōjō: the shajō with its shooting positions and honza, the yamichi, the azuchi with its targets, the path for the arrows
+│   ├── mat.ts          a wrestling mat: the circle and the matted area, the passivity band, the circles in the middle, the starting lines, the platform
 │   ├── ring.ts         a ring: the platform and its steps, the canvas, the ropes and their extensions, the four posts with their pads in the corner colours
 │   ├── cage.ts         an MMA cage: the platform and its steps, the canvas, the eight-sided fence with its gates, the padded posts
 │   ├── room.ts         the room round a budō surface as data: walls, surround, dais, banner, balconies, doors and windows, for a 3D view to raise
@@ -236,7 +237,7 @@ src/
 │   ├── athletics.ts    the World Athletics tracks and their stagger tables
 │   ├── skating.ts      the ISU's long track, short track and figure skating rink
 │   ├── budo.ts         the IJF's, the AJJF's, the WKF's, the FIK's, the Japan Sumo Association's and the ANKF's figures, and the tatami standards
-│   ├── combat.ts       the combat sports' figures: the MMA cage's (the Nevada commission's and the IMMAF's) and the boxing ring's
+│   ├── combat.ts       the combat sports' figures: the MMA cage's, the boxing ring's and the wrestling mats'
 │   ├── football.ts     the fields
 │   └── baseball.ts     the diamonds
 ├── geometry-entry.ts   the geometry's entry

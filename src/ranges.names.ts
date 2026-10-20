@@ -92,6 +92,7 @@ export const RANGES: Readonly<Record<Sport, readonly RangeInfo[]>> = Object.free
   dojo: Object.freeze([range("kamiza"), range("half", "left")]),
   mma: Object.freeze([range("cage"), range("gate"), range("half", "left")]),
   boxing: Object.freeze([range("ropes"), range("corner"), range("half", "left")]),
+  wrestling: Object.freeze([range("start"), range("passivity", undefined, ["uww"]), range("half", "left")]),
 });
 
 /** What a drawing's `range` asks for, checked: a name (at an end, or at its default) or a box. */

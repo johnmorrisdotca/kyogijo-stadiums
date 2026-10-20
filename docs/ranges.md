@@ -120,6 +120,9 @@ console.log(drawKyogijo({ sport: "nhl", range: undefined }) === drawKyogijo({ sp
 | `boxing` | `ropes` | the ring inside the ropes, with the ground just round them | none |
 | `boxing` | `corner` | the red corner, with its post, its pad and its steps | none |
 | `boxing` | `half` | one half of the platform, from the left edge to the middle | `left` |
+| `wrestling` | `start` | the middle of the mat, with the circle in it and the starting lines | none |
+| `wrestling` | `passivity` | the wrestling area with its orange passivity band (the UWW's mat) | none |
+| `wrestling` | `half` | one half of the mat, from the left edge to the middle | `left` |
 <!-- /made:ranges -->
 
 A range at an end takes `end`: `range: { name: "half", end: "right" }`. The end is as the surface is drawn wide: `left` or `right`, whichever way the drawing lies, so that a tall drawing's left end is its top. A range with no end (the neutral zone, the middle third, the infield) ignores one. The offensive ranges are at the right by default, as a frame's numbers are for a team that attacks the right (see [coordinate frames](./frames.md)), the defensive and own ranges at the left, and the others, such as a half, at the left, as a curling sheet's house is: `end` moves any of them.

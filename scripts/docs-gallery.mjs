@@ -146,6 +146,7 @@ const GAMES = {
   dojo: { away: side("japan", 27), home: side("canada", 24), status: "final", competition: "Open day" },
   mma: { away: side("mexico", 0), home: side("usa", 1), status: "final", competition: "Welterweight bout" },
   boxing: { away: side("japan", 0), home: side("canada", 1), status: "final", competition: "Middleweight bout" },
+  wrestling: { away: side("japan", 3), home: side("usa", 5), status: "final", competition: "Freestyle, 74 kg" },
   lacrosse: { away: side("canada", 27), home: side("usa", 24), status: "final", competition: "Final" },
   rugby: { away: RUGBY_AWAY, home: RUGBY_HOME, status: "final", competition: "Final" },
   afl: { away: AFL_AWAY, home: AFL_HOME, status: "final", competition: "Grand Final" },
@@ -1565,15 +1566,16 @@ function budoPage() {
   };
 }
 
-/** The combat sports: the MMA cage (the boxing ring and the mats of wrestling follow). */
+/** The combat sports: the MMA cage, the boxing ring and the wrestling mats. */
 function combatPage() {
   const mma = (opts) => drawing({ sport: "mma", ...opts });
   const boxing = (opts) => drawing({ sport: "boxing", ...opts });
+  const wrestling = (opts) => drawing({ sport: "wrestling", ...opts });
   return {
     slug: "gallery-combat",
     title: "Gallery: the combat sports",
-    ja: "格闘技（総合格闘技のケージ）",
-    intro: "The MMA cage: an eight-sided fence on its platform at 30 feet and at the smaller 25, in its three looks, without its gates and steps, close up on a gate, with its parts named, and with a score. The boxing ring: Nevada's, Wisconsin's and the amateurs' rings in their looks, with and without steps, a corner close up and a score. Every picture is drawn by the code beside it.",
+    ja: "格闘技",
+    intro: "The MMA cage: an eight-sided fence on its platform at 30 feet and at the smaller 25, in its three looks, without its gates and steps, close up on a gate, with its parts named, and with a score. The boxing ring: Nevada's, Wisconsin's and the amateurs' rings in their looks, with and without steps, a corner close up and a score. The wrestling mats: the UWW's, the NCAA's and the high schools', with the band, the circles and the starting lines. Every picture is drawn by the code beside it.",
     sections: [
       section("mma", "The MMA cage", "`sport: \"mma\"`: an eight-sided fenced area on a platform with steps, from the commissions' and the IMMAF's rules. The cage's size is the rules' (20 to 32 feet); the platform's height, the gates' width and the colours are marked as typical or ours in [Sources](./sources.md#the-combat-sports).", [
         item("mma-cage", "The cage, 30 feet across", mma({}), "The canvas inside the fence, eight padded posts, two gates opposite each other with their swing, and steps up to the platform at each gate."),
@@ -1601,6 +1603,21 @@ function combatPage() {
         item("boxing-ring-labels", "With its parts named", boxing({ landmarks: true })),
         item("boxing-ring-score", "A score", drawing({ sport: "boxing", ...GAMES.boxing }), "A bout between a red corner and a blue corner has no home side."),
         item("boxing-ring-ja", "In Japanese", boxing({ language: "ja" })),
+      ]),
+      section("wrestling", "The wrestling mats", "`sport: \"wrestling\"`: the UWW's mat (freestyle and Greco-Roman wrestle on the same one), the NCAA's folkstyle mat and the high schools'. The colours, the mat's square and the starting lines' places are marked as typical or ours in [Sources](./sources.md#the-combat-sports).", [
+        item("wrestling-uww", "The UWW's mat", wrestling({}), "A circle of 9 m with its orange passivity band of 1 m, the central circle, the protection area of 1.5 m, on a platform a metre wider each side."),
+        item("wrestling-uww-floor", "The same mat on the floor", wrestling({ budo: { height: 0 } }), "Allowed at the events that do not ask for a platform."),
+        item("wrestling-uww-green", "Green and beige", wrestling({ budo: { look: "green-beige" } })),
+        item("wrestling-uww-yellow", "Yellow and blue", wrestling({ budo: { look: "yellow-blue" } })),
+        item("wrestling-uww-passivity", "Close up: the passivity band", wrestling({ range: "passivity" })),
+        item("wrestling-uww-labels", "With its parts named", wrestling({ landmarks: true })),
+        item("wrestling-ncaa", "The NCAA's mat, 32 feet", wrestling({ league: "ncaa-wrestling" }), "The competition circle with its 2 inch line, the matted area of 5 feet, and the two starting lines closed by a green and a red line."),
+        item("wrestling-ncaa-42", "The NCAA's largest circle, 42 feet", wrestling({ league: "ncaa-wrestling", budo: { size: 12.8016 } })),
+        item("wrestling-nfhs", "The high schools' mat, 28 feet", wrestling({ league: "nfhs-wrestling" }), "The circle of 10 feet in the middle, optional from 2024-25."),
+        item("wrestling-nfhs-bare", "No circle in the middle", wrestling({ league: "nfhs-wrestling", budo: { circle: false } })),
+        item("wrestling-nfhs-start", "Close up: the starting lines", wrestling({ league: "nfhs-wrestling", range: "start" })),
+        item("wrestling-score", "A score", drawing({ sport: "wrestling", ...GAMES.wrestling }), "A bout between two wrestlers has no home side."),
+        item("wrestling-ja", "In Japanese", wrestling({ language: "ja" })),
       ]),
     ],
   };
