@@ -58,6 +58,9 @@ export interface MarkupInput {
   /** The arena's name, and where it is (`Anaheim, United States`), in the page's language. */
   arena: string;
   place: string;
+  /** The venue's seats for ice hockey and its seating tiers, in the words of the bowl's stage (`{seats}`, `{tiers}`). */
+  seats?: number | string;
+  tiers?: number | string;
   /** The stages flown, in order. */
   stages: readonly StageId[];
   /** The drawn map (already through `mapMarkup`), and whether it is chizu's (so that the credit names it). */
@@ -69,7 +72,7 @@ export interface MarkupInput {
 }
 
 /** The words of a language for the stage names: a stage's name and what is said of it. */
-export const stageWords = (language: Language, stage: StageId, values: { arena: string; place: string }): { name: string; text: string } => {
+export const stageWords = (language: Language, stage: StageId, values: { arena: string; place: string; seats?: number | string; tiers?: number | string }): { name: string; text: string } => {
   const words = FLYTHROUGH_WORDS[language].stage[stage];
   return { name: words.name, text: say(words.text, values) };
 };
@@ -90,7 +93,7 @@ export function controlsMarkup(words: FlythroughWords, stages: readonly StageId[
 /** The whole fly-through as markup. */
 export function flythroughMarkup(input: MarkupInput): string {
   const words = FLYTHROUGH_WORDS[input.language];
-  const values = { arena: input.arena, place: input.place };
+  const values = { arena: input.arena, place: input.place, seats: input.seats, tiers: input.tiers };
   const first = input.stages[0];
   const intro = stageWords(input.language, first, values);
   const label = say(words.title, values);

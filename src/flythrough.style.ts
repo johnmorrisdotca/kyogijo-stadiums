@@ -25,6 +25,8 @@ export const FLYTHROUGH_STYLE = `.kf{${LIGHT};color:var(--kf-ink);font:16px/1.45
 .kf-3d .ky-turn{height:100%}
 .kf-3d .ky-turn-view{aspect-ratio:auto;height:100%;min-height:0;border-radius:0;cursor:default;touch-action:auto}
 .kf-3d .ky-turn-help,.kf-3d .ky-turn-live{display:none}
+.kf-3d .ky-up-roof{filter:opacity(var(--kf-roof,1))}
+.kf-3d[data-roof="0"] .ky-up-roof{visibility:hidden}
 .kf-pin{position:absolute;left:0;top:0;width:0;height:0;pointer-events:none}
 .kf-pin::before{content:"";position:absolute;left:-7px;top:-7px;width:14px;height:14px;border-radius:50%;background:var(--kf-pin);border:2px solid var(--kf-bg);box-shadow:0 0 0 2px var(--kf-pin)}
 .kf-scale{position:absolute;left:12px;bottom:12px;display:flex;flex-direction:column;gap:2px;align-items:flex-start;font-size:.8rem;color:var(--kf-ink);background:var(--kf-panel);padding:4px 8px;border-radius:8px;pointer-events:none}

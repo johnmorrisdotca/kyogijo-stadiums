@@ -27,7 +27,9 @@ import {
 } from "./flythrough.path.ts";
 import { flythroughMarkup, graticuleMarkup, gridPath, mapMarkup, stageWords } from "./flythrough.markup.ts";
 import { FLYTHROUGH_WORDS, say } from "./flythrough.words.ts";
+import { LENS } from "./turn.camera.ts";
 import { mountKyogijoTurn, type KyogijoTurn } from "./turn.dom.ts";
+import type { TurnSettings } from "./turn.model.ts";
 import { arenaOfVenue, planVenue, venueById, venueOrientation, venueRink } from "./venues.ts";
 import type { Language } from "./types.ts";
 
@@ -137,7 +139,7 @@ export function mountFlythrough<M extends { width: number; height: number }>(hos
     }
   })();
   const place = `${arena.city}, ${region}`;
-  const values = { arena: name, place };
+  const values = { arena: name, place, seats: venue.seats.hockey.toLocaleString(language), tiers: venue.tiers.count };
   const wanted = (options.stages ?? STAGE_IDS).filter((stage, i, all) => STAGE_IDS.includes(stage) && all.indexOf(stage) === i);
   const stageList: StageId[] = STAGE_IDS.filter((stage) => wanted.includes(stage));
   if (stageList.length === 0) throw new Error("a fly-through needs at least one stage: choose from map, city and arena");
@@ -163,7 +165,7 @@ export function mountFlythrough<M extends { width: number; height: number }>(hos
   }
   const mapFrameNow: MapFrame = frame;
 
-  host.innerHTML = flythroughMarkup({ id, language, theme: options.theme, arena: name, place, stages: stageList, map: mapSvg, mapCredit: chizu, controls: settings.controls });
+  host.innerHTML = flythroughMarkup({ id, language, theme: options.theme, arena: name, place, stages: stageList, map: mapSvg, mapCredit: chizu, controls: settings.controls, seats: values.seats, tiers: values.tiers });
   const root = host.querySelector<HTMLElement>(".kf")!;
   const stage = root.querySelector<HTMLElement>(".kf-stage")!;
   const mapLayer = root.querySelector<HTMLElement>(".kf-map")!;
@@ -185,7 +187,9 @@ export function mountFlythrough<M extends { width: number; height: number }>(hos
   // ---- The 3D arena, from above to begin with: the view the path hands over at. ----
   const drawing = { sport: "nhl" as const, arena: venue.id, crowd: { real: true }, language, ...(options.theme === undefined ? {} : { theme: options.theme }) };
   let turn: KyogijoTurn | undefined;
-  if (stageList.includes("arena")) turn = mountKyogijoTurn(turnHost, drawing, { preset: "overhead", controls: false, venue: { roof: true }, motion: "none", id: `${id}-turn` });
+  // The settings object is kept: the view reads its `lens` at every paint, and the path shortens the lens as the camera comes into the bowl.
+  const turnSettings: TurnSettings = { preset: "overhead", controls: false, venue: { roof: true }, motion: "none", id: `${id}-turn`, lens: LENS };
+  if (stageList.some((one) => one === "arena" || one === "bowl" || one === "rink")) turn = mountKyogijoTurn(turnHost, drawing, turnSettings);
 
   // ---- The site plan: the building's outline and the rink, in the drawing's own feet; the sheet under it is the floor's. ----
   const plan = planVenue(venue);
@@ -221,6 +225,9 @@ export function mountFlythrough<M extends { width: number; height: number }>(hos
     if (turn !== undefined && floor !== null) {
       // Measure the arena seen from straight above, as the 3D view lays it out in this container: where the rink stands and how big a foot is.
       const was = turn.view();
+      const lens = turnSettings.lens;
+      // The hand-over is seen from straight above through the usual long lens, whatever the lens is now.
+      turnSettings.lens = LENS;
       turn.set({ yaw: 0, pitch: 0, zoom: 1 }, false);
       const box = floor.getBoundingClientRect();
       // The stage's own area, inside its border: the layers are laid out in it.
@@ -236,6 +243,7 @@ export function mountFlythrough<M extends { width: number; height: number }>(hos
         sheet = { x: vb.x, y: vb.y, w: vb.width, h: vb.height };
         drawPlan();
       }
+      turnSettings.lens = lens;
       turn.set(was, false);
     }
     const startSpan = start?.span ?? 9_000_000;
@@ -298,9 +306,12 @@ export function mountFlythrough<M extends { width: number; height: number }>(hos
     put("3d", turnHost, "visibility", live3d ? "visible" : "hidden");
     if (live3d && turn !== undefined) {
       put("3d", turnHost, "opacity", num(cam.arena, 3));
-      const view = `${num(cam.yaw, 3)}|${num(cam.pitch, 3)}|${num(cam.logZoom, 4)}`;
+      put("3d", turnHost, "--kf-roof", num(cam.roof, 3));
+      put("3d", turnHost, "@data-roof", cam.roof > 0.004 ? "1" : "0");
+      const view = `${num(cam.yaw, 3)}|${num(cam.pitch, 3)}|${num(cam.logZoom, 4)}|${num(cam.logLens, 4)}`;
       if (written["3d:view"] !== view) {
         written["3d:view"] = view;
+        turnSettings.lens = Math.exp(cam.logLens);
         turn.set({ yaw: cam.yaw, pitch: cam.pitch, zoom: Math.exp(cam.logZoom) }, false);
       }
     }

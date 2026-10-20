@@ -32,9 +32,9 @@ import { FLYTHROUGH_STYLE } from "./flythrough.style.ts";
 
 const FRAME = 1 / 60;
 /** The most a channel may change in one frame at 60 a second, in its own units. The path's own is a good deal less than these. */
-const STEP: Record<Channel, number> = { logSpan: 0.05, ax: 0.01, ay: 0.01, north: 1.2, map: 0.05, site: 0.05, arena: 0.05, yaw: 0.4, pitch: 0.8, logZoom: 0.01 };
+const STEP: Record<Channel, number> = { logSpan: 0.05, ax: 0.01, ay: 0.01, north: 1.2, map: 0.05, site: 0.05, arena: 0.05, yaw: 0.4, pitch: 0.8, logZoom: 0.01, logLens: 0.03, roof: 0.05 };
 /** The most the change itself may change from one frame to the next: no jump of speed. */
-const BEND: Record<Channel, number> = { logSpan: 0.003, ax: 0.002, ay: 0.002, north: 0.05, map: 0.006, site: 0.006, arena: 0.006, yaw: 0.01, pitch: 0.02, logZoom: 0.002 };
+const BEND: Record<Channel, number> = { logSpan: 0.003, ax: 0.002, ay: 0.002, north: 0.05, map: 0.006, site: 0.006, arena: 0.006, yaw: 0.01, pitch: 0.02, logZoom: 0.002, logLens: 0.002, roof: 0.006 };
 
 /** Every frame of a path at 60 a second, from the start to `after` seconds past its end. */
 function frames(flight: Flight, after = 40): Camera[] {
@@ -43,19 +43,36 @@ function frames(flight: Flight, after = 40): Camera[] {
   return out;
 }
 
-const SUBSETS: StageId[][] = [["map", "city", "arena"], ["map", "city"], ["city", "arena"], ["map", "arena"], ["map"], ["city"], ["arena"]];
+const SUBSETS: StageId[][] = [
+  ["map", "city", "arena", "bowl", "rink"],
+  ["map", "city", "arena"],
+  ["map", "city"],
+  ["city", "arena"],
+  ["map", "arena"],
+  ["arena", "bowl", "rink"],
+  ["map", "bowl"],
+  ["city", "rink"],
+  ["bowl", "rink"],
+  ["map"],
+  ["city"],
+  ["arena"],
+  ["bowl"],
+  ["rink"],
+];
 const input = (stages?: StageId[]) => ({ north: 90, siteSpan: 420, anchorStart: [0.18, -0.12] as const, anchorEnd: [0.02, 0.03] as const, ...(stages === undefined ? {} : { stages }) });
 
 describe("the fly-through's path", () => {
   it("flies the stages in order, from the map to the turning arena, and says when each starts", () => {
     const flight = flightPlan(input());
-    expect(stagesOf(flight)).toEqual(["map", "city", "arena"]);
+    expect(stagesOf(flight)).toEqual(["map", "city", "arena", "bowl", "rink"]);
     expect(startOf(flight, "map")).toBe(0);
     const starts = STAGE_IDS.map((id) => startOf(flight, id)!);
     expect(starts).toEqual([...starts].sort((a, b) => a - b));
-    expect(new Set(starts).size).toBe(3);
-    expect(flight.end).toBeGreaterThan(starts[2]);
+    expect(new Set(starts).size).toBe(5);
+    expect(flight.end).toBeGreaterThan(starts[4]);
+    // The path ends on the rink turning from the seat, more slowly than the arena turned.
     expect(flight.tail).toBeLessThan(0);
+    expect(Math.abs(flight.tail)).toBeLessThan(flight.input.turn);
   });
 
   it("never jumps: from frame to frame no channel changes by more than a small step, at 60 frames a second, over the whole path and the turning after it", () => {
@@ -84,7 +101,7 @@ describe("the fly-through's path", () => {
 
   it("keeps every layer's share between none and all, and shows the layers in order: the map, then the plan, then the arena", () => {
     const flight = flightPlan(input());
-    for (const camera of frames(flight, 5)) for (const layer of ["map", "site", "arena"] as const) {
+    for (const camera of frames(flight, 5)) for (const layer of ["map", "site", "arena", "roof"] as const) {
       expect(camera[layer]).toBeGreaterThanOrEqual(-1e-9);
       expect(camera[layer]).toBeLessThanOrEqual(1 + 1e-9);
     }
@@ -92,6 +109,9 @@ describe("the fly-through's path", () => {
     expect(at("map")).toMatchObject({ map: 1, site: 0, arena: 0 });
     expect(at("city")).toMatchObject({ map: 0, site: 1, arena: 0 });
     expect(at("arena").arena).toBe(1);
+    // The roof is on for the arena turning and lifted away by the time the camera is in the bowl.
+    expect(at("arena").roof).toBe(1);
+    expect(at("rink").roof).toBe(0);
     // The map is gone before the arena shows, and the plan is under the arena when the arena is whole.
     for (const camera of frames(flight, 5)) expect(camera.map === 0 || camera.arena === 0).toBe(true);
   });
@@ -135,9 +155,12 @@ describe("the fly-through's path", () => {
     const arena = cameraAt(flight, startOf(flight, "arena")!);
     expect(Math.exp(arena.logSpan)).toBeCloseTo(380, 6);
     expect(arena).toMatchObject({ yaw: 0, pitch: 0, logZoom: 0 });
-    // It settles in the sport's main camera.
+    // It tips to the sport's main camera, and a path that ends there stays in it.
     const view = mainView("nhl");
-    expect(cameraAt(flight, flight.end).pitch).toBeCloseTo(view.pitch, 9);
+    const [, , tilted] = [0, 0, flightPlan({ ...input(["map", "city", "arena"]), siteSpan: 380 })];
+    expect(cameraAt(tilted, tilted.end).pitch).toBeCloseTo(view.pitch, 9);
+    // The eye is the usual long lens until the camera goes in.
+    expect(arena.logLens).toBeCloseTo(Math.log(8), 9);
   });
 
   it("keeps the arena in view on the way: where it stands on the screen stays inside the stage", () => {
@@ -151,7 +174,7 @@ describe("the fly-through's path", () => {
   it("folds a moment long after the end back to one within a turn of it, with the same view", () => {
     const flight = flightPlan(input());
     const period = turnPeriod(flight);
-    expect(period).toBeCloseTo(30, 9);
+    expect(period).toBeCloseTo(360 / Math.abs(flight.tail), 9);
     expect(foldTime(flight, 5)).toBe(5);
     const late = flight.end + 3 * period + 7;
     const folded = foldTime(flight, late);
@@ -169,7 +192,52 @@ describe("the fly-through's path", () => {
     }
     expect(flight.rest.map.map).toBe(1);
     expect(flight.rest.city.site).toBe(1);
-    expect(flight.rest.arena).toMatchObject({ arena: 1, yaw: mainView("nhl").yaw, pitch: mainView("nhl").pitch });
+    expect(flight.rest.arena).toMatchObject({ arena: 1, yaw: mainView("nhl").yaw, pitch: mainView("nhl").pitch, roof: 1 });
+    // The bowl is seen with the roof lifted away and the rink from the seat, nearer and through a shorter lens, each still and whole.
+    expect(flight.rest.bowl.roof).toBe(0);
+    expect(flight.rest.rink).toMatchObject({ roof: 0, pitch: 77 });
+    expect(Math.exp(flight.rest.rink.logZoom)).toBeCloseTo(2.8, 9);
+    expect(Math.exp(flight.rest.rink.logLens)).toBeCloseTo(1, 9);
+    expect(flight.rest.bowl.logLens).toBeLessThan(flight.rest.arena.logLens);
+    expect(flight.rest.bowl.logLens).toBeGreaterThan(flight.rest.rink.logLens);
+  });
+
+  it("goes into the bowl in one run: the roof lifts away and the lens shortens and the camera comes nearer, never back, and the turn never stops or reverses", () => {
+    const flight = flightPlan(input());
+    const [bowl, rink] = [startOf(flight, "bowl")!, startOf(flight, "rink")!];
+    let [lens, roof, zoom, pitch] = [Infinity, Infinity, -Infinity, -Infinity];
+    for (let t = bowl; t <= flight.end + 5; t += FRAME) {
+      const camera = cameraAt(flight, t);
+      expect(camera.logLens, `lens at ${t}`).toBeLessThanOrEqual(lens + 1e-9);
+      expect(camera.roof, `roof at ${t}`).toBeLessThanOrEqual(roof + 1e-9);
+      expect(camera.logZoom, `zoom at ${t}`).toBeGreaterThanOrEqual(zoom - 1e-9);
+      expect(camera.pitch, `pitch at ${t}`).toBeGreaterThanOrEqual(pitch - 1e-9);
+      [lens, roof, zoom, pitch] = [camera.logLens, camera.roof, camera.logZoom, camera.pitch];
+    }
+    // From the arena's first frame to the last the arena turns the same way, at a speed between the rink's and the arena's, once it has started.
+    let yaw = cameraAt(flight, startOf(flight, "arena")!).yaw;
+    for (let t = startOf(flight, "arena")! + FRAME; t <= flight.end + 20; t += FRAME) {
+      const next = cameraAt(flight, t).yaw;
+      expect(next, `yaw at ${t}`).toBeLessThanOrEqual(yaw + 1e-9);
+      if (t > startOf(flight, "arena")! + 3.5) expect((yaw - next) / FRAME, `speed at ${t}`).toBeGreaterThan(flight.input.rinkTurn - 0.5);
+      expect((yaw - next) / FRAME, `speed at ${t}`).toBeLessThan(flight.input.turn + 0.5);
+      yaw = next;
+    }
+    // It settles at the seat's viewpoint where the rink stage starts.
+    const seat = cameraAt(flight, rink);
+    expect(seat.pitch).toBeCloseTo(77, 9);
+    expect(Math.exp(seat.logZoom)).toBeCloseTo(2.8, 9);
+    expect(Math.exp(seat.logLens)).toBeCloseTo(1, 9);
+    expect(seat.roof).toBe(0);
+  });
+
+  it("settles at the seat a page chose, and turns the rink at the speed it chose", () => {
+    const flight = flightPlan({ ...input(), seat: { pitch: 70, zoom: 2, lens: 2 }, rinkTurn: 5, turn: 10 });
+    const seat = cameraAt(flight, startOf(flight, "rink")!);
+    expect([seat.pitch, Math.exp(seat.logZoom), Math.exp(seat.logLens)].map((n) => Math.round(n * 1e6) / 1e6)).toEqual([70, 2, 2]);
+    expect(flight.tail).toBe(-5);
+    expect(flightPlan({ ...input(["arena"]), turn: 10 }).tail).toBe(-10);
+    expect(flightPlan({ ...input(["map"]) }).tail).toBe(0);
   });
 
   it("goes from any stage to any other along the path with no jump, at the clock's own faster pace", () => {
@@ -356,10 +424,12 @@ describe("the markup", () => {
     expect(Object.keys(ja).sort()).toEqual(Object.keys(en).sort());
     for (const id of STAGE_IDS) {
       for (const language of ["en", "ja"] as const) {
-        const said = stageWords(language, id, { arena: "Honda Center", place: "Anaheim, United States" });
+        const said = stageWords(language, id, { arena: "Honda Center", place: "Anaheim, United States", seats: "17,174", tiers: 2 });
         expect(said.name.length).toBeGreaterThan(0);
         expect(said.text).not.toContain("{");
-        expect(said.text).toContain("Honda Center");
+        // The words say what is seen: the arena where it is the subject, the seats and the tiers where the bowl is.
+        if (id === "bowl") expect(said.text).toContain("17,174");
+        else if (id !== "rink") expect(said.text).toContain("Honda Center");
       }
       expect(ja.stage[id].name).toMatch(/[぀-ヿ一-鿿]/);
       expect(ja.stage[id].text).toMatch(/[぀-ヿ一-鿿]/);

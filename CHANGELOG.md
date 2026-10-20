@@ -7,6 +7,12 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **The fly-through goes into the bowl** (`bowl` and `rink`, two stages after `arena`): the roof lifts away, and the camera comes in over the stands, tipping lower and nearer and through a shorter lens, to a seat's viewpoint inside the bowl, from where the rink turns. The 3D arena's own `lens` setting does it (a long lens from outside, about 1 from the seat, so that the eye is inside the building and the bowl has a real perspective), and the roof is dissolved with a CSS `filter: opacity()`, so that it composes with the 3D view's own cutting away of the walls. The seat is a place and a height of our own choosing (a pitch, a zoom and a lens, `seat` of `flightPlan`), said to be so, never a real seat; the bowl's words give the venue's seats and tiers.
+- **The camera has two more channels** (`logLens`, `roof`), still one path with no jumps: the turn slows from the arena's 12 degrees a second to the rink's 8 and never stops or reverses; the lens, the roof, the zoom and the tip change in one direction only on the way in. `flightPlan` takes `seat` and `rinkTurn`; `PACE` has the seconds of each part; the path now ends on the rink turning.
+- Tests for the way in (nothing reverses, the seat is reached where the rink stage starts, the stage stills show the roof lifted and the seat's view) over fourteen lists of stages, and in a real browser the four corners of the rink are followed on the screen at 30 frames a second, from outside and from the seat: each moves a little a frame and none falls behind the eye.
+
 ## [0.27.0] - 2026-10-20
 
 ### Added

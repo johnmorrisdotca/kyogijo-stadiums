@@ -10,7 +10,7 @@ export interface FlythroughWords {
   region: string;
   /** What a screen reader is told about the whole fly-through: `{arena}`, `{place}`. */
   about: string;
-  /** The stages: their names and what is said of each (`{arena}`, `{place}`). */
+  /** The stages: their names and what is said of each (`{arena}`, `{place}`, `{seats}`, `{tiers}`). */
   stage: Record<StageId, { name: string; text: string }>;
   /** Said when the stage changes: `{n}`, `{total}`, `{name}`, `{text}`. */
   announce: string;
@@ -32,11 +32,13 @@ export const FLYTHROUGH_WORDS: Record<Language, FlythroughWords> = {
   en: {
     title: "Fly-through: {arena}",
     region: "fly-through",
-    about: "A fly-through from a map to {arena} in {place}: the map, the city and the arena in 3D. Play, pause, step back or forward and choose a stage with the buttons or the keys.",
+    about: "A fly-through from a map to {arena} in {place}: the map, the city, the arena in 3D, the way in over the stands and the rink seen from a seat. Play, pause, step back or forward and choose a stage with the buttons or the keys.",
     stage: {
       map: { name: "Map", text: "{arena} stands in {place}." },
       city: { name: "City", text: "The building of {arena} from above, as OpenStreetMap maps it." },
       arena: { name: "Arena", text: "{arena} in 3D, turning." },
+      bowl: { name: "Bowl", text: "In over the stands, with the roof lifted away: a plausible bowl of {seats} seats in {tiers} tiers, not a seat map." },
+      rink: { name: "Rink", text: "A view across the ice from the stands, turning; the place and the height of the seat are ours, not a real seat's." },
     },
     announce: "Stage {n} of {total}: {name}. {text}",
     play: "Play",
@@ -52,11 +54,13 @@ export const FLYTHROUGH_WORDS: Record<Language, FlythroughWords> = {
   ja: {
     title: "フライスルー：{arena}",
     region: "フライスルー",
-    about: "地図から{place}の{arena}まで進むフライスルーです。地図、都市、3Dのアリーナの順に見られます。ボタンまたはキーで、再生・一時停止、前後の場面への移動、場面の選択ができます。",
+    about: "地図から{place}の{arena}まで進むフライスルーです。地図、都市、3Dのアリーナ、スタンドの上空から中へ入る場面、客席から見たリンクの順に見られます。ボタンまたはキーで、再生・一時停止、前後の場面への移動、場面の選択ができます。",
     stage: {
       map: { name: "地図", text: "{arena}は{place}にあります。" },
       city: { name: "都市", text: "{arena}の建物を真上から見たところです（OpenStreetMapの記録による）。" },
       arena: { name: "アリーナ", text: "{arena}を3Dで回転させて表示しています。" },
+      bowl: { name: "客席", text: "屋根を取り払い、スタンドの上空から中へ入ります。{seats}席・{tiers}層の推定のスタンドで、実際の座席表ではありません。" },
+      rink: { name: "リンク", text: "スタンドからリンクを見渡した眺めで、ゆっくり回転します。視点の位置と高さは仮のもので、実在の座席ではありません。" },
     },
     announce: "場面{n}／{total}：{name}。{text}",
     play: "再生",
@@ -72,4 +76,4 @@ export const FLYTHROUGH_WORDS: Record<Language, FlythroughWords> = {
 };
 
 /** A sentence with its `{name}` slots filled in. */
-export const say = (text: string, values: Record<string, string | number>): string => text.replace(/\{(\w+)\}/g, (_, key: string) => String(values[key] ?? ""));
+export const say = (text: string, values: Record<string, string | number | undefined>): string => text.replace(/\{(\w+)\}/g, (_, key: string) => String(values[key] ?? ""));

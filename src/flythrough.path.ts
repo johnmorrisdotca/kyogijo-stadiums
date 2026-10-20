@@ -3,22 +3,23 @@
 // keyframes in time, and every channel runs through them as a monotone cubic (Fritsch and Carlson), so that it is smooth where it passes a keyframe (the speed does not jump),
 // never overshoots between two (a layer's opacity stays between 0 and 1), and is still at its first keyframe. Nothing here touches a page: the same path can be worked out in
 // Node, tested frame by frame, and handed to the mount, which draws it.
-import { LONG_PRESETS, presetView } from "./turn.camera.ts";
+import { LENS, LONG_PRESETS, presetView } from "./turn.camera.ts";
 
 /** The stages of the fly-through, in order. */
-export type StageId = "map" | "city" | "arena";
+export type StageId = "map" | "city" | "arena" | "bowl" | "rink";
 
 /** The stages that exist, in the order of the path. */
-export const STAGE_IDS: readonly StageId[] = ["map", "city", "arena"];
+export const STAGE_IDS: readonly StageId[] = ["map", "city", "arena", "bowl", "rink"];
 
 /** The channels of the camera. */
-export const CHANNELS = ["logSpan", "ax", "ay", "north", "map", "site", "arena", "yaw", "pitch", "logZoom"] as const;
+export const CHANNELS = ["logSpan", "ax", "ay", "north", "map", "site", "arena", "yaw", "pitch", "logZoom", "logLens", "roof"] as const;
 export type Channel = (typeof CHANNELS)[number];
 
 /**
  * Where the camera is. `logSpan` is the natural logarithm of the metres the container's width shows (so that a zoom is a straight line); `ax` and `ay` are where the arena stands on the screen, as a
  * share of the width and of the height from the middle; `north` is how far the map and the site plan are turned, in degrees clockwise (the rink's long side lies along the page when it reaches the
- * venue's); `map`, `site` and `arena` are how much of the map, of the site plan and of the 3D arena shows (0 to 1); `yaw`, `pitch` and `logZoom` are the 3D view's turn and tip in degrees and the natural logarithm of its zoom.
+ * venue's); `map`, `site` and `arena` are how much of the map, of the site plan and of the 3D arena shows (0 to 1); `yaw`, `pitch` and `logZoom` are the 3D view's turn and tip in degrees and the natural logarithm of its zoom;
+ * `logLens` is the natural logarithm of the eye's lens, as a multiple of the stage's longer side (a long lens looks from far outside, a short one from inside the bowl) and `roof` is how much of the building's roof shows (0 to 1).
  */
 export type Camera = Record<Channel, number>;
 
@@ -41,6 +42,10 @@ export interface FlightInput {
   view?: { yaw: number; pitch: number };
   /** Degrees a second the arena turns at, once it is turning: 12 by default. */
   turn?: number;
+  /** The seat's viewpoint the camera settles at in the bowl: the tip of the 3D view in degrees, its zoom and the eye's lens. 77, 2.8 and 1 by default. */
+  seat?: { pitch: number; zoom: number; lens: number };
+  /** Degrees a second the rink turns at, from the seat: 8 by default. */
+  rinkTurn?: number;
 }
 
 /** A keyframe: the camera at a moment, and where it must be going where that is not what the neighbours say. */
@@ -58,11 +63,11 @@ export interface Flight {
   stages: readonly { id: StageId; start: number }[];
   /** The time of the last keyframe. */
   end: number;
-  /** After `end`, the arena goes on turning at this many degrees a second (negative: the near side goes to the right), and nothing else moves. */
+  /** After `end`, the view goes on turning at this many degrees a second (negative: the near side goes to the right), and nothing else moves: the arena's turn, or the rink's from the seat. */
   tail: number;
   /** The camera of each stage at rest: what a reader who prefers reduced motion is shown (one layer, nothing half-faded). */
   rest: Readonly<Record<StageId, Camera>>;
-  input: Required<Pick<FlightInput, "north" | "siteSpan" | "startSpan" | "citySpan" | "turn">> & { anchorStart: readonly [number, number]; anchorEnd: readonly [number, number]; view: { yaw: number; pitch: number } };
+  input: Required<Pick<FlightInput, "north" | "siteSpan" | "startSpan" | "citySpan" | "turn" | "rinkTurn" | "seat">> & { anchorStart: readonly [number, number]; anchorEnd: readonly [number, number]; view: { yaw: number; pitch: number } };
 }
 
 const clamp = (value: number, low: number, high: number): number => Math.min(high, Math.max(low, value));
@@ -163,7 +168,7 @@ export function foldTime(flight: Flight, time: number): number {
 }
 
 /** The camera's defaults: the map, from far above, with nothing of the arena showing. */
-const BASE: Camera = { logSpan: 0, ax: 0, ay: 0, north: 0, map: 1, site: 0, arena: 0, yaw: 0, pitch: 0, logZoom: 0 };
+const BASE: Camera = { logSpan: 0, ax: 0, ay: 0, north: 0, map: 1, site: 0, arena: 0, yaw: 0, pitch: 0, logZoom: 0, logLens: Math.log(LENS), roof: 1 };
 
 /** The keyframes of each stage in order. Each stage's first key is where it starts (and is the last key of the stage before it, the one that arrives). `dt` is the seconds from the key before. */
 interface Block {
@@ -171,13 +176,13 @@ interface Block {
   keys: { dt: number; camera: Partial<Camera>; slope?: Partial<Camera> }[];
 }
 
-/** How a path is paced: the seconds of each part. */
-export const PACE = { dwell: 1.6, step: 1.25, cityDwell: 0.9, approach: 1.6, rise: 0.8, hand: 0.7, tilt: 3.2 } as const;
+/** How a path is paced: the seconds of each part. `hold` is how long the arena turns, whole, before the camera goes in; `over` and `settle` the two parts of the way into the bowl; `stay` how long a still run of the rink's turn is kept before the end. */
+export const PACE = { dwell: 1.6, step: 1.25, cityDwell: 0.9, approach: 1.6, rise: 0.8, hand: 0.7, tilt: 3.2, hold: 3.5, over: 2.2, settle: 2.2, stay: 2 } as const;
 
 /**
- * The path from the map to the turning arena, for the stages asked (all by default): the map holds a moment, then the camera falls to the city in four even steps of the logarithm of the distance (the
+ * The path from the map to the rink, for the stages asked (all by default): the map holds a moment, then the camera falls to the city in four even steps of the logarithm of the distance (the
  * map turning as it comes to the venue's own orientation and giving way to the site plan), holds there, comes in until the plan is as large as the 3D arena seen from above, the arena rises out of it,
- * tips to the sport's main camera and turns.
+ * tips to the sport's main camera and turns; then the roof lifts away and the camera comes in over the stands, the eye's lens shortening as it goes, and settles at a seat's viewpoint, from where the rink turns.
  */
 export function flightPlan(input: FlightInput): Flight {
   const startSpan = input.startSpan ?? 9_000_000;
@@ -186,6 +191,8 @@ export function flightPlan(input: FlightInput): Flight {
   const [ax1, ay1] = input.anchorEnd ?? [0, 0];
   const north = wrap180(input.north);
   const turn = input.turn ?? 12;
+  const rinkTurn = input.rinkTurn ?? 8;
+  const seat = input.seat ?? { pitch: 77, zoom: 2.8, lens: 1 };
   const view = input.view ?? { yaw: LONG_PRESETS.broadcast.yaw, pitch: LONG_PRESETS.broadcast.pitch };
   const ln = Math.log;
   const L0 = ln(startSpan);
@@ -207,6 +214,13 @@ export function flightPlan(input: FlightInput): Flight {
   const start: Partial<Camera> = { logSpan: L0, ax: ax0, ay: ay0, north: 0, map: 1, site: 0, arena: 0, yaw: 0, pitch: 0, logZoom: 0 };
   const arrive: Partial<Camera> = { ...fall(4), logSpan: L1, ax: ax1, ay: ay1, north, map: 0, site: 1 };
   const near: Partial<Camera> = { ...arrive, logSpan: L2 };
+  // Where the turn has got to at each key of the arena, the bowl and the rink: the speed changes from `turn` to `rinkTurn` along the way, and each yaw is the one the two speeds either side of it come to.
+  const yaws: number[] = [];
+  let yaw = 0;
+  for (const [from, to, seconds] of [[0, turn, PACE.tilt], [turn, turn, PACE.hold], [turn, (turn + rinkTurn) / 2, PACE.over], [(turn + rinkTurn) / 2, rinkTurn, PACE.settle], [rinkTurn, rinkTurn, PACE.stay]] as const) {
+    yaw -= ((from + to) / 2) * seconds;
+    yaws.push(yaw);
+  }
   const blocks: Block[] = [
     { id: "map", keys: [{ dt: 0, camera: start }, { dt: PACE.dwell, camera: start }, { dt: PACE.step, camera: fall(1) }, { dt: PACE.step, camera: fall(2) }, { dt: PACE.step, camera: fall(3) }] },
     { id: "city", keys: [{ dt: PACE.step, camera: arrive }, { dt: PACE.cityDwell, camera: arrive }, { dt: PACE.approach, camera: near }, { dt: PACE.rise, camera: { ...near, arena: 1 } }] },
@@ -214,7 +228,21 @@ export function flightPlan(input: FlightInput): Flight {
       id: "arena",
       keys: [
         { dt: PACE.hand, camera: { ...near, arena: 1, site: 0, yaw: 0, pitch: 0 }, slope: { yaw: 0 } },
-        { dt: PACE.tilt, camera: { ...near, arena: 1, site: 0, yaw: -(turn * PACE.tilt) / 2, pitch: view.pitch }, slope: { yaw: -turn } },
+        { dt: PACE.tilt, camera: { ...near, arena: 1, site: 0, yaw: yaws[0], pitch: view.pitch }, slope: { yaw: -turn } },
+      ],
+    },
+    {
+      id: "bowl",
+      keys: [
+        { dt: PACE.hold, camera: { ...near, arena: 1, site: 0, yaw: yaws[1], pitch: view.pitch }, slope: { yaw: -turn } },
+        { dt: PACE.over, camera: { ...near, arena: 1, site: 0, yaw: yaws[2], pitch: lerp(view.pitch, seat.pitch, 0.5), logZoom: ln(seat.zoom) * 0.55, logLens: lerp(ln(LENS), ln(seat.lens), 0.6), roof: 0.3 }, slope: { yaw: -(turn + rinkTurn) / 2 } },
+      ],
+    },
+    {
+      id: "rink",
+      keys: [
+        { dt: PACE.settle, camera: { ...near, arena: 1, site: 0, yaw: yaws[3], pitch: seat.pitch, logZoom: ln(seat.zoom), logLens: ln(seat.lens), roof: 0 }, slope: { yaw: -rinkTurn } },
+        { dt: PACE.stay, camera: { ...near, arena: 1, site: 0, yaw: yaws[4], pitch: seat.pitch, logZoom: ln(seat.zoom), logLens: ln(seat.lens), roof: 0 }, slope: { yaw: -rinkTurn } },
       ],
     },
   ];
@@ -245,14 +273,16 @@ export function flightPlan(input: FlightInput): Flight {
     map: { ...BASE, ...start },
     city: { ...BASE, ...arrive },
     arena: { ...BASE, ...near, map: 0, site: 0, arena: 1, yaw: view.yaw, pitch: view.pitch, logZoom: 0 },
+    bowl: { ...BASE, ...near, map: 0, site: 0, arena: 1, yaw: view.yaw, pitch: lerp(view.pitch, seat.pitch, 0.5), logZoom: ln(seat.zoom) * 0.55, logLens: lerp(ln(LENS), ln(seat.lens), 0.6), roof: 0 },
+    rink: { ...BASE, ...near, map: 0, site: 0, arena: 1, yaw: view.yaw, pitch: seat.pitch, logZoom: ln(seat.zoom), logLens: ln(seat.lens), roof: 0 },
   };
   return {
     keys,
     stages,
     end: time,
-    tail: flown.some((block) => block.id === "arena") ? -turn : 0,
+    tail: flown[flown.length - 1].keys[flown[flown.length - 1].keys.length - 1].slope?.yaw ?? 0,
     rest,
-    input: { north, siteSpan: input.siteSpan, startSpan, citySpan, turn, anchorStart: [ax0, ay0], anchorEnd: [ax1, ay1], view },
+    input: { north, siteSpan: input.siteSpan, startSpan, citySpan, turn, rinkTurn, seat, anchorStart: [ax0, ay0], anchorEnd: [ax1, ay1], view },
   };
 }
 

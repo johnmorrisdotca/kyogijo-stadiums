@@ -83,7 +83,7 @@
       const setSelect = (id, value, allowed) => { if (allowed.includes(value)) $(id).value = value; };
       const state = { arena: VENUE_IDS.includes(params.get("arena")) ? params.get("arena") : VENUE_IDS[0] };
       const speed = Number(params.get("speed")) > 0 ? Number(params.get("speed")) : 1;
-      const stages = (params.get("stages") ?? "").split(",").filter((s) => ["map", "city", "arena"].includes(s));
+      const stages = (params.get("stages") ?? "").split(",").filter((s) => ["map", "city", "arena", "bowl", "rink"].includes(s));
       let trip;
 
       setSelect("theme", params.get("theme"), ["light", "dark"]);

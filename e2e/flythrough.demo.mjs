@@ -32,7 +32,7 @@ test("opens on the map for a reader who prefers reduced motion, as a still, with
   const root = page.locator(`${TRIP} .kf`);
   await expect(root).toHaveAttribute("data-mode", "stages");
   await expect(root).toHaveAttribute("data-stage", "map");
-  await expect(page.locator(`${TRIP} button[data-stage]`)).toHaveText(["1. Map", "2. City", "3. Arena"]);
+  await expect(page.locator(`${TRIP} button[data-stage]`)).toHaveText(["1. Map", "2. City", "3. Arena", "4. Bowl", "5. Rink"]);
   await expect(page.locator(`${TRIP} button[data-stage="map"]`)).toHaveAttribute("aria-current", "step");
   await expect(page.locator(`${TRIP} .kf-still`)).toContainText("reduce motion");
   await expect(page.locator(`${TRIP} .kf-credit`)).toContainText("(c) OpenStreetMap contributors, ODbL 1.0");
@@ -67,11 +67,29 @@ test("steps from stage to stage with the buttons and the keys, each a still: the
   expect((await box(page, `${TRIP} .kf-site`)).shown).toBe(false);
   await expect(page.locator(`${TRIP} .kf-3d .ky-turn[data-mode="3d"]`)).toHaveCount(1);
   await expect(page.locator(`${TRIP} .kf-3d .ky-turn`)).toHaveAttribute("data-preset", "broadcast");
-  await expect(page.locator(`${TRIP} .kf-live`)).toContainText("Stage 3 of 3: Arena.");
+  await expect(page.locator(`${TRIP} .kf-live`)).toContainText("Stage 3 of 5: Arena.");
+  // Into the bowl with the roof lifted away, then the rink from the seat, through a shorter lens and nearer.
+  await page.keyboard.press("ArrowRight");
+  await expect(root).toHaveAttribute("data-stage", "bowl");
+  await expect(page.locator(`${TRIP} .kf-caption`)).toContainText("a plausible bowl of 17,174 seats in 2 tiers, not a seat map");
+  await expect(page.locator(`${TRIP} .kf-3d`)).toHaveAttribute("data-roof", "0");
+  const bowl = await page.evaluate(() => window.flythrough.camera());
+  await page.keyboard.press("ArrowRight");
+  await expect(root).toHaveAttribute("data-stage", "rink");
+  await expect(page.locator(`${TRIP} .kf-caption`)).toContainText("not a real seat's");
+  const seat = await page.evaluate(() => window.flythrough.camera());
+  expect(Math.exp(seat.logLens)).toBeCloseTo(1, 6);
+  expect(seat.logLens).toBeLessThan(bowl.logLens);
+  expect(seat.logZoom).toBeGreaterThan(bowl.logZoom);
+  expect(seat.pitch).toBeGreaterThan(bowl.pitch);
+  await expect(page.locator(`${TRIP} .kf-live`)).toContainText("Stage 5 of 5: Rink.");
   // The last stage stays: next does nothing, back goes to the stage before, a number key and a stage button go to any.
   await page.locator(`${TRIP} button[data-act="next"]`).click();
-  await expect(root).toHaveAttribute("data-stage", "arena");
+  await expect(root).toHaveAttribute("data-stage", "rink");
   await page.locator(`${TRIP} button[data-act="back"]`).click();
+  await expect(root).toHaveAttribute("data-stage", "bowl");
+  await page.locator(`${STAGE}`).focus();
+  await page.keyboard.press("2");
   await expect(root).toHaveAttribute("data-stage", "city");
   await page.locator(`${STAGE}`).focus();
   await page.keyboard.press("1");
@@ -85,10 +103,10 @@ test("steps from stage to stage with the buttons and the keys, each a still: the
 
 test("plays by stages for a reader who prefers reduced motion: Play steps to the next still on its own, and stops at the last", async ({ page }) => {
   await open(page, "");
-  await page.evaluate(() => { window.flythrough.goTo("city"); });
+  await page.evaluate(() => { window.flythrough.goTo("bowl"); });
   await page.locator(`${TRIP} button[data-act="play"]`).click();
   await expect(page.locator(`${TRIP} button[data-act="play"]`)).toHaveAttribute("aria-pressed", "true");
-  await expect(page.locator(`${TRIP} .kf`)).toHaveAttribute("data-stage", "arena", { timeout: 9000 });
+  await expect(page.locator(`${TRIP} .kf`)).toHaveAttribute("data-stage", "rink", { timeout: 9000 });
   await expect(page.locator(`${TRIP} button[data-act="play"]`)).toHaveAttribute("aria-pressed", "false", { timeout: 7000 });
 });
 
@@ -108,15 +126,24 @@ test("flies for a reader who does not prefer reduced motion: one smooth camera, 
   const trace = await page.evaluate(({ end }) => {
     const trip = window.flythrough;
     const rect = (sel) => { const el = document.querySelector(sel); if (el === null) return null; const r = el.getBoundingClientRect(); return { cx: r.x + r.width / 2, cy: r.y + r.height / 2, w: r.width, h: r.height }; };
+    // The four corners of the rink (200 by 85 feet), where the 3D view puts them on the screen: from the matrix of the floor, which is how the view places it.
+    const corners = () => {
+      const el = document.querySelector(".kf-3d .ky-turn-floor");
+      if (el === null) return null;
+      const vb = el.querySelector("svg").viewBox.baseVal;
+      const pxPerFoot = parseFloat(el.style.width) / vb.width;
+      const m = new DOMMatrix(getComputedStyle(el).transform);
+      return [[0, 0], [200, 0], [200, 85], [0, 85]].map(([fx, fy]) => { const pt = m.transformPoint(new DOMPoint((fx - vb.x) * pxPerFoot, (fy - vb.y) * pxPerFoot, 0, 1)); return { x: pt.x / pt.w, y: pt.y / pt.w, w: pt.w }; });
+    };
     const out = [];
     for (let t = 0; t <= end + 4; t += 1 / 30) {
       trip.seek(t);
-      out.push({ t, stage: trip.stage, cam: trip.camera(), pin: rect(".kf-pin"), plan: rect(".kf-plan .ky-apron"), floor: rect(".kf-3d .ky-turn-floor svg"), bar: document.querySelector(".kf-scale-bar").getBoundingClientRect().width, hidden3d: getComputedStyle(document.querySelector(".kf-3d")).visibility });
+      out.push({ t, stage: trip.stage, cam: trip.camera(), pin: rect(".kf-pin"), plan: rect(".kf-plan .ky-apron"), floor: rect(".kf-3d .ky-turn-floor svg"), corners: corners(), view: document.querySelector(".kf-3d .ky-turn-view").getBoundingClientRect().width, bar: document.querySelector(".kf-scale-bar").getBoundingClientRect().width, hidden3d: getComputedStyle(document.querySelector(".kf-3d")).visibility });
     }
     return out;
   }, { end });
   const stages = trace.map((f) => f.stage).filter((s, i, all) => all.indexOf(s) === i);
-  expect(stages).toEqual(["map", "city", "arena"]);
+  expect(stages).toEqual(["map", "city", "arena", "bowl", "rink"]);
   for (let i = 1; i < trace.length; i += 1) {
     const [a, b] = [trace[i - 1], trace[i]];
     // The pin stays where the arena is, within a few pixels a frame; the plan and the 3D floor change size by a few percent a frame, and their middles move little.
@@ -126,10 +153,16 @@ test("flies for a reader who does not prefer reduced motion: one smooth camera, 
       expect(b.plan.w / a.plan.w, `plan at ${b.t}`).toBeGreaterThan(1 / 1.1);
       expect(Math.hypot(b.plan.cx - a.plan.cx, b.plan.cy - a.plan.cy), `plan middle at ${b.t}`).toBeLessThan(25);
     }
+    // The 3D arena, from outside and then from the seat: each corner of the rink moves a little a frame, on the way in too, and none ever falls behind the eye.
     if (a.cam.arena > 0.05 && b.cam.arena > 0.05) {
+      for (let c = 0; c < 4; c += 1) {
+        expect(b.corners[c].w, `corner ${c} in front of the eye at ${b.t}`).toBeGreaterThan(0.2);
+        expect(Math.hypot(b.corners[c].x - a.corners[c].x, b.corners[c].y - a.corners[c].y), `corner ${c} at ${b.t}`).toBeLessThan(0.015 * b.view);
+      }
+    }
+    if (a.cam.arena > 0.05 && b.cam.arena > 0.05 && Math.exp(b.cam.logLens) > 7.5) {
       expect(b.floor.w / a.floor.w, `floor at ${b.t}`).toBeLessThan(1.1);
       expect(b.floor.w / a.floor.w, `floor at ${b.t}`).toBeGreaterThan(1 / 1.1);
-      expect(Math.hypot(b.floor.cx - a.floor.cx, b.floor.cy - a.floor.cy), `floor middle at ${b.t}`).toBeLessThan(40);
     }
     expect(Math.abs(b.bar - a.bar), `scale bar at ${b.t}`).toBeLessThan(160);
   }
@@ -139,7 +172,7 @@ test("flies for a reader who does not prefer reduced motion: one smooth camera, 
   expect(Math.abs(hand.plan.w / hand.floor.w - 1)).toBeLessThan(0.015);
   expect(Math.abs(hand.plan.cx - hand.floor.cx)).toBeLessThan(3);
   expect(Math.abs(hand.plan.cy - hand.floor.cy)).toBeLessThan(3);
-  // The arena turns for ever after the end: the turn goes on, and the camera does nothing else.
+  // The rink turns for ever after the end: the turn goes on, and the camera does nothing else.
   const [x, y] = [trace[trace.length - 30].cam, trace[trace.length - 1].cam];
   expect(Math.abs(y.yaw - x.yaw)).toBeGreaterThan(5);
   expect(y.pitch).toBeCloseTo(x.pitch, 9);
@@ -223,7 +256,7 @@ test("draws light and dark, forced or following the device, with the credit and 
 
 test("speaks Japanese with the same stages, and a plain graticule when no map is given", async ({ page }) => {
   const { errors } = await open(page, "?lang=ja&map=plain");
-  await expect(page.locator(`${TRIP} button[data-stage]`)).toHaveText(["1. 地図", "2. 都市", "3. アリーナ"]);
+  await expect(page.locator(`${TRIP} button[data-stage]`)).toHaveText(["1. 地図", "2. 都市", "3. アリーナ", "4. 客席", "5. リンク"]);
   await expect(page.locator(`${TRIP} .kf-credit`)).toContainText("OpenStreetMap contributors");
   await expect(page.locator(`${TRIP} .kf-credit`)).not.toContainText("Natural Earth");
   await expect(page.locator(`${TRIP} .kf-caption`)).toContainText("にあります");
