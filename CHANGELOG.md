@@ -7,7 +7,7 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
-## [0.22.0] - 2026-10-20
+## [0.23.0] - 2026-10-20
 
 ### Added
 
@@ -15,6 +15,8 @@ All notable changes to this project are written here. The format follows
 - **A figure of a ring is now the league's:** `RingFigures` carries whether the ropes are tied and whether the corners are the boxers' (a boxing ring's are, a wrestling ring's are not), and the number of sets of steps.
 - **The demo** has the ring in its sport picker, with its looks, the score and the 3D view.
 
+
+## [0.22.0] - 2026-10-20
 
 ### Added
 
