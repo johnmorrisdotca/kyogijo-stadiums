@@ -347,3 +347,44 @@ test("flies the stages asked for, from where the first of them starts, and looks
   expect(Math.abs(seen.camera.ax)).toBeLessThan(0.1);
   expect(errors).toEqual([]);
 });
+
+test("flies every venue of the package from the map to the play and back, each without a complaint, with the play on the ice and the roof off in the bowl", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  const { errors } = await open(page, "");
+  const seen = await page.evaluate(async () => {
+    const { mountFlythrough } = await import("./dist/flythrough-entry.js");
+    const { VENUE_IDS } = await import("./dist/index.js");
+    const { default: WORLD } = await import("./chizu/world-entry.js");
+    const { drawChizu } = await import("./chizu/draw-entry.js");
+    const { projectPoint } = await import("./chizu/index.js");
+    const out = [];
+    for (const arena of VENUE_IDS) {
+      const host = document.createElement("div");
+      host.style.width = "700px";
+      document.body.append(host);
+      const trip = mountFlythrough(host, { arena, start: { map: WORLD, draw: drawChizu, project: projectPoint } }, { autoPlay: false, motion: "smooth", id: `all-${arena}` });
+      const row = { arena, stages: trip.stages.length };
+      // Every stage in turn, then the end of the path and a moment into the play.
+      for (let t = 0; t < trip.duration; t += 1.5) trip.seek(t);
+      trip.seek(trip.duration + 3);
+      const game = host.querySelector(".kf-game");
+      row.game = getComputedStyle(game).visibility;
+      row.dots = host.querySelectorAll('.kf-game [id$="replay-players"] > *:not(title):not(desc)').length;
+      row.roof = host.querySelector(".kf-3d").getAttribute("data-roof");
+      row.camera = trip.camera();
+      trip.destroy();
+      host.remove();
+      out.push(row);
+    }
+    return out;
+  });
+  expect(seen.length).toBeGreaterThanOrEqual(16);
+  for (const row of seen) {
+    expect(row.stages, row.arena).toBe(6);
+    expect(row.game, row.arena).toBe("visible");
+    expect(row.dots, row.arena).toBe(12);
+    expect(row.roof, row.arena).toBe("0");
+    expect(row.camera.arena, row.arena).toBe(1);
+  }
+  expect(errors).toEqual([]);
+});
