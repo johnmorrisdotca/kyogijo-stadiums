@@ -1,7 +1,7 @@
 <h1 align="center">Kyogijo Stadiums <sub>競技場</sub></h1>
 
 <p align="center"><strong>Sports surfaces as SVG, drawn to scale, with the score on them.</strong><br>
-The football fields, the hockey rink, the basketball court, the soccer pitch, every MLB and NPB ballpark, 167 arenas, and the surfaces of curling, athletics, skating, swimming, water polo, diving, artistic swimming, twelve net and racket sports, seven field sports, the budō and the MMA cage, forty sports in all, each drawn from its rulebook or its published distances, with each team's name and logo on its side and the score in the middle, a lineup and the situation of the game on them, with stands and a crowd, a pageant of flags and a 3D view. Wide or tall, light or dark, a badge for a list, a helper for React, a custom element and a frame for a page that runs no script. One function, no dependencies.</p>
+The surfaces of forty sports, from football and curling to the budō and the MMA cage, each drawn from its rulebook or its published distances, with each team's name and logo on its side and the score in the middle, a lineup and the situation of the game on them, with stands and a crowd, a pageant of flags and a 3D view. Wide or tall, light or dark, a badge for a list, a helper for React, a custom element and a frame for a page that runs no script. One function, no dependencies.</p>
 
 <p align="center">
   <a href="https://github.com/johnmorrisdotca/kyogijo-stadiums/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/johnmorrisdotca/kyogijo-stadiums/actions/workflows/ci.yml/badge.svg"></a>
@@ -72,7 +72,7 @@ console.log(svg.startsWith("<svg"), svg.includes("USA 3, Canada 2"));
 
 ## Features
 
-- **Forty surfaces, to scale.** The NFL, CFL and IFAF fields, the NHL rink, the NBA court, the soccer pitch and futsal court, the baseball field, the curling sheet, the courts of twelve net and racket sports, the pools, the athletics stadium, the skating rinks, the fields of seven field sports, the budō and the MMA cage. Every figure is cited in [sources](./docs/sources.md). [The surfaces](./docs/surfaces.md).
+- **Forty surfaces, to scale.** The NFL, CFL and IFAF fields, the NHL rink, the NBA court, the soccer pitch and futsal court, the baseball field, the curling sheet, twelve net and racket sports, the pools, the athletics stadium, the skating rinks, seven field sports, the budō and the MMA cage. Every figure is cited in [sources](./docs/sources.md). [The surfaces](./docs/surfaces.md).
 - **Each league's rulebook.** `league: "fiba"` draws a court as FIBA marks it: 48 variants, from the WNBA, the NCAA and the IIHF to Little League, PONY, softball, Curling Canada, FIVB's beach volleyball, rugby league and the NLL's box lacrosse, each cited. [League variants](./docs/variants.md).
 - **A realistic basketball floor.** `court: { hardwood: true }` draws maple boards that run the length of the court with staggered ends, grain, stained keys, the baskets and stanchions with soft shadows, a coaching box and benches, and a satin sheen, in every league and renderer. The clean floor stays the default. [Hardwood](./docs/hardwood.md).
 - **The stands and the crowd.** `crowd: true` draws the seating round any surface that has spectators: a bowl, two sides, a horseshoe, courtside rows or a ballpark's grandstands, with the people as seeded heads and shoulders in the home colours and the empty seats showing (`density`, or `attendance` over `capacity`). [The crowd](./docs/crowd.md).
@@ -575,7 +575,7 @@ The broadcast view puts the mat large, with the officials on a board at its side
 
 ### A table tennis area
 
-A table is drawn in the ITTF's playing area, 14 m by 7 m (`net.area` for Masters and wheelchair events), with dark surrounds and the umpires' chairs ([courts](./docs/courts.md#the-table-tennis-playing-area)).
+A table in the ITTF's playing area, 14 m by 7 m, with surrounds and chairs ([courts](./docs/courts.md#the-table-tennis-playing-area)).
 
 <p align="center">
 <picture>
@@ -615,22 +615,22 @@ A table is drawn in the ITTF's playing area, 14 m by 7 m (`net.area` for Masters
 
 ### An MMA cage
 
-`sport: "mma"`: an eight-sided cage on its platform, with the fence in mesh in 3D ([the combat sports page](./docs/combat.md)).
+[The combat sports page](./docs/combat.md).
 
 <p align="center">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/mma-cage-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/mma-cage-desk-light.webp" alt="An MMA cage from above on its platform, with a score on the canvas" width="660">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/mma-cage-desk-light.webp" alt="An MMA cage from above, with a score" width="660">
 </picture>
-<br><em>The cage, with a score.</em>
+<br><em>With a score.</em>
 </p>
 
 <p align="center">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/mma-cage-3d-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/mma-cage-3d-desk-light.webp" alt="The cage in 3D: a solid platform, a mesh fence and padded posts" width="660">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/mma-cage-3d-desk-light.webp" alt="The cage in 3D: a mesh fence on a solid platform" width="660">
 </picture>
-<br><em>The same cage in 3D.</em>
+<br><em>The cage in 3D.</em>
 </p>
 
 ### The element in a page
