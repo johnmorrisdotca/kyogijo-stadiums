@@ -143,6 +143,7 @@ const RANGE_COVERS = {
   sumo: { ring: "the ring of tawara, the tokudawara and the sand round them", start: "the middle of the ring, with the two shikiri-sen", half: "one half of the dohyō, from the left edge to the middle" },
   kyudo: { shajo: "the shajō, the hall the archers shoot from, with the shooting positions and the honza", yamichi: "the yamichi, the open ground between the shajō and the azuchi", azuchi: "the azuchi with the targets, and a little ground round it" },
   dojo: { kamiza: "the end of the floor at the kamiza's wall", half: "one half of the floor, from the left wall to the middle" },
+  prowrestling: { ropes: "the ring inside the ropes, with the ground just round them", half: "one half of the platform, from the left edge to the middle" },
   wrestling: { start: "the middle of the mat, with the circle in it and the starting lines", passivity: "the wrestling area with its orange passivity band (the UWW's mat)", half: "one half of the mat, from the left edge to the middle" },
   boxing: { ropes: "the ring inside the ropes, with the ground just round them", corner: "the red corner, with its post, its pad and its steps", half: "one half of the platform, from the left edge to the middle" },
   mma: { cage: "the octagon of the fence and the ground just round it", gate: "the north gate with its steps and the ground the gate swings over", half: "one half of the platform, from the left edge to the middle" },

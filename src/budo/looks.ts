@@ -64,6 +64,13 @@ const DOJO_ONLY = {
   "green-orange": pair({ ...COMMON, surface: "#6fa352", alt: "#69a04f", red: "#d4572a" }),
 };
 
+/** The ring's canvas over the dark skirt of its platform: a pale canvas with dark red ropes (the default), a blue one and a black one with white ropes. Ours: the rules do not paint a ring. */
+const RING_LOOKS = {
+    white: lifted(pair({ ...COMMON, surface: "#e6e3da", alt: "#d4d0c4", red: "#b32a2f", floor: "#2d3a56", rope: "#b32a2f" }), "#3b4a6e"),
+    blue: lifted(pair({ ...COMMON, surface: "#3a68ad", alt: "#2b528d", red: "#b32a2f", floor: "#1f3358", rope: "#f4f1e8" }), "#324a78"),
+    black: lifted(pair({ ...COMMON, surface: "#2b2e33", alt: "#1f2226", red: "#b32a2f", floor: "#17191c", rope: "#f4f1e8" }), "#3b3f45"),
+};
+
 /** The looks of each sport: the names, the default first, and the colours. */
 export const BUDO_LOOKS: Readonly<Record<BudoKind, Readonly<Record<string, Pair>>>> = Object.freeze({
   judo: MATS,
@@ -85,11 +92,8 @@ export const BUDO_LOOKS: Readonly<Record<BudoKind, Readonly<Record<string, Pair>
     blue: lifted(pair({ ...COMMON, surface: "#3a68ad", alt: "#2b528d", red: "#b32a2f", floor: "#2c3440" }), "#3a4452"),
   },
   // The ring's canvas over the dark skirt of its platform: a pale canvas with dark red ropes (the default), a blue one and a black one with white ropes. Ours: the rules do not paint a ring.
-  boxing: {
-    white: lifted(pair({ ...COMMON, surface: "#e6e3da", alt: "#d4d0c4", red: "#b32a2f", floor: "#2d3a56", rope: "#b32a2f" }), "#3b4a6e"),
-    blue: lifted(pair({ ...COMMON, surface: "#3a68ad", alt: "#2b528d", red: "#b32a2f", floor: "#1f3358", rope: "#f4f1e8" }), "#324a78"),
-    black: lifted(pair({ ...COMMON, surface: "#2b2e33", alt: "#1f2226", red: "#b32a2f", floor: "#17191c", rope: "#f4f1e8" }), "#3b3f45"),
-  },
+  boxing: RING_LOOKS,
+  prowrestling: RING_LOOKS,
   // The wrestling mat's colours: the circle over the border (a UWW mat's protection area is a different colour from the mat, as its rules say), with the passivity band orange in every look. Ours.
   wrestling: {
     "blue-red": lifted(pair({ ...COMMON, surface: "#2f6db0", alt: "#c0392b", red: "#f07a1a", floor: "#2e3138" }), "#3b3f48"),

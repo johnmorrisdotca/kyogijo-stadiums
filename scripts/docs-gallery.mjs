@@ -147,6 +147,7 @@ const GAMES = {
   mma: { away: side("mexico", 0), home: side("usa", 1), status: "final", competition: "Welterweight bout" },
   boxing: { away: side("japan", 0), home: side("canada", 1), status: "final", competition: "Middleweight bout" },
   wrestling: { away: side("japan", 3), home: side("usa", 5), status: "final", competition: "Freestyle, 74 kg" },
+  prowrestling: { away: side("mexico", 0), home: side("canada", 1), status: "final", competition: "Main event" },
   lacrosse: { away: side("canada", 27), home: side("usa", 24), status: "final", competition: "Final" },
   rugby: { away: RUGBY_AWAY, home: RUGBY_HOME, status: "final", competition: "Final" },
   afl: { away: AFL_AWAY, home: AFL_HOME, status: "final", competition: "Grand Final" },
@@ -1566,16 +1567,17 @@ function budoPage() {
   };
 }
 
-/** The combat sports: the MMA cage, the boxing ring and the wrestling mats. */
+/** The combat sports: the MMA cage, the boxing ring, the wrestling mats and the professional wrestling ring. */
 function combatPage() {
   const mma = (opts) => drawing({ sport: "mma", ...opts });
   const boxing = (opts) => drawing({ sport: "boxing", ...opts });
   const wrestling = (opts) => drawing({ sport: "wrestling", ...opts });
+  const proRing = (opts) => drawing({ sport: "prowrestling", ...opts });
   return {
     slug: "gallery-combat",
     title: "Gallery: the combat sports",
     ja: "格闘技",
-    intro: "The MMA cage: an eight-sided fence on its platform at 30 feet and at the smaller 25, in its three looks, without its gates and steps, close up on a gate, with its parts named, and with a score. The boxing ring: Nevada's, Wisconsin's and the amateurs' rings in their looks, with and without steps, a corner close up and a score. The wrestling mats: the UWW's, the NCAA's and the high schools', with the band, the circles and the starting lines. Every picture is drawn by the code beside it.",
+    intro: "The MMA cage: an eight-sided fence on its platform at 30 feet and at the smaller 25, in its three looks, without its gates and steps, close up on a gate, with its parts named, and with a score. The boxing ring: Nevada's, Wisconsin's and the amateurs' rings in their looks, with and without steps, a corner close up and a score. The wrestling mats: the UWW's, the NCAA's and the high schools', with the band, the circles and the starting lines. The professional wrestling ring at 20 and 14 feet, in its looks, close up and with its parts named. Every picture is drawn by the code beside it.",
     sections: [
       section("mma", "The MMA cage", "`sport: \"mma\"`: an eight-sided fenced area on a platform with steps, from the commissions' and the IMMAF's rules. The cage's size is the rules' (20 to 32 feet); the platform's height, the gates' width and the colours are marked as typical or ours in [Sources](./sources.md#the-combat-sports).", [
         item("mma-cage", "The cage, 30 feet across", mma({}), "The canvas inside the fence, eight padded posts, two gates opposite each other with their swing, and steps up to the platform at each gate."),
@@ -1618,6 +1620,19 @@ function combatPage() {
         item("wrestling-nfhs-start", "Close up: the starting lines", wrestling({ league: "nfhs-wrestling", range: "start" })),
         item("wrestling-score", "A score", drawing({ sport: "wrestling", ...GAMES.wrestling }), "A bout between two wrestlers has no home side."),
         item("wrestling-ja", "In Japanese", wrestling({ language: "ja" })),
+      ]),
+      section("prowrestling", "The professional wrestling ring", "`sport: \"prowrestling\"`: the same ring as a boxing ring but for three ropes that are not tied together, an apron of a foot and steel steps. No rulebook gives its figures: every one is typical, from the sources in [Sources](./sources.md#the-combat-sports).", [
+        item("prowrestling-ring", "The ring, 20 feet", proRing({}), "Three ropes at about 1, 3 and 5 feet turning to a post at each corner, a platform of 40 inches and steel steps at two corners."),
+        item("prowrestling-ring-18", "An 18 foot ring", proRing({ budo: { size: 5.4864 } })),
+        item("prowrestling-ring-14", "The smallest, 14 feet", proRing({ budo: { size: 4.2672 } })),
+        item("prowrestling-ring-blue", "A blue canvas", proRing({ budo: { look: "blue" } })),
+        item("prowrestling-ring-black", "A black canvas", proRing({ budo: { look: "black" } })),
+        item("prowrestling-ring-plain", "Plain posts, no steps", proRing({ budo: { corners: false, steps: false } })),
+        item("prowrestling-ring-floor", "On the floor of the hall", proRing({ budo: { height: 0 } })),
+        item("prowrestling-ring-ropes", "Close up: inside the ropes", proRing({ range: "ropes" })),
+        item("prowrestling-ring-labels", "With its parts named", proRing({ landmarks: true })),
+        item("prowrestling-ring-score", "A score", drawing({ sport: "prowrestling", ...GAMES.prowrestling })),
+        item("prowrestling-ring-ja", "In Japanese", proRing({ language: "ja" })),
       ]),
     ],
   };

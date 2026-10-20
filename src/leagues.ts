@@ -15,7 +15,7 @@ import { FIELD_HOCKEY_LEAGUES, fieldHockeyInFeet, type FieldHockeyLeague, type F
 import { ATHLETICS_LEAGUES, athleticsInFeet, type AthleticsFigures, type AthleticsLeague } from "./leagues/athletics.ts";
 import { longOval, outerEdge } from "./skating/track.ts";
 import { SKATING_LEAGUES, skatingInFeet, type SkatingFigures, type SkatingLeague } from "./leagues/skating.ts";
-import { BOXING_LEAGUES, MMA_LEAGUES, WRESTLING_LEAGUES } from "./leagues/combat.ts";
+import { BOXING_LEAGUES, MMA_LEAGUES, PRO_WRESTLING_LEAGUES, WRESTLING_LEAGUES } from "./leagues/combat.ts";
 import { BUDO_LEAGUES, DOJO_LEAGUES, JUDO_LEAGUES, KARATE_LEAGUES, KENDO_LEAGUES, KYUDO_LEAGUES, SUMO_LEAGUES, type BudoLeague } from "./leagues/budo.ts";
 import { GAELIC_LEAGUES, gaelicInFeet, type GaelicLeague, type GaelicSpec } from "./leagues/gaelic.ts";
 import { HANDBALL_LEAGUES, handballInFeet, type HandballLeague, type HandballSpec } from "./leagues/handball.ts";
@@ -46,7 +46,7 @@ export { WA_STANDARD_TRACK, WA_SHORT_TRACK, WA_STAGGER_TABLE, WA_SHORT_STAGGER_T
 export type { SkatingFigures, SkatingLeague, LongTrackFigures, ShortTrackFigures, FigureRinkFigures } from "./leagues/skating.ts";
 export { ISU_LONG_TRACK, ISU_SHORT_TRACK, ISU_FIGURE_RINK, ISU_LONG_TRACK_TABLE } from "./leagues/skating.ts";
 export type { BudoFigures, BudoLeague, DojoFigures, DojoLeague, JudoFigures, JudoLeague, KarateFigures, KarateLeague, KendoFigures, KendoLeague, KyudoFigures, KyudoLeague, Mat, SumoFigures, SumoLeague } from "./leagues/budo.ts";
-export { BOXING_LEAGUES, IMMAF_CAGE, MMA_LEAGUES, NRUC_CAGE, NCAA_MAT, NFHS_MAT, NRUC_RING, UWW_MAT, WBC_AMATEUR_RING, WISCONSIN_RING, WRESTLING_LEAGUES } from "./leagues/combat.ts";
+export { BOXING_LEAGUES, IMMAF_CAGE, MMA_LEAGUES, NRUC_CAGE, NCAA_MAT, NFHS_MAT, NRUC_RING, PRO_RING, PRO_WRESTLING_LEAGUES, UWW_MAT, WBC_AMATEUR_RING, WISCONSIN_RING, WRESTLING_LEAGUES } from "./leagues/combat.ts";
 export { AJJF_CONTEST, BUDO_LEAGUES, ENTEKI, FIK_SHIAI_JO, IJF_CONTEST, IJF_KATA, JSA_DOHYO, KINTEKI, WKF_KATA, WKF_KUMITE } from "./leagues/budo.ts";
 export type { BadmintonFigures, BadmintonLeague, FreeZone, FreeZones, NetFigures, NetLeague, NetSport, NetballFigures, NetballLeague, PadelFigures, PadelLeague, PickleballFigures, PickleballLeague, RacquetballFigures, RacquetballLeague, RoundnetFigures, RoundnetLeague, SepakTakrawFigures, SepakTakrawLeague, SquashFigures, SquashLeague, TableTennisFigures, TableTennisLeague, TennisFigures, TennisLeague, TeqballFigures, TeqballLeague, VolleyballFigures, VolleyballLeague } from "./leagues/courts.ts";
 export type { CourtFigures, CourtMarks } from "./leagues/basketball.ts";
@@ -59,7 +59,7 @@ export type { Family, LeagueSpan, Named } from "./leagues/types.ts";
 export type League = BasketballLeague | HockeyLeague | FootballLeague | BaseballLeague | CurlingLeague | NetLeague | LacrosseLeague | RugbyLeague | AflLeague | GaelicLeague | CricketLeague | FieldHockeyLeague | HandballLeague | AthleticsLeague | SkatingLeague | BudoLeague;
 
 /** The family of surface each sport draws; soccer's variants are its pitches (`pitch`), not leagues. */
-export const FAMILY_OF: Readonly<Record<Sport, Family | undefined>> = Object.freeze({ nfl: "football", cfl: "football", ifaf: "football", nhl: "hockey", nba: "basketball", mlb: "baseball", soccer: undefined, curling: "curling", tennis: "tennis", volleyball: "volleyball", badminton: "badminton", pickleball: "pickleball", tabletennis: "tabletennis", padel: "padel", squash: "squash", racquetball: "racquetball", sepaktakraw: "sepaktakraw", teqball: "teqball", roundnet: "roundnet", netball: "netball", lacrosse: "lacrosse", rugby: "rugby", afl: "afl", gaelic: "gaelic", cricket: "cricket", fieldhockey: "fieldhockey", handball: "handball", swimming: undefined, waterpolo: undefined, diving: undefined, artisticswimming: undefined, athletics: "athletics", skating: "skating", judo: "judo", karate: "karate", kendo: "kendo", sumo: "sumo", kyudo: "kyudo", dojo: "dojo", mma: "mma", boxing: "boxing", wrestling: "wrestling" });
+export const FAMILY_OF: Readonly<Record<Sport, Family | undefined>> = Object.freeze({ nfl: "football", cfl: "football", ifaf: "football", nhl: "hockey", nba: "basketball", mlb: "baseball", soccer: undefined, curling: "curling", tennis: "tennis", volleyball: "volleyball", badminton: "badminton", pickleball: "pickleball", tabletennis: "tabletennis", padel: "padel", squash: "squash", racquetball: "racquetball", sepaktakraw: "sepaktakraw", teqball: "teqball", roundnet: "roundnet", netball: "netball", lacrosse: "lacrosse", rugby: "rugby", afl: "afl", gaelic: "gaelic", cricket: "cricket", fieldhockey: "fieldhockey", handball: "handball", swimming: undefined, waterpolo: undefined, diving: undefined, artisticswimming: undefined, athletics: "athletics", skating: "skating", judo: "judo", karate: "karate", kendo: "kendo", sumo: "sumo", kyudo: "kyudo", dojo: "dojo", mma: "mma", boxing: "boxing", wrestling: "wrestling", prowrestling: "prowrestling" });
 
 /**
  * The leagues each sport can draw, in the order a menu lists them, the sport's own first (the three football sports share their
@@ -109,6 +109,7 @@ export const LEAGUES: Readonly<Record<Sport, readonly League[]>> = Object.freeze
   mma: MMA_LEAGUES,
   boxing: BOXING_LEAGUES,
   wrestling: WRESTLING_LEAGUES,
+  prowrestling: PRO_WRESTLING_LEAGUES,
 });
 
 /** Every league of every family, once each. */
@@ -398,6 +399,13 @@ export function leagueSize(sport: Sport, id: string, unit?: Unit): { length: num
       const frontage = (d.count - 1) * d.step.drawn + 2 * d.hall.side + d.hall.judges;
       const length = d.hall.rear + d.hall.depth - d.hall.front + d.distance - 1 + d.azuchi.depth;
       feet = { length: convertLength(length, "m", "ft"), width: convertLength(frontage, "m", "ft") };
+      break;
+    }
+    case "prowrestling": {
+      // The platform: the ring at the size drawn, with its apron.
+      const d = league.dimensions;
+      const m = d.size.drawn + 2 * Math.max(d.apron.drawn, d.post.fromRopes + d.post.pad / 2 + 0.02);
+      feet = { length: convertLength(m, "m", "ft"), width: convertLength(m, "m", "ft") };
       break;
     }
     case "wrestling": {
@@ -768,6 +776,16 @@ export function leagueFigures(league: League): [string, string][] {
         ["target", `${f.target.diameter * 100} cm across, its centre ${f.target.centre * 100} cm up, tilted ${f.target.tilt} degrees`],
         ["shooters", `${f.step.drawn} m apart (${f.step.min} m to ${f.step.max} m), ${f.honza} m from the shooting position to the honza`],
         ["shajō", `${f.hall.depth} m deep, ${f.hall.side} m from the end shooters to the walls, ceiling ${f.ceiling} m`],
+      ];
+    }
+    case "prowrestling": {
+      const f = league.dimensions;
+      const ft = (m: number): string => `${Math.round((m / 0.3048) * 100) / 100} ft`;
+      return [
+        ["ring", `${ft(f.size.min)} to ${ft(f.size.max)} square between the ropes (typical)`],
+        ["platform", `${ft(f.platform.height.drawn)} drawn, up to ${ft(f.platform.height.max)}`],
+        ["ropes", `${f.ropes.count} at ${f.ropes.heights.map((h) => ft(h)).join(", ")}, not tied together`],
+        ["apron", `${ft(f.apron.drawn)} beyond the ropes`],
       ];
     }
     case "wrestling": {

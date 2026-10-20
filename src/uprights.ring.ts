@@ -69,7 +69,8 @@ export function ringUprights(plan: BudoPlan, L: RingLayout, at: (x: number, y: n
   const hi = h0 + fig.ropes.heights[fig.ropes.heights.length - 1] * K;
   const ties: Plane[] = [];
   const sq = L.corners.map((c) => at(c.rope[0], c.rope[1]));
-  for (let i = 0; i < 4; i += 1) {
+  const sides = (plan.figures as { ties: boolean }).ties ? 4 : 0;
+  for (let i = 0; i < sides; i += 1) {
     const a = sq[i];
     const b = sq[(i + 1) % 4];
     for (const t of [1 / 3, 2 / 3]) {

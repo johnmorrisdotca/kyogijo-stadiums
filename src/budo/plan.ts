@@ -4,7 +4,7 @@
 import type { Area, Shape } from "../fields.types.ts";
 import { chooseLeague } from "../leagues.ts";
 import { BUDO_LEAGUES, DOJO_LEAGUES, JUDO_LEAGUES, KARATE_LEAGUES, KENDO_LEAGUES, KYUDO_LEAGUES, SUMO_LEAGUES, type BudoFigures, type BudoLeague, type JudoFigures, type KarateFigures } from "../leagues/budo.ts";
-import { BOXING_LEAGUES, MMA_LEAGUES, WRESTLING_LEAGUES, type BoxingFigures, type MmaFigures, type WrestlingFigures } from "../leagues/combat.ts";
+import { BOXING_LEAGUES, MMA_LEAGUES, PRO_WRESTLING_LEAGUES, WRESTLING_LEAGUES, type BoxingFigures, type MmaFigures, type ProWrestlingFigures, type WrestlingFigures } from "../leagues/combat.ts";
 import type { SurfaceOptions } from "../types.ts";
 import { dojoLayout, dojoLeague, dojoSpecOf, type DojoLayout } from "./dojo.ts";
 import { contestOf, gridOf, judoParts, matOf, safetyOf, snapTo, type JudoLayout } from "./judo.ts";
@@ -59,6 +59,7 @@ export interface BudoPlan {
   mma?: CageLayout;
   boxing?: RingLayout;
   wrestling?: MatLayout;
+  prowrestling?: RingLayout;
 }
 
 const isBudoLeague = (l: unknown): l is BudoLeague => typeof l === "object" && l !== null && BUDO_LEAGUES.includes(l as BudoLeague);
@@ -70,7 +71,7 @@ export const BUDO_SPORTS: readonly BudoKind[] = Object.freeze(["judo", "karate",
 export const isBudoSport = (sport: string): sport is Exclude<BudoKind, CombatKind> => (BUDO_SPORTS as readonly string[]).includes(sport);
 
 /** The combat sports the engine of the budō also draws: the MMA cage and the boxing ring. */
-export const COMBAT_SPORTS: readonly CombatKind[] = Object.freeze(["mma", "boxing", "wrestling"]);
+export const COMBAT_SPORTS: readonly CombatKind[] = Object.freeze(["mma", "boxing", "wrestling", "prowrestling"]);
 
 /** True for a combat sport (the MMA cage). */
 export const isCombatSport = (sport: string): sport is CombatKind => (COMBAT_SPORTS as readonly string[]).includes(sport);
@@ -78,7 +79,7 @@ export const isCombatSport = (sport: string): sport is CombatKind => (COMBAT_SPO
 /** True for a sport this engine draws: a sport of the budō or a combat sport. */
 export const isMatSport = (sport: string): sport is BudoKind => isBudoSport(sport) || isCombatSport(sport);
 
-const OWN = { judo: JUDO_LEAGUES, karate: KARATE_LEAGUES, kendo: KENDO_LEAGUES, sumo: SUMO_LEAGUES, kyudo: KYUDO_LEAGUES, dojo: DOJO_LEAGUES, mma: MMA_LEAGUES, boxing: BOXING_LEAGUES, wrestling: WRESTLING_LEAGUES } as const;
+const OWN = { judo: JUDO_LEAGUES, karate: KARATE_LEAGUES, kendo: KENDO_LEAGUES, sumo: SUMO_LEAGUES, kyudo: KYUDO_LEAGUES, dojo: DOJO_LEAGUES, mma: MMA_LEAGUES, boxing: BOXING_LEAGUES, wrestling: WRESTLING_LEAGUES, prowrestling: PRO_WRESTLING_LEAGUES } as const;
 
 /** What `budo.style` asks of a judo area: true for a kata area, false for a contest area, undefined for neither said. @throws TypeError for a value that is not `shiai` or `kata`. */
 function kataOf(style: unknown): boolean | undefined {
@@ -194,6 +195,13 @@ export function budoPlan(o: Pick<SurfaceOptions, "sport" | "league" | "budo" | "
       const L = ringParts(f, { size: ringSize(style.size, f, rule), height: ringHeight(style.height, f, rule), steps: flag(style.steps, true, "budo.steps"), corners: flag(style.corners, true, "budo.corners") });
       const ranges: Record<string, MRange> = { ...L.ranges, half: halves(L.platform) };
       return finish({ box: L.platform, extent: L.extent, areas: L.parts.areas, shapes: L.parts.shapes, lineWidth: f.ropes.diameter.drawn, ranges, marks: L.marks, centre: { x: L.centre[0], y: L.centre[1], r: L.size * 0.2 }, boxing: L });
+    }
+    case "prowrestling": {
+      const f = fig as ProWrestlingFigures;
+      const rule = "what rings are typically made as";
+      const L = ringParts(f, { size: ringSize(style.size, f, rule), height: ringHeight(style.height, f, rule), steps: flag(style.steps, true, "budo.steps"), corners: flag(style.corners, true, "budo.corners") });
+      const ranges: Record<string, MRange> = { ropes: L.ranges.ropes, half: halves(L.platform) };
+      return finish({ box: L.platform, extent: L.extent, areas: L.parts.areas, shapes: L.parts.shapes, lineWidth: f.ropes.diameter.drawn, ranges, marks: L.marks, centre: { x: L.centre[0], y: L.centre[1], r: L.size * 0.2 }, prowrestling: L });
     }
     case "wrestling": {
       const f = fig as WrestlingFigures;

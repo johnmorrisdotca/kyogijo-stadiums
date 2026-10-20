@@ -231,6 +231,8 @@ const PROFILES: Readonly<Record<Sport, Profile>> = {
   boxing: { shape: "bowl", side: 40, end: 40, bench: 0, corner: 56, tiers: [lower(60, 3, 24), upper(67, 120, 32, 60)], away: "corner" },
   // A wrestling mat stands in the middle of a hall in the same way.
   wrestling: { shape: "bowl", side: 36, end: 36, bench: 6, corner: 50, tiers: [lower(60, 3, 24), upper(67, 120, 32, 60)], away: "corner" },
+  // A wrestling ring stands in the middle of an arena as a boxing ring does.
+  prowrestling: { shape: "bowl", side: 40, end: 40, bench: 0, corner: 56, tiers: [lower(60, 3, 24), upper(67, 120, 32, 60)], away: "corner" },
 };
 
 /** The grounds of the package that are the home of an NFL or a CFL club, where a soccer pitch stands inside a gridiron's stands. From each ground's article. */

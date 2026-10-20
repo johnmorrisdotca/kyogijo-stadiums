@@ -48,6 +48,11 @@ export function budoAbout(o: Opt, language: Language, plan: BudoPlan = budoPlan(
     const platform = L.height > 0.0005 ? fill(words.boxingPlatform, { height: cm(L.height) }) : words.boxingFloor;
     return fill(words.boxing, { size: trim(L.size), feet: trim(L.size / 0.3048), apron: cm(L.apron), platform });
   }
+  if (plan.prowrestling !== undefined) {
+    const L = plan.prowrestling;
+    const platform = L.height > 0.0005 ? fill(words.boxingPlatform, { height: cm(L.height) }) : words.boxingFloor;
+    return fill(words.prowrestling, { size: trim(L.size), feet: trim(L.size / 0.3048), apron: cm(L.apron), platform });
+  }
   if (plan.wrestling !== undefined) {
     const L = plan.wrestling;
     const fig = plan.figures as { passivity: number; border: { drawn: number } };
@@ -84,6 +89,10 @@ export function budoSentences(o: Opt, language: Language, plan: BudoPlan = budoP
   if (plan.mma !== undefined) {
     if (plan.mma.gates.length > 0) out.push(words.mmaGates);
     if (plan.mma.steps.length > 0) out.push(words.mmaSteps);
+  }
+  if (plan.prowrestling !== undefined) {
+    out.push(words.prowrestlingRopes);
+    if (plan.prowrestling.steps.length > 0) out.push(words.prowrestlingSteps);
   }
   if (plan.wrestling !== undefined) {
     const fig = plan.figures as { centre: { diameter: number } | null; lines: unknown };

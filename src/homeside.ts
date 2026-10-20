@@ -59,6 +59,8 @@ export const HOME_FIRST: Readonly<Record<Sport, boolean>> = Object.freeze({
   boxing: false,
   // A bout is between a red wrestler and a blue one (the UWW) or a green and a red one (folkstyle): no home side.
   wrestling: false,
+  // A match has no home side.
+  prowrestling: false,
 });
 
 /** The leagues whose convention is not their sport's: the international federation's lacrosse lists the home team first. */

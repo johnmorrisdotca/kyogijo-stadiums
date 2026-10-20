@@ -45,7 +45,7 @@ export const TEAMS_JA = {
   net: { away: ja("korea"), home: ja("germany") },
 };
 
-export const FAMILIES = { nfl: "football", cfl: "football", ifaf: "football", nhl: "hockey", nba: "basketball", mlb: "baseball", soccer: "soccer", curling: "curling", tennis: "net", volleyball: "net", badminton: "net", pickleball: "net", tabletennis: "net", padel: "net", squash: "net", racquetball: "net", sepaktakraw: "net", teqball: "net", roundnet: "net", netball: "net", athletics: "football", skating: "hockey", lacrosse: "football", rugby: "football", afl: "football", gaelic: "football", cricket: "football", fieldhockey: "football", handball: "football", swimming: "football", waterpolo: "football", diving: "football", artisticswimming: "football", judo: "football", karate: "football", kendo: "football", sumo: "football", kyudo: "football", dojo: "football", mma: "football", boxing: "football", wrestling: "football" };
+export const FAMILIES = { nfl: "football", cfl: "football", ifaf: "football", nhl: "hockey", nba: "basketball", mlb: "baseball", soccer: "soccer", curling: "curling", tennis: "net", volleyball: "net", badminton: "net", pickleball: "net", tabletennis: "net", padel: "net", squash: "net", racquetball: "net", sepaktakraw: "net", teqball: "net", roundnet: "net", netball: "net", athletics: "football", skating: "hockey", lacrosse: "football", rugby: "football", afl: "football", gaelic: "football", cricket: "football", fieldhockey: "football", handball: "football", swimming: "football", waterpolo: "football", diving: "football", artisticswimming: "football", judo: "football", karate: "football", kendo: "football", sumo: "football", kyudo: "football", dojo: "football", mma: "football", boxing: "football", wrestling: "football", prowrestling: "football" };
 
 /** Typical scores and a competition line for each sport. */
 export const GAMES = {
@@ -98,4 +98,5 @@ export const GAMES = {
   mma: { away: 0, home: 1, status: "final", competition: "Welterweight bout", date: "Oct 18" },
   boxing: { away: 0, home: 1, status: "final", competition: "Middleweight bout", date: "Oct 18" },
   wrestling: { away: 3, home: 5, status: "final", competition: "Freestyle, 74 kg", date: "Oct 18" },
+  prowrestling: { away: 0, home: 1, status: "final", competition: "Main event", date: "Oct 18" },
 };

@@ -48,6 +48,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `surface.mma` | MMA cage | 総合格闘技のケージ |
 | `surface.boxing` | Boxing ring | ボクシングのリング |
 | `surface.wrestling` | Wrestling mat | レスリングのマット |
+| `surface.prowrestling` | Professional wrestling ring | プロレスのリング |
 | `about.nfl` | an American football field, 120 by 53 and a third yards with its end zones, with a yard line every 5 yards, hash marks, numbers and goal posts | アメリカンフットボールのフィールド。エンドゾーンを含めて120×53⅓ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールポストがあります |
 | `about.cfl` | a Canadian football field, 150 by 65 yards with its 20-yard end zones, with a yard line every 5 yards, hash marks, numbers and goal posts on the goal lines | カナディアンフットボールのフィールド。20ヤードのエンドゾーンを含めて150×65ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールライン上のゴールポストがあります |
 | `about.ifaf` | an international (IFAF) football field, 120 by 53 and a third yards with its end zones, with a yard line every 5 yards, hash marks, numbers and goal posts | 国際アメリカンフットボール連盟（IFAF）規格のフィールド。エンドゾーンを含めて120×53⅓ヤードで、5ヤードごとのヤードライン、ハッシュマーク、ヤードナンバー、ゴールポストがあります |
@@ -90,6 +91,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `about.mma` | an MMA cage: an eight-sided fenced area 9.14 metres (30 feet) across, on a platform 122 centimetres high | 総合格闘技のケージ。金網で囲まれた、対辺間の距離が30フィート（約9.1m）の八角形で、高さ122cmの台の上にあります |
 | `about.boxing` | a boxing ring: a square of 6.1 metres (20 feet) inside the ropes, on a platform 122 centimetres high | ボクシングのリング。ロープの内側は一辺20フィート（約6.1m）の正方形で、リングは高さ122cmの台の上にあります |
 | `about.wrestling` | a wrestling mat of the UWW: a circle 9 metres across in a protection area 1.5 metres wide, with an orange passivity band inside the circle, on a platform 1 metre high | UWWのレスリングマット。直径9mの円の外側に幅1.5mのプロテクションエリアがあり、円の内側にオレンジ色のパッシビティゾーンがあります。マットは高さ1mの台の上にあります |
+| `about.prowrestling` | a professional wrestling ring: a square of 6.1 metres (20 feet) inside three ropes, on a platform 102 centimetres high | プロレスのリング。ロープの内側は一辺20フィート（約6.1m）の正方形で、リングは高さ102cmの台の上にあります |
 | `status.final` | Final | 試合終了 |
 | `status.final-ot` | Final/OT | 試合終了（延長） |
 | `status.final-so` | Final/SO | 試合終了（SO） |
@@ -424,7 +426,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `budo.mmaFloor` | at floor level | ケージは床と同じ高さにあります |
 | `budo.mmaGates` | It has two gates, opposite each other. | 出入口は向かい合う2か所にあります。 |
 | `budo.mmaSteps` | Steps lead up to the platform at each gate. | 各出入口に、台へ上がる階段があります。 |
-| `budo.boxing` | a boxing ring: a square of {size} metres ({feet} feet) inside four ropes, on a canvas with an apron {apron} centimetres wide beyond them and a padded post in each corner, {platform} | ボクシングのリング。キャンバスを張った床は、ロープの内側が一辺{feet}フィート（約{size}m）の正方形で、4本のロープで囲まれています。ロープの外側には幅{apron}cmのエプロンが続き、四隅にパッド付きのコーナーポストがあります。{platform} |
+| `budo.boxing` | a boxing ring: a square of {size} metres ({feet} feet) inside four ropes, on a canvas with an apron {apron} centimetres wide beyond them and a padded post in each corner, {platform} | ボクシングのリング。キャンバスを張った床は、ロープの内側が一辺{feet}フィート（約{size}m）の正方形で、各辺に4本のロープが張られています。ロープの外側には幅{apron}cmのエプロンが続き、四隅にパッド付きのコーナーポストがあります。{platform} |
 | `budo.boxingPlatform` | on a platform {height} centimetres high | リングは高さ{height}cmの台の上にあります |
 | `budo.boxingFloor` | at floor level | リングは床と同じ高さにあります |
 | `budo.boxingCorners` | The corners are red and blue for the two boxers and white for the neutral ones. | コーナーの色は、ボクサー用が赤と青、中立コーナーが白です。 |
@@ -435,6 +437,9 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `budo.wrestlingFloor` | on the floor of the hall | マットは会場の床に敷かれています |
 | `budo.wrestlingCentre` | A circle {d} metres across marks the middle. | 中央には直径{d}mの円があります。 |
 | `budo.wrestlingLines` | Two parallel starting lines at the middle are closed at their ends by a green line and a red line. | 中央の平行な2本のスタートラインは、一方の端が緑の線、もう一方の端が赤の線で閉じられています。 |
+| `budo.prowrestling` | a professional wrestling ring: a square of {size} metres ({feet} feet) inside three ropes, on a canvas with an apron {apron} centimetres wide beyond them and a padded post in each corner, {platform} | プロレスのリング。キャンバスを張った床は、ロープの内側が一辺{feet}フィート（約{size}m）の正方形で、各辺に3本のロープが張られています。ロープの外側には幅{apron}cmのエプロンが続き、四隅にパッド付きのコーナーポストがあります。{platform} |
+| `budo.prowrestlingRopes` | The three ropes are not tied together. | 各辺の3本のロープは、互いにつながっていません。 |
+| `budo.prowrestlingSteps` | Steel steps stand beside the platform at two corners. | 台の脇、2つのコーナーのそばに、鉄製の階段があります。 |
 | `budo.board.ippon` | Ippon | 一本 |
 | `budo.board.wazaari` | Waza-ari | 技あり |
 | `budo.board.yuko` | Yuko | 有効 |
@@ -563,6 +568,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `special.guest.mma` | cage | ケージ |
 | `special.guest.boxing` | ring | リング |
 | `special.guest.wrestling` | mat | マット |
+| `special.guest.prowrestling` | ring | リング |
 | `special.title` | {guest} in {host} | {host}の中の{guest} |
 | `special.game` | {event}, {date}. | {event}、{date}。 |
 | `special.inside` | The {guest} lies wholly inside the outline of {host}. | {guest}全体が{host}の輪郭の内側に収まっています。 |
@@ -1044,6 +1050,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `notes.names.ring-blue-corner` | Blue corner | 青コーナー |
 | `notes.names.ring-apron` | Apron | エプロン |
 | `notes.names.ring-steps` | Steps | 階段 |
+| `notes.names.ring-platform` | Platform | 台 |
 | `notes.names.mat-circle` | Wrestling area | レスリングエリア |
 | `notes.names.mat-central` | Central surface | 中央の競技面 |
 | `notes.names.mat-border` | Border of the mat | マットの外周部 |
@@ -1516,6 +1523,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `sport_mma` | MMA cage | 総合格闘技 |
 | `sport_boxing` | Boxing ring | ボクシング |
 | `sport_wrestling` | Wrestling mat | レスリング |
+| `sport_prowrestling` | Pro wrestling ring | プロレス |
 | `pitchLabel` | Pitch | ピッチ |
 | `pitch_fifa` | International, 105 × 68 m | 国際標準 105×68m |
 | `pitch_uefa` | UEFA, 105 × 68 m | UEFA 105×68m |
@@ -2035,7 +2043,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `athletics` | The athletics stadium | 陸上競技場 |
 | page `skating` | The skating rinks | スケートリンク |
 | page `budo` | The budō: judo, karate, kendo, sumo, kyūdō and the dojo | 武道 |
-| page `combat` | The combat sports: the MMA cage, the boxing ring and the wrestling mats | 格闘技 |
+| page `combat` | The combat sports: the MMA cage, the boxing ring, the wrestling mats and the professional wrestling ring | 格闘技 |
 | page `multi` | Tournament layouts | 大会向けレイアウト（複数の競技面） |
 | page `judging` | Judging assignments | 審判員の配置 |
 | page `special-games` | Special games | 特設会場での試合 |

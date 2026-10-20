@@ -4,7 +4,7 @@
 export type BudoKind = "judo" | "karate" | "kendo" | "sumo" | "kyudo" | "dojo" | CombatKind;
 
 /** The combat sports the engine of the budō also draws: the MMA cage. */
-export type CombatKind = "mma" | "boxing" | "wrestling";
+export type CombatKind = "mma" | "boxing" | "wrestling" | "prowrestling";
 
 /** The sides of a hall, as a plan has them: north is the top of the drawing. `top`, `bottom`, `left` and `right` say the same. */
 export type Compass = "north" | "south" | "east" | "west";

@@ -95,7 +95,7 @@ import { VERSION } from "./version.ts";
 export { isPortrait };
 
 /** The sports that can be drawn, in the order a menu lists them. */
-export const SPORTS: readonly Sport[] = ["nfl", "cfl", "ifaf", "nhl", "nba", "mlb", "soccer", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis", "padel", "squash", "racquetball", "sepaktakraw", "teqball", "roundnet", "netball", "swimming", "waterpolo", "diving", "artisticswimming", "athletics", "skating", "judo", "karate", "kendo", "sumo", "kyudo", "dojo", "mma", "boxing", "wrestling", "lacrosse", "rugby", "afl", "gaelic", "cricket", "fieldhockey", "handball"];
+export const SPORTS: readonly Sport[] = ["nfl", "cfl", "ifaf", "nhl", "nba", "mlb", "soccer", "curling", "tennis", "volleyball", "badminton", "pickleball", "tabletennis", "padel", "squash", "racquetball", "sepaktakraw", "teqball", "roundnet", "netball", "swimming", "waterpolo", "diving", "artisticswimming", "athletics", "skating", "judo", "karate", "kendo", "sumo", "kyudo", "dojo", "mma", "boxing", "wrestling", "prowrestling", "lacrosse", "rugby", "afl", "gaelic", "cricket", "fieldhockey", "handball"];
 
 /** The CSS custom property each colour of `Colors` sets. */
 export const COLOR_PROPERTIES: Readonly<Record<keyof Colors, string>> = {
@@ -279,7 +279,7 @@ function buildSkating(o: SurfaceOptions, common: BuildOptions): Surface {
 /** The budō surface: its plan, drawn as it lies. A hall, a kyūdōjō and a range of mats have little ground round them. */
 function buildBudo(o: SurfaceOptions, common: BuildOptions): Surface {
   const plan = budoPlan({ ...o, detail: common.detail });
-  return budoSurface(common, plan, common.margin ?? (o.range === undefined ? (plan.mma === undefined && plan.boxing === undefined && plan.wrestling === undefined ? 12 : 5) : 4));
+  return budoSurface(common, plan, common.margin ?? (o.range === undefined ? (plan.mma === undefined && plan.boxing === undefined && plan.wrestling === undefined && plan.prowrestling === undefined ? 12 : 5) : 4));
 }
 
 /** What a drawing adds to what the builders are given: the features with a colour of their own, and a margin the annotations ask for. */
@@ -397,6 +397,7 @@ function buildWhole(o: SurfaceOptions, portrait: boolean, id: string, score: boo
     case "mma":
     case "boxing":
     case "wrestling":
+    case "prowrestling":
       return buildBudo({ ...o, sport }, common);
     default:
       throw new Error(`Unknown sport "${String(o.sport)}": use one of ${SPORTS.join(", ")}`);
@@ -633,7 +634,7 @@ const trimmed = (value: number): string => String(Math.round(value * 100) / 100)
 function leagueAbout(league: League, year: number | undefined, language: Language, sheet?: { length: number; width: number }): string {
   const words = KYOGIJO_STRINGS[language].league;
   if (league.family === "skating") return skatingAbout({ sport: "skating", league: league.id }, language);
-  if (league.family === "judo" || league.family === "karate" || league.family === "kendo" || league.family === "sumo" || league.family === "kyudo" || league.family === "dojo" || league.family === "mma" || league.family === "boxing" || league.family === "wrestling") return budoAbout({ sport: league.family, league: league.id }, language);
+  if (league.family === "judo" || league.family === "karate" || league.family === "kendo" || league.family === "sumo" || league.family === "kyudo" || league.family === "dojo" || league.family === "mma" || league.family === "boxing" || league.family === "wrestling" || league.family === "prowrestling") return budoAbout({ sport: league.family, league: league.id }, language);
   if (league.family === "athletics") return athleticsAbout({ sport: "athletics", league: league.id, athletics: sheet === undefined ? undefined : undefined }, language);
   // The field sports: their size is the surface drawn (the one the options ask for), in the unit their rulebook prints first.
   if (league.family === "lacrosse" || league.family === "rugby" || league.family === "afl" || league.family === "gaelic" || league.family === "cricket" || league.family === "fieldhockey" || league.family === "handball") {

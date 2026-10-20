@@ -144,7 +144,7 @@ describe("the ring's drawing", () => {
     expect(en).toContain("Three sets of steps lead up to the platform");
     const ja = drawKyogijo({ sport: "boxing", language: "ja" });
     expect(ja).toContain("ボクシングのリング");
-    expect(ja).toContain("一辺20フィート（約6.1m）の正方形で、4本のロープで囲まれています");
+    expect(ja).toContain("一辺20フィート（約6.1m）の正方形で、各辺に4本のロープが張られています");
     expect(drawKyogijo({ sport: "boxing", budo: { height: 0 } })).toContain("at floor level");
   });
 

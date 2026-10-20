@@ -52,8 +52,8 @@ const RING_CLASSES = `
 .kyogijo .ky-bud-corner-blue{fill:var(--ky-blue,#2a5db0)}
 .kyogijo .ky-bud-corner-white{fill:#f4f1e8;stroke:var(--ky-ink);stroke-opacity:.45;stroke-width:.03}`.trim();
 
-const COMBAT: readonly string[] = ["mma", "boxing"];
-const RING: readonly string[] = ["boxing"];
+const COMBAT: readonly string[] = ["mma", "boxing", "prowrestling"];
+const RING: readonly string[] = ["boxing", "prowrestling"];
 /** The rules of a wrestling mat's own class: the green neutral line of a folkstyle mat's starting lines. */
 const WRESTLING_CLASSES = `.kyogijo .ky-bud-green-fill{fill:#2f9e63}`;
 const WRESTLING: readonly string[] = ["wrestling"];

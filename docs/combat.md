@@ -1,6 +1,6 @@
-# The combat sports: the MMA cage, the boxing ring and the wrestling mats
+# The combat sports: the MMA cage, the boxing ring, the wrestling mats and the professional wrestling ring
 
-The combat sports' surfaces, drawn to scale from the rules a commission or a federation writes: `sport: "mma"`, an eight-sided cage on its platform with its padded posts, its two gates, its steps and its fence of mesh, `sport: "boxing"`, the square ring with its ropes and its four corners, and `sport: "wrestling"`, the circle of the UWW's mat and the folkstyle mats of the NCAA and the high schools. The professional wrestling ring follows them. The cage is named for what it is, a cage with eight sides: it is not any promotion's own cage, and no promotion's name or mark is used.
+The combat sports' surfaces, drawn to scale from the rules a commission or a federation writes: `sport: "mma"`, an eight-sided cage on its platform with its padded posts, its two gates, its steps and its fence of mesh, `sport: "boxing"`, the square ring with its ropes and its four corners, and `sport: "wrestling"`, the circle of the UWW's mat and the folkstyle mats of the NCAA and the high schools. `sport: "prowrestling"` is the professional wrestling ring. The cage is named for what it is, a cage with eight sides: it is not any promotion's own cage, and no promotion's name or mark is used.
 
 ```ts
 import { drawKyogijo, RANGES } from "@johnmorrisdotca/kyogijo-stadiums";
@@ -126,6 +126,24 @@ In 3D the UWW's platform is a solid block with the mat as its top, in the order 
 
 ![The UWW's mat in 3D: a red protection area, an orange passivity band round a blue wrestling surface with the central circle, on a solid platform](./images/wrestling-mat-3d-desk-light.webp)
 
+## The professional wrestling ring
+
+`sport: "prowrestling"`: the same ring as the boxing ring, with three ropes that are not tied together, an apron of a foot and steel steps at two corners. **No rulebook gives its figures**, so every one is **typical**, from the sources in [Sources](./sources.md#the-combat-sports), which differ: most rings are 14 to 20 feet a side between the ropes, and 20 feet is the large promotions' size (`budo.size` takes 4.27 m to 6.10 m; 5.49 m is the 18 foot ring); three ropes of 1 to 1.5 inches at about 1, 3 and 5 feet over the mat; a platform 40 inches over the floor (`budo.height`, 0 to 6 feet); an apron of 1 foot beyond the ropes.
+
+**Ours.** The posts' height (1.7 m over the mat, a little over the top rope), the pads' colours (red, blue and white, as in the boxing ring; `budo.corners: false` makes them plain), the two sets of steps (at the bottom left and the top right corner) and the colours of the three looks, which are the boxing ring's. The sources' 8 foot top rope and 9 to 10 foot posts are not used: they cannot be right beside ropes at 1, 3 and 5 feet.
+
+```ts
+import { budoPlan } from "@johnmorrisdotca/kyogijo-stadiums/budo";
+
+const ring = budoPlan({ sport: "prowrestling" });
+console.log((ring.prowrestling!.size / 0.3048).toFixed(0), ring.prowrestling?.steps.length, ring.prowrestling?.height.toFixed(3));
+// 20 2 1.016
+```
+
+In 3D the ring stands as the boxing ring does, with three ropes and no ties between them.
+
+![The professional wrestling ring in 3D from a low corner: a solid platform, coloured corner posts, three ropes and steps at two corners](./images/prowrestling-ring-3d-desk-light.webp)
+
 ## The demo
 
-The [demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/?sport=mma) has the cage, the ring and the mats in its sport picker, with the looks, the league of the ring, the cage's width (30 or 25 feet), the 3D view and the score. The address says all of it: `?sport=mma&view=3d&viewpoint=corner&cagesize=25`, `?sport=boxing&league=wbc-amateur`, `?sport=wrestling&league=ncaa-wrestling`.
+The [demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/?sport=mma) has the cage, the rings and the mats in its sport picker, with the looks, the league of the ring, the cage's width (30 or 25 feet), the 3D view and the score. The address says all of it: `?sport=mma&view=3d&viewpoint=corner&cagesize=25`, `?sport=boxing&league=wbc-amateur`, `?sport=wrestling&league=ncaa-wrestling`, `?sport=prowrestling`.

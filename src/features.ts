@@ -181,6 +181,14 @@ const WRESTLING: readonly Feature[] = [
   f("starting-lines", "--ky-line", "The two starting lines of a folkstyle mat with their green and red ends."),
 ];
 
+const PROWRESTLING: readonly Feature[] = [
+  f("apron", "--ky-apron", "The floor of the hall round the platform."),
+  f("canvas", "--ky-surface", "The canvas of the platform, ring and apron."),
+  f("ropes", "--ky-bud-rope", "The three ropes, and their extensions to the posts."),
+  f("steps", "--ky-bud-floor", "The steps beside the platform."),
+  f("corners", "--ky-ink", "The four corner posts with their pads."),
+];
+
 const KYUDO: readonly Feature[] = [
   f("apron", "--ky-apron", "The ground round the range."),
   f("shajo", "--ky-bud-floor", "The floor of the shajō."),
@@ -513,6 +521,7 @@ export const FEATURE_INFO: Readonly<Record<string, readonly Feature[]>> = Object
   mma: MMA,
   boxing: BOXING,
   wrestling: WRESTLING,
+  prowrestling: PROWRESTLING,
 });
 
 /**

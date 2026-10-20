@@ -1,7 +1,7 @@
 <h1 align="center">Kyogijo Stadiums <sub>競技場</sub></h1>
 
 <p align="center"><strong>Sports surfaces as SVG, drawn to scale, with the score on them.</strong><br>
-The surfaces of forty-two sports, from football and curling to the budō and the combat sports, each drawn from its rulebook or its published distances, with each team's name and logo on its side and the score in the middle, a lineup, stands and a crowd, a pageant of flags and a 3D view. Wide or tall, light or dark, a badge for a list, a helper for React, a custom element and a frame for a page that runs no script. One function, no dependencies.</p>
+The surfaces of forty-three sports, from football and curling to the budō and the combat sports, each drawn from its rulebook or its published distances, with each team's name and logo on its side and the score in the middle, a lineup, stands and a crowd, a pageant of flags and a 3D view. Wide or tall, light or dark, a badge for a list, a helper for React, a custom element and a frame for a page that runs no script. One function, no dependencies.</p>
 
 <p align="center">
   <a href="https://github.com/johnmorrisdotca/kyogijo-stadiums/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/johnmorrisdotca/kyogijo-stadiums/actions/workflows/ci.yml/badge.svg"></a>
@@ -72,7 +72,7 @@ console.log(svg.startsWith("<svg"), svg.includes("USA 3, Canada 2"));
 
 ## Features
 
-- **Forty-two surfaces, to scale.** The NFL, CFL and IFAF fields, the NHL rink, the NBA court, the soccer pitch and futsal court, the baseball field, the curling sheet, twelve net and racket sports, the pools, the athletics stadium, the skating rinks, seven field sports, the budō, the MMA cage, the boxing ring and the wrestling mats. Every figure is cited in [sources](./docs/sources.md). [The surfaces](./docs/surfaces.md).
+- **Forty-three surfaces, to scale.** The NFL, CFL and IFAF fields, the NHL rink, the NBA court, the soccer pitch and futsal court, the baseball field, the curling sheet, twelve net and racket sports, the pools, the athletics stadium, the skating rinks, seven field sports, the budō, the MMA cage, the rings and the wrestling mats. Every figure is cited in [sources](./docs/sources.md). [The surfaces](./docs/surfaces.md).
 - **Each league's rulebook.** `league: "fiba"` draws a court as FIBA marks it: 48 variants, from the WNBA, the NCAA and the IIHF to Little League, PONY, softball, Curling Canada, FIVB's beach volleyball, rugby league and the NLL's box lacrosse, each cited. [League variants](./docs/variants.md).
 - **A realistic basketball floor.** `court: { hardwood: true }` draws maple boards that run the length of the court with staggered ends, grain, stained keys, the baskets and stanchions with soft shadows, a coaching box and benches, and a satin sheen, in every league and renderer. The clean floor stays the default. [Hardwood](./docs/hardwood.md).
 - **The stands and the crowd.** `crowd: true` draws the seating round any surface that has spectators: a bowl, two sides, a horseshoe, courtside rows or a ballpark's grandstands, with the people as seeded heads and shoulders in the home colours and the empty seats showing (`density`, or `attendance` over `capacity`). [The crowd](./docs/crowd.md).
@@ -98,15 +98,15 @@ console.log(svg.startsWith("<svg"), svg.includes("USA 3, Canada 2"));
 - **Zoom to a part of a surface.** `range: "offensive-zone"` crops a drawing to a rink's zone, a half court, the paint, the red zone, a soccer half, third or penalty area, the infield, a curling house, or a box of your own in any frame, with its data, heat, labels and score following. [Display ranges](./docs/ranges.md).
 - **Wide, tall or fit the box.** Every surface lies wide or tall: tall turns it a quarter, keeps every word upright and puts the teams top and bottom. With `orientation: "auto"` the browser helpers follow the box.
 - **Where a point lies, by the rules, and a click as a place.** `zoneAt("nhl", [69, 22], { frame: "nhl-api" })` names the zone and the area in it from the surface's own figures, with `isThreePointer`, `inSlot`, `isFair`, `isHomeRun` and the like; `clientPointToField(svg, x, y, { provider })` is a pointer's place in any of the frames, with the zone. [Zones](./docs/zones.md), [pointing](./docs/pointer.md).
-- **Goals, the strike zone and the stumps, end-on.** A goal mouth for six sports with the shots laid on it and its zones, the catcher's view of the strike zone with its pitches numbered, and the wicket from the bowler's end with its line and length zones. [Targets](./docs/targets.md).
-- **Data on the surface.** Points, lines, arrows, text, heat maps, hexagons, zone charts and density contours over any surface, in its feet or a data provider's frame, cut to its outline, with a table for each layer; ready-made shot and pass charts. [Data layers](./docs/layers.md), [charts](./docs/charts.md).
-- **Small multiples and backgrounds.** `drawGrid` puts many drawings in one SVG, under a title and a subtitle, over a credit line, with a key they share, in a size for a social card, a square post or a phone; `background` lays a quiet pattern (felt, grass, wood, ice, paper, a grid, dots) or a photograph behind a drawing or a grid. [Layouts and backgrounds](./docs/layouts.md).
-- **Tournament layouts.** Several surfaces laid out together for one large event, to scale, on one floor, as one SVG: thirteen presets from table tennis, pickleball, curling, judo, karate, badminton and tennis, each with its rule and sources, whether it fits a hall, and a real stadium round it. [Tournament layouts](./docs/multi.md).
+- **Goals, the strike zone and the stumps, end-on.** A goal mouth for six sports with the shots laid on it, the catcher's view of the strike zone with its pitches numbered, and the wicket from the bowler's end with its zones. [Targets](./docs/targets.md).
+- **Data on the surface.** Points, lines, arrows, text, heat maps, hexagons, zone charts and density contours over any surface, in its own feet or a provider's frame; ready-made shot and pass charts. [Data layers](./docs/layers.md), [charts](./docs/charts.md).
+- **Small multiples and backgrounds.** `drawGrid` puts many drawings in one SVG, under a title and a subtitle, over a credit line, with a key they share, in a size for a card or a phone; `background` lays a quiet pattern or a photograph behind a drawing or a grid. [Layouts and backgrounds](./docs/layouts.md).
+- **Tournament layouts.** Several surfaces laid out together for one large event, to scale, on one floor, as one SVG: thirteen presets from table tennis, pickleball, curling, judo, karate, badminton and tennis, each with its rule and sources, and a stadium round it. [Tournament layouts](./docs/multi.md).
 - **Judging assignments.** Who judges where. [Judging](./docs/judging.md).
-- **Replay.** Tracking data played on any surface: the players with their numbers, the ball and its trail, and the passes, shots and goals as they happen, with controls, the keyboard and a live region, steps for a reader who prefers reduced motion, and a pause when the page is hidden. [Replay](./docs/replay.md).
-- **A 3D view.** Any surface as a floor that turns by mouse, touch, wheel or keys, with four viewpoints (overhead, broadcast, end-on, low corner), and what the rulebook stands on it at its height (nets, baskets, rink boards and glass, goals, a ballpark's fence, a pool's blocks, a table tennis area's surrounds) and the venue round it (raked stands, roofs, a dojo's walls). Plain DOM and CSS. [The 3D view](./docs/turn.md).
-- **Renderers.** The same drawing as plain data (a scene), on a canvas (a browser's or a Node canvas), in a d3 selection, as a mark of an Observable Plot, as GeoJSON and as a PNG in Node, each an entry of its own that imports nothing from outside the package. [Renderers](./docs/renderers.md).
-- **Units and frames.** Each surface in its rulebook's unit and any other, and 48 coordinate frames (ten soccer providers, the NHL API, HockeyTech, NBA stats, NFL tracking, MLBAM, Retrosheet, and a place from the net, the centre or the middle of the water of each other surface) to move a provider's points onto a surface. [Units](./docs/units.md), [coordinate frames](./docs/frames.md).
+- **Replay.** Tracking data played on any surface: the players, the ball and its trail, and the passes, shots and goals as they happen, with controls, the keyboard and a live region, and steps for a reader who prefers reduced motion. [Replay](./docs/replay.md).
+- **A 3D view.** Any surface as a floor that turns by mouse, touch, wheel or keys, with four viewpoints (overhead, broadcast, end-on, low corner), and what the rulebook stands on it at its height (nets, baskets, boards and glass, goals, a fence, a cage's mesh, a ring's ropes) and the venue round it (raked stands, roofs, a dojo's walls). [The 3D view](./docs/turn.md).
+- **Renderers.** The same drawing as plain data (a scene), on a canvas (a browser's or a Node canvas), in a d3 selection, as a mark of an Observable Plot, as GeoJSON and as a PNG in Node, each an entry of its own. [Renderers](./docs/renderers.md).
+- **Units and frames.** Each surface in its rulebook's unit and any other, and 48 coordinate frames (ten soccer providers, the NHL API, HockeyTech, NBA stats, NFL tracking, MLBAM, Retrosheet, and one for each other surface) to move a provider's points onto a surface. [Units](./docs/units.md), [coordinate frames](./docs/frames.md).
 - **A compact badge and a compact card.** One strip for a list, or the surface with that strip under it.
 - **Light and dark**, by the device or the page, and every colour a custom property; eight named looks, colours by feature, line widths and dashes, goal styles and mowing patterns, and arrows, axes and labels for teaching. [Theming](./docs/theming.md), [annotations](./docs/annotations.md).
 - **Accessible.** Each drawing is an `img` with a title and a description that say the surface and the result, in English or Japanese. [Accessibility](./docs/accessibility.md).
@@ -119,7 +119,7 @@ console.log(svg.startsWith("<svg"), svg.includes("USA 3, Canada 2"));
 | Part | What it is |
 | --- | --- |
 | `drawKyogijo`, `drawSurface`, `drawScore`, `drawBadge` | The drawing, as a string of SVG. |
-| `SPORTS`, `PARKS`, `PARK_IDS`, `COURT_THEMES` | The forty-two sports, the 94 ballparks, the court looks. |
+| `SPORTS`, `PARKS`, `PARK_IDS`, `COURT_THEMES` | The forty-three sports, the 94 ballparks, the court looks. |
 | `SOCCER_PITCHES`, `SOCCER_PROVIDERS`, `rescale`, `soccerSpec` | The soccer pitches, the data providers' coordinate systems and the map between them. |
 | `GROUNDS`, `groundById` | The 64 soccer grounds, each pitch at its own size. |
 | `EVENTS`, `eventOptions` | The 18 special games: a rink in a ballpark, a court on a carrier's deck, with `host` and `placement` in the options. |
@@ -233,7 +233,7 @@ console.log(box(wide), box(tall));
 <br><em>The same game tall: the teams top and bottom, every word upright.</em>
 </p>
 
-[The surfaces](./docs/surfaces.md) lists the forty-two, with their sizes and what is drawn; [score and layout](./docs/score.md) has the options of a score, a strip and a compact card.
+[The surfaces](./docs/surfaces.md) lists the forty-three, with their sizes and what is drawn; [score and layout](./docs/score.md) has the options of a score, a strip and a compact card.
 
 ### A league's rulebook
 
@@ -615,7 +615,7 @@ A table in the ITTF's playing area, 14 m by 7 m, with surrounds and chairs ([cou
 
 ### The combat sports
 
-An MMA cage, a boxing ring and wrestling mats ([the combat sports page](./docs/combat.md)).
+An MMA cage, rings and wrestling mats ([the combat sports page](./docs/combat.md)).
 
 <p align="center">
 <picture>
@@ -647,6 +647,14 @@ An MMA cage, a boxing ring and wrestling mats ([the combat sports page](./docs/c
 <img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/wrestling-mat-3d-desk-light.webp" alt="The UWW's wrestling mat in 3D on its platform" width="660">
 </picture>
 <br><em>The UWW's mat in 3D.</em>
+</p>
+
+<p align="center">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/prowrestling-ring-3d-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/prowrestling-ring-3d-desk-light.webp" alt="A professional wrestling ring in 3D with three ropes" width="660">
+</picture>
+<br><em>A wrestling ring in 3D.</em>
 </p>
 
 ### The element in a page
@@ -722,7 +730,7 @@ Nothing is branded. The drawing is coloured by custom properties on its `svg`, w
 
 ## Limits
 
-Each is held by a test: forty-two sports, ten soccer pitches and ten providers, 94 ballparks, 64 grounds, six units, forty-eight frames, a drawing of under 22 kB. The table, made from the code, is [limits](./docs/limits.md).
+Each is held by a test: forty-three sports, ten soccer pitches and ten providers, 94 ballparks, 64 grounds, six units, forty-eight frames, a drawing of under 22 kB. The table, made from the code, is [limits](./docs/limits.md).
 
 ## Accessibility
 

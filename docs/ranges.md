@@ -120,6 +120,8 @@ console.log(drawKyogijo({ sport: "nhl", range: undefined }) === drawKyogijo({ sp
 | `boxing` | `ropes` | the ring inside the ropes, with the ground just round them | none |
 | `boxing` | `corner` | the red corner, with its post, its pad and its steps | none |
 | `boxing` | `half` | one half of the platform, from the left edge to the middle | `left` |
+| `prowrestling` | `ropes` | the ring inside the ropes, with the ground just round them | none |
+| `prowrestling` | `half` | one half of the platform, from the left edge to the middle | `left` |
 | `wrestling` | `start` | the middle of the mat, with the circle in it and the starting lines | none |
 | `wrestling` | `passivity` | the wrestling area with its orange passivity band (the UWW's mat) | none |
 | `wrestling` | `half` | one half of the mat, from the left edge to the middle | `left` |

@@ -51,6 +51,7 @@ Each surface keeps the unit its rulebook states its figures in. The drawing itse
 | `mma` | the sport's own | undefined | `ft` (feet) |
 | `boxing` | the sport's own | undefined | `ft` (feet) |
 | `wrestling` | the sport's own | undefined | `m` (metres) |
+| `prowrestling` | the sport's own | undefined | `ft` (feet) |
 | `lacrosse` | the sport's own | lacrosse | `m` (metres) |
 | `rugby` | the sport's own | rugby | `m` (metres) |
 | `afl` | the sport's own | Australian football | `m` (metres) |

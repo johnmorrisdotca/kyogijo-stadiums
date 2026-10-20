@@ -89,8 +89,8 @@ export function ringParts(fig: RingFigures, o: { size: number; height: number; s
         parts.areas.push(rectArea(`step-${corner}-${t + 1}`, "steps", "ky-bud-step", { x0: b.x0, y0, x1: b.x1, y1: y0 + s.tread }));
       }
     };
-    // The red corner (bottom left), the blue corner (top right) and the neutral corner nearest the table (bottom right).
-    for (const corner of [3, 1, 2]) at(corner);
+    // The red corner (bottom left), the blue corner (top right) and the neutral corner nearest the table (bottom right); a ring with fewer sets has the first of them.
+    for (const corner of [3, 1, 2].slice(0, s.sets)) at(corner);
   }
   // The ropes seen from above are one line each side; each turns to its post by the extension.
   const w = Math.max(fig.ropes.diameter.drawn, 0.03);
@@ -110,10 +110,11 @@ export function ringParts(fig: RingFigures, o: { size: number; height: number; s
     { id: "ring-canvas", x: mid - o.size * 0.2, y: mid + o.size * 0.15, side: "bottom" },
     { id: "ring-ropes", x: ring.x1, y: mid - o.size * 0.2, side: "bottom" },
     { id: "ring-post", x: corners[0].post[0], y: corners[0].post[1], side: "top" },
-    { id: "ring-red-corner", x: red.post[0], y: red.post[1], side: "bottom" },
-    { id: "ring-blue-corner", x: blue.post[0], y: blue.post[1], side: "top" },
     { id: "ring-apron", x: mid, y: apron / 2, side: "top" },
   ];
+  // A boxing ring's corners are the two boxers' and two neutral ones; a wrestling ring's are not assigned, and its platform is named instead.
+  if (fig.boxerCorners) marks.push({ id: "ring-red-corner", x: red.post[0], y: red.post[1], side: "bottom" }, { id: "ring-blue-corner", x: blue.post[0], y: blue.post[1], side: "top" });
+  else if (o.height > 0) marks.push({ id: "ring-platform", x: platform.x1 - 0.2, y: mid + o.size * 0.3, side: "bottom" });
   if (steps.length > 0) {
     const last = steps[steps.length - 1];
     marks.push({ id: "ring-steps", x: (last.box.x0 + last.box.x1) / 2, y: side + (last.box.y1 - last.box.y0) / 2, side: "bottom" });

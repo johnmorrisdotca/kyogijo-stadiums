@@ -83,6 +83,7 @@ export function budoUprights(o: Pick<SurfaceOptions, "sport" | "league" | "budo"
   }
   if (plan.mma !== undefined) items.push(...cageUprights(plan, at, thin));
   if (plan.boxing !== undefined) items.push(...ringUprights(plan, plan.boxing, at));
+  if (plan.prowrestling !== undefined) items.push(...ringUprights(plan, plan.prowrestling, at));
   // A wrestling mat that stands on a platform (the UWW's at the great events) is a solid block with the mat as its top; on the floor nothing stands.
   if (plan.wrestling?.platform !== undefined) {
     const h = plan.wrestling.height * K;
@@ -110,5 +111,5 @@ export function budoUprights(o: Pick<SurfaceOptions, "sport" | "league" | "budo"
     });
     items.push({ id: "walls", kind: "walls", at: centre, height: h, planes });
   }
-  return { items, lift, area, whole: plan.sumo !== undefined || plan.mma !== undefined || plan.boxing !== undefined || plan.wrestling?.platform !== undefined };
+  return { items, lift, area, whole: plan.sumo !== undefined || plan.mma !== undefined || plan.boxing !== undefined || plan.prowrestling !== undefined || plan.wrestling?.platform !== undefined };
 }

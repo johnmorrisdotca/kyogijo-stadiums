@@ -104,6 +104,8 @@ await takePictures({
     { subject: "mma-cage", views: ["desk"], url: address("sport=mma&orientation=landscape"), ready: READY, target: stage, prepare: behind("spotlight") },
     // The boxing ring in 3D from a low corner, in the same light.
     // The UWW's wrestling mat in 3D from a low corner, on its platform.
+    // The professional wrestling ring in 3D from a low corner.
+    { subject: "prowrestling-ring-3d", views: ["desk"], url: address("sport=prowrestling&size=surface&view=3d&viewpoint=corner"), ready: READY_TURN, target: stage, prepare: behind("spotlight") },
     { subject: "wrestling-mat-3d", views: ["desk"], url: address("sport=wrestling&size=surface&view=3d&viewpoint=corner"), ready: READY_TURN, target: stage, prepare: behind("spotlight") },
     { subject: "boxing-ring-3d", views: ["desk"], url: address("sport=boxing&size=surface&view=3d&viewpoint=corner"), ready: READY_TURN, target: stage, prepare: behind("spotlight") },
     { subject: "mma-cage-3d", views: ["desk"], url: address("sport=mma&size=surface&view=3d&viewpoint=corner"), ready: READY_TURN, target: stage, prepare: behind("spotlight") },

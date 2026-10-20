@@ -72,6 +72,9 @@ export interface RingFigures {
   ropes: { count: number; heights: readonly number[]; diameter: Span };
   /** The corner posts: their height over the ring floor, their thickness, and how far each stands from the ropes (the ropes reach it by an extension). */
   post: { height: number; diameter: number; fromRopes: number; pad: number };
+  /** Whether two ties hold the ropes of a side in line (a boxing ring's; a wrestling ring's ropes are not tethered together), and whether the corners are the two boxers' (red and blue) and two neutral ones. */
+  ties: boolean;
+  boxerCorners: boolean;
 }
 
 /** The figures of a boxing ring, in metres. */
@@ -93,6 +96,8 @@ export const NRUC_RING: BoxingFigures = {
   foam: span(1 * IN, 1.5 * IN, 1 * IN),
   ropes: { count: 4, heights: [18 * IN, 30 * IN, 42 * IN, 54 * IN], diameter: span(1 * IN, 2 * IN, 1 * IN) },
   post: { height: 58 * IN, diameter: 3 * IN, fromRopes: 18 * IN, pad: 0.3 },
+  ties: true,
+  boxerCorners: true,
 };
 
 /** The ring of Wisconsin's rule (SPS 192.38): 16 to 20 feet within the ropes, an apron of at least 18 inches, a platform of at most 4 feet with three sets of steps, ropes at 18, 30, 42 and 54 inches, posts at least 3 inches across and 58 inches high. */
@@ -104,6 +109,8 @@ export const WISCONSIN_RING: BoxingFigures = {
   foam: span(1 * IN, 1 * IN, 1 * IN),
   ropes: { count: 4, heights: [18 * IN, 30 * IN, 42 * IN, 54 * IN], diameter: span(1 * IN, 2 * IN, 1 * IN) },
   post: { height: 58 * IN, diameter: 3 * IN, fromRopes: 18 * IN, pad: 0.3 },
+  ties: true,
+  boxerCorners: true,
 };
 
 /** The amateur ring of the WBC Amateur rules (Rule 1, 2026): 4.50 to 6.10 m within the ropes, a platform of 0.90 to 1.20 m, an apron of at least 0.50 m, ropes of 3 to 5 cm at 41, 71, 102 and 132 cm, three sets of steps. Ontario's amateur rules agree (4.9 to 6.1 m, ropes at 40, 70, 100 and 130 cm, an apron of at least 45 cm, a platform of at most 1.2 m). */
@@ -115,6 +122,8 @@ export const WBC_AMATEUR_RING: BoxingFigures = {
   foam: span(0.01, 0.025, 0.02),
   ropes: { count: 4, heights: [0.41, 0.71, 1.02, 1.32], diameter: span(0.03, 0.05, 0.04) },
   post: { height: 1.5, diameter: 0.076, fromRopes: 0.45, pad: 0.3 },
+  ties: true,
+  boxerCorners: true,
 };
 
 /** The boxing leagues: the Nevada commission's first. */
@@ -191,11 +200,41 @@ export const WRESTLING_LEAGUES: readonly WrestlingLeague[] = [
   { id: "nfhs-wrestling", family: "wrestling", name: { en: "Wrestling mat, high school folkstyle (NFHS)", ja: "レスリングのマット（NFHS：アメリカの高校のフォークスタイル）" }, unit: "ft", figuresUnit: "m", dimensions: NFHS_MAT, sources: ["nfhs-wrestling-mat", "ncaa-wrestling"] },
 ];
 
+/** The figures of a professional wrestling ring, in metres: the same ring as the boxing ring, with three ropes that are not tied together, posts at the corners and steel steps at ringside. No body's rule gives them: they are what rings are made as. */
+export interface ProWrestlingFigures extends RingFigures {
+  kind: "prowrestling";
+}
+
+/** A professional wrestling league: the ring as rings are made. */
+export type ProWrestlingLeague = LeagueBase<"prowrestling", ProWrestlingFigures>;
+
+/**
+ * The professional wrestling ring as it is typically made (no rulebook gives it: every figure is typical, from the sources that describe one, and they differ): most rings measure 14 to 20 feet a side between the ropes, and 20 feet is
+ * the large promotions' size (English Wikipedia, "Wrestling ring"); three ropes of 1 to 1.5 inches at about 1, 3 and 5 feet over the mat; a platform 40 inches (3 to 4.5 feet) over the floor; an apron of 1 foot beyond the ropes
+ * (dimensions.com, "Professional Wrestling Ring"; a 2012 description of a large promotion's ring). The posts' height over the mat (ours) is 1.7 m, a little over the top rope.
+ */
+export const PRO_RING: ProWrestlingFigures = {
+  kind: "prowrestling",
+  size: span(14 * FT, 20 * FT, 20 * FT),
+  platform: { height: span(0, 6 * FT, 40 * IN), steps: { sets: 2, treads: 3, tread: 0.3, width: 1 } },
+  apron: span(1 * FT, 3 * FT, 1 * FT),
+  foam: span(1 * IN, 2 * IN, 1 * IN),
+  ropes: { count: 3, heights: [1 * FT, 3 * FT, 5 * FT], diameter: span(1 * IN, 1.5 * IN, 1.25 * IN) },
+  post: { height: 1.7, diameter: 0.15, fromRopes: 0.12, pad: 0.26 },
+  ties: false,
+  boxerCorners: false,
+};
+
+/** The professional wrestling league: the ring as it is typically made. */
+export const PRO_WRESTLING_LEAGUES: readonly ProWrestlingLeague[] = [
+  { id: "pro-ring", family: "prowrestling", name: { en: "Professional wrestling ring, as rings are typically made", ja: "プロレスのリング（一般的な寸法）" }, unit: "ft", figuresUnit: "m", dimensions: PRO_RING, sources: ["wp-wrestling-ring", "dimensions-pro-ring", "wwe-ring-2012", "wp-boxing-ring"], builtIn: true },
+];
+
 /** The figures of a combat league. */
-export type CombatFigures = MmaFigures | BoxingFigures | WrestlingFigures;
+export type CombatFigures = MmaFigures | BoxingFigures | WrestlingFigures | ProWrestlingFigures;
 
 /** A league with a combat surface of its own. */
-export type CombatLeague = MmaLeague | BoxingLeague | WrestlingLeague;
+export type CombatLeague = MmaLeague | BoxingLeague | WrestlingLeague | ProWrestlingLeague;
 
 /** Every combat league, once each. */
-export const COMBAT_LEAGUES: readonly CombatLeague[] = Object.freeze([...MMA_LEAGUES, ...BOXING_LEAGUES, ...WRESTLING_LEAGUES]);
+export const COMBAT_LEAGUES: readonly CombatLeague[] = Object.freeze([...MMA_LEAGUES, ...BOXING_LEAGUES, ...WRESTLING_LEAGUES, ...PRO_WRESTLING_LEAGUES]);

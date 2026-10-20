@@ -21,7 +21,7 @@ export type { PoolSport, PoolStyle };
 export type BudoSport = "judo" | "karate" | "kendo" | "sumo" | "kyudo" | "dojo";
 
 /** The combat sports' rings, cages and mats, drawn by the same engine as the budō: the MMA cage (eight-sided, as a generic cage), and as they are added the boxing ring, the wrestling mats and the professional wrestling ring. */
-export type CombatSport = "mma" | "boxing" | "wrestling";
+export type CombatSport = "mma" | "boxing" | "wrestling" | "prowrestling";
 
 export type { BudoStyle, DojoSpec, BudoScore };
 

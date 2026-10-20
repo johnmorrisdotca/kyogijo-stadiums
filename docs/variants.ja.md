@@ -574,3 +574,18 @@
 - `ncaa-wrestling`: <https://ncaaorg.s3.amazonaws.com/championships/sports/wrestling/rules/PRMWR_RulesBook.pdf>
 - `nfhs-wrestling-mat`: <https://khsaa.org/?p=14520>
 
+## プロレスのリング
+
+`sport: "prowrestling"`
+
+| `league` | 名前 |
+| --- | --- |
+| `pro-ring`（その競技の標準） | プロレスのリング（一般的な寸法） |
+
+出典の URL：
+
+- `wp-wrestling-ring`: <https://en.wikipedia.org/w/index.php?title=Wrestling_ring&oldid=1379090810>
+- `dimensions-pro-ring`: <https://www.dimensions.com/element/professional-wrestling-ring>
+- `wwe-ring-2012`: <http://abstrusedecapod.blogspot.com/2012/11/wwe-wrestling-ring-dimensions.html>
+- `wp-boxing-ring`: <https://en.wikipedia.org/w/index.php?title=Boxing_ring&oldid=1370389178>
+

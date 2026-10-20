@@ -72,6 +72,8 @@ export const SURFACE_UNITS: Readonly<Record<Sport, Unit>> = Object.freeze({
   boxing: "ft",
   // The mat: the UWW's rules are in metres (the folkstyle leagues' in feet, in their own league).
   wrestling: "m",
+  // The ring: the sources give its figures in feet and inches.
+  prowrestling: "ft",
 });
 
 /** True when `unit` is one of the six. */

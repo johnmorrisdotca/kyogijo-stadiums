@@ -89,3 +89,17 @@ test("the wrestling mat shows its league, draws the UWW's band and a folkstyle m
   await noSidewaysScroll(page);
   expect(errors).toEqual([]);
 });
+
+test("the professional wrestling ring draws three ropes' extensions and four posts; in 3D it has a solid platform, four posts and no ties", async ({ page }) => {
+  const errors = await open(page, "?sport=prowrestling&lang=en&help=off");
+  await openGroups(page);
+  await expect(page.locator(at("budo-look"))).toBeVisible();
+  expect(await svg(page).evaluate((node) => node.querySelectorAll(".ky-bud-rope").length)).toBeGreaterThan(0);
+  await open(page, "?sport=prowrestling&view=3d&lang=en&help=off");
+  const stage = '[data-testid="stage"]';
+  await expect(page.locator(`${stage} [data-part="deck-top"]`)).toHaveCount(1);
+  await expect(page.locator(`${stage} .ky-up-post`)).toHaveCount(8);
+  await expect(page.locator(`${stage} [data-part^="tie-"]`)).toHaveCount(0);
+  await noSidewaysScroll(page);
+  expect(errors).toEqual([]);
+});

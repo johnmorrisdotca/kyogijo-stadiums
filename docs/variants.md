@@ -574,3 +574,18 @@ Sources:
 - `ncaa-wrestling`: NCAA Wrestling Rules 2025-26 and 2026-27, Rule 1, Section 1 Mats (Art. 1 mat specifications: a competition circle of 32 to 42 feet, a matted area of at least 5 feet round it, the circle's edge a 2 inch line in bounds; Art. 3 mat markings: two 1 inch down-position starting lines 3 feet long and 10 inches apart, closed by a green and a red neutral line) and Diagram 1, NCAA, Men's Wrestling Rules Committee, August 2025. <https://ncaaorg.s3.amazonaws.com/championships/sports/wrestling/rules/PRMWR_RulesBook.pdf>
 - `nfhs-wrestling-mat`: Required Wrestling Mat Area (quoting NFHS Wrestling Rule 2-1-2: a wrestling area of a minimum of 28 feet in diameter with a safety mat area of approximately 5 feet wide round it), Kentucky High School Athletic Association, notice of 21 November 2014, 2014 notice of the NFHS rule. <https://khsaa.org/?p=14520>
 
+## The professional wrestling ring
+
+`sport: "prowrestling"`
+
+| `league` | Name | Key figures |
+| --- | --- | --- |
+| `pro-ring` (the sport's own) | Professional wrestling ring, as rings are typically made | ring 14 ft to 20 ft square between the ropes (typical); platform 3.33 ft drawn, up to 6 ft; ropes 3 at 1 ft, 3 ft, 5 ft, not tied together; apron 1 ft beyond the ropes |
+
+Sources:
+
+- `wp-wrestling-ring`: Wrestling ring (English Wikipedia): constructed like a boxing ring; three ring ropes (one fewer than a boxing ring) that are not tethered together, held by turnbuckles hung on steel posts; the apron the mat beyond the ropes; steel steps at ringside; most rings 14 to 20 feet on each side, 20 feet for the large promotions and 18 for some others, Wikipedia contributors (CC BY-SA 4.0), read for facts only, revision 1379090810. <https://en.wikipedia.org/w/index.php?title=Wrestling_ring&oldid=1379090810>
+- `dimensions-pro-ring`: Professional Wrestling Ring Dimensions & Drawings: a ring of 20 by 20 feet, the mat 40 inches (1.02 m) over the floor, an apron of 1 foot, ropes of 1 to 1.5 inches, posts 6 inches across, Dimensions.com, the page as read on the date given (it names no promotion; its figure of an 8 foot top rope is not used). <https://www.dimensions.com/element/professional-wrestling-ring>
+- `wwe-ring-2012`: WWE Wrestling Ring Dimensions (a blog's description of a large promotion's ring as of 2012: a mat of 20 by 20 feet between the turnbuckles, 21 by 21 feet with the apron, 4 to 6 feet from the floor, three ropes at about 1, 3 and 5 feet over the mat, an apron of 1 foot beyond the ropes), Abstruse Decapod Games & Fun (a blog), posted 15 November 2012. <http://abstrusedecapod.blogspot.com/2012/11/wwe-wrestling-ring-dimensions.html>
+- `wp-boxing-ring`: Boxing ring (English Wikipedia): a square raised platform with a post at each corner, four ropes, a red corner and a blue corner; a standard ring 16 to 24 feet a side between the ropes with 2 feet outside, a platform 3 to 4 feet from the ground, ropes at 18, 30, 42 and 54 inches, Wikipedia contributors (CC BY-SA 4.0), read for facts only, revision 1370389178. <https://en.wikipedia.org/w/index.php?title=Boxing_ring&oldid=1370389178>
+

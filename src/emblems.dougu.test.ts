@@ -15,7 +15,7 @@ afterEach(() => useEmblems(undefined));
 describe("Dougu Sports plugged in", () => {
   it("has an icon for every sport the package draws", () => {
     // The dojo is a room for every budo, not a sport of its own in Dougu Sports: its icon is the judo one (`sport:judo`), the budo a dojo is most often built for and whose mats it is drawn with.
-    const icon = (sport: string): string => (sport === "dojo" ? "judo" : sport === "mma" || sport === "boxing" ? "karate" : sport === "wrestling" ? "judo" : sport);
+    const icon = (sport: string): string => (sport === "dojo" ? "judo" : sport === "mma" || sport === "boxing" ? "karate" : sport === "wrestling" || sport === "prowrestling" ? "judo" : sport);
     for (const sport of SPORTS) expect(SPORT_NAMES, sport).toContain(icon(sport));
   });
 
