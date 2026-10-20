@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { ARENAS, arenaById } from "./arenas.ts";
 import { areaOfOutline, type Pt } from "./crowd.ts";
 import { crowdStands, describe as describeDrawing, drawKyogijo } from "./draw.ts";
@@ -7,6 +7,9 @@ import { MAX_RAKE, SEAT_AREAS, VENUES, VENUE_ATTRIBUTION, VENUE_CONFERENCES, VEN
 import { areaOf, boxOf, coreOf, edgeDistance, inside, lonLatFrom, metresFrom, middleOf, northOn, simplified, smallestBox, turnedTo } from "./venues.geo.ts";
 import { VENUE_DATA } from "./venues.data.ts";
 import { VENUE_OSM } from "./venues.osm.data.ts";
+
+// Each venue is worked over (the main hall of its footprint, the bowl, the planes of the 3D view) and a test walks them all: on a slow machine the sixteen took more than the 30 seconds of the config, and the thirty-two will take more.
+vi.setConfig({ testTimeout: 300_000 });
 
 const PACIFIC = ["honda-center", "scotiabank-saddledome", "rogers-place", "crypto-com-arena", "sap-center", "climate-pledge-arena", "rogers-arena", "t-mobile-arena"];
 const CENTRAL = ["united-center", "ball-arena", "american-airlines-center", "grand-casino-arena", "bridgestone-arena", "enterprise-center", "delta-center", "canada-life-centre"];
