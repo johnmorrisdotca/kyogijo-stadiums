@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Kyogijo Stadiums: boards over a surface</title>
+    <meta name="description" content="A results board, a bout presentation or a medal table laid over a pool, a mat or an oval, in 2D and in 3D: placed at the top, a side or a corner, kept off the middle of the surface, never stretched." />
+    <style>
+      :root { color-scheme: light dark; --bg: #f6f4ee; --ink: #10151b; --muted: #434b54; --card: #fff; --line: #b9b3a3; --accent: #1f5fa8; --tab: #10151b; --tab-ink: #fff; }
+      @media (prefers-color-scheme: dark) { :root { --bg: #0d1218; --ink: #f6f3ea; --muted: #bcc3cb; --card: #18212a; --line: #475463; --accent: #7fb2ee; --tab: #f6f3ea; --tab-ink: #0d1218; } }
+      :root[data-theme="light"] { color-scheme: light; --bg: #f6f4ee; --ink: #10151b; --muted: #434b54; --card: #fff; --line: #b9b3a3; --accent: #1f5fa8; --tab: #10151b; --tab-ink: #fff; }
+      :root[data-theme="dark"] { color-scheme: dark; --bg: #0d1218; --ink: #f6f3ea; --muted: #bcc3cb; --card: #18212a; --line: #475463; --accent: #7fb2ee; --tab: #f6f3ea; --tab-ink: #0d1218; }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.45 system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif; }
+      main { max-width: 1280px; margin: 0 auto; padding: 12px 16px 24px; }
+      h1 { font-size: 1.4rem; margin: 0 0 2px; }
+      p.lede { margin: 0 0 12px; color: var(--muted); }
+      .back { margin: 0 0 6px; }
+      a { color: var(--accent); }
+      [hidden] { display: none !important; }
+      :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+      #tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; }
+      #tabs button { font: inherit; font-size: 1.05rem; font-weight: 800; min-height: 48px; padding: 0 16px; border-radius: 12px; border: 2px solid var(--tab); background: var(--card); color: var(--ink); cursor: pointer; }
+      #tabs button[aria-selected="true"] { background: var(--tab); color: var(--tab-ink); }
+      #stage { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 8px; }
+      #stage > svg.kyogijo { display: block; width: 100%; height: auto; max-height: calc(100vh - 190px); }
+      .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr)); gap: 12px; margin: 10px 0 0; }
+      label { display: grid; gap: 4px; min-width: 0; font-size: .9rem; color: var(--muted); }
+      label.check { grid-template-columns: auto 1fr; align-items: center; gap: 8px; }
+      select, input[type="range"] { width: 100%; min-width: 0; font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px; min-height: 44px; }
+      input[type="checkbox"] { width: 22px; height: 22px; }
+      details { margin-top: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 8px 12px; }
+      summary { cursor: pointer; min-height: 36px; font-weight: 700; display: flex; align-items: center; }
+      .note { color: var(--muted); font-size: .9rem; margin: 8px 0; }
+      #error { color: #c0392b; font-weight: 700; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="back"><a href="./" id="back" data-testid="back"></a></p>
+      <h1 id="title"></h1>
+      <p class="lede" id="lede"></p>
+      <div id="tabs" role="tablist" data-testid="tabs"></div>
+      <p id="error" role="alert" hidden></p>
+      <div id="stage" data-testid="stage"></div>
+      <details id="edit" open>
+        <summary id="l-edit"></summary>
+        <div class="controls">
+          <label><span id="l-view"></span><select id="view"><option value="2d">2D</option><option value="3d">3D</option></select></label>
+          <label><span id="l-position"></span><select id="position"></select></label>
+          <label><span id="l-share"></span><input id="share" type="range" min="10" max="100" step="1" /></label>
+          <label><span id="l-opacity"></span><input id="opacity" type="range" min="0" max="100" step="5" /></label>
+          <label id="x-row"><span id="l-x"></span><input id="x" type="range" min="0" max="100" step="1" /></label>
+          <label id="y-row"><span id="l-y"></span><input id="y" type="range" min="0" max="100" step="1" /></label>
+          <label class="check"><input id="cover" type="checkbox" /><span id="l-cover"></span></label>
+          <label><span id="l-language"></span><select id="language"><option value="en">English</option><option value="ja">日本語</option></select></label>
+          <label><span id="l-theme"></span><select id="theme"><option value="auto"></option><option value="light"></option><option value="dark"></option></select></label>
+        </div>
+      </details>
+      <p class="note" id="credit"></p>
+      <p class="note"><a href="./docs/boards.html" id="docs"></a></p>
+    </main>
+    <script type="module">
+      // Boards over a surface: a results board, a bout presentation or a medal table (drawn when the demo was built, by Taisen Brackets, from invented names and results) laid over a pool, a mat or an oval, in 2D
+      // and in 3D. The page only places them: `board` in the options of the drawing and of the 3D view. The position and the rest live in the address; nothing is sent anywhere and nothing is stored.
+      import { BOARD_POSITIONS, drawKyogijo } from "./dist/index.js";
+      import { mountKyogijoTurn } from "./dist/turn-entry.js";
+      import { BOARDS } from "./boards-data.js";
+      import { quietTitles } from "./quiet.js";
+      quietTitles();
+
+      const WORDS = {
+        en: {
+          title: "Boards over a surface", pageTitle: "Kyogijo Stadiums: boards over a surface", pageDescription: "A results board, a bout presentation or a medal table laid over a pool, a mat or an oval, in 2D and in 3D: placed at the top, a side or a corner, kept off the middle of the surface, never stretched.",
+          lede: "A board is any SVG with a size: here a results board, a bout presentation and a medal table. The surface takes it as a string and lays it over itself, off the middle unless you ask.",
+          back: "Back to the Kyogijo Stadiums demo", docs: "The boards page of the docs", edit: "Placement", view: "View", position: "Position", share: "Width, as a share of the surface", opacity: "Opacity", x: "Across (custom point)", y: "Down (custom point)", cover: "Let it cover the middle", language: "Language", theme: "Theme", auto: "Follow the device", light: "Light", dark: "Dark",
+          credit: "The boards were drawn with Taisen Brackets when the demo was built, from invented athletes and results. The surface never reads a board but for its size: it is written as an image.",
+          swimming: "Swimming final", judo: "Judo bout", athletics: "100 m final", skating: "Speed skating", medals: "Medal table",
+          top: "Top", bottom: "Bottom", side: "Right side", left: "Left side", corner: "Corner (top right)", "top-left": "Top left", "top-right": "Top right", "bottom-left": "Bottom left", "bottom-right": "Bottom right", custom: "A point of your own",
+          formLabel: "Where the board goes",
+        },
+        ja: {
+          title: "競技面に重ねるボード", pageTitle: "競技場 Kyogijo Stadiums：競技面に重ねるボード", pageDescription: "競泳プール、柔道の試合場、陸上競技場の上に、成績ボード、対戦紹介ボード、メダル表を重ねて表示します。2Dと3Dに対応。上部・側面・隅に置くことができ、競技面の中央は空けたままで、ボードが引き伸ばされることもありません。",
+          lede: "ボードは、大きさの分かるSVGであれば何でも使えます。ここでは成績ボード、対戦紹介ボード、メダル表を使っています。競技面はボードを文字列として受け取り、指定がなければ中央を空けて重ねます。",
+          back: "競技場 Kyogijo Stadiums のデモに戻る", docs: "ドキュメントの「ボード」ページ", edit: "配置", view: "表示", position: "位置", share: "幅（競技面に対する割合）", opacity: "不透明度", x: "横位置（自由な位置）", y: "縦位置（自由な位置）", cover: "中央にも重ねる", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク",
+          credit: "ボードは、デモの作成時にTaisen Brackets（トーナメント表のパッケージ）で描いたもので、選手名と成績は架空です。競技面はボードの大きさしか読み取らず、画像としてそのまま組み込みます。",
+          swimming: "競泳の決勝", judo: "柔道の試合", athletics: "100m決勝", skating: "スピードスケート", medals: "メダル表",
+          top: "上部", bottom: "下部", side: "右側", left: "左側", corner: "隅（右上）", "top-left": "左上", "top-right": "右上", "bottom-left": "左下", "bottom-right": "右下", custom: "自由な位置",
+          formLabel: "ボードを置く位置",
+        },
+      };
+      // What each tab draws: the surface, the board and where it opens.
+      const EXAMPLES = {
+        swimming: { options: { sport: "swimming" }, board: "swimming", position: "top" },
+        judo: { options: { sport: "judo" }, board: "judo", position: "top" },
+        athletics: { options: { sport: "athletics" }, board: "athletics", position: "top" },
+        skating: { options: { sport: "skating", league: "isu-long-track" }, board: "skating", position: "side" },
+        medals: { options: { sport: "athletics" }, board: "medals", position: "corner" },
+      };
+      const $ = (id) => document.getElementById(id);
+      const params = new URLSearchParams(location.search);
+      const words = () => WORDS[$("language").value];
+      const setSelect = (id, value, allowed) => { if (allowed.includes(value)) $(id).value = value; };
+      const number = (value, fallback, low, high) => { const n = Number(value); return value !== null && value !== "" && Number.isFinite(n) ? Math.min(high, Math.max(low, n)) : fallback; };
+      const state = { example: Object.hasOwn(EXAMPLES, params.get("example")) ? params.get("example") : "swimming" };
+      let turn;
+      let turnKey = "";
+
+      for (const name of [...BOARD_POSITIONS, "custom"]) $("position").append(new Option("", name));
+      setSelect("view", params.get("view"), ["2d", "3d"]);
+      setSelect("theme", params.get("theme"), ["light", "dark"]);
+      setSelect("language", params.get("lang"), ["en", "ja"]);
+      setSelect("position", params.get("position") ?? EXAMPLES[state.example].position, [...BOARD_POSITIONS, "custom"]);
+      $("share").value = String(number(params.get("share"), 50, 10, 100));
+      $("opacity").value = String(number(params.get("opacity"), 100, 0, 100));
+      $("x").value = String(number(params.get("x"), 50, 0, 100));
+      $("y").value = String(number(params.get("y"), 50, 0, 100));
+      $("cover").checked = params.get("cover") === "1";
+
+      function labelPage() {
+        const w = words();
+        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["back", "back"], ["docs", "docs"], ["l-edit", "edit"], ["l-view", "view"], ["l-position", "position"], ["l-share", "share"], ["l-opacity", "opacity"], ["l-x", "x"], ["l-y", "y"], ["l-cover", "cover"], ["l-language", "language"], ["l-theme", "theme"], ["credit", "credit"]]) $(id).textContent = w[key];
+        for (const option of $("position").options) option.textContent = w[option.value];
+        for (const option of $("theme").options) option.textContent = w[option.value];
+        document.documentElement.lang = $("language").value;
+        document.title = w.pageTitle;
+        document.querySelector('meta[name="description"]').setAttribute("content", w.pageDescription);
+        $("edit").setAttribute("aria-label", w.formLabel);
+        $("tabs").replaceChildren(...Object.keys(EXAMPLES).map((id) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.role = "tab";
+          button.dataset.example = id;
+          button.textContent = w[id];
+          button.setAttribute("aria-selected", String(id === state.example));
+          return button;
+        }));
+      }
+
+      /** The board of the tab as the options take it: the SVG with its size, the position and the rest from the controls. */
+      function boardOptions() {
+        const sample = BOARDS[EXAMPLES[state.example].board];
+        const position = $("position").value;
+        const board = { svg: sample.svg, width: sample.width, height: sample.height, label: sample.label, opacity: Number($("opacity").value) / 100, cover: $("cover").checked };
+        board.position = position === "custom" ? { x: Number($("x").value) / 100, y: Number($("y").value) / 100, anchor: "center" } : position;
+        board.share = Number($("share").value) / 100;
+        return board;
+      }
+
+      function syncUrl() {
+        const next = new URLSearchParams();
+        if (state.example !== "swimming") next.set("example", state.example);
+        if ($("view").value === "3d") next.set("view", "3d");
+        if ($("position").value !== EXAMPLES[state.example].position) next.set("position", $("position").value);
+        if ($("share").value !== "50") next.set("share", $("share").value);
+        if ($("opacity").value !== "100") next.set("opacity", $("opacity").value);
+        if ($("position").value === "custom") { next.set("x", $("x").value); next.set("y", $("y").value); }
+        if ($("cover").checked) next.set("cover", "1");
+        if ($("language").value === "ja") next.set("lang", "ja");
+        if ($("theme").value !== "auto") next.set("theme", $("theme").value);
+        history.replaceState(null, "", next.size === 0 ? location.pathname : `?${next}`);
+      }
+
+      function draw() {
+        const theme = $("theme").value;
+        if (theme === "auto") delete document.documentElement.dataset.theme;
+        else document.documentElement.dataset.theme = theme;
+        const custom = $("position").value === "custom";
+        $("x-row").hidden = !custom;
+        $("y-row").hidden = !custom;
+        const stage = $("stage");
+        $("error").hidden = true;
+        const example = EXAMPLES[state.example];
+        const options = { ...example.options, board: boardOptions(), language: $("language").value, ...(theme === "auto" ? {} : { theme }) };
+        document.body.dataset.view = $("view").value;
+        try {
+          if ($("view").value === "3d") {
+            const key = JSON.stringify([state.example]);
+            if (turn !== undefined && turnKey !== key) { turn.destroy(); turn = undefined; }
+            if (turn === undefined) {
+              stage.innerHTML = '<div id="three"></div>';
+              turnKey = key;
+              turn = mountKyogijoTurn($("three"), options, { preset: "broadcast" });
+            } else turn.update(options);
+          } else {
+            if (turn !== undefined) { turn.destroy(); turn = undefined; }
+            stage.innerHTML = drawKyogijo(options);
+          }
+        } catch (error) {
+          $("error").textContent = String(error.message);
+          $("error").hidden = false;
+        }
+        syncUrl();
+        const back = new URLSearchParams({ sport: example.options.sport });
+        if ($("language").value === "ja") back.set("lang", "ja");
+        $("back").href = `./?${back}`;
+        document.body.dataset.ready = "true";
+      }
+
+      labelPage();
+      $("tabs").addEventListener("click", (event) => {
+        const button = event.target.closest("button[data-example]");
+        if (button === null) return;
+        state.example = button.dataset.example;
+        $("position").value = EXAMPLES[state.example].position;
+        for (const other of $("tabs").children) other.setAttribute("aria-selected", String(other === button));
+        draw();
+      });
+      for (const id of ["view", "position", "share", "opacity", "x", "y", "cover", "theme"]) $(id).addEventListener("input", draw);
+      $("language").addEventListener("input", () => { labelPage(); draw(); });
+      draw();
+    </script>
+  </body>
+</html>

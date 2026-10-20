@@ -8,6 +8,7 @@ import { buildTurn, floorOptions, openingView, turnWords, type TurnModel, type T
 import { controlsMarkup, layoutOf, turnMarkupOf, worldMarkup, type Layout } from "./turn.markup.ts";
 import { KYOGIJO_TURN_STYLE } from "./turn.style.ts";
 import { esc } from "./format.ts";
+import { turnBoardMarkup } from "./overlay.ts";
 import type { ScoreOptions, SurfaceOptions } from "./types.ts";
 
 /** What `mountKyogijoTurn` gives back. `O` is what `update` takes: the options of a drawing, or (for `mountMultiTurn`) of a tournament layout. */
@@ -81,7 +82,7 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
   if (!supported) {
     // The flat drawing, with a sentence that says why it does not turn when the browser is the reason.
     const flat = (next: O): void => {
-      host.innerHTML = `<div class="ky-turn" data-mode="flat"><style>${KYOGIJO_TURN_STYLE}</style>${model.flat ?? drawKyogijo(floorOptions(next as SurfaceOptions | ScoreOptions))}${model.turnable ? `<p class="ky-turn-flat">${esc(turnWords(model).flat)}</p>` : ""}</div>`;
+      host.innerHTML = `<div class="ky-turn" data-mode="flat"><style>${KYOGIJO_TURN_STYLE}</style>${model.flat ?? drawKyogijo({ ...floorOptions(next as SurfaceOptions | ScoreOptions), board: (next as SurfaceOptions).board })}${model.turnable ? `<p class="ky-turn-flat">${esc(turnWords(model).flat)}</p>` : ""}</div>`;
     };
     flat(options);
     return {
@@ -464,6 +465,9 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
         if (forced === "light" || forced === "dark") world.setAttribute("data-theme", forced);
       }
       gather();
+      // The board is a layer of its own over the view, after the scene: it is written again, and the view's turn is not touched.
+      stage.querySelector(".ky-turn-board")?.remove();
+      if (model.board !== undefined) stage.insertAdjacentHTML("beforeend", turnBoardMarkup(model.board));
       stage.setAttribute("aria-label", model.title);
       root.querySelector(".ky-turn-help")!.textContent = `${turnWords(model).keys}${model.standing === "" ? "" : ` ${model.standing}`}`;
       const theme = (model.options as SurfaceOptions).theme;

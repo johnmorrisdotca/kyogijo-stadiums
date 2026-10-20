@@ -1,4 +1,5 @@
 import { JUDGING_DARK, JUDGING_LIGHT } from "./judging.style.ts";
+import { KYOGIJO_TURN_BOARD_STYLE } from "./overlay.ts";
 
 /**
  * The 3D view's stylesheet: the colours of what stands on the surface, in light and dark, and the rules that lay the scene out. Like the drawing's own, the
@@ -137,4 +138,5 @@ export const KYOGIJO_TURN_STYLE = `
 .ky-turn-controls button:disabled{opacity:.4;cursor:default}
 .ky-turn-help,.ky-turn-live{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 .ky-turn-flat{margin:8px 0 0;font-size:.85rem}
+${KYOGIJO_TURN_BOARD_STYLE}
 `.trim();

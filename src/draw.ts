@@ -55,6 +55,7 @@ import { KYOGIJO_STRINGS, fill } from "./strings.ts";
 import { courtStyle } from "./courts.style.ts";
 import { annotate, annotated, wideView, type Notes } from "./annotate.ts";
 import { KYOGIJO_BACKGROUND_STYLE, laidOn } from "./background.ts";
+import { overlayMarkup, placeBoard, resolveBoard } from "./overlay.ts";
 import { KYOGIJO_HARDWOOD_STYLE, resolveHardwood } from "./hardwood.ts";
 import { WALL_SEATS, densityOf, layoutOf as crowdLayout, resolveCrowd, type Crowd, type CrowdStands } from "./crowd.ts";
 import { drawCrowd, KYOGIJO_CROWD_STYLE } from "./crowd.draw.ts";
@@ -926,6 +927,8 @@ function drawnKyogijo(o: SurfaceOptions | ScoreOptions): string {
   let defs = "";
   let grounded = false;
   let foldedSheet = false;
+  let boarded: string | undefined;
+  const board = sized === "badge" ? undefined : resolveBoard(o.board);
   let pg: PageantParts | undefined;
   if (isScore(o) && left !== undefined && right !== undefined && sized === "badge") {
     const badge = badgeMarkup(left, right, { sport, status, parts, id, situation: situation === undefined ? undefined : badgeSituation(situation, language) });
@@ -1071,6 +1074,14 @@ function drawnKyogijo(o: SurfaceOptions | ScoreOptions): string {
       body = group;
       viewBox = `${num(v.x)} ${num(v.y)} ${num(v.w)} ${num(v.h)}`;
     }
+    // A board over the surface, in the drawing's own units, over everything else (a strip's score stays clear of it, under the surface).
+    if (board !== undefined) {
+      const laid = overlayMarkup(board, placeBoard(board, v));
+      if (laid !== "") {
+        body += laid;
+        boarded = typeof board.position === "object" ? "custom" : board.position;
+      }
+    }
   }
 
   const root = el(
@@ -1093,6 +1104,7 @@ function drawnKyogijo(o: SurfaceOptions | ScoreOptions): string {
       "data-track": sport === "athletics" ? o.athletics?.track : undefined,
       "data-winner": isScore(o) ? winner : undefined,
       "data-pageant": pg === undefined ? undefined : pageant?.style,
+      "data-board": boarded,
       "data-version": VERSION,
       width: safeLength(o.width),
       height: safeLength(o.height),

@@ -2046,6 +2046,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `combat` | The combat sports: the MMA cage, the boxing ring, the wrestling mats and the professional wrestling ring | 格闘技 |
 | page `multi` | Tournament layouts | 大会向けレイアウト（複数の競技面） |
 | page `judging` | Judging assignments | 審判員の配置 |
+| page `boards` | Boards over a surface | 競技面に重ねるボード |
 | page `special-games` | Special games | 特設会場での試合 |
 | page `ballparks` | Ballparks | 球場 |
 | page `grounds` | The grounds | スタジアム |
@@ -2087,6 +2088,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `gallery-layouts` | Gallery: layouts and backgrounds | ギャラリー：レイアウトと背景 |
 | page `gallery-multi` | Gallery: tournament layouts | ギャラリー：大会向けレイアウト |
 | page `gallery-judging` | Gallery: judging assignments | ギャラリー：審判員の配置 |
+| page `gallery-boards` | Gallery: boards over a surface | ギャラリー：競技面に重ねるボード |
 | page `gallery-pageant` | Gallery: flags on the halves | ギャラリー：ハーフに広げる旗 |
 | page `gallery-situation` | Gallery: the situation of a game | ギャラリー：試合の状況 |
 | group `compare` | Compare | 比較 |

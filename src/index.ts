@@ -11,6 +11,8 @@ export { OUTCOMES, drawLayers, layerTable } from "./layers.ts";
 export { RANGES } from "./ranges.names.ts";
 export { BACKGROUND_OPACITY, BACKGROUND_PATTERNS, KYOGIJO_BACKGROUND_STYLE } from "./background.ts";
 export type { Background, BackgroundFit, BackgroundOptions, BackgroundPattern } from "./background.ts";
+export { BOARD_CLEAR, BOARD_POSITIONS, placeBoard } from "./overlay.ts";
+export type { BoardBox, BoardOptions, BoardPoint, BoardPosition } from "./overlay.ts";
 export { FIELD_SPORTS, fieldPlan, isFieldSport } from "./fields.ts";
 export { POOL_SPORTS, isPoolSport, poolPlan, swimPlan, venueLayout } from "./pool.ts";
 export type { ArtisticPlan, Board, DivePlan, LanePlan, PoloPlan, PoolPlan, Rope, RopeColour, SwimPlan, VenueItem, VenueLayout } from "./pool.ts";

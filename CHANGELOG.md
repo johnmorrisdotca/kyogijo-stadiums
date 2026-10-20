@@ -7,6 +7,17 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.24.0] - 2026-10-20
+
+### Added
+
+- **A board over a surface** (`board` in the options of a drawing and of the 3D view, [boards over a surface](./docs/boards.md)): a results board, a bout presentation or a medal table that another package drew (Taisen Brackets', say) is taken as an SVG string with its size and laid over the surface. The package draws no board and imports none: the SVG is written as one image, which cannot run anything, never changed and never stretched (its own shape is kept, so no letter is stretched).
+- **Placed by name or by point.** `position` is `top` (the default), `bottom`, `side` (the right edge), `left`, `corner` (the top right), `top-left`, `top-right`, `bottom-left`, `bottom-right`, or a point of your own, `{ x, y, anchor? }`, as shares of the drawing. A named position keeps to its edge, one margin in, and is made smaller, never moved, where it would reach into the middle of the surface (`BOARD_CLEAR`, a third of the width and height, where the score's panel stands), so the middle is never covered unless `cover: true` or a point of your own says so. `share`, `margin`, `opacity` and a `label` for assistive technology are options; `BOARD_POSITIONS` and `placeBoard(board, box)` are exported.
+- **In 3D the board is a layer over the view, not a plane**: it does not turn, tip or zoom with the surface, never takes the pointer (a drag on it turns the view), is a share of the view's width in its own shape, and its height is held to what keeps the middle of the view clear. `update` replaces it and keeps the view's turn; where the browser cannot draw in 3D the flat drawing is shown with the board on it.
+- **A compact card** takes the board over its surface and not over its strip; **a badge** takes none. A drawing with no board, or with a value that is not a board, is the same text as before.
+- **The demo's boards page** (`boards.html`): a swimming final over the pool, a bout over a judo mat, a 100 m final over the athletics stadium, speed skating over the oval and a medal table in a corner, in 2D and 3D, with the position, the width, the opacity and a point of your own in the address, in English and Japanese. **The docs** have [a page](./docs/boards.md) and [a gallery](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-boards.html) of every position, how large a board may be, covering the middle and dark and Japanese.
+- Taisen Brackets 0.17.1 is a development dependency, for the demo's and the gallery's boards (`pnpm boards` writes `demo/boards-data.js`); it is not imported by the package.
+
 ## [0.23.0] - 2026-10-20
 
 ### Added

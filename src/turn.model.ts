@@ -9,6 +9,7 @@ import { TURN_DEFAULT, clampView, presetView, type PresetTable, type TurnPreset,
 import type { Plane } from "./turn.kit.ts";
 import { describeUprights, planesOf, uprightsFor, type UprightOptions, type Uprights } from "./uprights.ts";
 import { resolveCrowd } from "./crowd.ts";
+import { resolveBoard, type ResolvedBoard } from "./overlay.ts";
 import type { VenueBuild, VenueSettings } from "./venue.ts";
 import type { UprightKind } from "./turn.kit.ts";
 import type { Box3 } from "./turn.camera.ts";
@@ -99,6 +100,8 @@ export interface TurnModel {
   lens?: number;
   /** The flat drawing to show where the 3D view cannot be drawn, when it is not `drawKyogijo`'s of `options` (a tournament layout's). */
   flat?: string;
+  /** The board the options ask for (`board`), laid over the view: a layer of its own, never a plane of the scene. */
+  board?: ResolvedBoard;
 }
 
 /** The options with what makes the floor of a 3D view: the whole surface, lying wide, at its full size. */
@@ -107,6 +110,8 @@ export function floorOptions(options: SurfaceOptions | ScoreOptions): SurfaceOpt
   delete rest.range;
   delete rest.half;
   delete rest.aspect;
+  // A board is a layer over the 3D view, not a picture on the floor.
+  delete rest.board;
   return rest;
 }
 
@@ -220,6 +225,7 @@ export function buildTurn(options: SurfaceOptions | ScoreOptions, settings: Turn
     centre,
     view: openingView(settings, (o as SurfaceOptions).sport),
     turnable: !badge,
+    board: badge ? undefined : resolveBoard((options as SurfaceOptions).board),
   };
 }
 

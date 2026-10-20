@@ -4,6 +4,7 @@
 // page. A test runs every snippet against the source and checks that what the page shows is what the snippet draws.
 //
 //   const pages = galleryPages(lib);   // lib: { "@johnmorrisdotca/kyogijo-stadiums": module, "@johnmorrisdotca/kyogijo-stadiums/charts": module, ... }
+import { SAMPLES } from "./boards-sources.mjs";
 import { escapeHtml, slugOf } from "./docs-pages.mjs";
 
 const MAIN = "@johnmorrisdotca/kyogijo-stadiums";
@@ -1370,7 +1371,61 @@ function judgingPage() {
   };
 }
 
-export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, specialPage, dataPage, curlingPage, courtsPage, fieldsPage, poolsPage, athleticsPage, skatingPage, budoPage, combatPage, stylingPage, rangesPage, layoutsPage, multiPage, judgingPage, pageantPage, situationPage];
+
+/** The package that draws the boards of the gallery: a development dependency of this repository, never of the package. */
+const TAISEN = "@johnmorrisdotca/taisen-brackets";
+const BOARD_MAKERS = { results: ["resultsBoard", "resultsBoardSize", "source.rows.length"], bout: ["boutBoard", "boutBoardSize", "source.officials.length"], medals: ["broadcastMedalTable", "broadcastMedalSize", "source.rows.length"] };
+
+/** A snippet that lays one of the sample boards over a surface: the board is drawn by Taisen Brackets, from its source, and handed over as a string with its size. */
+function boardSnippet(name, { surface, board = {} } = {}) {
+  const sample = SAMPLES[name];
+  const [make, size, count] = BOARD_MAKERS[sample.kind];
+  const drawn = Object.fromEntries(Object.entries(sample.options).filter(([key]) => key !== "flags"));
+  const place = { position: sample.position, ...board };
+  const surfaceText = literal(surface ?? sample.surface).slice(2, -2);
+  const placeText = Object.entries(place).map(([key, value]) => `${key}: ${literal(value)}`).join(", ");
+  return `import { drawKyogijo } from "${MAIN}";\nimport { ${make}, ${size} } from "${TAISEN}";\n\nconst source = ${literal(sample.source)};\nconst svg = drawKyogijo({\n  ${surfaceText},\n  board: { svg: ${make}(source, ${literal(drawn)}), ...${size}(${count}, { width: ${sample.options.width} }), ${placeText} },\n});`;
+}
+
+function boardsPage() {
+  const medalsOn = (surface, position, extra = {}) => boardSnippet("medals", { surface, board: { position, ...extra } });
+  return {
+    slug: "gallery-boards",
+    title: "Gallery: boards over a surface",
+    ja: "競技面に重ねるボード",
+    intro: "A results board, a bout presentation and a medal table, drawn by Taisen Brackets from invented athletes and results, laid over a pool, a mat and an oval. The surface takes each as a string with its size and writes it as an image. Every picture is drawn by the build from the code under it.",
+    sections: [
+      section("each", "A board over each surface", "The position is a name; the width is what the room off the middle of the surface allows, up to half of it at the top.", [
+        item("board-swimming", "A swimming final over the pool", boardSnippet("swimming"), "A results board with a record badge, centred at the top edge."),
+        item("board-judo", "A bout presentation over the mat", boardSnippet("judo"), "The two athletes, the referee and the judges, at the top of the mat's surround."),
+        item("board-athletics", "A 100 m final over the oval", boardSnippet("athletics"), "Two columns, a reaction time and a time, medal boxes for the first three and a disqualification."),
+        item("board-skating", "Speed skating over the oval", boardSnippet("skating"), "`position: \"side\"`: at the right edge, centred up and down, with the times as text as a clock gives them."),
+        item("board-medals", "A medal table in a corner", boardSnippet("medals"), "`position: \"corner\"` is the top right corner; a medal table is narrow enough to leave the middle alone."),
+      ]),
+      section("positions", "Where it goes", "Nine names: `top`, `bottom`, `side` (right), `left`, `corner` (top right), `top-left`, `top-right`, `bottom-left` and `bottom-right`. Each keeps one margin from the edge it is at.", [
+        item("board-pos-bottom", "Bottom", medalsOn({ sport: "swimming" }, "bottom"), "Centred at the bottom edge."),
+        item("board-pos-left", "Left", medalsOn({ sport: "swimming" }, "left"), "At the left edge, centred up and down."),
+        item("board-pos-top-left", "Top left", medalsOn({ sport: "swimming" }, "top-left")),
+        item("board-pos-bottom-right", "Bottom right", medalsOn({ sport: "swimming" }, "bottom-right")),
+      ]),
+      section("room", "How large it may be", "A named position takes the `share` asked for (a share of the drawing's width), unless that would reach into the middle: then the board is made smaller, never moved. The board keeps its own shape, so no letter is stretched.", [
+        item("board-share-small", "A fifth of the width", boardSnippet("swimming", { board: { share: 0.2 } }), "`share: 0.2`."),
+        item("board-share-crowded", "As much as the room gives", boardSnippet("swimming", { board: { share: 1 } }), "`share: 1` asks for the whole width; the board stops where the middle of the surface begins."),
+        item("board-tall", "Tall, for a phone", boardSnippet("swimming", { surface: { sport: "nhl", orientation: "portrait" } }), "The same board over a rink that lies tall: the room above the middle is what holds it."),
+      ]),
+      section("cover", "When it may cover the middle", "`cover: true` lifts the limit for a named position, and a point of your own is never held to it. The board stays inside the drawing either way.", [
+        item("board-cover", "`cover: true`", boardSnippet("swimming", { board: { share: 0.9, cover: true, position: "bottom", opacity: 0.85 } }), "A large board at the bottom, a little transparent so that the lanes show through."),
+        item("board-point", "A point of your own", boardSnippet("medals", { board: { position: { x: 0.5, y: 0.5, anchor: "center" }, share: 0.45, opacity: 0.9 } }), "`position: { x: 0.5, y: 0.5, anchor: \"center\" }`: the middle of the drawing, as asked."),
+      ]),
+      section("themes", "Dark and Japanese", "The surface follows the theme and the language; the board is a graphic in the look it was drawn in.", [
+        item("board-dark", "Dark", boardSnippet("swimming", { surface: { sport: "swimming", theme: "dark" } }), "`theme: \"dark\"` on the surface; the board keeps its own look."),
+        item("board-ja", "In Japanese", boardSnippet("judo", { surface: { sport: "judo", language: "ja" } }), "`language: \"ja\"` on the surface: its title and description are in Japanese."),
+      ]),
+    ],
+  };
+}
+
+export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, specialPage, dataPage, curlingPage, courtsPage, fieldsPage, poolsPage, athleticsPage, skatingPage, budoPage, combatPage, stylingPage, rangesPage, layoutsPage, multiPage, judgingPage, boardsPage, pageantPage, situationPage];
 
 /** The sections of every page, with each item's picture made by running its code. */
 export function galleryData(lib) {
@@ -1742,5 +1797,7 @@ export async function libraryFrom(dir, ext, importer) {
   const entries = { "": "index", "/charts": "charts-entry", "/frames": "frames-entry", "/layers": "layers-entry", "/leagues": "leagues-entry", "/eras": "eras-entry", "/grounds": "grounds-entry", "/arenas": "arenas-entry", "/parks": "parks-entry", "/atlas": "atlas-entry", "/events": "events-entry", "/geometry": "geometry-entry", "/replay": "replay-entry", "/layouts": "layouts-entry", "/multi": "multi-entry", "/turn": "turn-entry", "/athletics": "athletics-entry", "/skating": "skating-entry", "/target": "target-entry", "/zones": "zones-entry", "/pointer": "pointer-entry", "/budo": "budo-entry", "/judging": "judging-entry" };
   const lib = {};
   for (const [suffix, file] of Object.entries(entries)) lib[`${MAIN}${suffix}`] = await importer(`${dir}/${file}${ext}`);
+  // The boards of the boards gallery are drawn by Taisen Brackets, a development dependency of this repository.
+  lib[TAISEN] = await import(TAISEN);
   return lib;
 }

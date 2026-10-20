@@ -93,6 +93,7 @@ pnpm test:package   # pack it as npm does, install it in an empty project, impor
 pnpm test:demo      # build the demo and play it in a real browser
 pnpm test:readme    # run the examples of the README and of docs/ against the built package
 pnpm docs:make      # rewrite what the docs make from the source: docs/strings-ja.md, docs/variants.md, docs/variants.ja.md, the tables of frames, units and limits
+pnpm boards         # redraw the demo's sample boards (demo/boards-data.js) with Taisen Brackets, a development dependency, from scripts/boards-sources.mjs
 ```
 
 **A dimension is a published fact.** Every number in `src/geometry.ts` comes from a rulebook, a federation's diagram or a ballpark's published figures, and says where in `docs/sources.md`. A change to one cites its source and has a test that would have caught the old value. Nothing is copied from a drawing or a data set whose terms do not allow it.

@@ -7,6 +7,7 @@ import { cross, facing, fadeOf, n, size, unit, type Plane } from "./turn.kit.ts"
 import { buildTurn, turnWords, type TurnModel, type TurnSettings } from "./turn.model.ts";
 import { KYOGIJO_TURN_STYLE } from "./turn.style.ts";
 import { esc } from "./format.ts";
+import { turnBoardMarkup } from "./overlay.ts";
 import type { ScoreOptions, SurfaceOptions } from "./types.ts";
 
 const px = (value: number): string => `${Math.round(value * 1000) / 1000}`;
@@ -142,7 +143,7 @@ export function turnMarkupOf(model: TurnModel, settings: TurnSettings = {}): str
   return (
     `<div class="ky-turn" id="${esc(model.id)}" data-sport="${esc(String(sport))}" data-mode="3d" data-touch="${settings.touch === "turn" ? "turn" : "scroll"}" data-preset="${presetOf(view, model.presets ?? sport) ?? "custom"}"${theme === "light" || theme === "dark" ? ` data-theme="${theme}"` : ""} lang="${model.language}">` +
     sheet +
-    `<div class="ky-turn-view" tabindex="0" role="group" aria-roledescription="${esc(words.region)}" aria-label="${esc(model.title)}" aria-describedby="${esc(model.id)}-help" aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown + - 0 1 2 3 4 Home Space"><div ${worldAttributes(model)}>${worldMarkup(model, layout)}</div></div>` +
+    `<div class="ky-turn-view" tabindex="0" role="group" aria-roledescription="${esc(words.region)}" aria-label="${esc(model.title)}" aria-describedby="${esc(model.id)}-help" aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown + - 0 1 2 3 4 Home Space"><div ${worldAttributes(model)}>${worldMarkup(model, layout)}</div>${model.board === undefined ? "" : turnBoardMarkup(model.board)}</div>` +
     `<p class="ky-turn-help" id="${esc(model.id)}-help">${esc(keys)}</p>` +
     (settings.controls === false ? "" : controlsMarkup(model, view)) +
     `<div class="ky-turn-live" role="status" aria-live="polite"></div>` +

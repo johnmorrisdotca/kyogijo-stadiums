@@ -1,4 +1,5 @@
 import type { Background } from "./background.ts";
+import type { BoardOptions } from "./overlay.ts";
 import type { EmblemRef, EmblemRenderer } from "./emblems-source.ts";
 import type { FlagRenderer } from "./flags-source.ts";
 import type { Layer } from "./layers.types.ts";
@@ -793,6 +794,12 @@ export interface SurfaceOptions {
    * Unset, the drawing is byte for byte as before. See `BackgroundOptions`.
    */
   background?: Background;
+  /**
+   * A board laid over the drawing: a results board, a bout presentation or a medal table that another package drew (Taisen Brackets', say), taken as an SVG string with its width and height, and placed at the top, a side, a corner or a point
+   * of your own, kept off the middle of the surface unless you say otherwise. It is written as an image, never changed and never stretched, and in the 3D view it is a layer over the view that does not turn with it. A compact strip and a
+   * badge take none. Unset, the drawing is byte for byte as before. See `BoardOptions` and `docs/boards.md`.
+   */
+  board?: BoardOptions;
   /**
    * The pageant: each team's flag or logo laid large over its half (a `carpet`) or on a round disc (a `stage`), with an emblem in the centre. `"carpet"`, `"stage"`, `true` (a carpet) or `PageantOptions`.
    * Off by default; a score drawing only. See `PageantOptions`.
