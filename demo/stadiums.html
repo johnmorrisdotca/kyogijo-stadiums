@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Kyogijo Stadiums: BC Place, a real stadium</title>
-    <meta name="description" content="BC Place in Vancouver drawn inside the real outline of its building from OpenStreetMap, with its retractable, cable-supported roof, a plausible bowl of the seats of each configuration, and the football field or the soccer pitch lying as the roof opening does, in 2D and in 3D." />
+    <title>Kyogijo Stadiums: real stadiums and ballparks</title>
+    <meta name="description" content="BC Place, Lumen Field and T-Mobile Park drawn inside the real outline of their buildings from OpenStreetMap, with their roofs, the field lying as the sources say and a plausible bowl of the seats of each configuration, in 2D and in 3D." />
     <style>
       :root { color-scheme: light dark; --bg: #f6f4ee; --ink: #10151b; --muted: #434b54; --card: #fff; --line: #b9b3a3; --accent: #1f5fa8; --tab: #10151b; --tab-ink: #fff; }
       @media (prefers-color-scheme: dark) { :root { --bg: #0d1218; --ink: #f6f3ea; --muted: #bcc3cb; --card: #18212a; --line: #475463; --accent: #7fb2ee; --tab: #f6f3ea; --tab-ink: #0d1218; } }
@@ -43,6 +43,7 @@
       <p class="back"><a href="./" id="back" data-testid="back"></a></p>
       <h1 id="title"></h1>
       <p class="lede" id="lede"></p>
+      <div id="stadium-tabs" role="tablist" data-testid="stadium-tabs"></div>
       <div id="tabs" role="tablist" data-testid="tabs"></div>
       <p id="error" role="alert" hidden></p>
       <div id="stage" data-testid="stage"></div>
@@ -62,54 +63,61 @@
         </div>
       </details>
       <p class="note" id="credit" data-testid="credit"></p>
-      <p class="note"><a href="./district.html?venues=bc-place,rogers-arena" id="district" data-testid="district"></a> · <a href="./docs/stadiums.html" id="docs"></a></p>
+      <p class="note"><a href="./district.html" id="district" data-testid="district"></a> · <a href="./docs/stadiums.html" id="docs"></a></p>
     </main>
     <script type="module">
-      // BC Place, Vancouver: a real stadium of football and soccer drawn inside the outline of its building (OpenStreetMap, ODbL 1.0), the field lying along the opening in its retractable, cable-supported roof, with a plausible bowl of
-      // the seats of each configuration. The page only asks the package to draw: `crowd: { real: true }` and a `stadium` in the options. What is chosen lives in the address; nothing is sent anywhere and nothing is stored.
+      // The real stadiums: BC Place, Lumen Field and T-Mobile Park, each drawn inside the outline of its building (OpenStreetMap, ODbL 1.0), the field lying as the sources say, with its roof and a plausible bowl of the seats of
+      // each configuration. The page only asks the package to draw: `crowd: { real: true }` and a `stadium` (or a `park`) in the options. What is chosen lives in the address; nothing is sent anywhere and nothing is stored.
       import { drawKyogijo } from "./dist/index.js";
-      import { STADIUMS, STADIUM_IDS, VENUE_ATTRIBUTION, groundOfStadium, planStadium } from "./dist/stadiums-entry.js";
-      import { groundNameIn } from "./dist/grounds-entry.js";
+      import { STADIUMS, STADIUM_IDS, stadiumConfigs, stadiumKind, stadiumNames } from "./dist/stadiums-entry.js";
       import { mountKyogijoTurn } from "./dist/turn-entry.js";
       import { quietTitles } from "./quiet.js";
       quietTitles();
 
       const WORDS = {
         en: {
-          title: "BC Place: a real stadium, for football and for soccer",
-          pageTitle: "Kyogijo Stadiums: BC Place, a real stadium",
-          pageDescription: "BC Place in Vancouver drawn inside the real outline of its building from OpenStreetMap, with its retractable, cable-supported roof, a plausible bowl of the seats of each configuration, and the football field or the soccer pitch lying as the roof's opening does, in 2D and in 3D.",
-          lede: "The stadium is drawn inside the outline of its building, as OpenStreetMap maps it, with the field lying along the opening in its roof (which is the field's size) and a bowl of the seats the sources give for each configuration. The bowl is a plausible one, never a seat map: no section, row or seat of a real plan, and no mark of a club, a league or a tournament.",
-          back: "Back to the Kyogijo Stadiums demo", docs: "The real stadiums page of the docs", district: "Beside Rogers Arena, in the district view",
-          factsTitle: "What the drawing is made from", edit: "View", view: "View", viewpoint: "Viewpoint", roof: "Roof and walls (3D)", open: "Roof open: the fabric gathered into its pod (3D)", language: "Language", theme: "Theme", auto: "Follow the device", light: "Light", dark: "Dark",
+          title: "Real stadiums and ballparks",
+          pageTitle: "Kyogijo Stadiums: real stadiums and ballparks",
+          pageDescription: "BC Place, Lumen Field and T-Mobile Park drawn inside the real outline of their buildings from OpenStreetMap, with their roofs, the field lying as the sources say and a plausible bowl of the seats of each configuration, in 2D and in 3D.",
+          lede: "Each stadium is drawn inside the outline of its building, as OpenStreetMap maps it, with the field lying as the roof's opening, the pitch or the infield says and a bowl of the seats the sources give for each configuration. The bowl is a plausible one, never a seat map: no section, row or seat of a real plan, and no mark of a club, a league or a tournament.",
+          back: "Back to the Kyogijo Stadiums demo", docs: "The real stadiums page of the docs", district: "Beside its neighbours, in the district view",
+          factsTitle: "What the drawing is made from", edit: "View", view: "View", viewpoint: "Viewpoint", roof: "Roof and walls (3D)", open: "Roof open (3D)", language: "Language", theme: "Theme", auto: "Follow the device", light: "Light", dark: "Dark",
           overhead: "Overhead", broadcast: "Broadcast", end: "End", corner: "Corner", formLabel: "How the stadium is shown",
-          cfl: "Football field", soccer: "Soccer pitch",
-          stadium: "Stadium", city: "City", seats: "Seats in this configuration", bowls: "Seating bowls", roofKind: "Roof", opening: "Opening in the roof", orientation: "How the field lies", outline: "Building outline", rim: "Roof heights", pitch: "The field",
-          documented: "a source says so", plausible: "ours, plausible", cable: "retractable, supported by cables",
-          opening_: "from the roof's opening, which is the field's size", building: "inferred from the building's long axis", none: "not known: drawn east-west, north at the top",
-          seatsText: "{seats} ({source})", bowlsText: "{count} ({basis}); the lower bowl {lower}", roofText: "{kind} ({basis})", openingText: "{length} by {width} metres, the size of the field (the article)",
-          orientationText: "{how}, the field along {heading} degrees from north", outlineText: "OpenStreetMap {way}, read {read}", rimText: "rim {rim} m, crown {crown} m (OpenStreetMap's height {height} m, of which the roof's rise {rise} m)",
-          pitchText: { cfl: "150 by 65 yards with 20-yard end zones", soccer: "the international 105 by 68 metres" },
-          wikipedia: "English Wikipedia", wikidata: "Wikidata",
-          credit: "Building outline and roof: (c) OpenStreetMap contributors, ODbL 1.0, openstreetmap.org/copyright. Seats, bowls and roof: Wikidata (CC0) and the English Wikipedia article the stadium cites, in our own words.",
+          cfl: "Football field", nfl: "Football field", soccer: "Soccer pitch", mlb: "Baseball field",
+          stadium: "Stadium", city: "City", seats: "Seats in this configuration", bowls: "Seating bowls", roofKind: "Roof", roofDetail: "The roof", orientation: "How the field lies", outline: "Building outline", pitch: "The field",
+          documented: "a source says so", plausible: "ours, plausible", wikipedia: "English Wikipedia", wikidata: "Wikidata",
+          cable: "retractable, supported by cables", canopy: "a canopy over some of the stands", panels: "retractable, in four sections", fixed: "fixed",
+          opening_: "from the roof's opening, which is the field's size", pitch_: "as OpenStreetMap maps the pitch", infield: "from the infield OpenStreetMap maps and the building's outline", building: "inferred from the building's long axis", none: "not known: drawn east-west, north at the top",
+          seatsText: "{seats} ({source})", bowlsText: "{count} ({basis})", bowlsLower: "; the lower bowl {lower}", bowlsClosed: "; the bowl holds {bowl}, the rest closed", bowlsLevels: "; by level {tiers}",
+          cableText: "an opening of {length} by {width} metres, the size of the field (the article); the fabric closes it or gathers into its pod",
+          canopyText: "covers {cover} percent of the seats and leaves the field open (the article); the roof's outline and heights are OpenStreetMap's",
+          panelsText: "its bottom {bottom} feet and its top {top} feet above the field, resting over the railway to the east when open (the article)",
+          orientationText: "{how}, the field along {heading} degrees from north", orientationPark: "{how}, home plate to centre field {heading} degrees from north",
+          outlineText: "OpenStreetMap {way}, read {read}",
+          pitchText: { cfl: "150 by 65 yards with 20-yard end zones", nfl: "120 by 53.3 yards", soccer: "the size published for the ground, 116 by 75 yards at Lumen Field and the international 105 by 68 metres elsewhere", mlb: "the fence at the distances published for the park" },
+          credit: "Building outlines, roofs and pitches: (c) OpenStreetMap contributors, ODbL 1.0, openstreetmap.org/copyright. Seats, bowls and roofs: Wikidata (CC0) and the English Wikipedia article each stadium cites, in our own words.",
         },
         ja: {
-          title: "BCプレイス：フットボールにもサッカーにも使われる実在のスタジアム",
-          pageTitle: "競技場 Kyogijo Stadiums：実在のスタジアム BCプレイス",
-          pageDescription: "バンクーバーのBCプレイスを、OpenStreetMapの建物の輪郭の内側に描きます。ケーブルで支える開閉式屋根、構成ごとの座席数から推定したスタンド、屋根の開口部に沿って置いたフットボール場・サッカー場を、2Dと3Dで見られます。",
-          lede: "スタジアムは、OpenStreetMapに記録された建物の輪郭の内側に、屋根の開口部（フィールドと同じ大きさ）に沿ってフィールドを置き、公表されている構成ごとの座席数からスタンドを推定して描いています。座席表ではありません。実際のブロック・列・座席は描いておらず、クラブ・リーグ・大会のマークもありません。",
-          back: "競技場 Kyogijo Stadiums のデモに戻る", docs: "ドキュメントの「実在のスタジアム」ページ", district: "ロジャース・アリーナと並べた地区の表示",
-          factsTitle: "この図の元になった情報", edit: "表示", view: "表示", viewpoint: "視点", roof: "屋根と壁（3D）", open: "屋根を開く：膜を中央にまとめる（3D）", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク",
+          title: "実在のスタジアムと球場",
+          pageTitle: "競技場 Kyogijo Stadiums：実在のスタジアムと球場",
+          pageDescription: "BCプレイス、ルーメン・フィールド、T-モバイル・パークを、OpenStreetMapの建物の輪郭の内側に描きます。屋根、資料に基づくフィールドの向き、構成ごとの座席数から推定したスタンドを、2Dと3Dで見られます。",
+          lede: "スタジアムは、OpenStreetMapに記録された建物の輪郭の内側に、屋根の開口部・ピッチ・内野が示す向きにフィールドを置き、公表されている構成ごとの座席数からスタンドを推定して描いています。座席表ではありません。実際のブロック・列・座席は描いておらず、クラブ・リーグ・大会のマークもありません。",
+          back: "競技場 Kyogijo Stadiums のデモに戻る", docs: "ドキュメントの「実在のスタジアム」ページ", district: "近くの会場と並べた地区の表示",
+          factsTitle: "この図の元になった情報", edit: "表示", view: "表示", viewpoint: "視点", roof: "屋根と壁（3D）", open: "屋根を開く（3D）", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク",
           overhead: "真上", broadcast: "中継", end: "エンド", corner: "コーナー", formLabel: "スタジアムの見せ方",
-          cfl: "フットボール場", soccer: "サッカー場",
-          stadium: "スタジアム", city: "都市", seats: "この構成の座席数", bowls: "客席の層", roofKind: "屋根", opening: "屋根の開口部", orientation: "フィールドの向き", outline: "建物の輪郭", rim: "屋根の高さ", pitch: "フィールド",
-          documented: "資料に記載あり", plausible: "推定", cable: "ケーブルで支える開閉式",
-          opening_: "屋根の開口部（フィールドと同じ大きさ）から", building: "建物の長軸から推定", none: "不明（東西に配置、北が上）",
-          seatsText: "{seats}席（{source}）", bowlsText: "{count}層（{basis}）、下層は{lower}席", roofText: "{kind}（{basis}）", openingText: "{length}×{width}m（記事による、フィールドと同じ大きさ）",
-          orientationText: "{how}。フィールドは北から{heading}度", outlineText: "OpenStreetMap {way}（{read}に取得）", rimText: "縁{rim}m、頂部{crown}m（OpenStreetMapの高さ{height}m、うち屋根の立ち上がり{rise}m）",
-          pitchText: { cfl: "150×65ヤード、エンドゾーン20ヤード", soccer: "国際標準の105×68m" },
-          wikipedia: "Wikipedia英語版", wikidata: "Wikidata",
-          credit: "建物の輪郭と屋根：(c) OpenStreetMap contributors（ODbL 1.0、openstreetmap.org/copyright）。座席数・層・屋根：Wikidata（CC0）と、このスタジアムの出典としているWikipedia英語版の記事（独自の言葉でまとめたもの）。",
+          cfl: "フットボール場", nfl: "フットボール場", soccer: "サッカー場", mlb: "野球場",
+          stadium: "スタジアム", city: "都市", seats: "この構成の座席数", bowls: "客席の層", roofKind: "屋根", roofDetail: "屋根の詳細", orientation: "フィールドの向き", outline: "建物の輪郭", pitch: "フィールド",
+          documented: "資料に記載あり", plausible: "推定", wikipedia: "Wikipedia英語版", wikidata: "Wikidata",
+          cable: "ケーブルで支える開閉式", canopy: "観客席の一部を覆う庇", panels: "4分割の開閉式", fixed: "固定屋根",
+          opening_: "屋根の開口部（フィールドと同じ大きさ）から", pitch_: "OpenStreetMapに記録されたピッチのとおり", infield: "OpenStreetMapに記録された内野と建物の輪郭から", building: "建物の長軸から推定", none: "不明（東西に配置、北が上）",
+          seatsText: "{seats}席（{source}）", bowlsText: "{count}層（{basis}）", bowlsLower: "、下層は{lower}席", bowlsClosed: "、スタンドは{bowl}席分で、残りは閉鎖", bowlsLevels: "、階ごとの座席数：{tiers}",
+          cableText: "開口部は{length}×{width}m（記事による、フィールドと同じ大きさ）。膜が閉じ、または収納部へまとまる",
+          canopyText: "客席の{cover}％を覆い、フィールドは開放（記事による）。屋根の輪郭と高さはOpenStreetMapによる",
+          panelsText: "下端はフィールドから{bottom}フィート、上端は{top}フィート。開くと東側の線路の上に重なる（記事による）",
+          orientationText: "{how}。フィールドは北から{heading}度", orientationPark: "{how}。ホームから中堅は北から{heading}度",
+          outlineText: "OpenStreetMap {way}（{read}に取得）",
+          pitchText: { cfl: "150×65ヤード、エンドゾーン20ヤード", nfl: "120×53.3ヤード", soccer: "そのグラウンドで公表されている広さ（ルーメン・フィールドは116×75ヤード、ほかは国際標準の105×68m）", mlb: "球場で公表されている距離のフェンス" },
+          credit: "建物の輪郭、屋根、ピッチ：(c) OpenStreetMap contributors（ODbL 1.0、openstreetmap.org/copyright）。座席数・層・屋根：Wikidata（CC0）と、各スタジアムが出典とするWikipedia英語版の記事（独自の言葉でまとめたもの）。",
         },
       };
       const $ = (id) => document.getElementById(id);
@@ -117,9 +125,8 @@
       const words = () => WORDS[$("language").value];
       const setSelect = (id, value, allowed) => { if (allowed.includes(value)) $(id).value = value; };
       const fillIn = (text, values) => text.replace(/\{(\w+)\}/g, (_, key) => String(values[key]));
-      const ID = STADIUM_IDS[0];
-      const CONFIGS = ["cfl", "soccer"];
-      const state = { config: CONFIGS.includes(params.get("config")) ? params.get("config") : "cfl" };
+      const state = { stadium: STADIUM_IDS.includes(params.get("stadium")) ? params.get("stadium") : STADIUM_IDS[0], config: params.get("config") };
+      if (!stadiumConfigs(STADIUMS[state.stadium]).includes(state.config)) state.config = stadiumConfigs(STADIUMS[state.stadium])[0];
       let turn;
       let turnKey = "";
 
@@ -130,6 +137,9 @@
       $("roof").checked = params.get("roof") === "1" || params.get("open") === "1";
       $("open").checked = params.get("open") === "1";
 
+      const nameOf = (id) => stadiumNames(STADIUMS[id])[$("language").value];
+      const retractable = () => ["cable", "panels"].includes(STADIUMS[state.stadium].roof.kind);
+
       function labelPage() {
         const w = words();
         for (const [id, key] of [["title", "title"], ["lede", "lede"], ["back", "back"], ["docs", "docs"], ["district", "district"], ["l-facts", "factsTitle"], ["l-edit", "edit"], ["l-view", "view"], ["l-viewpoint", "viewpoint"], ["l-roof", "roof"], ["l-open", "open"], ["l-language", "language"], ["l-theme", "theme"], ["credit", "credit"]]) $(id).textContent = w[key];
@@ -138,7 +148,16 @@
         document.title = w.pageTitle;
         document.querySelector('meta[name="description"]').setAttribute("content", w.pageDescription);
         $("edit").setAttribute("aria-label", w.formLabel);
-        $("tabs").replaceChildren(...CONFIGS.map((config) => {
+        $("stadium-tabs").replaceChildren(...STADIUM_IDS.map((id) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.role = "tab";
+          button.dataset.stadium = id;
+          button.textContent = nameOf(id);
+          button.setAttribute("aria-selected", String(id === state.stadium));
+          return button;
+        }));
+        $("tabs").replaceChildren(...stadiumConfigs(STADIUMS[state.stadium]).map((config) => {
           const button = document.createElement("button");
           button.type = "button";
           button.role = "tab";
@@ -153,21 +172,26 @@
       function listFacts() {
         const w = words();
         const lang = $("language").value;
-        const s = STADIUMS[ID];
-        const ground = groundOfStadium(s);
+        const s = STADIUMS[state.stadium];
         const config = s.configs[state.config];
         const axis = s.osm.axis;
-        const roof = s.osm.roof;
+        const park = stadiumKind(s) === "park";
+        const num = (n) => n.toLocaleString(lang);
+        let bowls = fillIn(w.bowlsText, { count: s.tiers.count, basis: w[s.tiers.basis] });
+        if (s.tiers.lowerSeats !== undefined) bowls += fillIn(w.bowlsLower, { lower: num(s.tiers.lowerSeats) });
+        if (s.bowlSeats !== undefined && s.bowlSeats > config.seats) bowls += fillIn(w.bowlsClosed, { bowl: num(s.bowlSeats) });
+        if (s.tiers.tierSeats !== undefined) bowls += fillIn(w.bowlsLevels, { tiers: `${num(s.tiers.tierSeats.lower)} / ${num(s.tiers.tierSeats.upper)} / ${num(s.tiers.tierSeats.bleachers)}` });
+        const roof = s.roof;
+        const detail = roof.kind === "cable" ? fillIn(w.cableText, { length: roof.opening.length, width: roof.opening.width }) : roof.kind === "canopy" ? fillIn(w.canopyText, { cover: Math.round(roof.cover * 100) }) : roof.kind === "panels" ? fillIn(w.panelsText, { bottom: roof.bottom, top: roof.top }) : "";
+        const how = { opening: w.opening_, pitch: w.pitch_, infield: w.infield, building: w.building }[axis.basis];
         const rows = [
-          [w.stadium, `${groundNameIn(ground, undefined, lang)} (${s.wikidata})`],
-          [w.city, ground.city],
+          [w.stadium, `${nameOf(s.id)} (${s.wikidata})`],
           [w.pitch, w.pitchText[state.config]],
-          [w.seats, fillIn(w.seatsText, { seats: config.seats.toLocaleString(lang), source: w[config.source] })],
-          [w.bowls, fillIn(w.bowlsText, { count: s.tiers.count, basis: w[s.tiers.basis], lower: s.tiers.lowerSeats.toLocaleString(lang) })],
-          [w.roofKind, fillIn(w.roofText, { kind: w[s.roof.kind], basis: w[s.roof.basis] })],
-          [w.opening, fillIn(w.openingText, { length: s.roof.opening.length, width: s.roof.opening.width })],
-          [w.rim, fillIn(w.rimText, { rim: roof.height - roof.rise, crown: roof.height, height: roof.height, rise: roof.rise })],
-          [w.orientation, axis.basis === "none" ? w.none : fillIn(w.orientationText, { how: w[axis.basis === "opening" ? "opening_" : axis.basis], heading: axis.heading })],
+          [w.seats, fillIn(w.seatsText, { seats: num(config.seats), source: w[config.source] })],
+          [w.bowls, bowls],
+          [w.roofKind, `${w[roof.kind]} (${w[roof.basis]})`],
+          ...(detail === "" ? [] : [[w.roofDetail, detail]]),
+          [w.orientation, axis.basis === "none" ? w.none : fillIn(park ? w.orientationPark : w.orientationText, { how, heading: axis.heading })],
           [w.outline, fillIn(w.outlineText, { way: s.osm.source, read: s.osm.read })],
         ];
         $("list").replaceChildren(...rows.flatMap(([term, text]) => {
@@ -181,7 +205,8 @@
 
       function syncUrl() {
         const next = new URLSearchParams();
-        if (state.config !== "cfl") next.set("config", state.config);
+        if (state.stadium !== STADIUM_IDS[0]) next.set("stadium", state.stadium);
+        if (state.config !== stadiumConfigs(STADIUMS[state.stadium])[0]) next.set("config", state.config);
         if ($("view").value === "3d") next.set("view", "3d");
         if ($("viewpoint").value !== "corner") next.set("viewpoint", $("viewpoint").value);
         if ($("roof").checked) next.set("roof", "1");
@@ -191,6 +216,12 @@
         history.replaceState(null, "", next.size === 0 ? location.pathname : `?${next}`);
       }
 
+      /** The options a stadium and a configuration are drawn from: a ballpark by its `park`, any other by its `stadium`. */
+      function optionsOf(theme) {
+        const park = stadiumKind(STADIUMS[state.stadium]) === "park";
+        return { sport: state.config, ...(park ? { park: state.stadium } : { stadium: state.stadium }), crowd: { real: true }, language: $("language").value, ...(theme === "auto" ? {} : { theme }) };
+      }
+
       function draw() {
         const theme = $("theme").value;
         if (theme === "auto") delete document.documentElement.dataset.theme;
@@ -198,16 +229,16 @@
         const three = $("view").value === "3d";
         $("viewpoint-row").hidden = !three;
         $("roof-row").hidden = !three;
-        $("open-row").hidden = !three || !$("roof").checked;
-        if (!$("roof").checked) $("open").checked = false;
+        $("open-row").hidden = !three || !$("roof").checked || !retractable();
+        if (!$("roof").checked || !retractable()) $("open").checked = false;
         const stage = $("stage");
         $("error").hidden = true;
-        const options = { sport: state.config, stadium: ID, crowd: { real: true }, language: $("language").value, ...(theme === "auto" ? {} : { theme }) };
+        const options = optionsOf(theme);
         document.body.dataset.view = $("view").value;
         try {
           if (three) {
             const settings = { preset: $("viewpoint").value, ...($("roof").checked ? { venue: { roof: true, roofOpen: $("open").checked } } : {}) };
-            const key = JSON.stringify([state.config, $("roof").checked, $("open").checked]);
+            const key = JSON.stringify([state.stadium, state.config, $("roof").checked, $("open").checked]);
             if (turn !== undefined && turnKey !== key) { turn.destroy(); turn = undefined; }
             if (turn === undefined) {
               stage.innerHTML = '<div id="three"></div>';
@@ -230,11 +261,20 @@
         const back = new URLSearchParams({ sport: state.config });
         if ($("language").value === "ja") back.set("lang", "ja");
         $("back").href = `./?${back}`;
-        $("district").href = `./district.html?venues=${ID}:${state.config},rogers-arena${$("language").value === "ja" ? "&lang=ja" : ""}`;
+        const lang = $("language").value === "ja" ? "&lang=ja" : "";
+        $("district").href = `./district.html?venues=${state.stadium === "bc-place" ? `${state.stadium}:${state.config},rogers-arena` : `t-mobile-park,lumen-field`}${lang}`;
         document.body.dataset.ready = "true";
       }
 
       labelPage();
+      $("stadium-tabs").addEventListener("click", (event) => {
+        const button = event.target.closest("button[data-stadium]");
+        if (button === null) return;
+        state.stadium = button.dataset.stadium;
+        if (!stadiumConfigs(STADIUMS[state.stadium]).includes(state.config)) state.config = stadiumConfigs(STADIUMS[state.stadium])[0];
+        labelPage();
+        draw();
+      });
       $("tabs").addEventListener("click", (event) => {
         const button = event.target.closest("button[data-config]");
         if (button === null) return;

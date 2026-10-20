@@ -97,3 +97,24 @@ test("is in Japanese on request, the title, the facts and the drawing's own desc
   expect(await page.locator(`${STAGE} svg.ky-district text`).allTextContents()).toContain("BCプレイス");
   await noSidewaysScroll(page);
 });
+
+test("shows Seattle: the two SoDo stadiums as neighbours, then the three venues as a city at their real distances, with names", async ({ page }) => {
+  const { errors } = await open(page);
+  await page.locator('#tabs button[data-preset="sodo"]').click();
+  await expect(page.locator(`${STAGE} [data-venue]`)).toHaveCount(2);
+  await expect(page.locator(`${STAGE} [data-venue="t-mobile-park:mlb"]`)).toHaveCount(1);
+  await expect(page.locator(`${STAGE} [data-venue="lumen-field:nfl"]`)).toHaveCount(1);
+  await expect(page.locator(`${STAGE} svg.ky-district`)).toHaveAttribute("data-mode", "neighbours");
+  await expect(page.locator('[data-testid="between"]')).toContainText("459 metres apart");
+  await page.locator('#tabs button[data-preset="seattle"]').click();
+  await expect(page.locator(`${STAGE} [data-venue]`)).toHaveCount(3);
+  await expect(page.locator(`${STAGE} svg.ky-district`)).toHaveAttribute("data-mode", "city");
+  expect(await page.locator(`${STAGE} svg.ky-district text`).allTextContents()).toEqual(expect.arrayContaining(["T-Mobile Park", "Lumen Field", "Climate Pledge Arena"]));
+  await expect(page.locator('#tabs button[aria-selected="true"]')).toHaveText("Seattle city: all three venues");
+  expect(page.url()).toContain("mode=city");
+  await page.locator("#view").selectOption("3d");
+  await expect(page.locator(`${STAGE} .ky-turn`)).toHaveCount(1);
+  expect(await page.locator(`${STAGE} [data-part^="m2-"]`).count()).toBeGreaterThan(100);
+  expect(errors).toEqual([]);
+  await noSidewaysScroll(page);
+});

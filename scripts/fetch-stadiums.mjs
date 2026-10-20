@@ -34,13 +34,17 @@ const getJson = async (url) => {
 };
 
 // ---- Wikidata. ----
+// A stadium added later is fetched and put beside the ones already there; what an earlier run kept is never fetched again.
 const wikidataFile = new URL("wikidata.json", out);
-if (!existsSync(wikidataFile)) {
-  const ids = stadiums.map((v) => v.wikidata).join("|");
-  const body = await getJson(`https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${ids}&props=labels|claims|sitelinks&languages=en|ja&format=json&formatversion=2`);
-  writeFileSync(wikidataFile, `${JSON.stringify({ read: day, licence: "Wikidata, CC0", entities: body.entities }, null, 1)}\n`);
-  console.log("wikidata.json written");
-  await pause(2000);
+{
+  const kept = existsSync(wikidataFile) ? JSON.parse(readFileSync(wikidataFile, "utf8")) : { read: day, licence: "Wikidata, CC0", entities: {} };
+  const missing = stadiums.filter((v) => kept.entities[v.wikidata] === undefined).map((v) => v.wikidata);
+  if (missing.length > 0) {
+    const body = await getJson(`https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${missing.join("|")}&props=labels|claims|sitelinks&languages=en|ja&format=json&formatversion=2`);
+    writeFileSync(wikidataFile, `${JSON.stringify({ ...kept, entities: { ...kept.entities, ...body.entities } }, null, 1)}\n`);
+    console.log(`wikidata.json written (${missing.join(", ")})`);
+    await pause(2000);
+  }
 }
 
 // ---- English Wikipedia. ----
@@ -61,8 +65,10 @@ const plain = (text) =>
     .replace(/<[^>]+>/g, " ")
     .replace(/\s+/g, " ")
     .trim();
-if (!existsSync(wikipediaFile)) {
-  const url = `https://en.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=ids|timestamp|content&rvslots=main&titles=${encodeURIComponent(stadiums.map((v) => v.en.title).join("|"))}&redirects=1&format=json&formatversion=2`;
+const keptArticles = existsSync(wikipediaFile) ? JSON.parse(readFileSync(wikipediaFile, "utf8")) : { read: day, licence: "English Wikipedia, CC BY-SA 4.0: sentences kept as evidence only", articles: {} };
+const wanted = stadiums.filter((v) => keptArticles.articles[v.id] === undefined);
+if (wanted.length > 0) {
+  const url = `https://en.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=ids|timestamp|content&rvslots=main&titles=${encodeURIComponent(wanted.map((v) => v.en.title).join("|"))}&redirects=1&format=json&formatversion=2`;
   const answer = (await getJson(url)).query;
   const redirected = new Map([...(answer.normalized ?? []), ...(answer.redirects ?? [])].map((r) => [r.from, r.to]));
   const resolve = (title) => {
@@ -71,7 +77,7 @@ if (!existsSync(wikipediaFile)) {
     return t;
   };
   const articles = {};
-  for (const v of stadiums) {
+  for (const v of wanted) {
     const page = answer.pages.find((p) => p.title === resolve(v.en.title));
     const revision = page?.revisions?.[0];
     if (revision === undefined) {
@@ -85,7 +91,7 @@ if (!existsSync(wikipediaFile)) {
     const sentences = prose.split(/(?<=[.!?])\s+(?=[A-Z])/).filter((s) => TOPIC.test(s) && s.length < 500);
     articles[v.id] = { title: page.title, revision: revision.revid, timestamp: revision.timestamp, infoboxCapacity: capacity, sentences };
   }
-  writeFileSync(wikipediaFile, `${JSON.stringify({ read: day, licence: "English Wikipedia, CC BY-SA 4.0: sentences kept as evidence only", articles }, null, 1)}\n`);
+  writeFileSync(wikipediaFile, `${JSON.stringify({ ...keptArticles, articles: { ...keptArticles.articles, ...articles } }, null, 1)}\n`);
   console.log(`wikipedia.json written (${Object.keys(articles).length} articles)`);
   await pause(2000);
 }
@@ -96,7 +102,10 @@ for (const v of stadiums) {
   const file = new URL(`osm-${v.id}.json`, out);
   if (existsSync(file)) continue;
   // The building tagged with the stadium's Wikidata item, and the roof mapped over it (a multipolygon of the band and its opening; the relation's own ways come with it).
-  const query = `[out:json][timeout:60];(nwr["wikidata"="${v.wikidata}"];${v.roofRelation === undefined ? "" : `rel(${v.roofRelation});`});out geom;`;
+  // A stadium whose building, pitches and roofs are named (`osm`: `way/<id>` and `relation/<id>`, because OpenStreetMap does not tag them all with the Wikidata item) is asked for by those; the others by the item.
+  const named = v.osm === undefined ? [] : Object.values(v.osm).flat().filter((x) => typeof x === "string").map((x) => x.split("/"));
+  const ids = (kind) => named.filter(([k]) => k === kind).map(([, id]) => id);
+  const query = v.osm === undefined ? `[out:json][timeout:60];(nwr["wikidata"="${v.wikidata}"];${v.roofRelation === undefined ? "" : `rel(${v.roofRelation});`});out geom;` : `[out:json][timeout:60];(${ids("relation").length > 0 ? `rel(id:${ids("relation").join(",")});` : ""}${ids("way").length > 0 ? `way(id:${ids("way").join(",")});` : ""});out geom;`;
   let answer;
   for (let attempt = 0; attempt < 8 && answer === undefined; attempt += 1) {
     const url = GATEWAYS[gateway % GATEWAYS.length];

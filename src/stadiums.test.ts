@@ -1,23 +1,26 @@
 import { describe, expect, it } from "vitest";
-import { areaOfOutline } from "./crowd.ts";
+import { areaOfOutline, resolveCrowd } from "./crowd.ts";
+import { MLB_DIAMOND } from "./leagues/baseball.ts";
+import { fenceFor, parkById } from "./parks.ts";
+import { fenceOutline } from "./surfaces/baseball.ts";
 import { crowdStands, describe as describeDrawing, drawKyogijo } from "./draw.ts";
 import { GROUNDS } from "./grounds.ts";
 import { MAX_RAKE } from "./venues.ts";
 import { areaOf, coreOf, inside, lonLatFrom, metresFrom, middleOf, smallestBox } from "./venues.geo.ts";
-import { STADIUMS, STADIUM_IDS, VENUE_ATTRIBUTION, groundOfStadium, planStadium, stadiumBowlInside, stadiumById, stadiumByWikidata, stadiumConfigOf, stadiumOrientation, stadiumSeats, type StadiumConfigId } from "./stadiums.ts";
+import { STADIUMS, STADIUM_IDS, VENUE_ATTRIBUTION, groundOfStadium, planPark, planStadium, stadiumBowlInside, stadiumById, stadiumByWikidata, stadiumConfigOf, stadiumFrameHeading, stadiumKind, stadiumNames, stadiumOrientation, stadiumSeats, type StadiumConfigId } from "./stadiums.ts";
 import { STADIUM_DATA } from "./stadiums.data.ts";
 import { STADIUM_OSM } from "./stadiums.osm.data.ts";
 import { buildTurn } from "./turn-entry.ts";
 
 const bc = STADIUMS["bc-place"];
 const lonLat = (ring: readonly (readonly [number, number])[]): [number, number][] => ring.map(([lon, lat]) => [lon, lat]);
-const options = (sport: "cfl" | "soccer", extra: Record<string, unknown> = {}) => ({ sport, stadium: "bc-place", crowd: { real: true }, ...extra }) as never;
+const options = (sport: "cfl" | "nfl" | "soccer", extra: Record<string, unknown> = {}) => ({ sport, stadium: "bc-place", crowd: { real: true }, ...extra }) as never;
 /** The field's box in the drawing's frame, as the stands are laid round it. */
-const fieldOf = (sport: "cfl" | "soccer") => crowdStands(options(sport))!.box;
+const fieldOf = (sport: "cfl" | "nfl" | "soccer") => crowdStands(options(sport))!.box;
 
 describe("the stadiums: BC Place", () => {
   it("is the one stadium of the data, a ground the package already has, with its Wikidata item and the article its facts were read from", () => {
-    expect(STADIUM_IDS).toEqual(["bc-place"]);
+    expect(STADIUM_IDS).toEqual(["bc-place", "lumen-field", "t-mobile-park"]);
     expect(stadiumById("bc-place")).toBe(bc);
     expect(stadiumByWikidata("Q612227")).toBe(bc);
     expect(stadiumById("toString")).toBeUndefined();
@@ -26,7 +29,7 @@ describe("the stadiums: BC Place", () => {
     const ground = groundOfStadium(bc);
     expect(ground.wikidata).toBe(bc.wikidata);
     expect(ground.en).toEqual(bc.en);
-    expect(GROUNDS[bc.ground]).toBe(ground);
+    expect(GROUNDS[bc.ground!]).toBe(ground);
     expect(bc.en.revision).toBeGreaterThan(1_000_000_000);
   });
 
@@ -35,7 +38,7 @@ describe("the stadiums: BC Place", () => {
     expect(stadiumSeats(bc, "soccer")).toBe(52497);
     expect(bc.configs.cfl).toMatchObject({ sport: "cfl", source: "wikipedia" });
     expect(bc.configs.soccer).toMatchObject({ sport: "soccer", source: "wikipedia" });
-    for (const key of ["cfl", "soccer"] as const) expect(bc.configs[key].read.length).toBeGreaterThan(20);
+    for (const key of ["cfl", "soccer"] as const) expect(bc.configs[key]!.read.length).toBeGreaterThan(20);
     expect(bc.tiers).toMatchObject({ count: 2, basis: "documented", lowerSeats: 27695 });
   });
 
@@ -335,5 +338,210 @@ describe("BC Place in 3D", () => {
     expect(model.floor).toContain('class="ky-cr-north"');
     expect(model.floor).not.toMatch(/class="ky-cr-(people|bed)"/);
     expect(model.planes.length).toBeLessThan(1000);
+  });
+});
+
+/** The corners of the polygon a roof plane draws, in the scene: the plane's own corner and sides, and the points of its first polygon in its own feet. */
+const cornersOf = (p: { o: readonly number[]; u: readonly number[]; v: readonly number[]; svg: string }): [number, number, number][] => {
+  const points = /<polygon[^>]* points="([^"]*)"/.exec(p.svg)![1].trim().split(/\s+/).map((pair) => pair.split(",").map(Number));
+  const [lu, lv] = [Math.hypot(...p.u), Math.hypot(...p.v)];
+  return points.map(([x, y]): [number, number, number] => [0, 1, 2].map((i) => p.o[i] + (x / lu) * p.u[i] + (y / lv) * p.v[i]) as [number, number, number]);
+};
+const lumen = STADIUMS["lumen-field"];
+const tmobile = STADIUMS["t-mobile-park"];
+const FEET = 3.28084;
+
+describe("Lumen Field", () => {
+  it("is a stadium of football and soccer with the seats the article gives for each, one bowl fitted to the larger, and a canopy over 70 percent of its seats", () => {
+    expect(stadiumKind(lumen)).toBe("stadium");
+    expect(lumen.gridiron).toBe("nfl");
+    expect(stadiumSeats(lumen, "nfl")).toBe(68740);
+    expect(stadiumSeats(lumen, "soccer")).toBe(37722);
+    expect(stadiumSeats(lumen, "cfl")).toBe(0);
+    expect(lumen.bowlSeats).toBe(68740);
+    expect(lumen.wikidataSeats).toEqual([67000, 72000]);
+    expect(lumen.tiers).toMatchObject({ count: 3, basis: "documented" });
+    expect(lumen.roof).toMatchObject({ kind: "canopy", basis: "documented", cover: 0.7 });
+    expect(stadiumByWikidata("Q612736")).toBe(lumen);
+    expect(stadiumNames(lumen)).toEqual({ en: "Lumen Field", ja: "ルーメン・フィールド" });
+  });
+
+  it("is OpenStreetMap's relation of its building, the field lying along the pitches it maps (north and south), and two canopies one each side of the field", () => {
+    expect(lumen.osm.source).toBe("relation/2305831");
+    expect(lumen.osm.axis).toMatchObject({ heading: 0, basis: "pitch" });
+    expect(lumen.osm.canopies).toHaveLength(2);
+    for (const c of lumen.osm.canopies!) expect(c).toMatchObject({ height: 36, rise: 10 });
+    const centres = lumen.osm.canopies!.map((c) => middleOf(lonLat(c.ring))[0] - lumen.osm.axis.centre[0]);
+    // East and west of the middle of the field, 70 to 90 metres.
+    expect(Math.min(...centres)).toBeLessThan(0);
+    expect(Math.max(...centres)).toBeGreaterThan(0);
+    const ring = lonLat(lumen.osm.ring);
+    const area = areaOf(metresFrom(middleOf(ring), ring));
+    expect(area).toBeGreaterThan(45000);
+    expect(area).toBeLessThan(55000);
+  });
+
+  it("holds the bowl's seats in three bowls and opens a configuration's from the lowest bowl up: the soccer pitch closes the upper bowl and part of the middle one, drawn empty", () => {
+    const nfl = planStadium(lumen, "nfl", fieldOf("nfl"));
+    const soccer = planStadium(lumen, "soccer", fieldOf("soccer"));
+    for (const p of [nfl, soccer]) {
+      expect(p.fit).toBe("fits");
+      expect(p.total).toBe(68740);
+      expect(p.seats.map((t) => t.tier)).toEqual(["lower", "middle", "upper"]);
+      expect(stadiumBowlInside(p)).toBe(true);
+    }
+    expect(nfl.open).toBe(68740);
+    expect(soccer.open).toBe(37722);
+    expect(nfl.bowl.rings.map((r) => r.fill)).toEqual([1, 0.94, 0.88]);
+    const [lower, middle, upper] = soccer.bowl.rings;
+    expect(lower.fill).toBe(1);
+    expect(middle.fill).toBeGreaterThan(0);
+    expect(middle.fill).toBeLessThan(0.94);
+    expect(upper.fill).toBe(0);
+    // The seats open are the soccer configuration's, to a seat of rounding.
+    const openSeats = lower.seats + middle.seats * (middle.fill / 0.94);
+    expect(Math.abs(openSeats - 37722)).toBeLessThan(40);
+  });
+
+  it("is lowered under its canopy: the top row stands under the canopy's low edge by at least a clearance", () => {
+    const p = planStadium(lumen, "nfl", fieldOf("nfl"));
+    const low = Math.min(...p.bowl.shell.canopies!.map((c) => c.low));
+    expect(low).toBeCloseTo(26 * FEET, 0);
+    expect(p.bowl.rings[2].height[1]).toBeLessThanOrEqual(low - 5.4);
+    expect(p.bowl.rings[2].height[1]).toBeGreaterThan(40);
+    expect(p.bowl.shell.roof).toBe("canopy");
+    for (const ring of p.bowl.rings) expect(ring.rake).toBeLessThanOrEqual(36.01);
+  });
+
+  it("draws the football field and the soccer pitch in the same building, in the NFL's first row, and is ignored for the league it has no field for", () => {
+    for (const sport of ["nfl", "soccer"] as const) {
+      const svg = drawKyogijo(options(sport, { stadium: "lumen-field" }));
+      expect(svg, sport).toContain('class="ky-cr-shell"');
+      expect(svg, sport).toContain('class="ky-cr-north"');
+      const stands = crowdStands(options(sport, { stadium: "lumen-field" }))!;
+      expect(stands.seats, sport).toBe(68740);
+      expect(stands.real?.roof, sport).toBe("canopy");
+    }
+    expect(drawKyogijo({ sport: "soccer", ground: "lumen-field", crowd: { real: true } } as never)).toContain('class="ky-cr-shell"');
+    expect(drawKyogijo(options("cfl", { stadium: "lumen-field", id: "x" }))).toBe(drawKyogijo({ sport: "cfl", crowd: { real: true }, id: "x" } as never));
+    const en = describeDrawing(options("nfl", { stadium: "lumen-field" }));
+    expect(en.description).toContain("68740 seats in 3 bowls");
+    expect(en.description).toContain("The field lies as OpenStreetMap maps the pitch");
+    const ja = describeDrawing(options("soccer", { stadium: "lumen-field", language: "ja" }));
+    expect(ja.description).toContain("ルーメン・フィールド");
+    expect(ja.description).toContain("ピッチ");
+  });
+
+  it("raises its walls to just over the top row and canopies over the sides, high at the back of the stands, and leaves the field and the ends open", () => {
+    const model = buildTurn(options("nfl", { stadium: "lumen-field" }), { venue: { roof: true } });
+    const roof = model.uprights.items.find((i) => i.kind === "roof")!;
+    const planes = roof.planes;
+    expect(planes.length).toBeGreaterThan(20);
+    expect(planes.every((p) => p.id.startsWith("roof-c"))).toBe(true);
+    expect(new Set(planes.map((p) => p.id.split("-")[1])).size).toBe(2);
+    // Each piece is a triangle through its corners: they stand between the canopy's low edge (26 metres) and its high one (36).
+    const zs = planes.flatMap((p) => cornersOf(p).map((c) => c[2]));
+    expect(Math.min(...zs)).toBeCloseTo(26 * FEET, 0);
+    expect(Math.max(...zs)).toBeCloseTo(36 * FEET, 0);
+    // Over the middle of the field there is nothing: no plane of the roof has its middle over the field's box.
+    const plan = planStadium(lumen, "nfl", fieldOf("nfl"));
+    const field = plan.box;
+    for (const p of planes) {
+      const mx = p.o[0] + (p.u[0] + p.v[0]) / 2;
+      const my = p.o[1] + (p.u[1] + p.v[1]) / 2;
+      expect(mx > field.x && mx < field.x + field.w && my > field.y && my < field.y + field.h, p.id).toBe(false);
+    }
+    expect(model.uprights.items.find((i) => i.kind === "walls")).toBeDefined();
+  });
+});
+
+describe("T-Mobile Park", () => {
+  // What the drawing lays the park's stands from: its fence, the backstop and the crowd with no visitors' block.
+  const parkInput = () => ({ fence: fenceOutline(fenceFor(parkById("t-mobile-park"), undefined)), backstop: MLB_DIAMOND.backstop, crowd: { ...resolveCrowd({ real: true })!, awayEnd: "none" as const }, seatsOnWalls: [] });
+  const parkPlan = () => planPark(tmobile, parkInput());
+
+  it("is a ballpark with the seats of baseball, its levels by their seats, and a retractable roof in sections 217 to 269 feet over the field", () => {
+    expect(stadiumKind(tmobile)).toBe("park");
+    expect(tmobile.park).toBe("t-mobile-park");
+    expect(stadiumSeats(tmobile, "mlb")).toBe(47368);
+    expect(tmobile.wikidataSeats).toEqual([47476]);
+    expect(tmobile.tiers).toMatchObject({ count: 4, basis: "documented", tierSeats: { lower: 20521, upper: 4123 + 2050 + 15902, bleachers: 3666 } });
+    expect(tmobile.roof).toMatchObject({ kind: "panels", basis: "documented", bottom: 217, top: 269 });
+    expect(stadiumNames(tmobile)).toEqual({ en: "T-Mobile Park", ja: "T-モバイル・パーク" });
+  });
+
+  it("lies as the infield OpenStreetMap maps and the outline say: home plate faces north-east, the baselines 4.4 degrees from north, and the fence and the stands behind it fit the building", () => {
+    expect(tmobile.osm.axis).toMatchObject({ heading: 49.4, basis: "infield", elongation: 1 });
+    expect(stadiumFrameHeading(tmobile)).toBeCloseTo(139.4, 5);
+    expect(stadiumOrientation(tmobile)).toEqual({ heading: 49.4, basis: "infield", north: Math.round((90 - 139.4) * 10) / 10 });
+    expect(tmobile.osm.source).toBe("relation/3008332");
+    expect(tmobile.osm.height).toBe(21);
+  });
+
+  it("holds the seats of baseball to within two percent, each band as deep as the seats of its levels need, in the proportions the article gives", () => {
+    const plan = parkPlan();
+    expect(plan.fit).toBe("fits");
+    expect(Math.abs(plan.total - 47368) / 47368).toBeLessThan(0.02);
+    const share = (id: string) => plan.seats.find((s) => s.tier === id)!.seats / plan.total;
+    expect(share("lower")).toBeCloseTo(20521 / 46262, 1);
+    expect(share("upper")).toBeCloseTo(22075 / 46262, 1);
+    expect(share("bleachers")).toBeCloseTo(3666 / 46262, 1);
+    expect(plan.depths.lower).toBeGreaterThan(20);
+    expect(plan.depths.upper).toBeLessThan(160);
+    expect(planPark(tmobile, parkInput())).toBe(plan);
+  });
+
+  it("has the park's fence inside the building and the stands too, and the building's walls as high as OpenStreetMap maps them (21 metres)", () => {
+    const plan = parkPlan();
+    const fence = parkInput().fence.map(([u, v]): [number, number] => [u, -v]);
+    for (const p of fence) expect(inside(plan.footprint, p), `${p}`).toBe(true);
+    expect(plan.stands.real?.wall).toBeCloseTo(21 * FEET, 0);
+    expect(plan.stands.real?.roof).toBe("panels");
+    expect(plan.stands.real?.panels?.bottom).toBe(217);
+    expect(plan.stands.real?.panels?.top).toBe(269);
+    // The sections rest over the east side: the parked outline is in the east third of the building.
+    expect(plan.stands.real!.panels!.parked.length).toBeGreaterThan(3);
+  });
+
+  it("draws in 2D with its building and arrow, says what it is in both languages, and is ignored for a park that has no real one", () => {
+    const o = { sport: "mlb", park: "t-mobile-park", crowd: { real: true } } as never;
+    const svg = drawKyogijo(o);
+    expect(svg).toContain('class="ky-cr-shell"');
+    expect(svg).toContain('class="ky-cr-north"');
+    const en = describeDrawing(o);
+    expect(en.description).toContain("The outfield fence follows the figures published for T-Mobile Park.");
+    expect(en.description).toContain("for 47368 seats");
+    expect(en.description).toContain("The way home plate faces is worked out from the infield OpenStreetMap maps");
+    const ja = describeDrawing({ ...(o as object), language: "ja" } as never);
+    expect(ja.description).toContain("T-モバイル・パーク");
+    expect(ja.description).toContain("47368席");
+    expect(drawKyogijo({ sport: "mlb", park: "fenway-park", crowd: { real: true }, id: "x" } as never)).toBe(drawKyogijo({ sport: "mlb", park: "fenway-park", crowd: true, id: "x" } as never));
+    expect(drawKyogijo({ sport: "mlb", park: "t-mobile-park", crowd: true, id: "x" } as never)).not.toContain('class="ky-cr-shell"');
+  });
+
+  it("raises walls at 21 metres and a roof far over the field: closed, sections between 217 and 269 feet over a crown; open, only the sections resting over the east side", () => {
+    const closed = buildTurn({ sport: "mlb", park: "t-mobile-park", crowd: { real: true } } as never, { venue: { roof: true } });
+    const open = buildTurn({ sport: "mlb", park: "t-mobile-park", crowd: { real: true } } as never, { venue: { roof: true, roofOpen: true } });
+    const walls = closed.uprights.items.find((i) => i.kind === "walls")!;
+    expect(Math.max(...walls.planes.flatMap((p) => [p.o[2], p.o[2] + p.v[2]]))).toBeCloseTo(21 * FEET, 0);
+    const roof = (m: typeof closed) => m.uprights.items.find((i) => i.kind === "roof")!.planes;
+    const z = (planes: ReturnType<typeof roof>): [number, number] => {
+      const all = planes.flatMap((p) => [p.o[2], p.o[2] + p.u[2], p.o[2] + p.v[2], p.o[2] + p.u[2] + p.v[2]]);
+      return [Math.min(...all), Math.max(...all)];
+    };
+    // Each piece of the closed roof is a pair of triangles, from the rim at 217 feet up to the crown at 269.
+    const pieces = roof(closed).filter((p) => /^roof-\d+[ab]$/.test(p.id));
+    expect(pieces.length).toBeGreaterThanOrEqual(56);
+    const zs = pieces.flatMap((p) => cornersOf(p).map((c) => c[2]));
+    expect(Math.min(...zs)).toBeCloseTo(217, 0);
+    expect(Math.max(...zs)).toBeCloseTo(269, 0);
+    expect(roof(closed).some((p) => p.id.startsWith("fabric-"))).toBe(true);
+    expect(roof(closed).some((p) => p.id.startsWith("parked-"))).toBe(false);
+    expect(roof(open).some((p) => p.id.startsWith("fabric-"))).toBe(false);
+    const parked = roof(open).filter((p) => p.id.startsWith("parked-"));
+    expect(parked.length).toBeGreaterThan(3);
+    const [pl, ph] = z(parked);
+    expect(pl).toBeCloseTo(217, 0);
+    expect(ph).toBeCloseTo(224, 0);
   });
 });

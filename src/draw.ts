@@ -11,7 +11,7 @@ import { FOOTBALL } from "./geometry.ts";
 import { renderLayers } from "./layers.ts";
 import { arenaById, arenaCourtIn, arenaNameIn, arenaOfficialName, arenaRinkIn } from "./arenas.ts";
 import { venueById, venueBowl } from "./venues.ts";
-import { groundOfStadium, stadiumBowl, stadiumById, stadiumConfigOf, stadiumSeats } from "./stadiums.ts";
+import { planPark, stadiumBowl, stadiumById, stadiumConfigOf, stadiumKind, stadiumNames, stadiumSeats, type RealStadium, type StadiumConfigId } from "./stadiums.ts";
 import { groundById, groundNameIn, groundOfficialName } from "./grounds.ts";
 import { BOARD, courtFor, hasSetsBoard, isNetLeague, isNetSport, type CourtPlan } from "./court.ts";
 import { cricketBoardMarkup } from "./cricket.board.ts";
@@ -440,6 +440,17 @@ function parkFence(o: SurfaceOptions): { points: ReturnType<typeof fenceFor>; ba
   return { points: fenceFor(parkById(o.park), feetFence(o.fence, unit), o.year), backstop: MLB_DIAMOND.backstop };
 }
 
+/**
+ * The real stadium (and the configuration) the options draw, where `crowd: { real: true }` asks for one: a football field (`cfl`, `nfl`) or a soccer pitch in the stadium named by `stadium` or by the `ground`, a baseball field in
+ * the park named by `park`; none for a league of the caller's own, a stadium that has no such configuration, or a sport with none.
+ */
+function realStadiumOf(o: SurfaceOptions, sport: Sport, real: boolean): { stadium: RealStadium; config: StadiumConfigId } | undefined {
+  const config = real ? stadiumConfigOf(sport) : undefined;
+  if (config === undefined || chooseLeague(o).league !== undefined) return undefined;
+  const stadium = stadiumById(config === "mlb" ? o.park : o.stadium ?? o.ground);
+  return stadium !== undefined && stadium.configs[config] !== undefined && (stadiumKind(stadium) === "park") === (config === "mlb") ? { stadium, config } : undefined;
+}
+
 /** The stands round a surface, laid out from its box (or, for a ballpark, from its fence). */
 function standsFor(o: SurfaceOptions, surface: Surface, crowd: Crowd): CrowdStands {
   const { sport } = chooseLeague(o);
@@ -449,7 +460,11 @@ function standsFor(o: SurfaceOptions, surface: Surface, crowd: Crowd): CrowdStan
     // The walls that have seats on top of them: the ones the package knows (Fenway Park's Green Monster), or, asked for, every wall of 25 feet or more.
     const park = parkById(o.park);
     const walls = park === undefined || crowd.wallSeats === false ? [] : parkWallsIn(park, o.year).filter((w) => (crowd.wallSeats === true ? w.height_ft >= 25 : w.label !== undefined && WALL_SEATS[park.id] === w.label));
-    return parkLayout({ fence: fenceOutline(points), backstop, crowd, seatsOnWalls: walls.map((w) => ({ from: w.from, to: w.to, height: w.height_ft })) });
+    const input = { fence: fenceOutline(points), backstop, crowd, seatsOnWalls: walls.map((w) => ({ from: w.from, to: w.to, height: w.height_ft })) };
+    // A real ballpark: the building it stands in, the way home plate faces and a roof, with its stands as deep as its seats need (no visitors' block: no source places one).
+    const real = realStadiumOf(o, sport, crowd.real);
+    if (real !== undefined) return planPark(real.stadium, { ...input, crowd: crowd.awayEnd === "auto" ? { ...crowd, awayEnd: "none" } : crowd }).stands;
+    return parkLayout(input);
   }
   // An arena's real venue: the building it stands in and a bowl fitted to it, where the package has one for the arena and no league of the caller's own sets the surface.
   const box = surface.whole ?? surface.box ?? { x: 0, y: 0, w: 100, h: 100 };
@@ -457,9 +472,8 @@ function standsFor(o: SurfaceOptions, surface: Surface, crowd: Crowd): CrowdStan
   // (No visitors' block: no source says where a real arena puts them.)
   if (venue !== undefined) return crowdLayout({ sport, box, crowd: crowd.awayEnd === "auto" ? { ...crowd, awayEnd: "none" } : crowd, awaySide, real: venueBowl(venue, box) });
   // A football field or a soccer pitch in a real stadium: its building and a bowl of the configuration's seats.
-  const config = crowd.real ? stadiumConfigOf(sport) : undefined;
-  const stadium = config !== undefined && chooseLeague(o).league === undefined ? stadiumById(o.stadium ?? o.ground) : undefined;
-  if (stadium !== undefined && config !== undefined) return crowdLayout({ sport, box, crowd: crowd.awayEnd === "auto" ? { ...crowd, awayEnd: "none" } : crowd, awaySide, real: stadiumBowl(stadium, config, box) });
+  const real = realStadiumOf(o, sport, crowd.real);
+  if (real !== undefined) return crowdLayout({ sport, box, crowd: crowd.awayEnd === "auto" ? { ...crowd, awayEnd: "none" } : crowd, awaySide, real: stadiumBowl(real.stadium, real.config, box) });
   // A dojo's crowd sits in its gallery, from the room's balcony data (in feet here); the arenas (the Budokan, the Kokugikan) keep their bowls.
   const hall = sport === "dojo" ? dojoGallery(o) : undefined;
   const gallery = hall === undefined ? undefined : { offset: hall.offset / 0.3048, depth: hall.depth / 0.3048, height: [hall.height[0] / 0.3048, hall.height[1] / 0.3048] as [number, number], rows: hall.rows, aisles: hall.aisles };
@@ -752,10 +766,10 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
   const realCrowd = o.crowd === undefined || o.crowd === false ? undefined : resolveCrowd(o.crowd);
   const venue = sport === "nhl" && league === undefined && realCrowd?.real === true ? venueById(o.arena) : undefined;
   const realLine = venue === undefined || arenaName === undefined ? "" : `${gap}${fill(words.said.real, { arena: arenaName, seats: String(venue.seats.hockey), tiers: String(venue.tiers.count) })}${gap}${words.said[venue.osm.axis.basis === "mapped" ? "realMapped" : venue.osm.axis.basis === "building" ? "realBuilding" : "realNone"]}`;
-  const config = realCrowd?.real === true ? stadiumConfigOf(sport) : undefined;
-  const realStadium = config !== undefined && league === undefined ? stadiumById(o.stadium ?? o.ground) : undefined;
-  const stadiumLine = realStadium === undefined || config === undefined ? "" : `${gap}${fill(words.said.stadium, { stadium: groundNameIn(groundOfStadium(realStadium), o.year, language), seats: String(stadiumSeats(realStadium, config)), tiers: String(realStadium.tiers.count) })}${gap}${words.said[realStadium.osm.axis.basis === "opening" ? "stadiumOpening" : realStadium.osm.axis.basis === "building" ? "stadiumBuilding" : "stadiumNone"]}`;
-  const parkLine = (parkName === undefined ? `${groundLine}${halfLine}${arenaLine}${realLine}${stadiumLine}` : `${gap}${fill(words.said.park, { park: parkName })}${officially(parkOfficial)}${ballpark === undefined ? "" : ballparkSentences(ballpark).map((line) => `${gap}${line}`).join("")}`) + (special === undefined ? "" : `${gap}${special.text}`);
+  const real = realStadiumOf(o, sport, realCrowd?.real === true);
+  const stadiumKey = (basis: string): "stadiumOpening" | "stadiumPitch" | "stadiumInfield" | "stadiumBuilding" | "stadiumNone" => (basis === "opening" ? "stadiumOpening" : basis === "pitch" ? "stadiumPitch" : basis === "infield" ? "stadiumInfield" : basis === "building" ? "stadiumBuilding" : "stadiumNone");
+  const stadiumLine = real === undefined ? "" : `${gap}${fill(real.config === "mlb" ? words.said.stadiumPark : words.said.stadium, { stadium: stadiumNames(real.stadium)[language], seats: String(stadiumSeats(real.stadium, real.config)), tiers: String(real.stadium.tiers.count) })}${gap}${words.said[stadiumKey(real.stadium.osm.axis.basis)]}`;
+  const parkLine = (parkName === undefined ? `${groundLine}${halfLine}${arenaLine}${realLine}${stadiumLine}` : `${gap}${fill(words.said.park, { park: parkName })}${officially(parkOfficial)}${ballpark === undefined ? "" : ballparkSentences(ballpark).map((line) => `${gap}${line}`).join("")}${stadiumLine}`) + (special === undefined ? "" : `${gap}${special.text}`);
   // A drawing of a past season says which: the markings are those of that season.
   const dated = typeof o.year === "number" && Number.isFinite(o.year);
   const eraLine =

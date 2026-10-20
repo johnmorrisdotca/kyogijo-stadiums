@@ -386,6 +386,9 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `said.stadiumOpening` | The field lies along the opening in the roof, which is the size of the field, and the arrow points north. | フィールドは屋根の開口部（フィールドと同じ大きさ）に沿って置いており、矢印は北を指します。 |
 | `said.stadiumBuilding` | The field lies along the building's long axis, which is an inference, and the arrow points north. | フィールドは建物の長い軸に沿って置いており（推定）、矢印は北を指します。 |
 | `said.stadiumNone` | The field's orientation is not known, so it is drawn east-west with north at the top. | フィールドの向きは分かっていないため、東西に置き、北を上にしています。 |
+| `said.stadiumPark` | The stands are the usual stands of a ballpark, each band as deep as its seats need, for {seats} seats, fitted inside the outline of the building of {stadium} from OpenStreetMap ((c) OpenStreetMap contributors); it is not the park's plan. | {stadium}の建物の輪郭（OpenStreetMap、(c) OpenStreetMap contributors）の内側に、{seats}席のスタンドを推定して描いています。球場の設計図ではありません。 |
+| `said.stadiumPitch` | The field lies as OpenStreetMap maps the pitch, and the arrow points north. | フィールドの向きはOpenStreetMapに記録されたピッチのとおりで、矢印は北を指します。 |
+| `said.stadiumInfield` | The way home plate faces is worked out from the infield OpenStreetMap maps and the building's outline, and the arrow points north. | ホームプレートの向きは、OpenStreetMapに記録された内野と建物の輪郭から推定しており、矢印は北を指します。 |
 | `said.district` | A plan of {count} real venues at their real positions and orientations, from the outlines OpenStreetMap maps; {mode}. | OpenStreetMapの建物の輪郭をもとに、{count}か所の実在の会場を実際の位置と向きのとおりに並べた配置図です。{mode}。 |
 | `said.districtNeighbours` | it is fitted close round the buildings | 建物のすぐ近くまで寄せて描いています |
 | `said.districtCity` | it keeps the real distances, with a grid of kilometres and a scale | 実際の距離を保ち、1km方眼と縮尺を添えています |

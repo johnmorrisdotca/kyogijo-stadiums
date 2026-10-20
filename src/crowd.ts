@@ -92,8 +92,17 @@ export interface RealShell {
   hall: Extract<Outline, { kind: "rrect" }>;
   /** The way north points on the page, in degrees clockwise from the top; absent where the rink's real orientation is not known. */
   north?: number;
-  /** `fixed` is a lid; `saddle` a roof that rises at the two ends and falls at the two sides; `cable` a cable-supported roof with an opening over the surface, which a retractable fabric closes (BC Place's). */
-  roof: "fixed" | "saddle" | "cable";
+  /**
+   * `fixed` is a lid; `saddle` a roof that rises at the two ends and falls at the two sides; `cable` a cable-supported roof with an opening over the surface, which a retractable fabric closes (BC Place's);
+   * `canopy` roofs over some of the stands and leaves the field open (Lumen Field's, `canopies`); `panels` a retractable roof of sections over a ballpark's field and stands, far above its walls (T-Mobile Park's, `panels`).
+   */
+  roof: "fixed" | "saddle" | "cable" | "canopy" | "panels";
+  /** The height of the walls, in feet, where it is not the roof's rim (a ballpark's walls stand far below its roof). */
+  wall?: number;
+  /** A `canopy` roof's pieces: the outline of each in the drawing's frame, the height of its low edge (over the field's side) and how far it rises to its high edge (over the back of the stands), in feet. */
+  canopies?: { ring: Pt[]; low: number; rise: number }[];
+  /** A `panels` roof: the outline it covers when closed, its bottom and its top above the field in feet (rim and crown), and where its sections rest when it is open. */
+  panels?: { cover: Pt[]; bottom: number; top: number; parked: Pt[] };
   /** A `cable` roof: how far its crown (the edge of the opening) stands over its rim, in feet, and the opening, a polygon in the drawing's frame over the surface. */
   crown?: { rise: number; opening: Pt[] };
   /** The height of the roof's lowest edge above the surface, in feet. */

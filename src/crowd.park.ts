@@ -21,6 +21,8 @@ export interface ParkInput {
   crowd: Crowd;
   /** The walls that have seats on top of them. */
   seatsOnWalls?: readonly WallSeats[];
+  /** How deep each band of stands is, in feet: the conventions of a drawing (60, 56 and 54) unless a real ballpark's seats set them (`planPark`). */
+  depths?: { lower: number; upper: number; bleachers: number };
 }
 
 const dist = ([x, y]: Pt): number => Math.hypot(x, y);
@@ -121,9 +123,9 @@ export function parkLayout(input: ParkInput): CrowdStands {
       aisles: pieces.flatMap((points) => aislesOf(points)),
     });
   };
-  const lowerDepth = 60;
+  const lowerDepth = input.depths?.lower ?? 60;
   const walk = 7;
-  const upperDepth = 56;
+  const upperDepth = input.depths?.upper ?? 56;
   add("lower", "lower", [band(inner, nI, 0, lowerDepth)], 0, lowerDepth, [4, 40], 1);
   add("upper", "upper", [band(inner, nI, lowerDepth + walk, lowerDepth + walk + upperDepth)], lowerDepth + walk, lowerDepth + walk + upperDepth, [52, 104], 0.88);
   const concourses: CrowdStands["concourses"] = [{ region: { kind: "poly", points: band(inner, nI, lowerDepth - 0.5, lowerDepth + walk + 0.5) }, hole: null }];
@@ -131,7 +133,7 @@ export function parkLayout(input: ParkInput): CrowdStands {
   // The outfield: bleachers right behind the fence, radially from home plate, but for a gap at the batter's eye in the horseshoe; and, where the park has seats on top of a wall,
   // a band of them along the wall at its height.
   const wall = 12;
-  const depth = 54;
+  const depth = input.depths?.bleachers ?? 54;
   if (shape !== "grandstand") {
     const nF: Normals = fence.map((p) => ({ n: [p[0] / (dist(p) || 1), p[1] / (dist(p) || 1)], k: 1 }));
     const eye = (i: number): boolean => Math.abs(fence[i][0]) < pole * 0.07 && shape === "horseshoe";

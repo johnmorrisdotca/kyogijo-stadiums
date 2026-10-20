@@ -2,11 +2,11 @@
 // and the notice that list them. Plain JavaScript, so that reading files needs no Node types.
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { GROUNDS } from "./grounds.ts";
-import { STADIUMS, STADIUM_IDS } from "./stadiums.ts";
+import { STADIUMS, STADIUM_IDS, stadiumNames } from "./stadiums.ts";
 import { areaOf, edgeDistance, metresFrom, middleOf } from "./venues.geo.ts";
 
 const stadiums = STADIUM_IDS.map((id) => STADIUMS[id]);
+const names = (s) => stadiumNames(s).en;
 const lonLat = (ring) => ring.map(([lon, lat]) => [lon, lat]);
 
 describe("the real stadiums' files", () => {
@@ -28,28 +28,50 @@ describe("the real stadiums' files", () => {
       expect(raw.licence).toContain("ODbL");
       const way = raw.elements.find((e) => `${e.type}/${e.id}` === s.osm.source);
       expect(way, s.id).toBeDefined();
-      expect(way.tags.wikidata).toBe(s.wikidata);
-      const all = way.geometry.slice(0, -1).map((p) => [p.lon, p.lat]);
+      if (way.tags?.wikidata !== undefined) expect(way.tags.wikidata).toBe(s.wikidata);
+      // The outline is a way, or the outer ways of a relation joined end to end.
+      const parts = way.type === "way" ? [way.geometry] : way.members.filter((m) => m.role === "outer").map((m) => m.geometry);
+      const joined = [];
+      const left = parts.map((g) => [...g]);
+      let chain = left.shift();
+      while (left.length > 0 && !(chain[0].lat === chain.at(-1).lat && chain[0].lon === chain.at(-1).lon)) {
+        const at = left.findIndex((g) => g[0].lat === chain.at(-1).lat && g[0].lon === chain.at(-1).lon);
+        if (at < 0) break;
+        chain = [...chain, ...left.splice(at, 1)[0].slice(1)];
+      }
+      joined.push(chain);
+      const all = chain.slice(0, -1).map((p) => [p.lon, p.lat]);
       const origin = middleOf(all);
       const raws = metresFrom(origin, all);
       const kept = metresFrom(origin, lonLat(s.osm.ring));
       for (const [x, y] of kept) expect(Math.min(...raws.map(([rx, ry]) => Math.hypot(rx - x, ry - y))), s.id).toBeLessThan(0.2);
       for (const p of raws) expect(edgeDistance(kept, p), s.id).toBeLessThan(1.2);
       expect(Math.abs(areaOf(kept) - areaOf(raws)) / areaOf(raws), s.id).toBeLessThan(0.01);
-      const relation = raw.elements.find((e) => `${e.type}/${e.id}` === s.osm.roof.source);
-      expect(relation.tags.height).toBe(String(s.osm.roof.height));
-      expect(relation.tags["roof:height"]).toBe(String(s.osm.roof.rise));
-      const opening = relation.members.find((m) => m.role === "inner");
-      expect(`way/${opening.ref}`).toBe(s.osm.roof.opening.source);
-      const first = opening.geometry.slice(0, -1).map((p) => [p.lon, p.lat]);
-      const o = metresFrom(origin, first);
-      const k = metresFrom(origin, lonLat(s.osm.roof.opening.ring));
-      for (const p of o) expect(edgeDistance(k, p), s.id).toBeLessThan(1.2);
+      if (s.osm.roof !== undefined) {
+        const relation = raw.elements.find((e) => `${e.type}/${e.id}` === s.osm.roof.source);
+        expect(relation.tags.height).toBe(String(s.osm.roof.height));
+        expect(relation.tags["roof:height"]).toBe(String(s.osm.roof.rise));
+        const opening = relation.members.find((m) => m.role === "inner");
+        expect(`way/${opening.ref}`).toBe(s.osm.roof.opening.source);
+        const first = opening.geometry.slice(0, -1).map((p) => [p.lon, p.lat]);
+        const o = metresFrom(origin, first);
+        const k = metresFrom(origin, lonLat(s.osm.roof.opening.ring));
+        for (const p of o) expect(edgeDistance(k, p), s.id).toBeLessThan(1.2);
+      }
+      for (const canopy of s.osm.canopies ?? []) {
+        const e = raw.elements.find((x) => `${x.type}/${x.id}` === canopy.source);
+        expect(e.tags["building:part"], canopy.source).toBe("roof");
+        expect(Number(e.tags.height), canopy.source).toBe(canopy.height);
+        expect(Number(e.tags["roof:height"]), canopy.source).toBe(canopy.rise);
+      }
       // The facts were read at the revision the archive holds, from the article of the ground, and its infobox's capacities are the figures used.
       const article = JSON.parse(readFileSync(`data-sources/stadiums/${s.osm.read}/wikipedia.json`, "utf8")).articles[s.id];
       expect(article.revision, s.id).toBe(s.en.revision);
-      expect(article.title, s.id).toBe(GROUNDS[s.ground].en.title);
-      for (const seats of [s.configs.cfl.seats, s.configs.soccer.seats, s.tiers.lowerSeats]) expect(article.infoboxCapacity, `${s.id} ${seats}`).toContain(seats.toLocaleString("en-US"));
+      expect(article.title, s.id).toBe(s.en.title);
+      for (const config of Object.values(s.configs)) expect(article.infoboxCapacity, `${s.id} ${config.sport}`).toContain(config.seats.toLocaleString("en-US"));
+      if (s.tiers.lowerSeats !== undefined) expect(article.infoboxCapacity, s.id).toContain(s.tiers.lowerSeats.toLocaleString("en-US"));
+      // A ballpark's tiers by their seats are in the article's sentences.
+      for (const seats of Object.values(s.tiers.tierSeats ?? {})) if (seats !== s.tiers.tierSeats.upper) expect(article.sentences.join(" "), `${s.id} ${seats}`).toContain(seats.toLocaleString("en-US"));
     }
   });
 
@@ -57,8 +79,7 @@ describe("the real stadiums' files", () => {
     const page = readFileSync("docs/stadiums.md", "utf8");
     for (const s of stadiums) {
       expect(page, s.id).toContain(`\`${s.id}\``);
-      expect(page, s.id).toContain(s.configs.cfl.seats.toLocaleString("en-US"));
-      expect(page, s.id).toContain(s.configs.soccer.seats.toLocaleString("en-US"));
+      for (const config of Object.values(s.configs)) expect(page, `${s.id} ${config.sport}`).toContain(config.seats.toLocaleString("en-US"));
       expect(page, s.id).toContain(s.wikidata);
     }
     expect(page).toContain("(c) OpenStreetMap contributors");
@@ -74,7 +95,7 @@ describe("the real stadiums' files", () => {
     expect(notice).toContain("ODbL");
     expect(notice).toContain("src/stadiums.osm.data.ts");
     expect(notice).toContain("data-sources/stadiums");
-    for (const s of stadiums) expect(notice, s.id).toContain(`| ${GROUNDS[s.ground].name} | ${s.wikidata} | ${s.osm.source} | ${s.en.title}, ${s.en.revision} |`);
+    for (const s of stadiums) expect(notice, s.id).toContain(`| ${names(s)} | ${s.wikidata} | ${s.osm.source} | ${s.en.title}, ${s.en.revision} |`);
   });
 
   it("make the files from the same data again, and the page's table is the one the build writes", () => {
@@ -82,7 +103,7 @@ describe("the real stadiums' files", () => {
     expect(data.stadiums.map((v) => v.id)).toEqual([...STADIUM_IDS]);
     const page = readFileSync("docs/stadiums.md", "utf8");
     const table = /<!-- stadiums-table -->\n([\s\S]*?)\n<!-- \/stadiums-table -->/.exec(page)?.[1] ?? "";
-    for (const s of stadiums) expect(table).toContain(`| \`${s.id}\` | ${GROUNDS[s.ground].name} |`);
+    for (const s of stadiums) expect(table).toContain(`| \`${s.id}\` | ${names(s)} |`);
   });
 
   it("draw no mark of a club, a league, a tournament or a sponsor: the words of the docs name only the plain facts", () => {

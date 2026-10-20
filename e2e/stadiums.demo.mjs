@@ -75,9 +75,50 @@ test("is in Japanese on request, the title, the facts and the drawing's own desc
   await open(page, "?lang=ja&theme=dark&config=soccer");
   await expect(page.locator("html")).toHaveAttribute("lang", "ja");
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-  await expect(page.locator("#title")).toContainText("BCプレイス");
+  await expect(page.locator("#title")).toContainText("実在のスタジアムと球場");
+  await expect(page.locator('#stadium-tabs button[aria-selected="true"]')).toHaveText("BCプレイス");
   await expect(page.locator('[data-testid="facts"]')).toContainText("52,497席");
   await expect(page.locator(`${STAGE} svg.kyogijo desc`)).toContainText("OpenStreetMap");
   await expect(page.locator('[data-testid="district"]')).toHaveAttribute("href", /district\.html\?venues=bc-place:soccer,rogers-arena&lang=ja/);
   await noSidewaysScroll(page);
+});
+
+test("has the three stadiums as tabs, each with its own configurations, facts and roof: Lumen Field's canopies, T-Mobile Park's sections", async ({ page }) => {
+  const { errors } = await open(page);
+  await expect(page.locator("#stadium-tabs button")).toHaveText(["BC Place", "Lumen Field", "T-Mobile Park"]);
+  await page.locator('#stadium-tabs button[data-stadium="lumen-field"]').click();
+  await expect(page.locator("#tabs button")).toHaveText(["Football field", "Soccer pitch"]);
+  await expect(page.locator(`${STAGE} svg.kyogijo`)).toHaveAttribute("data-sport", "nfl");
+  const facts = page.locator('[data-testid="facts"]');
+  await expect(facts).toContainText("68,740");
+  await expect(facts).toContainText("a canopy over some of the stands (a source says so)");
+  await expect(facts).toContainText("covers 70 percent of the seats");
+  await expect(facts).toContainText("as OpenStreetMap maps the pitch");
+  expect(page.url()).toContain("stadium=lumen-field");
+  await page.locator('#tabs button[data-config="soccer"]').click();
+  await expect(facts).toContainText("37,722");
+  await expect(facts).toContainText("the bowl holds 68,740, the rest closed");
+  await page.locator('#stadium-tabs button[data-stadium="t-mobile-park"]').click();
+  await expect(page.locator("#tabs button")).toHaveText(["Baseball field"]);
+  await expect(page.locator(`${STAGE} svg.kyogijo`)).toHaveAttribute("data-sport", "mlb");
+  await expect(page.locator(`${STAGE} svg.kyogijo .ky-cr-shell`)).toHaveCount(1);
+  await expect(facts).toContainText("47,368");
+  await expect(facts).toContainText("217 feet");
+  await expect(facts).toContainText("home plate to centre field 49.4 degrees from north");
+  expect(errors).toEqual([]);
+});
+
+test("raises Lumen Field's canopies and T-Mobile Park's roof in 3D, the sections resting to the east when the roof is open", async ({ page }) => {
+  const { errors } = await open(page, "?stadium=lumen-field&view=3d&roof=1");
+  expect(await page.locator(`${STAGE} [data-part^="roof-c0-"]`).count()).toBeGreaterThan(20);
+  expect(await page.locator(`${STAGE} [data-part^="roof-c1-"]`).count()).toBeGreaterThan(20);
+  await expect(page.locator("#open-row")).toBeHidden();
+  await page.locator('#stadium-tabs button[data-stadium="t-mobile-park"]').click();
+  expect(await page.locator(`${STAGE} [data-part^="fabric-"]`).count()).toBeGreaterThanOrEqual(28);
+  await expect(page.locator("#open-row")).toBeVisible();
+  await page.locator("#open").check();
+  await expect(page.locator(`${STAGE} [data-part^="fabric-"]`)).toHaveCount(0);
+  await expect(page.locator(`${STAGE} [data-part^="parked-"]`).first()).toBeAttached();
+  expect(page.url()).toContain("stadium=t-mobile-park");
+  expect(errors).toEqual([]);
 });

@@ -604,7 +604,7 @@ console.log(svg.includes("ky-cr-shell"), planVenue(venueById("climate-pledge-are
 
 ### A real stadium, and a district
 
-`stadium: "bc-place"` draws BC Place for football or soccer under its cable roof; `drawDistrict({ venues: ["bc-place", "rogers-arena"] })` puts venues at their real positions, to turn together in 3D ([districts](./docs/district.md)).
+`stadium: "bc-place"` draws BC Place for football or soccer under its cable roof, and Lumen Field and T-Mobile Park (`park`) likewise ([stadiums](./docs/stadiums.md)); `drawDistrict({ venues: ["bc-place", "rogers-arena"] })` puts venues at their real positions, tight as neighbours or spread as a city, to turn together in 3D ([districts](./docs/district.md)).
 
 <p align="center">
 <picture>
@@ -620,6 +620,14 @@ console.log(svg.includes("ky-cr-shell"), planVenue(venueById("climate-pledge-are
 <img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/district-bc-rogers-3d-desk-light.webp" alt="BC Place and Rogers Arena in 3D on one ground with a grid, a scale and a north arrow." width="640">
 </picture>
 <br><em>BC Place and Rogers Arena.</em>
+</p>
+
+<p align="center">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/district-seattle-3d-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/district-seattle-3d-desk-light.webp" alt="Lumen Field and T-Mobile Park in 3D on one ground: a football stadium under canopies and a ballpark under its roof." width="640">
+</picture>
+<br><em>Seattle's SoDo.</em>
 </p>
 
 ### A fly-through

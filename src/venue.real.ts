@@ -1,5 +1,6 @@
 // The building of a real venue, raised: its walls, standing on the outline OpenStreetMap gives, and its roof over the top tier, a lid that rises towards the middle, a saddle that rises at the two ends and falls at the two
-// sides, or a cable-supported roof that rises to an opening over the surface which a retractable fabric closes (BC Place's, with the fabric gathered into its pod when `roofOpen` is asked). All are asked for with the roof
+// sides, a cable-supported roof that rises to an opening over the surface which a retractable fabric closes (BC Place's, with the fabric gathered into its pod when `roofOpen` is asked), canopies over some of the
+// stands that leave the field open (Lumen Field's), or retractable panels high over a ballpark (T-Mobile Park's, resting over its east side when `roofOpen` is asked). All are asked for with the roof
 // (`venue: { roof: true }`) and give way to the eye as the other walls do. Pure: data in, planes out.
 import { rayAt, type Pt, type RealShell, type StandRing } from "./crowd.ts";
 import { n, shy, wall, type Plane, type Upright, type V3 } from "./turn.kit.ts";
@@ -73,10 +74,20 @@ export function realBuilding(real: RealShell, top: StandRing | undefined, centre
     const b = rim[(i + 1) % steps];
     const long = Math.hypot(b[0] - a[0], b[1] - a[1]);
     if (long < 1) return;
-    const high = lift + roofAt(real, [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2]);
+    const high = lift + (real.wall ?? roofAt(real, [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2]));
     planes.push({ ...shy(wall(`shell-${i}`, "wall", a[0], a[1], b[0], b[1], 0, high, `<rect class="u-shell" width="${n(long)}" height="${n(high)}"/>`), centre), fadeTo: 0.02 });
   });
   if (parts.walls && planes.length > 0) items.push({ id: "shell", kind: "walls", at: centre, height: Math.max(...planes.map((p) => p.o[2])), planes });
+  if (parts.roof && real.roof === "canopy" && real.canopies !== undefined) {
+    const planes = canopyRoof(real.canopies, c, lift, steps);
+    if (planes.length > 0) items.push({ id: "roof", kind: "roof", at: centre, height: heightOf(planes), planes });
+    return items;
+  }
+  if (parts.roof && real.roof === "panels" && real.panels !== undefined) {
+    const planes = panelsRoof(real.panels, c, lift, steps, open);
+    if (planes.length > 0) items.push({ id: "roof", kind: "roof", at: centre, height: heightOf(planes), planes });
+    return items;
+  }
   const crown = real.roof === "cable" ? real.crown : undefined;
   if (!parts.roof || (top?.hole == null && crown === undefined)) return items;
   const roof: Plane[] = [];
@@ -103,9 +114,110 @@ export function realBuilding(real: RealShell, top: StandRing | undefined, centre
     const piece = raked(`roof-${k}`, "roof", quad, slope, [ex / el, ey / el], paint);
     if (piece !== undefined) roof.push({ ...piece, shy: [(mid[0] - c[0]) / away, (mid[1] - c[1]) / away] });
   }
-  if (crown !== undefined) roof.push(...cablePod(real, crown, inner, c, lift, steps, open));
-  if (roof.length > 0) items.push({ id: "roof", kind: "roof", at: centre, height: Math.max(...roof.flatMap((p) => [p.o[2], p.o[2] + p.u[2], p.o[2] + p.v[2], p.o[2] + p.u[2] + p.v[2]])), planes: roof });
+  if (crown !== undefined) roof.push(...cablePod(lift + real.edge + crown.rise, inner, c, steps, open));
+  if (roof.length > 0) items.push({ id: "roof", kind: "roof", at: centre, height: heightOf(roof), planes: roof });
   return items;
+}
+
+/** The top of a set of planes. */
+const heightOf = (planes: readonly Plane[]): number => Math.max(...planes.flatMap((p) => [p.o[2], p.o[2] + p.u[2], p.o[2] + p.v[2], p.o[2] + p.u[2] + p.v[2]]));
+
+/** The two points where a ray from `from` first enters a polygon and last leaves it (the polygon is a band round the middle, so a ray crosses it once), or `undefined` where it misses. */
+function span(poly: readonly Pt[], from: Pt, angle: number): [Pt, Pt] | undefined {
+  const [dx, dy] = [Math.cos(angle), Math.sin(angle)];
+  const hits: number[] = [];
+  poly.forEach(([ax, ay], i) => {
+    const [bx, by] = poly[(i + 1) % poly.length];
+    const [ex, ey] = [bx - ax, by - ay];
+    const den = dx * ey - dy * ex;
+    if (Math.abs(den) < 1e-12) return;
+    const t = ((ax - from[0]) * ey - (ay - from[1]) * ex) / den;
+    const u = ((ax - from[0]) * dy - (ay - from[1]) * dx) / den;
+    if (t > 1e-6 && u >= 0 && u < 1) hits.push(t);
+  });
+  if (hits.length < 2) return undefined;
+  const [lo, hi] = [Math.min(...hits), Math.max(...hits)];
+  return [[from[0] + dx * lo, from[1] + dy * lo], [from[0] + dx * hi, from[1] + dy * hi]];
+}
+
+/**
+ * A piece of roof between two rays: the quad `[inner a, inner b, outer b, outer a]` at the heights given, as a plane that gives way to the eye. A quad whose edges are not parallel is not flat at those heights, so
+ * with `exact` it is two triangles, each a plane through its corners.
+ */
+function piece(id: string, quad: Pt[], heights: number[], c: Pt, cables: boolean, exact = false): Plane[] {
+  const [ai, bi, b, a] = quad;
+  const [ex, ey] = [b[0] - a[0], b[1] - a[1]];
+  const el = Math.hypot(ex, ey);
+  if (el < 1e-6) return [];
+  const make = (name: string, poly: Pt[], hs: number[], cable: boolean): Plane[] => {
+    const slope = slopeThrough(poly.map((p, i): V3 => [p[0], p[1], hs[i]]));
+    const mid: Pt = [poly.reduce((s, p) => s + p[0], 0) / poly.length, poly.reduce((s, p) => s + p[1], 0) / poly.length];
+    const away = Math.hypot(mid[0] - c[0], mid[1] - c[1]) || 1;
+    const paint = (corners: Pt[]): string => `<polygon class="u-roof" points="${pointList(corners)}"/>${cable ? `<path class="u-cable" d="M${n(corners[0][0])} ${n(corners[0][1])}L${n(corners[3][0])} ${n(corners[3][1])}"/>` : ""}`;
+    const plane = raked(name, "roof", poly, slope, [ex / el, ey / el], paint);
+    return plane === undefined ? [] : [{ ...plane, shy: [(mid[0] - c[0]) / away, (mid[1] - c[1]) / away] }];
+  };
+  if (!exact) return make(id, quad, heights, cables);
+  return [...make(`${id}a`, [ai, bi, b], [heights[0], heights[1], heights[2]], false), ...make(`${id}b`, [ai, b, a], [heights[0], heights[2], heights[3]], false)];
+}
+
+/** How far a canopy's low edge, the field's side of it, stands under its high edge: the OpenStreetMap roof's `roof:height` is the rise, and the canopy rises to the back of the stands (ours: the sources do not say which way it slopes). */
+export const CANOPY_NOTE = "low over the field, high over the back of the stands";
+
+/**
+ * Canopies over some of the stands (Lumen Field's two, one each side of the field): each OpenStreetMap roof outline is cut by the rays from the middle of the field into the strips between them, the edge towards
+ * the field low and the edge towards the back of the stands `rise` higher.
+ */
+function canopyRoof(canopies: NonNullable<RealShell["canopies"]>, c: Pt, lift: number, steps: number): Plane[] {
+  const planes: Plane[] = [];
+  canopies.forEach((canopy, ci) => {
+    const spans = Array.from({ length: steps }, (_, k) => span(canopy.ring, c, (2 * Math.PI * k) / steps));
+    for (let k = 0; k < steps; k += 1) {
+      const [s, t] = [spans[k], spans[(k + 1) % steps]];
+      if (s === undefined || t === undefined) continue;
+      const [lo, hi] = [lift + canopy.low, lift + canopy.low + canopy.rise];
+      planes.push(...piece(`roof-c${ci}-${k}`, [s[0], t[0], t[1], s[1]], [lo, lo, hi, hi], c, false, true));
+    }
+  });
+  return planes;
+}
+
+/** The share of a retractable roof's cover that the closed roof's flat crown takes (the sections meet in the middle at the crown's height). */
+const PANEL_CROWN = 0.3;
+/** How thick a parked section is, in feet (ours). */
+const PANEL_THICK = 7;
+
+/**
+ * A ballpark's retractable roof: closed, a band from the rim of its cover up to a crown over the middle with the fabric laid over the crown (as the cable roof's); open, only the sections resting over the side of the
+ * building they park on, as slabs at the rim's height.
+ */
+function panelsRoof(panels: NonNullable<RealShell["panels"]>, c: Pt, lift: number, steps: number, open: boolean): Plane[] {
+  const planes: Plane[] = [];
+  if (!open) {
+    const rim = Array.from({ length: steps }, (_, k): Pt => firstHit(panels.cover, c, (2 * Math.PI * k) / steps) ?? c);
+    const inner = rim.map((p): Pt => [c[0] + (p[0] - c[0]) * PANEL_CROWN, c[1] + (p[1] - c[1]) * PANEL_CROWN]);
+    for (let k = 0; k < steps; k += 1) {
+      const [a, b] = [rim[k], rim[(k + 1) % steps]];
+      const [ai, bi] = [inner[k], inner[(k + 1) % steps]];
+      const [lo, hi] = [lift + panels.bottom, lift + panels.top];
+      planes.push(...piece(`roof-${k}`, [ai, bi, b, a], [hi, hi, lo, lo], c, false, true));
+    }
+    // The crown itself: a flat cap over the middle, in the fabric's drawing.
+    planes.push(...cablePod(lift + panels.top, inner, c, steps, false));
+    return planes;
+  }
+  // Open: the parked sections as slabs.
+  const z = lift + panels.bottom;
+  const top = z + PANEL_THICK;
+  const slab = raked("parked-top", "roof", panels.parked, { x0: panels.parked[0][0], y0: panels.parked[0][1], z0: top, gx: 0, gy: 0 }, [1, 0], (corners) => `<polygon class="u-pod" points="${pointList(corners)}"/>`);
+  if (slab !== undefined) planes.push({ ...slab, id: "parked-top" });
+  panels.parked.forEach((a, i) => {
+    const b = panels.parked[(i + 1) % panels.parked.length];
+    const long = Math.hypot(b[0] - a[0], b[1] - a[1]);
+    if (long < 0.5) return;
+    planes.push({ ...shy(wall(`parked-${i}`, "roof", a[0], a[1], b[0], b[1], z, top, `<rect class="u-pod" width="${n(long)}" height="${n(PANEL_THICK)}"/>`), c), fadeTo: 0.3 });
+  });
+  return planes;
 }
 
 /** The pod in the middle of a cable roof's opening, as a share of the opening's size, and how thick it is, in feet (ours: the article says the fabric gathers into a pod above the video board, not how large it is). */
@@ -115,9 +227,8 @@ export const POD = { share: 0.24, thick: 9 } as const;
  * What lies over the opening of a cable roof: the pod in the middle (a box hung at the crown's height) and, with the roof closed, the fabric between the pod and the opening's edge, drawn thin so that the seats
  * show through it. Open, only the pod is there: the fabric has gathered into it.
  */
-function cablePod(real: RealShell, crown: NonNullable<RealShell["crown"]>, edge: readonly Pt[], c: Pt, lift: number, steps: number, open: boolean): Plane[] {
+function cablePod(z: number, edge: readonly Pt[], c: Pt, steps: number, open: boolean): Plane[] {
   const planes: Plane[] = [];
-  const z = lift + real.edge + crown.rise;
   const pod = edge.map((p): Pt => [c[0] + (p[0] - c[0]) * POD.share, c[1] + (p[1] - c[1]) * POD.share]);
   if (!open) {
     for (let k = 0; k < steps; k += 1) {

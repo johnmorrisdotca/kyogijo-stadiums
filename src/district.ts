@@ -8,8 +8,7 @@ import { crowdStands, drawKyogijo } from "./draw.ts";
 import { FEET_PER_METRE } from "./geometry.ts";
 import { KYOGIJO_STRINGS } from "./strings.ts";
 import { esc, hash } from "./format.ts";
-import { groundNameIn } from "./grounds.ts";
-import { STADIUM_IDS, groundOfStadium, stadiumById, stadiumSeats, type RealStadium, type StadiumConfigId } from "./stadiums.ts";
+import { STADIUM_IDS, stadiumById, stadiumConfigs, stadiumFrameHeading, stadiumKind, stadiumNames, stadiumSeats, type RealStadium, type StadiumConfigId } from "./stadiums.ts";
 import { VENUE_ATTRIBUTION, VENUE_IDS, venueById, type RealVenue } from "./venues.ts";
 import { hullOf, metresFrom, middleOf, smallestBox, type LonLat } from "./venues.geo.ts";
 import type { Pt } from "./crowd.ts";
@@ -48,7 +47,7 @@ export interface DistrictMember {
   /** The key of the venue and the configuration, unique in a district: `rogers-arena`, `bc-place:soccer`. */
   key: string;
   id: string;
-  kind: "arena" | "stadium";
+  kind: "arena" | "stadium" | "park";
   config?: StadiumConfigId;
   /** The name in both languages. */
   name: { en: string; ja: string };
@@ -83,19 +82,19 @@ const venueMember = (venue: RealVenue, language: Language): DistrictMember => {
 };
 
 const stadiumMember = (stadium: RealStadium, config: StadiumConfigId, language: Language): DistrictMember => {
-  const ground = groundOfStadium(stadium);
+  const park = stadiumKind(stadium) === "park";
   return {
     key: `${stadium.id}:${config}`,
     id: stadium.id,
-    kind: "stadium",
+    kind: park ? "park" : "stadium",
     config,
-    name: { en: groundNameIn(ground, undefined, "en"), ja: groundNameIn(ground, undefined, "ja") },
+    name: stadiumNames(stadium),
     ring: stadium.osm.ring,
     centre: stadium.osm.axis.centre,
-    heading: stadium.osm.axis.heading,
+    heading: stadiumFrameHeading(stadium),
     basis: stadium.osm.axis.basis,
     seats: stadiumSeats(stadium, config),
-    options: { sport: config, stadium: stadium.id, crowd: { real: true }, language },
+    options: park ? { sport: "mlb", park: stadium.id, crowd: { real: true }, language } : { sport: config, stadium: stadium.id, crowd: { real: true }, language },
   };
 };
 
@@ -124,8 +123,8 @@ export function districtMember(input: DistrictVenueInput, language: Language = "
   }
   const stadium = stadiumById(id);
   if (stadium !== undefined) {
-    const config = (named ?? Object.keys(stadium.configs)[0]) as StadiumConfigId;
-    if (stadium.configs[config] === undefined) throw new Error(`${id} has no configuration ${String(named)}: ${Object.keys(stadium.configs).join(", ")}`);
+    const config = (named ?? stadiumConfigs(stadium)[0]) as StadiumConfigId;
+    if (stadium.configs[config] === undefined) throw new Error(`${id} has no configuration ${String(named)}: ${stadiumConfigs(stadium).join(", ")}`);
     return stadiumMember(stadium, config, language);
   }
   throw new Error(`no venue ${String(id)}: the venues are ${DISTRICT_IDS.join(", ")}`);
@@ -237,8 +236,8 @@ export const KYOGIJO_DISTRICT_STYLE = `
 const ROOT = /^<svg([^>]*)>/;
 const VIEWBOX = /viewBox="(-?[\d.]+) (-?[\d.]+) ([\d.]+) ([\d.]+)"/;
 
-/** The north arrow of a venue's drawing and the apron under it: a district has one of each of its own. */
-const withoutOwn = (svg: string): string => svg.replace(/<rect class="ky-apron"[^>]*\/>/, "").replace(/<path class="ky-cr-north"[^>]*\/>/, "").replace(/<path class="ky-cr-north-n"[^>]*\/>/, "");
+/** The north arrow of a venue's drawing and the apron (a ballpark's foul ground) under it: a district has one of each of its own. */
+const withoutOwn = (svg: string): string => svg.replace(/<rect class="ky-(?:apron|foul)"[^>]*\/>/, "").replace(/<path class="ky-cr-north"[^>]*\/>/, "").replace(/<path class="ky-cr-north-n"[^>]*\/>/, "");
 
 /**
  * A venue's drawing as a part of the district's: its root made a nested `svg` that keeps the class, the sport and the colours the drawing's stylesheet reads, its box laid in its own frame (so that the group's turn
@@ -264,8 +263,9 @@ export function nestedDrawing(svg: string): { markup: string; box: { x: number; 
 
 const num = (value: number): string => String(Math.round(value * 100) / 100);
 
-/** The middle of a venue's surface in its own drawing's frame (the box the stands are laid round), which its drawing is turned about. */
+/** The point of a venue's own drawing the district puts at the venue's place on the ground and turns it about: the middle of its surface (the box the stands are laid round), or home plate, the origin of a ballpark's frame. */
 export function surfaceCentre(options: SurfaceOptions): Pt {
+  if (options.sport === "mlb") return [0, 0];
   const stands = crowdStands(options);
   if (stands === undefined) throw new Error("a district's venue has a crowd");
   return [stands.box.x + stands.box.w / 2, stands.box.y + stands.box.h / 2];

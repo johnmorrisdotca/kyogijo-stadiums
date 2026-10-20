@@ -140,15 +140,15 @@ export function standsVenueOf(stands: CrowdStands, crowd: Crowd, o: Pick<Surface
     }
     // The low wall under the first row of a tier the walks do not lead to (a ballpark's wall seats stand on the fence, which the fence's own planes make).
     if (ring.tier !== "wall" && !chained.has(ring) && ring.height[0] > 0.5) {
-      for (const strip of strips) {
+      strips.forEach((strip, si) => {
         for (let i = 0; i + 1 < strip.inner.length; i += 1) {
           const [a, b] = [strip.inner[i], strip.inner[i + 1]];
           if (Math.hypot(b[0] - a[0], b[1] - a[1]) < 0.5 || inCover([(a[0] + b[0]) / 2, (a[1] + b[1]) / 2])) continue;
           const h = lift + ring.height[0];
-          const w = wall(`${ring.id}-front-${i}`, "fascia", a[0], a[1], b[0], b[1], 0, h, `<rect class="u-fascia" width="${n(Math.hypot(b[0] - a[0], b[1] - a[1]))}" height="${n(h)}"/>`);
+          const w = wall(`${ring.id}-front-${si === 0 ? "" : `s${si}-`}${i}`, "fascia", a[0], a[1], b[0], b[1], 0, h, `<rect class="u-fascia" width="${n(Math.hypot(b[0] - a[0], b[1] - a[1]))}" height="${n(h)}"/>`);
           seatPlanes.push(shy(w, centre));
         }
-      }
+      });
     }
   }
 

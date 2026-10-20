@@ -7,7 +7,10 @@
    "lat": 49.27667,
    "lon": -123.11194,
    "roofRelation": 5836463,
-   "en": { "title": "BC Place", "revision": 1372065649 },
+   "en": {
+    "title": "BC Place",
+    "revision": 1372065649
+   },
    "configs": {
     "cfl": {
      "sport": "cfl",
@@ -32,7 +35,103 @@
     "kind": "cable",
     "basis": "documented",
     "read": "the article: a retractable roof supported by cables, the largest of its kind, its opening 100 by 85 metres (the size of the field), the fabric retracting into a pod in the middle of the opening above the suspended video board",
-    "opening": { "length": 100, "width": 85, "unit": "m" }
+    "opening": {
+     "length": 100,
+     "width": 85,
+     "unit": "m"
+    }
+   }
+  },
+  {
+   "id": "lumen-field",
+   "kind": "stadium",
+   "wikidata": "Q612736",
+   "ground": "lumen-field",
+   "lat": 47.59528,
+   "lon": -122.33167,
+   "gridiron": "nfl",
+   "osm": {
+    "building": "relation/2305831",
+    "pitches": [
+     "way/163840038",
+     "way/174251770"
+    ],
+    "roofs": [
+     "way/458208106",
+     "way/458208107"
+    ]
+   },
+   "en": {
+    "title": "Lumen Field",
+    "revision": 1373998493
+   },
+   "configs": {
+    "nfl": {
+     "sport": "nfl",
+     "seats": 68740,
+     "source": "wikipedia",
+     "read": "the infobox's capacity for the NFL, 68,740 (expandable to 72,000 for special events)"
+    },
+    "soccer": {
+     "sport": "soccer",
+     "seats": 37722,
+     "source": "wikipedia",
+     "read": "the infobox's capacity for MLS, 37,722, the upper and lower sections tarped off beyond it"
+    }
+   },
+   "bowlSeats": 68740,
+   "tiers": {
+    "count": 3,
+    "basis": "documented",
+    "read": "the article names the lower concourse levels, the club and suite levels and the Summit levels above them"
+   },
+   "roof": {
+    "kind": "canopy",
+    "basis": "documented",
+    "cover": 0.7,
+    "read": "the article: a roof of 200,000 square feet that covers 70 percent of the seats and leaves the field open, spanning 720 feet between concrete pylons at the north and south ends"
+   }
+  },
+  {
+   "id": "t-mobile-park",
+   "kind": "park",
+   "wikidata": "Q1193117",
+   "park": "t-mobile-park",
+   "lat": 47.59139,
+   "lon": -122.3325,
+   "osm": {
+    "building": "relation/3008332",
+    "infield": "relation/5729177",
+    "infieldWay": 158755973
+   },
+   "en": {
+    "title": "T-Mobile Park",
+    "revision": 1379419810
+   },
+   "configs": {
+    "mlb": {
+     "sport": "mlb",
+     "seats": 47368,
+     "source": "wikipedia",
+     "read": "the infobox's capacity for baseball, 47,368"
+    }
+   },
+   "tiers": {
+    "count": 4,
+    "basis": "documented",
+    "tierSeats": {
+     "lower": 20521,
+     "upper": 22075,
+     "bleachers": 3666
+    },
+    "read": "the article's levels: the Main Level of 20,521 seats (most of the lower bowl), the Club Level of 4,123, the Suite Level of 2,050 and the View Level of 15,902, and two bleacher sections of 3,666"
+   },
+   "roof": {
+    "kind": "panels",
+    "basis": "documented",
+    "bottom": 217,
+    "top": 269,
+    "read": "the article: a retractable roof in four sections that does not fully enclose the ballpark, its bottom 217 feet and its top 269 feet above the field, resting over the railway tracks to the east when open"
    }
   }
  ]

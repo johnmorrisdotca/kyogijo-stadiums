@@ -119,6 +119,8 @@ await takePictures({
     // The real stadiums and a district (0.26.0): BC Place's soccer pitch under its cable roof in 3D, and BC Place beside Rogers Arena in 3D (the stadiums and district pages' stage); their 2D drawings are in the docs gallery.
     { subject: "stadiums-bc-place-3d", views: ["desk"], url: "/stadiums.html?config=soccer&view=3d&viewpoint=broadcast&roof=1", ready: READY_HALLS_TURN, target: "#stage" },
     { subject: "district-bc-rogers-3d", views: ["desk"], url: "/district.html?view=3d&viewpoint=broadcast&labels=1", ready: READY_HALLS_TURN, target: "#stage" },
+    // Seattle (0.30.0): the two SoDo stadiums side by side in 3D, a ballpark and a football stadium on one ground (the district page's stage); the city view with Climate Pledge Arena is in the docs gallery.
+    { subject: "district-seattle-3d", views: ["desk"], url: "/district.html?venues=t-mobile-park,lumen-field&view=3d&viewpoint=broadcast&labels=1", ready: READY_HALLS_TURN, target: "#stage" },
     // Boards over a surface (0.24.0): a results board over a pool, a bout presentation over a judo mat in 3D, a medal table in the corner of the athletics stadium (invented names; the boards page's stage).
     { subject: "boards-swimming", views: ["desk"], url: "/boards.html?example=swimming", ready: READY_HALLS, target: "#stage" },
     { subject: "boards-judo-3d", views: ["desk"], url: "/boards.html?example=judo&view=3d", ready: READY_HALLS_TURN, target: "#stage" },

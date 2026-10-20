@@ -428,3 +428,107 @@ describe("the order buildings are drawn in", () => {
     expect(groupRanks(stacked, 180)).toEqual([1, 0]);
   });
 });
+
+const SODO: DistrictOptions = { venues: ["t-mobile-park", "lumen-field"] };
+const SEATTLE: DistrictOptions = { venues: ["t-mobile-park", "lumen-field", "climate-pledge-arena"], mode: "city" };
+
+describe("Seattle: the venues of a ballpark, a stadium and an arena", () => {
+  it("are a park (its one configuration, home plate its middle), a stadium in its first configuration and an arena, each a key a district takes", () => {
+    expect(DISTRICT_IDS).toEqual(expect.arrayContaining(["t-mobile-park", "lumen-field", "climate-pledge-arena"]));
+    expect(districtMember("t-mobile-park")).toMatchObject({ key: "t-mobile-park:mlb", kind: "park", config: "mlb", seats: 47368, name: { en: "T-Mobile Park", ja: "T-モバイル・パーク" } });
+    expect(districtMember("lumen-field")).toMatchObject({ key: "lumen-field:nfl", kind: "stadium", config: "nfl", seats: 68740 });
+    expect(districtMember("lumen-field:soccer")).toMatchObject({ key: "lumen-field:soccer", seats: 37722 });
+    expect(districtMember("t-mobile-park").options).toMatchObject({ sport: "mlb", park: "t-mobile-park", crowd: { real: true } });
+    expect(districtMember("lumen-field:soccer").options).toMatchObject({ sport: "soccer", stadium: "lumen-field" });
+    expect(() => districtMember("t-mobile-park:nfl")).toThrow(/no configuration nfl/);
+    // A ballpark's frame is turned a quarter from the way out to centre field.
+    expect(districtMember("t-mobile-park").heading).toBeCloseTo(139.4, 5);
+    expect(districtMember("lumen-field").heading).toBe(0);
+  });
+
+  it("stand where they do: Lumen Field 459 metres north of T-Mobile Park's home plate, Climate Pledge Arena 3.4 to 3.8 kilometres from both, to a metre of the great-circle distance", () => {
+    const plan = planDistrict(SEATTLE);
+    const [tmp, lumen, cpa] = plan.members;
+    const centre = (m: (typeof plan.members)[number]) => m.member.centre;
+    const metres = (a: (typeof plan.members)[number], b: (typeof plan.members)[number]) => plan.between.find((x) => (x.a === a.member.key && x.b === b.member.key) || (x.b === a.member.key && x.a === b.member.key))!.metres;
+    expect(Math.abs(metres(tmp, lumen) - haversine(centre(tmp), centre(lumen)))).toBeLessThan(1);
+    expect(Math.abs(metres(tmp, cpa) - haversine(centre(tmp), centre(cpa)))).toBeLessThan(1);
+    expect(metres(tmp, lumen)).toBeGreaterThan(430);
+    expect(metres(tmp, lumen)).toBeLessThan(480);
+    expect(metres(lumen, cpa)).toBeGreaterThan(3300);
+    expect(metres(tmp, cpa)).toBeLessThan(3900);
+    // Lumen Field is north of the ballpark and the arena north of both, with north at the top of the page.
+    expect(lumen.at[1]).toBeLessThan(tmp.at[1]);
+    expect(cpa.at[1]).toBeLessThan(lumen.at[1]);
+    const feet = Math.hypot(lumen.at[0] - tmp.at[0], lumen.at[1] - tmp.at[1]);
+    expect(Math.abs(feet / FEET - metres(tmp, lumen))).toBeLessThan(1);
+  });
+
+  it("turns the ballpark's drawing so that out to centre field points north-east, and Lumen Field's so that its field runs north and south", () => {
+    const [tmp, lumen] = planDistrict(SODO).members;
+    // The park's drawing has centre field at the top of the page; rotated by 49.4 degrees clockwise it points at 49.4 degrees from north.
+    expect(tmp.angle).toBeCloseTo(49.4, 5);
+    expect(lumen.angle).toBeCloseTo(-90, 5);
+  });
+
+  it("fits the two stadiums tight as neighbours and the three at the real distances as a city, with a kilometre grid and a name beside each", () => {
+    const sodo = planDistrict(SODO);
+    const city = planDistrict(SEATTLE);
+    expect(sodo.mode).toBe("neighbours");
+    expect(city.mode).toBe("city");
+    expect(city.view.h / sodo.view.h).toBeGreaterThan(5);
+    const svg = drawDistrict(SEATTLE);
+    for (const name of ["T-Mobile Park", "Lumen Field", "Climate Pledge Arena"]) expect(svg).toContain(`>${name}</text>`);
+    expect(svg).toContain(">500 m<");
+    expect((svg.match(/data-venue="/g) ?? []).length).toBe(3);
+    expect((svg.match(/class="ky-dist-north"/g) ?? []).length).toBe(1);
+    expect(svg).not.toContain('class="ky-apron"');
+    expect(svg).not.toContain('class="ky-foul"');
+    expect(drawDistrict(SODO)).toContain('data-mode="neighbours"');
+  });
+
+  it("holds each venue's seats in the district: 47,368, 68,740 (37,722 open for soccer) and 17,151", () => {
+    const stands = (key: string) => crowdStands(districtMember(key).options)!;
+    expect(Math.abs(stands("t-mobile-park").seats - 47368) / 47368).toBeLessThan(0.02);
+    expect(stands("lumen-field:nfl").seats).toBe(68740);
+    expect(stands("lumen-field:soccer").seats).toBe(68740);
+    expect(stands("climate-pledge-arena").seats).toBe(17151);
+  });
+
+  it("raises the three in 3D, a ballpark and a stadium and an arena, each of one building, steady as it turns, and drawn far building first from every side", () => {
+    const model = buildDistrictTurn(SEATTLE, {});
+    expect(model.groups).toHaveLength(3);
+    expect(model.planes.every((p) => p.group !== undefined && p.group >= 0 && p.group < 3)).toBe(true);
+    for (const g of [0, 1, 2]) expect(model.planes.filter((p) => p.group === g).length, `${g}`).toBeGreaterThan(100);
+    expect(new Set(model.planes.map((p) => p.id)).size).toBe(model.planes.length);
+    expect(model.planes.length).toBeLessThan(2500);
+    const base = layoutOf(model, { yaw: 0, pitch: 62, zoom: 1 }, 960, 600).at;
+    for (const yaw of range(-180, 180, 30)) expect(layoutOf(model, { yaw, pitch: 62, zoom: 1 }, 960, 600).at).toEqual(base);
+    // The two neighbours: from a side that is clear, the nearer one is drawn after the other.
+    const sodo = buildDistrictTurn(SODO, {});
+    const [a, b] = planDistrict(SODO).members;
+    const axis = [b.at[0] - a.at[0], b.at[1] - a.at[1]];
+    const length = Math.hypot(axis[0], axis[1]);
+    for (const pitch of [30, 62, 84]) {
+      for (const yaw of range(-180, 175, 5)) {
+        const t = ((axis[0] / length) * Math.sin((yaw * Math.PI) / 180) + (axis[1] / length) * Math.cos((yaw * Math.PI) / 180));
+        if (Math.abs(t) < 0.35) continue;
+        const layout = layoutOf(sodo, { yaw, pitch, zoom: 1 }, 960, 600);
+        const stackOf = (g: number): number[] => sodo.planes.flatMap((p, i) => (p.group === g ? [layout.stack[i + 1]] : []));
+        const [near, far] = t > 0 ? [stackOf(1), stackOf(0)] : [stackOf(0), stackOf(1)];
+        expect(Math.min(...near), `yaw ${yaw} pitch ${pitch}`).toBeGreaterThan(Math.max(...far));
+      }
+    }
+  });
+
+  it("puts the ballpark's roof and the stadium's canopies in the district, the roof open on request", () => {
+    const closed = buildDistrictTurn(SODO, {});
+    const open = buildDistrictTurn(SODO, { venue: { roof: true, roofOpen: true } });
+    const ids = (m: TurnModel, g: number) => m.planes.filter((p) => p.group === g).map((p) => p.id);
+    expect(ids(closed, 0).some((id) => id.includes("fabric-"))).toBe(true);
+    expect(ids(open, 0).some((id) => id.includes("fabric-"))).toBe(false);
+    expect(ids(open, 0).some((id) => id.includes("parked-"))).toBe(true);
+    expect(ids(closed, 1).some((id) => id.includes("roof-c0-"))).toBe(true);
+    expect(ids(closed, 1).some((id) => id.includes("roof-c1-"))).toBe(true);
+  });
+});

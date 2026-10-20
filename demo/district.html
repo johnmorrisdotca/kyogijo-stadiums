@@ -92,10 +92,10 @@
           factsTitle: "What the plan is made from", edit: "Choose", venues: "Venues", mode: "Fit", turn: "Turn", labels: "Names beside the venues", view: "View", viewpoint: "Viewpoint", roof: "Roofs and walls (3D)", language: "Language", theme: "Theme", auto: "Follow the device", light: "Light", dark: "Dark",
           neighbours: "Neighbours: close round the buildings", city: "City: the real distances, with a grid", north: "North at the top", fit: "Long way across the page",
           overhead: "Overhead", broadcast: "Broadcast", end: "End", corner: "Corner", formLabel: "How the district is shown",
-          venue: "Venue", seats: "Seats", rink: "Surface", orientation: "How it lies", cfl: "football field", soccer: "soccer pitch", nhl: "ice hockey rink", opening: "along the roof's opening", building: "inferred from the building", none: "not known, east-west",
+          venue: "Venue", seats: "Seats", rink: "Surface", orientation: "How it lies", cfl: "football field", nfl: "football field", soccer: "soccer pitch", mlb: "baseball field", nhl: "ice hockey rink", opening: "along the roof's opening", pitch: "as the pitch is mapped", infield: "from the mapped infield", building: "inferred from the building", none: "not known, east-west",
           between: "The middles of {a} and {b} are {metres} metres apart.", pickOne: "Choose at least one venue.",
           credit: "Building outlines and roofs: (c) OpenStreetMap contributors, ODbL 1.0, openstreetmap.org/copyright. Seats, tiers and roofs: Wikidata (CC0) and the English Wikipedia article each venue cites, in our own words.",
-          presets: { pair: "BC Place and Rogers Arena", soccer: "BC Place for soccer and Rogers Arena", alone: "Rogers Arena alone" },
+          presets: { pair: "BC Place and Rogers Arena", soccer: "BC Place for soccer and Rogers Arena", alone: "Rogers Arena alone", sodo: "Seattle SoDo: T-Mobile Park and Lumen Field", seattle: "Seattle city: all three venues" },
         },
         ja: {
           title: "実在の会場の地区",
@@ -106,13 +106,20 @@
           factsTitle: "この図の元になった情報", edit: "選ぶ", venues: "会場", mode: "縮尺の取り方", turn: "回転", labels: "会場名を添える", view: "表示", viewpoint: "視点", roof: "屋根と壁（3D）", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク",
           neighbours: "隣り合う会場：建物のすぐ近くまで寄せる", city: "都市：実際の距離を保ち、方眼を添える", north: "北を上にする", fit: "長い方を横に置く",
           overhead: "真上", broadcast: "中継", end: "エンド", corner: "コーナー", formLabel: "地区の見せ方",
-          venue: "会場", seats: "座席数", rink: "競技面", orientation: "向き", cfl: "フットボール場", soccer: "サッカー場", nhl: "アイスホッケーのリンク", opening: "屋根の開口部に沿う", building: "建物から推定", none: "不明（東西）",
+          venue: "会場", seats: "座席数", rink: "競技面", orientation: "向き", cfl: "フットボール場", nfl: "フットボール場", soccer: "サッカー場", mlb: "野球場", nhl: "アイスホッケーのリンク", opening: "屋根の開口部に沿う", pitch: "地図のピッチのとおり", infield: "地図の内野から", building: "建物から推定", none: "不明（東西）",
           between: "{a}と{b}の中心は{metres}m離れています。", pickOne: "会場を1つ以上選んでください。",
           credit: "建物の輪郭と屋根：(c) OpenStreetMap contributors（ODbL 1.0、openstreetmap.org/copyright）。座席数・層・屋根：Wikidata（CC0）と、各会場が出典としているWikipedia英語版の記事（独自の言葉でまとめたもの）。",
-          presets: { pair: "BCプレイスとロジャース・アリーナ", soccer: "サッカー用のBCプレイスとロジャース・アリーナ", alone: "ロジャース・アリーナのみ" },
+          presets: { pair: "BCプレイスとロジャース・アリーナ", soccer: "サッカー用のBCプレイスとロジャース・アリーナ", alone: "ロジャース・アリーナのみ", sodo: "シアトルのSoDo：T-モバイル・パークとルーメン・フィールド", seattle: "シアトルの都市：3つの会場" },
         },
       };
-      const PRESETS = { pair: ["bc-place:cfl", "rogers-arena"], soccer: ["bc-place:soccer", "rogers-arena"], alone: ["rogers-arena"] };
+      /** The choices a preset sets: the venues, and the fit (neighbours where the venues are close, a city where they are kilometres apart). */
+      const PRESETS = {
+        pair: { venues: ["bc-place:cfl", "rogers-arena"], mode: "neighbours" },
+        soccer: { venues: ["bc-place:soccer", "rogers-arena"], mode: "neighbours" },
+        alone: { venues: ["rogers-arena"], mode: "neighbours" },
+        sodo: { venues: ["t-mobile-park:mlb", "lumen-field:nfl"], mode: "neighbours" },
+        seattle: { venues: ["t-mobile-park:mlb", "lumen-field:nfl", "climate-pledge-arena"], mode: "city" },
+      };
       const $ = (id) => document.getElementById(id);
       const params = new URLSearchParams(location.search);
       const words = () => WORDS[$("language").value];
@@ -120,7 +127,7 @@
       const fillIn = (text, values) => text.replace(/\{(\w+)\}/g, (_, key) => String(values[key]));
       /** Every venue the page offers, by the key a district takes: the arenas, and each configuration of a stadium. */
       const KEYS = DISTRICT_IDS.flatMap((id) => (Object.hasOwn(STADIUMS, id) ? Object.keys(STADIUMS[id].configs).map((config) => `${id}:${config}`) : [id]));
-      const asked = (params.get("venues") ?? PRESETS.pair.join(",")).split(",").map((v) => (Object.hasOwn(STADIUMS, v) ? `${v}:${Object.keys(STADIUMS[v].configs)[0]}` : v));
+      const asked = (params.get("venues") ?? PRESETS.pair.venues.join(",")).split(",").map((v) => (Object.hasOwn(STADIUMS, v) ? `${v}:${Object.keys(STADIUMS[v].configs)[0]}` : v));
       const state = { venues: asked.filter((v, i) => KEYS.includes(v) && asked.indexOf(v) === i) };
       let turn;
       let turnKey = "";
@@ -152,7 +159,7 @@
           button.role = "tab";
           button.dataset.preset = preset;
           button.textContent = w.presets[preset];
-          button.setAttribute("aria-selected", String(PRESETS[preset].join() === state.venues.join()));
+          button.setAttribute("aria-selected", String(PRESETS[preset].venues.join() === state.venues.join() && PRESETS[preset].mode === $("mode").value));
           return button;
         }));
         $("picks").replaceChildren(...KEYS.map((key) => {
@@ -164,7 +171,7 @@
           box.checked = state.venues.includes(key);
           const text = document.createElement("span");
           const member = districtMember(key, $("language").value);
-          text.textContent = member.kind === "stadium" ? `${nameOf(key)} (${w[member.config]})` : nameOf(key);
+          text.textContent = member.kind === "arena" ? nameOf(key) : `${nameOf(key)} (${w[member.config]})`;
           label.append(box, text);
           return label;
         }));
@@ -186,7 +193,7 @@
 
       function syncUrl() {
         const next = new URLSearchParams();
-        if (state.venues.join() !== PRESETS.pair.join()) next.set("venues", state.venues.join(","));
+        if (state.venues.join() !== PRESETS.pair.venues.join()) next.set("venues", state.venues.join(","));
         if ($("mode").value !== "neighbours") next.set("mode", $("mode").value);
         if ($("turn").value !== "0") next.set("turn", $("turn").value);
         if ($("labels").checked !== ($("mode").value === "city")) next.set("labels", $("labels").checked ? "1" : "0");
@@ -254,7 +261,10 @@
       $("tabs").addEventListener("click", (event) => {
         const button = event.target.closest("button[data-preset]");
         if (button === null) return;
-        state.venues = [...PRESETS[button.dataset.preset]];
+        const preset = PRESETS[button.dataset.preset];
+        state.venues = [...preset.venues];
+        $("mode").value = preset.mode;
+        $("labels").checked = preset.mode === "city";
         labelPage();
         draw();
       });
@@ -268,7 +278,7 @@
         labelPage();
         draw();
       });
-      $("mode").addEventListener("input", () => { $("labels").checked = $("mode").value === "city"; draw(); });
+      $("mode").addEventListener("input", () => { $("labels").checked = $("mode").value === "city"; labelPage(); draw(); });
       for (const id of ["turn", "labels", "view", "viewpoint", "roof", "theme"]) $(id).addEventListener("input", draw);
       $("language").addEventListener("input", () => { labelPage(); draw(); });
       draw();
