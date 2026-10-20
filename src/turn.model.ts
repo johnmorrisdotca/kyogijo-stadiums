@@ -100,6 +100,8 @@ export interface TurnModel {
   lens?: number;
   /** The flat drawing to show where the 3D view cannot be drawn, when it is not `drawKyogijo`'s of `options` (a tournament layout's). */
   flat?: string;
+  /** The buildings of a scene that has several standing apart (a district's), each as the convex hull of its outline in the drawing's frame, in feet: the planes that name one (`Plane.group`) are stacked building by building. */
+  groups?: { hull: readonly (readonly [number, number])[] }[];
   /** The board the options ask for (`board`), laid over the view: a layer of its own, never a plane of the scene. */
   board?: ResolvedBoard;
 }

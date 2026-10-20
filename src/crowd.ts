@@ -92,8 +92,10 @@ export interface RealShell {
   hall: Extract<Outline, { kind: "rrect" }>;
   /** The way north points on the page, in degrees clockwise from the top; absent where the rink's real orientation is not known. */
   north?: number;
-  /** `fixed` is a lid; `saddle` a roof that rises at the two ends and falls at the two sides. */
-  roof: "fixed" | "saddle";
+  /** `fixed` is a lid; `saddle` a roof that rises at the two ends and falls at the two sides; `cable` a cable-supported roof with an opening over the surface, which a retractable fabric closes (BC Place's). */
+  roof: "fixed" | "saddle" | "cable";
+  /** A `cable` roof: how far its crown (the edge of the opening) stands over its rim, in feet, and the opening, a polygon in the drawing's frame over the surface. */
+  crown?: { rise: number; opening: Pt[] };
   /** The height of the roof's lowest edge above the surface, in feet. */
   edge: number;
 }
@@ -519,7 +521,7 @@ export function layoutOf(input: LayoutInput): CrowdStands {
   const base0: Profile = gal === undefined ? PROFILES[sport] : { shape: "bowl", side: gal.offset, end: gal.offset, bench: 0, corner: 0, tiers: [{ id: "gallery", from: 0, to: gal.depth, height: gal.height, fill: 1 }], away: "corner" };
   const base: Profile = input.arena === true && base0.arena !== undefined ? { ...base0, ...base0.arena, tiers: base0.arena.tiers ?? base0.tiers } : base0;
   const host = sport === "soccer" ? (crowd.stadium === "nfl" || crowd.stadium === "cfl" ? crowd.stadium : crowd.stadium === "auto" && input.ground !== undefined ? GRIDIRON_GROUNDS[input.ground] : undefined) : undefined;
-  const stadium: "purpose" | "nfl" | "cfl" | undefined = sport === "soccer" ? host ?? "purpose" : undefined;
+  const stadium: "purpose" | "nfl" | "cfl" | undefined = sport === "soccer" && input.real === undefined ? host ?? "purpose" : undefined;
   const p = stadium === "nfl" || stadium === "cfl" ? { ...PROFILES[stadium], shape: base.shape, away: base.away } : base;
   const shape = input.real !== undefined ? "bowl" : crowd.shape ?? p.shape;
   const off = input.real?.off ?? offsets(base, box, stadium ?? "purpose");

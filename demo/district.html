@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Kyogijo Stadiums: a district of real venues</title>
+    <meta name="description" content="Several real venues of one city on one plan at their real relative positions and orientations, from OpenStreetMap: BC Place and Rogers Arena side by side in Vancouver, to turn around together in 3D or look down on in 2D." />
+    <style>
+      :root { color-scheme: light dark; --bg: #f6f4ee; --ink: #10151b; --muted: #434b54; --card: #fff; --line: #b9b3a3; --accent: #1f5fa8; --tab: #10151b; --tab-ink: #fff; }
+      @media (prefers-color-scheme: dark) { :root { --bg: #0d1218; --ink: #f6f3ea; --muted: #bcc3cb; --card: #18212a; --line: #475463; --accent: #7fb2ee; --tab: #f6f3ea; --tab-ink: #0d1218; } }
+      :root[data-theme="light"] { color-scheme: light; --bg: #f6f4ee; --ink: #10151b; --muted: #434b54; --card: #fff; --line: #b9b3a3; --accent: #1f5fa8; --tab: #10151b; --tab-ink: #fff; }
+      :root[data-theme="dark"] { color-scheme: dark; --bg: #0d1218; --ink: #f6f3ea; --muted: #bcc3cb; --card: #18212a; --line: #475463; --accent: #7fb2ee; --tab: #f6f3ea; --tab-ink: #0d1218; }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.45 system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif; }
+      main { max-width: 1280px; margin: 0 auto; padding: 12px 16px 24px; }
+      h1 { font-size: 1.4rem; margin: 0 0 2px; }
+      p.lede { margin: 0 0 12px; color: var(--muted); }
+      .back { margin: 0 0 6px; }
+      a { color: var(--accent); }
+      [hidden] { display: none !important; }
+      :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+      #tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; }
+      #tabs button { font: inherit; font-size: 1rem; font-weight: 800; min-height: 48px; padding: 0 14px; border-radius: 12px; border: 2px solid var(--tab); background: var(--card); color: var(--ink); cursor: pointer; }
+      #tabs button[aria-selected="true"] { background: var(--tab); color: var(--tab-ink); }
+      #stage { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 8px; }
+      #stage > svg.kyogijo { display: block; width: 100%; height: auto; max-height: calc(100vh - 190px); }
+      .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr)); gap: 12px; margin: 10px 0 0; }
+      label { display: grid; gap: 4px; min-width: 0; font-size: .9rem; color: var(--muted); }
+      label.check { grid-template-columns: auto 1fr; align-items: center; gap: 8px; }
+      select { width: 100%; min-width: 0; font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px; min-height: 44px; }
+      input[type="checkbox"] { width: 22px; height: 22px; }
+      details { margin-top: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 8px 12px; }
+      summary { cursor: pointer; min-height: 36px; font-weight: 700; display: flex; align-items: center; }
+      dl { display: grid; grid-template-columns: max-content 1fr; gap: 4px 14px; margin: 8px 0; }
+      dt { color: var(--muted); }
+      dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+      .note { color: var(--muted); font-size: .9rem; margin: 8px 0; }
+      #error { color: #c0392b; font-weight: 700; }
+      fieldset { border: 1px solid var(--line); border-radius: 12px; padding: 8px 12px; margin: 10px 0 0; min-width: 0; }
+      legend { font-weight: 700; padding: 0 6px; }
+      fieldset .picks { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: 4px 12px; }
+      table { border-collapse: collapse; width: 100%; font-size: .92rem; }
+      th, td { text-align: left; padding: 4px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+      th { color: var(--muted); font-weight: 600; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="back"><a href="./" id="back" data-testid="back"></a></p>
+      <h1 id="title"></h1>
+      <p class="lede" id="lede"></p>
+      <div id="tabs" role="tablist" data-testid="tabs"></div>
+      <p id="error" role="alert" hidden></p>
+      <div id="stage" data-testid="stage"></div>
+      <details id="facts" open>
+        <summary id="l-facts"></summary>
+        <table data-testid="facts"><thead id="head"></thead><tbody id="list"></tbody></table>
+        <p class="note" id="between" data-testid="between"></p>
+      </details>
+      <details id="edit" open>
+        <summary id="l-edit"></summary>
+        <fieldset id="venues-box"><legend id="l-venues"></legend><div class="picks" id="picks" data-testid="picks"></div></fieldset>
+        <div class="controls">
+          <label><span id="l-mode"></span><select id="mode"><option value="neighbours"></option><option value="city"></option></select></label>
+          <label><span id="l-turn"></span><select id="turn"><option value="0"></option><option value="auto"></option></select></label>
+          <label class="check"><input id="labels" type="checkbox" /><span id="l-labels"></span></label>
+          <label><span id="l-view"></span><select id="view"><option value="2d">2D</option><option value="3d">3D</option></select></label>
+          <label id="viewpoint-row"><span id="l-viewpoint"></span><select id="viewpoint"><option value="overhead"></option><option value="broadcast"></option><option value="end"></option><option value="corner"></option></select></label>
+          <label class="check" id="roof-row"><input id="roof" type="checkbox" checked /><span id="l-roof"></span></label>
+          <label><span id="l-language"></span><select id="language"><option value="en">English</option><option value="ja">日本語</option></select></label>
+          <label><span id="l-theme"></span><select id="theme"><option value="auto"></option><option value="light"></option><option value="dark"></option></select></label>
+        </div>
+      </details>
+      <p class="note" id="credit" data-testid="credit"></p>
+      <p class="note"><a href="./stadiums.html" id="stadiums"></a> · <a href="./docs/district.html" id="docs"></a></p>
+    </main>
+    <script type="module">
+      // A district: several real venues of one city on one plan, each at its real position and orientation (OpenStreetMap, ODbL 1.0), to look down on in 2D or turn around together in 3D. The page only asks the package to draw
+      // (`drawDistrict`, `mountDistrictTurn`): the venues, the mode and the turn are options. What is chosen lives in the address; nothing is sent anywhere and nothing is stored.
+      import { DISTRICT_IDS, districtMember, drawDistrict, mountDistrictTurn, planDistrict, unknownVenues, VENUE_ATTRIBUTION } from "./dist/district-entry.js";
+      import { STADIUMS } from "./dist/stadiums-entry.js";
+      import { quietTitles } from "./quiet.js";
+      quietTitles();
+
+      const WORDS = {
+        en: {
+          title: "A district of real venues",
+          pageTitle: "Kyogijo Stadiums: a district of real venues",
+          pageDescription: "Several real venues of one city on one plan at their real relative positions and orientations, from OpenStreetMap: BC Place and Rogers Arena side by side in Vancouver, to turn around together in 3D or look down on in 2D.",
+          lede: "Each venue is the one its own page draws, put where it stands and turned as it lies, from the outlines OpenStreetMap maps. Among neighbours the plan is fitted close round the buildings; in a city it keeps the real distances, with a grid of kilometres. Never a street map and no mark of a club, a league or a tournament.",
+          back: "Back to the Kyogijo Stadiums demo", docs: "The district page of the docs", stadiums: "BC Place on its own",
+          factsTitle: "What the plan is made from", edit: "Choose", venues: "Venues", mode: "Fit", turn: "Turn", labels: "Names beside the venues", view: "View", viewpoint: "Viewpoint", roof: "Roofs and walls (3D)", language: "Language", theme: "Theme", auto: "Follow the device", light: "Light", dark: "Dark",
+          neighbours: "Neighbours: close round the buildings", city: "City: the real distances, with a grid", north: "North at the top", fit: "Long way across the page",
+          overhead: "Overhead", broadcast: "Broadcast", end: "End", corner: "Corner", formLabel: "How the district is shown",
+          venue: "Venue", seats: "Seats", rink: "Surface", orientation: "How it lies", cfl: "football field", soccer: "soccer pitch", nhl: "ice hockey rink", opening: "along the roof's opening", building: "inferred from the building", none: "not known, east-west",
+          between: "The middles of {a} and {b} are {metres} metres apart.", pickOne: "Choose at least one venue.",
+          credit: "Building outlines and roofs: (c) OpenStreetMap contributors, ODbL 1.0, openstreetmap.org/copyright. Seats, tiers and roofs: Wikidata (CC0) and the English Wikipedia article each venue cites, in our own words.",
+          presets: { pair: "BC Place and Rogers Arena", soccer: "BC Place for soccer and Rogers Arena", alone: "Rogers Arena alone" },
+        },
+        ja: {
+          title: "実在の会場の地区",
+          pageTitle: "競技場 Kyogijo Stadiums：実在の会場の地区",
+          pageDescription: "同じ都市の実在の会場を、OpenStreetMapをもとに、実際の位置と向きのとおり1枚の図に並べます。バンクーバーのBCプレイスとロジャース・アリーナを、3Dで一緒に回したり、2Dで真上から見たりできます。",
+          lede: "各会場は、それぞれのページで描かれるものを、OpenStreetMapに記録された輪郭のとおりの位置と向きに置いたものです。隣り合う会場は建物のすぐ近くまで寄せ、都市では実際の距離を保って1km方眼を添えます。道路地図ではなく、クラブ・リーグ・大会のマークもありません。",
+          back: "競技場 Kyogijo Stadiums のデモに戻る", docs: "ドキュメントの「地区」ページ", stadiums: "BCプレイス単独のページ",
+          factsTitle: "この図の元になった情報", edit: "選ぶ", venues: "会場", mode: "縮尺の取り方", turn: "向き", labels: "会場名を添える", view: "表示", viewpoint: "視点", roof: "屋根と壁（3D）", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク",
+          neighbours: "隣り合う会場：建物のすぐ近くまで寄せる", city: "都市：実際の距離を保ち、方眼を添える", north: "北を上にする", fit: "長い方を横に置く",
+          overhead: "真上", broadcast: "中継", end: "エンド", corner: "コーナー", formLabel: "地区の見せ方",
+          venue: "会場", seats: "座席数", rink: "競技面", orientation: "向き", cfl: "フットボール場", soccer: "サッカー場", nhl: "アイスホッケーのリンク", opening: "屋根の開口部に沿う", building: "建物から推定", none: "不明のため東西",
+          between: "{a}と{b}の中心は{metres}m離れています。", pickOne: "会場を1つ以上選んでください。",
+          credit: "建物の輪郭と屋根：(c) OpenStreetMap contributors（ODbL 1.0、openstreetmap.org/copyright）。座席数・層・屋根：Wikidata（CC0）と、各会場が示すEnglish Wikipediaの記事（独自の言葉で記述）。",
+          presets: { pair: "BCプレイスとロジャース・アリーナ", soccer: "サッカーのBCプレイスとロジャース・アリーナ", alone: "ロジャース・アリーナのみ" },
+        },
+      };
+      const PRESETS = { pair: ["bc-place:cfl", "rogers-arena"], soccer: ["bc-place:soccer", "rogers-arena"], alone: ["rogers-arena"] };
+      const $ = (id) => document.getElementById(id);
+      const params = new URLSearchParams(location.search);
+      const words = () => WORDS[$("language").value];
+      const setSelect = (id, value, allowed) => { if (allowed.includes(value)) $(id).value = value; };
+      const fillIn = (text, values) => text.replace(/\{(\w+)\}/g, (_, key) => String(values[key]));
+      /** Every venue the page offers, by the key a district takes: the arenas, and each configuration of a stadium. */
+      const KEYS = DISTRICT_IDS.flatMap((id) => (Object.hasOwn(STADIUMS, id) ? Object.keys(STADIUMS[id].configs).map((config) => `${id}:${config}`) : [id]));
+      const asked = (params.get("venues") ?? PRESETS.pair.join(",")).split(",").map((v) => (Object.hasOwn(STADIUMS, v) ? `${v}:${Object.keys(STADIUMS[v].configs)[0]}` : v));
+      const state = { venues: asked.filter((v, i) => KEYS.includes(v) && asked.indexOf(v) === i) };
+      let turn;
+      let turnKey = "";
+
+      setSelect("mode", params.get("mode"), ["neighbours", "city"]);
+      setSelect("turn", params.get("turn"), ["0", "auto"]);
+      setSelect("view", params.get("view"), ["2d", "3d"]);
+      setSelect("viewpoint", params.get("viewpoint"), ["overhead", "broadcast", "end", "corner"]);
+      setSelect("theme", params.get("theme"), ["light", "dark"]);
+      setSelect("language", params.get("lang"), ["en", "ja"]);
+      $("labels").checked = params.get("labels") === "1" || (params.get("labels") === null && params.get("mode") === "city");
+      $("roof").checked = params.get("roof") !== "0";
+
+      const nameOf = (key) => districtMember(key, $("language").value).name[$("language").value];
+
+      function labelPage() {
+        const w = words();
+        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["back", "back"], ["docs", "docs"], ["stadiums", "stadiums"], ["l-facts", "factsTitle"], ["l-edit", "edit"], ["l-venues", "venues"], ["l-mode", "mode"], ["l-turn", "turn"], ["l-labels", "labels"], ["l-view", "view"], ["l-viewpoint", "viewpoint"], ["l-roof", "roof"], ["l-language", "language"], ["l-theme", "theme"], ["credit", "credit"]]) $(id).textContent = w[key];
+        for (const select of ["viewpoint", "theme", "mode"]) for (const option of $(select).options) option.textContent = w[option.value];
+        $("turn").options[0].textContent = w.north;
+        $("turn").options[1].textContent = w.fit;
+        document.documentElement.lang = $("language").value;
+        document.title = w.pageTitle;
+        document.querySelector('meta[name="description"]').setAttribute("content", w.pageDescription);
+        $("edit").setAttribute("aria-label", w.formLabel);
+        $("tabs").replaceChildren(...Object.keys(PRESETS).map((preset) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.role = "tab";
+          button.dataset.preset = preset;
+          button.textContent = w.presets[preset];
+          button.setAttribute("aria-selected", String(PRESETS[preset].join() === state.venues.join()));
+          return button;
+        }));
+        $("picks").replaceChildren(...KEYS.map((key) => {
+          const label = document.createElement("label");
+          label.className = "check";
+          const box = document.createElement("input");
+          box.type = "checkbox";
+          box.dataset.key = key;
+          box.checked = state.venues.includes(key);
+          const text = document.createElement("span");
+          const member = districtMember(key, $("language").value);
+          text.textContent = member.kind === "stadium" ? `${nameOf(key)} (${w[member.config]})` : nameOf(key);
+          label.append(box, text);
+          return label;
+        }));
+      }
+
+      function listFacts(plan) {
+        const w = words();
+        const lang = $("language").value;
+        $("head").replaceChildren(...[w.venue, w.rink, w.seats, w.orientation].map((text) => { const th = document.createElement("th"); th.textContent = text; return th; }));
+        $("list").replaceChildren(...plan.members.map((placed) => {
+          const m = placed.member;
+          const tr = document.createElement("tr");
+          const sport = m.options.sport;
+          for (const text of [nameOf(m.key), w[sport], m.seats.toLocaleString(lang), m.basis === "none" ? w.none : `${w[m.basis]}, ${m.heading}°`]) { const td = document.createElement("td"); td.textContent = text; tr.append(td); }
+          return tr;
+        }));
+        $("between").textContent = plan.between.map((b) => fillIn(w.between, { a: nameOf(b.a), b: nameOf(b.b), metres: Math.round(b.metres).toLocaleString(lang) })).join(" ");
+      }
+
+      function syncUrl() {
+        const next = new URLSearchParams();
+        if (state.venues.join() !== PRESETS.pair.join()) next.set("venues", state.venues.join(","));
+        if ($("mode").value !== "neighbours") next.set("mode", $("mode").value);
+        if ($("turn").value !== "0") next.set("turn", $("turn").value);
+        if ($("labels").checked !== ($("mode").value === "city")) next.set("labels", $("labels").checked ? "1" : "0");
+        if ($("view").value === "3d") next.set("view", "3d");
+        if ($("viewpoint").value !== "corner") next.set("viewpoint", $("viewpoint").value);
+        if (!$("roof").checked) next.set("roof", "0");
+        if ($("language").value === "ja") next.set("lang", "ja");
+        if ($("theme").value !== "auto") next.set("theme", $("theme").value);
+        history.replaceState(null, "", next.size === 0 ? location.pathname : `?${next}`);
+      }
+
+      function draw() {
+        const theme = $("theme").value;
+        if (theme === "auto") delete document.documentElement.dataset.theme;
+        else document.documentElement.dataset.theme = theme;
+        const three = $("view").value === "3d";
+        $("viewpoint-row").hidden = !three;
+        $("roof-row").hidden = !three;
+        $("error").hidden = true;
+        document.body.dataset.view = $("view").value;
+        const stage = $("stage");
+        if (state.venues.length === 0 || unknownVenues(state.venues).length > 0) {
+          if (turn !== undefined) { turn.destroy(); turn = undefined; }
+          stage.replaceChildren();
+          $("error").textContent = words().pickOne;
+          $("error").hidden = false;
+          $("list").replaceChildren();
+          $("between").textContent = "";
+          syncUrl();
+          document.body.dataset.ready = "true";
+          return;
+        }
+        const options = { venues: state.venues, mode: $("mode").value, turn: $("turn").value === "auto" ? "auto" : 0, labels: $("labels").checked, language: $("language").value, ...(theme === "auto" ? {} : { theme }) };
+        try {
+          const plan = planDistrict(options);
+          if (three) {
+            const settings = { preset: $("viewpoint").value, venue: { roof: $("roof").checked } };
+            const key = JSON.stringify([state.venues, options.mode, options.turn, $("roof").checked]);
+            if (turn !== undefined && turnKey !== key) { turn.destroy(); turn = undefined; }
+            if (turn === undefined) {
+              stage.innerHTML = '<div id="three"></div>';
+              turnKey = key;
+              turn = mountDistrictTurn($("three"), options, settings);
+            } else {
+              turn.update(options);
+              turn.preset($("viewpoint").value);
+            }
+          } else {
+            if (turn !== undefined) { turn.destroy(); turn = undefined; }
+            stage.innerHTML = drawDistrict(options, plan);
+          }
+          listFacts(plan);
+        } catch (error) {
+          $("error").textContent = String(error.message);
+          $("error").hidden = false;
+        }
+        syncUrl();
+        const back = new URLSearchParams();
+        if ($("language").value === "ja") back.set("lang", "ja");
+        $("back").href = back.size === 0 ? "./" : `./?${back}`;
+        document.body.dataset.ready = "true";
+      }
+
+      labelPage();
+      $("tabs").addEventListener("click", (event) => {
+        const button = event.target.closest("button[data-preset]");
+        if (button === null) return;
+        state.venues = [...PRESETS[button.dataset.preset]];
+        labelPage();
+        draw();
+      });
+      $("picks").addEventListener("input", (event) => {
+        const box = event.target.closest("input[data-key]");
+        if (box === null) return;
+        const next = KEYS.filter((key) => (key === box.dataset.key ? box.checked : state.venues.includes(key)));
+        // A stadium is in a district once: choosing a configuration of it takes the other away.
+        const stadium = box.dataset.key.split(":")[0];
+        state.venues = next.filter((key) => key === box.dataset.key || key.split(":")[0] !== stadium || !box.checked);
+        labelPage();
+        draw();
+      });
+      $("mode").addEventListener("input", () => { $("labels").checked = $("mode").value === "city"; draw(); });
+      for (const id of ["turn", "labels", "view", "viewpoint", "roof", "theme"]) $(id).addEventListener("input", draw);
+      $("language").addEventListener("input", () => { labelPage(); draw(); });
+      draw();
+    </script>
+  </body>
+</html>

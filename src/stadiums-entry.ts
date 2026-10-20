@@ -1,0 +1,3 @@
+// The real stadiums: the outline of each stadium's building and the way its field lies (OpenStreetMap, ODbL 1.0) and a plausible bowl from the seats of each configuration, the bowls and the roof the sources give (Wikidata, Wikipedia).
+export { VENUE_ATTRIBUTION, STADIUMS, STADIUM_IDS, groundOfStadium, planStadium, stadiumBowl, stadiumBowlInside, stadiumById, stadiumByWikidata, stadiumConfigOf, stadiumOrientation, stadiumSeats } from "./stadiums.ts";
+export type { RealStadium, RealStadiumData, StadiumBasis, StadiumConfigData, StadiumConfigId, StadiumOrientation, StadiumOsm, StadiumPlan, StadiumRoof } from "./stadiums.ts";

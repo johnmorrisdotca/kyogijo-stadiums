@@ -15,6 +15,8 @@ import type { SurfaceOptions } from "./types.ts";
 export interface VenueSettings {
   /** Roofs and canopies over the top tier of the stands: a canopy over the back of the top tier in the open, a lid over a hall. They give way to the eye as the walls do. Off by default. */
   roof?: boolean;
+  /** A retractable roof (a real venue's: BC Place's) drawn open, the fabric gathered into its pod, instead of closed over the opening. Closed by default. */
+  roofOpen?: boolean;
   /** How finely the curves are cut: `low` a facet to each corner, `auto` (the default) three, `high` six; an oval is 12, 28 or 56 facets round. */
   detail?: Cut;
 }
@@ -167,7 +169,7 @@ export function standsVenueOf(stands: CrowdStands, crowd: Crowd, o: Pick<Surface
   if (wallSeats.length > 0) items.push({ id: "wall-seats", kind: "wall-seats", at: centre, height: topOf(wallSeats), planes: wallSeats });
 
   // The roof: a canopy over the back of the top tier, or a lid over it in a hall. A real venue has its own: the walls of its building and a roof of its kind over them.
-  if (stands.real !== undefined && v.roof === true) items.push(...realBuilding(stands.real, topRing(stands), centre, lift, ARC_STEPS[cut].oval * 2));
+  if (stands.real !== undefined && v.roof === true) items.push(...realBuilding(stands.real, topRing(stands), centre, lift, ARC_STEPS[cut].oval * 2, v.roofOpen === true));
   const top = v.roof === true && crowd.roof && stands.real === undefined ? topRing(stands) : undefined;
   if (top !== undefined) {
     const lid = INDOOR.includes(String(o.sport));

@@ -406,6 +406,37 @@ function venuesPage(lib) {
   };
 }
 
+/** The real stadiums and a district: BC Place in both configurations in the outline of its building, then districts of venues placed on one plan at their real positions. */
+const district = (options) => `import { drawDistrict } from "${MAIN}/district";\n\nconst svg = drawDistrict(${literal(options)});`;
+function stadiumsPage(lib) {
+  const { STADIUMS } = lib[`${MAIN}/stadiums`];
+  const bc = STADIUMS["bc-place"];
+  const real = (sport, extra = {}) => drawing({ sport, stadium: "bc-place", crowd: { real: true }, ...extra });
+  const seats = (config) => `${bc.configs[config].seats.toLocaleString("en-US")} seats in ${bc.tiers.count} bowls (${bc.tiers.basis}), a retractable, cable-supported roof (${bc.roof.basis}); the field lies along the opening in the roof.`;
+  return {
+    slug: "gallery-stadiums",
+    title: "Gallery: the real stadiums and a district",
+    ja: "実在のスタジアムと地区",
+    intro: "BC Place in Vancouver in the outline of its building as OpenStreetMap maps it ((c) OpenStreetMap contributors, ODbL 1.0), for football and for soccer, with a plausible bowl of the seats the sources give for each; then districts, venues of one city on one plan at their real positions and orientations. A small arrow says where north is. Never a seat map, never a street map, and no mark of a club, a league or a tournament.",
+    sections: [
+      section("bc-place", "BC Place", "`crowd: { real: true }` with a `stadium`, for `sport: \"cfl\"` or `sport: \"soccer\"`.", [
+        item("stadium-bc-cfl", "The football field", real("cfl"), seats("cfl")),
+        item("stadium-bc-soccer", "The soccer pitch", real("soccer"), seats("soccer")),
+        item("stadium-bc-dark", "The football field, dark", real("cfl", { theme: "dark" }), seats("cfl")),
+        item("stadium-bc-ja", "The soccer pitch, in Japanese", real("soccer", { language: "ja" }), seats("soccer")),
+        item("stadium-bc-small", "The football field, small", real("cfl", { width: 320 }), "Under 480 pixels wide the crowd is plain blocks and the outline and the arrow stay."),
+      ]),
+      section("district", "A district", "`drawDistrict` with a list of venue keys: each venue as its own page draws it, put where it stands and turned as it lies, with a grid, a scale and a north arrow.", [
+        item("district-neighbours", "BC Place and Rogers Arena, neighbours", district({ venues: ["bc-place", "rogers-arena"] }), "The middles of the two are 264 metres apart; a line of the grid every 100 metres."),
+        item("district-soccer", "The same with BC Place for soccer, with names", district({ venues: ["bc-place:soccer", "rogers-arena"], labels: true }), "A stadium names the configuration it is drawn in: `bc-place:soccer`."),
+        item("district-turned", "Turned to lie across the page", district({ venues: ["bc-place", "rogers-arena"], turn: "auto" }), "`turn: \"auto\"` turns the map, north arrow and all, so that the district's long way lies across the page."),
+        item("district-city", "As a city", district({ venues: ["bc-place", "rogers-arena"], mode: "city" }), "`mode: \"city\"` keeps the real distances with a grid of kilometres and a name beside each venue."),
+        item("district-ja", "In Japanese, dark", district({ venues: ["bc-place", "rogers-arena"], language: "ja", theme: "dark", labels: true }), "The names and the description are in Japanese."),
+      ]),
+    ],
+  };
+}
+
 function specialPage(lib) {
   const { EVENTS, EVENT_IDS } = lib[`${MAIN}/events`];
   const teams = (sport) => (sport === "nba" ? [PEAKS, BOLTS, "Finals, Game 6"] : sport === "mlb" ? [STARS, PINES, "Game 5"] : [OWLS, ANCHORS, "Cup Final, Game 7"]);
@@ -1453,7 +1484,7 @@ function boardsPage() {
   };
 }
 
-export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, venuesPage, specialPage, dataPage, curlingPage, courtsPage, fieldsPage, poolsPage, athleticsPage, skatingPage, budoPage, combatPage, stylingPage, rangesPage, layoutsPage, multiPage, judgingPage, boardsPage, pageantPage, situationPage];
+export const GALLERY_BUILDERS = [surfacesPage, soccerPage, leaguesPage, yearsPage, placesPage, venuesPage, stadiumsPage, specialPage, dataPage, curlingPage, courtsPage, fieldsPage, poolsPage, athleticsPage, skatingPage, budoPage, combatPage, stylingPage, rangesPage, layoutsPage, multiPage, judgingPage, boardsPage, pageantPage, situationPage];
 
 /** The sections of every page, with each item's picture made by running its code. */
 export function galleryData(lib) {
@@ -1465,12 +1496,14 @@ export function galleryData(lib) {
 
 /** The base stylesheet is in the page once; a drawing carries it too, which is 8 kB each. The gallery leaves it out of each and says so. */
 const STYLE_RE = /<style>[\s\S]*?<\/style>/;
+/** Every style block of a drawing that holds several (a district's nested drawings): each that is the base stylesheet is left out of the item. */
+const STYLE_ALL = /<style>[\s\S]*?<\/style>/g;
 
 /** Where a gallery item's own files are, beside the pages: its drawing as an SVG file, and a page that draws it from the published package. */
 export const itemFiles = (id) => ({ svg: `gallery/${id}.svg`, page: `gallery/${id}.html` });
 
 const itemHtml = (entry, style) => {
-  const svg = entry.svg.replace(STYLE_RE, (block) => (block.includes(style.slice(0, 60)) || style.includes(block.slice("<style>".length, -"</style>".length)) ? "" : block));
+  const svg = entry.svg.replace(STYLE_ALL, (block) => (block.includes(style.slice(0, 60)) || style.includes(block.slice("<style>".length, -"</style>".length)) ? "" : block));
   const code = escapeHtml(entry.code);
   const files = itemFiles(entry.id);
   return `<figure class="g-item" id="${entry.id}" data-testid="gallery-item">
@@ -1822,7 +1855,7 @@ export function framesFiles(lib) {
 
 /** The package's entry points as `runSnippet` wants them, read from a folder of built (`.js`) or source (`.ts`) files. */
 export async function libraryFrom(dir, ext, importer) {
-  const entries = { "": "index", "/charts": "charts-entry", "/frames": "frames-entry", "/layers": "layers-entry", "/leagues": "leagues-entry", "/eras": "eras-entry", "/grounds": "grounds-entry", "/arenas": "arenas-entry", "/venues": "venues-entry", "/parks": "parks-entry", "/atlas": "atlas-entry", "/events": "events-entry", "/geometry": "geometry-entry", "/replay": "replay-entry", "/layouts": "layouts-entry", "/multi": "multi-entry", "/turn": "turn-entry", "/athletics": "athletics-entry", "/skating": "skating-entry", "/target": "target-entry", "/zones": "zones-entry", "/pointer": "pointer-entry", "/budo": "budo-entry", "/judging": "judging-entry" };
+  const entries = { "": "index", "/charts": "charts-entry", "/frames": "frames-entry", "/layers": "layers-entry", "/leagues": "leagues-entry", "/eras": "eras-entry", "/grounds": "grounds-entry", "/arenas": "arenas-entry", "/venues": "venues-entry", "/stadiums": "stadiums-entry", "/district": "district-entry", "/parks": "parks-entry", "/atlas": "atlas-entry", "/events": "events-entry", "/geometry": "geometry-entry", "/replay": "replay-entry", "/layouts": "layouts-entry", "/multi": "multi-entry", "/turn": "turn-entry", "/athletics": "athletics-entry", "/skating": "skating-entry", "/target": "target-entry", "/zones": "zones-entry", "/pointer": "pointer-entry", "/budo": "budo-entry", "/judging": "judging-entry" };
   const lib = {};
   for (const [suffix, file] of Object.entries(entries)) lib[`${MAIN}${suffix}`] = await importer(`${dir}/${file}${ext}`);
   // The boards of the boards gallery are drawn by Taisen Brackets, a development dependency of this repository.

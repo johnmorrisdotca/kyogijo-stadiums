@@ -44,6 +44,11 @@ export interface Plane {
   fadeTo?: number;
   /** How low the eye must be for a `shy` plane to begin to give way: the share (of the plane's side being towards the eye, times the sine of the pitch) at which the fade starts; 0.1 when missing. A low barrier takes a high one, so that it stays whole until the eye is nearly level with it. */
   fadeAt?: number;
+  /**
+   * The building (a `TurnModel.groups` index) a plane belongs to, in a scene of several that stand apart (a district's): the view draws one building's planes all before another's, by which side of the line between
+   * them the eye is on, and the planes of one building among themselves by depth.
+   */
+  group?: number;
 }
 
 /** What stands on the surface as a thing a reader would name: a net, a basket, a goal, a pair of posts. */

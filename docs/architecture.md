@@ -277,6 +277,13 @@ src/
 ├── flythrough.words.ts the fly-through's words, in English and Japanese
 ├── flythrough.dom.ts   the fly-through in a page: the layers under one camera, the clock, the controls and keys, reduced motion, the live region
 ├── flythrough-entry.ts the fly-through's entry
+├── stadiums.ts         the real stadiums of football and soccer: the building, how the field lies, and a bowl fitted inside it from the seats of each configuration, the bowls and the roof the sources give
+├── stadiums.data.ts    made by scripts/build-stadiums.mjs from scripts/stadiums.data.json: the facts, with their sources
+├── stadiums.osm.data.ts made by scripts/build-stadiums.mjs from data-sources/stadiums/: what OpenStreetMap gave (outline, roof, opening), ODbL 1.0, kept apart
+├── stadiums-entry.ts   the stadiums' entry
+├── district.ts         a district: several real venues placed on one plan at their real relative positions and orientations, tight (neighbours) or at the distances of a city, in 2D
+├── district.turn.ts    a district in 3D: each venue's planes turned and moved to its place, stacked building by building
+├── district-entry.ts   the district's entry
 ├── atlas.ts            every park, ground and arena with its place, its tenants and the surfaces it offers, and the filters
 ├── tenants.ts          the clubs that played in a place: their types, the sport each draws as and the leagues that ask for no surface
 ├── tenants.data.ts     made by scripts/build-tenants.mjs from scripts/tenants.wikidata.json

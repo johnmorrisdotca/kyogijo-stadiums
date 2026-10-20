@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Kyogijo Stadiums: BC Place, a real stadium</title>
+    <meta name="description" content="BC Place in Vancouver drawn inside the real outline of its building from OpenStreetMap, with its retractable, cable-supported roof, a plausible bowl of the seats of each configuration, and the football field or the soccer pitch lying as the roof opening does, in 2D and in 3D." />
+    <style>
+      :root { color-scheme: light dark; --bg: #f6f4ee; --ink: #10151b; --muted: #434b54; --card: #fff; --line: #b9b3a3; --accent: #1f5fa8; --tab: #10151b; --tab-ink: #fff; }
+      @media (prefers-color-scheme: dark) { :root { --bg: #0d1218; --ink: #f6f3ea; --muted: #bcc3cb; --card: #18212a; --line: #475463; --accent: #7fb2ee; --tab: #f6f3ea; --tab-ink: #0d1218; } }
+      :root[data-theme="light"] { color-scheme: light; --bg: #f6f4ee; --ink: #10151b; --muted: #434b54; --card: #fff; --line: #b9b3a3; --accent: #1f5fa8; --tab: #10151b; --tab-ink: #fff; }
+      :root[data-theme="dark"] { color-scheme: dark; --bg: #0d1218; --ink: #f6f3ea; --muted: #bcc3cb; --card: #18212a; --line: #475463; --accent: #7fb2ee; --tab: #f6f3ea; --tab-ink: #0d1218; }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.45 system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif; }
+      main { max-width: 1280px; margin: 0 auto; padding: 12px 16px 24px; }
+      h1 { font-size: 1.4rem; margin: 0 0 2px; }
+      p.lede { margin: 0 0 12px; color: var(--muted); }
+      .back { margin: 0 0 6px; }
+      a { color: var(--accent); }
+      [hidden] { display: none !important; }
+      :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+      #tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; }
+      #tabs button { font: inherit; font-size: 1rem; font-weight: 800; min-height: 48px; padding: 0 14px; border-radius: 12px; border: 2px solid var(--tab); background: var(--card); color: var(--ink); cursor: pointer; }
+      #tabs button[aria-selected="true"] { background: var(--tab); color: var(--tab-ink); }
+      #stage { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 8px; }
+      #stage > svg.kyogijo { display: block; width: 100%; height: auto; max-height: calc(100vh - 190px); }
+      .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr)); gap: 12px; margin: 10px 0 0; }
+      label { display: grid; gap: 4px; min-width: 0; font-size: .9rem; color: var(--muted); }
+      label.check { grid-template-columns: auto 1fr; align-items: center; gap: 8px; }
+      select { width: 100%; min-width: 0; font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px; min-height: 44px; }
+      input[type="checkbox"] { width: 22px; height: 22px; }
+      details { margin-top: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 8px 12px; }
+      summary { cursor: pointer; min-height: 36px; font-weight: 700; display: flex; align-items: center; }
+      dl { display: grid; grid-template-columns: max-content 1fr; gap: 4px 14px; margin: 8px 0; }
+      dt { color: var(--muted); }
+      dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+      .note { color: var(--muted); font-size: .9rem; margin: 8px 0; }
+      #error { color: #c0392b; font-weight: 700; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="back"><a href="./" id="back" data-testid="back"></a></p>
+      <h1 id="title"></h1>
+      <p class="lede" id="lede"></p>
+      <div id="tabs" role="tablist" data-testid="tabs"></div>
+      <p id="error" role="alert" hidden></p>
+      <div id="stage" data-testid="stage"></div>
+      <details id="facts" open>
+        <summary id="l-facts"></summary>
+        <dl id="list" data-testid="facts"></dl>
+      </details>
+      <details id="edit" open>
+        <summary id="l-edit"></summary>
+        <div class="controls">
+          <label><span id="l-view"></span><select id="view"><option value="2d">2D</option><option value="3d">3D</option></select></label>
+          <label id="viewpoint-row"><span id="l-viewpoint"></span><select id="viewpoint"><option value="overhead"></option><option value="broadcast"></option><option value="end"></option><option value="corner"></option></select></label>
+          <label class="check" id="roof-row"><input id="roof" type="checkbox" /><span id="l-roof"></span></label>
+          <label class="check" id="open-row"><input id="open" type="checkbox" /><span id="l-open"></span></label>
+          <label><span id="l-language"></span><select id="language"><option value="en">English</option><option value="ja">日本語</option></select></label>
+          <label><span id="l-theme"></span><select id="theme"><option value="auto"></option><option value="light"></option><option value="dark"></option></select></label>
+        </div>
+      </details>
+      <p class="note" id="credit" data-testid="credit"></p>
+      <p class="note"><a href="./district.html?venues=bc-place,rogers-arena" id="district" data-testid="district"></a> · <a href="./docs/stadiums.html" id="docs"></a></p>
+    </main>
+    <script type="module">
+      // BC Place, Vancouver: a real stadium of football and soccer drawn inside the outline of its building (OpenStreetMap, ODbL 1.0), the field lying along the opening in its retractable, cable-supported roof, with a plausible bowl of
+      // the seats of each configuration. The page only asks the package to draw: `crowd: { real: true }` and a `stadium` in the options. What is chosen lives in the address; nothing is sent anywhere and nothing is stored.
+      import { drawKyogijo } from "./dist/index.js";
+      import { STADIUMS, STADIUM_IDS, VENUE_ATTRIBUTION, groundOfStadium, planStadium } from "./dist/stadiums-entry.js";
+      import { groundNameIn } from "./dist/grounds-entry.js";
+      import { mountKyogijoTurn } from "./dist/turn-entry.js";
+      import { quietTitles } from "./quiet.js";
+      quietTitles();
+
+      const WORDS = {
+        en: {
+          title: "BC Place: a real stadium, for football and for soccer",
+          pageTitle: "Kyogijo Stadiums: BC Place, a real stadium",
+          pageDescription: "BC Place in Vancouver drawn inside the real outline of its building from OpenStreetMap, with its retractable, cable-supported roof, a plausible bowl of the seats of each configuration, and the football field or the soccer pitch lying as the roof's opening does, in 2D and in 3D.",
+          lede: "The stadium is drawn inside the outline of its building, as OpenStreetMap maps it, with the field lying along the opening in its roof (which is the field's size) and a bowl of the seats the sources give for each configuration. The bowl is a plausible one, never a seat map: no section, row or seat of a real plan, and no mark of a club, a league or a tournament.",
+          back: "Back to the Kyogijo Stadiums demo", docs: "The real stadiums page of the docs", district: "Beside Rogers Arena, in the district view",
+          factsTitle: "What the drawing is made from", edit: "View", view: "View", viewpoint: "Viewpoint", roof: "Roof and walls (3D)", open: "Roof open: the fabric gathered into its pod (3D)", language: "Language", theme: "Theme", auto: "Follow the device", light: "Light", dark: "Dark",
+          overhead: "Overhead", broadcast: "Broadcast", end: "End", corner: "Corner", formLabel: "How the stadium is shown",
+          cfl: "Football field", soccer: "Soccer pitch",
+          stadium: "Stadium", city: "City", seats: "Seats in this configuration", bowls: "Seating bowls", roofKind: "Roof", opening: "Opening in the roof", orientation: "How the field lies", outline: "Building outline", rim: "Roof heights", pitch: "The field",
+          documented: "a source says so", plausible: "ours, plausible", cable: "retractable, supported by cables",
+          opening_: "from the roof's opening, which is the field's size", building: "inferred from the building's long axis", none: "not known: drawn east-west, north at the top",
+          seatsText: "{seats} ({source})", bowlsText: "{count} ({basis}); the lower bowl {lower}", roofText: "{kind} ({basis})", openingText: "{length} by {width} metres, the size of the field (the article)",
+          orientationText: "{how}, the field along {heading} degrees from north", outlineText: "OpenStreetMap {way}, read {read}", rimText: "rim {rim} m, crown {crown} m (OpenStreetMap's height {height} m, of which the roof's rise {rise} m)",
+          pitchText: { cfl: "150 by 65 yards with 20-yard end zones", soccer: "the international 105 by 68 metres" },
+          wikipedia: "English Wikipedia", wikidata: "Wikidata",
+          credit: "Building outline and roof: (c) OpenStreetMap contributors, ODbL 1.0, openstreetmap.org/copyright. Seats, bowls and roof: Wikidata (CC0) and the English Wikipedia article the stadium cites, in our own words.",
+        },
+        ja: {
+          title: "BCプレイス：フットボールとサッカーの実在のスタジアム",
+          pageTitle: "競技場 Kyogijo Stadiums：実在のスタジアム BCプレイス",
+          pageDescription: "バンクーバーのBCプレイスを、OpenStreetMapの建物の輪郭の内側に描きます。ケーブルで支える開閉式屋根、構成ごとの座席数から推定したスタンド、屋根の開口部に沿って置いたフットボール場・サッカー場を、2Dと3Dで見られます。",
+          lede: "スタジアムは、OpenStreetMapに記録された建物の輪郭の内側に、屋根の開口部（フィールドと同じ大きさ）に沿ってフィールドを置き、公表されている構成ごとの座席数からスタンドを推定して描いています。座席表ではなく、実際の区画・列・座席は描いておらず、クラブ・リーグ・大会のマークもありません。",
+          back: "競技場 Kyogijo Stadiums のデモに戻る", docs: "ドキュメントの「実在のスタジアム」ページ", district: "ロジャース・アリーナと並べた地区の表示",
+          factsTitle: "この図の元になった情報", edit: "表示", view: "表示", viewpoint: "視点", roof: "屋根と壁（3D）", open: "屋根を開く（膜を中央の収納部へ）（3D）", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク",
+          overhead: "真上", broadcast: "中継", end: "エンド", corner: "コーナー", formLabel: "スタジアムの見せ方",
+          cfl: "フットボール場", soccer: "サッカー場",
+          stadium: "スタジアム", city: "都市", seats: "この構成の座席数", bowls: "客席の層", roofKind: "屋根", opening: "屋根の開口部", orientation: "フィールドの向き", outline: "建物の輪郭", rim: "屋根の高さ", pitch: "フィールド",
+          documented: "資料に記載あり", plausible: "推定", cable: "ケーブルで支える開閉式",
+          opening_: "屋根の開口部（フィールドと同じ大きさ）から", building: "建物の長軸から推定", none: "不明のため東西に配置し、北を上にしています",
+          seatsText: "{seats}席（{source}）", bowlsText: "{count}層（{basis}）、下層は{lower}席", roofText: "{kind}（{basis}）", openingText: "{length}×{width}m（記事による、フィールドと同じ大きさ）",
+          orientationText: "{how}（フィールドは北から{heading}度の向き）", outlineText: "OpenStreetMap {way}（{read}に取得）", rimText: "軒{rim}m、頂部{crown}m（OpenStreetMapの高さ{height}m、うち屋根の立ち上がり{rise}m）",
+          pitchText: { cfl: "150×65ヤード、エンドゾーン20ヤード", soccer: "国際標準の105×68m" },
+          wikipedia: "English Wikipedia", wikidata: "Wikidata",
+          credit: "建物の輪郭と屋根：(c) OpenStreetMap contributors（ODbL 1.0、openstreetmap.org/copyright）。座席数・層・屋根：Wikidata（CC0）と、このスタジアムが示すEnglish Wikipediaの記事（独自の言葉で記述）。",
+        },
+      };
+      const $ = (id) => document.getElementById(id);
+      const params = new URLSearchParams(location.search);
+      const words = () => WORDS[$("language").value];
+      const setSelect = (id, value, allowed) => { if (allowed.includes(value)) $(id).value = value; };
+      const fillIn = (text, values) => text.replace(/\{(\w+)\}/g, (_, key) => String(values[key]));
+      const ID = STADIUM_IDS[0];
+      const CONFIGS = ["cfl", "soccer"];
+      const state = { config: CONFIGS.includes(params.get("config")) ? params.get("config") : "cfl" };
+      let turn;
+      let turnKey = "";
+
+      setSelect("view", params.get("view"), ["2d", "3d"]);
+      setSelect("viewpoint", params.get("viewpoint"), ["overhead", "broadcast", "end", "corner"]);
+      setSelect("theme", params.get("theme"), ["light", "dark"]);
+      setSelect("language", params.get("lang"), ["en", "ja"]);
+      $("roof").checked = params.get("roof") === "1" || params.get("open") === "1";
+      $("open").checked = params.get("open") === "1";
+
+      function labelPage() {
+        const w = words();
+        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["back", "back"], ["docs", "docs"], ["district", "district"], ["l-facts", "factsTitle"], ["l-edit", "edit"], ["l-view", "view"], ["l-viewpoint", "viewpoint"], ["l-roof", "roof"], ["l-open", "open"], ["l-language", "language"], ["l-theme", "theme"], ["credit", "credit"]]) $(id).textContent = w[key];
+        for (const select of ["viewpoint", "theme"]) for (const option of $(select).options) option.textContent = w[option.value];
+        document.documentElement.lang = $("language").value;
+        document.title = w.pageTitle;
+        document.querySelector('meta[name="description"]').setAttribute("content", w.pageDescription);
+        $("edit").setAttribute("aria-label", w.formLabel);
+        $("tabs").replaceChildren(...CONFIGS.map((config) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.role = "tab";
+          button.dataset.config = config;
+          button.textContent = w[config];
+          button.setAttribute("aria-selected", String(config === state.config));
+          return button;
+        }));
+      }
+
+      /** What the drawing is made from, as a list. */
+      function listFacts() {
+        const w = words();
+        const lang = $("language").value;
+        const s = STADIUMS[ID];
+        const ground = groundOfStadium(s);
+        const config = s.configs[state.config];
+        const axis = s.osm.axis;
+        const roof = s.osm.roof;
+        const rows = [
+          [w.stadium, `${groundNameIn(ground, undefined, lang)} (${s.wikidata})`],
+          [w.city, ground.city],
+          [w.pitch, w.pitchText[state.config]],
+          [w.seats, fillIn(w.seatsText, { seats: config.seats.toLocaleString(lang), source: w[config.source] })],
+          [w.bowls, fillIn(w.bowlsText, { count: s.tiers.count, basis: w[s.tiers.basis], lower: s.tiers.lowerSeats.toLocaleString(lang) })],
+          [w.roofKind, fillIn(w.roofText, { kind: w[s.roof.kind], basis: w[s.roof.basis] })],
+          [w.opening, fillIn(w.openingText, { length: s.roof.opening.length, width: s.roof.opening.width })],
+          [w.rim, fillIn(w.rimText, { rim: roof.height - roof.rise, crown: roof.height, height: roof.height, rise: roof.rise })],
+          [w.orientation, axis.basis === "none" ? w.none : fillIn(w.orientationText, { how: w[axis.basis === "opening" ? "opening_" : axis.basis], heading: axis.heading })],
+          [w.outline, fillIn(w.outlineText, { way: s.osm.source, read: s.osm.read })],
+        ];
+        $("list").replaceChildren(...rows.flatMap(([term, text]) => {
+          const dt = document.createElement("dt");
+          const dd = document.createElement("dd");
+          dt.textContent = term;
+          dd.textContent = text;
+          return [dt, dd];
+        }));
+      }
+
+      function syncUrl() {
+        const next = new URLSearchParams();
+        if (state.config !== "cfl") next.set("config", state.config);
+        if ($("view").value === "3d") next.set("view", "3d");
+        if ($("viewpoint").value !== "corner") next.set("viewpoint", $("viewpoint").value);
+        if ($("roof").checked) next.set("roof", "1");
+        if ($("open").checked) next.set("open", "1");
+        if ($("language").value === "ja") next.set("lang", "ja");
+        if ($("theme").value !== "auto") next.set("theme", $("theme").value);
+        history.replaceState(null, "", next.size === 0 ? location.pathname : `?${next}`);
+      }
+
+      function draw() {
+        const theme = $("theme").value;
+        if (theme === "auto") delete document.documentElement.dataset.theme;
+        else document.documentElement.dataset.theme = theme;
+        const three = $("view").value === "3d";
+        $("viewpoint-row").hidden = !three;
+        $("roof-row").hidden = !three;
+        $("open-row").hidden = !three || !$("roof").checked;
+        if (!$("roof").checked) $("open").checked = false;
+        const stage = $("stage");
+        $("error").hidden = true;
+        const options = { sport: state.config, stadium: ID, crowd: { real: true }, language: $("language").value, ...(theme === "auto" ? {} : { theme }) };
+        document.body.dataset.view = $("view").value;
+        try {
+          if (three) {
+            const settings = { preset: $("viewpoint").value, ...($("roof").checked ? { venue: { roof: true, roofOpen: $("open").checked } } : {}) };
+            const key = JSON.stringify([state.config, $("roof").checked, $("open").checked]);
+            if (turn !== undefined && turnKey !== key) { turn.destroy(); turn = undefined; }
+            if (turn === undefined) {
+              stage.innerHTML = '<div id="three"></div>';
+              turnKey = key;
+              turn = mountKyogijoTurn($("three"), options, settings);
+            } else {
+              turn.update(options);
+              turn.preset($("viewpoint").value);
+            }
+          } else {
+            if (turn !== undefined) { turn.destroy(); turn = undefined; }
+            stage.innerHTML = drawKyogijo(options);
+          }
+        } catch (error) {
+          $("error").textContent = String(error.message);
+          $("error").hidden = false;
+        }
+        listFacts();
+        syncUrl();
+        const back = new URLSearchParams({ sport: state.config });
+        if ($("language").value === "ja") back.set("lang", "ja");
+        $("back").href = `./?${back}`;
+        $("district").href = `./district.html?venues=${ID}:${state.config},rogers-arena${$("language").value === "ja" ? "&lang=ja" : ""}`;
+        document.body.dataset.ready = "true";
+      }
+
+      labelPage();
+      $("tabs").addEventListener("click", (event) => {
+        const button = event.target.closest("button[data-config]");
+        if (button === null) return;
+        state.config = button.dataset.config;
+        for (const other of $("tabs").children) other.setAttribute("aria-selected", String(other === button));
+        draw();
+      });
+      for (const id of ["view", "viewpoint", "roof", "open", "theme"]) $(id).addEventListener("input", draw);
+      $("language").addEventListener("input", () => { labelPage(); draw(); });
+      draw();
+    </script>
+  </body>
+</html>

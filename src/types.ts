@@ -300,7 +300,8 @@ export interface CrowdOptions {
   /**
    * The stands of the arena's real venue, for an NHL `arena` the package has one of (`VENUES`, `@johnmorrisdotca/kyogijo-stadiums/venues`): the outline of its building from OpenStreetMap, the rink lying along
    * the building as it does in the world (a small arrow says where north is), and a bowl of the number of tiers and the seats the sources give, fitted inside the building, under its kind of roof. An arena with no venue
-   * is drawn with the usual stands. Off by default. The drawing needs the credit `VENUE_ATTRIBUTION`. See `docs/venues.md`.
+   * is drawn with the usual stands. Off by default. The drawing needs the credit `VENUE_ATTRIBUTION`. See `docs/venues.md`. The same for a football field (`sport: "cfl"`) or a soccer pitch in a real stadium (`stadium`, or a `ground` that is one;
+   * `docs/stadiums.md`): the building, the field lying in it and a bowl of the configuration's seats.
    */
   real?: boolean;
   /** `false` draws no seats: of a real venue (`real`) only its building and the arrow that says where north is, which is what the floor of the 3D view needs under the stands it raises. On by default. */
@@ -778,6 +779,8 @@ export interface SurfaceOptions {
   pitch?: SoccerPitchId | SoccerSize;
   /** The soccer ground to draw: a key of `GROUNDS`. The pitch has the size its article publishes (the international 105 by 68 m where none is), and the drawing carries the ground's name for `year`. A `pitch` of your own wins over the ground's size. */
   ground?: string;
+  /** The stadium to draw a football field (`sport: "cfl"`) or a soccer pitch in, for `crowd: { real: true }`: a key of `STADIUMS` (`bc-place`). A soccer drawing with a `ground` that is a stadium of `STADIUMS` needs no other. */
+  stadium?: string;
   /** The arena to draw an NHL rink or an NBA court of: a key of `ARENAS`. The rink or the court has the size its sources publish where that differs from the league's (the league's where none does), the markings are those of `year`, and the drawing carries the arena's name for `year`. A `league` of your own wins over the arena's size. */
   arena?: string;
   /** Draw a soccer pitch in a data provider's own coordinates (`opta`, `statsbomb`, `wyscout`, `tracab`, `metrica`, `skillcorner`, `secondspectrum`, `impect`, `uefa`, `international`), or in a frame of your own: the lines stand where the provider puts them, and an empty `ky-data` group in its units is put in the drawing for raw data. */

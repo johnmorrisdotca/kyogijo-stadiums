@@ -75,17 +75,17 @@ console.log(svg.startsWith("<svg"), svg.includes("USA 3, Canada 2"));
 - **Forty-three surfaces, to scale.** The NFL, CFL and IFAF fields, the NHL rink, the NBA court, soccer, baseball, curling, twelve net and racket sports, the pools, athletics, skating, seven field sports, the budō, the MMA cage, the rings and the mats. Every figure is cited in [sources](./docs/sources.md). [The surfaces](./docs/surfaces.md).
 - **Each league's rulebook.** `league: "fiba"` draws a court as FIBA marks it: 48 variants, from the WNBA and the IIHF to Little League, softball, rugby league and box lacrosse, each cited. [League variants](./docs/variants.md).
 - **A realistic basketball floor.** `court: { hardwood: true }` draws maple boards that run the length of the court with staggered ends, grain and stained keys, the baskets with soft shadows, and benches. The clean floor stays the default. [Hardwood](./docs/hardwood.md).
-- **The stands and the crowd.** `crowd: true` draws the seating round any surface that has spectators: a bowl, two sides, a horseshoe, courtside rows or a ballpark's grandstands, with the people as seeded heads in the home colours and the empty seats showing. `crowd: { real: true }` puts an NHL arena in its building's outline (OpenStreetMap) with a plausible bowl of its seats, tiers and roof: eight so far, never a seat map. [The crowd](./docs/crowd.md), [the real venues](./docs/venues.md).
+- **The stands and the crowd.** `crowd: true` draws the seating round any surface that has spectators: a bowl, two sides, a horseshoe, courtside rows or a ballpark's grandstands, with the people as seeded heads in the home colours and the empty seats showing. `crowd: { real: true }` puts an NHL arena, or BC Place, in its building's outline (OpenStreetMap) with a plausible bowl, never a seat map. [The crowd](./docs/crowd.md), [venues](./docs/venues.md), [stadiums](./docs/stadiums.md).
 - **Curling, from the rule books.** A sheet from World Curling's and Curling Canada's rules, tall by default, with the board and the hammer in a score, `curlingStones` for an end's stones, `show: "folded"` for both houses enlarged. [Curling](./docs/curling.md).
 - **Net, racket and court sports, from their rulebooks.** The ITF's, FIVB's, BWF's, USA Pickleball's and ITTF's courts and table, and padel, squash, racquetball, sepak takraw, teqball, roundnet and netball, each in its look, with a board of sets and games. [Net, racket and court sports](./docs/courts.md).
 - **Swimming, water polo, diving and artistic swimming, from World Aquatics' regulations.** The 50 or 25 m pool with its lanes, ropes, blocks and touch panels; the water polo field; the diving well; the artistic swimming area. [Pools](./docs/pools.md).
 - **Lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey and handball, from their rulebooks.** The fields and floors of World Lacrosse, World Rugby, the NRL, the AFL, the GAA, the FIH and the IHF, and a cricket ground. [Field sports](./docs/field-sports.md).
 - **The athletics stadium, from World Athletics' rules.** The 400 m track with its lanes and staggers worked out from the running lines, every race start, hurdles, the steeplechase and the field events, with lane draws, results and a race replay. [The athletics stadium](./docs/athletics.md).
 - **The skating rinks, from the ISU's rules.** The 400 m speed skating track with each race's lines worked out lane by lane; the short track's oval; the figure skating rink; and results, a race replay and a programme's elements. [The skating rinks](./docs/skating.md).
-- **The budō, from the federations' rules.** The IJF's and the All Japan Judo Federation's judo areas, the WKF's karate areas, the kendo shiai-jo, the sumo dohyō, the kyūdōjō, and **a dojo builder**: tatami laid as real units, with its walls, doors, windows and shrine. Scores are judo's ippon, waza-ari and shido, points and sumo's kimarite. [The budō](./docs/budo.md).
+- **The budō, from the federations' rules.** The IJF's and the All Japan Judo Federation's judo areas, the WKF's karate areas, the kendo shiai-jo, the sumo dohyō, the kyūdōjō, and **a dojo builder**: tatami laid as real units, with its walls, doors, windows and shrine. [The budō](./docs/budo.md).
 - **Soccer, to the Laws.** A pitch from Law 1 of the IFAB Laws of the Game of any size, with presets from international to 5-a-side, half pitches, five mowing patterns and four goal styles. [Soccer](./docs/soccer.md).
-- **Every ballpark.** The 30 current MLB parks and 44 that MLB clubs have left, and the 12 home parks of Nippon Professional Baseball with eight other NPB grounds, each with its fence drawn from the distances published for it, as it stood in a season. With the fence's heights and a park's quirks (`walls`, `quirks`), none guessed. [Ballparks](./docs/ballparks.md).
-- **Soccer grounds, arenas and an atlas.** 64 soccer grounds at their published sizes, 167 NHL, NBA, WNBA and PWHL arenas (`drawKyogijo({ sport: "nhl", arena: "boston-garden" })`), and 330 places on a map, found by any of their names. [The grounds](./docs/grounds.md), [the arenas](./docs/arenas.md), [the atlas](./docs/atlas.md), [names](./docs/ballparks.md#names).
+- **Every ballpark.** The 30 current MLB parks and 44 that MLB clubs have left, and the 12 home parks of Nippon Professional Baseball with eight other NPB grounds, each with its fence drawn from the distances published for it, as it stood in a season, with its walls and quirks (`walls`, `quirks`), none guessed. [Ballparks](./docs/ballparks.md).
+- **Soccer grounds, arenas and an atlas.** 64 soccer grounds at their published sizes, 167 NHL, NBA, WNBA and PWHL arenas (`drawKyogijo({ sport: "nhl", arena: "boston-garden" })`), and 330 places on a map, found by any of their names. [Grounds](./docs/grounds.md), [arenas](./docs/arenas.md), [atlas](./docs/atlas.md), [names](./docs/ballparks.md#names).
 - **Special games.** A surface set inside another, to scale: an NHL rink on a ballpark's infield, a baseball field over a London stadium's pitch. 18 games, each cited. [Special games](./docs/special-games.md).
 - **Surfaces through the years.** `year: 1975` draws a surface as its league's rules marked it that season, each change cited. [Surfaces through the years](./docs/eras.md).
 - **Score mode.** Each team's name and logo on its side (end zones, ends of the ice, halves of the court, dugouts) and the score large in the middle, with the competition, status and date, and the winner emphasised. [Score and layout](./docs/score.md#round-marks).
@@ -124,15 +124,12 @@ console.log(svg.startsWith("<svg"), svg.includes("USA 3, Canada 2"));
 | `EVENTS`, `eventOptions` | The 18 special games: a rink in a ballpark, a court on a carrier's deck. |
 | `./zones`, `./pointer`, `./target` | Where a point lies by a sport's own rules; a click as a place in a provider's numbers; a goal, the strike zone or the stumps end-on. |
 | `./geometry`, `./frames`, `./layers`, `./charts`, `./replay` | The dimensions in any unit; the providers' frames; data layers; charts; tracking data played on a surface. |
-| `./athletics` | The athletics stadium: the plan, the races and field events, and the lane draw, results, replay and field marks charts. |
-| `./budo` | The budō: the areas, the dohyō, the kyūdōjō, the dojo builder (`dojo`, `drawDojo`), the 82 kimarite and the five halls. |
-| `./skating` | The skating rinks: the plan, the races, and the pairs, starting positions, results, replay and programme charts. |
-| `./parks`, `./grounds`, `./arenas`, `./venues`, `./atlas`, `./eras`, `./leagues`, `./events` | The ballparks, grounds, arenas and real venues, every place, a season's markings, each league's rulebook, the special games. |
+| `./athletics`, `./budo`, `./skating` | The athletics stadium, the budō (areas, dohyō, kyūdōjō, the dojo builder `drawDojo`, the 82 kimarite) and the skating rinks: plans, races and charts. |
+| `./parks`, `./grounds`, `./arenas`, `./atlas`, `./eras`, `./leagues`, `./events` | The ballparks, grounds, arenas, every place, a season's markings, each league's rulebook, the special games. |
+| `./venues`, `./stadiums`, `./district` | Real arenas and stadiums in their buildings' outlines; districts of venues on one plan. |
 | `./turn` | A surface as a 3D view that turns, with the net, basket, goal or posts standing on it. |
 | `./scene`, `./canvas`, `./d3`, `./plot`, `./geojson`, `./png` | The drawing as data, on a canvas, in d3, as an Observable Plot mark, as GeoJSON, as a PNG (the optional peer `@resvg/resvg-js`). |
-| `./multi` | `drawMulti`, `multiFit`: several surfaces laid out for one event ([docs](./docs/multi.md), [demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/halls.html)). |
-| `./judging` | `drawJudging`, `judgingBoard`, `mountJudgingBroadcast`, `judgingPrint`: who judges where, on a plan, a board or paper ([docs](./docs/judging.md)). |
-| `./layouts` | `drawGrid` and `GRID_PRESETS`: small multiples with a title, a key and a credit line; backgrounds. |
+| `./multi`, `./judging`, `./layouts` | `drawMulti` (several surfaces for one event, [docs](./docs/multi.md), [demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/halls.html)); `drawJudging` (who judges where, [docs](./docs/judging.md)); `drawGrid` (small multiples, backgrounds). |
 | `./mount`, `./react`, `./element`, `./element/define` | Draw into a container; React props; the `<kyogijo-field>` element and its registration. |
 
 The full list of entry points is in [entry points](./docs/entry-points.md); every export is in the [API reference](https://johnmorrisdotca.github.io/kyogijo-stadiums/api.html).
@@ -147,7 +144,7 @@ npm install @johnmorrisdotca/kyogijo-stadiums
 # or: yarn add @johnmorrisdotca/kyogijo-stadiums
 ```
 
-It needs Node 22 or later on a server, and any current browser. It is plain ES modules, with types. Once it is on npm the same files are on the CDNs: `https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo-stadiums@0/+esm` is the package as one module for the browser, and `https://unpkg.com/@johnmorrisdotca/kyogijo-stadiums@0/dist/index.js` the file itself.
+It needs Node 22 or later on a server, and any current browser. It is plain ES modules, with types, and on the CDNs once on npm: `https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo-stadiums@0/+esm` is the package as one module for the browser.
 
 ### Four ways in
 
@@ -182,7 +179,7 @@ console.log(svg.includes("Cup Final, Game 7"), svg.includes("Final/OT"));
 <p align="center">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/football-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/football-desk-light.webp" alt="A football field drawn wide on a background of floodlight beams: Mexico's green end zone on the left with its flag and name, the USA's navy one on the right, the yard lines and numbers between them, and the score panel at midfield reading 27 to 24, Final, Championship Game." width="720">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/football-desk-light.webp" alt="A football field drawn wide under floodlight beams: Mexico's green end zone on the left with its flag and name, the USA's navy one on the right, the yard lines and numbers between, and the score panel at midfield reading 27 to 24." width="720">
 </picture>
 <br><em>A football field: the end zones in the teams' colours, the score at midfield.</em>
 </p>
@@ -262,7 +259,7 @@ console.log(svg.includes("甲子園球場のグラウンド"), svg.includes("阪
 <p align="center">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/ballpark-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/ballpark-desk-light.webp" alt="The baseball field of Hanshin Koshien Stadium on a royal purple background: the outfield fence at its published distances, 95 metres at the lines and 118 in the alleys, the infield dirt, and a red and a navy dugout panel with Japan's and the USA's flags." width="640">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/ballpark-desk-light.webp" alt="The baseball field of Hanshin Koshien Stadium on royal purple: the outfield fence at its published distances, 95 metres at the lines and 118 in the alleys, the infield dirt, and a red and a navy dugout panel with Japan's and the USA's flags." width="640">
 </picture>
 <br><em>A ballpark's fence, drawn through the distances its article publishes.</em>
 </p>
@@ -321,7 +318,7 @@ console.log(/viewBox="0 0 440 64"/.test(badge));
 <p align="center">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/badges-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/badges-desk-light.webp" alt="A list of eight score strips in the demo, on a midnight-blue background, each a team block with its country's flag, a short name and its score at each end, in the team's colour, and in the middle a small picture of the sport and the state of the game, such as Final, Final/OT and 2nd period." width="640">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/badges-desk-light.webp" alt="Eight score strips in the demo on a midnight-blue background, each with a team block, flag, short name and score at each end, and in the middle a small picture of the sport and the state of the game, such as Final or 2nd period." width="640">
 </picture>
 <br><em>Badges for a list of games.</em>
 </p>
@@ -342,7 +339,7 @@ console.log(svg.includes("--ky-key:#1e4f8f"), svg.includes("METRO BOLTS"));
 <p align="center">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/court-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/court-desk-light.webp" alt="A basketball court in the two-tone look, in a warm glow: a pale floor with a deep blue key, centre circle and border, the words AUSTRALIA and JAPAN along the baselines, each country's flag and name on its half, and the score panel at centre court reading 108 to 112, Finals, Game 6." width="640">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/court-desk-light.webp" alt="A basketball court in the two-tone look, in a warm glow: a pale floor with a deep blue key, centre circle and border, AUSTRALIA and JAPAN along the baselines, each flag and name on its half, and the score panel at centre court reading 108 to 112." width="640">
 </picture>
 <br><em>A court in a look of its own: the paint, the border and the words on the baselines are options.</em>
 </p>
@@ -367,7 +364,7 @@ console.log(items.map((item) => item.kind).join(), html.includes("preserve-3d"))
 // net,netposts,antennae false
 ```
 
-The flat drawing is the floor, turned by a drag, a swipe, the keys or four viewpoints, with what the rulebook stands on it at its height; each part is one `matrix3d`, so there is no 3D context for a phone to lose. In the element: `<kyogijo-field sport="nhl" turn turn-view="broadcast">`. [The 3D view](./docs/turn.md).
+The flat drawing is the floor, turned by a drag, a swipe, the keys or four viewpoints, with what the rulebook stands on it at its height; each part is one `matrix3d`. In the element: `<kyogijo-field sport="nhl" turn turn-view="broadcast">`. [The 3D view](./docs/turn.md).
 
 <p align="center">
 <picture>
@@ -476,7 +473,7 @@ console.log(zone.includes('data-range="offensive-zone"'), zone.includes("Shows o
 // true true
 ```
 
-Lines, arrows, text, heat maps, hexagons, zones and contours are in [data layers](./docs/layers.md); shot, spray and pass charts are one call each in [charts](./docs/charts.md); pass networks, formations, lineups, Voronoi cells and flow fields are layers too ([team shape](./docs/team-shape.md)).
+Lines, arrows, text, heat maps, hexagons, zones and contours are in [data layers](./docs/layers.md); shot, spray and pass charts in [charts](./docs/charts.md); pass networks, formations, lineups, Voronoi cells and flow fields are layers too ([team shape](./docs/team-shape.md)).
 
 ### Small multiples on a card
 
@@ -495,7 +492,7 @@ console.log(svg.includes('viewBox="0 0 1200 675"'), svg.includes("Three ballpark
 
 ### Several surfaces on one floor
 
-`drawMulti` lays the package's own surfaces out for one large event, to scale, on one floor, with the officials' chairs and boards and places for the event's words (`sample: true` fills them with an invented event; [tournament layouts](./docs/multi.md)). `multiFit` says whether a layout fits a hall, `stadium: true` sets it inside stands, and `mountMultiTurn` turns it in 3D.
+`drawMulti` lays the package's own surfaces out for one large event, to scale, on one floor, with the officials' chairs and boards and places for the event's words (`sample: true` fills them with an invented event; [tournament layouts](./docs/multi.md)). `multiFit` says whether it fits a hall, `stadium: true` sets it inside stands, `mountMultiTurn` turns it in 3D.
 
 ```ts
 import { drawMulti, multiLayout } from "@johnmorrisdotca/kyogijo-stadiums/multi";
@@ -586,6 +583,26 @@ console.log(layout.needs.length, layout.needs.width);
 <img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/venues-saddledome-3d-desk-light.webp" alt="The Saddledome in 3D: two tiers of seats under its roof." width="640">
 </picture>
 <br><em>The Saddledome, in 3D.</em>
+</p>
+
+### A real stadium, and a district
+
+`stadium: "bc-place"` draws BC Place for football or soccer under its cable roof; `drawDistrict({ venues: ["bc-place", "rogers-arena"] })` puts venues at their real positions, to turn together in 3D ([districts](./docs/district.md)).
+
+<p align="center">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/stadiums-bc-place-3d-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/stadiums-bc-place-3d-desk-light.webp" alt="BC Place's soccer pitch in 3D: two bowls of seats under a cable-supported roof with an opening." width="640">
+</picture>
+<br><em>BC Place, in 3D.</em>
+</p>
+
+<p align="center">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/district-bc-rogers-3d-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/district-bc-rogers-3d-desk-light.webp" alt="BC Place and Rogers Arena in 3D on one ground with a grid, a scale and a north arrow." width="640">
+</picture>
+<br><em>BC Place and Rogers Arena.</em>
 </p>
 
 ### Who judges where
@@ -765,13 +782,13 @@ A page that moves (`mountKyogijo`), a file written on a server and a frame for a
 
 ## API
 
-The [API reference](https://johnmorrisdotca.github.io/kyogijo-stadiums/api.html) lists every export of every entry point with its signature and its doc comment. It is made from the source by `pnpm site`. [Entry points](./docs/entry-points.md) says what each of the 15 holds: the main one draws; `/geometry`, `/frames`, `/layers`, `/charts`, `/replay`, `/parks`, `/eras`, `/leagues`, `/grounds` and `/atlas` stand apart; `/mount`, `/turn`, `/react`, `/element` and `/element/define` put a drawing in a page.
+The [API reference](https://johnmorrisdotca.github.io/kyogijo-stadiums/api.html) lists every export of every entry point with its signature and doc comment, made from the source by `pnpm site`. [Entry points](./docs/entry-points.md) says what each holds: the main one draws, the data and geometry ones stand apart, and `/mount`, `/turn`, `/react`, `/element` and `/element/define` put a drawing in a page.
 
 Every function is pure: it returns new values and never changes what it was given.
 
 ## Theming
 
-Nothing is branded. The drawing is coloured by custom properties on its `svg`, with a light set and a dark set that follow the device (or `data-theme` on the page's root, or `theme` in the options); a page's own rule always wins. Each property is listed with its light and dark value, with the court's five looks, in [theming](./docs/theming.md).
+Nothing is branded. The drawing is coloured by custom properties on its `svg`, with a light set and a dark set that follow the device (or `data-theme`, or `theme` in the options); a page's own rule always wins. Each property is listed in [theming](./docs/theming.md).
 
 ## Limits
 
@@ -781,41 +798,41 @@ Each is held by a test: forty-three sports, ten soccer pitches and ten providers
 
 - Each drawing is an `img` with a `<title>` and a `<desc>` that say the teams, the score, the surface and the result, in English or Japanese.
 - A score is also text, words stay upright when the surface lies tall, colour is never the only sign, and each data layer has a table for a screen reader.
-- Nothing moves by itself: a replay plays when asked, steps for a reader who prefers reduced motion, and pauses when the page is hidden; a changed score pulses once.
+- Nothing moves by itself: a replay plays when asked, steps for a reader who prefers reduced motion, and pauses when the page is hidden.
 
-The rest, with the contrast and what is not yet done, is in [accessibility](./docs/accessibility.md).
+The rest is in [accessibility](./docs/accessibility.md).
 
 ## Browser and runtime support
 
-Any browser with ES modules, `:where()` and SVG 2's `href` on images: Chrome and Edge 88, Safari 14, Firefox 78, all from 2021 on. The custom element needs shadow DOM and `part`. The drawing function runs on Node 22 or later and in any other JavaScript runtime: it touches no DOM. The demo is played in Chromium and WebKit, at a phone's width and a desk's, before every release.
+Any browser with ES modules, `:where()` and SVG 2's `href` on images: Chrome and Edge 88, Safari 14, Firefox 78, all from 2021 on. The custom element needs shadow DOM and `part`. The drawing function runs on Node 22 or later and in any runtime: it touches no DOM. The demo is played in Chromium and WebKit, at a phone's width and a desk's, before every release.
 
 ## Languages
 
-English and Japanese: the title, the description and the standard statuses of a drawing, the sentence of each change in `eraChanges`, and the demo. The words are listed beside their English in [the Japanese of Kyogijo](./docs/strings-ja.md). Team names, competitions and dates are written as you give them, in any language; Japanese names of the NPB parks are in `PARKS`. Not yet: the Japanese read by a native reader (the demo says so when it is shown).
+English and Japanese: the title, the description and the statuses of a drawing, the sentence of each change in `eraChanges`, and the demo. The words are listed beside their English in [the Japanese of Kyogijo](./docs/strings-ja.md). Team names, competitions and dates are written as you give them, in any language. Not yet: the Japanese read by a native reader (the demo says so when it is shown).
 
 ## Roadmap
 
 Not here yet, each welcome as an [issue](https://github.com/johnmorrisdotca/kyogijo-stadiums/issues):
 
 - **More surfaces**: the FIBA and college courts, the international rink, rugby pitches, soccer's beach and street formats.
-- **More real venues**: the other divisions' arenas, then the NBA's, NFL's and MLB's, each in its building's outline.
-- **More parks of the past**: the 19th-century grounds, and the parks whose articles give no distances yet (the Kingdome, Joe Robbie Stadium).
+- **More real venues**: the other divisions' arenas, then the NBA's, NFL's and MLB's, and more districts.
+- **More parks of the past**: the 19th-century grounds, and the parks whose articles give no distances yet.
 - **More charts on data layers**: a formation chart, a pass sonar chart and a Voronoi chart of their own (the layers exist; see [team shape](./docs/team-shape.md)).
 - **Football in a different standard**: the college and high-school hash marks.
 
-Left out on purpose: statistics, rosters and schedules. Kyogijo Stadiums draws the place and the score it is given.
+Left out on purpose: statistics, rosters and schedules.
 
 ## Architecture
 
-The drawing is plain functions over plain data with no DOM and no dependency. The dimensions are in one file, the ballparks are generated from a reviewed list, and each surface is a function that returns its markup and the places the teams and the score go. Every entry point stands apart, so that importing the geometry, the parks or the grounds loads nothing else. The files and what each is for are in [architecture](./docs/architecture.md).
+The drawing is plain functions over plain data with no DOM and no dependency. The dimensions are in one file, the ballparks are generated from a reviewed list, and each surface is a function that returns its markup and the places the teams and the score go. Every entry point stands apart. The files are in [architecture](./docs/architecture.md).
 
 ## The name
 
-*Kyogijo* (競技場, kyōgijō, きょうぎじょう) is Japanese for a sports ground, the place a contest is held, written with 競技, "contest", and 場, "place", and said *kyo-u-gi-jo-u*. "Stadiums" is added in English so that the name says what it draws; the package uses the word for every surface it draws. The long vowels are written without a macron, as in the other packages of the family.
+*Kyogijo* (競技場, kyōgijō, きょうぎじょう) is Japanese for a sports ground, the place a contest is held, written with 競技, "contest", and 場, "place". "Stadiums" is added in English so that the name says what it draws. The long vowels are written without a macron, as in the other packages of the family.
 
 ## Where it comes from, and where it is used
 
-Kyogijo Stadiums was made for [SPX Stats](https://spxn.com), the historical record of the NHL, NBA, MLB, NFL and CFL, to show the score of a game or a championship on the surface it was played on, with each team's name and logo at its side. Its Japanese names and its Japanese parks are there because the same author makes a Japanese study app and a site for Japanese board games, and because baseball in Japan is a sport its fans know by its grounds.
+Kyogijo Stadiums was made for [SPX Stats](https://spxn.com), the historical record of the NHL, NBA, MLB, NFL and CFL, to show the score of a game or a championship on the surface it was played on, with each team's name and logo at its side. Its Japanese names and parks are there because the same author makes a Japanese study app and a site for Japanese board games.
 
 ### Used by
 
@@ -914,7 +931,7 @@ See [CHANGELOG.md](./CHANGELOG.md). The first release, 0.1.0, draws the twenty s
 
 ## Licence
 
-The code is [MIT](./LICENSE) © John Morris. The ballparks' fence distances are facts published in Wikipedia's articles, re-expressed here as numbers, with the article and revision of each cited in [NOTICE.md](./NOTICE.md) (shipped in the package) and [docs/references.md](./docs/references.md). The dimensions of the surfaces are facts from the rulebooks and the federations' diagrams, cited in [docs/sources.md](./docs/sources.md).
+The code is [MIT](./LICENSE) © John Morris. The ballparks' fence distances are facts published in Wikipedia's articles, re-expressed as numbers, with each article and revision cited in [NOTICE.md](./NOTICE.md) (shipped in the package) and [docs/references.md](./docs/references.md). The surfaces' dimensions are facts from the rulebooks and diagrams, cited in [docs/sources.md](./docs/sources.md).
 
 | Data | Made from | Terms |
 | --- | --- | --- |
@@ -922,6 +939,7 @@ The code is [MIT](./LICENSE) © John Morris. The ballparks' fence distances are 
 | The soccer pitch's dimensions and the providers' coordinates | The IFAB and FIFA Futsal Laws of the Game, UEFA, MLS, NCAA and FA documents, and each provider's own pages (docs/sources.md) | Facts; no text or drawing copied |
 | The fence distances of 94 ballparks | The English and Japanese Wikipedia articles of each, at the revision cited | Facts; the articles are CC BY-SA 4.0 and none of their text is used |
 | The Wikidata item of each ballpark | Wikidata, as linked from the cited article | CC0 |
+| The outlines of the real venues and stadiums | OpenStreetMap, read 2026-10-20, kept as returned | ODbL 1.0, (c) OpenStreetMap contributors, in files of their own; a drawing carries the credit |
 | 64 soccer grounds | English Wikipedia articles at the revision cited; Wikidata | Facts; CC BY-SA 4.0 articles, no text used; CC0 |
 | The demo's countries and their logos | The names and codes of real countries; the maple leaf, the sun disc and the roundels are drawn for this package | MIT |
 | The demo's country flags | [Hata](https://github.com/johnmorrisdotca/hata), a development dependency whose flags are loaded into the demo site with its licence and notice; the package itself draws none | MIT, and its flags' own licences in its NOTICE.md |

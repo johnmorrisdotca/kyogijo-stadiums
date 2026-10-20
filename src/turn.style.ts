@@ -69,6 +69,11 @@ export const KYOGIJO_TURN_STYLE = `
 .ky-turn .u-fascia{fill:var(--ky-up-fascia)}
 .ky-turn .u-shell{fill:var(--ky-up-fascia);stroke:var(--ky-up-roofline);stroke-width:.6}
 .ky-turn .u-roof{fill:var(--ky-up-roof);stroke:var(--ky-up-roofline);stroke-width:.8;stroke-linejoin:round}
+.ky-turn .u-signplate{fill:var(--ky-turn-bg);fill-opacity:.9;stroke:var(--ky-turn-rule);stroke-width:.5}
+.ky-turn .u-sign{fill:var(--ky-turn-ink);font-family:var(--ky-font,system-ui,-apple-system,"Segoe UI","Hiragino Sans","Noto Sans JP",sans-serif);font-weight:600}
+.ky-turn .u-cable{fill:none;stroke:var(--ky-up-roofline);stroke-width:1}
+.ky-turn .u-fabric{fill:var(--ky-up-roof);fill-opacity:.55;stroke:none}
+.ky-turn .u-pod{fill:var(--ky-up-fascia);stroke:var(--ky-up-roofline);stroke-width:.6}
 .ky-turn .ky-up-seats svg{opacity:var(--ky-cr-dim)}
 .ky-turn .ky-cr-seat{fill:none;stroke:var(--ky-cr-empty);stroke-width:1.3;stroke-opacity:.65}
 .ky-turn .ky-cr-h{stroke:var(--ky-cr-home)}

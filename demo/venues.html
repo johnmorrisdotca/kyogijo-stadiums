@@ -61,7 +61,7 @@
         </div>
       </details>
       <p class="note" id="credit" data-testid="credit"></p>
-      <p class="note"><a href="./docs/venues.html" id="docs"></a></p>
+      <p class="note"><a href="./docs/venues.html" id="docs"></a> · <a href="./stadiums.html" id="stadiums-link"></a> · <a href="./district.html?venues=bc-place,rogers-arena" id="district-link"></a></p>
     </main>
     <script type="module">
       // The real arenas of the NHL's Pacific Division: each drawn inside the outline of its building (OpenStreetMap, ODbL 1.0) with a plausible bowl of the seats, tiers and roof the sources give, in 2D and in 3D.
@@ -77,7 +77,7 @@
           pageTitle: "Kyogijo Stadiums: the real arenas of the NHL's Pacific Division",
           pageDescription: "The eight arenas of the NHL's Pacific Division drawn inside the real outline of their buildings from OpenStreetMap, with a plausible bowl of the seats, tiers and roof the sources give, in 2D and in 3D.",
           lede: "Each arena is drawn inside the outline of its building, as OpenStreetMap maps it, with a bowl of the seats, the tiers and the kind of roof the sources give. The bowl is a plausible one, never a seat map: no section, row or seat of a real plan is drawn, and no mark of a team or a league.",
-          back: "Back to the Kyogijo Stadiums demo", docs: "The real venues page of the docs",
+          back: "Back to the Kyogijo Stadiums demo", docs: "The real venues page of the docs", stadiumsLink: "BC Place, a real stadium", districtLink: "BC Place beside Rogers Arena",
           factsTitle: "What the drawing is made from", edit: "View", view: "View", viewpoint: "Viewpoint", roof: "Roof and walls (3D)", language: "Language", theme: "Theme", auto: "Follow the device", light: "Light", dark: "Dark",
           overhead: "Overhead", broadcast: "Broadcast", end: "End", corner: "Corner", formLabel: "How the venue is shown",
           arena: "Arena", city: "City", seats: "Seats for ice hockey", tiers: "Seating tiers", roofKind: "Roof", orientation: "How the rink lies", outline: "Building outline",
@@ -92,7 +92,7 @@
           pageTitle: "競技場 Kyogijo Stadiums：実在のアリーナ（NHLパシフィック・ディビジョン）",
           pageDescription: "NHLパシフィック・ディビジョンの8つのアリーナを、OpenStreetMapの建物の輪郭の内側に描き、公表されている座席数・層の数・屋根の種類から推定したスタンドを重ねます。2Dと3Dに対応しています。",
           lede: "各アリーナは、OpenStreetMapに記録された建物の輪郭の内側に、公表されている座席数・層の数・屋根の種類からスタンドを推定して描いています。座席表ではなく、実際の区画・列・座席は描いておらず、チームやリーグのマークもありません。",
-          back: "競技場 Kyogijo Stadiums のデモに戻る", docs: "ドキュメントの「実在の会場」ページ",
+          back: "競技場 Kyogijo Stadiums のデモに戻る", docs: "ドキュメントの「実在の会場」ページ", stadiumsLink: "実在のスタジアム BCプレイス", districtLink: "ロジャース・アリーナと並べたBCプレイス",
           factsTitle: "この図の元になった情報", edit: "表示", view: "表示", viewpoint: "視点", roof: "屋根と壁（3D）", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク",
           overhead: "真上", broadcast: "中継", end: "エンド", corner: "コーナー", formLabel: "会場の見せ方",
           arena: "アリーナ", city: "都市", seats: "アイスホッケーの座席数", tiers: "客席の層", roofKind: "屋根", orientation: "リンクの向き", outline: "建物の輪郭",
@@ -123,7 +123,7 @@
 
       function labelPage() {
         const w = words();
-        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["back", "back"], ["docs", "docs"], ["l-facts", "factsTitle"], ["l-edit", "edit"], ["l-view", "view"], ["l-viewpoint", "viewpoint"], ["l-roof", "roof"], ["l-language", "language"], ["l-theme", "theme"], ["credit", "credit"]]) $(id).textContent = w[key];
+        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["back", "back"], ["docs", "docs"], ["stadiums-link", "stadiumsLink"], ["district-link", "districtLink"], ["l-facts", "factsTitle"], ["l-edit", "edit"], ["l-view", "view"], ["l-viewpoint", "viewpoint"], ["l-roof", "roof"], ["l-language", "language"], ["l-theme", "theme"], ["credit", "credit"]]) $(id).textContent = w[key];
         for (const select of ["viewpoint", "theme"]) for (const option of $(select).options) option.textContent = w[option.value];
         document.documentElement.lang = $("language").value;
         document.title = w.pageTitle;

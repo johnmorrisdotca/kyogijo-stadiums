@@ -1,5 +1,6 @@
-// The building of a real venue, raised: its walls, standing on the outline OpenStreetMap gives, and its roof over the top tier, a lid that rises towards the middle or a saddle that rises at the two ends and falls at the two
-// sides. Both are asked for with the roof (`venue: { roof: true }`) and give way to the eye as the other walls do. Pure: data in, planes out.
+// The building of a real venue, raised: its walls, standing on the outline OpenStreetMap gives, and its roof over the top tier, a lid that rises towards the middle, a saddle that rises at the two ends and falls at the two
+// sides, or a cable-supported roof that rises to an opening over the surface which a retractable fabric closes (BC Place's, with the fabric gathered into its pod when `roofOpen` is asked). All are asked for with the roof
+// (`venue: { roof: true }`) and give way to the eye as the other walls do. Pure: data in, planes out.
 import { rayAt, type Pt, type RealShell, type StandRing } from "./crowd.ts";
 import { n, shy, wall, type Plane, type Upright, type V3 } from "./turn.kit.ts";
 import { pointList, raked, type Slope } from "./venue.geom.ts";
@@ -58,7 +59,7 @@ function slopeThrough(points: readonly V3[]): Slope {
  * The walls and the roof of a real venue. The hall is the building's outline cut to the bowl's wall and a margin (`RealShell.hall`): its rim is where a ray from the middle meets the one or the other first, in `steps`
  * rays. A wall stands on each stretch of the rim, up to the roof's height over it; the roof is a band from the rim in to the inner edge of the top tier (the middle stays open, as the 3D view's roofs are).
  */
-export function realBuilding(real: RealShell, top: StandRing | undefined, centre: readonly [number, number], lift: number, steps: number): Items {
+export function realBuilding(real: RealShell, top: StandRing | undefined, centre: readonly [number, number], lift: number, steps: number, open = false): Items {
   const items: Upright[] = [];
   const c: Pt = [centre[0], centre[1]];
   const rim = Array.from({ length: steps }, (_, k): Pt => {
@@ -76,12 +77,16 @@ export function realBuilding(real: RealShell, top: StandRing | undefined, centre
     planes.push({ ...shy(wall(`shell-${i}`, "wall", a[0], a[1], b[0], b[1], 0, high, `<rect class="u-shell" width="${n(long)}" height="${n(high)}"/>`), centre), fadeTo: 0.02 });
   });
   if (planes.length > 0) items.push({ id: "shell", kind: "walls", at: centre, height: Math.max(...planes.map((p) => p.o[2])), planes });
-  if (top?.hole == null) return items;
+  const crown = real.roof === "cable" ? real.crown : undefined;
+  if (top?.hole == null && crown === undefined) return items;
   const roof: Plane[] = [];
-  const hole = top.hole;
-  const inner = rim.map((_, k) => rayAt(hole, c[0], c[1], (2 * Math.PI * k) / steps));
-  const rise = real.roof === "saddle" ? 0 : LID_RISE;
-  const zOf = (p: Pt, inward: boolean): number => lift + roofAt(real, p) + (inward ? rise : 0);
+  // A cable roof rises from the rim of the hall to the opening over the surface; any other is a band from the rim in to the inner edge of the top tier.
+  const inner = rim.map((_, k) => {
+    const angle = (2 * Math.PI * k) / steps;
+    return crown === undefined ? rayAt(top!.hole!, c[0], c[1], angle) : firstHit(crown.opening, c, angle) ?? rayAt(top!.hole!, c[0], c[1], angle);
+  });
+  const rise = real.roof === "saddle" || real.roof === "cable" ? 0 : LID_RISE;
+  const zOf = (p: Pt, inward: boolean): number => lift + roofAt(real, p) + (inward ? (crown === undefined ? rise : crown.rise) : 0);
   for (let k = 0; k < steps; k += 1) {
     const [a, b] = [rim[k], rim[(k + 1) % steps]];
     const [ai, bi] = [inner[k], inner[(k + 1) % steps]];
@@ -93,11 +98,50 @@ export function realBuilding(real: RealShell, top: StandRing | undefined, centre
     if (el < 1e-6) continue;
     const mid: Pt = [(a[0] + b[0] + ai[0] + bi[0]) / 4, (a[1] + b[1] + ai[1] + bi[1]) / 4];
     const away = Math.hypot(mid[0] - c[0], mid[1] - c[1]);
-    const piece = raked(`roof-${k}`, "roof", quad, slope, [ex / el, ey / el], (corners) => `<polygon class="u-roof" points="${pointList(corners)}"/>`);
+    // A cable roof's cables run from the rim to the opening along the edge of each piece (ours: the drawing's cables are as many as its pieces, not the roof's own count).
+    const paint = (corners: Pt[]): string => `<polygon class="u-roof" points="${pointList(corners)}"/>${crown === undefined ? "" : `<path class="u-cable" d="M${n(corners[0][0])} ${n(corners[0][1])}L${n(corners[3][0])} ${n(corners[3][1])}"/>`}`;
+    const piece = raked(`roof-${k}`, "roof", quad, slope, [ex / el, ey / el], paint);
     if (piece !== undefined) roof.push({ ...piece, shy: [(mid[0] - c[0]) / away, (mid[1] - c[1]) / away] });
   }
+  if (crown !== undefined) roof.push(...cablePod(real, crown, inner, c, lift, steps, open));
   if (roof.length > 0) items.push({ id: "roof", kind: "roof", at: centre, height: Math.max(...roof.flatMap((p) => [p.o[2], p.o[2] + p.u[2], p.o[2] + p.v[2], p.o[2] + p.u[2] + p.v[2]])), planes: roof });
   return items;
+}
+
+/** The pod in the middle of a cable roof's opening, as a share of the opening's size, and how thick it is, in feet (ours: the article says the fabric gathers into a pod above the video board, not how large it is). */
+export const POD = { share: 0.24, thick: 9 } as const;
+
+/**
+ * What lies over the opening of a cable roof: the pod in the middle (a box hung at the crown's height) and, with the roof closed, the fabric between the pod and the opening's edge, drawn thin so that the seats
+ * show through it. Open, only the pod is there: the fabric has gathered into it.
+ */
+function cablePod(real: RealShell, crown: NonNullable<RealShell["crown"]>, edge: readonly Pt[], c: Pt, lift: number, steps: number, open: boolean): Plane[] {
+  const planes: Plane[] = [];
+  const z = lift + real.edge + crown.rise;
+  const pod = edge.map((p): Pt => [c[0] + (p[0] - c[0]) * POD.share, c[1] + (p[1] - c[1]) * POD.share]);
+  if (!open) {
+    for (let k = 0; k < steps; k += 1) {
+      const [a, b] = [edge[k], edge[(k + 1) % steps]];
+      const [ai, bi] = [pod[k], pod[(k + 1) % steps]];
+      const el = Math.hypot(b[0] - a[0], b[1] - a[1]);
+      if (el < 1e-6) continue;
+      const mid: Pt = [(a[0] + b[0] + ai[0] + bi[0]) / 4, (a[1] + b[1] + ai[1] + bi[1]) / 4];
+      const away = Math.hypot(mid[0] - c[0], mid[1] - c[1]);
+      const piece = raked(`fabric-${k}`, "roof", [ai, bi, b, a], { x0: c[0], y0: c[1], z0: z, gx: 0, gy: 0 }, [(b[0] - a[0]) / el, (b[1] - a[1]) / el], (corners) => `<polygon class="u-fabric" points="${pointList(corners)}"/>`);
+      if (piece !== undefined) planes.push({ ...piece, shy: [(mid[0] - c[0]) / away, (mid[1] - c[1]) / away], fadeTo: 0.04 });
+    }
+  }
+  // The pod: a flat top and the sides of a ring of boxes, one to each piece.
+  const top = z + POD.thick;
+  const topFace = raked("pod-top", "roof", pod, { x0: c[0], y0: c[1], z0: top, gx: 0, gy: 0 }, [1, 0], (corners) => `<polygon class="u-pod" points="${pointList(corners)}"/>`);
+  if (topFace !== undefined) planes.push(topFace);
+  for (let k = 0; k < steps; k += 1) {
+    const [a, b] = [pod[k], pod[(k + 1) % steps]];
+    const long = Math.hypot(b[0] - a[0], b[1] - a[1]);
+    if (long < 0.5) continue;
+    planes.push({ ...shy(wall(`pod-${k}`, "roof", a[0], a[1], b[0], b[1], z, top, `<rect class="u-pod" width="${n(long)}" height="${n(POD.thick)}"/>`), c), fadeTo: 0.3 });
+  }
+  return planes;
 }
 
 type Items = Upright[];

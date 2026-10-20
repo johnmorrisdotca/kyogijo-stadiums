@@ -23,6 +23,38 @@ export function planeMatrix(p: Plane, scale: number, centre: readonly [number, n
   return [u[0], u[1], u[2], 0, v[0], v[1], v[2], 0, w[0], w[1], w[2], 0, (p.o[0] - centre[0]) * scale, (p.o[1] - centre[1]) * scale, p.o[2] * scale, 1];
 }
 
+/**
+ * The order to draw buildings that stand apart in, far first: `rank[g]` is how many of the others `g` stands in front of. One building is in front of another when a line can be put between them and the eye is on its
+ * side (from the side of a line, the eye sees what is on its own side of it first, whatever the heights); two that no line separates go by how near their middles are.
+ */
+export function groupRanks(groups: readonly { hull: readonly (readonly [number, number])[] }[], yaw: number): number[] {
+  const a = (yaw * Math.PI) / 180;
+  // The direction on the plan towards the eye: depth grows with `x sin(yaw) + y cos(yaw)`.
+  const toward: [number, number] = [Math.sin(a), Math.cos(a)];
+  const middle = groups.map((g) => [g.hull.reduce((s, p) => s + p[0], 0) / g.hull.length, g.hull.reduce((s, p) => s + p[1], 0) / g.hull.length] as const);
+  const rank = new Array<number>(groups.length).fill(0);
+  groups.forEach((g, i) =>
+    groups.forEach((h, j) => {
+      if (j <= i) return;
+      // The axes tried for a line between them: the line through the middles' centre at right angles to the way from one to the other, then others round the circle.
+      const base = Math.atan2(middle[j][1] - middle[i][1], middle[j][0] - middle[i][0]);
+      let side = 0;
+      for (let k = 0; k < 36 && side === 0; k += 1) {
+        const t = base + (k % 2 === 0 ? 1 : -1) * Math.ceil(k / 2) * (Math.PI / 36);
+        const axis: [number, number] = [Math.cos(t), Math.sin(t)];
+        const along = (p: readonly [number, number]): number => p[0] * axis[0] + p[1] * axis[1];
+        if (Math.max(...g.hull.map(along)) < Math.min(...h.hull.map(along))) side = axis[0] * toward[0] + axis[1] * toward[1] > 0 ? 1 : -1;
+      }
+      // No line between them: the nearer middle is in front.
+      if (side === 0) side = middle[j][0] * toward[0] + middle[j][1] * toward[1] > middle[i][0] * toward[0] + middle[i][1] * toward[1] ? 1 : -1;
+      // `side` 1: `h` is nearer to the eye than `g`.
+      if (side > 0) rank[j] += 1;
+      else rank[i] += 1;
+    }),
+  );
+  return rank;
+}
+
 /** Where everything is for a view in a container: the placement, the matrix of each element and its place in the stack. */
 export interface Layout {
   at: Placement;
@@ -49,8 +81,10 @@ export function layoutOf(model: TurnModel, view: TurnView, width: number, height
   // sorted with the rest, by its middle, so that the legs and the skirt on the far side are drawn under it and the ones on the near side over it, and nothing under the top shows through it.
   const depth = (p: Plane): number => depthOf([(p.o[0] + (p.u[0] + p.v[0]) / 2 - centre[0]) * s, (p.o[1] + (p.u[1] + p.v[1]) / 2 - centre[1]) * s, (p.o[2] + (p.u[2] + p.v[2]) / 2) * s], view, at);
   const raised = model.uprights.lift > 0;
-  const order = [...planes.map((p, i) => ({ i: i + 1, ground: p.kind === "ground", depth: depth(p) })), ...(raised ? [{ i: 0, ground: false, depth: depth(floor) }] : [])].filter((one) => !one.ground);
-  order.sort((a, b) => a.depth - b.depth);
+  const order = [...planes.map((p, i) => ({ i: i + 1, ground: p.kind === "ground", depth: depth(p), group: p.group })), ...(raised ? [{ i: 0, ground: false, depth: depth(floor), group: undefined as number | undefined }] : [])].filter((one) => !one.ground);
+  // Buildings that stand apart are drawn one after another, the far one first; a plane of none (the floor) goes by its depth alone.
+  const rank = model.groups === undefined ? undefined : groupRanks(model.groups, view.yaw);
+  order.sort((a, b) => (rank === undefined || a.group === undefined || b.group === undefined ? 0 : rank[a.group] - rank[b.group]) || a.depth - b.depth);
   const stack = new Array<number>(model.planes.length + 1).fill(0);
   stack[0] = 1;
   order.forEach((one, rank) => {

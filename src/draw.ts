@@ -11,6 +11,7 @@ import { FOOTBALL } from "./geometry.ts";
 import { renderLayers } from "./layers.ts";
 import { arenaById, arenaCourtIn, arenaNameIn, arenaOfficialName, arenaRinkIn } from "./arenas.ts";
 import { venueById, venueBowl } from "./venues.ts";
+import { groundOfStadium, stadiumBowl, stadiumById, stadiumConfigOf, stadiumSeats } from "./stadiums.ts";
 import { groundById, groundNameIn, groundOfficialName } from "./grounds.ts";
 import { BOARD, courtFor, hasSetsBoard, isNetLeague, isNetSport, type CourtPlan } from "./court.ts";
 import { cricketBoardMarkup } from "./cricket.board.ts";
@@ -455,6 +456,10 @@ function standsFor(o: SurfaceOptions, surface: Surface, crowd: Crowd): CrowdStan
   const venue = crowd.real && sport === "nhl" && chooseLeague(o).league === undefined ? venueById(o.arena) : undefined;
   // (No visitors' block: no source says where a real arena puts them.)
   if (venue !== undefined) return crowdLayout({ sport, box, crowd: crowd.awayEnd === "auto" ? { ...crowd, awayEnd: "none" } : crowd, awaySide, real: venueBowl(venue, box) });
+  // A football field or a soccer pitch in a real stadium: its building and a bowl of the configuration's seats.
+  const config = crowd.real ? stadiumConfigOf(sport) : undefined;
+  const stadium = config !== undefined && chooseLeague(o).league === undefined ? stadiumById(o.stadium ?? o.ground) : undefined;
+  if (stadium !== undefined && config !== undefined) return crowdLayout({ sport, box, crowd: crowd.awayEnd === "auto" ? { ...crowd, awayEnd: "none" } : crowd, awaySide, real: stadiumBowl(stadium, config, box) });
   // A dojo's crowd sits in its gallery, from the room's balcony data (in feet here); the arenas (the Budokan, the Kokugikan) keep their bowls.
   const hall = sport === "dojo" ? dojoGallery(o) : undefined;
   const gallery = hall === undefined ? undefined : { offset: hall.offset / 0.3048, depth: hall.depth / 0.3048, height: [hall.height[0] / 0.3048, hall.height[1] / 0.3048] as [number, number], rows: hall.rows, aisles: hall.aisles };
@@ -747,7 +752,10 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
   const realCrowd = o.crowd === undefined || o.crowd === false ? undefined : resolveCrowd(o.crowd);
   const venue = sport === "nhl" && league === undefined && realCrowd?.real === true ? venueById(o.arena) : undefined;
   const realLine = venue === undefined || arenaName === undefined ? "" : `${gap}${fill(words.said.real, { arena: arenaName, seats: String(venue.seats.hockey), tiers: String(venue.tiers.count) })}${gap}${words.said[venue.osm.axis.basis === "mapped" ? "realMapped" : venue.osm.axis.basis === "building" ? "realBuilding" : "realNone"]}`;
-  const parkLine = (parkName === undefined ? `${groundLine}${halfLine}${arenaLine}${realLine}` : `${gap}${fill(words.said.park, { park: parkName })}${officially(parkOfficial)}${ballpark === undefined ? "" : ballparkSentences(ballpark).map((line) => `${gap}${line}`).join("")}`) + (special === undefined ? "" : `${gap}${special.text}`);
+  const config = realCrowd?.real === true ? stadiumConfigOf(sport) : undefined;
+  const realStadium = config !== undefined && league === undefined ? stadiumById(o.stadium ?? o.ground) : undefined;
+  const stadiumLine = realStadium === undefined || config === undefined ? "" : `${gap}${fill(words.said.stadium, { stadium: groundNameIn(groundOfStadium(realStadium), o.year, language), seats: String(stadiumSeats(realStadium, config)), tiers: String(realStadium.tiers.count) })}${gap}${words.said[realStadium.osm.axis.basis === "opening" ? "stadiumOpening" : realStadium.osm.axis.basis === "building" ? "stadiumBuilding" : "stadiumNone"]}`;
+  const parkLine = (parkName === undefined ? `${groundLine}${halfLine}${arenaLine}${realLine}${stadiumLine}` : `${gap}${fill(words.said.park, { park: parkName })}${officially(parkOfficial)}${ballpark === undefined ? "" : ballparkSentences(ballpark).map((line) => `${gap}${line}`).join("")}`) + (special === undefined ? "" : `${gap}${special.text}`);
   // A drawing of a past season says which: the markings are those of that season.
   const dated = typeof o.year === "number" && Number.isFinite(o.year);
   const eraLine =
