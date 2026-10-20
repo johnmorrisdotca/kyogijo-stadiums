@@ -7,6 +7,23 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.13.0] - 2026-10-20
+
+### Added
+
+- **Tournament layouts in 3D** (`mountMultiTurn`, `multiTurnMarkup`, `buildMultiTurn` and `multiPresets` of `@johnmorrisdotca/kyogijo-stadiums/multi`). A layout can be turned like any surface: the same four viewpoints (overhead, broadcast, end-on and low corner), turn, tilt, zoom, reset and auto-turn, the same drag, keys and pinch, and the steady camera of 0.12.2 (a fixed scale for the whole turn, ten-decimal matrices, the lens of 8), with the whole floor fitted at every angle. It is the 3D view and not a second renderer: the layout is built as a `TurnModel`, so the camera, the controls and the tests are the ones every surface has (`mountKyogijoTurn` is now `mountTurn` over `buildTurn`, and `mountMultiTurn` is `mountTurn` over `buildMultiTurn`; `TurnModel` has `presets` and `flat` for a model with viewpoints and a flat drawing of its own). Each surface stands as it does on its own page and in its own cell (`uprightsFor`, moved and turned with the cell, and with the hall when the hall turns the layout): the nets and posts of every net sport and a table tennis table as a top 76 cm over the floor on its skirt and legs, with the table's own drawing on it and a soft shadow on the floor, each table's parts drawn in the right order from every side. What only a layout has is stood up from the figures the flat drawing draws: a surround of 75 cm round each area (the ITTF Handbook, 3.2.3.3), in pieces of at most 3 m, that gives way a little only to an eye low on its side (`Plane.fadeAt`); an umpire's chair and a score table as solid blocks; the scoreboard hung over the middle of the floor and facing the eye, and one at each surface where the layout has them. With `stadium` the stands of the hall are raised on the floor's ground (`standsVenueOf`, the same planes `standsVenue` makes for one surface), with a roof on request. The viewpoints are turned to the layout: a net sport's end-on view looks along its surfaces, and a floor taller than it is wide is turned a quarter so that its long way runs across the screen. The heights of the chairs, the tables and the scoreboard are ours (no rule gives them); the table's, the net's and the surround's are the rulebook's.
+- **`halls.html` has the 3D view.** A View choice (`2D` or `3D`, `view=3d` in the address), the viewpoint in the address (`viewpoint=`), the roof of the stadium (`roof=1`) and the 3D view's own controls under the floor; a layout chosen in 3D opens on the viewpoint chosen. Try it: <https://johnmorrisdotca.github.io/kyogijo-stadiums/halls.html?preset=tabletennis-4&view=3d>.
+- **Docs and README.** A section "In 3D" on [the layouts page](./docs/multi.md#in-3d) with a picture of a layout in 3D (four table tennis areas, light and dark); the same picture in the README's layouts section.
+- **Japanese**, two phrases for the parts named in a layout's 3D description: `競技エリアのフェンス` (the competition area's fence) and `審判席と記録台` (the umpires' chairs and the score tables).
+
+### Changed
+
+- `multiDrawing(options, raise)` (internal to `multi.draw.ts`) is the drawing of a layout with what was worked out to make it; `drawMulti` is its string. A layout made as the floor of a 3D view leaves out what the 3D view stands up. The drawn picture is unchanged.
+
+### Tests
+
+- The size-steadiness test (`src/turn.size.test.ts`) and the camera-fit test (`src/turn.camera.test.ts`) now run on every tournament layout, alone and in a stadium, in place of four layouts used as a plain floor; the depth-order and whole-floor tests of 0.12.2 (`src/turn.raised.test.ts`) run on the tables of the table tennis layouts and on the floor and stands of five layouts at every turn and tip, desk and phone; `src/multi.turn.test.ts` holds each surface to its cell (also in a hall that turns the layout), the surrounds, chairs, scoreboards and stands, the viewpoints and the markup; `e2e/halls.demo.mjs` plays the layouts page in 3D in a real browser (the controls, the address, a full turn's size, the legs under each table's top, the stadium and its roof, Japanese, a phone).
+
 ## [0.12.2] - 2026-10-20
 
 ### Added
