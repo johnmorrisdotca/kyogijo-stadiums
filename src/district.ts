@@ -183,7 +183,7 @@ const haversine = (a: readonly [number, number], b: readonly [number, number]): 
  * import { planDistrict } from "@johnmorrisdotca/kyogijo-stadiums/district";
  * const plan = planDistrict({ venues: ["bc-place", "rogers-arena"] });
  * console.log(plan.mode, plan.members.length, Math.round(plan.between[0].metres));
- * // neighbours 2 380
+ * // neighbours 2 264
  * ```
  */
 export function planDistrict(options: DistrictOptions): DistrictPlan {
