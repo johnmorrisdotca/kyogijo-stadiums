@@ -19,9 +19,23 @@
       a { color: var(--accent); }
       [hidden] { display: none !important; }
       :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-      #tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; }
-      #tabs button { font: inherit; font-size: 1rem; font-weight: 800; min-height: 48px; padding: 0 14px; border-radius: 12px; border: 2px solid var(--tab); background: var(--card); color: var(--ink); cursor: pointer; }
+      :root { --hit: 48px; }
+      /* The venues are chips and the field of a stadium a segmented choice, as on the venues page and the home page: the same font, height, pressed state and wrap, in light and dark. */
+      #stadium-tabs, #tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 10px; }
+      #stadium-tabs button { font: inherit; font-size: .95rem; font-weight: 700; min-height: var(--hit); padding: 0 16px; border-radius: 999px; border: 2px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer; }
+      #stadium-tabs button:hover:not([aria-selected="true"]) { border-color: var(--tab); }
+      #stadium-tabs button[aria-selected="true"] { border-color: var(--tab); background: var(--tab); color: var(--tab-ink); }
+      #tabs { display: inline-flex; gap: 4px; padding: 3px; background: var(--card); border: 1px solid var(--line); border-radius: 999px; }
+      #tabs button { font: inherit; font-size: .95rem; font-weight: 700; min-height: var(--hit); padding: 0 18px; border-radius: 999px; border: 0; background: transparent; color: var(--ink); cursor: pointer; }
+      #tabs button:hover:not([aria-selected="true"]) { background: color-mix(in srgb, var(--ink) 8%, transparent); }
       #tabs button[aria-selected="true"] { background: var(--tab); color: var(--tab-ink); }
+      #tabs:empty { display: none; }
+      @media (max-width: 600px) {
+        #stadium-tabs { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
+        #stadium-tabs button { flex: none; white-space: nowrap; }
+        #tabs { max-width: 100%; }
+        #tabs button { flex: 1 1 auto; padding: 0 12px; }
+      }
       #stage { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 8px; }
       #stage > svg.kyogijo { display: block; width: 100%; height: auto; max-height: calc(100vh - 190px); }
       .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr)); gap: 12px; margin: 10px 0 0; }
