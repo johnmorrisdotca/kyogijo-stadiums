@@ -5490,6 +5490,6669 @@
      "badges": []
     }
    }
+  },
+  "Q733748": {
+   "type": "item",
+   "id": "Q733748",
+   "labels": {
+    "en": {
+     "language": "en",
+     "value": "Tokyo Dome"
+    },
+    "ja": {
+     "language": "ja",
+     "value": "東京ドーム"
+    }
+   },
+   "claims": {
+    "P373": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P373",
+       "hash": "2bf5ecb155c9ac8cd4dfbf055c8d9e64af4d1551",
+       "datavalue": {
+        "value": "Tokyo Dome",
+        "type": "string"
+       },
+       "datatype": "string"
+      },
+      "type": "statement",
+      "id": "q733748$F6E21A74-CD70-4902-A829-86D4D3C6F630",
+      "rank": "normal"
+     }
+    ],
+    "P625": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P625",
+       "hash": "dc818e2932a37ff5b6cd91a350c451af16b350c0",
+       "datavalue": {
+        "value": {
+         "latitude": 35.705555555555556,
+         "longitude": 139.75194444444443,
+         "altitude": null,
+         "precision": 0.0002777777777777778,
+         "globe": "http://www.wikidata.org/entity/Q2"
+        },
+        "type": "globecoordinate"
+       },
+       "datatype": "globe-coordinate"
+      },
+      "type": "statement",
+      "id": "q733748$D89CA19D-8E70-4A31-AA0F-94C4F069EFB9",
+      "rank": "normal"
+     }
+    ],
+    "P646": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P646",
+       "hash": "d70cb31322ad66ffc6dc520055738c3faa7fc82e",
+       "datavalue": {
+        "value": "/m/032ctp",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q733748$D17D004E-7BEA-4A3C-AB77-A7D87FEF666C",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "2b00cb481cddcac7623114367489b5c194901c4a",
+        "snaks": {
+         "P248": [
+          {
+           "snaktype": "value",
+           "property": "P248",
+           "hash": "a94b740202b097dd33355e0e6c00e54b9395e5e0",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 15241312,
+             "id": "Q15241312"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ],
+         "P577": [
+          {
+           "snaktype": "value",
+           "property": "P577",
+           "hash": "fde79ecb015112d2f29229ccc1ec514ed3e71fa2",
+           "datavalue": {
+            "value": {
+             "time": "+2013-10-28T00:00:00Z",
+             "timezone": 0,
+             "before": 0,
+             "after": 0,
+             "precision": 11,
+             "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+            },
+            "type": "time"
+           },
+           "datatype": "time"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P248",
+         "P577"
+        ]
+       }
+      ]
+     }
+    ],
+    "P466": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P466",
+       "hash": "b55be3d4b95095cf6ecc010ee981f63d3813c5b6",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 1197407,
+         "id": "Q1197407"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q733748$6DE7CB84-53D2-4B2B-BFAA-84E8CCB5EB60",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+        "snaks": {
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 328,
+             "id": "Q328"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P143"
+        ]
+       }
+      ]
+     },
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P466",
+       "hash": "2d3f1c168c3120e8c519aa0ac3daecf302b70a12",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 974277,
+         "id": "Q974277"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "qualifiers": {
+       "P580": [
+        {
+         "snaktype": "value",
+         "property": "P580",
+         "hash": "3975d8bff9a27f2ccb7aeaea1348b4bc6c3de8b2",
+         "datavalue": {
+          "value": {
+           "time": "+1988-00-00T00:00:00Z",
+           "timezone": 0,
+           "before": 0,
+           "after": 0,
+           "precision": 9,
+           "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+          },
+          "type": "time"
+         },
+         "datatype": "time"
+        }
+       ],
+       "P582": [
+        {
+         "snaktype": "value",
+         "property": "P582",
+         "hash": "8cf42da636603cf5e981a4fdb48bd8a5fe9892dc",
+         "datavalue": {
+          "value": {
+           "time": "+2003-00-00T00:00:00Z",
+           "timezone": 0,
+           "before": 0,
+           "after": 0,
+           "precision": 9,
+           "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+          },
+          "type": "time"
+         },
+         "datatype": "time"
+        }
+       ]
+      },
+      "qualifiers-order": [
+       "P580",
+       "P582"
+      ],
+      "id": "Q733748$b280554e-4845-9daf-9c6c-263ece57b0ea",
+      "rank": "normal"
+     }
+    ],
+    "P18": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P18",
+       "hash": "75ef13e9cd0d61040d6179b4a81211e8d4e8c5b4",
+       "datavalue": {
+        "value": "Tokyo dome.JPG",
+        "type": "string"
+       },
+       "datatype": "commonsMedia"
+      },
+      "type": "statement",
+      "id": "Q733748$0E6F4233-E325-403E-9C72-CD76D093C85E",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+        "snaks": {
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 328,
+             "id": "Q328"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P143"
+        ]
+       }
+      ]
+     }
+    ],
+    "P1083": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P1083",
+       "hash": "23c9c04ed10dd61140c66a0cde7a8c5648d8a014",
+       "datavalue": {
+        "value": {
+         "amount": "+55000",
+         "unit": "1"
+        },
+        "type": "quantity"
+       },
+       "datatype": "quantity"
+      },
+      "type": "statement",
+      "id": "Q733748$F7399F67-85A1-4254-91FA-AF365A442AAC",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+        "snaks": {
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 328,
+             "id": "Q328"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P143"
+        ]
+       }
+      ]
+     }
+    ],
+    "P131": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P131",
+       "hash": "fbd9ccbdd8bcd8afc5fb997c0a640f7161aa5e61",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 11488350,
+         "id": "Q11488350"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q733748$E4883DAF-629A-4B18-964B-8ED8E7FFA795",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+        "snaks": {
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 328,
+             "id": "Q328"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P143"
+        ]
+       }
+      ]
+     }
+    ],
+    "P1004": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P1004",
+       "hash": "1e439bf711fd122e0089d9c814ccb64401668a17",
+       "datavalue": {
+        "value": "9ebc6213-bd3d-40bb-b1d8-cc6d9f9a68fa",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q733748$F2DE840D-2D32-498D-BE6B-D2359B2C4E10",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "706208b3024200fd0a39ad499808dd0d98d74065",
+        "snaks": {
+         "P248": [
+          {
+           "snaktype": "value",
+           "property": "P248",
+           "hash": "623cc8f0e2f65afe4d66b91962d354a2f3aa9a27",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 14005,
+             "id": "Q14005"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P248"
+        ]
+       }
+      ]
+     }
+    ],
+    "P31": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P31",
+       "hash": "3c2510889eb3e3b954eb5142aef8641857adae5e",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 1049757,
+         "id": "Q1049757"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q733748$0274a9d8-413e-919d-4ffe-179b4bffced9",
+      "rank": "normal"
+     },
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P31",
+       "hash": "0e4645cbf89ac36871fdc13017f4578983b0d08f",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 625797,
+         "id": "Q625797"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q733748$b2e35576-4b4d-bde7-56cf-be62e1dbef92",
+      "rank": "normal"
+     }
+    ],
+    "P17": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P17",
+       "hash": "55178c20e031f1579d34d802f16f6b9951b631e1",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 17,
+         "id": "Q17"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q733748$D173A1F4-130E-4632-AB8A-6B2421B7E5A8",
+      "rank": "normal"
+     }
+    ],
+    "P1566": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P1566",
+       "hash": "0a542c641302256b4d0574edcc7da28e11fc9d82",
+       "datavalue": {
+        "value": "8504827",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q733748$1748D0DF-79BA-4139-A9BC-1E1446B49F37",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "88694a0f4d1486770c269f7db16a1982f74da69d",
+        "snaks": {
+         "P248": [
+          {
+           "snaktype": "value",
+           "property": "P248",
+           "hash": "1b3ef912a2bd61e18dd43abd184337eb010b2e96",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 830106,
+             "id": "Q830106"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P248"
+        ]
+       }
+      ]
+     }
+    ],
+    "P641": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P641",
+       "hash": "8682f60c82abf09b2ec316112627a94e908f2ff9",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 5369,
+         "id": "Q5369"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q733748$FBEAAB86-664E-4FE3-A333-7A8BC18BC041",
+      "rank": "normal"
+     }
+    ],
+    "P454": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P454",
+       "hash": "2311e2520638a0ca41b38968e35df3468af7fe8a",
+       "datavalue": {
+        "value": "20000731",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q733748$C47FFF65-96DE-4177-841B-64D58A53A439",
+      "rank": "normal"
+     }
+    ],
+    "P856": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P856",
+       "hash": "bf5bceb27fe04be3e8fe67617d5858e808a4d3d8",
+       "datavalue": {
+        "value": "https://www.tokyo-dome.co.jp/dome/",
+        "type": "string"
+       },
+       "datatype": "url"
+      },
+      "type": "statement",
+      "qualifiers": {
+       "P407": [
+        {
+         "snaktype": "value",
+         "property": "P407",
+         "hash": "d858d1b9f6e6e383f38dfbe706d102f056c07312",
+         "datavalue": {
+          "value": {
+           "entity-type": "item",
+           "numeric-id": 5287,
+           "id": "Q5287"
+          },
+          "type": "wikibase-entityid"
+         },
+         "datatype": "wikibase-item"
+        }
+       ]
+      },
+      "qualifiers-order": [
+       "P407"
+      ],
+      "id": "Q733748$DB2E49D5-1FF0-483A-985E-0DA09383CB7B",
+      "rank": "normal"
+     },
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P856",
+       "hash": "d7ea8821a312e57a71e6e5729626edb029add178",
+       "datavalue": {
+        "value": "https://www.tokyo-dome.co.jp/en/tourists/dome/",
+        "type": "string"
+       },
+       "datatype": "url"
+      },
+      "type": "statement",
+      "qualifiers": {
+       "P407": [
+        {
+         "snaktype": "value",
+         "property": "P407",
+         "hash": "daf1c4fcb58181b02dff9cc89deb084004ddae4b",
+         "datavalue": {
+          "value": {
+           "entity-type": "item",
+           "numeric-id": 1860,
+           "id": "Q1860"
+          },
+          "type": "wikibase-entityid"
+         },
+         "datatype": "wikibase-item"
+        }
+       ]
+      },
+      "qualifiers-order": [
+       "P407"
+      ],
+      "id": "Q733748$a55d6596-431e-7f6d-ee01-31476cdd5be2",
+      "rank": "normal"
+     },
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P856",
+       "hash": "abaaf0cf3140ec7d526421521525a6db931233ce",
+       "datavalue": {
+        "value": "https://www.tokyo-dome.co.jp/zh-CHS/tourists/dome/",
+        "type": "string"
+       },
+       "datatype": "url"
+      },
+      "type": "statement",
+      "qualifiers": {
+       "P407": [
+        {
+         "snaktype": "value",
+         "property": "P407",
+         "hash": "4970e6b4a7655ad85f2594f617758c4250799664",
+         "datavalue": {
+          "value": {
+           "entity-type": "item",
+           "numeric-id": 13414913,
+           "id": "Q13414913"
+          },
+          "type": "wikibase-entityid"
+         },
+         "datatype": "wikibase-item"
+        }
+       ]
+      },
+      "qualifiers-order": [
+       "P407"
+      ],
+      "id": "Q733748$d77b8c6b-4239-2a9e-477d-ae7e33c00eb4",
+      "rank": "normal"
+     },
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P856",
+       "hash": "79ef8269e94c8d2fbc0e91c5c0f07098d0487d90",
+       "datavalue": {
+        "value": "https://www.tokyo-dome.co.jp/zh-CHT/tourists/dome/",
+        "type": "string"
+       },
+       "datatype": "url"
+      },
+      "type": "statement",
+      "qualifiers": {
+       "P407": [
+        {
+         "snaktype": "value",
+         "property": "P407",
+         "hash": "fbe0ce84fb2993dc61a764c6b3ccbda1fb4cc669",
+         "datavalue": {
+          "value": {
+           "entity-type": "item",
+           "numeric-id": 18130932,
+           "id": "Q18130932"
+          },
+          "type": "wikibase-entityid"
+         },
+         "datatype": "wikibase-item"
+        }
+       ]
+      },
+      "qualifiers-order": [
+       "P407"
+      ],
+      "id": "Q733748$32a5cb2d-4f70-7f9c-242d-567a91502dee",
+      "rank": "normal"
+     },
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P856",
+       "hash": "21d996731e5dee8e101aaed5a2bb414275a00525",
+       "datavalue": {
+        "value": "https://www.tokyo-dome.co.jp/ko/tourists/dome/",
+        "type": "string"
+       },
+       "datatype": "url"
+      },
+      "type": "statement",
+      "qualifiers": {
+       "P407": [
+        {
+         "snaktype": "value",
+         "property": "P407",
+         "hash": "a10335a425d19169dd856e0a5f71735853eab0ab",
+         "datavalue": {
+          "value": {
+           "entity-type": "item",
+           "numeric-id": 9176,
+           "id": "Q9176"
+          },
+          "type": "wikibase-entityid"
+         },
+         "datatype": "wikibase-item"
+        }
+       ]
+      },
+      "qualifiers-order": [
+       "P407"
+      ],
+      "id": "Q733748$5bfc0d92-4b39-cd32-0651-b15e30997d64",
+      "rank": "normal"
+     }
+    ],
+    "P1398": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P1398",
+       "hash": "0342b391c4908603dfd70c82a8bf140f6e773ec3",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 6431378,
+         "id": "Q6431378"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q733748$bcdbce8a-4311-d12c-1b21-c5ee964fbc31",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "a29a646602abf65105ed0f39a44231c962ece9ee",
+        "snaks": {
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "c6f1777471211df31724ac60175786f3872c83e9",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 177837,
+             "id": "Q177837"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P143"
+        ]
+       }
+      ]
+     }
+    ],
+    "P935": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P935",
+       "hash": "78beb4f37e1a8b5d8f2ffa82edab4e089d35a54c",
+       "datavalue": {
+        "value": "Tokyo Dome",
+        "type": "string"
+       },
+       "datatype": "string"
+      },
+      "type": "statement",
+      "id": "Q733748$6cb01005-49f4-f0b8-2c57-7888e1e8565d",
+      "rank": "normal"
+     }
+    ],
+    "P3417": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P3417",
+       "hash": "6c8b44632f27cca3062abbc9a8ae4cfdb0c74493",
+       "datavalue": {
+        "value": "Tokyo-Dome",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q733748$B1CAE4E0-4DD1-455C-9AE2-77929FC067DE",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "3b0a5bb3c1f955edce73740124f7d935698092ad",
+        "snaks": {
+         "P248": [
+          {
+           "snaktype": "value",
+           "property": "P248",
+           "hash": "3ac9682e789a3a3791d4fd088b265ea03abef101",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 51711,
+             "id": "Q51711"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P248"
+        ]
+       }
+      ]
+     }
+    ],
+    "P910": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P910",
+       "hash": "a33a21d2933761fef7f88fb89b4bc92ff81ae6cb",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 9690495,
+         "id": "Q9690495"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q733748$E76AA25A-45CA-4D81-ADAE-2C1E81A72D0C",
+      "rank": "normal"
+     }
+    ],
+    "P1619": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P1619",
+       "hash": "c72b956f353e00bec8c1836403f98b0edd0bfef7",
+       "datavalue": {
+        "value": {
+         "time": "+1988-03-17T00:00:00Z",
+         "timezone": 0,
+         "before": 0,
+         "after": 0,
+         "precision": 11,
+         "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+        },
+        "type": "time"
+       },
+       "datatype": "time"
+      },
+      "type": "statement",
+      "id": "Q733748$0CB1DF9B-BCB0-4BF7-BDC4-A693D77F8228",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "812a578c412a39fc1250026549c7fa3885e23806",
+        "snaks": {
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "07596fc82d3ed4d248b85e5543852cc31e37dc8c",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 199913,
+             "id": "Q199913"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ],
+         "P4656": [
+          {
+           "snaktype": "value",
+           "property": "P4656",
+           "hash": "c56464475f413bcad49b0be2e7d038be29966c54",
+           "datavalue": {
+            "value": "https://he.wikipedia.org/w/index.php?title=טוקיו_דום&oldid=23479024",
+            "type": "string"
+           },
+           "datatype": "url"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P143",
+         "P4656"
+        ]
+       }
+      ]
+     }
+    ],
+    "P7561": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P7561",
+       "hash": "96adee46e329bd0f78110aaf72602941cac6f6fd",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 75109882,
+         "id": "Q75109882"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q733748$1209F094-F7AA-4004-9604-1A115B9E6079",
+      "rank": "normal"
+     }
+    ],
+    "P84": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P84",
+       "hash": "c57f3783f79ed0bc62a4c05337ba1bcbb7513b00",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 3116531,
+         "id": "Q3116531"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q733748$8325427E-6978-4093-8496-C543976DEA11",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "9d443aa2e04761fca3b4da82023852cf884bd43e",
+        "snaks": {
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 328,
+             "id": "Q328"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ],
+         "P4656": [
+          {
+           "snaktype": "value",
+           "property": "P4656",
+           "hash": "61480d61c0d1a1608e6e0a1fda56f18e813887d4",
+           "datavalue": {
+            "value": "https://en.wikipedia.org/w/index.php?title=Tokyo_Dome&oldid=936408499",
+            "type": "string"
+           },
+           "datatype": "url"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P143",
+         "P4656"
+        ]
+       }
+      ]
+     }
+    ],
+    "P7084": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P7084",
+       "hash": "047472faf7de12e4139f7d1d8def007b9739e5f9",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 8234126,
+         "id": "Q8234126"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "qualifiers": {
+       "P4224": [
+        {
+         "snaktype": "value",
+         "property": "P4224",
+         "hash": "481c9bbdf04bc5354724556f866f81216a2b50a9",
+         "datavalue": {
+          "value": {
+           "entity-type": "item",
+           "numeric-id": 83193888,
+           "id": "Q83193888"
+          },
+          "type": "wikibase-entityid"
+         },
+         "datatype": "wikibase-item"
+        }
+       ]
+      },
+      "qualifiers-order": [
+       "P4224"
+      ],
+      "id": "Q733748$fc7a7de9-4853-7128-2b5e-b5de6f342114",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "1e23183bad0a6326352e5b609b34db7827027c69",
+        "snaks": {
+         "P813": [
+          {
+           "snaktype": "value",
+           "property": "P813",
+           "hash": "f7053bc1490da03a80c5ee9a7a4f47e57bd6f544",
+           "datavalue": {
+            "value": {
+             "time": "+2020-01-20T00:00:00Z",
+             "timezone": 0,
+             "before": 0,
+             "after": 0,
+             "precision": 11,
+             "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+            },
+            "type": "time"
+           },
+           "datatype": "time"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P813"
+        ]
+       }
+      ]
+     }
+    ],
+    "P3451": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P3451",
+       "hash": "4fd1a3566b68ff86e46c67125afc5dfb176d0901",
+       "datavalue": {
+        "value": "Tokyo Dome night.jpg",
+        "type": "string"
+       },
+       "datatype": "commonsMedia"
+      },
+      "type": "statement",
+      "qualifiers": {
+       "P518": [
+        {
+         "snaktype": "value",
+         "property": "P518",
+         "hash": "bbdddfd1ba0ec6abf1571afbd4190cbf1829ef32",
+         "datavalue": {
+          "value": {
+           "entity-type": "item",
+           "numeric-id": 56240104,
+           "id": "Q56240104"
+          },
+          "type": "wikibase-entityid"
+         },
+         "datatype": "wikibase-item"
+        }
+       ]
+      },
+      "qualifiers-order": [
+       "P518"
+      ],
+      "id": "Q733748$199A252F-F9A5-4B79-8601-58F0C4C33E8D",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "e0afc4770f31e2e1f1590706a2d46657fffc01b7",
+        "snaks": {
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "5d3b16d350189b0a81818758208505444c86c127",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 565,
+             "id": "Q565"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ],
+         "P373": [
+          {
+           "snaktype": "value",
+           "property": "P373",
+           "hash": "d2dabf01ad8b9b84f43e8e342b4c35e1a08dd68a",
+           "datavalue": {
+            "value": "Tokyo Dome City at night",
+            "type": "string"
+           },
+           "datatype": "string"
+          }
+         ],
+         "P813": [
+          {
+           "snaktype": "value",
+           "property": "P813",
+           "hash": "e34dfba31bcd2c66cac9662a081095767e2cc8ec",
+           "datavalue": {
+            "value": {
+             "time": "+2026-06-00T00:00:00Z",
+             "timezone": 0,
+             "before": 0,
+             "after": 0,
+             "precision": 10,
+             "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+            },
+            "type": "time"
+           },
+           "datatype": "time"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P143",
+         "P373",
+         "P813"
+        ]
+       }
+      ]
+     },
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P3451",
+       "hash": "3a3c9092f868929356116c65b5231c7e9801083e",
+       "datavalue": {
+        "value": "Tokyo Dome side view.jpg",
+        "type": "string"
+       },
+       "datatype": "commonsMedia"
+      },
+      "type": "statement",
+      "id": "Q733748$BF06160D-8483-4868-8532-003ECBC3A965",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "ead284320e09de073203c2a7386688f62be61625",
+        "snaks": {
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 328,
+             "id": "Q328"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ],
+         "P813": [
+          {
+           "snaktype": "value",
+           "property": "P813",
+           "hash": "f7053bc1490da03a80c5ee9a7a4f47e57bd6f544",
+           "datavalue": {
+            "value": {
+             "time": "+2020-01-20T00:00:00Z",
+             "timezone": 0,
+             "before": 0,
+             "after": 0,
+             "precision": 11,
+             "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+            },
+            "type": "time"
+           },
+           "datatype": "time"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P143",
+         "P813"
+        ]
+       }
+      ]
+     }
+    ],
+    "P5775": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P5775",
+       "hash": "09c4f9569232bb0928bf46a0be610a896974f4e4",
+       "datavalue": {
+        "value": "Interior of Tokyo Dome 201904b.jpg",
+        "type": "string"
+       },
+       "datatype": "commonsMedia"
+      },
+      "type": "statement",
+      "id": "Q733748$8155ABD7-4044-41CF-AF72-71C974BB301B",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "6d98bf944a6239be14363c3cc777b28a73e89109",
+        "snaks": {
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "c6f1777471211df31724ac60175786f3872c83e9",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 177837,
+             "id": "Q177837"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ],
+         "P813": [
+          {
+           "snaktype": "value",
+           "property": "P813",
+           "hash": "f7053bc1490da03a80c5ee9a7a4f47e57bd6f544",
+           "datavalue": {
+            "value": {
+             "time": "+2020-01-20T00:00:00Z",
+             "timezone": 0,
+             "before": 0,
+             "after": 0,
+             "precision": 11,
+             "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+            },
+            "type": "time"
+           },
+           "datatype": "time"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P143",
+         "P813"
+        ]
+       }
+      ]
+     }
+    ],
+    "P276": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P276",
+       "hash": "0f5927a44460df7c364c47cb7d740ee109f2e6e4",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 564554,
+         "id": "Q564554"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q733748$34aaa905-410a-26f6-aa8b-03763204114f",
+      "rank": "normal"
+     }
+    ],
+    "P137": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P137",
+       "hash": "273fb3d0bb206de41edb376a6cfe1bf629f6a60a",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 2439074,
+         "id": "Q2439074"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q733748$da5e9a75-4b85-b2cd-4f8a-8d9bc54942cc",
+      "rank": "normal"
+     }
+    ],
+    "P1365": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P1365",
+       "hash": "452d5e2d31a360fe6079ce762719298a82609cb9",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 473519,
+         "id": "Q473519"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q733748$41b4b7bc-4e0a-1aae-ccd0-5a66a9a586b1",
+      "rank": "normal"
+     }
+    ],
+    "P527": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P527",
+       "hash": "1a1a8b683c80fea1587b85e0e3da4db2895d1672",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 1134380,
+         "id": "Q1134380"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q733748$1cd291a3-492c-1048-ed79-f62c6e865e9a",
+      "rank": "normal"
+     }
+    ],
+    "P144": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P144",
+       "hash": "fcf6eb95ae966e36b5d3f4a4fc6a8a96e8432f6f",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 1072186,
+         "id": "Q1072186"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q733748$1017062c-4d8e-d7da-21cb-977c37b67b03",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "a29a646602abf65105ed0f39a44231c962ece9ee",
+        "snaks": {
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "c6f1777471211df31724ac60175786f3872c83e9",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 177837,
+             "id": "Q177837"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P143"
+        ]
+       }
+      ]
+     }
+    ],
+    "P729": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P729",
+       "hash": "06f72438ec0799d489a49b1d3b99a251a46bf06f",
+       "datavalue": {
+        "value": {
+         "time": "+1988-03-18T00:00:00Z",
+         "timezone": 0,
+         "before": 0,
+         "after": 0,
+         "precision": 11,
+         "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+        },
+        "type": "time"
+       },
+       "datatype": "time"
+      },
+      "type": "statement",
+      "id": "Q733748$cb987fe7-4c8d-b34f-850a-fadae64c8a35",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "a29a646602abf65105ed0f39a44231c962ece9ee",
+        "snaks": {
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "c6f1777471211df31724ac60175786f3872c83e9",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 177837,
+             "id": "Q177837"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P143"
+        ]
+       }
+      ]
+     }
+    ],
+    "P3032": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P3032",
+       "hash": "205ff0894e2590beaf060a4bb0aead26b2a7f7f6",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 4389857,
+         "id": "Q4389857"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q733748$bd7a6ffb-41e0-4141-25ce-3a9af7958cc3",
+      "rank": "normal"
+     }
+    ],
+    "P2013": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P2013",
+       "hash": "3bb14884c589e0e251f4dbd5d3aff523cbba30fc",
+       "datavalue": {
+        "value": "tokyodome1988",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q733748$bda005a7-4fb6-5758-b2d9-6473e78a4479",
+      "rank": "normal"
+     }
+    ],
+    "P3977": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P3977",
+       "hash": "23bea7b0226baa1ecdc18053142e06d40e0857bf",
+       "datavalue": {
+        "value": "1069706",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q733748$bb97cab1-4de8-52ba-c79f-bf50d54b9a34",
+      "rank": "normal"
+     }
+    ],
+    "P3134": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P3134",
+       "hash": "e206dd4ea2c22481f486e355963893f7d30ae1b2",
+       "datavalue": {
+        "value": "1837992",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q733748$437EACAD-2689-4941-99CD-3D2448365860",
+      "rank": "normal"
+     }
+    ],
+    "P2046": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P2046",
+       "hash": "070ea53da30b2766924d18027429c10878e3bc2e",
+       "datavalue": {
+        "value": {
+         "amount": "+46755",
+         "unit": "http://www.wikidata.org/entity/Q25343"
+        },
+        "type": "quantity"
+       },
+       "datatype": "quantity"
+      },
+      "type": "statement",
+      "id": "Q733748$9d744873-467e-589b-8f20-2c8321a978a3",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "79f2082f7c9a38e16a86bc0cd898dd439de15c29",
+        "snaks": {
+         "P854": [
+          {
+           "snaktype": "value",
+           "property": "P854",
+           "hash": "34af588ac1ed216a517e9ddea0fbbefb74f685ea",
+           "datavalue": {
+            "value": "https://www.tokyo-dome.co.jp/faq/dome/",
+            "type": "string"
+           },
+           "datatype": "url"
+          }
+         ],
+         "P813": [
+          {
+           "snaktype": "value",
+           "property": "P813",
+           "hash": "3265c4535a3869d5a03f448372622d2886c594fb",
+           "datavalue": {
+            "value": {
+             "time": "+2020-08-03T00:00:00Z",
+             "timezone": 0,
+             "before": 0,
+             "after": 0,
+             "precision": 11,
+             "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+            },
+            "type": "time"
+           },
+           "datatype": "time"
+          }
+         ],
+         "P5997": [
+          {
+           "snaktype": "value",
+           "property": "P5997",
+           "hash": "1a05a611a91779a9dd4013747d324c430d2e52ca",
+           "datavalue": {
+            "value": "面積の基準としてよく使われているのは建築面積で、46,755平方メートルです。",
+            "type": "string"
+           },
+           "datatype": "string"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P854",
+         "P813",
+         "P5997"
+        ]
+       }
+      ]
+     }
+    ],
+    "P2234": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P2234",
+       "hash": "fe9fab5c57e2175e8b2e786293a8120f210631a3",
+       "datavalue": {
+        "value": {
+         "amount": "+1240000",
+         "unit": "http://www.wikidata.org/entity/Q25517"
+        },
+        "type": "quantity"
+       },
+       "datatype": "quantity"
+      },
+      "type": "statement",
+      "id": "Q733748$72af0ab5-446c-b09f-96d7-d1db9b598ea2",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "37631f2ab7a30c4d8fd0b12ded9afe9b83ce72ae",
+        "snaks": {
+         "P854": [
+          {
+           "snaktype": "value",
+           "property": "P854",
+           "hash": "34af588ac1ed216a517e9ddea0fbbefb74f685ea",
+           "datavalue": {
+            "value": "https://www.tokyo-dome.co.jp/faq/dome/",
+            "type": "string"
+           },
+           "datatype": "url"
+          }
+         ],
+         "P813": [
+          {
+           "snaktype": "value",
+           "property": "P813",
+           "hash": "3265c4535a3869d5a03f448372622d2886c594fb",
+           "datavalue": {
+            "value": {
+             "time": "+2020-08-03T00:00:00Z",
+             "timezone": 0,
+             "before": 0,
+             "after": 0,
+             "precision": 11,
+             "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+            },
+            "type": "time"
+           },
+           "datatype": "time"
+          }
+         ],
+         "P5997": [
+          {
+           "snaktype": "value",
+           "property": "P5997",
+           "hash": "4d84c558e5b39bfb3db720111b29d5c1e545820e",
+           "datavalue": {
+            "value": "容積は124万立方メートルです。",
+            "type": "string"
+           },
+           "datatype": "string"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P854",
+         "P813",
+         "P5997"
+        ]
+       }
+      ]
+     }
+    ],
+    "P2130": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P2130",
+       "hash": "a20916a1372f037d8289ed8a24a63b49acac94cb",
+       "datavalue": {
+        "value": {
+         "amount": "+35000000000",
+         "unit": "http://www.wikidata.org/entity/Q8146"
+        },
+        "type": "quantity"
+       },
+       "datatype": "quantity"
+      },
+      "type": "statement",
+      "qualifiers": {
+       "P1480": [
+        {
+         "snaktype": "value",
+         "property": "P1480",
+         "hash": "cb40f2027a88b8d23735681aaccba1069a574f54",
+         "datavalue": {
+          "value": {
+           "entity-type": "item",
+           "numeric-id": 5727902,
+           "id": "Q5727902"
+          },
+          "type": "wikibase-entityid"
+         },
+         "datatype": "wikibase-item"
+        }
+       ]
+      },
+      "qualifiers-order": [
+       "P1480"
+      ],
+      "id": "Q733748$528dd012-4028-475b-0df3-77b26f1d0501",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "70428107c4e6a37adbab74df9b3f15979bcefed8",
+        "snaks": {
+         "P854": [
+          {
+           "snaktype": "value",
+           "property": "P854",
+           "hash": "34af588ac1ed216a517e9ddea0fbbefb74f685ea",
+           "datavalue": {
+            "value": "https://www.tokyo-dome.co.jp/faq/dome/",
+            "type": "string"
+           },
+           "datatype": "url"
+          }
+         ],
+         "P813": [
+          {
+           "snaktype": "value",
+           "property": "P813",
+           "hash": "3265c4535a3869d5a03f448372622d2886c594fb",
+           "datavalue": {
+            "value": {
+             "time": "+2020-08-03T00:00:00Z",
+             "timezone": 0,
+             "before": 0,
+             "after": 0,
+             "precision": 11,
+             "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+            },
+            "type": "time"
+           },
+           "datatype": "time"
+          }
+         ],
+         "P5997": [
+          {
+           "snaktype": "value",
+           "property": "P5997",
+           "hash": "3156a5689dea5b47ab45c2eff87a1dcb8e35ea12",
+           "datavalue": {
+            "value": "東京ドームの建設費はいくらですか？約350億円です。",
+            "type": "string"
+           },
+           "datatype": "string"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P854",
+         "P813",
+         "P5997"
+        ]
+       }
+      ]
+     }
+    ],
+    "P1329": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P1329",
+       "hash": "24e23c8c952c0c7ac842dc70c7bbc7f0844ec623",
+       "datavalue": {
+        "value": "+81-3-5800-9999",
+        "type": "string"
+       },
+       "datatype": "string"
+      },
+      "type": "statement",
+      "id": "Q733748$fceb27f7-4d23-2108-971a-990f5e44788d",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "7ae4e909bef0f7e805cfbd54f6673af306196173",
+        "snaks": {
+         "P854": [
+          {
+           "snaktype": "value",
+           "property": "P854",
+           "hash": "34af588ac1ed216a517e9ddea0fbbefb74f685ea",
+           "datavalue": {
+            "value": "https://www.tokyo-dome.co.jp/faq/dome/",
+            "type": "string"
+           },
+           "datatype": "url"
+          }
+         ],
+         "P813": [
+          {
+           "snaktype": "value",
+           "property": "P813",
+           "hash": "3265c4535a3869d5a03f448372622d2886c594fb",
+           "datavalue": {
+            "value": {
+             "time": "+2020-08-03T00:00:00Z",
+             "timezone": 0,
+             "before": 0,
+             "after": 0,
+             "precision": 11,
+             "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+            },
+            "type": "time"
+           },
+           "datatype": "time"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P854",
+         "P813"
+        ]
+       }
+      ]
+     }
+    ],
+    "P8592": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P8592",
+       "hash": "33ba6c0db9862522c3c903b75ea82ea61f818623",
+       "datavalue": {
+        "value": "Tokyo-dome air.jpg",
+        "type": "string"
+       },
+       "datatype": "commonsMedia"
+      },
+      "type": "statement",
+      "id": "Q733748$dec7a8f3-46ee-c7e4-0afb-28dce783a1f6",
+      "rank": "normal"
+     }
+    ],
+    "P4839": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P4839",
+       "hash": "ddde248b3441f913207bb800b45cf563a0a99810",
+       "datavalue": {
+        "value": "Entity[\"Stadium\", \"TokyoDome::548m5\"]",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q733748$22C70B77-E959-438D-AFDC-B9FEA21EC2E1",
+      "rank": "normal"
+     }
+    ],
+    "P8989": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P8989",
+       "hash": "bcbc0c9f85da4ed5180491af22cff2254d90164a",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 104602541,
+         "id": "Q104602541"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q733748$09da058f-1daa-4ff6-af6d-1f9c8d76e8e1",
+      "rank": "normal"
+     }
+    ],
+    "P127": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P127",
+       "hash": "63b3f35f202a019f5b300c785634201843ec1901",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 167037,
+         "id": "Q167037"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q733748$E4145F6D-006F-4776-BE72-5C8A0777A753",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "10c86f334e1203ae3a41e70e5c4cef8b2f3a17df",
+        "snaks": {
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "07596fc82d3ed4d248b85e5543852cc31e37dc8c",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 199913,
+             "id": "Q199913"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ],
+         "P4656": [
+          {
+           "snaktype": "value",
+           "property": "P4656",
+           "hash": "a2366e4d15269751dd54ef81c37739781487fcd7",
+           "datavalue": {
+            "value": "https://he.wikipedia.org/w/index.php?title=טוקיו_דום&oldid=29386043",
+            "type": "string"
+           },
+           "datatype": "url"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P143",
+         "P4656"
+        ]
+       }
+      ]
+     }
+    ],
+    "P10565": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P10565",
+       "hash": "7af21dc833dff55dfb7c794aca8c15ec4e00d753",
+       "datavalue": {
+        "value": "119285",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q733748$F26F4F9B-6684-431B-9B9A-E65DA96E30A9",
+      "rank": "normal"
+     }
+    ],
+    "P571": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P571",
+       "hash": "b80b52b9ae7b4e7551932a80c5ab235c4ecf84dd",
+       "datavalue": {
+        "value": {
+         "time": "+1988-03-17T00:00:00Z",
+         "timezone": 0,
+         "before": 0,
+         "after": 0,
+         "precision": 11,
+         "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+        },
+        "type": "time"
+       },
+       "datatype": "time"
+      },
+      "type": "statement",
+      "id": "Q733748$507553B9-489D-4E3F-8233-32342E5F0F4C",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "04d1aeb9ac2ca49831db04b2a96451234a8fc5e6",
+        "snaks": {
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 328,
+             "id": "Q328"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ],
+         "P4656": [
+          {
+           "snaktype": "value",
+           "property": "P4656",
+           "hash": "2962d8973673798999ed8cd3f9cb9cf12ca9fa85",
+           "datavalue": {
+            "value": "https://en.wikipedia.org/w/index.php?title=Tokyo_Dome&oldid=1150227482",
+            "type": "string"
+           },
+           "datatype": "url"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P143",
+         "P4656"
+        ]
+       }
+      ]
+     }
+    ],
+    "P8453": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P8453",
+       "hash": "513f0736cfa11256a237be43d387a013696bc6a1",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 801496,
+         "id": "Q801496"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q733748$9525e300-4e07-9aab-b608-ceb81a42539f",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "cb27aab719a2ccb184d8235325c2d4834c5c186f",
+        "snaks": {
+         "P854": [
+          {
+           "snaktype": "value",
+           "property": "P854",
+           "hash": "776a054faf26f1d7e51d902ca471aa0bddd88797",
+           "datavalue": {
+            "value": "https://www.tokyo-dome.co.jp/access/",
+            "type": "string"
+           },
+           "datatype": "url"
+          }
+         ],
+         "P813": [
+          {
+           "snaktype": "value",
+           "property": "P813",
+           "hash": "d91ec7d5256b33f6eec1e25a503f2fd04b16bd23",
+           "datavalue": {
+            "value": {
+             "time": "+2023-12-03T00:00:00Z",
+             "timezone": 0,
+             "before": 0,
+             "after": 0,
+             "precision": 11,
+             "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+            },
+            "type": "time"
+           },
+           "datatype": "time"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P854",
+         "P813"
+        ]
+       }
+      ]
+     },
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P8453",
+       "hash": "41881102221eda48d41707e6e711c36f352fadda",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 1156432,
+         "id": "Q1156432"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q733748$d6862844-4fad-68e3-b92c-1e89a79e83ee",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "cb27aab719a2ccb184d8235325c2d4834c5c186f",
+        "snaks": {
+         "P854": [
+          {
+           "snaktype": "value",
+           "property": "P854",
+           "hash": "776a054faf26f1d7e51d902ca471aa0bddd88797",
+           "datavalue": {
+            "value": "https://www.tokyo-dome.co.jp/access/",
+            "type": "string"
+           },
+           "datatype": "url"
+          }
+         ],
+         "P813": [
+          {
+           "snaktype": "value",
+           "property": "P813",
+           "hash": "d91ec7d5256b33f6eec1e25a503f2fd04b16bd23",
+           "datavalue": {
+            "value": {
+             "time": "+2023-12-03T00:00:00Z",
+             "timezone": 0,
+             "before": 0,
+             "after": 0,
+             "precision": 11,
+             "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+            },
+            "type": "time"
+           },
+           "datatype": "time"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P854",
+         "P813"
+        ]
+       }
+      ]
+     },
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P8453",
+       "hash": "de2db907c1d7e27f42a58ed8082997f1ffa78bec",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 1073928,
+         "id": "Q1073928"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q733748$7dd0cc9d-4210-edb6-03fe-78b6711a9312",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "cb27aab719a2ccb184d8235325c2d4834c5c186f",
+        "snaks": {
+         "P854": [
+          {
+           "snaktype": "value",
+           "property": "P854",
+           "hash": "776a054faf26f1d7e51d902ca471aa0bddd88797",
+           "datavalue": {
+            "value": "https://www.tokyo-dome.co.jp/access/",
+            "type": "string"
+           },
+           "datatype": "url"
+          }
+         ],
+         "P813": [
+          {
+           "snaktype": "value",
+           "property": "P813",
+           "hash": "d91ec7d5256b33f6eec1e25a503f2fd04b16bd23",
+           "datavalue": {
+            "value": {
+             "time": "+2023-12-03T00:00:00Z",
+             "timezone": 0,
+             "before": 0,
+             "after": 0,
+             "precision": 11,
+             "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+            },
+            "type": "time"
+           },
+           "datatype": "time"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P854",
+         "P813"
+        ]
+       }
+      ]
+     }
+    ],
+    "P9957": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P9957",
+       "hash": "94e61bef1ccef8379038cbea31848929e544736b",
+       "datavalue": {
+        "value": "97727",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q733748$3D621F0E-25CB-4671-815A-64E533A00BB1",
+      "rank": "normal"
+     }
+    ],
+    "P1705": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P1705",
+       "hash": "b45c73dd8beab76f3202d8c49a883a74c1fdc27f",
+       "datavalue": {
+        "value": {
+         "text": "東京ドーム",
+         "language": "ja"
+        },
+        "type": "monolingualtext"
+       },
+       "datatype": "monolingualtext"
+      },
+      "type": "statement",
+      "id": "Q733748$3fbb4892-4e06-84d1-84b6-50c53e3ba44c",
+      "rank": "normal"
+     }
+    ],
+    "P13130": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P13130",
+       "hash": "1e2269930afae9da6d61a27c9e2cf55dee7296c1",
+       "datavalue": {
+        "value": "東京巨蛋",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "qualifiers": {
+       "P9675": [
+        {
+         "snaktype": "value",
+         "property": "P9675",
+         "hash": "f9fbe5e4626a9ee0a13f8f15aeb0313dd4d7ee06",
+         "datavalue": {
+          "value": "21454",
+          "type": "string"
+         },
+         "datatype": "string"
+        }
+       ]
+      },
+      "qualifiers-order": [
+       "P9675"
+      ],
+      "id": "Q733748$7ABD395F-D9CC-4B8B-B288-F796AFDA9570",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "5ccf62d24f2d24e15a0993bb7fc0e90749076179",
+        "snaks": {
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "cb49f6fa327b245e4a5aaf48c44b3f503bcd4265",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 30239,
+             "id": "Q30239"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ],
+         "P4656": [
+          {
+           "snaktype": "value",
+           "property": "P4656",
+           "hash": "6285694752d4d14614ccf891ef9faefa0412d7a7",
+           "datavalue": {
+            "value": "https://zh.wikipedia.org/w/index.php?title=東京巨蛋&oldid=86022725",
+            "type": "string"
+           },
+           "datatype": "url"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P143",
+         "P4656"
+        ]
+       }
+      ]
+     }
+    ],
+    "P6375": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P6375",
+       "hash": "55935dda0bc97a6685ca2525ed089ec50d3a6506",
+       "datavalue": {
+        "value": {
+         "text": "〒112-0004 東京都文京区後楽1-3-61",
+         "language": "ja"
+        },
+        "type": "monolingualtext"
+       },
+       "datatype": "monolingualtext"
+      },
+      "type": "statement",
+      "id": "Q733748$801828a1-4860-f4fc-6ee1-c6c4b5dd8a6f",
+      "rank": "normal"
+     }
+    ],
+    "P2002": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P2002",
+       "hash": "3c3cca36ed0221a0e2b5b8c0d3bfb88615977eb9",
+       "datavalue": {
+        "value": "tokyodome1988_",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "qualifiers": {
+       "P580": [
+        {
+         "snaktype": "value",
+         "property": "P580",
+         "hash": "a8cede38e10ff9e5009f9770e065ebaec3b9ac26",
+         "datavalue": {
+          "value": {
+           "time": "+2022-02-03T00:00:00Z",
+           "timezone": 0,
+           "before": 0,
+           "after": 0,
+           "precision": 11,
+           "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+          },
+          "type": "time"
+         },
+         "datatype": "time"
+        }
+       ]
+      },
+      "qualifiers-order": [
+       "P580"
+      ],
+      "id": "Q733748$995cf24b-442a-f5fe-b0f8-271779b8e333",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "8547792a86a2211f6c20cd4dc21f7d81cf600c48",
+        "snaks": {
+         "P5997": [
+          {
+           "snaktype": "value",
+           "property": "P5997",
+           "hash": "7b78626a40728f5fdde6a6b5d22b4861767b8779",
+           "datavalue": {
+            "value": "公式アカウント, 球場職員がポスト < 東京ドーム 公式SNS < 東京ドームとは",
+            "type": "string"
+           },
+           "datatype": "string"
+          }
+         ],
+         "P854": [
+          {
+           "snaktype": "value",
+           "property": "P854",
+           "hash": "2a848ac650ae0b65cd2ac4cd31595d3cb34fd1c8",
+           "datavalue": {
+            "value": "https://www.tokyo-dome.co.jp/dome/about/",
+            "type": "string"
+           },
+           "datatype": "url"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P5997",
+         "P854"
+        ]
+       }
+      ]
+     }
+    ],
+    "P2397": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P2397",
+       "hash": "75b9f37da321bad4b57e42722e3410885b6d3a7f",
+       "datavalue": {
+        "value": "UCKF9JhWeRNlgtwmLJpD1_vA",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "qualifiers": {
+       "P1810": [
+        {
+         "snaktype": "value",
+         "property": "P1810",
+         "hash": "cf6180c445a73f6d67f8e9b30e13dfddd56d5db4",
+         "datavalue": {
+          "value": "東京ドームシティ",
+          "type": "string"
+         },
+         "datatype": "string"
+        }
+       ],
+       "P580": [
+        {
+         "snaktype": "value",
+         "property": "P580",
+         "hash": "ed28df972e568732afc4d1eaeafc78751f6a0988",
+         "datavalue": {
+          "value": {
+           "time": "+2015-04-20T00:00:00Z",
+           "timezone": 0,
+           "before": 0,
+           "after": 0,
+           "precision": 11,
+           "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+          },
+          "type": "time"
+         },
+         "datatype": "time"
+        }
+       ],
+       "P11245": [
+        {
+         "snaktype": "value",
+         "property": "P11245",
+         "hash": "9127a18d15ae3d515c388e1d117e91024dc6d09c",
+         "datavalue": {
+          "value": "tokyodomecity_official",
+          "type": "string"
+         },
+         "datatype": "external-id"
+        }
+       ],
+       "P585": [
+        {
+         "snaktype": "value",
+         "property": "P585",
+         "hash": "8e95afe17ffe8112442d2dda0c39ebff7d497166",
+         "datavalue": {
+          "value": {
+           "time": "+2026-06-04T00:00:00Z",
+           "timezone": 0,
+           "before": 0,
+           "after": 0,
+           "precision": 11,
+           "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+          },
+          "type": "time"
+         },
+         "datatype": "time"
+        }
+       ],
+       "P2241": [
+        {
+         "snaktype": "value",
+         "property": "P2241",
+         "hash": "a457fd939bc6914b49066a30dd706d3632460627",
+         "datavalue": {
+          "value": {
+           "entity-type": "item",
+           "numeric-id": 21502410,
+           "id": "Q21502410"
+          },
+          "type": "wikibase-entityid"
+         },
+         "datatype": "wikibase-item"
+        }
+       ],
+       "P8327": [
+        {
+         "snaktype": "value",
+         "property": "P8327",
+         "hash": "668a631dd19ad7c1f2466c313210788be515577a",
+         "datavalue": {
+          "value": {
+           "entity-type": "item",
+           "numeric-id": 564554,
+           "id": "Q564554"
+          },
+          "type": "wikibase-entityid"
+         },
+         "datatype": "wikibase-item"
+        }
+       ]
+      },
+      "qualifiers-order": [
+       "P1810",
+       "P580",
+       "P11245",
+       "P585",
+       "P2241",
+       "P8327"
+      ],
+      "id": "Q733748$41f158c8-4e11-7d5a-3046-53e4d9617cae",
+      "rank": "deprecated",
+      "references": [
+       {
+        "hash": "d9da090f9ee768544b9113e71ce8e1c4d153719f",
+        "snaks": {
+         "P5997": [
+          {
+           "snaktype": "value",
+           "property": "P5997",
+           "hash": "ed6df57d0ae7c07e0d336cea111f38c63ede884d",
+           "datavalue": {
+            "value": "ソーシャルメディアアカウント一覧 | 東京ドームシティ",
+            "type": "string"
+           },
+           "datatype": "string"
+          }
+         ],
+         "P854": [
+          {
+           "snaktype": "value",
+           "property": "P854",
+           "hash": "1154ca4f940f6a9bdfdf2f2053e7a2d6aac9fe60",
+           "datavalue": {
+            "value": "https://www.tokyo-dome.co.jp/socialmedia_accounts/",
+            "type": "string"
+           },
+           "datatype": "url"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P5997",
+         "P854"
+        ]
+       },
+       {
+        "hash": "cd2f203280c0e0b983b4df6a9a521233c2974005",
+        "snaks": {
+         "P4656": [
+          {
+           "snaktype": "value",
+           "property": "P4656",
+           "hash": "673dd76273157e0fcd2b94c332e5307534da495b",
+           "datavalue": {
+            "value": "https://www.wikidata.org/wiki/Property:P2397#P2397$9725c8ef-42c2-46fe-fb43-9e36e4f199b3",
+            "type": "string"
+           },
+           "datatype": "url"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P4656"
+        ]
+       }
+      ]
+     }
+    ],
+    "P2003": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P2003",
+       "hash": "31a0ebb0a6c96bc57edafd3d03514ec6074bc5f0",
+       "datavalue": {
+        "value": "tokyodome1988_",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q733748$b9197569-4bf4-f2d3-9f8f-f990cfecbe26",
+      "rank": "normal"
+     }
+    ],
+    "P14541": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P14541",
+       "hash": "311f6ab83b9e86662f10b2d4704cec73192332c4",
+       "datavalue": {
+        "value": "29P1La",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "qualifiers": {
+       "P1810": [
+        {
+         "snaktype": "value",
+         "property": "P1810",
+         "hash": "535cfb03bf924e7469a6fccee518c69fbbb1f7cd",
+         "datavalue": {
+          "value": "日本东京巨蛋体育馆",
+          "type": "string"
+         },
+         "datatype": "string"
+        }
+       ],
+       "P5017": [
+        {
+         "snaktype": "value",
+         "property": "P5017",
+         "hash": "4102f68ef6a3e38f38a98753d6cc1bfbff5c97c5",
+         "datavalue": {
+          "value": {
+           "time": "+2022-01-20T00:00:00Z",
+           "timezone": 0,
+           "before": 0,
+           "after": 0,
+           "precision": 11,
+           "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+          },
+          "type": "time"
+         },
+         "datatype": "time"
+        }
+       ]
+      },
+      "qualifiers-order": [
+       "P1810",
+       "P5017"
+      ],
+      "id": "Q733748$283BFA38-41A9-4F4C-822B-B2379DBD3893",
+      "rank": "normal"
+     }
+    ]
+   },
+   "sitelinks": {
+    "bgwiki": {
+     "site": "bgwiki",
+     "title": "Токио Доум",
+     "badges": []
+    },
+    "cawiki": {
+     "site": "cawiki",
+     "title": "Tokyo Dome",
+     "badges": []
+    },
+    "commonswiki": {
+     "site": "commonswiki",
+     "title": "Tokyo Dome",
+     "badges": []
+    },
+    "dewiki": {
+     "site": "dewiki",
+     "title": "Tokyo Dome",
+     "badges": []
+    },
+    "enwiki": {
+     "site": "enwiki",
+     "title": "Tokyo Dome",
+     "badges": []
+    },
+    "eswiki": {
+     "site": "eswiki",
+     "title": "Tokyo Dome",
+     "badges": []
+    },
+    "fawiki": {
+     "site": "fawiki",
+     "title": "توکیو دم",
+     "badges": []
+    },
+    "fiwiki": {
+     "site": "fiwiki",
+     "title": "Tokyo Dome",
+     "badges": []
+    },
+    "frwiki": {
+     "site": "frwiki",
+     "title": "Tokyo Dome",
+     "badges": []
+    },
+    "glwiki": {
+     "site": "glwiki",
+     "title": "Tokyo Dome",
+     "badges": []
+    },
+    "hawiki": {
+     "site": "hawiki",
+     "title": "Tokyo Dome",
+     "badges": []
+    },
+    "hewiki": {
+     "site": "hewiki",
+     "title": "טוקיו דום",
+     "badges": []
+    },
+    "huwiki": {
+     "site": "huwiki",
+     "title": "Tokyo Dome",
+     "badges": []
+    },
+    "hywiki": {
+     "site": "hywiki",
+     "title": "Տոկիո Դոում",
+     "badges": []
+    },
+    "idwiki": {
+     "site": "idwiki",
+     "title": "Tokyo Dome",
+     "badges": []
+    },
+    "itwiki": {
+     "site": "itwiki",
+     "title": "Tokyo Dome",
+     "badges": []
+    },
+    "jawiki": {
+     "site": "jawiki",
+     "title": "東京ドーム",
+     "badges": []
+    },
+    "jvwiki": {
+     "site": "jvwiki",
+     "title": "Tokyo Dome",
+     "badges": []
+    },
+    "kowiki": {
+     "site": "kowiki",
+     "title": "도쿄 돔",
+     "badges": []
+    },
+    "mswiki": {
+     "site": "mswiki",
+     "title": "Tokyo Dome",
+     "badges": []
+    },
+    "nlwiki": {
+     "site": "nlwiki",
+     "title": "Tokyo Dome",
+     "badges": []
+    },
+    "nowiki": {
+     "site": "nowiki",
+     "title": "Tokyo Dome",
+     "badges": []
+    },
+    "plwiki": {
+     "site": "plwiki",
+     "title": "Tokyo Dome",
+     "badges": []
+    },
+    "ptwiki": {
+     "site": "ptwiki",
+     "title": "Tokyo Dome",
+     "badges": []
+    },
+    "ruwiki": {
+     "site": "ruwiki",
+     "title": "Токио Доум",
+     "badges": []
+    },
+    "simplewiki": {
+     "site": "simplewiki",
+     "title": "Tokyo Dome",
+     "badges": []
+    },
+    "svwiki": {
+     "site": "svwiki",
+     "title": "Tokyo Dome",
+     "badges": []
+    },
+    "thwiki": {
+     "site": "thwiki",
+     "title": "โตเกียวโดม",
+     "badges": []
+    },
+    "trwiki": {
+     "site": "trwiki",
+     "title": "Tokyo Dome",
+     "badges": []
+    },
+    "ukwiki": {
+     "site": "ukwiki",
+     "title": "Токіо Доум",
+     "badges": []
+    },
+    "viwiki": {
+     "site": "viwiki",
+     "title": "Tokyo Dome",
+     "badges": []
+    },
+    "zhwiki": {
+     "site": "zhwiki",
+     "title": "東京巨蛋",
+     "badges": []
+    }
+   }
+  },
+  "Q4389857": {
+   "type": "item",
+   "id": "Q4389857",
+   "labels": {
+    "ja": {
+     "language": "ja",
+     "value": "後楽園ホール"
+    },
+    "en": {
+     "language": "en",
+     "value": "Korakuen Hall"
+    }
+   },
+   "claims": {
+    "P373": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P373",
+       "hash": "c541efb42c137a1ce0bba8a8a543dc05b59e3a92",
+       "datavalue": {
+        "value": "Korakuen Hall",
+        "type": "string"
+       },
+       "datatype": "string"
+      },
+      "type": "statement",
+      "id": "q4389857$B6487BA7-D376-42F2-8509-78F87C237BA4",
+      "rank": "normal"
+     }
+    ],
+    "P625": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P625",
+       "hash": "bf88e46ab8353d356e811db52fb5da0ca8a88c3e",
+       "datavalue": {
+        "value": {
+         "latitude": 35.704319,
+         "longitude": 139.751939,
+         "altitude": null,
+         "precision": 0.0001,
+         "globe": "http://www.wikidata.org/entity/Q2"
+        },
+        "type": "globecoordinate"
+       },
+       "datatype": "globe-coordinate"
+      },
+      "type": "statement",
+      "id": "q4389857$65C924C1-6042-4B70-9AD8-56990AF85EE1",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+        "snaks": {
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 328,
+             "id": "Q328"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P143"
+        ]
+       }
+      ]
+     }
+    ],
+    "P646": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P646",
+       "hash": "bd55e27364ed8636ade2a23f06b50c4f6c56053b",
+       "datavalue": {
+        "value": "/m/0bxwjy",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q4389857$36432695-1687-4515-B2E6-38FA1B05743F",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "2b00cb481cddcac7623114367489b5c194901c4a",
+        "snaks": {
+         "P248": [
+          {
+           "snaktype": "value",
+           "property": "P248",
+           "hash": "a94b740202b097dd33355e0e6c00e54b9395e5e0",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 15241312,
+             "id": "Q15241312"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ],
+         "P577": [
+          {
+           "snaktype": "value",
+           "property": "P577",
+           "hash": "fde79ecb015112d2f29229ccc1ec514ed3e71fa2",
+           "datavalue": {
+            "value": {
+             "time": "+2013-10-28T00:00:00Z",
+             "timezone": 0,
+             "before": 0,
+             "after": 0,
+             "precision": 11,
+             "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+            },
+            "type": "time"
+           },
+           "datatype": "time"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P248",
+         "P577"
+        ]
+       }
+      ]
+     }
+    ],
+    "P466": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P466",
+       "hash": "5967385b81144fdc19a6ced7940bada3d9fd5893",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 864910,
+         "id": "Q864910"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q4389857$C9721767-170F-4B82-BED0-048A33664777",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+        "snaks": {
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 328,
+             "id": "Q328"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P143"
+        ]
+       }
+      ]
+     }
+    ],
+    "P18": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P18",
+       "hash": "96717d43702c2b78df4776ce23005ffa3e59261f",
+       "datavalue": {
+        "value": "Korakuen Hall 2007.jpg",
+        "type": "string"
+       },
+       "datatype": "commonsMedia"
+      },
+      "type": "statement",
+      "id": "Q4389857$6F2E0DBD-CB25-42B9-9C70-DC5A40C380CD",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+        "snaks": {
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 328,
+             "id": "Q328"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P143"
+        ]
+       }
+      ]
+     }
+    ],
+    "P1083": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P1083",
+       "hash": "ff530765705d1b79eb72eee4027a0f5b1a06a6da",
+       "datavalue": {
+        "value": {
+         "amount": "+2005",
+         "unit": "1"
+        },
+        "type": "quantity"
+       },
+       "datatype": "quantity"
+      },
+      "type": "statement",
+      "id": "Q4389857$28EDDAB4-93CE-4BCA-8F1E-977E223ED6D8",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+        "snaks": {
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 328,
+             "id": "Q328"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P143"
+        ]
+       }
+      ]
+     }
+    ],
+    "P131": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P131",
+       "hash": "fbd9ccbdd8bcd8afc5fb997c0a640f7161aa5e61",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 11488350,
+         "id": "Q11488350"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q4389857$FC917D9C-0461-4776-BF44-454A1C2DC9A4",
+      "rank": "normal"
+     }
+    ],
+    "P31": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P31",
+       "hash": "2046faaac0142c300518fb0d5a63f61e499bc293",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 1763828,
+         "id": "Q1763828"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q4389857$794E5874-8016-4879-B5E0-67ACA49BCF2A",
+      "rank": "normal"
+     }
+    ],
+    "P17": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P17",
+       "hash": "55178c20e031f1579d34d802f16f6b9951b631e1",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 17,
+         "id": "Q17"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q4389857$52DA4316-0AC7-4CD2-B364-71A4ED0D5667",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "e347ed74d5f73f36205d274a20452f79a384b0e4",
+        "snaks": {
+         "P248": [
+          {
+           "snaktype": "value",
+           "property": "P248",
+           "hash": "1b3ef912a2bd61e18dd43abd184337eb010b2e96",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 830106,
+             "id": "Q830106"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ],
+         "P813": [
+          {
+           "snaktype": "value",
+           "property": "P813",
+           "hash": "2e8cd9b0cf326816ec447bea7951359ad21549f9",
+           "datavalue": {
+            "value": {
+             "time": "+2015-04-06T00:00:00Z",
+             "timezone": 0,
+             "before": 0,
+             "after": 0,
+             "precision": 11,
+             "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+            },
+            "type": "time"
+           },
+           "datatype": "time"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P248",
+         "P813"
+        ]
+       }
+      ]
+     }
+    ],
+    "P641": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P641",
+       "hash": "963285a206e48a3a70ddb5a0ddbf3f8d883f8f9e",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 131359,
+         "id": "Q131359"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q4389857$A65E4841-1C70-4D6F-9662-580FC60EF25A",
+      "rank": "normal"
+     }
+    ],
+    "P1004": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P1004",
+       "hash": "45113a72561a71a18ec4d70f6ece2d1d492a3602",
+       "datavalue": {
+        "value": "7417baac-450b-47b2-95f9-bfafceeb5703",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q4389857$82327E4D-88F5-4530-9CF1-C9CFCF5B39CE",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "5910b488f96064ef7da253c52cc03fab3f1e0eec",
+        "snaks": {
+         "P248": [
+          {
+           "snaktype": "value",
+           "property": "P248",
+           "hash": "623cc8f0e2f65afe4d66b91962d354a2f3aa9a27",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 14005,
+             "id": "Q14005"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ],
+         "P813": [
+          {
+           "snaktype": "value",
+           "property": "P813",
+           "hash": "8b9424a7f0148fca7780daef8d6f7a3eac84a324",
+           "datavalue": {
+            "value": {
+             "time": "+2018-12-27T00:00:00Z",
+             "timezone": 0,
+             "before": 0,
+             "after": 0,
+             "precision": 11,
+             "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+            },
+            "type": "time"
+           },
+           "datatype": "time"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P248",
+         "P813"
+        ]
+       }
+      ]
+     }
+    ],
+    "P1619": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P1619",
+       "hash": "e9739ef613452cf022627b1119debf173f8a8cbd",
+       "datavalue": {
+        "value": {
+         "time": "+1962-04-16T00:00:00Z",
+         "timezone": 0,
+         "before": 0,
+         "after": 0,
+         "precision": 11,
+         "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+        },
+        "type": "time"
+       },
+       "datatype": "time"
+      },
+      "type": "statement",
+      "id": "Q4389857$7203A308-D54B-4AD8-8DFA-FB52E966A02C",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "e03de0998f38b7cfcfedb9fd32f00d19a8b00858",
+        "snaks": {
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 328,
+             "id": "Q328"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ],
+         "P4656": [
+          {
+           "snaktype": "value",
+           "property": "P4656",
+           "hash": "432e3694cb5c12389648ebea1ba5e9caf1640c06",
+           "datavalue": {
+            "value": "https://en.wikipedia.org/w/index.php?title=Korakuen_Hall&oldid=933180327",
+            "type": "string"
+           },
+           "datatype": "url"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P143",
+         "P4656"
+        ]
+       }
+      ]
+     }
+    ],
+    "P276": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P276",
+       "hash": "7af4126b2b2b973cb12b1afda0c262e482f5efee",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 130760638,
+         "id": "Q130760638"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q4389857$31C3D296-A61B-4534-98B3-CD884D225579",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "e03de0998f38b7cfcfedb9fd32f00d19a8b00858",
+        "snaks": {
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 328,
+             "id": "Q328"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ],
+         "P4656": [
+          {
+           "snaktype": "value",
+           "property": "P4656",
+           "hash": "432e3694cb5c12389648ebea1ba5e9caf1640c06",
+           "datavalue": {
+            "value": "https://en.wikipedia.org/w/index.php?title=Korakuen_Hall&oldid=933180327",
+            "type": "string"
+           },
+           "datatype": "url"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P143",
+         "P4656"
+        ]
+       }
+      ]
+     }
+    ],
+    "P856": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P856",
+       "hash": "4759876d021d82fd08dde5f0fbb39efadf027bcd",
+       "datavalue": {
+        "value": "https://www.tokyo-dome.co.jp/hall/",
+        "type": "string"
+       },
+       "datatype": "url"
+      },
+      "type": "statement",
+      "qualifiers": {
+       "P407": [
+        {
+         "snaktype": "value",
+         "property": "P407",
+         "hash": "d858d1b9f6e6e383f38dfbe706d102f056c07312",
+         "datavalue": {
+          "value": {
+           "entity-type": "item",
+           "numeric-id": 5287,
+           "id": "Q5287"
+          },
+          "type": "wikibase-entityid"
+         },
+         "datatype": "wikibase-item"
+        },
+        {
+         "snaktype": "value",
+         "property": "P407",
+         "hash": "4970e6b4a7655ad85f2594f617758c4250799664",
+         "datavalue": {
+          "value": {
+           "entity-type": "item",
+           "numeric-id": 13414913,
+           "id": "Q13414913"
+          },
+          "type": "wikibase-entityid"
+         },
+         "datatype": "wikibase-item"
+        },
+        {
+         "snaktype": "value",
+         "property": "P407",
+         "hash": "fbe0ce84fb2993dc61a764c6b3ccbda1fb4cc669",
+         "datavalue": {
+          "value": {
+           "entity-type": "item",
+           "numeric-id": 18130932,
+           "id": "Q18130932"
+          },
+          "type": "wikibase-entityid"
+         },
+         "datatype": "wikibase-item"
+        },
+        {
+         "snaktype": "value",
+         "property": "P407",
+         "hash": "a10335a425d19169dd856e0a5f71735853eab0ab",
+         "datavalue": {
+          "value": {
+           "entity-type": "item",
+           "numeric-id": 9176,
+           "id": "Q9176"
+          },
+          "type": "wikibase-entityid"
+         },
+         "datatype": "wikibase-item"
+        }
+       ]
+      },
+      "qualifiers-order": [
+       "P407"
+      ],
+      "id": "Q4389857$512dc5e5-4d13-9f0f-2c0b-9fc9cbc30d23",
+      "rank": "normal"
+     }
+    ],
+    "P3134": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P3134",
+       "hash": "63cac96f35a5c4aa28ee803490246672f230671a",
+       "datavalue": {
+        "value": "1602605",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q4389857$791E4D85-619C-43FF-A2F2-73955E417E27",
+      "rank": "normal"
+     }
+    ],
+    "P3032": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P3032",
+       "hash": "dfa8f460a21735d363d5e007a39e449fe053fd20",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 733748,
+         "id": "Q733748"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q4389857$e943f8cb-422a-ce9b-16c1-dfd0c1cecfe9",
+      "rank": "normal"
+     }
+    ],
+    "P5775": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P5775",
+       "hash": "26377b268b3b850ae881894ece23da6bed2c6b45",
+       "datavalue": {
+        "value": "Korakuen Hall.jpg",
+        "type": "string"
+       },
+       "datatype": "commonsMedia"
+      },
+      "type": "statement",
+      "id": "Q4389857$4cff8471-4fb8-ccab-0ebd-6a2ae86217d9",
+      "rank": "normal"
+     }
+    ],
+    "P571": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P571",
+       "hash": "b0b5ecdb9a635e3a0197a01b829587893642c903",
+       "datavalue": {
+        "value": {
+         "time": "+1962-01-15T00:00:00Z",
+         "timezone": 0,
+         "before": 0,
+         "after": 0,
+         "precision": 11,
+         "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+        },
+        "type": "time"
+       },
+       "datatype": "time"
+      },
+      "type": "statement",
+      "id": "Q4389857$9554e393-44aa-910b-72fc-e6330a81cc8f",
+      "rank": "normal"
+     }
+    ],
+    "P6375": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P6375",
+       "hash": "749e3a0bf99fcc23e08c874e069a6ef5ea9c1917",
+       "datavalue": {
+        "value": {
+         "text": "東京都文京区後楽一丁目3番61号",
+         "language": "ja"
+        },
+        "type": "monolingualtext"
+       },
+       "datatype": "monolingualtext"
+      },
+      "type": "statement",
+      "id": "Q4389857$5004233f-4a3e-0dd2-ae5d-ba3f834ded5f",
+      "rank": "normal"
+     }
+    ],
+    "P10046": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P10046",
+       "hash": "272454737ff42c926c4e52c0d80dfe87c058c052",
+       "datavalue": {
+        "value": "617296679887314657",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q4389857$d5d6c7ed-4a09-f996-c186-0601ad530535",
+      "rank": "normal"
+     }
+    ],
+    "P2572": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P2572",
+       "hash": "8150bbff1d0996a32cf4be318622bfcc41273c72",
+       "datavalue": {
+        "value": "後楽園ホール",
+        "type": "string"
+       },
+       "datatype": "string"
+      },
+      "type": "statement",
+      "id": "Q4389857$e44cd68c-4773-ae75-69c4-00561e782f69",
+      "rank": "normal"
+     }
+    ],
+    "P3749": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P3749",
+       "hash": "4b6e24878da2428ed60e971c521d295e7a7f364a",
+       "datavalue": {
+        "value": "17778298211461212820",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q4389857$0b9cc238-4fbf-12dd-89cf-484dd99d2c58",
+      "rank": "normal"
+     }
+    ],
+    "P137": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P137",
+       "hash": "273fb3d0bb206de41edb376a6cfe1bf629f6a60a",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 2439074,
+         "id": "Q2439074"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q4389857$93f00cd7-4dc8-2ff3-2288-eea6051f21d8",
+      "rank": "normal"
+     }
+    ]
+   },
+   "sitelinks": {
+    "commonswiki": {
+     "site": "commonswiki",
+     "title": "Category:Korakuen Hall",
+     "badges": []
+    },
+    "dewiki": {
+     "site": "dewiki",
+     "title": "Kōrakuen-Halle",
+     "badges": []
+    },
+    "enwiki": {
+     "site": "enwiki",
+     "title": "Korakuen Hall",
+     "badges": []
+    },
+    "eswiki": {
+     "site": "eswiki",
+     "title": "Pabellón Korakuen",
+     "badges": []
+    },
+    "frwiki": {
+     "site": "frwiki",
+     "title": "Korakuen Hall",
+     "badges": []
+    },
+    "iowiki": {
+     "site": "iowiki",
+     "title": "Halo Kōrakuen",
+     "badges": []
+    },
+    "jawiki": {
+     "site": "jawiki",
+     "title": "後楽園ホール",
+     "badges": []
+    },
+    "kowiki": {
+     "site": "kowiki",
+     "title": "고라쿠엔 홀",
+     "badges": []
+    },
+    "nlwiki": {
+     "site": "nlwiki",
+     "title": "Korakuen Hall",
+     "badges": []
+    },
+    "ruwiki": {
+     "site": "ruwiki",
+     "title": "Коракуэн (арена)",
+     "badges": []
+    },
+    "thwiki": {
+     "site": "thwiki",
+     "title": "โครากูเอ็งฮอล",
+     "badges": []
+    }
+   }
+  },
+  "Q959811": {
+   "type": "item",
+   "id": "Q959811",
+   "labels": {
+    "en": {
+     "language": "en",
+     "value": "Koshien Stadium"
+    },
+    "ja": {
+     "language": "ja",
+     "value": "阪神甲子園球場"
+    }
+   },
+   "claims": {
+    "P373": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P373",
+       "hash": "e2443fb04db5e90350893bba8e11cf733dd93939",
+       "datavalue": {
+        "value": "Hanshin Koshien Stadium",
+        "type": "string"
+       },
+       "datatype": "string"
+      },
+      "type": "statement",
+      "id": "q959811$9FABE084-033A-4D6E-9398-166204D9C0B5",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+        "snaks": {
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 328,
+             "id": "Q328"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P143"
+        ]
+       }
+      ]
+     }
+    ],
+    "P625": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P625",
+       "hash": "816574bfa212c87ac5a997567bf1bdc414c5d9fb",
+       "datavalue": {
+        "value": {
+         "latitude": 34.72138888888889,
+         "longitude": 135.36166666666668,
+         "altitude": null,
+         "precision": 0.0002777777777777778,
+         "globe": "http://www.wikidata.org/entity/Q2"
+        },
+        "type": "globecoordinate"
+       },
+       "datatype": "globe-coordinate"
+      },
+      "type": "statement",
+      "id": "q959811$80FB9CE1-2319-42BD-B221-DCD45814D812",
+      "rank": "normal"
+     }
+    ],
+    "P646": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P646",
+       "hash": "fd566193dc5e828bc5978c9e6f885bdc4785a7f9",
+       "datavalue": {
+        "value": "/m/03fqtd",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q959811$58501B57-4819-46F4-BC9F-A7F3249DAAFD",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "2b00cb481cddcac7623114367489b5c194901c4a",
+        "snaks": {
+         "P248": [
+          {
+           "snaktype": "value",
+           "property": "P248",
+           "hash": "a94b740202b097dd33355e0e6c00e54b9395e5e0",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 15241312,
+             "id": "Q15241312"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ],
+         "P577": [
+          {
+           "snaktype": "value",
+           "property": "P577",
+           "hash": "fde79ecb015112d2f29229ccc1ec514ed3e71fa2",
+           "datavalue": {
+            "value": {
+             "time": "+2013-10-28T00:00:00Z",
+             "timezone": 0,
+             "before": 0,
+             "after": 0,
+             "precision": 11,
+             "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+            },
+            "type": "time"
+           },
+           "datatype": "time"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P248",
+         "P577"
+        ]
+       }
+      ]
+     }
+    ],
+    "P18": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P18",
+       "hash": "d476b9288280e5726b19540f355e6fb674667236",
+       "datavalue": {
+        "value": "Summer Koshien 2009 Final.jpg",
+        "type": "string"
+       },
+       "datatype": "commonsMedia"
+      },
+      "type": "statement",
+      "id": "Q959811$460C0E08-0043-4685-9763-271C8D304233",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+        "snaks": {
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 328,
+             "id": "Q328"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P143"
+        ]
+       }
+      ]
+     }
+    ],
+    "P1083": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P1083",
+       "hash": "b3e2130dcfcfcba18a972ec5f26342fda7fad0ed",
+       "datavalue": {
+        "value": {
+         "amount": "+60000",
+         "unit": "1"
+        },
+        "type": "quantity"
+       },
+       "datatype": "quantity"
+      },
+      "type": "statement",
+      "id": "Q959811$2B3179F1-3EF1-4D9A-B2F2-B3FE337785BC",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+        "snaks": {
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 328,
+             "id": "Q328"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P143"
+        ]
+       }
+      ]
+     }
+    ],
+    "P466": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P466",
+       "hash": "79b1180bea79a0732246bd21add01c9844306949",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 131159678,
+         "id": "Q131159678"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q959811$7A1136C7-AD3C-4866-9DDB-E364D7C44FF2",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+        "snaks": {
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 328,
+             "id": "Q328"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P143"
+        ]
+       }
+      ]
+     },
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P466",
+       "hash": "9222a9a0db7b8d5ac0e32e699915b923c66608a6",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 127635,
+         "id": "Q127635"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q959811$0e906f20-4ece-b2c1-c4b6-cc7cf70e449e",
+      "rank": "normal"
+     }
+    ],
+    "P137": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P137",
+       "hash": "d40e7d4184527c6c97022e6c17bef805b045b563",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 1140781,
+         "id": "Q1140781"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q959811$7515AA58-D91E-4601-A6EF-C27CC8D4755E",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+        "snaks": {
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 328,
+             "id": "Q328"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P143"
+        ]
+       }
+      ]
+     }
+    ],
+    "P84": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P84",
+       "hash": "c476a3b19162f3afe6d462ffb0b699b2a7e5aee1",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 384730,
+         "id": "Q384730"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q959811$267B4485-D07C-4917-8BD0-B2DF1A127695",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+        "snaks": {
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 328,
+             "id": "Q328"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P143"
+        ]
+       }
+      ]
+     }
+    ],
+    "P131": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P131",
+       "hash": "1d5804c8c69e58520a84e628f37c247a635aef5f",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 243853,
+         "id": "Q243853"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q959811$C5AFCB18-3A4F-449C-9E33-029C6C38FBBF",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+        "snaks": {
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 328,
+             "id": "Q328"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P143"
+        ]
+       }
+      ]
+     }
+    ],
+    "P127": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P127",
+       "hash": "306691297388360651b08082f7cd21f20d39af84",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 1140781,
+         "id": "Q1140781"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q959811$30234B76-F999-4418-92C1-78E7842685F3",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+        "snaks": {
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 328,
+             "id": "Q328"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P143"
+        ]
+       }
+      ]
+     }
+    ],
+    "P17": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P17",
+       "hash": "55178c20e031f1579d34d802f16f6b9951b631e1",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 17,
+         "id": "Q17"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q959811$BD4B28ED-C08D-4681-9F87-C9C80368DD9D",
+      "rank": "normal"
+     }
+    ],
+    "P31": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P31",
+       "hash": "8c2e8fd474e6104eaef9b83588e70a61fd692de2",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 595452,
+         "id": "Q595452"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q959811$2389FAF3-8437-4C35-B55D-0C24FB01C325",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "fa278ebfc458360e5aed63d5058cca83c46134f1",
+        "snaks": {
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 328,
+             "id": "Q328"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P143"
+        ]
+       }
+      ]
+     }
+    ],
+    "P641": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P641",
+       "hash": "8682f60c82abf09b2ec316112627a94e908f2ff9",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 5369,
+         "id": "Q5369"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q959811$66765BBD-FEE4-4FA0-A98C-BCFF02E93637",
+      "rank": "normal"
+     }
+    ],
+    "P2002": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P2002",
+       "hash": "1db22566592dd7db2fc73c1700936f32d01e96fa",
+       "datavalue": {
+        "value": "enjoy_koshien",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "qualifiers": {
+       "P3744": [
+        {
+         "snaktype": "value",
+         "property": "P3744",
+         "hash": "0ea4be29b2541da5696b19b0dfbc70ce186e642d",
+         "datavalue": {
+          "value": {
+           "amount": "+81636",
+           "unit": "1"
+          },
+          "type": "quantity"
+         },
+         "datatype": "quantity"
+        }
+       ],
+       "P6552": [
+        {
+         "snaktype": "value",
+         "property": "P6552",
+         "hash": "f4ba30686df39bb32edd2a4c4ce6c19bf6698c24",
+         "datavalue": {
+          "value": "3009443756",
+          "type": "string"
+         },
+         "datatype": "external-id"
+        }
+       ],
+       "P585": [
+        {
+         "snaktype": "value",
+         "property": "P585",
+         "hash": "5db48cf4d011c3882931889ed5e2d04f10f3c76f",
+         "datavalue": {
+          "value": {
+           "time": "+2018-05-10T00:00:00Z",
+           "timezone": 0,
+           "before": 0,
+           "after": 0,
+           "precision": 11,
+           "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+          },
+          "type": "time"
+         },
+         "datatype": "time"
+        }
+       ],
+       "P580": [
+        {
+         "snaktype": "value",
+         "property": "P580",
+         "hash": "cb4b7ff01014045e6295a8c621fc67a6a39534cb",
+         "datavalue": {
+          "value": {
+           "time": "+2015-02-03T00:00:00Z",
+           "timezone": 0,
+           "before": 0,
+           "after": 0,
+           "precision": 11,
+           "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+          },
+          "type": "time"
+         },
+         "datatype": "time"
+        }
+       ]
+      },
+      "qualifiers-order": [
+       "P3744",
+       "P6552",
+       "P585",
+       "P580"
+      ],
+      "id": "Q959811$7489ECC8-106C-4D2C-9B74-DB3896387649",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "a29a646602abf65105ed0f39a44231c962ece9ee",
+        "snaks": {
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "c6f1777471211df31724ac60175786f3872c83e9",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 177837,
+             "id": "Q177837"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P143"
+        ]
+       }
+      ]
+     }
+    ],
+    "P1619": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P1619",
+       "hash": "7f9cdbae18b8457b043a947b6fd96dc9be2b5c4e",
+       "datavalue": {
+        "value": {
+         "time": "+1924-08-01T00:00:00Z",
+         "timezone": 0,
+         "before": 0,
+         "after": 0,
+         "precision": 11,
+         "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+        },
+        "type": "time"
+       },
+       "datatype": "time"
+      },
+      "type": "statement",
+      "id": "Q959811$8960D0AE-DBB0-4D10-915C-EF45E3D7287A",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "68e90f1327c1fff81967b14b41f4b1159aba4bda",
+        "snaks": {
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 328,
+             "id": "Q328"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ],
+         "P4656": [
+          {
+           "snaktype": "value",
+           "property": "P4656",
+           "hash": "d486c15c4e06d9b5e6a988c88ef0150ac0a9c4d1",
+           "datavalue": {
+            "value": "https://en.wikipedia.org/w/index.php?title=Koshien_Stadium&oldid=851373546",
+            "type": "string"
+           },
+           "datatype": "url"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P143",
+         "P4656"
+        ]
+       }
+      ]
+     }
+    ],
+    "P571": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P571",
+       "hash": "3cf16250f71fad990ace554dc2b16cdd48cca19c",
+       "datavalue": {
+        "value": {
+         "time": "+1924-01-01T00:00:00Z",
+         "timezone": 0,
+         "before": 0,
+         "after": 0,
+         "precision": 9,
+         "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+        },
+        "type": "time"
+       },
+       "datatype": "time"
+      },
+      "type": "statement",
+      "id": "Q959811$D644B417-AEDA-4AF6-AA26-678D3D307497",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "3c97462724c676ad0e2c97c1c7d3280aa592b08e",
+        "snaks": {
+         "P813": [
+          {
+           "snaktype": "value",
+           "property": "P813",
+           "hash": "195108957eff26a4c4350918e0cbf092092eae69",
+           "datavalue": {
+            "value": {
+             "time": "+2019-07-01T00:00:00Z",
+             "timezone": 0,
+             "before": 0,
+             "after": 0,
+             "precision": 11,
+             "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+            },
+            "type": "time"
+           },
+           "datatype": "time"
+          }
+         ],
+         "P3452": [
+          {
+           "snaktype": "value",
+           "property": "P3452",
+           "hash": "4761f2dabae7e4356058976bf050b98db931b25b",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 8131733,
+             "id": "Q8131733"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ],
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "e4f6d9441d0600513c4533c672b5ab472dc73694",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 328,
+             "id": "Q328"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P813",
+         "P3452",
+         "P143"
+        ]
+       }
+      ]
+     }
+    ],
+    "P138": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P138",
+       "hash": "1e2d2a5b9742bc83fa458341bff8fc0d29529af8",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 1140781,
+         "id": "Q1140781"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q959811$abb9df0c-4366-5e1a-aa60-a64094385ffe",
+      "rank": "normal"
+     },
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P138",
+       "hash": "4649a049ade9649600e6986f4c0f02c2a152feaa",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 1190890,
+         "id": "Q1190890"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q959811$e8a4fab0-49db-04f7-4ddf-e0a8c59c287c",
+      "rank": "normal"
+     }
+    ],
+    "P7561": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P7561",
+       "hash": "0f48027fbb26121a4b825209f01cb175869ad62d",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 75106500,
+         "id": "Q75106500"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q959811$2666F1BE-1A8B-4E86-89C6-E6356A58F385",
+      "rank": "normal"
+     }
+    ],
+    "P276": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P276",
+       "hash": "fe411c976bbce16eb132e7c265bbe7a6f0b21dd9",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 243853,
+         "id": "Q243853"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q959811$C6FE4F03-E3E6-4989-B0CE-0563490EFEA4",
+      "rank": "normal"
+     }
+    ],
+    "P8687": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P8687",
+       "hash": "63edd46c0ef828201502c41c5cf3f8c04e885217",
+       "datavalue": {
+        "value": {
+         "amount": "+118009",
+         "unit": "1"
+        },
+        "type": "quantity"
+       },
+       "datatype": "quantity"
+      },
+      "type": "statement",
+      "qualifiers": {
+       "P6552": [
+        {
+         "snaktype": "value",
+         "property": "P6552",
+         "hash": "f4ba30686df39bb32edd2a4c4ce6c19bf6698c24",
+         "datavalue": {
+          "value": "3009443756",
+          "type": "string"
+         },
+         "datatype": "external-id"
+        }
+       ],
+       "P585": [
+        {
+         "snaktype": "value",
+         "property": "P585",
+         "hash": "1fae305dda221f606eda84f91ee0db6d70492cf1",
+         "datavalue": {
+          "value": {
+           "time": "+2021-01-04T00:00:00Z",
+           "timezone": 0,
+           "before": 0,
+           "after": 0,
+           "precision": 11,
+           "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+          },
+          "type": "time"
+         },
+         "datatype": "time"
+        }
+       ]
+      },
+      "qualifiers-order": [
+       "P6552",
+       "P585"
+      ],
+      "id": "Q959811$dbe3850a-0641-48d4-9fb7-f155bd77857b",
+      "rank": "normal"
+     },
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P8687",
+       "hash": "76b471a17388cba98a56ac858cfe529e07f0b3d1",
+       "datavalue": {
+        "value": {
+         "amount": "+81636",
+         "unit": "1"
+        },
+        "type": "quantity"
+       },
+       "datatype": "quantity"
+      },
+      "type": "statement",
+      "qualifiers": {
+       "P6552": [
+        {
+         "snaktype": "value",
+         "property": "P6552",
+         "hash": "f4ba30686df39bb32edd2a4c4ce6c19bf6698c24",
+         "datavalue": {
+          "value": "3009443756",
+          "type": "string"
+         },
+         "datatype": "external-id"
+        }
+       ],
+       "P585": [
+        {
+         "snaktype": "value",
+         "property": "P585",
+         "hash": "5db48cf4d011c3882931889ed5e2d04f10f3c76f",
+         "datavalue": {
+          "value": {
+           "time": "+2018-05-10T00:00:00Z",
+           "timezone": 0,
+           "before": 0,
+           "after": 0,
+           "precision": 11,
+           "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+          },
+          "type": "time"
+         },
+         "datatype": "time"
+        }
+       ]
+      },
+      "qualifiers-order": [
+       "P6552",
+       "P585"
+      ],
+      "id": "Q959811$cce086d7-0c2b-42d9-a978-3f60243b746b",
+      "rank": "normal"
+     },
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P8687",
+       "hash": "ba68e4661644f4a33ff46944278671b8e9f2fff3",
+       "datavalue": {
+        "value": {
+         "amount": "+138396",
+         "unit": "1"
+        },
+        "type": "quantity"
+       },
+       "datatype": "quantity"
+      },
+      "type": "statement",
+      "qualifiers": {
+       "P6552": [
+        {
+         "snaktype": "value",
+         "property": "P6552",
+         "hash": "f4ba30686df39bb32edd2a4c4ce6c19bf6698c24",
+         "datavalue": {
+          "value": "3009443756",
+          "type": "string"
+         },
+         "datatype": "external-id"
+        }
+       ],
+       "P585": [
+        {
+         "snaktype": "value",
+         "property": "P585",
+         "hash": "c17bb9539bedf3d57cf18088cbc8c7aef80cc9d6",
+         "datavalue": {
+          "value": {
+           "time": "+2022-02-26T00:00:00Z",
+           "timezone": 0,
+           "before": 0,
+           "after": 0,
+           "precision": 11,
+           "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+          },
+          "type": "time"
+         },
+         "datatype": "time"
+        }
+       ]
+      },
+      "qualifiers-order": [
+       "P6552",
+       "P585"
+      ],
+      "id": "Q959811$50858f73-fa6c-402a-b4c5-0320094e35ed",
+      "rank": "normal"
+     },
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P8687",
+       "hash": "f3ad721cedf228ac103e719bf91352ebf006662f",
+       "datavalue": {
+        "value": {
+         "amount": "+152555",
+         "unit": "1"
+        },
+        "type": "quantity"
+       },
+       "datatype": "quantity"
+      },
+      "type": "statement",
+      "qualifiers": {
+       "P6552": [
+        {
+         "snaktype": "value",
+         "property": "P6552",
+         "hash": "f4ba30686df39bb32edd2a4c4ce6c19bf6698c24",
+         "datavalue": {
+          "value": "3009443756",
+          "type": "string"
+         },
+         "datatype": "external-id"
+        }
+       ],
+       "P585": [
+        {
+         "snaktype": "value",
+         "property": "P585",
+         "hash": "f8752aaee69e878b264b48cf2b5c504be28099d7",
+         "datavalue": {
+          "value": {
+           "time": "+2023-02-05T00:00:00Z",
+           "timezone": 0,
+           "before": 0,
+           "after": 0,
+           "precision": 11,
+           "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+          },
+          "type": "time"
+         },
+         "datatype": "time"
+        }
+       ]
+      },
+      "qualifiers-order": [
+       "P6552",
+       "P585"
+      ],
+      "id": "Q959811$b0d3d6b6-3215-43cc-bb58-59ce88087c94",
+      "rank": "preferred"
+     },
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P8687",
+       "hash": "08f2706f5081fdc44f302d6021d7c0d4660aff49",
+       "datavalue": {
+        "value": {
+         "amount": "+9270",
+         "unit": "1",
+         "upperBound": "+9279",
+         "lowerBound": "+9270"
+        },
+        "type": "quantity"
+       },
+       "datatype": "quantity"
+      },
+      "type": "statement",
+      "qualifiers": {
+       "P2397": [
+        {
+         "snaktype": "value",
+         "property": "P2397",
+         "hash": "62ae7752849fb15fd28d1f571b159df1e149e328",
+         "datavalue": {
+          "value": "UCmKsiaMoVIhiALZbQsmrOGQ",
+          "type": "string"
+         },
+         "datatype": "external-id"
+        }
+       ],
+       "P585": [
+        {
+         "snaktype": "value",
+         "property": "P585",
+         "hash": "dbc0a179e0391c5612cb874ef193b5c0a6fe694c",
+         "datavalue": {
+          "value": {
+           "time": "+2023-02-22T00:00:00Z",
+           "timezone": 0,
+           "before": 0,
+           "after": 0,
+           "precision": 11,
+           "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+          },
+          "type": "time"
+         },
+         "datatype": "time"
+        }
+       ]
+      },
+      "qualifiers-order": [
+       "P2397",
+       "P585"
+      ],
+      "id": "Q959811$cbe3cac7-fe15-41f1-8e6e-19d16f9f94d1",
+      "rank": "normal"
+     },
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P8687",
+       "hash": "0def91646d92cb74f27c9cf829a5dea43341e89b",
+       "datavalue": {
+        "value": {
+         "amount": "+10800",
+         "unit": "1",
+         "upperBound": "+10899",
+         "lowerBound": "+10800"
+        },
+        "type": "quantity"
+       },
+       "datatype": "quantity"
+      },
+      "type": "statement",
+      "qualifiers": {
+       "P2397": [
+        {
+         "snaktype": "value",
+         "property": "P2397",
+         "hash": "62ae7752849fb15fd28d1f571b159df1e149e328",
+         "datavalue": {
+          "value": "UCmKsiaMoVIhiALZbQsmrOGQ",
+          "type": "string"
+         },
+         "datatype": "external-id"
+        }
+       ],
+       "P585": [
+        {
+         "snaktype": "value",
+         "property": "P585",
+         "hash": "a8bd43a0e4d959a5c9c558c2834b81311ce9054b",
+         "datavalue": {
+          "value": {
+           "time": "+2023-03-22T00:00:00Z",
+           "timezone": 0,
+           "before": 0,
+           "after": 0,
+           "precision": 11,
+           "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+          },
+          "type": "time"
+         },
+         "datatype": "time"
+        }
+       ]
+      },
+      "qualifiers-order": [
+       "P2397",
+       "P585"
+      ],
+      "id": "Q959811$0dc5e1a7-b935-48a2-a8cf-0b940936533a",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "58a6269a7282347320705325b7864f6a78658db2",
+        "snaks": {
+         "P813": [
+          {
+           "snaktype": "value",
+           "property": "P813",
+           "hash": "b30214ab2341df33eaf6cd0166751459da477f79",
+           "datavalue": {
+            "value": {
+             "time": "+2023-03-22T00:00:00Z",
+             "timezone": 0,
+             "before": 0,
+             "after": 0,
+             "precision": 11,
+             "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+            },
+            "type": "time"
+           },
+           "datatype": "time"
+          }
+         ],
+         "P248": [
+          {
+           "snaktype": "value",
+           "property": "P248",
+           "hash": "e6e6374525f7d680f01ff599745f367fb1369b87",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 8056784,
+             "id": "Q8056784"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P813",
+         "P248"
+        ]
+       }
+      ]
+     },
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P8687",
+       "hash": "00eea4be1ad73237d8ff3cc8f722b59f132c31f7",
+       "datavalue": {
+        "value": {
+         "amount": "+12600",
+         "unit": "1",
+         "upperBound": "+12699",
+         "lowerBound": "+12600"
+        },
+        "type": "quantity"
+       },
+       "datatype": "quantity"
+      },
+      "type": "statement",
+      "qualifiers": {
+       "P2397": [
+        {
+         "snaktype": "value",
+         "property": "P2397",
+         "hash": "62ae7752849fb15fd28d1f571b159df1e149e328",
+         "datavalue": {
+          "value": "UCmKsiaMoVIhiALZbQsmrOGQ",
+          "type": "string"
+         },
+         "datatype": "external-id"
+        }
+       ],
+       "P585": [
+        {
+         "snaktype": "value",
+         "property": "P585",
+         "hash": "9d64e8af0848e60ef457a2cc2e3dfdf54af0f5a3",
+         "datavalue": {
+          "value": {
+           "time": "+2023-05-31T00:00:00Z",
+           "timezone": 0,
+           "before": 0,
+           "after": 0,
+           "precision": 11,
+           "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+          },
+          "type": "time"
+         },
+         "datatype": "time"
+        }
+       ]
+      },
+      "qualifiers-order": [
+       "P2397",
+       "P585"
+      ],
+      "id": "Q959811$0b41579f-dccd-460f-ab91-a83bb198fe71",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "671e7e50e0904a7e6a4c274c56d5af1407ab40d5",
+        "snaks": {
+         "P813": [
+          {
+           "snaktype": "value",
+           "property": "P813",
+           "hash": "d6b6438d2a93e2106850d8b5dccbf532771237a1",
+           "datavalue": {
+            "value": {
+             "time": "+2023-05-31T00:00:00Z",
+             "timezone": 0,
+             "before": 0,
+             "after": 0,
+             "precision": 11,
+             "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+            },
+            "type": "time"
+           },
+           "datatype": "time"
+          }
+         ],
+         "P248": [
+          {
+           "snaktype": "value",
+           "property": "P248",
+           "hash": "e6e6374525f7d680f01ff599745f367fb1369b87",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 8056784,
+             "id": "Q8056784"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P813",
+         "P248"
+        ]
+       }
+      ]
+     },
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P8687",
+       "hash": "cf79b711079585eecdb375e7e90e36f3806a13e1",
+       "datavalue": {
+        "value": {
+         "amount": "+16100",
+         "unit": "1",
+         "upperBound": "+16199",
+         "lowerBound": "+16100"
+        },
+        "type": "quantity"
+       },
+       "datatype": "quantity"
+      },
+      "type": "statement",
+      "qualifiers": {
+       "P2397": [
+        {
+         "snaktype": "value",
+         "property": "P2397",
+         "hash": "62ae7752849fb15fd28d1f571b159df1e149e328",
+         "datavalue": {
+          "value": "UCmKsiaMoVIhiALZbQsmrOGQ",
+          "type": "string"
+         },
+         "datatype": "external-id"
+        }
+       ],
+       "P585": [
+        {
+         "snaktype": "value",
+         "property": "P585",
+         "hash": "a0fe151aa4548f4cb32f90cad64cf3bd09515171",
+         "datavalue": {
+          "value": {
+           "time": "+2024-01-13T00:00:00Z",
+           "timezone": 0,
+           "before": 0,
+           "after": 0,
+           "precision": 11,
+           "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+          },
+          "type": "time"
+         },
+         "datatype": "time"
+        }
+       ]
+      },
+      "qualifiers-order": [
+       "P2397",
+       "P585"
+      ],
+      "id": "Q959811$5e3e206a-9e70-464e-bb11-2e23f0735f9e",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "92c34dd71e56924ecc36a7e64d7bbd103b67029b",
+        "snaks": {
+         "P813": [
+          {
+           "snaktype": "value",
+           "property": "P813",
+           "hash": "3ca1d8c5a6ce77b9f8132d86be9ef2e51f3ec61a",
+           "datavalue": {
+            "value": {
+             "time": "+2024-01-13T00:00:00Z",
+             "timezone": 0,
+             "before": 0,
+             "after": 0,
+             "precision": 11,
+             "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+            },
+            "type": "time"
+           },
+           "datatype": "time"
+          }
+         ],
+         "P248": [
+          {
+           "snaktype": "value",
+           "property": "P248",
+           "hash": "e6e6374525f7d680f01ff599745f367fb1369b87",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 8056784,
+             "id": "Q8056784"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P813",
+         "P248"
+        ]
+       }
+      ]
+     },
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P8687",
+       "hash": "1c5ef9cd375d2a3294771a7a745f4e0774684362",
+       "datavalue": {
+        "value": {
+         "amount": "+19100",
+         "unit": "1",
+         "upperBound": "+19199",
+         "lowerBound": "+19100"
+        },
+        "type": "quantity"
+       },
+       "datatype": "quantity"
+      },
+      "type": "statement",
+      "qualifiers": {
+       "P2397": [
+        {
+         "snaktype": "value",
+         "property": "P2397",
+         "hash": "62ae7752849fb15fd28d1f571b159df1e149e328",
+         "datavalue": {
+          "value": "UCmKsiaMoVIhiALZbQsmrOGQ",
+          "type": "string"
+         },
+         "datatype": "external-id"
+        }
+       ],
+       "P585": [
+        {
+         "snaktype": "value",
+         "property": "P585",
+         "hash": "8af25abdf6159e73eab2298cb0e2ba64d3aebd15",
+         "datavalue": {
+          "value": {
+           "time": "+2024-05-11T00:00:00Z",
+           "timezone": 0,
+           "before": 0,
+           "after": 0,
+           "precision": 11,
+           "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+          },
+          "type": "time"
+         },
+         "datatype": "time"
+        }
+       ]
+      },
+      "qualifiers-order": [
+       "P2397",
+       "P585"
+      ],
+      "id": "Q959811$2800749e-59b7-4450-bd77-b07d854f59f2",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "d9f8bcc1f19457c109d1611a27f98b11f466444a",
+        "snaks": {
+         "P813": [
+          {
+           "snaktype": "value",
+           "property": "P813",
+           "hash": "5b9db19a3ae06d9d5d35db561af7dec25e2fb4cc",
+           "datavalue": {
+            "value": {
+             "time": "+2024-05-11T00:00:00Z",
+             "timezone": 0,
+             "before": 0,
+             "after": 0,
+             "precision": 11,
+             "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+            },
+            "type": "time"
+           },
+           "datatype": "time"
+          }
+         ],
+         "P248": [
+          {
+           "snaktype": "value",
+           "property": "P248",
+           "hash": "e6e6374525f7d680f01ff599745f367fb1369b87",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 8056784,
+             "id": "Q8056784"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P813",
+         "P248"
+        ]
+       }
+      ]
+     },
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P8687",
+       "hash": "69efb27938bd8f1517ec52af9ba3ab23a55b5717",
+       "datavalue": {
+        "value": {
+         "amount": "+21300",
+         "unit": "1",
+         "upperBound": "+21399",
+         "lowerBound": "+21300"
+        },
+        "type": "quantity"
+       },
+       "datatype": "quantity"
+      },
+      "type": "statement",
+      "qualifiers": {
+       "P2397": [
+        {
+         "snaktype": "value",
+         "property": "P2397",
+         "hash": "62ae7752849fb15fd28d1f571b159df1e149e328",
+         "datavalue": {
+          "value": "UCmKsiaMoVIhiALZbQsmrOGQ",
+          "type": "string"
+         },
+         "datatype": "external-id"
+        }
+       ],
+       "P585": [
+        {
+         "snaktype": "value",
+         "property": "P585",
+         "hash": "fbe391233c51345cfb6936e463f36d1868299076",
+         "datavalue": {
+          "value": {
+           "time": "+2024-09-14T00:00:00Z",
+           "timezone": 0,
+           "before": 0,
+           "after": 0,
+           "precision": 11,
+           "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+          },
+          "type": "time"
+         },
+         "datatype": "time"
+        }
+       ]
+      },
+      "qualifiers-order": [
+       "P2397",
+       "P585"
+      ],
+      "id": "Q959811$b93bff2e-0444-4b98-abe8-cf9b4a569244",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "846362ca6535f375036ff81dfedbfb89ccd4bf18",
+        "snaks": {
+         "P813": [
+          {
+           "snaktype": "value",
+           "property": "P813",
+           "hash": "57b2170443601946b5f18346013ad4920d8c0f73",
+           "datavalue": {
+            "value": {
+             "time": "+2024-09-14T00:00:00Z",
+             "timezone": 0,
+             "before": 0,
+             "after": 0,
+             "precision": 11,
+             "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+            },
+            "type": "time"
+           },
+           "datatype": "time"
+          }
+         ],
+         "P248": [
+          {
+           "snaktype": "value",
+           "property": "P248",
+           "hash": "e6e6374525f7d680f01ff599745f367fb1369b87",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 8056784,
+             "id": "Q8056784"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P813",
+         "P248"
+        ]
+       }
+      ]
+     },
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P8687",
+       "hash": "df150dd94e893d4cecd9de70f8883a02fc8aaab7",
+       "datavalue": {
+        "value": {
+         "amount": "+24000",
+         "unit": "1",
+         "upperBound": "+24099",
+         "lowerBound": "+24000"
+        },
+        "type": "quantity"
+       },
+       "datatype": "quantity"
+      },
+      "type": "statement",
+      "qualifiers": {
+       "P2397": [
+        {
+         "snaktype": "value",
+         "property": "P2397",
+         "hash": "62ae7752849fb15fd28d1f571b159df1e149e328",
+         "datavalue": {
+          "value": "UCmKsiaMoVIhiALZbQsmrOGQ",
+          "type": "string"
+         },
+         "datatype": "external-id"
+        }
+       ],
+       "P585": [
+        {
+         "snaktype": "value",
+         "property": "P585",
+         "hash": "e54af82c182f8e7ffa5c93c1f3f093a0c06b1848",
+         "datavalue": {
+          "value": {
+           "time": "+2025-03-23T00:00:00Z",
+           "timezone": 0,
+           "before": 0,
+           "after": 0,
+           "precision": 11,
+           "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+          },
+          "type": "time"
+         },
+         "datatype": "time"
+        }
+       ]
+      },
+      "qualifiers-order": [
+       "P2397",
+       "P585"
+      ],
+      "id": "Q959811$d992dedb-a49a-448c-acd7-75627362f2c7",
+      "rank": "preferred",
+      "references": [
+       {
+        "hash": "f15cf9bcaa8b06fbf534d2b8f51924c2c7a03100",
+        "snaks": {
+         "P813": [
+          {
+           "snaktype": "value",
+           "property": "P813",
+           "hash": "4e5edd9fd30e338a1c849ef15e865b3d819527d5",
+           "datavalue": {
+            "value": {
+             "time": "+2025-03-23T00:00:00Z",
+             "timezone": 0,
+             "before": 0,
+             "after": 0,
+             "precision": 11,
+             "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+            },
+            "type": "time"
+           },
+           "datatype": "time"
+          }
+         ],
+         "P248": [
+          {
+           "snaktype": "value",
+           "property": "P248",
+           "hash": "e6e6374525f7d680f01ff599745f367fb1369b87",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 8056784,
+             "id": "Q8056784"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P813",
+         "P248"
+        ]
+       }
+      ]
+     }
+    ],
+    "P214": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P214",
+       "hash": "662f51ed74d74ef04460a45f98fcd973693606d2",
+       "datavalue": {
+        "value": "15153593793851671731",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q959811$a4a6f95d-487e-48c5-ab4f-862eb34b23d6",
+      "rank": "normal"
+     }
+    ],
+    "P349": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P349",
+       "hash": "808cd97c0035d60aadd8a72be46def6b2a01a2d3",
+       "datavalue": {
+        "value": "001300024",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q959811$96b7841d-41fc-4391-a1e0-38c2c8974975",
+      "rank": "normal"
+     }
+    ],
+    "P1621": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P1621",
+       "hash": "b5bfe23ea17754e51121d460dd6b98ffb21b30d2",
+       "datavalue": {
+        "value": "Hanshin Koshien Stadium Oct09 10.jpg",
+        "type": "string"
+       },
+       "datatype": "commonsMedia"
+      },
+      "type": "statement",
+      "id": "Q959811$e1e3985e-4198-4125-b61a-f711a2b85224",
+      "rank": "normal"
+     }
+    ],
+    "P2003": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P2003",
+       "hash": "a43336d4e1600e43065a28b25629831bf076ed48",
+       "datavalue": {
+        "value": "enjoy_koshien",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q959811$aa41839b-4a5d-0ccd-1107-468ad995b4ea",
+      "rank": "normal"
+     }
+    ],
+    "P2397": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P2397",
+       "hash": "62ae7752849fb15fd28d1f571b159df1e149e328",
+       "datavalue": {
+        "value": "UCmKsiaMoVIhiALZbQsmrOGQ",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "qualifiers": {
+       "P1810": [
+        {
+         "snaktype": "value",
+         "property": "P1810",
+         "hash": "7262169e5e7a303b5f6204db76b092804eb827c8",
+         "datavalue": {
+          "value": "阪神甲子園球場",
+          "type": "string"
+         },
+         "datatype": "string"
+        }
+       ],
+       "P3744": [
+        {
+         "snaktype": "value",
+         "property": "P3744",
+         "hash": "4c4b039c5c402588370c540c3ff6f2b07a22903c",
+         "datavalue": {
+          "value": {
+           "amount": "+9260",
+           "unit": "1"
+          },
+          "type": "quantity"
+         },
+         "datatype": "quantity"
+        }
+       ],
+       "P3740": [
+        {
+         "snaktype": "value",
+         "property": "P3740",
+         "hash": "de6e5e3fdc57beca63efeb86e5bd33cdcab0e653",
+         "datavalue": {
+          "value": {
+           "amount": "+64",
+           "unit": "1"
+          },
+          "type": "quantity"
+         },
+         "datatype": "quantity"
+        }
+       ],
+       "P5436": [
+        {
+         "snaktype": "value",
+         "property": "P5436",
+         "hash": "6df51bc8b3a398ee33ccbf2dc28dcfc6cfcf5530",
+         "datavalue": {
+          "value": {
+           "amount": "+994732",
+           "unit": "1"
+          },
+          "type": "quantity"
+         },
+         "datatype": "quantity"
+        }
+       ],
+       "P580": [
+        {
+         "snaktype": "value",
+         "property": "P580",
+         "hash": "8944012c01129ad4c32de1bb10cf659eb7134f1d",
+         "datavalue": {
+          "value": {
+           "time": "+2014-09-12T00:00:00Z",
+           "timezone": 0,
+           "before": 0,
+           "after": 0,
+           "precision": 11,
+           "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+          },
+          "type": "time"
+         },
+         "datatype": "time"
+        }
+       ],
+       "P585": [
+        {
+         "snaktype": "value",
+         "property": "P585",
+         "hash": "0ddd609cac17f6935c575e8287ed93d8cae3f2cf",
+         "datavalue": {
+          "value": {
+           "time": "+2023-02-19T00:00:00Z",
+           "timezone": 0,
+           "before": 0,
+           "after": 0,
+           "precision": 11,
+           "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+          },
+          "type": "time"
+         },
+         "datatype": "time"
+        }
+       ],
+       "P11245": [
+        {
+         "snaktype": "value",
+         "property": "P11245",
+         "hash": "41862f67af75da21f098fc3784ea93ddb04cf77a",
+         "datavalue": {
+          "value": "enjoy_koshien",
+          "type": "string"
+         },
+         "datatype": "external-id"
+        }
+       ]
+      },
+      "qualifiers-order": [
+       "P1810",
+       "P3744",
+       "P3740",
+       "P5436",
+       "P580",
+       "P585",
+       "P11245"
+      ],
+      "id": "Q959811$2936923d-46e4-4ac1-fcc8-a5361e539517",
+      "rank": "normal"
+     }
+    ],
+    "P2013": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P2013",
+       "hash": "71a33ae9126d8b05a34e3026e08c3e056cbb1cd7",
+       "datavalue": {
+        "value": "enjoy.koshien",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q959811$ad8dade5-4793-5ef2-415a-8355df5573aa",
+      "rank": "normal"
+     }
+    ],
+    "P3134": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P3134",
+       "hash": "c14abf5976e76ac2c54f7980168a5513296df190",
+       "datavalue": {
+        "value": "1424168",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q959811$eb4069c3-433a-c269-f513-57e1ee2f7339",
+      "rank": "normal"
+     }
+    ],
+    "P6900": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P6900",
+       "hash": "6423a68fe5b4c3f945382e743d54663db4c121c9",
+       "datavalue": {
+        "value": "阪神甲子園球場",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q959811$673f7fa9-48af-0a07-1308-7064a91cc8aa",
+      "rank": "normal"
+     }
+    ],
+    "P910": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P910",
+       "hash": "3f0be4ea1a94a2af30e8f9006502d3052495ca3e",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 27069651,
+         "id": "Q27069651"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q959811$5ebaed0a-4fc2-ea5d-fbba-a487aa882c43",
+      "rank": "normal"
+     }
+    ],
+    "P856": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P856",
+       "hash": "a1a7f828a10e614d9765c5e84fcc19beddeebaa5",
+       "datavalue": {
+        "value": "http://hanshintigers.jp/",
+        "type": "string"
+       },
+       "datatype": "url"
+      },
+      "type": "statement",
+      "qualifiers": {
+       "P407": [
+        {
+         "snaktype": "value",
+         "property": "P407",
+         "hash": "d858d1b9f6e6e383f38dfbe706d102f056c07312",
+         "datavalue": {
+          "value": {
+           "entity-type": "item",
+           "numeric-id": 5287,
+           "id": "Q5287"
+          },
+          "type": "wikibase-entityid"
+         },
+         "datatype": "wikibase-item"
+        },
+        {
+         "snaktype": "value",
+         "property": "P407",
+         "hash": "daf1c4fcb58181b02dff9cc89deb084004ddae4b",
+         "datavalue": {
+          "value": {
+           "entity-type": "item",
+           "numeric-id": 1860,
+           "id": "Q1860"
+          },
+          "type": "wikibase-entityid"
+         },
+         "datatype": "wikibase-item"
+        },
+        {
+         "snaktype": "value",
+         "property": "P407",
+         "hash": "fbe0ce84fb2993dc61a764c6b3ccbda1fb4cc669",
+         "datavalue": {
+          "value": {
+           "entity-type": "item",
+           "numeric-id": 18130932,
+           "id": "Q18130932"
+          },
+          "type": "wikibase-entityid"
+         },
+         "datatype": "wikibase-item"
+        },
+        {
+         "snaktype": "value",
+         "property": "P407",
+         "hash": "a10335a425d19169dd856e0a5f71735853eab0ab",
+         "datavalue": {
+          "value": {
+           "entity-type": "item",
+           "numeric-id": 9176,
+           "id": "Q9176"
+          },
+          "type": "wikibase-entityid"
+         },
+         "datatype": "wikibase-item"
+        }
+       ]
+      },
+      "qualifiers-order": [
+       "P407"
+      ],
+      "id": "Q959811$4286a491-4782-0c4e-8206-8b5f230bced2",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "c71e3f50c1a374e2721fca815e3f38202b27920b",
+        "snaks": {
+         "P143": [
+          {
+           "snaktype": "value",
+           "property": "P143",
+           "hash": "342852c6ea3be834528dad2b0808c542dc83626d",
+           "datavalue": {
+            "value": {
+             "entity-type": "item",
+             "numeric-id": 19826574,
+             "id": "Q19826574"
+            },
+            "type": "wikibase-entityid"
+           },
+           "datatype": "wikibase-item"
+          }
+         ],
+         "P4656": [
+          {
+           "snaktype": "value",
+           "property": "P4656",
+           "hash": "a15bdedbca2709d2730347466c954f6729399125",
+           "datavalue": {
+            "value": "https://id.wikivoyage.org/wiki/Nishinomiya?oldid=36699",
+            "type": "string"
+           },
+           "datatype": "url"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P143",
+         "P4656"
+        ]
+       }
+      ]
+     }
+    ],
+    "P527": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P527",
+       "hash": "0fe27c33a0a0f58210758c38c7c8ac36498fd18f",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 10855326,
+         "id": "Q10855326"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q959811$ed097215-416b-d29d-10bc-fb0024f96cd9",
+      "rank": "normal"
+     }
+    ],
+    "P10225": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P10225",
+       "hash": "fff0a4061e187a3fbd2f800a33ef6d7b6c752f03",
+       "datavalue": {
+        "value": "https://shop.koshien-stadium.jp/",
+        "type": "string"
+       },
+       "datatype": "url"
+      },
+      "type": "statement",
+      "qualifiers": {
+       "P407": [
+        {
+         "snaktype": "value",
+         "property": "P407",
+         "hash": "d858d1b9f6e6e383f38dfbe706d102f056c07312",
+         "datavalue": {
+          "value": {
+           "entity-type": "item",
+           "numeric-id": 5287,
+           "id": "Q5287"
+          },
+          "type": "wikibase-entityid"
+         },
+         "datatype": "wikibase-item"
+        }
+       ]
+      },
+      "qualifiers-order": [
+       "P407"
+      ],
+      "id": "Q959811$a415c136-45a7-8b58-7006-7e18e532428d",
+      "rank": "normal"
+     }
+    ],
+    "P793": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P793",
+       "hash": "1c3325d98f83e7a9ada6d969e38625cb5773ed2e",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 1075405,
+         "id": "Q1075405"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q959811$ad5434c4-4e84-bd11-436a-1d47ab9f6300",
+      "rank": "normal"
+     },
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P793",
+       "hash": "076d7830cd7391a0e8acff4f7b1019059bad74f8",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 845459,
+         "id": "Q845459"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q959811$5e49c5b5-4423-ae37-c8ee-7196e8d71e9a",
+      "rank": "normal"
+     }
+    ],
+    "P3451": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P3451",
+       "hash": "71e34c9f941bd2149bd3fa30b329b2f157ac4a65",
+       "datavalue": {
+        "value": "Koshien-3.jpg",
+        "type": "string"
+       },
+       "datatype": "commonsMedia"
+      },
+      "type": "statement",
+      "id": "Q959811$37426ed8-4b02-1c66-65e8-6f44d5d5321e",
+      "rank": "normal"
+     }
+    ],
+    "P8592": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P8592",
+       "hash": "18c16b3568b892bef927bd1231a37aee788aeea1",
+       "datavalue": {
+        "value": "Koshien Stadium.jpg",
+        "type": "string"
+       },
+       "datatype": "commonsMedia"
+      },
+      "type": "statement",
+      "id": "Q959811$9934c63e-4f8c-e716-68cd-97542007c51c",
+      "rank": "normal"
+     }
+    ],
+    "P12170": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P12170",
+       "hash": "618a186454457579d33ec4b96a9a473a2d0ada22",
+       "datavalue": {
+        "value": "AGkNAX",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q959811$b694151f-44b5-6ede-1882-3a33be35e441",
+      "rank": "normal"
+     }
+    ],
+    "P8453": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P8453",
+       "hash": "0535f7bd4a0df009c3dacceb3e78d2fd8954e6d2",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 6455288,
+         "id": "Q6455288"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q959811$1f725a45-4643-c181-fc60-3bcd07af0cc7",
+      "rank": "normal",
+      "references": [
+       {
+        "hash": "82f713003d7d04a955591320b8a743d6765ca281",
+        "snaks": {
+         "P854": [
+          {
+           "snaktype": "value",
+           "property": "P854",
+           "hash": "38010fdb0162887df590896ff8caa115cf63d824",
+           "datavalue": {
+            "value": "https://www.hanshin.co.jp/koshien/access/traffic.html",
+            "type": "string"
+           },
+           "datatype": "url"
+          }
+         ],
+         "P813": [
+          {
+           "snaktype": "value",
+           "property": "P813",
+           "hash": "d91ec7d5256b33f6eec1e25a503f2fd04b16bd23",
+           "datavalue": {
+            "value": {
+             "time": "+2023-12-03T00:00:00Z",
+             "timezone": 0,
+             "before": 0,
+             "after": 0,
+             "precision": 11,
+             "calendarmodel": "http://www.wikidata.org/entity/Q1985727"
+            },
+            "type": "time"
+           },
+           "datatype": "time"
+          }
+         ]
+        },
+        "snaks-order": [
+         "P854",
+         "P813"
+        ]
+       }
+      ]
+     }
+    ],
+    "P765": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P765",
+       "hash": "ab3a0226f7ed3463d5ca5477b5d8b6daf5f38cd7",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 207766,
+         "id": "Q207766"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q959811$9d2890b6-4312-8023-ba6a-7407ee22398a",
+      "rank": "normal"
+     },
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P765",
+       "hash": "eab749d0c3d5d7bc8a2c7247283d7c5bb0eb276b",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 193158,
+         "id": "Q193158"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q959811$73bff785-421e-7f77-b6be-363e3717377b",
+      "rank": "normal"
+     }
+    ],
+    "P11408": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P11408",
+       "hash": "1d9a6f4792c3ffe24a02a9acf2669b7c1edf574c",
+       "datavalue": {
+        "value": "阪神甲子園球場",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q959811$a74e6c35-46ef-d6d8-bcc7-4b80af52e24a",
+      "rank": "normal"
+     }
+    ],
+    "P126": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P126",
+       "hash": "c40075c7b8c5c14edbabfd18e7b6e4b6a32f4c8b",
+       "datavalue": {
+        "value": {
+         "entity-type": "item",
+         "numeric-id": 1140781,
+         "id": "Q1140781"
+        },
+        "type": "wikibase-entityid"
+       },
+       "datatype": "wikibase-item"
+      },
+      "type": "statement",
+      "id": "Q959811$db4329bc-4daa-13b3-d78d-f9d7d3f09289",
+      "rank": "normal"
+     }
+    ],
+    "P3108": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P3108",
+       "hash": "f3dc0c2589449b8ccb35c84352d321b383ad7f62",
+       "datavalue": {
+        "value": "阪神甲子園球場-西宮市-2",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q959811$d1e2f0f7-4dc8-f97c-3158-36470c37fe48",
+      "rank": "normal"
+     }
+    ],
+    "P402": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P402",
+       "hash": "c44d5fdd6f701e8b94c966d8e7aabd1471f76c3a",
+       "datavalue": {
+        "value": "9845926",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q959811$42246473-4059-fe36-8254-a966b59ba9e8",
+      "rank": "normal"
+     }
+    ],
+    "P4173": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P4173",
+       "hash": "304216b2fdc73bdda5c4448fe3ea0415fc4443f2",
+       "datavalue": {
+        "value": "819257714830296",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q959811$39ee36ff-40f7-589a-4be1-5cd7223367fa",
+      "rank": "normal"
+     },
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P4173",
+       "hash": "2ddbcaa0f6c815127124017ad1949447b0bf9ded",
+       "datavalue": {
+        "value": "174652",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q959811$31f84e47-4cf4-e67c-0f20-859bacb6e2f7",
+      "rank": "normal"
+     },
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P4173",
+       "hash": "5978c3057be6e538b73ccc80efa1f2c20c078cd3",
+       "datavalue": {
+        "value": "264714469",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q959811$50b2918b-432d-a892-a79e-87ebedcb2bc9",
+      "rank": "normal"
+     },
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P4173",
+       "hash": "a42aa8d4f06650b9166630ff83ee9c84a7b406fa",
+       "datavalue": {
+        "value": "152933358641053",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q959811$bb96e61c-4716-a66f-7cae-dc27ba9891b9",
+      "rank": "normal"
+     },
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P4173",
+       "hash": "a62d4a81f5360dd06c9b07242c0ed496b2c10ca8",
+       "datavalue": {
+        "value": "111011081535826",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q959811$70a0875b-4b4b-bc48-4f4e-8055798ed737",
+      "rank": "normal"
+     },
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P4173",
+       "hash": "09ad4706acfc96e4cf615fbb4cfab33c3f7448ed",
+       "datavalue": {
+        "value": "413896247",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q959811$7987a480-4329-7cea-9505-e8f25bb39a93",
+      "rank": "normal"
+     },
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P4173",
+       "hash": "71fa1bdd29331129b9e98b81e97f3d0749496bf6",
+       "datavalue": {
+        "value": "230000353",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q959811$077ce795-4606-a0dd-5f91-dd29d3a314ab",
+      "rank": "normal"
+     },
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P4173",
+       "hash": "282f5a533438a164c0d0dbf7b045a60db696d301",
+       "datavalue": {
+        "value": "714915243",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q959811$671b5bb9-4fab-2f9f-23a7-2edbe2a8adad",
+      "rank": "normal"
+     },
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P4173",
+       "hash": "4d97d71ecf02d72b314d288cf122103cb8e20944",
+       "datavalue": {
+        "value": "1032165312",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q959811$16cc1967-4876-52f8-b1a7-73418dc4db12",
+      "rank": "normal"
+     },
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P4173",
+       "hash": "55a8ed766f27f122f5f67d9053233d706d287c7f",
+       "datavalue": {
+        "value": "228494158",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q959811$4b67d088-452d-b512-0ee3-529435c63cce",
+      "rank": "normal"
+     },
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P4173",
+       "hash": "b689496b34896587ce4077802f09e9e91a490c00",
+       "datavalue": {
+        "value": "696885206",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q959811$d3b58057-45b0-1beb-1687-fb2d4f09b4aa",
+      "rank": "normal"
+     }
+    ],
+    "P3749": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P3749",
+       "hash": "a7883df1e55577cda15168570c9116af8eb665a8",
+       "datavalue": {
+        "value": "17865344084205682267",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q959811$d866f2bc-4573-67e5-1475-d6b23f443485",
+      "rank": "normal"
+     }
+    ],
+    "P1004": [
+     {
+      "mainsnak": {
+       "snaktype": "value",
+       "property": "P1004",
+       "hash": "3751a05bc70a2187ba40f2de2cf7619fba3b8307",
+       "datavalue": {
+        "value": "64d382be-68a5-45b2-9adc-0f42563ec9d6",
+        "type": "string"
+       },
+       "datatype": "external-id"
+      },
+      "type": "statement",
+      "id": "Q959811$b08a244a-423f-9b4f-6541-dd11b61b6b40",
+      "rank": "normal"
+     }
+    ]
+   },
+   "sitelinks": {
+    "bgwiki": {
+     "site": "bgwiki",
+     "title": "Стадион Ханшин Кошиен",
+     "badges": []
+    },
+    "dawiki": {
+     "site": "dawiki",
+     "title": "Hanshin Koshien Stadium",
+     "badges": []
+    },
+    "dewiki": {
+     "site": "dewiki",
+     "title": "Hanshin-Kōshien-Stadion",
+     "badges": []
+    },
+    "enwiki": {
+     "site": "enwiki",
+     "title": "Koshien Stadium",
+     "badges": []
+    },
+    "eswiki": {
+     "site": "eswiki",
+     "title": "Estadio Koshien",
+     "badges": []
+    },
+    "euwiki": {
+     "site": "euwiki",
+     "title": "Hanshin Koshien Stadium",
+     "badges": []
+    },
+    "fiwiki": {
+     "site": "fiwiki",
+     "title": "Hanshin Kōshien -stadion",
+     "badges": []
+    },
+    "frwiki": {
+     "site": "frwiki",
+     "title": "Stade Kōshien",
+     "badges": []
+    },
+    "glwiki": {
+     "site": "glwiki",
+     "title": "Estadio Koshien",
+     "badges": []
+    },
+    "huwiki": {
+     "site": "huwiki",
+     "title": "Hanshin Koshien Stadion",
+     "badges": []
+    },
+    "itwiki": {
+     "site": "itwiki",
+     "title": "Stadio Hanshin Kōshien",
+     "badges": []
+    },
+    "jawiki": {
+     "site": "jawiki",
+     "title": "阪神甲子園球場",
+     "badges": []
+    },
+    "kowiki": {
+     "site": "kowiki",
+     "title": "한신 고시엔 구장",
+     "badges": []
+    },
+    "ltwiki": {
+     "site": "ltwiki",
+     "title": "Hanšin Košien stadionas",
+     "badges": []
+    },
+    "mrwiki": {
+     "site": "mrwiki",
+     "title": "कोशियन स्टेडियम",
+     "badges": []
+    },
+    "mswiki": {
+     "site": "mswiki",
+     "title": "Stadium Koshien",
+     "badges": []
+    },
+    "nlwiki": {
+     "site": "nlwiki",
+     "title": "Hanshin Koshien Stadium",
+     "badges": []
+    },
+    "nowiki": {
+     "site": "nowiki",
+     "title": "Hanshin Koshien Stadium",
+     "badges": []
+    },
+    "pswiki": {
+     "site": "pswiki",
+     "title": "کوشين لوبغالی",
+     "badges": []
+    },
+    "ptwiki": {
+     "site": "ptwiki",
+     "title": "Koshien Stadium",
+     "badges": []
+    },
+    "sawiki": {
+     "site": "sawiki",
+     "title": "हन्शिन् कोशिएन् स्टेडियम",
+     "badges": []
+    },
+    "simplewiki": {
+     "site": "simplewiki",
+     "title": "Koshien Stadium",
+     "badges": []
+    },
+    "svwiki": {
+     "site": "svwiki",
+     "title": "Hanshin Koshien Stadium",
+     "badges": []
+    },
+    "tewiki": {
+     "site": "tewiki",
+     "title": "హన్షిన్ కోషియన్ స్టేడియం",
+     "badges": []
+    },
+    "thwiki": {
+     "site": "thwiki",
+     "title": "โคชิเอ็ง",
+     "badges": []
+    },
+    "tiwiki": {
+     "site": "tiwiki",
+     "title": "ኮሺየን ስታዲየም",
+     "badges": []
+    },
+    "tlwiki": {
+     "site": "tlwiki",
+     "title": "Koshien Stadium",
+     "badges": []
+    },
+    "trwiki": {
+     "site": "trwiki",
+     "title": "Kōshien Stadyumu",
+     "badges": []
+    },
+    "ukwiki": {
+     "site": "ukwiki",
+     "title": "Стадіон Кошиен",
+     "badges": []
+    },
+    "viwiki": {
+     "site": "viwiki",
+     "title": "Sân vận động Hanshin Kōshien",
+     "badges": []
+    },
+    "wuuwiki": {
+     "site": "wuuwiki",
+     "title": "阪神甲子园球场",
+     "badges": []
+    },
+    "zh_yuewiki": {
+     "site": "zh_yuewiki",
+     "title": "阪神甲子園球場",
+     "badges": []
+    },
+    "zhwiki": {
+     "site": "zhwiki",
+     "title": "阪神甲子園球場",
+     "badges": []
+    }
+   }
   }
  }
 }

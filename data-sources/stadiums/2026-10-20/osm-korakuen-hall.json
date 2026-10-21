@@ -1,0 +1,60 @@
+{
+ "read": "2026-10-20",
+ "licence": "ODbL 1.0, (c) OpenStreetMap contributors, openstreetmap.org/copyright",
+ "gateway": "https://overpass-api.de/api/interpreter",
+ "query": "[out:json][timeout:60];(way(id:45977418););out geom;",
+ "osmBase": "2026-10-21T00:17:36Z",
+ "wikidata": "Q4389857",
+ "elements": [
+  {
+   "type": "way",
+   "id": 45977418,
+   "bounds": {
+    "minlat": 35.7039627,
+    "minlon": 139.7518314,
+    "maxlat": 35.7045568,
+    "maxlon": 139.7522824
+   },
+   "nodes": [
+    585629235,
+    585629074,
+    1041094915,
+    585629263,
+    585629235
+   ],
+   "geometry": [
+    {
+     "lat": 35.7045568,
+     "lon": 139.7518949
+    },
+    {
+     "lat": 35.7039948,
+     "lon": 139.7518314
+    },
+    {
+     "lat": 35.7039627,
+     "lon": 139.7522063
+    },
+    {
+     "lat": 35.7045249,
+     "lon": 139.7522824
+    },
+    {
+     "lat": 35.7045568,
+     "lon": 139.7518949
+    }
+   ],
+   "tags": {
+    "amenity": "arts_centre",
+    "building": "yes",
+    "name": "後楽園ホール",
+    "name:en": "Korakuen Hall",
+    "name:es": "Korakuen Hall",
+    "source": "Bing, 2007-04",
+    "wikidata": "Q4389857",
+    "wikimedia_commons": "Category:Korakuen Hall",
+    "wikipedia": "en:Korakuen Hall"
+   }
+  }
+ ]
+}

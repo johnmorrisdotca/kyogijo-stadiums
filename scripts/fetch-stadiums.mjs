@@ -6,7 +6,8 @@
 //                      multipolygon of the roof's band and the opening in it), as OSM returned them (geometry and tags). Kept apart from every other file here: it is ODbL data, and src/stadiums.osm.data.ts says so.
 //   wikidata.json      Wikidata (CC0): the claims of each stadium's item, as the API returned them.
 //   wikipedia.json     English Wikipedia (CC BY-SA 4.0): the revision of each stadium's article and the sentences that speak of its seats, its bowls, its roof and its field, as evidence for a person to read; a fact
-//                      is in scripts/stadiums.data.json in our own words, with the article and the revision.
+//                      is in scripts/stadiums.data.json in our own words, with the article and the revision. A stadium with a Japanese article (`ja`) has that too, under `articlesJa`: the revision and the
+//                      sentences that speak of the same things (CC BY-SA 4.0 as well, evidence only).
 //
 // Overpass is polite use only: one query per stadium, 10 seconds apart, a back-off on 429, 502, 503 and 504 and the second public gateway when the first is busy.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -94,6 +95,32 @@ if (wanted.length > 0) {
   writeFileSync(wikipediaFile, `${JSON.stringify({ ...keptArticles, articles: { ...keptArticles.articles, ...articles } }, null, 1)}\n`);
   console.log(`wikipedia.json written (${Object.keys(articles).length} articles)`);
   await pause(2000);
+}
+
+// ---- Japanese Wikipedia. ----
+// The articles of the stadiums that cite one (`ja`), kept beside the English ones: the revision, and the sentences that speak of the seats, the levels, the roof and the field.
+const TOPIC_JA = /(?:収容|席|層|階|屋根|膜|空気|気圧|ドーム|銀傘|傘|スタンド|バルコニー|グラウンド|フィールド|黒土|芝|蔦|ツタ|フェンス|両翼|中堅|最大|高さ|メートル|南側|センター側|ライト|レフト|浜風|m)/;
+{
+  const kept = JSON.parse(readFileSync(wikipediaFile, "utf8"));
+  const wantedJa = stadiums.filter((v) => v.ja !== undefined && kept.articlesJa?.[v.id] === undefined);
+  if (wantedJa.length > 0) {
+    const articlesJa = {};
+    for (const v of wantedJa) {
+      const url = `https://ja.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=ids|timestamp|content&rvslots=main&titles=${encodeURIComponent(v.ja.title)}&redirects=1&format=json&formatversion=2`;
+      const page = (await getJson(url)).query.pages[0];
+      const revision = page?.revisions?.[0];
+      if (revision === undefined) {
+        console.log(`${v.id}: no Japanese article ${v.ja.title}`);
+        continue;
+      }
+      const prose = plain(revision.slots.main.content);
+      const sentences = prose.split(/(?<=[。！？])/).map((x) => x.trim()).filter((x) => TOPIC_JA.test(x) && x.length < 400);
+      articlesJa[v.id] = { title: page.title, revision: revision.revid, timestamp: revision.timestamp, sentences };
+      await pause(2000);
+    }
+    writeFileSync(wikipediaFile, `${JSON.stringify({ ...kept, articlesJa: { ...kept.articlesJa, ...articlesJa } }, null, 1)}\n`);
+    console.log(`wikipedia.json: ${Object.keys(articlesJa).length} Japanese article(s) written`);
+  }
 }
 
 // ---- OpenStreetMap, through Overpass. ----

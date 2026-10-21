@@ -121,6 +121,9 @@ await takePictures({
     { subject: "district-bc-rogers-3d", views: ["desk"], url: "/district.html?view=3d&viewpoint=broadcast&labels=1", ready: READY_HALLS_TURN, target: "#stage" },
     // Seattle (0.30.0): the two SoDo stadiums side by side in 3D, a ballpark and a football stadium on one ground (the district page's stage); the city view with Climate Pledge Arena is in the docs gallery.
     { subject: "district-seattle-3d", views: ["desk"], url: "/district.html?venues=t-mobile-park,lumen-field&view=3d&viewpoint=broadcast&labels=1", ready: READY_HALLS_TURN, target: "#stage" },
+    // Tokyo Dome (0.32.0): the ballpark under its air-supported roof in 3D from a low corner (the stadiums page's stage), and Tokyo Dome City, the Dome with Korakuen Hall, on one ground (the district page's stage).
+    { subject: "stadiums-tokyo-dome-3d", views: ["desk"], url: "/stadiums.html?stadium=tokyo-dome&view=3d&viewpoint=corner&roof=1", ready: READY_HALLS_TURN, target: "#stage" },
+    { subject: "district-tokyo-3d", views: ["desk"], url: "/district.html?venues=tokyo-dome,korakuen-hall&view=3d&viewpoint=corner&roof=1&labels=1", ready: READY_HALLS_TURN, target: "#stage" },
     // Boards over a surface (0.24.0): a results board over a pool, a bout presentation over a judo mat in 3D, a medal table in the corner of the athletics stadium (invented names; the boards page's stage).
     { subject: "boards-swimming", views: ["desk"], url: "/boards.html?example=swimming", ready: READY_HALLS, target: "#stage" },
     { subject: "boards-judo-3d", views: ["desk"], url: "/boards.html?example=judo&view=3d", ready: READY_HALLS_TURN, target: "#stage" },

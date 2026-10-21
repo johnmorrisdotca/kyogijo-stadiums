@@ -20,7 +20,7 @@ const fieldOf = (sport: "cfl" | "nfl" | "soccer") => crowdStands(options(sport))
 
 describe("the stadiums: BC Place", () => {
   it("is the one stadium of the data, a ground the package already has, with its Wikidata item and the article its facts were read from", () => {
-    expect(STADIUM_IDS).toEqual(["bc-place", "lumen-field", "t-mobile-park"]);
+    expect(STADIUM_IDS).toEqual(["bc-place", "lumen-field", "t-mobile-park", "tokyo-dome", "korakuen-hall"]);
     expect(stadiumById("bc-place")).toBe(bc);
     expect(stadiumByWikidata("Q612227")).toBe(bc);
     expect(stadiumById("toString")).toBeUndefined();
@@ -543,5 +543,138 @@ describe("T-Mobile Park", () => {
     const [pl, ph] = z(parked);
     expect(pl).toBeCloseTo(217, 0);
     expect(ph).toBeCloseTo(224, 0);
+  });
+});
+
+describe("Tokyo Dome", () => {
+  const dome = STADIUMS["tokyo-dome"];
+  const parkInput = () => ({ fence: fenceOutline(fenceFor(parkById("tokyo-dome"), undefined)), backstop: MLB_DIAMOND.backstop, crowd: { ...resolveCrowd({ real: true })!, awayEnd: "none" as const }, seatsOnWalls: [] });
+  const plan = () => planPark(dome, parkInput());
+  const options = { sport: "mlb", park: "tokyo-dome", crowd: { real: true } } as never;
+
+  it("is a ballpark of baseball's seats, in two levels, under an air-supported roof, as the English and the Japanese article say", () => {
+    expect(stadiumKind(dome)).toBe("park");
+    expect(stadiumSeats(dome, "mlb")).toBe(45600);
+    expect(dome.wikidataSeats).toEqual([55000]);
+    expect(dome.tiers).toMatchObject({ count: 2, basis: "documented" });
+    expect(dome.roof).toMatchObject({ kind: "dome", basis: "documented" });
+    expect(dome.en).toEqual({ title: "Tokyo Dome", revision: 1379232526 });
+    expect(dome.ja?.title).toBe("東京ドーム");
+    expect(stadiumNames(dome)).toEqual({ en: "Tokyo Dome", ja: "東京ドーム" });
+    expect(stadiumByWikidata("Q733748")).toBe(dome);
+  });
+
+  it("is the building OpenStreetMap maps, with its roof as a part of its own: 56.19 metres to the top, 30 of them the roof's rise", () => {
+    expect(dome.osm.source).toBe("way/20028328");
+    expect(dome.osm.licence).toBe("ODbL-1.0");
+    expect(dome.osm.roof).toMatchObject({ source: "way/577764996", height: 56.19, rise: 30 });
+    expect(dome.osm.roof!.ring!.length).toBeGreaterThan(20);
+    const metres = metresFrom(middleOf(lonLat(dome.osm.ring)), lonLat(dome.osm.ring));
+    expect(areaOf(metres)).toBeGreaterThan(36000);
+    expect(areaOf(metres)).toBeLessThan(41000);
+  });
+
+  it("does not guess how the field lies: no diamond is mapped in the dome, so the way home plate faces is not known, and no arrow points north", () => {
+    expect(dome.osm.axis.basis).toBe("none");
+    expect(stadiumOrientation(dome).basis).toBe("none");
+    const svg = drawKyogijo(options);
+    expect(svg).toContain('class="ky-cr-shell"');
+    expect(svg).not.toContain('class="ky-cr-north"');
+    expect(plan().stands.real?.north).toBeUndefined();
+    const en = describeDrawing(options).description;
+    expect(en).toContain("The way home plate faces is not known");
+    expect(en).toContain("no arrow points north");
+    expect(describeDrawing({ ...(options as object), language: "ja" } as never).description).toContain("東京ドーム");
+  });
+
+  it("holds the seats of baseball to within two percent, with the stands inside the building except for a corner or two", () => {
+    const p = plan();
+    expect(p.fit).toBe("fits");
+    expect(Math.abs(p.total - 45600) / 45600).toBeLessThan(0.02);
+    const points = p.stands.rings.flatMap((r) => [r.region, ...(r.more ?? [])].flatMap((o) => (o.kind === "poly" ? o.points : [])));
+    const outside = points.filter((q) => !inside(p.footprint, q)).length;
+    expect(outside / points.length).toBeLessThan(0.08);
+    expect(p.seatArea).toBeLessThan(4.6);
+    expect(planPark(dome, parkInput())).toBe(p);
+  });
+
+  it("raises an air-supported roof in 3D, a lens from the rim at 86 feet to a crown at 184, which never opens", () => {
+    const closed = buildTurn(options, { venue: { roof: true } });
+    const open = buildTurn(options, { venue: { roof: true, roofOpen: true } });
+    const walls = closed.uprights.items.find((i) => i.kind === "walls")!;
+    expect(Math.max(...walls.planes.flatMap((q) => [q.o[2], q.o[2] + q.v[2]]))).toBeCloseTo((56.19 - 30) * FEET, 0);
+    const roof = closed.uprights.items.find((i) => i.kind === "roof")!;
+    const zs = roof.planes.flatMap((q) => cornersOf(q).map((c) => c[2]));
+    expect(Math.min(...zs)).toBeCloseTo((56.19 - 30) * FEET, 0);
+    expect(Math.max(...zs)).toBeCloseTo(56.19 * FEET, 0);
+    expect(roof.planes.every((q) => q.id.startsWith("roof-"))).toBe(true);
+    expect(roof.planes.some((q) => q.shy !== undefined)).toBe(true);
+    expect(open.uprights.items.find((i) => i.kind === "roof")!.planes.map((q) => q.id)).toEqual(roof.planes.map((q) => q.id));
+    expect(buildTurn(options, {}).uprights.items.find((i) => i.kind === "roof")).toBeUndefined();
+  });
+});
+
+describe("Korakuen Hall", () => {
+  const hall = STADIUMS["korakuen-hall"];
+  const ring = { x: 0, y: 0, w: 24.1, h: 24.1 };
+  const options = { sport: "boxing", stadium: "korakuen-hall", crowd: { real: true } } as never;
+
+  it("is a hall with a boxing ring, its names Wikidata's labels, and the seats of its two articles: 1,403 on the floor and 2,005 at the most", () => {
+    expect(stadiumKind(hall)).toBe("hall");
+    expect(hall.ground).toBeUndefined();
+    expect(hall.park).toBeUndefined();
+    expect(stadiumNames(hall)).toEqual({ en: "Korakuen Hall", ja: "後楽園ホール" });
+    expect(hall.names?.readingJa).toBe("こうらくえんホール");
+    expect(Object.keys(hall.configs)).toEqual(["boxing"]);
+    expect(stadiumSeats(hall, "boxing")).toBe(1403);
+    expect(hall.bowlSeats).toBe(2005);
+    expect(hall.wikidataSeats).toEqual([2005]);
+    expect(hall.tiers).toMatchObject({ count: 2, basis: "documented", lowerSeats: 1403 });
+    expect(stadiumConfigOf("boxing")).toBe("boxing");
+    expect(stadiumByWikidata("Q4389857")).toBe(hall);
+    expect(hall.osm.source).toBe("way/45977418");
+  });
+
+  it("lies in its building along the building's long axis, an inference the data says so of", () => {
+    expect(hall.osm.axis.basis).toBe("building");
+    expect(hall.osm.axis.elongation).toBeGreaterThan(1.5);
+    expect(stadiumOrientation(hall).basis).toBe("building");
+  });
+
+  it("holds the seats of the hall to the seat, the floor's 1,403 in the lower bowl and the balconies' standing places in the upper, which is closed and drawn empty", () => {
+    const plan = planStadium(hall, "boxing", ring);
+    expect(plan.total).toBe(2005);
+    expect(plan.seats.map((t) => t.tier)).toEqual(["lower", "upper"]);
+    expect(plan.seats[0].seats).toBe(1403);
+    expect(plan.fit).toBe("fits");
+    expect(stadiumBowlInside(plan)).toBe(true);
+    expect(plan.open).toBe(1403);
+    expect(plan.bowl.rings[0].fill).toBe(1);
+    expect(plan.bowl.rings[1].fill).toBe(0);
+    expect(planStadium(hall, "boxing", ring)).toBe(plan);
+    expect(() => planStadium(hall, "soccer", ring)).toThrow();
+  });
+
+  it("draws in 2D with its building round the ring, says what it is in both languages, and is ignored without a real crowd or for another sport", () => {
+    const svg = drawKyogijo(options);
+    expect(svg).toContain('class="ky-cr-shell"');
+    expect(svg).toContain('class="ky-cr-north"');
+    const en = describeDrawing(options).description;
+    expect(en).toContain("plausible bowl of 1403 seats in 2 levels");
+    expect(en).toContain("Korakuen Hall");
+    expect(en).toContain("it is not the hall's plan");
+    expect(en).toContain("The ring is set along the building's long axis");
+    const ja = describeDrawing({ ...(options as object), language: "ja" } as never).description;
+    expect(ja).toContain("後楽園ホール");
+    expect(ja).toContain("1403席");
+    expect(drawKyogijo({ sport: "boxing", stadium: "korakuen-hall", crowd: true, id: "x" } as never)).not.toContain('class="ky-cr-shell"');
+    expect(drawKyogijo({ sport: "prowrestling", stadium: "korakuen-hall", crowd: { real: true }, id: "x" } as never)).not.toContain('class="ky-cr-shell"');
+  });
+
+  it("raises its walls to a lid over the bowl in 3D, with the ring in the middle", () => {
+    const model = buildTurn(options, { venue: { roof: true } });
+    expect(model.uprights.items.find((i) => i.kind === "walls")).toBeDefined();
+    expect(model.uprights.items.find((i) => i.kind === "roof")).toBeDefined();
+    expect(model.uprights.items.find((i) => i.kind === "stands")).toBeDefined();
   });
 });

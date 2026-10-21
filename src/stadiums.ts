@@ -1,4 +1,4 @@
-// The real stadiums: for a stadium that stages football and soccer, or a ballpark, the outline of its building and the way its field lies in it (from OpenStreetMap, ODbL 1.0), and a bowl of the seats of each configuration,
+// The real stadiums: for a stadium that stages football and soccer, a ballpark, or a hall that stages boxing, the outline of its building and the way its field lies in it (from OpenStreetMap, ODbL 1.0), and a bowl of the seats of each configuration,
 // the number of bowls and the kind of roof the sources give (Wikidata, CC0, and the English Wikipedia article each fact cites), fitted inside the outline. It is the stadium's counterpart of `venues.ts`, for a surface that is a
 // field and not a rink: level one is the building, level two a plausible bowl, and it stops there (no team's, ticket seller's or federation's seat map is read or copied, no section or row is named, and no mark of a club, a
 // league or a tournament is drawn). The drawing is `drawKyogijo({ sport: "cfl", stadium, crowd: { real: true } })` (or `sport: "soccer"` with a `ground` or a `stadium`, `sport: "mlb"` with a `park`) and, in 3D, the same options
@@ -19,17 +19,18 @@ export { VENUE_ATTRIBUTION };
 /** How a fact is known: `documented` is what a source cited with it says; `plausible` is ours, for a bowl no source describes. */
 export type StadiumBasis = "documented" | "plausible";
 
-/** The configurations of a stadium: the field the seats are counted for. `cfl` and `nfl` are the football fields of the two leagues, `soccer` a soccer pitch, `mlb` a baseball field. */
-export type StadiumConfigId = "cfl" | "nfl" | "soccer" | "mlb";
+/** The configurations of a stadium: the field the seats are counted for. `cfl` and `nfl` are the football fields of the two leagues, `soccer` a soccer pitch, `mlb` a baseball field, `boxing` a boxing ring in a hall. */
+export type StadiumConfigId = "cfl" | "nfl" | "soccer" | "mlb" | "boxing";
 
-/** What a stadium is: a `stadium` has a football field and a soccer pitch lying along its length, a `park` is a baseball park, whose frame is home plate's. */
-export type StadiumKind = "stadium" | "park";
+/** What a stadium is: a `stadium` has a football field and a soccer pitch lying along its length, a `park` is a baseball park, whose frame is home plate's, a `hall` is a hall with a ring in the middle and the seats round it. */
+export type StadiumKind = "stadium" | "park" | "hall";
 
 /**
  * The kinds of roof: `cable` is a cable-supported roof with an opening over the field that a retractable fabric closes (BC Place's); `fixed` a lid over the bowl; `canopy` roofs over some of the stands that leave the field
- * open (Lumen Field's); `panels` a retractable roof of sections high over a ballpark (T-Mobile Park's).
+ * open (Lumen Field's); `panels` a retractable roof of sections high over a ballpark (T-Mobile Park's); `dome` an air-supported roof, a membrane held up by the air inside (Tokyo Dome's); `open` no roof over the
+ * field (Koshien Stadium's).
  */
-export type StadiumRoof = "cable" | "fixed" | "canopy" | "panels";
+export type StadiumRoof = "cable" | "fixed" | "canopy" | "panels" | "dome" | "open";
 
 /** What one configuration of a stadium is: its sport and its seats, and where the figure was read. */
 export interface StadiumConfigData {
@@ -56,6 +57,15 @@ export interface RealStadiumData {
   gridiron?: "cfl" | "nfl";
   /** The English Wikipedia article the facts that are not Wikidata's were read from, at a revision. */
   en: { title: string; revision: number };
+  /** The Japanese Wikipedia article some of the facts were read from, at a revision. */
+  ja?: { title: string; revision: number };
+  /** The names of a hall, in both languages (a stadium's and a park's are those of its ground and its park): Wikidata's labels. */
+  names?: { en: string; ja: string; readingJa?: string };
+  /**
+   * Plain drawing choices where the sources say so, each with what was read: `ivyWalls` draws the building's walls in green (Koshien Stadium's ivy), `dirtInfield` draws the infield all dirt, with no grass inside the bases
+   * (the same stadium's). They are drawn as plain colours, not as a picture of the plants or the soil.
+   */
+  looks?: { ivyWalls?: string; dirtInfield?: string };
   configs: Partial<Record<StadiumConfigId, StadiumConfigData>>;
   /** The seats of the whole bowl where it holds more than a configuration's (Lumen Field's soccer seats are fewer: the upper sections are closed): the bowl is fitted to these and a configuration opens its seats from the lowest bowl up. */
   bowlSeats?: number;
@@ -79,7 +89,7 @@ export interface RealStadiumData {
     opening?: { length: number; width: number; unit: "m" };
     /** A canopy's share of the seats it covers, as the article gives it. */
     cover?: number;
-    /** A retractable roof's bottom and top above the field, in feet, as the article gives them. */
+    /** A retractable roof's bottom and top above the field, in feet, as the article gives them (an air-supported roof's height is the building's, from OpenStreetMap). */
     bottom?: number;
     top?: number;
   };
@@ -96,18 +106,19 @@ export interface StadiumOsm {
   /** The building's height in metres, where OpenStreetMap maps one. */
   height?: number;
   /** The roof OpenStreetMap maps over the building: its heights in metres (`height` to the top of the roof, `rise` of that the roof's own) and the opening in it as `[longitude, latitude]`. */
-  roof?: { source: string; height?: number; rise?: number; outer?: string; opening?: { source: string; ring: [number, number][] } };
+  roof?: { source: string; height?: number; rise?: number; outer?: string; opening?: { source: string; ring: [number, number][] }; ring?: [number, number][] };
   /** The canopies OpenStreetMap maps over some of the stands: each one's outline, the height of its top and how far it rises (metres). */
   canopies?: { source: string; height: number; rise: number; ring: [number, number][] }[];
   /** The building's outline as `[longitude, latitude]`, not repeating its first point. */
   ring: [number, number][];
   /**
    * How the field lies, worked out when the data was made: the heading of its long side (degrees clockwise from north, 0 to under 180; for a ballpark, the heading from home plate out to centre field, 0 to under 360), how that
-   * is known (`opening`: from the roof's opening, which the article says is the field's size; `pitch`: from the pitches OpenStreetMap maps; `infield`: from the mapped infield, with the outline choosing which way is out to
-   * centre field; `building`: from the long axis of the building's main hall, an inference; `none`: no direction, 90 is stood in), how much of a direction the building has (`strength`) and how much longer than wide the
-   * opening, the pitch or the hall is (`elongation`), and the middle of the field as `[longitude, latitude]` (home plate for a ballpark).
+   * is known (`opening`: from the roof's opening, which the article says is the field's size; `pitch`: from the pitches OpenStreetMap maps, and for a ballpark from the grass of the field it maps, fitted to the fence
+   * the park publishes (`rms`, in metres, is how far the two lie apart); `infield`: from the mapped infield, with the outline choosing which way is out to centre field; `building`: from the long axis of the
+   * building's main hall, an inference; `none`: no direction is known, and the heading is a stand-in (90 for a field with a long side, and for a ballpark the way that keeps its fence and its stands inside the building)),
+   * how much of a direction the building has (`strength`) and how much longer than wide the opening, the pitch or the hall is (`elongation`), and the middle of the field as `[longitude, latitude]` (home plate for a ballpark).
    */
-  axis: { heading: number; basis: "opening" | "pitch" | "infield" | "building" | "none"; strength: number; elongation: number; centre: [number, number] };
+  axis: { heading: number; basis: "opening" | "pitch" | "infield" | "building" | "none"; strength: number; elongation: number; centre: [number, number]; rms?: number };
 }
 
 /** A stadium: its facts and what OpenStreetMap gave. */
@@ -140,15 +151,19 @@ export const stadiumKind = (stadium: RealStadium): StadiumKind => stadium.kind ?
 /** The configurations a stadium has, in the order of its data. */
 export const stadiumConfigs = (stadium: RealStadium): StadiumConfigId[] => Object.keys(stadium.configs) as StadiumConfigId[];
 
-/** The ground a stadium is (its name, place and pitch). Throws for a ballpark, which has a park. */
+/** The ground a stadium is (its name, place and pitch). Throws for a ballpark, which has a park, and for a hall, which has none. */
 export const groundOfStadium = (stadium: RealStadium): Ground => {
   const ground = groundById(stadium.ground);
   if (ground === undefined) throw new Error(`${stadium.id} has no ground ${String(stadium.ground)}`);
   return ground;
 };
 
-/** The names a stadium goes by in both languages, of its ground or its park. */
+/** The names a stadium goes by in both languages, of its ground or its park (a hall's own). */
 export function stadiumNames(stadium: RealStadium): { en: string; ja: string } {
+  if (stadiumKind(stadium) === "hall") {
+    if (stadium.names === undefined) throw new Error(`${stadium.id} is a hall with no names`);
+    return { en: stadium.names.en, ja: stadium.names.ja };
+  }
   if (stadiumKind(stadium) === "park") {
     const park = PARKS[stadium.park ?? ""];
     if (park === undefined) throw new Error(`${stadium.id} has no park ${String(stadium.park)}`);
@@ -167,8 +182,8 @@ export const stadiumFrameHeading = (stadium: RealStadium): number => (stadiumKin
 /** How the field lies in a stadium's building (see `StadiumOsm.axis`). */
 export const stadiumOrientation = (stadium: RealStadium): StadiumOrientation => ({ heading: stadium.osm.axis.heading, basis: stadium.osm.axis.basis, north: round(northOn(stadiumFrameHeading(stadium))) });
 
-/** The configuration a sport is: `cfl`, `nfl`, `soccer` or `mlb`, or `undefined` for a sport a stadium has no configuration for. */
-export const stadiumConfigOf = (sport: string | undefined): StadiumConfigId | undefined => (sport === "cfl" || sport === "nfl" || sport === "soccer" || sport === "mlb" ? sport : undefined);
+/** The configuration a sport is: `cfl`, `nfl`, `soccer`, `mlb` or `boxing`, or `undefined` for a sport a stadium has no configuration for. */
+export const stadiumConfigOf = (sport: string | undefined): StadiumConfigId | undefined => (sport === "cfl" || sport === "nfl" || sport === "soccer" || sport === "mlb" || sport === "boxing" ? sport : undefined);
 
 /** The seats of a stadium for a configuration (0 for one it has none of). */
 export const stadiumSeats = (stadium: RealStadium, config: StadiumConfigId): number => stadium.configs[config]?.seats ?? 0;
@@ -177,6 +192,8 @@ export const stadiumSeats = (stadium: RealStadium, config: StadiumConfigId): num
 
 /** How far the first row is from a football field's footprint (the league's field and its end zones) along a side and at an end, and the corner's radius: the package's own gridiron profile (`crowd.ts`), so that a real stadium's first row is the usual one. */
 const FIRST_ROW = { cfl: { side: 42, end: 28, corner: 60 }, nfl: { side: 40, end: 26, corner: 60 } } as const;
+/** How far a hall's first row is from the box of the ring, on every side, in feet (ours: the seats at the ringside are a few feet from the ropes). */
+export const HALL_FIRST_ROW = 8;
 /** The height of the first row above the field, in feet, the rise of a bowl's rows by the number of bowls (what the lowest, a middle and the upper rise, at most), and the rise of the walk between two bowls (a suite level): ours, no source gives them. */
 export const STADIUM_FIRST_HEIGHT = 5;
 export const STADIUM_RISES: Readonly<Record<1 | 2 | 3, readonly number[]>> = { 1: [60], 2: [38, 62], 3: [32, 26, 56] };
@@ -247,7 +264,7 @@ const PLANS = new WeakMap<RealStadium, Map<string, StadiumPlan>>();
  * ```
  */
 export function planStadium(stadium: RealStadium, config: StadiumConfigId, box: Box): StadiumPlan {
-  if (stadiumKind(stadium) !== "stadium") throw new Error(`${stadium.id} is a ballpark: planPark plans it`);
+  if (stadiumKind(stadium) === "park") throw new Error(`${stadium.id} is a ballpark: planPark plans it`);
   if (stadium.configs[config] === undefined) throw new Error(`${stadium.id} has no configuration ${config}`);
   const key = `${config}|${box.x}|${box.y}|${box.w}|${box.h}`;
   const mine = PLANS.get(stadium) ?? new Map<string, StadiumPlan>();
@@ -277,7 +294,11 @@ function plan(stadium: RealStadium, config: StadiumConfigId, rink: Box): Stadium
   const gridiron = FOOTBALL[kind];
   const row = FIRST_ROW[kind];
   const length = gridiron.length + 2 * gridiron.endZone;
-  const first: RRect = { kind: "rrect", x0: at[0] - length / 2 - row.end, y0: at[1] - gridiron.width / 2 - row.side, x1: at[0] + length / 2 + row.end, y1: at[1] + gridiron.width / 2 + row.side, r: row.corner };
+  // A hall's first row stands a little way from the ring's box on every side; a stadium's round a football field's footprint.
+  const first: RRect =
+    stadiumKind(stadium) === "hall"
+      ? { kind: "rrect", x0: rink.x - HALL_FIRST_ROW, y0: rink.y - HALL_FIRST_ROW, x1: rink.x + rink.w + HALL_FIRST_ROW, y1: rink.y + rink.h + HALL_FIRST_ROW, r: HALL_FIRST_ROW }
+      : { kind: "rrect", x0: at[0] - length / 2 - row.end, y0: at[1] - gridiron.width / 2 - row.side, x1: at[0] + length / 2 + row.end, y1: at[1] + gridiron.width / 2 + row.side, r: row.corner };
   const shapedAs = (long: number, s: number): RRect => ({ kind: "rrect", x0: at[0] - long * s, y0: at[1] - s, x1: at[0] + long * s, y1: at[1] + s, r: CORNER * s });
   const largest = (long: number): number => {
     let [lo, hi] = [60, Math.max(fb.x1 - fb.x0, fb.y1 - fb.y0)];
@@ -356,6 +377,14 @@ function plan(stadium: RealStadium, config: StadiumConfigId, rink: Box): Stadium
   // The rounding of each bowl's seats leaves the total a seat or two off the bowl's: the last bowl takes the difference.
   const missing = seatsTotal - rings.reduce((sum, ring) => sum + ring.seats, 0);
   if (!tight && Math.abs(missing) <= 3) rings[rings.length - 1].seats += missing;
+  // Where a source gives the seats of the lowest bowl, that bowl holds them to the seat (the rounding of its area leaves it one or two off) and the last bowl the rest.
+  if (!tight && stadium.tiers.lowerSeats !== undefined && rings.length > 1) {
+    const off = stadium.tiers.lowerSeats - rings[0].seats;
+    if (off !== 0 && Math.abs(off) <= 3) {
+      rings[0].seats += off;
+      rings[rings.length - 1].seats -= off;
+    }
+  }
   const total = rings.reduce((sum, ring) => sum + ring.seats, 0);
   // A configuration that opens fewer seats than the bowl holds opens them from the lowest bowl up: a bowl's people are its open share of them, and a closed one is empty.
   if (open < seatsTotal) {
@@ -416,6 +445,8 @@ export interface ParkPlan {
   /** The seats each band holds, and in all, against the configuration's. */
   seats: { tier: string; seats: number }[];
   total: number;
+  /** The floor a seat takes in the plan, in square feet: 4.6 as the usual stands have it, less where the building is too small for them and the bowl is steeper. */
+  seatArea: number;
   /** Whether the stands hold the configuration's seats to within two percent. */
   fit: "fits" | "tight";
 }
@@ -424,6 +455,8 @@ const PARK_PLANS = new WeakMap<RealStadium, Map<string, ParkPlan>>();
 
 /** The share of a ballpark's building the closed roof covers, and the share of its width along the east side the open roof's sections rest over (ours: the article says where they rest, not how much). */
 const PARK_COVER = 0.92;
+/** How far an open-air ballpark's walls stand over its top row, in feet (ours). */
+const OPEN_WALL_OVER = 6;
 const PARK_PARKED = 0.3;
 
 /**
@@ -448,16 +481,6 @@ function park(stadium: RealStadium, input: ParkInput): ParkPlan {
   const bands = stadium.tiers.tierSeats ?? { lower: seats * 0.45, upper: seats * 0.47, bleachers: seats * 0.08 };
   const sum = bands.lower + bands.upper + bands.bleachers;
   const wanted = { lower: (bands.lower / sum) * seats, upper: (bands.upper / sum) * seats, bleachers: (bands.bleachers / sum) * seats };
-  // Each band is as deep as holds its seats: the usual depths scaled by what the seats of the band are to what the band holds, a few rounds over (a band's seats grow with its depth).
-  const depths = { lower: 60, upper: 56, bleachers: 54 };
-  let stands = parkLayout({ ...input, depths });
-  for (let i = 0; i < 12; i += 1) {
-    const held = (id: string): number => stands.rings.find((r) => r.id === id)?.seats ?? 0;
-    const next = { lower: depths.lower * (wanted.lower / Math.max(1, held("lower"))), upper: depths.upper * (wanted.upper / Math.max(1, held("upper"))), bleachers: depths.bleachers * (wanted.bleachers / Math.max(1, held("bleachers"))) };
-    for (const k of ["lower", "upper", "bleachers"] as const) depths[k] = Math.min(160, Math.max(20, next[k]));
-    stands = parkLayout({ ...input, depths });
-  }
-  const total = stands.rings.reduce((n, r) => n + r.seats, 0);
   const orientation = stadiumOrientation(stadium);
   const frameHeading = stadiumFrameHeading(stadium);
   // The building in the park's frame, in feet: home plate at the origin.
@@ -470,27 +493,57 @@ function park(stadium: RealStadium, input: ParkInput): ParkPlan {
   };
   const footprint = world.map(frameOf);
   const fb = boxOf(footprint);
+  // Each band is as deep as holds its seats: the usual depths scaled by what the seats of the band are to what the band holds, a few rounds over (a band's seats grow with its depth). The usual depths
+  // take a seat to be 4.6 square feet of plan; a building too small for them has a steeper bowl, in which a seat takes less (the factors of `SEAT_AREAS`, as an arena's bowl), until the stands fit inside it.
+  let depths = { lower: 60, upper: 56, bleachers: 54 };
+  let stands = parkLayout({ ...input, depths });
+  let factor = 1;
+  for (const f of [1, ...SEAT_AREAS.map((area) => 4.6 / area)]) {
+    factor = f;
+    depths = { lower: 60, upper: 56, bleachers: 54 };
+    stands = parkLayout({ ...input, depths });
+    for (let i = 0; i < 12; i += 1) {
+      const held = (id: string): number => (stands.rings.find((r) => r.id === id)?.seats ?? 0) * f;
+      const next = { lower: depths.lower * (wanted.lower / Math.max(1, held("lower"))), upper: depths.upper * (wanted.upper / Math.max(1, held("upper"))), bleachers: depths.bleachers * (wanted.bleachers / Math.max(1, held("bleachers"))) };
+      for (const k of ["lower", "upper", "bleachers"] as const) depths[k] = Math.min(160, Math.max(20, next[k]));
+      stands = parkLayout({ ...input, depths });
+    }
+    if (stands.rings.every((r) => [r.region, ...(r.more ?? [])].every((o) => o.kind !== "poly" || o.points.every((p) => inside(footprint, p))))) break;
+  }
+  if (factor !== 1) {
+    for (const ring of stands.rings) ring.seats = Math.round(ring.seats * factor);
+    stands.seats = stands.rings.reduce((n, r) => n + r.seats, 0);
+  }
+  const total = stands.rings.reduce((n, r) => n + r.seats, 0);
   const box = stands.box;
   const c: Pt = [box.x + box.w / 2, box.y + box.h / 2];
-  const cover = footprint.map((p): Pt => [c[0] + (p[0] - c[0]) * PARK_COVER, c[1] + (p[1] - c[1]) * PARK_COVER]);
-  // Where the sections rest: the east side of the building, over the railway there (the article says so): the strip of the outline east of a share of its width.
-  const [wx0, wx1] = [Math.min(...world.map((p) => p[0])), Math.max(...world.map((p) => p[0]))];
-  const [wy0, wy1] = [Math.min(...world.map((p) => p[1])), Math.max(...world.map((p) => p[1]))];
-  const strip = clipConvex(world, [[wx1 - (wx1 - wx0) * PARK_PARKED, wy0 - 1], [wx1 + 1, wy0 - 1], [wx1 + 1, wy1 + 1], [wx1 - (wx1 - wx0) * PARK_PARKED, wy1 + 1]]);
-  const parked = strip.map(frameOf);
   const north = orientation.basis === "none" ? undefined : orientation.north;
   const room = north === undefined ? 0 : NORTH_ROOM;
-  const wallFeet = round((stadium.osm.height ?? 20) * FEET_PER_METRE);
   const hall = { kind: "rrect" as const, x0: fb.x0 - 30, y0: fb.y0 - 30, x1: fb.x1 + 30, y1: fb.y1 + 30, r: 0 };
-  const shell: RealShell = {
-    footprint,
-    hall,
-    ...(north === undefined ? {} : { north }),
-    roof: "panels",
-    edge: wallFeet,
-    wall: wallFeet,
-    panels: { cover, bottom: stadium.roof.bottom ?? 217, top: stadium.roof.top ?? 269, parked },
-  };
+  const top = Math.max(...stands.rings.map((r) => r.height[1]));
+  const ivy = stadium.looks?.ivyWalls === undefined ? {} : { ivy: true };
+  let shell: RealShell;
+  if (stadium.roof.kind === "dome") {
+    // An air-supported roof: the membrane over the outline OpenStreetMap maps for it, standing at the height of its rim (the building's height less the roof's own rise) and rising to the building's height.
+    const mapped = stadium.osm.roof;
+    if (mapped?.ring === undefined || mapped.height === undefined || mapped.rise === undefined) throw new Error(`${stadium.id} has a dome roof and no mapped roof`);
+    const rim = metresFrom(origin, lonLat(mapped.ring)).map(frameOf);
+    const low = round((mapped.height - mapped.rise) * FEET_PER_METRE);
+    shell = { footprint, hall, ...(north === undefined ? {} : { north }), roof: "dome", edge: low, wall: low, dome: { rim, low, crown: round(mapped.height * FEET_PER_METRE) }, ...ivy };
+  } else if (stadium.roof.kind === "open") {
+    // No roof: the walls stand a little over the top row.
+    const wall = round(Math.max(top + OPEN_WALL_OVER, (stadium.osm.height ?? 0) * FEET_PER_METRE));
+    shell = { footprint, hall, ...(north === undefined ? {} : { north }), roof: "open", edge: wall, wall, ...ivy };
+  } else {
+    const cover = footprint.map((p): Pt => [c[0] + (p[0] - c[0]) * PARK_COVER, c[1] + (p[1] - c[1]) * PARK_COVER]);
+    // Where the sections rest: the east side of the building, over the railway there (the article says so): the strip of the outline east of a share of its width.
+    const [wx0, wx1] = [Math.min(...world.map((p) => p[0])), Math.max(...world.map((p) => p[0]))];
+    const [wy0, wy1] = [Math.min(...world.map((p) => p[1])), Math.max(...world.map((p) => p[1]))];
+    const strip = clipConvex(world, [[wx1 - (wx1 - wx0) * PARK_PARKED, wy0 - 1], [wx1 + 1, wy0 - 1], [wx1 + 1, wy1 + 1], [wx1 - (wx1 - wx0) * PARK_PARKED, wy1 + 1]]);
+    const parked = strip.map(frameOf);
+    const wallFeet = round((stadium.osm.height ?? 20) * FEET_PER_METRE);
+    shell = { footprint, hall, ...(north === undefined ? {} : { north }), roof: "panels", edge: wallFeet, wall: wallFeet, panels: { cover, bottom: stadium.roof.bottom ?? 217, top: stadium.roof.top ?? 269, parked }, ...ivy };
+  }
   const reach = {
     left: Math.max(stands.reach.left, box.x - fb.x0),
     right: Math.max(stands.reach.right, fb.x1 - box.x - box.w),
@@ -498,5 +551,5 @@ function park(stadium: RealStadium, input: ParkInput): ParkPlan {
     bottom: Math.max(stands.reach.bottom, fb.y1 - box.y - box.h),
   };
   const real: CrowdStands = { ...stands, real: shell, reach };
-  return { stadium, config, orientation, footprint, stands: real, depths: { lower: round(depths.lower), upper: round(depths.upper), bleachers: round(depths.bleachers) }, seats: stands.rings.map((r) => ({ tier: r.id, seats: r.seats })), total, fit: Math.abs(total - seats) / seats <= 0.02 ? "fits" : "tight" };
+  return { stadium, config, orientation, footprint, stands: real, depths: { lower: round(depths.lower), upper: round(depths.upper), bleachers: round(depths.bleachers) }, seats: stands.rings.map((r) => ({ tier: r.id, seats: r.seats })), total, seatArea: round(4.6 / factor, 1), fit: Math.abs(total - seats) / seats <= 0.02 ? "fits" : "tight" };
 }

@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Kyogijo Stadiums: real stadiums and ballparks</title>
-    <meta name="description" content="BC Place, Lumen Field and T-Mobile Park drawn inside the real outline of their buildings from OpenStreetMap, with their roofs, the field lying as the sources say and a plausible bowl of the seats of each configuration, in 2D and in 3D." />
+    <meta name="description" content="BC Place, Lumen Field, T-Mobile Park, Tokyo Dome and Korakuen Hall drawn inside the real outline of their buildings from OpenStreetMap, with their roofs, the field lying as the sources say and a plausible bowl of the seats of each configuration, in 2D and in 3D." />
     <style>
       :root { color-scheme: light dark; --bg: #f6f4ee; --ink: #10151b; --muted: #434b54; --card: #fff; --line: #b9b3a3; --accent: #1f5fa8; --tab: #10151b; --tab-ink: #fff; }
       @media (prefers-color-scheme: dark) { :root { --bg: #0d1218; --ink: #f6f3ea; --muted: #bcc3cb; --card: #18212a; --line: #475463; --accent: #7fb2ee; --tab: #f6f3ea; --tab-ink: #0d1218; } }
@@ -66,7 +66,7 @@
       <p class="note"><a href="./district.html" id="district" data-testid="district"></a> · <a href="./docs/stadiums.html" id="docs"></a></p>
     </main>
     <script type="module">
-      // The real stadiums: BC Place, Lumen Field and T-Mobile Park, each drawn inside the outline of its building (OpenStreetMap, ODbL 1.0), the field lying as the sources say, with its roof and a plausible bowl of the seats of
+      // The real stadiums: BC Place, Lumen Field, T-Mobile Park, Tokyo Dome and Korakuen Hall, each drawn inside the outline of its building (OpenStreetMap, ODbL 1.0), the field lying as the sources say, with its roof and a plausible bowl of the seats of
       // each configuration. The page only asks the package to draw: `crowd: { real: true }` and a `stadium` (or a `park`) in the options. What is chosen lives in the address; nothing is sent anywhere and nothing is stored.
       import { drawKyogijo } from "./dist/index.js";
       import { STADIUMS, STADIUM_IDS, stadiumConfigs, stadiumKind, stadiumNames } from "./dist/stadiums-entry.js";
@@ -78,45 +78,49 @@
         en: {
           title: "Real stadiums and ballparks",
           pageTitle: "Kyogijo Stadiums: real stadiums and ballparks",
-          pageDescription: "BC Place, Lumen Field and T-Mobile Park drawn inside the real outline of their buildings from OpenStreetMap, with their roofs, the field lying as the sources say and a plausible bowl of the seats of each configuration, in 2D and in 3D.",
+          pageDescription: "BC Place, Lumen Field, T-Mobile Park, Tokyo Dome and Korakuen Hall drawn inside the real outline of their buildings from OpenStreetMap, with their roofs, the field lying as the sources say and a plausible bowl of the seats of each configuration, in 2D and in 3D.",
           lede: "Each stadium is drawn inside the outline of its building, as OpenStreetMap maps it, with the field lying as the roof's opening, the pitch or the infield says and a bowl of the seats the sources give for each configuration. The bowl is a plausible one, never a seat map: no section, row or seat of a real plan, and no mark of a club, a league or a tournament.",
           back: "Back to the Kyogijo Stadiums demo", docs: "The real stadiums page of the docs", district: "Beside its neighbours, in the district view",
           factsTitle: "What the drawing is made from", edit: "View", view: "View", viewpoint: "Viewpoint", roof: "Roof and walls (3D)", open: "Roof open (3D)", language: "Language", theme: "Theme", auto: "Follow the device", light: "Light", dark: "Dark",
           overhead: "Overhead", broadcast: "Broadcast", end: "End", corner: "Corner", formLabel: "How the stadium is shown",
-          cfl: "Football field", nfl: "Football field", soccer: "Soccer pitch", mlb: "Baseball field",
+          cfl: "Football field", nfl: "Football field", soccer: "Soccer pitch", mlb: "Baseball field", boxing: "Boxing ring",
           stadium: "Stadium", city: "City", seats: "Seats in this configuration", bowls: "Seating bowls", roofKind: "Roof", roofDetail: "The roof", orientation: "How the field lies", outline: "Building outline", pitch: "The field",
           documented: "a source says so", plausible: "ours, plausible", wikipedia: "English Wikipedia", wikidata: "Wikidata",
-          cable: "retractable, supported by cables", canopy: "a canopy over some of the stands", panels: "retractable, in four sections", fixed: "fixed",
-          opening_: "from the roof's opening, which is the field's size", pitch_: "as OpenStreetMap maps the pitch", infield: "from the infield OpenStreetMap maps and the building's outline", building: "inferred from the building's long axis", none: "not known: drawn east-west, north at the top",
+          cable: "retractable, supported by cables", canopy: "a canopy over some of the stands", panels: "retractable, in four sections", fixed: "fixed", dome: "an air-supported dome", open: "none, open to the air",
+          opening_: "from the roof's opening, which is the field's size", pitch_: "as OpenStreetMap maps the pitch", infield: "from the infield OpenStreetMap maps and the building's outline", building: "inferred from the building's long axis", none: "not known: drawn east-west, north at the top", nonePark: "not known: the field is drawn the way that fits the building, with no arrow to north", pitchPark_: "from the grass of the field OpenStreetMap maps, fitted to the published fence (about {rms} metres off)",
           seatsText: "{seats} ({source})", bowlsText: "{count} ({basis})", bowlsLower: "; the lower bowl {lower}", bowlsClosed: "; the bowl holds {bowl}, the rest closed", bowlsLevels: "; by level {tiers}",
           cableText: "an opening of {length} by {width} metres, the size of the field (the article); the fabric closes it or gathers into its pod",
           canopyText: "covers {cover} percent of the seats and leaves the field open (the article); the roof's outline and heights are OpenStreetMap's",
           panelsText: "its bottom {bottom} feet and its top {top} feet above the field, resting over the railway to the east when open (the article)",
+          domeText: "a double membrane held up by blowing the air inside 0.3 percent over the outside; its rim {low} feet and its crown {crown} feet above the field, from OpenStreetMap; it never opens (the articles)",
+          openText: "no roof over the grounds (the articles); the Ginsan roof over the grandstand behind home plate is not drawn; the walls are drawn green, for the ivy, and the infield all dirt",
           orientationText: "{how}, the field along {heading} degrees from north", orientationPark: "{how}, home plate to centre field {heading} degrees from north",
           outlineText: "OpenStreetMap {way}, read {read}",
-          pitchText: { cfl: "150 by 65 yards with 20-yard end zones", nfl: "120 by 53.3 yards", soccer: "the size published for the ground, 116 by 75 yards at Lumen Field and the international 105 by 68 metres elsewhere", mlb: "the fence at the distances published for the park" },
+          pitchText: { cfl: "150 by 65 yards with 20-yard end zones", nfl: "120 by 53.3 yards", soccer: "the size published for the ground, 116 by 75 yards at Lumen Field and the international 105 by 68 metres elsewhere", mlb: "the fence at the distances published for the park", boxing: "a boxing ring as the rules of boxing draw it, with the seats round it" },
           credit: "Building outlines, roofs and pitches: (c) OpenStreetMap contributors, ODbL 1.0, openstreetmap.org/copyright. Seats, bowls and roofs: Wikidata (CC0) and the English Wikipedia article each stadium cites, in our own words.",
         },
         ja: {
           title: "実在のスタジアムと球場",
           pageTitle: "競技場 Kyogijo Stadiums：実在のスタジアムと球場",
-          pageDescription: "BCプレイス、ルーメン・フィールド、T-モバイル・パークを、OpenStreetMapの建物の輪郭の内側に描きます。屋根、資料に基づくフィールドの向き、構成ごとの座席数から推定したスタンドを、2Dと3Dで見られます。",
+          pageDescription: "BCプレイス、ルーメン・フィールド、T-モバイル・パーク、東京ドームと後楽園ホールを、OpenStreetMapの建物の輪郭の内側に描きます。屋根、資料に基づくフィールドの向き、構成ごとの座席数から推定したスタンドを、2Dと3Dで見られます。",
           lede: "スタジアムは、OpenStreetMapに記録された建物の輪郭の内側に、屋根の開口部・ピッチ・内野が示す向きにフィールドを置き、公表されている構成ごとの座席数からスタンドを推定して描いています。座席表ではありません。実際のブロック・列・座席は描いておらず、クラブ・リーグ・大会のマークもありません。",
           back: "競技場 Kyogijo Stadiums のデモに戻る", docs: "ドキュメントの「実在のスタジアム」ページ", district: "近くの会場と並べた地区の表示",
           factsTitle: "この図の元になった情報", edit: "表示", view: "表示", viewpoint: "視点", roof: "屋根と壁（3D）", open: "屋根を開く（3D）", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク",
           overhead: "真上", broadcast: "中継", end: "エンド", corner: "コーナー", formLabel: "スタジアムの見せ方",
-          cfl: "フットボール場", nfl: "フットボール場", soccer: "サッカー場", mlb: "野球場",
+          cfl: "フットボール場", nfl: "フットボール場", soccer: "サッカー場", mlb: "野球場", boxing: "ボクシングのリング",
           stadium: "スタジアム", city: "都市", seats: "この構成の座席数", bowls: "客席の層", roofKind: "屋根", roofDetail: "屋根の詳細", orientation: "フィールドの向き", outline: "建物の輪郭", pitch: "フィールド",
           documented: "資料に記載あり", plausible: "推定", wikipedia: "Wikipedia英語版", wikidata: "Wikidata",
-          cable: "ケーブルで支える開閉式", canopy: "観客席の一部を覆う庇", panels: "4分割の開閉式", fixed: "固定屋根",
-          opening_: "屋根の開口部（フィールドと同じ大きさ）", pitch_: "OpenStreetMapに記録されたピッチ", infield: "OpenStreetMapに記録された内野と建物の輪郭", building: "建物の長軸からの推定", none: "不明（東西に配置、北が上）",
+          cable: "ケーブルで支える開閉式", canopy: "観客席の一部を覆う庇", panels: "4分割の開閉式", fixed: "固定屋根", dome: "空気膜構造のドーム", open: "屋根なし（開放）",
+          opening_: "屋根の開口部（フィールドと同じ大きさ）", pitch_: "OpenStreetMapに記録されたピッチ", infield: "OpenStreetMapに記録された内野と建物の輪郭", building: "建物の長軸からの推定", none: "不明（東西に配置、北が上）", nonePark: "不明（建物に収まる向きで描き、北の矢印はなし）", pitchPark_: "OpenStreetMapに記録されたグラウンドの芝生を、公表されているフェンスに合わせたもの、ずれは約{rms}m",
           seatsText: "{seats}席（{source}）", bowlsText: "{count}層（{basis}）", bowlsLower: "、下層は{lower}席", bowlsClosed: "、スタンドは{bowl}席分で、残りは閉鎖", bowlsLevels: "、階ごとの座席数：{tiers}",
           cableText: "開口部は{length}×{width}m（記事による、フィールドと同じ大きさ）。膜で閉じるか、収納部にたたまれる",
           canopyText: "客席の{cover}％を覆い、フィールドは開放（記事による）。屋根の輪郭と高さはOpenStreetMapによる",
           panelsText: "下端はフィールドから{bottom}フィート、上端は{top}フィート。開くと東側の線路の上に重なる（記事による）",
+          domeText: "二重の膜を、内部の空気圧を外部より0.3％高くして支える。縁はフィールドから{low}フィート、頂点は{crown}フィート（OpenStreetMapによる）。開閉はしない（記事による）",
+          openText: "グラウンドに屋根はない（記事による）。バックネット裏から内野席を覆う銀傘は描いていない。壁はツタを表す緑、内野はすべて土で描いている",
           orientationText: "フィールドは北から{heading}度（根拠：{how}）", orientationPark: "ホームプレートからセンターへの向きは北から{heading}度（根拠：{how}）",
           outlineText: "OpenStreetMap {way}（{read}に取得）",
-          pitchText: { cfl: "150×65ヤード、エンドゾーン20ヤード", nfl: "120×53.3ヤード", soccer: "各会場で公表されている広さ（ルーメン・フィールドは116×75ヤード、ほかは国際標準の105×68m）", mlb: "球場ごとに公表されている距離に置いたフェンス" },
+          pitchText: { cfl: "150×65ヤード、エンドゾーン20ヤード", nfl: "120×53.3ヤード", soccer: "各会場で公表されている広さ（ルーメン・フィールドは116×75ヤード、ほかは国際標準の105×68m）", mlb: "球場ごとに公表されている距離に置いたフェンス", boxing: "ボクシングのルールどおりのリングと、その周りの客席" },
           credit: "建物の輪郭、屋根、ピッチ：(c) OpenStreetMap contributors（ODbL 1.0、openstreetmap.org/copyright）。座席数・層・屋根：Wikidata（CC0）と、各スタジアムが出典とするWikipedia英語版の記事（独自の言葉でまとめたもの）。",
         },
       };
@@ -182,8 +186,8 @@
         if (s.bowlSeats !== undefined && s.bowlSeats > config.seats) bowls += fillIn(w.bowlsClosed, { bowl: num(s.bowlSeats) });
         if (s.tiers.tierSeats !== undefined) bowls += fillIn(w.bowlsLevels, { tiers: `${num(s.tiers.tierSeats.lower)} / ${num(s.tiers.tierSeats.upper)} / ${num(s.tiers.tierSeats.bleachers)}` });
         const roof = s.roof;
-        const detail = roof.kind === "cable" ? fillIn(w.cableText, { length: roof.opening.length, width: roof.opening.width }) : roof.kind === "canopy" ? fillIn(w.canopyText, { cover: Math.round(roof.cover * 100) }) : roof.kind === "panels" ? fillIn(w.panelsText, { bottom: roof.bottom, top: roof.top }) : "";
-        const how = { opening: w.opening_, pitch: w.pitch_, infield: w.infield, building: w.building }[axis.basis];
+        const detail = roof.kind === "dome" ? fillIn(w.domeText, { low: Math.round((s.osm.roof.height - s.osm.roof.rise) * 3.28084), crown: Math.round(s.osm.roof.height * 3.28084) }) : roof.kind === "open" ? w.openText : roof.kind === "cable" ? fillIn(w.cableText, { length: roof.opening.length, width: roof.opening.width }) : roof.kind === "canopy" ? fillIn(w.canopyText, { cover: Math.round(roof.cover * 100) }) : roof.kind === "panels" ? fillIn(w.panelsText, { bottom: roof.bottom, top: roof.top }) : "";
+        const how = { opening: w.opening_, pitch: park ? fillIn(w.pitchPark_, { rms: axis.rms }) : w.pitch_, infield: w.infield, building: w.building }[axis.basis];
         const rows = [
           [w.stadium, `${nameOf(s.id)} (${s.wikidata})`],
           [w.pitch, w.pitchText[state.config]],
@@ -191,7 +195,7 @@
           [w.bowls, bowls],
           [w.roofKind, `${w[roof.kind]} (${w[roof.basis]})`],
           ...(detail === "" ? [] : [[w.roofDetail, detail]]),
-          [w.orientation, axis.basis === "none" ? w.none : fillIn(park ? w.orientationPark : w.orientationText, { how, heading: axis.heading })],
+          [w.orientation, axis.basis === "none" ? (park ? w.nonePark : w.none) : fillIn(park ? w.orientationPark : w.orientationText, { how, heading: axis.heading })],
           [w.outline, fillIn(w.outlineText, { way: s.osm.source, read: s.osm.read })],
         ];
         $("list").replaceChildren(...rows.flatMap(([term, text]) => {
@@ -262,7 +266,9 @@
         if ($("language").value === "ja") back.set("lang", "ja");
         $("back").href = `./?${back}`;
         const lang = $("language").value === "ja" ? "&lang=ja" : "";
-        $("district").href = `./district.html?venues=${state.stadium === "bc-place" ? `${state.stadium}:${state.config},rogers-arena` : `t-mobile-park,lumen-field`}${lang}`;
+        const neighbours = { "bc-place": `bc-place:${state.config},rogers-arena`, "t-mobile-park": "t-mobile-park,lumen-field", "lumen-field": "t-mobile-park,lumen-field", "tokyo-dome": "tokyo-dome,korakuen-hall", "korakuen-hall": "tokyo-dome,korakuen-hall" }[state.stadium];
+        $("district").hidden = neighbours === undefined;
+        if (neighbours !== undefined) $("district").href = `./district.html?venues=${neighbours}${lang}`;
         document.body.dataset.ready = "true";
       }
 

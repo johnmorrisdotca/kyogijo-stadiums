@@ -48,15 +48,23 @@ describe("the real stadiums' files", () => {
       for (const p of raws) expect(edgeDistance(kept, p), s.id).toBeLessThan(1.2);
       expect(Math.abs(areaOf(kept) - areaOf(raws)) / areaOf(raws), s.id).toBeLessThan(0.01);
       if (s.osm.roof !== undefined) {
+        // BC Place's roof is a relation of a band and the opening in it; Tokyo Dome's is a way, its outline kept with its heights.
         const relation = raw.elements.find((e) => `${e.type}/${e.id}` === s.osm.roof.source);
         expect(relation.tags.height).toBe(String(s.osm.roof.height));
         expect(relation.tags["roof:height"]).toBe(String(s.osm.roof.rise));
-        const opening = relation.members.find((m) => m.role === "inner");
-        expect(`way/${opening.ref}`).toBe(s.osm.roof.opening.source);
-        const first = opening.geometry.slice(0, -1).map((p) => [p.lon, p.lat]);
-        const o = metresFrom(origin, first);
-        const k = metresFrom(origin, lonLat(s.osm.roof.opening.ring));
-        for (const p of o) expect(edgeDistance(k, p), s.id).toBeLessThan(1.2);
+        if (s.osm.roof.opening !== undefined) {
+          const opening = relation.members.find((m) => m.role === "inner");
+          expect(`way/${opening.ref}`).toBe(s.osm.roof.opening.source);
+          const first = opening.geometry.slice(0, -1).map((p) => [p.lon, p.lat]);
+          const o = metresFrom(origin, first);
+          const k = metresFrom(origin, lonLat(s.osm.roof.opening.ring));
+          for (const p of o) expect(edgeDistance(k, p), s.id).toBeLessThan(1.2);
+        }
+        if (s.osm.roof.ring !== undefined) {
+          const o = metresFrom(origin, relation.geometry.slice(0, -1).map((p) => [p.lon, p.lat]));
+          const k = metresFrom(origin, lonLat(s.osm.roof.ring));
+          for (const p of o) expect(edgeDistance(k, p), s.id).toBeLessThan(1.2);
+        }
       }
       for (const canopy of s.osm.canopies ?? []) {
         const e = raw.elements.find((x) => `${x.type}/${x.id}` === canopy.source);
@@ -68,6 +76,12 @@ describe("the real stadiums' files", () => {
       const article = JSON.parse(readFileSync(`data-sources/stadiums/${s.osm.read}/wikipedia.json`, "utf8")).articles[s.id];
       expect(article.revision, s.id).toBe(s.en.revision);
       expect(article.title, s.id).toBe(s.en.title);
+      // The Japanese article a fact cites is in the archive at the revision the facts name.
+      if (s.ja !== undefined) {
+        const ja = JSON.parse(readFileSync(`data-sources/stadiums/${s.osm.read}/wikipedia.json`, "utf8")).articlesJa[s.id];
+        expect(ja.title, s.id).toBe(s.ja.title);
+        expect(ja.revision, s.id).toBe(s.ja.revision);
+      }
       for (const config of Object.values(s.configs)) expect(article.infoboxCapacity, `${s.id} ${config.sport}`).toContain(config.seats.toLocaleString("en-US"));
       if (s.tiers.lowerSeats !== undefined) expect(article.infoboxCapacity, s.id).toContain(s.tiers.lowerSeats.toLocaleString("en-US"));
       // A ballpark's tiers by their seats are in the article's sentences.

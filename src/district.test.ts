@@ -532,3 +532,69 @@ describe("Seattle: the venues of a ballpark, a stadium and an arena", () => {
     expect(ids(closed, 1).some((id) => id.includes("roof-c1-"))).toBe(true);
   });
 });
+
+const TOKYO: DistrictOptions = { venues: ["tokyo-dome", "korakuen-hall"] };
+
+describe("Tokyo Dome City: Tokyo Dome and Korakuen Hall", () => {
+  it("takes a ballpark and a hall as venues, by their keys, each in its one configuration", () => {
+    expect(DISTRICT_IDS).toEqual(expect.arrayContaining(["tokyo-dome", "korakuen-hall"]));
+    expect(districtMember("tokyo-dome")).toMatchObject({ key: "tokyo-dome:mlb", kind: "park", config: "mlb", seats: 45600, basis: "none", name: { en: "Tokyo Dome", ja: "東京ドーム" } });
+    expect(districtMember("korakuen-hall")).toMatchObject({ key: "korakuen-hall:boxing", kind: "hall", config: "boxing", seats: 1403, basis: "building", name: { en: "Korakuen Hall", ja: "後楽園ホール" } });
+    expect(districtMember("korakuen-hall").options).toMatchObject({ sport: "boxing", stadium: "korakuen-hall", crowd: { real: true } });
+    expect(districtMember("tokyo-dome").options).toMatchObject({ sport: "mlb", park: "tokyo-dome", crowd: { real: true } });
+    expect(() => districtMember("korakuen-hall:soccer")).toThrow(/no configuration soccer/);
+  });
+
+  it("stand where they do: the hall 140 metres south of the ballpark's home plate or so, to a metre of the great-circle distance", () => {
+    const plan = planDistrict(TOKYO);
+    const [dome, hall] = plan.members;
+    const metres = plan.between[0].metres;
+    expect(Math.abs(metres - haversine(dome.member.centre, hall.member.centre))).toBeLessThan(1);
+    expect(metres).toBeGreaterThan(80);
+    expect(metres).toBeLessThan(220);
+    // South of the dome with north at the top of the page: further down.
+    expect(hall.at[1]).toBeGreaterThan(dome.at[1]);
+    expect(plan.mode).toBe("neighbours");
+    expect(describeDistrict(TOKYO).description).toContain("Tokyo Dome and Korakuen Hall");
+    expect(describeDistrict({ ...TOKYO, language: "ja" }).title).toBe("東京ドームと後楽園ホールの位置関係");
+  });
+
+  it("draws both in one plan with no arrow of their own, and each name beside it on request", () => {
+    const svg = drawDistrict({ ...TOKYO, labels: true });
+    expect((svg.match(/data-venue="/g) ?? []).length).toBe(2);
+    for (const name of ["Tokyo Dome", "Korakuen Hall"]) expect(svg).toContain(`>${name}</text>`);
+    expect(svg).not.toContain('class="ky-cr-north"');
+    expect(svg).toContain('class="ky-dist-north"');
+  });
+
+  it("holds each venue's seats in the district", () => {
+    const stands = (key: string) => crowdStands(districtMember(key).options)!;
+    expect(Math.abs(stands("tokyo-dome").seats - 45600) / 45600).toBeLessThan(0.02);
+    expect(stands("korakuen-hall").seats).toBe(2005);
+  });
+
+  it("raises them in 3D, a dome's roof over a ballpark and a hall under its lid, steady as it turns, and each building drawn whole, far one first, from every side", () => {
+    const model = buildDistrictTurn(TOKYO, {});
+    expect(model.groups).toHaveLength(2);
+    expect(model.planes.every((p) => p.group !== undefined && p.group >= 0 && p.group < 2)).toBe(true);
+    for (const g of [0, 1]) expect(model.planes.filter((p) => p.group === g).length, `${g}`).toBeGreaterThan(100);
+    expect(new Set(model.planes.map((p) => p.id)).size).toBe(model.planes.length);
+    expect(model.planes.length).toBeLessThan(2500);
+    expect(model.planes.some((p) => p.group === 0 && p.id.includes("roof-0-"))).toBe(true);
+    const base = layoutOf(model, { yaw: 0, pitch: 62, zoom: 1 }, 960, 600).at;
+    for (const yaw of range(-180, 180, 30)) expect(layoutOf(model, { yaw, pitch: 62, zoom: 1 }, 960, 600).at).toEqual(base);
+    const [a, b] = planDistrict(TOKYO).members;
+    const axis = [b.at[0] - a.at[0], b.at[1] - a.at[1]];
+    const length = Math.hypot(axis[0], axis[1]);
+    for (const pitch of [30, 62, 84]) {
+      for (const yaw of range(-180, 175, 5)) {
+        const t = (axis[0] / length) * Math.sin((yaw * Math.PI) / 180) + (axis[1] / length) * Math.cos((yaw * Math.PI) / 180);
+        if (Math.abs(t) < 0.35) continue;
+        const layout = layoutOf(model, { yaw, pitch, zoom: 1 }, 960, 600);
+        const stackOf = (g: number): number[] => model.planes.flatMap((p, i) => (p.group === g ? [layout.stack[i + 1]] : []));
+        const [near, far] = t > 0 ? [stackOf(1), stackOf(0)] : [stackOf(0), stackOf(1)];
+        expect(Math.min(...near), `yaw ${yaw} pitch ${pitch}`).toBeGreaterThan(Math.max(...far));
+      }
+    }
+  });
+});

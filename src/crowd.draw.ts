@@ -148,7 +148,7 @@ export interface DrawInput {
 /** The building of a real venue and, where its rink's orientation is known, a small arrow with an N that says where north lies. The N is a path of three strokes, so that no font is needed. */
 export function realMarkup(real: RealShell): string {
   const fp = real.footprint;
-  let svg = el("path", { class: "ky-cr-shell", d: `M${fp.map(([x, y]) => `${n1(x)} ${n1(y)}`).join("L")}Z` });
+  let svg = el("path", { class: real.ivy === true ? "ky-cr-shell ky-cr-ivy" : "ky-cr-shell", d: `M${fp.map(([x, y]) => `${n1(x)} ${n1(y)}`).join("L")}Z` });
   if (real.north !== undefined) {
     const top = Math.min(...fp.map((p) => p[1]));
     const right = Math.max(...fp.map((p) => p[0]));
@@ -247,6 +247,7 @@ export const KYOGIJO_CROWD_STYLE = `
 .kyogijo .ky-cr-media{fill:#1c2127;fill-opacity:.4}
 .kyogijo .ky-cr-camera{fill:#1c2127;fill-opacity:.75}
 .kyogijo .ky-cr-shell{fill:var(--ky-cr-conc);fill-opacity:.55;stroke:var(--ky-cr-rim);stroke-width:1.6;stroke-linejoin:round}
+.kyogijo .ky-cr-ivy{fill:#5b8a45;fill-opacity:.6}
 .kyogijo .ky-cr-north{fill:var(--ky-cr-rim);stroke:var(--ky-cr-rim);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .kyogijo .ky-cr-north-n{fill:none;stroke:var(--ky-cr-rim);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 .kyogijo .ky-cr-plaza{fill:var(--ky-apron);stroke:var(--ky-apron);stroke-width:8;stroke-linejoin:round}

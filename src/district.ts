@@ -1,5 +1,5 @@
 // A district: several real venues of one city placed on one plan at their real relative positions and orientations, read from the same OpenStreetMap outlines each venue is drawn from (`venues.ts`, `stadiums.ts`).
-// It is generic: a district is a list of venue keys, whichever kinds they are (an NHL arena, a football or soccer stadium, a ballpark later), and the plan fits itself to them. Two modes say how far apart the venues are:
+// It is generic: a district is a list of venue keys, whichever kinds they are (an NHL arena, a football or soccer stadium, a ballpark, a hall with a boxing ring), and the plan fits itself to them. Two modes say how far apart the venues are:
 // `neighbours` fits the plan tight round buildings that stand within a few hundred metres of each other, with no more than a margin between them; `city` keeps the real distances between venues that are kilometres
 // apart, with a grid, a scale and a name beside each. Nothing is drawn but what the venues are drawn from: no street, no park and no mark of a team, a league or a tournament; the credit
 // `VENUE_ATTRIBUTION` goes with it. Pure: options in, a plan, and markup, out; `district.turn.ts` raises it in 3D.
@@ -19,7 +19,7 @@ export type DistrictMode = "neighbours" | "city";
 
 export const DISTRICT_MODES: readonly DistrictMode[] = ["neighbours", "city"];
 
-/** A venue of a district: its key, and for a stadium the configuration it is drawn in (`cfl` or `soccer`; the first it has where none is given). `"bc-place:soccer"` is the same as `{ id: "bc-place", config: "soccer" }`. */
+/** A venue of a district: its key, and for a stadium the configuration it is drawn in (`cfl` or `soccer`; the first it has where none is given; a ballpark's is `mlb` and a hall's `boxing`). `"bc-place:soccer"` is the same as `{ id: "bc-place", config: "soccer" }`. */
 export type DistrictVenueInput = string | { id: string; config?: StadiumConfigId };
 
 /** What can be asked of a district. */
@@ -47,7 +47,7 @@ export interface DistrictMember {
   /** The key of the venue and the configuration, unique in a district: `rogers-arena`, `bc-place:soccer`. */
   key: string;
   id: string;
-  kind: "arena" | "stadium" | "park";
+  kind: "arena" | "stadium" | "park" | "hall";
   config?: StadiumConfigId;
   /** The name in both languages. */
   name: { en: string; ja: string };
@@ -86,7 +86,7 @@ const stadiumMember = (stadium: RealStadium, config: StadiumConfigId, language: 
   return {
     key: `${stadium.id}:${config}`,
     id: stadium.id,
-    kind: park ? "park" : "stadium",
+    kind: park ? "park" : stadiumKind(stadium) === "hall" ? "hall" : "stadium",
     config,
     name: stadiumNames(stadium),
     ring: stadium.osm.ring,

@@ -118,3 +118,20 @@ test("shows Seattle: the two SoDo stadiums as neighbours, then the three venues 
   expect(errors).toEqual([]);
   await noSidewaysScroll(page);
 });
+
+test("shows Tokyo Dome City: the ballpark and the hall as neighbours, one arrow, in 3D with the dome's roof", async ({ page }) => {
+  const { errors } = await open(page);
+  await page.locator('#tabs button[data-preset="tokyo"]').click();
+  await expect(page.locator(`${STAGE} [data-venue]`)).toHaveCount(2);
+  await expect(page.locator(`${STAGE} [data-venue="tokyo-dome:mlb"]`)).toHaveCount(1);
+  await expect(page.locator(`${STAGE} [data-venue="korakuen-hall:boxing"]`)).toHaveCount(1);
+  await expect(page.locator(`${STAGE} svg.ky-district`)).toHaveAttribute("data-mode", "neighbours");
+  await expect(page.locator(`${STAGE} .ky-dist-north`)).toHaveCount(1);
+  await expect(page.locator('#tabs button[aria-selected="true"]')).toHaveText("Tokyo Dome City: Tokyo Dome and Korakuen Hall");
+  await expect(page.locator('[data-testid="facts"]')).toContainText("not known, fitted to the building");
+  await page.locator("#view").selectOption("3d");
+  await expect(page.locator(`${STAGE} .ky-turn`)).toHaveCount(1);
+  expect(await page.locator(`${STAGE} [data-part^="m0-roof-0-"]`).count()).toBeGreaterThan(40);
+  expect(errors).toEqual([]);
+  await noSidewaysScroll(page);
+});

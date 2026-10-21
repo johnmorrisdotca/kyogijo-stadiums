@@ -1,7 +1,8 @@
 // The building of a real venue, raised: its walls, standing on the outline OpenStreetMap gives, and its roof over the top tier, a lid that rises towards the middle, a saddle that rises at the two ends and falls at the two
 // sides, a cable-supported roof that rises to an opening over the surface which a retractable fabric closes (BC Place's, with the fabric gathered into its pod when `roofOpen` is asked), canopies over some of the
-// stands that leave the field open (Lumen Field's), or retractable panels high over a ballpark (T-Mobile Park's, resting over its east side when `roofOpen` is asked). All are asked for with the roof
-// (`venue: { roof: true }`) and give way to the eye as the other walls do. Pure: data in, planes out.
+// stands that leave the field open (Lumen Field's), retractable panels high over a ballpark (T-Mobile Park's, resting over its east side when `roofOpen` is asked), an air-supported dome (Tokyo Dome's: a smooth lens of
+// membrane from the rim of the walls to a crown, which never opens), or no roof at all (Koshien Stadium's). All are asked for with the roof (`venue: { roof: true }`) and give way to the eye as the other walls do.
+// Pure: data in, planes out.
 import { rayAt, type Pt, type RealShell, type StandRing } from "./crowd.ts";
 import { n, shy, wall, type Plane, type Upright, type V3 } from "./turn.kit.ts";
 import { pointList, raked, type Slope } from "./venue.geom.ts";
@@ -75,7 +76,7 @@ export function realBuilding(real: RealShell, top: StandRing | undefined, centre
     const long = Math.hypot(b[0] - a[0], b[1] - a[1]);
     if (long < 1) return;
     const high = lift + (real.wall ?? roofAt(real, [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2]));
-    planes.push({ ...shy(wall(`shell-${i}`, "wall", a[0], a[1], b[0], b[1], 0, high, `<rect class="u-shell" width="${n(long)}" height="${n(high)}"/>`), centre), fadeTo: 0.02 });
+    planes.push({ ...shy(wall(`shell-${i}`, "wall", a[0], a[1], b[0], b[1], 0, high, `<rect class="${real.ivy === true ? "u-shell u-ivy" : "u-shell"}" width="${n(long)}" height="${n(high)}"/>`), centre), fadeTo: 0.02 });
   });
   if (parts.walls && planes.length > 0) items.push({ id: "shell", kind: "walls", at: centre, height: Math.max(...planes.map((p) => p.o[2])), planes });
   if (parts.roof && real.roof === "canopy" && real.canopies !== undefined) {
@@ -83,6 +84,13 @@ export function realBuilding(real: RealShell, top: StandRing | undefined, centre
     if (planes.length > 0) items.push({ id: "roof", kind: "roof", at: centre, height: heightOf(planes), planes });
     return items;
   }
+  if (parts.roof && real.roof === "dome" && real.dome !== undefined) {
+    const planes = domeRoof(real.dome, lift, steps);
+    if (planes.length > 0) items.push({ id: "roof", kind: "roof", at: centre, height: heightOf(planes), planes });
+    return items;
+  }
+  // An open-air ballpark has walls and no roof.
+  if (real.roof === "open") return items;
   if (parts.roof && real.roof === "panels" && real.panels !== undefined) {
     const planes = panelsRoof(real.panels, c, lift, steps, open);
     if (planes.length > 0) items.push({ id: "roof", kind: "roof", at: centre, height: heightOf(planes), planes });
@@ -179,6 +187,45 @@ function canopyRoof(canopies: NonNullable<RealShell["canopies"]>, c: Pt, lift: n
       planes.push(...piece(`roof-c${ci}-${k}`, [s[0], t[0], t[1], s[1]], [lo, lo, hi, hi], c, false, true));
     }
   });
+  return planes;
+}
+
+/** How many rings of pieces an air-supported roof is drawn in, from the rim in to the crown (ours: the roof is smooth, the drawing is faceted). */
+export const DOME_RINGS = 4;
+
+/**
+ * An air-supported roof: the membrane over the rim of the walls, a lens that stands `low` over the surface at the rim and rises to the `crown` over the middle (a shallow cap: the height falls with the square of the way
+ * out to the rim), in rings of pieces between rays from the middle of the rim. Its pieces are drawn as the roof is (a pale skin with a thin line), so that the net of wires it is made on shows.
+ */
+function domeRoof(dome: NonNullable<RealShell["dome"]>, lift: number, steps: number): Plane[] {
+  const planes: Plane[] = [];
+  const mid: Pt = [dome.rim.reduce((s, p) => s + p[0], 0) / dome.rim.length, dome.rim.reduce((s, p) => s + p[1], 0) / dome.rim.length];
+  const rim = Array.from({ length: steps }, (_, k): Pt => firstHit(dome.rim, mid, (2 * Math.PI * k) / steps) ?? mid);
+  // The rings' share of the way out (1 is the rim), the outermost first, and the height there.
+  const shares = Array.from({ length: DOME_RINGS + 1 }, (_, j) => 1 - (j * 0.85) / DOME_RINGS);
+  // (The innermost ring is the crown itself, the flat cap's height, so that the roof reaches the height OpenStreetMap maps.)
+  const at = (share: number): number => lift + (share === shares[DOME_RINGS] ? dome.crown : dome.low + (dome.crown - dome.low) * (1 - share * share));
+  const ring = (share: number): Pt[] => rim.map((p): Pt => [mid[0] + (p[0] - mid[0]) * share, mid[1] + (p[1] - mid[1]) * share]);
+  for (let j = 0; j < DOME_RINGS; j += 1) {
+    const [outer, inner] = [ring(shares[j]), ring(shares[j + 1])];
+    const [zo, zi] = [at(shares[j]), at(shares[j + 1])];
+    for (let k = 0; k < steps; k += 1) {
+      const [a, b] = [outer[k], outer[(k + 1) % steps]];
+      const [ai, bi] = [inner[k], inner[(k + 1) % steps]];
+      const [ex, ey] = [b[0] - a[0], b[1] - a[1]];
+      const el = Math.hypot(ex, ey);
+      if (el < 1e-6) continue;
+      const slope = slopeThrough([[ai[0], ai[1], zi], [bi[0], bi[1], zi], [b[0], b[1], zo], [a[0], a[1], zo]]);
+      const centre: Pt = [(a[0] + b[0] + ai[0] + bi[0]) / 4, (a[1] + b[1] + ai[1] + bi[1]) / 4];
+      const away = Math.hypot(centre[0] - mid[0], centre[1] - mid[1]) || 1;
+      const plane = raked(`roof-${j}-${k}`, "roof", [ai, bi, b, a], slope, [ex / el, ey / el], (corners) => `<polygon class="u-roof" points="${pointList(corners)}"/>`);
+      if (plane !== undefined) planes.push({ ...plane, shy: [(centre[0] - mid[0]) / away, (centre[1] - mid[1]) / away], fadeTo: 0.2 });
+    }
+  }
+  // The crown: a flat cap over the middle.
+  const top = ring(shares[DOME_RINGS]);
+  const cap = raked("roof-crown", "roof", top, { x0: mid[0], y0: mid[1], z0: at(shares[DOME_RINGS]), gx: 0, gy: 0 }, [1, 0], (corners) => `<polygon class="u-roof" points="${pointList(corners)}"/>`);
+  if (cap !== undefined) planes.push({ ...cap, fadeTo: 0.2 });
   return planes;
 }
 

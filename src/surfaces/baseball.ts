@@ -121,7 +121,7 @@ export function baseball(points: readonly FencePoint[], o: BuildOptions, era?: M
   base += el("path", { class: ft(o, "infield-dirt", "ky-dirt"), d: `M0 0L${num(ua)} ${num(-ua)}A${num(skin)} ${num(skin)} 0 0 0 ${num(-ua)} ${num(-ua)}Z` });
   const centreV = d.base * SQ;
   const half = centreV - 4.5 * Math.SQRT2;
-  base += el("path", { class: ft(o, "infield-grass", "ky-infield"), d: `M0 ${num(-(centreV + half))}L${num(half)} ${num(-centreV)}L0 ${num(-(centreV - half))}L${num(-half)} ${num(-centreV)}Z` });
+  if (o.dirtInfield !== true) base += el("path", { class: ft(o, "infield-grass", "ky-infield"), d: `M0 ${num(-(centreV + half))}L${num(half)} ${num(-centreV)}L0 ${num(-(centreV - half))}L${num(-half)} ${num(-centreV)}Z` });
   const cuts: [number, number, number][] = [
     [0, 0, MLB.homeCircleRadius],
     [centreV, centreV, MLB.baseCircleRadius],

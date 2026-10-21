@@ -133,6 +133,112 @@
     "top": 269,
     "read": "the article: a retractable roof in four sections that does not fully enclose the ballpark, its bottom 217 feet and its top 269 feet above the field, resting over the railway tracks to the east when open"
    }
+  },
+  {
+   "id": "tokyo-dome",
+   "kind": "park",
+   "wikidata": "Q733748",
+   "park": "tokyo-dome",
+   "lat": 35.70556,
+   "lon": 139.75194,
+   "osm": {
+    "building": "way/20028328",
+    "roof": "way/577764996"
+   },
+   "en": {
+    "title": "Tokyo Dome",
+    "revision": 1379232526
+   },
+   "ja": {
+    "title": "東京ドーム",
+    "revision": 111434287
+   },
+   "configs": {
+    "mlb": {
+     "sport": "mlb",
+     "seats": 45600,
+     "source": "wikipedia",
+     "read": "the infobox's capacity for baseball, 45,600 (42,000 to 55,000 for events, 57,000 at the most)"
+    }
+   },
+   "tiers": {
+    "count": 2,
+    "basis": "documented",
+    "read": "the Japanese article: the infield stands are in two levels with a balcony level between them, and the outfield stands are on one level"
+   },
+   "roof": {
+    "kind": "dome",
+    "basis": "documented",
+    "read": "the articles: an air-supported roof, a double membrane of coated glass cloth on a net of 28 wires 8.5 metres apart, held up by blowing the air inside 0.3 percent over the outside; 56 metres high inside"
+   },
+   "evidence": {
+    "en": [
+     "air-supported structure",
+     "dome-shaped roof"
+    ],
+    "ja": [
+     "内部の空気圧を外部よりも0.3%",
+     "28本のワイヤを8.5メートル間隔",
+     "二重構造の膜",
+     "内野席は2層式で中間にバルコニー席",
+     "外野は1階"
+    ]
+   }
+  },
+  {
+   "id": "korakuen-hall",
+   "kind": "hall",
+   "wikidata": "Q4389857",
+   "names": {
+    "en": "Korakuen Hall",
+    "ja": "後楽園ホール",
+    "readingJa": "こうらくえんホール"
+   },
+   "lat": 35.7043,
+   "lon": 139.7519,
+   "osm": {
+    "building": "way/45977418"
+   },
+   "en": {
+    "title": "Korakuen Hall",
+    "revision": 1372211318
+   },
+   "ja": {
+    "title": "後楽園ホール",
+    "revision": 111205284
+   },
+   "configs": {
+    "boxing": {
+     "sport": "boxing",
+     "seats": 1403,
+     "source": "wikipedia",
+     "read": "the infobox's capacity, 1,403 seats (2,005 at the most, with the balconies used for standing)"
+    }
+   },
+   "bowlSeats": 2005,
+   "tiers": {
+    "count": 2,
+    "basis": "documented",
+    "lowerSeats": 1403,
+    "read": "the Japanese article: the 1,403 seats are on the floor (780 fixed seats on the south side, movable seats of 109 east, 109 west and 405 north), and the balconies on the east and west sides, above, take standing places up to 2,005"
+   },
+   "roof": {
+    "kind": "fixed",
+    "basis": "plausible",
+    "read": "the hall is on the fifth floor of a building (the Japanese article), under the building's own roof, drawn as a lid (ours)"
+   },
+   "city": "Tokyo",
+   "country": "JP",
+   "evidence": {
+    "ja": [
+     "1,403席",
+     "南固定席：780席",
+     "可動席：東109席、西109席、北405席",
+     "立見席使用可",
+     "最大収容人数：2,005人",
+     "後楽園ホールビルの5階"
+    ]
+   }
   }
  ]
 }

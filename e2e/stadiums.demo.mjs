@@ -83,9 +83,9 @@ test("is in Japanese on request, the title, the facts and the drawing's own desc
   await noSidewaysScroll(page);
 });
 
-test("has the three stadiums as tabs, each with its own configurations, facts and roof: Lumen Field's canopies, T-Mobile Park's sections", async ({ page }) => {
+test("has the five stadiums as tabs, each with its own configurations, facts and roof: Lumen Field's canopies, T-Mobile Park's sections", async ({ page }) => {
   const { errors } = await open(page);
-  await expect(page.locator("#stadium-tabs button")).toHaveText(["BC Place", "Lumen Field", "T-Mobile Park"]);
+  await expect(page.locator("#stadium-tabs button")).toHaveText(["BC Place", "Lumen Field", "T-Mobile Park", "Tokyo Dome", "Korakuen Hall"]);
   await page.locator('#stadium-tabs button[data-stadium="lumen-field"]').click();
   await expect(page.locator("#tabs button")).toHaveText(["Football field", "Soccer pitch"]);
   await expect(page.locator(`${STAGE} svg.kyogijo`)).toHaveAttribute("data-sport", "nfl");
@@ -120,5 +120,33 @@ test("raises Lumen Field's canopies and T-Mobile Park's roof in 3D, the sections
   await expect(page.locator(`${STAGE} [data-part^="fabric-"]`)).toHaveCount(0);
   await expect(page.locator(`${STAGE} [data-part^="parked-"]`).first()).toBeAttached();
   expect(page.url()).toContain("stadium=t-mobile-park");
+  expect(errors).toEqual([]);
+});
+
+test("draws Tokyo Dome with no arrow to north, since nothing says how its field lies, and says so, and Korakuen Hall with its ring", async ({ page }) => {
+  const { errors, outside } = await open(page, "?stadium=tokyo-dome");
+  const facts = page.locator('[data-testid="facts"]');
+  await expect(page.locator("#tabs button")).toHaveText(["Baseball field"]);
+  await expect(page.locator(`${STAGE} svg.kyogijo .ky-cr-shell`)).toHaveCount(1);
+  await expect(page.locator(`${STAGE} svg.kyogijo .ky-cr-north`)).toHaveCount(0);
+  await expect(facts).toContainText("45,600");
+  await expect(facts).toContainText("an air-supported dome (a source says so)");
+  await expect(facts).toContainText("not known: the field is drawn the way that fits the building, with no arrow to north");
+  await expect(page.locator('[data-testid="district"]')).toHaveAttribute("href", /district\.html\?venues=tokyo-dome,korakuen-hall/);
+  await page.locator('#stadium-tabs button[data-stadium="korakuen-hall"]').click();
+  await expect(page.locator("#tabs button")).toHaveText(["Boxing ring"]);
+  await expect(page.locator(`${STAGE} svg.kyogijo`)).toHaveAttribute("data-sport", "boxing");
+  await expect(page.locator(`${STAGE} svg.kyogijo .ky-cr-shell`)).toHaveCount(1);
+  await expect(facts).toContainText("1,403");
+  await expect(facts).toContainText("the bowl holds 2,005, the rest closed");
+  expect(errors).toEqual([]);
+  expect(outside).toEqual([]);
+  await noSidewaysScroll(page);
+});
+
+test("raises Tokyo Dome's air-supported roof in 3D, which has no open state", async ({ page }) => {
+  const { errors } = await open(page, "?stadium=tokyo-dome&view=3d&roof=1");
+  expect(await page.locator(`${STAGE} [data-part^="roof-0-"]`).count()).toBeGreaterThan(40);
+  await expect(page.locator("#open-row")).toBeHidden();
   expect(errors).toEqual([]);
 });

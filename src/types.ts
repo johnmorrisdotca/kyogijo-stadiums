@@ -779,7 +779,7 @@ export interface SurfaceOptions {
   pitch?: SoccerPitchId | SoccerSize;
   /** The soccer ground to draw: a key of `GROUNDS`. The pitch has the size its article publishes (the international 105 by 68 m where none is), and the drawing carries the ground's name for `year`. A `pitch` of your own wins over the ground's size. */
   ground?: string;
-  /** The stadium to draw a football field (`sport: "cfl"`) or a soccer pitch in, for `crowd: { real: true }`: a key of `STADIUMS` (`bc-place`). A soccer drawing with a `ground` that is a stadium of `STADIUMS` needs no other. */
+  /** The stadium to draw a football field (`sport: "cfl"`), a soccer pitch or a boxing ring (`sport: "boxing"`, in a hall) in, for `crowd: { real: true }`: a key of `STADIUMS` (`bc-place`, `korakuen-hall`). A soccer drawing with a `ground` that is a stadium of `STADIUMS` needs no other. */
   stadium?: string;
   /** The arena to draw an NHL rink or an NBA court of: a key of `ARENAS`. The rink or the court has the size its sources publish where that differs from the league's (the league's where none does), the markings are those of `year`, and the drawing carries the arena's name for `year`. A `league` of your own wins over the arena's size. */
   arena?: string;

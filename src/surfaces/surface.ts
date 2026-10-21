@@ -158,6 +158,8 @@ export interface BuildOptions {
   landmarks?: boolean;
   /** For baseball: what the park's article adds to the plain field (the warning track's width, the walls, the quirks). */
   ballpark?: Ballpark;
+  /** For baseball: the infield is all dirt, with no grass inside the bases (a real ballpark's, where its sources say so: Koshien Stadium's). */
+  dirtInfield?: boolean;
 }
 
 /**

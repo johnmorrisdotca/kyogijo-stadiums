@@ -346,7 +346,9 @@ function buildWhole(o: SurfaceOptions, portrait: boolean, id: string, score: boo
         const diamond = diamondOf(league, o.year);
         return baseball(fenceFor(parkById(o.park), feetFence(o.fence, unit), o.year, diamondFence(diamond)), { ...common, ballpark: ballparkFor(o) }, undefined, diamond);
       }
-      return baseball(fenceFor(parkById(o.park), feetFence(o.fence, unit), o.year), { ...common, ballpark: ballparkFor(o) }, rulesFor("mlb", o.year).rules);
+      // A real ballpark whose infield is all dirt (Koshien Stadium's) has no grass inside the bases.
+      const dirt = realStadiumOf(o, "mlb", resolveCrowd(o.crowd)?.real === true)?.stadium.looks?.dirtInfield !== undefined;
+      return baseball(fenceFor(parkById(o.park), feetFence(o.fence, unit), o.year), { ...common, ballpark: ballparkFor(o), ...(dirt ? { dirtInfield: true } : {}) }, rulesFor("mlb", o.year).rules);
     }
     case "soccer":
       return buildSoccer(o, common, scored, unit);
@@ -767,8 +769,9 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
   const venue = sport === "nhl" && league === undefined && realCrowd?.real === true ? venueById(o.arena) : undefined;
   const realLine = venue === undefined || arenaName === undefined ? "" : `${gap}${fill(words.said.real, { arena: arenaName, seats: String(venue.seats.hockey), tiers: String(venue.tiers.count) })}${gap}${words.said[venue.osm.axis.basis === "mapped" ? "realMapped" : venue.osm.axis.basis === "building" ? "realBuilding" : "realNone"]}`;
   const real = realStadiumOf(o, sport, realCrowd?.real === true);
-  const stadiumKey = (basis: string): "stadiumOpening" | "stadiumPitch" | "stadiumInfield" | "stadiumBuilding" | "stadiumNone" => (basis === "opening" ? "stadiumOpening" : basis === "pitch" ? "stadiumPitch" : basis === "infield" ? "stadiumInfield" : basis === "building" ? "stadiumBuilding" : "stadiumNone");
-  const stadiumLine = real === undefined ? "" : `${gap}${fill(real.config === "mlb" ? words.said.stadiumPark : words.said.stadium, { stadium: stadiumNames(real.stadium)[language], seats: String(stadiumSeats(real.stadium, real.config)), tiers: String(real.stadium.tiers.count) })}${gap}${words.said[stadiumKey(real.stadium.osm.axis.basis)]}`;
+  const stadiumKey = (basis: string, kind: "stadium" | "park" | "hall"): "stadiumOpening" | "stadiumPitch" | "stadiumInfield" | "stadiumBuilding" | "stadiumNone" | "stadiumRingBuilding" | "stadiumPitchPark" | "stadiumNonePark" =>
+    basis === "opening" ? "stadiumOpening" : basis === "pitch" ? (kind === "park" ? "stadiumPitchPark" : "stadiumPitch") : basis === "infield" ? "stadiumInfield" : basis === "building" ? (kind === "hall" ? "stadiumRingBuilding" : "stadiumBuilding") : kind === "park" ? "stadiumNonePark" : "stadiumNone";
+  const stadiumLine = real === undefined ? "" : `${gap}${fill(real.config === "mlb" ? words.said.stadiumPark : stadiumKind(real.stadium) === "hall" ? words.said.stadiumHall : words.said.stadium, { stadium: stadiumNames(real.stadium)[language], seats: String(stadiumSeats(real.stadium, real.config)), tiers: String(real.stadium.tiers.count) })}${gap}${words.said[stadiumKey(real.stadium.osm.axis.basis, stadiumKind(real.stadium))]}`;
   const parkLine = (parkName === undefined ? `${groundLine}${halfLine}${arenaLine}${realLine}${stadiumLine}` : `${gap}${fill(words.said.park, { park: parkName })}${officially(parkOfficial)}${ballpark === undefined ? "" : ballparkSentences(ballpark).map((line) => `${gap}${line}`).join("")}${stadiumLine}`) + (special === undefined ? "" : `${gap}${special.text}`);
   // A drawing of a past season says which: the markings are those of that season.
   const dated = typeof o.year === "number" && Number.isFinite(o.year);
