@@ -7,6 +7,13 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.40.1] - 2026-10-21
+
+### Fixed
+
+- **Switching a stadium between football and soccer reshaped the whole drawing** (BC Place, Lumen Field): the view was fitted to the field and the bowl was rebuilt from the configuration's seats, so the building's outline, the scale, the frame and the tint of the ground all changed. Now only the field changes. The view is the building's with a little ground round it, about the middle of the field (the same outline and scale for every configuration, in 2D and in 3D), the bowl is the building's and holds the most seats any configuration has (BC Place's soccer 52,497 opens from the lowest bowl up and draws the other 2,003 seats empty, as Lumen Field's does), and the ground round the building is the football field's beige whichever field lies in it (`data-stadium` on the drawing's root; the dark ground is one for every sport). `planStadium(...).total` for BC Place's soccer is now 54,500, the bowl's, with `open` the configuration's 52,497.
+- **The stadiums page's buttons were the browser's own** (the venue buttons) and its field choice differed from the family's: the venues are chips and the field a segmented choice, as on the venues and home pages, 48 pixels high, with a pressed state, in light and dark, and on a phone the chips scroll sideways. A new demo test (`e2e/controls.demo.mjs`) fails on any visible button or select of any demo page that is left in the browser's own style, in light and dark.
+
 ## [0.40.0] - 2026-10-21
 
 ### Added
