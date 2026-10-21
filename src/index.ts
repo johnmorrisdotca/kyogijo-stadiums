@@ -4,7 +4,7 @@ export { HOME_FIRST, HOME_FIRST_LEAGUES, homeSideFor } from "./homeside.ts";
 export { inkOn, luminance, rgbOf, safeColour, safePicture } from "./colour.ts";
 export { safeLogo } from "./logo.ts";
 export { useEmblems } from "./emblems-source.ts";
-export { LIGHTING_PRESETS, LIGHT_COLORS, LIGHT_PRESETS } from "./venue.lighting.ts";
+export { LIGHTING_PRESETS, LIGHT_COLORS, LIGHT_PRESETS, resolveLighting } from "./venue.lighting.ts";
 export type { EmblemDrawOptions, EmblemId, EmblemRef, EmblemRenderer, EmblemStyleName } from "./emblems-source.ts";
 export { useFlags } from "./flags-source.ts";
 export type { FlagRenderer, FlagRequest, FlagShape } from "./flags-source.ts";

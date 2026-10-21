@@ -177,7 +177,7 @@ The demo's lighting choice has Lights down among its presets, and a choice of th
 
 ### The lighting presets
 
-A preset is a name on the same `lighting` option, and a table of constants (`LIGHT_PRESETS`, with `LIGHTING_PRESETS` for the names and `LIGHT_COLORS` for the colours; all exported from the main entry and from `/turn`) says what each is made of: how dark the house is (`house`: `half`, `dim` or `dark`), how the aisles are lit (`aisles`: `none`, small `dots` or `beams`), whether a pool of light lies round the surface (`pool`), and the colours of the wash and the beams.
+A preset is a name on the same `lighting` option, and a table of constants (`LIGHT_PRESETS`, with `LIGHTING_PRESETS` for the names and `LIGHT_COLORS` for the colours; and `resolveLighting`, all exported from the main entry and from `/turn`) says what each is made of: how dark the house is (`house`: `half`, `dim` or `dark`), how the aisles are lit (`aisles`: `none`, small `dots` or `beams`), whether a pool of light lies round the surface (`pool`), and the colours of the wash and the beams.
 
 | Preset | The house | The aisles | The surface |
 | --- | --- | --- | --- |
