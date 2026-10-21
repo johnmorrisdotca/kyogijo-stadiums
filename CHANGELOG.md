@@ -7,6 +7,12 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.34.0] - 2026-10-20
+
+### Added
+
+- **Koshien Stadium** (`park: "hanshin-koshien-stadium"`, `阪神甲子園球場`, 47,400 seats, open air): the way home plate faces is found by fitting the park's published fence to the grass of the field OpenStreetMap maps (`axis.basis` `pitch`, 172 degrees, the fence 2.9 metres from the mapped edge, `axis.rms`; good to about ten degrees, and the Japanese article puts the annex south, behind centre field). The ivy and the all-dirt infield are plain drawing choices the sources give (`looks.ivyWalls`, `looks.dirtInfield`): green walls in 2D and 3D, and no grass inside the bases. No roof over the field (`StadiumRoof` `open`); the Ginsan roof over the grandstand is not drawn.
+
 ## [0.33.0] - 2026-10-20
 
 ### Added

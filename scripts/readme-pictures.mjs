@@ -124,6 +124,8 @@ await takePictures({
     // Tokyo Dome (0.33.0): the ballpark under its air-supported roof in 3D from a low corner (the stadiums page's stage), and Tokyo Dome City, the Dome with Korakuen Hall, on one ground (the district page's stage).
     { subject: "stadiums-tokyo-dome-3d", views: ["desk"], url: "/stadiums.html?stadium=tokyo-dome&view=3d&viewpoint=corner&roof=1", ready: READY_HALLS_TURN, target: "#stage" },
     { subject: "district-tokyo-3d", views: ["desk"], url: "/district.html?venues=tokyo-dome,korakuen-hall&view=3d&viewpoint=corner&roof=1&labels=1", ready: READY_HALLS_TURN, target: "#stage" },
+    // Koshien Stadium (0.34.0): the open-air ballpark with its ivy walls from a low corner in 3D, no roof (the stadiums page's stage); small (scale 0.6) to stay in the 2 MB of the stills.
+    { subject: "stadiums-koshien-3d", views: ["desk"], url: "/stadiums.html?stadium=hanshin-koshien-stadium&view=3d&viewpoint=corner&roof=1", ready: READY_HALLS_TURN, target: "#stage", scale: 0.6 },
     // Boards over a surface (0.24.0): a results board over a pool, a bout presentation over a judo mat in 3D, a medal table in the corner of the athletics stadium (invented names; the boards page's stage).
     { subject: "boards-swimming", views: ["desk"], url: "/boards.html?example=swimming", ready: READY_HALLS, target: "#stage" },
     { subject: "boards-judo-3d", views: ["desk"], url: "/boards.html?example=judo&view=3d", ready: READY_HALLS_TURN, target: "#stage" },

@@ -604,7 +604,7 @@ console.log(svg.includes("ky-cr-shell"), planVenue(venueById("climate-pledge-are
 
 ### A real stadium, and a district
 
-`stadium: "bc-place"` draws BC Place for football or soccer under its cable roof, and Lumen Field, T-Mobile Park, Tokyo Dome (`park`) and Korakuen Hall (`sport: "boxing"`) likewise ([stadiums](./docs/stadiums.md)); `drawDistrict({ venues: ["bc-place", "rogers-arena"] })` puts venues at their real positions, tight as neighbours or spread as a city, to turn together in 3D ([districts](./docs/district.md)).
+`stadium: "bc-place"` draws BC Place for football or soccer under its cable roof, and Lumen Field, T-Mobile Park, Tokyo Dome, Koshien Stadium (`park`) and Korakuen Hall (`sport: "boxing"`) likewise ([stadiums](./docs/stadiums.md)); `drawDistrict({ venues: ["bc-place", "rogers-arena"] })` puts venues at their real positions, tight as neighbours or spread as a city, to turn together in 3D ([districts](./docs/district.md)).
 
 <p align="center">
 <picture>

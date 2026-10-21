@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Kyogijo Stadiums: real stadiums and ballparks</title>
-    <meta name="description" content="BC Place, Lumen Field, T-Mobile Park, Tokyo Dome and Korakuen Hall drawn inside the real outline of their buildings from OpenStreetMap, with their roofs, the field lying as the sources say and a plausible bowl of the seats of each configuration, in 2D and in 3D." />
+    <meta name="description" content="BC Place, Lumen Field, T-Mobile Park, Tokyo Dome, Koshien Stadium and Korakuen Hall drawn inside the real outline of their buildings from OpenStreetMap, with their roofs, the field lying as the sources say and a plausible bowl of the seats of each configuration, in 2D and in 3D." />
     <style>
       :root { color-scheme: light dark; --bg: #f6f4ee; --ink: #10151b; --muted: #434b54; --card: #fff; --line: #b9b3a3; --accent: #1f5fa8; --tab: #10151b; --tab-ink: #fff; }
       @media (prefers-color-scheme: dark) { :root { --bg: #0d1218; --ink: #f6f3ea; --muted: #bcc3cb; --card: #18212a; --line: #475463; --accent: #7fb2ee; --tab: #f6f3ea; --tab-ink: #0d1218; } }
@@ -66,7 +66,7 @@
       <p class="note"><a href="./district.html" id="district" data-testid="district"></a> · <a href="./docs/stadiums.html" id="docs"></a></p>
     </main>
     <script type="module">
-      // The real stadiums: BC Place, Lumen Field, T-Mobile Park, Tokyo Dome and Korakuen Hall, each drawn inside the outline of its building (OpenStreetMap, ODbL 1.0), the field lying as the sources say, with its roof and a plausible bowl of the seats of
+      // The real stadiums: BC Place, Lumen Field, T-Mobile Park, Tokyo Dome, Koshien Stadium and Korakuen Hall, each drawn inside the outline of its building (OpenStreetMap, ODbL 1.0), the field lying as the sources say, with its roof and a plausible bowl of the seats of
       // each configuration. The page only asks the package to draw: `crowd: { real: true }` and a `stadium` (or a `park`) in the options. What is chosen lives in the address; nothing is sent anywhere and nothing is stored.
       import { drawKyogijo } from "./dist/index.js";
       import { STADIUMS, STADIUM_IDS, stadiumConfigs, stadiumKind, stadiumNames } from "./dist/stadiums-entry.js";
@@ -78,7 +78,7 @@
         en: {
           title: "Real stadiums and ballparks",
           pageTitle: "Kyogijo Stadiums: real stadiums and ballparks",
-          pageDescription: "BC Place, Lumen Field, T-Mobile Park, Tokyo Dome and Korakuen Hall drawn inside the real outline of their buildings from OpenStreetMap, with their roofs, the field lying as the sources say and a plausible bowl of the seats of each configuration, in 2D and in 3D.",
+          pageDescription: "BC Place, Lumen Field, T-Mobile Park, Tokyo Dome, Koshien Stadium and Korakuen Hall drawn inside the real outline of their buildings from OpenStreetMap, with their roofs, the field lying as the sources say and a plausible bowl of the seats of each configuration, in 2D and in 3D.",
           lede: "Each stadium is drawn inside the outline of its building, as OpenStreetMap maps it, with the field lying as the roof's opening, the pitch or the infield says and a bowl of the seats the sources give for each configuration. The bowl is a plausible one, never a seat map: no section, row or seat of a real plan, and no mark of a club, a league or a tournament.",
           back: "Back to the Kyogijo Stadiums demo", docs: "The real stadiums page of the docs", district: "Beside its neighbours, in the district view",
           factsTitle: "What the drawing is made from", edit: "View", view: "View", viewpoint: "Viewpoint", roof: "Roof and walls (3D)", open: "Roof open (3D)", language: "Language", theme: "Theme", auto: "Follow the device", light: "Light", dark: "Dark",
@@ -102,7 +102,7 @@
         ja: {
           title: "実在のスタジアムと球場",
           pageTitle: "競技場 Kyogijo Stadiums：実在のスタジアムと球場",
-          pageDescription: "BCプレイス、ルーメン・フィールド、T-モバイル・パーク、東京ドームと後楽園ホールを、OpenStreetMapの建物の輪郭の内側に描きます。屋根、資料に基づくフィールドの向き、構成ごとの座席数から推定したスタンドを、2Dと3Dで見られます。",
+          pageDescription: "BCプレイス、ルーメン・フィールド、T-モバイル・パーク、東京ドーム、阪神甲子園球場、後楽園ホールを、OpenStreetMapの建物の輪郭の内側に描きます。屋根、資料に基づくフィールドの向き、構成ごとの座席数から推定したスタンドを、2Dと3Dで見られます。",
           lede: "スタジアムは、OpenStreetMapに記録された建物の輪郭の内側に、屋根の開口部・ピッチ・内野が示す向きにフィールドを置き、公表されている構成ごとの座席数からスタンドを推定して描いています。座席表ではありません。実際のブロック・列・座席は描いておらず、クラブ・リーグ・大会のマークもありません。",
           back: "競技場 Kyogijo Stadiums のデモに戻る", docs: "ドキュメントの「実在のスタジアム」ページ", district: "近くの会場と並べた地区の表示",
           factsTitle: "この図の元になった情報", edit: "表示", view: "表示", viewpoint: "視点", roof: "屋根と壁（3D）", open: "屋根を開く（3D）", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク",

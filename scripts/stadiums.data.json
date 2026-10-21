@@ -239,6 +239,59 @@
      "後楽園ホールビルの5階"
     ]
    }
+  },
+  {
+   "id": "hanshin-koshien-stadium",
+   "kind": "park",
+   "wikidata": "Q959811",
+   "park": "hanshin-koshien-stadium",
+   "lat": 34.72139,
+   "lon": 135.36167,
+   "osm": {
+    "building": "relation/9845926",
+    "pitch": "way/168946072"
+   },
+   "en": {
+    "title": "Koshien Stadium",
+    "revision": 1374217766
+   },
+   "ja": {
+    "title": "阪神甲子園球場",
+    "revision": 111237979
+   },
+   "configs": {
+    "mlb": {
+     "sport": "mlb",
+     "seats": 47400,
+     "source": "wikipedia",
+     "read": "the infobox's last capacity, 47,400 (it lists the earlier ones, 47,757 and 47,808 among them)"
+    }
+   },
+   "tiers": {
+    "count": 1,
+    "basis": "documented",
+    "read": "the Japanese article: the stands are on one level, the largest of a one-level stand in Japan, the infield stand's 50 rows 14.3 metres high"
+   },
+   "roof": {
+    "kind": "open",
+    "basis": "documented",
+    "read": "the English article: the outfield is natural grass and open to the air, no roof over the grounds; the Ginsan roof over the grandstand behind home plate is not drawn"
+   },
+   "looks": {
+    "ivyWalls": "the Japanese article: ivy planted on the outer wall since 1924, taken off for the renovation and planted again; the English article calls the ivy a symbol of the stadium (drawn as a green wall, nothing more)",
+    "dirtInfield": "the Japanese article: the infield is the black soil of the park and the outfield natural grass; the English article: the infield continues to be all dirt (drawn as dirt with no grass inside the bases)"
+   },
+   "evidence": {
+    "ja": [
+     "一層式",
+     "50段、高さ14.3m",
+     "内野は黒土",
+     "オープンエアー",
+     "1924年12月に安価で見た目を向上させる策として外壁を覆うための蔦が植栽",
+     "南側（センター側後方）",
+     "浜風"
+    ]
+   }
   }
  ]
 }

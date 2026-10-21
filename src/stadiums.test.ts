@@ -20,7 +20,7 @@ const fieldOf = (sport: "cfl" | "nfl" | "soccer") => crowdStands(options(sport))
 
 describe("the stadiums: BC Place", () => {
   it("is the one stadium of the data, a ground the package already has, with its Wikidata item and the article its facts were read from", () => {
-    expect(STADIUM_IDS).toEqual(["bc-place", "lumen-field", "t-mobile-park", "tokyo-dome", "korakuen-hall"]);
+    expect(STADIUM_IDS).toEqual(["bc-place", "lumen-field", "t-mobile-park", "tokyo-dome", "korakuen-hall", "hanshin-koshien-stadium"]);
     expect(stadiumById("bc-place")).toBe(bc);
     expect(stadiumByWikidata("Q612227")).toBe(bc);
     expect(stadiumById("toString")).toBeUndefined();
@@ -676,5 +676,58 @@ describe("Korakuen Hall", () => {
     expect(model.uprights.items.find((i) => i.kind === "walls")).toBeDefined();
     expect(model.uprights.items.find((i) => i.kind === "roof")).toBeDefined();
     expect(model.uprights.items.find((i) => i.kind === "stands")).toBeDefined();
+  });
+});
+
+describe("Koshien Stadium", () => {
+  const koshien = STADIUMS["hanshin-koshien-stadium"];
+  const parkInput = () => ({ fence: fenceOutline(fenceFor(parkById("hanshin-koshien-stadium"), undefined)), backstop: MLB_DIAMOND.backstop, crowd: { ...resolveCrowd({ real: true })!, awayEnd: "none" as const }, seatsOnWalls: [] });
+  const plan = () => planPark(koshien, parkInput());
+  const options = { sport: "mlb", park: "hanshin-koshien-stadium", crowd: { real: true } } as never;
+
+  it("is an open-air ballpark of 47,400 seats on one level, its ivy and its all-dirt infield drawing choices the sources give", () => {
+    expect(stadiumKind(koshien)).toBe("park");
+    expect(stadiumSeats(koshien, "mlb")).toBe(47400);
+    expect(koshien.tiers).toMatchObject({ count: 1, basis: "documented" });
+    expect(koshien.roof).toMatchObject({ kind: "open", basis: "documented" });
+    expect(koshien.looks?.ivyWalls).toContain("ivy");
+    expect(koshien.looks?.dirtInfield).toContain("dirt");
+    expect(stadiumNames(koshien)).toEqual({ en: "Koshien Stadium", ja: "甲子園球場" });
+    expect(koshien.osm.source).toBe("relation/9845926");
+    expect(koshien.ja).toEqual({ title: "阪神甲子園球場", revision: 111237979 });
+  });
+
+  it("lies as the grass of the field OpenStreetMap maps, fitted to the published fence: out to centre field south, within a few degrees, as the Japanese article puts the annex behind centre field to the south", () => {
+    const axis = koshien.osm.axis;
+    expect(axis.basis).toBe("pitch");
+    expect(axis.rms).toBeLessThan(4);
+    expect(axis.heading).toBeGreaterThan(165);
+    expect(axis.heading).toBeLessThan(180);
+    expect(stadiumOrientation(koshien).basis).toBe("pitch");
+    expect(drawKyogijo(options)).toContain('class="ky-cr-north"');
+    expect(describeDrawing(options).description).toContain("worked out from the grass of the field OpenStreetMap maps, fitted to the published fence");
+  });
+
+  it("holds the seats of baseball to within two percent in its bands", () => {
+    const p = plan();
+    expect(Math.abs(p.total - 47400) / 47400).toBeLessThan(0.02);
+    expect(p.fit).toBe("fits");
+    expect(p.stands.real?.roof).toBe("open");
+  });
+
+  it("draws no grass inside the bases and walls in the colour of ivy, and only for a real crowd", () => {
+    const svg = drawKyogijo({ ...(options as object), id: "k" } as never);
+    expect(svg).not.toContain('class="ky-infield"');
+    expect(svg).toContain('class="ky-cr-shell ky-cr-ivy"');
+    expect(drawKyogijo({ sport: "mlb", park: "hanshin-koshien-stadium", id: "k" } as never)).toContain('class="ky-infield"');
+    expect(drawKyogijo({ sport: "mlb", park: "t-mobile-park", crowd: { real: true }, id: "k" } as never)).toContain('class="ky-infield"');
+  });
+
+  it("raises ivy walls and no roof in 3D, whatever is asked", () => {
+    const model = buildTurn(options, { venue: { roof: true } });
+    const walls = model.uprights.items.find((i) => i.kind === "walls")!;
+    expect(walls.planes.every((q) => q.svg.includes("u-ivy"))).toBe(true);
+    expect(model.uprights.items.find((i) => i.kind === "roof")).toBeUndefined();
+    expect(Math.max(...walls.planes.flatMap((q) => [q.o[2], q.o[2] + q.v[2]]))).toBeGreaterThan(40);
   });
 });

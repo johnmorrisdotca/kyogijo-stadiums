@@ -97,7 +97,7 @@ if (Object.keys(arenas.ARENAS).length !== 167 || arenas.arenaRinkIn(arenas.arena
 const venues = all[names.indexOf(${JSON.stringify(`${pkg.name}/venues`)})];
 if (venues.VENUE_IDS.length !== 32 || venues.planVenue(venues.venueById("honda-center")).total !== 17174 || !venues.VENUE_ATTRIBUTION.includes("OpenStreetMap")) throw new Error("the venues are wrong");
 const stadiums = all[names.indexOf(${JSON.stringify(`${pkg.name}/stadiums`)})];
-if (stadiums.STADIUM_IDS.length !== 5 || stadiums.stadiumSeats(stadiums.stadiumById("bc-place"), "soccer") !== 52497 || stadiums.stadiumKind(stadiums.stadiumById("t-mobile-park")) !== "park" || !stadiums.VENUE_ATTRIBUTION.includes("OpenStreetMap")) throw new Error("the stadiums are wrong");
+if (stadiums.STADIUM_IDS.length !== 6 || stadiums.stadiumSeats(stadiums.stadiumById("bc-place"), "soccer") !== 52497 || stadiums.stadiumKind(stadiums.stadiumById("t-mobile-park")) !== "park" || !stadiums.VENUE_ATTRIBUTION.includes("OpenStreetMap")) throw new Error("the stadiums are wrong");
 const district = all[names.indexOf(${JSON.stringify(`${pkg.name}/district`)})];
 if (district.planDistrict({ venues: ["bc-place", "rogers-arena"] }).members.length !== 2 || district.planDistrict({ venues: ["t-mobile-park", "lumen-field"] }).members.length !== 2 || !district.drawDistrict({ venues: ["bc-place", "rogers-arena"] }).includes("ky-district")) throw new Error("the district is wrong");
 const atlas = all[names.indexOf(${JSON.stringify(`${pkg.name}/atlas`)})];

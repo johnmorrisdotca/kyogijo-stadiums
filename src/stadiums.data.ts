@@ -63,4 +63,17 @@ export const STADIUM_DATA: RealStadiumData[] = [
     "tiers": {"count": 2, "basis": "documented", "lowerSeats": 1403, "read": "the Japanese article: the 1,403 seats are on the floor (780 fixed seats on the south side, movable seats of 109 east, 109 west and 405 north), and the balconies on the east and west sides, above, take standing places up to 2,005"},
     "roof": {"kind": "fixed", "basis": "plausible", "read": "the hall is on the fifth floor of a building (the Japanese article), under the building's own roof, drawn as a lid (ours)"},
   },
+  {
+    "id": "hanshin-koshien-stadium",
+    "kind": "park",
+    "wikidata": "Q959811",
+    "park": "hanshin-koshien-stadium",
+    "en": {"title": "Koshien Stadium", "revision": 1374217766},
+    "ja": {"title": "阪神甲子園球場", "revision": 111237979},
+    "looks": {"ivyWalls": "the Japanese article: ivy planted on the outer wall since 1924, taken off for the renovation and planted again; the English article calls the ivy a symbol of the stadium (drawn as a green wall, nothing more)", "dirtInfield": "the Japanese article: the infield is the black soil of the park and the outfield natural grass; the English article: the infield continues to be all dirt (drawn as dirt with no grass inside the bases)"},
+    "configs": {"mlb": {"sport": "mlb", "seats": 47400, "source": "wikipedia", "read": "the infobox's last capacity, 47,400 (it lists the earlier ones, 47,757 and 47,808 among them)"}},
+    "wikidataSeats": [60000],
+    "tiers": {"count": 1, "basis": "documented", "read": "the Japanese article: the stands are on one level, the largest of a one-level stand in Japan, the infield stand's 50 rows 14.3 metres high"},
+    "roof": {"kind": "open", "basis": "documented", "read": "the English article: the outfield is natural grass and open to the air, no roof over the grounds; the Ginsan roof over the grandstand behind home plate is not drawn"},
+  },
 ];
