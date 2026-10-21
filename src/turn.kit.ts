@@ -9,7 +9,7 @@
 export type V3 = readonly [number, number, number];
 
 /** What a plane is a part of: it is the class of its element (`ky-up-<kind>`) and what a test finds it by. */
-export type PartKind = "post" | "net" | "tape" | "antenna" | "board" | "glass" | "rim" | "stanchion" | "frame" | "goal" | "flag" | "stump" | "leg" | "table" | "pylon" | "wall" | "screen" | "pole" | "ground" | "target" | "seats" | "concourse" | "fascia" | "roof" | "banner" | "platform" | "rail" | "matedge" | "shrine" | "surround" | "chair" | "desk" | "card" | "sign";
+export type PartKind = "post" | "net" | "tape" | "antenna" | "board" | "glass" | "rim" | "stanchion" | "frame" | "goal" | "flag" | "stump" | "leg" | "table" | "pylon" | "wall" | "screen" | "pole" | "ground" | "target" | "seats" | "concourse" | "fascia" | "roof" | "banner" | "platform" | "rail" | "matedge" | "shrine" | "surround" | "chair" | "desk" | "card" | "sign" | "apron" | "bench" | "floor";
 
 /** One flat rectangle. Its own x runs along `u` (its whole length) and its own y along `v`; `o` is the corner both start from. `svg` is what is drawn on it, in feet along `u` and `v`. */
 export interface Plane {

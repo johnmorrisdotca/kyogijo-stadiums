@@ -271,6 +271,7 @@ src/
 ├── venues.osm.data.ts  made by scripts/build-venues.mjs from data-sources/venues/: what OpenStreetMap gave, ODbL 1.0, kept apart
 ├── venues-entry.ts     the venues' entry
 ├── venue.real.ts       a real venue's walls and roof, raised in 3D
+├── venue.fill.ts       the empty places of a real venue's 3D view filled: the suite level between two bowls, the apron round the surface with its benches, the back of each bowl, the concourse floor
 ├── flythrough.path.ts  the fly-through's camera as plain numbers: the keyframes, the monotone cubic through them, the stages, the clock, the map's frame and the scale bar
 ├── flythrough.game.ts  the fly-through's play on the ice, made up for the picture: a replay's timeline of five skaters and a goalie a side and a puck, and the layers' markup of a moment
 ├── flythrough.markup.ts the fly-through as markup: the stage and its three layers, the controls and the credit, and the map as a layer

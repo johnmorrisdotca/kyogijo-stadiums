@@ -75,6 +75,24 @@ export const KYOGIJO_TURN_STYLE = `
 .ky-turn .u-cable{fill:none;stroke:var(--ky-up-roofline);stroke-width:1}
 .ky-turn .u-fabric{fill:var(--ky-up-roof);fill-opacity:.55;stroke:none}
 .ky-turn .u-pod{fill:var(--ky-up-fascia);stroke:var(--ky-up-roofline);stroke-width:.6}
+/* A real venue's empty places, filled: the suite level between two bowls, the apron round the surface, the back of each bowl and the concourse floor behind it. */
+.ky-turn .u-suite{fill:color-mix(in srgb,var(--ky-up-fascia) 78%,var(--ky-cr-bed))}
+.ky-turn .u-suite-win{fill:color-mix(in srgb,var(--ky-cr-gap) 55%,#6f93b3)}
+.ky-turn .u-suite-bar{stroke:var(--ky-up-fascia);stroke-width:.5}
+.ky-turn .u-suite-ledge{fill:color-mix(in srgb,var(--ky-up-fascia) 60%,var(--ky-cr-conc))}
+.ky-turn .u-apron{fill:color-mix(in srgb,var(--ky-cr-bed) 82%,#000)}
+.ky-turn .u-timeb{fill:color-mix(in srgb,var(--ky-cr-conc) 70%,#3a3f46)}
+.ky-turn .u-timeb-side{fill:color-mix(in srgb,var(--ky-cr-conc) 70%,#3a3f46);filter:brightness(.7)}
+.ky-turn .u-penb{fill:color-mix(in srgb,var(--ky-up-glass,#bcd2e0) 80%,#5d7a8f)}
+.ky-turn .u-penb-side{fill:color-mix(in srgb,var(--ky-up-glass,#bcd2e0) 80%,#5d7a8f);filter:brightness(.72)}
+.ky-turn .u-teamb{fill:color-mix(in srgb,var(--ky-up-wood,#8a6a47) 80%,#2a2f36)}
+.ky-turn .u-teamb-side{fill:color-mix(in srgb,var(--ky-up-wood,#8a6a47) 80%,#2a2f36);filter:brightness(.7)}
+.ky-turn .u-back{fill:color-mix(in srgb,var(--ky-up-fascia) 66%,var(--ky-cr-bed))}
+.ky-turn .u-backrib{stroke:var(--ky-cr-bed);stroke-width:.7;stroke-opacity:.7}
+.ky-turn .u-coping{fill:color-mix(in srgb,var(--ky-up-fascia) 70%,var(--ky-cr-conc))}
+.ky-turn .u-cfloor{fill:color-mix(in srgb,var(--ky-cr-bed) 60%,var(--ky-cr-conc))}
+.ky-turn .u-clane{stroke:color-mix(in srgb,var(--ky-cr-conc) 55%,#fff);stroke-opacity:.6;stroke-width:1.1}
+.ky-turn .kyogijo .ky-cr-shell:not(.ky-cr-ivy){fill:color-mix(in srgb,var(--ky-cr-bed) 70%,var(--ky-cr-conc));fill-opacity:.9}
 .ky-turn .ky-up-seats svg{opacity:var(--ky-cr-dim)}
 .ky-turn .ky-cr-seat{fill:none;stroke:var(--ky-cr-empty);stroke-width:1.3;stroke-opacity:.65}
 .ky-turn .ky-cr-h{stroke:var(--ky-cr-home)}

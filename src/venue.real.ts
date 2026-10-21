@@ -25,7 +25,7 @@ export function saddleAt(real: Pick<RealShell, "footprint">, [x, y]: Pt): number
 export const roofAt = (real: RealShell, p: Pt): number => real.edge + (real.roof === "saddle" ? SADDLE_RISE * saddleAt(real, p) : 0);
 
 /** The point where a ray from `from` first meets a polygon, or `undefined`. */
-function firstHit(poly: readonly Pt[], from: Pt, angle: number): Pt | undefined {
+export function firstHit(poly: readonly Pt[], from: Pt, angle: number): Pt | undefined {
   const [dx, dy] = [Math.cos(angle), Math.sin(angle)];
   let best: { t: number; p: Pt } | undefined;
   poly.forEach(([ax, ay], i) => {

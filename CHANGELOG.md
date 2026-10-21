@@ -7,6 +7,12 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.34.1] - 2026-10-20
+
+### Fixed
+
+- **No gray empty areas in the 3D view of a real venue** (`src/venue.fill.ts`, [the venues](./docs/venues.md), [the stadiums](./docs/stadiums.md)): the 3D arenas showed flat gray nothing in three places. **The shelf between the bowls** is now the suite level: a facing wall with a band of windows, a pane to every 7 feet, and a ledge. **The apron between the surface and the first row** is a thin dark floor, with the players' benches, the penalty boxes and the timekeeper's table at the usual places on the bench side of an ice rink. **The slab between the back of the bowl and the building** is closed by a back wall with a coping (it gives way to the eye as the building's walls do, keeping a little of itself) and a darker concourse floor with its lanes and joints, out to the building's outline, the annexes included. Every arena of the NHL, every stadium and the hall, and a tournament layout's stadium (`VenueSettings.fill`) have the fill; the usual stands (`crowd: true`) are unchanged. New part kinds `apron`, `bench` and `floor`; a ballpark gets the suite wall and the back wall, and no apron or floor of its own.
+
 ## [0.34.0] - 2026-10-20
 
 ### Added

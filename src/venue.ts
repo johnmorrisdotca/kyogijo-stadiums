@@ -7,7 +7,8 @@ import { patterns } from "./crowd.draw.ts";
 import { crowdStands } from "./draw.ts";
 import { groundById } from "./grounds.ts";
 import { ARC_STEPS, clipAround, clipConvex, clipSegment, areaOf, pointList, raked, slopeOf, stripsOf, tidy, type Cut, type Strip } from "./venue.geom.ts";
-import { realBuilding } from "./venue.real.ts";
+import { apronPlanes, backEdges, backWall, concourseFloor, rimAt, suiteWall } from "./venue.fill.ts";
+import { firstHit, realBuilding } from "./venue.real.ts";
 import { n, shy, wall, type Plane, type Upright } from "./turn.kit.ts";
 import type { SurfaceOptions } from "./types.ts";
 
@@ -19,6 +20,8 @@ export interface VenueSettings {
   roofOpen?: boolean;
   /** The walls of a real venue's building (`crowd: { real: true }`), raised on its outline: they follow `roof` where left out (a roof and walls together, as before), and `walls: true` with `roof` off raises the walls alone, `roof: true` with `walls: false` the roof alone. */
   walls?: boolean;
+  /** Fill the empty places of the stands (the apron round the surface, the back of each bowl): on for a real venue's, off for the usual stands (where it is a tournament layout's hall that asks for it). */
+  fill?: boolean;
   /** How finely the curves are cut: `low` a facet to each corner, `auto` (the default) three, `high` six; an oval is 12, 28 or 56 facets round. */
   detail?: Cut;
 }
@@ -84,6 +87,7 @@ export function standsVenueOf(stands: CrowdStands, crowd: Crowd, o: Pick<Surface
   const inCover = (p: Pt): boolean => covers.some(([x0, y0, x1, y1]) => p[0] >= x0 && p[0] <= x1 && p[1] >= y0 && p[1] <= y1);
   const pieces = (poly: Pt[]): Pt[][] => (covers.length === 0 ? [poly] : clipAround(poly, covers));
 
+  const filled = v.fill ?? stands.real !== undefined;
   const seatPlanes: Plane[] = [];
   const wallSeats: Plane[] = [];
   let count = 0;
@@ -160,9 +164,26 @@ export function standsVenueOf(stands: CrowdStands, crowd: Crowd, o: Pick<Surface
       if (slope === undefined) continue;
       for (const piece of pieces(tidy(q))) {
         count += 1;
-        const p = raked(`walk-${count}`, "concourse", piece, slope.slope, slope.along, (corners) => `<polygon class="u-conc" points="${pointList(corners)}"/>`);
+        // Where the empty places are filled, the walk between two tiers is the suite level: a facing wall with a band of windows, not a bare shelf.
+        const p = raked(`walk-${count}`, "concourse", piece, slope.slope, slope.along, (corners) => (filled ? suiteWall(corners) : `<polygon class="u-conc" points="${pointList(corners)}"/>`));
         if (p !== undefined) seatPlanes.push({ ...p, shy: slope.out });
       }
+    }
+  }
+
+  // The empty places are filled (see `venue.fill.ts`): the apron round the surface and the back of each bowl, and, for a real venue's building, the concourse floor behind the bowl.
+  if (filled) {
+    const first = stands.rings.find((r) => r.tier !== "wall" && r.tier !== "bleachers") ?? stands.rings[0];
+    if (first !== undefined) seatPlanes.push(...apronPlanes(stands, first, cut, lift));
+    const real = stands.real;
+    const middle: [number, number] = [centre[0], centre[1]];
+    const behind = new Set(links.map((l) => l.before));
+    for (const ring of stands.rings) {
+      if (ring.tier === "wall" || behind.has(ring)) continue;
+      backEdges(ring, cut).forEach((edge, k) => {
+        seatPlanes.push(...backWall(`back-${ring.id}${k === 0 ? "" : `-s${k}`}`, edge, ring.height[1], lift, centre));
+        if (real !== undefined && ring.region.kind !== "poly" && k === 0) seatPlanes.push(...concourseFloor(`floor-${ring.id}`, ring.region, middle, rimAt(real.hall, real.footprint, middle), (a) => firstHit(real.footprint, middle, a), ARC_STEPS[cut].oval, lift));
+      });
     }
   }
 
