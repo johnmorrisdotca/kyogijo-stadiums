@@ -190,9 +190,11 @@ export const stadiumSeats = (stadium: RealStadium, config: StadiumConfigId): num
 
 /**
  * The stylesheet of a stadium that stages more than one field (`data-stadium` on the drawing's root): the ground round the building is its own, the football field's, whichever field lies in it, so that a soccer pitch does not tint it
- * green. Light only: the dark ground is one for every sport.
+ * green (light only: the dark ground is one for every sport), and the crowd's dimming in the dark kept on a layer of its own.
  */
 export const KYOGIJO_STADIUM_STYLE =
+  // The crowd dims in the dark as a group (`opacity`): on a layer of its own it is drawn the same whatever is drawn over it (the field), so that two configurations of a stadium are the same crowd to the last level of a pixel.
+  ".kyogijo[data-stadium] .ky-crowd{will-change:opacity}\n" +
   "@media (prefers-color-scheme:light){:where(html:not([data-theme=dark]) .kyogijo[data-sport=soccer][data-stadium]:not([data-theme=dark])){--ky-apron:#dcd8c9}}\n" +
   ":where(html[data-theme=light] .kyogijo[data-sport=soccer][data-stadium],.kyogijo[data-theme=light][data-sport=soccer][data-stadium]){--ky-apron:#dcd8c9}";
 
