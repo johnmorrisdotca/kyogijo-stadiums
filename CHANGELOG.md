@@ -7,6 +7,13 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.40.2] - 2026-10-21
+
+### Fixed
+
+- **BC Place and Lumen Field still differed between football and soccer, by a few pixels**: 0.40.1 made the frame the building's, but the view's origin still moved with the field, so the picture shifted and its margin changed, and the crowd's tiles started at the field's corner, so the people were a different pattern in each. A stadium of more than one configuration is now laid out in **the venue's own frame**, the middle of its field at the origin: the `viewBox` is the same text for every configuration, the building, the bowl and the crowd are the same numbers and the same tiles (`crowdStands(...).shift` is where the field's middle is in the surface's own frame, and the surface group is shifted by it), and the 3D view's floor, stands and what stands on the field are in the same frame (`uprightsFor` moves the field's things into it). Rendered at one size in a browser, the two configurations differ in no pixel outside the field's surround and the closed seats, in 2D and from overhead in 3D (`e2e/venue.demo.mjs`, Lumen Field too, light and dark).
+- **The seats a configuration does not open are closed in the same place every time**: BC Place's soccer pitch opens 52,497 of the bowl's 54,500 and Lumen Field's 37,722 of 68,740. A whole bowl that does not open is drawn as empty seats under a pale veil (`ring.closed`), and the seats left over are a block of the next bowl at the middle of the left side, as wide as comes nearest (`bowl.closedSectors`, a `closed` sector in the stands, painted in 2D and on the raked planes in 3D). It replaces the thinner crowd that the upper bowl had in 0.40.1; no random number is used.
+
 ## [0.40.1] - 2026-10-21
 
 ### Fixed
