@@ -7,6 +7,10 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Changed
+
+- The development dependency `@johnmorrisdotca/dougu-sports` is 0.13.0 (was 0.2.0): its four new icons, `sport:mma`, `sport:boxing`, `sport:wrestling` and `sport:prowrestling`, are the combat sports' own, so the test of the real set no longer stands in the karate and judo icons for them, and the demo's emblem pickers list them. Kyogijo's own code and its published package are unchanged; the demo (built from this repository) shows the new icons.
+
 ## [0.32.0] - 2026-10-20
 
 ### Added

@@ -19,14 +19,14 @@ importers:
         specifier: 1.4.0
         version: 1.4.0
       '@johnmorrisdotca/dougu-sports':
-        specifier: 0.2.0
-        version: 0.2.0
+        specifier: 0.13.0
+        version: 0.13.0
       '@johnmorrisdotca/hata':
         specifier: 1.5.0
         version: 1.5.0
       '@johnmorrisdotca/taisen-brackets':
         specifier: 0.17.1
-        version: 0.17.1(@johnmorrisdotca/dougu-sports@0.2.0)(@johnmorrisdotca/hata@1.5.0)
+        version: 0.17.1(@johnmorrisdotca/dougu-sports@0.13.0)(@johnmorrisdotca/hata@1.5.0)
       '@playwright/test':
         specifier: ^1.63.0
         version: 1.64.0
@@ -110,8 +110,8 @@ packages:
     resolution: {integrity: sha512-tlfHQ9bL0Sim3SNuDRw7YNAjdnlrmWDzFZve9DIF9SNngHN3KQQj7r+zsSI0xAAzQ+dyOiZSbHHZ1jM15ZkoDA==}
     engines: {node: '>=22'}
 
-  '@johnmorrisdotca/dougu-sports@0.2.0':
-    resolution: {integrity: sha512-10HVYsRLXiUFLWIheDmihWWqLly9vpDiaFrbK+HBPsEPRcbnLLgM7LicAHNN6Sc1qS01wvH5bB4hG55lHoqWfw==}
+  '@johnmorrisdotca/dougu-sports@0.13.0':
+    resolution: {integrity: sha512-+crM8Q5X2m0/ir3/3/qCCyUtkA3PpsH7qgoDeSjvTKj6MzbmkDTYv4loTa0s19JdSShXadVdS9sqJVD1vJXbYQ==}
     engines: {node: '>=22'}
 
   '@johnmorrisdotca/hata@1.5.0':
@@ -1042,13 +1042,13 @@ snapshots:
 
   '@johnmorrisdotca/chizu@1.4.0': {}
 
-  '@johnmorrisdotca/dougu-sports@0.2.0': {}
+  '@johnmorrisdotca/dougu-sports@0.13.0': {}
 
   '@johnmorrisdotca/hata@1.5.0': {}
 
-  '@johnmorrisdotca/taisen-brackets@0.17.1(@johnmorrisdotca/dougu-sports@0.2.0)(@johnmorrisdotca/hata@1.5.0)':
+  '@johnmorrisdotca/taisen-brackets@0.17.1(@johnmorrisdotca/dougu-sports@0.13.0)(@johnmorrisdotca/hata@1.5.0)':
     optionalDependencies:
-      '@johnmorrisdotca/dougu-sports': 0.2.0
+      '@johnmorrisdotca/dougu-sports': 0.13.0
       '@johnmorrisdotca/hata': 1.5.0
 
   '@jridgewell/resolve-uri@3.1.2': {}

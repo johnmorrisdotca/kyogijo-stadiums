@@ -1,7 +1,12 @@
 // The pickers of ready-made emblems (Dougu Sports, plugged in with useEmblems): a team's mark and the middle of a pageant. Tiles a finger wide, each the emblem itself, named for a screen reader; a tap changes the drawing and the code.
+import { EMBLEM_GROUPS } from "@johnmorrisdotca/dougu-sports/emblems";
 import { expect, test } from "@playwright/test";
 
 import { at, noSidewaysScroll, open, openGroups, svg } from "./demo.mjs";
+
+// The demo offers these groups as marks (demo/model.js MARK_IDS) and these as the middle of a pageant (CENTRE_IDS): the counts follow the Dougu Sports build the demo is made with.
+const MARKS = ["crest", "sport", "trophy", "medal", "award", "ball", "gear"].reduce((n, group) => n + EMBLEM_GROUPS[group].length, 0);
+const CENTRES = ["trophy", "medal", "award", "ball"].reduce((n, group) => n + EMBLEM_GROUPS[group].length, 0);
 
 /** The documents of the images in the drawing, decoded. */
 const images = (page) =>
@@ -14,7 +19,7 @@ test("a team's mark can be a ready-made emblem: its tiles are a finger wide, a t
   await page.locator(`${at("away-logo")} button[data-value="ready"]`).click();
   await expect(page.locator(at("away-mark"))).toBeVisible();
   await expect(page.locator(at("home-mark"))).toBeHidden();
-  await expect(page.locator(`${at("away-mark")} button`)).toHaveCount(166);
+  await expect(page.locator(`${at("away-mark")} button`)).toHaveCount(MARKS);
   await page.locator(`${at("away-mark")} button[data-value="crest:diamond"]`).scrollIntoViewIfNeeded();
   await page.locator(`${at("away-mark")} button[data-value="crest:diamond"]`).click();
   await expect(page.locator(`${at("away-mark")} button[data-value="crest:diamond"]`)).toHaveAttribute("aria-pressed", "true");
@@ -40,7 +45,7 @@ test("every tile has a name for a screen reader, in the page's language", async 
   await openGroups(page);
   await page.locator(`${at("home-logo")} button[data-value="ready"]`).click();
   const names = await page.locator(`${at("home-mark")} button`).evaluateAll((all) => all.map((b) => b.getAttribute("aria-label")));
-  expect(names).toHaveLength(166);
+  expect(names).toHaveLength(MARKS);
   expect(names.every((name) => name.length > 2)).toBe(true);
   // Dougu Sports names a few emblems alike (two kinds of ball in the same picture): the names are not unique, but none is empty.
   expect(new Set(names).size).toBeGreaterThan(130);
@@ -58,7 +63,7 @@ test("the middle of a pageant is a ready-made trophy, in the metal or the line s
   await expect(page.locator(at("pageant-emblem-id"))).toBeHidden();
   await page.locator(at("pageant-emblem")).click();
   await expect(page.locator(at("pageant-emblem-id"))).toBeVisible();
-  await expect(page.locator(`${at("pageant-emblem-id")} button`)).toHaveCount(82);
+  await expect(page.locator(`${at("pageant-emblem-id")} button`)).toHaveCount(CENTRES);
   await page.locator(`${at("pageant-emblem-id")} button[data-value="trophy:hockey-cup"]`).scrollIntoViewIfNeeded();
   await page.locator(`${at("pageant-emblem-id")} button[data-value="trophy:hockey-cup"]`).click();
   await expect.poll(async () => (await images(page)).some((doc) => doc.includes("<title>Banded silver cup</title>") && doc.includes("linearGradient"))).toBe(true);
