@@ -13,25 +13,6 @@ The surfaces of forty-three sports, from football and curling to the budō and t
 
 <p align="center"><a href="https://johnmorrisdotca.github.io/kyogijo-stadiums/"><strong>Open the demo →</strong></a> · <a href="https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/">Documentation</a> · <a href="https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery.html">Gallery</a> · <a href="./docs/compare.md">How it compares</a> · <a href="https://johnmorrisdotca.github.io/kyogijo-stadiums/api.html">API reference</a></p>
 
-<table align="center">
-<tr>
-<td align="center" valign="top">
-<picture>
-<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turning-venue-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turning-venue-desk-light.webp" alt="A real arena turning once round in 3D: Climate Pledge Arena in the outline of its building, two tiers of seats round the rink." width="410">
-</picture>
-<br><em>A real arena, turning: Climate Pledge Arena in the outline of its building (OpenStreetMap).</em>
-</td>
-<td align="center" valign="top">
-<picture>
-<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turning-hall-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turning-hall-desk-light.webp" alt="A tournament layout turning once round in 3D: four table tennis areas on one floor, a surround round each and a scoreboard hung over them." width="410">
-</picture>
-<br><em>A tournament layout, turning: four table tennis areas under one scoreboard.</em>
-</td>
-</tr>
-</table>
-
 > **Renamed.** Previously `@johnmorrisdotca/kyogijo`; renamed in 0.4.0 to `@johnmorrisdotca/kyogijo-stadiums`. The product is still Kyogijo Stadiums (競技場); only the package and the repository names changed. See the [changelog](./CHANGELOG.md).
 
 <table align="center">
@@ -409,6 +390,7 @@ import { mountKyogijoTurn } from "@johnmorrisdotca/kyogijo-stadiums/turn";
 
 const view = mountKyogijoTurn(document.querySelector("#court")!, { sport: "volleyball", status: "live" }, { preset: "end" });
 view.preset("corner");
+view.setDirection("clockwise"); // the auto-turn goes the other way (`direction` in the settings says it at the start)
 ```
 
 ```ts
@@ -420,7 +402,7 @@ console.log(items.map((item) => item.kind).join(), html.includes("preserve-3d"))
 // net,netposts,antennae false
 ```
 
-The flat drawing is the floor, turned by a drag, a swipe, the keys or four viewpoints, with what the rulebook stands on it at its height; each part is one `matrix3d`. In the element: `<kyogijo-field sport="nhl" turn turn-view="broadcast">`. [The 3D view](./docs/turn.md).
+The flat drawing is the floor, turned by a drag, a swipe, the keys or four viewpoints, with what the rulebook stands on it at its height; each part is one `matrix3d`. The auto-turn waits for Play, and turns either way: `counterclockwise` (the near side swinging to the viewer's right) by default, `clockwise` on the Reverse button. In the element: `<kyogijo-field sport="nhl" turn turn-view="broadcast">`. [The 3D view](./docs/turn.md).
 
 <p align="center">
 <picture>
@@ -561,6 +543,14 @@ console.log(layout.needs.length, layout.needs.width);
 // 47 19
 ```
 
+<p align="center">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turning-hall-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turning-hall-desk-light.webp" alt="A tournament layout turning once round in 3D, slowly: four table tennis areas on one floor, a surround round each and a scoreboard hung over them." width="640">
+</picture>
+<br><em>A tournament layout, turning: four table tennis areas under one scoreboard.</em>
+</p>
+
 ### Boards over a surface
 
 `board` lays a results board, a bout presentation or a medal table, any SVG, over a surface in 2D and 3D, off its middle and never stretched ([boards](./docs/boards.md)).
@@ -591,7 +581,7 @@ console.log(layout.needs.length, layout.needs.width);
 
 ### The real venues
 
-`crowd: { real: true }` draws an NHL arena in its building: the outline from OpenStreetMap, the rink lying along the building where it says so, and a plausible bowl of the seats, tiers and roof the sources give. All thirty-two arenas of the league, division by division ([the real venues](./docs/venues.md)). In 3D the demo's [venues page](https://johnmorrisdotca.github.io/kyogijo-stadiums/venues.html) turns by itself, with the stands, walls, roof, building, markings and labels switched on the view while it turns.
+`crowd: { real: true }` draws an NHL arena in its building: the outline from OpenStreetMap, the rink lying along the building where it says so, and a plausible bowl of the seats, tiers and roof the sources give. All thirty-two arenas of the league, division by division ([the real venues](./docs/venues.md)). In 3D the demo's [venues page](https://johnmorrisdotca.github.io/kyogijo-stadiums/venues.html) turns while the pointer is over it, with the stands, walls, roof, building, markings and labels switched on the view while it turns.
 
 ```ts
 import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
@@ -601,6 +591,14 @@ const svg = drawKyogijo({ sport: "nhl", arena: "climate-pledge-arena", crowd: { 
 console.log(svg.includes("ky-cr-shell"), planVenue(venueById("climate-pledge-arena")!).total);
 // true 17151
 ```
+
+<p align="center">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turning-venue-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/turning-venue-desk-light.webp" alt="A real arena turning once round in 3D, slowly: Climate Pledge Arena in the outline of its building, two tiers of seats with a suite level of windows between them, and a darker concourse floor round the bowl." width="640">
+</picture>
+<br><em>A real arena, turning: Climate Pledge Arena in the outline of its building (OpenStreetMap).</em>
+</p>
 
 ### A real stadium, and a district
 

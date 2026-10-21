@@ -64,6 +64,8 @@ export function mountJudgingBroadcast(host: HTMLElement, options: JudgingOptions
     },
     play: () => turn.play(),
     pause: () => turn.pause(),
+    direction: () => turn.direction(),
+    setDirection: (direction) => turn.setDirection(direction),
     togglePlay: () => turn.togglePlay(),
     svg: () => turn.svg(),
     destroy: () => {

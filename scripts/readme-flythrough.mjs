@@ -18,7 +18,7 @@ import { animated } from "./webp-animated.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const frames = Number(process.env.FRAMES ?? 40);
-const frameMs = Number(process.env.FRAME_MS ?? 130);
+const frameMs = Number(process.env.FRAME_MS ?? 260);
 const width = Number(process.env.WIDTH ?? 448);
 const quality = Number(process.env.QUALITY ?? 0.55);
 const BUDGET = 1024 * 1024;

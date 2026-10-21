@@ -170,10 +170,10 @@ test("an old address's roof=1 is the walls and the roof together, and the choice
 });
 
 test("has the controls on the view, in sight without scrolling, and a button pressed while the view turns neither stops it nor sends it back", async ({ page }) => {
-  const { errors } = await open(page, "?view=3d&venue=climate-pledge-arena", "no-preference");
+  const { errors } = await open(page, "?view=3d&venue=climate-pledge-arena&spin=on", "no-preference");
   const stage = page.locator(`${STAGE} .ky-turn-view`);
   const play = page.locator('.ky-turn-controls button[data-act="play"]');
-  // The view turns by itself: Play is pressed, and the scene's turn changes from one moment to the next.
+  // The address asked for the turn (`spin=on`): Play is pressed, and the scene's turn changes from one moment to the next.
   await expect(play).toHaveAttribute("aria-pressed", "true");
   const sceneTurn = () => page.locator(`${STAGE} .ky-turn-floor`).evaluate((floor) => getComputedStyle(floor).transform);
   const first = await sceneTurn();
@@ -199,11 +199,69 @@ test("has the controls on the view, in sight without scrolling, and a button pre
   await expect(play).toHaveAttribute("aria-pressed", "true");
   const second = await sceneTurn();
   await expect.poll(sceneTurn).not.toBe(second);
-  // Play and Pause are the view's, and the address says it is paused.
+  // Play and Pause are the view's, and the address says it is paused (it says `spin=on` only while the reader's own turn goes).
   await play.click();
   await expect(play).toHaveAttribute("aria-pressed", "false");
-  expect(page.url()).toContain("spin=off");
+  expect(page.url()).not.toContain("spin=");
   expect(errors).toEqual([]);
+});
+
+test("waits still when it opens, turns while the pointer is over it, and stops when it leaves", async ({ page }) => {
+  const { errors } = await open(page, "?view=3d&venue=climate-pledge-arena", "no-preference");
+  const play = page.locator('.ky-turn-controls button[data-act="play"]');
+  const sceneTurn = () => page.locator(`${STAGE} .ky-turn-floor`).evaluate((floor) => getComputedStyle(floor).transform);
+  await expect(play).toHaveAttribute("aria-pressed", "false");
+  const still = await sceneTurn();
+  await page.waitForTimeout(500);
+  expect(await sceneTurn()).toBe(still);
+  await page.locator(`${STAGE} .ky-turn-view`).hover();
+  await expect(play).toHaveAttribute("aria-pressed", "true");
+  await expect.poll(sceneTurn).not.toBe(still);
+  // The pointer's turn is not the reader's own, so the address does not carry it.
+  expect(page.url()).not.toContain("spin=");
+  await page.mouse.move(2, 2);
+  await expect(play).toHaveAttribute("aria-pressed", "false");
+  expect(errors).toEqual([]);
+});
+
+test("a tap on the view starts the turn on a phone and a second tap holds it", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.use.hasTouch !== true, "a touch screen only: a mouse turns it by hovering");
+  await open(page, "?view=3d&venue=climate-pledge-arena", "no-preference");
+  const play = page.locator('.ky-turn-controls button[data-act="play"]');
+  await expect(play).toHaveAttribute("aria-pressed", "false");
+  await page.locator(`${STAGE} .ky-turn-view`).tap();
+  await expect(play).toHaveAttribute("aria-pressed", "true");
+  await page.locator(`${STAGE} .ky-turn-view`).tap();
+  await expect(play).toHaveAttribute("aria-pressed", "false");
+});
+
+test("turns either way: Reverse is a button of the view, pressed while it goes clockwise, and the address keeps it as dir=cw", async ({ page }) => {
+  await open(page, "?view=3d&venue=climate-pledge-arena&spin=on", "no-preference");
+  const reverse = page.locator('.ky-turn-controls button[data-act="reverse"]');
+  const angle = () => page.locator(`${STAGE} .ky-turn-floor`).evaluate((floor) => {
+    const m = getComputedStyle(floor).transform.slice("matrix3d(".length, -1).split(",").map(Number);
+    return Math.atan2(m[1], m[0]);
+  });
+  const swing = async () => {
+    const a = await angle();
+    await page.waitForTimeout(700);
+    const d = (await angle()) - a;
+    return Math.sign(Math.atan2(Math.sin(d), Math.cos(d)));
+  };
+  await expect(reverse).toHaveAttribute("aria-pressed", "false");
+  const way = await swing();
+  expect(way).not.toBe(0);
+  await reverse.click();
+  await expect(reverse).toHaveAttribute("aria-pressed", "true");
+  expect(page.url()).toContain("dir=cw");
+  expect(await swing()).toBe(-way);
+  // A part switched while it turns neither stops it nor changes the way.
+  await chip(page, "roof").click();
+  await expect(reverse).toHaveAttribute("aria-pressed", "true");
+  expect(await swing()).toBe(-way);
+  await reverse.click();
+  expect(page.url()).not.toContain("dir=");
+  expect(await swing()).toBe(way);
 });
 
 test("hides the building, the markings and the labels by a style and not by drawing again, and takes the seats away with the stands", async ({ page }) => {

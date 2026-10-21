@@ -68,7 +68,7 @@ The demo's [district page](https://johnmorrisdotca.github.io/kyogijo-stadiums/di
 
 `["tokyo-dome", "korakuen-hall"]` puts Tokyo Dome, a ballpark under its air-supported roof, and Korakuen Hall, the hall with a boxing ring that stands in the same complex about 140 metres south of the Dome's middle, side by side as neighbours: the ballpark's key has the one configuration `mlb` and the hall's the one `boxing`, so the district names them `tokyo-dome:mlb` and `korakuen-hall:boxing`. The hall is a kind of venue of its own (`member.kind` is `"hall"`) and is drawn with the boxing ring in the middle of its seats. Tokyo Dome's orientation is not known (no diamond is mapped in the dome), so its drawing lies the way that fits its building, `basis` is `none`, and the district's north arrow is the only one; the hall's is inferred from its building's long axis. In 3D each is a building of its own, the Dome's roof a lens over the whole ballpark.
 
-![Tokyo Dome and Korakuen Hall in 3D from a low corner: a ballpark under an air-supported roof, a lens of pale pieces over the stands and the field, and a small hall to its south with its lid, on one ground with a grid, a scale of 50 metres and a north arrow, each with its name over it](./images/district-tokyo-3d-desk-light.webp)
+![Tokyo Dome and Korakuen Hall in 3D from a low corner: a ballpark under an air-supported roof, a lens of pale pieces over the stands and the field, and a small hall to its south with its lid, on one ground with a grid, a scale of 50 metres and a north arrow, each with its name over it](./pictures/district-tokyo-3d-desk-light.webp)
 
 ```ts
 import { planDistrict } from "@johnmorrisdotca/kyogijo-stadiums/district";

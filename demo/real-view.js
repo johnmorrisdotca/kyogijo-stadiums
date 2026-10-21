@@ -6,6 +6,7 @@
 // building, the markings and the labels are only hidden by a style (a `data-hide` on the stage), so that a button pressed while the view turns neither stops it nor sends it back.
 import { drawKyogijo } from "./dist/index.js";
 import { mountKyogijoTurn } from "./dist/turn-entry.js";
+import { hoverOf, wayOf, writeWay } from "./turn-way.js";
 
 /** The parts a reader can switch, in the order of the bar, with what each is by default: the stands on, the walls and roof off (the bowl is seen), the building, the markings and the labels on. */
 export const PARTS = ["stands", "walls", "roof", "building", "markings", "labels"];
@@ -43,7 +44,7 @@ export const REAL_VIEW_CSS = `
  * @param {string} [options.prefix] the prefix of this view's parameters in the address
  * @param {boolean} [options.flat] whether the view can be flat (a `view` button); a view that cannot is always 3D
  * @param {string} [options.chipClass] a class for the buttons, for a page that has a style of its own for them
- * @param {boolean} [options.spin] whether the 3D view turns by itself when it opens (a reader who prefers reduced motion gets it still)
+ * @param {boolean} [options.spin] whether the 3D view can be asked to turn by itself when it opens (`spin=on` in the address, which Auto-turn writes; a reader who prefers reduced motion gets it still): it waits still otherwise and turns while the pointer is over it
  * @param {(state: object) => void} [options.onChange] called after anything changed, with the state
  */
 export function mountRealView({ stage, bar, venue, page, prefix = "", flat = true, spin = true, chipClass = "", onChange = () => undefined }) {
@@ -55,13 +56,15 @@ export function mountRealView({ stage, bar, venue, page, prefix = "", flat = tru
     view: flat && params.get(key("view")) !== "3d" ? "2d" : "3d",
     ...Object.fromEntries(PARTS.map((part) => [part, flag(part, DEFAULTS[part])])),
     viewpoint: VIEWPOINTS.includes(params.get(key("viewpoint"))) ? params.get(key("viewpoint")) : "corner",
-    spin: spin && params.get(key("spin")) !== "off",
+    spin: spin && params.get(key("spin")) === "on",
   };
   // An old address's `roof=1` was the walls and the roof together.
   if (params.get(key("roof")) === "1" && !params.has(key("walls"))) state.walls = true;
   if (!flat) state.view = "3d";
   stage.classList.add("rv-stage");
   let turn;
+  /** Whether the turn running now is the pointer's (so the address does not record it). */
+  let hover;
   let styled = document.getElementById("rv-style");
   if (styled === null) {
     styled = document.createElement("style");
@@ -86,7 +89,8 @@ export function mountRealView({ stage, bar, venue, page, prefix = "", flat = tru
     // A roof asked for on its own would read back as the old roof-and-walls without its `walls=0`.
     if (state.roof && !state.walls) next.set(key("walls"), "0");
     set("viewpoint", state.viewpoint === "corner" ? null : state.viewpoint);
-    set("spin", spin && !state.spin ? "off" : null);
+    set("spin", spin && state.spin ? "on" : null);
+    writeWay(next);
     history.replaceState(history.state, "", next.size === 0 ? location.pathname : `${location.pathname}?${next}${location.hash}`);
   }
 
@@ -133,10 +137,12 @@ export function mountRealView({ stage, bar, venue, page, prefix = "", flat = tru
       turn = mountKyogijoTurn(stage.firstElementChild, optionsNow(), {
         preset: state.viewpoint,
         venue: venueNow(),
+        ...wayOf(sync),
         ...(state.spin ? { autoPlay: true } : {}),
         onChange: (_, preset) => { if (preset !== undefined && preset !== state.viewpoint) { state.viewpoint = preset; sync(); } },
-        onPlayChange: (playing) => { if (spin && playing !== state.spin) { state.spin = playing; sync(); } },
+        onPlayChange: (playing) => { if (spin && hover?.on !== true && playing !== state.spin) { state.spin = playing; sync(); } },
       });
+      hover = hoverOf(stage, turn);
     } else {
       turn.update(optionsNow(), { venue: venueNow() });
     }

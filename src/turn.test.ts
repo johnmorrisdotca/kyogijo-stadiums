@@ -26,6 +26,7 @@ import {
   presetView,
   project,
   step,
+  turnDirection,
   turnMarkup,
   uprightsFor,
 } from "./turn-entry.ts";
@@ -820,6 +821,29 @@ describe("the auto-turn's controls", () => {
     expect(turnSettingsFromAttributes(read({ "turn-autoplay": "false" })).autoPlay).toBeUndefined();
     expect(turnSettingsFromAttributes(read({ "turn-speed": "-20" })).speed).toBe(-20);
     expect(turnSettingsFromAttributes(read({ "turn-speed": "fast" })).speed).toBeUndefined();
-    for (const name of ["turn-venue", "turn-roof", "turn-autoplay", "turn-speed"]) expect(KYOGIJO_ATTRIBUTES).toContain(name);
+    expect(turnSettingsFromAttributes(read({ "turn-direction": "clockwise" })).direction).toBe("clockwise");
+    expect(turnSettingsFromAttributes(read({ "turn-direction": "counterclockwise" })).direction).toBe("counterclockwise");
+    expect(turnSettingsFromAttributes(read({ "turn-direction": "left" })).direction).toBeUndefined();
+    for (const name of ["turn-venue", "turn-roof", "turn-autoplay", "turn-speed", "turn-direction"]) expect(KYOGIJO_ATTRIBUTES).toContain(name);
+  });
+
+  it("turns either way: the default is how it has always turned, the near side swinging to the viewer's right, and `direction` names the other", () => {
+    expect(turnDirection(undefined)).toBe("counterclockwise");
+    expect(turnDirection("clockwise")).toBe("clockwise");
+    expect(turnDirection("sideways")).toBe("counterclockwise");
+    // The default's yaw decreases: a point near the eye moves to the right as the yaw goes down.
+    const model = buildTurn({ sport: "volleyball" });
+    const layout = (yaw: number) => project([0, 100, 0], { yaw, pitch: 50, zoom: 1 }, { k: 1, tx: 0, ty: 0 }, 5000);
+    expect(layout(-10)[0]).toBeGreaterThan(layout(0)[0]);
+    expect(model.view.yaw).toBeDefined();
+  });
+
+  it("has a Reverse button beside Auto-turn, pressed only while it turns clockwise, in the page's language", () => {
+    const plain = turnMarkup({ sport: "volleyball" });
+    expect(plain).toMatch(/<button type="button" data-act="reverse" aria-pressed="false" aria-label="Turn the other way" title="Turn the other way">Reverse<\/button>/);
+    expect(turnMarkup({ sport: "volleyball" }, { direction: "clockwise" })).toContain('data-act="reverse" aria-pressed="true"');
+    expect(turnMarkup({ sport: "volleyball", language: "ja" })).toContain(">逆回転</button>");
+    expect(turnMarkup({ sport: "volleyball" }, { controls: false })).not.toContain('data-act="reverse"');
+    expect(KYOGIJO_STRINGS.en.turn.announceClockwise).toBe("Turning clockwise");
   });
 });

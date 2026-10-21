@@ -43,6 +43,8 @@ trip.pause();
 | `id` | The prefix of the ids in the page, for a page with more than one. |
 | `onStage`, `onPlayChange` | Called when the camera enters a stage, and when it starts or stops flying. |
 
+The demo's page (`flythrough.html`) opens still (`autoPlay: false`), flies while the pointer is over the stage (a tap on a phone starts it and a second tap holds it) and takes `speed=0.5` unless the address says another, half the package's own pace; `?play=1` has it fly from the start. The fly-through has no direction to reverse: its path is one run from the map to the play, and the turn of the arena in it is part of that path.
+
 The handle: `play()`, `pause()`, `toggle()`, `next()`, `back()`, `goTo(stage)` (a name or a place in `stages`), `seek(seconds)` (the camera at once at a moment of the path: a scrubber, a test), `camera()`, `stage`, `stages`, `time`, `duration`, `playing`, `mode` and `destroy()`.
 
 ## The stages

@@ -19,13 +19,13 @@ import { animated } from "./webp-animated.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const steps = Number(process.env.STEPS ?? 60);
-const frameMs = Number(process.env.FRAME_MS ?? 50);
+const frameMs = Number(process.env.FRAME_MS ?? 100);
 const width = Number(process.env.WIDTH ?? 640);
 const quality = Number(process.env.QUALITY ?? 0.7);
 /** The moving pictures: a page of the demo and what to show on it (the scheme is added). `zoomOut` is the steps back (the "-" key, 1.2 times each; the "+" key for a negative one) so that the floor fills the picture and keeps inside it all the way round. */
 const SHOTS = [
   // A real arena, in the outline of its building, from a low corner.
-  { subject: "turning-venue-desk", url: "/venues.html?venue=climate-pledge-arena&view=3d&viewpoint=corner&roof=0", zoomOut: 1 },
+  { subject: "turning-venue-desk", url: "/venues.html?venue=climate-pledge-arena&view=3d&viewpoint=corner&roof=0", zoomOut: 0 },
   // A tournament layout: four table tennis areas under one scoreboard.
   { subject: "turning-hall-desk", url: "/halls.html?preset=tabletennis-4&view=3d&viewpoint=corner", zoomOut: 0 },
 ];

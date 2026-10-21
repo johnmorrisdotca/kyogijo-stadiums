@@ -10,6 +10,7 @@ import { KYOGIJO_TURN_STYLE, mountKyogijoTurn } from "./dist/turn-entry.js";
 import "./dist/element-define.js";
 import { initAtlas } from "./atlas.js";
 import { mountRealView } from "./real-view.js";
+import { hoverOf, turnOnHover, wayOf, writeWay } from "./turn-way.js";
 import { mountPlaceGrid } from "./place-grid.js";
 import { toParams } from "./embed-params.js";
 import { quiet, quietTitles } from "./quiet.js";
@@ -388,7 +389,8 @@ function render() {
       stage.replaceChildren();
       // The page's own light or dark is the stylesheet's to follow; the turn's own rules are written once into the page, like the drawing's.
       turnRoof = state.venueRoof;
-      turn = mountKyogijoTurn(stage, o, { preset: state.viewpoint, ...(state.venueRoof ? { venue: { roof: true } } : {}), onChange: (_, preset) => { if (preset !== undefined) state.viewpoint = preset; syncUrl(); } });
+      turn = mountKyogijoTurn(stage, o, { preset: state.viewpoint, ...wayOf(syncUrl), ...(state.venueRoof ? { venue: { roof: true } } : {}), onChange: (_, preset) => { if (preset !== undefined) state.viewpoint = preset; syncUrl(); } });
+      hoverOf(stage, turn);
     } else turn.update(o);
     stage.dataset.orientation = "landscape";
     stage.dataset.sport = state.sport;
@@ -457,6 +459,7 @@ function syncUrl() {
     if (value === null) q.delete(key);
     else q.set(key, value);
   }
+  writeWay(q);
   history.replaceState(history.state, "", `${location.pathname}?${q.toString()}${location.hash}`);
 }
 
@@ -821,6 +824,9 @@ function drawReplays() {
     const mount = mountKyogijo($(id), { sport, orientation: "landscape", language: lang, style: "none", id: `replay-${kind}`, ...(kind === "pool" ? { pool: swum } : {}) });
     const handle = mount.replay(plays[kind], { ...(kind === "pool" ? { trail: 3, trailOf: ["home"] } : {}), ...(at === undefined ? {} : { start: at.t - at.start, speed: at.speed, loop: at.loop }) });
     replays.set(id, { mount, handle });
+    // A replay waits still and plays while the pointer is over its stage (a tap on a phone starts it and a second tap holds it), as the 3D views turn.
+    const stage = $(id).querySelector(".ky-stage");
+    if (stage !== null) turnOnHover(stage, { get playing() { return handle.state().playing; }, play: () => { handle.play(); return handle.state().playing; }, pause: () => handle.pause(), togglePlay: () => { handle.toggle(); return handle.state().playing; } }, () => 0);
   }
   const element = $("replay-element");
   element.setAttribute("language", lang);
@@ -1013,7 +1019,7 @@ stage.addEventListener("click", (event) => {
 $("place-clear").addEventListener("click", () => { state.shots = []; change(); });
 $("place").addEventListener("click", () => showPlace(null));
 
-// ----- The featured real arena at the head of the page: it turns by itself, and its buttons work while it turns.
+// ----- The featured real arena at the head of the page: it waits still and turns while the pointer is over it, and its buttons work while it turns.
 const FEATURED = "climate-pledge-arena";
 const featuredKey = new URLSearchParams(location.search).get("fv");
 const featured = mountRealView({

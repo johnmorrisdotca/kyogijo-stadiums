@@ -2,7 +2,7 @@
 // `perspective` on a parent): every element carries its whole place on the screen in one `matrix3d`, worked out here from the way the scene is looked at, and
 // the elements are stacked far to near by `z-index`. A browser that cannot keep nested 3D layers (Safari on a phone can lose them) draws it as it is meant.
 // The same text is what a page is given from `turnMarkup` and what the mount writes; the mount then makes it turn.
-import { TURN_PRESET_NAMES, cameraMatrix, depthOf, eyeDistance, fit, matrix3d, multiply, presetOf, type Placement, type TurnView } from "./turn.camera.ts";
+import { TURN_PRESET_NAMES, cameraMatrix, depthOf, eyeDistance, fit, matrix3d, multiply, presetOf, turnDirection, type Placement, type TurnDirection, type TurnView } from "./turn.camera.ts";
 import { cross, facing, fadeOf, n, size, unit, type Plane } from "./turn.kit.ts";
 import { buildTurn, turnWords, type TurnModel, type TurnSettings } from "./turn.model.ts";
 import { KYOGIJO_TURN_STYLE } from "./turn.style.ts";
@@ -143,7 +143,7 @@ export function worldMarkup(model: TurnModel, layout: Layout): string {
 }
 
 /** The buttons under the view. */
-export function controlsMarkup(model: TurnModel, view: TurnView, playing = false): string {
+export function controlsMarkup(model: TurnModel, view: TurnView, playing = false, direction: TurnDirection = "counterclockwise"): string {
   const words = turnWords(model);
   const here = presetOf(view, model.presets ?? (model.options as SurfaceOptions).sport);
   const presets = TURN_PRESET_NAMES.map((name, i) => `<button type="button" data-preset="${name}" aria-pressed="${here === name}" aria-keyshortcuts="${i + 1}">${esc(words[name])}</button>`).join("");
@@ -158,7 +158,9 @@ export function controlsMarkup(model: TurnModel, view: TurnView, playing = false
   const buttons = tools.map(([act, glyph, label]) => `<button type="button" data-act="${act}" aria-label="${esc(label)}" title="${esc(label)}">${glyph}</button>`).join("");
   // The auto-turn: a toggle named for what it is, pressed while the view turns; its glyph and tooltip say what pressing it does.
   const play = `<button type="button" data-act="play" data-wide aria-pressed="${playing}" aria-keyshortcuts="Space" title="${esc(playing ? words.playOff : words.playOn)}"><span data-glyph aria-hidden="true">${playing ? "❚❚" : "▶"}</span>${esc(words.play)}</button>`;
-  return `<div class="ky-turn-controls"><div class="ky-turn-group" role="group" aria-label="${esc(words.group)}">${presets}</div><div class="ky-turn-group">${buttons}<button type="button" data-act="reset" aria-keyshortcuts="0 Home">${esc(words.reset)}</button>${play}</div></div>`;
+  // The other way round: a toggle, pressed while the auto-turn goes clockwise (the default is how it has always turned, the near side swinging to the right).
+  const reverse = `<button type="button" data-act="reverse" aria-pressed="${direction === "clockwise"}" aria-label="${esc(words.reverseLabel)}" title="${esc(words.reverseLabel)}">${esc(words.reverse)}</button>`;
+  return `<div class="ky-turn-controls"><div class="ky-turn-group" role="group" aria-label="${esc(words.group)}">${presets}</div><div class="ky-turn-group">${buttons}<button type="button" data-act="reset" aria-keyshortcuts="0 Home">${esc(words.reset)}</button>${play}${reverse}</div></div>`;
 }
 
 /** The size, in pixels, the first view is worked out for. */
@@ -179,7 +181,7 @@ export function turnMarkupOf(model: TurnModel, settings: TurnSettings = {}): str
     sheet +
     `<div class="ky-turn-view" tabindex="0" role="group" aria-roledescription="${esc(words.region)}" aria-label="${esc(model.title)}" aria-describedby="${esc(model.id)}-help" aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown + - 0 1 2 3 4 Home Space"><div ${worldAttributes(model)}>${worldMarkup(model, layout)}</div>${model.board === undefined ? "" : turnBoardMarkup(model.board)}</div>` +
     `<p class="ky-turn-help" id="${esc(model.id)}-help">${esc(keys)}</p>` +
-    (settings.controls === false ? "" : controlsMarkup(model, view)) +
+    (settings.controls === false ? "" : controlsMarkup(model, view, false, turnDirection(settings.direction))) +
     `<div class="ky-turn-live" role="status" aria-live="polite"></div>` +
     `</div>`
   );

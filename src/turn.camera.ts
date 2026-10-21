@@ -15,6 +15,17 @@ export interface TurnView {
 export type TurnPreset = "overhead" | "broadcast" | "end" | "corner";
 
 /** The viewpoints, in the order the controls and the number keys list them. */
+/**
+ * Which way the auto-turn goes, seen from above. `"counterclockwise"` is how it has always turned: the near side swings to the viewer's right. `"clockwise"` is the other way: the near side swings to the left.
+ * A drag, the keys and the buttons are not reversed.
+ */
+export type TurnDirection = "clockwise" | "counterclockwise";
+
+/** A direction from anything: `"clockwise"` is clockwise, and everything else is the default, `"counterclockwise"`. */
+export function turnDirection(value: unknown): TurnDirection {
+  return value === "clockwise" ? "clockwise" : "counterclockwise";
+}
+
 export const TURN_PRESET_NAMES: readonly TurnPreset[] = ["overhead", "broadcast", "end", "corner"];
 
 /**

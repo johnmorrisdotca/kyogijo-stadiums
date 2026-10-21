@@ -162,8 +162,8 @@ test("has the controls of the 3D view: four viewpoints that follow the address, 
   await open(page, "?preset=tabletennis-4&view=3d");
   const bar = page.locator(`${STAGE} .ky-turn-controls`);
   const sizes = await bar.locator("button").evaluateAll((all) => all.map((b) => [Math.round(b.getBoundingClientRect().width), Math.round(b.getBoundingClientRect().height)]));
-  // Four viewpoints, six moves, the reset and the auto-turn: every one a finger wide.
-  expect(sizes.length).toBe(12);
+  // Four viewpoints, six moves, the reset, the auto-turn and Reverse: every one a finger wide.
+  expect(sizes.length).toBe(13);
   for (const [w, h] of sizes) {
     expect(w).toBeGreaterThanOrEqual(44);
     expect(h).toBeGreaterThanOrEqual(44);
@@ -293,4 +293,38 @@ test("the places are dressed with a sample event unless the box is cleared, and 
   await open(page, "?preset=judo-1x3&lang=ja");
   await expect(page.locator(`${at("stage")} .ky-mu-sample-text`).first()).toContainText("競技場杯");
   expect(errors).toEqual([]);
+});
+
+test("the 3D layout waits still and turns while the pointer is over it, and Reverse turns it the other way and is kept in the address as dir=cw", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await open(page, "?preset=tabletennis-4&view=3d");
+  const play = page.locator(`${STAGE} button[data-act="play"]`);
+  const reverse = page.locator(`${STAGE} button[data-act="reverse"]`);
+  const angle = () => page.locator(`${STAGE} .ky-turn-floor`).evaluate((floor) => {
+    const m = new DOMMatrix(getComputedStyle(floor).transform);
+    return Math.atan2(m.m12, m.m11);
+  });
+  const swing = async () => {
+    const a = await angle();
+    await page.waitForTimeout(700);
+    const d = (await angle()) - a;
+    return Math.abs(Math.atan2(Math.sin(d), Math.cos(d))) < 1e-4 ? 0 : Math.sign(Math.atan2(Math.sin(d), Math.cos(d)));
+  };
+  await expect(play).toHaveAttribute("aria-pressed", "false");
+  expect(await swing()).toBe(0);
+  await page.locator(`${STAGE} .ky-turn-view`).hover();
+  await expect(play).toHaveAttribute("aria-pressed", "true");
+  const way = await swing();
+  expect(way).not.toBe(0);
+  // Reverse, with the pointer on the buttons: the view is the reader's own now, and the address keeps the way.
+  await reverse.click();
+  await expect(reverse).toHaveAttribute("aria-pressed", "true");
+  expect(page.url()).toContain("dir=cw");
+  await page.locator(`${STAGE} .ky-turn-view`).hover();
+  expect(await swing()).toBe(-way);
+  await page.mouse.move(2, 2);
+  await expect(play).toHaveAttribute("aria-pressed", "false");
+  await page.goto(page.url());
+  await page.waitForSelector(`${STAGE} .ky-turn`);
+  await expect(page.locator(`${STAGE} button[data-act="reverse"]`)).toHaveAttribute("aria-pressed", "true");
 });

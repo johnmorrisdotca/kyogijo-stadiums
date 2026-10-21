@@ -147,14 +147,17 @@ import { mountKyogijoTurn } from "@johnmorrisdotca/kyogijo-stadiums/turn";
 const view = mountKyogijoTurn(document.querySelector("#hall")!, { sport: "dojo", dojo: { jo: 20, dais: true, balcony: true } }, { autoPlay: true, speed: 10 });
 view.pause();
 view.togglePlay();      // true: it turns again
-console.log(view.playing);
+view.setDirection("clockwise"); // the other way, without stopping it
+console.log(view.playing, view.direction());
 ```
 
 - `autoPlay: true` starts it when the view is mounted, and not for a reader who prefers reduced motion (it starts paused, and the button is there for the reader to press); `autoPlay: "force"` starts it anyway.
 - `speed` is degrees of yaw a second, 12 by default; a positive number turns it as a drag to the right does (the near side goes to the right), a negative one the other way.
+- `direction` says which way, seen from above: `"counterclockwise"` (the default, how it has always turned: the near side swings to the viewer's right) or `"clockwise"` (to the left); `turnDirection(value)` reads a direction from anything (`"clockwise"` is clockwise and everything else the default). The **Reverse** button of the view (a toggle, `aria-pressed` while it goes clockwise) and `setDirection(direction)` change it at once and without stopping the turn, `direction()` says which it is, and `onDirectionChange(direction)` tells the page. A drag, the keys and the buttons are not reversed, and a negative `speed` reverses it too. The element reads `turn-direction="clockwise"`.
+- The demo's pages (the main one, the venues, the stadiums, the districts, the tournament layouts, the judging page, the boards and the fly-through) wait still when they open, turn while the pointer is over the view (a tap on a phone starts it and a second tap holds it) at half the speed the package turns by when it is not told (6 degrees a second), and keep the way in the address as `dir=cw`; Auto-turn and Play still start it for good, and a reader who prefers reduced motion is never turned for by the pointer. The page does this itself (`demo/turn-way.js`): the package only has `play()`, `pause()` and `setDirection()`.
 - It holds while the pointer holds the view and goes on when it lets go. It does nothing while the page is hidden or the view is scrolled out of sight, and starts again when it is back. The arrow keys, a viewpoint, the reset or a call to `set` or `preset` take the view over and stop it; zooming does not.
 - About thirty frames a second are drawn, each a write of the planes' `matrix3d` and nothing else; nothing is polled and nothing runs while it is stopped. `onPlayChange(playing)` says when it starts and stops, and `onChange` is called once when it stops, with the view it ended on, and not at every frame.
-- The handle has `playing`, `play()`, `pause()` and `togglePlay()`, each of which gives whether it is turning now.
+- The handle has `playing`, `play()`, `pause()` and `togglePlay()`, each of which gives whether it is turning now, and `direction()` and `setDirection()`.
 
 ## The score
 
@@ -171,6 +174,8 @@ In a drawing with a score the 3D view does not lay the score's panel on the floo
 | `venue` | `true`, `false` or `{ roof, walls, detail }`: the stands and the room, raised. On when the drawing has a `crowd` or is a dojo. `roof: true` adds a roof or canopy; `walls` is the walls of a real venue's building, which follow `roof` when left out (`walls: true` alone raises the walls, `roof: true, walls: false` the roof alone); `detail` is `low`, `auto` or `high`. |
 | `autoPlay` | `true` starts the auto-turn at once, unless the reader prefers reduced motion; `"force"` starts it anyway. Left out, nothing moves until Play. |
 | `speed` | The auto-turn's degrees of yaw a second: 12 by default. |
+| `direction` | `counterclockwise` (the default) or `clockwise`; see the auto-turn above. |
+| `onDirectionChange` | Called with the direction when the Reverse button or `setDirection` changes it. |
 | `onPlayChange` | Called with `true` when the auto-turn starts and `false` when it stops. |
 | `score` | `board` (the default) hangs the score up as a scoreboard; `floor` leaves the panel on the floor. |
 | `touch` | `scroll` (the default) or `turn`. |
@@ -206,7 +211,7 @@ A page with no script keeps the flat drawing: render `drawKyogijo(options)` into
 - The view is a `group` named by the drawing's title, with the role description "3D view" (in Japanese, the same words), focusable, with `aria-keyshortcuts` and a description that gives the keys and what stands on the surface, with its heights in the rulebook's own unit.
 - The flat drawing keeps its own `role="img"`, title and description. The parts that stand up are decoration and hidden from a screen reader.
 - A viewpoint, a reset and the end of a drag or a run of keys are said in a polite live region ("End-on view", "Turned to 40 degrees, seen from 34 degrees above the floor"); a drag is not said as it goes.
-- With `prefers-reduced-motion` the view jumps between viewpoints instead of gliding, and nothing ever moves by itself: the auto-turn runs only after the reader presses Play or Space, or when the page's `autoPlay` asks (not for a reader who prefers reduced motion, whose view starts paused). Nothing is polled: the elements' transforms are written when the view changes, and a glide is half a second of animation frames.
+- With `prefers-reduced-motion` the view jumps between viewpoints instead of gliding, and nothing ever moves by itself: the auto-turn runs only after the reader presses Play or Space, or when the page's `autoPlay` asks (not for a reader who prefers reduced motion, whose view starts paused; and the demo's pointer never turns it for them). Nothing is polled: the elements' transforms are written when the view changes, and a glide is half a second of animation frames.
 - Focus is shown with a 3 px outline, and the controls are 44 pixels or more.
 
 ## Looks

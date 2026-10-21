@@ -18,7 +18,7 @@ export const KYOGIJO_ATTRIBUTES = [
   "home", "away", "home-abbr", "away-abbr", "home-score", "away-score", "home-penalties", "away-penalties", "score", "home-logo", "away-logo", "home-flag", "away-flag", "home-color", "away-color",
   "status", "competition", "date", "label", "winner", "home-side", "pageant", "description", "options",
   "loop", "speed", "autoplay", "controls", "trail",
-  "turn", "turn-view", "turn-controls", "turn-uprights", "turn-score", "turn-touch", "turn-venue", "turn-roof", "turn-autoplay", "turn-speed",
+  "turn", "turn-view", "turn-controls", "turn-uprights", "turn-score", "turn-touch", "turn-venue", "turn-roof", "turn-autoplay", "turn-speed", "turn-direction",
 ] as const;
 
 /** The attributes that are about a replay and not about the drawing. */
@@ -42,6 +42,8 @@ export function turnSettingsFromAttributes(read: (name: string) => string | null
   else if (auto !== null && auto !== "false") out.autoPlay = true;
   const speed = Number(read("turn-speed"));
   if (read("turn-speed") !== null && Number.isFinite(speed)) out.speed = speed;
+  const direction = read("turn-direction");
+  if (direction === "clockwise" || direction === "counterclockwise") out.direction = direction;
   return out;
 }
 

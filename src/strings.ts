@@ -824,6 +824,11 @@ export interface KyogijoWords {
     playOff: string;
     announcePlay: string;
     announcePause: string;
+    /** The Reverse button's name (pressed while the auto-turn goes clockwise), what it is for, and what is announced when the direction changes. */
+    reverse: string;
+    reverseLabel: string;
+    announceClockwise: string;
+    announceCounterclockwise: string;
     /** What is announced after a key or a button: {name} for a viewpoint, and the angles: {yaw} and {pitch} in degrees. */
     announce: string;
     announceAngle: string;
@@ -1320,7 +1325,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       keys: "A 3D view you can turn. Drag, or use the arrow keys, to turn and tilt it; plus and minus zoom; 1 to 4 pick a viewpoint; 0 or Home puts it back; Space starts and stops the auto-turn. Pinch, or hold Ctrl and scroll, to zoom.",
       overhead: "Overhead", broadcast: "Broadcast", end: "End-on", corner: "Low corner",
       reset: "Reset the view", turnLeft: "Turn left", turnRight: "Turn right", raise: "Tip the surface away", lower: "Tip the surface toward you", zoomIn: "Zoom in", zoomOut: "Zoom out",
-      play: "Auto-turn", playOn: "Start the auto-turn", playOff: "Pause the auto-turn", announcePlay: "Auto-turn on", announcePause: "Auto-turn paused",
+      play: "Auto-turn", playOn: "Start the auto-turn", playOff: "Pause the auto-turn", announcePlay: "Auto-turn on", announcePause: "Auto-turn paused", reverse: "Reverse", reverseLabel: "Turn the other way", announceClockwise: "Turning clockwise", announceCounterclockwise: "Turning counterclockwise",
       announce: "{name} view", announceAngle: "Turned to {yaw} degrees, seen from {pitch} degrees above the floor.",
       flat: "This browser cannot draw the 3D view, so the flat drawing is shown.",
       standing: "Standing on it, in the 3D view: {list}.", item: "{name} {h}", itemSag: "{name} {h} at the posts, {low} at the middle",
@@ -1880,7 +1885,7 @@ export const KYOGIJO_STRINGS: Record<Language, KyogijoWords> = {
       keys: "回して見られる3D表示です。ドラッグするか矢印キーで回転と傾きを変え、プラスとマイナスのキーで拡大と縮小、1から4のキーで視点を選び、0キーまたはHomeキーで元に戻し、スペースキーで自動回転を始めたり止めたりします。ピンチ操作、またはCtrlキーを押しながらのスクロールでも拡大・縮小できます。",
       overhead: "真上", broadcast: "中継カメラ", end: "エンド側から", corner: "低い角度から",
       reset: "元に戻す", turnLeft: "左へ回す", turnRight: "右へ回す", raise: "床面を奥へ傾ける", lower: "床面を手前へ傾ける", zoomIn: "拡大", zoomOut: "縮小",
-      play: "自動回転", playOn: "自動回転を始める", playOff: "自動回転を一時停止する", announcePlay: "自動回転を始めました", announcePause: "自動回転を一時停止しました",
+      play: "自動回転", playOn: "自動回転を始める", playOff: "自動回転を一時停止する", announcePlay: "自動回転を始めました", announcePause: "自動回転を一時停止しました", reverse: "逆回転", reverseLabel: "逆向きに回す", announceClockwise: "時計回りに回転しています", announceCounterclockwise: "反時計回りに回転しています",
       announce: "{name}の視点", announceAngle: "向きは{yaw}度、見下ろす角度は{pitch}度です。",
       flat: "このブラウザーでは3D表示ができないため、平面の図を表示しています。",
       standing: "3D表示で立って見えるもの：{list}。", item: "{name} {h}", itemSag: "{name} 支柱の位置で{h}（中央は{low}）",

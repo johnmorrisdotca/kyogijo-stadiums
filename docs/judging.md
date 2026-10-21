@@ -103,7 +103,7 @@ A seat with nobody in it counts as fitting. With `seatNames: true` and `chart: "
 
 `mountJudgingTurn(host, options, settings)` mounts the assignment as the package's [3D view](./turn.md): the same controls, keys, pointer, auto-turn and camera as every other, over the judo floor (one area for each mat side by side, or the one `mat` names). The judges' table and the five chairs stand on it (the table 75 cm high and the chairs 45 cm, ours), **a large numbered badge stands on the table in front of each judge** (a name card with `seatNames: true`; a badge where a name does not fit), and the mat's name is on a sign over the table. Badges, cards and sign **lean back to face the eye squarely** as the view is tipped (`Plane.lean`): a card that stands upright is seen foreshortened from above, and its type looks squeezed, so they are turned and never stretched, and read the same from every angle. The chart goes beside the view (`judgingChart`). `judgingTurnMarkup` is the still markup, for a server; `buildJudgingTurn` is the model.
 
-![The judges' table of a kata area in 3D, with a name card in front of each of the five judges and the mat's name on a sign over them, and the chart beside the view](./images/judging-3d-desk-light.webp)
+![The judges' table of a kata area in 3D, with a name card in front of each of the five judges and the mat's name on a sign over them, and the chart beside the view](./pictures/judging-3d-desk-light.webp)
 
 The view opens from the mat's side at a pitch of 42 degrees (`JUDGING_PRESETS.broadcast`), (the cards lean to face the eye, so the pitch does not squash their type). `focus: "bench"` fits the view to the judges' bench and makes the scene turn about it, so the cards are about three times larger on the screen than in the view of the whole floor. A name on a card keeps the same floor: type no smaller than 0.19 m on the floor, about 11 pixels at the opening view of a 960-pixel box. The view keeps its size through a whole turn, as every 3D view does: the camera's fit is one scale and one place for every angle, tested for the whole floor and for the bench. With several benches in view the scene turns about the middle of them and the view has a longer lens of its own (`TurnModel.lens`), so that a bench several metres off the axis does not swell as it swings toward the eye; `lens` in the settings overrides it.
 
@@ -155,7 +155,7 @@ A `<title>` that is a direct child of the root `<svg>` is the browser's tooltip 
 
 The plan-and-chart layout is the one to print, and `judgingPrint` lays it out on paper: **one mat to a page, on A4 or US letter**, always in the light colours (a dark theme is not printed), the picture scaled as a whole to the page's printable area and anchored at its top.
 
-![A4 page: the plan of a kata mat with the five judges' badges, and the chart of seat, name and ID under it](./images/judging-print-a4-desk-light.webp)
+![A4 page: the plan of a kata mat with the five judges' badges, and the chart of seat, name and ID under it](./pictures/judging-print-a4-desk-light.webp)
 
 ```ts
 import { JUDGING_PAPER, judgingPrint, judgingPrintSheets, judgingPrintStyle } from "@johnmorrisdotca/kyogijo-stadiums/judging";

@@ -102,6 +102,7 @@
       // Judging assignments: set the mats and who sits in which seat; the seats are numbers and the chart is the key (names can go on the seats too), in 2D and in 3D. Everything is in this page and its address: nothing is
       // sent anywhere and nothing is stored.
       import { JUDGING_SEATS, JUDGING_WORDS, drawJudging, judgingChart, judgingPrintSheets, judgingPrintStyle, judgingTable, mountJudgingBroadcast, mountJudgingTurn } from "./dist/judging-entry.js";
+      import { hoverOf, wayOf, writeWay } from "./turn-way.js";
       import { quietTitles } from "./quiet.js";
       quietTitles();
       import { TURN_PRESET_NAMES } from "./dist/turn-entry.js";
@@ -304,6 +305,7 @@
         if ($("orientation").value !== "auto") next.set("orientation", $("orientation").value);
         if ($("language").value === "ja") next.set("lang", "ja");
         if ($("theme").value !== "auto") next.set("theme", $("theme").value);
+        writeWay(next);
         history.replaceState(null, "", next.size === 0 ? location.pathname : `?${next}`);
       }
 
@@ -330,6 +332,7 @@
               stage.innerHTML = '<div id="three"></div>';
               turnKey = key;
               turn = mountJudgingBroadcast($("three"), o, { preset: state.viewpoint, onChange: (_, preset) => { if (preset !== undefined) state.viewpoint = preset; syncUrl(); } });
+              hoverOf($("three"), turn);
             } else turn.update(o);
           } else if (broadcast) {
             if (turn !== undefined) { turn.destroy(); turn = undefined; }
@@ -341,7 +344,7 @@
             if (turn === undefined) {
               stage.innerHTML = '<div class="pair"><div id="three"></div><div id="chart-side"></div></div>';
               turnKey = key;
-              turn = mountJudgingTurn($("three"), o, { preset: state.viewpoint, onChange: (_, preset) => { if (preset !== undefined) state.viewpoint = preset; syncUrl(); } });
+              turn = mountJudgingTurn($("three"), o, { preset: state.viewpoint, ...wayOf(syncUrl), onChange: (_, preset) => { if (preset !== undefined) state.viewpoint = preset; syncUrl(); } });
             } else turn.update(o);
             stage.querySelector(".pair").dataset.orientation = o.orientation;
             $("chart-side").innerHTML = html;

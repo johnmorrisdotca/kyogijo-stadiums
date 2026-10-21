@@ -2,6 +2,8 @@
 export { mountKyogijoTurn, mountTurn, turnSupported } from "./turn.dom.ts";
 export type { KyogijoTurn } from "./turn.dom.ts";
 export { buildTurn, floorOptions, openingView } from "./turn.model.ts";
+export { turnDirection } from "./turn.camera.ts";
+export type { TurnDirection } from "./turn.camera.ts";
 export type { TurnModel, TurnSettings } from "./turn.model.ts";
 export { layoutOf, planeMarkup, planeMatrix, turnMarkup, turnMarkupOf } from "./turn.markup.ts";
 export type { Layout } from "./turn.markup.ts";

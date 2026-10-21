@@ -47,7 +47,7 @@ describe("an animated WebP made from frames", () => {
     }
   });
 
-  it("is what the README shows: the moving pictures in docs/images are such files, 60 frames of 50 milliseconds, at the size of a picture and under their budget", () => {
+  it("is what the README shows: the moving pictures in docs/images are such files, 60 frames of 100 milliseconds, at the size of a picture and under their budget", () => {
     for (const name of ["turning-venue-desk-light", "turning-venue-desk-dark", "turning-hall-desk-light", "turning-hall-desk-dark"]) {
       const file = still(name);
       expect(file.toString("ascii", 0, 4), name).toBe("RIFF");
@@ -57,7 +57,7 @@ describe("an animated WebP made from frames", () => {
       expect(file[20] & 0x02, name).toBe(0x02);
       expect(canvasOf(file)[0], name).toBe(640);
       expect(file.length, name).toBeLessThan(1024 * 1024);
-      for (const [kind, , body] of list.filter(([k]) => k === "ANMF")) expect([kind, file.readUIntLE(body + 12, 3)], name).toEqual(["ANMF", 50]);
+      for (const [kind, , body] of list.filter(([k]) => k === "ANMF")) expect([kind, file.readUIntLE(body + 12, 3)], name).toEqual(["ANMF", 100]);
     }
   });
 });

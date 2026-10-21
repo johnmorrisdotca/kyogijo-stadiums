@@ -63,8 +63,8 @@ test("a viewpoint is a button, and moves the scene", async ({ page }, testInfo) 
 test("every control is a finger wide and no wider than the page", async ({ page }) => {
   await open(page, "?sport=tennis&view=3d&lang=en&help=off");
   const sizes = await page.locator(`${STAGE} .ky-turn-controls button`).evaluateAll((all) => all.map((b) => [Math.round(b.getBoundingClientRect().width), Math.round(b.getBoundingClientRect().height)]));
-  // Four viewpoints, six moves, the reset and the auto-turn.
-  expect(sizes.length).toBe(12);
+  // Four viewpoints, six moves, the reset, the auto-turn and Reverse.
+  expect(sizes.length).toBe(13);
   for (const [w, h] of sizes) {
     expect(w).toBeGreaterThanOrEqual(44);
     expect(h).toBeGreaterThanOrEqual(44);

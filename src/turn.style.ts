@@ -156,7 +156,7 @@ export const KYOGIJO_TURN_STYLE = `
 .ky-turn-group{display:flex;flex-wrap:wrap;gap:6px}
 .ky-turn-controls button{font:inherit;font-size:.9rem;font-weight:600;min-width:44px;min-height:44px;padding:0 12px;border-radius:999px;border:1px solid var(--ky-turn-rule);background:var(--ky-turn-chip);color:var(--ky-turn-ink);cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
 .ky-turn-controls button[aria-pressed=true]{background:var(--ky-turn-chip-on);color:var(--ky-turn-chip-on-ink);border-color:var(--ky-turn-chip-on)}
-.ky-turn-controls button[data-act]:not([data-act=reset]):not([data-act=play]){font-size:1.2rem}
+.ky-turn-controls button[data-act]:not([data-act=reset]):not([data-act=play]):not([data-act=reverse]){font-size:1.2rem}
 .ky-turn-controls button[data-act=play]{gap:.45em;padding:0 16px}
 .ky-turn-controls button[data-act=play] [data-glyph]{font-size:.8em;letter-spacing:-.1em}
 .ky-turn-controls button:focus-visible{outline:3px solid var(--ky-turn-ink);outline-offset:2px}

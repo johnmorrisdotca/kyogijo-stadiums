@@ -71,6 +71,7 @@
       import { drawKyogijo } from "./dist/index.js";
       import { STADIUMS, STADIUM_IDS, stadiumConfigs, stadiumKind, stadiumNames } from "./dist/stadiums-entry.js";
       import { mountKyogijoTurn } from "./dist/turn-entry.js";
+      import { hoverOf, wayOf, writeWay } from "./turn-way.js";
       import { quietTitles } from "./quiet.js";
       quietTitles();
 
@@ -217,6 +218,7 @@
         if ($("open").checked) next.set("open", "1");
         if ($("language").value === "ja") next.set("lang", "ja");
         if ($("theme").value !== "auto") next.set("theme", $("theme").value);
+        writeWay(next);
         history.replaceState(null, "", next.size === 0 ? location.pathname : `?${next}`);
       }
 
@@ -241,13 +243,14 @@
         document.body.dataset.view = $("view").value;
         try {
           if (three) {
-            const settings = { preset: $("viewpoint").value, ...($("roof").checked ? { venue: { roof: true, roofOpen: $("open").checked } } : {}) };
+            const settings = { preset: $("viewpoint").value, ...wayOf(syncUrl), ...($("roof").checked ? { venue: { roof: true, roofOpen: $("open").checked } } : {}) };
             const key = JSON.stringify([state.stadium, state.config, $("roof").checked, $("open").checked]);
             if (turn !== undefined && turnKey !== key) { turn.destroy(); turn = undefined; }
             if (turn === undefined) {
               stage.innerHTML = '<div id="three"></div>';
               turnKey = key;
               turn = mountKyogijoTurn($("three"), options, settings);
+              hoverOf($("three"), turn);
             } else {
               turn.update(options);
               turn.preset($("viewpoint").value);

@@ -5,7 +5,7 @@ import { hash } from "./format.ts";
 import { lengthUnit } from "./common.ts";
 import { convertLength } from "./units.ts";
 import { KYOGIJO_STRINGS } from "./strings.ts";
-import { TURN_DEFAULT, clampView, presetView, type PresetTable, type TurnPreset, type TurnView } from "./turn.camera.ts";
+import { TURN_DEFAULT, clampView, presetView, type PresetTable, type TurnDirection, type TurnPreset, type TurnView } from "./turn.camera.ts";
 import type { Plane } from "./turn.kit.ts";
 import { describeUprights, planesOf, uprightsFor, type UprightOptions, type Uprights } from "./uprights.ts";
 import { resolveCrowd } from "./crowd.ts";
@@ -52,6 +52,10 @@ export interface TurnSettings {
   autoPlay?: boolean | "force";
   /** Degrees of yaw a second the auto-turn goes by: 12 by default, positive turning the near side to the right as a drag to the right does, negative the other way. */
   speed?: number;
+  /** Which way the auto-turn goes: `"counterclockwise"` (the way it has always turned, the near side swinging to the viewer's right) by default, or `"clockwise"`. The Reverse button, `setDirection` and `update` change it; a negative `speed` reverses it too. */
+  direction?: TurnDirection;
+  /** Called with the direction when the Reverse button or `setDirection` changes it. */
+  onDirectionChange?: (direction: TurnDirection) => void;
   /** Called with `true` when the auto-turn starts and `false` when it stops, whatever stopped it. */
   onPlayChange?: (playing: boolean) => void;
   /** Called after the view has changed by a key, a button or the pointer, with the view and the viewpoint it is (`undefined` when it has been turned by hand). */

@@ -3,7 +3,7 @@
 // reduced motion gets jumps for glides, and where the browser cannot draw in 3D the flat drawing stays. Nothing is polled and nothing runs while the view is
 // still: the elements' `transform`s are written when the view changes, and a glide between viewpoints is a short run of animation frames.
 import { drawKyogijo } from "./draw.ts";
-import { STEP, TURN_PRESET_NAMES, clampView, drag, nearest, nudge, presetOf, presetView, step, type PresetTable, type TurnPreset, type TurnView } from "./turn.camera.ts";
+import { STEP, TURN_PRESET_NAMES, clampView, drag, nearest, nudge, presetOf, presetView, step, turnDirection, type PresetTable, type TurnDirection, type TurnPreset, type TurnView } from "./turn.camera.ts";
 import { buildTurn, floorOptions, openingView, turnWords, type TurnModel, type TurnSettings } from "./turn.model.ts";
 import { controlsMarkup, layoutOf, turnMarkupOf, worldMarkup, type Layout } from "./turn.markup.ts";
 import { KYOGIJO_TURN_STYLE } from "./turn.style.ts";
@@ -35,6 +35,10 @@ export interface KyogijoTurn<O = SurfaceOptions | ScoreOptions> {
   play(): boolean;
   /** Stop the auto-turn. */
   pause(): void;
+  /** Which way the auto-turn goes. */
+  direction(): TurnDirection;
+  /** Change which way the auto-turn goes, at once and without stopping it (the Reverse button does). */
+  setDirection(direction: TurnDirection): void;
   /** Start the auto-turn if it is stopped and stop it if it is running; it gives whether it is running now. */
   togglePlay(): boolean;
   /** The flat drawing that is the floor, or `null` after `destroy`. */
@@ -100,6 +104,8 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
       playing: false,
       play: () => false,
       pause: () => undefined,
+      direction: () => turnDirection(settings.direction),
+      setDirection: () => undefined,
       togglePlay: () => false,
       update: (next, change) => {
         if (change?.venue !== undefined) venue = { ...(typeof venue === "object" ? venue : {}), ...change.venue };
@@ -132,6 +138,7 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
   let lastTick: number | undefined;
   let advanced = false;
   const speed = typeof settings.speed === "number" && Number.isFinite(settings.speed) ? settings.speed : 12;
+  let way: TurnDirection = turnDirection(settings.direction);
 
   const calm = (): boolean => settings.motion === "none" || (settings.motion !== "smooth" && media?.matches === true);
 
@@ -263,7 +270,7 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
     lastTick = stamp;
     if (dt > 0) {
       stop();
-      view = clampView({ ...view, yaw: view.yaw - speed * dt });
+      view = clampView({ ...view, yaw: view.yaw - (way === "clockwise" ? -1 : 1) * speed * dt });
       shown = view;
       advanced = true;
       paint(shown);
@@ -288,6 +295,14 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
     }
     if (!quiet) say(next ? turnWords(model).announcePlay : turnWords(model).announcePause);
     settings.onPlayChange?.(next);
+  };
+  /** Change the direction; the Reverse button says which it is, and the page is told. */
+  const setWay = (next: TurnDirection, quiet = false): void => {
+    if (next === way) return;
+    way = next;
+    root.querySelector<HTMLButtonElement>("button[data-act=reverse]")?.setAttribute("aria-pressed", String(way === "clockwise"));
+    if (!quiet) say(way === "clockwise" ? turnWords(model).announceClockwise : turnWords(model).announceCounterclockwise);
+    settings.onDirectionChange?.(way);
   };
   // A view scrolled out of sight does not turn.
   let onScreen = true;
@@ -326,6 +341,7 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
       case "zoom-in": return go(step(view, { zoom: STEP.zoom }), 180, "none", true);
       case "zoom-out": return go(step(view, { zoom: 1 / STEP.zoom }), 180, "none", true);
       case "play": return void setPlaying(!playing);
+      case "reverse": return setWay(way === "clockwise" ? "counterclockwise" : "clockwise");
       case "reset": return toOpening();
       default:
     }
@@ -482,7 +498,7 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
       if (theme === "light" || theme === "dark") root.dataset.theme = theme;
       else root.removeAttribute("data-theme");
       const controls = root.querySelector(".ky-turn-controls");
-      if (controls !== null) controls.outerHTML = controlsMarkup(model, view, playing);
+      if (controls !== null) controls.outerHTML = controlsMarkup(model, view, playing, way);
       paint(shown);
       label();
     },
@@ -495,6 +511,10 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
     },
     pause() {
       setPlaying(false);
+    },
+    direction: () => way,
+    setDirection(next) {
+      setWay(turnDirection(next));
     },
     togglePlay() {
       setPlaying(!playing);

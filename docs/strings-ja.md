@@ -1293,6 +1293,10 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `turn.playOff` | Pause the auto-turn | 自動回転を一時停止する |
 | `turn.announcePlay` | Auto-turn on | 自動回転を始めました |
 | `turn.announcePause` | Auto-turn paused | 自動回転を一時停止しました |
+| `turn.reverse` | Reverse | 逆回転 |
+| `turn.reverseLabel` | Turn the other way | 逆向きに回す |
+| `turn.announceClockwise` | Turning clockwise | 時計回りに回転しています |
+| `turn.announceCounterclockwise` | Turning counterclockwise | 反時計回りに回転しています |
 | `turn.announce` | {name} view | {name}の視点 |
 | `turn.announceAngle` | Turned to {yaw} degrees, seen from {pitch} degrees above the floor. | 向きは{yaw}度、見下ろす角度は{pitch}度です。 |
 | `turn.flat` | This browser cannot draw the 3D view, so the flat drawing is shown. | このブラウザーでは3D表示ができないため、平面の図を表示しています。 |
@@ -1498,7 +1502,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `groupSurface` | Surface | 競技場 |
 | `groupTeams` | Teams | チーム |
 | `featureTitle` | The real arenas of the NHL | 実在のアリーナ：NHL |
-| `featureText` | Each arena is drawn in the outline of its building, as OpenStreetMap maps it, with a plausible bowl of the seats the sources give. It turns by itself: press any button while it does, drag it to take hold, or pause it. | 各アリーナは、OpenStreetMapに記録された建物の輪郭の内側に、公表されている座席数から推定したスタンドを重ねて描いています。自動で回転しますが、回転中でもボタンを押せます。ドラッグで操作でき、一時停止もできます。 |
+| `featureText` | Each arena is drawn in the outline of its building, as OpenStreetMap maps it, with a plausible bowl of the seats the sources give. It waits still and turns while the pointer is over it (a tap on a phone starts it, a second tap holds it): press any button while it does, drag it to take hold, or turn it the other way. | 各アリーナは、OpenStreetMapに記録された建物の輪郭の内側に、公表されている座席数から推定したスタンドを描いています。最初は静止していて、ポインターを重ねると回転します（スマートフォンではタップで回転し、もう一度タップすると止まります）。回転中でもボタンを押せます。ドラッグして手で回すこともでき、逆向きにも回せます。 |
 | `featureArena` | Arena | アリーナ |
 | `featureVenues` | All the real arenas, by division, with their facts | 実在のアリーナの一覧（ディビジョン別・情報つき） |
 | `featureHalls` | Tournament layouts in 3D | 3Dで見る大会向けレイアウト |

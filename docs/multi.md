@@ -13,9 +13,9 @@ console.log(layout.needs.length, layout.needs.width, layout.needs.area);
 // 28 14 392
 ```
 
-![Three judo contest areas in a row on one red floor of mats, dressed with a sample event's name, year and city, simple emblems and boards along the edges](./images/multi-judo-desk-light.webp)
+![Three judo contest areas in a row on one red floor of mats, dressed with a sample event's name, year and city, simple emblems and boards along the edges](./pictures/multi-judo-desk-light.webp)
 
-![Four table tennis areas in two rows of two under one scoreboard](./images/multi-tabletennis-desk-light.webp)
+![Four table tennis areas in two rows of two under one scoreboard](./pictures/multi-tabletennis-desk-light.webp)
 
 Each surface is the one `drawKyogijo` draws (a table, a court, a sheet, the sport's own several judo or karate areas), with its own lines, moved to its place: nothing is drawn a second way. The layout adds the floor, and, where the sport has them, the barriers, the officials' chairs, a scoreboard hung over the middle of the floor, the boards along its edges and the empty places for the event's own words and marks. It is one picture, with a title and a description for a screen reader, light and dark like every drawing, and [`multiTable`](#the-text-alternative) says the same thing as a table.
 
@@ -65,7 +65,7 @@ Every place for the event's own words and marks is an empty, dashed rectangle wi
 
 `sample: true` dresses the places as an event would: an invented event, "Kyogijo Open 2026 · Osaka" (in Japanese `競技場杯 2026 · 大阪`), on the floor and the boards, and a simple emblem of the package's own (a ring with a star, a diamond or waves) in each logo place; `sample: { event, year, city }` is your own. Nothing real is named or drawn: no event, brand, federation, sponsor or league. The demo's pictures and its default view are dressed this way, and its "Sample event content" box (`sample=0` in its address) shows the empty places again.
 
-![Three judo contest areas in a row on one red floor of mats with the places for the event's words and marks left empty and dashed, and dark boards along the edges](./images/multi-judo-empty-desk-light.webp)
+![Three judo contest areas in a row on one red floor of mats with the places for the event's words and marks left empty and dashed, and dark boards along the edges](./pictures/multi-judo-empty-desk-light.webp)
 
 The same three areas with the places left empty: the words and marks in the places, and the boards, are what an organiser configures.
 

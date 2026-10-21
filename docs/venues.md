@@ -4,7 +4,7 @@ An arena of the NHL drawn in the building it stands in: the outline of the build
 
 It is a plausible bowl, never a seat map. Nothing here is read or copied from a team's, a ticket seller's or a venue's own seating chart: no section, row or seat of a real plan is drawn, and no mark of a team or a league. The bowl has the right number of seats in the right number of tiers inside the right outline, and says so where it only looks right.
 
-![The Honda Center's hockey rink in the outline of its building seen from above: a grey building outline with a small arrow marked N at its top right, a bowl of two tiers of seats round the ice with a walk between them, and the rink's boards, lines and face-off circles in the middle](./images/venues-honda-desk-light.webp)
+![The Honda Center's hockey rink in the outline of its building seen from above: a grey building outline with a small arrow marked N at its top right, a bowl of two tiers of seats round the ice with a walk between them, and the rink's boards, lines and face-off circles in the middle](./pictures/venues-honda-desk-light.webp)
 
 ```ts
 import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";

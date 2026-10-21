@@ -78,6 +78,7 @@
       // A district: several real venues of one city on one plan, each at its real position and orientation (OpenStreetMap, ODbL 1.0), to look down on in 2D or turn around together in 3D. The page only asks the package to draw
       // (`drawDistrict`, `mountDistrictTurn`): the venues, the mode and the turn are options. What is chosen lives in the address; nothing is sent anywhere and nothing is stored.
       import { DISTRICT_IDS, districtMember, drawDistrict, mountDistrictTurn, planDistrict, unknownVenues, VENUE_ATTRIBUTION } from "./dist/district-entry.js";
+      import { hoverOf, wayOf, writeWay } from "./turn-way.js";
       import { STADIUMS } from "./dist/stadiums-entry.js";
       import { quietTitles } from "./quiet.js";
       quietTitles();
@@ -203,6 +204,7 @@
         if (!$("roof").checked) next.set("roof", "0");
         if ($("language").value === "ja") next.set("lang", "ja");
         if ($("theme").value !== "auto") next.set("theme", $("theme").value);
+        writeWay(next);
         history.replaceState(null, "", next.size === 0 ? location.pathname : `?${next}`);
       }
 
@@ -231,13 +233,14 @@
         try {
           const plan = planDistrict(options);
           if (three) {
-            const settings = { preset: $("viewpoint").value, venue: { roof: $("roof").checked } };
+            const settings = { preset: $("viewpoint").value, venue: { roof: $("roof").checked }, ...wayOf(syncUrl) };
             const key = JSON.stringify([state.venues, options.mode, options.turn, $("roof").checked]);
             if (turn !== undefined && turnKey !== key) { turn.destroy(); turn = undefined; }
             if (turn === undefined) {
               stage.innerHTML = '<div id="three"></div>';
               turnKey = key;
               turn = mountDistrictTurn($("three"), options, settings);
+              hoverOf($("three"), turn);
             } else {
               turn.update(options);
               turn.preset($("viewpoint").value);

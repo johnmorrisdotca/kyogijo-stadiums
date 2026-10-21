@@ -60,7 +60,7 @@ A ballpark (`kind: "park"`), so its frame is home plate's, as every ballpark's i
 
 ## Tokyo Dome
 
-![Tokyo Dome in 3D from a low corner: a ballpark with a lens-shaped air-supported roof of pale pieces over the stands and the field, and walls round the building](./images/stadiums-tokyo-dome-3d-desk-light.webp)
+![Tokyo Dome in 3D from a low corner: a ballpark with a lens-shaped air-supported roof of pale pieces over the stands and the field, and walls round the building](./pictures/stadiums-tokyo-dome-3d-desk-light.webp)
 
 A ballpark under an air-supported roof (`kind: "park"`): `drawKyogijo({ sport: "mlb", park: "tokyo-dome", crowd: { real: true } })`, with the fence at the distances published for the park in metres (100 to the poles, 110 to the power alleys, 122 to centre field: they were already the park's) and the stands behind it. Its Japanese name is `東京ドーム`.
 
@@ -79,7 +79,7 @@ A hall with a boxing ring in the middle (`kind: "hall"`): `drawKyogijo({ sport: 
 
 ## Koshien Stadium
 
-![Koshien Stadium in 3D from a low corner: an open-air ballpark with green ivy walls round one level of stands and no roof over the field](./images/stadiums-koshien-3d-desk-light.webp)
+![Koshien Stadium in 3D from a low corner: an open-air ballpark with green ivy walls round one level of stands and no roof over the field](./pictures/stadiums-koshien-3d-desk-light.webp)
 
 The ballpark of the high school tournaments, in the open air: `drawKyogijo({ sport: "mlb", park: "hanshin-koshien-stadium", crowd: { real: true } })`. Its Japanese name is `阪神甲子園球場` (the park's own short name, `甲子園球場`, is the package's `PARKS` name), and its fence is the park's published one (95 metres to the poles, 118 to the alleys and to centre field).
 

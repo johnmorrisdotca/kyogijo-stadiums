@@ -65,6 +65,7 @@
       // and in 3D. The page only places them: `board` in the options of the drawing and of the 3D view. The position and the rest live in the address; nothing is sent anywhere and nothing is stored.
       import { BOARD_POSITIONS, drawKyogijo } from "./dist/index.js";
       import { mountKyogijoTurn } from "./dist/turn-entry.js";
+      import { hoverOf, wayOf, writeWay } from "./turn-way.js";
       import { BOARDS } from "./boards-data.js";
       import { quietTitles } from "./quiet.js";
       quietTitles();
@@ -158,6 +159,7 @@
         if ($("cover").checked) next.set("cover", "1");
         if ($("language").value === "ja") next.set("lang", "ja");
         if ($("theme").value !== "auto") next.set("theme", $("theme").value);
+        writeWay(next);
         history.replaceState(null, "", next.size === 0 ? location.pathname : `?${next}`);
       }
 
@@ -180,7 +182,8 @@
             if (turn === undefined) {
               stage.innerHTML = '<div id="three"></div>';
               turnKey = key;
-              turn = mountKyogijoTurn($("three"), options, { preset: "broadcast" });
+              turn = mountKyogijoTurn($("three"), options, { preset: "broadcast", ...wayOf(syncUrl) });
+              hoverOf($("three"), turn);
             } else turn.update(options);
           } else {
             if (turn !== undefined) { turn.destroy(); turn = undefined; }

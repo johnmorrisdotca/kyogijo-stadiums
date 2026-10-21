@@ -57,6 +57,7 @@
       // What is chosen lives in the address (`?arena=`, `?lang=`, `?theme=`, `?map=plain`, `?speed=`, `?stages=`); nothing is sent anywhere and nothing is stored.
       import { VENUE_IDS, arenaById, arenaNameIn } from "./dist/index.js";
       import { mountFlythrough } from "./dist/flythrough-entry.js";
+      import { turnOnHover } from "./turn-way.js";
       import WORLD from "./chizu/world-entry.js";
       import { drawChizu } from "./chizu/draw-entry.js";
       import { projectPoint } from "./chizu/index.js";
@@ -84,7 +85,9 @@
       const words = () => WORDS[$("language").value];
       const setSelect = (id, value, allowed) => { if (allowed.includes(value)) $(id).value = value; };
       const state = { arena: VENUE_IDS.includes(params.get("arena")) ? params.get("arena") : VENUE_IDS[0] };
-      const speed = Number(params.get("speed")) > 0 ? Number(params.get("speed")) : 1;
+      // The fly-through waits still and flies while the pointer is over it (a tap on a phone starts it and a second tap holds it), at half the package's pace unless the address asks for another.
+      const FIRST_SPEED = 0.5;
+      const speed = Number(params.get("speed")) > 0 ? Number(params.get("speed")) : FIRST_SPEED;
       const stages = (params.get("stages") ?? "").split(",").filter((s) => ["map", "city", "arena", "bowl", "rink", "game"].includes(s));
       let trip;
 
@@ -117,7 +120,7 @@
         if ($("language").value === "ja") next.set("lang", "ja");
         if ($("theme").value !== "auto") next.set("theme", $("theme").value);
         if ($("map").value === "plain") next.set("map", "plain");
-        if (speed !== 1) next.set("speed", String(speed));
+        if (speed !== FIRST_SPEED) next.set("speed", String(speed));
         if (stages.length > 0) next.set("stages", stages.join(","));
         history.replaceState(null, "", next.size === 0 ? location.pathname : `?${next}`);
       }
@@ -135,8 +138,11 @@
             ...(theme === "auto" ? {} : { theme }),
             ...($("map").value === "chizu" ? { start: { map: WORLD, draw: drawChizu, project: projectPoint } } : {}),
             ...(stages.length > 0 ? { stages } : {}),
-          }, { speed, id: "trip-flight", onStage: (stage) => { document.body.dataset.stage = stage; } });
+          }, { speed, autoPlay: params.get("play") === "1", id: "trip-flight", onStage: (stage) => { document.body.dataset.stage = stage; } });
           if (keep !== undefined && trip.stages.includes(keep)) trip.goTo(keep);
+          const flight = trip;
+          const stage = $("trip").querySelector(".kf-stage");
+          if (stage !== null) turnOnHover(stage, { get playing() { return flight.playing; }, play: () => { flight.play(); return flight.playing; }, pause: () => flight.pause(), togglePlay: () => flight.toggle() }, () => 0);
         } catch (error) {
           $("error").textContent = String(error.message);
           $("error").hidden = false;

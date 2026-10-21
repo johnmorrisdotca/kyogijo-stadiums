@@ -6,7 +6,10 @@
 // Every picture stands on one of the family's shared backgrounds (scripts/family-backgrounds.ts, chosen in the demo's own Background menu, so the picture is the page as a reader can make it): the
 // surface is the drawing as the package makes it, and the background is the felt around it, in the dark or the light variant of the picture's scheme. Which background, and why, is at each shot.
 // Output: docs/images/<subject>-<desk|phone>-<light|dark>.webp.
+import { mkdirSync, readdirSync, renameSync } from "node:fs";
+import { dirname, join } from "node:path";
 import process from "node:process";
+import { fileURLToPath } from "node:url";
 import { takePictures } from "./readme-pictures-lib.mjs";
 
 const READY = '[data-testid="stage"][data-ready="true"] svg.kyogijo';
@@ -115,7 +118,7 @@ await takePictures({
     { subject: "judging-broadcast-3d", views: ["desk"], url: "/judging.html?view=broadcast&mat=1", ready: READY_HALLS_TURN, target: "#stage" },
     // The real venues (0.25.0): the Honda Center in the outline of its building, and the Saddledome under its saddle roof in 3D (the venues page's stage).
     { subject: "venues-honda", views: ["desk"], url: "/venues.html?venue=honda-center", ready: READY_HALLS, target: "#stage" },
-    { subject: "venues-saddledome-3d", views: ["desk"], url: "/venues.html?venue=scotiabank-saddledome&view=3d&viewpoint=broadcast&roof=1", ready: READY_HALLS_TURN, target: "#stage" },
+    { subject: "venues-saddledome-3d", views: ["desk"], url: "/venues.html?venue=scotiabank-saddledome&view=3d&viewpoint=broadcast&roof=1", ready: READY_HALLS_TURN, target: "#stage", height: 1300 },
     // The real stadiums and a district (0.26.0): BC Place's soccer pitch under its cable roof in 3D, and BC Place beside Rogers Arena in 3D (the stadiums and district pages' stage); their 2D drawings are in the docs gallery.
     { subject: "stadiums-bc-place-3d", views: ["desk"], url: "/stadiums.html?config=soccer&view=3d&viewpoint=broadcast&roof=1", ready: READY_HALLS_TURN, target: "#stage" },
     { subject: "district-bc-rogers-3d", views: ["desk"], url: "/district.html?view=3d&viewpoint=broadcast&labels=1", ready: READY_HALLS_TURN, target: "#stage" },
@@ -124,8 +127,8 @@ await takePictures({
     // Tokyo Dome (0.33.0): the ballpark under its air-supported roof in 3D from a low corner (the stadiums page's stage), and Tokyo Dome City, the Dome with Korakuen Hall, on one ground (the district page's stage).
     { subject: "stadiums-tokyo-dome-3d", views: ["desk"], url: "/stadiums.html?stadium=tokyo-dome&view=3d&viewpoint=corner&roof=1", ready: READY_HALLS_TURN, target: "#stage" },
     { subject: "district-tokyo-3d", views: ["desk"], url: "/district.html?venues=tokyo-dome,korakuen-hall&view=3d&viewpoint=corner&roof=1&labels=1", ready: READY_HALLS_TURN, target: "#stage" },
-    // Koshien Stadium (0.34.0): the open-air ballpark with its ivy walls from a low corner in 3D, no roof (the stadiums page's stage); small (scale 0.6) to stay in the 2 MB of the stills.
-    { subject: "stadiums-koshien-3d", views: ["desk"], url: "/stadiums.html?stadium=hanshin-koshien-stadium&view=3d&viewpoint=corner&roof=1", ready: READY_HALLS_TURN, target: "#stage", scale: 0.6 },
+    // Koshien Stadium (0.34.0): the open-air ballpark with its ivy walls from a low corner in 3D, no roof (the stadiums page's stage).
+    { subject: "stadiums-koshien-3d", views: ["desk"], url: "/stadiums.html?stadium=hanshin-koshien-stadium&view=3d&viewpoint=corner&roof=1", ready: READY_HALLS_TURN, target: "#stage" },
     // Boards over a surface (0.24.0): a results board over a pool, a bout presentation over a judo mat in 3D, a medal table in the corner of the athletics stadium (invented names; the boards page's stage).
     { subject: "boards-swimming", views: ["desk"], url: "/boards.html?example=swimming", ready: READY_HALLS, target: "#stage" },
     { subject: "boards-judo-3d", views: ["desk"], url: "/boards.html?example=judo&view=3d", ready: READY_HALLS_TURN, target: "#stage" },
@@ -173,3 +176,13 @@ await takePictures({
     },
   ],
 });
+
+// The pictures that only a page of docs/ shows are taken with the rest and then moved to docs/pictures: docs/images holds the README's pictures (the family's lint counts every file there against the README's 2 MB, and wants each one used in the README),
+// and a page of docs/ names its own pictures in `./pictures/`.
+const DOCS_ONLY = new Set(["boxing-ring-3d-desk", "district-tokyo-3d-desk", "judging-3d-desk", "judging-print-a4-desk", "mma-cage-desk", "multi-judo-desk", "multi-judo-empty-desk", "multi-tabletennis-desk", "prowrestling-ring-3d-desk", "stadiums-koshien-3d-desk", "stadiums-tokyo-dome-3d-desk", "venues-honda-desk", "wrestling-mat-3d-desk"]);
+const docs = join(dirname(fileURLToPath(import.meta.url)), "..", "docs");
+mkdirSync(join(docs, "pictures"), { recursive: true });
+for (const file of readdirSync(join(docs, "images"))) {
+  const subject = file.replace(/-(?:light|dark)\.\w+$/, "");
+  if (DOCS_ONLY.has(subject)) renameSync(join(docs, "images", file), join(docs, "pictures", file));
+}

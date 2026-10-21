@@ -206,9 +206,9 @@ test("flies for a reader who does not prefer reduced motion: one smooth camera, 
 
 test("plays and pauses: Play flies, Pause eases to a stop and the clock stays still, Space does the same, and a skip glides to the stage and stays there", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
-  await open(page, "?speed=4");
+  await open(page, "?speed=4&play=1");
   const play = page.locator(`${TRIP} button[data-act="play"]`);
-  // It plays on its own when the reader does not prefer reduced motion.
+  // It plays on its own when the address asks (`play=1`) and the reader does not prefer reduced motion; without, it waits still for the pointer or Play.
   await expect(play).toHaveAttribute("aria-pressed", "true");
   await expect.poll(() => page.evaluate(() => window.flythrough.time)).toBeGreaterThan(0.5);
   await play.click();
@@ -217,6 +217,8 @@ test("plays and pauses: Play flies, Pause eases to a stop and the clock stays st
   const held = await page.evaluate(() => window.flythrough.time);
   await page.waitForTimeout(500);
   expect(await page.evaluate(() => window.flythrough.time)).toBe(held);
+  // (The pointer is out of the way, or the page scrolling the stage under it would start the pointer's own turn.)
+  await page.mouse.move(2, 2);
   await page.locator(STAGE).focus();
   await page.keyboard.press(" ");
   await expect(play).toHaveAttribute("aria-pressed", "true");
@@ -387,4 +389,23 @@ test("flies every venue of the package from the map to the play and back, each w
     expect(row.camera.arena, row.arena).toBe(1);
   }
   expect(errors).toEqual([]);
+});
+
+test("waits still when it opens, flies while the pointer is over the stage and holds when it leaves, at half the pace unless the address asks for another", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await open(page, "");
+  const play = page.locator(`${TRIP} button[data-act="play"]`);
+  await expect(play).toHaveAttribute("aria-pressed", "false");
+  expect(await page.evaluate(() => window.flythrough.time)).toBe(0);
+  await page.waitForTimeout(500);
+  expect(await page.evaluate(() => window.flythrough.time)).toBe(0);
+  await page.locator(STAGE).hover();
+  await expect(play).toHaveAttribute("aria-pressed", "true");
+  await expect.poll(() => page.evaluate(() => window.flythrough.time)).toBeGreaterThan(0.2);
+  await page.mouse.move(2, 2);
+  await expect(play).toHaveAttribute("aria-pressed", "false");
+  // The pace is not in the address while it is the demo's own half speed.
+  expect(page.url()).not.toContain("speed=");
+  await open(page, "?speed=1");
+  await expect.poll(() => page.url()).toContain("speed=1");
 });

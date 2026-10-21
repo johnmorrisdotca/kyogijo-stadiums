@@ -7,6 +7,17 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.35.0] - 2026-10-20
+
+### Added
+
+- **The auto-turn goes either way** (`TurnSettings.direction`, `KyogijoTurn.direction()` and `setDirection()`, `turnDirection()`, `TurnSettings.onDirectionChange`, the element's `turn-direction`): `"counterclockwise"` is how it has always turned, the near side swinging to the viewer's right, and stays the default; `"clockwise"` is the other way. The 3D view has a **Reverse** button (`逆回転`), a toggle pressed while it goes clockwise, that changes the way at once without stopping the turn and says so aloud; a drag, the keys and the other buttons are not reversed. Every 3D view has it: the stadiums, the districts, the tournament layouts and the judging view too. [The 3D view](./docs/turn.md#the-auto-turn).
+
+### Changed
+
+- **The demo waits still and turns on the pointer** (`demo/turn-way.js`): every 3D page of the demo (the home page and its featured arena, the venues, stadiums, districts, tournament layouts, judging and boards pages) opens still, turns while the pointer is over the view, and holds when it leaves; a tap on a phone starts it and a second tap holds it; Auto-turn still starts it for good (`spin=on` on the venues page's address), and a reader who prefers reduced motion is never turned for by the pointer. The pages turn at half the old speed (6 degrees a second; the package's own default, 12, is unchanged), and Reverse is kept in the address as `dir=cw`. The replays play while the pointer is over them in the same way. The fly-through page opens still and flies on the pointer at `speed=0.5`, half the pace (`?play=1` has it fly from the start).
+- **The README opens on the still pictures again**: the two turning pictures at the head are gone, and each moving picture is beside its own section (the real venues, the tournament layouts, the fly-through), at half the speed (100 milliseconds a frame for the arenas, 260 for the fly-through); the real venues' pictures are taken again with the filled bowls of 0.34.1. The pictures only a page of docs shows are in `docs/pictures`, so that `docs/images` holds the README's own: the family's README lint (`scripts/readme-lint.mjs`) is again its own file with one rule added, the moving pictures' budget.
+
 ## [0.34.1] - 2026-10-20
 
 ### Fixed

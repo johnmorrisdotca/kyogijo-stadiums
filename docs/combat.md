@@ -14,7 +14,7 @@ console.log(RANGES.mma.map((range) => range.id).join(", "));
 // cage, gate, half
 ```
 
-![An MMA cage seen from above on its dark platform: a grey canvas inside an eight-sided fence with eight padded posts and two gates, steps at the top and bottom of the platform, and a score of two fighters on the canvas](./images/mma-cage-desk-light.webp)
+![An MMA cage seen from above on its dark platform: a grey canvas inside an eight-sided fence with eight padded posts and two gates, steps at the top and bottom of the platform, and a score of two fighters on the canvas](./pictures/mma-cage-desk-light.webp)
 
 The options are `budo` (`BudoStyle`), as for the budō, which the cage shares its engine with; `league` picks the rule. A figure is a published fact with its rule in [Sources](./sources.md#the-combat-sports); a figure no rule gives is marked **ours** there and in the code, and a figure that is common practice and not a rule is marked **typical**.
 
@@ -92,7 +92,7 @@ console.log(small.boxing?.size.toFixed(2), small.boxing?.steps.length);
 
 In 3D the platform is a solid block as the cage's is. The four posts are solid and stand in their corner's colour, 58 inches over the ring floor; each of the four ropes is a thin round bar along each side and, at each corner, out to its post by its extension, so that the canvas is in sight through them, and two ties a side hold the ropes in line. The steps are three blocks each. The same tests hold the size of the view as it turns, the order the parts are drawn in from every side and the scene inside its box (`src/boxing.test.ts`).
 
-![The ring in 3D from a low corner: a solid platform on the floor of the hall, four posts in red, blue and white with four ropes between them, and the steps](./images/boxing-ring-3d-desk-light.webp)
+![The ring in 3D from a low corner: a solid platform on the floor of the hall, four posts in red, blue and white with four ropes between them, and the steps](./pictures/boxing-ring-3d-desk-light.webp)
 
 ## Wrestling
 
@@ -124,7 +124,7 @@ console.log((college.wrestling!.circle / 0.3048).toFixed(0), college.wrestling?.
 
 In 3D the UWW's platform is a solid block with the mat as its top, in the order the other platforms are; a folkstyle mat lies on the floor and nothing stands on it.
 
-![The UWW's mat in 3D: a red protection area, an orange passivity band round a blue wrestling surface with the central circle, on a solid platform](./images/wrestling-mat-3d-desk-light.webp)
+![The UWW's mat in 3D: a red protection area, an orange passivity band round a blue wrestling surface with the central circle, on a solid platform](./pictures/wrestling-mat-3d-desk-light.webp)
 
 ## The professional wrestling ring
 
@@ -142,7 +142,7 @@ console.log((ring.prowrestling!.size / 0.3048).toFixed(0), ring.prowrestling?.st
 
 In 3D the ring stands as the boxing ring does, with three ropes and no ties between them.
 
-![The professional wrestling ring in 3D from a low corner: a solid platform, coloured corner posts, three ropes and steps at two corners](./images/prowrestling-ring-3d-desk-light.webp)
+![The professional wrestling ring in 3D from a low corner: a solid platform, coloured corner posts, three ropes and steps at two corners](./pictures/prowrestling-ring-3d-desk-light.webp)
 
 ## The demo
 
