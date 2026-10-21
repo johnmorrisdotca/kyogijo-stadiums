@@ -7,6 +7,8 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.33.0] - 2026-10-20
+
 ### Added
 
 - **Tokyo Dome City** ([the real stadiums](./docs/stadiums.md), [the district page](./docs/district.md)): **Tokyo Dome** (`park: "tokyo-dome"`, `東京ドーム`, 45,600 seats for baseball) and **Korakuen Hall** (`stadium: "korakuen-hall"` with `sport: "boxing"`, `後楽園ホール`, 1,403 seats and the balconies' standing places up to 2,005), each in the outline of its building from OpenStreetMap, side by side as a district (`["tokyo-dome", "korakuen-hall"]`).
