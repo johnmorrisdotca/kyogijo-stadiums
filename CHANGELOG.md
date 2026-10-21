@@ -7,6 +7,12 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.39.1] - 2026-10-21
+
+### Fixed
+
+- **Japanese wording, from a native-quality review**: spectator seating is `観客席` everywhere in the demo and the fly-through (the fly-through's Bowl stage and the venues page's Stands toggle were `客席`, and the "tiers" labels are now `観客席の層数`); the fly-through's Rink stage is `アイスリンク` (and the atlas's rink label), and its badge is `プレーのイメージ` (was `模擬プレー（イメージ）`); the night lighting is `夜間照明` and its toggle `夜間` (was `ナイト`, which also means a court colour and reads as "knight"); the centre-hung scoreboard is `センターハングビジョン（吊り下げ式スコアボード）` (`センタービジョン` reads as the centre-field screen in baseball); two fly-through sentences read more naturally. English is unchanged.
+
 ## [0.39.0] - 2026-10-21
 
 ### Added
