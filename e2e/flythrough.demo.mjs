@@ -283,7 +283,7 @@ test("draws light and dark, forced or following the device, with the credit and 
 
 test("speaks Japanese with the same stages, and a plain graticule when no map is given", async ({ page }) => {
   const { errors } = await open(page, "?lang=ja&map=plain");
-  await expect(page.locator(`${TRIP} button[data-stage]`)).toHaveText(["1. 地図", "2. 都市", "3. アリーナ", "4. 客席", "5. リンク", "6. 試合"]);
+  await expect(page.locator(`${TRIP} button[data-stage]`)).toHaveText(["1. 地図", "2. 都市", "3. アリーナ", "4. 観客席", "5. アイスリンク", "6. 試合"]);
   await expect(page.locator(`${TRIP} .kf-credit`)).toContainText("OpenStreetMap contributors");
   await expect(page.locator(`${TRIP} .kf-credit`)).not.toContainText("Natural Earth");
   await expect(page.locator(`${TRIP} .kf-caption`)).toContainText("にあります");

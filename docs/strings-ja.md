@@ -1352,7 +1352,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `turn.parts.ring-ropes` | ropes | ロープ |
 | `turn.parts.ring-posts` | corner posts | コーナーポスト |
 | `turn.parts.ribbon-boards` | LED ribbon boards | LEDリボンビジョン |
-| `turn.parts.hung-board` | centre-hung scoreboard | センタービジョン（吊り下げ式スコアボード） |
+| `turn.parts.hung-board` | centre-hung scoreboard | センターハングビジョン（吊り下げ式スコアボード） |
 | `rules.defensive-zone` | Defensive zone | ディフェンディングゾーン |
 | `rules.neutral-zone` | Neutral zone | ニュートラルゾーン |
 | `rules.offensive-zone` | Offensive zone | アタッキングゾーン |
@@ -1510,11 +1510,11 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `featureHalls` | Tournament layouts in 3D | 3Dで見る大会向けレイアウト |
 | `featureJudging` | Who judges where: the broadcast view | 審判の配置：中継ビュー |
 | `featureGroup` | What to show | 表示する要素 |
-| `p_stands` | Stands | 客席 |
+| `p_stands` | Stands | 観客席 |
 | `p_walls` | Walls | 壁 |
 | `p_roof` | Roof | 屋根 |
 | `p_boards` | LED boards | LEDビジョン |
-| `p_night` | Night | ナイト |
+| `p_night` | Night | 夜間 |
 | `p_lights` | Lights down | 場内暗転 |
 | `p_wash` | Surface light colour | 競技面の照明の色 |
 | `wash_none` | Surface light: none | 照明の色：なし |
@@ -1935,7 +1935,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `atlasLeagues` | Leagues | リーグ・大会 |
 | `atlasPitch` | Pitch | ピッチ |
 | `atlasPitchDefault` | no size published, drawn at the international size | 公表された寸法がないため、国際標準の寸法で描画 |
-| `atlasRink` | Rink | リンク |
+| `atlasRink` | Rink | アイスリンク |
 | `atlasCourt` | Court | コート |
 | `atlasSeats` | Seats | 座席数 |
 | `atlasSeats_hockey` | {n} for hockey | アイスホッケー{n}席 |

@@ -132,6 +132,6 @@ test("has the view and its buttons in sight at a laptop's size, and the links to
 test("is in Japanese on request: the title, the buttons and the arena's names", async ({ page }) => {
   await open(page, "?lang=ja", "reduce");
   await expect(page.locator("#feature-title")).toContainText("実在のアリーナ");
-  await expect(chip(page, "stands")).toHaveText("客席");
+  await expect(chip(page, "stands")).toHaveText("観客席");
   await expect(page.locator(at("feature-venue"))).toContainText("クライメット");
 });
