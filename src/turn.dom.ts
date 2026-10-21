@@ -494,6 +494,9 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
       if (model.board !== undefined) stage.insertAdjacentHTML("beforeend", turnBoardMarkup(model.board));
       stage.setAttribute("aria-label", model.title);
       root.querySelector(".ky-turn-help")!.textContent = `${turnWords(model).keys}${model.standing === "" ? "" : ` ${model.standing}`}`;
+      // The lighting is an attribute of the root, which the stylesheet reads: it changes with the scene, the view's turn is not touched.
+      if (model.lighting === undefined) root.removeAttribute("data-lighting");
+      else root.setAttribute("data-lighting", model.lighting);
       const theme = (model.options as SurfaceOptions).theme;
       if (theme === "light" || theme === "dark") root.dataset.theme = theme;
       else root.removeAttribute("data-theme");

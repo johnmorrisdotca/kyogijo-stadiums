@@ -184,3 +184,19 @@ test("shows the LED boards of a stadium or of Korakuen Hall on request, in the p
   await expect(page.locator(`${STAGE} .ky-up-hung-board`)).toHaveCount(0);
   expect(errors).toEqual([]);
 });
+
+test("lights a stadium as at night on request, in the plan and in 3D, and keeps the choice in the address", async ({ page }) => {
+  const { errors } = await open(page, "?stadium=bc-place");
+  await expect(page.locator(`${STAGE} svg.kyogijo .ky-night`)).toHaveCount(0);
+  await page.locator("#night").check();
+  await expect(page.locator(`${STAGE} svg.kyogijo .ky-night`)).toHaveCount(1);
+  expect(new URL(page.url()).searchParams.get("night")).toBe("1");
+  await page.goto("http://kyogijo.test/stadiums.html?stadium=lumen-field&view=3d&night=1&boards=1");
+  await page.waitForSelector(`${STAGE} .ky-turn`);
+  await expect(page.locator("#night")).toBeChecked();
+  await expect(page.locator(`${STAGE} .ky-turn`)).toHaveAttribute("data-lighting", "night");
+  await page.locator("#night").uncheck();
+  await expect(page.locator(`${STAGE} .ky-turn`)).not.toHaveAttribute("data-lighting", /.*/);
+  expect(new URL(page.url()).searchParams.get("night")).toBeNull();
+  expect(errors).toEqual([]);
+});

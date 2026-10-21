@@ -1,6 +1,6 @@
 // What a tournament layout is: several of the package's own surfaces (tables, courts, sheets, a judo floor's contest areas) laid out together on one floor for one large event, to scale, and the
 // hall floor that layout needs. Types only; the figures are in multi.data.ts and the working-out in multi.ts.
-import type { LedBoardOptions, Sport, SurfaceOptions } from "./types.ts";
+import type { LedBoardOptions, LightingOptions, Sport, SurfaceOptions } from "./types.ts";
 
 /** The unit a layout's lengths are written in: the one its rulebook prints. */
 export type MultiUnit = "m" | "ft";
@@ -209,7 +209,7 @@ export interface MultiOptions {
   /** The hall's floor: a key of `MULTI_VENUES`, a hall of `MULTI_VENUES` itself, or a floor of your own. The layout is set in it, and the drawing says whether it fits. */
   venue?: string | MultiVenue | { length: number; width: number; unit?: MultiUnit };
   /** A real stadium round the floor, to the same scale: the walls, the stands and the crowd the package draws for the sport. Off by default. */
-  stadium?: boolean | { crowd?: boolean; density?: number; roof?: boolean; shape?: "bowl" | "sides"; detail?: "fine" | "plain"; boards?: boolean | LedBoardOptions };
+  stadium?: boolean | { crowd?: boolean; density?: number; roof?: boolean; shape?: "bowl" | "sides"; detail?: "fine" | "plain"; boards?: boolean | LedBoardOptions; lighting?: LightingOptions };
   /** The empty places for the event's words and marks, and the boards: on by default; `false` draws neither. */
   slots?: boolean;
   /**

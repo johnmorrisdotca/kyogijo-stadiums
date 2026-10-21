@@ -287,6 +287,13 @@ export type SheetEnd = Side | "top" | "bottom";
 /** The shape of a venue's stands round the playing surface. */
 export type CrowdShape = "bowl" | "sides" | "horseshoe" | "grandstand";
 
+/**
+ * The lighting of a venue (`crowd.lighting` in the plan, `venue.lighting` in the 3D view): `"night"` (or `true`, or `{ preset: "night" }`) dims the house, lights the playing surface and shows small lights along the aisles and stairs, the ribbon
+ * boards and the scoreboard glowing, the exits and the concourse rim softly lit. The named presets are the base other lightings are added to; `false` is no lighting. Off by default.
+ */
+export type LightingPreset = "night";
+export type LightingOptions = LightingPreset | boolean | { preset?: LightingPreset };
+
 /** The patterns a ribbon board shows: `bands` (two bands of colour, in panels), `blocks` (a block of colour to a panel), `chevrons` (arrows running along it) or `waves`. */
 export type LedBoardPattern = "bands" | "blocks" | "chevrons" | "waves";
 
@@ -362,6 +369,8 @@ export interface CrowdOptions {
    * middle of the surface. `true` for both in the package's colours, or `{ ribbon, scoreboard, colors, pattern, score }`. Generic content only. Off by default. See `docs/boards.md`.
    */
   boards?: boolean | LedBoardOptions;
+  /** The lighting of the venue: `"night"` dims the house and lights the surface, the aisles, the boards and the exits. Off by default. See `docs/venues.md`. */
+  lighting?: LightingOptions;
 }
 
 /**

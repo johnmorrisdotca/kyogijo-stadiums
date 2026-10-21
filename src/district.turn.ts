@@ -7,7 +7,7 @@ import { n, plane, type Plane, type Upright } from "./turn.kit.ts";
 import { TURN_PRESETS, wrap, type PresetTable } from "./turn.camera.ts";
 import { mountTurn, type KyogijoTurn } from "./turn.dom.ts";
 import { turnMarkupOf } from "./turn.markup.ts";
-import { buildTurn, openingView, sceneBox, WORLD_PX, type TurnModel, type TurnSettings } from "./turn.model.ts";
+import { buildTurn, lightingOf, openingView, sceneBox, WORLD_PX, type TurnModel, type TurnSettings } from "./turn.model.ts";
 import { planesOf, type Uprights } from "./uprights.ts";
 import { FEET_PER_METRE } from "./geometry.ts";
 import { hullOf } from "./venues.geo.ts";
@@ -131,6 +131,7 @@ export function buildDistrictTurn(options: DistrictOptions, settings: DistrictTu
     defs: defs.join(""),
     crowdStyle,
     venue: true,
+    ...lightingOf(typeof settings.venue === "object" ? settings.venue : {}, undefined),
     look: undefined,
     planes,
     box,

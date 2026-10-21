@@ -1514,6 +1514,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `p_walls` | Walls | 壁 |
 | `p_roof` | Roof | 屋根 |
 | `p_boards` | LED boards | LEDビジョン |
+| `p_night` | Night | ナイト |
 | `p_building` | Building | 建物 |
 | `p_markings` | Markings | ライン |
 | `p_labels` | Labels | ラベル |

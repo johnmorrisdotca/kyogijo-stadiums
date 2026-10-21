@@ -177,7 +177,7 @@ export function turnMarkupOf(model: TurnModel, settings: TurnSettings = {}): str
   const theme = (model.options as SurfaceOptions).theme;
   const sport = (model.options as SurfaceOptions).sport;
   return (
-    `<div class="ky-turn" id="${esc(model.id)}" data-sport="${esc(String(sport))}" data-mode="3d" data-touch="${settings.touch === "turn" ? "turn" : "scroll"}" data-preset="${presetOf(view, model.presets ?? sport) ?? "custom"}"${theme === "light" || theme === "dark" ? ` data-theme="${theme}"` : ""} lang="${model.language}">` +
+    `<div class="ky-turn" id="${esc(model.id)}" data-sport="${esc(String(sport))}" data-mode="3d" data-touch="${settings.touch === "turn" ? "turn" : "scroll"}" data-preset="${presetOf(view, model.presets ?? sport) ?? "custom"}"${model.lighting === undefined ? "" : ` data-lighting="${model.lighting}"`}${theme === "light" || theme === "dark" ? ` data-theme="${theme}"` : ""} lang="${model.language}">` +
     sheet +
     `<div class="ky-turn-view" tabindex="0" role="group" aria-roledescription="${esc(words.region)}" aria-label="${esc(model.title)}" aria-describedby="${esc(model.id)}-help" aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown + - 0 1 2 3 4 Home Space"><div ${worldAttributes(model)}>${worldMarkup(model, layout)}</div>${model.board === undefined ? "" : turnBoardMarkup(model.board)}</div>` +
     `<p class="ky-turn-help" id="${esc(model.id)}-help">${esc(keys)}</p>` +

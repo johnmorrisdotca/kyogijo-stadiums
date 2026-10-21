@@ -38,14 +38,14 @@ const ofKind = (model: TurnModel, kind: string): Plane[] => model.planes.filter(
 const itemsOf = (model: TurnModel, kind: string) => model.uprights.items.filter((i) => i.kind === kind);
 const cross = (a: V3, b: V3): V3 => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
 
-const LOOK: Boards = { ribbon: true, scoreboard: true, colors: ["#ff0000", "#00ff00", "#0000ff"], pattern: "bands", score: [3, 2] };
+const LOOK: Boards = { ribbon: true, scoreboard: true, colors: ["#ff0000", "#00ff00", "#0000ff"], pattern: "bands", score: [3, 2], glow: false };
 
 describe("what the boards option asks for", () => {
   it("is nothing by default and when it is false, and both boards with the package's colours for true", () => {
     expect(resolveBoards(undefined)).toBeUndefined();
     expect(resolveBoards(false)).toBeUndefined();
     expect(resolveBoards({ ribbon: false, scoreboard: false })).toBeUndefined();
-    expect(resolveBoards(true)).toEqual({ ribbon: true, scoreboard: true, colors: [...BOARD_COLORS], pattern: "bands", score: [0, 0] });
+    expect(resolveBoards(true)).toEqual({ ribbon: true, scoreboard: true, colors: [...BOARD_COLORS], pattern: "bands", score: [0, 0], glow: false });
     expect(resolveBoards({ ribbon: false })).toMatchObject({ ribbon: false, scoreboard: true });
   });
 

@@ -13,7 +13,8 @@ import { resolveBoard, type ResolvedBoard } from "./overlay.ts";
 import type { VenueBuild, VenueSettings } from "./venue.ts";
 import type { UprightKind } from "./turn.kit.ts";
 import type { Box3 } from "./turn.camera.ts";
-import type { Language, ScoreOptions, SurfaceOptions } from "./types.ts";
+import { resolveLighting } from "./venue.lighting.ts";
+import type { Language, LightingOptions, LightingPreset, ScoreOptions, SurfaceOptions } from "./types.ts";
 
 /** What can be asked of a 3D view. */
 export interface TurnSettings {
@@ -88,6 +89,8 @@ export interface TurnModel {
   crowdStyle: string;
   /** Whether the venue is raised. */
   venue: boolean;
+  /** The lighting of the venue (`data-lighting` on the view's root, which the stylesheet reads), or `undefined`. */
+  lighting?: LightingPreset;
   /** The sport and look the floor is painted in, when it has one (a budō surface's mats): the planes of its room are painted in the same look. */
   look: { sport: string; look: string } | undefined;
   planes: Plane[];
@@ -109,6 +112,12 @@ export interface TurnModel {
   /** The board the options ask for (`board`), laid over the view: a layer of its own, never a plane of the scene. */
   board?: ResolvedBoard;
 }
+
+/** The lighting a venue is built with, as a model's field: the venue's own setting, else the crowd's, and none where there is no venue. */
+export const lightingOf = (venue: { lighting?: LightingOptions } | undefined, crowd: SurfaceOptions["crowd"]): { lighting?: LightingPreset } => {
+  const lighting = venue === undefined ? undefined : resolveLighting(venue.lighting !== undefined ? venue.lighting : resolveCrowd(crowd)?.lighting);
+  return lighting === undefined ? {} : { lighting };
+};
 
 /** The options with what makes the floor of a 3D view: the whole surface, lying wide, at its full size. */
 export function floorOptions(options: SurfaceOptions | ScoreOptions): SurfaceOptions | ScoreOptions {
@@ -227,6 +236,7 @@ export function buildTurn(options: SurfaceOptions | ScoreOptions, settings: Turn
     // The colours the crowd has in the flat drawing (which the floor no longer carries) are read from a small drawing of the same options.
     crowdStyle: uprights.defs === undefined ? "" : crowdVars(drawKyogijo({ ...asked, size: "badge", style: "none" } as unknown as SurfaceOptions)),
     venue: venue !== undefined,
+    ...lightingOf(venue, (asked as SurfaceOptions).crowd),
     look: lookOf(floor),
     planes,
     box,

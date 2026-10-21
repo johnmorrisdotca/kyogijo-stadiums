@@ -112,6 +112,41 @@ Where to say it: `crowd: { boards }` draws the plan and, in the 3D view, is read
 
 Every lit shape carries the class `u-led` in 3D (`ky-cr-led` in the plan), over the dark housing `u-led-bed`, so that a lighting layer can make the boards glow. The 3D view reads the venue's planes as kinds `ribbon` and `hung-board` (the uprights `ribbon-boards` and `hung-board`, said in words for a screen reader). The demo's [venues](https://johnmorrisdotca.github.io/kyogijo-stadiums/venues.html), [stadiums](https://johnmorrisdotca.github.io/kyogijo-stadiums/stadiums.html), [tournament layouts](https://johnmorrisdotca.github.io/kyogijo-stadiums/halls.html) and [district](https://johnmorrisdotca.github.io/kyogijo-stadiums/district.html) pages have an LED boards switch, kept in the address as `boards=1`.
 
+## Night lighting
+
+`lighting: "night"` lights a venue as at night: the house goes down, the playing surface stays lit, small lights show along the aisles and stairs, the [LED boards](#led-boards) glow, the exits are green and the windows, the coping and the lanes of the concourse are softly lit. It is off by default, and a drawing without it is exactly what it was. It is the first lighting of an option that later ones (a show's colours and washes) are added to: `lighting` is a preset name now (`"night"`, `true` and `{ preset: "night" }` are the same; `false` is none), and a preset will be what the next ones are chosen by.
+
+![The TD Garden in 3D at night, from the main camera: the seats dark, small lights along the aisles, green lights at the exits, the ribbon boards and the scoreboard glowing and the ice bright](./pictures/night-td-3d-desk-light.webp)
+
+```ts
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
+import { buildTurn } from "@johnmorrisdotca/kyogijo-stadiums/turn";
+
+const arena = { sport: "nhl", arena: "td-garden", crowd: { real: true } } as const;
+const model = buildTurn(arena, { venue: { boards: true, lighting: "night" } });
+console.log(model.lighting, model.planes.some((p) => p.id === "night-pool"));
+// night true
+const plan = drawKyogijo({ ...arena, crowd: { real: true, lighting: "night" } });
+console.log(plan.includes('class="ky-crowd ky-night"'), plan.includes('class="ky-cr-pool"'));
+// true true
+```
+
+What it is made of, so that it is cheap and nothing is worked out as the view turns: in 3D a veil over each plane of seats (`u-veil`), one flat plane on the floor round the surface (`night-pool`, a radial gradient that is clear over the middle, so that the markings stay as drawn), the aisle lines drawn as dotted lights (`ky-cr-aisle`) and every fourth, the vomitory, as a green exit light (`ky-cr-vom`), a halo under each lit board panel (`u-led-glow`), and the colours, which are custom properties of the view's root (`data-lighting="night"`: `--ky-night-aisle`, `--ky-night-exit` and `--ky-night-rim`, with the venue's own `--ky-cr-bed` and the rest set dark). The night rule sets the venue's colours itself, with more weight than the themes' rules, so the house is dark in the light theme and in the dark one, and the lights are at least seven to one against the seats in both. In the plan it is a veil over the stands (`ky-cr-veil`), the same lights and a pool of light round the surface; the boards are outside the dimmed group.
+
+| Where | How |
+| --- | --- |
+| The plan | `crowd: { lighting: "night" }`. |
+| The 3D view | `venue: { lighting: "night" }`, or the crowd's (the venue's wins, and `false` turns it off). `turn.update(options, { venue: { lighting } })` changes it while the view turns, without stopping it or sending it back. The root carries `data-lighting="night"`; `TurnModel.lighting` says it. |
+| A district | `venue: { lighting }` of the 3D view, one pool of light to each venue. |
+| A tournament hall | `stadium: { lighting }`, or `venue: { lighting }` in 3D. |
+| The usual stands | The same: any `crowd` has it, not only a real building. |
+
+The demo's venues page has a Night button beside LED boards, and the stadiums, tournament layouts and district pages a Night lighting checkbox; it is kept in the address as `night=1`.
+
+![The TD Garden's plan at night: the stands dark under a veil, dotted lights along the aisles, green lights where the vomitories reach the bowl, a pool of light round the ice and the ribbon lit along the upper tier](./pictures/night-td-plan-desk-light.webp)
+
+![Lumen Field at night from a low corner in the dark theme: dark stands with dotted aisle lights, glowing ribbons, a lit field and a lit scoreboard over it](./pictures/night-lumen-3d-desk-dark.webp)
+
 ## How the rink's orientation is found
 
 OpenStreetMap maps the ice inside three of these thirty-two buildings (TD Garden, the Xfinity Mobile Arena and PPG Paints Arena: `osm.ice` holds its outline), so their rinks lie as the ice does; for the other twenty-nine the rink's orientation is an inference from the building, and says so (`basis`):

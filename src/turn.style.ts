@@ -90,6 +90,16 @@ export const KYOGIJO_TURN_STYLE = `
 /* LED boards: the housing and the screen are dark; the lit parts (class u-led) carry their own colours, and are what a lighting layer makes glow. */
 .ky-turn .u-led-bed{fill:#0b0f14}
 .ky-turn .u-led-screen{fill:#06121d}
+/* Night: the house is down. The venue's own colours go dark in either theme (the page's theme is the page's), the seats under a veil, small lights show along the aisles, the exits are green, and the windows, the coping and the lanes of the concourse are softly lit. */
+.ky-turn[data-lighting=night]{--ky-cr-bed:#11151a;--ky-cr-empty:#2a313a;--ky-cr-gap:#020304;--ky-cr-conc:#171c22;--ky-cr-dim:1;--ky-up-fascia:#272c29;--ky-up-ground:#1d211e;--ky-night-aisle:#ffd9a3;--ky-night-exit:#7dffb0;--ky-night-rim:#ffe0b0}
+.ky-turn .u-veil{fill:#04060a;fill-opacity:.62}
+.ky-turn[data-lighting=night] .ky-cr-aisle{stroke:var(--ky-night-aisle);stroke-opacity:.95;stroke-dasharray:1.1 3.4;stroke-linecap:round}
+.ky-turn[data-lighting=night] .ky-cr-vom{stroke:var(--ky-night-exit);stroke-opacity:.6;stroke-dasharray:none}
+.ky-turn[data-lighting=night] .u-suite-win{fill:color-mix(in srgb,var(--ky-night-aisle) 50%,#2a2218)}
+.ky-turn[data-lighting=night] .u-coping{fill:color-mix(in srgb,var(--ky-night-rim) 55%,var(--ky-up-fascia))}
+.ky-turn[data-lighting=night] .u-suite-ledge{fill:color-mix(in srgb,var(--ky-night-rim) 45%,var(--ky-up-fascia))}
+.ky-turn[data-lighting=night] .u-clane{stroke:var(--ky-night-rim);stroke-opacity:.4}
+.ky-turn[data-lighting=night] .u-apron{fill:#30363e}
 .ky-turn .u-back{fill:color-mix(in srgb,var(--ky-up-fascia) 66%,var(--ky-cr-bed))}
 .ky-turn .u-backrib{stroke:var(--ky-cr-bed);stroke-width:.7;stroke-opacity:.7}
 .ky-turn .u-coping{fill:color-mix(in srgb,var(--ky-up-fascia) 70%,var(--ky-cr-conc))}

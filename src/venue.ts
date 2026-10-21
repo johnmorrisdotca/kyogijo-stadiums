@@ -7,11 +7,12 @@ import { patterns } from "./crowd.draw.ts";
 import { crowdStands } from "./draw.ts";
 import { groundById } from "./grounds.ts";
 import { ARC_STEPS, clipAround, clipConvex, clipSegment, areaOf, pointList, raked, slopeOf, stripsOf, tidy, type Cut, type Strip } from "./venue.geom.ts";
-import { apronPlanes, backEdges, backWall, concourseFloor, rimAt, suiteWall } from "./venue.fill.ts";
+import { APRON_RISE, apronPlanes, backEdges, backWall, concourseFloor, rimAt, suiteWall } from "./venue.fill.ts";
 import { firstHit, realBuilding } from "./venue.real.ts";
+import { lightPool, resolveLighting } from "./venue.lighting.ts";
 import { centreBoard, fasciaRibbon, hangsOver, ledStrip, resolveBoards, ribbonHigh, ribbonShare, tierLinks } from "./venue.boards.ts";
 import { n, shy, wall, type Plane, type Upright } from "./turn.kit.ts";
-import type { LedBoardOptions, SurfaceOptions } from "./types.ts";
+import type { LedBoardOptions, LightingOptions, SurfaceOptions } from "./types.ts";
 
 /** What can be asked of the venue. */
 export interface VenueSettings {
@@ -28,6 +29,11 @@ export interface VenueSettings {
    * colours, or `{ ribbon, scoreboard, colors, pattern, score }`. Generic content, never a logo, a sponsor or a real board's text. Off by default; it wins over the crowd's own `boards`, and `false` turns that one off. See `docs/boards.md`.
    */
   boards?: boolean | LedBoardOptions;
+  /**
+   * The lighting: `"night"` (or `true`, or `{ preset: "night" }`) dims the seats, lights the surface with a pool of light round it, shows small lights along the aisles and the exits, makes the boards glow and lights the rim of the concourse.
+   * Off by default; it wins over the crowd's own `lighting`, and `false` turns that one off. See `docs/venues.md`.
+   */
+  lighting?: LightingOptions;
   /** How finely the curves are cut: `low` a facet to each corner, `auto` (the default) three, `high` six; an oval is 12, 28 or 56 facets round. */
   detail?: Cut;
 }
@@ -112,6 +118,7 @@ export function standsVenueOf(stands: CrowdStands, crowd: Crowd, o: Pick<Surface
       if (s.kind === "away") svg += fine ? `<polygon fill="url(#${pid}-cr-a)" points="${points}"/>` : `<polygon class="u-blk-a" fill-opacity="${round(0.3 + 0.6 * density)}" points="${points}"/>`;
       else svg += fine ? `<polygon fill="url(#${pid}-cr-${s.kind === "tifo-home" ? "th" : "ta"})" points="${points}"/>` : `<polygon class="${s.kind === "tifo-home" ? "u-th" : "u-ta"}" points="${points}"/>`;
     }
+    if (night) svg += `<polygon class="u-veil" points="${pointList(corners)}"/>`;
     if (fine) {
       let plain = "";
       let vomitory = "";
@@ -124,7 +131,7 @@ export function standsVenueOf(stands: CrowdStands, crowd: Crowd, o: Pick<Surface
         else plain += d;
       });
       if (plain !== "") svg += `<path class="ky-cr-aisle" fill="none" stroke-width="1.1" d="${plain}"/>`;
-      if (vomitory !== "") svg += `<path class="ky-cr-aisle" fill="none" stroke-width="2.4" d="${vomitory}"/>`;
+      if (vomitory !== "") svg += `<path class="${night ? "ky-cr-aisle ky-cr-vom" : "ky-cr-aisle"}" fill="none" stroke-width="2.4" d="${vomitory}"/>`;
     }
     return svg;
   };
@@ -133,7 +140,8 @@ export function standsVenueOf(stands: CrowdStands, crowd: Crowd, o: Pick<Surface
   const chained = new Set<StandRing>();
   const links = tierLinks(stands);
   for (const l of links) chained.add(l.after);
-  const boards = resolveBoards(v.boards !== undefined ? v.boards : crowd.boards, { home: crowd.home, away: crowd.away });
+  const night = resolveLighting(v.lighting !== undefined ? v.lighting : crowd.lighting) === "night";
+  const boards = resolveBoards(v.boards !== undefined ? v.boards : crowd.boards, { home: crowd.home, away: crowd.away }, night);
   const ribbons: Plane[] = [];
   /** How far along the ribbon of one level the next piece of it starts, in feet, so that its panels carry on. */
   let run = 0;
@@ -216,6 +224,8 @@ export function standsVenueOf(stands: CrowdStands, crowd: Crowd, o: Pick<Surface
     }
   }
 
+  // The surface is lit: a pool of light on the floor round it, under the seats.
+  if (night) seatPlanes.push(lightPool("night-pool", stands.box, lift + APRON_RISE + 0.03));
   const items: Upright[] = [];
   if (seatPlanes.length > 0) items.push({ id: "stands", kind: "stands", at: centre, height: topOf(seatPlanes), planes: seatPlanes });
   if (ribbons.length > 0) items.push({ id: "ribbon-boards", kind: "ribbon-boards", at: centre, height: topOf(ribbons), planes: ribbons });

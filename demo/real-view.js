@@ -8,9 +8,9 @@ import { drawKyogijo } from "./dist/index.js";
 import { mountKyogijoTurn } from "./dist/turn-entry.js";
 import { hoverOf, wayOf, writeWay } from "./turn-way.js";
 
-/** The parts a reader can switch, in the order of the bar, with what each is by default: the stands on, the walls, the roof and the LED boards off (the bowl is seen), the building, the markings and the labels on. */
-export const PARTS = ["stands", "walls", "roof", "boards", "building", "markings", "labels"];
-const DEFAULTS = { stands: true, walls: false, roof: false, boards: false, building: true, markings: true, labels: true };
+/** The parts a reader can switch, in the order of the bar, with what each is by default: the stands on, the walls, the roof, the LED boards and the night lighting off (the bowl is seen), the building, the markings and the labels on. */
+export const PARTS = ["stands", "walls", "roof", "boards", "night", "building", "markings", "labels"];
+const DEFAULTS = { stands: true, walls: false, roof: false, boards: false, night: false, building: true, markings: true, labels: true };
 /** What the boards show when they are on: the package's own colours and a plain score (a demo's choice, not the library's default of 0 and 0). */
 const BOARDS = { score: [3, 2] };
 /** The viewpoints the 3D view has. */
@@ -42,7 +42,7 @@ export const REAL_VIEW_CSS = `
  * @param {HTMLElement} options.stage where the drawing or the 3D view goes
  * @param {HTMLElement} options.bar where the buttons go
  * @param {string} options.venue the venue (a key of `VENUES`) when the address names none
- * @param {() => { lang: string, words: Record<string, string>, theme: "light" | "dark" | undefined }} options.page the page's language, the words of the buttons (`p_stands`, `p_walls`, `p_roof`, `p_boards`, `p_building`, `p_markings`, `p_labels`, `view2d`, `view3d`, `group`) and the theme it forces
+ * @param {() => { lang: string, words: Record<string, string>, theme: "light" | "dark" | undefined }} options.page the page's language, the words of the buttons (`p_stands`, `p_walls`, `p_roof`, `p_boards`, `p_night`, `p_building`, `p_markings`, `p_labels`, `view2d`, `view3d`, `group`) and the theme it forces
  * @param {string} [options.prefix] the prefix of this view's parameters in the address
  * @param {boolean} [options.flat] whether the view can be flat (a `view` button); a view that cannot is always 3D
  * @param {string} [options.chipClass] a class for the buttons, for a page that has a style of its own for them
@@ -77,9 +77,9 @@ export function mountRealView({ stage, bar, venue, page, prefix = "", flat = tru
 
   const optionsNow = () => {
     const { lang, theme } = page();
-    return { sport: "nhl", arena: state.venue, crowd: { real: true, stands: state.stands, ...(state.boards ? { boards: BOARDS } : {}) }, language: lang, ...(theme === undefined ? {} : { theme }) };
+    return { sport: "nhl", arena: state.venue, crowd: { real: true, stands: state.stands, ...(state.boards ? { boards: BOARDS } : {}), ...(state.night ? { lighting: "night" } : {}) }, language: lang, ...(theme === undefined ? {} : { theme }) };
   };
-  const venueNow = () => ({ roof: state.roof, walls: state.walls, boards: state.boards ? BOARDS : false });
+  const venueNow = () => ({ roof: state.roof, walls: state.walls, boards: state.boards ? BOARDS : false, lighting: state.night ? "night" : false });
   const hidden = () => ["building", "markings", "labels"].filter((part) => !state[part]).join(" ");
 
   /** Write what differs from the usual into the address, under the prefix, and leave every other parameter as it is. */

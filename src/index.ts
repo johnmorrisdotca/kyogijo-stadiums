@@ -85,6 +85,8 @@ export type {
   CrowdOptions,
   LedBoardOptions,
   LedBoardPattern,
+  LightingOptions,
+  LightingPreset,
   CrowdShape,
   Detail,
   DirectionOptions,

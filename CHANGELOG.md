@@ -7,6 +7,16 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.38.0] - 2026-10-21
+
+### Added
+
+- **Night lighting** (`lighting: "night"`, [night lighting](./docs/venues.md#night-lighting), `src/venue.lighting.ts`): a venue lit as at night. The house goes down (a veil over the seats, the venue's colours set dark in the light theme and in the dark one), the playing surface stays lit with a pool of light round it that is clear over the markings, small lights show along the aisles and stairs, the exits (every fourth aisle, the vomitories) are green, the ribbon boards and the scoreboard of [the LED boards](./docs/venues.md#led-boards) glow with a halo under every panel, and the windows, the coping and the lanes of the concourse are softly lit. `venue: { lighting }` in the 3D view, `crowd: { lighting }` in the plan (and read by the 3D view where `venue.lighting` says nothing), `stadium: { lighting }` round a tournament hall; `"night"`, `true` and `{ preset: "night" }` are the same and `false` is none. It is the base later lightings are added to: the option is a preset name, and `TurnModel.lighting` and the view's `data-lighting` say which. Off by default, and a drawing without it is exactly what it was. Nothing is worked out again as the view turns: the lights are custom properties (`--ky-night-aisle`, `--ky-night-exit`, `--ky-night-rim`) and a few static shapes, one added plane (`night-pool`) to a venue; `turn.update(options, { venue: { lighting } })` changes it while the view turns. The lights are at least seven to one against the seats in both themes (a test holds it). New exports: `LightingOptions` and `LightingPreset`. About 3 KB of source in the one new module.
+- **A Night switch on the demo** (kept in the address as `night=1`): a button in the bar over the venues page's view and the home page's featured arena, which lights the plan and the 3D view and, in 3D, changes it without stopping or sending back the turn; a checkbox on the stadiums, tournament layouts and district pages.
+
+### Changed
+
+- **The plan's ribbon boards are outside the crowd's group** (`<g class="ky-cr-ribbon">` follows `<g class="ky-crowd">` and no longer sits inside it), so that the crowd's dimming and the night veil do not reach them.
 ## [0.37.0] - 2026-10-20
 
 ### Added

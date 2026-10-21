@@ -11,7 +11,7 @@ import { TURN_PRESETS, NET_PRESETS, wrap, type PresetTable } from "./turn.camera
 import { box, flat, n, plane, rect, shy, thinnest, wall, type Plane, type Rect, type Upright } from "./turn.kit.ts";
 import { mountTurn, type KyogijoTurn } from "./turn.dom.ts";
 import { turnMarkupOf } from "./turn.markup.ts";
-import { openingView, sceneBox, type TurnModel, type TurnSettings } from "./turn.model.ts";
+import { lightingOf, openingView, sceneBox, type TurnModel, type TurnSettings } from "./turn.model.ts";
 import { describeUprights, planesOf, uprightsFor, type UprightOptions, type Uprights } from "./uprights.ts";
 import { standsVenueOf } from "./venue.ts";
 import { isNetSport } from "./court.ts";
@@ -225,6 +225,7 @@ export function buildMultiTurn(options: MultiOptions, settings: TurnSettings = {
     defs,
     crowdStyle,
     venue: drawn.stands !== undefined,
+    ...(drawn.stands === undefined ? {} : lightingOf({ lighting: typeof settings.venue === "object" && settings.venue.lighting !== undefined ? settings.venue.lighting : drawn.stands.crowd.lighting }, undefined)),
     look: { sport: spec.sport, look: look ?? "plain" },
     planes,
     box: box3,

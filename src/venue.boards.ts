@@ -14,6 +14,8 @@ export interface Boards {
   colors: [string, string, string];
   pattern: LedBoardPattern;
   score: [number, number];
+  /** Each lit panel has a halo under it (the venue is lit as at night). */
+  glow: boolean;
 }
 
 /** The package's own colours of light: amber, blue and a white with a little blue in it. */
@@ -40,7 +42,7 @@ const COLOR = /^(#[0-9a-f]{3,8}|(?:rgb|hsl)a?\([\d\s.,%/-]{3,40}\)|[a-z]{3,24})$
 export const safeColor = (value: unknown): string | undefined => (typeof value === "string" && COLOR.test(value.trim()) ? value.trim() : undefined);
 
 /** The boards a `boards` option asks for (the crowd's `home` and `away` are the colours when it names none), or `undefined` for none. */
-export function resolveBoards(ask: boolean | LedBoardOptions | undefined | null, team: { home?: string; away?: string } = {}): Boards | undefined {
+export function resolveBoards(ask: boolean | LedBoardOptions | undefined | null, team: { home?: string; away?: string } = {}, glow = false): Boards | undefined {
   if (ask === undefined || ask === null || ask === false) return undefined;
   const o: LedBoardOptions = ask === true ? {} : ask;
   const given = (Array.isArray(o.colors) ? o.colors : [team.home, team.away]).map(safeColor).filter((c): c is string => c !== undefined).slice(0, 3);
@@ -52,6 +54,7 @@ export function resolveBoards(ask: boolean | LedBoardOptions | undefined | null,
     colors,
     pattern: BOARD_PATTERNS.includes(o.pattern as LedBoardPattern) ? (o.pattern as LedBoardPattern) : "bands",
     score: [whole(o.score?.[0]), whole(o.score?.[1])],
+    glow,
   };
   return boards.ribbon || boards.scoreboard ? boards : undefined;
 }
@@ -65,7 +68,7 @@ const loop = (pts: readonly Pt[]): string => `M${pts.map(at).join("L")}Z`;
  * A ribbon on a quad `[a, b, c, d]` of a plane (a and b along its lower edge, d and c along its upper): a dark housing with panels of light in it, in the pattern asked. `run` is how far along the ribbon this quad starts, in feet,
  * so that the panels carry on in the colour they were from one quad to the next. A quad that is not a quad is the housing alone.
  */
-export function ledStrip(corners: readonly Pt[], look: Pick<Boards, "colors" | "pattern">, run = 0): string {
+export function ledStrip(corners: readonly Pt[], look: Pick<Boards, "colors" | "pattern"> & { glow?: boolean }, run = 0): string {
   const bed = `<path class="u-led-bed" d="${loop(corners)}"/>`;
   if (corners.length !== 4) return bed;
   const [a, b, c, d] = corners;
@@ -91,7 +94,7 @@ export function ledStrip(corners: readonly Pt[], look: Pick<Boards, "colors" | "
       });
       paint(color, `M${pts.map(at).join("L")}`);
     });
-    const waves = [...lit].map(([color, shapes]) => `<path class="u-led" fill="none" stroke="${color}" stroke-width="${n(BOARD.ribbon * 0.2)}" stroke-linecap="round" stroke-linejoin="round" d="${shapes.join("")}"/>`);
+    const waves = [...lit].map(([color, shapes]) => (look.glow === true ? `<path class="u-led-glow" fill="none" stroke="${color}" stroke-opacity=".3" stroke-width="${n(BOARD.ribbon * 0.7)}" stroke-linecap="round" d="${shapes.join("")}"/>` : "") + `<path class="u-led" fill="none" stroke="${color}" stroke-width="${n(BOARD.ribbon * 0.2)}" stroke-linecap="round" stroke-linejoin="round" d="${shapes.join("")}"/>`);
     return bed + waves.join("");
   }
   for (let i = 0; i < panels; i += 1) {
@@ -112,7 +115,9 @@ export function ledStrip(corners: readonly Pt[], look: Pick<Boards, "colors" | "
       paint(other, loop([across(s0, mid + 0.03), across(s1, mid + 0.03), across(s1, hi), across(s0, hi)]));
     }
   }
-  return bed + [...lit].map(([color, shapes]) => `<path class="u-led" fill="${color}" d="${shapes.join("")}"/>`).join("");
+  // A halo under each colour's panels: the same shapes, stroked wide and faint, so that the light seems to spill over the housing and the wall beside it.
+  const halo = (color: string, shapes: string[]): string => (look.glow === true ? `<path class="u-led-glow" fill="${color}" fill-opacity=".3" stroke="${color}" stroke-opacity=".3" stroke-width="${n(BOARD.ribbon * 0.6)}" stroke-linejoin="round" d="${shapes.join("")}"/>` : "");
+  return bed + [...lit].map(([color, shapes]) => `${halo(color, shapes)}<path class="u-led" fill="${color}" d="${shapes.join("")}"/>`).join("");
 }
 
 /** The ribbon on a wall, `length` feet long and `height` feet high: the same strip, on a rectangle (its lower edge is the wall's lower edge). */
@@ -190,7 +195,8 @@ function boardFace(w: number, h: number, look: Boards): string {
   const [c0, c1, c2] = look.colors;
   const edge = Math.min(0.5, h * 0.06);
   const band = h * 0.1;
-  let svg = `<rect class="u-led-bed" width="${n(w)}" height="${n(h)}"/><rect class="u-led-screen" x="${n(edge)}" y="${n(edge)}" width="${n(w - 2 * edge)}" height="${n(h - 2 * edge)}"/>`;
+  const halo = look.glow ? `<rect class="u-led-glow" x="${n(-0.8)}" y="${n(-0.8)}" width="${n(w + 1.6)}" height="${n(h + 1.6)}" rx="1" fill="${c2}" fill-opacity=".2"/>` : "";
+  let svg = `${halo}<rect class="u-led-bed" width="${n(w)}" height="${n(h)}"/><rect class="u-led-screen" x="${n(edge)}" y="${n(edge)}" width="${n(w - 2 * edge)}" height="${n(h - 2 * edge)}"/>`;
   svg += `<path class="u-led" fill="${c2}" d="M${n(edge)} ${n(edge)}h${n(w - 2 * edge)}v${n(band)}h${n(-(w - 2 * edge))}zM${n(edge)} ${n(h - edge - band)}h${n(w - 2 * edge)}v${n(band)}h${n(-(w - 2 * edge))}z"/>`;
   const block = Math.min(w * 0.2, h * 0.5);
   const [yb, hb] = [h * 0.28, h * 0.44];
@@ -271,7 +277,8 @@ export function planRibbons(stands: CrowdStands, look: Boards): string {
   if (paths === "") return "";
   const cell = BOARD.panel;
   const lit = look.colors.map((color, k) => el("path", { class: "ky-cr-led", d: paths, fill: "none", stroke: color, "stroke-width": 2.2, "stroke-dasharray": `${cell} ${cell * 2}`, "stroke-dashoffset": -cell * k }));
-  return el("g", { class: "ky-cr-ribbon" }, el("path", { class: "ky-cr-led-line", d: paths, "stroke-width": 3.4 }) + lit.join(""));
+  const glow = look.glow ? look.colors.map((color, k) => el("path", { class: "ky-cr-led-glow", d: paths, fill: "none", stroke: color, "stroke-opacity": 0.3, "stroke-width": 7, "stroke-dasharray": `${cell} ${cell * 2}`, "stroke-dashoffset": -cell * k })).join("") : "";
+  return el("g", { class: "ky-cr-ribbon" }, el("path", { class: "ky-cr-led-line", d: paths, "stroke-width": 3.4 }) + glow + lit.join(""));
 }
 
 /** The scoreboard in the flat plan, as the board hangs over the surface seen from above: its dark cap with a line of light round it and its four edges' colours. */
@@ -285,7 +292,8 @@ export function planScoreboard(box: { x: number; y: number; w: number; h: number
   return el(
     "g",
     { class: "ky-cr-board" },
-    rect("ky-cr-led-bed", b) +
+    (look.glow ? rect("ky-cr-led-glow", { x: b.x - rim * 2, y: b.y - rim * 2, w: b.w + rim * 4, d: b.d + rim * 4 }, { fill: c2, "fill-opacity": 0.22 }) : "") +
+      rect("ky-cr-led-bed", b) +
       edge(inner.x, inner.y, inner.w, rim, c0) +
       edge(inner.x, inner.y + inner.d - rim, inner.w, rim, c1) +
       edge(inner.x, inner.y, rim, inner.d, c2) +
