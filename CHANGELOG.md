@@ -7,6 +7,14 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.39.0] - 2026-10-21
+
+### Added
+
+- **Lights down** (`lighting: "lightsDown"`, [lights down](./docs/venues.md#lights-down)): a show's house on the same `lighting` option as the night. The house is nearly black; each stair aisle is lit from above as a beam, drawn in the plane of the seats (so it follows the tier's rake) as a wide faint stroke, a narrower one and a bright core, which is the soft falloff on the steps either side, with two thin lit rails beside it (a vomitory has a broader beam) and the front of every step edged with a thin line of light; the boards glow as at night. In the plan the same, as `ky-cr-beam` and `ky-cr-edge` under a heavier veil. 3D, plan, a district, a tournament hall and the usual stands all take it.
+- **A wash of colour of light on the surface** (`lighting: { preset, wash }`): one flat plane over the playing surface in 3D (`light-wash`, with a rink's rounded corners) and a rectangle in the plan (`ky-cr-wash`), a radial gradient brighter over the middle (`WASH`: 0.46 to 0.26, never so much that the markings under it are lost, and a test holds it), with the night's pool of light taking the colour as well. `aisles` is the colour of the beams. Both take a CSS colour (anything else is ignored) or a name from `LIGHT_COLORS`: `white` (the beams' default), `amber`, `purple`, `magenta`, `blue`, `cyan`. `resolveLighting` now answers `{ preset, aisles, wash }`; `LightingPreset` is `"night" | "lightsDown"` and `LightingOptions` takes `{ preset, aisles, wash }`. `TurnModel.lighting` and the view's `data-lighting` say the preset (`"lightsDown"` is darker than `"night"` in the stylesheet). Off by default, and a drawing without lighting is exactly what it was; the presets, the chase and the team colours of the show-lighting plan are to come, on the same option. The beams, edges and wash are static shapes (colours baked in): nothing is worked out as the view turns.
+- **A Lights down button and a wash choice on the demo** (kept in the address as `lights=1` and `wash=purple`, `magenta`, `blue` or `white`): in the bar over the venues page's view and the home page's featured arena (Lights down and Night turn each other off; the beams take a colour that goes with the wash), and as a checkbox and a choice on the stadiums, tournament layouts and district pages. In 3D they change the lighting while the view turns, without stopping it or sending it back.
+
 ## [0.38.0] - 2026-10-21
 
 ### Added

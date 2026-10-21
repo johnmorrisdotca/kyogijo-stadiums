@@ -581,7 +581,7 @@ console.log(layout.needs.length, layout.needs.width);
 
 ### The real venues
 
-`crowd: { real: true }` draws an NHL arena in its building: the outline from OpenStreetMap, the rink lying along the building where it says so, and a plausible bowl of the seats, tiers and roof the sources give. All thirty-two arenas of the league, division by division ([the real venues](./docs/venues.md)). `boards: true` adds LED ribbon boards and a hung scoreboard, generic content ([LED boards](./docs/venues.md#led-boards)). In 3D the demo's [venues page](https://johnmorrisdotca.github.io/kyogijo-stadiums/venues.html) turns while the pointer is over it, with the stands, walls, roof, LED boards, night, building, markings and labels switched on the view while it turns.
+`crowd: { real: true }` draws an NHL arena in its building: the outline from OpenStreetMap, the rink lying along the building where it says so, and a plausible bowl of the seats, tiers and roof the sources give. All thirty-two arenas of the league, division by division ([the real venues](./docs/venues.md)). `boards: true` adds LED ribbon boards and a hung scoreboard, generic content ([LED boards](./docs/venues.md#led-boards)). In 3D the demo's [venues page](https://johnmorrisdotca.github.io/kyogijo-stadiums/venues.html) turns while the pointer is over it, with the stands, walls, roof, LED boards, night, lights down, building, markings and labels switched on the view while it turns.
 
 ```ts
 import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";

@@ -115,7 +115,7 @@ export interface TurnModel {
 
 /** The lighting a venue is built with, as a model's field: the venue's own setting, else the crowd's, and none where there is no venue. */
 export const lightingOf = (venue: { lighting?: LightingOptions } | undefined, crowd: SurfaceOptions["crowd"]): { lighting?: LightingPreset } => {
-  const lighting = venue === undefined ? undefined : resolveLighting(venue.lighting !== undefined ? venue.lighting : resolveCrowd(crowd)?.lighting);
+  const lighting = venue === undefined ? undefined : resolveLighting(venue.lighting !== undefined ? venue.lighting : resolveCrowd(crowd)?.lighting)?.preset;
   return lighting === undefined ? {} : { lighting };
 };
 

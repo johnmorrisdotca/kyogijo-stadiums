@@ -60,6 +60,8 @@
           <label class="check" id="open-row"><input id="open" type="checkbox" /><span id="l-open"></span></label>
           <label class="check" id="boards-row"><input id="boards" type="checkbox" data-testid="boards" /><span id="l-boards"></span></label>
           <label class="check" id="night-row"><input id="night" type="checkbox" data-testid="night" /><span id="l-night"></span></label>
+          <label class="check" id="lights-row"><input id="lights" type="checkbox" data-testid="lights" /><span id="l-lights"></span></label>
+          <label id="wash-row"><span id="l-wash"></span><select id="wash" data-testid="wash"><option value="none"></option><option value="purple"></option><option value="magenta"></option><option value="blue"></option><option value="white"></option></select></label>
           <label><span id="l-language"></span><select id="language"><option value="en">English</option><option value="ja">日本語</option></select></label>
           <label><span id="l-theme"></span><select id="theme"><option value="auto"></option><option value="light"></option><option value="dark"></option></select></label>
         </div>
@@ -71,6 +73,7 @@
       // The real stadiums: BC Place, Lumen Field, T-Mobile Park, Tokyo Dome, Koshien Stadium and Korakuen Hall, each drawn inside the outline of its building (OpenStreetMap, ODbL 1.0), the field lying as the sources say, with its roof and a plausible bowl of the seats of
       // each configuration. The page only asks the package to draw: `crowd: { real: true }` and a `stadium` (or a `park`) in the options. What is chosen lives in the address; nothing is sent anywhere and nothing is stored.
       import { drawKyogijo } from "./dist/index.js";
+      import { lightingFor } from "./lighting.js";
       import { STADIUMS, STADIUM_IDS, stadiumConfigs, stadiumKind, stadiumNames } from "./dist/stadiums-entry.js";
       import { mountKyogijoTurn } from "./dist/turn-entry.js";
       import { hoverOf, wayOf, writeWay } from "./turn-way.js";
@@ -84,7 +87,7 @@
           pageDescription: "BC Place, Lumen Field, T-Mobile Park, Tokyo Dome, Koshien Stadium and Korakuen Hall drawn inside the real outline of their buildings from OpenStreetMap, with their roofs, the field lying as the sources say and a plausible bowl of the seats of each configuration, in 2D and in 3D.",
           lede: "Each stadium is drawn inside the outline of its building, as OpenStreetMap maps it, with the field lying as the roof's opening, the pitch or the infield says and a bowl of the seats the sources give for each configuration. The bowl is a plausible one, never a seat map: no section, row or seat of a real plan, and no mark of a club, a league or a tournament.",
           back: "Back to the Kyogijo Stadiums demo", docs: "The real stadiums page of the docs", district: "Beside its neighbours, in the district view",
-          factsTitle: "What the drawing is made from", edit: "View", view: "View", viewpoint: "Viewpoint", roof: "Roof and walls (3D)", open: "Roof open (3D)", boards: "LED boards", night: "Night lighting", language: "Language", theme: "Theme", auto: "Follow the device", light: "Light", dark: "Dark",
+          factsTitle: "What the drawing is made from", edit: "View", view: "View", viewpoint: "Viewpoint", roof: "Roof and walls (3D)", open: "Roof open (3D)", boards: "LED boards", night: "Night lighting", lights: "Lights down", wash: "Surface light colour", wash_none: "none", wash_purple: "Purple", wash_magenta: "Magenta", wash_blue: "Blue", wash_white: "White", language: "Language", theme: "Theme", auto: "Follow the device", light: "Light", dark: "Dark",
           overhead: "Overhead", broadcast: "Broadcast", end: "End", corner: "Corner", formLabel: "How the stadium is shown",
           cfl: "Football field", nfl: "Football field", soccer: "Soccer pitch", mlb: "Baseball field", boxing: "Boxing ring",
           stadium: "Stadium", city: "City", seats: "Seats in this configuration", bowls: "Seating bowls", roofKind: "Roof", roofDetail: "The roof", orientation: "How the field lies", outline: "Building outline", pitch: "The field",
@@ -108,7 +111,7 @@
           pageDescription: "BCプレイス、ルーメン・フィールド、T-モバイル・パーク、東京ドーム、阪神甲子園球場、後楽園ホールを、OpenStreetMapの建物の輪郭の内側に描きます。屋根、資料に基づくフィールドの向き、構成ごとの座席数から推定したスタンドを、2Dと3Dで見られます。",
           lede: "スタジアムは、OpenStreetMapに記録された建物の輪郭の内側に、屋根の開口部・ピッチ・内野が示す向きにフィールドを置き、公表されている構成ごとの座席数からスタンドを推定して描いています。座席表ではありません。実際のブロック・列・座席は描いておらず、クラブ・リーグ・大会のマークもありません。",
           back: "競技場 Kyogijo Stadiums のデモに戻る", docs: "ドキュメントの「実在のスタジアム」ページ", district: "近くの会場と並べた地区の表示",
-          factsTitle: "この図の元になった情報", edit: "表示", view: "表示", viewpoint: "視点", roof: "屋根と壁（3D）", open: "屋根を開く（3D）", boards: "LEDビジョン", night: "ナイト照明", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク",
+          factsTitle: "この図の元になった情報", edit: "表示", view: "表示", viewpoint: "視点", roof: "屋根と壁（3D）", open: "屋根を開く（3D）", boards: "LEDビジョン", night: "ナイト照明", lights: "場内暗転", wash: "競技面の照明の色", wash_none: "なし", wash_purple: "紫", wash_magenta: "マゼンタ", wash_blue: "青", wash_white: "白", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク",
           overhead: "真上", broadcast: "中継", end: "エンド", corner: "コーナー", formLabel: "スタジアムの見せ方",
           cfl: "フットボール場", nfl: "フットボール場", soccer: "サッカー場", mlb: "野球場", boxing: "ボクシングのリング",
           stadium: "スタジアム", city: "都市", seats: "この構成の座席数", bowls: "客席の層", roofKind: "屋根", roofDetail: "屋根の詳細", orientation: "フィールドの向き", outline: "建物の輪郭", pitch: "フィールド",
@@ -143,7 +146,9 @@
       setSelect("language", params.get("lang"), ["en", "ja"]);
       $("roof").checked = params.get("roof") === "1" || params.get("open") === "1";
       $("boards").checked = params.get("boards") === "1";
-      $("night").checked = params.get("night") === "1";
+      $("night").checked = params.get("night") === "1" && params.get("lights") !== "1";
+      $("lights").checked = params.get("lights") === "1";
+      $("wash").value = ["purple", "magenta", "blue", "white"].includes(params.get("wash")) ? params.get("wash") : "none";
       $("open").checked = params.get("open") === "1";
 
       const nameOf = (id) => stadiumNames(STADIUMS[id])[$("language").value];
@@ -151,8 +156,9 @@
 
       function labelPage() {
         const w = words();
-        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["back", "back"], ["docs", "docs"], ["district", "district"], ["l-facts", "factsTitle"], ["l-edit", "edit"], ["l-view", "view"], ["l-viewpoint", "viewpoint"], ["l-roof", "roof"], ["l-open", "open"], ["l-boards", "boards"], ["l-night", "night"], ["l-language", "language"], ["l-theme", "theme"], ["credit", "credit"]]) $(id).textContent = w[key];
+        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["back", "back"], ["docs", "docs"], ["district", "district"], ["l-facts", "factsTitle"], ["l-edit", "edit"], ["l-view", "view"], ["l-viewpoint", "viewpoint"], ["l-roof", "roof"], ["l-open", "open"], ["l-boards", "boards"], ["l-night", "night"], ["l-lights", "lights"], ["l-wash", "wash"], ["l-language", "language"], ["l-theme", "theme"], ["credit", "credit"]]) $(id).textContent = w[key];
         for (const select of ["viewpoint", "theme"]) for (const option of $(select).options) option.textContent = w[option.value];
+        for (const option of $("wash").options) option.textContent = w[`wash_${option.value}`];
         document.documentElement.lang = $("language").value;
         document.title = w.pageTitle;
         document.querySelector('meta[name="description"]').setAttribute("content", w.pageDescription);
@@ -222,16 +228,21 @@
         if ($("open").checked) next.set("open", "1");
         if ($("boards").checked) next.set("boards", "1");
         if ($("night").checked) next.set("night", "1");
+        if ($("lights").checked) next.set("lights", "1");
+        if ($("wash").value !== "none") next.set("wash", $("wash").value);
         if ($("language").value === "ja") next.set("lang", "ja");
         if ($("theme").value !== "auto") next.set("theme", $("theme").value);
         writeWay(next);
         history.replaceState(null, "", next.size === 0 ? location.pathname : `?${next}`);
       }
 
+      /** The lighting the switches say: Night or Lights down (one at a time) and the colour of light on the surface. */
+      const lightingNow = () => lightingFor({ night: $("night").checked, lights: $("lights").checked, wash: $("wash").value });
+
       /** The options a stadium and a configuration are drawn from: a ballpark by its `park`, any other by its `stadium`. */
       function optionsOf(theme) {
         const park = stadiumKind(STADIUMS[state.stadium]) === "park";
-        return { sport: state.config, ...(park ? { park: state.stadium } : { stadium: state.stadium }), crowd: { real: true, ...($("boards").checked ? { boards: { score: [3, 2] } } : {}), ...($("night").checked ? { lighting: "night" } : {}) }, language: $("language").value, ...(theme === "auto" ? {} : { theme }) };
+        return { sport: state.config, ...(park ? { park: state.stadium } : { stadium: state.stadium }), crowd: { real: true, ...($("boards").checked ? { boards: { score: [3, 2] } } : {}), ...(lightingNow() === false ? {} : { lighting: lightingNow() }) }, language: $("language").value, ...(theme === "auto" ? {} : { theme }) };
       }
 
       function draw() {
@@ -297,7 +308,10 @@
         for (const other of $("tabs").children) other.setAttribute("aria-selected", String(other === button));
         draw();
       });
-      for (const id of ["view", "viewpoint", "roof", "open", "boards", "night", "theme"]) $(id).addEventListener("input", draw);
+      // Night and Lights down are two lightings, one at a time (these run before the page draws again).
+      $("night").addEventListener("input", () => { if ($("night").checked) $("lights").checked = false; });
+      $("lights").addEventListener("input", () => { if ($("lights").checked) $("night").checked = false; });
+      for (const id of ["view", "viewpoint", "roof", "open", "boards", "night", "lights", "wash", "theme"]) $(id).addEventListener("input", draw);
       $("language").addEventListener("input", () => { labelPage(); draw(); });
       draw();
     </script>

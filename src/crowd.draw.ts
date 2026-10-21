@@ -4,7 +4,8 @@
 // the same crowd. Written for this package; no photograph or other drawing was copied.
 import { el, num } from "./format.ts";
 import { hangsOver, planRibbons, planScoreboard, resolveBoards } from "./venue.boards.ts";
-import { POOL, resolveLighting } from "./venue.lighting.ts";
+import { NHL } from "./geometry.ts";
+import { POOL, WASH, beamSvg, resolveLighting } from "./venue.lighting.ts";
 import { NORTH_AT, generator, outlinePath, type Crowd, type CrowdStands, type Pt, type RealShell, type StandRing, type StandSector } from "./crowd.ts";
 
 /** The width and the height of a tile of the crowd, in feet, and the seats' pitch. */
@@ -200,9 +201,21 @@ export function drawCrowd(stands: CrowdStands, o: DrawInput): { defs: string; ma
   }
   for (const s of stands.sectors) body += sector(s, id, fine, density);
   // The house is down: a dark veil over the seats, under the aisles' lights.
-  const night = resolveLighting(crowd.lighting) === "night" && stands.gallery !== true;
-  if (night) for (const ring of stands.rings) body += el("path", { class: "ky-cr-veil", d: path(ring) });
-  if (fine) for (const ring of stands.rings) body += stands.gallery === true ? "" : rows(ring) + aisles(ring, night);
+  const light = stands.gallery === true ? undefined : resolveLighting(crowd.lighting);
+  const night = light?.preset === "night";
+  const down = light?.preset === "lightsDown";
+  if (light !== undefined) for (const ring of stands.rings) body += el("path", { class: down ? "ky-cr-veil ky-cr-veil-down" : "ky-cr-veil", d: path(ring) });
+  if (fine) {
+    for (const ring of stands.rings) {
+      if (stands.gallery === true) continue;
+      if (!down || light === undefined) body += rows(ring) + aisles(ring, night);
+      else {
+        // The lights down: the front of each tier edged with light, each stair aisle a beam from above with its rails (a vomitory a broader one).
+        body += rows(ring) + (ring.hole === null ? "" : el("path", { class: "ky-cr-edge", d: outlinePath(ring.hole), fill: "none", stroke: light.aisles, "stroke-opacity": 0.6, "stroke-width": 0.6 }));
+        ring.aisles.forEach(([[x0, y0], [x1, y1]], i) => (body += beamSvg([x0, y0], [x1, y1], light.aisles, "ky-cr-beam", i % 4 === 0)));
+      }
+    }
+  }
   // Depth: the front wall of a tier throws a shade on its first rows (and the ground in front of it), the roof's edge on the last rows of the upper tier.
   // A gallery's railing: a line along its front edge, over the seats.
   if (stands.gallery === true) for (const ring of stands.rings) if (ring.hole !== null) body += el("path", { class: "ky-bud-rail", d: outlinePath(ring.hole), fill: "none" });
@@ -213,15 +226,20 @@ export function drawCrowd(stands: CrowdStands, o: DrawInput): { defs: string; ma
     }
   }
   // The LED boards: a lit line along the front of the upper tiers, and the scoreboard over the middle of the surface (over it, in `over`).
-  const boards = resolveBoards(crowd.boards, { home: crowd.home, away: crowd.away }, night);
+  const boards = resolveBoards(crowd.boards, { home: crowd.home, away: crowd.away }, light !== undefined);
   const lit = boards?.ribbon === true ? planRibbons(stands, boards) : "";
   if (boards?.scoreboard === true && hangsOver(stands.sport)) over += planScoreboard(stands.box, boards);
   // The surface is lit: a pool of light round it, clear over the markings.
   let pool = "";
+  if (light?.wash !== undefined) {
+    const b = stands.box;
+    pool += el("radialGradient", { id: `${id}-wash`, cx: 0.5, cy: 0.5, r: 0.72 }, el("stop", { offset: 0, "stop-color": light.wash, "stop-opacity": WASH.middle }) + el("stop", { offset: 1, "stop-color": light.wash, "stop-opacity": WASH.edge }));
+    over += el("rect", { class: "ky-cr-wash", x: n1(b.x), y: n1(b.y), width: n1(b.w), height: n1(b.h), rx: stands.sport === "nhl" ? NHL.cornerRadius : undefined, fill: `url(#${id}-wash)` });
+  }
   if (night) {
     const b = stands.box;
     const [w, h] = [b.w + 2 * POOL.reach, b.h + 2 * POOL.reach];
-    pool = el("radialGradient", { id: `${id}-pool`, cx: 0.5, cy: 0.5, r: 0.5 }, [[0, 0], [POOL.edge - 0.12, 0], [POOL.edge, POOL.strength], [1, 0]].map(([offset, opacity]) => el("stop", { offset, "stop-color": "#fff4dc", "stop-opacity": opacity })).join(""));
+    pool += el("radialGradient", { id: `${id}-pool`, cx: 0.5, cy: 0.5, r: 0.5 }, [[0, 0], [POOL.edge - 0.12, 0], [POOL.edge, POOL.strength], [1, 0]].map(([offset, opacity]) => el("stop", { offset, "stop-color": "#fff4dc", "stop-opacity": opacity })).join(""));
     over += el("rect", { class: "ky-cr-pool", x: n1(b.x - POOL.reach), y: n1(b.y - POOL.reach), width: n1(w), height: n1(h), fill: `url(#${id}-pool)` });
   }
   for (const [x0, y0, x1, y1] of stands.covers) body += el("rect", { class: o.ground, x: n1(x0), y: n1(y0), width: n1(x1 - x0), height: n1(y1 - y0) });
@@ -229,7 +247,7 @@ export function drawCrowd(stands: CrowdStands, o: DrawInput): { defs: string; ma
     const [x0, y0, x1, y1] = g.box;
     body += el("rect", { class: `ky-cr-${g.kind}`, x: n1(x0), y: n1(y0), width: n1(x1 - x0), height: n1(y1 - y0), rx: g.kind === "bench" ? 1 : undefined });
   }
-  return { defs: (fine && (stands.gallery !== true || density > 0) ? patterns(id, crowd, density, tifo.home || tifo.away ? tifo : undefined, stands.gallery === true || stands.real !== undefined) : "") + pool, markup: el("g", { class: night ? "ky-crowd ky-night" : "ky-crowd" }, body) + lit, over };
+  return { defs: (fine && (stands.gallery !== true || density > 0) ? patterns(id, crowd, density, tifo.home || tifo.away ? tifo : undefined, stands.gallery === true || stands.real !== undefined) : "") + pool, markup: el("g", { class: down ? "ky-crowd ky-night ky-down" : night ? "ky-crowd ky-night" : "ky-crowd" }, body) + lit, over };
 }
 
 /** A block of visitors or a card display, a polygon over the band it is in. */
@@ -272,6 +290,8 @@ export const KYOGIJO_CROWD_STYLE = `
 .kyogijo .ky-cr-yard{stroke:var(--ky-line);stroke-opacity:.5;fill:none}
 .kyogijo .ky-night{--ky-cr-bed:#11151a;--ky-cr-empty:#2a313a;--ky-cr-gap:#020304;--ky-cr-conc:#171c22;--ky-cr-rim:#07090c}
 .kyogijo .ky-cr-veil{fill:#04060a;fill-opacity:.6}
+.kyogijo .ky-cr-veil-down{fill-opacity:.8}
+.kyogijo .ky-cr-beam,.kyogijo .ky-cr-edge{stroke-linecap:butt}
 .kyogijo .ky-night .ky-cr-aisle{stroke:#ffd9a3;stroke-opacity:.95;stroke-dasharray:1.1 3.4;stroke-linecap:round}
 .kyogijo .ky-night .ky-cr-vom{stroke:#7dffb0;stroke-opacity:.6;stroke-dasharray:none}
 .kyogijo .ky-night .ky-cr-shell{fill:#171c22}

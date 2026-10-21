@@ -114,7 +114,7 @@ Every lit shape carries the class `u-led` in 3D (`ky-cr-led` in the plan), over 
 
 ## Night lighting
 
-`lighting: "night"` lights a venue as at night: the house goes down, the playing surface stays lit, small lights show along the aisles and stairs, the [LED boards](#led-boards) glow, the exits are green and the windows, the coping and the lanes of the concourse are softly lit. It is off by default, and a drawing without it is exactly what it was. It is the first lighting of an option that later ones (a show's colours and washes) are added to: `lighting` is a preset name now (`"night"`, `true` and `{ preset: "night" }` are the same; `false` is none), and a preset will be what the next ones are chosen by.
+`lighting: "night"` lights a venue as at night (and [lights down](#lights-down) is a show's): the house goes down, the playing surface stays lit, small lights show along the aisles and stairs, the [LED boards](#led-boards) glow, the exits are green and the windows, the coping and the lanes of the concourse are softly lit. It is off by default, and a drawing without it is exactly what it was. It is the first lighting of an option that later ones (a show's colours and washes) are added to: `lighting` is a preset name (`"night"`, `true` and `{ preset: "night" }` are the same, `"lightsDown"` the second, `false` none), or `{ preset, aisles, wash }`.
 
 ![The TD Garden in 3D at night, from the main camera: the seats dark, small lights along the aisles, green lights at the exits, the ribbon boards and the scoreboard glowing and the ice bright](./pictures/night-td-3d-desk-light.webp)
 
@@ -146,6 +146,34 @@ The demo's venues page has a Night button beside LED boards, and the stadiums, t
 ![The TD Garden's plan at night: the stands dark under a veil, dotted lights along the aisles, green lights where the vomitories reach the bowl, a pool of light round the ice and the ribbon lit along the upper tier](./pictures/night-td-plan-desk-light.webp)
 
 ![Lumen Field at night from a low corner in the dark theme: dark stands with dotted aisle lights, glowing ribbons, a lit field and a lit scoreboard over it](./pictures/night-lumen-3d-desk-dark.webp)
+
+### Lights down
+
+`lighting: "lightsDown"` is a show's house: nearly black, each stair aisle lit from above as a beam with a soft falloff on the steps either side (it lies in the plane of the seats, so it follows the tier's rake), thin lit rails beside it, the front of every step edged with light, and the boards still glowing. `wash` puts a colour of light on the playing surface, over the markings, which stay visible through it (it never takes more than half of the colour away from them); it works with `"night"` too, where the pool of light round the surface takes the colour as well. `aisles` is the colour of the beams. Both take a CSS colour or one of the named colours `LIGHT_COLORS` holds: `white` (the beams' default), `amber`, `purple`, `magenta`, `blue` and `cyan`; anything else is ignored.
+
+![The TD Garden in 3D with its lights down: dark stands, an amber beam down every stair aisle, the ribbon boards and scoreboard lit, and the ice washed in purple with its markings showing through](./pictures/lights-down-td-3d-desk-dark.webp)
+
+```ts
+import { buildTurn } from "@johnmorrisdotca/kyogijo-stadiums/turn";
+
+const arena = { sport: "nhl", arena: "td-garden", crowd: { real: true } } as const;
+const lit = buildTurn(arena, { venue: { lighting: { preset: "lightsDown", aisles: "blue", wash: "magenta" } } });
+console.log(lit.lighting, lit.planes.some((p) => p.id === "light-wash"), lit.planes.some((p) => p.svg.includes("u-beam")));
+// lightsDown true true
+```
+
+| Part | In 3D | In the plan |
+| --- | --- | --- |
+| The house | A heavier veil over the seats (`u-veil-down`), the venue's colours set darker still. | `ky-cr-veil-down` over the stands, the crowd group `ky-crowd ky-night ky-down`. |
+| An aisle's beam | Three strokes of the aisle's line, wide and faint, narrower, and a bright core (`u-beam`), and two thin rails beside it; a vomitory has a broader beam. | The same strokes (`ky-cr-beam`). |
+| A step's edge | A thin lit line along the front of each piece of a tier (`u-edge`). | A lit line along the front of each tier (`ky-cr-edge`). |
+| The wash | One flat plane over the surface's box (`light-wash`), brighter over the middle (`WASH`), with the surface's rounded corners for a rink. | A rectangle over the surface (`ky-cr-wash`) in the same gradient. |
+
+The demo's venues page has a Lights down button beside Night (one of the two at a time) and a choice of the colour of light on the surface (purple, magenta, blue or white, the beams taking a colour that goes with it); the stadiums, tournament layouts and district pages have the same as a checkbox and a choice. They are kept in the address as `lights=1` and `wash=purple`.
+
+![The TD Garden in 3D from a low corner, lights down, with blue beams down the aisles and the ice washed in magenta](./pictures/lights-down-td-blue-3d-desk-dark.webp)
+
+![The TD Garden's plan with its lights down: the stands nearly black, amber beams down the aisles and a purple wash over the ice](./pictures/lights-down-td-plan-desk-light.webp)
 
 ## How the rink's orientation is found
 

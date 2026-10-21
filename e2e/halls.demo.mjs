@@ -290,6 +290,19 @@ test("the stadium round the floor can be lit as at night, in the plan and in 3D,
   await expect(page.locator(`${STAGE} .ky-turn`)).not.toHaveAttribute("data-lighting", /.*/);
 });
 
+test("the stadium round the floor can have its lights down with a colour of light, in the plan and in 3D, and the address keeps it", async ({ page }) => {
+  await open(page, "?preset=tabletennis-4&stadium=on");
+  await page.locator("#lights").check();
+  await page.locator("#wash").selectOption("blue");
+  await expect(page.locator(`${STAGE} svg .ky-down`)).toHaveCount(1);
+  const params = new URL(page.url()).searchParams;
+  expect([params.get("lights"), params.get("wash")]).toEqual(["1", "blue"]);
+  await page.goto("http://kyogijo.test/halls.html?preset=tabletennis-4&view=3d&stadium=on&lights=1&wash=purple");
+  await page.waitForSelector(`${STAGE} .ky-turn`);
+  await expect(page.locator(`${STAGE} .ky-turn`)).toHaveAttribute("data-lighting", "lightsDown");
+  await expect(page.locator(`${STAGE} [data-part="light-wash"]`)).toHaveCount(1);
+});
+
 test("the 3D view of a layout speaks Japanese, and says what stands on it", async ({ page }) => {
   await open(page, "?preset=tabletennis-4&view=3d&lang=ja");
   await expect(page.locator(`${STAGE} .ky-turn-view`)).toHaveAttribute("aria-roledescription", "3D表示");

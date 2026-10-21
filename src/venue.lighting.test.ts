@@ -6,7 +6,7 @@ import { buildMultiTurn } from "./multi.turn.ts";
 import { buildDistrictTurn } from "./district.turn.ts";
 import { STADIUMS, STADIUM_IDS, stadiumKind } from "./stadiums.ts";
 import { buildTurn, KYOGIJO_TURN_STYLE, turnMarkupOf, type TurnModel } from "./turn-entry.ts";
-import { LIGHTING_PRESETS, POOL, resolveLighting } from "./venue.lighting.ts";
+import { LIGHTING_PRESETS, LIGHT_COLORS, POOL, WASH, resolveLighting } from "./venue.lighting.ts";
 import { VENUE_IDS } from "./venues.ts";
 import type { SurfaceOptions } from "./types.ts";
 
@@ -28,15 +28,25 @@ const seats = (m: TurnModel) => m.planes.filter((p) => p.kind === "seats");
 
 describe("what the lighting option asks for", () => {
   it("is nothing by default and when false, night for night, true and { preset: night }, and nothing for a name it does not know", () => {
-    expect(LIGHTING_PRESETS).toEqual(["night"]);
+    expect(LIGHTING_PRESETS).toEqual(["night", "lightsDown"]);
     expect(resolveLighting(undefined)).toBeUndefined();
     expect(resolveLighting(false)).toBeUndefined();
-    expect(resolveLighting("night")).toBe("night");
-    expect(resolveLighting(true)).toBe("night");
-    expect(resolveLighting({})).toBe("night");
-    expect(resolveLighting({ preset: "night" })).toBe("night");
+    expect(resolveLighting("night")?.preset).toBe("night");
+    expect(resolveLighting(true)?.preset).toBe("night");
+    expect(resolveLighting({})?.preset).toBe("night");
+    expect(resolveLighting({ preset: "night" })?.preset).toBe("night");
+    expect(resolveLighting("lightsDown")?.preset).toBe("lightsDown");
+    expect(resolveLighting({ preset: "lightsDown" })?.preset).toBe("lightsDown");
     expect(resolveLighting("disco" as never)).toBeUndefined();
     expect(resolveLighting({ preset: "disco" } as never)).toBeUndefined();
+  });
+
+  it("takes the colour of the beams and of the wash by name or as a CSS colour, white beams and no wash where it is not said, and ignores what is not a colour", () => {
+    expect(resolveLighting("lightsDown")).toEqual({ preset: "lightsDown", aisles: LIGHT_COLORS.white, wash: undefined });
+    expect(resolveLighting({ preset: "lightsDown", aisles: "amber", wash: "purple" })).toEqual({ preset: "lightsDown", aisles: LIGHT_COLORS.amber, wash: LIGHT_COLORS.purple });
+    expect(resolveLighting({ preset: "lightsDown", aisles: "#c8102e", wash: "rgb(10, 20, 30)" })).toMatchObject({ aisles: "#c8102e", wash: "rgb(10, 20, 30)" });
+    expect(resolveLighting({ preset: "lightsDown", aisles: '"><script>', wash: "url(#x)" })).toMatchObject({ aisles: LIGHT_COLORS.white, wash: undefined });
+    for (const name of ["white", "amber", "purple", "magenta", "blue", "cyan"]) expect(LIGHT_COLORS).toHaveProperty(name);
   });
 });
 
@@ -94,7 +104,7 @@ describe("a real venue at night", () => {
   });
 
   it("has a stylesheet that goes dark in either theme and keeps the lights readable on the dark", () => {
-    const rule = /\.ky-turn\[data-lighting=night\]\{([^}]*)\}/.exec(KYOGIJO_TURN_STYLE)![1];
+    const rule = /\.ky-turn\[data-lighting\]\{([^}]*)\}/.exec(KYOGIJO_TURN_STYLE)![1];
     const get = (name: string): string => new RegExp(`--${name}:(#[0-9a-f]{6})`).exec(rule)![1];
     const lum = (hex: string): number => luminance(rgbOf(hex)!);
     const ratio = (a: string, b: string): number => (Math.max(lum(a), lum(b)) + 0.05) / (Math.min(lum(a), lum(b)) + 0.05);
@@ -164,5 +174,77 @@ describe("the flat plan at night", () => {
     for (const [id, o] of REAL) expect(drawKyogijo({ ...o, crowd: { ...(o.crowd as object), lighting: "night" } } as SurfaceOptions), id).toContain('class="ky-crowd ky-night"');
     expect(drawMulti({ preset: "tabletennis-4", stadium: { lighting: "night" } } as never)).toContain('class="ky-crowd ky-night"');
     expect(drawMulti({ preset: "tabletennis-4", stadium: true } as never)).not.toContain('class="ky-crowd ky-night"');
+  });
+});
+
+describe("the lights down", () => {
+  const td = { sport: "nhl", arena: "td-garden", crowd: { real: true } } as SurfaceOptions;
+  const down = (extra: object = {}) => ({ preset: "lightsDown" as const, ...extra });
+
+  it("puts a beam in every stair aisle of every arena and stadium, in the plane of the seats so that it follows the rake, with the step edges lit and the dark aisle lines gone", () => {
+    for (const [id, options] of REAL) {
+      const model = build(options, { lighting: down({ aisles: "amber" }) });
+      expect(model.lighting, id).toBe("lightsDown");
+      const raked = seats(model).filter((p) => p.svg.includes("u-beam"));
+      expect(raked.length, id).toBeGreaterThan(0);
+      for (const p of raked) {
+        expect(p.svg, `${id} ${p.id}`).toContain(`stroke="${LIGHT_COLORS.amber}"`);
+        expect(p.svg, `${id} ${p.id}`).toContain("u-edge");
+        expect(p.svg, `${id} ${p.id}`).toContain("u-veil-down");
+        expect(p.svg, `${id} ${p.id}`).not.toContain('class="ky-cr-aisle');
+      }
+      // A beam on a tier lies on its slope: some plane that has one is not level.
+      expect(raked.some((p) => Math.abs(p.v[2]) + Math.abs(p.u[2]) > 0.5), id).toBe(true);
+    }
+  });
+
+  it("has no pool of light and no wash unless a wash is asked for, and then one flat wash plane over the surface, weak enough that the markings stay", () => {
+    const plain = buildTurn(td, { venue: { lighting: down() } });
+    expect(night(plain)).toHaveLength(0);
+    expect(plain.planes.filter((p) => p.id === "light-wash")).toHaveLength(0);
+    const washed = buildTurn(td, { venue: { lighting: down({ wash: "purple" }) } });
+    const wash = washed.planes.filter((p) => p.id === "light-wash");
+    expect(wash).toHaveLength(1);
+    expect(washed.planes.length).toBe(plain.planes.length + 1);
+    expect(WASH.middle).toBeLessThanOrEqual(0.5);
+    expect(WASH.edge).toBeLessThan(WASH.middle);
+    expect(wash[0].svg).toContain(LIGHT_COLORS.purple);
+    expect(wash[0].svg).toContain(`stop-opacity="${WASH.middle}"`);
+    // It is flat, over the surface's box and no further.
+    expect(wash[0].u[2]).toBe(0);
+    expect(wash[0].v[2]).toBe(0);
+    expect(wash[0].o[2]).toBeGreaterThan(0);
+    expect(wash[0].o[2]).toBeLessThan(0.5);
+  });
+
+  it("takes a wash on the night too, with the pool of light tinted by it, and no wash on a venue without lighting", () => {
+    const m = buildTurn(td, { venue: { lighting: { preset: "night", wash: "blue" } } });
+    expect(m.planes.some((p) => p.id === "light-wash")).toBe(true);
+    expect(night(m)[0].svg).toContain(LIGHT_COLORS.blue);
+    expect(buildTurn(td, {}).planes.some((p) => p.id === "light-wash")).toBe(false);
+  });
+
+  it("is on the view's root as lightsDown, and the stylesheet makes the house darker than at night", () => {
+    expect(turnMarkupOf(buildTurn(td, { venue: { lighting: "lightsDown" } }), {})).toContain('data-lighting="lightsDown"');
+    expect(KYOGIJO_TURN_STYLE).toMatch(/\.ky-turn\[data-lighting=lightsDown\]\{--ky-cr-bed:#0a0d11/);
+    expect(KYOGIJO_TURN_STYLE).toContain(".ky-turn .u-veil-down{fill-opacity:.8}");
+  });
+
+  it("is the same in the plan: beams and edges, the stands under a heavier veil, a wash over the surface, in every venue", () => {
+    const options = (lighting: unknown) => ({ ...td, id: "t", crowd: { real: true, lighting } }) as SurfaceOptions;
+    const svg = drawKyogijo(options(down({ aisles: "amber", wash: "magenta" })));
+    for (const word of ['class="ky-crowd ky-night ky-down"', "ky-cr-beam", 'class="ky-cr-edge"', 'class="ky-cr-veil ky-cr-veil-down"', 'class="ky-cr-wash"', "<radialGradient"]) expect(svg).toContain(word);
+    expect(svg).not.toContain('class="ky-cr-aisle"');
+    expect(svg).toContain(LIGHT_COLORS.magenta);
+    expect(drawKyogijo(options(down()))).not.toContain('class="ky-cr-wash"');
+    for (const [id, o] of REAL) expect(drawKyogijo({ ...o, crowd: { ...(o.crowd as object), lighting: down({ wash: "blue" }) } } as SurfaceOptions), id).toContain("ky-cr-beam");
+    // The night's wash is in the plan too.
+    expect(drawKyogijo(options({ preset: "night", wash: "blue" }))).toContain('class="ky-cr-wash"');
+  });
+
+  it("is lit in a district, a hall and the usual stands, with the same presets", () => {
+    expect(buildDistrictTurn({ venues: ["bc-place", "rogers-arena"] } as never, { venue: { lighting: "lightsDown" } }).lighting).toBe("lightsDown");
+    expect(buildMultiTurn({ preset: "tabletennis-4", stadium: { lighting: { preset: "lightsDown", wash: "white" } } } as never).lighting).toBe("lightsDown");
+    expect(buildTurn({ sport: "nba", crowd: true } as SurfaceOptions, { venue: { lighting: down({ wash: "cyan" }) } }).planes.some((p) => p.id === "light-wash")).toBe(true);
   });
 });

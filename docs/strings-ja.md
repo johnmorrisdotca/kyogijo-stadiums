@@ -1515,6 +1515,13 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `p_roof` | Roof | 屋根 |
 | `p_boards` | LED boards | LEDビジョン |
 | `p_night` | Night | ナイト |
+| `p_lights` | Lights down | 場内暗転 |
+| `p_wash` | Surface light colour | 競技面の照明の色 |
+| `wash_none` | Surface light: none | 照明の色：なし |
+| `wash_purple` | Purple light | 紫の照明 |
+| `wash_magenta` | Magenta light | マゼンタの照明 |
+| `wash_blue` | Blue light | 青の照明 |
+| `wash_white` | White light | 白の照明 |
 | `p_building` | Building | 建物 |
 | `p_markings` | Markings | ライン |
 | `p_labels` | Labels | ラベル |

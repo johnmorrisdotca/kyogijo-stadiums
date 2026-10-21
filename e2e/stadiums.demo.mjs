@@ -200,3 +200,23 @@ test("lights a stadium as at night on request, in the plan and in 3D, and keeps 
   expect(new URL(page.url()).searchParams.get("night")).toBeNull();
   expect(errors).toEqual([]);
 });
+
+test("brings a stadium's lights down on request, with a colour of light on the field, in the plan and in 3D, and keeps it in the address", async ({ page }) => {
+  const { errors } = await open(page, "?stadium=bc-place");
+  await page.locator("#lights").check();
+  await page.locator("#wash").selectOption("purple");
+  await expect(page.locator(`${STAGE} svg.kyogijo .ky-down`)).toHaveCount(1);
+  await expect(page.locator(`${STAGE} svg.kyogijo .ky-cr-wash`)).toHaveCount(1);
+  const params = new URL(page.url()).searchParams;
+  expect([params.get("lights"), params.get("wash")]).toEqual(["1", "purple"]);
+  // Night turns the lights down off.
+  await page.locator("#night").check();
+  await expect(page.locator("#lights")).not.toBeChecked();
+  await page.goto("http://kyogijo.test/stadiums.html?stadium=lumen-field&view=3d&lights=1&wash=magenta");
+  await page.waitForSelector(`${STAGE} .ky-turn`);
+  await expect(page.locator("#lights")).toBeChecked();
+  await expect(page.locator("#wash")).toHaveValue("magenta");
+  await expect(page.locator(`${STAGE} .ky-turn`)).toHaveAttribute("data-lighting", "lightsDown");
+  await expect(page.locator(`${STAGE} [data-part="light-wash"]`)).toHaveCount(1);
+  expect(errors).toEqual([]);
+});

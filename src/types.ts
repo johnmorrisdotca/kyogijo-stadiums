@@ -288,11 +288,12 @@ export type SheetEnd = Side | "top" | "bottom";
 export type CrowdShape = "bowl" | "sides" | "horseshoe" | "grandstand";
 
 /**
- * The lighting of a venue (`crowd.lighting` in the plan, `venue.lighting` in the 3D view): `"night"` (or `true`, or `{ preset: "night" }`) dims the house, lights the playing surface and shows small lights along the aisles and stairs, the ribbon
- * boards and the scoreboard glowing, the exits and the concourse rim softly lit. The named presets are the base other lightings are added to; `false` is no lighting. Off by default.
+ * The lighting of a venue (`crowd.lighting` in the plan, `venue.lighting` in the 3D view). `"night"` (or `true`, or `{ preset: "night" }`) dims the house, lights the playing surface and shows small lights along the aisles and stairs, the ribbon
+ * boards and the scoreboard glowing, the exits and the concourse rim softly lit. `"lightsDown"` is a show's house: nearly black, each stair aisle lit from above as a beam with a soft falloff on the steps either side, the rails and the front of
+ * every step edged with light. `wash` colours the playing surface with a light (a CSS colour, or `white`, `amber`, `purple`, `magenta`, `blue`, `cyan`; the markings stay visible) and `aisles` the beams (`lightsDown`). `false` is no lighting. Off by default.
  */
-export type LightingPreset = "night";
-export type LightingOptions = LightingPreset | boolean | { preset?: LightingPreset };
+export type LightingPreset = "night" | "lightsDown";
+export type LightingOptions = LightingPreset | boolean | { preset?: LightingPreset; aisles?: string; wash?: string };
 
 /** The patterns a ribbon board shows: `bands` (two bands of colour, in panels), `blocks` (a block of colour to a panel), `chevrons` (arrows running along it) or `waves`. */
 export type LedBoardPattern = "bands" | "blocks" | "chevrons" | "waves";

@@ -150,6 +150,19 @@ test("lights the district as at night in 3D on request, kept in the address, wit
   expect(errors).toEqual([]);
 });
 
+test("brings the district's lights down in 3D on request, with a colour of light on each surface, kept in the address, without mounting the view again", async ({ page }) => {
+  const { errors } = await open(page, "?view=3d");
+  await page.locator(`${STAGE} .ky-turn`).evaluate((root) => { root.dataset.same = "yes"; });
+  await page.locator("#lights").check();
+  await page.locator("#wash").selectOption("purple");
+  await expect(page.locator(`${STAGE} .ky-turn`)).toHaveAttribute("data-lighting", "lightsDown");
+  await expect(page.locator(`${STAGE} .ky-turn`)).toHaveAttribute("data-same", "yes");
+  await expect(page.locator(`${STAGE} [data-part$="light-wash"]`)).toHaveCount(2);
+  const params = new URL(page.url()).searchParams;
+  expect([params.get("lights"), params.get("wash")]).toEqual(["1", "purple"]);
+  expect(errors).toEqual([]);
+});
+
 test("shows Tokyo Dome City: the ballpark and the hall as neighbours, one arrow, in 3D with the dome's roof", async ({ page }) => {
   const { errors } = await open(page);
   await page.locator('#tabs button[data-preset="tokyo"]').click();

@@ -187,7 +187,7 @@ test("has the controls on the view, in sight without scrolling, and a button pre
   }
   // The scene is marked, so that a mount again would show: it is the same one at the end.
   await page.locator(`${STAGE} .ky-turn`).evaluate((root) => { root.dataset.same = "yes"; });
-  for (const part of ["stands", "walls", "roof", "boards", "night", "building", "markings", "labels", "labels", "markings", "building", "night", "boards", "roof", "walls", "stands"]) {
+  for (const part of ["stands", "walls", "roof", "boards", "night", "lights", "building", "markings", "labels", "labels", "markings", "building", "lights", "night", "boards", "roof", "walls", "stands"]) {
     await chip(page, part).click();
     await expect(play).toHaveAttribute("aria-pressed", "true");
   }
@@ -291,6 +291,55 @@ test("switches the night lighting while the view turns: it is the same scene aft
     await chip(page, "night").click();
     await expect(page.locator(`${STAGE} .ky-turn`)).not.toHaveAttribute("data-lighting", /.*/);
   }
+  expect(errors).toEqual([]);
+});
+
+test("brings the lights down on request, with a colour of light on the surface, in the plan and in 3D, kept in the address, one lighting at a time", async ({ page }) => {
+  const { errors } = await open(page, "?venue=td-garden");
+  const wash = page.locator('#bar [data-testid="wash"]');
+  await expect(wash).toHaveValue("none");
+  await chip(page, "lights").click();
+  await expect(chip(page, "lights")).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator(`${STAGE} svg.kyogijo .ky-down`)).toHaveCount(1);
+  expect(await page.locator(`${STAGE} svg.kyogijo .ky-cr-beam`).count()).toBeGreaterThan(10);
+  await expect(page.locator(`${STAGE} svg.kyogijo .ky-cr-wash`)).toHaveCount(0);
+  await wash.selectOption("purple");
+  await expect(page.locator(`${STAGE} svg.kyogijo .ky-cr-wash`)).toHaveCount(1);
+  expect(page.url()).toContain("lights=1");
+  expect(page.url()).toContain("wash=purple");
+  // Night turns the lights down off.
+  await chip(page, "night").click();
+  await expect(chip(page, "lights")).toHaveAttribute("aria-pressed", "false");
+  await expect(chip(page, "night")).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator(`${STAGE} svg.kyogijo .ky-down`)).toHaveCount(0);
+  expect(page.url()).not.toContain("lights=");
+  expect(page.url()).toContain("night=1");
+  // The address brings it back, in 3D: the preset on the root and the wash a plane of its own.
+  await page.goto("http://kyogijo.test/venues.html?venue=td-garden&view=3d&lights=1&wash=blue");
+  await page.waitForSelector(`${STAGE} .ky-turn`);
+  await expect(chip(page, "lights")).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator('#bar [data-testid="wash"]')).toHaveValue("blue");
+  await expect(page.locator(`${STAGE} .ky-turn`)).toHaveAttribute("data-lighting", "lightsDown");
+  await expect(page.locator(`${STAGE} [data-part="light-wash"]`)).toHaveCount(1);
+  await page.locator('#bar [data-testid="wash"]').selectOption("none");
+  await expect(page.locator(`${STAGE} [data-part="light-wash"]`)).toHaveCount(0);
+  expect(errors).toEqual([]);
+});
+
+test("changes the lights down and the wash while the view turns: the same scene afterwards, still turning", async ({ page }) => {
+  const { errors } = await open(page, "?view=3d&venue=td-garden&spin=on", "no-preference");
+  const play = page.locator('.ky-turn-controls button[data-act="play"]');
+  await expect(play).toHaveAttribute("aria-pressed", "true");
+  await page.locator(`${STAGE} .ky-turn`).evaluate((root) => { root.dataset.same = "yes"; });
+  const sceneTurn = () => page.locator(`${STAGE} .ky-turn-floor`).evaluate((floor) => getComputedStyle(floor).transform);
+  await chip(page, "lights").click();
+  await page.locator('#bar [data-testid="wash"]').selectOption("magenta");
+  await expect(page.locator(`${STAGE} .ky-turn`)).toHaveAttribute("data-lighting", "lightsDown");
+  await expect(page.locator(`${STAGE} [data-part="light-wash"]`)).toHaveCount(1);
+  await expect(page.locator(`${STAGE} .ky-turn`)).toHaveAttribute("data-same", "yes");
+  await expect(play).toHaveAttribute("aria-pressed", "true");
+  const first = await sceneTurn();
+  await expect.poll(sceneTurn).not.toBe(first);
   expect(errors).toEqual([]);
 });
 
