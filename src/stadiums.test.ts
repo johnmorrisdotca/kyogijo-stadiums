@@ -131,13 +131,16 @@ describe("the bowl of BC Place", () => {
       expect(plan.seats[0].seats, config).toBeLessThanOrEqual(27696);
       expect(plan.seats[1].seats, config).toBe(54500 - plan.seats[0].seats);
     }
-    // The bowl is the same for both; soccer opens 2,003 fewer seats, from the top down, drawn empty.
+    // The bowl is the same for both; soccer opens 2,003 fewer seats: a block of the upper bowl at the middle of the left side, from one aisle to another, closed and drawn empty, the same every time.
     expect(plans[0].plan.seats).toEqual(plans[1].plan.seats);
-    expect(plans[0].plan.bowl.rings.map((r) => r.fill)).toEqual([1, 0.88]);
-    const [lowerSoccer, upperSoccer] = plans[1].plan.bowl.rings;
-    expect(lowerSoccer.fill).toBe(1);
-    expect(upperSoccer.fill).toBeGreaterThan(0);
-    expect(upperSoccer.fill).toBeLessThan(0.88);
+    expect(plans[0].plan.bowl.rings).toEqual(plans[1].plan.bowl.rings);
+    expect(plans[0].plan.bowl.closedSectors).toBeUndefined();
+    const [block, ...others] = plans[1].plan.bowl.closedSectors!;
+    expect(others).toHaveLength(0);
+    expect(block).toMatchObject({ ring: "upper", kind: "closed" });
+    const seatsOfBlock = Math.abs(areaOf(block.points)) / plans[1].plan.seatArea;
+    expect(Math.abs(seatsOfBlock - 2003)).toBeLessThan(2003 * 0.12);
+    expect(planStadium(bc, "soccer", plans[1].box).bowl.closedSectors).toEqual(plans[1].plan.bowl.closedSectors);
   });
 
   it("is the same building for both: the same footprint, the same hall and the same first row, round fields of two sizes", () => {
@@ -400,14 +403,17 @@ describe("Lumen Field", () => {
     expect(nfl.open).toBe(68740);
     expect(soccer.open).toBe(37722);
     expect(nfl.bowl.rings.map((r) => r.fill)).toEqual([1, 0.94, 0.88]);
+    expect(nfl.bowl.closedSectors).toBeUndefined();
+    // The soccer pitch closes the upper bowl whole, and a block of the middle one at the middle of its left side; the lower bowl is open.
     const [lower, middle, upper] = soccer.bowl.rings;
-    expect(lower.fill).toBe(1);
-    expect(middle.fill).toBeGreaterThan(0);
-    expect(middle.fill).toBeLessThan(0.94);
+    expect([lower.closed, middle.closed, upper.closed]).toEqual([undefined, undefined, true]);
     expect(upper.fill).toBe(0);
-    // The seats open are the soccer configuration's, to a seat of rounding.
-    const openSeats = lower.seats + middle.seats * (middle.fill / 0.94);
-    expect(Math.abs(openSeats - 37722)).toBeLessThan(40);
+    const [block, ...others] = soccer.bowl.closedSectors!;
+    expect(others).toHaveLength(0);
+    expect(block).toMatchObject({ ring: "middle", kind: "closed" });
+    // The seats closed are the bowl's less the configuration's, to a few aisles' width of the block.
+    const closed = upper.seats + Math.abs(areaOf(block.points)) / soccer.seatArea;
+    expect(Math.abs(closed - (68740 - 37722))).toBeLessThan(68740 * 0.03);
   });
 
   it("is lowered under its canopy: the top row stands under the canopy's low edge by at least a clearance", () => {

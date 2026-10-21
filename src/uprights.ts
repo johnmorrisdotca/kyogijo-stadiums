@@ -3,7 +3,7 @@
 // stylesheet. `describeUprights` says the same in words, for a reader who cannot see it.
 import { courtFor, courtGeometry, isNetSport } from "./court.ts";
 import { drawingId, feetFence, lengthUnit } from "./common.ts";
-import { drawKyogijo, pitchOf } from "./draw.ts";
+import { crowdStands, drawKyogijo, pitchOf } from "./draw.ts";
 import { rulesFor, footballIn } from "./eras.ts";
 import { fieldPlan, isFieldSport } from "./fields.ts";
 import { footballLength } from "./geometry.ts";
@@ -150,6 +150,13 @@ export function uprightsFor(o: SurfaceOptions, settings: UprightOptions = {}): U
     const sheet = sheetFor(o).spec;
     thin = thinnest(sheet.length, sheet.width);
     area = { x0: 0, y0: 0, x1: sheet.length, y1: sheet.width };
+  }
+  // A real stadium of more than one configuration is drawn in the venue's own frame (the middle of its field at the origin): what stands on the field is moved there with it, and the stands are already in it.
+  const shift = crowdStands(o)?.shift;
+  if (shift !== undefined) {
+    const [dx, dy] = shift;
+    items = items.map((item) => ({ ...item, at: [item.at[0] - dx, item.at[1] - dy] as const, planes: item.planes.map((p) => ({ ...p, o: [p.o[0] - dx, p.o[1] - dy, p.o[2]] as Plane["o"] })) }));
+    if (area !== undefined) area = { x0: area.x0 - dx, y0: area.y0 - dy, x1: area.x1 - dx, y1: area.y1 - dy };
   }
   // The venue: the stands and the room, raised. A dojo's own walls are the room's, with their doors and windows.
   let defs = "";

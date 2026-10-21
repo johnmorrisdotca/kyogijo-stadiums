@@ -121,6 +121,7 @@ export const KYOGIJO_TURN_STYLE = `
 .ky-turn .ky-cr-ta{fill:var(--ky-cr-away)}
 .ky-turn .ky-cr-tw{fill:#f2f0ea}
 .ky-turn .ky-cr-aisle{fill:none;stroke:var(--ky-cr-gap);stroke-opacity:.8}
+.ky-turn .ky-cr-shut-veil{fill:var(--ky-cr-empty);fill-opacity:.42}
 .ky-turn .ky-cr-row{fill:none;stroke:var(--ky-cr-gap);stroke-opacity:.5;stroke-width:.5}
 .ky-turn .ky-bud-gseat{stroke:var(--ky-up-rail);stroke-opacity:.3}
 .ky-turn .u-door{fill:var(--ky-up-door)}

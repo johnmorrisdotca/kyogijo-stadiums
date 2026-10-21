@@ -3,7 +3,7 @@
 // field and not a rink: level one is the building, level two a plausible bowl, and it stops there (no team's, ticket seller's or federation's seat map is read or copied, no section or row is named, and no mark of a club, a
 // league or a tournament is drawn). The drawing is `drawKyogijo({ sport: "cfl", stadium, crowd: { real: true } })` (or `sport: "soccer"` with a `ground` or a `stadium`, `sport: "mlb"` with a `park`) and, in 3D, the same options
 // in `buildTurn`.
-import { NORTH_ROOM, aislesOf, areaOfOutline, outlinePoints, type Box, type CrowdStands, type Outline, type Pt, type RealBowl, type RealShell, type StandRing } from "./crowd.ts";
+import { NORTH_ROOM, aisleParameters, aislesOf, areaOfOutline, outlinePoints, sectorPolygon, type Box, type CrowdStands, type Outline, type Pt, type RealBowl, type RealShell, type StandRing, type StandSector } from "./crowd.ts";
 import { parkLayout, type ParkInput } from "./crowd.park.ts";
 import { FEET_PER_METRE, FOOTBALL } from "./geometry.ts";
 import { groundById, type Ground } from "./grounds.ts";
@@ -233,6 +233,42 @@ function solveFor(f: (t: number) => number, lo: number, hi: number, target: numb
   return (a + b) / 2;
 }
 
+/**
+ * The bowl with `closedSeats` of its seats closed, the ones a configuration does not open: whole bands from the last (outermost) inward, marked `closed` and drawn as empty seats, and where the seats left to close are part of a band, a block of
+ * that band at the middle of its left side (an end of the field, where the long axis ends), as many seats as comes nearest, drawn as empty seats over it. The same place every time: no random number. `area` is
+ * the floor a seat takes in the plan.
+ */
+function shut(rings: readonly StandRing[], closedSeats: number, area: number): { rings: StandRing[]; sectors: StandSector[] } {
+  const out = rings.map((ring) => ({ ...ring }));
+  const sectors: StandSector[] = [];
+  let left = closedSeats;
+  for (let k = out.length - 1; k >= 0 && left > 0; k -= 1) {
+    const ring = out[k];
+    if (left >= ring.seats - 2) {
+      ring.fill = 0;
+      ring.closed = true;
+      left -= ring.seats;
+      continue;
+    }
+    if (ring.region.kind === "rrect" && ring.hole?.kind === "rrect") {
+      const [region, hole] = [ring.region, ring.hole];
+      // A block centred on the middle of the left side (6.5), widened by a tenth of a side's length (about 30 feet) at a time, as wide as comes nearest to the seats to close.
+      const step = 1 / Math.max(aisleParameters(hole).nv, 2);
+      const seatsOf = (w: number): number => Math.round(areaOfOutline({ kind: "poly", points: sectorPolygon(region, hole, 6.5 - w / 2, 6.5 + w / 2) }) / area);
+      let width = step;
+      let made = seatsOf(width);
+      for (let i = 0; made < left && width + step < 8; i += 1) {
+        const next = seatsOf(width + step);
+        if (Math.abs(next - left) > Math.abs(made - left)) break;
+        [width, made] = [width + step, next];
+      }
+      sectors.push({ ring: ring.id, kind: "closed", points: sectorPolygon(region, hole, 6.5 - width / 2, 6.5 + width / 2) });
+    }
+    left = 0;
+  }
+  return { rings: out, sectors };
+}
+
 /** The plan of a stadium for a configuration: its building in the drawing's frame, the bowl fitted inside, and how it lies. */
 export interface StadiumPlan {
   stadium: RealStadium;
@@ -397,14 +433,8 @@ function plan(stadium: RealStadium, config: StadiumConfigId, rink: Box): Stadium
     }
   }
   const total = rings.reduce((sum, ring) => sum + ring.seats, 0);
-  // A configuration that opens fewer seats than the bowl holds opens them from the lowest bowl up: a bowl's people are its open share of them, and a closed one is empty.
-  if (open < seatsTotal) {
-    let before = 0;
-    for (const ring of rings) {
-      ring.fill = round(ring.fill * Math.min(1, Math.max(0, (open - before) / Math.max(1, ring.seats))), 3);
-      before += ring.seats;
-    }
-  }
+  // A configuration that opens fewer seats than the bowl holds opens them from the lowest bowl up: the seats it does not open are the top tier's, closed, drawn empty and in the same place every time.
+  const closing = open < seatsTotal ? shut(rings, seatsTotal - open, seatArea) : { rings, sectors: [] };
   const top = rings[rings.length - 1].height[1];
   const roof = stadium.osm.roof;
   const rise = roof?.rise === undefined ? 0 : round(roof.rise * FEET_PER_METRE);
@@ -416,7 +446,8 @@ function plan(stadium: RealStadium, config: StadiumConfigId, rink: Box): Stadium
   const north = orientation.basis === "none" ? undefined : orientation.north;
   const room = north === undefined ? 0 : NORTH_ROOM;
   const bowl: RealBowl = {
-    rings,
+    rings: closing.rings,
+    ...(closing.sectors.length === 0 ? {} : { closedSectors: closing.sectors }),
     off: { left: rink.x - first.x0, right: first.x1 - rink.x - rink.w, top: rink.y - first.y0, bottom: first.y1 - rink.y - rink.h },
     reach: { left: Math.max(0, -rink.w / 2 - around.x0), right: Math.max(0, around.x1 - rink.w / 2), top: Math.max(0, -rink.h / 2 - around.y0) + room, bottom: Math.max(0, around.y1 - rink.h / 2) },
     shell: {

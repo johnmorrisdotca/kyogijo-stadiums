@@ -38,12 +38,14 @@ export interface StandRing {
   seats: number;
   /** The aisles and vomitories across the band, each from a point on its inner edge to its outer: across the sides, fanning round the corners. */
   aisles: [Pt, Pt][];
+  /** The band is closed in this configuration (a real stadium's seats a configuration does not open): drawn as empty seats, with no people, in the same place every time. */
+  closed?: boolean;
 }
 
 /** A block of the stands that is not the home fans': the visitors', or a card display. A polygon in the wide frame. */
 export interface StandSector {
   ring: string;
-  kind: "away" | "tifo-home" | "tifo-away";
+  kind: "away" | "tifo-home" | "tifo-away" | "closed";
   points: Pt[];
 }
 
@@ -78,6 +80,11 @@ export interface CrowdStands {
   gallery?: boolean;
   /** The stands are a real venue's (see `src/venues.ts`): the outline of its building, the way north lies on the page and the roof. */
   real?: RealShell;
+  /**
+   * A real stadium of more than one configuration is laid out in its own frame, the venue's, with the middle of its field at the origin whichever field it is: `shift` is where that middle is in the drawing's own
+   * frame (the surface's), so that what belongs to the field is drawn there and the building, the bowl and the crowd are the same numbers for every configuration.
+   */
+  shift?: [number, number];
 }
 
 /** The room above a real venue's building that the arrow saying where north is takes, in feet, and how far above the building's box the middle of the arrow stands. */
@@ -117,6 +124,8 @@ export interface RealShell {
 /** The stands of a real venue, worked out from its building (`venueBowl`): what `layoutOf` takes in place of a sport's usual tiers. */
 export interface RealBowl {
   rings: StandRing[];
+  /** Blocks of a band a configuration closes (its seats beyond the configuration's own): drawn over the band as empty seats, in the same place every time. */
+  closedSectors?: StandSector[];
   /** How far the first row stands from the surface's edge at each side, in feet (the bench side has more). */
   off: { left: number; right: number; top: number; bottom: number };
   /** The ground the venue needs beyond the surface on each side, in feet: the building's, and room for the arrow that says where north is. */
@@ -459,7 +468,7 @@ export function rrectAt(o: Extract<Outline, { kind: "rrect" }>, u: number): { p:
 }
 
 /** The aisles a band has, as parameters of its inner outline: one at each end of every straight side (about every 30 feet along it) and one in the middle of every corner. */
-function aisleParameters(hole: Extract<Outline, { kind: "rrect" }>): { us: number[]; nh: number; nv: number } {
+export function aisleParameters(hole: Extract<Outline, { kind: "rrect" }>): { us: number[]; nh: number; nv: number } {
   const r = Math.min(hole.r, (hole.x1 - hole.x0) / 2, (hole.y1 - hole.y0) / 2);
   const nh = Math.max(2, Math.round((hole.x1 - hole.x0 - 2 * r) / 30));
   const nv = Math.max(2, Math.round((hole.y1 - hole.y0 - 2 * r) / 30));
@@ -486,6 +495,13 @@ export function aislesOf(region: Outline, hole: Outline | null): [Pt, Pt][] {
 /** The aisles of a hall's gallery: on each straight side, one across the band at each of the `shares` (0 to 1) of the side's length, from the first side's left end. */
 function galleryAisles(region: Extract<Outline, { kind: "rrect" }>, hole: Extract<Outline, { kind: "rrect" }>, shares: readonly number[]): [Pt, Pt][] {
   return [0, 2, 4, 6].flatMap((side) => shares.map((f): [Pt, Pt] => [rrectAt(hole, side + f).p, rrectAt(region, side + f).p]));
+}
+
+/** The polygon of a band between two parameters, cut finely (a thirty-second of a side at a time) so that a block at a corner follows its curve as the band does. */
+export function sectorPolygon(region: Extract<Outline, { kind: "rrect" }>, hole: Extract<Outline, { kind: "rrect" }>, u0: number, u1: number): Pt[] {
+  const steps = Math.max(2, Math.ceil((u1 - u0) * 32));
+  const us = Array.from({ length: steps + 1 }, (_, i) => u0 + ((u1 - u0) * i) / steps);
+  return [...us.map((u) => rrectAt(region, u).p), ...us.map((u) => rrectAt(hole, u).p).reverse()];
 }
 
 /** The polygon of a band between two aisle parameters: along the outer edge, then back along the inner. */
@@ -596,6 +612,7 @@ export function layoutOf(input: LayoutInput): CrowdStands {
   });
   const stands: CrowdStands = { sport, shape, box, rings, covers, concourses, sectors: [], gaps: [], reach: reachOf, seats: rings.reduce((n, r) => n + r.seats, 0) };
   if (input.real !== undefined) stands.real = input.real.shell;
+  if (input.real?.closedSectors !== undefined) stands.sectors.push(...input.real.closedSectors);
   if (stadium !== undefined) stands.stadium = stadium;
   if (gal !== undefined) stands.gallery = true;
   if (stadium === "nfl" || stadium === "cfl") {

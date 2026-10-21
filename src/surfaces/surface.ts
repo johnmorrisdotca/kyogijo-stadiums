@@ -108,6 +108,8 @@ export interface Surface {
   lineRef?: { width: number; feet: number };
   /** For a surface with a crowd: the margin it was drawn with, which holds the stands. */
   crowdMargin?: number;
+  /** A real stadium of more than one configuration laid out in the venue's own frame: where the middle of its field is in the surface's frame (the surface is shifted to lie there), and the ground, building, stands and crowd under it, in the venue's frame. */
+  venue?: { shift: [number, number]; under: string };
   /** Where the parts a situation is drawn against are: a rink's lines and nets, a diamond's bases, a gridiron's goal lines. */
   anchors?: SituationAnchors;
 }

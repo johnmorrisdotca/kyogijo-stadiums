@@ -59,7 +59,7 @@ import { annotate, annotated, wideView, type Notes } from "./annotate.ts";
 import { KYOGIJO_BACKGROUND_STYLE, laidOn } from "./background.ts";
 import { overlayMarkup, placeBoard, resolveBoard } from "./overlay.ts";
 import { KYOGIJO_HARDWOOD_STYLE, resolveHardwood } from "./hardwood.ts";
-import { WALL_SEATS, densityOf, layoutOf as crowdLayout, resolveCrowd, type Crowd, type CrowdStands } from "./crowd.ts";
+import { WALL_SEATS, densityOf, layoutOf as crowdLayout, resolveCrowd, type Box, type Crowd, type CrowdStands } from "./crowd.ts";
 import { drawCrowd, KYOGIJO_CROWD_STYLE } from "./crowd.draw.ts";
 import { teamColors } from "./venue.lighting.ts";
 import { parkLayout } from "./crowd.park.ts";
@@ -476,7 +476,12 @@ function standsFor(o: SurfaceOptions, surface: Surface, crowd: Crowd): CrowdStan
   if (venue !== undefined) return crowdLayout({ sport, box, crowd: crowd.awayEnd === "auto" ? { ...crowd, awayEnd: "none" } : crowd, awaySide, real: venueBowl(venue, box) });
   // A football field or a soccer pitch in a real stadium: its building and a bowl of the configuration's seats.
   const real = realStadiumOf(o, sport, crowd.real);
-  if (real !== undefined) return crowdLayout({ sport, box, crowd: crowd.awayEnd === "auto" ? { ...crowd, awayEnd: "none" } : crowd, awaySide, real: stadiumBowl(real.stadium, real.config, box) });
+  if (real !== undefined) {
+    const stands = (at: Box): CrowdStands => crowdLayout({ sport, box: at, crowd: crowd.awayEnd === "auto" ? { ...crowd, awayEnd: "none" } : crowd, awaySide, real: stadiumBowl(real.stadium, real.config, at) });
+    if (!venueFrame(o, crowd, surface)) return stands(box);
+    // In the venue's frame the middle of the field is the origin, so the same building, bowl and crowd are laid out whichever field is in it.
+    return { ...stands({ x: -box.w / 2, y: -box.h / 2, w: box.w, h: box.h }), shift: [box.x + box.w / 2, box.y + box.h / 2] };
+  }
   // A dojo's crowd sits in its gallery, from the room's balcony data (in feet here); the arenas (the Budokan, the Kokugikan) keep their bowls.
   const hall = sport === "dojo" ? dojoGallery(o) : undefined;
   const gallery = hall === undefined ? undefined : { offset: hall.offset / 0.3048, depth: hall.depth / 0.3048, height: [hall.height[0] / 0.3048, hall.height[1] / 0.3048] as [number, number], rows: hall.rows, aisles: hall.aisles };
@@ -498,6 +503,14 @@ function stadiumHasConfigs(o: SurfaceOptions, crowd: Crowd): boolean {
   return real !== undefined && stadiumKind(real.stadium) === "stadium" && stadiumConfigs(real.stadium).length > 1;
 }
 
+/**
+ * Whether a stadium of more than one configuration is laid out in the venue's own frame: its field is placed in it, and the building, the bowl, the crowd and the view are the same numbers whichever field it is. Not for a portrait drawing,
+ * a cropped one, or one that asks for annotations, a situation, a pageant or the pointer, which are worked out in the surface's own frame.
+ */
+function venueFrame(o: SurfaceOptions, crowd: Crowd, surface: Surface): boolean {
+  return surface.turn === undefined && o.range === undefined && o.situation === undefined && o.pageant === undefined && o.pointer !== true && !annotated(o) && stadiumHasConfigs(o, crowd);
+}
+
 /** A surface with the stands and the crowd round it: the ground is made as wide as the stands need, then the stands are laid on it under the surface. */
 function buildCrowded(o: SurfaceOptions, portrait: boolean, id: string, score: boolean, scored: boolean, extra: Extra, crowd: Crowd): Surface {
   let margin = extra.margin;
@@ -512,13 +525,6 @@ function buildCrowded(o: SurfaceOptions, portrait: boolean, id: string, score: b
   }
   const surface = buildWhole(o, portrait, id, score, scored, { ...extra, margin });
   const stands = standsFor(o, surface, crowd);
-  // A stadium that stages more than one field is framed by its building, once, whichever field is drawn: the view is the building's with a small margin, about the middle of the field.
-  const field = stands.box;
-  if (surface.turn === undefined && o.range === undefined && stadiumHasConfigs(o, crowd)) {
-    const [cx, cy] = [field.x + field.w / 2, field.y + field.h / 2];
-    const [left, right, top, bottom] = [field.w / 2 + stands.reach.left, field.w / 2 + stands.reach.right, field.h / 2 + stands.reach.top, field.h / 2 + stands.reach.bottom].map((d) => d + VENUE_PAD);
-    surface.view = { x: cx - left, y: cy - top, w: left + right, h: top + bottom };
-  }
   const seats = stands.seats;
   const ground = groundById(o.ground)?.capacity;
   const fine = crowd.detail === "fine" || (crowd.detail === "auto" && !smallDrawing(o));
@@ -527,6 +533,22 @@ function buildCrowded(o: SurfaceOptions, portrait: boolean, id: string, score: b
   // A gallery is empty unless the options say how full: its seats are the detail.
   const taken = stands.gallery === true && crowd.density === undefined && crowd.attendance === undefined ? 0 : densityOf(crowd, seats, ground);
   const drawn = drawCrowd(stands, { id, crowd, density: taken, fine, ground: bg, team: teamColors(o) });
+  if (stands.shift !== undefined) {
+    // A stadium of more than one configuration: the ground, the building, the stands and the crowd are laid in the venue's own frame (the middle of the field at the origin), under a surface that is shifted to lie in it, and the view is the
+    // building's with a little ground round it: the same frame, the same numbers, the same crowd whichever field is drawn. What stands over the field comes back to the surface's frame.
+    const [sx, sy] = stands.shift;
+    const { reach, box } = stands;
+    const [left, right, top, bottom] = [box.w / 2 + reach.left, box.w / 2 + reach.right, box.h / 2 + reach.top, box.h / 2 + reach.bottom].map((d) => Math.round((d + VENUE_PAD) * 100) / 100);
+    const view = { x: -left, y: -top, w: left + right, h: top + bottom };
+    const apron = first.replace(/\sx="[^"]*"/, ` x="${view.x - 1}"`).replace(/\sy="[^"]*"/, ` y="${view.y - 1}"`).replace(/\swidth="[^"]*"/, ` width="${view.w + 2}"`).replace(/\sheight="[^"]*"/, ` height="${view.h + 2}"`);
+    surface.venue = { shift: [sx, sy], under: apron + drawn.markup };
+    surface.base = surface.base.slice(first.length);
+    surface.view = view;
+    surface.defs += drawn.defs;
+    surface.lines += drawn.over === "" ? "" : el("g", { transform: `translate(${sx.toFixed(4)} ${sy.toFixed(4)})` }, drawn.over);
+    surface.crowdMargin = margin;
+    return surface;
+  }
   surface.base = first + drawn.markup + surface.base.slice(first.length);
   surface.defs += drawn.defs;
   surface.lines += drawn.over;
@@ -1033,8 +1055,10 @@ function drawnKyogijo(o: SurfaceOptions | ScoreOptions): string {
     const lines = lineLook(o, surface.lineRef, lengthUnit(o));
     if (lines !== undefined) surface.lines = restyleLines(surface.lines, lines);
     // A ground (a pattern, a colour or a photograph) is laid on the apron, under the surface.
-    const ground = laidOn(surface.base, o.background, id);
-    grounded = ground.base !== surface.base;
+    // A stadium laid out in the venue's frame has its ground, building and stands under the surface, which is shifted to lie in it.
+    const venue = surface.venue;
+    const ground = laidOn(venue === undefined ? surface.base : venue.under, o.background, id);
+    grounded = ground.base !== (venue === undefined ? surface.base : venue.under);
     defs = surface.defs + ground.defs;
     // The situation: a tint under the lines, and the rest over them and the data (cut with the surface when it is cropped).
     const sit =
@@ -1049,7 +1073,7 @@ function drawnKyogijo(o: SurfaceOptions | ScoreOptions): string {
             strip: stripped && sized === "compact",
           });
     const cutSit = (markup: string): string => (markup !== "" && surface.defs.includes(`id="${id}-rg"`) ? el("g", { "clip-path": `url(#${id}-rg)` }, markup) : markup);
-    let inner = ground.base + (sit === undefined ? "" : cutSit(sit.under));
+    let inner = (venue === undefined ? ground.base : surface.base) + (sit === undefined ? "" : cutSit(sit.under));
     if (sit !== undefined) defs += sit.defs;
     let teams = "";
     // A pageant lays each team's picture over its half, in place of the names painted at the ends.
@@ -1117,7 +1141,8 @@ function drawnKyogijo(o: SurfaceOptions | ScoreOptions): string {
         inner += el("g", { transform: `translate(${num(surface.plate.cx)} ${num(surface.plate.cy)})${surface.turned ? " rotate(-90)" : ""}` }, board);
       } else inner += plateMarkup(surface.plate, left, right, { competition: o.competition, foot: foot === "" ? undefined : foot }, { turned: surface.turned, parts, surfaceSport: sport });
     }
-    const group = el("g", { class: "ky-surface-group", transform: surface.turn, part: parts ? "surface" : undefined, ...(o.pointer === true ? fieldAttributes({ ...o, sport }) : {}) }, inner);
+    const field = el("g", { class: "ky-surface-group", transform: venue === undefined ? surface.turn : `translate(${(-venue.shift[0]).toFixed(4)} ${(-venue.shift[1]).toFixed(4)})`, part: parts ? "surface" : undefined, ...(o.pointer === true ? fieldAttributes({ ...o, sport }) : {}) }, inner);
+    const group = venue === undefined ? field : ground.base + field;
     const v = surface.view;
     if (isScore(o) && left !== undefined && right !== undefined && sized === "compact") {
       const badge = badgeMarkup(left, right, { sport, status, parts, id, situation: situation === undefined ? undefined : badgeSituation(situation, language) });

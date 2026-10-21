@@ -55,11 +55,13 @@ function tile(seed: number, density: number, share: number, team: "ky-cr-h" | "k
 }
 
 /** The tiles a crowd needs: the home tile, the home tile of the upper tiers (emptier) and the visitors', and the display tiles. */
-export function patterns(id: string, crowd: Crowd, density: number, tifo: { home: boolean; away: boolean } | undefined, neutral = false, rows = false): string {
+export function patterns(id: string, crowd: Crowd, density: number, tifo: { home: boolean; away: boolean } | undefined, neutral = false, rows = false, shut = false): string {
   // A 3D view's tiles carry the lines of the rows too (a row every third of a tile, along the tile's x), so that a raked plane is textured and not drawn seat by seat.
   const rowLines = rows ? el("path", { class: "ky-cr-row", d: `M0 .3H${TILE}M0 ${TILE / 3 + 0.3}H${TILE}M0 ${(2 * TILE) / 3 + 0.3}H${TILE}`, fill: "none" }) : "";
   const make = (suffix: string, body: string, size = TILE): string => el("pattern", { id: `${id}-cr-${suffix}`, width: size, height: size, patternUnits: "userSpaceOnUse" }, size === TILE ? body + rowLines : body);
   let out = make("h", tile(crowd.seed * 7 + 1, density, neutral ? 0 : 0.88, "ky-cr-h", neutral)) + make("a", tile(crowd.seed * 7 + 3, Math.min(1, density * 1.04), 0.94, "ky-cr-a"));
+  // The seats of a closed band: the same seats, every one empty.
+  if (shut) out += make("e", tile(crowd.seed * 7 + 5, 0, 0, "ky-cr-h", true));
   if (tifo !== undefined) {
     const stripes = (cls: string): string => el("rect", { class: cls, width: 3, height: 6 }) + el("rect", { class: "ky-cr-tw", x: 3, width: 3, height: 6 });
     const checks = (cls: string): string => el("rect", { class: cls, width: 3, height: 3 }) + el("rect", { class: cls, x: 3, y: 3, width: 3, height: 3 }) + el("rect", { class: "ky-cr-tw", x: 3, width: 3, height: 3 }) + el("rect", { class: "ky-cr-tw", y: 3, width: 3, height: 3 });
@@ -196,6 +198,11 @@ export function drawCrowd(stands: CrowdStands, o: DrawInput): { defs: string; ma
     // The bed of seats under the tile, so that no seam of the pattern shows light.
     const bed = stands.gallery === true ? "ky-cr-bed ky-bud-gbed" : "ky-cr-bed";
     // A hall's gallery, seen from above, is neat rows of seats along its band (a few people are not drawn: it is subtle).
+    if (ring.closed === true) {
+      // Closed seats: the bed and the same seats, every one empty, so that the closed part is the same drawing in every configuration that closes it.
+      body += el("path", { class: bed, d: path(ring) }) + (fine ? el("path", { class: "ky-cr-shut", d: path(ring), fill: `url(#${id}-cr-e)` }) + el("path", { class: "ky-cr-shut-veil", d: path(ring) }) : el("path", { class: "ky-cr-blk", d: path(ring), "fill-opacity": num(0.28) }));
+      continue;
+    }
     if (stands.gallery === true && fine) body += el("path", { class: bed, d: path(ring) }) + galleryRows(ring) + (density > 0 ? el("path", { class: "ky-cr-people", d: path(ring), fill: `url(#${id}-cr-h)` }) : "");
     else if (fine) body += el("path", { class: bed, d: path(ring) }) + el("path", { class: "ky-cr-people", d: path(ring), fill: `url(#${id}-cr-h)` });
     else body += el("path", { class: bed, d: path(ring) }) + el("path", { class: stands.gallery === true ? "ky-cr-blk ky-bud-gblk" : "ky-cr-blk", d: path(ring), "fill-opacity": num(0.28 + 0.6 * density * ring.fill) });
@@ -249,11 +256,16 @@ export function drawCrowd(stands: CrowdStands, o: DrawInput): { defs: string; ma
     const [x0, y0, x1, y1] = g.box;
     body += el("rect", { class: `ky-cr-${g.kind}`, x: n1(x0), y: n1(y0), width: n1(x1 - x0), height: n1(y1 - y0), rx: g.kind === "bench" ? 1 : undefined });
   }
-  return { defs: (fine && (stands.gallery !== true || density > 0) ? patterns(id, crowd, density, tifo.home || tifo.away ? tifo : undefined, stands.gallery === true || stands.real !== undefined) : "") + pool, markup: el("g", { class: light === undefined ? "ky-crowd" : light.house === "dark" ? "ky-crowd ky-night ky-down" : light.house === "half" ? "ky-crowd ky-night ky-half" : "ky-crowd ky-night" }, body) + lit, over };
+  return { defs: (fine && (stands.gallery !== true || density > 0) ? patterns(id, crowd, density, tifo.home || tifo.away ? tifo : undefined, stands.gallery === true || stands.real !== undefined, false, stands.rings.some((r) => r.closed === true) || stands.sectors.some((s) => s.kind === "closed")) : "") + pool, markup: el("g", { class: light === undefined ? "ky-crowd" : light.house === "dark" ? "ky-crowd ky-night ky-down" : light.house === "half" ? "ky-crowd ky-night ky-half" : "ky-crowd ky-night" }, body) + lit, over };
 }
 
 /** A block of visitors or a card display, a polygon over the band it is in. */
 function sector(s: StandSector, id: string, fine: boolean, density: number): string {
+  // A block of closed seats: the bed and the same seats, every one empty.
+  if (s.kind === "closed") {
+    const d = `M${s.points.map(([x, y]) => `${n1(x)} ${n1(y)}`).join("L")}Z`;
+    return el("path", { class: "ky-cr-bed", d }) + (fine ? el("path", { class: "ky-cr-shut", d, fill: `url(#${id}-cr-e)` }) + el("path", { class: "ky-cr-shut-veil", d }) : el("path", { class: "ky-cr-blk", d, "fill-opacity": num(0.28) }));
+  }
   if (s.kind === "away") return fine ? el("path", { class: "ky-cr-people", d: poly(s.points), fill: `url(#${id}-cr-a)` }) : el("path", { class: "ky-cr-blk-a", d: poly(s.points), "fill-opacity": num(0.3 + 0.6 * density) });
   const team = s.kind === "tifo-home" ? "th" : "ta";
   return fine ? el("path", { class: "ky-cr-tifo", d: poly(s.points), fill: `url(#${id}-cr-${team})` }) : el("path", { class: s.kind === "tifo-home" ? "ky-cr-th" : "ky-cr-ta", d: poly(s.points) });
@@ -266,6 +278,7 @@ export const KYOGIJO_CROWD_STYLE = `
 :where(html[data-theme=dark] .kyogijo,.kyogijo[data-theme=dark]){--ky-cr-bed:#242a32;--ky-cr-empty:#4a535f;--ky-cr-gap:#050709;--ky-cr-conc:#2a3038;--ky-cr-rim:#07090c;--ky-cr-dim:.82}
 .kyogijo .ky-crowd{opacity:var(--ky-cr-dim)}
 .kyogijo .ky-cr-bed{fill:var(--ky-cr-bed);stroke:var(--ky-cr-rim);stroke-width:1.8;stroke-opacity:.55;stroke-linejoin:round}
+.kyogijo .ky-cr-shut-veil{fill:var(--ky-cr-empty);fill-opacity:.42}
 .kyogijo .ky-cr-seat{fill:none;stroke:var(--ky-cr-empty);stroke-width:1.3;stroke-opacity:.65}
 .kyogijo .ky-cr-h{stroke:var(--ky-cr-home,var(--ky-right))}
 .kyogijo .ky-cr-a{stroke:var(--ky-cr-away,var(--ky-left))}

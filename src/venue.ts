@@ -98,7 +98,7 @@ export function standsVenueOf(stands: CrowdStands, crowd: Crowd, o: Pick<Surface
   const density = densityOf(crowd, stands.seats, groundById(o.ground)?.capacity);
   const tifo = { home: stands.sectors.some((s) => s.kind === "tifo-home"), away: stands.sectors.some((s) => s.kind === "tifo-away") };
   const pid = `${v.id}-v`;
-  const defs = fine ? patterns(pid, crowd, density, tifo.home || tifo.away ? tifo : undefined, stands.real !== undefined, true) : "";
+  const defs = fine ? patterns(pid, crowd, density, tifo.home || tifo.away ? tifo : undefined, stands.real !== undefined, true, stands.rings.some((r) => r.closed === true) || stands.sectors.some((s) => s.kind === "closed")) : "";
   const centre: [number, number] = [stands.box.x + stands.box.w / 2, stands.box.y + stands.box.h / 2];
   const covers = stands.covers;
   const inCover = (p: Pt): boolean => covers.some(([x0, y0, x1, y1]) => p[0] >= x0 && p[0] <= x1 && p[1] >= y0 && p[1] <= y1);
@@ -112,13 +112,16 @@ export function standsVenueOf(stands: CrowdStands, crowd: Crowd, o: Pick<Surface
   const paint = (ring: StandRing, piece: Pt[]) => (corners: Pt[], local: (p: Pt) => Pt): string => {
     let svg = `<polygon class="u-bed" points="${pointList(corners)}"/>`;
     const people = ring.fill < 0.95 ? ` fill-opacity="${round(1 - Math.min(0.5, (1 - ring.fill) * 1.6))}"` : "";
-    svg += fine ? `<polygon fill="url(#${pid}-cr-h)"${people} points="${pointList(corners)}"/>` : `<polygon class="u-blk" fill-opacity="${round(0.28 + 0.6 * density * ring.fill)}" points="${pointList(corners)}"/>`;
+    // Closed seats are the same seats, every one empty.
+    if (ring.closed === true) svg += fine ? `<polygon fill="url(#${pid}-cr-e)" points="${pointList(corners)}"/><polygon class="ky-cr-shut-veil" points="${pointList(corners)}"/>` : `<polygon class="u-blk" fill-opacity="0.28" points="${pointList(corners)}"/>`;
+    else svg += fine ? `<polygon fill="url(#${pid}-cr-h)"${people} points="${pointList(corners)}"/>` : `<polygon class="u-blk" fill-opacity="${round(0.28 + 0.6 * density * ring.fill)}" points="${pointList(corners)}"/>`;
     for (const s of stands.sectors) {
       if (s.ring !== ring.id) continue;
       const part = tidy(clipConvex(s.points, piece));
       if (part.length < 3 || Math.abs(areaOf(part)) < 0.05) continue;
       const points = pointList(part.map(local));
-      if (s.kind === "away") svg += fine ? `<polygon fill="url(#${pid}-cr-a)" points="${points}"/>` : `<polygon class="u-blk-a" fill-opacity="${round(0.3 + 0.6 * density)}" points="${points}"/>`;
+      if (s.kind === "closed") svg += fine ? `<polygon class="u-bed" points="${points}"/><polygon fill="url(#${pid}-cr-e)" points="${points}"/><polygon class="ky-cr-shut-veil" points="${points}"/>` : `<polygon class="u-blk" fill-opacity="0.28" points="${points}"/>`;
+      else if (s.kind === "away") svg += fine ? `<polygon fill="url(#${pid}-cr-a)" points="${points}"/>` : `<polygon class="u-blk-a" fill-opacity="${round(0.3 + 0.6 * density)}" points="${points}"/>`;
       else svg += fine ? `<polygon fill="url(#${pid}-cr-${s.kind === "tifo-home" ? "th" : "ta"})" points="${points}"/>` : `<polygon class="${s.kind === "tifo-home" ? "u-th" : "u-ta"}" points="${points}"/>`;
     }
     if (light !== undefined) svg += `<polygon class="${light.house === "dark" ? "u-veil u-veil-down" : light.house === "half" ? "u-veil u-veil-half" : "u-veil"}" points="${pointList(corners)}"/>`;
