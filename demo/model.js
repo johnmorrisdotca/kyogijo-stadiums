@@ -11,7 +11,7 @@ export const SIZES = ["full", "compact", "badge", "surface"];
 export const ORIENTATIONS = ["landscape", "portrait", "auto"];
 export const THEMES = ["auto", "light", "dark"];
 export const STATUSES = ["final", "final-ot", "final-so", "final-aet", "final-pens", "live", "half", "custom"];
-export const PATTERNS = ["bands", "wide", "narrow", "lengthwise", "checks", "diagonal", "none"];
+export const PATTERNS = ["bands", "wide", "narrow", "lengthwise", "checks", "diagonal", "diamonds", "none"];
 export const GOALS = ["box", "line", "strip", "none"];
 export const HALVES = ["none", "left", "right"];
 /** How much of a curling sheet: all of it, only the top end, only the bottom end, or the whole sheet folded with both houses enlarged beside it. */
@@ -22,6 +22,8 @@ export const VIEWPOINTS = ["overhead", "broadcast", "end", "corner"];
 export const PAGEANTS = ["off", "carpet", "stage"];
 /** The sports a game's situation is drawn for, and what each control of it offers. */
 export const SITUATION_SPORTS = ["nhl", "mlb", "nfl", "cfl", "ifaf"];
+/** The sports whose grass is mown in a pattern of its own choosing: a football field, a ballpark and a soccer pitch. */
+export const MOW_SPORTS = ["nfl", "cfl", "ifaf", "mlb", "soccer"];
 export const SIT_HOCKEY = ["pp", "en", "delayed", "shootout"];
 export const SIT_OUTS = ["0", "1", "2"];
 export const SIT_COUNTS = ["0-0", "1-1", "3-2"];
@@ -347,12 +349,12 @@ export function optionsFor(s, lang, forCode = false) {
   if (s.sport === "mlb" && s.park !== "generic") o.park = s.park;
   if (s.league !== null && !isOwnLeague(s.sport, s.league)) o.league = s.league;
   if (s.year !== null && hasSeasons(s)) o.year = s.year;
+  if (MOW_SPORTS.includes(s.sport) && s.pattern !== "bands") o.stripePattern = s.pattern;
   if (s.sport === "soccer") {
     if (s.pitch !== "fifa") o.pitch = s.pitch;
     if (s.ground !== "none") o.ground = s.ground;
     if (s.arena !== "none" && (s.sport === "nhl" || s.sport === "nba")) o.arena = s.arena;
     if (s.pitchType !== "none") o.pitchType = s.pitchType;
-    if (s.pattern !== "bands") o.stripePattern = s.pattern;
     if (s.goals !== "box") o.goals = s.goals;
     if (s.half !== "none" && s.size === "surface") o.half = s.half;
     if (!s.flags) o.cornerFlags = false;
@@ -563,6 +565,7 @@ export function hiddenRows(s) {
     "pitch-row": !soccer,
     "ground-row": !soccer,
     "pitch-type-row": !soccer,
+    "mow-group": !MOW_SPORTS.includes(s.sport),
     "soccer-group": !soccer,
     "curling-group": s.sport !== "curling",
     "away-pens-row": !soccer,

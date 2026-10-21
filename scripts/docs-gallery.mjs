@@ -262,7 +262,7 @@ function soccerPage(lib) {
     intro: "A pitch of every preset size, the five ways to mow the grass, the four goal styles, one half, and a shoot-out in the score.",
     sections: [
       section("presets", "Pitches by size", "`pitch` takes a preset or a size of your own; every size and its rule is in the sources.", presets.map((name) => item(`pitch-${name}`, `Pitch: ${name}`, drawing({ sport: "soccer", pitch: name })))),
-      section("patterns", "Mowing patterns", "`stripePattern`.", ["bands", "wide", "narrow", "lengthwise", "checks", "diagonal", "none"].map((name) => item(`pattern-${name}`, `Stripes: ${name}`, drawing({ sport: "soccer", stripePattern: name })))),
+      section("patterns", "Mowing patterns", "`stripePattern`.", ["bands", "wide", "narrow", "lengthwise", "checks", "diagonal", "diamonds", "none"].map((name) => item(`pattern-${name}`, `Stripes: ${name}`, drawing({ sport: "soccer", stripePattern: name })))),
       section("goals", "Goals", "`goals`, and `cornerFlags` for the flags.", ["box", "line", "strip", "none"].map((name) => item(`goals-${name}`, `Goals: ${name}`, drawing({ sport: "soccer", goals: name })))),
       section("halves", "One half", "`half` draws one half of a bare pitch.", ["left", "right"].map((name) => item(`half-${name}`, `Half: ${name}`, drawing({ sport: "soccer", half: name })))),
       section("pens", "A shoot-out", "A team's `penalties` are written with the status.", [item("shootout", "Final, on penalties", drawing({ sport: "soccer", ...GAMES.soccer }))]),
@@ -755,8 +755,8 @@ function stylingPage(lib) {
         item("goals-custom", "A function of your own", goalCode, "`goalMarkup` is given where each goal stands and returns SVG in feet."),
       ]),
       section("mowing", "Mowing patterns", "`stripePattern` on a football field and a ballpark, as on a soccer pitch.", [
-        ...["wide", "narrow", "lengthwise", "checks", "diagonal", "circles"].map((name) => item(`mow-nfl-${name}`, `Field: ${name}`, drawing({ sport: "nfl", stripePattern: name }))),
-        ...["bands", "lengthwise", "checks", "diagonal", "fan"].map((name) => item(`mow-mlb-${name}`, `Ballpark: ${name}`, drawing({ sport: "mlb", stripePattern: name }))),
+        ...["wide", "narrow", "lengthwise", "checks", "diagonal", "diamonds", "circles"].map((name) => item(`mow-nfl-${name}`, `Field: ${name}`, drawing({ sport: "nfl", stripePattern: name }))),
+        ...["bands", "lengthwise", "checks", "diagonal", "diamonds", "fan"].map((name) => item(`mow-mlb-${name}`, `Ballpark: ${name}`, drawing({ sport: "mlb", stripePattern: name }))),
         item("mow-soccer-circles", "Pitch: circles", drawing({ sport: "soccer", stripePattern: "circles" })),
       ]),
       section("direction", "Direction of play", "`direction` draws an arrow for the end each team attacks, by the sport's rule for the periods.", [

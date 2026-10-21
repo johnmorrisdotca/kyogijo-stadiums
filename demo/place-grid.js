@@ -52,7 +52,7 @@ const FAMILY_OF = { nfl: "football", cfl: "football", ifaf: "football", nhl: "ho
 const FAMILIES = ["football", "hockey", "basketball", "baseball", "soccer", "curling", "net", "pool", "field", "track", "budo"];
 
 /** The soccer pitches the section shows, in order, each in the group of the chip that keeps it. */
-const PATTERNS = ["bands", "wide", "narrow", "lengthwise", "checks", "diagonal"];
+const PATTERNS = ["bands", "wide", "narrow", "lengthwise", "checks", "diagonal", "diamonds"];
 const PITCHES = [
   ...["fifa", "ncaa"].map((id) => ({ id, group: "presets" })),
   ...["9-a-side", "7-a-side", "5-a-side"].map((id) => ({ id, group: "small" })),

@@ -6,10 +6,10 @@ import { at, noSidewaysScroll, open, tap } from "./demo.mjs";
 
 const SECTIONS = {
   gallery: { grid: "gallery-cards", chips: "gallery-family", card: "figure.card", total: 43, noun: "sports", param: "galleryfamily", all: "galleryall" },
-  pitches: { grid: "pitch-cards", chips: "pitches-group", card: "figure.card", total: 16, noun: "pitches", param: "pitchesgroup", all: "pitchesall" },
+  pitches: { grid: "pitch-cards", chips: "pitches-group", card: "figure.card", total: 17, noun: "pitches", param: "pitchesgroup", all: "pitchesall" },
 };
 const FAMILIES = { football: 3, hockey: 1, basketball: 1, baseball: 1, soccer: 1, curling: 1, net: 12, pool: 4, field: 7, track: 2 };
-const GROUPS = { presets: 2, small: 3, futsal: 1, grounds: 2, layouts: 2, mowing: 6 };
+const GROUPS = { presets: 2, small: 3, futsal: 1, grounds: 2, layouts: 2, mowing: 7 };
 
 const cards = (page, name) => page.locator(`${at(SECTIONS[name].grid)} ${SECTIONS[name].card}`);
 /** The cards that take room: those the stylesheet has not shut away (a phone's row that scrolls sideways counts every card in it). */
@@ -107,7 +107,7 @@ test("the pitches narrow to a kind", async ({ page }, testInfo) => {
   await expect(count).toHaveAttribute("aria-live", "polite");
   for (const [group, n] of Object.entries(GROUPS)) {
     await press(page, "pitches", group, testInfo);
-    await expect(count).toHaveText(`${n} of 16 pitches`);
+    await expect(count).toHaveText(`${n} of 17 pitches`);
     await expect(cards(page, "pitches")).toHaveCount(n);
     expect(param(page, "pitchesgroup")).toBe(group);
     await expect(page.locator(`${at("pitch-cards")} svg.kyogijo`)).toHaveCount(n);
@@ -119,7 +119,7 @@ test("the pitches narrow to a kind", async ({ page }, testInfo) => {
   await press(page, "pitches", "grounds", testInfo);
   await expect(page.locator(`${at("pitch-cards")} figcaption`)).toHaveText(["Anfield · 101 × 68 m", "Maracanã Stadium · 105 × 68 m"]);
   await press(page, "pitches", "all", testInfo);
-  await expect(count).toHaveText("16 of 16 pitches");
+  await expect(count).toHaveText("17 of 17 pitches");
   expect(param(page, "pitchesgroup")).toBeNull();
 });
 
@@ -145,7 +145,7 @@ test("the chips are in the address under names of their own, and an address rest
   await expect(page.locator(at("gallery-more"))).toHaveAttribute("aria-expanded", "true");
   await expect(cards(page, "gallery")).toHaveCount(7);
   await expect(page.locator(`${at("gallery-cards")} svg.kyogijo`)).toHaveCount(7);
-  await expect(page.locator(at("pitches-count"))).toHaveText("3 of 16 pitches");
+  await expect(page.locator(at("pitches-count"))).toHaveText("3 of 17 pitches");
   await expect(pressed(page, "pitches")).toHaveText("Small-sided");
   // The chip that is on is in sight, however far along the row it is.
   await open(page, "?lang=en&help=off&galleryfamily=field");
@@ -158,7 +158,7 @@ test("the chips are in the address under names of their own, and an address rest
   // A value the section does not have is the default, and the other section is not touched.
   await open(page, "?lang=en&help=off&galleryfamily=rugby&pitchesgroup=none&galleryall=2");
   await expect(page.locator(at("gallery-count"))).toHaveText("43 of 43 sports");
-  await expect(page.locator(at("pitches-count"))).toHaveText("16 of 16 pitches");
+  await expect(page.locator(at("pitches-count"))).toHaveText("17 of 17 pitches");
   await expect(page.locator(at("gallery-more"))).toHaveAttribute("aria-expanded", "false");
   url = new URL(page.url());
   expect(url.searchParams.get("galleryfamily")).toBe("rugby");
@@ -187,7 +187,7 @@ test("the chips and the show-all button work from the keyboard", async ({ page, 
   await expect(pitches).toHaveText("Show fewer");
   await expect(pitches).toBeFocused();
   await page.keyboard.press("Space");
-  await expect(pitches).toHaveText("Show all 16 pitches");
+  await expect(pitches).toHaveText("Show all 17 pitches");
 });
 
 test("the row that scrolls sideways on a phone can be reached from the keyboard", async ({ page, browserName }) => {
@@ -228,8 +228,8 @@ test("in Japanese the sections say everything in Japanese, and a change of langu
   await expect(page.locator(at("gallery-count"))).toHaveText("43競技中43競技");
   await expect(page.locator(at("gallery-more"))).toHaveText("全43競技を表示");
   await expect(page.locator("#pitches-title")).toHaveText("サッカーのピッチ");
-  await expect(page.locator(at("pitches-count"))).toHaveText("16種中16種");
-  await expect(page.locator(at("pitches-more"))).toHaveText("全16種を表示");
+  await expect(page.locator(at("pitches-count"))).toHaveText("17種中17種");
+  await expect(page.locator(at("pitches-more"))).toHaveText("全17種を表示");
   await expect(pressed(page, "gallery")).toHaveText("すべて");
   await expect(page.getByRole("search", { name: "競技の絞り込み" })).toBeAttached();
   await expect(page.getByRole("search", { name: "ピッチの絞り込み" })).toBeAttached();

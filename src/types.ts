@@ -83,11 +83,11 @@ export interface Placement {
 export type Detail = "full" | "simple";
 
 /**
- * How grass is mown: bands across the surface (the usual), wide ones or narrow ones, along it, in checks, on the diagonal, in rings round the
+ * How grass is mown: bands across the surface (the usual), wide ones or narrow ones, along it, in checks, on the diagonal, in diamonds (the checks turned 45 degrees: a ballpark outfield's crosshatch, its sides along the foul lines), in rings round the
  * middle (`circles`), or `none`. A ballpark is mown in `rings` by default (arcs about home plate) and may also be mown in a `fan` (wedges out from
  * home plate). A football field and a ballpark take the same options as a soccer pitch; a surface that is not grass ignores them.
  */
-export type StripePattern = "bands" | "wide" | "narrow" | "lengthwise" | "checks" | "diagonal" | "circles" | "rings" | "fan" | "none";
+export type StripePattern = "bands" | "wide" | "narrow" | "lengthwise" | "checks" | "diagonal" | "diamonds" | "circles" | "rings" | "fan" | "none";
 
 /**
  * How a goal is drawn, seen from above. A soccer goal: the net as a box behind the goal line, a line on it, a solid strip, or not at all.

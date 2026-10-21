@@ -226,7 +226,7 @@ const safeLength = (value: number | string | undefined): string | undefined => {
   return typeof value === "string" && /^\d+(?:\.\d+)?(?:px|%|em|rem|vw|vh)?$/.test(value.trim()) ? value.trim() : undefined;
 };
 
-const PATTERNS: readonly StripePattern[] = ["bands", "wide", "narrow", "lengthwise", "checks", "diagonal", "circles", "rings", "fan", "none"];
+const PATTERNS: readonly StripePattern[] = ["bands", "wide", "narrow", "lengthwise", "checks", "diagonal", "diamonds", "circles", "rings", "fan", "none"];
 const GOALS: readonly GoalStyle[] = ["box", "line", "strip", "none"];
 
 /** The pitch the options ask for: a `pitch` of the caller's, else the size a `ground` publishes, else none (the international pitch). */

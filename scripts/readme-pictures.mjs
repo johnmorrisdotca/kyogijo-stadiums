@@ -59,6 +59,8 @@ await takePictures({
     { subject: "football", views: ["desk"], url: address("sport=nfl&orientation=landscape"), ready: READY, target: stage, prepare: behind("floodlights") },
     // A basketball court in a look of its own, in a glow.
     { subject: "court", views: ["desk"], url: address("sport=nba&orientation=landscape&court=twoTone&baseline=1"), ready: READY, target: stage, prepare: behind("glow") },
+    // A ballpark mown in diamonds, the crosshatch of an outfield (0.36.0; the theming page's picture, taken with the rest and moved to docs/pictures).
+    { subject: "mowing-diamonds", views: ["desk"], url: address("sport=mlb&park=t-mobile-park&pattern=diamonds&orientation=landscape"), ready: READY, target: stage, prepare: behind("royal") },
     // A ballpark's fence, drawn from its published distances, with its dugouts for the teams.
     { subject: "ballpark", views: ["desk"], url: address("sport=mlb&park=hanshin-koshien-stadium&orientation=landscape"), ready: READY, target: stage, prepare: behind("royal") },
     // The same game tall, for a phone: the words upright, the teams top and bottom.
@@ -179,7 +181,7 @@ await takePictures({
 
 // The pictures that only a page of docs/ shows are taken with the rest and then moved to docs/pictures: docs/images holds the README's pictures (the family's lint counts every file there against the README's 2 MB, and wants each one used in the README),
 // and a page of docs/ names its own pictures in `./pictures/`.
-const DOCS_ONLY = new Set(["boxing-ring-3d-desk", "district-tokyo-3d-desk", "judging-3d-desk", "judging-print-a4-desk", "mma-cage-desk", "multi-judo-desk", "multi-judo-empty-desk", "multi-tabletennis-desk", "prowrestling-ring-3d-desk", "stadiums-koshien-3d-desk", "stadiums-tokyo-dome-3d-desk", "venues-honda-desk", "wrestling-mat-3d-desk"]);
+const DOCS_ONLY = new Set(["mowing-diamonds-desk", "boxing-ring-3d-desk", "district-tokyo-3d-desk", "judging-3d-desk", "judging-print-a4-desk", "mma-cage-desk", "multi-judo-desk", "multi-judo-empty-desk", "multi-tabletennis-desk", "prowrestling-ring-3d-desk", "stadiums-koshien-3d-desk", "stadiums-tokyo-dome-3d-desk", "venues-honda-desk", "wrestling-mat-3d-desk"]);
 const docs = join(dirname(fileURLToPath(import.meta.url)), "..", "docs");
 mkdirSync(join(docs, "pictures"), { recursive: true });
 for (const file of readdirSync(join(docs, "images"))) {

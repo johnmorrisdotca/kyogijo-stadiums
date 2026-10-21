@@ -110,8 +110,8 @@ test("each provider's pitch is drawn, and the converter keeps a point on its lin
 test("the soccer pitches section draws and does not scroll sideways, in Japanese too", async ({ page }) => {
   await open(page, "?lang=en&help=off");
   await page.locator(at("pitch-cards")).scrollIntoViewIfNeeded();
-  // Ten pitches and the six ways of mowing and goals, in one short section with chips (see compact.demo.mjs).
-  await expect(page.locator(`${at("pitch-cards")} svg.kyogijo`)).toHaveCount(16);
+  // Ten pitches and the seven ways of mowing and goals, in one short section with chips (see compact.demo.mjs).
+  await expect(page.locator(`${at("pitch-cards")} svg.kyogijo`)).toHaveCount(17);
   await noSidewaysScroll(page);
   await page.locator('[data-lang="ja"]').click();
   await expect(page.locator("#pitches-title")).toContainText("サッカー");

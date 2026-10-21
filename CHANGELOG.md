@@ -7,6 +7,13 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.36.0] - 2026-10-20
+
+### Added
+
+- **A diamond mowing pattern** (`stripePattern: "diamonds"`, `菱形` in the demo): the crosshatch of a ballpark's outfield, as in a photograph of T-Mobile Park. On a ballpark it is squares of 30 feet with their sides along the foul lines, from home plate out, lighter and darker alternately (two passes of 45-degree stripes crossing); on a football field and a soccer pitch it is squares of a band turned 45 degrees, one of them centred on the turf so that both ends are mown alike, whatever the size. It is cut to the fair ground or to the turf by a clip path. The infield grass stays one tone, and a separate infield pattern is not offered: the pattern is the outfield's. [Theming](./docs/theming.md), the gallery's mowing sections.
+- **The demo's Mowing choice is for every grass sport**: a football field and a ballpark have it too (it was the soccer pitch's alone), with Diamonds among the choices; the soccer section of the home page shows the diamonds as one more card.
+
 ## [0.35.0] - 2026-10-20
 
 ### Added

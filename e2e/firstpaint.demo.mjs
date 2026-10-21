@@ -164,27 +164,27 @@ test.describe("with JavaScript off", () => {
     await page.goto("http://kyogijo.test/");
     // Every card is in the page, with its name; the six a desk shows first are drawn, and each of the others is a box of the same size.
     await expect(page.locator("#gallery-body figure.card")).toHaveCount(43);
-    await expect(page.locator("#pitches-body figure.card")).toHaveCount(16);
+    await expect(page.locator("#pitches-body figure.card")).toHaveCount(17);
     expect(await page.locator("#gallery-body figure svg.kyogijo").count()).toBe(6);
     expect(await page.locator("#pitches-body figure svg.kyogijo").count()).toBe(6);
     expect(await page.locator("#gallery-body figure .pf-img[data-late]").count()).toBe(37);
-    expect(await page.locator("#pitches-body figure .pf-img[data-late]").count()).toBe(10);
+    expect(await page.locator("#pitches-body figure .pf-img[data-late]").count()).toBe(11);
     const boxes = await page.locator("#gallery-body figure .card-stage").evaluateAll((all) => new Set(all.filter((el) => el.getClientRects().length > 0).map((el) => `${Math.round(el.getBoundingClientRect().width)}x${Math.round(el.getBoundingClientRect().height)}`)).size);
     expect(boxes).toBe(1);
     await expect(page.locator(at("gallery-count"))).toHaveText("43 of 43 sports");
-    await expect(page.locator(at("pitches-count"))).toHaveText("16 of 16 pitches");
+    await expect(page.locator(at("pitches-count"))).toHaveText("17 of 17 pitches");
     await expect(page.locator(`${at("gallery-family")} button`)).toHaveCount(12);
     await expect(page.locator(`${at("gallery-family")} button[aria-pressed="true"]`)).toHaveText("All");
     await expect(page.locator(`${at("pitches-group")} button`)).toHaveCount(7);
     await expect(page.locator(at("gallery-more"))).toHaveText("Show all 43 sports");
-    await expect(page.locator(at("pitches-more"))).toHaveText("Show all 16 pitches");
+    await expect(page.locator(at("pitches-more"))).toHaveText("Show all 17 pitches");
     await expect(page.locator(at("gallery-reset"))).toBeHidden();
     await expect(page.locator("#gallery h2")).toHaveText("Every sport");
     await expect(page.locator("#pitches h2")).toHaveText("The soccer pitch");
     // The page is short already: the stylesheet shuts the rest of the cards away, not the script (a phone's row scrolls sideways, so shuts none).
     const shut = (id) => page.locator(`#${id}-body figure.card`).evaluateAll((all) => all.filter((el) => getComputedStyle(el).display === "none").length);
     const phone = page.viewportSize().width < 560;
-    expect([await shut("gallery"), await shut("pitches")]).toEqual(phone ? [0, 0] : [37, 10]);
+    expect([await shut("gallery"), await shut("pitches")]).toEqual(phone ? [0, 0] : [37, 11]);
     for (const id of ["gallery", "pitches"]) expect((await page.locator(`#${id}`).boundingBox()).height).toBeLessThan(phone ? 700 : 900);
   });
 
@@ -260,7 +260,7 @@ test("the sports, pitches, parks and grounds keep their box and their cards when
   // The cards that were boxes are drawn when their grid comes within a screen of the window, in the boxes they had: the lower ones wait for the reader to come down.
   for (const id of ["pitch-cards", "park-grid", "ground-grid"]) await page.locator(at(id)).scrollIntoViewIfNeeded();
   await expect(page.locator("#gallery-body figure svg.kyogijo")).toHaveCount(43);
-  await expect(page.locator("#pitches-body figure svg.kyogijo")).toHaveCount(16);
+  await expect(page.locator("#pitches-body figure svg.kyogijo")).toHaveCount(17);
   await expect(page.locator("#parks-body .park svg.kyogijo")).toHaveCount(30);
   await expect(page.locator("#grounds-body .park svg.kyogijo")).toHaveCount(28);
   expect(await page.locator("[data-late]").count()).toBe(0);

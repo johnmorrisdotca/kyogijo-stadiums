@@ -341,8 +341,10 @@ const page = `<!doctype html>
                 <input type="range" class="fam-field era-range" id="crowd-density" data-testid="crowd-density" min="0" max="100" step="5" value="${first.crowdDensity}" />
                 <output class="era-season" id="crowd-density-out" data-testid="crowd-density-out" for="crowd-density">${first.crowdDensity}%</output>
               </div>
+              <div id="mow-group"${hid("mow-group")}>
+                ${seg("pattern", "stripePattern", "How the grass is mown: bands across the field, wide or narrow, along it, in checks, on the diagonal or in diamonds (the crosshatch of a ballpark).", "芝の刈り方です。フィールドを横切る縞（標準・太い・細い）、長辺に沿った縞、市松模様、斜めの縞、菱形（球場の外野に見られる、斜めの縞を交差させた刈り方）から選べます。")}
+              </div>
               <div id="soccer-group"${hid("soccer-group")}>
-                ${seg("pattern", "stripePattern", "How the grass is mown: bands across the pitch, wide or narrow, along it, in checks or on the diagonal.", "芝の刈り方です。ピッチを横切る縞（標準・太い・細い）、縦方向の縞、市松模様、斜めの縞から選べます。")}
                 ${seg("goals", "goalStyle", "How the goals are drawn from above: the net as a box, a line on the goal line, a solid strip or nothing.", "ゴールを真上から見た描き方です。ネットを四角で描く、ゴールライン上の線にする、塗りつぶした帯にする、描かない、の4つから選べます。")}
                 ${seg("half", "half", "Show the whole pitch or one half. A drawing with teams always shows the whole pitch.", "ピッチ全体か、片側の半面を表示します。チームを載せた図では常にピッチ全体を表示します。")}
                 <div class="setup fam-row">${toggle("flags", "cornerFlags")}</div>

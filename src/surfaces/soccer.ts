@@ -30,10 +30,10 @@ const BANDS: Record<"bands" | "wide" | "narrow", number> = { bands: 19, wide: 9,
 /** The stripes of mown grass, as one path of the lighter bands (or the darker, as you see it). */
 function stripes(pattern: StripePattern, L: number, W: number, id: string): { path: string; defs: string; evenodd?: boolean } {
   if (pattern === "none") return { path: "", defs: "" };
-  if (pattern === "circles") {
-    // Rings about the middle, as wide as a usual band, cut to the pitch.
-    const mown = mowTurf("circles", { x: 0, y: 0, w: L, h: W }, L / BANDS.bands);
-    return { path: mown.path, defs: `<clipPath id="${id}-turf"><rect x="0" y="0" width="${n(L)}" height="${n(W)}"/></clipPath>`, evenodd: true };
+  if (pattern === "circles" || pattern === "diamonds") {
+    // Rings about the middle, or squares turned 45 degrees about it, as wide as a usual band, cut to the pitch.
+    const mown = mowTurf(pattern, { x: 0, y: 0, w: L, h: W }, L / BANDS.bands);
+    return { path: mown.path, defs: `<clipPath id="${id}-turf"><rect x="0" y="0" width="${n(L)}" height="${n(W)}"/></clipPath>`, evenodd: mown.evenodd };
   }
   const rect = (x: number, y: number, w: number, h: number): string => `M${n(x)} ${n(y)}h${n(w)}v${n(h)}h${n(-w)}z`;
   const parts: string[] = [];

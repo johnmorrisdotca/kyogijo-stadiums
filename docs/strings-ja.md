@@ -1585,6 +1585,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `pattern_lengthwise` | Lengthwise | 長辺に沿った縞 |
 | `pattern_checks` | Checks | 市松 |
 | `pattern_diagonal` | Diagonal | 斜め |
+| `pattern_diamonds` | Diamonds | 菱形 |
 | `pattern_none` | None | なし |
 | `budoLook` | Mats | 畳 |
 | `budoLook_default` | The sport's own | 標準 |

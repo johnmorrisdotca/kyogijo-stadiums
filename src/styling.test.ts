@@ -194,18 +194,18 @@ describe("goals", () => {
 });
 
 describe("mowing patterns", () => {
-  const patterns = ["bands", "wide", "narrow", "lengthwise", "checks", "diagonal", "circles", "rings", "fan", "none"] as const;
+  const patterns = ["bands", "wide", "narrow", "lengthwise", "checks", "diagonal", "diamonds", "circles", "rings", "fan", "none"] as const;
   const stripe = (svg: string): Node | undefined => withClass(root(svg), "ky-stripe")[0] ?? withClass(root(svg), "ky-ring")[0];
 
   it("mow a football field in every pattern, the usual one by default and for `bands`", () => {
     expect(drawKyogijo({ sport: "nfl", id: "m", stripePattern: "bands" })).toBe(drawKyogijo({ sport: "nfl", id: "m" }));
     const paths = new Set<string>();
-    for (const pattern of ["wide", "narrow", "lengthwise", "checks", "diagonal", "circles"] as const) {
+    for (const pattern of ["wide", "narrow", "lengthwise", "checks", "diagonal", "diamonds", "circles"] as const) {
       const node = stripe(drawKyogijo({ sport: "nfl", id: "m", stripePattern: pattern }));
       expect(node, pattern).toBeDefined();
       paths.add(node!.attrs.d);
     }
-    expect(paths.size).toBe(6);
+    expect(paths.size).toBe(7);
     expect(stripe(drawKyogijo({ sport: "nfl", id: "m", stripePattern: "none" }))).toBeUndefined();
     expect(stripe(drawKyogijo({ sport: "nfl", id: "m", stripePattern: "circles" }))!.attrs["clip-path"]).toBe("url(#m-turf)");
   });
@@ -214,13 +214,13 @@ describe("mowing patterns", () => {
     expect(drawKyogijo({ sport: "mlb", id: "m", stripePattern: "rings" })).toBe(drawKyogijo({ sport: "mlb", id: "m" }));
     expect(drawKyogijo({ sport: "mlb", id: "m", stripePattern: "circles" })).toBe(drawKyogijo({ sport: "mlb", id: "m" }));
     const paths = new Set<string>();
-    for (const pattern of ["bands", "wide", "narrow", "lengthwise", "checks", "diagonal", "fan"] as const) {
+    for (const pattern of ["bands", "wide", "narrow", "lengthwise", "checks", "diagonal", "diamonds", "fan"] as const) {
       const node = withClass(root(drawKyogijo({ sport: "mlb", id: "m", stripePattern: pattern })), "ky-stripe")[0];
       expect(node, pattern).toBeDefined();
       expect(node.attrs["clip-path"]).toBe("url(#m-fair)");
       paths.add(node.attrs.d);
     }
-    expect(paths.size).toBe(7);
+    expect(paths.size).toBe(8);
     expect(withClass(root(drawKyogijo({ sport: "mlb", id: "m", stripePattern: "none" })), "ky-ring")).toHaveLength(0);
   });
 

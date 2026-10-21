@@ -95,7 +95,9 @@ console.log(svg.split('class="my-net"').length - 1);
 // 2
 ```
 
-`stripePattern` mows football fields, ballparks and soccer pitches: `bands` (the usual), `wide`, `narrow`, `lengthwise`, `checks`, `diagonal`, `circles` (rings about the middle) and `none`. A ballpark is mown in `rings` (arcs about home plate) by default, and also in a `fan` (wedges out from home plate). Ice and wood have no grass, so they ignore it. [Annotations](./annotations.md) label, measure and point the surface out.
+`stripePattern` mows football fields, ballparks and soccer pitches: `bands` (the usual), `wide`, `narrow`, `lengthwise`, `checks`, `diagonal`, `diamonds` (the checks turned 45 degrees, the crosshatch of a ballpark's outfield), `circles` (rings about the middle) and `none`. A ballpark is mown in `rings` (arcs about home plate) by default, and also in a `fan` (wedges out from home plate) or in `diamonds`, whose sides run along the foul lines, as two passes of stripes parallel to them cross from home plate out; on a football field and a soccer pitch the diamonds are squares of a band turned 45 degrees, one of them centred on the turf so that both ends are mown alike. The infield grass is one tone: the pattern is the outfield's. Ice and wood have no grass, so they ignore it.
+
+![T-Mobile Park mown in diamonds: squares of lighter and darker grass with their sides along the foul lines, from home plate out to the fence, with the infield's dirt and grass in one tone](./pictures/mowing-diamonds-desk-light.webp) [Annotations](./annotations.md) label, measure and point the surface out.
 
 ## The colours
 

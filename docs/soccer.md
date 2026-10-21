@@ -7,7 +7,7 @@
 | `pitch` | A preset or a size: `{ length, width, unit }` in metres (or `yd`, `ft`, `in`, `cm`, `mm`; `units` sets the default). The international 105 by 68 m by default. |
 | `ground` | A ground of `GROUNDS` ([below](./soccer.md#famous-grounds)): its pitch size. |
 | `half` | `left` or `right`: one half, for a bare pitch. A drawing with teams always shows the whole. |
-| `stripePattern` | `bands` (19, the default), `wide`, `narrow`, `lengthwise`, `checks`, `diagonal`, `circles` (rings about the centre) or `none`; `stripes: false` also turns them off. A football field and a ballpark take the same option ([Theming](./theming.md#goals-and-mowing)). |
+| `stripePattern` | `bands` (19, the default), `wide`, `narrow`, `lengthwise`, `checks`, `diagonal`, `diamonds` (the checks turned 45 degrees), `circles` (rings about the centre) or `none`; `stripes: false` also turns them off. A football field and a ballpark take the same option ([Theming](./theming.md#goals-and-mowing)). |
 | `goals` | `box` (the net, the default), `line`, `strip` or `none`; the same four style a hockey net, a basket and a field's posts, and `goalMarkup` draws a goal of your own ([Theming](./theming.md#goals-and-mowing)). `cornerFlags` turns the flags off. |
 | `pitchType` | Draw the pitch in a data provider's own coordinates (below). |
 
