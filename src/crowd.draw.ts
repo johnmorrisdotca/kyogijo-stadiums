@@ -146,6 +146,8 @@ export interface DrawInput {
   density: number;
   fine: boolean;
   ground: string;
+  /** The teams' colours of the drawing's score, where it has them: what a lighting's team colours are (the crowd's own `home` and `away` come first). */
+  team?: { home?: string; away?: string };
 }
 
 /** The building of a real venue and, where its rink's orientation is known, a small arrow with an N that says where north lies. The N is a path of three strokes, so that no font is needed. */
@@ -201,18 +203,18 @@ export function drawCrowd(stands: CrowdStands, o: DrawInput): { defs: string; ma
   }
   for (const s of stands.sectors) body += sector(s, id, fine, density);
   // The house is down: a dark veil over the seats, under the aisles' lights.
-  const light = stands.gallery === true ? undefined : resolveLighting(crowd.lighting);
-  const night = light?.preset === "night";
-  const down = light?.preset === "lightsDown";
-  if (light !== undefined) for (const ring of stands.rings) body += el("path", { class: down ? "ky-cr-veil ky-cr-veil-down" : "ky-cr-veil", d: path(ring) });
+  const light = stands.gallery === true ? undefined : resolveLighting(crowd.lighting, { home: crowd.home ?? o.team?.home, away: crowd.away ?? o.team?.away });
+  const night = light?.aisles === "dots";
+  const down = light?.aisles === "beams";
+  if (light !== undefined) for (const ring of stands.rings) body += el("path", { class: light.house === "dark" ? "ky-cr-veil ky-cr-veil-down" : light.house === "half" ? "ky-cr-veil ky-cr-veil-half" : "ky-cr-veil", d: path(ring) });
   if (fine) {
     for (const ring of stands.rings) {
       if (stands.gallery === true) continue;
       if (!down || light === undefined) body += rows(ring) + aisles(ring, night);
       else {
         // The lights down: the front of each tier edged with light, each stair aisle a beam from above with its rails (a vomitory a broader one).
-        body += rows(ring) + (ring.hole === null ? "" : el("path", { class: "ky-cr-edge", d: outlinePath(ring.hole), fill: "none", stroke: light.aisles, "stroke-opacity": 0.6, "stroke-width": 0.6 }));
-        ring.aisles.forEach(([[x0, y0], [x1, y1]], i) => (body += beamSvg([x0, y0], [x1, y1], light.aisles, "ky-cr-beam", i % 4 === 0)));
+        body += rows(ring) + (ring.hole === null ? "" : el("path", { class: "ky-cr-edge", d: outlinePath(ring.hole), fill: "none", stroke: light.beam, "stroke-opacity": 0.6, "stroke-width": 0.6 }));
+        ring.aisles.forEach(([[x0, y0], [x1, y1]], i) => (body += beamSvg([x0, y0], [x1, y1], light.beam, "ky-cr-beam", i % 4 === 0)));
       }
     }
   }
@@ -236,7 +238,7 @@ export function drawCrowd(stands: CrowdStands, o: DrawInput): { defs: string; ma
     pool += el("radialGradient", { id: `${id}-wash`, cx: 0.5, cy: 0.5, r: 0.72 }, el("stop", { offset: 0, "stop-color": light.wash, "stop-opacity": WASH.middle }) + el("stop", { offset: 1, "stop-color": light.wash, "stop-opacity": WASH.edge }));
     over += el("rect", { class: "ky-cr-wash", x: n1(b.x), y: n1(b.y), width: n1(b.w), height: n1(b.h), rx: stands.sport === "nhl" ? NHL.cornerRadius : undefined, fill: `url(#${id}-wash)` });
   }
-  if (night) {
+  if (light?.pool === true) {
     const b = stands.box;
     const [w, h] = [b.w + 2 * POOL.reach, b.h + 2 * POOL.reach];
     pool += el("radialGradient", { id: `${id}-pool`, cx: 0.5, cy: 0.5, r: 0.5 }, [[0, 0], [POOL.edge - 0.12, 0], [POOL.edge, POOL.strength], [1, 0]].map(([offset, opacity]) => el("stop", { offset, "stop-color": "#fff4dc", "stop-opacity": opacity })).join(""));
@@ -247,7 +249,7 @@ export function drawCrowd(stands: CrowdStands, o: DrawInput): { defs: string; ma
     const [x0, y0, x1, y1] = g.box;
     body += el("rect", { class: `ky-cr-${g.kind}`, x: n1(x0), y: n1(y0), width: n1(x1 - x0), height: n1(y1 - y0), rx: g.kind === "bench" ? 1 : undefined });
   }
-  return { defs: (fine && (stands.gallery !== true || density > 0) ? patterns(id, crowd, density, tifo.home || tifo.away ? tifo : undefined, stands.gallery === true || stands.real !== undefined) : "") + pool, markup: el("g", { class: down ? "ky-crowd ky-night ky-down" : night ? "ky-crowd ky-night" : "ky-crowd" }, body) + lit, over };
+  return { defs: (fine && (stands.gallery !== true || density > 0) ? patterns(id, crowd, density, tifo.home || tifo.away ? tifo : undefined, stands.gallery === true || stands.real !== undefined) : "") + pool, markup: el("g", { class: light === undefined ? "ky-crowd" : light.house === "dark" ? "ky-crowd ky-night ky-down" : light.house === "half" ? "ky-crowd ky-night ky-half" : "ky-crowd ky-night" }, body) + lit, over };
 }
 
 /** A block of visitors or a card display, a polygon over the band it is in. */
@@ -291,6 +293,8 @@ export const KYOGIJO_CROWD_STYLE = `
 .kyogijo .ky-night{--ky-cr-bed:#11151a;--ky-cr-empty:#2a313a;--ky-cr-gap:#020304;--ky-cr-conc:#171c22;--ky-cr-rim:#07090c}
 .kyogijo .ky-cr-veil{fill:#04060a;fill-opacity:.6}
 .kyogijo .ky-cr-veil-down{fill-opacity:.8}
+.kyogijo .ky-cr-veil-half{fill-opacity:.3}
+.kyogijo .ky-half{--ky-cr-bed:#2a3039;--ky-cr-empty:#4a535f;--ky-cr-gap:#0a0c0f;--ky-cr-conc:#2a3038}
 .kyogijo .ky-cr-beam,.kyogijo .ky-cr-edge{stroke-linecap:butt}
 .kyogijo .ky-night .ky-cr-aisle{stroke:#ffd9a3;stroke-opacity:.95;stroke-dasharray:1.1 3.4;stroke-linecap:round}
 .kyogijo .ky-night .ky-cr-vom{stroke:#7dffb0;stroke-opacity:.6;stroke-dasharray:none}

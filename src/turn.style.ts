@@ -94,11 +94,13 @@ export const KYOGIJO_TURN_STYLE = `
 .ky-turn[data-lighting]{--ky-cr-bed:#11151a;--ky-cr-empty:#2a313a;--ky-cr-gap:#020304;--ky-cr-conc:#171c22;--ky-cr-dim:1;--ky-up-fascia:#272c29;--ky-up-ground:#1d211e;--ky-night-aisle:#ffd9a3;--ky-night-exit:#7dffb0;--ky-night-rim:#ffe0b0}
 .ky-turn .u-veil{fill:#04060a;fill-opacity:.62}
 .ky-turn .u-veil-down{fill-opacity:.8}
-.ky-turn[data-lighting=lightsDown]{--ky-cr-bed:#0a0d11;--ky-cr-conc:#101419;--ky-up-fascia:#1b1f1d;--ky-up-ground:#15181a}
+.ky-turn .u-veil-half{fill-opacity:.3}
+.ky-turn:is([data-lighting=lightsDown],[data-lighting=intro],[data-lighting=concert]){--ky-cr-bed:#0a0d11;--ky-cr-conc:#101419;--ky-up-fascia:#1b1f1d;--ky-up-ground:#15181a}
+.ky-turn[data-lighting=game]{--ky-cr-bed:#2a3039;--ky-cr-empty:#4a535f;--ky-cr-gap:#0a0c0f;--ky-cr-conc:#2a3038;--ky-up-fascia:#3b403c;--ky-up-ground:#242823}
 .ky-turn[data-lighting=night] .ky-cr-aisle{stroke:var(--ky-night-aisle);stroke-opacity:.95;stroke-dasharray:1.1 3.4;stroke-linecap:round}
 .ky-turn[data-lighting=night] .ky-cr-vom{stroke:var(--ky-night-exit);stroke-opacity:.6;stroke-dasharray:none}
 .ky-turn[data-lighting] .u-suite-win{fill:color-mix(in srgb,var(--ky-night-aisle) 50%,#2a2218)}
-.ky-turn[data-lighting=lightsDown] .u-suite-win{fill:color-mix(in srgb,var(--ky-night-aisle) 10%,#0d1116)}
+.ky-turn:is([data-lighting=lightsDown],[data-lighting=intro],[data-lighting=concert]) .u-suite-win{fill:color-mix(in srgb,var(--ky-night-aisle) 10%,#0d1116)}
 .ky-turn[data-lighting] .u-coping{fill:color-mix(in srgb,var(--ky-night-rim) 55%,var(--ky-up-fascia))}
 .ky-turn[data-lighting] .u-suite-ledge{fill:color-mix(in srgb,var(--ky-night-rim) 45%,var(--ky-up-fascia))}
 .ky-turn[data-lighting] .u-clane{stroke:var(--ky-night-rim);stroke-opacity:.4}

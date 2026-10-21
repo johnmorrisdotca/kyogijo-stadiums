@@ -288,12 +288,14 @@ export type SheetEnd = Side | "top" | "bottom";
 export type CrowdShape = "bowl" | "sides" | "horseshoe" | "grandstand";
 
 /**
- * The lighting of a venue (`crowd.lighting` in the plan, `venue.lighting` in the 3D view). `"night"` (or `true`, or `{ preset: "night" }`) dims the house, lights the playing surface and shows small lights along the aisles and stairs, the ribbon
- * boards and the scoreboard glowing, the exits and the concourse rim softly lit. `"lightsDown"` is a show's house: nearly black, each stair aisle lit from above as a beam with a soft falloff on the steps either side, the rails and the front of
- * every step edged with light. `wash` colours the playing surface with a light (a CSS colour, or `white`, `amber`, `purple`, `magenta`, `blue`, `cyan`; the markings stay visible) and `aisles` the beams (`lightsDown`). `false` is no lighting. Off by default.
+ * The lighting of a venue (`crowd.lighting` in the plan, `venue.lighting` in the 3D view): a named preset (`LIGHT_PRESETS`), `true` (the night), or `{ preset, colors, aisles, wash }`. `"night"` dims the house, lights the playing surface and shows small
+ * lights along the aisles and stairs, the ribbon boards and the scoreboard glowing, the exits and the concourse rim softly lit. `"game"` is white light with the house half lit. `"lightsDown"` is a show's house: nearly black, each stair aisle lit from
+ * above as a beam with a soft falloff on the steps either side, the rails and the front of every step edged with light. `"intro"` is the same house with the home team's colour washed over the surface and the visitors' in the beams (the teams'
+ * colours where the options have them, else blue and amber); `"concert"` has warm amber beams and a purple surface. `colors` are one or two colours that stand for the home and the visitors (before the options' teams); `wash` colours the playing surface
+ * with a light (a CSS colour, or `white`, `amber`, `purple`, `magenta`, `blue`, `cyan`; the markings stay visible) and `aisles` the beams, and both win over the preset's. `false` is no lighting. Off by default.
  */
-export type LightingPreset = "night" | "lightsDown";
-export type LightingOptions = LightingPreset | boolean | { preset?: LightingPreset; aisles?: string; wash?: string };
+export type LightingPreset = "night" | "game" | "lightsDown" | "intro" | "concert";
+export type LightingOptions = LightingPreset | boolean | { preset?: LightingPreset; colors?: readonly string[]; aisles?: string; wash?: string };
 
 /** The patterns a ribbon board shows: `bands` (two bands of colour, in panels), `blocks` (a block of colour to a panel), `chevrons` (arrows running along it) or `waves`. */
 export type LedBoardPattern = "bands" | "blocks" | "chevrons" | "waves";

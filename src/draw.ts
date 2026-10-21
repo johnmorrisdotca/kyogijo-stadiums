@@ -61,6 +61,7 @@ import { overlayMarkup, placeBoard, resolveBoard } from "./overlay.ts";
 import { KYOGIJO_HARDWOOD_STYLE, resolveHardwood } from "./hardwood.ts";
 import { WALL_SEATS, densityOf, layoutOf as crowdLayout, resolveCrowd, type Crowd, type CrowdStands } from "./crowd.ts";
 import { drawCrowd, KYOGIJO_CROWD_STYLE } from "./crowd.draw.ts";
+import { teamColors } from "./venue.lighting.ts";
 import { parkLayout } from "./crowd.park.ts";
 import { featureColours, featureStyle } from "./features.ts";
 import { isLook, lookStyle } from "./look.ts";
@@ -509,7 +510,7 @@ function buildCrowded(o: SurfaceOptions, portrait: boolean, id: string, score: b
   const bg = /class="([^"]*)"/.exec(first)?.[1] ?? "ky-apron";
   // A gallery is empty unless the options say how full: its seats are the detail.
   const taken = stands.gallery === true && crowd.density === undefined && crowd.attendance === undefined ? 0 : densityOf(crowd, seats, ground);
-  const drawn = drawCrowd(stands, { id, crowd, density: taken, fine, ground: bg });
+  const drawn = drawCrowd(stands, { id, crowd, density: taken, fine, ground: bg, team: teamColors(o) });
   surface.base = first + drawn.markup + surface.base.slice(first.length);
   surface.defs += drawn.defs;
   surface.lines += drawn.over;

@@ -6,27 +6,74 @@ import { flat, n, type Plane } from "./turn.kit.ts";
 import { safeColor } from "./venue.boards.ts";
 import type { LightingOptions, LightingPreset } from "./types.ts";
 
-export const LIGHTING_PRESETS: readonly LightingPreset[] = ["night", "lightsDown"];
-
-/** The named colours of light: `wash` and `aisles` take these by name (ours, a little saturated, for a light seen on dark). */
+/** The named colours of light: `wash`, `aisles` and `colors` take these by name (ours, a little saturated, for a light seen on dark). */
 export const LIGHT_COLORS = { white: "#fff6e6", amber: "#ffb830", purple: "#9b4dff", magenta: "#ff2bd6", blue: "#2b7bff", cyan: "#27d6ff" } as const;
 
-/** The lighting as asked, with every part's value. `aisles` is the colour of the beams and `wash` the surface's colour of light (none for the surface as it is). */
+/** How dark the house is: `half` (a light veil, the game's), `dim` (the night's) or `dark` (a show's). */
+export type House = "half" | "dim" | "dark";
+
+/**
+ * A named lighting. `house` is how dark the stands are; `aisles` how the aisles are lit (`none`, small `dots`, or a `beam` of light from above down each); `pool` whether a pool of light lies on the floor round the surface; `wash` and `beam` are the colours
+ * of the light on the surface and of the beams: a colour (a name of `LIGHT_COLORS`), or `home` and `away`, the teams' colours where the options have them (`crowd.home` and `crowd.away`, the colours of a score's teams), else `fallback`'s.
+ */
+export interface LightPreset {
+  house: House;
+  aisles: "none" | "dots" | "beams";
+  pool: boolean;
+  wash?: keyof typeof LIGHT_COLORS | "home" | "away";
+  beam?: keyof typeof LIGHT_COLORS | "home" | "away";
+  /** What `home` and `away` are where the options name no team colour. */
+  fallback?: { home: keyof typeof LIGHT_COLORS; away: keyof typeof LIGHT_COLORS };
+}
+
+/**
+ * The named lightings. `night`: the calm dim house with small lights along the aisles. `game`: white light, the house half lit, a pool of light round the surface. `lightsDown`: the house nearly black, a white beam down each aisle. `intro`: the
+ * house dark, the home team's colour washed over the surface and the visitors' (the second colour) in the beams. `concert`: warm amber beams and a purple surface. (The `celebration` of the plan, colours chasing round the bowl, is a later one.)
+ */
+export const LIGHT_PRESETS: Readonly<Record<LightingPreset, LightPreset>> = {
+  night: { house: "dim", aisles: "dots", pool: true },
+  game: { house: "half", aisles: "none", pool: true },
+  lightsDown: { house: "dark", aisles: "beams", pool: false },
+  intro: { house: "dark", aisles: "beams", pool: false, wash: "home", beam: "away", fallback: { home: "blue", away: "amber" } },
+  concert: { house: "dark", aisles: "beams", pool: false, wash: "purple", beam: "amber" },
+};
+export const LIGHTING_PRESETS = Object.keys(LIGHT_PRESETS) as readonly LightingPreset[];
+
+/** The lighting as asked, with every part's value. */
 export interface Lighting {
   preset: LightingPreset;
-  aisles: string;
+  house: House;
+  aisles: "none" | "dots" | "beams";
+  pool: boolean;
+  /** The colour of the beams. */
+  beam: string;
+  /** The surface's colour of light (none for the surface as it is). */
   wash: string | undefined;
 }
 
 const colorOf = (value: unknown): string | undefined => (typeof value === "string" && Object.hasOwn(LIGHT_COLORS, value) ? LIGHT_COLORS[value as keyof typeof LIGHT_COLORS] : safeColor(value));
 
-/** The lighting an option asks for: a named preset, `true` for the first (night), `{ preset, aisles, wash }`, or `undefined` for none (false, nothing, an unknown name). */
-export function resolveLighting(ask: LightingOptions | undefined | null): Lighting | undefined {
+/** The teams' colours the options have: a score's teams' `color`, over which a crowd's `home` and `away` stand. */
+export function teamColors(o: object, crowd?: { home?: string; away?: string }): { home?: string; away?: string } {
+  const teams = o as { home?: { color?: unknown }; away?: { color?: unknown } };
+  return { home: safeColor(crowd?.home) ?? safeColor(teams.home?.color), away: safeColor(crowd?.away) ?? safeColor(teams.away?.color) };
+}
+
+/**
+ * The lighting an option asks for: a preset's name, `true` for the first (night), or `{ preset, colors, aisles, wash }`, or `undefined` for none (false, nothing, an unknown name). A colour comes from, in order: `wash` or `aisles`, `colors` (the first
+ * is what the preset's `home` is, the second its `away`), the teams' colours (`team`), the preset's own.
+ */
+export function resolveLighting(ask: LightingOptions | undefined | null, team: { home?: string; away?: string } = {}): Lighting | undefined {
   if (ask === undefined || ask === null || ask === false) return undefined;
   const o = typeof ask === "object" ? ask : {};
   const name = typeof ask === "string" ? ask : ask === true ? "night" : o.preset ?? "night";
   if (!LIGHTING_PRESETS.includes(name as LightingPreset)) return undefined;
-  return { preset: name as LightingPreset, aisles: colorOf(o.aisles) ?? LIGHT_COLORS.white, wash: colorOf(o.wash) };
+  const preset = name as LightingPreset;
+  const base = LIGHT_PRESETS[preset];
+  const given = (Array.isArray(o.colors) ? o.colors : []).map(colorOf).filter((c): c is string => c !== undefined);
+  const side = (which: "home" | "away"): string => (which === "home" ? given[0] ?? team.home : given[1] ?? team.away) ?? LIGHT_COLORS[base.fallback?.[which] ?? (which === "home" ? "blue" : "amber")];
+  const pick = (token: LightPreset["wash"]): string | undefined => (token === undefined ? undefined : token === "home" || token === "away" ? side(token) : LIGHT_COLORS[token]);
+  return { preset, house: base.house, aisles: base.aisles, pool: base.pool, beam: colorOf(o.aisles) ?? pick(base.beam) ?? LIGHT_COLORS.white, wash: colorOf(o.wash) ?? pick(base.wash) };
 }
 
 /** How far the pool of light round the surface reaches beyond its box, in feet, and the share of the pool that is bright (the surface's own edge). The surface itself stays as drawn: the pool is brightest just outside its markings. */

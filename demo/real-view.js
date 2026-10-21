@@ -7,11 +7,11 @@
 import { drawKyogijo } from "./dist/index.js";
 import { mountKyogijoTurn } from "./dist/turn-entry.js";
 import { hoverOf, wayOf, writeWay } from "./turn-way.js";
-import { WASHES, lightingFor } from "./lighting.js";
+import { LIGHTINGS, WASHES, lightingFor, lightingOfAddress } from "./lighting.js";
 
 /** The parts a reader can switch, in the order of the bar, with what each is by default: the stands on, the walls, the roof, the LED boards and the night lighting off (the bowl is seen), the building, the markings and the labels on. */
-export const PARTS = ["stands", "walls", "roof", "boards", "night", "lights", "building", "markings", "labels"];
-const DEFAULTS = { stands: true, walls: false, roof: false, boards: false, night: false, lights: false, building: true, markings: true, labels: true };
+export const PARTS = ["stands", "walls", "roof", "boards", "building", "markings", "labels"];
+const DEFAULTS = { stands: true, walls: false, roof: false, boards: false, building: true, markings: true, labels: true };
 /** What the boards show when they are on: the package's own colours and a plain score (a demo's choice, not the library's default of 0 and 0). */
 const BOARDS = { score: [3, 2] };
 /** The viewpoints the 3D view has. */
@@ -21,7 +21,7 @@ const VIEWPOINTS = ["overhead", "broadcast", "end", "corner"];
 export const REAL_VIEW_CSS = `
 .rv-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0 0 8px; }
 .rv-bar button, .rv-bar select { font: inherit; font-size: .9rem; font-weight: 700; min-height: 44px; padding: 0 12px; border-radius: 999px; border: 2px solid var(--rv-line, #b9b3a3); background: var(--rv-card, #fff); color: var(--rv-ink, #10151b); cursor: pointer; }
-.rv-bar select { font-weight: 600; padding: 0 8px; }
+.rv-bar select { font-weight: 600; padding: 0 8px; box-sizing: border-box; height: 44px; display: inline-block; max-width: 12rem; }
 .rv-bar button[aria-pressed="true"] { background: var(--rv-on, #10151b); color: var(--rv-on-ink, #fff); border-color: var(--rv-on, #10151b); }
 .rv-bar button:focus-visible, .rv-bar select:focus-visible { outline: 3px solid var(--rv-accent, #1f5fa8); outline-offset: 2px; }
 .rv-bar [hidden] { display: none !important; }
@@ -43,7 +43,7 @@ export const REAL_VIEW_CSS = `
  * @param {HTMLElement} options.stage where the drawing or the 3D view goes
  * @param {HTMLElement} options.bar where the buttons go
  * @param {string} options.venue the venue (a key of `VENUES`) when the address names none
- * @param {() => { lang: string, words: Record<string, string>, theme: "light" | "dark" | undefined }} options.page the page's language, the words of the buttons (`p_stands`, `p_walls`, `p_roof`, `p_boards`, `p_night`, `p_lights`, `p_wash`, `wash_none`, `wash_purple`, `wash_magenta`, `wash_blue`, `wash_white`, `p_building`, `p_markings`, `p_labels`, `view2d`, `view3d`, `group`) and the theme it forces
+ * @param {() => { lang: string, words: Record<string, string>, theme: "light" | "dark" | undefined }} options.page the page's language, the words of the buttons (`p_stands`, `p_walls`, `p_roof`, `p_boards`, `p_lighting`, `lighting_off`, `lighting_night`, `lighting_game`, `lighting_lightsDown`, `lighting_intro`, `lighting_concert`, `p_wash`, `wash_none`, `wash_purple`, `wash_magenta`, `wash_blue`, `wash_white`, `p_building`, `p_markings`, `p_labels`, `view2d`, `view3d`, `group`) and the theme it forces
  * @param {string} [options.prefix] the prefix of this view's parameters in the address
  * @param {boolean} [options.flat] whether the view can be flat (a `view` button); a view that cannot is always 3D
  * @param {string} [options.chipClass] a class for the buttons, for a page that has a style of its own for them
@@ -60,6 +60,7 @@ export function mountRealView({ stage, bar, venue, page, prefix = "", flat = tru
     ...Object.fromEntries(PARTS.map((part) => [part, flag(part, DEFAULTS[part])])),
     viewpoint: VIEWPOINTS.includes(params.get(key("viewpoint"))) ? params.get(key("viewpoint")) : "corner",
     spin: spin && params.get(key("spin")) === "on",
+    lighting: lightingOfAddress(params, prefix),
     wash: WASHES.includes(params.get(key("wash"))) ? params.get(key("wash")) : "none",
   };
   // An old address's `roof=1` was the walls and the roof together.
@@ -92,7 +93,11 @@ export function mountRealView({ stage, bar, venue, page, prefix = "", flat = tru
     for (const part of PARTS) set(part, state[part] === DEFAULTS[part] ? null : state[part] ? "1" : "0");
     // A roof asked for on its own would read back as the old roof-and-walls without its `walls=0`.
     if (state.roof && !state.walls) next.set(key("walls"), "0");
-    set("wash", state.wash === "none" ? null : state.wash);
+    set("lighting", state.lighting === "off" ? null : state.lighting);
+    // An old address's `night=1` and `lights=1` are the lighting now.
+    set("night", null);
+    set("lights", null);
+    set("wash", state.wash === "none" || state.lighting === "off" ? null : state.wash);
     set("viewpoint", state.viewpoint === "corner" ? null : state.viewpoint);
     set("spin", spin && state.spin ? "on" : null);
     writeWay(next);
@@ -113,12 +118,20 @@ export function mountRealView({ stage, bar, venue, page, prefix = "", flat = tru
       button.hidden = only3d && !three;
       buttons.push(button);
     }
-    // The colour of light on the surface, a choice beside the toggles.
+    // The lighting, a preset to choose, and the colour of light on the surface over the preset's own, beside the toggles.
+    const lighting = document.createElement("select");
+    lighting.setAttribute("aria-label", words.p_lighting);
+    lighting.dataset.testid = "lighting";
+    lighting.dataset.lighting = "";
+    lighting.className = `${chipClass} rv-pick`.trim();
+    for (const name of LIGHTINGS) lighting.append(new Option(words[`lighting_${name}`], name));
+    lighting.value = state.lighting;
+    buttons.push(lighting);
     const wash = document.createElement("select");
     wash.setAttribute("aria-label", words.p_wash);
     wash.dataset.testid = "wash";
     wash.dataset.wash = "";
-    if (chipClass !== "") wash.className = chipClass;
+    wash.className = `${chipClass} rv-pick`.trim();
     for (const name of WASHES) wash.append(new Option(words[`wash_${name}`], name));
     wash.value = state.wash;
     buttons.push(wash);
@@ -181,16 +194,15 @@ export function mountRealView({ stage, bar, venue, page, prefix = "", flat = tru
     const part = button.dataset.part;
     if (part === undefined) return;
     state[part] = !state[part];
-    // Night and Lights down are two lightings, one at a time.
-    if (state[part] && (part === "night" || part === "lights")) state[part === "night" ? "lights" : "night"] = false;
-    if (part === "night" || part === "lights") renderBar();
+
     button.setAttribute("aria-pressed", String(state[part]));
     apply();
   });
 
   bar.addEventListener("change", (event) => {
-    if (event.target.dataset?.wash === undefined) return;
-    state.wash = WASHES.includes(event.target.value) ? event.target.value : "none";
+    if (event.target.dataset?.wash !== undefined) state.wash = WASHES.includes(event.target.value) ? event.target.value : "none";
+    else if (event.target.dataset?.lighting !== undefined) state.lighting = LIGHTINGS.includes(event.target.value) ? event.target.value : "off";
+    else return;
     apply();
   });
 

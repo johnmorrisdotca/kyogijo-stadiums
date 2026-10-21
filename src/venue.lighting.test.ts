@@ -6,7 +6,7 @@ import { buildMultiTurn } from "./multi.turn.ts";
 import { buildDistrictTurn } from "./district.turn.ts";
 import { STADIUMS, STADIUM_IDS, stadiumKind } from "./stadiums.ts";
 import { buildTurn, KYOGIJO_TURN_STYLE, turnMarkupOf, type TurnModel } from "./turn-entry.ts";
-import { LIGHTING_PRESETS, LIGHT_COLORS, POOL, WASH, resolveLighting } from "./venue.lighting.ts";
+import { LIGHTING_PRESETS, LIGHT_COLORS, LIGHT_PRESETS, POOL, WASH, resolveLighting } from "./venue.lighting.ts";
 import { VENUE_IDS } from "./venues.ts";
 import type { SurfaceOptions } from "./types.ts";
 
@@ -28,7 +28,7 @@ const seats = (m: TurnModel) => m.planes.filter((p) => p.kind === "seats");
 
 describe("what the lighting option asks for", () => {
   it("is nothing by default and when false, night for night, true and { preset: night }, and nothing for a name it does not know", () => {
-    expect(LIGHTING_PRESETS).toEqual(["night", "lightsDown"]);
+    expect(LIGHTING_PRESETS).toEqual(["night", "game", "lightsDown", "intro", "concert"]);
     expect(resolveLighting(undefined)).toBeUndefined();
     expect(resolveLighting(false)).toBeUndefined();
     expect(resolveLighting("night")?.preset).toBe("night");
@@ -42,10 +42,10 @@ describe("what the lighting option asks for", () => {
   });
 
   it("takes the colour of the beams and of the wash by name or as a CSS colour, white beams and no wash where it is not said, and ignores what is not a colour", () => {
-    expect(resolveLighting("lightsDown")).toEqual({ preset: "lightsDown", aisles: LIGHT_COLORS.white, wash: undefined });
-    expect(resolveLighting({ preset: "lightsDown", aisles: "amber", wash: "purple" })).toEqual({ preset: "lightsDown", aisles: LIGHT_COLORS.amber, wash: LIGHT_COLORS.purple });
-    expect(resolveLighting({ preset: "lightsDown", aisles: "#c8102e", wash: "rgb(10, 20, 30)" })).toMatchObject({ aisles: "#c8102e", wash: "rgb(10, 20, 30)" });
-    expect(resolveLighting({ preset: "lightsDown", aisles: '"><script>', wash: "url(#x)" })).toMatchObject({ aisles: LIGHT_COLORS.white, wash: undefined });
+    expect(resolveLighting("lightsDown")).toMatchObject({ preset: "lightsDown", beam: LIGHT_COLORS.white, wash: undefined });
+    expect(resolveLighting({ preset: "lightsDown", aisles: "amber", wash: "purple" })).toMatchObject({ preset: "lightsDown", beam: LIGHT_COLORS.amber, wash: LIGHT_COLORS.purple });
+    expect(resolveLighting({ preset: "lightsDown", aisles: "#c8102e", wash: "rgb(10, 20, 30)" })).toMatchObject({ beam: "#c8102e", wash: "rgb(10, 20, 30)" });
+    expect(resolveLighting({ preset: "lightsDown", aisles: '"><script>', wash: "url(#x)" })).toMatchObject({ beam: LIGHT_COLORS.white, wash: undefined });
     for (const name of ["white", "amber", "purple", "magenta", "blue", "cyan"]) expect(LIGHT_COLORS).toHaveProperty(name);
   });
 });
@@ -226,7 +226,7 @@ describe("the lights down", () => {
 
   it("is on the view's root as lightsDown, and the stylesheet makes the house darker than at night", () => {
     expect(turnMarkupOf(buildTurn(td, { venue: { lighting: "lightsDown" } }), {})).toContain('data-lighting="lightsDown"');
-    expect(KYOGIJO_TURN_STYLE).toMatch(/\.ky-turn\[data-lighting=lightsDown\]\{--ky-cr-bed:#0a0d11/);
+    expect(KYOGIJO_TURN_STYLE).toMatch(/\.ky-turn:is\(\[data-lighting=lightsDown\],\[data-lighting=intro\],\[data-lighting=concert\]\)\{--ky-cr-bed:#0a0d11/);
     expect(KYOGIJO_TURN_STYLE).toContain(".ky-turn .u-veil-down{fill-opacity:.8}");
   });
 
@@ -246,5 +246,113 @@ describe("the lights down", () => {
     expect(buildDistrictTurn({ venues: ["bc-place", "rogers-arena"] } as never, { venue: { lighting: "lightsDown" } }).lighting).toBe("lightsDown");
     expect(buildMultiTurn({ preset: "tabletennis-4", stadium: { lighting: { preset: "lightsDown", wash: "white" } } } as never).lighting).toBe("lightsDown");
     expect(buildTurn({ sport: "nba", crowd: true } as SurfaceOptions, { venue: { lighting: down({ wash: "cyan" }) } }).planes.some((p) => p.id === "light-wash")).toBe(true);
+  });
+});
+
+describe("the named presets", () => {
+  const td = { sport: "nhl", arena: "td-garden", crowd: { real: true } } as SurfaceOptions;
+  const scored = (extra: object = {}) => ({ ...td, home: { name: "Home", score: 3, color: "#c8102e" }, away: { name: "Away", score: 2, color: "#13294b" }, ...extra }) as unknown as SurfaceOptions;
+  const washOf = (m: TurnModel) => m.planes.find((p) => p.id === "light-wash")?.svg ?? "";
+  const beamsOf = (m: TurnModel) => seats(m).map((p) => p.svg).join("");
+
+  it("are a table of constants: each preset's house, aisles, pool of light and colours", () => {
+    expect(Object.keys(LIGHT_PRESETS)).toEqual([...LIGHTING_PRESETS]);
+    expect(LIGHT_PRESETS.night).toMatchObject({ house: "dim", aisles: "dots", pool: true });
+    expect(LIGHT_PRESETS.game).toMatchObject({ house: "half", aisles: "none", pool: true });
+    expect(LIGHT_PRESETS.lightsDown).toMatchObject({ house: "dark", aisles: "beams", pool: false });
+    expect(LIGHT_PRESETS.intro).toMatchObject({ house: "dark", aisles: "beams", wash: "home", beam: "away" });
+    expect(LIGHT_PRESETS.concert).toMatchObject({ house: "dark", aisles: "beams", wash: "purple", beam: "amber" });
+  });
+
+  it("take their colours, in order, from wash and aisles, from colors, from the teams, from the preset's own", () => {
+    const own = resolveLighting("intro")!;
+    expect([own.wash, own.beam]).toEqual([LIGHT_COLORS.blue, LIGHT_COLORS.amber]);
+    const team = { home: "#c8102e", away: "#13294b" };
+    expect(resolveLighting("intro", team)).toMatchObject({ wash: "#c8102e", beam: "#13294b" });
+    expect(resolveLighting({ preset: "intro", colors: ["magenta", "#ffffff"] }, team)).toMatchObject({ wash: LIGHT_COLORS.magenta, beam: "#ffffff" });
+    expect(resolveLighting({ preset: "intro", colors: ["magenta"] }, team)).toMatchObject({ wash: LIGHT_COLORS.magenta, beam: "#13294b" });
+    expect(resolveLighting({ preset: "intro", colors: ["magenta", "cyan"], wash: "white", aisles: "blue" }, team)).toMatchObject({ wash: LIGHT_COLORS.white, beam: LIGHT_COLORS.blue });
+    expect(resolveLighting({ preset: "intro", colors: ['"><x', "javascript:1"] }, team)).toMatchObject({ wash: "#c8102e", beam: "#13294b" });
+    expect(resolveLighting("concert", team)).toMatchObject({ wash: LIGHT_COLORS.purple, beam: LIGHT_COLORS.amber });
+    expect(resolveLighting({ preset: "concert", wash: "blue" })).toMatchObject({ wash: LIGHT_COLORS.blue, beam: LIGHT_COLORS.amber });
+    expect(resolveLighting("game")).toMatchObject({ wash: undefined, beam: LIGHT_COLORS.white });
+  });
+
+  it("show the home team's colour on the surface and the visitors' in the beams, where the score has them", () => {
+    const model = buildTurn(scored(), { venue: { lighting: "intro" } });
+    expect(model.lighting).toBe("intro");
+    expect(washOf(model)).toContain("#c8102e");
+    expect(beamsOf(model)).toContain('stroke="#13294b"');
+    expect(night(model)).toHaveLength(0);
+    // The crowd's own home and away win over the teams'.
+    const crowd = buildTurn(scored({ crowd: { real: true, home: "#00ff00", away: "#0000ff" } }), { venue: { lighting: "intro" } });
+    expect(washOf(crowd)).toContain("#00ff00");
+    expect(beamsOf(crowd)).toContain('stroke="#0000ff"');
+    // Without any team the preset's own colours stand; passed colours stand for the teams.
+    const bare = buildTurn(td, { venue: { lighting: "intro" } });
+    expect(washOf(bare)).toContain(LIGHT_COLORS.blue);
+    expect(beamsOf(bare)).toContain(`stroke="${LIGHT_COLORS.amber}"`);
+    const passed = buildTurn(scored(), { venue: { lighting: { preset: "intro", colors: ["#7a00ff", "#00ffaa"] } } });
+    expect(washOf(passed)).toContain("#7a00ff");
+    expect(beamsOf(passed)).toContain('stroke="#00ffaa"');
+  });
+
+  it("make the concert's surface purple and its beams amber, and the game's house half lit in white light with no beams and a pool of light", () => {
+    const concert = buildTurn(td, { venue: { lighting: "concert" } });
+    expect(washOf(concert)).toContain(LIGHT_COLORS.purple);
+    expect(beamsOf(concert)).toContain(`stroke="${LIGHT_COLORS.amber}"`);
+    const game = buildTurn(td, { venue: { lighting: "game", boards: true } });
+    expect(game.lighting).toBe("game");
+    expect(night(game)).toHaveLength(1);
+    expect(game.planes.some((p) => p.id === "light-wash")).toBe(false);
+    const svg = beamsOf(game);
+    expect(svg).toContain("u-veil-half");
+    expect(svg).not.toContain("u-veil-down");
+    expect(svg).not.toContain("u-beam");
+    expect(svg).not.toContain("ky-cr-vom");
+    expect(game.planes.some((p) => p.svg.includes("u-led-glow"))).toBe(true);
+    expect(turnMarkupOf(game, {})).toContain('data-lighting="game"');
+  });
+
+  it("build in every real venue and in a district, a hall and the usual stands, for every preset", () => {
+    for (const preset of ["intro", "concert"] as const) {
+      for (const [id, options] of REAL) {
+        const m = build(options, { lighting: preset });
+        expect(m.lighting, `${preset} ${id}`).toBe(preset);
+        expect(m.planes.some((p) => p.id === "light-wash"), `${preset} ${id}`).toBe(true);
+      }
+    }
+    for (const preset of ["game", "night"] as const) for (const [id, options] of REAL.slice(0, 40).filter((_, i) => i % 5 === 0)) expect(build(options, { lighting: preset }).lighting, `${preset} ${id}`).toBe(preset);
+    for (const preset of LIGHTING_PRESETS) {
+      expect(buildDistrictTurn({ venues: ["bc-place", "rogers-arena"] } as never, { venue: { lighting: preset } }).lighting).toBe(preset);
+      expect(buildMultiTurn({ preset: "tabletennis-4", stadium: { lighting: preset } } as never).lighting).toBe(preset);
+      expect(buildTurn({ sport: "nba", crowd: true } as SurfaceOptions, { venue: { lighting: preset } }).lighting).toBe(preset);
+    }
+  });
+
+  it("are in the plan too: the game's half-lit house, the intro's team colours and the concert's purple", () => {
+    const plan = (lighting: unknown, o: object = {}) => drawKyogijo({ ...scored(o), id: "t", crowd: { real: true, lighting, ...((o as { crowd?: object }).crowd ?? {}) } } as SurfaceOptions);
+    const game = plan("game");
+    expect(game).toContain('class="ky-crowd ky-night ky-half"');
+    expect(game).toContain("ky-cr-veil-half");
+    expect(game).toContain('class="ky-cr-pool"');
+    expect(game).not.toContain('class="ky-cr-beam"');
+    const intro = plan("intro");
+    expect(intro).toContain('class="ky-crowd ky-night ky-down"');
+    expect(intro).toContain('class="ky-cr-wash"');
+    expect(intro).toContain("#c8102e");
+    expect(intro).toContain('stroke="#13294b"');
+    expect(plan("intro", { home: { name: "H", score: 1 }, away: { name: "A", score: 0 } })).toContain(LIGHT_COLORS.blue);
+    const concert = plan("concert");
+    expect(concert).toContain(LIGHT_COLORS.purple);
+    expect(concert).toContain(`stroke="${LIGHT_COLORS.amber}"`);
+    expect(drawKyogijo({ ...td, id: "t", crowd: { real: true, lighting: { preset: "intro", colors: ["#7a00ff", "#00ffaa"] } } } as SurfaceOptions)).toContain("#7a00ff");
+  });
+
+  it("have a stylesheet for the game's half-lit house that is lighter than the night's", () => {
+    const rule = /\.ky-turn\[data-lighting=game\]\{([^}]*)\}/.exec(KYOGIJO_TURN_STYLE)![1];
+    const bed = /--ky-cr-bed:(#[0-9a-f]{6})/.exec(rule)![1];
+    expect(luminance(rgbOf(bed)!)).toBeGreaterThan(luminance(rgbOf("#11151a")!));
+    expect(KYOGIJO_TURN_STYLE).toContain(".ky-turn .u-veil-half{fill-opacity:.3}");
   });
 });

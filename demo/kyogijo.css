@@ -246,7 +246,7 @@ kyogijo-field::part(plate) { filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .25)); 
 #feature-bar { min-height: 44px; }
 .feature .rv-bar .fam-chip { cursor: pointer; font: inherit; font-size: .9rem; font-weight: 700; color: var(--ink); }
 .feature .rv-bar .fam-chip[aria-pressed="true"] { background: var(--ink); color: var(--page); border-color: var(--ink); }
-.feature .rv-bar select { min-width: min(100%, 16rem); }
+.feature .rv-bar select:not(.rv-pick) { min-width: min(100%, 16rem); }
 #feature-stage { --feature-h: clamp(430px, calc(100vh - var(--rv-chrome) + 130px), 890px); border: 1px solid var(--rule); border-radius: var(--radius, 12px); background: var(--surface); padding: 6px; height: var(--feature-h); box-sizing: border-box; }
 /* The box is as tall before the script has drawn the arena as after, so that nothing below it jumps (the buttons under the view take what they need and the view the rest). */
 #feature-stage .rv-three, #feature-stage .ky-turn { height: 100%; }

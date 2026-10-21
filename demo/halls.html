@@ -53,8 +53,7 @@
         <label class="check"><input id="stadium" type="checkbox" /><span id="l-stadium"></span></label>
         <label class="check" id="roof-row" hidden><input id="roof" type="checkbox" /><span id="l-roof"></span></label>
         <label class="check" id="boards-row" hidden><input id="boards" type="checkbox" data-testid="boards" /><span id="l-boards"></span></label>
-        <label class="check" id="night-row" hidden><input id="night" type="checkbox" data-testid="night" /><span id="l-night"></span></label>
-          <label class="check" id="lights-row" hidden><input id="lights" type="checkbox" data-testid="lights" /><span id="l-lights"></span></label>
+          <label id="lighting-row" hidden><span id="l-lighting"></span><select id="lighting" data-testid="lighting"><option value="off"></option><option value="night"></option><option value="game"></option><option value="lightsDown"></option><option value="intro"></option><option value="concert"></option></select></label>
           <label id="wash-row" hidden><span id="l-wash"></span><select id="wash" data-testid="wash"><option value="none"></option><option value="purple"></option><option value="magenta"></option><option value="blue"></option><option value="white"></option></select></label>
         <label class="check"><input id="sample" type="checkbox" checked /><span id="l-sample"></span></label>
         <label class="check"><input id="slots" type="checkbox" checked /><span id="l-slots"></span></label>
@@ -74,7 +73,7 @@
       // Tournament layouts: pick a preset, set it in a hall, switch the real stadium on or off, and turn the whole floor in 3D. The package draws everything; this page only passes the options.
       import { MULTI_PRESETS, MULTI_VENUES, drawMulti, mountMultiTurn, multiSetting, multiTable, fitSentence, needsSentence } from "./dist/multi-entry.js";
       import { hoverOf, wayOf, writeWay } from "./turn-way.js";
-      import { lightingFor } from "./lighting.js";
+      import { lightingFor, lightingOfAddress } from "./lighting.js";
       import { TURN_PRESET_NAMES } from "./dist/turn-entry.js";
       import { quietTitles } from "./quiet.js";
       quietTitles();
@@ -83,13 +82,13 @@
         en: {
           title: "Tournament layouts", pageTitle: "Kyogijo Stadiums: tournament layouts", pageDescription: "Several surfaces laid out together for one large event, to scale, in a hall, with a real stadium round them that can be switched on.", formLabel: "Layout choices", lede: "Several surfaces laid out together for one large event, to scale, on one floor. Set the layout in a hall to see whether it fits, and switch the stadium on to see it inside real stands.",
           preset: "Layout", venue: "Hall", none: "No hall (the floor the layout needs)", rows: "Rows", columns: "Columns", language: "Language", theme: "Theme", auto: "Follow the device", light: "Light", dark: "Dark",
-          view: "View", roof: "Roof (3D)", boards: "LED boards round the stadium", night: "Night lighting", lights: "Lights down", wash: "Surface light colour", wash_none: "none", wash_purple: "Purple", wash_magenta: "Magenta", wash_blue: "Blue", wash_white: "White", stadium: "Stadium round the floor", sample: "Sample event content: an invented name, year, city and emblems", slots: "Places for the event's words and marks", labels: "Names of the surfaces", table: "The same as a table", docs: "The tournament layouts page of the docs", back: "Back to the Kyogijo Stadiums demo",
+          view: "View", roof: "Roof (3D)", boards: "LED boards round the stadium", lighting: "Lighting", lighting_off: "Lighting: off", lighting_night: "Night", lighting_game: "Game", lighting_lightsDown: "Lights down", lighting_intro: "Intro", lighting_concert: "Concert", wash: "Surface light colour", wash_none: "as the preset", wash_purple: "Purple", wash_magenta: "Magenta", wash_blue: "Blue", wash_white: "White", stadium: "Stadium round the floor", sample: "Sample event content: an invented name, year, city and emblems", slots: "Places for the event's words and marks", labels: "Names of the surfaces", table: "The same as a table", docs: "The tournament layouts page of the docs", back: "Back to the Kyogijo Stadiums demo",
           needs: "This layout needs {size}.", event: "Tied to {name}, {year}, {venue}, {city}: {note}", basisRulebook: "The spacing is the rulebook's; no event's plan is drawn.", basisEvent: "The arrangement is what the event used, read from reports and photographs: not a measured plan.",
         },
         ja: {
           title: "大会向けレイアウト", pageTitle: "競技場 Kyogijo Stadiums：大会向けレイアウト", pageDescription: "複数の競技面を、大会向けに1枚の床の上へ縮尺どおりに並べます。会場を選ぶと収まるかどうかがわかり、スタジアムをオンにすると実際のスタンドの中に置いた様子を確認できます。", formLabel: "レイアウトの選択", lede: "複数の競技面を、大会向けに1枚の床の上へ縮尺どおりに並べます。会場を選ぶと収まるかどうかがわかり、スタジアムをオンにすると実際のスタンドの中に置いた様子を確認できます。",
           preset: "レイアウト", venue: "会場", none: "会場なし（レイアウトに必要な床）", rows: "行", columns: "列", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク",
-          view: "表示", roof: "屋根（3D）", boards: "スタジアムのLEDビジョン", night: "夜間照明", lights: "場内暗転", wash: "競技面の照明の色", wash_none: "なし", wash_purple: "紫", wash_magenta: "マゼンタ", wash_blue: "青", wash_white: "白", stadium: "床の周りのスタジアム", sample: "見本の大会内容（架空の大会名・年・開催地・エンブレム）", slots: "大会の文字やマークを入れる枠", labels: "競技面の名前", table: "表で見る", docs: "ドキュメントの「大会向けレイアウト」ページ", back: "競技場 Kyogijo Stadiums のデモに戻る",
+          view: "表示", roof: "屋根（3D）", boards: "スタジアムのLEDビジョン", lighting: "照明", lighting_off: "照明：なし", lighting_night: "夜間", lighting_game: "試合中", lighting_lightsDown: "場内暗転", lighting_intro: "選手紹介", lighting_concert: "コンサート", wash: "競技面の照明の色", wash_none: "プリセットのまま", wash_purple: "紫", wash_magenta: "マゼンタ", wash_blue: "青", wash_white: "白", stadium: "床の周りのスタジアム", sample: "見本の大会内容（架空の大会名・年・開催地・エンブレム）", slots: "大会の文字やマークを入れる枠", labels: "競技面の名前", table: "表で見る", docs: "ドキュメントの「大会向けレイアウト」ページ", back: "競技場 Kyogijo Stadiums のデモに戻る",
           needs: "このレイアウトに必要な床：{size}。", event: "関連する大会：{name}（{year}年、{venue}、{city}）。{note}", basisRulebook: "間隔は競技規則のとおりです。特定の大会の図面は描いていません。", basisEvent: "並べ方は大会で実際に使われたものを報道や写真から読み取ったもので、実測の図面ではありません。",
         },
       };
@@ -112,8 +111,7 @@
       $("view").value = params.get("view") === "3d" ? "3d" : "flat";
       $("roof").checked = params.get("roof") === "1";
       $("boards").checked = params.get("boards") === "1";
-      $("night").checked = params.get("night") === "1" && params.get("lights") !== "1";
-      $("lights").checked = params.get("lights") === "1";
+      $("lighting").value = lightingOfAddress(params);
       $("wash").value = ["purple", "magenta", "blue", "white"].includes(params.get("wash")) ? params.get("wash") : "none";
       // Sample event content is on unless the address turns it off (`sample=0`): the pictures show a dressed layout, and the empty places stay one click away.
       $("sample").checked = params.get("sample") !== "0";
@@ -133,10 +131,11 @@
         const language = $("language").value;
         for (const option of presetSelect.options) option.textContent = MULTI_PRESETS.find((p) => p.id === option.value).name[language];
         for (const option of venueSelect.options) option.textContent = option.value === "" ? w.none : MULTI_VENUES.find((v) => v.id === option.value).name[language];
-        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["l-preset", "preset"], ["l-venue", "venue"], ["l-rows", "rows"], ["l-columns", "columns"], ["l-language", "language"], ["l-theme", "theme"], ["l-view", "view"], ["l-roof", "roof"], ["l-boards", "boards"], ["l-night", "night"], ["l-lights", "lights"], ["l-wash", "wash"], ["l-sample", "sample"], ["l-stadium", "stadium"], ["l-slots", "slots"], ["l-sample", "sample"], ["l-labels", "labels"], ["l-table", "table"], ["docs", "docs"], ["back", "back"]]) $(id).textContent = w[key];
+        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["l-preset", "preset"], ["l-venue", "venue"], ["l-rows", "rows"], ["l-columns", "columns"], ["l-language", "language"], ["l-theme", "theme"], ["l-view", "view"], ["l-roof", "roof"], ["l-boards", "boards"], ["l-lighting", "lighting"], ["l-wash", "wash"], ["l-sample", "sample"], ["l-stadium", "stadium"], ["l-slots", "slots"], ["l-sample", "sample"], ["l-labels", "labels"], ["l-table", "table"], ["docs", "docs"], ["back", "back"]]) $(id).textContent = w[key];
         const themeSelect = $("theme");
         for (const option of themeSelect.options) option.textContent = w[option.value];
         for (const option of $("wash").options) option.textContent = w[`wash_${option.value}`];
+        for (const option of $("lighting").options) option.textContent = w[`lighting_${option.value}`];
         document.documentElement.lang = language;
         document.title = w.pageTitle;
         document.querySelector('meta[name="description"]').setAttribute("content", w.pageDescription);
@@ -144,7 +143,7 @@
       }
 
       /** The lighting the switches say: Night or Lights down (one at a time) and the colour of light on the surface. */
-      const lightingNow = () => lightingFor({ night: $("night").checked, lights: $("lights").checked, wash: $("wash").value });
+      const lightingNow = () => lightingFor({ lighting: $("lighting").value, wash: $("wash").value });
 
       /** The address says what the page shows: the layout, the hall, the stadium (and its roof), the language, the 3D view and the viewpoint it is on. */
       function syncUrl() {
@@ -153,9 +152,8 @@
         if (venueSelect.value !== "") next.set("venue", venueSelect.value);
         if ($("stadium").checked) next.set("stadium", "on");
         if ($("stadium").checked && $("boards").checked) next.set("boards", "1");
-        if ($("stadium").checked && $("night").checked) next.set("night", "1");
-        if ($("stadium").checked && $("lights").checked) next.set("lights", "1");
-        if ($("stadium").checked && $("wash").value !== "none") next.set("wash", $("wash").value);
+        if ($("stadium").checked && $("lighting").value !== "off") next.set("lighting", $("lighting").value);
+        if ($("stadium").checked && $("lighting").value !== "off" && $("wash").value !== "none") next.set("wash", $("wash").value);
         if ($("language").value === "ja") next.set("lang", "ja");
         if (!$("sample").checked) next.set("sample", "0");
         if ($("view").value === "3d") {
@@ -198,8 +196,7 @@
         const three = $("view").value === "3d";
         $("roof-row").hidden = !(three && $("stadium").checked);
         $("boards-row").hidden = !$("stadium").checked;
-        $("night-row").hidden = !$("stadium").checked;
-        $("lights-row").hidden = !$("stadium").checked;
+        $("lighting-row").hidden = !$("stadium").checked;
         $("wash-row").hidden = !$("stadium").checked;
         const roof = three && $("stadium").checked && $("roof").checked;
         if (three) {
@@ -231,10 +228,7 @@
       // Another layout opens the 3D view afresh, on the viewpoint chosen: its surfaces may stand across the picture, so the angles of the last one would not mean the same.
       presetSelect.addEventListener("change", () => { syncGrid(); if (turn !== undefined) { turn.destroy(); turn = undefined; } draw(); });
       $("language").addEventListener("change", () => { labelOptions(); draw(); });
-      // Night and Lights down are two lightings, one at a time (these run before the page draws again).
-      $("night").addEventListener("change", () => { if ($("night").checked) $("lights").checked = false; });
-      $("lights").addEventListener("change", () => { if ($("lights").checked) $("night").checked = false; });
-      for (const id of ["venue", "rows", "columns", "theme", "stadium", "slots", "sample", "labels", "view", "roof", "boards", "night", "lights", "wash"]) $(id).addEventListener("change", draw);
+      for (const id of ["venue", "rows", "columns", "theme", "stadium", "slots", "sample", "labels", "view", "roof", "boards", "lighting", "wash"]) $(id).addEventListener("change", draw);
       syncGrid();
       labelOptions();
       draw();

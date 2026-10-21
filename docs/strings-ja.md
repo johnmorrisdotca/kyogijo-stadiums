@@ -1514,10 +1514,15 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `p_walls` | Walls | 壁 |
 | `p_roof` | Roof | 屋根 |
 | `p_boards` | LED boards | LEDビジョン |
-| `p_night` | Night | 夜間 |
-| `p_lights` | Lights down | 場内暗転 |
+| `p_lighting` | Lighting | 照明 |
+| `lighting_off` | Lighting: off | 照明：なし |
+| `lighting_night` | Night | 夜間 |
+| `lighting_game` | Game | 試合中 |
+| `lighting_lightsDown` | Lights down | 場内暗転 |
+| `lighting_intro` | Intro | 選手紹介 |
+| `lighting_concert` | Concert | コンサート |
 | `p_wash` | Surface light colour | 競技面の照明の色 |
-| `wash_none` | Surface light: none | 照明の色：なし |
+| `wash_none` | Light colour: preset | 照明の色：プリセットのまま |
 | `wash_purple` | Purple light | 紫の照明 |
 | `wash_magenta` | Magenta light | マゼンタの照明 |
 | `wash_blue` | Blue light | 青の照明 |

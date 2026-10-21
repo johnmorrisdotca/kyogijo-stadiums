@@ -10,7 +10,7 @@ import { groundById } from "./grounds.ts";
 import { ARC_STEPS, clipAround, clipConvex, clipSegment, areaOf, pointList, raked, slopeOf, stripsOf, tidy, type Cut, type Strip } from "./venue.geom.ts";
 import { APRON_RISE, apronPlanes, backEdges, backWall, concourseFloor, rimAt, suiteWall } from "./venue.fill.ts";
 import { firstHit, realBuilding } from "./venue.real.ts";
-import { beamSvg, edgeSvg, lightPool, lightWash, resolveLighting } from "./venue.lighting.ts";
+import { beamSvg, edgeSvg, lightPool, lightWash, resolveLighting, teamColors } from "./venue.lighting.ts";
 import { centreBoard, fasciaRibbon, hangsOver, ledStrip, resolveBoards, ribbonHigh, ribbonShare, tierLinks } from "./venue.boards.ts";
 import { n, shy, wall, type Plane, type Upright } from "./turn.kit.ts";
 import type { LedBoardOptions, LightingOptions, SurfaceOptions } from "./types.ts";
@@ -44,6 +44,8 @@ export interface VenueBuild extends VenueSettings {
   id: string;
   /** Leave the scoreboard hung over the middle out (a tournament hall has scoreboards of its own). */
   noCentre?: boolean;
+  /** The teams' colours the drawing has (a crowd's `home` and `away`, or a score's teams'): what a lighting's team colours are. */
+  team?: { home?: string; away?: string };
 }
 
 /** What the venue is made of: the things that stand, and the patterns they are drawn with (the contents of a `defs`). */
@@ -83,7 +85,7 @@ export function standsVenue(o: SurfaceOptions, v: VenueBuild, lift: number): Ven
   const stands = crowdStands(o);
   const crowd = resolveCrowd(o.crowd);
   if (stands === undefined || crowd === undefined || stands.gallery === true) return NO_VENUE;
-  return standsVenueOf(stands, crowd, { sport: o.sport, detail: o.detail, ground: o.ground }, v, lift);
+  return standsVenueOf(stands, crowd, { sport: o.sport, detail: o.detail, ground: o.ground }, { ...v, team: v.team ?? teamColors(o, crowd) }, lift);
 }
 
 /**
@@ -119,15 +121,15 @@ export function standsVenueOf(stands: CrowdStands, crowd: Crowd, o: Pick<Surface
       if (s.kind === "away") svg += fine ? `<polygon fill="url(#${pid}-cr-a)" points="${points}"/>` : `<polygon class="u-blk-a" fill-opacity="${round(0.3 + 0.6 * density)}" points="${points}"/>`;
       else svg += fine ? `<polygon fill="url(#${pid}-cr-${s.kind === "tifo-home" ? "th" : "ta"})" points="${points}"/>` : `<polygon class="${s.kind === "tifo-home" ? "u-th" : "u-ta"}" points="${points}"/>`;
     }
-    if (light !== undefined) svg += `<polygon class="${down ? "u-veil u-veil-down" : "u-veil"}" points="${pointList(corners)}"/>`;
+    if (light !== undefined) svg += `<polygon class="${light.house === "dark" ? "u-veil u-veil-down" : light.house === "half" ? "u-veil u-veil-half" : "u-veil"}" points="${pointList(corners)}"/>`;
     // The lights down: the front of each step is edged with light, and each stair aisle is a beam from above with the rails beside it (the aisle lines the stands' dark ones are, are left out).
     if (down && light !== undefined) {
-      if (corners.length === 4) svg += edgeSvg(corners[0], corners[1], light.aisles, "u-edge");
+      if (corners.length === 4) svg += edgeSvg(corners[0], corners[1], light.beam, "u-edge");
       if (fine) {
         ring.aisles.forEach(([a, b], i) => {
           const seg = clipSegment(a, b, piece);
           if (seg === undefined || Math.hypot(seg[1][0] - seg[0][0], seg[1][1] - seg[0][1]) < 0.5) return;
-          svg += beamSvg(local(seg[0]), local(seg[1]), light.aisles, "u-beam", i % 4 === 0);
+          svg += beamSvg(local(seg[0]), local(seg[1]), light.beam, "u-beam", i % 4 === 0);
         });
       }
     } else if (fine) {
@@ -151,9 +153,9 @@ export function standsVenueOf(stands: CrowdStands, crowd: Crowd, o: Pick<Surface
   const chained = new Set<StandRing>();
   const links = tierLinks(stands);
   for (const l of links) chained.add(l.after);
-  const light = resolveLighting(v.lighting !== undefined ? v.lighting : crowd.lighting);
-  const night = light?.preset === "night";
-  const down = light?.preset === "lightsDown";
+  const light = resolveLighting(v.lighting !== undefined ? v.lighting : crowd.lighting, v.team ?? teamColors({}, crowd));
+  const night = light?.aisles === "dots";
+  const down = light?.aisles === "beams";
   const boards = resolveBoards(v.boards !== undefined ? v.boards : crowd.boards, { home: crowd.home, away: crowd.away }, light !== undefined);
   const ribbons: Plane[] = [];
   /** How far along the ribbon of one level the next piece of it starts, in feet, so that its panels carry on. */
@@ -238,7 +240,7 @@ export function standsVenueOf(stands: CrowdStands, crowd: Crowd, o: Pick<Surface
   }
 
   // The surface is lit: a pool of light on the floor round it, under the seats.
-  if (night) seatPlanes.push(lightPool("night-pool", stands.box, lift + APRON_RISE + 0.03, light?.wash));
+  if (light?.pool === true) seatPlanes.push(lightPool("night-pool", stands.box, lift + APRON_RISE + 0.03, light?.wash));
   // A colour of light on the surface (a show's wash), over the markings, which stay visible through it.
   if (light?.wash !== undefined) seatPlanes.push(lightWash("light-wash", stands.box, lift + APRON_RISE + 0.06, light.wash, stands.sport === "nhl" ? NHL.cornerRadius : 0));
   const items: Upright[] = [];

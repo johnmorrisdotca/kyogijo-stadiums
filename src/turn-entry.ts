@@ -13,6 +13,8 @@ export type { Box3, Mat4, Placement, TurnPreset, TurnToward, TurnView } from "./
 export { describeUprights, heightUnit, planesOf, uprightsFor } from "./uprights.ts";
 export type { UprightOptions, Uprights } from "./uprights.ts";
 export { ROOF } from "./venue.ts";
+export { LIGHTING_PRESETS, LIGHT_COLORS, LIGHT_PRESETS, WASH, resolveLighting } from "./venue.lighting.ts";
+export type { House, LightPreset, Lighting } from "./venue.lighting.ts";
 export type { Venue, VenueBuild, VenueSettings } from "./venue.ts";
 export type { LedBoardOptions, LedBoardPattern, LightingOptions, LightingPreset } from "./types.ts";
 export type { Plane, PartKind, Upright, UprightKind, V3 } from "./turn.kit.ts";

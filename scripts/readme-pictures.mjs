@@ -155,6 +155,10 @@ await takePictures({
     { subject: "lights-down-td-3d", views: ["desk"], url: "/venues.html?venue=td-garden&view=3d&viewpoint=broadcast&boards=1&lights=1&wash=purple", ready: READY_HALLS_TURN, target: "#stage" },
     { subject: "lights-down-td-blue-3d", views: ["desk"], url: "/venues.html?venue=td-garden&view=3d&viewpoint=corner&boards=1&lights=1&wash=magenta", ready: READY_HALLS_TURN, target: "#stage" },
     { subject: "lights-down-td-plan", views: ["desk"], url: "/venues.html?venue=td-garden&boards=1&lights=1&wash=purple", ready: READY_HALLS, target: "#stage" },
+    // The lighting presets (0.40.0): the intro (sample team colours: the red on the ice, the blue in the beams), the concert and the game, in 3D from the main camera (the Lighting choice on the venues page).
+    { subject: "presets-intro-3d", views: ["desk"], url: "/venues.html?venue=td-garden&view=3d&viewpoint=broadcast&boards=1&lighting=intro", ready: READY_HALLS_TURN, target: "#stage" },
+    { subject: "presets-concert-3d", views: ["desk"], url: "/venues.html?venue=td-garden&view=3d&viewpoint=broadcast&boards=1&lighting=concert", ready: READY_HALLS_TURN, target: "#stage" },
+    { subject: "presets-game-3d", views: ["desk"], url: "/venues.html?venue=td-garden&view=3d&viewpoint=broadcast&boards=1&lighting=game", ready: READY_HALLS_TURN, target: "#stage" },
     // Boards over a surface (0.24.0): a results board over a pool, a bout presentation over a judo mat in 3D, a medal table in the corner of the athletics stadium (invented names; the boards page's stage).
     { subject: "boards-swimming", views: ["desk"], url: "/boards.html?example=swimming", ready: READY_HALLS, target: "#stage" },
     { subject: "boards-judo-3d", views: ["desk"], url: "/boards.html?example=judo&view=3d", ready: READY_HALLS_TURN, target: "#stage" },
@@ -205,7 +209,7 @@ await takePictures({
 
 // The pictures that only a page of docs/ shows are taken with the rest and then moved to docs/pictures: docs/images holds the README's pictures (the family's lint counts every file there against the README's 2 MB, and wants each one used in the README),
 // and a page of docs/ names its own pictures in `./pictures/`.
-const DOCS_ONLY = new Set(["mowing-diamonds-desk", "boxing-ring-3d-desk", "district-tokyo-3d-desk", "judging-3d-desk", "judging-print-a4-desk", "mma-cage-desk", "multi-judo-desk", "multi-judo-empty-desk", "multi-tabletennis-desk", "prowrestling-ring-3d-desk", "stadiums-koshien-3d-desk", "stadiums-tokyo-dome-3d-desk", "venues-honda-desk", "wrestling-mat-3d-desk", "led-boards-td-3d-desk", "led-boards-td-plan-desk", "led-boards-lumen-3d-desk", "night-td-3d-desk", "night-td-plan-desk", "night-lumen-3d-desk", "lights-down-td-3d-desk", "lights-down-td-blue-3d-desk", "lights-down-td-plan-desk"]);
+const DOCS_ONLY = new Set(["mowing-diamonds-desk", "boxing-ring-3d-desk", "district-tokyo-3d-desk", "judging-3d-desk", "judging-print-a4-desk", "mma-cage-desk", "multi-judo-desk", "multi-judo-empty-desk", "multi-tabletennis-desk", "prowrestling-ring-3d-desk", "stadiums-koshien-3d-desk", "stadiums-tokyo-dome-3d-desk", "venues-honda-desk", "wrestling-mat-3d-desk", "led-boards-td-3d-desk", "led-boards-td-plan-desk", "led-boards-lumen-3d-desk", "night-td-3d-desk", "night-td-plan-desk", "night-lumen-3d-desk", "lights-down-td-3d-desk", "lights-down-td-blue-3d-desk", "lights-down-td-plan-desk", "presets-intro-3d-desk", "presets-concert-3d-desk", "presets-game-3d-desk"]);
 const docs = join(dirname(fileURLToPath(import.meta.url)), "..", "docs");
 mkdirSync(join(docs, "pictures"), { recursive: true });
 for (const file of readdirSync(join(docs, "images"))) {
