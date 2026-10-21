@@ -393,7 +393,7 @@ function venuesPage(lib) {
     slug: "gallery-venues",
     title: "Gallery: the real venues",
     ja: "実在の会場",
-    intro: `The ${VENUE_IDS.length} arenas of the NHL's divisions drawn so far (the Pacific and the Central, the Western Conference), each in the outline of its building as OpenStreetMap maps it ((c) OpenStreetMap contributors, ODbL 1.0), with a plausible bowl of the seats, tiers and roof the sources give. A small arrow says where north is where the rink's orientation is known. Never a seat map, and no mark of a team or a league. Every picture is drawn by the build from the code under it.`,
+    intro: `The ${VENUE_IDS.length} arenas of the NHL, division by division (the Western Conference's Pacific and Central, the Eastern Conference's Atlantic and Metropolitan), each in the outline of its building as OpenStreetMap maps it ((c) OpenStreetMap contributors, ODbL 1.0), with a plausible bowl of the seats, tiers and roof the sources give. A small arrow says where north is where the rink's orientation is known. Never a seat map, and no mark of a team or a league. Every picture is drawn by the build from the code under it.`,
     sections: [
       ...VENUE_DIVISIONS.filter((division) => venuesIn(division).length > 0).map((division) =>
         section(division, `The ${division[0].toUpperCase()}${division.slice(1)} Division`, `${conferenceOf(division) === "western" ? "Western" : "Eastern"} Conference. \`crowd: { real: true }\` with an \`arena\` that has a venue.`, venuesIn(division).map(({ id }) => item(`venue-${id}`, ARENAS[id].name, real(id), note(id)))),

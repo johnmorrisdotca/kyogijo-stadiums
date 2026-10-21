@@ -29,7 +29,7 @@ test("leads the page with a real arena that turns by itself, and a reader who pr
   const [feature, tryIt] = await Promise.all([page.locator("#feature").boundingBox(), page.locator("#try").boundingBox()]);
   expect(feature.y).toBeLessThan(tryIt.y);
   await expect(page.locator(at("feature-venue"))).toHaveValue("climate-pledge-arena");
-  expect(await page.locator(`${at("feature-venue")} option`).count()).toBe(16);
+  expect(await page.locator(`${at("feature-venue")} option`).count()).toBe(32);
   expect(errors).toEqual([]);
   await noSidewaysScroll(page);
   const still = await page.context().newPage();

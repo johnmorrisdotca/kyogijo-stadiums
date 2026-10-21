@@ -2,11 +2,11 @@
 
 One smooth camera from a map to a real arena, into its bowl and onto a game. It starts on a map drawn with [chizu](https://github.com/johnmorrisdotca/chizu), falls to the city and to the building of an arena as OpenStreetMap maps it, and the building rises into the [3D arena](./turn.md), which turns. Then the roof lifts away, the camera comes in over the stands and down to the ice, and settles at a seat's viewpoint, from where the rink turns, and a short play comes onto the ice: skaters and a puck, moving. `@johnmorrisdotca/kyogijo-stadiums/flythrough` has one function for a page, `mountFlythrough`, and the plain path it flies, which can be worked out and tested in Node.
 
-The arena is one of the [real venues](./venues.md) (so far the sixteen of the NHL's Pacific and Central Divisions). No team's or league's mark is drawn: the map is land and sea, the building is an outline, and the arena is the same plausible bowl as the venues page's, never a seat map. The seat's viewpoint is a place and a height of our own choosing, not a real seat's, and the play is made up for the picture (a replay's own timeline, see [the game](#the-game)): it says so on the screen and in its words, and it is no real game's data.
+The arena is one of the [real venues](./venues.md) (all thirty-two of the NHL's arenas). No team's or league's mark is drawn: the map is land and sea, the building is an outline, and the arena is the same plausible bowl as the venues page's, never a seat map. The seat's viewpoint is a place and a height of our own choosing, not a real seat's, and the play is made up for the picture (a replay's own timeline, see [the game](#the-game)): it says so on the screen and in its words, and it is no real game's data.
 
 ![The fly-through, sped up: a map of North America with a pin on Seattle, the building's outline in the city, Climate Pledge Arena rising into 3D and turning, the roof lifting away, a seat's view across the rink and a play on the ice.](./images/turning-flythrough-desk-light.webp)
 
-The demo's [fly-through page](https://johnmorrisdotca.github.io/kyogijo-stadiums/flythrough.html) flies each of the sixteen; `flythrough.html?arena=honda-center` opens it on one (`lang=ja`, `theme=dark`, `map=plain` and `stages=city,arena` are in the address too).
+The demo's [fly-through page](https://johnmorrisdotca.github.io/kyogijo-stadiums/flythrough.html) flies each of the thirty-two; `flythrough.html?arena=honda-center` opens it on one (`lang=ja`, `theme=dark`, `map=plain` and `stages=city,arena` are in the address too).
 
 ```ts no-run
 import { mountFlythrough } from "@johnmorrisdotca/kyogijo-stadiums/flythrough";

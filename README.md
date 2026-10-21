@@ -64,7 +64,7 @@ Kyogijo Stadiums draws the places a game is played on, with the score of the gam
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/venues-saddledome-3d-desk-dark.webp">
 <img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/venues-saddledome-3d-desk-light.webp" alt="The Scotiabank Saddledome in 3D: two tiers of seats under its saddle roof." width="400">
 </picture>
-<br><strong><a href="./docs/venues.md">Real arenas</a></strong>: the NHL's Western Conference, each in the outline of its building with a plausible bowl of the seats, tiers and roof the sources give; 2D and 3D, with the stands, walls and roof to switch.
+<br><strong><a href="./docs/venues.md">Real arenas</a></strong>: all thirty-two arenas of the NHL, each in the outline of its building with a plausible bowl of the seats, tiers and roof the sources give; 2D and 3D, with the stands, walls and roof to switch.
 </td>
 <td align="center" valign="top">
 <picture>
@@ -591,7 +591,7 @@ console.log(layout.needs.length, layout.needs.width);
 
 ### The real venues
 
-`crowd: { real: true }` draws an NHL arena in its building: the outline from OpenStreetMap, the rink lying along the building where it says so, and a plausible bowl of the seats, tiers and roof the sources give. Sixteen arenas so far, the Western Conference's (Pacific and Central Divisions); the Eastern Conference follows ([the real venues](./docs/venues.md)). In 3D the demo's [venues page](https://johnmorrisdotca.github.io/kyogijo-stadiums/venues.html) turns by itself, with the stands, walls, roof, building, markings and labels switched on the view while it turns.
+`crowd: { real: true }` draws an NHL arena in its building: the outline from OpenStreetMap, the rink lying along the building where it says so, and a plausible bowl of the seats, tiers and roof the sources give. All thirty-two arenas of the league, division by division ([the real venues](./docs/venues.md)). In 3D the demo's [venues page](https://johnmorrisdotca.github.io/kyogijo-stadiums/venues.html) turns by itself, with the stands, walls, roof, building, markings and labels switched on the view while it turns.
 
 ```ts
 import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
@@ -788,7 +788,7 @@ English and Japanese: the title, the description and the statuses of a drawing, 
 Not here yet, each welcome as an [issue](https://github.com/johnmorrisdotca/kyogijo-stadiums/issues):
 
 - **More surfaces**: the FIBA and college courts, the international rink, rugby pitches, soccer's beach and street formats.
-- **More real venues**: the Eastern Conference's arenas, then the NBA's, NFL's and MLB's, and more districts.
+- **More real venues**: the NBA's, NFL's and MLB's, and more districts.
 - **More parks of the past**: the 19th-century grounds, and the parks whose articles give no distances yet.
 - **More charts on data layers**: a formation chart, a pass sonar chart and a Voronoi chart of their own (the layers exist; see [team shape](./docs/team-shape.md)).
 - **Football in a different standard**: the college and high-school hash marks.

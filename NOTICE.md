@@ -411,7 +411,7 @@ The Japanese Wikipedia articles read for the names, with their revisions, are li
 
 ## The venues' sources
 
-The arenas of the NHL's Pacific and Central Divisions, read on 2026-10-20 (`pnpm venues:fetch <date> <division>`; the files are in `data-sources/venues/2026-10-20/`: `osm-<arena>.json` as Overpass returned them, and `wikidata-<division>.json` and `wikipedia-<division>.json`). The outline of a building is OpenStreetMap's, ODbL 1.0, (c) OpenStreetMap contributors, and lives in `src/venues.osm.data.ts` alone. The seats, the tiers and the roof are in `src/venues.data.ts`, with what each cites. No seat map of a team, a ticket seller or a venue is read or copied, and no mark of a team or a league is drawn.
+The thirty-two arenas of the NHL, read on 2026-10-20 (`pnpm venues:fetch <date> <division>`; the files are in `data-sources/venues/2026-10-20/`: `osm-<arena>.json` as Overpass returned them, and `wikidata-<division>.json` and `wikipedia-<division>.json`). The outline of a building is OpenStreetMap's, ODbL 1.0, (c) OpenStreetMap contributors, and lives in `src/venues.osm.data.ts` alone. The seats, the tiers and the roof are in `src/venues.data.ts`, with what each cites. No seat map of a team, a ticket seller or a venue is read or copied, and no mark of a team or a league is drawn.
 
 <!-- venues-notice -->
 | Arena | Wikidata item | OpenStreetMap element | English article and revision |
@@ -432,6 +432,22 @@ The arenas of the NHL's Pacific and Central Divisions, read on 2026-10-20 (`pnpm
 | Enterprise Center | Q1067700 | way/42369176 | Enterprise Center, 1372086380 |
 | Delta Center | Q82294 | way/23335190 | Delta Center, 1379043310 |
 | Canada Life Centre | Q656928 | way/14869890 | Canada Life Centre, 1379717047 |
+| TD Garden | Q432105 | way/25123637 | TD Garden, 1372238200 |
+| KeyBank Center | Q1110789 | way/626433722 | KeyBank Center, 1381057909 |
+| Little Caesars Arena | Q18154984 | way/526548805 | Little Caesars Arena, 1380799342 |
+| Amerant Bank Arena | Q795526 | way/43903801 | Amerant Bank Arena, 1379821144 |
+| Bell Centre | Q522282 | way/19911284 | Bell Centre, 1380110375 |
+| Canadian Tire Centre | Q1327290 | way/449048777 | Canadian Tire Centre, 1378044395 |
+| Benchmark International Arena | Q940199 | relation/12296444 | Benchmark International Arena, 1376541285 |
+| Scotiabank Arena | Q406972 | way/19882585 | Scotiabank Arena, 1380381634 |
+| Lenovo Center | Q39177 | way/47732090 | Lenovo Center, 1380055594 |
+| Nationwide Arena | Q166503 | way/30266537 | Nationwide Arena, 1379010656 |
+| Prudential Center | Q849027 | way/1421198650 | Prudential Center, 1380112777 |
+| UBS Arena | Q48742753 | way/328876880 | UBS Arena, 1374271562 |
+| Madison Square Garden | Q186125 | way/138141251 | Madison Square Garden, 1380115046 |
+| Xfinity Mobile Arena | Q818735 | way/25312366 | Xfinity Mobile Arena, 1380172806 |
+| PPG Paints Arena | Q595460 | way/130358195 | PPG Paints Arena, 1378458359 |
+| Capital One Arena | Q223240 | way/48041466 | Capital One Arena, 1375927841 |
 <!-- /venues-notice -->
 
 ## The stadiums' sources

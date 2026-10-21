@@ -4,7 +4,7 @@ import { areaOfOutline, type Pt } from "./crowd.ts";
 import { crowdStands, describe as describeDrawing, drawKyogijo } from "./draw.ts";
 import { PITCH_MAX, buildTurn, eyeDistance, layoutOf, presetsFor, project, type TurnModel } from "./turn-entry.ts";
 import { MAX_RAKE, SEAT_AREAS, VENUES, VENUE_ATTRIBUTION, VENUE_CONFERENCES, VENUE_DIVISIONS, VENUE_IDS, arenaOfVenue, bowlInside, conferenceOf, planVenue, venueById, venueByWikidata, venueOrientation, venuesIn, venuesInConference, type RealVenue } from "./venues.ts";
-import { areaOf, boxOf, coreOf, edgeDistance, inside, lonLatFrom, metresFrom, middleOf, northOn, simplified, smallestBox, turnedTo } from "./venues.geo.ts";
+import { areaOf, boxOf, centroidOf, coreOf, edgeDistance, inside, lonLatFrom, metresFrom, middleOf, northOn, simplified, smallestBox, turnedTo } from "./venues.geo.ts";
 import { VENUE_DATA } from "./venues.data.ts";
 import { VENUE_OSM } from "./venues.osm.data.ts";
 
@@ -13,7 +13,11 @@ vi.setConfig({ testTimeout: 300_000 });
 
 const PACIFIC = ["honda-center", "scotiabank-saddledome", "rogers-place", "crypto-com-arena", "sap-center", "climate-pledge-arena", "rogers-arena", "t-mobile-arena"];
 const CENTRAL = ["united-center", "ball-arena", "american-airlines-center", "grand-casino-arena", "bridgestone-arena", "enterprise-center", "delta-center", "canada-life-centre"];
-const ALL = [...PACIFIC, ...CENTRAL];
+const ATLANTIC = ["td-garden", "keybank-center", "little-caesars-arena", "amerant-bank-arena", "bell-centre", "canadian-tire-centre", "benchmark-international-arena", "scotiabank-arena"];
+const METROPOLITAN = ["lenovo-center", "nationwide-arena", "prudential-center", "ubs-arena", "madison-square-garden", "xfinity-mobile-arena", "ppg-paints-arena", "capital-one-arena"];
+const ALL = [...PACIFIC, ...CENTRAL, ...ATLANTIC, ...METROPOLITAN];
+/** The division of each venue, from the lists above. */
+const DIVISION_OF = Object.fromEntries([...PACIFIC.map((id) => [id, "pacific"]), ...CENTRAL.map((id) => [id, "central"]), ...ATLANTIC.map((id) => [id, "atlantic"]), ...METROPOLITAN.map((id) => [id, "metropolitan"])]);
 const venues = VENUE_IDS.map((id) => VENUES[id]);
 const lonLat = (ring: readonly (readonly [number, number])[]): [number, number][] => ring.map(([lon, lat]) => [lon, lat]);
 const outlineOf = (v: RealVenue): Pt[] => {
@@ -22,18 +26,19 @@ const outlineOf = (v: RealVenue): Pt[] => {
 };
 const range = (from: number, to: number, by: number): number[] => Array.from({ length: Math.floor((to - from) / by) + 1 }, (_, i) => from + i * by);
 
-describe("the venues: the Pacific and Central divisions", () => {
+describe("the venues: the four divisions of the NHL", () => {
   it("are the eight arenas of each division of the NHL drawn so far, each an arena in use that the package already has", () => {
     expect(VENUE_IDS).toEqual(ALL);
     expect(venuesIn("pacific").map((v) => v.id)).toEqual(PACIFIC);
     expect(venuesIn("central").map((v) => v.id)).toEqual(CENTRAL);
-    expect(venuesIn("atlantic")).toEqual([]);
+    expect(venuesIn("atlantic").map((v) => v.id)).toEqual(ATLANTIC);
+    expect(venuesIn("metropolitan").map((v) => v.id)).toEqual(METROPOLITAN);
     for (const v of venues) {
       const arena = arenaOfVenue(v);
       expect(arena.status, v.id).toBe("current");
       expect(arena.wikidata, v.id).toBe(v.wikidata);
       expect(VENUE_DIVISIONS, v.id).toContain(v.division);
-      expect(v.division, v.id).toBe(PACIFIC.includes(v.id) ? "pacific" : "central");
+      expect(v.division, v.id).toBe(DIVISION_OF[v.id]);
       expect(venueById(v.id)).toBe(v);
       expect(venueByWikidata(v.wikidata)).toBe(v);
     }
@@ -43,8 +48,8 @@ describe("the venues: the Pacific and Central divisions", () => {
     expect(VENUE_CONFERENCES).toEqual({ western: ["pacific", "central"], eastern: ["atlantic", "metropolitan"] });
     expect(conferenceOf("central")).toBe("western");
     expect(conferenceOf("metropolitan")).toBe("eastern");
-    expect(venuesInConference("western").map((v) => v.id)).toEqual(ALL);
-    expect(venuesInConference("eastern")).toEqual([]);
+    expect(venuesInConference("western").map((v) => v.id)).toEqual([...PACIFIC, ...CENTRAL]);
+    expect(venuesInConference("eastern").map((v) => v.id)).toEqual([...ATLANTIC, ...METROPOLITAN]);
     expect(venueById(undefined)).toBeUndefined();
     expect(venueById("toString")).toBeUndefined();
   });
@@ -54,7 +59,8 @@ describe("the venues: the Pacific and Central divisions", () => {
       expect(v.seats.hockey, v.id).toBeGreaterThan(15000);
       expect(v.seats.hockey, v.id).toBeLessThan(21000);
       expect(["wikidata", "wikipedia"], v.id).toContain(v.seats.source);
-      expect(v.seats.wikidata, v.id).toBeGreaterThan(15000);
+      // Wikidata's own capacity is kept beside the figure used, and is `null` where the item gives none (the Little Caesars Arena's and the UBS Arena's).
+      if (v.seats.wikidata !== null) expect(v.seats.wikidata, v.id).toBeGreaterThan(15000);
       expect([1, 2, 3], v.id).toContain(v.tiers.count);
       expect(["documented", "plausible"], v.id).toContain(v.tiers.basis);
       expect(["documented", "plausible"], v.id).toContain(v.roof.basis);
@@ -79,6 +85,11 @@ describe("the venues: the Pacific and Central divisions", () => {
     expect(VENUES["delta-center"].seats.hockey).toBe(16020);
     expect(VENUES["united-center"].seats.hockey).toBe(19717);
     expect(VENUES["canada-life-centre"].seats.hockey).toBe(15225);
+    // The Eastern Conference's: the infobox's present figure where it lists years (the Canadian Tire Centre's 17,010 from 2026, not the 18,500 of 1996), and no Wikidata capacity for two items.
+    expect(VENUES["canadian-tire-centre"].seats.hockey).toBe(17010);
+    expect(VENUES["td-garden"].seats.hockey).toBe(17850);
+    expect(VENUES["bell-centre"].seats.hockey).toBe(20962);
+    expect(venues.filter((v) => v.seats.wikidata === null).map((v) => v.id)).toEqual(["little-caesars-arena", "ubs-arena"]);
   });
 
   it("say what a source says and what is ours: the Saddledome's roof and the number of tiers are documented where an article says them", () => {
@@ -92,7 +103,10 @@ describe("the venues: the Pacific and Central divisions", () => {
     expect(VENUES["canada-life-centre"].tiers).toMatchObject({ count: 2, basis: "documented", lowerShare: 0.579 });
     expect(VENUES["enterprise-center"].tiers).toMatchObject({ count: 2, basis: "documented" });
     expect(VENUES["united-center"].tiers).toMatchObject({ count: 2, basis: "documented" });
-    expect(venues.filter((v) => v.tiers.count === 3).map((v) => v.id)).toEqual(["grand-casino-arena"]);
+    // The Eastern Conference's: three levels where an article names a 100, a 200 and a 300 level or a three-tier layout (the KeyBank Center, the Bell Centre, the Canadian Tire Centre), two documented where it names the lower and the upper bowl.
+    for (const id of ["keybank-center", "bell-centre", "canadian-tire-centre"]) expect(VENUES[id].tiers, id).toMatchObject({ count: 3, basis: "documented" });
+    for (const id of ["lenovo-center", "prudential-center", "madison-square-garden"]) expect(VENUES[id].tiers, id).toMatchObject({ count: 2, basis: "documented" });
+    expect(venues.filter((v) => v.tiers.count === 3).map((v) => v.id)).toEqual(["grand-casino-arena", "keybank-center", "bell-centre", "canadian-tire-centre"]);
   });
 
   it("are the generated data files, in step with the sources' dates and with each other", () => {
@@ -206,14 +220,18 @@ describe("the geometry of a building's outline", () => {
 });
 
 describe("how the rink lies", () => {
-  it("is mapped nowhere in the Pacific and Central divisions (no ice in the data), inferred from the main hall where the building has a direction and a longer side, and not known for a round one", () => {
+  it("is mapped for the three buildings OpenStreetMap maps the ice in (TD Garden, Xfinity Mobile Arena, PPG Paints Arena), inferred from the main hall where the building has a direction and a longer side, and not known for a round one", () => {
     const basis = Object.fromEntries(venues.map((v) => [v.id, v.osm.axis.basis]));
     expect(basis).toEqual({
       "honda-center": "building", "scotiabank-saddledome": "none", "rogers-place": "building", "crypto-com-arena": "none", "sap-center": "none", "climate-pledge-arena": "building", "rogers-arena": "building", "t-mobile-arena": "building",
       "united-center": "building", "ball-arena": "none", "american-airlines-center": "building", "grand-casino-arena": "building", "bridgestone-arena": "building", "enterprise-center": "building", "delta-center": "building", "canada-life-centre": "building",
+      "td-garden": "mapped", "keybank-center": "building", "little-caesars-arena": "building", "amerant-bank-arena": "none", "bell-centre": "building", "canadian-tire-centre": "none", "benchmark-international-arena": "none", "scotiabank-arena": "none",
+      "lenovo-center": "none", "nationwide-arena": "building", "prudential-center": "building", "ubs-arena": "building", "madison-square-garden": "none", "xfinity-mobile-arena": "mapped", "ppg-paints-arena": "mapped", "capital-one-arena": "none",
     });
+    const MAPPED = ["td-garden", "xfinity-mobile-arena", "ppg-paints-arena"];
+    expect(venues.filter((v) => v.osm.ice !== undefined).map((v) => v.id)).toEqual(MAPPED);
     for (const v of venues) {
-      expect(v.osm.ice, v.id).toBeUndefined();
+      expect(v.osm.ice !== undefined, v.id).toBe(MAPPED.includes(v.id));
       const o = venueOrientation(v);
       expect(o.basis).toBe(v.osm.axis.basis);
       expect(o.heading).toBeGreaterThanOrEqual(0);
@@ -226,13 +244,37 @@ describe("how the rink lies", () => {
     }
   });
 
+  it("takes the rink's heading from the ice where OpenStreetMap maps it: a rink-sized outline inside the building, longer than wide, whose long side is the stored heading, and the middle of the ice is the stored middle", () => {
+    for (const id of ["td-garden", "xfinity-mobile-arena", "ppg-paints-arena"]) {
+      const v = VENUES[id];
+      expect(v.osm.axis.basis, id).toBe("mapped");
+      expect(v.osm.ice!.source, id).toMatch(/^(?:way|relation)\/\d+$/);
+      const origin = middleOf(lonLat(v.osm.ring));
+      const ice = metresFrom(origin, lonLat(v.osm.ice!.ring));
+      // An NHL rink is 200 by 85 feet, 1,580 square metres; the ice mapped is within a third of it.
+      expect(areaOf(ice), id).toBeGreaterThan(1000);
+      expect(areaOf(ice), id).toBeLessThan(2600);
+      expect(inside(metresFrom(origin, lonLat(v.osm.ring)), centroidOf(ice)), id).toBe(true);
+      const box = smallestBox(ice);
+      expect(box.length / box.width, id).toBeGreaterThanOrEqual(1.5);
+      const off = Math.min(Math.abs(box.heading - v.osm.axis.heading), 180 - Math.abs(box.heading - v.osm.axis.heading));
+      expect(off, id).toBeLessThan(0.2);
+      const [east, north] = metresFrom(origin, [v.osm.axis.centre])[0];
+      const [cx, cy] = centroidOf(ice);
+      expect(Math.hypot(east - cx, north - cy), id).toBeLessThan(0.6);
+      // The drawing is turned the way the ice lies: north points as much less than the heading as for any other.
+      expect(venueOrientation(v).north, id).toBeCloseTo(90 - v.osm.axis.heading, 1);
+    }
+  });
+
   it("puts the building's main hall along x in the drawing: the footprint's long direction is the rink's, for the buildings with a direction", () => {
     for (const v of venues.filter((x) => x.osm.axis.basis === "building")) {
       const plan = planVenue(v);
       const core = coreOf(plan.footprint);
       // In the drawing's frame the hall's long side is along x (heading 90 in a frame whose north is up).
       const off = Math.min(Math.abs(core.heading - 90), 180 - Math.abs(core.heading - 90));
-      expect(off, `${v.id}: ${core.heading}`).toBeLessThan(6);
+      // (The search takes directions three degrees apart, and a hall whose largest rectangle hardly changes between two of them can be found as far as nine degrees off when the building is turned: the Prudential Center's.)
+      expect(off, `${v.id}: ${core.heading}`).toBeLessThan(10);
     }
   });
 

@@ -1,0 +1,158 @@
+{
+ "read": "2026-10-20",
+ "licence": "ODbL 1.0, (c) OpenStreetMap contributors, openstreetmap.org/copyright",
+ "gateway": "https://lambert.openstreetmap.de/api/interpreter",
+ "query": "[out:json][timeout:60];(nwr[\"wikidata\"=\"Q223240\"];nwr(around:300,38.89806,-77.02083)[\"sport\"=\"ice_hockey\"];nwr(around:300,38.89806,-77.02083)[\"leisure\"=\"ice_rink\"];);out geom;",
+ "osmBase": "2026-10-20T23:23:53Z",
+ "wikidata": "Q223240",
+ "elements": [
+  {
+   "type": "way",
+   "id": 48041466,
+   "bounds": {
+    "minlat": 38.8974832,
+    "minlon": -77.0217585,
+    "maxlat": 38.8986899,
+    "maxlon": -77.0201131
+   },
+   "nodes": [
+    610815898,
+    610815896,
+    610816200,
+    610816202,
+    610816204,
+    610816205,
+    9572139443,
+    610816225,
+    610816226,
+    610816228,
+    9572139441,
+    610816230,
+    610816231,
+    12410781092,
+    610816232,
+    610816234,
+    610816236,
+    610816237,
+    610816238,
+    610816240,
+    9951151070,
+    610816241,
+    610815898
+   ],
+   "geometry": [
+    {
+     "lat": 38.8986893,
+     "lon": -77.0210967
+    },
+    {
+     "lat": 38.898689,
+     "lon": -77.0207152
+    },
+    {
+     "lat": 38.8986889,
+     "lon": -77.0205742
+    },
+    {
+     "lat": 38.8986473,
+     "lon": -77.0205745
+    },
+    {
+     "lat": 38.8986426,
+     "lon": -77.0201148
+    },
+    {
+     "lat": 38.8986426,
+     "lon": -77.0201131
+    },
+    {
+     "lat": 38.8984358,
+     "lon": -77.0201157
+    },
+    {
+     "lat": 38.8974835,
+     "lon": -77.0201277
+    },
+    {
+     "lat": 38.8974832,
+     "lon": -77.0206799
+    },
+    {
+     "lat": 38.8974991,
+     "lon": -77.02068
+    },
+    {
+     "lat": 38.8974994,
+     "lon": -77.0209454
+    },
+    {
+     "lat": 38.8974996,
+     "lon": -77.0212107
+    },
+    {
+     "lat": 38.8974842,
+     "lon": -77.0212108
+    },
+    {
+     "lat": 38.8974835,
+     "lon": -77.0217141
+    },
+    {
+     "lat": 38.8974834,
+     "lon": -77.0217578
+    },
+    {
+     "lat": 38.8974844,
+     "lon": -77.0217578
+    },
+    {
+     "lat": 38.8976709,
+     "lon": -77.0217562
+    },
+    {
+     "lat": 38.8976708,
+     "lon": -77.0217402
+    },
+    {
+     "lat": 38.8977243,
+     "lon": -77.0217397
+    },
+    {
+     "lat": 38.8977244,
+     "lon": -77.0217585
+    },
+    {
+     "lat": 38.8979408,
+     "lon": -77.0217569
+    },
+    {
+     "lat": 38.8986899,
+     "lon": -77.0217563
+    },
+    {
+     "lat": 38.8986893,
+     "lon": -77.0210967
+    }
+   ],
+   "tags": {
+    "addr:city": "Washington",
+    "addr:housenumber": "601",
+    "addr:postcode": "20004",
+    "addr:state": "DC",
+    "addr:street": "F Street Northwest",
+    "building": "yes",
+    "dcgis:captureyear": "19990331",
+    "dcgis:dataset": "buildings",
+    "dcgis:featurecode": "2000",
+    "leisure": "stadium",
+    "name": "Capital One Arena",
+    "name:etymology:wikidata": "Q1034654",
+    "phone": "+1 202-628-3200",
+    "source": "dcgis",
+    "sport": "hockey;basketball",
+    "website": "https://capitalonearena.monumentalnetwork.com/",
+    "wikidata": "Q223240"
+   }
+  }
+ ]
+}

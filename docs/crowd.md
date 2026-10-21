@@ -33,7 +33,7 @@ The distances, the depths and the heights of the stands are conventions for a dr
 | `gaps` | The tunnel, the camera platform, the benches and the media row. On by default. |
 | `roof` | The roof's edge throws a shade on the last rows of the upper tier. On by default. |
 | `wallSeats` | A ballpark's seats on top of a wall: by default the walls the package knows have them (Fenway Park's Green Monster, `WALL_SEATS`), `true` for every wall of the park's data that is 25 feet or more, `false` for none. |
-| `real` | The stands of the arena's real venue (`arena` names it): the outline of its building, the rink lying in it and a bowl of the seats, tiers and roof the sources give, for the sixteen arenas of the Pacific and Central Divisions; any other arena keeps the usual stands; a football field or a soccer pitch in a `stadium` of `STADIUMS` (BC Place) has its building and a bowl of its configuration's seats. [The real venues](./venues.md), [the real stadiums](./stadiums.md). |
+| `real` | The stands of the arena's real venue (`arena` names it): the outline of its building, the rink lying in it and a bowl of the seats, tiers and roof the sources give, for the thirty-two arenas of the NHL; any other arena keeps the usual stands; a football field or a soccer pitch in a `stadium` of `STADIUMS` (BC Place) has its building and a bowl of its configuration's seats. [The real venues](./venues.md), [the real stadiums](./stadiums.md). |
 | `stands` | `false` draws no seats: of a real venue only its building and the arrow that says where north is. |
 | `detail` | `fine` (the people, the empty seats, the aisles and the shade), `plain` (blocks of colour), or `auto` (the default): `plain` for `detail: "simple"` or a `width` under 480 pixels. |
 

@@ -9,11 +9,15 @@ const STAGE = '[data-testid="stage"]';
 const DIVISIONS = {
   pacific: { ids: ["honda-center", "scotiabank-saddledome", "rogers-place", "crypto-com-arena", "sap-center", "climate-pledge-arena", "rogers-arena", "t-mobile-arena"], names: ["Honda Center", "Scotiabank Saddledome", "Rogers Place", "Crypto.com Arena", "SAP Center", "Climate Pledge Arena", "Rogers Arena", "T-Mobile Arena"] },
   central: { ids: ["united-center", "ball-arena", "american-airlines-center", "grand-casino-arena", "bridgestone-arena", "enterprise-center", "delta-center", "canada-life-centre"], names: ["United Center", "Ball Arena", "American Airlines Center", "Grand Casino Arena", "Bridgestone Arena", "Enterprise Center", "Delta Center", "Canada Life Centre"] },
+  atlantic: { ids: ["td-garden", "keybank-center", "little-caesars-arena", "amerant-bank-arena", "bell-centre", "canadian-tire-centre", "benchmark-international-arena", "scotiabank-arena"], names: ["TD Garden", "KeyBank Center", "Little Caesars Arena", "Amerant Bank Arena", "Bell Centre", "Canadian Tire Centre", "Benchmark International Arena", "Scotiabank Arena"] },
+  metropolitan: { ids: ["lenovo-center", "nationwide-arena", "prudential-center", "ubs-arena", "madison-square-garden", "xfinity-mobile-arena", "ppg-paints-arena", "capital-one-arena"], names: ["Lenovo Center", "Nationwide Arena", "Prudential Center", "UBS Arena", "Madison Square Garden", "Xfinity Mobile Arena", "PPG Paints Arena", "Capital One Arena"] },
 };
 /** Whether the rink's orientation is known for each (an arrow marks north in the drawing). */
 const ARROW = {
   "honda-center": true, "scotiabank-saddledome": false, "rogers-place": true, "crypto-com-arena": false, "sap-center": false, "climate-pledge-arena": true, "rogers-arena": true, "t-mobile-arena": true,
   "united-center": true, "ball-arena": false, "american-airlines-center": true, "grand-casino-arena": true, "bridgestone-arena": true, "enterprise-center": true, "delta-center": true, "canada-life-centre": true,
+  "td-garden": true, "keybank-center": true, "little-caesars-arena": true, "amerant-bank-arena": false, "bell-centre": true, "canadian-tire-centre": false, "benchmark-international-arena": false, "scotiabank-arena": false,
+  "lenovo-center": false, "nationwide-arena": true, "prudential-center": true, "ubs-arena": true, "madison-square-garden": false, "xfinity-mobile-arena": true, "ppg-paints-arena": true, "capital-one-arena": false,
 };
 
 /** The bar's button for a part (`stands`, `walls`, `roof`, `building`, `markings`, `labels`) or a view (`view-3d`). */
@@ -37,9 +41,9 @@ async function open(page, query = "", motion = "reduce") {
 test("opens on the Honda Center in the outline of its building, with the Pacific Division's eight arenas as tabs and the divisions to choose, nothing sent anywhere and nothing wider than the screen", async ({ page }) => {
   const { errors, outside } = await open(page);
   await expect(page.locator("#tabs button")).toHaveText(DIVISIONS.pacific.names);
-  // The divisions that have venues, by conference: the Western Conference's two, and no Eastern one until it has a venue.
-  await expect(page.locator("#divisions button")).toHaveText(["Pacific", "Central"]);
-  await expect(page.locator("#divisions .conf-name")).toHaveText(["Western Conference"]);
+  // The divisions, by conference: the Western Conference's two, then the Eastern's.
+  await expect(page.locator("#divisions button")).toHaveText(["Pacific", "Central", "Atlantic", "Metropolitan"]);
+  await expect(page.locator("#divisions .conf-name")).toHaveText(["Western Conference", "Eastern Conference"]);
   await expect(page.locator('#divisions button[aria-pressed="true"]')).toHaveText("Pacific");
   await expect(page.locator('#tabs button[aria-selected="true"]')).toHaveText("Honda Center");
   await expect(page.locator(`${STAGE} svg.kyogijo .ky-cr-shell`)).toHaveCount(1);
@@ -106,6 +110,22 @@ test("draws a venue of three tiers, the Grand Casino Arena's, and lists its divi
   await expect(facts).toContainText("3 (a source says so)");
   await expect(facts).toContainText("OpenStreetMap relation/20658401");
   await expect(page.locator(`${STAGE} svg.kyogijo .ky-cr-shell`)).toHaveCount(1);
+  expect(errors).toEqual([]);
+});
+
+test("lists the Eastern Conference's venues too: a venue whose ice OpenStreetMap maps, and one whose Wikidata item gives no capacity", async ({ page }) => {
+  const { errors } = await open(page, "?venue=td-garden");
+  await expect(page.locator('#divisions button[aria-pressed="true"]')).toHaveText("Atlantic");
+  const facts = page.locator('[data-testid="facts"]');
+  await expect(facts).toContainText("Atlantic, Eastern Conference");
+  await expect(facts).toContainText("17,850");
+  await expect(facts).toContainText("from the ice OpenStreetMap maps");
+  await expect(facts).toContainText("OpenStreetMap way/25123637");
+  await expect(page.locator(`${STAGE} svg.kyogijo .ky-cr-north`)).toHaveCount(1);
+  await page.locator('#tabs button[data-venue="little-caesars-arena"]').click();
+  await expect(facts).toContainText("19,515 (Wikidata gives no capacity)");
+  await page.locator('#divisions button[data-division="metropolitan"]').click();
+  await expect(page.locator("#tabs button")).toHaveText(DIVISIONS.metropolitan.names);
   expect(errors).toEqual([]);
 });
 

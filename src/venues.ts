@@ -38,8 +38,8 @@ export interface RealVenueData {
     /** The seats for ice hockey: Wikidata's where its item gives a figure for ice hockey (`wikidata`), else the article's (`wikipedia`). */
     hockey: number;
     source: "wikidata" | "wikipedia";
-    /** Wikidata's own capacity (P1083), kept beside it: it is often for another event, or an older year. */
-    wikidata: number;
+    /** Wikidata's own capacity (P1083), kept beside it: it is often for another event, or an older year; `null` where the item gives none (the Little Caesars Arena's, the UBS Arena's). */
+    wikidata: number | null;
     /** What was read, in a few words of ours. */
     read: string;
   };

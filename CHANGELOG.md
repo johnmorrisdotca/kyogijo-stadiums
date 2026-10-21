@@ -7,6 +7,14 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.32.0] - 2026-10-20
+
+### Added
+
+- **The real venues of the Atlantic and Metropolitan Divisions**: TD Garden, the KeyBank Center, the Little Caesars Arena, the Amerant Bank Arena, the Bell Centre, the Canadian Tire Centre, the Benchmark International Arena and the Scotiabank Arena; the Lenovo Center, the Nationwide Arena, the Prudential Center, the UBS Arena, Madison Square Garden, the Xfinity Mobile Arena, PPG Paints Arena and the Capital One Arena. That completes the league: all thirty-two arenas, the Western and the Eastern Conference, drawn as the first sixteen were (the outline of the building from OpenStreetMap, read on 2026-10-20; a plausible bowl of the seats, tiers and roof the sources give, each fact labelled `documented` or `plausible`). Three arenas have three seating tiers besides the Grand Casino Arena's: the KeyBank Center's (its article names the 200 and 300 levels), the Bell Centre's (a three-tier layout) and the Canadian Tire Centre's (levels 100, 200 and 300); two tiers are documented for the Lenovo Center, the Prudential Center and Madison Square Garden. The Little Caesars Arena's and the UBS Arena's Wikidata items give no capacity (`seats.wikidata` is `null` there; the infobox's figure for ice hockey is used). Where two outlines carry an arena's Wikidata item (the Xfinity Mobile Arena's) the one tagged `building` is the building; a building that is a relation (the Benchmark International Arena's) is read as the Grand Casino Arena's was.
+- **True orientation where OpenStreetMap maps the ice**: TD Garden, the Xfinity Mobile Arena and PPG Paints Arena have the rink mapped inside the building (a rink-sized outline whose long side gives the heading and whose middle is the rink's), so their rinks lie as the ice does (`basis: "mapped"`), not as the building's main hall suggests. Of the thirty-two, three are mapped, eighteen inferred from the main hall and eleven not known. A venue's `osm.ice.source` can now be a relation.
+- **The demo's venues page, the home page's featured arena, the gallery and the docs** list all thirty-two by division and conference (the Eastern Conference's two divisions are in the chooser, `venuesInConference("eastern")` has its sixteen, `VENUE_IDS` has thirty-two), and the fly-through page flies each of them.
+
 ## [0.31.0] - 2026-10-20
 
 ### Added

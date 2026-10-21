@@ -76,7 +76,7 @@ describe("the real venues' files", () => {
     const data = JSON.parse(readFileSync("scripts/venues.data.json", "utf8"));
     expect(data.venues.map((v) => v.id)).toEqual([...VENUE_IDS]);
     // Each division lists its venues in the order of the data, and sits in the conference the league has it in.
-    expect(Object.keys(data.divisions)).toEqual(["pacific", "central"]);
+    expect(Object.keys(data.divisions)).toEqual(["pacific", "central", "atlantic", "metropolitan"]);
     for (const [division, entry] of Object.entries(data.divisions)) {
       expect(entry.venues, division).toEqual(venues.filter((v) => v.division === division).map((v) => v.id));
       expect(VENUE_CONFERENCES[entry.conference], division).toContain(division);

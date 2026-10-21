@@ -68,7 +68,8 @@ for (const v of venues) {
   if (!(Number.isInteger(seats.hockey) && seats.hockey > 8000 && seats.hockey < 25000)) fail(`${v.id}: seats`);
   if (!SOURCES.includes(seats.source)) fail(`${v.id}: seats.source`);
   const given = capacities(item);
-  if (!given.some((c) => c.amount === seats.wikidata)) fail(`${v.id}: Wikidata gives ${given.map((c) => c.amount).join(", ")}, not ${seats.wikidata}`);
+  // Wikidata's own capacity is kept beside the figure used; an item that gives none has `null`.
+  if (given.length === 0 ? seats.wikidata !== null : !given.some((c) => c.amount === seats.wikidata)) fail(`${v.id}: Wikidata gives ${given.map((c) => c.amount).join(", ") || "no capacity"}, not ${seats.wikidata}`);
   // Wikidata's own figure for ice hockey wins where the item has one; else the figure is the article's.
   // Where it has several (a capacity changed in some year: P580 says from when), the latest is the present one.
   const hockey = given.filter((c) => c.sport === ICE_HOCKEY).sort((a, b) => b.from.localeCompare(a.from))[0];
@@ -88,7 +89,9 @@ for (const v of venues) {
   // A closed way, or a multipolygon relation whose outer ways join into one ring (a building drawn in two ways), is an outline.
   const closed = (e) => outerRingOf(e) !== undefined;
   const ringOf = (e) => outerRingOf(e).slice(0, -1).map((p) => [p.lon, p.lat]);
-  const building = raw.elements.filter((e) => e.tags?.wikidata === v.wikidata && closed(e));
+  // Where more than one outline carries the item (a building and a sports centre drawn over it), the one tagged `building` is the building.
+  let building = raw.elements.filter((e) => e.tags?.wikidata === v.wikidata && closed(e));
+  if (building.length > 1) building = building.filter((e) => e.tags.building !== undefined);
   if (building.length !== 1) fail(`${v.id}: ${building.length} outlines carry ${v.wikidata}; a split building needs a rule of its own`);
   const outline = building[0];
   const origin = middleOf(ringOf(outline));
@@ -99,7 +102,7 @@ for (const v of venues) {
   const ice = raw.elements.filter((e) => e !== outline && closed(e) && (e.tags?.leisure === "ice_rink" || e.tags?.sport === "ice_hockey")).flatMap((e) => {
     const m = metresFrom(origin, ringOf(e));
     const area = areaOf(m);
-    return area > 1000 && area < 2600 && inside(metresFrom(origin, ringOf(outline)), centroidOf(m)) ? [{ id: `way/${e.id}`, ring: ringOf(e).map(([lon, lat]) => [Math.round(lon * 1e6) / 1e6, Math.round(lat * 1e6) / 1e6]), shape: smallestBox(m) }] : [];
+    return area > 1000 && area < 2600 && inside(metresFrom(origin, ringOf(outline)), centroidOf(m)) ? [{ id: `${e.type}/${e.id}`, ring: ringOf(e).map(([lon, lat]) => [Math.round(lon * 1e6) / 1e6, Math.round(lat * 1e6) / 1e6]), shape: smallestBox(m) }] : [];
   });
   if (ice.length > 1) fail(`${v.id}: ${ice.length} ice candidates inside the building`);
   const height = Number(outline.tags.height);
@@ -163,7 +166,7 @@ const table = `| Key | Arena | Division | City | Wikidata | Seats for hockey | T
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 ${venues.map((v) => {
   const arena = arenas.find((a) => a.id === v.id);
-  const seats = `${v.seats.hockey.toLocaleString("en-US")} (${v.seats.source === "wikidata" ? "Wikidata" : "Wikipedia"}; Wikidata's capacity ${v.seats.wikidata.toLocaleString("en-US")})`;
+  const seats = `${v.seats.hockey.toLocaleString("en-US")} (${v.seats.source === "wikidata" ? "Wikidata" : "Wikipedia"}; Wikidata's capacity ${v.seats.wikidata === null ? "none" : v.seats.wikidata.toLocaleString("en-US")})`;
   return `| \`${v.id}\` | ${arena.name} | ${v.division[0].toUpperCase()}${v.division.slice(1)} | ${arena.city}, ${COUNTRY[arena.country] ?? arena.country} | ${v.wikidata} | ${seats} | ${v.tiers.count}, ${v.tiers.basis} | ${v.roof.kind}, ${v.roof.basis} | ${how(osm[v.id].axis)} | ${osm[v.id].source.replace("/", " ")}, ${m2(osm[v.id]).toLocaleString("en-US")} m² |`;
 }).join("\n")}`;
 const page = new URL("../docs/venues.md", import.meta.url);
