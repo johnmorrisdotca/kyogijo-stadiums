@@ -11,7 +11,7 @@ import { FOOTBALL } from "./geometry.ts";
 import { renderLayers } from "./layers.ts";
 import { arenaById, arenaCourtIn, arenaNameIn, arenaOfficialName, arenaRinkIn } from "./arenas.ts";
 import { venueById, venueBowl } from "./venues.ts";
-import { planPark, stadiumBowl, stadiumById, stadiumConfigOf, stadiumKind, stadiumNames, stadiumSeats, type RealStadium, type StadiumConfigId } from "./stadiums.ts";
+import { KYOGIJO_STADIUM_STYLE, planPark, stadiumBowl, stadiumById, stadiumConfigOf, stadiumConfigs, stadiumKind, stadiumNames, stadiumSeats, type RealStadium, type StadiumConfigId } from "./stadiums.ts";
 import { groundById, groundNameIn, groundOfficialName } from "./grounds.ts";
 import { BOARD, courtFor, hasSetsBoard, isNetLeague, isNetSport, type CourtPlan } from "./court.ts";
 import { cricketBoardMarkup } from "./cricket.board.ts";
@@ -489,6 +489,15 @@ const smallDrawing = (o: SurfaceOptions): boolean => {
   return o.detail === "simple" || (w !== undefined && w < 480);
 };
 
+/** The ground, in feet, a stadium's frame holds beyond its building. */
+const VENUE_PAD = 6;
+
+/** Whether the options draw a real stadium of more than one configuration (a football field and a soccer pitch in one building): its frame is the building's, not the field's. */
+function stadiumHasConfigs(o: SurfaceOptions, crowd: Crowd): boolean {
+  const real = realStadiumOf(o, chooseLeague(o).sport, crowd.real);
+  return real !== undefined && stadiumKind(real.stadium) === "stadium" && stadiumConfigs(real.stadium).length > 1;
+}
+
 /** A surface with the stands and the crowd round it: the ground is made as wide as the stands need, then the stands are laid on it under the surface. */
 function buildCrowded(o: SurfaceOptions, portrait: boolean, id: string, score: boolean, scored: boolean, extra: Extra, crowd: Crowd): Surface {
   let margin = extra.margin;
@@ -503,6 +512,13 @@ function buildCrowded(o: SurfaceOptions, portrait: boolean, id: string, score: b
   }
   const surface = buildWhole(o, portrait, id, score, scored, { ...extra, margin });
   const stands = standsFor(o, surface, crowd);
+  // A stadium that stages more than one field is framed by its building, once, whichever field is drawn: the view is the building's with a small margin, about the middle of the field.
+  const field = stands.box;
+  if (surface.turn === undefined && o.range === undefined && stadiumHasConfigs(o, crowd)) {
+    const [cx, cy] = [field.x + field.w / 2, field.y + field.h / 2];
+    const [left, right, top, bottom] = [field.w / 2 + stands.reach.left, field.w / 2 + stands.reach.right, field.h / 2 + stands.reach.top, field.h / 2 + stands.reach.bottom].map((d) => d + VENUE_PAD);
+    surface.view = { x: cx - left, y: cy - top, w: left + right, h: top + bottom };
+  }
   const seats = stands.seats;
   const ground = groundById(o.ground)?.capacity;
   const fine = crowd.detail === "fine" || (crowd.detail === "auto" && !smallDrawing(o));
@@ -952,6 +968,9 @@ function drawnKyogijo(o: SurfaceOptions | ScoreOptions): string {
   const walled = sport === "mlb" && ballparkDrawn(ballparkFor(o));
   const hardwood = sport === "nba" && o.court?.hardwood !== undefined && o.court.hardwood !== false;
   const crowded = crowdOf(o) !== undefined;
+  // The stadium a drawing is in, where it has more than one configuration: its ground is its own, whichever field lies in it (the stylesheet reads it).
+  const crowdHere = crowdOf(o);
+  const stadiumOfDrawing = crowdHere !== undefined && stadiumHasConfigs(o, crowdHere) ? realStadiumOf(o, sport, crowdHere.real)?.stadium.id : undefined;
   const style = colourStyle(o, { left: leftTeam, right: rightTeam, home: isScore(o) ? o.home : undefined, away: isScore(o) ? o.away : undefined }, featured);
   const palette = isLook(o.look) ? o.look : undefined;
   const budoLook = isMatSport(sport) ? budoLookOf(sport, o.budo?.look ?? (sport === "dojo" ? dojoSpecOf(o.dojo).look : undefined)) : undefined;
@@ -1129,6 +1148,7 @@ function drawnKyogijo(o: SurfaceOptions | ScoreOptions): string {
       role: "img",
       "aria-labelledby": `${titleId} ${descId}`,
       "data-sport": sport,
+      "data-stadium": stadiumOfDrawing,
       "data-league": o.league === undefined || o.league === "" ? (chooseLeague(o).league?.id ?? undefined) : o.league,
       "data-range": isScore(o) && sport === "curling" ? undefined : rangeLabel(o),
       "data-event": o.host !== undefined && typeof o.event === "string" ? safeClass(o.event) : undefined,
@@ -1148,7 +1168,7 @@ function drawnKyogijo(o: SurfaceOptions | ScoreOptions): string {
       style: style === "" ? undefined : style,
     },
     `<title id="${titleId}">${esc(title)}</title><desc id="${descId}">${esc(description)}</desc>` +
-      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${left?.round === true || right?.round === true || (pg !== undefined && pageant?.style === "stage") || (pg !== undefined && pageant?.emblem?.shape !== "plain" && pageant?.emblem !== undefined) ? `\n${KYOGIJO_MARK_STYLE}` : ""}${pg === undefined ? "" : `\n${KYOGIJO_PAGEANT_STYLE}${pageant?.animate === undefined || pageant.animate === "none" ? "" : `\n${KYOGIJO_PAGEANT_MOTION}`}`}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}${foldedSheet ? `\n${KYOGIJO_FOLD_STYLE}` : ""}${isPoolSport(sport) ? `\n${o.pool?.venue !== undefined ? KYOGIJO_POOL_STYLE : poolStyle({ sport, ...commonOf(o.pool ?? {}), race: o.pool?.race !== undefined, section: o.pool?.section !== undefined && o.pool.section !== false })}` : ""}${plan === undefined ? "" : `\n${courtStyle(plan.sport, plan.look)}`}${fieldsStyle(sport) === "" ? "" : `\n${fieldsStyle(sport)}`}${athleticsStyle(sport) === "" ? "" : `\n${athleticsStyle(sport)}`}${skatingStyle(sport) === "" ? "" : `\n${skatingStyle(sport)}`}${budoLook === undefined ? "" : `\n${budoStyle(sport, budoLook)}`}${palette === undefined ? "" : `\n${lookStyle(palette)}`}${athleticsTrackRules(sport, o.athletics?.track) === "" ? "" : `\n${athleticsTrackRules(sport, o.athletics?.track)}`}${walled ? `\n${KYOGIJO_WALLS_STYLE}` : ""}${hardwood ? `\n${KYOGIJO_HARDWOOD_STYLE}` : ""}${features === undefined ? "" : `\n${featureStyle(sport, features)}`}${notes === undefined || notes.svg === "" ? "" : `\n${KYOGIJO_NOTE_STYLE}`}${grounded ? `\n${KYOGIJO_BACKGROUND_STYLE}` : ""}${crowded ? `\n${KYOGIJO_CROWD_STYLE}` : ""}${crowded && sport === "dojo" ? KYOGIJO_BUDO_GALLERY_STYLE : ""}${situation === undefined ? "" : `\n${KYOGIJO_SITUATION_STYLE}`}${o.host === undefined ? "" : `\n${specialStyle(hostSport(o.host))}`}</style>`) +
+      (o.style === "none" ? "" : `<style>${KYOGIJO_BASE_STYLE}${left?.round === true || right?.round === true || (pg !== undefined && pageant?.style === "stage") || (pg !== undefined && pageant?.emblem?.shape !== "plain" && pageant?.emblem !== undefined) ? `\n${KYOGIJO_MARK_STYLE}` : ""}${pg === undefined ? "" : `\n${KYOGIJO_PAGEANT_STYLE}${pageant?.animate === undefined || pageant.animate === "none" ? "" : `\n${KYOGIJO_PAGEANT_MOTION}`}`}${sport === "curling" ? `\n${KYOGIJO_CURLING_STYLE}` : ""}${foldedSheet ? `\n${KYOGIJO_FOLD_STYLE}` : ""}${isPoolSport(sport) ? `\n${o.pool?.venue !== undefined ? KYOGIJO_POOL_STYLE : poolStyle({ sport, ...commonOf(o.pool ?? {}), race: o.pool?.race !== undefined, section: o.pool?.section !== undefined && o.pool.section !== false })}` : ""}${plan === undefined ? "" : `\n${courtStyle(plan.sport, plan.look)}`}${fieldsStyle(sport) === "" ? "" : `\n${fieldsStyle(sport)}`}${athleticsStyle(sport) === "" ? "" : `\n${athleticsStyle(sport)}`}${skatingStyle(sport) === "" ? "" : `\n${skatingStyle(sport)}`}${budoLook === undefined ? "" : `\n${budoStyle(sport, budoLook)}`}${palette === undefined ? "" : `\n${lookStyle(palette)}`}${athleticsTrackRules(sport, o.athletics?.track) === "" ? "" : `\n${athleticsTrackRules(sport, o.athletics?.track)}`}${walled ? `\n${KYOGIJO_WALLS_STYLE}` : ""}${hardwood ? `\n${KYOGIJO_HARDWOOD_STYLE}` : ""}${features === undefined ? "" : `\n${featureStyle(sport, features)}`}${notes === undefined || notes.svg === "" ? "" : `\n${KYOGIJO_NOTE_STYLE}`}${grounded ? `\n${KYOGIJO_BACKGROUND_STYLE}` : ""}${stadiumOfDrawing === undefined ? "" : `\n${KYOGIJO_STADIUM_STYLE}`}${crowded ? `\n${KYOGIJO_CROWD_STYLE}` : ""}${crowded && sport === "dojo" ? KYOGIJO_BUDO_GALLERY_STYLE : ""}${situation === undefined ? "" : `\n${KYOGIJO_SITUATION_STYLE}`}${o.host === undefined ? "" : `\n${specialStyle(hostSport(o.host))}`}</style>`) +
       (defs === "" ? "" : `<defs>${defs}</defs>`) +
       body,
   );

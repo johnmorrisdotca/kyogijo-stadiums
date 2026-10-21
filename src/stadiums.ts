@@ -188,6 +188,14 @@ export const stadiumConfigOf = (sport: string | undefined): StadiumConfigId | un
 /** The seats of a stadium for a configuration (0 for one it has none of). */
 export const stadiumSeats = (stadium: RealStadium, config: StadiumConfigId): number => stadium.configs[config]?.seats ?? 0;
 
+/**
+ * The stylesheet of a stadium that stages more than one field (`data-stadium` on the drawing's root): the ground round the building is its own, the football field's, whichever field lies in it, so that a soccer pitch does not tint it
+ * green. Light only: the dark ground is one for every sport.
+ */
+export const KYOGIJO_STADIUM_STYLE =
+  "@media (prefers-color-scheme:light){:where(html:not([data-theme=dark]) .kyogijo[data-sport=soccer][data-stadium]:not([data-theme=dark])){--ky-apron:#dcd8c9}}\n" +
+  ":where(html[data-theme=light] .kyogijo[data-sport=soccer][data-stadium],.kyogijo[data-theme=light][data-sport=soccer][data-stadium]){--ky-apron:#dcd8c9}";
+
 // ---- The bowl. ----
 
 /** How far the first row is from a football field's footprint (the league's field and its end zones) along a side and at an end, and the corner's radius: the package's own gridiron profile (`crowd.ts`), so that a real stadium's first row is the usual one. */
@@ -260,7 +268,7 @@ const PLANS = new WeakMap<RealStadium, Map<string, StadiumPlan>>();
  * import { planStadium, stadiumById } from "@johnmorrisdotca/kyogijo-stadiums/stadiums";
  * const plan = planStadium(stadiumById("bc-place")!, "soccer", { x: 0, y: 0, w: 344.5, h: 223.1 });
  * console.log(plan.orientation.basis, plan.seats.map((t) => `${t.tier} ${t.seats}`).join(", "), plan.total);
- * // opening lower 27695, upper 24802 52497
+ * // opening lower 27695, upper 26805 54500
  * ```
  */
 export function planStadium(stadium: RealStadium, config: StadiumConfigId, box: Box): StadiumPlan {
@@ -286,6 +294,8 @@ function plan(stadium: RealStadium, config: StadiumConfigId, rink: Box): Stadium
   const place = (ring: readonly Pt[]): Pt[] => ring.map(([x, y]): Pt => [round((x - middle[0]) * FEET_PER_METRE + at[0], 2), round((y - middle[1]) * FEET_PER_METRE + at[1], 2)]);
   const footprint = place(outline);
   const fb = boxOf(footprint);
+  // How far the building reaches from the middle of the field on each side, worked out from the outline as it is (not as placed and rounded): one answer for every configuration, which is the stadium's frame.
+  const around = boxOf(outline.map(([x, y]): Pt => [(x - middle[0]) * FEET_PER_METRE, (y - middle[1]) * FEET_PER_METRE]));
   const openingRing = stadium.osm.roof?.opening?.ring;
   const opening = openingRing === undefined ? undefined : place(turned(openingRing));
 
@@ -317,7 +327,8 @@ function plan(stadium: RealStadium, config: StadiumConfigId, rink: Box): Stadium
   const gap = GAP / Math.max(20, depth / 4);
 
   const open = stadium.configs[config]?.seats ?? 0;
-  const seatsTotal = stadium.bowlSeats ?? open;
+  // The bowl is the building's, the same for every configuration: it holds the most seats any of them opens (or the seats the data gives the bowl), and a configuration that opens fewer closes the rest.
+  const seatsTotal = stadium.bowlSeats ?? Math.max(...Object.values(stadium.configs).map((c) => c?.seats ?? 0));
   const count = Math.min(3, stadium.tiers.count) as 1 | 2 | 3;
   const lower = stadium.tiers.lowerSeats === undefined ? (count === 1 ? 1 : count === 2 ? LOWER_SHARE : 0.36) : stadium.tiers.lowerSeats / seatsTotal;
   const shares = count === 1 ? [1] : count === 2 ? [lower, 1 - lower] : [lower, (1 - lower) * 0.36, (1 - lower) * 0.64];
@@ -407,7 +418,7 @@ function plan(stadium: RealStadium, config: StadiumConfigId, rink: Box): Stadium
   const bowl: RealBowl = {
     rings,
     off: { left: rink.x - first.x0, right: first.x1 - rink.x - rink.w, top: rink.y - first.y0, bottom: first.y1 - rink.y - rink.h },
-    reach: { left: Math.max(0, rink.x - fb.x0), right: Math.max(0, fb.x1 - rink.x - rink.w), top: Math.max(0, rink.y - fb.y0) + room, bottom: Math.max(0, fb.y1 - rink.y - rink.h) },
+    reach: { left: Math.max(0, -rink.w / 2 - around.x0), right: Math.max(0, around.x1 - rink.w / 2), top: Math.max(0, -rink.h / 2 - around.y0) + room, bottom: Math.max(0, around.y1 - rink.h / 2) },
     shell: {
       footprint,
       hall: { ...outer, x0: outer.x0 - HALL, y0: outer.y0 - HALL, x1: outer.x1 + HALL, y1: outer.y1 + HALL, r: outer.r + HALL },

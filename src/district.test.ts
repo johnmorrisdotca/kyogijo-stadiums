@@ -53,7 +53,8 @@ describe("a district's venues", () => {
   it("hold their seats in the district as they do alone: BC Place's 54,500 and 52,497, Rogers Arena's 18,871, each in the bowl of its own plan", () => {
     const stands = (key: string) => crowdStands(districtMember(key).options)!;
     expect(stands("bc-place:cfl").seats).toBe(54500);
-    expect(stands("bc-place:soccer").seats).toBe(52497);
+    // The bowl is the building's: soccer's configuration opens 52,497 of the bowl's 54,500.
+    expect(stands("bc-place:soccer").seats).toBe(54500);
     expect(stands("rogers-arena").seats).toBe(18871);
     for (const [key, total] of [["bc-place:cfl", planStadium(STADIUMS["bc-place"], "cfl", stands("bc-place:cfl").box).total], ["rogers-arena", planVenue(VENUES["rogers-arena"], stands("rogers-arena").box).total]] as const) {
       expect(total, key).toBe(districtMember(key).seats);

@@ -15,7 +15,7 @@ console.log(svg.includes("ky-cr-shell"), svg.includes("ky-cr-north"));
 // true true
 const plan = planStadium(stadiumById("bc-place")!, "soccer", { x: 0, y: 0, w: 344.5, h: 223.1 });
 console.log(plan.orientation.basis, plan.seats.map((t) => `${t.tier} ${t.seats}`).join(", "), plan.total);
-// opening lower 27695, upper 24802 52497
+// opening lower 27695, upper 26805 54500
 ```
 
 The stadium is the key in [`STADIUMS`](#the-stadiums) (the key of its ground in [`GROUNDS`](./grounds.md), or of its park in [`PARKS`](./ballparks.md)): `stadium` names it for a football field (`sport: "cfl"` or `"nfl"`), a soccer pitch (`sport: "soccer"`) or a boxing ring (`sport: "boxing"`, in a hall), and `park` for a baseball field (`sport: "mlb"`), and a soccer drawing whose `ground` is a stadium needs no other. Any other sport, a `league` of your own and `crowd: { real: false }` leave the stands as they were. The demo's [stadiums page](https://johnmorrisdotca.github.io/kyogijo-stadiums/stadiums.html) and the [gallery](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-stadiums.html) draw both configurations in 2D and in 3D, in English and Japanese, and puts the stadium [beside Rogers Arena](./district.md).
@@ -25,9 +25,11 @@ The stadium is the key in [`STADIUMS`](#the-stadiums) (the key of its ground in 
 The building is one, and so is the bowl; what changes is the field and the seats the stadium has for it:
 
 - **Football (`sport: "cfl"`).** The field of the Canadian league, 150 by 65 yards with its 20-yard end zones (the article says the stadium was the first to use a 20-yard end zone), and 54,500 seats: the infobox's first capacity, which Wikidata's capacity (P1083) also gives.
-- **Soccer (`sport: "soccer"`).** The pitch at the international 105 by 68 metres, and 52,497 seats: the infobox's figure for the 2026 tournament, 2,003 fewer than its first (the article's own words say neither why nor which seats; the lower bowl is kept and the upper bowl takes the difference). The article gives the soccer pitch as 117 by 75 yards (about 107 by 69 metres), which is not a size of the infobox's for international matches, so [`GROUNDS`](./grounds.md) keeps the international size for this ground and so does the drawing.
+- **Soccer (`sport: "soccer"`).** The pitch at the international 105 by 68 metres, and 52,497 seats: the infobox's figure for the 2026 tournament, 2,003 fewer than its first (the article's own words say neither why nor which seats, so the bowl is not changed: it is the same bowl as football's and the 2,003 seats are closed from the top down, drawn empty). The article gives the soccer pitch as 117 by 75 yards (about 107 by 69 metres), which is not a size of the infobox's for international matches, so [`GROUNDS`](./grounds.md) keeps the international size for this ground and so does the drawing.
 
 The same 27,695 seats are the lower bowl in both: the infobox lists them as "lower bowl", and the article says the stadium's soccer club sold only the lower bowl for years.
+
+Nothing else changes between the two: the building's outline, the bowl, the frame (the view is the building's with a little ground round it, about the middle of the field, so the outline and the scale are the same in both) and the ground round the building are the stadium's, not the sport's. Only the field changes, and the seats a configuration closes where a source says so.
 
 ## The two levels, in BC Place
 
@@ -35,7 +37,7 @@ The same 27,695 seats are the lower bowl in both: the infobox lists them as "low
 
 **Level two is the bowl.** From the first row, which stands from a football field's footprint where the package's own gridiron stands have it (42 feet from a side line, 28 from an end line), out to the wall of the building, between them the two bowls:
 
-- The seats are the configuration's. Each bowl's outer edge is placed so that its band holds its share of them, with a walk between the bowls. A bowl that fits holds exactly the configuration's seats; BC Place's building has room for soccer's 52,497 at 3.8 square feet of floor a seat in the plan and for football's 54,500 at 3.4 (the bowl is steeper than the usual drawing's, whose seat takes 4.6), and the plan says `tight` where even 3 would not hold them.
+- The bowl is the building's, one for every configuration: it holds the most seats any configuration has (BC Place's 54,500), or the `bowlSeats` the data gives. Each bowl's outer edge is placed so that its band holds its share of them, with a walk between the bowls. A bowl that fits holds exactly those seats; BC Place's building has room for them at 3.4 square feet of floor a seat in the plan (the bowl is steeper than the usual drawing's, whose seat takes 4.6), and the plan says `tight` where even 3 would not hold them. A configuration with fewer seats (soccer's 52,497) opens them from the lowest bowl up and draws the rest empty, as Lumen Field's soccer pitch does with its upper bowl.
 - The lower bowl holds the share the infobox gives, 27,695 seats; the upper bowl the rest.
 - The outer edge of the bowl is the largest rounded rectangle, between 1.15 and 1.6 times as long as it is wide, that fits inside the outline round the middle of the field, with a wall's depth to spare.
 - The rows rise at most 36 degrees; the heights (5 feet for the first row, 38 and 62 feet of rise for the lower and the upper bowl, a suite level of 24 feet between them) are ours: no source gives them.

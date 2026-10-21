@@ -116,7 +116,8 @@ describe("the bowl of BC Place", () => {
   it("holds the seats of its configuration, to the seat, in two bowls, and fits inside the building", () => {
     for (const { config, plan } of plans) {
       expect(plan.fit, config).toBe("fits");
-      expect(plan.total, config).toBe(stadiumSeats(bc, config));
+      expect(plan.total, config).toBe(54500);
+      expect(plan.open, config).toBe(stadiumSeats(bc, config));
       expect(plan.seats.map((t) => t.tier), config).toEqual(["lower", "upper"]);
       expect(plan.seats.reduce((s, t) => s + t.seats, 0), config).toBe(plan.total);
       expect(plan.bowl.rings.reduce((s, r) => s + r.seats, 0), config).toBe(plan.total);
@@ -128,9 +129,15 @@ describe("the bowl of BC Place", () => {
     for (const { config, plan } of plans) {
       expect(plan.seats[0].seats, config).toBeGreaterThanOrEqual(27694);
       expect(plan.seats[0].seats, config).toBeLessThanOrEqual(27696);
-      expect(plan.seats[1].seats, config).toBe(stadiumSeats(bc, config) - plan.seats[0].seats);
+      expect(plan.seats[1].seats, config).toBe(54500 - plan.seats[0].seats);
     }
-    expect(plans[0].plan.seats[1].seats - plans[1].plan.seats[1].seats).toBe(54500 - 52497);
+    // The bowl is the same for both; soccer opens 2,003 fewer seats, from the top down, drawn empty.
+    expect(plans[0].plan.seats).toEqual(plans[1].plan.seats);
+    expect(plans[0].plan.bowl.rings.map((r) => r.fill)).toEqual([1, 0.88]);
+    const [lowerSoccer, upperSoccer] = plans[1].plan.bowl.rings;
+    expect(lowerSoccer.fill).toBe(1);
+    expect(upperSoccer.fill).toBeGreaterThan(0);
+    expect(upperSoccer.fill).toBeLessThan(0.88);
   });
 
   it("is the same building for both: the same footprint, the same hall and the same first row, round fields of two sizes", () => {
@@ -208,14 +215,14 @@ describe("BC Place drawn in 2D", () => {
     const svg = drawKyogijo({ sport: "soccer", ground: "bc-place", crowd: { real: true } } as never);
     expect(svg).toContain('class="ky-cr-shell"');
     expect(svg).toContain("BC Place");
-    expect(crowdStands({ sport: "soccer", ground: "bc-place", crowd: { real: true } } as never)?.seats).toBe(52497);
+    expect(crowdStands({ sport: "soccer", ground: "bc-place", crowd: { real: true } } as never)?.seats).toBe(54500);
   });
 
-  it("has the stands of the bowl: a tier per bowl, the seats the configuration has, and no block of visitors, which no source places", () => {
+  it("has the stands of the bowl: a tier per bowl, the seats of the bowl (one for both configurations), and no block of visitors, which no source places", () => {
     for (const sport of ["cfl", "soccer"] as const) {
       const stands = crowdStands(options(sport))!;
       expect(stands.rings.map((r) => r.tier), sport).toEqual(["lower", "upper"]);
-      expect(stands.seats, sport).toBe(stadiumSeats(bc, sport));
+      expect(stands.seats, sport).toBe(54500);
       expect(stands.sectors.filter((s) => s.kind === "away"), sport).toHaveLength(0);
       expect(stands.real?.roof, sport).toBe("cable");
       expect(stands.stadium, sport).toBeUndefined();
@@ -729,5 +736,70 @@ describe("Koshien Stadium", () => {
     expect(walls.planes.every((q) => q.svg.includes("u-ivy"))).toBe(true);
     expect(model.uprights.items.find((i) => i.kind === "roof")).toBeUndefined();
     expect(Math.max(...walls.planes.flatMap((q) => [q.o[2], q.o[2] + q.v[2]]))).toBeGreaterThan(40);
+  });
+});
+
+describe("a stadium of more than one configuration is one drawing but for its field", () => {
+  const stadiums = STADIUM_IDS.map((id) => STADIUMS[id]).filter((s) => stadiumKind(s) === "stadium" && Object.keys(s.configs).length > 1);
+  const viewOf = (svg: string): number[] => /viewBox="(-?[\d.]+) (-?[\d.]+) ([\d.]+) ([\d.]+)"/.exec(svg)!.slice(1).map(Number);
+  /** The building's outline as the drawing writes it, moved so that the view's corner is the origin: the same stadium gives the same numbers, whichever field lies in it. */
+  const outlineIn = (svg: string): number[] => {
+    const [x, y] = viewOf(svg);
+    const numbers = /class="ky-cr-shell" d="([^"]+)"/.exec(svg)![1].match(/-?[\d.]+/g)!.map(Number);
+    return numbers.map((n, i) => n - (i % 2 === 0 ? x : y));
+  };
+
+  it("covers BC Place and Lumen Field", () => {
+    expect(stadiums.map((s) => s.id)).toEqual(["bc-place", "lumen-field"]);
+  });
+
+  it("has one frame, one outline, one bowl and one ground, whichever configuration is drawn", () => {
+    for (const stadium of stadiums) {
+      const sports = Object.keys(stadium.configs) as ("cfl" | "nfl" | "soccer")[];
+      const drawings = sports.map((sport) => drawKyogijo({ sport, stadium: stadium.id, crowd: { real: true } } as never));
+      const [first, ...rest] = drawings;
+      for (const [i, svg] of rest.entries()) {
+        const what = `${stadium.id}: ${sports[0]} and ${sports[i + 1]}`;
+        // The viewBox is the same size, and the building lies in it in the same place.
+        expect(viewOf(svg).slice(2), what).toEqual(viewOf(first).slice(2));
+        const [a, b] = [outlineIn(first), outlineIn(svg)];
+        expect(b, what).toHaveLength(a.length);
+        for (const [k, n] of a.entries()) expect(Math.abs(n - b[k]), `${what}, number ${k}`).toBeLessThan(0.15);
+        // The ground is the stadium's (a stylesheet rule), not the sport's.
+        expect(svg, what).toContain(`data-stadium="${stadium.id}"`);
+        expect(svg, what).toContain("--ky-apron:#dcd8c9");
+      }
+    }
+  });
+
+  it("has one bowl: the same rings, with the seats a configuration does not open drawn empty", () => {
+    for (const stadium of stadiums) {
+      const sports = Object.keys(stadium.configs) as ("cfl" | "nfl" | "soccer")[];
+      const plans = sports.map((sport) => planStadium(stadium, stadium.configs[sport]!.sport, crowdStands({ sport, stadium: stadium.id, crowd: { real: true } } as never)!.box));
+      // Each bowl's outer edge, as its distance from the middle of the field on each side.
+      const edges = (plan: (typeof plans)[number]): number[] =>
+        plan.bowl.rings.flatMap((r) => {
+          const region = r.region as { x0: number; y0: number; x1: number; y1: number; r: number };
+          const [cx, cy] = [plan.box.x + plan.box.w / 2, plan.box.y + plan.box.h / 2];
+          return [cx - region.x0, region.x1 - cx, cy - region.y0, region.y1 - cy, region.r];
+        });
+      for (const plan of plans.slice(1)) {
+        expect(plan.seats, stadium.id).toEqual(plans[0].seats);
+        expect(plan.total, stadium.id).toBe(plans[0].total);
+        for (const [k, n] of edges(plans[0]).entries()) expect(Math.abs(n - edges(plan)[k]), `${stadium.id}, edge ${k}`).toBeLessThan(0.01);
+      }
+    }
+  });
+
+  it("is framed the same in 3D: the scene's extent in feet is the building's for every configuration", () => {
+    for (const stadium of stadiums) {
+      const sports = Object.keys(stadium.configs) as ("cfl" | "nfl" | "soccer")[];
+      const models = sports.map((sport) => buildTurn({ sport, stadium: stadium.id, crowd: { real: true } } as never, { preset: "overhead" }));
+      const size = (m: (typeof models)[number]): number[] => [(m.box.x1 - m.box.x0) / m.scale, (m.box.y1 - m.box.y0) / m.scale, m.box.z1 / m.scale];
+      for (const m of models.slice(1)) {
+        const [a, b] = [size(models[0]), size(m)];
+        for (const [k, n] of a.entries()) expect(Math.abs(n - b[k]), `${stadium.id}, axis ${k}`).toBeLessThan(0.05);
+      }
+    }
   });
 });
