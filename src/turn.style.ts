@@ -87,6 +87,9 @@ export const KYOGIJO_TURN_STYLE = `
 .ky-turn .u-penb-side{fill:color-mix(in srgb,var(--ky-up-glass,#bcd2e0) 80%,#5d7a8f);filter:brightness(.72)}
 .ky-turn .u-teamb{fill:color-mix(in srgb,var(--ky-up-wood,#8a6a47) 80%,#2a2f36)}
 .ky-turn .u-teamb-side{fill:color-mix(in srgb,var(--ky-up-wood,#8a6a47) 80%,#2a2f36);filter:brightness(.7)}
+/* LED boards: the housing and the screen are dark; the lit parts (class u-led) carry their own colours, and are what a lighting layer makes glow. */
+.ky-turn .u-led-bed{fill:#0b0f14}
+.ky-turn .u-led-screen{fill:#06121d}
 .ky-turn .u-back{fill:color-mix(in srgb,var(--ky-up-fascia) 66%,var(--ky-cr-bed))}
 .ky-turn .u-backrib{stroke:var(--ky-cr-bed);stroke-width:.7;stroke-opacity:.7}
 .ky-turn .u-coping{fill:color-mix(in srgb,var(--ky-up-fascia) 70%,var(--ky-cr-conc))}

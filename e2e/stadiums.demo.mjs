@@ -161,3 +161,26 @@ test("raises Tokyo Dome's air-supported roof in 3D, which has no open state, and
   expect(await page.locator(`${STAGE} .u-ivy`).count()).toBeGreaterThan(20);
   expect(errors).toEqual([]);
 });
+
+test("shows the LED boards of a stadium or of Korakuen Hall on request, in the plan and in 3D, and keeps the choice in the address", async ({ page }) => {
+  const { errors } = await open(page, "?stadium=korakuen-hall");
+  await expect(page.locator(`${STAGE} svg.kyogijo .ky-cr-ribbon`)).toHaveCount(0);
+  await page.locator("#boards").check();
+  await expect(page.locator(`${STAGE} svg.kyogijo .ky-cr-ribbon`)).toHaveCount(1);
+  await expect(page.locator(`${STAGE} svg.kyogijo .ky-cr-board`)).toHaveCount(1);
+  expect(new URL(page.url()).searchParams.get("boards")).toBe("1");
+  await page.goto("http://kyogijo.test/stadiums.html?stadium=lumen-field&view=3d&boards=1");
+  await page.waitForSelector(`${STAGE} .ky-turn`);
+  await expect(page.locator("#boards")).toBeChecked();
+  await expect(page.locator(`${STAGE} .ky-up-ribbon`).first()).toBeAttached();
+  await expect(page.locator(`${STAGE} .ky-up-hung-board`).first()).toBeAttached();
+  await page.locator("#boards").uncheck();
+  await expect(page.locator(`${STAGE} .ky-up-ribbon`)).toHaveCount(0);
+  await expect(page.locator(`${STAGE} .ky-up-hung-board`)).toHaveCount(0);
+  expect(new URL(page.url()).searchParams.get("boards")).toBeNull();
+  // A ballpark has ribbons in 3D and no scoreboard over the field.
+  await page.locator('#stadium-tabs button[data-stadium="t-mobile-park"]').click();
+  await page.locator("#boards").check();
+  await expect(page.locator(`${STAGE} .ky-up-hung-board`)).toHaveCount(0);
+  expect(errors).toEqual([]);
+});

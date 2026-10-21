@@ -256,6 +256,25 @@ test("the stadium round the floor stands up in 3D, its roof is a toggle, and bot
   expect(new URL(page.url()).searchParams.get("roof")).toBeNull();
 });
 
+test("the stadium round the floor has LED boards on request: ribbons round it in the plan and in 3D, none over the middle (the layout has its own scoreboards), and the address keeps them", async ({ page }) => {
+  await open(page, "?preset=tabletennis-4");
+  await expect(page.locator("#boards-row")).toBeHidden();
+  await page.locator("#stadium").check();
+  await expect(page.locator("#boards-row")).toBeVisible();
+  await expect(page.locator(`${STAGE} svg .ky-cr-ribbon`)).toHaveCount(0);
+  await page.locator("#boards").check();
+  await expect(page.locator(`${STAGE} svg .ky-cr-ribbon`)).toHaveCount(1);
+  await expect(page.locator(`${STAGE} svg .ky-cr-board`)).toHaveCount(0);
+  expect(new URL(page.url()).searchParams.get("boards")).toBe("1");
+  await page.goto("http://kyogijo.test/halls.html?preset=tabletennis-4&view=3d&stadium=on&boards=1");
+  await page.waitForSelector(`${STAGE} .ky-turn`);
+  await expect(page.locator("#boards")).toBeChecked();
+  await expect(page.locator(`${STAGE} .ky-up-ribbon`).first()).toBeAttached();
+  await expect(page.locator(`${STAGE} .ky-up-hung-board`)).toHaveCount(0);
+  await page.locator("#boards").uncheck();
+  await expect(page.locator(`${STAGE} .ky-up-ribbon`)).toHaveCount(0);
+});
+
 test("the 3D view of a layout speaks Japanese, and says what stands on it", async ({ page }) => {
   await open(page, "?preset=tabletennis-4&view=3d&lang=ja");
   await expect(page.locator(`${STAGE} .ky-turn-view`)).toHaveAttribute("aria-roledescription", "3D表示");

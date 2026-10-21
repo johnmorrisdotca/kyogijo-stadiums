@@ -3,6 +3,7 @@
 // All of it is patterns, paths and rectangles, which every renderer of the package reads. The tiles are made from a seed with a generator of our own, so the same options give
 // the same crowd. Written for this package; no photograph or other drawing was copied.
 import { el, num } from "./format.ts";
+import { hangsOver, planRibbons, planScoreboard, resolveBoards } from "./venue.boards.ts";
 import { NORTH_AT, generator, outlinePath, type Crowd, type CrowdStands, type Pt, type RealShell, type StandRing, type StandSector } from "./crowd.ts";
 
 /** The width and the height of a tile of the crowd, in feet, and the seats' pitch. */
@@ -207,6 +208,10 @@ export function drawCrowd(stands: CrowdStands, o: DrawInput): { defs: string; ma
       if (ring.tier === "upper" && crowd.roof) body += el("path", { d: outlinePath(ring.region), fill: "none", stroke: "#000", "stroke-opacity": 0.16, "stroke-width": 18 });
     }
   }
+  // The LED boards: a lit line along the front of the upper tiers, and the scoreboard over the middle of the surface (over it, in `over`).
+  const boards = resolveBoards(crowd.boards, { home: crowd.home, away: crowd.away });
+  if (boards?.ribbon === true) body += planRibbons(stands, boards);
+  if (boards?.scoreboard === true && hangsOver(stands.sport)) over += planScoreboard(stands.box, boards);
   for (const [x0, y0, x1, y1] of stands.covers) body += el("rect", { class: o.ground, x: n1(x0), y: n1(y0), width: n1(x1 - x0), height: n1(y1 - y0) });
   for (const g of stands.gaps) {
     const [x0, y0, x1, y1] = g.box;
@@ -252,4 +257,7 @@ export const KYOGIJO_CROWD_STYLE = `
 .kyogijo .ky-cr-north-n{fill:none;stroke:var(--ky-cr-rim);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 .kyogijo .ky-cr-plaza{fill:var(--ky-apron);stroke:var(--ky-apron);stroke-width:8;stroke-linejoin:round}
 .kyogijo .ky-cr-ez{fill:var(--ky-line);fill-opacity:.16}
-.kyogijo .ky-cr-yard{stroke:var(--ky-line);stroke-opacity:.5;fill:none}`.trim();
+.kyogijo .ky-cr-yard{stroke:var(--ky-line);stroke-opacity:.5;fill:none}
+.kyogijo .ky-cr-led-bed{fill:#0b0f14}
+.kyogijo .ky-cr-led-line{fill:none;stroke:#0b0f14;stroke-linejoin:round}
+.kyogijo .ky-cr-led{stroke-linecap:butt}`.trim();

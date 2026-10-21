@@ -287,6 +287,26 @@ export type SheetEnd = Side | "top" | "bottom";
 /** The shape of a venue's stands round the playing surface. */
 export type CrowdShape = "bowl" | "sides" | "horseshoe" | "grandstand";
 
+/** The patterns a ribbon board shows: `bands` (two bands of colour, in panels), `blocks` (a block of colour to a panel), `chevrons` (arrows running along it) or `waves`. */
+export type LedBoardPattern = "bands" | "blocks" | "chevrons" | "waves";
+
+/**
+ * The LED boards of a venue (`crowd.boards`, or `venue.boards` of the 3D view): the ribbon boards along the fascia between the seating levels, and a scoreboard hung over the playing surface. The content is generic: bands of colour,
+ * abstract patterns and a plain score, never a logo, a sponsor or text from a real board. `true` is both, in the package's own colours. Off by default.
+ */
+export interface LedBoardOptions {
+  /** The ribbon boards along the fascia between the levels (the front of the single level of a hall that has one). On by default. */
+  ribbon?: boolean;
+  /** The scoreboard hung over the middle of the playing surface, four sided, with a ring of display under it. On by default, and left out of a ballpark (whose scoreboard stands behind the outfield). */
+  scoreboard?: boolean;
+  /** One to three colours of the lights, as CSS colours (`#e03c31`, `rgb(...)`, a name). The crowd's `home` and `away` colours when left out and the crowd has them, else amber, blue and white. */
+  colors?: readonly string[];
+  /** What the ribbon boards show. `bands` by default. */
+  pattern?: LedBoardPattern;
+  /** The plain score on the scoreboard: home, then away, whole numbers 0 to 99. 0 and 0 by default. */
+  score?: readonly [number, number];
+}
+
 /**
  * The stands and the crowd round a surface (`crowd`). Every part is optional. `true` is the sport's usual venue, 85 percent full, with an away end, drawn in detail.
  * See `docs/crowd.md`.
@@ -337,6 +357,11 @@ export interface CrowdOptions {
   wallSeats?: boolean;
   /** How much is drawn: `fine` (the crowd as heads and shoulders, empty seats, aisles), `plain` (blocks of colour), or `auto` (`plain` for `detail: "simple"` or a `width` under 480 pixels). */
   detail?: "auto" | "fine" | "plain";
+  /**
+   * LED boards: ribbon boards along the front of the upper tiers (drawn as a lit line in the flat plan, raised on the fascia of the suite level in the 3D view, where `venue.boards` says the same and wins) and a scoreboard over the
+   * middle of the surface. `true` for both in the package's colours, or `{ ribbon, scoreboard, colors, pattern, score }`. Generic content only. Off by default. See `docs/boards.md`.
+   */
+  boards?: boolean | LedBoardOptions;
 }
 
 /**

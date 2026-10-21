@@ -119,6 +119,23 @@ test("shows Seattle: the two SoDo stadiums as neighbours, then the three venues 
   await noSidewaysScroll(page);
 });
 
+test("puts LED boards on every venue of the district in 3D on request, kept in the address, without mounting the view again", async ({ page }) => {
+  const { errors } = await open(page, "?view=3d");
+  await expect(page.locator("#boards-row")).toBeVisible();
+  await expect(page.locator(`${STAGE} .ky-up-ribbon`)).toHaveCount(0);
+  await page.locator(`${STAGE} .ky-turn`).evaluate((root) => { root.dataset.same = "yes"; });
+  await page.locator("#boards").check();
+  await expect(page.locator(`${STAGE} [data-part^="m0-"].ky-up-ribbon`).first()).toBeAttached();
+  await expect(page.locator(`${STAGE} [data-part^="m1-"].ky-up-ribbon`).first()).toBeAttached();
+  await expect(page.locator(`${STAGE} [data-part$="centre-board-south"]`)).toHaveCount(2);
+  await expect(page.locator(`${STAGE} .ky-turn`)).toHaveAttribute("data-same", "yes");
+  expect(new URL(page.url()).searchParams.get("boards")).toBe("1");
+  await page.locator("#boards").uncheck();
+  await expect(page.locator(`${STAGE} .ky-up-ribbon`)).toHaveCount(0);
+  expect(new URL(page.url()).searchParams.get("boards")).toBeNull();
+  expect(errors).toEqual([]);
+});
+
 test("shows Tokyo Dome City: the ballpark and the hall as neighbours, one arrow, in 3D with the dome's roof", async ({ page }) => {
   const { errors } = await open(page);
   await page.locator('#tabs button[data-preset="tokyo"]').click();

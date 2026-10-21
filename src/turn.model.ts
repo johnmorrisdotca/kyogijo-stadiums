@@ -124,7 +124,7 @@ export function floorOptions(options: SurfaceOptions | ScoreOptions): SurfaceOpt
 const VIEWBOX = /viewBox="(-?[\d.]+) (-?[\d.]+) ([\d.]+) ([\d.]+)"/;
 
 /** The kinds of thing the venue makes. */
-const VENUE_KINDS: readonly UprightKind[] = ["stands", "wall-seats", "roof", "gallery", "dais", "banner", "shrine", "mat-edge", "walls"];
+const VENUE_KINDS: readonly UprightKind[] = ["stands", "wall-seats", "roof", "gallery", "dais", "banner", "shrine", "mat-edge", "walls", "ribbon-boards", "hung-board"];
 
 /** The sport and look a floor drawing says it is painted in (`data-sport` and `data-look` on its root), for the planes round it to be painted in the same. */
 function lookOf(floor: string): { sport: string; look: string } | undefined {

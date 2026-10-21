@@ -1351,6 +1351,8 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `turn.parts.cage-posts` | padded posts | パッド付き支柱 |
 | `turn.parts.ring-ropes` | ropes | ロープ |
 | `turn.parts.ring-posts` | corner posts | コーナーポスト |
+| `turn.parts.ribbon-boards` | LED ribbon boards | LEDリボンビジョン |
+| `turn.parts.hung-board` | centre-hung scoreboard | センタービジョン（吊り下げ式スコアボード） |
 | `rules.defensive-zone` | Defensive zone | ディフェンディングゾーン |
 | `rules.neutral-zone` | Neutral zone | ニュートラルゾーン |
 | `rules.offensive-zone` | Offensive zone | アタッキングゾーン |
@@ -1511,6 +1513,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `p_stands` | Stands | 客席 |
 | `p_walls` | Walls | 壁 |
 | `p_roof` | Roof | 屋根 |
+| `p_boards` | LED boards | LEDビジョン |
 | `p_building` | Building | 建物 |
 | `p_markings` | Markings | ライン |
 | `p_labels` | Labels | ラベル |

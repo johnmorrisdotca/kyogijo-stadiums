@@ -131,6 +131,22 @@ await takePictures({
     { subject: "district-tokyo-3d", views: ["desk"], url: "/district.html?venues=tokyo-dome,korakuen-hall&view=3d&viewpoint=corner&roof=1&labels=1", ready: READY_HALLS_TURN, target: "#stage" },
     // Koshien Stadium (0.34.0): the open-air ballpark with its ivy walls from a low corner in 3D, no roof (the stadiums page's stage).
     { subject: "stadiums-koshien-3d", views: ["desk"], url: "/stadiums.html?stadium=hanshin-koshien-stadium&view=3d&viewpoint=corner&roof=1", ready: READY_HALLS_TURN, target: "#stage" },
+    // LED boards (0.37.0): the ribbon boards along the fascia between the levels and the scoreboard hung over the ice, in 3D from the main camera and in the plan, and Lumen Field's from a low corner (the venues and stadiums pages' stage, the Boards button on).
+    {
+      subject: "led-boards-td-3d",
+      views: ["desk"],
+      url: "/venues.html?venue=td-garden&view=3d&viewpoint=broadcast&boards=1",
+      ready: READY_HALLS_TURN,
+      target: "#stage",
+      prepare: async (page) => {
+        await page.locator("#stage .ky-turn-view").focus();
+        for (let i = 0; i < 3; i += 1) await page.keyboard.press("+");
+        await settle(page);
+        await page.locator("#stage .ky-turn-view").blur();
+      },
+    },
+    { subject: "led-boards-td-plan", views: ["desk"], url: "/venues.html?venue=td-garden&boards=1", ready: READY_HALLS, target: "#stage" },
+    { subject: "led-boards-lumen-3d", views: ["desk"], url: "/stadiums.html?stadium=lumen-field&view=3d&viewpoint=corner&boards=1", ready: READY_HALLS_TURN, target: "#stage" },
     // Boards over a surface (0.24.0): a results board over a pool, a bout presentation over a judo mat in 3D, a medal table in the corner of the athletics stadium (invented names; the boards page's stage).
     { subject: "boards-swimming", views: ["desk"], url: "/boards.html?example=swimming", ready: READY_HALLS, target: "#stage" },
     { subject: "boards-judo-3d", views: ["desk"], url: "/boards.html?example=judo&view=3d", ready: READY_HALLS_TURN, target: "#stage" },
@@ -181,7 +197,7 @@ await takePictures({
 
 // The pictures that only a page of docs/ shows are taken with the rest and then moved to docs/pictures: docs/images holds the README's pictures (the family's lint counts every file there against the README's 2 MB, and wants each one used in the README),
 // and a page of docs/ names its own pictures in `./pictures/`.
-const DOCS_ONLY = new Set(["mowing-diamonds-desk", "boxing-ring-3d-desk", "district-tokyo-3d-desk", "judging-3d-desk", "judging-print-a4-desk", "mma-cage-desk", "multi-judo-desk", "multi-judo-empty-desk", "multi-tabletennis-desk", "prowrestling-ring-3d-desk", "stadiums-koshien-3d-desk", "stadiums-tokyo-dome-3d-desk", "venues-honda-desk", "wrestling-mat-3d-desk"]);
+const DOCS_ONLY = new Set(["mowing-diamonds-desk", "boxing-ring-3d-desk", "district-tokyo-3d-desk", "judging-3d-desk", "judging-print-a4-desk", "mma-cage-desk", "multi-judo-desk", "multi-judo-empty-desk", "multi-tabletennis-desk", "prowrestling-ring-3d-desk", "stadiums-koshien-3d-desk", "stadiums-tokyo-dome-3d-desk", "venues-honda-desk", "wrestling-mat-3d-desk", "led-boards-td-3d-desk", "led-boards-td-plan-desk", "led-boards-lumen-3d-desk"]);
 const docs = join(dirname(fileURLToPath(import.meta.url)), "..", "docs");
 mkdirSync(join(docs, "pictures"), { recursive: true });
 for (const file of readdirSync(join(docs, "images"))) {

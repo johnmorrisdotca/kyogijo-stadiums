@@ -3,7 +3,7 @@
 // profile of the distances a venue of its kind keeps between the surface and its first row and how deep its tiers are; they are conventions for a drawing, not a rulebook's
 // figures (no rulebook gives them), except the footprint of the gridiron a soccer pitch can stand inside, which is the field's own.
 import { FOOTBALL } from "./geometry.ts";
-import type { CrowdOptions, CrowdShape, Side, Sport, SurfaceOptions } from "./types.ts";
+import type { CrowdOptions, CrowdShape, LedBoardOptions, Side, Sport, SurfaceOptions } from "./types.ts";
 
 export type Pt = [number, number];
 export type Box = { x: number; y: number; w: number; h: number };
@@ -148,6 +148,8 @@ export interface Crowd {
   /** Whether the seats are drawn (a real venue's building is, without them, when this is false). */
   stands: boolean;
   detail: "auto" | "fine" | "plain";
+  /** The LED boards as asked (`resolveBoards` reads them), or `undefined` for none. */
+  boards: boolean | LedBoardOptions | undefined;
 }
 
 const finite = (v: unknown): v is number => typeof v === "number" && Number.isFinite(v);
@@ -178,6 +180,7 @@ export function resolveCrowd(value: SurfaceOptions["crowd"]): Crowd | undefined 
     real: o.real === true,
     stands: o.stands !== false,
     detail: o.detail === "fine" || o.detail === "plain" ? o.detail : "auto",
+    boards: o.boards === true || (typeof o.boards === "object" && o.boards !== null) ? o.boards : undefined,
   };
 }
 

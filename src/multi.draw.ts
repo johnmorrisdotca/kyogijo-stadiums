@@ -17,6 +17,7 @@ import { fill } from "./strings.ts";
 import { textWidth } from "./text.ts";
 import type { Language, SurfaceOptions } from "./types.ts";
 import { uprightsFor } from "./uprights.ts";
+import { hallBoards } from "./venue.boards.ts";
 import { VERSION } from "./version.ts";
 
 const metres = (ft: number): number => ft / FEET_PER_METRE;
@@ -296,7 +297,7 @@ export function multiDrawing(options: MultiOptions, raise: boolean, uprights = t
   }
   if (stadium !== undefined) {
     const standsLike = venue?.standsLike ?? spec.sport;
-    const crowd: Crowd = resolveCrowd({ gaps: false, awayEnd: "none", roof: stadium.roof, shape: stadium.shape, density: stadium.density, detail: stadium.detail === "plain" ? "plain" : "fine" }) as Crowd;
+    const crowd: Crowd = resolveCrowd({ gaps: false, awayEnd: "none", roof: stadium.roof, shape: stadium.shape, density: stadium.density, detail: stadium.detail === "plain" ? "plain" : "fine", boards: hallBoards(stadium.boards) }) as Crowd;
     const stands = layoutOf({ sport: standsLike, box: wide, crowd, awaySide: "right", arena: venue?.shape === "octagon" });
     const wall = venue?.shape === "octagon" ? el("path", { class: "ky-mu-wall", d: octagonD(hall.w / 2, hall.w / 2, hall.w / 2) }) : el("rect", { class: "ky-mu-wall", x: 0, y: 0, width: num(hall.w), height: num(hall.h), rx: 0.5 });
     if (raise) hallMarkup += wall;

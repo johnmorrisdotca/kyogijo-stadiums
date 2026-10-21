@@ -165,6 +165,8 @@ export function uprightsFor(o: SurfaceOptions, settings: UprightOptions = {}): U
   // The score, hung up: the badge on a board that turns to face the eye.
   const scored = (o as Partial<ScoreOptions>).home !== undefined && (o as Partial<ScoreOptions>).away !== undefined && (o as Partial<ScoreOptions>).size !== "badge";
   if (scored && settings.score !== "floor" && area !== undefined) {
+    // The score has a board of its own: the venue's hung scoreboard does not stand beside it.
+    items = items.filter((item) => item.kind !== "hung-board");
     const board = scoreboard(drawKyogijo({ ...o, size: "badge", style: "none", id: `${drawingId(o)}-board` }), sport, area, thin);
     if (board !== undefined) items.push(board);
   }

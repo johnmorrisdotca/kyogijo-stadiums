@@ -76,6 +76,42 @@ Made by `pnpm venues` from `scripts/venues.data.json` and the files of `data-sou
 | `capital-one-arena` | Capital One Arena | Metropolitan | Washington, United States | Q223240 | 18,573 (Wikipedia; Wikidata's capacity 20,674) | 2, plausible | fixed, plausible | not known | way 48041466, 18,700 m² |
 <!-- /venues-table -->
 
+## LED boards
+
+`boards` lights a venue up: the ribbon boards along the fascia between the seating levels, and a scoreboard hung over the middle of the playing surface. It is off by default, and a drawing without it is exactly what it was. The content is generic and ours: panels of colour in bands, blocks, chevrons or waves, and a plain score in seven-segment digits (drawn as paths, so that no font is needed). No logo, no sponsor, no line of text from a real board, and no real team's colours unless you pass them.
+
+![The TD Garden in 3D with the LED boards on: a ribbon of lit panels in amber, blue and white along the front of the upper tier, and a four-sided scoreboard hanging over the ice with a score of 3 to 2 on every face](./pictures/led-boards-td-3d-desk-light.webp)
+
+```ts
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
+import { buildTurn } from "@johnmorrisdotca/kyogijo-stadiums/turn";
+
+const arena = { sport: "nhl", arena: "td-garden", crowd: { real: true } } as const;
+const model = buildTurn(arena, { venue: { boards: { colors: ["#c8102e", "#ffffff"], pattern: "chevrons", score: [3, 2] } } });
+console.log(model.planes.some((p) => p.kind === "ribbon"), model.planes.some((p) => p.kind === "hung-board"));
+// true true
+const plan = drawKyogijo({ ...arena, crowd: { real: true, boards: true } });
+console.log(plan.includes("ky-cr-ribbon"), plan.includes("ky-cr-board"));
+// true true
+```
+
+| Option | What it does |
+| --- | --- |
+| `boards` | `true` for both boards in the package's own colours, `false` for none, or an object: |
+| `ribbon` | The ribbon boards. On by default. In 3D each is a strip of the suite level's wall under the next tier, 3.8 feet tall, a plane of its own (the walk below it is the walk less that strip); a venue with one level has its ribbon on the front of that level. In the plan it is a lit line along the front of each tier that has a walk below it. |
+| `scoreboard` | The scoreboard over the surface: four faces with the score on each, a ring of display under them, a cap and a strut, hung 28 to 70 feet over the surface (a fifth of its longer side) and sized by it (an arena's is about 28 by 19 feet). A ballpark has none; a tournament hall has the layout's own scoreboards, so only ribbons. In 3D a score drawing's own scoreboard replaces it. |
+| `colors` | One to three CSS colours (a hex, `rgb()`, `hsl()` or a name; anything else is ignored). The crowd's `home` and `away` where left out and the crowd has them, else amber, blue and white. |
+| `pattern` | `bands` (the usual), `blocks`, `chevrons` or `waves`. |
+| `score` | Home, then away, whole numbers 0 to 99. 0 and 0 by default. |
+
+Where to say it: `crowd: { boards }` draws the plan and, in the 3D view, is read by the venue; `venue: { boards }` of the 3D view says the same and wins (`false` turns the crowd's off), and `turn.update(options, { venue: { boards } })` changes it while the view turns, without stopping it or sending it back. The same options work for the stadiums and Korakuen Hall, in a district (each venue has its own) and, as `stadium: { boards }`, round a tournament hall.
+
+![The TD Garden's plan with the ribbon as a lit line along the front of the upper tier and the scoreboard as a small dark cap at centre ice](./pictures/led-boards-td-plan-desk-light.webp)
+
+![Lumen Field in 3D from a low corner in the dark theme, a ribbon along each of its two upper tiers and a scoreboard over the field](./pictures/led-boards-lumen-3d-desk-dark.webp)
+
+Every lit shape carries the class `u-led` in 3D (`ky-cr-led` in the plan), over the dark housing `u-led-bed`, so that a lighting layer can make the boards glow. The 3D view reads the venue's planes as kinds `ribbon` and `hung-board` (the uprights `ribbon-boards` and `hung-board`, said in words for a screen reader). The demo's [venues](https://johnmorrisdotca.github.io/kyogijo-stadiums/venues.html), [stadiums](https://johnmorrisdotca.github.io/kyogijo-stadiums/stadiums.html), [tournament layouts](https://johnmorrisdotca.github.io/kyogijo-stadiums/halls.html) and [district](https://johnmorrisdotca.github.io/kyogijo-stadiums/district.html) pages have an LED boards switch, kept in the address as `boards=1`.
+
 ## How the rink's orientation is found
 
 OpenStreetMap maps the ice inside three of these thirty-two buildings (TD Garden, the Xfinity Mobile Arena and PPG Paints Arena: `osm.ice` holds its outline), so their rinks lie as the ice does; for the other twenty-nine the rink's orientation is an inference from the building, and says so (`basis`):

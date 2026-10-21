@@ -9,8 +9,9 @@ import { groundById } from "./grounds.ts";
 import { ARC_STEPS, clipAround, clipConvex, clipSegment, areaOf, pointList, raked, slopeOf, stripsOf, tidy, type Cut, type Strip } from "./venue.geom.ts";
 import { apronPlanes, backEdges, backWall, concourseFloor, rimAt, suiteWall } from "./venue.fill.ts";
 import { firstHit, realBuilding } from "./venue.real.ts";
+import { centreBoard, fasciaRibbon, hangsOver, ledStrip, resolveBoards, ribbonHigh, ribbonShare, tierLinks } from "./venue.boards.ts";
 import { n, shy, wall, type Plane, type Upright } from "./turn.kit.ts";
-import type { SurfaceOptions } from "./types.ts";
+import type { LedBoardOptions, SurfaceOptions } from "./types.ts";
 
 /** What can be asked of the venue. */
 export interface VenueSettings {
@@ -22,6 +23,11 @@ export interface VenueSettings {
   walls?: boolean;
   /** Fill the empty places of the stands (the apron round the surface, the back of each bowl): on for a real venue's, off for the usual stands (where it is a tournament layout's hall that asks for it). */
   fill?: boolean;
+  /**
+   * The LED boards: ribbon boards along the fascia between the seating levels (on the front of the one level a venue has, where there is no walk) and a scoreboard hung over the middle of the playing surface. `true` for both in the package's
+   * colours, or `{ ribbon, scoreboard, colors, pattern, score }`. Generic content, never a logo, a sponsor or a real board's text. Off by default; it wins over the crowd's own `boards`, and `false` turns that one off. See `docs/boards.md`.
+   */
+  boards?: boolean | LedBoardOptions;
   /** How finely the curves are cut: `low` a facet to each corner, `auto` (the default) three, `high` six; an oval is 12, 28 or 56 facets round. */
   detail?: Cut;
 }
@@ -29,6 +35,8 @@ export interface VenueSettings {
 /** The settings a venue is built from: the asker's, and the prefix of the ids of what it draws, which the view gives. */
 export interface VenueBuild extends VenueSettings {
   id: string;
+  /** Leave the scoreboard hung over the middle out (a tournament hall has scoreboards of its own). */
+  noCentre?: boolean;
 }
 
 /** What the venue is made of: the things that stand, and the patterns they are drawn with (the contents of a `defs`). */
@@ -123,12 +131,12 @@ export function standsVenueOf(stands: CrowdStands, crowd: Crowd, o: Pick<Surface
 
   // The tiers. A ring that no concourse leads to is the first of its chain: a low wall stands under its first row.
   const chained = new Set<StandRing>();
-  const links = stands.concourses.map((c, ci) => {
-    let at = stands.rings.findIndex((r) => r.hole === c.region);
-    if (at < 1) at = Math.min(ci + 1, stands.rings.length - 1);
-    chained.add(stands.rings[at]);
-    return { c, before: stands.rings[at - 1], after: stands.rings[at] };
-  });
+  const links = tierLinks(stands);
+  for (const l of links) chained.add(l.after);
+  const boards = resolveBoards(v.boards !== undefined ? v.boards : crowd.boards, { home: crowd.home, away: crowd.away });
+  const ribbons: Plane[] = [];
+  /** How far along the ribbon of one level the next piece of it starts, in feet, so that its panels carry on. */
+  let run = 0;
 
   for (const ring of stands.rings) {
     const strips = stripsOf(ring.region, ring.hole, ring.more ?? [], cut);
@@ -149,8 +157,16 @@ export function standsVenueOf(stands: CrowdStands, crowd: Crowd, o: Pick<Surface
           const [a, b] = [strip.inner[i], strip.inner[i + 1]];
           if (Math.hypot(b[0] - a[0], b[1] - a[1]) < 0.5 || inCover([(a[0] + b[0]) / 2, (a[1] + b[1]) / 2])) continue;
           const h = lift + ring.height[0];
-          const w = wall(`${ring.id}-front-${si === 0 ? "" : `s${si}-`}${i}`, "fascia", a[0], a[1], b[0], b[1], 0, h, `<rect class="u-fascia" width="${n(Math.hypot(b[0] - a[0], b[1] - a[1]))}" height="${n(h)}"/>`);
+          const id = `${ring.id}-front-${si === 0 ? "" : `s${si}-`}${i}`;
+          const long = Math.hypot(b[0] - a[0], b[1] - a[1]);
+          // A venue with one level has its ribbon on the front of that level: the front is the wall below the ribbon, and the ribbon a wall of its own over it.
+          const ribbon = boards?.ribbon === true && links.length === 0 && ring.height[0] >= 5 ? ribbonHigh(h) : 0;
+          const w = wall(id, "fascia", a[0], a[1], b[0], b[1], 0, h - ribbon, `<rect class="u-fascia" width="${n(long)}" height="${n(h - ribbon)}"/>`);
           seatPlanes.push(shy(w, centre));
+          if (ribbon > 0 && boards !== undefined) {
+            ribbons.push(shy(fasciaRibbon(`${id}-ribbon`, a, b, h, boards, run), centre));
+            run += long;
+          }
         }
       });
     }
@@ -158,14 +174,27 @@ export function standsVenueOf(stands: CrowdStands, crowd: Crowd, o: Pick<Surface
 
   // The walks between the tiers: a plane from the outer edge of one tier up to the first row of the next.
   for (const { c, before, after } of links) {
-    if (before === undefined || after === undefined) continue;
+    run = 0;
+    const rise = after.height[0] - before.height[1];
     for (const q of quadsOf(stripsOf(c.region, c.hole, [], cut))) {
       const slope = slopeOf(q, lift + before.height[1], lift + after.height[0]);
       if (slope === undefined) continue;
+      const share = boards?.ribbon === true ? ribbonShare(rise, Math.hypot(slope.slope.gx, slope.slope.gy)) : 0;
       for (const piece of pieces(tidy(q))) {
         count += 1;
+        // A ribbon board is the top of the walk, a plane of its own over the same slope: the walk below it is the walk less that strip.
+        let walk = piece;
+        if (share > 0 && boards !== undefined && piece.length === 4) {
+          const [a, b, c2, d] = piece;
+          const cut1 = (p: Pt, q2: Pt): Pt => [p[0] + (q2[0] - p[0]) * (1 - share), p[1] + (q2[1] - p[1]) * (1 - share)];
+          const [e, f] = [cut1(a, d), cut1(b, c2)];
+          walk = [a, b, f, e];
+          const rib = raked(`ribbon-${count}`, "ribbon", [e, f, c2, d], slope.slope, slope.along, (corners) => ledStrip(corners, boards, run));
+          if (rib !== undefined) ribbons.push({ ...rib, shy: slope.out });
+          run += Math.hypot(b[0] - a[0], b[1] - a[1]);
+        }
         // Where the empty places are filled, the walk between two tiers is the suite level: a facing wall with a band of windows, not a bare shelf.
-        const p = raked(`walk-${count}`, "concourse", piece, slope.slope, slope.along, (corners) => (filled ? suiteWall(corners) : `<polygon class="u-conc" points="${pointList(corners)}"/>`));
+        const p = raked(`walk-${count}`, "concourse", walk, slope.slope, slope.along, (corners) => (filled ? suiteWall(corners) : `<polygon class="u-conc" points="${pointList(corners)}"/>`));
         if (p !== undefined) seatPlanes.push({ ...p, shy: slope.out });
       }
     }
@@ -189,6 +218,12 @@ export function standsVenueOf(stands: CrowdStands, crowd: Crowd, o: Pick<Surface
 
   const items: Upright[] = [];
   if (seatPlanes.length > 0) items.push({ id: "stands", kind: "stands", at: centre, height: topOf(seatPlanes), planes: seatPlanes });
+  if (ribbons.length > 0) items.push({ id: "ribbon-boards", kind: "ribbon-boards", at: centre, height: topOf(ribbons), planes: ribbons });
+  // The scoreboard hung over the middle of the surface (a ballpark has none, and a hall's own scoreboards stand in its place).
+  if (boards?.scoreboard === true && v.noCentre !== true && hangsOver(String(o.sport))) {
+    const planes = centreBoard("centre-board", stands.box, lift, boards);
+    items.push({ id: "centre-board", kind: "hung-board", at: centre, height: topOf(planes), planes });
+  }
   if (wallSeats.length > 0) items.push({ id: "wall-seats", kind: "wall-seats", at: centre, height: topOf(wallSeats), planes: wallSeats });
 
   // The roof: a canopy over the back of the top tier, or a lid over it in a hall. A real venue has its own: the walls of its building and a roof of its kind over them.

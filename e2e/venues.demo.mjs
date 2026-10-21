@@ -20,7 +20,7 @@ const ARROW = {
   "lenovo-center": false, "nationwide-arena": true, "prudential-center": true, "ubs-arena": true, "madison-square-garden": false, "xfinity-mobile-arena": true, "ppg-paints-arena": true, "capital-one-arena": false,
 };
 
-/** The bar's button for a part (`stands`, `walls`, `roof`, `building`, `markings`, `labels`) or a view (`view-3d`). */
+/** The bar's button for a part (`stands`, `walls`, `roof`, `boards`, `building`, `markings`, `labels`) or a view (`view-3d`). */
 const chip = (page, name) => page.locator(`#bar [data-testid="${name.startsWith("view-") ? name : `part-${name}`}"]`);
 
 async function open(page, query = "", motion = "reduce") {
@@ -187,7 +187,7 @@ test("has the controls on the view, in sight without scrolling, and a button pre
   }
   // The scene is marked, so that a mount again would show: it is the same one at the end.
   await page.locator(`${STAGE} .ky-turn`).evaluate((root) => { root.dataset.same = "yes"; });
-  for (const part of ["stands", "walls", "roof", "building", "markings", "labels", "labels", "markings", "building", "roof", "walls", "stands"]) {
+  for (const part of ["stands", "walls", "roof", "boards", "building", "markings", "labels", "labels", "markings", "building", "boards", "roof", "walls", "stands"]) {
     await chip(page, part).click();
     await expect(play).toHaveAttribute("aria-pressed", "true");
   }
@@ -203,6 +203,47 @@ test("has the controls on the view, in sight without scrolling, and a button pre
   await play.click();
   await expect(play).toHaveAttribute("aria-pressed", "false");
   expect(page.url()).not.toContain("spin=");
+  expect(errors).toEqual([]);
+});
+
+test("shows the LED boards on request, in the plan and in 3D, kept in the address, and in 3D without stopping or sending back the turn", async ({ page }) => {
+  const { errors } = await open(page, "?venue=td-garden");
+  // Off by default: nothing of them in the plan or the address.
+  await expect(chip(page, "boards")).toHaveAttribute("aria-pressed", "false");
+  await expect(page.locator(`${STAGE} svg.kyogijo .ky-cr-ribbon`)).toHaveCount(0);
+  await chip(page, "boards").click();
+  await expect(chip(page, "boards")).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator(`${STAGE} svg.kyogijo .ky-cr-ribbon`)).toHaveCount(1);
+  await expect(page.locator(`${STAGE} svg.kyogijo .ky-cr-board`)).toHaveCount(1);
+  expect(page.url()).toContain("boards=1");
+  // The address brings them back, in 3D too: ribbons on the fascia and a scoreboard hung over the ice.
+  await page.goto("http://kyogijo.test/venues.html?venue=td-garden&view=3d&boards=1");
+  await page.waitForSelector(`${STAGE} .ky-turn`);
+  await expect(chip(page, "boards")).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator(`${STAGE} .ky-up-ribbon`).first()).toBeAttached();
+  await expect(page.locator(`${STAGE} .ky-up-hung-board`).first()).toBeAttached();
+  await chip(page, "boards").click();
+  await expect(page.locator(`${STAGE} .ky-up-ribbon`)).toHaveCount(0);
+  await expect(page.locator(`${STAGE} .ky-up-hung-board`)).toHaveCount(0);
+  expect(page.url()).not.toContain("boards=");
+  expect(errors).toEqual([]);
+});
+
+test("switches the LED boards while the view turns: it is the same scene afterwards and it goes on turning", async ({ page }) => {
+  const { errors } = await open(page, "?view=3d&venue=td-garden&spin=on", "no-preference");
+  const play = page.locator('.ky-turn-controls button[data-act="play"]');
+  await expect(play).toHaveAttribute("aria-pressed", "true");
+  await page.locator(`${STAGE} .ky-turn`).evaluate((root) => { root.dataset.same = "yes"; });
+  await expect(chip(page, "boards")).toBeVisible();
+  const box = await chip(page, "boards").boundingBox();
+  expect(box.y + box.height).toBeLessThanOrEqual(page.viewportSize().height);
+  await chip(page, "boards").click();
+  await expect(page.locator(`${STAGE} .ky-up-ribbon`).first()).toBeAttached();
+  await expect(page.locator(`${STAGE} .ky-turn`)).toHaveAttribute("data-same", "yes");
+  await expect(play).toHaveAttribute("aria-pressed", "true");
+  const sceneTurn = () => page.locator(`${STAGE} .ky-turn-floor`).evaluate((floor) => getComputedStyle(floor).transform);
+  const first = await sceneTurn();
+  await expect.poll(sceneTurn).not.toBe(first);
   expect(errors).toEqual([]);
 });
 

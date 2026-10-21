@@ -7,6 +7,13 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.37.0] - 2026-10-20
+
+### Added
+
+- **LED boards** (`boards`, [the LED boards](./docs/venues.md#led-boards), `src/venue.boards.ts`): the ribbon boards along the fascia between the seating levels, and a scoreboard hung over the middle of the playing surface, for every real venue (the thirty-two arenas of the NHL, BC Place, Lumen Field, Korakuen Hall and the ballparks), for the usual stands, in a district, and, as `stadium: { boards }`, round a tournament hall. `venue: { boards: true | { ribbon, scoreboard, colors, pattern, score } }` in the 3D view, `crowd: { boards }` in the plan (and read by the 3D view where `venue.boards` says nothing); off by default, and a drawing without it is exactly what it was. The content is generic and ours: panels of colour in `bands`, `blocks`, `chevrons` or `waves`, and a plain score in seven-segment digits (paths, no font); the colours are the asker's, else the crowd's `home` and `away`, else amber, blue and white (any other string than a hex, `rgb()`, `hsl()` or a name is ignored). In 3D a ribbon is the top 3.8 feet of the suite level's wall, a plane of its own (the walk below it is the walk less that strip; a venue with one level has its ribbon on the front of that level), and the scoreboard is four faces with the score on each, a ring of display under them, a cap and a strut, hung over the surface by a fifth of its longer side and sized by it (an arena's is about 28 by 19 feet). A ballpark has no scoreboard over the field, a hall has the layout's own (only ribbons there), and a score drawing's own scoreboard replaces the venue's. Every lit shape carries the class `u-led` (`ky-cr-led` in the plan) over a dark housing, for a lighting layer to make glow; the planes are the kinds `ribbon` and `hung-board` (uprights `ribbon-boards` and `hung-board`, said in words in English and Japanese). `turn.update(options, { venue: { boards } })` changes them while the view turns. New exports: `LedBoardOptions` and `LedBoardPattern`. About 17 KB of source in the one new module (`dist/venue.boards.js`), a ribbon of a 32-arena venue being a few dozen planes.
+- **An LED boards switch on the demo** (kept in the address as `boards=1`): a button in the bar over the venues page's view and the home page's featured arena, which draws it in the plan and in 3D and, in 3D, changes it without stopping or sending back the turn; a checkbox on the stadiums, tournament layouts and district pages.
+
 ## [0.36.0] - 2026-10-20
 
 ### Added

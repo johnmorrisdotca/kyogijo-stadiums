@@ -83,6 +83,8 @@ export type {
   Colors,
   CourtStyle,
   CrowdOptions,
+  LedBoardOptions,
+  LedBoardPattern,
   CrowdShape,
   Detail,
   DirectionOptions,

@@ -194,7 +194,7 @@ export function buildMultiTurn(options: MultiOptions, settings: TurnSettings = {
   let crowdStyle = "";
   if (drawn.stands !== undefined && keep("stands")) {
     const roof = typeof settings.venue === "object" && settings.venue.roof !== undefined ? settings.venue.roof : typeof options.stadium === "object" && options.stadium.roof === true;
-    const venue = standsVenueOf(drawn.stands.stands, drawn.stands.crowd, { sport: drawn.stands.standsLike as Sport }, { fill: true, ...(typeof settings.venue === "object" ? settings.venue : {}), roof, id }, 0);
+    const venue = standsVenueOf(drawn.stands.stands, drawn.stands.crowd, { sport: drawn.stands.standsLike as Sport }, { fill: true, ...(typeof settings.venue === "object" ? settings.venue : {}), roof, id, noCentre: true }, 0);
     items.push(...venue.items.filter((item) => item.kind !== "roof" || roof));
     defs = venue.defs;
     crowdStyle = "--ky-cr-home:#8b94a3;--ky-cr-away:#8b94a3";

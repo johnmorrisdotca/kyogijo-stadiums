@@ -14,4 +14,5 @@ export { describeUprights, heightUnit, planesOf, uprightsFor } from "./uprights.
 export type { UprightOptions, Uprights } from "./uprights.ts";
 export { ROOF } from "./venue.ts";
 export type { Venue, VenueBuild, VenueSettings } from "./venue.ts";
+export type { LedBoardOptions, LedBoardPattern } from "./types.ts";
 export type { Plane, PartKind, Upright, UprightKind, V3 } from "./turn.kit.ts";
