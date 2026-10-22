@@ -21,6 +21,8 @@ All notable changes to this project are written here. The format follows
 
 ## [0.41.0] - 2026-10-22
 
+Not published on its own; shipped in 0.42.0.
+
 ### Added
 
 - **The crowd outside the venue** ([the page](./docs/outside.md)): `outside: { level: 0 | 25 | 50 | 75 | 100 }` on a [district](./docs/district.md) puts that share of the venues' seats' worth of people on the sidewalks, plazas, parks, platforms and grounds round them, in 2D (`mountDistrict`, new) and in the 3D turn (`mountDistrictTurn`, whose view has `setOutside(level)` and `outsideCost()`), never on a carriageway, a railway, water or a building. The crowd is one ordered list, so a level is a prefix of it (nobody moves when the level does), each venue's share is exact to a person at every level and the same options give the same list (`outsideCrowd`, `outsideCount`). It is drawn with no element for a person: two typed arrays, one loop and one `putImageData` on one canvas, laid over the plan or on the 3D floor, where the floor's own matrix carries it round; a district seen whole shows density and a near view shows each person, and nothing is painted again when the view turns. Measured at 100 percent for BC Place and Rogers Arena together (73,371 people): a paint of 2 to 17 ms on a level change (the first about twice that), 0.3 ms more of the main thread a frame while the view turns, 60 frames a second with it as without, and 250 ms once for the mask and the crowd.
