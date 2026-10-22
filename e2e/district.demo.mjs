@@ -315,9 +315,8 @@ test("paints the crowd in the colour of the theme: light on the dark ground and 
 });
 
 test("puts Tokyo Dome City among its buildings from Project PLATEAU, flat in 2D and standing in 3D, with its credit, and kept in the address", async ({ page }) => {
-  const { errors, outside } = await open(page);
-  // The choice is there only where the venues have buildings to show.
-  await page.locator('#tabs button[data-preset="sodo"]').click();
+  const { errors, outside } = await open(page, "?venues=hanshin-koshien-stadium");
+  // The choice is there only where the venues have surroundings to show.
   await expect(page.locator("#context-row")).toBeHidden();
   await page.locator('#tabs button[data-preset="tokyo"]').click();
   await expect(page.locator("#context-row")).toBeVisible();
@@ -418,8 +417,10 @@ test("shows downtown Vancouver's streets and buildings round BC Place and Rogers
   expect(new URL(page.url()).searchParams.get("context")).toBe("0");
   await page.locator('[data-testid="context"]').check();
   expect(new URL(page.url()).searchParams.get("context")).toBeNull();
-  // Seattle has none.
-  await page.locator('#tabs button[data-preset="sodo"]').click();
+  // A venue with none (Koshien Stadium) has no choice.
+  await page.locator('input[data-key="rogers-arena"]').uncheck();
+  await page.locator('input[data-key="bc-place:cfl"]').uncheck();
+  await page.locator('input[data-key="hanshin-koshien-stadium:mlb"]').check();
   await expect(page.locator('[data-testid="context"]')).toBeHidden();
   await expect(page.locator(`${STAGE} svg.ky-district .ky-dist-streets`)).toHaveCount(0);
   expect(errors).toEqual([]);
@@ -466,5 +467,65 @@ test("marks the gates of BC Place and Rogers Arena on the plan and the 3D floor 
   await page.locator('#tabs button[data-preset="sodo"]').click();
   await expect(page.locator('[data-testid="gates"]')).toBeHidden();
   await expect(page.locator(`${STAGE} [data-gate]`)).toHaveCount(0);
+  expect(errors).toEqual([]);
+});
+
+test("puts Vancouver's water, green and trees under its streets and buildings, credited, flat in 2D and on the floor in 3D, and off with the choice", async ({ page }) => {
+  const { errors, outside } = await open(page);
+  await expect(page.locator('[data-testid="context"]')).toBeChecked();
+  const plan = `${STAGE} svg.ky-district`;
+  expect(await page.locator(`${plan} .ky-dist-street`).count()).toBeGreaterThanOrEqual(3);
+  expect(await page.locator(`${plan} .ky-dist-tree`).count()).toBeGreaterThanOrEqual(2);
+  // (The water of False Creek lies beyond the frame, which is the venues' with 150 metres of ground.)
+  await expect(page.locator(`${plan} .ky-dist-green`)).toHaveCount(1);
+  const credit = page.locator('[data-testid="credit"]');
+  await expect(credit).toContainText("Buildings and streets: (c) OpenStreetMap contributors");
+  await expect(credit).toContainText("Land cover made with VoxCity (MIT) from OpenStreetMap");
+  await expect(credit).toContainText("Trees: City of Vancouver open data, Public trees, under the Open Government Licence - Vancouver");
+  await expect(credit).toContainText("simplified and edited by Kyogijo Stadiums");
+  // The green, the streets and the trees lie under the venues, the green lowest and the trees over the streets.
+  const order = await page.locator(plan).evaluate((svg) => {
+    const after = (a, b) => (svg.querySelector(a).compareDocumentPosition(svg.querySelector(b)) & 4) > 0;
+    return [after(".ky-dist-green", ".ky-dist-street"), after(".ky-dist-street", ".ky-dist-tree"), after(".ky-dist-tree", ".ky-dist-block"), after(".ky-dist-tree", "[data-venue]")];
+  });
+  expect(order).toEqual([true, true, true, true]);
+  await page.locator("#view").selectOption("3d");
+  await expect(page.locator(`${STAGE} .ky-turn`)).toHaveCount(1);
+  expect(await page.locator(`${STAGE} .ky-turn-floor .ky-dist-tree`).count()).toBeGreaterThanOrEqual(2);
+  await page.locator('[data-testid="context"]').uncheck();
+  await expect(page.locator(`${STAGE} .ky-turn-floor .ky-dist-tree`)).toHaveCount(0);
+  await expect(page.locator(`${STAGE} .ky-turn-floor .ky-dist-green`)).toHaveCount(0);
+  await page.locator('[data-testid="context"]').check();
+  await expect(page.locator(`${STAGE} .ky-turn-floor .ky-dist-tree`).first()).toBeAttached();
+  expect(errors).toEqual([]);
+  expect(outside).toEqual([]);
+  await noSidewaysScroll(page);
+});
+
+test("puts Seattle's three venues in the city between them, and Seattle Center and SoDo each among their own streets, with the City's credit in English and in Japanese", async ({ page }) => {
+  const { errors } = await open(page);
+  const credit = page.locator('[data-testid="credit"]');
+  await page.locator('#tabs button[data-preset="seattle"]').click();
+  await expect(page.locator(`${STAGE} [data-venue]`)).toHaveCount(3);
+  await expect(page.locator(`${STAGE} .ky-dist-street`).first()).toBeAttached();
+  await expect(page.locator(`${STAGE} .ky-dist-water`)).toHaveCount(1);
+  expect(await page.locator(`${STAGE} .ky-dist-context`).evaluate((g) => g.querySelector(".ky-dist-b3") !== null)).toBe(true);
+  await expect(credit).toContainText("City of Seattle, Building Outlines 2015");
+  await expect(credit).toContainText("USGS 3D Elevation Program");
+  await expect(credit).toContainText("no warranty");
+  await expect(credit).not.toContainText("Vancouver");
+  // The city's own view has no single trees (it is too wide to show them).
+  await expect(page.locator(`${STAGE} .ky-dist-tree`)).toHaveCount(0);
+  await page.locator('#tabs button[data-preset="seattlecenter"]').click();
+  await expect(page.locator('#tabs button[aria-selected="true"]')).toHaveText("Seattle Center");
+  expect(await page.locator(`${STAGE} .ky-dist-tree`).count()).toBeGreaterThanOrEqual(2);
+  await expect(credit).toContainText("City of Seattle, Combined Tree Point");
+  await page.locator('#tabs button[data-preset="sodo"]').click();
+  await expect(page.locator(`${STAGE} [data-venue]`)).toHaveCount(2);
+  await expect(page.locator(`${STAGE} .ky-dist-street`).first()).toBeAttached();
+  await page.locator("#language").selectOption("ja");
+  await expect(credit).toContainText("シアトル市");
+  await expect(credit).toContainText("© OpenStreetMap contributors");
+  await expect(credit).toContainText("加工して作成");
   expect(errors).toEqual([]);
 });

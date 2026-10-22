@@ -104,7 +104,7 @@
       // (`drawDistrict`, `mountDistrictTurn`): the venues, the mode and the turn are options. What is chosen lives in the address; nothing is sent anywhere and nothing is stored.
       import { DISTRICT_IDS, districtMember, mountDistrict, mountDistrictTurn, OUTSIDE_LEVELS, OUTSIDE_VENUES, planDistrict, unknownVenues, VENUE_ATTRIBUTION } from "./dist/district-entry.js";
       import { TOKYO_DOME_CITY } from "./dist/plateau-entry.js";
-      import { VANCOUVER_CENTRE } from "./dist/osm-entry.js";
+      import { contextFor } from "./dist/cityctx-entry.js";
       import { hoverOf, keepCamera, wayOf, writeWay } from "./turn-way.js";
       import { lightingFor, lightingOfAddress } from "./lighting.js";
       import { STADIUMS } from "./dist/stadiums-entry.js";
@@ -116,9 +116,9 @@
           title: "A district of real venues",
           pageTitle: "Kyogijo Stadiums: a district of real venues",
           pageDescription: "Several real venues of one city on one plan at their real relative positions and orientations, from OpenStreetMap: BC Place and Rogers Arena side by side in Vancouver, to turn around together in 3D or look down on in 2D.",
-          lede: "Each venue is the one its own page draws, put where it stands and turned as it lies, from the outlines OpenStreetMap maps. Among neighbours the plan is fitted close round the buildings; in a city it keeps the real distances, with a grid of kilometres. Never a street map and no mark of a club, a league or a tournament.",
+          lede: "Each venue is the one its own page draws, where it stands and as it lies (OpenStreetMap outlines). Neighbours share a close plan; a city keeps real distances on a kilometre grid. Streets and buildings are faint context, never a map, and there is no mark of a club, a league or a tournament.",
           back: "Back to the Kyogijo Stadiums demo", docs: "The district page of the docs", stadiums: "BC Place on its own",
-          factsTitle: "What the plan is made from", edit: "Choose", venues: "Venues", mode: "Fit", turn: "Turn", labels: "Names beside the venues", context: "Surrounding buildings and streets", roofopen: "Retractable roof open (3D)", gates: "Gates, and the way a queue runs", kodokan: "Kodokan: the main dojo, in the air on the 7th floor", building: "Kodokan building", xray: "See-through walls", solid: "Solid", none: "Off (the dojo alone)", view: "View", viewpoint: "Viewpoint", roof: "Roofs and walls (3D)", boards: "LED boards (3D)", lighting: "Lighting", lighting_off: "Lighting: off", lighting_night: "Night", lighting_game: "Game", lighting_lightsDown: "Lights down", lighting_intro: "Intro", lighting_concert: "Concert", wash: "Surface light colour", wash_none: "as the preset", wash_purple: "Purple", wash_magenta: "Magenta", wash_blue: "Blue", wash_white: "White", language: "Language", theme: "Theme", auto: "Follow the device", light: "Light", dark: "Dark",
+          factsTitle: "What the plan is made from", edit: "Choose", venues: "Venues", mode: "Fit", turn: "Turn", labels: "Names beside the venues", context: "Surroundings: buildings, streets, water and trees", roofopen: "Retractable roof open (3D)", gates: "Gates, and the way a queue runs", kodokan: "Kodokan: the main dojo, in the air on the 7th floor", building: "Kodokan building", xray: "See-through walls", solid: "Solid", none: "Off (the dojo alone)", view: "View", viewpoint: "Viewpoint", roof: "Roofs and walls (3D)", boards: "LED boards (3D)", lighting: "Lighting", lighting_off: "Lighting: off", lighting_night: "Night", lighting_game: "Game", lighting_lightsDown: "Lights down", lighting_intro: "Intro", lighting_concert: "Concert", wash: "Surface light colour", wash_none: "as the preset", wash_purple: "Purple", wash_magenta: "Magenta", wash_blue: "Blue", wash_white: "White", language: "Language", theme: "Theme", auto: "Follow the device", light: "Light", dark: "Dark",
           neighbours: "Neighbours: close round the buildings", city: "City: the real distances, with a grid", north: "North at the top", fit: "Long way across the page",
           overhead: "Overhead", broadcast: "Broadcast", end: "End", corner: "Corner", formLabel: "How the district is shown",
           venue: "Venue", seats: "Seats", rink: "Surface", orientation: "How it lies", cfl: "football field", nfl: "football field", soccer: "soccer pitch", mlb: "baseball field", boxing: "boxing ring", dojo: "main dojo, 7th floor (420 jō)", nhl: "ice hockey rink", opening: "along the roof's opening", pitch: "as the pitch is mapped", infield: "from the mapped infield", building: "inferred from the building", none: "not known, east-west", nonePark: "not known, fitted to the building",
@@ -126,15 +126,15 @@
           outside: "People outside", outsideNote: "A crowd outside is drawn for BC Place and Rogers Arena for now; the other venues come later.",
           outsideCount: "{people} people outside, {percent}% of the {seats} seats. They stand on sidewalks, plazas and the venues' grounds, never on a road. Walkable ground: OpenStreetMap.", outsideNone: "Nobody outside. Choose a share of the seats to put outside the venues.",
           credit: "Building outlines, roofs and the ground a crowd outside may stand on (sidewalks, plazas, roads, buildings): (c) OpenStreetMap contributors, ODbL 1.0, openstreetmap.org/copyright. Seats, tiers and roofs: Wikidata (CC0) and the English Wikipedia article each venue cites, in our own words.",
-          presets: { pair: "BC Place and Rogers Arena", soccer: "BC Place for soccer and Rogers Arena", alone: "Rogers Arena alone", sodo: "Seattle SoDo: T-Mobile Park and Lumen Field", seattle: "Seattle city: all three venues", tokyo: "Tokyo Dome City: Tokyo Dome and Korakuen Hall", tokyokodokan: "Tokyo Dome City and the Kodokan", kodokan: "Tokyo Dome City and the Kodokan" },
+          presets: { pair: "BC Place and Rogers Arena", soccer: "BC Place for soccer and Rogers Arena", alone: "Rogers Arena alone", sodo: "Seattle SoDo: T-Mobile Park and Lumen Field", seattlecenter: "Seattle Center", seattle: "Seattle city: all three venues", tokyo: "Tokyo Dome City: Tokyo Dome and Korakuen Hall", tokyokodokan: "Tokyo Dome City and the Kodokan", kodokan: "Tokyo Dome City and the Kodokan" },
         },
         ja: {
           title: "実在の会場の地区",
           pageTitle: "競技場 Kyogijo Stadiums：実在の会場の地区",
           pageDescription: "同じ都市の実在の会場を、OpenStreetMapをもとに、実際の位置と向きのとおり1枚の図に並べます。バンクーバーのBCプレイスとロジャース・アリーナ、シアトルの3つの会場、東京ドームと後楽園ホールなどを、3Dで一緒に回したり、2Dで真上から見たりできます。",
-          lede: "各会場は、それぞれのページで描いたものを、OpenStreetMapに記録された実際の位置と向きに置いています。隣り合う会場は建物のすぐ近くまで寄せ、都市では実際の距離を保って1km方眼を添えます。道路地図ではなく、クラブ・リーグ・大会のマークもありません。",
+          lede: "各会場は、それぞれのページで描いたものを、OpenStreetMapに記録された実際の位置と向きに置いています。隣り合う会場は建物のすぐ近くまで寄せ、都市では実際の距離を保って1km方眼を添えます。道路や建物はうっすらとした背景で、道案内の地図ではありません。クラブ・リーグ・大会のマークもありません。",
           back: "競技場 Kyogijo Stadiums のデモに戻る", docs: "ドキュメントの「会場の地区」ページ", stadiums: "BCプレイス単独のページ",
-          factsTitle: "この図の元になった情報", edit: "選ぶ", venues: "会場", mode: "縮尺の取り方", turn: "回転", labels: "会場名を添える", context: "周辺の建物と道路", roofopen: "開閉式屋根を開ける（3D）", gates: "ゲートと行列の向き", kodokan: "講道館：7階の大道場を空中に描く", building: "講道館の建物", xray: "壁を透かす", solid: "壁を不透明にする", none: "なし（大道場のみ）", view: "表示", viewpoint: "視点", roof: "屋根と壁（3D）", boards: "LEDビジョン（3D）", lighting: "照明", lighting_off: "照明：なし", lighting_night: "夜間", lighting_game: "試合中", lighting_lightsDown: "場内暗転", lighting_intro: "選手紹介", lighting_concert: "コンサート", wash: "競技面の照明の色", wash_none: "プリセットのまま", wash_purple: "紫", wash_magenta: "マゼンタ", wash_blue: "青", wash_white: "白", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク",
+          factsTitle: "この図の元になった情報", edit: "選ぶ", venues: "会場", mode: "縮尺の取り方", turn: "回転", labels: "会場名を添える", context: "周辺：建物・道路・水面・樹木", roofopen: "開閉式屋根を開ける（3D）", gates: "ゲートと行列の向き", kodokan: "講道館：7階の大道場を空中に描く", building: "講道館の建物", xray: "壁を透かす", solid: "壁を不透明にする", none: "なし（大道場のみ）", view: "表示", viewpoint: "視点", roof: "屋根と壁（3D）", boards: "LEDビジョン（3D）", lighting: "照明", lighting_off: "照明：なし", lighting_night: "夜間", lighting_game: "試合中", lighting_lightsDown: "場内暗転", lighting_intro: "選手紹介", lighting_concert: "コンサート", wash: "競技面の照明の色", wash_none: "プリセットのまま", wash_purple: "紫", wash_magenta: "マゼンタ", wash_blue: "青", wash_white: "白", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク",
           neighbours: "隣り合う会場：建物のすぐ近くまで寄せる", city: "都市：実際の距離を保ち、方眼を添える", north: "北を上にする", fit: "長い方を横に置く",
           overhead: "真上", broadcast: "中継", end: "エンド", corner: "コーナー", formLabel: "地区の見せ方",
           venue: "会場", seats: "座席数", rink: "競技面", orientation: "向き", cfl: "フットボール場", nfl: "フットボール場", soccer: "サッカー場", mlb: "野球場", boxing: "ボクシングのリング", dojo: "大道場（7階、420畳）", nhl: "アイスホッケーのリンク", opening: "屋根の開口部に沿う", pitch: "地図のピッチのとおり", infield: "地図の内野から", building: "建物から推定", none: "不明（東西）", nonePark: "不明（建物に合わせた向き）",
@@ -142,7 +142,7 @@
           outside: "会場の外の人出", outsideNote: "会場の外の人出は、今のところBCプレイスとロジャーズ・アリーナの周辺で描けます。ほかの会場には、まだ対応していません。",
           outsideCount: "会場の外に{people}人（{seats}席の{percent}％）。人が立つのは歩道、広場、会場の敷地だけで、車道には立ちません。人が立てる場所のデータは、OpenStreetMapをもとにしています。", outsideNone: "会場の外には誰もいません。座席数に対する割合を選ぶと、その分の人が外に出ます。",
           credit: "建物の輪郭、屋根、および会場の外で人が立てる場所を判断するためのデータ（歩道、広場、道路、建物）：(c) OpenStreetMap contributors（ODbL 1.0、openstreetmap.org/copyright）。座席数、スタンドの層、屋根：Wikidata（CC0）と、各会場が出典としている英語版ウィキペディアの記事（内容は自分たちの言葉でまとめ直しています）。",
-          presets: { pair: "BCプレイスとロジャース・アリーナ", soccer: "サッカー用のBCプレイスとロジャース・アリーナ", alone: "ロジャース・アリーナのみ", sodo: "シアトルのSoDo：T-モバイル・パークとルーメン・フィールド", seattle: "シアトル市内：3つの会場", tokyo: "東京ドームシティ：東京ドームと後楽園ホール", tokyokodokan: "東京ドームシティと講道館" },
+          presets: { pair: "BCプレイスとロジャース・アリーナ", soccer: "サッカー用のBCプレイスとロジャース・アリーナ", alone: "ロジャース・アリーナのみ", sodo: "シアトルのSoDo：T-モバイル・パークとルーメン・フィールド", seattlecenter: "シアトル・センター", seattle: "シアトル市内：3つの会場", tokyo: "東京ドームシティ：東京ドームと後楽園ホール", tokyokodokan: "東京ドームシティと講道館" },
         },
       };
       /** The choices a preset sets: the venues, and the fit (neighbours where the venues are close, a city where they are kilometres apart). */
@@ -150,8 +150,9 @@
         pair: { venues: ["bc-place:cfl", "rogers-arena"], mode: "neighbours", context: true },
         soccer: { venues: ["bc-place:soccer", "rogers-arena"], mode: "neighbours", context: true },
         alone: { venues: ["rogers-arena"], mode: "neighbours", context: true },
-        sodo: { venues: ["t-mobile-park:mlb", "lumen-field:nfl"], mode: "neighbours" },
-        seattle: { venues: ["t-mobile-park:mlb", "lumen-field:nfl", "climate-pledge-arena"], mode: "city" },
+        seattlecenter: { venues: ["climate-pledge-arena"], mode: "neighbours", context: true },
+        sodo: { venues: ["t-mobile-park:mlb", "lumen-field:nfl"], mode: "neighbours", context: true },
+        seattle: { venues: ["t-mobile-park:mlb", "lumen-field:nfl", "climate-pledge-arena"], mode: "city", context: true },
         tokyo: { venues: ["tokyo-dome:mlb", "korakuen-hall:boxing"], mode: "neighbours", context: true },
         tokyokodokan: { venues: ["tokyo-dome:mlb", "korakuen-hall:boxing", "kodokan"], mode: "neighbours", context: true },
       };
@@ -179,7 +180,7 @@
       /** Whether the venues chosen are Tokyo Dome City's (with PLATEAU's buildings round them): the Kodokan's choice is theirs. */
       const hasTokyo = () => state.venues.some((key) => ["tokyo-dome", "korakuen-hall", "kodokan"].includes(idOf(key)));
       /** The buildings and streets the venues chosen have round them: Tokyo Dome City's (Project PLATEAU) or downtown Vancouver's (OpenStreetMap). */
-      const contextAreas = () => (hasTokyo() ? [TOKYO_DOME_CITY] : state.venues.some((key) => ["bc-place", "rogers-arena"].includes(idOf(key))) ? [VANCOUVER_CENTRE] : []);
+      const contextAreas = () => (hasTokyo() ? [TOKYO_DOME_CITY] : contextFor(state.venues));
       const hasContext = () => contextAreas().length > 0;
       /** Whether a venue chosen has gates (`venueGates`) or a retractable roof that opens. */
       const hasGates = () => state.venues.some((key) => ["bc-place", "rogers-arena"].includes(idOf(key)));
@@ -395,7 +396,7 @@
           listFacts(plan);
           paintOutsideBar(plan);
           noteCost();
-          $("credit").textContent = plan.context === undefined ? words().credit : `${words().credit} ${plan.context.attribution[$("language").value].join(" ")}`;
+          $("credit").textContent = plan.context === undefined ? words().credit : `${words().credit} ${plan.context.attribution[$("language").value].join($("language").value === "ja" ? "。" : "; ")}.`;
         } catch (error) {
           $("error").textContent = String(error.message);
           $("error").hidden = false;
