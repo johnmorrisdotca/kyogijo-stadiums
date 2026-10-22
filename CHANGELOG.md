@@ -7,6 +7,16 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **Seattle among its streets, buildings, water and trees, and Vancouver's water, green and trees** ([the district page](./docs/district.md#among-its-streets-buildings-water-and-trees-vancouver-and-seattle)): `context: contextFor(venues)` (new entry `@johnmorrisdotca/kyogijo-stadiums/cityctx`) puts a district in its city. Four areas in the format of downtown Vancouver's: Seattle's SoDo (Lumen Field and T-Mobile Park), Seattle Center (Climate Pledge Arena), the city view of all three, and `VANCOUVER_NATURE` beside `VANCOUVER_CENTRE`. The `streets` layer is the one `pnpm osm-context` makes (carriageways, viaducts, railways, sidewalks and paths with a width); new are `landCover` (water, green and wood, from the grid VoxCity, run locally with no account, makes from OpenStreetMap) and `trees` (the Cities' inventories and OpenStreetMap's tree nodes), and Seattle's buildings carry the City's measured heights (Building Outlines 2015 with USGS 3DEP ground levels). The water, green and trees lie flat on the floor under the streets and add no plane to the 3D view; the 130 biggest buildings stand as blocks. Each area is 12 to 150 KB of data (a third of that gzipped); a district that does not ask carries none. Every layer is credited in English and in Japanese, once, in the description. The raw answers are kept, dated, in `data-sources/cityctx/2026-10-22/`.
+- **The district page** has a Seattle Center preset beside Rogers Arena alone, surroundings on for the Seattle venues too, and the choice is "Surroundings: buildings, streets, water and trees" (it was "Surrounding buildings and streets"); `context=0` turns them off.
+- `pnpm cityctx:fetch`, `pnpm cityctx:vox` and `pnpm cityctx` make the data; the City of Seattle's 3D Buildings, VoxCity and Sat3DGen are in [the references](./docs/references.md) with what each may be used for.
+
+### Changed
+
+- A `ContextPlan` has `land` and `trees` beside `streets`, and `contextFloor` draws water, green and wood, the streets, the trees as dots and then the buildings; a layer whose credit is empty adds none to the description.
+
 ## [0.43.0] - 2026-10-22
 
 ### Fixed
