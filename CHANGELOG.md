@@ -12,6 +12,7 @@ All notable changes to this project are written here. The format follows
 ### Fixed
 
 - **A see-through building's walls now fade by the side the eye is on, at every turn and tilt** (`Plane.fadeSide`): the Kodokan's near walls gave way only when the eye was low, and at some angles and tilts a near wall was drawn opaque over the dojo. Every wall between the eye and the room is now clear, a wall on the far side stays whole behind it, and a test turns the view in steps of 15 degrees at six tilts and finds no wall over the dojo's floor that is not clear. The roof is clearer too.
+- **The district page's seven presets pushed the crowd bar off the first screen on a phone** (the new preset made the chips wrap into one more row): on a narrow screen the chips are 44 pixels high with a smaller gap, so that the bar and the plan stay in view.
 - **Auto-turn could not be kept stopped on the district, stadiums, venues and halls pages**: pressing the button to stop the turn worked, but the pointer coming back over the view turned it again by hover. A reader who has used the Auto-turn button (or the Space key) is left alone by the pointer for the rest of the page; the button toggles every time. A new test presses it on each page, with and without yaw, pitch and zoom in the address, by mouse, keyboard and tap.
 
 ### Added
