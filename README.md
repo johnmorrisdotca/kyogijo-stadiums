@@ -13,8 +13,6 @@ The surfaces of forty-three sports, from football and curling to the budō and t
 
 <p align="center"><a href="https://johnmorrisdotca.github.io/kyogijo-stadiums/"><strong>Open the demo →</strong></a> · <a href="https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/">Documentation</a> · <a href="https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery.html">Gallery</a> · <a href="./docs/compare.md">How it compares</a> · <a href="https://johnmorrisdotca.github.io/kyogijo-stadiums/api.html">API reference</a></p>
 
-> **Renamed.** Previously `@johnmorrisdotca/kyogijo`; renamed in 0.4.0 to `@johnmorrisdotca/kyogijo-stadiums`. The product is still Kyogijo Stadiums (競技場); only the package and the repository names changed. See the [changelog](./CHANGELOG.md).
-
 <table align="center">
 <tr>
 <td align="center" valign="top">
