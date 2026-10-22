@@ -23,6 +23,10 @@ jobs:
   demo:
     name: demo (${{ matrix.shard }}/4)
     runs-on: ubuntu-latest
+    # Playwright's own image, whose tag is the version of @playwright/test in the lockfile (src/ci.test.js holds the two together): the browsers and what they need are in it. Installing the browsers with their system packages took 55 of a shard's 70 minutes, fetching 200 packages from a slow mirror.
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.0-noble
+      options: --ipc=host --init
     strategy:
       fail-fast: false
       matrix:
@@ -35,7 +39,6 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm exec playwright install --with-deps chromium webkit
       - name: The demo, played in Chromium and WebKit at a phone's width and a desk's (a quarter of the tests)
         run: pnpm site && pnpm exec playwright test --shard=${{ matrix.shard }}/4
   package:
