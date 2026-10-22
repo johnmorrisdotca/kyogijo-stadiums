@@ -529,3 +529,64 @@ test("puts Seattle's three venues in the city between them, and Seattle Center a
   await expect(credit).toContainText("加工して作成");
   expect(errors).toEqual([]);
 });
+
+test("chooses a floor of the Kodokan's building: all of them or one, the plate of the floor picked out in 3D, its rooms listed, kept in the address", async ({ page }) => {
+  const { errors, outside } = await open(page, "?venues=kodokan&view=3d");
+  const floor = page.locator('[data-testid="floor"]');
+  await expect(floor).toBeVisible();
+  await expect(floor.locator("option")).toHaveCount(10);
+  await expect(floor.locator("option").nth(1)).toContainText("8F: spectators' gallery");
+  await expect(floor.locator("option").nth(3)).toContainText("6F: school dojo (240 jō), international dojo (192 jō)");
+  await expect(page.locator('[data-testid="floors"] tr')).toHaveCount(9);
+  await expect(page.locator(`${STAGE} [data-part="m0-plate"]`)).toHaveCount(0);
+  // Every floor is a slab with an edge: the great dojo's floor has four sides, the other storeys are faint slabs.
+  await expect(page.locator(`${STAGE} [data-part^="m0-slab-s"]`)).toHaveCount(4);
+  expect(await page.locator(`${STAGE} [data-part^="m0-plate-f"]`).count()).toBeGreaterThan(60);
+  await floor.selectOption("6");
+  await expect(page.locator(`${STAGE} [data-part^="m0-plate-s"]`)).toHaveCount(10);
+  expect(new URL(page.url()).searchParams.get("floor")).toBe("6");
+  await expect(page.locator(`${STAGE} [data-part="m0-plate"]`)).toHaveCount(1);
+  await expect(page.locator(`${STAGE} [data-part="m0-floor"]`)).toHaveCount(1);
+  await expect(page.locator(`${STAGE} [data-part="m0p1-floor"]`)).toHaveCount(1);
+  await expect(page.locator(`${STAGE} [data-part="m0p2-floor"]`)).toHaveCount(0);
+  expect(await page.locator(`${STAGE} [data-part^="m0-shell-"]`).count()).toBeGreaterThan(10);
+  await expect(page.locator('[data-testid="floors"] tr[aria-current="true"]')).toContainText("6F");
+  await expect(page.locator('[data-testid="floors"] tr[aria-current="true"]')).toContainText("school dojo (240 jō)");
+  // The 5th floor has three dojos; a floor of plain rooms has a plate and no dojo; the basement is under the ground.
+  await floor.selectOption("5");
+  await expect(page.locator(`${STAGE} [data-part="m0p2-floor"]`)).toHaveCount(1);
+  await floor.selectOption("3");
+  await expect(page.locator(`${STAGE} [data-part="m0-plate"]`)).toHaveCount(1);
+  await expect(page.locator(`${STAGE} [data-part$="-floor"]`)).toHaveCount(0);
+  await floor.selectOption("0");
+  expect(new URL(page.url()).searchParams.get("floor")).toBe("b1");
+  await expect(page.locator(`${STAGE} [data-part$="-plate"]`)).toHaveCount(0);
+  await expect(page.locator('[data-testid="floors"] tr[aria-current="true"]')).toContainText("B1");
+  // The seventh floor is the great dojo and the eighth its gallery.
+  await floor.selectOption("7");
+  await expect(page.locator(`${STAGE} [data-part="m0-floor"]`)).toHaveCount(1);
+  await floor.selectOption("8");
+  await expect(page.locator(`${STAGE} [data-part="m0-plate"]`)).toHaveCount(1);
+  await expect(page.locator(`${STAGE} [data-part="m0-floor"]`)).toHaveCount(0);
+  // All floors again: the address forgets it and the great dojo stands as it did.
+  await floor.selectOption("all");
+  expect(new URL(page.url()).searchParams.has("floor")).toBe(false);
+  await expect(page.locator(`${STAGE} [data-part="m0-plate"]`)).toHaveCount(0);
+  await expect(page.locator(`${STAGE} [data-part="m0-floor"]`)).toHaveCount(1);
+  expect(errors).toEqual([]);
+  expect(outside).toEqual([]);
+});
+
+test("opens a floor of the Kodokan from the address, in 2D and in Japanese, and hides the choice for a district without it", async ({ page }) => {
+  const { errors } = await open(page, "?venues=kodokan&floor=b1&lang=ja");
+  await expect(page.locator('[data-testid="floor"]')).toHaveValue("0");
+  await expect(page.locator('[data-testid="floor"] option').nth(3)).toContainText("6階：学校道場（240畳）、国際部道場（192畳）");
+  await expect(page.locator(`${STAGE} [data-shell="kodokan"][data-floor]`)).toHaveCount(0);
+  await open(page, "?venues=kodokan&floor=6");
+  await expect(page.locator(`${STAGE} [data-venue="kodokan"]`)).toHaveCount(2);
+  await expect(page.locator(`${STAGE} [data-shell="kodokan"][data-floor="6"]`)).toHaveCount(1);
+  await open(page, "?floor=6");
+  await expect(page.locator("#floor-row")).toBeHidden();
+  await expect(page.locator('[data-testid="floors"]')).toBeHidden();
+  expect(errors).toEqual([]);
+});

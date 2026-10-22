@@ -2,8 +2,10 @@
 // (`buildTurn`: the stands, the walls and the roof, the goals and posts of its field), its planes are turned about the middle of its surface and moved to where the plan puts it, and the floor is the district's flat
 // plan drawn with each venue's building only. The model it makes is a `TurnModel`, so the camera, the controls, the pointer, the auto-turn and the steady fit of every other 3D view are this one's; its
 // buildings are stacked building by building (`Plane.group`), the far one first, so that a roof never shows through a nearer building.
-import { describeDistrict, districtId, drawDistrict, drawMember, nestedDrawing, planDistrict, surfaceCentre, type DistrictOptions, type DistrictPlaced, type DistrictPlan } from "./district.ts";
-import { blockPlanes, contextUprights, shellBlock } from "./context.ts";
+import { describeDistrict, districtId, drawDistrict, drawMember, nestedDrawing, planDistrict, surfaceCentre, type DistrictOptions, type DistrictPlan } from "./district.ts";
+import { blockPlanes, contextUprights, shellBlock, slabPlanes } from "./context.ts";
+import { dojo } from "./budo/dojo.api.ts";
+import { KODOKAN_FLOORS, KODOKAN_GALLERY_LEVEL } from "./kodokan.ts";
 import { APART, n, plane, type Plane, type Upright } from "./turn.kit.ts";
 import { TURN_PRESETS, wrap, type PresetTable } from "./turn.camera.ts";
 import { mountTurn, type KyogijoTurn } from "./turn.dom.ts";
@@ -37,7 +39,7 @@ const rot = ([x, y]: Pt, degrees: number): Pt => {
 };
 
 /** A plane of a venue's own frame (its surface's middle at `centre`) put in the district's: turned by the venue's angle about that middle and moved to where the plan puts it. */
-function placeInDistrict(p: Plane, placed: DistrictPlaced, centre: Pt, prefix: string, group: number, lift = 0): Plane {
+function placeInDistrict(p: Plane, placed: { at: Pt; angle: number }, centre: Pt, prefix: string, group: number, lift = 0): Plane {
   const at = (x: number, y: number): Pt => {
     const [rx, ry] = rot([x - centre[0], y - centre[1]], placed.angle);
     return [rx + placed.at[0], ry + placed.at[1]];
@@ -83,35 +85,78 @@ export function buildDistrictTurn(options: DistrictOptions, settings: DistrictTu
   let crowdStyle = "";
   plan.members.forEach((placed, i) => {
     const member = placed.member;
-    const memberId = `${id}-m${i}`;
-    // Each venue is built as its own 3D view is, with the crowd drawn without its seats on its floor and the stands raised.
-    const model = buildTurn({ ...member.options, language, ...(options.theme === undefined ? {} : { theme: options.theme }), id: `${base}-m${i}` } as SurfaceOptions, { ...settings, id: memberId, venue: { roof: true, ...(typeof settings.venue === "object" ? settings.venue : {}) }, preset: undefined, view: undefined });
-    const centre = surfaceCentre(member.options);
     const prefix = `m${i}-`;
-    // A venue on an upper floor (the Kodokan's main dojo) stands that high over the ground, on a floor drawn in the air; the ground under it is left bare.
-    const lift = placed.member.elevation ?? 0;
-    for (const item of model.uprights.items) {
-      const planes = item.planes.filter((p) => p.kind !== "ground").map((p) => placeInDistrict(p, placed, centre, prefix, i, lift));
-      if (planes.length > 0) {
-        const [ax, ay] = item.at;
-        const [rx, ry] = rot([ax - centre[0], ay - centre[1]], placed.angle);
-        items.push({ ...item, id: `${prefix}${item.id}`, at: [rx + placed.at[0], ry + placed.at[1]], height: item.height + lift, planes });
+    // A venue may have several surfaces (the rooms of a floor): each is built as its own 3D view is, with the crowd drawn without its seats on its floor and the stands raised, and put where the plan puts it, in the venue's one group.
+    placed.parts.forEach((pp, j) => {
+      const part = pp.part;
+      const tag = j === 0 ? "" : `p${j}`;
+      const memberId = `${id}-m${i}${tag}`;
+      const model = buildTurn({ ...part.options, language, ...(options.theme === undefined ? {} : { theme: options.theme }), id: `${base}-m${i}${tag}` } as SurfaceOptions, { ...settings, id: memberId, venue: { roof: true, ...(typeof settings.venue === "object" ? settings.venue : {}) }, preset: undefined, view: undefined });
+      const centre = surfaceCentre(part.options);
+      const pfx = `m${i}${tag}-`;
+      // A surface on an upper floor (the Kodokan's dojos) stands that high over the ground, on a floor drawn in the air; the ground under it is left bare.
+      const lift = part.elevation ?? 0;
+      // Which part of a room is drawn: what stands below the gallery's level, or what stands above it.
+      const lowest = (p: Plane): number => Math.min(p.o[2], p.o[2] + p.u[2], p.o[2] + p.v[2], p.o[2] + p.u[2] + p.v[2]);
+      const shown = (p: Plane): boolean => part.show === undefined || (part.show === "gallery") === (lowest(p) >= KODOKAN_GALLERY_LEVEL - 1e-6);
+      for (const item of model.uprights.items) {
+        const planes = item.planes.filter((p) => p.kind !== "ground" && shown(p)).map((p) => placeInDistrict(p, pp, centre, pfx, i, lift));
+        if (planes.length > 0) {
+          const [ax, ay] = item.at;
+          const [rx, ry] = rot([ax - centre[0], ay - centre[1]], pp.angle);
+          items.push({ ...item, id: `${pfx}${item.id}`, at: [rx + pp.at[0], ry + pp.at[1]], height: item.height + lift, planes });
+        }
       }
-    }
-    if (lift > 0) {
-      const { markup, box, styles } = nestedDrawing(drawMember(member, { ...options, id: base }, i, base, { floor: true }));
-      for (const block of styles) if (!defs.includes(block)) defs.push(block);
-      const floor = plane("floor", "floor", [box.x, box.y, 0], [box.w, 0, 0], [0, box.h, 0], `<g transform="translate(${n(-box.x)} ${n(-box.y)})">${markup}</g>`);
-      items.push({ id: `${prefix}floor`, kind: "deck", at: placed.at, height: lift, planes: [placeInDistrict(floor, placed, centre, prefix, i, lift)] });
-    }
+      if (lift > 0 && part.show !== "gallery") {
+        const { markup, box, styles } = nestedDrawing(drawMember(member, { ...options, id: base }, i, base, { floor: true }, j));
+        for (const block of styles) if (!defs.includes(block)) defs.push(block);
+        const floor = plane("floor", "floor", [box.x, box.y, 0], [box.w, 0, 0], [0, box.h, 0], `<g transform="translate(${n(-box.x)} ${n(-box.y)})">${markup}</g>`);
+        items.push({ id: `${pfx}floor`, kind: "deck", at: pp.at, height: lift, planes: [placeInDistrict(floor, pp, centre, pfx, i, lift)] });
+        // The room's floor is a slab too, with an edge all round (the building's own floors do that for a chosen floor): its mats' rectangle and a hand's width more.
+        const spec = (part.options as { dojo?: Parameters<typeof dojo>[0] }).dojo;
+        if (member.plate === undefined && spec !== undefined && member.slabThickness !== undefined) {
+          const room = dojo(spec);
+          const m = 0.12 * FEET_PER_METRE;
+          const [w, l] = [room.width * FEET_PER_METRE, room.length * FEET_PER_METRE];
+          const corners: Pt[] = [[-m, -m], [w + m, -m], [w + m, l + m], [-m, l + m]].map(([x, y]) => {
+            const [rx, ry] = rot([x - centre[0], y - centre[1]], pp.angle);
+            return [rx + pp.at[0], ry + pp.at[1]];
+          });
+          const pixels = 1000 / Math.max(plan.view.w, plan.view.h);
+          const thick = Math.min(Math.max(member.slabThickness * FEET_PER_METRE, 10 / pixels), ((member.shell?.height ?? 60) / (member.shell?.storeys ?? 8)) * 0.5);
+          items.push({ id: `${pfx}slab`, kind: "deck", at: pp.at, height: lift, planes: slabPlanes(corners, lift, thick, { top: `${pfx}slab-top`, side: `${pfx}slab-s` }, "plain").map((p) => ({ ...p, group: i })) });
+        }
+      }
+      if (model.defs !== "") defs.push(model.defs);
+      if (crowdStyle === "" && model.crowdStyle !== "") crowdStyle = model.crowdStyle;
+    });
     // The building it stands in: see-through (its walls give way to the eye) or solid, in the venue's group so that it is stacked with it.
     if (member.shell !== undefined && options.building !== "none") {
-      const block = shellBlock(member.key, placed.footprint, member.shell.height, options.building === "solid" ? undefined : placed.at);
+      // What is seen through its walls: the middle of the rooms in it (the building's own middle where a floor has none).
+      const inside: Pt = placed.parts.length === 0 ? placed.at : [placed.parts.reduce((s, q) => s + q.at[0], 0) / placed.parts.length, placed.parts.reduce((s, q) => s + q.at[1], 0) / placed.parts.length];
+      const block = shellBlock(member.key, placed.footprint, member.shell.height, options.building === "solid" ? undefined : inside);
       const planes = blockPlanes(block, `${prefix}shell-`).map((p) => ({ ...p, group: i }));
       items.push({ id: `${prefix}shell`, kind: "blocks", at: placed.at, height: member.shell.height, planes });
     }
-    if (model.defs !== "") defs.push(model.defs);
-    if (crowdStyle === "" && model.crowdStyle !== "") crowdStyle = model.crowdStyle;
+    // The floors of the building as slabs with an edge: the one chosen is picked out (its plate, with its name over it), the others are faint. A slab is as thick as the venue says and never thinner than ten pixels at the page's own size.
+    if (member.slabs !== undefined && options.building !== "none") {
+      const pixels = 1000 / Math.max(plan.view.w, plan.view.h);
+      const thick = Math.min(Math.max((member.slabThickness ?? 0.6) * FEET_PER_METRE, 10 / pixels), ((member.shell?.height ?? 60) / (member.shell?.storeys ?? 8)) * 0.5);
+      for (const slab of member.slabs) {
+        const chosen = member.plate?.floor === slab.floor;
+        // The great dojo's floor, seen with every floor, has its own slab; and a solid building hides what is in it.
+        if (!chosen && ((member.plate === undefined && slab.floor === 7) || options.building === "solid")) continue;
+        const ids = chosen ? { top: `${prefix}plate`, side: `${prefix}plate-s` } : { top: `${prefix}plate-f${slab.floor}-top`, side: `${prefix}plate-f${slab.floor}-s` };
+        const planes = slabPlanes(placed.footprint, slab.level, thick, ids, chosen ? "chosen" : "faint").map((p) => ({ ...p, group: i }));
+        items.push({ id: ids.top, kind: "deck", at: placed.at, height: slab.level, planes });
+      }
+    }
+    if (member.plate !== undefined) {
+      const { floor, level } = member.plate;
+      const label = KODOKAN_FLOORS.find((f) => f.floor === floor)?.label[language] ?? String(floor);
+      const size = Math.max(plan.view.w, plan.view.h) * 0.018;
+      items.push({ id: `${prefix}plate-name`, kind: "scoreboard", at: placed.at, height: level + size * 1.7, planes: [sign(`${prefix}plate-name`, label, placed.at, level + size * 0.4, size, i)] });
+    }
   });
   // The buildings round the venues stand apart from them: each block's planes are of no venue's group.
   if (plan.context !== undefined) for (const item of contextUprights(plan.context)) items.push({ ...item, planes: item.planes.map((p) => ({ ...p, group: APART })) });
@@ -131,7 +176,7 @@ export function buildDistrictTurn(options: DistrictOptions, settings: DistrictTu
   const planes = planesOf(uprights);
   const box = sceneBox(planes, area, 0, centre, scale);
   // (The floor has no names: the 3D view's own signs, which face the eye, carry them.)
-  const floor = drawDistrict({ ...options, id: base, labels: false }, plan, (member, i) => drawMember(member, { ...options, id: base }, i, base, { floor: true }));
+  const floor = drawDistrict({ ...options, id: base, labels: false }, plan, (member, i, part) => drawMember(member, { ...options, id: base }, i, base, { floor: true }, part));
   const { title, description } = describeDistrict(options, plan);
   const presets = districtPresets(plan);
   const surfaceLike = { sport: "soccer", language, ...(options.theme === undefined ? {} : { theme: options.theme }), ...(options.style === undefined ? {} : { style: options.style }) } as SurfaceOptions;

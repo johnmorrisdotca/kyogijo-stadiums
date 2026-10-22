@@ -16,4 +16,6 @@ export const KODOKAN_BUILDING = {
   "storeys": 8,
   /** The middle of the main dojo's room, `[longitude, latitude]`, the compass heading of its x axis (0 to under 180) and the length of its side in metres, walls and gallery included. */
   "room": { "centre": [139.75342,35.707654], "heading": 77, "side": 31.8, "clearance": 0.18 },
+  /** The rooms of the 5th and 6th floors: each floor's heading (of its rooms' x axis), and for each room its count in jo, its size in metres (the dojo builder's shape for the count) and the middle of it, `[longitude, latitude]`. Ours but the counts. */
+  "floors": {"5":{"heading":167,"clearance":2.59,"rooms":[{"id":"womens","jo":240,"w":27.3,"l":14.56,"centre":[139.753353,35.707641]},{"id":"boys","jo":114,"w":17.29,"l":10.92,"centre":[139.75352,35.707624]},{"id":"special","jo":40,"w":9.1,"l":7.28,"centre":[139.753483,35.707752]}]},"6":{"heading":77,"clearance":2.43,"rooms":[{"id":"school","jo":240,"w":27.3,"l":14.56,"centre":[139.7534,35.707724]},{"id":"international","jo":192,"w":21.84,"l":14.56,"centre":[139.75344,35.707583]}]}},
 } as const;

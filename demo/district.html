@@ -46,6 +46,7 @@
       dt { color: var(--muted); }
       dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
       .note { color: var(--muted); font-size: .9rem; margin: 8px 0; }
+      #floors-list tr[aria-current="true"] { background: color-mix(in srgb, var(--accent) 16%, transparent); font-weight: 700; }
       #error { color: #c0392b; font-weight: 700; }
       fieldset { border: 1px solid var(--line); border-radius: 12px; padding: 8px 12px; margin: 10px 0 0; min-width: 0; }
       legend { font-weight: 700; padding: 0 6px; }
@@ -74,6 +75,11 @@
         <table data-testid="facts"><thead id="head"></thead><tbody id="list"></tbody></table>
         <p class="note" id="between" data-testid="between"></p>
       </details>
+      <details id="floors-box" open hidden>
+        <summary id="l-floors"></summary>
+        <table data-testid="floors"><tbody id="floors-list"></tbody></table>
+        <p class="note" id="floors-note"></p>
+      </details>
       <details id="edit" open>
         <summary id="l-edit"></summary>
         <fieldset id="venues-box"><legend id="l-venues"></legend><div class="picks" id="picks" data-testid="picks"></div></fieldset>
@@ -83,6 +89,7 @@
           <label class="check"><input id="labels" type="checkbox" /><span id="l-labels"></span></label>
           <label class="check" id="context-row"><input id="context" type="checkbox" data-testid="context" /><span id="l-context"></span></label>
           <label class="check" id="kodokan-row"><input id="kodokan" type="checkbox" data-testid="kodokan" /><span id="l-kodokan"></span></label>
+          <label id="floor-row"><span id="l-floor"></span><select id="floor" data-testid="floor"></select></label>
           <label id="building-row"><span id="l-building"></span><select id="building" data-testid="building"><option value="xray"></option><option value="solid"></option><option value="none"></option></select></label>
           <label><span id="l-view"></span><select id="view"><option value="2d">2D</option><option value="3d">3D</option></select></label>
           <label id="viewpoint-row"><span id="l-viewpoint"></span><select id="viewpoint"><option value="overhead"></option><option value="broadcast"></option><option value="end"></option><option value="corner"></option></select></label>
@@ -102,7 +109,7 @@
     <script type="module">
       // A district: several real venues of one city on one plan, each at its real position and orientation (OpenStreetMap, ODbL 1.0), to look down on in 2D or turn around together in 3D. The page only asks the package to draw
       // (`drawDistrict`, `mountDistrictTurn`): the venues, the mode and the turn are options. What is chosen lives in the address; nothing is sent anywhere and nothing is stored.
-      import { DISTRICT_IDS, districtMember, mountDistrict, mountDistrictTurn, OUTSIDE_LEVELS, OUTSIDE_VENUES, planDistrict, unknownVenues, VENUE_ATTRIBUTION } from "./dist/district-entry.js";
+      import { DISTRICT_IDS, districtMember, KODOKAN_FLOORS, mountDistrict, mountDistrictTurn, OUTSIDE_LEVELS, OUTSIDE_VENUES, planDistrict, unknownVenues, VENUE_ATTRIBUTION } from "./dist/district-entry.js";
       import { TOKYO_DOME_CITY } from "./dist/plateau-entry.js";
       import { contextFor } from "./dist/cityctx-entry.js";
       import { hoverOf, keepCamera, wayOf, writeWay } from "./turn-way.js";
@@ -118,7 +125,7 @@
           pageDescription: "Several real venues of one city on one plan at their real relative positions and orientations, from OpenStreetMap: BC Place and Rogers Arena side by side in Vancouver, to turn around together in 3D or look down on in 2D.",
           lede: "Each venue is the one its own page draws, where it stands and as it lies (OpenStreetMap outlines). Neighbours share a close plan; a city keeps real distances on a kilometre grid. Streets and buildings are faint context, never a map, and there is no mark of a club, a league or a tournament.",
           back: "Back to the Kyogijo Stadiums demo", docs: "The district page of the docs", stadiums: "BC Place on its own",
-          factsTitle: "What the plan is made from", edit: "Choose", venues: "Venues", mode: "Fit", turn: "Turn", labels: "Names beside the venues", context: "Surroundings: buildings, streets, water and trees", roofopen: "Retractable roof open (3D)", gates: "Gates, and the way a queue runs", kodokan: "Kodokan: the main dojo, in the air on the 7th floor", building: "Kodokan building", xray: "See-through walls", solid: "Solid", none: "Off (the dojo alone)", view: "View", viewpoint: "Viewpoint", roof: "Roofs and walls (3D)", boards: "LED boards (3D)", lighting: "Lighting", lighting_off: "Lighting: off", lighting_night: "Night", lighting_game: "Game", lighting_lightsDown: "Lights down", lighting_intro: "Intro", lighting_concert: "Concert", wash: "Surface light colour", wash_none: "as the preset", wash_purple: "Purple", wash_magenta: "Magenta", wash_blue: "Blue", wash_white: "White", language: "Language", theme: "Theme", auto: "Follow the device", light: "Light", dark: "Dark",
+          factsTitle: "What the plan is made from", edit: "Choose", venues: "Venues", mode: "Fit", turn: "Turn", labels: "Names beside the venues", context: "Surroundings: buildings, streets, water and trees", roofopen: "Retractable roof open (3D)", gates: "Gates, and the way a queue runs", kodokan: "Kodokan: the main dojo, in the air on the 7th floor", building: "Kodokan building", floor: "Kodokan floor", floorAll: "All floors: the great dojo as it stands", floors: "The Kodokan's floors", floorsNote: "What the Kodokan's own floor guide lists on each floor (the 1st floor is English Wikipedia's: the guide lists nothing there). Where the guide gives a count of jō, the room is drawn at it; the rooms' places on a floor, the special dojo (the guide gives no count: drawn at 40 jō) and the plain floor plates are ours.", xray: "See-through walls", solid: "Solid", none: "Off (the dojo alone)", view: "View", viewpoint: "Viewpoint", roof: "Roofs and walls (3D)", boards: "LED boards (3D)", lighting: "Lighting", lighting_off: "Lighting: off", lighting_night: "Night", lighting_game: "Game", lighting_lightsDown: "Lights down", lighting_intro: "Intro", lighting_concert: "Concert", wash: "Surface light colour", wash_none: "as the preset", wash_purple: "Purple", wash_magenta: "Magenta", wash_blue: "Blue", wash_white: "White", language: "Language", theme: "Theme", auto: "Follow the device", light: "Light", dark: "Dark",
           neighbours: "Neighbours: close round the buildings", city: "City: the real distances, with a grid", north: "North at the top", fit: "Long way across the page",
           overhead: "Overhead", broadcast: "Broadcast", end: "End", corner: "Corner", formLabel: "How the district is shown",
           venue: "Venue", seats: "Seats", rink: "Surface", orientation: "How it lies", cfl: "football field", nfl: "football field", soccer: "soccer pitch", mlb: "baseball field", boxing: "boxing ring", dojo: "main dojo, 7th floor (420 jō)", nhl: "ice hockey rink", opening: "along the roof's opening", pitch: "as the pitch is mapped", infield: "from the mapped infield", building: "inferred from the building", none: "not known, east-west", nonePark: "not known, fitted to the building",
@@ -134,7 +141,7 @@
           pageDescription: "同じ都市の実在の会場を、OpenStreetMapをもとに、実際の位置と向きのとおり1枚の図に並べます。バンクーバーのBCプレイスとロジャース・アリーナ、シアトルの3つの会場、東京ドームと後楽園ホールなどを、3Dで一緒に回したり、2Dで真上から見たりできます。",
           lede: "各会場は、それぞれのページで描いたものを、OpenStreetMapに記録された実際の位置と向きに置いています。隣り合う会場は建物のすぐ近くまで寄せ、都市では実際の距離を保って1km方眼を添えます。道路や建物はうっすらとした背景で、道案内の地図ではありません。クラブ・リーグ・大会のマークもありません。",
           back: "競技場 Kyogijo Stadiums のデモに戻る", docs: "ドキュメントの「会場の地区」ページ", stadiums: "BCプレイス単独のページ",
-          factsTitle: "この図の元になった情報", edit: "選ぶ", venues: "会場", mode: "縮尺の取り方", turn: "回転", labels: "会場名を添える", context: "周辺：建物・道路・水面・樹木", roofopen: "開閉式屋根を開ける（3D）", gates: "ゲートと行列の向き", kodokan: "講道館：7階の大道場を空中に描く", building: "講道館の建物", xray: "壁を透かす", solid: "壁を不透明にする", none: "なし（大道場のみ）", view: "表示", viewpoint: "視点", roof: "屋根と壁（3D）", boards: "LEDビジョン（3D）", lighting: "照明", lighting_off: "照明：なし", lighting_night: "夜間", lighting_game: "試合中", lighting_lightsDown: "場内暗転", lighting_intro: "選手紹介", lighting_concert: "コンサート", wash: "競技面の照明の色", wash_none: "プリセットのまま", wash_purple: "紫", wash_magenta: "マゼンタ", wash_blue: "青", wash_white: "白", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク",
+          factsTitle: "この図の元になった情報", edit: "選ぶ", venues: "会場", mode: "縮尺の取り方", turn: "回転", labels: "会場名を添える", context: "周辺：建物・道路・水面・樹木", roofopen: "開閉式屋根を開ける（3D）", gates: "ゲートと行列の向き", kodokan: "講道館：7階の大道場を空中に描く", building: "講道館の建物", floor: "講道館の階", floorAll: "すべての階（大道場はそのまま）", floors: "講道館の各階", floorsNote: "講道館の案内に載っている各階の内容です（1階は案内に記載がないため、英語版ウィキペディアによります）。案内に畳数がある部屋は、その畳数で描いています。階ごとの部屋の配置、畳数の記載がない特別道場（40畳で描いています）、部屋を描いていない階の床面は、こちらで決めたものです。", xray: "壁を透かす", solid: "壁を不透明にする", none: "なし（大道場のみ）", view: "表示", viewpoint: "視点", roof: "屋根と壁（3D）", boards: "LEDビジョン（3D）", lighting: "照明", lighting_off: "照明：なし", lighting_night: "夜間", lighting_game: "試合中", lighting_lightsDown: "場内暗転", lighting_intro: "選手紹介", lighting_concert: "コンサート", wash: "競技面の照明の色", wash_none: "プリセットのまま", wash_purple: "紫", wash_magenta: "マゼンタ", wash_blue: "青", wash_white: "白", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク",
           neighbours: "隣り合う会場：建物のすぐ近くまで寄せる", city: "都市：実際の距離を保ち、方眼を添える", north: "北を上にする", fit: "長い方を横に置く",
           overhead: "真上", broadcast: "中継", end: "エンド", corner: "コーナー", formLabel: "地区の見せ方",
           venue: "会場", seats: "座席数", rink: "競技面", orientation: "向き", cfl: "フットボール場", nfl: "フットボール場", soccer: "サッカー場", mlb: "野球場", boxing: "ボクシングのリング", dojo: "大道場（7階、420畳）", nhl: "アイスホッケーのリンク", opening: "屋根の開口部に沿う", pitch: "地図のピッチのとおり", infield: "地図の内野から", building: "建物から推定", none: "不明（東西）", nonePark: "不明（建物に合わせた向き）",
@@ -188,6 +195,8 @@
       /** The Kodokan's building, round its main dojo in the air: see-through by default, solid, or left out. */
       const BUILDINGS = ["xray", "solid", "none"];
       const hasKodokan = () => state.venues.includes("kodokan");
+      /** The floor of the Kodokan the page shows, or undefined for all of them: 0 is the basement (b1 in the address). */
+      const floorNow = () => ($("floor").value === "all" ? undefined : Number($("floor").value));
       const contextOn = () => hasContext() && $("context").checked;
 
       setSelect("mode", params.get("mode"), ["neighbours", "city"]);
@@ -202,6 +211,12 @@
       $("gates").checked = params.get("gates") === "1";
       $("context").checked = params.get("context") !== "0";
       setSelect("building", params.get("building"), ["xray", "solid", "none"]);
+      {
+        const asked = (params.get("floor") ?? "").toLowerCase();
+        const value = asked === "b1" ? "0" : /^[1-8]$/.test(asked) ? asked : "all";
+        $("floor").innerHTML = `<option value="all"></option>${[...KODOKAN_FLOORS].reverse().map((f) => `<option value="${f.floor}"></option>`).join("")}`;
+        $("floor").value = value;
+      }
       $("boards").checked = params.get("boards") === "1";
       $("lighting").value = lightingOfAddress(params);
       $("wash").value = ["purple", "magenta", "blue", "white"].includes(params.get("wash")) ? params.get("wash") : "none";
@@ -210,8 +225,17 @@
 
       function labelPage() {
         const w = words();
-        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["back", "back"], ["docs", "docs"], ["stadiums", "stadiums"], ["l-facts", "factsTitle"], ["l-edit", "edit"], ["l-venues", "venues"], ["l-roofopen", "roofopen"], ["l-gates", "gates"], ["l-outside", "outside"], ["l-mode", "mode"], ["l-turn", "turn"], ["l-labels", "labels"], ["l-context", "context"], ["l-kodokan", "kodokan"], ["l-building", "building"], ["l-view", "view"], ["l-viewpoint", "viewpoint"], ["l-roof", "roof"], ["l-boards", "boards"], ["l-lighting", "lighting"], ["l-wash", "wash"], ["l-language", "language"], ["l-theme", "theme"], ["credit", "credit"]]) $(id).textContent = w[key];
+        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["back", "back"], ["docs", "docs"], ["stadiums", "stadiums"], ["l-facts", "factsTitle"], ["l-edit", "edit"], ["l-venues", "venues"], ["l-roofopen", "roofopen"], ["l-gates", "gates"], ["l-outside", "outside"], ["l-mode", "mode"], ["l-turn", "turn"], ["l-labels", "labels"], ["l-context", "context"], ["l-kodokan", "kodokan"], ["l-building", "building"], ["l-floor", "floor"], ["l-floors", "floors"], ["floors-note", "floorsNote"], ["l-view", "view"], ["l-viewpoint", "viewpoint"], ["l-roof", "roof"], ["l-boards", "boards"], ["l-lighting", "lighting"], ["l-wash", "wash"], ["l-language", "language"], ["l-theme", "theme"], ["credit", "credit"]]) $(id).textContent = w[key];
         for (const option of $("building").options) option.textContent = w[option.value];
+        for (const option of $("floor").options) option.textContent = option.value === "all" ? w.floorAll : (() => { const f = KODOKAN_FLOORS.find((k) => k.floor === Number(option.value)); return `${f.label[$("language").value]}${$("language").value === "ja" ? "：" : ": "}${f.lists[$("language").value]}`; })();
+        $("floors-list").replaceChildren(...[...KODOKAN_FLOORS].reverse().map((f) => {
+          const lang = $("language").value;
+          const tr = document.createElement("tr");
+          tr.dataset.floor = String(f.floor);
+          tr.setAttribute("aria-current", String(String(f.floor) === $("floor").value));
+          for (const text of [f.label[lang], f.lists[lang]]) { const td = document.createElement("td"); td.textContent = text; tr.append(td); }
+          return tr;
+        }));
         for (const select of ["viewpoint", "theme", "mode"]) for (const option of $(select).options) option.textContent = w[option.value];
         for (const option of $("wash").options) option.textContent = w[`wash_${option.value}`];
         for (const option of $("lighting").options) option.textContent = w[`lighting_${option.value}`];
@@ -272,6 +296,7 @@
         if (hasOpening() && $("roofopen").checked) next.set("roofopen", "1");
         if (hasGates() && $("gates").checked) next.set("gates", "1");
         if (hasKodokan() && $("building").value !== "xray") next.set("building", $("building").value);
+        if (hasKodokan() && $("floor").value !== "all") next.set("floor", $("floor").value === "0" ? "b1" : $("floor").value);
         if ($("boards").checked) next.set("boards", "1");
         if ($("lighting").value !== "off") next.set("lighting", $("lighting").value);
         if ($("lighting").value !== "off" && $("wash").value !== "none") next.set("wash", $("wash").value);
@@ -332,6 +357,8 @@
         $("gates-row").hidden = !hasGates();
         $("kodokan").checked = hasKodokan();
         $("building-row").hidden = !hasKodokan();
+        $("floor-row").hidden = !hasKodokan();
+        $("floors-box").hidden = !hasKodokan();
         $("boards-row").hidden = !three;
         $("lighting-row").hidden = !three;
         $("wash-row").hidden = !three;
@@ -353,12 +380,12 @@
           return;
         }
         // A district with a mask asks for the crowd at every level, 0 included: the plan keeps room round the buildings for it, so that nothing moves when the level does.
-        const options = { venues: state.venues, mode: $("mode").value, turn: $("turn").value === "auto" ? "auto" : 0, labels: $("labels").checked, language: $("language").value, ...(masked() ? { outside: { level: state.outside } } : {}), ...(theme === "auto" ? {} : { theme }), ...(contextOn() ? { context: contextAreas() } : {}), ...(hasGates() && $("gates").checked ? { gates: true } : {}), ...(hasKodokan() ? { building: $("building").value } : {}) };
+        const options = { venues: state.venues, mode: $("mode").value, turn: $("turn").value === "auto" ? "auto" : 0, labels: $("labels").checked, language: $("language").value, ...(masked() ? { outside: { level: state.outside } } : {}), ...(theme === "auto" ? {} : { theme }), ...(contextOn() ? { context: contextAreas() } : {}), ...(hasGates() && $("gates").checked ? { gates: true } : {}), ...(hasKodokan() ? { building: $("building").value } : {}), ...(hasKodokan() && floorNow() !== undefined ? { floor: floorNow() } : {}) };
         try {
           const plan = planDistrict(options);
           if (three) {
             const settings = { preset: $("viewpoint").value, venue: { roof: $("roof").checked, roofOpen: $("roofopen").checked, boards: boardsNow(), lighting: lightingNow() }, ...wayOf(syncUrl) };
-            const key = JSON.stringify([state.venues, options.mode, options.turn, $("roof").checked, contextOn(), hasKodokan() ? $("building").value : "", options.gates === true]);
+            const key = JSON.stringify([state.venues, options.mode, options.turn, $("roof").checked, contextOn(), hasKodokan() ? $("building").value : "", hasKodokan() ? $("floor").value : "", options.gates === true]);
             // Another choice of venues draws the scene again, and the camera goes on where the reader left it: the view is opened on it.
             if (turn !== undefined && turnKey !== key) { camera.carry(turn); turn.destroy(); turn = undefined; }
             if (turn === undefined) {
@@ -394,6 +421,7 @@
           }
           if (three && flat !== undefined) { flat.destroy(); flat = undefined; }
           listFacts(plan);
+          for (const row of $("floors-list").children) row.setAttribute("aria-current", String(row.dataset.floor === $("floor").value));
           paintOutsideBar(plan);
           noteCost();
           $("credit").textContent = plan.context === undefined ? words().credit : `${words().credit} ${plan.context.attribution[$("language").value].join($("language").value === "ja" ? "。" : "; ")}.`;
@@ -418,6 +446,7 @@
         $("labels").checked = preset.mode === "city";
         $("context").checked = preset.context === true;
         $("building").value = "xray";
+        $("floor").value = "all";
         labelPage();
         draw();
       });
@@ -448,7 +477,7 @@
         draw();
       });
       $("mode").addEventListener("input", () => { $("labels").checked = $("mode").value === "city"; labelPage(); draw(); });
-      for (const id of ["turn", "labels", "context", "gates", "roofopen", "building", "view", "viewpoint", "roof", "boards", "lighting", "wash", "theme"]) $(id).addEventListener("input", draw);
+      for (const id of ["turn", "labels", "context", "gates", "roofopen", "building", "floor", "view", "viewpoint", "roof", "boards", "lighting", "wash", "theme"]) $(id).addEventListener("input", draw);
       $("language").addEventListener("input", () => { labelPage(); draw(); });
       draw();
     </script>

@@ -79,7 +79,13 @@ export function layoutOf(model: TurnModel, view: TurnView, width: number, height
   const transforms = [floor, ...planes].map((p) => matrix3d(multiply(camera, planeMatrix(p, s, centre))));
   // Far to near: a plane's depth is that of its middle. The ground of a hall is under everything. The floor is next, unless it stands raised on something (a table tennis table's top, on its legs): then it is
   // sorted with the rest, by its middle, so that the legs and the skirt on the far side are drawn under it and the ones on the near side over it, and nothing under the top shows through it.
-  const depth = (p: Plane): number => depthOf([(p.o[0] + (p.u[0] + p.v[0]) / 2 - centre[0]) * s, (p.o[1] + (p.u[1] + p.v[1]) / 2 - centre[1]) * s, (p.o[2] + (p.u[2] + p.v[2]) / 2) * s], view, at);
+  const depth = (p: Plane): number => {
+    // A see-through building's wall is a tall plane round what stands in it: a far wall is behind all of it and a near one in front of all of it, however high its middle is, so a far wall is placed by its foot and a near one by its top.
+    const zs = [p.o[2], p.o[2] + p.u[2], p.o[2] + p.v[2], p.o[2] + p.u[2] + p.v[2]];
+    const z = p.fadeSide === true ? (fadeOf(p, view.yaw, view.pitch) >= 1 ? Math.min(...zs) : Math.max(...zs)) : (p.o[2] + (p.u[2] + p.v[2]) / 2);
+    if (p.under === true) return Math.min(...[[0, 0], [1, 0], [0, 1], [1, 1]].map(([a, b]) => depthOf([(p.o[0] + a * p.u[0] + b * p.v[0] - centre[0]) * s, (p.o[1] + a * p.u[1] + b * p.v[1] - centre[1]) * s, (p.o[2] + a * p.u[2] + b * p.v[2]) * s], view, at)));
+    return depthOf([(p.o[0] + (p.u[0] + p.v[0]) / 2 - centre[0]) * s, (p.o[1] + (p.u[1] + p.v[1]) / 2 - centre[1]) * s, z * s], view, at);
+  };
   const raised = model.uprights.lift > 0;
   const order = [...planes.map((p, i) => ({ i: i + 1, ground: p.kind === "ground", depth: depth(p), group: p.group })), ...(raised ? [{ i: 0, ground: false, depth: depth(floor), group: undefined as number | undefined }] : [])].filter((one) => !one.ground);
   // Buildings that stand apart are drawn one after another, the far one first; a plane of none (the floor) goes by its depth alone.

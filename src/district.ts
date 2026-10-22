@@ -4,6 +4,7 @@
 // apart, with a grid, a scale and a name beside each. Nothing is drawn but what the venues are drawn from: no street, no park and no mark of a team, a league or a tournament; the credit
 // `VENUE_ATTRIBUTION` goes with it. Pure: options in, a plan, and markup, out; `district.turn.ts` raises it in 3D.
 import { arenaById, arenaNameIn } from "./arenas.ts";
+import { dojo } from "./budo/dojo.api.ts";
 import { kodokanMember } from "./kodokan.ts";
 import { contextFloor, contextFrame, placeContext, toneOf, type ContextPlan, type ContextArea } from "./context.ts";
 import { crowdStands, drawKyogijo } from "./draw.ts";
@@ -62,6 +63,11 @@ export interface DistrictOptions {
    * alone. Only a venue that stands in a building (`DistrictMember.shell`) is changed.
    */
   building?: "xray" | "solid" | "none";
+  /**
+   * The floor of the Kodokan's building to show, 0 (the basement) to 8: the 7th is the great dojo, the 8th its gallery, the 5th and 6th their dojos as the Kodokan's floor guide counts them, the others a plain floor plate; the chosen floor's plate is picked out
+   * and what is drawn on the other floors is left out. Missing: the great dojo as it stands, on its floor, with nothing picked out. Only a venue that is a building of floors (`kodokan`) is changed.
+   */
+  floor?: number;
 }
 
 /** A venue of a district as the district needs it: what it is called, where it stands, how it lies, and how it is drawn. */
@@ -90,6 +96,30 @@ export interface DistrictMember {
   shell?: { height: number; storeys: number };
   /** The credit of data this venue is made from that is not OpenStreetMap's (the Kodokan's building: Project PLATEAU). */
   attribution?: { en: string; ja: string };
+  /**
+   * What is drawn inside the venue, when it is not one surface: the rooms of a floor of a building (the Kodokan's 5th and 6th floors have two or three dojos), each its own surface with its own place. Missing: the venue's one surface, `options`
+   * at `centre` turned `heading`. An empty list draws no surface at all (a floor of plain rooms).
+   */
+  parts?: DistrictPart[];
+  /** The floor of the building the venue is drawn at, and the height of its level above the ground in feet: the building's plate at that level is drawn in 3D, picked out from the see-through walls. */
+  plate?: { floor: number; level: number };
+  /** Every floor of the building with the height of its level in feet, and how thick a floor is in metres: each is drawn as a slab with an edge, the chosen one (`plate`) picked out and the rest faint. */
+  slabs?: { floor: number; level: number }[];
+  slabThickness?: number;
+}
+
+/** One surface of a venue that has several (`DistrictMember.parts`): what it is drawn from, where it stands, how it lies and how high its floor is. */
+export interface DistrictPart {
+  key: string;
+  options: SurfaceOptions;
+  /** The middle of the surface, \`[longitude, latitude]\`. */
+  centre: readonly [number, number];
+  /** The compass heading of the surface's x axis, 0 to under 180. */
+  heading: number;
+  /** How high its floor stands above the ground, in feet. */
+  elevation?: number;
+  /** Which part of the surface's room is drawn: `room` (the floor, the walls and what stands on it, not the gallery over it) or `gallery` (what stands above the room's walls: the seats, the rail, the roof). Everything when missing. */
+  show?: "room" | "gallery";
 }
 
 const venueMember = (venue: RealVenue, language: Language): DistrictMember => {
@@ -142,7 +172,7 @@ export const isDistrictId = (id: string): boolean => DISTRICT_IDS.includes(id);
  * // bc-place:soccer stadium 52497
  * ```
  */
-export function districtMember(input: DistrictVenueInput, language: Language = "en"): DistrictMember {
+export function districtMember(input: DistrictVenueInput, language: Language = "en", floor?: number): DistrictMember {
   const [id, named] = typeof input === "string" ? input.split(":") : [input.id, input.config];
   const venue = venueById(id);
   if (venue !== undefined) {
@@ -158,7 +188,7 @@ export function districtMember(input: DistrictVenueInput, language: Language = "
   // The Kodokan: a hall of the budō, its main dojo in the air in its building (`kodokan.ts`).
   if (id === "kodokan") {
     if (named !== undefined) throw new Error(`kodokan has one configuration, not ${named}`);
-    return kodokanMember(language);
+    return kodokanMember(language, floor);
   }
   throw new Error(`no venue ${String(id)}: the venues are ${DISTRICT_IDS.join(", ")}`);
 }
@@ -170,12 +200,21 @@ const RAD = Math.PI / 180;
 export const turnBy = ([x, y]: Pt, degrees: number): Pt => [x * Math.cos(degrees * RAD) - y * Math.sin(degrees * RAD), x * Math.sin(degrees * RAD) + y * Math.cos(degrees * RAD)];
 
 /** A venue placed in the district: where its surface's middle is, how far its drawing is turned, and where its building stands, all in feet in the district's frame (x to the right, y down the page). */
+export interface PlacedPart {
+  part: DistrictPart;
+  /** The middle of the surface, and the degrees its drawing is turned clockwise, as for the venue's own. */
+  at: Pt;
+  angle: number;
+}
+
 export interface DistrictPlaced {
   member: DistrictMember;
   /** The middle of the surface. */
   at: Pt;
   /** The degrees the venue's own drawing (its field along x) is turned clockwise to lie as it does in the world. */
   angle: number;
+  /** The surfaces of the venue as the plan places them (one, unless the venue has `parts`). */
+  parts: PlacedPart[];
   /** The building's outline. */
   footprint: Pt[];
   /** Its convex hull, which the depth order of the 3D view separates buildings by. */
@@ -241,7 +280,7 @@ export function planDistrict(options: DistrictOptions): DistrictPlan {
   if (options.venues.length === 0) throw new Error("a district needs a venue");
   const language: Language = options.language === "ja" ? "ja" : "en";
   const mode: DistrictMode = options.mode === "city" ? "city" : "neighbours";
-  const members = options.venues.map((v) => districtMember(v, language));
+  const members = options.venues.map((v) => districtMember(v, language, options.floor));
   const keys = new Set<string>();
   for (const m of members) {
     if (keys.has(m.key)) throw new Error(`${m.key} is in the district twice`);
@@ -261,7 +300,9 @@ export function planDistrict(options: DistrictOptions): DistrictPlan {
   }
   const placed: DistrictPlaced[] = members.map((member, i) => {
     const footprint = raw[i].footprint.map((p) => turnBy(p, turn));
-    return { member, at: turnBy(raw[i].at, turn), angle: member.heading - 90 + turn, footprint, hull: hullOf(footprint) };
+    // The venue's surfaces: its own, or the parts it is drawn from, each placed by its own middle and heading.
+    const parts: PlacedPart[] = (member.parts ?? [{ key: member.key, options: member.options, centre: member.centre, heading: member.heading, ...(member.elevation === undefined ? {} : { elevation: member.elevation }) }]).map((part) => ({ part, at: turnBy(ground([part.centre as LonLat])[0], turn), angle: part.heading - 90 + turn }));
+    return { member, parts, at: turnBy(raw[i].at, turn), angle: member.heading - 90 + turn, footprint, hull: hullOf(footprint) };
   });
   const xs = placed.flatMap((p) => p.footprint.map((q) => q[0]));
   const ys = placed.flatMap((p) => p.footprint.map((q) => q[1]));
@@ -286,9 +327,9 @@ export function planDistrict(options: DistrictOptions): DistrictPlan {
 
 /** The colours and the type of a district's drawing, light and dark. Defaults sit in `:where()`, so a page's own rule wins. */
 export const KYOGIJO_DISTRICT_STYLE = `
-:where(.ky-district){--ky-dist-ground:#e1e4da;--ky-dist-grid:rgba(40,46,42,.16);--ky-dist-ink:#1f2320;--ky-dist-halo:rgba(255,255,255,.9);--ky-dist-people:#c2410c;--ky-dist-b0:#d1d4cb;--ky-dist-b1:#c3c7be;--ky-dist-b2:#b2b7ae;--ky-dist-b3:#9ea49b;--ky-dist-bline:rgba(40,46,42,.28);--ky-dist-road:#cbcfc4;--ky-dist-deck:#bdc2b7;--ky-dist-walk:#eef0e8;--ky-dist-rail:#8b9288;--ky-dist-gate:#1f5fa8;--ky-dist-water:#c7d5dc;--ky-dist-green:#d2dcc4;--ky-dist-wood:#c3d0b6;--ky-dist-tree:#b3c2a3}
-@media (prefers-color-scheme:dark){:where(html:not([data-theme=light]) .ky-district:not([data-theme=light])){--ky-dist-ground:#1b2025;--ky-dist-grid:rgba(220,226,220,.16);--ky-dist-ink:#e8ece8;--ky-dist-halo:rgba(14,18,16,.85);--ky-dist-people:#fbbf24;--ky-dist-b0:#262c31;--ky-dist-b1:#2e353b;--ky-dist-b2:#394148;--ky-dist-b3:#474f57;--ky-dist-bline:rgba(220,226,220,.22);--ky-dist-road:#2b3239;--ky-dist-deck:#353d45;--ky-dist-walk:#242b31;--ky-dist-rail:#5b646c;--ky-dist-gate:#7fb2ee;--ky-dist-water:#1c2d3b;--ky-dist-green:#202d26;--ky-dist-wood:#1c2b23;--ky-dist-tree:#2e4337}}
-:where(html[data-theme=dark] .ky-district,.ky-district[data-theme=dark]){--ky-dist-ground:#1b2025;--ky-dist-grid:rgba(220,226,220,.16);--ky-dist-ink:#e8ece8;--ky-dist-halo:rgba(14,18,16,.85);--ky-dist-people:#fbbf24;--ky-dist-b0:#262c31;--ky-dist-b1:#2e353b;--ky-dist-b2:#394148;--ky-dist-b3:#474f57;--ky-dist-bline:rgba(220,226,220,.22);--ky-dist-road:#2b3239;--ky-dist-deck:#353d45;--ky-dist-walk:#242b31;--ky-dist-rail:#5b646c;--ky-dist-gate:#7fb2ee;--ky-dist-water:#1c2d3b;--ky-dist-green:#202d26;--ky-dist-wood:#1c2b23;--ky-dist-tree:#2e4337}
+:where(.ky-district){--ky-dist-ground:#e1e4da;--ky-dist-grid:rgba(40,46,42,.16);--ky-dist-ink:#1f2320;--ky-dist-halo:rgba(255,255,255,.9);--ky-dist-people:#c2410c;--ky-dist-b0:#d1d4cb;--ky-dist-b1:#c3c7be;--ky-dist-b2:#b2b7ae;--ky-dist-b3:#9ea49b;--ky-dist-bline:rgba(40,46,42,.28);--ky-dist-road:#cbcfc4;--ky-dist-deck:#bdc2b7;--ky-dist-walk:#eef0e8;--ky-dist-rail:#8b9288;--ky-dist-gate:#1f5fa8;--ky-dist-water:#c7d5dc;--ky-dist-green:#d2dcc4;--ky-dist-wood:#c3d0b6;--ky-dist-tree:#b3c2a3;--ky-dist-floor:#2f6db0}
+@media (prefers-color-scheme:dark){:where(html:not([data-theme=light]) .ky-district:not([data-theme=light])){--ky-dist-ground:#1b2025;--ky-dist-grid:rgba(220,226,220,.16);--ky-dist-ink:#e8ece8;--ky-dist-halo:rgba(14,18,16,.85);--ky-dist-people:#fbbf24;--ky-dist-b0:#262c31;--ky-dist-b1:#2e353b;--ky-dist-b2:#394148;--ky-dist-b3:#474f57;--ky-dist-bline:rgba(220,226,220,.22);--ky-dist-road:#2b3239;--ky-dist-deck:#353d45;--ky-dist-walk:#242b31;--ky-dist-rail:#5b646c;--ky-dist-gate:#7fb2ee;--ky-dist-water:#1c2d3b;--ky-dist-green:#202d26;--ky-dist-wood:#1c2b23;--ky-dist-tree:#2e4337;--ky-dist-floor:#7fb0e8}}
+:where(html[data-theme=dark] .ky-district,.ky-district[data-theme=dark]){--ky-dist-ground:#1b2025;--ky-dist-grid:rgba(220,226,220,.16);--ky-dist-ink:#e8ece8;--ky-dist-halo:rgba(14,18,16,.85);--ky-dist-people:#fbbf24;--ky-dist-b0:#262c31;--ky-dist-b1:#2e353b;--ky-dist-b2:#394148;--ky-dist-b3:#474f57;--ky-dist-bline:rgba(220,226,220,.22);--ky-dist-road:#2b3239;--ky-dist-deck:#353d45;--ky-dist-walk:#242b31;--ky-dist-rail:#5b646c;--ky-dist-gate:#7fb2ee;--ky-dist-water:#1c2d3b;--ky-dist-green:#202d26;--ky-dist-wood:#1c2b23;--ky-dist-tree:#2e4337;--ky-dist-floor:#7fb0e8}
 .ky-district .ky-dist-ground{fill:var(--ky-dist-ground)}
 .ky-district .ky-dist-grid{fill:none;stroke:var(--ky-dist-grid);stroke-width:1}
 .ky-district .ky-dist-block{stroke:var(--ky-dist-bline);stroke-width:.5;stroke-linejoin:round}
@@ -310,6 +351,7 @@ export const KYOGIJO_DISTRICT_STYLE = `
 .ky-district .ky-dist-gate-plausible rect{fill:var(--ky-dist-ground);fill-opacity:.85}
 .ky-district .ky-dist-gate-queue{fill:none;stroke:var(--ky-dist-gate);stroke-width:3;stroke-dasharray:9 7}
 .ky-district .ky-dist-ghost{fill:var(--ky-dist-b1);fill-opacity:.35}
+.ky-district .ky-dist-floor{stroke:var(--ky-dist-floor);stroke-width:2}
 .ky-district .ky-dist-ink{fill:none;stroke:var(--ky-dist-ink);stroke-linecap:round;stroke-linejoin:round}
 .ky-district .ky-dist-text{fill:var(--ky-dist-ink);font-family:var(--ky-font,system-ui,-apple-system,"Segoe UI","Hiragino Sans","Noto Sans JP",sans-serif);font-weight:600;paint-order:stroke;stroke:var(--ky-dist-halo);stroke-linejoin:round}`;
 
@@ -347,6 +389,11 @@ const num = (value: number): string => String(Math.round(value * 100) / 100);
 export function surfaceCentre(options: SurfaceOptions): Pt {
   if (options.sport === "mlb") return [0, 0];
   const stands = crowdStands(options);
+  // A room with no crowd (a dojo of a floor of rooms) has its mats from the corner of its drawing.
+  if (stands === undefined && options.sport === "dojo" && options.dojo !== undefined) {
+    const floor = dojo(options.dojo);
+    return [(floor.width * FEET_PER_METRE) / 2, (floor.length * FEET_PER_METRE) / 2];
+  }
   if (stands === undefined) throw new Error("a district's venue has a crowd");
   return [stands.box.x + stands.box.w / 2, stands.box.y + stands.box.h / 2];
 }
@@ -361,7 +408,7 @@ export function scaleOf(view: { w: number }): number {
 export const metresText = (metres: number): string => (metres >= 1000 ? `${metres / 1000} km` : `${metres} m`);
 
 /** The id of a district's drawing: the option's, or a hash of the options. */
-export const districtId = (options: DistrictOptions): string => (typeof options.id === "string" && options.id !== "" ? options.id : `ky-district-${hash(JSON.stringify([options.venues, options.mode, options.turn, options.language, options.theme, options.stands, ...(options.context === undefined || options.context.length === 0 ? [] : [options.context.map((a) => a.key)]), ...(options.building === undefined ? [] : [options.building])]))}`);
+export const districtId = (options: DistrictOptions): string => (typeof options.id === "string" && options.id !== "" ? options.id : `ky-district-${hash(JSON.stringify([options.venues, options.mode, options.turn, options.language, options.theme, options.stands, ...(options.context === undefined || options.context.length === 0 ? [] : [options.context.map((a) => a.key)]), ...(options.building === undefined ? [] : [options.building]), ...(options.floor === undefined ? [] : [`floor${options.floor}`])]))}`);
 
 /** The title and the description of a district, in its language: what is drawn, where each venue stands from the first, how far apart they are, and the credit. */
 export function describeDistrict(options: DistrictOptions, plan: DistrictPlan = planDistrict(options)): { title: string; description: string } {
@@ -386,14 +433,16 @@ export function describeDistrict(options: DistrictOptions, plan: DistrictPlan = 
 const fillWords = (text: string, values: Record<string, string>): string => text.replace(/\{(\w+)\}/g, (_, key: string) => values[key] ?? "");
 
 /** How a venue is drawn for a district: its own options with the district's language, theme and ids, in 2D with its stands or as the floor of the 3D view (its building only). */
-export function drawMember(member: DistrictMember, options: DistrictOptions, index: number, id: string, how: { floor?: boolean } = {}): string {
+export function drawMember(member: DistrictMember, options: DistrictOptions, index: number, id: string, how: { floor?: boolean } = {}, partIndex = 0): string {
   const stands = options.stands !== false && how.floor !== true;
+  const own = member.parts?.[partIndex]?.options ?? member.options;
   return drawKyogijo({
-    ...member.options,
-    crowd: { real: true, ...(stands ? {} : { stands: false }) },
+    ...own,
+    // A room that is drawn without a crowd stays so.
+    crowd: own.crowd === false ? false : { real: true, ...(stands ? {} : { stands: false }) },
     language: options.language === "ja" ? "ja" : "en",
     ...(options.theme === undefined ? {} : { theme: options.theme }),
-    id: `${id}-m${index}`,
+    id: `${id}-m${index}${partIndex === 0 ? "" : `-p${partIndex}`}`,
   } as SurfaceOptions);
 }
 
@@ -408,7 +457,7 @@ export function drawMember(member: DistrictMember, options: DistrictOptions, ind
  * // true true
  * ```
  */
-export function drawDistrict(options: DistrictOptions, plan: DistrictPlan = planDistrict(options), drawing?: (member: DistrictMember, index: number) => string): string {
+export function drawDistrict(options: DistrictOptions, plan: DistrictPlan = planDistrict(options), drawing?: (member: DistrictMember, index: number, part: number) => string): string {
   const language: Language = options.language === "ja" ? "ja" : "en";
   const id = districtId(options);
   const { view } = plan;
@@ -439,18 +488,20 @@ export function drawDistrict(options: DistrictOptions, plan: DistrictPlan = plan
       const shell = placed.member.shell;
       if (shell === undefined) continue;
       const tone = options.building === "solid" ? `ky-dist-b${toneOf(shell.height)}` : "ky-dist-ghost";
-      parts.push(`<path class="ky-dist-block ${tone}" data-shell="${esc(placed.member.key)}" clip-path="url(#${id}-clip)" d="M${placed.footprint.map(([x, y]) => `${num(x)} ${num(y)}`).join("L")}Z"/>`);
+      parts.push(`<path class="ky-dist-block ${tone}${placed.member.plate === undefined ? "" : " ky-dist-floor"}" data-shell="${esc(placed.member.key)}"${placed.member.plate === undefined ? "" : ` data-floor="${placed.member.plate.floor}"`} clip-path="url(#${id}-clip)" d="M${placed.footprint.map(([x, y]) => `${num(x)} ${num(y)}`).join("L")}Z"/>`);
     }
   }
   const styles: string[] = [];
   plan.members.forEach((placed, i) => {
-    const svg = drawing === undefined ? drawMember(placed.member, options, i, id) : drawing(placed.member, i);
-    const { markup, styles: own } = nestedDrawing(svg);
-    for (const block of own) if (!styles.includes(block)) styles.push(block);
-    // The 3D view draws a raised floor in the air itself: the ground under it is left bare.
-    if (drawing !== undefined && (placed.member.elevation ?? 0) > 0) return;
-    const centre = surfaceCentre(placed.member.options);
-    parts.push(`<g class="ky-dist-venue" data-venue="${esc(placed.member.key)}" transform="translate(${num(placed.at[0])} ${num(placed.at[1])}) rotate(${num(placed.angle)}) translate(${num(-centre[0])} ${num(-centre[1])})">${markup}</g>`);
+    placed.parts.forEach((pp, j) => {
+      const svg = drawing === undefined ? drawMember(placed.member, options, i, id, {}, j) : drawing(placed.member, i, j);
+      const { markup, styles: own } = nestedDrawing(svg);
+      for (const block of own) if (!styles.includes(block)) styles.push(block);
+      // The 3D view draws a raised floor in the air itself: the ground under it is left bare.
+      if (drawing !== undefined && (pp.part.elevation ?? 0) > 0) return;
+      const centre = surfaceCentre(pp.part.options);
+      parts.push(`<g class="ky-dist-venue" data-venue="${esc(placed.member.key)}"${j === 0 ? "" : ` data-part="${esc(pp.part.key)}"`} transform="translate(${num(pp.at[0])} ${num(pp.at[1])}) rotate(${num(pp.angle)}) translate(${num(-centre[0])} ${num(-centre[1])})">${markup}</g>`);
+    });
   });
   if (plan.gates.length > 0) {
     // A door's bar on the outline, and a dashed stub out from it the way a queue would run; a gate a source names is filled, one that is ours is drawn hollow.

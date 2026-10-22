@@ -127,7 +127,41 @@ console.log(member.key, member.kind, member.seats, (member.elevation! / 3.28084)
 - **The building.** `building: "xray"` (the default) draws it with each wall giving way to the eye as the view comes round to that side and looks in, to a trace of itself, and the roof nearly clear; `"solid"` draws it whole; `"none"` leaves it out and the dojo floats on its floor alone. On the plan it is a pale ghost, in its tone of height when solid, under the room. The building of the model that is the same one is left out of the surrounding `context`, whichever you ask.
 - **The credit.** A district with the Kodokan carries PLATEAU's credit in its description, with or without the surrounding buildings.
 
+![The Kodokan seen from the side: the great dojo's floor is a slab with an edge in the air, the building's other floors are faint slabs one above the other, and the near walls are cleared so that the room shows](./pictures/district-kodokan-side-3d-desk-light.webp)
+
+**A floor is a slab.** Seen from the side a floor is not a sheet: the great dojo's floor, and every floor of the building, is a slab with a top, sides shaded by the way they face, and a thickness of 0.6 metres (a floor and its beams: ours, a plausible figure, since a reinforced-concrete floor with its beams is some 0.4 to 0.8 metres of structure) or ten pixels at the page's own size, whichever is more, and no more than half a storey. The floors of the building are faint slabs, the chosen one picked out. The walls on the eye's side of the room give way at every turn and tilt, the near ones to a trace and the far ones whole behind it, and a test turns the view round in steps of fifteen degrees at seven tilts, and at the angle a reader sent, to find none drawn over the room's floor.
+
 The demo's [district page](https://johnmorrisdotca.github.io/kyogijo-stadiums/district.html?venues=tokyo-dome,korakuen-hall,kodokan) has the Kodokan as a choice in the Tokyo district and a preset, "Tokyo Dome City and the Kodokan", with the building's three states in the address (`building=solid`, `building=none`). The main camera looks over the district from the south, where taller buildings stand in front of the Kodokan: turn the view with the arrows, or open it with `yaw` and `pitch` in the address, as [this view from the north](https://johnmorrisdotca.github.io/kyogijo-stadiums/district.html?venues=tokyo-dome,korakuen-hall,kodokan&view=3d&yaw=150&pitch=55) does.
+
+### The floors of the building
+
+`floor` (0 to 8, with 0 the basement) shows one floor of the Kodokan's building: its plate is picked out at its level with the floor's name over it, the walls are see-through, and what is drawn on the other floors is left out. Without it the great dojo stands as it did, on its floor, with nothing picked out.
+
+![The Kodokan's 6th floor in 3D: the school dojo and the international dojo, one above the other on the plate of the floor, picked out in blue inside the see-through building](./pictures/district-kodokan-floor6-3d-desk-light.webp)
+
+```ts
+import { planDistrict } from "@johnmorrisdotca/kyogijo-stadiums/district";
+
+const plan = planDistrict({ venues: ["kodokan"], floor: 6 });
+const member = plan.members[0].member;
+console.log(member.parts!.map((part) => part.key).join(" "), (member.plate!.level / 3.28084).toFixed(1));
+// school international 26.9
+```
+
+| Floor | What the Kodokan's floor guide lists | Drawn |
+| --- | --- | --- |
+| 8F | the spectators' gallery, about 900 seats | the gallery of the great dojo: its seats, rail and roof |
+| 7F | the main dojo, 420 jō | the great dojo as above, without its gallery |
+| 6F | the school dojo, 240 jō, and the international dojo, 192 jō | both dojos, at their counts |
+| 5F | the women's dojo, 240 jō, the boys' dojo, 114 jō, and a special dojo (no count given) | the three dojos: the special dojo at 40 jō, ours |
+| 4F | the dojo guidance office, the dojo reception and the changing rooms | the plate of the floor |
+| 3F | accommodation | the plate of the floor |
+| 2F | the museum and library, a classroom, meeting rooms 3 and 4 | the plate of the floor |
+| 1F | nothing in the guide; English Wikipedia: parking, a bank and a store | the plate of the floor |
+| B1 | the dining hall, the training room and the disaster-prevention centre | nothing: it is under the ground |
+
+- **Where the words come from.** The floors are those of [the Kodokan's own floor guide](https://kdkjudo.org/%e6%96%bd%e8%a8%ad%e3%81%ae%e3%81%94%e6%a1%88%e5%86%85/) (read on 2026-10-22): the International Judo Center, the new building, from the 8th floor down to the basement, with the count of jō of each dojo where it gives one. The guide's entry for the 1st floor is empty, so that row is [English Wikipedia's](https://en.wikipedia.org/wiki/Kodokan_Judo_Institute) ("The first floor has parking, a bank, and a store"); the Kodokan's own page puts its shop in the main building, which is another building. English Wikipedia says the same of the other floors, in fewer words (the fifth, sixth and seventh floors are training space).
+- **What is ours.** No source publishes a plan of any floor. The rooms are the dojo builder's own shape for their counts (240 jō is 27.3 by 14.56 metres, 192 jō 21.84 by 14.56, 114 jō 17.29 by 10.92, 40 jō 9.1 by 7.28), laid out in rows a metre and a half apart (the 6th floor's two one above the other, the 5th floor's big one above the smaller two side by side) and each floor's block put where it stands farthest from the building's walls (`scripts/build-plateau.mjs`; about 2.5 metres clear). That the guide's two dojos of a floor stand on the two sides of it is not published either: the layout is ours. The special dojo's size, the plain plates, and the storey height (the building's height over its eight storeys, 5.4 metres, so the 6th floor's level is 26.9 metres) are ours too. The great dojo's floor is set a little under the 7th storey's level so that its room stays under the roof; the gallery's plate is at the room's wall height over it.
 
 ## In 3D
 

@@ -56,7 +56,7 @@ export interface ContextBlock {
   area: number;
   /** A venue stands in this building (Korakuen Hall's building, which would hide it): it is drawn as a ghost. */
   ghost: boolean;
-  /** The middle a see-through building's walls give way from, in feet: the venue raised in it (the Kodokan's main dojo). Set only by `shellBlock`. */
+  /** The middle of what is seen through a see-through building (the room or rooms raised in it), in feet: each wall gives way to the eye when the eye is on its side of that middle. Set only by `shellBlock`. */
   xray?: Pt;
   /** Whether the building lies wholly inside the plan's frame: only such a building stands up in the 3D view, one the frame cuts is a part of the floor. */
   whole: boolean;
@@ -429,6 +429,30 @@ export function blockPlanes(b: ContextBlock, prefix: string): Plane[] {
   return planes;
 }
 
+const SLAB_SIDES = ["u-slab-a", "u-slab-b", "u-slab-c"] as const;
+
+/**
+ * A floor of a building as a slab: a top face at `level` and sides down `thickness` below it, shaded by the way each side faces, so that it is a solid piece with an edge from every side and never a sheet one pixel thick.
+ * `look`: `chosen` is picked out (its top is the blue plate, drawn under whatever stands on it), `faint` is a floor of the building that is not the one chosen, `plain` has no top (a floor that is drawn by something else, a dojo's mats).
+ * `top` and `side` are the ids of the planes (a side's has its place in the ring after it).
+ */
+export function slabPlanes(ring: readonly Pt[], level: number, thickness: number, ids: { top: string; side: string }, look: "chosen" | "faint" | "plain"): Plane[] {
+  const wound = signedArea(ring);
+  const planes: Plane[] = [];
+  const faint = (p: Plane): Plane => (look === "faint" ? { ...p, shy: [0, 0], fadeAt: -10, fadeTo: 0.18 } : p);
+  ring.forEach((p, i) => {
+    const q = ring[(i + 1) % ring.length];
+    const long = Math.hypot(q[0] - p[0], q[1] - p[1]);
+    if (long < 1) return;
+    planes.push(faint(wall(`${ids.side}${i}`, "floor", p[0], p[1], q[0], q[1], level - thickness, level, `<rect class="u-slab ${SLAB_SIDES[sideOf(p, q, wound)]}" width="${n(long)}" height="${n(thickness)}"/>`)));
+  });
+  if (look !== "plain") {
+    const top = raked(ids.top, "floor", ring, { x0: ring[0][0], y0: ring[0][1], z0: level, gx: 0, gy: 0 }, [1, 0], (corners) => `<polygon class="${look === "chosen" ? "u-floorplate" : "u-slab-top"}" points="${pointList(corners)}"/>`);
+    if (top !== undefined) planes.push(faint(look === "chosen" ? { ...top, under: true } : top));
+  }
+  return planes;
+}
+
 /** The blocks of the 3D view: the `most` buildings that matter most (the tallest and widest, by height times the side of their ground), each a few planes, in the order the plan lists them. */
 export function contextUprights(plan: ContextPlan, most = CONTEXT_BLOCKS): Upright[] {
   const wanted = new Set(plan.blocks.filter((b) => b.whole).sort((a, b) => weight(b) - weight(a) || (a.id < b.id ? -1 : 1)).slice(0, Math.max(0, most)).map((b) => b.id));
@@ -443,7 +467,7 @@ export function contextUprights(plan: ContextPlan, most = CONTEXT_BLOCKS): Uprig
   return items;
 }
 
-/** The building a raised venue stands in as a block: its outline in feet, its height, `xray` the middle its walls give way from (or none for a solid one). */
+/** The building a raised venue stands in as a block: its outline in feet, its height, `xray` the middle of what is seen through its walls (none for a solid one). */
 export function shellBlock(key: string, ring: readonly Pt[], height: number, xray: Pt | undefined): ContextBlock {
   return { id: `shell-${key}`, ring: [...ring], height, rise: 0, area: Math.abs(signedArea(ring)), ghost: false, whole: true, ...(xray === undefined ? {} : { xray }) };
 }

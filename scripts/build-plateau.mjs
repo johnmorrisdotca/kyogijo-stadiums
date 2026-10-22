@@ -11,6 +11,7 @@ import { Buffer } from "node:buffer";
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import process from "node:process";
 import { URL } from "node:url";
+import { dojo } from "../src/budo/dojo.api.ts";
 import { areaOf, inside, lonLatFrom, metresFrom, simplified, edgeDistance } from "../src/venues.geo.ts";
 
 const root = new URL("../data-sources/plateau/", import.meta.url);
@@ -152,6 +153,68 @@ const SIDE = 31.8;
   const fixed = (lonLat) => lonLat.map((v) => Math.round(v * 1e6) / 1e6);
   // The dojo's x axis lies along the compass heading 90 less the angle (anticlockwise from east) the search turned the square by.
   const heading = (((90 - best.h) % 180) + 180) % 180;
+  // The dojos of the 5th and 6th floors (the Kodokan's own floor guide: the school dojo of 240 jo and the international dojo of 192 jo on the 6th; the women's dojo of 240, the boys' of 114 and a special dojo on the 5th, which the guide gives no count).
+  // The building gives no plan: the rooms are the dojo builder's own shape for their counts (a special dojo's, no count published, is ours: 40 jo), laid out in two rows (6th) and two rows with the smaller two side by side (5th), a metre and a half apart,
+  // and each floor's block is put where it stands farthest from the building's walls, whichever way it is turned. All of it ours but the counts.
+  const GAP = 1.5;
+  const size = (jo) => {
+    const d = dojo({ mats: jo, surround: 0 });
+    return { w: Math.round(d.width * 100) / 100, l: Math.round(d.length * 100) / 100 };
+  };
+  const LAYOUTS = {
+    6: [{ id: "school", jo: 240 }, { id: "international", jo: 192 }],
+    5: [{ id: "womens", jo: 240 }, { id: "boys", jo: 114 }, { id: "special", jo: 40 }],
+  };
+  const floors = {};
+  for (const [floor, list] of Object.entries(LAYOUTS)) {
+    const rooms = list.map((r) => ({ ...r, ...size(r.jo) }));
+    // Offsets of each room's middle in the block's own frame (x along the rooms, y across, in metres from the block's middle).
+    let offsets;
+    let W;
+    let L;
+    if (floor === "6") {
+      [W, L] = [Math.max(rooms[0].w, rooms[1].w), rooms[0].l + GAP + rooms[1].l];
+      offsets = [[0, -L / 2 + rooms[0].l / 2], [0, L / 2 - rooms[1].l / 2]];
+    } else {
+      const row = rooms[1].w + GAP + rooms[2].w;
+      const second = Math.max(rooms[1].l, rooms[2].l);
+      [W, L] = [Math.max(rooms[0].w, row), rooms[0].l + GAP + second];
+      offsets = [[0, -L / 2 + rooms[0].l / 2], [-row / 2 + rooms[1].w / 2, L / 2 - second / 2], [row / 2 - rooms[2].w / 2, L / 2 - second / 2]];
+    }
+    const block = (cx, cy, h) => {
+      const a = (h * Math.PI) / 180;
+      const [c, sn] = [Math.cos(a), Math.sin(a)];
+      const pts = [];
+      for (let i = 0; i < 16; i += 1) {
+        const t = -0.5 + i / 16;
+        for (const [u, v] of [[-W / 2, t * L], [W / 2, -t * L], [-t * W, -L / 2], [t * W, L / 2]]) pts.push([cx + u * c - v * sn, cy + u * sn + v * c]);
+      }
+      return pts;
+    };
+    let fit = { clear: -Infinity, cx: 0, cy: 0, h: 0 };
+    for (let h = 0; h < 180; h += 0.5) {
+      for (let cx = -12; cx <= 36; cx += 0.25) {
+        for (let cy = -6; cy <= 44; cy += 0.25) {
+          const pts = block(cx, cy, h);
+          if (!pts.every((p) => inside(ring, p))) continue;
+          const clear = Math.min(...pts.map((p) => edgeDistance(ring, p)));
+          if (clear > fit.clear) fit = { clear, cx, cy, h };
+        }
+      }
+    }
+    if (fit.clear <= 0) throw new Error(`the Kodokan: the ${floor}th floor's rooms do not fit in the building`);
+    const a = (fit.h * Math.PI) / 180;
+    floors[floor] = {
+      heading: (((90 - fit.h) % 180) + 180) % 180,
+      clearance: Math.round(fit.clear * 100) / 100,
+      rooms: rooms.map((r, i) => {
+        // The room's x axis lies along the block's, its y across: a step down the page is a step at a right angle clockwise on the map.
+        const [dx, dy] = offsets[i];
+        const at = [fit.cx + dx * Math.cos(a) + dy * Math.sin(a), fit.cy + dx * Math.sin(a) - dy * Math.cos(a)];
+        return { id: r.id, jo: r.jo, w: r.w, l: r.l, centre: fixed(lonLatFrom(origin, at)) };
+      }),
+    };
+  }
   const kodokan = `// Made by scripts/build-plateau.mjs from data-sources/plateau/${day}/: do not edit by hand.
 //
 // THIS FILE IS DATA FROM PROJECT PLATEAU, edited: the Kodokan's building (its roof-edge outline simplified to 0.3 metres, its height and its storeys, from MLIT's 3D city model of Bunkyo ward, 2025 edition) and where the main dojo's
@@ -170,8 +233,10 @@ export const KODOKAN_BUILDING = {
   "storeys": ${b.storeys},
   /** The middle of the main dojo's room, \`[longitude, latitude]\`, the compass heading of its x axis (0 to under 180) and the length of its side in metres, walls and gallery included. */
   "room": { "centre": ${JSON.stringify(fixed(lonLatFrom(origin, [best.cx, best.cy])))}, "heading": ${heading}, "side": ${SIDE}, "clearance": ${Math.round(best.clear * 100) / 100} },
+  /** The rooms of the 5th and 6th floors: each floor's heading (of its rooms' x axis), and for each room its count in jo, its size in metres (the dojo builder's shape for the count) and the middle of it, \`[longitude, latitude]\`. Ours but the counts. */
+  "floors": ${JSON.stringify(floors)},
 } as const;
 `;
   writeFileSync(new URL("../src/kodokan.data.ts", import.meta.url), kodokan);
-  console.log(`src/kodokan.data.ts written: ${b.id} ${b.height} m, ${b.storeys} storeys, ${ring.length} points, room at heading ${heading}, ${Math.round(best.clear * 100) / 100} m clear`);
+  console.log(`src/kodokan.data.ts written: ${b.id} ${b.height} m, ${b.storeys} storeys, ${ring.length} points, room at heading ${heading}, ${Math.round(best.clear * 100) / 100} m clear; floors ${Object.entries(floors).map(([f, v]) => `${f}: heading ${v.heading}, ${v.clearance} m clear`).join("; ")}`);
 }
