@@ -7,13 +7,13 @@ People standing outside a district's venues, on the ground people may stand on: 
 Roads are never drawn. The crowd's shape is what shows them: the bands with nobody on them are the carriageways, the railway and the water.
 
 ```ts
-import { outsideCount, outsideCrowd, planDistrict } from "@johnmorrisdotca/kyogijo-stadiums/district";
+import { OUTSIDE_LEVELS, outsideCount, outsideCrowd, planDistrict } from "@johnmorrisdotca/kyogijo-stadiums/district";
 
 const plan = planDistrict({ venues: ["bc-place", "rogers-arena"], outside: { level: 50 } });
 const crowd = outsideCrowd(plan)!;
 console.log(crowd.venues.map((v) => `${v.key} ${v.placed}`).join(", "));
 // bc-place:cfl 54500, rogers-arena 18871
-console.log([0, 25, 50, 75, 100].map((level) => outsideCount(crowd, level)).join(" "));
+console.log(OUTSIDE_LEVELS.map((level) => outsideCount(crowd, level)).join(" "));
 // 0 18343 36686 55028 73371
 ```
 
