@@ -33,7 +33,8 @@ for (const name of ["gallery", "pitches"]) {
     await expect(pressed(page, name)).toHaveText("All");
     await expect(cards(page, name)).toHaveCount(one.total);
     // Before this change the sports were 4,451 px on a desk and 11,941 px on a phone, and the pitches 3,236 and 8,455.
-    expect(await height(page, id)).toBeLessThan(phone ? 600 : 820);
+    // (On a desk: under 860, which is still a screen of 900; the Linux of the CI image sets the sports' section 8 pixels taller than 820.)
+    expect(await height(page, id)).toBeLessThan(phone ? 600 : 860);
     if (phone) {
       // One row that scrolls sideways, with the next card peeking in at the edge.
       expect(await shown(page, name)).toBe(one.total);
