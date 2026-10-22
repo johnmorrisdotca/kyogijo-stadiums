@@ -7,6 +7,8 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.42.1] - 2026-10-22
+
 ### Fixed
 
 - The README no longer carries the grey "Renamed" box about the package's old name (the 0.4.0 entry below keeps the history).
