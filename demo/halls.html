@@ -72,7 +72,7 @@
     <script type="module">
       // Tournament layouts: pick a preset, set it in a hall, switch the real stadium on or off, and turn the whole floor in 3D. The package draws everything; this page only passes the options.
       import { MULTI_PRESETS, MULTI_VENUES, drawMulti, mountMultiTurn, multiSetting, multiTable, fitSentence, needsSentence } from "./dist/multi-entry.js";
-      import { hoverOf, wayOf, writeWay } from "./turn-way.js";
+      import { hoverOf, keepCamera, wayOf, writeWay } from "./turn-way.js";
       import { lightingFor, lightingOfAddress } from "./lighting.js";
       import { TURN_PRESET_NAMES } from "./dist/turn-entry.js";
       import { quietTitles } from "./quiet.js";
@@ -98,6 +98,8 @@
       // The 3D view while the page is on it: it takes the stage over from the flat drawing, and gives it back. The roof is a setting of the mount, so a change of it mounts the view again.
       let turn;
       let turnRoof = false;
+      /** The camera the reader chose: kept when the view is mounted again (another layout, the roof, flat and back), and the turn made by hand is in the address. */
+      const camera = keepCamera();
 
       const presetSelect = $("preset");
       const venueSelect = $("venue");
@@ -161,6 +163,7 @@
           if (state.viewpoint !== "corner") next.set("viewpoint", state.viewpoint);
           if ($("stadium").checked && $("roof").checked) next.set("roof", "1");
           writeWay(next);
+          camera.write(next);
         }
         history.replaceState(null, "", `?${next}`);
       }
@@ -200,13 +203,14 @@
         $("wash-row").hidden = !$("stadium").checked;
         const roof = three && $("stadium").checked && $("roof").checked;
         if (three) {
-          if (turn !== undefined && turnRoof !== roof) { turn.destroy(); turn = undefined; }
+          if (turn !== undefined && turnRoof !== roof) { camera.carry(turn); turn.destroy(); turn = undefined; }
           if (turn === undefined) {
             turnRoof = roof;
-            turn = mountMultiTurn($("stage"), options, { preset: state.viewpoint, ...wayOf(syncUrl), ...(roof ? { venue: { roof: true } } : {}), onChange: (_, preset) => { if (preset !== undefined) state.viewpoint = preset; syncUrl(); } });
+            turn = mountMultiTurn($("stage"), options, { preset: state.viewpoint, ...wayOf(syncUrl), ...(roof ? { venue: { roof: true } } : {}), ...camera.settings(), onChange: (view, preset) => { if (preset !== undefined) state.viewpoint = preset; camera.changed(view, preset, syncUrl); } });
             hoverOf($("stage"), turn);
           } else turn.update(options);
         } else {
+          camera.carry(turn);
           if (turn !== undefined) { turn.destroy(); turn = undefined; }
           $("stage").innerHTML = svg;
         }
@@ -225,8 +229,8 @@
         document.body.dataset.ready = "true";
       }
 
-      // Another layout opens the 3D view afresh, on the viewpoint chosen: its surfaces may stand across the picture, so the angles of the last one would not mean the same.
-      presetSelect.addEventListener("change", () => { syncGrid(); if (turn !== undefined) { turn.destroy(); turn = undefined; } draw(); });
+      // Another layout draws the scene again (its surfaces may stand across the picture), and the camera goes on where the reader left it: the view is opened on it and fits the new floor.
+      presetSelect.addEventListener("change", () => { syncGrid(); if (turn !== undefined) { camera.carry(turn); turn.destroy(); turn = undefined; } draw(); });
       $("language").addEventListener("change", () => { labelOptions(); draw(); });
       for (const id of ["venue", "rows", "columns", "theme", "stadium", "slots", "sample", "labels", "view", "roof", "boards", "lighting", "wash"]) $(id).addEventListener("change", draw);
       syncGrid();

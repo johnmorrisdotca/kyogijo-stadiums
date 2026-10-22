@@ -6,7 +6,7 @@
 // building, the markings and the labels are only hidden by a style (a `data-hide` on the stage), so that a button pressed while the view turns neither stops it nor sends it back.
 import { drawKyogijo } from "./dist/index.js";
 import { mountKyogijoTurn } from "./dist/turn-entry.js";
-import { hoverOf, wayOf, writeWay } from "./turn-way.js";
+import { hoverOf, keepCamera, wayOf, writeWay } from "./turn-way.js";
 import { LIGHTINGS, WASHES, lightingFor, lightingOfAddress } from "./lighting.js";
 
 /** The parts a reader can switch, in the order of the bar, with what each is by default: the stands on, the walls, the roof, the LED boards and the night lighting off (the bowl is seen), the building, the markings and the labels on. */
@@ -68,6 +68,8 @@ export function mountRealView({ stage, bar, venue, page, prefix = "", flat = tru
   if (!flat) state.view = "3d";
   stage.classList.add("rv-stage");
   let turn;
+  /** The camera the reader chose: kept when the 3D view is mounted again after the flat one, and the turn made by hand is in the address under the prefix. */
+  const camera = keepCamera(prefix);
   /** Whether the turn running now is the pointer's (so the address does not record it). */
   let hover;
   let styled = document.getElementById("rv-style");
@@ -101,6 +103,7 @@ export function mountRealView({ stage, bar, venue, page, prefix = "", flat = tru
     set("viewpoint", state.viewpoint === "corner" ? null : state.viewpoint);
     set("spin", spin && state.spin ? "on" : null);
     writeWay(next);
+    camera.write(next);
     history.replaceState(history.state, "", next.size === 0 ? location.pathname : `${location.pathname}?${next}${location.hash}`);
   }
 
@@ -155,6 +158,7 @@ export function mountRealView({ stage, bar, venue, page, prefix = "", flat = tru
   function draw() {
     stage.dataset.hide = hidden();
     if (state.view === "2d") {
+      camera.carry(turn);
       if (turn !== undefined) { turn.destroy(); turn = undefined; }
       stage.innerHTML = drawKyogijo(optionsNow());
       return;
@@ -166,7 +170,11 @@ export function mountRealView({ stage, bar, venue, page, prefix = "", flat = tru
         venue: venueNow(),
         ...wayOf(sync),
         ...(state.spin ? { autoPlay: true } : {}),
-        onChange: (_, preset) => { if (preset !== undefined && preset !== state.viewpoint) { state.viewpoint = preset; sync(); } },
+        ...camera.settings(),
+        onChange: (view, preset) => {
+          if (preset !== undefined) state.viewpoint = preset;
+          camera.changed(view, preset, sync);
+        },
         onPlayChange: (playing) => { if (spin && hover?.on !== true && playing !== state.spin) { state.spin = playing; sync(); } },
       });
       hover = hoverOf(stage, turn);

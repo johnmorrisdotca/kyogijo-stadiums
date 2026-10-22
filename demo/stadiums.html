@@ -89,7 +89,7 @@
       import { lightingFor, lightingOfAddress } from "./lighting.js";
       import { STADIUMS, STADIUM_IDS, stadiumConfigs, stadiumKind, stadiumNames } from "./dist/stadiums-entry.js";
       import { mountKyogijoTurn } from "./dist/turn-entry.js";
-      import { hoverOf, wayOf, writeWay } from "./turn-way.js";
+      import { hoverOf, keepCamera, wayOf, writeWay } from "./turn-way.js";
       import { quietTitles } from "./quiet.js";
       quietTitles();
 
@@ -152,6 +152,10 @@
       if (!stadiumConfigs(STADIUMS[state.stadium]).includes(state.config)) state.config = stadiumConfigs(STADIUMS[state.stadium])[0];
       let turn;
       let turnKey = "";
+      /** The camera the reader chose: kept when the view is mounted again for another stadium, configuration or roof, and the turn made by hand is in the address. */
+      const camera = keepCamera();
+      /** The viewpoint the view was last put on, so that only a new choice of it moves the camera. */
+      let viewpointNow = "";
 
       setSelect("view", params.get("view"), ["2d", "3d"]);
       setSelect("viewpoint", params.get("viewpoint"), ["overhead", "broadcast", "end", "corner"]);
@@ -236,7 +240,7 @@
         if (state.stadium !== STADIUM_IDS[0]) next.set("stadium", state.stadium);
         if (state.config !== stadiumConfigs(STADIUMS[state.stadium])[0]) next.set("config", state.config);
         if ($("view").value === "3d") next.set("view", "3d");
-        if ($("viewpoint").value !== "corner") next.set("viewpoint", $("viewpoint").value);
+        if ($("viewpoint").value !== "overhead") next.set("viewpoint", $("viewpoint").value);
         if ($("roof").checked) next.set("roof", "1");
         if ($("open").checked) next.set("open", "1");
         if ($("boards").checked) next.set("boards", "1");
@@ -245,6 +249,7 @@
         if ($("language").value === "ja") next.set("lang", "ja");
         if ($("theme").value !== "auto") next.set("theme", $("theme").value);
         writeWay(next);
+        camera.write(next);
         history.replaceState(null, "", next.size === 0 ? location.pathname : `?${next}`);
       }
 
@@ -274,17 +279,34 @@
           if (three) {
             const settings = { preset: $("viewpoint").value, ...wayOf(syncUrl), ...($("roof").checked ? { venue: { roof: true, roofOpen: $("open").checked } } : {}) };
             const key = JSON.stringify([state.stadium, state.config, $("roof").checked, $("open").checked]);
-            if (turn !== undefined && turnKey !== key) { turn.destroy(); turn = undefined; }
+            // Another stadium, configuration or roof draws the scene again, and the camera goes on where the reader left it: the view is opened on it.
+            if (turn !== undefined && turnKey !== key) { camera.carry(turn); turn.destroy(); turn = undefined; }
             if (turn === undefined) {
               stage.innerHTML = '<div id="three"></div>';
               turnKey = key;
-              turn = mountKyogijoTurn($("three"), options, settings);
+              turn = mountKyogijoTurn($("three"), options, {
+                ...settings,
+                ...camera.settings(),
+                onChange: (view, preset) => {
+                  // A viewpoint chosen on the view's own buttons is the page's too.
+                  if (preset !== undefined && $("viewpoint").value !== preset) $("viewpoint").value = preset;
+                  viewpointNow = $("viewpoint").value;
+                  camera.changed(view, preset, syncUrl);
+                },
+              });
+              viewpointNow = $("viewpoint").value;
               hoverOf($("three"), turn);
             } else {
               turn.update(options);
-              turn.preset($("viewpoint").value);
+              // Only a viewpoint chosen from the list moves the camera: anything else leaves it where it is.
+              if ($("viewpoint").value !== viewpointNow) {
+                viewpointNow = $("viewpoint").value;
+                camera.chose();
+                turn.preset(viewpointNow);
+              }
             }
           } else {
+            camera.carry(turn);
             if (turn !== undefined) { turn.destroy(); turn = undefined; }
             stage.innerHTML = drawKyogijo(options);
           }

@@ -95,7 +95,7 @@
       // (`drawDistrict`, `mountDistrictTurn`): the venues, the mode and the turn are options. What is chosen lives in the address; nothing is sent anywhere and nothing is stored.
       import { DISTRICT_IDS, districtMember, mountDistrict, mountDistrictTurn, OUTSIDE_LEVELS, OUTSIDE_VENUES, planDistrict, unknownVenues, VENUE_ATTRIBUTION } from "./dist/district-entry.js";
       import { TOKYO_DOME_CITY } from "./dist/plateau-entry.js";
-      import { hoverOf, wayOf, writeWay } from "./turn-way.js";
+      import { hoverOf, keepCamera, wayOf, writeWay } from "./turn-way.js";
       import { lightingFor, lightingOfAddress } from "./lighting.js";
       import { STADIUMS } from "./dist/stadiums-entry.js";
       import { quietTitles } from "./quiet.js";
@@ -156,6 +156,10 @@
       let turn;
       let flat;
       let turnKey = "";
+      /** The camera the reader chose: kept when the view is mounted again for another choice of venues, and the turn made by hand is in the address. */
+      const camera = keepCamera();
+      /** The viewpoint the view was last put on, so that only a new choice of it moves the camera. */
+      let viewpointNow = "";
       /** The share of the seats outside, in percent: the address's, one of the levels, else nobody. */
       state.outside = OUTSIDE_LEVELS.includes(Number(params.get("outside"))) ? Number(params.get("outside")) : 0;
       const masked = () => state.venues.some((key) => OUTSIDE_VENUES.includes(key.split(":")[0]));
@@ -235,7 +239,7 @@
         if ($("turn").value !== "0") next.set("turn", $("turn").value);
         if ($("labels").checked !== ($("mode").value === "city")) next.set("labels", $("labels").checked ? "1" : "0");
         if ($("view").value === "3d") next.set("view", "3d");
-        if ($("viewpoint").value !== "corner") next.set("viewpoint", $("viewpoint").value);
+        if ($("viewpoint").value !== "overhead") next.set("viewpoint", $("viewpoint").value);
         if (!$("roof").checked) next.set("roof", "0");
         if (hasContext() && !$("context").checked) next.set("context", "0");
         if ($("boards").checked) next.set("boards", "1");
@@ -245,6 +249,7 @@
         if ($("language").value === "ja") next.set("lang", "ja");
         if ($("theme").value !== "auto") next.set("theme", $("theme").value);
         writeWay(next);
+        camera.write(next);
         history.replaceState(null, "", next.size === 0 ? location.pathname : `?${next}`);
       }
 
@@ -299,6 +304,7 @@
         document.body.dataset.view = $("view").value;
         const stage = $("stage");
         if (state.venues.length === 0 || unknownVenues(state.venues).length > 0) {
+          camera.carry(turn);
           if (turn !== undefined) { turn.destroy(); turn = undefined; }
           if (flat !== undefined) { flat.destroy(); flat = undefined; }
           stage.replaceChildren();
@@ -318,18 +324,35 @@
           if (three) {
             const settings = { preset: $("viewpoint").value, venue: { roof: $("roof").checked, boards: boardsNow(), lighting: lightingNow() }, ...wayOf(syncUrl) };
             const key = JSON.stringify([state.venues, options.mode, options.turn, $("roof").checked, contextOn()]);
-            if (turn !== undefined && turnKey !== key) { turn.destroy(); turn = undefined; }
+            // Another choice of venues draws the scene again, and the camera goes on where the reader left it: the view is opened on it.
+            if (turn !== undefined && turnKey !== key) { camera.carry(turn); turn.destroy(); turn = undefined; }
             if (turn === undefined) {
               if (flat !== undefined) { flat.destroy(); flat = undefined; }
               stage.innerHTML = '<div id="three"></div>';
               turnKey = key;
-              turn = mountDistrictTurn($("three"), options, settings);
+              turn = mountDistrictTurn($("three"), options, {
+                ...settings,
+                ...camera.settings(),
+                onChange: (view, preset) => {
+                  // A viewpoint chosen on the view's own buttons is the page's too.
+                  if (preset !== undefined && $("viewpoint").value !== preset) $("viewpoint").value = preset;
+                  viewpointNow = $("viewpoint").value;
+                  camera.changed(view, preset, syncUrl);
+                },
+              });
+              viewpointNow = $("viewpoint").value;
               hoverOf($("three"), turn);
             } else {
               turn.update(options, { venue: { boards: boardsNow(), lighting: lightingNow() } });
-              turn.preset($("viewpoint").value);
+              // Only a viewpoint chosen from the list moves the camera: anything else leaves it where it is.
+              if ($("viewpoint").value !== viewpointNow) {
+                viewpointNow = $("viewpoint").value;
+                camera.chose();
+                turn.preset(viewpointNow);
+              }
             }
           } else {
+            camera.carry(turn);
             if (turn !== undefined) { turn.destroy(); turn = undefined; }
             if (flat !== undefined) flat.destroy();
             flat = mountDistrict(stage, options);

@@ -79,3 +79,56 @@ export function hoverOf(host, control) {
   const view = host.querySelector(".ky-turn-view");
   return view === null ? { on: false } : turnOnHover(view, control);
 }
+
+/**
+ * The camera a reader has chosen, kept when the page has to mount its 3D view again (another venue, another configuration, the roof, flat and back): the view (turn, tilt, zoom) and whether the auto-turn was running go
+ * to the new view, so that only what must change (the frame it fits) changes. The turn the reader made by hand is also kept in the address, as `yaw`, `pitch` and `zoom` (under `prefix`, for a page with more than one view);
+ * a viewpoint chosen from the list or the view's own buttons takes them out again, since the viewpoint says it. Nothing here is sent anywhere or stored.
+ */
+export function keepCamera(prefix = "", params = new URLSearchParams(location.search)) {
+  const names = ["yaw", "pitch", "zoom"];
+  const fromAddress = {};
+  for (const name of names) {
+    const text = params.get(`${prefix}${name}`);
+    const value = text === null || text.trim() === "" ? Number.NaN : Number(text);
+    if (Number.isFinite(value)) fromAddress[name] = value;
+  }
+  /** What the address and the hand have chosen: the view the reader turned by hand, or nothing while a viewpoint says it. */
+  let held = Object.keys(fromAddress).length === 0 ? undefined : fromAddress;
+  /** What the view that was destroyed last was at, to open the next one on. */
+  let carried;
+  let playing = false;
+  return {
+    /** Call before `destroy()`: the view now and whether it turned. */
+    carry(turn) {
+      if (turn === undefined || turn.mode !== "3d") return;
+      carried = turn.view();
+      playing = turn.playing === true;
+    },
+    /** The settings that open a view where the last one was (the address's turn at the first mount, the carried view after): spread them into the mount's settings. */
+    settings() {
+      const view = carried ?? held;
+      return { ...(view === undefined ? {} : { view }), ...(playing ? { autoPlay: true } : {}) };
+    },
+    /** For the view's `onChange`: remember a turn made by hand, and forget it when a viewpoint was chosen. */
+    changed(view, preset, write) {
+      held = preset === undefined ? { yaw: view.yaw, pitch: view.pitch, zoom: view.zoom } : undefined;
+      carried = undefined;
+      write?.();
+    },
+    /** A viewpoint was chosen from the page's own list. */
+    chose(write) {
+      held = undefined;
+      carried = undefined;
+      write?.();
+    },
+    /** Write the turn the reader made by hand into an address's parameters (rounded to what the eye can tell apart). */
+    write(next) {
+      for (const name of names) {
+        if (held === undefined) next.delete(`${prefix}${name}`);
+        else next.set(`${prefix}${name}`, String(Math.round(held[name] * (name === "zoom" ? 100 : 10)) / (name === "zoom" ? 100 : 10)));
+      }
+      return next;
+    },
+  };
+}
