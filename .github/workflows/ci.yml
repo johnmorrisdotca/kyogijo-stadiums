@@ -19,9 +19,9 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm check
       - run: pnpm build
-  # The demo's browser tests take an hour on one runner: four shards run at once, each building the demo and playing a quarter of the tests in the three projects (a failed test is retried once, and the report says it was).
+  # The demo's browser tests take an hour on one runner: six jobs run at once, each building the demo and playing one project's tests or a share of WebKit's (a failed test is retried once, and the report says it was).
   demo:
-    name: demo (${{ matrix.shard }}/4)
+    name: demo (${{ matrix.project }} ${{ matrix.shard }})
     runs-on: ubuntu-latest
     # Playwright's own image, whose tag is the version of @playwright/test in the lockfile (src/ci.test.js holds the two together): the browsers and what they need are in it. Installing the browsers with their system packages took 55 of a shard's 70 minutes, fetching 200 packages from a slow mirror.
     container:
@@ -30,7 +30,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4]
+        # WebKit is three times as slow as Chromium and was a third of the tests: split by project first, and WebKit's into four (each job about a quarter of an hour).
+        include:
+          - { project: chromium-phone, shard: 1/1 }
+          - { project: chromium-desk, shard: 1/1 }
+          - { project: webkit-phone, shard: 1/4 }
+          - { project: webkit-phone, shard: 2/4 }
+          - { project: webkit-phone, shard: 3/4 }
+          - { project: webkit-phone, shard: 4/4 }
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
@@ -39,8 +46,8 @@ jobs:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - name: The demo, played in Chromium and WebKit at a phone's width and a desk's (a quarter of the tests)
-        run: pnpm site && pnpm exec playwright test --shard=${{ matrix.shard }}/4
+      - name: The demo, played in Chromium and WebKit at a phone's width and a desk's (one project, a share of its tests)
+        run: pnpm site && pnpm exec playwright test --project=${{ matrix.project }} --shard=${{ matrix.shard }}
   package:
     runs-on: ${{ matrix.os }}
     strategy:

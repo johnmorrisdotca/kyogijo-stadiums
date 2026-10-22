@@ -15,11 +15,15 @@ describe("ci.yml's demo job", () => {
     expect(demo).toContain("options: --ipc=host --init");
   });
 
-  it("installs no browser and no package of the system, and plays a quarter of the tests in each of four shards", () => {
+  it("installs no browser and no package of the system, and plays each project's tests in jobs of its own, WebKit's (the slow one) in four", () => {
     expect(demo).not.toContain("playwright install");
     expect(demo).not.toContain("apt");
-    expect(demo).toContain("shard: [1, 2, 3, 4]");
-    expect(demo).toContain("--shard=${{ matrix.shard }}/4");
+    const jobs = [...demo.matchAll(/- \{ project: ([\w-]+), shard: (\d+)\/(\d+) \}/g)].map((m) => `${m[1]} ${m[2]}/${m[3]}`);
+    expect(jobs).toEqual(["chromium-phone 1/1", "chromium-desk 1/1", "webkit-phone 1/4", "webkit-phone 2/4", "webkit-phone 3/4", "webkit-phone 4/4"]);
+    expect(demo).toContain("--project=${{ matrix.project }} --shard=${{ matrix.shard }}");
+    // Every project of the config is played in some job.
+    const config = readFileSync("playwright.config.mjs", "utf8");
+    for (const project of [...config.matchAll(/name: "([\w-]+)"/g)].map((m) => m[1])) expect(jobs.some((j) => j.startsWith(`${project} `)), project).toBe(true);
   });
 
   it("is retried once on the runner only, and says so in its report", () => {
