@@ -129,7 +129,7 @@ await takePictures({
     // Tokyo Dome (0.33.0): the ballpark under its air-supported roof in 3D from a low corner (the stadiums page's stage), and Tokyo Dome City, the Dome with Korakuen Hall, on one ground (the district page's stage).
     { subject: "stadiums-tokyo-dome-3d", views: ["desk"], url: "/stadiums.html?stadium=tokyo-dome&view=3d&viewpoint=corner&roof=1", ready: READY_HALLS_TURN, target: "#stage" },
     { subject: "district-tokyo-3d", views: ["desk"], url: "/district.html?venues=tokyo-dome,korakuen-hall&view=3d&viewpoint=corner&roof=1&labels=1&context=0", ready: READY_HALLS_TURN, target: "#stage" },
-    // Tokyo Dome City among its buildings (0.41.0): the same district with the buildings of Project PLATEAU round it, at their real heights, from a low corner (the district page's stage, the surroundings choice on).
+    // Tokyo Dome City among its buildings (0.42.0): the same district with the buildings of Project PLATEAU round it, at their real heights, from a low corner (the district page's stage, the surroundings choice on).
     { subject: "district-tokyo-context-3d", views: ["desk"], url: "/district.html?venues=tokyo-dome,korakuen-hall&view=3d&viewpoint=corner&roof=1", ready: READY_HALLS_TURN, target: "#stage", height: 1100 },
     // The crowd outside (0.41.0): BC Place and Rogers Arena with a quarter and with all of their seats' worth of people on the sidewalks, plazas and grounds round them (the plan), and from the main camera in 3D at all of them (the district page's stage).
     { subject: "outside-plan-25", views: ["desk"], url: "/district.html?outside=25", ready: 'body[data-ready="true"] #stage canvas.ky-district-outside:not([hidden])', target: "#stage" },
