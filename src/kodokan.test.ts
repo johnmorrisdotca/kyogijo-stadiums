@@ -5,7 +5,7 @@ import { buildDistrictTurn } from "./district.turn.ts";
 import { FEET_PER_METRE } from "./geometry.ts";
 import { KODOKAN, KODOKAN_DOJO, KODOKAN_FLOOR_HEIGHT, KODOKAN_ROOM_HEIGHT, kodokanMember } from "./kodokan.ts";
 import { PLATEAU_ATTRIBUTION, TOKYO_DOME_CITY } from "./plateau.data.ts";
-import { layoutOf } from "./turn.markup.ts";
+import { eyeDistance, layoutOf, project } from "./turn-entry.ts";
 import { APART, type Plane } from "./turn.kit.ts";
 import { inside } from "./venues.geo.ts";
 
@@ -96,10 +96,10 @@ describe("the Kodokan in a district", () => {
     const walls = xray.filter((p) => p.id.includes("-w"));
     expect(walls.length).toBe(10);
     for (const w of walls) expect(w.shy && Math.hypot(...w.shy)).toBeCloseTo(1, 6);
-    for (const w of walls) expect(w.fadeTo).toBe(0.06);
+    for (const w of walls) expect(w).toMatchObject({ fadeTo: 0.06, fadeSide: true });
     const roof = xray.filter((p) => p.id.endsWith("-top"));
     expect(roof.length).toBe(1);
-    expect(roof[0]).toMatchObject({ shy: [0, 0], fadeTo: 0.18 });
+    expect(roof[0]).toMatchObject({ shy: [0, 0], fadeTo: 0.1 });
     expect(Math.max(...xray.flatMap(corners).map((c) => c[2])) / FEET_PER_METRE).toBeCloseTo(KODOKAN.height, 1);
     const solid = shell(buildDistrictTurn({ ...ALONE, building: "solid" }));
     expect(solid.length).toBe(xray.length);
@@ -121,6 +121,38 @@ describe("the Kodokan in a district", () => {
     const at = (p: Plane): number => layout.fade[m.planes.indexOf(p) + 1];
     expect(at(south)).toBeLessThan(0.3);
     expect(at(north)).toBe(1);
+  });
+
+  it("shows the dojo through the building at every turn and tilt: no wall that is not faded is drawn over the dojo's floor, and the ones that are not between the eye and it are behind it", () => {
+    for (const context of [undefined, [TOKYO_DOME_CITY]]) {
+      const m = buildDistrictTurn({ venues: ["kodokan"], ...(context === undefined ? {} : { context }) });
+      const [width, height] = [1200, 800];
+      const distance = eyeDistance(width, height, m.lens);
+      const floor = m.planes.find((p) => p.id === "m0-floor")!;
+      const floorAt = m.planes.indexOf(floor);
+      const shell = m.planes.map((p, i) => ({ p, i })).filter(({ p }) => p.id.startsWith("m0-shell-"));
+      const point = (v: readonly number[], view: typeof m.view, at: Parameters<typeof project>[2]): [number, number] => {
+        const r = project([(v[0] - m.centre[0]) * m.scale, (v[1] - m.centre[1]) * m.scale, v[2] * m.scale], view, at, distance);
+        return [r[0], r[1]];
+      };
+      for (const pitch of [12, 25, 35, 55, 75, 88]) {
+        for (let yaw = 0; yaw < 360; yaw += 15) {
+          const view = { ...m.view, yaw, pitch, zoom: 1 };
+          const layout = layoutOf(m, view, width, height);
+          // Nine points of the dojo's floor, seen from this side.
+          const seen = [0.25, 0.5, 0.75].flatMap((a) => [0.25, 0.5, 0.75].map((b) => point([floor.o[0] + a * floor.u[0] + b * floor.v[0], floor.o[1] + a * floor.u[1] + b * floor.v[1], floor.o[2]], view, layout.at)));
+          for (const { p, i } of shell) {
+            const outline = [[0, 0], [1, 0], [1, 1], [0, 1]].map(([a, b]) => point([p.o[0] + a * p.u[0] + b * p.v[0], p.o[1] + a * p.u[1] + b * p.v[1], p.o[2] + a * p.u[2] + b * p.v[2]], view, layout.at));
+            if (!seen.some((s) => inside(outline, s))) continue;
+            const fade = layout.fade[i + 1];
+            // Over the floor on the screen: clear enough to see through, or painted before the floor, behind it.
+            const clear = fade <= 0.12;
+            const behind = layout.stack[i + 1] < layout.stack[floorAt + 1];
+            expect(clear || behind, `${p.id} at yaw ${yaw}, pitch ${pitch}: fade ${fade}, stack ${layout.stack[i + 1]} against the floor's ${layout.stack[floorAt + 1]}`).toBe(true);
+          }
+        }
+      }
+    }
   });
 
   it("is a venue like the others: the frame takes in its building, the group order holds, the credit is in the description without any context", () => {

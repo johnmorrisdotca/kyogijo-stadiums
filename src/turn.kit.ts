@@ -45,6 +45,11 @@ export interface Plane {
   /** How low the eye must be for a `shy` plane to begin to give way: the share (of the plane's side being towards the eye, times the sine of the pitch) at which the fade starts; 0.1 when missing. A low barrier takes a high one, so that it stays whole until the eye is nearly level with it. */
   fadeAt?: number;
   /**
+   * A `shy` plane that gives way by the side the eye is on and not by how low it is: every wall on the eye's side of what it surrounds fades the same, at any tilt, and one on the far side stays whole. A see-through building's walls
+   * (a raised room is seen through every wall between it and the eye, at a low angle and from straight above alike).
+   */
+  fadeSide?: boolean;
+  /**
    * The building (a `TurnModel.groups` index) a plane belongs to, in a scene of several that stand apart (a district's): the view draws one building's planes all before another's, by which side of the line between
    * them the eye is on, and the planes of one building among themselves by depth.
    */
@@ -177,11 +182,16 @@ export function shy(p: Plane, centre: readonly [number, number]): Plane {
  * How much of a wall is left (1 whole, down to 0.08) at a view: none is cut away unless the wall is on the eye's side of the surface, and then more the lower the eye is, because a wall seen
  * from straight above hides nothing. `yaw` and `pitch` are the view's, in degrees.
  */
-export function fadeOf(p: Pick<Plane, "shy" | "fadeTo" | "fadeAt">, yaw: number, pitch: number): number {
+export function fadeOf(p: Pick<Plane, "shy" | "fadeTo" | "fadeAt" | "fadeSide">, yaw: number, pitch: number): number {
   if (p.shy === undefined) return 1;
   const a = (yaw * Math.PI) / 180;
   // The horizontal direction from the surface to the eye (the same sum as the depth of a point).
   const toward = p.shy[0] * Math.sin(a) + p.shy[1] * Math.cos(a);
+  // By side: whole on the far side, a short ramp across the walls edge-on to the eye, and the same fade on every wall of the near side, whatever the tilt.
+  if (p.fadeSide === true) {
+    const t = Math.min(1, Math.max(0, (toward + 0.05) / 0.15));
+    return Math.round((1 - (1 - (p.fadeTo ?? 0.08)) * t) * 1000) / 1000;
+  }
   const hides = toward * Math.sin((pitch * Math.PI) / 180);
   const from = p.fadeAt ?? 0.1;
   const t = Math.min(1, Math.max(0, (hides - from) / 0.25));

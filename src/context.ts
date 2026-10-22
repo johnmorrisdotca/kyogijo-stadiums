@@ -276,8 +276,8 @@ export function blockPlanes(b: ContextBlock, prefix: string): Plane[] {
   const ghost = (p: Plane): Plane => (b.ghost ? { ...p, shy: [0, 0], fadeAt: -10, fadeTo: 0.16 } : p);
   // A see-through building: each wall gives way as the eye comes round to its side and looks in, to a trace of itself, and the roof is always nearly clear.
   const xray = b.xray;
-  const wall1 = (p: Plane): Plane => (xray === undefined ? ghost(p) : { ...shy(p, xray), fadeTo: 0.06 });
-  const roof1 = (p: Plane): Plane => (xray === undefined ? ghost(p) : { ...p, shy: [0, 0], fadeAt: -10, fadeTo: 0.18 });
+  const wall1 = (p: Plane): Plane => (xray === undefined ? ghost(p) : { ...shy(p, xray), fadeTo: 0.06, fadeSide: true });
+  const roof1 = (p: Plane): Plane => (xray === undefined ? ghost(p) : { ...p, shy: [0, 0], fadeAt: -10, fadeTo: 0.1 });
   b.ring.forEach((p, i) => {
     const q = b.ring[(i + 1) % b.ring.length];
     const long = Math.hypot(q[0] - p[0], q[1] - p[1]);

@@ -55,7 +55,8 @@ export function turnOnHover(view, control, where = () => control.view().yaw) {
     downYaw = yaw();
   });
   view.addEventListener("pointerenter", (event) => {
-    if (event.pointerType !== "mouse" || reduced.matches || control.playing) return;
+    // A reader who has used the Auto-turn button or the Space key has chosen for themselves: the pointer coming back over the view does not turn it again behind their back.
+    if (event.pointerType !== "mouse" || reduced.matches || control.playing || chosen) return;
     hover.on = true;
     if (!control.play()) hover.on = false;
   });
@@ -74,10 +75,26 @@ export function turnOnHover(view, control, where = () => control.view().yaw) {
   return hover;
 }
 
+/** Whether the reader has pressed Auto-turn (or the Space key) on this page: from then on the button is the only thing that starts the turn, and hovering does not. Kept for the page, so that a view mounted again for another choice does not forget it. */
+let chosen = false;
+
 /** A view mounted in `host`: the element `turnOnHover` listens on is the 3D view's own. */
 export function hoverOf(host, control) {
   const view = host.querySelector(".ky-turn-view");
-  return view === null ? { on: false } : turnOnHover(view, control);
+  if (view === null) return { on: false };
+  const hover = turnOnHover(view, control);
+  // The Auto-turn button (and Space on the view) is the reader's own choice, either way: pressed to stop, it stops for good, and the pointer passing over the view afterwards starts nothing.
+  const own = () => {
+    chosen = true;
+    hover.on = false;
+  };
+  host.addEventListener("click", (event) => {
+    if (event.target instanceof Element && event.target.closest('button[data-act="play"]') !== null) own();
+  });
+  host.addEventListener("keydown", (event) => {
+    if (event.key === " ") own();
+  });
+  return hover;
 }
 
 /**

@@ -7,6 +7,11 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Fixed
+
+- **A see-through building's walls now fade by the side the eye is on, at every turn and tilt** (`Plane.fadeSide`): the Kodokan's near walls gave way only when the eye was low, and at some angles and tilts a near wall was drawn opaque over the dojo. Every wall between the eye and the room is now clear, a wall on the far side stays whole behind it, and a test turns the view in steps of 15 degrees at six tilts and finds no wall over the dojo's floor that is not clear. The roof is clearer too.
+- **Auto-turn could not be kept stopped on the district, stadiums, venues and halls pages**: pressing the button to stop the turn worked, but the pointer coming back over the view turned it again by hover. A reader who has used the Auto-turn button (or the Space key) is left alone by the pointer for the rest of the page; the button toggles every time. A new test presses it on each page, with and without yaw, pitch and zoom in the address, by mouse, keyboard and tap.
+
 ### Added
 
 - **The Kodokan in the Tokyo district** ([the district page](./docs/district.md#the-kodokan-the-great-dojo-in-the-air)): `"kodokan"` is a venue of a district. Its main dojo (the great dojo, on the 7th floor, 420 mats, four contest areas at once, a gallery of about 900 on the 8th) is drawn in the air on its real floor, 31.9 metres up, in Project PLATEAU's building (8 storeys, 43.1 metres, its real outline), with the package's judo dojo inside: the four areas, the gallery, the seat of honour. No source gives the floor's shape or the room's place in the building: the floor is a square of 420 jō and the room is put where it stands farthest from the walls (ours, and said). `building: "xray" | "solid" | "none"` draws the building with walls that give way to the eye as it looks in (the default), whole, or not at all. The building is the venue's own, so the surrounding `context` leaves its copy out. A district with the Kodokan carries PLATEAU's credit without any context. New in the Tokyo district of the demo: a Kodokan choice, a Kodokan building choice kept in the address (`building=solid`, `building=none`), and a preset "Tokyo Dome City and the Kodokan". A picture of the dojo in the docs.
