@@ -7,6 +7,8 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.43.0] - 2026-10-22
+
 ### Fixed
 
 - **A see-through building's walls now fade by the side the eye is on, at every turn and tilt** (`Plane.fadeSide`): the Kodokan's near walls gave way only when the eye was low, and at some angles and tilts a near wall was drawn opaque over the dojo. Every wall between the eye and the room is now clear, a wall on the far side stays whole behind it, and a test turns the view in steps of 15 degrees at six tilts and finds no wall over the dojo's floor that is not clear. The roof is clearer too.
@@ -19,12 +21,16 @@ All notable changes to this project are written here. The format follows
 
 ## [0.42.1] - 2026-10-22
 
+Not published on its own; shipped in 0.43.0.
+
 ### Fixed
 
 - The README no longer carries the grey "Renamed" box about the package's old name (the 0.4.0 entry below keeps the history).
 - **The demo's 3D views keep the camera when the choice changes** (the district, stadiums, venues and layouts pages): another venue or district, another stadium or configuration, another layout, the roof, or the flat view and back used to open the view afresh on its viewpoint, taking away the turn, tilt and zoom the reader had chosen and stopping the auto-turn. The view is now opened where the last one was (turn, tilt, zoom, and Play if it was turning) and only the frame it fits changes. A turn made by hand is in the address as `yaw`, `pitch` and `zoom` (under the home page's `f` prefix for its featured arena), and an address that names them opens on them; a viewpoint chosen from the list or the view's own buttons takes them out again and says itself. A box that is not the viewpoint (the boards, the labels, the language) no longer sends the view back to the viewpoint, and the district and stadiums pages now write `viewpoint=` for every viewpoint but their own default, overhead (a reload used to lose a chosen low corner).
 
 ## [0.42.0] - 2026-10-22
+
+Not published on its own; shipped in 0.43.0.
 
 ### Added
 
