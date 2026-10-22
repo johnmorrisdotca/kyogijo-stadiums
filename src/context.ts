@@ -4,7 +4,7 @@
 // floor, shaded by height, and the biggest and tallest as blocks standing on it in the 3D view. Pure: data in, markup and planes out.
 import { FEET_PER_METRE } from "./geometry.ts";
 import { boxOf, hullOf, inside, metresFrom, type LonLat } from "./venues.geo.ts";
-import { n, wall, type Plane, type Upright } from "./turn.kit.ts";
+import { n, shy, wall, type Plane, type Upright } from "./turn.kit.ts";
 import { pointList, raked, type Slope } from "./venue.geom.ts";
 import type { Pt } from "./crowd.ts";
 
@@ -51,6 +51,8 @@ export interface ContextBlock {
   area: number;
   /** A venue stands in this building (Korakuen Hall's building, which would hide it): it is drawn as a ghost. */
   ghost: boolean;
+  /** The middle a see-through building's walls give way from, in feet: the venue raised in it (the Kodokan's main dojo). Set only by `shellBlock`. */
+  xray?: Pt;
   /** Whether the building lies wholly inside the plan's frame: only such a building stands up in the 3D view, one the frame cuts is a part of the floor. */
   whole: boolean;
 }
@@ -120,6 +122,8 @@ export function contextFrame(areas: readonly ContextArea[], origin: LonLat, turn
 /** A venue as the context needs it: its building's outline in the district's frame. */
 export interface ContextVenue {
   footprint: readonly Pt[];
+  /** The footprint is a building the venue draws itself (the Kodokan's, with its dojo in the air in it): the building of the model that is the same is the venue's, left out. */
+  shell?: boolean;
 }
 
 /**
@@ -142,7 +146,7 @@ export function placeContext(areas: readonly ContextArea[], origin: LonLat, turn
       const middle = centroid(ring);
       const share = (poly: readonly Pt[]): number => ring.filter((p) => inside(poly, p)).length / ring.length;
       // A venue inside the building (its middle and at least half of its outline's points): the building is a ghost round it.
-      const holds = venues.some((v) => inside(ring, centroid(v.footprint)) && v.footprint.filter((p) => inside(ring, p)).length * 2 >= v.footprint.length);
+      const holds = venues.some((v) => v.shell !== true && inside(ring, centroid(v.footprint)) && v.footprint.filter((p) => inside(ring, p)).length * 2 >= v.footprint.length);
       if (!holds && hulls.some((hull) => inside(hull, middle) || share(hull) >= 0.7)) {
         owned += 1;
         return;
@@ -264,21 +268,25 @@ const sideOf = (a: Pt, b: Pt, wound: number): 0 | 1 | 2 => {
 const SIDES = ["u-block-a", "u-block-b", "u-block-c"] as const;
 
 /** One building as the planes of a block: its walls up to the eaves, and over them a flat roof, or a hip roof where it has a pitched one. A ghost's planes are always mostly cut away, so that a venue inside it shows. */
-function blockPlanes(b: ContextBlock, prefix: string): Plane[] {
+export function blockPlanes(b: ContextBlock, prefix: string): Plane[] {
   const planes: Plane[] = [];
   const wound = signedArea(b.ring);
   const pitched = b.rise > 3 && b.ring.length <= 8 && convex(b.ring);
   const eave = pitched ? Math.max(b.height - b.rise, 3) : b.height;
   const ghost = (p: Plane): Plane => (b.ghost ? { ...p, shy: [0, 0], fadeAt: -10, fadeTo: 0.16 } : p);
+  // A see-through building: each wall gives way as the eye comes round to its side and looks in, to a trace of itself, and the roof is always nearly clear.
+  const xray = b.xray;
+  const wall1 = (p: Plane): Plane => (xray === undefined ? ghost(p) : { ...shy(p, xray), fadeTo: 0.06 });
+  const roof1 = (p: Plane): Plane => (xray === undefined ? ghost(p) : { ...p, shy: [0, 0], fadeAt: -10, fadeTo: 0.18 });
   b.ring.forEach((p, i) => {
     const q = b.ring[(i + 1) % b.ring.length];
     const long = Math.hypot(q[0] - p[0], q[1] - p[1]);
     if (long < 3) return;
-    planes.push(ghost(wall(`${prefix}w${i}`, "block", p[0], p[1], q[0], q[1], 0, eave, `<rect class="u-block ${SIDES[sideOf(p, q, wound)]}" width="${n(long)}" height="${n(eave)}"/>`)));
+    planes.push(wall1(wall(`${prefix}w${i}`, "block", p[0], p[1], q[0], q[1], 0, eave, `<rect class="u-block ${SIDES[sideOf(p, q, wound)]}" width="${n(long)}" height="${n(eave)}"/>`)));
   });
   const roof = (id: string, poly: Pt[], slope: Slope, along: Pt): void => {
     const p = raked(id, "block", poly, slope, along, (corners) => `<polygon class="u-block-roof" points="${pointList(corners)}"/>`);
-    if (p !== undefined) planes.push(ghost(p));
+    if (p !== undefined) planes.push(roof1(p));
   };
   if (!pitched) {
     roof(`${prefix}top`, b.ring, { x0: b.ring[0][0], y0: b.ring[0][1], z0: b.height, gx: 0, gy: 0 }, [1, 0]);
@@ -304,4 +312,9 @@ export function contextUprights(plan: ContextPlan, most = CONTEXT_BLOCKS): Uprig
     items.push({ id: `c-${b.id}`, kind: "blocks", at: [x, y], height: b.height, planes });
   }
   return items;
+}
+
+/** The building a raised venue stands in as a block: its outline in feet, its height, `xray` the middle its walls give way from (or none for a solid one). */
+export function shellBlock(key: string, ring: readonly Pt[], height: number, xray: Pt | undefined): ContextBlock {
+  return { id: `shell-${key}`, ring: [...ring], height, rise: 0, area: Math.abs(signedArea(ring)), ghost: false, whole: true, ...(xray === undefined ? {} : { xray }) };
 }

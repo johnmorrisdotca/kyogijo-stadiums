@@ -11,7 +11,7 @@ import { Buffer } from "node:buffer";
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import process from "node:process";
 import { URL } from "node:url";
-import { areaOf, metresFrom, simplified } from "../src/venues.geo.ts";
+import { areaOf, inside, lonLatFrom, metresFrom, simplified, edgeDistance } from "../src/venues.geo.ts";
 
 const root = new URL("../data-sources/plateau/", import.meta.url);
 const day = process.argv[2] ?? readdirSync(root).filter((name) => /^\d{4}-\d{2}-\d{2}$/.test(name)).sort().at(-1);
@@ -79,12 +79,9 @@ const head = `// Made by scripts/build-plateau.mjs from the files of data-source
 // free for anyone, commercial use included, compatible with Creative Commons Attribution 4.0; the credit is \`PLATEAU_ATTRIBUTION\`. The copyright of a ward's data belongs to its local government. It is kept apart from
 // the OpenStreetMap data (ODbL 1.0) of the venues' outlines and from every CC0 file of the package, and nothing is copied from one to the other. The raw extract is in data-sources/plateau/.
 import type { ContextArea } from "./context.ts";
+import { PLATEAU_ATTRIBUTION } from "./plateau.credit.ts";
 
-/** The credit that goes with a drawing made from these buildings: the source, and that it was edited. */
-export const PLATEAU_ATTRIBUTION = {
-  en: "Project PLATEAU, Ministry of Land, Infrastructure, Transport and Tourism (MLIT), https://www.mlit.go.jp/plateau/ (3D city model of Bunkyo ward, 2025 edition), simplified and edited by Kyogijo Stadiums; not made by MLIT",
-  ja: "出典：国土交通省 Project PLATEAU（文京区の3D都市モデル、2025年度）を Kyogijo Stadiums が加工して作成。国土交通省が作成したものではありません。",
-};
+export { PLATEAU_ATTRIBUTION };
 
 `;
 const body = Object.entries(areas)
@@ -116,3 +113,65 @@ ${a.text.replace(/^ {4}/gm, "        ")}
   .join("\n");
 writeFileSync(new URL("../src/plateau.data.ts", import.meta.url), `${head}${body}\n/** Every area, by key. */\nexport const PLATEAU_AREAS: Readonly<Record<string, ContextArea>> = { ${Object.keys(areas).map((k) => `${JSON.stringify(k)}: ${k.toUpperCase().replace(/-/g, "_")}`).join(", ")} };\n`);
 console.log("src/plateau.data.ts written");
+
+// ---- The Kodokan: one building, and where its main dojo lies in it. ----
+// The building is the one of the extract that holds the point English Wikipedia's infobox gives for the Kodokan (35.7076 N, 139.7534 E) and that PLATEAU counts as 8 storeys above ground (OpenStreetMap's way 170598646, Wikidata Q1165384, building:levels 8, is the same outline: read as a check, not copied).
+// Its main dojo is 420 jo (the count of the Kodokan's own page, English Wikipedia and the IJF) on the 7th floor, four contest areas on a floor that must be 26 metres square at least, and a gallery on the 8th: the room, walls to the far edge
+// of the gallery, is 31.8 metres square with no wood round the mats (`SIDE`). The shape of the floor is ours (no source gives it): the square is put where it stands farthest from the building's walls, whatever way it is turned.
+const KODOKAN = { find: [139.7534024, 35.7076186], storeys: 8 };
+const SIDE = 31.8;
+{
+  const extract = JSON.parse(readFileSync(new URL(`${[...Object.keys(areas)][0]}.json`, dir), "utf8"));
+  const hit = extract.buildings.filter((b) => b.storeys === KODOKAN.storeys && inside(b.ring.map((p) => [p[0], p[1]]), KODOKAN.find));
+  if (hit.length !== 1) throw new Error(`the Kodokan: ${hit.length} buildings of ${KODOKAN.storeys} storeys hold ${KODOKAN.find}`);
+  const b = hit[0];
+  const origin = b.ring[0];
+  const ring = simplified(metresFrom(origin, b.ring), 0.3);
+  const corners = (cx, cy, h) => {
+    const a = (h * Math.PI) / 180;
+    const [c, s, r] = [Math.cos(a), Math.sin(a), SIDE / 2];
+    const pts = [];
+    for (let i = 0; i < 16; i += 1) {
+      const t = -r + (2 * r * i) / 16;
+      for (const [u, v] of [[-r, t], [r, -t], [-t, -r], [t, r]]) pts.push([cx + u * c - v * s, cy + u * s + v * c]);
+    }
+    return pts;
+  };
+  let best = { clear: -Infinity, cx: 0, cy: 0, h: 0 };
+  for (let h = 0; h < 90; h += 0.5) {
+    for (let cx = -12; cx <= 36; cx += 0.25) {
+      for (let cy = -6; cy <= 44; cy += 0.25) {
+        const pts = corners(cx, cy, h);
+        if (!pts.every((p) => inside(ring, p))) continue;
+        const clear = Math.min(...pts.map((p) => edgeDistance(ring, p)));
+        if (clear > best.clear) best = { clear, cx, cy, h };
+      }
+    }
+  }
+  if (best.clear <= 0) throw new Error("the Kodokan: the room does not fit in the building");
+  const fixed = (lonLat) => lonLat.map((v) => Math.round(v * 1e6) / 1e6);
+  // The dojo's x axis lies along the compass heading 90 less the angle (anticlockwise from east) the search turned the square by.
+  const heading = (((90 - best.h) % 180) + 180) % 180;
+  const kodokan = `// Made by scripts/build-plateau.mjs from data-sources/plateau/${day}/: do not edit by hand.
+//
+// THIS FILE IS DATA FROM PROJECT PLATEAU, edited: the Kodokan's building (its roof-edge outline simplified to 0.3 metres, its height and its storeys, from MLIT's 3D city model of Bunkyo ward, 2025 edition) and where the main dojo's
+// room is put in it (worked out here from the outline, ours). The credit is \`PLATEAU_ATTRIBUTION\` (plateau.credit.ts), the terms the PLATEAU Site Policy's (free, commercial use included, compatible with CC BY 4.0). Apart from the
+// OpenStreetMap data (ODbL 1.0); nothing is copied from one to the other. The raw extract is in data-sources/plateau/.
+
+/** The Kodokan's building and the place of its main dojo in it. */
+export const KODOKAN_BUILDING = {
+  /** The building's id in PLATEAU's file (bldg:Building gml:id). */
+  "source": ${JSON.stringify(b.id)},
+  "read": ${JSON.stringify(extract.read)},
+  /** The roof-edge outline, \`[longitude, latitude]\`. */
+  "ring": ${JSON.stringify(ring.map((p) => fixed(lonLatFrom(origin, p))))},
+  /** The height of the building's top above its ground, in metres, and its storeys above ground. */
+  "height": ${b.height},
+  "storeys": ${b.storeys},
+  /** The middle of the main dojo's room, \`[longitude, latitude]\`, the compass heading of its x axis (0 to under 180) and the length of its side in metres, walls and gallery included. */
+  "room": { "centre": ${JSON.stringify(fixed(lonLatFrom(origin, [best.cx, best.cy])))}, "heading": ${heading}, "side": ${SIDE}, "clearance": ${Math.round(best.clear * 100) / 100} },
+} as const;
+`;
+  writeFileSync(new URL("../src/kodokan.data.ts", import.meta.url), kodokan);
+  console.log(`src/kodokan.data.ts written: ${b.id} ${b.height} m, ${b.storeys} storeys, ${ring.length} points, room at heading ${heading}, ${Math.round(best.clear * 100) / 100} m clear`);
+}

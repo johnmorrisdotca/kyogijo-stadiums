@@ -295,6 +295,9 @@ src/
 ├── walk.ts             the walkable mask of a district: half-metre cells rasterised from the features of walk.data.ts
 ├── walk.data.ts        made by scripts/build-walk.mjs from data-sources/walk/: what stands in a crowd's way or holds it, ODbL 1.0, kept apart
 ├── context.ts          the buildings round a district: an area's layers in one frame, the buildings placed in the district's, flat on its floor and as blocks in 3D
+├── kodokan.ts          the Kodokan as a venue of a district: its main dojo in the air on the 7th floor, in PLATEAU's building
+├── kodokan.data.ts     the Kodokan's building and the room's place in it (made by scripts/build-plateau.mjs)
+├── plateau.credit.ts   the credit that goes with PLATEAU's buildings, in English and in Japanese
 ├── plateau.data.ts     Tokyo Dome City's buildings from Project PLATEAU, simplified at build time (made by scripts/build-plateau.mjs)
 ├── plateau-entry.ts    the PLATEAU entry
 ├── atlas.ts            every park, ground and arena with its place, its tenants and the surfaces it offers, and the filters

@@ -51,7 +51,7 @@ export interface Hall {
 }
 
 /** The Kodokan's main dojo as drawn: a square floor of 420 jō's area, four contest areas, the seat of honour, the banner, the wood and the gallery, in the two looks the owner's photographs show. The years of both are unknown. */
-const KODOKAN_MAIN: DojoSpec = {
+export const KODOKAN_MAIN: DojoSpec = {
   mats: { width: 26.4, length: 26.4 },
   surround: 4,
   areas: { across: 2, down: 2 },

@@ -4,6 +4,7 @@ export type { DistrictMember, DistrictMode, DistrictOptions, DistrictPlaced, Dis
 export { buildDistrictTurn, districtPresets, districtTurnMarkup, mountDistrictTurn } from "./district.turn.ts";
 export type { DistrictTurnSettings } from "./district.turn.ts";
 export type { ContextArea } from "./context.ts";
+export { KODOKAN, KODOKAN_DOJO, KODOKAN_FLOOR_HEIGHT, KODOKAN_ROOM_HEIGHT, kodokanMember } from "./kodokan.ts";
 export { VENUE_ATTRIBUTION } from "./venues.ts";
 export { mountDistrict } from "./district.dom.ts";
 export type { KyogijoDistrict } from "./district.dom.ts";

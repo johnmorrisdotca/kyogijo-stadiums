@@ -7,6 +7,11 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **The Kodokan in the Tokyo district** ([the district page](./docs/district.md#the-kodokan-the-great-dojo-in-the-air)): `"kodokan"` is a venue of a district. Its main dojo (the great dojo, on the 7th floor, 420 mats, four contest areas at once, a gallery of about 900 on the 8th) is drawn in the air on its real floor, 31.9 metres up, in Project PLATEAU's building (8 storeys, 43.1 metres, its real outline), with the package's judo dojo inside: the four areas, the gallery, the seat of honour. No source gives the floor's shape or the room's place in the building: the floor is a square of 420 jō and the room is put where it stands farthest from the walls (ours, and said). `building: "xray" | "solid" | "none"` draws the building with walls that give way to the eye as it looks in (the default), whole, or not at all. The building is the venue's own, so the surrounding `context` leaves its copy out. A district with the Kodokan carries PLATEAU's credit without any context. New in the Tokyo district of the demo: a Kodokan choice, a Kodokan building choice kept in the address (`building=solid`, `building=none`), a preset "Tokyo Dome City and the Kodokan", and `yaw` and `pitch` in the address for an exact opening view. A picture of the dojo in the docs.
+- A member of a district can stand on a floor above the ground (`DistrictMember.elevation`, in feet): its planes are lifted, its floor is drawn in the air as a plane of its own and the ground under it is left bare in 3D.
+
 ## [0.42.1] - 2026-10-22
 
 ### Fixed

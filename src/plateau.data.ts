@@ -6,12 +6,9 @@
 // free for anyone, commercial use included, compatible with Creative Commons Attribution 4.0; the credit is `PLATEAU_ATTRIBUTION`. The copyright of a ward's data belongs to its local government. It is kept apart from
 // the OpenStreetMap data (ODbL 1.0) of the venues' outlines and from every CC0 file of the package, and nothing is copied from one to the other. The raw extract is in data-sources/plateau/.
 import type { ContextArea } from "./context.ts";
+import { PLATEAU_ATTRIBUTION } from "./plateau.credit.ts";
 
-/** The credit that goes with a drawing made from these buildings: the source, and that it was edited. */
-export const PLATEAU_ATTRIBUTION = {
-  en: "Project PLATEAU, Ministry of Land, Infrastructure, Transport and Tourism (MLIT), https://www.mlit.go.jp/plateau/ (3D city model of Bunkyo ward, 2025 edition), simplified and edited by Kyogijo Stadiums; not made by MLIT",
-  ja: "出典：国土交通省 Project PLATEAU（文京区の3D都市モデル、2025年度）を Kyogijo Stadiums が加工して作成。国土交通省が作成したものではありません。",
-};
+export { PLATEAU_ATTRIBUTION };
 
 /** Tokyo Dome City: 734 buildings within 500 metres of the middle, from Bunkyo ward, Tokyo (13105), 2025, product specification 5.0, read 2026-10-22. */
 export const TOKYO_DOME_CITY: ContextArea = {

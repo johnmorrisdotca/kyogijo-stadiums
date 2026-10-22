@@ -106,6 +106,29 @@ console.log(blocks.length, owned, blocks.filter((b) => b.ghost).length, Math.max
 
 **The terms.** PLATEAU's [site policy](https://www.mlit.go.jp/plateau/site-policy/) (clause 3) lets anyone use its data free of charge, commercial use included, and is compatible with Creative Commons Attribution 4.0 and the Public Data License 1.0; the source is to be credited and what was edited is to say so, and MLIT's name is not to be used as though it made the result. The copyright of a ward's data belongs to its local government. The credit goes in the description of every drawing and view that uses the buildings, in the district's language: "Project PLATEAU, Ministry of Land, Infrastructure, Transport and Tourism (MLIT), https://www.mlit.go.jp/plateau/ (3D city model of Bunkyo ward, 2025 edition), simplified and edited by Kyogijo Stadiums; not made by MLIT". The data is in `src/plateau.data.ts`, apart from OpenStreetMap's (ODbL) and from every CC0 file, and `NOTICE.md` names it.
 
+## The Kodokan: the great dojo in the air
+
+`"kodokan"` is a venue of a district like the others: the Kodokan Judo Institute in Kasuga, Bunkyo, about 300 metres north-east of Tokyo Dome, with its main dojo, the great dojo, drawn in the air, on its real floor, inside the building. The building is PLATEAU's, the room and its mats are the package's own judo dojo, [the one the atlas draws](./budo.md#famous-halls-on-the-atlas), and the floor of the room is as high over the ground as the 7th floor of an 8-storey building.
+
+![The Kodokan's main dojo in 3D: four pale contest areas on green mats on a floor in the air, a gallery of seats on all four sides and the raised seat of honour at the front wall, inside the building's outline drawn as a see-through ghost](./pictures/district-kodokan-3d-desk-light.webp)
+
+```ts
+import { planDistrict } from "@johnmorrisdotca/kyogijo-stadiums/district";
+
+const plan = planDistrict({ venues: ["kodokan"] });
+const member = plan.members[0].member;
+console.log(member.key, member.kind, member.seats, (member.elevation! / 3.28084).toFixed(1));
+// kodokan hall 900 31.9
+```
+
+- **What a source says.** The main dojo is on the 7th floor, has 420 mats and four official contests can be held in it at the same time; the gallery is on the 8th floor and seats about 900; the building has eight floors and a basement. The Kodokan's own page ([its facilities page](https://kdkjudo.org/%e6%96%bd%e8%a8%ad%e3%81%ae%e3%81%94%e6%a1%88%e5%86%85/)), [English Wikipedia](https://en.wikipedia.org/wiki/Kodokan_Judo_Institute) (read on 2026-10-22; last edited 2026-04-20) and the [IJF](https://www.ijf.org/news/show/kodokan-an-institution-a-legendary-place-and-a-training-venue) say it. The floor is drawn as 420 jō (the atlas's count, a floor of 26.4 metres square, on which the four 8-metre areas fit), the gallery with 3 rows of seats on each side.
+- **What the building says.** PLATEAU's model of Bunkyo ward has it as one building: 8 storeys above ground, 43.1 metres, an outline of ten points (OpenStreetMap's way 170598646, with 8 levels and Wikidata Q1165384, is the same outline, read as a check and not copied). The 7th floor is six storeys up at the building's own storey height, 5.4 metres, which puts the floor 32.3 metres up; the room is 11.2 metres high (the dojo's 4.5-metre walls, the gallery level with their tops, the lid), two storeys, so the floor is set at 31.9 metres to leave the room under the roof.
+- **What is ours.** No source gives the shape of the floor or the room's place in the building, so the floor is a square, and the room (walls and gallery, 31.8 metres square) is put where it stands farthest from the building's walls, whichever way it is turned (`scripts/build-plateau.mjs`; 0.18 metre clear). Its wood is none: the atlas draws 4 metres of wood all round the mats, which would not stand inside the real outline. The storey height is the building's average.
+- **The building.** `building: "xray"` (the default) draws it with each wall giving way to the eye as the view comes round to that side and looks in, to a trace of itself, and the roof nearly clear; `"solid"` draws it whole; `"none"` leaves it out and the dojo floats on its floor alone. On the plan it is a pale ghost, in its tone of height when solid, under the room. The building of the model that is the same one is left out of the surrounding `context`, whichever you ask.
+- **The credit.** A district with the Kodokan carries PLATEAU's credit in its description, with or without the surrounding buildings.
+
+The demo's [district page](https://johnmorrisdotca.github.io/kyogijo-stadiums/district.html?venues=tokyo-dome,korakuen-hall,kodokan) has the Kodokan as a choice in the Tokyo district and a preset, "Tokyo Dome City and the Kodokan", with the building's three states in the address (`building=solid`, `building=none`). The main camera looks over the district from the south, where taller buildings stand in front of the Kodokan: turn the view with the arrows, or open it with `yaw` and `pitch` in the address (the demo's own), as [this view from the north](https://johnmorrisdotca.github.io/kyogijo-stadiums/district.html?venues=tokyo-dome,korakuen-hall,kodokan&view=3d&yaw=150&pitch=55) does.
+
 ## In 3D
 
 `buildDistrictTurn` makes a [`TurnModel`](./turn.md) like any other, so the camera, the four viewpoints, the controls, the pointer, the keys and the auto-turn are the 3D view's own, and its fit is steady: the scale and the place are one for the whole circle, so turning never zooms in and out or sways. Each venue is built as it is on its own (`buildTurn`: the stands, the walls and the roof with `venue: { roof: true }`, the goals and the posts), its planes turned about the middle of its surface and moved to its place; the floor is the district's plan with each building's outline only.

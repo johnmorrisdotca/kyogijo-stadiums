@@ -350,3 +350,58 @@ test("says the credit of the buildings in Japanese, and keeps the choice off fro
   await expect(page.locator(`${STAGE} .ky-dist-context`)).toHaveCount(0);
   await expect(page.locator('[data-testid="context"]')).not.toBeChecked();
 });
+
+test("puts the Kodokan's main dojo in the air in its building: a choice in the Tokyo district, a preset, the building's three states in the address", async ({ page }) => {
+  const { errors, outside } = await open(page);
+  await expect(page.locator("#kodokan-row")).toBeHidden();
+  await page.locator('#tabs button[data-preset="tokyokodokan"]').click();
+  await expect(page.locator('#tabs button[aria-selected="true"]')).toHaveText("Tokyo Dome City and the Kodokan");
+  await expect(page.locator('[data-testid="kodokan"]')).toBeChecked();
+  await expect(page.locator(`${STAGE} [data-venue="kodokan"]`)).toHaveCount(1);
+  await expect(page.locator(`${STAGE} [data-shell="kodokan"].ky-dist-ghost`)).toHaveCount(1);
+  await expect(page.locator('[data-testid="facts"]')).toContainText("Kodokan");
+  await expect(page.locator('[data-testid="facts"]')).toContainText("main dojo, 7th floor (420 jō)");
+  await expect(page.locator('[data-testid="facts"]')).toContainText("900");
+  await expect(page.locator('[data-testid="credit"]')).toContainText("Project PLATEAU");
+  expect(new URL(page.url()).searchParams.get("venues")).toContain("kodokan");
+  await page.locator("#view").selectOption("3d");
+  await expect(page.locator('[data-testid="building"]')).toBeVisible();
+  await expect(page.locator(`${STAGE} .ky-turn`)).toHaveCount(1);
+  // The floor is in the air as a plane of its own, the room's planes round it, the building's walls over them.
+  await expect(page.locator(`${STAGE} [data-part="m2-floor"]`)).toHaveCount(1);
+  expect(await page.locator(`${STAGE} [data-part^="m2-shell-"]`).count()).toBeGreaterThan(10);
+  expect(await page.locator(`${STAGE} [data-part^="m2-"]`).count()).toBeGreaterThan(60);
+  await page.locator('[data-testid="building"]').selectOption("solid");
+  expect(new URL(page.url()).searchParams.get("building")).toBe("solid");
+  expect(await page.locator(`${STAGE} [data-part^="m2-shell-"]`).count()).toBeGreaterThan(10);
+  await page.locator('[data-testid="building"]').selectOption("none");
+  expect(new URL(page.url()).searchParams.get("building")).toBe("none");
+  await expect(page.locator(`${STAGE} [data-part^="m2-shell-"]`)).toHaveCount(0);
+  await expect(page.locator(`${STAGE} [data-part="m2-floor"]`)).toHaveCount(1);
+  await page.locator('[data-testid="building"]').selectOption("xray");
+  expect(new URL(page.url()).searchParams.has("building")).toBe(false);
+  // Off: the venue goes and the choice of building with it.
+  await page.locator('[data-testid="kodokan"]').uncheck();
+  await expect(page.locator(`${STAGE} [data-part^="m2-"]`)).toHaveCount(0);
+  await expect(page.locator('[data-testid="building"]')).toBeHidden();
+  expect(new URL(page.url()).searchParams.get("venues")).not.toContain("kodokan");
+  await page.locator('[data-testid="kodokan"]').check();
+  await expect(page.locator(`${STAGE} [data-part="m2-floor"]`)).toHaveCount(1);
+  expect(errors).toEqual([]);
+  expect(outside).toEqual([]);
+  await noSidewaysScroll(page);
+});
+
+test("opens the Kodokan from the address in 2D and in Japanese, with its building left out when the address says so, and an exact opening view", async ({ page }) => {
+  const { errors } = await open(page, "?venues=kodokan&lang=ja&building=none");
+  await expect(page.locator(`${STAGE} [data-venue="kodokan"]`)).toHaveCount(1);
+  await expect(page.locator(`${STAGE} [data-shell]`)).toHaveCount(0);
+  await expect(page.locator('[data-testid="building"]')).toHaveValue("none");
+  await expect(page.locator('[data-testid="facts"]')).toContainText("講道館");
+  await expect(page.locator('[data-testid="facts"]')).toContainText("大道場（7階、420畳）");
+  await expect(page.locator('[data-testid="credit"]')).toContainText("国土交通省");
+  await open(page, "?venues=tokyo-dome,korakuen-hall,kodokan&view=3d&yaw=150&pitch=55");
+  await expect(page.locator(`${STAGE} .ky-turn`)).toHaveCount(1);
+  await expect(page.locator(`${STAGE} [data-part="m2-floor"]`)).toHaveCount(1);
+  expect(errors).toEqual([]);
+});
