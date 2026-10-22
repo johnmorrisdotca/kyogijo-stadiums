@@ -80,6 +80,31 @@ console.log(tokyo.mode, tokyo.members.map((m) => `${m.member.key} ${m.member.kin
 
 The demo's [district page](https://johnmorrisdotca.github.io/kyogijo-stadiums/district.html?venues=tokyo-dome,korakuen-hall&labels=1) has it as a preset, in English and Japanese.
 
+## Among its buildings: Project PLATEAU
+
+A district can stand among the buildings round it. `context` takes areas of data a page passes in, and `@johnmorrisdotca/kyogijo-stadiums/plateau` has one, `TOKYO_DOME_CITY`: the 734 buildings within 500 metres of the middle of Tokyo Dome City, from Project PLATEAU, the Ministry of Land, Infrastructure, Transport and Tourism's 3D city model of Bunkyo ward (2025 edition). A district that does not ask for them is drawn as it always was and carries none of the data.
+
+![Tokyo Dome City among its buildings in 3D from a low corner: the ballpark under its roof and the hall beside it, with the blocks of the neighbourhood standing round them at their real heights, the hotel tower in front and the ward office tower behind, on one ground with a scale of 100 metres](./pictures/district-tokyo-context-3d-desk-light.webp)
+
+```ts
+import { planDistrict } from "@johnmorrisdotca/kyogijo-stadiums/district";
+import { TOKYO_DOME_CITY } from "@johnmorrisdotca/kyogijo-stadiums/plateau";
+
+const plan = planDistrict({ venues: ["tokyo-dome", "korakuen-hall"], context: [TOKYO_DOME_CITY] });
+const heights = plan.context.blocks.map((b) => b.height / 3.28084);
+console.log(plan.context.blocks.length, plan.context.owned, plan.context.blocks.filter((b) => b.ghost).length, Math.max(...heights).toFixed(1));
+// 364 2 1 155.0
+```
+
+- **What is drawn.** On the floor every building in the frame, flat, in four tones by height (under 15 metres, 45, 100, and taller), under the venues; in 3D the 130 biggest and tallest of them as blocks, a wall for each side of its outline up to its eaves, lit by the way it faces in three tones, and a roof (a hip roof, with its ridge along the building's long side, where PLATEAU's LOD2 shape has a pitched roof and the outline is a plain convex one; a flat one otherwise). The detail is low on purpose: the heights are the point.
+- **The frame.** It takes in the streets round the venues, 150 metres on every side, and grows to take in any landmark, a building of 100 metres or more within 400 metres of them: Tokyo Dome Hotel, 155 metres (154.9 as PLATEAU measured it; heights are kept to half a metre), stands 370 metres from the hall, and Bunkyo Civic Center, about 139 metres, to the north.
+- **A venue is its own.** The Dome is drawn from its own outline and shell, so the buildings of the model that are the Dome's (its stands and its roof, `plan.context.owned`) are left out. Korakuen Hall stands inside a larger building of the model that would hide it, so that building is a ghost: pale on the floor and nearly clear in 3D. The hall in its building, at its floor, is a later release's.
+- **Heights.** A height is PLATEAU's measured height of the building's top above its ground (a building the model gives none, or a bad one, takes its LOD1 block's, or six metres). The Dome is 54.8 metres in PLATEAU, 56.19 in OpenStreetMap and Wikipedia, and the venue keeps the figure it has. The ground is flat.
+- **How it is made, once, at build time.** `pnpm plateau:fetch` reads the ward's CityGML by range requests (the 640 MB zip is not downloaded: its directory and the four building files the area touches, 2 to 5 MB each compressed), keeps the buildings round the middle as PLATEAU gives them in `data-sources/plateau/<date>/`, and `pnpm plateau` cuts them down: the roof-edge outline simplified to 0.6 metres on a half-metre grid, the height, and the rise of a pitched roof. Nothing is read or requested at run time. The file is 40 KB (16 KB gzipped); `docs/entry-points.md` has the entry.
+- **The data file is made of layers.** A `ContextArea` is one frame (an origin in longitude and latitude, a grid step and a radius, in metres east and north of the origin) and separate `layers`, each with its own source, licence, credit and rows: today `buildings`; trees and land cover from another source are added beside it, in the same frame, with no change to the buildings.
+
+**The terms.** PLATEAU's [site policy](https://www.mlit.go.jp/plateau/site-policy/) (clause 3) lets anyone use its data free of charge, commercial use included, and is compatible with Creative Commons Attribution 4.0 and the Public Data License 1.0; the source is to be credited and what was edited is to say so, and MLIT's name is not to be used as though it made the result. The copyright of a ward's data belongs to its local government. The credit goes in the description of every drawing and view that uses the buildings, in the district's language: "Project PLATEAU, Ministry of Land, Infrastructure, Transport and Tourism (MLIT), https://www.mlit.go.jp/plateau/ (3D city model of Bunkyo ward, 2025 edition), simplified and edited by Kyogijo Stadiums; not made by MLIT". The data is in `src/plateau.data.ts`, apart from OpenStreetMap's (ODbL) and from every CC0 file, and `NOTICE.md` names it.
+
 ## In 3D
 
 `buildDistrictTurn` makes a [`TurnModel`](./turn.md) like any other, so the camera, the four viewpoints, the controls, the pointer, the keys and the auto-turn are the 3D view's own, and its fit is steady: the scale and the place are one for the whole circle, so turning never zooms in and out or sways. Each venue is built as it is on its own (`buildTurn`: the stands, the walls and the roof with `venue: { roof: true }`, the goals and the posts), its planes turned about the middle of its surface and moved to its place; the floor is the district's plan with each building's outline only.
@@ -94,10 +119,10 @@ The viewpoints turn with the map (`districtPresets`): the main camera looks over
 
 ## Limits
 
-- The plan is the venues' own outlines, not a map: no street, water or park is drawn (a [crowd outside](./outside.md) shows where the roads are by where it is not), which would need more OpenStreetMap data and its credit. `city` is the real distances without a base map (a base map from OpenStreetMap, or Chizu's, is not here).
+- The plan is the venues' own outlines and, with `context`, the buildings round them, not a map: no street, water or park is drawn (a [crowd outside](./outside.md) shows where the roads are by where it is not), which would need more OpenStreetMap data and its credit. `city` is the real distances without a base map (a base map from OpenStreetMap, or Chizu's, is not here).
 - A venue a few kilometres off is a small building on a large ground: the 3D view zooms to it, and flying from one to the next is [the fly-through](./flythrough.md)'s, which does not take a district.
 - A building's outline is OpenStreetMap's: where it takes in a plaza or a wing, so does the plan, and two outlines can touch.
 - Depth between buildings is exact for buildings a line can separate; two that no line separates (outlines that overlap) are ordered by their middles.
 - The ground is flat: no hill or street level.
 
-Every drawing and view carries the credit `VENUE_ATTRIBUTION` in its description: (c) OpenStreetMap contributors, ODbL 1.0, openstreetmap.org/copyright.
+Every drawing and view carries the credit `VENUE_ATTRIBUTION` in its description: (c) OpenStreetMap contributors, ODbL 1.0, openstreetmap.org/copyright; one with `context` carries the credit of its buildings too.

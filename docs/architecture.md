@@ -294,6 +294,9 @@ src/
 ├── outside.dom.ts      the crowd's canvas on a page, in the 3D view's floor and over the 2D plan, painted when something it shows changes
 ├── walk.ts             the walkable mask of a district: half-metre cells rasterised from the features of walk.data.ts
 ├── walk.data.ts        made by scripts/build-walk.mjs from data-sources/walk/: what stands in a crowd's way or holds it, ODbL 1.0, kept apart
+├── context.ts          the buildings round a district: an area's layers in one frame, the buildings placed in the district's, flat on its floor and as blocks in 3D
+├── plateau.data.ts     Tokyo Dome City's buildings from Project PLATEAU, simplified at build time (made by scripts/build-plateau.mjs)
+├── plateau-entry.ts    the PLATEAU entry
 ├── atlas.ts            every park, ground and arena with its place, its tenants and the surfaces it offers, and the filters
 ├── tenants.ts          the clubs that played in a place: their types, the sport each draws as and the leagues that ask for no surface
 ├── tenants.data.ts     made by scripts/build-tenants.mjs from scripts/tenants.wikidata.json

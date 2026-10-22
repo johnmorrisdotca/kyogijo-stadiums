@@ -76,6 +76,7 @@
           <label><span id="l-mode"></span><select id="mode"><option value="neighbours"></option><option value="city"></option></select></label>
           <label><span id="l-turn"></span><select id="turn"><option value="0"></option><option value="auto"></option></select></label>
           <label class="check"><input id="labels" type="checkbox" /><span id="l-labels"></span></label>
+          <label class="check" id="context-row"><input id="context" type="checkbox" data-testid="context" /><span id="l-context"></span></label>
           <label><span id="l-view"></span><select id="view"><option value="2d">2D</option><option value="3d">3D</option></select></label>
           <label id="viewpoint-row"><span id="l-viewpoint"></span><select id="viewpoint"><option value="overhead"></option><option value="broadcast"></option><option value="end"></option><option value="corner"></option></select></label>
           <label class="check" id="roof-row"><input id="roof" type="checkbox" checked /><span id="l-roof"></span></label>
@@ -93,6 +94,7 @@
       // A district: several real venues of one city on one plan, each at its real position and orientation (OpenStreetMap, ODbL 1.0), to look down on in 2D or turn around together in 3D. The page only asks the package to draw
       // (`drawDistrict`, `mountDistrictTurn`): the venues, the mode and the turn are options. What is chosen lives in the address; nothing is sent anywhere and nothing is stored.
       import { DISTRICT_IDS, districtMember, mountDistrict, mountDistrictTurn, OUTSIDE_LEVELS, OUTSIDE_VENUES, planDistrict, unknownVenues, VENUE_ATTRIBUTION } from "./dist/district-entry.js";
+      import { TOKYO_DOME_CITY } from "./dist/plateau-entry.js";
       import { hoverOf, wayOf, writeWay } from "./turn-way.js";
       import { lightingFor, lightingOfAddress } from "./lighting.js";
       import { STADIUMS } from "./dist/stadiums-entry.js";
@@ -106,7 +108,7 @@
           pageDescription: "Several real venues of one city on one plan at their real relative positions and orientations, from OpenStreetMap: BC Place and Rogers Arena side by side in Vancouver, to turn around together in 3D or look down on in 2D.",
           lede: "Each venue is the one its own page draws, put where it stands and turned as it lies, from the outlines OpenStreetMap maps. Among neighbours the plan is fitted close round the buildings; in a city it keeps the real distances, with a grid of kilometres. Never a street map and no mark of a club, a league or a tournament.",
           back: "Back to the Kyogijo Stadiums demo", docs: "The district page of the docs", stadiums: "BC Place on its own",
-          factsTitle: "What the plan is made from", edit: "Choose", venues: "Venues", mode: "Fit", turn: "Turn", labels: "Names beside the venues", view: "View", viewpoint: "Viewpoint", roof: "Roofs and walls (3D)", boards: "LED boards (3D)", lighting: "Lighting", lighting_off: "Lighting: off", lighting_night: "Night", lighting_game: "Game", lighting_lightsDown: "Lights down", lighting_intro: "Intro", lighting_concert: "Concert", wash: "Surface light colour", wash_none: "as the preset", wash_purple: "Purple", wash_magenta: "Magenta", wash_blue: "Blue", wash_white: "White", language: "Language", theme: "Theme", auto: "Follow the device", light: "Light", dark: "Dark",
+          factsTitle: "What the plan is made from", edit: "Choose", venues: "Venues", mode: "Fit", turn: "Turn", labels: "Names beside the venues", context: "Surrounding buildings (Project PLATEAU)", view: "View", viewpoint: "Viewpoint", roof: "Roofs and walls (3D)", boards: "LED boards (3D)", lighting: "Lighting", lighting_off: "Lighting: off", lighting_night: "Night", lighting_game: "Game", lighting_lightsDown: "Lights down", lighting_intro: "Intro", lighting_concert: "Concert", wash: "Surface light colour", wash_none: "as the preset", wash_purple: "Purple", wash_magenta: "Magenta", wash_blue: "Blue", wash_white: "White", language: "Language", theme: "Theme", auto: "Follow the device", light: "Light", dark: "Dark",
           neighbours: "Neighbours: close round the buildings", city: "City: the real distances, with a grid", north: "North at the top", fit: "Long way across the page",
           overhead: "Overhead", broadcast: "Broadcast", end: "End", corner: "Corner", formLabel: "How the district is shown",
           venue: "Venue", seats: "Seats", rink: "Surface", orientation: "How it lies", cfl: "football field", nfl: "football field", soccer: "soccer pitch", mlb: "baseball field", boxing: "boxing ring", nhl: "ice hockey rink", opening: "along the roof's opening", pitch: "as the pitch is mapped", infield: "from the mapped infield", building: "inferred from the building", none: "not known, east-west", nonePark: "not known, fitted to the building",
@@ -122,7 +124,7 @@
           pageDescription: "同じ都市の実在の会場を、OpenStreetMapをもとに、実際の位置と向きのとおり1枚の図に並べます。バンクーバーのBCプレイスとロジャース・アリーナ、シアトルの3つの会場、東京ドームと後楽園ホールなどを、3Dで一緒に回したり、2Dで真上から見たりできます。",
           lede: "各会場は、それぞれのページで描いたものを、OpenStreetMapに記録された実際の位置と向きに置いています。隣り合う会場は建物のすぐ近くまで寄せ、都市では実際の距離を保って1km方眼を添えます。道路地図ではなく、クラブ・リーグ・大会のマークもありません。",
           back: "競技場 Kyogijo Stadiums のデモに戻る", docs: "ドキュメントの「会場の地区」ページ", stadiums: "BCプレイス単独のページ",
-          factsTitle: "この図の元になった情報", edit: "選ぶ", venues: "会場", mode: "縮尺の取り方", turn: "回転", labels: "会場名を添える", view: "表示", viewpoint: "視点", roof: "屋根と壁（3D）", boards: "LEDビジョン（3D）", lighting: "照明", lighting_off: "照明：なし", lighting_night: "夜間", lighting_game: "試合中", lighting_lightsDown: "場内暗転", lighting_intro: "選手紹介", lighting_concert: "コンサート", wash: "競技面の照明の色", wash_none: "プリセットのまま", wash_purple: "紫", wash_magenta: "マゼンタ", wash_blue: "青", wash_white: "白", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク",
+          factsTitle: "この図の元になった情報", edit: "選ぶ", venues: "会場", mode: "縮尺の取り方", turn: "回転", labels: "会場名を添える", context: "周辺の建物（Project PLATEAU）", view: "表示", viewpoint: "視点", roof: "屋根と壁（3D）", boards: "LEDビジョン（3D）", lighting: "照明", lighting_off: "照明：なし", lighting_night: "夜間", lighting_game: "試合中", lighting_lightsDown: "場内暗転", lighting_intro: "選手紹介", lighting_concert: "コンサート", wash: "競技面の照明の色", wash_none: "プリセットのまま", wash_purple: "紫", wash_magenta: "マゼンタ", wash_blue: "青", wash_white: "白", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク",
           neighbours: "隣り合う会場：建物のすぐ近くまで寄せる", city: "都市：実際の距離を保ち、方眼を添える", north: "北を上にする", fit: "長い方を横に置く",
           overhead: "真上", broadcast: "中継", end: "エンド", corner: "コーナー", formLabel: "地区の見せ方",
           venue: "会場", seats: "座席数", rink: "競技面", orientation: "向き", cfl: "フットボール場", nfl: "フットボール場", soccer: "サッカー場", mlb: "野球場", boxing: "ボクシングのリング", nhl: "アイスホッケーのリンク", opening: "屋根の開口部に沿う", pitch: "地図のピッチのとおり", infield: "地図の内野から", building: "建物から推定", none: "不明（東西）", nonePark: "不明（建物に合わせた向き）",
@@ -140,7 +142,7 @@
         alone: { venues: ["rogers-arena"], mode: "neighbours" },
         sodo: { venues: ["t-mobile-park:mlb", "lumen-field:nfl"], mode: "neighbours" },
         seattle: { venues: ["t-mobile-park:mlb", "lumen-field:nfl", "climate-pledge-arena"], mode: "city" },
-        tokyo: { venues: ["tokyo-dome:mlb", "korakuen-hall:boxing"], mode: "neighbours" },
+        tokyo: { venues: ["tokyo-dome:mlb", "korakuen-hall:boxing"], mode: "neighbours", context: true },
       };
       const $ = (id) => document.getElementById(id);
       const params = new URLSearchParams(location.search);
@@ -157,6 +159,9 @@
       /** The share of the seats outside, in percent: the address's, one of the levels, else nobody. */
       state.outside = OUTSIDE_LEVELS.includes(Number(params.get("outside"))) ? Number(params.get("outside")) : 0;
       const masked = () => state.venues.some((key) => OUTSIDE_VENUES.includes(key.split(":")[0]));
+      /** Whether the venues chosen have buildings round them to show (Tokyo Dome City's, from Project PLATEAU): the choice is on for them unless the address says context=0. */
+      const hasContext = () => state.venues.some((key) => key.startsWith("tokyo-dome:") || key.startsWith("korakuen-hall:"));
+      const contextOn = () => hasContext() && $("context").checked;
 
       setSelect("mode", params.get("mode"), ["neighbours", "city"]);
       setSelect("turn", params.get("turn"), ["0", "auto"]);
@@ -166,6 +171,7 @@
       setSelect("language", params.get("lang"), ["en", "ja"]);
       $("labels").checked = params.get("labels") === "1" || (params.get("labels") === null && params.get("mode") === "city");
       $("roof").checked = params.get("roof") !== "0";
+      $("context").checked = params.get("context") !== "0";
       $("boards").checked = params.get("boards") === "1";
       $("lighting").value = lightingOfAddress(params);
       $("wash").value = ["purple", "magenta", "blue", "white"].includes(params.get("wash")) ? params.get("wash") : "none";
@@ -174,7 +180,7 @@
 
       function labelPage() {
         const w = words();
-        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["back", "back"], ["docs", "docs"], ["stadiums", "stadiums"], ["l-facts", "factsTitle"], ["l-edit", "edit"], ["l-venues", "venues"], ["l-outside", "outside"], ["l-mode", "mode"], ["l-turn", "turn"], ["l-labels", "labels"], ["l-view", "view"], ["l-viewpoint", "viewpoint"], ["l-roof", "roof"], ["l-boards", "boards"], ["l-lighting", "lighting"], ["l-wash", "wash"], ["l-language", "language"], ["l-theme", "theme"], ["credit", "credit"]]) $(id).textContent = w[key];
+        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["back", "back"], ["docs", "docs"], ["stadiums", "stadiums"], ["l-facts", "factsTitle"], ["l-edit", "edit"], ["l-venues", "venues"], ["l-outside", "outside"], ["l-mode", "mode"], ["l-turn", "turn"], ["l-labels", "labels"], ["l-context", "context"], ["l-view", "view"], ["l-viewpoint", "viewpoint"], ["l-roof", "roof"], ["l-boards", "boards"], ["l-lighting", "lighting"], ["l-wash", "wash"], ["l-language", "language"], ["l-theme", "theme"], ["credit", "credit"]]) $(id).textContent = w[key];
         for (const select of ["viewpoint", "theme", "mode"]) for (const option of $(select).options) option.textContent = w[option.value];
         for (const option of $("wash").options) option.textContent = w[`wash_${option.value}`];
         for (const option of $("lighting").options) option.textContent = w[`lighting_${option.value}`];
@@ -231,6 +237,7 @@
         if ($("view").value === "3d") next.set("view", "3d");
         if ($("viewpoint").value !== "corner") next.set("viewpoint", $("viewpoint").value);
         if (!$("roof").checked) next.set("roof", "0");
+        if (hasContext() && !$("context").checked) next.set("context", "0");
         if ($("boards").checked) next.set("boards", "1");
         if ($("lighting").value !== "off") next.set("lighting", $("lighting").value);
         if ($("lighting").value !== "off" && $("wash").value !== "none") next.set("wash", $("wash").value);
@@ -284,6 +291,7 @@
         const three = $("view").value === "3d";
         $("viewpoint-row").hidden = !three;
         $("roof-row").hidden = !three;
+        $("context-row").hidden = !hasContext();
         $("boards-row").hidden = !three;
         $("lighting-row").hidden = !three;
         $("wash-row").hidden = !three;
@@ -304,12 +312,12 @@
           return;
         }
         // A district with a mask asks for the crowd at every level, 0 included: the plan keeps room round the buildings for it, so that nothing moves when the level does.
-        const options = { venues: state.venues, mode: $("mode").value, turn: $("turn").value === "auto" ? "auto" : 0, labels: $("labels").checked, language: $("language").value, ...(masked() ? { outside: { level: state.outside } } : {}), ...(theme === "auto" ? {} : { theme }) };
+        const options = { venues: state.venues, mode: $("mode").value, turn: $("turn").value === "auto" ? "auto" : 0, labels: $("labels").checked, language: $("language").value, ...(masked() ? { outside: { level: state.outside } } : {}), ...(theme === "auto" ? {} : { theme }), ...(contextOn() ? { context: [TOKYO_DOME_CITY] } : {}) };
         try {
           const plan = planDistrict(options);
           if (three) {
             const settings = { preset: $("viewpoint").value, venue: { roof: $("roof").checked, boards: boardsNow(), lighting: lightingNow() }, ...wayOf(syncUrl) };
-            const key = JSON.stringify([state.venues, options.mode, options.turn, $("roof").checked]);
+            const key = JSON.stringify([state.venues, options.mode, options.turn, $("roof").checked, contextOn()]);
             if (turn !== undefined && turnKey !== key) { turn.destroy(); turn = undefined; }
             if (turn === undefined) {
               if (flat !== undefined) { flat.destroy(); flat = undefined; }
@@ -330,6 +338,7 @@
           listFacts(plan);
           paintOutsideBar(plan);
           noteCost();
+          $("credit").textContent = plan.context === undefined ? words().credit : `${words().credit} ${plan.context.attribution[$("language").value].join(" ")}`;
         } catch (error) {
           $("error").textContent = String(error.message);
           $("error").hidden = false;
@@ -349,6 +358,7 @@
         state.venues = [...preset.venues];
         $("mode").value = preset.mode;
         $("labels").checked = preset.mode === "city";
+        $("context").checked = preset.context === true;
         labelPage();
         draw();
       });
@@ -374,7 +384,7 @@
         document.querySelector('#outside-levels button[aria-pressed="true"]')?.focus();
       });
       $("mode").addEventListener("input", () => { $("labels").checked = $("mode").value === "city"; labelPage(); draw(); });
-      for (const id of ["turn", "labels", "view", "viewpoint", "roof", "boards", "lighting", "wash", "theme"]) $(id).addEventListener("input", draw);
+      for (const id of ["turn", "labels", "context", "view", "viewpoint", "roof", "boards", "lighting", "wash", "theme"]) $(id).addEventListener("input", draw);
       $("language").addEventListener("input", () => { labelPage(); draw(); });
       draw();
     </script>

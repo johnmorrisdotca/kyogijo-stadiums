@@ -3,6 +3,7 @@ export { DISTRICT_IDS, DISTRICT_MARGIN, DISTRICT_MODES, KYOGIJO_DISTRICT_STYLE, 
 export type { DistrictMember, DistrictMode, DistrictOptions, DistrictPlaced, DistrictPlan, DistrictVenueInput } from "./district.ts";
 export { buildDistrictTurn, districtPresets, districtTurnMarkup, mountDistrictTurn } from "./district.turn.ts";
 export type { DistrictTurnSettings } from "./district.turn.ts";
+export type { ContextArea } from "./context.ts";
 export { VENUE_ATTRIBUTION } from "./venues.ts";
 export { mountDistrict } from "./district.dom.ts";
 export type { KyogijoDistrict } from "./district.dom.ts";

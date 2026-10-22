@@ -3,7 +3,7 @@
 // the elements are stacked far to near by `z-index`. A browser that cannot keep nested 3D layers (Safari on a phone can lose them) draws it as it is meant.
 // The same text is what a page is given from `turnMarkup` and what the mount writes; the mount then makes it turn.
 import { TURN_PRESET_NAMES, cameraMatrix, depthOf, eyeDistance, fit, matrix3d, multiply, presetOf, turnDirection, type Placement, type TurnDirection, type TurnView } from "./turn.camera.ts";
-import { cross, facing, fadeOf, n, size, unit, type Plane } from "./turn.kit.ts";
+import { APART, cross, facing, fadeOf, n, size, unit, type Plane } from "./turn.kit.ts";
 import { buildTurn, turnWords, type TurnModel, type TurnSettings } from "./turn.model.ts";
 import { KYOGIJO_TURN_STYLE } from "./turn.style.ts";
 import { esc } from "./format.ts";
@@ -84,7 +84,11 @@ export function layoutOf(model: TurnModel, view: TurnView, width: number, height
   const order = [...planes.map((p, i) => ({ i: i + 1, ground: p.kind === "ground", depth: depth(p), group: p.group })), ...(raised ? [{ i: 0, ground: false, depth: depth(floor), group: undefined as number | undefined }] : [])].filter((one) => !one.ground);
   // Buildings that stand apart are drawn one after another, the far one first; a plane of none (the floor) goes by its depth alone.
   const rank = model.groups === undefined ? undefined : groupRanks(model.groups, view.yaw);
-  order.sort((a, b) => (rank === undefined || a.group === undefined || b.group === undefined ? 0 : rank[a.group] - rank[b.group]) || a.depth - b.depth);
+  // The planes of the blocks that stand round the buildings (`APART`) are stacked by depth among themselves and then woven into the buildings' by depth, each list keeping its own order.
+  const apart = order.filter((one) => one.group === APART).sort((a, b) => a.depth - b.depth);
+  const own = order.filter((one) => one.group !== APART).sort((a, b) => (rank === undefined || a.group === undefined || b.group === undefined ? 0 : rank[a.group] - rank[b.group]) || a.depth - b.depth);
+  order.length = 0;
+  for (let i = 0, j = 0; i < own.length || j < apart.length; ) order.push(j >= apart.length || (i < own.length && own[i].depth <= apart[j].depth) ? own[i++] : apart[j++]);
   const stack = new Array<number>(model.planes.length + 1).fill(0);
   stack[0] = 1;
   order.forEach((one, rank) => {

@@ -7,6 +7,16 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **A district among its buildings, from Project PLATEAU** ([the district page](./docs/district.md#among-its-buildings-project-plateau)): `drawDistrict`, `planDistrict` and `buildDistrictTurn` take `context: [TOKYO_DOME_CITY]` (new entry `@johnmorrisdotca/kyogijo-stadiums/plateau`), the 734 buildings within 500 metres of the middle of Tokyo Dome City from the Ministry of Land, Infrastructure, Transport and Tourism's 3D city model of Bunkyo ward (2025 edition). They lie flat on the floor in four tones by height, and the 130 biggest and tallest stand in the 3D view at their real heights, walls lit by the way they face and hip roofs where the model has them: Tokyo Dome Hotel at 155 metres, Bunkyo Civic Center at about 139. The frame takes in the streets round the venues (150 metres) and grows to any landmark of 100 metres or more within 400. A building that is a venue's own (the Dome's stands and roof) is left out; the building Korakuen Hall stands in is a ghost. The data is cut down at build time (`pnpm plateau:fetch` reads the ward's CityGML by range requests, `pnpm plateau` writes `src/plateau.data.ts`: 40 KB, 16 KB gzipped) and nothing is read at run time; the raw fields are in `data-sources/plateau/2026-10-22/`. A district that does not ask is drawn as before and carries none of it. The credit (PLATEAU's site policy: free, commercial use included, compatible with CC BY 4.0; credited, and said to be edited) is in each description in English and in Japanese and in `NOTICE.md`. The data file is one frame with separate layers (`ContextArea.layers`), so trees and land cover can be laid beside the buildings.
+- **A Surrounding buildings choice on the district page**, on for Tokyo Dome City (`context=0` in the address turns it off), and a 3D picture of the district among its buildings in the docs.
+- The three links John sent (jeantimex/tokyo, mkturkcan/valdrada and a Tokyo Tower model on Printables) in [the references](./docs/references.md), with what each may be used for.
+
+### Changed
+
+- A plane of the 3D view can belong to no building (`APART`): the view stacks such planes by depth among themselves and weaves them into the buildings' (which keep their building-by-building order), so a district's surrounding blocks need no group of their own.
+
 ## [0.41.0] - 2026-10-22
 
 ### Added

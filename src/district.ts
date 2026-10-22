@@ -4,6 +4,7 @@
 // apart, with a grid, a scale and a name beside each. Nothing is drawn but what the venues are drawn from: no street, no park and no mark of a team, a league or a tournament; the credit
 // `VENUE_ATTRIBUTION` goes with it. Pure: options in, a plan, and markup, out; `district.turn.ts` raises it in 3D.
 import { arenaById, arenaNameIn } from "./arenas.ts";
+import { contextFloor, contextFrame, placeContext, type ContextPlan, type ContextArea } from "./context.ts";
 import { crowdStands, drawKyogijo } from "./draw.ts";
 import { FEET_PER_METRE } from "./geometry.ts";
 import { KYOGIJO_STRINGS } from "./strings.ts";
@@ -47,6 +48,11 @@ export interface DistrictOptions {
    * for it at all, even at level 0, makes room round the buildings for the crowd (`OUTSIDE_ROOM`), so that the plan does not move when the level does; only a district with a venue that has a walkable mask (`OUTSIDE_VENUES`) is changed.
    */
   outside?: OutsideOptions;
+  /**
+   * The buildings round the venues, as areas of data a page passes in (`TOKYO_DOME_CITY` of `@johnmorrisdotca/kyogijo-stadiums/plateau`): low in detail, flat on the floor shaded by height and, for the biggest and the tallest, standing
+   * in the 3D view. The frame is widened to take in the streets round the venues. None (the default) draws the district as it always was, and carries no data. The credit of each area goes into the description.
+   */
+  context?: readonly ContextArea[];
 }
 
 /** A venue of a district as the district needs it: what it is called, where it stands, how it lies, and how it is drawn. */
@@ -165,6 +171,8 @@ export interface DistrictPlan {
   /** The way north points on the page, degrees clockwise from the top. */
   north: number;
   members: DistrictPlaced[];
+  /** The buildings round the venues that the options' `context` brings, placed in the frame; `undefined` without it. */
+  context: ContextPlan | undefined;
   /** The frame the plan is drawn in, in feet: the venues' buildings with the margin the mode gives them. */
   view: { x: number; y: number; w: number; h: number };
   /** The distance between each pair of surfaces' middles, in metres, as the ground gives it. */
@@ -226,24 +234,36 @@ export function planDistrict(options: DistrictOptions): DistrictPlan {
   const xs = placed.flatMap((p) => p.footprint.map((q) => q[0]));
   const ys = placed.flatMap((p) => p.footprint.map((q) => q[1]));
   const [x0, x1, y0, y1] = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)];
+  const context = options.context !== undefined && options.context.length > 0;
   // A district that asks for a crowd outside (and has a mask to put it on) keeps room round its buildings for it, whatever the level, so that the plan stays where it is as the level changes.
   const room = options.outside !== undefined && walkIdFor(members.map((m) => m.id)) !== undefined ? OUTSIDE_ROOM * FEET_PER_METRE : 0;
   const margin = Math.max(Math.max(x1 - x0, y1 - y0) * DISTRICT_MARGIN[mode], room);
-  const view = { x: x0 - margin, y: y0 - margin, w: x1 - x0 + 2 * margin, h: y1 - y0 + 2 * margin };
+  // With context the frame takes in the streets round the buildings (and any landmark near them) as well.
+  const round = { x0: x0 - margin, y0: y0 - margin, x1: x1 + margin, y1: y1 + margin };
+  const wide = context ? contextFrame(options.context!, origin, turn, { x0, y0, x1, y1 }) : round;
+  const framed = { x0: Math.min(round.x0, wide.x0), y0: Math.min(round.y0, wide.y0), x1: Math.max(round.x1, wide.x1), y1: Math.max(round.y1, wide.y1) };
+  const view = { x: framed.x0, y: framed.y0, w: framed.x1 - framed.x0, h: framed.y1 - framed.y0 };
   const between: DistrictPlan["between"] = [];
   members.forEach((a, i) => members.slice(i + 1).forEach((b) => between.push({ a: a.key, b: b.key, metres: Math.round(haversine(a.centre, b.centre) * 10) / 10 })));
-  return { options, mode, turn, north: turn, members: placed, view, between, origin };
+  const around = context ? placeContext(options.context!, origin, turn, view, placed.map((p) => ({ footprint: p.footprint }))) : undefined;
+  return { options, mode, turn, north: turn, members: placed, origin, context: around, view, between };
 }
 
 // ---- The drawing. ----
 
 /** The colours and the type of a district's drawing, light and dark. Defaults sit in `:where()`, so a page's own rule wins. */
 export const KYOGIJO_DISTRICT_STYLE = `
-:where(.ky-district){--ky-dist-ground:#e1e4da;--ky-dist-grid:rgba(40,46,42,.16);--ky-dist-ink:#1f2320;--ky-dist-halo:rgba(255,255,255,.9);--ky-dist-people:#c2410c}
-@media (prefers-color-scheme:dark){:where(html:not([data-theme=light]) .ky-district:not([data-theme=light])){--ky-dist-ground:#1b2025;--ky-dist-grid:rgba(220,226,220,.16);--ky-dist-ink:#e8ece8;--ky-dist-halo:rgba(14,18,16,.85);--ky-dist-people:#fbbf24}}
-:where(html[data-theme=dark] .ky-district,.ky-district[data-theme=dark]){--ky-dist-ground:#1b2025;--ky-dist-grid:rgba(220,226,220,.16);--ky-dist-ink:#e8ece8;--ky-dist-halo:rgba(14,18,16,.85);--ky-dist-people:#fbbf24}
+:where(.ky-district){--ky-dist-ground:#e1e4da;--ky-dist-grid:rgba(40,46,42,.16);--ky-dist-ink:#1f2320;--ky-dist-halo:rgba(255,255,255,.9);--ky-dist-people:#c2410c;--ky-dist-b0:#d1d4cb;--ky-dist-b1:#c3c7be;--ky-dist-b2:#b2b7ae;--ky-dist-b3:#9ea49b;--ky-dist-bline:rgba(40,46,42,.28)}
+@media (prefers-color-scheme:dark){:where(html:not([data-theme=light]) .ky-district:not([data-theme=light])){--ky-dist-ground:#1b2025;--ky-dist-grid:rgba(220,226,220,.16);--ky-dist-ink:#e8ece8;--ky-dist-halo:rgba(14,18,16,.85);--ky-dist-people:#fbbf24;--ky-dist-b0:#262c31;--ky-dist-b1:#2e353b;--ky-dist-b2:#394148;--ky-dist-b3:#474f57;--ky-dist-bline:rgba(220,226,220,.22)}}
+:where(html[data-theme=dark] .ky-district,.ky-district[data-theme=dark]){--ky-dist-ground:#1b2025;--ky-dist-grid:rgba(220,226,220,.16);--ky-dist-ink:#e8ece8;--ky-dist-halo:rgba(14,18,16,.85);--ky-dist-people:#fbbf24;--ky-dist-b0:#262c31;--ky-dist-b1:#2e353b;--ky-dist-b2:#394148;--ky-dist-b3:#474f57;--ky-dist-bline:rgba(220,226,220,.22)}
 .ky-district .ky-dist-ground{fill:var(--ky-dist-ground)}
 .ky-district .ky-dist-grid{fill:none;stroke:var(--ky-dist-grid);stroke-width:1}
+.ky-district .ky-dist-block{stroke:var(--ky-dist-bline);stroke-width:.5;stroke-linejoin:round}
+.ky-district .ky-dist-b0{fill:var(--ky-dist-b0)}
+.ky-district .ky-dist-b1{fill:var(--ky-dist-b1)}
+.ky-district .ky-dist-b2{fill:var(--ky-dist-b2)}
+.ky-district .ky-dist-b3{fill:var(--ky-dist-b3)}
+.ky-district .ky-dist-ghost{fill:var(--ky-dist-b1);fill-opacity:.35}
 .ky-district .ky-dist-ink{fill:none;stroke:var(--ky-dist-ink);stroke-linecap:round;stroke-linejoin:round}
 .ky-district .ky-dist-text{fill:var(--ky-dist-ink);font-family:var(--ky-font,system-ui,-apple-system,"Segoe UI","Hiragino Sans","Noto Sans JP",sans-serif);font-weight:600;paint-order:stroke;stroke:var(--ky-dist-halo);stroke-linejoin:round}`;
 
@@ -295,7 +315,7 @@ export function scaleOf(view: { w: number }): number {
 export const metresText = (metres: number): string => (metres >= 1000 ? `${metres / 1000} km` : `${metres} m`);
 
 /** The id of a district's drawing: the option's, or a hash of the options. */
-export const districtId = (options: DistrictOptions): string => (typeof options.id === "string" && options.id !== "" ? options.id : `ky-district-${hash(JSON.stringify([options.venues, options.mode, options.turn, options.language, options.theme, options.stands]))}`);
+export const districtId = (options: DistrictOptions): string => (typeof options.id === "string" && options.id !== "" ? options.id : `ky-district-${hash(JSON.stringify([options.venues, options.mode, options.turn, options.language, options.theme, options.stands, ...(options.context === undefined || options.context.length === 0 ? [] : [options.context.map((a) => a.key)])]))}`);
 
 /** The title and the description of a district, in its language: what is drawn, where each venue stands from the first, how far apart they are, and the credit. */
 export function describeDistrict(options: DistrictOptions, plan: DistrictPlan = planDistrict(options)): { title: string; description: string } {
@@ -312,7 +332,8 @@ export function describeDistrict(options: DistrictOptions, plan: DistrictPlan = 
   const level = options.outside?.level ?? 0;
   const standing = level > 0 ? Math.round(plan.members.filter((p) => walkIdFor([p.member.id]) !== undefined).reduce((sum, p) => sum + p.member.seats, 0) * level / 100) : 0;
   const crowd = standing > 0 ? `${gap}${fillWords(words.districtOutside, { percent: String(level), people: String(standing).replace(/\B(?=(\d{3})+(?!\d))/g, ",") })}` : "";
-  return { title, description: `${text}${apart}${crowd}${gap}${words.districtCredit}${gap}${VENUE_ATTRIBUTION}${language === "ja" ? "。" : "."}` };
+  const credit = plan.context === undefined ? "" : `${gap}${plan.context.attribution[language].join(language === "ja" ? "。" : "; ")}${language === "ja" ? "。" : "."}`;
+  return { title, description: `${text}${apart}${crowd}${gap}${words.districtCredit}${gap}${VENUE_ATTRIBUTION}${language === "ja" ? "。" : "."}${credit}` };
 }
 
 const fillWords = (text: string, values: Record<string, string>): string => text.replace(/\{(\w+)\}/g, (_, key: string) => values[key] ?? "");
@@ -364,6 +385,7 @@ export function drawDistrict(options: DistrictOptions, plan: DistrictPlan = plan
   parts.push(`<rect class="ky-dist-ground" x="${num(view.x)}" y="${num(view.y)}" width="${num(view.w)}" height="${num(view.h)}"/>`);
   parts.push(`<clipPath id="${id}-clip"><rect x="${num(view.x)}" y="${num(view.y)}" width="${num(view.w)}" height="${num(view.h)}"/></clipPath>`);
   parts.push(`<path class="ky-dist-grid" clip-path="url(#${id}-clip)" d="${grid.join("")}"/>`);
+  if (plan.context !== undefined) parts.push(`<g clip-path="url(#${id}-clip)">${contextFloor(plan.context)}</g>`);
   const styles: string[] = [];
   plan.members.forEach((placed, i) => {
     const svg = drawing === undefined ? drawMember(placed.member, options, i, id) : drawing(placed.member, i);

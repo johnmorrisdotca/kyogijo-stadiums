@@ -3,7 +3,8 @@
 // plan drawn with each venue's building only. The model it makes is a `TurnModel`, so the camera, the controls, the pointer, the auto-turn and the steady fit of every other 3D view are this one's; its
 // buildings are stacked building by building (`Plane.group`), the far one first, so that a roof never shows through a nearer building.
 import { describeDistrict, districtId, drawDistrict, drawMember, planDistrict, surfaceCentre, type DistrictOptions, type DistrictPlaced, type DistrictPlan } from "./district.ts";
-import { n, plane, type Plane, type Upright } from "./turn.kit.ts";
+import { contextUprights } from "./context.ts";
+import { APART, n, plane, type Plane, type Upright } from "./turn.kit.ts";
 import { TURN_PRESETS, wrap, type PresetTable } from "./turn.camera.ts";
 import { mountTurn, type KyogijoTurn } from "./turn.dom.ts";
 import { turnMarkupOf } from "./turn.markup.ts";
@@ -98,6 +99,8 @@ export function buildDistrictTurn(options: DistrictOptions, settings: DistrictTu
     if (model.defs !== "") defs.push(model.defs);
     if (crowdStyle === "" && model.crowdStyle !== "") crowdStyle = model.crowdStyle;
   });
+  // The buildings round the venues stand apart from them: each block's planes are of no venue's group.
+  if (plan.context !== undefined) for (const item of contextUprights(plan.context)) items.push({ ...item, planes: item.planes.map((p) => ({ ...p, group: APART })) });
   if (labels) {
     const size = Math.max(plan.view.w, plan.view.h) * (plan.mode === "city" ? 0.016 : 0.022);
     plan.members.forEach((placed, i) => {

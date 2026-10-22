@@ -163,7 +163,7 @@ console.log(svg.startsWith("<svg"), svg.includes("USA 3, Canada 2"));
 | `./geometry`, `./frames`, `./layers`, `./charts`, `./replay` | The dimensions in any unit; the providers' frames; data layers; charts; tracking data played on a surface. |
 | `./athletics`, `./budo`, `./skating` | The athletics stadium, the budō (areas, dohyō, kyūdōjō, the dojo builder `drawDojo`, the 82 kimarite) and the skating rinks: plans, races and charts. |
 | `./parks`, `./grounds`, `./arenas`, `./atlas`, `./eras`, `./leagues`, `./events` | The ballparks, grounds, arenas, every place, a season's markings, each league's rulebook, the special games. |
-| `./venues`, `./stadiums`, `./district` | Real arenas and stadiums in their buildings' outlines; districts of venues on one plan. |
+| `./venues`, `./stadiums`, `./district`, `./plateau` | Real arenas and stadiums in their buildings' outlines; districts on one plan, among PLATEAU's buildings. |
 | `./turn` | A surface as a 3D view that turns, with the net, basket, goal or posts standing on it. |
 | `./scene`, `./canvas`, `./d3`, `./plot`, `./geojson`, `./png` | The drawing as data, on a canvas, in d3, as an Observable Plot mark, as GeoJSON, as a PNG (the optional peer `@resvg/resvg-js`). |
 | `./multi`, `./judging`, `./layouts` | `drawMulti` (several surfaces for one event, [docs](./docs/multi.md), [demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/halls.html)); `drawJudging` (who judges where, [docs](./docs/judging.md)); `drawGrid` (small multiples, backgrounds). |

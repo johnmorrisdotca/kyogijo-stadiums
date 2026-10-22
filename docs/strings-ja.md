@@ -1354,6 +1354,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `turn.parts.ring-posts` | corner posts | コーナーポスト |
 | `turn.parts.ribbon-boards` | LED ribbon boards | LEDリボンビジョン |
 | `turn.parts.hung-board` | centre-hung scoreboard | センターハングビジョン（吊り下げ式スコアボード） |
+| `turn.parts.blocks` | surrounding buildings | 周辺の建物 |
 | `rules.defensive-zone` | Defensive zone | ディフェンディングゾーン |
 | `rules.neutral-zone` | Neutral zone | ニュートラルゾーン |
 | `rules.offensive-zone` | Offensive zone | アタッキングゾーン |

@@ -313,3 +313,40 @@ test("paints the crowd in the colour of the theme: light on the dark ground and 
   expect(Math.max(...(await colour()))).toBeGreaterThan(200);
   expect(Math.max(...light)).toBeLessThan(220);
 });
+
+test("puts Tokyo Dome City among its buildings from Project PLATEAU, flat in 2D and standing in 3D, with its credit, and kept in the address", async ({ page }) => {
+  const { errors, outside } = await open(page);
+  // The choice is there only where the venues have buildings to show.
+  await expect(page.locator("#context-row")).toBeHidden();
+  await page.locator('#tabs button[data-preset="tokyo"]').click();
+  await expect(page.locator("#context-row")).toBeVisible();
+  await expect(page.locator('[data-testid="context"]')).toBeChecked();
+  await expect(page.locator(`${STAGE} .ky-dist-context .ky-dist-block`)).toHaveCount(5);
+  await expect(page.locator(`${STAGE} .ky-dist-ghost`)).toHaveCount(1);
+  await expect(page.locator('[data-testid="credit"]')).toContainText("Project PLATEAU");
+  await expect(page.locator('[data-testid="credit"]')).toContainText("not made by MLIT");
+  await page.locator("#view").selectOption("3d");
+  await expect(page.locator(`${STAGE} .ky-turn`)).toHaveCount(1);
+  expect(await page.locator(`${STAGE} [data-part^="c-"]`).count()).toBeGreaterThan(500);
+  expect(await page.locator(`${STAGE} .ky-up-block .u-block-roof`).count()).toBeGreaterThan(50);
+  // The venues are as they were: the dome's roof is still its own.
+  expect(await page.locator(`${STAGE} [data-part^="m0-roof-0-"]`).count()).toBeGreaterThan(40);
+  await page.locator('[data-testid="context"]').uncheck();
+  await expect(page.locator(`${STAGE} [data-part^="c-"]`)).toHaveCount(0);
+  expect(new URL(page.url()).searchParams.get("context")).toBe("0");
+  await page.locator('[data-testid="context"]').check();
+  await expect(page.locator(`${STAGE} [data-part^="c-"]`).first()).toBeAttached();
+  expect(new URL(page.url()).searchParams.has("context")).toBe(false);
+  expect(errors).toEqual([]);
+  expect(outside).toEqual([]);
+  await noSidewaysScroll(page);
+});
+
+test("says the credit of the buildings in Japanese, and keeps the choice off from an address that says context=0", async ({ page }) => {
+  await open(page, "?venues=tokyo-dome,korakuen-hall&lang=ja");
+  await expect(page.locator('[data-testid="credit"]')).toContainText("国土交通省");
+  await expect(page.locator(`${STAGE} .ky-dist-context`)).toHaveCount(1);
+  await open(page, "?venues=tokyo-dome,korakuen-hall&context=0");
+  await expect(page.locator(`${STAGE} .ky-dist-context`)).toHaveCount(0);
+  await expect(page.locator('[data-testid="context"]')).not.toBeChecked();
+});
