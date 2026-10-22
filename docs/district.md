@@ -91,8 +91,9 @@ import { planDistrict } from "@johnmorrisdotca/kyogijo-stadiums/district";
 import { TOKYO_DOME_CITY } from "@johnmorrisdotca/kyogijo-stadiums/plateau";
 
 const plan = planDistrict({ venues: ["tokyo-dome", "korakuen-hall"], context: [TOKYO_DOME_CITY] });
-const heights = plan.context.blocks.map((b) => b.height / 3.28084);
-console.log(plan.context.blocks.length, plan.context.owned, plan.context.blocks.filter((b) => b.ghost).length, Math.max(...heights).toFixed(1));
+const { blocks, owned } = plan.context!;
+const heights = blocks.map((b) => b.height / 3.28084);
+console.log(blocks.length, owned, blocks.filter((b) => b.ghost).length, Math.max(...heights).toFixed(1));
 // 364 2 1 155.0
 ```
 
