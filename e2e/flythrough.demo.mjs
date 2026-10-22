@@ -226,11 +226,14 @@ test("plays and pauses: Play flies, Pause eases to a stop and the clock stays st
   await expect(play).toHaveAttribute("aria-pressed", "false");
   // A skip to the arena glides there along the path, and the clock then rests at the stage's start.
   await page.locator(`${TRIP} button[data-stage="arena"]`).click();
+  // The pointer goes out of the way again: a page that scrolled the stage under it would start the pointer's own turn, and on a slow machine it did.
+  await page.mouse.move(2, 2);
   await expect(page.locator(`${TRIP} .kf`)).toHaveAttribute("data-stage", "arena", { timeout: 4000 });
   await page.waitForTimeout(2200);
   const arrived = await page.evaluate(() => ({ time: window.flythrough.time, start: window.flythrough.camera() }));
   expect(arrived.start.arena).toBe(1);
   await page.locator(`${TRIP} button[data-stage="map"]`).click();
+  await page.mouse.move(2, 2);
   await expect(page.locator(`${TRIP} .kf`)).toHaveAttribute("data-stage", "map", { timeout: 4000 });
   await page.waitForTimeout(2200);
   expect(await page.evaluate(() => window.flythrough.time)).toBe(0);
