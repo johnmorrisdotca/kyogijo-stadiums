@@ -14,6 +14,7 @@ import type { VenueBuild, VenueSettings } from "./venue.ts";
 import type { UprightKind } from "./turn.kit.ts";
 import type { Box3 } from "./turn.camera.ts";
 import { resolveLighting } from "./venue.lighting.ts";
+import type { OutsideSpec } from "./outside.dom.ts";
 import type { Language, LightingOptions, LightingPreset, ScoreOptions, SurfaceOptions } from "./types.ts";
 
 /** What can be asked of a 3D view. */
@@ -111,6 +112,8 @@ export interface TurnModel {
   groups?: { hull: readonly (readonly [number, number])[] }[];
   /** The board the options ask for (`board`), laid over the view: a layer of its own, never a plane of the scene. */
   board?: ResolvedBoard;
+  /** The crowd outside the venues of a district, asked for (`DistrictOptions.outside`): a canvas on the floor that the mount paints (`outside.dom.ts`), never a plane of the scene. */
+  outside?: OutsideSpec;
 }
 
 /** The lighting a venue is built with, as a model's field: the venue's own setting, else the crowd's, and none where there is no venue. */

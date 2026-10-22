@@ -171,3 +171,145 @@ test("shows Tokyo Dome City: the ballpark and the hall as neighbours, one arrow,
   expect(errors).toEqual([]);
   await noSidewaysScroll(page);
 });
+
+/** How many pixels of a canvas have any ink: the people on it. */
+const inked = (page, selector) =>
+  page.locator(selector).evaluate((canvas) => {
+    const data = canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height).data;
+    let n = 0;
+    for (let i = 3; i < data.length; i += 4) if (data[i] > 0) n += 1;
+    return n;
+  });
+
+test("offers the crowd outside for Vancouver, in view before the plan, five levels, and for no other district", async ({ page }) => {
+  const { errors } = await open(page);
+  const bar = page.locator('[data-testid="outside"]');
+  await expect(bar).toBeVisible();
+  await expect(bar.locator("button")).toHaveText(["0%", "25%", "50%", "75%", "100%"]);
+  await expect(bar.locator('button[aria-pressed="true"]')).toHaveText("0%");
+  // In the first screen: the bar ends above the fold, the plan under it.
+  const box = await bar.boundingBox();
+  const height = page.viewportSize().height;
+  expect(box.y + box.height).toBeLessThan(height);
+  await expect(page.locator('[data-testid="outside-count"]')).toContainText("Nobody outside");
+  await page.locator('#tabs button[data-preset="sodo"]').click();
+  await expect(bar).toBeHidden();
+  await expect(page.locator('[data-testid="outside-note"]')).toContainText("BC Place and Rogers Arena");
+  await page.locator('#tabs button[data-preset="pair"]').click();
+  await expect(bar).toBeVisible();
+  expect(errors).toEqual([]);
+});
+
+test("puts the crowd outside on one canvas over the plan, a level at a time, kept in the address, the plan where it was", async ({ page }) => {
+  const { errors } = await open(page);
+  const CANVAS = `${STAGE} canvas.ky-district-outside`;
+  const plan = page.locator(`${STAGE} svg.ky-district`);
+  const viewBox = await plan.getAttribute("viewBox");
+  const elements = await page.locator(`${STAGE} *`).count();
+  await expect(page.locator(CANVAS)).toHaveCount(1);
+  expect(await page.locator(CANVAS).getAttribute("width")).toBe("1");
+  const painted = {};
+  for (const level of [25, 50, 75, 100]) {
+    await page.locator(`[data-testid="outside"] button[data-level="${level}"]`).click();
+    await expect(page.locator(CANVAS)).toHaveAttribute("data-outside", String(level));
+    await expect(page.locator('[data-testid="outside"] button[aria-pressed="true"]')).toHaveText(`${level}%`);
+    expect(new URL(page.url()).searchParams.get("outside")).toBe(String(level));
+    // The plan is the same text at every level, and nothing was added to it for a person: one canvas is all there is.
+    expect(await plan.getAttribute("viewBox")).toBe(viewBox);
+    expect(await page.locator(`${STAGE} *`).count()).toBe(elements);
+    painted[level] = await inked(page, CANVAS);
+  }
+  // More people cover more pixels, level by level.
+  expect(painted[25]).toBeGreaterThan(1000);
+  expect(painted[50]).toBeGreaterThan(painted[25]);
+  expect(painted[75]).toBeGreaterThan(painted[50]);
+  expect(painted[100]).toBeGreaterThan(painted[75]);
+  await expect(page.locator('[data-testid="outside-count"]')).toContainText("73,371 people outside, 100% of the 73,371 seats");
+  // The canvas lies over the plan's drawing and no further.
+  const [svg, canvas] = [await plan.boundingBox(), await page.locator(CANVAS).boundingBox()];
+  expect(canvas.x).toBeGreaterThanOrEqual(svg.x - 1);
+  expect(canvas.x + canvas.width).toBeLessThanOrEqual(svg.x + svg.width + 1);
+  expect(canvas.y).toBeGreaterThanOrEqual(svg.y - 1);
+  expect(canvas.y + canvas.height).toBeLessThanOrEqual(svg.y + svg.height + 1);
+  await page.locator('[data-testid="outside"] button[data-level="0"]').click();
+  expect(await page.locator(CANVAS).getAttribute("width")).toBe("1");
+  expect(new URL(page.url()).searchParams.get("outside")).toBeNull();
+  expect(errors).toEqual([]);
+});
+
+test("opens on a level from the address, in 2D and in 3D, and says it in Japanese on request", async ({ page }) => {
+  const { errors } = await open(page, "?outside=50");
+  await expect(page.locator('[data-testid="outside"] button[aria-pressed="true"]')).toHaveText("50%");
+  await expect(page.locator(`${STAGE} canvas.ky-district-outside`)).toHaveAttribute("data-outside", "50");
+  expect(await inked(page, `${STAGE} canvas.ky-district-outside`)).toBeGreaterThan(1000);
+  await page.locator("#view").selectOption("3d");
+  await expect(page.locator(`${STAGE} .ky-turn-floor canvas.ky-turn-outside`)).toHaveAttribute("data-outside", "50");
+  expect(await inked(page, `${STAGE} canvas.ky-turn-outside`)).toBeGreaterThan(1000);
+  expect(new URL(page.url()).searchParams.get("outside")).toBe("50");
+  await page.locator("#language").selectOption("ja");
+  await expect(page.locator("#l-outside")).toHaveText("会場の外の人出");
+  await expect(page.locator('[data-testid="outside-count"]')).toContainText("会場の外に36,686人（73,371席の50％）");
+  await expect(page.locator(`${STAGE} .ky-turn-outside`)).toHaveAttribute("data-outside", "50");
+  expect(errors).toEqual([]);
+  await noSidewaysScroll(page);
+});
+
+test("stands the crowd on the floor of the 3D view, a level at a time, without mounting the view again, and paints nothing while it turns", async ({ page }) => {
+  await page.addInitScript(() => {
+    window.__puts = 0;
+    const put = CanvasRenderingContext2D.prototype.putImageData;
+    CanvasRenderingContext2D.prototype.putImageData = function (...args) {
+      window.__puts += 1;
+      return put.apply(this, args);
+    };
+  });
+  const { errors } = await open(page, "?view=3d");
+  const CANVAS = `${STAGE} .ky-turn-floor > canvas.ky-turn-outside`;
+  await expect(page.locator(CANVAS)).toHaveCount(1);
+  expect(await page.locator(CANVAS).getAttribute("width")).toBe("1");
+  const planes = await page.locator(`${STAGE} .ky-up`).count();
+  await page.locator(`${STAGE} .ky-turn`).evaluate((root) => { root.dataset.same = "yes"; });
+  await page.locator('[data-testid="outside"] button[data-level="100"]').click();
+  await expect(page.locator(CANVAS)).toHaveAttribute("data-outside", "100");
+  await expect(page.locator(`${STAGE} .ky-turn`)).toHaveAttribute("data-same", "yes");
+  // One canvas and no plane more: the people are not elements of the scene.
+  expect(await page.locator(`${STAGE} .ky-up`).count()).toBe(planes);
+  expect(await inked(page, CANVAS)).toBeGreaterThan(5000);
+  // The cost of the paint, written on the bar, is the one-off a level costs.
+  const cost = Number(await page.locator('[data-testid="outside"]').getAttribute("data-cost-ms"));
+  expect(cost).toBeGreaterThan(0);
+  expect(cost).toBeLessThan(400);
+  await expect(page.locator('[data-testid="outside"]')).toHaveAttribute("data-people", "73371");
+  // Turn it: the floor's matrix moves with each frame and the canvas is not painted again.
+  const floor = page.locator(`${STAGE} .ky-turn-floor`);
+  const before = await floor.getAttribute("style");
+  const puts = await page.evaluate(() => window.__puts);
+  await page.locator('button[data-act="play"]').click();
+  await page.waitForTimeout(900);
+  expect(await floor.getAttribute("style")).not.toBe(before);
+  expect(await page.evaluate(() => window.__puts)).toBe(puts);
+  // A level changed while it turns keeps it turning: the view's angle goes on from where it was, and the view is the same one.
+  const turning = await floor.getAttribute("style");
+  await page.locator('[data-testid="outside"] button[data-level="25"]').click();
+  await page.waitForTimeout(600);
+  expect(await floor.getAttribute("style")).not.toBe(turning);
+  await expect(page.locator('button[data-act="play"]')).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator(`${STAGE} .ky-turn`)).toHaveAttribute("data-same", "yes");
+  expect(await page.evaluate(() => window.__puts)).toBe(puts + 1);
+  expect(errors).toEqual([]);
+});
+
+test("paints the crowd in the colour of the theme: light on the dark ground and dark on the light, and again when the theme changes", async ({ page }) => {
+  await open(page, "?outside=100&theme=light");
+  const CANVAS = `${STAGE} canvas.ky-district-outside`;
+  const colour = () => page.locator(CANVAS).evaluate((canvas) => {
+    const data = canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height).data;
+    for (let i = 3; i < data.length; i += 4) if (data[i] > 0) return [data[i - 3], data[i - 2], data[i - 1]];
+    return [];
+  });
+  const light = await colour();
+  await page.locator("#theme").selectOption("dark");
+  await expect.poll(colour).not.toEqual(light);
+  expect(Math.max(...(await colour()))).toBeGreaterThan(200);
+  expect(Math.max(...light)).toBeLessThan(220);
+});

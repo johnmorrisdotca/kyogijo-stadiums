@@ -40,6 +40,7 @@ Kyogijo Stadiums draws sports surfaces as SVG, to scale, with the score on them.
 - [The real venues](./venues.md): all thirty-two arenas of the NHL (the Pacific, Central, Atlantic and Metropolitan Divisions) drawn in the outline of their buildings (OpenStreetMap) with a plausible bowl of the seats, tiers and roof the sources give, in 2D and 3D.
 - [The fly-through](./flythrough.md) ([demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/flythrough.html)): one smooth camera from a chizu map down to the city and the building of a real arena, which rises into the 3D arena and turns; reduced motion shows each stage as a still.
 - [The real stadiums](./stadiums.md): BC Place for football and soccer, drawn in the outline of its building (OpenStreetMap) with its retractable, cable-supported roof and a plausible bowl of the seats the sources give.
+- [The crowd outside the venue](./outside.md): people on the sidewalks, plazas and grounds round a district's venues, at 0, 25, 50, 75 or 100 percent of the seats, drawn as one canvas, on ground OpenStreetMap maps (Vancouver first).
 - [A district of venues](./district.md): several real venues of one city on one plan at their real positions and orientations, in 2D and in 3D, tight round neighbours or at the real distances of a city.
 - [League variants](./variants.md): the WNBA, FIBA, the NCAA, the IIHF, Little League and more, each from its rulebook.
 - [Surfaces through the years](./eras.md): the markings of a season, each change cited.

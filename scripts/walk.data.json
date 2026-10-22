@@ -1,0 +1,6 @@
+{
+  "radiusMetres": 350,
+  "districts": [
+    { "id": "vancouver", "venues": ["bc-place:cfl", "rogers-arena"] }
+  ]
+}

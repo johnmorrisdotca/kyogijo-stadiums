@@ -11,6 +11,8 @@ import { esc } from "./format.ts";
 import { turnBoardMarkup } from "./overlay.ts";
 import type { ScoreOptions, SurfaceOptions } from "./types.ts";
 import type { VenueSettings } from "./venue.ts";
+import { attachOutside3d, type OutsideLayer } from "./outside.dom.ts";
+import type { OutsideLevel } from "./outside.paint.ts";
 
 /** What `mountKyogijoTurn` gives back. `O` is what `update` takes: the options of a drawing, or (for `mountMultiTurn`) of a tournament layout. */
 export interface KyogijoTurn<O = SurfaceOptions | ScoreOptions> {
@@ -41,6 +43,10 @@ export interface KyogijoTurn<O = SurfaceOptions | ScoreOptions> {
   setDirection(direction: TurnDirection): void;
   /** Start the auto-turn if it is stopped and stop it if it is running; it gives whether it is running now. */
   togglePlay(): boolean;
+  /** For a view with a crowd outside (a district asked for one): show another level at once, without drawing the view again, so that the turn goes on. */
+  setOutside?(level: OutsideLevel): void;
+  /** What the crowd outside's last paint cost, in milliseconds, how many people it drew and how (`dots` or `density`), or `undefined` where there is no crowd or it has not been drawn. */
+  outsideCost?(): { ms: number; people: number; mode: string; pixels: number } | undefined;
   /** The flat drawing that is the floor, or `null` after `destroy`. */
   svg(): SVGSVGElement | null;
   /** Stop listening and empty the container. */
@@ -154,6 +160,14 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
     faded = elements.map((one) => one.style.opacity);
   };
   gather();
+  // The crowd outside, a canvas on the floor (the floor's matrix carries it), painted again only when its level, its detail or its colour changes.
+  let outside: OutsideLayer | undefined;
+  const crowd = (): void => {
+    outside?.destroy();
+    const floor = stage.querySelector<HTMLElement>(".ky-turn-floor");
+    outside = model.outside === undefined || floor === null ? undefined : attachOutside3d(floor, model.outside);
+  };
+  crowd();
 
   const buttons = (): NodeListOf<HTMLButtonElement> => root.querySelectorAll<HTMLButtonElement>("button[data-preset]");
   /** The Play button says what it is and what it does: pressed while the view turns. */
@@ -171,6 +185,7 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
     const width = stage.clientWidth || 960;
     const height = stage.clientHeight || 600;
     const layout: Layout = layoutOf(model, now, width, height, settings.lens);
+    outside?.zoom(now.zoom);
     elements.forEach((one, i) => {
       if (written[i] !== layout.transforms[i]) one.style.transform = written[i] = layout.transforms[i];
       const z = String(layout.stack[i]);
@@ -489,6 +504,7 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
         if (forced === "light" || forced === "dark") world.setAttribute("data-theme", forced);
       }
       gather();
+      crowd();
       // The board is a layer of its own over the view, after the scene: it is written again, and the view's turn is not touched.
       stage.querySelector(".ky-turn-board")?.remove();
       if (model.board !== undefined) stage.insertAdjacentHTML("beforeend", turnBoardMarkup(model.board));
@@ -523,10 +539,19 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
       setPlaying(!playing);
       return playing;
     },
+    setOutside(level) {
+      if (!alive) return;
+      outside?.setLevel(level);
+    },
+    outsideCost() {
+      const last = outside?.last;
+      return last === undefined ? undefined : { ms: last.ms, people: last.stats.people, mode: last.stats.mode, pixels: last.pixels };
+    },
     svg: () => (alive ? root.querySelector<SVGSVGElement>(".ky-turn-floor svg.kyogijo") : null),
     destroy() {
       if (!alive) return;
       alive = false;
+      outside?.destroy();
       stop();
       stopTick();
       seen?.disconnect();

@@ -23,7 +23,13 @@
       #tabs button { font: inherit; font-size: 1rem; font-weight: 800; min-height: 48px; padding: 0 14px; border-radius: 12px; border: 2px solid var(--tab); background: var(--card); color: var(--ink); cursor: pointer; }
       #tabs button[aria-selected="true"] { background: var(--tab); color: var(--tab-ink); }
       #stage { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 8px; }
-      #stage > svg.kyogijo { display: block; width: 100%; height: auto; max-height: calc(100vh - 190px); }
+      #stage > .ky-district-view > svg.kyogijo { display: block; width: 100%; height: auto; max-height: calc(100vh - 190px); }
+      #outside-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin: 0 0 10px; padding: 8px 10px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; }
+      #outside-bar .label { font-weight: 700; margin-right: 4px; }
+      #outside-levels { display: flex; flex-wrap: wrap; gap: 6px; }
+      #outside-levels button { font: inherit; font-weight: 800; min-height: 44px; min-width: 56px; padding: 0 12px; border-radius: 10px; border: 2px solid var(--tab); background: var(--card); color: var(--ink); cursor: pointer; }
+      #outside-levels button[aria-pressed="true"] { background: var(--tab); color: var(--tab-ink); }
+      #outside-count { color: var(--muted); font-size: .9rem; }
       .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr)); gap: 12px; margin: 10px 0 0; }
       label { display: grid; gap: 4px; min-width: 0; font-size: .9rem; color: var(--muted); }
       label.check { grid-template-columns: auto 1fr; align-items: center; gap: 8px; }
@@ -50,8 +56,14 @@
       <h1 id="title"></h1>
       <p class="lede" id="lede"></p>
       <div id="tabs" role="tablist" data-testid="tabs"></div>
+      <div id="outside-bar" role="group" aria-labelledby="l-outside" data-testid="outside" hidden>
+        <span class="label" id="l-outside"></span>
+        <div id="outside-levels"></div>
+        <span id="outside-count" role="status" aria-live="polite" data-testid="outside-count"></span>
+      </div>
       <p id="error" role="alert" hidden></p>
       <div id="stage" data-testid="stage"></div>
+      <p class="note" id="outside-note" data-testid="outside-note" hidden></p>
       <details id="facts" open>
         <summary id="l-facts"></summary>
         <table data-testid="facts"><thead id="head"></thead><tbody id="list"></tbody></table>
@@ -80,7 +92,7 @@
     <script type="module">
       // A district: several real venues of one city on one plan, each at its real position and orientation (OpenStreetMap, ODbL 1.0), to look down on in 2D or turn around together in 3D. The page only asks the package to draw
       // (`drawDistrict`, `mountDistrictTurn`): the venues, the mode and the turn are options. What is chosen lives in the address; nothing is sent anywhere and nothing is stored.
-      import { DISTRICT_IDS, districtMember, drawDistrict, mountDistrictTurn, planDistrict, unknownVenues, VENUE_ATTRIBUTION } from "./dist/district-entry.js";
+      import { DISTRICT_IDS, districtMember, mountDistrict, mountDistrictTurn, OUTSIDE_LEVELS, OUTSIDE_VENUES, planDistrict, unknownVenues, VENUE_ATTRIBUTION } from "./dist/district-entry.js";
       import { hoverOf, wayOf, writeWay } from "./turn-way.js";
       import { lightingFor, lightingOfAddress } from "./lighting.js";
       import { STADIUMS } from "./dist/stadiums-entry.js";
@@ -99,7 +111,9 @@
           overhead: "Overhead", broadcast: "Broadcast", end: "End", corner: "Corner", formLabel: "How the district is shown",
           venue: "Venue", seats: "Seats", rink: "Surface", orientation: "How it lies", cfl: "football field", nfl: "football field", soccer: "soccer pitch", mlb: "baseball field", boxing: "boxing ring", nhl: "ice hockey rink", opening: "along the roof's opening", pitch: "as the pitch is mapped", infield: "from the mapped infield", building: "inferred from the building", none: "not known, east-west", nonePark: "not known, fitted to the building",
           between: "The middles of {a} and {b} are {metres} metres apart.", pickOne: "Choose at least one venue.",
-          credit: "Building outlines and roofs: (c) OpenStreetMap contributors, ODbL 1.0, openstreetmap.org/copyright. Seats, tiers and roofs: Wikidata (CC0) and the English Wikipedia article each venue cites, in our own words.",
+          outside: "People outside", outsideNote: "A crowd outside is drawn for BC Place and Rogers Arena for now; the other venues come later.",
+          outsideCount: "{people} people outside, {percent}% of the {seats} seats. They stand on sidewalks, plazas and the venues' grounds, never on a road. Walkable ground: OpenStreetMap.", outsideNone: "Nobody outside. Choose a share of the seats to put outside the venues.",
+          credit: "Building outlines, roofs and the ground a crowd outside may stand on (sidewalks, plazas, roads, buildings): (c) OpenStreetMap contributors, ODbL 1.0, openstreetmap.org/copyright. Seats, tiers and roofs: Wikidata (CC0) and the English Wikipedia article each venue cites, in our own words.",
           presets: { pair: "BC Place and Rogers Arena", soccer: "BC Place for soccer and Rogers Arena", alone: "Rogers Arena alone", sodo: "Seattle SoDo: T-Mobile Park and Lumen Field", seattle: "Seattle city: all three venues", tokyo: "Tokyo Dome City: Tokyo Dome and Korakuen Hall" },
         },
         ja: {
@@ -113,7 +127,9 @@
           overhead: "真上", broadcast: "中継", end: "エンド", corner: "コーナー", formLabel: "地区の見せ方",
           venue: "会場", seats: "座席数", rink: "競技面", orientation: "向き", cfl: "フットボール場", nfl: "フットボール場", soccer: "サッカー場", mlb: "野球場", boxing: "ボクシングのリング", nhl: "アイスホッケーのリンク", opening: "屋根の開口部に沿う", pitch: "地図のピッチのとおり", infield: "地図の内野から", building: "建物から推定", none: "不明（東西）", nonePark: "不明（建物に合わせた向き）",
           between: "{a}と{b}の中心は{metres}m離れています。", pickOne: "会場を1つ以上選んでください。",
-          credit: "建物の輪郭と屋根：(c) OpenStreetMap contributors（ODbL 1.0、openstreetmap.org/copyright）。座席数・層・屋根：Wikidata（CC0）と、各会場が出典としているWikipedia英語版の記事（独自の言葉でまとめたもの）。",
+          outside: "会場の外の人出", outsideNote: "会場の外の人出は、今のところBCプレイスとロジャーズ・アリーナの周辺で描けます。ほかの会場には、まだ対応していません。",
+          outsideCount: "会場の外に{people}人（{seats}席の{percent}％）。人が立つのは歩道、広場、会場の敷地だけで、車道には立ちません。人が立てる場所のデータは、OpenStreetMapをもとにしています。", outsideNone: "会場の外には誰もいません。座席数に対する割合を選ぶと、その分の人が外に出ます。",
+          credit: "建物の輪郭、屋根、および会場の外で人が立てる場所を判断するためのデータ（歩道、広場、道路、建物）：(c) OpenStreetMap contributors（ODbL 1.0、openstreetmap.org/copyright）。座席数、スタンドの層、屋根：Wikidata（CC0）と、各会場が出典としている英語版ウィキペディアの記事（内容は自分たちの言葉でまとめ直しています）。",
           presets: { pair: "BCプレイスとロジャース・アリーナ", soccer: "サッカー用のBCプレイスとロジャース・アリーナ", alone: "ロジャース・アリーナのみ", sodo: "シアトルのSoDo：T-モバイル・パークとルーメン・フィールド", seattle: "シアトル市内：3つの会場", tokyo: "東京ドームシティ：東京ドームと後楽園ホール" },
         },
       };
@@ -136,7 +152,11 @@
       const asked = (params.get("venues") ?? PRESETS.pair.venues.join(",")).split(",").map((v) => (Object.hasOwn(STADIUMS, v) ? `${v}:${Object.keys(STADIUMS[v].configs)[0]}` : v));
       const state = { venues: asked.filter((v, i) => KEYS.includes(v) && asked.indexOf(v) === i) };
       let turn;
+      let flat;
       let turnKey = "";
+      /** The share of the seats outside, in percent: the address's, one of the levels, else nobody. */
+      state.outside = OUTSIDE_LEVELS.includes(Number(params.get("outside"))) ? Number(params.get("outside")) : 0;
+      const masked = () => state.venues.some((key) => OUTSIDE_VENUES.includes(key.split(":")[0]));
 
       setSelect("mode", params.get("mode"), ["neighbours", "city"]);
       setSelect("turn", params.get("turn"), ["0", "auto"]);
@@ -154,7 +174,7 @@
 
       function labelPage() {
         const w = words();
-        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["back", "back"], ["docs", "docs"], ["stadiums", "stadiums"], ["l-facts", "factsTitle"], ["l-edit", "edit"], ["l-venues", "venues"], ["l-mode", "mode"], ["l-turn", "turn"], ["l-labels", "labels"], ["l-view", "view"], ["l-viewpoint", "viewpoint"], ["l-roof", "roof"], ["l-boards", "boards"], ["l-lighting", "lighting"], ["l-wash", "wash"], ["l-language", "language"], ["l-theme", "theme"], ["credit", "credit"]]) $(id).textContent = w[key];
+        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["back", "back"], ["docs", "docs"], ["stadiums", "stadiums"], ["l-facts", "factsTitle"], ["l-edit", "edit"], ["l-venues", "venues"], ["l-outside", "outside"], ["l-mode", "mode"], ["l-turn", "turn"], ["l-labels", "labels"], ["l-view", "view"], ["l-viewpoint", "viewpoint"], ["l-roof", "roof"], ["l-boards", "boards"], ["l-lighting", "lighting"], ["l-wash", "wash"], ["l-language", "language"], ["l-theme", "theme"], ["credit", "credit"]]) $(id).textContent = w[key];
         for (const select of ["viewpoint", "theme", "mode"]) for (const option of $(select).options) option.textContent = w[option.value];
         for (const option of $("wash").options) option.textContent = w[`wash_${option.value}`];
         for (const option of $("lighting").options) option.textContent = w[`lighting_${option.value}`];
@@ -214,6 +234,7 @@
         if ($("boards").checked) next.set("boards", "1");
         if ($("lighting").value !== "off") next.set("lighting", $("lighting").value);
         if ($("lighting").value !== "off" && $("wash").value !== "none") next.set("wash", $("wash").value);
+        if (masked() && state.outside > 0) next.set("outside", String(state.outside));
         if ($("language").value === "ja") next.set("lang", "ja");
         if ($("theme").value !== "auto") next.set("theme", $("theme").value);
         writeWay(next);
@@ -223,6 +244,38 @@
       /** The boards the page asks of the 3D view: a plain score on, or off. A change goes in with `update`, so the view goes on turning. */
       const boardsNow = () => ($("boards").checked ? { score: [3, 2] } : false);
       const lightingNow = () => lightingFor({ lighting: $("lighting").value, wash: $("wash").value });
+
+      /** The bar of levels: the buttons, which one is pressed, and what the level means in people. */
+      function paintOutsideBar(plan) {
+        const w = words();
+        const lang = $("language").value;
+        const on = masked();
+        $("outside-bar").hidden = !on;
+        $("outside-note").hidden = on;
+        $("outside-note").textContent = w.outsideNote;
+        if (!on) return;
+        $("outside-levels").replaceChildren(...OUTSIDE_LEVELS.map((level) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.dataset.level = String(level);
+          button.textContent = `${level}%`;
+          button.setAttribute("aria-pressed", String(level === state.outside));
+          return button;
+        }));
+        const seats = plan.members.filter((p) => OUTSIDE_VENUES.includes(p.member.id)).reduce((sum, p) => sum + p.member.seats, 0);
+        $("outside-count").textContent = state.outside === 0 ? w.outsideNone : fillIn(w.outsideCount, { people: Math.round((seats * state.outside) / 100).toLocaleString(lang), percent: state.outside, seats: seats.toLocaleString(lang) });
+        $("outside-bar").dataset.level = String(state.outside);
+      }
+
+      /** What the crowd's last paint cost, written on the bar for a person or a test to read. */
+      function noteCost() {
+        const cost = (turn ?? flat)?.outsideCost?.();
+        if (cost === undefined) delete $("outside-bar").dataset.costMs;
+        else {
+          $("outside-bar").dataset.costMs = cost.ms.toFixed(1);
+          $("outside-bar").dataset.people = String(cost.people);
+        }
+      }
 
       function draw() {
         const theme = $("theme").value;
@@ -239,7 +292,9 @@
         const stage = $("stage");
         if (state.venues.length === 0 || unknownVenues(state.venues).length > 0) {
           if (turn !== undefined) { turn.destroy(); turn = undefined; }
+          if (flat !== undefined) { flat.destroy(); flat = undefined; }
           stage.replaceChildren();
+          $("outside-bar").hidden = true;
           $("error").textContent = words().pickOne;
           $("error").hidden = false;
           $("list").replaceChildren();
@@ -248,7 +303,8 @@
           document.body.dataset.ready = "true";
           return;
         }
-        const options = { venues: state.venues, mode: $("mode").value, turn: $("turn").value === "auto" ? "auto" : 0, labels: $("labels").checked, language: $("language").value, ...(theme === "auto" ? {} : { theme }) };
+        // A district with a mask asks for the crowd at every level, 0 included: the plan keeps room round the buildings for it, so that nothing moves when the level does.
+        const options = { venues: state.venues, mode: $("mode").value, turn: $("turn").value === "auto" ? "auto" : 0, labels: $("labels").checked, language: $("language").value, ...(masked() ? { outside: { level: state.outside } } : {}), ...(theme === "auto" ? {} : { theme }) };
         try {
           const plan = planDistrict(options);
           if (three) {
@@ -256,6 +312,7 @@
             const key = JSON.stringify([state.venues, options.mode, options.turn, $("roof").checked]);
             if (turn !== undefined && turnKey !== key) { turn.destroy(); turn = undefined; }
             if (turn === undefined) {
+              if (flat !== undefined) { flat.destroy(); flat = undefined; }
               stage.innerHTML = '<div id="three"></div>';
               turnKey = key;
               turn = mountDistrictTurn($("three"), options, settings);
@@ -266,9 +323,13 @@
             }
           } else {
             if (turn !== undefined) { turn.destroy(); turn = undefined; }
-            stage.innerHTML = drawDistrict(options, plan);
+            if (flat !== undefined) flat.destroy();
+            flat = mountDistrict(stage, options);
           }
+          if (three && flat !== undefined) { flat.destroy(); flat = undefined; }
           listFacts(plan);
+          paintOutsideBar(plan);
+          noteCost();
         } catch (error) {
           $("error").textContent = String(error.message);
           $("error").hidden = false;
@@ -300,6 +361,17 @@
         state.venues = next.filter((key) => key === box.dataset.key || key.split(":")[0] !== stadium || !box.checked);
         labelPage();
         draw();
+      });
+      $("outside-levels").addEventListener("click", (event) => {
+        const button = event.target.closest("button[data-level]");
+        if (button === null) return;
+        state.outside = Number(button.dataset.level);
+        // Only the crowd changes: the plan or the view is not drawn again, so that a turn goes on.
+        (turn ?? flat)?.setOutside(state.outside);
+        paintOutsideBar(planDistrict({ venues: state.venues, mode: $("mode").value, turn: $("turn").value === "auto" ? "auto" : 0, outside: { level: state.outside } }));
+        noteCost();
+        syncUrl();
+        document.querySelector('#outside-levels button[aria-pressed="true"]')?.focus();
       });
       $("mode").addEventListener("input", () => { $("labels").checked = $("mode").value === "city"; labelPage(); draw(); });
       for (const id of ["turn", "labels", "view", "viewpoint", "roof", "boards", "lighting", "wash", "theme"]) $(id).addEventListener("input", draw);

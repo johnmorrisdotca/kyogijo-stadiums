@@ -7,6 +7,15 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.41.0] - 2026-10-22
+
+### Added
+
+- **The crowd outside the venue** ([the page](./docs/outside.md)): `outside: { level: 0 | 25 | 50 | 75 | 100 }` on a [district](./docs/district.md) puts that share of the venues' seats' worth of people on the sidewalks, plazas, parks, platforms and grounds round them, in 2D (`mountDistrict`, new) and in the 3D turn (`mountDistrictTurn`, whose view has `setOutside(level)` and `outsideCost()`), never on a carriageway, a railway, water or a building. The crowd is one ordered list, so a level is a prefix of it (nobody moves when the level does), each venue's share is exact to a person at every level and the same options give the same list (`outsideCrowd`, `outsideCount`). It is drawn with no element for a person: two typed arrays, one loop and one `putImageData` on one canvas, laid over the plan or on the 3D floor, where the floor's own matrix carries it round; a district seen whole shows density and a near view shows each person, and nothing is painted again when the view turns. Measured at 100 percent for BC Place and Rogers Arena together (73,371 people): a paint of 2 to 17 ms on a level change (the first about twice that), 0.3 ms more of the main thread a frame while the view turns, 60 frames a second with it as without, and 250 ms once for the mask and the crowd.
+- **The walkable mask of Vancouver** (BC Place and Rogers Arena, one mask shared): made from OpenStreetMap's own answer (Overpass, ODbL 1.0, kept raw in `data-sources/walk/2026-10-22/`, credited "(c) OpenStreetMap contributors") by `pnpm walk:fetch` and `pnpm walk` (`scripts/walk-rules.mjs` says what a person may stand on and what stops a crowd) into `src/walk.data.ts`, apart from the CC0 data. `src/outside.raw.test.js` holds all 73,371 people to the raw answer. Only Vancouver has a mask; every other venue comes in a later release, and so do the entrances and the walk in and out.
+- **A bar of the five levels** on the demo's [district page](https://johnmorrisdotca.github.io/kyogijo-stadiums/district.html?outside=50), over the plan and the 3D view, kept in the address (`outside=50`), in English and Japanese, with the number of people said in words.
+- `pnpm outside:cost` prints the cost of a crowd; `DistrictPlan.origin` is the point the plan's metres are measured from.
+
 ## [0.40.2] - 2026-10-21
 
 ### Fixed

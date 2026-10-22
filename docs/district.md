@@ -88,9 +88,13 @@ The demo's [district page](https://johnmorrisdotca.github.io/kyogijo-stadiums/di
 
 The viewpoints turn with the map (`districtPresets`): the main camera looks over the district from the south when north is up. `labels` stands a name over each building on a sign that faces the eye.
 
+## The crowd outside
+
+`outside: { level: 25 }` puts a quarter of the venues' seats' worth of people on the sidewalks, plazas and grounds round the buildings, never on a road, in 2D (`mountDistrict`) and in 3D, for BC Place and Rogers Arena. It is [its own page](./outside.md): the walkable ground it stands on, the levels, the licence and the cost.
+
 ## Limits
 
-- The plan is the venues' own outlines, not a map: no street, water or park is drawn, which would need more OpenStreetMap data and its credit. `city` is the real distances without a base map (a base map from OpenStreetMap, or Chizu's, is not here).
+- The plan is the venues' own outlines, not a map: no street, water or park is drawn (a [crowd outside](./outside.md) shows where the roads are by where it is not), which would need more OpenStreetMap data and its credit. `city` is the real distances without a base map (a base map from OpenStreetMap, or Chizu's, is not here).
 - A venue a few kilometres off is a small building on a large ground: the 3D view zooms to it, and flying from one to the next is [the fly-through](./flythrough.md)'s, which does not take a district.
 - A building's outline is OpenStreetMap's: where it takes in a plaza or a wing, so does the plan, and two outlines can touch.
 - Depth between buildings is exact for buildings a line can separate; two that no line separates (outlines that overlap) are ordered by their middles.

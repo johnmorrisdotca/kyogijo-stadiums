@@ -11,6 +11,7 @@ import { buildTurn, lightingOf, openingView, sceneBox, WORLD_PX, type TurnModel,
 import { planesOf, type Uprights } from "./uprights.ts";
 import { FEET_PER_METRE } from "./geometry.ts";
 import { hullOf } from "./venues.geo.ts";
+import { hasOutside, outsideCrowd, outsideLevelOf } from "./outside.ts";
 import type { Pt } from "./crowd.ts";
 import type { Language, SurfaceOptions } from "./types.ts";
 
@@ -143,6 +144,8 @@ export function buildDistrictTurn(options: DistrictOptions, settings: DistrictTu
     lens: 12,
     flat: drawDistrict(options, plan),
     groups: plan.members.map((p) => ({ hull: hullOf(p.footprint) })),
+    // The crowd outside, when the district asks for one and has a mask to put it on: the mount paints it on a canvas on the floor.
+    ...(options.outside !== undefined && hasOutside(plan) ? { outside: { level: outsideLevelOf(options), crowd: () => outsideCrowd(plan), viewBox: { x: view.x, y: view.y, w: view.w, h: view.h } } } : {}),
   };
 }
 

@@ -4,3 +4,13 @@ export type { DistrictMember, DistrictMode, DistrictOptions, DistrictPlaced, Dis
 export { buildDistrictTurn, districtPresets, districtTurnMarkup, mountDistrictTurn } from "./district.turn.ts";
 export type { DistrictTurnSettings } from "./district.turn.ts";
 export { VENUE_ATTRIBUTION } from "./venues.ts";
+export { mountDistrict } from "./district.dom.ts";
+export type { KyogijoDistrict } from "./district.dom.ts";
+// The crowd outside the venues, on ground people may stand on (OpenStreetMap, ODbL 1.0), at 0, 25, 50, 75 or 100 percent of the seats.
+export { OUTSIDE_DENSITY, OUTSIDE_LEVELS, OUTSIDE_REACH, OUTSIDE_VENUES, hasOutside, isOutsideLevel, outsideCount, outsideCrowd, outsideLevelOf } from "./outside.ts";
+export type { OutsideCrowd, OutsideLevel, OutsideOptions } from "./outside.ts";
+export { PERSON_METRES, frameOf, rasterOutside } from "./outside.paint.ts";
+export type { OutsideFrame, OutsideStats } from "./outside.paint.ts";
+export { OUTSIDE_ROOM } from "./district.ts";
+export { WALK_CELL, WALK_IDS, walkMask, walkable } from "./walk.ts";
+export type { WalkData, WalkMask } from "./walk.ts";

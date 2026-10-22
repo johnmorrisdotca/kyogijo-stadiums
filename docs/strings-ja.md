@@ -397,6 +397,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | `said.districtNeighbours` | it is fitted close round the buildings | 建物のすぐ近くまで寄せて描いています |
 | `said.districtCity` | it keeps the real distances, with a grid of kilometres and a scale | 実際の距離を保ち、1km方眼と縮尺を添えています |
 | `said.districtCredit` | Credit: | 出典： |
+| `said.districtOutside` | People outside: {percent} percent of the seats of the venues, {people} people, stand on the sidewalks, plazas and grounds round them, and none on a road. | 会場の外の人出：会場の全座席数の{percent}％にあたる{people}人が、会場の周りの歩道、広場、敷地に立っています。車道には立っていません。 |
 | `said.era` | The markings are those of the {season} season. | ラインやマークは{season}シーズンのものです。 |
 | `said.hammer` | {name} has the hammer. | {name}がハンマー（最後の1投）を持っています。 |
 | `said.ends` | By end, {name}: {list}. | {name}のエンドごとの得点：{list}。 |
@@ -2108,6 +2109,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `flythrough` | The fly-through | フライスルー |
 | page `stadiums` | The real stadiums | 実在のスタジアム |
 | page `district` | A district of venues | 会場の地区 |
+| page `outside` | The crowd outside the venue | 会場の外の人出 |
 | page `variants` | League variants | リーグごとの違い |
 | page `eras` | Surfaces through the years | 年ごとの競技場 |
 | page `atlas` | The atlas | 球場とスタジアムの地図 |

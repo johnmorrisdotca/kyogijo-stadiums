@@ -287,7 +287,13 @@ src/
 ├── stadiums-entry.ts   the stadiums' entry
 ├── district.ts         a district: several real venues placed on one plan at their real relative positions and orientations, tight (neighbours) or at the distances of a city, in 2D
 ├── district.turn.ts    a district in 3D: each venue's planes turned and moved to its place, stacked building by building
+├── district.dom.ts     a district's 2D plan in a page, with the crowd outside over it
 ├── district-entry.ts   the district's entry
+├── outside.ts          the crowd outside a district's venues: one ordered list of people on the walkable ground, a level a prefix of it
+├── outside.paint.ts    the crowd as RGBA bytes in a frame: one loop, no element, density where far and discs where near
+├── outside.dom.ts      the crowd's canvas on a page, in the 3D view's floor and over the 2D plan, painted when something it shows changes
+├── walk.ts             the walkable mask of a district: half-metre cells rasterised from the features of walk.data.ts
+├── walk.data.ts        made by scripts/build-walk.mjs from data-sources/walk/: what stands in a crowd's way or holds it, ODbL 1.0, kept apart
 ├── atlas.ts            every park, ground and arena with its place, its tenants and the surfaces it offers, and the filters
 ├── tenants.ts          the clubs that played in a place: their types, the sport each draws as and the leagues that ask for no surface
 ├── tenants.data.ts     made by scripts/build-tenants.mjs from scripts/tenants.wikidata.json
