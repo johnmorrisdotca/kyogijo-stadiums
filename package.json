@@ -148,6 +148,11 @@
       "import": "./dist/plateau-entry.js",
       "default": "./dist/plateau-entry.js"
     },
+    "./cityctx": {
+      "types": "./dist/cityctx-entry.d.ts",
+      "import": "./dist/cityctx-entry.js",
+      "default": "./dist/cityctx-entry.js"
+    },
     "./osm": {
       "types": "./dist/osm-entry.d.ts",
       "import": "./dist/osm-entry.js",
@@ -317,6 +322,9 @@
     "stadiums:fetch": "node scripts/fetch-stadiums.mjs",
     "walk": "node scripts/build-walk.mjs",
     "osm-context": "node scripts/build-osm-context.mjs",
+    "cityctx": "node scripts/build-cityctx.mjs",
+    "cityctx:fetch": "node scripts/fetch-cityctx.mjs",
+    "cityctx:vox": "python3.13 -I scripts/cityctx_vox.py",
     "walk:fetch": "node scripts/fetch-walk.mjs",
     "outside:cost": "node scripts/outside-cost.mjs",
     "plateau": "node scripts/build-plateau.mjs",

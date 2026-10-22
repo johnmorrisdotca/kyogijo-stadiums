@@ -1,0 +1,64 @@
+{
+  "areas": [
+    {
+      "id": "vancouver-nature",
+      "name": {
+        "en": "Vancouver: water, green and trees round BC Place and Rogers Arena",
+        "ja": "バンクーバー：BCプレイスとロジャース・アリーナ周辺の水面・緑地・樹木"
+      },
+      "city": "vancouver",
+      "kind": "nature",
+      "origin": [
+        -123.11038,
+        49.277237
+      ],
+      "radius": 450,
+      "grid": 0.5
+    },
+    {
+      "id": "seattle-sodo",
+      "name": {
+        "en": "Seattle: SoDo, Lumen Field and T-Mobile Park",
+        "ja": "シアトル：SoDo地区、ルーメン・フィールドとTモバイル・パーク"
+      },
+      "city": "seattle",
+      "kind": "detail",
+      "origin": [
+        -122.3322675,
+        47.5931355
+      ],
+      "radius": 650,
+      "grid": 0.5
+    },
+    {
+      "id": "seattle-center",
+      "name": {
+        "en": "Seattle: Seattle Center and Climate Pledge Arena",
+        "ja": "シアトル：シアトル・センターとクライメット・プレッジ・アリーナ"
+      },
+      "city": "seattle",
+      "kind": "detail",
+      "origin": [
+        -122.354005,
+        47.622006
+      ],
+      "radius": 550,
+      "grid": 0.5
+    },
+    {
+      "id": "seattle-city",
+      "name": {
+        "en": "Seattle: the city between the three venues",
+        "ja": "シアトル：3つの会場のあいだの市街"
+      },
+      "city": "seattle",
+      "kind": "city",
+      "origin": [
+        -122.3395133,
+        47.602759
+      ],
+      "radius": 3000,
+      "grid": 2
+    }
+  ]
+}
