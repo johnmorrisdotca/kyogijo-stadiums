@@ -263,16 +263,6 @@
       }
 
       /** The boards the page asks of the 3D view: a plain score on, or off. A change goes in with `update`, so the view goes on turning. */
-      /** An exact opening view from the address (yaw and pitch, in degrees), laid over the viewpoint's: how a picture looks at a venue the main camera cannot see. */
-      let openingUsed = false;
-      const openingAsked = () => {
-        // Only the first time the view is opened: after that the camera goes on where the reader left it.
-        if (openingUsed) return {};
-        openingUsed = true;
-        const view = {};
-        for (const key of ["yaw", "pitch"]) if (params.has(key) && Number.isFinite(Number(params.get(key)))) view[key] = Number(params.get(key));
-        return Object.keys(view).length === 0 ? {} : { view };
-      };
       const boardsNow = () => ($("boards").checked ? { score: [3, 2] } : false);
       const lightingNow = () => lightingFor({ lighting: $("lighting").value, wash: $("wash").value });
 
@@ -344,7 +334,7 @@
         try {
           const plan = planDistrict(options);
           if (three) {
-            const settings = { preset: $("viewpoint").value, ...openingAsked(), venue: { roof: $("roof").checked, boards: boardsNow(), lighting: lightingNow() }, ...wayOf(syncUrl) };
+            const settings = { preset: $("viewpoint").value, venue: { roof: $("roof").checked, boards: boardsNow(), lighting: lightingNow() }, ...wayOf(syncUrl) };
             const key = JSON.stringify([state.venues, options.mode, options.turn, $("roof").checked, contextOn(), hasKodokan() ? $("building").value : ""]);
             // Another choice of venues draws the scene again, and the camera goes on where the reader left it: the view is opened on it.
             if (turn !== undefined && turnKey !== key) { camera.carry(turn); turn.destroy(); turn = undefined; }
