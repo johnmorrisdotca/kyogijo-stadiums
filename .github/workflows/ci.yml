@@ -19,8 +19,14 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm check
       - run: pnpm build
+  # The demo's browser tests take an hour on one runner: four shards run at once, each building the demo and playing a quarter of the tests in the three projects (a failed test is retried once, and the report says it was).
   demo:
+    name: demo (${{ matrix.shard }}/4)
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
@@ -30,8 +36,8 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec playwright install --with-deps chromium webkit
-      - name: The demo, played in Chromium and WebKit at a phone's width and a desk's
-        run: pnpm test:demo
+      - name: The demo, played in Chromium and WebKit at a phone's width and a desk's (a quarter of the tests)
+        run: pnpm site && pnpm exec playwright test --shard=${{ matrix.shard }}/4
   package:
     runs-on: ${{ matrix.os }}
     strategy:

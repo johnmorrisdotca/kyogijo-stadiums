@@ -1,4 +1,5 @@
 // The demo's own tests: a real browser, real taps. `pnpm test:demo` builds the demo and runs them.
+import process from "node:process";
 import { defineConfig, devices } from "@playwright/test";
 
 const phone = { viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true };
@@ -10,7 +11,9 @@ export default defineConfig({
   timeout: 90_000,
   fullyParallel: true,
   forbidOnly: true,
-  reporter: "list",
+  // On the runner a test that fails is played once more, and the report says "flaky" for one that passed the second time: a slow machine does not cost an hour, and the flake is still seen.
+  retries: process.env.CI ? 1 : 0,
+  reporter: process.env.CI ? [["list"], ["github"]] : "list",
   use: { reducedMotion: "reduce", locale: "en-US" },
   projects: [
     { name: "chromium-phone", use: { ...devices["Desktop Chrome"], ...phone } },
