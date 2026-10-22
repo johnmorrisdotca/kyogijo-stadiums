@@ -22,9 +22,12 @@ export interface ContextLayer {
 }
 
 /**
- * An area of context round a district: ONE coordinate frame (the origin, the grid step and the radius, in metres east and north of the origin) and separate layers laid in it. Today there is one layer, `buildings`; trees and land
- * cover are added beside it later as layers of their own, each with its own source and licence, with no change to the frame or to the layers that are there. A layer a caller does not ask for or an area lacks is simply not drawn.
- * The row of a `buildings` layer: the height and the rise of the roof (0 for a flat one) in grid steps, then the first point (east, north) and each step to the next, in grid steps from the origin.
+ * An area of context round a district: ONE coordinate frame (the origin, the grid step and the radius, in metres east and north of the origin) and separate layers laid in it, each with its own source and licence. A layer an
+ * area lacks is simply not drawn. The rows of each layer, all in grid steps from the origin:
+ * - `buildings`: the height and the rise of the roof (0 for a flat one), then the first point (east, north) and each step to the next.
+ * - `streets`: the kind (0 a carriageway at street level, 1 one on a viaduct or a bridge, 2 a railway, 3 a sidewalk or a path) and the width in grid steps, then the first point and each step to the next, a line.
+ * - `landCover`: the class (0 water, 1 green, 2 wood), then the first point and each step to the next, an outline (a hole is an outline of its own, filled even-odd).
+ * - `trees`: one row: the first tree's east, north and crown radius, then each next tree's step in east and north from the one before and its crown radius.
  */
 export interface ContextArea {
   key: string;
@@ -66,11 +69,28 @@ export interface ContextStreet {
   points: Pt[];
 }
 
+/** A water, green or wood outline in feet in the district's frame (a hole is an outline of its own). */
+export interface ContextShape {
+  /** 0 water, 1 green, 2 wood. */
+  cls: number;
+  ring: Pt[];
+}
+
+/** A tree in feet in the district's frame, its crown's radius in feet. */
+export interface ContextTree {
+  at: Pt;
+  r: number;
+}
+
 /** What a district's context is: the buildings kept, and how many were left out because they are a venue's own. */
 export interface ContextPlan {
   blocks: ContextBlock[];
   /** The streets, from a `streets` layer: drawn flat on the floor, under the buildings. */
   streets?: ContextStreet[];
+  /** The water, green and wood outlines of a `landCover` layer that reach the frame: drawn flat, under the streets. */
+  land?: ContextShape[];
+  /** The trees of a `trees` layer inside the frame: drawn as dots, over the streets and under the buildings. */
+  trees?: ContextTree[];
   /** The buildings of the model that are a venue (the Dome's own parts), left out: the venue draws them. */
   owned: number;
   /** The credits of the areas used, in each language. */
@@ -190,8 +210,41 @@ export function placeContext(areas: readonly ContextArea[], origin: LonLat, turn
       streets.push({ kind: row[0] as ContextStreet["kind"], width: row[1] * area.grid * FEET_PER_METRE, points });
     }
   }
+  // The water, green and wood of the areas, and their trees.
+  const land: ContextShape[] = [];
+  const trees: ContextTree[] = [];
+  for (const area of areas) {
+    const [east, north] = metresFrom(origin, [area.origin as LonLat])[0];
+    const g = area.grid;
+    const put = (x: number, y: number): Pt => rotate([(x * g + east) * FEET_PER_METRE, -(y * g + north) * FEET_PER_METRE], turn);
+    for (const row of area.layers.landCover?.rows ?? []) {
+      const ring: Pt[] = [];
+      let [x, y] = [row[1], row[2]];
+      ring.push(put(x, y));
+      for (let i = 3; i + 1 < row.length; i += 2) {
+        x += row[i];
+        y += row[i + 1];
+        ring.push(put(x, y));
+      }
+      const box = boxOf(ring);
+      if (!(box.x1 < fx0 || box.x0 > fx1 || box.y1 < fy0 || box.y0 > fy1)) land.push({ cls: row[0], ring });
+    }
+    for (const row of area.layers.trees?.rows ?? []) {
+      let [x, y] = [row[0], row[1]];
+      for (let i = 0; i + 2 < row.length; i += 3) {
+        if (i > 0) {
+          x += row[i];
+          y += row[i + 1];
+        }
+        const at = put(x, y);
+        if (at[0] >= fx0 && at[0] <= fx1 && at[1] >= fy0 && at[1] <= fy1) trees.push({ at, r: row[i + 2] * g * FEET_PER_METRE });
+      }
+    }
+  }
+  // An empty credit (a layer whose credit another layer of the area has said) adds nothing.
   const layers = areas.flatMap((a) => Object.values(a.layers));
-  return { blocks, streets, owned, attribution: { en: [...new Set(layers.map((l) => l.attribution.en))], ja: [...new Set(layers.map((l) => l.attribution.ja))] } };
+  const credits = (language: "en" | "ja"): string[] => [...new Set(layers.map((l) => l.attribution[language]).filter((text) => text !== ""))];
+  return { blocks, streets, land, trees, owned, attribution: { en: credits("en"), ja: credits("ja") } };
 }
 
 /** The tone (0 low to 3 tall) of a building of `feet` height. */
@@ -215,14 +268,37 @@ export function streetsFloor(streets: readonly ContextStreet[]): string {
   return `<g class="ky-dist-streets" aria-hidden="true" fill="none">${keys.map((key) => `<path class="ky-dist-street ky-dist-street-${key.split(" ")[0]}" stroke-width="${key.split(" ")[1]}" d="${groups.get(key)!.join("")}"/>`).join("")}</g>`;
 }
 
-/** The buildings flat on the floor of a district: one path for each tone, and one for the ghosts, drawn under the venues. Empty for a district with no context. */
+const one = (value: number): string => String(Math.round(value * 10) / 10);
+
+/** Water, green and wood flat on the floor, the lowest of what a context draws: one path for each class, filled even-odd so that a hole is a hole. */
+export function landFloor(land: readonly ContextShape[]): string {
+  const classes = ["ky-dist-water", "ky-dist-green", "ky-dist-wood"];
+  return classes.map((cls, i) => {
+    const rings = land.filter((s) => s.cls === i);
+    return rings.length === 0 ? "" : `<path class="ky-dist-land ${cls}" fill-rule="evenodd" d="${rings.map((s) => `M${s.ring.map(([x, y]) => `${one(x)} ${one(y)}`).join("L")}Z`).join("")}"/>`;
+  }).join("");
+}
+
+/** Trees as dots: one path for each of three sizes (the crown's diameter on the floor, in feet), a dot being a round cap on a line of no length, so that a thousand trees are three elements. */
+export function treesFloor(trees: readonly ContextTree[]): string {
+  const sizes = [[0, 11, 9], [11, 17, 14], [17, Infinity, 20]] as const;
+  return sizes.map(([from, to, width]) => {
+    const dots = trees.filter((t) => t.r * 2 >= from && t.r * 2 < to);
+    return dots.length === 0 ? "" : `<path class="ky-dist-tree" stroke-width="${width}" d="${dots.map((t) => `M${one(t.at[0])} ${one(t.at[1])}h0`).join("")}"/>`;
+  }).join("");
+}
+
+/**
+ * What lies flat on the floor of a district under the venues, from the lowest up: water, green and wood, the streets, the trees as dots, and the buildings in four tones by height with the ghosts. All of it faint, so that a crowd
+ * reads on it. Empty for a district with no context.
+ */
 export function contextFloor(plan: ContextPlan): string {
-  const roads = streetsFloor(plan.streets ?? []);
-  if (plan.blocks.length === 0) return roads;
+  const under = `${landFloor(plan.land ?? [])}${streetsFloor(plan.streets ?? [])}${treesFloor(plan.trees ?? [])}`;
+  if (plan.blocks.length === 0) return under;
   const paths: string[][] = [[], [], [], [], []];
   for (const b of plan.blocks) paths[b.ghost ? 4 : toneOf(b.height)].push(`M${b.ring.map(([x, y]) => `${num(x)} ${num(y)}`).join("L")}Z`);
   const classes = ["ky-dist-b0", "ky-dist-b1", "ky-dist-b2", "ky-dist-b3", "ky-dist-ghost"];
-  return `${roads}<g class="ky-dist-context" aria-hidden="true">${paths.map((d, i) => (d.length === 0 ? "" : `<path class="ky-dist-block ${classes[i]}" d="${d.join("")}"/>`)).join("")}</g>`;
+  return `${under}<g class="ky-dist-context" aria-hidden="true">${paths.map((d, i) => (d.length === 0 ? "" : `<path class="ky-dist-block ${classes[i]}" d="${d.join("")}"/>`)).join("")}</g>`;
 }
 
 // ---- The blocks of the 3D view. ----

@@ -286,9 +286,9 @@ export function planDistrict(options: DistrictOptions): DistrictPlan {
 
 /** The colours and the type of a district's drawing, light and dark. Defaults sit in `:where()`, so a page's own rule wins. */
 export const KYOGIJO_DISTRICT_STYLE = `
-:where(.ky-district){--ky-dist-ground:#e1e4da;--ky-dist-grid:rgba(40,46,42,.16);--ky-dist-ink:#1f2320;--ky-dist-halo:rgba(255,255,255,.9);--ky-dist-people:#c2410c;--ky-dist-b0:#d1d4cb;--ky-dist-b1:#c3c7be;--ky-dist-b2:#b2b7ae;--ky-dist-b3:#9ea49b;--ky-dist-bline:rgba(40,46,42,.28);--ky-dist-road:#cbcfc4;--ky-dist-deck:#bdc2b7;--ky-dist-walk:#eef0e8;--ky-dist-rail:#8b9288;--ky-dist-gate:#1f5fa8}
-@media (prefers-color-scheme:dark){:where(html:not([data-theme=light]) .ky-district:not([data-theme=light])){--ky-dist-ground:#1b2025;--ky-dist-grid:rgba(220,226,220,.16);--ky-dist-ink:#e8ece8;--ky-dist-halo:rgba(14,18,16,.85);--ky-dist-people:#fbbf24;--ky-dist-b0:#262c31;--ky-dist-b1:#2e353b;--ky-dist-b2:#394148;--ky-dist-b3:#474f57;--ky-dist-bline:rgba(220,226,220,.22);--ky-dist-road:#2b3239;--ky-dist-deck:#353d45;--ky-dist-walk:#242b31;--ky-dist-rail:#5b646c;--ky-dist-gate:#7fb2ee}}
-:where(html[data-theme=dark] .ky-district,.ky-district[data-theme=dark]){--ky-dist-ground:#1b2025;--ky-dist-grid:rgba(220,226,220,.16);--ky-dist-ink:#e8ece8;--ky-dist-halo:rgba(14,18,16,.85);--ky-dist-people:#fbbf24;--ky-dist-b0:#262c31;--ky-dist-b1:#2e353b;--ky-dist-b2:#394148;--ky-dist-b3:#474f57;--ky-dist-bline:rgba(220,226,220,.22);--ky-dist-road:#2b3239;--ky-dist-deck:#353d45;--ky-dist-walk:#242b31;--ky-dist-rail:#5b646c;--ky-dist-gate:#7fb2ee}
+:where(.ky-district){--ky-dist-ground:#e1e4da;--ky-dist-grid:rgba(40,46,42,.16);--ky-dist-ink:#1f2320;--ky-dist-halo:rgba(255,255,255,.9);--ky-dist-people:#c2410c;--ky-dist-b0:#d1d4cb;--ky-dist-b1:#c3c7be;--ky-dist-b2:#b2b7ae;--ky-dist-b3:#9ea49b;--ky-dist-bline:rgba(40,46,42,.28);--ky-dist-road:#cbcfc4;--ky-dist-deck:#bdc2b7;--ky-dist-walk:#eef0e8;--ky-dist-rail:#8b9288;--ky-dist-gate:#1f5fa8;--ky-dist-water:#c7d5dc;--ky-dist-green:#d2dcc4;--ky-dist-wood:#c3d0b6;--ky-dist-tree:#b3c2a3}
+@media (prefers-color-scheme:dark){:where(html:not([data-theme=light]) .ky-district:not([data-theme=light])){--ky-dist-ground:#1b2025;--ky-dist-grid:rgba(220,226,220,.16);--ky-dist-ink:#e8ece8;--ky-dist-halo:rgba(14,18,16,.85);--ky-dist-people:#fbbf24;--ky-dist-b0:#262c31;--ky-dist-b1:#2e353b;--ky-dist-b2:#394148;--ky-dist-b3:#474f57;--ky-dist-bline:rgba(220,226,220,.22);--ky-dist-road:#2b3239;--ky-dist-deck:#353d45;--ky-dist-walk:#242b31;--ky-dist-rail:#5b646c;--ky-dist-gate:#7fb2ee;--ky-dist-water:#1c2d3b;--ky-dist-green:#202d26;--ky-dist-wood:#1c2b23;--ky-dist-tree:#2e4337}}
+:where(html[data-theme=dark] .ky-district,.ky-district[data-theme=dark]){--ky-dist-ground:#1b2025;--ky-dist-grid:rgba(220,226,220,.16);--ky-dist-ink:#e8ece8;--ky-dist-halo:rgba(14,18,16,.85);--ky-dist-people:#fbbf24;--ky-dist-b0:#262c31;--ky-dist-b1:#2e353b;--ky-dist-b2:#394148;--ky-dist-b3:#474f57;--ky-dist-bline:rgba(220,226,220,.22);--ky-dist-road:#2b3239;--ky-dist-deck:#353d45;--ky-dist-walk:#242b31;--ky-dist-rail:#5b646c;--ky-dist-gate:#7fb2ee;--ky-dist-water:#1c2d3b;--ky-dist-green:#202d26;--ky-dist-wood:#1c2b23;--ky-dist-tree:#2e4337}
 .ky-district .ky-dist-ground{fill:var(--ky-dist-ground)}
 .ky-district .ky-dist-grid{fill:none;stroke:var(--ky-dist-grid);stroke-width:1}
 .ky-district .ky-dist-block{stroke:var(--ky-dist-bline);stroke-width:.5;stroke-linejoin:round}
@@ -301,6 +301,11 @@ export const KYOGIJO_DISTRICT_STYLE = `
 .ky-district .ky-dist-street-1{stroke:var(--ky-dist-deck)}
 .ky-district .ky-dist-street-2{stroke:var(--ky-dist-rail);stroke-dasharray:6 3}
 .ky-district .ky-dist-street-3{stroke:var(--ky-dist-walk)}
+.ky-district .ky-dist-land{stroke:none}
+.ky-district .ky-dist-water{fill:var(--ky-dist-water)}
+.ky-district .ky-dist-green{fill:var(--ky-dist-green)}
+.ky-district .ky-dist-wood{fill:var(--ky-dist-wood)}
+.ky-district .ky-dist-tree{fill:none;stroke:var(--ky-dist-tree);stroke-linecap:round}
 .ky-district .ky-dist-gate rect{fill:var(--ky-dist-gate);stroke:var(--ky-dist-gate);stroke-width:2.4}
 .ky-district .ky-dist-gate-plausible rect{fill:var(--ky-dist-ground);fill-opacity:.85}
 .ky-district .ky-dist-gate-queue{fill:none;stroke:var(--ky-dist-gate);stroke-width:3;stroke-dasharray:9 7}
