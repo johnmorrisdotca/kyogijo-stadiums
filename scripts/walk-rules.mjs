@@ -79,3 +79,23 @@ export function classify(t, closed) {
   if (["park", "garden", "playground", "common"].includes(t.leisure) && !["private", "no", "customers", "permit"].includes(t.access ?? "") && t.fee !== "yes") return { kind: "walk-area" };
   return null;
 }
+
+/**
+ * What a way is on a district's floor as a street of the context (`streets` layer), from its tags: `{ kind, width }` or `null`. Kind 0 is a carriageway at street level, 1 a carriageway on a viaduct or a bridge, 2 a railway (a tram or a SkyTrain
+ * guideway, at street level or raised; OpenStreetMap tags the SkyTrain `subway`, and it is left out only where it runs in a tunnel), 3 a sidewalk or a path at street level. A tunnel is under the ground and left out, a crossing is on the carriageway. Width is in metres. These are drawn flat; a viaduct's height is not drawn.
+ */
+export function streetOf(t) {
+  if (yes(t.tunnel) && t.tunnel !== "building_passage") return null;
+  if (t.highway !== undefined && CARRIAGEWAYS.has(t.highway)) return { kind: atGround(t) ? 0 : 1, width: carriagewayWidth(t) };
+  if (["rail", "light_rail", "tram", "narrow_gauge", "monorail", "funicular", "subway"].includes(t.railway)) return { kind: 2, width: 4 };
+  if (t.highway !== undefined && ["footway", "path", "pedestrian"].includes(t.highway) && atGround(t) && !["crossing", "traffic_island"].includes(t.footway) && t.area !== "yes" && !["private", "no"].includes(t.access ?? "")) return { kind: 3, width: walkWidth(t) };
+  return null;
+}
+
+/** The height of a building in metres from its tags: `height`, else its levels at 3.2 metres, else `null` (the caller's own default, which is ours and is said so). */
+export function buildingHeight(t) {
+  const asked = number(t.height);
+  if (asked !== undefined && asked > 0) return asked;
+  const levels = number(t["building:levels"]);
+  return levels !== undefined && levels > 0 ? levels * 3.2 : null;
+}

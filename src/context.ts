@@ -35,7 +35,9 @@ export interface ContextArea {
   radius: number;
   /** The step the coordinates and the heights are counted in, in metres (a half). */
   grid: number;
-  layers: { buildings?: ContextLayer; trees?: ContextLayer; landCover?: ContextLayer };
+  /** A building this tall, in metres, is a landmark that the plan's frame grows to take in; `CONTEXT_LANDMARK` when missing. A city of many tall buildings (Vancouver's downtown) sets it above them, so that the frame stays round the venues. */
+  landmark?: number;
+  layers: { buildings?: ContextLayer; streets?: ContextLayer; trees?: ContextLayer; landCover?: ContextLayer };
 }
 
 /** One building as the district holds it: its outline in feet in the district's frame (x to the right, y down the page), its height and the rise of its roof in feet. */
@@ -57,9 +59,18 @@ export interface ContextBlock {
   whole: boolean;
 }
 
+/** One street of the `streets` layer as the district holds it: its kind (0 a carriageway at street level, 1 a carriageway on a viaduct or a bridge, 2 a railway, 3 a sidewalk or a path), its width in feet and its line in feet in the district's frame. */
+export interface ContextStreet {
+  kind: 0 | 1 | 2 | 3;
+  width: number;
+  points: Pt[];
+}
+
 /** What a district's context is: the buildings kept, and how many were left out because they are a venue's own. */
 export interface ContextPlan {
   blocks: ContextBlock[];
+  /** The streets, from a `streets` layer: drawn flat on the floor, under the buildings. */
+  streets?: ContextStreet[];
   /** The buildings of the model that are a venue (the Dome's own parts), left out: the venue draws them. */
   owned: number;
   /** The credits of the areas used, in each language. */
@@ -96,6 +107,20 @@ export function decodeBuilding(area: Pick<ContextArea, "grid">, row: readonly nu
   return { ring, height: row[0] * g, rise: row[1] * g };
 }
 
+/** A street of a `streets` layer, decoded: its line in metres east and north of the area's origin. The row is the kind, the width in grid steps, then the first point and each step to the next in grid steps. */
+export function decodeStreet(area: Pick<ContextArea, "grid">, row: readonly number[]): Pt[] {
+  const g = area.grid;
+  const line: Pt[] = [];
+  let [x, y] = [row[2], row[3]];
+  line.push([x * g, y * g]);
+  for (let i = 4; i + 1 < row.length; i += 2) {
+    x += row[i];
+    y += row[i + 1];
+    line.push([x * g, y * g]);
+  }
+  return line;
+}
+
 /**
  * The box a district with context is framed to, in feet in the district's frame: the venues' box widened by `CONTEXT_REACH` on every side, and grown to take in every landmark (a building of `CONTEXT_LANDMARK` metres or more) that stands within
  * `CONTEXT_LANDMARK_REACH` metres of the venues' box, with a margin of its own. `box` is the venues' own.
@@ -107,7 +132,7 @@ export function contextFrame(areas: readonly ContextArea[], origin: LonLat, turn
   for (const area of areas) {
     const [east, north] = metresFrom(origin, [area.origin as LonLat])[0];
     for (const row of area.layers.buildings?.rows ?? []) {
-      if (row[0] * area.grid < CONTEXT_LANDMARK) continue;
+      if (row[0] * area.grid < (area.landmark ?? CONTEXT_LANDMARK)) continue;
       const b = decodeBuilding(area, row);
       const ring = b.ring.map(([e, nn]): Pt => rotate([(e + east) * FEET_PER_METRE, -(nn + north) * FEET_PER_METRE], turn));
       const at = boxOf(ring);
@@ -154,8 +179,19 @@ export function placeContext(areas: readonly ContextArea[], origin: LonLat, turn
       blocks.push({ id: `${area.key}-${index}`, ring, height: b.height * FEET_PER_METRE, rise: b.rise * FEET_PER_METRE, area: Math.abs(signedArea(ring)), ghost: holds, whole: box.x0 >= fx0 && box.x1 <= fx1 && box.y0 >= fy0 && box.y1 <= fy1 });
     });
   }
+  // The streets of the areas: each a line with a width, kept where it reaches into the frame.
+  const streets: ContextStreet[] = [];
+  for (const area of areas) {
+    const [east, north] = metresFrom(origin, [area.origin as LonLat])[0];
+    for (const row of area.layers.streets?.rows ?? []) {
+      const points = decodeStreet(area, row).map(([e, nn]): Pt => rotate([(e + east) * FEET_PER_METRE, -(nn + north) * FEET_PER_METRE], turn));
+      const box = boxOf(points);
+      if (box.x1 < fx0 || box.x0 > fx1 || box.y1 < fy0 || box.y0 > fy1) continue;
+      streets.push({ kind: row[0] as ContextStreet["kind"], width: row[1] * area.grid * FEET_PER_METRE, points });
+    }
+  }
   const layers = areas.flatMap((a) => Object.values(a.layers));
-  return { blocks, owned, attribution: { en: [...new Set(layers.map((l) => l.attribution.en))], ja: [...new Set(layers.map((l) => l.attribution.ja))] } };
+  return { blocks, streets, owned, attribution: { en: [...new Set(layers.map((l) => l.attribution.en))], ja: [...new Set(layers.map((l) => l.attribution.ja))] } };
 }
 
 /** The tone (0 low to 3 tall) of a building of `feet` height. */
@@ -163,13 +199,30 @@ export const toneOf = (feet: number): number => CONTEXT_TONES.filter((m) => feet
 
 const num = (value: number): string => String(Math.round(value * 100) / 100);
 
+/** The streets flat on the floor, under the buildings: a path for each kind and width (a foot), widest and lowest kinds first, so that a sidewalk lies over the carriageway beside it and a viaduct's deck over the street under it. */
+export function streetsFloor(streets: readonly ContextStreet[]): string {
+  if (streets.length === 0) return "";
+  const groups = new Map<string, string[]>();
+  for (const s of streets) {
+    const key = `${s.kind} ${Math.max(1, Math.round(s.width))}`;
+    const list = groups.get(key) ?? [];
+    list.push(`M${s.points.map(([x, y]) => `${num(x)} ${num(y)}`).join("L")}`);
+    groups.set(key, list);
+  }
+  // Under: street-level carriageways, then railways, then sidewalks and paths, then viaducts (which cross over the rest).
+  const order = [0, 2, 3, 1];
+  const keys = [...groups.keys()].sort((a, b) => order.indexOf(Number(a.split(" ")[0])) - order.indexOf(Number(b.split(" ")[0])) || Number(b.split(" ")[1]) - Number(a.split(" ")[1]));
+  return `<g class="ky-dist-streets" aria-hidden="true" fill="none">${keys.map((key) => `<path class="ky-dist-street ky-dist-street-${key.split(" ")[0]}" stroke-width="${key.split(" ")[1]}" d="${groups.get(key)!.join("")}"/>`).join("")}</g>`;
+}
+
 /** The buildings flat on the floor of a district: one path for each tone, and one for the ghosts, drawn under the venues. Empty for a district with no context. */
 export function contextFloor(plan: ContextPlan): string {
-  if (plan.blocks.length === 0) return "";
+  const roads = streetsFloor(plan.streets ?? []);
+  if (plan.blocks.length === 0) return roads;
   const paths: string[][] = [[], [], [], [], []];
   for (const b of plan.blocks) paths[b.ghost ? 4 : toneOf(b.height)].push(`M${b.ring.map(([x, y]) => `${num(x)} ${num(y)}`).join("L")}Z`);
   const classes = ["ky-dist-b0", "ky-dist-b1", "ky-dist-b2", "ky-dist-b3", "ky-dist-ghost"];
-  return `<g class="ky-dist-context" aria-hidden="true">${paths.map((d, i) => (d.length === 0 ? "" : `<path class="ky-dist-block ${classes[i]}" d="${d.join("")}"/>`)).join("")}</g>`;
+  return `${roads}<g class="ky-dist-context" aria-hidden="true">${paths.map((d, i) => (d.length === 0 ? "" : `<path class="ky-dist-block ${classes[i]}" d="${d.join("")}"/>`)).join("")}</g>`;
 }
 
 // ---- The blocks of the 3D view. ----

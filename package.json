@@ -148,6 +148,11 @@
       "import": "./dist/plateau-entry.js",
       "default": "./dist/plateau-entry.js"
     },
+    "./osm": {
+      "types": "./dist/osm-entry.d.ts",
+      "import": "./dist/osm-entry.js",
+      "default": "./dist/osm-entry.js"
+    },
     "./grounds": {
       "types": "./dist/grounds-entry.d.ts",
       "import": "./dist/grounds-entry.js",
@@ -311,6 +316,7 @@
     "stadiums": "node scripts/build-stadiums.mjs",
     "stadiums:fetch": "node scripts/fetch-stadiums.mjs",
     "walk": "node scripts/build-walk.mjs",
+    "osm-context": "node scripts/build-osm-context.mjs",
     "walk:fetch": "node scripts/fetch-walk.mjs",
     "outside:cost": "node scripts/outside-cost.mjs",
     "plateau": "node scripts/build-plateau.mjs",

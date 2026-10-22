@@ -289,6 +289,9 @@ src/
 ├── district.turn.ts    a district in 3D: each venue's planes turned and moved to its place, stacked building by building
 ├── district.dom.ts     a district's 2D plan in a page, with the crowd outside over it
 ├── district-entry.ts   the district's entry
+├── gates.ts            the gates of a venue: points on the building's outline with the way each faces, and how each is known
+├── osm.context.data.ts made by scripts/build-osm-context.mjs from data-sources/walk/: the buildings and streets round a district from OpenStreetMap, ODbL 1.0, kept apart
+├── osm-entry.ts        the OpenStreetMap context's entry
 ├── outside.ts          the crowd outside a district's venues: one ordered list of people on the walkable ground, a level a prefix of it
 ├── outside.paint.ts    the crowd as RGBA bytes in a frame: one loop, no element, density where far and discs where near
 ├── outside.dom.ts      the crowd's canvas on a page, in the 3D view's floor and over the 2D plan, painted when something it shows changes

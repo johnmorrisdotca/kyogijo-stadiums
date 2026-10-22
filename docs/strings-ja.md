@@ -2111,6 +2111,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `stadiums` | The real stadiums | 実在のスタジアム |
 | page `district` | A district of venues | 会場の地区 |
 | page `outside` | The crowd outside the venue | 会場の外の人出 |
+| page `gates` | The gates of a venue | 会場のゲート |
 | page `variants` | League variants | リーグごとの違い |
 | page `eras` | Surfaces through the years | 年ごとの競技場 |
 | page `atlas` | The atlas | 球場とスタジアムの地図 |

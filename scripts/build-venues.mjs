@@ -123,7 +123,7 @@ for (const v of venues) {
 
 // ---- The data files. ----
 const q = (value) => JSON.stringify(value).replace(/":/g, '": ').replace(/,"/g, ', "');
-const FACT_KEYS = ["id", "wikidata", "division", "en", "seats", "tiers", "roof"];
+const FACT_KEYS = ["id", "wikidata", "division", "en", "seats", "tiers", "roof", "facade"];
 const readDays = [...days].sort().join(", ");
 const factsText = `// Made by scripts/build-venues.mjs from scripts/venues.data.json: do not edit by hand.
 // The facts are those of the Wikidata items and the English Wikipedia articles (revisions) each entry cites, in our own words; see docs/venues.md and NOTICE.md. Wikidata is CC0; the facts read from
@@ -131,7 +131,7 @@ const factsText = `// Made by scripts/build-venues.mjs from scripts/venues.data.
 import type { RealVenueData } from "./venues.ts";
 
 export const VENUE_DATA: RealVenueData[] = [
-${venues.map((v) => `  {\n${FACT_KEYS.map((key) => `    "${key}": ${q(v[key])},`).join("\n")}\n  },`).join("\n")}
+${venues.map((v) => `  {\n${FACT_KEYS.filter((key) => v[key] !== undefined).map((key) => `    "${key}": ${q(v[key])},`).join("\n")}\n  },`).join("\n")}
 ];
 `;
 writeFileSync(new URL("../src/venues.data.ts", import.meta.url), factsText);

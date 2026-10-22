@@ -340,7 +340,7 @@ describe("BC Place in 3D", () => {
       expect(low).toBeCloseTo(ring.height[0], 3);
       expect(high).toBeCloseTo(ring.height[1], 3);
     }
-    for (const p of [...item(model, "walls")!.planes, ...item(model, "roof")!.planes].filter((q) => q.id !== "pod-top")) expect(p.shy, p.id).toBeDefined();
+    for (const p of [...item(model, "walls")!.planes, ...item(model, "roof")!.planes].filter((q) => q.id !== "pod-top" && q.kind !== "mast")) expect(p.shy, p.id).toBeDefined();
   });
 
   it("carries the building on the floor with the arrow and no seats, and costs under a thousand elements", () => {

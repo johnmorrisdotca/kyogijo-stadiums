@@ -13,6 +13,7 @@ import { esc, hash } from "./format.ts";
 import { STADIUM_IDS, stadiumById, stadiumConfigs, stadiumFrameHeading, stadiumKind, stadiumNames, stadiumSeats, type RealStadium, type StadiumConfigId } from "./stadiums.ts";
 import { VENUE_ATTRIBUTION, VENUE_IDS, venueById, type RealVenue } from "./venues.ts";
 import { hullOf, metresFrom, middleOf, smallestBox, type LonLat } from "./venues.geo.ts";
+import { venueGates } from "./gates.ts";
 import { walkIdFor } from "./walk.ts";
 import type { OutsideOptions } from "./outside.ts";
 import type { Pt } from "./crowd.ts";
@@ -44,6 +45,8 @@ export interface DistrictOptions {
   style?: "none";
   /** Draw every venue's stands in 2D (true, the default) or its building only. */
   stands?: boolean;
+  /** Mark each venue's gates on the plan (`venueGates`: a door's bar on the building's outline and a dashed stub the way a queue runs). Off when left out. */
+  gates?: boolean;
   /**
    * The crowd outside the venues (`outside.ts`): `{ level: 25 }` puts a quarter of the seats' worth of people on the sidewalks, plazas and grounds round them, in the mounted views (`mountDistrict`, `mountDistrictTurn`). Off when left out. Asking
    * for it at all, even at level 0, makes room round the buildings for the crowd (`OUTSIDE_ROOM`), so that the plan does not move when the level does; only a district with a venue that has a walkable mask (`OUTSIDE_VENUES`) is changed.
@@ -179,6 +182,16 @@ export interface DistrictPlaced {
   hull: Pt[];
 }
 
+/** A gate placed in a district: where it is on its venue's outline in the plan's frame, in feet, and the way it faces on the page, in degrees clockwise from the top. */
+export interface DistrictGate {
+  key: string;
+  venue: string;
+  name: { en: string; ja: string };
+  at: Pt;
+  angle: number;
+  basis: "documented" | "plausible";
+}
+
 /** What a district is: its venues placed, the box that fits them, and how the map lies. */
 export interface DistrictPlan {
   options: DistrictOptions;
@@ -190,6 +203,8 @@ export interface DistrictPlan {
   members: DistrictPlaced[];
   /** The buildings round the venues that the options' `context` brings, placed in the frame; `undefined` without it. */
   context: ContextPlan | undefined;
+  /** The gates of the venues, where the options ask for them: each on its building's outline in the plan's frame (feet), and the way it faces on the page. Empty otherwise. */
+  gates: DistrictGate[];
   /** The frame the plan is drawn in, in feet: the venues' buildings with the margin the mode gives them. */
   view: { x: number; y: number; w: number; h: number };
   /** The distance between each pair of surfaces' middles, in metres, as the ground gives it. */
@@ -263,16 +278,17 @@ export function planDistrict(options: DistrictOptions): DistrictPlan {
   const between: DistrictPlan["between"] = [];
   members.forEach((a, i) => members.slice(i + 1).forEach((b) => between.push({ a: a.key, b: b.key, metres: Math.round(haversine(a.centre, b.centre) * 10) / 10 })));
   const around = context ? placeContext(options.context!, origin, turn, view, placed.map((p) => ({ footprint: p.footprint, shell: p.member.shell !== undefined }))) : undefined;
-  return { options, mode, turn, north: turn, members: placed, origin, context: around, view, between };
+  const gates: DistrictGate[] = options.gates !== true ? [] : placed.flatMap((p) => venueGates(p.member.id).map((g): DistrictGate => ({ key: g.key, venue: p.member.key, name: g.name, at: turnBy(ground([g.at])[0], turn), angle: ((g.bearing + turn) % 360 + 360) % 360, basis: g.basis })));
+  return { options, mode, turn, north: turn, members: placed, origin, context: around, gates, view, between };
 }
 
 // ---- The drawing. ----
 
 /** The colours and the type of a district's drawing, light and dark. Defaults sit in `:where()`, so a page's own rule wins. */
 export const KYOGIJO_DISTRICT_STYLE = `
-:where(.ky-district){--ky-dist-ground:#e1e4da;--ky-dist-grid:rgba(40,46,42,.16);--ky-dist-ink:#1f2320;--ky-dist-halo:rgba(255,255,255,.9);--ky-dist-people:#c2410c;--ky-dist-b0:#d1d4cb;--ky-dist-b1:#c3c7be;--ky-dist-b2:#b2b7ae;--ky-dist-b3:#9ea49b;--ky-dist-bline:rgba(40,46,42,.28)}
-@media (prefers-color-scheme:dark){:where(html:not([data-theme=light]) .ky-district:not([data-theme=light])){--ky-dist-ground:#1b2025;--ky-dist-grid:rgba(220,226,220,.16);--ky-dist-ink:#e8ece8;--ky-dist-halo:rgba(14,18,16,.85);--ky-dist-people:#fbbf24;--ky-dist-b0:#262c31;--ky-dist-b1:#2e353b;--ky-dist-b2:#394148;--ky-dist-b3:#474f57;--ky-dist-bline:rgba(220,226,220,.22)}}
-:where(html[data-theme=dark] .ky-district,.ky-district[data-theme=dark]){--ky-dist-ground:#1b2025;--ky-dist-grid:rgba(220,226,220,.16);--ky-dist-ink:#e8ece8;--ky-dist-halo:rgba(14,18,16,.85);--ky-dist-people:#fbbf24;--ky-dist-b0:#262c31;--ky-dist-b1:#2e353b;--ky-dist-b2:#394148;--ky-dist-b3:#474f57;--ky-dist-bline:rgba(220,226,220,.22)}
+:where(.ky-district){--ky-dist-ground:#e1e4da;--ky-dist-grid:rgba(40,46,42,.16);--ky-dist-ink:#1f2320;--ky-dist-halo:rgba(255,255,255,.9);--ky-dist-people:#c2410c;--ky-dist-b0:#d1d4cb;--ky-dist-b1:#c3c7be;--ky-dist-b2:#b2b7ae;--ky-dist-b3:#9ea49b;--ky-dist-bline:rgba(40,46,42,.28);--ky-dist-road:#cbcfc4;--ky-dist-deck:#bdc2b7;--ky-dist-walk:#eef0e8;--ky-dist-rail:#8b9288;--ky-dist-gate:#1f5fa8}
+@media (prefers-color-scheme:dark){:where(html:not([data-theme=light]) .ky-district:not([data-theme=light])){--ky-dist-ground:#1b2025;--ky-dist-grid:rgba(220,226,220,.16);--ky-dist-ink:#e8ece8;--ky-dist-halo:rgba(14,18,16,.85);--ky-dist-people:#fbbf24;--ky-dist-b0:#262c31;--ky-dist-b1:#2e353b;--ky-dist-b2:#394148;--ky-dist-b3:#474f57;--ky-dist-bline:rgba(220,226,220,.22);--ky-dist-road:#2b3239;--ky-dist-deck:#353d45;--ky-dist-walk:#242b31;--ky-dist-rail:#5b646c;--ky-dist-gate:#7fb2ee}}
+:where(html[data-theme=dark] .ky-district,.ky-district[data-theme=dark]){--ky-dist-ground:#1b2025;--ky-dist-grid:rgba(220,226,220,.16);--ky-dist-ink:#e8ece8;--ky-dist-halo:rgba(14,18,16,.85);--ky-dist-people:#fbbf24;--ky-dist-b0:#262c31;--ky-dist-b1:#2e353b;--ky-dist-b2:#394148;--ky-dist-b3:#474f57;--ky-dist-bline:rgba(220,226,220,.22);--ky-dist-road:#2b3239;--ky-dist-deck:#353d45;--ky-dist-walk:#242b31;--ky-dist-rail:#5b646c;--ky-dist-gate:#7fb2ee}
 .ky-district .ky-dist-ground{fill:var(--ky-dist-ground)}
 .ky-district .ky-dist-grid{fill:none;stroke:var(--ky-dist-grid);stroke-width:1}
 .ky-district .ky-dist-block{stroke:var(--ky-dist-bline);stroke-width:.5;stroke-linejoin:round}
@@ -280,6 +296,14 @@ export const KYOGIJO_DISTRICT_STYLE = `
 .ky-district .ky-dist-b1{fill:var(--ky-dist-b1)}
 .ky-district .ky-dist-b2{fill:var(--ky-dist-b2)}
 .ky-district .ky-dist-b3{fill:var(--ky-dist-b3)}
+.ky-district .ky-dist-street{stroke-linejoin:round;stroke-linecap:butt}
+.ky-district .ky-dist-street-0{stroke:var(--ky-dist-road)}
+.ky-district .ky-dist-street-1{stroke:var(--ky-dist-deck)}
+.ky-district .ky-dist-street-2{stroke:var(--ky-dist-rail);stroke-dasharray:6 3}
+.ky-district .ky-dist-street-3{stroke:var(--ky-dist-walk)}
+.ky-district .ky-dist-gate rect{fill:var(--ky-dist-gate);stroke:var(--ky-dist-gate);stroke-width:2.4}
+.ky-district .ky-dist-gate-plausible rect{fill:var(--ky-dist-ground);fill-opacity:.85}
+.ky-district .ky-dist-gate-queue{fill:none;stroke:var(--ky-dist-gate);stroke-width:3;stroke-dasharray:9 7}
 .ky-district .ky-dist-ghost{fill:var(--ky-dist-b1);fill-opacity:.35}
 .ky-district .ky-dist-ink{fill:none;stroke:var(--ky-dist-ink);stroke-linecap:round;stroke-linejoin:round}
 .ky-district .ky-dist-text{fill:var(--ky-dist-ink);font-family:var(--ky-font,system-ui,-apple-system,"Segoe UI","Hiragino Sans","Noto Sans JP",sans-serif);font-weight:600;paint-order:stroke;stroke:var(--ky-dist-halo);stroke-linejoin:round}`;
@@ -423,6 +447,11 @@ export function drawDistrict(options: DistrictOptions, plan: DistrictPlan = plan
     const centre = surfaceCentre(placed.member.options);
     parts.push(`<g class="ky-dist-venue" data-venue="${esc(placed.member.key)}" transform="translate(${num(placed.at[0])} ${num(placed.at[1])}) rotate(${num(placed.angle)}) translate(${num(-centre[0])} ${num(-centre[1])})">${markup}</g>`);
   });
+  if (plan.gates.length > 0) {
+    // A door's bar on the outline, and a dashed stub out from it the way a queue would run; a gate a source names is filled, one that is ours is drawn hollow.
+    const bars = plan.gates.map((g) => `<g class="ky-dist-gate ky-dist-gate-${g.basis}" data-gate="${esc(g.key)}" transform="translate(${num(g.at[0])} ${num(g.at[1])}) rotate(${num(g.angle)})"><path class="ky-dist-gate-queue" d="M0 -9V-90"/><rect x="-24" y="-5" width="48" height="10" rx="3.5"/></g>`);
+    parts.push(`<g class="ky-dist-gates" aria-hidden="true">${bars.join("")}</g>`);
+  }
   if (labels) {
     const size = diag * (plan.mode === "city" ? 0.018 : 0.026);
     plan.members.forEach((placed) => {

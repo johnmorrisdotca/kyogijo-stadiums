@@ -78,6 +78,11 @@ export const KYOGIJO_TURN_STYLE = `
 .ky-turn .u-roof{fill:var(--ky-up-roof);stroke:var(--ky-up-roofline);stroke-width:.8;stroke-linejoin:round}
 .ky-turn .u-signplate{fill:var(--ky-turn-bg);fill-opacity:.9;stroke:var(--ky-turn-rule);stroke-width:.5}
 .ky-turn .u-sign{fill:var(--ky-turn-ink);font-family:var(--ky-font,system-ui,-apple-system,"Segoe UI","Hiragino Sans","Noto Sans JP",sans-serif);font-weight:600}
+.ky-turn .u-mast{fill:var(--ky-up-fascia);stroke:var(--ky-up-roofline);stroke-width:.4}
+.ky-turn .u-skylight{fill:var(--ky-up-skylight,#a9c8da);fill-opacity:.9;stroke:var(--ky-up-roofline);stroke-width:.5}
+.ky-turn .u-podium{fill:#000;fill-opacity:.16}
+.ky-turn .u-ledge{fill:var(--ky-up-roofline)}
+.ky-turn .u-glazing{fill:#0b1a24;fill-opacity:.32}
 .ky-turn .u-cable{fill:none;stroke:var(--ky-up-roofline);stroke-width:1}
 .ky-turn .u-fabric{fill:var(--ky-up-roof);fill-opacity:.55;stroke:none}
 .ky-turn .u-pod{fill:var(--ky-up-fascia);stroke:var(--ky-up-roofline);stroke-width:.6}

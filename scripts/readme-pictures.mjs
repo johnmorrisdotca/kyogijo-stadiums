@@ -23,6 +23,13 @@ const address = (query) => `/?lang=en&help=off&${query}`;
 
 /** Wait for the page to be at rest: two frames, so that a picture drawn at the felt's shape has been laid in. */
 const settle = (page) => page.evaluate(() => new Promise((done) => requestAnimationFrame(() => requestAnimationFrame(done))));
+/** Zoom a 3D view in by `steps` presses of the plus key, and wait for it to rest. */
+const zoomed = (steps) => async (page) => {
+  await page.locator(".ky-turn-view").focus();
+  for (let i = 0; i < steps; i += 1) await page.keyboard.press("+");
+  await page.waitForTimeout(900);
+  await settle(page);
+};
 /** Choose a background in the demo's menu (a name, one for each scheme, or a function of the view and scheme), once `before` (if any) has set the page up; `after` runs last. */
 const behind = (names, before, after) => async (page, state) => {
   if (before) await before(page, state);
@@ -137,6 +144,12 @@ await takePictures({
     { subject: "outside-plan-25", views: ["desk"], url: "/district.html?outside=25", ready: 'body[data-ready="true"] #stage canvas.ky-district-outside:not([hidden])', target: "#stage" },
     { subject: "outside-plan", views: ["desk"], url: "/district.html?outside=100", ready: 'body[data-ready="true"] #stage canvas.ky-district-outside:not([hidden])', target: "#stage" },
     { subject: "outside-3d", views: ["desk"], url: "/district.html?view=3d&viewpoint=broadcast&outside=100", ready: 'body[data-ready="true"] #stage .ky-turn-outside:not([hidden])', target: "#stage" },
+    // Downtown Vancouver (0.43.0): the two venues among OpenStreetMap's streets and buildings with their gates marked (the plan and the main camera), BC Place's thirty-six masts from a corner and its roof open from the main camera, and Rogers Arena's skylight, all on the district page's stage.
+    { subject: "vancouver-plan", views: ["desk"], url: "/district.html?gates=1&outside=50", ready: 'body[data-ready="true"] #stage canvas.ky-district-outside:not([hidden])', target: "#stage" },
+    { subject: "vancouver-3d", views: ["desk"], url: "/district.html?view=3d&viewpoint=broadcast&gates=1", ready: READY_HALLS_TURN, target: "#stage" },
+    { subject: "vancouver-masts-3d", views: ["desk"], url: "/district.html?venues=bc-place&view=3d&viewpoint=corner&context=0", ready: READY_HALLS_TURN, target: "#stage", prepare: zoomed(4) },
+    { subject: "vancouver-roof-open-3d", views: ["desk"], url: "/district.html?venues=bc-place&view=3d&viewpoint=broadcast&roofopen=1&context=0", ready: READY_HALLS_TURN, target: "#stage", prepare: zoomed(4) },
+    { subject: "vancouver-rogers-3d", views: ["desk"], url: "/district.html?venues=rogers-arena&view=3d&viewpoint=broadcast&gates=1&context=0", ready: READY_HALLS_TURN, target: "#stage", prepare: zoomed(7) },
     // Koshien Stadium (0.34.0): the open-air ballpark with its ivy walls from a low corner in 3D, no roof (the stadiums page's stage).
     { subject: "stadiums-koshien-3d", views: ["desk"], url: "/stadiums.html?stadium=hanshin-koshien-stadium&view=3d&viewpoint=corner&roof=1", ready: READY_HALLS_TURN, target: "#stage" },
     // LED boards (0.37.0): the ribbon boards along the fascia between the levels and the scoreboard hung over the ice, in 3D from the main camera and in the plan, and Lumen Field's from a low corner (the venues and stadiums pages' stage, the Boards button on).
@@ -217,7 +230,7 @@ await takePictures({
 
 // The pictures that only a page of docs/ shows are taken with the rest and then moved to docs/pictures: docs/images holds the README's pictures (the family's lint counts every file there against the README's 2 MB, and wants each one used in the README),
 // and a page of docs/ names its own pictures in `./pictures/`.
-const DOCS_ONLY = new Set(["mowing-diamonds-desk", "boxing-ring-3d-desk", "district-tokyo-3d-desk", "district-tokyo-context-3d-desk", "district-kodokan-3d-desk", "outside-plan-25-desk", "outside-plan-desk", "outside-3d-desk", "judging-3d-desk", "judging-print-a4-desk", "mma-cage-desk", "multi-judo-desk", "multi-judo-empty-desk", "multi-tabletennis-desk", "prowrestling-ring-3d-desk", "stadiums-koshien-3d-desk", "stadiums-tokyo-dome-3d-desk", "venues-honda-desk", "wrestling-mat-3d-desk", "led-boards-td-3d-desk", "led-boards-td-plan-desk", "led-boards-lumen-3d-desk", "night-td-3d-desk", "night-td-plan-desk", "night-lumen-3d-desk", "lights-down-td-3d-desk", "lights-down-td-blue-3d-desk", "lights-down-td-plan-desk", "presets-intro-3d-desk", "presets-concert-3d-desk", "presets-game-3d-desk"]);
+const DOCS_ONLY = new Set(["mowing-diamonds-desk", "boxing-ring-3d-desk", "district-tokyo-3d-desk", "district-tokyo-context-3d-desk", "district-kodokan-3d-desk", "outside-plan-25-desk", "outside-plan-desk", "outside-3d-desk", "vancouver-rogers-3d-desk", "vancouver-roof-open-3d-desk", "vancouver-masts-3d-desk", "vancouver-3d-desk", "vancouver-plan-desk", "judging-3d-desk", "judging-print-a4-desk", "mma-cage-desk", "multi-judo-desk", "multi-judo-empty-desk", "multi-tabletennis-desk", "prowrestling-ring-3d-desk", "stadiums-koshien-3d-desk", "stadiums-tokyo-dome-3d-desk", "venues-honda-desk", "wrestling-mat-3d-desk", "led-boards-td-3d-desk", "led-boards-td-plan-desk", "led-boards-lumen-3d-desk", "night-td-3d-desk", "night-td-plan-desk", "night-lumen-3d-desk", "lights-down-td-3d-desk", "lights-down-td-blue-3d-desk", "lights-down-td-plan-desk", "presets-intro-3d-desk", "presets-concert-3d-desk", "presets-game-3d-desk"]);
 const docs = join(dirname(fileURLToPath(import.meta.url)), "..", "docs");
 mkdirSync(join(docs, "pictures"), { recursive: true });
 for (const file of readdirSync(join(docs, "images"))) {

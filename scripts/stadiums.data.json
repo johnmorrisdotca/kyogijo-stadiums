@@ -39,7 +39,19 @@
      "length": 100,
      "width": 85,
      "unit": "m"
+    },
+    "masts": {
+     "count": 36,
+     "height": 47.5,
+     "unit": "m",
+     "source": "https://www.structuremag.org/article/bc-place-revitalization/ (STRUCTURE magazine, 'BC Place Revitalization': thirty-six steel perimeter masts rise 47.5 metres above the original roof's concrete ring beam, carrying a radial cable truss post-tensioned in a new steel compression ring; the roof is about 40,000 square metres, clear spans of 227 by 186 metres, its centre 7,500 square metres retractable into the centre gondola above the video scoreboard); read on 2026-10-22, facts only"
     }
+   },
+   "facade": {
+    "podium": 40,
+    "unit": "ft",
+    "basis": "plausible",
+    "read": "the brief: a lower podium ring under the concourse levels, in the building's own outline; its height is ours (the sources do not say)"
    }
   },
   {

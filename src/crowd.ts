@@ -117,6 +117,12 @@ export interface RealShell {
   ivy?: boolean;
   /** A `cable` roof: how far its crown (the edge of the opening) stands over its rim, in feet, and the opening, a polygon in the drawing's frame over the surface. */
   crown?: { rise: number; opening: Pt[] };
+  /** The height of the building's podium, a lower band of its walls under the concourse levels, in feet; the walls are drawn in two bands where a venue has one (ours where the sources do not say). */
+  podium?: number;
+  /** A `fixed` roof closed in the middle by a cap with a long skylight along the surface's long side (Rogers Arena's): ours, from the brief. */
+  skylight?: boolean;
+  /** A `cable` roof's masts round its rim: how many, and how high they rise over the rim, in feet. */
+  masts?: { count: number; height: number };
   /** The height of the roof's lowest edge above the surface, in feet. */
   edge: number;
 }

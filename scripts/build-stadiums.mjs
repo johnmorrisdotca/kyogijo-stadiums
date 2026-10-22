@@ -346,7 +346,7 @@ for (const v of stadiums) {
 
 // ---- The data files. ----
 const q = (value) => JSON.stringify(value).replace(/":/g, '": ').replace(/,"/g, ', "');
-const FACT_KEYS = ["id", "kind", "wikidata", "ground", "park", "gridiron", "names", "en", "ja", "looks", "configs", "bowlSeats", "wikidataSeats", "tiers", "roof"];
+const FACT_KEYS = ["id", "kind", "wikidata", "ground", "park", "gridiron", "names", "en", "ja", "looks", "configs", "bowlSeats", "wikidataSeats", "tiers", "roof", "facade"];
 const factsText = `// Made by scripts/build-stadiums.mjs from scripts/stadiums.data.json: do not edit by hand.
 // The facts are those of the Wikidata items and the English Wikipedia articles (revisions) each entry cites, in our own words; see docs/stadiums.md and NOTICE.md. Wikidata is CC0; the facts read from
 // English Wikipedia are numbers and words of ours, not its text (CC BY-SA 4.0). What OpenStreetMap gave is in stadiums.osm.data.ts, apart, because it is ODbL.

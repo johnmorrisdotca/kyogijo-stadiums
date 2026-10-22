@@ -248,7 +248,14 @@
    "roof": {
     "kind": "fixed",
     "basis": "plausible",
-    "read": "an indoor arena: a fixed roof, as nothing says otherwise"
+    "read": "an indoor arena: a fixed roof, as nothing says otherwise; the long skylight over the middle of the roof, and the cap that closes the roof round it, are ours (the brief's)",
+    "skylight": true
+   },
+   "facade": {
+    "podium": 38,
+    "unit": "ft",
+    "basis": "plausible",
+    "read": "the brief: the stepped facade over the Pat Quinn Way front, a lower podium under the upper levels; its height is ours (the sources do not say)"
    }
   },
   {

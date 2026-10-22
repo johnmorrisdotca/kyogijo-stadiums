@@ -81,12 +81,16 @@ export interface RealStadiumData {
     tierSeats?: { lower: number; upper: number; bleachers: number };
     read: string;
   };
+  /** The building's lower band, a podium under the concourse levels: its height in feet and how it is known (ours where the sources do not say). */
+  facade?: { podium: number; unit: "ft"; basis: StadiumBasis; read: string };
   roof: {
     kind: StadiumRoof;
     basis: StadiumBasis;
     read: string;
     /** A cable roof's opening over the field, as the article gives it, in metres. */
     opening?: { length: number; width: number; unit: "m" };
+    /** A cable roof's masts round its rim, as the engineering article gives them: how many, and how high they rise over the ring beam, in metres (the source is named, apart from Wikipedia's, in `source`). */
+    masts?: { count: number; height: number; unit: "m"; source: string };
     /** A canopy's share of the seats it covers, as the article gives it. */
     cover?: number;
     /** A retractable roof's bottom and top above the field, in feet, as the article gives them (an air-supported roof's height is the building's, from OpenStreetMap). */
@@ -459,6 +463,8 @@ function plan(stadium: RealStadium, config: StadiumConfigId, rink: Box): Stadium
       roof: cable ? "cable" : canopies === undefined ? "fixed" : "canopy",
       edge,
       ...(cable ? { crown: { rise, opening } } : {}),
+      ...(stadium.facade === undefined ? {} : { podium: stadium.facade.podium }),
+      ...(cable && stadium.roof.masts !== undefined ? { masts: { count: stadium.roof.masts.count, height: round(stadium.roof.masts.height * FEET_PER_METRE) } } : {}),
       ...(canopies === undefined ? {} : { canopies }),
     },
   };

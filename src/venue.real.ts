@@ -57,6 +57,51 @@ function slopeThrough(points: readonly V3[]): Slope {
   return { x0: mx, y0: my, z0: mz, gx, gy };
 }
 
+/** How tall the glazed concourse band over a podium is, in feet (ours). */
+export const GLAZING = 14;
+
+/** A wall's two bands: the podium at its foot (a shade darker), a ledge over it and a band of glazing over the ledge, on the wall's own plane (its y runs down from the top). */
+function podiumBands(long: number, high: number, podium: number): string {
+  const top = Math.min(podium, high * 0.6);
+  const glaze = Math.min(GLAZING, Math.max(0, high - top - 4));
+  return `<rect class="u-podium" y="${n(high - top)}" width="${n(long)}" height="${n(top)}"/><rect class="u-ledge" y="${n(high - top - 1.2)}" width="${n(long)}" height="1.2"/>${glaze > 2 ? `<rect class="u-glazing" y="${n(high - top - 1.2 - glaze)}" width="${n(long)}" height="${n(glaze)}"/>` : ""}`;
+}
+
+/** The point of the hall's rim at an angle from the middle: where a ray meets the hall's outline or the building's, whichever it meets first. */
+export function rimPoint(real: Pick<RealShell, "hall" | "footprint">, c: Pt, angle: number): Pt {
+  const cap = rayAt(real.hall, c[0], c[1], angle);
+  const out = firstHit(real.footprint, c, angle);
+  return out !== undefined && Math.hypot(out[0] - c[0], out[1] - c[1]) < Math.hypot(cap[0] - c[0], cap[1] - c[1]) ? out : cap;
+}
+
+/** How far a mast leans out from the vertical, in degrees (ours: the sources give the count and the height of BC Place's masts, and the photographs of the building show them leaning out from the rim). */
+export const MAST_LEAN = 12;
+/** How thick a mast is drawn, in feet (ours). */
+export const MAST_WIDTH = 6;
+
+/**
+ * The masts of a cable roof: `count` of them round the rim, each rising from the rim at the roof's edge, `height` feet, leaning out from the middle. A mast is two thin strips crossed, one in the plane of the slant and the
+ * radius and one in the plane of the slant and the tangent, so that it is seen from every side (as a post is). The count and the height are the sources'; the lean and the thickness are ours.
+ */
+export function mastPlanes(real: Pick<RealShell, "hall" | "footprint">, c: Pt, z: number, masts: { count: number; height: number }): Plane[] {
+  const planes: Plane[] = [];
+  const lean = (MAST_LEAN * Math.PI) / 180;
+  for (let i = 0; i < masts.count; i += 1) {
+    const angle = (2 * Math.PI * (i + 0.5)) / masts.count;
+    const [bx, by] = rimPoint(real, c, angle);
+    const [rx, ry] = [Math.cos(angle), Math.sin(angle)];
+    const [tx, ty] = [-ry, rx];
+    const slant: V3 = [rx * masts.height * Math.sin(lean), ry * masts.height * Math.sin(lean), masts.height * Math.cos(lean)];
+    const long = Math.hypot(...slant);
+    const half = MAST_WIDTH / 2;
+    const svg = `<polygon class="u-mast" points="0 ${n(half)} ${n(long)} ${n(half * 0.45)} ${n(long)} ${n(half * 1.55)}"/>`;
+    // A strip along the slant, across the tangent; and one along the slant, across the radius.
+    planes.push({ id: `mast-${i}-a`, kind: "mast", o: [bx - tx * half, by - ty * half, z], u: slant, v: [tx * MAST_WIDTH, ty * MAST_WIDTH, 0], svg });
+    planes.push({ id: `mast-${i}-b`, kind: "mast", o: [bx - rx * half, by - ry * half, z], u: slant, v: [rx * MAST_WIDTH, ry * MAST_WIDTH, 0], svg });
+  }
+  return planes;
+}
+
 /**
  * The walls and the roof of a real venue (`parts` says which are made). The hall is the building's outline cut to the bowl's wall and a margin (`RealShell.hall`): its rim is where a ray from the middle meets the one or the other first, in `steps`
  * rays. A wall stands on each stretch of the rim, up to the roof's height over it; the roof is a band from the rim in to the inner edge of the top tier (the middle stays open, as the 3D view's roofs are).
@@ -64,19 +109,14 @@ function slopeThrough(points: readonly V3[]): Slope {
 export function realBuilding(real: RealShell, top: StandRing | undefined, centre: readonly [number, number], lift: number, steps: number, open = false, parts: { walls: boolean; roof: boolean } = { walls: true, roof: true }): Items {
   const items: Upright[] = [];
   const c: Pt = [centre[0], centre[1]];
-  const rim = Array.from({ length: steps }, (_, k): Pt => {
-    const angle = (2 * Math.PI * k) / steps;
-    const cap = rayAt(real.hall, c[0], c[1], angle);
-    const out = firstHit(real.footprint, c, angle);
-    return out !== undefined && Math.hypot(out[0] - c[0], out[1] - c[1]) < Math.hypot(cap[0] - c[0], cap[1] - c[1]) ? out : cap;
-  });
+  const rim = Array.from({ length: steps }, (_, k): Pt => rimPoint(real, c, (2 * Math.PI * k) / steps));
   const planes: Plane[] = [];
   rim.forEach((a, i) => {
     const b = rim[(i + 1) % steps];
     const long = Math.hypot(b[0] - a[0], b[1] - a[1]);
     if (long < 1) return;
     const high = lift + (real.wall ?? roofAt(real, [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2]));
-    planes.push({ ...shy(wall(`shell-${i}`, "wall", a[0], a[1], b[0], b[1], 0, high, `<rect class="${real.ivy === true ? "u-shell u-ivy" : "u-shell"}" width="${n(long)}" height="${n(high)}"/>`), centre), fadeTo: 0.02 });
+    planes.push({ ...shy(wall(`shell-${i}`, "wall", a[0], a[1], b[0], b[1], 0, high, `<rect class="${real.ivy === true ? "u-shell u-ivy" : "u-shell"}" width="${n(long)}" height="${n(high)}"/>${real.podium === undefined ? "" : podiumBands(long, high, real.podium)}`), centre), fadeTo: 0.02 });
   });
   if (parts.walls && planes.length > 0) items.push({ id: "shell", kind: "walls", at: centre, height: Math.max(...planes.map((p) => p.o[2])), planes });
   if (parts.roof && real.roof === "canopy" && real.canopies !== undefined) {
@@ -122,9 +162,40 @@ export function realBuilding(real: RealShell, top: StandRing | undefined, centre
     const piece = raked(`roof-${k}`, "roof", quad, slope, [ex / el, ey / el], paint);
     if (piece !== undefined) roof.push({ ...piece, shy: [(mid[0] - c[0]) / away, (mid[1] - c[1]) / away] });
   }
+  if (crown === undefined && real.skylight === true) roof.push(...skylightCap(inner, c, lift + real.edge + rise));
   if (crown !== undefined) roof.push(...cablePod(lift + real.edge + crown.rise, inner, c, steps, open));
+  if (crown !== undefined && real.masts !== undefined) roof.push(...mastPlanes(real, c, lift + real.edge, real.masts));
   if (roof.length > 0) items.push({ id: "roof", kind: "roof", at: centre, height: heightOf(roof), planes: roof });
   return items;
+}
+
+/** How far a skylight cap stands over the inner edge of the roof's band, and how wide the skylight bar is, in feet (ours: the sources do not say how high the roof closes or how wide the glass is). */
+export const CAP_RISE = 7;
+export const SKYLIGHT_WIDTH = 14;
+/** The share of the opening's length the skylight bar runs over, from the middle each way. */
+export const SKYLIGHT_SHARE = 0.78;
+
+/**
+ * Close the roof's middle: the opening the band leaves is covered at `z` by a flat cap raised `CAP_RISE` over the band's inner edge, with a short skirt joining the two, and over the middle of the cap along the long axis lies a long
+ * skylight bar of glass (the roof of Rogers Arena has one; the surface's long side lies along x in the drawing's frame, so the bar runs along x). The shape and the sizes are ours.
+ */
+function skylightCap(hole: readonly Pt[], c: Pt, z: number): Plane[] {
+  const planes: Plane[] = [];
+  const top = z + CAP_RISE;
+  const cap = raked("cap", "roof", hole, { x0: c[0], y0: c[1], z0: top, gx: 0, gy: 0 }, [1, 0], (corners) => `<polygon class="u-roof" points="${pointList(corners)}"/>`);
+  if (cap !== undefined) planes.push(cap);
+  hole.forEach((a, k) => {
+    const b = hole[(k + 1) % hole.length];
+    const long = Math.hypot(b[0] - a[0], b[1] - a[1]);
+    if (long < 0.5) return;
+    planes.push({ ...shy(wall(`skirt-${k}`, "roof", a[0], a[1], b[0], b[1], z, top, `<rect class="u-roof" width="${n(long)}" height="${n(CAP_RISE)}"/>`), c), fadeTo: 0.3 });
+  });
+  const xs = hole.map((p) => p[0]);
+  const half = ((Math.max(...xs) - Math.min(...xs)) / 2) * SKYLIGHT_SHARE;
+  const bar: Pt[] = [[c[0] - half, c[1] - SKYLIGHT_WIDTH / 2], [c[0] + half, c[1] - SKYLIGHT_WIDTH / 2], [c[0] + half, c[1] + SKYLIGHT_WIDTH / 2], [c[0] - half, c[1] + SKYLIGHT_WIDTH / 2]];
+  const glass = raked("skylight", "roof", bar, { x0: c[0], y0: c[1], z0: top + 0.4, gx: 0, gy: 0 }, [1, 0], (corners) => `<polygon class="u-skylight" points="${pointList(corners)}"/>`);
+  if (glass !== undefined) planes.push(glass);
+  return planes;
 }
 
 /** The top of a set of planes. */

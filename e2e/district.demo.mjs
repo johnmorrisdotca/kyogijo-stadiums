@@ -317,6 +317,7 @@ test("paints the crowd in the colour of the theme: light on the dark ground and 
 test("puts Tokyo Dome City among its buildings from Project PLATEAU, flat in 2D and standing in 3D, with its credit, and kept in the address", async ({ page }) => {
   const { errors, outside } = await open(page);
   // The choice is there only where the venues have buildings to show.
+  await page.locator('#tabs button[data-preset="sodo"]').click();
   await expect(page.locator("#context-row")).toBeHidden();
   await page.locator('#tabs button[data-preset="tokyo"]').click();
   await expect(page.locator("#context-row")).toBeVisible();
@@ -403,5 +404,67 @@ test("opens the Kodokan from the address in 2D and in Japanese, with its buildin
   await open(page, "?venues=tokyo-dome,korakuen-hall,kodokan&view=3d&yaw=150&pitch=55");
   await expect(page.locator(`${STAGE} .ky-turn`)).toHaveCount(1);
   await expect(page.locator(`${STAGE} [data-part="m2-floor"]`)).toHaveCount(1);
+  expect(errors).toEqual([]);
+});
+
+test("shows downtown Vancouver's streets and buildings round BC Place and Rogers Arena, from OpenStreetMap, and takes them away on request", async ({ page }) => {
+  const { errors } = await open(page);
+  await expect(page.locator('[data-testid="context"]')).toBeChecked();
+  await expect(page.locator(`${STAGE} svg.ky-district .ky-dist-streets`)).toHaveCount(1);
+  await expect(page.locator(`${STAGE} svg.ky-district .ky-dist-context`)).toHaveCount(1);
+  await expect(page.locator('[data-testid="credit"]')).toContainText("Buildings and streets: (c) OpenStreetMap contributors");
+  await page.locator('[data-testid="context"]').uncheck();
+  await expect(page.locator(`${STAGE} svg.ky-district .ky-dist-streets`)).toHaveCount(0);
+  expect(new URL(page.url()).searchParams.get("context")).toBe("0");
+  await page.locator('[data-testid="context"]').check();
+  expect(new URL(page.url()).searchParams.get("context")).toBeNull();
+  // Seattle has none.
+  await page.locator('#tabs button[data-preset="sodo"]').click();
+  await expect(page.locator('[data-testid="context"]')).toBeHidden();
+  await expect(page.locator(`${STAGE} svg.ky-district .ky-dist-streets`)).toHaveCount(0);
+  expect(errors).toEqual([]);
+});
+
+test("stands the towers of downtown Vancouver round the two venues in 3D, thirty-six masts on BC Place's roof, and a skylight on Rogers Arena's", async ({ page }) => {
+  const { errors } = await open(page, "?view=3d");
+  expect(await page.locator(`${STAGE} [data-part^="c-vancouver-"]`).count()).toBeGreaterThan(100);
+  await expect(page.locator(`${STAGE} [data-part^="m0-mast-"]`)).toHaveCount(72);
+  await expect(page.locator(`${STAGE} [data-part="m1-skylight"]`)).toHaveCount(1);
+  await page.locator("#roof").uncheck();
+  await expect(page.locator(`${STAGE} [data-part^="m0-mast-"]`)).toHaveCount(0);
+  await expect(page.locator(`${STAGE} [data-part="m1-skylight"]`)).toHaveCount(0);
+  expect(errors).toEqual([]);
+});
+
+test("opens and closes BC Place's retractable roof in 3D, kept in the address, without mounting the view again, and offers it for no other district but Seattle's ballpark", async ({ page }) => {
+  const { errors } = await open(page, "?view=3d");
+  await expect(page.locator("#roofopen-row")).toBeVisible();
+  expect(await page.locator(`${STAGE} [data-part^="m0-fabric-"]`).count()).toBeGreaterThan(20);
+  await page.locator(`${STAGE} .ky-turn`).evaluate((root) => { root.dataset.same = "yes"; });
+  await page.locator("#roofopen").check();
+  await expect(page.locator(`${STAGE} [data-part^="m0-fabric-"]`)).toHaveCount(0);
+  await expect(page.locator(`${STAGE} .ky-turn`)).toHaveAttribute("data-same", "yes");
+  expect(new URL(page.url()).searchParams.get("roofopen")).toBe("1");
+  await page.locator("#roofopen").uncheck();
+  expect(await page.locator(`${STAGE} [data-part^="m0-fabric-"]`).count()).toBeGreaterThan(20);
+  expect(new URL(page.url()).searchParams.get("roofopen")).toBeNull();
+  await page.locator('#tabs button[data-preset="tokyo"]').click();
+  await expect(page.locator("#roofopen-row")).toBeHidden();
+  expect(errors).toEqual([]);
+});
+
+test("marks the gates of BC Place and Rogers Arena on the plan and the 3D floor on request: twelve, one of them named by a source, kept in the address", async ({ page }) => {
+  const { errors } = await open(page);
+  await expect(page.locator(`${STAGE} [data-gate]`)).toHaveCount(0);
+  await page.locator('[data-testid="gates"]').check();
+  await expect(page.locator(`${STAGE} [data-gate]`)).toHaveCount(12);
+  await expect(page.locator(`${STAGE} .ky-dist-gate-documented`)).toHaveCount(1);
+  await expect(page.locator(`${STAGE} [data-gate="bc-place:south"]`)).toHaveCount(1);
+  expect(new URL(page.url()).searchParams.get("gates")).toBe("1");
+  await page.locator("#view").selectOption("3d");
+  await expect(page.locator(`${STAGE} .ky-turn-floor [data-gate]`)).toHaveCount(12);
+  await page.locator('#tabs button[data-preset="sodo"]').click();
+  await expect(page.locator('[data-testid="gates"]')).toBeHidden();
+  await expect(page.locator(`${STAGE} [data-gate]`)).toHaveCount(0);
   expect(errors).toEqual([]);
 });

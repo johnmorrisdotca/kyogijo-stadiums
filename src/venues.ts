@@ -51,7 +51,9 @@ export interface RealVenueData {
     lowerShare?: number;
     read: string;
   };
-  roof: { kind: VenueRoof; basis: VenueBasis; read: string };
+  /** The building's lower band, a podium under the upper levels: its height in feet and how it is known (ours where the sources do not say). */
+  facade?: { podium: number; unit: "ft"; basis: VenueBasis; read: string };
+  roof: { kind: VenueRoof; basis: VenueBasis; read: string; /** A long skylight over the middle of the roof, closed in round it: drawn where the venue says so (ours). */ skylight?: boolean };
 }
 
 /** What OpenStreetMap gave of a venue: ODbL 1.0 data, "(c) OpenStreetMap contributors". */
@@ -314,7 +316,7 @@ function plan(venue: RealVenue, rink: Box): VenuePlan {
     rings,
     off: { left: FIRST_ROW.end, right: FIRST_ROW.end, top: FIRST_ROW.side, bottom: FIRST_ROW.side + FIRST_ROW.bench },
     reach: { left: Math.max(0, rink.x - fb.x0), right: Math.max(0, fb.x1 - rink.x - rink.w), top: Math.max(0, rink.y - fb.y0) + room, bottom: Math.max(0, fb.y1 - rink.y - rink.h) },
-    shell: { footprint, hall: { ...outer, x0: outer.x0 - HALL, y0: outer.y0 - HALL, x1: outer.x1 + HALL, y1: outer.y1 + HALL, r: outer.r + HALL }, ...(north === undefined ? {} : { north }), roof: venue.roof.kind, edge },
+    shell: { footprint, hall: { ...outer, x0: outer.x0 - HALL, y0: outer.y0 - HALL, x1: outer.x1 + HALL, y1: outer.y1 + HALL, r: outer.r + HALL }, ...(north === undefined ? {} : { north }), roof: venue.roof.kind, edge, ...(venue.facade === undefined ? {} : { podium: venue.facade.podium }), ...(venue.roof.skylight === true ? { skylight: true } : {}) },
   };
   return { venue, orientation, box: rink, footprint, bowl, seats: rings.map((ring) => ({ tier: ring.tier, seats: ring.seats })), total, seatArea, fit: tight ? "tight" : "fits" };
 }

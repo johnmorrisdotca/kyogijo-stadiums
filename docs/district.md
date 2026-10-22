@@ -137,6 +137,37 @@ The demo's [district page](https://johnmorrisdotca.github.io/kyogijo-stadiums/di
 
 The viewpoints turn with the map (`districtPresets`): the main camera looks over the district from the south when north is up. `labels` stands a name over each building on a sign that faces the eye.
 
+## Among the streets of downtown Vancouver
+
+`context: [VANCOUVER_CENTRE]` (from `@johnmorrisdotca/kyogijo-stadiums/osm`) puts BC Place and Rogers Arena among the streets and buildings OpenStreetMap maps round them, as the `context` of [Tokyo Dome City](#among-its-buildings-project-plateau) does with PLATEAU's: the carriageways, the viaducts (the Georgia and the Dunsmuir), the SkyTrain's guideway, the sidewalks and the paths flat on the floor under the venues, and the buildings round them flat and, the biggest 130 of them, standing in 3D, shaded by height. Each building has the height OpenStreetMap maps for it (its `height`, else its `building:levels` at 3.2 metres, else 10 metres, which is ours: 54 of the 204 map neither). The frame is the venues' with 150 metres of ground round them: the towers do not widen it. A venue's own building is the venue's, and is left out. The credit, "(c) OpenStreetMap contributors, ODbL 1.0", is in the drawing's description.
+
+![BC Place and Rogers Arena in 3D from the main camera among the streets and towers of downtown Vancouver, the viaducts and the SkyTrain's guideway as pale bands on the ground, BC Place's thirty-six masts rising round its roof, and each building's gates marked on its outline](./pictures/vancouver-3d-desk-light.webp)
+
+```ts
+import { planDistrict } from "@johnmorrisdotca/kyogijo-stadiums/district";
+import { VANCOUVER_CENTRE } from "@johnmorrisdotca/kyogijo-stadiums/osm";
+
+const plan = planDistrict({ venues: ["bc-place", "rogers-arena"], context: [VANCOUVER_CENTRE] });
+console.log(plan.context!.blocks.length > 30, plan.context!.streets!.length > 300, plan.context!.owned);
+// true true 3
+```
+
+- **The streets** are a `streets` layer beside the `buildings` one in the area's data: each a line with a kind (0 a carriageway at street level, 1 one on a viaduct or a bridge, 2 a railway, 3 a sidewalk or a path) and a width in grid steps, drawn flat under the buildings, so that a sidewalk lies over the carriageway beside it and a viaduct's deck over the street under it. A viaduct is drawn flat: its height is not.
+- **`landmark`** is an area's own height in metres for a building the frame grows to take in (`CONTEXT_LANDMARK`, 100, when missing): downtown Vancouver sets it above its towers.
+- Made by `pnpm osm-context` from the raw answer [the crowd's walkable mask](./outside.md#how-the-mask-is-made) is made from, and held to it by `src/vancouver.raw.test.js`.
+
+![The plan of BC Place and Rogers Arena among downtown Vancouver's streets and buildings, with all the gates marked and half of the seats' worth of people on the sidewalks and plazas](./pictures/vancouver-plan-desk-light.webp)
+
+## BC Place's roof, masts and gates
+
+The 3D view of BC Place has its roof's **36 masts**, each 47.5 metres over the rim and leaning out, and its **retractable roof open or closed** (`venue: { roofOpen: true }`, `turn.update(options, { venue: { roofOpen } })`, a Retractable roof open choice on the demo's page, kept in the address as `roofopen=1`: the fabric gathers into the pod and only the pod stays). [The stadiums page](./stadiums.md) says what is known and what is ours; the masts are one of the sources' facts, cited. Rogers Arena's roof is closed in the middle with a long skylight along the rink (ours). `gates: true` marks each venue's [gates](./gates.md).
+
+![BC Place alone in 3D from a corner, zoomed in: the stands, the roof's band and pod, and thirty-six masts leaning out from the rim](./pictures/vancouver-masts-3d-desk-light.webp)
+
+![BC Place alone in 3D from the main camera in the dark theme with its retractable roof open: the fabric gone into the pod in the middle and the masts round the rim](./pictures/vancouver-roof-open-3d-desk-dark.webp)
+
+![Rogers Arena in 3D from the main camera, zoomed in: the roof closed in the middle by a cap with a long skylight along the rink, the gates marked on the outline with a dashed stub each](./pictures/vancouver-rogers-3d-desk-light.webp)
+
 ## The crowd outside
 
 `outside: { level: 25 }` puts a quarter of the venues' seats' worth of people on the sidewalks, plazas and grounds round the buildings, never on a road, in 2D (`mountDistrict`) and in 3D, for BC Place and Rogers Arena. It is [its own page](./outside.md): the walkable ground it stands on, the levels, the licence and the cost.

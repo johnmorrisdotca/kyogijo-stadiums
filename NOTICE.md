@@ -466,6 +466,12 @@ BC Place, Lumen Field, T-Mobile Park, Tokyo Dome, Korakuen Hall and Koshien Stad
 | Korakuen Hall | Q4389857 | way/45977418 | Korakuen Hall, 1372211318 |
 | Koshien Stadium | Q959811 | relation/9845926 | Koshien Stadium, 1374217766 |
 
+## The context's and the gates' sources
+
+Downtown Vancouver's buildings and streets (`VANCOUVER_CENTRE`, `src/osm.context.data.ts`) are OpenStreetMap's, ODbL 1.0, (c) OpenStreetMap contributors, made by `pnpm osm-context` from the same raw answer as the walkable mask (`data-sources/walk/2026-10-22/osm-vancouver.json`): each building's outline simplified to 60 centimetres with the height OpenStreetMap maps (else its levels at 3.2 metres, else 10 metres, which is ours) and each street as a line with a width; no name, id or tag is copied. It is kept in its own file, apart from every CC0 and CC BY-SA file and from the PLATEAU data of Tokyo.
+
+BC Place's masts (`scripts/stadiums.data.json`, `roof.masts`: 36, 47.5 metres) are a fact read from STRUCTURE magazine's article on the roof (https://www.structuremag.org/article/bc-place-revitalization/, 2026-10-22); its words are not kept. The gates (`src/gates.ts`) are ours, placed on OpenStreetMap's outlines; the one fact is that BC Place has a Gate G on the south side, from the English Wikipedia article (revision 1372065649, CC BY-SA 4.0, our own words).
+
 ## The walkable masks' sources
 
 The ground round the venues of a district, read on 2026-10-22 (`pnpm walk:fetch`; the file is `data-sources/walk/2026-10-22/osm-<district>.json`, as Overpass returned it, with the query and the time of OpenStreetMap's data) and made into `src/walk.data.ts` by `pnpm walk`. It is OpenStreetMap's, ODbL 1.0, (c) OpenStreetMap contributors, and lives in that file alone. Nothing of Wikidata or Wikipedia is in it.

@@ -16,3 +16,7 @@ export type { OutsideFrame, OutsideStats } from "./outside.paint.ts";
 export { OUTSIDE_ROOM } from "./district.ts";
 export { WALK_CELL, WALK_IDS, walkMask, walkable } from "./walk.ts";
 export type { WalkData, WalkMask } from "./walk.ts";
+// The gates of a venue: where the crowd goes in, on the building's outline, with the way each faces and how it is known.
+export { GATE_FACTS, GATE_VENUES, gateName, venueGates } from "./gates.ts";
+export type { Gate, GateBasis, GateFact } from "./gates.ts";
+export type { DistrictGate } from "./district.ts";

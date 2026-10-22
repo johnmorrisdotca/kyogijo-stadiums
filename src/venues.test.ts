@@ -591,7 +591,8 @@ describe("a real venue in 3D", () => {
         // High at the two ends of the rink and low at the two sides: the saddle's rise (30 feet) is the roof's range over its edge.
         expect(high - low, v.id).toBeGreaterThan(20);
       } else {
-        expect(high - low, v.id).toBeLessThanOrEqual(30);
+        // (A lid with a skylight is closed in the middle by a cap a few feet over its band.)
+        expect(high - low, v.id).toBeLessThanOrEqual(v.roof.skylight === true ? 38 : 30);
       }
     }
   });
