@@ -7,6 +7,10 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Fixed
+
+- **A judo tournament layout of the IJF's kata area or the AJJF's contest area now lies where its surface is drawn** ([tournament layouts](./docs/multi.md)): `multiLayout` sized every judo floor by the IJF contest area's figures (4 m of safety and common area), whatever the surface's `league`, while the drawing used the league's own, so a layout of `league: "ijf-kata"` (2 m) or `"ajjf"` (sizes made whole numbers of its 91 cm mats) drew its mats smaller than the floor, its labels and the places for the event's words and marks off the areas, and said it needed more floor than it does (two kata areas need 27 by 15 m, not 33 by 19). The floor is now laid from the judo drawing's own plan (`budoPlan`), and karate's from its league's figures. The presets are unchanged.
+
 ## [0.44.0] - 2026-10-22
 
 ### Added
