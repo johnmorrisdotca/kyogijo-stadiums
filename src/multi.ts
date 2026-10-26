@@ -1,9 +1,9 @@
 // A tournament layout laid out: several of the package's own surfaces on one floor, to scale, where each stands and what it leaves free; the floor the layout needs; and whether it fits a hall's floor. The
 // figures are in multi.data.ts (a rulebook's, with its source); this file only adds them up. Nothing here draws SVG (multi.draw.ts does), and every function returns new values.
-import { inOctagon } from "./budo/plan.ts";
+import { budoLeague, budoPlan, inOctagon } from "./budo/plan.ts";
 import { fill } from "./strings.ts";
 import { FEET_PER_METRE } from "./geometry.ts";
-import { IJF_CONTEST, WKF_KUMITE } from "./leagues/budo.ts";
+import { IJF_CONTEST, WKF_KUMITE, type JudoFigures } from "./leagues/budo.ts";
 import { MULTI_PRESETS, MULTI_VENUES, multiPreset, multiVenueById } from "./multi.data.ts";
 import { MULTI_WORDS } from "./multi.words.ts";
 import type { MultiCell, MultiFit, MultiLayout, MultiNeeds, MultiOptions, MultiSize, MultiSlot, MultiSpec, MultiUnit, MultiVenue } from "./multi.types.ts";
@@ -139,13 +139,21 @@ export function multiLayout(options: Pick<MultiOptions, "preset" | "layout" | "r
   let floor: { w: number; h: number };
   let tatami: Parameters<typeof slotsFor>[3];
   if (spec.kind === "budo") {
-    // The contest area, the safety area, the common safe zone between areas and the free zone, in metres: judo's from the IJF's figures (or the options'), karate's from the WKF's kumite area.
+    // The contest area, the safety area, the common safe zone between areas and the free zone, in metres. Judo's are the drawing's own (`budoPlan`), so that the floor is laid where the surface is
+    // drawn for every league: the IJF's contest area, its kata area (2 m of safety and common area, not 4) and the AJJF's (sizes made whole numbers of its 91 cm mats). Karate's are its league's.
     const karate = spec.sport === "karate";
-    const opts = spec.surface.budo ?? {};
-    const c = karate ? WKF_KUMITE.area : opts.size ?? IJF_CONTEST.contest.drawn;
-    const s = karate ? WKF_KUMITE.safety : opts.safety ?? IJF_CONTEST.safety.drawn;
-    const gap = karate ? WKF_KUMITE.between : Math.max(IJF_CONTEST.common, s);
-    const free = karate ? 0 : IJF_CONTEST.freeZone;
+    let c: number, s: number, gap: number, free: number;
+    if (karate) {
+      const dims = budoLeague(spec.surface).dimensions;
+      const k = dims.kind === "karate" ? dims : WKF_KUMITE;
+      [c, s, gap, free] = [k.area, k.safety, k.between, 0];
+    } else {
+      const plan = budoPlan(spec.surface);
+      const first = plan.judo?.contests[0];
+      const fig = plan.figures.kind === "judo" ? (plan.figures as JudoFigures) : IJF_CONTEST;
+      if (plan.judo === undefined || first === undefined) throw new Error(`The layout "${spec.id}" is not a judo floor of contest areas`);
+      [c, s, gap, free] = [first.x1 - first.x0, first.x0, plan.judo.gap, fig.freeZone];
+    }
     const across = spec.columns;
     const down = spec.rows;
     const tw = across * c + (across - 1) * gap + 2 * s;

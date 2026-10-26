@@ -73,6 +73,25 @@ describe("the tournament layouts' figures", () => {
     }
   });
 
+  it("lay a judo floor of another league where its own drawing puts it: the IJF's kata area and the AJJF's contest area", () => {
+    const judo = multiPreset("judo-1x3") as MultiSpec;
+    for (const league of ["ijf", "ijf-kata", "ajjf"]) {
+      for (const columns of [1, 2, 3]) {
+        const layout = multiLayout({ layout: { ...judo, id: `judo-${league}`, surface: { ...judo.surface, league } }, columns });
+        const box = outlineOf(layout.spec.surface).box;
+        const tatami = layout.tatami as { x: number; y: number; w: number; h: number };
+        const at = `${league} x ${columns}`;
+        expect(tatami.w, at).toBeCloseTo(box.w, 4);
+        expect(tatami.h, at).toBeCloseTo(box.h, 4);
+        const first = layout.cells[0];
+        const last = layout.cells[layout.cells.length - 1];
+        expect(last.x + last.w + (first.x - tatami.x), at).toBeCloseTo(tatami.x + tatami.w, 4);
+      }
+    }
+    // A kata area has 2 m of safety and common area, not the contest area's 4: two areas need 27 by 15 m, not 33 by 19.
+    expect(multiLayout({ layout: { ...judo, id: "judo-kata", surface: { ...judo.surface, league: "ijf-kata" } }, columns: 2 }).needs).toMatchObject({ length: 27, width: 15 });
+  });
+
   it("take a grid and a stagger of the caller's own, and refuse what is not one", () => {
     expect(multiLayout({ preset: "tabletennis-4", rows: 3, columns: 5 }).cells).toHaveLength(15);
     const staggered = multiLayout({ preset: "tabletennis-4", stagger: 0.5 });
