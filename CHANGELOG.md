@@ -7,6 +7,8 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.44.1] - 2026-10-28
+
 ### Fixed
 
 - **The wheel over a focused 3D view tips it the way a drag does**: the wheel up lifts the near edge of the surface toward the viewer, like a drag up (it did the opposite, so the wheel and the hand disagreed), and the wheel down lowers it. A drag, the arrow keys and the "Tip the surface away" and "Tip the surface toward you" buttons already agreed (up lifts the near edge); a test now holds all four to one direction, and a finger that is let to turn tips it as a mouse does. Left and right are unchanged. The `pitch` of a view, in the address and in `TurnView`, keeps its meaning.
