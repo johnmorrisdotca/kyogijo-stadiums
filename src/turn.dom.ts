@@ -3,7 +3,7 @@
 // reduced motion gets jumps for glides, and where the browser cannot draw in 3D the flat drawing stays. Nothing is polled and nothing runs while the view is
 // still: the elements' `transform`s are written when the view changes, and a glide between viewpoints is a short run of animation frames.
 import { drawKyogijo } from "./draw.ts";
-import { STEP, TURN_PRESET_NAMES, clampView, drag, nearest, nudge, presetOf, presetView, step, turnDirection, type PresetTable, type TurnDirection, type TurnPreset, type TurnView } from "./turn.camera.ts";
+import { STEP, TURN_PRESET_NAMES, clampView, drag, nearest, nudge, presetOf, presetView, step, turnDirection, wheelTip, type PresetTable, type TurnDirection, type TurnPreset, type TurnView } from "./turn.camera.ts";
 import { buildTurn, floorOptions, openingView, turnWords, type TurnModel, type TurnSettings } from "./turn.model.ts";
 import { controlsMarkup, layoutOf, turnMarkupOf, worldMarkup, type Layout } from "./turn.markup.ts";
 import { KYOGIJO_TURN_STYLE } from "./turn.style.ts";
@@ -459,7 +459,7 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
     } else if (doc.activeElement === stage) {
       event.preventDefault();
       grab();
-      view = event.shiftKey || Math.abs(event.deltaX) > Math.abs(event.deltaY) ? clampView({ ...view, yaw: view.yaw + (event.deltaX || event.deltaY) * 0.25 }) : clampView({ ...view, pitch: view.pitch + event.deltaY * 0.15 });
+      view = event.shiftKey || Math.abs(event.deltaX) > Math.abs(event.deltaY) ? clampView({ ...view, yaw: view.yaw + (event.deltaX || event.deltaY) * 0.25 }) : wheelTip(view, event.deltaY);
     } else return;
     shown = view;
     paint(shown);

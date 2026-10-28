@@ -59,7 +59,7 @@ The steady scale is the smallest the old fit used over the turn, so the floor is
 
 - **Drag** with the mouse turns the view across and tips it up and down; **double click** puts it back.
 - **A finger** drags sideways to turn the view and leaves a vertical swipe to the page, so that a page of views can still be scrolled with a thumb. `touch: "turn"` keeps every touch for the view, which then also tips it; **two fingers** pinch to zoom.
-- **The wheel** is the page's, so that the page scrolls over a view. Ctrl and the wheel (a pinch on a trackpad) zoom; with the view focused, the wheel tips it and Shift with the wheel turns it.
+- **The wheel** is the page's, so that the page scrolls over a view. Ctrl and the wheel (a pinch on a trackpad) zoom; with the view focused, the wheel tips it and Shift with the wheel turns it. Up always lifts the near edge of the surface toward the viewer, as if it were held there: a drag up, the wheel up, the up arrow and the \"Tip the surface away\" button all do it, and down lowers it.
 - **The keys**, with the view focused: the arrows turn and tip the way a drag toward that side does (Left and Right carry the near side that way; Up tips as a drag up does, Down as a drag down; Shift for bigger steps), plus and minus zoom, 1 to 4 pick a viewpoint, 0 or Home puts it back.
 - **Space**, with the view focused, starts and stops the [auto-turn](#the-auto-turn).
 - **The buttons** under the view are the four viewpoints, turn left and right, the up and down arrows, zoom in and out, reset, and the Auto-turn toggle: each is 44 pixels square or more, and a button takes the view toward its side as the arrow key does. `nudge(view, "left" | "right" | "up" | "down", degrees)` is that step, for a page with controls of its own.

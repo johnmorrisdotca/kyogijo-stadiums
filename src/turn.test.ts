@@ -30,7 +30,7 @@ import {
   turnMarkup,
   uprightsFor,
 } from "./turn-entry.ts";
-import { nearest, wrap } from "./turn.camera.ts";
+import { nearest, wheelTip, wrap } from "./turn.camera.ts";
 import { facing, fadeOf } from "./turn.kit.ts";
 import { KYOGIJO_STRINGS } from "./strings.ts";
 import type { Upright } from "./turn.kit.ts";
@@ -630,6 +630,16 @@ describe("the eye", () => {
     // And a step toward one side undoes a step toward the other.
     expect(nudge(nudge(v, "left", 6), "right", 6)).toEqual(v);
     expect(nudge(nudge(v, "up", 4), "down", 4)).toEqual(v);
+  });
+
+  it("the wheel tips as a drag does: the wheel up lifts the near edge like a drag up, the wheel down lowers it", () => {
+    const v = { yaw: 0, pitch: 50, zoom: 1 };
+    expect(wheelTip(v, -100).pitch).toBeGreaterThan(v.pitch);
+    expect(wheelTip(v, 100).pitch).toBeLessThan(v.pitch);
+    expect(Math.sign(wheelTip(v, -100).pitch - v.pitch)).toBe(Math.sign(drag(v, 0, -40).pitch - v.pitch));
+    expect(Math.sign(wheelTip(v, 100).pitch - v.pitch)).toBe(Math.sign(drag(v, 0, 40).pitch - v.pitch));
+    expect(wheelTip(v, 100).yaw).toBe(v.yaw);
+    expect(wheelTip(v, -100000).pitch).toBe(PITCH_MAX);
   });
 
   it("turns with a drag and steps with a key: across turns it, up and down tips it, and a touch that only turns leaves the tip", () => {

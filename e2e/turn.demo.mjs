@@ -179,6 +179,86 @@ test("a drag takes hold of the surface: right moves the near side right, down ti
   expect(await below()).toBeLessThan(down - 1);
 });
 
+// The tip, measured the way a person sees it: how far the near edge of the surface is below the middle of the floor (the fit moves the whole picture a little as the surface is tipped).
+const nearBelow = async (page) => {
+  const near = await nearestPart(page);
+  return (await where(page, near)).y - (await where(page, "floor")).y;
+};
+
+test("a drag up lifts the near edge toward the viewer (it goes up the screen) and a drag down lowers it, as a turntable lifted by its near edge", async ({ page }) => {
+  await open(page, "?sport=nhl&view=3d&lang=en&help=off&viewpoint=broadcast");
+  const start = await nearBelow(page);
+  await dragBy(page, 0, -40);
+  const up = await nearBelow(page);
+  expect(up, "a drag up: the near edge comes up the screen").toBeLessThan(start - 1);
+  await dragBy(page, 0, 80);
+  expect(await nearBelow(page), "a drag down: the near edge comes down").toBeGreaterThan(up + 1);
+});
+
+test("the wheel over a focused view tips it as a drag does: the wheel up lifts the near edge, the wheel down lowers it", async ({ page }) => {
+  await open(page, "?sport=nhl&view=3d&lang=en&help=off&viewpoint=broadcast");
+  const view = page.locator(`${STAGE} .ky-turn-view`);
+  await view.focus();
+  const box = await view.boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 3);
+  const start = await nearBelow(page);
+  await page.mouse.wheel(0, -100);
+  const up = await nearBelow(page);
+  expect(up, "the wheel up lifts the near edge, like a drag up").toBeLessThan(start - 1);
+  await page.mouse.wheel(0, 200);
+  expect(await nearBelow(page), "the wheel down lowers it, like a drag down").toBeGreaterThan(up + 1);
+});
+
+test("an arrow up and the Tip the surface away button lift the near edge, as a drag up does", async ({ page }) => {
+  await open(page, "?sport=nhl&view=3d&lang=en&help=off&viewpoint=broadcast");
+  await page.locator(`${STAGE} .ky-turn-view`).focus();
+  const start = await nearBelow(page);
+  await page.keyboard.press("ArrowUp");
+  const keyed = await nearBelow(page);
+  expect(keyed).toBeLessThan(start - 0.5);
+  await page.keyboard.press("ArrowDown");
+  await page.keyboard.press("ArrowDown");
+  expect(await nearBelow(page)).toBeGreaterThan(keyed + 0.5);
+});
+
+test("a finger that is let to turn tips the view the way a mouse does: up lifts the near edge", async ({ page }) => {
+  await open(page, "?sport=nhl&view=3d&lang=en&help=off");
+  const heights = await page.evaluate(async () => {
+    const { mountKyogijoTurn } = await import("/dist/turn-entry.js");
+    const out = {};
+    for (const type of ["mouse", "touch"]) {
+      const host = document.createElement("div");
+      host.style.cssText = "position:fixed;left:0;top:0;width:640px;height:420px;background:#fff;z-index:99999";
+      document.body.append(host);
+      const view = mountKyogijoTurn(host, { sport: "nhl" }, { touch: "turn", view: { pitch: 50 } });
+      const target = host.querySelector(".ky-turn-view");
+      const floor = host.querySelector(".ky-turn-floor");
+      const edge = () => floor.getBoundingClientRect().bottom - floor.getBoundingClientRect().top;
+      const fire = (name, y) => target.dispatchEvent(new window.PointerEvent(name, { pointerId: 41, pointerType: type, isPrimary: true, button: 0, clientX: 300, clientY: y, bubbles: true, cancelable: true }));
+      const before = edge();
+      fire("pointerdown", 200);
+      fire("pointermove", 170);
+      fire("pointermove", 140);
+      fire("pointerup", 140);
+      const up = edge();
+      fire("pointerdown", 140);
+      fire("pointermove", 200);
+      fire("pointermove", 260);
+      fire("pointerup", 260);
+      out[type] = { before, up, down: edge() };
+      view.destroy();
+      host.remove();
+    }
+    return out;
+  });
+  // Up tips the surface away, so it is seen more edge-on: the floor is lower on the screen than it was tall; the same for a touch as for a mouse, and down brings it back.
+  for (const type of ["mouse", "touch"]) {
+    expect(heights[type].up, `${type}: a drag up tips the surface away`).toBeLessThan(heights[type].before - 1);
+    expect(heights[type].down, `${type}: a drag down tips it back`).toBeGreaterThan(heights[type].up + 1);
+  }
+  expect(Math.round(heights.touch.up)).toBe(Math.round(heights.mouse.up));
+});
+
 test("the left and right arrows turn the way a drag to that side does", async ({ page }) => {
   await open(page, "?sport=nhl&view=3d&lang=en&help=off&viewpoint=broadcast");
   await page.locator(`${STAGE} .ky-turn-view`).focus();

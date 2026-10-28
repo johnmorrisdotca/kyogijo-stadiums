@@ -145,6 +145,12 @@ export function drag(view: TurnView, dx: number, dy: number, tilt = true, degree
   return clampView({ ...view, yaw: view.yaw - dx * degreesPerPixel, pitch: tilt ? view.pitch - dy * degreesPerPixel * 0.75 : view.pitch });
 }
 
+/**
+ * The view after the wheel turns by `deltaY` (positive is down, as `WheelEvent.deltaY` says) while the view has focus: the wheel up tips the surface as a drag up does (the near edge goes up, the
+ * front is lifted: the pitch rises) and the wheel down as a drag down does.
+ */
+export const wheelTip = (view: TurnView, deltaY: number): TurnView => clampView({ ...view, pitch: view.pitch - deltaY * 0.15 });
+
 /** A box in the scene, in pixels from the scene's middle, the floor at `z0` and the highest thing at `z1`. */
 export interface Box3 {
   x0: number;
