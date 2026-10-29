@@ -49,6 +49,11 @@ export interface Plane {
    * (a raised room is seen through every wall between it and the eye, at a low angle and from straight above alike).
    */
   fadeSide?: boolean;
+  /**
+   * A face of a closed solid that nothing shows through (a building's wall, drawn opaque): the side of it that is the solid's outside, as the way its `u` x `v` points, 1 out of the solid and -1 into it. While the face is turned away
+   * from the eye it is hidden by the solid's own near faces, so a page that asks for it (`layoutOf`'s `cull`) leaves it out of the view until the view turns it round, and spends nothing on it.
+   */
+  cull?: 1 | -1;
   /** A plate the other planes of its building stand on (a floor of a building picked out): it is placed by its farthest corner, so that it is drawn under everything on it, whatever way the view turns. */
   under?: boolean;
   /**

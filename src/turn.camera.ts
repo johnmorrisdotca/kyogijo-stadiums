@@ -249,8 +249,11 @@ export type Mat4 = readonly number[];
 
 /** Two matrices as one: `b` first, then `a`. */
 export function multiply(a: Mat4, b: Mat4): number[] {
-  const out = new Array<number>(16).fill(0);
-  for (let col = 0; col < 4; col += 1) for (let row = 0; row < 4; row += 1) for (let k = 0; k < 4; k += 1) out[col * 4 + row] += a[k * 4 + row] * b[col * 4 + k];
+  const out = new Array<number>(16);
+  for (let col = 0; col < 16; col += 4) {
+    const [b0, b1, b2, b3] = [b[col], b[col + 1], b[col + 2], b[col + 3]];
+    for (let row = 0; row < 4; row += 1) out[col + row] = a[row] * b0 + a[4 + row] * b1 + a[8 + row] * b2 + a[12 + row] * b3;
+  }
   return out;
 }
 
@@ -281,12 +284,18 @@ export function cameraMatrix(view: TurnView, at: Placement, distance: number): n
  * surface swelled and shrank in steps.
  */
 const num = (value: number): string => {
-  const text = value.toFixed(10).replace(/\.?0+$/, "");
-  return text === "-0" || text === "" ? "0" : text;
+  if (value === 0) return "0";
+  const text = value.toFixed(10);
+  // Without the zeros at the end, and the point if nothing is left after it: the same text as stripping them with a pattern, a good deal faster for the thousands of numbers a turn writes.
+  let end = text.length;
+  while (text.charCodeAt(end - 1) === 48) end -= 1;
+  if (text.charCodeAt(end - 1) === 46) end -= 1;
+  const out = end === text.length ? text : text.slice(0, end);
+  return out === "-0" ? "0" : out;
 };
 
 /** A matrix as the CSS `transform` that applies it. */
-export const matrix3d = (m: Mat4): string => `matrix3d(${m.map(num).join(",")})`;
+export const matrix3d = (m: Mat4): string => `matrix3d(${num(m[0])},${num(m[1])},${num(m[2])},${num(m[3])},${num(m[4])},${num(m[5])},${num(m[6])},${num(m[7])},${num(m[8])},${num(m[9])},${num(m[10])},${num(m[11])},${num(m[12])},${num(m[13])},${num(m[14])},${num(m[15])})`;
 
 /** How far a point is from the eye's plane after the scene is turned and tipped, in pixels towards the eye: bigger is nearer. Planes are drawn far first. */
 export function depthOf(point: readonly [number, number, number], view: TurnView, at: Placement): number {

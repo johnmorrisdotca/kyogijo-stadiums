@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CONTEXT_BLOCKS, CONTEXT_REACH, CONTEXT_TONES, contextFloor, contextUprights, decodeBuilding, placeContext, toneOf, type ContextArea } from "./context.ts";
+import { CONTEXT_BLOCKS, CONTEXT_REACH, CONTEXT_TONES, blockPlanes, contextFloor, contextUprights, decodeBuilding, placeContext, toneOf, type ContextArea } from "./context.ts";
 import { describeDistrict, districtId, drawDistrict, planDistrict, type DistrictOptions } from "./district.ts";
 import { buildDistrictTurn, districtTurnMarkup } from "./district.turn.ts";
 import { PLATEAU_AREAS, PLATEAU_ATTRIBUTION, TOKYO_DOME_CITY } from "./plateau.data.ts";
@@ -7,6 +7,7 @@ import { FEET_PER_METRE } from "./geometry.ts";
 import { boxOf, hullOf, inside } from "./venues.geo.ts";
 import { APART } from "./turn.kit.ts";
 import { layoutOf } from "./turn.markup.ts";
+import { eyeDistance } from "./turn.camera.ts";
 
 const TOKYO: DistrictOptions = { venues: ["tokyo-dome", "korakuen-hall"], context: [TOKYO_DOME_CITY] };
 const BARE: DistrictOptions = { venues: ["tokyo-dome", "korakuen-hall"] };
@@ -233,5 +234,76 @@ describe("a context layer's frame", () => {
     const [a, b] = [buildings(TOKYO_DOME_CITY)[0], buildings(double)[0]];
     expect(b.height).toBeCloseTo(a.height * 2, 9);
     expect(b.ring[0][0]).toBeCloseTo(a.ring[0][0] * 2, 9);
+  });
+});
+
+describe("the walls of a solid building that face away from the eye", () => {
+  const ring: [number, number][] = [[0, 0], [100, 0], [100, 60], [0, 60]];
+  const block = (extra: Partial<Parameters<typeof blockPlanes>[0]> = {}) => blockPlanes({ id: "t", ring, height: 50, rise: 0, area: 6000, ghost: false, whole: true, ...extra }, "t-");
+
+  it("are marked on the opaque walls and nowhere else: not on the roof, not on a ghost's walls, not on a see-through building's", () => {
+    const planes = block();
+    expect(planes.filter((p) => p.cull !== undefined).map((p) => p.id)).toEqual(["t-w0", "t-w1", "t-w2", "t-w3"]);
+    expect(planes.find((p) => p.id === "t-top")!.cull).toBeUndefined();
+    expect(block({ ghost: true }).every((p) => p.cull === undefined)).toBe(true);
+    expect(block({ xray: [50, 30] }).every((p) => p.cull === undefined)).toBe(true);
+    // The outside of the wall is the other side of it for a ring wound the other way round.
+    const back = block({ ring: [...ring].reverse() });
+    expect(back.find((p) => p.id === "t-w0")!.cull).toBe(-(planes.find((p) => p.id === "t-w0")!.cull as number));
+  });
+
+  it("are left out exactly when the eye is on the inside of their plane, at every turn and tilt, and the rest are laid out as they are without the asking", () => {
+    const model = buildDistrictTurn(TOKYO);
+    const [w, h] = [1200, 800];
+    const flagged = model.planes.map((p, i) => ({ p, i })).filter(({ p }) => p.cull !== undefined);
+    expect(flagged.length).toBeGreaterThan(300);
+    let hidden = 0;
+    let shown = 0;
+    for (const yaw of [0, 37, 90, 144, 215, 300]) {
+      for (const pitch of [18, 40, 64, 85]) {
+        const view = { yaw, pitch, zoom: 1 };
+        const all = layoutOf(model, view, w, h);
+        const layout = layoutOf(model, view, w, h, undefined, true);
+        expect(all.culled).toBeUndefined();
+        expect(layout.culled!.length).toBe(model.planes.length + 1);
+        // Where the eye is, in the scene's own pixels from its middle: the camera looks along z at a distance, and the scene was turned, tipped and moved to be seen.
+        const k = layout.at.k;
+        const [yw, pt] = [(yaw * Math.PI) / 180, (pitch * Math.PI) / 180];
+        const [x2, y3, z3] = [-layout.at.tx, -layout.at.ty, eyeDistance(w, h, model.lens)];
+        const y2 = y3 * Math.cos(pt) + z3 * Math.sin(pt);
+        const eye = [(x2 * Math.cos(yw) + y2 * Math.sin(yw)) / k, (-x2 * Math.sin(yw) + y2 * Math.cos(yw)) / k, (-y3 * Math.sin(pt) + z3 * Math.cos(pt)) / k];
+        for (const { p, i } of flagged) {
+          const mid = [0, 1, 2].map((a) => (p.o[a] + (p.u[a] + p.v[a]) / 2 - (a < 2 ? model.centre[a] : 0)) * model.scale);
+          const [u, v] = [p.u, p.v];
+          const normal = [u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]].map((c) => c * (p.cull as number));
+          const facing = normal[0] * (eye[0] - mid[0]) + normal[1] * (eye[1] - mid[1]) + normal[2] * (eye[2] - mid[2]);
+          if (Math.abs(facing) < 1e-6 * Math.hypot(...normal) * Math.hypot(...eye)) continue;
+          expect(layout.culled![i + 1], `${p.id} at yaw ${yaw}, pitch ${pitch}`).toBe(facing < 0);
+          if (facing < 0) hidden += 1;
+          else shown += 1;
+          // What is drawn is laid out as it always was.
+          if (facing > 0) expect(layout.transforms[i + 1]).toBe(all.transforms[i + 1]);
+          else expect(layout.transforms[i + 1]).toBe("");
+        }
+        // Planes with nothing to cull are not touched.
+        for (let i = 0; i < model.planes.length; i += 1) if (model.planes[i].cull === undefined) expect(layout.transforms[i + 1]).toBe(all.transforms[i + 1]);
+      }
+    }
+    // About half of the faces turn away, whatever the view.
+    expect(hidden).toBeGreaterThan(shown * 0.3);
+    expect(shown).toBeGreaterThan(hidden * 0.3);
+  });
+
+  it("stack the rest as they were stacked with every plane: the same far-to-near order", () => {
+    const model = buildDistrictTurn(TOKYO);
+    for (const yaw of [10, 130, 250]) {
+      const view = { yaw, pitch: 52, zoom: 1 };
+      const all = layoutOf(model, view, 1200, 800);
+      const layout = layoutOf(model, view, 1200, 800, undefined, true);
+      const kept = model.planes.map((_, i) => i + 1).filter((i) => layout.culled![i] !== true);
+      const byAll = [...kept].sort((a, b) => all.stack[a] - all.stack[b]);
+      const byCull = [...kept].sort((a, b) => layout.stack[a] - layout.stack[b]);
+      expect(byCull).toEqual(byAll);
+    }
   });
 });

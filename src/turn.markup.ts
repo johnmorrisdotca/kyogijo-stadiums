@@ -58,28 +58,98 @@ export function groupRanks(groups: readonly { hull: readonly (readonly [number, 
 /** Where everything is for a view in a container: the placement, the matrix of each element and its place in the stack. */
 export interface Layout {
   at: Placement;
-  /** The floor, then the planes in the model's order. */
+  /** The floor, then the planes in the model's order. A plane that `cull` says is turned away has `""` here. */
   transforms: string[];
   /** The stack of each: 0 for the ground of a hall, 1 for the floor, then the planes far to near from 2. */
   stack: number[];
   /** How much of each is left: 1 for all but the walls that are between the eye and the surface, which are cut away as the view is low and on their side (`fadeOf`). */
   fade: number[];
+  /** Which elements are not drawn at this view, by their place in `transforms`: the faces of a closed solid that are turned away from the eye (`Plane.cull`). Only when `layoutOf` was asked to leave them out. */
+  culled?: boolean[];
 }
 
-/** Work a view out in a container `width` by `height` pixels. */
-export function layoutOf(model: TurnModel, view: TurnView, width: number, height: number, lens?: number): Layout {
+const RAD = Math.PI / 180;
+
+/** What a plane needs at every view that does not change with the view: its matrix before the camera and the place its depth is taken at. Worked out once for a model's planes. */
+interface Prepared {
+  planes: readonly Plane[];
+  scale: number;
+  centre: readonly [number, number];
+  /** The matrix of each plane before the camera (undefined for a billboard, which turns with the view). */
+  base: (number[] | undefined)[];
+  /** The place of each plane's depth, in pixels from the middle of the scene: x, y, z of the middle, and the lowest and highest z of its corners (for a wall that gives way by its side). Undefined for a billboard or a plane that goes by its corners. */
+  mid: (readonly [number, number, number, number, number] | undefined)[];
+}
+
+const prepared = new WeakMap<readonly Plane[], Prepared>();
+
+function prepare(model: TurnModel): Prepared {
+  const known = prepared.get(model.planes);
+  if (known !== undefined && known.scale === model.scale && known.centre[0] === model.centre[0] && known.centre[1] === model.centre[1]) return known;
+  const s = model.scale;
+  const centre = model.centre;
+  const base: Prepared["base"] = [];
+  const mid: Prepared["mid"] = [];
+  for (const p of model.planes) {
+    if (p.billboard === true) {
+      base.push(undefined);
+      mid.push(undefined);
+      continue;
+    }
+    base.push(planeMatrix(p, s, centre));
+    if (p.under === true) {
+      mid.push(undefined);
+      continue;
+    }
+    const zs = [p.o[2], p.o[2] + p.u[2], p.o[2] + p.v[2], p.o[2] + p.u[2] + p.v[2]];
+    mid.push([(p.o[0] + (p.u[0] + p.v[0]) / 2 - centre[0]) * s, (p.o[1] + (p.u[1] + p.v[1]) / 2 - centre[1]) * s, (p.o[2] + (p.u[2] + p.v[2]) / 2) * s, Math.min(...zs) * s, Math.max(...zs) * s]);
+  }
+  const made: Prepared = { planes: model.planes, scale: s, centre, base, mid };
+  prepared.set(model.planes, made);
+  return made;
+}
+
+/**
+ * Whether a plane is turned away from the eye, given its matrix: the sign of the determinant of the 3 by 3 map from the plane's own x and y to the screen says which side of it faces the eye (positive: the side that its `u` x `v`
+ * points out of), and `Plane.cull` says which side is the solid's outside. A plane edge-on to the eye has no area to draw.
+ */
+const turnedAway = (m: readonly number[], side: 1 | -1): boolean => side * (m[0] * (m[5] * m[15] - m[13] * m[7]) - m[4] * (m[1] * m[15] - m[13] * m[3]) + m[12] * (m[1] * m[7] - m[5] * m[3])) <= 0;
+
+/**
+ * Work a view out in a container `width` by `height` pixels. With `cull`, the faces of a closed solid that are turned away from the eye (`Plane.cull`) are left out: they have no transform and no place in the stack, and `culled` says
+ * which, so that a page need not write them at all; without it every plane is laid out, as a still picture needs.
+ */
+export function layoutOf(model: TurnModel, view: TurnView, width: number, height: number, lens?: number, cull = false): Layout {
   const distance = eyeDistance(width, height, lens ?? model.lens);
   const at = fit(model.box, { ...view, zoom: 1 }, width, height, distance);
   const camera = cameraMatrix(view, at, distance);
   const s = model.scale;
   const centre = model.centre;
+  const known = prepare(model);
   const floor: Plane = { id: "floor", kind: "ground", o: [model.viewBox.x, model.viewBox.y, model.uprights.lift], u: [model.viewBox.w, 0, 0], v: [0, model.viewBox.h, 0], svg: "" };
+  const count = model.planes.length;
+  const transforms = new Array<string>(count + 1);
+  const culled = cull ? new Array<boolean>(count + 1).fill(false) : undefined;
   // A billboard faces the eye at this view.
-  const planes = model.planes.map((p) => facing(p, view.yaw, view.pitch));
-  const transforms = [floor, ...planes].map((p) => matrix3d(multiply(camera, planeMatrix(p, s, centre))));
+  const planes = new Array<Plane>(count);
+  for (let i = 0; i < count; i += 1) planes[i] = facing(model.planes[i], view.yaw, view.pitch);
+  transforms[0] = matrix3d(multiply(camera, planeMatrix(floor, s, centre)));
+  for (let i = 0; i < count; i += 1) {
+    const m = multiply(camera, known.base[i] ?? planeMatrix(planes[i], s, centre));
+    const side = planes[i].cull;
+    if (culled !== undefined && side !== undefined && turnedAway(m, side)) {
+      culled[i + 1] = true;
+      transforms[i + 1] = "";
+    } else transforms[i + 1] = matrix3d(m);
+  }
   // Far to near: a plane's depth is that of its middle. The ground of a hall is under everything. The floor is next, unless it stands raised on something (a table tennis table's top, on its legs): then it is
   // sorted with the rest, by its middle, so that the legs and the skirt on the far side are drawn under it and the ones on the near side over it, and nothing under the top shows through it.
-  const depth = (p: Plane): number => {
+  const [sinYaw, cosYaw, sinPitch, cosPitch] = [Math.sin(view.yaw * RAD), Math.cos(view.yaw * RAD), Math.sin(view.pitch * RAD), Math.cos(view.pitch * RAD)];
+  const k = at.k * view.zoom;
+  const depthAt = (x: number, y: number, z: number): number => (x * k * sinYaw + y * k * cosYaw) * sinPitch + z * k * cosPitch;
+  const depth = (p: Plane, i: number): number => {
+    const pre = i < 0 ? undefined : known.mid[i];
+    if (pre !== undefined) return depthAt(pre[0], pre[1], p.fadeSide === true ? (fadeOf(p, view.yaw, view.pitch) >= 1 ? pre[3] : pre[4]) : pre[2]);
     // A see-through building's wall is a tall plane round what stands in it: a far wall is behind all of it and a near one in front of all of it, however high its middle is, so a far wall is placed by its foot and a near one by its top.
     const zs = [p.o[2], p.o[2] + p.u[2], p.o[2] + p.v[2], p.o[2] + p.u[2] + p.v[2]];
     const z = p.fadeSide === true ? (fadeOf(p, view.yaw, view.pitch) >= 1 ? Math.min(...zs) : Math.max(...zs)) : (p.o[2] + (p.u[2] + p.v[2]) / 2);
@@ -87,7 +157,9 @@ export function layoutOf(model: TurnModel, view: TurnView, width: number, height
     return depthOf([(p.o[0] + (p.u[0] + p.v[0]) / 2 - centre[0]) * s, (p.o[1] + (p.u[1] + p.v[1]) / 2 - centre[1]) * s, z * s], view, at);
   };
   const raised = model.uprights.lift > 0;
-  const order = [...planes.map((p, i) => ({ i: i + 1, ground: p.kind === "ground", depth: depth(p), group: p.group })), ...(raised ? [{ i: 0, ground: false, depth: depth(floor), group: undefined as number | undefined }] : [])].filter((one) => !one.ground);
+  const order: { i: number; depth: number; group: number | undefined }[] = [];
+  for (let i = 0; i < count; i += 1) if (planes[i].kind !== "ground" && culled?.[i + 1] !== true) order.push({ i: i + 1, depth: depth(planes[i], i), group: planes[i].group });
+  if (raised) order.push({ i: 0, depth: depth(floor, -1), group: undefined });
   // Buildings that stand apart are drawn one after another, the far one first; a plane of none (the floor) goes by its depth alone.
   const rank = model.groups === undefined ? undefined : groupRanks(model.groups, view.yaw);
   // The planes of the blocks that stand round the buildings (`APART`) are stacked by depth among themselves and then woven into the buildings' by depth, each list keeping its own order.
@@ -95,13 +167,15 @@ export function layoutOf(model: TurnModel, view: TurnView, width: number, height
   const own = order.filter((one) => one.group !== APART).sort((a, b) => (rank === undefined || a.group === undefined || b.group === undefined ? 0 : rank[a.group] - rank[b.group]) || a.depth - b.depth);
   order.length = 0;
   for (let i = 0, j = 0; i < own.length || j < apart.length; ) order.push(j >= apart.length || (i < own.length && own[i].depth <= apart[j].depth) ? own[i++] : apart[j++]);
-  const stack = new Array<number>(model.planes.length + 1).fill(0);
+  const stack = new Array<number>(count + 1).fill(0);
   stack[0] = 1;
   order.forEach((one, rank) => {
     stack[one.i] = rank + 2;
   });
-  const fade = [1, ...model.planes.map((p) => fadeOf(p, view.yaw, view.pitch))];
-  return { at, transforms, stack, fade };
+  const fade = new Array<number>(count + 1);
+  fade[0] = 1;
+  for (let i = 0; i < count; i += 1) fade[i + 1] = fadeOf(model.planes[i], view.yaw, view.pitch);
+  return { at, transforms, stack, fade, ...(culled === undefined ? {} : { culled }) };
 }
 
 /** One plane as an element: its box in pixels and the SVG drawn on it in feet. */

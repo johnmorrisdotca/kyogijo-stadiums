@@ -153,11 +153,14 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
   let written: string[] = [];
   let stacked: string[] = [];
   let faded: string[] = [];
+  /** Which elements are left out of the view now (the faces of a solid that face away from the eye): they are not written to, and drawn at all, till the view turns them round. */
+  let gone: boolean[] = [];
   const gather = (): void => {
     elements = [...stage.querySelectorAll<HTMLElement>(".ky-turn-floor, .ky-up")];
     written = elements.map((one) => one.style.transform);
     stacked = elements.map((one) => one.style.zIndex);
     faded = elements.map((one) => one.style.opacity);
+    gone = elements.map(() => false);
   };
   gather();
   // The crowd outside, a canvas on the floor (the floor's matrix carries it), painted again only when its level, its detail or its colour changes.
@@ -184,9 +187,17 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
   const paint = (now: TurnView): void => {
     const width = stage.clientWidth || 960;
     const height = stage.clientHeight || 600;
-    const layout: Layout = layoutOf(model, now, width, height, settings.lens);
+    const layout: Layout = layoutOf(model, now, width, height, settings.lens, true);
     outside?.zoom(now.zoom);
+    const culled = layout.culled;
     elements.forEach((one, i) => {
+      // A face turned away from the eye is hidden by the solid it belongs to: it is taken out of the page's drawing, not written to.
+      const away = culled?.[i] === true;
+      if (away !== gone[i]) {
+        one.style.display = away ? "none" : "";
+        gone[i] = away;
+      }
+      if (away) return;
       if (written[i] !== layout.transforms[i]) one.style.transform = written[i] = layout.transforms[i];
       const z = String(layout.stack[i]);
       if (stacked[i] !== z) one.style.zIndex = stacked[i] = z;
