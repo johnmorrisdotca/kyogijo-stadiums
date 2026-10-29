@@ -18,6 +18,7 @@
 import { GROUNDS, GROUND_IDS, PARKS, PARK_IDS, SPORTS, drawKyogijo } from "./dist/index.js";
 import { placeById, placesBy } from "./dist/atlas-entry.js";
 import { gameOf, teamOf } from "./games.js";
+import { replaceAddress } from "./address.js";
 
 const escape = (text) => String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const sentence = (say, key, values = {}) => say(key).replace(/\{(\w+)\}/g, (_, name) => String(values[name]));
@@ -353,7 +354,7 @@ export function mountPlaceGrid(name, { say, lang, onPick }) {
     syncMore();
     const q = writeParams(name, state, new URLSearchParams(location.search));
     const query = q.toString();
-    history.replaceState(history.state, "", `${location.pathname}${query === "" ? "" : `?${query}`}${location.hash}`);
+    replaceAddress(`${location.pathname}${query === "" ? "" : `?${query}`}${location.hash}`);
   }
 
   /** Draw the whole body again (the first time when the page does not hold this view already, and when the language changes). */

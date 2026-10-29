@@ -26,6 +26,7 @@ import { mlbSprayChart, nbaShotChart, nflPassChart, nhlShotMap, soccerShotMap } 
 import { fenceAt } from "./dist/geometry-entry.js";
 import { FIELDS, MAX_SHOTS, SEGS, applyParams, budoFromSurface, chosenLeague, hasSeasons, hiddenRows, hiddenStatus, labelOf as labelsFor, loadGame as loadGameInto, makeState, optionsFor as optionsOf, seasonRange, urlPairs, usesEmblems, usesFlags, flagCodes } from "./model.js";
 import { WORDS } from "./words.js";
+import { replaceAddress } from "./address.js";
 
 // No box with the drawing's words over the mat when the pointer rests on it (the title stays, for screen readers).
 quietTitles();
@@ -460,7 +461,7 @@ function syncUrl() {
     else q.set(key, value);
   }
   writeWay(q);
-  history.replaceState(history.state, "", `${location.pathname}?${q.toString()}${location.hash}`);
+  replaceAddress(`${location.pathname}?${q.toString()}${location.hash}`);
 }
 
 function change() {
@@ -1034,7 +1035,7 @@ const featured = mountRealView({
     const next = new URLSearchParams(location.search);
     if (own.venue === FEATURED) next.delete("fv");
     else next.set("fv", own.venue);
-    history.replaceState(history.state, "", `${location.pathname}${next.size === 0 ? "" : `?${next}`}${location.hash}`);
+    replaceAddress(`${location.pathname}${next.size === 0 ? "" : `?${next}`}${location.hash}`);
   },
 });
 /** The arenas to choose from, by name in the page's language. */

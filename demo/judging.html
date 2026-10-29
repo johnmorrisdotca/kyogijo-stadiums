@@ -102,6 +102,7 @@
       // Judging assignments: set the mats and who sits in which seat; the seats are numbers and the chart is the key (names can go on the seats too), in 2D and in 3D. Everything is in this page and its address: nothing is
       // sent anywhere and nothing is stored.
       import { JUDGING_SEATS, JUDGING_WORDS, drawJudging, judgingChart, judgingPrintSheets, judgingPrintStyle, judgingTable, mountJudgingBroadcast, mountJudgingTurn } from "./dist/judging-entry.js";
+      import { replaceAddress } from "./address.js";
       import { hoverOf, wayOf, writeWay } from "./turn-way.js";
       import { quietTitles } from "./quiet.js";
       quietTitles();
@@ -306,7 +307,7 @@
         if ($("language").value === "ja") next.set("lang", "ja");
         if ($("theme").value !== "auto") next.set("theme", $("theme").value);
         writeWay(next);
-        history.replaceState(null, "", next.size === 0 ? location.pathname : `?${next}`);
+        replaceAddress(next.size === 0 ? location.pathname : `?${next}`);
       }
 
       function draw() {

@@ -110,6 +110,7 @@
       // A district: several real venues of one city on one plan, each at its real position and orientation (OpenStreetMap, ODbL 1.0), to look down on in 2D or turn around together in 3D. The page only asks the package to draw
       // (`drawDistrict`, `mountDistrictTurn`): the venues, the mode and the turn are options. What is chosen lives in the address; nothing is sent anywhere and nothing is stored.
       import { DISTRICT_IDS, districtMember, KODOKAN_FLOORS, mountDistrict, mountDistrictTurn, OUTSIDE_LEVELS, OUTSIDE_VENUES, planDistrict, unknownVenues, VENUE_ATTRIBUTION } from "./dist/district-entry.js";
+      import { replaceAddress } from "./address.js";
       import { TOKYO_DOME_CITY } from "./dist/plateau-entry.js";
       import { contextFor } from "./dist/cityctx-entry.js";
       import { hoverOf, keepCamera, wayOf, writeWay } from "./turn-way.js";
@@ -305,7 +306,7 @@
         if ($("theme").value !== "auto") next.set("theme", $("theme").value);
         writeWay(next);
         camera.write(next);
-        history.replaceState(null, "", next.size === 0 ? location.pathname : `?${next}`);
+        replaceAddress(next.size === 0 ? location.pathname : `?${next}`);
       }
 
       /** The boards the page asks of the 3D view: a plain score on, or off. A change goes in with `update`, so the view goes on turning. */

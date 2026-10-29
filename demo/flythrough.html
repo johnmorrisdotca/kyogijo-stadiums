@@ -56,6 +56,7 @@
       // The fly-through of a real arena: the page hands the package chizu's world map, its drawing and its projection (the package has no dependency of its own) and asks for `mountFlythrough`.
       // What is chosen lives in the address (`?arena=`, `?lang=`, `?theme=`, `?map=plain`, `?speed=`, `?stages=`); nothing is sent anywhere and nothing is stored.
       import { VENUE_IDS, arenaById, arenaNameIn } from "./dist/index.js";
+      import { replaceAddress } from "./address.js";
       import { mountFlythrough } from "./dist/flythrough-entry.js";
       import { turnOnHover } from "./turn-way.js";
       import WORLD from "./chizu/world-entry.js";
@@ -122,7 +123,7 @@
         if ($("map").value === "plain") next.set("map", "plain");
         if (speed !== FIRST_SPEED) next.set("speed", String(speed));
         if (stages.length > 0) next.set("stages", stages.join(","));
-        history.replaceState(null, "", next.size === 0 ? location.pathname : `?${next}`);
+        replaceAddress(next.size === 0 ? location.pathname : `?${next}`);
       }
 
       function draw(keep) {

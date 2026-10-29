@@ -75,6 +75,7 @@
       // The real arenas of the NHL, by conference and division: each drawn inside the outline of its building (OpenStreetMap, ODbL 1.0) with a plausible bowl of the seats, tiers and roof the sources give, in 2D and in 3D.
       // The page only asks the package to draw: `crowd: { real: true }` in the options. What is chosen lives in the address; nothing is sent anywhere and nothing is stored.
       import { VENUES, VENUE_CONFERENCES, VENUE_IDS, arenaById, arenaNameIn, venuesIn } from "./dist/index.js";
+      import { replaceAddress } from "./address.js";
       import { mountRealView } from "./real-view.js";
       import { quietTitles } from "./quiet.js";
       quietTitles();
@@ -205,7 +206,7 @@
         set("division", null);
         set("lang", $("language").value === "ja" ? "ja" : null);
         set("theme", $("theme").value !== "auto" ? $("theme").value : null);
-        history.replaceState(null, "", next.size === 0 ? location.pathname : `?${next}`);
+        replaceAddress(next.size === 0 ? location.pathname : `?${next}`);
       }
 
       /** What the page does after the view changed: the theme, the list of facts, the address and the link back. */

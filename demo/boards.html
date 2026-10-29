@@ -64,6 +64,7 @@
       // Boards over a surface: a results board, a bout presentation or a medal table (drawn when the demo was built, by Taisen Brackets, from invented names and results) laid over a pool, a mat or an oval, in 2D
       // and in 3D. The page only places them: `board` in the options of the drawing and of the 3D view. The position and the rest live in the address; nothing is sent anywhere and nothing is stored.
       import { BOARD_POSITIONS, drawKyogijo } from "./dist/index.js";
+      import { replaceAddress } from "./address.js";
       import { mountKyogijoTurn } from "./dist/turn-entry.js";
       import { hoverOf, wayOf, writeWay } from "./turn-way.js";
       import { BOARDS } from "./boards-data.js";
@@ -160,7 +161,7 @@
         if ($("language").value === "ja") next.set("lang", "ja");
         if ($("theme").value !== "auto") next.set("theme", $("theme").value);
         writeWay(next);
-        history.replaceState(null, "", next.size === 0 ? location.pathname : `?${next}`);
+        replaceAddress(next.size === 0 ? location.pathname : `?${next}`);
       }
 
       function draw() {

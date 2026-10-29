@@ -7,6 +7,10 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Fixed
+
+- **The demo's pages no longer throw a SecurityError in Safari when the view is turned over and over.** Every choice a demo page makes is written into its address with `history.replaceState`, and WebKit refuses the hundred-and-first call in ten seconds; a held arrow key or a run of turn buttons made thirty a second, so the Kodokan's district page (and every other demo page) logged an uncaught error for each. The pages now write through `demo/address.js`, which writes at once while there is room (sixty in ten seconds), keeps only the latest address past that and writes it when the window has room, and never throws. A new end-to-end test turns the Kodokan a full turn at three tilts on every floor and in each state of its building, in Chromium and WebKit, and fails on any page error or any matrix that is not a number. (This is the one error the Kodokan's turn could be made to raise; the crash a reader reported on a phone, perhaps the memory of the large layers at a high pixel ratio, has not been reproduced.)
+
 ## [0.44.1] - 2026-10-28
 
 ### Fixed

@@ -590,3 +590,44 @@ test("opens a floor of the Kodokan from the address, in 2D and in Japanese, and 
   await expect(page.locator('[data-testid="floors"]')).toBeHidden();
   expect(errors).toEqual([]);
 });
+
+test("turns the Kodokan a full turn at three tilts on every floor and in every state of its building, with no page error and no matrix that is not a number", async ({ page }) => {
+  test.setTimeout(180_000);
+  const { errors } = await open(page, "?venues=kodokan&view=3d");
+  const floor = page.locator('[data-testid="floor"]');
+  const values = await floor.locator("option").evaluateAll((all) => all.map((option) => option.value));
+  expect(values.length).toBe(10);
+  // Fifteen steps of 24 degrees (shift and the right arrow) are one turn; each step is drawn before the next. Then every plane's matrix is read.
+  const round = () => page.evaluate(async () => {
+    const view = document.querySelector('[data-testid="stage"] .ky-turn-view');
+    const frame = () => new Promise((done) => requestAnimationFrame(() => requestAnimationFrame(done)));
+    const floorStyle = () => document.querySelector('[data-testid="stage"] .ky-turn-floor').getAttribute("style");
+    const start = floorStyle();
+    let moved = false;
+    for (let step = 0; step < 15; step++) {
+      view.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", shiftKey: true, bubbles: true, cancelable: true }));
+      await frame();
+      if (step === 4 && floorStyle() !== start) moved = true;
+    }
+    const styles = [...document.querySelectorAll('[data-testid="stage"] .ky-turn-floor, [data-testid="stage"] .ky-up')].map((element) => element.getAttribute("style") ?? "");
+    return { moved, planes: styles.length, bad: styles.filter((style) => /NaN|Infinity/.test(style)).length };
+  });
+  for (const value of values) {
+    await floor.selectOption(value);
+    for (const preset of ["overhead", "broadcast", "corner"]) {
+      await page.locator(`${STAGE} button[data-preset="${preset}"]`).click();
+      const turned = await round();
+      expect(turned.moved, `floor ${value}, ${preset}`).toBe(true);
+      expect(turned.planes, `floor ${value}, ${preset}`).toBeGreaterThan(20);
+      expect(turned.bad, `floor ${value}, ${preset}`).toBe(0);
+    }
+  }
+  // The building's three states, once round at the tilt each opens on.
+  for (const building of ["xray", "solid", "none"]) {
+    await page.locator('[data-testid="building"]').selectOption(building);
+    const turned = await round();
+    expect(turned.moved, `building ${building}`).toBe(true);
+    expect(turned.bad, `building ${building}`).toBe(0);
+  }
+  expect(errors).toEqual([]);
+});

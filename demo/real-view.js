@@ -8,6 +8,7 @@ import { drawKyogijo } from "./dist/index.js";
 import { mountKyogijoTurn } from "./dist/turn-entry.js";
 import { hoverOf, keepCamera, wayOf, writeWay } from "./turn-way.js";
 import { LIGHTINGS, WASHES, lightingFor, lightingOfAddress } from "./lighting.js";
+import { replaceAddress } from "./address.js";
 
 /** The parts a reader can switch, in the order of the bar, with what each is by default: the stands on, the walls, the roof, the LED boards and the night lighting off (the bowl is seen), the building, the markings and the labels on. */
 export const PARTS = ["stands", "walls", "roof", "boards", "building", "markings", "labels"];
@@ -104,7 +105,7 @@ export function mountRealView({ stage, bar, venue, page, prefix = "", flat = tru
     set("spin", spin && state.spin ? "on" : null);
     writeWay(next);
     camera.write(next);
-    history.replaceState(history.state, "", next.size === 0 ? location.pathname : `${location.pathname}?${next}${location.hash}`);
+    replaceAddress(next.size === 0 ? location.pathname : `${location.pathname}?${next}${location.hash}`);
   }
 
   function renderBar() {

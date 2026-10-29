@@ -4,6 +4,7 @@
 import { ARENAS, GROUNDS, arenaCourtIn, arenaRinkIn, drawKyogijo } from "./dist/index.js";
 import { PLACES, atlasFacets, hallSurfaces, officialName, placeById, placesBy, plainName, surfaceOf, surfacesOf } from "./dist/atlas-entry.js";
 import { ATLAS_MARK_STYLE, markIcon, markSvg } from "./atlas-marks.js";
+import { replaceAddress } from "./address.js";
 
 const $ = (id) => document.getElementById(id);
 // The words of the leagues that have a name in Japanese other than the one they go by in English; any other league is shown by its name as the data gives it.
@@ -398,7 +399,7 @@ export async function initAtlas({ say, lang, onTry }) {
     state.selected = id;
     const q = new URLSearchParams(location.search);
     q.set("place", id);
-    history.replaceState(history.state, "", `${location.pathname}?${q.toString()}${location.hash}`);
+    replaceAddress(`${location.pathname}?${q.toString()}${location.hash}`);
     for (const button of $("atlas-list").querySelectorAll(".atlas-item")) {
       button.setAttribute("aria-pressed", String(button.dataset.id === id));
       button.tabIndex = button.dataset.id === id ? 0 : -1;

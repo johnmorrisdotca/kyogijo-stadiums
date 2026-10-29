@@ -86,6 +86,7 @@
       // The real stadiums: BC Place, Lumen Field, T-Mobile Park, Tokyo Dome, Koshien Stadium and Korakuen Hall, each drawn inside the outline of its building (OpenStreetMap, ODbL 1.0), the field lying as the sources say, with its roof and a plausible bowl of the seats of
       // each configuration. The page only asks the package to draw: `crowd: { real: true }` and a `stadium` (or a `park`) in the options. What is chosen lives in the address; nothing is sent anywhere and nothing is stored.
       import { drawKyogijo } from "./dist/index.js";
+      import { replaceAddress } from "./address.js";
       import { lightingFor, lightingOfAddress } from "./lighting.js";
       import { STADIUMS, STADIUM_IDS, stadiumConfigs, stadiumKind, stadiumNames } from "./dist/stadiums-entry.js";
       import { mountKyogijoTurn } from "./dist/turn-entry.js";
@@ -250,7 +251,7 @@
         if ($("theme").value !== "auto") next.set("theme", $("theme").value);
         writeWay(next);
         camera.write(next);
-        history.replaceState(null, "", next.size === 0 ? location.pathname : `?${next}`);
+        replaceAddress(next.size === 0 ? location.pathname : `?${next}`);
       }
 
       /** The lighting the choices say: a preset and the colour of light on the surface over the preset's own. */
