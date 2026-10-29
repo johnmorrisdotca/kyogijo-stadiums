@@ -243,6 +243,8 @@ kyogijo-field::part(plate) { filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .25)); 
 /* The featured real arena at the head of the page: its buttons are the family's chips, and the view stands as tall as the screen leaves room for. */
 .feature { --rv-line: var(--rule); --rv-card: var(--surface); --rv-ink: var(--ink); --rv-on: var(--ink); --rv-on-ink: var(--page); --rv-accent: var(--accent); --rv-chrome: 520px; margin: 0 0 22px; }
 .feature .rv-bar { margin-bottom: 6px; }
+/* The venue list is empty in the page's HTML and filled by the script: WebKit on macOS gives an empty select less than its minimum height, so the row keeps the height the filled select has. */
+#feature-pick { min-height: 44px; }
 #feature-bar { min-height: 44px; }
 .feature .rv-bar .fam-chip { cursor: pointer; font: inherit; font-size: .9rem; font-weight: 700; color: var(--ink); }
 .feature .rv-bar .fam-chip[aria-pressed="true"] { background: var(--ink); color: var(--page); border-color: var(--ink); }
