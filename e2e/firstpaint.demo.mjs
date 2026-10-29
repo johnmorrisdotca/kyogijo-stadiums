@@ -17,13 +17,14 @@ const JOHN = "?sport=nba&league=gleague&place=mazda-stadium-hiroshima";
  * Serve `site/` slowly, as a network does: the page and its stylesheets at once, every script after a pause, so that the
  * browser paints what the HTML holds before the script can change anything.
  */
-async function serveSlowly(page, delay = 400) {
+async function serveSlowly(page, delay = 400, exact = false) {
   await page.route("http://kyogijo.test/**", async (route) => {
     const { pathname } = new URL(route.request().url());
     const file = join(site, pathname.endsWith("/") ? `${pathname}index.html` : pathname);
     if (!existsSync(file)) return route.fulfill({ status: 404, body: "" });
     const type = TYPES[file.slice(file.lastIndexOf("."))] ?? "application/octet-stream";
-    if (type === "text/javascript") await new Promise((done) => setTimeout(done, delay));
+    // The pages ask for all their modules at once (a preload in the head), so the script comes after one pause and not after seven: the pause (of a page that preloads: not the docs pages') is never shorter than a slow runner needs to look at the page the HTML made.
+    if (type === "text/javascript") await new Promise((done) => setTimeout(done, exact ? delay : Math.max(delay, 1500)));
     return route.fulfill({ body: readFileSync(file), contentType: type });
   });
 }
@@ -70,7 +71,7 @@ for (const path of ["docs/", "docs/getting-started.html", "docs/gallery-fields.h
     test.skip(browserName !== "chromium", "only Chromium reports layout shifts");
     await page.emulateMedia({ colorScheme: "dark" });
     await watchShifts(page);
-    await serveSlowly(page, 250);
+    await serveSlowly(page, 250, true);
     await page.goto(`http://kyogijo.test/${path}`);
     await page.waitForLoadState("load");
     await page.waitForTimeout(1500);

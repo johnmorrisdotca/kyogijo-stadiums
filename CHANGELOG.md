@@ -14,7 +14,7 @@ All notable changes to this project are written here. The format follows
 
 ### Added
 
-- `pnpm exec node scripts/perf-district.mjs` measures the district page in Chromium and WebKit, on a desk and a phone window at the device pixel ratios 1, 2 and 3, with the CPU slowed or not: the time to draw, the bytes of script, the elements and planes, the cost of a step of a turn and the memory the layers would take. `e2e/perf.demo.mjs` holds the counts that decide the speed (planes, planes drawn, elements) and the modules' preload to a budget, so that a change that doubles them is found by the test.
+- `pnpm exec node scripts/perf-district.mjs` measures the district page in Chromium and WebKit, on a desk and a phone window at the device pixel ratios 1, 2 and 3, with the CPU slowed or not: the time to draw, the bytes of script, the elements and planes, the cost of a step of a turn and the memory the layers would take. `e2e/perf.demo.mjs` holds the counts that decide the speed (planes, planes drawn, elements) and the modules' preload to a budget, so that a change that doubles them is found by the test. The slow server of the first-paint tests holds a page's scripts back for at least 1.5 seconds (it was 0.25 to 0.7 for each of seven levels of imports, and with the modules asked for together one pause is all there is).
 
 ### Fixed
 
