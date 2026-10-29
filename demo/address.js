@@ -3,13 +3,13 @@
 /**
  * Write the address the page has come to, as `history.replaceState` does, but never so often that the browser refuses: WebKit throws a SecurityError from the hundred-and-first call in ten seconds, and a
  * reader who holds an arrow key, or presses a turn button over and over, calls it thirty times a second. Writes go straight through while there is room (so a test or a reader sees the address at once);
- * past sixty in ten seconds only the latest address is kept and written a moment later, and a browser that still refuses is not heard from.
+ * past ninety in ten seconds only the latest address is kept and written a moment later, and a browser that still refuses is not heard from.
  */
 const writes = [];
 let waiting;
 let latest;
 const WINDOW_MS = 10_000;
-const ROOM = 60;
+const ROOM = 90;
 function flushAddress() {
   waiting = undefined;
   if (latest === undefined) return;
