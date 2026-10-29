@@ -15,6 +15,7 @@ import { framesBlockHtml, framesFiles, galleryData, galleryPageHtml, libraryFrom
 import { FAMILY_SCRIPT, familyFooter, familyHead, familyHeader, familyUnreviewed } from "./family-template.mjs";
 import { iconLinks } from "./icon-links.mjs";
 import { firstPaintHead, sayEnglish } from "./first-paint.mjs";
+import { addModulePreloads } from "./module-preload.mjs";
 import { WORDS } from "../demo/words.js";
 
 const id = "kyogijo-stadiums";
@@ -651,5 +652,8 @@ const made = buildDocs({
   siteBlocks: { frames: framesBlockHtml(lib, style) },
   files: framesFiles(lib),
 });
+// Every page's modules are asked for together, from its head, not one file at a time as each is found (scripts/module-preload.mjs).
+const preloaded = addModulePreloads("site");
+console.log(`site/ pages that preload their modules: ${Object.entries(preloaded).map(([page, count]) => `${page} ${count}`).join(", ")}.`);
 console.log(`site/docs/ is ready: ${made.pages} pages, ${made.entries} titles and headings to search.`);
 console.log("site/ is ready: serve it, or let the Pages workflow publish it.");
