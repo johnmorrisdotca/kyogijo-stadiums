@@ -107,12 +107,17 @@
       <p class="note"><a href="./stadiums.html" id="stadiums"></a> · <a href="./docs/district.html" id="docs"></a></p>
     </main>
     <script type="module">
+      // Start reading the area the address asks for now, while the page's other modules come, so that its file is there when they have run. Only the area of the first view: another choice reads its own when it is made.
+      import { loadAreasFor } from "./dist/areas-entry.js";
+      const asked = new URLSearchParams(location.search);
+      if (asked.get("context") !== "0") loadAreasFor((asked.get("venues") ?? "bc-place:cfl,rogers-arena").split(",")).catch(() => {});
+    </script>
+    <script type="module">
       // A district: several real venues of one city on one plan, each at its real position and orientation (OpenStreetMap, ODbL 1.0), to look down on in 2D or turn around together in 3D. The page only asks the package to draw
       // (`drawDistrict`, `mountDistrictTurn`): the venues, the mode and the turn are options. What is chosen lives in the address; nothing is sent anywhere and nothing is stored.
       import { DISTRICT_IDS, districtMember, KODOKAN_FLOORS, mountDistrict, mountDistrictTurn, OUTSIDE_LEVELS, OUTSIDE_VENUES, planDistrict, unknownVenues, VENUE_ATTRIBUTION } from "./dist/district-entry.js";
       import { replaceAddress } from "./address.js";
-      import { TOKYO_DOME_CITY } from "./dist/plateau-entry.js";
-      import { contextFor } from "./dist/cityctx-entry.js";
+      import { areaKeysFor, loadAreasFor } from "./dist/areas-entry.js";
       import { hoverOf, keepCamera, wayOf, writeWay } from "./turn-way.js";
       import { lightingFor, lightingOfAddress } from "./lighting.js";
       import { STADIUMS } from "./dist/stadiums-entry.js";
@@ -187,9 +192,8 @@
       const idOf = (key) => key.split(":")[0];
       /** Whether the venues chosen are Tokyo Dome City's (with PLATEAU's buildings round them): the Kodokan's choice is theirs. */
       const hasTokyo = () => state.venues.some((key) => ["tokyo-dome", "korakuen-hall", "kodokan"].includes(idOf(key)));
-      /** The buildings and streets the venues chosen have round them: Tokyo Dome City's (Project PLATEAU) or downtown Vancouver's (OpenStreetMap). */
-      const contextAreas = () => (hasTokyo() ? [TOKYO_DOME_CITY] : contextFor(state.venues));
-      const hasContext = () => contextAreas().length > 0;
+      /** Whether the venues chosen have buildings and streets round them: Tokyo Dome City's (Project PLATEAU), downtown Vancouver's (OpenStreetMap) or Seattle's. Only the keys are asked here; an area's data is read, from its own file, when it is drawn. */
+      const hasContext = () => areaKeysFor(state.venues).length > 0;
       /** Whether a venue chosen has gates (`venueGates`) or a retractable roof that opens. */
       const hasGates = () => state.venues.some((key) => ["bc-place", "rogers-arena"].includes(idOf(key)));
       const hasOpening = () => state.venues.some((key) => ["bc-place", "t-mobile-park"].includes(idOf(key)));
@@ -345,7 +349,10 @@
         }
       }
 
-      function draw() {
+      /** The number of the last draw asked for: a draw that waits for an area's file and finds a later one asked for leaves the page to it. */
+      let drawing = 0;
+      async function draw() {
+        const mine = ++drawing;
         const theme = $("theme").value;
         if (theme === "auto") delete document.documentElement.dataset.theme;
         else document.documentElement.dataset.theme = theme;
@@ -381,7 +388,20 @@
           return;
         }
         // A district with a mask asks for the crowd at every level, 0 included: the plan keeps room round the buildings for it, so that nothing moves when the level does.
-        const options = { venues: state.venues, mode: $("mode").value, turn: $("turn").value === "auto" ? "auto" : 0, labels: $("labels").checked, language: $("language").value, ...(masked() ? { outside: { level: state.outside } } : {}), ...(theme === "auto" ? {} : { theme }), ...(contextOn() ? { context: contextAreas() } : {}), ...(hasGates() && $("gates").checked ? { gates: true } : {}), ...(hasKodokan() ? { building: $("building").value } : {}), ...(hasKodokan() && floorNow() !== undefined ? { floor: floorNow() } : {}) };
+        let context;
+        if (contextOn()) {
+          document.body.dataset.ready = "false";
+          try {
+            context = await loadAreasFor(state.venues);
+          } catch (error) {
+            $("error").textContent = String(error.message);
+            $("error").hidden = false;
+            document.body.dataset.ready = "true";
+            return;
+          }
+          if (mine !== drawing) return;
+        }
+        const options = { venues: state.venues, mode: $("mode").value, turn: $("turn").value === "auto" ? "auto" : 0, labels: $("labels").checked, language: $("language").value, ...(masked() ? { outside: { level: state.outside } } : {}), ...(theme === "auto" ? {} : { theme }), ...(context === undefined ? {} : { context }), ...(hasGates() && $("gates").checked ? { gates: true } : {}), ...(hasKodokan() ? { building: $("building").value } : {}), ...(hasKodokan() && floorNow() !== undefined ? { floor: floorNow() } : {}) };
         try {
           const plan = planDistrict(options);
           if (three) {

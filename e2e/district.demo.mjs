@@ -518,7 +518,8 @@ test("puts Seattle's three venues in the city between them, and Seattle Center a
   await expect(page.locator(`${STAGE} .ky-dist-tree`)).toHaveCount(0);
   await page.locator('#tabs button[data-preset="seattlecenter"]').click();
   await expect(page.locator('#tabs button[aria-selected="true"]')).toHaveText("Seattle Center");
-  expect(await page.locator(`${STAGE} .ky-dist-tree`).count()).toBeGreaterThanOrEqual(2);
+  // Seattle Center's file is read when the preset is chosen, so its trees come a moment after the tab does.
+  await expect.poll(() => page.locator(`${STAGE} .ky-dist-tree`).count()).toBeGreaterThanOrEqual(2);
   await expect(credit).toContainText("City of Seattle, Combined Tree Point");
   await page.locator('#tabs button[data-preset="sodo"]').click();
   await expect(page.locator(`${STAGE} [data-venue]`)).toHaveCount(2);
