@@ -199,7 +199,8 @@ test.describe("with JavaScript off", () => {
       await expect(page.locator("header nav a").first()).not.toBeEmpty();
       await expect(page.locator("footer")).toContainText("Made from the package's own");
       await expect(page.locator("main h1, main h2").first()).not.toBeEmpty();
-      if (path.includes("gallery-")) expect(await page.locator("main svg.kyogijo").count()).toBeGreaterThan(5);
+      // Without script a gallery picture is the image of its own file (with script it is drawn when it comes near).
+      if (path.includes("gallery-")) expect(await page.locator("main .lazy-art img").count()).toBeGreaterThan(5);
     });
   }
 });

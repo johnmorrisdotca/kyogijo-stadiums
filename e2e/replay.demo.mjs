@@ -445,6 +445,7 @@ test("the docs have a Replay page in the contents, and the gallery draws a frame
   await page.goto("http://kyogijo.test/docs/gallery-data.html");
   for (const id of ["replay-rink", "replay-pitch"]) {
     const item = page.locator(`#${id}`);
+    await item.scrollIntoViewIfNeeded();
     await expect(item.locator('g[id$="replay-players"]')).toHaveCount(1);
     expect(await item.locator('g[id$="replay-numbers"] text').count()).toBeGreaterThanOrEqual(5);
     expect(await item.locator("pre code").textContent()).toContain('from "@johnmorrisdotca/kyogijo-stadiums/replay"');

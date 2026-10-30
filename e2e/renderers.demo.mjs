@@ -37,7 +37,8 @@ for (const scheme of ["light", "dark"]) {
     const context = await browser.newContext({ colorScheme: scheme });
     const page = await context.newPage();
     await serve(page);
-    await page.goto("http://kyogijo.test/docs/");
+    // A page of the docs that draws nothing, so that its stylesheet holds only the page's own: the drawings carry theirs.
+    await page.goto("http://kyogijo.test/docs/limits.html");
     const result = await page.evaluate(
       async ({ DRAWINGS, scheme }) => {
         const { sceneFromSvg } = await import("/dist/scene-entry.js");
