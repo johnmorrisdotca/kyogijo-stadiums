@@ -7,6 +7,29 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.48.1] - 2026-10-30
+
+### Changed
+
+- **The docs site is regrouped by task and by sport (SPX-297).** The contents has two views, *By task* (start, sports, venues and 3D, data on a surface, gallery, reference) and *By sport* (a guide and the pictures of each of thirteen sports, and the places), its groups open and shut, one page template with a short header, a 48 px search, contents and Copy buttons, in light and dark, phone first. The home page leads with a live picture for each sport and a still for each place (New York, Montreal, the Saddledome, the roof switch, the quality levels, Vancouver, Seattle, Tokyo and the Kodokan, tournament halls, judging) with the page of the demo that shows it, and the six tasks. The gallery's index has a group of live tiles for each sport and for the real venues (each with a Copy button for its code), a filter by name and a button for each group.
+- **The gallery's pages are light.** A picture is drawn from its own file when it comes within a screen or two of the reader, a few at a time, in the page's own stylesheet (so it follows light and dark with the device); the drawings' stylesheet is one cached file, `docs/drawings.css`, and not 197 KB in every page. The pages fall from 0.4 to 1.2 MB to 0.1 to 0.3 MB, and the code is beside each picture, not behind a button. Without script a picture is the image of its file.
+- **The README is a front door** (38 KB, from 64 KB): the hero, a showcase in rows (the picture in the middle of each of the first three turns, slowly; the others stand still), the first examples, and links. The rest of its examples are the new page `docs/examples.md` ("Recipes"), run by `pnpm test:readme` like the rest. The README's moving pictures show each frame twice as long (200 ms; the fly-through 520 ms), by changing only the frames' durations (`retimed` in `scripts/webp-animated.mjs`), so the files keep their size.
+- Twelve pictures that only the docs use moved from `docs/images` (the README's) to `docs/pictures`.
+
+### Fixed
+
+- **The pictures in the docs pages were not pictures on the site.** A page's image pointed at its file's page on GitHub, not at the file, so the docs site showed none of the screenshots of the 3D views. They are served from the site now, with a dark twin for the dark theme and their size in the tag, so a page does not move as they load.
+
+### Added
+
+- `docs/pictures/quality-{high,medium,low}-3d-desk-{light,dark}.webp`: Seattle's three venues held at each quality tier.
+- Tests: every address of the docs site before the regrouping is still a page; the home page and the gallery's index name only pages, headings and pictures that exist, draw their tiles when they come near, and filter; every control of the docs is 48 px; a picture of a page loads, light and dark; the contents' two views.
+
+### Cost
+
+- The package is unchanged (no change to `src/` but its version): `dist/` and the bundle and device budgets are as in 0.48.0. The docs site is bigger by its stills (8 MB of pictures served beside the pages, loaded when near) and smaller in its pages.
+- Japanese: the contents, the search and the buttons of the docs site have new words, checked by a reviewer; the pages' own words stay in English.
+
 ## [0.48.0] - 2026-10-30
 
 ### Added
