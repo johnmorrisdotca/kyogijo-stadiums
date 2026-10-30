@@ -104,10 +104,14 @@ test("a press changes the tier without moving the camera, and the view goes on t
   const play = page.locator(`${STAGE} .ky-turn-controls button[data-act="play"]`).first();
   await press(page, play);
   await expect(play).toHaveAttribute("aria-pressed", "true");
+  // Whether the view is turning: the floor's matrix is not the same a moment later (up to two seconds on a slow runner).
   const turning = async () => {
     const a = await floorMatrix(page);
-    await page.waitForTimeout(350);
-    return a !== (await floorMatrix(page));
+    for (let i = 0; i < 8; i += 1) {
+      await page.waitForTimeout(250);
+      if (a !== (await floorMatrix(page))) return true;
+    }
+    return false;
   };
   expect(await turning()).toBe(true);
   for (const tier of ["low", "medium", "auto", "high"]) {
