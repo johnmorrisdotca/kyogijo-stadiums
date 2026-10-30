@@ -59,6 +59,145 @@
       ],
       "radius": 3000,
       "grid": 2
+    },
+    {
+      "id": "nyc-midtown",
+      "name": {
+        "en": "New York: Midtown, Madison Square Garden and Penn Station",
+        "ja": "ニューヨーク：ミッドタウン、マディソン・スクエア・ガーデンとペンシルベニア駅周辺"
+      },
+      "city": "nyc",
+      "kind": "detail",
+      "origin": [
+        -73.99346,
+        40.75054
+      ],
+      "radius": 650,
+      "grid": 0.5
+    },
+    {
+      "id": "nyc-bronx",
+      "name": {
+        "en": "New York: the Bronx, Yankee Stadium",
+        "ja": "ニューヨーク：ブロンクス、ヤンキー・スタジアム周辺"
+      },
+      "city": "nyc",
+      "kind": "detail",
+      "origin": [
+        -73.92639,
+        40.82957
+      ],
+      "radius": 650,
+      "grid": 0.5
+    },
+    {
+      "id": "nyc-flushing",
+      "name": {
+        "en": "New York: Flushing Meadows, Citi Field",
+        "ja": "ニューヨーク：フラッシング・メドウズ、シティ・フィールド周辺"
+      },
+      "city": "nyc",
+      "kind": "detail",
+      "origin": [
+        -73.84578,
+        40.75699
+      ],
+      "radius": 650,
+      "grid": 0.5
+    },
+    {
+      "id": "nyc-brooklyn",
+      "name": {
+        "en": "New York: Brooklyn, Barclays Center",
+        "ja": "ニューヨーク：ブルックリン、バークレイズ・センター周辺"
+      },
+      "city": "nyc",
+      "kind": "detail",
+      "origin": [
+        -73.97469,
+        40.68265
+      ],
+      "radius": 550,
+      "grid": 0.5,
+      "minArea": 50
+    },
+    {
+      "id": "meadowlands",
+      "name": {
+        "en": "New Jersey: the Meadowlands, MetLife Stadium",
+        "ja": "ニュージャージー：メドウランズ、メットライフ・スタジアム周辺"
+      },
+      "city": "osm",
+      "kind": "detail",
+      "origin": [
+        -74.07444,
+        40.81361
+      ],
+      "radius": 650,
+      "grid": 0.5
+    },
+    {
+      "id": "belmont-park",
+      "name": {
+        "en": "New York: Belmont Park and UBS Arena, Elmont",
+        "ja": "ニューヨーク：エルモント、ベルモント・パークとUBSアリーナ周辺"
+      },
+      "city": "osm",
+      "kind": "detail",
+      "origin": [
+        -73.7262,
+        40.7117
+      ],
+      "radius": 650,
+      "grid": 0.5
+    },
+    {
+      "id": "montreal-downtown",
+      "name": {
+        "en": "Montreal: downtown, the Bell Centre",
+        "ja": "モントリオール：ダウンタウン、ベルセンター周辺"
+      },
+      "city": "osm",
+      "kind": "detail",
+      "origin": [
+        -73.56931,
+        45.49603
+      ],
+      "radius": 650,
+      "grid": 0.5
+    },
+    {
+      "id": "montreal-olympic",
+      "name": {
+        "en": "Montreal: Olympic Park, the Olympic Stadium and its tower",
+        "ja": "モントリオール：オリンピック公園、オリンピック・スタジアムとその塔"
+      },
+      "city": "osm",
+      "kind": "detail",
+      "origin": [
+        -73.55164,
+        45.55781
+      ],
+      "radius": 700,
+      "grid": 0.5,
+      "exclude": [
+        "way/20213158"
+      ]
+    },
+    {
+      "id": "montreal-city",
+      "name": {
+        "en": "Montreal: the city between the two venues",
+        "ja": "モントリオール：2つの会場のあいだの市街"
+      },
+      "city": "osm",
+      "kind": "city",
+      "origin": [
+        -73.5605,
+        45.527
+      ],
+      "radius": 4200,
+      "grid": 3
     }
   ]
 }

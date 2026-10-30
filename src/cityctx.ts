@@ -2,7 +2,16 @@
 import type { ContextArea } from "./context.ts";
 import { SEATTLE_CENTER, SEATTLE_CITY, SEATTLE_SODO, VANCOUVER_NATURE } from "./cityctx.data.ts";
 import { VANCOUVER_CENTRE } from "./osm.context.data.ts";
-import { CITYCTX_VENUES } from "./areas.ts";
+import { CITYCTX_DETAIL, CITYCTX_VENUES, MOST_DETAIL_AREAS } from "./areas.ts";
+import { BELMONT_PARK } from "./cityctx.belmont-park.data.ts";
+import { MEADOWLANDS } from "./cityctx.meadowlands.data.ts";
+import { MONTREAL_CITY } from "./cityctx.montreal-city.data.ts";
+import { MONTREAL_DOWNTOWN } from "./cityctx.montreal-downtown.data.ts";
+import { MONTREAL_OLYMPIC } from "./cityctx.montreal-olympic.data.ts";
+import { NYC_BRONX } from "./cityctx.nyc-bronx.data.ts";
+import { NYC_BROOKLYN } from "./cityctx.nyc-brooklyn.data.ts";
+import { NYC_FLUSHING } from "./cityctx.nyc-flushing.data.ts";
+import { NYC_MIDTOWN } from "./cityctx.nyc-midtown.data.ts";
 
 /** The venues each area is drawn round, by their ids (the part of a district's key before the colon). */
 export { CITYCTX_VENUES };
@@ -27,5 +36,11 @@ export function contextFor(venues: readonly string[]): ContextArea[] {
   if (sodo && center) areas.push(SEATTLE_CITY);
   else if (sodo) areas.push(SEATTLE_SODO);
   else if (center) areas.push(SEATTLE_CENTER);
+  const detail: Record<string, ContextArea> = { "nyc-midtown": NYC_MIDTOWN, "nyc-bronx": NYC_BRONX, "nyc-flushing": NYC_FLUSHING, "nyc-brooklyn": NYC_BROOKLYN, "meadowlands": MEADOWLANDS, "belmont-park": BELMONT_PARK, "montreal-downtown": MONTREAL_DOWNTOWN, "montreal-olympic": MONTREAL_OLYMPIC };
+  const montreal = ["montreal-downtown", "montreal-olympic"].filter((key) => has(CITYCTX_DETAIL[key]));
+  if (montreal.length === 2) areas.push(MONTREAL_CITY);
+  else areas.push(...montreal.map((key) => detail[key]));
+  const york = Object.entries(CITYCTX_DETAIL).filter(([key, list]) => !key.startsWith("montreal") && has(list)).map(([key]) => key);
+  if (york.length <= MOST_DETAIL_AREAS) areas.push(...york.map((key) => detail[key]));
   return areas;
 }

@@ -7,6 +7,8 @@
 //   seattle-trees-<area>       City of Seattle, "Combined Tree Point" (street and park trees: place, diameter at breast height). Same terms.
 //   seattle-ground-<area>      USGS 3DEP elevation (metres, public domain) at the points the building heights need, from the National Map's ImageServer.
 //   vancouver-trees-<area>     City of Vancouver open data, "Public trees" (place and diameter). Open Government Licence - Vancouver.
+//   nyc-footprints-<area>      City of New York, Building Footprints (NYC Open Data, dataset 5zhs-2jue: outline, roof height above ground in feet, ground elevation in feet, construction year). NYC's Open Data Law (Administrative
+//                              Code 23-502) puts no registration, licence or restriction on use on a public data set; the City may ask that the source and the version be named and what was changed said. No warranty.
 //
 // One request at a time, a pause after it, a User-Agent that names the project and a way to reach its author, a back-off on 429 and 5xx. A file that is already there is not fetched again.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -16,7 +18,7 @@ import { URL } from "node:url";
 
 const config = JSON.parse(readFileSync(new URL("./cityctx.data.json", import.meta.url), "utf8"));
 const day = process.argv[2] ?? new Date().toISOString().slice(0, 10);
-const only = process.argv[3];
+const only = process.argv[3]?.split(",");
 const out = new URL(`../data-sources/cityctx/${day}/`, import.meta.url);
 mkdirSync(out, { recursive: true });
 const USER_AGENT = "kyogijo-venues/0.1 (https://github.com/johnmorrisdotca/kyogijo-stadiums; john@johnmorris.ca)";
@@ -26,6 +28,7 @@ const SEATTLE_OUTLINES = "https://services.arcgis.com/ZOyb2t4B0UYuYNYH/arcgis/re
 const SEATTLE_TREES = "https://services.arcgis.com/ZOyb2t4B0UYuYNYH/arcgis/rest/services/Combined_Tree_Point/FeatureServer/0/query";
 const SAMPLES = "https://elevation.nationalmap.gov/arcgis/rest/services/3DEPElevation/ImageServer/getSamples";
 const VANCOUVER = "https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets";
+const NYC_FOOTPRINTS = "https://data.cityofnewyork.us/resource/5zhs-2jue.json";
 
 async function get(url, init = {}, tries = 6) {
   for (let attempt = 0; attempt < tries; attempt += 1) {
@@ -49,7 +52,9 @@ function osmQuery(area) {
   const around = `(around:${area.radius},${area.origin[1]},${area.origin[0]})`;
   if (area.kind === "city") {
     // The city view keeps the streets (not the service lanes), the water, the big parks and woods, and only the tall buildings OpenStreetMap tags (the City's outlines carry the rest).
-    return `[out:json][timeout:240];(way["highway"~"^(motorway|trunk|primary|secondary|tertiary|unclassified|residential|living_street|motorway_link|trunk_link|primary_link|secondary_link)$"]${around};way["railway"="rail"]${around};way["natural"~"^(water|bay|coastline|wood)$"]${around};way["waterway"~"^(riverbank|dock)$"]${around};rel["type"="multipolygon"]["natural"="water"]${around};way["leisure"~"^(park|garden)$"]${around};rel["type"="multipolygon"]["leisure"="park"]${around};way["building"]["building:levels"~"^([6-9]|[1-9][0-9])$"]${around};way["building"]["height"~"^[0-9]{2,3}"]${around};way["building"="stadium"]${around};);out geom;`;
+    // (A view several kilometres wide keeps the main streets only: the side streets would be noise from so far, and Overpass would not answer for them.)
+    const streets = area.radius > 3500 ? "motorway|trunk|primary|secondary|tertiary|motorway_link|trunk_link|primary_link|secondary_link" : "motorway|trunk|primary|secondary|tertiary|unclassified|residential|living_street|motorway_link|trunk_link|primary_link|secondary_link";
+    return `[out:json][timeout:240];(way["highway"~"^(${streets})$"]${around};way["railway"="rail"]${around};way["natural"~"^(water|bay|coastline|wood)$"]${around};way["waterway"~"^(riverbank|dock)$"]${around};rel["type"="multipolygon"]["natural"="water"]${around};way["leisure"~"^(park|garden)$"]${around};rel["type"="multipolygon"]["leisure"="park"]${around};way["building"]["building:levels"~"^([6-9]|[1-9][0-9])$"]${around};way["building"]["height"~"^[0-9]{2,3}"]${around};way["building"="stadium"]${around};);out geom;`;
   }
   if (area.kind === "nature") return `[out:json][timeout:240];(node["natural"="tree"]${around};way["natural"="tree_row"]${around};);out geom;`;
   return `[out:json][timeout:240];(way["building"]${around};rel["building"]${around};way["highway"]${around};way["railway"]${around};way["natural"~"^(water|bay|coastline|wood|scrub|grassland)$"]${around};way["waterway"~"^(riverbank|dock)$"]${around};rel["type"="multipolygon"]["natural"="water"]${around};way["leisure"~"^(park|garden|playground|pitch|common)$"]${around};way["landuse"~"^(grass|forest|recreation_ground|meadow)$"]${around};way["place"="square"]${around};way["amenity"="parking"]${around};node["natural"="tree"]${around};way["natural"="tree_row"]${around};);out geom;`;
@@ -173,12 +178,30 @@ async function vancouver(area) {
   }
 }
 
+// ---- The City of New York. ----
+async function nyc(area) {
+  const file = new URL(`nyc-footprints-${area.id}.json`, out);
+  if (existsSync(file)) return;
+  const rows = [];
+  for (let offset = 0; ; offset += 5000) {
+    const p = new URLSearchParams({ $select: "bin,height_roof,ground_elevation,construction_year,feature_code,last_status_type,the_geom", $where: `within_circle(the_geom, ${area.origin[1]}, ${area.origin[0]}, ${area.radius + 80})`, $order: "bin", $limit: "5000", $offset: String(offset) });
+    const page = JSON.parse(await get(`${NYC_FOOTPRINTS}?${p}`));
+    rows.push(...page);
+    if (page.length < 5000) break;
+    await pause(1500);
+  }
+  writeFileSync(file, `${JSON.stringify({ ...meta(area, { source: "City of New York, Building Footprints (NYC Open Data, dataset 5zhs-2jue, Office of Technology and Innovation), https://data.cityofnewyork.us/resource/5zhs-2jue", licence: "NYC Open Data: public data set under the Open Data Law (Administrative Code 23-502), no registration, licence or restriction on use; the source and the version are named and changes said; no warranty of accuracy", units: "height_roof and ground_elevation in feet" }), rows })}\n`);
+  console.log(`${area.id}: New York footprints, ${rows.length} rows`);
+  await pause(3000);
+}
+
 for (const area of config.areas) {
-  if (only !== undefined && area.id !== only) continue;
+  if (only !== undefined && !only.includes(area.id)) continue;
   if (area.city === "seattle") {
     await seattle(area);
     await ground(area);
-  } else await vancouver(area);
+  } else if (area.city === "nyc") await nyc(area);
+  else if (area.city === "vancouver") await vancouver(area);
   await osm(area);
 }
 process.exit(0);

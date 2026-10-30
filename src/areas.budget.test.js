@@ -11,7 +11,7 @@ import { OSM_AREAS } from "./osm.context.data.ts";
 import { PLATEAU_AREAS } from "./plateau.data.ts";
 
 const read = (file) => readFileSync(`src/${file}`, "utf8");
-const DATA = ["osm.context.data.ts", "plateau.data.ts", "cityctx.data.ts", "cityctx.vancouver-nature.data.ts", "cityctx.seattle-sodo.data.ts", "cityctx.seattle-center.data.ts", "cityctx.seattle-city.data.ts"];
+const DATA = ["osm.context.data.ts", "plateau.data.ts", "cityctx.data.ts", "cityctx.vancouver-nature.data.ts", "cityctx.seattle-sodo.data.ts", "cityctx.seattle-center.data.ts", "cityctx.seattle-city.data.ts", "cityctx.nyc-midtown.data.ts", "cityctx.nyc-bronx.data.ts", "cityctx.nyc-flushing.data.ts", "cityctx.nyc-brooklyn.data.ts", "cityctx.meadowlands.data.ts", "cityctx.belmont-park.data.ts", "cityctx.montreal-downtown.data.ts", "cityctx.montreal-olympic.data.ts", "cityctx.montreal-city.data.ts"];
 
 /** The files a source file reaches by its imports (and re-exports), itself included; a dynamic `import()` is not followed. Names are relative to src/. */
 function closure(file, seen = new Set()) {
@@ -30,7 +30,7 @@ describe("the areas of context, one file each", () => {
 
   it("are each reached by the entry that exports them, and the entries `cityctx`, `osm` and `plateau` still export every one", () => {
     expect([...closure("cityctx-entry.ts")].filter((file) => file.startsWith("cityctx.") && file.endsWith(".data.ts")).sort()).toEqual(DATA.filter((file) => file.startsWith("cityctx.")).sort());
-    expect(Object.keys(CITYCTX_AREAS).sort()).toEqual(["seattle-center", "seattle-city", "seattle-sodo", "vancouver-nature"]);
+    expect(Object.keys(CITYCTX_AREAS).sort()).toEqual(["belmont-park", "meadowlands", "montreal-city", "montreal-downtown", "montreal-olympic", "nyc-bronx", "nyc-brooklyn", "nyc-flushing", "nyc-midtown", "seattle-center", "seattle-city", "seattle-sodo", "vancouver-nature"]);
     expect(Object.keys(OSM_AREAS)).toEqual(["vancouver"]);
     expect(Object.keys(PLATEAU_AREAS)).toEqual(["tokyo-dome-city"]);
   });

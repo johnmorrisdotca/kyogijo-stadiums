@@ -20,10 +20,17 @@ import { buildingHeight, classify, streetOf } from "./walk-rules.mjs";
 
 const config = JSON.parse(readFileSync(new URL("./cityctx.data.json", import.meta.url), "utf8"));
 const root = new URL("../data-sources/cityctx/", import.meta.url);
-const day = process.argv[2] ?? readdirSync(root).filter((name) => /^\d{4}-\d{2}-\d{2}$/.test(name)).sort().at(-1);
+// A file is read from the newest day that has it: an area added later is fetched on a day of its own and the earlier days' files stay as they were read.
+const days = readdirSync(root).filter((name) => /^\d{4}-\d{2}-\d{2}$/.test(name)).sort().reverse();
+const day = process.argv[2] ?? days[0];
 if (day === undefined) throw new Error("no data-sources/cityctx/<date>/ to read: run `pnpm cityctx:fetch` first");
-const dir = new URL(`${day}/`, root);
-const read = (name) => (existsSync(new URL(name, dir)) ? JSON.parse(readFileSync(new URL(name, dir), "utf8")) : undefined);
+const readFrom = new Map();
+const read = (name) => {
+  const from = (process.argv[2] === undefined ? days : [day]).find((d) => existsSync(new URL(`${d}/${name}`, root)));
+  if (from === undefined) return undefined;
+  readFrom.set(name, from);
+  return JSON.parse(readFileSync(new URL(`${from}/${name}`, root), "utf8"));
+};
 const FT = 0.3048;
 
 // ---- Small helpers. ----
@@ -62,10 +69,12 @@ function steps(points, g) {
 }
 
 // ---- The buildings. ----
-function osmBuildings(osm, origin) {
+function osmBuildings(osm, origin, exclude = []) {
   const found = [];
   for (const e of osm.elements) {
     const tags = e.tags ?? {};
+    // A building a venue draws itself (the Olympic Stadium's tower, which leans: a block would stand it up straight).
+    if (exclude.includes(`${e.type}/${e.id}`)) continue;
     // A building that stops a crowd (the rule the walkable mask has): not a roof, a canopy, a carport or a ruin.
     if (tags.building === undefined || classify(tags, true)?.kind !== "block-area") continue;
     const ring = outerRingOf(e);
@@ -85,6 +94,21 @@ function osmBuildings(osm, origin) {
     });
   }
   return found;
+}
+
+/** The City of New York's Building Footprints as the matcher takes them: the outline and the roof height above the ground (feet in the file, metres here). A footprint that is a MultiPolygon is one building per polygon. */
+function nycOutlines(file, origin) {
+  if (file === undefined) return [];
+  return file.rows.flatMap((row) => {
+    const polygons = row.the_geom?.type === "MultiPolygon" ? row.the_geom.coordinates : row.the_geom?.type === "Polygon" ? [row.the_geom.coordinates] : [];
+    const feet = Number(row.height_roof);
+    const height = feet > 0 && feet * FT < 400 ? feet * FT : undefined;
+    return polygons.flatMap((rings) => {
+      const ring = rings[0];
+      if (ring === undefined || ring.length < 4) return [];
+      return [{ ring: metresFrom(origin, ring.slice(0, -1)), height, type: row.feature_code }];
+    });
+  });
 }
 
 function seattleOutlines(file, ground, origin) {
@@ -121,8 +145,8 @@ function matcher(source) {
 
 function buildingsOf(area, files) {
   const origin = area.origin;
-  const osm = osmBuildings(files.osm, origin);
-  const sources = seattleOutlines(files.outlines, files.ground, origin);
+  const osm = osmBuildings(files.osm, origin, area.exclude);
+  const sources = area.city === "nyc" ? nycOutlines(files.nyc, origin) : seattleOutlines(files.outlines, files.ground, origin);
   const find = matcher(sources);
   const used = new Set();
   const all = [];
@@ -130,7 +154,7 @@ function buildingsOf(area, files) {
     const i = find(b.ring);
     const matched = i >= 0 ? sources[i] : undefined;
     if (i >= 0) used.add(i);
-    // The City's measured height wins over a tag in Seattle (LiDAR of 2015, the ground taken from 3DEP); a tagged height is used where the City has none.
+    // The City's measured height wins over a tag in Seattle (LiDAR of 2015, the ground taken from 3DEP) and in New York (the roof height of the Building Footprints); a tagged height is used where the City has none.
     const city = matched?.height;
     const tagged = b.height;
     const guess = 10;
@@ -172,6 +196,30 @@ function streetsRows(area, osm) {
 
 // ---- Land cover. ----
 const LAND = ["water", "green", "wood"];
+/** The outlines of OpenStreetMap's water, wetland, parks, grass and woods (rings of ways and of multipolygon relations, the holes of a relation as rings of their own, which the drawing fills even-odd), for an area that has no VoxCity grid. */
+function landFromOsm(area, osm) {
+  const classOf = (t) => {
+    if (t.natural === "water" || t.natural === "bay" || t.natural === "wetland" || ["riverbank", "dock"].includes(t.waterway) || t.landuse === "reservoir" || t.landuse === "basin") return 0;
+    if (t.natural === "wood" || t.landuse === "forest") return 2;
+    if (["park", "garden", "pitch", "golf_course", "playground", "recreation_ground", "nature_reserve", "common"].includes(t.leisure) || ["grass", "meadow", "recreation_ground", "cemetery", "village_green", "orchard", "allotments"].includes(t.landuse) || ["grassland", "scrub", "heath"].includes(t.natural)) return 1;
+    return undefined;
+  };
+  const found = [[], [], []];
+  for (const e of osm.elements) {
+    const cls = classOf(e.tags ?? {});
+    if (cls === undefined || e.tags?.building !== undefined || e.tags?.tunnel !== undefined) continue;
+    const rings = [];
+    if (e.type === "way" && e.geometry !== undefined && e.geometry.length > 3) rings.push(e.geometry);
+    if (e.type === "relation") for (const m of e.members ?? []) if (m.type === "way" && m.geometry !== undefined && m.geometry.length > 3) rings.push(m.geometry);
+    for (const g of rings) {
+      const closed = g[0].lat === g.at(-1).lat && g[0].lon === g.at(-1).lon;
+      if (!closed) continue;
+      found[cls].push(metresFrom(area.origin, g.slice(0, -1).map((p) => [p.lon, p.lat])));
+    }
+  }
+  return { outlines: { water: found[0], green: found[1], wood: found[2] } };
+}
+
 function landCoverOf(area, vox) {
   const rows = [];
   const g = grid(area);
@@ -236,6 +284,7 @@ for (const area of config.areas) {
     osm: read(`osm-${area.id}.json`),
     vtrees: read(`vancouver-trees-${area.id}.json`),
     outlines: read(`seattle-outlines-${area.id}.json`),
+    nyc: read(`nyc-footprints-${area.id}.json`),
     ground: read(`seattle-ground-${area.id}.json`),
     strees: read(`seattle-trees-${area.id}.json`),
     vox: read(`voxcity-${area.id}.json`),
@@ -246,7 +295,7 @@ for (const area of config.areas) {
   }
   const g = grid(area);
   const everything = area.kind === "nature" ? [] : buildingsOf(area, files);
-  const minArea = area.kind === "detail" ? 25 : 120;
+  const minArea = area.minArea ?? (area.kind === "detail" ? 25 : 120);
   const kept = [];
   const bySource = { city: 0, tag: 0, default: 0 };
   const rows = [];
@@ -267,14 +316,14 @@ for (const area of config.areas) {
     bySource[b.source] += 1;
   }
   const streets = area.kind === "nature" ? [] : streetsRows(area, files.osm);
-  const landCover = landCoverOf(area, files.vox);
+  const landCover = landCoverOf(area, files.vox ?? (area.city === "seattle" || area.city === "vancouver" ? undefined : landFromOsm(area, files.osm)));
   const treeList = treesOf(area, files, kept).map((t) => [snap(t.x, g), snap(t.y, g), Math.max(1, Math.round(t.r / g))]);
   // One row: the first tree (east, north, radius), then each next tree's step from the one before in east and north, and its radius.
   const trees = treeList.length === 0 ? [] : [treeList.flatMap((t, i) => (i === 0 ? t : [t[0] - treeList[i - 1][0], t[1] - treeList[i - 1][1], t[2]]))];
   const text = (list) => list.map((row) => `        [${row.join(",")}],`).join("\n");
   const bytes = { buildings: Buffer.byteLength(text(rows)), streets: Buffer.byteLength(text(streets)), landCover: Buffer.byteLength(text(landCover)), trees: Buffer.byteLength(text(trees)) };
   const treeCount = treeList.length;
-  areas[area.id] = { area, files, rows, streets, landCover, trees, treeCount, text, bytes, bySource };
+  areas[area.id] = { area, read: readFrom.get(`osm-${area.id}.json`), files, rows, streets, landCover, trees, treeCount, text, bytes, bySource };
   console.log(`${area.id}: ${rows.length} buildings (heights from ${JSON.stringify(bySource)}), ${streets.length} street lines, ${landCover.length} land cover rings, ${treeCount} trees; bytes ${JSON.stringify(bytes)} = ${Object.values(bytes).reduce((a, b) => a + b, 0)}`);
 }
 
@@ -285,28 +334,36 @@ const CREDITS = {
   osm: OSM,
   vancouverTrees: { en: "Trees: City of Vancouver open data, Public trees, under the Open Government Licence - Vancouver", ja: "樹木：バンクーバー市オープンデータ「Public trees」（Open Government Licence - Vancouver）" },
   seattleBuildings: { en: "Building outlines and roof heights: City of Seattle, Building Outlines 2015 (the City gives no warranty of its accuracy); ground levels: USGS 3D Elevation Program", ja: "建物の輪郭と屋根の高さ：シアトル市「Building Outlines 2015」（市は正確性を保証しません）、地面の標高：USGS 3D Elevation Program" },
+  nycBuildings: { en: "Building outlines and roof heights: City of New York, Building Footprints, NYC Open Data (no warranty of accuracy)", ja: "建物の輪郭と屋根の高さ：ニューヨーク市「Building Footprints」（NYC Open Data、正確性の保証なし）" },
   seattleTrees: { en: "Trees: City of Seattle, Combined Tree Point", ja: "樹木：シアトル市「Combined Tree Point」" },
   vox: { en: "Land cover made with VoxCity (MIT) from OpenStreetMap", ja: "土地被覆：OpenStreetMap から VoxCity（MIT）で作成" },
 };
 const clauses = (...keys) => ({ en: keys.map((k) => CREDITS[k].en).join("; "), ja: keys.map((k) => CREDITS[k].ja).join("；") });
 // One credit for the area, said once: the buildings' layer carries the OpenStreetMap credit and the Cities' heights (and that it was edited); the others say only what is theirs, and the streets nothing more.
 const LAYER_CREDITS = (area) => ({
-  buildings: { en: `${clauses("osm", "seattleBuildings").en}; ${EDITED.en}`, ja: `${clauses("osm", "seattleBuildings").ja}；${EDITED.ja}` },
+  buildings: (() => {
+    const keys = area.city === "seattle" ? ["osm", "seattleBuildings"] : area.city === "nyc" ? ["osm", "nycBuildings"] : ["osm"];
+    return { en: `${clauses(...keys).en}; ${EDITED.en}`, ja: `${clauses(...keys).ja}；${EDITED.ja}` };
+  })(),
   streets: { en: "", ja: "" },
-  landCover: clauses("vox"),
+  landCover: area.city === "seattle" || area.city === "vancouver" ? clauses("vox") : clauses("osm"),
   // (A nature area's buildings and streets are VANCOUVER_CENTRE's, which carry OpenStreetMap's credit: its land cover and trees say their own, with the edit.)
-  trees: area.kind === "nature" ? { en: `${CREDITS.vancouverTrees.en}; ${EDITED.en}`, ja: `${CREDITS.vancouverTrees.ja}；${EDITED.ja}` } : clauses("seattleTrees"),
+  trees: area.kind === "nature" ? { en: `${CREDITS.vancouverTrees.en}; ${EDITED.en}`, ja: `${CREDITS.vancouverTrees.ja}；${EDITED.ja}` } : area.city === "seattle" ? clauses("seattleTrees") : { en: `${CREDITS.osm.en}; ${EDITED.en}`, ja: `${CREDITS.osm.ja}；${EDITED.ja}` },
 });
 const SOURCES = {
   vancouver: { trees: "OpenStreetMap natural=tree and the City of Vancouver's Public trees: https://opendata.vancouver.ca/explore/dataset/public-trees/" },
   seattle: { buildings: "OpenStreetMap (Overpass) with the City of Seattle's Building Outlines 2015 (https://services.arcgis.com/ZOyb2t4B0UYuYNYH/arcgis/rest/services/Building_Outline_2015/FeatureServer) and USGS 3DEP ground levels", trees: "OpenStreetMap natural=tree and the City of Seattle's Combined Tree Point (https://services.arcgis.com/ZOyb2t4B0UYuYNYH/arcgis/rest/services/Combined_Tree_Point/FeatureServer)" },
 };
+SOURCES.nyc = { buildings: "OpenStreetMap (Overpass) with the City of New York's Building Footprints (NYC Open Data, https://data.cityofnewyork.us/resource/5zhs-2jue): the outline and the roof height above ground", trees: "OpenStreetMap natural=tree" };
+SOURCES.osm = { buildings: "OpenStreetMap (Overpass): the outline and the height or levels tagged, else a plain default", trees: "OpenStreetMap natural=tree" };
 const LICENCES = {
   vancouver: { trees: "ODbL 1.0 (OpenStreetMap) and the Open Government Licence - Vancouver" },
   seattle: { buildings: "ODbL 1.0 (outlines, OpenStreetMap); the City of Seattle's outlines and heights under its Open Data Policy (no licence requirement or restriction on use; source, version and changes shown); USGS 3DEP, public domain", trees: "ODbL 1.0 (OpenStreetMap) and the City of Seattle's Open Data Policy (no restriction on use; source, version and changes shown)" },
 };
+LICENCES.nyc = { buildings: "ODbL 1.0 (outlines, OpenStreetMap); the City of New York's footprints and roof heights as a public data set of its Open Data Law (Administrative Code 23-502: no registration, licence or restriction on use; the source and the version named and changes said; no warranty of accuracy)", trees: "ODbL 1.0 (OpenStreetMap)" };
+LICENCES.osm = { buildings: "ODbL 1.0 (OpenStreetMap)", trees: "ODbL 1.0 (OpenStreetMap)" };
 const symbol = (id) => id.toUpperCase().replace(/-/g, "_");
-const head = `// Made by scripts/build-cityctx.mjs from the files of data-sources/cityctx/${day}/: do not edit by hand.
+const headOf = (day, city) => `// Made by scripts/build-cityctx.mjs from the files of data-sources/cityctx/${day}/: do not edit by hand.
 //
 // THIS FILE IS OPENSTREETMAP DATA (ODbL 1.0) WITH THE CITIES' OPEN DATA LAID ON IT, edited: "(c) OpenStreetMap contributors, openstreetmap.org/copyright". It holds the surroundings of a district for the 2D plan and the
 // 3D view: Seattle's buildings (outline, height, for a pitched roof its rise) and streets and railways as lines, and water, green and wood outlines and single trees for Seattle and for Vancouver (whose buildings and
@@ -314,12 +371,20 @@ const head = `// Made by scripts/build-cityctx.mjs from the files of data-source
 // levels; the City's Open Data Policy asks that the source, the version and the changes be shown); the trees of the two Cities' inventories (Vancouver Public trees under the Open Government Licence - Vancouver, Seattle
 // Combined Tree Point) are added to OpenStreetMap's. The land cover is the grid VoxCity (MIT, https://github.com/kunifujiwara/VoxCity) makes from OpenStreetMap, vectorized. The data was cut down here (outlines
 // simplified to a few tenths of a metre, put on a grid) and is not the Cities' own, which did not make it. The raw answers are kept, dated, in data-sources/cityctx/. This file is kept apart from every CC0 file
-// of the package and from PLATEAU's data, and nothing is copied from one to the other.
+// of the package and from PLATEAU's data, and nothing is copied from one to the other.${city === "nyc" ? `
+//
+// THIS AREA IS NEW YORK'S: the outlines of the streets, the buildings (outline and, where the City's Building Footprints give a roof height above ground, the City's height; else the height or the levels OpenStreetMap tags, else a
+// plain default of 10 metres, ours), the water and green outlines and the trees are OpenStreetMap's (ODbL 1.0); the footprints are the City of New York's (NYC Open Data; its Open Data Law, Administrative Code 23-502, asks for no registration
+// or licence and no restriction on use, and lets the City ask that the source and the version be named and what was changed said; the City gives no warranty of accuracy). The land cover here is OpenStreetMap's outlines as mapped
+// (VoxCity is not used for this area).` : city === "osm" ? `
+//
+// THIS AREA IS OPENSTREETMAP ALONE: the buildings (outline and the height or the levels tagged, else a plain default of 10 metres, ours), the streets, the water and green outlines as mapped and the trees (ODbL 1.0). No other
+// source is laid on it, and VoxCity is not used for this area.` : ""}
 import type { ContextArea } from "./context.ts";
 
 `;
 const files = Object.values(areas)
-  .map(({ area, rows, streets, landCover, trees, treeCount, text, files }) => {
+  .map(({ area, read: day, rows, streets, landCover, trees, treeCount, text, files }) => {
     const credits = LAYER_CREDITS(area);
     const vox = files.vox;
     const layer = (name, source, read, licence, attribution, list, doc) => `    ${JSON.stringify(name)}: {
@@ -335,7 +400,7 @@ ${text(list)}
     const layers = [
       ...(rows.length === 0 ? [] : [layer("buildings", SOURCES[area.city].buildings, day, LICENCES[area.city].buildings, credits.buildings, rows, "Each building: the height in grid steps, the roof's rise in grid steps (0 for a flat roof), then the first point (east, north) and each step to the next, in grid steps from `origin`.")]),
       ...(streets.length === 0 ? [] : [layer("streets", "OpenStreetMap highways, railways, sidewalks and paths (Overpass; the kinds are scripts/walk-rules.mjs's streetOf)", day, "ODbL 1.0", credits.streets, streets, "Each line: the kind (0 a carriageway at street level, 1 one on a viaduct or a bridge, 2 a railway, 3 a sidewalk or a path), the width in grid steps, then the first point (east, north) and each step to the next, in grid steps from `origin`.")]),
-      ...(landCover.length === 0 ? [] : [layer("landCover", `VoxCity ${vox.source.match(/VoxCity [\d.]+/)?.[0].slice(8)} land cover from OpenStreetMap`, day, "ODbL 1.0 (OpenStreetMap); VoxCity is MIT", credits.landCover, landCover, "Each outline: the class (0 water, 1 green, 2 wood), then the first point (east, north) and each step to the next, in grid steps from `origin`. A hole is an outline of its own (filled even-odd).")]),
+      ...(landCover.length === 0 ? [] : [layer("landCover", vox === undefined ? "OpenStreetMap water, wetland, parks, grass and woods (Overpass), outlines as mapped" : `VoxCity ${vox.source.match(/VoxCity [\d.]+/)?.[0].slice(8)} land cover from OpenStreetMap`, day, vox === undefined ? "ODbL 1.0 (OpenStreetMap)" : "ODbL 1.0 (OpenStreetMap); VoxCity is MIT", credits.landCover, landCover, "Each outline: the class (0 water, 1 green, 2 wood), then the first point (east, north) and each step to the next, in grid steps from `origin`. A hole is an outline of its own (filled even-odd).")]),
       ...(trees.length === 0 ? [] : [layer("trees", SOURCES[area.city].trees, day, LICENCES[area.city].trees, credits.trees, trees, "One row for all the trees: the first tree's east, north and crown radius, then each next tree's step in east and north from the one before and its crown radius, all in grid steps.")]),
     ].join("\n");
     const text1 = `/** ${area.name.en}: ${rows.length} buildings, ${streets.length} street lines, ${landCover.length} land cover outlines and ${treeCount} trees within ${area.radius} metres of the middle, read ${day}. */
@@ -350,15 +415,15 @@ ${layers}
   },
 };
 `;
-    return { id: area.id, text: text1 };
+    return { id: area.id, day, city: area.city, text: text1 };
   });
 
-for (const { id, text: area } of files) {
-  writeFileSync(new URL(`../src/cityctx.${id}.data.ts`, import.meta.url), `${head}${area}`);
+for (const { id, day: readDay, city, text: area } of files) {
+  writeFileSync(new URL(`../src/cityctx.${id}.data.ts`, import.meta.url), `${headOf(readDay, city)}${area}`);
   console.log(`src/cityctx.${id}.data.ts written`);
 }
 // The file that joins them: what the `cityctx` entry exports. A page that wants one area imports that area's file (or asks `loadArea` of `./areas.ts` for it) and carries no other.
-const join = `// Made by scripts/build-cityctx.mjs from the files of data-sources/cityctx/${day}/: do not edit by hand.
+const join = `// Made by scripts/build-cityctx.mjs from the files of data-sources/cityctx/: do not edit by hand.
 //
 // Every area of the surroundings of Seattle and of Vancouver's water and trees, joined: the cityctx entry. The data is in one file for each area (src/cityctx.<area>.data.ts, OpenStreetMap, ODbL 1.0, with the Cities' open data,
 // each file saying so at its head), so that a page that shows one area carries only that one: import the area's file, or ask \`loadArea\` of the \`areas\` entry for it. This file is only the list.

@@ -10,11 +10,26 @@ export const CITYCTX_VENUES = Object.freeze({
   center: ["climate-pledge-arena"],
 });
 
+/** The venues each detail area of New York, New Jersey and Montreal is drawn round, by their ids: one area for each venue, and for Montreal's two the city between them when both are shown. */
+export const CITYCTX_DETAIL: Readonly<Record<string, readonly string[]>> = Object.freeze({
+  "nyc-midtown": ["madison-square-garden"],
+  "nyc-bronx": ["yankee-stadium"],
+  "nyc-flushing": ["citi-field"],
+  "nyc-brooklyn": ["barclays-center"],
+  "meadowlands": ["metlife-stadium"],
+  "belmont-park": ["ubs-arena"],
+  "montreal-downtown": ["bell-centre"],
+  "montreal-olympic": ["olympic-stadium-montreal"],
+});
+
+/** The most patches of New York's surroundings a choice of venues takes: more than this many venues of the city are too far apart for patches of detail round each. */
+export const MOST_DETAIL_AREAS = 2;
+
 /** The venues of Tokyo Dome City, round which Project PLATEAU's buildings are drawn (the Kodokan stands a little way off, inside the area). */
 export const TOKYO_VENUES: readonly string[] = Object.freeze(["tokyo-dome", "korakuen-hall", "kodokan"]);
 
 /** The key of every area there is data for, in the order a district draws them: each is one file. */
-export const AREA_KEYS: readonly string[] = Object.freeze(["vancouver", "vancouver-nature", "seattle-sodo", "seattle-center", "seattle-city", "tokyo-dome-city"]);
+export const AREA_KEYS: readonly string[] = Object.freeze(["vancouver", "vancouver-nature", "seattle-sodo", "seattle-center", "seattle-city", "tokyo-dome-city", "nyc-midtown", "nyc-bronx", "nyc-flushing", "nyc-brooklyn", "meadowlands", "belmont-park", "montreal-downtown", "montreal-olympic", "montreal-city"]);
 
 /** Each area's loader: the one `import()` of the one file that holds it. */
 const LOADERS: Readonly<Record<string, () => Promise<ContextArea>>> = {
@@ -24,6 +39,15 @@ const LOADERS: Readonly<Record<string, () => Promise<ContextArea>>> = {
   "seattle-center": async () => (await import("./cityctx.seattle-center.data.ts")).SEATTLE_CENTER,
   "seattle-city": async () => (await import("./cityctx.seattle-city.data.ts")).SEATTLE_CITY,
   "tokyo-dome-city": async () => (await import("./plateau.data.ts")).TOKYO_DOME_CITY,
+  "nyc-midtown": async () => (await import("./cityctx.nyc-midtown.data.ts")).NYC_MIDTOWN,
+  "nyc-bronx": async () => (await import("./cityctx.nyc-bronx.data.ts")).NYC_BRONX,
+  "nyc-flushing": async () => (await import("./cityctx.nyc-flushing.data.ts")).NYC_FLUSHING,
+  "nyc-brooklyn": async () => (await import("./cityctx.nyc-brooklyn.data.ts")).NYC_BROOKLYN,
+  "meadowlands": async () => (await import("./cityctx.meadowlands.data.ts")).MEADOWLANDS,
+  "belmont-park": async () => (await import("./cityctx.belmont-park.data.ts")).BELMONT_PARK,
+  "montreal-downtown": async () => (await import("./cityctx.montreal-downtown.data.ts")).MONTREAL_DOWNTOWN,
+  "montreal-olympic": async () => (await import("./cityctx.montreal-olympic.data.ts")).MONTREAL_OLYMPIC,
+  "montreal-city": async () => (await import("./cityctx.montreal-city.data.ts")).MONTREAL_CITY,
 };
 
 /**
@@ -42,6 +66,13 @@ export function areaKeysFor(venues: readonly string[]): string[] {
   const has = (list: readonly string[]): boolean => list.some((id) => ids.has(id));
   if (has(TOKYO_VENUES)) return ["tokyo-dome-city"];
   const keys: string[] = [];
+  // Montreal's two venues stand six kilometres apart: together they take the city between them, each alone its own surroundings. New York's and New Jersey's venues are in different boroughs and states: each shown takes its own.
+  const montreal = ["montreal-downtown", "montreal-olympic"].filter((key) => has(CITYCTX_DETAIL[key]));
+  if (montreal.length === 2) keys.push("montreal-city");
+  else keys.push(...montreal);
+  // (More than two of New York's venues are in more than two boroughs and states, tens of kilometres across: each patch of surroundings would be a speck and together they would weigh a megabyte of drawing, so such a choice has none.)
+  const york = Object.entries(CITYCTX_DETAIL).filter(([key, list]) => !key.startsWith("montreal") && has(list)).map(([key]) => key);
+  if (york.length <= MOST_DETAIL_AREAS) keys.push(...york);
   if (has(CITYCTX_VENUES.vancouver)) keys.push("vancouver", "vancouver-nature");
   const [sodo, center] = [has(CITYCTX_VENUES.sodo), has(CITYCTX_VENUES.center)];
   if (sodo && center) keys.push("seattle-city");

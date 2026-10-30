@@ -16,8 +16,8 @@ const CITY = withContext(["t-mobile-park:mlb", "lumen-field:nfl", "climate-pledg
 const bytesOf = (area: ContextArea): number => JSON.stringify(area).length;
 
 describe("the areas round the venues of Vancouver and Seattle", () => {
-  it("are four frames, each with its origin, radius and grid, and every area by its key", () => {
-    expect(Object.keys(CITYCTX_AREAS)).toEqual(["vancouver-nature", "seattle-sodo", "seattle-center", "seattle-city"]);
+  it("are thirteen frames, each with its origin, radius and grid, and every area by its key", () => {
+    expect(Object.keys(CITYCTX_AREAS)).toEqual(["vancouver-nature", "seattle-sodo", "seattle-center", "seattle-city", "nyc-midtown", "nyc-bronx", "nyc-flushing", "nyc-brooklyn", "meadowlands", "belmont-park", "montreal-downtown", "montreal-olympic", "montreal-city"]);
     for (const area of AREAS) expect(CITYCTX_AREAS[area.key]).toBe(area);
     // Vancouver's has the middle of downtown Vancouver's own area, which has its buildings and streets.
     expect(VANCOUVER_NATURE).toMatchObject({ origin: VANCOUVER_CENTRE.origin, radius: 450, grid: 0.5 });
