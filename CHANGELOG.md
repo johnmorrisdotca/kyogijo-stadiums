@@ -7,6 +7,47 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Changed
+
+- **A district page of the demo loads 158 to 243 KB less script and data, and the crowd outside, the words and the venues are read when they are shown (SPX-795, SPX-797).** Three tables that every district page carried, whatever it showed, are files read with a dynamic `import()` by the lean district (`district-lean`), as the venues' records were in 0.45.1:
+  - **The walkable ground of the crowd outside** (`walk.data`, 88 KB, 24.5 KB gzipped, Vancouver's alone) is a file for each district (`walk/vancouver.data.js`, 83 KB: written to whole quarter-metres, it is a little smaller than the table was) and `walk.index.ts` lists the districts with their venues. `await loadOutside(venues)`, from `district-lean` and `venue-data`, reads the file of the district a venue stands in, and the outline of each arena of it (the crowd keeps out of the buildings of venues that are not shown too); it reads nothing for venues no mask names. `hasOutside`, `OUTSIDE_VENUES`, `walkIdFor` and the plan itself need no data. `outsideCrowd(plan)` is synchronous and unchanged on the `district` entry, which holds every district's data (`walk.full.ts`); on the lean district it throws, saying so, where it is asked before `loadOutside`. The demo calls `loadOutside` for a choice with a crowd to show, so the pages of Seattle, Tokyo and the Kodokan never fetch the file.
+  - **The words** (`strings.js`, 156 KB, 43.5 KB gzipped) are a file for each language: `strings.en.js` (66 KB, 19 gzipped) and `strings.ja.js` (87 KB, 25 gzipped), with `strings.core.ts` holding the types, `fill`, the table and `loadStrings`. `await loadStrings(language)` reads a language (once, the same promise after) and the lean district draws in it; a language not read throws, naming the call. An English page does not read the Japanese, a Japanese page does not read the English, and choosing the other language in the middle of a session reads it then. `KYOGIJO_STRINGS` is synchronous with both languages on every other entry, as before: `strings.ts` imports the two files, each of which holds its language when it is read. The Japanese is moved and not changed (the table's JSON is the same character for character).
+  - **The real venues of the NHL's arenas** (`venues.data` 25 KB and `venues.osm.data` 54 KB, 14 KB gzipped together) are two files for each venue (`venues/<key>.data.js`, the facts, and `venues/<key>.osm.data.js`, what OpenStreetMap gave: the licences stay in files apart), about 1 and 1.5 KB each, read by `loadVenueDataFor` with the arena's record, and `venues.index.ts` lists the keys. `VENUES` is the table of the venues held: all 32 on every entry that had them, those read on the lean district, and `venueById` throws for a venue not read yet instead of drawing without it. `VENUES` is no longer frozen (its venues are).
+  - **Nothing changes in what is drawn.** `src/venue-data.test.ts` draws every preset in 2D and 3D, in English and Japanese, with surroundings and crowd, through the lean district and the `district` entry, and the characters are the same; the crowd outside is the same people to the last bit; and screenshots of the demo's district page before and after (Vancouver with a crowd of 25, 50 and 75 percent in 2D and 3D, in both languages; Seattle; Tokyo; the Kodokan; a desk and a phone window) are the same pixel for pixel.
+- **The entries that had them have them still**, as 0.45.1 did: `src/venue-data.budget.test.js` holds each entry to the venues, the words and the walkable ground it had, and the lean district, `venue-data` and `areas` to none of them in their import graph. The package is 144 files and 99 KB bigger unpacked (1,401 to 1,545 files, 6,982 to 7,083 KB; packed 1,889 to 1,926 KB): the tables stay, and each record is a file again.
+
+### Added
+
+- `loadOutside(venues)` and `loadStrings(language)` on `district-lean` and `venue-data`; `loadWalk`, `registerWalk`, `loadVenue`, `registerVenues`, `hasStrings` and `provideStrings` in the modules that hold the tables (not entry exports).
+- Tests: the lean district holds no walkable ground, words or venue until they are read, says which call reads them, reads each once and reads nothing for venues no mask names; the import graph; every entry's tables; `e2e/bundles.demo.mjs` checks the network log of every preset (the one language's words, the venue's two files, the walkable ground for Vancouver's presets alone, and no table of every venue) and of a Japanese page, of a language chosen in the middle of the session, and of choosing venues with and without a crowd.
+
+### Measured
+
+Chromium, a desk window, the demo's pages built from 0.45.2 and from this commit and measured beside each other (`node scripts/bundle-report.mjs --base`), script and data fetched, raw KB (gzipped KB), from the network log. The district pages are opened in 3D from the broadcast viewpoint, as `scripts/bundle-lib.mjs` has them; `bundle-budget.json` is lowered to match for each of them.
+
+| Page | Before | After | Saved |
+|---|---|---|---|
+| home | 5,185.4 (1,583.1) | 5,193.7 (1,586.8) | -8.3 (-3.7) |
+| venues | 2,985.5 (849.8) | 2,992.9 (853.1) | -7.4 (-3.3) |
+| district: BC Place and Rogers Arena | 2,513.2 (772.2) | 2,355.3 (738.2) | 157.9 (34.0) |
+| district: Rogers Arena alone | 2,512.3 (771.8) | 2,354.4 (737.8) | 157.9 (34.0) |
+| district: BC Place (soccer) and Rogers Arena | 2,513.2 (772.2) | 2,355.3 (738.2) | 157.9 (34.0) |
+| district: Seattle Center | 2,546.0 (778.9) | 2,305.4 (720.7) | 240.6 (58.2) |
+| district: SoDo | 2,515.3 (773.1) | 2,272.8 (714.0) | 242.5 (59.1) |
+| district: Seattle, three venues | 2,630.7 (795.8) | 2,390.2 (737.6) | 240.5 (58.2) |
+| district: Tokyo Dome City | 2,474.7 (763.1) | 2,232.1 (704.0) | 242.6 (59.1) |
+| district: Tokyo Dome City and the Kodokan | 2,474.7 (763.1) | 2,232.1 (704.0) | 242.6 (59.1) |
+| district: the Kodokan | 2,416.0 (747.5) | 2,173.4 (688.4) | 242.6 (59.1) |
+| stadiums | 2,973.1 (845.5) | 2,980.7 (848.8) | -7.6 (-3.3) |
+| halls | 3,069.6 (875.4) | 3,076.9 (878.6) | -7.3 (-3.2) |
+| boards | 3,081.0 (865.0) | 3,088.4 (868.2) | -7.4 (-3.2) |
+| flythrough | 3,399.0 (987.8) | 3,406.4 (991.1) | -7.4 (-3.3) |
+| judging | 2,974.1 (848.6) | 2,981.4 (851.9) | -7.3 (-3.3) |
+
+- **The pages that need everything cost 7 to 8 KB more (3 KB gzipped, a third of a percent)**: the words are two files that gzip a little worse apart, and the index and the loader are new. Their budget is unchanged. A district page of one venue saves 158 KB (Vancouver, which still reads its walkable ground: 24 KB gzipped) to 243 KB.
+- What each page saves, raw (gzipped): the walkable ground 88 (24.5) where there is no crowd outside, the words 87 (25) for the language not read (and 66 (19) when it is the other), the venues 79 (14) less the one or two a district shows, and the small index and loaders that are added. The files of the walkable ground, the English words and the venue each load in parallel with the page's other modules, as the records of 0.45.1 do.
+- **Times are not claimed.** `bundle-report.mjs` also measured the first paint and the drawn page at 1 and 4 times slower CPU, but the machine's load average was 27 to 42 during the runs (`uptime`) and 3 runs of each page differed by more than a change of this size could make; a change in bytes of this kind is not a change in time that can be told from the noise here.
+
 ## [0.45.2] - 2026-10-30
 
 ### Changed
