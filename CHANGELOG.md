@@ -7,18 +7,13 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.46.0] - 2026-10-30
+
 ### Added
 
 - **Five stadiums and nine areas of surroundings on the east coast (SPX-654, SPX-653).** Each stadium is the building OpenStreetMap maps, the field lying as the map or the outline says, and a bowl of the seats its article gives ([the east coast](./docs/stadiums.md#the-east-coast)): **Yankee Stadium** (46,537 seats, home plate facing 75.6 degrees from the mapped infield), **Citi Field** (41,922, 14.5 degrees from the mapped grass fitted to the fence), **MetLife Stadium** (82,500 for the NFL's field and 80,663 for a soccer pitch, lying along 166.5 degrees as the mapped pitch does, with no roof, as its article says), **Barclays Center**, the first hall of the basketball court (`sport: "nba"`, 17,732 seats, the court along the building's long axis, an inference the drawing says) and **the Olympic Stadium of Montreal** (49,757 seats for baseball, a fixed roof drawn as a low lens, and **the Montreal Tower**, 165 metres, inclined at 45 degrees, leaning over the bowl in 3D: its footprint and height are OpenStreetMap's, its width ours). Madison Square Garden, UBS Arena and the Bell Centre were already real venues and now have surroundings. Each stadium adds 1.7 to 3 KB of data (0.9 to 1.3 KB gzipped).
 - **Their surroundings, one file each, read only when the venue is shown** ([New York and Montreal](./docs/district.md#new-york-and-montreal)): Midtown (round Madison Square Garden), the Bronx, Flushing Meadows, Brooklyn, the Meadowlands, Belmont Park, downtown Montreal, Olympic Park and the city between Montreal's two venues, 36 to 129 KB each as data (14 to 42 KB gzipped). Outlines, streets, water, parks and trees are OpenStreetMap's (ODbL 1.0); New York's heights are the roof heights of the City of New York's Building Footprints (NYC Open Data, read on 2026-10-30; the City's Open Data Law asks that the source and the version be named and changes said, and the City gives no warranty), which give a height to 94 to 99 buildings in a hundred. More than two of New York's venues in one choice take no surroundings (they lie tens of kilometres apart). Four presets on the district page: New York Midtown, New York's six venues at their real distances, Montreal's Olympic Stadium and its tower, and the Bell Centre with the Olympic Stadium.
 - `StadiumConfigId` has `nba`; a stadium kind `park` can have a `fixed` roof (drawn as the dome's lens) and a `tower`; `RealShell.tower`, `towerPlanes`, `MOST_DETAIL_AREAS`, `CITYCTX_DETAIL`. The generators read a later day's OpenStreetMap file beside the earlier days' (`pnpm stadiums:fetch <date>` carries the earlier Wikidata and Wikipedia files forward; `pnpm cityctx` reads each file from the newest day that has it, and `minArea` and `exclude` in `scripts/cityctx.data.json` keep a dense area small and a building a venue draws itself out of the context).
-
-### Changed
-
-- An open-air stadium of the stadium kind (`roof.kind: "open"`) is drawn with no roof in 3D; before, every stadium of that kind had a lid.
-
-### Added
-
 - **Roofs are cut away from above and whole from the street (SPX-695).** A roof of a real venue now fades by how high the eye is (`Plane.cut`): from straight above it is cut away to a ghost so the bowl shows, whole at the main camera and below, and whole again at a street's eye whatever side it is on. Before, a roof was as solid from overhead as from the side and gave way only by side.
 - **Lumen Field's canopies are arched and the stadium has its tower (SPX-696).** OpenStreetMap's `roof:shape=round` for both canopies is read (`shape`) and drawn as a convex arc in three pieces across; the canopies are a firmer white and the walls under them rise to the canopy's back edge, so the outside of each roof is one face to the crest. A 13-storey tower stands at the open north end with its vertical scoreboard on the face towards the field (`endTower` in the stadium's data: the storeys are the article's, the size and the place ours).
 - **T-Mobile Park's roof runs on rails and its facade is a brick tone (SPX-696).** A girder along the north and the south side at the roof's lowest height on four columns each, stays when the roof is open; the walls are a brick tone (the brief's: the article does not say it).
@@ -33,6 +28,10 @@ All notable changes to this project are written here. The format follows
 ### Fixed
 
 - The stadiums page's "Roof open (3D)" label read "none, open to the air": two words of its table shared the key `open`.
+
+### Changed
+
+- An open-air stadium of the stadium kind (`roof.kind: "open"`) is drawn with no roof in 3D; before, every stadium of that kind had a lid.
 
 ## [0.45.3] - 2026-10-30
 
