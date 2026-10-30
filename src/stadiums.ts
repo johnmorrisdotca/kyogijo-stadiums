@@ -534,7 +534,7 @@ const PARK_COVER = 0.92;
 const OPEN_WALL_OVER = 6;
 /** How far a fixed roof's crown stands over its rim, in feet, and the width of a leaning tower's shaft at its base and at its top, in feet (ours: the sources give a roof's kind and a tower's height, not these). */
 const FIXED_CROWN = 30;
-const TOWER_WIDTH = [180, 92] as const;
+const TOWER_WIDTH = [240, 64] as const;
 const PARK_PARKED = 0.3;
 
 /**
@@ -614,7 +614,7 @@ function park(stadium: RealStadium, input: ParkInput): ParkPlan {
     const low = round(Math.max(top + STADIUM_CLEARANCE, (stadium.osm.height ?? 0) * FEET_PER_METRE));
     const rim = footprint.map((p): Pt => [c[0] + (p[0] - c[0]) * 0.98, c[1] + (p[1] - c[1]) * 0.98]);
     const mapped = stadium.osm.tower;
-    const tower = mapped === undefined || stadium.tower === undefined ? undefined : { base: frameOf(metresFrom(origin, [mapped.base as LonLat])[0]), top: frameOf(metresFrom(origin, [mapped.top as LonLat])[0]), height: round(stadium.tower.height * FEET_PER_METRE), width: [TOWER_WIDTH[0], TOWER_WIDTH[1]] as [number, number] };
+    const tower = mapped === undefined || stadium.tower === undefined ? undefined : { base: frameOf(metresFrom(origin, [mapped.base as LonLat])[0]), top: frameOf(metresFrom(origin, [mapped.top as LonLat])[0]), height: round(stadium.tower.height * FEET_PER_METRE), angle: stadium.tower.angle, width: [TOWER_WIDTH[0], TOWER_WIDTH[1]] as [number, number] };
     shell = { footprint, hall, ...(north === undefined ? {} : { north }), roof: "dome", edge: low, wall: low, dome: { rim, low, crown: low + FIXED_CROWN }, ...(tower === undefined ? {} : { tower }), ...ivy };
   } else if (stadium.roof.kind === "open") {
     // No roof: the walls stand a little over the top row.

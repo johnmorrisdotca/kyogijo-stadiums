@@ -345,8 +345,8 @@ for (const v of stadiums) {
       roof = { source: `${e.type}/${e.id}`, height: top, rise, ring: simple(outlines(e)[0].geometry) };
     }
   }
-  // A tower beside the building (the Olympic Stadium's): its footprint, and its axis. The shaft leans over the building at the inclination the article gives, so its top is `height / tan(angle)` metres from the base towards
-  // the middle of the building, and its base is the footprint's point farthest from that middle.
+  // A tower beside the building (the Olympic Stadium's): its footprint and its axis. OpenStreetMap maps the observatory at the top of the tower (a viewpoint, `towerTop`) and the line of the funicular where it rides on the shaft (`funicular`: the way
+  // tagged above ground, its tunnel being below): the top is the observatory, the foot the end of that line farthest from it, 165 metres below it in height (the height the article and the map give for the tower).
   let tower;
   if (v.osm?.tower !== undefined) {
     if (v.tower === undefined) fail(`${v.id}: the tower is mapped (${v.osm.tower}) but the facts do not say what it is`);
@@ -355,12 +355,17 @@ for (const v of stadiums) {
     if (height !== v.tower.height) fail(`${v.id}: OpenStreetMap maps the tower ${height} m high, the facts say ${v.tower.height}`);
     const own = outlines(e)[0] ?? fail(`${v.id}: ${v.osm.tower} has no closed outline`);
     const m = metresFrom(origin, ringOf(own.geometry));
-    const farthest = m.reduce((best, p) => (Math.hypot(...p) > Math.hypot(...best) ? p : best), m[0]);
-    const reach = v.tower.height / Math.tan((v.tower.angle * Math.PI) / 180);
-    const away = Math.hypot(...farthest);
-    const topAt = [farthest[0] - (farthest[0] / away) * reach, farthest[1] - (farthest[1] / away) * reach];
+    const topNode = find(raw, v.osm.towerTop ?? fail(`${v.id}: the tower's top (towerTop) is not named`), v.id);
+    const [topAt] = metresFrom(origin, [[topNode.lon, topNode.lat]]);
+    const line = (v.osm.funicular ?? fail(`${v.id}: the tower's funicular is not named`)).flatMap((spec) => metresFrom(origin, find(raw, spec, v.id).geometry.map((p) => [p.lon, p.lat])));
+    const foot = line.reduce((best, p) => (Math.hypot(p[0] - topAt[0], p[1] - topAt[1]) > Math.hypot(best[0] - topAt[0], best[1] - topAt[1]) ? p : best), line[0]);
+    // The shaft leans over the building: the top is inside the building's outline, the foot outside it, and the run between them agrees with the article's 45 degrees for the height (within a fifth).
+    if (!inside(metres, topAt) || inside(metres, foot)) fail(`${v.id}: the tower's top should be over the building and its foot outside it`);
+    const run = Math.hypot(foot[0] - topAt[0], foot[1] - topAt[1]);
+    const slope = (v.tower.height / run);
+    if (Math.abs(Math.atan(slope) * 180 / Math.PI - v.tower.angle) > v.tower.angle * 0.2) fail(`${v.id}: the tower runs ${run.toFixed(0)} m across for ${v.tower.height} m of height, not the article's ${v.tower.angle} degrees`);
     const kept = simplified(m, 1.5);
-    tower = { source: `${e.type}/${e.id}`, height, ring: lonlat6(ringOf(own.geometry).filter((_, i) => kept.some((k) => k === m[i]))), base: lonLatFrom(origin, farthest).map((x) => round(x, 6)), top: lonLatFrom(origin, topAt).map((x) => round(x, 6)) };
+    tower = { source: `${e.type}/${e.id}`, height, ring: lonlat6(ringOf(own.geometry).filter((_, i) => kept.some((k) => k === m[i]))), base: lonLatFrom(origin, foot).map((x) => round(x, 6)), top: lonLatFrom(origin, topAt).map((x) => round(x, 6)) };
   }
   osm[v.id] = { source: outlineSource, read: raw.read, base: raw.osmBase, ring, ...(Number.isFinite(height) && height > 5 && height < 120 ? { height } : {}), ...(roof === undefined ? {} : { roof }), ...(canopies === undefined ? {} : { canopies }), ...(tower === undefined ? {} : { tower }), axis };
 }

@@ -131,12 +131,13 @@ const TOPIC_JA = /(?:収容|席|層|階|屋根|膜|空気|気圧|ドーム|銀�
 let gateway = 0;
 for (const v of stadiums) {
   const file = new URL(`osm-${v.id}.json`, out);
-  if (existsSync(file)) continue;
+  // (A stadium an earlier day read keeps that day's file.)
+  if (existsSync(file) || (earlier !== undefined && readdirSync(new URL("../data-sources/stadiums/", import.meta.url)).some((d) => d < day && existsSync(new URL(`../data-sources/stadiums/${d}/osm-${v.id}.json`, import.meta.url))))) continue;
   // The building tagged with the stadium's Wikidata item, and the roof mapped over it (a multipolygon of the band and its opening; the relation's own ways come with it).
   // A stadium whose building, pitches and roofs are named (`osm`: `way/<id>` and `relation/<id>`, because OpenStreetMap does not tag them all with the Wikidata item) is asked for by those; the others by the item.
   const named = v.osm === undefined ? [] : Object.values(v.osm).flat().filter((x) => typeof x === "string").map((x) => x.split("/"));
   const ids = (kind) => named.filter(([k]) => k === kind).map(([, id]) => id);
-  const query = v.osm === undefined ? `[out:json][timeout:60];(nwr["wikidata"="${v.wikidata}"];${v.roofRelation === undefined ? "" : `rel(${v.roofRelation});`});out geom;` : `[out:json][timeout:60];(${ids("relation").length > 0 ? `rel(id:${ids("relation").join(",")});` : ""}${ids("way").length > 0 ? `way(id:${ids("way").join(",")});` : ""});out geom;`;
+  const query = v.osm === undefined ? `[out:json][timeout:60];(nwr["wikidata"="${v.wikidata}"];${v.roofRelation === undefined ? "" : `rel(${v.roofRelation});`});out geom;` : `[out:json][timeout:60];(${ids("relation").length > 0 ? `rel(id:${ids("relation").join(",")});` : ""}${ids("way").length > 0 ? `way(id:${ids("way").join(",")});` : ""}${ids("node").length > 0 ? `node(id:${ids("node").join(",")});` : ""});out geom;`;
   let answer;
   for (let attempt = 0; attempt < 8 && answer === undefined; attempt += 1) {
     const url = GATEWAYS[gateway % GATEWAYS.length];

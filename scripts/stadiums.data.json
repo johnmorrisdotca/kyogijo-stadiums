@@ -100,7 +100,10 @@
    "endTower": {
     "storeys": 13,
     "height": 46,
-    "size": [12, 12],
+    "size": [
+     12,
+     12
+    ],
     "along": 85,
     "basis": "plausible",
     "read": "the article: a 13-story tower at the north end, with a vertical scoreboard and the Hawks' Nest bleachers at its base; the storeys are the article's, and the height (46 metres, a storey of 3.5 metres), the footprint (12 by 12 metres), the place (85 metres north of the pitch's middle, on its axis, where the end is open) and the scoreboard's size on its face are ours (no source gives them)"
@@ -461,7 +464,11 @@
    "lon": -73.55164,
    "osm": {
     "building": "way/108505523",
-    "tower": "way/20213158"
+    "tower": "way/20213158",
+    "towerTop": "node/1244748261",
+    "funicular": [
+     "way/1457567082"
+    ]
    },
    "en": {
     "title": "Olympic Stadium (Montreal)",
@@ -490,7 +497,7 @@
     "unit": "m",
     "angle": 45,
     "basis": "documented",
-    "read": "the article: the Montreal Tower, 165 m high, tallest inclined structure in the world, inclined at 45 degrees and built into the north base of the stadium; OpenStreetMap maps its outline and the same 165 m height"
+    "read": "the article: the Montreal Tower, 165 m high, the tallest inclined structure in the world, inclined at 45 degrees and built into the north base of the stadium, from which the cables of the roof were hung; OpenStreetMap maps the building's outline and the same 165 m height, the observatory at its top (a viewpoint) and, as the part of the funicular line that rides on the tower (tagged above ground, its tunnel below), the line of the shaft from its foot to its top: that is 158 m across for 165 m of height, the article's 45 degrees. The slight curve of the shaft and its widths are ours."
    },
    "evidence": {
     "en": [

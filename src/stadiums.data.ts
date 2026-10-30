@@ -124,7 +124,7 @@ export const STADIUM_DATA: RealStadiumData[] = [
     "wikidataSeats": [45757],
     "tiers": {"count": 2, "basis": "plausible", "read": "no source read says how many seating levels there are: a lower and an upper bowl are drawn, the usual for a stadium of 50,000 seats (ours)"},
     "roof": {"kind": "fixed", "basis": "documented", "read": "the article: the Kevlar roof, which could retract, was removed in May 1998 and a $26 million non-retractable opaque blue roof was installed later that year; a doughnut-shaped permanent ring is the roof's permanent component"},
-    "tower": {"height": 165, "unit": "m", "angle": 45, "basis": "documented", "read": "the article: the Montreal Tower, 165 m high, tallest inclined structure in the world, inclined at 45 degrees and built into the north base of the stadium; OpenStreetMap maps its outline and the same 165 m height"},
+    "tower": {"height": 165, "unit": "m", "angle": 45, "basis": "documented", "read": "the article: the Montreal Tower, 165 m high, the tallest inclined structure in the world, inclined at 45 degrees and built into the north base of the stadium, from which the cables of the roof were hung; OpenStreetMap maps the building's outline and the same 165 m height, the observatory at its top (a viewpoint) and, as the part of the funicular line that rides on the tower (tagged above ground, its tunnel below), the line of the shaft from its foot to its top: that is 158 m across for 165 m of height, the article's 45 degrees. The slight curve of the shaft and its widths are ours."},
   },
   {
     "id": "barclays-center",

@@ -100,6 +100,10 @@ export const KYOGIJO_TURN_STYLE = `
 .ky-turn .u-mast{fill:var(--ky-up-fascia);stroke:var(--ky-up-roofline);stroke-width:.4}
 .ky-turn .u-tower{fill:var(--ky-up-fascia);stroke:var(--ky-up-roofline);stroke-width:.4}
 .ky-turn .u-tower-slit{fill:var(--ky-up-roofline);fill-opacity:.55}
+.ky-turn .u-tower-foot{fill:var(--ky-up-roofline);fill-opacity:.8}
+.ky-turn .u-tower-cap{fill:var(--ky-up-roofline);fill-opacity:.85}
+.ky-turn .u-tower-glass{fill:var(--ky-up-fascia);fill-opacity:.55}
+.ky-turn .u-tower-cable{fill:var(--ky-up-roofline);fill-opacity:.7}
 .ky-turn .u-skylight{fill:var(--ky-up-skylight,#a9c8da);fill-opacity:.9;stroke:var(--ky-up-roofline);stroke-width:.5}
 .ky-turn .u-podium{fill:#000;fill-opacity:.16}
 .ky-turn .u-ledge{fill:var(--ky-up-roofline)}

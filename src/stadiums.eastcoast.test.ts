@@ -57,10 +57,11 @@ describe("the facts of the five new stadiums", () => {
     expect(o.tower).toMatchObject({ height: 165, angle: 45, basis: "documented" });
     expect(o.osm.tower).toMatchObject({ source: "way/20213158", height: 165 });
     const [[bx, by], [tx, ty]] = metresFrom([o.osm.axis.centre[0], o.osm.axis.centre[1]], [o.osm.tower!.base, o.osm.tower!.top]);
-    // 165 metres up at 45 degrees is 165 metres across, towards the building.
-    expect(Math.hypot(tx - bx, ty - by)).toBeGreaterThan(160);
+    // 165 metres up at 45 degrees is about 165 metres across (the funicular line on the shaft runs 158), the foot outside the building and the top, the observatory, inside it.
+    expect(Math.hypot(tx - bx, ty - by)).toBeGreaterThan(150);
     expect(Math.hypot(tx - bx, ty - by)).toBeLessThan(170);
     expect(Math.hypot(tx, ty)).toBeLessThan(Math.hypot(bx, by));
+    expect(o.osm.tower!.source).toBe("way/20213158");
   });
 });
 
@@ -124,12 +125,25 @@ describe("the new venues in 3D, roof on and off", () => {
 
   it("raises the Montreal Tower as four faces to 165 metres over the ground, leaning towards the stadium", () => {
     const roof = buildTurn({ sport: "mlb", park: "olympic-stadium-montreal", crowd: { real: true } } as never, { venue: { roof: true } }).uprights.items.find((i) => i.kind === "roof")!;
-    const tower = roof.planes.filter((p) => p.id.startsWith("tower-"));
-    expect(tower).toHaveLength(4);
-    // (The shaft's sections are horizontal: its top is level at 165 metres and its base on the ground.)
-    for (const p of tower) expect(p.o[2] + p.u[2]).toBeCloseTo(165 * FEET, 0);
-    for (const p of tower) expect(p.o[2]).toBeCloseTo(0, 5);
-    expect(tower.every((p) => p.svg.includes("u-tower"))).toBe(true);
+    const tower = roof.planes.filter((p) => p.id.startsWith("tower-") && !p.id.startsWith("tower-cable"));
+    // Twelve rings of four faces, a plinth of five planes and an observatory of five.
+    expect(tower).toHaveLength(12 * 4 + 5 + 5);
+    // (The shaft's sections are horizontal: the observatory's roof is level at 165 metres, the plinth stands on the ground and nothing goes under it.)
+    const tops = tower.filter((p) => p.id === "tower-cap-top").map((p) => p.o[2]);
+    expect(tops).toHaveLength(1);
+    expect(tops[0]).toBeCloseTo(165 * FEET, 0);
+    expect(Math.min(...tower.map((p) => Math.min(p.o[2], p.o[2] + p.u[2], p.o[2] + p.v[2])))).toBeCloseTo(0, 5);
+    expect(Math.max(...tower.map((p) => Math.max(p.o[2], p.o[2] + p.u[2], p.o[2] + p.v[2])))).toBeCloseTo(165 * FEET, 0);
+    // It narrows: the first ring is broad and the last narrow, and the shaft has slits down its back and cables to the roof.
+    const width = (id: string) => { const p = tower.find((q) => q.id === id)!; return Math.hypot(p.v[0], p.v[1]); };
+    expect(width("tower-0-0")).toBeGreaterThan(2.5 * width("tower-11-0"));
+    expect(tower.filter((p) => p.svg.includes("u-tower-slit")).length).toBeGreaterThan(5);
+    expect(roof.planes.filter((p) => p.id.startsWith("tower-cable")).length).toBe(6);
+    expect(tower.every((p) => p.kind === "wall")).toBe(true);
+    // Over the bowl: the observatory stands inside the building's outline and the foot outside it.
+    const cap = tower.find((p) => p.id === "tower-cap-0")!;
+    const foot = tower.find((p) => p.id === "tower-foot-0")!;
+    expect(Math.hypot(cap.o[0], cap.o[1])).toBeLessThan(Math.hypot(foot.o[0], foot.o[1]));
   });
 });
 

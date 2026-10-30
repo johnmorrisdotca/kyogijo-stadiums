@@ -129,7 +129,7 @@ export interface RealShell {
    * A tower that leans over the building (the Olympic Stadium's Montreal Tower): the middle of its base and of its top in the drawing's frame, the height of its top above the surface in feet, and the width of its shaft at the
    * base and at the top in feet (a plain tapering square shaft: its width is ours).
    */
-  tower?: { base: Pt; top: Pt; height: number; width: [number, number] };
+  tower?: { base: Pt; top: Pt; height: number; angle: number; width: [number, number] };
   /** The height of the roof's lowest edge above the surface, in feet. */
   edge: number;
   /** Towers that stand apart from the bowl (Lumen Field's, at the open end), each a box on its outline in the drawing's frame, `height` feet high; `face` is the unit direction its scoreboard looks, towards the field. */

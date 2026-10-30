@@ -448,11 +448,11 @@ export const STADIUM_OSM: Record<string, StadiumOsm> = {
   "olympic-stadium-montreal": {
     "source": "way/108505523",
     "read": "2026-10-30",
-    "base": "2026-10-30T13:39:21Z",
+    "base": "2026-10-30T15:34:06Z",
     "licence": "ODbL-1.0",
     "attribution": "(c) OpenStreetMap contributors, ODbL 1.0, openstreetmap.org/copyright",
     "axis": {"heading": 345, "basis": "none", "strength": 1.21, "elongation": 1.28, "centre": [-73.551436,45.557263]},
-    "tower": { "source": "way/20213158", "height": 165, "base": [-73.552526,45.560719], "top": [-73.552079,45.559268], "ring": [
+    "tower": { "source": "way/20213158", "height": 165, "base": [-73.552212,45.55979], "top": [-73.551804,45.558392], "ring": [
       [-73.551265, 45.559204],
       [-73.55152, 45.559114],
       [-73.551691, 45.559005],

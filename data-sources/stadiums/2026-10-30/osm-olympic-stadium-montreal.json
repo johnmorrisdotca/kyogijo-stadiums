@@ -1,11 +1,24 @@
 {
  "read": "2026-10-30",
  "licence": "ODbL 1.0, (c) OpenStreetMap contributors, openstreetmap.org/copyright",
- "gateway": "https://lambert.openstreetmap.de/api/interpreter",
- "query": "[out:json][timeout:60];(way(id:108505523,20213158););out geom;",
- "osmBase": "2026-10-30T13:39:21Z",
+ "gateway": "https://overpass-api.de/api/interpreter",
+ "query": "[out:json][timeout:60];(way(id:108505523,20213158,1457567082,1457567083,1457567084);node(id:1244748261););out geom;",
+ "osmBase": "2026-10-30T15:34:06Z",
  "wikidata": "Q285467",
  "elements": [
+  {
+   "type": "node",
+   "id": 1244748261,
+   "lat": 45.5583923,
+   "lon": -73.5518043,
+   "tags": {
+    "construction": "yes",
+    "name": "Observatoire de la Tour de Montréal",
+    "name:en": "Montreal Tower Observatory",
+    "name:fr": "Observatoire de la Tour de Montréal",
+    "tourism": "viewpoint"
+   }
+  },
   {
    "type": "way",
    "id": 20213158,
@@ -572,6 +585,103 @@
     "wheelchair": "yes",
     "wikidata": "Q285467",
     "wikipedia": "fr:Stade olympique de Montréal"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1457567082,
+   "bounds": {
+    "minlat": 45.558771,
+    "minlon": -73.5522117,
+    "maxlat": 45.5597903,
+    "maxlon": -73.5519215
+   },
+   "nodes": [
+    13367770422,
+    13367770421
+   ],
+   "geometry": [
+    {
+     "lat": 45.558771,
+     "lon": -73.5519215
+    },
+    {
+     "lat": 45.5597903,
+     "lon": -73.5522117
+    }
+   ],
+   "tags": {
+    "incline": "down",
+    "layer": "1",
+    "name": "funiculaire de la Tour de Montréal",
+    "railway": "funicular"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1457567083,
+   "bounds": {
+    "minlat": 45.5597903,
+    "minlon": -73.5523878,
+    "maxlat": 45.560409,
+    "maxlon": -73.5522117
+   },
+   "nodes": [
+    13367770421,
+    13367770420
+   ],
+   "geometry": [
+    {
+     "lat": 45.5597903,
+     "lon": -73.5522117
+    },
+    {
+     "lat": 45.560409,
+     "lon": -73.5523878
+    }
+   ],
+   "tags": {
+    "incline": "down",
+    "layer": "-1",
+    "name": "funiculaire de la Tour de Montréal",
+    "railway": "funicular",
+    "tunnel": "yes"
+   }
+  },
+  {
+   "type": "way",
+   "id": 1457567084,
+   "bounds": {
+    "minlat": 45.558685,
+    "minlon": -73.5519215,
+    "maxlat": 45.558771,
+    "maxlon": -73.551897
+   },
+   "nodes": [
+    13367770419,
+    13367770423,
+    13367770422
+   ],
+   "geometry": [
+    {
+     "lat": 45.558685,
+     "lon": -73.551897
+    },
+    {
+     "lat": 45.558728,
+     "lon": -73.5519092
+    },
+    {
+     "lat": 45.558771,
+     "lon": -73.5519215
+    }
+   ],
+   "tags": {
+    "incline": "down",
+    "layer": "-1",
+    "name": "funiculaire de la Tour de Montréal",
+    "railway": "funicular",
+    "tunnel": "yes"
    }
   }
  ]

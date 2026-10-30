@@ -633,3 +633,18 @@ test("turns the Kodokan a full turn at three tilts on every floor and in every s
   }
   expect(errors).toEqual([]);
 });
+
+test("the Montreal Tower stands in the Olympic Stadium's 3D view at every tier of quality, and turns with it without an error", async ({ page }) => {
+  const errors = [];
+  page.on("pageerror", (error) => errors.push(String(error)));
+  await serve(page);
+  for (const quality of ["high", "medium", "low"]) {
+    await page.goto(`http://kyogijo.test/district.html?venues=olympic-stadium-montreal&view=3d&viewpoint=broadcast&quality=${quality}&yaw=120&pitch=75`);
+    await page.waitForSelector('body[data-ready="true"] [data-testid="stage"] .ky-turn[data-mode="3d"]');
+    const shaft = page.locator(`${STAGE} [data-part*="tower-"]`);
+    expect(await shaft.count(), quality).toBeGreaterThanOrEqual(58);
+    // The cables are a small part: the high tier has them and the lower ones leave them out.
+    expect(await page.locator(`${STAGE} [data-part*="tower-cable"]`).count(), quality).toBe(quality === "high" ? 6 : 0);
+  }
+  expect(errors).toEqual([]);
+});
