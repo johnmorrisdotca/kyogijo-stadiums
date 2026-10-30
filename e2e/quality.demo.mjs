@@ -172,59 +172,86 @@ test("the quality controls are a finger wide, in the page's own style, in light 
   }
 });
 
-test("`auto` steps down when the frames run over budget under a slow processor, holds a tier that keeps 30 frames a second, and steps back up when the processor is quick again", async ({ page }, info) => {
-  test.skip(info.project.name !== "chromium-desk", "the processor is slowed through the Chrome DevTools protocol");
-  test.setTimeout(120_000);
-  // (The wait before a try upward is longer than the time the test holds a tier for, so that the frames it reads are the tier's own.)
-  const tune = { frames: 14, minFrames: 8, settleMs: 450, warmMs: 500, quietMs: 350, upAfterMs: 7000 };
-  // (BC Place and Rogers Arena: at full speed every tier holds 60 frames a second here, so the way back up ends on high on any machine that can; Seattle's high is 45.)
-  const errors = await open(page, "view=3d&viewpoint=broadcast", tune);
-  const cdp = await page.context().newCDPSession(page);
-  await expect(root(page)).toHaveAttribute("data-tier", "high");
-  // A turn made of pointer moves, one to a frame, kept going while the callback is asked to: it gives the mean frame interval of its last second and the tier.
-  const turn = (ms, until) =>
-    page.evaluate(async ({ ms, until }) => {
-      const stage = document.querySelector(".ky-turn-view");
-      const rootEl = document.querySelector(".ky-turn");
-      const box = stage.getBoundingClientRect();
-      const fire = (type, x, y) => stage.dispatchEvent(new PointerEvent(type, { pointerId: 11, pointerType: "mouse", button: 0, buttons: 1, clientX: x, clientY: y, bubbles: true }));
-      const frame = () => new Promise((done) => requestAnimationFrame(() => done(performance.now())));
-      const tiers = [];
-      let changedAt = performance.now();
-      let x = box.left + box.width / 2;
-      let last = await frame();
-      const start = last;
-      const stamps = [];
-      fire("pointerdown", x, box.top + 100);
-      for (let i = 0; performance.now() - start < ms; i += 1) {
-        x += i % 20 < 10 ? 6 : -6;
-        fire("pointermove", x, box.top + 100 + (i % 8));
-        const now = await frame();
-        stamps.push([now, now - last]);
-        last = now;
-        if (tiers.at(-1) !== rootEl.dataset.tier) {
-          tiers.push(rootEl.dataset.tier);
-          changedAt = now;
-        }
-        // `until`: "settled" ends the turn when the tier has stood still for three seconds off `high`; "high" when it is back on it for two.
-        if (until === "settled" && rootEl.dataset.tier !== "high" && now - changedAt > 3000) break;
-        if (until === "high" && rootEl.dataset.tier === "high" && now - changedAt > 2000) break;
+/**
+ * A turn made of pointer moves, one to a frame, kept going for `ms` or until `until` (`"settled"`: the tier has stood still for three seconds off `high`; `"high"`: it is back on it for two); it gives the tiers it went through, the mean
+ * frame interval of its last 1.5 seconds and the tier it ends on. With `burn` (milliseconds a tier costs a frame, a pointer move spends that long) the machine is made as slow as a test says, whatever it is.
+ */
+const turnView = (page, ms, until, burn) =>
+  page.evaluate(async ({ ms, until, burn }) => {
+    const stage = document.querySelector(".ky-turn-view");
+    const rootEl = document.querySelector(".ky-turn");
+    const box = stage.getBoundingClientRect();
+    const fire = (type, x, y) => stage.dispatchEvent(new PointerEvent(type, { pointerId: 11, pointerType: "mouse", button: 0, buttons: 1, clientX: x, clientY: y, bubbles: true }));
+    const frame = () => new Promise((done) => requestAnimationFrame(() => done(performance.now())));
+    const spend = () => {
+      const cost = burn?.[rootEl.dataset.tier] ?? 0;
+      for (const begin = performance.now(); performance.now() - begin < cost; );
+    };
+    stage.addEventListener("pointermove", spend);
+    const tiers = [];
+    let changedAt = performance.now();
+    let x = box.left + box.width / 2;
+    let last = await frame();
+    const start = last;
+    const stamps = [];
+    fire("pointerdown", x, box.top + 100);
+    for (let i = 0; performance.now() - start < ms; i += 1) {
+      x += i % 20 < 10 ? 6 : -6;
+      fire("pointermove", x, box.top + 100 + (i % 8));
+      const now = await frame();
+      stamps.push([now, now - last]);
+      last = now;
+      if (tiers.at(-1) !== rootEl.dataset.tier) {
+        tiers.push(rootEl.dataset.tier);
+        changedAt = now;
       }
-      fire("pointerup", x, box.top + 100);
-      const recent = stamps.filter(([t]) => t > last - 1500).map(([, d]) => d);
-      return { tiers, mean: recent.reduce((s, d) => s + d, 0) / Math.max(1, recent.length), tier: rootEl.dataset.tier };
-    }, { ms, until });
+      if (until === "settled" && rootEl.dataset.tier !== "high" && now - changedAt > 3000) break;
+      if (until === "high" && rootEl.dataset.tier === "high" && now - changedAt > 2000) break;
+    }
+    fire("pointerup", x, box.top + 100);
+    stage.removeEventListener("pointermove", spend);
+    const recent = stamps.filter(([t]) => t > last - 1500).map(([, d]) => d);
+    return { tiers, mean: recent.reduce((sum, d) => sum + d, 0) / Math.max(1, recent.length), tier: rootEl.dataset.tier };
+  }, { ms, until, burn });
+
+const TUNE = { frames: 14, minFrames: 8, settleMs: 450, warmMs: 500, quietMs: 350, upAfterMs: 7000 };
+
+test("`auto` steps down when each frame costs more than its budget, on any machine, and keeps a tier whose frames are within it", async ({ page }) => {
+  test.setTimeout(120_000);
+  // Each tier is given the cost of a device: high 80 ms a frame, medium 45, low 4 (on top of what the machine itself spends).
+  const errors = await open(page, "view=3d&viewpoint=broadcast", TUNE);
+  await expect(root(page)).toHaveAttribute("data-tier", "high");
+  const down = await turnView(page, 60_000, "settled", { high: 80, medium: 45, low: 4 });
+  expect(down.tiers.length, JSON.stringify(down)).toBeGreaterThan(1);
+  expect(down.tier, JSON.stringify(down)).toBe("low");
+  await expect(root(page)).toHaveAttribute("data-quality", "auto");
+  await expect(page.locator(NOW)).toHaveText("Auto: drawn at Low for now.");
+  expect(query(page).has("quality")).toBe(false);
+  expect(errors).toEqual([]);
+});
+
+test("`auto` steps down under a slow processor and back up when the processor is quick again, on a machine that holds 60 frames a second", async ({ page }, info) => {
+  test.skip(info.project.name !== "chromium-desk", "the processor is slowed through the Chrome DevTools protocol");
+  test.setTimeout(150_000);
+  // (The wait before a try upward is longer than the time the test holds a tier for, so that the frames it reads are the tier's own.)
+  // (BC Place and Rogers Arena: at full speed every tier holds 60 frames a second here on a machine that can, so the way back up ends on high; Seattle's high is 45.)
+  const errors = await open(page, "view=3d&viewpoint=broadcast", TUNE);
+  const cdp = await page.context().newCDPSession(page);
+  // A machine that cannot hold 60 frames a second at `high` (a shared runner several times slower than a desk) has no way back up to judge: the other test is what it runs.
+  const probe = await turnView(page, 2500);
+  test.skip(probe.mean > 18, `this machine does not hold 60 frames a second at high (${probe.mean.toFixed(1)} ms a frame)`);
+  await expect(root(page)).toHaveAttribute("data-tier", "high");
   await cdp.send("Emulation.setCPUThrottlingRate", { rate: 6 });
-  const down = await turn(60_000, "settled");
+  const down = await turnView(page, 60_000, "settled");
   // It stepped down (to medium or straight to low) and did not stay on high.
   expect(down.tiers.length, JSON.stringify(down)).toBeGreaterThan(1);
   expect(down.tier).not.toBe("high");
   // Held there, the frames are within 30 a second (33 ms), whichever tier it is on.
-  const held = await turn(2000);
+  const held = await turnView(page, 2000);
   expect(held.mean, JSON.stringify(held)).toBeLessThan(40);
   // The processor is quick again: after the wait it tries the tier above, and in the end is on high.
   await cdp.send("Emulation.setCPUThrottlingRate", { rate: 1 });
-  const up = await turn(90_000, "high");
+  const up = await turnView(page, 90_000, "high");
   expect(up.tier, JSON.stringify(up)).toBe("high");
   // The address and the bar say what is drawn.
   await expect(page.locator(NOW)).toHaveText(/Auto: drawn at High/);

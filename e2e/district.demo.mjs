@@ -594,7 +594,8 @@ test("opens a floor of the Kodokan from the address, in 2D and in Japanese, and 
 
 test("turns the Kodokan a full turn at three tilts on every floor and in every state of its building, with no page error and no matrix that is not a number", async ({ page }) => {
   test.setTimeout(180_000);
-  const { errors } = await open(page, "?venues=kodokan&view=3d");
+  // (At `high`: the test turns for minutes, and a slow runner would otherwise take `auto` down a tier, which draws fewer planes.)
+  const { errors } = await open(page, "?venues=kodokan&view=3d&quality=high");
   const floor = page.locator('[data-testid="floor"]');
   const values = await floor.locator("option").evaluateAll((all) => all.map((option) => option.value));
   expect(values.length).toBe(10);
