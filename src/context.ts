@@ -247,6 +247,22 @@ export function placeContext(areas: readonly ContextArea[], origin: LonLat, turn
   return { blocks, streets, land, trees, owned, attribution: { en: credits("en"), ja: credits("ja") } };
 }
 
+/** A share of the trees, spread evenly over the lot: every tree at 1, none at 0, and at 0.5 every other. The same trees every time, so that a view drawn again at a tier keeps the ones it kept. */
+export function thinTrees(trees: readonly ContextTree[], share: number): ContextTree[] {
+  if (share >= 1) return [...trees];
+  if (!(share > 0)) return [];
+  const kept: ContextTree[] = [];
+  let owed = 0;
+  for (const tree of trees) {
+    owed += share;
+    if (owed >= 1) {
+      owed -= 1;
+      kept.push(tree);
+    }
+  }
+  return kept;
+}
+
 /** The tone (0 low to 3 tall) of a building of `feet` height. */
 export const toneOf = (feet: number): number => CONTEXT_TONES.filter((m) => feet / FEET_PER_METRE >= m).length;
 

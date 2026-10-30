@@ -81,6 +81,12 @@ export const KYOGIJO_TURN_STYLE = `
 .ky-turn .u-slab-top{fill:var(--ky-up-blk-roof);stroke:var(--ky-up-blk-line);stroke-width:.5}
 .ky-turn .u-floorplate{fill:var(--ky-up-plate);stroke:var(--ky-up-plate-line);stroke-width:1.2;stroke-linejoin:round}
 .ky-turn .u-block-roof{fill:var(--ky-up-blk-roof);stroke:var(--ky-up-blk-line);stroke-width:.5;stroke-linejoin:round}
+/* A venue drawn as a proxy in the lower tiers (district.turn.ts): the tones of the buildings round it, darker and bluer, as a stadium's concrete and roof read against a city's. */
+.ky-turn .u-proxy{stroke:var(--ky-up-blk-line);stroke-width:.6}
+.ky-turn .u-proxy-a{fill:color-mix(in srgb,var(--ky-up-blk-a) 52%,#4d6fa0)}
+.ky-turn .u-proxy-b{fill:color-mix(in srgb,var(--ky-up-blk-b) 52%,#3f5c88)}
+.ky-turn .u-proxy-c{fill:color-mix(in srgb,var(--ky-up-blk-c) 52%,#324b72)}
+.ky-turn .u-proxy-roof{fill:color-mix(in srgb,var(--ky-up-blk-roof) 60%,#5f7fae);stroke:var(--ky-up-blk-line);stroke-width:.6;stroke-linejoin:round}
 .ky-turn .u-roof{fill:var(--ky-up-roof);stroke:var(--ky-up-roofline);stroke-width:.8;stroke-linejoin:round}
 .ky-turn .u-signplate{fill:var(--ky-turn-bg);fill-opacity:.9;stroke:var(--ky-turn-rule);stroke-width:.5}
 .ky-turn .u-sign{fill:var(--ky-turn-ink);font-family:var(--ky-font,system-ui,-apple-system,"Segoe UI","Hiragino Sans","Noto Sans JP",sans-serif);font-weight:600}

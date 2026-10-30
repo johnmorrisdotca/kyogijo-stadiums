@@ -3,7 +3,9 @@
 // plan drawn with each venue's building only. The model it makes is a `TurnModel`, so the camera, the controls, the pointer, the auto-turn and the steady fit of every other 3D view are this one's; its
 // buildings are stacked building by building (`Plane.group`), the far one first, so that a roof never shows through a nearer building.
 import { describeDistrict, districtId, drawDistrict, drawMember, nestedDrawing, planDistrict, surfaceCentre, type DistrictOptions, type DistrictPlan } from "./district.ts";
-import { blockPlanes, contextUprights, shellBlock, slabPlanes } from "./context.ts";
+import { blockPlanes, contextUprights, shellBlock, slabPlanes, thinTrees } from "./context.ts";
+import { TIER_PROFILES, tierOf } from "./quality.ts";
+import type { Box3 } from "./turn.camera.ts";
 import { dojo } from "./budo/dojo.api.ts";
 import { KODOKAN_FLOORS, KODOKAN_GALLERY_LEVEL } from "./kodokan.ts";
 import { APART, n, plane, type Plane, type Upright } from "./turn.kit.ts";
@@ -62,6 +64,31 @@ function placeInDistrict(p: Plane, placed: { at: Pt; angle: number }, centre: Pt
   return moved;
 }
 
+/** The box a district at `high` is framed to, kept for the options it was worked out for, so that a lower tier is framed exactly as `high` is: the camera does not move when the tier changes. */
+const HIGH_BOX = new WeakMap<object, { key: string; box: Box3 }>();
+
+/** The small parts of a venue that the lower tiers leave out: its furniture and fittings, never its stands, walls, floor or roof. */
+const SMALL_PARTS: ReadonlySet<string> = new Set(["bench", "glass", "post", "goal", "stanchion", "pole", "pylon", "mast", "fascia", "rail", "platform", "apron", "flag", "board", "frame", "rim", "net", "antenna", "tape"]);
+
+/** How high a venue that is drawn as a block stands, in feet, by what it is: a stand-in for its stands and roof, near what its own model reaches. */
+const BLOCK_HEIGHT: Record<string, number> = { arena: 100, stadium: 115, park: 95, hall: 60 };
+
+/** A venue drawn as a proxy is a closed block while it is smaller than this share of the plan's longest side, and a ring of walls open at the top (the field and its stands show inside) above it. */
+const SOLID_BELOW = 0.12;
+
+/** The planes of a venue drawn as a proxy, in the venue's own group, tinted as a venue and not as the buildings round it: its outline standing up to its height, closed by a roof when it is small, a ring of walls seen from both sides when it is not. */
+function venueBlock(key: string, kind: string, ring: readonly Pt[], prefix: string, group: number, open: boolean): Plane[] {
+  const height = BLOCK_HEIGHT[kind] ?? 90;
+  const block = shellBlock(`venue-${key}`, ring, open ? height * 0.6 : height, undefined);
+  const planes = blockPlanes(block, `${prefix}proxy-`).filter((p) => !open || /w\d+$/.test(p.id));
+  return planes.map((p) => {
+    const tinted: Plane = { ...p, svg: p.svg.replace(/u-block-roof/g, "u-proxy-roof").replace(/u-block-([abc])/g, "u-proxy-$1").replace(/u-block /g, "u-proxy "), group };
+    // Seen from both sides: the inside of the far wall shows over the field.
+    if (open) delete tinted.cull;
+    return tinted;
+  });
+}
+
 /** A name that faces the eye, standing over a building: its text on a plate. */
 function sign(id: string, text: string, at: Pt, bottom: number, size: number, group: number): Plane {
   const wide = Math.max(size * 2.2, size * 0.62 * text.length + size * 1.2);
@@ -79,6 +106,9 @@ export function buildDistrictTurn(options: DistrictOptions, settings: DistrictTu
   const plan = planDistrict(options);
   const base = districtId(options);
   const id = settings.id ?? `${base}-turn`;
+  // How much is drawn: the tier asked for (a view that chooses by its frames builds it again at each tier).
+  const profile = TIER_PROFILES[tierOf(settings.quality)];
+  const longest = Math.max(plan.view.w, plan.view.h);
   const labels = options.labels ?? plan.mode === "city";
   const items: Upright[] = [];
   const defs: string[] = [];
@@ -86,12 +116,23 @@ export function buildDistrictTurn(options: DistrictOptions, settings: DistrictTu
   plan.members.forEach((placed, i) => {
     const member = placed.member;
     const prefix = `m${i}-`;
+    // A small venue, in a tier that draws such as a block: its outline standing up to its height, and nothing of its stands.
+    const xs = placed.footprint.map((q) => q[0]);
+    const ys = placed.footprint.map((q) => q[1]);
+    const plain = member.shell === undefined && member.parts === undefined && member.elevation === undefined && member.plate === undefined && member.slabs === undefined;
+    const span = Math.max(Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys));
+    // (A district of one venue never draws it as a block: it is what the view is of.)
+    if (plain && plan.members.length > 1 && profile.proxy > 0 && span < profile.proxy * longest) {
+      items.push({ id: `${prefix}proxy`, kind: "blocks", at: placed.at, height: BLOCK_HEIGHT[member.kind] ?? 90, planes: venueBlock(member.key, member.kind, placed.footprint, prefix, i, span >= SOLID_BELOW * longest) });
+      return;
+    }
     // A venue may have several surfaces (the rooms of a floor): each is built as its own 3D view is, with the crowd drawn without its seats on its floor and the stands raised, and put where the plan puts it, in the venue's one group.
     placed.parts.forEach((pp, j) => {
       const part = pp.part;
       const tag = j === 0 ? "" : `p${j}`;
       const memberId = `${id}-m${i}${tag}`;
-      const model = buildTurn({ ...part.options, language, ...(options.theme === undefined ? {} : { theme: options.theme }), id: `${base}-m${i}${tag}` } as SurfaceOptions, { ...settings, id: memberId, venue: { roof: true, ...(typeof settings.venue === "object" ? settings.venue : {}) }, preset: undefined, view: undefined });
+      const crowd = (part.options as { crowd?: unknown }).crowd;
+      const model = buildTurn({ ...part.options, ...(profile.simple && typeof crowd === "object" && crowd !== null ? { crowd: { ...crowd, detail: "plain" } } : {}), language, ...(options.theme === undefined ? {} : { theme: options.theme }), id: `${base}-m${i}${tag}` } as SurfaceOptions, { ...settings, id: memberId, venue: { roof: true, ...(typeof settings.venue === "object" ? settings.venue : {}) }, preset: undefined, view: undefined });
       const centre = surfaceCentre(part.options);
       const pfx = `m${i}${tag}-`;
       // A surface on an upper floor (the Kodokan's dojos) stands that high over the ground, on a floor drawn in the air; the ground under it is left bare.
@@ -100,7 +141,7 @@ export function buildDistrictTurn(options: DistrictOptions, settings: DistrictTu
       const lowest = (p: Plane): number => Math.min(p.o[2], p.o[2] + p.u[2], p.o[2] + p.v[2], p.o[2] + p.u[2] + p.v[2]);
       const shown = (p: Plane): boolean => part.show === undefined || (part.show === "gallery") === (lowest(p) >= KODOKAN_GALLERY_LEVEL - 1e-6);
       for (const item of model.uprights.items) {
-        const planes = item.planes.filter((p) => p.kind !== "ground" && shown(p)).map((p) => placeInDistrict(p, pp, centre, pfx, i, lift));
+        const planes = item.planes.filter((p) => p.kind !== "ground" && shown(p) && !(profile.simple && SMALL_PARTS.has(p.kind))).map((p) => placeInDistrict(p, pp, centre, pfx, i, lift));
         if (planes.length > 0) {
           const [ax, ay] = item.at;
           const [rx, ry] = rot([ax - centre[0], ay - centre[1]], pp.angle);
@@ -146,6 +187,8 @@ export function buildDistrictTurn(options: DistrictOptions, settings: DistrictTu
         const chosen = member.plate?.floor === slab.floor;
         // The great dojo's floor, seen with every floor, has its own slab; and a solid building hides what is in it.
         if (!chosen && ((member.plate === undefined && slab.floor === 7) || options.building === "solid")) continue;
+        // The faint floors are as big as the building (each is a layer of its own, a megapixel and more): the lower tiers keep the chosen floor's and leave the others out.
+        if (!chosen && profile.simple) continue;
         const ids = chosen ? { top: `${prefix}plate`, side: `${prefix}plate-s` } : { top: `${prefix}plate-f${slab.floor}-top`, side: `${prefix}plate-f${slab.floor}-s` };
         const planes = slabPlanes(placed.footprint, slab.level, thick, ids, chosen ? "chosen" : "faint").map((p) => ({ ...p, group: i }));
         items.push({ id: ids.top, kind: "deck", at: placed.at, height: slab.level, planes });
@@ -159,7 +202,7 @@ export function buildDistrictTurn(options: DistrictOptions, settings: DistrictTu
     }
   });
   // The buildings round the venues stand apart from them: each block's planes are of no venue's group.
-  if (plan.context !== undefined) for (const item of contextUprights(plan.context)) items.push({ ...item, planes: item.planes.map((p) => ({ ...p, group: APART })) });
+  if (plan.context !== undefined) for (const item of contextUprights(plan.context, profile.blocks)) items.push({ ...item, planes: item.planes.map((p) => ({ ...p, group: APART })) });
   if (labels) {
     const size = Math.max(plan.view.w, plan.view.h) * (plan.mode === "city" ? 0.016 : 0.022);
     plan.members.forEach((placed, i) => {
@@ -174,9 +217,21 @@ export function buildDistrictTurn(options: DistrictOptions, settings: DistrictTu
   const area = { x0: view.x, y0: view.y, x1: view.x + view.w, y1: view.y + view.h };
   const uprights: Uprights = { items, lift: 0, thin: Math.hypot(view.w, view.h) * 0.0012, area, whole: true, ...(defs.length === 0 ? {} : { defs: defs.join("") }) };
   const planes = planesOf(uprights);
-  const box = sceneBox(planes, area, 0, centre, scale);
+  // The camera is fitted to what the district is at `high`, whatever tier it is drawn at: a view that changes tier keeps its camera where it is, and the lower tiers stand in the same frame.
+  let box = sceneBox(planes, area, 0, centre, scale);
+  if (profile.tier !== "high") {
+    const key = JSON.stringify(settings.venue ?? null);
+    const known = HIGH_BOX.get(options);
+    if (known?.key === key) box = known.box;
+    else {
+      box = buildDistrictTurn(options, { ...settings, quality: "high" }).box;
+      HIGH_BOX.set(options, { key, box });
+    }
+  } else HIGH_BOX.set(options, { key: JSON.stringify(settings.venue ?? null), box });
   // (The floor has no names: the 3D view's own signs, which face the eye, carry them.)
-  const floor = drawDistrict({ ...options, id: base, labels: false }, plan, (member, i, part) => drawMember(member, { ...options, id: base }, i, base, { floor: true }, part));
+  // (The trees of the tiers that draw fewer are thinned on the floor only: a tree is a dot there.)
+  const floorPlan: DistrictPlan = profile.trees < 1 && plan.context?.trees !== undefined ? { ...plan, context: { ...plan.context, trees: thinTrees(plan.context.trees, profile.trees) } } : plan;
+  const floor = drawDistrict({ ...options, id: base, labels: false }, floorPlan, (member, i, part) => drawMember(member, { ...options, id: base }, i, base, { floor: true }, part));
   const { title, description } = describeDistrict(options, plan);
   const presets = districtPresets(plan);
   const surfaceLike = { sport: "soccer", language, ...(options.theme === undefined ? {} : { theme: options.theme }), ...(options.style === undefined ? {} : { style: options.style }) } as SurfaceOptions;
@@ -201,6 +256,7 @@ export function buildDistrictTurn(options: DistrictOptions, settings: DistrictTu
     centre,
     view: openingView(settings, presets),
     turnable: true,
+    tiered: true,
     presets,
     // A scene that turns about its middle with buildings far from it wants a longer lens, so that what swings toward the eye does not swell.
     lens: 12,
