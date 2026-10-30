@@ -2,9 +2,11 @@
 // drawn, at full speed and with the CPU slowed 4 times, each with the machine's load at the time (a loaded machine makes a time worthless: run again when it is quiet). The budget (`bundle-budget.json`) is held by
 // `e2e/bundles.demo.mjs`; this prints the table for the changelog.
 //
-//   node scripts/bundle-report.mjs [--site site] [--port 6961] [--pages home,venues,district:alone] [--throttle 1,4] [--runs 3] [--no-paint] [--files] [--markdown] [--out file.json] [--budget [--write scripts/bundle-budget.json]]
+//   node scripts/bundle-report.mjs [--site site] [--base other-site] [--port 6961] [--pages home,venues,district:alone] [--throttle 1,4] [--runs 3] [--no-paint] [--files] [--markdown] [--out file.json]
+//                                  [--budget [--write scripts/bundle-budget.json]]
 //
-// `--budget` prints a new `bundle-budget.json` (each page's bytes rounded up a few percent) instead of the table; with `--write` it writes the file.
+// `--base` is another build of the demo (an earlier release's `site/`): each page is measured on both, a run of one and then a run of the other, so that the load of the machine falls on both alike, and the table shows
+// before and after. `--budget` prints a new `bundle-budget.json` (each page's bytes rounded up a few percent) instead of the table; with `--write` it writes the file.
 import { loadavg } from "node:os";
 import { writeFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -18,52 +20,76 @@ const arg = (name, fallback) => {
   return at < 0 ? fallback : process.argv[at + 1];
 };
 const flag = (name) => process.argv.includes(`--${name}`);
-const SITE = resolve(arg("site", "site"));
 const PORT = Number(arg("port", "6961"));
+const SITES = [{ label: "after", dir: resolve(arg("site", "site")), port: PORT }, ...(arg("base", "") === "" ? [] : [{ label: "before", dir: resolve(arg("base", "")), port: PORT + 1 }])];
 const ONLY = arg("pages", "").split(",").filter(Boolean);
 const THROTTLES = flag("no-paint") ? [] : arg("throttle", "1,4").split(",").map(Number);
 const RUNS = Number(arg("runs", "3"));
 const OUT = arg("out", "");
 
 const median = (list) => { const s = [...list].sort((a, b) => a - b); return s.length === 0 ? 0 : s[Math.floor(s.length / 2)]; };
+const round1 = (x) => Math.round(x * 10) / 10;
 const pages = PAGES.filter((page) => ONLY.length === 0 || ONLY.includes(page.name));
-const server = await serveSite(SITE, PORT);
+const servers = await Promise.all(SITES.map((site) => serveSite(site.dir, site.port)));
 const browser = await chromium.launch();
 const rows = [];
 try {
   for (const page of pages) {
-    const url = `http://127.0.0.1:${PORT}/${page.path}`;
-    // The bytes are the same on every load; the first load (full speed, nothing else asked of it) reports them.
-    const first = await loadPage(browser, url, { paint: false });
-    const row = { page: page.name, jsKB: first.jsKB, jsGzipKB: first.jsGzipKB, jsFiles: first.jsFiles, dataKB: first.dataKB, dataGzipKB: first.dataGzipKB, dataFiles: first.dataFiles, errors: first.errors, paint: {} };
-    if (flag("files")) row.files = first.files;
+    const row = { page: page.name };
+    for (const site of SITES) {
+      const url = `http://127.0.0.1:${site.port}/${page.path}`;
+      // The bytes are the same on every load; the first load (full speed, nothing else asked of it) reports them.
+      const first = await loadPage(browser, url, { paint: false });
+      row[site.label] = { jsKB: first.jsKB, jsGzipKB: first.jsGzipKB, jsFiles: first.jsFiles, dataKB: first.dataKB, dataGzipKB: first.dataGzipKB, dataFiles: first.dataFiles, errors: first.errors, paint: {} };
+      if (flag("files")) row[site.label].files = first.files;
+    }
     for (const throttle of THROTTLES) {
-      const runs = [];
+      const runs = Object.fromEntries(SITES.map((site) => [site.label, []]));
+      // One run of each site in turn, so that a loaded machine is loaded for both.
       for (let i = 0; i < RUNS; i += 1) {
-        const load = loadavg()[0];
-        const one = await loadPage(browser, url, { throttle });
-        runs.push({ fcp: one.fcp, ready: one.ready, painted: one.painted, load: Math.round(load * 10) / 10 });
+        for (const site of SITES) {
+          const load = loadavg()[0];
+          const one = await loadPage(browser, `http://127.0.0.1:${site.port}/${page.path}`, { throttle });
+          runs[site.label].push({ fcp: one.fcp, ready: one.ready, painted: one.painted, load: round1(load) });
+        }
       }
-      row.paint[`${throttle}x`] = { fcp: median(runs.map((r) => r.fcp)), painted: median(runs.map((r) => r.painted)), load: Math.round(median(runs.map((r) => r.load)) * 10) / 10, runs };
+      for (const site of SITES) {
+        const list = runs[site.label];
+        row[site.label].paint[`${throttle}x`] = { fcp: median(list.map((r) => r.fcp)), painted: median(list.map((r) => r.painted)), load: round1(median(list.map((r) => r.load))), runs: list };
+      }
     }
     rows.push(row);
-    console.error(`${page.name}: ${row.jsKB} KB script (${row.jsGzipKB} gzip), ${row.dataKB} KB data (${row.dataGzipKB} gzip)${row.errors.length > 0 ? `, ERRORS ${row.errors.join(" | ")}` : ""}`);
+    const now = row.after;
+    console.error(`${page.name}: ${now.jsKB} KB script (${now.jsGzipKB} gzip), ${now.dataKB} KB data (${now.dataGzipKB} gzip)${now.errors.length > 0 ? `, ERRORS ${now.errors.join(" | ")}` : ""}`);
   }
 } finally {
   await browser.close();
-  server.close();
+  for (const server of servers) server.close();
 }
 
 if (OUT) writeFileSync(OUT, JSON.stringify(rows, null, 1));
 if (flag("budget")) {
   const room = (kb) => Math.ceil((kb * 1.05 + 2) / 5) * 5;
-  const budget = Object.fromEntries(rows.map((row) => [row.page, { totalKB: room(row.jsKB + row.dataKB), totalGzipKB: room(row.jsGzipKB + row.dataGzipKB), dataKB: room(row.dataKB) }]));
+  const budget = Object.fromEntries(rows.map((row) => [row.page, { totalKB: room(row.after.jsKB + row.after.dataKB), totalGzipKB: room(row.after.jsGzipKB + row.after.dataGzipKB), dataKB: room(row.after.dataKB) }]));
   if (arg("write", "") === "") console.log(JSON.stringify(budget, null, 2));
   else writeFileSync(arg("write", ""), `${JSON.stringify(budget, null, 2)}\n`);
 } else {
-  const t = (row, key) => (row.paint[key] === undefined ? "" : `${row.paint[key].fcp} / ${row.paint[key].painted}`);
-  const head = ["page", "script KB (gzip)", "data KB (gzip)", "files", ...THROTTLES.map((x) => `fcp / drawn ms at ${x}x`), "load at 1x / 4x"];
-  const lines = rows.map((row) => [row.page, `${row.jsKB} (${row.jsGzipKB})`, `${row.dataKB} (${row.dataGzipKB})`, `${row.jsFiles} + ${row.dataFiles}`, ...THROTTLES.map((x) => t(row, `${x}x`)), THROTTLES.length === 0 ? "" : THROTTLES.map((x) => row.paint[`${x}x`].load).join(" / ")]);
+  const both = SITES.length > 1;
+  const total = (r, key) => round1(r[`js${key}`] + r[`data${key}`]);
+  const bytes = (r) => `${total(r, "KB")} (${total(r, "GzipKB")})`;
+  const paint = (row, key) => {
+    const after = row.after.paint[key];
+    const text = (p) => `${p.fcp} / ${p.painted}`;
+    return both ? `${text(row.before.paint[key])} -> ${text(after)}` : text(after);
+  };
+  const head = ["page", both ? "KB (gzip) before -> after" : "KB (gzip)", "script / data KB after", ...THROTTLES.map((x) => `fcp / drawn ms at ${x}x`), ...(THROTTLES.length > 0 ? ["load at 1x / 4x"] : [])];
+  const lines = rows.map((row) => [
+    row.page,
+    both ? `${bytes(row.before)} -> ${bytes(row.after)}` : bytes(row.after),
+    `${row.after.jsKB} / ${row.after.dataKB}`,
+    ...THROTTLES.map((x) => paint(row, `${x}x`)),
+    ...(THROTTLES.length > 0 ? [THROTTLES.map((x) => (both ? `${row.before.paint[`${x}x`].load}, ${row.after.paint[`${x}x`].load}` : row.after.paint[`${x}x`].load)).join(" / ")] : []),
+  ]);
   if (flag("markdown")) console.log([head, head.map(() => "---"), ...lines].map((cells) => `| ${cells.join(" | ")} |`).join("\n"));
   else for (const cells of [head, ...lines]) console.log(cells.join("\t"));
 }
