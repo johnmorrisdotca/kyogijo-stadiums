@@ -337,6 +337,7 @@ export interface KyogijoWords {
     stadiumPark: string;
     stadiumPitch: string;
     stadiumInfield: string;
+    stadiumStreets: string;
     stadiumHall: string;
     stadiumRingBuilding: string;
     stadiumCourtBuilding: string;

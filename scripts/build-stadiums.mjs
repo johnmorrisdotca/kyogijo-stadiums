@@ -326,7 +326,9 @@ for (const v of stadiums) {
       for (let a = -45; a <= 45; a += 5) for (let k = 1; k <= 10; k += 1) wedge.push([((radiusAt(a) * k) / 10) * Math.sin((a * Math.PI) / 180), ((radiusAt(a) * k) / 10) * Math.cos((a * Math.PI) / 180)]);
       const [cu, cw] = [wedge.reduce((t, p) => t + p[0], 0) / wedge.length, wedge.reduce((t, p) => t + p[1], 0) / wedge.length];
       // The stands are about 34 metres deep beyond the fence and behind home plate in a steep modern bowl (ours), and home plate may stand up to 30 metres either way of where the middle of the fair ground is the building's middle.
-      const tries = Array.from({ length: 72 }, (_, i) => i * 5).flatMap((h) => {
+      // Where a published list of the streets round the park says which way it lies (`orientation`), the heading is that one, and only the place of home plate is searched.
+      const headings = v.orientation === undefined ? Array.from({ length: 72 }, (_, i) => i * 5) : [v.orientation.heading];
+      const tries = headings.flatMap((h) => {
         const { dir, right } = frame(h);
         return [-30, -20, -10, 0, 10, 20, 30].map((shift) => {
           const home = [core.centre[0] - cu * right[0] - cw * dir[0] + shift * dir[0], core.centre[1] - cu * right[1] - cw * dir[1] + shift * dir[1]];
@@ -334,7 +336,7 @@ for (const v of stadiums) {
         });
       });
       tries.sort((a, b) => a.bad - b.bad || b.clear - a.clear || Math.abs(a.shift) - Math.abs(b.shift) || a.h - b.h);
-      axis = { heading: tries[0].h, basis: "none", strength: round(core.strength, 2), elongation: round(core.length / core.width, 2), centre: lonLatFrom(origin, tries[0].home).map((x) => round(x, 6)) };
+      axis = { heading: tries[0].h, basis: v.orientation === undefined ? "none" : v.orientation.basis, strength: round(core.strength, 2), elongation: round(core.length / core.width, 2), centre: lonLatFrom(origin, tries[0].home).map((x) => round(x, 6)) };
     }
     if (v.osm.roof !== undefined) {
       // An air-supported roof (Tokyo Dome's): the outline OpenStreetMap maps for it, its height to the top and how much of that is the roof's own rise.
@@ -408,7 +410,7 @@ writeFileSync(new URL("../src/stadiums.osm.data.ts", import.meta.url), osmText);
 
 // docs/stadiums.md: the table of the stadiums between its markers; the rest of the page is written by hand.
 const m2 = (ring) => Math.round(areaOf(metresFrom(middleOf(ring), ring)));
-const HOW = { opening: "from the roof's opening", pitch: "as OpenStreetMap maps the pitch", infield: "from the mapped infield and the outline", building: "inferred" };
+const HOW = { opening: "from the roof's opening", pitch: "as OpenStreetMap maps the pitch", infield: "from the mapped infield and the outline", building: "inferred", streets: "from the streets the English Wikipedia lists at the bases and the outfield, to the nearest 45 degrees" };
 const how = (a, v) => (a.basis === "none" ? "not known" : kindOf(v) === "park" ? `home to centre field ${a.heading}° (${a.basis === "pitch" ? `from the mapped grass of the field fitted to the fence, about ${a.rms} m off` : HOW[a.basis]})` : `along ${a.heading}° (${HOW[a.basis]})`);
 const COUNTRY = { US: "United States", CA: "Canada", JP: "Japan" };
 const roofText = (v) => `${{ cable: "retractable, cable-supported", fixed: "fixed", canopy: `canopy over ${Math.round((v.roof.cover ?? 0) * 100)} percent of the seats`, panels: "retractable, in four sections", dome: "air-supported dome", open: "none, open to the air" }[v.roof.kind]} (${v.roof.basis})`;

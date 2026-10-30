@@ -36,7 +36,8 @@ describe("the facts of the five new stadiums", () => {
     expect(stadiumOrientation(STADIUMS["citi-field"])).toMatchObject({ basis: "pitch", heading: 14.5 });
     expect(STADIUMS["citi-field"].osm.axis.rms).toBeLessThan(4);
     expect(stadiumOrientation(STADIUMS["metlife-stadium"])).toMatchObject({ basis: "pitch", heading: 166.5 });
-    expect(stadiumOrientation(STADIUMS["olympic-stadium-montreal"]).basis).toBe("none");
+    // No map has the field, but the English Wikipedia's list of the park's streets (first base: Pierre-De Coubertin, left field: Sherbrooke, third base: Pie-IX, right field: Viau) puts home plate in the north-west corner.
+    expect(stadiumOrientation(STADIUMS["olympic-stadium-montreal"])).toMatchObject({ basis: "streets", heading: 135 });
     expect(stadiumOrientation(STADIUMS["barclays-center"]).basis).toBe("building");
     for (const id of ["yankee-stadium", "citi-field", "metlife-stadium", "olympic-stadium-montreal", "barclays-center"]) {
       expect(STADIUMS[id].osm.licence).toBe("ODbL-1.0");
@@ -126,24 +127,29 @@ describe("the new venues in 3D, roof on and off", () => {
   it("raises the Montreal Tower as four faces to 165 metres over the ground, leaning towards the stadium", () => {
     const roof = buildTurn({ sport: "mlb", park: "olympic-stadium-montreal", crowd: { real: true } } as never, { venue: { roof: true } }).uprights.items.find((i) => i.kind === "roof")!;
     const tower = roof.planes.filter((p) => p.id.startsWith("tower-") && !p.id.startsWith("tower-cable"));
-    // Twelve rings of four faces, a plinth of five planes and an observatory of five.
-    expect(tower).toHaveLength(12 * 4 + 5 + 5);
-    // (The shaft's sections are horizontal: the observatory's roof is level at 165 metres, the plinth stands on the ground and nothing goes under it.)
+    // Twelve rings of four faces (front, back and the two flanks) and an observatory of five.
+    expect(tower).toHaveLength(12 * 4 + 5);
+    // (The shaft's sections are horizontal: the observatory's roof is level at 165 metres and the back reaches the ground far behind the foot.)
     const tops = tower.filter((p) => p.id === "tower-cap-top").map((p) => p.o[2]);
     expect(tops).toHaveLength(1);
     expect(tops[0]).toBeCloseTo(165 * FEET, 0);
     expect(Math.min(...tower.map((p) => Math.min(p.o[2], p.o[2] + p.u[2], p.o[2] + p.v[2])))).toBeCloseTo(0, 5);
     expect(Math.max(...tower.map((p) => Math.max(p.o[2], p.o[2] + p.u[2], p.o[2] + p.v[2])))).toBeCloseTo(165 * FEET, 0);
-    // It narrows: the first ring is broad and the last narrow, and the shaft has slits down its back and cables to the roof.
+    // It narrows: the first ring is broad and the last narrow, and the shaft has slits down its back and a fan of cables to the roof.
     const width = (id: string) => { const p = tower.find((q) => q.id === id)!; return Math.hypot(p.v[0], p.v[1]); };
-    expect(width("tower-0-0")).toBeGreaterThan(2.5 * width("tower-11-0"));
+    expect(width("tower-0-f")).toBeGreaterThan(2.5 * width("tower-11-f"));
     expect(tower.filter((p) => p.svg.includes("u-tower-slit")).length).toBeGreaterThan(5);
-    expect(roof.planes.filter((p) => p.id.startsWith("tower-cable")).length).toBe(6);
+    expect(roof.planes.filter((p) => p.id.startsWith("tower-cable")).length).toBe(10);
     expect(tower.every((p) => p.kind === "wall")).toBe(true);
-    // Over the bowl: the observatory stands inside the building's outline and the foot outside it.
+    // It curves: the back sweeps out along the ground, so that the shaft is much longer at its foot than at its top.
+    const long = (id: string) => { const p = tower.find((q) => q.id === id)!; return Math.hypot(p.v[0], p.v[1]); };
+    expect(long("tower-0-l")).toBeGreaterThan(2 * long("tower-10-l"));
+    // Its foot is at the building's rim, and the observatory over the bowl: the front of the lowest ring is nearer the middle than the tail of the back.
     const cap = tower.find((p) => p.id === "tower-cap-0")!;
-    const foot = tower.find((p) => p.id === "tower-foot-0")!;
-    expect(Math.hypot(cap.o[0], cap.o[1])).toBeLessThan(Math.hypot(foot.o[0], foot.o[1]));
+    const front = tower.find((p) => p.id === "tower-0-f")!;
+    const tail = tower.find((p) => p.id === "tower-0-b")!;
+    expect(Math.hypot(cap.o[0], cap.o[1])).toBeLessThan(Math.hypot(front.o[0], front.o[1]));
+    expect(Math.hypot(front.o[0], front.o[1])).toBeLessThan(Math.hypot(tail.o[0], tail.o[1]));
   });
 });
 

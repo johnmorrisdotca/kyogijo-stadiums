@@ -66,6 +66,8 @@ export interface RealStadiumData {
    * (the same stadium's). They are drawn as plain colours, not as a picture of the plants or the soil.
    */
   looks?: { ivyWalls?: string; dirtInfield?: string; brickWalls?: string };
+  /** Which way a ballpark's field lies where no map says but a published list does: the heading from home plate to centre field in degrees clockwise from north, `streets` (the streets the list names at the bases and the outfield), where it was read and what was read. */
+  orientation?: { heading: number; basis: "streets"; source: string; read: string };
   configs: Partial<Record<StadiumConfigId, StadiumConfigData>>;
   /** The seats of the whole bowl where it holds more than a configuration's (Lumen Field's soccer seats are fewer: the upper sections are closed): the bowl is fitted to these and a configuration opens its seats from the lowest bowl up. */
   bowlSeats?: number;
@@ -97,9 +99,11 @@ export interface RealStadiumData {
     masts?: { count: number; height: number; unit: "m"; source: string };
     /** A canopy's share of the seats it covers, as the article gives it. */
     cover?: number;
-    /** A retractable roof's bottom and top above the field, in feet, as the article gives them (an air-supported roof's height is the building's, from OpenStreetMap). */
+    /** A retractable roof's bottom and top above the field, in feet, as the article gives them (an air-supported roof's height is the building's, from OpenStreetMap; a fixed roof's `top` is its crown's). */
     bottom?: number;
     top?: number;
+    /** A fixed roof on a frame of ribs (the Olympic Stadium's consoles): how many, how many of them are anchored to the ground, and where it is read. */
+    ribs?: { count: number; anchored: number; source: string };
   };
 }
 
@@ -129,10 +133,10 @@ export interface StadiumOsm {
    * How the field lies, worked out when the data was made: the heading of its long side (degrees clockwise from north, 0 to under 180; for a ballpark, the heading from home plate out to centre field, 0 to under 360), how that
    * is known (`opening`: from the roof's opening, which the article says is the field's size; `pitch`: from the pitches OpenStreetMap maps, and for a ballpark from the grass of the field it maps, fitted to the fence
    * the park publishes (`rms`, in metres, is how far the two lie apart); `infield`: from the mapped infield, with the outline choosing which way is out to centre field; `building`: from the long axis of the
-   * building's main hall, an inference; `none`: no direction is known, and the heading is a stand-in (90 for a field with a long side, and for a ballpark the way that keeps its fence and its stands inside the building)),
+   * building's main hall, an inference; `streets`: from the streets a published list gives at the bases and the outfield of a ballpark, to the nearest 45 degrees, an inference; `none`: no direction is known, and the heading is a stand-in (90 for a field with a long side, and for a ballpark the way that keeps its fence and its stands inside the building)),
    * how much of a direction the building has (`strength`) and how much longer than wide the opening, the pitch or the hall is (`elongation`), and the middle of the field as `[longitude, latitude]` (home plate for a ballpark).
    */
-  axis: { heading: number; basis: "opening" | "pitch" | "infield" | "building" | "none"; strength: number; elongation: number; centre: [number, number]; rms?: number };
+  axis: { heading: number; basis: "opening" | "pitch" | "infield" | "building" | "streets" | "none"; strength: number; elongation: number; centre: [number, number]; rms?: number };
 }
 
 /** A stadium: its facts and what OpenStreetMap gave. */
@@ -532,9 +536,13 @@ const PARK_PLANS = new WeakMap<RealStadium, Map<string, ParkPlan>>();
 const PARK_COVER = 0.92;
 /** How far an open-air ballpark's walls stand over its top row, in feet (ours). */
 const OPEN_WALL_OVER = 6;
-/** How far a fixed roof's crown stands over its rim, in feet, and the width of a leaning tower's shaft at its base and at its top, in feet (ours: the sources give a roof's kind and a tower's height, not these). */
+/** How far a fixed roof's crown stands over its rim, in feet (where no source gives its height), and the width of a leaning tower's shaft at its base and at its top, in feet (ours: the sources give a roof's kind and a tower's height, not these). */
 const FIXED_CROWN = 30;
 const TOWER_WIDTH = [240, 64] as const;
+/** How far in the outline the stands of a ribbed shell are fitted, as a share of the way to its middle: the shell's sweep clears the top row there (ours, from the shell's profile in `venue.ribbed.ts`). */
+const RIBBED_STANDS = 0.87;
+/** How far a ribbed shell's ring stands over the top row, in feet: the roof panels climb to it from the glazing, and the top row's back wall under them stays below the panel there (ours). */
+const RIBBED_CLEARANCE = 36;
 const PARK_PARKED = 0.3;
 
 /**
@@ -571,6 +579,10 @@ function park(stadium: RealStadium, input: ParkInput): ParkPlan {
   };
   const footprint = world.map(frameOf);
   const fb = boxOf(footprint);
+  // A ribbed shell (the Olympic Stadium's) rises over the bowl in a sweep from its outline in to a ring, so the stands must stand inside the shell: they are fitted inside the outline drawn in by `RIBBED_STANDS`.
+  const ribbed = stadium.roof.kind === "fixed" && stadium.roof.ribs !== undefined;
+  const mean: Pt = [footprint.reduce((t, p) => t + p[0], 0) / footprint.length, footprint.reduce((t, p) => t + p[1], 0) / footprint.length];
+  const fitted = ribbed ? footprint.map((p): Pt => [mean[0] + (p[0] - mean[0]) * RIBBED_STANDS, mean[1] + (p[1] - mean[1]) * RIBBED_STANDS]) : footprint;
   // Each band is as deep as holds its seats: the usual depths scaled by what the seats of the band are to what the band holds, a few rounds over (a band's seats grow with its depth). The usual depths
   // take a seat to be 4.6 square feet of plan; a building too small for them has a steeper bowl, in which a seat takes less (the factors of `SEAT_AREAS`, as an arena's bowl), until the stands fit inside it.
   let depths = { lower: 60, upper: 56, bleachers: 54 };
@@ -586,7 +598,7 @@ function park(stadium: RealStadium, input: ParkInput): ParkPlan {
       for (const k of ["lower", "upper", "bleachers"] as const) depths[k] = Math.min(160, Math.max(20, next[k]));
       stands = parkLayout({ ...input, depths });
     }
-    if (stands.rings.every((r) => [r.region, ...(r.more ?? [])].every((o) => o.kind !== "poly" || o.points.every((p) => inside(footprint, p))))) break;
+    if (stands.rings.every((r) => [r.region, ...(r.more ?? [])].every((o) => o.kind !== "poly" || o.points.every((p) => inside(fitted, p))))) break;
   }
   if (factor !== 1) {
     for (const ring of stands.rings) ring.seats = Math.round(ring.seats * factor);
@@ -611,11 +623,11 @@ function park(stadium: RealStadium, input: ParkInput): ParkPlan {
   } else if (stadium.roof.kind === "fixed") {
     // A fixed roof over the whole bowl (the Olympic Stadium's): a low lens over the outline, from the walls (a little over the top row) to a crown a little higher over the middle (ours: the sources say the roof is fixed, not what shape it has),
     // and the tower that leans over it where OpenStreetMap maps one.
-    const low = round(Math.max(top + STADIUM_CLEARANCE, (stadium.osm.height ?? 0) * FEET_PER_METRE));
+    const low = round(Math.max(top + (ribbed ? RIBBED_CLEARANCE : STADIUM_CLEARANCE), (stadium.osm.height ?? 0) * FEET_PER_METRE));
     const rim = footprint.map((p): Pt => [c[0] + (p[0] - c[0]) * 0.98, c[1] + (p[1] - c[1]) * 0.98]);
     const mapped = stadium.osm.tower;
     const tower = mapped === undefined || stadium.tower === undefined ? undefined : { base: frameOf(metresFrom(origin, [mapped.base as LonLat])[0]), top: frameOf(metresFrom(origin, [mapped.top as LonLat])[0]), height: round(stadium.tower.height * FEET_PER_METRE), angle: stadium.tower.angle, width: [TOWER_WIDTH[0], TOWER_WIDTH[1]] as [number, number] };
-    shell = { footprint, hall, ...(north === undefined ? {} : { north }), roof: "dome", edge: low, wall: low, dome: { rim, low, crown: low + FIXED_CROWN }, ...(tower === undefined ? {} : { tower }), ...ivy };
+    shell = { footprint, hall, ...(north === undefined ? {} : { north }), roof: "dome", edge: low, wall: low, dome: { rim, low, crown: stadium.roof.top === undefined ? low + FIXED_CROWN : Math.max(low + 6, stadium.roof.top), ...(stadium.roof.ribs === undefined ? {} : { ribs: { count: stadium.roof.ribs.count } }) }, ...(tower === undefined ? {} : { tower }), ...ivy };
   } else if (stadium.roof.kind === "open") {
     // No roof: the walls stand a little over the top row.
     const wall = round(Math.max(top + OPEN_WALL_OVER, (stadium.osm.height ?? 0) * FEET_PER_METRE));

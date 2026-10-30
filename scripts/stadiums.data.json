@@ -490,7 +490,13 @@
    "roof": {
     "kind": "fixed",
     "basis": "documented",
-    "read": "the article: the Kevlar roof, which could retract, was removed in May 1998 and a $26 million non-retractable opaque blue roof was installed later that year; a doughnut-shaped permanent ring is the roof's permanent component"
+    "read": "the article: the Kevlar roof, which could retract, was removed in May 1998 and a $26 million non-retractable opaque blue roof was installed later that year; a doughnut-shaped permanent ring is the roof's permanent component; the roof is only 52 m (170.6 ft) over the field of play (the English article) and the building 284 m by 245 m (the French article), the roof's profile, the glazed bays and the ribs' flare are ours, from photographs",
+    "top": 171,
+    "ribs": {
+     "count": 38,
+     "anchored": 34,
+     "source": "https://fr.wikipedia.org/wiki/Stade_olympique_de_Montr%C3%A9al: the frame is 38 cantilevered consoles, 34 anchored to the ground and 4 fixed to the tower"
+    }
    },
    "tower": {
     "height": 165,
@@ -505,6 +511,12 @@
      "165 m tower",
      "non-retractable opaque blue roof was installed"
     ]
+   },
+   "orientation": {
+    "heading": 135,
+    "basis": "streets",
+    "source": "https://en.wikipedia.org/wiki/List_of_baseball_parks_in_Montreal",
+    "read": "the list names a street at each of four places round the park (first base: Avenue Pierre-De Coubertin, left field: Sherbrooke, third base: Pie-IX, right field: Viau); the four streets bound the stadium on its north, south, west and east, which puts home plate in the north-west corner and centre field to the south-east, a heading of 135 degrees, no finer than the eight points of the compass (an inference: the article gives no bearing, and neither OpenStreetMap nor Wikidata maps the field)"
    }
   },
   {

@@ -111,8 +111,8 @@ export interface RealShell {
   canopies?: { ring: Pt[]; low: number; rise: number; shape?: string }[];
   /** A `panels` roof: the outline it covers when closed, its bottom and its top above the field in feet (rim and crown), and where its sections rest when it is open. */
   panels?: { cover: Pt[]; bottom: number; top: number; parked: Pt[] };
-  /** A `dome` roof: the outline of its rim in the drawing's frame, and the heights of the rim (`low`) and of the crown above the surface, in feet. It is held up by the air inside, so it is a smooth lens, with no struts. */
-  dome?: { rim: Pt[]; low: number; crown: number };
+  /** A `dome` roof: the outline of its rim in the drawing's frame, and the heights of the rim (`low`) and of the crown above the surface, in feet. It is held up by the air inside, so it is a smooth lens, with no struts. With `ribs` (the Olympic Stadium's) the shell is `count` concrete consoles with glazed panels between them and a roof of panels rising to a ring, and `low` is the ring's height. */
+  dome?: { rim: Pt[]; low: number; crown: number; ribs?: { count: number } };
   /** Draw the walls as brick (a ballpark's facade, T-Mobile Park's: from the brief; a plain drawing choice, a wall in a brick tone, no courses). */
   brick?: boolean;
   /** Draw the walls as ivy-covered (a plain drawing choice: the wall in green). */

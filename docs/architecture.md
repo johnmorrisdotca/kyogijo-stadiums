@@ -288,6 +288,7 @@ src/
 ├── venues.all.ts       holds every venue for the drawing: `full.ts` imports it, the lean district does not
 ├── venues-entry.ts     the venues' entry
 ├── venue.real.ts       a real venue's walls and roof, raised in 3D
+├── venue.ribbed.ts     a shell of ribs, glazed bays and a roof of panels (the Olympic Stadium's), raised in 3D
 ├── venue.fill.ts       the empty places of a real venue's 3D view filled: the suite level between two bowls, the apron round the surface with its benches, the back of each bowl, the concourse floor
 ├── venue.lighting.ts   the lighting of a venue (night): which lighting an option asks for, and the pool of light on the floor round the surface; the rest is the stylesheet's and the plan's
 ├── venue.boards.ts     the LED boards of a venue: the ribbon boards along the fascia between the levels and the scoreboard hung over the surface, in 3D and in the plan, with generic content in the colours asked

@@ -161,7 +161,7 @@ await takePictures({
     { subject: "stadiums-metlife-3d", views: ["desk"], url: "/stadiums.html?stadium=metlife-stadium&view=3d&viewpoint=broadcast&roof=1", ready: READY_HALLS_TURN, target: "#stage" },
     { subject: "stadiums-yankee-3d", views: ["desk"], url: "/stadiums.html?stadium=yankee-stadium&view=3d&viewpoint=broadcast&roof=1", ready: READY_HALLS_TURN, target: "#stage" },
     { subject: "stadiums-citi-3d", views: ["desk"], url: "/stadiums.html?stadium=citi-field&view=3d&viewpoint=broadcast&roof=1", ready: READY_HALLS_TURN, target: "#stage" },
-    { subject: "stadiums-olympic-3d", views: ["desk"], url: "/stadiums.html?stadium=olympic-stadium-montreal&view=3d&viewpoint=corner&roof=1", ready: READY_HALLS_TURN, target: "#stage" },
+    { subject: "stadiums-olympic-3d", views: ["desk"], url: "/stadiums.html?stadium=olympic-stadium-montreal&view=3d&viewpoint=end&roof=1", ready: READY_HALLS_TURN, target: "#stage" },
     { subject: "stadiums-barclays-3d", views: ["desk"], url: "/stadiums.html?stadium=barclays-center&view=3d&viewpoint=broadcast&roof=1", ready: READY_HALLS_TURN, target: "#stage" },
     { subject: "district-midtown-3d", views: ["desk"], url: "/district.html?venues=madison-square-garden&view=3d&viewpoint=broadcast", ready: READY_HALLS_TURN, target: "#stage", height: 1100 },
     { subject: "district-bronx-3d", views: ["desk"], url: "/district.html?venues=yankee-stadium&view=3d&viewpoint=broadcast", ready: READY_HALLS_TURN, target: "#stage", height: 1100 },

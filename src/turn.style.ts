@@ -98,11 +98,15 @@ export const KYOGIJO_TURN_STYLE = `
 .ky-turn .u-signplate{fill:var(--ky-turn-bg);fill-opacity:.9;stroke:var(--ky-turn-rule);stroke-width:.5}
 .ky-turn .u-sign{fill:var(--ky-turn-ink);font-family:var(--ky-font,system-ui,-apple-system,"Segoe UI","Hiragino Sans","Noto Sans JP",sans-serif);font-weight:600}
 .ky-turn .u-mast{fill:var(--ky-up-fascia);stroke:var(--ky-up-roofline);stroke-width:.4}
-.ky-turn .u-tower{fill:var(--ky-up-fascia);stroke:var(--ky-up-roofline);stroke-width:.4}
+.ky-turn .u-tower{fill:color-mix(in srgb,var(--ky-up-fascia) 70%,var(--ky-up-white));stroke:var(--ky-up-roofline);stroke-width:.4}
 .ky-turn .u-tower-slit{fill:var(--ky-up-roofline);fill-opacity:.55}
+.ky-turn .u-rib{fill:color-mix(in srgb,var(--ky-up-fascia) 40%,var(--ky-up-white));stroke:var(--ky-up-roofline);stroke-width:.5}
+.ky-turn .u-bay{fill:color-mix(in srgb,var(--ky-up-fascia) 55%,var(--ky-up-white));stroke:none}
+.ky-turn .u-dome{fill:color-mix(in srgb,var(--ky-up-fascia) 22%,var(--ky-up-white));stroke:var(--ky-up-roofline);stroke-width:.5;stroke-linejoin:round}
+.ky-turn .u-glass{fill:#1b252d;fill-opacity:.8}
 .ky-turn .u-tower-foot{fill:var(--ky-up-roofline);fill-opacity:.8}
-.ky-turn .u-tower-cap{fill:var(--ky-up-roofline);fill-opacity:.85}
-.ky-turn .u-tower-glass{fill:var(--ky-up-fascia);fill-opacity:.55}
+.ky-turn .u-tower-cap{fill:color-mix(in srgb,var(--ky-up-fascia) 60%,var(--ky-up-white));stroke:var(--ky-up-roofline);stroke-width:.4}
+.ky-turn .u-tower-glass{fill:#0b1a24;fill-opacity:.5}
 .ky-turn .u-tower-cable{fill:var(--ky-up-roofline);fill-opacity:.7}
 .ky-turn .u-skylight{fill:var(--ky-up-skylight,#a9c8da);fill-opacity:.9;stroke:var(--ky-up-roofline);stroke-width:.5}
 .ky-turn .u-podium{fill:#000;fill-opacity:.16}

@@ -6,6 +6,7 @@
 import { rayAt, type Pt, type RealShell, type StandRing } from "./crowd.ts";
 import { bar, box, n, pole, shy, wall, type Plane, type Upright, type V3 } from "./turn.kit.ts";
 import { pointList, raked, type Slope } from "./venue.geom.ts";
+import { ribbedRoof, ribbedWalls } from "./venue.ribbed.ts";
 import { edgeDistance, inside } from "./venues.geo.ts";
 
 /** How far a lid rises from its edge towards the middle, and how far a saddle's high ends stand over its low sides, in feet (ours: the sources give a roof's kind, not its height). */
@@ -46,18 +47,20 @@ export function wallAt(real: RealShell, p: Pt): number {
   return top;
 }
 
-/** How many rings the leaning tower's shaft is cut into, how far its foot stands wider than the shaft over it (a plinth), and the observatory's width over the shaft's top, its height and the share of it that is glass (ours). */
+/** How many rings the leaning tower's shaft is cut into, and the observatory on its top: its length along the lean, its width and its height, in feet (ours: the sources give the tower's height and its inclination, not these). */
 const TOWER_RINGS = 12;
-const TOWER_PLINTH = { wide: 1.3, high: 26 };
-const TOWER_CAP = { wide: 1.5, high: 40 };
+const TOWER_CAP = { long: 84, wide: 72, high: 34 };
+/** How far the shaft's back runs out beyond its foot, as a share of the run from the foot to the top (the back sweeps down to the ground in a long curve), how far its front stands over the top, and how far its back stands behind it, in feet (ours). */
+const TOWER_TAIL = 0.45;
+const TOWER_PRAW = { front: 18, back: 58 };
 
 /**
- * A tower that leans and curves: a square shaft of horizontal sections that tapers from a broad foot on the ground to a narrow top, along a curve that runs from the foot to the top (the line the map gives of its funicular), its
- * back curving up from a flatter foot to the inclination the article gives at the top; a plinth where it meets the ground, the dark slits down its sloped back, an observatory of dark and glass bands on its top and, with `cables`,
- * thin lines from the observatory to the roof. Each face of a ring is a trapezoid on a plane through its corners, so that the faces meet along their edges. The foot and the top and their height are the sources'; the curve, the
- * widths, the slits, the plinth and the observatory are ours.
+ * A tower that leans and curves: a shaft of horizontal sections, a square of rising width at its foot narrowing to its top, that leans over the building. Its foot is at the building's rim (where the mapped axis crosses it, `rim` feet
+ * from the top along the axis), its front, the steep face that looks at the building, runs from there to the top, and its back, the face that looks away and up, sweeps down from the top in a long curve that flattens to the ground
+ * far behind the foot. On the top stands the observatory, a dark block with a band of glass, and, with `cables`, thin lines run from it to the roof. Every face of a ring is a trapezoid on a plane through its corners, so the faces
+ * meet along their edges. The foot, the top and the height are the sources' (the map's funicular line and the article's inclination); the curve, the widths, the slits and the observatory are ours.
  */
-export function towerPlanes(tower: NonNullable<RealShell["tower"]>, z: number, cables: V3[] = []): Plane[] {
+export function towerPlanes(tower: NonNullable<RealShell["tower"]>, z: number, cables: V3[] = [], rim?: number): Plane[] {
   const [bx, by] = tower.base;
   const [tx, ty] = tower.top;
   const run = Math.hypot(tx - bx, ty - by) || 1;
@@ -65,69 +68,71 @@ export function towerPlanes(tower: NonNullable<RealShell["tower"]>, z: number, c
   const a: [number, number] = [-d[1], d[0]];
   const [w0, w1] = tower.width;
   const H = tower.height - TOWER_CAP.high;
-  // The curve in the plane of the lean (run along the axis, height): a quadratic from the foot to the top whose tangent at the top rises at the article's inclination.
-  const lean = Math.tan((tower.angle * Math.PI) / 180);
-  const reach = Math.min(H * 0.12, run * 0.12);
-  const control: [number, number] = [run - reach / lean, H - reach];
-  const at = (t: number): [number, number] => [2 * t * (1 - t) * control[0] + t * t * run, 2 * t * (1 - t) * control[1] + t * t * H];
-  const wide = (t: number): number => w1 + (w0 - w1) * (1 - t) ** 1.15;
-  const offsets: [number, number][] = [[-1, -1], [1, -1], [1, 1], [-1, 1]];
-  const ring = (centre: [number, number], height: number, w: number, k: number): V3 => [bx + d[0] * centre[0] + (a[0] * offsets[k][0] + d[0] * offsets[k][1]) * (w / 2), by + d[1] * centre[0] + (a[1] * offsets[k][0] + d[1] * offsets[k][1]) * (w / 2), z + height];
+  // Along the lean (from the foot towards the top) and across it: a point of the shaft at a place `p` along, `q` across and `h` up.
+  const at = (p: number, q: number, h: number): V3 => [bx + d[0] * p + a[0] * q, by + d[1] * p + a[1] * q, z + h];
+  const front0 = Math.max(0, Math.min(run * 0.9, run - (rim ?? run * 0.5)));
+  const frontAt = (h: number): number => front0 + (run + TOWER_PRAW.front - front0) * (h / H) ** 0.92;
+  // The back: a quadratic curve from the tail on the ground, flat there, to the top, steep there; its rings are equal steps along the curve.
+  const [p0, p1, p2]: [number, number][] = [[-TOWER_TAIL * run, 0], [run * 0.34, H * 0.15], [run - TOWER_PRAW.back, H]];
+  const curve = (t: number): [number, number] => [(1 - t) ** 2 * p0[0] + 2 * t * (1 - t) * p1[0] + t * t * p2[0], (1 - t) ** 2 * p0[1] + 2 * t * (1 - t) * p1[1] + t * t * p2[1]];
+  const wide = (h: number): number => w1 + (w0 - w1) * (1 - h / H) ** 1.15;
+  const rings = Array.from({ length: TOWER_RINGS + 1 }, (_, i) => {
+    const [back, h] = curve(i / TOWER_RINGS);
+    return { h, back, front: frameFront(frontAt(h), back), w: wide(h) };
+  });
   const planes: Plane[] = [];
-  const face = (id: string, o: V3, u: V3, v: V3, svg: string): void => {
+  const face = (id: string, o: V3, up: V3, along: V3, r: number, svg: (lu: number) => string): void => {
+    const [lu, lv] = [Math.hypot(...up), Math.hypot(...along)];
     // (A wall, not a mast: the lower tiers leave out the small parts, and a tower 165 metres high is not one.)
-    planes.push({ id, kind: "wall", o, u, v, svg });
+    planes.push({ id, kind: "wall", o, u: up, v: along, svg: `<polygon class="u-tower" points="0 0 ${n(lu)} 0 ${n(lu)} ${n(lv * r)} 0 ${n(lv)}"/>${svg(lu)}` });
   };
+  const sub = (p: V3, q: V3): V3 => [p[0] - q[0], p[1] - q[1], p[2] - q[2]];
+  const scale = (p: V3, k: number): V3 => [p[0] * k, p[1] * k, p[2] * k];
   for (let i = 0; i < TOWER_RINGS; i += 1) {
-    const [t0, t1] = [i / TOWER_RINGS, (i + 1) / TOWER_RINGS];
-    const [p0, p1] = [at(t0), at(t1)];
-    const [wa, wb] = [wide(t0), wide(t1)];
-    for (let k = 0; k < 4; k += 1) {
-      const o = ring([p0[0], 0], p0[1], wa, k);
-      const up = ring([p1[0], 0], p1[1], wb, k);
-      const next = ring([p0[0], 0], p0[1], wa, (k + 1) % 4);
-      const u: V3 = [up[0] - o[0], up[1] - o[1], up[2] - o[2]];
-      const v: V3 = [next[0] - o[0], next[1] - o[1], next[2] - o[2]];
-      const [lu, lv] = [Math.hypot(...u), Math.hypot(...v)];
-      const r = wb / wa;
-      // The sloped back (the face away from the lean) has the two long dark slits down it, a few rings clear of the foot and of the top.
-      const slit = (f0: number, f1: number): string => `<polygon class="u-tower-slit" points="0 ${n(f0 * lv)} ${n(lu)} ${n(f0 * lv * r)} ${n(lu)} ${n(f1 * lv * r)} 0 ${n(f1 * lv)}"/>`;
-      const slits = k === 0 && i >= 2 && i < TOWER_RINGS - 1 ? `${slit(0.24, 0.31)}${slit(0.62, 0.69)}` : "";
-      face(`tower-${i}-${k}`, o, u, v, `<polygon class="u-tower" points="0 0 ${n(lu)} 0 ${n(lu)} ${n(lv * r)} 0 ${n(lv)}"/>${slits}`);
+    const [r0, r1] = [rings[i], rings[i + 1]];
+    const wr = r1.w / r0.w;
+    const lr = (r1.front - r1.back) / (r0.front - r0.back);
+    // The front and the back: across the shaft, from the left corner of the ring to the right.
+    for (const [name, k0, k1] of [["f", "front", "front"], ["b", "back", "back"]] as const) {
+      const o = at(r0[k0], -r0.w / 2, r0.h);
+      const top = at(r1[k1], -r1.w / 2, r1.h);
+      // The sloped back carries the two long dark slits down it, a few rings clear of the foot and of the top.
+      const slit = (lu: number, f0: number, f1: number): string => `<polygon class="u-tower-slit" points="0 ${n(f0 * r0.w)} ${n(lu)} ${n(f0 * r1.w)} ${n(lu)} ${n(f1 * r1.w)} 0 ${n(f1 * r0.w)}"/>`;
+      const slits = name === "b" && i >= 2 && i < TOWER_RINGS - 1 ? (lu: number): string => `${slit(lu, 0.24, 0.31)}${slit(lu, 0.62, 0.69)}` : (): string => "";
+      face(`tower-${i}-${name}`, o, sub(top, o), scale([a[0], a[1], 0], r0.w), wr, slits);
     }
-  }
-  // The plinth where the foot meets the ground: a low block wider than the shaft, with its top.
-  {
-    const wp = w0 * TOWER_PLINTH.wide;
-    for (let k = 0; k < 4; k += 1) {
-      const o = ring([0, 0], 0, wp, k);
-      const next = ring([0, 0], 0, wp, (k + 1) % 4);
-      const v: V3 = [next[0] - o[0], next[1] - o[1], 0];
-      face(`tower-foot-${k}`, o, [0, 0, TOWER_PLINTH.high], v, `<rect class="u-tower-foot" width="${n(TOWER_PLINTH.high)}" height="${n(Math.hypot(v[0], v[1]))}"/>`);
+    // The two flanks: along the lean, from the front to the back.
+    for (const [name, side] of [["l", -1], ["r", 1]] as const) {
+      const o = at(r0.front, (side * r0.w) / 2, r0.h);
+      const top = at(r1.front, (side * r1.w) / 2, r1.h);
+      face(`tower-${i}-${name}`, o, sub(top, o), scale([-d[0], -d[1], 0], r0.front - r0.back), lr, () => "");
     }
-    const o = ring([0, 0], TOWER_PLINTH.high, wp, 0);
-    const [c1, c3] = [ring([0, 0], TOWER_PLINTH.high, wp, 1), ring([0, 0], TOWER_PLINTH.high, wp, 3)];
-    face("tower-foot-top", o, [c1[0] - o[0], c1[1] - o[1], 0], [c3[0] - o[0], c3[1] - o[1], 0], `<rect class="u-tower-foot" width="${n(wp)}" height="${n(wp)}"/>`);
   }
   // The observatory on the top: a block a little wider than the shaft there, its walls dark, with a band of glass round it, and a flat roof.
-  const [topAt, topW] = [at(1), wide(1) * TOWER_CAP.wide];
+  const top = rings[TOWER_RINGS];
+  const centre = (top.front + top.back) / 2;
+  const [hl, hw] = [TOWER_CAP.long / 2, TOWER_CAP.wide / 2];
+  const corners: [number, number][] = [[hl, -hw], [hl, hw], [-hl, hw], [-hl, -hw]];
   for (let k = 0; k < 4; k += 1) {
-    const o = ring([topAt[0], 0], topAt[1], topW, k);
-    const next = ring([topAt[0], 0], topAt[1], topW, (k + 1) % 4);
-    const v: V3 = [next[0] - o[0], next[1] - o[1], 0];
-    const lv = Math.hypot(v[0], v[1]);
-    face(`tower-cap-${k}`, o, [0, 0, TOWER_CAP.high], v, `<rect class="u-tower-cap" width="${n(TOWER_CAP.high)}" height="${n(lv)}"/><rect class="u-tower-glass" x="${n(TOWER_CAP.high * 0.3)}" width="${n(TOWER_CAP.high * 0.45)}" height="${n(lv)}"/>`);
+    const [c0, c1] = [corners[k], corners[(k + 1) % 4]];
+    const o = at(centre + c0[0], c0[1], top.h);
+    const along = sub(at(centre + c1[0], c1[1], top.h), o);
+    const lv = Math.hypot(...along);
+    planes.push({ id: `tower-cap-${k}`, kind: "wall", o, u: [0, 0, TOWER_CAP.high], v: along, svg: `<rect class="u-tower-cap" width="${n(TOWER_CAP.high)}" height="${n(lv)}"/><rect class="u-tower-glass" x="${n(TOWER_CAP.high * 0.3)}" width="${n(TOWER_CAP.high * 0.45)}" height="${n(lv)}"/>` });
   }
   {
-    const o = ring([topAt[0], 0], topAt[1] + TOWER_CAP.high, topW, 0);
-    const [c1, c3] = [ring([topAt[0], 0], topAt[1] + TOWER_CAP.high, topW, 1), ring([topAt[0], 0], topAt[1] + TOWER_CAP.high, topW, 3)];
-    face("tower-cap-top", o, [c1[0] - o[0], c1[1] - o[1], 0], [c3[0] - o[0], c3[1] - o[1], 0], `<rect class="u-tower-cap" width="${n(topW)}" height="${n(topW)}"/>`);
+    const o = at(centre + corners[0][0], corners[0][1], top.h + TOWER_CAP.high);
+    const [c1, c3] = [at(centre + corners[1][0], corners[1][1], top.h + TOWER_CAP.high), at(centre + corners[3][0], corners[3][1], top.h + TOWER_CAP.high)];
+    planes.push({ id: "tower-cap-top", kind: "wall", o, u: sub(c1, o), v: sub(c3, o), svg: `<rect class="u-tower-cap" width="${n(TOWER_CAP.wide)}" height="${n(TOWER_CAP.long)}"/>` });
   }
   // The cables that held the roof, from the observatory to the roof: thin lines.
-  const from: V3 = ring([topAt[0], 0], topAt[1] + TOWER_CAP.high * 0.4, 0, 0);
+  const from = at(centre, 0, top.h + TOWER_CAP.high * 0.4);
   cables.forEach((to, i) => planes.push(...bar(`tower-cable-${i}`, "mast", from, to, 1.2, "u-tower-cable")));
   return planes;
 }
+
+/** The front's place along the lean at a height, kept in front of the back (a shaft is never turned inside out where the back's curve comes close to the front's line). */
+const frameFront = (front: number, back: number): number => Math.max(front, back + 40);
 
 /** The point where a ray from `from` first meets a polygon, or `undefined`. */
 export function firstHit(poly: readonly Pt[], from: Pt, angle: number): Pt | undefined {
@@ -216,7 +221,14 @@ export function realBuilding(real: RealShell, top: StandRing | undefined, centre
   const c: Pt = [centre[0], centre[1]];
   const rim = Array.from({ length: steps }, (_, k): Pt => rimPoint(real, c, (2 * Math.PI * k) / steps));
   const planes: Plane[] = [];
-  rim.forEach((a, i) => {
+  // A ribbed shell (the Olympic Stadium's) is its own: ribs and glazed bays in place of a drum of walls.
+  const ribbed = real.roof === "dome" && real.dome?.ribs !== undefined;
+  if (ribbed && parts.walls) {
+    const mid: Pt = [real.dome!.rim.reduce((t, p) => t + p[0], 0) / real.dome!.rim.length, real.dome!.rim.reduce((t, p) => t + p[1], 0) / real.dome!.rim.length];
+    const shell = ribbedWalls(real, mid, lift, steps);
+    items.push({ id: "shell", kind: "walls", at: centre, height: heightOf(shell), planes: shell });
+  }
+  if (!ribbed) rim.forEach((a, i) => {
     const b = rim[(i + 1) % steps];
     const long = Math.hypot(b[0] - a[0], b[1] - a[1]);
     if (long < 1) return;
@@ -234,15 +246,17 @@ export function realBuilding(real: RealShell, top: StandRing | undefined, centre
     return items;
   }
   if (parts.roof && real.roof === "dome" && real.dome !== undefined) {
-    // The cables run from the tower to the middle of the roof and a third of the way out each side of it.
+    // The cables run from the tower in a fan across the roof, from the crown out to either side of it, down to the ring.
     const rim = real.dome.rim;
     const mid: Pt = [rim.reduce((t, p) => t + p[0], 0) / rim.length, rim.reduce((t, p) => t + p[1], 0) / rim.length];
-    const reach = Math.max(...rim.map((p) => Math.hypot(p[0] - mid[0], p[1] - mid[1]))) / 3;
+    const reach = Math.max(...rim.map((p) => Math.hypot(p[0] - mid[0], p[1] - mid[1]))) / 2.4;
     const across: Pt = real.tower === undefined ? [0, 0] : [-(real.tower.top[1] - real.tower.base[1]), real.tower.top[0] - real.tower.base[0]];
     const long = Math.hypot(across[0], across[1]) || 1;
-    const high = lift + real.dome.low + (real.dome.crown - real.dome.low) * (1 - 0.1);
-    const cables: V3[] = [[mid[0], mid[1], lift + real.dome.crown], ...[-1, 1].map((side): V3 => [mid[0] + (across[0] / long) * reach * side, mid[1] + (across[1] / long) * reach * side, high])];
-    const planes = [...domeRoof(real.dome, lift, steps), ...(real.tower === undefined ? [] : towerPlanes(real.tower, lift, cables))];
+    const cables: V3[] = [-1, -0.5, 0, 0.5, 1].map((f): V3 => [mid[0] + (across[0] / long) * reach * f, mid[1] + (across[1] / long) * reach * f, lift + real.dome!.crown - (real.dome!.crown - real.dome!.low) * 0.9 * Math.abs(f) ** 1.6]);
+    // Where the tower's axis meets the building's rim, seen from the top: how far the foot's front is from the top along the axis.
+    const hit = real.tower === undefined ? undefined : firstHit(real.footprint, real.tower.top, Math.atan2(real.tower.base[1] - real.tower.top[1], real.tower.base[0] - real.tower.top[0]));
+    const rimRun = real.tower === undefined || hit === undefined ? undefined : Math.hypot(hit[0] - real.tower.top[0], hit[1] - real.tower.top[1]);
+    const planes = [...(real.dome.ribs === undefined ? domeRoof(real.dome, lift, steps) : ribbedRoof(real, mid, lift, steps)), ...(real.tower === undefined ? [] : towerPlanes(real.tower, lift, cables, rimRun))];
     if (planes.length > 0) items.push({ id: "roof", kind: "roof", at: centre, height: heightOf(planes), planes });
     return items;
   }
