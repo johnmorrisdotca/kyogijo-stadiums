@@ -15,6 +15,7 @@ import type { UprightKind } from "./turn.kit.ts";
 import type { Box3 } from "./turn.camera.ts";
 import { resolveLighting } from "./venue.lighting.ts";
 import type { OutsideSpec } from "./outside.dom.ts";
+import type { GovernorTuning, Quality, QualityTier } from "./quality.ts";
 import type { Language, LightingOptions, LightingPreset, ScoreOptions, SurfaceOptions } from "./types.ts";
 
 /** What can be asked of a 3D view. */
@@ -60,6 +61,16 @@ export interface TurnSettings {
   onDirectionChange?: (direction: TurnDirection) => void;
   /** Called with `true` when the auto-turn starts and `false` when it stops, whatever stopped it. */
   onPlayChange?: (playing: boolean) => void;
+  /**
+   * How much the view draws, so that it turns well on every device: `"auto"` (the default) starts on `high` and watches the frames the view makes while it turns, stepping a tier down when they run over budget for a while and back up
+   * when they have been steady for longer; `"high"` is everything as it always was; `"medium"` and `"low"` draw less (the buildings round a district stand up fewer, the trees and the crowd are thinner, a small venue is a block, and the layers
+   * are rastered at a lower pixel ratio). A tier asked for by name is kept; `setQuality` changes it at once, and the camera and the auto-turn go on. See `docs/quality.md`.
+   */
+  quality?: Quality;
+  /** How the frames are judged in `auto` (see `GovernorTuning`): for a test or a screen that is unusual; the defaults suit a 60 Hz display. */
+  qualityTuning?: Partial<GovernorTuning>;
+  /** Called with the tier the view is drawn at when it is first mounted and each time `auto` or `setQuality` changes it. */
+  onQualityChange?: (tier: QualityTier, quality: Quality) => void;
   /** Called after the view has changed by a key, a button or the pointer, with the view and the viewpoint it is (`undefined` when it has been turned by hand). */
   onChange?: (view: TurnView, preset: TurnPreset | undefined) => void;
 }
@@ -112,6 +123,8 @@ export interface TurnModel {
   groups?: { hull: readonly (readonly [number, number])[] }[];
   /** The board the options ask for (`board`), laid over the view: a layer of its own, never a plane of the scene. */
   board?: ResolvedBoard;
+  /** Whether the model has tiers: a district's does (`quality`), a single surface's does not, and the view does not time its frames or make its layers smaller for one that has none. */
+  tiered?: boolean;
   /** The crowd outside the venues of a district, asked for (`DistrictOptions.outside`): a canvas on the floor that the mount paints (`outside.dom.ts`), never a plane of the scene. */
   outside?: OutsideSpec;
 }

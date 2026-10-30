@@ -5,6 +5,8 @@ export { buildTurn, floorOptions, openingView } from "./turn.model.ts";
 export { turnDirection } from "./turn.camera.ts";
 export type { TurnDirection } from "./turn.camera.ts";
 export type { TurnModel, TurnSettings } from "./turn.model.ts";
+export { GOVERNOR_TUNING, QUALITIES, QUALITY_TIERS, TIER_PROFILES, createGovernor, handheld, isQuality, qualityOf, rasterOf, tierOf } from "./quality.ts";
+export type { Governor, GovernorTuning, Quality, QualityTier, TierProfile } from "./quality.ts";
 export { layoutOf, planeMarkup, planeMatrix, turnMarkup, turnMarkupOf } from "./turn.markup.ts";
 export type { Layout } from "./turn.markup.ts";
 export { KYOGIJO_TURN_STYLE } from "./turn.style.ts";
