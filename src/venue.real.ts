@@ -4,12 +4,15 @@
 // membrane from the rim of the walls to a crown, which never opens), or no roof at all (Koshien Stadium's). All are asked for with the roof (`venue: { roof: true }`) and give way to the eye as the other walls do.
 // Pure: data in, planes out.
 import { rayAt, type Pt, type RealShell, type StandRing } from "./crowd.ts";
-import { n, shy, wall, type Plane, type Upright, type V3 } from "./turn.kit.ts";
+import { box, n, pole, shy, wall, type Plane, type Upright, type V3 } from "./turn.kit.ts";
 import { pointList, raked, type Slope } from "./venue.geom.ts";
+import { edgeDistance, inside } from "./venues.geo.ts";
 
 /** How far a lid rises from its edge towards the middle, and how far a saddle's high ends stand over its low sides, in feet (ours: the sources give a roof's kind, not its height). */
 export const LID_RISE = 22;
 export const SADDLE_RISE = 30;
+/** How far a barrel vault's crown stands over its springing at the long sides, in feet (ours: the article says the roof looks like a Quonset hut, not how high it rises). */
+export const BARREL_RISE = 34;
 
 /** The saddle's share of its rise at a point (0 at the middle of a side, 1 at the middle of an end): half a saddle's way from one to the other, as a hyperbolic paraboloid (u squared less v squared) lies over the building's box. */
 export function saddleAt(real: Pick<RealShell, "footprint">, [x, y]: Pt): number {
@@ -21,8 +24,27 @@ export function saddleAt(real: Pick<RealShell, "footprint">, [x, y]: Pt): number
   return (1 + Math.max(-1, Math.min(1, s))) / 2;
 }
 
+/** The barrel vault's share of its rise at a point (0 at the springing along each long side, 1 over the middle line): a round arch over the building's short axis, the quarter of a circle's rise at each step in from the side. */
+export function barrelAt(real: Pick<RealShell, "footprint">, [, y]: Pt): number {
+  const ys = real.footprint.map((p) => p[1]);
+  const [cy, hy] = [(Math.min(...ys) + Math.max(...ys)) / 2, (Math.max(...ys) - Math.min(...ys)) / 2];
+  const v = Math.min(1, Math.abs((y - cy) / hy));
+  return Math.sqrt(1 - v * v);
+}
+
 /** The height of the roof over a point of the building's edge, above the surface, in feet. */
-export const roofAt = (real: RealShell, p: Pt): number => real.edge + (real.roof === "saddle" ? SADDLE_RISE * saddleAt(real, p) : 0);
+export const roofAt = (real: RealShell, p: Pt): number => real.edge + (real.roof === "saddle" ? SADDLE_RISE * saddleAt(real, p) : real.roof === "barrel" ? BARREL_RISE * barrelAt(real, p) : 0);
+
+/** How near a wall must stand to a canopy's outline to be the wall under it, in feet. */
+const CANOPY_REACH = 50;
+
+/** The height of the wall of a building under canopies at a point of its rim: where a canopy is over it, the canopy's back edge, which the wall carries up to (the outside of Lumen Field's roofs is one curved face to the ground); elsewhere the rim's own height. */
+export function wallAt(real: RealShell, p: Pt): number {
+  if (real.roof !== "canopy" || real.canopies === undefined) return roofAt(real, p);
+  let top = roofAt(real, p);
+  for (const canopy of real.canopies) if (inside(canopy.ring, p) || edgeDistance(canopy.ring, p) < CANOPY_REACH) top = Math.max(top, canopy.low + canopy.rise);
+  return top;
+}
 
 /**
  * A tower that leans: a square shaft that tapers from its base on the ground to its top at `height` feet, in four faces. Each face is the trapezoid between two corners of the base and the two over them, drawn on a plane
@@ -147,10 +169,14 @@ export function realBuilding(real: RealShell, top: StandRing | undefined, centre
     const b = rim[(i + 1) % steps];
     const long = Math.hypot(b[0] - a[0], b[1] - a[1]);
     if (long < 1) return;
-    const high = lift + (real.wall ?? roofAt(real, [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2]));
-    planes.push({ ...shy(wall(`shell-${i}`, "wall", a[0], a[1], b[0], b[1], 0, high, `<rect class="${real.ivy === true ? "u-shell u-ivy" : "u-shell"}" width="${n(long)}" height="${n(high)}"/>${real.podium === undefined ? "" : podiumBands(long, high, real.podium)}`), centre), fadeTo: 0.02 });
+    const high = lift + (real.wall ?? wallAt(real, [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2]));
+    planes.push({ ...shy(wall(`shell-${i}`, "wall", a[0], a[1], b[0], b[1], 0, high, `<rect class="${real.ivy === true ? "u-shell u-ivy" : real.brick === true ? "u-shell u-brick" : "u-shell"}" width="${n(long)}" height="${n(high)}"/>${real.podium === undefined ? "" : podiumBands(long, high, real.podium)}`), centre), fadeTo: 0.02 });
   });
   if (parts.walls && planes.length > 0) items.push({ id: "shell", kind: "walls", at: centre, height: Math.max(...planes.map((p) => p.o[2])), planes });
+  if (parts.walls && real.towers !== undefined) {
+    const towers = real.towers.flatMap((tower, i) => endTowerPlanes(tower, i, lift, c));
+    if (towers.length > 0) items.push({ id: "endtower", kind: "walls", at: centre, height: Math.max(...real.towers.map((t) => t.height)) + lift, planes: towers });
+  }
   if (parts.roof && real.roof === "canopy" && real.canopies !== undefined) {
     const planes = canopyRoof(real.canopies, c, lift, steps);
     if (planes.length > 0) items.push({ id: "roof", kind: "roof", at: centre, height: heightOf(planes), planes });
@@ -176,7 +202,7 @@ export function realBuilding(real: RealShell, top: StandRing | undefined, centre
     const angle = (2 * Math.PI * k) / steps;
     return crown === undefined ? rayAt(top!.hole!, c[0], c[1], angle) : firstHit(crown.opening, c, angle) ?? rayAt(top!.hole!, c[0], c[1], angle);
   });
-  const rise = real.roof === "saddle" || real.roof === "cable" ? 0 : LID_RISE;
+  const rise = real.roof === "saddle" || real.roof === "barrel" || real.roof === "cable" ? 0 : LID_RISE;
   const zOf = (p: Pt, inward: boolean): number => lift + roofAt(real, p) + (inward ? (crown === undefined ? rise : crown.rise) : 0);
   for (let k = 0; k < steps; k += 1) {
     const [a, b] = [rim[k], rim[(k + 1) % steps]];
@@ -255,7 +281,7 @@ function span(poly: readonly Pt[], from: Pt, angle: number): [Pt, Pt] | undefine
  * A piece of roof between two rays: the quad `[inner a, inner b, outer b, outer a]` at the heights given, as a plane that gives way to the eye. A quad whose edges are not parallel is not flat at those heights, so
  * with `exact` it is two triangles, each a plane through its corners.
  */
-function piece(id: string, quad: Pt[], heights: number[], c: Pt, cables: boolean, exact = false): Plane[] {
+function piece(id: string, quad: Pt[], heights: number[], c: Pt, cables: boolean, exact = false, cls = "u-roof"): Plane[] {
   const [ai, bi, b, a] = quad;
   const [ex, ey] = [b[0] - a[0], b[1] - a[1]];
   const el = Math.hypot(ex, ey);
@@ -264,7 +290,7 @@ function piece(id: string, quad: Pt[], heights: number[], c: Pt, cables: boolean
     const slope = slopeThrough(poly.map((p, i): V3 => [p[0], p[1], hs[i]]));
     const mid: Pt = [poly.reduce((s, p) => s + p[0], 0) / poly.length, poly.reduce((s, p) => s + p[1], 0) / poly.length];
     const away = Math.hypot(mid[0] - c[0], mid[1] - c[1]) || 1;
-    const paint = (corners: Pt[]): string => `<polygon class="u-roof" points="${pointList(corners)}"/>${cable ? `<path class="u-cable" d="M${n(corners[0][0])} ${n(corners[0][1])}L${n(corners[3][0])} ${n(corners[3][1])}"/>` : ""}`;
+    const paint = (corners: Pt[]): string => `<polygon class="${cls}" points="${pointList(corners)}"/>${cable ? `<path class="u-cable" d="M${n(corners[0][0])} ${n(corners[0][1])}L${n(corners[3][0])} ${n(corners[3][1])}"/>` : ""}`;
     const plane = raked(name, "roof", poly, slope, [ex / el, ey / el], paint);
     return plane === undefined ? [] : [{ ...plane, shy: [(mid[0] - c[0]) / away, (mid[1] - c[1]) / away] }];
   };
@@ -275,21 +301,70 @@ function piece(id: string, quad: Pt[], heights: number[], c: Pt, cables: boolean
 /** How far a canopy's low edge, the field's side of it, stands under its high edge: the OpenStreetMap roof's `roof:height` is the rise, and the canopy rises to the back of the stands (ours: the sources do not say which way it slopes). */
 export const CANOPY_NOTE = "low over the field, high over the back of the stands";
 
+/** How many strips a canopy is cut into from the field's side to the back, so that a curved roof is a curve (ours: the drawing's pieces are flat). */
+export const CANOPY_STRIPS = 3;
+/** From this many rays round the middle on, a canopy is cut by every other one. */
+export const CANOPY_FINE = 48;
+
+/** The share of a canopy's rise at a share of the way from the field's side to the back: a straight slope, or for OpenStreetMap's `roof:shape=round` a convex arc, a quarter of a circle, steep at the field's edge and levelling over the back of the stands. */
+export function canopyRiseAt(shape: string | undefined, t: number): number {
+  return shape === "round" ? Math.sin((Math.max(0, Math.min(1, t)) * Math.PI) / 2) : t;
+}
+
+const between = (a: Pt, b: Pt, t: number): Pt => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+
 /**
- * Canopies over some of the stands (Lumen Field's two, one each side of the field): each OpenStreetMap roof outline is cut by the rays from the middle of the field into the strips between them, the edge towards
- * the field low and the edge towards the back of the stands `rise` higher.
+ * Canopies over some of the stands (Lumen Field's two, one each side of the field): each OpenStreetMap roof outline is cut by the rays from the middle of the field into the strips between them, and each strip across, from
+ * the edge towards the field, low, to the edge towards the back of the stands, `rise` higher, into `CANOPY_STRIPS` pieces that follow the roof's shape: a straight slope, or a round arc where OpenStreetMap says `round`.
  */
 function canopyRoof(canopies: NonNullable<RealShell["canopies"]>, c: Pt, lift: number, steps: number): Plane[] {
   const planes: Plane[] = [];
   canopies.forEach((canopy, ci) => {
     const spans = Array.from({ length: steps }, (_, k) => span(canopy.ring, c, (2 * Math.PI * k) / steps));
-    for (let k = 0; k < steps; k += 1) {
-      const [s, t] = [spans[k], spans[(k + 1) % steps]];
+    // Every other ray of a fine cut: a canopy is long and gently curved, and each ray is a piece across its three strips (the plane budget of a district counts them).
+    const stride = steps >= CANOPY_FINE ? 2 : 1;
+    for (let k = 0; k < steps; k += stride) {
+      const [s, t] = [spans[k], spans[(k + stride) % steps]];
       if (s === undefined || t === undefined) continue;
-      const [lo, hi] = [lift + canopy.low, lift + canopy.low + canopy.rise];
-      planes.push(...piece(`roof-c${ci}-${k}`, [s[0], t[0], t[1], s[1]], [lo, lo, hi, hi], c, false, true));
+      for (let j = 0; j < CANOPY_STRIPS; j += 1) {
+        const [u0, u1] = [j / CANOPY_STRIPS, (j + 1) / CANOPY_STRIPS];
+        const [z0, z1] = [lift + canopy.low + canopy.rise * canopyRiseAt(canopy.shape, u0), lift + canopy.low + canopy.rise * canopyRiseAt(canopy.shape, u1)];
+        planes.push(...piece(`roof-c${ci}-${k}-${j}`, [between(s[0], s[1], u0), between(t[0], t[1], u0), between(t[0], t[1], u1), between(s[0], s[1], u1)], [z0, z0, z1, z1], c, false, false, "u-roof u-canopy"));
+      }
     }
   });
+  return planes;
+}
+
+/** How wide the scoreboard on a tower's face is and how tall, as shares of the face, and how far it stands out from it, in feet (ours: the article says the scoreboard is vertical, not how large). */
+export const TOWER_BOARD = { wide: 0.62, tall: 0.46, from: 0.55, out: 0.4 } as const;
+
+/**
+ * A tower standing apart from the bowl: a box on its outline, four faces and a flat top, that gives way to the eye as a wall does (a tall tower between the eye and the field is cut away, whole from above), with the scoreboard
+ * on the face towards the field, a dark panel high on it and divided into its rows of lamps.
+ */
+export function endTowerPlanes(tower: NonNullable<RealShell["towers"]>[number], index: number, lift: number, centre: Pt): Plane[] {
+  const xs = tower.ring.map((p) => p[0]);
+  const ys = tower.ring.map((p) => p[1]);
+  const [x0, x1, y0, y1] = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)];
+  const top = lift + tower.height;
+  const parts = box(`endtower-${index}`, "wall", { x0, y0, x1, y1 }, top, "u-endtower");
+  const planes: Plane[] = parts.map((p) => (p.id.endsWith("-top") ? p : { ...shy(p, centre), fadeTo: 0.25 }));
+  // The scoreboard: on the face that looks at the field, a little proud of it.
+  const [fx, fy] = tower.face;
+  const [w, h] = fx !== 0 ? [y1 - y0, top] : [x1 - x0, top];
+  const [bw, bh] = [w * TOWER_BOARD.wide, h * TOWER_BOARD.tall];
+  const zTop = top * TOWER_BOARD.from + bh;
+  const svg = `<rect class="u-endtower-board" width="${n(bw)}" height="${n(bh)}"/><path class="u-endtower-rows" d="${Array.from({ length: 9 }, (_, k) => `M0 ${n(((k + 1) * bh) / 10)}H${n(bw)}`).join("")}"/>`;
+  if (fx !== 0) {
+    const x = fx > 0 ? x1 + TOWER_BOARD.out : x0 - TOWER_BOARD.out;
+    const mid = (y0 + y1) / 2;
+    planes.push({ ...shy(wall(`endtower-${index}-board`, "wall", x, mid - bw / 2, x, mid + bw / 2, zTop - bh, zTop, svg), centre), fadeTo: 0.25 });
+  } else {
+    const y = fy > 0 ? y1 + TOWER_BOARD.out : y0 - TOWER_BOARD.out;
+    const mid = (x0 + x1) / 2;
+    planes.push({ ...shy(wall(`endtower-${index}-board`, "wall", mid - bw / 2, y, mid + bw / 2, y, zTop - bh, zTop, svg), centre), fadeTo: 0.25 });
+  }
   return planes;
 }
 
@@ -342,7 +417,7 @@ const PANEL_THICK = 7;
  * building they park on, as slabs at the rim's height.
  */
 function panelsRoof(panels: NonNullable<RealShell["panels"]>, c: Pt, lift: number, steps: number, open: boolean): Plane[] {
-  const planes: Plane[] = [];
+  const planes: Plane[] = [...panelRails(panels, c, lift)];
   if (!open) {
     const rim = Array.from({ length: steps }, (_, k): Pt => firstHit(panels.cover, c, (2 * Math.PI * k) / steps) ?? c);
     const inner = rim.map((p): Pt => [c[0] + (p[0] - c[0]) * PANEL_CROWN, c[1] + (p[1] - c[1]) * PANEL_CROWN]);
@@ -366,6 +441,55 @@ function panelsRoof(panels: NonNullable<RealShell["panels"]>, c: Pt, lift: numbe
     const long = Math.hypot(b[0] - a[0], b[1] - a[1]);
     if (long < 0.5) return;
     planes.push({ ...shy(wall(`parked-${i}`, "roof", a[0], a[1], b[0], b[1], z, top, `<rect class="u-pod" width="${n(long)}" height="${n(PANEL_THICK)}"/>`), c), fadeTo: 0.3 });
+  });
+  return planes;
+}
+
+/** How wide a rail girder is, how thick, how wide a column under it is, and how many columns stand under each rail, in feet (ours: the article says the roof runs on rails on the north and the south side, not what holds them up). */
+export const RAIL = { wide: 12, thick: 16, column: 15, columns: 4, inset: 24 } as const;
+
+/** A prism over a four-cornered outline, from `z0` to `z1`: its sides and its top, in the roof's pod tone (a dark steel). */
+function prism(id: string, ring: readonly Pt[], z0: number, z1: number, c: Pt): Plane[] {
+  const planes: Plane[] = [];
+  ring.forEach((a, i) => {
+    const b = ring[(i + 1) % ring.length];
+    const long = Math.hypot(b[0] - a[0], b[1] - a[1]);
+    if (long < 0.5) return;
+    planes.push({ ...shy(wall(`${id}-${i}`, "roof", a[0], a[1], b[0], b[1], z0, z1, `<rect class="u-rail" width="${n(long)}" height="${n(z1 - z0)}"/>`), c), fadeTo: 0.3 });
+  });
+  const top = raked(`${id}-top`, "roof", [...ring], { x0: ring[0][0], y0: ring[0][1], z0: z1, gx: 0, gy: 0 }, [1, 0], (corners) => `<polygon class="u-rail" points="${pointList(corners)}"/>`);
+  if (top !== undefined) planes.push(top);
+  return planes;
+}
+
+/**
+ * The rails a retractable ballpark roof runs on, along its north and south sides (the article: 128 wheels on rails there), as two girders at the roof's lowest height, each on a row of columns from the ground, and running
+ * on over the strip where the sections rest. The rails run the way the sections park, from the cover's middle to where they rest; a girder lies a little inside each side of the cover.
+ */
+export function panelRails(panels: NonNullable<RealShell["panels"]>, c: Pt, lift: number): Plane[] {
+  const mean = (ring: readonly Pt[]): Pt => [ring.reduce((s, p) => s + p[0], 0) / ring.length, ring.reduce((s, p) => s + p[1], 0) / ring.length];
+  const park = mean(panels.parked);
+  const length = Math.hypot(park[0] - c[0], park[1] - c[1]);
+  if (length < 1) return [];
+  const e: Pt = [(park[0] - c[0]) / length, (park[1] - c[1]) / length];
+  const m: Pt = [-e[1], e[0]];
+  const along = (p: Pt): number => (p[0] - c[0]) * e[0] + (p[1] - c[1]) * e[1];
+  const across = (p: Pt): number => (p[0] - c[0]) * m[0] + (p[1] - c[1]) * m[1];
+  const [a0, a1] = [Math.min(...panels.cover.map(along)), Math.max(...panels.parked.map(along), ...panels.cover.map(along))];
+  const [m0, m1] = [Math.min(...panels.cover.map(across)) + RAIL.inset, Math.max(...panels.cover.map(across)) - RAIL.inset];
+  const at = (u: number, v: number): Pt => [c[0] + e[0] * u + m[0] * v, c[1] + e[1] * u + m[1] * v];
+  const planes: Plane[] = [];
+  const z = lift + panels.bottom;
+  [m0, m1].forEach((v, side) => {
+    const w = RAIL.wide / 2;
+    planes.push(...prism(`rail-${side}`, [at(a0, v - w), at(a1, v - w), at(a1, v + w), at(a0, v + w)], z - RAIL.thick, z, c));
+    for (let k = 0; k < RAIL.columns; k += 1) {
+      const u = a0 + ((k + 0.5) * (a1 - a0)) / RAIL.columns;
+      const h = RAIL.column / 2;
+      // A column is two strips crossed, as a post is (`pole`): seen from every side with two planes and not five.
+      const [x, y] = at(u, v);
+      planes.push(...pole(`rail-${side}-leg-${k}`, "roof", x, y, lift, z - RAIL.thick, h * 2, "u-rail"));
+    }
   });
   return planes;
 }

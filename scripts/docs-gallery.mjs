@@ -385,7 +385,7 @@ function venuesPage(lib) {
   const HOW = { mapped: "mapped in OpenStreetMap", building: "inferred from the building's long axis", none: "not known, drawn east-west with north at the top" };
   const note = (id) => {
     const v = VENUES[id];
-    const roof = v.roof.kind === "saddle" ? "a saddle roof" : "a fixed roof";
+    const roof = v.roof.kind === "saddle" ? "a saddle roof" : v.roof.kind === "barrel" ? "a barrel-vaulted roof" : "a fixed roof";
     return `${v.seats.hockey.toLocaleString("en-US")} seats in ${v.tiers.count} tiers (${v.tiers.basis}), ${roof} (${v.roof.basis}); the rink is ${HOW[v.osm.axis.basis]}.`;
   };
   const real = (id, extra = "") => drawing({ sport: "nhl", arena: id, crowd: { real: true }, ...(extra === "" ? {} : JSON.parse(extra)) });

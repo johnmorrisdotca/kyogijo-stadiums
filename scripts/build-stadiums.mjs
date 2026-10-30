@@ -87,7 +87,7 @@ for (const v of stadiums) {
     const kept = (language === "ja" ? wikipediaJa[v.id]?.sentences : article.sentences)?.join(" ") ?? "";
     for (const phrase of phrases) if (!kept.includes(phrase)) fail(`${v.id}: "${phrase}" is not in the ${language} article's kept sentences`);
   }
-  if (v.looks !== undefined) for (const [key, read] of Object.entries(v.looks)) if (!["ivyWalls", "dirtInfield"].includes(key) || typeof read !== "string" || read === "") fail(`${v.id}: looks.${key}`);
+  if (v.looks !== undefined) for (const [key, read] of Object.entries(v.looks)) if (!["ivyWalls", "dirtInfield", "brickWalls"].includes(key) || typeof read !== "string" || read === "") fail(`${v.id}: looks.${key}`);
   const numbers = listed(article.infoboxCapacity);
   const keys = Object.keys(v.configs);
   if (keys.length === 0 || !keys.every((key) => CONFIGS[kind].includes(key))) fail(`${v.id}: configurations ${keys.join(", ")}`);
@@ -226,7 +226,7 @@ for (const v of stadiums) {
     if (v.osm.roofs !== undefined) {
       canopies = v.osm.roofs.map((spec) => {
         const e = find(raw, spec, v.id);
-        return { source: `${e.type}/${e.id}`, height: Number(e.tags?.height), rise: Number(e.tags?.["roof:height"]), ring: simple(outlines(e)[0].geometry) };
+        return { source: `${e.type}/${e.id}`, height: Number(e.tags?.height), rise: Number(e.tags?.["roof:height"]), ...(typeof e.tags?.["roof:shape"] === "string" ? { shape: e.tags["roof:shape"] } : {}), ring: simple(outlines(e)[0].geometry) };
       });
       for (const c of canopies) if (!Number.isFinite(c.height) || !Number.isFinite(c.rise)) fail(`${v.id}: ${c.source} has no height and roof height`);
     }
@@ -367,7 +367,7 @@ for (const v of stadiums) {
 
 // ---- The data files. ----
 const q = (value) => JSON.stringify(value).replace(/":/g, '": ').replace(/,"/g, ', "');
-const FACT_KEYS = ["id", "kind", "wikidata", "ground", "park", "gridiron", "names", "en", "ja", "looks", "configs", "bowlSeats", "wikidataSeats", "tiers", "roof", "tower", "facade"];
+const FACT_KEYS = ["id", "kind", "wikidata", "ground", "park", "gridiron", "names", "en", "ja", "looks", "configs", "bowlSeats", "wikidataSeats", "tiers", "roof", "tower", "endTower", "facade"];
 const factsText = `// Made by scripts/build-stadiums.mjs from scripts/stadiums.data.json: do not edit by hand.
 // The facts are those of the Wikidata items and the English Wikipedia articles (revisions) each entry cites, in our own words; see docs/stadiums.md and NOTICE.md. Wikidata is CC0; the facts read from
 // English Wikipedia are numbers and words of ours, not its text (CC BY-SA 4.0). What OpenStreetMap gave is in stadiums.osm.data.ts, apart, because it is ODbL.
@@ -394,7 +394,7 @@ ${stadiums.map((v) => {
   const o = clean(osm[v.id]);
   const roof = o.roof === undefined ? "" : `\n    "roof": {\n      "source": ${q(o.roof.source)},${o.roof.height === undefined ? "" : `\n      "height": ${o.roof.height},`}${o.roof.rise === undefined ? "" : `\n      "rise": ${o.roof.rise},`}${o.roof.outer === undefined ? "" : `\n      "outer": ${q(o.roof.outer)},`}${o.roof.opening === undefined ? "" : `\n      "opening": { "source": ${q(o.roof.opening.source)}, "ring": ${ringText(o.roof.opening.ring, "      ")} },`}${o.roof.ring === undefined ? "" : `\n      "ring": ${ringText(o.roof.ring, "      ")},`}\n    },`;
   const tower = o.tower === undefined ? "" : `\n    "tower": { "source": ${q(o.tower.source)}, "height": ${o.tower.height}, "base": ${q(o.tower.base)}, "top": ${q(o.tower.top)}, "ring": ${ringText(o.tower.ring, "    ")} },`;
-  const canopies = o.canopies === undefined ? "" : `\n    "canopies": [\n${o.canopies.map((c) => `      { "source": ${q(c.source)}, "height": ${c.height}, "rise": ${c.rise}, "ring": ${ringText(c.ring, "      ")} },`).join("\n")}\n    ],`;
+  const canopies = o.canopies === undefined ? "" : `\n    "canopies": [\n${o.canopies.map((c) => `      { "source": ${q(c.source)}, "height": ${c.height}, "rise": ${c.rise},${c.shape === undefined ? "" : ` "shape": ${q(c.shape)},`} "ring": ${ringText(c.ring, "      ")} },`).join("\n")}\n    ],`;
   return `  "${v.id}": {\n    "source": ${q(o.source)},\n    "read": ${q(o.read)},\n    "base": ${q(o.base)},\n    "licence": "ODbL-1.0",\n    "attribution": "(c) OpenStreetMap contributors, ODbL 1.0, openstreetmap.org/copyright",\n${o.height === undefined ? "" : `    "height": ${o.height},\n`}    "axis": ${q(o.axis)},${roof}${canopies}${tower}\n    "ring": ${ringText(o.ring, "    ")},\n  },`;
 }).join("\n")}
 };

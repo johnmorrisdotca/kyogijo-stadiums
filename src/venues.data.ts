@@ -102,7 +102,7 @@ export const VENUE_DATA: RealVenueData[] = [
     "en": {"title": "American Airlines Center", "revision": 1379833787},
     "seats": {"hockey": 18532, "source": "wikipedia", "wikidata": 19200, "read": "the infobox's figure for ice hockey, 18,532 (19,323 with standing room); Wikidata's one capacity (19,200) is the basketball one"},
     "tiers": {"count": 2, "basis": "plausible", "read": "no source says how many seating levels there are: two bowls are drawn; the article speaks of retractable seating, which the bowl does not draw"},
-    "roof": {"kind": "fixed", "basis": "plausible", "read": "an indoor arena: a fixed roof, as nothing says otherwise; the article says the roof looks like a Quonset hut, a barrel vault, which the one kind of fixed roof does not draw"},
+    "roof": {"kind": "barrel", "basis": "documented", "read": "the article says the roof looks like a Quonset hut, which is a barrel vault: drawn as a round arch over the rink's short axis, highest over its middle line and falling to the walls at the two long sides; the height of the crown (34 feet over the springing) is ours (the article gives none)"},
   },
   {
     "id": "grand-casino-arena",

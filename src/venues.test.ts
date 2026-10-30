@@ -64,7 +64,7 @@ describe("the venues: the four divisions of the NHL", () => {
       expect([1, 2, 3], v.id).toContain(v.tiers.count);
       expect(["documented", "plausible"], v.id).toContain(v.tiers.basis);
       expect(["documented", "plausible"], v.id).toContain(v.roof.basis);
-      expect(["fixed", "saddle"], v.id).toContain(v.roof.kind);
+      expect(["fixed", "saddle", "barrel"], v.id).toContain(v.roof.kind);
       for (const read of [v.seats.read, v.tiers.read, v.roof.read]) expect(read.length, v.id).toBeGreaterThan(20);
       expect(v.en.revision, v.id).toBeGreaterThan(1_000_000_000);
       expect(v.en.title, v.id).toBe(arenaOfVenue(v).en.title);
@@ -98,6 +98,8 @@ describe("the venues: the four divisions of the NHL", () => {
     expect(VENUES["crypto-com-arena"].tiers).toMatchObject({ count: 2, basis: "documented", lowerShare: 0.667 });
     expect(VENUES["honda-center"].tiers.basis).toBe("plausible");
     expect(venues.filter((v) => v.roof.kind === "saddle")).toHaveLength(1);
+    expect(VENUES["american-airlines-center"].roof).toMatchObject({ kind: "barrel", basis: "documented" });
+    expect(venues.filter((v) => v.roof.kind === "barrel")).toHaveLength(1);
     // The Central Division's: three seating bowls where an article counts four levels with one of suites; two where the lower bowl's seats are given (Winnipeg's 8,812 of 15,225); two documented where upper and lower tiers are named.
     expect(VENUES["grand-casino-arena"].tiers).toMatchObject({ count: 3, basis: "documented" });
     expect(VENUES["canada-life-centre"].tiers).toMatchObject({ count: 2, basis: "documented", lowerShare: 0.579 });
@@ -573,7 +575,7 @@ describe("a real venue in 3D", () => {
     expect(parts({})).toEqual([]);
   });
 
-  it("raises a roof and walls only when asked, a lid over a fixed roof and a saddle over the Saddledome's", () => {
+  it("raises a roof and walls only when asked, a lid over a fixed roof, a saddle over the Saddledome's and a barrel vault over the American Airlines Center's", () => {
     for (const [v, model] of models) {
       expect(item(model, "roof"), v.id).toBeUndefined();
       expect(item(model, "walls"), v.id).toBeUndefined();
@@ -590,6 +592,10 @@ describe("a real venue in 3D", () => {
       if (v.roof.kind === "saddle") {
         // High at the two ends of the rink and low at the two sides: the saddle's rise (30 feet) is the roof's range over its edge.
         expect(high - low, v.id).toBeGreaterThan(20);
+      } else if (v.roof.kind === "barrel") {
+        // A round arch over the rink's short axis: the crown stands over the springing by its rise (34 feet), and the roof's range is about that.
+        expect(high - low, v.id).toBeGreaterThan(25);
+        expect(high - low, v.id).toBeLessThan(40);
       } else {
         // (A lid with a skylight is closed in the middle by a cap a few feet over its band.)
         expect(high - low, v.id).toBeLessThanOrEqual(v.roof.skylight === true ? 38 : 30);

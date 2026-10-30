@@ -50,6 +50,12 @@ export interface Plane {
    */
   fadeSide?: boolean;
   /**
+   * A roof: it is cut away from above, so that the bowl under it stays visible, and whole from the street. Its opacity falls from whole to `fadeTo` (0.12 when missing) as the eye rises over the building, from a pitch of `CUTAWAY.from`
+   * degrees (the eye at a low angle, outside) to `CUTAWAY.to` (the eye looking down); at the lowest pitches the view allows, an eye at street level, it is whole again whatever its side. In between a roof that is `shy` gives way as
+   * a wall does, by the side the eye is on.
+   */
+  cut?: boolean;
+  /**
    * A face of a closed solid that nothing shows through (a building's wall, drawn opaque): the side of it that is the solid's outside, as the way its `u` x `v` points, 1 out of the solid and -1 into it. While the face is turned away
    * from the eye it is hidden by the solid's own near faces, so a page that asks for it (`layoutOf`'s `cull`) leaves it out of the view until the view turns it round, and spends nothing on it.
    */
@@ -189,7 +195,29 @@ export function shy(p: Plane, centre: readonly [number, number]): Plane {
  * How much of a wall is left (1 whole, down to 0.08) at a view: none is cut away unless the wall is on the eye's side of the surface, and then more the lower the eye is, because a wall seen
  * from straight above hides nothing. `yaw` and `pitch` are the view's, in degrees.
  */
-export function fadeOf(p: Pick<Plane, "shy" | "fadeTo" | "fadeAt" | "fadeSide">, yaw: number, pitch: number): number {
+export function fadeOf(p: Pick<Plane, "shy" | "fadeTo" | "fadeAt" | "fadeSide" | "cut">, yaw: number, pitch: number): number {
+  if (p.cut === true) return cutOf(p, yaw, pitch);
+  return sideOf(p, yaw, pitch);
+}
+
+/** The pitches, in degrees, between which a roof is cut away from above (it is whole at `high` and over, and gone to its `fadeTo` at `low` and under), and between which it is whole again at street level. */
+export const CUTAWAY = { low: 8, high: 38, streetFrom: 74, streetTo: 84 } as const;
+
+const smooth = (x: number, from: number, to: number): number => {
+  const t = Math.min(1, Math.max(0, (x - from) / (to - from)));
+  return t * t * (3 - 2 * t);
+};
+
+/** How much of a roof is left at a view: cut away from above, given way like a wall by its side, whole at street level. */
+function cutOf(p: Pick<Plane, "shy" | "fadeTo" | "fadeAt" | "fadeSide">, yaw: number, pitch: number): number {
+  const lowest = p.fadeTo ?? 0.12;
+  const above = lowest + (1 - lowest) * smooth(pitch, CUTAWAY.low, CUTAWAY.high);
+  const kept = Math.min(above, sideOf(p, yaw, pitch));
+  const street = smooth(pitch, CUTAWAY.streetFrom, CUTAWAY.streetTo);
+  return Math.round((kept + (1 - kept) * street) * 1000) / 1000;
+}
+
+function sideOf(p: Pick<Plane, "shy" | "fadeTo" | "fadeAt" | "fadeSide">, yaw: number, pitch: number): number {
   if (p.shy === undefined) return 1;
   const a = (yaw * Math.PI) / 180;
   // The horizontal direction from the surface to the eye (the same sum as the depth of a point).

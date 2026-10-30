@@ -100,19 +100,21 @@ export interface RealShell {
   /** The way north points on the page, in degrees clockwise from the top; absent where the rink's real orientation is not known. */
   north?: number;
   /**
-   * `fixed` is a lid; `saddle` a roof that rises at the two ends and falls at the two sides; `cable` a cable-supported roof with an opening over the surface, which a retractable fabric closes (BC Place's);
+   * `fixed` is a lid; `saddle` a roof that rises at the two ends and falls at the two sides; `barrel` a barrel vault, a round arch along the surface that stands highest over its middle line and falls to the walls at the two sides; `cable` a cable-supported roof with an opening over the surface, which a retractable fabric closes (BC Place's);
    * `canopy` roofs over some of the stands and leaves the field open (Lumen Field's, `canopies`); `panels` a retractable roof of sections over a ballpark's field and stands, far above its walls (T-Mobile Park's, `panels`);
    * `dome` an air-supported roof, a membrane that rises from the rim of the walls to a crown over the middle of the field (Tokyo Dome's, `dome`); `open` no roof: the walls only (Koshien Stadium's).
    */
-  roof: "fixed" | "saddle" | "cable" | "canopy" | "panels" | "dome" | "open";
+  roof: "fixed" | "saddle" | "barrel" | "cable" | "canopy" | "panels" | "dome" | "open";
   /** The height of the walls, in feet, where it is not the roof's rim (a ballpark's walls stand far below its roof). */
   wall?: number;
   /** A `canopy` roof's pieces: the outline of each in the drawing's frame, the height of its low edge (over the field's side) and how far it rises to its high edge (over the back of the stands), in feet. */
-  canopies?: { ring: Pt[]; low: number; rise: number }[];
+  canopies?: { ring: Pt[]; low: number; rise: number; shape?: string }[];
   /** A `panels` roof: the outline it covers when closed, its bottom and its top above the field in feet (rim and crown), and where its sections rest when it is open. */
   panels?: { cover: Pt[]; bottom: number; top: number; parked: Pt[] };
   /** A `dome` roof: the outline of its rim in the drawing's frame, and the heights of the rim (`low`) and of the crown above the surface, in feet. It is held up by the air inside, so it is a smooth lens, with no struts. */
   dome?: { rim: Pt[]; low: number; crown: number };
+  /** Draw the walls as brick (a ballpark's facade, T-Mobile Park's: from the brief; a plain drawing choice, a wall in a brick tone, no courses). */
+  brick?: boolean;
   /** Draw the walls as ivy-covered (a plain drawing choice: the wall in green). */
   ivy?: boolean;
   /** A `cable` roof: how far its crown (the edge of the opening) stands over its rim, in feet, and the opening, a polygon in the drawing's frame over the surface. */
@@ -130,6 +132,8 @@ export interface RealShell {
   tower?: { base: Pt; top: Pt; height: number; width: [number, number] };
   /** The height of the roof's lowest edge above the surface, in feet. */
   edge: number;
+  /** Towers that stand apart from the bowl (Lumen Field's, at the open end), each a box on its outline in the drawing's frame, `height` feet high; `face` is the unit direction its scoreboard looks, towards the field. */
+  towers?: { ring: Pt[]; height: number; face: Pt }[];
 }
 
 /** The stands of a real venue, worked out from its building (`venueBowl`): what `layoutOf` takes in place of a sport's usual tiers. */

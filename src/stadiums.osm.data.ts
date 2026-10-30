@@ -72,7 +72,7 @@ export const STADIUM_OSM: Record<string, StadiumOsm> = {
     "attribution": "(c) OpenStreetMap contributors, ODbL 1.0, openstreetmap.org/copyright",
     "axis": {"heading": 0, "basis": "pitch", "strength": 1.32, "elongation": 2.16, "centre": [-122.33163,47.595154]},
     "canopies": [
-      { "source": "way/458208106", "height": 36, "rise": 10, "ring": [
+      { "source": "way/458208106", "height": 36, "rise": 10, "shape": "round", "ring": [
         [-122.332395, 47.596154],
         [-122.33234, 47.595145],
         [-122.332404, 47.594143],
@@ -87,7 +87,7 @@ export const STADIUM_OSM: Record<string, StadiumOsm> = {
         [-122.332747, 47.596004],
         [-122.332452, 47.596154],
       ] },
-      { "source": "way/458208107", "height": 36, "rise": 10, "ring": [
+      { "source": "way/458208107", "height": 36, "rise": 10, "shape": "round", "ring": [
         [-122.330897, 47.596155],
         [-122.330837, 47.596159],
         [-122.33062, 47.596055],

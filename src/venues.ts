@@ -14,8 +14,8 @@ export const VENUE_ATTRIBUTION = "(c) OpenStreetMap contributors, ODbL 1.0, open
 /** How a fact is known: `documented` is what a source cited with it says; `plausible` is ours, for a bowl no source describes. */
 export type VenueBasis = "documented" | "plausible";
 
-/** The kinds of roof the venues have: `fixed` is a lid over the bowl, `saddle` a roof that rises at the two ends and falls at the two sides (the Scotiabank Saddledome's). */
-export type VenueRoof = "fixed" | "saddle";
+/** The kinds of roof the venues have: `fixed` is a lid over the bowl, `saddle` a roof that rises at the two ends and falls at the two sides (the Scotiabank Saddledome's), `barrel` a barrel vault along the rink, a round arch over its short axis (the American Airlines Center's). */
+export type VenueRoof = "fixed" | "saddle" | "barrel";
 
 /** The NHL's divisions, in the order of the league's own listing: the Western Conference's two, then the Eastern's. A division none of whose arenas has a venue yet has no venues in `venuesIn`. */
 export const VENUE_DIVISIONS = ["pacific", "central", "atlantic", "metropolitan"] as const;

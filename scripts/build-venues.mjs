@@ -31,7 +31,7 @@ const CONFERENCES = { pacific: "western", central: "western", atlantic: "eastern
 const STRENGTH = 1.25;
 const ELONGATION = 1.1;
 const BASES = ["documented", "plausible"];
-const ROOFS = ["fixed", "saddle"];
+const ROOFS = ["fixed", "saddle", "barrel"];
 const SOURCES = ["wikipedia", "wikidata"];
 const venues = source.venues;
 for (const [name, division] of Object.entries(source.divisions)) {

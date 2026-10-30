@@ -27,6 +27,7 @@ export const STADIUM_DATA: RealStadiumData[] = [
     "wikidataSeats": [67000,72000],
     "tiers": {"count": 3, "basis": "documented", "read": "the article names the lower concourse levels, the club and suite levels and the Summit levels above them"},
     "roof": {"kind": "canopy", "basis": "documented", "cover": 0.7, "read": "the article: a roof of 200,000 square feet that covers 70 percent of the seats and leaves the field open, spanning 720 feet between concrete pylons at the north and south ends"},
+    "endTower": {"storeys": 13, "height": 46, "size": [12,12], "along": 85, "basis": "plausible", "read": "the article: a 13-story tower at the north end, with a vertical scoreboard and the Hawks' Nest bleachers at its base; the storeys are the article's, and the height (46 metres, a storey of 3.5 metres), the footprint (12 by 12 metres), the place (85 metres north of the pitch's middle, on its axis, where the end is open) and the scoreboard's size on its face are ours (no source gives them)"},
   },
   {
     "id": "t-mobile-park",
@@ -34,6 +35,7 @@ export const STADIUM_DATA: RealStadiumData[] = [
     "wikidata": "Q1193117",
     "park": "t-mobile-park",
     "en": {"title": "T-Mobile Park", "revision": 1379419810},
+    "looks": {"brickWalls": "the brief (John's, 2026-10-22): the ballpark's facade is brick; the English article does not say so, so it is drawn as a wall in a brick tone, nothing more (no courses, no arches)"},
     "configs": {"mlb": {"sport": "mlb", "seats": 47368, "source": "wikipedia", "read": "the infobox's capacity for baseball, 47,368"}},
     "wikidataSeats": [47476],
     "tiers": {"count": 4, "basis": "documented", "tierSeats": {"lower": 20521, "upper": 22075, "bleachers": 3666}, "read": "the article's levels: the Main Level of 20,521 seats (most of the lower bowl), the Club Level of 4,123, the Suite Level of 2,050 and the View Level of 15,902, and two bleacher sections of 3,666"},

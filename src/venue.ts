@@ -282,5 +282,7 @@ export function standsVenueOf(stands: CrowdStands, crowd: Crowd, o: Pick<Surface
     if (planes.length > 0) items.push({ id: "roof", kind: "roof", at: centre, height: topOf(planes), planes });
   }
   const r = stands.reach;
-  return { items, defs, reach: Math.max(r.left, r.right, r.top, r.bottom) + 6 };
+  // Every roof is cut away from above and whole from the street (`Plane.cut`).
+  const cutItems = items.map((item) => (item.kind === "roof" ? { ...item, planes: item.planes.map((p) => ({ ...p, cut: true })) } : item));
+  return { items: cutItems, defs, reach: Math.max(r.left, r.right, r.top, r.bottom) + 6 };
 }

@@ -11,6 +11,7 @@ import { STADIUMS, STADIUM_IDS, VENUE_ATTRIBUTION, groundOfStadium, planPark, pl
 import { STADIUM_DATA } from "./stadiums.data.ts";
 import { STADIUM_OSM } from "./stadiums.osm.data.ts";
 import { buildTurn } from "./turn-entry.ts";
+import { CANOPY_STRIPS, canopyRiseAt } from "./venue.real.ts";
 
 const bc = STADIUMS["bc-place"];
 const lonLat = (ring: readonly (readonly [number, number])[]): [number, number][] => ring.map(([lon, lat]) => [lon, lat]);
@@ -452,10 +453,10 @@ describe("Lumen Field", () => {
     expect(planes.length).toBeGreaterThan(20);
     expect(planes.every((p) => p.id.startsWith("roof-c"))).toBe(true);
     expect(new Set(planes.map((p) => p.id.split("-")[1])).size).toBe(2);
-    // Each piece is a triangle through its corners: they stand between the canopy's low edge (26 metres) and its high one (36).
+    // Each piece is flat through its corners (a few feet off for a piece of a curve): they stand between the canopy's low edge (26 metres) and its high one (36).
     const zs = planes.flatMap((p) => cornersOf(p).map((c) => c[2]));
-    expect(Math.min(...zs)).toBeCloseTo(26 * FEET, 0);
-    expect(Math.max(...zs)).toBeCloseTo(36 * FEET, 0);
+    expect(Math.abs(Math.min(...zs) - 26 * FEET)).toBeLessThan(2);
+    expect(Math.abs(Math.max(...zs) - 36 * FEET)).toBeLessThan(2);
     // Over the middle of the field there is nothing: no plane of the roof has its middle over the field's box.
     const plan = planStadium(lumen, "nfl", fieldOf("nfl"));
     const field = plan.box;
@@ -465,6 +466,69 @@ describe("Lumen Field", () => {
       expect(mx > field.x && mx < field.x + field.w && my > field.y && my < field.y + field.h, p.id).toBe(false);
     }
     expect(model.uprights.items.find((i) => i.kind === "walls")).toBeDefined();
+  });
+
+  it("reads OpenStreetMap's roof:shape round for both canopies, and draws each as a convex arc: steep at the field's edge, levelling at the back", () => {
+    expect(lumen.osm.canopies!.map((c) => c.shape)).toEqual(["round", "round"]);
+    expect(canopyRiseAt("round", 0)).toBe(0);
+    expect(canopyRiseAt("round", 1)).toBeCloseTo(1, 10);
+    expect(canopyRiseAt("round", 0.5)).toBeGreaterThan(0.7);
+    expect(canopyRiseAt(undefined, 0.5)).toBe(0.5);
+    // The rise over the first strip is more than over the last: a convex arc.
+    const first = canopyRiseAt("round", 1 / CANOPY_STRIPS) - canopyRiseAt("round", 0);
+    const last = canopyRiseAt("round", 1) - canopyRiseAt("round", 1 - 1 / CANOPY_STRIPS);
+    expect(first).toBeGreaterThan(last * 2);
+  });
+
+  it("carries the walls up to the canopy's back edge where a canopy is over them, and keeps the rim's own height at the ends", () => {
+    const model = buildTurn(options("nfl", { stadium: "lumen-field" }), { venue: { roof: true } });
+    const walls = model.uprights.items.find((i) => i.kind === "walls")!;
+    const highs = walls.planes.map((p) => Math.abs(p.v[2]));
+    // The tallest wall reaches the canopies' crest (36 metres); the lowest stands at the rim's own height, well under it.
+    expect(Math.max(...highs)).toBeGreaterThan(35 * FEET);
+    expect(Math.min(...highs)).toBeLessThan(30 * FEET);
+  });
+});
+
+describe("Lumen Field's tower", () => {
+  it("stands at the open north end, 13 storeys of the article's, apart from the bowl, with its scoreboard on the face that looks at the field, and only with the walls", () => {
+    expect(lumen.endTower).toMatchObject({ storeys: 13, basis: "plausible" });
+    const plan = planStadium(lumen, "nfl", fieldOf("nfl"));
+    const [tower] = plan.bowl.shell.towers!;
+    expect(tower.height).toBeCloseTo(46 * FEET, 0);
+    const xs = tower.ring.map((p) => p[0]);
+    const ys = tower.ring.map((p) => p[1]);
+    // 12 metres on a side, and not over the field.
+    expect(Math.max(...xs) - Math.min(...xs)).toBeCloseTo(12 * FEET, 0);
+    expect(Math.max(...ys) - Math.min(...ys)).toBeCloseTo(12 * FEET, 0);
+    const field = plan.box;
+    const [mx, my] = [(Math.min(...xs) + Math.max(...xs)) / 2, (Math.min(...ys) + Math.max(...ys)) / 2];
+    expect(mx > field.x && mx < field.x + field.w && my > field.y && my < field.y + field.h).toBe(false);
+    // The scoreboard looks towards the field's middle.
+    const [fx, fy] = [field.x + field.w / 2 - mx, field.y + field.h / 2 - my];
+    expect(tower.face[0] * fx + tower.face[1] * fy).toBeGreaterThan(0);
+    const walls = buildTurn(options("nfl", { stadium: "lumen-field" }), { venue: { walls: true } });
+    expect(walls.planes.some((p) => p.id === "endtower-0-board")).toBe(true);
+    const roofOnly = buildTurn(options("nfl", { stadium: "lumen-field" }), { venue: { roof: true, walls: false } });
+    expect(roofOnly.planes.some((p) => p.id.startsWith("endtower-"))).toBe(false);
+  });
+});
+
+describe("T-Mobile Park's rails and facade", () => {
+  it("runs its roof on a girder along each of the north and the south side, on columns from the ground, and draws its walls in a brick tone, from the brief", () => {
+    const model = buildTurn({ sport: "mlb", park: "t-mobile-park", crowd: { real: true } } as never, { venue: { roof: true, walls: true } });
+    const rails = model.planes.filter((p) => p.id.startsWith("rail-"));
+    expect(rails.some((p) => p.id === "rail-0-top")).toBe(true);
+    expect(rails.some((p) => p.id === "rail-1-top")).toBe(true);
+    expect(rails.filter((p) => p.id.startsWith("rail-0-leg-")).length).toBeGreaterThanOrEqual(8);
+    // The legs stand on the ground and reach the girder under the roof's lowest height.
+    const leg = rails.find((p) => p.id.startsWith("rail-0-leg-0"))!;
+    expect(Math.min(leg.o[2], leg.o[2] + leg.u[2], leg.o[2] + leg.v[2])).toBeLessThan(5);
+    expect(Math.max(leg.o[2], leg.o[2] + leg.u[2], leg.o[2] + leg.v[2])).toBeGreaterThan(150);
+    expect(model.planes.some((p) => p.svg.includes("u-brick"))).toBe(true);
+    // They stand when the roof is open, too.
+    const open = buildTurn({ sport: "mlb", park: "t-mobile-park", crowd: { real: true } } as never, { venue: { roof: true, roofOpen: true } });
+    expect(open.planes.some((p) => p.id === "rail-0-top")).toBe(true);
   });
 });
 

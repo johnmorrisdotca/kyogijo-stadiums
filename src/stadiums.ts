@@ -65,7 +65,7 @@ export interface RealStadiumData {
    * Plain drawing choices where the sources say so, each with what was read: `ivyWalls` draws the building's walls in green (Koshien Stadium's ivy), `dirtInfield` draws the infield all dirt, with no grass inside the bases
    * (the same stadium's). They are drawn as plain colours, not as a picture of the plants or the soil.
    */
-  looks?: { ivyWalls?: string; dirtInfield?: string };
+  looks?: { ivyWalls?: string; dirtInfield?: string; brickWalls?: string };
   configs: Partial<Record<StadiumConfigId, StadiumConfigData>>;
   /** The seats of the whole bowl where it holds more than a configuration's (Lumen Field's soccer seats are fewer: the upper sections are closed): the bowl is fitted to these and a configuration opens its seats from the lowest bowl up. */
   bowlSeats?: number;
@@ -85,6 +85,8 @@ export interface RealStadiumData {
   tower?: { height: number; unit: "m"; angle: number; basis: StadiumBasis; read: string };
   /** The building's lower band, a podium under the concourse levels: its height in feet and how it is known (ours where the sources do not say). */
   facade?: { podium: number; unit: "ft"; basis: StadiumBasis; read: string };
+  /** A tower standing apart from the bowl, `endTower` (Lumen Field's, at the open north end): the storeys the article gives, and ours (`plausible`) the height in metres, the footprint in metres, and how far it stands along the field's axis from the middle of the pitch, in metres (positive towards the heading of the axis). */
+  endTower?: { storeys: number; height: number; size: [number, number]; along: number; basis: StadiumBasis; read: string };
   roof: {
     kind: StadiumRoof;
     basis: StadiumBasis;
@@ -114,7 +116,7 @@ export interface StadiumOsm {
   /** The roof OpenStreetMap maps over the building: its heights in metres (`height` to the top of the roof, `rise` of that the roof's own) and the opening in it as `[longitude, latitude]`. */
   roof?: { source: string; height?: number; rise?: number; outer?: string; opening?: { source: string; ring: [number, number][] }; ring?: [number, number][] };
   /** The canopies OpenStreetMap maps over some of the stands: each one's outline, the height of its top and how far it rises (metres). */
-  canopies?: { source: string; height: number; rise: number; ring: [number, number][] }[];
+  canopies?: { source: string; height: number; rise: number; /** OpenStreetMap's `roof:shape` where the roof has one (`round` for Lumen Field's two). */ shape?: string; ring: [number, number][] }[];
   /**
    * The tower OpenStreetMap maps beside the building, where the stadium has one (`RealStadiumData.tower`): its footprint (the tower's shaft seen from above, with its base) as `[longitude, latitude]`, the height OpenStreetMap
    * maps for it in metres, and the two ends of its axis worked out from them: the base, the footprint's point farthest from the middle of the building, and the top, 165 m up, which lies over the building (the shaft leans over
@@ -334,6 +336,18 @@ export function planStadium(stadium: RealStadium, config: StadiumConfigId, box: 
   return made;
 }
 
+/** A tower of a stadium, in the drawing's frame: its outline (a rectangle with its sides along the field's axes), its height in feet and the direction its scoreboard looks, along an axis, towards the middle of the field. */
+function endTowerOf(tower: NonNullable<RealStadium["endTower"]>, heading: number, middle: Pt, place: (ring: readonly Pt[]) => Pt[], at: Pt): NonNullable<RealShell["towers"]>[number] {
+  const [dx, dy] = turnedTo(heading, [Math.sin((heading * Math.PI) / 180), Math.cos((heading * Math.PI) / 180)]);
+  const c: Pt = [middle[0] + dx * tower.along, middle[1] + dy * tower.along];
+  const [hw, hh] = [tower.size[0] / 2, tower.size[1] / 2];
+  const ring = place([[c[0] - hw, c[1] - hh], [c[0] + hw, c[1] - hh], [c[0] + hw, c[1] + hh], [c[0] - hw, c[1] + hh]]);
+  const [mx, my] = [(ring[0][0] + ring[2][0]) / 2, (ring[0][1] + ring[2][1]) / 2];
+  const [fx, fy] = [at[0] - mx, at[1] - my];
+  const face: Pt = Math.abs(fx) >= Math.abs(fy) ? [Math.sign(fx), 0] : [0, Math.sign(fy)];
+  return { ring, height: round(tower.height * FEET_PER_METRE), face };
+}
+
 function plan(stadium: RealStadium, config: StadiumConfigId, rink: Box): StadiumPlan {
   const orientation = stadiumOrientation(stadium);
   const origin = middleOf(lonLat(stadium.osm.ring));
@@ -456,9 +470,11 @@ function plan(stadium: RealStadium, config: StadiumConfigId, rink: Box): Stadium
   const mapped = roof?.height === undefined ? 0 : round((roof.height - (roof.rise ?? 0)) * FEET_PER_METRE);
   const edge = stadium.roof.kind === "canopy" ? round(top + CANOPY_CLEARANCE) : Math.max(mapped, top + STADIUM_CLEARANCE);
   const cable = stadium.roof.kind === "cable" && opening !== undefined && rise > 0;
-  const canopies = stadium.roof.kind === "canopy" && stadium.osm.canopies !== undefined ? stadium.osm.canopies.map((c) => ({ ring: place(turned(c.ring)), low: round((c.height - c.rise) * FEET_PER_METRE), rise: round(c.rise * FEET_PER_METRE) })) : undefined;
+  const canopies = stadium.roof.kind === "canopy" && stadium.osm.canopies !== undefined ? stadium.osm.canopies.map((c) => ({ ring: place(turned(c.ring)), low: round((c.height - c.rise) * FEET_PER_METRE), rise: round(c.rise * FEET_PER_METRE), ...(c.shape === undefined ? {} : { shape: c.shape }) })) : undefined;
   const north = orientation.basis === "none" ? undefined : orientation.north;
   const room = north === undefined ? 0 : NORTH_ROOM;
+  // A tower apart from the bowl: a box `along` metres from the middle of the pitch on its axis, its scoreboard on the face that looks at the field.
+  const towers = stadium.endTower === undefined ? undefined : [endTowerOf(stadium.endTower, orientation.heading, middle, place, at)];
   const bowl: RealBowl = {
     rings: closing.rings,
     ...(closing.sectors.length === 0 ? {} : { closedSectors: closing.sectors }),
@@ -474,6 +490,7 @@ function plan(stadium: RealStadium, config: StadiumConfigId, rink: Box): Stadium
       ...(stadium.facade === undefined ? {} : { podium: stadium.facade.podium }),
       ...(cable && stadium.roof.masts !== undefined ? { masts: { count: stadium.roof.masts.count, height: round(stadium.roof.masts.height * FEET_PER_METRE) } } : {}),
       ...(canopies === undefined ? {} : { canopies }),
+      ...(towers === undefined ? {} : { towers }),
     },
   };
   return { stadium, config, orientation, box: rink, footprint, opening, bowl, seats: rings.map((ring) => ({ tier: ring.tier, seats: ring.seats })), total, open, seatArea, fit: tight ? "tight" : "fits" };
@@ -582,7 +599,7 @@ function park(stadium: RealStadium, input: ParkInput): ParkPlan {
   const room = north === undefined ? 0 : NORTH_ROOM;
   const hall = { kind: "rrect" as const, x0: fb.x0 - 30, y0: fb.y0 - 30, x1: fb.x1 + 30, y1: fb.y1 + 30, r: 0 };
   const top = Math.max(...stands.rings.map((r) => r.height[1]));
-  const ivy = stadium.looks?.ivyWalls === undefined ? {} : { ivy: true };
+  const ivy = stadium.looks?.ivyWalls === undefined ? (stadium.looks?.brickWalls === undefined ? {} : { brick: true }) : { ivy: true };
   let shell: RealShell;
   if (stadium.roof.kind === "dome") {
     // An air-supported roof: the membrane over the outline OpenStreetMap maps for it, standing at the height of its rim (the building's height less the roof's own rise) and rising to the building's height.
