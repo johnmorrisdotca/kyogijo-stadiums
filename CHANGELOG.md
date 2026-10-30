@@ -7,6 +7,50 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.45.1] - 2026-10-30
+
+### Changed
+
+- **Each district page of the demo loads 22 to 25 percent fewer bytes.** The district page carried 3.27 MB of script and data (933 KB gzipped) whatever it showed; it now carries 2.41 to 2.63 MB (746 to 794 KB gzipped), and a page of one venue reads that venue's record and no other. Four things did it:
+  - **Venue data is one file for each venue** (about 440 KB before gzip, 58 after, gone from every district page). `arenas.data.ts`, `parks.data.ts` and `grounds.data.ts` stay, as the entries that have every venue read them; besides them the generators (`pnpm arenas`, `pnpm parks`, `pnpm grounds`) write a file for each record (`src/arenas/rogers-arena.data.ts`, 0.9 KB) and a list of every key with its names and the `import()` of its file (`arenas.index.ts` and its two like, 54 KB together). The drawing reads a venue from a table (`heldArena`, `heldPark`, `heldGround`) that the full lists fill; the new `full.js` (in `sideEffects`) fills it, and **every entry but the new lean one imports it**, so `index`, `district`, `turn`, `stadiums`, `venues` and the rest have every venue as before (`src/venue-data.budget.test.js` holds each entry to what it had).
+  - **A lean district.** The new entry `@johnmorrisdotca/kyogijo-stadiums/district-lean` has everything `district` exports and holds no arena, park or ground until `loadVenueDataFor(venues)` has read the files of those it is about to draw (the call `loadAreasFor` is for the areas); with them read it draws what `district` draws, character for character (`src/venue-data.test.ts` draws every preset of the demo in 2D and 3D, in English and Japanese, with surroundings and crowd, through both). `@johnmorrisdotca/kyogijo-stadiums/venue-data` has the loaders (`loadVenueDataFor`, `venueDataKeysFor`, `loadArena`, `loadPark`, `loadGround`) and `venueName(key, language)`, the name of a venue from the lists of names alone, so that a page can list every venue to choose from and read only the records of those chosen. The demo's district page uses the lean entry.
+  - **The layers are a part the drawing asks for** (`draw.parts.ts`): `drawKyogijo` took the 300 KB of `layers.ts`, `heat.ts` and what they import into every page, with layers or without. `full.js` fills the table; the lean district leaves it empty, and a drawing that asks for `layers` there throws and says how to have them. Every other entry has them.
+  - **Two modules were imported only to be exported again.** `leagues.ts` took the 70 KB of `LEAGUE_SOURCES` into every page that imports it, and `rules.ts` read the table of every park for a list of keys. `index` and `leagues` now export `LEAGUE_SOURCES` from its own file (nothing changes for a caller), and `PARKS_WITHOUT_WALL_HEIGHTS` reads a small generated file (`parks.walls.ts`).
+- Added, and nothing removed or changed in shape: the entries `district-lean` and `venue-data`, and `districtRing(key)` (the outline of a venue's building without its record; the crowd outside keeps out of the buildings of venues that are not shown).
+- The package is 362 KB bigger unpacked (6.43 to 6.80 MB; 725 to 1,399 files: the records are in the table and again as files of their own).
+
+### Added
+
+- **A budget of bytes for every page of the demo.** `node scripts/bundle-report.mjs` (`pnpm bundles`) lists the scripts and the data each page fetches, raw and gzipped, from a real browser's network log, with its first paint and the moment it has drawn at full speed and at 4 times slower CPU, each with the machine's load; `--base <another site/>` measures two builds a run at a time. `scripts/bundle-budget.json` holds each page to a little over where it is (`pnpm bundles:budget` writes it), `e2e/bundles.demo.mjs` fails a page that grows past it, and CI runs that file in a job of its own (`bundles`).
+- Tests: every district preset reads the records of the venues it shows and no other, no table of every venue and no layers, at every quality tier and without a page error; choosing other venues reads their records then, once, and choosing them again reads nothing; the 2D plan reads the same; every venue is listed by name with no record read.
+
+### Measured
+
+Chromium on a Mac Studio, the pages served from the same Mac (no network between page and files, so the bytes matter more to a reader than the times show). 0.45.0 and this release were built beside each other and measured by `scripts/bundle-report.mjs --base`, a run of one and then a run of the other, the median of three. The load average of the machine was 9.3 to 12.7 for every row: lower than it often is, still not quiet. Bytes are script and data, raw and, in brackets, gzipped; times are the first contentful paint and the moment the page says it is drawn, in milliseconds.
+
+| Page | JS + data KB (gzip), before | after | First paint / drawn ms, 1x CPU: before | after | 4x CPU: before | after |
+|---|---|---|---|---|---|---|
+| Home page | 5174 (1578) | 5180 (1581) | 108 / 874 | 112 / 848 | 672 / 3845 | 700 / 4315 |
+| Venues page | 2974 (845) | 2980 (848) | 48 / 146 | 52 / 153 | 384 / 634 | 384 / 617 |
+| District: BC Place and Rogers Arena | 3271 (933) | 2508 (771) | 40 / 266 | 36 / 256 | 376 / 1191 | 360 / 1164 |
+| District: Rogers Arena alone | 3271 (933) | 2507 (770) | 40 / 218 | 40 / 194 | 352 / 832 | 300 / 780 |
+| District: BC Place (soccer) and Rogers Arena | 3271 (933) | 2508 (771) | 40 / 256 | 40 / 234 | 376 / 1171 | 324 / 1079 |
+| District: Seattle Center | 3304 (940) | 2541 (777) | 40 / 301 | 40 / 282 | 328 / 1014 | 304 / 921 |
+| District: SoDo | 3273 (934) | 2510 (771) | 36 / 350 | 36 / 298 | 296 / 1124 | 284 / 1066 |
+| District: Seattle, three venues | 3387 (956) | 2625 (794) | 40 / 336 | 40 / 297 | 312 / 1372 | 292 / 1319 |
+| District: Tokyo Dome City | 3233 (924) | 2469 (761) | 40 / 287 | 40 / 259 | 344 / 1183 | 316 / 1124 |
+| District: Tokyo Dome City and the Kodokan | 3233 (924) | 2469 (761) | 40 / 340 | 36 / 318 | 340 / 1390 | 284 / 1355 |
+| District: the Kodokan alone | 3176 (909) | 2411 (746) | 44 / 207 | 40 / 179 | 340 / 827 | 296 / 734 |
+
+- The district pages are 22 to 25 percent lighter and draw 4 to 15 percent sooner at full speed and 2 to 11 percent sooner with the CPU slowed 4 times (the table). A second run an hour later (load 8 to 17, same method) agrees: 3 to 14 percent and 1 to 9 percent; the home page and the venues page do not move beyond the noise (the home page's 4x time was 12 percent up in the first run and level in the second). The first contentful paint is the page's HTML, drawn before any script runs, and does not move.
+- The home page and the venues page grow by 6 KB: the three tables' small core modules, which every entry that has all venues now loads besides the tables.
+
+### What is not smaller, and why
+
+- **The crowd's walkable mask** (`walk.data`, 88 KB) still loads on every district page: `outsideCrowd()` is documented as synchronous, and the plan keeps room round the buildings for the crowd at every level, level 0 included. Splitting it would make that function asynchronous or need a load call first, so it is left as it is for a decision.
+- **The Kodokan's floors, the quality tiers' extra code, the gates, the trees and the outside crowd's code** were measured one by one by taking each out of the page's import graph: 2 KB (the Kodokan and the dojo builder; the boxing ring uses the rest), 10 KB (quality), 6 KB (gates) and 23 KB (context, which holds the trees) of script. What they import is shared with what stays, so loading them on demand would save little and would make `mountDistrictTurn` asynchronous.
+- **What is left** (lean district, Rogers Arena alone, 2.2 MB of script before gzip): the strings of every sport (156 KB); the sports' families the district never draws (athletics, pools, skating, courts: about 100 KB that `outline.ts`, `uprights.ts` and `draw.ts` still reach); the situation and pageant code (39 and 25 KB: parts like the layers would take them out); the outlines of the venues (`venues.osm.data` 54 KB and `venues.data` 25 KB: the treatment the arenas had would take them out).
+
 ## [0.45.0] - 2026-10-30
 
 ### Added
