@@ -82,7 +82,7 @@ describe("the new venues drawn", () => {
     expect(en).toContain("The court is set along the building's long axis, which is an inference");
     const ja = describeDrawing({ ...(o as object), language: "ja" } as never).description;
     expect(ja).toContain("バークレイズ・センター");
-    expect(ja).toContain("コートは建物の長い軸に沿って");
+    expect(ja).toContain("コートは建物の長軸に沿って");
   });
 
   it("keeps MetLife Stadium's two configurations in one frame, with the mapped pitch's way as the field's", () => {

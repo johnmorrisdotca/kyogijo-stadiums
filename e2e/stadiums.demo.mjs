@@ -19,6 +19,27 @@ async function open(page, query = "") {
   return { errors, outside };
 }
 
+test("the east coast: Barclays Center's court, MetLife Stadium's two fields, and the Olympic Stadium's tower, with the facts and no error", async ({ page }) => {
+  const { errors, outside } = await open(page, "?stadium=barclays-center");
+  const facts = page.locator("#list");
+  await expect(page.locator("#tabs button")).toHaveText(["Basketball court"]);
+  await expect(page.locator(`${STAGE} svg.kyogijo`)).toHaveAttribute("data-sport", "nba");
+  await expect(page.locator(`${STAGE} svg.kyogijo .ky-cr-shell`)).toHaveCount(1);
+  await expect(facts).toContainText("17,732");
+  await page.locator('#stadium-tabs button[data-stadium="metlife-stadium"]').click();
+  await expect(page.locator("#tabs button")).toHaveText(["Football field", "Soccer pitch"]);
+  await expect(facts).toContainText("82,500");
+  await page.locator('#tabs button[data-config="soccer"]').click();
+  await expect(facts).toContainText("80,663");
+  await expect(facts).toContainText("none, open to the air");
+  await page.locator('#stadium-tabs button[data-stadium="olympic-stadium-montreal"]').click();
+  await expect(facts).toContainText("49,757");
+  await expect(facts).toContainText("the tower that leans over it, 165 metres high and inclined at 45 degrees");
+  await expect(page.locator('[data-testid="district"]')).toHaveAttribute("href", /district\.html\?venues=olympic-stadium-montreal,bell-centre/);
+  expect(errors).toEqual([]);
+  expect(outside).toEqual([]);
+});
+
 test("opens on BC Place's football field in the outline of its building, with the two configurations as tabs, nothing sent anywhere and nothing wider than the screen", async ({ page }) => {
   const { errors, outside } = await open(page);
   await expect(page.locator("#tabs button")).toHaveText(["Football field", "Soccer pitch"]);
@@ -83,9 +104,9 @@ test("is in Japanese on request, the title, the facts and the drawing's own desc
   await noSidewaysScroll(page);
 });
 
-test("has the six stadiums as tabs, each with its own configurations, facts and roof: Lumen Field's canopies, T-Mobile Park's sections", async ({ page }) => {
+test("has the eleven stadiums as tabs, each with its own configurations, facts and roof: Lumen Field's canopies, T-Mobile Park's sections", async ({ page }) => {
   const { errors } = await open(page);
-  await expect(page.locator("#stadium-tabs button")).toHaveText(["BC Place", "Lumen Field", "T-Mobile Park", "Tokyo Dome", "Korakuen Hall", "Koshien Stadium"]);
+  await expect(page.locator("#stadium-tabs button")).toHaveText(["BC Place", "Lumen Field", "T-Mobile Park", "Tokyo Dome", "Korakuen Hall", "Koshien Stadium", "Yankee Stadium", "Citi Field", "MetLife Stadium", "Olympic Stadium", "Barclays Center"]);
   await page.locator('#stadium-tabs button[data-stadium="lumen-field"]').click();
   await expect(page.locator("#tabs button")).toHaveText(["Football field", "Soccer pitch"]);
   await expect(page.locator(`${STAGE} svg.kyogijo`)).toHaveAttribute("data-sport", "nfl");

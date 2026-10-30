@@ -1,82 +1,82 @@
 {
   "home": {
-    "totalKB": 5445,
-    "totalGzipKB": 1665,
-    "dataKB": 1185
+    "totalKB": 5475,
+    "totalGzipKB": 1675,
+    "dataKB": 1200
   },
   "venues": {
-    "totalKB": 3135,
-    "totalGzipKB": 895,
-    "dataKB": 595
+    "totalKB": 3165,
+    "totalGzipKB": 905,
+    "dataKB": 610
   },
   "district:pair": {
-    "totalKB": 2480,
-    "totalGzipKB": 780,
-    "dataKB": 245
+    "totalKB": 2500,
+    "totalGzipKB": 785,
+    "dataKB": 260
   },
   "district:alone": {
-    "totalKB": 2475,
-    "totalGzipKB": 780,
-    "dataKB": 245
+    "totalKB": 2500,
+    "totalGzipKB": 785,
+    "dataKB": 260
   },
   "district:soccer": {
-    "totalKB": 2480,
-    "totalGzipKB": 780,
-    "dataKB": 245
+    "totalKB": 2500,
+    "totalGzipKB": 785,
+    "dataKB": 260
   },
   "district:seattlecenter": {
-    "totalKB": 2425,
-    "totalGzipKB": 760,
-    "dataKB": 195
+    "totalKB": 2445,
+    "totalGzipKB": 765,
+    "dataKB": 210
   },
   "district:sodo": {
-    "totalKB": 2390,
-    "totalGzipKB": 755,
-    "dataKB": 160
+    "totalKB": 2415,
+    "totalGzipKB": 760,
+    "dataKB": 175
   },
   "district:seattle": {
-    "totalKB": 2515,
-    "totalGzipKB": 780,
-    "dataKB": 285
+    "totalKB": 2535,
+    "totalGzipKB": 785,
+    "dataKB": 300
   },
   "district:tokyo": {
-    "totalKB": 2350,
-    "totalGzipKB": 745,
-    "dataKB": 120
+    "totalKB": 2370,
+    "totalGzipKB": 750,
+    "dataKB": 130
   },
   "district:tokyokodokan": {
-    "totalKB": 2350,
-    "totalGzipKB": 745,
-    "dataKB": 120
+    "totalKB": 2370,
+    "totalGzipKB": 750,
+    "dataKB": 130
   },
   "district:kodokan": {
-    "totalKB": 2285,
-    "totalGzipKB": 725,
-    "dataKB": 55
+    "totalKB": 2310,
+    "totalGzipKB": 735,
+    "dataKB": 70
   },
   "stadiums": {
-    "totalKB": 3120,
-    "totalGzipKB": 890,
-    "dataKB": 595
+    "totalKB": 3155,
+    "totalGzipKB": 900,
+    "dataKB": 610
   },
   "halls": {
-    "totalKB": 3220,
-    "totalGzipKB": 920,
-    "dataKB": 630
+    "totalKB": 3255,
+    "totalGzipKB": 930,
+    "dataKB": 645
   },
   "boards": {
-    "totalKB": 3235,
-    "totalGzipKB": 910,
-    "dataKB": 710
+    "totalKB": 3265,
+    "totalGzipKB": 920,
+    "dataKB": 725
   },
   "flythrough": {
-    "totalKB": 3570,
-    "totalGzipKB": 1040,
-    "dataKB": 595
+    "totalKB": 3600,
+    "totalGzipKB": 1050,
+    "dataKB": 610
   },
   "judging": {
-    "totalKB": 3120,
-    "totalGzipKB": 895,
-    "dataKB": 600
+    "totalKB": 3155,
+    "totalGzipKB": 905,
+    "dataKB": 610
   }
 }

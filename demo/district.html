@@ -26,6 +26,9 @@
       @media (max-width: 520px) {
         #tabs { gap: 6px; }
         #tabs button { font-size: .9rem; min-height: 44px; padding: 0 10px; border-width: 1.5px; }
+        /* Twelve presets are a row that scrolls along, not twelve lines: the crowd bar and the plan stay in the first screen. */
+        #tabs { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; }
+        #tabs button { flex: none; white-space: nowrap; }
       }
       #stage { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 8px; }
       #stage > .ky-district-view > svg.kyogijo { display: block; width: 100%; height: auto; max-height: calc(100vh - 190px); }
@@ -285,6 +288,8 @@
           button.setAttribute("aria-selected", String(PRESETS[preset].venues.join() === state.venues.join() && PRESETS[preset].mode === $("mode").value));
           return button;
         }));
+        // (A chosen preset that has scrolled out of the phone's row of them comes back into it.)
+        $("tabs").querySelector('[aria-selected="true"]')?.scrollIntoView?.({ block: "nearest", inline: "nearest" });
         $("picks").replaceChildren(...KEYS.map((key) => {
           const label = document.createElement("label");
           label.className = "check";

@@ -16,6 +16,13 @@ const PRESETS = [
   { name: "Seattle, three venues", query: "venues=t-mobile-park:mlb,lumen-field:nfl,climate-pledge-arena&mode=city", files: ["cityctx.seattle-city.data.js"] },
   { name: "Tokyo Dome City", query: "venues=tokyo-dome:mlb,korakuen-hall:boxing", files: ["plateau.data.js"] },
   { name: "Tokyo Dome City with the Kodokan", query: "venues=tokyo-dome:mlb,korakuen-hall:boxing,kodokan", files: ["plateau.data.js"] },
+  { name: "New York Midtown", query: "venues=madison-square-garden", files: ["cityctx.nyc-midtown.data.js"] },
+  { name: "Yankee Stadium", query: "venues=yankee-stadium:mlb", files: ["cityctx.nyc-bronx.data.js"] },
+  { name: "Barclays Center", query: "venues=barclays-center:nba", files: ["cityctx.nyc-brooklyn.data.js"] },
+  { name: "MetLife Stadium", query: "venues=metlife-stadium:nfl", files: ["cityctx.meadowlands.data.js"] },
+  { name: "New York, six venues: far apart, so no surroundings", query: "venues=madison-square-garden,barclays-center:nba,yankee-stadium:mlb,citi-field:mlb,metlife-stadium:nfl,ubs-arena&mode=city", files: [] },
+  { name: "Montreal's Olympic Stadium", query: "venues=olympic-stadium-montreal:mlb", files: ["cityctx.montreal-olympic.data.js"] },
+  { name: "Montreal, two venues", query: "venues=bell-centre,olympic-stadium-montreal:mlb&mode=city&turn=auto", files: ["cityctx.montreal-city.data.js"] },
   { name: "the Kodokan alone, with no surroundings", query: "venues=kodokan&context=0", files: [] },
 ];
 
