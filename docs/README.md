@@ -38,6 +38,7 @@ Kyogijo Stadiums draws sports surfaces as SVG, to scale, with the score on them.
 - [The grounds](./grounds.md): 64 soccer grounds, each pitch at its published size.
 - [The arenas](./arenas.md): 167 arenas of the NHL, the NBA, the WNBA and the PWHL, with the size of a rink where an article gives one.
 - [The real venues](./venues.md): all thirty-two arenas of the NHL (the Pacific, Central, Atlantic and Metropolitan Divisions) drawn in the outline of their buildings (OpenStreetMap) with a plausible bowl of the seats, tiers and roof the sources give, in 2D and 3D.
+- [Roofs we still need photos for](./roof-photos-needed.md): the thirty-two NHL arenas, the roof each draws today, what open sources say of its shape and the one photo each still needs.
 - [The fly-through](./flythrough.md) ([demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/flythrough.html)): one smooth camera from a chizu map down to the city and the building of a real arena, which rises into the 3D arena and turns; reduced motion shows each stage as a still.
 - [The real stadiums](./stadiums.md): BC Place for football and soccer, drawn in the outline of its building (OpenStreetMap) with its retractable, cable-supported roof and a plausible bowl of the seats the sources give.
 - [The gates of a venue](./gates.md): where the crowd goes in: points on a building's outline with the way each faces and how each is known, marked on a district's plan, for the queues of the crowd's walk in and out.

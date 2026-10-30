@@ -70,6 +70,7 @@ export const NAV = [
       { slug: "grounds", ja: "スタジアム" },
       { slug: "arenas", ja: "アリーナ" },
       { slug: "venues", ja: "実在の会場" },
+      { slug: "roof-photos-needed", ja: "屋根の写真が必要な会場" },
       { slug: "flythrough", ja: "フライスルー" },
       { slug: "stadiums", ja: "実在のスタジアム" },
       { slug: "district", ja: "会場の地区" },

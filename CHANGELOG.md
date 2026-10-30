@@ -7,6 +7,10 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- A page listing the thirty-two NHL arenas: the roof each draws, what open sources say of its shape, and the one photo each still needs (`docs/roof-photos-needed.md`).
+
 ## [0.46.0] - 2026-10-30
 
 ### Added

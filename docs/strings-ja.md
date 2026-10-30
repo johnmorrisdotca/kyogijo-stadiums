@@ -2108,6 +2108,7 @@ Made from `src/strings.en.ts`, `src/strings.ja.ts` and `demo/words.js` by `pnpm 
 | page `grounds` | The grounds | スタジアム |
 | page `arenas` | The arenas | アリーナ |
 | page `venues` | The real venues | 実在の会場 |
+| page `roof-photos-needed` | Roofs we still need photos for | 屋根の写真が必要な会場 |
 | page `flythrough` | The fly-through | フライスルー |
 | page `stadiums` | The real stadiums | 実在のスタジアム |
 | page `district` | A district of venues | 会場の地区 |
