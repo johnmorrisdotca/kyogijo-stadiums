@@ -5,7 +5,7 @@ import { thinTrees, type ContextTree } from "./context.ts";
 import { buildDistrictTurn, districtTurnMarkup } from "./district.turn.ts";
 import { areaKeysFor, loadAreasFor } from "./areas.ts";
 import { layoutOf } from "./turn.markup.ts";
-import { GOVERNOR_TUNING, QUALITIES, QUALITY_TIERS, TIER_PROFILES, createGovernor, handheld, higher, layerBudget, lower, qualityOf, rasterOf, rasterShares, tierOf, type Governor, type QualityTier } from "./quality.ts";
+import { GOVERNOR_TUNING, QUALITIES, QUALITY_TIERS, TIER_PROFILES, createGovernor, handheld, higher, layerBudget, lower, qualityOf, rasterOf, rasterShares, tierOf, viewShare, FLOOR_SHARE, SHARE_LEVELS, VIEW_MARGIN, type Governor, type QualityTier } from "./quality.ts";
 
 describe("the tiers", () => {
   it("are high, medium and low, and `auto` is the mode that chooses among them", () => {
@@ -97,6 +97,51 @@ describe("the biggest layers", () => {
     // With no budget, every layer is made at the share.
     expect(rasterShares(sizes, 0.5, 3, Infinity)).toEqual([0.5, 0.5, 0.5, 0.5]);
     expect(rasterShares(sizes, 1, 1, Infinity)).toEqual([1, 1, 1, 1]);
+  });
+});
+
+describe("the share a view needs", () => {
+  it("is the smallest level that is as fine as the screen shows the layer, with the perspective's margin", () => {
+    // The Kodokan alone on a phone: the scene is fitted at 0.19 of its own pixels at most, so a layer a quarter as wide and as high is finer than the screen needs.
+    expect(viewShare(0.19, 1)).toBe(0.25);
+    expect(viewShare(0.3, 1)).toBe(0.4);
+    expect(viewShare(0.4, 1)).toBe(0.6);
+    expect(viewShare(0.7, 1)).toBe(1);
+    // A zoom asks for more, a smaller view for no less than the smallest level.
+    expect(viewShare(0.19, 2)).toBe(0.6);
+    expect(viewShare(0.19, 4)).toBe(1);
+    expect(viewShare(0.19, 0.5)).toBe(0.25);
+    expect(viewShare(0.01, 0.5)).toBe(0.25);
+  });
+
+  it("never asks for more than a whole layer, and every level is one a layer can be made at", () => {
+    expect(viewShare(5, 4)).toBe(1);
+    for (const level of SHARE_LEVELS) expect(level).toBeGreaterThanOrEqual(0.2);
+    expect(SHARE_LEVELS[SHARE_LEVELS.length - 1]).toBe(1);
+    // Each level is at least as fine as the screen shows: the share is never under the scale times the zoom.
+    for (const scale of [0.1, 0.15, 0.2, 0.3, 0.45, 0.6, 0.8]) for (const zoom of [0.5, 1, 1.5, 2, 3, 4]) expect(viewShare(scale, zoom) + 1e-9).toBeGreaterThanOrEqual(Math.min(1, scale * zoom * VIEW_MARGIN));
+  });
+
+  it("holds every layer to it, under the share the tier asks for and the budget", () => {
+    const sizes: [number, number][] = [[1114, 1186], [200, 100]];
+    expect(rasterShares(sizes, 1, 3, Infinity, 0.25)).toEqual([0.25, 0.25]);
+    // A tier's own share is kept when it is lower than the view's.
+    expect(rasterShares(sizes, 0.2, 3, Infinity, 0.6)).toEqual([0.2, 0.2]);
+    // A layer past the budget is made smaller still.
+    expect(rasterShares(sizes, 1, 3, 1e6, 0.6)[0]).toBeLessThan(0.3);
+    // No ceiling is a whole layer, as before.
+    expect(rasterShares(sizes, 1, 3, Infinity)).toEqual([1, 1]);
+  });
+
+  it("keeps the floor, the one layer with the thinnest lines, at least at its own share, but never over what the tier asks for", () => {
+    expect(FLOOR_SHARE).toBeGreaterThan(0.25);
+    const sizes: [number, number][] = [[1400, 1400], [200, 100]];
+    expect(rasterShares(sizes, 1, 3, Infinity, 0.25, FLOOR_SHARE)).toEqual([FLOOR_SHARE, 0.25]);
+    // A view that needs more than the floor's least has the floor at what it needs.
+    expect(rasterShares(sizes, 1, 3, Infinity, 1, FLOOR_SHARE)).toEqual([1, 1]);
+    // The tier's own share and budget still hold the floor down.
+    expect(rasterShares(sizes, 0.33, 3, Infinity, 0.25, FLOOR_SHARE)).toEqual([0.33, 0.25]);
+    expect(rasterShares(sizes, 1, 3, 1e6, 0.25, FLOOR_SHARE)[0]).toBeLessThan(FLOOR_SHARE);
   });
 });
 

@@ -3,7 +3,7 @@
 // reduced motion gets jumps for glides, and where the browser cannot draw in 3D the flat drawing stays. Nothing is polled and nothing runs while the view is
 // still: the elements' `transform`s are written when the view changes, and a glide between viewpoints is a short run of animation frames.
 import { drawKyogijo } from "./draw.ts";
-import { STEP, TURN_PRESET_NAMES, clampView, drag, nearest, nudge, presetOf, presetView, step, turnDirection, wheelTip, type PresetTable, type TurnDirection, type TurnPreset, type TurnView } from "./turn.camera.ts";
+import { STEP, TURN_PRESET_NAMES, clampView, drag, nearest, nudge, presetOf, presetView, step, turnDirection, viewScale, wheelTip, type PresetTable, type TurnDirection, type TurnPreset, type TurnView } from "./turn.camera.ts";
 import { buildTurn, floorOptions, openingView, turnWords, type TurnModel, type TurnSettings } from "./turn.model.ts";
 import { controlsMarkup, layoutOf, turnMarkupOf, worldMarkup, type Layout, type Raster } from "./turn.markup.ts";
 import { KYOGIJO_TURN_STYLE } from "./turn.style.ts";
@@ -12,7 +12,7 @@ import { turnBoardMarkup } from "./overlay.ts";
 import type { ScoreOptions, SurfaceOptions } from "./types.ts";
 import type { VenueSettings } from "./venue.ts";
 import { attachOutside3d, type OutsideLayer } from "./outside.dom.ts";
-import { TIER_PROFILES, createGovernor, handheld, layerBudget, qualityOf, rasterOf, rasterShares, tierOf, type Governor, type Quality, type QualityTier } from "./quality.ts";
+import { TIER_PROFILES, createGovernor, handheld, layerBudget, qualityOf, rasterOf, rasterShares, tierOf, viewShare, FLOOR_SHARE, type Governor, type Quality, type QualityTier } from "./quality.ts";
 import { size } from "./turn.kit.ts";
 import type { OutsideLevel } from "./outside.paint.ts";
 
@@ -102,6 +102,12 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
   let tier: QualityTier = tierOf(quality);
   // (Set again below, once the model is built, for a view that has no tiers.)
   const isHandheld = handheld(win);
+  /**
+   * The share of its size a layer needs to be as fine as this screen shows it (`viewShare`): a district on a phone is drawn at a sixth of the scene's own size, so its layers need a quarter as many pixels on a side. It is worked out from the container's
+   * size and the zoom, and held while they are as they are: `settleRaster` draws the layers again when they change enough to need another.
+   */
+  let ceiling = 1;
+  const ceilingFor = (of: TurnModel, width: number, height: number, zoom: number): number => (of.tiered === true ? viewShare(viewScale(of.box, width, height, settings.lens ?? of.lens), zoom) : 1);
   /** The share of its size each layer is made at for a model, now: one number when they all are, one each when the biggest are held to a budget of pixels. */
   const rasterFor = (of: TurnModel): Raster => {
     // (Only a model that has tiers is made smaller: a surface on its own is small, and nothing of it would be left out.)
@@ -109,14 +115,19 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
     const dpr = win?.devicePixelRatio ?? 1;
     const share = rasterOf(quality, tier, dpr, isHandheld);
     const budget = layerBudget(tier, isHandheld);
-    if (share === 1 && budget === Infinity) return 1;
+    if (share === 1 && budget === Infinity && ceiling === 1) return 1;
     const boxes: (readonly [number, number])[] = [[of.viewBox.w * of.scale, of.viewBox.h * of.scale], ...of.planes.map((p): readonly [number, number] => { const [w, h] = size(p); return [w * of.scale, h * of.scale]; })];
-    return rasterShares(boxes, share, dpr, budget);
+    return rasterShares(boxes, share, dpr, budget, ceiling, FLOOR_SHARE);
   };
   const sameRaster = (a: Raster, b: Raster): boolean => (typeof a === "number" || typeof b === "number" ? a === b : a.length === b.length && a.every((x, i) => x === b[i]));
   let current = options;
   let model: TurnModel = build(options, { ...settings, quality: tier });
   if (model.tiered !== true) tier = "high";
+  // (The container is not written yet: its width is the host's and its height the one the stylesheet gives it, 16 by 10 or 5 by 4 on a phone; `settleRaster` corrects it once the view is in the page.)
+  {
+    const width = host.clientWidth > 0 ? host.clientWidth : (settings.size?.width ?? 960);
+    ceiling = ceilingFor(model, width, Math.max(260, width * (width <= 560 ? 0.8 : 0.625)), model.view.zoom);
+  }
   let raster: Raster = rasterFor(model);
   /** The models built at each tier for the options now, so that a step back to a tier is not built again. */
   let made = new Map<QualityTier, TurnModel>([[tier, model]]);
@@ -208,6 +219,7 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
   crowd();
   root.dataset.quality = quality;
   root.dataset.tier = tier;
+  root.dataset.share = String(ceiling);
 
   // ---- Quality: in `auto`, the frames the view makes while it turns decide the tier. ----
   let governor: Governor | undefined = quality === "auto" && win !== null && model.tiered === true ? createGovernor(tier, settings.qualityTuning) : undefined;
@@ -273,6 +285,7 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
     const known = made.get(tier);
     model = known ?? build(current, { ...settings, quality: tier, id: settings.id ?? baseId, venue, preset: undefined, view });
     made.set(tier, model);
+    ceiling = ceilingFor(model, stage.clientWidth || 960, stage.clientHeight || 600, shown.zoom);
     raster = rasterFor(model);
     const layout = layoutOf(model, shown, stage.clientWidth || 960, stage.clientHeight || 600, settings.lens, false, raster);
     const world = root.querySelector<HTMLElement>(".ky-turn-world")!;
@@ -290,6 +303,7 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
     crowd();
     root.dataset.quality = quality;
     root.dataset.tier = tier;
+    root.dataset.share = String(ceiling);
   };
   /** The governor stepped: draw at the new tier. */
   const retier = (next: QualityTier): void => {
@@ -312,6 +326,27 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
     const glyph = button.querySelector("[data-glyph]");
     if (glyph !== null) glyph.textContent = playing ? "❚❚" : "▶";
   };
+  // ---- The pixels of the layers follow the view: a zoom or a new size of the container may need a finer or allow a coarser share, and the layers are drawn again at it. ----
+  let seenZoom = shown.zoom;
+  let settling: ReturnType<typeof setTimeout> | undefined;
+  /** Draw the layers again if the view needs another share than they were made at. */
+  const settleRaster = (): void => {
+    settling = undefined;
+    if (!alive || model.tiered !== true) return;
+    if (ceilingFor(model, stage.clientWidth || 960, stage.clientHeight || 600, shown.zoom) === ceiling) return;
+    renderWorld();
+    paint(shown);
+  };
+  /**
+   * The view changed in a way that may change the share it needs. A finer share is drawn soon (a moment after the zoom has stopped, so that a pinch is not drawn again at every step), a coarser one only after a while at rest: until
+   * then the layers are finer than needed, which costs memory and nothing to the eye.
+   */
+  const wantRaster = (): void => {
+    if (!alive || model.tiered !== true || win === null) return;
+    clearTimeout(settling);
+    const next = ceilingFor(model, stage.clientWidth || 960, stage.clientHeight || 600, shown.zoom);
+    settling = next === ceiling ? undefined : win.setTimeout(settleRaster, next > ceiling ? 160 : 1500);
+  };
   /** Put a view on the screen. */
   const paint = (now: TurnView): void => {
     const width = stage.clientWidth || 960;
@@ -333,6 +368,10 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
       const o = layout.fade[i] < 1 ? String(layout.fade[i]) : "";
       if (faded[i] !== o) one.style.opacity = faded[i] = o;
     });
+    if (now.zoom !== seenZoom) {
+      seenZoom = now.zoom;
+      wantRaster();
+    }
     touched();
   };
   const label = (): void => {
@@ -342,6 +381,8 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
   };
   paint(shown);
   label();
+  // The container is in the page now: the share its layers need, at its real size.
+  settleRaster();
 
   const stop = (): void => {
     if (flight !== undefined) win?.cancelAnimationFrame(flight.frame);
@@ -611,7 +652,11 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
   // ---- The size of the box. ----
   let observer: ResizeObserver | undefined;
   if (typeof ResizeObserver === "function") {
-    observer = new ResizeObserver(() => alive && paint(shown));
+    observer = new ResizeObserver(() => {
+      if (!alive) return;
+      paint(shown);
+      wantRaster();
+    });
     observer.observe(stage);
   }
 
@@ -714,6 +759,7 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
     destroy() {
       if (!alive) return;
       alive = false;
+      clearTimeout(settling);
       outside?.destroy();
       stop();
       stopTick();

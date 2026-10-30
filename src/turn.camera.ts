@@ -244,6 +244,15 @@ export function fit(b: Box3, view: TurnView, w: number, h: number, distance: num
   return at;
 }
 
+/**
+ * The scale (screen pixels for a pixel of the scene, at a zoom of 1) a scene's box is fitted at in a container, the largest any tip of the view makes it: a view tipped towards the horizon is fitted larger, and the layers are made
+ * for the largest so that tipping the view does not make them again.
+ */
+export function viewScale(b: Box3, w: number, h: number, lens?: number): number {
+  const distance = eyeDistance(w, h, lens);
+  return Math.max(...[0, 30, 58, 70, PITCH_MAX].map((pitch) => fit(b, { yaw: 0, pitch, zoom: 1 }, w, h, distance).k));
+}
+
 /** A 4 by 4 matrix, as CSS writes it in `matrix3d`: sixteen numbers, a column after a column. */
 export type Mat4 = readonly number[];
 

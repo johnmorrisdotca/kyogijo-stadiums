@@ -82,15 +82,40 @@ export function layerBudget(tier: QualityTier, isHandheld: boolean): number {
 }
 
 /**
- * The share of its size each layer is made at, from the sizes the layers would have at full size (their boxes in CSS pixels), the share every layer is made at (`rasterOf`), the device's pixel ratio and the layer budget: a layer is
- * made at the smaller of the share and the one that holds `budget` device pixels, never under a fifth. The floor comes first, then the planes, as `layoutOf` takes them.
+ * The shares a layer is made at, from the smallest to a whole: the share a view needs (`viewShare`) is rounded up to one of these, so that a zoom draws the layers again at most three times from the whole view to the nearest and not at every step.
  */
-export function rasterShares(sizes: readonly (readonly [number, number])[], share: number, dpr: number, budget: number): number[] {
+export const SHARE_LEVELS: readonly number[] = [0.25, 0.4, 0.6, 1];
+
+/** How much finer than the screen shows it a layer is made: the perspective makes what is near the eye larger than the scale of the fit says, by a tenth at most with the lens of a district. */
+export const VIEW_MARGIN = 1.25;
+
+/**
+ * The share of its size a layer needs to be as fine as the screen shows it, whatever the device's pixel ratio: a layer holds `share` device pixels for each pixel of the scene (times the ratio) and the screen shows `scale * zoom`
+ * of them (times the ratio too, and a little more near the eye), so a share of `scale * zoom * VIEW_MARGIN` is as sharp as the view and no layer needs more. `scale` is the scale that fits the scene in its container (`viewScale`), `zoom` the
+ * view's. Rounded up to one of `SHARE_LEVELS`, so a view that is drawn at 0.15 of the scene's size, as a district on a phone is, has layers a quarter as wide and as high, a sixteenth of the pixels. 1 when the view is at least as large as the scene.
+ */
+export function viewShare(scale: number, zoom: number): number {
+  const need = scale * zoom * VIEW_MARGIN;
+  return SHARE_LEVELS.find((level) => level >= need - 1e-9) ?? 1;
+}
+
+/**
+ * The least share the floor is made at, under what the view needs: the floor is one layer, and it holds the thinnest lines of the view (the north arrow, the scale, the grid, the streets and their edges), which a browser draws as a staircase
+ * when the layer is made much coarser than it shows (Chromium does; measured on the demo at a ratio of 3). One layer at 0.6 of its size is 24 megabytes on a phone at a ratio of 3, against 67 whole.
+ */
+export const FLOOR_SHARE = 0.6;
+
+/**
+ * The share of its size each layer is made at, from the sizes the layers would have at full size (their boxes in CSS pixels), the share every layer is made at (`rasterOf`), the device's pixel ratio and the layer budget: a layer is
+ * made at the smaller of the share and the one that holds `budget` device pixels, and never at more than `ceiling` (what the view needs, `viewShare`), never under a fifth. The floor comes first, then the planes, as `layoutOf` takes them; its
+ * ceiling is at least `floorMin`.
+ */
+export function rasterShares(sizes: readonly (readonly [number, number])[], share: number, dpr: number, budget: number, ceiling = 1, floorMin = 0): number[] {
   const ratio = dpr > 0 ? dpr : 1;
-  return sizes.map(([w, h]) => {
+  return sizes.map(([w, h], i) => {
     const area = w * h * ratio * ratio;
     const own = area > budget ? Math.sqrt(budget / area) : 1;
-    return Math.max(0.2, Math.round(Math.min(share, own) * 1000) / 1000);
+    return Math.max(0.2, Math.round(Math.min(share, own, i === 0 ? Math.max(ceiling, floorMin) : ceiling) * 1000) / 1000);
   });
 }
 

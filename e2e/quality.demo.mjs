@@ -283,3 +283,40 @@ test("a tier held by name is never changed by the frames", async ({ page }, info
   });
   await expect(root(page)).toHaveAttribute("data-tier", "high");
 });
+
+/** The memory the layers of the 3D view are counted at: every plane's box, times the device's pixel ratio squared, four bytes a pixel, in megabytes (what `scripts/perf-district.mjs` reports). */
+const layerMegabytes = (page) => page.evaluate(() => {
+  const dpr = window.devicePixelRatio;
+  let pixels = 0;
+  for (const el of document.querySelectorAll(".ky-turn-floor, .ky-up")) pixels += el.offsetWidth * el.offsetHeight * dpr * dpr;
+  return (pixels * 4) / 1048576;
+});
+const share = async (page) => Number(await root(page).getAttribute("data-share"));
+
+test("the layers are made as fine as the screen shows them and no finer, finer again after a zoom, and the picture does not move", async ({ page }, info) => {
+  test.setTimeout(90_000);
+  const errors = await open(page, "venues=kodokan&context=0&view=3d&viewpoint=broadcast&quality=high");
+  await expect(root(page)).toHaveAttribute("data-tier", "high");
+  const first = await share(page);
+  const phone = info.project.name !== "chromium-desk";
+  // On a phone the whole scene is a sixth of its own size: the layers are a quarter as wide, a sixteenth of the pixels (the Kodokan's 713 megabytes at a ratio of 3 were 45).
+  if (phone) expect(first, "share on a phone").toBeLessThanOrEqual(0.4);
+  expect(first).toBeLessThanOrEqual(1);
+  const small = await layerMegabytes(page);
+  if (phone) expect(small, "layers on a phone").toBeLessThan(120);
+  // (A wide screen needs the whole of them: nothing to make coarser there, and no finer to ask for.)
+  if (first < 1) {
+    const before = await floorBox(page);
+    // Zoomed in, the view needs a finer share: it is drawn again at it a moment after the zoom stops, and the floor is where the zoom puts it.
+    for (let i = 0; i < 7; i += 1) await press(page, page.locator(`${STAGE} button[data-act="zoom-in"]`));
+    await expect.poll(() => share(page), { timeout: 5000 }).toBeGreaterThan(first);
+    const zoomed = await floorBox(page);
+    expect(zoomed[2]).toBeGreaterThan(before[2] * 2);
+    await expect.poll(() => layerMegabytes(page), { timeout: 5000 }).toBeGreaterThan(small);
+    // Back out, and after a while at rest the layers are made coarser again, the floor where it was.
+    for (let i = 0; i < 7; i += 1) await press(page, page.locator(`${STAGE} button[data-act="zoom-out"]`));
+    await expect.poll(() => share(page), { timeout: 8000 }).toBe(first);
+    sameBox(await floorBox(page), before, "the floor after a zoom in and out");
+  }
+  expect(errors).toEqual([]);
+});
