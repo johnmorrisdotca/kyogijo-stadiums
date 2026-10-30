@@ -7,10 +7,6 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
-### Added
-
-- A page listing the thirty-two NHL arenas: the roof each draws, what open sources say of its shape, and the one photo each still needs (`docs/roof-photos-needed.md`).
-
 ## [0.46.0] - 2026-10-30
 
 ### Added
@@ -28,6 +24,8 @@ All notable changes to this project are written here. The format follows
 - **The roof and the walls are two choices on the stadiums and district pages.** Roof and Walls are separate pills (`roof`, `walls` in the address), so a roof can be taken off with the walls standing, and a roof asked for on the stadiums page brings the walls it stands on (which can then be taken off). An older `roof=1` with no `walls` is the walls and the roof, as it was.
 - `FlythroughOptions.roof` (true when left out): `false` keeps the roof off for the whole flight with the walls standing; the demo's page has the pill and `roof=0`.
 - Tests: `e2e/roof.demo.mjs` (every page's pill is a pill and is kept in, and read from, the address).
+
+- A page listing the thirty-two NHL arenas: the roof each draws, what open sources say of its shape, and the one photo each still needs (`docs/roof-photos-needed.md`).
 
 ### Fixed
 
