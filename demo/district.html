@@ -392,6 +392,8 @@
 
       /** The number of the last draw asked for: a draw that waits for an area's file and finds a later one asked for leaves the page to it. */
       let drawing = 0;
+      /** The areas read for a choice of venues (with the surroundings on or off), by the choice: what a choice already read is drawn from at once. */
+      const held = new Map();
       async function draw() {
         const mine = ++drawing;
         const theme = $("theme").value;
@@ -429,18 +431,23 @@
           return;
         }
         // A district with a mask asks for the crowd at every level, 0 included: the plan keeps room round the buildings for it, so that nothing moves when the level does.
-        // The records of the venues chosen, and the area round them if it is on, are read from their own files (a choice that was made before is held and asks for nothing).
+        // The records of the venues chosen, and the area round them if it is on, are read from their own files. A choice that was made before is held: it is drawn at once, without waiting for anything.
+        const heldKey = `${state.venues.join()}|${contextOn()}`;
         let context;
-        document.body.dataset.ready = "false";
-        try {
-          [context] = await Promise.all([contextOn() ? loadAreasFor(state.venues) : undefined, loadVenueDataFor(state.venues)]);
-        } catch (error) {
-          $("error").textContent = String(error.message);
-          $("error").hidden = false;
-          document.body.dataset.ready = "true";
-          return;
+        if (held.has(heldKey)) context = held.get(heldKey);
+        else {
+          document.body.dataset.ready = "false";
+          try {
+            [context] = await Promise.all([contextOn() ? loadAreasFor(state.venues) : undefined, loadVenueDataFor(state.venues)]);
+          } catch (error) {
+            $("error").textContent = String(error.message);
+            $("error").hidden = false;
+            document.body.dataset.ready = "true";
+            return;
+          }
+          held.set(heldKey, context);
+          if (mine !== drawing) return;
         }
-        if (mine !== drawing) return;
         const options = { venues: state.venues, mode: $("mode").value, turn: $("turn").value === "auto" ? "auto" : 0, labels: $("labels").checked, language: $("language").value, ...(masked() ? { outside: { level: state.outside } } : {}), ...(theme === "auto" ? {} : { theme }), ...(context === undefined ? {} : { context }), ...(hasGates() && $("gates").checked ? { gates: true } : {}), ...(hasKodokan() ? { building: $("building").value } : {}), ...(hasKodokan() && floorNow() !== undefined ? { floor: floorNow() } : {}) };
         try {
           const plan = planDistrict(options);
