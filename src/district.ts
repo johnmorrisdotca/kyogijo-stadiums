@@ -9,7 +9,7 @@ import { kodokanMember } from "./kodokan.ts";
 import { contextFloor, contextFrame, placeContext, toneOf, type ContextPlan, type ContextArea } from "./context.ts";
 import { crowdStands, drawKyogijo } from "./draw.ts";
 import { FEET_PER_METRE } from "./geometry.ts";
-import { KYOGIJO_STRINGS } from "./strings.ts";
+import { KYOGIJO_STRINGS } from "./strings.core.ts";
 import { esc, hash } from "./format.ts";
 import { STADIUM_IDS, stadiumById, stadiumConfigs, stadiumFrameHeading, stadiumKind, stadiumNames, stadiumSeats, type RealStadium, type StadiumConfigId } from "./stadiums.ts";
 import { VENUE_ATTRIBUTION, VENUE_IDS, venueById, type RealVenue } from "./venues.ts";

@@ -276,13 +276,16 @@ src/
 ├── arenas.index.ts     made by scripts/build-arenas.mjs: every arena's key and names with the import() of its own file
 ├── arenas/             made by scripts/build-arenas.mjs: one file for each arena (`td-garden.data.ts`), read when that arena is asked for
 ├── venue-data.ts       the venues' data one file each, read when asked for (`loadVenueDataFor`, `loadArena`, `loadPark`, `loadGround`), and the venues' names without reading any (`venueName`)
-├── full.ts             imports every arena, park and ground and fills the table of drawing parts, so that they are held for the drawing: every entry but the lean district imports it
+├── full.ts             imports every arena, park and ground, every real venue and the words in both languages, and fills the table of drawing parts, so that they are held for the drawing: every entry but the lean district imports it
 ├── venue-data-entry.ts the venue data entry
 ├── arenas-entry.ts     the arenas' entry
-├── venues.ts           the real venues of the NHL's arenas: the building, how the rink lies, and a bowl fitted inside it from the seats, tiers and roof the sources give
+├── venues.ts           the real venues of the NHL's arenas: the building, how the rink lies, and a bowl fitted inside it from the seats, tiers and roof the sources give, and the table of the venues held for the drawing (`loadVenue` reads one)
 ├── venues.geo.ts       the plane geometry of a building's outline: its metres, its main hall and axis, and the drawing's frame
-├── venues.data.ts      made by scripts/build-venues.mjs from scripts/venues.data.json: the facts, with their sources
-├── venues.osm.data.ts  made by scripts/build-venues.mjs from data-sources/venues/: what OpenStreetMap gave, ODbL 1.0, kept apart
+├── venues.data.ts      made by scripts/build-venues.mjs from scripts/venues.data.json: every venue's facts, with their sources, in one table
+├── venues.osm.data.ts  made by scripts/build-venues.mjs from data-sources/venues/: every venue's outline, what OpenStreetMap gave, ODbL 1.0, kept apart
+├── venues.index.ts     made by scripts/build-venues.mjs: every venue's key with the import() of its two files
+├── venues/             made by scripts/build-venues.mjs: two files for each venue (`honda-center.data.ts`, the facts, and `honda-center.osm.data.ts`, what OpenStreetMap gave, kept apart for their licences), read when that venue is asked for
+├── venues.all.ts       holds every venue for the drawing: `full.ts` imports it, the lean district does not
 ├── venues-entry.ts     the venues' entry
 ├── venue.real.ts       a real venue's walls and roof, raised in 3D
 ├── venue.fill.ts       the empty places of a real venue's 3D view filled: the suite level between two bowls, the apron round the surface with its benches, the back of each bowl, the concourse floor
@@ -304,7 +307,7 @@ src/
 ├── district.dom.ts     a district's 2D plan in a page, with the crowd outside over it
 ├── district-entry.ts   the district's entry
 ├── district.api.ts     everything the district entries export
-├── district-lean-entry.ts the lean district's entry: the district with no venue's data held until `loadVenueDataFor` has read the ones it shows
+├── district-lean-entry.ts the lean district's entry: the district with no venue's data, walkable ground or words held until `loadVenueDataFor`, `loadOutside` and `loadStrings` have read the ones it shows
 ├── gates.ts            the gates of a venue: points on the building's outline with the way each faces, and how each is known
 ├── osm.context.data.ts made by scripts/build-osm-context.mjs from data-sources/walk/: the buildings and streets round a district from OpenStreetMap, ODbL 1.0, kept apart
 ├── osm-entry.ts        the OpenStreetMap context's entry
@@ -349,7 +352,10 @@ src/
 ├── ranges.ts           a drawing cropped to a range: the view, the clip, the annotations' room, the score's panel
 ├── ranges.names.ts     the named ranges of each sport and the check of the `range` option
 ├── style.ts            the stylesheet, light and dark
-├── strings.ts          the words, in English and Japanese
+├── strings.ts          the words in both languages, held for the drawing: reads the two files below (every entry but the lean district imports it)
+├── strings.core.ts     the types of the words, `fill`, the table `KYOGIJO_STRINGS` and `loadStrings`, which reads one language's file
+├── strings.en.ts       the English words
+├── strings.ja.ts       the Japanese words
 ├── text.ts             measuring and fitting a name
 ├── colour.ts           safe colours and picture addresses
 ├── logo.ts             the one path a logo, flag, mark or emblem takes into a drawing: an address, a data address, an SVG document or, with a renderer plugged in, an emblem's id
@@ -398,7 +404,7 @@ Tests sit beside the code. `scripts/` builds the demo and the docs site, checks 
 The demo is not bundled: a page loads the modules it imports, as the files `tsc` wrote, so what a page weighs is the size of its import graph and of the data it reads. Three things keep that small, and one test holds it.
 
 - **Data is read for what is shown.** An area of surroundings (`areas.ts`), an arena, a park and a ground (`venue-data.ts`) are one file each, read with a dynamic `import()` when a page is about to draw them. The tables of every record (`arenas.data.ts` and its two like) are only for the entries that have always had every venue.
-- **Whole or lean is the entry's choice, not the drawing's.** The drawing reads venues from tables (`heldArena`, `heldPark`, `heldGround`) and the layers from `draw.parts.ts`; `full.ts` fills them, and every entry imports it except the lean district's (`district-lean`). A lean page names what it will draw (`loadVenueDataFor`), and the same drawing comes out, character for character (`src/venue-data.test.ts`).
+- **Whole or lean is the entry's choice, not the drawing's.** The drawing reads venues from tables (`heldArena`, `heldPark`, `heldGround`) and the layers from `draw.parts.ts`; `full.ts` fills them, and every entry imports it except the lean district's (`district-lean`); the real venues (`venues.all.ts`), the words (`strings.ts`) and the walkable ground (`walk.full.ts`) are held the same way, by the entries that always had them. A lean page names what it will draw (`loadVenueDataFor`, `loadOutside`, `loadStrings`), and the same drawing comes out, character for character (`src/venue-data.test.ts`).
 - **A module is imported for what it gives.** A file that imports another only to export it again takes that file along for every page that imports it (`leagues.ts` took the 70 KB of the league sources that way); the entry that exports a thing imports it from the file it is in.
 - **A budget.** `node scripts/bundle-report.mjs` lists the scripts and data of every page, raw and gzipped, with first paint at full speed and at 4 times slower CPU and the machine's load (`pnpm bundles`; `--base <another site/>` measures two builds a run at a time). `scripts/bundle-budget.json` holds each page to a little over where it is, `e2e/bundles.demo.mjs` fails a page that grows past it, and CI runs that file in a job of its own (`pnpm bundles:budget` writes a new budget when a page has got lighter, or heavier on purpose).
 

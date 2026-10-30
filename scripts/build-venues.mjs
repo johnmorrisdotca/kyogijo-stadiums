@@ -1,4 +1,4 @@
-// Writes src/venues.data.ts, src/venues.osm.data.ts, the tables of docs/venues.md and NOTICE.md from scripts/venues.data.json and the dated files under data-sources/venues/ (`pnpm venues`).
+// Writes src/venues.data.ts, src/venues.osm.data.ts (the tables of every venue), src/venues/<id>.data.ts and src/venues/<id>.osm.data.ts (a file of each kind for each venue), src/venues.index.ts, the tables of docs/venues.md and NOTICE.md from scripts/venues.data.json and the dated files under data-sources/venues/ (`pnpm venues`).
 //
 // The two data files are kept apart because their licences are: src/venues.data.ts holds facts (a number of seats, a number of seating levels, a kind of roof) with the Wikidata item or the English
 // Wikipedia article and revision each was read from, and no text; src/venues.osm.data.ts holds what was read from OpenStreetMap (a building's outline, the ice where it is mapped, the building's height),
@@ -7,7 +7,7 @@
 //
 // The raw responses (`pnpm venues:fetch <date> <division>`) stay in data-sources/venues/<date>/ as they were returned; each venue names the day it was read (`read`) and this script reads that day's files, the
 // division's `wikidata-<division>.json` and `wikipedia-<division>.json` and the venue's own `osm-<id>.json`.
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { URL } from "node:url";
 import { areaOf, centroidOf, coreOf, inside, lonLatFrom, metresFrom, middleOf, outerRingOf, simplified, smallestBox } from "../src/venues.geo.ts";
 
@@ -122,38 +122,67 @@ for (const v of venues) {
 }
 
 // ---- The data files. ----
+// Besides the two tables of every venue (src/venues.data.ts and src/venues.osm.data.ts, which the entries that hold every venue read), each venue is two files of its own, kept apart because their licences are: src/venues/<id>.data.ts
+// (the facts) and src/venues/<id>.osm.data.ts (what OpenStreetMap gave), and src/venues.index.ts lists every key with the import() of its two files. A page that draws one arena reads that arena's two files and not the others'; the tables
+// hold the same records again, as the arenas', parks' and grounds' tables do.
 const q = (value) => JSON.stringify(value).replace(/":/g, '": ').replace(/,"/g, ', "');
 const FACT_KEYS = ["id", "wikidata", "division", "en", "seats", "tiers", "roof", "facade"];
 const readDays = [...days].sort().join(", ");
-const factsText = `// Made by scripts/build-venues.mjs from scripts/venues.data.json: do not edit by hand.
-// The facts are those of the Wikidata items and the English Wikipedia articles (revisions) each entry cites, in our own words; see docs/venues.md and NOTICE.md. Wikidata is CC0; the facts read from
-// English Wikipedia are numbers and words of ours, not its text (CC BY-SA 4.0). What OpenStreetMap gave is in venues.osm.data.ts, apart, because it is ODbL.
+const BY = `scripts/build-venues.mjs from scripts/venues.data.json`;
+const BY_OSM = `scripts/build-venues.mjs from the files of data-sources/venues/ (read ${readDays})`;
+/** A record as an object literal at the left margin. */
+const factEntry = (v) => `{\n${FACT_KEYS.filter((key) => v[key] !== undefined).map((key) => `  "${key}": ${q(v[key])},`).join("\n")}\n}`;
+const osmEntry = (v) => {
+  const o = osm[v.id];
+  const ring = `[\n${o.ring.map(([lon, lat]) => `    [${lon}, ${lat}]`).join(",\n")},\n  ]`;
+  const ice = o.ice === undefined ? "" : `\n  "ice": { "source": ${q(o.ice.source)}, "ring": [${o.ice.ring.map(([lon, lat]) => `[${lon}, ${lat}]`).join(", ")}] },`;
+  return `{\n  "source": ${q(o.source)},\n  "read": ${q(o.read)},\n  "base": ${q(o.base)},\n  "licence": "ODbL-1.0",\n  "attribution": "(c) OpenStreetMap contributors, ODbL 1.0, openstreetmap.org/copyright",\n${o.height === undefined ? "" : `  "height": ${o.height},\n`}  "axis": ${q(o.axis)},\n  "ring": ${ring},${ice}\n}`;
+};
+const FACTS_HEAD = `// The facts are those of the Wikidata items and the English Wikipedia articles (revisions) each entry cites, in our own words; see docs/venues.md and NOTICE.md. Wikidata is CC0; the facts read from
+// English Wikipedia are numbers and words of ours, not its text (CC BY-SA 4.0). What OpenStreetMap gave is in venues.osm.data.ts and venues/<id>.osm.data.ts, apart, because it is ODbL.`;
+const OSM_HEAD = `// THIS FILE IS ODbL 1.0 DATA FROM OPENSTREETMAP: "(c) OpenStreetMap contributors", https://www.openstreetmap.org/copyright. It holds each venue's building outline (the way OpenStreetMap tags with the
+// venue's Wikidata item, simplified to a metre, longitude and latitude to six decimals), the building's height where OpenStreetMap maps one, and the ice where OpenStreetMap maps it. The package is MIT;
+// this file is a derived database under the ODbL, offered under it with the credit above. The drawings made from it are produced works and need only the credit (\`VENUE_ATTRIBUTION\`). Nothing in a CC0
+// or CC BY-SA file of the package is copied from here or into here. The raw responses are in data-sources/venues/.`;
+
+const dir = new URL("../src/venues/", import.meta.url);
+rmSync(dir, { recursive: true, force: true });
+mkdirSync(dir, { recursive: true });
+for (const v of venues) {
+  writeFileSync(new URL(`${v.id}.data.ts`, dir), `// Made by ${BY}: do not edit by hand. One venue of src/venues.data.ts, for a page that draws it.\n${FACTS_HEAD}\nimport type { RealVenueData } from "../venues.ts";\n\nexport const VENUE: RealVenueData = ${factEntry(v)};\n`);
+  writeFileSync(new URL(`${v.id}.osm.data.ts`, dir), `// Made by ${BY_OSM}: do not edit by hand. One venue of src/venues.osm.data.ts, for a page that draws it.\n//\n${OSM_HEAD}\nimport type { VenueOsm } from "../venues.ts";\n\nexport const OSM: VenueOsm = ${osmEntry(v)};\n`);
+}
+writeFileSync(
+  new URL("../src/venues.index.ts", import.meta.url),
+  `// Made by ${BY}: do not edit by hand.
+// Every key of src/venues.data.ts with the import() of the two files that hold its record (\`venues/<key>.data.ts\`, the facts, and \`venues/<key>.osm.data.ts\`, what OpenStreetMap gave, kept apart for their licences), read with a dynamic import() when the venue is asked for (see \`loadVenue\` in venues.ts).
+import type { RealVenueData, VenueOsm } from "./venues.ts";
+
+export const VENUE_INDEX: Readonly<Record<string, { readonly load: () => Promise<readonly [{ readonly VENUE: RealVenueData }, { readonly OSM: VenueOsm }]> }>> = {
+${venues.map((v) => `  ${JSON.stringify(v.id)}: { load: () => Promise.all([import(${JSON.stringify(`./venues/${v.id}.data.ts`)}), import(${JSON.stringify(`./venues/${v.id}.osm.data.ts`)})]) },`).join("\n")}
+};
+`,
+);
+
+// The two tables keep every venue's record as they always did (the entries that hold every venue read them and nothing else: one file of 25 KB and one of 55 KB, which gzip better than 64 small files do); the files of `venues/` hold each record again.
+const inTable = (text) => text.split("\n").map((line) => `  ${line}`).join("\n");
+const factsText = `// Made by ${BY}: do not edit by hand.
+${FACTS_HEAD}
 import type { RealVenueData } from "./venues.ts";
 
 export const VENUE_DATA: RealVenueData[] = [
-${venues.map((v) => `  {\n${FACT_KEYS.filter((key) => v[key] !== undefined).map((key) => `    "${key}": ${q(v[key])},`).join("\n")}\n  },`).join("\n")}
+${venues.map((v) => `${inTable(factEntry(v))},`).join("\n")}
 ];
 `;
 writeFileSync(new URL("../src/venues.data.ts", import.meta.url), factsText);
 
-const osmText = `// Made by scripts/build-venues.mjs from the files of data-sources/venues/ (read ${readDays}): do not edit by hand.
+const osmText = `// Made by ${BY_OSM}: do not edit by hand.
 //
-// THIS FILE IS ODbL 1.0 DATA FROM OPENSTREETMAP: "(c) OpenStreetMap contributors", https://www.openstreetmap.org/copyright. It holds each venue's building outline (the way OpenStreetMap tags with the
-// venue's Wikidata item, simplified to a metre, longitude and latitude to six decimals), the building's height where OpenStreetMap maps one, and the ice where OpenStreetMap maps it. The package is MIT;
-// this file is a derived database under the ODbL, offered under it with the credit above. The drawings made from it are produced works and need only the credit (\`VENUE_ATTRIBUTION\`). Nothing in a CC0
-// or CC BY-SA file of the package is copied from here or into here. The raw responses are in data-sources/venues/.
+${OSM_HEAD}
 import type { VenueOsm } from "./venues.ts";
 
-/** The credit the ODbL asks for, wherever a drawing made from this data is shown. */
-export const VENUE_ATTRIBUTION = "(c) OpenStreetMap contributors, ODbL 1.0, openstreetmap.org/copyright";
-
 export const VENUE_OSM: Record<string, VenueOsm> = {
-${venues.map((v) => {
-  const o = osm[v.id];
-  const ring = `[\n${o.ring.map(([lon, lat]) => `      [${lon}, ${lat}]`).join(",\n")},\n    ]`;
-  const ice = o.ice === undefined ? "" : `\n    "ice": { "source": ${q(o.ice.source)}, "ring": [${o.ice.ring.map(([lon, lat]) => `[${lon}, ${lat}]`).join(", ")}] },`;
-  return `  "${v.id}": {\n    "source": ${q(o.source)},\n    "read": ${q(o.read)},\n    "base": ${q(o.base)},\n    "licence": "ODbL-1.0",\n    "attribution": "(c) OpenStreetMap contributors, ODbL 1.0, openstreetmap.org/copyright",\n${o.height === undefined ? "" : `    "height": ${o.height},\n`}    "axis": ${q(o.axis)},\n    "ring": ${ring},${ice}\n  },`;
-}).join("\n")}
+${venues.map((v) => `  ${JSON.stringify(v.id)}: ${inTable(osmEntry(v)).trimStart()},`).join("\n")}
 };
 `;
 writeFileSync(new URL("../src/venues.osm.data.ts", import.meta.url), osmText);
@@ -183,4 +212,4 @@ const noticeTable = `| Arena | Wikidata item | OpenStreetMap element | English a
 | --- | --- | --- | --- |
 ${venues.map((v) => `| ${arenas.find((a) => a.id === v.id).name} | ${v.wikidata} | ${osm[v.id].source} | ${v.en.title}, ${v.en.revision} |`).join("\n")}`;
 writeFileSync(notice, noticeText.replace(noticeMarked, () => `<!-- venues-notice -->\n${noticeTable}\n<!-- /venues-notice -->`));
-console.log(`src/venues.data.ts, src/venues.osm.data.ts: ${venues.length} venues of the ${Object.keys(source.divisions).join(", ")} divisions, read ${readDays}`);
+console.log(`src/venues.data.ts, src/venues.osm.data.ts, src/venues.index.ts and src/venues/ (two files for each venue): ${venues.length} venues of the ${Object.keys(source.divisions).join(", ")} divisions, read ${readDays}`);

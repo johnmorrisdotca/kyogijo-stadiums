@@ -1,4 +1,6 @@
 // The leagues: each variant of a family of surface, with its rulebook's figures, its names and its sources.
+// The words in both languages, as this entry has always carried them (the lean district reads one language when it is asked to).
+import "./strings.ts";
 export { FAMILY_OF, LEAGUES, VARIANTS, aflOf, chooseLeague, courtOf, cricketOf, diamondOf, fieldHockeyOf, fieldOf, gaelicOf, handballOf, lacrosseOf, rugbyOf, hasHistory, leagueAt, leagueAtOf, leagueById, leagueChanges, leagueFigures, leagueIds, leagueSeason, leagueSize, netOf, rinkOf, sheetOf } from "./leagues.ts";
 export type { BaseballLeague, BasketballLeague, CourtFigures, CurlingLeague, SheetFigures, BadmintonFigures, BadmintonLeague, FreeZone, FreeZones, NetFigures, NetLeague, NetSport, NetballFigures, NetballLeague, PadelFigures, PadelLeague, PickleballFigures, PickleballLeague, RacquetballFigures, RacquetballLeague, RoundnetFigures, RoundnetLeague, SepakTakrawFigures, SepakTakrawLeague, SquashFigures, SquashLeague, TableTennisFigures, TableTennisLeague, TennisFigures, TennisLeague, TeqballFigures, TeqballLeague, VolleyballFigures, VolleyballLeague, CourtMarks, DiamondFigures, Family, FootballLeague, HockeyLeague, League, LeagueAt, LeagueChange, LeagueSource, LeagueSpan, Named, RinkFigures } from "./leagues.ts";
 export { MLB_DIAMOND } from "./leagues/baseball.ts";

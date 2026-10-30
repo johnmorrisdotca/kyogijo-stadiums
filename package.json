@@ -72,7 +72,11 @@
     "./dist/arenas.js",
     "./dist/parks.js",
     "./dist/grounds.js",
-    "./dist/walk.full.js"
+    "./dist/venues.all.js",
+    "./dist/walk.full.js",
+    "./dist/strings.js",
+    "./dist/strings.en.js",
+    "./dist/strings.ja.js"
   ],
   "main": "./dist/index.js",
   "module": "./dist/index.js",

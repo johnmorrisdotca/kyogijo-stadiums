@@ -2,3 +2,5 @@
 import "./full.ts";
 // ... and the walkable ground of every district, as the district entry has it.
 import "./walk.full.ts";
+// ... and every real venue of the NHL's arenas.
+import "./venues.all.ts";

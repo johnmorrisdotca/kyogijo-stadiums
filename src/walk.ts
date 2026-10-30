@@ -1,6 +1,8 @@
 // The walkable mask of a district: the cells of a fine grid on the ground where a person may stand, worked out from the features OpenStreetMap maps round the venues (`walk.data.ts`, ODbL 1.0): the paths, sidewalks,
 // plazas, squares, parks and platforms people stand on, the apron of each venue's own ground, minus what stops a crowd (carriageways at the width their lanes give them, cycle tracks, railways, water and every building).
 // Pure arithmetic on typed arrays, in Node or in a page: data in, a grid out. Nothing is drawn here; the roads are never drawn, and the shape of a crowd on this mask is what shows where they are.
+import { VENUE_INDEX } from "./venues.index.ts";
+import { loadVenue } from "./venues.ts";
 import { WALK_INDEX } from "./walk.index.ts";
 import type { LonLat } from "./venues.geo.ts";
 import type { Pt } from "./crowd.ts";
@@ -202,7 +204,7 @@ export const walkIdFor = (venueIds: readonly string[]): string | undefined => WA
 
 /**
  * The walkable ground the crowd outside some venues stands on, read from its file and held for the drawing: await it before `planDistrict`, `drawDistrict`, `mountDistrict` or `mountDistrictTurn` of the lean district with `outside` asked for
- * (the district entry holds every district's data and needs no call). It reads nothing for venues that no mask names, so a page may call it for every choice of venues; asking again reads nothing.
+ * (the district entry holds every district's data and needs no call), and the outline of each arena of the ground (the crowd keeps out of the buildings of the venues that are not shown too). It reads nothing for venues that no mask names, so a page may call it for every choice of venues; asking again reads nothing.
  * @example
  * ```ts
  * import { loadOutside, loadVenueDataFor, outsideCrowd, planDistrict } from "@johnmorrisdotca/kyogijo-stadiums/district-lean";
@@ -214,5 +216,8 @@ export const walkIdFor = (venueIds: readonly string[]): string | undefined => WA
  */
 export async function loadOutside(venues: readonly string[]): Promise<void> {
   const id = walkIdFor(venues.map((key) => key.split(":")[0]));
-  if (id !== undefined) await loadWalk(id);
+  if (id === undefined) return;
+  // The crowd keeps out of every building the ground has, those of venues that are not shown too: an arena of the ground has its outline read with the ground.
+  const outlines = WALK_INDEX[id].venues.map((key) => key.split(":")[0]).filter((one) => Object.hasOwn(VENUE_INDEX, one));
+  await Promise.all([loadWalk(id), ...outlines.map(loadVenue)]);
 }

@@ -1,5 +1,5 @@
 // What a budō drawing says of itself: its sentence about the surface, and what the options mark on it. Built from the plan, so that the words and the drawing agree.
-import { fill, KYOGIJO_STRINGS } from "../strings.ts";
+import { fill, KYOGIJO_STRINGS } from "../strings.core.ts";
 import type { Language, SurfaceOptions, Team } from "../types.ts";
 import { budoView } from "../budo.score.ts";
 import { kimariteName } from "./kimarite.ts";

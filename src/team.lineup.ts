@@ -11,7 +11,7 @@ import { chooseLeague } from "./leagues.ts";
 import { SURFACES, computeFormation, formationOf, type Spot } from "./team.formation.ts";
 import { attrs, labelOf, paintOf, round, titled, type TeamTable } from "./team.common.ts";
 import type { Formation, FormationLayer, FormationPlayer, FormationSport, LineupLayer, LineupPlayer } from "./team.types.ts";
-import { fill } from "./strings.ts";
+import { fill } from "./strings.core.ts";
 import { FEET_PER } from "./units.ts";
 
 /** The sports whose team turns round for the visitors: a side that attacks the other end. Baseball's fielders, football's offence and a cricket field do not. */

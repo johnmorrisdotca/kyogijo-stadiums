@@ -10,7 +10,7 @@ import { toSurface } from "./frames.ts";
 import "./frames.providers.ts";
 import { parseRange, type ParsedRange } from "./ranges.names.ts";
 import { frameSizeOf } from "./outline.ts";
-import { KYOGIJO_STRINGS, fill } from "./strings.ts";
+import { KYOGIJO_STRINGS, fill } from "./strings.core.ts";
 import { quarterTurn, type Surface } from "./surfaces/surface.ts";
 import type { Box, Language, Side, SurfaceOptions } from "./types.ts";
 import { convertLength } from "./units.ts";

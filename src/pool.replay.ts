@@ -5,7 +5,7 @@
 import { swimPlan, type LanePlan, type SwimPlan } from "./pool.ts";
 import { formatTime, type RaceRow } from "./pool.race.ts";
 import type { ReplayEvent, ReplayFrame, ReplayObject, ReplayTimeline } from "./replay.types.ts";
-import { KYOGIJO_STRINGS } from "./strings.ts";
+import { KYOGIJO_STRINGS } from "./strings.core.ts";
 import type { Language, SurfaceOptions } from "./types.ts";
 
 /** What a race replay is made with. */

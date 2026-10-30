@@ -4,7 +4,7 @@ import { describe, drawKyogijo } from "./draw.ts";
 import { hash } from "./format.ts";
 import { lengthUnit } from "./common.ts";
 import { convertLength } from "./units.ts";
-import { KYOGIJO_STRINGS } from "./strings.ts";
+import { KYOGIJO_STRINGS } from "./strings.core.ts";
 import { TURN_DEFAULT, clampView, presetView, type PresetTable, type TurnDirection, type TurnPreset, type TurnView } from "./turn.camera.ts";
 import type { Plane } from "./turn.kit.ts";
 import { describeUprights, planesOf, uprightsFor, type UprightOptions, type Uprights } from "./uprights.ts";

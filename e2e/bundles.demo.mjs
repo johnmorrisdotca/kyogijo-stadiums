@@ -60,9 +60,14 @@ const RECORDS = {
   kodokan: [],
 };
 const RECORD_FILE = /\/dist\/(?:arenas|parks|grounds)\/[a-z0-9-]+\.data\.js$/;
-const TABLES = /\/dist\/(?:arenas|parks|grounds|walk)\.data\.js$|\/dist\/(?:layers|heat|heat\.zones|full|walk\.full)\.js$/;
+const TABLES = /\/dist\/(?:arenas|parks|grounds|walk|venues|venues\.osm)\.data\.js$|\/dist\/(?:layers|heat|heat\.zones|full|walk\.full|venues\.all)\.js$/;
+// An arena of the NHL also has a real venue: two files, the facts and the outline (OpenStreetMap's, kept apart), and no table of every venue.
+const VENUE_FILE = /\/dist\/venues\/[a-z0-9-]+\.(?:osm\.)?data\.js$/;
+const VENUES_OF = { pair: ["rogers-arena"], alone: ["rogers-arena"], soccer: ["rogers-arena"], seattlecenter: ["climate-pledge-arena"], seattle: ["climate-pledge-arena"] };
 // The walkable ground of the crowd outside is read for the presets that have venues of Vancouver's and for no other: one file, the district's, and never the table of every district.
 const WALK_FILE = /\/dist\/walk\/[a-z0-9-]+\.data\.js$/;
+// The words are one file for each language, and a page reads the language it shows (and the other only when it is chosen): never the file of every language, never the Japanese on an English page.
+const WORDS_FILE = /\/dist\/strings(?:\.[a-z]+)?\.js$/;
 const WALKS = { pair: ["walk/vancouver"], alone: ["walk/vancouver"], soccer: ["walk/vancouver"] };
 
 for (const [preset, query] of Object.entries(DISTRICT_PRESETS)) {
@@ -78,6 +83,9 @@ for (const [preset, query] of Object.entries(DISTRICT_PRESETS)) {
       expect(errors, `${preset} at ${tier}`).toEqual([]);
       expect(records, `${preset} at ${tier}`).toEqual([...RECORDS[preset]].sort());
       expect(files.map((file) => file.url).filter((url) => TABLES.test(url)), `${preset} at ${tier} carries a table of every venue, of every district's walkable ground, or the layers`).toEqual([]);
+      expect(files.map((file) => file.url).filter((url) => VENUE_FILE.test(url)).map((url) => url.replace(/^\/dist\/venues\//, "")).sort(), `${preset} at ${tier} reads the real venues of ${(VENUES_OF[preset] ?? []).join(", ") || "no arena"}`).toEqual((VENUES_OF[preset] ?? []).flatMap((id) => [`${id}.data.js`, `${id}.osm.data.js`]).sort());
+      expect(files.map((file) => file.url).filter((url) => WORDS_FILE.test(url)).filter((url) => /strings\.(?:en|ja)\.js$/.test(url)), `${preset} at ${tier} reads the English words and not the Japanese`).toEqual(["/dist/strings.en.js"]);
+      expect(files.map((file) => file.url).filter((url) => /\/dist\/strings\.js$/.test(url)), `${preset} at ${tier} carries the file that holds both languages`).toEqual([]);
       expect(files.map((file) => file.url).filter((url) => WALK_FILE.test(url)).map((url) => url.replace(/^\/dist\/|\.data\.js$/g, "")), `${preset} at ${tier} reads the walkable ground of ${WALKS[preset] === undefined ? "no district" : WALKS[preset].join(", ")}`).toEqual(WALKS[preset] ?? []);
       // The tiers differ in what they draw, not in what they load.
       const loaded = files.map((file) => file.url).sort();
@@ -131,6 +139,28 @@ test("the walkable ground of the crowd outside is read when venues with a crowd 
   await choose("pair");
   await choose("tokyo");
   expect(asked).toEqual(["/dist/walk/vancouver.data.js"]);
+  expect(errors).toEqual([]);
+});
+
+test("the words of a Japanese page are the Japanese file alone, and choosing the other language reads its file then, once", async ({ page }) => {
+  const asked = [];
+  page.on("request", (request) => /\/dist\/strings\.(?:en|ja)\.js$/.test(new URL(request.url()).pathname) && asked.push(new URL(request.url()).pathname));
+  const { errors } = await watch(page, "district.html?venues=rogers-arena&lang=ja");
+  expect(asked).toEqual(["/dist/strings.ja.js"]);
+  const stage = page.locator('[data-testid="stage"]');
+  const japanese = await stage.innerHTML();
+  expect(japanese).toContain("ロジャーズ");
+  const choose = async (language) => {
+    await page.locator("#language").selectOption(language);
+    await page.waitForSelector('body[data-ready="true"]');
+    await page.waitForFunction((value) => document.documentElement.lang === value, language);
+  };
+  await choose("en");
+  expect(asked).toEqual(["/dist/strings.ja.js", "/dist/strings.en.js"]);
+  expect(await stage.innerHTML()).toContain("Rogers Arena");
+  await choose("ja");
+  await choose("en");
+  expect(asked).toEqual(["/dist/strings.ja.js", "/dist/strings.en.js"]);
   expect(errors).toEqual([]);
 });
 

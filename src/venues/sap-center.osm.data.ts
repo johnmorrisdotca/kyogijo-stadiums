@@ -1,0 +1,62 @@
+// Made by scripts/build-venues.mjs from the files of data-sources/venues/ (read 2026-10-20): do not edit by hand. One venue of src/venues.osm.data.ts, for a page that draws it.
+//
+// THIS FILE IS ODbL 1.0 DATA FROM OPENSTREETMAP: "(c) OpenStreetMap contributors", https://www.openstreetmap.org/copyright. It holds each venue's building outline (the way OpenStreetMap tags with the
+// venue's Wikidata item, simplified to a metre, longitude and latitude to six decimals), the building's height where OpenStreetMap maps one, and the ice where OpenStreetMap maps it. The package is MIT;
+// this file is a derived database under the ODbL, offered under it with the credit above. The drawings made from it are produced works and need only the credit (`VENUE_ATTRIBUTION`). Nothing in a CC0
+// or CC BY-SA file of the package is copied from here or into here. The raw responses are in data-sources/venues/.
+import type { VenueOsm } from "../venues.ts";
+
+export const OSM: VenueOsm = {
+  "source": "way/24169210",
+  "read": "2026-10-20",
+  "base": "2026-10-20T19:39:36Z",
+  "licence": "ODbL-1.0",
+  "attribution": "(c) OpenStreetMap contributors, ODbL 1.0, openstreetmap.org/copyright",
+  "height": 28.73,
+  "axis": {"heading": 90, "basis": "none", "strength": 1.48, "elongation": 1.03, "centre": [-121.901264,37.332787]},
+  "ring": [
+    [-121.900672, 37.333382],
+    [-121.900548, 37.333293],
+    [-121.900539, 37.333163],
+    [-121.900479, 37.333023],
+    [-121.900461, 37.332909],
+    [-121.900472, 37.332784],
+    [-121.900503, 37.332684],
+    [-121.900479, 37.33236],
+    [-121.900645, 37.332212],
+    [-121.901046, 37.332196],
+    [-121.901233, 37.332144],
+    [-121.901403, 37.33213],
+    [-121.901654, 37.332166],
+    [-121.901815, 37.332158],
+    [-121.901938, 37.332246],
+    [-121.901948, 37.332377],
+    [-121.902011, 37.332522],
+    [-121.902116, 37.33252],
+    [-121.902124, 37.332617],
+    [-121.902044, 37.332621],
+    [-121.902051, 37.332706],
+    [-121.90213, 37.332702],
+    [-121.902137, 37.332798],
+    [-121.902009, 37.332802],
+    [-121.901984, 37.332869],
+    [-121.902006, 37.333179],
+    [-121.902167, 37.33317],
+    [-121.90217, 37.333258],
+    [-121.902088, 37.333235],
+    [-121.902065, 37.333257],
+    [-121.902125, 37.333301],
+    [-121.902003, 37.33341],
+    [-121.901942, 37.333367],
+    [-121.901918, 37.333388],
+    [-121.901956, 37.33345],
+    [-121.901856, 37.333451],
+    [-121.901841, 37.333328],
+    [-121.901452, 37.333346],
+    [-121.901374, 37.333373],
+    [-121.901424, 37.333471],
+    [-121.901201, 37.333579],
+    [-121.901081, 37.333412],
+    [-121.90083, 37.333376],
+  ],
+};

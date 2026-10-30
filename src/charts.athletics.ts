@@ -13,7 +13,7 @@ import type { AthleticsFieldEvent, AthleticsRace } from "./athletics/types.ts";
 import { esc } from "./format.ts";
 import type { Layer, PointDatum, TextDatum } from "./layers.types.ts";
 import type { ReplayEvent, ReplayFrame, ReplayLook, ReplayObject, ReplayTimeline } from "./replay.types.ts";
-import { fill } from "./strings.ts";
+import { fill } from "./strings.core.ts";
 import type { SurfaceOptions } from "./types.ts";
 
 const isNum = (v: unknown): v is number => typeof v === "number" && Number.isFinite(v);

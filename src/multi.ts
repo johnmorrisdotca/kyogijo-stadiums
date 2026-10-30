@@ -1,7 +1,7 @@
 // A tournament layout laid out: several of the package's own surfaces on one floor, to scale, where each stands and what it leaves free; the floor the layout needs; and whether it fits a hall's floor. The
 // figures are in multi.data.ts (a rulebook's, with its source); this file only adds them up. Nothing here draws SVG (multi.draw.ts does), and every function returns new values.
 import { inOctagon } from "./budo/plan.ts";
-import { fill } from "./strings.ts";
+import { fill } from "./strings.core.ts";
 import { FEET_PER_METRE } from "./geometry.ts";
 import { IJF_CONTEST, WKF_KUMITE } from "./leagues/budo.ts";
 import { MULTI_PRESETS, MULTI_VENUES, multiPreset, multiVenueById } from "./multi.data.ts";

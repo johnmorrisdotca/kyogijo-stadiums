@@ -5,7 +5,7 @@
 import { attackingIn, frameByName, toSurface, type Frame } from "./frames.ts";
 import { el, num } from "./format.ts";
 import { frameSizeOf } from "./outline.ts";
-import { fill, type KyogijoWords } from "./strings.ts";
+import { fill, type KyogijoWords } from "./strings.core.ts";
 import { textWidth } from "./text.ts";
 import { textOn, type Mark, type Surface } from "./surfaces/surface.ts";
 import type { DirectionOptions, ScoreOptions, Side, Sport, SurfaceOptions } from "./types.ts";

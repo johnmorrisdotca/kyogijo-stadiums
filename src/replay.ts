@@ -19,7 +19,7 @@ import type {
   ReplayTimeline,
   ReplayTrail,
 } from "./replay.types.ts";
-import { KYOGIJO_STRINGS, fill, type KyogijoWords } from "./strings.ts";
+import { KYOGIJO_STRINGS, fill, type KyogijoWords } from "./strings.core.ts";
 import type { Language, ScoreOptions, SurfaceOptions } from "./types.ts";
 import { VERSION } from "./version.ts";
 

@@ -7,7 +7,7 @@ import type { P } from "./layers.marks.ts";
 import { attrs, dots, frameNote, squareWord, unitWord, groupByTeam, paintOf, placeAll, polygonPath, round, teamClass, teamKey, teamLabel, titled, labelOf, type Placed, type TeamTable } from "./team.common.ts";
 import { convexHull, delaunay, polygonArea, polygonCentroid, triangulationEdges, voronoiCells } from "./team.geometry.ts";
 import type { DelaunayLayer, HullLayer, PlayerDatum, VoronoiLayer } from "./team.types.ts";
-import { fill } from "./strings.ts";
+import { fill } from "./strings.core.ts";
 import { FEET_PER } from "./units.ts";
 
 type Player = Placed<PlayerDatum>;

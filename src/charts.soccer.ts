@@ -8,7 +8,7 @@ import { layerTable, renderLayers } from "./layers.ts";
 import type { Layer, PointStyle, PointsLayer } from "./layers.types.ts";
 import { outlineOf } from "./outline.ts";
 import { KYOGIJO_BASE_STYLE } from "./style.ts";
-import { fill } from "./strings.ts";
+import { fill } from "./strings.core.ts";
 import { FEET_PER_METRE } from "./geometry.ts";
 import { SOCCER } from "./surfaces/soccer-spec.ts";
 import { VERSION } from "./version.ts";

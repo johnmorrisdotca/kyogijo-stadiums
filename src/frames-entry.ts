@@ -1,4 +1,6 @@
 // Coordinate frames: where a data provider puts a point on a surface, and the functions that move points between a provider's frame, the surface and another provider's frame.
+// The words in both languages, as this entry has always carried them (the lean district reads one language when it is asked to).
+import "./strings.ts";
 export { FRAMES, attackingIn, convert, convertPoints, flipEnds, frameByName, framesOf, fromSurface, piecewise, registerFrame, span, toSurface } from "./frames.ts";
 export type { Attacking, ConvertOptions, Ends, Frame, FrameMap, FrameUnit, Landmark, Mapper, PlaceOptions, SurfaceSize } from "./frames.ts";
 export { RETROSHEET_ZONES, zoneAt, zoneToPoint } from "./frames.providers.ts";

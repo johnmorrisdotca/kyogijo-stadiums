@@ -10,49 +10,49 @@
     "dataKB": 595
   },
   "district:pair": {
-    "totalKB": 2640,
-    "totalGzipKB": 815,
-    "dataKB": 335
+    "totalKB": 2480,
+    "totalGzipKB": 780,
+    "dataKB": 245
   },
   "district:alone": {
-    "totalKB": 2635,
-    "totalGzipKB": 815,
-    "dataKB": 330
+    "totalKB": 2475,
+    "totalGzipKB": 780,
+    "dataKB": 245
   },
   "district:soccer": {
-    "totalKB": 2640,
-    "totalGzipKB": 815,
-    "dataKB": 335
+    "totalKB": 2480,
+    "totalGzipKB": 780,
+    "dataKB": 245
   },
   "district:seattlecenter": {
-    "totalKB": 2670,
-    "totalGzipKB": 820,
-    "dataKB": 365
+    "totalKB": 2425,
+    "totalGzipKB": 760,
+    "dataKB": 195
   },
   "district:sodo": {
-    "totalKB": 2640,
-    "totalGzipKB": 815,
-    "dataKB": 335
+    "totalKB": 2390,
+    "totalGzipKB": 755,
+    "dataKB": 160
   },
   "district:seattle": {
-    "totalKB": 2760,
-    "totalGzipKB": 840,
-    "dataKB": 455
+    "totalKB": 2515,
+    "totalGzipKB": 780,
+    "dataKB": 285
   },
   "district:tokyo": {
-    "totalKB": 2595,
-    "totalGzipKB": 805,
-    "dataKB": 295
+    "totalKB": 2350,
+    "totalGzipKB": 745,
+    "dataKB": 120
   },
   "district:tokyokodokan": {
-    "totalKB": 2595,
-    "totalGzipKB": 805,
-    "dataKB": 295
+    "totalKB": 2350,
+    "totalGzipKB": 745,
+    "dataKB": 120
   },
   "district:kodokan": {
-    "totalKB": 2535,
-    "totalGzipKB": 790,
-    "dataKB": 230
+    "totalKB": 2285,
+    "totalGzipKB": 725,
+    "dataKB": 55
   },
   "stadiums": {
     "totalKB": 3120,

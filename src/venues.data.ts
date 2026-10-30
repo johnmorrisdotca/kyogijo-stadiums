@@ -1,6 +1,6 @@
 // Made by scripts/build-venues.mjs from scripts/venues.data.json: do not edit by hand.
 // The facts are those of the Wikidata items and the English Wikipedia articles (revisions) each entry cites, in our own words; see docs/venues.md and NOTICE.md. Wikidata is CC0; the facts read from
-// English Wikipedia are numbers and words of ours, not its text (CC BY-SA 4.0). What OpenStreetMap gave is in venues.osm.data.ts, apart, because it is ODbL.
+// English Wikipedia are numbers and words of ours, not its text (CC BY-SA 4.0). What OpenStreetMap gave is in venues.osm.data.ts and venues/<id>.osm.data.ts, apart, because it is ODbL.
 import type { RealVenueData } from "./venues.ts";
 
 export const VENUE_DATA: RealVenueData[] = [

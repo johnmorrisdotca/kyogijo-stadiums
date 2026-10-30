@@ -6,7 +6,7 @@ import { isNum, markAttrs, place, type Env } from "./layers.env.ts";
 import type { P } from "./layers.marks.ts";
 import { FRAMES } from "./frames.ts";
 import type { LayerBase, MarkDatum } from "./layers.types.ts";
-import { fill } from "./strings.ts";
+import { fill } from "./strings.core.ts";
 import type { Unit } from "./units.ts";
 
 /** The words of the team layers. */

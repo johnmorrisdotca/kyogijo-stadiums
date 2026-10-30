@@ -6,10 +6,10 @@ import { heldArena, arenaRinkIn, type Arena, type ArenaSource } from "./arenas.c
 import { NORTH_ROOM, aislesOf, areaOfOutline, outlinePoints, type Box, type Outline, type Pt, type RealBowl, type StandRing } from "./crowd.ts";
 import { NHL, FEET_PER_METRE } from "./geometry.ts";
 import { boxOf, edgeDistance, inside, metresFrom, middleOf, northOn, turnedTo, type LonLat } from "./venues.geo.ts";
-import { VENUE_DATA } from "./venues.data.ts";
-import { VENUE_ATTRIBUTION, VENUE_OSM } from "./venues.osm.data.ts";
+import { VENUE_INDEX } from "./venues.index.ts";
 
-export { VENUE_ATTRIBUTION };
+/** The credit the ODbL asks for, wherever a drawing made from OpenStreetMap's data is shown. */
+export const VENUE_ATTRIBUTION = "(c) OpenStreetMap contributors, ODbL 1.0, openstreetmap.org/copyright";
 
 /** How a fact is known: `documented` is what a source cited with it says; `plausible` is ours, for a bowl no source describes. */
 export type VenueBasis = "documented" | "plausible";
@@ -92,14 +92,49 @@ export interface VenueOrientation {
   north: number;
 }
 
-/** The venues by key: the arenas of the NHL's divisions that have been drawn, with their facts and their outlines. */
-export const VENUES: Readonly<Record<string, RealVenue>> = Object.freeze(Object.fromEntries(VENUE_DATA.map((data) => [data.id, Object.freeze({ ...data, osm: VENUE_OSM[data.id] })])));
+const HELD: Record<string, RealVenue> = {};
+
+/**
+ * The real venues held for the drawing, by key: every venue in the entries that have always had them (the full table, `venues.all.ts`, fills it), and in the lean district the venues `loadVenueDataFor` has read. Do not write to it.
+ * @example
+ * ```ts
+ * import { VENUES } from "@johnmorrisdotca/kyogijo-stadiums/venues";
+ * console.log(VENUES["honda-center"].seats.hockey);
+ * // 17174
+ * ```
+ */
+export const VENUES: Readonly<Record<string, RealVenue>> = HELD;
+
+/** Hold venues for the drawing, from their facts and what OpenStreetMap gave (the same key in each): a later one with a key replaces the earlier. Returns the venues as held. */
+export function registerVenues(data: readonly RealVenueData[], osm: Readonly<Record<string, VenueOsm>>): RealVenue[] {
+  return data.map((one) => (HELD[one.id] = Object.freeze({ ...one, osm: osm[one.id] })));
+}
 
 /** The keys of `VENUES`, in the order of the data. */
-export const VENUE_IDS: readonly string[] = Object.freeze(VENUE_DATA.map((data) => data.id));
+export const VENUE_IDS: readonly string[] = Object.freeze(Object.keys(VENUE_INDEX));
 
-/** The venue of an arena (by its key in `ARENAS`), or `undefined`. */
-export const venueById = (id: string | undefined): RealVenue | undefined => (id !== undefined && Object.prototype.hasOwnProperty.call(VENUES, id) ? VENUES[id] : undefined);
+const reading = new Map<string, Promise<RealVenue>>();
+
+/** A venue by its key, read from its two files (the facts, and what OpenStreetMap gave) the first time and held for the drawing after: asking again gives the same promise. A key that is not a venue rejects, naming the keys there are. */
+export function loadVenue(id: string): Promise<RealVenue> {
+  const held = Object.hasOwn(HELD, id) ? HELD[id] : undefined;
+  if (held !== undefined) return Promise.resolve(held);
+  const found = reading.get(id);
+  if (found !== undefined) return found;
+  if (!Object.hasOwn(VENUE_INDEX, id)) return Promise.reject(new Error(`no venue ${JSON.stringify(id)}: the venues are ${VENUE_IDS.join(", ")}`));
+  const promise = VENUE_INDEX[id].load().then(([facts, outline]) => registerVenues([facts.VENUE], { [id]: outline.OSM })[0]);
+  reading.set(id, promise);
+  promise.catch(() => reading.delete(id));
+  return promise;
+}
+
+/** The venue of an arena (by its key in `ARENAS`), or `undefined` for an arena that has none. A venue that has not been read yet (the lean district reads them with `loadVenueDataFor`) throws, saying so. */
+export const venueById = (id: string | undefined): RealVenue | undefined => {
+  if (id === undefined) return undefined;
+  if (Object.hasOwn(HELD, id)) return HELD[id];
+  if (Object.hasOwn(VENUE_INDEX, id)) throw new Error(`the venue ${id} is not read yet: await loadVenueDataFor([${JSON.stringify(id)}]) before the first call of the lean district that draws it, or use an entry that holds every venue (the main entry, or any but the lean district's)`);
+  return undefined;
+};
 
 /** The venue whose arena is the Wikidata item `Q774138`, or `undefined`. */
 export const venueByWikidata = (wikidata: string | undefined): RealVenue | undefined => Object.values(VENUES).find((venue) => venue.wikidata === wikidata);

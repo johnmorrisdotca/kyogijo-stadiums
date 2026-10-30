@@ -1,5 +1,7 @@
 // The fly-through: one smooth camera from a map to the real arena, over the map (chizu's, handed over), the building's site plan and the 3D arena.
 import "./full.ts";
+// The real venues of the NHL's arenas, as this entry has always had them (the lean district reads the ones it shows).
+import "./venues.all.ts";
 export { mountFlythrough } from "./flythrough.dom.ts";
 export type { Flythrough, FlythroughOptions, FlythroughSettings, FlythroughStart } from "./flythrough.dom.ts";
 export { CHANNELS, PACE, RAMP, STAGE_IDS, cameraAt, flightPlan, foldTime, glide, glideSeconds, mainView, mapBox, mapFrame, monotoneSlopes, nextRate, stageAt, startOf, stagesOf } from "./flythrough.path.ts";

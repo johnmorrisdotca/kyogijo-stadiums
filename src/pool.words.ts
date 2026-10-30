@@ -3,7 +3,7 @@ import { artisticPlan, divePlan, poloPlan, swimPlan, venueOf, type PoolPlan, typ
 import { STATUS_TEXT, formatTime } from "./pool.race.ts";
 import { MEDALS } from "./pool.labels.ts";
 import { WATER_POLO } from "./pool.figures.ts";
-import { KYOGIJO_STRINGS, fill } from "./strings.ts";
+import { KYOGIJO_STRINGS, fill } from "./strings.core.ts";
 import type { Language, SurfaceOptions } from "./types.ts";
 
 const trimmed = (value: number): string => String(Math.round(value * 100) / 100);

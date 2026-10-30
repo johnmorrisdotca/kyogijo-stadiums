@@ -1,7 +1,7 @@
 import { el, num } from "../format.ts";
 import { feet, reachOf, venueLayout, type PoolPlan, type VenueLayout } from "../pool.ts";
 import { deckMarkup, paintDefs, poolIds, type PoolCtx } from "../pool.kit.ts";
-import { KYOGIJO_STRINGS } from "../strings.ts";
+import { KYOGIJO_STRINGS } from "../strings.core.ts";
 import type { Language, PoolStyle } from "../types.ts";
 import { artistic } from "./artistic.ts";
 import { diving } from "./dive.ts";

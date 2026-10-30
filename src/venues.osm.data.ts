@@ -6,9 +6,6 @@
 // or CC BY-SA file of the package is copied from here or into here. The raw responses are in data-sources/venues/.
 import type { VenueOsm } from "./venues.ts";
 
-/** The credit the ODbL asks for, wherever a drawing made from this data is shown. */
-export const VENUE_ATTRIBUTION = "(c) OpenStreetMap contributors, ODbL 1.0, openstreetmap.org/copyright";
-
 export const VENUE_OSM: Record<string, VenueOsm> = {
   "honda-center": {
     "source": "way/120623151",

@@ -14,7 +14,7 @@ import { zoneCounts } from "./heat.ts";
 import type { ZonesLayer } from "./heat.types.ts";
 import { envFor } from "./layers.env.ts";
 import type { Layer, PointDatum } from "./layers.types.ts";
-import { fill } from "./strings.ts";
+import { fill } from "./strings.core.ts";
 import type { SheetStyle } from "./types.ts";
 import { convertLength, isUnit } from "./units.ts";
 

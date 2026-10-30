@@ -11,7 +11,7 @@ import { KYOGIJO_MARK_STYLE } from "./mark.ts";
 import { isPolygon, shapePath } from "./layers.marks.ts";
 import type { MarkShape } from "./layers.types.ts";
 import { elements, parseSvg, textOf, writeSvg, type SvgNode } from "./scene.xml.ts";
-import { KYOGIJO_STRINGS, fill } from "./strings.ts";
+import { KYOGIJO_STRINGS, fill } from "./strings.core.ts";
 import { KYOGIJO_BASE_STYLE, KYOGIJO_CURLING_STYLE, KYOGIJO_HEAT_STYLE, KYOGIJO_NOTE_STYLE, KYOGIJO_TEAM_STYLE } from "./style.ts";
 import { textWidth } from "./text.ts";
 import type { Language, ScoreOptions, SurfaceOptions } from "./types.ts";

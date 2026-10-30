@@ -54,7 +54,7 @@ import { artistic } from "./surfaces/artistic.ts";
 import { cropToRange, describeRange, rangeLabel, shows } from "./ranges.ts";
 import { badgeMarkup, bannerMarkup, plateMarkup, stateOf, type TeamView } from "./score.ts";
 import { setsBoardMarkup } from "./sets.board.ts";
-import { KYOGIJO_STRINGS, fill } from "./strings.ts";
+import { KYOGIJO_STRINGS, fill } from "./strings.core.ts";
 import { courtStyle } from "./courts.style.ts";
 import { annotate, annotated, wideView, type Notes } from "./annotate.ts";
 import { KYOGIJO_BACKGROUND_STYLE, laidOn } from "./background.ts";

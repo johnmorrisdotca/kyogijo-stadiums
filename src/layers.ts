@@ -43,7 +43,7 @@ import type {
   TextDatum,
   TextStyle,
 } from "./layers.types.ts";
-import { KYOGIJO_STRINGS, fill, type KyogijoWords } from "./strings.ts";
+import { KYOGIJO_STRINGS, fill, type KyogijoWords } from "./strings.core.ts";
 import type { Box, ScoreOptions, SurfaceOptions } from "./types.ts";
 import { FEET_PER } from "./units.ts";
 

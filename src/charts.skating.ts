@@ -7,7 +7,7 @@ import type { Chart, ChartOptions, KeyItem } from "./charts.types.ts";
 import { esc } from "./format.ts";
 import type { Layer, PointDatum, TextDatum } from "./layers.types.ts";
 import type { ReplayEvent, ReplayFrame, ReplayLook, ReplayObject, ReplayTimeline } from "./replay.types.ts";
-import { fill } from "./strings.ts";
+import { fill } from "./strings.core.ts";
 import type { SurfaceOptions } from "./types.ts";
 import { ELEMENT_KINDS, ELEMENT_NAMES, type ElementKind, raceById } from "./skating/events.ts";
 import { ISU_SHORT_TRACK } from "./leagues/skating.ts";

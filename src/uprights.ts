@@ -13,7 +13,7 @@ import { NHL_RINK } from "./leagues/hockey.ts";
 import { chooseLeague, courtOf, diamondOf, fieldOf, rinkOf } from "./leagues.ts";
 import { fenceFor, heldPark, parkWallsIn } from "./parks.core.ts";
 import { fenceOutline } from "./surfaces/baseball.ts";
-import { KYOGIJO_STRINGS, fill } from "./strings.ts";
+import { KYOGIJO_STRINGS, fill } from "./strings.core.ts";
 import { soccerSpec } from "./surfaces/soccer-spec.ts";
 import { thinnest, type Plane, type Upright, type UprightKind } from "./turn.kit.ts";
 import { scoreboard } from "./uprights.board.ts";

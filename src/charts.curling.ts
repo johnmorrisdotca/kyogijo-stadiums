@@ -8,7 +8,7 @@ import { sheetFor } from "./sheet.ts";
 import type { CurlingOptions, CurlingStone, CurlingStoneResult, CurlingTotals, Chart, KeyItem } from "./charts.types.ts";
 import type { Layer, PointDatum, TextDatum } from "./layers.types.ts";
 import { assemble, clean, drawingOptions, keyItems, keyLayers, languageOf, round, wordsOf, type KeyEntry, type Look } from "./charts.ts";
-import { fill } from "./strings.ts";
+import { fill } from "./strings.core.ts";
 import { outlineOf } from "./outline.ts";
 import { isUnit } from "./units.ts";
 import type { SheetStyle } from "./types.ts";

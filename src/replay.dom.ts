@@ -6,7 +6,7 @@ import { renderLayers } from "./layers.ts";
 import { REPLAY_SPEEDS, createReplay, type ReplayController } from "./replay.control.ts";
 import { describeEvent, drawFrame, replayClock, replayGroups, replaySpoken, replayInfo, replayPlacer, replaySnapshot, type ReplayGroup } from "./replay.ts";
 import type { ReplayChange, ReplaySettings, ReplayTimeline } from "./replay.types.ts";
-import { KYOGIJO_STRINGS, fill } from "./strings.ts";
+import { KYOGIJO_STRINGS, fill } from "./strings.core.ts";
 import type { Language, ScoreOptions, SurfaceOptions } from "./types.ts";
 
 type P = [number, number];

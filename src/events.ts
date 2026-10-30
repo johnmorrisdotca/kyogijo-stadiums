@@ -2,7 +2,7 @@ import { EVENT_DATA, EVENT_SOURCES, type EventSource, type PlacementRule, type S
 import { heldGround, groundNameIn } from "./grounds.core.ts";
 import { heldPark, parkNameIn } from "./parks.core.ts";
 import { INFIELD_CENTRE, fitOf, hostOutline, type Fit } from "./special.ts";
-import { KYOGIJO_STRINGS, fill } from "./strings.ts";
+import { KYOGIJO_STRINGS, fill } from "./strings.core.ts";
 import type { HostOptions, Language, Placement, SurfaceOptions } from "./types.ts";
 
 export { EVENT_SOURCES } from "./events.data.ts";

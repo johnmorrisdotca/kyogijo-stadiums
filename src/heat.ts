@@ -31,7 +31,7 @@ import { buildZoneSet, type ZoneSet } from "./heat.zones.ts";
 import { clamp01, isNum, markAttrs, newMade, opacityOf, place, placeBack, toArray, unitOfLayer, type Env, type Made } from "./layers.env.ts";
 import { rampColour, type P } from "./layers.marks.ts";
 import type { LayerBase } from "./layers.types.ts";
-import { fill } from "./strings.ts";
+import { fill } from "./strings.core.ts";
 import { textWidth } from "./text.ts";
 import type { Box } from "./types.ts";
 import { FEET_PER, type Unit } from "./units.ts";

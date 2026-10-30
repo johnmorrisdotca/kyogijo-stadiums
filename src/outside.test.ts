@@ -145,6 +145,7 @@ describe("the crowd outside", () => {
     vi.resetModules();
     await import("./full.ts");
     await import("./walk.full.ts");
+    await import("./venues.all.ts");
     const fresh = await import("./outside.ts");
     const freshPlan = (await import("./district.ts")).planDistrict(PAIR);
     const again = fresh.outsideCrowd(freshPlan)!;
@@ -270,7 +271,7 @@ describe("the crowd as pixels", () => {
   it("is worked out once: the crowd of a plan is the same object the second time, and its first work stays under two seconds", () => {
     expect(outsideCrowd(plan)).toBe(crowd);
     vi.resetModules();
-    return Promise.all([import("./outside.ts"), import("./district.ts"), import("./full.ts"), import("./walk.full.ts")]).then(([fresh, district]) => {
+    return Promise.all([import("./outside.ts"), import("./district.ts"), import("./full.ts"), import("./walk.full.ts"), import("./venues.all.ts")]).then(([fresh, district]) => {
       const started = performance.now();
       fresh.outsideCrowd(district.planDistrict(PAIR));
       expect(performance.now() - started).toBeLessThan(2000);

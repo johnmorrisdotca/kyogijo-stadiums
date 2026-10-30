@@ -10,6 +10,8 @@ import { PARK_INDEX } from "./parks.index.ts";
 import { KODOKAN_NAME } from "./kodokan.ts";
 import { STADIUMS, stadiumKind } from "./stadiums.ts";
 import type { Language } from "./types.ts";
+import { VENUE_INDEX } from "./venues.index.ts";
+import { loadVenue } from "./venues.ts";
 
 type Index = Readonly<Record<string, { readonly name: string; readonly nameJa: string }>>;
 
@@ -84,7 +86,7 @@ export function venueDataKeysFor(venues: readonly string[]): VenueDataKeys {
 }
 
 /**
- * The records of the venues a page is about to draw, each read from its own file and no other, and held for the drawing: what `planDistrict`, `drawDistrict` and `mountDistrictTurn` of the lean district read. Await it before the
+ * The records of the venues a page is about to draw, each read from its own file (an arena of the NHL's real venue from its own two) and no other, and held for the drawing: what `planDistrict`, `drawDistrict` and `mountDistrictTurn` of the lean district read. Await it before the
  * first call and again when the venues change; a venue whose records are held is not read twice.
  * @example
  * ```ts
@@ -97,7 +99,8 @@ export function venueDataKeysFor(venues: readonly string[]): VenueDataKeys {
  */
 export async function loadVenueDataFor(venues: readonly string[]): Promise<void> {
   const keys = venueDataKeysFor(venues);
-  await Promise.all([...keys.arenas.map(loadArena), ...keys.parks.map(loadPark), ...keys.grounds.map(loadGround)]);
+  // An arena of the NHL also has a real venue (its facts and its outline, two files), which the district draws it from.
+  await Promise.all([...keys.arenas.map(loadArena), ...keys.arenas.filter((id) => Object.hasOwn(VENUE_INDEX, id)).map(loadVenue), ...keys.parks.map(loadPark), ...keys.grounds.map(loadGround)]);
 }
 
 const nameIn = (index: Index, id: string | undefined, language: Language): string | undefined => (id !== undefined && Object.hasOwn(index, id) ? (language === "ja" ? index[id].nameJa : index[id].name) : undefined);

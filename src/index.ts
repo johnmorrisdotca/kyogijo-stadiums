@@ -1,5 +1,7 @@
 // Kyogijo Stadiums 競技場: sports surfaces as SVG, drawn to scale, with the teams and the score on them.
 import "./full.ts";
+// The real venues of the NHL's arenas, as this entry has always had them (the lean district reads the ones it shows).
+import "./venues.all.ts";
 export { COLOR_PROPERTIES, SPORTS, crowdStands, describe, drawBadge, drawKyogijo, drawScore, drawSurface, isPortrait, statusLabel, statusText, winnerOf } from "./draw.ts";
 export { HOME_FIRST, HOME_FIRST_LEAGUES, homeSideFor } from "./homeside.ts";
 export { inkOn, luminance, rgbOf, safeColour, safePicture } from "./colour.ts";
@@ -36,8 +38,8 @@ export { HEAT_RAMPS, HEAT_RAMP_NAMES } from "./heat.colour.ts";
 export { ZONE_SETS, ZONE_SET_IDS } from "./heat.zones.ts";
 export type { Bandwidth, ContourLayer, HeatBase, HeatBins, HeatDatum, HeatLabels, HeatLegend, HeatRamp, HeatRampName, HeatStatistic, HeatmapLayer, HexOrientation, HexbinLayer, LegendLayer, Reducer, StatisticName, ZoneSetId, ZonesLayer } from "./heat.types.ts";
 export type { ArrowsLayer, Comet, Layer, LayerBase, LayerKind, LayerTeam, LineDatum, LineStyle, LinesLayer, MarkDatum, MarkShape, OutcomeStyle, Paint, PointDatum, PointStyle, PointsLayer, Scale, TableOptions, TextDatum, TextLayer, TextStyle } from "./layers.types.ts";
-export { KYOGIJO_STRINGS } from "./strings.ts";
-export type { KyogijoWords } from "./strings.ts";
+export { KYOGIJO_STRINGS } from "./strings.core.ts";
+export type { KyogijoWords } from "./strings.core.ts";
 export { KYOGIJO_COURTS_STYLE } from "./courts.style.ts";
 export { HARDWOOD_SMALL, KYOGIJO_HARDWOOD_STYLE } from "./hardwood.ts";
 export { KYOGIJO_CROWD_STYLE } from "./crowd.draw.ts";

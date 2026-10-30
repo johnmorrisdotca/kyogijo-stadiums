@@ -5,7 +5,7 @@ import { FRAMES } from "./frames.ts";
 import { formationById, positionName } from "./formations.ts";
 import { isNum, markAttrs, newMade, opacityOf, place, unitOfLayer, type Env, type Made } from "./layers.env.ts";
 import type { P } from "./layers.marks.ts";
-import { fill } from "./strings.ts";
+import { fill } from "./strings.core.ts";
 import { attrs, labelOf, paintOf, round, titled, type TeamTable } from "./team.common.ts";
 import type { Formation, FormationLayer, FormationPlayer, FormationSport } from "./team.types.ts";
 import { FEET_PER } from "./units.ts";

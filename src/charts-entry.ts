@@ -1,5 +1,7 @@
 // The ready-made charts: shot charts, shot maps, spray charts and pass charts built on the data layers.
 import "./full.ts";
+// The real venues of the NHL's arenas, as this entry has always had them (the lean district reads the ones it shows).
+import "./venues.all.ts";
 export { nbaShotChart, nflPassChart, nhlShotMap } from "./charts.ts";
 export { mlbSprayChart } from "./charts.baseball.ts";
 export { soccerGoalMouth, soccerShotMap } from "./charts.soccer.ts";

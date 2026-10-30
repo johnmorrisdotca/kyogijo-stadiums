@@ -1,4 +1,6 @@
 // The ballparks: their fence distances, with the article each was read from.
+// The words in both languages, as this entry has always carried them (the lean district reads one language when it is asked to).
+import "./strings.ts";
 export { PARKS, PARK_IDS, fenceFor, parkById, parkByName, parkByWikidata, parkNameIn, parkOfficialName, parkPointsIn, parkQuirksIn, parkSourceUrl, parkUnit, parkWallsIn, parksByName } from "./parks.ts";
 export { officialName, plainName } from "./names.ts";
 export type { PlaceAlias, PlaceNameKind } from "./names.ts";

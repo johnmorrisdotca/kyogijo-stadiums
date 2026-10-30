@@ -11,7 +11,7 @@ import { layerTable, renderLayers } from "./layers.ts";
 import type { Layer, OutcomeStyle, PointsLayer, TextLayer } from "./layers.types.ts";
 import { chooseLeague, lacrosseOf } from "./leagues.ts";
 import { KYOGIJO_BASE_STYLE } from "./style.ts";
-import { KYOGIJO_STRINGS, fill, type KyogijoWords } from "./strings.ts";
+import { KYOGIJO_STRINGS, fill, type KyogijoWords } from "./strings.core.ts";
 import { soccerSpec } from "./surfaces/soccer-spec.ts";
 import { NHL, FEET_PER_METRE } from "./geometry.ts";
 import { WATER_POLO } from "./pool.figures.ts";

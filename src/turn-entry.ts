@@ -1,5 +1,7 @@
 // The 3D view: a surface as a floor that turns, with a net, a basket, a goal or a pair of posts standing on it.
 import "./full.ts";
+// The real venues of the NHL's arenas, as this entry has always had them (the lean district reads the ones it shows).
+import "./venues.all.ts";
 export { mountKyogijoTurn, mountTurn, turnSupported } from "./turn.dom.ts";
 export type { KyogijoTurn } from "./turn.dom.ts";
 export { buildTurn, floorOptions, openingView } from "./turn.model.ts";

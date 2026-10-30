@@ -1,7 +1,7 @@
 // The pass network chart: who passed to whom on a pitch, each player a node at the average place of his passes, sized by touches, and each pair of players a link
 // sized by their passes, with a key and a table. The idea is that of mplsoccer's pass-network example (MIT); no code of it, nor of sportypy or sportyR (GPL), is used.
 import { envFor } from "./layers.env.ts";
-import { fill } from "./strings.ts";
+import { fill } from "./strings.core.ts";
 import { assemble, clean, drawingOptions, frameOf, fromOf, keyLayers, languageOf, wordsOf } from "./charts.ts";
 import type { Chart, ChartOptions, KeyItem } from "./charts.types.ts";
 import type { Frame } from "./frames.ts";

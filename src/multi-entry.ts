@@ -2,6 +2,8 @@
 // officials' chairs, a scoreboard hung over the middle, the boards and the empty places for the event's own words and marks; the real configurations of events as presets, each with its rule; the halls whose
 // floors are published, and whether a layout fits one; and a real stadium round the floor at the same scale. `multiTable` is the text alternative.
 import "./full.ts";
+// The real venues of the NHL's arenas, as this entry has always had them (the lean district reads the ones it shows).
+import "./venues.all.ts";
 export { drawMulti, multiSetting, multiTable } from "./multi.draw.ts";
 export { SURROUND_HEIGHT, buildMultiTurn, mountMultiTurn, multiPresets, multiTurnMarkup } from "./multi.turn.ts";
 export { MULTI_MAX, fitSentence, multiFit, multiLayout, needsSentence, specOf, venueOf } from "./multi.ts";

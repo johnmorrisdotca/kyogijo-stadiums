@@ -5,7 +5,7 @@ import { wideView } from "./annotate.ts";
 import { el, num } from "./format.ts";
 import { DRIVE_CODES, downTag, hockeyPill, yardLineText, type BaseballRead, type FootballRead, type HockeyRead, type SituationRead } from "./situation.ts";
 import { pillWidget, scorebugWidget, shootoutWidget, tagWidget, type Widget } from "./situation.widgets.ts";
-import { KYOGIJO_STRINGS } from "./strings.ts";
+import { KYOGIJO_STRINGS } from "./strings.core.ts";
 import { roundedRect, textOn, type Surface } from "./surfaces/surface.ts";
 import type { Language, Side } from "./types.ts";
 

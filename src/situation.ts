@@ -2,7 +2,7 @@
 // team attacks, which end, what the words say), so that the drawing (`situation.draw.ts`, `situation.badge.ts`) and the description do not decide it twice. A value that is not what
 // it should be (a fourth down on the CFL's field, 7 skaters, a clock that is not a time) is left out, as a value from a page's markup is anywhere else; nothing here throws.
 import { attackingIn } from "./frames.ts";
-import { KYOGIJO_STRINGS, fill, type SituationWords } from "./strings.ts";
+import { KYOGIJO_STRINGS, fill, type SituationWords } from "./strings.core.ts";
 import type { DirectionOptions, Language, Side, Sport } from "./types.ts";
 import type { BaseballSituation, DriveResult, FootballSituation, HockeySituation, Situation, SituationTeam } from "./situation.types.ts";
 

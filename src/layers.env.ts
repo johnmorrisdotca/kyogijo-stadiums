@@ -10,7 +10,7 @@ import type { P } from "./layers.marks.ts";
 import type { LayerBase } from "./layers.types.ts";
 import { chooseLeague } from "./leagues.ts";
 import { frameSizeOf, outlineOf, type Outline } from "./outline.ts";
-import { KYOGIJO_STRINGS, type KyogijoWords } from "./strings.ts";
+import { KYOGIJO_STRINGS, type KyogijoWords } from "./strings.core.ts";
 import type { Box, ScoreOptions, SurfaceOptions } from "./types.ts";
 import { FEET_PER, SURFACE_UNITS, isUnit, type Unit } from "./units.ts";
 

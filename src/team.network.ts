@@ -4,7 +4,7 @@
 import { esc, num } from "./format.ts";
 import { isNum, markAttrs, newMade, opacityOf, place, toArray, unitOfLayer, type Env, type Made } from "./layers.env.ts";
 import { curveBetween, curvePath, headPath, type P } from "./layers.marks.ts";
-import { fill } from "./strings.ts";
+import { fill } from "./strings.core.ts";
 import { attrs, frameNote, round, teamClass, teamKey, titled, type TeamTable } from "./team.common.ts";
 import type { NetworkLayer, PassDatum } from "./team.types.ts";
 import { FEET_PER } from "./units.ts";

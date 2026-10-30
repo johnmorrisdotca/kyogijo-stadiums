@@ -11,7 +11,7 @@ import { KYOGIJO_JUDGING_BOARD_STYLE, KYOGIJO_JUDGING_STYLE } from "./judging.st
 import { judgingText } from "./judging.text.ts";
 import type { JudgingOptions, JudgingResolved } from "./judging.types.ts";
 import { JUDGING_WORDS } from "./judging.words.ts";
-import { fill } from "./strings.ts";
+import { fill } from "./strings.core.ts";
 import { metaMarkup, safeClass } from "./common.ts";
 import { LINE_HEIGHT, fitLines, textWidth } from "./text.ts";
 import { VERSION } from "./version.ts";

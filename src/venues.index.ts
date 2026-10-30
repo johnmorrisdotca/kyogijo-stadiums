@@ -1,0 +1,38 @@
+// Made by scripts/build-venues.mjs from scripts/venues.data.json: do not edit by hand.
+// Every key of src/venues.data.ts with the import() of the two files that hold its record (`venues/<key>.data.ts`, the facts, and `venues/<key>.osm.data.ts`, what OpenStreetMap gave, kept apart for their licences), read with a dynamic import() when the venue is asked for (see `loadVenue` in venues.ts).
+import type { RealVenueData, VenueOsm } from "./venues.ts";
+
+export const VENUE_INDEX: Readonly<Record<string, { readonly load: () => Promise<readonly [{ readonly VENUE: RealVenueData }, { readonly OSM: VenueOsm }]> }>> = {
+  "honda-center": { load: () => Promise.all([import("./venues/honda-center.data.ts"), import("./venues/honda-center.osm.data.ts")]) },
+  "scotiabank-saddledome": { load: () => Promise.all([import("./venues/scotiabank-saddledome.data.ts"), import("./venues/scotiabank-saddledome.osm.data.ts")]) },
+  "rogers-place": { load: () => Promise.all([import("./venues/rogers-place.data.ts"), import("./venues/rogers-place.osm.data.ts")]) },
+  "crypto-com-arena": { load: () => Promise.all([import("./venues/crypto-com-arena.data.ts"), import("./venues/crypto-com-arena.osm.data.ts")]) },
+  "sap-center": { load: () => Promise.all([import("./venues/sap-center.data.ts"), import("./venues/sap-center.osm.data.ts")]) },
+  "climate-pledge-arena": { load: () => Promise.all([import("./venues/climate-pledge-arena.data.ts"), import("./venues/climate-pledge-arena.osm.data.ts")]) },
+  "rogers-arena": { load: () => Promise.all([import("./venues/rogers-arena.data.ts"), import("./venues/rogers-arena.osm.data.ts")]) },
+  "t-mobile-arena": { load: () => Promise.all([import("./venues/t-mobile-arena.data.ts"), import("./venues/t-mobile-arena.osm.data.ts")]) },
+  "united-center": { load: () => Promise.all([import("./venues/united-center.data.ts"), import("./venues/united-center.osm.data.ts")]) },
+  "ball-arena": { load: () => Promise.all([import("./venues/ball-arena.data.ts"), import("./venues/ball-arena.osm.data.ts")]) },
+  "american-airlines-center": { load: () => Promise.all([import("./venues/american-airlines-center.data.ts"), import("./venues/american-airlines-center.osm.data.ts")]) },
+  "grand-casino-arena": { load: () => Promise.all([import("./venues/grand-casino-arena.data.ts"), import("./venues/grand-casino-arena.osm.data.ts")]) },
+  "bridgestone-arena": { load: () => Promise.all([import("./venues/bridgestone-arena.data.ts"), import("./venues/bridgestone-arena.osm.data.ts")]) },
+  "enterprise-center": { load: () => Promise.all([import("./venues/enterprise-center.data.ts"), import("./venues/enterprise-center.osm.data.ts")]) },
+  "delta-center": { load: () => Promise.all([import("./venues/delta-center.data.ts"), import("./venues/delta-center.osm.data.ts")]) },
+  "canada-life-centre": { load: () => Promise.all([import("./venues/canada-life-centre.data.ts"), import("./venues/canada-life-centre.osm.data.ts")]) },
+  "td-garden": { load: () => Promise.all([import("./venues/td-garden.data.ts"), import("./venues/td-garden.osm.data.ts")]) },
+  "keybank-center": { load: () => Promise.all([import("./venues/keybank-center.data.ts"), import("./venues/keybank-center.osm.data.ts")]) },
+  "little-caesars-arena": { load: () => Promise.all([import("./venues/little-caesars-arena.data.ts"), import("./venues/little-caesars-arena.osm.data.ts")]) },
+  "amerant-bank-arena": { load: () => Promise.all([import("./venues/amerant-bank-arena.data.ts"), import("./venues/amerant-bank-arena.osm.data.ts")]) },
+  "bell-centre": { load: () => Promise.all([import("./venues/bell-centre.data.ts"), import("./venues/bell-centre.osm.data.ts")]) },
+  "canadian-tire-centre": { load: () => Promise.all([import("./venues/canadian-tire-centre.data.ts"), import("./venues/canadian-tire-centre.osm.data.ts")]) },
+  "benchmark-international-arena": { load: () => Promise.all([import("./venues/benchmark-international-arena.data.ts"), import("./venues/benchmark-international-arena.osm.data.ts")]) },
+  "scotiabank-arena": { load: () => Promise.all([import("./venues/scotiabank-arena.data.ts"), import("./venues/scotiabank-arena.osm.data.ts")]) },
+  "lenovo-center": { load: () => Promise.all([import("./venues/lenovo-center.data.ts"), import("./venues/lenovo-center.osm.data.ts")]) },
+  "nationwide-arena": { load: () => Promise.all([import("./venues/nationwide-arena.data.ts"), import("./venues/nationwide-arena.osm.data.ts")]) },
+  "prudential-center": { load: () => Promise.all([import("./venues/prudential-center.data.ts"), import("./venues/prudential-center.osm.data.ts")]) },
+  "ubs-arena": { load: () => Promise.all([import("./venues/ubs-arena.data.ts"), import("./venues/ubs-arena.osm.data.ts")]) },
+  "madison-square-garden": { load: () => Promise.all([import("./venues/madison-square-garden.data.ts"), import("./venues/madison-square-garden.osm.data.ts")]) },
+  "xfinity-mobile-arena": { load: () => Promise.all([import("./venues/xfinity-mobile-arena.data.ts"), import("./venues/xfinity-mobile-arena.osm.data.ts")]) },
+  "ppg-paints-arena": { load: () => Promise.all([import("./venues/ppg-paints-arena.data.ts"), import("./venues/ppg-paints-arena.osm.data.ts")]) },
+  "capital-one-arena": { load: () => Promise.all([import("./venues/capital-one-arena.data.ts"), import("./venues/capital-one-arena.osm.data.ts")]) },
+};

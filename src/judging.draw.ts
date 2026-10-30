@@ -12,7 +12,7 @@ import { judgingText } from "./judging.text.ts";
 import { KYOGIJO_JUDGING_STYLE } from "./judging.style.ts";
 import type { JudgingAssignment, JudgingOptions, JudgingResolved } from "./judging.types.ts";
 import { JUDGING_WORDS } from "./judging.words.ts";
-import { fill } from "./strings.ts";
+import { fill } from "./strings.core.ts";
 import { LINE_HEIGHT } from "./text.ts";
 import { VERSION } from "./version.ts";
 

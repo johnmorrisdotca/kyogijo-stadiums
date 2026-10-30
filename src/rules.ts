@@ -24,7 +24,7 @@ import { fenceFor, heldPark, parkWallsIn, type Park } from "./parks.core.ts";
 import { PARK_IDS_WITHOUT_WALLS } from "./parks.walls.ts";
 import { frameSizeOf, outlineOf, type Outline } from "./outline.ts";
 import { soccerSpec } from "./surfaces/soccer-spec.ts";
-import { KYOGIJO_STRINGS } from "./strings.ts";
+import { KYOGIJO_STRINGS } from "./strings.core.ts";
 import type { RuleId } from "./rules.types.ts";
 import type { Language, Sport, SurfaceOptions } from "./types.ts";
 import { FEET_PER, isUnit, type Unit } from "./units.ts";

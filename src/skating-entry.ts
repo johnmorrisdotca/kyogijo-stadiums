@@ -1,6 +1,8 @@
 // The ice skating rinks: the standard 400 m speed skating track, the short track oval and the figure skating rink, with the plan of each, the track's geometry (a point of a lane, the start of a race, the
 // lap of the crossing), the races and the elements, and the data: the pairs of a race, the starting positions of a short track race, the results, a replay and the elements of a programme as marks.
 import "./full.ts";
+// The real venues of the NHL's arenas, as this entry has always had them (the lean district reads the ones it shows).
+import "./venues.all.ts";
 export { skatingPairs, skatingGrid, skatingResults, skatingReplay, figureElements, formatTime, distanceSkated } from "./charts.skating.ts";
 export type { DrawTotals, ElementTotals, FigureElementsOptions, SkatingElement, SkatingEntry, SkatingPair, SkatingRaceOptions, SkatingReplay, SkatingReplayOptions, SkatingResult, SkatingResultsTotals, SkatingRunner, SkatingStarter } from "./charts.skating.ts";
 export { ELEMENT_KINDS, ELEMENT_NAMES, LONG_TRACK_RACES, LONG_TRACK_RACE_IDS, RACES, RACE_IDS, SHORT_TRACK_RACES, SHORT_TRACK_RACE_IDS, raceById } from "./skating/events.ts";

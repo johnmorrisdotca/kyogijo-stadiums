@@ -119,19 +119,21 @@
     <script type="module">
       // Start reading the area and the venues' records the address asks for now, while the page's other modules come, so that their files are there when they have run. Only those of the first view: another choice reads its own when it is made.
       import { loadAreasFor } from "./dist/areas-entry.js";
-      import { loadOutside, loadVenueDataFor } from "./dist/venue-data-entry.js";
+      import { loadOutside, loadStrings, loadVenueDataFor } from "./dist/venue-data-entry.js";
       const asked = new URLSearchParams(location.search);
       const first = (asked.get("venues") ?? "bc-place:cfl,rogers-arena").split(",");
       if (asked.get("context") !== "0") loadAreasFor(first).catch(() => {});
       loadVenueDataFor(first).catch(() => {});
       // The walkable ground of a crowd outside is read only for venues that have one (Vancouver's): for any other choice this reads nothing.
       loadOutside(first).catch(() => {});
+      // ... and the words of the language the address asks for, one file; the other language is read only when it is chosen.
+      loadStrings(asked.get("lang") === "ja" ? "ja" : "en").catch(() => {});
     </script>
     <script type="module">
       // A district: several real venues of one city on one plan, each at its real position and orientation (OpenStreetMap, ODbL 1.0), to look down on in 2D or turn around together in 3D. The page only asks the package to draw
       // (`drawDistrict`, `mountDistrictTurn`): the venues, the mode and the turn are options. What is chosen lives in the address; nothing is sent anywhere and nothing is stored.
       // The lean district: it holds the records of the venues it is asked to show and no others (`loadVenueDataFor`), and lists the rest by name alone (`venueName`).
-      import { areaKeysFor, DISTRICT_IDS, KODOKAN_FLOORS, loadAreasFor, loadOutside, loadVenueDataFor, mountDistrict, mountDistrictTurn, OUTSIDE_LEVELS, OUTSIDE_VENUES, planDistrict, QUALITIES, STADIUMS, unknownVenues, venueName, VENUE_ATTRIBUTION } from "./dist/district-lean-entry.js";
+      import { areaKeysFor, DISTRICT_IDS, KODOKAN_FLOORS, loadAreasFor, loadOutside, loadStrings, loadVenueDataFor, mountDistrict, mountDistrictTurn, OUTSIDE_LEVELS, OUTSIDE_VENUES, planDistrict, QUALITIES, STADIUMS, unknownVenues, venueName, VENUE_ATTRIBUTION } from "./dist/district-lean-entry.js";
       import { replaceAddress } from "./address.js";
       import { hoverOf, keepCamera, wayOf, writeWay } from "./turn-way.js";
       import { lightingFor, lightingOfAddress } from "./lighting.js";
@@ -433,14 +435,14 @@
           return;
         }
         // A district with a mask asks for the crowd at every level, 0 included: the plan keeps room round the buildings for it, so that nothing moves when the level does.
-        // The records of the venues chosen, the area round them if it is on, and the walkable ground of the crowd outside if they have one, are read from their own files. A choice that was made before is held: it is drawn at once, without waiting for anything.
-        const heldKey = `${state.venues.join()}|${contextOn()}`;
+        // The records of the venues chosen, the area round them if it is on, the walkable ground of the crowd outside if they have one, and the words of the language chosen, are read from their own files. A choice that was made before is held: it is drawn at once, without waiting for anything.
+        const heldKey = `${state.venues.join()}|${contextOn()}|${$("language").value}`;
         let context;
         if (held.has(heldKey)) context = held.get(heldKey);
         else {
           document.body.dataset.ready = "false";
           try {
-            [context] = await Promise.all([contextOn() ? loadAreasFor(state.venues) : undefined, loadVenueDataFor(state.venues), masked() ? loadOutside(state.venues) : undefined]);
+            [context] = await Promise.all([contextOn() ? loadAreasFor(state.venues) : undefined, loadVenueDataFor(state.venues), masked() ? loadOutside(state.venues) : undefined, loadStrings($("language").value)]);
           } catch (error) {
             $("error").textContent = String(error.message);
             $("error").hidden = false;

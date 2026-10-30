@@ -7,7 +7,7 @@ import { buildZoneSet } from "./heat.zones.ts";
 import { isNum, newMade, opacityOf, place, placeBack, toArray, unitOfLayer, type Env, type Made } from "./layers.env.ts";
 import { headPath, type P } from "./layers.marks.ts";
 import type { LayerBase } from "./layers.types.ts";
-import { fill } from "./strings.ts";
+import { fill } from "./strings.core.ts";
 import { attrs, frameNote, labelOf, round, teamClass, teamKey, teamLabel, titled, unitWord, type TeamTable } from "./team.common.ts";
 import type { FlowLayer, MoveDatum, SonarLayer } from "./team.types.ts";
 import { FEET_PER, type Unit } from "./units.ts";

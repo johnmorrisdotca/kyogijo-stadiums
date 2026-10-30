@@ -9,7 +9,7 @@ import type { ZoneSetId, ZonesLayer } from "./heat.types.ts";
 import { outlineOf } from "./outline.ts";
 import { fenceFor, heldPark } from "./parks.core.ts";
 import { MLB } from "./geometry.ts";
-import { fill } from "./strings.ts";
+import { fill } from "./strings.core.ts";
 import type { Ball, Chart, KeyItem, MlbSprayOptions, MlbTotals } from "./charts.types.ts";
 import { assemble, clean, countOutcomes, describeCounts, drawingOptions, frameOf, fromOf, hasPlace, keyItems, keyLayers, languageOf, placed, wordsOf, zoneTotals, type KeyEntry, type Look } from "./charts.ts";
 

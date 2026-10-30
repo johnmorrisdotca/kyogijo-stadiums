@@ -2,7 +2,7 @@
 // (`quirks`), the warning track's width, and the words that name them. The figures are in parks.ts; this file reads the options and says what to draw and what to say.
 import { lengthUnit } from "./common.ts";
 import { heldPark, parkQuirksIn, parkWallsIn, type ParkDugouts, type ParkQuirk, type ParkWall } from "./parks.core.ts";
-import { KYOGIJO_STRINGS, fill, type KyogijoWords } from "./strings.ts";
+import { KYOGIJO_STRINGS, fill, type KyogijoWords } from "./strings.core.ts";
 import type { Language, QuirkName, SurfaceOptions } from "./types.ts";
 
 /** The unit the heights and distances are written in: feet, or metres for a drawing in metres, centimetres or millimetres. */

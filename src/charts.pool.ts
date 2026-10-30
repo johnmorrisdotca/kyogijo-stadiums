@@ -7,7 +7,7 @@ import { swimPlan } from "./pool.ts";
 import { formatTime, pacePer100, splitMetres } from "./pool.race.ts";
 import type { PoolRace, PoolStyle } from "./pool.types.ts";
 import type { Chart, ChartOptions } from "./charts.types.ts";
-import { KYOGIJO_STRINGS, fill } from "./strings.ts";
+import { KYOGIJO_STRINGS, fill } from "./strings.core.ts";
 import type { Language, SurfaceOptions } from "./types.ts";
 
 /** One split of a swimmer: the metres it covers, the seconds it took, and its pace. */

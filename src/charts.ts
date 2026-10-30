@@ -14,7 +14,7 @@ import { layerTable } from "./layers.ts";
 import type { Layer, LayerBase, LinesLayer, MarkDatum, OutcomeStyle, PointDatum, PointStyle, PointsLayer, TextLayer } from "./layers.types.ts";
 import { flagPicture } from "./logo.ts";
 import { outlineOf } from "./outline.ts";
-import { KYOGIJO_STRINGS, fill, type KyogijoWords } from "./strings.ts";
+import { KYOGIJO_STRINGS, fill, type KyogijoWords } from "./strings.core.ts";
 import { textWidth } from "./text.ts";
 import type { Chart, ChartOptions, KeyItem, NbaShot, NbaShotOptions, NbaTotals, NflPass, NflPassOptions, NflTotals, NhlShot, NhlShotOptions, NhlTotals, ZoneTotal } from "./charts.types.ts";
 import type { Language, Sport, SurfaceOptions } from "./types.ts";

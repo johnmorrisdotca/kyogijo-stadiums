@@ -2,7 +2,7 @@
 import { JUDGING_WORDS } from "./judging.words.ts";
 import type { JudgingSetting } from "./judging.ts";
 import type { JudgingAssignment, JudgingOptions } from "./judging.types.ts";
-import { fill } from "./strings.ts";
+import { fill } from "./strings.core.ts";
 
 /** The sentence that names one seat and who sits in it. */
 function seatSentence(a: JudgingAssignment, setting: Pick<JudgingSetting, "language">): string {

@@ -1,5 +1,5 @@
 // What a skating drawing says of itself: its sentence about the rink, and what the options mark on it. Cheap (it reads the options, not the plan), so that a title and a description cost nothing.
-import { fill, KYOGIJO_STRINGS } from "../strings.ts";
+import { fill, KYOGIJO_STRINGS } from "../strings.core.ts";
 import type { Language, SurfaceOptions } from "../types.ts";
 import { raceById } from "./events.ts";
 import { furnitureOf, racesOf, skatingLeague } from "./plan.ts";

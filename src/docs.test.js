@@ -25,7 +25,7 @@ function stringsDocument() {
   const lines = [
     "# The Japanese of Kyogijo",
     "",
-    "Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds this file to them. The Japanese has not yet been read by a native reader: a correction is welcome as a *Fix a translation* issue.",
+    "Made from `src/strings.en.ts`, `src/strings.ja.ts` and `demo/words.js` by `pnpm docs:make`; a test holds this file to them. The Japanese has not yet been read by a native reader: a correction is welcome as a *Fix a translation* issue.",
     "",
     "## The drawing's words (`KYOGIJO_STRINGS`)",
     "",

@@ -13,7 +13,7 @@ import { KYOGIJO_MULTI_STYLE } from "./multi.style.ts";
 import { MULTI_WORDS } from "./multi.words.ts";
 import type { MultiCell, MultiFit, MultiLayout, MultiOptions, MultiSample, MultiSlot, MultiVenue } from "./multi.types.ts";
 import { outlineOf } from "./outline.ts";
-import { fill } from "./strings.ts";
+import { fill } from "./strings.core.ts";
 import { textWidth } from "./text.ts";
 import type { Language, SurfaceOptions } from "./types.ts";
 import { uprightsFor } from "./uprights.ts";

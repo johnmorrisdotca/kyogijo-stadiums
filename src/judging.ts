@@ -4,7 +4,7 @@ import { budoPlan, type BudoPlan, type MBox } from "./budo/plan.ts";
 import { JUDGING_LEAGUE, JUDGING_MATS_MAX, JUDGING_SEATS, JUDGING_SEAT_WORDS, JUDGING_STYLES } from "./judging.data.ts";
 import type { JudgingAssignment, JudgingMat, JudgingOptions, JudgingResolved, JudgingSeat, JudgingStyle } from "./judging.types.ts";
 import { JUDGING_WORDS } from "./judging.words.ts";
-import { fill } from "./strings.ts";
+import { fill } from "./strings.core.ts";
 import type { Language } from "./types.ts";
 
 /** The longest name, ID and mat label that are taken, in characters. */
