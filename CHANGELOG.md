@@ -7,6 +7,53 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.45.0] - 2026-10-30
+
+### Added
+
+- **`quality`: how much the 3D view of a district draws, so that it turns well on every device.** A setting of the 3D view (`quality: "auto" | "high" | "medium" | "low"`, `auto` by default; `view.quality`, `view.tier`, `view.setQuality(quality)`, `onQualityChange`, and `qualityTuning` for a test or an unusual screen; docs/quality.md). `high` is everything as it always was: the same elements and the same pixels as before (checked against 0.44.2 for every preset, in Chromium to the byte of the screenshot, light and dark, and in WebKit at the same place on the page). `auto` starts on `high`, times the frames the view makes while it turns (not the browser's name, not the device's model) and steps a tier down when the mean interval is over 21 ms (under 48 frames a second) for a window, and a tier up when the mean has been 18.5 ms or less for 5 seconds. A try upward that fails is taken back and the next one waits twice as long (5, 10, 20, 40, 80, 160 seconds, at most 5 minutes), so a device on the edge between two tiers settles on the lower and never flickers; a display that refreshes at 30 Hz is measured once, when idle, and not taken for a slow view. A step draws the world again and **keeps the camera where it is** (the lower tiers are framed as `high` is, and the pointer, the auto-turn and a drag in the middle of being made are not touched).
+- **The tiers.** `medium`: the 24 biggest buildings round a district stand up (130 at `high`), every other footprint stays on the floor; every other tree; a small venue (under 12 percent of the plan) is one block with its height; the small parts of a venue (benches, glass, goals, posts, masts, fascia, rails) and the faint floors of a building are left out, the crowd in the stands is blocks of colour at most 0.6 full; the crowd outside is half as many people on a canvas 0.7 as wide. `low`: no building stands up (footprints only, shaded by height), one tree in four, a venue under 40 percent of the plan is a ring of walls open at the top with its field showing inside, no crowd outside. A district of one venue is never drawn as a block, and the flat 2D plan is not changed by any tier.
+- **The pixel ratio of the layers is capped on a phone or a tablet** (a coarse pointer or a screen of 820 CSS pixels or less on a side, `handheld()`): `auto` makes the layers at a ratio of 2 at most, `medium` 1.5 and `low` 1, and a layer past a budget of device pixels (2 million at `medium`, 1 million at `low` on a handheld) is made smaller still. A layer is made that share as wide and as high and its matrix widens it back, so the picture is the same and it holds the square of the share as many device pixels. **What this does and does not do** is in docs/quality.md: the sizes reported here are the boxes times the ratio squared, which is what the Kodokan's 680 megabytes were counted by; an engine that draws a layer again at the scale its matrix has (Chromium does, and screenshots in both engines do) makes the same pixels from it, and we could not measure the memory an iPhone allocates. What is certain is the tiers' own reduction of layers (the Kodokan's faint floors: 152 planes down to 42 at `medium` and `low`).
+- **The demo's district page has the choice in its own controls over the view**: Auto, High, Medium and Low (finger-wide, in light and dark, in English and Japanese) with a line that says what was asked for and what is drawn now ("Auto: drawn at Medium for now."), `?quality=auto|high|medium|low` in the address (`auto`, the default, is left out), and a press changes the tier without moving the camera or stopping the turn.
+- `scripts/perf-district.mjs --quality high,medium,low,auto` measures each tier of every preset, and for `auto` turns the view until its tier has stood still for four seconds and says the tier it settled on and the steps it took. Layers are now counted in WebKit too.
+- Tests: every tier draws every preset without a page error (unit and demo e2e, three browsers); `high` equals no `quality` (planes, floor, markup); the governor on simulated devices (a fast one, a slow one, one on the edge, a 30 Hz and a 120 Hz display, hitches, pauses); a press and a drag keep the camera; `auto` steps down under a CPU slowed 6 times and back up when it is released (Chromium); a tier held by name is never changed by the frames; each lower tier holds the plane budget of the performance test; the controls are finger-wide and not in the browser's own style.
+
+### Measured
+
+Frames a second of a turn made of pointer moves, planes drawn and layers, on a Mac Studio (Apple silicon) that was **heavily loaded by other work during every run (load average 27 to 90)**, so the numbers are good for comparing tiers and not for their last digit. "Before" is 0.44.2, built beside this release and measured by the same script; `high` here is the same page as before, so those two columns differ only by the load of the minute.
+
+| Preset | Planes: high / medium / low | Chromium, CPU x4, frames a second: before / high / medium / low / auto (tier it settled on) | WebKit phone, ratio 3: before / high / medium / low / auto (tier) |
+|---|---|---|---|
+| Rogers Arena alone | 547 / 442 / 280 | 30 / 30 / 38 / 44 / 52 (low) | 48 / 59 / 59 / 59 / 59 (high) |
+| BC Place and Rogers Arena | 1,309 / 983 / 42 | 14 / 13 / 18 / 60 / 60 (low) | 28 / 63 / 59 / 59 / 59 (high) |
+| BC Place (soccer) and Rogers Arena | 1,305 / 983 / 42 | 15 / 15 / 22 / 60 / 60 (low) | 26 / 59 / 59 / 59 / 63 (high) |
+| Seattle Center | 1,088 / 606 / 220 | 21 / 22 / 33 / 60 / 61 (low) | 10 / 6 / 19 / 59 / 59 (low) |
+| SoDo | 1,346 / 926 / 61 | 15 / 14 / 18 / 60 / 60 (low) | 7 / 4 / 11 / 59 / 59 (low) |
+| Seattle, three venues (city) | 2,175 / 280 / 88 | 9 / 8 / 58 / 60 / 58 (medium) | 17 / 15 / 59 / 59 / 63 (medium) |
+| Tokyo Dome City | 2,049 / 839 / 42 | 10 / 9 / 21 / 60 / 60 (low) | 9 / 8 / 26 / 59 / 59 (low) |
+| Tokyo Dome City and the Kodokan | 2,286 / 900 / 83 | 9 / 8 / 19 / 59 / 60 (low) | 6 / 6 / 31 / 59 / 27 (medium) |
+| The Kodokan alone | 152 / 42 / 42 | 60 / 51 / 60 / 60 / 60 (high) | 24 / 36 / 59 / 59 / 59 (medium) |
+
+`auto` settles on 48 frames a second or more on every preset with the CPU slowed 4 times in Chromium (desk and phone window), and on 60 on a desk with nothing slowed, except Tokyo Dome City (48: its `high` takes 20 ms a frame, just under the budget). The one row under 30 is WebKit's Tokyo Dome City and the Kodokan (27, on `medium`, measured at a load average of 60: its `medium` measures 31 on a quieter minute and `low` 59). The planes of `high` are those of 0.44.2, in the same order.
+
+| Preset | Chromium desk, nothing slowed: `auto` frames a second (tier) | Chromium phone, ratio 3: layers in megabytes, before / `auto` at its start / `medium` / `low` |
+|---|---|---|
+| Rogers Arena alone | 60 (high) | 100 / 44 / 17 / 5 |
+| BC Place and Rogers Arena | 60 (high) | 118 / 52 / 22 / 4 |
+| BC Place (soccer) and Rogers Arena | 60 (high) | 118 / 53 / 22 / 4 |
+| Seattle Center | 60 (high) | 98 / 43 / 18 / 5 |
+| SoDo | 60 (high) | 86 / 38 / 18 / 4 |
+| Seattle, three venues (city) | 60 (high) | 50 / 22 / 8 / 4 |
+| Tokyo Dome City | 48 (high) | 76 / 34 / 15 / 4 |
+| Tokyo Dome City and the Kodokan | 60 (high) | 78 / 35 / 14 / 4 |
+| The Kodokan alone | 60 (high) | 713 / 317 / 67 / 32 |
+
+(The layer sizes are the page's own boxes times the pixel ratio squared, as before; see what the cap does and does not do above.)
+
+### Changed
+
+- The district page's outside-crowd levels are 48 pixels high, as the new quality bar's are (they were 44).
+
 ## [0.44.2] - 2026-10-29
 
 ### Changed
