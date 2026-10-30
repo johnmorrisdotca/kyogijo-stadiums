@@ -7,6 +7,43 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Changed
+
+- **The 3D view of a district makes its layers as fine as the screen shows them, and no finer: a phone holds a sixteenth of the pixels.** The scene is made 1,400 pixels across and every plane was a layer as fine as that, whatever the screen: a phone shows the scene a sixth of that size, so its layers were five times finer than anything it could draw, and at a ratio of 3 the Kodokan's building alone was 713 megabytes of layers (each floor a layer of 1,114 by 1,186 pixels), which is what an iPhone's browser could not keep (SPX-699). The view now works out the share of its size a layer needs from the scale that fits the scene in its box (at any tip of the view), the zoom, and a margin of a quarter for the perspective, and rounds it up to 0.25, 0.4, 0.6 or 1 (`viewShare`, `viewScale`, `SHARE_LEVELS`; docs/quality.md, "The pixels of the layers"). It holds for every tier, `high` asked for by name too; the 3D view of a single surface is not changed. The Kodokan alone on a phone is made at 0.25 (a sixteenth of the pixels). The floor, which is one layer and holds the thinnest lines of the view, is made at 0.6 at least (`FLOOR_SHARE`), because a one-pixel line such as the north arrow shows steps in Chromium when its layer is made a quarter as fine.
+- **The share follows the view.** A zoom that needs a finer share draws the layers again 160 milliseconds after it stops (a pinch is not drawn again at every step, and from the whole view to the nearest it is at most three times); a zoom out or a smaller box makes them coarser only after a second and a half at rest; a new size of the container, a new set of venues and a step of the tier work it out again. The camera, the auto-turn and a drag in the middle of being made are not touched, and `data-share` on `.ky-turn` says the share. A wide screen needs the whole share, so there nothing changes: its screenshots are the same byte for byte.
+- **The flat layers were not moved onto a canvas, as SPX-772 first asked, because they are not where a step goes.** Streets, footprints, trees and land are a few paths in the floor, and the floor is one layer (17 elements for the Kodokan). Taking the floor out of the page altogether saves 4 to 6 percent of a turn step in Chromium with the CPU 4 times slower (Seattle 117 to 111 ms and 119 to 113 in two runs); taking every plane out saves three quarters of it (117 to 44). A step costs the planes that stand up (2,175 for Seattle), not what lies flat.
+- Costs 5 KB (1 KB gzipped) of script on a district page (2,411 to 2,416 KB); the bundle budget holds.
+
+### Added
+
+- Tests: `viewShare`, the floor's share and `rasterShares` with a ceiling (`src/quality.test.ts`); `e2e/quality.demo.mjs` checks on a phone that the Kodokan's layers are under 120 megabytes, that a zoom in makes them finer a moment after it stops and a zoom out makes them coarser again after a while at rest, and that the floor is where it was.
+
+### Measured
+
+Chromium and WebKit on a Mac Studio, a phone window of 390 by 844 at a ratio of 3, the CPU of Chromium slowed 4 times where said, 40 turn steps a row (`node scripts/perf-district.mjs --quality high,medium,low,auto`); the 0.45.1 site and this one were built beside each other and measured one after the other. The load average of the machine was 18 to 20 before each run (`uptime`) and 15 to 26 during them, so a frame that differs by under 15 percent in Chromium is not a difference. Layers are the boxes times the ratio squared, four bytes a pixel, as the script has always counted them.
+
+| Preset (high) | Planes | Layers MB at ratio 3: before | after | WebKit phone ms a frame: before | after | frames a second: before | after | Chromium phone, 4x CPU, ms: before | after |
+|---|---|---|---|---|---|---|---|---|---|
+| Rogers Arena alone | 547 | 100 | 25 | 17 | 17 | 59 | 59 | 30 | 32 |
+| BC Place and Rogers Arena | 1309 | 118 | 24 | 17 | 17 | 59 | 59 | 81 | 68 |
+| BC Place (soccer) and Rogers Arena | 1305 | 118 | 25 | 17 | 17 | 59 | 59 | 64 | 66 |
+| Seattle Center | 1088 | 98 | 21 | 105 | 21 | 10 | 48 | 41 | 45 |
+| SoDo | 1346 | 86 | 18 | 124 | 26 | 8 | 38 | 66 | 71 |
+| Seattle, three venues | 2175 | 50 | 15 | 60 | 31 | 17 | 32 | 119 | 141 |
+| Tokyo Dome City | 2049 | 76 | 19 | 121 | 41 | 8 | 24 | 109 | 109 |
+| Tokyo Dome City and the Kodokan | 2286 | 78 | 16 | 140 | 54 | 7 | 19 | 119 | 123 |
+| The Kodokan alone | 152 | 713 | 64 | 28 | 17 | 36 | 59 | 17 | 17 |
+
+| Kodokan alone, layers MB at ratio 3 | before | after |
+|---|---|---|
+| high | 713 | 64 |
+| medium | 67 | 25 |
+| low | 32 | 21 |
+| auto (first draw) | 317 | 64 |
+
+- **WebKit, the iPhone's engine, turns the heavy presets two to five times faster** (Seattle Center 105 to 21 ms a frame, SoDo 124 to 26, Tokyo Dome City 121 to 41, Tokyo Dome City and the Kodokan 140 to 54, the Kodokan alone 28 to 17): its frames follow the pixels of the layers. Chromium does not move beyond the noise (a desk window at 4 times slower CPU, built before and after run in turn twice, for BC Place (soccer) and Rogers Arena, Tokyo Dome City, and with the Kodokan: 65 and 60, 95 and 99, 111 and 111 ms, then 64 and 67, 97 and 91, 124 and 113; and a desk window is the same page to the byte). The lower tiers' layers fall too: the Kodokan at `medium` 67 to 25 megabytes, at `low` 32 to 21.
+- **The pictures.** Every preset at every tier, in light and dark, in Chromium (a desk window and a phone window) and in WebKit (a phone window): 162 pairs of screenshots. The desk window is the same to the byte. At a ratio of 3 WebKit differs by at most 0.23 percent of the pixels by more than 8 levels of 255 (0.05 percent by more than 32) and Chromium by at most 1.8 and 0.13 percent. Side by side the colours and the places are the same; what differs is thin lines and patterns that alias: a football field's yard lines are clean where they were dotted, rails and the Kodokan's mats are crisper, and in Chromium a one-pixel arrow is a little rougher.
+
 ## [0.45.1] - 2026-10-30
 
 ### Changed
