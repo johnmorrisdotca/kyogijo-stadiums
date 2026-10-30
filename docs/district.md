@@ -210,6 +210,18 @@ console.log(areas.map((a) => a.key).join(), blocks.length > 500, streets!.length
 
 ![Seattle's three venues from the broadcast view among the streets and towers of the city between them, Elliott Bay to the west, Climate Pledge Arena at Seattle Center in the north-west and Lumen Field and T-Mobile Park in SoDo in the south, on one ground with a scale of 500 metres](./pictures/district-seattle-context-3d-desk-light.webp)
 
+- **Only the areas a page shows.** Each area is one file of data (Seattle's city view alone is 150 kilobytes), and `contextFor` carries all of them. A page that shows one choice of venues asks for that choice's areas instead: `loadAreasFor(venues)` of `@johnmorrisdotca/kyogijo-stadiums/areas` reads the files of those areas with a dynamic `import()` and no others, and gives the same areas `contextFor` does (and Tokyo Dome City's, for the Tokyo venues). `loadArea(key)` reads one by its key, `areaKeysFor(venues)` says the keys without reading anything, and a bundler splits each file into a chunk of its own. The demo's district page does this: it opens on Rogers Arena without Seattle's or Tokyo's data.
+
+```ts
+import { loadAreasFor } from "@johnmorrisdotca/kyogijo-stadiums/areas";
+import { planDistrict } from "@johnmorrisdotca/kyogijo-stadiums/district";
+
+const venues = ["climate-pledge-arena"];
+const plan = planDistrict({ venues, context: await loadAreasFor(venues) });
+console.log(plan.context!.blocks.length > 100);
+// true
+```
+
 - **What is drawn.** Under the venues and faint so that a crowd reads on it, from the lowest up: water, green and wood in flat tones, the streets (the same `streets` layer and look as Vancouver's), single trees as dots, and the buildings in four tones by height; in 3D the 130 biggest as blocks, as PLATEAU's. The water, the streets and the trees are the floor's own and add no plane to the 3D view.
 - **The areas.** Four, each its own frame: Vancouver's nature (450 metres round the middle of the two venues: the water of False Creek, the parks, and 1,370 trees), Seattle's SoDo (650 metres), Seattle Center (550 metres) and Seattle's city view (3 kilometres, on a grid of two metres, with only the buildings that matter from far, those 1,200 square metres or more on the ground or 24 metres or more tall, the carriageways, viaducts and railways but not the service lanes, sidewalks or paths, and no trees).
 - **Where each layer comes from.** *Buildings (Seattle):* outlines from OpenStreetMap; heights from the City where it has them (Building Outlines 2015: its roof apex elevation, less the ground under the building from USGS 3DEP, gives the height above ground), else the `height` or `building:levels` OpenStreetMap gives, else 10 metres, which is ours (the same default as Vancouver's); a City outline OpenStreetMap does not have is a building of its own. *Streets:* OpenStreetMap's, by the rule the crowd's mask shares (`streetOf`: carriageways, viaducts and bridges, railways, and in a detail area the sidewalks and paths). *Water, green and wood:* the grid of land cover VoxCity makes from OpenStreetMap, vectorized. *Trees:* the City's tree inventories (Vancouver's Public trees, Seattle's Combined Tree Point) and OpenStreetMap's tree nodes and rows, a crown radius from each trunk diameter, one to every four metres, none under a building, the largest crowns first and at most 1,400 to an area.

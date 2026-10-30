@@ -2,18 +2,15 @@
 import type { ContextArea } from "./context.ts";
 import { SEATTLE_CENTER, SEATTLE_CITY, SEATTLE_SODO, VANCOUVER_NATURE } from "./cityctx.data.ts";
 import { VANCOUVER_CENTRE } from "./osm.context.data.ts";
+import { CITYCTX_VENUES } from "./areas.ts";
 
 /** The venues each area is drawn round, by their ids (the part of a district's key before the colon). */
-export const CITYCTX_VENUES = Object.freeze({
-  vancouver: ["bc-place", "rogers-arena"],
-  sodo: ["lumen-field", "t-mobile-park"],
-  center: ["climate-pledge-arena"],
-});
+export { CITYCTX_VENUES };
 
 /**
  * The areas of context that go with some venues, for a district's `context` option: downtown Vancouver's buildings and streets (`VANCOUVER_CENTRE`, of `./osm`) with its water, green and trees (`VANCOUVER_NATURE`) for BC Place and
  * Rogers Arena; Seattle's SoDo for Lumen Field and T-Mobile Park, Seattle Center's for Climate Pledge Arena, and the city's own, with streets and the buildings that matter from far, for a district that holds venues of both (they are
- * three kilometres apart, so the detail of either would be a speck). A venue of neither city has none.
+ * three kilometres apart, so the detail of either would be a speck). A venue of neither city has none. This one carries every area's data; `loadAreasFor` of the `areas` entry reads only the ones asked for.
  * @example
  * ```ts
  * import { contextFor } from "@johnmorrisdotca/kyogijo-stadiums/cityctx";

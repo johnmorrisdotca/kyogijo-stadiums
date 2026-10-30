@@ -1,4 +1,4 @@
-// Writes src/cityctx.data.ts from the dated files of data-sources/cityctx/ (`pnpm cityctx`, or `pnpm cityctx 2026-10-22` for a day).
+// Writes src/cityctx.<area>.data.ts, one file for each area, and src/cityctx.data.ts, which joins them, from the dated files of data-sources/cityctx/ (`pnpm cityctx`, or `pnpm cityctx 2026-10-22` for a day).
 //
 // What a district's surroundings are made of, cut down once, at build time, to a few tens of kilobytes an area: no tile and no request at run time. Each area is one frame (the origin, a grid step and a radius) and
 // separate layers laid in it (`ContextArea.layers`, the format `scripts/build-osm-context.mjs` makes downtown Vancouver's buildings and streets in, and its helpers are used here):
@@ -9,7 +9,7 @@
 //   landCover  water, green and wood outlines, from the grid of land cover VoxCity makes from OpenStreetMap (scripts/cityctx_vox.py).
 //   trees      single trees: the City of Seattle's and the City of Vancouver's tree inventories and OpenStreetMap's tree nodes, a crown radius each. Not in the city view.
 // A `nature` area (Vancouver's) has only land cover and trees: its buildings and streets are `VANCOUVER_CENTRE`'s. The data is OpenStreetMap's (ODbL 1.0) with the Cities' open data laid on it, edited here;
-// src/cityctx.data.ts says so at its head, each layer has its credit, and the file is apart from the CC0 files and from PLATEAU's.
+// each area's file says so at its head, each layer has its credit, and the file is apart from the CC0 files and from PLATEAU's.
 import { Buffer } from "node:buffer";
 import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import process from "node:process";
@@ -318,7 +318,7 @@ const head = `// Made by scripts/build-cityctx.mjs from the files of data-source
 import type { ContextArea } from "./context.ts";
 
 `;
-const body = Object.values(areas)
+const files = Object.values(areas)
   .map(({ area, rows, streets, landCover, trees, treeCount, text, files }) => {
     const credits = LAYER_CREDITS(area);
     const vox = files.vox;
@@ -338,7 +338,7 @@ ${text(list)}
       ...(landCover.length === 0 ? [] : [layer("landCover", `VoxCity ${vox.source.match(/VoxCity [\d.]+/)?.[0].slice(8)} land cover from OpenStreetMap`, day, "ODbL 1.0 (OpenStreetMap); VoxCity is MIT", credits.landCover, landCover, "Each outline: the class (0 water, 1 green, 2 wood), then the first point (east, north) and each step to the next, in grid steps from `origin`. A hole is an outline of its own (filled even-odd).")]),
       ...(trees.length === 0 ? [] : [layer("trees", SOURCES[area.city].trees, day, LICENCES[area.city].trees, credits.trees, trees, "One row for all the trees: the first tree's east, north and crown radius, then each next tree's step in east and north from the one before and its crown radius, all in grid steps.")]),
     ].join("\n");
-    return `/** ${area.name.en}: ${rows.length} buildings, ${streets.length} street lines, ${landCover.length} land cover outlines and ${treeCount} trees within ${area.radius} metres of the middle, read ${day}. */
+    const text1 = `/** ${area.name.en}: ${rows.length} buildings, ${streets.length} street lines, ${landCover.length} land cover outlines and ${treeCount} trees within ${area.radius} metres of the middle, read ${day}. */
 export const ${symbol(area.id)}: ContextArea = {
   "key": ${JSON.stringify(area.id)},
   "name": ${JSON.stringify(area.name)},
@@ -350,7 +350,25 @@ ${layers}
   },
 };
 `;
-  })
-  .join("\n");
-writeFileSync(new URL("../src/cityctx.data.ts", import.meta.url), `${head}${body}\n/** Every area, by key. */\nexport const CITYCTX_AREAS: Readonly<Record<string, ContextArea>> = { ${Object.keys(areas).map((k) => `${JSON.stringify(k)}: ${symbol(k)}`).join(", ")} };\n`);
+    return { id: area.id, text: text1 };
+  });
+
+for (const { id, text: area } of files) {
+  writeFileSync(new URL(`../src/cityctx.${id}.data.ts`, import.meta.url), `${head}${area}`);
+  console.log(`src/cityctx.${id}.data.ts written`);
+}
+// The file that joins them: what the `cityctx` entry exports. A page that wants one area imports that area's file (or asks `loadArea` of `./areas.ts` for it) and carries no other.
+const join = `// Made by scripts/build-cityctx.mjs from the files of data-sources/cityctx/${day}/: do not edit by hand.
+//
+// Every area of the surroundings of Seattle and of Vancouver's water and trees, joined: the cityctx entry. The data is in one file for each area (src/cityctx.<area>.data.ts, OpenStreetMap, ODbL 1.0, with the Cities' open data,
+// each file saying so at its head), so that a page that shows one area carries only that one: import the area's file, or ask \`loadArea\` of the \`areas\` entry for it. This file is only the list.
+import type { ContextArea } from "./context.ts";
+${Object.keys(areas).map((k) => `import { ${symbol(k)} } from "./cityctx.${k}.data.ts";`).join("\n")}
+
+export { ${Object.keys(areas).map(symbol).join(", ")} };
+
+/** Every area, by key. */
+export const CITYCTX_AREAS: Readonly<Record<string, ContextArea>> = { ${Object.keys(areas).map((k) => `${JSON.stringify(k)}: ${symbol(k)}`).join(", ")} };
+`;
+writeFileSync(new URL("../src/cityctx.data.ts", import.meta.url), join);
 console.log("src/cityctx.data.ts written");

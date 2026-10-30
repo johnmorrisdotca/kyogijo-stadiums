@@ -153,6 +153,11 @@
       "import": "./dist/cityctx-entry.js",
       "default": "./dist/cityctx-entry.js"
     },
+    "./areas": {
+      "types": "./dist/areas-entry.d.ts",
+      "import": "./dist/areas-entry.js",
+      "default": "./dist/areas-entry.js"
+    },
     "./osm": {
       "types": "./dist/osm-entry.d.ts",
       "import": "./dist/osm-entry.js",

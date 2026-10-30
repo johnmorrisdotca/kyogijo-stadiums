@@ -293,8 +293,14 @@ src/
 ├── osm.context.data.ts made by scripts/build-osm-context.mjs from data-sources/walk/: the buildings and streets round a district from OpenStreetMap, ODbL 1.0, kept apart
 ├── osm-entry.ts        the OpenStreetMap context's entry
 ├── cityctx.ts          which areas of the surroundings go with a choice of venues (`contextFor`)
-├── cityctx.data.ts     Seattle's buildings, streets, land cover and trees and Vancouver's land cover and trees, simplified at build time (made by scripts/build-cityctx.mjs from data-sources/cityctx/, ODbL 1.0 with the Cities' open data, kept apart)
+├── cityctx.data.ts     the list of the four files below (made by scripts/build-cityctx.mjs): every area of Seattle and Vancouver's nature, joined, for the cityctx entry
+├── cityctx.seattle-city.data.ts   the city of Seattle between its three venues: buildings, streets and land cover (made by scripts/build-cityctx.mjs from data-sources/cityctx/, ODbL 1.0 with the Cities' open data, kept apart)
+├── cityctx.seattle-sodo.data.ts   Seattle's SoDo, round Lumen Field and T-Mobile Park: buildings, streets, land cover and trees (the same)
+├── cityctx.seattle-center.data.ts Seattle Center, round Climate Pledge Arena: buildings, streets, land cover and trees (the same)
+├── cityctx.vancouver-nature.data.ts Vancouver's water, green and trees round BC Place and Rogers Arena (the same)
 ├── cityctx-entry.ts    the cityctx entry
+├── areas.ts            which areas of context go with a choice of venues, and each one read from its own file with a dynamic import when it is asked for
+├── areas-entry.ts      the areas entry
 ├── outside.ts          the crowd outside a district's venues: one ordered list of people on the walkable ground, a level a prefix of it
 ├── outside.paint.ts    the crowd as RGBA bytes in a frame: one loop, no element, density where far and discs where near
 ├── outside.dom.ts      the crowd's canvas on a page, in the 3D view's floor and over the 2D plan, painted when something it shows changes
