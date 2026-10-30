@@ -172,8 +172,9 @@ test("`auto` steps down when the frames run over budget under a slow processor, 
   test.skip(info.project.name !== "chromium-desk", "the processor is slowed through the Chrome DevTools protocol");
   test.setTimeout(120_000);
   // (The wait before a try upward is longer than the time the test holds a tier for, so that the frames it reads are the tier's own.)
-  const tune = { frames: 14, settleMs: 450, warmMs: 500, quietMs: 350, upAfterMs: 7000 };
-  const errors = await open(page, "venues=t-mobile-park:mlb,lumen-field:nfl,climate-pledge-arena&mode=city&view=3d&viewpoint=broadcast", tune);
+  const tune = { frames: 14, minFrames: 8, settleMs: 450, warmMs: 500, quietMs: 350, upAfterMs: 7000 };
+  // (BC Place and Rogers Arena: at full speed every tier holds 60 frames a second here, so the way back up ends on high on any machine that can; Seattle's high is 45.)
+  const errors = await open(page, "view=3d&viewpoint=broadcast", tune);
   const cdp = await page.context().newCDPSession(page);
   await expect(root(page)).toHaveAttribute("data-tier", "high");
   // A turn made of pointer moves, one to a frame, kept going while the callback is asked to: it gives the mean frame interval of its last second and the tier.

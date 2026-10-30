@@ -96,8 +96,9 @@ export function rasterShares(sizes: readonly (readonly [number, number])[], shar
 
 /** How the governor judges the frames. Times are in milliseconds. */
 export interface GovernorTuning {
-  /** The frames in a window it judges, at least; a window is also at least `settleMs` long. */
+  /** The frames in a window it keeps (the oldest are dropped past twice this), and the fewest it judges: a window is also at least `settleMs` long, so a view at 60 frames a second judges 42 frames and one at 6 frames a second judges 8. */
   frames: number;
+  minFrames: number;
   settleMs: number;
   /** The first frames after the view is mounted are slow whatever it holds (scripts are still compiling, the page is still being laid out): they are not judged. */
   warmMs: number;
@@ -113,7 +114,7 @@ export interface GovernorTuning {
   pauseMs: number;
 }
 
-export const GOVERNOR_TUNING: GovernorTuning = { frames: 24, settleMs: 700, warmMs: 600, budgetMs: 21, steadyMs: 18.5, upAfterMs: 5000, maxUpAfterMs: 300000, quietMs: 600, pauseMs: 250 };
+export const GOVERNOR_TUNING: GovernorTuning = { frames: 24, minFrames: 8, settleMs: 700, warmMs: 600, budgetMs: 21, steadyMs: 18.5, upAfterMs: 5000, maxUpAfterMs: 300000, quietMs: 600, pauseMs: 250 };
 
 /** What the governor does with a frame. */
 export interface Governor {
@@ -189,7 +190,7 @@ export function createGovernor(start: QualityTier, tuning: Partial<GovernorTunin
       if (window.length === 0) since = now - interval;
       window.push(interval);
       if (window.length > t.frames * 2) window.shift();
-      if (window.length < t.frames || now - since < t.settleMs) return undefined;
+      if (window.length < t.minFrames || now - since < t.settleMs) return undefined;
       const mean = window.reduce((s, x) => s + x, 0) / window.length;
       const slow = refresh / 16.7;
       const budget = Math.max(t.budgetMs, t.budgetMs * slow);
