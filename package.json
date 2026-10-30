@@ -355,7 +355,9 @@
     "names:fetch": "node scripts/fetch-names.mjs",
     "tenants": "node scripts/build-tenants.mjs",
     "tenants:fetch": "node scripts/fetch-tenants.mjs",
-    "parks:check": "node scripts/check-parks.mjs"
+    "parks:check": "node scripts/check-parks.mjs",
+    "bundles": "node scripts/bundle-report.mjs --markdown",
+    "bundles:budget": "node scripts/bundle-report.mjs --no-paint --budget --write scripts/bundle-budget.json"
   },
   "devDependencies": {
     "@eslint/js": "^9.0.0",

@@ -77,3 +77,20 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - name: The README's TypeScript and JavaScript examples, type-checked and run against the built package
         run: pnpm test:readme
+  # What each page of the demo carries, against a budget of bytes (scripts/bundle-budget.json): a change that makes a page heavier fails here, in a minute, and not as one of the demo's tests in an hour. The same file is among the demo's tests too.
+  bundles:
+    name: bundles (bytes per page)
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.0-noble
+      options: --ipc=host --init
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: The scripts and data of each page of the built demo, against the budget
+        run: pnpm site && pnpm exec playwright test e2e/bundles.demo.mjs --project=chromium-desk

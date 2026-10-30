@@ -1,0 +1,82 @@
+{
+  "home": {
+    "totalKB": 5445,
+    "totalGzipKB": 1665,
+    "dataKB": 1185
+  },
+  "venues": {
+    "totalKB": 3135,
+    "totalGzipKB": 895,
+    "dataKB": 595
+  },
+  "district:pair": {
+    "totalKB": 2640,
+    "totalGzipKB": 815,
+    "dataKB": 335
+  },
+  "district:alone": {
+    "totalKB": 2635,
+    "totalGzipKB": 815,
+    "dataKB": 330
+  },
+  "district:soccer": {
+    "totalKB": 2640,
+    "totalGzipKB": 815,
+    "dataKB": 335
+  },
+  "district:seattlecenter": {
+    "totalKB": 2670,
+    "totalGzipKB": 820,
+    "dataKB": 365
+  },
+  "district:sodo": {
+    "totalKB": 2640,
+    "totalGzipKB": 815,
+    "dataKB": 335
+  },
+  "district:seattle": {
+    "totalKB": 2760,
+    "totalGzipKB": 840,
+    "dataKB": 455
+  },
+  "district:tokyo": {
+    "totalKB": 2595,
+    "totalGzipKB": 805,
+    "dataKB": 295
+  },
+  "district:tokyokodokan": {
+    "totalKB": 2595,
+    "totalGzipKB": 805,
+    "dataKB": 295
+  },
+  "district:kodokan": {
+    "totalKB": 2535,
+    "totalGzipKB": 790,
+    "dataKB": 230
+  },
+  "stadiums": {
+    "totalKB": 3120,
+    "totalGzipKB": 890,
+    "dataKB": 595
+  },
+  "halls": {
+    "totalKB": 3220,
+    "totalGzipKB": 920,
+    "dataKB": 630
+  },
+  "boards": {
+    "totalKB": 3235,
+    "totalGzipKB": 910,
+    "dataKB": 710
+  },
+  "flythrough": {
+    "totalKB": 3570,
+    "totalGzipKB": 1040,
+    "dataKB": 595
+  },
+  "judging": {
+    "totalKB": 3120,
+    "totalGzipKB": 895,
+    "dataKB": 600
+  }
+}
