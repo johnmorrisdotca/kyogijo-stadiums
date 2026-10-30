@@ -7,6 +7,8 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.44.2] - 2026-10-29
+
 ### Changed
 
 - **The district page turns faster, with nothing drawn differently where it can be said**: a step of a turn cost the page's own script and the browser's drawing in proportion to the number of planes of the 3D view, and the view had grown from about 1,200 planes (0.40.2, Seattle) to about 2,200. The faces of an opaque building that turn away from the eye are no longer written to or drawn (`Plane.cull`, set on the walls of the district's surrounding blocks and of a solid Kodokan: a closed solid hides its own far faces, and `layoutOf` takes a `cull` argument that leaves them out, off by default so that a still picture and the tests lay out every plane as before); the matrices and numbers of a step are worked out with less allocation (the layout is the same to the last digit). At the opening view of the Seattle district that is 419 of 2,174 planes left out, and the step costs the main thread 20 to 35 percent less in Chromium (Seattle 28.8 to 23.0 ms, Tokyo Dome City with the Kodokan 31.7 to 23.3 ms, on a 1280 by 800 window; 123 to 99 ms and 133 to 100 ms with the CPU slowed four times) and about a quarter less in WebKit; in the default view of the surroundings, where the hidden walls used to be painted over a neighbour here and there, a few of the edge pixels are not the same (under 2.7 percent of the pixels of a district, almost all the thin line where two walls meet).
