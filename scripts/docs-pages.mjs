@@ -95,6 +95,7 @@ export const NAV = [
       { slug: "team-shape", ja: "チームの形" },
       { slug: "replay", ja: "リプレイ" },
       { slug: "turn", ja: "3D表示" },
+      { slug: "quality", ja: "3D表示の画質" },
       { slug: "renderers", ja: "レンダラー" },
     ],
   },

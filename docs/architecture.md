@@ -344,6 +344,7 @@ src/
 ├── turn.markup.ts      a 3D view as markup: every element carries its place in one `matrix3d`, stacked far to near; the buttons
 ├── turn.style.ts       the 3D view's colours, light and dark, and its rules
 ├── turn.dom.ts         the 3D view in a page: the pointer, the touch, the wheel, the keys, the glide, the live region, and the flat fallback
+├── quality.ts          how much a 3D view draws: the three tiers and what each leaves out, the pixel ratio a layer is made at, and the governor that steps a tier down and up by the frames the view makes
 ├── turn-entry.ts       the 3D view's entry
 ├── uprights.ts         what stands on a surface: read from the options as the drawing is, with its heights and its sentence
 ├── uprights.goal.ts    the parts several sports share: a goal with its net, a pair of posts, a flag on a pole

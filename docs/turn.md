@@ -185,8 +185,11 @@ In a drawing with a score the 3D view does not lay the score's panel on the floo
 | `size` | For `turnMarkup`, the box the first view is worked out for: 960 by 600. |
 | `id` | The prefix of the ids in the view, for a page with more than one. |
 | `onChange` | Called with the view and the viewpoint it is (`undefined` when it was turned by hand). |
+| `quality` | How much the view draws: `auto` (the default) chooses by the frames the view makes, `high`, `medium` and `low` hold a tier; see [quality](./quality.md). |
+| `qualityTuning` | How `auto` judges the frames: for a test or an unusual screen. |
+| `onQualityChange` | Called with the tier drawn and what was asked for when `auto` or `setQuality` changes it. |
 
-The handle `mountKyogijoTurn` gives back has `view()`, `set(view, glide?)`, `preset(name)`, `reset()`, `update(options, change?)`, `svg()` (the flat drawing that is the floor), `destroy()`, `mode`, and for the auto-turn `playing`, `play()`, `pause()` and `togglePlay()`.
+The handle `mountKyogijoTurn` gives back has `view()`, `set(view, glide?)`, `preset(name)`, `reset()`, `update(options, change?)`, `svg()` (the flat drawing that is the floor), `destroy()`, `mode`, `quality`, `tier` and `setQuality(quality)` (see [quality](./quality.md)), and for the auto-turn `playing`, `play()`, `pause()` and `togglePlay()`.
 
 `update(options)` draws the scene again with new options and keeps the view and the auto-turn: a turning view goes on turning from where it is. `update(options, { venue: { roof, walls, boards, lighting } })` also changes what the venue's walls and roof stand on, so that a page can switch them on and off without mounting the view again (the demo's venues page does, with a button for each).
 

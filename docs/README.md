@@ -43,6 +43,7 @@ Kyogijo Stadiums draws sports surfaces as SVG, to scale, with the score on them.
 - [The gates of a venue](./gates.md): where the crowd goes in: points on a building's outline with the way each faces and how each is known, marked on a district's plan, for the queues of the crowd's walk in and out.
 - [The crowd outside the venue](./outside.md): people on the sidewalks, plazas and grounds round a district's venues, at 0, 25, 50, 75 or 100 percent of the seats, drawn as one canvas, on ground OpenStreetMap maps (Vancouver first).
 - [A district of venues](./district.md): several real venues of one city on one plan at their real positions and orientations, in 2D and in 3D, tight round neighbours or at the real distances of a city.
+- [Quality](./quality.md): how much the 3D view draws, so that it turns well on every device: three tiers, `auto` by the frames the view makes, and the pixel ratio of the layers.
 - [League variants](./variants.md): the WNBA, FIBA, the NCAA, the IIHF, Little League and more, each from its rulebook.
 - [Surfaces through the years](./eras.md): the markings of a season, each change cited.
 - [The atlas](./atlas.md): every park, ground and arena on a map.

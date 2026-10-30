@@ -2126,6 +2126,7 @@ Made from `src/strings.ts` and `demo/words.js` by `pnpm docs:make`; a test holds
 | page `team-shape` | Team shape | チームの形 |
 | page `replay` | Replay | リプレイ |
 | page `turn` | The 3D view | 3D表示 |
+| page `quality` | Quality: drawing less on a device that needs it | 3D表示の画質 |
 | page `renderers` | Renderers | レンダラー |
 | group `gallery` | Gallery | ギャラリー |
 | page `gallery` | Gallery | ギャラリーの案内 |
