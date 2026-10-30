@@ -59,7 +59,11 @@ export interface VenueDataKeys {
  * ```ts
  * import { venueDataKeysFor } from "@johnmorrisdotca/kyogijo-stadiums/venue-data";
  * console.log(venueDataKeysFor(["rogers-arena", "bc-place:cfl", "t-mobile-park:mlb"]));
- * // { arenas: [ 'rogers-arena' ], parks: [ 't-mobile-park' ], grounds: [ 'bc-place' ] }
+ * // {
+ * //   arenas: [ 'rogers-arena' ],
+ * //   parks: [ 't-mobile-park' ],
+ * //   grounds: [ 'bc-place' ]
+ * // }
  * ```
  */
 export function venueDataKeysFor(venues: readonly string[]): VenueDataKeys {

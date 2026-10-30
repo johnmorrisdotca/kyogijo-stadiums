@@ -390,6 +390,15 @@ src/
 
 Tests sit beside the code. `scripts/` builds the demo and the docs site, checks the packed package and the README's examples, and takes the README's pictures; `demo/` is the page and the frame; `e2e/` plays the demo and the docs in a real browser.
 
+## What a page carries
+
+The demo is not bundled: a page loads the modules it imports, as the files `tsc` wrote, so what a page weighs is the size of its import graph and of the data it reads. Three things keep that small, and one test holds it.
+
+- **Data is read for what is shown.** An area of surroundings (`areas.ts`), an arena, a park and a ground (`venue-data.ts`) are one file each, read with a dynamic `import()` when a page is about to draw them. The tables of every record (`arenas.data.ts` and its two like) are only for the entries that have always had every venue.
+- **Whole or lean is the entry's choice, not the drawing's.** The drawing reads venues from tables (`heldArena`, `heldPark`, `heldGround`) and the layers from `draw.parts.ts`; `full.ts` fills them, and every entry imports it except the lean district's (`district-lean`). A lean page names what it will draw (`loadVenueDataFor`), and the same drawing comes out, character for character (`src/venue-data.test.ts`).
+- **A module is imported for what it gives.** A file that imports another only to export it again takes that file along for every page that imports it (`leagues.ts` took the 70 KB of the league sources that way); the entry that exports a thing imports it from the file it is in.
+- **A budget.** `node scripts/bundle-report.mjs` lists the scripts and data of every page, raw and gzipped, with first paint at full speed and at 4 times slower CPU and the machine's load (`pnpm bundles`; `--base <another site/>` measures two builds a run at a time). `scripts/bundle-budget.json` holds each page to a little over where it is, `e2e/bundles.demo.mjs` fails a page that grows past it, and CI runs that file in a job of its own (`pnpm bundles:budget` writes a new budget when a page has got lighter, or heavier on purpose).
+
 ## The docs site
 
 `pnpm site` builds the demo and then these pages as `site/docs/`. Nothing of it is in the package: `marked` is a development dependency, read at build time only.
