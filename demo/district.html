@@ -156,7 +156,7 @@
           outside: "People outside", outsideNote: "A crowd outside is drawn for BC Place and Rogers Arena for now; the other venues come later.",
           outsideCount: "{people} people outside, {percent}% of the {seats} seats. They stand on sidewalks, plazas and the venues' grounds, never on a road. Walkable ground: OpenStreetMap.", outsideNone: "Nobody outside. Choose a share of the seats to put outside the venues.",
           credit: "Building outlines, roofs and the ground a crowd outside may stand on (sidewalks, plazas, roads, buildings): (c) OpenStreetMap contributors, ODbL 1.0, openstreetmap.org/copyright. Seats, tiers and roofs: Wikidata (CC0) and the English Wikipedia article each venue cites, in our own words.",
-          presets: { pair: "BC Place and Rogers Arena", soccer: "BC Place for soccer and Rogers Arena", alone: "Rogers Arena alone", sodo: "Seattle SoDo: T-Mobile Park and Lumen Field", seattlecenter: "Seattle Center", seattle: "Seattle city: all three venues", tokyo: "Tokyo Dome City: Tokyo Dome and Korakuen Hall", tokyokodokan: "Tokyo Dome City and the Kodokan", kodokan: "Tokyo Dome City and the Kodokan" },
+          presets: { pair: "BC Place and Rogers Arena", soccer: "BC Place for soccer and Rogers Arena", alone: "Rogers Arena alone", sodo: "Seattle SoDo: T-Mobile Park and Lumen Field", seattlecenter: "Seattle Center", seattle: "Seattle city: all three venues", tokyo: "Tokyo Dome City: Tokyo Dome and Korakuen Hall", tokyokodokan: "Tokyo Dome City and the Kodokan", kodokan: "Tokyo Dome City and the Kodokan", midtown: "New York Midtown: Madison Square Garden", newyork: "New York: six venues at their real distances", montrealolympic: "Montreal: the Olympic Stadium and its tower", montreal: "Montreal: the Bell Centre and the Olympic Stadium" },
         },
         ja: {
           title: "実在の会場の地区",
@@ -173,7 +173,7 @@
           outside: "会場の外の人出", outsideNote: "会場の外の人出は、今のところBCプレイスとロジャーズ・アリーナの周辺で描けます。ほかの会場には、まだ対応していません。",
           outsideCount: "会場の外に{people}人（{seats}席の{percent}％）。人が立つのは歩道、広場、会場の敷地だけで、車道には立ちません。人が立てる場所のデータは、OpenStreetMapをもとにしています。", outsideNone: "会場の外には誰もいません。座席数に対する割合を選ぶと、その分の人が外に出ます。",
           credit: "建物の輪郭、屋根、および会場の外で人が立てる場所を判断するためのデータ（歩道、広場、道路、建物）：(c) OpenStreetMap contributors（ODbL 1.0、openstreetmap.org/copyright）。座席数、スタンドの層、屋根：Wikidata（CC0）と、各会場が出典としている英語版ウィキペディアの記事（内容は自分たちの言葉でまとめ直しています）。",
-          presets: { pair: "BCプレイスとロジャース・アリーナ", soccer: "サッカー用のBCプレイスとロジャース・アリーナ", alone: "ロジャース・アリーナのみ", sodo: "シアトルのSoDo：T-モバイル・パークとルーメン・フィールド", seattlecenter: "シアトル・センター", seattle: "シアトル市内：3つの会場", tokyo: "東京ドームシティ：東京ドームと後楽園ホール", tokyokodokan: "東京ドームシティと講道館" },
+          presets: { pair: "BCプレイスとロジャース・アリーナ", soccer: "サッカー用のBCプレイスとロジャース・アリーナ", alone: "ロジャース・アリーナのみ", sodo: "シアトルのSoDo：T-モバイル・パークとルーメン・フィールド", seattlecenter: "シアトル・センター", seattle: "シアトル市内：3つの会場", tokyo: "東京ドームシティ：東京ドームと後楽園ホール", tokyokodokan: "東京ドームシティと講道館", midtown: "ニューヨーク・ミッドタウン：マディソン・スクエア・ガーデン", newyork: "ニューヨーク：6つの会場を実際の距離で", montrealolympic: "モントリオール：オリンピック・スタジアムとその塔", montreal: "モントリオール：ベル・センターとオリンピック・スタジアム" },
         },
       };
       /** The choices a preset sets: the venues, and the fit (neighbours where the venues are close, a city where they are kilometres apart). */
@@ -186,6 +186,10 @@
         seattle: { venues: ["t-mobile-park:mlb", "lumen-field:nfl", "climate-pledge-arena"], mode: "city", context: true },
         tokyo: { venues: ["tokyo-dome:mlb", "korakuen-hall:boxing"], mode: "neighbours", context: true },
         tokyokodokan: { venues: ["tokyo-dome:mlb", "korakuen-hall:boxing", "kodokan"], mode: "neighbours", context: true },
+        midtown: { venues: ["madison-square-garden"], mode: "neighbours", context: true },
+        newyork: { venues: ["madison-square-garden", "barclays-center:nba", "yankee-stadium:mlb", "citi-field:mlb", "metlife-stadium:nfl", "ubs-arena"], mode: "city", turn: "auto", context: true },
+        montrealolympic: { venues: ["olympic-stadium-montreal:mlb"], mode: "neighbours", context: true },
+        montreal: { venues: ["bell-centre", "olympic-stadium-montreal:mlb"], mode: "city", turn: "auto", context: true },
       };
       const $ = (id) => document.getElementById(id);
       const params = new URLSearchParams(location.search);
@@ -524,6 +528,8 @@
         const preset = PRESETS[button.dataset.preset];
         state.venues = [...preset.venues];
         $("mode").value = preset.mode;
+        // (Venues that lie north and south of each other, as Montreal's two do, are fitted across the page.)
+        $("turn").value = preset.turn ?? "0";
         $("labels").checked = preset.mode === "city";
         $("context").checked = preset.context === true;
         $("building").value = "xray";

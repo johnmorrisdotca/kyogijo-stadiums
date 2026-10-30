@@ -312,11 +312,20 @@ src/
 ├── osm.context.data.ts made by scripts/build-osm-context.mjs from data-sources/walk/: the buildings and streets round a district from OpenStreetMap, ODbL 1.0, kept apart
 ├── osm-entry.ts        the OpenStreetMap context's entry
 ├── cityctx.ts          which areas of the surroundings go with a choice of venues (`contextFor`)
-├── cityctx.data.ts     the list of the four files below (made by scripts/build-cityctx.mjs): every area of Seattle and Vancouver's nature, joined, for the cityctx entry
+├── cityctx.data.ts     the list of the files below (made by scripts/build-cityctx.mjs): every area of Seattle, New York, Montreal and Vancouver's nature, joined, for the cityctx entry
 ├── cityctx.seattle-city.data.ts   the city of Seattle between its three venues: buildings, streets and land cover (made by scripts/build-cityctx.mjs from data-sources/cityctx/, ODbL 1.0 with the Cities' open data, kept apart)
 ├── cityctx.seattle-sodo.data.ts   Seattle's SoDo, round Lumen Field and T-Mobile Park: buildings, streets, land cover and trees (the same)
 ├── cityctx.seattle-center.data.ts Seattle Center, round Climate Pledge Arena: buildings, streets, land cover and trees (the same)
 ├── cityctx.vancouver-nature.data.ts Vancouver's water, green and trees round BC Place and Rogers Arena (the same)
+├── cityctx.nyc-midtown.data.ts New York's Midtown, round Madison Square Garden: buildings with the City's roof heights, streets, land cover and trees
+├── cityctx.nyc-bronx.data.ts the Bronx, round Yankee Stadium (the same)
+├── cityctx.nyc-flushing.data.ts Flushing Meadows, round Citi Field (the same)
+├── cityctx.nyc-brooklyn.data.ts Brooklyn, round Barclays Center (the same)
+├── cityctx.meadowlands.data.ts the Meadowlands, round MetLife Stadium: OpenStreetMap alone
+├── cityctx.belmont-park.data.ts Belmont Park, round UBS Arena: OpenStreetMap alone
+├── cityctx.montreal-downtown.data.ts downtown Montreal, round the Bell Centre: OpenStreetMap alone
+├── cityctx.montreal-olympic.data.ts Montreal's Olympic Park, round the Olympic Stadium: OpenStreetMap alone, without the tower, which the stadium draws
+├── cityctx.montreal-city.data.ts Montreal between the Bell Centre and the Olympic Stadium: the buildings and streets that matter from far, and the water
 ├── cityctx-entry.ts    the cityctx entry
 ├── areas.ts            which areas of context go with a choice of venues, and each one read from its own file with a dynamic import when it is asked for
 ├── areas-entry.ts      the areas entry
