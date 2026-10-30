@@ -29,7 +29,7 @@ async function openContents(page) {
 test("the docs open on the overview, with a contents of every page and no complaint, and the contents is shut on a phone and open on a desk", async ({ page }) => {
   const errors = await docs(page);
   expect(errors).toEqual([]);
-  expect(await page.title()).toContain("Documentation");
+  expect(await page.title()).toContain("documentation");
   await expect(page.locator("h1").nth(1)).toHaveText("Documentation");
   if (isPhone(page)) {
     await expect(page.locator(at("docs-nav"))).toBeHidden();
@@ -55,9 +55,9 @@ test("the contents leads to a page, the page's own headings are listed under it,
   await expect(page.locator(`${at("docs-nav")} a[href="#install"]`)).toBeAttached();
   const next = page.locator('.docs-pager a[rel="next"]');
   await next.scrollIntoViewIfNeeded();
-  await expect(next).toContainText("The surfaces");
+  await expect(next).toContainText("Recipes");
   await next.click();
-  await expect(page).toHaveURL(/surfaces\.html/);
+  await expect(page).toHaveURL(/examples\.html/);
   const prev = page.locator('.docs-pager a[rel="prev"]');
   await prev.scrollIntoViewIfNeeded();
   await prev.click();
@@ -153,21 +153,25 @@ test("the gallery draws every picture with its code and a copy button, and the c
   expect(errors).toEqual([]);
   const items = page.locator(at("gallery-item"));
   expect(await items.count()).toBeGreaterThanOrEqual(30);
+  // A picture is drawn when it comes near the screen: scroll to it, and it arrives from its own file.
   for (const [i, item] of (await items.all()).entries()) {
     if (i % 6 !== 0) continue;
-    expect(await item.locator("svg").count(), `item ${i} has its drawing`).toBeGreaterThanOrEqual(1);
+    await item.scrollIntoViewIfNeeded();
+    await expect(item.locator("svg").first(), `item ${i} has its drawing`).toBeAttached();
     expect(await item.locator("pre").count(), `item ${i} has its code`).toBe(1);
     expect(await item.locator(at("gallery-copy")).count(), `item ${i} has its button`).toBe(1);
   }
   const nfl = page.locator("#bare-nfl");
   await nfl.scrollIntoViewIfNeeded();
   await expect(nfl.locator("svg.kyogijo")).toHaveAttribute("data-sport", "nfl");
-  await nfl.locator("summary").click();
+  // The code is beside the picture, not behind a button.
+  await expect(nfl.locator("pre")).toBeVisible();
   await expect(nfl.locator("pre")).toContainText('drawKyogijo({ sport: "nfl" })');
   await nfl.locator(at("gallery-copy")).click();
   await expect(nfl.locator(".g-status")).toHaveText("Copied to the clipboard.");
   expect(await page.evaluate(() => window.__copied)).toBe('import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";\n\nconst svg = drawKyogijo({ sport: "nfl" });');
   // The picture of a tall rink is tall, and the one of a league is that league's.
+  await page.locator("#tall-nhl").scrollIntoViewIfNeeded();
   await expect(page.locator("#tall-nhl svg")).toHaveAttribute("data-orientation", "portrait");
   await noSidewaysScroll(page);
 });
@@ -176,29 +180,39 @@ test("every other gallery page has its pictures and its code", async ({ page }) 
   for (const [path, first] of [["gallery-soccer.html", "#pitch-fifa"], ["gallery-leagues.html", "#league-nba-wnba"], ["gallery-years.html", "#year-nhl-1930"], ["gallery-places.html", "#park-fenway-park"], ["gallery-special.html", "#event-winter-classic-2009"], ["gallery-data.html", "#heatmap"]]) {
     const errors = await docs(page, path);
     expect(errors, path).toEqual([]);
+    await page.locator(first).scrollIntoViewIfNeeded();
     await expect(page.locator(`${first} svg`).first(), path).toBeAttached();
     await expect(page.locator(`${first} pre`), path).toHaveCount(1);
     expect(await page.locator(at("gallery-item")).count(), path).toBeGreaterThanOrEqual(5);
     await noSidewaysScroll(page);
   }
   // The heat map is drawn: cells in its colours, and a legend.
+  await page.goto("http://kyogijo.test/docs/gallery-data.html?lang=en&help=off");
+  await page.locator("#heatmap").scrollIntoViewIfNeeded();
   await expect(page.locator("#heatmap svg path").first()).toBeAttached();
+  await page.locator("#chart-nba").scrollIntoViewIfNeeded();
   await expect(page.locator("#chart-nba svg")).toBeAttached();
 });
 
 test("the layouts page draws grids and grounds, and every item has a download and a page that draws it from the published package", async ({ page }) => {
   const errors = await docs(page, "gallery-layouts.html");
   expect(errors).toEqual([]);
+  // Each picture is drawn when it comes near: go to it first.
+  await page.locator("#grid-card").scrollIntoViewIfNeeded();
   await expect(page.locator("#grid-card svg.kyogijo-grid")).toHaveAttribute("viewBox", "0 0 1200 675");
+  await page.locator("#grid-phone").scrollIntoViewIfNeeded();
   await expect(page.locator("#grid-phone svg.kyogijo-grid")).toHaveAttribute("data-columns", "1");
+  await page.locator("#bg-felt").scrollIntoViewIfNeeded();
   await expect(page.locator("#bg-felt svg pattern")).toHaveCount(1);
+  await page.locator("#photo-drawing").scrollIntoViewIfNeeded();
   await expect(page.locator("#photo-drawing svg image.ky-bg-img")).toHaveCount(1);
   // A grid's drawings are drawn, each with its own title.
-  expect(await page.locator("#grid-card svg [role=img]").count()).toBe(4);
+  await page.locator("#grid-card").scrollIntoViewIfNeeded();
+  await expect(page.locator("#grid-card svg [role=img]")).toHaveCount(4);
   const item = page.locator("#grid-card");
   await expect(item.locator(at("gallery-download"))).toHaveAttribute("href", "gallery/grid-card.svg");
   await expect(item.locator(at("gallery-download"))).toHaveAttribute("download", "grid-card.svg");
-  await expect(item.locator(".g-published")).toContainText("only released versions");
+  await expect(page.locator(".g-published").first()).toContainText("only released versions");
   const svg = await page.evaluate(async () => (await window.fetch("gallery/grid-card.svg")).text());
   expect(svg.startsWith("<svg")).toBe(true);
   expect(svg).toContain("Four surfaces");
@@ -259,7 +273,11 @@ test("the pages are light or dark with the device", async ({ page }) => {
   expect(await shade()).toBeGreaterThan(600);
   await page.emulateMedia({ colorScheme: "dark" });
   expect(await shade()).toBeLessThan(200);
-  await expect(page.locator("#bare-nhl svg.kyogijo")).toBeAttached();
+  await page.locator("#bare-nhl").scrollIntoViewIfNeeded();
+  const drawing = page.locator("#bare-nhl svg.kyogijo");
+  await expect(drawing).toBeAttached();
+  // The drawing is in the page, under the page's stylesheet, so it follows the device too: its ink is the dark set's.
+  expect(await drawing.evaluate((el) => getComputedStyle(el).getPropertyValue("--ky-ink").trim())).toBe("#ece8dc");
 });
 
 test("the demo and the API reference link to the docs", async ({ page }) => {
@@ -271,4 +289,95 @@ test("the demo and the API reference link to the docs", async ({ page }) => {
   await page.locator('header a[href="docs/"]').click();
   await expect(page).toHaveURL(/\/docs\/$/);
   await expect(page.locator(at("docs-article"))).toBeVisible();
+});
+
+test("the home page leads with a tile for each sport and each place, by task and by sport, and the pictures of the places are real pictures", async ({ page }) => {
+  const errors = await docs(page);
+  expect(errors).toEqual([]);
+  expect(await page.locator(at("sport-tile")).count()).toBeGreaterThanOrEqual(13);
+  expect(await page.locator(at("place-tile")).count()).toBeGreaterThanOrEqual(10);
+  for (const name of ["New York", "Montreal", "The Saddledome", "The roof switch", "Quality levels"]) await expect(page.locator(`${at("place-tile")} h3`, { hasText: name })).toBeAttached();
+  // A picture of a place is a file that loads, not a link to a page.
+  const tile = page.locator(at("place-tile")).first();
+  await tile.scrollIntoViewIfNeeded();
+  await expect.poll(() => tile.locator("img").first().evaluate((img) => img.complete && img.naturalWidth > 0)).toBe(true);
+  // A sport's picture is drawn from the gallery's file when the tile comes near.
+  const sport = page.locator(at("sport-tile")).first();
+  await sport.scrollIntoViewIfNeeded();
+  await expect(sport.locator("svg.kyogijo")).toBeAttached();
+  await noSidewaysScroll(page);
+});
+
+test("the contents has two views, by task and by sport, and the choice is kept", async ({ page }) => {
+  await docs(page, "soccer.html");
+  await openContents(page);
+  await expect(page.locator(`${at("docs-nav")} [data-view="task"][role=tabpanel]`)).toBeVisible();
+  await page.locator('.docs-views [data-view="sport"]').click();
+  await expect(page.locator(`${at("docs-nav")} [data-view="sport"][role=tabpanel]`)).toBeVisible();
+  await expect(page.locator(`${at("docs-nav")} [data-view="task"][role=tabpanel]`)).toBeHidden();
+  // Each sport leads to its guide and its pictures; the one being read is open.
+  for (const name of ["Hockey", "Basketball", "Baseball", "Football", "Soccer", "Curling", "Budō"]) await expect(page.locator(`${at("docs-nav")} [data-view="sport"] summary`, { hasText: name })).toBeAttached();
+  await expect(page.locator(`${at("docs-nav")} [data-view="sport"] details[open] a[data-current]`).first()).toHaveText("Soccer");
+  await page.reload();
+  await openContents(page);
+  await expect(page.locator(`${at("docs-nav")} [data-view="sport"][role=tabpanel]`)).toBeVisible();
+});
+
+test("the gallery's index shows live pictures for every group, draws only those near the screen, and filters by name", async ({ page }) => {
+  const errors = await docs(page, "gallery.html");
+  expect(errors).toEqual([]);
+  const tiles = page.locator(at("gallery-tile"));
+  expect(await tiles.count()).toBeGreaterThanOrEqual(100);
+  // Not every drawing at once: at the top of the page only the ones near it are drawn.
+  await page.locator("#venues").scrollIntoViewIfNeeded();
+  await page.waitForTimeout(800);
+  const drawn = await page.locator(`${at("gallery-tile")} svg.kyogijo`).count();
+  expect(drawn).toBeGreaterThan(0);
+  expect(drawn).toBeLessThan(40);
+  // The filter narrows the tiles by their words, and says how many are shown.
+  await page.locator(at("gallery-filter")).fill("saddledome");
+  await expect(page.locator(`${at("gallery-tile")}:not([hidden])`).first()).toBeVisible();
+  const shown = await page.locator(`${at("gallery-tile")}:not([hidden])`).count();
+  expect(shown).toBeGreaterThan(0);
+  expect(shown).toBeLessThan(10);
+  await page.locator(at("gallery-filter")).fill("zzzqqq");
+  await expect(page.locator("#g-none")).toBeVisible();
+  await page.locator(at("gallery-filter")).fill("");
+  // A tile copies the code that drew it.
+  await page.evaluate(() => { window.__copied = null; Object.defineProperty(navigator, "clipboard", { value: { writeText: async (text) => { window.__copied = text; } }, configurable: true }); });
+  const first = page.locator(`${at("gallery-tile")} ${at("tile-copy")}`).first();
+  await first.scrollIntoViewIfNeeded();
+  await first.click();
+  expect(await page.evaluate(() => window.__copied)).toContain("drawKyogijo");
+  await noSidewaysScroll(page);
+});
+
+test("a picture in a page of the docs is a file that loads, light and dark", async ({ page }) => {
+  for (const scheme of ["light", "dark"]) {
+    await page.emulateMedia({ colorScheme: scheme });
+    await docs(page, "district.html");
+    const img = page.locator(`${at("docs-article")} img`).first();
+    await img.scrollIntoViewIfNeeded();
+    await expect.poll(() => img.evaluate((el) => el.complete && el.naturalWidth > 0)).toBe(true);
+    const src = await img.evaluate((el) => el.currentSrc);
+    expect(src).toContain(scheme === "dark" ? "-dark." : "-light.");
+  }
+});
+
+test("every control of the docs is at least 48 px to the touch, and none is left in the browser's own style", async ({ page }) => {
+  for (const path of ["index.html", "gallery.html", "gallery-venues.html", "soccer.html"]) {
+    await docs(page, path);
+    await openContents(page);
+    await page.locator("details.docs-group").evaluateAll((all) => all.forEach((d) => { d.open = true; }));
+    const small = await page.evaluate(() => {
+      const found = [];
+      for (const el of document.querySelectorAll("button, input, select, summary, .docs-article a.hub-main, .g-links a, .hub-links a, .docs-pager a, .g-chips a")) {
+        const r = el.getBoundingClientRect();
+        if (r.width === 0 || r.height === 0 || getComputedStyle(el).visibility === "hidden") continue;
+        if (r.height < 47.5 && !el.closest("[hidden]")) found.push(`${el.tagName.toLowerCase()}${el.id ? `#${el.id}` : ""} ${el.textContent.trim().slice(0, 24)} ${Math.round(r.height)}`);
+      }
+      return found;
+    });
+    expect(small, path).toEqual([]);
+  }
 });

@@ -17,6 +17,7 @@ import process from "node:process";
 import { Marked } from "marked";
 
 import { DOCS_CSS, DOCS_JS } from "./docs-assets.mjs";
+import { NAV, NAV_WORDS, PLACES, SPORTS } from "./docs-nav.mjs";
 import { FAMILY_SCRIPT, familyFooter, familyHead, familyHeader, familyUnreviewed } from "./family-template.mjs";
 import { iconLinks } from "./icon-links.mjs";
 import { RELEASE_PAGE, firstPaintHead, sayEnglish } from "./first-paint.mjs";
@@ -24,137 +25,7 @@ import { RELEASE_PAGE, firstPaintHead, sayEnglish } from "./first-paint.mjs";
 export const SITE_ORIGIN = "https://johnmorrisdotca.github.io/kyogijo-stadiums/";
 export const REPO = "https://github.com/johnmorrisdotca/kyogijo-stadiums";
 
-/** The contents: groups of pages, in order. A page is the name of its file in docs/ (`index` is docs/README.md); `ja` is its title in Japanese. */
-export const NAV = [
-  {
-    id: "start",
-    en: "Start here",
-    ja: "最初に読む",
-    pages: [
-      { slug: "index", ja: "ドキュメントの概要" },
-      { slug: "getting-started", ja: "はじめに" },
-      { slug: "surfaces", ja: "競技場" },
-      { slug: "score", ja: "得点とレイアウト" },
-      { slug: "theming", ja: "テーマと色" },
-      { slug: "annotations", ja: "攻撃方向・目盛り・部位名の注釈" },
-      { slug: "ranges", ja: "表示範囲とズーム" },
-      { slug: "layouts", ja: "レイアウトと背景" },
-      { slug: "pageant", ja: "ハーフに広げる旗とエンブレム" },
-      { slug: "situation", ja: "試合の状況（人数・走者・ダウン）" },
-      { slug: "emblems", ja: "トロフィー・メダル・ボール・エンブレム" },
-      { slug: "flags", ja: "国旗（国コードからHataで描く）" },
-      { slug: "accessibility", ja: "アクセシビリティ" },
-    ],
-  },
-  {
-    id: "places",
-    en: "Sports and places",
-    ja: "競技と場所",
-    pages: [
-      { slug: "soccer", ja: "サッカー" },
-      { slug: "curling", ja: "カーリング" },
-      { slug: "courts", ja: "ネット型・ラケット型などのコート競技" },
-      { slug: "hardwood", ja: "リアルなバスケットボールコートの床" },
-      { slug: "field-sports", ja: "ラクロス、ラグビーなどのフィールド" },
-      { slug: "crowd", ja: "スタンドと観客" },
-      { slug: "pools", ja: "競泳・水球・飛込・アーティスティックスイミングのプール" },
-      { slug: "athletics", ja: "陸上競技場" },
-      { slug: "skating", ja: "スケートリンク" },
-      { slug: "budo", ja: "武道" },
-      { slug: "combat", ja: "格闘技" },
-      { slug: "multi", ja: "大会向けレイアウト（複数の競技面）" },
-      { slug: "judging", ja: "審判員の配置" },
-      { slug: "boards", ja: "競技面に重ねるボード" },
-      { slug: "special-games", ja: "特設会場での試合" },
-      { slug: "ballparks", ja: "球場" },
-      { slug: "grounds", ja: "スタジアム" },
-      { slug: "arenas", ja: "アリーナ" },
-      { slug: "venues", ja: "実在の会場" },
-      { slug: "roof-photos-needed", ja: "屋根の写真が必要な会場" },
-      { slug: "flythrough", ja: "フライスルー" },
-      { slug: "stadiums", ja: "実在のスタジアム" },
-      { slug: "district", ja: "会場の地区" },
-      { slug: "outside", ja: "会場の外の人出" },
-      { slug: "gates", ja: "会場のゲート" },
-      { slug: "variants", ja: "リーグごとの違い" },
-      { slug: "eras", ja: "年ごとの競技場" },
-      { slug: "atlas", ja: "球場とスタジアムの地図" },
-    ],
-  },
-  {
-    id: "data",
-    en: "Data on a surface",
-    ja: "競技場の上のデータ",
-    pages: [
-      { slug: "units", ja: "単位" },
-      { slug: "frames", ja: "座標系" },
-      { slug: "zones", ja: "ゾーンとルール" },
-      { slug: "pointer", ja: "図上の位置を調べる" },
-      { slug: "layers", ja: "データレイヤー" },
-      { slug: "charts", ja: "すぐ使えるチャート" },
-      { slug: "targets", ja: "ゴールマウス・ストライクゾーン・スタンプ" },
-      { slug: "team-shape", ja: "チームの形" },
-      { slug: "replay", ja: "リプレイ" },
-      { slug: "turn", ja: "3D表示" },
-      { slug: "quality", ja: "3D表示の画質" },
-      { slug: "renderers", ja: "レンダラー" },
-    ],
-  },
-  {
-    id: "gallery",
-    en: "Gallery",
-    ja: "ギャラリー",
-    pages: [
-      { slug: "gallery", ja: "ギャラリーの案内" },
-      { slug: "gallery-surfaces", en: "Gallery: surfaces and scores", ja: "ギャラリー：競技場と得点", site: true },
-      { slug: "gallery-soccer", en: "Gallery: the soccer pitch", ja: "ギャラリー：サッカーのピッチ", site: true },
-      { slug: "gallery-leagues", en: "Gallery: every league's surface", ja: "ギャラリー：リーグごとの競技場", site: true },
-      { slug: "gallery-years", en: "Gallery: surfaces through the years", ja: "ギャラリー：年ごとの競技場", site: true },
-      { slug: "gallery-places", en: "Gallery: ballparks, grounds and arenas", ja: "ギャラリー：球場、スタジアム、アリーナ", site: true },
-      { slug: "gallery-venues", en: "Gallery: the real venues", ja: "ギャラリー：実在の会場", site: true },
-      { slug: "gallery-stadiums", en: "Gallery: the real stadiums and a district", ja: "ギャラリー：実在のスタジアムと会場の地区", site: true },
-      { slug: "gallery-special", en: "Gallery: special games", ja: "ギャラリー：特設会場での試合", site: true },
-      { slug: "gallery-data", en: "Gallery: data on a surface", ja: "ギャラリー：競技場の上のデータ", site: true },
-      { slug: "gallery-curling", en: "Gallery: curling", ja: "ギャラリー：カーリング", site: true },
-      { slug: "gallery-courts", en: "Gallery: net, racket and court sports", ja: "ギャラリー：ネット型・ラケット型などのコート競技", site: true },
-      { slug: "gallery-fields", en: "Gallery: lacrosse, rugby, Australian football, Gaelic games, cricket, hockey and handball", ja: "ギャラリー：ラクロス、ラグビー、オーストラリアンフットボール、ゲーリック・ゲームズ、クリケット、フィールドホッケー、ハンドボール", site: true },
-      { slug: "gallery-pools", en: "Gallery: swimming, water polo, diving and artistic swimming", ja: "ギャラリー：競泳、水球、飛込、アーティスティックスイミング", site: true },
-      { slug: "gallery-athletics", en: "Gallery: the athletics stadium", ja: "ギャラリー：陸上競技場", site: true },
-      { slug: "gallery-skating", en: "Gallery: the skating rinks", ja: "ギャラリー：スケートリンク", site: true },
-      { slug: "gallery-budo", en: "Gallery: the budō", ja: "ギャラリー：武道", site: true },
-      { slug: "gallery-combat", en: "Gallery: the combat sports", ja: "ギャラリー：格闘技", site: true },
-      { slug: "gallery-styling", en: "Gallery: looks and annotations", ja: "ギャラリー：スタイルと注釈", site: true },
-      { slug: "gallery-ranges", en: "Gallery: display ranges and zoom", ja: "ギャラリー：表示範囲とズーム", site: true },
-      { slug: "gallery-layouts", en: "Gallery: layouts and backgrounds", ja: "ギャラリー：レイアウトと背景", site: true },
-      { slug: "gallery-multi", en: "Gallery: tournament layouts", ja: "ギャラリー：大会向けレイアウト", site: true },
-      { slug: "gallery-judging", en: "Gallery: judging assignments", ja: "ギャラリー：審判員の配置", site: true },
-      { slug: "gallery-boards", en: "Gallery: boards over a surface", ja: "ギャラリー：競技面に重ねるボード", site: true },
-      { slug: "gallery-pageant", en: "Gallery: flags on the halves", ja: "ギャラリー：ハーフに広げる旗", site: true },
-      { slug: "gallery-situation", en: "Gallery: the situation of a game", ja: "ギャラリー：試合の状況", site: true },
-    ],
-  },
-  {
-    id: "compare",
-    en: "Compare",
-    ja: "比較",
-    pages: [{ slug: "compare", ja: "他のパッケージとの比較" }],
-  },
-  {
-    id: "reference",
-    en: "Reference",
-    ja: "リファレンス",
-    pages: [
-      { slug: "entry-points", ja: "エントリーポイント" },
-      { slug: "limits", ja: "数と上限" },
-      { slug: "sources", ja: "寸法の出典" },
-      { slug: "references", ja: "参考資料" },
-      { slug: "parks", ja: "球場の識別キー" },
-      { slug: "strings-ja", ja: "日本語訳の一覧" },
-      { slug: "terminology", ja: "用語集" },
-      { slug: "architecture", ja: "アーキテクチャ" },
-    ],
-  },
-];
+export { NAV };
 
 /** Every page of the contents, in order. */
 export const PAGE_LIST = NAV.flatMap((group) => group.pages.map((page) => ({ ...page, group: group.id })));
@@ -231,9 +102,43 @@ export function resolveLink(from, href, known) {
     return { kind: "page", url: `${slug}.html${hash}`, slug, anchor };
   }
   if (!existsSync(join(known.root, target))) return { kind: "error", error: `${href} (${target}) is not a file of the repository` };
-  if (/^docs\/[^/]+\.(svg|png|webp)$/.test(target)) return { kind: "asset", url: posix.basename(target), file: target };
+  // A picture of the docs: beside the pages (`atlas-map.svg`), or in docs/images (the README's) or docs/pictures (the pages'), each served at the same relative path on the site.
+  if (/^docs\/([^/]+|images\/[^/]+|pictures\/[^/]+)\.(svg|png|webp)$/.test(target)) return { kind: "asset", url: target.slice("docs/".length), file: target };
   const directory = statSync(join(known.root, target)).isDirectory();
   return { kind: "repo", url: `${REPO}/${directory ? "tree" : "blob"}/main/${target}${hash}` };
+}
+
+/** The width and height of a WebP or a PNG file, or `undefined`: so that a picture keeps its room before it has loaded. */
+export function imageSize(file) {
+  let bytes;
+  try {
+    bytes = readFileSync(file);
+  } catch {
+    return undefined;
+  }
+  if (bytes.length > 30 && bytes.toString("latin1", 0, 4) === "RIFF" && bytes.toString("latin1", 8, 12) === "WEBP") {
+    const kind = bytes.toString("latin1", 12, 16);
+    if (kind === "VP8X") return { width: 1 + bytes.readUIntLE(24, 3), height: 1 + bytes.readUIntLE(27, 3) };
+    if (kind === "VP8 ") return { width: bytes.readUInt16LE(26) & 0x3fff, height: bytes.readUInt16LE(28) & 0x3fff };
+    if (kind === "VP8L") {
+      const bits = bytes.readUInt32LE(21);
+      return { width: (bits & 0x3fff) + 1, height: ((bits >> 14) & 0x3fff) + 1 };
+    }
+  }
+  if (bytes.length > 24 && bytes.toString("latin1", 1, 4) === "PNG") return { width: bytes.readUInt32BE(16), height: bytes.readUInt32BE(20) };
+  return undefined;
+}
+
+/**
+ * A picture of the docs as HTML. A `-light` file with a `-dark` twin is a `<picture>` that follows the device, as the README's do; the size is in the tag so that the page
+ * does not move when it loads, and it loads when it comes near.
+ */
+export function pictureHtml({ url, file, alt, title, root }) {
+  const size = file && root ? imageSize(join(root, file)) : undefined;
+  const dims = size ? ` width="${size.width}" height="${size.height}"` : "";
+  const img = `<img src="${escapeHtml(url)}" alt="${escapeHtml(alt)}"${title ? ` title="${escapeHtml(title)}"` : ""}${dims} loading="lazy" decoding="async">`;
+  if (/-light\.(webp|png)$/.test(url) && file && root && existsSync(join(root, file.replace("-light.", "-dark.")))) return `<picture><source media="(prefers-color-scheme: dark)" srcset="${escapeHtml(url.replace("-light.", "-dark."))}">${img}</picture>`;
+  return img;
 }
 
 /** An address on the page `from` (in site/docs/) to a link target. */
@@ -257,11 +162,11 @@ function renderer(from, known, headings, siteBlocks) {
     image({ href, title, text }) {
       const found = resolveLink(from, href, known);
       const url = found.kind === "asset" ? found.url : found.kind === "error" ? href : found.url;
-      return `<img src="${escapeHtml(url)}" alt="${escapeHtml(text)}"${title ? ` title="${escapeHtml(title)}"` : ""} loading="lazy">`;
+      return pictureHtml({ url, file: found.kind === "asset" ? found.file : undefined, alt: text, title, root: known.root });
     },
     code({ text, lang }) {
       const language = (lang ?? "").split(/\s+/)[0];
-      return `<pre><code${language ? ` class="language-${escapeHtml(language)}"` : ""}>${escapeHtml(text)}\n</code></pre>\n`;
+      return `<div class="docs-code"><div class="docs-code-bar"><span class="docs-code-lang">${escapeHtml(language || "text")}</span><button type="button" class="fam-button docs-copy" data-copy-pre data-docs-copy-label data-testid="docs-copy">Copy</button></div><pre tabindex="0"><code${language ? ` class="language-${escapeHtml(language)}"` : ""}>${escapeHtml(text)}\n</code></pre></div>\n`;
     },
     table(token) {
       const head = token.header.map((cell, i) => `<th${token.align[i] ? ` style="text-align:${token.align[i]}"` : ""}>${this.parser.parseInline(cell.tokens)}</th>`).join("");
@@ -284,7 +189,7 @@ export function markdownToHtml(markdown, from, known, siteBlocks = {}) {
   return { html: marked.parse(markdown), headings };
 }
 
-/** The words of the documentation pages in both languages, laid over the family's. `pageTitles` and `groups` are filled from NAV. */
+/** The words of the documentation pages in both languages, laid over the family's. */
 export const DOCS_WORDS = {
   en: {
     pitch: "Guides, the reference, a gallery of every picture it can draw, and how it compares: the pages are made from the package's own files when the site is built.",
@@ -295,7 +200,7 @@ export const DOCS_WORDS = {
     pageApi: "API reference",
     pageDocs: "Docs",
     docsSearchLabel: "Search the docs",
-    docsSearchPlaceholder: "Search titles and headings (press / to start)",
+    docsSearchPlaceholder: "Search the docs (press /)",
     docsMenu: "Contents",
     docsNone: "No title or heading has all of: {q}",
     docsCount: "{n} matches",
@@ -312,6 +217,12 @@ export const DOCS_WORDS = {
     docsDownload: "Download SVG",
     docsOpenPage: "Open in a page",
     docsOpenNote: "Open in a page loads the published package from jsDelivr, which serves only released versions.",
+    galleryFilter: "Filter the pictures",
+    galleryFilterPlaceholder: "Filter by name: a sport, a venue, a look",
+    galleryShown: "{n} pictures shown",
+    galleryNone: "No picture has all of those words.",
+    galleryAll: "All pictures",
+    ...NAV_WORDS.en,
   },
   ja: {
     pitch: "使い方のガイド、リファレンス、描けるすべての図のギャラリー、他のパッケージとの比較。これらのページは、パッケージ内のファイルから「pnpm site」で作っています。",
@@ -322,7 +233,7 @@ export const DOCS_WORDS = {
     pageApi: "APIリファレンス（英語）",
     pageDocs: "ドキュメント",
     docsSearchLabel: "ドキュメントを検索",
-    docsSearchPlaceholder: "タイトルと見出しを検索（「/」キーで入力開始）",
+    docsSearchPlaceholder: "ドキュメントを検索（「/」キー）",
     docsMenu: "目次",
     docsNone: "「{q}」のすべての語を含むタイトルや見出しはありません。",
     docsCount: "{n}件見つかりました",
@@ -339,47 +250,81 @@ export const DOCS_WORDS = {
     docsDownload: "SVGを保存",
     docsOpenPage: "ページで開く",
     docsOpenNote: "「ページで開く」は、公開済みのパッケージをjsDelivrから読み込みます。jsDelivrが配信するのは公開済みのバージョンだけです。",
+    galleryFilter: "図を絞り込む",
+    galleryFilterPlaceholder: "名前で絞り込み：競技、会場、見た目",
+    galleryShown: "{n}点を表示中",
+    galleryNone: "これらの語をすべて含む図はありません。",
+    galleryAll: "すべての図",
+    ...NAV_WORDS.ja,
   },
 };
 
 const pageUrl = (slug) => `${slug}.html`;
 
-/** The sidebar: every group, every page, and under the page being read the h2 headings it holds. */
+/** The title of a page of the contents, in English: its own heading, or the contents' name for a page the build makes. */
+const titleIn = (slug, headingsByPage) => headingsByPage.get(slug)?.title ?? slug;
+
+/** The sidebar: its two views. By task, every group of pages (the one holding this page open), and under the page being read the h2 headings it holds. By sport, each sport with its guide and its pictures. */
 function sidebar(current, headingsByPage) {
-  return NAV.map((group) => {
-    const items = group.pages
+  const group = PAGE_LIST.find((page) => page.slug === current)?.group;
+  const task = NAV.map((one) => {
+    const items = one.pages
       .map((page) => {
-        const title = headingsByPage.get(page.slug)?.title ?? page.slug;
+        const title = titleIn(page.slug, headingsByPage);
         const here = page.slug === current;
         const subs = here ? (headingsByPage.get(page.slug)?.headings ?? []).filter((heading) => heading.depth === 2).slice(0, 40) : [];
         const nested = subs.length > 0 ? `<ul>${subs.map((heading) => `<li><a href="#${heading.id}">${escapeHtml(heading.text)}</a></li>`).join("")}</ul>` : "";
         return `<li><a href="${pageUrl(page.slug)}"${here ? ' aria-current="page"' : ""} data-ja="${escapeHtml(page.ja)}">${escapeHtml(title)}</a>${nested}</li>`;
       })
       .join("");
-    return `<div><h2 data-ja="${escapeHtml(group.ja)}">${escapeHtml(group.en)}</h2><ul>${items}</ul></div>`;
+    return `<details class="docs-group"${one.id === group ? " open" : ""}><summary><span data-ja="${escapeHtml(one.ja)}">${escapeHtml(one.en)}</span></summary><ul>${items}</ul></details>`;
   }).join("\n");
+  const sportOf = (sport) => {
+    const open = sport.guide === current || sport.pages.some((page) => page.slug === current);
+    const link = (slug, at, en, ja, cls = "") => {
+      const here = slug === current;
+      return `<li><a href="${pageUrl(slug)}${at ? `#${at}` : ""}"${here ? " data-current" : ""}${cls ? ` class="${cls}"` : ""} data-ja="${escapeHtml(ja)}">${escapeHtml(en)}</a></li>`;
+    };
+    const guide = PAGE_LIST.find((page) => page.slug === sport.guide);
+    const items = [link(sport.guide, "", titleIn(sport.guide, headingsByPage), guide?.ja ?? "", "docs-sub-guide"), ...sport.pages.map((page) => link(page.slug, page.at, page.en, page.ja))].join("");
+    return `<details class="docs-group"${open ? " open" : ""}><summary><span data-ja="${escapeHtml(sport.ja)}">${escapeHtml(sport.en)}</span></summary><ul>${items}</ul></details>`;
+  };
+  const places = PLACES.map((place) => `<li><a href="${pageUrl(place.page)}${place.at ? `#${place.at}` : ""}" data-ja="${escapeHtml(place.ja)}">${escapeHtml(place.en)}</a></li>`).join("");
+  const placesGroup = `<details class="docs-group"><summary><span data-ja="${escapeHtml("会場と地区")}">Venues and districts</span></summary><ul>${places}</ul></details>`;
+  return `<div class="docs-views" role="tablist" data-say-label="navViews">
+            <button type="button" role="tab" aria-selected="true" data-view="task" data-say="navByTask"></button>
+            <button type="button" role="tab" aria-selected="false" data-view="sport" data-say="navBySport"></button>
+          </div>
+          <div class="docs-view" data-view="task" role="tabpanel">
+${task}
+          </div>
+          <div class="docs-view" data-view="sport" role="tabpanel" hidden>
+${SPORTS.map(sportOf).join("\n")}
+${placesGroup}
+          </div>`;
 }
 
 /** One whole page of the docs site: the family's header and footer, the search box, the contents, the article and the pager. */
 export function docsPage({ id, name, icon, slug, title, description, article, headingsByPage, editFile }) {
   const order = PAGE_LIST.map((page) => page.slug);
   const at = order.indexOf(slug);
-  const titleOfSlug = (s) => headingsByPage.get(s)?.title ?? s;
+  const titleOfSlug = (s) => titleIn(s, headingsByPage);
   const jaOfSlug = (s) => PAGE_LIST.find((page) => page.slug === s)?.ja ?? "";
   const pager = (s, rel, say) => (s === undefined ? "" : `<a href="${pageUrl(s)}" rel="${rel}"><small data-say="${say}"></small><span data-ja="${escapeHtml(jaOfSlug(s))}">${escapeHtml(titleOfSlug(s))}</span></a>`);
   const prev = order[at - 1];
   const next = order[at + 1];
   const edit = editFile ? `<p class="docs-edit"><a href="${REPO}/edit/main/${editFile}" data-say="docsEdit" rel="noopener"></a></p>` : "";
+  const drawings = /lazy-art|class="kyogijo/.test(article) ? `\n    <link rel="stylesheet" href="drawings.css" />` : "";
   return sayEnglish(`<!doctype html>
 <html lang="en">
   <head>
-    ${familyHead({ id, title: `${title} · ${name} documentation`, description })}
+    ${familyHead({ id, title: slug === "index" ? `${name} documentation` : `${title} · ${name} documentation`, description })}
     ${icon === undefined ? iconLinks("../") : `<link rel="icon" href="${icon}" />`}
     ${firstPaintHead(id)}
     <link rel="stylesheet" href="../family.css" />
-    <link rel="stylesheet" href="docs.css" />
+    <link rel="stylesheet" href="docs.css" />${drawings}
   </head>
-  <body>
+  <body class="docs-page">
     <main>
       ${familyHeader({ id, links: [{ href: "../", say: "pageBack" }, { href: "../api.html", say: "pageApi" }, { href: "./", say: "pageDocs" }] })}
       <div class="docs-bar">
@@ -388,12 +333,12 @@ export function docsPage({ id, name, icon, slug, title, description, article, he
           <ul class="docs-results" id="docs-results" role="listbox" hidden data-testid="docs-results"></ul>
           <div class="docs-count" id="docs-count" role="status" aria-live="polite"></div>
         </div>
+        <button type="button" class="fam-button docs-menu-toggle" id="docs-menu-toggle" aria-expanded="true" aria-controls="docs-nav" data-testid="docs-menu-toggle"><span data-say="docsMenu"></span><span aria-hidden="true">≡</span></button>
       </div>
       <div class="docs-layout">
         <div class="docs-menu">
-          <button type="button" class="fam-button docs-menu-toggle" id="docs-menu-toggle" aria-expanded="true" aria-controls="docs-nav" data-testid="docs-menu-toggle"><span data-say="docsMenu"></span><span aria-hidden="true">≡</span></button>
           <div class="docs-nav" id="docs-nav" role="navigation" aria-label="Documentation" data-testid="docs-nav">
-${sidebar(slug, headingsByPage)}
+          ${sidebar(slug, headingsByPage)}
           </div>
         </div>
         <article class="docs-article" data-testid="docs-article" data-page="${slug}">
@@ -417,9 +362,11 @@ ${article}
 
 /**
  * Write the documentation site into `outDir` (site/docs). `extraPages` are the pages made from code:
- * `{ slug, title, description, html, headings }`. `siteBlocks` fills the Markdown pages' `<!-- site:name -->` markers; `files` are more files for the site (`{ path, content }`).
+ * `{ slug, title, description, html, headings }`. `siteBlocks` fills the Markdown pages' `<!-- site:name -->` markers; `files` are more files for the site (`{ path, content }`);
+ * `drawingsCss` is the stylesheet of the drawings (the pages that hold drawings link it once) and `drawingsBase` the start of the one block of it that a drawing carries, which
+ * the page leaves out of each drawing it draws; `searchExtra` are more rows for the search (`[title, url, page, pageJa, depth, titleJa]`).
  */
-export function buildDocs({ root = process.cwd(), outDir = "site/docs", id = "kyogijo-stadiums", name = "Kyogijo Stadiums", icon, extraPages = [], siteBlocks = {}, files = [], wordsExtra = {} }) {
+export function buildDocs({ root = process.cwd(), outDir = "site/docs", id = "kyogijo-stadiums", name = "Kyogijo Stadiums", icon, extraPages = [], siteBlocks = {}, files = [], wordsExtra = {}, drawingsCss = "", drawingsBase = "", searchExtra = [] }) {
   const extra = new Map(extraPages.map((page) => [page.slug, page]));
   const known = { root, pages: new Set(PAGE_LIST.map((page) => page.slug)) };
   mkdirSync(outDir, { recursive: true });
@@ -451,17 +398,21 @@ export function buildDocs({ root = process.cwd(), outDir = "site/docs", id = "ky
       docsPage({ id, name, icon, slug: page.slug, title: info.title, description: one.description, article: one.html, headingsByPage, editFile: one.file }),
     );
   }
-  // The search index: each page's title, then each of its headings below the first, with the page they are on.
+  // The search index: each page's title, then each of its headings below the first, with the page they are on; then the sports and the places the home page names.
   const rows = [];
   for (const page of PAGE_LIST) {
     const info = headingsByPage.get(page.slug);
     rows.push([info.title, pageUrl(page.slug), info.title, page.ja, 0, page.ja]);
     for (const heading of info.headings) if (heading.depth > 1) rows.push([heading.text, `${pageUrl(page.slug)}#${heading.id}`, info.title, page.ja, heading.depth - 1, ""]);
   }
+  for (const sport of SPORTS) rows.push([sport.en, `gallery.html#${sport.id}`, "Gallery", "ギャラリー", 1, sport.ja]);
+  for (const place of PLACES) rows.push([place.en, `gallery.html#place-${place.id}`, "Gallery", "ギャラリー", 1, place.ja]);
+  rows.push(...searchExtra);
   const words = { en: { ...DOCS_WORDS.en, ...(wordsExtra.en ?? {}) }, ja: { ...DOCS_WORDS.ja, ...(wordsExtra.ja ?? {}) } };
-  writeFileSync(join(outDir, "search-index.js"), `/* The titles and headings of every page of the docs: made by scripts/docs-pages.mjs. */\nwindow.KYOGIJO_DOCS_INDEX = ${JSON.stringify(rows)};\nwindow.KYOGIJO_DOCS_WORDS = ${JSON.stringify(words)};\n`);
+  writeFileSync(join(outDir, "search-index.js"), `/* The titles and headings of every page of the docs: made by scripts/docs-pages.mjs. */\nwindow.KYOGIJO_DOCS_INDEX = ${JSON.stringify(rows)};\nwindow.KYOGIJO_DOCS_WORDS = ${JSON.stringify(words)};\nwindow.KYOGIJO_DOCS_BASE = ${JSON.stringify(drawingsBase)};\n`);
   writeFileSync(join(outDir, "docs.css"), DOCS_CSS);
   writeFileSync(join(outDir, "docs.js"), DOCS_JS);
+  if (drawingsCss !== "") writeFileSync(join(outDir, "drawings.css"), drawingsCss);
   // The files of the pages made from code: each gallery item's drawing as an SVG and as a page that draws it from the published package.
   for (const page of [...extraPages, { files }]) {
     for (const file of page.files ?? []) {
@@ -469,8 +420,12 @@ export function buildDocs({ root = process.cwd(), outDir = "site/docs", id = "ky
       writeFileSync(join(outDir, file.path), file.content);
     }
   }
-  // Pictures the pages show.
+  // Pictures the pages show: beside the pages, and the README's (docs/images) and the pages' own (docs/pictures), each under its own name.
   for (const file of readdirSync(join(root, "docs"))) if (/\.(svg|png|webp)$/.test(file)) cpSync(join(root, "docs", file), join(outDir, file));
+  for (const folder of ["images", "pictures"]) {
+    mkdirSync(join(outDir, folder), { recursive: true });
+    for (const file of readdirSync(join(root, "docs", folder))) if (/\.(png|webp|svg)$/.test(file)) cpSync(join(root, "docs", folder, file), join(outDir, folder, file));
+  }
   return { pages: PAGE_LIST.length, entries: rows.length };
 }
 

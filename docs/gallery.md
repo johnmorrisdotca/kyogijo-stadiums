@@ -1,6 +1,10 @@
 # Gallery
 
-Every picture the package draws, each with the code that draws it, a button to copy the code, a link to download the drawing as an SVG file and a link that opens it in a page of its own. The pictures are drawn by the build of the docs site from that code, so a picture cannot part from its snippet, and a test runs every snippet against the source. The "Open in a page" link opens one HTML file, made when the site is built, that draws the picture again from the published package on jsDelivr; jsDelivr serves only published versions, so a feature newer than the last release is not in it, and the page then keeps the picture the build drew and says why.
+Every picture the package draws, with the code that draws it. Pick a sport or a venue below, or filter by name. Each picture has a button that copies its code, a link that downloads the drawing as an SVG file and a link that opens it in a page of its own, which draws it again from the published package on jsDelivr (it serves only published versions, so a feature newer than the last release is not in it, and the page then keeps the picture the build drew and says why). The pictures are drawn by the build of the docs site from that code, so a picture cannot part from its snippet, and a test runs every snippet against the source.
+
+<!-- site:gallery-index -->
+
+## All the gallery pages
 
 The gallery is made when the site is built (`pnpm site`), so its pages are on the [docs site](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery.html) and not in this repository:
 

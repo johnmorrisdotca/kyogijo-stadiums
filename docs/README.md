@@ -2,9 +2,16 @@
 
 Kyogijo Stadiums draws sports surfaces as SVG, to scale, with the score on them. The README is the pitch and the first minute; these pages are everything else. The same pages are on the [docs site](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/), with a search over their titles and headings and a gallery that draws every picture from the code beside it.
 
-## Start here
+<!-- site:home -->
+
+## All the pages
+
+The contents of the site, by task. On the site the same pages are also listed by sport.
+
+### Start here
 
 - [Getting started](./getting-started.md): install, the four ways in, the element and the frame.
+- [Recipes](./examples.md): short examples to copy, one for each thing the package does.
 - [The surfaces](./surfaces.md): the forty-three surfaces and how a league's rules change one.
 - [Score and layout](./score.md): the teams, the score, the strip for a list, wide and tall.
 - [Theming](./theming.md): every colour, light and dark, the eight named looks, colours by feature, line widths and dashes, goal styles and mowing patterns.
@@ -17,7 +24,7 @@ Kyogijo Stadiums draws sports surfaces as SVG, to scale, with the score on them.
 - [Layouts and backgrounds](./layouts.md): small multiples with a title, a key and a credit line, in a size for a card or a phone, and patterns or a photograph behind a drawing or a grid.
 - [Accessibility](./accessibility.md): what each drawing says to a screen reader.
 
-## Sports and places
+### Sports and places
 
 - [Soccer](./soccer.md): sizes, mowing patterns, goals, shoot-outs and the providers' coordinates.
 - [Curling](./curling.md): the sheet from World Curling's and Curling Canada's rules, the board with the hammer, and the stones of an end scored by the rules.
@@ -49,7 +56,7 @@ Kyogijo Stadiums draws sports surfaces as SVG, to scale, with the score on them.
 - [Surfaces through the years](./eras.md): the markings of a season, each change cited.
 - [The atlas](./atlas.md): every park, ground and arena on a map.
 
-## Data on a surface
+### Data on a surface
 
 - [Units](./units.md): each surface in its rulebook's unit, and the conversions.
 - [Coordinate frames](./frames.md): where each data provider puts a point, and how to move it onto a surface.
@@ -62,12 +69,12 @@ Kyogijo Stadiums draws sports surfaces as SVG, to scale, with the score on them.
 - [Replay](./replay.md): tracking data played on a surface, with controls, a keyboard, a live region and steps for reduced motion.
 - [Renderers](./renderers.md): the drawing as plain data, on a canvas, in a d3 selection, in an Observable Plot, as GeoJSON and as a PNG.
 
-## Gallery and comparison
+### Gallery and comparison
 
 - [Gallery](./gallery.md): every surface, league, season, park, ground, layer, heat map and chart, drawn from the code shown beside it.
 - [How it compares](./compare.md): a table against the other packages that draw playing surfaces.
 
-## Reference
+### Reference
 
 - [Entry points](./entry-points.md), and the [API reference](https://johnmorrisdotca.github.io/kyogijo-stadiums/api.html) for every export.
 - [Limits](./limits.md): the numbers a test holds.

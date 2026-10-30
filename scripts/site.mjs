@@ -12,6 +12,7 @@ import { backgroundOptions, backgroundsModule } from "./backgrounds.mjs";
 import { atlasMapSvg } from "./atlas-map.mjs";
 import { buildDocs } from "./docs-pages.mjs";
 import { framesBlockHtml, framesFiles, galleryData, galleryPageHtml, libraryFrom } from "./docs-gallery.mjs";
+import { galleryIndexBlock, homeBlock } from "./docs-hub.mjs";
 import { FAMILY_SCRIPT, familyFooter, familyHead, familyHeader, familyUnreviewed } from "./family-template.mjs";
 import { iconLinks } from "./icon-links.mjs";
 import { firstPaintHead, sayEnglish } from "./first-paint.mjs";
@@ -643,14 +644,18 @@ writeFileSync("site/family-backgrounds.js", backgroundsModule());
 writeFileSync("site/api.css", API_CSS);
 writeFileSync("site/api.html", apiPage({ id, name: "Kyogijo Stadiums" }));
 // The documentation pages: docs/*.md as pages, and the gallery, drawn from code by the built package.
+const gallery = galleryData(lib);
 const made = buildDocs({
   root: process.cwd(),
   outDir: "site/docs",
   id,
   name: "Kyogijo Stadiums",
-  extraPages: galleryData(lib).map((one) => galleryPageHtml(one, style)),
-  siteBlocks: { frames: framesBlockHtml(lib, style) },
+  extraPages: gallery.map((one) => galleryPageHtml(one)),
+  siteBlocks: { frames: framesBlockHtml(lib), home: homeBlock({ gallery, root: process.cwd() }), "gallery-index": galleryIndexBlock({ gallery, root: process.cwd() }) },
   files: framesFiles(lib),
+  // The drawings' stylesheet, once, for every page that draws; the one block a drawing carries of it is left out of each (docs.js).
+  drawingsCss: style,
+  drawingsBase: lib["@johnmorrisdotca/kyogijo-stadiums"].KYOGIJO_STYLE.slice(0, 60),
 });
 // Every page's modules are asked for together, from its head, not one file at a time as each is found (scripts/module-preload.mjs).
 const preloaded = addModulePreloads("site");

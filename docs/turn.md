@@ -2,7 +2,7 @@
 
 A surface drawn flat hides what stands on it: a net, a basket, a goal, the posts of a football field. `@johnmorrisdotca/kyogijo-stadiums/turn` shows any surface as a floor that turns. The floor is the flat drawing itself, with its score, its data layers and its labels; it is tipped and turned by the mouse, a finger, the wheel or the keys, and what the rulebook puts on the surface stands up on it, at the rulebook's height.
 
-![A volleyball court from behind an end line: the net at 2.43 m on its posts, with the antennae, and the viewpoint buttons under it](./images/turn-volleyball-desk-light.webp)
+![A volleyball court from behind an end line: the net at 2.43 m on its posts, with the antennae, and the viewpoint buttons under it](./pictures/turn-volleyball-desk-light.webp)
 
 It is plain DOM and CSS, with no dependency and no canvas. Each part that stands up (a net, a pane of glass, a backboard, the two strips that make a post) is a flat rectangle with a little SVG on it, and each carries its whole place on the screen in one `matrix3d`; the parts are stacked far to near by `z-index`. Nothing is nested in 3D (no `preserve-3d`, no `perspective` on a parent), so a browser that cannot keep nested 3D layers, as Safari on a phone sometimes cannot, draws it as it is meant. The drawing it is made from is the one `drawKyogijo` draws, so the 3D view is an enhancement over the static SVG, which stays what a server renders.
 
@@ -53,7 +53,7 @@ The steady scale is the smallest the old fit used over the turn, so the floor is
 
 **Tipping the view still rescales it**: the pitch changes how much of the box the scene covers, so the placement is worked out again for each pitch (a floor is drawn about 1.6 times as large at a tip of 84 degrees as overhead). Fitting over every pitch as well was tried and not kept: it fits the scene at the overhead view, where a long floor has to fit the box's height, so at a tip of 60 degrees the floor would be 0.64 of the size it can have. Zoom (`+` and `-`, the buttons, a pinch or Ctrl and the wheel) is laid on top of the fit and does not change it. `fit(box, view, width, height, distance)` takes the view's pitch and not its yaw.
 
-![A hockey rink from a low corner: the boards, the glass and a goal at each end](./images/turn-rink-desk-light.webp)
+![A hockey rink from a low corner: the boards, the glass and a goal at each end](./pictures/turn-rink-desk-light.webp)
 
 ## Hands
 
@@ -225,6 +225,6 @@ A page with no script keeps the flat drawing: render `drawKyogijo(options)` into
 
 The colours of what stands up are custom properties on `.ky-turn`, light and dark, in `KYOGIJO_TURN_STYLE`: `--ky-up-pole`, `--ky-up-white`, `--ky-up-yellow`, `--ky-up-red`, `--ky-up-orange`, `--ky-up-mesh`, `--ky-up-netfill`, `--ky-up-tape`, `--ky-up-glass`, `--ky-up-backboard`, `--ky-up-board`, `--ky-up-wall`, `--ky-up-table`, `--ky-up-pad`, `--ky-up-rim` and a few more; `--ky-turn-ratio` is the box's shape (16/10, and 5/4 on a phone). The defaults are in `:where()`, so a page's own rule wins. Pass `style: "none"` in the options to leave the stylesheet out and put `KYOGIJO_TURN_STYLE` in the page once.
 
-![A basketball court from the main camera: a basket at each end](./images/turn-court-desk-light.webp)
+![A basketball court from the main camera: a basket at each end](./pictures/turn-court-desk-light.webp)
 
 [Open the demo in 3D](https://johnmorrisdotca.github.io/kyogijo-stadiums/?sport=volleyball&view=3d&viewpoint=end): the View switch in the playground turns any surface.

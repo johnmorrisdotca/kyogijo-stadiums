@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 
 import { serve } from "./demo.mjs";
 
-const PAGES = ["", "stadiums.html", "stadiums.html?view=3d", "district.html", "district.html?view=3d", "halls.html", "judging.html", "boards.html", "flythrough.html", "venues.html", "venues.html?view=3d", "embed.html", "api.html"];
+const PAGES = ["", "stadiums.html", "stadiums.html?view=3d", "district.html", "district.html?view=3d", "halls.html", "judging.html", "boards.html", "flythrough.html", "venues.html", "venues.html?view=3d", "embed.html", "api.html", "docs/", "docs/gallery.html", "docs/gallery-venues.html"];
 
 /** The visible buttons and selects that still look as the browser draws them: the same border, ground and corners as a fresh, unstyled control of the same kind. */
 async function unstyled(page) {

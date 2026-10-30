@@ -103,7 +103,7 @@ The look is the drawing's `data-look`, and its rules are written into the drawin
 
 ### The table tennis playing area
 
-![A table tennis table in the middle of its playing area of 14 m by 7 m, enclosed by dark surrounds, with the umpire's chair in line with the net, the assistant umpire's chair opposite it and the umpires' table beside the first](./images/tabletennis-area-desk-light.webp)
+![A table tennis table in the middle of its playing area of 14 m by 7 m, enclosed by dark surrounds, with the umpire's chair in line with the net, the assistant umpire's chair opposite it and the umpires' table beside the first](./pictures/tabletennis-area-desk-light.webp)
 
 `sport: "tabletennis"` draws the table in the playing area the ITTF's Regulations for International Competitions ask for (3.2.3, chapter 3 of the ITTF Statutes 2026, read on 2026-10-20), as the default:
 

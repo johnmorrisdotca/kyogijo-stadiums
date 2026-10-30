@@ -48,7 +48,7 @@ A drawing says what it is to a screen reader: "an MMA cage: an eight-sided fence
 
 `buildTurn({ sport: "mma" })` raises the cage. The platform is a **solid block**: four sides from the floor of the hall up to the canvas and a top that is the drawing's own canvas, fence line and posts, lifted to the platform's height (the way the dohyō's mound is, so that the ground round it stays low). The eight padded posts are solid, two crossed strips each, from the platform to a hand's breadth over the fence. The fence is **mesh**: a panel on each of the eight flats, a faint tint with fine threads, a pad along the top and one along the foot, and the two gates as frames of padded rails over mesh, so that the canvas is in sight through it. A panel that lies between the eye and the cage gives way, as a pane of glass at a rink does, to at most 30 per cent of itself, and none gives way from straight above. The steps are three blocks each, the highest touching the platform.
 
-![The cage in 3D from a low corner: the platform as a solid block on the floor of the hall, the mesh fence with its padded posts, and the steps at a gate](./images/mma-cage-3d-desk-light.webp)
+![The cage in 3D from a low corner: the platform as a solid block on the floor of the hall, the mesh fence with its padded posts, and the steps at a gate](./pictures/mma-cage-3d-desk-light.webp)
 
 The view is the same as for every surface: the steady camera (the cage keeps its size as the view turns, in no step) and the order the parts are drawn in from every side (the platform's far sides before its top and its near sides after it, the fence and the posts over the top), each held by a test in `src/mma.test.ts`. The views are `overhead`, `broadcast`, `end` and `corner`, as the others have.
 

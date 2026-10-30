@@ -8,6 +8,8 @@ import { Marked } from "marked";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { cdnUrl, framesBlockHtml, framesFiles, framesItems, galleryData, galleryPageHtml, libraryFrom, literal, runSnippet } from "../scripts/docs-gallery.mjs";
+import { galleryIndexBlock, homeBlock } from "../scripts/docs-hub.mjs";
+import { PLACES, SPORTS } from "../scripts/docs-nav.mjs";
 import { NAV, PAGE_LIST, buildDocs, fileOf, headingsOf, readPages, resolveLink, slugOf } from "../scripts/docs-pages.mjs";
 
 const MAIN = "@johnmorrisdotca/kyogijo-stadiums";
@@ -64,7 +66,7 @@ describe("the links of the README and of every page", () => {
   const readme = read("README.md");
   const sources = [{ file: "README.md", markdown: readme }, ...readPages().map((page) => ({ file: page.file, markdown: page.markdown }))];
   const headings = new Map([["README.md", headingsOf(readme).map((heading) => heading.id)], ...readPages().map((page) => [page.file, page.headings.map((heading) => heading.id)])]);
-  const made = galleryData(lib).map((one) => galleryPageHtml(one, style));
+  const made = galleryData(lib).map((one) => galleryPageHtml(one));
   const madeIds = new Map(made.map((page) => [page.slug, page.headings.map((heading) => heading.id)]));
 
   for (const { file, markdown } of sources) {
@@ -108,8 +110,8 @@ describe("the docs site built from the pages", () => {
   beforeAll(() => {
     rmSync(out, { recursive: true, force: true });
     mkdirSync(out, { recursive: true });
-    pages = galleryData(lib).map((one) => galleryPageHtml(one, style));
-    result = buildDocs({ root: resolve("."), outDir: out, icon: "data:,", extraPages: pages, siteBlocks: { frames: framesBlockHtml(lib, style) }, files: framesFiles(lib) });
+    pages = galleryData(lib).map((one) => galleryPageHtml(one));
+    result = buildDocs({ root: resolve("."), outDir: out, icon: "data:,", extraPages: pages, siteBlocks: { frames: framesBlockHtml(lib) }, files: framesFiles(lib) });
   });
   afterAll(() => rmSync(out, { recursive: true, force: true }));
 
@@ -195,13 +197,16 @@ describe("the gallery", () => {
     for (const entry of frames) expect(runSnippet(entry.code, lib).startsWith("<svg"), entry.id).toBe(true);
   });
 
-  it("writes each page with a copy button and its code for every picture, and the stylesheet once", () => {
+  it("writes each page with a copy button and its code for every picture, and draws each from its file when it comes near", () => {
     for (const page of data) {
-      const made = galleryPageHtml(page, style);
+      const made = galleryPageHtml(page);
       const count = page.sections.reduce((sum, one) => sum + one.items.length, 0);
       expect((made.html.match(/data-testid="gallery-copy"/g) ?? []).length, page.slug).toBe(count);
       expect((made.html.match(/<pre id="code-/g) ?? []).length, page.slug).toBe(count);
-      expect(made.html.split(style.slice(0, 80)).length - 1, `${page.slug}: the base stylesheet is in the page once`).toBe(1);
+      // The pictures are drawn when they come near, from their own files, and the stylesheet is the site's one file: not in the page.
+      expect((made.html.match(/class="lazy-art" data-src="gallery\//g) ?? []).length, `${page.slug}: a box for each picture, filled from its file`).toBe(count);
+      expect(made.html, `${page.slug}: no drawing and no stylesheet in the page`).not.toContain(style.slice(0, 80));
+      expect(made.html).not.toContain("<svg");
     }
   });
 
@@ -216,7 +221,7 @@ describe("the gallery", () => {
 
   it("gives every item a download of its drawing and a page that draws it from the published package", () => {
     for (const page of data) {
-      const made = galleryPageHtml(page, style);
+      const made = galleryPageHtml(page);
       const count = page.sections.reduce((sum, one) => sum + one.items.length, 0);
       expect((made.html.match(/data-testid="gallery-download"/g) ?? []).length, page.slug).toBe(count);
       expect((made.html.match(/data-testid="gallery-open"/g) ?? []).length, page.slug).toBe(count);
@@ -236,7 +241,7 @@ describe("the gallery", () => {
     const AsyncFunction = Object.getPrototypeOf(async () => {}).constructor;
     const runs = [];
     for (const page of data) {
-      const made = galleryPageHtml(page, style);
+      const made = galleryPageHtml(page);
       for (const entry of page.sections.flatMap((one) => one.items)) {
         const html = made.files.find((file) => file.path === `gallery/${entry.id}.html`).content;
         expect(html.startsWith("<!doctype html>"), entry.id).toBe(true);
@@ -270,7 +275,7 @@ describe("the gallery", () => {
 
   it("says what a page does when the published package has no such feature", async () => {
     const entry = data[0].sections[0].items[0];
-    const html = galleryPageHtml({ ...data[0], sections: [{ ...data[0].sections[0], items: [entry] }] }, style).files.find((file) => file.path.endsWith(".html")).content;
+    const html = galleryPageHtml({ ...data[0], sections: [{ ...data[0].sections[0], items: [entry] }] }).files.find((file) => file.path.endsWith(".html")).content;
     const script = /<script type="module">\n([\s\S]*?)<\/script>/.exec(html)[1];
     const AsyncFunction = Object.getPrototypeOf(async () => {}).constructor;
     const seen = {};
@@ -284,5 +289,55 @@ describe("the gallery", () => {
     expect(literal({ a: 1, "b-c": [1, 2], d: { e: "x" } })).toBe('{ a: 1, "b-c": [1, 2], d: { e: "x" } }');
     expect(runSnippet(`import { drawKyogijo } from "${MAIN}";\nconst svg = drawKyogijo(${literal({ sport: "nhl" })});`, lib)).toBe(lib[MAIN].drawKyogijo({ sport: "nhl" }));
     expect(() => runSnippet("const svg = 1;", lib)).toThrow(/SVG string/);
+  });
+});
+
+/** Every address the docs site had before the contents was regrouped by task and by sport: each is still a page of it. */
+const KEPT_ADDRESSES = ["accessibility", "annotations", "architecture", "arenas", "athletics", "atlas", "ballparks", "boards", "budo", "charts", "combat", "compare", "courts", "crowd", "curling", "district", "emblems", "entry-points", "eras", "field-sports", "flags", "flythrough", "frames", "gallery", "gallery-athletics", "gallery-boards", "gallery-budo", "gallery-combat", "gallery-courts", "gallery-curling", "gallery-data", "gallery-fields", "gallery-judging", "gallery-layouts", "gallery-leagues", "gallery-multi", "gallery-pageant", "gallery-places", "gallery-pools", "gallery-ranges", "gallery-situation", "gallery-skating", "gallery-soccer", "gallery-special", "gallery-stadiums", "gallery-styling", "gallery-surfaces", "gallery-venues", "gallery-years", "gates", "getting-started", "grounds", "hardwood", "index", "judging", "layers", "layouts", "limits", "multi", "outside", "pageant", "parks", "pointer", "pools", "quality", "ranges", "references", "renderers", "replay", "roof-photos-needed", "score", "situation", "skating", "soccer", "sources", "special-games", "stadiums", "strings-ja", "surfaces", "targets", "team-shape", "terminology", "theming", "turn", "units", "variants", "venues", "zones"];
+
+describe("the addresses of the docs site", () => {
+  it("are all still there after the contents was regrouped, and the home page and the gallery's index lead on to them", () => {
+    const slugs = new Set(PAGE_LIST.map((page) => page.slug));
+    for (const slug of KEPT_ADDRESSES) expect(slugs.has(slug), `${slug}.html`).toBe(true);
+    expect(fileOf("index")).toBe("docs/README.md");
+    expect(readFileSync("docs/README.md", "utf8")).toContain("<!-- site:home -->");
+    expect(readFileSync("docs/gallery.md", "utf8")).toContain("<!-- site:gallery-index -->");
+  });
+});
+
+describe("the home page and the gallery's index", () => {
+  const gallery = galleryData(lib);
+  const pages = new Map(readPages(".").map((page) => [page.slug, page]));
+
+  it("name only pages, headings and pictures that exist, and show a live tile for each sport and a still for each place", () => {
+    const home = homeBlock({ gallery, root: "." });
+    expect((home.match(/data-testid="sport-tile"/g) ?? []).length).toBe(SPORTS.length);
+    expect((home.match(/data-testid="place-tile"/g) ?? []).length).toBe(PLACES.length);
+    for (const place of PLACES) {
+      const page = pages.get(place.page);
+      expect(page, `${place.id}: the page ${place.page}`).toBeDefined();
+      if (place.at) expect(page.headings.some((heading) => heading.id === place.at), `${place.id}: #${place.at} on ${place.page}`).toBe(true);
+    }
+    for (const sport of SPORTS) {
+      expect(pages.has(sport.guide), `${sport.id}: guide ${sport.guide}`).toBe(true);
+      for (const link of sport.pages) {
+        const target = gallery.find((page) => page.slug === link.slug) ?? pages.get(link.slug);
+        expect(target, `${sport.id}: ${link.slug}`).toBeDefined();
+        if (link.at && gallery.some((page) => page.slug === link.slug)) {
+          const ids = gallery.find((page) => page.slug === link.slug).sections.flatMap((one) => [one.id, ...one.items.map((entry) => entry.id)]);
+          expect(ids, `${sport.id}: ${link.slug}#${link.at}`).toContain(link.at);
+        }
+      }
+    }
+  });
+
+  it("make the index from the gallery's own pictures, a group at a time, each tile drawn when it comes near and carrying its code", () => {
+    const index = galleryIndexBlock({ gallery, root: "." });
+    const tiles = index.match(/data-testid="gallery-tile"/g) ?? [];
+    expect(tiles.length).toBeGreaterThanOrEqual(100);
+    expect(index).not.toContain("<svg");
+    expect((index.match(/class="lazy-art" data-src="gallery\//g) ?? []).length).toBe(tiles.length);
+    expect((index.match(/data-copy-code="/g) ?? []).length).toBe(tiles.length);
+    for (const name of ["Saddledome", "Madison Square Garden", "Bell Centre"]) expect(index).toContain(name);
   });
 });

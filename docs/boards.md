@@ -29,7 +29,7 @@ console.log(svg.includes('data-board="top"'), svg.includes('class="ky-board-img"
 
 The demo's [boards page](https://johnmorrisdotca.github.io/kyogijo-stadiums/boards.html) lays five boards over a pool, a mat and two ovals, in 2D and in 3D, and keeps the placement in its address. The [gallery](https://johnmorrisdotca.github.io/kyogijo-stadiums/docs/gallery-boards.html) shows every position and the limits below. The athletes and results in the pictures are invented.
 
-![A results board over a swimming pool seen from above: a blue title band reading Men's 100m freestyle with a gold medal square, a bar reading Final, and eight rows with a red rank box, a country code, a flag, a name and a time, the winner's with a record badge, centred at the top edge of the pool, over the lane ropes and above the middle](./images/boards-swimming-desk-light.webp)
+![A results board over a swimming pool seen from above: a blue title band reading Men's 100m freestyle with a gold medal square, a bar reading Final, and eight rows with a red rank box, a country code, a flag, a name and a time, the winner's with a record badge, centred at the top edge of the pool, over the lane ropes and above the middle](./pictures/boards-swimming-desk-light.webp)
 
 ## The option
 
@@ -73,12 +73,12 @@ view.preset("corner"); // the board stays where it is
 view.update({ sport: "judo", board: { svg: nextBoutSvg, width: 960, height: 269, position: "top" } }); // a new board, the view keeps its turn
 ```
 
-![A judo mat in 3D from a low corner with a bout presentation board over the top of the view: the two athletes in a red and a blue band, the referee and two judges, steady while the mat is turned](./images/boards-judo-3d-desk-light.webp)
+![A judo mat in 3D from a low corner with a bout presentation board over the top of the view: the two athletes in a red and a blue band, the referee and two judges, steady while the mat is turned](./pictures/boards-judo-3d-desk-light.webp)
 
 `turnMarkup` writes the layer into the markup it makes, after the scene, and the stylesheet (`KYOGIJO_TURN_STYLE`) has its rules; where the browser cannot draw in 3D, the flat drawing is shown with the board on it.
 
 ## A medal table in a corner
 
-![A medal table over the corner of an athletics stadium: a title band, a bar with a gold, a silver and a bronze disc over their columns and the word total, and eight rows with a flag, a country code and the counts, at the top right, off the middle of the field](./images/boards-medals-desk-light.webp)
+![A medal table over the corner of an athletics stadium: a title band, a bar with a gold, a silver and a bronze disc over their columns and the word total, and eight rows with a flag, a country code and the counts, at the top right, off the middle of the field](./pictures/boards-medals-desk-light.webp)
 
 A board is any SVG: make it with your own code, or with Taisen Brackets' three. They carry no mark of any games, federation or broadcaster, and neither does Kyogijo; a mark of yours is yours to have the right to.

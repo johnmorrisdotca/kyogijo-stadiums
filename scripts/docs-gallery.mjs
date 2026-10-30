@@ -1511,24 +1511,35 @@ export function galleryData(lib) {
   });
 }
 
-/** The base stylesheet is in the page once; a drawing carries it too, which is 8 kB each. The gallery leaves it out of each and says so. */
-/** Every style block of a drawing (a district's nested drawings carry several): each that is the base stylesheet is left out of the item. */
-const STYLE_ALL = /<style>[\s\S]*?<\/style>/g;
+/** The shape of a drawing: its viewBox's width and height, so that the box it will be drawn in keeps its room before it is. */
+export const shapeOf = (svg) => {
+  const [, , width, height] = (/viewBox="([^"]+)"/.exec(svg)?.[1] ?? "0 0 300 200").split(/\s+/).map(Number);
+  return { width, height };
+};
 
 /** Where a gallery item's own files are, beside the pages: its drawing as an SVG file, and a page that draws it from the published package. */
 export const itemFiles = (id) => ({ svg: `gallery/${id}.svg`, page: `gallery/${id}.html` });
 
-const itemHtml = (entry, style) => {
-  const svg = entry.svg.replace(STYLE_ALL, (block) => (block.includes(style.slice(0, 60)) || style.includes(block.slice("<style>".length, -"</style>".length)) ? "" : block));
+/**
+ * A picture that is drawn when it comes near: a box of the drawing's shape that docs.js fills from the item's SVG file when the reader is within a screen or two of it. Without
+ * script the file is an image (light only, as a downloaded SVG is). `style` is the largest the box may be, in rem, for a tall drawing.
+ */
+export function lazyArt(entry, { tallRem = 26 } = {}) {
+  const { width, height } = shapeOf(entry.svg);
+  const ratio = width / height;
+  const files = itemFiles(entry.id);
+  const limit = ratio < 1 ? `;max-width:min(100%,${(tallRem * ratio).toFixed(1)}rem)` : "";
+  return `<div class="lazy-art" data-src="${files.svg}" data-alt="${escapeHtml(entry.title)}" aria-busy="true" style="aspect-ratio:${Math.round(width * 100) / 100} / ${Math.round(height * 100) / 100}${limit}"><noscript><img src="${files.svg}" alt="${escapeHtml(entry.title)}" loading="lazy" width="${Math.round(width)}" height="${Math.round(height)}"></noscript></div>`;
+}
+
+const itemHtml = (entry) => {
   const code = escapeHtml(entry.code);
   const files = itemFiles(entry.id);
   return `<figure class="g-item" id="${entry.id}" data-testid="gallery-item">
   <h3 id="t-${entry.id}">${escapeHtml(entry.title)}</h3>
-  <div class="g-art" data-testid="gallery-art">${svg}</div>
+  <div class="g-art" data-testid="gallery-art">${lazyArt(entry)}</div>
   ${entry.note ? `<p class="g-note">${escapeHtml(entry.note)}</p>` : ""}
-  <div class="g-actions"><button type="button" class="fam-button" data-copy-for="code-${entry.id}" aria-describedby="t-${entry.id}" data-testid="gallery-copy"><span data-copy-label data-docs-copy-label>Copy</span></button><a class="fam-button" href="${files.svg}" download="${entry.id}.svg" aria-describedby="t-${entry.id}" data-testid="gallery-download" data-say="docsDownload">Download SVG</a><a class="fam-button" href="${files.page}" aria-describedby="t-${entry.id}" data-testid="gallery-open" data-say="docsOpenPage">Open in a page</a><span class="g-status" role="status" aria-live="polite"></span></div>
-  <p class="g-note g-published" data-say="docsOpenNote">Open in a page loads the published package from jsDelivr, which serves only released versions.</p>
-  <details class="g-code"><summary data-say="docsShowCode">Show the code</summary><pre id="code-${entry.id}"><code class="language-ts">${code}</code></pre></details>
+  <div class="docs-code g-code"><div class="docs-code-bar"><span class="docs-code-lang">ts</span><button type="button" class="fam-button docs-copy" data-copy-for="code-${entry.id}" aria-describedby="t-${entry.id}" data-testid="gallery-copy"><span data-copy-label data-docs-copy-label>Copy</span></button><span class="g-links"><a href="${files.svg}" download="${entry.id}.svg" aria-describedby="t-${entry.id}" data-testid="gallery-download" data-say="docsDownload">Download SVG</a><a href="${files.page}" aria-describedby="t-${entry.id}" data-testid="gallery-open" data-say="docsOpenPage">Open in a page</a></span><span class="g-status" role="status" aria-live="polite"></span></div><pre id="code-${entry.id}" tabindex="0"><code class="language-ts">${code}</code></pre></div>
 </figure>`;
 };
 
@@ -1587,22 +1598,24 @@ ${script}
 `;
 }
 
-/** A gallery page as HTML for docs-pages.mjs: `{ slug, title, description, html, headings }`. `style` is `KYOGIJO_STYLE`, put in the page once. */
-export function galleryPageHtml(page, style) {
+/** A gallery page as HTML for docs-pages.mjs: `{ slug, title, description, html, headings }`. */
+export function galleryPageHtml(page) {
   const headings = [{ depth: 1, text: page.title, id: slugOf(page.title) }];
+  const count = page.sections.reduce((sum, one) => sum + one.items.length, 0);
   const sections = page.sections
     .map((one) => {
       headings.push({ depth: 2, text: one.title, id: one.id });
       const items = one.items
         .map((entry) => {
           headings.push({ depth: 3, text: entry.title, id: entry.id });
-          return itemHtml(entry, style);
+          return itemHtml(entry);
         })
         .join("\n");
       return `<section aria-labelledby="${one.id}"><h2 id="${one.id}">${escapeHtml(one.title)}<a class="docs-anchor" href="#${one.id}" aria-label="${escapeHtml(one.title)}">#</a></h2>\n<p>${escapeHtml(one.intro).replace(/`([^`]+)`/g, "<code>$1</code>")}</p>\n<div class="g-grid">\n${items}\n</div></section>`;
     })
     .join("\n");
-  const html = `<h1 id="${headings[0].id}">${escapeHtml(page.title)}</h1>\n<p>${escapeHtml(page.intro).replace(/`([^`]+)`/g, "<code>$1</code>")} The pictures share one stylesheet, which is left out of each one's SVG here; <code>drawKyogijo</code> puts it in every drawing unless <code>style: "none"</code> says not to.</p>\n<style>${style}</style>\n${sections}\n`;
+  const chips = page.sections.map((one) => `<li><a href="#${one.id}">${escapeHtml(one.title)}<span class="g-count">${one.items.length}</span></a></li>`).join("");
+  const html = `<h1 id="${headings[0].id}">${escapeHtml(page.title)}</h1>\n<p class="g-lead">${escapeHtml(page.intro).replace(/`([^`]+)`/g, "<code>$1</code>")}</p>\n<ul class="g-chips" aria-label="Sections of this page">${chips}</ul>\n<p class="g-published">${count} pictures, each drawn by the build from the code under it, which the Copy button copies. They are drawn as they come near the screen. ${escapeHtml("Open in a page loads the published package from jsDelivr, which serves only released versions.")}</p>\n${sections}\n`;
   const major = page.major ?? "0";
   const version = page.version ?? `${major}.x`;
   const files = page.sections.flatMap((one) => one.items).flatMap((entry) => [{ path: itemFiles(entry.id).svg, content: `${entry.svg}\n` }, { path: itemFiles(entry.id).page, content: standalonePage(entry, major, version) }]);
@@ -1854,9 +1867,9 @@ export function framesItems(lib) {
 }
 
 /** The frames' drawings as the HTML of the `<!-- site:frames -->` marker of docs/frames.md. */
-export function framesBlockHtml(lib, style) {
+export function framesBlockHtml(lib) {
   const items = framesItems(lib).map((entry) => ({ ...entry, svg: runSnippet(entry.code, lib) }));
-  return `<style>${style}</style>\n<div class="g-frames" data-testid="frames-gallery">\n${items.map((entry) => itemHtml(entry, style)).join("\n")}\n</div>\n`;
+  return `<div class="g-frames" data-testid="frames-gallery">\n${items.map((entry) => itemHtml(entry)).join("\n")}\n</div>\n`;
 }
 
 /** The files of the frames' items (each drawing as an SVG and as a page that draws it from the published package), for `buildDocs`' `files`. */

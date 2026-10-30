@@ -427,14 +427,16 @@ The demo is not bundled: a page loads the modules it imports, as the files `tsc`
 scripts/
 ├── site.mjs            builds the demo, the API reference and the docs site into site/
 ├── docs-pages.mjs      docs/*.md as pages: the contents, the search index, the pager, the links
-├── docs-assets.mjs     the docs' stylesheet and script (the search box, the contents, the copy buttons)
+├── docs-assets.mjs     reads the docs' stylesheet and script from docs-site/ (the search box, the contents, the copy buttons, pictures drawn when they come near)
+├── docs-nav.mjs        the contents by task and by sport, the places and the gallery's groups, with their names in Japanese
+├── docs-hub.mjs        the home page's tiles and the gallery's index, made from the gallery's own pictures
 ├── docs-gallery.mjs    the gallery and the frames' drawings: code that is run, and the picture it draws
 ├── docs-made.mjs       the tables of docs/*.md made from the source: frames, units, limits
 ├── docs-examples.mjs   what an example says it prints, and how to hold it to what it prints
 └── api.mjs             the API reference, read from the doc comments with the TypeScript compiler
 ```
 
-- A page of the docs is a Markdown file of `docs/`, listed in `NAV` of `docs-pages.mjs` with its title in Japanese. A link in it is to another page by its file (`./soccer.md#data-providers`), and `resolveLink` turns it into the page's address on the site, or on GitHub for a file of the repository; a test holds every link, and every anchor, of the README and of every page.
+- A page of the docs is a Markdown file of `docs/`, listed in `NAV` of `docs-nav.mjs` with its title in Japanese. A link in it is to another page by its file (`./soccer.md#data-providers`), and `resolveLink` turns it into the page's address on the site, or on GitHub for a file of the repository; a test holds every link, and every anchor, of the README and of every page.
 - `<!-- made:frames -->` and its end comment mark a table `pnpm docs:make` writes from the code; `<!-- site:frames -->` marks where the build draws the same spot in every frame. Both are comments, so on GitHub the page reads as it is.
 - The gallery's pages are not Markdown: each picture is the value of a snippet of code, run by the build against the built package, and the snippet is shown beside it. A test runs every snippet against the source.
 - Every `ts` example of the README and of every page is run by `src/docs.examples.test.js` against the source, and again, type-checked, by `pnpm test:readme` against the built package; what a block prints is held to the comment lines after its `console.log`.

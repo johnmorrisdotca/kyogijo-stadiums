@@ -2053,7 +2053,7 @@ Made from `src/strings.en.ts`, `src/strings.ja.ts` and `demo/words.js` by `pnpm 
 | `pageApi` | API reference | APIリファレンス（英語） |
 | `pageDocs` | Docs | ドキュメント |
 | `docsSearchLabel` | Search the docs | ドキュメントを検索 |
-| `docsSearchPlaceholder` | Search titles and headings (press / to start) | タイトルと見出しを検索（「/」キーで入力開始） |
+| `docsSearchPlaceholder` | Search the docs (press /) | ドキュメントを検索（「/」キー） |
 | `docsMenu` | Contents | 目次 |
 | `docsNone` | No title or heading has all of: {q} | 「{q}」のすべての語を含むタイトルや見出しはありません。 |
 | `docsCount` | {n} matches | {n}件見つかりました |
@@ -2070,6 +2070,16 @@ Made from `src/strings.en.ts`, `src/strings.ja.ts` and `demo/words.js` by `pnpm 
 | `docsDownload` | Download SVG | SVGを保存 |
 | `docsOpenPage` | Open in a page | ページで開く |
 | `docsOpenNote` | Open in a page loads the published package from jsDelivr, which serves only released versions. | 「ページで開く」は、公開済みのパッケージをjsDelivrから読み込みます。jsDelivrが配信するのは公開済みのバージョンだけです。 |
+| `galleryFilter` | Filter the pictures | 図を絞り込む |
+| `galleryFilterPlaceholder` | Filter by name: a sport, a venue, a look | 名前で絞り込み：競技、会場、見た目 |
+| `galleryShown` | {n} pictures shown | {n}点を表示中 |
+| `galleryNone` | No picture has all of those words. | これらの語をすべて含む図はありません。 |
+| `galleryAll` | All pictures | すべての図 |
+| `navByTask` | By task | 目的から探す |
+| `navBySport` | By sport | 競技から探す |
+| `navViews` | Contents: choose a view | 目次の表示を選ぶ |
+| `navGuide` | Guide | ガイド |
+| `navPictures` | Pictures | 図の一覧 |
 
 ## The docs site's contents (`NAV`)
 
@@ -2078,6 +2088,7 @@ Made from `src/strings.en.ts`, `src/strings.ja.ts` and `demo/words.js` by `pnpm 
 | group `start` | Start here | 最初に読む |
 | page `index` | Documentation | ドキュメントの概要 |
 | page `getting-started` | Getting started | はじめに |
+| page `examples` | Recipes | コード例 |
 | page `surfaces` | The surfaces | 競技場 |
 | page `score` | Score and layout | 得点とレイアウト |
 | page `theming` | Theming | テーマと色 |
@@ -2089,35 +2100,38 @@ Made from `src/strings.en.ts`, `src/strings.ja.ts` and `demo/words.js` by `pnpm 
 | page `emblems` | Emblems: trophies, medals, balls and crests | トロフィー・メダル・ボール・エンブレム |
 | page `flags` | Flags: a country's code, drawn by Hata | 国旗（国コードからHataで描く） |
 | page `accessibility` | Accessibility | アクセシビリティ |
-| group `places` | Sports and places | 競技と場所 |
+| group `sports` | Sports | 競技 |
 | page `soccer` | Soccer | サッカー |
 | page `curling` | Curling | カーリング |
 | page `courts` | Net, racket and court sports | ネット型・ラケット型などのコート競技 |
 | page `hardwood` | A realistic basketball floor | リアルなバスケットボールコートの床 |
 | page `field-sports` | Lacrosse, rugby, Australian football, Gaelic games, cricket, field hockey and handball | ラクロス、ラグビーなどのフィールド |
-| page `crowd` | The stands and the crowd | スタンドと観客 |
 | page `pools` | Swimming, water polo, diving and artistic swimming | 競泳・水球・飛込・アーティスティックスイミングのプール |
 | page `athletics` | The athletics stadium | 陸上競技場 |
 | page `skating` | The skating rinks | スケートリンク |
 | page `budo` | The budō: judo, karate, kendo, sumo, kyūdō and the dojo | 武道 |
 | page `combat` | The combat sports: the MMA cage, the boxing ring, the wrestling mats and the professional wrestling ring | 格闘技 |
-| page `multi` | Tournament layouts | 大会向けレイアウト（複数の競技面） |
-| page `judging` | Judging assignments | 審判員の配置 |
-| page `boards` | Boards over a surface | 競技面に重ねるボード |
-| page `special-games` | Special games | 特設会場での試合 |
+| page `variants` | League variants | リーグごとの違い |
+| page `eras` | Surfaces through the years | 年ごとの競技場 |
+| group `venues` | Venues and 3D | 会場と3D表示 |
+| page `crowd` | The stands and the crowd | スタンドと観客 |
 | page `ballparks` | Ballparks | 球場 |
 | page `grounds` | The grounds | スタジアム |
 | page `arenas` | The arenas | アリーナ |
 | page `venues` | The real venues | 実在の会場 |
 | page `roof-photos-needed` | Roofs we still need photos for | 屋根の写真が必要な会場 |
-| page `flythrough` | The fly-through | フライスルー |
 | page `stadiums` | The real stadiums | 実在のスタジアム |
 | page `district` | A district of venues | 会場の地区 |
 | page `outside` | The crowd outside the venue | 会場の外の人出 |
 | page `gates` | The gates of a venue | 会場のゲート |
-| page `variants` | League variants | リーグごとの違い |
-| page `eras` | Surfaces through the years | 年ごとの競技場 |
+| page `flythrough` | The fly-through | フライスルー |
+| page `special-games` | Special games | 特設会場での試合 |
 | page `atlas` | The atlas | 球場とスタジアムの地図 |
+| page `multi` | Tournament layouts | 大会向けレイアウト（複数の競技面） |
+| page `judging` | Judging assignments | 審判員の配置 |
+| page `boards` | Boards over a surface | 競技面に重ねるボード |
+| page `turn` | The 3D view | 3D表示 |
+| page `quality` | Quality: drawing less on a device that needs it | 3D表示の画質 |
 | group `data` | Data on a surface | 競技場の上のデータ |
 | page `units` | Units | 単位 |
 | page `frames` | Coordinate frames | 座標系 |
@@ -2128,8 +2142,6 @@ Made from `src/strings.en.ts`, `src/strings.ja.ts` and `demo/words.js` by `pnpm 
 | page `targets` | Goal mouths, the strike zone and the stumps | ゴールマウス・ストライクゾーン・スタンプ |
 | page `team-shape` | Team shape | チームの形 |
 | page `replay` | Replay | リプレイ |
-| page `turn` | The 3D view | 3D表示 |
-| page `quality` | Quality: drawing less on a device that needs it | 3D表示の画質 |
 | page `renderers` | Renderers | レンダラー |
 | group `gallery` | Gallery | ギャラリー |
 | page `gallery` | Gallery | ギャラリーの案内 |
