@@ -40,9 +40,7 @@
       #stage > svg.kyogijo { display: block; width: 100%; height: auto; max-height: calc(100vh - 190px); }
       .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr)); gap: 12px; margin: 10px 0 0; }
       label { display: grid; gap: 4px; min-width: 0; font-size: .9rem; color: var(--muted); }
-      label.check { grid-template-columns: auto 1fr; align-items: center; gap: 8px; }
       select { width: 100%; min-width: 0; font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px; min-height: 44px; }
-      input[type="checkbox"] { width: 22px; height: 22px; }
       details { margin-top: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 8px 12px; }
       summary { cursor: pointer; min-height: 36px; font-weight: 700; display: flex; align-items: center; }
       dl { display: grid; grid-template-columns: max-content 1fr; gap: 4px 14px; margin: 8px 0; }
@@ -51,6 +49,7 @@
       .note { color: var(--muted); font-size: .9rem; margin: 8px 0; }
       #error { color: #c0392b; font-weight: 700; }
     </style>
+    <link rel="stylesheet" href="./check-pill.css" />
   </head>
   <body>
     <main>
@@ -70,7 +69,8 @@
         <div class="controls">
           <label><span id="l-view"></span><select id="view"><option value="2d">2D</option><option value="3d">3D</option></select></label>
           <label id="viewpoint-row"><span id="l-viewpoint"></span><select id="viewpoint"><option value="overhead"></option><option value="broadcast"></option><option value="end"></option><option value="corner"></option></select></label>
-          <label class="check" id="roof-row"><input id="roof" type="checkbox" /><span id="l-roof"></span></label>
+          <label class="check" id="walls-row"><input id="walls" type="checkbox" data-testid="walls" /><span id="l-walls"></span></label>
+          <label class="check" id="roof-row"><input id="roof" type="checkbox" data-testid="roof" /><span id="l-roof"></span></label>
           <label class="check" id="open-row"><input id="open" type="checkbox" /><span id="l-open"></span></label>
           <label class="check" id="boards-row"><input id="boards" type="checkbox" data-testid="boards" /><span id="l-boards"></span></label>
           <label id="lighting-row"><span id="l-lighting"></span><select id="lighting" data-testid="lighting"><option value="off"></option><option value="night"></option><option value="game"></option><option value="lightsDown"></option><option value="intro"></option><option value="concert"></option></select></label>
@@ -101,7 +101,7 @@
           pageDescription: "BC Place, Lumen Field, T-Mobile Park, Tokyo Dome, Koshien Stadium and Korakuen Hall drawn inside the real outline of their buildings from OpenStreetMap, with their roofs, the field lying as the sources say and a plausible bowl of the seats of each configuration, in 2D and in 3D.",
           lede: "Each stadium is drawn inside the outline of its building, as OpenStreetMap maps it, with the field lying as the roof's opening, the pitch or the infield says and a bowl of the seats the sources give for each configuration. The bowl is a plausible one, never a seat map: no section, row or seat of a real plan, and no mark of a club, a league or a tournament.",
           back: "Back to the Kyogijo Stadiums demo", docs: "The real stadiums page of the docs", district: "Beside its neighbours, in the district view",
-          factsTitle: "What the drawing is made from", edit: "View", view: "View", viewpoint: "Viewpoint", roof: "Roof and walls (3D)", open: "Roof open (3D)", boards: "LED boards", lighting: "Lighting", lighting_off: "Lighting: off", lighting_night: "Night", lighting_game: "Game", lighting_lightsDown: "Lights down", lighting_intro: "Intro", lighting_concert: "Concert", wash: "Surface light colour", wash_none: "as the preset", wash_purple: "Purple", wash_magenta: "Magenta", wash_blue: "Blue", wash_white: "White", language: "Language", theme: "Theme", auto: "Follow the device", light: "Light", dark: "Dark",
+          factsTitle: "What the drawing is made from", edit: "View", view: "View", viewpoint: "Viewpoint", walls: "Walls (3D)", roof: "Roof (3D)", roofOpen: "Roof open (3D)", boards: "LED boards", lighting: "Lighting", lighting_off: "Lighting: off", lighting_night: "Night", lighting_game: "Game", lighting_lightsDown: "Lights down", lighting_intro: "Intro", lighting_concert: "Concert", wash: "Surface light colour", wash_none: "as the preset", wash_purple: "Purple", wash_magenta: "Magenta", wash_blue: "Blue", wash_white: "White", language: "Language", theme: "Theme", auto: "Follow the device", light: "Light", dark: "Dark",
           overhead: "Overhead", broadcast: "Broadcast", end: "End", corner: "Corner", formLabel: "How the stadium is shown",
           cfl: "Football field", nfl: "Football field", soccer: "Soccer pitch", mlb: "Baseball field", boxing: "Boxing ring",
           stadium: "Stadium", city: "City", seats: "Seats in this configuration", bowls: "Seating bowls", roofKind: "Roof", roofDetail: "The roof", orientation: "How the field lies", outline: "Building outline", pitch: "The field",
@@ -125,7 +125,7 @@
           pageDescription: "BCプレイス、ルーメン・フィールド、T-モバイル・パーク、東京ドーム、阪神甲子園球場、後楽園ホールを、OpenStreetMapの建物の輪郭の内側に描きます。屋根、資料に基づくフィールドの向き、構成ごとの座席数から推定したスタンドを、2Dと3Dで見られます。",
           lede: "スタジアムは、OpenStreetMapに記録された建物の輪郭の内側に、屋根の開口部・ピッチ・内野が示す向きにフィールドを置き、公表されている構成ごとの座席数からスタンドを推定して描いています。座席表ではありません。実際のブロック・列・座席は描いておらず、クラブ・リーグ・大会のマークもありません。",
           back: "競技場 Kyogijo Stadiums のデモに戻る", docs: "ドキュメントの「実在のスタジアム」ページ", district: "近くの会場と並べた地区の表示",
-          factsTitle: "この図の元になった情報", edit: "表示", view: "表示", viewpoint: "視点", roof: "屋根と壁（3D）", open: "屋根を開く（3D）", boards: "LEDビジョン", lighting: "照明", lighting_off: "照明：なし", lighting_night: "夜間", lighting_game: "試合中", lighting_lightsDown: "場内暗転", lighting_intro: "選手紹介", lighting_concert: "コンサート", wash: "競技面の照明の色", wash_none: "プリセットのまま", wash_purple: "紫", wash_magenta: "マゼンタ", wash_blue: "青", wash_white: "白", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク",
+          factsTitle: "この図の元になった情報", edit: "表示", view: "表示", viewpoint: "視点", walls: "壁（3D）", roof: "屋根（3D）", roofOpen: "屋根を開く（3D）", boards: "LEDビジョン", lighting: "照明", lighting_off: "照明：なし", lighting_night: "夜間", lighting_game: "試合中", lighting_lightsDown: "場内暗転", lighting_intro: "選手紹介", lighting_concert: "コンサート", wash: "競技面の照明の色", wash_none: "プリセットのまま", wash_purple: "紫", wash_magenta: "マゼンタ", wash_blue: "青", wash_white: "白", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク",
           overhead: "真上", broadcast: "中継", end: "エンド", corner: "コーナー", formLabel: "スタジアムの見せ方",
           cfl: "フットボール場", nfl: "フットボール場", soccer: "サッカー場", mlb: "野球場", boxing: "ボクシングのリング",
           stadium: "スタジアム", city: "都市", seats: "この構成の座席数", bowls: "観客席の層数", roofKind: "屋根", roofDetail: "屋根の詳細", orientation: "フィールドの向き", outline: "建物の輪郭", pitch: "フィールド",
@@ -162,7 +162,9 @@
       setSelect("viewpoint", params.get("viewpoint"), ["overhead", "broadcast", "end", "corner"]);
       setSelect("theme", params.get("theme"), ["light", "dark"]);
       setSelect("language", params.get("lang"), ["en", "ja"]);
+      // The roof and the walls are two choices. An address that has `roof=1` and no `walls` is an older one, when the roof asked for the walls too.
       $("roof").checked = params.get("roof") === "1" || params.get("open") === "1";
+      $("walls").checked = params.has("walls") ? params.get("walls") === "1" : $("roof").checked;
       $("boards").checked = params.get("boards") === "1";
       $("lighting").value = lightingOfAddress(params);
       $("wash").value = ["purple", "magenta", "blue", "white"].includes(params.get("wash")) ? params.get("wash") : "none";
@@ -173,7 +175,7 @@
 
       function labelPage() {
         const w = words();
-        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["back", "back"], ["docs", "docs"], ["district", "district"], ["l-facts", "factsTitle"], ["l-edit", "edit"], ["l-view", "view"], ["l-viewpoint", "viewpoint"], ["l-roof", "roof"], ["l-open", "open"], ["l-boards", "boards"], ["l-lighting", "lighting"], ["l-wash", "wash"], ["l-language", "language"], ["l-theme", "theme"], ["credit", "credit"]]) $(id).textContent = w[key];
+        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["back", "back"], ["docs", "docs"], ["district", "district"], ["l-facts", "factsTitle"], ["l-edit", "edit"], ["l-view", "view"], ["l-viewpoint", "viewpoint"], ["l-walls", "walls"], ["l-roof", "roof"], ["l-open", "roofOpen"], ["l-boards", "boards"], ["l-lighting", "lighting"], ["l-wash", "wash"], ["l-language", "language"], ["l-theme", "theme"], ["credit", "credit"]]) $(id).textContent = w[key];
         for (const select of ["viewpoint", "theme"]) for (const option of $(select).options) option.textContent = w[option.value];
         for (const option of $("wash").options) option.textContent = w[`wash_${option.value}`];
         for (const option of $("lighting").options) option.textContent = w[`lighting_${option.value}`];
@@ -242,6 +244,8 @@
         if (state.config !== stadiumConfigs(STADIUMS[state.stadium])[0]) next.set("config", state.config);
         if ($("view").value === "3d") next.set("view", "3d");
         if ($("viewpoint").value !== "overhead") next.set("viewpoint", $("viewpoint").value);
+        if ($("walls").checked) next.set("walls", "1");
+        else if ($("roof").checked) next.set("walls", "0");
         if ($("roof").checked) next.set("roof", "1");
         if ($("open").checked) next.set("open", "1");
         if ($("boards").checked) next.set("boards", "1");
@@ -269,6 +273,7 @@
         else document.documentElement.dataset.theme = theme;
         const three = $("view").value === "3d";
         $("viewpoint-row").hidden = !three;
+        $("walls-row").hidden = !three;
         $("roof-row").hidden = !three;
         $("open-row").hidden = !three || !$("roof").checked || !retractable();
         if (!$("roof").checked || !retractable()) $("open").checked = false;
@@ -278,8 +283,8 @@
         document.body.dataset.view = $("view").value;
         try {
           if (three) {
-            const settings = { preset: $("viewpoint").value, ...wayOf(syncUrl), ...($("roof").checked ? { venue: { roof: true, roofOpen: $("open").checked } } : {}) };
-            const key = JSON.stringify([state.stadium, state.config, $("roof").checked, $("open").checked]);
+            const settings = { preset: $("viewpoint").value, ...wayOf(syncUrl), ...($("roof").checked || $("walls").checked ? { venue: { roof: $("roof").checked, walls: $("walls").checked, roofOpen: $("open").checked } } : {}) };
+            const key = JSON.stringify([state.stadium, state.config, $("roof").checked, $("walls").checked, $("open").checked]);
             // Another stadium, configuration or roof draws the scene again, and the camera goes on where the reader left it: the view is opened on it.
             if (turn !== undefined && turnKey !== key) { camera.carry(turn); turn.destroy(); turn = undefined; }
             if (turn === undefined) {
@@ -343,7 +348,9 @@
         for (const other of $("tabs").children) other.setAttribute("aria-selected", String(other === button));
         draw();
       });
-      for (const id of ["view", "viewpoint", "roof", "open", "boards", "lighting", "wash", "theme"]) $(id).addEventListener("input", draw);
+      // A roof asked for brings the walls it stands on (a roof alone floats); the walls can then be taken off to see the roof by itself.
+      $("roof").addEventListener("input", () => { if ($("roof").checked) $("walls").checked = true; });
+      for (const id of ["view", "viewpoint", "walls", "roof", "open", "boards", "lighting", "wash", "theme"]) $(id).addEventListener("input", draw);
       $("language").addEventListener("input", () => { labelPage(); draw(); });
       draw();
     </script>

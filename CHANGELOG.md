@@ -7,6 +7,17 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **A Roof pill on every demo page with a 3D view of a venue, kept in the address (SPX-695).** The stadiums, district, halls and fly-through pages had a checkbox or none; each now has a pill in the demo's control style (48 px, pressed when on, light and dark, wrapping on a phone), under the one name `roof`: off until asked where the reader looks at the field (venues, home, stadiums, halls: `roof=1`), on until taken off among streets and in flight (district, fly-through: `roof=0`). The venues page and the home page's featured arena already had their Roof chip. The checkbox of each page that had one (`label.check`) is drawn as that pill, from the one file `demo/check-pill.css`; it is still a checkbox for a keyboard, a screen reader and a test.
+- **The roof and the walls are two choices on the stadiums and district pages.** Roof and Walls are separate pills (`roof`, `walls` in the address), so a roof can be taken off with the walls standing, and a roof asked for on the stadiums page brings the walls it stands on (which can then be taken off). An older `roof=1` with no `walls` is the walls and the roof, as it was.
+- `FlythroughOptions.roof` (true when left out): `false` keeps the roof off for the whole flight with the walls standing; the demo's page has the pill and `roof=0`.
+- Tests: `e2e/roof.demo.mjs` (every page's pill is a pill and is kept in, and read from, the address).
+
+### Fixed
+
+- The stadiums page's "Roof open (3D)" label read "none, open to the air": two words of its table shared the key `open`.
+
 ## [0.45.3] - 2026-10-30
 
 ### Changed

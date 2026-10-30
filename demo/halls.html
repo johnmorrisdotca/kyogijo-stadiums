@@ -6,10 +6,10 @@
     <title>Kyogijo Stadiums: tournament layouts</title>
     <meta name="description" content="Several surfaces laid out together for one large event, to scale, in a hall, with a real stadium round them that can be switched on." />
     <style>
-      :root { color-scheme: light dark; --bg: #f6f4ee; --ink: #1d2320; --muted: #5b625e; --card: #fff; --line: #cfcabb; --accent: #1f5fa8; }
-      @media (prefers-color-scheme: dark) { :root { --bg: #141816; --ink: #ecebe5; --muted: #a2a8a3; --card: #1d2220; --line: #39403c; --accent: #7fb2ee; } }
-      :root[data-theme="light"] { color-scheme: light; --bg: #f6f4ee; --ink: #1d2320; --muted: #5b625e; --card: #fff; --line: #cfcabb; --accent: #1f5fa8; }
-      :root[data-theme="dark"] { color-scheme: dark; --bg: #141816; --ink: #ecebe5; --muted: #a2a8a3; --card: #1d2220; --line: #39403c; --accent: #7fb2ee; }
+      :root { color-scheme: light dark; --bg: #f6f4ee; --ink: #1d2320; --muted: #5b625e; --card: #fff; --line: #cfcabb; --accent: #1f5fa8; --tab: #1d2320; --tab-ink: #fff; --hit: 48px; }
+      @media (prefers-color-scheme: dark) { :root { --bg: #141816; --ink: #ecebe5; --muted: #a2a8a3; --card: #1d2220; --line: #39403c; --accent: #7fb2ee; --tab: #ecebe5; --tab-ink: #141816; } }
+      :root[data-theme="light"] { color-scheme: light; --bg: #f6f4ee; --ink: #1d2320; --muted: #5b625e; --card: #fff; --line: #cfcabb; --accent: #1f5fa8; --tab: #1d2320; --tab-ink: #fff; }
+      :root[data-theme="dark"] { color-scheme: dark; --bg: #141816; --ink: #ecebe5; --muted: #a2a8a3; --card: #1d2220; --line: #39403c; --accent: #7fb2ee; --tab: #ecebe5; --tab-ink: #141816; }
       * { box-sizing: border-box; }
       body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.45 system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif; }
       main { max-width: 1100px; margin: 0 auto; padding: 16px; }
@@ -18,8 +18,6 @@
       .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr)); gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px; }
       label { display: grid; gap: 4px; min-width: 0; font-size: .9rem; color: var(--muted); }
       select, input[type="number"] { width: 100%; min-width: 0; font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 8px; min-height: 44px; }
-      .check { display: flex; align-items: center; gap: 8px; min-height: 44px; color: var(--ink); }
-      .check input { width: 22px; height: 22px; }
       [hidden] { display: none !important; }
       :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
       #fit { margin: 12px 0; padding: 10px 12px; border-left: 4px solid var(--accent); background: var(--card); border-radius: 6px; }
@@ -36,6 +34,7 @@
       a { color: var(--accent); }
       .back { margin: 0 0 8px; }
     </style>
+    <link rel="stylesheet" href="./check-pill.css" />
   </head>
   <body>
     <main>

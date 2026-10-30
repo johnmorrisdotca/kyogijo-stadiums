@@ -33,6 +33,7 @@ trip.pause();
 | `stages` | Which stages to fly, in the order of the path: `map`, `city`, `arena`, `bowl`, `rink`, `game`; all by default. A stage left out keeps its seconds, and the camera crosses them in one smooth run, so a list of `["city", "arena"]` starts at the city. |
 | `language` | `en` (the default) or `ja`. |
 | `theme` | `light` or `dark`; without one the device's setting decides. |
+| `roof` | Whether the building has its roof (true): it is there over the arena and lifts away as the camera comes into the bowl. `false` keeps it off for the whole flight, with the walls still standing. The demo's page has a Roof pill for it, kept in the address as `roof=0`. |
 
 | Setting | Meaning |
 | --- | --- |

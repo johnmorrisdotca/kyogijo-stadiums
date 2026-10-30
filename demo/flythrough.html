@@ -33,6 +33,7 @@
       .note { color: var(--muted); font-size: .9rem; margin: 8px 0; }
       #error { color: #c0392b; font-weight: 700; }
     </style>
+    <link rel="stylesheet" href="./check-pill.css" />
   </head>
   <body>
     <main>
@@ -42,12 +43,13 @@
       <div id="tabs" role="group" data-testid="tabs"></div>
       <p id="error" role="alert" hidden></p>
       <div id="trip" data-testid="trip"></div>
-      <details id="edit">
+      <details id="edit" open>
         <summary id="l-edit"></summary>
         <div class="controls">
           <label><span id="l-language"></span><select id="language"><option value="en">English</option><option value="ja">日本語</option></select></label>
           <label><span id="l-theme"></span><select id="theme"><option value="auto"></option><option value="light"></option><option value="dark"></option></select></label>
           <label><span id="l-map"></span><select id="map"><option value="chizu"></option><option value="plain"></option></select></label>
+          <label class="check" id="roof-row"><input id="roof" type="checkbox" data-testid="roof" checked /><span id="l-roof"></span></label>
         </div>
       </details>
       <p class="note"><a href="./docs/flythrough.html" id="docs"></a> · <a href="./venues.html" id="venues"></a></p>
@@ -71,14 +73,14 @@
           pageTitle: "Kyogijo Stadiums: fly-through of a real arena",
           lede: "One smooth camera: it starts on a map, falls to the city and the building of the arena, which rises into 3D and turns. Play, pause, step back or choose a stage. The building's outline is OpenStreetMap's; no team or league mark is drawn.",
           back: "Back to the Kyogijo Stadiums demo", docs: "The fly-through page of the docs", venues: "The real venues page",
-          edit: "Look", language: "Language", theme: "Theme", auto: "Follow the device", light: "Light", dark: "Dark", map: "Map", chizu: "chizu's world map", plain: "Plain graticule (no map)", group: "The arenas",
+          edit: "Look", language: "Language", theme: "Theme", auto: "Follow the device", light: "Light", dark: "Dark", map: "Map", roof: "Roof over the arena (3D)", chizu: "chizu's world map", plain: "Plain graticule (no map)", group: "The arenas",
         },
         ja: {
           title: "実在のアリーナへのフライスルー",
           pageTitle: "競技場 Kyogijo Stadiums：実在のアリーナへのフライスルー",
           lede: "ひとつながりのカメラ移動です。地図から始まり、都市とアリーナの建物へ近づき、建物は3Dに立ち上がって回転します。再生・一時停止・戻る・場面の選択ができます。建物の輪郭はOpenStreetMapのもので、チームやリーグのマークはありません。",
           back: "競技場 Kyogijo Stadiums のデモに戻る", docs: "ドキュメントの「フライスルー」ページ", venues: "「実在の会場」ページ",
-          edit: "表示", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク", map: "地図", chizu: "chizuの世界地図", plain: "経緯線のみ（地図なし）", group: "アリーナ",
+          edit: "表示", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク", map: "地図", roof: "アリーナの屋根（3D）", chizu: "chizuの世界地図", plain: "経緯線のみ（地図なし）", group: "アリーナ",
         },
       };
       const $ = (id) => document.getElementById(id);
@@ -95,11 +97,13 @@
       setSelect("theme", params.get("theme"), ["light", "dark"]);
       setSelect("language", params.get("lang"), ["en", "ja"]);
       setSelect("map", params.get("map"), ["plain"]);
+      // The roof is on, as the path flies it (it lifts away as the camera comes into the bowl); `roof=0` keeps it off for the whole flight.
+      $("roof").checked = params.get("roof") !== "0";
       const nameOf = (id) => arenaNameIn(arenaById(id), undefined, $("language").value);
 
       function labelPage() {
         const w = words();
-        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["back", "back"], ["docs", "docs"], ["venues", "venues"], ["l-edit", "edit"], ["l-language", "language"], ["l-theme", "theme"], ["l-map", "map"]]) $(id).textContent = w[key];
+        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["back", "back"], ["docs", "docs"], ["venues", "venues"], ["l-edit", "edit"], ["l-language", "language"], ["l-theme", "theme"], ["l-map", "map"], ["l-roof", "roof"]]) $(id).textContent = w[key];
         for (const select of ["theme", "map"]) for (const option of $(select).options) option.textContent = w[option.value];
         document.documentElement.lang = $("language").value;
         document.title = w.pageTitle;
@@ -121,6 +125,7 @@
         if ($("language").value === "ja") next.set("lang", "ja");
         if ($("theme").value !== "auto") next.set("theme", $("theme").value);
         if ($("map").value === "plain") next.set("map", "plain");
+        if (!$("roof").checked) next.set("roof", "0");
         if (speed !== FIRST_SPEED) next.set("speed", String(speed));
         if (stages.length > 0) next.set("stages", stages.join(","));
         replaceAddress(next.size === 0 ? location.pathname : `?${next}`);
@@ -136,6 +141,7 @@
           trip = mountFlythrough($("trip"), {
             arena: state.arena,
             language: $("language").value,
+            roof: $("roof").checked,
             ...(theme === "auto" ? {} : { theme }),
             ...($("map").value === "chizu" ? { start: { map: WORLD, draw: drawChizu, project: projectPoint } } : {}),
             ...(stages.length > 0 ? { stages } : {}),
@@ -164,7 +170,7 @@
         for (const other of $("tabs").children) { other.setAttribute("aria-pressed", String(other === button)); other.setAttribute("aria-selected", String(other === button)); }
         draw();
       });
-      for (const id of ["theme", "map"]) $(id).addEventListener("input", () => draw(trip?.stage));
+      for (const id of ["theme", "map", "roof"]) $(id).addEventListener("input", () => draw(trip?.stage));
       $("language").addEventListener("input", () => { labelPage(); draw(trip?.stage); });
       draw();
     </script>

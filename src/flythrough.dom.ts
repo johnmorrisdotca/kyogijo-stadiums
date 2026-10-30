@@ -58,6 +58,8 @@ export interface FlythroughOptions<M extends { width: number; height: number } =
   language?: Language;
   /** `light` or `dark`; the device's setting decides when it is left out. */
   theme?: "light" | "dark";
+  /** Whether the building has its roof (true when left out): the roof is there over the arena and lifts away as the camera comes into the bowl. `false` keeps the roof off for the whole flight, the walls still standing, so that the bowl is seen from the first stage of the arena. */
+  roof?: boolean;
 }
 
 /** How it behaves. */
@@ -190,7 +192,7 @@ export function mountFlythrough<M extends { width: number; height: number }>(hos
   const drawing = { sport: "nhl" as const, arena: venue.id, crowd: { real: true }, language, ...(options.theme === undefined ? {} : { theme: options.theme }) };
   let turn: KyogijoTurn | undefined;
   // The settings object is kept: the view reads its `lens` at every paint, and the path shortens the lens as the camera comes into the bowl.
-  const turnSettings: TurnSettings = { preset: "overhead", controls: false, venue: { roof: true }, motion: "none", id: `${id}-turn`, lens: LENS };
+  const turnSettings: TurnSettings = { preset: "overhead", controls: false, venue: { roof: options.roof !== false, walls: true }, motion: "none", id: `${id}-turn`, lens: LENS };
   if (stageList.some((one) => one === "arena" || one === "bowl" || one === "rink" || one === "game")) turn = mountKyogijoTurn(turnHost, drawing, turnSettings);
 
   // ---- The game: a plane that lies on the floor of the 3D arena, with the play's dots drawn on it by the replay's own layers. It takes the floor's own transform after every paint, and stands in the same layer of the stack
@@ -326,7 +328,7 @@ export function mountFlythrough<M extends { width: number; height: number }>(hos
     if (live3d && turn !== undefined) {
       put("3d", turnHost, "opacity", num(cam.arena, 3));
       put("3d", turnHost, "--kf-roof", num(cam.roof, 3));
-      put("3d", turnHost, "@data-roof", cam.roof > 0.004 ? "1" : "0");
+      put("3d", turnHost, "@data-roof", options.roof !== false && cam.roof > 0.004 ? "1" : "0");
       const view = `${num(cam.yaw, 3)}|${num(cam.pitch, 3)}|${num(cam.logZoom, 4)}|${num(cam.logLens, 4)}`;
       if (written["3d:view"] !== view) {
         written["3d:view"] = view;
