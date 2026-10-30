@@ -29,12 +29,17 @@
       }
       #stage { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 8px; }
       #stage > .ky-district-view > svg.kyogijo { display: block; width: 100%; height: auto; max-height: calc(100vh - 190px); }
-      #outside-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin: 0 0 10px; padding: 8px 10px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; }
-      #outside-bar .label { font-weight: 700; margin-right: 4px; }
-      #outside-levels { display: flex; flex-wrap: wrap; gap: 6px; }
-      #outside-levels button { font: inherit; font-weight: 800; min-height: 44px; min-width: 56px; padding: 0 12px; border-radius: 10px; border: 2px solid var(--tab); background: var(--card); color: var(--ink); cursor: pointer; }
-      #outside-levels button[aria-pressed="true"] { background: var(--tab); color: var(--tab-ink); }
-      #outside-count { color: var(--muted); font-size: .9rem; }
+      #outside-bar, #quality-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin: 0 0 10px; padding: 8px 10px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; }
+      #outside-bar .label, #quality-bar .label { font-weight: 700; margin-right: 4px; }
+      #outside-levels, #quality-levels { display: flex; flex-wrap: wrap; gap: 6px; }
+      #quality-levels { gap: 4px; }
+      #outside-levels button, #quality-levels button { font: inherit; font-weight: 800; min-height: 48px; min-width: 56px; padding: 0 12px; border-radius: 10px; border: 2px solid var(--tab); background: var(--card); color: var(--ink); cursor: pointer; }
+      #outside-levels button[aria-pressed="true"], #quality-levels button[aria-pressed="true"] { background: var(--tab); color: var(--tab-ink); }
+      #outside-count, #quality-now { color: var(--muted); font-size: .9rem; }
+      #quality-bar { margin: 0 0 10px; padding: 6px 10px; gap: 2px 8px; }
+      #quality-bar .label { margin-right: 0; }
+      #quality-levels button { min-width: 48px; padding: 0 9px; }
+      #quality-now { font-size: .82rem; line-height: 1.25; }
       .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr)); gap: 12px; margin: 10px 0 0; }
       label { display: grid; gap: 4px; min-width: 0; font-size: .9rem; color: var(--muted); }
       label.check { grid-template-columns: auto 1fr; align-items: center; gap: 8px; }
@@ -62,6 +67,11 @@
       <h1 id="title"></h1>
       <p class="lede" id="lede"></p>
       <div id="tabs" role="tablist" data-testid="tabs"></div>
+      <div id="quality-bar" role="group" aria-labelledby="l-quality" data-testid="quality" hidden>
+        <span class="label" id="l-quality"></span>
+        <div id="quality-levels"></div>
+        <span id="quality-now" role="status" aria-live="polite" data-testid="quality-now"></span>
+      </div>
       <div id="outside-bar" role="group" aria-labelledby="l-outside" data-testid="outside" hidden>
         <span class="label" id="l-outside"></span>
         <div id="outside-levels"></div>
@@ -117,6 +127,7 @@
       // (`drawDistrict`, `mountDistrictTurn`): the venues, the mode and the turn are options. What is chosen lives in the address; nothing is sent anywhere and nothing is stored.
       import { DISTRICT_IDS, districtMember, KODOKAN_FLOORS, mountDistrict, mountDistrictTurn, OUTSIDE_LEVELS, OUTSIDE_VENUES, planDistrict, unknownVenues, VENUE_ATTRIBUTION } from "./dist/district-entry.js";
       import { replaceAddress } from "./address.js";
+      import { QUALITIES } from "./dist/turn-entry.js";
       import { areaKeysFor, loadAreasFor } from "./dist/areas-entry.js";
       import { hoverOf, keepCamera, wayOf, writeWay } from "./turn-way.js";
       import { lightingFor, lightingOfAddress } from "./lighting.js";
@@ -136,6 +147,7 @@
           overhead: "Overhead", broadcast: "Broadcast", end: "End", corner: "Corner", formLabel: "How the district is shown",
           venue: "Venue", seats: "Seats", rink: "Surface", orientation: "How it lies", cfl: "football field", nfl: "football field", soccer: "soccer pitch", mlb: "baseball field", boxing: "boxing ring", dojo: "main dojo, 7th floor (420 jō)", nhl: "ice hockey rink", opening: "along the roof's opening", pitch: "as the pitch is mapped", infield: "from the mapped infield", building: "inferred from the building", none: "not known, east-west", nonePark: "not known, fitted to the building",
           between: "The middles of {a} and {b} are {metres} metres apart.", pickOne: "Choose at least one venue.",
+          quality: "Quality", quality_auto: "Auto", quality_high: "High", quality_medium: "Medium", quality_low: "Low", qualityHeld: "Held at {tier}.", qualityAuto: "Auto: drawn at {tier} for now.",
           outside: "People outside", outsideNote: "A crowd outside is drawn for BC Place and Rogers Arena for now; the other venues come later.",
           outsideCount: "{people} people outside, {percent}% of the {seats} seats. They stand on sidewalks, plazas and the venues' grounds, never on a road. Walkable ground: OpenStreetMap.", outsideNone: "Nobody outside. Choose a share of the seats to put outside the venues.",
           credit: "Building outlines, roofs and the ground a crowd outside may stand on (sidewalks, plazas, roads, buildings): (c) OpenStreetMap contributors, ODbL 1.0, openstreetmap.org/copyright. Seats, tiers and roofs: Wikidata (CC0) and the English Wikipedia article each venue cites, in our own words.",
@@ -152,6 +164,7 @@
           overhead: "真上", broadcast: "中継", end: "エンド", corner: "コーナー", formLabel: "地区の見せ方",
           venue: "会場", seats: "座席数", rink: "競技面", orientation: "向き", cfl: "フットボール場", nfl: "フットボール場", soccer: "サッカー場", mlb: "野球場", boxing: "ボクシングのリング", dojo: "大道場（7階、420畳）", nhl: "アイスホッケーのリンク", opening: "屋根の開口部に沿う", pitch: "地図のピッチのとおり", infield: "地図の内野から", building: "建物から推定", none: "不明（東西）", nonePark: "不明（建物に合わせた向き）",
           between: "{a}と{b}の中心は{metres}m離れています。", pickOne: "会場を1つ以上選んでください。",
+          quality: "画質", quality_auto: "自動", quality_high: "高", quality_medium: "中", quality_low: "低", qualityHeld: "画質を{tier}に固定しています。", qualityAuto: "自動：いまは{tier}の画質で表示しています。",
           outside: "会場の外の人出", outsideNote: "会場の外の人出は、今のところBCプレイスとロジャーズ・アリーナの周辺で描けます。ほかの会場には、まだ対応していません。",
           outsideCount: "会場の外に{people}人（{seats}席の{percent}％）。人が立つのは歩道、広場、会場の敷地だけで、車道には立ちません。人が立てる場所のデータは、OpenStreetMapをもとにしています。", outsideNone: "会場の外には誰もいません。座席数に対する割合を選ぶと、その分の人が外に出ます。",
           credit: "建物の輪郭、屋根、および会場の外で人が立てる場所を判断するためのデータ（歩道、広場、道路、建物）：(c) OpenStreetMap contributors（ODbL 1.0、openstreetmap.org/copyright）。座席数、スタンドの層、屋根：Wikidata（CC0）と、各会場が出典としている英語版ウィキペディアの記事（内容は自分たちの言葉でまとめ直しています）。",
@@ -180,6 +193,8 @@
       const state = { venues: asked.filter((v, i) => KEYS.includes(v) && asked.indexOf(v) === i) };
       let turn;
       let flat;
+      /** What is asked of the 3D view's detail: `auto` (the frames it makes choose the tier), or a tier held. The address's `quality`. */
+      state.quality = QUALITIES.includes(params.get("quality")) ? params.get("quality") : "auto";
       let turnKey = "";
       /** The camera the reader chose: kept when the view is mounted again for another choice of venues, and the turn made by hand is in the address. */
       const camera = keepCamera();
@@ -230,7 +245,7 @@
 
       function labelPage() {
         const w = words();
-        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["back", "back"], ["docs", "docs"], ["stadiums", "stadiums"], ["l-facts", "factsTitle"], ["l-edit", "edit"], ["l-venues", "venues"], ["l-roofopen", "roofopen"], ["l-gates", "gates"], ["l-outside", "outside"], ["l-mode", "mode"], ["l-turn", "turn"], ["l-labels", "labels"], ["l-context", "context"], ["l-kodokan", "kodokan"], ["l-building", "building"], ["l-floor", "floor"], ["l-floors", "floors"], ["floors-note", "floorsNote"], ["l-view", "view"], ["l-viewpoint", "viewpoint"], ["l-roof", "roof"], ["l-boards", "boards"], ["l-lighting", "lighting"], ["l-wash", "wash"], ["l-language", "language"], ["l-theme", "theme"], ["credit", "credit"]]) $(id).textContent = w[key];
+        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["back", "back"], ["docs", "docs"], ["stadiums", "stadiums"], ["l-facts", "factsTitle"], ["l-edit", "edit"], ["l-venues", "venues"], ["l-roofopen", "roofopen"], ["l-gates", "gates"], ["l-outside", "outside"], ["l-quality", "quality"], ["l-mode", "mode"], ["l-turn", "turn"], ["l-labels", "labels"], ["l-context", "context"], ["l-kodokan", "kodokan"], ["l-building", "building"], ["l-floor", "floor"], ["l-floors", "floors"], ["floors-note", "floorsNote"], ["l-view", "view"], ["l-viewpoint", "viewpoint"], ["l-roof", "roof"], ["l-boards", "boards"], ["l-lighting", "lighting"], ["l-wash", "wash"], ["l-language", "language"], ["l-theme", "theme"], ["credit", "credit"]]) $(id).textContent = w[key];
         for (const option of $("building").options) option.textContent = w[option.value];
         for (const option of $("floor").options) option.textContent = option.value === "all" ? w.floorAll : (() => { const f = KODOKAN_FLOORS.find((k) => k.floor === Number(option.value)); return `${f.label[$("language").value]}${$("language").value === "ja" ? "：" : ": "}${f.lists[$("language").value]}`; })();
         $("floors-list").replaceChildren(...[...KODOKAN_FLOORS].reverse().map((f) => {
@@ -303,6 +318,7 @@
         if (hasKodokan() && $("building").value !== "xray") next.set("building", $("building").value);
         if (hasKodokan() && $("floor").value !== "all") next.set("floor", $("floor").value === "0" ? "b1" : $("floor").value);
         if ($("boards").checked) next.set("boards", "1");
+        if (state.quality !== "auto") next.set("quality", state.quality);
         if ($("lighting").value !== "off") next.set("lighting", $("lighting").value);
         if ($("lighting").value !== "off" && $("wash").value !== "none") next.set("wash", $("wash").value);
         if (masked() && state.outside > 0) next.set("outside", String(state.outside));
@@ -337,6 +353,31 @@
         const seats = plan.members.filter((p) => OUTSIDE_VENUES.includes(p.member.id)).reduce((sum, p) => sum + p.member.seats, 0);
         $("outside-count").textContent = state.outside === 0 ? w.outsideNone : fillIn(w.outsideCount, { people: Math.round((seats * state.outside) / 100).toLocaleString(lang), percent: state.outside, seats: seats.toLocaleString(lang) });
         $("outside-bar").dataset.level = String(state.outside);
+      }
+
+      /** The quality bar: the choices, the one asked for pressed, and what the view is drawn at now (for `auto` the tier the frames have led it to). Only a 3D view has it. */
+      function paintQualityBar() {
+        const w = words();
+        const bar = $("quality-bar");
+        bar.hidden = $("view").value !== "3d" || state.venues.length === 0;
+        if (bar.hidden) return;
+        // The buttons are kept and only changed, so that a press that is in the middle of being made is not lost when the tier changes.
+        const list = $("quality-levels");
+        QUALITIES.forEach((q, i) => {
+          let button = list.children[i];
+          if (button === undefined) {
+            button = document.createElement("button");
+            button.type = "button";
+            list.append(button);
+          }
+          button.dataset.quality = q;
+          button.textContent = w[`quality_${q}`];
+          button.setAttribute("aria-pressed", String(q === state.quality));
+        });
+        const tier = turn?.tier ?? "high";
+        $("quality-now").textContent = fillIn(state.quality === "auto" ? w.qualityAuto : w.qualityHeld, { tier: w[`quality_${tier}`] });
+        bar.dataset.quality = state.quality;
+        bar.dataset.tier = tier;
       }
 
       /** What the crowd's last paint cost, written on the bar for a person or a test to read. */
@@ -415,6 +456,10 @@
               turnKey = key;
               turn = mountDistrictTurn($("three"), options, {
                 ...settings,
+                quality: state.quality,
+                // (A test sets how the frames are judged, so that it need not wait for the real defaults.)
+                ...(window.__kyogijoQualityTuning === undefined ? {} : { qualityTuning: window.__kyogijoQualityTuning }),
+                onQualityChange: () => paintQualityBar(),
                 ...camera.settings(),
                 onChange: (view, preset) => {
                   // A viewpoint chosen on the view's own buttons is the page's too.
@@ -444,6 +489,7 @@
           listFacts(plan);
           for (const row of $("floors-list").children) row.setAttribute("aria-current", String(row.dataset.floor === $("floor").value));
           paintOutsideBar(plan);
+          paintQualityBar();
           noteCost();
           $("credit").textContent = plan.context === undefined ? words().credit : `${words().credit} ${plan.context.attribution[$("language").value].join($("language").value === "ja" ? "。" : "; ")}.`;
         } catch (error) {
@@ -491,6 +537,16 @@
         noteCost();
         syncUrl();
         document.querySelector('#outside-levels button[aria-pressed="true"]')?.focus();
+      });
+      $("quality-levels").addEventListener("click", (event) => {
+        const button = event.target.closest("button[data-quality]");
+        if (button === null) return;
+        state.quality = button.dataset.quality;
+        // Only the detail changes: the camera stays where it is and the turn goes on.
+        turn?.setQuality(state.quality);
+        paintQualityBar();
+        syncUrl();
+        document.querySelector('#quality-levels button[aria-pressed="true"]')?.focus();
       });
       $("kodokan").addEventListener("input", () => {
         state.venues = KEYS.filter((key) => (key === "kodokan" ? $("kodokan").checked : state.venues.includes(key)));

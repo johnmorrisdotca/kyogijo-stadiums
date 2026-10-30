@@ -15,6 +15,33 @@ const BUDGETS = [
   { name: "Tokyo Dome City with the Kodokan", query: "venues=tokyo-dome:mlb,korakuen-hall:boxing,kodokan", planes: 2400, drawn: 1950, nodes: 8400 },
 ];
 
+// What each lower tier holds the same views to (`quality=` in the address): the planes drawn, which are what a step of the turn costs.
+const TIER_BUDGETS = [
+  { name: "Rogers Arena alone", query: "venues=rogers-arena", medium: 480, low: 320 },
+  { name: "Seattle, three venues", query: "venues=t-mobile-park:mlb,lumen-field:nfl,climate-pledge-arena&mode=city", medium: 320, low: 120 },
+  { name: "Tokyo Dome City with the Kodokan", query: "venues=tokyo-dome:mlb,korakuen-hall:boxing,kodokan", medium: 950, low: 120 },
+];
+
+for (const budget of TIER_BUDGETS) {
+  test(`${budget.name}: each lower tier holds the view to fewer planes`, async ({ page }) => {
+    const errors = [];
+    page.on("pageerror", (error) => errors.push(String(error)));
+    await serve(page);
+    const planes = {};
+    for (const tier of ["high", "medium", "low"]) {
+      await page.goto(`http://kyogijo.test/district.html?${budget.query}&view=3d&viewpoint=broadcast&quality=${tier}`);
+      await page.waitForSelector('body[data-ready="true"]');
+      await page.waitForSelector(`${STAGE} .ky-turn[data-mode="3d"]`);
+      planes[tier] = await page.evaluate((stage) => document.querySelectorAll(`${stage} .ky-up`).length, STAGE);
+    }
+    expect(planes.medium, `medium ${JSON.stringify(planes)}`).toBeLessThanOrEqual(budget.medium);
+    expect(planes.low, `low ${JSON.stringify(planes)}`).toBeLessThanOrEqual(budget.low);
+    expect(planes.medium).toBeLessThan(planes.high);
+    expect(planes.low).toBeLessThan(planes.medium);
+    expect(errors).toEqual([]);
+  });
+}
+
 for (const budget of BUDGETS) {
   test(`${budget.name}: the 3D view stays inside its budget of planes and a step of the turn is quick`, async ({ page }, info) => {
     const errors = [];
