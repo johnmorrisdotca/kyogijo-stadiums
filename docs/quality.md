@@ -65,6 +65,23 @@ Every plane of the view is a layer the browser keeps pixels for, as wide and as 
 
 `node scripts/perf-district.mjs --quality high,medium,low,auto` measures every district preset of the demo at each tier in Chromium (a desk window, and a phone window at a ratio of 3) and in WebKit (a phone window at a ratio of 3), with the CPU slowed 4 times or not (Chromium only): the planes, the milliseconds a frame and the frames a second of a turn made of pointer moves, and the layers' box. For `auto` it turns the view for up to 20 seconds, until the tier has stood still for 4, and says the tier it settled on. The table of the release it was made for is in the [changelog](../CHANGELOG.md).
 
+## Speed checks per device class
+
+A test that holds the view to a budget has to hold on a slow, busy runner, or it is worse than none: it fails for the runner and not for the change, and a team learns to retry it. So the checks in `e2e/budgets.device.mjs` measure only what a runner does not change, or what it changes for everything at once, and each class of device is a project of the config, played in a job of its own on the public repository's CI (free, a minute or two each, in the same image as the demo's tests):
+
+| Project | Browser | Window | Pixel ratio | CPU | Held at |
+| --- | --- | --- | --- | --- | --- |
+| `device-desk` | Chromium | 1280 by 800 | 1 | as it is | `high` |
+| `device-mid-phone` | WebKit (iPhone emulation) | 390 by 844, touch | 3 | as it is | `medium` |
+| `device-slow-android` | Chromium | 412 by 915, touch | 2.6 | slowed 6 times | `low` |
+
+Every district preset (all twelve, the New York and Montreal ones among them) and the venues page's 3D view is opened at the tier its class is held at, which is in the address (`quality=`): the governor of `auto` steps down when a runner's frames are slow, and that changes what is counted (the last flake of the suite was `quality=auto` dropping a tier on a slow runner), so the checks pin it, and the governor has its own tests (`e2e/quality.demo.mjs`). The venues page has no tiers, so it is measured as it opens.
+
+- **Exact counts, with a margin of 15 percent:** the layers of the view (the floor and every plane), those drawn at the opening view, every element of the page, the memory the layers take at the device's pixel ratio (every layer's box times the ratio squared, four bytes a pixel) and the biggest single layer. They are the same on a fast machine and a slow one, so they cannot flake, and a change that makes a district heavier fails in every job.
+- **A ratio, with a margin of 100 percent:** the median time of a step of the turn to the end of its frame, over the same time for a reference scene (600 planes in a 3D box, each step writing every plane's depth and hiding a third of them) measured in the same browser with the same CPU slowing, one after the other. A loaded runner slows both, so the ratio holds where milliseconds would not; its budget is twice what it measured, and at least one more, so a view that has become twice as slow fails and a noisy minute does not. A frame is timed in whole refreshes (a view that is quick takes one, 16.7 ms, as the reference does), so a ratio of 1 is a view that keeps up and a ratio of 4 is one that takes about four refreshes.
+
+`e2e/device.budgets.json` holds the budgets. After a change that is meant to make a preset heavier or lighter, `DEVICE_MEASURE=file.jsonl pnpm exec playwright test --project=device-desk` (and the other two) writes what each page measured, and the budgets are those numbers with the margins above.
+
 ## Never
 
 The tier is never decided from the browser's name. A page that wants a tier for its own reason says it (`quality: "low"`), and one that wants the frames to decide leaves `auto`. Nothing here is stored: a view that is mounted again starts on `high` and the frames bring it back to where it was in a second or two of turning.

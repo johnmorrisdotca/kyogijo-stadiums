@@ -90,7 +90,8 @@ A release that adds something a reader can see (a new surface or event type, a l
 ```sh
 pnpm check          # lint, types, tests, the build and the packed package
 pnpm test:package   # pack it as npm does, install it in an empty project, import every entry
-pnpm test:demo      # build the demo and play it in a real browser
+pnpm test:demo      # build the demo and play it in a real browser (every project, the speed checks per device class included)
+pnpm exec playwright test --project=device-desk   # the speed checks of one device class (device-mid-phone, device-slow-android): docs/quality.md
 pnpm test:readme    # run the examples of the README and of docs/ against the built package
 pnpm docs:make      # rewrite what the docs make from the source: docs/strings-ja.md, docs/variants.md, docs/variants.ja.md, the tables of frames, units and limits
 pnpm boards         # redraw the demo's sample boards (demo/boards-data.js) with Taisen Brackets, a development dependency, from scripts/boards-sources.mjs

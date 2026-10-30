@@ -19,7 +19,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm check
       - run: pnpm build
-  # The demo's browser tests take an hour on one runner: six jobs run at once, each building the demo and playing one project's tests or a share of WebKit's (a failed test is retried once, and the report says it was).
+  # The demo's browser tests take an hour on one runner: six jobs run at once, each building the demo and playing one project's tests or a share of WebKit's (a failed test is retried once, and the report says it was). Three more play the speed checks per device class (e2e/budgets.device.mjs), a minute or two each, in the same image.
   demo:
     name: demo (${{ matrix.project }} ${{ matrix.shard }})
     runs-on: ubuntu-latest
@@ -38,6 +38,10 @@ jobs:
           - { project: webkit-phone, shard: 2/4 }
           - { project: webkit-phone, shard: 3/4 }
           - { project: webkit-phone, shard: 4/4 }
+          # The speed checks per device class: a desk, a mid phone (WebKit, a pixel ratio of 3) and a slow Android (Chromium, the CPU slowed 6 times, a ratio of 2.6); each is one short job, not sharded.
+          - { project: device-desk, shard: 1/1 }
+          - { project: device-mid-phone, shard: 1/1 }
+          - { project: device-slow-android, shard: 1/1 }
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6

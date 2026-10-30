@@ -15,11 +15,11 @@ describe("ci.yml's demo job", () => {
     expect(demo).toContain("options: --ipc=host --init");
   });
 
-  it("installs no browser and no package of the system, and plays each project's tests in jobs of its own, WebKit's (the slow one) in four", () => {
+  it("installs no browser and no package of the system, and plays each project's tests in jobs of its own, WebKit's (the slow one) in four, and the speed checks per device class in one short job each", () => {
     expect(demo).not.toContain("playwright install");
     expect(demo).not.toContain("apt");
     const jobs = [...demo.matchAll(/- \{ project: ([\w-]+), shard: (\d+)\/(\d+) \}/g)].map((m) => `${m[1]} ${m[2]}/${m[3]}`);
-    expect(jobs).toEqual(["chromium-phone 1/1", "chromium-desk 1/1", "webkit-phone 1/4", "webkit-phone 2/4", "webkit-phone 3/4", "webkit-phone 4/4"]);
+    expect(jobs).toEqual(["chromium-phone 1/1", "chromium-desk 1/1", "webkit-phone 1/4", "webkit-phone 2/4", "webkit-phone 3/4", "webkit-phone 4/4", "device-desk 1/1", "device-mid-phone 1/1", "device-slow-android 1/1"]);
     expect(demo).toContain("--project=${{ matrix.project }} --shard=${{ matrix.shard }}");
     // Every project of the config is played in some job.
     const config = readFileSync("playwright.config.mjs", "utf8");

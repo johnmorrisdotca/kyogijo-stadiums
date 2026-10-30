@@ -1,0 +1,320 @@
+{
+ "device-desk": {
+  "pair": {
+   "planes": 1506,
+   "drawn": 1248,
+   "nodes": 6450,
+   "mb": 15.1,
+   "biggestMb": 7.4,
+   "ratio": 2.9
+  },
+  "soccer": {
+   "planes": 1501,
+   "drawn": 1244,
+   "nodes": 6404,
+   "mb": 15.1,
+   "biggestMb": 7.4,
+   "ratio": 2.6
+  },
+  "alone": {
+   "planes": 630,
+   "drawn": 533,
+   "nodes": 3209,
+   "mb": 12.8,
+   "biggestMb": 7.9,
+   "ratio": 2.0
+  },
+  "seattlecenter": {
+   "planes": 1252,
+   "drawn": 848,
+   "nodes": 4870,
+   "mb": 12.5,
+   "biggestMb": 6.5,
+   "ratio": 2.0
+  },
+  "sodo": {
+   "planes": 1558,
+   "drawn": 1309,
+   "nodes": 6299,
+   "mb": 11.4,
+   "biggestMb": 5.5,
+   "ratio": 2.9
+  },
+  "seattle": {
+   "planes": 2511,
+   "drawn": 2038,
+   "nodes": 9570,
+   "mb": 6.5,
+   "biggestMb": 5.3,
+   "ratio": 4.5
+  },
+  "tokyo": {
+   "planes": 2357,
+   "drawn": 1792,
+   "nodes": 8556,
+   "mb": 9.8,
+   "biggestMb": 4.6,
+   "ratio": 4.1
+  },
+  "tokyokodokan": {
+   "planes": 2629,
+   "drawn": 2006,
+   "nodes": 9521,
+   "mb": 9.9,
+   "biggestMb": 4.8,
+   "ratio": 4.4
+  },
+  "midtown": {
+   "planes": 1722,
+   "drawn": 1111,
+   "nodes": 6292,
+   "mb": 20.1,
+   "biggestMb": 8.0,
+   "ratio": 2.4
+  },
+  "newyork": {
+   "planes": 2049,
+   "drawn": 2049,
+   "nodes": 9310,
+   "mb": 5.8,
+   "biggestMb": 5.6,
+   "ratio": 4.6
+  },
+  "montrealolympic": {
+   "planes": 1261,
+   "drawn": 994,
+   "nodes": 5179,
+   "mb": 17.0,
+   "biggestMb": 8.0,
+   "ratio": 2.2
+  },
+  "montreal": {
+   "planes": 2394,
+   "drawn": 1806,
+   "nodes": 9080,
+   "mb": 3.6,
+   "biggestMb": 3.3,
+   "ratio": 4.0
+  },
+  "venues": {
+   "planes": 248,
+   "drawn": 248,
+   "nodes": 1567,
+   "mb": 13.0,
+   "biggestMb": 6.9,
+   "ratio": 2.0
+  }
+ },
+ "device-mid-phone": {
+  "pair": {
+   "planes": 1131,
+   "drawn": 918,
+   "nodes": 5069,
+   "mb": 12.8,
+   "biggestMb": 8.8,
+   "ratio": 4.6
+  },
+  "soccer": {
+   "planes": 1131,
+   "drawn": 918,
+   "nodes": 5011,
+   "mb": 12.8,
+   "biggestMb": 8.8,
+   "ratio": 3.5
+  },
+  "alone": {
+   "planes": 509,
+   "drawn": 412,
+   "nodes": 2660,
+   "mb": 11.5,
+   "biggestMb": 8.8,
+   "ratio": 2
+  },
+  "seattlecenter": {
+   "planes": 697,
+   "drawn": 486,
+   "nodes": 3020,
+   "mb": 11.8,
+   "biggestMb": 8.8,
+   "ratio": 2.1
+  },
+  "sodo": {
+   "planes": 1075,
+   "drawn": 983,
+   "nodes": 4669,
+   "mb": 12.0,
+   "biggestMb": 8.8,
+   "ratio": 3.9
+  },
+  "seattle": {
+   "planes": 322,
+   "drawn": 179,
+   "nodes": 1878,
+   "mb": 9.0,
+   "biggestMb": 8.8,
+   "ratio": 2
+  },
+  "tokyo": {
+   "planes": 965,
+   "drawn": 779,
+   "nodes": 3966,
+   "mb": 14.2,
+   "biggestMb": 8.8,
+   "ratio": 3.9
+  },
+  "tokyokodokan": {
+   "planes": 1035,
+   "drawn": 841,
+   "nodes": 4298,
+   "mb": 10.7,
+   "biggestMb": 8.8,
+   "ratio": 2.8
+  },
+  "midtown": {
+   "planes": 508,
+   "drawn": 390,
+   "nodes": 2464,
+   "mb": 11.5,
+   "biggestMb": 8.8,
+   "ratio": 2.6
+  },
+  "newyork": {
+   "planes": 210,
+   "drawn": 109,
+   "nodes": 1644,
+   "mb": 9.0,
+   "biggestMb": 8.8,
+   "ratio": 2
+  },
+  "montrealolympic": {
+   "planes": 892,
+   "drawn": 713,
+   "nodes": 3979,
+   "mb": 13.4,
+   "biggestMb": 8.8,
+   "ratio": 4.2
+  },
+  "montreal": {
+   "planes": 368,
+   "drawn": 204,
+   "nodes": 1908,
+   "mb": 7.5,
+   "biggestMb": 7.3,
+   "ratio": 2
+  },
+  "venues": {
+   "planes": 248,
+   "drawn": 248,
+   "nodes": 1567,
+   "mb": 117.1,
+   "biggestMb": 62.4,
+   "ratio": 3.1
+  }
+ },
+ "device-slow-android": {
+  "pair": {
+   "planes": 49,
+   "drawn": 49,
+   "nodes": 1022,
+   "mb": 4.6,
+   "biggestMb": 4.4,
+   "ratio": 2
+  },
+  "soccer": {
+   "planes": 49,
+   "drawn": 49,
+   "nodes": 963,
+   "mb": 4.6,
+   "biggestMb": 4.4,
+   "ratio": 1.9
+  },
+  "alone": {
+   "planes": 322,
+   "drawn": 322,
+   "nodes": 2102,
+   "mb": 5.2,
+   "biggestMb": 4.4,
+   "ratio": 5.3
+  },
+  "seattlecenter": {
+   "planes": 253,
+   "drawn": 253,
+   "nodes": 1689,
+   "mb": 5.1,
+   "biggestMb": 4.4,
+   "ratio": 4.0
+  },
+  "sodo": {
+   "planes": 71,
+   "drawn": 71,
+   "nodes": 1075,
+   "mb": 4.8,
+   "biggestMb": 4.4,
+   "ratio": 2.0
+  },
+  "seattle": {
+   "planes": 102,
+   "drawn": 55,
+   "nodes": 1216,
+   "mb": 4.6,
+   "biggestMb": 4.4,
+   "ratio": 2
+  },
+  "tokyo": {
+   "planes": 49,
+   "drawn": 46,
+   "nodes": 914,
+   "mb": 4.6,
+   "biggestMb": 4.4,
+   "ratio": 2.0
+  },
+  "tokyokodokan": {
+   "planes": 96,
+   "drawn": 94,
+   "nodes": 1177,
+   "mb": 4.6,
+   "biggestMb": 4.4,
+   "ratio": 2.0
+  },
+  "midtown": {
+   "planes": 258,
+   "drawn": 258,
+   "nodes": 1715,
+   "mb": 4.6,
+   "biggestMb": 4.4,
+   "ratio": 4.0
+  },
+  "newyork": {
+   "planes": 210,
+   "drawn": 109,
+   "nodes": 1644,
+   "mb": 4.6,
+   "biggestMb": 4.4,
+   "ratio": 4.2
+  },
+  "montrealolympic": {
+   "planes": 488,
+   "drawn": 488,
+   "nodes": 2769,
+   "mb": 7.3,
+   "biggestMb": 4.4,
+   "ratio": 6.9
+  },
+  "montreal": {
+   "planes": 60,
+   "drawn": 33,
+   "nodes": 984,
+   "mb": 3.4,
+   "biggestMb": 3.3,
+   "ratio": 2.0
+  },
+  "venues": {
+   "planes": 248,
+   "drawn": 248,
+   "nodes": 1567,
+   "mb": 88.0,
+   "biggestMb": 46.9,
+   "ratio": 2.5
+  }
+ }
+}
