@@ -320,8 +320,11 @@ src/
 ├── outside.ts          the crowd outside a district's venues: one ordered list of people on the walkable ground, a level a prefix of it
 ├── outside.paint.ts    the crowd as RGBA bytes in a frame: one loop, no element, density where far and discs where near
 ├── outside.dom.ts      the crowd's canvas on a page, in the 3D view's floor and over the 2D plan, painted when something it shows changes
-├── walk.ts             the walkable mask of a district: half-metre cells rasterised from the features of walk.data.ts
-├── walk.data.ts        made by scripts/build-walk.mjs from data-sources/walk/: what stands in a crowd's way or holds it, ODbL 1.0, kept apart
+├── walk.ts             the walkable mask of a district: half-metre cells rasterised from the features of its data, and the table of the districts' data held for the drawing (`loadOutside` reads one)
+├── walk.data.ts        made by scripts/build-walk.mjs from data-sources/walk/: every district's data in one table, ODbL 1.0, kept apart
+├── walk.index.ts       made by scripts/build-walk.mjs: every district with its venues and the import() of its own file
+├── walk/               made by scripts/build-walk.mjs: one file for each district (`vancouver.data.ts`), what stands in a crowd's way or holds it, read when that district's crowd is shown
+├── walk.full.ts        holds the data of every district for the drawing: the district entry imports it, the lean district does not
 ├── context.ts          the buildings round a district: an area's layers in one frame, the buildings placed in the district's, flat on its floor and as blocks in 3D
 ├── kodokan.ts          the Kodokan as a venue of a district: its main dojo in the air on the 7th floor, in PLATEAU's building
 ├── kodokan.data.ts     the Kodokan's building and the room's place in it (made by scripts/build-plateau.mjs)

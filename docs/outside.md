@@ -51,7 +51,7 @@ The seats are the ones the district already holds for each venue and configurati
 The mask is the cells of a grid half a metre across, on the ground round the venues, where a person may stand. It is made from [OpenStreetMap](https://www.openstreetmap.org/copyright) in two steps, and the crowd is worked out from it when it is asked for.
 
 1. **`pnpm walk:fetch`** asks OpenStreetMap, through the Overpass API, for everything mapped within 350 metres of the venues: one request, a pause after it, a User-Agent that names the project, and the answer kept as it came in `data-sources/walk/<date>/osm-vancouver.json`. The raw file is ODbL 1.0 data and stays apart from the package's other files.
-2. **`pnpm walk`** (`scripts/build-walk.mjs`, by the rules of `scripts/walk-rules.mjs`) lays the features flat in metres from the district's middle, simplifies them to 30 centimetres and writes them to `src/walk.data.ts`, in quarter-metres: lines with a width and rings, and nothing else (no name, no id, no tag). The file is a derived database under the ODbL, with the credit at its head.
+2. **`pnpm walk`** (`scripts/build-walk.mjs`, by the rules of `scripts/walk-rules.mjs`) lays the features flat in metres from the district's middle, simplifies them to 30 centimetres and writes them to `src/walk/<district>.data.ts` (one file for each district, and `src/walk.data.ts` as the table of them all), in quarter-metres: lines with a width and rings, and nothing else (no name, no id, no tag). The file is a derived database under the ODbL, with the credit at its head.
 
 **What a person may stand on:** the paths and sidewalks (a footway at its `width`, 2.4 metres for a sidewalk and 2 for any other path), steps, pedestrian streets, plazas and squares, parks and gardens that are open to all, platforms, a shared cycle path, and a band 5 metres wide round each venue's building, which is its own ground.
 
@@ -93,7 +93,7 @@ A test holds the budget: no more than 13 pixel stamps a person at any size the v
 
 ## Licence
 
-The ground the people stand on is OpenStreetMap's: **(c) OpenStreetMap contributors, ODbL 1.0, openstreetmap.org/copyright**. `src/walk.data.ts` is a derived database offered under the ODbL and kept in its own file; the package is MIT, and the crowds and drawings made from the data are produced works that carry the credit (`VENUE_ATTRIBUTION`, in every drawing's description). The data never mixes with the CC0 and CC BY-SA files of the package, and the raw answer is in `data-sources/walk/`.
+The ground the people stand on is OpenStreetMap's: **(c) OpenStreetMap contributors, ODbL 1.0, openstreetmap.org/copyright**. `src/walk.data.ts` and the files of `src/walk/` are a derived database offered under the ODbL and kept in its own file; the package is MIT, and the crowds and drawings made from the data are produced works that carry the credit (`VENUE_ATTRIBUTION`, in every drawing's description). The data never mixes with the CC0 and CC BY-SA files of the package, and the raw answer is in `data-sources/walk/`.
 
 ## Limits
 

@@ -11,8 +11,8 @@ describe("the docs' Architecture", () => {
   it("names exactly the files under src/", () => {
     const named = [...tree.matchAll(/[├└]── ([\w.-]+\.ts)\b/g)].map((match) => match[1]).sort();
     const listed = files("src")
-      // The files of arenas/, parks/ and grounds/ are one record each, made by the generators.
-      .filter((path) => path.endsWith(".ts") && !/\.(test|fixture)\./.test(path) && !/^(arenas|parks|grounds)\//.test(path))
+      // The files of arenas/, parks/, grounds/ and walk/ are one record each, made by the generators.
+      .filter((path) => path.endsWith(".ts") && !/\.(test|fixture)\./.test(path) && !/^(arenas|parks|grounds|walk)\//.test(path))
       .map((path) => path.split("/").at(-1))
       .sort();
     expect(named).toEqual(listed);

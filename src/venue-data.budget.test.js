@@ -55,10 +55,21 @@ describe("the entries that have the venues", () => {
     }
   });
 
+  it("hold the walkable ground of every district in the district entry alone, as only it did, and the lean district none until loadOutside reads it", async () => {
+    for (const entry of ["index.ts", ...entries]) {
+      vi.resetModules();
+      await import(/* @vite-ignore */ `./${entry}`);
+      const walk = await import("./walk.ts");
+      expect(walk.heldWalk("vancouver") !== undefined, entry).toBe(entry === "district-entry.ts");
+    }
+  }, 120_000);
+
   it("are the only way to the lists: nothing else imports a table of every venue, so that the lean district reaches none", () => {
     for (const data of ["arenas.data.ts", "parks.data.ts", "grounds.data.ts"]) {
       expect(reaches("district-lean-entry.ts", data), `district-lean-entry reaches ${data}`).toBe(false);
     }
     for (const full of ["arenas.ts", "parks.ts", "grounds.ts", "full.ts"]) expect(reaches("district-lean-entry.ts", full), `district-lean-entry reaches ${full}`).toBe(false);
+    for (const walk of ["walk.data.ts", "walk.full.ts", "walk/vancouver.data.ts"]) expect(reaches("district-lean-entry.ts", walk), `district-lean-entry reaches ${walk}`).toBe(false);
+    expect(reaches("district-entry.ts", "walk.full.ts")).toBe(true);
   });
 });

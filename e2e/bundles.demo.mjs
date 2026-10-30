@@ -60,7 +60,10 @@ const RECORDS = {
   kodokan: [],
 };
 const RECORD_FILE = /\/dist\/(?:arenas|parks|grounds)\/[a-z0-9-]+\.data\.js$/;
-const TABLES = /\/dist\/(?:arenas|parks|grounds)\.data\.js$|\/dist\/(?:layers|heat|heat\.zones|full)\.js$/;
+const TABLES = /\/dist\/(?:arenas|parks|grounds|walk)\.data\.js$|\/dist\/(?:layers|heat|heat\.zones|full|walk\.full)\.js$/;
+// The walkable ground of the crowd outside is read for the presets that have venues of Vancouver's and for no other: one file, the district's, and never the table of every district.
+const WALK_FILE = /\/dist\/walk\/[a-z0-9-]+\.data\.js$/;
+const WALKS = { pair: ["walk/vancouver"], alone: ["walk/vancouver"], soccer: ["walk/vancouver"] };
 
 for (const [preset, query] of Object.entries(DISTRICT_PRESETS)) {
   test(`${preset}: reads the records of the venues it shows and no other, at every quality tier`, async ({ page }) => {
@@ -74,7 +77,8 @@ for (const [preset, query] of Object.entries(DISTRICT_PRESETS)) {
       const records = files.map((file) => file.url).filter((url) => RECORD_FILE.test(url)).map((url) => url.replace(/^\/dist\//, "").replace(/\.data\.js$/, "")).sort();
       expect(errors, `${preset} at ${tier}`).toEqual([]);
       expect(records, `${preset} at ${tier}`).toEqual([...RECORDS[preset]].sort());
-      expect(files.map((file) => file.url).filter((url) => TABLES.test(url)), `${preset} at ${tier} carries a table of every venue, or the layers`).toEqual([]);
+      expect(files.map((file) => file.url).filter((url) => TABLES.test(url)), `${preset} at ${tier} carries a table of every venue, of every district's walkable ground, or the layers`).toEqual([]);
+      expect(files.map((file) => file.url).filter((url) => WALK_FILE.test(url)).map((url) => url.replace(/^\/dist\/|\.data\.js$/g, "")), `${preset} at ${tier} reads the walkable ground of ${WALKS[preset] === undefined ? "no district" : WALKS[preset].join(", ")}`).toEqual(WALKS[preset] ?? []);
       // The tiers differ in what they draw, not in what they load.
       const loaded = files.map((file) => file.url).sort();
       first ??= loaded;
@@ -107,6 +111,26 @@ test("choosing other venues reads their records then, once, and choosing them ag
   await page.waitForFunction(() => document.querySelector('#tabs button[data-preset="sodo"]')?.getAttribute("aria-selected") === "true");
   await page.waitForSelector('body[data-ready="true"]');
   expect(asked).toEqual([]);
+  expect(errors).toEqual([]);
+});
+
+test("the walkable ground of the crowd outside is read when venues with a crowd are chosen, once, and never for the others", async ({ page }) => {
+  const asked = [];
+  page.on("request", (request) => WALK_FILE.test(new URL(request.url()).pathname) && asked.push(new URL(request.url()).pathname));
+  const { errors } = await watch(page, "district.html?venues=t-mobile-park:mlb,lumen-field:nfl");
+  expect(asked).toEqual([]);
+  const choose = async (preset) => {
+    await page.locator(`#tabs button[data-preset="${preset}"]`).click();
+    await page.waitForFunction((name) => document.querySelector(`#tabs button[data-preset="${name}"]`)?.getAttribute("aria-selected") === "true", preset);
+    await page.waitForSelector('body[data-ready="true"]');
+  };
+  await choose("pair");
+  await page.waitForSelector('[data-testid="outside"]:not([hidden])');
+  expect(asked).toEqual(["/dist/walk/vancouver.data.js"]);
+  await choose("sodo");
+  await choose("pair");
+  await choose("tokyo");
+  expect(asked).toEqual(["/dist/walk/vancouver.data.js"]);
   expect(errors).toEqual([]);
 });
 

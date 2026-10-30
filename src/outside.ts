@@ -5,8 +5,8 @@
 import { districtRing, turnBy, type DistrictPlan } from "./district.ts";
 import { FEET_PER_METRE } from "./geometry.ts";
 import { metresFrom, type LonLat } from "./venues.geo.ts";
-import { WALK_DATA } from "./walk.data.ts";
-import { WALK_IDS, walkIdFor, walkMask, type WalkMask } from "./walk.ts";
+import { WALK_INDEX } from "./walk.index.ts";
+import { WALK_IDS, walkDataOf, walkIdFor, walkMask, type WalkMask } from "./walk.ts";
 import { OUTSIDE_LEVELS, outsideCount, type OutsideCrowd, type OutsideLevel } from "./outside.paint.ts";
 import type { Pt } from "./crowd.ts";
 
@@ -188,13 +188,14 @@ export const maskIdOf = (plan: Pick<DistrictPlan, "members">): string | undefine
 export const hasOutside = (plan: Pick<DistrictPlan, "members">): boolean => maskIdOf(plan) !== undefined;
 
 /** The ids of the venues there is a walkable mask round. */
-export const OUTSIDE_VENUES: readonly string[] = Object.freeze([...new Set(WALK_IDS.flatMap((id) => WALK_DATA[id].venues.map((key) => key.split(":")[0])))]);
+export const OUTSIDE_VENUES: readonly string[] = Object.freeze([...new Set(WALK_IDS.flatMap((id) => WALK_INDEX[id].venues.map((key) => key.split(":")[0])))]);
 
 const placedCache = new WeakMap<DistrictPlan, OutsideCrowd | null>();
 
 /**
  * The crowd outside a plan's venues, in the plan's frame: the people of every venue of the plan that stands on a mask (each with its seats as the plan has them), worked out once and kept. `undefined` where no venue of the plan
- * has a mask. The crowd is the same list whatever level is shown: `outsideCount` says how many of its first people stand at a level.
+ * has a mask. The crowd is the same list whatever level is shown: `outsideCount` says how many of its first people stand at a level. The district entry holds the data of every mask; the lean district holds a mask's data only after
+ * `loadOutside(venues)` has read it, and throws, saying so, where it is asked for a crowd before.
  * @example
  * ```ts
  * import { planDistrict } from "@johnmorrisdotca/kyogijo-stadiums/district";
@@ -212,7 +213,7 @@ export function outsideCrowd(plan: DistrictPlan): OutsideCrowd | undefined {
     placedCache.set(plan, null);
     return undefined;
   }
-  const data = WALK_DATA[maskId];
+  const data = walkDataOf(maskId);
   const ids = data.venues.map((key) => key.split(":")[0]);
   const present = ids.map((id) => plan.members.find((m) => m.member.id === id)).filter((m) => m !== undefined);
   const extras = { buildings: data.venues.map((key) => metresFrom(data.origin, districtRing(key) as LonLat[])), apron: 5 };
@@ -240,7 +241,7 @@ export function outsideCrowd(plan: DistrictPlan): OutsideCrowd | undefined {
 
 /** Whether a point of the plan's frame (feet) is on the mask's walkable ground: the inverse of what `outsideCrowd` does to a person, for a test to hold the crowd to the mask. */
 export function standsOnWalkable(plan: DistrictPlan, maskId: string, [fx, fy]: Pt): boolean {
-  const data = WALK_DATA[maskId];
+  const data = walkDataOf(maskId);
   const [shiftX, shiftY] = metresFrom(plan.origin as LonLat, [data.origin as LonLat])[0];
   const [ux, uy] = turnBy([fx, fy], -plan.turn);
   const mask = walkMask(maskId, { buildings: data.venues.map((key) => metresFrom(data.origin, districtRing(key) as LonLat[])), apron: 5 });

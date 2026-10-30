@@ -1,9 +1,12 @@
 // The walkable mask of a district: the cells of a fine grid on the ground where a person may stand, worked out from the features OpenStreetMap maps round the venues (`walk.data.ts`, ODbL 1.0): the paths, sidewalks,
 // plazas, squares, parks and platforms people stand on, the apron of each venue's own ground, minus what stops a crowd (carriageways at the width their lanes give them, cycle tracks, railways, water and every building).
 // Pure arithmetic on typed arrays, in Node or in a page: data in, a grid out. Nothing is drawn here; the roads are never drawn, and the shape of a crowd on this mask is what shows where they are.
-import { WALK_DATA, WALK_UNIT } from "./walk.data.ts";
+import { WALK_INDEX } from "./walk.index.ts";
 import type { LonLat } from "./venues.geo.ts";
 import type { Pt } from "./crowd.ts";
+
+/** The metres one whole number of the mask's coordinates is. */
+export const WALK_UNIT = 0.25;
 
 /** What a district's mask is made from, as `walk.data.ts` holds it: lines (`[width in tenths of a metre, first point, steps...]`) and areas (rings, the first the outside, in whole quarter-metres). */
 export interface WalkData {
@@ -43,7 +46,47 @@ export interface WalkMask {
 }
 
 /** The districts there are masks for. */
-export const WALK_IDS: readonly string[] = Object.freeze(Object.keys(WALK_DATA));
+export const WALK_IDS: readonly string[] = Object.freeze(Object.keys(WALK_INDEX));
+
+/**
+ * The data of the districts held for the drawing. The full table (`walk.data.ts`, which `full.ts` registers) holds every district's; `loadOutside` holds the one a page is about to show a crowd for. The index (`walk.index.ts`) lists the
+ * districts and their venues without holding any data, so that asking whether a venue has a crowd outside reads none.
+ */
+const HELD = new Map<string, WalkData>();
+
+/** Hold districts' data for the drawing, under their keys: a later one with a key replaces the earlier. */
+export function registerWalk(table: Readonly<Record<string, WalkData>>): void {
+  for (const [id, data] of Object.entries(table)) HELD.set(id, data);
+}
+
+/** The data of a district, if it is held. */
+export const heldWalk = (id: string): WalkData | undefined => HELD.get(id);
+
+/** The data of a district, which a crowd outside is made from; throws, saying how to have it, where it is not held. */
+export function walkDataOf(id: string): WalkData {
+  const found = HELD.get(id);
+  if (found !== undefined) return found;
+  if (!Object.hasOwn(WALK_INDEX, id)) throw new Error(`no walkable mask ${id}: the masks are ${WALK_IDS.join(", ")}`);
+  throw new Error(`the walkable mask ${id} is not read yet: await loadOutside(venues) before the first call of this entry's crowd outside, or use an entry that holds every district (the main entry, or the district entry)`);
+}
+
+const reading = new Map<string, Promise<WalkData>>();
+
+/** A district's data, read from its own file the first time and held for the drawing after: asking again gives the same promise. A key that is not a district rejects, naming the ones there are. */
+export function loadWalk(id: string): Promise<WalkData> {
+  const held = HELD.get(id);
+  if (held !== undefined) return Promise.resolve(held);
+  const found = reading.get(id);
+  if (found !== undefined) return found;
+  if (!Object.hasOwn(WALK_INDEX, id)) return Promise.reject(new Error(`no walkable mask ${id}: the masks are ${WALK_IDS.join(", ")}`));
+  const promise = WALK_INDEX[id].load().then((module) => {
+    HELD.set(id, module.WALK);
+    return module.WALK;
+  });
+  reading.set(id, promise);
+  promise.catch(() => reading.delete(id));
+  return promise;
+}
 
 /** A path from its packed form: the first point, then the step to each next one, in metres. */
 export function unpack(packed: readonly number[], from = 0): Pt[] {
@@ -120,15 +163,14 @@ export interface WalkExtras {
 const masks = new Map<string, WalkMask>();
 
 /**
- * The mask of a district, rasterised from `WALK_DATA` (and kept for the next call): the walkable areas and the paths at their width, the apron round each venue, then the carriageways, cycle tracks, railways, water and buildings cut out
+ * The mask of a district, rasterised from the district's data (`walk/<district>.data.ts`, held by `loadOutside` or by the full table; and kept for the next call): the walkable areas and the paths at their width, the apron round each venue, then the carriageways, cycle tracks, railways, water and buildings cut out
  * of them, and the venues' own buildings last. A person stands in a cell with value 1, and nowhere else.
  */
 export function walkMask(id: string, extras: WalkExtras): WalkMask {
   const key = `${id}:${extras.apron}:${extras.buildings.map((b) => b.length).join(",")}`;
   const kept = masks.get(key);
   if (kept !== undefined) return kept;
-  const data = WALK_DATA[id];
-  if (data === undefined) throw new Error(`no walkable mask ${id}: the masks are ${WALK_IDS.join(", ")}`);
+  const data = walkDataOf(id);
   const [west, south, east, north] = data.box;
   const width = Math.ceil((east - west) / WALK_CELL);
   const height = Math.ceil((north - south) / WALK_CELL);
@@ -156,4 +198,21 @@ export function walkable(mask: WalkMask, x: number, y: number): boolean {
 }
 
 /** The mask a set of venues stand on, if there is one: the first mask that names one of them (by id, whatever configuration). */
-export const walkIdFor = (venueIds: readonly string[]): string | undefined => WALK_IDS.find((id) => WALK_DATA[id].venues.some((key) => venueIds.includes(key.split(":")[0])));
+export const walkIdFor = (venueIds: readonly string[]): string | undefined => WALK_IDS.find((id) => WALK_INDEX[id].venues.some((key) => venueIds.includes(key.split(":")[0])));
+
+/**
+ * The walkable ground the crowd outside some venues stands on, read from its file and held for the drawing: await it before `planDistrict`, `drawDistrict`, `mountDistrict` or `mountDistrictTurn` of the lean district with `outside` asked for
+ * (the district entry holds every district's data and needs no call). It reads nothing for venues that no mask names, so a page may call it for every choice of venues; asking again reads nothing.
+ * @example
+ * ```ts
+ * import { loadOutside, loadVenueDataFor, outsideCrowd, planDistrict } from "@johnmorrisdotca/kyogijo-stadiums/district-lean";
+ * const venues = ["bc-place:cfl", "rogers-arena"];
+ * await Promise.all([loadVenueDataFor(venues), loadOutside(venues)]);
+ * console.log(outsideCrowd(planDistrict({ venues, outside: { level: 25 } }))?.venues.length);
+ * // 2
+ * ```
+ */
+export async function loadOutside(venues: readonly string[]): Promise<void> {
+  const id = walkIdFor(venues.map((key) => key.split(":")[0]));
+  if (id !== undefined) await loadWalk(id);
+}

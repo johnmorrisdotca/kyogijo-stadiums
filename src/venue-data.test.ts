@@ -103,6 +103,7 @@ describe("the lean district", () => {
       const base = { venues, mode: venues.length > 2 ? ("city" as const) : ("neighbours" as const), language: "en" as const };
       const lean = await import("./district-lean-entry.ts");
       await lean.loadVenueDataFor(venues);
+      await lean.loadOutside(venues);
       const context = await lean.loadAreasFor(venues);
       const variants = (api: typeof lean) => [base, { ...base, language: "ja" as const }, { ...base, context, outside: { level: 50 as const } }].flatMap((options) => [api.drawDistrict(options), api.districtTurnMarkup(options)]);
       const leanDrawn = variants(lean);
@@ -114,7 +115,45 @@ describe("the lean district", () => {
       for (let i = 0; i < fullDrawn.length; i += 1) expect(leanDrawn[i] === fullDrawn[i], `${name} ${i}`).toBe(true);
       expect(fullDrawn[0].length).toBeGreaterThan(1000);
       expect(leanCrowd?.count, name).toBe(fullCrowd?.count);
-      expect(leanCrowd === undefined ? [] : [...leanCrowd.x.slice(0, 50)], name).toEqual(fullCrowd === undefined ? [] : [...fullCrowd.x.slice(0, 50)]);
+      // The whole crowd, every person's place and venue, is the district entry's to the last bit.
+      expect(leanCrowd === undefined, name).toBe(fullCrowd === undefined);
+      if (leanCrowd !== undefined && fullCrowd !== undefined) {
+        expect(leanCrowd.mask, name).toBe(fullCrowd.mask);
+        expect(leanCrowd.venues, name).toEqual(fullCrowd.venues);
+        for (const part of ["x", "y", "venue"] as const) expect(Array.from(leanCrowd[part]).join(",") === Array.from(fullCrowd[part]).join(","), `${name} ${part}`).toBe(true);
+      }
     });
   }
+
+  it("holds the walkable ground of no district until loadOutside has read it, says so where a crowd is asked for before, and reads nothing for venues no mask names", async () => {
+    const lean = await import("./district-lean-entry.ts");
+    const walk = await import("./walk.ts");
+    expect(lean.WALK_IDS).toEqual(["vancouver"]);
+    expect(lean.OUTSIDE_VENUES).toEqual(["bc-place", "rogers-arena"]);
+    await lean.loadVenueDataFor(PRESETS.pair);
+    // The plan, and whether there is a crowd to show, need no data: the index says which venues stand on a mask.
+    const plan = lean.planDistrict({ venues: PRESETS.pair, outside: { level: 25 } });
+    expect(lean.hasOutside(plan)).toBe(true);
+    expect(walk.heldWalk("vancouver")).toBeUndefined();
+    expect(() => lean.outsideCrowd(plan)).toThrow(/vancouver is not read yet.*loadOutside/);
+    for (const [name, venues] of Object.entries(PRESETS)) {
+      if (lean.OUTSIDE_VENUES.some((id) => venues.some((key) => key.split(":")[0] === id))) continue;
+      await lean.loadOutside(venues);
+      expect(walk.heldWalk("vancouver"), name).toBeUndefined();
+    }
+    const read = lean.loadOutside(PRESETS.pair);
+    await expect(lean.loadOutside(PRESETS.pair)).resolves.toBeUndefined();
+    await read;
+    expect(walk.heldWalk("vancouver")?.venues).toEqual(["bc-place:cfl", "rogers-arena"]);
+    expect(lean.outsideCrowd(plan)?.count).toBeGreaterThan(1000);
+    await expect(walk.loadWalk("nowhere")).rejects.toThrow(/no walkable mask nowhere.*vancouver/);
+    await expect(walk.loadWalk("constructor")).rejects.toThrow(/no walkable mask/);
+  });
+
+  it("reads the walkable ground once: the same promise while it is read, and the data after", async () => {
+    const walk = await import("./walk.ts");
+    expect(walk.loadWalk("vancouver")).toBe(walk.loadWalk("vancouver"));
+    const data = await walk.loadWalk("vancouver");
+    expect(await walk.loadWalk("vancouver")).toBe(data);
+  });
 });
