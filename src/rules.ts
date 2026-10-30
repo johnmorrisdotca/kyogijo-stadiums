@@ -20,7 +20,8 @@ import "./frames.providers.ts";
 import "./surfaces/soccer-providers.ts";
 import { buildZoneSet, infieldReach, ZONE_SETS, ZONE_SET_IDS, type ZoneContext, type ZoneSet } from "./heat.zones.ts";
 import { feetFence, lengthUnit } from "./common.ts";
-import { fenceFor, parkById, parkWallsIn, PARKS, type Park } from "./parks.ts";
+import { fenceFor, heldPark, parkWallsIn, type Park } from "./parks.core.ts";
+import { PARK_IDS_WITHOUT_WALLS } from "./parks.index.ts";
 import { frameSizeOf, outlineOf, type Outline } from "./outline.ts";
 import { soccerSpec } from "./surfaces/soccer-spec.ts";
 import { KYOGIJO_STRINGS } from "./strings.ts";
@@ -262,8 +263,8 @@ export function wallHeightAt(park: Park, angle: number, year?: number): number |
 
 function baseJudge(o: SurfaceOptions, league: ReturnType<typeof chooseLeague>["league"]): Judge {
   const generic = league?.family === "baseball" ? diamondFence(diamondOf(league, o.year)) : undefined;
-  const points = fenceFor(parkById(o.park), feetFence(o.fence, lengthUnit(o)), o.year, generic);
-  const track = parkById(o.park)?.track_ft ?? MLB.warningTrack;
+  const points = fenceFor(heldPark(o.park), feetFence(o.fence, lengthUnit(o)), o.year, generic);
+  const track = heldPark(o.park)?.track_ft ?? MLB.warningTrack;
   return (x, y) => {
     const flags: string[] = [];
     // The foul lines are the fair territory's edges, and a ball on one is fair: fair is out from home plate between them.
@@ -541,7 +542,7 @@ export interface HomeRunOptions extends ZoneOptions {
  * The ballparks whose wall heights the package holds nowhere in their fence: of the 94 parks, the 35 whose article gives heights have them for some stretch,
  * and for the rest the height is not known here, so a decision that needs it is undecided (`homeRun: undefined`), never guessed.
  */
-export const PARKS_WITHOUT_WALL_HEIGHTS: readonly string[] = Object.freeze(Object.values(PARKS).filter((park) => (park.walls ?? []).length === 0).map((park) => park.id));
+export const PARKS_WITHOUT_WALL_HEIGHTS: readonly string[] = Object.freeze([...PARK_IDS_WITHOUT_WALLS]);
 
 /**
  * Whether a ball is a home run, from the park's own fence: the fence's distance at the bearing and, when the height of the ball is given, the wall's height there
@@ -558,7 +559,7 @@ export const PARKS_WITHOUT_WALL_HEIGHTS: readonly string[] = Object.freeze(Objec
  * ```
  */
 export function homeRun(park: string | Park, point: PlaceLike, options: HomeRunOptions = {}): HomeRunVerdict {
-  const found = typeof park === "string" ? parkById(park) : park;
+  const found = typeof park === "string" ? heldPark(park) : park;
   if (found === undefined) throw new RangeError(`Unknown park "${String(park)}": use a key of PARKS`);
   const o = { ...options, park: found.id };
   const r = ruled("mlb", o);

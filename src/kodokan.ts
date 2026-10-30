@@ -18,6 +18,9 @@ export const KODOKAN_ROOM_HEIGHT = 11.2;
 /** The height of the main dojo's floor above the ground, in metres: the 7th floor, six storeys up at the building's own storey height (its height over its storeys, 5.4 metres), and no higher than leaves the room under the roof. */
 export const KODOKAN_FLOOR_HEIGHT: number = Math.min((6 * BUILDING.height) / BUILDING.storeys, BUILDING.height - KODOKAN_ROOM_HEIGHT);
 
+/** The Kodokan's name in each language. */
+export const KODOKAN_NAME: { readonly en: string; readonly ja: string } = Object.freeze({ en: "Kodokan", ja: "講道館" });
+
 /** Where the Kodokan's building stands and what it is: for tests and pages that say it. */
 export const KODOKAN = { ...BUILDING, floorHeight: KODOKAN_FLOOR_HEIGHT, roomHeight: KODOKAN_ROOM_HEIGHT, mats: 420, seats: 900 } as const;
 
@@ -105,7 +108,7 @@ export function kodokanMember(language: Language, floor?: number): DistrictMembe
     key: "kodokan",
     id: "kodokan",
     kind: "hall",
-    name: { en: "Kodokan", ja: "講道館" },
+    name: { ...KODOKAN_NAME },
     ring: BUILDING.ring,
     centre: BUILDING.room.centre,
     heading: BUILDING.room.heading,

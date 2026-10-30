@@ -1,4 +1,5 @@
 // The fly-through: one smooth camera from a map to the real arena, over the map (chizu's, handed over), the building's site plan and the 3D arena.
+import "./full.ts";
 export { mountFlythrough } from "./flythrough.dom.ts";
 export type { Flythrough, FlythroughOptions, FlythroughSettings, FlythroughStart } from "./flythrough.dom.ts";
 export { CHANNELS, PACE, RAMP, STAGE_IDS, cameraAt, flightPlan, foldTime, glide, glideSeconds, mainView, mapBox, mapFrame, monotoneSlopes, nextRate, stageAt, startOf, stagesOf } from "./flythrough.path.ts";

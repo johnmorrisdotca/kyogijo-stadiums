@@ -4,7 +4,7 @@
 import { convertLength } from "./units.ts";
 import { num, el } from "./format.ts";
 import { MLB } from "./geometry.ts";
-import { groundById } from "./grounds.ts";
+import { heldGround } from "./grounds.core.ts";
 import { lengthUnit } from "./common.ts";
 import { lineLook, restyleLines } from "./restyle.ts";
 import { outlineOf, type Outline } from "./outline.ts";
@@ -17,7 +17,7 @@ export function hostSurfaceOptions(host: HostOptions, o: Pick<SurfaceOptions, "y
   const common = { detail: o.detail, stripes: o.stripes, stripePattern: o.stripePattern, exactLines: o.exactLines, year };
   if (host.park !== undefined) return { ...common, sport: "mlb", park: host.park };
   if (host.ground !== undefined || host.pitch !== undefined) {
-    const ground = groundById(host.ground);
+    const ground = heldGround(host.ground);
     const pitch = host.pitch ?? (ground === undefined || ground.pitchSize === "default" ? undefined : { ...ground.pitch, unit: "m" as const });
     return { ...common, sport: "soccer", ground: host.ground, pitch };
   }

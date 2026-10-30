@@ -67,7 +67,11 @@
   "type": "module",
   "sideEffects": [
     "./dist/element-define.js",
-    "./dist/frames.providers.js"
+    "./dist/frames.providers.js",
+    "./dist/full.js",
+    "./dist/arenas.js",
+    "./dist/parks.js",
+    "./dist/grounds.js"
   ],
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -157,6 +161,16 @@
       "types": "./dist/areas-entry.d.ts",
       "import": "./dist/areas-entry.js",
       "default": "./dist/areas-entry.js"
+    },
+    "./venue-data": {
+      "types": "./dist/venue-data-entry.d.ts",
+      "import": "./dist/venue-data-entry.js",
+      "default": "./dist/venue-data-entry.js"
+    },
+    "./district-lean": {
+      "types": "./dist/district-lean-entry.d.ts",
+      "import": "./dist/district-lean-entry.js",
+      "default": "./dist/district-lean-entry.js"
     },
     "./osm": {
       "types": "./dist/osm-entry.d.ts",

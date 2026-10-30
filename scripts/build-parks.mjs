@@ -18,6 +18,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { URL } from "node:url";
 import { checkNames } from "./names-lib.mjs";
+import { writeVenueFiles } from "./venue-files.mjs";
 
 const parks = JSON.parse(readFileSync(new URL("./parks.data.json", import.meta.url), "utf8"));
 const ids = new Set();
@@ -96,13 +97,22 @@ for (const park of parks) {
 const compact = (json) => json.replace(/\[\s+(-?[\d.]+),\s+(-?[\d.]+)\s+\]/g, "[$1, $2]");
 const alias = (entry) => `{ ${Object.entries(entry).map(([key, value]) => `${JSON.stringify(key)}: ${JSON.stringify(value)}`).join(", ")} }`;
 // An alias is one line; the rest is JSON as it is laid out.
-const stash = [];
-const json = JSON.stringify(parks, (key, value) => (key === "aliases" && Array.isArray(value) ? value.map((entry) => `@@${stash.push(alias(entry)) - 1}@@`) : value), 2).replace(/"@@(\d+)@@"/g, (_, n) => stash[Number(n)]);
+const layout = (value) => {
+  const stash = [];
+  return compact(JSON.stringify(value, (key, part) => (key === "aliases" && Array.isArray(part) ? part.map((entry) => `@@${stash.push(alias(entry)) - 1}@@`) : part), 2).replace(/"@@(\d+)@@"/g, (_, n) => stash[Number(n)]));
+};
+const json = layout(parks);
 const text = `// Made by scripts/build-parks.mjs from scripts/parks.data.json: do not edit by hand.
 // Fence distances are facts published in the articles each entry cites; see docs/references.md.
-import type { ParkData } from "./parks.ts";
+import type { ParkData } from "./parks.core.ts";
 
-export const PARK_DATA: ParkData[] = ${compact(json)};
+export const PARK_DATA: ParkData[] = ${json};
 `;
 writeFileSync(new URL("../src/parks.data.ts", import.meta.url), text);
+// The parks none of whose fence has a wall height the article gives: `PARKS_WITHOUT_WALL_HEIGHTS`, which needs the key and not the table.
+const without = parks.filter((park) => (park.walls ?? []).length === 0).map((park) => park.id);
+writeVenueFiles({
+  kind: "parks", type: "ParkData", constant: "PARK", index: "PARK_INDEX", records: parks, text: layout, by: "scripts/build-parks.mjs from scripts/parks.data.json",
+  extra: `\n/** The keys of the parks whose article gives no wall height anywhere on the fence. */\nexport const PARK_IDS_WITHOUT_WALLS: readonly string[] = ${JSON.stringify(without)};\n`,
+});
 console.log(`src/parks.data.ts: ${parks.length} parks`);

@@ -8,11 +8,12 @@ import { el, esc, num } from "./format.ts";
 import { fieldAttributes } from "./field.data.ts";
 import { ERA_SPORTS, footballIn, rulesFor, seasonLabel, type EraSport } from "./eras.ts";
 import { FOOTBALL } from "./geometry.ts";
-import { renderLayers } from "./layers.ts";
-import { arenaById, arenaCourtIn, arenaNameIn, arenaOfficialName, arenaRinkIn } from "./arenas.ts";
+import { partOf } from "./draw.parts.ts";
+import type { RenderedLayers } from "./layers.ts";
+import { heldArena, arenaCourtIn, arenaNameIn, arenaOfficialName, arenaRinkIn } from "./arenas.core.ts";
 import { venueById, venueBowl } from "./venues.ts";
 import { KYOGIJO_STADIUM_STYLE, planPark, stadiumBowl, stadiumById, stadiumConfigOf, stadiumConfigs, stadiumKind, stadiumNames, stadiumSeats, type RealStadium, type StadiumConfigId } from "./stadiums.ts";
-import { groundById, groundNameIn, groundOfficialName } from "./grounds.ts";
+import { heldGround, groundNameIn, groundOfficialName } from "./grounds.core.ts";
 import { BOARD, courtFor, hasSetsBoard, isNetLeague, isNetSport, type CourtPlan } from "./court.ts";
 import { cricketBoardMarkup } from "./cricket.board.ts";
 import { athleticsPlan } from "./athletics/plan.ts";
@@ -39,7 +40,7 @@ import { fieldsStyle } from "./fields.style.ts";
 import { resolveHomeSide } from "./homeside.ts";
 import { LEAGUES, chooseLeague, courtOf, diamondOf, fieldOf, hasHistory, leagueSeason, leagueSize, netOf, rinkOf, sheetOf, type League } from "./leagues.ts";
 import { MLB_DIAMOND, diamondFence } from "./leagues/baseball.ts";
-import { fenceFor, parkById, parkNameIn, parkOfficialName, parkWallsIn } from "./parks.ts";
+import { fenceFor, heldPark, parkNameIn, parkOfficialName, parkWallsIn } from "./parks.core.ts";
 import { boardMarkup, endText } from "./curling.board.ts";
 import { sheetFor } from "./sheet.ts";
 import { commonOf, isPoolSport, swimPlan, poloPlan, divePlan, artisticPlan } from "./pool.ts";
@@ -95,6 +96,9 @@ import type { BuildOptions, Surface } from "./surfaces/surface.ts";
 import { abbreviate, capitals } from "./text.ts";
 import type { Colors, CourtStyle, FieldSport, GoalStyle, Language, PageantStyle, ScoreOptions, Side, Sport, StripePattern, SurfaceOptions, Team, TeamMark } from "./types.ts";
 import { VERSION } from "./version.ts";
+
+/** What the layers are when a drawing has none: nothing, and nothing to say. */
+const NO_LAYERS: RenderedLayers = { svg: "", summaries: [] };
 
 export { isPortrait };
 
@@ -233,7 +237,7 @@ const GOALS: readonly GoalStyle[] = ["box", "line", "strip", "none"];
 /** The pitch the options ask for: a `pitch` of the caller's, else the size a `ground` publishes, else none (the international pitch). */
 export function pitchOf(o: SurfaceOptions): SoccerPitchId | SoccerSize | undefined {
   if (o.pitch !== undefined) return o.pitch;
-  const ground = groundById(o.ground);
+  const ground = heldGround(o.ground);
   return ground === undefined || ground.pitchSize === "default" ? undefined : { ...ground.pitch, unit: "m" };
 }
 
@@ -333,23 +337,23 @@ function buildWhole(o: SurfaceOptions, portrait: boolean, id: string, score: boo
     }
     case "nhl": {
       // An arena's rink is the size its sources publish, with the markings of the season asked for; an arena with none published has the NHL's.
-      const sized = league === undefined ? arenaRinkIn(arenaById(o.arena), o.year) : undefined;
+      const sized = league === undefined ? arenaRinkIn(heldArena(o.arena), o.year) : undefined;
       if (sized !== undefined) return hockey(common, rulesFor("nhl", o.year).rules, { ...NHL_RINK, length: sized.length, width: sized.width });
       return league?.family === "hockey" ? hockey(common, undefined, rinkOf(league, o.year)) : hockey(common, rulesFor("nhl", o.year).rules);
     }
     case "nba": {
-      const sized = league === undefined ? arenaCourtIn(arenaById(o.arena), o.year) : undefined;
+      const sized = league === undefined ? arenaCourtIn(heldArena(o.arena), o.year) : undefined;
       if (sized !== undefined) return basketball(common, rulesFor("nba", o.year).rules, { ...NBA_COURT, length: sized.length, width: sized.width });
       return league?.family === "basketball" ? basketball(common, undefined, courtOf(league, o.year)) : basketball(common, rulesFor("nba", o.year).rules);
     }
     case "mlb": {
       if (league?.family === "baseball") {
         const diamond = diamondOf(league, o.year);
-        return baseball(fenceFor(parkById(o.park), feetFence(o.fence, unit), o.year, diamondFence(diamond)), { ...common, ballpark: ballparkFor(o) }, undefined, diamond);
+        return baseball(fenceFor(heldPark(o.park), feetFence(o.fence, unit), o.year, diamondFence(diamond)), { ...common, ballpark: ballparkFor(o) }, undefined, diamond);
       }
       // A real ballpark whose infield is all dirt (Koshien Stadium's) has no grass inside the bases.
       const dirt = realStadiumOf(o, "mlb", resolveCrowd(o.crowd)?.real === true)?.stadium.looks?.dirtInfield !== undefined;
-      return baseball(fenceFor(parkById(o.park), feetFence(o.fence, unit), o.year), { ...common, ballpark: ballparkFor(o), ...(dirt ? { dirtInfield: true } : {}) }, rulesFor("mlb", o.year).rules);
+      return baseball(fenceFor(heldPark(o.park), feetFence(o.fence, unit), o.year), { ...common, ballpark: ballparkFor(o), ...(dirt ? { dirtInfield: true } : {}) }, rulesFor("mlb", o.year).rules);
     }
     case "soccer":
       return buildSoccer(o, common, scored, unit);
@@ -438,9 +442,9 @@ function parkFence(o: SurfaceOptions): { points: ReturnType<typeof fenceFor>; ba
   const { league } = chooseLeague(o);
   if (league?.family === "baseball") {
     const diamond = diamondOf(league, o.year);
-    return { points: fenceFor(parkById(o.park), feetFence(o.fence, unit), o.year, diamondFence(diamond)), backstop: diamond.backstop };
+    return { points: fenceFor(heldPark(o.park), feetFence(o.fence, unit), o.year, diamondFence(diamond)), backstop: diamond.backstop };
   }
-  return { points: fenceFor(parkById(o.park), feetFence(o.fence, unit), o.year), backstop: MLB_DIAMOND.backstop };
+  return { points: fenceFor(heldPark(o.park), feetFence(o.fence, unit), o.year), backstop: MLB_DIAMOND.backstop };
 }
 
 /**
@@ -461,7 +465,7 @@ function standsFor(o: SurfaceOptions, surface: Surface, crowd: Crowd): CrowdStan
   if (sport === "mlb") {
     const { points, backstop } = parkFence(o);
     // The walls that have seats on top of them: the ones the package knows (Fenway Park's Green Monster), or, asked for, every wall of 25 feet or more.
-    const park = parkById(o.park);
+    const park = heldPark(o.park);
     const walls = park === undefined || crowd.wallSeats === false ? [] : parkWallsIn(park, o.year).filter((w) => (crowd.wallSeats === true ? w.height_ft >= 25 : w.label !== undefined && WALL_SEATS[park.id] === w.label));
     const input = { fence: fenceOutline(points), backstop, crowd, seatsOnWalls: walls.map((w) => ({ from: w.from, to: w.to, height: w.height_ft })) };
     // A real ballpark: the building it stands in, the way home plate faces and a roof, with its stands as deep as its seats need (no visitors' block: no source places one).
@@ -526,7 +530,7 @@ function buildCrowded(o: SurfaceOptions, portrait: boolean, id: string, score: b
   const surface = buildWhole(o, portrait, id, score, scored, { ...extra, margin });
   const stands = standsFor(o, surface, crowd);
   const seats = stands.seats;
-  const ground = groundById(o.ground)?.capacity;
+  const ground = heldGround(o.ground)?.capacity;
   const fine = crowd.detail === "fine" || (crowd.detail === "auto" && !smallDrawing(o));
   const first = /^<[^>]*\/>/.exec(surface.base)?.[0] ?? "";
   const bg = /class="([^"]*)"/.exec(first)?.[1] ?? "ky-apron";
@@ -765,17 +769,17 @@ export function describe(o: SurfaceOptions | ScoreOptions): { title: string; des
   const language: Language = o.language === "ja" ? "ja" : "en";
   const words = KYOGIJO_STRINGS[language];
   const { sport, league } = chooseLeague(o);
-  const park = sport === "mlb" ? parkById(o.park) : undefined;
+  const park = sport === "mlb" ? heldPark(o.park) : undefined;
   const parkName = park === undefined ? undefined : parkNameIn(park, language);
   const pitch = sport === "soccer" ? soccerSpec(pitchOf(o)) : undefined;
   // A ground names a full-size pitch; a small-sided pitch or futsal court the caller asked for keeps its own name.
-  const ground = pitch?.format === "11" ? groundById(o.ground) : undefined;
+  const ground = pitch?.format === "11" ? heldGround(o.ground) : undefined;
   const groundName = ground === undefined ? undefined : groundNameIn(ground, o.year, language);
   // A league other than the sport's own is named by its rulebook's, and its description is made from its figures.
-  const trackGround = sport === "athletics" ? groundById(o.ground) : undefined;
+  const trackGround = sport === "athletics" ? heldGround(o.ground) : undefined;
   const trackGroundName = trackGround === undefined ? undefined : groundNameIn(trackGround, o.year, language);
   // An arena names its rink or its court.
-  const arena = (sport === "nhl" || sport === "nba") && league === undefined ? arenaById(o.arena) : undefined;
+  const arena = (sport === "nhl" || sport === "nba") && league === undefined ? heldArena(o.arena) : undefined;
   const arenaName = arena === undefined ? undefined : arenaNameIn(arena, o.year, language);
   const arenaSize = arena === undefined || arenaName === undefined ? undefined : sport === "nhl" ? arenaRinkIn(arena, o.year) : arenaCourtIn(arena, o.year);
   const surfaceName = arenaName !== undefined ? fill(sport === "nhl" ? words.said.arenaRink : words.said.arenaCourt, { arena: arenaName }) : trackGroundName !== undefined ? fill(words.athletics.ground, { ground: trackGroundName }) : groundName !== undefined ? (language === "ja" ? `${groundName}のピッチ` : `${groundName}, soccer pitch`) : league !== undefined && parkName === undefined ? league.name[language] : parkName === undefined ? (pitch?.format === "futsal" ? words.soccer.futsal : words.surface[sport]) : language === "ja" ? `${parkName}のグラウンド` : `${parkName}, baseball field`;
@@ -1103,13 +1107,13 @@ function drawnKyogijo(o: SurfaceOptions | ScoreOptions): string {
     // A lineup's players stand over what the situation lights (a runner's base, a drive's arrows), so that none of them is hidden; any other data goes over it.
     if (sit !== undefined && lineupped) inner += cutSit(sit.over);
     // Data goes over the markings and under the score's panel.
-    const layered = renderLayers(o, o.layers, surface.turned, surface.whole === undefined ? undefined : surface.box, surface.upright);
+    const layered = o.layers === undefined || o.layers.length === 0 ? NO_LAYERS : partOf("layers", "the layers option")(o, o.layers, surface.turned, surface.whole === undefined ? undefined : surface.box, surface.upright);
     inner += surface.frame === undefined || layered.svg === "" ? layered.svg : el("g", { transform: surface.frame }, layered.svg);
     // A surface drawn in parts shows the data again in each enlarged part, with its own ids, hidden from a reader of the drawing (the strip says it). A colour bar sized
     // against the whole sheet falls outside the panels' part of it and is cut away there; one given a `region` inside a panel's part is drawn there, large.
     if (surface.panels !== undefined && layered.svg !== "" && o.layers !== undefined) {
       surface.panels.forEach((panel, i) => {
-        const copy = renderLayers({ ...o, id: `${id}-f${i}` }, o.layers, surface.turned);
+        const copy = partOf("layers", "the layers option")({ ...o, id: `${id}-f${i}` }, o.layers, surface.turned);
         if (copy.svg !== "") inner += el("g", { class: "ky-fold-data", "aria-hidden": "true", transform: panel.transform, "clip-path": `url(#${panel.clip})` }, copy.svg);
       });
     }

@@ -1,4 +1,5 @@
 // A judging assignment: the officials of each mat area of a judo tournament, by seat, with their names and IDs, in the seat where they fit and in a chart where they do not; in 2D and in 3D.
+import "./full.ts";
 export { judgingBoard, boardFoot, BOARD_BASE } from "./judging.board.ts";
 export { JUDGING_PAPER, judgingPrint, judgingPrintSheets, judgingPrintStyle } from "./judging.print.ts";
 export type { JudgingPrintOptions } from "./judging.print.ts";

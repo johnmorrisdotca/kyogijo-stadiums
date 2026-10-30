@@ -2,10 +2,10 @@
 // a ballpark's x is across the field and its y minus the distance out from home plate): where a data layer is cut, and the size
 // its marks follow.
 import { FEET_PER_METRE, FOOTBALL, NBA, NHL, footballLength, surfaceSize, type SizedSport } from "./geometry.ts";
-import { arenaById, arenaCourtIn, arenaRinkIn } from "./arenas.ts";
+import { heldArena, arenaCourtIn, arenaRinkIn } from "./arenas.core.ts";
 import { chooseLeague, courtOf, diamondOf, fieldOf, rinkOf } from "./leagues.ts";
 import { diamondFence } from "./leagues/baseball.ts";
-import { fenceFor, parkById } from "./parks.ts";
+import { fenceFor, heldPark } from "./parks.core.ts";
 import { fenceOutline } from "./surfaces/baseball.ts";
 import { soccerSpec } from "./surfaces/soccer-spec.ts";
 import { roundedRect } from "./surfaces/surface.ts";
@@ -67,7 +67,7 @@ export function outlineOf(o: Pick<SurfaceOptions, "sport" | "park" | "fence" | "
     }
     case "nhl": {
       const rink = league?.family === "hockey" ? rinkOf(league, o.year) : undefined;
-      const sized = league === undefined ? arenaRinkIn(arenaById(o.arena), o.year) : undefined;
+      const sized = league === undefined ? arenaRinkIn(heldArena(o.arena), o.year) : undefined;
       const [length, width, r] = rink !== undefined ? [rink.length, rink.width, rink.cornerRadius] : sized !== undefined ? [sized.length, sized.width, NHL.cornerRadius] : [NHL.length, NHL.width, NHL.cornerRadius];
       const box = { x: 0, y: 0, w: length, h: width };
       // A rectangle with quarter-circle corners: outside only when a point is in a corner's square but beyond its arc.
@@ -84,12 +84,12 @@ export function outlineOf(o: Pick<SurfaceOptions, "sport" | "park" | "fence" | "
         const court = courtOf(league, o.year);
         return rect(court.length, court.width);
       }
-      const sized = league === undefined ? arenaCourtIn(arenaById(o.arena), o.year) : undefined;
+      const sized = league === undefined ? arenaCourtIn(heldArena(o.arena), o.year) : undefined;
       return sized === undefined ? rect(NBA.length, NBA.width) : rect(sized.length, sized.width);
     }
     case "mlb": {
       const generic = league?.family === "baseball" ? diamondFence(diamondOf(league, o.year)) : undefined;
-      const outline = fenceOutline(fenceFor(parkById(o.park), feetFence(o.fence, lengthUnit(o)), o.year, generic));
+      const outline = fenceOutline(fenceFor(heldPark(o.park), feetFence(o.fence, lengthUnit(o)), o.year, generic));
       const us = outline.map(([u]) => u);
       const vs = outline.map(([, v]) => v);
       const x = Math.min(...us);

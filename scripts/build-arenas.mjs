@@ -9,6 +9,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { URL } from "node:url";
 import { checkNames } from "./names-lib.mjs";
+import { writeVenueFiles } from "./venue-files.mjs";
 
 const read = (name) => JSON.parse(readFileSync(new URL(`./${name}`, import.meta.url), "utf8"));
 const arenas = read("arenas.data.json");
@@ -67,13 +68,14 @@ const entry = (a) => {
 };
 const text = `// Made by scripts/build-arenas.mjs from scripts/arenas.data.json: do not edit by hand.
 // The facts are those of the articles each entry cites; see docs/references.md.
-import type { ArenaData } from "./arenas.ts";
+import type { ArenaData } from "./arenas.core.ts";
 
 export const ARENA_DATA: ArenaData[] = [
 ${arenas.map(entry).join(",\n")},
 ];
 `;
 writeFileSync(new URL("../src/arenas.data.ts", import.meta.url), text);
+writeVenueFiles({ kind: "arenas", type: "ArenaData", constant: "ARENA", index: "ARENA_INDEX", records: arenas, text: entry, by: "scripts/build-arenas.mjs from scripts/arenas.data.json" });
 
 // docs/arenas.md: every arena, for people.
 const COUNTRY = { US: "United States", CA: "Canada" };

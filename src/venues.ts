@@ -2,7 +2,7 @@
 // the sources give (Wikidata, CC0, and the English Wikipedia article each fact cites), fitted inside the outline. Level one is the building: its outline and orientation, as OpenStreetMap maps them. Level two is a plausible
 // bowl: a number of seats in the number of tiers the sources say, between the rink's boards and the building's wall, under the roof's kind. It stops there: no team's or ticket seller's seat map is read or copied, no
 // section or row is named, and no mark of a team or a league is drawn. The drawing is `drawKyogijo({ sport: "nhl", arena, crowd: { real: true } })` and, in 3D, the same options in `buildTurn` or `mountTurn`.
-import { arenaById, arenaRinkIn, type Arena, type ArenaSource } from "./arenas.ts";
+import { heldArena, arenaRinkIn, type Arena, type ArenaSource } from "./arenas.core.ts";
 import { NORTH_ROOM, aislesOf, areaOfOutline, outlinePoints, type Box, type Outline, type Pt, type RealBowl, type StandRing } from "./crowd.ts";
 import { NHL, FEET_PER_METRE } from "./geometry.ts";
 import { boxOf, edgeDistance, inside, metresFrom, middleOf, northOn, turnedTo, type LonLat } from "./venues.geo.ts";
@@ -115,7 +115,7 @@ export const venuesInConference = (conference: VenueConference): RealVenue[] => 
 
 /** The arena a venue is of. */
 export const arenaOfVenue = (venue: RealVenue): Arena => {
-  const arena = arenaById(venue.id);
+  const arena = heldArena(venue.id);
   if (arena === undefined) throw new Error(`${venue.id} is not an arena`);
   return arena;
 };
@@ -130,7 +130,7 @@ export const venueOrientation = (venue: RealVenue): VenueOrientation => ({ headi
 
 /** The rink's box as the drawing has it: the arena's own where its sources publish a size, else the NHL's. */
 export function venueRink(venue: RealVenue): Box {
-  const sized = arenaRinkIn(arenaById(venue.id));
+  const sized = arenaRinkIn(heldArena(venue.id));
   return { x: 0, y: 0, w: sized?.length ?? NHL.length, h: sized?.width ?? NHL.width };
 }
 

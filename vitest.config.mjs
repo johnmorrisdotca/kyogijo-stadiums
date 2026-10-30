@@ -2,4 +2,4 @@
 // files run side by side, so the limit is 30 seconds and not vitest's 5.
 import { defineConfig } from "vitest/config";
 
-export default defineConfig({ test: { testTimeout: 30_000 } });
+export default defineConfig({ test: { testTimeout: 30_000, setupFiles: ["./src/all-venues.fixture.ts"] } });

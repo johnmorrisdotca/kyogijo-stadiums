@@ -231,6 +231,25 @@ console.log(plan.context!.blocks.length > 100);
 
 **The terms.** OpenStreetMap's data is ODbL 1.0 ("(c) OpenStreetMap contributors, ODbL 1.0, openstreetmap.org/copyright"); the file that holds it is a derived database kept apart from the CC0 files and from PLATEAU's. The City of Seattle's Open Data Policy lets a dataset on its portal be used with no licence requirement or restriction, if the source, the version and what was changed are shown, and the City gives no warranty of accuracy, which the credit says; USGS 3DEP elevation is a US Government work in the public domain. The City of Vancouver's Public trees are under the Open Government Licence - Vancouver (free to use, the City credited). Each layer has its credit in English and Japanese, and a district that uses the area carries them in its description, once: for Seattle, "(c) OpenStreetMap contributors, ODbL 1.0, openstreetmap.org/copyright; Building outlines and roof heights: City of Seattle, Building Outlines 2015 (the City gives no warranty of its accuracy); ground levels: USGS 3D Elevation Program; simplified and edited by Kyogijo Stadiums; Land cover made with VoxCity (MIT) from OpenStreetMap; Trees: City of Seattle, Combined Tree Point". The sources are listed in [the references](./references.md) and the [NOTICE](../NOTICE.md).
 
+## A page that carries only the venues it shows
+
+Every entry has every arena, park and ground there is data for (about 440 kilobytes of data before gzip, 58 after), and the layers part of the drawing (about 300 kilobytes of code), because the drawing reads a venue's record from a table the full lists fill and the layers when the options ask for them. A page that shows one district needs a few of them. `@johnmorrisdotca/kyogijo-stadiums/district-lean` is the district with none of it: the same exports, a table that is empty, and `loadVenueDataFor(venues)`, which reads the file of each venue's record (`arenas/rogers-arena.data.js`, 0.9 kilobytes) with a dynamic `import()` and holds it for the drawing. Call it before the first `planDistrict`, `drawDistrict`, `mountDistrict` or `mountDistrictTurn` and again when the venues change (a record that is held is not read twice); it is what `loadAreasFor` is for the areas.
+
+```ts
+import { drawDistrict, loadAreasFor, loadVenueDataFor } from "@johnmorrisdotca/kyogijo-stadiums/district-lean";
+
+const venues = ["bc-place:cfl", "rogers-arena"];
+await Promise.all([loadVenueDataFor(venues), loadAreasFor(venues)]);
+console.log(drawDistrict({ venues, context: await loadAreasFor(venues) }).startsWith("<svg"));
+// true
+```
+
+- **The same drawing.** `src/venue-data.test.ts` draws every preset of the demo in 2D and in 3D, in English and in Japanese, with its surroundings and its crowd outside, through the `district` entry and through this one, and the two are the same characters.
+- **A list of names without the records.** `venueName(key, language)` is the name `districtMember(key, language).name[language]` gives, from a list of names alone (`arenas.index.js` and its two like), so that a page can list every venue to choose from (the demo's district page does) and read only the records of those chosen.
+- **The layers are not carried.** A drawing that asks for `layers` through this entry throws and says so; a district never does. Every other entry has them, as it always had.
+- **`district`, `turn`, `stadiums` and the rest are unchanged.** Each imports `full.js` (listed in `sideEffects`), which holds every record and fills the table of the drawing's parts, so a bundler that keeps the entry keeps them. `src/venue-data.budget.test.js` holds each entry to what it had.
+- **Made by the generators.** `pnpm arenas`, `pnpm parks` and `pnpm grounds` write, besides the table of every record (`arenas.data.ts` and its two like), a file for each record (`src/arenas/<key>.data.ts`) and the list of keys with their names and the `import()` of each file (`arenas.index.ts`).
+
 ## BC Place's roof, masts and gates
 
 The 3D view of BC Place has its roof's **36 masts**, each 47.5 metres over the rim and leaning out, and its **retractable roof open or closed** (`venue: { roofOpen: true }`, `turn.update(options, { venue: { roofOpen } })`, a Retractable roof open choice on the demo's page, kept in the address as `roofopen=1`: the fabric gathers into the pod and only the pod stays). [The stadiums page](./stadiums.md) says what is known and what is ours; the masts are one of the sources' facts, cited. Rogers Arena's roof is closed in the middle with a long skylight along the rink (ours). `gates: true` marks each venue's [gates](./gates.md).

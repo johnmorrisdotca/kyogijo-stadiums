@@ -3,7 +3,7 @@
 // `neighbours` fits the plan tight round buildings that stand within a few hundred metres of each other, with no more than a margin between them; `city` keeps the real distances between venues that are kilometres
 // apart, with a grid, a scale and a name beside each. Nothing is drawn but what the venues are drawn from: no street, no park and no mark of a team, a league or a tournament; the credit
 // `VENUE_ATTRIBUTION` goes with it. Pure: options in, a plan, and markup, out; `district.turn.ts` raises it in 3D.
-import { arenaById, arenaNameIn } from "./arenas.ts";
+import { heldArena, arenaNameIn } from "./arenas.core.ts";
 import { dojo } from "./budo/dojo.api.ts";
 import { kodokanMember } from "./kodokan.ts";
 import { contextFloor, contextFrame, placeContext, toneOf, type ContextPlan, type ContextArea } from "./context.ts";
@@ -123,7 +123,7 @@ export interface DistrictPart {
 }
 
 const venueMember = (venue: RealVenue, language: Language): DistrictMember => {
-  const arena = arenaById(venue.id);
+  const arena = heldArena(venue.id);
   if (arena === undefined) throw new Error(`${venue.id} is not an arena`);
   return {
     key: venue.id,
@@ -191,6 +191,25 @@ export function districtMember(input: DistrictVenueInput, language: Language = "
     return kodokanMember(language, floor);
   }
   throw new Error(`no venue ${String(id)}: the venues are ${DISTRICT_IDS.join(", ")}`);
+}
+
+/**
+ * The outline of a venue's building, as `districtMember(input).ring` has it, read without the venue's records: a crowd outside keeps out of every building the ground has, and the buildings of venues that are not shown need no names.
+ * Throws as `districtMember` does for a key no venue has.
+ */
+export function districtRing(input: DistrictVenueInput): DistrictMember["ring"] {
+  const [id, named] = typeof input === "string" ? input.split(":") : [input.id, input.config];
+  const venue = venueById(id);
+  if (venue !== undefined) {
+    if (named !== undefined && named !== "nhl") throw new Error(`${id} is an arena with one configuration, not ${named}`);
+    return venue.osm.ring;
+  }
+  const stadium = stadiumById(id);
+  if (stadium !== undefined) {
+    if (named !== undefined && stadium.configs[named as StadiumConfigId] === undefined) throw new Error(`${id} has no configuration ${named}: ${stadiumConfigs(stadium).join(", ")}`);
+    return stadium.osm.ring;
+  }
+  return districtMember(input).ring;
 }
 
 // ---- The plan. ----

@@ -6,6 +6,7 @@ The drawing is plain functions over plain data with no DOM and no dependency. Th
 src/
 ├── index.ts            the main entry
 ├── draw.ts             drawKyogijo: options in, one string of SVG out
+├── draw.parts.ts       the parts of a drawing that only some drawings use (the layers), held in a table that `full.ts` fills, so that the lean district does not carry them
 ├── score.ts            the teams' places, the score's panel and the badge
 ├── homeside.ts         which side the home team is on by default, for each sport: home first for soccer and the world codes, away first for the North American leagues
 ├── mark.ts             the round team mark: a flag or a logo in a circle with a ring, or the team's initials on its colour
@@ -258,12 +259,24 @@ src/
 ├── parks.ts            the ballparks, their fences, walls, quirks, names and their sources
 ├── ballpark.ts         what a drawing asks of a park's walls and quirks (`walls`, `quirks`), and the words that name them
 ├── parks.data.ts       made by scripts/build-parks.mjs from scripts/parks.data.json
+├── parks.core.ts       a park's types and the functions that need no table (its fence in a season, its walls, quirks and names), and the table of the parks held for the drawing
+├── parks.index.ts      made by scripts/build-parks.mjs: every park's key and names with the import() of its own file, and the parks with no wall height
+├── parks/              made by scripts/build-parks.mjs: one file for each park (`fenway-park.data.ts`), read when that park is asked for
 ├── parks-entry.ts      the parks' entry
 ├── grounds.ts          the soccer grounds
 ├── grounds.data.ts     made by scripts/build-grounds.mjs
+├── grounds.core.ts     a ground's types and the functions that need no table (its names in a year), and the table of the grounds held for the drawing
+├── grounds.index.ts    made by scripts/build-grounds.mjs: every ground's key and names with the import() of its own file
+├── grounds/            made by scripts/build-grounds.mjs: one file for each ground (`old-trafford.data.ts`), read when that ground is asked for
 ├── grounds-entry.ts    the grounds' entry
 ├── arenas.ts           the hockey and basketball arenas: their names, seats and the rink or court sizes the sources publish
 ├── arenas.data.ts      made by scripts/build-arenas.mjs from scripts/arenas.data.json
+├── arenas.core.ts      an arena's types and the functions that need no table (the rink or court size in a year, its names), and the table of the arenas held for the drawing
+├── arenas.index.ts     made by scripts/build-arenas.mjs: every arena's key and names with the import() of its own file
+├── arenas/             made by scripts/build-arenas.mjs: one file for each arena (`td-garden.data.ts`), read when that arena is asked for
+├── venue-data.ts       the venues' data one file each, read when asked for (`loadVenueDataFor`, `loadArena`, `loadPark`, `loadGround`), and the venues' names without reading any (`venueName`)
+├── full.ts             imports every arena, park and ground and fills the table of drawing parts, so that they are held for the drawing: every entry but the lean district imports it
+├── venue-data-entry.ts the venue data entry
 ├── arenas-entry.ts     the arenas' entry
 ├── venues.ts           the real venues of the NHL's arenas: the building, how the rink lies, and a bowl fitted inside it from the seats, tiers and roof the sources give
 ├── venues.geo.ts       the plane geometry of a building's outline: its metres, its main hall and axis, and the drawing's frame
@@ -289,6 +302,8 @@ src/
 ├── district.turn.ts    a district in 3D: each venue's planes turned and moved to its place, stacked building by building
 ├── district.dom.ts     a district's 2D plan in a page, with the crowd outside over it
 ├── district-entry.ts   the district's entry
+├── district.api.ts     everything the district entries export
+├── district-lean-entry.ts the lean district's entry: the district with no venue's data held until `loadVenueDataFor` has read the ones it shows
 ├── gates.ts            the gates of a venue: points on the building's outline with the way each faces, and how each is known
 ├── osm.context.data.ts made by scripts/build-osm-context.mjs from data-sources/walk/: the buildings and streets round a district from OpenStreetMap, ODbL 1.0, kept apart
 ├── osm-entry.ts        the OpenStreetMap context's entry

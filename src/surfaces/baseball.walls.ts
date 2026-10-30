@@ -4,8 +4,8 @@
 import { el, num } from "../format.ts";
 import { fenceAt, type FencePoint } from "../geometry.ts";
 import { lengthText, quirkName, tierOf, tierTexts, wallText, type Ballpark } from "../ballpark.ts";
-import type { HillQuirk, ParkQuirk } from "../parks.ts";
-import type { DugoutSide } from "../parks.ts";
+import type { HillQuirk, ParkQuirk } from "../parks.core.ts";
+import type { DugoutSide } from "../parks.core.ts";
 import { textOn } from "./surface.ts";
 
 const RAD = Math.PI / 180;

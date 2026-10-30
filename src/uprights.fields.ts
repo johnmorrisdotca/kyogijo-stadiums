@@ -6,7 +6,7 @@ import { FEET_PER_METRE, fenceAt, footballLength, type FencePoint, type Football
 import { fenceOutline } from "./surfaces/baseball.ts";
 import type { SoccerSpec } from "./surfaces/soccer-spec.ts";
 import { flagPole, goalCage, postPair } from "./uprights.goal.ts";
-import type { ParkWall } from "./parks.ts";
+import type { ParkWall } from "./parks.core.ts";
 import { mesh, n, pole, threads, wall, type Plane, type Upright } from "./turn.kit.ts";
 
 const M = FEET_PER_METRE;

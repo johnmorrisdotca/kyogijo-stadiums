@@ -2,7 +2,7 @@
 // the page hands it over, else a plain graticule) turned and zoomed in a viewBox that is true to the ground round the arena, the site plan (the building's outline, from OpenStreetMap) in pixels at the same
 // scale, and the 3D arena of `mountKyogijoTurn`, driven by its own view. Nothing runs on a timer: a frame is drawn only while the clock moves (playing, or gliding to a stage), and not while the page is hidden
 // or the stage is off the screen. A reader who prefers reduced motion gets each stage as a still, and the controls step from one to the next.
-import { arenaById, arenaNameIn } from "./arenas.ts";
+import { heldArena, arenaNameIn } from "./arenas.core.ts";
 import {
   STAGE_IDS,
   cameraAt,
@@ -123,7 +123,7 @@ export interface Flythrough {
 export function mountFlythrough<M extends { width: number; height: number }>(host: HTMLElement, options: FlythroughOptions<M>, settings: FlythroughSettings = {}): Flythrough {
   const venue = venueById(options.arena);
   if (venue === undefined) throw new Error(`${options.arena} has no real venue: choose one of the keys of VENUES`);
-  const arena = arenaById(venue.id) ?? arenaOfVenue(venue);
+  const arena = heldArena(venue.id) ?? arenaOfVenue(venue);
   const doc = host.ownerDocument;
   const win = doc.defaultView;
   const language: Language = options.language === "ja" ? "ja" : "en";

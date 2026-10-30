@@ -1,4 +1,5 @@
 // Kyogijo Stadiums 競技場: sports surfaces as SVG, drawn to scale, with the teams and the score on them.
+import "./full.ts";
 export { COLOR_PROPERTIES, SPORTS, crowdStands, describe, drawBadge, drawKyogijo, drawScore, drawSurface, isPortrait, statusLabel, statusText, winnerOf } from "./draw.ts";
 export { HOME_FIRST, HOME_FIRST_LEAGUES, homeSideFor } from "./homeside.ts";
 export { inkOn, luminance, rgbOf, safeColour, safePicture } from "./colour.ts";

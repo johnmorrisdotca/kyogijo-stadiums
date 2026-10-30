@@ -1,4 +1,5 @@
 // The athletics stadium: the races and the field events, the plan of the track and what is marked on it, the oval's geometry (a point of a lane, the stagger of each lane's start), and the data: lane draws, results, a replay and the marks of throws and jumps.
+import "./full.ts";
 export { laneDraw, raceResults, raceReplay, fieldMarks, formatTime, distanceRun } from "./charts.athletics.ts";
 export type { AthleticsEntry, AthleticsResult, AthleticsRaceOptions, AthleticsRunner, FieldAttempt, FieldMarksOptions, FieldTotals, LaneDrawTotals, RaceReplay, RaceReplayOptions, ResultsTotals } from "./charts.athletics.ts";
 export { FIELD_EVENTS, FIELD_EVENT_IDS, RACES, RACE_IDS, fieldEventById, raceById } from "./athletics/events.ts";

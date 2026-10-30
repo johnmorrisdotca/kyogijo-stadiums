@@ -1,4 +1,5 @@
 // The budō (武道): judo and karate competition areas, the kendo shiai-jo, the sumo dohyō, the kyūdōjō and the dojo builder, with their plans, the tatami layout, the kimarite, the looks and the stylesheet.
+import "./full.ts";
 export { DOJO_STANDARDS, dojo, drawDojo } from "./budo/dojo.api.ts";
 export type { Dojo, Tatami } from "./budo/dojo.api.ts";
 export { DOJO_SIZES, floorOf, shapeOfJo } from "./budo/dojo.ts";

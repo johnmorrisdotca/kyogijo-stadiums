@@ -1,7 +1,7 @@
 // What a ballpark's article gives beyond the fence's distances, turned into what a drawing is asked for: the walls and their heights (`walls`), the quirks
 // (`quirks`), the warning track's width, and the words that name them. The figures are in parks.ts; this file reads the options and says what to draw and what to say.
 import { lengthUnit } from "./common.ts";
-import { parkById, parkQuirksIn, parkWallsIn, type ParkDugouts, type ParkQuirk, type ParkWall } from "./parks.ts";
+import { heldPark, parkQuirksIn, parkWallsIn, type ParkDugouts, type ParkQuirk, type ParkWall } from "./parks.core.ts";
 import { KYOGIJO_STRINGS, fill, type KyogijoWords } from "./strings.ts";
 import type { Language, QuirkName, SurfaceOptions } from "./types.ts";
 
@@ -37,7 +37,7 @@ const QUIRK_NAMES: readonly QuirkName[] = ["hill", "overhang", "pole", "flagpole
  * A request that cannot be read is left out, as the other options' are.
  */
 export function ballparkFor(o: SurfaceOptions): Ballpark | undefined {
-  const park = parkById(o.park);
+  const park = heldPark(o.park);
   if (park === undefined) return undefined;
   const language: Language = o.language === "ja" ? "ja" : "en";
   const unit: BallparkUnit = ["m", "cm", "mm"].includes(lengthUnit(o)) ? "m" : "ft";

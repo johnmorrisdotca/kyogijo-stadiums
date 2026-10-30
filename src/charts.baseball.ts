@@ -7,7 +7,7 @@ import { zoneToPoint } from "./frames.providers.ts";
 import type { Layer, PointDatum, PointStyle, PointsLayer } from "./layers.types.ts";
 import type { ZoneSetId, ZonesLayer } from "./heat.types.ts";
 import { outlineOf } from "./outline.ts";
-import { fenceFor, parkById } from "./parks.ts";
+import { fenceFor, heldPark } from "./parks.core.ts";
 import { MLB } from "./geometry.ts";
 import { fill } from "./strings.ts";
 import type { Ball, Chart, KeyItem, MlbSprayOptions, MlbTotals } from "./charts.types.ts";
@@ -65,7 +65,7 @@ export function mlbSprayChart(balls: readonly Ball[], options: MlbSprayOptions =
   const all = wordsOf(language);
   const w = all.charts;
   const frame = frameOf(options.from, "mlbam");
-  const park = options.park === undefined ? undefined : parkById(options.park);
+  const park = options.park === undefined ? undefined : heldPark(options.park);
   if (options.park !== undefined && options.park !== "generic" && park === undefined) throw new RangeError(`Unknown park "${options.park}": use a key of PARKS, such as "fenway-park"`);
   const margin = typeof options.margin === "number" && options.margin >= 0 ? options.margin : 40;
   const o = drawingOptions("mlb", options, w.titleMlb, { margin, ...(options.park === undefined ? {} : { park: options.park }), ...(options.year === undefined ? {} : { year: options.year }) });

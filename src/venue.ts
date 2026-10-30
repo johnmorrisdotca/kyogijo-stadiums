@@ -6,7 +6,7 @@ import { densityOf, resolveCrowd, type Crowd, type CrowdStands, type Pt, type St
 import { patterns } from "./crowd.draw.ts";
 import { crowdStands } from "./draw.ts";
 import { NHL } from "./geometry.ts";
-import { groundById } from "./grounds.ts";
+import { heldGround } from "./grounds.core.ts";
 import { ARC_STEPS, clipAround, clipConvex, clipSegment, areaOf, pointList, raked, slopeOf, stripsOf, tidy, type Cut, type Strip } from "./venue.geom.ts";
 import { APRON_RISE, apronPlanes, backEdges, backWall, concourseFloor, rimAt, suiteWall } from "./venue.fill.ts";
 import { firstHit, realBuilding } from "./venue.real.ts";
@@ -95,7 +95,7 @@ export function standsVenue(o: SurfaceOptions, v: VenueBuild, lift: number): Ven
 export function standsVenueOf(stands: CrowdStands, crowd: Crowd, o: Pick<SurfaceOptions, "sport" | "detail" | "ground">, v: VenueBuild, lift: number): Venue {
   const cut: Cut = v.detail ?? "auto";
   const fine = crowd.detail !== "plain" && o.detail !== "simple";
-  const density = densityOf(crowd, stands.seats, groundById(o.ground)?.capacity);
+  const density = densityOf(crowd, stands.seats, heldGround(o.ground)?.capacity);
   const tifo = { home: stands.sectors.some((s) => s.kind === "tifo-home"), away: stands.sectors.some((s) => s.kind === "tifo-away") };
   const pid = `${v.id}-v`;
   const defs = fine ? patterns(pid, crowd, density, tifo.home || tifo.away ? tifo : undefined, stands.real !== undefined, true, stands.rings.some((r) => r.closed === true) || stands.sectors.some((s) => s.kind === "closed")) : "";

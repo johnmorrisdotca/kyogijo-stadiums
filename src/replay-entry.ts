@@ -1,5 +1,6 @@
 // Replay: tracking data over time on a surface. The frame, the clock and the pure functions between them; the controls and the animation
 // are in the mount (`mountKyogijo(...).replay(...)`) and in `<kyogijo-field>`.
+import "./full.ts";
 export { activeEvents, describeEvent, drawFrame, eventsBetween, interpolate, possession, replayClock, replayEvents, replayInfo, replayLayers, replaySnapshot, replaySummary, replayTable, replayTimes, trails } from "./replay.ts";
 export type { ReplaySnapshot } from "./replay.ts";
 export { alongPool, distanceAt, progressOf, raceTimeline } from "./pool.replay.ts";

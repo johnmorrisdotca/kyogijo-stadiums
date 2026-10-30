@@ -13,6 +13,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { URL } from "node:url";
 import { checkNames } from "./names-lib.mjs";
+import { writeVenueFiles } from "./venue-files.mjs";
 
 const grounds = JSON.parse(readFileSync(new URL("./grounds.data.json", import.meta.url), "utf8"));
 const editions = JSON.parse(readFileSync(new URL("./grounds.editions.json", import.meta.url), "utf8"));
@@ -99,13 +100,14 @@ const entry = (g) => {
 };
 const text = `// Made by scripts/build-grounds.mjs from scripts/grounds.data.json and scripts/grounds.editions.json: do not edit by hand.
 // The facts are those of the articles each entry cites; see docs/references.md.
-import type { GroundData } from "./grounds.ts";
+import type { GroundData } from "./grounds.core.ts";
 
 export const GROUND_DATA: GroundData[] = [
 ${data.map(entry).join(",\n")},
 ];
 `;
 writeFileSync(new URL("../src/grounds.data.ts", import.meta.url), text);
+writeVenueFiles({ kind: "grounds", type: "GroundData", constant: "GROUND", index: "GROUND_INDEX", records: data, text: entry, by: "scripts/build-grounds.mjs from scripts/grounds.data.json and scripts/grounds.editions.json" });
 
 // docs/grounds.md: every ground, for people.
 const COUNTRY = { UY: "Uruguay", IT: "Italy", FR: "France", BR: "Brazil", CH: "Switzerland", SE: "Sweden", CL: "Chile", GB: "United Kingdom", MX: "Mexico", DE: "Germany", AR: "Argentina", ES: "Spain", US: "United States", JP: "Japan", ZA: "South Africa", RU: "Russia", QA: "Qatar", CA: "Canada", CN: "China", AU: "Australia", PT: "Portugal", KR: "South Korea", NL: "Netherlands" };

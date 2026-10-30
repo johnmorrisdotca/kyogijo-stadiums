@@ -1,6 +1,6 @@
 // Made by scripts/build-parks.mjs from scripts/parks.data.json: do not edit by hand.
 // Fence distances are facts published in the articles each entry cites; see docs/references.md.
-import type { ParkData } from "./parks.ts";
+import type { ParkData } from "./parks.core.ts";
 
 export const PARK_DATA: ParkData[] = [
   {

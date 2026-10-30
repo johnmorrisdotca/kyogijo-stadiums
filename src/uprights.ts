@@ -11,7 +11,7 @@ import { diamondFence } from "./leagues/baseball.ts";
 import { NBA_COURT } from "./leagues/basketball.ts";
 import { NHL_RINK } from "./leagues/hockey.ts";
 import { chooseLeague, courtOf, diamondOf, fieldOf, rinkOf } from "./leagues.ts";
-import { fenceFor, parkById, parkWallsIn } from "./parks.ts";
+import { fenceFor, heldPark, parkWallsIn } from "./parks.core.ts";
 import { fenceOutline } from "./surfaces/baseball.ts";
 import { KYOGIJO_STRINGS, fill } from "./strings.ts";
 import { soccerSpec } from "./surfaces/soccer-spec.ts";
@@ -97,7 +97,7 @@ export function uprightsFor(o: SurfaceOptions, settings: UprightOptions = {}): U
     items = courtUprights(court, thin, league?.id === "fiba");
   } else if (sport === "mlb") {
     const diamond = league?.family === "baseball" ? diamondOf(league, o.year) : undefined;
-    const park = parkById(o.park);
+    const park = heldPark(o.park);
     const points = fenceFor(park, feetFence(o.fence, unit), o.year, diamond === undefined ? undefined : diamondFence(diamond));
     thin = 0.4;
     items = ballparkUprights(points, park === undefined ? [] : parkWallsIn(park, o.year), thin);

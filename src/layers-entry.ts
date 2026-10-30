@@ -1,4 +1,5 @@
 // The data layers on their own: what a caller who composes a drawing's parts needs.
+import "./full.ts";
 export { OUTCOMES, drawLayers, layerTable, renderLayers } from "./layers.ts";
 export type { RenderedLayers } from "./layers.ts";
 export { rampColour } from "./layers.marks.ts";

@@ -1,6 +1,6 @@
 // Made by scripts/build-arenas.mjs from scripts/arenas.data.json: do not edit by hand.
 // The facts are those of the articles each entry cites; see docs/references.md.
-import type { ArenaData } from "./arenas.ts";
+import type { ArenaData } from "./arenas.core.ts";
 
 export const ARENA_DATA: ArenaData[] = [
   {

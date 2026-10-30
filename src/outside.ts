@@ -2,7 +2,7 @@
 // or 100 percent of the venues' seats. One ordered list of people: a level is a prefix of it, so that moving the level up only adds people and moving it down only takes some away, and the same options always give the same
 // list (a seeded generator, integer arithmetic and no clock). The crowd is thickest by the venues and thins with distance, never more than `OUTSIDE_DENSITY` people to a square metre. Pure: a plan in, typed arrays out; `outside.paint.ts`
 // turns them into pixels and `outside.dom.ts` puts the pixels on a page. Roads are never drawn: the crowd's shape is what shows them.
-import { districtMember, turnBy, type DistrictPlan } from "./district.ts";
+import { districtRing, turnBy, type DistrictPlan } from "./district.ts";
 import { FEET_PER_METRE } from "./geometry.ts";
 import { metresFrom, type LonLat } from "./venues.geo.ts";
 import { WALK_DATA } from "./walk.data.ts";
@@ -215,7 +215,7 @@ export function outsideCrowd(plan: DistrictPlan): OutsideCrowd | undefined {
   const data = WALK_DATA[maskId];
   const ids = data.venues.map((key) => key.split(":")[0]);
   const present = ids.map((id) => plan.members.find((m) => m.member.id === id)).filter((m) => m !== undefined);
-  const extras = { buildings: data.venues.map((key) => metresFrom(data.origin, districtMember(key).ring as LonLat[])), apron: 5 };
+  const extras = { buildings: data.venues.map((key) => metresFrom(data.origin, districtRing(key) as LonLat[])), apron: 5 };
   const mask = walkMask(maskId, extras);
   const wanted: Wanted[] = present.map((m) => ({ key: m.member.key, seats: m.member.seats, ring: extras.buildings[ids.indexOf(m.member.id)] }));
   const kept = `${maskId}|${wanted.map((w) => `${w.key}:${w.seats}`).join(",")}`;
@@ -243,7 +243,7 @@ export function standsOnWalkable(plan: DistrictPlan, maskId: string, [fx, fy]: P
   const data = WALK_DATA[maskId];
   const [shiftX, shiftY] = metresFrom(plan.origin as LonLat, [data.origin as LonLat])[0];
   const [ux, uy] = turnBy([fx, fy], -plan.turn);
-  const mask = walkMask(maskId, { buildings: data.venues.map((key) => metresFrom(data.origin, districtMember(key).ring as LonLat[])), apron: 5 });
+  const mask = walkMask(maskId, { buildings: data.venues.map((key) => metresFrom(data.origin, districtRing(key) as LonLat[])), apron: 5 });
   const [mx, my] = [ux / FEET_PER_METRE - shiftX, -uy / FEET_PER_METRE - shiftY];
   const col = Math.floor((mx - mask.x0) / mask.cell);
   const row = Math.floor((my - mask.y0) / mask.cell);

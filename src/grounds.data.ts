@@ -1,6 +1,6 @@
 // Made by scripts/build-grounds.mjs from scripts/grounds.data.json and scripts/grounds.editions.json: do not edit by hand.
 // The facts are those of the articles each entry cites; see docs/references.md.
-import type { GroundData } from "./grounds.ts";
+import type { GroundData } from "./grounds.core.ts";
 
 export const GROUND_DATA: GroundData[] = [
   {

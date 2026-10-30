@@ -6,8 +6,8 @@
 import { NORTH_ROOM, aisleParameters, aislesOf, areaOfOutline, outlinePoints, sectorPolygon, type Box, type CrowdStands, type Outline, type Pt, type RealBowl, type RealShell, type StandRing, type StandSector } from "./crowd.ts";
 import { parkLayout, type ParkInput } from "./crowd.park.ts";
 import { FEET_PER_METRE, FOOTBALL } from "./geometry.ts";
-import { groundById, type Ground } from "./grounds.ts";
-import { PARKS } from "./parks.ts";
+import { heldGround, type Ground } from "./grounds.core.ts";
+import { heldPark } from "./parks.core.ts";
 import { GAP, HALL, MAX_RAKE, SEAT_AREAS, WALL, VENUE_ATTRIBUTION } from "./venues.ts";
 import { boxOf, edgeDistance, inside, metresFrom, middleOf, northOn, turnedTo, type LonLat } from "./venues.geo.ts";
 import { clipConvex } from "./venue.geom.ts";
@@ -157,7 +157,7 @@ export const stadiumConfigs = (stadium: RealStadium): StadiumConfigId[] => Objec
 
 /** The ground a stadium is (its name, place and pitch). Throws for a ballpark, which has a park, and for a hall, which has none. */
 export const groundOfStadium = (stadium: RealStadium): Ground => {
-  const ground = groundById(stadium.ground);
+  const ground = heldGround(stadium.ground);
   if (ground === undefined) throw new Error(`${stadium.id} has no ground ${String(stadium.ground)}`);
   return ground;
 };
@@ -169,7 +169,7 @@ export function stadiumNames(stadium: RealStadium): { en: string; ja: string } {
     return { en: stadium.names.en, ja: stadium.names.ja };
   }
   if (stadiumKind(stadium) === "park") {
-    const park = PARKS[stadium.park ?? ""];
+    const park = heldPark(stadium.park);
     if (park === undefined) throw new Error(`${stadium.id} has no park ${String(stadium.park)}`);
     return { en: park.name, ja: park.nameJa };
   }

@@ -6,7 +6,7 @@ import type { Area, Shape } from "../fields.types.ts";
 import { num } from "../format.ts";
 import { ATHLETICS_LEAGUES, WA_SHORT_TRACK, WA_STANDARD_TRACK, type AthleticsFigures, type AthleticsLeague } from "../leagues/athletics.ts";
 import { chooseLeague } from "../leagues.ts";
-import { groundById } from "../grounds.ts";
+import { heldGround } from "../grounds.core.ts";
 import { soccerSpec, type SoccerSpec } from "../surfaces/soccer-spec.ts";
 import type { SurfaceOptions } from "../types.ts";
 import { FIELD_EVENT_IDS, RACES, RACE_IDS, raceById } from "./events.ts";
@@ -207,7 +207,7 @@ export function athleticsPlan(o: Pick<SurfaceOptions, "sport" | "league" | "athl
   }
   const turf = infield === "none" || indoor ? undefined : { d: D.d, stripes: turfBands(-S / 2 - ARENA.turf, S / 2 + ARENA.turf, -R, R) };
   // The pitch inside the track: the options', else the size the ground's article publishes, else the international 105 by 68 m.
-  const ground = groundById(o.ground);
+  const ground = heldGround(o.ground);
   const groundPitch = ground === undefined || ground.pitchSize === "default" ? undefined : ({ ...ground.pitch, unit: "m" } as const);
   const spec = soccerSpec(o.athletics?.pitch ?? o.pitch ?? groundPitch, "m");
   let pitch: AthleticsPlan["pitch"] = infield === "pitch" && !indoor ? { spec, x: -spec.length / 2, y: -spec.width / 2 } : undefined;

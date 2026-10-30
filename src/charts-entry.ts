@@ -1,4 +1,5 @@
 // The ready-made charts: shot charts, shot maps, spray charts and pass charts built on the data layers.
+import "./full.ts";
 export { nbaShotChart, nflPassChart, nhlShotMap } from "./charts.ts";
 export { mlbSprayChart } from "./charts.baseball.ts";
 export { soccerGoalMouth, soccerShotMap } from "./charts.soccer.ts";

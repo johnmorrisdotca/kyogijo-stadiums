@@ -117,21 +117,22 @@
       <p class="note"><a href="./stadiums.html" id="stadiums"></a> · <a href="./docs/district.html" id="docs"></a></p>
     </main>
     <script type="module">
-      // Start reading the area the address asks for now, while the page's other modules come, so that its file is there when they have run. Only the area of the first view: another choice reads its own when it is made.
+      // Start reading the area and the venues' records the address asks for now, while the page's other modules come, so that their files are there when they have run. Only those of the first view: another choice reads its own when it is made.
       import { loadAreasFor } from "./dist/areas-entry.js";
+      import { loadVenueDataFor } from "./dist/venue-data-entry.js";
       const asked = new URLSearchParams(location.search);
-      if (asked.get("context") !== "0") loadAreasFor((asked.get("venues") ?? "bc-place:cfl,rogers-arena").split(",")).catch(() => {});
+      const first = (asked.get("venues") ?? "bc-place:cfl,rogers-arena").split(",");
+      if (asked.get("context") !== "0") loadAreasFor(first).catch(() => {});
+      loadVenueDataFor(first).catch(() => {});
     </script>
     <script type="module">
       // A district: several real venues of one city on one plan, each at its real position and orientation (OpenStreetMap, ODbL 1.0), to look down on in 2D or turn around together in 3D. The page only asks the package to draw
       // (`drawDistrict`, `mountDistrictTurn`): the venues, the mode and the turn are options. What is chosen lives in the address; nothing is sent anywhere and nothing is stored.
-      import { DISTRICT_IDS, districtMember, KODOKAN_FLOORS, mountDistrict, mountDistrictTurn, OUTSIDE_LEVELS, OUTSIDE_VENUES, planDistrict, unknownVenues, VENUE_ATTRIBUTION } from "./dist/district-entry.js";
+      // The lean district: it holds the records of the venues it is asked to show and no others (`loadVenueDataFor`), and lists the rest by name alone (`venueName`).
+      import { areaKeysFor, DISTRICT_IDS, KODOKAN_FLOORS, loadAreasFor, loadVenueDataFor, mountDistrict, mountDistrictTurn, OUTSIDE_LEVELS, OUTSIDE_VENUES, planDistrict, QUALITIES, STADIUMS, unknownVenues, venueName, VENUE_ATTRIBUTION } from "./dist/district-lean-entry.js";
       import { replaceAddress } from "./address.js";
-      import { QUALITIES } from "./dist/turn-entry.js";
-      import { areaKeysFor, loadAreasFor } from "./dist/areas-entry.js";
       import { hoverOf, keepCamera, wayOf, writeWay } from "./turn-way.js";
       import { lightingFor, lightingOfAddress } from "./lighting.js";
-      import { STADIUMS } from "./dist/stadiums-entry.js";
       import { quietTitles } from "./quiet.js";
       quietTitles();
 
@@ -241,7 +242,7 @@
       $("lighting").value = lightingOfAddress(params);
       $("wash").value = ["purple", "magenta", "blue", "white"].includes(params.get("wash")) ? params.get("wash") : "none";
 
-      const nameOf = (key) => districtMember(key, $("language").value).name[$("language").value];
+      const nameOf = (key) => venueName(key, $("language").value) ?? key;
 
       function labelPage() {
         const w = words();
@@ -282,8 +283,7 @@
           box.dataset.key = key;
           box.checked = state.venues.includes(key);
           const text = document.createElement("span");
-          const member = districtMember(key, $("language").value);
-          text.textContent = member.kind === "arena" || member.config === undefined ? nameOf(key) : `${nameOf(key)} (${w[member.config]})`;
+          text.textContent = key.includes(":") ? `${nameOf(key)} (${w[key.split(":")[1]]})` : nameOf(key);
           label.append(box, text);
           return label;
         }));
@@ -429,19 +429,18 @@
           return;
         }
         // A district with a mask asks for the crowd at every level, 0 included: the plan keeps room round the buildings for it, so that nothing moves when the level does.
+        // The records of the venues chosen, and the area round them if it is on, are read from their own files (a choice that was made before is held and asks for nothing).
         let context;
-        if (contextOn()) {
-          document.body.dataset.ready = "false";
-          try {
-            context = await loadAreasFor(state.venues);
-          } catch (error) {
-            $("error").textContent = String(error.message);
-            $("error").hidden = false;
-            document.body.dataset.ready = "true";
-            return;
-          }
-          if (mine !== drawing) return;
+        document.body.dataset.ready = "false";
+        try {
+          [context] = await Promise.all([contextOn() ? loadAreasFor(state.venues) : undefined, loadVenueDataFor(state.venues)]);
+        } catch (error) {
+          $("error").textContent = String(error.message);
+          $("error").hidden = false;
+          document.body.dataset.ready = "true";
+          return;
         }
+        if (mine !== drawing) return;
         const options = { venues: state.venues, mode: $("mode").value, turn: $("turn").value === "auto" ? "auto" : 0, labels: $("labels").checked, language: $("language").value, ...(masked() ? { outside: { level: state.outside } } : {}), ...(theme === "auto" ? {} : { theme }), ...(context === undefined ? {} : { context }), ...(hasGates() && $("gates").checked ? { gates: true } : {}), ...(hasKodokan() ? { building: $("building").value } : {}), ...(hasKodokan() && floorNow() !== undefined ? { floor: floorNow() } : {}) };
         try {
           const plan = planDistrict(options);
