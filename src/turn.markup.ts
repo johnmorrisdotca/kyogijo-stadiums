@@ -12,6 +12,12 @@ import type { ScoreOptions, SurfaceOptions } from "./types.ts";
 
 const px = (value: number): string => `${Math.round(value * 1000) / 1000}`;
 
+/** The share of its size each layer is made at: one number for all, or one for each (the floor first, then the planes in the model's order). */
+export type Raster = number | readonly number[];
+
+/** The share of the layer at `index` (0 the floor, then the planes). */
+const shareOf = (raster: Raster, index: number): number => (typeof raster === "number" ? raster : (raster[index] ?? 1));
+
 /**
  * The matrix that stands a plane in the scene, before the camera: its x along `u`, its y along `v`, its corner `o`, in pixels from the middle of the scene
  * (`centre`, in feet).
@@ -117,9 +123,10 @@ const turnedAway = (m: readonly number[], side: 1 | -1): boolean => side * (m[0]
 
 /**
  * Work a view out in a container `width` by `height` pixels. With `cull`, the faces of a closed solid that are turned away from the eye (`Plane.cull`) are left out: they have no transform and no place in the stack, and `culled` says
- * which, so that a page need not write them at all; without it every plane is laid out, as a still picture needs.
+ * which, so that a page need not write them at all; without it every plane is laid out, as a still picture needs. `raster` is the share of its size an element is made at (`rasterOf`): each element's matrix widens it back, so that the
+ * picture is the same and the layers hold `raster` squared as many pixels.
  */
-export function layoutOf(model: TurnModel, view: TurnView, width: number, height: number, lens?: number, cull = false): Layout {
+export function layoutOf(model: TurnModel, view: TurnView, width: number, height: number, lens?: number, cull = false, raster: Raster = 1): Layout {
   const distance = eyeDistance(width, height, lens ?? model.lens);
   const at = fit(model.box, { ...view, zoom: 1 }, width, height, distance);
   const camera = cameraMatrix(view, at, distance);
@@ -128,14 +135,21 @@ export function layoutOf(model: TurnModel, view: TurnView, width: number, height
   const known = prepare(model);
   const floor: Plane = { id: "floor", kind: "ground", o: [model.viewBox.x, model.viewBox.y, model.uprights.lift], u: [model.viewBox.w, 0, 0], v: [0, model.viewBox.h, 0], svg: "" };
   const count = model.planes.length;
+  const widen = (m: number[], index: number): number[] => {
+    const share = shareOf(raster, index);
+    if (share === 1) return m;
+    const back = 1 / share;
+    for (let i = 0; i < 8; i += 1) m[i] *= back;
+    return m;
+  };
   const transforms = new Array<string>(count + 1);
   const culled = cull ? new Array<boolean>(count + 1).fill(false) : undefined;
   // A billboard faces the eye at this view.
   const planes = new Array<Plane>(count);
   for (let i = 0; i < count; i += 1) planes[i] = facing(model.planes[i], view.yaw, view.pitch);
-  transforms[0] = matrix3d(multiply(camera, planeMatrix(floor, s, centre)));
+  transforms[0] = matrix3d(widen(multiply(camera, planeMatrix(floor, s, centre)), 0));
   for (let i = 0; i < count; i += 1) {
-    const m = multiply(camera, known.base[i] ?? planeMatrix(planes[i], s, centre));
+    const m = widen(multiply(camera, known.base[i] ?? planeMatrix(planes[i], s, centre)), i + 1);
     const side = planes[i].cull;
     if (culled !== undefined && side !== undefined && turnedAway(m, side)) {
       culled[i + 1] = true;
@@ -179,16 +193,17 @@ export function layoutOf(model: TurnModel, view: TurnView, width: number, height
 }
 
 /** One plane as an element: its box in pixels and the SVG drawn on it in feet. */
-export function planeMarkup(p: Plane, scale: number, transform: string, stack: number, fade = 1): string {
+export function planeMarkup(p: Plane, scale: number, transform: string, stack: number, fade = 1, raster = 1): string {
   const [w, h] = size(p);
-  return `<div class="ky-up ky-up-${p.kind}" data-part="${esc(p.id)}" style="width:${px(w * scale)}px;height:${px(h * scale)}px;transform:${transform};z-index:${stack}${fade < 1 ? `;opacity:${n(fade)}` : ""}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n(w)} ${n(h)}" width="${px(w * scale)}" height="${px(h * scale)}" aria-hidden="true" focusable="false">${p.svg}</svg></div>`;
+  const [bw, bh] = [px(w * scale * raster), px(h * scale * raster)];
+  return `<div class="ky-up ky-up-${p.kind}" data-part="${esc(p.id)}" style="width:${bw}px;height:${bh}px;transform:${transform};z-index:${stack}${fade < 1 ? `;opacity:${n(fade)}` : ""}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n(w)} ${n(h)}" width="${bw}" height="${bh}" aria-hidden="true" focusable="false">${p.svg}</svg></div>`;
 }
 
 /**
  * A plane that is the floor's own drawing seen through its rectangle (`Plane.crop`): the floor's SVG again, its viewBox cut down to the plane's rectangle, in the plane's own box. It is a picture, not a second
  * description: it carries no role, title or description of its own.
  */
-export function cropMarkup(model: TurnModel, p: Plane, transform: string, stack: number, fade = 1): string {
+export function cropMarkup(model: TurnModel, p: Plane, transform: string, stack: number, fade = 1, raster = 1): string {
   const [w, h] = size(p);
   const box = `${px(p.o[0])} ${px(p.o[1])} ${px(w)} ${px(h)}`;
   const picture = model.floor
@@ -198,13 +213,13 @@ export function cropMarkup(model: TurnModel, p: Plane, transform: string, stack:
     .replace(/^<svg([^>]*?)\srole="img"/, '<svg$1 aria-hidden="true"')
     .replace(/^<svg([^>]*?)\saria-labelledby="[^"]*"/, "<svg$1")
     .replace(/<title\b[^>]*>[\s\S]*?<\/title>|<desc\b[^>]*>[\s\S]*?<\/desc>/g, "");
-  return `<div class="ky-up ky-up-${p.kind}" data-part="${esc(p.id)}" data-crop="floor" style="width:${px(w * model.scale)}px;height:${px(h * model.scale)}px;transform:${transform};z-index:${stack}${fade < 1 ? `;opacity:${n(fade)}` : ""}">${picture}</div>`;
+  return `<div class="ky-up ky-up-${p.kind}" data-part="${esc(p.id)}" data-crop="floor" style="width:${px(w * model.scale * raster)}px;height:${px(h * model.scale * raster)}px;transform:${transform};z-index:${stack}${fade < 1 ? `;opacity:${n(fade)}` : ""}">${picture}</div>`;
 }
 
 /** The floor as an element: the flat drawing, in the pixels of the scene. */
-export function floorMarkup(model: TurnModel, transform: string, stack: number): string {
+export function floorMarkup(model: TurnModel, transform: string, stack: number, raster = 1): string {
   const vb = model.viewBox;
-  return `<div class="ky-turn-floor" style="width:${px(vb.w * model.scale)}px;height:${px(vb.h * model.scale)}px;transform:${transform};z-index:${stack}">${model.floor}</div>`;
+  return `<div class="ky-turn-floor"${raster === 1 ? "" : ` data-raster="${raster}"`} style="width:${px(vb.w * model.scale * raster)}px;height:${px(vb.h * model.scale * raster)}px;transform:${transform};z-index:${stack}">${model.floor}</div>`;
 }
 
 /** The patterns the venue's planes are drawn with, once, in a box of no size: every plane's SVG reads them by id, and the crowd's colours are on this element. */
@@ -222,8 +237,8 @@ export function worldAttributes(model: TurnModel): string {
 }
 
 /** The floor and the planes of a model, laid out. */
-export function worldMarkup(model: TurnModel, layout: Layout): string {
-  return defsMarkup(model) + floorMarkup(model, layout.transforms[0], layout.stack[0]) + model.planes.map((p, i) => (p.crop === true ? cropMarkup(model, p, layout.transforms[i + 1], layout.stack[i + 1], layout.fade[i + 1]) : planeMarkup(p, model.scale, layout.transforms[i + 1], layout.stack[i + 1], layout.fade[i + 1]))).join("");
+export function worldMarkup(model: TurnModel, layout: Layout, raster: Raster = 1): string {
+  return defsMarkup(model) + floorMarkup(model, layout.transforms[0], layout.stack[0], shareOf(raster, 0)) + model.planes.map((p, i) => (p.crop === true ? cropMarkup(model, p, layout.transforms[i + 1], layout.stack[i + 1], layout.fade[i + 1], shareOf(raster, i + 1)) : planeMarkup(p, model.scale, layout.transforms[i + 1], layout.stack[i + 1], layout.fade[i + 1], shareOf(raster, i + 1)))).join("");
 }
 
 /** The buttons under the view. */
@@ -251,11 +266,11 @@ export function controlsMarkup(model: TurnModel, view: TurnView, playing = false
 export const sizeOf = (settings: TurnSettings): { width: number; height: number } => settings.size ?? { width: 960, height: 600 };
 
 /** The 3D view of a model as markup, laid out for `settings.size`; a page's script then makes it turn. */
-export function turnMarkupOf(model: TurnModel, settings: TurnSettings = {}): string {
+export function turnMarkupOf(model: TurnModel, settings: TurnSettings = {}, raster: Raster = 1): string {
   const words = turnWords(model);
   const { width, height } = sizeOf(settings);
   const view = model.view;
-  const layout = layoutOf(model, view, width, height, settings.lens);
+  const layout = layoutOf(model, view, width, height, settings.lens, false, raster);
   const keys = `${words.keys}${model.standing === "" ? "" : ` ${model.standing}`}`;
   const sheet = (model.options as SurfaceOptions).style === "none" ? "" : `<style>${KYOGIJO_TURN_STYLE}</style>`;
   const theme = (model.options as SurfaceOptions).theme;
@@ -263,7 +278,7 @@ export function turnMarkupOf(model: TurnModel, settings: TurnSettings = {}): str
   return (
     `<div class="ky-turn" id="${esc(model.id)}" data-sport="${esc(String(sport))}" data-mode="3d" data-touch="${settings.touch === "turn" ? "turn" : "scroll"}" data-preset="${presetOf(view, model.presets ?? sport) ?? "custom"}"${model.lighting === undefined ? "" : ` data-lighting="${model.lighting}"`}${theme === "light" || theme === "dark" ? ` data-theme="${theme}"` : ""} lang="${model.language}">` +
     sheet +
-    `<div class="ky-turn-view" tabindex="0" role="group" aria-roledescription="${esc(words.region)}" aria-label="${esc(model.title)}" aria-describedby="${esc(model.id)}-help" aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown + - 0 1 2 3 4 Home Space"><div ${worldAttributes(model)}>${worldMarkup(model, layout)}</div>${model.board === undefined ? "" : turnBoardMarkup(model.board)}</div>` +
+    `<div class="ky-turn-view" tabindex="0" role="group" aria-roledescription="${esc(words.region)}" aria-label="${esc(model.title)}" aria-describedby="${esc(model.id)}-help" aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown + - 0 1 2 3 4 Home Space"><div ${worldAttributes(model)}>${worldMarkup(model, layout, raster)}</div>${model.board === undefined ? "" : turnBoardMarkup(model.board)}</div>` +
     `<p class="ky-turn-help" id="${esc(model.id)}-help">${esc(keys)}</p>` +
     (settings.controls === false ? "" : controlsMarkup(model, view, false, turnDirection(settings.direction))) +
     `<div class="ky-turn-live" role="status" aria-live="polite"></div>` +

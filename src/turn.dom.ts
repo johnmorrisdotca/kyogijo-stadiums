@@ -5,13 +5,15 @@
 import { drawKyogijo } from "./draw.ts";
 import { STEP, TURN_PRESET_NAMES, clampView, drag, nearest, nudge, presetOf, presetView, step, turnDirection, wheelTip, type PresetTable, type TurnDirection, type TurnPreset, type TurnView } from "./turn.camera.ts";
 import { buildTurn, floorOptions, openingView, turnWords, type TurnModel, type TurnSettings } from "./turn.model.ts";
-import { controlsMarkup, layoutOf, turnMarkupOf, worldMarkup, type Layout } from "./turn.markup.ts";
+import { controlsMarkup, layoutOf, turnMarkupOf, worldMarkup, type Layout, type Raster } from "./turn.markup.ts";
 import { KYOGIJO_TURN_STYLE } from "./turn.style.ts";
 import { esc } from "./format.ts";
 import { turnBoardMarkup } from "./overlay.ts";
 import type { ScoreOptions, SurfaceOptions } from "./types.ts";
 import type { VenueSettings } from "./venue.ts";
 import { attachOutside3d, type OutsideLayer } from "./outside.dom.ts";
+import { TIER_PROFILES, createGovernor, handheld, layerBudget, qualityOf, rasterOf, rasterShares, tierOf, type Governor, type Quality, type QualityTier } from "./quality.ts";
+import { size } from "./turn.kit.ts";
 import type { OutsideLevel } from "./outside.paint.ts";
 
 /** What `mountKyogijoTurn` gives back. `O` is what `update` takes: the options of a drawing, or (for `mountMultiTurn`) of a tournament layout. */
@@ -47,6 +49,12 @@ export interface KyogijoTurn<O = SurfaceOptions | ScoreOptions> {
   setOutside?(level: OutsideLevel): void;
   /** What the crowd outside's last paint cost, in milliseconds, how many people it drew and how (`dots` or `density`), or `undefined` where there is no crowd or it has not been drawn. */
   outsideCost?(): { ms: number; people: number; mode: string; pixels: number } | undefined;
+  /** What the view was asked to draw: `auto`, or the tier it is held at. */
+  readonly quality: Quality;
+  /** The tier the view is drawn at now: what `quality` says, and for `auto` the one the frames have led it to (`high` at first). */
+  readonly tier: QualityTier;
+  /** Change what the view is asked to draw: a tier is taken at once, `auto` goes on from the tier it is at. The camera and the auto-turn are not touched. */
+  setQuality(quality: Quality): void;
   /** The flat drawing that is the floor, or `null` after `destroy`. */
   svg(): SVGSVGElement | null;
   /** Stop listening and empty the container. */
@@ -89,7 +97,30 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
   const win = doc.defaultView;
   /** The venue's settings as they are now: the mounted ones, altered by `update`. */
   let venue: boolean | VenueSettings | undefined = settings.venue;
-  let model: TurnModel = build(options, settings);
+  // How much is drawn: what was asked, and the tier it is drawn at (`auto` starts on `high` and is moved by the frames the view makes while it turns).
+  let quality: Quality = qualityOf(settings.quality);
+  let tier: QualityTier = tierOf(quality);
+  // (Set again below, once the model is built, for a view that has no tiers.)
+  const isHandheld = handheld(win);
+  /** The share of its size each layer is made at for a model, now: one number when they all are, one each when the biggest are held to a budget of pixels. */
+  const rasterFor = (of: TurnModel): Raster => {
+    // (Only a model that has tiers is made smaller: a surface on its own is small, and nothing of it would be left out.)
+    if (of.tiered !== true) return 1;
+    const dpr = win?.devicePixelRatio ?? 1;
+    const share = rasterOf(quality, tier, dpr, isHandheld);
+    const budget = layerBudget(tier, isHandheld);
+    if (share === 1 && budget === Infinity) return 1;
+    const boxes: (readonly [number, number])[] = [[of.viewBox.w * of.scale, of.viewBox.h * of.scale], ...of.planes.map((p): readonly [number, number] => { const [w, h] = size(p); return [w * of.scale, h * of.scale]; })];
+    return rasterShares(boxes, share, dpr, budget);
+  };
+  const sameRaster = (a: Raster, b: Raster): boolean => (typeof a === "number" || typeof b === "number" ? a === b : a.length === b.length && a.every((x, i) => x === b[i]));
+  let current = options;
+  let model: TurnModel = build(options, { ...settings, quality: tier });
+  if (model.tiered !== true) tier = "high";
+  let raster: Raster = rasterFor(model);
+  /** The models built at each tier for the options now, so that a step back to a tier is not built again. */
+  let made = new Map<QualityTier, TurnModel>([[tier, model]]);
+  const baseId = model.id;
   /** What names the four viewpoints: the model's own table (a tournament layout has one), else the sport's. */
   const sport = (): string | PresetTable | undefined => model.presets ?? (model.options as SurfaceOptions).sport;
   const supported = turnSupported(win ?? undefined) && model.turnable;
@@ -113,6 +144,9 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
       direction: () => turnDirection(settings.direction),
       setDirection: () => undefined,
       togglePlay: () => false,
+      quality: qualityOf(settings.quality),
+      tier: tierOf(settings.quality),
+      setQuality: () => undefined,
       update: (next, change) => {
         if (change?.venue !== undefined) venue = { ...(typeof venue === "object" ? venue : {}), ...change.venue };
         model = build(next, { ...settings, id: settings.id ?? model.id, venue });
@@ -126,7 +160,7 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
     };
   }
 
-  host.innerHTML = turnMarkupOf(model, settings);
+  host.innerHTML = turnMarkupOf(model, settings, raster);
   const root = host.querySelector<HTMLElement>(".ky-turn")!;
   const stage = root.querySelector<HTMLElement>(".ky-turn-view")!;
   const live = root.querySelector<HTMLElement>(".ky-turn-live")!;
@@ -169,8 +203,103 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
     outside?.destroy();
     const floor = stage.querySelector<HTMLElement>(".ky-turn-floor");
     outside = model.outside === undefined || floor === null ? undefined : attachOutside3d(floor, model.outside);
+    outside?.setDetail(TIER_PROFILES[tier].outside);
   };
   crowd();
+  root.dataset.quality = quality;
+  root.dataset.tier = tier;
+
+  // ---- Quality: in `auto`, the frames the view makes while it turns decide the tier. ----
+  let governor: Governor | undefined = quality === "auto" && win !== null && model.tiered === true ? createGovernor(tier, settings.qualityTuning) : undefined;
+  let meterFrame: number | undefined;
+  let lastStamp: number | undefined;
+  let lastPaint = 0;
+  /** The display's own interval, measured once with nothing else going on: an idle loop of frames a moment after the mount (the lower decile of their intervals, so that a busy moment does not count). */
+  let probe: number | undefined;
+  let displayMs: number | undefined;
+  const probeDisplay = (): void => {
+    if (win === null || probe !== undefined || displayMs !== undefined) return;
+    const found: number[] = [];
+    let before: number | undefined;
+    const step = (stamp: number): void => {
+      probe = undefined;
+      if (!alive || win === null) return;
+      if (doc.hidden === true) {
+        // Hidden: start over when it can be seen.
+        found.length = 0;
+        before = undefined;
+        probe = win.setTimeout(() => (probe = win.requestAnimationFrame(step)), 400);
+        return;
+      }
+      if (before !== undefined) found.push(stamp - before);
+      before = stamp;
+      if (found.length < 24) probe = win.requestAnimationFrame(step);
+      else {
+        displayMs = [...found].sort((a, b) => a - b)[Math.floor(found.length * 0.1)];
+        governor?.display(displayMs);
+      }
+    };
+    probe = win.setTimeout(() => (probe = win.requestAnimationFrame(step)), 350);
+  };
+  const stopMeter = (): void => {
+    if (meterFrame !== undefined) win?.cancelAnimationFrame(meterFrame);
+    meterFrame = undefined;
+    lastStamp = undefined;
+  };
+  if (governor !== undefined) probeDisplay();
+  /** The loop that times the frames: it runs while the view is being painted and for a third of a second after, and does nothing while the view is still. */
+  const meterTick = (stamp: number): void => {
+    meterFrame = undefined;
+    if (!alive || governor === undefined || win === null) return;
+    if (doc.hidden === true || stamp - lastPaint > 300) {
+      lastStamp = undefined;
+      governor.pause();
+      return;
+    }
+    const next = lastStamp === undefined ? undefined : governor.frame(stamp - lastStamp, stamp);
+    lastStamp = next === undefined ? stamp : undefined;
+    // (A step draws the view again, which asks for the loop itself: only one is ever running.)
+    if (next !== undefined) retier(next);
+    if (meterFrame === undefined) meterFrame = win.requestAnimationFrame(meterTick);
+  };
+  /** The view was painted: the frames are timed from now until it is still. */
+  const touched = (): void => {
+    if (governor === undefined || win === null) return;
+    lastPaint = win.performance.now();
+    if (meterFrame === undefined) meterFrame = win.requestAnimationFrame(meterTick);
+  };
+  /** Draw the world again, from the model of the tier and the options now: the camera, the auto-turn and the pointer are not touched (the elements are the only thing replaced). */
+  const renderWorld = (): void => {
+    const known = made.get(tier);
+    model = known ?? build(current, { ...settings, quality: tier, id: settings.id ?? baseId, venue, preset: undefined, view });
+    made.set(tier, model);
+    raster = rasterFor(model);
+    const layout = layoutOf(model, shown, stage.clientWidth || 960, stage.clientHeight || 600, settings.lens, false, raster);
+    const world = root.querySelector<HTMLElement>(".ky-turn-world")!;
+    world.innerHTML = worldMarkup(model, layout, raster);
+    // The look the floor is painted in (and the theme) are attributes of the world.
+    for (const name of ["data-sport", "data-look", "data-theme"]) world.removeAttribute(name);
+    world.className = model.look === undefined ? "ky-turn-world" : "ky-turn-world kyogijo";
+    if (model.look !== undefined) {
+      world.setAttribute("data-sport", model.look.sport);
+      world.setAttribute("data-look", model.look.look);
+      const forced = (model.options as SurfaceOptions).theme;
+      if (forced === "light" || forced === "dark") world.setAttribute("data-theme", forced);
+    }
+    gather();
+    crowd();
+    root.dataset.quality = quality;
+    root.dataset.tier = tier;
+  };
+  /** The governor stepped: draw at the new tier. */
+  const retier = (next: QualityTier): void => {
+    if (next === tier) return;
+    tier = next;
+    renderWorld();
+    paint(shown);
+    label();
+    settings.onQualityChange?.(tier, quality);
+  };
 
   const buttons = (): NodeListOf<HTMLButtonElement> => root.querySelectorAll<HTMLButtonElement>("button[data-preset]");
   /** The Play button says what it is and what it does: pressed while the view turns. */
@@ -187,7 +316,7 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
   const paint = (now: TurnView): void => {
     const width = stage.clientWidth || 960;
     const height = stage.clientHeight || 600;
-    const layout: Layout = layoutOf(model, now, width, height, settings.lens, true);
+    const layout: Layout = layoutOf(model, now, width, height, settings.lens, true, raster);
     outside?.zoom(now.zoom);
     const culled = layout.culled;
     elements.forEach((one, i) => {
@@ -204,6 +333,7 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
       const o = layout.fade[i] < 1 ? String(layout.fade[i]) : "";
       if (faded[i] !== o) one.style.opacity = faded[i] = o;
     });
+    touched();
   };
   const label = (): void => {
     const here = presetOf(view, sport());
@@ -499,23 +629,11 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
     update(next, change) {
       if (!alive) return;
       if (change?.venue !== undefined) venue = { ...(typeof venue === "object" ? venue : {}), ...change.venue };
-      model = build(next, { ...settings, id: settings.id ?? model.id, venue, preset: undefined, view });
+      current = next;
+      made = new Map();
       view = clampView(view);
+      renderWorld();
       opening = openingView(settings, sport());
-      const layout = layoutOf(model, shown, stage.clientWidth || 960, stage.clientHeight || 600, settings.lens);
-      const world = root.querySelector<HTMLElement>(".ky-turn-world")!;
-      world.innerHTML = worldMarkup(model, layout);
-      // The look the floor is painted in (and the theme) are attributes of the world.
-      for (const name of ["data-sport", "data-look", "data-theme"]) world.removeAttribute(name);
-      world.className = model.look === undefined ? "ky-turn-world" : "ky-turn-world kyogijo";
-      if (model.look !== undefined) {
-        world.setAttribute("data-sport", model.look.sport);
-        world.setAttribute("data-look", model.look.look);
-        const forced = (model.options as SurfaceOptions).theme;
-        if (forced === "light" || forced === "dark") world.setAttribute("data-theme", forced);
-      }
-      gather();
-      crowd();
       // The board is a layer of its own over the view, after the scene: it is written again, and the view's turn is not touched.
       stage.querySelector(".ky-turn-board")?.remove();
       if (model.board !== undefined) stage.insertAdjacentHTML("beforeend", turnBoardMarkup(model.board));
@@ -534,6 +652,40 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
     },
     get playing() {
       return playing;
+    },
+    get quality() {
+      return quality;
+    },
+    get tier() {
+      return tier;
+    },
+    setQuality(asked) {
+      if (!alive) return;
+      quality = qualityOf(asked, quality);
+      const was = tier;
+      if (model.tiered !== true) {
+        // A view that has no tiers draws as it does whatever is asked: the question is kept, and answered `high`.
+        governor = undefined;
+        stopMeter();
+        tier = "high";
+      } else if (quality === "auto") {
+        stopMeter();
+        governor = win === null ? undefined : createGovernor(tier, settings.qualityTuning);
+        if (displayMs !== undefined) governor?.display(displayMs);
+        else probeDisplay();
+      } else {
+        governor = undefined;
+        stopMeter();
+        tier = quality;
+      }
+      root.dataset.quality = quality;
+      // The tier, or the share its layers are made at, has changed: the world is drawn again (the shares are worked out for the model of the tier, in `renderWorld`).
+      if (tier !== was || !sameRaster(rasterFor(model), raster)) {
+        renderWorld();
+        paint(shown);
+        label();
+      }
+      settings.onQualityChange?.(tier, quality);
     },
     play() {
       setPlaying(true);
@@ -565,6 +717,7 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
       outside?.destroy();
       stop();
       stopTick();
+      stopMeter();
       seen?.disconnect();
       doc.removeEventListener("visibilitychange", onVisible);
       clearTimeout(spoken);

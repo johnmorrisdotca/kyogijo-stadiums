@@ -17,6 +17,8 @@ export interface OutsideLayer {
   /** The level shown. */
   readonly level: OutsideLevel;
   setLevel(level: OutsideLevel): void;
+  /** How much of the crowd a quality tier draws: the share of the people (0 hides the canvas) and the share of the usual width of the canvas. Painted again when it changes. */
+  setDetail(detail: { people: number; width: number }): void;
   /** The 3D view's zoom: a near view is painted finer (its people discs, not density). The paint is redone only when the zoom crosses `NEAR`. */
   zoom(zoom: number): void;
   /** What the last paint cost, in milliseconds, and drew: `undefined` before the first. */
@@ -60,6 +62,7 @@ function watchTheme(doc: Document, change: () => void): () => void {
 function layerOf(canvas: HTMLCanvasElement, spec: OutsideSpec, colourFrom: () => Element, size: () => number): OutsideLayer & { repaint(force?: boolean): void; zoomTier: number } {
   const doc = canvas.ownerDocument;
   let level = spec.level;
+  let detail = { people: 1, width: 1 };
   let ink = inkOf(colourFrom());
   let drawn = "";
   let alive = true;
@@ -83,10 +86,16 @@ function layerOf(canvas: HTMLCanvasElement, spec: OutsideSpec, colourFrom: () =>
       layer.zoomTier = tier;
       layer.repaint();
     },
+    setDetail(next: { people: number; width: number }) {
+      if (next.people === detail.people && next.width === detail.width) return;
+      detail = next;
+      layer.repaint();
+    },
     repaint(force = false) {
       if (!alive) return;
-      const width = Math.min(MAX_WIDE, Math.max(1, Math.round(size())));
-      if (level === 0) {
+      const width = Math.min(MAX_WIDE, Math.max(1, Math.round(size() * detail.width)));
+      const shown = (Math.round(level * detail.people) as OutsideLevel);
+      if (level === 0 || shown === 0) {
         // Nobody: the canvas is made one pixel, so that it holds no memory.
         if (canvas.width !== 1 || canvas.height !== 1) {
           canvas.width = 1;
@@ -100,10 +109,10 @@ function layerOf(canvas: HTMLCanvasElement, spec: OutsideSpec, colourFrom: () =>
       if (crowd === undefined) return;
       canvas.hidden = false;
       const frame = frameOf(spec.viewBox, width);
-      const key = `${level}|${frame.width}x${frame.height}|${ink.join(",")}`;
+      const key = `${shown}|${frame.width}x${frame.height}|${ink.join(",")}`;
       if (!force && key === drawn) return;
       const started = performance.now();
-      const { rgba, stats } = rasterOutside(crowd, level, frame, ink);
+      const { rgba, stats } = rasterOutside(crowd, shown, frame, ink);
       if (canvas.width !== frame.width || canvas.height !== frame.height) {
         canvas.width = frame.width;
         canvas.height = frame.height;
@@ -150,7 +159,7 @@ export function attachOutside3d(floor: HTMLElement, spec: OutsideSpec, prefetchC
   canvas.setAttribute("data-outside", String(spec.level));
   canvas.style.cssText = "position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none";
   floor.append(canvas);
-  const layer = layerOf(canvas, spec, () => floor.querySelector(".ky-district") ?? floor, () => (parseFloat(floor.style.width) || floor.clientWidth || 1400) * (layer.zoomTier === 1 ? 2.4 : 1.4));
+  const layer = layerOf(canvas, spec, () => floor.querySelector(".ky-district") ?? floor, () => ((parseFloat(floor.style.width) || floor.clientWidth || 1400) / (parseFloat(floor.dataset.raster ?? "") || 1)) * (layer.zoomTier === 1 ? 2.4 : 1.4));
   const set = layer.setLevel;
   layer.setLevel = (next) => {
     canvas.setAttribute("data-outside", String(next));
