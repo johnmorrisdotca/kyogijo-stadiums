@@ -7,6 +7,8 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.45.2] - 2026-10-30
+
 ### Changed
 
 - **The 3D view of a district makes its layers as fine as the screen shows them, and no finer: a phone holds a sixteenth of the pixels.** The scene is made 1,400 pixels across and every plane was a layer as fine as that, whatever the screen: a phone shows the scene a sixth of that size, so its layers were five times finer than anything it could draw, and at a ratio of 3 the Kodokan's building alone was 713 megabytes of layers (each floor a layer of 1,114 by 1,186 pixels), which is what an iPhone's browser could not keep (SPX-699). The view now works out the share of its size a layer needs from the scale that fits the scene in its box (at any tip of the view), the zoom, and a margin of a quarter for the perspective, and rounds it up to 0.25, 0.4, 0.6 or 1 (`viewShare`, `viewScale`, `SHARE_LEVELS`; docs/quality.md, "The pixels of the layers"). It holds for every tier, `high` asked for by name too; the 3D view of a single surface is not changed. The Kodokan alone on a phone is made at 0.25 (a sixteenth of the pixels). The floor, which is one layer and holds the thinnest lines of the view, is made at 0.6 at least (`FLOOR_SHARE`), because a one-pixel line such as the north arrow shows steps in Chromium when its layer is made a quarter as fine.
