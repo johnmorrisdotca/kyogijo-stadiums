@@ -342,6 +342,7 @@
     "arenas:check": "node scripts/check-arenas.mjs",
     "venues": "node scripts/build-venues.mjs",
     "venues:fetch": "node scripts/fetch-venues.mjs",
+    "venues:rink": "node scripts/fetch-rink-evidence.mjs",
     "stadiums": "node scripts/build-stadiums.mjs",
     "stadiums:fetch": "node scripts/fetch-stadiums.mjs",
     "walk": "node scripts/build-walk.mjs",

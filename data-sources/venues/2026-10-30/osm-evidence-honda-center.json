@@ -1,0 +1,15 @@
+{
+ "read": "2026-10-30",
+ "licence": "ODbL 1.0, (c) OpenStreetMap contributors, openstreetmap.org/copyright",
+ "gateway": "https://lambert.openstreetmap.de/api/interpreter",
+ "query": "[out:json][timeout:60];(nwr(around:260,33.80778,-117.87667)[\"indoor\"];nwr(around:260,33.80778,-117.87667)[\"sport\"];nwr(around:260,33.80778,-117.87667)[\"leisure\"~\"pitch|ice_rink|sports_centre|stadium|track\"];nwr(around:260,33.80778,-117.87667)[\"building:part\"];nwr(around:260,33.80778,-117.87667)[\"name\"~\"ice|rink|court|floor|bowl\",i];nwr(around:260,33.80778,-117.87667)[\"man_made\"~\"scoreboard\"];);out geom tags;",
+ "osmBase": "2026-10-30T18:51:04Z",
+ "wikidata": "Q774138",
+ "dropped": {
+  "building:part": 0,
+  "why": "a building part with no sport, leisure, indoor or rink-like name says nothing about a rink; dropped after the answer came, to keep the file small"
+ },
+ "elements": [
+ {"type":"way","id":120623151,"bounds":{"minlat":33.8073364,"minlon":-117.8773044,"maxlat":33.8083138,"maxlon":-117.8757655},"geometry":[{"lat":33.807656,"lon":-117.8772618},{"lat":33.8074479,"lon":-117.8772607},{"lat":33.807448,"lon":-117.8772221},{"lat":33.8074255,"lon":-117.8772143},{"lat":33.8074077,"lon":-117.8771931},{"lat":33.807401,"lon":-117.8771599},{"lat":33.807371,"lon":-117.8771547},{"lat":33.8073718,"lon":-117.8769225},{"lat":33.8073364,"lon":-117.8769366},{"lat":33.8073411,"lon":-117.8761188},{"lat":33.8073746,"lon":-117.8761431},{"lat":33.8073755,"lon":-117.8759029},{"lat":33.8074182,"lon":-117.8759032},{"lat":33.8074256,"lon":-117.8758817},{"lat":33.8074389,"lon":-117.8758636},{"lat":33.8074611,"lon":-117.8758557},{"lat":33.8074633,"lon":-117.8758045},{"lat":33.8076737,"lon":-117.8758053},{"lat":33.8076593,"lon":-117.8757655},{"lat":33.8080334,"lon":-117.875767},{"lat":33.8080115,"lon":-117.8758065},{"lat":33.8081909,"lon":-117.8758071},{"lat":33.8081902,"lon":-117.8758564},{"lat":33.8082157,"lon":-117.8758681},{"lat":33.808229,"lon":-117.8758893},{"lat":33.8082356,"lon":-117.8759121},{"lat":33.8082695,"lon":-117.8759157},{"lat":33.8082692,"lon":-117.8761426},{"lat":33.808312,"lon":-117.8761288},{"lat":33.8083138,"lon":-117.8769464},{"lat":33.808268,"lon":-117.8769248},{"lat":33.8082676,"lon":-117.8771629},{"lat":33.8082271,"lon":-117.8771639},{"lat":33.808226,"lon":-117.8771819},{"lat":33.8082077,"lon":-117.87721},{"lat":33.8081832,"lon":-117.8772144},{"lat":33.8081823,"lon":-117.8772646},{"lat":33.8079894,"lon":-117.8772636},{"lat":33.808005,"lon":-117.8773044},{"lat":33.807635,"lon":-117.8772987},{"lat":33.807656,"lon":-117.8772618}],"tags":{"addr:city":"Anaheim","addr:housenumber":"2695","addr:postcode":"92806","addr:state":"CA","addr:street":"East Katella Avenue","building":"arena","ele":"50","gnis:feature_id":"2126156","leisure":"stadium","name":"Honda Center","name:uk":"Хонда-центр","old_name":"The Pond","sport":"skating","start_date":"1993","toilets:wheelchair":"yes","wheelchair":"yes","wikidata":"Q774138","wikipedia":"en:Honda Center"}}
+ ]
+}

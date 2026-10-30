@@ -1,0 +1,207 @@
+{
+ "read": "2026-10-30",
+ "wikipedia": "the article read in full (English Wikipedia, 2026-10-30): no sentence gives the compass direction of the rink or of the floor",
+ "commons": "the arena's category and its sub-categories on Wikimedia Commons, one level down, looked through by title and description for a stated direction of the ice, of the floor or of a camera looking along it, and for an aerial of an open roof: none states one (photographs are looked at as evidence and never copied)",
+ "venues": {
+  "honda-center": {
+   "commons": {
+    "category": "Honda Center",
+    "files": 362
+   }
+  },
+  "scotiabank-saddledome": {
+   "commons": {
+    "category": "Scotiabank Saddledome",
+    "files": 123
+   },
+   "photographs": "eight photographs looked at, three taken from known places fix the roof's line at 60 degrees (see below); none shows the ice",
+   "changed": "the roof's line is recorded (60 degrees); the rink is still not known"
+  },
+  "rogers-place": {
+   "commons": {
+    "category": "Rogers Place",
+    "files": 192
+   }
+  },
+  "crypto-com-arena": {
+   "commons": {
+    "category": "Crypto.com Arena",
+    "files": 163
+   }
+  },
+  "sap-center": {
+   "commons": {
+    "category": "SAP Center",
+    "files": 57
+   }
+  },
+  "climate-pledge-arena": {
+   "commons": {
+    "category": "Climate Pledge Arena",
+    "files": 148
+   }
+  },
+  "rogers-arena": {
+   "commons": {
+    "category": "Rogers Arena",
+    "files": 40
+   }
+  },
+  "t-mobile-arena": {
+   "commons": {
+    "category": "T-Mobile Arena",
+    "files": 420
+   }
+  },
+  "united-center": {
+   "commons": {
+    "category": "United Center",
+    "files": 119
+   }
+  },
+  "ball-arena": {
+   "commons": {
+    "category": "Ball Arena",
+    "files": 173
+   }
+  },
+  "american-airlines-center": {
+   "commons": {
+    "category": "American Airlines Center",
+    "files": 593
+   }
+  },
+  "grand-casino-arena": {
+   "commons": {
+    "category": "Xcel Energy Center",
+    "files": 26
+   }
+  },
+  "bridgestone-arena": {
+   "commons": {
+    "category": "Bridgestone Arena",
+    "files": 603
+   },
+   "wikipedia": "the theatre layout puts the stage \"at the north end of the arena floor\": the floor lies roughly north-south; the building's 156 degrees agrees within 24, and the sentence gives no bearing",
+   "changed": "no: stays inferred (a point of the compass is not a heading)"
+  },
+  "enterprise-center": {
+   "commons": {
+    "category": "Enterprise Center",
+    "files": 481
+   }
+  },
+  "delta-center": {
+   "commons": {
+    "category": "Delta Center",
+    "files": 77
+   }
+  },
+  "canada-life-centre": {
+   "commons": {
+    "category": "Canada Life Centre",
+    "files": 17
+   }
+  },
+  "td-garden": {
+   "commons": {
+    "category": "TD Garden",
+    "files": 200
+   },
+   "changed": "no: mapped before",
+   "photographs": "the parquet floor mapped inside lies along the ice's direction"
+  },
+  "keybank-center": {
+   "commons": {
+    "category": "KeyBank Center",
+    "files": 56
+   }
+  },
+  "little-caesars-arena": {
+   "commons": {
+    "category": "Little Caesars Arena",
+    "files": 279
+   }
+  },
+  "amerant-bank-arena": {
+   "commons": {
+    "category": "Amerant Bank Arena",
+    "files": 38
+   }
+  },
+  "bell-centre": {
+   "commons": {
+    "category": "Bell Centre",
+    "files": 212
+   }
+  },
+  "canadian-tire-centre": {
+   "commons": {
+    "category": "Canadian Tire Centre",
+    "files": 98
+   }
+  },
+  "benchmark-international-arena": {
+   "commons": {
+    "category": "Benchmark International Arena",
+    "files": 366
+   }
+  },
+  "scotiabank-arena": {
+   "commons": {
+    "category": "Scotiabank Arena",
+    "files": 196
+   }
+  },
+  "lenovo-center": {
+   "commons": {
+    "category": "Lenovo Center",
+    "files": 445
+   }
+  },
+  "nationwide-arena": {
+   "commons": {
+    "category": "Nationwide Arena",
+    "files": 105
+   }
+  },
+  "prudential-center": {
+   "commons": {
+    "category": "Prudential Center",
+    "files": 56
+   }
+  },
+  "ubs-arena": {
+   "commons": {
+    "category": "UBS Arena",
+    "files": 60
+   }
+  },
+  "madison-square-garden": {
+   "commons": {
+    "category": "Madison Square Garden",
+    "files": 354
+   }
+  },
+  "xfinity-mobile-arena": {
+   "commons": {
+    "category": "Xfinity Mobile Arena",
+    "files": 547
+   },
+   "changed": "no: mapped before"
+  },
+  "ppg-paints-arena": {
+   "commons": {
+    "category": "PPG Paints Arena",
+    "files": 629
+   },
+   "changed": "no: mapped before"
+  },
+  "capital-one-arena": {
+   "commons": {
+    "category": "Capital One Arena",
+    "files": 160
+   }
+  }
+ }
+}

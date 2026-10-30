@@ -49,6 +49,29 @@ describe("the real venues' files", () => {
     }
   });
 
+  it("keep what was looked at to show how each rink lies: a sweep of OpenStreetMap for every arena, dated, with the ice it finds the one the venue holds, and a line for each arena in the docs", () => {
+    const rink = JSON.parse(readFileSync("scripts/venues.rink.json", "utf8"));
+    expect(rink.read).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(Object.keys(rink.venues).sort()).toEqual([...VENUE_IDS].sort());
+    const page = readFileSync("docs/venues.md", "utf8");
+    const table = page.slice(page.indexOf("<!-- rink-table -->"), page.indexOf("<!-- /rink-table -->"));
+    for (const v of venues) {
+      const raw = JSON.parse(readFileSync(`data-sources/venues/${rink.read}/osm-evidence-${v.id}.json`, "utf8"));
+      expect(raw.wikidata, v.id).toBe(v.wikidata);
+      expect(raw.licence, v.id).toContain("ODbL");
+      expect(raw.query, v.id).toContain("around:260");
+      expect(rink.venues[v.id].commons.files, v.id).toBeGreaterThan(-1);
+      expect(table, v.id).toContain(`\`${v.id}\``);
+      // A rink OpenStreetMap maps is one the sweep finds again, and no sweep finds one the venue does not hold.
+      const ice = raw.elements.filter((e) => `${e.type}/${e.id}` === v.osm.ice?.source);
+      expect(ice.length, v.id).toBe(v.osm.ice === undefined ? 0 : 1);
+      expect(table.split("\n").find((line) => line.startsWith(`| \`${v.id}\``)), v.id).toContain(v.osm.ice === undefined ? "no ice" : `ice ${v.osm.ice.source}`);
+    }
+    // Three are mapped, and the page says what the reading changed: nothing about any rink's direction.
+    expect(venues.filter((v) => v.osm.axis.basis === "mapped").map((v) => v.id)).toEqual(["td-garden", "xfinity-mobile-arena", "ppg-paints-arena"]);
+    expect(page).toContain("**no arena changed its basis.**");
+  });
+
   it("have a docs page that lists every venue with its facts, carries the credit and the licence, and is in the docs' lists", () => {
     const page = readFileSync("docs/venues.md", "utf8");
     for (const v of venues) {

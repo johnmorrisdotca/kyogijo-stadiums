@@ -76,6 +76,55 @@ Made by `pnpm venues` from `scripts/venues.data.json` and the files of `data-sou
 | `capital-one-arena` | Capital One Arena | Metropolitan | Washington, United States | Q223240 | 18,573 (Wikipedia; Wikidata's capacity 20,674) | 2, plausible | fixed, plausible | not known | way 48041466, 18,700 m² |
 <!-- /venues-table -->
 
+## How each rink's direction is known
+
+A rink's direction is one of three things (`VenueOrientation.basis`): **mapped**, the ice OpenStreetMap maps inside the building (TD Garden, Xfinity Mobile Arena, PPG Paints Arena); **inferred**, the long axis of the building's main hall, which a rink usually follows but which no source says; or **not known**, a building with no direction, drawn east-west with north at the top. Only a source that shows the rink makes it mapped.
+
+On 2026-10-30 (SPX-645) each of the thirty-two was looked at again for anything better, from open sources only, and nothing was taken from a team's or a ticket seller's seat map:
+
+- **OpenStreetMap**, every sports, indoor, building-part, stadium, pitch and rink feature within 260 metres of the arena (`pnpm venues:rink`, the answers in `data-sources/venues/2026-10-30/`; a building part with no sport, indoor tag or rink-like name is left out of each file and the count, and the file says how many). An ice, or a basketball court (which lies as the rink does, on the one floor), inside the building. Only the three already mapped have one: TD Garden's parquet floor lies along its ice, and no other arena has a court or a rink mapped inside. `pnpm venues` fails if a later sweep finds an ice the first read did not hold.
+- **English Wikipedia**, each article read in full for a sentence that gives the compass direction of the rink or the floor. One speaks of a direction: the Bridgestone Arena's theatre layout puts its stage "at the north end of the arena floor". That says the floor lies roughly north-south, which the building's inferred 156 degrees agrees with; it gives no bearing, so the arena stays inferred.
+- **Wikimedia Commons**, each arena's category and sub-categories (as many files as the table says), looked through by title and description for a stated direction of the ice, of the floor, or of a camera looking along it, and for an aerial photograph of an open roof. None states one. Photographs are looked at as evidence and never copied or redistributed; a photograph with a licence the package could not credit is not used at all.
+
+The result: **no arena changed its basis.** Twenty-nine stay inferred or not known, and each says so in the table above and on the demo's venues page. Where a source later shows a rink (a mapped ice, a photograph of the ice taken from a place and a direction the photograph states, or an article's bearing), the arena's record in `scripts/venues.data.json` takes that source and its basis becomes mapped.
+
+<!-- rink-table -->
+| Key | How the rink lies in the drawing | OpenStreetMap, read 2026-10-30 | English Wikipedia | Wikimedia Commons | Changed by this reading |
+| --- | --- | --- | --- | --- | --- |
+| `honda-center` | inferred: from the building's long axis, 90° | 1 feature; no ice, no court | no direction given | 362 files of "Honda Center" | no |
+| `scotiabank-saddledome` | not known: drawn east-west, north at the top | 6 features; no ice, no court | no direction given | 123 files of "Scotiabank Saddledome"; eight photographs looked at, three taken from known places fix the roof's line at 60 degrees (see below); none shows the ice | the roof's line is recorded (60 degrees); the rink is still not known |
+| `rogers-place` | inferred: from the building's long axis, 93° | 17 features; no ice, no court | no direction given | 192 files of "Rogers Place" | no |
+| `crypto-com-arena` | not known: drawn east-west, north at the top | 18 features; no ice, no court | no direction given | 163 files of "Crypto.com Arena" | no |
+| `sap-center` | not known: drawn east-west, north at the top | 3 features; no ice, no court | no direction given | 57 files of "SAP Center" | no |
+| `climate-pledge-arena` | inferred: from the building's long axis, 0° | 9 features; no ice, no court | no direction given | 148 files of "Climate Pledge Arena" | no |
+| `rogers-arena` | inferred: from the building's long axis, 102° | 12 features; no ice, no court | no direction given | 40 files of "Rogers Arena" | no |
+| `t-mobile-arena` | inferred: from the building's long axis, 90° | 2 features; no ice, no court | no direction given | 420 files of "T-Mobile Arena" | no |
+| `united-center` | inferred: from the building's long axis, 90° | 6 features; no ice, no court | no direction given | 119 files of "United Center" | no |
+| `ball-arena` | not known: drawn east-west, north at the top | 2 features; no ice, no court | no direction given | 173 files of "Ball Arena" | no |
+| `american-airlines-center` | inferred: from the building's long axis, 144° | 1 feature; no ice, no court | no direction given | 593 files of "American Airlines Center" | no |
+| `grand-casino-arena` | inferred: from the building's long axis, 120° | 63 features; no ice, no court | no direction given | 26 files of "Xcel Energy Center" | no |
+| `bridgestone-arena` | inferred: from the building's long axis, 156° | 4 features; no ice, no court | the theatre layout puts the stage "at the north end of the arena floor": the floor lies roughly north-south; the building's 156 degrees agrees within 24, and the sentence gives no bearing | 603 files of "Bridgestone Arena" | no: stays inferred (a point of the compass is not a heading) |
+| `enterprise-center` | inferred: from the building's long axis, 105° | 5 features; no ice, no court | no direction given | 481 files of "Enterprise Center" | no |
+| `delta-center` | inferred: from the building's long axis, 45° | 4 features; no ice, no court | no direction given | 77 files of "Delta Center" | no |
+| `canada-life-centre` | inferred: from the building's long axis, 162° | 42 features; no ice, no court | no direction given | 17 files of "Canada Life Centre" | no |
+| `td-garden` | mapped: the ice, way/837727439, along 55.2° | 146 features; ice way/837727439, court way/837727438 along 54.3° | no direction given | 200 files of "TD Garden"; the parquet floor mapped inside lies along the ice's direction | no: mapped before |
+| `keybank-center` | inferred: from the building's long axis, 144° | 6 features; no ice, no court | no direction given | 56 files of "KeyBank Center" | no |
+| `little-caesars-arena` | inferred: from the building's long axis, 147° | 2 features; no ice, no court | no direction given | 279 files of "Little Caesars Arena" | no |
+| `amerant-bank-arena` | not known: drawn east-west, north at the top | 1 feature; no ice, no court | no direction given | 38 files of "Amerant Bank Arena" | no |
+| `bell-centre` | inferred: from the building's long axis, 132° | 11 features; no ice, no court | no direction given | 212 files of "Bell Centre" | no |
+| `canadian-tire-centre` | not known: drawn east-west, north at the top | 1 feature; no ice, no court | no direction given | 98 files of "Canadian Tire Centre" | no |
+| `benchmark-international-arena` | not known: drawn east-west, north at the top | 6 features; no ice, no court | no direction given | 366 files of "Benchmark International Arena" | no |
+| `scotiabank-arena` | not known: drawn east-west, north at the top | 123 features; no ice, no court | no direction given | 196 files of "Scotiabank Arena" | no |
+| `lenovo-center` | not known: drawn east-west, north at the top | 2 features; no ice, no court | no direction given | 445 files of "Lenovo Center" | no |
+| `nationwide-arena` | inferred: from the building's long axis, 93° | 1 feature; no ice, no court | no direction given | 105 files of "Nationwide Arena" | no |
+| `prudential-center` | inferred: from the building's long axis, 21° | 3 features; no ice, no court | no direction given | 56 files of "Prudential Center" | no |
+| `ubs-arena` | inferred: from the building's long axis, 18° | 12 features; no ice, no court | no direction given | 60 files of "UBS Arena" | no |
+| `madison-square-garden` | not known: drawn east-west, north at the top | 63 features; no ice, no court | no direction given | 354 files of "Madison Square Garden" | no |
+| `xfinity-mobile-arena` | mapped: the ice, relation/20144167, along 15.6° | 7 features; ice relation/20144167, court way/1471736142 along 15.8° | no direction given | 547 files of "Xfinity Mobile Arena" | no: mapped before |
+| `ppg-paints-arena` | mapped: the ice, way/1557965070, along 18.7° | 5 features; ice way/1557965070, no court | no direction given | 629 files of "PPG Paints Arena" | no: mapped before |
+| `capital-one-arena` | not known: drawn east-west, north at the top | 182 features; no ice, no court | no direction given | 160 files of "Capital One Arena" | no |
+<!-- /rink-table -->
+
 ## The Scotiabank Saddledome
 
 ![The Scotiabank Saddledome in 3D from the southeast, its near walls cut away: a saddle roof that sags between its two high points over a round bowl of two tiers, leaning walls and a stair tower at each of the two ends](./images/venues-saddledome-3d-desk-light.webp)

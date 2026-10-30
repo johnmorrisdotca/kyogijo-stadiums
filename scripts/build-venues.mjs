@@ -128,6 +128,47 @@ for (const v of venues) {
   osm[v.id] = { source: `${outline.type}/${outline.id}`, read: raw.read, base: raw.osmBase, ring, height: Number.isFinite(height) && height > 5 && height < 120 ? height : undefined, ice: ice.length === 1 ? { source: ice[0].id, ring: ice[0].ring } : undefined, axis };
 }
 
+// ---- How each rink's direction is known: what the sweep of 2026-10-30 found. ----
+// `pnpm venues:rink` read, for each arena, every sports, indoor and building-part feature OpenStreetMap maps within 260 metres of it (`osm-evidence-<id>.json` of the day named in scripts/venues.rink.json). Here the same
+// test as above is made on those answers, and a basketball court as well (a court lies as the rink does, on the one floor): an ice or a court inside the building that the first read does not hold is a failure, so that a
+// rink that a map shows can never be left as inferred. The table of docs/venues.md says, for each arena, how its direction is known and what was looked at.
+const rinkData = read("venues.rink.json");
+const rinkRead = rinkData.read;
+if (!/^\d{4}-\d{2}-\d{2}$/.test(rinkRead)) fail("venues.rink.json: read");
+const evidence = {};
+for (const v of venues) {
+  const raw = loadFrom(rinkRead, `osm-evidence-${v.id}.json`);
+  if (raw.wikidata !== v.wikidata) fail(`${v.id}: osm-evidence-${v.id}.json is for ${raw.wikidata}`);
+  const origin = middleOf(osm[v.id].ring);
+  const building = metresFrom(origin, osm[v.id].ring);
+  const ringOf = (e) => metresFrom(origin, outerRingOf(e).slice(0, -1).map((p) => [p.lon, p.lat]));
+  const within = (e) => outerRingOf(e) !== undefined && e.tags?.wikidata !== v.wikidata && inside(building, centroidOf(ringOf(e)));
+  const ice = raw.elements.filter((e) => within(e) && (e.tags?.leisure === "ice_rink" || e.tags?.sport === "ice_hockey") && areaOf(ringOf(e)) > 1000 && areaOf(ringOf(e)) < 2600).map((e) => `${e.type}/${e.id}`);
+  const courts = raw.elements.filter((e) => within(e) && e.tags?.sport === "basketball" && areaOf(ringOf(e)) > 250 && areaOf(ringOf(e)) < 900).map((e) => ({ id: `${e.type}/${e.id}`, heading: Math.round(smallestBox(ringOf(e)).heading * 10) / 10 }));
+  const kept = osm[v.id].ice?.source;
+  if (ice.length !== (kept === undefined ? 0 : 1) || (kept !== undefined && ice[0] !== kept)) fail(`${v.id}: the sweep finds ice ${ice.join(", ") || "none"} and the first read ${kept ?? "none"}: read the files again`);
+  evidence[v.id] = { elements: raw.elements.length, ice, courts };
+}
+const rinkWords = (v) => {
+  const o = osm[v.id];
+  const basis = o.axis.basis === "mapped" ? `mapped: the ice, ${o.ice.source}, along ${o.axis.heading}°` : o.axis.basis === "building" ? `inferred: from the building's long axis, ${o.axis.heading}°` : "not known: drawn east-west, north at the top";
+  const e = evidence[v.id];
+  const extra = rinkData.venues[v.id] ?? {};
+  const sweep = `${e.elements} feature${e.elements === 1 ? "" : "s"}; ${e.ice.length === 0 ? "no ice" : `ice ${e.ice[0]}`}${e.courts.length === 0 ? ", no court" : `, ${e.courts.map((c) => `court ${c.id} along ${c.heading}°`).join(", ")}`}`;
+  const commons = extra.commons === undefined ? "" : `${extra.commons.files} files of "${extra.commons.category}"`;
+  return `| \`${v.id}\` | ${basis} | ${sweep} | ${extra.wikipedia ?? "no direction given"} | ${commons}${extra.photographs === undefined ? "" : `; ${extra.photographs}`} | ${extra.changed ?? "no"} |`;
+};
+const rinkTable = `| Key | How the rink lies in the drawing | OpenStreetMap, read ${rinkRead} | English Wikipedia | Wikimedia Commons | Changed by this reading |
+| --- | --- | --- | --- | --- | --- |
+${venues.map(rinkWords).join("\n")}`;
+{
+  const page = new URL("../docs/venues.md", import.meta.url);
+  const text = readFileSync(page, "utf8");
+  const marked = /<!-- rink-table -->[\s\S]*?<!-- \/rink-table -->/;
+  if (!marked.test(text)) fail("docs/venues.md has no <!-- rink-table --> markers");
+  writeFileSync(page, text.replace(marked, () => `<!-- rink-table -->\n${rinkTable}\n<!-- /rink-table -->`));
+}
+
 // ---- The data files. ----
 // Besides the two tables of every venue (src/venues.data.ts and src/venues.osm.data.ts, which the entries that hold every venue read), each venue is two files of its own, kept apart because their licences are: src/venues/<id>.data.ts
 // (the facts) and src/venues/<id>.osm.data.ts (what OpenStreetMap gave), and src/venues.index.ts lists every key with the import() of its two files. A page that draws one arena reads that arena's two files and not the others'; the tables
