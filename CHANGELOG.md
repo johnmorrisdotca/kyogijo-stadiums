@@ -7,6 +7,8 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.48.0] - 2026-10-30
+
 ### Added
 
 - **The Scotiabank Saddledome is its own drawing (SPX-646).** A round building under one roof that is a reverse hyperbolic paraboloid (`src/venue.saddle.ts`): the roof is a net of quads on the surface `z = z0 + k (a² − b²)` over the round plan (`saddleHeight`; 8, 10 or 16 cells to a side at `low`, `auto` and `high` detail, the plan mapped on a square grid so every cell is a fair quad), a beam 5 feet deep round its edge that overhangs the wall, leaning walls in `4 × cells` facets with a pier at every second one, the lines of the cladding and a few windows, and at each of the two high points a round stair tower and a square one. Every quad is shaded by its own normal, cut away from above and from the eye's side, and whole from the street, with the roof and the walls on or off. The roof's line runs 60 degrees from north (east-northeast to west-southwest), its low rim stands 78 feet over the ice and its high points 138, read from three photographs of the building taken from known places and from the outline's one bulge (`roof.saddle` in `scripts/venues.data.json`, with what each was read from; the photographs are looked at as evidence and not copied). The bowl is round (`bowl.round`) and its tiers rise 20 and 30 feet (`bowl.rises`) so that the low rim clears the top row (`SADDLE_CLEARANCE`, 8 feet). Side-by-side sheets against the photographs are in the release notes' hand-off, and the page [docs/venues.md](./docs/venues.md#the-scotiabank-saddledome) says what the drawing leaves out.
@@ -19,7 +21,7 @@ All notable changes to this project are written here. The format follows
 
 ### Cost
 
-- The package's script grows by 17.1 KB (5.5 KB gzipped) on the venues page and the district pages (the saddle builder 14.1 KB, 4.7 KB gzipped, the shell's hook and the data), and its data by 1.3 KB (0.5 KB gzipped); style by 1.1 KB. No dependency is added. The Saddledome in 3D with its roof and walls is 718 planes at `high` (against 546; 133 KB of drawing against 71), 413 at `auto` (322; 74 KB against 46) and 295 at `low` (187; 48 KB against 31), the other thirty-one venues as they were; every page stays inside its byte budget.
+- The package's script grows by 17.7 KB (5.7 KB gzipped) on the venues page and the district pages (the saddle builder 14.5 KB, 4.8 KB gzipped, the shell's hook and the data), and its data by 1.3 KB (0.5 KB gzipped); style by 1.1 KB. The venues page is 3,065 KB against a budget of 3,165, the districts 2,428 against 2,500. No dependency is added. The Saddledome in 3D with its roof and walls is 718 planes at `high` (against 546; 133 KB of drawing against 71), 413 at `auto` (322; 74 KB against 46) and 295 at `low` (187; 48 KB against 31), the other thirty-one venues as they were; every page stays inside its byte budget.
 
 ## [0.47.0] - 2026-10-30
 
