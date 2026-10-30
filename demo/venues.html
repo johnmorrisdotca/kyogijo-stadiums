@@ -96,6 +96,7 @@
           mapped: "from the ice OpenStreetMap maps", building: "inferred from the building's long axis", none: "not known: drawn east-west, north at the top",
           seatsText: "{seats} (Wikidata's own figure {wikidata})", seatsNoneText: "{seats} (Wikidata gives no capacity)", tiersText: "{count} ({basis})", roofText: "{kind} ({basis})", orientationText: "{how}, the rink along {heading} degrees from north",
           outlineText: "OpenStreetMap {way}, read {read}",
+          roofMeasure: "Roof's measure", roofMeasureText: "its two high points lie on a line {bearing} degrees from north, {high} feet over the ice; the low rim stands {low} feet (ours, from photographs)",
           credit: "Building outlines: (c) OpenStreetMap contributors, ODbL 1.0, openstreetmap.org/copyright. Seats, tiers and roofs: Wikidata (CC0) and the English Wikipedia article each venue cites, in our own words.",
         },
         ja: {
@@ -113,6 +114,7 @@
           mapped: "OpenStreetMapに記録された氷面から", building: "建物の長軸から推定", none: "不明のため東西に配置し、北を上にしています",
           seatsText: "{seats}席（Wikidata自体の数値は{wikidata}）", seatsNoneText: "{seats}席（Wikidataには収容人数の記載がありません）", tiersText: "{count}層（{basis}）", roofText: "{kind}（{basis}）", orientationText: "{how}（リンクは北から{heading}度の向き）",
           outlineText: "OpenStreetMap {way}（{read}に取得）",
+          roofMeasure: "屋根の寸法", roofMeasureText: "二つの高い頂点は北から{bearing}度の線上にあり、氷面からの高さは{high}フィート。低い縁の高さは{low}フィート（写真をもとにした当サイトの推定値）",
           credit: "建物の輪郭：(c) OpenStreetMap contributors（ODbL 1.0、openstreetmap.org/copyright）。座席数・層の数・屋根：Wikidata（CC0）と、各会場が示すEnglish Wikipediaの記事（独自の言葉で記述）。",
         },
       };
@@ -186,6 +188,7 @@
           [w.seats, fillIn(v.seats.wikidata === null ? w.seatsNoneText : w.seatsText, { seats: v.seats.hockey.toLocaleString($("language").value), wikidata: v.seats.wikidata?.toLocaleString($("language").value) })],
           [w.tiers, fillIn(w.tiersText, { count: v.tiers.count, basis: w[v.tiers.basis] })],
           [w.roofKind, fillIn(w.roofText, { kind: w[v.roof.kind], basis: w[v.roof.basis] })],
+          ...(v.roof.saddle === undefined ? [] : [[w.roofMeasure, fillIn(w.roofMeasureText, v.roof.saddle)]]),
           [w.orientation, orientation.basis === "none" ? w.none : fillIn(w.orientationText, { how: w[orientation.basis], heading: orientation.heading })],
           [w.outline, fillIn(w.outlineText, { way: v.osm.source, read: v.osm.read })],
         ];

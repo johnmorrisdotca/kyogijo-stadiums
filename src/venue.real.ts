@@ -7,23 +7,13 @@ import { rayAt, type Pt, type RealShell, type StandRing } from "./crowd.ts";
 import { bar, box, n, pole, shy, wall, type Plane, type Upright, type V3 } from "./turn.kit.ts";
 import { pointList, raked, type Slope } from "./venue.geom.ts";
 import { ribbedRoof, ribbedWalls } from "./venue.ribbed.ts";
+import { SADDLE_CELLS, saddleHeight, saddleRoof, saddleTowers, saddleWalls } from "./venue.saddle.ts";
 import { edgeDistance, inside } from "./venues.geo.ts";
 
-/** How far a lid rises from its edge towards the middle, and how far a saddle's high ends stand over its low sides, in feet (ours: the sources give a roof's kind, not its height). */
+/** How far a lid rises from its edge towards the middle, in feet (ours: the sources give a roof's kind, not its height). */
 export const LID_RISE = 22;
-export const SADDLE_RISE = 30;
 /** How far a barrel vault's crown stands over its springing at the long sides, in feet (ours: the article says the roof looks like a Quonset hut, not how high it rises). */
 export const BARREL_RISE = 34;
-
-/** The saddle's share of its rise at a point (0 at the middle of a side, 1 at the middle of an end): half a saddle's way from one to the other, as a hyperbolic paraboloid (u squared less v squared) lies over the building's box. */
-export function saddleAt(real: Pick<RealShell, "footprint">, [x, y]: Pt): number {
-  const xs = real.footprint.map((p) => p[0]);
-  const ys = real.footprint.map((p) => p[1]);
-  const [cx, cy] = [(Math.min(...xs) + Math.max(...xs)) / 2, (Math.min(...ys) + Math.max(...ys)) / 2];
-  const [hx, hy] = [(Math.max(...xs) - Math.min(...xs)) / 2, (Math.max(...ys) - Math.min(...ys)) / 2];
-  const s = ((x - cx) / hx) ** 2 - ((y - cy) / hy) ** 2;
-  return (1 + Math.max(-1, Math.min(1, s))) / 2;
-}
 
 /** The barrel vault's share of its rise at a point (0 at the springing along each long side, 1 over the middle line): a round arch over the building's short axis, the quarter of a circle's rise at each step in from the side. */
 export function barrelAt(real: Pick<RealShell, "footprint">, [, y]: Pt): number {
@@ -34,7 +24,7 @@ export function barrelAt(real: Pick<RealShell, "footprint">, [, y]: Pt): number 
 }
 
 /** The height of the roof over a point of the building's edge, above the surface, in feet. */
-export const roofAt = (real: RealShell, p: Pt): number => real.edge + (real.roof === "saddle" ? SADDLE_RISE * saddleAt(real, p) : real.roof === "barrel" ? BARREL_RISE * barrelAt(real, p) : 0);
+export const roofAt = (real: RealShell, p: Pt): number => (real.roof === "saddle" && real.saddle !== undefined ? saddleHeight(real.saddle, p) : real.edge + (real.roof === "barrel" ? BARREL_RISE * barrelAt(real, p) : 0));
 
 /** How near a wall must stand to a canopy's outline to be the wall under it, in feet. */
 const CANOPY_REACH = 50;
@@ -219,6 +209,19 @@ export function mastPlanes(real: Pick<RealShell, "hall" | "footprint">, c: Pt, z
 export function realBuilding(real: RealShell, top: StandRing | undefined, centre: readonly [number, number], lift: number, steps: number, open = false, parts: { walls: boolean; roof: boolean } = { walls: true, roof: true }): Items {
   const items: Upright[] = [];
   const c: Pt = [centre[0], centre[1]];
+  // The Saddledome's building is its own: a round wall that leans out to a beam, under one saddle roof (`venue.saddle.ts`).
+  if (real.roof === "saddle" && real.saddle !== undefined) {
+    const cells = steps >= 100 ? SADDLE_CELLS.high : steps >= 48 ? SADDLE_CELLS.auto : SADDLE_CELLS.low;
+    if (parts.walls) {
+      const walls = [...saddleWalls(real.saddle, lift, cells, c), ...saddleTowers(real.saddle, lift)];
+      if (walls.length > 0) items.push({ id: "shell", kind: "walls", at: centre, height: heightOf(walls), planes: walls });
+    }
+    if (parts.roof) {
+      const roof = saddleRoof(real.saddle, lift, cells);
+      if (roof.length > 0) items.push({ id: "roof", kind: "roof", at: centre, height: heightOf(roof), planes: roof });
+    }
+    return items;
+  }
   const rim = Array.from({ length: steps }, (_, k): Pt => rimPoint(real, c, (2 * Math.PI * k) / steps));
   const planes: Plane[] = [];
   // A ribbed shell (the Olympic Stadium's) is its own: ribs and glazed bays in place of a drum of walls.

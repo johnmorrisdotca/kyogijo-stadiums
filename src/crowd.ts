@@ -132,6 +132,11 @@ export interface RealShell {
   tower?: { base: Pt; top: Pt; height: number; angle: number; width: [number, number] };
   /** The height of the roof's lowest edge above the surface, in feet. */
   edge: number;
+  /**
+   * A `saddle` roof's measure, in the drawing's frame: the middle of its round plan and its radius, the unit direction of the line through its two high points, the height of those points (`high`) and of the low rim between them
+   * (`low`), in feet over the surface. The roof is the hyperbolic paraboloid through them (`venue.saddle.ts`), and the building round it is round.
+   */
+  saddle?: { centre: Pt; radius: number; axis: Pt; low: number; high: number };
   /** Towers that stand apart from the bowl (Lumen Field's, at the open end), each a box on its outline in the drawing's frame, `height` feet high; `face` is the unit direction its scoreboard looks, towards the field. */
   towers?: { ring: Pt[]; height: number; face: Pt }[];
 }

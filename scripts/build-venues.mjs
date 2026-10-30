@@ -78,6 +78,13 @@ for (const v of venues) {
   if (![1, 2, 3].includes(tiers.count) || !BASES.includes(tiers.basis) || typeof tiers.read !== "string") fail(`${v.id}: tiers`);
   if (tiers.lowerShare !== undefined && !(tiers.count > 1 && tiers.lowerShare > 0.3 && tiers.lowerShare < 0.8)) fail(`${v.id}: lowerShare`);
   if (!ROOFS.includes(roof.kind) || !BASES.includes(roof.basis) || typeof roof.read !== "string") fail(`${v.id}: roof`);
+  // A saddle roof says which way it lies and how high it stands; no other roof has the measure. A bowl that is not the usual says why.
+  const { saddle } = roof;
+  if ((roof.kind === "saddle") !== (saddle !== undefined)) fail(`${v.id}: only a saddle roof has a saddle, and a saddle roof has one`);
+  if (saddle !== undefined) {
+    if (!(saddle.bearing >= 0 && saddle.bearing < 180) || !(saddle.low > 40 && saddle.high > saddle.low + 20 && saddle.high < 260) || typeof saddle.read !== "string" || saddle.read === "") fail(`${v.id}: saddle`);
+  }
+  if (v.bowl !== undefined && (typeof v.bowl.read !== "string" || v.bowl.read === "" || (v.bowl.rises !== undefined && !(v.bowl.rises.length === 2 && v.bowl.rises.every((r) => r >= 10 && r <= 60))))) fail(`${v.id}: bowl`);
 }
 
 // ---- What OpenStreetMap gave. ----
@@ -126,7 +133,7 @@ for (const v of venues) {
 // (the facts) and src/venues/<id>.osm.data.ts (what OpenStreetMap gave), and src/venues.index.ts lists every key with the import() of its two files. A page that draws one arena reads that arena's two files and not the others'; the tables
 // hold the same records again, as the arenas', parks' and grounds' tables do.
 const q = (value) => JSON.stringify(value).replace(/":/g, '": ').replace(/,"/g, ', "');
-const FACT_KEYS = ["id", "wikidata", "division", "en", "seats", "tiers", "roof", "facade"];
+const FACT_KEYS = ["id", "wikidata", "division", "en", "seats", "tiers", "roof", "facade", "bowl"];
 const readDays = [...days].sort().join(", ");
 const BY = `scripts/build-venues.mjs from scripts/venues.data.json`;
 const BY_OSM = `scripts/build-venues.mjs from the files of data-sources/venues/ (read ${readDays})`;

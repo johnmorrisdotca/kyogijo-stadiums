@@ -3,7 +3,7 @@
 // bowl: a number of seats in the number of tiers the sources say, between the rink's boards and the building's wall, under the roof's kind. It stops there: no team's or ticket seller's seat map is read or copied, no
 // section or row is named, and no mark of a team or a league is drawn. The drawing is `drawKyogijo({ sport: "nhl", arena, crowd: { real: true } })` and, in 3D, the same options in `buildTurn` or `mountTurn`.
 import { heldArena, arenaRinkIn, type Arena, type ArenaSource } from "./arenas.core.ts";
-import { NORTH_ROOM, aislesOf, areaOfOutline, outlinePoints, type Box, type Outline, type Pt, type RealBowl, type StandRing } from "./crowd.ts";
+import { NORTH_ROOM, aislesOf, areaOfOutline, outlinePoints, type Box, type Outline, type Pt, type RealBowl, type RealShell, type StandRing } from "./crowd.ts";
 import { NHL, FEET_PER_METRE } from "./geometry.ts";
 import { boxOf, edgeDistance, inside, metresFrom, middleOf, northOn, turnedTo, type LonLat } from "./venues.geo.ts";
 import { VENUE_INDEX } from "./venues.index.ts";
@@ -14,7 +14,7 @@ export const VENUE_ATTRIBUTION = "(c) OpenStreetMap contributors, ODbL 1.0, open
 /** How a fact is known: `documented` is what a source cited with it says; `plausible` is ours, for a bowl no source describes. */
 export type VenueBasis = "documented" | "plausible";
 
-/** The kinds of roof the venues have: `fixed` is a lid over the bowl, `saddle` a roof that rises at the two ends and falls at the two sides (the Scotiabank Saddledome's), `barrel` a barrel vault along the rink, a round arch over its short axis (the American Airlines Center's). */
+/** The kinds of roof the venues have: `fixed` is a lid over the bowl, `saddle` a roof that rises at two opposite points of its rim and falls at the two between (the Scotiabank Saddledome's), `barrel` a barrel vault along the rink, a round arch over its short axis (the American Airlines Center's). */
 export type VenueRoof = "fixed" | "saddle" | "barrel";
 
 /** The NHL's divisions, in the order of the league's own listing: the Western Conference's two, then the Eastern's. A division none of whose arenas has a venue yet has no venues in `venuesIn`. */
@@ -53,7 +53,20 @@ export interface RealVenueData {
   };
   /** The building's lower band, a podium under the upper levels: its height in feet and how it is known (ours where the sources do not say). */
   facade?: { podium: number; unit: "ft"; basis: VenueBasis; read: string };
-  roof: { kind: VenueRoof; basis: VenueBasis; read: string; /** A long skylight over the middle of the roof, closed in round it: drawn where the venue says so (ours). */ skylight?: boolean };
+  roof: {
+    kind: VenueRoof;
+    basis: VenueBasis;
+    read: string;
+    /** A long skylight over the middle of the roof, closed in round it: drawn where the venue says so (ours). */
+    skylight?: boolean;
+    /**
+     * A `saddle` roof's measure: the compass bearing of the line through its two high points (degrees clockwise from north, 0 up to 180: a line has two ends), and the height of the high points and of the low rim over the surface, in feet. Measured on
+     * photographs of the building taken from known places, with the outline's own bulge at the end of the line; the heights are ours, as accurate as a photograph allows. `read` says what each was taken from.
+     */
+    saddle?: { bearing: number; low: number; high: number; read: string };
+  };
+  /** A bowl the sources describe as other than the usual: a round plan (the Saddledome's), and the rise of each tier in feet where it is not the usual (ours, from photographs). */
+  bowl?: { round?: boolean; rises?: [number, number]; read: string };
 }
 
 /** What OpenStreetMap gave of a venue: ODbL 1.0 data, "(c) OpenStreetMap contributors". */
@@ -194,6 +207,8 @@ const TIER_IDS: Readonly<Record<1 | 2 | 3, readonly ("lower" | "middle" | "upper
 const FILL: Readonly<Record<"lower" | "middle" | "upper", number>> = { lower: 1, middle: 0.94, upper: 0.88 };
 /** The height a roof's edge stands over the top row, at the least, in feet. */
 export const CLEARANCE = 22;
+/** The least a saddle roof's low rim stands over the top row, in feet: the roof is lower over the bowl's sides than a lid is, and falls to the rim over the top row (ours, from photographs). */
+export const SADDLE_CLEARANCE = 8;
 
 type RRect = Extract<Outline, { kind: "rrect" }>;
 const lerp = (a: number, b: number, t: number): number => a + (b - a) * t;
@@ -269,7 +284,7 @@ function plan(venue: RealVenue, rink: Box): VenuePlan {
   // The first row round the rink, and the largest bowl-shaped outline that fits inside the building round the middle of the hall: as much longer than wide as the hall is, and as round at the corners as a bowl is.
   const first: RRect = { kind: "rrect", x0: rink.x - FIRST_ROW.end, y0: rink.y - FIRST_ROW.side, x1: rink.x + rink.w + FIRST_ROW.end, y1: rink.y + rink.h + FIRST_ROW.side + FIRST_ROW.bench, r: FIRST_ROW.corner };
   // The aspect that holds the most: a bowl is between 1.15 and 1.6 times as long as it is wide, as much as the hall allows.
-  const shapedAs = (long: number, s: number): RRect => ({ kind: "rrect", x0: at[0] - long * s, y0: at[1] - s, x1: at[0] + long * s, y1: at[1] + s, r: CORNER * s });
+  const shapedAs = (long: number, s: number): RRect => ({ kind: "rrect", x0: at[0] - long * s, y0: at[1] - s, x1: at[0] + long * s, y1: at[1] + s, r: (venue.bowl?.round === true ? 1 : CORNER) * s });
   const largest = (long: number): number => {
     let [lo, hi] = [60, Math.max(fb.x1 - fb.x0, fb.y1 - fb.y0)];
     for (let i = 0; i < 24; i += 1) {
@@ -279,7 +294,8 @@ function plan(venue: RealVenue, rink: Box): VenuePlan {
     }
     return lo;
   };
-  const tries = [1.15, 1.25, 1.35, 1.45, 1.6].map((long) => ({ long, s: largest(long) }));
+  const circular = venue.bowl?.round === true;
+  const tries = (circular ? [1] : [1.15, 1.25, 1.35, 1.45, 1.6]).map((long) => ({ long, s: largest(long) }));
   const best = tries.reduce((a, b) => (a.long * a.s * a.s >= b.long * b.s * b.s ? a : b));
   const lo = best.s;
   const shaped = (s: number): RRect => shapedAs(best.long, s);
@@ -310,7 +326,7 @@ function plan(venue: RealVenue, rink: Box): VenuePlan {
       const tier = TIER_IDS[count][k];
       // The band's depth along the two long sides on average, where the bowl is the shallowest and the rake the steepest: the rise is what a rake of at most `MAX_RAKE` degrees gives over it, up to the usual rise of a tier of its place.
       const run = (region.y1 - hole.y1 + (hole.y0 - region.y0)) / 2;
-      const rise = Math.min(RISES[count][k], Math.max(6, run * Math.tan((MAX_RAKE * Math.PI) / 180)));
+      const rise = Math.min((count === 2 ? venue.bowl?.rises?.[k] : undefined) ?? RISES[count][k], Math.max(6, run * Math.tan((MAX_RAKE * Math.PI) / 180)));
       const [h0, h1] = [k === 0 ? FIRST_HEIGHT : up + WALK_RISE, (k === 0 ? FIRST_HEIGHT : up + WALK_RISE) + rise];
       up = h1;
       rings.push({
@@ -344,16 +360,46 @@ function plan(venue: RealVenue, rink: Box): VenuePlan {
   if (!tight && Math.abs(missing) <= 3) rings[rings.length - 1].seats += missing;
   const total = rings.reduce((sum, ring) => sum + ring.seats, 0);
   const top = rings[rings.length - 1].height[1];
-  const edge = Math.max(round((venue.osm.height ?? 0) * FEET_PER_METRE), top + CLEARANCE);
+  const saddled = venue.roof.kind === "saddle" ? venue.roof.saddle : undefined;
+  const edge = saddled === undefined ? Math.max(round((venue.osm.height ?? 0) * FEET_PER_METRE), top + CLEARANCE) : Math.max(saddled.low, top + SADDLE_CLEARANCE);
   const north = orientation.basis === "none" ? undefined : orientation.north;
   const room = north === undefined ? 0 : NORTH_ROOM;
   const bowl: RealBowl = {
     rings,
     off: { left: FIRST_ROW.end, right: FIRST_ROW.end, top: FIRST_ROW.side, bottom: FIRST_ROW.side + FIRST_ROW.bench },
     reach: { left: Math.max(0, rink.x - fb.x0), right: Math.max(0, fb.x1 - rink.x - rink.w), top: Math.max(0, rink.y - fb.y0) + room, bottom: Math.max(0, fb.y1 - rink.y - rink.h) },
-    shell: { footprint, hall: { ...outer, x0: outer.x0 - HALL, y0: outer.y0 - HALL, x1: outer.x1 + HALL, y1: outer.y1 + HALL, r: outer.r + HALL }, ...(north === undefined ? {} : { north }), roof: venue.roof.kind, edge, ...(venue.facade === undefined ? {} : { podium: venue.facade.podium }), ...(venue.roof.skylight === true ? { skylight: true } : {}) },
+    shell: { footprint, hall: { ...outer, x0: outer.x0 - HALL, y0: outer.y0 - HALL, x1: outer.x1 + HALL, y1: outer.y1 + HALL, r: outer.r + HALL }, ...(north === undefined ? {} : { north }), roof: venue.roof.kind, edge, ...(saddled === undefined ? {} : { saddle: saddleOf(saddled, footprint, at, orientation.heading, edge) }), ...(venue.facade === undefined ? {} : { podium: venue.facade.podium }), ...(venue.roof.skylight === true ? { skylight: true } : {}) },
   };
   return { venue, orientation, box: rink, footprint, bowl, seats: rings.map((ring) => ({ tier: ring.tier, seats: ring.seats })), total, seatArea, fit: tight ? "tight" : "fits" };
+}
+
+/**
+ * A saddle roof's measure in the drawing's frame: its middle at the bowl's, the radius of its round plan (the middle distance of the building's outline from the middle, so that an annex's bulge does not swell it), and the line through
+ * its two high points turned from the compass bearing the data gives by the way the rink lies (the frame has the rink's long side along x). `edge` is the low rim's height.
+ */
+function saddleOf(data: NonNullable<RealVenueData["roof"]["saddle"]>, footprint: readonly Pt[], at: Pt, heading: number, edge: number): NonNullable<RealShell["saddle"]> {
+  const radii = Array.from({ length: 72 }, (_, k) => {
+    const a = (2 * Math.PI * k) / 72;
+    return rayLength(footprint, at, a);
+  }).sort((a, b) => a - b);
+  const turn = ((data.bearing - heading) * Math.PI) / 180;
+  return { centre: at, radius: round(radii[36], 1), axis: [round(Math.cos(turn), 4), round(Math.sin(turn), 4)], low: edge, high: data.high };
+}
+
+/** How far a ray from `from` at `angle` runs before it leaves a polygon. */
+function rayLength(poly: readonly Pt[], from: Pt, angle: number): number {
+  const [dx, dy] = [Math.cos(angle), Math.sin(angle)];
+  let best = Infinity;
+  poly.forEach(([ax, ay], i) => {
+    const [bx, by] = poly[(i + 1) % poly.length];
+    const [ex, ey] = [bx - ax, by - ay];
+    const den = dx * ey - dy * ex;
+    if (Math.abs(den) < 1e-12) return;
+    const t = ((ax - from[0]) * ey - (ay - from[1]) * ex) / den;
+    const u = ((ax - from[0]) * dy - (ay - from[1]) * dx) / den;
+    if (t > 1e-6 && u >= 0 && u <= 1 && t < best) best = t;
+  });
+  return Number.isFinite(best) ? best : 0;
 }
 
 /** The stands of a venue for `layoutOf` and the 3D view, round a rink: `planVenue`'s bowl. */

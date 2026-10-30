@@ -3,7 +3,8 @@ import { ARENAS, arenaById } from "./arenas.ts";
 import { areaOfOutline, type Pt } from "./crowd.ts";
 import { crowdStands, describe as describeDrawing, drawKyogijo } from "./draw.ts";
 import { PITCH_MAX, buildTurn, eyeDistance, layoutOf, presetsFor, project, type TurnModel } from "./turn-entry.ts";
-import { MAX_RAKE, SEAT_AREAS, VENUES, VENUE_ATTRIBUTION, VENUE_CONFERENCES, VENUE_DIVISIONS, VENUE_IDS, arenaOfVenue, bowlInside, conferenceOf, planVenue, venueById, venueByWikidata, venueOrientation, venuesIn, venuesInConference, type RealVenue } from "./venues.ts";
+import { EAVE } from "./venue.saddle.ts";
+import { MAX_RAKE, SADDLE_CLEARANCE, SEAT_AREAS, VENUES, VENUE_ATTRIBUTION, VENUE_CONFERENCES, VENUE_DIVISIONS, VENUE_IDS, arenaOfVenue, bowlInside, conferenceOf, planVenue, venueById, venueByWikidata, venueOrientation, venuesIn, venuesInConference, type RealVenue } from "./venues.ts";
 import { areaOf, boxOf, centroidOf, coreOf, edgeDistance, inside, lonLatFrom, metresFrom, middleOf, northOn, simplified, smallestBox, turnedTo } from "./venues.geo.ts";
 import { VENUE_DATA } from "./venues.data.ts";
 import { VENUE_OSM } from "./venues.osm.data.ts";
@@ -361,7 +362,8 @@ describe("the bowl", () => {
         previous = region;
       });
       const edge = plan.bowl.shell.edge;
-      expect(edge, v.id).toBeGreaterThanOrEqual(rings.at(-1)!.height[1] + 22);
+      // (A lid stands 22 feet over the top row; a saddle roof's low rim falls nearer to it, 8 feet, and rises to its high points from there.)
+      expect(edge, v.id).toBeGreaterThanOrEqual(rings.at(-1)!.height[1] + (v.roof.kind === "saddle" ? SADDLE_CLEARANCE : 22));
     }
   });
 
@@ -587,11 +589,11 @@ describe("a real venue in 3D", () => {
       expect(walls.planes.length, v.id).toBeGreaterThanOrEqual(40);
       const plan = planVenue(v);
       const [low, high] = zs(roof.planes);
-      // (A quad of the roof is a plane fitted through its corners, a foot or two off where the corners are.)
-      expect(low, v.id).toBeGreaterThanOrEqual(plan.bowl.shell.edge - 3);
+      // (A quad of the roof is a plane fitted through its corners, a foot or two off where the corners are; the Saddledome's beam hangs its depth under the roof's rim.)
+      expect(low, v.id).toBeGreaterThanOrEqual(plan.bowl.shell.edge - 3 - (v.roof.kind === "saddle" ? EAVE.depth : 0));
       if (v.roof.kind === "saddle") {
-        // High at the two ends of the rink and low at the two sides: the saddle's rise (30 feet) is the roof's range over its edge.
-        expect(high - low, v.id).toBeGreaterThan(20);
+        // High at the two high points and low between: the roof's range is its high points over its low rim (60 feet by the data), less the beam under the rim.
+        expect(high - low, v.id).toBeGreaterThan(55);
       } else if (v.roof.kind === "barrel") {
         // A round arch over the rink's short axis: the crown stands over the springing by its rise (34 feet), and the roof's range is about that.
         expect(high - low, v.id).toBeGreaterThan(25);

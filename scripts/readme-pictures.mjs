@@ -127,7 +127,7 @@ await takePictures({
     { subject: "judging-broadcast-3d", views: ["desk"], url: "/judging.html?view=broadcast&mat=1", ready: READY_HALLS_TURN, target: "#stage" },
     // The real venues (0.25.0): the Honda Center in the outline of its building, and the Saddledome under its saddle roof in 3D (the venues page's stage).
     { subject: "venues-honda", views: ["desk"], url: "/venues.html?venue=honda-center", ready: READY_HALLS, target: "#stage" },
-    { subject: "venues-saddledome-3d", views: ["desk"], url: "/venues.html?venue=scotiabank-saddledome&view=3d&viewpoint=broadcast&roof=1", ready: READY_HALLS_TURN, target: "#stage", height: 1300 },
+    { subject: "venues-saddledome-3d", views: ["desk"], url: "/venues.html?venue=scotiabank-saddledome&view=3d&roof=1&yaw=33&pitch=76&zoom=1.1", ready: READY_HALLS_TURN, target: "#stage", height: 1300 },
     // The real stadiums and a district (0.26.0): BC Place's soccer pitch under its cable roof in 3D, and BC Place beside Rogers Arena in 3D (the stadiums and district pages' stage); their 2D drawings are in the docs gallery.
     { subject: "stadiums-bc-place-3d", views: ["desk"], url: "/stadiums.html?config=soccer&view=3d&viewpoint=broadcast&roof=1", ready: READY_HALLS_TURN, target: "#stage" },
     { subject: "district-bc-rogers-3d", views: ["desk"], url: "/district.html?view=3d&viewpoint=broadcast&labels=1", ready: READY_HALLS_TURN, target: "#stage" },
