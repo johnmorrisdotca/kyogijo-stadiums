@@ -132,7 +132,7 @@ export function buildDistrictTurn(options: DistrictOptions, settings: DistrictTu
       const tag = j === 0 ? "" : `p${j}`;
       const memberId = `${id}-m${i}${tag}`;
       const crowd = (part.options as { crowd?: unknown }).crowd;
-      const model = buildTurn({ ...part.options, ...(profile.simple && typeof crowd === "object" && crowd !== null ? { crowd: { ...crowd, detail: "plain" } } : {}), language, ...(options.theme === undefined ? {} : { theme: options.theme }), id: `${base}-m${i}${tag}` } as SurfaceOptions, { ...settings, id: memberId, venue: { roof: true, ...(typeof settings.venue === "object" ? settings.venue : {}) }, preset: undefined, view: undefined });
+      const model = buildTurn({ ...part.options, ...(profile.simple && typeof crowd === "object" && crowd !== null ? { crowd: { ...crowd, detail: "plain", density: Math.min((crowd as { density?: number }).density ?? 0.85, 0.6) } } : {}), language, ...(options.theme === undefined ? {} : { theme: options.theme }), id: `${base}-m${i}${tag}` } as SurfaceOptions, { ...settings, id: memberId, venue: { roof: true, ...(typeof settings.venue === "object" ? settings.venue : {}) }, preset: undefined, view: undefined });
       const centre = surfaceCentre(part.options);
       const pfx = `m${i}${tag}-`;
       // A surface on an upper floor (the Kodokan's dojos) stands that high over the ground, on a floor drawn in the air; the ground under it is left bare.
