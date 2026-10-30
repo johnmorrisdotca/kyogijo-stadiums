@@ -7,6 +7,8 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.47.0] - 2026-10-30
+
 ### Added
 
 - **The Olympic Stadium's shell is the building's: 38 ribs, glazed bays and a low white roof (SPX-811).** In place of a plain tall drum under a low lens, the shell is 38 concrete consoles (34 anchored to the ground, 4 fixed to the tower: the French article) round the building's outline, each a curved wing that stands out at its foot and sweeps in to a ring, a glazed bay between each pair (a podium and three bands of glass), white roof panels climbing from the glazing to the ring, and a membrane closing the ring in a low cone, its crown the 52 metres over the field the English article gives. The stands are fitted inside the shell's sweep (`RIBBED_STANDS`), so no row stands out through the roof; the ring's height, the ribs' flare and the bays' profile are ours, from Commons photographs (`src/venue.ribbed.ts`, `RealShell.dome.ribs`, `StadiumRoof` data `ribs` and `top`). Compared with Commons photographs from the plaza, across the river, from Mount Royal and from below the tower (sheets in the backups folder, `2026-10-30-olympic-shell`). Left as it is, honestly: the real ribs are bigger and more curved, the real membrane is pleated and the real tower has about forty cables where the drawing has five.
