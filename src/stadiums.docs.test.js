@@ -83,7 +83,8 @@ describe("the real stadiums' files", () => {
         expect(ja.revision, s.id).toBe(s.ja.revision);
       }
       for (const config of Object.values(s.configs)) expect(article.infoboxCapacity, `${s.id} ${config.sport}`).toContain(config.seats.toLocaleString("en-US"));
-      if (s.tiers.lowerSeats !== undefined) expect(article.infoboxCapacity, s.id).toContain(s.tiers.lowerSeats.toLocaleString("en-US"));
+      // (The seats of the lowest bowl are on the infobox's line, or in the article's own table of the bowls.)
+      if (s.tiers.lowerSeats !== undefined) expect(`${article.infoboxCapacity} ${article.sentences.join(" ")}`, s.id).toContain(s.tiers.lowerSeats.toLocaleString("en-US"));
       // A ballpark's tiers by their seats are in the article's sentences.
       for (const seats of Object.values(s.tiers.tierSeats ?? {})) if (seats !== s.tiers.tierSeats.upper) expect(article.sentences.join(" "), `${s.id} ${seats}`).toContain(seats.toLocaleString("en-US"));
     }

@@ -304,6 +304,234 @@
      "浜風"
     ]
    }
+  },
+  {
+   "id": "yankee-stadium",
+   "kind": "park",
+   "wikidata": "Q753529",
+   "park": "yankee-stadium",
+   "lat": 40.82957,
+   "lon": -73.92639,
+   "osm": {
+    "building": "way/24801630",
+    "infield": "relation/9526083",
+    "infieldWay": 255283058
+   },
+   "en": {
+    "title": "Yankee Stadium",
+    "revision": 1382714435
+   },
+   "configs": {
+    "mlb": {
+     "sport": "mlb",
+     "seats": 46537,
+     "source": "wikipedia",
+     "read": "the infobox's capacity for baseball, 46,537 (2020 on; earlier seasons 47,309 to 50,291), the article's own figure for seats, with standing room 52,325; Wikidata's capacity (49,642) is the figure of 2014"
+    }
+   },
+   "tiers": {
+    "count": 2,
+    "basis": "documented",
+    "read": "the article: the Field Level and Main Level are the lower bowl, with the suites on the H&R Block Level, and the Upper Level and Grandstand Level the upper bowl; bleacher seats beyond the outfield fences"
+   },
+   "roof": {
+    "kind": "open",
+    "basis": "plausible",
+    "read": "the article speaks of a roof only as the support of the top deck's cantilevers and its lighting, with a frieze along the upper deck; nothing says that anything covers the field or the lower bowl, so the drawing is open to the air and leaves the upper deck's roof out"
+   },
+   "evidence": {
+    "en": [
+     "46,537 fans can be seated",
+     "Field Level and Main Level constitute the lower bowl",
+     "Upper Level and Grandstand Level constituting the upper bowl"
+    ]
+   }
+  },
+  {
+   "id": "citi-field",
+   "kind": "park",
+   "wikidata": "Q1072882",
+   "park": "citi-field",
+   "lat": 40.75699,
+   "lon": -73.84578,
+   "osm": {
+    "building": "way/604023701",
+    "pitch": "relation/8420709"
+   },
+   "en": {
+    "title": "Citi Field",
+    "revision": 1381363029
+   },
+   "configs": {
+    "mlb": {
+     "sport": "mlb",
+     "seats": 41922,
+     "source": "wikipedia",
+     "read": "the infobox's capacity for baseball, 41,922 (2012 on; 41,800 in 2009 to 2011), which Wikidata's capacity (P1083) also gives"
+    }
+   },
+   "tiers": {
+    "count": 3,
+    "basis": "plausible",
+    "read": "the article names the Field, the Excelsior and the Promenade levels and says restaurants and clubs are on every level; three bowls are drawn from those names (ours: it does not count them)"
+   },
+   "roof": {
+    "kind": "open",
+    "basis": "documented",
+    "read": "the article: the preliminary model of 1998 had a retractable roof and a movable grass field; the ballpark as built has no roof, and the drawing is open to the air"
+   },
+   "evidence": {
+    "en": [
+     "Citi Field has a capacity of 41,922",
+     "Excelsior Level",
+     "Promenade Level"
+    ]
+   }
+  },
+  {
+   "id": "metlife-stadium",
+   "kind": "stadium",
+   "wikidata": "Q10862290",
+   "ground": "metlife-stadium",
+   "gridiron": "nfl",
+   "lat": 40.81361,
+   "lon": -74.07444,
+   "osm": {
+    "building": "way/24221553",
+    "pitches": [
+     "way/180559973"
+    ],
+    "onePitch": true
+   },
+   "en": {
+    "title": "MetLife Stadium",
+    "revision": 1381185974
+   },
+   "configs": {
+    "nfl": {
+     "sport": "nfl",
+     "seats": 82500,
+     "source": "wikipedia",
+     "read": "the infobox's capacity, 82,500, for both the Giants' and the Jets' games, which Wikidata's capacity (P1083) also gives"
+    },
+    "soccer": {
+     "sport": "soccer",
+     "seats": 80663,
+     "source": "wikipedia",
+     "read": "the infobox's capacity for the 2026 world cup of soccer, 80,663, 1,837 fewer than its first (the renovation of the lower bowl that widened the field for the tournament)"
+    }
+   },
+   "tiers": {
+    "count": 3,
+    "basis": "documented",
+    "lowerSeats": 33346,
+    "read": "the article's table of the seating bowl: a lower bowl of 33,346 seats, a mid-bowl of 21,323 and an upper bowl of 27,897"
+   },
+   "roof": {
+    "kind": "open",
+    "basis": "documented",
+    "read": "the article: MetLife Stadium does not have a roof, as proposals to include one failed over a dispute for funding"
+   },
+   "bowlSeats": 82500,
+   "evidence": {
+    "en": [
+     "MetLife Stadium does not have a roof",
+     "Lower bowl",
+     "33,346"
+    ]
+   }
+  },
+  {
+   "id": "olympic-stadium-montreal",
+   "kind": "park",
+   "wikidata": "Q285467",
+   "park": "olympic-stadium-montreal",
+   "lat": 45.55781,
+   "lon": -73.55164,
+   "osm": {
+    "building": "way/108505523",
+    "tower": "way/20213158"
+   },
+   "en": {
+    "title": "Olympic Stadium (Montreal)",
+    "revision": 1382141337
+   },
+   "configs": {
+    "mlb": {
+     "sport": "mlb",
+     "seats": 49757,
+     "source": "wikipedia",
+     "read": "the infobox's capacity for baseball, 49,757 (1992 on, after 12,000 seats were taken out and home plate moved closer to the stands in the renovations of 1991); Wikidata's capacity (45,757) is kept beside it"
+    }
+   },
+   "tiers": {
+    "count": 2,
+    "basis": "plausible",
+    "read": "no source read says how many seating levels there are: a lower and an upper bowl are drawn, the usual for a stadium of 50,000 seats (ours)"
+   },
+   "roof": {
+    "kind": "fixed",
+    "basis": "documented",
+    "read": "the article: the Kevlar roof, which could retract, was removed in May 1998 and a $26 million non-retractable opaque blue roof was installed later that year; a doughnut-shaped permanent ring is the roof's permanent component"
+   },
+   "tower": {
+    "height": 165,
+    "unit": "m",
+    "angle": 45,
+    "basis": "documented",
+    "read": "the article: the Montreal Tower, 165 m high, tallest inclined structure in the world, inclined at 45 degrees and built into the north base of the stadium; OpenStreetMap maps its outline and the same 165 m height"
+   },
+   "evidence": {
+    "en": [
+     "inclined at 45°",
+     "165 m tower",
+     "non-retractable opaque blue roof was installed"
+    ]
+   }
+  },
+  {
+   "id": "barclays-center",
+   "kind": "hall",
+   "wikidata": "Q807966",
+   "names": {
+    "en": "Barclays Center",
+    "ja": "バークレイズ・センター"
+   },
+   "city": "Brooklyn",
+   "country": "US",
+   "lat": 40.68265,
+   "lon": -73.97469,
+   "osm": {
+    "building": "relation/8610205"
+   },
+   "en": {
+    "title": "Barclays Center",
+    "revision": 1380399342
+   },
+   "configs": {
+    "nba": {
+     "sport": "nba",
+     "seats": 17732,
+     "source": "wikipedia",
+     "read": "the infobox's capacity for basketball, 17,732, which Wikidata's capacity (P1083) also gives (hockey 15,795, which the NHL's Islanders used until 2020)"
+    }
+   },
+   "tiers": {
+    "count": 2,
+    "basis": "plausible",
+    "read": "no source read says how many seating levels there are: a lower and an upper bowl are drawn, the usual for an arena of 17,700 seats (ours)"
+   },
+   "roof": {
+    "kind": "fixed",
+    "basis": "documented",
+    "read": "the article speaks of the arena's green roof (an ironworker was killed installing it in 2015) and of a weathering-steel latticework in three articulated bands; the roof is fixed"
+   },
+   "evidence": {
+    "en": [
+     "arena's green roof",
+     "three articulated bands"
+    ]
+   }
   }
  ]
 }

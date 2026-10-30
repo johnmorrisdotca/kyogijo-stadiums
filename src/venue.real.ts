@@ -24,6 +24,38 @@ export function saddleAt(real: Pick<RealShell, "footprint">, [x, y]: Pt): number
 /** The height of the roof over a point of the building's edge, above the surface, in feet. */
 export const roofAt = (real: RealShell, p: Pt): number => real.edge + (real.roof === "saddle" ? SADDLE_RISE * saddleAt(real, p) : 0);
 
+/**
+ * A tower that leans: a square shaft that tapers from its base on the ground to its top at `height` feet, in four faces. Each face is the trapezoid between two corners of the base and the two over them, drawn on a plane
+ * through the base corner, the slanted edge and the base edge, so that the faces meet along their edges whatever the lean. The base and the top are the sources' (the map's footprint and the inclination the article gives); the
+ * width of the shaft is ours.
+ */
+export function towerPlanes(tower: NonNullable<RealShell["tower"]>, z: number): Plane[] {
+  const [bx, by] = tower.base;
+  const [tx, ty] = tower.top;
+  const lean = Math.hypot(tx - bx, ty - by) || 1;
+  // The shaft's sections are horizontal, a square at the base and a smaller one at the top: two directions across it, along the lean (`d`) and square to it (`a`), so that the sides along the lean stand upright and the front and the
+  // back slope.
+  const d: [number, number] = [(tx - bx) / lean, (ty - by) / lean];
+  const a: [number, number] = [-d[1], d[0]];
+  const [w0, w1] = tower.width;
+  const offsets: [number, number][] = [[-1, -1], [1, -1], [1, 1], [-1, 1]];
+  const corner = (k: number, w: number, top: boolean): V3 => [(top ? tx : bx) + (a[0] * offsets[k][0] + d[0] * offsets[k][1]) * (w / 2), (top ? ty : by) + (a[1] * offsets[k][0] + d[1] * offsets[k][1]) * (w / 2), z + (top ? tower.height : 0)];
+  const planes: Plane[] = [];
+  for (let k = 0; k < 4; k += 1) {
+    const [c0, c1] = [corner(k, w0, false), corner((k + 1) % 4, w0, false)];
+    const t0 = corner(k, w1, true);
+    const u: V3 = [t0[0] - c0[0], t0[1] - c0[1], t0[2] - c0[2]];
+    const v: V3 = [c1[0] - c0[0], c1[1] - c0[1], c1[2] - c0[2]];
+    const [lu, lv] = [Math.hypot(...u), Math.hypot(...v)];
+    // The face that looks up and away from the stadium carries the two long dark slits the tower has down its sloped face and the dark band of the observatory at its top (ours, from photographs: simple strips, not its glazing).
+    const width = (at: number): number => lv * (1 - (at / lu) * (1 - w1 / w0));
+    const strip = (f0: number, f1: number, s0: number, s1: number): string => `<polygon class="u-tower-slit" points="${n(s0)} ${n(f0 * width(s0))} ${n(s1)} ${n(f0 * width(s1))} ${n(s1)} ${n(f1 * width(s1))} ${n(s0)} ${n(f1 * width(s0))}"/>`;
+    const slits = k === 0 ? `${strip(0.26, 0.33, lu * 0.1, lu * 0.9)}${strip(0.62, 0.69, lu * 0.1, lu * 0.9)}${strip(0, 1, lu * 0.94, lu)}` : "";
+    planes.push({ id: `tower-${k}`, kind: "mast", o: c0, u, v, svg: `<polygon class="u-tower" points="0 0 ${n(lu)} 0 ${n(lu)} ${n((lv * w1) / w0)} 0 ${n(lv)}"/>${slits}` });
+  }
+  return planes;
+}
+
 /** The point where a ray from `from` first meets a polygon, or `undefined`. */
 export function firstHit(poly: readonly Pt[], from: Pt, angle: number): Pt | undefined {
   const [dx, dy] = [Math.cos(angle), Math.sin(angle)];
@@ -125,7 +157,7 @@ export function realBuilding(real: RealShell, top: StandRing | undefined, centre
     return items;
   }
   if (parts.roof && real.roof === "dome" && real.dome !== undefined) {
-    const planes = domeRoof(real.dome, lift, steps);
+    const planes = [...domeRoof(real.dome, lift, steps), ...(real.tower === undefined ? [] : towerPlanes(real.tower, lift))];
     if (planes.length > 0) items.push({ id: "roof", kind: "roof", at: centre, height: heightOf(planes), planes });
     return items;
   }

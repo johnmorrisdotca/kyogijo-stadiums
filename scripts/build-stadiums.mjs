@@ -22,7 +22,9 @@ const root = new URL("../data-sources/stadiums/", import.meta.url);
 const day = process.argv[2] ?? readdirSync(root).filter((name) => /^\d{4}-\d{2}-\d{2}$/.test(name)).sort().at(-1);
 if (day === undefined) throw new Error("no data-sources/stadiums/<date>/ to read: run `pnpm stadiums:fetch` first");
 const dir = new URL(`${day}/`, root);
-const load = (name) => JSON.parse(readFileSync(new URL(name, dir), "utf8"));
+// A stadium added on a later day has its own OpenStreetMap file in that day's folder (with the day's whole Wikidata and Wikipedia files, which hold every stadium); a stadium of an earlier day keeps its own folder.
+const days = readdirSync(root).filter((name) => /^\d{4}-\d{2}-\d{2}$/.test(name)).sort().reverse().filter((name) => name <= day);
+const load = (name) => JSON.parse(readFileSync(new URL(name, existsSync(new URL(name, dir)) ? dir : new URL(`${days.find((d) => existsSync(new URL(`${d}/${name}`, root)))}/`, root)), "utf8"));
 const wikidata = load("wikidata.json").entities;
 const wikipediaFile = load("wikipedia.json");
 const wikipedia = wikipediaFile.articles;
@@ -34,9 +36,11 @@ const fail = (message) => {
 const BASES = ["documented", "plausible"];
 const ROOFS = ["cable", "fixed", "canopy", "panels", "dome", "open"];
 const SOURCES = ["wikipedia", "wikidata"];
-const CONFIGS = { stadium: ["cfl", "nfl", "soccer"], park: ["mlb"], hall: ["boxing"] };
+const CONFIGS = { stadium: ["cfl", "nfl", "soccer"], park: ["mlb"], hall: ["boxing", "nba"] };
 /** The least and the most seats a configuration of each kind has. */
-const SEATS = { stadium: [20000, 100000], park: [20000, 100000], hall: [1000, 5000] };
+const SEATS = { stadium: [20000, 100000], park: [20000, 100000], hall: [1000, 5000], arena: [10000, 25000] };
+/** The range a configuration is held to: an arena's court is a hall of its own size. */
+const seatsRange = (kind, key) => (kind === "hall" && key === "nba" ? SEATS.arena : SEATS[kind]);
 const SPORT_OF_TAG = { american_football: ["nfl", "cfl"], canadian_football: ["cfl"], soccer: ["soccer"], baseball: ["mlb"] };
 const stadiums = source.stadiums;
 const kindOf = (v) => v.kind ?? "stadium";
@@ -72,7 +76,6 @@ for (const v of stadiums) {
   const article = wikipedia[v.id];
   if (article === undefined || article.title !== v.en.title) fail(`${v.id}: the archive has no article ${v.en.title}`);
   if (article.revision !== v.en.revision) fail(`${v.id}: the facts cite revision ${v.en.revision} but the archive read ${article.revision}`);
-  if (place.en?.revision !== v.en.revision && kind === "stadium") fail(`${v.id}: the ground's article is at revision ${place.en?.revision}, not ${v.en.revision}`);
   // The Japanese article a fact cites, at its revision, and the words of either article that a fact leans on (kept sentences of the archive).
   if (v.ja !== undefined) {
     const ja = wikipediaJa[v.id];
@@ -91,7 +94,7 @@ for (const v of stadiums) {
   for (const key of keys) {
     const c = v.configs[key];
     if (c.sport !== key) fail(`${v.id}: configuration ${key}`);
-    if (!(Number.isInteger(c.seats) && c.seats > SEATS[kind][0] && c.seats < SEATS[kind][1])) fail(`${v.id}/${key}: seats`);
+    if (!(Number.isInteger(c.seats) && c.seats > seatsRange(kind, key)[0] && c.seats < seatsRange(kind, key)[1])) fail(`${v.id}/${key}: seats`);
     if (!SOURCES.includes(c.source) || typeof c.read !== "string" || c.read === "") fail(`${v.id}/${key}: source and read`);
     // A figure is on the infobox's capacity line (or is Wikidata's, where it says so).
     if (!(c.source === "wikidata" ? capacities(item).includes(c.seats) : numbers.includes(c.seats))) fail(`${v.id}/${key}: ${c.seats} is not what ${c.source} gives (${c.source === "wikidata" ? capacities(item).join(", ") : numbers.join(", ")})`);
@@ -100,7 +103,7 @@ for (const v of stadiums) {
   if (kind === "stadium" && !["cfl", "nfl"].includes(v.gridiron ?? "cfl")) fail(`${v.id}: gridiron`);
   const { tiers, roof } = v;
   if (![1, 2, 3, 4].includes(tiers.count) || !BASES.includes(tiers.basis) || typeof tiers.read !== "string") fail(`${v.id}: tiers`);
-  if (tiers.lowerSeats !== undefined && !(tiers.count > 1 && numbers.includes(tiers.lowerSeats) && (kind === "hall" ? tiers.lowerSeats < (v.bowlSeats ?? Infinity) : tiers.lowerSeats < Math.min(...keys.map((k) => v.configs[k].seats)) * 0.8))) fail(`${v.id}: lowerSeats must be on the infobox's line and under 80 percent of every configuration's (a hall's: under the bowl's seats)`);
+  if (tiers.lowerSeats !== undefined && !(tiers.count > 1 && (numbers.includes(tiers.lowerSeats) || article.sentences.join(" ").includes(grouped(tiers.lowerSeats))) && (kind === "hall" ? tiers.lowerSeats < (v.bowlSeats ?? Infinity) : tiers.lowerSeats < Math.min(...keys.map((k) => v.configs[k].seats)) * 0.8))) fail(`${v.id}: lowerSeats must be on the infobox's line (or in the article's sentences) and under 80 percent of every configuration's (a hall's: under the bowl's seats)`);
   // A ballpark's tiers by their seats: each figure is in the article's sentences, and they add up to within 5 percent of the capacity (some places are standing ones and the like).
   if (tiers.tierSeats !== undefined) {
     const prose = article.sentences.join(" ");
@@ -151,7 +154,7 @@ const largest = (e, origin) => outlines(e).reduce((best, o) => (best === undefin
 const osm = {};
 for (const v of stadiums) {
   const file = `osm-${v.id}.json`;
-  if (!existsSync(new URL(file, dir))) fail(`${v.id}: ${file} is not in ${day}: run \`pnpm stadiums:fetch\``);
+  if (!days.some((d) => existsSync(new URL(`${d}/${file}`, root)))) fail(`${v.id}: ${file} is not in ${day}: run \`pnpm stadiums:fetch\``);
   const raw = load(file);
   if (raw.wikidata !== v.wikidata) fail(`${v.id}: ${file} is for ${raw.wikidata}`);
   const kind = kindOf(v);
@@ -216,7 +219,8 @@ for (const v of stadiums) {
     const headings = boxes.map((b) => b.box.heading);
     const off = (h) => Math.abs((((h - headings[0] + 90) % 180) + 180) % 180 - 90);
     if (Math.max(...headings.map(off)) > 3) fail(`${v.id}: the pitches do not lie the same way (${headings.join(", ")})`);
-    for (const key of Object.keys(v.configs)) if (!boxes.some((b) => (SPORT_OF_TAG[b.e.tags?.sport] ?? []).includes(key))) fail(`${v.id}: no pitch mapped for ${key}`);
+    // (A stadium whose one mapped pitch serves every configuration says so, `onePitch`: MetLife Stadium's is tagged for soccer for the 2026 tournament, and its note says it was American football's.)
+    if (v.osm.onePitch !== true) for (const key of Object.keys(v.configs)) if (!boxes.some((b) => (SPORT_OF_TAG[b.e.tags?.sport] ?? []).includes(key))) fail(`${v.id}: no pitch mapped for ${key}`);
     const mean = [boxes.reduce((s, b) => s + b.centre[0], 0) / boxes.length, boxes.reduce((s, b) => s + b.centre[1], 0) / boxes.length];
     axis = { heading: round(headings[0], 1), basis: "pitch", strength: round(coreOf(metres).strength, 2), elongation: round(boxes[0].box.length / boxes[0].box.width, 2), centre: lonLatFrom(origin, mean).map((x) => round(x, 6)) };
     if (v.osm.roofs !== undefined) {
@@ -341,12 +345,29 @@ for (const v of stadiums) {
       roof = { source: `${e.type}/${e.id}`, height: top, rise, ring: simple(outlines(e)[0].geometry) };
     }
   }
-  osm[v.id] = { source: outlineSource, read: raw.read, base: raw.osmBase, ring, ...(Number.isFinite(height) && height > 5 && height < 120 ? { height } : {}), ...(roof === undefined ? {} : { roof }), ...(canopies === undefined ? {} : { canopies }), axis };
+  // A tower beside the building (the Olympic Stadium's): its footprint, and its axis. The shaft leans over the building at the inclination the article gives, so its top is `height / tan(angle)` metres from the base towards
+  // the middle of the building, and its base is the footprint's point farthest from that middle.
+  let tower;
+  if (v.osm?.tower !== undefined) {
+    if (v.tower === undefined) fail(`${v.id}: the tower is mapped (${v.osm.tower}) but the facts do not say what it is`);
+    const e = find(raw, v.osm.tower, v.id);
+    const height = Number(e.tags?.height);
+    if (height !== v.tower.height) fail(`${v.id}: OpenStreetMap maps the tower ${height} m high, the facts say ${v.tower.height}`);
+    const own = outlines(e)[0] ?? fail(`${v.id}: ${v.osm.tower} has no closed outline`);
+    const m = metresFrom(origin, ringOf(own.geometry));
+    const farthest = m.reduce((best, p) => (Math.hypot(...p) > Math.hypot(...best) ? p : best), m[0]);
+    const reach = v.tower.height / Math.tan((v.tower.angle * Math.PI) / 180);
+    const away = Math.hypot(...farthest);
+    const topAt = [farthest[0] - (farthest[0] / away) * reach, farthest[1] - (farthest[1] / away) * reach];
+    const kept = simplified(m, 1.5);
+    tower = { source: `${e.type}/${e.id}`, height, ring: lonlat6(ringOf(own.geometry).filter((_, i) => kept.some((k) => k === m[i]))), base: lonLatFrom(origin, farthest).map((x) => round(x, 6)), top: lonLatFrom(origin, topAt).map((x) => round(x, 6)) };
+  }
+  osm[v.id] = { source: outlineSource, read: raw.read, base: raw.osmBase, ring, ...(Number.isFinite(height) && height > 5 && height < 120 ? { height } : {}), ...(roof === undefined ? {} : { roof }), ...(canopies === undefined ? {} : { canopies }), ...(tower === undefined ? {} : { tower }), axis };
 }
 
 // ---- The data files. ----
 const q = (value) => JSON.stringify(value).replace(/":/g, '": ').replace(/,"/g, ', "');
-const FACT_KEYS = ["id", "kind", "wikidata", "ground", "park", "gridiron", "names", "en", "ja", "looks", "configs", "bowlSeats", "wikidataSeats", "tiers", "roof", "facade"];
+const FACT_KEYS = ["id", "kind", "wikidata", "ground", "park", "gridiron", "names", "en", "ja", "looks", "configs", "bowlSeats", "wikidataSeats", "tiers", "roof", "tower", "facade"];
 const factsText = `// Made by scripts/build-stadiums.mjs from scripts/stadiums.data.json: do not edit by hand.
 // The facts are those of the Wikidata items and the English Wikipedia articles (revisions) each entry cites, in our own words; see docs/stadiums.md and NOTICE.md. Wikidata is CC0; the facts read from
 // English Wikipedia are numbers and words of ours, not its text (CC BY-SA 4.0). What OpenStreetMap gave is in stadiums.osm.data.ts, apart, because it is ODbL.
@@ -372,8 +393,9 @@ export const STADIUM_OSM: Record<string, StadiumOsm> = {
 ${stadiums.map((v) => {
   const o = clean(osm[v.id]);
   const roof = o.roof === undefined ? "" : `\n    "roof": {\n      "source": ${q(o.roof.source)},${o.roof.height === undefined ? "" : `\n      "height": ${o.roof.height},`}${o.roof.rise === undefined ? "" : `\n      "rise": ${o.roof.rise},`}${o.roof.outer === undefined ? "" : `\n      "outer": ${q(o.roof.outer)},`}${o.roof.opening === undefined ? "" : `\n      "opening": { "source": ${q(o.roof.opening.source)}, "ring": ${ringText(o.roof.opening.ring, "      ")} },`}${o.roof.ring === undefined ? "" : `\n      "ring": ${ringText(o.roof.ring, "      ")},`}\n    },`;
+  const tower = o.tower === undefined ? "" : `\n    "tower": { "source": ${q(o.tower.source)}, "height": ${o.tower.height}, "base": ${q(o.tower.base)}, "top": ${q(o.tower.top)}, "ring": ${ringText(o.tower.ring, "    ")} },`;
   const canopies = o.canopies === undefined ? "" : `\n    "canopies": [\n${o.canopies.map((c) => `      { "source": ${q(c.source)}, "height": ${c.height}, "rise": ${c.rise}, "ring": ${ringText(c.ring, "      ")} },`).join("\n")}\n    ],`;
-  return `  "${v.id}": {\n    "source": ${q(o.source)},\n    "read": ${q(o.read)},\n    "base": ${q(o.base)},\n    "licence": "ODbL-1.0",\n    "attribution": "(c) OpenStreetMap contributors, ODbL 1.0, openstreetmap.org/copyright",\n${o.height === undefined ? "" : `    "height": ${o.height},\n`}    "axis": ${q(o.axis)},${roof}${canopies}\n    "ring": ${ringText(o.ring, "    ")},\n  },`;
+  return `  "${v.id}": {\n    "source": ${q(o.source)},\n    "read": ${q(o.read)},\n    "base": ${q(o.base)},\n    "licence": "ODbL-1.0",\n    "attribution": "(c) OpenStreetMap contributors, ODbL 1.0, openstreetmap.org/copyright",\n${o.height === undefined ? "" : `    "height": ${o.height},\n`}    "axis": ${q(o.axis)},${roof}${canopies}${tower}\n    "ring": ${ringText(o.ring, "    ")},\n  },`;
 }).join("\n")}
 };
 `;

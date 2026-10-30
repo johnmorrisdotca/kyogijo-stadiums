@@ -152,7 +152,7 @@ const stadiumMember = (stadium: RealStadium, config: StadiumConfigId, language: 
     heading: stadiumFrameHeading(stadium),
     basis: stadium.osm.axis.basis,
     seats: stadiumSeats(stadium, config),
-    options: park ? { sport: "mlb", park: stadium.id, crowd: { real: true }, language } : { sport: config, stadium: stadium.id, crowd: { real: true }, language },
+    options: park ? { sport: "mlb", park: stadium.id, crowd: { real: true }, language } : { sport: config, stadium: stadium.id, ...(config === "nba" ? { arena: stadium.id } : {}), crowd: { real: true }, language },
   };
 };
 

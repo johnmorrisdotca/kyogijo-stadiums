@@ -19,7 +19,7 @@ const REAL: readonly (readonly [string, SurfaceOptions])[] = [
   ...STADIUM_IDS.map((id): [string, SurfaceOptions] => {
     const v = STADIUMS[id];
     const kind = stadiumKind(v);
-    const sport = kind === "park" ? "mlb" : kind === "hall" ? "boxing" : Object.keys(v.configs)[0];
+    const sport = kind === "park" ? "mlb" : Object.keys(v.configs)[0];
     return [id, (kind === "park" ? { sport, park: v.park, crowd: { real: true } } : { sport, stadium: id, crowd: { real: true } }) as SurfaceOptions];
   }),
 ];

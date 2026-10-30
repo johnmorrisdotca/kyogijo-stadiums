@@ -20,7 +20,7 @@ const fieldOf = (sport: "cfl" | "nfl" | "soccer") => crowdStands(options(sport))
 
 describe("the stadiums: BC Place", () => {
   it("is the one stadium of the data, a ground the package already has, with its Wikidata item and the article its facts were read from", () => {
-    expect(STADIUM_IDS).toEqual(["bc-place", "lumen-field", "t-mobile-park", "tokyo-dome", "korakuen-hall", "hanshin-koshien-stadium"]);
+    expect(STADIUM_IDS).toEqual(["bc-place", "lumen-field", "t-mobile-park", "tokyo-dome", "korakuen-hall", "hanshin-koshien-stadium", "yankee-stadium", "citi-field", "metlife-stadium", "olympic-stadium-montreal", "barclays-center"]);
     expect(stadiumById("bc-place")).toBe(bc);
     expect(stadiumByWikidata("Q612227")).toBe(bc);
     expect(stadiumById("toString")).toBeUndefined();
@@ -755,8 +755,8 @@ describe("a stadium of more than one configuration is one drawing but for its fi
     return numbers.map((n, i) => n - (i % 2 === 0 ? x : y));
   };
 
-  it("covers BC Place and Lumen Field", () => {
-    expect(stadiums.map((s) => s.id)).toEqual(["bc-place", "lumen-field"]);
+  it("covers BC Place, Lumen Field and MetLife Stadium", () => {
+    expect(stadiums.map((s) => s.id)).toEqual(["bc-place", "lumen-field", "metlife-stadium"]);
   });
 
   it("has one frame, one outline, one bowl and one ground, whichever configuration is drawn", () => {

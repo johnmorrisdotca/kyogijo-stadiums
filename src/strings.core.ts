@@ -339,6 +339,7 @@ export interface KyogijoWords {
     stadiumInfield: string;
     stadiumHall: string;
     stadiumRingBuilding: string;
+    stadiumCourtBuilding: string;
     stadiumPitchPark: string;
     stadiumNonePark: string;
     /** A district: a plan of {count} real venues at their real positions, {mode}; and what `mode` says for the two kinds of plan, and the word before the credit. */

@@ -123,6 +123,11 @@ export interface RealShell {
   skylight?: boolean;
   /** A `cable` roof's masts round its rim: how many, and how high they rise over the rim, in feet. */
   masts?: { count: number; height: number };
+  /**
+   * A tower that leans over the building (the Olympic Stadium's Montreal Tower): the middle of its base and of its top in the drawing's frame, the height of its top above the surface in feet, and the width of its shaft at the
+   * base and at the top in feet (a plain tapering square shaft: its width is ours).
+   */
+  tower?: { base: Pt; top: Pt; height: number; width: [number, number] };
   /** The height of the roof's lowest edge above the surface, in feet. */
   edge: number;
 }

@@ -10,7 +10,7 @@
 //                      sentences that speak of the same things (CC BY-SA 4.0 as well, evidence only).
 //
 // Overpass is polite use only: one query per stadium, 10 seconds apart, a back-off on 429, 502, 503 and 504 and the second public gateway when the first is busy.
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import process from "node:process";
 import { setTimeout } from "node:timers";
 import { URL } from "node:url";
@@ -23,6 +23,9 @@ mkdirSync(out, { recursive: true });
 const USER_AGENT = "kyogijo-venues/0.1 (https://github.com/johnmorrisdotca/kyogijo-stadiums; john@johnmorris.ca)";
 const GATEWAYS = ["https://overpass-api.de/api/interpreter", "https://lambert.openstreetmap.de/api/interpreter"];
 const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+// A stadium added on a later day goes into a folder of that day, whose Wikidata and Wikipedia files start from the newest earlier day's (what that day read is kept, and is not read again); its OpenStreetMap file is its own.
+const earlier = readdirSync(new URL("../data-sources/stadiums/", import.meta.url)).filter((name) => /^\d{4}-\d{2}-\d{2}$/.test(name) && name < day).sort().at(-1);
+const carried = (name) => (earlier !== undefined && existsSync(new URL(`../data-sources/stadiums/${earlier}/${name}`, import.meta.url)) ? JSON.parse(readFileSync(new URL(`../data-sources/stadiums/${earlier}/${name}`, import.meta.url), "utf8")) : undefined);
 
 const getJson = async (url) => {
   for (let attempt = 0; attempt < 4; attempt += 1) {
@@ -38,7 +41,7 @@ const getJson = async (url) => {
 // A stadium added later is fetched and put beside the ones already there; what an earlier run kept is never fetched again.
 const wikidataFile = new URL("wikidata.json", out);
 {
-  const kept = existsSync(wikidataFile) ? JSON.parse(readFileSync(wikidataFile, "utf8")) : { read: day, licence: "Wikidata, CC0", entities: {} };
+  const kept = existsSync(wikidataFile) ? JSON.parse(readFileSync(wikidataFile, "utf8")) : carried("wikidata.json") ?? { read: day, licence: "Wikidata, CC0", entities: {} };
   const missing = stadiums.filter((v) => kept.entities[v.wikidata] === undefined).map((v) => v.wikidata);
   if (missing.length > 0) {
     const body = await getJson(`https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${missing.join("|")}&props=labels|claims|sitelinks&languages=en|ja&format=json&formatversion=2`);
@@ -66,7 +69,7 @@ const plain = (text) =>
     .replace(/<[^>]+>/g, " ")
     .replace(/\s+/g, " ")
     .trim();
-const keptArticles = existsSync(wikipediaFile) ? JSON.parse(readFileSync(wikipediaFile, "utf8")) : { read: day, licence: "English Wikipedia, CC BY-SA 4.0: sentences kept as evidence only", articles: {} };
+const keptArticles = existsSync(wikipediaFile) ? JSON.parse(readFileSync(wikipediaFile, "utf8")) : carried("wikipedia.json") ?? { read: day, licence: "English Wikipedia, CC BY-SA 4.0: sentences kept as evidence only", articles: {} };
 const wanted = stadiums.filter((v) => keptArticles.articles[v.id] === undefined);
 if (wanted.length > 0) {
   const url = `https://en.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=ids|timestamp|content&rvslots=main&titles=${encodeURIComponent(wanted.map((v) => v.en.title).join("|"))}&redirects=1&format=json&formatversion=2`;
@@ -87,7 +90,8 @@ if (wanted.length > 0) {
     }
     const content = revision.slots.main.content;
     // The infobox's capacity line is a fact worth keeping whole (the figures for the other configurations are in it); the prose is kept as the sentences that speak of the topics.
-    const capacity = /\|\s*capacity\s*=\s*([^\n]*)/.exec(content)?.[1]?.replace(/<ref[^>]*\/>/gi, "").replace(/<ref[^>]*>[\s\S]*?<\/ref>/gi, "").replace(/\[\[(?:[^\]|]*\|)?([^\]]*)\]\]/g, "$1");
+    // (The field runs to the next infobox field: a list of capacities may spread over several lines, as Yankee Stadium's collapsible list does.)
+    const capacity = /\|\s*capacity\s*=\s*([\s\S]*?)(?=\n\s*\|\s*[a-z_ ]+=|\n\}\})/.exec(content)?.[1]?.replace(/<ref[^>]*\/>/gi, "").replace(/<ref[^>]*>[\s\S]*?<\/ref>/gi, "").replace(/\[\[(?:[^\]|]*\|)?([^\]]*)\]\]/g, "$1").replace(/\s+/g, " ").trim();
     const prose = plain(content);
     const sentences = prose.split(/(?<=[.!?])\s+(?=[A-Z])/).filter((s) => TOPIC.test(s) && s.length < 500);
     articles[v.id] = { title: page.title, revision: revision.revid, timestamp: revision.timestamp, infoboxCapacity: capacity, sentences };

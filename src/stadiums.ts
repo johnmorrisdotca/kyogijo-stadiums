@@ -19,8 +19,8 @@ export { VENUE_ATTRIBUTION };
 /** How a fact is known: `documented` is what a source cited with it says; `plausible` is ours, for a bowl no source describes. */
 export type StadiumBasis = "documented" | "plausible";
 
-/** The configurations of a stadium: the field the seats are counted for. `cfl` and `nfl` are the football fields of the two leagues, `soccer` a soccer pitch, `mlb` a baseball field, `boxing` a boxing ring in a hall. */
-export type StadiumConfigId = "cfl" | "nfl" | "soccer" | "mlb" | "boxing";
+/** The configurations of a stadium: the field the seats are counted for. `cfl` and `nfl` are the football fields of the two leagues, `soccer` a soccer pitch, `mlb` a baseball field, `boxing` a boxing ring in a hall, `nba` a basketball court in a hall (an arena that stages basketball, Barclays Center). */
+export type StadiumConfigId = "cfl" | "nfl" | "soccer" | "mlb" | "boxing" | "nba";
 
 /** What a stadium is: a `stadium` has a football field and a soccer pitch lying along its length, a `park` is a baseball park, whose frame is home plate's, a `hall` is a hall with a ring in the middle and the seats round it. */
 export type StadiumKind = "stadium" | "park" | "hall";
@@ -81,6 +81,8 @@ export interface RealStadiumData {
     tierSeats?: { lower: number; upper: number; bleachers: number };
     read: string;
   };
+  /** A tower that leans over the stadium (the Olympic Stadium's Montreal Tower): its height and its inclination, as the article gives them. The tower's footprint is `StadiumOsm.tower`. */
+  tower?: { height: number; unit: "m"; angle: number; basis: StadiumBasis; read: string };
   /** The building's lower band, a podium under the concourse levels: its height in feet and how it is known (ours where the sources do not say). */
   facade?: { podium: number; unit: "ft"; basis: StadiumBasis; read: string };
   roof: {
@@ -113,6 +115,12 @@ export interface StadiumOsm {
   roof?: { source: string; height?: number; rise?: number; outer?: string; opening?: { source: string; ring: [number, number][] }; ring?: [number, number][] };
   /** The canopies OpenStreetMap maps over some of the stands: each one's outline, the height of its top and how far it rises (metres). */
   canopies?: { source: string; height: number; rise: number; ring: [number, number][] }[];
+  /**
+   * The tower OpenStreetMap maps beside the building, where the stadium has one (`RealStadiumData.tower`): its footprint (the tower's shaft seen from above, with its base) as `[longitude, latitude]`, the height OpenStreetMap
+   * maps for it in metres, and the two ends of its axis worked out from them: the base, the footprint's point farthest from the middle of the building, and the top, 165 m up, which lies over the building (the shaft leans over
+   * it at the inclination the article gives, so its top is that many metres from the base, towards the middle of the building).
+   */
+  tower?: { source: string; height: number; ring: [number, number][]; base: [number, number]; top: [number, number] };
   /** The building's outline as `[longitude, latitude]`, not repeating its first point. */
   ring: [number, number][];
   /**
@@ -186,8 +194,8 @@ export const stadiumFrameHeading = (stadium: RealStadium): number => (stadiumKin
 /** How the field lies in a stadium's building (see `StadiumOsm.axis`). */
 export const stadiumOrientation = (stadium: RealStadium): StadiumOrientation => ({ heading: stadium.osm.axis.heading, basis: stadium.osm.axis.basis, north: round(northOn(stadiumFrameHeading(stadium))) });
 
-/** The configuration a sport is: `cfl`, `nfl`, `soccer`, `mlb` or `boxing`, or `undefined` for a sport a stadium has no configuration for. */
-export const stadiumConfigOf = (sport: string | undefined): StadiumConfigId | undefined => (sport === "cfl" || sport === "nfl" || sport === "soccer" || sport === "mlb" || sport === "boxing" ? sport : undefined);
+/** The configuration a sport is: `cfl`, `nfl`, `soccer`, `mlb`, `boxing` or `nba`, or `undefined` for a sport a stadium has no configuration for. */
+export const stadiumConfigOf = (sport: string | undefined): StadiumConfigId | undefined => (sport === "cfl" || sport === "nfl" || sport === "soccer" || sport === "mlb" || sport === "boxing" || sport === "nba" ? sport : undefined);
 
 /** The seats of a stadium for a configuration (0 for one it has none of). */
 export const stadiumSeats = (stadium: RealStadium, config: StadiumConfigId): number => stadium.configs[config]?.seats ?? 0;
@@ -460,7 +468,7 @@ function plan(stadium: RealStadium, config: StadiumConfigId, rink: Box): Stadium
       footprint,
       hall: { ...outer, x0: outer.x0 - HALL, y0: outer.y0 - HALL, x1: outer.x1 + HALL, y1: outer.y1 + HALL, r: outer.r + HALL },
       ...(north === undefined ? {} : { north }),
-      roof: cable ? "cable" : canopies === undefined ? "fixed" : "canopy",
+      roof: cable ? "cable" : canopies === undefined ? (stadium.roof.kind === "open" ? "open" : "fixed") : "canopy",
       edge,
       ...(cable ? { crown: { rise, opening } } : {}),
       ...(stadium.facade === undefined ? {} : { podium: stadium.facade.podium }),
@@ -507,6 +515,9 @@ const PARK_PLANS = new WeakMap<RealStadium, Map<string, ParkPlan>>();
 const PARK_COVER = 0.92;
 /** How far an open-air ballpark's walls stand over its top row, in feet (ours). */
 const OPEN_WALL_OVER = 6;
+/** How far a fixed roof's crown stands over its rim, in feet, and the width of a leaning tower's shaft at its base and at its top, in feet (ours: the sources give a roof's kind and a tower's height, not these). */
+const FIXED_CROWN = 30;
+const TOWER_WIDTH = [180, 92] as const;
 const PARK_PARKED = 0.3;
 
 /**
@@ -580,6 +591,14 @@ function park(stadium: RealStadium, input: ParkInput): ParkPlan {
     const rim = metresFrom(origin, lonLat(mapped.ring)).map(frameOf);
     const low = round((mapped.height - mapped.rise) * FEET_PER_METRE);
     shell = { footprint, hall, ...(north === undefined ? {} : { north }), roof: "dome", edge: low, wall: low, dome: { rim, low, crown: round(mapped.height * FEET_PER_METRE) }, ...ivy };
+  } else if (stadium.roof.kind === "fixed") {
+    // A fixed roof over the whole bowl (the Olympic Stadium's): a low lens over the outline, from the walls (a little over the top row) to a crown a little higher over the middle (ours: the sources say the roof is fixed, not what shape it has),
+    // and the tower that leans over it where OpenStreetMap maps one.
+    const low = round(Math.max(top + STADIUM_CLEARANCE, (stadium.osm.height ?? 0) * FEET_PER_METRE));
+    const rim = footprint.map((p): Pt => [c[0] + (p[0] - c[0]) * 0.98, c[1] + (p[1] - c[1]) * 0.98]);
+    const mapped = stadium.osm.tower;
+    const tower = mapped === undefined || stadium.tower === undefined ? undefined : { base: frameOf(metresFrom(origin, [mapped.base as LonLat])[0]), top: frameOf(metresFrom(origin, [mapped.top as LonLat])[0]), height: round(stadium.tower.height * FEET_PER_METRE), width: [TOWER_WIDTH[0], TOWER_WIDTH[1]] as [number, number] };
+    shell = { footprint, hall, ...(north === undefined ? {} : { north }), roof: "dome", edge: low, wall: low, dome: { rim, low, crown: low + FIXED_CROWN }, ...(tower === undefined ? {} : { tower }), ...ivy };
   } else if (stadium.roof.kind === "open") {
     // No roof: the walls stand a little over the top row.
     const wall = round(Math.max(top + OPEN_WALL_OVER, (stadium.osm.height ?? 0) * FEET_PER_METRE));
