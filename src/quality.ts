@@ -101,7 +101,7 @@ export interface GovernorTuning {
   settleMs: number;
   /** The first frames after the view is mounted are slow whatever it holds (scripts are still compiling, the page is still being laid out): they are not judged. */
   warmMs: number;
-  /** The mean interval between frames above which the view is over budget (27 is below 37 frames a second; it widens on a display that refreshes slower than 60 Hz), and the mean at or under which it is steady (18.5 holds 60 frames a second). */
+  /** The mean interval between frames above which the view is over budget (21 is below 48 frames a second: a view that misses a refresh in three does not hold 60; it widens on a display that refreshes slower than 60 Hz), and the mean at or under which it is steady (18.5 holds 60 frames a second). */
   budgetMs: number;
   steadyMs: number;
   /** How long the view must stay steady before it tries the tier above, and the most that wait grows to after steps that were taken back. */
@@ -113,7 +113,7 @@ export interface GovernorTuning {
   pauseMs: number;
 }
 
-export const GOVERNOR_TUNING: GovernorTuning = { frames: 24, settleMs: 700, warmMs: 600, budgetMs: 27, steadyMs: 18.5, upAfterMs: 5000, maxUpAfterMs: 300000, quietMs: 600, pauseMs: 250 };
+export const GOVERNOR_TUNING: GovernorTuning = { frames: 24, settleMs: 700, warmMs: 600, budgetMs: 21, steadyMs: 18.5, upAfterMs: 5000, maxUpAfterMs: 300000, quietMs: 600, pauseMs: 250 };
 
 /** What the governor does with a frame. */
 export interface Governor {
@@ -195,7 +195,10 @@ export function createGovernor(start: QualityTier, tuning: Partial<GovernorTunin
       const budget = Math.max(t.budgetMs, t.budgetMs * slow);
       // Steady is steady on any display: only a view that really holds 60 frames a second tries a tier up.
       const steady = t.steadyMs;
-      if (mean > budget && tier !== "low") {
+      // Over budget is judged without the slowest frames of the window (a hitch, a script that ran in the middle of a turn is not a slow view); steady is judged with all of them.
+      const sorted = [...window].sort((x, y) => x - y).slice(0, window.length - Math.max(1, Math.floor(window.length / 12)));
+      const trimmed = sorted.reduce((sum, x) => sum + x, 0) / sorted.length;
+      if (trimmed > budget && tier !== "low") {
         // A step down soon after a step up is a try that failed: the next try waits longer.
         if (now - lastUp < 30000) wait = Math.min(t.maxUpAfterMs, wait * 2);
         return step(lower(tier), now);

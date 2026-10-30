@@ -216,8 +216,8 @@ describe("the governor", () => {
     expect(out[0]).toBe("medium");
   });
 
-  it("learns a faster display too: at 120 Hz a view that holds 40 frames a second is not over budget", () => {
-    const { steps } = simulate({ high: 20, medium: 12, low: 8 }, 60, "high", {}, 0, 8.333);
+  it("learns a faster display too: at 120 Hz a view that holds 60 frames a second is not over budget", () => {
+    const { steps } = simulate({ high: 12, medium: 8, low: 4 }, 60, "high", {}, 0, 8.333);
     expect(steps).toEqual([]);
   });
 

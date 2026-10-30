@@ -39,10 +39,10 @@ What the lower tiers draw is still the place: the footprints of every building s
 
 `auto` starts on `high`, watches the frames while the view turns (a drag, the auto-turn, a glide; nothing is measured while it is still), and moves between the tiers:
 
-- **Down**: when the mean interval between frames over a window (at least 24 frames and 0.7 seconds) is over 27 ms, which is below 37 frames a second, it steps one tier down. Frames that are far apart (over 250 ms: a hidden page, a stopped turn) are a pause and not slow frames, and the first 0.6 second after the mount is not judged.
+- **Down**: when the mean interval between frames over a window (at least 24 frames and 0.7 seconds) is over 21 ms, which is below 48 frames a second (a view that misses one refresh in three does not hold 60; the slowest twelfth of the window is left out, so a hitch is not a slow view), it steps one tier down. Frames that are far apart (over 250 ms: a hidden page, a stopped turn) are a pause and not slow frames, and the first 0.6 second after the mount is not judged.
 - **Up**: when the mean has been 18.5 ms or less (60 frames a second held) for 5 seconds, it tries the tier above.
 - **A try that fails is taken back, and the next one waits longer**: a step down within 30 seconds of a step up doubles the wait (5, 10, 20, 40, 80, 160 seconds, and no more than 5 minutes). A device on the edge between two tiers settles on the lower one and tries the higher less and less often; it never flickers between them.
-- **A slow display is not a slow view**: the page measures the display's own interval once, in an idle moment after the mount, so a phone that refreshes at 30 Hz is not run down to `low`, and a 120 Hz display is judged by the same 27 ms.
+- **A slow display is not a slow view**: the page measures the display's own interval once, in an idle moment after the mount, so a phone that refreshes at 30 Hz is not run down to `low`, and a 120 Hz display is judged by the same 21 ms.
 - **A tier asked for by name is never changed by the frames.**
 
 A step draws the view again at the new tier (the model of each tier is kept, so a step back is only the elements) and **keeps the camera exactly where it is**: the lower tiers are framed as `high` is (`TurnModel.box` is that of `high`), the view, the pointer and the auto-turn are not touched, and a drag that is in the middle of being made goes on. The model for a lower tier is built once per set of options, so the first step down costs a build and the elements.
