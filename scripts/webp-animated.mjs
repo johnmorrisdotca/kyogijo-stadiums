@@ -27,3 +27,14 @@ export function animated(frames, w, h, duration) {
   const body = Buffer.concat([Buffer.from("WEBP", "ascii"), chunk("VP8X", Buffer.concat([Buffer.from([0x02, 0, 0, 0]), le(w - 1, 3), le(h - 1, 3)])), chunk("ANIM", Buffer.concat([Buffer.alloc(4, 255), le(0, 2)])), ...anmf]);
   return Buffer.concat([Buffer.from("RIFF", "ascii"), le(body.length, 4), body]);
 }
+
+/** The same animated WebP with every frame shown for `duration` milliseconds: only the duration field of each ANMF chunk changes, so no frame is drawn or encoded again and the size is the same. */
+export function retimed(file, duration) {
+  const out = Buffer.from(file);
+  for (let at = 12; at + 8 <= out.length; ) {
+    const size = out.readUInt32LE(at + 4);
+    if (out.toString("ascii", at, at + 4) === "ANMF") out.writeUIntLE(duration, at + 8 + 12, 3);
+    at += 8 + size + (size % 2);
+  }
+  return out;
+}

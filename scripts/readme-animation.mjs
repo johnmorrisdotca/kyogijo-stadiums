@@ -19,7 +19,7 @@ import { animated } from "./webp-animated.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const steps = Number(process.env.STEPS ?? 60);
-const frameMs = Number(process.env.FRAME_MS ?? 100);
+const frameMs = Number(process.env.FRAME_MS ?? 200);
 const width = Number(process.env.WIDTH ?? 640);
 const quality = Number(process.env.QUALITY ?? 0.7);
 /** The moving pictures: a page of the demo and what to show on it (the scheme is added). `zoomOut` is the steps back (the "-" key, 1.2 times each; the "+" key for a negative one) so that the floor fills the picture and keeps inside it all the way round. */
