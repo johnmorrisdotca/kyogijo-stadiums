@@ -7,6 +7,8 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.45.3] - 2026-10-30
+
 ### Changed
 
 - **A district page of the demo loads 158 to 243 KB less script and data, and the crowd outside, the words and the venues are read when they are shown (SPX-795, SPX-797).** Three tables that every district page carried, whatever it showed, are files read with a dynamic `import()` by the lean district (`district-lean`), as the venues' records were in 0.45.1:
