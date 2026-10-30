@@ -4,7 +4,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { ARENA_INDEX } from "./arenas.index.ts";
 import { GROUND_INDEX } from "./grounds.index.ts";
-import { PARK_IDS_WITHOUT_WALLS, PARK_INDEX } from "./parks.index.ts";
+import { PARK_INDEX } from "./parks.index.ts";
+import { PARK_IDS_WITHOUT_WALLS } from "./parks.walls.ts";
 import { ARENA_DATA } from "./arenas.data.ts";
 import { GROUND_DATA } from "./grounds.data.ts";
 import { PARK_DATA } from "./parks.data.ts";

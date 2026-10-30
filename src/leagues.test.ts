@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { describe as describeDrawing, drawKyogijo } from "./draw.ts";
 import { hash } from "./format.ts";
-import { FAMILY_OF, LEAGUES, LEAGUE_SOURCES, VARIANTS, chooseLeague, hasHistory, leagueAt, leagueChanges, leagueIds, leagueSize, type League } from "./leagues.ts";
+import { FAMILY_OF, LEAGUES, VARIANTS, chooseLeague, hasHistory, leagueAt, leagueChanges, leagueIds, leagueSize, type League } from "./leagues.ts";
+import { LEAGUE_SOURCES } from "./leagues/sources.ts";
 import { ERA_CURRENT } from "./eras.ts";
 import type { ScoreOptions, Sport } from "./types.ts";
 import { parseXml, walk, withClass, type Node } from "./xml.fixture.ts";

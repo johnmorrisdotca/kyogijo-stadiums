@@ -4,7 +4,8 @@ import { arcMeetsBoundary } from "./fields/afl.ts";
 import { dotsIn, linesIn, m, named, planOf } from "./fields.fixture.ts";
 import { inOutline } from "./fields.kit.ts";
 import type { ArcShape, PathShape, PolyShape, RingShape } from "./fields.types.ts";
-import { AFL_GROUNDS, LEAGUES, LEAGUE_SOURCES, aflOf } from "./leagues.ts";
+import { AFL_GROUNDS, LEAGUES, aflOf } from "./leagues.ts";
+import { LEAGUE_SOURCES } from "./leagues/sources.ts";
 import { drawKyogijo } from "./draw.ts";
 
 const close = (a: number, b: number, places = 2): void => expect(a).toBeCloseTo(b, places);

@@ -70,7 +70,7 @@ export { VENUE_ATTRIBUTION, VENUE_CONFERENCES, VENUE_DIVISIONS, VENUE_IDS, VENUE
 export type { RealVenue, RealVenueData, VenueBasis, VenueConference, VenueDivision, VenueOrientation, VenueOsm, VenuePlan, VenueRoof } from "./venues.ts";
 export { GROUND_IDS, GROUNDS, groundById, groundByName, groundByWikidata, groundNameIn, groundOfficialName, groundSourceUrl, groundsByName, groundsHosting } from "./grounds.ts";
 export type { Ground, GroundCompetition, GroundData, GroundName, GroundSource, GroundTournament } from "./grounds.ts";
-export { AFL_GROUNDS, FAMILY_OF, LEAGUES, LEAGUE_SOURCES, VARIANTS, chooseLeague, hasHistory, leagueAt, leagueById, leagueChanges, leagueFigures, leagueIds, leagueSeason, leagueSize } from "./leagues.ts";
+export { AFL_GROUNDS, FAMILY_OF, LEAGUES, VARIANTS, chooseLeague, hasHistory, leagueAt, leagueById, leagueChanges, leagueFigures, leagueIds, leagueSeason, leagueSize } from "./leagues.ts";
 export type { BaseballLeague, BasketballLeague, CourtFigures, CourtMarks, DiamondFigures, Family, FootballLeague, HockeyLeague, League, LeagueAt, LeagueChange, LeagueSource, LeagueSpan, Named, RinkFigures } from "./leagues.ts";
 export { SURFACE_UNITS, UNITS, convertLength, isUnit } from "./units.ts";
 export type { Unit } from "./units.ts";
@@ -126,3 +126,4 @@ export type {
   Theme,
   WallOptions,
 } from "./types.ts";
+export { LEAGUE_SOURCES } from "./leagues/sources.ts";

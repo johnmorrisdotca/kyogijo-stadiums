@@ -111,8 +111,13 @@ export const PARK_DATA: ParkData[] = ${json};
 writeFileSync(new URL("../src/parks.data.ts", import.meta.url), text);
 // The parks none of whose fence has a wall height the article gives: `PARKS_WITHOUT_WALL_HEIGHTS`, which needs the key and not the table.
 const without = parks.filter((park) => (park.walls ?? []).length === 0).map((park) => park.id);
-writeVenueFiles({
-  kind: "parks", type: "ParkData", constant: "PARK", index: "PARK_INDEX", records: parks, text: layout, by: "scripts/build-parks.mjs from scripts/parks.data.json",
-  extra: `\n/** The keys of the parks whose article gives no wall height anywhere on the fence. */\nexport const PARK_IDS_WITHOUT_WALLS: readonly string[] = ${JSON.stringify(without)};\n`,
-});
+writeVenueFiles({ kind: "parks", type: "ParkData", constant: "PARK", index: "PARK_INDEX", records: parks, text: layout, by: "scripts/build-parks.mjs from scripts/parks.data.json" });
+writeFileSync(
+  new URL("../src/parks.walls.ts", import.meta.url),
+  `// Made by scripts/build-parks.mjs from scripts/parks.data.json: do not edit by hand.
+// The keys of the parks whose article gives no wall height anywhere on the fence (\`PARKS_WITHOUT_WALL_HEIGHTS\`), kept apart from the table of parks so that a page that needs the list does not carry the table.
+
+export const PARK_IDS_WITHOUT_WALLS: readonly string[] = ${JSON.stringify(without)};
+`,
+);
 console.log(`src/parks.data.ts: ${parks.length} parks`);

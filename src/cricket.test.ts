@@ -4,7 +4,8 @@ import { cricketBoardMarkup, totalText } from "./cricket.board.ts";
 import { linesIn, named, planOf, yd } from "./fields.fixture.ts";
 import type { PathShape, RingShape } from "./fields.types.ts";
 import { drawKyogijo, statusLabel, winnerOf } from "./draw.ts";
-import { LEAGUES, LEAGUE_SOURCES, cricketOf } from "./leagues.ts";
+import { LEAGUES, cricketOf } from "./leagues.ts";
+import { LEAGUE_SOURCES } from "./leagues/sources.ts";
 import { parseXml, walk } from "./xml.fixture.ts";
 
 const close = (a: number, b: number, places = 2): void => expect(a).toBeCloseTo(b, places);

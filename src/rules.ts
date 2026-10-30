@@ -21,7 +21,7 @@ import "./surfaces/soccer-providers.ts";
 import { buildZoneSet, infieldReach, ZONE_SETS, ZONE_SET_IDS, type ZoneContext, type ZoneSet } from "./heat.zones.ts";
 import { feetFence, lengthUnit } from "./common.ts";
 import { fenceFor, heldPark, parkWallsIn, type Park } from "./parks.core.ts";
-import { PARK_IDS_WITHOUT_WALLS } from "./parks.index.ts";
+import { PARK_IDS_WITHOUT_WALLS } from "./parks.walls.ts";
 import { frameSizeOf, outlineOf, type Outline } from "./outline.ts";
 import { soccerSpec } from "./surfaces/soccer-spec.ts";
 import { KYOGIJO_STRINGS } from "./strings.ts";

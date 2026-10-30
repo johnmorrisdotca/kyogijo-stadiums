@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { drawKyogijo } from "./draw.ts";
 import { hash } from "./format.ts";
-import { LEAGUE_SOURCES } from "./leagues.ts";
+import { LEAGUE_SOURCES } from "./leagues/sources.ts";
 import { MULTI_PRESETS, MULTI_SOURCES, MULTI_VENUES, multiPreset, multiSource, multiVenueById } from "./multi.data.ts";
 import { drawMulti, multiSetting, multiTable } from "./multi.draw.ts";
 import { fitSentence, multiFit, multiLayout, multiNumber, needsSentence, specOf } from "./multi.ts";

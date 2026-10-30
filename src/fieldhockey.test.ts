@@ -3,7 +3,8 @@ import { describe, expect, it } from "vitest";
 import { dotsIn, linesIn, m, named, placesOf, planOf } from "./fields.fixture.ts";
 import type { ArcShape, PathShape } from "./fields.types.ts";
 import { drawKyogijo } from "./draw.ts";
-import { LEAGUES, LEAGUE_SOURCES, fieldHockeyOf } from "./leagues.ts";
+import { LEAGUES, fieldHockeyOf } from "./leagues.ts";
+import { LEAGUE_SOURCES } from "./leagues/sources.ts";
 
 const close = (a: number, b: number, places = 2): void => expect(a).toBeCloseTo(b, places);
 const plan = planOf("fieldhockey");

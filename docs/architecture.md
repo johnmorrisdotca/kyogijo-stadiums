@@ -260,7 +260,8 @@ src/
 ├── ballpark.ts         what a drawing asks of a park's walls and quirks (`walls`, `quirks`), and the words that name them
 ├── parks.data.ts       made by scripts/build-parks.mjs from scripts/parks.data.json
 ├── parks.core.ts       a park's types and the functions that need no table (its fence in a season, its walls, quirks and names), and the table of the parks held for the drawing
-├── parks.index.ts      made by scripts/build-parks.mjs: every park's key and names with the import() of its own file, and the parks with no wall height
+├── parks.index.ts      made by scripts/build-parks.mjs: every park's key and names with the import() of its own file
+├── parks.walls.ts      made by scripts/build-parks.mjs: the keys of the parks with no wall height, apart from the table
 ├── parks/              made by scripts/build-parks.mjs: one file for each park (`fenway-park.data.ts`), read when that park is asked for
 ├── parks-entry.ts      the parks' entry
 ├── grounds.ts          the soccer grounds

@@ -7,9 +7,9 @@ import { URL } from "node:url";
 /**
  * Write the record files and the index of one kind of venue.
  * `kind` is the folder and the file stem (`arenas`), `type` the type of a record (`ArenaData`), `constant` the record's export (`ARENA`) and `index` the index's (`ARENA_INDEX`);
- * `records` are the records, `text(record)` writes one as a TypeScript object literal, `by` names the generator and its source for the header, and `extra` is more text for the end of the index.
+ * `records` are the records, `text(record)` writes one as a TypeScript object literal, `by` names the generator and its source for the header.
  */
-export function writeVenueFiles({ kind, type, constant, index, records, text, by, extra = "" }) {
+export function writeVenueFiles({ kind, type, constant, index, records, text, by }) {
   const dir = new URL(`../src/${kind}/`, import.meta.url);
   rmSync(dir, { recursive: true, force: true });
   mkdirSync(dir, { recursive: true });
@@ -26,6 +26,6 @@ import type { ${type} } from "./${kind}.core.ts";
 export const ${index}: Readonly<Record<string, { readonly name: string; readonly nameJa: string; readonly load: () => Promise<{ readonly ${constant}: ${type} }> }>> = {
 ${lines.join("\n")}
 };
-${extra}`,
+`,
   );
 }

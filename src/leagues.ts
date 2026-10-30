@@ -21,7 +21,6 @@ import { GAELIC_LEAGUES, gaelicInFeet, type GaelicLeague, type GaelicSpec } from
 import { HANDBALL_LEAGUES, handballInFeet, type HandballLeague, type HandballSpec } from "./leagues/handball.ts";
 import { LACROSSE_LEAGUES, lacrosseInFeet, type LacrosseLeague, type LacrosseSpec } from "./leagues/lacrosse.ts";
 import { RUGBY_LEAGUES, rugbyInFeet, type RugbyLeague, type RugbySpec } from "./leagues/rugby.ts";
-import { LEAGUE_SOURCES } from "./leagues/sources.ts";
 import type { Span } from "./leagues/fields.ts";
 import type { Family, LeagueSpan } from "./leagues/types.ts";
 import { inFeet } from "./leagues/types.ts";
@@ -29,7 +28,6 @@ import type { FootballSpec } from "./geometry.ts";
 import type { Sport, SurfaceOptions } from "./types.ts";
 import { convertLength, type Unit } from "./units.ts";
 
-export { LEAGUE_SOURCES };
 export type { LeagueSource } from "./leagues/sources.ts";
 export type { BaseballLeague, BasketballLeague, CurlingLeague, FootballLeague, HockeyLeague };
 export { AFL_GROUNDS } from "./leagues/aussie.ts";

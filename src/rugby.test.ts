@@ -2,7 +2,8 @@
 import { describe, expect, it } from "vitest";
 import { drawKyogijo } from "./draw.ts";
 import { dotsIn, linesIn, m, named, placesOf, planOf } from "./fields.fixture.ts";
-import { LEAGUES, LEAGUE_SOURCES, leagueFigures, leagueSize, rugbyOf } from "./leagues.ts";
+import { LEAGUES, leagueFigures, leagueSize, rugbyOf } from "./leagues.ts";
+import { LEAGUE_SOURCES } from "./leagues/sources.ts";
 import { parseXml, walk } from "./xml.fixture.ts";
 
 const close = (a: number, b: number, places = 2): void => expect(a).toBeCloseTo(b, places);

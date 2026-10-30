@@ -1,5 +1,5 @@
 // The leagues: each variant of a family of surface, with its rulebook's figures, its names and its sources.
-export { FAMILY_OF, LEAGUES, LEAGUE_SOURCES, VARIANTS, aflOf, chooseLeague, courtOf, cricketOf, diamondOf, fieldHockeyOf, fieldOf, gaelicOf, handballOf, lacrosseOf, rugbyOf, hasHistory, leagueAt, leagueAtOf, leagueById, leagueChanges, leagueFigures, leagueIds, leagueSeason, leagueSize, netOf, rinkOf, sheetOf } from "./leagues.ts";
+export { FAMILY_OF, LEAGUES, VARIANTS, aflOf, chooseLeague, courtOf, cricketOf, diamondOf, fieldHockeyOf, fieldOf, gaelicOf, handballOf, lacrosseOf, rugbyOf, hasHistory, leagueAt, leagueAtOf, leagueById, leagueChanges, leagueFigures, leagueIds, leagueSeason, leagueSize, netOf, rinkOf, sheetOf } from "./leagues.ts";
 export type { BaseballLeague, BasketballLeague, CourtFigures, CurlingLeague, SheetFigures, BadmintonFigures, BadmintonLeague, FreeZone, FreeZones, NetFigures, NetLeague, NetSport, NetballFigures, NetballLeague, PadelFigures, PadelLeague, PickleballFigures, PickleballLeague, RacquetballFigures, RacquetballLeague, RoundnetFigures, RoundnetLeague, SepakTakrawFigures, SepakTakrawLeague, SquashFigures, SquashLeague, TableTennisFigures, TableTennisLeague, TennisFigures, TennisLeague, TeqballFigures, TeqballLeague, VolleyballFigures, VolleyballLeague, CourtMarks, DiamondFigures, Family, FootballLeague, HockeyLeague, League, LeagueAt, LeagueChange, LeagueSource, LeagueSpan, Named, RinkFigures } from "./leagues.ts";
 export { MLB_DIAMOND } from "./leagues/baseball.ts";
 export { NBA_COURT } from "./leagues/basketball.ts";
@@ -24,3 +24,4 @@ export { ATHLETICS_LEAGUES, WA_SHORT_STAGGER_TABLE, WA_SHORT_TRACK, WA_STAGGER_T
 export type { AthleticsFigures, AthleticsLeague } from "./leagues/athletics.ts";
 export { fixed, span } from "./leagues/fields.ts";
 export type { Span } from "./leagues/fields.ts";
+export { LEAGUE_SOURCES } from "./leagues/sources.ts";

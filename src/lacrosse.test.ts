@@ -4,7 +4,8 @@ import { describe, expect, it } from "vitest";
 import { fortyFiveMeeting } from "./fields/lacrosse.ts";
 import { dotsIn, inch, linesIn, m, named, placesOf, planOf, yd } from "./fields.fixture.ts";
 import type { ArcShape, RingShape } from "./fields.types.ts";
-import { LEAGUES, LEAGUE_SOURCES, lacrosseOf } from "./leagues.ts";
+import { LEAGUES, lacrosseOf } from "./leagues.ts";
+import { LEAGUE_SOURCES } from "./leagues/sources.ts";
 import { drawKyogijo } from "./draw.ts";
 
 const close = (a: number, b: number, places = 2): void => expect(a).toBeCloseTo(b, places);
