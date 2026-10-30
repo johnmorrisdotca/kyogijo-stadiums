@@ -47,7 +47,8 @@ for (const budget of BUDGETS) {
     const errors = [];
     page.on("pageerror", (error) => errors.push(String(error)));
     await serve(page);
-    await page.goto(`http://kyogijo.test/district.html?${budget.query}&view=3d&viewpoint=broadcast`);
+    // (Pinned to the High tier: on a slow runner the frame governor of `auto` drops to a lower tier while the view is dragged, which has fewer planes and none left out, so that the count of faces left out after the turn reads 0; the tiers have their own tests above.)
+    await page.goto(`http://kyogijo.test/district.html?${budget.query}&view=3d&viewpoint=broadcast&quality=high`);
     await page.waitForSelector('body[data-ready="true"]');
     await page.waitForSelector(`${STAGE} .ky-turn[data-mode="3d"]`);
     const counts = await page.evaluate((stage) => {
