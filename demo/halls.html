@@ -12,7 +12,7 @@
       :root[data-theme="dark"] { color-scheme: dark; --bg: #141816; --ink: #ecebe5; --muted: #a2a8a3; --card: #1d2220; --line: #39403c; --accent: #7fb2ee; --tab: #ecebe5; --tab-ink: #141816; }
       * { box-sizing: border-box; }
       body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.45 system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif; }
-      main { max-width: 1100px; margin: 0 auto; padding: 16px; }
+      main { max-width: 1280px; margin: 0 auto; padding: 16px; }
       h1 { font-size: 1.5rem; margin: 0 0 4px; }
       p.lede { margin: 0 0 16px; color: var(--muted); }
       .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr)); gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 12px; }
@@ -24,6 +24,11 @@
       #fit[data-fit="false"] { border-left-color: #c0392b; }
       #stage { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 8px; }
       #stage > svg { display: block; width: 100%; height: auto; max-height: 80vh; }
+      /* The layout, the hall and the grid are a panel at the side of the view on a desk, and under it on a phone; the view and the bar over it have the width. */
+      .vb-layout { display: grid; grid-template-columns: minmax(220px, 270px) minmax(0, 1fr); gap: 16px; align-items: start; }
+      .vb-layout .controls { grid-template-columns: 1fr; }
+      #fit { margin: 8px 0 0; }
+      @media (max-width: 900px) { .vb-layout { display: flex; flex-direction: column; align-items: stretch; } .vb-side { order: 2; } }
       .rule, .note { color: var(--muted); font-size: .9rem; margin: 8px 0; }
       details { margin-top: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; }
       summary { cursor: pointer; min-height: 32px; }
@@ -38,9 +43,11 @@
   </head>
   <body>
     <main>
-      <p class="back"><a href="./" id="back" data-testid="back"></a></p>
-      <h1 id="title"></h1>
+      <p class="back" data-first><a href="./" id="back" data-testid="back"></a></p>
+      <h1 id="title" data-first></h1>
       <p class="lede" id="lede"></p>
+      <div class="vb-layout" data-first>
+      <div class="vb-side">
       <form class="controls" id="controls" aria-label="Layout">
         <label><span id="l-preset"></span><select id="preset"></select></label>
         <label><span id="l-venue"></span><select id="venue"></select></label>
@@ -59,7 +66,12 @@
         <label class="check"><input id="labels" type="checkbox" checked /><span id="l-labels"></span></label>
       </form>
       <p id="fit" role="status" aria-live="polite"></p>
+      </div>
+      <div class="vb-view">
+      <div id="bar" data-testid="bar" role="group"></div>
       <div id="stage" data-testid="stage"></div>
+      </div>
+      </div>
       <p class="rule" id="rule"></p>
       <p class="note" id="event"></p>
       <details>
@@ -76,6 +88,7 @@
       import { lightingFor, lightingOfAddress } from "./lighting.js";
       import { TURN_PRESET_NAMES } from "./dist/turn-entry.js";
       import { quietTitles } from "./quiet.js";
+      import { fitView, moveToBar } from "./view-bar.js";
       quietTitles();
 
       const WORDS = {
@@ -97,7 +110,6 @@
       const state = { language: params.get("lang") === "ja" ? "ja" : "en", viewpoint: TURN_PRESET_NAMES.includes(params.get("viewpoint")) ? params.get("viewpoint") : "corner" };
       // The 3D view while the page is on it: it takes the stage over from the flat drawing, and gives it back. The roof is a setting of the mount, so a change of it mounts the view again.
       let turn;
-      let turnRoof = false;
       /** The camera the reader chose: kept when the view is mounted again (another layout, the roof, flat and back), and the turn made by hand is in the address. */
       const camera = keepCamera();
 
@@ -142,6 +154,7 @@
         document.title = w.pageTitle;
         document.querySelector('meta[name="description"]').setAttribute("content", w.pageDescription);
         $("controls").setAttribute("aria-label", w.formLabel);
+        $("bar").setAttribute("aria-label", w.formLabel);
       }
 
       /** The lighting the switches say: Night or Lights down (one at a time) and the colour of light on the surface. */
@@ -203,12 +216,10 @@
         $("wash-row").hidden = !$("stadium").checked;
         const roof = three && $("stadium").checked && $("roof").checked;
         if (three) {
-          if (turn !== undefined && turnRoof !== roof) { camera.carry(turn); turn.destroy(); turn = undefined; }
           if (turn === undefined) {
-            turnRoof = roof;
-            turn = mountMultiTurn($("stage"), options, { preset: state.viewpoint, ...wayOf(syncUrl), ...(roof ? { venue: { roof: true } } : {}), ...camera.settings(), onChange: (view, preset) => { if (preset !== undefined) state.viewpoint = preset; camera.changed(view, preset, syncUrl); } });
+            turn = mountMultiTurn($("stage"), options, { preset: state.viewpoint, ...wayOf(syncUrl), venue: { roof }, ...camera.settings(), onChange: (view, preset) => { if (preset !== undefined) state.viewpoint = preset; camera.changed(view, preset, syncUrl); } });
             hoverOf($("stage"), turn);
-          } else turn.update(options);
+          } else turn.update(options, { venue: { roof } });
         } else {
           camera.carry(turn);
           if (turn !== undefined) { turn.destroy(); turn = undefined; }
@@ -223,6 +234,7 @@
         $("event").textContent = spec.event === undefined ? (spec.basis === "event" ? w.basisEvent : w.basisRulebook) : `${fill(w.event, { name: (ja && spec.event.ja?.name) || spec.event.name, year: spec.event.year, venue: (ja && spec.event.ja?.venue) || spec.event.venue, city: (ja && spec.event.ja?.city) || spec.event.city, note: spec.event.note[language] })}${ja ? "" : " "}${spec.basis === "event" ? w.basisEvent : w.basisRulebook}`;
         $("table").innerHTML = multiTable(options);
         syncUrl();
+        fitStage();
         const back = new URLSearchParams({ sport: spec.sport });
         if (language === "ja") back.set("lang", "ja");
         $("back").href = `./?${back}`;
@@ -233,6 +245,9 @@
       presetSelect.addEventListener("change", () => { syncGrid(); if (turn !== undefined) { camera.carry(turn); turn.destroy(); turn = undefined; } draw(); });
       $("language").addEventListener("change", () => { labelOptions(); draw(); });
       for (const id of ["venue", "rows", "columns", "theme", "stadium", "slots", "sample", "labels", "view", "roof", "boards", "lighting", "wash"]) $(id).addEventListener("change", draw);
+      // The controls of the view are on the view: what the stadium round the floor is (its roof, its boards and its lights), what is drawn on the floor, light or dark and flat or 3D are in the bar over it; the layout, the hall and the grid stay in the panel.
+      moveToBar($("bar"), ["view", "stadium", "roof", "boards", ["lighting", { quiet: true }], ["wash", { quiet: true }], "labels", "theme"]);
+      const fitStage = fitView($("stage"));
       syncGrid();
       labelOptions();
       draw();

@@ -48,21 +48,23 @@
       #error { color: #c0392b; font-weight: 700; }
       #stage[data-broadcast] { background: transparent; border: 0; padding: 0; }
       #stage[data-broadcast] > svg.kyogijo { max-width: calc((100vh - 230px) * 16 / 9); min-width: min(100%, 520px); margin: 0 auto; }
-      #stage[data-broadcast] #three { max-width: calc((100vh - 300px) * 16 / 9); min-width: min(100%, 520px); margin: 0 auto; }
+      #stage[data-broadcast] #three { max-width: calc((100vh - 430px) * 16 / 9); min-width: min(100%, 520px); margin: 0 auto; }
       body[data-view="broadcast"] main { max-width: 1680px; }
       #print { display: none; }
       @media print { body { margin: 0; background: #fff; } body > main { display: none !important; } #print { display: block; } }
       @media (max-width: 640px) { .seat { grid-template-columns: minmax(0, 1fr); } #stage .pair { grid-template-columns: minmax(0, 1fr); } }
     </style>
+    <link rel="stylesheet" href="./check-pill.css" />
   </head>
   <body>
     <main>
-      <p class="back"><a href="./" id="back" data-testid="back"></a></p>
-      <h1 id="title"></h1>
+      <p class="back" data-first><a href="./" id="back" data-testid="back"></a></p>
+      <h1 id="title" data-first></h1>
       <p class="lede" id="lede"></p>
-      <div id="tabs" role="tablist" data-testid="tabs"></div>
-      <p id="error" role="alert" hidden></p>
-      <div id="stage" data-testid="stage"></div>
+      <div id="tabs" role="tablist" data-testid="tabs" data-first></div>
+      <p id="error" role="alert" hidden data-first></p>
+      <div id="bar" data-testid="bar" role="group" data-first></div>
+      <div id="stage" data-testid="stage" data-first></div>
       <details id="edit" open>
         <summary id="l-edit"></summary>
         <div class="controls">
@@ -105,6 +107,7 @@
       import { replaceAddress } from "./address.js";
       import { hoverOf, wayOf, writeWay } from "./turn-way.js";
       import { quietTitles } from "./quiet.js";
+      import { fitView, moveToBar } from "./view-bar.js";
       quietTitles();
       import { TURN_PRESET_NAMES } from "./dist/turn-entry.js";
 
@@ -180,6 +183,7 @@
         document.title = w.pageTitle;
         document.querySelector('meta[name="description"]').setAttribute("content", w.pageDescription);
         $("edit").setAttribute("aria-label", w.formLabel);
+        $("bar").setAttribute("aria-label", w.formLabel);
       }
 
       function buildOfficials() {
@@ -359,6 +363,8 @@
           $("error").hidden = false;
         }
         syncUrl();
+        stage.classList.toggle("rv-fit", !broadcast);
+        fitStage();
         const back = new URLSearchParams({ sport: "judo" });
         if ($("language").value === "ja") back.set("lang", "ja");
         $("back").href = `./?${back}`;
@@ -401,6 +407,9 @@
       // The layout follows the screen: a tablet turned on its side puts the chart beside the plan, held upright under it.
       let resizing = 0;
       window.addEventListener("resize", () => { cancelAnimationFrame(resizing); resizing = requestAnimationFrame(() => { if ($("orientation").value === "auto") draw(); }); });
+      // The controls of the view are on the view: flat, 3D or broadcast, the camera's focus, the seat names and the side judges, light or dark; the mats' people, the chart and the paper stay in the panel under it.
+      moveToBar($("bar"), ["view", "dim", "focus", "seatnames", "sidejudges", "theme"]);
+      const fitStage = fitView($("stage"));
       labelPage();
       $("side-row").hidden = $("style").value === "kata";
       buildTabs();

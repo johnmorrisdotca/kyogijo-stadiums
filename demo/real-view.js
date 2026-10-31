@@ -9,6 +9,7 @@ import { mountKyogijoTurn } from "./dist/turn-entry.js";
 import { hoverOf, keepCamera, wayOf, writeWay } from "./turn-way.js";
 import { LIGHTINGS, WASHES, lightingFor, lightingOfAddress } from "./lighting.js";
 import { replaceAddress } from "./address.js";
+import { fitView, installViewBar } from "./view-bar.js";
 
 /** The parts a reader can switch, in the order of the bar, with what each is by default: the stands on, the walls, the roof, the LED boards and the night lighting off (the bowl is seen), the building, the markings and the labels on. */
 export const PARTS = ["stands", "walls", "roof", "boards", "building", "markings", "labels"];
@@ -20,23 +21,17 @@ const VIEWPOINTS = ["overhead", "broadcast", "end", "corner"];
 
 /** The page's styles for the bar and for the parts that are hidden; it asks the page for `--rv-line`, `--rv-card`, `--rv-ink`, `--rv-on`, `--rv-on-ink` and `--rv-accent` (with plain fallbacks). */
 export const REAL_VIEW_CSS = `
-.rv-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0 0 8px; }
 .rv-bar button, .rv-bar select { font: inherit; font-size: .9rem; font-weight: 700; min-height: 44px; padding: 0 12px; border-radius: 999px; border: 2px solid var(--rv-line, #b9b3a3); background: var(--rv-card, #fff); color: var(--rv-ink, #10151b); cursor: pointer; }
 .rv-bar select { font-weight: 600; padding: 0 8px; box-sizing: border-box; height: 44px; display: inline-block; max-width: 12rem; }
 .rv-bar button[aria-pressed="true"] { background: var(--rv-on, #10151b); color: var(--rv-on-ink, #fff); border-color: var(--rv-on, #10151b); }
 .rv-bar button:focus-visible, .rv-bar select:focus-visible { outline: 3px solid var(--rv-accent, #1f5fa8); outline-offset: 2px; }
-.rv-bar [hidden] { display: none !important; }
 .rv-bar .rv-sep { width: 1px; align-self: stretch; background: var(--rv-line, #b9b3a3); margin: 4px 2px; }
+.rv-stage { --rv-least: 300px; --rv-most: 760px; }
 .rv-stage[data-hide~="building"] .ky-cr-shell { display: none; }
 .rv-stage[data-hide~="markings"] .ky-surface-group { display: none; }
 .rv-stage[data-hide~="labels"] :is(.ky-cr-north, .ky-cr-north-n) { display: none; }
-.rv-stage .ky-turn-view { aspect-ratio: auto; height: clamp(300px, calc(100vh - var(--rv-chrome, 440px)), 760px); }
 .rv-stage > svg.kyogijo { display: block; width: 100%; height: auto; max-height: calc(100vh - var(--rv-chrome, 440px) + 110px); }
-@media (max-width: 600px) {
-  .rv-bar { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
-  .rv-bar button, .rv-bar select { flex: none; min-height: 44px; }
-  .rv-stage .ky-turn-view { height: clamp(220px, 40vh, 340px); }
-}`;
+@media (max-width: 600px) { .rv-bar button, .rv-bar select { flex: none; min-height: 44px; } .rv-stage { --rv-least: 220px; } }`;
 
 /**
  * Mount a real venue in `stage`, with its controls in `bar`.
@@ -49,9 +44,10 @@ export const REAL_VIEW_CSS = `
  * @param {boolean} [options.flat] whether the view can be flat (a `view` button); a view that cannot is always 3D
  * @param {string} [options.chipClass] a class for the buttons, for a page that has a style of its own for them
  * @param {boolean} [options.spin] whether the 3D view can be asked to turn by itself when it opens (`spin=on` in the address, which Auto-turn writes; a reader who prefers reduced motion gets it still): it waits still otherwise and turns while the pointer is over it
+ * @param {number} [options.box] for a page whose stage is a box of its own height (`--feature-h`): the least that box is, in pixels; the box takes what is left of the screen
  * @param {(state: object) => void} [options.onChange] called after anything changed, with the state
  */
-export function mountRealView({ stage, bar, venue, page, prefix = "", flat = true, spin = true, chipClass = "", onChange = () => undefined }) {
+export function mountRealView({ stage, bar, venue, page, prefix = "", flat = true, spin = true, chipClass = "", box = 0, onChange = () => undefined }) {
   const key = (name) => `${prefix}${name}`;
   const params = new URLSearchParams(location.search);
   const flag = (name, normal) => (params.has(key(name)) ? params.get(key(name)) === "1" : normal);
@@ -73,6 +69,7 @@ export function mountRealView({ stage, bar, venue, page, prefix = "", flat = tru
   const camera = keepCamera(prefix);
   /** Whether the turn running now is the pointer's (so the address does not record it). */
   let hover;
+  installViewBar();
   let styled = document.getElementById("rv-style");
   if (styled === null) {
     styled = document.createElement("style");
@@ -188,6 +185,7 @@ export function mountRealView({ stage, bar, venue, page, prefix = "", flat = tru
     draw();
     sync();
     onChange(state);
+    fitStage?.();
   }
 
   bar.addEventListener("click", (event) => {
@@ -216,6 +214,7 @@ export function mountRealView({ stage, bar, venue, page, prefix = "", flat = tru
   });
 
   renderBar();
+  const fitStage = fitView(stage, { box });
   apply();
   return {
     state,

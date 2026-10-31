@@ -24,7 +24,9 @@
       #tabs button[aria-selected="true"] { background: var(--tab); color: var(--tab-ink); }
       /* Sixteen arenas are one row that scrolls on a phone, so that the view stays in sight (the fly-through waits while it is off screen). */
       @media (max-width: 600px) { #tabs { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; } #tabs button { flex: none; white-space: nowrap; } }
-      #trip { background: var(--card); border-radius: 12px; padding: 8px; border: 1px solid var(--line); }
+      /* Thirty-two arenas are two rows on a desk that scroll down, so that the view stays in sight with its buttons. */
+      @media (min-width: 601px) { #tabs { max-height: 112px; overflow-y: auto; } }
+      #trip { --rv-least: 260px; background: var(--card); border-radius: 12px; padding: 8px; border: 1px solid var(--line); }
       .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr)); gap: 12px; margin: 10px 0 0; }
       label { display: grid; gap: 4px; min-width: 0; font-size: .9rem; color: var(--muted); }
       select { width: 100%; min-width: 0; font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px; min-height: 44px; }
@@ -37,12 +39,13 @@
   </head>
   <body>
     <main>
-      <p class="back"><a href="./" id="back" data-testid="back"></a></p>
-      <h1 id="title"></h1>
+      <p class="back" data-first><a href="./" id="back" data-testid="back"></a></p>
+      <h1 id="title" data-first></h1>
       <p class="lede" id="lede"></p>
-      <div id="tabs" role="group" data-testid="tabs"></div>
-      <p id="error" role="alert" hidden></p>
-      <div id="trip" data-testid="trip"></div>
+      <div id="tabs" role="group" data-testid="tabs" data-first></div>
+      <p id="error" role="alert" hidden data-first></p>
+      <div id="bar" data-testid="bar" role="group" data-first></div>
+      <div id="trip" data-testid="trip" data-first></div>
       <details id="edit" open>
         <summary id="l-edit"></summary>
         <div class="controls">
@@ -61,6 +64,7 @@
       import { replaceAddress } from "./address.js";
       import { mountFlythrough } from "./dist/flythrough-entry.js";
       import { turnOnHover } from "./turn-way.js";
+      import { fitView, moveToBar } from "./view-bar.js";
       import WORLD from "./chizu/world-entry.js";
       import { drawChizu } from "./chizu/draw-entry.js";
       import { projectPoint } from "./chizu/index.js";
@@ -108,6 +112,7 @@
         document.documentElement.lang = $("language").value;
         document.title = w.pageTitle;
         $("tabs").setAttribute("aria-label", w.group);
+        $("bar").setAttribute("aria-label", w.group);
         $("tabs").replaceChildren(...VENUE_IDS.map((id) => {
           const button = document.createElement("button");
           button.type = "button";
@@ -136,6 +141,8 @@
         if (theme === "auto") delete document.documentElement.dataset.theme;
         else document.documentElement.dataset.theme = theme;
         $("error").hidden = true;
+        // The roof, the map and the light are changed on the view while it flies: the flight goes on from the same moment, playing if it was playing.
+        const at = trip === undefined ? undefined : { time: trip.time, playing: trip.playing };
         trip?.destroy();
         try {
           trip = mountFlythrough($("trip"), {
@@ -146,7 +153,10 @@
             ...($("map").value === "chizu" ? { start: { map: WORLD, draw: drawChizu, project: projectPoint } } : {}),
             ...(stages.length > 0 ? { stages } : {}),
           }, { speed, autoPlay: params.get("play") === "1", id: "trip-flight", onStage: (stage) => { document.body.dataset.stage = stage; } });
-          if (keep !== undefined && trip.stages.includes(keep)) trip.goTo(keep);
+          if (at !== undefined && keep !== undefined && trip.stages.includes(keep)) {
+            trip.seek(at.time);
+            if (at.playing) trip.play();
+          } else if (keep !== undefined && trip.stages.includes(keep)) trip.goTo(keep);
           const flight = trip;
           const stage = $("trip").querySelector(".kf-stage");
           if (stage !== null) turnOnHover(stage, { get playing() { return flight.playing; }, play: () => { flight.play(); return flight.playing; }, pause: () => flight.pause(), togglePlay: () => flight.toggle() }, () => 0);
@@ -155,6 +165,7 @@
           $("error").hidden = false;
         }
         syncUrl();
+        fitStage();
         const back = new URLSearchParams({ sport: "nhl", arena: state.arena });
         if ($("language").value === "ja") back.set("lang", "ja");
         $("back").href = `./?${back}`;
@@ -162,6 +173,9 @@
         window.flythrough = trip;
       }
 
+      // The controls of the view are on the view: the roof, the map it starts on and light or dark; the language stays in the panel under it.
+      moveToBar($("bar"), ["roof", "map", "theme"]);
+      const fitStage = fitView($("trip"));
       labelPage();
       $("tabs").addEventListener("click", (event) => {
         const button = event.target.closest("button[data-arena]");

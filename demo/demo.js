@@ -373,26 +373,19 @@ const stage = $("stage");
 let mount;
 /** The 3D view, while the playground is on it: it takes the stage over from the flat drawing, and gives it back. */
 let turn;
-/** The roof the 3D view was mounted with: it is a setting of the mount, so a change of it mounts the view again. */
-let turnRoof = false;
 function render() {
   const o = optionsFor(state);
   o.style = "none";
   stage.dataset.view = state.view;
   if (state.view === "3d") {
-    if (turn !== undefined && turnRoof !== state.venueRoof) {
-      turn.destroy();
-      turn = undefined;
-    }
     if (turn === undefined) {
       mount?.destroy();
       mount = undefined;
       stage.replaceChildren();
       // The page's own light or dark is the stylesheet's to follow; the turn's own rules are written once into the page, like the drawing's.
-      turnRoof = state.venueRoof;
-      turn = mountKyogijoTurn(stage, o, { preset: state.viewpoint, ...wayOf(syncUrl), ...(state.venueRoof ? { venue: { roof: true } } : {}), onChange: (_, preset) => { if (preset !== undefined) state.viewpoint = preset; syncUrl(); } });
+      turn = mountKyogijoTurn(stage, o, { preset: state.viewpoint, ...wayOf(syncUrl), venue: { roof: state.venueRoof }, onChange: (_, preset) => { if (preset !== undefined) state.viewpoint = preset; syncUrl(); } });
       hoverOf(stage, turn);
-    } else turn.update(o);
+    } else turn.update(o, { venue: { roof: state.venueRoof } });
     stage.dataset.orientation = "landscape";
     stage.dataset.sport = state.sport;
     stage.dataset.size = state.size;
@@ -431,7 +424,38 @@ function render() {
   $("crowd-density-out").textContent = `${state.crowdDensity}%`;
   updateEmbed();
   updateHallLink();
+  paintStageBar();
   syncUrl();
+}
+
+// ----- The choices a reader reaches for while the surface is in sight are buttons over it that press the panel's own (flat or 3D, the crowd, the roof over it, dark): nothing is drawn again by them but what the panel's would, so a turn goes on.
+const stageBar = $("stage-bar");
+const STAGE_BAR = [
+  { id: "bar-flat", label: () => say("view_flat"), on: () => state.view === "flat", press: () => $("view").querySelector('[data-value="flat"]').click() },
+  { id: "bar-3d", label: () => say("view_3d"), on: () => state.view === "3d", press: () => $("view").querySelector('[data-value="3d"]').click() },
+  { id: "bar-crowd", label: () => say("crowd"), on: () => state.crowd, press: () => $("crowd").click() },
+  { id: "bar-roof", label: () => say("venueRoof"), on: () => state.venueRoof, shown: () => state.view === "3d" && state.crowd, press: () => $("venue-roof").click() },
+  { id: "bar-dark", label: () => say("theme_dark"), on: () => state.theme === "dark", press: () => $("theme").querySelector(`[data-value="${state.theme === "dark" ? "light" : "dark"}"]`).click() },
+];
+for (const item of STAGE_BAR) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "fam-chip";
+  button.dataset.testid = item.id;
+  button.dataset.bar = item.id;
+  stageBar.append(button);
+}
+stageBar.addEventListener("click", (event) => STAGE_BAR.find((item) => item.id === event.target.closest("button")?.dataset.bar)?.press());
+function paintStageBar() {
+  stageBar.hidden = false;
+  stageBar.setAttribute("aria-label", say("stageBar"));
+  for (const [i, item] of STAGE_BAR.entries()) {
+    const button = stageBar.children[i];
+    const text = item.label();
+    if (button.textContent !== text) button.textContent = text;
+    button.setAttribute("aria-pressed", String(item.on()));
+    button.hidden = item.shown !== undefined && !item.shown();
+  }
 }
 
 /** The sports that have a tournament layout, each with its first preset, read once from the layouts entry. */
@@ -1030,6 +1054,7 @@ const featured = mountRealView({
   prefix: "f",
   flat: false,
   chipClass: "fam-chip",
+  box: 430,
   page: () => ({ lang: language.lang, words: { ...WORDS[language.lang], group: say("featureGroup") }, theme: state.theme === "light" || state.theme === "dark" ? state.theme : undefined }),
   onChange: (own) => {
     const next = new URLSearchParams(location.search);

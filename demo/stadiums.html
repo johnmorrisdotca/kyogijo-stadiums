@@ -53,13 +53,14 @@
   </head>
   <body>
     <main>
-      <p class="back"><a href="./" id="back" data-testid="back"></a></p>
-      <h1 id="title"></h1>
+      <p data-first class="back"><a href="./" id="back" data-testid="back"></a></p>
+      <h1 data-first id="title"></h1>
       <p class="lede" id="lede"></p>
-      <div id="stadium-tabs" role="tablist" data-testid="stadium-tabs"></div>
-      <div id="tabs" role="tablist" data-testid="tabs"></div>
-      <p id="error" role="alert" hidden></p>
-      <div id="stage" data-testid="stage"></div>
+      <div data-first id="stadium-tabs" role="tablist" data-testid="stadium-tabs"></div>
+      <div data-first id="tabs" role="tablist" data-testid="tabs"></div>
+      <p data-first id="error" role="alert" hidden></p>
+      <div data-first id="bar" data-testid="bar" role="group"></div>
+      <div data-first id="stage" data-testid="stage"></div>
       <details id="facts" open>
         <summary id="l-facts"></summary>
         <dl id="list" data-testid="facts"></dl>
@@ -92,6 +93,7 @@
       import { mountKyogijoTurn } from "./dist/turn-entry.js";
       import { hoverOf, keepCamera, wayOf, writeWay } from "./turn-way.js";
       import { quietTitles } from "./quiet.js";
+      import { fitView, moveToBar } from "./view-bar.js";
       quietTitles();
 
       const WORDS = {
@@ -185,6 +187,7 @@
         document.title = w.pageTitle;
         document.querySelector('meta[name="description"]').setAttribute("content", w.pageDescription);
         $("edit").setAttribute("aria-label", w.formLabel);
+        $("bar").setAttribute("aria-label", w.formLabel);
         $("stadium-tabs").replaceChildren(...STADIUM_IDS.map((id) => {
           const button = document.createElement("button");
           button.type = "button";
@@ -269,6 +272,9 @@
         return { sport: state.config, ...(park ? { park: state.stadium } : { stadium: state.stadium }), crowd: { real: true, ...($("boards").checked ? { boards: { score: [3, 2] } } : {}), ...(lightingNow() === false ? {} : { lighting: lightingNow() }) }, language: $("language").value, ...(theme === "auto" ? {} : { theme }) };
       }
 
+      /** The walls, the roof and whether it is open, as the view takes them. */
+      const venueNow = () => ({ roof: $("roof").checked, walls: $("walls").checked, roofOpen: $("open").checked });
+
       function draw() {
         const theme = $("theme").value;
         if (theme === "auto") delete document.documentElement.dataset.theme;
@@ -285,9 +291,9 @@
         document.body.dataset.view = $("view").value;
         try {
           if (three) {
-            const settings = { preset: $("viewpoint").value, ...wayOf(syncUrl), ...($("roof").checked || $("walls").checked ? { venue: { roof: $("roof").checked, walls: $("walls").checked, roofOpen: $("open").checked } } : {}) };
-            const key = JSON.stringify([state.stadium, state.config, $("roof").checked, $("walls").checked, $("open").checked]);
-            // Another stadium, configuration or roof draws the scene again, and the camera goes on where the reader left it: the view is opened on it.
+            const settings = { preset: $("viewpoint").value, ...wayOf(syncUrl), venue: venueNow() };
+            const key = JSON.stringify([state.stadium, state.config]);
+            // Another stadium or configuration draws the scene again, and the camera goes on where the reader left it: the view is opened on it. The walls, the roof and its opening are changed in place, so that a turn goes on.
             if (turn !== undefined && turnKey !== key) { camera.carry(turn); turn.destroy(); turn = undefined; }
             if (turn === undefined) {
               stage.innerHTML = '<div id="three"></div>';
@@ -305,7 +311,7 @@
               viewpointNow = $("viewpoint").value;
               hoverOf($("three"), turn);
             } else {
-              turn.update(options);
+              turn.update(options, { venue: venueNow() });
               // Only a viewpoint chosen from the list moves the camera: anything else leaves it where it is.
               if ($("viewpoint").value !== viewpointNow) {
                 viewpointNow = $("viewpoint").value;
@@ -324,6 +330,7 @@
         }
         listFacts();
         syncUrl();
+        fit();
         const back = new URLSearchParams({ sport: state.config });
         if ($("language").value === "ja") back.set("lang", "ja");
         $("back").href = `./?${back}`;
@@ -334,6 +341,9 @@
         document.body.dataset.ready = "true";
       }
 
+      // The controls of the view are on the view: the toggles, the lights and the light or dark are in the bar over it, the rest stay in the panel under it.
+      moveToBar($("bar"), ["view", "walls", "roof", "open", "boards", ["lighting", { quiet: true }], ["wash", { quiet: true }], "theme"]);
+      const fit = fitView($("stage"));
       labelPage();
       $("stadium-tabs").addEventListener("click", (event) => {
         const button = event.target.closest("button[data-stadium]");
