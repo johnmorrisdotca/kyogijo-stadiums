@@ -7,6 +7,12 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.48.2] - 2026-10-30
+
+### Fixed
+
+- **An arena's hockey seats are the present figure of its article, not the first its infobox gives.** Twelve arenas drew an old figure: Scotiabank Saddledome 16,605 is now 19,289 (1995 to present; 16,605 was 1983 to 1988), Rogers Arena 18,422 is 18,871 (2018 to present), SAP Center 17,562 is 17,435 (2023 to present), Bell Centre 21,273 is 20,962 (2025 to present), Canadian Tire Centre 18,500 is 17,010 (2026 to present), Grand Casino Arena 18,064 is 17,954 (2012 to present), KeyBank Center 18,595 is 19,070 (2013 to present), Lenovo Center 18,730 is 18,547 (2026 to present), PPG Paints Arena 18,087 is 18,187 (2023 to present), Prudential Center 17,625 is 16,514 (2015 to present), State Farm Arena 18,545 is 17,624 (its last ice-hockey figure in the article, 2010 to 2011), and Bridgestone Arena 17,159 is 17,510 (Wikidata's figure for ice hockey). Each arena's `note` keeps the figure it had before. The arena data and the venues now give the same hockey seats. Basketball seats are unchanged.
+
 ## [0.48.1] - 2026-10-30
 
 ### Changed
