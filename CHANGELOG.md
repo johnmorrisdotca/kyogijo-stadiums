@@ -7,6 +7,25 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.49.0] - 2026-10-30
+
+### Added
+
+- **The controls of every 3D demo are on the view (SPX-651).** The stadiums, the halls, the judging, the boards, the district and the fly-through pages, and the home page's playground, have the bar the venues page and the featured arena already had, over the view: the walls, the roof and its opening, the boards, the lights, the names, the area round, the gates, the Kodokan's building and floor, the seat names and side judges, where the board goes, the roof and map of the fly-through, flat or 3D and light or dark, each only on the page where it means something. The view's own buttons (viewpoints, turn, tilt, zoom, Auto-turn, Reverse) are under it, and the bar, the view and the buttons are all in the first screen on a desk (1280 by 900) and on a phone (390 by 844), every control 44 pixels or more; the rest of the options stay in the panel (at the side of the view on a desk, under it on a phone, where the text of the page and the district's presets also go). The home page's playground has Flat, 3D, Crowd, Roof and Dark over its view, pressing the panel's own buttons. The choices were already in the address and still are. On a phone the bar is one row that scrolls along.
+- **A press on the bar never stops or sends back the turn.** The stadiums' walls, roof and opening, the halls' roof, the district's walls, roofs, area round, gates, building and floor, and the playground's roof now change the scene in place (`update(options, { venue })`) where they mounted the view again; the scene is the same one afterwards, with the same DOM as a fresh page with that choice (checked for each). The fly-through goes on from the same moment, playing if it played.
+- Demo only: `demo/view-bar.js` (`moveToBar` puts the labels of a page's existing controls in the bar, `fitView` gives the view the shape that leaves room for the bar and the buttons in the screen: the stage's `--rv-ratio` over the package's own `--ky-turn-ratio`, or a narrower box for the boards, whose pictures are made for the package's shape) is shared by every page and by `real-view.js`.
+- Tests: `e2e/viewbar.demo.mjs` (the bar, the view and the buttons in the first screen, 44 pixels or more, nothing wider than the screen, on each page; each toggle and list pressed while the view turns, 6 degrees a second, leaves it turning without a jump, and leaves the same scene; the flight's time and play; the home page's two bars), in the three browsers' projects.
+
+### Changed
+
+- The home page's first-paint box of the featured arena and the playground's bar are made as tall as they will be before the script runs, so that nothing under them moves.
+
+### Cost
+
+- The package is unchanged (no change to `src/` but its version): `dist/` and the device and quality budgets are as in 0.48.2. The demo pages grow by `view-bar.js` and their own lines: 8.2 KB of script on each page (3.2 KB gzipped): the venues page 3,074.7 KB against 3,066.5, the districts 2,435.8 against 2,427.6 (alone), the stadiums 3,062.5 against 3,054.2, the halls 3,158.8 against 3,150.5, the boards 3,170.3 against 3,162.0, the judging 3,063.3 against 3,055.1, the fly-through 3,488.3 against 3,480.0, the home page 5,277.3 against 5,267.3; every page stays inside its budget, none is raised.
+- Japanese: one new string, the name of the home page's bar (`stageBar`, `表示の切り替え：平面と3D、観客、屋根、ダークモード`, "Switching the display: flat and 3D, crowd, roof, dark mode"), checked by the Japanese reviewer.
+- Known gap: on a phone the home page's header (the family's navigation and the name) fills the first screen, so there the featured arena's bar and the top of its view are in the first screen and its buttons under the view are one scroll down. The senshu and dougu turn demos are not part of this release.
+
 ## [0.48.2] - 2026-10-30
 
 ### Fixed
