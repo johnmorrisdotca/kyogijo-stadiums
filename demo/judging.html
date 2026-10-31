@@ -409,11 +409,12 @@
       window.addEventListener("resize", () => { cancelAnimationFrame(resizing); resizing = requestAnimationFrame(() => { if ($("orientation").value === "auto") draw(); }); });
       // The controls of the view are on the view: flat, 3D or broadcast, the camera's focus, the seat names and the side judges, light or dark; the mats' people, the chart and the paper stay in the panel under it.
       moveToBar($("bar"), ["view", "dim", "focus", "seatnames", "sidejudges", "theme"]);
-      const fitStage = fitView($("stage"));
       labelPage();
       $("side-row").hidden = $("style").value === "kata";
       buildTabs();
       buildOfficials();
+      // The shape of the view is worked out where the page now stands (its text is in, its bars are drawn), before the view is first made in it.
+      const fitStage = fitView($("stage"));
       draw();
     </script>
   </body>

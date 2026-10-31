@@ -247,9 +247,10 @@
       for (const id of ["venue", "rows", "columns", "theme", "stadium", "slots", "sample", "labels", "view", "roof", "boards", "lighting", "wash"]) $(id).addEventListener("change", draw);
       // The controls of the view are on the view: what the stadium round the floor is (its roof, its boards and its lights), what is drawn on the floor, light or dark and flat or 3D are in the bar over it; the layout, the hall and the grid stay in the panel.
       moveToBar($("bar"), ["view", "stadium", "roof", "boards", ["lighting", { quiet: true }], ["wash", { quiet: true }], "labels", "theme"]);
-      const fitStage = fitView($("stage"));
       syncGrid();
       labelOptions();
+      // The shape of the view is worked out where the page now stands (its text is in, its bars are drawn), before the view is first made in it.
+      const fitStage = fitView($("stage"));
       draw();
     </script>
   </body>

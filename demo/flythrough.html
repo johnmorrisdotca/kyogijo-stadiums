@@ -175,7 +175,6 @@
 
       // The controls of the view are on the view: the roof, the map it starts on and light or dark; the language stays in the panel under it.
       moveToBar($("bar"), ["roof", "map", "theme"]);
-      const fitStage = fitView($("trip"));
       labelPage();
       $("tabs").addEventListener("click", (event) => {
         const button = event.target.closest("button[data-arena]");
@@ -186,6 +185,8 @@
       });
       for (const id of ["theme", "map", "roof"]) $(id).addEventListener("input", () => draw(trip?.stage));
       $("language").addEventListener("input", () => { labelPage(); draw(trip?.stage); });
+      // The shape of the view is worked out where the page now stands (its text is in, its bars are drawn), before the view is first made in it.
+      const fitStage = fitView($("trip"));
       draw();
     </script>
   </body>

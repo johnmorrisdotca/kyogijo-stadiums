@@ -551,7 +551,6 @@
 
       // The controls of the view are on the view: flat or 3D, the walls, the roof and its opening, the gates, the boards and the lights, the names, the area round and the Kodokan's building, light or dark; the venues to pick, the mode, the turn, the viewpoint and the language stay in the panel under it.
       moveToBar($("bar"), ["view", "walls", "roof", "roofopen", "gates", "boards", ["lighting", { quiet: true }], ["wash", { quiet: true }], "labels", "context", "kodokan", "building", "floor", "theme"]);
-      const fitStage = fitView($("stage"));
       labelPage();
       $("tabs").addEventListener("click", (event) => {
         const button = event.target.closest("button[data-preset]");
@@ -607,6 +606,8 @@
       $("mode").addEventListener("input", () => { $("labels").checked = $("mode").value === "city"; labelPage(); draw(); });
       for (const id of ["turn", "labels", "context", "gates", "roofopen", "building", "floor", "view", "viewpoint", "walls", "roof", "boards", "lighting", "wash", "theme"]) $(id).addEventListener("input", draw);
       $("language").addEventListener("input", () => { labelPage(); draw(); });
+      // The shape of the view is worked out where the page now stands (its text is in, its bars are drawn), before the view is first made in it.
+      const fitStage = fitView($("stage"));
       draw();
     </script>
   </body>

@@ -208,7 +208,6 @@
 
       // The controls of the view are on the view: flat or 3D, where the board goes, whether it covers the middle, light or dark; the sizes stay in the panel under it.
       moveToBar($("bar"), ["view", "position", "cover", "theme"]);
-      const fitStage = fitView($("stage"), { keepShape: true });
       labelPage();
       $("tabs").addEventListener("click", (event) => {
         const button = event.target.closest("button[data-example]");
@@ -220,6 +219,8 @@
       });
       for (const id of ["view", "position", "share", "opacity", "x", "y", "cover", "theme"]) $(id).addEventListener("input", draw);
       $("language").addEventListener("input", () => { labelPage(); draw(); });
+      // The shape of the view is worked out where the page now stands (its text is in, its bars are drawn), before the view is first made in it.
+      const fitStage = fitView($("stage"), { keepShape: true });
       draw();
     </script>
   </body>

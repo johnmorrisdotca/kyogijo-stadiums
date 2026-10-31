@@ -343,7 +343,6 @@
 
       // The controls of the view are on the view: the toggles, the lights and the light or dark are in the bar over it, the rest stay in the panel under it.
       moveToBar($("bar"), ["view", "walls", "roof", "open", "boards", ["lighting", { quiet: true }], ["wash", { quiet: true }], "theme"]);
-      const fit = fitView($("stage"));
       labelPage();
       $("stadium-tabs").addEventListener("click", (event) => {
         const button = event.target.closest("button[data-stadium]");
@@ -364,6 +363,8 @@
       $("roof").addEventListener("input", () => { if ($("roof").checked) $("walls").checked = true; });
       for (const id of ["view", "viewpoint", "walls", "roof", "open", "boards", "lighting", "wash", "theme"]) $(id).addEventListener("input", draw);
       $("language").addEventListener("input", () => { labelPage(); draw(); });
+      // The shape of the view is worked out where the page now stands (its text is in, its bars are drawn), before the view is first made in it.
+      const fit = fitView($("stage"));
       draw();
     </script>
   </body>
