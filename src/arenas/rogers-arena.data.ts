@@ -18,6 +18,7 @@ export const ARENA: ArenaData = {
     "lon": -123.10889,
     "status": "current",
     "from": 1995,
-    "capacity": {"hockey": 18422, "basketball": 19193},
+    "capacity": {"hockey": 18871, "basketball": 19193},
+    "note": "Ice hockey: 18,871 is the article's figure for 2018–present; 18,422 was its figure for 1995–2002.",
     "en": {"title": "Rogers Arena", "revision": 1379918849},
   };

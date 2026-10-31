@@ -26,6 +26,7 @@ export const ARENA: ArenaData = {
     "lon": -75.92722,
     "status": "current",
     "from": 1996,
-    "capacity": {"hockey": 18500},
+    "capacity": {"hockey": 17010},
+    "note": "Ice hockey: 17,010 is the article's figure for 2026–present; 18,500 was its figure for 1996–2005.",
     "en": {"title": "Canadian Tire Centre", "revision": 1378044395},
   };

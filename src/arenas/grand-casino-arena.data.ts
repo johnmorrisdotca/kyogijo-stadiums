@@ -21,6 +21,7 @@ export const ARENA: ArenaData = {
     "lon": -93.10111,
     "status": "current",
     "from": 2000,
-    "capacity": {"hockey": 18064},
+    "capacity": {"hockey": 17954},
+    "note": "Ice hockey: 17,954 is the article's figure for 2012–present; 18,064 was its figure for 2000–2012.",
     "en": {"title": "Grand Casino Arena", "revision": 1379407082},
   };

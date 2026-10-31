@@ -22,6 +22,7 @@ export const ARENA: ArenaData = {
     "lon": -84.39639,
     "status": "current",
     "from": 1999,
-    "capacity": {"hockey": 18545, "basketball": 20233},
+    "capacity": {"hockey": 17624, "basketball": 20233},
+    "note": "Ice hockey: 17,624 is the article's last ice-hockey figure (2010–2011); the article gives none after 2011. 18,545 was its figure for 1999–2010.",
     "en": {"title": "State Farm Arena", "revision": 1379287335},
   };

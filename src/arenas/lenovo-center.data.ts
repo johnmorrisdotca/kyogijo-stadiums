@@ -26,6 +26,7 @@ export const ARENA: ArenaData = {
     "lon": -78.72194,
     "status": "current",
     "from": 1999,
-    "capacity": {"hockey": 18730},
+    "capacity": {"hockey": 18547},
+    "note": "Ice hockey: 18,547 is the article's figure for 2026–present; 18,730 was its figure for 1999–2006.",
     "en": {"title": "Lenovo Center", "revision": 1380055594},
   };

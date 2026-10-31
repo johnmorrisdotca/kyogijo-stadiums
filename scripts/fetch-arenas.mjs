@@ -48,7 +48,7 @@ const entities = await wikidata(arenas.map((a) => a.wikidata), "labels|aliases|c
 // Labels of the items the claims point to: the places the arenas stand in, the countries, and what a capacity applies to.
 const pointed = new Set();
 for (const e of Object.values(entities)) {
-  for (const id of [...ids(e, "P131"), ...ids(e, "P17"), ...(e.claims?.P1083 ?? []).flatMap((c) => (c.qualifiers?.P518 ?? []).map((q) => q.datavalue?.value?.id).filter(Boolean))]) pointed.add(id);
+  for (const id of [...ids(e, "P131"), ...ids(e, "P17"), ...(e.claims?.P1083 ?? []).flatMap((c) => [...(c.qualifiers?.P518 ?? []), ...(c.qualifiers?.P641 ?? [])].map((q) => q.datavalue?.value?.id).filter(Boolean))]) pointed.add(id);
 }
 const targets = await wikidata([...pointed], "labels|claims");
 const label = (id) => targets[id]?.labels?.en?.value;
@@ -147,7 +147,7 @@ for (const arena of arenas) {
     names: (e.claims?.P2561 ?? []).map((c) => ({ ...(value(c) === undefined ? {} : { text: value(c).text, lang: value(c).language }), ...(qualifierYear(c, "P580") === undefined ? {} : { from: qualifierYear(c, "P580") }), ...(qualifierYear(c, "P582") === undefined ? {} : { to: qualifierYear(c, "P582") }) })),
     ...(at === undefined ? {} : { lat: at.latitude, lon: at.longitude }),
     years: { opened: yearsOf(e, "P1619"), inception: yearsOf(e, "P571"), closed: yearsOf(e, "P3999"), ended: yearsOf(e, "P576") },
-    capacity: (e.claims?.P1083 ?? []).map((c) => ({ amount: Number(value(c)?.amount), ...(qualifierYear(c, "P585") === undefined ? {} : { year: qualifierYear(c, "P585") }), ...((c.qualifiers?.P518 ?? []).length === 0 ? {} : { applies: c.qualifiers.P518.map((q) => label(q.datavalue?.value?.id)).filter(Boolean) }) })).filter((c) => Number.isFinite(c.amount)),
+    capacity: (e.claims?.P1083 ?? []).map((c) => ({ amount: Number(value(c)?.amount), ...(qualifierYear(c, "P585") === undefined ? {} : { year: qualifierYear(c, "P585") }), ...((c.qualifiers?.P641 ?? []).length === 0 ? {} : { sport: c.qualifiers.P641.map((q) => label(q.datavalue?.value?.id)).filter(Boolean) }), ...((c.qualifiers?.P518 ?? []).length === 0 ? {} : { applies: c.qualifiers.P518.map((q) => label(q.datavalue?.value?.id)).filter(Boolean) }) })).filter((c) => Number.isFinite(c.amount)),
     places: ids(e, "P131").map((id) => label(id)).filter(Boolean),
     country: ids(e, "P17").map((id) => iso(id)).filter(Boolean),
     ...(e.sitelinks?.enwiki === undefined ? {} : { enwiki: e.sitelinks.enwiki.title }),

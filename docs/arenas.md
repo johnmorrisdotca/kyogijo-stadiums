@@ -7,30 +7,30 @@ Made by `pnpm arenas` from `scripts/arenas.data.json`; do not edit by hand. 167 
 | `amerant-bank-arena` | Amerant Bank Arena | Sunrise, United States | Q795526 | 1998– | 19,250 hockey |  |
 | `american-airlines-center` | American Airlines Center | Dallas, United States | Q463345 | 2001– | 18,532 hockey, 19,200 basketball |  |
 | `ball-arena` | Ball Arena | Denver, United States | Q795470 | 1999– | 17,809 hockey, 19,520 basketball |  |
-| `bell-centre` | Bell Centre (Centre Bell) | Montreal, Canada | Q522282 | 1996– | 21,273 hockey |  |
+| `bell-centre` | Bell Centre (Centre Bell) | Montreal, Canada | Q522282 | 1996– | 20,962 hockey |  |
 | `benchmark-international-arena` | Benchmark International Arena | Tampa, United States | Q940199 | 1996– |  |  |
-| `bridgestone-arena` | Bridgestone Arena | Nashville, United States | Q302869 | 1996– | 17,159 hockey |  |
+| `bridgestone-arena` | Bridgestone Arena | Nashville, United States | Q302869 | 1996– | 17,510 hockey |  |
 | `canada-life-centre` | Canada Life Centre | Winnipeg, Canada | Q656928 | 2004– | 15,225 hockey |  |
-| `canadian-tire-centre` | Canadian Tire Centre | Ottawa, Canada | Q1327290 | 1996– | 18,500 hockey |  |
+| `canadian-tire-centre` | Canadian Tire Centre | Ottawa, Canada | Q1327290 | 1996– | 17,010 hockey |  |
 | `capital-one-arena` | Capital One Arena | Washington, United States | Q223240 | 1997– | 18,573 hockey, 20,356 basketball |  |
 | `climate-pledge-arena` | Climate Pledge Arena | Seattle, United States | Q977529 | 1962– | 17,151 hockey, 18,300 basketball |  |
 | `crypto-com-arena` | Crypto.com Arena | Los Angeles, United States | Q186080 | 1999– | 18,145 hockey, 19,079 basketball |  |
 | `delta-center` | Delta Center | Salt Lake City, United States | Q82294 | 1991– | 16,020 hockey, 18,186 basketball |  |
 | `enterprise-center` | Enterprise Center | St. Louis, United States | Q1067700 | 1994– | 18,096 hockey |  |
-| `grand-casino-arena` | Grand Casino Arena | Saint Paul, United States | Q1421388 | 2000– | 18,064 hockey |  |
+| `grand-casino-arena` | Grand Casino Arena | Saint Paul, United States | Q1421388 | 2000– | 17,954 hockey |  |
 | `honda-center` | Honda Center | Anaheim, United States | Q774138 | 1993– | 17,174 hockey, 18,336 basketball |  |
-| `keybank-center` | KeyBank Center | Buffalo, United States | Q1110789 | 1996– | 18,595 hockey |  |
-| `lenovo-center` | Lenovo Center | Raleigh, United States | Q39177 | 1999– | 18,730 hockey |  |
+| `keybank-center` | KeyBank Center | Buffalo, United States | Q1110789 | 1996– | 19,070 hockey |  |
+| `lenovo-center` | Lenovo Center | Raleigh, United States | Q39177 | 1999– | 18,547 hockey |  |
 | `little-caesars-arena` | Little Caesars Arena | Detroit, United States | Q18154984 | 2017– | 19,515 hockey, 20,332 basketball |  |
 | `madison-square-garden` | Madison Square Garden | New York, United States | Q186125 | 1968– |  |  |
 | `nationwide-arena` | Nationwide Arena | Columbus, United States | Q166503 | 2000– | 18,500 hockey |  |
-| `ppg-paints-arena` | PPG Paints Arena | Pittsburgh, United States | Q595460 | 2010– | 18,087 hockey |  |
-| `prudential-center` | Prudential Center | Newark, United States | Q849027 | 2007– | 17,625 hockey, 18,711 basketball |  |
-| `rogers-arena` | Rogers Arena | Vancouver, Canada | Q517318 | 1995– | 18,422 hockey, 19,193 basketball |  |
+| `ppg-paints-arena` | PPG Paints Arena | Pittsburgh, United States | Q595460 | 2010– | 18,187 hockey |  |
+| `prudential-center` | Prudential Center | Newark, United States | Q849027 | 2007– | 16,514 hockey, 18,711 basketball |  |
+| `rogers-arena` | Rogers Arena | Vancouver, Canada | Q517318 | 1995– | 18,871 hockey, 19,193 basketball |  |
 | `rogers-place` | Rogers Place | Edmonton, Canada | Q5339036 | 2016– |  |  |
-| `sap-center` | SAP Center | San Jose, United States | Q261863 | 1993– | 17,562 hockey, 18,543 basketball |  |
+| `sap-center` | SAP Center | San Jose, United States | Q261863 | 1993– | 17,435 hockey, 18,543 basketball |  |
 | `scotiabank-arena` | Scotiabank Arena | Toronto, Canada | Q406972 | 1999– | 18,819 hockey, 19,800 basketball |  |
-| `scotiabank-saddledome` | Scotiabank Saddledome | Calgary, Canada | Q1140083 | 1983– | 16,605 hockey |  |
+| `scotiabank-saddledome` | Scotiabank Saddledome | Calgary, Canada | Q1140083 | 1983– | 19,289 hockey |  |
 | `t-mobile-arena` | T-Mobile Arena | Las Vegas, United States | Q3338973 | 2016– | 17,500 hockey |  |
 | `td-garden` | TD Garden | Boston, United States | Q432105 | 1995– |  |  |
 | `ubs-arena` | UBS Arena | Elmont, United States | Q48742753 | 2021– | 17,255 hockey |  |
@@ -39,7 +39,7 @@ Made by `pnpm arenas` from `scripts/arenas.data.json`; do not edit by hand. 167 
 | `barclays-center` | Barclays Center | Brooklyn, United States | Q807966 | 2012– | 15,795 hockey, 17,732 basketball |  |
 | `mortgage-matchup-center` | Mortgage Matchup Center | Phoenix, United States | Q1538690 | 1992– |  |  |
 | `pacific-coliseum` | Pacific Coliseum | Vancouver, Canada | Q832644 | 1968– | 15,041 hockey |  |
-| `state-farm-arena` | State Farm Arena | Atlanta, United States | Q1123297 | 1999– | 18,545 hockey, 20,233 basketball |  |
+| `state-farm-arena` | State Farm Arena | Atlanta, United States | Q1123297 | 1999– | 17,624 hockey, 20,233 basketball |  |
 | `chase-center` | Chase Center | San Francisco, United States | Q15262098 | 2019– | 18,064 basketball |  |
 | `fedexforum` | FedExForum | Memphis, United States | Q641212 | 2004– | 16,667 basketball |  |
 | `fiserv-forum` | Fiserv Forum | Milwaukee, United States | Q20372160 | 2018– | 17,385 basketball |  |
@@ -190,6 +190,18 @@ No article gives the size of any court. Three arenas are said to have had a rink
 
 ## Notes
 
+- `bell-centre`: Ice hockey: 20,962 is the article's figure for 2025–present; 21,273 was its figure for 1996–2014.
+- `bridgestone-arena`: Ice hockey: 17,510 is Wikidata's figure for ice hockey (P1083 with P641 ice hockey); the article's infobox gives 17,159 undated.
+- `canadian-tire-centre`: Ice hockey: 17,010 is the article's figure for 2026–present; 18,500 was its figure for 1996–2005.
+- `grand-casino-arena`: Ice hockey: 17,954 is the article's figure for 2012–present; 18,064 was its figure for 2000–2012.
+- `keybank-center`: Ice hockey: 19,070 is the article's figure for 2013–present; 18,595 was its figure for 1996–1999.
+- `lenovo-center`: Ice hockey: 18,547 is the article's figure for 2026–present; 18,730 was its figure for 1999–2006.
+- `ppg-paints-arena`: Ice hockey: 18,187 is the article's figure for 2023–present; 18,087 was its figure for 2010–2011.
+- `prudential-center`: Ice hockey: 16,514 is the article's figure for 2015–present; 17,625 was its figure for 2007–2013.
+- `rogers-arena`: Ice hockey: 18,871 is the article's figure for 2018–present; 18,422 was its figure for 1995–2002.
+- `sap-center`: Ice hockey: 17,435 is the article's figure for 2023–present; 17,562 was its figure for 2001–2023.
+- `scotiabank-saddledome`: Ice hockey: 19,289 is the article's figure for 1995–present; 16,605 was its figure for 1983–1988.
+- `state-farm-arena`: Ice hockey: 17,624 is the article's last ice-hockey figure (2010–2011); the article gives none after 2011. 18,545 was its figure for 1999–2010.
 - `buffalo-memorial-auditorium`: The article says the ice sheet fell short of the NHL's 200 by 85 feet and gives no figure: the rink is drawn at the NHL's size.
 - `chicago-stadium`: The article says the Stadium's ice was shorter than the NHL's regulation size, the distance taken out of the neutral zone, and gives no figure: the rink is drawn at the NHL's size.
 - `cow-palace`: The article says the rink was smaller than the NHL's and gives no figure: it is drawn at the NHL's size.

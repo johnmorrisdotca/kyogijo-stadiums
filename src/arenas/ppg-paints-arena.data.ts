@@ -22,6 +22,7 @@ export const ARENA: ArenaData = {
     "lon": -79.9892,
     "status": "current",
     "from": 2010,
-    "capacity": {"hockey": 18087},
+    "capacity": {"hockey": 18187},
+    "note": "Ice hockey: 18,187 is the article's figure for 2023–present; 18,087 was its figure for 2010–2011.",
     "en": {"title": "PPG Paints Arena", "revision": 1378458359},
   };

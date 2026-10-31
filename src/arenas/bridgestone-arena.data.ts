@@ -24,6 +24,7 @@ export const ARENA: ArenaData = {
     "lon": -86.77861,
     "status": "current",
     "from": 1996,
-    "capacity": {"hockey": 17159},
+    "capacity": {"hockey": 17510},
+    "note": "Ice hockey: 17,510 is Wikidata's figure for ice hockey (P1083 with P641 ice hockey); the article's infobox gives 17,159 undated.",
     "en": {"title": "Bridgestone Arena", "revision": 1373721363},
   };

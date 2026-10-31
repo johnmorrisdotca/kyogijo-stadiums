@@ -25,6 +25,7 @@ export const ARENA: ArenaData = {
     "lon": -73.56944,
     "status": "current",
     "from": 1996,
-    "capacity": {"hockey": 21273},
+    "capacity": {"hockey": 20962},
+    "note": "Ice hockey: 20,962 is the article's figure for 2025–present; 21,273 was its figure for 1996–2014.",
     "en": {"title": "Bell Centre", "revision": 1380110375},
   };

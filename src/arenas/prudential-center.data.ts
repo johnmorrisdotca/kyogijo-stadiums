@@ -16,6 +16,7 @@ export const ARENA: ArenaData = {
     "lon": -74.17111,
     "status": "current",
     "from": 2007,
-    "capacity": {"hockey": 17625, "basketball": 18711},
+    "capacity": {"hockey": 16514, "basketball": 18711},
+    "note": "Ice hockey: 16,514 is the article's figure for 2015–present; 17,625 was its figure for 2007–2013.",
     "en": {"title": "Prudential Center", "revision": 1380112777},
   };

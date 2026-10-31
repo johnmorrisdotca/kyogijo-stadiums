@@ -28,6 +28,7 @@ export const ARENA: ArenaData = {
     "lon": -121.90111,
     "status": "current",
     "from": 1993,
-    "capacity": {"hockey": 17562, "basketball": 18543},
+    "capacity": {"hockey": 17435, "basketball": 18543},
+    "note": "Ice hockey: 17,435 is the article's figure for 2023–present; 17,562 was its figure for 2001–2023.",
     "en": {"title": "SAP Center", "revision": 1376082812},
   };

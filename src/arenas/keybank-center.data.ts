@@ -26,6 +26,7 @@ export const ARENA: ArenaData = {
     "lon": -78.87639,
     "status": "current",
     "from": 1996,
-    "capacity": {"hockey": 18595},
+    "capacity": {"hockey": 19070},
+    "note": "Ice hockey: 19,070 is the article's figure for 2013–present; 18,595 was its figure for 1996–1999.",
     "en": {"title": "KeyBank Center", "revision": 1375699062},
   };

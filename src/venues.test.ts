@@ -73,11 +73,12 @@ describe("the venues: the four divisions of the NHL", () => {
   });
 
   it("have seats that are the present ones: where an infobox lists years, the last, not the first the arena data takes", () => {
-    // The arena data's seats are the first figure of an infobox; the venue's are the present one (the Saddledome's 16,605 were its 1983 seats).
+    // The arena data's hockey seats are the venue's present figure (the Saddledome's 16,605 were its 1983 seats, kept in the arena's note).
     expect(VENUES["scotiabank-saddledome"].seats.hockey).toBe(19289);
-    expect(arenaById("scotiabank-saddledome")?.capacity?.hockey).toBe(16605);
+    expect(arenaById("scotiabank-saddledome")?.capacity?.hockey).toBe(19289);
     expect(VENUES["rogers-arena"].seats.hockey).toBe(18871);
     expect(VENUES["sap-center"].seats.hockey).toBe(17435);
+    for (const a of Object.values(ARENAS)) if (a.capacity?.hockey !== undefined && (VENUES as Record<string, RealVenue>)[a.id] !== undefined) expect(a.capacity.hockey, a.id).toBe((VENUES as Record<string, RealVenue>)[a.id].seats.hockey);
     // Wikidata's own figure for ice hockey wins where its item has one.
     expect(VENUES["rogers-place"].seats).toMatchObject({ hockey: 18641, source: "wikidata", wikidata: 18641 });
     expect(venues.filter((v) => v.seats.source === "wikidata").map((v) => v.id)).toEqual(["rogers-place", "grand-casino-arena", "bridgestone-arena"]);

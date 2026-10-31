@@ -26,7 +26,11 @@ export interface ArenaSize {
   source: string;
 }
 
-/** The seats an arena holds for each sport, as the infobox of its article gives them (the first number it gives for the sport). */
+/**
+ * The seats an arena holds for each sport, as the infobox of its article gives them. For hockey it is the figure of the article's
+ * current configuration: the latest dated ice-hockey figure, or the only one (Wikidata's P1083 carries no sport qualifier, so it is not
+ * used). An earlier figure is kept in the arena's `note`. Basketball is still the first figure the infobox gives.
+ */
 export interface ArenaCapacity {
   hockey?: number;
   basketball?: number;

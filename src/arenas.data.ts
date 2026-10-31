@@ -95,7 +95,8 @@ export const ARENA_DATA: ArenaData[] = [
     "lon": -73.56944,
     "status": "current",
     "from": 1996,
-    "capacity": {"hockey": 21273},
+    "capacity": {"hockey": 20962},
+    "note": "Ice hockey: 20,962 is the article's figure for 2025–present; 21,273 was its figure for 1996–2014.",
     "en": {"title": "Bell Centre", "revision": 1380110375},
   },
   {
@@ -140,7 +141,8 @@ export const ARENA_DATA: ArenaData[] = [
     "lon": -86.77861,
     "status": "current",
     "from": 1996,
-    "capacity": {"hockey": 17159},
+    "capacity": {"hockey": 17510},
+    "note": "Ice hockey: 17,510 is Wikidata's figure for ice hockey (P1083 with P641 ice hockey); the article's infobox gives 17,159 undated.",
     "en": {"title": "Bridgestone Arena", "revision": 1373721363},
   },
   {
@@ -194,7 +196,8 @@ export const ARENA_DATA: ArenaData[] = [
     "lon": -75.92722,
     "status": "current",
     "from": 1996,
-    "capacity": {"hockey": 18500},
+    "capacity": {"hockey": 17010},
+    "note": "Ice hockey: 17,010 is the article's figure for 2026–present; 18,500 was its figure for 1996–2005.",
     "en": {"title": "Canadian Tire Centre", "revision": 1378044395},
   },
   {
@@ -353,7 +356,8 @@ export const ARENA_DATA: ArenaData[] = [
     "lon": -93.10111,
     "status": "current",
     "from": 2000,
-    "capacity": {"hockey": 18064},
+    "capacity": {"hockey": 17954},
+    "note": "Ice hockey: 17,954 is the article's figure for 2012–present; 18,064 was its figure for 2000–2012.",
     "en": {"title": "Grand Casino Arena", "revision": 1379407082},
   },
   {
@@ -406,7 +410,8 @@ export const ARENA_DATA: ArenaData[] = [
     "lon": -78.87639,
     "status": "current",
     "from": 1996,
-    "capacity": {"hockey": 18595},
+    "capacity": {"hockey": 19070},
+    "note": "Ice hockey: 19,070 is the article's figure for 2013–present; 18,595 was its figure for 1996–1999.",
     "en": {"title": "KeyBank Center", "revision": 1375699062},
   },
   {
@@ -434,7 +439,8 @@ export const ARENA_DATA: ArenaData[] = [
     "lon": -78.72194,
     "status": "current",
     "from": 1999,
-    "capacity": {"hockey": 18730},
+    "capacity": {"hockey": 18547},
+    "note": "Ice hockey: 18,547 is the article's figure for 2026–present; 18,730 was its figure for 1999–2006.",
     "en": {"title": "Lenovo Center", "revision": 1380055594},
   },
   {
@@ -520,7 +526,8 @@ export const ARENA_DATA: ArenaData[] = [
     "lon": -79.9892,
     "status": "current",
     "from": 2010,
-    "capacity": {"hockey": 18087},
+    "capacity": {"hockey": 18187},
+    "note": "Ice hockey: 18,187 is the article's figure for 2023–present; 18,087 was its figure for 2010–2011.",
     "en": {"title": "PPG Paints Arena", "revision": 1378458359},
   },
   {
@@ -538,7 +545,8 @@ export const ARENA_DATA: ArenaData[] = [
     "lon": -74.17111,
     "status": "current",
     "from": 2007,
-    "capacity": {"hockey": 17625, "basketball": 18711},
+    "capacity": {"hockey": 16514, "basketball": 18711},
+    "note": "Ice hockey: 16,514 is the article's figure for 2015–present; 17,625 was its figure for 2007–2013.",
     "en": {"title": "Prudential Center", "revision": 1380112777},
   },
   {
@@ -558,7 +566,8 @@ export const ARENA_DATA: ArenaData[] = [
     "lon": -123.10889,
     "status": "current",
     "from": 1995,
-    "capacity": {"hockey": 18422, "basketball": 19193},
+    "capacity": {"hockey": 18871, "basketball": 19193},
+    "note": "Ice hockey: 18,871 is the article's figure for 2018–present; 18,422 was its figure for 1995–2002.",
     "en": {"title": "Rogers Arena", "revision": 1379918849},
   },
   {
@@ -606,7 +615,8 @@ export const ARENA_DATA: ArenaData[] = [
     "lon": -121.90111,
     "status": "current",
     "from": 1993,
-    "capacity": {"hockey": 17562, "basketball": 18543},
+    "capacity": {"hockey": 17435, "basketball": 18543},
+    "note": "Ice hockey: 17,435 is the article's figure for 2023–present; 17,562 was its figure for 2001–2023.",
     "en": {"title": "SAP Center", "revision": 1376082812},
   },
   {
@@ -654,7 +664,8 @@ export const ARENA_DATA: ArenaData[] = [
     "lon": -114.05194,
     "status": "current",
     "from": 1983,
-    "capacity": {"hockey": 16605},
+    "capacity": {"hockey": 19289},
+    "note": "Ice hockey: 19,289 is the article's figure for 1995–present; 16,605 was its figure for 1983–1988.",
     "en": {"title": "Scotiabank Saddledome", "revision": 1377341466},
   },
   {
@@ -857,7 +868,8 @@ export const ARENA_DATA: ArenaData[] = [
     "lon": -84.39639,
     "status": "current",
     "from": 1999,
-    "capacity": {"hockey": 18545, "basketball": 20233},
+    "capacity": {"hockey": 17624, "basketball": 20233},
+    "note": "Ice hockey: 17,624 is the article's last ice-hockey figure (2010–2011); the article gives none after 2011. 18,545 was its figure for 1999–2010.",
     "en": {"title": "State Farm Arena", "revision": 1379287335},
   },
   {

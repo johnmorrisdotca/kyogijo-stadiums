@@ -25,6 +25,7 @@ export const ARENA: ArenaData = {
     "lon": -114.05194,
     "status": "current",
     "from": 1983,
-    "capacity": {"hockey": 16605},
+    "capacity": {"hockey": 19289},
+    "note": "Ice hockey: 19,289 is the article's figure for 1995–present; 16,605 was its figure for 1983–1988.",
     "en": {"title": "Scotiabank Saddledome", "revision": 1377341466},
   };
