@@ -1054,7 +1054,7 @@ const featured = mountRealView({
   prefix: "f",
   flat: false,
   chipClass: "fam-chip",
-  box: 430,
+  fit: false,
   page: () => ({ lang: language.lang, words: { ...WORDS[language.lang], group: say("featureGroup") }, theme: state.theme === "light" || state.theme === "dark" ? state.theme : undefined }),
   onChange: (own) => {
     const next = new URLSearchParams(location.search);

@@ -64,21 +64,17 @@ export function moveToBar(bar, controls) {
  * Size the 3D view in `stage` so that what is above it, the view and its own buttons fit in the screen. The view keeps its way of being drawn (the package frames the scene, the boards and the labels for the shape of its box,
  * which `--ky-turn-ratio` gives, written on the view), so what changes is that shape: the stage's width over the height that is left of the screen, never lower than the stage's `--rv-least` nor higher than its `--rv-most` (a phone's page that has more
  * above it than a screen scrolls to it instead). The height left is the screen's, less the stage's top in the page, the buttons under the view and the stage's own padding, kept up to date as the page changes.
- * With `keepShape` the shape is not changed: the stage gets narrower instead. With `box`, the stage is itself a box of a height the page's own style gives from `--feature-h` (the home page's, which holds the view and its buttons): that height is what is left of the screen, never under `box` pixels.
+ * With `keepShape` the shape is not changed: the stage gets narrower instead.
  * Returns a function that works it out again at once (a page calls it after drawing).
  */
-export function fitView(stage, { box = 0, keepShape = false } = {}) {
+export function fitView(stage, { keepShape = false } = {}) {
   installViewBar();
-  if (box === 0) stage.classList.add("rv-fit");
+  stage.classList.add("rv-fit");
   if (keepShape) stage.classList.add("rv-keep");
   /** The height of what is under the view (its buttons), as last measured: a first guess before the view is there, so that it is made in nearly the shape it keeps. */
   let under = window.innerWidth <= 600 ? 230 : 110;
   const work = () => {
     const top = stage.getBoundingClientRect().top + window.scrollY;
-    if (box > 0) {
-      stage.style.setProperty("--feature-h", `${Math.round(Math.min(890, Math.max(box, window.innerHeight - top - 16)))}px`);
-      return;
-    }
     if (!stage.classList.contains("rv-fit")) {
       stage.style.removeProperty("--rv-ratio");
       return;
@@ -103,7 +99,9 @@ export function fitView(stage, { box = 0, keepShape = false } = {}) {
       return;
     }
     const width = view === null ? stage.getBoundingClientRect().width - sides : view.getBoundingClientRect().width;
-    stage.style.setProperty("--rv-ratio", (Math.round((width / height) * 1000) / 1000).toString());
+    // Never taller than the package's own shape would make it (16:10, 5:4 on a phone): a view that fills the screen is not a bigger one to draw than the package asks for.
+    const wide = window.innerWidth <= 560 ? 5 / 4 : 16 / 10;
+    stage.style.setProperty("--rv-ratio", (Math.round(Math.max(wide, width / height) * 1000) / 1000).toString());
   };
   // A change of the page is answered on the next frame, not inside the observer's own turn (a change of the view's shape changes the page).
   let waiting = 0;

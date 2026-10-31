@@ -44,10 +44,10 @@ export const REAL_VIEW_CSS = `
  * @param {boolean} [options.flat] whether the view can be flat (a `view` button); a view that cannot is always 3D
  * @param {string} [options.chipClass] a class for the buttons, for a page that has a style of its own for them
  * @param {boolean} [options.spin] whether the 3D view can be asked to turn by itself when it opens (`spin=on` in the address, which Auto-turn writes; a reader who prefers reduced motion gets it still): it waits still otherwise and turns while the pointer is over it
- * @param {number} [options.box] for a page whose stage is a box of its own height (`--feature-h`): the least that box is, in pixels; the box takes what is left of the screen
+ * @param {boolean} [options.fit] whether the view is given the shape that leaves room for the bar and its buttons in the screen (`false` for a page whose stage is a box of its own height, as the home page's)
  * @param {(state: object) => void} [options.onChange] called after anything changed, with the state
  */
-export function mountRealView({ stage, bar, venue, page, prefix = "", flat = true, spin = true, chipClass = "", box = 0, onChange = () => undefined }) {
+export function mountRealView({ stage, bar, venue, page, prefix = "", flat = true, spin = true, chipClass = "", fit = true, onChange = () => undefined }) {
   const key = (name) => `${prefix}${name}`;
   const params = new URLSearchParams(location.search);
   const flag = (name, normal) => (params.has(key(name)) ? params.get(key(name)) === "1" : normal);
@@ -214,7 +214,7 @@ export function mountRealView({ stage, bar, venue, page, prefix = "", flat = tru
   });
 
   renderBar();
-  const fitStage = fitView(stage, { box });
+  const fitStage = fit ? fitView(stage) : undefined;
   apply();
   return {
     state,
