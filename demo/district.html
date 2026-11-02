@@ -102,17 +102,17 @@
       <p class="note" id="outside-note" data-testid="outside-note" hidden></p>
       </div>
       </div>
-      <details id="facts" open>
+      <details id="facts" open data-pane>
         <summary id="l-facts"></summary>
         <table data-testid="facts"><thead id="head"></thead><tbody id="list"></tbody></table>
         <p class="note" id="between" data-testid="between"></p>
       </details>
-      <details id="floors-box" open hidden>
+      <details id="floors-box" open hidden data-pane>
         <summary id="l-floors"></summary>
         <table data-testid="floors"><tbody id="floors-list"></tbody></table>
         <p class="note" id="floors-note"></p>
       </details>
-      <details id="edit" open>
+      <details id="edit" open data-pane data-pane-default>
         <summary id="l-edit"></summary>
         <fieldset id="venues-box"><legend id="l-venues"></legend><div class="picks" id="picks" data-testid="picks"></div></fieldset>
         <div class="controls">
@@ -161,8 +161,10 @@
       import { hoverOf, keepCamera, wayOf, writeWay } from "./turn-way.js";
       import { lightingFor, lightingOfAddress } from "./lighting.js";
       import { quietTitles } from "./quiet.js";
+      import { panesToTabs } from "./tabs.js";
       import { fitView, moveToBar } from "./view-bar.js";
       quietTitles();
+      panesToTabs();
 
       const WORDS = {
         en: {

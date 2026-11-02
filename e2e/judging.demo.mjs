@@ -176,7 +176,7 @@ test("a damaged address opens on the sample names, and the table says the same a
   const { errors } = await open(page, "?d=%7Bnot-json&mat=9&view=sideways");
   await expect(page.locator("#tabs button")).toHaveText(["Mat 1", "Mat 2", "All mats"]);
   await expect(page.locator(`${STAGE} .ky-ju-name`).first()).toHaveText("Aiko Mori");
-  await page.locator("details", { hasText: "The same as a table" }).locator("summary").click();
+  await page.locator("#tab-table-box").click();
   await expect(page.locator("#table table")).toContainText("Judge 3, central");
   await expect(page.locator("#table tbody tr")).toHaveCount(10);
   expect(errors).toEqual([]);
@@ -372,7 +372,7 @@ test("no box with the picture's words over the mat: the title is not a direct ch
 test("printing: every mat is a page of the chosen paper, one to a page, in the plan-and-chart layout and the light colours, and the rest of the page is left out", async ({ page, browserName }) => {
   await open(page, "?theme=dark&paper=letter");
   await page.evaluate(() => { window.__printed = 0; window.print = () => { window.__printed += 1; }; });
-  await page.locator("#l-print").click();
+  await page.locator("#tab-print-box").click();
   await page.locator("#print-btn").click();
   expect(await page.evaluate(() => window.__printed)).toBe(1);
   await expect(page.locator("#print .ky-ju-sheet")).toHaveCount(2);
@@ -409,4 +409,23 @@ test("in a wide face (Verdana, DejaVu Sans) every line of the board stays inside
   }));
   expect(rows.length).toBeGreaterThan(8);
   for (const item of rows) expect(item.ok, item.text).toBe(true);
+});
+
+// John, 2026-11-02 (KYOGIJO-STADIUMS-18): the choices, the print and the table were folds, one under another. They are tabs: one pane on the screen at a time.
+test("the choices, the print and the table are tabs on one screen, not folds one under another", async ({ page }) => {
+  await open(page, "?lang=en");
+  const bar = page.getByTestId("pane-tabs");
+  await expect(bar.getByRole("tab")).toHaveCount(3);
+  await expect(page.locator("#tab-table-box")).toHaveText("The same as a table");
+  await expect(page.locator("#tab-edit")).toHaveText("Mats and officials");
+  await expect(page.locator("#edit")).toBeVisible();
+  await expect(page.locator("#print-box")).toBeHidden();
+  await expect(page.locator("#table-box")).toBeHidden();
+  await page.locator("#tab-table-box").click();
+  await expect(page.locator("#table-box")).toBeVisible();
+  await expect(page.locator("#edit")).toBeHidden();
+  await page.locator("#tab-table-box").focus();
+  await page.keyboard.press("ArrowLeft");
+  await expect(page.locator("#print-box")).toBeVisible();
+  await expect(page.locator("#tab-print-box")).toHaveAttribute("aria-selected", "true");
 });

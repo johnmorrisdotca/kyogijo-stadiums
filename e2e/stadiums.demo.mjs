@@ -234,3 +234,15 @@ test("lights a stadium with a preset on request, in the plan and in 3D, with a c
   await expect(page.locator("#lighting")).toHaveValue("night");
   expect(errors).toEqual([]);
 });
+
+// John, 2026-11-02 (KYOGIJO-STADIUMS-18): the facts and the choices were two open folds one under the other. They are tabs, the choices first.
+test("the facts and the choices are two tabs on one screen", async ({ page }) => {
+  await open(page, "?lang=en");
+  await expect(page.getByTestId("pane-tabs").getByRole("tab")).toHaveCount(2);
+  await expect(page.locator("#edit")).toBeVisible();
+  await expect(page.locator("#facts")).toBeHidden();
+  await page.locator("#tab-facts").click();
+  await expect(page.locator("#facts")).toBeVisible();
+  await expect(page.locator("#edit")).toBeHidden();
+  expect(await page.locator("details[open]").count()).toBe(2);
+});

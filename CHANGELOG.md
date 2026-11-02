@@ -7,6 +7,10 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Changed
+
+- The demo (not the package): no more folds one under another, and none in every card (KYOGIJO-STADIUMS-18). On the stadiums, district and judging pages the facts, the floors, the choices, the print and the table were open folds in a stack; they are now tabs under the drawing (`demo/tabs.js`, with the arrow keys), the choices first, so the pane and its options share one screen. On the home page the Data and Charts sets each had a "Show the data as a table" fold in every card (thirteen); one switch above each set now swaps its drawings for the tables that stand for them. Tests in `e2e/stadiums.demo.mjs`, `e2e/district.demo.mjs`, `e2e/judging.demo.mjs`, `e2e/data.demo.mjs` and `e2e/charts.demo.mjs`. No new words, so no new Japanese.
+
 ## [0.49.0] - 2026-10-30
 
 ### Added

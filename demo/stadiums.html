@@ -61,11 +61,11 @@
       <p data-first id="error" role="alert" hidden></p>
       <div data-first id="bar" data-testid="bar" role="group"></div>
       <div data-first id="stage" data-testid="stage"></div>
-      <details id="facts" open>
+      <details id="facts" open data-pane>
         <summary id="l-facts"></summary>
         <dl id="list" data-testid="facts"></dl>
       </details>
-      <details id="edit" open>
+      <details id="edit" open data-pane data-pane-default>
         <summary id="l-edit"></summary>
         <div class="controls">
           <label><span id="l-view"></span><select id="view"><option value="2d">2D</option><option value="3d">3D</option></select></label>
@@ -93,8 +93,10 @@
       import { mountKyogijoTurn } from "./dist/turn-entry.js";
       import { hoverOf, keepCamera, wayOf, writeWay } from "./turn-way.js";
       import { quietTitles } from "./quiet.js";
+      import { panesToTabs } from "./tabs.js";
       import { fitView, moveToBar } from "./view-bar.js";
       quietTitles();
+      panesToTabs();
 
       const WORDS = {
         en: {

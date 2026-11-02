@@ -656,22 +656,25 @@ const DATA = [
   ["positional", () => ({ sport: "soccer", layers: touchZones() })],
   ["density", () => ({ sport: "mlb", layers: sprayDensity() })],
 ];
+/** One switch for a whole set of cards: their drawings, or the tables that stand for them (John, 2026-11-02: no fold in every card). */
+function tableSwitch(button, host) {
+  button.addEventListener("click", () => {
+    const on = button.getAttribute("aria-pressed") !== "true";
+    button.setAttribute("aria-pressed", String(on));
+    host.dataset.view = on ? "tables" : "drawings";
+  });
+}
 function buildData() {
   const host = $("data-cards");
   host.replaceChildren();
   for (const [key, make] of DATA) {
     const options = { ...make(), orientation: "auto", language: language.lang, style: "none" };
     const fig = figure(host, options, say(`data_${key}`));
-    const details = document.createElement("details");
-    details.className = "data-table";
-    details.dataset.testid = `data-table-${key}`;
-    const summary = document.createElement("summary");
-    summary.textContent = say("dataTable");
     const holder = document.createElement("div");
-    holder.className = "data-table-body";
+    holder.className = "data-table data-table-body";
+    holder.dataset.testid = `data-table-${key}`;
     holder.innerHTML = layerTable(options.layers, { language: language.lang, maxRows: 60, surface: options });
-    details.append(summary, holder);
-    fig.append(details);
+    fig.append(holder);
   }
 }
 
@@ -709,16 +712,11 @@ function buildCharts() {
       host.append(fig);
     } else fig = figure(host, { ...chart.options, orientation: "landscape", language: language.lang, style: "none" }, say(`chart_${key}`));
     fig.dataset.chart = key;
-    const details = document.createElement("details");
-    details.className = "data-table";
-    details.dataset.testid = `chart-table-${key}`;
-    const summary = document.createElement("summary");
-    summary.textContent = say("dataTable");
     const holder = document.createElement("div");
-    holder.className = "data-table-body";
+    holder.className = "data-table data-table-body";
+    holder.dataset.testid = `chart-table-${key}`;
     holder.innerHTML = chart.table({ maxRows: 40 });
-    details.append(summary, holder);
-    fig.append(details);
+    fig.append(holder);
   }
 }
 
@@ -764,6 +762,9 @@ function buildPools() {
     if (key === "results" || key === "pace" || key === "hall") fig.style.gridColumn = "1 / -1";
   }
 }
+
+tableSwitch($("data-tables"), $("data-cards"));
+tableSwitch($("chart-tables"), $("chart-cards"));
 
 function buildExamples() {
   for (const m of mounts) m.handle?.destroy();

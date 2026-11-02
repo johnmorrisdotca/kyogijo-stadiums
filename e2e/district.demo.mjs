@@ -648,3 +648,14 @@ test("the Montreal Tower stands in the Olympic Stadium's 3D view at every tier o
   }
   expect(errors).toEqual([]);
 });
+
+// John, 2026-11-02 (KYOGIJO-STADIUMS-18): the facts, the floors and the choices were three open folds, one under another. They are tabs, the choices first.
+test("the facts and the choices are tabs on one screen, and the floors tab comes only with a venue that has floors", async ({ page }) => {
+  await open(page, "?lang=en");
+  await expect(page.locator("#edit")).toBeVisible();
+  await expect(page.locator("#facts")).toBeHidden();
+  await expect(page.locator("#tab-floors-box")).toBeHidden();
+  await page.locator("#tab-facts").click();
+  await expect(page.locator("#facts")).toBeVisible();
+  await expect(page.locator("#edit")).toBeHidden();
+});

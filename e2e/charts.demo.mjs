@@ -50,13 +50,16 @@ test("the NBA chart colours its zones, the MLB chart draws balls beyond the fenc
   expect(await goal.locator("g.ky-pts > *").count()).toBeGreaterThan(5);
 });
 
-test("each chart has a table, shut until asked", async ({ page }) => {
+test("each chart has a table, shown by one switch for all of them and not by a fold in every card", async ({ page }) => {
   await open(page, "?lang=en&help=off");
+  expect(await page.locator(`${at("chart-cards")} details, ${at("chart-cards")} summary`).count()).toBe(0);
+  for (const key of CARDS) await expect(page.locator(at(`chart-table-${key}`)).locator("table").first()).toBeHidden();
+  const button = page.locator(at("chart-tables"));
+  await button.scrollIntoViewIfNeeded();
+  await button.click();
+  await expect(button).toHaveAttribute("aria-pressed", "true");
   for (const key of CARDS) {
     const details = page.locator(at(`chart-table-${key}`));
-    await details.scrollIntoViewIfNeeded();
-    await expect(details.locator("table").first()).toBeHidden();
-    await details.locator("summary").click();
     await expect(details.locator("table").first()).toBeVisible();
   }
   const zones = page.locator(at("chart-table-nba"));

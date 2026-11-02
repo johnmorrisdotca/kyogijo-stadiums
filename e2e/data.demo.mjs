@@ -51,13 +51,14 @@ test("every layer is cut to the surface: the rink's layer points at the clip of 
   expect(new Set(ids).size).toBe(ids.length);
 });
 
-test("each drawing has a table of its data, shut until asked, and the page does not scroll sideways", async ({ page }) => {
+test("each drawing has a table of its data, shown by one switch for all of them, and the page does not scroll sideways", async ({ page }) => {
   await open(page, "?lang=en&help=off");
+  expect(await page.locator(`${at("data-cards")} details, ${at("data-cards")} summary`).count()).toBe(0);
   const table = page.locator(`${at("data-table-shots")}`);
-  await table.scrollIntoViewIfNeeded();
   await expect(table.locator("table")).toBeHidden();
-  await table.locator("summary").click();
+  await page.locator(at("data-tables")).click();
   await expect(table.locator("table")).toBeVisible();
+  await expect(page.locator(`${at("data-cards")} svg.kyogijo`).first()).toBeHidden();
   expect(await table.locator("caption").textContent()).toContain("44 shots");
   expect(await table.locator("tbody tr").count()).toBe(44);
   await noSidewaysScroll(page);
@@ -93,12 +94,11 @@ test("the heat charts draw cells, zones and bands in a ramp, with a legend that 
   }
   // The zone chart's table has a row for each of the six zones, and the heat map's lists its hottest cells.
   const zones = page.locator(`${at("data-table-zones")}`);
+  await page.locator(at("data-tables")).click();
   await zones.scrollIntoViewIfNeeded();
-  await zones.locator("summary").click();
   expect(await zones.locator("tbody tr").count()).toBe(6);
   expect(await zones.locator("caption").textContent()).toContain("Zone chart of 520 shots");
   const heat = page.locator(`${at("data-table-heat")}`);
-  await heat.locator("summary").click();
   expect(await heat.locator("tbody tr").count()).toBe(60);
   expect(await heat.locator("caption small").textContent()).toMatch(/The first 60 of \d+ rows/);
   await noSidewaysScroll(page);

@@ -548,12 +548,14 @@ const page = `<!doctype html>
       <section class="more" id="data" aria-labelledby="data-title">
         <h2 id="data-title" data-say="dataTitle"></h2>
         <p data-say="dataText"></p>
+        <p class="table-switch"><button type="button" class="fam-chip" id="data-tables" data-testid="data-tables" aria-pressed="false" data-say="dataTable"></button></p>
         <div class="cards" id="data-cards" data-testid="data-cards"></div>
       </section>
 
       <section class="more" id="charts" aria-labelledby="charts-title">
         <h2 id="charts-title" data-say="chartsTitle"></h2>
         <p data-say="chartsText"></p>
+        <p class="table-switch"><button type="button" class="fam-chip" id="chart-tables" data-testid="chart-tables" aria-pressed="false" data-say="dataTable"></button></p>
         <div class="cards" id="chart-cards" data-testid="chart-cards"></div>
       </section>
 

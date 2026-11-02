@@ -65,7 +65,7 @@
       <p id="error" role="alert" hidden data-first></p>
       <div id="bar" data-testid="bar" role="group" data-first></div>
       <div id="stage" data-testid="stage" data-first></div>
-      <details id="edit" open>
+      <details id="edit" open data-pane data-pane-default>
         <summary id="l-edit"></summary>
         <div class="controls">
           <label><span id="l-style"></span><select id="style"><option value="kata"></option><option value="shiai"></option></select></label>
@@ -83,7 +83,7 @@
         <div id="officials"></div>
         <div class="actions"><button type="button" id="reset"></button></div>
       </details>
-      <details id="print-box">
+      <details id="print-box" data-pane>
         <summary id="l-print"></summary>
         <div class="controls">
           <label><span id="l-paper"></span><select id="paper"><option value="a4">A4</option><option value="letter"></option></select></label>
@@ -91,7 +91,7 @@
         <p class="note" id="print-note"></p>
         <div class="actions"><button type="button" id="print-btn"></button></div>
       </details>
-      <details>
+      <details id="table-box" data-pane>
         <summary id="l-table"></summary>
         <div class="table-wrap" id="table"></div>
       </details>
@@ -107,8 +107,10 @@
       import { replaceAddress } from "./address.js";
       import { hoverOf, wayOf, writeWay } from "./turn-way.js";
       import { quietTitles } from "./quiet.js";
+      import { panesToTabs } from "./tabs.js";
       import { fitView, moveToBar } from "./view-bar.js";
       quietTitles();
+      panesToTabs();
       import { TURN_PRESET_NAMES } from "./dist/turn-entry.js";
 
       const WORDS = {
