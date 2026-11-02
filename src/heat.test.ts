@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { seeded } from "../demo/layers-data.js";
 import { SPORTS, drawKyogijo } from "./draw.ts";
-import { hash } from "./format.ts";
+import { fingerprint as hash } from "./fingerprint.fixture.ts";
 import { layerTable } from "./layers.ts";
 import type { HeatDatum } from "./heat.types.ts";
 import type { Layer } from "./layers.types.ts";

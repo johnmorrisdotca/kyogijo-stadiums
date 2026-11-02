@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { ARENAS } from "./arenas.ts";
 import { PLACES, placeById, placeByName, placesBy, placesByName } from "./atlas.ts";
 import { describe as describeDrawing, drawKyogijo } from "./draw.ts";
-import { hash } from "./format.ts";
+import { fingerprint as hash } from "./fingerprint.fixture.ts";
 import { GROUNDS, GROUND_IDS, groundByName, groundNameIn, groundOfficialName, groundsByName } from "./grounds.ts";
 import { officialName, plainName } from "./names.ts";
 import { GROUNDS_BEFORE_EN, GROUNDS_BEFORE_JA, PARKS_BEFORE_JA } from "./names.fixture.ts";

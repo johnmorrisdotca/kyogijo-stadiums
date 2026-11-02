@@ -3,7 +3,7 @@ import { COURT_THEMES } from "./themes.ts";
 import { SPORTS, drawKyogijo } from "./draw.ts";
 import { isFieldSport } from "./fields.ts";
 import { isPoolSport } from "./pool.ts";
-import { hash } from "./format.ts";
+import { fingerprint as hash } from "./fingerprint.fixture.ts";
 import type { ScoreOptions, SurfaceOptions } from "./types.ts";
 
 // The styling, direction and annotation options are all off by default, and a drawing made without them must stay the same text, byte for

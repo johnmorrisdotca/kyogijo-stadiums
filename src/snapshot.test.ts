@@ -3,7 +3,7 @@ import { SPORTS, drawKyogijo } from "./draw.ts";
 import { isFieldSport } from "./fields.ts";
 import { isPoolSport } from "./pool.ts";
 import { isMatSport } from "./budo/plan.ts";
-import { hash } from "./format.ts";
+import { fingerprint as hash, withoutVersion } from "./fingerprint.fixture.ts";
 import type { ScoreOptions, Sport } from "./types.ts";
 import { parseXml, walk } from "./xml.fixture.ts";
 
@@ -37,7 +37,7 @@ describe("the drawings' structure", () => {
   }
 
   it("the badge, written out", () => {
-    expect(drawKyogijo({ sport: "nhl", ...game, size: "badge", style: "none" })).toMatchSnapshot();
+    expect(withoutVersion(drawKyogijo({ sport: "nhl", ...game, size: "badge", style: "none" }))).toMatchSnapshot();
   });
 
   /** The sports added after the field sports: padel, squash, racquetball, sepak takraw, teqball, roundnet and netball. */
@@ -79,7 +79,7 @@ describe("the soccer pitches' structure", () => {
     });
   }
   it("a bare pitch, written out", () => {
-    expect(drawKyogijo({ sport: "soccer", id: "snap", style: "none", margin: 0, exactLines: true })).toMatchSnapshot();
+    expect(withoutVersion(drawKyogijo({ sport: "soccer", id: "snap", style: "none", margin: 0, exactLines: true }))).toMatchSnapshot();
   });
   it("is within its size budget, bare, in each pitch and with its frame", () => {
     for (const pitch of pitches) expect(drawKyogijo({ sport: "soccer", pitch }).length, pitch).toBeLessThan(13_500);

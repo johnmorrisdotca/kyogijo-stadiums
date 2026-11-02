@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { drawKyogijo } from "./draw.ts";
-import { hash } from "./format.ts";
+import { fingerprint as hash } from "./fingerprint.fixture.ts";
 import { evaluate, lengthOf, matched, parseStylesheet, substitute, type CssNode } from "./scene.css.ts";
 import { sceneToSvg } from "./scene.flat.ts";
 import { corpus, GAME } from "./scene.fixture.ts";

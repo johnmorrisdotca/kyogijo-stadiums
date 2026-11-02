@@ -4,7 +4,7 @@ import { ballType, mlbSprayChart } from "./charts.baseball.ts";
 import { clean, foldToRight } from "./charts.ts";
 import { nbaShotChart, nflPassChart, nhlShotMap, soccerGoalMouth, soccerShotMap } from "./charts-entry.ts";
 import type { Chart } from "./charts.types.ts";
-import { hash } from "./format.ts";
+import { fingerprint as hash } from "./fingerprint.fixture.ts";
 import { frameByName } from "./frames.ts";
 import { fenceAt } from "./geometry.ts";
 import { fenceFor, parkById } from "./parks.ts";

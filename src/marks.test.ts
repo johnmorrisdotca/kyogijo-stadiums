@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { nbaShotChart } from "./charts-entry.ts";
 import { drawKyogijo } from "./draw.ts";
-import { hash } from "./format.ts";
+import { fingerprint as hash } from "./fingerprint.fixture.ts";
 import type { Layer } from "./layers.types.ts";
 
 const attr = /data-mark-id|data-index|data-zone/;

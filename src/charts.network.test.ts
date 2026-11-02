@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { passNetwork, type PassNetworkPass } from "./charts.network.ts";
-import { hash } from "./format.ts";
+import { fingerprint as hash } from "./fingerprint.fixture.ts";
 import { parseXml, withClass } from "./xml.fixture.ts";
 
 function random(seed: number): () => number {

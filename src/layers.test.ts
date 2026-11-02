@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { seeded, shotMap, passMap, sprayChart } from "../demo/layers-data.js";
 import { SPORTS, drawKyogijo, drawSurface } from "./draw.ts";
-import { hash } from "./format.ts";
+import { fingerprint as hash } from "./fingerprint.fixture.ts";
 import { OUTCOMES, drawLayers, layerTable } from "./layers.ts";
 import { curveBetween, rampColour, shapePath, wavePath } from "./layers.marks.ts";
 import type { Layer, PointDatum } from "./layers.types.ts";

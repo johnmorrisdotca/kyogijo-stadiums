@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { describe as describeDrawing, drawKyogijo } from "./draw.ts";
-import { hash } from "./format.ts";
+import { fingerprint as hash } from "./fingerprint.fixture.ts";
 import { FAMILY_OF, LEAGUES, VARIANTS, chooseLeague, hasHistory, leagueAt, leagueChanges, leagueIds, leagueSize, type League } from "./leagues.ts";
 import { LEAGUE_SOURCES } from "./leagues/sources.ts";
 import { ERA_CURRENT } from "./eras.ts";
