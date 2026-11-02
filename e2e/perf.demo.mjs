@@ -9,8 +9,9 @@ import { serve } from "./demo.mjs";
 const STAGE = '[data-testid="stage"]';
 
 // planes: the `.ky-up` elements; drawn: those not left out because they face away from the eye; nodes: every element of the page.
+// Rogers Arena's nodes went from 2800 to 2810 for the page's row of tabs (2026-11-02: a row and its buttons, no more planes).
 const BUDGETS = [
-  { name: "Rogers Arena alone", query: "venues=rogers-arena", planes: 600, drawn: 500, nodes: 2800 },
+  { name: "Rogers Arena alone", query: "venues=rogers-arena", planes: 600, drawn: 500, nodes: 2810 },
   { name: "Seattle, three venues", query: "venues=t-mobile-park:mlb,lumen-field:nfl,climate-pledge-arena&mode=city", planes: 2300, drawn: 1900, nodes: 8400 },
   { name: "Tokyo Dome City with the Kodokan", query: "venues=tokyo-dome:mlb,korakuen-hall:boxing,kodokan", planes: 2400, drawn: 1950, nodes: 8400 },
 ];
