@@ -251,7 +251,7 @@ await takePictures({
     { subject: "tabletennis-area", views: ["desk"], url: address("sport=tabletennis&size=surface&orientation=landscape"), ready: READY, target: stage, prepare: behind("spotlight") },
     // The same area in 3D from a low corner.
     { subject: "tabletennis-area-3d", views: ["desk"], url: address("sport=tabletennis&size=surface&view=3d&viewpoint=corner"), ready: READY_TURN, target: stage, prepare: behind("spotlight") },
-    // A game on the ice (0.51.0): the examples' made-up game in the home page's game section, in 3D from the main camera and flat, a moment after a goal (the shot's arrow and the goal's star on the ice), and on the
+    // A game on the ice (0.52.0): the examples' made-up game in the home page's game section, in 3D from the main camera and flat, a moment after a goal (the shot's arrow and the goal's star on the ice), and on the
     // hero's arena with Play a game on, in front of its crowd.
     { subject: "replay-game-3d", views: ["desk"], url: address(""), ready: READY, target: "#game-stage .ky-turn-view", prepare: game("3d", 271) },
     { subject: "replay-game-flat", views: ["desk"], url: address(""), ready: READY, target: "#game-stage .ky-stage", prepare: game("flat", 271) },
