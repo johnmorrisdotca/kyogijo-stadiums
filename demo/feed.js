@@ -67,7 +67,14 @@ export function mountFeedControls(page) {
   });
 
   // ---- An address. ----
+  let follow;
+  const stopFollow = () => {
+    follow?.stop();
+    follow = undefined;
+    $("feed-live").setAttribute("aria-pressed", "false");
+  };
   $("feed-load").addEventListener("click", async () => {
+    stopFollow();
     const url = $("feed-url").value.trim();
     if (url === "") {
       tell("feedNoUrl");
@@ -83,6 +90,35 @@ export function mountFeedControls(page) {
   });
   $("feed-url").addEventListener("keydown", (event) => {
     if (event.key === "Enter") $("feed-load").click();
+  });
+
+  // ---- Live: the address asked again every 15 seconds while the page is shown, until the game is over or the server says no. ----
+  $("feed-live").addEventListener("click", async () => {
+    if (follow !== undefined) {
+      stopFollow();
+      tell("feedLiveOff");
+      return;
+    }
+    const url = $("feed-url").value.trim();
+    if (url === "") {
+      tell("feedNoUrl");
+      return;
+    }
+    $("feed-live").setAttribute("aria-pressed", "true");
+    tell("feedReading");
+    const { followFeed } = await feedsCode();
+    follow = followFeed(url, {
+      onGame: (game) => played(game, true),
+      onError: failed,
+      onState: (state) => {
+        if (state === "ended") tell("feedLiveEnded");
+        if (state === "refused") tell("feedLiveRefused");
+        if (state === "ended" || state === "refused") {
+          follow = undefined;
+          $("feed-live").setAttribute("aria-pressed", "false");
+        }
+      },
+    });
   });
 
   // ---- Where to find a feed: the sport's sources, our sample first; Use fills the field. ----
@@ -124,5 +160,7 @@ export function mountFeedControls(page) {
   return {
     /** The section came near the screen, or the language changed: write the list. */
     paint: () => void paint(),
+    /** Stop a live follow (the section's game is replaced). */
+    stop: stopFollow,
   };
 }

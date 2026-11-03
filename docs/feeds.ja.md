@@ -14,7 +14,7 @@
 
 ## オープンなタイムライン
 
-kyogijo独自の形式は、JSONで書いた[リプレイのタイムライン](./replay.md#the-timeline)です。`frames`（それぞれ時刻 `t` と `objects` を持ち、各オブジェクトは `id`、`home`・`away`・`ball`・`puck`・`official` のいずれかの `team`、`x` と `y` を持ちます）、`events`（`t`、`pass`・`shot`・`goal`・`whistle` などの `kind`、`team`、位置）、スコアボード用の `periods`（それぞれ `number`、`start`、`end`、そしてリプレイの時間を縮めた場合にスコアボードの時計で数えるピリオドの長さ `length`）と `clock`（残り時間を数える `down` か、経過時間を数える `up`）から成ります。両チームは `teams`（`home` と `away`、それぞれ `abbr`、`name`、`color`）に書き、`readFeed` はそれを試合の `teams` として返します。`from` は位置の座標系を指定します（`nhl-api`、`opta` など。[座標系](./frames.md)を参照）。[サンプルの試合](./example-games.md)のような試合ファイル（`kind: "kyogijo-game"`）は、タイムラインに両チーム、ロースター、ピリオドを加えたもので、どちらの形でも読み込めます。
+kyogijo独自の形式は、JSONで書いた[リプレイのタイムライン](./replay.md#the-timeline)です。`frames`（それぞれ時刻 `t` と `objects` を持ち、各オブジェクトは `id`、`home`・`away`・`ball`・`puck`・`official` のいずれかの `team`、`x` と `y` を持ちます）、`events`（`t`、`pass`・`shot`・`goal`・`whistle` などの `kind`、`team`、位置）、スコアボード用の `periods`（それぞれ `number`、`start`、`end`、そしてリプレイの時間を実際の試合時間と変えている場合に、スコアボードの時計で数えるピリオドの長さ `length`）と `clock`（残り時間を数える `down` か、経過時間を数える `up`）から成ります。両チームは `teams`（`home` と `away`、それぞれ `abbr`、`name`、`color`）に書き、`readFeed` はそれを試合の `teams` として返します。`from` は位置の座標系を指定します（`nhl-api`、`opta` など。[座標系](./frames.md)を参照）。[サンプルの試合](./example-games.md)のような試合ファイル（`kind: "kyogijo-game"`）は、タイムラインに両チーム、ロースター、ピリオドを加えたもので、どちらの形でも読み込めます。
 
 ```json
 {
@@ -92,6 +92,25 @@ try {
 
 **ブラウザーで読み取れない場合。** 多くのサーバーは、ほかのサイトのページからの読み取りを許可していません。`Access-Control-Allow-Origin` を返さないため、ブラウザーが応答を拒否します（CORS）。ページからはサーバーが停止している場合と区別できないため、エラーでは両方の可能性を伝えます（`cors`）。その場合は、応答を保存してファイルとして選ぶか貼り付けるか、ヘッダーを付ける中継サーバーを自分で用意して指定してください。当サイトは中継サーバーを運用せず、パッケージが中継サーバーを求めることもありません。
 
+## ライブ
+
+`replay.follow(url, options)` は、試合の進行中にフィードを追います。アドレスをすぐに取得し、その後は15秒ごと（`every`、10秒未満にはできません）に、ページが表示されている間だけ再取得します。内容が変わった応答はそのつど再生し（閲覧者がいた位置から、または閲覧者が最新の時点にいた場合は最新の時点から）、フィード上で試合が終了したとき（`ended`）や、サーバーから拒否されたとき（403または429）に停止します。エラーの後は待ち時間を2倍にし、最長2分まで延ばします。`stop()` は取得を止め、リプレイはそのまま残します。
+
+```ts no-run
+import "@johnmorrisdotca/kyogijo-stadiums/feeds";
+import type { KyogijoTurn } from "@johnmorrisdotca/kyogijo-stadiums/turn";
+
+declare const view: KyogijoTurn;
+declare const address: string;
+const live = view.replay.follow(address, { onState: (state) => console.log(state), onError: (error) => console.log(error.kind) });
+// later
+live.stop();
+```
+
+`followFeed(url, { onGame })` は取得だけを行う関数で、独自の方法で試合を再生するページ向けです。ページが非表示の間はタイマーを動かさず、タイマーは常に1つまでです。
+
 ## デモでは
 
-デモの試合のセクションにある[自分のフィードを再生](https://johnmorrisdotca.github.io/kyogijo-stadiums/#feed)では、アドレス、ファイル、貼り付けのいずれかで指定でき、アドレス欄の横に[フィードの入手先](./where-to-find-a-feed.ja.md)を当サイトの架空のサンプルを先頭にして表示します。**使う**を押すと、そのアドレスが欄に入ります。
+![デモの「自分のフィードを再生」パネル。NHL形式の架空のプレーバイプレーを貼り付けて再生したところで、アドレス欄と「このフィードを再生」「ライブで追う」ボタン、ファイル選択と貼り付けの欄、提供元の利用規約に関する注記、当サイトの架空のサンプルを先頭にしたフィードの入手先の一覧が表示されている](./pictures/feed-panel-desk-light.webp)
+
+デモの試合のセクションにある[自分のフィードを再生](https://johnmorrisdotca.github.io/kyogijo-stadiums/#feed)では、アドレス（**ライブで追う**も可）、ファイル、貼り付けのいずれかで指定でき、アドレス欄の横に[フィードの入手先](./where-to-find-a-feed.ja.md)を当サイトの架空のサンプルを先頭にして表示します。**使う**を押すと、そのアドレスが欄に入ります。

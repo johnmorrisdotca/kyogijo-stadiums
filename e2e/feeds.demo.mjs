@@ -1,5 +1,5 @@
 // Bring your own feed, in the demo's game section: our made-up sample from the list, an address the reader gives (answered here by a made-up server, never a real one), a file, a paste, the plain words for a
-// refusal.
+// refusal, and a live follow that asks again every 15 seconds only while the page is shown and stops when the game is over or the server says no.
 import { expect, test } from "@playwright/test";
 
 import { at, open } from "./demo.mjs";
@@ -107,6 +107,62 @@ test.describe("bring your own feed", () => {
     await page.locator(at("feed-paste")).fill("{ not json");
     await page.locator(at("feed-paste-play")).click();
     await expect(status(page)).toContainText("That is not a feed this page reads");
+  });
+
+  test("follows live: asks every 15 seconds while the page is shown, none while hidden, and stops when the game is over", async ({ page }) => {
+    await page.clock.install();
+    let plays = 3;
+    const asked = await feedServer(page, () => ({ body: JSON.stringify(stub(plays >= 5 ? "OFF" : "LIVE", plays)) }));
+    await toFeed(page);
+    await page.locator(at("feed-url")).fill(FEED);
+    await page.locator(at("feed-live")).click();
+    await expect(page.locator(at("feed-live"))).toHaveAttribute("aria-pressed", "true");
+    await expect(status(page)).toHaveText("Live: MTH – OWL, 2 events. Asked again every 15 seconds while this page is shown.");
+    await page.clock.runFor(14_000);
+    expect(asked).toHaveLength(1);
+    plays = 4;
+    await page.clock.runFor(1_500);
+    await expect.poll(() => asked.length).toBe(2);
+    await expect(status(page)).toHaveText("Live: MTH – OWL, 3 events. Asked again every 15 seconds while this page is shown.");
+    // Hidden: nothing is asked, however long; shown again, it asks at once.
+    await page.evaluate(() => {
+      Object.defineProperty(document, "visibilityState", { configurable: true, get: () => "hidden" });
+      document.dispatchEvent(new Event("visibilitychange"));
+    });
+    await page.clock.runFor(120_000);
+    expect(asked).toHaveLength(2);
+    plays = 5;
+    await page.evaluate(() => {
+      Object.defineProperty(document, "visibilityState", { configurable: true, get: () => "visible" });
+      document.dispatchEvent(new Event("visibilitychange"));
+    });
+    await expect.poll(() => asked.length).toBe(3);
+    await expect(status(page)).toHaveText("The game is over: following stopped.");
+    await expect(page.locator(at("feed-live"))).toHaveAttribute("aria-pressed", "false");
+    await page.clock.runFor(120_000);
+    expect(asked).toHaveLength(3);
+  });
+
+  test("stops following when the server says no (429), and when the reader presses Follow live again", async ({ page }) => {
+    await page.clock.install();
+    let refuse = false;
+    const asked = await feedServer(page, () => (refuse ? { status: 429 } : { body: JSON.stringify(stub("LIVE", 3)) }));
+    await toFeed(page);
+    await page.locator(at("feed-url")).fill(FEED);
+    await page.locator(at("feed-live")).click();
+    await expect(status(page)).toContainText("Live: MTH – OWL");
+    refuse = true;
+    await page.clock.runFor(15_500);
+    await expect(status(page)).toHaveText("The server asked us to stop (403 or 429): following stopped.");
+    await page.clock.runFor(300_000);
+    expect(asked).toHaveLength(2);
+    refuse = false;
+    await page.locator(at("feed-live")).click();
+    await expect(status(page)).toContainText("Live: MTH – OWL");
+    await page.locator(at("feed-live")).click();
+    await expect(status(page)).toHaveText("Stopped following.");
+    await page.clock.runFor(60_000);
+    expect(asked).toHaveLength(3);
   });
 
   test("speaks Japanese", async ({ page }) => {

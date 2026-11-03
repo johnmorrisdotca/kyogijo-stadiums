@@ -22,7 +22,7 @@ export interface KyogijoMount {
    * Play tracking data on the surface: the players, the ball and the events of a timeline, with controls under the drawing (play, pause, step,
    * speed, loop, position), the keyboard (space, the arrow keys, Home and End) and a live region for goals and shots. Only the marks that move are
    * moved, on animation frames. A reader who prefers reduced motion gets steps, and nothing plays by itself; a hidden page pauses. `update` keeps the replay. `replay.fromUrl(url, options)` plays a feed from an
-   * address the reader gives,, once the `/feeds` entry is loaded (see `docs/feeds.md`).
+   * address the reader gives, and `replay.follow(url, options)` follows one live, once the `/feeds` entry is loaded (see `docs/feeds.md`).
    */
   replay: ReplayCall;
   /** Stop watching the container and empty it. */

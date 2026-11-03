@@ -2,7 +2,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { FEED_LIMITS, FeedError } from "./feeds.core.ts";
-import { feedAddress, fetchFeedText, loadFeed } from "./feeds.fetch.ts";
+import { feedAddress, fetchFeedText, followFeed, loadFeed, type FeedFollowState } from "./feeds.fetch.ts";
 import { NHL_OVERTIME, NHL_PERIOD, nhlPlayByPlay } from "./feeds.nhl.ts";
 import { feedFormatOf, kyogijoFeed, readFeed, readFeedText } from "./feeds.ts";
 import "./feeds.dom.ts";
@@ -171,7 +171,96 @@ describe("a feed fetched by the reader's browser", () => {
   });
 });
 
-describe("a replay's fromUrl", () => {
+/** A page's document as a follow sees it: shown or hidden, with its visibility event. */
+function page() {
+  const doc = new EventTarget() as EventTarget & { visibilityState: "visible" | "hidden"; defaultView: typeof globalThis };
+  doc.visibilityState = "visible";
+  doc.defaultView = globalThis;
+  const show = (shown: boolean) => {
+    doc.visibilityState = shown ? "visible" : "hidden";
+    doc.dispatchEvent(new Event("visibilitychange"));
+  };
+  return { doc: doc as unknown as Document, show };
+}
+
+describe("a live follow", () => {
+  afterEach(() => vi.useRealTimers());
+
+  /** A server whose answers are given in turn; it counts what it was asked. */
+  const server = (answers: (() => Response)[]) => {
+    let asks = 0;
+    return { fetch: async () => answers[Math.min(asks++, answers.length - 1)](), asks: () => asks };
+  };
+  const live = (state = "LIVE", plays = stubPlayByPlay().plays) => () => answer(JSON.stringify(stubPlayByPlay({ gameState: state, plays })));
+
+  it("asks at once and then every 15 seconds (never faster than 10), tells only of an answer that changed, and stops when the game is over", async () => {
+    vi.useFakeTimers();
+    const { doc } = page();
+    const fake = server([live(), live(), live("LIVE", stubPlayByPlay().plays.slice(0, 5)), live("OFF")]);
+    const games: boolean[] = [];
+    const follow = followFeed("https://feeds.example/pbp", { fetch: fake.fetch, doc, every: 3, onGame: (game) => games.push(game.ended) });
+    await vi.advanceTimersByTimeAsync(0);
+    expect(fake.asks()).toBe(1);
+    await vi.advanceTimersByTimeAsync(9_000);
+    expect(fake.asks()).toBe(1);
+    await vi.advanceTimersByTimeAsync(1_000);
+    expect(fake.asks()).toBe(2);
+    expect(games).toEqual([false]);
+    await vi.advanceTimersByTimeAsync(20_000);
+    expect(games).toEqual([false, false, true]);
+    expect(follow.state()).toBe("ended");
+    await vi.advanceTimersByTimeAsync(60_000);
+    expect(fake.asks()).toBe(4);
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it("asks nothing while the page is hidden, and asks when it is shown again", async () => {
+    vi.useFakeTimers();
+    const { doc, show } = page();
+    const fake = server([live()]);
+    const states: FeedFollowState[] = [];
+    const follow = followFeed("https://feeds.example/pbp", { fetch: fake.fetch, doc, onState: (state) => states.push(state) });
+    await vi.advanceTimersByTimeAsync(0);
+    show(false);
+    await vi.advanceTimersByTimeAsync(60_000);
+    expect(fake.asks()).toBe(1);
+    expect(follow.state()).toBe("hidden");
+    await vi.advanceTimersByTimeAsync(300_000);
+    expect(fake.asks()).toBe(1);
+    expect(vi.getTimerCount()).toBe(0);
+    show(true);
+    await vi.advanceTimersByTimeAsync(0);
+    expect(fake.asks()).toBe(2);
+    follow.stop();
+    expect(follow.state()).toBe("stopped");
+    expect(vi.getTimerCount()).toBe(0);
+    expect(states).toContain("hidden");
+  });
+
+  it("waits twice as long after each error, up to two minutes, and stops for good at a 403 or a 429", async () => {
+    vi.useFakeTimers();
+    const { doc, show } = page();
+    const errors: string[] = [];
+    const fake = server([() => answer("", 500), () => answer("", 500), () => answer("", 429)]);
+    const follow = followFeed("https://feeds.example/pbp", { fetch: fake.fetch, doc, every: 10, onError: (error) => errors.push(`${error.kind} ${error.status}`) });
+    await vi.advanceTimersByTimeAsync(0);
+    await vi.advanceTimersByTimeAsync(19_000);
+    expect(fake.asks()).toBe(1);
+    await vi.advanceTimersByTimeAsync(1_000);
+    expect(fake.asks()).toBe(2);
+    await vi.advanceTimersByTimeAsync(40_000);
+    expect(fake.asks()).toBe(3);
+    expect(errors).toEqual(["http 500", "http 500", "http 429"]);
+    expect(follow.state()).toBe("refused");
+    show(false);
+    show(true);
+    await vi.advanceTimersByTimeAsync(600_000);
+    expect(fake.asks()).toBe(3);
+    expect(vi.getTimerCount()).toBe(0);
+  });
+});
+
+describe("a replay's fromUrl and follow", () => {
   afterEach(() => vi.useRealTimers());
   /** A replay that only remembers what it was given. */
   const fakePlay = () => {
@@ -192,5 +281,22 @@ describe("a replay's fromUrl", () => {
     expect(made).toHaveLength(1);
     expect(made[0].settings).toEqual({ speed: 2 });
     await expect(replay.fromUrl("ftp://feeds.example/x")).rejects.toThrow(FeedError);
+  });
+
+  it("follows a feed live: a new replay on each answer that changed, at its newest moment while the reader is there", async () => {
+    vi.useFakeTimers();
+    const { doc } = page();
+    const { made, replay } = fakePlay();
+    let n = 0;
+    const plays = stubPlayByPlay().plays;
+    const follow = replay.follow("https://feeds.example/pbp", { doc, fetch: async () => answer(JSON.stringify(stubPlayByPlay({ plays: plays.slice(0, 4 + n++) }))) });
+    await vi.advanceTimersByTimeAsync(0);
+    await vi.advanceTimersByTimeAsync(15_000);
+    expect(made).toHaveLength(2);
+    expect(made[0].destroyed).toBe(true);
+    expect(made[1].settings?.start).toBe(Number.MAX_SAFE_INTEGER);
+    expect(follow.replay()).toBeDefined();
+    follow.stop();
+    expect(vi.getTimerCount()).toBe(0);
   });
 });

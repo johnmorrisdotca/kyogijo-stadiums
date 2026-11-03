@@ -93,6 +93,25 @@ Only an `http` or `https` address is read (a relative one against the page's), n
 
 **When the browser cannot read it.** Many servers do not let a page of another site read them: they send no `Access-Control-Allow-Origin`, and the browser refuses the answer (CORS). A page cannot tell that from a server that is down, so the error says both (`cors`). Then the reader can save the answer and pick it as a file or paste it, or point at a relay of their own that adds the header. We run no relay, and the package never asks for one.
 
+## Live
+
+`replay.follow(url, options)` follows a feed while its game is played: it asks the address now and then every 15 seconds (`every`, never less than 10), only while the page is shown, plays each answer that changed (from where the reader was, or at its newest moment when they were there), and stops when the feed says the game is over (`ended`) or the server says no (403 or 429). After an error it waits twice as long, up to two minutes. `stop()` stops asking and leaves the replay.
+
+```ts no-run
+import "@johnmorrisdotca/kyogijo-stadiums/feeds";
+import type { KyogijoTurn } from "@johnmorrisdotca/kyogijo-stadiums/turn";
+
+declare const view: KyogijoTurn;
+declare const address: string;
+const live = view.replay.follow(address, { onState: (state) => console.log(state), onError: (error) => console.log(error.kind) });
+// later
+live.stop();
+```
+
+`followFeed(url, { onGame })` does the asking alone, for a page that plays the game its own way. Nothing runs on a timer while the page is hidden, and one timer at most at any time.
+
 ## In the demo
 
-[Bring your own feed](https://johnmorrisdotca.github.io/kyogijo-stadiums/#feed), in the game section of the demo, takes an address, a file or a paste, and lists [where to find a feed](./where-to-find-a-feed.md) beside the field, our made-up sample first; **Use** fills the field.
+![The Bring your own feed panel of the demo after a made-up NHL-style play-by-play was pasted and played: the address field with Play this feed and Follow live, the file and paste controls, the note on the source's terms, and the list of where to find a feed, our made-up sample first](./pictures/feed-panel-desk-light.webp)
+
+[Bring your own feed](https://johnmorrisdotca.github.io/kyogijo-stadiums/#feed), in the game section of the demo, takes an address (with **Follow live**), a file or a paste, and lists [where to find a feed](./where-to-find-a-feed.md) beside the field, our made-up sample first; **Use** fills the field.

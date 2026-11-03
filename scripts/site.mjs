@@ -667,6 +667,7 @@ const page = `<!doctype html>
           <div class="feed-row">
             <label class="feed-url"><span data-say="feedUrl"></span><input type="url" id="feed-url" data-testid="feed-url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://"></label>
             <button type="button" class="fam-button" id="feed-load" data-testid="feed-load" data-primary="true" data-say="feedLoad"></button>
+            <button type="button" class="fam-button" id="feed-live" data-testid="feed-live" aria-pressed="false" data-say="feedLive"></button>
           </div>
           <div class="feed-row">
             <button type="button" class="fam-button" id="feed-file-pick" data-testid="feed-file-pick" data-say="feedFile"></button><input type="file" id="feed-file" data-testid="feed-file" accept="application/json,.json" hidden>

@@ -337,6 +337,25 @@ await takePictures({
         await settle(page);
       },
     })),
+    // Bring your own feed (KYOGIJO-STADIUMS-37): the panel after a made-up NHL-style play-by-play was pasted and played (invented sides, nothing fetched), with the list of where to find a feed.
+    {
+      subject: "feed-panel",
+      views: ["desk", "phone"],
+      url: address(""),
+      ready: READY,
+      target: '[data-testid="feed"]',
+      prepare: async (page) => {
+        await page.locator('[data-testid="feed"]').scrollIntoViewIfNeeded();
+        await page.waitForSelector('[data-testid="feed-sources"] li');
+        const play = (t, type, x, y, team, order, period = 1) => ({ periodDescriptor: { number: period, periodType: "REG" }, timeInPeriod: t, typeDescKey: type, sortOrder: order, details: { xCoord: x, yCoord: y, eventOwnerTeamId: team } });
+        const stub = { gameState: "OFF", homeTeam: { id: 1, abbrev: "MTH", commonName: { default: "Moths" } }, awayTeam: { id: 2, abbrev: "OWL", commonName: { default: "Owls" } }, plays: [play("00:00", "faceoff", 0, 0, 1, 1), play("01:30", "shot-on-goal", 70, -10, 1, 2), play("02:10", "goal", 82, 3, 1, 3), play("03:00", "goal", -80, 2, 2, 4, 2)] };
+        await page.locator('[data-testid="feed-paste"]').fill(JSON.stringify(stub));
+        await page.locator('[data-testid="feed-paste-play"]').click();
+        await page.waitForSelector("#game-stage .ky-turn-replay");
+        await page.mouse.move(0, 0);
+        await settle(page);
+      },
+    },
     // The strips for a list of games, on midnight. They are a list and not a surface, so the background is laid behind the list itself, by the same module and in the same way as behind the felt.
     {
       subject: "badges",
@@ -382,7 +401,7 @@ await takePictures({
 
 // The pictures that only a page of docs/ shows are taken with the rest and then moved to docs/pictures: docs/images holds the README's pictures (the family's lint counts every file there against the README's 2 MB, and wants each one used in the README),
 // and a page of docs/ names its own pictures in `./pictures/`.
-const DOCS_ONLY = new Set(["power-play-3d-desk", "stoppage-goal-3d-desk", "stoppage-line-up-3d-desk", "stoppage-drop-3d-desk", "crowd-volleyball-desk", "crowd-athletics-desk", "crowd-nhl-desk", "crowd-boxing-desk", "crowd-tabletennis-desk", "district-lasvegas-race-3d-desk", "district-lasvegas-3d-desk", "district-lasvegas-plan-desk", "circuits-race-feed-desk", "circuits-race-3d-desk", "hero-game-board-3d-desk", "hero-game-board-3d-phone", "tall-phone", "badges-desk", "boards-judo-3d-desk", "boards-medals-desk", "boards-swimming-desk", "judo-kata-desk", "judo-kata-tapes-desk", "mma-cage-3d-desk", "tabletennis-area-desk", "tabletennis-area-3d-desk", "turn-court-desk", "turn-rink-desk", "turn-volleyball-desk", "stadiums-metlife-3d-desk", "stadiums-yankee-3d-desk", "stadiums-citi-3d-desk", "stadiums-olympic-3d-desk", "stadiums-barclays-3d-desk", "district-midtown-3d-desk", "district-bronx-3d-desk", "district-brooklyn-3d-desk", "district-montreal-olympic-3d-desk", "district-newyork-plan-desk", "district-montreal-city-plan-desk", "mowing-diamonds-desk", "boxing-ring-3d-desk", "district-tokyo-3d-desk", "district-tokyo-context-3d-desk", "district-seattle-context-3d-desk", "quality-high-3d-desk", "quality-medium-3d-desk", "quality-low-3d-desk", "district-kodokan-3d-desk", "district-kodokan-floor6-3d-desk", "district-kodokan-side-3d-desk", "outside-plan-25-desk", "outside-plan-desk", "outside-3d-desk", "vancouver-rogers-3d-desk", "vancouver-roof-open-3d-desk", "vancouver-masts-3d-desk", "vancouver-3d-desk", "vancouver-plan-desk", "judging-3d-desk", "judging-print-a4-desk", "mma-cage-desk", "multi-judo-desk", "multi-judo-empty-desk", "multi-tabletennis-desk", "prowrestling-ring-3d-desk", "stadiums-koshien-3d-desk", "stadiums-tokyo-dome-3d-desk", "venues-honda-desk", "wrestling-mat-3d-desk", "led-boards-td-3d-desk", "led-boards-td-plan-desk", "led-boards-lumen-3d-desk", "night-td-3d-desk", "night-td-plan-desk", "night-lumen-3d-desk", "lights-down-td-3d-desk", "lights-down-td-blue-3d-desk", "lights-down-td-plan-desk", "presets-intro-3d-desk", "presets-concert-3d-desk", "presets-game-3d-desk"]);
+const DOCS_ONLY = new Set(["feed-panel-desk", "feed-panel-phone", "power-play-3d-desk", "stoppage-goal-3d-desk", "stoppage-line-up-3d-desk", "stoppage-drop-3d-desk", "crowd-volleyball-desk", "crowd-athletics-desk", "crowd-nhl-desk", "crowd-boxing-desk", "crowd-tabletennis-desk", "district-lasvegas-race-3d-desk", "district-lasvegas-3d-desk", "district-lasvegas-plan-desk", "circuits-race-feed-desk", "circuits-race-3d-desk", "hero-game-board-3d-desk", "hero-game-board-3d-phone", "tall-phone", "badges-desk", "boards-judo-3d-desk", "boards-medals-desk", "boards-swimming-desk", "judo-kata-desk", "judo-kata-tapes-desk", "mma-cage-3d-desk", "tabletennis-area-desk", "tabletennis-area-3d-desk", "turn-court-desk", "turn-rink-desk", "turn-volleyball-desk", "stadiums-metlife-3d-desk", "stadiums-yankee-3d-desk", "stadiums-citi-3d-desk", "stadiums-olympic-3d-desk", "stadiums-barclays-3d-desk", "district-midtown-3d-desk", "district-bronx-3d-desk", "district-brooklyn-3d-desk", "district-montreal-olympic-3d-desk", "district-newyork-plan-desk", "district-montreal-city-plan-desk", "mowing-diamonds-desk", "boxing-ring-3d-desk", "district-tokyo-3d-desk", "district-tokyo-context-3d-desk", "district-seattle-context-3d-desk", "quality-high-3d-desk", "quality-medium-3d-desk", "quality-low-3d-desk", "district-kodokan-3d-desk", "district-kodokan-floor6-3d-desk", "district-kodokan-side-3d-desk", "outside-plan-25-desk", "outside-plan-desk", "outside-3d-desk", "vancouver-rogers-3d-desk", "vancouver-roof-open-3d-desk", "vancouver-masts-3d-desk", "vancouver-3d-desk", "vancouver-plan-desk", "judging-3d-desk", "judging-print-a4-desk", "mma-cage-desk", "multi-judo-desk", "multi-judo-empty-desk", "multi-tabletennis-desk", "prowrestling-ring-3d-desk", "stadiums-koshien-3d-desk", "stadiums-tokyo-dome-3d-desk", "venues-honda-desk", "wrestling-mat-3d-desk", "led-boards-td-3d-desk", "led-boards-td-plan-desk", "led-boards-lumen-3d-desk", "night-td-3d-desk", "night-td-plan-desk", "night-lumen-3d-desk", "lights-down-td-3d-desk", "lights-down-td-blue-3d-desk", "lights-down-td-plan-desk", "presets-intro-3d-desk", "presets-concert-3d-desk", "presets-game-3d-desk"]);
 const docs = join(dirname(fileURLToPath(import.meta.url)), "..", "docs");
 mkdirSync(join(docs, "pictures"), { recursive: true });
 for (const file of readdirSync(join(docs, "images"))) {

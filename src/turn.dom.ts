@@ -83,7 +83,7 @@ export interface KyogijoTurn<O = SurfaceOptions | ScoreOptions> {
    * Play tracking data on the view: the players stand up on the surface as discs that face the eye (home circles, away squares, numbers), the ball or the puck runs on the floor with its trail, and the passes, shots and
    * goals are drawn on the floor as in the flat replay. The replay's controls go under the view's; the view still turns, tips and zooms while it plays. Space on the view plays and pauses, comma and full stop step; the
    * arrow keys still turn the view. `destroy` on what it gives takes the replay away and leaves the view. A tournament layout has no replay. Where the browser cannot draw the 3D view, the flat replay plays instead.
-   * `replay.fromUrl(url, options)` plays a feed from an address the reader gives,, once the `/feeds` entry is loaded (see `docs/feeds.md`).
+   * `replay.fromUrl(url, options)` plays a feed from an address the reader gives, and `replay.follow(url, options)` follows one live, once the `/feeds` entry is loaded (see `docs/feeds.md`).
    */
   replay: ReplayCall;
   /** Stop listening and empty the container. */
