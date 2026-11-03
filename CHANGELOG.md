@@ -7,6 +7,8 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.52.0] - 2026-11-03
+
 ### Added
 
 - **A replay plays on the 3D view (KYOGIJO-STADIUMS-23)** ([the replay in 3D](./docs/replay.md#in-3d)): `view.replay(timeline, settings?)` on the handle of `mountKyogijoTurn` gives the same controller as `mount.replay`, and the rink can be turned, tipped and zoomed while the game plays. The players and officials stand up as discs that face the eye (the flat replay's circles, squares, triangles and numbers, turned up), and the ball or the puck, its trail, the passes, the shots and the goals stay on the floor. `stand: false` keeps the players flat. On the view, Space plays and pauses, comma and full stop step, and the arrow keys still turn it; on the replay's controls the arrows step. Nothing runs while it is paused, hidden or out of sight, the auto-turn and the replay share one animation frame, only what moves is written, and destroy leaves nothing; browser tests hold each of these. `replayTurnModel` is the pure model of a frame, and `<kyogijo-field turn>` with a `timeline` plays it on its 3D view.
