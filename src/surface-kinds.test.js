@@ -8,9 +8,7 @@ import { SPORTS } from "./index.ts";
 import { READING_JA, SURFACE_GROUPS, SURFACE_KINDS, choiceOf, groupOf, kindOf, orderedChips, pickerHtml, sportChips, surfaceOf } from "../demo/surface-kinds.js";
 import { WORDS } from "../demo/words.js";
 
-// The page's model, as the page loads it: its imports of the built package are the package's source here (the tests run before the build).
-vi.mock("../demo/dist/index.js", () => import("./index.ts"));
-vi.mock("../demo/dist/layers-entry.js", () => import("./layers-entry.ts"));
+// The page's model, as the page loads it: its imports of the built package are the package's source here (vitest.config.mjs, demo-dist-is-source).
 vi.mock("../demo/emblems.js", () => ({ EMBLEM_GROUPS: { crest: ["crest:shield", "crest:roundel"], sport: [], trophy: ["trophy:soccer-globe"], medal: [], award: [], ball: [], gear: [] } }));
 
 const sayIn = (lang) => (key) => {
