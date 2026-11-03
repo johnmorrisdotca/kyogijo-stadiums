@@ -1,4 +1,6 @@
 // The catalogue page: the leagues' coverage, the three tabs, the sport and group chips, the search, the pages of cards, the pins on the map, Japanese and dark, and nothing wider than the screen.
+import { readFileSync } from "node:fs";
+
 import { expect, test } from "@playwright/test";
 
 import { at, noSidewaysScroll, serve, tap } from "./demo.mjs";
@@ -19,7 +21,8 @@ test("shows the supported venues a page at a time, the ones drawn in their build
   await expect(page.locator(`${at("coverage")} .cov[data-league="nhl"]`)).toContainText("32 / 32");
   await expect(page.locator(at("card"))).toHaveCount(24);
   await expect(page.locator(at("card")).first().locator(".badge")).toHaveText("In its building");
-  await expect(page.locator(at("found"))).toContainText("331 venues");
+  const supported = JSON.parse(readFileSync("catalogue.json", "utf8")).counts.supported;
+  await expect(page.locator(at("found"))).toContainText(`${supported} venues`);
   await tap(page, at("next"), testInfo);
   await expect(page.locator(at("page"))).toContainText("Page 2 of");
   await expect(page).toHaveURL(/page=2/);
@@ -28,6 +31,12 @@ test("shows the supported venues a page at a time, the ones drawn in their build
   await page.waitForSelector(`${at("map")}[data-ready="true"] .cat-overlay circle`);
   expect(errors).toEqual([]);
   await noSidewaysScroll(page);
+});
+
+test("is linked from the home page's atlas", async ({ page }) => {
+  await serve(page);
+  await page.goto("http://kyogijo.test/?lang=en&help=off");
+  await expect(page.locator(at("catalogue-link"))).toHaveAttribute("href", "catalogue.html");
 });
 
 test("the tabs, the chips and the search narrow the cards and the pins together", async ({ page }, testInfo) => {

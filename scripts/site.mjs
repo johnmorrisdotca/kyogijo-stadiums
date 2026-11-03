@@ -234,7 +234,7 @@ const page = `<!doctype html>
   </head>
   <body>
     <main>
-      ${familyHeader({ id, links: [{ href: "docs/", say: "pageDocs" }, { href: "api.html", say: "pageApi" }, { href: "halls.html", say: "pageHalls" }, { href: "catalogue.html", say: "pageCatalogue" }] })}
+      ${familyHeader({ id, links: [{ href: "docs/", say: "pageDocs" }, { href: "api.html", say: "pageApi" }, { href: "halls.html", say: "pageHalls" }] })}
 
       <section class="feature" id="feature" aria-labelledby="feature-title">
         <div class="try-head">
@@ -435,6 +435,7 @@ const page = `<!doctype html>
       <section class="more atlas" id="atlas" aria-labelledby="atlas-title" data-testid="atlas">
         <h2 id="atlas-title" data-say="atlasTitle"></h2>
         <p class="atlas-text" data-say="atlasText"></p>
+        <p class="atlas-catalogue"><a href="catalogue.html" data-testid="catalogue-link" data-say="atlasCatalogue"></a></p>
         <div class="atlas-filters">
           <div class="setup fam-row"><span class="fam-label" data-say="atlasSport"></span><div class="fam-seg" role="group" data-say-label="atlasSport" id="atlas-sport" data-testid="atlas-sport"></div></div>
           <div class="setup fam-row"><span class="fam-label" data-say="atlasStatus"></span><div class="fam-seg" role="group" data-say-label="atlasStatus" id="atlas-status" data-testid="atlas-status"></div></div>

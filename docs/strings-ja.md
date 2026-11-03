@@ -1503,7 +1503,7 @@ Made from `src/strings.en.ts`, `src/strings.ja.ts` and `demo/words.js` by `pnpm 
 | `foot` | Every dimension is from a rulebook or a published figure; the sources are in the repository. | 寸法はすべて、ルールブックまたは公表されている数値に基づいています。出典はリポジトリに載っています。 |
 | `pageApi` | API reference | APIリファレンス（英語） |
 | `pageHalls` | Tournament layouts | 大会向けレイアウト |
-| `pageCatalogue` | Every venue | 会場カタログ |
+| `atlasCatalogue` | The catalogue: every venue drawn, being built or wanted, with every NBA, MLB, NFL, CFL and NHL venue of the season | 会場カタログ：対応済み・制作中・追加したい会場の一覧（今シーズンの NBA・MLB・NFL・CFL・NHL の全会場つき） |
 | `hallLink` | See it as a tournament floor | 大会のフロアとして見る |
 | `pageDocs` | Docs | ドキュメント |
 | `groupSurface` | Surface | 競技場 |
