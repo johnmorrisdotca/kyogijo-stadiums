@@ -58,6 +58,7 @@
       <div id="tabs" role="tablist" data-testid="tabs"></div>
       <div id="tools">
         <div class="rv-bar" id="bar" data-testid="bar"></div>
+        <div class="rv-bar" id="sound-bar" data-testid="sound-bar"></div>
         <div class="rv-bar" id="page-bar">
           <select id="theme" aria-label="Theme"><option value="auto"></option><option value="light"></option><option value="dark"></option></select>
           <select id="language" aria-label="Language"><option value="en">English</option><option value="ja">日本語</option></select>
@@ -78,6 +79,7 @@
       import { VENUES, VENUE_CONFERENCES, VENUE_IDS, arenaById, arenaNameIn, venuesIn } from "./dist/index.js";
       import { replaceAddress } from "./address.js";
       import { mountRealView } from "./real-view.js";
+      import { mountSoundBar, venueSound } from "./sound-bar.js";
       import { quietTitles } from "./quiet.js";
       quietTitles();
 
@@ -134,6 +136,7 @@
       const wanted = Object.hasOwn(VENUES, params.get("venue")) ? params.get("venue") : DIVISIONS.includes(params.get("division")) ? venuesIn(params.get("division"))[0].id : VENUE_IDS[0];
       const state = { venue: wanted, division: VENUES[wanted].division };
       let view;
+      let sound;
 
       setSelect("theme", params.get("theme"), ["light", "dark"]);
       setSelect("language", params.get("lang"), ["en", "ja"]);
@@ -225,6 +228,7 @@
         const back = new URLSearchParams({ sport: "nhl", arena: state.venue });
         if ($("language").value === "ja") back.set("lang", "ja");
         $("back").href = `./?${back}`;
+        sound?.update();
         document.body.dataset.view = view?.state.view ?? "";
         document.body.dataset.ready = "true";
       }
@@ -256,6 +260,8 @@
         game: { note: $("game-note"), say: (key) => words()[key] },
         onChange: after,
       });
+      // The crowd of the arena, on its own: a bed for an arena of its seats under its roof, at a level, with no game.
+      sound = mountSoundBar({ bar: $("sound-bar"), host: $("stage"), lang: () => $("language").value, context: () => venueSound(VENUES[state.venue], view.state) });
       after();
     </script>
   </body>

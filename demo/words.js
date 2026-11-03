@@ -226,6 +226,8 @@ export const WORDS = {
     gameCode: "The code for this view",
     gamePlay: "Play a game",
     gamePlayTip: "Play {title} on this surface. Press again to take it away.",
+    // The Sound button as the page is first drawn, before its own script (sound-bar.js) takes its place: the same word as the package's SOUND_WORDS.
+    soundButton: "Sound",
     elementTitle: "As an element",
     elementText: "Each of these is a <kyogijo-field> tag with attributes and no script of its own.",
     moreText: "Everything here is a call of one function.",
@@ -456,6 +458,7 @@ export const WORDS = {
     gameCode: "この表示のコード",
     gamePlay: "試合を再生",
     gamePlayTip: "「{title}」をこの競技面で再生します。もう一度押すと、元の表示に戻ります。",
+    soundButton: "サウンド",
     elementTitle: "要素として",
     elementText: "ここにあるのはどれも、属性だけを指定した <kyogijo-field> タグで、専用のスクリプトはありません。",
     moreText: "ここにあるものは、すべて1つの関数の呼び出しです。",

@@ -239,6 +239,11 @@
       "import": "./dist/replay-entry.js",
       "default": "./dist/replay-entry.js"
     },
+    "./sound": {
+      "types": "./dist/sound-entry.d.ts",
+      "import": "./dist/sound-entry.js",
+      "default": "./dist/sound-entry.js"
+    },
     "./scene": {
       "types": "./dist/scene-entry.d.ts",
       "import": "./dist/scene-entry.js",
@@ -371,6 +376,8 @@
     "cityctx:fetch": "node scripts/fetch-cityctx.mjs",
     "cityctx:vox": "python3.13 -I scripts/cityctx_vox.py",
     "walk:fetch": "node scripts/fetch-walk.mjs",
+    "sounds": "node scripts/make-sounds.mjs",
+    "sounds:fetch": "node scripts/fetch-sounds.mjs",
     "outside:cost": "node scripts/outside-cost.mjs",
     "plateau": "node scripts/build-plateau.mjs",
     "plateau:fetch": "node scripts/fetch-plateau.mjs",

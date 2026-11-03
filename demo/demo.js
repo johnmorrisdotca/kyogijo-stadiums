@@ -22,6 +22,7 @@ import { replayPlay } from "./replay-data.js";
 import { playGame } from "./play-game.js";
 import { followOfAddress, keepFollow } from "./follow.js";
 import { gameOptions, gameTimeline, loadGame as loadExampleGame, periodAt, scoreAt } from "./game.js";
+import { mountSoundBar, venueSound } from "./sound-bar.js";
 import { poolRace, shortRace } from "./pool-data.js";
 import { raceTimeline } from "./dist/replay-entry.js";
 import { nation } from "./nations.js";
@@ -461,6 +462,7 @@ function render() {
   updateEmbed();
   updateHallLink();
   paintStageBar();
+  trySound?.update();
   syncUrl();
 }
 
@@ -529,6 +531,21 @@ tryGame = playGame({
 function sidesOf(o) {
   return { home: o.home, away: o.away, status: o.status, homeSide: o.homeSide };
 }
+
+// ----- The surface's sound, under the buttons over it: the crowd bed of the surface's kind of venue (an arena, an open stadium, a ballpark, a court hall, a pool, a dojo, a ring, a track), as
+// large as the crowd chosen, heard from the view chosen. A surface with no sound set shows none of it.
+const trySound = mountSoundBar({
+  bar: $("try-sound"),
+  host: $("stage"),
+  lang: () => language.lang,
+  id: "try-sound",
+  context: () => ({
+    sport: state.sport,
+    ...(Object.hasOwn(VENUES, state.arena) ? { venue: { roof: VENUES[state.arena].roof.kind, seats: VENUES[state.arena].seats.hockey } } : {}),
+    crowd: state.crowd ? state.crowdDensity / 100 : 0,
+    view: state.view === "3d" ? "3d" : "2d",
+  }),
+});
 
 /** The sports that have a tournament layout, each with its first preset, read once from the layouts entry. */
 let hallPresets;
@@ -1195,6 +1212,7 @@ function onLanguage() {
   fillFeatured();
   featured.refresh();
   drawGame();
+  heroSound.update();
   for (const grid of grids) grid.relabel();
   fillParks();
   fillGrounds();
@@ -1242,6 +1260,8 @@ $("place").addEventListener("click", () => showPlace(null));
 
 // ----- The featured real arena at the head of the page: it waits still and turns while the pointer is over it, and its buttons work while it turns.
 const FEATURED = "climate-pledge-arena";
+/** The featured arena's sound: its crowd on its own. */
+let heroSound;
 const featuredKey = new URLSearchParams(location.search).get("fv");
 const featured = mountRealView({
   stage: $("feature-stage"),
@@ -1259,8 +1279,10 @@ const featured = mountRealView({
     if (own.venue === FEATURED) next.delete("fv");
     else next.set("fv", own.venue);
     replaceAddress(`${location.pathname}${next.size === 0 ? "" : `?${next}`}${location.hash}`);
+    heroSound?.update();
   },
 });
+heroSound = mountSoundBar({ bar: $("feature-sound"), host: $("feature-stage"), lang: () => language.lang, prefix: "f", id: "feature-sound", context: () => venueSound(VENUES[featured.state.venue], featured.state) });
 /** The arenas to choose from, by name in the page's language. */
 function fillFeatured() {
   const select = $("feature-venue");

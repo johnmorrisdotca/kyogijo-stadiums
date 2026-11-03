@@ -221,6 +221,12 @@ src/
 ├── replay.follow.dom.ts the follow camera's buttons in the replay's bar, and the flat replay's camera, which shows part of the drawing by its viewBox
 ├── replay.types.ts     the replay's types
 ├── replay-entry.ts     the replay's entry
+├── sound.sets.ts       the index of sound sets: a crowd bed for each kind of venue (its room, its layers, its levels) and each sport's set (its bed and the voices of each kind of moment)
+├── sound.mix.ts        the sound in its context, pure: the room a venue makes, the crowd for the people in it, each layer's gain at a level
+├── sound.synth.ts      the sounds made in the browser with Web Audio: seeded noise, applause and talk, a room's echo
+├── sound.dom.ts        a surface's sound in a page: one audio context for the page, the bed's loops only while heard, the recordings fetched when first on and decoded when heard
+├── sound.words.ts      the sound's words in English and Japanese
+├── sound-entry.ts      the sound's entry (`@johnmorrisdotca/kyogijo-stadiums/sound`)
 ├── scene.ts            sceneOf and sceneFromSvg: the drawing as plain data, read from the markup that writes the SVG
 ├── scene.types.ts      the scene's types: items, styles, clips, gradients and patterns
 ├── scene.xml.ts        a reader and writer of the package's SVG that gives the same text back, byte for byte

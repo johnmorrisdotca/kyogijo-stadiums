@@ -7,6 +7,11 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **Sound: the crowd of each kind of venue, at a level (KYOGIJO-STADIUMS-36)** ([sound](./docs/sound.md)): `@johnmorrisdotca/kyogijo-stadiums/sound` has `createKyogijoSound`, a surface's crowd made in the browser with Web Audio (the building's air, people talking, applause and the crowd's voice, and the pool's water), at five levels from quiet to a roar, heard in the room its venue makes (its roof and its seats: an arena rings, an open stadium does not), as large as the crowd in it and drier from above in 2D. An index of sound sets (`SOUND_BEDS`, `SOUND_SETS`, `SOUND_OF_SPORT`) gives every surface a bed for its kind of venue (arena, open stadium, ballpark, court hall, pool, dojo, ring, track) and the levels it offers (a kyudo hall only two); a surface with none has no sound. Off until turned on: nothing is fetched, made or decoded before, one audio context serves the page, and nothing plays or decodes while it is off, muted, hidden or out of sight. `soundRoom`, `soundMix` and `levelFor` are the rules, pure.
+- The demo: a Sound button, a volume slider and the crowd's levels as buttons, kept in the address (`sound=on`, `volume`, `level`), on the real arenas (venues.html), under the surface in Try it (the levels of each surface's venue, none with the crowd off) and over the arena at the top of the page. Its recordings (`demo/sounds/`) are CC0 or in the public domain, each listed with its source, author and licence in [sound credits](./docs/sound-credits.md), made by `pnpm sounds:fetch` and `pnpm sounds` (loudness matched, seamless loops, Opus with AAC); the most a sport loads is under 110 kB. They are not in the npm package.
+
 ## [0.60.1] - 2026-11-03
 
 ### Fixed

@@ -1,0 +1,44 @@
+{
+  "note": "The demo's recordings: each raw file, where it was read, who made it and its licence (CC0 or public domain only), and the part of it that is used. pnpm sounds:fetch keeps the raw files in data-sources/sounds/raw/ (not in git); pnpm sounds makes demo/sounds/ from them.",
+  "sounds": [
+    {
+      "name": "murmur",
+      "raw": "360703_eguobyte_large-crowd-medium-distance-stereo.wav",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/a/a9/360703_eguobyte_large-crowd-medium-distance-stereo.wav",
+      "page": "https://commons.wikimedia.org/wiki/File:360703_eguobyte_large-crowd-medium-distance-stereo.wav",
+      "source": "https://freesound.org/people/eguobyte/sounds/360703/",
+      "title": "large crowd, medium distance (stereo)",
+      "author": "eguobyte",
+      "licence": "CC0 1.0",
+      "licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "what": "About a thousand people talking, with almost no word that can be made out: the bed's murmur.",
+      "from": 12, "seconds": 8, "loop": true, "fade": 0.8, "rms": -20, "kbps": 28
+    },
+    {
+      "name": "applause",
+      "raw": "Sound_Effects_-_Applause_after_a_concert.ogg",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/3/32/Sound_Effects_-_Applause_after_a_concert.ogg",
+      "page": "https://commons.wikimedia.org/wiki/File:Sound_Effects_-_Applause_after_a_concert.ogg",
+      "source": "https://commons.wikimedia.org/wiki/File:Sound_Effects_-_Applause_after_a_concert.ogg",
+      "title": "Sound Effects - Applause after a concert",
+      "author": "Amada44",
+      "licence": "CC0 1.0",
+      "licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "what": "A hall's applause, steady: the bed's applause.",
+      "from": 20, "seconds": 6, "loop": true, "fade": 0.6, "rms": -20, "kbps": 28
+    },
+    {
+      "name": "water",
+      "raw": "Indoor_swimming_pool_hall.ogg",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/5/5b/Indoor_swimming_pool_hall.ogg",
+      "page": "https://commons.wikimedia.org/wiki/File:Indoor_swimming_pool_hall.ogg",
+      "source": "http://www.pdsounds.org/sounds/indoor_swimming_pool_hall",
+      "title": "Indoor swimming pool - hall",
+      "author": "stephan",
+      "licence": "Public domain",
+      "licenceUrl": "https://commons.wikimedia.org/wiki/File:Indoor_swimming_pool_hall.ogg",
+      "what": "An indoor pool's hall: water and voices far off, ringing. The pool's bed.",
+      "from": 20, "seconds": 8, "loop": true, "fade": 0.8, "rms": -22, "kbps": 28
+    }
+  ]
+}

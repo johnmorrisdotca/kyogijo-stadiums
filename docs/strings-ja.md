@@ -2080,6 +2080,7 @@ Made from `src/strings.en.ts`, `src/strings.ja.ts` and `demo/words.js` by `pnpm 
 | `gameCode` | The code for this view | この表示のコード |
 | `gamePlay` | Play a game | 試合を再生 |
 | `gamePlayTip` | Play {title} on this surface. Press again to take it away. | 「{title}」をこの競技面で再生します。もう一度押すと、元の表示に戻ります。 |
+| `soundButton` | Sound | サウンド |
 | `elementTitle` | As an element | 要素として |
 | `elementText` | Each of these is a <kyogijo-field> tag with attributes and no script of its own. | ここにあるのはどれも、属性だけを指定した <kyogijo-field> タグで、専用のスクリプトはありません。 |
 | `moreText` | Everything here is a call of one function. | ここにあるものは、すべて1つの関数の呼び出しです。 |
@@ -2203,6 +2204,8 @@ Made from `src/strings.en.ts`, `src/strings.ja.ts` and `demo/words.js` by `pnpm 
 | page `team-shape` | Team shape | チームの形 |
 | page `replay` | Replay | リプレイ |
 | page `example-games` | Example games | サンプルの試合データ |
+| page `sound` | Sound | サウンド |
+| page `sound-credits` | Sound credits | サウンドのクレジット |
 | page `renderers` | Renderers | レンダラー |
 | group `gallery` | Gallery | ギャラリー |
 | page `gallery` | Gallery | ギャラリーの案内 |

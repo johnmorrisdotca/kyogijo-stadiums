@@ -12,9 +12,11 @@ const KINDS = {
   "district-lean-entry.ts": [], "venue-data-entry.ts": [], "circuits-entry.ts": [],
   // The catalogue is data only: it draws nothing, so it never held a venue's record or the words.
   "catalogue-entry.ts": [],
+  // The sound draws nothing: it has its own few words (SOUND_WORDS) and no venue's record.
+  "sound-entry.ts": [],
 };
-/** The entries that never held the package's words: the three that load them, and the catalogue, which draws nothing. */
-const WORDLESS = ["district-lean-entry.ts", "venue-data-entry.ts", "areas-entry.ts", "catalogue-entry.ts"];
+/** The entries that never held the package's words: the three that load them, and the catalogue and the sound, which draw nothing. */
+const WORDLESS = ["district-lean-entry.ts", "venue-data-entry.ts", "areas-entry.ts", "catalogue-entry.ts", "sound-entry.ts"];
 /** The entries that have always had the real venues of the NHL's arenas (the others never did, and the lean district has none until it reads them). */
 const VENUE_ENTRIES = ["index.ts", "mount-entry.ts", "react-entry.ts", "element-entry.ts", "venues-entry.ts", "stadiums-entry.ts", "district-entry.ts", "athletics-entry.ts", "skating-entry.ts", "budo-entry.ts", "judging-entry.ts", "charts-entry.ts", "layouts-entry.ts", "multi-entry.ts", "replay-entry.ts", "scene-entry.ts", "canvas-entry.ts", "d3-entry.ts", "plot-entry.ts", "geojson-entry.ts", "png-entry.ts", "turn-entry.ts", "flythrough-entry.ts"];
 const entries = [...new Set(readFileSync("package.json", "utf8").match(/"\.\/dist\/[a-z0-9.-]+-entry\.js"/g).map((file) => `${file.replace(/"\.\/dist\/|\.js"/g, "")}.ts`))];

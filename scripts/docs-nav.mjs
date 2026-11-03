@@ -116,6 +116,8 @@ export const NAV = [
       { slug: "team-shape", ja: "チームの形" },
       { slug: "replay", ja: "リプレイ" },
       { slug: "example-games", ja: "サンプルの試合データ" },
+      { slug: "sound", ja: "サウンド" },
+      { slug: "sound-credits", ja: "サウンドのクレジット" },
       { slug: "renderers", ja: "レンダラー" },
     ],
   },
