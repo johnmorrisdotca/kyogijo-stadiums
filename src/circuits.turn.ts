@@ -31,10 +31,10 @@ export const CIRCUIT_PLANES_MAX = 120;
 
 /**
  * What stands up on a circuit's floor, in its plan's frame (feet): the pit building at its mapped height and each turn's number on a post over its badge's place beside the bend, the marker turned to face the eye and leaning
- * back to be read square on. `drawn` is the circuit's drawing (its badges are where the markers stand) and `thin` the width of a post. The 3D view of the circuit stands these, and a district with the circuit stands them where
- * it puts the circuit.
+ * back to be read square on. `drawn` is the circuit's drawing (its badges are where the markers stand), `thin` the width of a post and `turns: false` leaves the markers out (the pit building stays). The 3D view of the
+ * circuit stands these, and a district with the circuit stands them where it puts the circuit.
  */
-export function circuitUprights(drawn: CircuitDrawing, thin: number): Upright[] {
+export function circuitUprights(drawn: CircuitDrawing, thin: number, turns = true): Upright[] {
   const plan = drawn.plan;
   const k = drawn.k;
   const items: Upright[] = [];
@@ -46,7 +46,7 @@ export function circuitUprights(drawn: CircuitDrawing, thin: number): Upright[] 
   const size = CIRCUIT_MARKER.size * k;
   const top = CIRCUIT_MARKER.post * k;
   const marks: Plane[] = [];
-  for (const b of drawn.badges) {
+  for (const b of turns ? drawn.badges : []) {
     const [x, y] = b.at;
     const r = size / 2;
     const svg = `<circle class="u-ci-badge" cx="${num(r)}" cy="${num(r)}" r="${num(r * 0.94)}" stroke-width="${num(r * 0.1)}"/><text class="u-ci-badge-n" x="${num(r)}" y="${num(r + r * 0.4)}" font-size="${num(r * (b.n >= 10 ? 1.05 : 1.25))}">${b.n}</text>`;
@@ -68,10 +68,11 @@ export function buildCircuitTurn(options: CircuitOptions, settings: TurnSettings
   const id = settings.id ?? (typeof options.id === "string" && options.id !== "" ? `${options.id}-turn` : `ky-turn-${hash(JSON.stringify([options, settings.preset]))}`);
   const standUp = settings.uprights !== false;
   // The floor: the drawing, its name left to the page and its turns' numbers standing up instead (on the floor too when nothing stands).
-  const drawn = circuitDrawing({ ...options, id: `${id}-floor`, label: false, turns: !standUp });
+  const showTurns = options.turns !== false;
+  const drawn = circuitDrawing({ ...options, id: `${id}-floor`, label: false, turns: !standUp && showTurns });
   const plan = drawn.plan;
   const { x: vx, y: vy, w: vw, h: vh } = drawn.viewBox;
-  const items: Upright[] = standUp ? circuitUprights(drawn, thinnest(vw, vh)) : [];
+  const items: Upright[] = standUp ? circuitUprights(drawn, thinnest(vw, vh), showTurns) : [];
   const area = plan.box;
   const uprights: Uprights = { items, lift: 0, thin: thinnest(vw, vh), area };
   const planes = planesOf(uprights);

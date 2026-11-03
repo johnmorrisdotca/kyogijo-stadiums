@@ -76,6 +76,8 @@
         <label><span id="l-view"></span><select id="view"><option value="flat">2D</option><option value="3d">3D</option></select></label>
         <label><span id="l-circuit"></span><select id="circuit"></select></label>
         <label class="check" id="race-row"><input id="race" type="checkbox" data-testid="race" /><span id="l-race"></span></label>
+        <label class="check" id="markers-row"><input id="markers" type="checkbox" data-testid="markers" /><span id="l-markers"></span></label>
+        <label class="check" id="carlabels-row" hidden><input id="carlabels" type="checkbox" data-testid="carlabels" /><span id="l-carlabels"></span></label>
         <label><span id="l-language"></span><select id="language"><option value="en">English</option><option value="ja">日本語</option></select></label>
         <label><span id="l-theme"></span><select id="theme"><option value="auto"></option><option value="light"></option><option value="dark"></option></select></label>
       </div>
@@ -107,7 +109,7 @@
           pageDescription: "A famous race track drawn from OpenStreetMap: the lap as a ribbon of the track's width, the pit lane, the start and finish, each turn's number, in 2D and 3D, light and dark, English and Japanese.",
           lede: "A race track as OpenStreetMap maps it: the lap at the track's width, the pit lane and the pit building, the start and the finish, and each turn's number. Turn it in 3D, or turn on Race to watch a simulated race of made-up cars, with its clock and timing board.",
           back: "Back to the Kyogijo Stadiums demo", docs: "The circuits page of the docs", city: "This circuit in its surroundings, on the district page", view: "View", circuit: "Circuit", language: "Language", theme: "Theme", auto: "As the device", light: "Light", dark: "Dark",
-          code: "Code", table: "Facts", copy: "Copy the code", copied: "Copied.", race: "Race",
+          code: "Code", table: "Facts", copy: "Copy the code", copied: "Copied.", race: "Race", markers: "Markers", carlabels: "Car labels",
           feed: "What the race plays", simulation: "Simulation", feedUrl: "A feed's address", load: "Play the feed", follow: "Follow live", feedMore: "Paste a feed, or choose a file", paste: "Play what is pasted", file: "Choose a file",
           terms: "Your browser reads the address you give: nothing goes through a server of ours and nothing is kept. You are responsible for following the terms of the source you use.", feedDocs: "The race feed's format", where: "Where to find a feed",
           reading: "Reading the feed…", playing: "Playing {cars} cars over {laps} laps from the feed.", following: "Following: asked again every 15 seconds while this page is visible.", over: "The race is over: no longer following.", stopped: "The source refused or is busy: no longer following.",
@@ -119,7 +121,7 @@
           pageDescription: "OpenStreetMapのデータから描いた有名なレーストラック。コース幅で描いた周回路、ピットレーン、スタートとフィニッシュ、各コーナーの番号を、2Dと3D、ライトとダーク、英語と日本語で表示します。",
           lede: "OpenStreetMapに登録されたレーストラックを描きます。コース幅で描いた周回路、ピットレーンとピットビル、スタートとフィニッシュ、各コーナーの番号を表示し、3Dで回転させて見られます。「レース」をオンにすると、架空のマシンによるシミュレーションレースを、レース時計とタイミングボード付きで見られます。",
           back: "競技場 Kyogijo Stadiums のデモに戻る", docs: "ドキュメントの「サーキット」ページ", city: "地区のページで、このサーキットを周辺の様子とあわせて見る", view: "表示", circuit: "サーキット", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク",
-          code: "コード", table: "データ", copy: "コードをコピー", copied: "コピーしました。", race: "レース",
+          code: "コード", table: "データ", copy: "コードをコピー", copied: "コピーしました。", race: "レース", markers: "コーナー番号", carlabels: "順位の数字",
           feed: "レースの再生元", simulation: "シミュレーション", feedUrl: "フィードのアドレス", load: "フィードを再生", follow: "ライブで追う", feedMore: "フィードを貼り付けるか、ファイルを選ぶ", paste: "貼り付けたものを再生", file: "ファイルを選ぶ",
           terms: "入力したアドレスは、お使いのブラウザが直接読み込みます。kyogijoのサーバーは経由せず、何も保存しません。使うフィードの提供元が定める利用条件を守る責任は、利用者にあります。", feedDocs: "レースフィードの形式", where: "フィードの探し方",
           reading: "フィードを読み込んでいます…", playing: "フィードから{cars}台のマシン、{laps}周のレースを再生しています。", following: "ライブで追っています。このページが表示されている間、15秒ごとに読み込み直します。", over: "レースが終わったので、追うのをやめました。", stopped: "提供元に拒否されたか混み合っているため、追うのをやめました。",
@@ -138,6 +140,10 @@
       if (params.get("race") === "1") $("race").checked = true;
       let raceSpeed = RACE_SPEEDS.includes(Number(params.get("speed"))) ? Number(params.get("speed")) : 1;
       let raceLoop = params.get("loop") === "1";
+      // Markers (the turn numbers): on with no race, off while a race plays unless the address says (`markers=1`, `markers=0`); Car labels (the positions on the dots) are on unless `labels=0`.
+      let markersParam = ["0", "1"].includes(params.get("markers")) ? params.get("markers") : null;
+      let carLabels = params.get("labels") !== "0";
+      const markersOn = () => (markersParam === null ? !$("race").checked : markersParam === "1");
       let raceTime = Number.isFinite(Number(params.get("t"))) ? Math.max(0, Number(params.get("t"))) : 0;
       let race;
       let raceKey = "";
@@ -161,7 +167,7 @@
         document.title = w.pageTitle;
         document.querySelector('meta[name="description"]').content = w.pageDescription;
         for (const key of ["title", "lede", "back", "docs", "credit", "city"]) $(key).textContent = w[key];
-        for (const key of ["view", "circuit", "language", "theme", "code", "table", "race", "feed"]) $(`l-${key}`).textContent = w[key];
+        for (const key of ["view", "circuit", "language", "theme", "code", "table", "race", "markers", "carlabels", "feed"]) $(`l-${key}`).textContent = w[key];
         $("l-feed-url").textContent = w.feedUrl;
         $("feed-load").textContent = w.load;
         $("l-feed-follow").textContent = w.follow;
@@ -179,7 +185,7 @@
 
       function options() {
         const theme = $("theme").value;
-        return { circuit: $("circuit").value, ...($("language").value === "ja" ? { language: "ja" } : {}), ...(theme === "auto" ? {} : { theme }) };
+        return { circuit: $("circuit").value, ...($("language").value === "ja" ? { language: "ja" } : {}), ...(theme === "auto" ? {} : { theme }), ...(!$("race").checked && !markersOn() ? { turns: false } : {}) };
       }
 
       /** The code that draws what is shown: the same options, as a reader would write them. */
@@ -193,7 +199,9 @@
           const view = $("view").value === "3d" ? [`view: "3d"`, `turn: { preset: ${JSON.stringify(viewpoint)} }`] : [];
           const speed = raceSpeed === 1 ? [] : [`speed: ${raceSpeed}`];
           const loop = raceLoop ? ["loop: true"] : [];
-          const rest = [...view, ...speed, ...loop];
+          const markers = markersOn() ? ["markers: true"] : [];
+          const labels = carLabels ? [] : ["labels: false"];
+          const rest = [...view, ...speed, ...loop, ...markers, ...labels];
           return `import { mountCircuitRace } from "@johnmorrisdotca/kyogijo-stadiums/circuits";\n\nconst race = mountCircuitRace(document.querySelector("#race"), ${literal}${rest.length === 0 ? "" : `, { ${rest.join(", ")} }`});\nrace.play();`;
         }
         if ($("view").value === "3d") {
@@ -227,9 +235,11 @@
           next.set("race", "1");
           if (raceSpeed !== 1) next.set("speed", String(raceSpeed));
           if (raceLoop) next.set("loop", "1");
+          if (!carLabels) next.set("labels", "0");
           if (Math.round(raceTime) > 0) next.set("t", String(Math.round(raceTime)));
           if (feedRace !== undefined && feedAddressNow !== "" && feedAddressNow !== "pasted") next.set("feed", feedAddressNow);
         }
+        if (markersParam !== null) next.set("markers", markersParam);
         writeWay(next);
         replaceAddress(next.size === 0 ? location.pathname : `?${next}`);
       }
@@ -377,6 +387,9 @@
         const theme = $("theme").value;
         if (theme === "auto") delete document.documentElement.dataset.theme;
         else document.documentElement.dataset.theme = theme;
+        $("markers").checked = markersOn();
+        $("carlabels").checked = carLabels;
+        $("carlabels-row").hidden = !$("race").checked;
         const o = options();
         const stage = $("stage");
         $("error").hidden = true;
@@ -397,6 +410,8 @@
                 turn: turnSettings,
                 speed: raceSpeed,
                 loop: raceLoop,
+                markers: markersOn(),
+                labels: carLabels,
                 start: raceTime,
                 ...(feedRace === undefined ? {} : { race: feedRace }),
                 onChange: (state) => {
@@ -408,7 +423,11 @@
                 },
               });
               if (race.turn !== undefined) hoverOf($("race-view"), race.turn);
-            } else race.update(o);
+            } else {
+              race.update(o);
+              race.setMarkers(markersOn());
+              race.setLabels(carLabels);
+            }
           } else if ($("view").value === "3d") {
             if (race !== undefined) { race.destroy(); race = undefined; raceKey = ""; }
             const key = o.circuit;
@@ -465,7 +484,9 @@
       });
       $("language").addEventListener("change", () => { labelPage(); draw(); });
       for (const id of ["view", "circuit", "theme", "race"]) $(id).addEventListener("change", draw);
-      moveToBar($("bar"), ["view", ["circuit", { quiet: true }], "race", "language", "theme"]);
+      $("markers").addEventListener("change", () => { markersParam = $("markers").checked ? "1" : "0"; draw(); });
+      $("carlabels").addEventListener("change", () => { carLabels = $("carlabels").checked; draw(); });
+      moveToBar($("bar"), ["view", ["circuit", { quiet: true }], "race", "markers", "carlabels", "language", "theme"]);
       labelPage();
       quietTitles();
       panesToTabs();

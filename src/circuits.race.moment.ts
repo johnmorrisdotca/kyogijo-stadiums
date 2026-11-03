@@ -50,6 +50,21 @@ export interface RaceMoment {
   fastest?: { index: number; lap: number; time: number };
 }
 
+/** How many metres clear of the car that holds the leader's mark the first car must be before the mark moves to it. */
+export const LEADER_CLEAR = 1.5;
+
+/**
+ * The car that wears the leader's mark: the first car, except that two cars within a hair of each other do not hand it back and forth: the car that has it keeps it until the first is clear of it by `LEADER_CLEAR`
+ * metres, or it has retired or finished behind. `held` is the car that wore it a moment ago (none after a seek, which takes the first at once).
+ */
+export function raceLeaderMark(moment: RaceMoment, held?: string): RaceStanding | undefined {
+  const first = moment.standings[0];
+  if (first === undefined || held === undefined || held === first.car.id) return first;
+  const was = moment.standings.find((line) => line.car.id === held);
+  if (was === undefined || was.status === "out" || was.status === "finished" || was.status === "grid") return first;
+  return first.distance - was.distance > LEADER_CLEAR ? first : was;
+}
+
 /** The lengths of the lap and the pit lane on the drawing, worked out once for a race. */
 const LENGTHS = new WeakMap<CircuitRace, { lap: Float64Array; pit: Float64Array }>();
 const lengthsOf = (race: CircuitRace): { lap: Float64Array; pit: Float64Array } => {

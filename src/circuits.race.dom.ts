@@ -3,7 +3,7 @@
 // Nothing runs until the reader plays it, and nothing runs while it is paused, the page is hidden or the race is out of sight. With reduced motion nothing plays by itself: play moves to the leader's next lap.
 import { CIRCUIT_MARKER, buildCircuitTurn } from "./circuits.turn.ts";
 import { RACE_STYLE, carMarkup, carRadius, lapTime, raceBoard, raceClock, raceDrawing, raceStage, standingGap } from "./circuits.race.draw.ts";
-import { raceAt, raceLapStep, type RaceMoment } from "./circuits.race.moment.ts";
+import { raceAt, raceLapStep, raceLeaderMark, type RaceMoment } from "./circuits.race.moment.ts";
 import { createReplayBar, replayKey, type ReplayBarSlots } from "./replay.bar.ts";
 import { simulateRace, type CircuitRace, type RaceOptions } from "./circuits.race.ts";
 import { RACE_WORDS } from "./circuits.race.words.ts";
@@ -33,6 +33,10 @@ export interface RaceViewSettings {
   turn?: TurnSettings;
   /** 1 (the default), 10 or 60; any speed from 1 to 600 is allowed. */
   speed?: number;
+  /** The turn numbers standing over the track (flat and in 3D): off by default, because a race is about the cars and the pins stand over them; `setMarkers` changes it. The scale bar, the north arrow and the credit stay. */
+  markers?: boolean;
+  /** The position numbers on the cars' dots: on by default; `setLabels` changes it. The leader's mark stays either way. */
+  labels?: boolean;
   /** Go round again from the start when the race ends, as a game's replay does: off by default. */
   loop?: boolean;
   /** Seconds from the start to begin at: 0 (the grid) by default. */
@@ -57,6 +61,8 @@ export interface RaceState {
   ended: boolean;
   speed: number;
   loop: boolean;
+  markers: boolean;
+  labels: boolean;
   motion: "smooth" | "step";
 }
 
@@ -106,6 +112,10 @@ export interface KyogijoRace<O = RaceViewOptions, V = CircuitOptions> {
   /** One lap on (1) or back (-1), pausing. */
   step(direction: 1 | -1): void;
   setLoop(loop: boolean): void;
+  /** Show or hide the turn numbers standing over the track, flat and in 3D. */
+  setMarkers(markers: boolean): void;
+  /** Show or hide the position numbers on the cars' dots. The leader's mark (a ring and a P1 tag) is always there. */
+  setLabels(labels: boolean): void;
   setSpeed(speed: number): void;
   /** Draw again with new options (the language, the theme): the clock and the race stay where they are. A new circuit, seed, laps or cars is a new race: mount it again. */
   update(options: O): void;
@@ -116,6 +126,9 @@ export interface KyogijoRace<O = RaceViewOptions, V = CircuitOptions> {
 
 /** The plane of a car standing in a 3D view: a disc that faces the eye, its lower edge on the floor over its place. */
 const carPlane = (id: string, x: number, y: number, d: number, svg: string): Plane => ({ id: `car-${id}`, kind: "player", o: [x - d / 2, y, d], u: [d, 0, 0], v: [0, 0, -d], svg, billboard: true, lean: true });
+
+/** A plane of the leader's mark standing in a 3D view: `w` wide and `h` high, centred over (x, y) with its top at height `top`, facing the eye. */
+const markPlane = (id: string, x: number, y: number, w: number, h: number, top: number, svg: string): Plane => ({ id, kind: "sign", o: [x - w / 2, y, top], u: [w, 0, 0], v: [0, 0, -h], svg, billboard: true, lean: true });
 
 /**
  * Mount a simulated race on a circuit: the circuit flat (or in 3D) with a dot for each made-up car, the race clock, play and pause, the speeds 1×, 10× and 60×, a slider over the whole race and the timing board, moving
@@ -142,12 +155,14 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
   const media = typeof matchMedia === "function" ? matchMedia("(prefers-reduced-motion: reduce)") : undefined;
   const motionNow = (): "smooth" | "step" => (settings.motion === "smooth" ? "smooth" : settings.motion === "step" ? "step" : media?.matches === true ? "step" : "smooth");
   const clampSpeed = (n: number): number => Math.min(600, Math.max(1, n));
-  const state: RaceState = { t: Math.min(Math.max(settings.start ?? 0, 0), race.duration), duration: race.duration, playing: false, ended: false, speed: clampSpeed(Number.isFinite(settings.speed) ? (settings.speed as number) : 1), loop: settings.loop === true, motion: motionNow() };
+  const state: RaceState = { t: Math.min(Math.max(settings.start ?? 0, 0), race.duration), duration: race.duration, playing: false, ended: false, speed: clampSpeed(Number.isFinite(settings.speed) ? (settings.speed as number) : 1), loop: settings.loop === true, markers: settings.markers === true, labels: settings.labels !== false, motion: motionNow() };
   const tell = (): void => settings.onChange?.({ ...state });
 
   // ---- The parts: the stage, the clock, the controls, the note, the live region and the board. ----
   const root = doc.createElement("div");
   root.className = "ky-race";
+  root.dataset.labels = state.labels ? "on" : "off";
+  root.dataset.markers = state.markers ? "on" : "off";
   const style = doc.createElement("style");
   style.textContent = RACE_STYLE;
   const stage = doc.createElement("div");
@@ -173,7 +188,23 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
   /** Each car's element (a group in the flat drawing, a plane's element in 3D), the text of its position, and what each was last given. */
   let cars = new Map<string, { el: Element | null; text: Element | null; r: number; at: string; position: number; status: string }>();
   const planes = new Map<string, Plane>();
+  /** The leader's mark: the flat drawing's group (and the car it is on, and where it was last put), and in 3D the ring and the tag as planes. */
+  let lead: { el: Element | null; at: string; car: string } = { el: null, at: "", car: "" };
+  const leadPlanes: { ring?: Plane; tag?: Plane } = {};
+  /** The car that wears the mark now: it is handed on only when the first is clear of it (`raceLeaderMark`). */
+  let marked: string | undefined;
   let disc = 0;
+  // The leader's mark in 3D, in the disc's own size: a ring round it (1.4 discs across, its lower edge a little under the floor) and a tag of 1.0 by 0.5 discs over the ring.
+  const ringSize = (): number => 1.4 * disc;
+  const ringTop = (): number => 0.5 * disc + 0.7 * disc;
+  const tagWidth = (): number => 1.0 * disc;
+  const tagHeight = (): number => 0.5 * disc;
+  const tagTop = (): number => 1.75 * disc;
+  const ringSvg = (): string => {
+    const c = ringSize() / 2;
+    return `<circle class="ky-ci-lead-halo" cx="${num(c)}" cy="${num(c)}" r="${num(0.58 * disc)}" stroke-width="${num(0.15 * disc)}"/><circle class="ky-ci-lead-ring" cx="${num(c)}" cy="${num(c)}" r="${num(0.58 * disc)}" stroke-width="${num(0.09 * disc)}"/>`;
+  };
+  const tagSvg = (): string => `<rect class="ky-ci-lead-tag" x="${num(0.03 * disc)}" y="${num(0.03 * disc)}" width="${num(0.94 * disc)}" height="${num(0.44 * disc)}" rx="${num(0.12 * disc)}" stroke-width="${num(0.04 * disc)}"/><text class="ky-ci-lead-p" x="${num(0.5 * disc)}" y="${num(0.34 * disc)}" font-size="${num(0.32 * disc)}">P1</text>`;
   let moment = raceAt(race, state.t);
 
   // ---- The bar: the package's one replay bar, told what each button does to this race. ----
@@ -207,15 +238,19 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
   const bar = barBox.el;
   stage.after(bar);
 
+  /** The circuit as it is drawn now: the turn numbers stand only while Markers is on. */
+  const shown = (): O => ({ ...options, turns: state.markers });
+
   const bindFlat = (): void => {
     cars = new Map();
     for (const el of stage.querySelectorAll(".ky-ci-car")) {
       const id = el.getAttribute("data-car") ?? "";
       cars.set(id, { el, text: el.querySelector("text"), r: Number(el.querySelector("circle")?.getAttribute("r") ?? 0), at: el.getAttribute("transform") ?? "", position: Number(el.querySelector("text")?.textContent ?? 0), status: el.getAttribute("data-status") ?? "" });
     }
+    lead = { el: stage.querySelector(".ky-ci-lead"), at: stage.querySelector(".ky-ci-lead")?.getAttribute("transform") ?? "", car: stage.querySelector(".ky-ci-lead")?.getAttribute("data-car") ?? "" };
   };
   const drawFlat = (): void => {
-    stage.innerHTML = scene.flat(options, state.t, fromFeed ? race : undefined);
+    stage.innerHTML = scene.flat(shown(), state.t, fromFeed ? race : undefined);
     bindFlat();
   };
   /** The model of the 3D view with a disc for each car at the clock's time. */
@@ -230,7 +265,21 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
       const at = place(line.at);
       planes.set(line.car.id, carPlane(line.car.id, at[0], at[1], disc, svg));
     }
-    return { ...model, planes: [...model.planes, ...planes.values()] };
+    // The leader's mark stands over its car: a ring round the disc and a tag above it, whose only change is their place.
+    const first = raceLeaderMark(moment, marked);
+    marked = first?.car.id;
+    leadPlanes.ring = undefined;
+    leadPlanes.tag = undefined;
+    const extra: Plane[] = [];
+    if (first !== undefined) {
+      const at = place(first.at);
+      const ring = markPlane("lead-ring", at[0], at[1], ringSize(), ringSize(), ringTop(), ringSvg());
+      const tag = markPlane("lead-tag", at[0], at[1], tagWidth(), tagHeight(), tagTop(), tagSvg());
+      leadPlanes.ring = ring;
+      leadPlanes.tag = tag;
+      extra.push(ring, tag);
+    }
+    return { ...model, planes: [...model.planes, ...planes.values(), ...extra] };
   };
   const bindTurn = (): void => {
     cars = new Map();
@@ -244,7 +293,7 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
     if (settings.view === "3d") {
       const holder = doc.createElement("div");
       stage.replaceChildren(holder);
-      turn = mountTurn(holder, scene.view(options), settings.turn ?? {}, scene.build, false, (lent) => {
+      turn = mountTurn(holder, scene.view(shown()), settings.turn ?? {}, scene.build, false, (lent) => {
         inner = lent;
       });
       if (inner !== undefined) {
@@ -334,6 +383,33 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
       if (car.status !== line.status) {
         car.status = line.status;
         setAttr(car.el, "data-status", line.status);
+      }
+    }
+    // The leader's mark goes with the first car, and is handed on only when the next is clear of it (a seek takes the first at once).
+    const mark = raceLeaderMark(moment, crossed ? marked : undefined);
+    marked = mark?.car.id;
+    if (mark !== undefined) {
+      const m = place(mark.at);
+      if (inner !== undefined) {
+        const { ring, tag } = leadPlanes;
+        if (ring !== undefined && (ring.o[0] !== m[0] - ringSize() / 2 || ring.o[1] !== m[1])) {
+          ring.o = [m[0] - ringSize() / 2, m[1], ringTop()];
+          moved = true;
+        }
+        if (tag !== undefined && (tag.o[0] !== m[0] - tagWidth() / 2 || tag.o[1] !== m[1])) {
+          tag.o = [m[0] - tagWidth() / 2, m[1], tagTop()];
+          moved = true;
+        }
+      } else if (lead.el !== null) {
+        const at = `translate(${num(m[0])} ${num(m[1])})`;
+        if (lead.at !== at) {
+          lead.at = at;
+          lead.el.setAttribute("transform", at);
+        }
+        if (lead.car !== mark.car.id) {
+          lead.car = mark.car.id;
+          lead.el.setAttribute("data-car", mark.car.id);
+        }
       }
     }
     if (moved) inner?.repaint();
@@ -463,6 +539,22 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
       label();
       tell();
     },
+    setMarkers(markers) {
+      if (state.markers === markers) return;
+      state.markers = markers;
+      root.dataset.markers = markers ? "on" : "off";
+      // The pins are in the drawing (flat) or stand in the view (3D): the circuit is drawn again with or without them, the clock and the cars where they are.
+      if (turn !== undefined) turn.update(scene.view(shown()));
+      else drawFlat();
+      paint(undefined, false);
+      tell();
+    },
+    setLabels(labels) {
+      if (state.labels === labels) return;
+      state.labels = labels;
+      root.dataset.labels = labels ? "on" : "off";
+      tell();
+    },
     setSpeed(speed) {
       if (!Number.isFinite(speed)) return;
       const next = clampSpeed(speed);
@@ -475,7 +567,7 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
       options = { ...next, circuit: options.circuit, seed: options.seed, laps: options.laps, cars: options.cars };
       language = options.language === "ja" ? "ja" : "en";
       place = scene.point(options);
-      if (turn !== undefined) turn.update(scene.view(options));
+      if (turn !== undefined) turn.update(scene.view(shown()));
       else drawFlat();
       buildBoard();
       words();

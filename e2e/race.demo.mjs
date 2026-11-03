@@ -14,7 +14,7 @@ async function open(page, path) {
   await serve(page);
   await page.goto(`http://kyogijo.test/${path}`);
   await page.waitForSelector('body[data-ready="true"]');
-  await page.waitForSelector(`${STAGE} .ky-race`);
+  await page.waitForSelector(path.includes("race=1") ? `${STAGE} .ky-race` : `${STAGE} svg.kyogijo`);
   return errors;
 }
 
@@ -114,6 +114,106 @@ test("with reduced motion nothing plays by itself: play goes to the leader's nex
   const frames = await page.evaluate(() => window.__frames);
   await page.waitForTimeout(500);
   expect((await page.evaluate(() => window.__frames)) - frames).toBe(0);
+});
+
+test("Markers: the turn numbers are on with no race, off while a race plays, a button brings them back, the address keeps it, and the map's credit always stays", async ({ page }, testInfo) => {
+  const pins = (view) => (view === "3d" ? page.locator(`${STAGE} .ky-up[data-part^="turn-"]`) : page.locator(`${STAGE} .ky-ci-turn`));
+  const credit = page.locator(`${STAGE} svg.kyogijo text.ky-ci-credit`);
+  const creditText = /OpenStreetMap contributors/;
+  // No race: the pins stand, and Markers is pressed in.
+  await open(page, "circuits.html");
+  await expect(pins("flat")).toHaveCount(17);
+  await expect(page.locator('[data-testid="markers"]')).toBeChecked();
+  await expect(credit.first()).toHaveText(creditText);
+  // The race: off, unless the address says.
+  await open(page, "circuits.html?race=1");
+  await expect(pins("flat")).toHaveCount(0);
+  await expect(page.locator('[data-testid="markers"]')).not.toBeChecked();
+  await expect(credit.first()).toHaveText(creditText);
+  await expect(page.locator(`${STAGE} .ky-ci-car`)).toHaveCount(20);
+  expect(new URL(page.url()).searchParams.get("markers")).toBeNull();
+  // Pressed in, they come back over the race, and the address says so; pressed out, they go and it says that.
+  await press(page, page.locator('[data-testid="markers"]').locator(".."), testInfo);
+  await expect(pins("flat")).toHaveCount(17);
+  await expect(page.locator(`${STAGE} .ky-ci-car`)).toHaveCount(20);
+  await expect.poll(() => new URL(page.url()).searchParams.get("markers")).toBe("1");
+  await press(page, page.locator('[data-testid="markers"]').locator(".."), testInfo);
+  await expect(pins("flat")).toHaveCount(0);
+  await expect.poll(() => new URL(page.url()).searchParams.get("markers")).toBe("0");
+  await expect(credit.first()).toHaveText(creditText);
+  // The address brings it back, flat and in 3D (a view with no pin stands none; the pit building stays).
+  await open(page, "circuits.html?race=1&markers=1");
+  await expect(pins("flat")).toHaveCount(17);
+  await open(page, "circuits.html?race=1&view=3d");
+  await page.waitForSelector(`${STAGE} .ky-turn[data-mode="3d"]`);
+  await expect(pins("3d")).toHaveCount(0);
+  await expect(page.locator(`${STAGE} .ky-up[data-part^="pit-"]`).first()).toBeAttached();
+  await open(page, "circuits.html?race=1&view=3d&markers=1");
+  await page.waitForSelector(`${STAGE} .ky-turn[data-mode="3d"]`);
+  expect(await pins("3d").count()).toBeGreaterThanOrEqual(17);
+  await expect(credit.first()).toHaveText(creditText);
+});
+
+test("Car labels: the position numbers on the dots go and come back, and the address keeps it", async ({ page }, testInfo) => {
+  await open(page, "circuits.html?race=1");
+  const number = page.locator(`${STAGE} .ky-ci-car-n`).first();
+  await expect(number).toBeVisible();
+  await press(page, page.locator('[data-testid="carlabels"]').locator(".."), testInfo);
+  await expect(number).toBeHidden();
+  await expect(page.locator(`${STAGE} .ky-ci-car`)).toHaveCount(20);
+  await expect.poll(() => new URL(page.url()).searchParams.get("labels")).toBe("0");
+  await open(page, "circuits.html?race=1&labels=0");
+  await expect(page.locator(`${STAGE} .ky-ci-car-n`).first()).toBeHidden();
+  await expect(page.locator('[data-testid="carlabels"]')).not.toBeChecked();
+  // The leader's mark is there with the numbers off.
+  await expect(page.locator(`${STAGE} .ky-ci-lead`)).toHaveCount(1);
+  await expect(page.locator(`${STAGE} .ky-ci-lead-p`)).toBeVisible();
+});
+
+test("the leader's mark: one ring and a P1 tag on the first car, moving with it, handed on at a pass, and on whatever Markers and Car labels say", async ({ page }) => {
+  await open(page, "circuits.html?race=1&labels=0&speed=60");
+  const mark = page.locator(`${STAGE} .ky-ci-lead`);
+  await expect(mark).toHaveCount(1);
+  const first = () => page.locator(`${STAGE} .ky-race-board tbody tr`).first().getAttribute("data-car");
+  const onLeader = async () => {
+    const id = await first();
+    expect(await mark.getAttribute("data-car")).toBe(id);
+    expect(await mark.getAttribute("transform")).toBe(await dot(page, id).getAttribute("transform"));
+    return id;
+  };
+  await onLeader();
+  // The board's first row is the highlighted one.
+  expect(await page.locator(`${STAGE} .ky-race-board tbody tr`).first().evaluate((el) => getComputedStyle(el).backgroundColor)).not.toBe("rgba(0, 0, 0, 0)");
+  expect(await page.locator(`${STAGE} .ky-race-board tbody tr`).nth(1).evaluate((el) => getComputedStyle(el).backgroundColor)).toBe("rgba(0, 0, 0, 0)");
+  // Through the race: at every moment sampled the mark is on the first car, and it was handed on at least once.
+  const leaders = new Set();
+  for (const fraction of [0.05, 0.12, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]) {
+    await page.locator(`${STAGE} .ky-race .ky-position`).evaluate((range, f) => {
+      range.value = String(Math.round(Number(range.max) * f));
+      range.dispatchEvent(new Event("input", { bubbles: true }));
+    }, fraction);
+    leaders.add(await onLeader());
+  }
+  expect(leaders.size).toBeGreaterThan(1);
+  // The ring and the tag are drawn (a ring, a halo, a tag and its word) and are not hidden by the other cars: nothing is drawn after the mark.
+  expect(await mark.locator("circle, rect, text").count()).toBe(4);
+  expect(await page.locator(`${STAGE} svg.kyogijo > g:last-child`).evaluate((el) => el.classList.contains("ky-ci-lead"))).toBe(true);
+});
+
+test("the leader's mark in 3D: a ring and a tag stand with the first car's disc and move with it", async ({ page }, testInfo) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await open(page, "circuits.html?race=1&view=3d&speed=60&labels=0");
+  await page.waitForSelector(`${STAGE} .ky-turn[data-mode="3d"]`);
+  const ring = page.locator(`${STAGE} .ky-up[data-part="lead-ring"]`);
+  const tag = page.locator(`${STAGE} .ky-up[data-part="lead-tag"]`);
+  await expect(ring).toHaveCount(1);
+  await expect(tag).toHaveCount(1);
+  const before = await ring.evaluate((el) => el.style.transform);
+  await press(page, page.locator(`${STAGE} .ky-race .ky-play`), testInfo);
+  await page.waitForTimeout(1200);
+  expect(await ring.evaluate((el) => el.style.transform)).not.toBe(before);
+  expect(await tag.evaluate((el) => el.style.transform)).not.toBe("");
+  await expect(tag.locator("text")).toHaveText("P1");
 });
 
 test.describe("the race's freeze and leak rules", () => {

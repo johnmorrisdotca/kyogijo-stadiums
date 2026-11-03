@@ -65,10 +65,25 @@ export function carMarkup(line: RaceStanding, r: number, language: Language): st
   return el("g", { class: "ky-ci-car", "data-car": line.car.id, "data-status": line.status, transform: `translate(${num(line.at[0])} ${num(line.at[1])})`, role: "img", "aria-label": label }, inner);
 }
 
+/**
+ * The leader's mark: a ring round the car's dot in a contrasting colour (amber, edged dark, so that it reads on a light or a dark ground) and a small "P1" tag above it, laid at the car's place. It is its own group,
+ * drawn after every car so that no dot lies over it, and it stays whatever the page does with the turn markers and the cars' numbers.
+ */
+export function leaderMarkup(line: RaceStanding, r: number): string {
+  const ring = 1.55 * r;
+  const inner =
+    el("circle", { class: "ky-ci-lead-halo", r: num(ring), "stroke-width": num(0.55 * r) }) +
+    el("circle", { class: "ky-ci-lead-ring", r: num(ring), "stroke-width": num(0.3 * r) }) +
+    el("rect", { class: "ky-ci-lead-tag", x: num(-1.15 * r), y: num(-3.45 * r), width: num(2.3 * r), height: num(1.35 * r), rx: num(0.4 * r), "stroke-width": num(0.14 * r) }) +
+    el("text", { class: "ky-ci-lead-p", y: num(-2.45 * r), "font-size": num(1.0 * r) }, "P1");
+  return el("g", { class: "ky-ci-lead", "data-car": line.car.id, transform: `translate(${num(line.at[0])} ${num(line.at[1])})`, "aria-hidden": "true" }, inner);
+}
+
 /** The cars of a moment as one group, the last car drawn first so that the leader lies on top. */
 export function carsMarkup(moment: RaceMoment, r: number, language: Language): string {
   const lines = [...moment.standings].sort((a, b) => a.index - b.index);
-  return el("g", { class: "ky-ci-cars" }, lines.map((line) => carMarkup(line, r, language)).join(""));
+  const first = moment.standings[0];
+  return el("g", { class: "ky-ci-cars" }, lines.map((line) => carMarkup(line, r, language)).join("")) + (first === undefined ? "" : leaderMarkup(first, r));
 }
 
 /** What a race's drawing is made from: the circuit's options, the race's, and the moment. */
@@ -150,6 +165,12 @@ export const RACE_STYLE = `
 .ky-circuit .ky-ci-car-dot,.ky-district .ky-ci-car-dot,.ky-turn .ky-ci-car-dot{stroke:var(--ky-ci-ground,#fff)}
 .ky-circuit .ky-ci-car-n,.ky-district .ky-ci-car-n,.ky-turn .ky-ci-car-n{font-family:var(--ky-font,system-ui,sans-serif);font-weight:800;text-anchor:middle;font-variant-numeric:tabular-nums}
 .ky-circuit .ky-ci-car[data-status=out],.ky-district .ky-ci-car[data-status=out]{opacity:.45}
+.ky-circuit .ky-ci-lead-halo,.ky-district .ky-ci-lead-halo,.ky-turn .ky-ci-lead-halo{fill:none;stroke:var(--ky-ci-lead-edge,#14181d)}
+.ky-circuit .ky-ci-lead-ring,.ky-district .ky-ci-lead-ring,.ky-turn .ky-ci-lead-ring{fill:none;stroke:var(--ky-ci-lead,#f5b50a)}
+.ky-circuit .ky-ci-lead-tag,.ky-district .ky-ci-lead-tag,.ky-turn .ky-ci-lead-tag{fill:var(--ky-ci-lead,#f5b50a);stroke:var(--ky-ci-lead-edge,#14181d)}
+.ky-circuit .ky-ci-lead-p,.ky-district .ky-ci-lead-p,.ky-turn .ky-ci-lead-p{fill:#14181d;font-family:var(--ky-font,system-ui,sans-serif);font-weight:800;text-anchor:middle}
+.ky-race[data-labels=off] .ky-ci-car-n{display:none}
+.ky-race .ky-race-board tbody tr:first-child{background:color-mix(in srgb,var(--ky-ci-lead,#f5b50a) 22%,transparent)}
 .ky-race{position:relative;display:block;color:inherit}
 ${BAR_STYLE}
 .ky-race .ky-race-hint,.ky-race .ky-race-live{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}

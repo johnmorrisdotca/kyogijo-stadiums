@@ -16,9 +16,9 @@ export { RACE_PACE, cornerSpeed, paceProfile, speedAt } from "./circuits.pace.ts
 export type { PaceProfile } from "./circuits.pace.ts";
 export { RACE_DISTANCE, raceLaps, simulateRace } from "./circuits.race.ts";
 export type { CircuitRace, RaceCar, RaceOptions, RaceStop } from "./circuits.race.ts";
-export { carAt, raceAt, raceLapMarks, raceLapStep, racePoint } from "./circuits.race.moment.ts";
+export { LEADER_CLEAR, carAt, raceAt, raceLapMarks, raceLapStep, raceLeaderMark, racePoint } from "./circuits.race.moment.ts";
 export type { RaceMoment, RaceStanding, RaceStatus } from "./circuits.race.moment.ts";
-export { RACE_STYLE, drawRace, gapText, lapTime, raceBoard, raceClock, raceDrawing, raceStage } from "./circuits.race.draw.ts";
+export { RACE_STYLE, drawRace, gapText, lapTime, leaderMarkup, raceBoard, raceClock, raceDrawing, raceStage } from "./circuits.race.draw.ts";
 export type { RaceDrawOptions, RaceDrawing } from "./circuits.race.draw.ts";
 export { RACE_SPEEDS, mountCircuitRace } from "./circuits.race.dom.ts";
 export type { KyogijoRace, RaceState, RaceViewOptions, RaceViewSettings } from "./circuits.race.dom.ts";

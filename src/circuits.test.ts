@@ -173,6 +173,17 @@ describe("the 3D view", () => {
     expect(model.flat).toContain('data-turn="17"');
   });
 
+  it("stands no turn marker with turns: false, flat or in 3D, and keeps the pit building", () => {
+    const off = buildCircuitTurn({ circuit: "las-vegas", turns: false });
+    expect(off.planes.filter((p) => p.kind === "sign")).toEqual([]);
+    expect(off.planes.filter((p) => p.id.startsWith("turn-"))).toEqual([]);
+    expect(off.planes.filter((p) => p.kind === "block").length).toBeGreaterThan(4);
+    expect(off.floor).not.toContain("data-turn=");
+    expect(off.flat).not.toContain("data-turn=");
+    expect(circuitTurnMarkup({ circuit: "las-vegas", turns: false }, { preset: "corner" })).not.toContain('data-part="turn-');
+    expect(drawCircuit({ circuit: "las-vegas", turns: false })).not.toContain("data-turn=");
+  });
+
   it("is the floor alone with uprights: false", () => {
     const bare = buildCircuitTurn({ circuit: "las-vegas" }, { uprights: false });
     expect(bare.planes).toEqual([]);

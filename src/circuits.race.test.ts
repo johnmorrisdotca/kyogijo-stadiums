@@ -18,6 +18,8 @@ import {
   raceClock,
   raceLapMarks,
   raceLapStep,
+  raceLeaderMark,
+  leaderMarkup,
   raceLaps,
   racePoint,
   raceStage,
@@ -187,6 +189,39 @@ describe("the drawing, the clock and the board", () => {
     expect(svg).toContain('data-turn="17"');
     expect(drawRace({ circuit: "las-vegas", laps: 6, cars: 10, seed: 5, t: 300 })).toBe(svg);
     expect(drawRace({ circuit: "las-vegas", laps: 6, cars: 10, seed: 5, t: 300, language: "ja" })).toContain("シミュレーション");
+  });
+
+  it("marks the leader: one ring and a P1 tag, drawn after every car, on the first car, and the credit and the cars stay", () => {
+    const at = (t: number): string => drawRace({ circuit: "las-vegas", laps: 6, cars: 10, seed: 5, t });
+    for (const t of [0, 120, 300, 900]) {
+      const svg = at(t);
+      expect(svg.match(/class="ky-ci-lead"/g)).toHaveLength(1);
+      expect(svg.indexOf('class="ky-ci-lead"')).toBeGreaterThan(svg.lastIndexOf('class="ky-ci-car"'));
+      const first = raceAt(race, t).standings[0];
+      expect(svg).toContain(`class="ky-ci-lead" data-car="${first.car.id}"`);
+    }
+    expect(at(300)).toContain(">P1<");
+    expect(leaderMarkup(raceAt(race, 300).standings[0], 10)).toContain("ky-ci-lead-ring");
+  });
+
+  it("hands the leader's mark on only when the first car is clear of the one that wears it", () => {
+    // Find a pass: the first moment at which the car in front changes.
+    let t = 1;
+    const was = raceAt(race, t).standings[0].car.id;
+    while (t < race.duration && raceAt(race, t).standings[0].car.id === was) t += 0.5;
+    const after = raceAt(race, t);
+    const first = after.standings[0];
+    const old = after.standings.find((line) => line.car.id === was)!;
+    // A hair ahead keeps the mark where it was; clear ahead hands it on; and with nobody holding it the first has it.
+    expect(raceLeaderMark(after, undefined)).toBe(first);
+    expect(raceLeaderMark(after, first.car.id)).toBe(first);
+    const hair = { ...after, standings: [{ ...first, distance: old.distance + 0.4 }, ...after.standings.slice(1)] };
+    expect(raceLeaderMark(hair, was)?.car.id).toBe(was);
+    const clear = { ...after, standings: [{ ...first, distance: old.distance + 3 }, ...after.standings.slice(1)] };
+    expect(raceLeaderMark(clear, was)?.car.id).toBe(first.car.id);
+    // A car that retired or finished does not keep it.
+    const out = { ...after, standings: after.standings.map((line) => (line.car.id === was ? { ...line, status: "out" as const } : line)) };
+    expect(raceLeaderMark(out, was)?.car.id).toBe(first.car.id);
   });
 
   it("writes the clock, the lap and the gaps", () => {
