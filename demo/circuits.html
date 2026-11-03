@@ -296,7 +296,8 @@
       function playFeed(feed, address, again = false) {
         lastFeed = feed;
         feedRace = raceFromFeed(feed, $("circuit").value);
-        say(fillIn(words().playing, { cars: feedRace.cars.length, laps: feedRace.laps }));
+        // A feed that came in again while it is followed keeps the line that says it is followed.
+        if (!again) say(fillIn(words().playing, { cars: feedRace.cars.length, laps: feedRace.laps }));
         if (again && race !== undefined) {
           race.replace(feedRace);
           return;
