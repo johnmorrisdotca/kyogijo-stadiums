@@ -652,6 +652,7 @@ const page = `<!doctype html>
           </div>
           <div class="game-row" id="game-periods" data-testid="game-periods" role="group" data-say-label="gamePeriods"></div>
           <p class="game-score" id="game-score" data-testid="game-score"></p>
+          <div class="game-row" id="game-sound" data-testid="game-sound"></div>
         </div>
         <div class="game-stage" id="game-stage" data-testid="game-stage"><p class="game-wait" data-say="gameLoading"></p></div>
         <p class="game-note" data-testid="game-note" data-say="gameNote"></p>

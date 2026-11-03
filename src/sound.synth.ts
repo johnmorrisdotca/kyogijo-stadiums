@@ -1,7 +1,7 @@
-// The sounds made in the browser with Web Audio, for every layer of a crowd's bed that has no recording, or whose recording a page does not give: a crowd is filtered noise, talk is noise
-// that rises and falls with syllables, applause many short bursts. The noise and the room's echo are written into buffers once, from a seeded generator, so that the same
+// The sounds made in the browser with Web Audio, for every voice and layer that has no recording, or whose recording a page does not give: a whistle is an oscillator with a trill, a horn
+// three low saws through a filter, a crowd filtered noise whose level moves slowly. The noise and the room's echo are written into buffers once, from a seeded generator, so that the same
 // call makes the same sound; nothing here reads a clock but the audio context's own, or makes a sound before it is asked to.
-import type { SoundLayer } from "./sound.sets.ts";
+import type { SoundLayer, SoundVoice } from "./sound.sets.ts";
 
 /** A seeded generator of numbers from 0 to 1 (mulberry32): the noise is the same every time. */
 export function seeded(seed: number): () => number {
@@ -142,4 +142,182 @@ export function layerFilter(context: BaseAudioContext, layer: SoundLayer): Audio
   filter.frequency.value = frequency;
   filter.Q.value = q;
   return filter;
+}
+
+/** An envelope on a gain: up in `attack`, held, then down in `release`, from `when`. */
+function envelope(gain: AudioParam, when: number, peak: number, attack: number, hold: number, release: number): number {
+  gain.setValueAtTime(0, when);
+  gain.linearRampToValueAtTime(peak, when + attack);
+  gain.setValueAtTime(peak, when + attack + hold);
+  gain.linearRampToValueAtTime(0, when + attack + hold + release);
+  return when + attack + hold + release;
+}
+
+/** An oscillator from `when` to `until`, into `into`. */
+function tone(context: BaseAudioContext, into: AudioNode, type: OscillatorType, frequency: number, when: number, until: number): OscillatorNode {
+  const osc = context.createOscillator();
+  osc.type = type;
+  osc.frequency.value = frequency;
+  osc.connect(into);
+  osc.start(when);
+  osc.stop(until);
+  return osc;
+}
+
+/** A burst of noise from a buffer, from `when` to `until`, into `into`. */
+function burst(context: BaseAudioContext, into: AudioNode, noise: AudioBuffer, when: number, until: number): AudioBufferSourceNode {
+  const source = context.createBufferSource();
+  source.buffer = noise;
+  source.loop = true;
+  source.connect(into);
+  source.start(when);
+  source.stop(until);
+  return source;
+}
+
+/** One blast of a pea whistle: a high tone with a fast trill, and a little breath. */
+function whistleBlast(context: BaseAudioContext, out: AudioNode, noise: AudioBuffer, when: number, length: number): number {
+  const amp = context.createGain();
+  amp.connect(out);
+  const until = envelope(amp.gain, when, 0.35, 0.015, length, 0.06);
+  const osc = tone(context, amp, "sine", 2900, when, until);
+  const trill = context.createOscillator();
+  trill.frequency.value = 28;
+  const depth = context.createGain();
+  depth.gain.value = 140;
+  trill.connect(depth);
+  depth.connect(osc.frequency);
+  trill.start(when);
+  trill.stop(until);
+  const breath = context.createBiquadFilter();
+  breath.type = "bandpass";
+  breath.frequency.value = 2900;
+  breath.Q.value = 4;
+  const breathGain = context.createGain();
+  breathGain.gain.value = 0.25;
+  breath.connect(breathGain);
+  breathGain.connect(amp);
+  burst(context, breath, noise, when, until);
+  return until;
+}
+
+/** One strike of a ring's bell: three partials that ring down. */
+function bellStrike(context: BaseAudioContext, out: AudioNode, when: number): number {
+  const until = when + 1.4;
+  for (const [frequency, loud] of [[830, 0.3], [1490, 0.18], [2210, 0.12]] as const) {
+    const amp = context.createGain();
+    amp.gain.setValueAtTime(loud, when);
+    amp.gain.exponentialRampToValueAtTime(0.0001, until);
+    amp.connect(out);
+    tone(context, amp, "sine", frequency, when, until);
+  }
+  return until;
+}
+
+/** A crowd's vowel: noise through a filter that opens from `from` to `to` hertz, swelling and falling away. */
+function vowel(context: BaseAudioContext, out: AudioNode, noise: AudioBuffer, when: number, from: number, to: number, peak: number, attack: number, release: number): number {
+  const filter = context.createBiquadFilter();
+  filter.type = "bandpass";
+  filter.Q.value = 1.2;
+  filter.frequency.setValueAtTime(from, when);
+  filter.frequency.linearRampToValueAtTime(to, when + attack);
+  const amp = context.createGain();
+  filter.connect(amp);
+  amp.connect(out);
+  const until = envelope(amp.gain, when, peak, attack, 0.1, release);
+  burst(context, filter, noise, when, until);
+  return until;
+}
+
+/** The loops a made voice is cut from, made the first time a voice needs one and kept by the caller. */
+export interface VoiceBuffers {
+  /** Pink noise. */
+  noise(): AudioBuffer;
+  /** Hands clapping. */
+  applause(): AudioBuffer;
+}
+
+/**
+ * Make a voice in the browser at `when` on the context's clock, into `out`, from the noise of `noise` (a pink loop). Returns when it ends. The horn is one chord held, never a tune; the
+ * swell is not here, as it moves the bed's roar (the engine does it).
+ */
+export function makeVoice(context: BaseAudioContext, voice: Exclude<SoundVoice, "swell">, out: AudioNode, buffers: VoiceBuffers, when: number): number {
+  const noise = buffers.noise();
+  switch (voice) {
+    case "whistle":
+      return whistleBlast(context, out, noise, when, 0.45);
+    case "whistle-end": {
+      const second = whistleBlast(context, out, noise, when, 0.22) + 0.12;
+      const third = whistleBlast(context, out, noise, second, 0.22) + 0.12;
+      return whistleBlast(context, out, noise, third, 1.3);
+    }
+    case "horn": {
+      const filter = context.createBiquadFilter();
+      filter.type = "lowpass";
+      filter.frequency.value = 1100;
+      filter.Q.value = 1;
+      const amp = context.createGain();
+      filter.connect(amp);
+      amp.connect(out);
+      const until = envelope(amp.gain, when, 0.22, 0.06, 2.6, 0.6);
+      for (const frequency of [98, 98.6, 123.5, 146.8]) tone(context, filter, "sawtooth", frequency, when, until);
+      return until;
+    }
+    case "buzzer": {
+      const filter = context.createBiquadFilter();
+      filter.type = "lowpass";
+      filter.frequency.value = 2200;
+      const amp = context.createGain();
+      filter.connect(amp);
+      amp.connect(out);
+      const until = envelope(amp.gain, when, 0.16, 0.01, 1.3, 0.04);
+      tone(context, filter, "square", 196, when, until);
+      tone(context, filter, "sawtooth", 392, when, until);
+      return until;
+    }
+    case "bell":
+      return [0, 0.3, 0.6].reduce((end, at) => Math.max(end, bellStrike(context, out, when + at)), when);
+    case "gun": {
+      const filter = context.createBiquadFilter();
+      filter.type = "highpass";
+      filter.frequency.value = 700;
+      const amp = context.createGain();
+      filter.connect(amp);
+      amp.connect(out);
+      amp.gain.setValueAtTime(0.9, when);
+      amp.gain.exponentialRampToValueAtTime(0.0001, when + 0.35);
+      burst(context, filter, noise, when, when + 0.35);
+      const thump = context.createGain();
+      thump.gain.setValueAtTime(0.6, when);
+      thump.gain.exponentialRampToValueAtTime(0.0001, when + 0.25);
+      thump.connect(out);
+      tone(context, thump, "sine", 85, when, when + 0.25);
+      return when + 0.35;
+    }
+    case "beep": {
+      const amp = context.createGain();
+      amp.connect(out);
+      const until = envelope(amp.gain, when, 0.18, 0.005, 0.45, 0.02);
+      tone(context, amp, "square", 1000, when, until);
+      return until;
+    }
+    case "ooh":
+      return vowel(context, out, noise, when, 360, 640, 1.2, 0.35, 1.5);
+    case "cheer":
+      return vowel(context, out, noise, when, 700, 1100, 1, 0.08, 1.2);
+    case "applause": {
+      const amp = context.createGain();
+      amp.connect(out);
+      const until = envelope(amp.gain, when, 0.6, 0.25, 1.8, 1.6);
+      const source = context.createBufferSource();
+      source.buffer = buffers.applause();
+      source.loop = true;
+      const filter = layerFilter(context, "applause");
+      source.connect(filter);
+      filter.connect(amp);
+      source.start(when);
+      source.stop(until);
+      return until;
+    }
+  }
 }

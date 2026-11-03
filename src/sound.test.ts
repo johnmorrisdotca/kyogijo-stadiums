@@ -1,11 +1,13 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { SPORTS } from "./draw.ts";
-import { createKyogijoSound } from "./sound.dom.ts";
+import { createReplay } from "./replay.control.ts";
+import { SOUND_TAIL, createKyogijoSound } from "./sound.dom.ts";
 import { fakeAudio, fakeDoc, settled } from "./sound.fixture.ts";
-import { LEVEL_MIX, levelFor, soundLevelsOf, soundMix, soundRoom, soundSetOf } from "./sound.mix.ts";
+import { LEVEL_MIX, cueKindOf, cuesOf, cuesOfChange, excitementAt, levelFor, soundLevelsOf, soundMix, soundRoom, soundSetOf, soundVoicesOf } from "./sound.mix.ts";
 import { CUE_KINDS, SOUND_BEDS, SOUND_LEVELS, SOUND_OF_SPORT, SOUND_SETS } from "./sound.sets.ts";
 import { applauseSamples, impulseSamples, murmurSamples, noiseSamples, seeded } from "./sound.synth.ts";
 import { SOUND_WORDS } from "./sound.words.ts";
+import type { ReplayChange, ReplayTimeline } from "./replay.types.ts";
 
 const VOICES = ["horn", "whistle", "whistle-end", "buzzer", "bell", "gun", "beep", "ooh", "cheer", "applause", "swell"];
 
@@ -30,8 +32,21 @@ describe("the index of sound sets", () => {
   it("has no sound for a surface it does not know, and so no levels or voices", () => {
     expect(soundSetOf("circuit")).toBeUndefined();
     expect(soundLevelsOf("circuit")).toEqual([]);
+    expect(soundVoicesOf("circuit")).toEqual([]);
     expect(soundRoom({ sport: "circuit" })).toBeUndefined();
     expect(soundMix({ sport: "circuit" }, "loud")).toBeUndefined();
+  });
+
+  it("gives each sport its own cues: a horn for hockey, a buzzer for basketball, a whistle for soccer, a bell for the ring", () => {
+    expect(cuesOf({ kind: "goal" }, "nhl")).toEqual(["horn", "swell"]);
+    expect(cuesOf({ kind: "period-end" }, "nba")).toEqual(["buzzer"]);
+    expect(cuesOf({ kind: "whistle" }, "soccer")).toEqual(["whistle"]);
+    expect(cuesOf({ kind: "goal" }, "soccer")).toEqual(["swell"]);
+    expect(cuesOf({ kind: "round-start" }, "boxing")).toEqual(["bell"]);
+    expect(cuesOf({ kind: "start" }, "athletics")).toEqual(["gun"]);
+    expect(cuesOf({ kind: "start" }, "swimming")).toEqual(["beep"]);
+    expect(cuesOf({ kind: "goal" }, "tennis")).toEqual(["applause"]);
+    expect(soundVoicesOf("nhl")).toEqual(["horn", "swell", "ooh", "whistle", "buzzer"]);
   });
 
   it("offers the levels of the venue, fewer for a still sport", () => {
@@ -41,6 +56,13 @@ describe("the index of sound sets", () => {
     expect(levelFor("kyudo", "roar")).toBe("murmur");
     expect(levelFor("judo", "roar")).toBe("loud");
     expect(levelFor("nhl", "roar")).toBe("roar");
+  });
+
+  it("reads a timeline's own words as kinds of moment", () => {
+    expect(cueKindOf({ kind: "Touchdown" })).toBe("goal");
+    expect(cueKindOf({ kind: "full-time" })).toBe("game-end");
+    expect(cueKindOf({ kind: "foul" })).toBe("whistle");
+    expect(cueKindOf({ kind: "pass" })).toBeUndefined();
   });
 
   it("has the words in both languages", () => {
@@ -100,6 +122,59 @@ describe("the room and the mix", () => {
   });
 });
 
+describe("the game's excitement", () => {
+  const periods = [
+    { start: 0, end: 100 },
+    { start: 120, end: 220 },
+    { start: 240, end: 340 },
+  ];
+  const at = (t: number, score?: { home: number; away: number }, sinceGoal?: number) => excitementAt({ t, start: 0, end: 340, periods, score, sinceGoal });
+  it("murmurs before, between and after the periods", () => {
+    expect(at(-1)).toBe("murmur");
+    expect(at(110)).toBe("murmur");
+    expect(at(340)).toBe("murmur");
+  });
+  it("is engaged in play, loud late in a close game, roars after a goal, and quiet in a game already won", () => {
+    expect(at(50, { home: 0, away: 0 })).toBe("engaged");
+    expect(at(300, { home: 3, away: 2 })).toBe("loud");
+    expect(at(300, { home: 5, away: 0 })).toBe("murmur");
+    expect(at(150, { home: 1, away: 0 }, 2)).toBe("roar");
+    expect(at(150, { home: 1, away: 0 }, 8)).toBe("engaged");
+  });
+});
+
+describe("the cues of a replay's moves", () => {
+  const state = { t: 10, start: 0, end: 300, playing: true, ended: false, speed: 1, loop: false, motion: "smooth" as const };
+  const change = (reason: ReplayChange["reason"], t: number, crossed: ReplayChange["crossed"] = []): ReplayChange => ({ state: { ...state, t }, reason, crossed });
+  const periods = [
+    { start: 0, end: 100 },
+    { start: 120, end: 220 },
+  ];
+  it("plays an event's cue while the clock plays or steps forward, and none on a seek or going back", () => {
+    const goal = [{ t: 9.5, kind: "goal", team: "home" as const }];
+    expect(cuesOfChange(change("tick", 10, goal), 9, "nhl").map((c) => c.voice)).toEqual(["horn", "swell"]);
+    expect(cuesOfChange(change("step", 10, goal), 9, "nhl").map((c) => c.voice)).toEqual(["horn", "swell"]);
+    expect(cuesOfChange(change("seek", 10, goal), 9, "nhl")).toEqual([]);
+    expect(cuesOfChange(change("tick", 8, goal), 9, "nhl")).toEqual([]);
+    expect(cuesOfChange(change("tick", 10, goal), 9, "circuit")).toEqual([]);
+  });
+  it("calls a period's end, and the game's at the last", () => {
+    expect(cuesOfChange(change("tick", 101), 99, "nhl", periods).map((c) => `${c.kind} ${c.voice}`)).toEqual(["period-end buzzer"]);
+    expect(cuesOfChange(change("tick", 221), 219, "nhl", periods).map((c) => `${c.kind} ${c.voice}`)).toEqual(["game-end buzzer", "game-end horn", "game-end swell"]);
+    expect(cuesOfChange(change("tick", 121), 119, "soccer", periods).map((c) => `${c.kind} ${c.voice}`)).toEqual(["period-start whistle"]);
+    expect(cuesOfChange(change("tick", 101), 99, "soccer", periods).map((c) => `${c.kind} ${c.voice}`)).toEqual(["period-end whistle-end"]);
+  });
+  it("orders the cues by time, and keeps the team", () => {
+    const crossed = [
+      { t: 99.6, kind: "whistle" },
+      { t: 99.2, kind: "shot", team: "away" as const },
+    ];
+    const cues = cuesOfChange(change("tick", 101, crossed), 99, "nhl", periods);
+    expect(cues.map((c) => c.voice)).toEqual(["ooh", "whistle", "buzzer"]);
+    expect(cues[0].team).toBe("away");
+  });
+});
+
 describe("the sound made", () => {
   it("is the same noise from the same seed", () => {
     expect(seeded(3)()).toBe(seeded(3)());
@@ -116,7 +191,17 @@ describe("the sound made", () => {
   });
 });
 
+const TIMELINE: ReplayTimeline = {
+  frames: [0, 10, 20, 30, 40].map((t) => ({ t, objects: [{ id: "puck", team: "puck" as const, x: t, y: 0 }] })),
+  events: [
+    { t: 5, kind: "goal", team: "home" },
+    { t: 25, kind: "whistle" },
+  ],
+};
+const NHL_PERIODS = [{ number: 1, start: 0, end: 40 }];
+
 describe("the engine", () => {
+  afterEach(() => vi.useRealTimers());
   const make = (extra: Partial<Parameters<typeof createKyogijoSound>[0]> = {}) => {
     const audio = fakeAudio();
     const page = fakeDoc();
@@ -140,7 +225,7 @@ describe("the engine", () => {
   };
 
   it("does nothing until it is turned on: no audio context, no fetch, no decode", async () => {
-    const { sound, fetched, made, audio } = make({ files: { murmur: "sounds/murmur.ogg", applause: "sounds/applause.ogg" } });
+    const { sound, fetched, made, audio } = make({ files: { murmur: "sounds/murmur.ogg", whistle: "sounds/whistle.ogg" } });
     sound.setLevel("loud");
     sound.setVolume(0.8);
     sound.setContext({ view: "2d" });
@@ -152,15 +237,15 @@ describe("the engine", () => {
   });
 
   it("turned on, makes the one context, fetches only the files its surface uses, and plays its bed's loops", async () => {
-    const { sound, fetched, made, audio } = make({ files: { murmur: "sounds/murmur.ogg", applause: "sounds/applause.ogg", water: "sounds/water.ogg" } });
+    const { sound, fetched, made, audio } = make({ files: { murmur: "sounds/murmur.ogg", whistle: "sounds/whistle.ogg", bell: "sounds/bell.ogg", water: "sounds/water.ogg" } });
     await sound.enable();
     await settled();
     expect(made()).toBe(1);
-    expect(fetched.sort()).toEqual(["sounds/applause.ogg", "sounds/murmur.ogg"]);
+    expect(fetched.sort()).toEqual(["sounds/murmur.ogg", "sounds/whistle.ogg"]);
     expect(audio.context.state).toBe("running");
     expect(audio.context.decodes).toBe(2);
-    // room, murmur, applause and roar.
-    expect(audio.running().filter((n) => n.kind === "source" && n.loop).length).toBe(4);
+    // room, murmur, applause and roar, and the roar's swell.
+    expect(audio.running().filter((n) => n.kind === "source" && n.loop).length).toBe(5);
     expect(sound.state()).toMatchObject({ on: true, audible: true, heard: "engaged" });
     await sound.enable();
     expect(made()).toBe(1);
@@ -213,22 +298,74 @@ describe("the engine", () => {
   it("makes a surface with no sound set silent, and offers nothing", async () => {
     const { sound, audio } = make({ sport: "circuit" });
     await sound.enable();
-    expect(sound.state()).toMatchObject({ has: false, audible: false, quiet: "no-sound", levels: [] });
+    expect(sound.state()).toMatchObject({ has: false, audible: false, quiet: "no-sound", levels: [], voices: [] });
     expect(audio.running()).toEqual([]);
   });
 
-  it("glides the bed when the level or a setting changes, and not when nothing did", async () => {
-    const { sound, audio } = make();
+  it("follows a replay: the horn and the swell at the goal, the whistle at the stoppage, nothing on a seek, quiet while paused", async () => {
+    const cues: string[] = [];
+    const { sound, audio } = make({ onCue: (cue) => cues.push(`${cue.t} ${cue.voice}`) });
     await sound.enable();
+    vi.useFakeTimers();
+    const replay = createReplay(TIMELINE);
+    sound.follow(replay, { periods: NHL_PERIODS });
+    expect(sound.state()).toMatchObject({ following: true, audible: false, quiet: "paused" });
+    expect(audio.running()).toEqual([]);
+    replay.play();
+    expect(sound.state().audible).toBe(true);
+    replay.advance(6);
+    expect(cues).toEqual(["5 horn", "5 swell"]);
+    // The horn is three low saws and a fourth a little apart.
+    expect(audio.tones().filter((f) => f < 150).length).toBe(4);
+    replay.seek(4);
+    replay.seek(30);
+    expect(cues.length).toBe(2);
+    replay.seek(20);
+    audio.context.currentTime = 1;
+    replay.advance(6);
+    expect(cues).toEqual(["5 horn", "5 swell", "25 whistle"]);
+    audio.context.currentTime = 2;
+    replay.advance(20);
+    expect(cues.slice(3)).toEqual(["40 buzzer", "40 horn", "40 swell"]);
+    expect(replay.state().playing).toBe(false);
+    // The end's cues are heard out, and then it goes quiet.
+    expect(sound.state()).toMatchObject({ quiet: "paused", audible: true });
+    expect(audio.context.state).toBe("running");
+    vi.advanceTimersByTime(SOUND_TAIL * 1000);
+    expect(sound.state().audible).toBe(false);
+    expect(audio.context.state).toBe("suspended");
+    expect(audio.running()).toEqual([]);
+  });
+
+  it("follows the game's excitement under auto: a roar just after the goal, then engaged", async () => {
+    const { sound } = make({ level: "auto" });
+    await sound.enable();
+    const replay = createReplay(TIMELINE);
+    sound.follow(replay, { periods: NHL_PERIODS, scoreAt: (t) => ({ home: t >= 5 ? 1 : 0, away: 0 }) });
+    replay.play();
+    replay.advance(2);
+    expect(sound.state().heard).toBe("engaged");
+    replay.advance(4);
+    expect(sound.state().heard).toBe("roar");
+    replay.advance(8);
+    expect(sound.state().heard).toBe("engaged");
+    sound.setLevel("quiet");
+    expect(sound.state().heard).toBe("quiet");
+  });
+
+  it("glides the bed only when the level or a setting changes, not on every frame", async () => {
+    const { sound, audio } = make({ level: "auto" });
+    await sound.enable();
+    const replay = createReplay(TIMELINE);
+    sound.follow(replay, { periods: NHL_PERIODS });
+    replay.play();
     const targets = () => audio.context.nodes.reduce((n, node) => n + (node.gain?.calls.filter((c) => c[0] === "target").length ?? 0), 0);
+    replay.advance(0.5);
     const before = targets();
-    sound.setLevel("engaged");
-    sound.setLevel("roar");
-    const after = targets();
-    expect(after).toBeGreaterThan(before);
-    sound.state();
-    sound.state();
-    expect(targets()).toBe(after);
+    for (let i = 0; i < 30; i++) replay.advance(0.02);
+    expect(targets()).toBe(before);
+    sound.setVolume(0.3);
+    expect(targets()).toBeGreaterThan(before);
   });
 
   it("changes its bed with its surface", async () => {
@@ -236,8 +373,8 @@ describe("the engine", () => {
     await sound.enable();
     sound.setContext({ sport: "swimming" });
     expect(sound.state().levels).toEqual(SOUND_LEVELS);
-    // room, water, murmur, applause and roar.
-    expect(audio.running().filter((n) => n.kind === "source" && n.loop).length).toBe(5);
+    // room, water, murmur, applause, roar and the swell.
+    expect(audio.running().filter((n) => n.kind === "source" && n.loop).length).toBe(6);
     sound.setContext({ sport: "kyudo" });
     expect(sound.state().levels).toEqual(["quiet", "murmur"]);
     expect(audio.running().filter((n) => n.kind === "source" && n.loop).length).toBe(3);
@@ -246,11 +383,14 @@ describe("the engine", () => {
   it("destroyed, leaves nothing running and no listener", async () => {
     const { sound, audio, page } = make();
     await sound.enable();
+    const replay = createReplay(TIMELINE);
+    sound.follow(replay);
+    replay.play();
     sound.destroy();
     expect(audio.running()).toEqual([]);
     expect(page.listeners()).toBe(0);
     expect(audio.context.state).toBe("suspended");
-    sound.setLevel("roar");
+    replay.advance(10);
     expect(audio.running()).toEqual([]);
     await sound.enable();
     expect(sound.state().on).toBe(false);

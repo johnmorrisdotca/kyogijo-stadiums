@@ -260,7 +260,7 @@ console.log(svg.startsWith("<svg"), svg.includes("USA 3, Canada 2"));
 - **Bring your own race feed**: a race plays from a feed you choose, read by your own browser from an address, pasted or from a file, and followed while it is live: kyogijo's open race timeline or OpenF1-style lap rows, with our made-up sample feed first. [The race feed](./docs/race-feed.md), [Where to find a feed](./docs/where-to-find-a-feed.md).
 - **Tournaments**: several surfaces on one floor, who judges where, boards laid over a surface. [Layouts](./docs/multi.md), [judging](./docs/judging.md), [boards](./docs/boards.md).
 - **Data on a surface**: points, heat maps, shot and pass charts, team shapes and a replay, flat or in 3D with the players standing on the ice, in 48 providers' coordinate frames. [Layers](./docs/layers.md), [frames](./docs/frames.md), [replay](./docs/replay.md), [an example game](./docs/example-games.md).
-- **Sound**: the crowd of each kind of venue at a level from quiet to a roar, heard in the room its venue makes; made in the browser, off until turned on. [Sound](./docs/sound.md).
+- **Sound**: the crowd of each kind of venue at a level from quiet to a roar, heard in the room its venue makes, and its game's sounds (the goal horn, the whistle, the buzzer, the bell) from a replay; made in the browser, off until turned on. [Sound](./docs/sound.md).
 - **Looks and flags**: eight named looks, a flag or crest on each half, trophies and crests from Dougu Sports, flags from Hata, light and dark. [Theming](./docs/theming.md), [the pageant](./docs/pageant.md).
 - **Four ways in**: a function that returns SVG text, a helper that draws into a container, a custom element, a frame for pages with no script; renderers for a canvas, d3, Observable Plot, GeoJSON and PNG. [Entry points](./docs/entry-points.md), [renderers](./docs/renderers.md).
 - **Accessible and small**: each drawing is an `img` with a title and a description, in English or Japanese; no dependencies, no network requests, nothing stored.
@@ -276,7 +276,7 @@ console.log(svg.startsWith("<svg"), svg.includes("USA 3, Canada 2"));
 | `./circuits` | Race tracks as OpenStreetMap maps them, in 2D and 3D, and a simulated race on them with its clock and timing board ([demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/circuits.html?race=1)). |
 | `./multi`, `./judging`, `./layouts` | Several surfaces for one event ([demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/halls.html)); who judges where; small multiples and backgrounds. |
 | `./layers`, `./charts`, `./frames`, `./zones`, `./pointer`, `./replay` | Data layers, charts, the providers' frames, zones by the rules, a click as a place, tracking data played on a surface. |
-| `./sound` | A surface's crowd, made in the browser with Web Audio ([demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/venues.html?sound=on)). |
+| `./sound` | A surface's crowd and its game's sounds, made in the browser with Web Audio ([demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/venues.html?sound=on)). |
 | `./athletics`, `./budo`, `./skating` | The athletics stadium, the budō (areas, dohyō, the dojo builder) and the skating rinks. |
 | `./scene`, `./canvas`, `./d3`, `./plot`, `./geojson`, `./png` | The drawing as data, on a canvas, in d3, as an Observable Plot mark, as GeoJSON, as a PNG. |
 | `./mount`, `./react`, `./element`, `./element/define` | Draw into a container; React props; the `<kyogijo-field>` element and its registration. |

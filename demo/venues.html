@@ -80,6 +80,7 @@
       import { replaceAddress } from "./address.js";
       import { mountRealView } from "./real-view.js";
       import { mountSoundBar, venueSound } from "./sound-bar.js";
+      import { scoreAt } from "./game.js";
       import { quietTitles } from "./quiet.js";
       quietTitles();
 
@@ -137,6 +138,7 @@
       const state = { venue: wanted, division: VENUES[wanted].division };
       let view;
       let sound;
+      let unfollow;
 
       setSelect("theme", params.get("theme"), ["light", "dark"]);
       setSelect("language", params.get("lang"), ["en", "ja"]);
@@ -257,7 +259,15 @@
         venue: state.venue,
         page: () => ({ lang: $("language").value, words: words(), theme: $("theme").value === "auto" ? undefined : $("theme").value }),
         // Play a game, in 3D: the examples' game of the rink on this arena's ice (the index of the games says the rink has one), its button after Labels.
-        game: { note: $("game-note"), say: (key) => words()[key] },
+        game: {
+          note: $("game-note"),
+          say: (key) => words()[key],
+          // The arena's sound follows the game while it plays: its cues, and Follow the game among the levels.
+          onReplay: (replay, game) => {
+            unfollow?.();
+            unfollow = replay === undefined ? undefined : sound?.follow(replay, { periods: game.periods, scoreAt: (t) => scoreAt(game, t) });
+          },
+        },
         onChange: after,
       });
       // The crowd of the arena, on its own: a bed for an arena of its seats under its roof, at a level, with no game.

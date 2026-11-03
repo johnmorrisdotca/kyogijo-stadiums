@@ -24,8 +24,10 @@ import { gameTimeline, gamesFor, loadGame, loadGames, periodAt, scoreAt } from "
  * @param {(key: string) => string} options.say the page's words: `gamePlay`, `gamePlayTip` (with `{title}`), `gameGoal` (with `{team}` and `{name}`)
  * @param {boolean} [options.on] on when the page opens (the address said so): it plays once the index says the surface has a game
  * @param {(on: boolean) => void} [options.onChange] told when it is turned on or off, by a press or because the surface or the view can no longer play it
+ * @param {(replay: object | undefined, game: object | undefined) => void} [options.onReplay] told of the replay as it is put on the view (with the game it plays) and with `undefined` as it is
+ *   taken off: what follows the game's clock beside the score (the sound) follows it from here
  */
-export function playGame({ button, note, host, lang, say, on = false, onChange = () => undefined }) {
+export function playGame({ button, note, host, lang, say, on = false, onChange = () => undefined, onReplay = () => undefined }) {
   /** The index, once read; until then nothing is shown and nothing is decided. */
   let games;
   /** The game of the surface on show, and the game loaded for it. */
@@ -71,6 +73,7 @@ export function playGame({ button, note, host, lang, say, on = false, onChange =
     unfollow = undefined;
     unkeep?.();
     unkeep = undefined;
+    if (handle !== undefined) onReplay(undefined, undefined);
     handle?.destroy();
     handle = undefined;
   }
@@ -89,6 +92,7 @@ export function playGame({ button, note, host, lang, say, on = false, onChange =
     handle = view.replay(gameTimeline(game, lang(), goalWords), { ...(at === undefined ? { autoplay: true } : { start: at.t - at.start, speed: at.speed, loop: at.loop, autoplay: at.playing }), follow: followOfAddress() });
     unfollow = handle.subscribe((change) => follow(change.state.t));
     unkeep = keepFollow(handle);
+    onReplay(handle, game);
     paint();
   }
 

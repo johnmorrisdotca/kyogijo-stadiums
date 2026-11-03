@@ -222,9 +222,9 @@ src/
 ├── replay.types.ts     the replay's types
 ├── replay-entry.ts     the replay's entry
 ├── sound.sets.ts       the index of sound sets: a crowd bed for each kind of venue (its room, its layers, its levels) and each sport's set (its bed and the voices of each kind of moment)
-├── sound.mix.ts        the sound in its context, pure: the room a venue makes, the crowd for the people in it, each layer's gain at a level
-├── sound.synth.ts      the sounds made in the browser with Web Audio: seeded noise, applause and talk, a room's echo
-├── sound.dom.ts        a surface's sound in a page: one audio context for the page, the bed's loops only while heard, the recordings fetched when first on and decoded when heard
+├── sound.mix.ts        the sound in its context, pure: the room a venue makes, the crowd for the people in it, each layer's gain at a level, the game's excitement, and the cues of an event and of a replay's move
+├── sound.synth.ts      the sounds made in the browser with Web Audio: seeded noise, applause and talk, a room's echo, and every voice (whistle, horn, buzzer, bell, gun, beep, ooh, cheer, applause)
+├── sound.dom.ts        a surface's sound in a page: one audio context for the page, the bed's loops only while heard, the recordings fetched when first on and decoded when heard, a replay followed
 ├── sound.words.ts      the sound's words in English and Japanese
 ├── sound-entry.ts      the sound's entry (`@johnmorrisdotca/kyogijo-stadiums/sound`)
 ├── scene.ts            sceneOf and sceneFromSvg: the drawing as plain data, read from the markup that writes the SVG

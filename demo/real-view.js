@@ -48,7 +48,7 @@ export const REAL_VIEW_CSS = `
  * @param {boolean} [options.spin] whether the 3D view can be asked to turn by itself when it opens (`spin=on` in the address, which Auto-turn writes; a reader who prefers reduced motion gets it still): it waits still otherwise and turns while the pointer is over it
  * @param {boolean} [options.fit] whether the view is given the shape that leaves room for the bar and its buttons in the screen (`false` for a page whose stage is a box of its own height, as the home page's)
  * @param {(state: object) => void} [options.onChange] called after anything changed, with the state
- * @param {false | { button?: HTMLButtonElement, note?: HTMLElement, say: (key: string) => string }} [options.game] Play a game (`play-game.js`): its button (one of the bar's own after Labels when
+ * @param {false | { button?: HTMLButtonElement, note?: HTMLElement, say: (key: string) => string, onReplay?: (replay: object | undefined, game: object | undefined) => void }} [options.game] Play a game (`play-game.js`): its button (one of the bar's own after Labels when
  *   none is given), the note under the view, and the page's words; on in the address as `game=1` under the prefix. It plays in 3D only: the flat drawing hides it.
  */
 export function mountRealView({ stage, bar, venue, page, prefix = "", flat = true, spin = true, chipClass = "", fit = true, game: gameSettings = false, onChange = () => undefined }) {
@@ -258,6 +258,8 @@ export function mountRealView({ stage, bar, venue, page, prefix = "", flat = tru
         sync();
         onChange(state);
       },
+      // The replay as it goes on the view and comes off: a page's sound follows it.
+      ...(gameSettings.onReplay === undefined ? {} : { onReplay: gameSettings.onReplay }),
     });
   }
   const fitStage = fit ? fitView(stage) : undefined;

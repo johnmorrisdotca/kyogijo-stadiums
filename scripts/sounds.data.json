@@ -24,7 +24,7 @@
       "author": "Amada44",
       "licence": "CC0 1.0",
       "licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-      "what": "A hall's applause, steady: the bed's applause.",
+      "what": "A hall's applause, steady: the bed's applause and the applause of a point.",
       "from": 20, "seconds": 6, "loop": true, "fade": 0.6, "rms": -20, "kbps": 28
     },
     {
@@ -39,6 +39,58 @@
       "licenceUrl": "https://commons.wikimedia.org/wiki/File:Indoor_swimming_pool_hall.ogg",
       "what": "An indoor pool's hall: water and voices far off, ringing. The pool's bed.",
       "from": 20, "seconds": 8, "loop": true, "fade": 0.8, "rms": -22, "kbps": 28
+    },
+    {
+      "name": "whistle",
+      "raw": "218318_splicesound_referee-whistle-blow-gymnasium.wav",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/7/7d/218318_splicesound_referee-whistle-blow-gymnasium.wav",
+      "page": "https://commons.wikimedia.org/wiki/File:218318_splicesound_referee-whistle-blow-gymnasium.wav",
+      "source": "https://freesound.org/people/SpliceSound/sounds/218318/",
+      "title": "referee whistle blow gymnasium",
+      "author": "SpliceSound",
+      "licence": "CC0 1.0",
+      "licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "what": "A referee's whistle in a gym: the whistle of a stoppage.",
+      "from": 0.05, "seconds": 1.2, "loop": false, "peak": -3, "kbps": 40
+    },
+    {
+      "name": "bell",
+      "raw": "Dingdingding.wav",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/6/64/Dingdingding.wav",
+      "page": "https://commons.wikimedia.org/wiki/File:Dingdingding.wav",
+      "source": "https://commons.wikimedia.org/wiki/File:Dingdingding.wav",
+      "title": "Dingdingding (boxing bell)",
+      "author": "IOII-IOIO-IIOI",
+      "licence": "CC0 1.0",
+      "licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "what": "A boxing bell struck three times: a round's start and end.",
+      "from": 0, "seconds": 1.74, "loop": false, "peak": -3, "kbps": 40
+    },
+    {
+      "name": "ooh",
+      "raw": "Ohhh_ahhh.ogg",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/0/0f/Ohhh_ahhh.ogg",
+      "page": "https://commons.wikimedia.org/wiki/File:Ohhh_ahhh.ogg",
+      "source": "http://www.pdsounds.org/sounds/ohhh_ahhh",
+      "title": "Ohhh Ahhh!",
+      "author": "starlite",
+      "licence": "Public domain",
+      "licenceUrl": "https://commons.wikimedia.org/wiki/File:Ohhh_ahhh.ogg",
+      "what": "A few people going \"ooh\" and \"aah\": a near miss.",
+      "from": 0, "seconds": 2.5, "loop": false, "peak": -4, "kbps": 32
+    },
+    {
+      "name": "cheer",
+      "raw": "Hurray.ogg",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/e/e8/Hurray.ogg",
+      "page": "https://commons.wikimedia.org/wiki/File:Hurray.ogg",
+      "source": "http://www.pdsounds.org/sounds/hurray",
+      "title": "Hurray",
+      "author": "starlite",
+      "licence": "Public domain",
+      "licenceUrl": "https://commons.wikimedia.org/wiki/File:Hurray.ogg",
+      "what": "A few people cheering: a point in a quiet hall.",
+      "from": 0.2, "seconds": 3.1, "loop": false, "peak": -4, "kbps": 32
     }
   ]
 }

@@ -503,10 +503,16 @@ function paintStageBar() {
 
 // Play a game on the Try it surface: shown while the surface on show has a game in the index (and is not a badge, which has no surface), flat or in 3D. Flat it is `mount.replay`, in 3D
 // `view.replay`; changing the view, the crowd or the theme keeps its moment, and the game's sides and score are laid over the reader's own while it plays.
+let tryUnfollow;
 tryGame = playGame({
   button: stageBar.querySelector('[data-bar="bar-game"]'),
   note: $("try-game-note"),
   on: state.game,
+  // The surface's sound follows the game while it plays: its cues, and Follow the game among the levels.
+  onReplay: (replay, game) => {
+    tryUnfollow?.();
+    tryUnfollow = replay === undefined ? undefined : trySound.follow(replay, { periods: game.periods, scoreAt: (t) => scoreAt(game, t) });
+  },
   lang: () => language.lang,
   say,
   host: {
@@ -960,6 +966,15 @@ function drawReplays() {
 // ----- A game on the ice, in 3D: the examples' made-up game, loaded when the section comes near the screen (or when the hero's Play game is pressed), played by `view.replay` on the
 // 3D rink or by `mount.replay` on the flat one. The score on the board follows the clock; the period buttons seek. Nothing plays by itself.
 const gameView = { view: "3d", game: undefined, handle: undefined, holder: undefined, score: "", period: 0, stop: undefined };
+/** The game's sound: the arena's crowd following the game, and its cues (the horn and the swell at a goal, the whistle at a stoppage, the buzzer at a period's end). */
+const gameSound = mountSoundBar({
+  bar: $("game-sound"),
+  host: $("game-stage"),
+  lang: () => language.lang,
+  prefix: "g",
+  id: "game-sound",
+  context: () => ({ sport: gameView.game?.sport ?? "nhl", view: gameView.view === "3d" ? "3d" : "2d" }),
+});
 const goalWords = (values) => say("gameGoal").replace("{team}", values.team).replace("{name}", values.name);
 /** The code for the view shown: what a page of a reader's own would run. */
 function gameCode() {
@@ -991,6 +1006,8 @@ function drawGame() {
   if (game === undefined) return;
   const at = gameView.handle?.state();
   gameView.stop?.();
+  gameView.unfollow?.();
+  gameView.unfollow = undefined;
   gameView.handle?.destroy();
   gameView.holder?.destroy();
   const stage = $("game-stage");
@@ -1017,6 +1034,9 @@ function drawGame() {
     unscore();
     unkeep();
   };
+  gameView.unfollow?.();
+  gameSound.update();
+  gameView.unfollow = gameSound.follow(gameView.handle, { periods: game.periods, scoreAt: (t) => scoreAt(game, t) });
   gameFollow(gameView.handle.state().t);
   for (const button of $("game-views").children) button.setAttribute("aria-pressed", String(button.dataset.gameView === gameView.view));
   $("game-periods").replaceChildren(
@@ -1213,6 +1233,7 @@ function onLanguage() {
   featured.refresh();
   drawGame();
   heroSound.update();
+  gameSound.update();
   for (const grid of grids) grid.relabel();
   fillParks();
   fillGrounds();
@@ -1260,8 +1281,14 @@ $("place").addEventListener("click", () => showPlace(null));
 
 // ----- The featured real arena at the head of the page: it waits still and turns while the pointer is over it, and its buttons work while it turns.
 const FEATURED = "climate-pledge-arena";
-/** The featured arena's sound: its crowd on its own. */
+/** The featured arena's sound: its crowd on its own, and the game's cues while Play a game plays. */
 let heroSound;
+let heroUnfollow;
+/** The hero's sound follows the game while Play a game plays it. */
+function heroFollow(replay, game) {
+  heroUnfollow?.();
+  heroUnfollow = replay === undefined ? undefined : heroSound?.follow(replay, { periods: game.periods, scoreAt: (t) => scoreAt(game, t) });
+}
 const featuredKey = new URLSearchParams(location.search).get("fv");
 const featured = mountRealView({
   stage: $("feature-stage"),
@@ -1272,7 +1299,7 @@ const featured = mountRealView({
   chipClass: "fam-chip",
   fit: false,
   // Play a game: the examples' game of the rink, in front of the arena's crowd, by the same `view.replay` as the game section and the Try it surface (`play-game.js`). Its button is the hero's own.
-  game: { button: $("feature-game"), note: $("feature-game-note"), say },
+  game: { button: $("feature-game"), note: $("feature-game-note"), say, onReplay: (replay, game) => heroFollow(replay, game) },
   page: () => ({ lang: language.lang, words: { ...WORDS[language.lang], group: say("featureGroup") }, theme: state.theme === "light" || state.theme === "dark" ? state.theme : undefined }),
   onChange: (own) => {
     const next = new URLSearchParams(location.search);

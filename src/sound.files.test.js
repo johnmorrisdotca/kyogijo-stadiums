@@ -3,7 +3,7 @@
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { SOUND_BEDS, SOUND_OF_SPORT } from "./sound.sets.ts";
-import { soundSetOf } from "./sound.mix.ts";
+import { soundSetOf, soundVoicesOf } from "./sound.mix.ts";
 
 const data = JSON.parse(readFileSync("scripts/sounds.data.json", "utf8"));
 const credits = readFileSync("docs/sound-credits.md", "utf8");
@@ -44,7 +44,8 @@ describe("the demo's recordings", () => {
     let most = { ogg: 0, m4a: 0 };
     for (const sport of Object.keys(SOUND_OF_SPORT)) {
       const set = soundSetOf(sport);
-      const wanted = new Set(SOUND_BEDS[set.bed].layers.filter((n) => names.includes(n)));
+      const voices = soundVoicesOf(sport);
+      const wanted = new Set([...SOUND_BEDS[set.bed].layers, ...voices, ...(voices.includes("whistle-end") ? ["whistle"] : [])].filter((n) => names.includes(n)));
       for (const ext of ["ogg", "m4a"]) {
         const bytes = [...wanted].reduce((sum, n) => sum + statSync(`${folder}/${n}.${ext}`).size, 0);
         expect(bytes, `${sport} ${ext}`).toBeLessThanOrEqual(BUDGET[ext]);

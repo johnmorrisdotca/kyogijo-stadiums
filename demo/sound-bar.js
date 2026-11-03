@@ -1,6 +1,6 @@
 // The demo's sound controls, for any view of a surface: a Sound button, a volume slider and the crowd's levels as buttons, each kept in the address under the page's prefix (`sound=on`,
-// `volume=40`, `level=loud`). They are built from what the surface's sound set offers: a surface with no set shows none, and a still sport fewer levels. Off, the bar is the Sound button
-// alone; the volume and the levels come with the sound. The sound itself is the package's (`createKyogijoSound`), whose code is loaded the first time
+// `volume=40`, `level=loud`). They are built from what the surface's sound set offers: a surface with no set shows none, a still sport fewer levels, and "Follow the game" only while a game
+// plays. Off, the bar is the Sound button alone; the volume and the levels come with the sound. The sound itself is the package's (`createKyogijoSound`), whose code is loaded the first time
 // the sound is turned on; the recordings are the demo's own (`sounds/`, CC0 and public domain, docs/sound-credits.md), fetched then too. A browser lets audio start only after a press, so an
 // address that says `sound=on` turns it on at the reader's first press anywhere on the page.
 // The index of sound sets and the words are the two small modules of the entry the bar needs before then (whether a surface has a sound, and the button's name).
@@ -9,7 +9,7 @@ import { SOUND_WORDS } from "./dist/sound.words.js";
 import { replaceAddress } from "./address.js";
 
 /** The recordings the demo has, by name. */
-export const SOUND_FILES = ["murmur", "applause", "water"];
+export const SOUND_FILES = ["murmur", "applause", "water", "whistle", "bell", "ooh", "cheer"];
 
 /** The demo's recordings in the format this browser decodes: Opus where it can, else AAC. */
 export function soundFiles(probe = typeof document === "undefined" ? undefined : document.createElement("audio")) {
@@ -18,7 +18,7 @@ export function soundFiles(probe = typeof document === "undefined" ? undefined :
   return Object.fromEntries(SOUND_FILES.map((name) => [name, `sounds/${name}.${ext}`]));
 }
 
-const LEVELS = ["quiet", "murmur", "engaged", "loud", "roar"];
+const LEVELS = ["auto", "quiet", "murmur", "engaged", "loud", "roar"];
 
 /** The controls' own layout: one row, the levels a row of buttons, the slider with its word; a page's buttons keep its own look. */
 export const SOUND_CSS = `
@@ -35,7 +35,7 @@ export function venueSound(venue, viewState) {
 }
 
 /** The sound's choices in an address, under a prefix: on or off, the volume (0 to 100) and the level. */
-export function readSound(params, prefix = "", fallback = "engaged") {
+export function readSound(params, prefix = "", fallback = "auto") {
   const volume = Number(params.get(`${prefix}volume`));
   const level = params.get(`${prefix}level`);
   return {
@@ -46,7 +46,7 @@ export function readSound(params, prefix = "", fallback = "engaged") {
 }
 
 /** The sound's choices written into an address, under a prefix: only what differs from the usual. */
-export function writeSound(params, choice, prefix = "", fallback = "engaged") {
+export function writeSound(params, choice, prefix = "", fallback = "auto") {
   const set = (name, value) => (value === null ? params.delete(`${prefix}${name}`) : params.set(`${prefix}${name}`, value));
   set("sound", choice.on ? "on" : null);
   set("volume", choice.volume === 60 ? null : String(choice.volume));
@@ -64,14 +64,17 @@ export function writeSound(params, choice, prefix = "", fallback = "engaged") {
  * @param {string} [options.prefix] the prefix of the parameters in the address
  * @param {string} [options.id] the prefix of the controls' test ids
  * @param {string} [options.chipClass] the class of the buttons
- * @param {string} [options.level] the level when the address names none: `engaged`
+ * @param {string} [options.level] the level when the address names none: `auto` (the game's when one plays, else engaged)
  */
-export function mountSoundBar({ bar, host, lang, context, prefix = "", id = "sound", chipClass = "fam-chip", level = "engaged" }) {
+export function mountSoundBar({ bar, host, lang, context, prefix = "", id = "sound", chipClass = "fam-chip", level = "auto" }) {
   const choice = readSound(new URLSearchParams(location.search), prefix, level);
+  let following = false;
   /** The package's sound, made the first time the sound is turned on; until then what a page asks of it is kept and given to it then. */
   let sound;
   let loading;
+  let followed;
   const words = () => SOUND_WORDS[lang()] ?? SOUND_WORDS.en;
+  const levelNow = () => (choice.level === "auto" && !following ? "engaged" : choice.level);
   const has = () => Object.hasOwn(SOUND_OF_SPORT, context().sport);
 
   /** The sound, loaded and made once. */
@@ -79,11 +82,17 @@ export function mountSoundBar({ bar, host, lang, context, prefix = "", id = "sou
     loading ??= import("./dist/sound-entry.js").then(({ createKyogijoSound }) => {
       sound = createKyogijoSound({
         ...context(),
-        level: choice.level,
+        level: levelNow(),
         volume: choice.volume / 100,
         files: soundFiles(),
         host,
+        // The last cue, on the bar: what a test (and a curious reader's inspector) can see played.
+        onCue: (cue) => {
+          bar.dataset.cue = cue.voice;
+          bar.dataset.cues = String(Number(bar.dataset.cues ?? 0) + 1);
+        },
       });
+      if (followed !== undefined) followed.stop = sound.follow(followed.controller, followed.game);
       return sound;
     });
     return loading;
@@ -126,7 +135,7 @@ export function mountSoundBar({ bar, host, lang, context, prefix = "", id = "sou
     replaceAddress(next.size === 0 ? `${location.pathname}${location.hash}` : `${location.pathname}?${next}${location.hash}`);
   }
 
-  /** Write the controls as the surface and the choices say: the Sound button, and while the sound is on the volume and the levels the surface offers. */
+  /** Write the controls as the surface and the choices say: the Sound button, and while the sound is on the volume and the levels the surface offers (Follow the game only while a game plays). */
   function render() {
     const w = words();
     bar.hidden = !has();
@@ -144,16 +153,18 @@ export function mountSoundBar({ bar, host, lang, context, prefix = "", id = "sou
     bar.dataset.audible = String(sound?.state().audible ?? false);
     if (!shown) return;
     const state = sound.state();
+    const offered = [...(following ? ["auto"] : []), ...state.levels];
+    const want = levelNow();
     // A level the surface does not offer shows as the nearest it does (`heard`).
-    const pressed = state.levels.includes(choice.level) ? choice.level : state.heard;
+    const pressed = want === "auto" ? "auto" : state.levels.includes(want) ? want : state.heard;
     levels.replaceChildren(
-      ...state.levels.map((one) => {
+      ...offered.map((one) => {
         const button = document.createElement("button");
         button.type = "button";
         button.className = chipClass;
         button.dataset.level = one;
         button.dataset.testid = `${id}-level-${one}`;
-        button.textContent = w.levels[one];
+        button.textContent = one === "auto" ? w.auto : w.levels[one];
         button.setAttribute("aria-pressed", String(one === pressed));
         return button;
       }),
@@ -177,7 +188,7 @@ export function mountSoundBar({ bar, host, lang, context, prefix = "", id = "sou
     const chosen = event.target.closest("button")?.dataset.level;
     if (chosen === undefined) return;
     choice.level = chosen;
-    sound?.setLevel(choice.level);
+    sound?.setLevel(levelNow());
     sync();
     render();
   });
@@ -199,6 +210,23 @@ export function mountSoundBar({ bar, host, lang, context, prefix = "", id = "sou
     update() {
       sound?.setContext(context());
       render();
+    },
+    /** Follow a game's replay: its cues, and Follow the game among the levels. Returns a function that stops it. */
+    follow(controller, game) {
+      following = true;
+      const mine = { controller, game, stop: undefined };
+      followed = mine;
+      sound?.setLevel(levelNow());
+      if (sound !== undefined) mine.stop = sound.follow(controller, game);
+      render();
+      return () => {
+        mine.stop?.();
+        if (followed !== mine) return;
+        followed = undefined;
+        following = false;
+        sound?.setLevel(levelNow());
+        render();
+      };
     },
     destroy() {
       sound?.destroy();

@@ -44,12 +44,12 @@ test.describe("the crowd of a real arena (venues.html)", () => {
     expect(code).toEqual(["sound-entry.js", "sound.dom.js", "sound.mix.js", "sound.synth.js"].filter((f) => code.includes(f)));
     expect(code).toContain("sound.dom.js");
     await expect.poll(() => audio(page).then((a) => a.state)).toBe("running");
-    // An arena's bed is the murmur and the applause. Opus where the browser decodes it, else AAC; never the pool's water.
-    await expect.poll(() => sounds.map((s) => s.replace(/\.(ogg|m4a)$/, "")).sort()).toEqual(["applause", "murmur"]);
+    // An arena's bed is the murmur and the applause; hockey's cues use the "ooh" and the whistle. Opus where the browser decodes it, else AAC; never the pool's water or the ring's bell.
+    await expect.poll(() => sounds.map((s) => s.replace(/\.(ogg|m4a)$/, "")).sort()).toEqual(["applause", "murmur", "ooh", "whistle"]);
     const a = await audio(page);
     expect(a.contexts).toBe(1);
-    // The room, the murmur, the applause and the roar, looping.
-    expect(a.running).toBe(4);
+    // The room, the murmur, the applause, the roar and the roar's swell, looping.
+    expect(a.running).toBe(5);
     await expect(page).toHaveURL(/[?&]sound=on/);
     expect(errors).toEqual([]);
   });
@@ -90,7 +90,7 @@ test.describe("the crowd of a real arena (venues.html)", () => {
       Object.defineProperty(document, "visibilityState", { value: "visible", configurable: true });
       document.dispatchEvent(new Event("visibilitychange"));
     });
-    await expect.poll(() => audio(page).then((a) => `${a.state} ${a.running}`)).toBe("running 4");
+    await expect.poll(() => audio(page).then((a) => `${a.state} ${a.running}`)).toBe("running 5");
     // The view out of sight: a tall space under the page, and the page scrolled down past the view.
     await page.evaluate(() => {
       document.body.style.paddingBottom = "4000px";
@@ -105,12 +105,12 @@ test.describe("the crowd of a real arena (venues.html)", () => {
     const { sounds } = await open(page, "venues.html");
     await page.waitForSelector('body[data-ready="true"]');
     await page.locator(at("sound-toggle")).click();
-    await expect.poll(() => sounds.length).toBe(2);
+    await expect.poll(() => sounds.length).toBe(4);
     await page.locator(at("sound-toggle")).click();
     await expect.poll(() => audio(page).then((a) => `${a.state} ${a.running}`)).toBe("suspended 0");
     await page.locator(at("sound-toggle")).click();
-    await expect.poll(() => audio(page).then((a) => `${a.state} ${a.running}`)).toBe("running 4");
-    expect(sounds.length).toBe(2);
+    await expect.poll(() => audio(page).then((a) => `${a.state} ${a.running}`)).toBe("running 5");
+    expect(sounds.length).toBe(4);
     expect((await audio(page)).contexts).toBe(1);
   });
 
@@ -144,26 +144,60 @@ test.describe("the surface's sound in Try it (index.html)", () => {
     expect(errors).toEqual([]);
   });
 
-  test("changes its bed with the surface: a pool fetches the water", async ({ page }) => {
+  test("changes its bed with the surface: a pool fetches the water and the cheer", async ({ page }) => {
     const { sounds } = await open(page, "?sport=swimming&crowd=1");
     await page.waitForSelector(`${at("stage")}[data-ready="true"] svg.kyogijo`);
     await page.locator(at("try-sound-toggle")).click();
     // On a phone the bar's buttons may leave the surface below the screen, and out of sight the sound waits: bring it into view.
     await page.locator(at("stage")).scrollIntoViewIfNeeded();
-    await expect.poll(() => sounds.map((s) => s.replace(/\.(ogg|m4a)$/, "")).sort()).toEqual(["applause", "murmur", "water"]);
-    await expect.poll(() => audio(page).then((a) => a.running)).toBe(5);
+    await expect.poll(() => sounds.map((s) => s.replace(/\.(ogg|m4a)$/, "")).sort()).toEqual(["applause", "cheer", "murmur", "water", "whistle"]);
+    await expect.poll(() => audio(page).then((a) => a.running)).toBe(6);
     expect((await audio(page)).contexts).toBe(1);
   });
 });
 
-test.describe("the arena at the top of the page (index.html)", () => {
-  test("has its crowd on its own, with the arena's levels", async ({ page }) => {
+test.describe("the game's sound", () => {
+  test("the hero's arena: its crowd on its own, then Follow the game while Play a game plays", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "no-preference" });
     const { errors } = await open(page, "");
     await page.waitForSelector(`${at("feature-stage")} .ky-turn`);
     await page.locator(at("feature-sound-toggle")).click();
     await expect.poll(() => audio(page).then((a) => a.state)).toBe("running");
     await expect(page.locator(`${at("feature-sound-levels")} button`)).toHaveText(["Quiet", "Murmur", "Engaged", "Loud", "Roar"]);
+    await page.locator(at("feature-game")).click();
+    await expect(page.locator(at("feature-sound-level-auto"))).toHaveText("Follow the game");
+    await expect(page.locator(at("feature-sound-level-auto"))).toHaveAttribute("aria-pressed", "true");
     await expect(page).toHaveURL(/[?&]fsound=on/);
+    // Play a game off: no game to follow.
+    await page.locator(at("feature-game")).click();
+    await expect(page.locator(at("feature-sound-level-auto"))).toHaveCount(0);
+    expect(errors).toEqual([]);
+  });
+
+  test("the game section: the horn at a goal while it plays, nothing while it is paused, nothing on a seek past a goal", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "no-preference" });
+    const { errors } = await open(page, "");
+    const bar = page.locator(at("game-sound"));
+    await page.locator("#game").scrollIntoViewIfNeeded();
+    await expect(page.locator("#game-stage .ky-turn-replay")).toBeVisible();
+    const play = page.locator("#game-stage").getByRole("button", { name: "Play" });
+    const pause = page.locator("#game-stage").getByRole("button", { name: "Pause" });
+    await page.locator(at("game-sound-toggle")).click();
+    await expect(page.locator(at("game-sound-level-auto"))).toHaveAttribute("aria-pressed", "true");
+    // Paused: the game's sound waits.
+    await expect.poll(() => audio(page).then((a) => a.contexts)).toBe(1);
+    expect((await audio(page)).state).not.toBe("running");
+    // A seek past the first goal (84.76 s) calls no cue.
+    await page.locator(`${at("game-stage")} .ky-position`).fill("90");
+    expect(await bar.getAttribute("data-cues")).toBeNull();
+    // Just before it, played: the horn (three low saws and one a little apart) and the crowd's swell.
+    await page.locator(`${at("game-stage")} .ky-position`).fill("83.5");
+    await play.click();
+    await expect.poll(() => audio(page).then((a) => a.state)).toBe("running");
+    await expect.poll(() => bar.getAttribute("data-cue"), { timeout: 10_000 }).toBe("swell");
+    expect((await audio(page)).tones.filter((f) => f > 97 && f < 150).length).toBeGreaterThanOrEqual(4);
+    await pause.click();
+    await expect.poll(() => audio(page).then((a) => `${a.state} ${a.running}`)).toBe("suspended 0");
     expect(errors).toEqual([]);
   });
 });
@@ -176,7 +210,7 @@ test.describe("what is made", () => {
     await page.goto("http://kyogijo.test/venues.html");
     const out = await page.evaluate(async () => {
       const { createKyogijoSound } = await import("./dist/sound-entry.js");
-      const files = Object.fromEntries(["murmur", "applause", "water"].map((n) => [n, `sounds/${n}.ogg`]));
+      const files = Object.fromEntries(["murmur", "applause", "water", "whistle", "bell", "ooh", "cheer"].map((n) => [n, `sounds/${n}.ogg`]));
       const render = async (sport, level, withFiles = true) => {
         const ctx = new window.OfflineAudioContext(2, 48000 * 3, 48000);
         ctx.resume = () => Promise.resolve();
