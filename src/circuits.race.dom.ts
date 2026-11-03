@@ -1,9 +1,10 @@
-// A simulated race in a page: the circuit flat or in 3D with a dot for each car, the race clock, the controls (play, the speeds 1×, 10× and 60×, and a slider over the whole race) and the timing board, all moving
+// A simulated race in a page: the circuit flat or in 3D with a dot for each car, the package's one replay bar (replay.bar.ts: to the start, a lap back and on, play, the speeds 1×, 10× and 60×, loop, a slider over the whole race and the clock line) and the timing board, all moving
 // together. Each animation frame moves only the dots that moved and writes the board and the clock only where their words changed (the board at most four times a second); no element is made while it plays.
 // Nothing runs until the reader plays it, and nothing runs while it is paused, the page is hidden or the race is out of sight. With reduced motion nothing plays by itself: play moves to the leader's next lap.
 import { CIRCUIT_MARKER, buildCircuitTurn } from "./circuits.turn.ts";
 import { RACE_STYLE, carMarkup, carRadius, lapTime, raceBoard, raceClock, raceDrawing, raceStage, standingGap } from "./circuits.race.draw.ts";
-import { raceAt, type RaceMoment } from "./circuits.race.moment.ts";
+import { raceAt, raceLapStep, type RaceMoment } from "./circuits.race.moment.ts";
+import { createReplayBar, replayKey, type ReplayBarSlots } from "./replay.bar.ts";
 import { simulateRace, type CircuitRace, type RaceOptions } from "./circuits.race.ts";
 import { RACE_WORDS } from "./circuits.race.words.ts";
 import type { CircuitOptions } from "./circuits.types.ts";
@@ -15,6 +16,8 @@ import type { Plane } from "./turn.kit.ts";
 import type { TurnModel, TurnSettings } from "./turn.model.ts";
 import type { TurnInternals } from "./turn.replay.dom.ts";
 import type { Language } from "./types.ts";
+
+let counter = 0;
 
 /** The speeds the controls offer: real time, ten times and sixty times (a minute of the race a second). */
 export const RACE_SPEEDS: readonly number[] = Object.freeze([1, 10, 60]);
@@ -30,6 +33,8 @@ export interface RaceViewSettings {
   turn?: TurnSettings;
   /** 1 (the default), 10 or 60; any speed from 1 to 600 is allowed. */
   speed?: number;
+  /** Go round again from the start when the race ends, as a game's replay does: off by default. */
+  loop?: boolean;
   /** Seconds from the start to begin at: 0 (the grid) by default. */
   start?: number;
   /** Play at once. Ignored for a reader who prefers reduced motion, and while the page is hidden. */
@@ -51,6 +56,7 @@ export interface RaceState {
   playing: boolean;
   ended: boolean;
   speed: number;
+  loop: boolean;
   motion: "smooth" | "step";
 }
 
@@ -83,6 +89,8 @@ export interface KyogijoRace<O = RaceViewOptions, V = CircuitOptions> {
   readonly race: CircuitRace;
   /** The 3D view, when the race is on one. */
   readonly turn: KyogijoTurn<V> | undefined;
+  /** The places in the bar for the buttons of other features (the follow camera, the sound): empty elements that show only while they hold something. */
+  readonly slots: ReplayBarSlots;
   state(): RaceState;
   /** The race at the clock's time: the standings, the lap, the fastest lap. */
   moment(): RaceMoment;
@@ -93,6 +101,11 @@ export interface KyogijoRace<O = RaceViewOptions, V = CircuitOptions> {
   seek(t: number): void;
   /** Go to the moment the leader next crosses the line. */
   nextLap(): void;
+  /** Go back to the start of the lap the leader is on, or the one before when the clock is within a second of it. */
+  prevLap(): void;
+  /** One lap on (1) or back (-1), pausing. */
+  step(direction: 1 | -1): void;
+  setLoop(loop: boolean): void;
   setSpeed(speed: number): void;
   /** Draw again with new options (the language, the theme): the clock and the race stay where they are. A new circuit, seed, laps or cars is a new race: mount it again. */
   update(options: O): void;
@@ -100,9 +113,6 @@ export interface KyogijoRace<O = RaceViewOptions, V = CircuitOptions> {
   replace(race: CircuitRace): void;
   destroy(): void;
 }
-
-const ICONS = { play: "M8 5v14l11-7z", pause: "M6 5h4v14H6zM14 5h4v14h-4z", next: "M6 5l8.5 7L6 19zM16 5h2v14h-2z" };
-const icon = (d: string): string => `<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false" fill="currentColor"><path d="${d}"/></svg>`;
 
 /** The plane of a car standing in a 3D view: a disc that faces the eye, its lower edge on the floor over its place. */
 const carPlane = (id: string, x: number, y: number, d: number, svg: string): Plane => ({ id: `car-${id}`, kind: "player", o: [x - d / 2, y, d], u: [d, 0, 0], v: [0, 0, -d], svg, billboard: true, lean: true });
@@ -132,7 +142,7 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
   const media = typeof matchMedia === "function" ? matchMedia("(prefers-reduced-motion: reduce)") : undefined;
   const motionNow = (): "smooth" | "step" => (settings.motion === "smooth" ? "smooth" : settings.motion === "step" ? "step" : media?.matches === true ? "step" : "smooth");
   const clampSpeed = (n: number): number => Math.min(600, Math.max(1, n));
-  const state: RaceState = { t: Math.min(Math.max(settings.start ?? 0, 0), race.duration), duration: race.duration, playing: false, ended: false, speed: clampSpeed(Number.isFinite(settings.speed) ? (settings.speed as number) : 1), motion: motionNow() };
+  const state: RaceState = { t: Math.min(Math.max(settings.start ?? 0, 0), race.duration), duration: race.duration, playing: false, ended: false, speed: clampSpeed(Number.isFinite(settings.speed) ? (settings.speed as number) : 1), loop: settings.loop === true, motion: motionNow() };
   const tell = (): void => settings.onChange?.({ ...state });
 
   // ---- The parts: the stage, the clock, the controls, the note, the live region and the board. ----
@@ -142,37 +152,9 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
   style.textContent = RACE_STYLE;
   const stage = doc.createElement("div");
   stage.className = "ky-race-view";
-  const clock = doc.createElement("div");
-  clock.className = "ky-race-clock";
-  const time = doc.createElement("span");
-  time.className = "ky-race-time";
-  const stageLine = doc.createElement("span");
-  stageLine.className = "ky-race-stage";
-  clock.append(time, stageLine);
-  const bar = doc.createElement("div");
-  bar.className = "ky-race-bar";
-  bar.setAttribute("role", "group");
-  const play = doc.createElement("button");
-  play.type = "button";
-  play.className = "ky-race-play";
-  const speeds = doc.createElement("span");
-  speeds.className = "ky-race-speeds";
-  speeds.setAttribute("role", "group");
-  const speedButtons = RACE_SPEEDS.map((n) => {
-    const b = doc.createElement("button");
-    b.type = "button";
-    b.dataset.speed = String(n);
-    b.textContent = `${n}×`;
-    speeds.append(b);
-    return b;
-  });
-  const range = doc.createElement("input");
-  range.type = "range";
-  range.className = "ky-race-position";
-  range.min = "0";
-  range.max = String(race.duration);
-  range.step = "1";
-  bar.append(play, speeds, range);
+  const hint = doc.createElement("p");
+  hint.className = "ky-race-hint";
+  hint.id = `ky-race-keys-${++counter}`;
   const note = doc.createElement("p");
   note.className = "ky-race-note";
   const live = doc.createElement("div");
@@ -182,7 +164,7 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
   const boardWrap = doc.createElement("div");
   boardWrap.className = "ky-race-board-wrap";
   boardWrap.hidden = settings.board === false;
-  root.append(style, stage, clock, bar, note, live, boardWrap);
+  root.append(style, stage, hint, note, live, boardWrap);
   host.replaceChildren(root);
 
   // ---- The drawing: flat, or the circuit's 3D view with the cars standing on it. ----
@@ -193,6 +175,37 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
   const planes = new Map<string, Plane>();
   let disc = 0;
   let moment = raceAt(race, state.t);
+
+  // ---- The bar: the package's one replay bar, told what each button does to this race. ----
+  const barWords = () => {
+    const w = RACE_WORDS[language];
+    return { group: w.group, play: w.play, pause: w.pause, start: w.start, back: w.prevLap, forward: w.nextLap, speed: w.speed, loop: w.loop, position: w.position };
+  };
+  const barBox = createReplayBar({
+    doc,
+    speeds: RACE_SPEEDS,
+    speedName: (n) => `${RACE_WORDS[language].speed} ${fill(RACE_WORDS[language].speedValue, { speed: n })}`,
+    words: barWords,
+    state: () => ({ playing: state.playing, speed: state.speed, loop: state.loop, motion: state.motion }),
+    range: () => ({ max: race.duration, step: "1" }),
+    readout: () => {
+      const w = RACE_WORDS[language];
+      return {
+        value: Math.round(state.t),
+        main: raceClock(state.t),
+        line: raceStage(moment, language),
+        spoken: fill(w.positionValue, { time: raceClock(state.t), total: raceClock(race.duration) }),
+      };
+    },
+    seek: (value) => api.seek(value),
+    toggle: () => api.toggle(),
+    start: () => api.seek(0),
+    step: (direction) => api.step(direction),
+    setSpeed: (speed) => api.setSpeed(speed),
+    setLoop: (loop) => api.setLoop(loop),
+  });
+  const bar = barBox.el;
+  stage.after(bar);
 
   const bindFlat = (): void => {
     cars = new Map();
@@ -267,12 +280,7 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
   };
   const writeBoard = (): void => {
     const w = RACE_WORDS[language];
-    setText(time, raceClock(state.t));
-    setAttr(time, "aria-label", fill(w.elapsed, { time: raceClock(state.t) }));
-    setText(stageLine, raceStage(moment, language));
-    const at = String(Math.round(state.t));
-    if (range.value !== at) range.value = at;
-    setAttr(range, "aria-valuetext", fill(w.positionValue, { time: raceClock(state.t), total: raceClock(race.duration) }));
+    barBox.sync();
     moment.standings.forEach((line, i) => {
       const r = boardRows[i];
       if (r === undefined) return;
@@ -343,28 +351,17 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
     }
   };
 
-  // ---- The controls. ----
+  // ---- The bar and the note: made again when the words or the motion change, and shown the state as it moves. ----
   const label = (): void => {
-    const w = RACE_WORDS[language];
-    bar.setAttribute("aria-label", w.group);
-    speeds.setAttribute("aria-label", w.speed);
-    const step = state.motion === "step";
-    const name = step ? w.nextLap : state.playing ? w.pause : w.play;
-    if (play.getAttribute("aria-label") !== name) {
-      play.setAttribute("aria-label", name);
-      play.title = name;
-      play.innerHTML = icon(step ? ICONS.next : state.playing ? ICONS.pause : ICONS.play);
-    }
-    speeds.hidden = step;
-    for (const b of speedButtons) {
-      const n = Number(b.dataset.speed);
-      b.setAttribute("aria-label", `${w.speed} ${fill(w.speedValue, { speed: n })}`);
-      b.setAttribute("aria-pressed", String(n === state.speed));
-    }
-    range.setAttribute("aria-label", w.position);
-    setText(note, fromFeed ? w.feedNote : w.simulated);
+    barBox.sync();
+    setText(note, fromFeed ? RACE_WORDS[language].feedNote : RACE_WORDS[language].simulated);
     root.dataset.state = state.ended ? "ended" : state.playing ? "playing" : "paused";
     root.dataset.motion = state.motion;
+  };
+  const words = (): void => {
+    barBox.build();
+    hint.textContent = inner !== undefined ? RACE_WORDS[language].keysTurn : RACE_WORDS[language].keys;
+    label();
   };
 
   // ---- The clock on the page: animation frames while playing and in sight (the 3D view's own, so that its turn and the race share one), and nothing else. ----
@@ -387,7 +384,16 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
     if (!state.playing || !onScreen) return;
     const dt = Math.min(0.25, Math.max(0, (now - last) / 1000));
     last = now;
-    state.t = Math.min(race.duration, state.t + dt * state.speed);
+    const next = state.t + dt * state.speed;
+    state.t = Math.min(race.duration, next);
+    if (next >= race.duration && state.loop && race.duration > 0) {
+      // Past the flag with Loop on: what is left of the frame goes round from the grid.
+      state.t = next % race.duration;
+      paint(now, true);
+      tell();
+      frameId = request(frame);
+      return;
+    }
     if (state.t >= race.duration) {
       state.playing = false;
       state.ended = true;
@@ -407,6 +413,7 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
     get turn() {
       return turn;
     },
+    slots: barBox.slots,
     state: () => ({ ...state }),
     moment: () => moment,
     play() {
@@ -440,10 +447,21 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
       tell();
     },
     nextLap() {
-      const first = moment.standings[0];
-      const next = first === undefined ? undefined : race.crossings[first.index].find((at) => at > state.t + 1e-6);
+      api.step(1);
+    },
+    prevLap() {
+      api.step(-1);
+    },
+    step(direction) {
+      const to = raceLapStep(race, state.t, direction);
       api.pause();
-      api.seek(next ?? race.duration);
+      api.seek(to);
+    },
+    setLoop(loop) {
+      if (state.loop === loop) return;
+      state.loop = loop;
+      label();
+      tell();
     },
     setSpeed(speed) {
       if (!Number.isFinite(speed)) return;
@@ -460,21 +478,22 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
       if (turn !== undefined) turn.update(scene.view(options));
       else drawFlat();
       buildBoard();
-      label();
+      words();
       paint(undefined, false);
     },
     replace(next) {
       const cars = race.cars.length;
       race = next;
       fromFeed = true;
+      const longer = state.duration !== race.duration;
       state.duration = race.duration;
-      range.max = String(race.duration);
       if (state.t > race.duration) state.t = race.duration;
       state.ended = !state.playing && state.t >= race.duration;
       moment = raceAt(race, state.t);
       if (inner !== undefined) inner.setDecorate(withCars, bindTurn);
       else drawFlat();
       if (cars !== race.cars.length || boardRows.length !== race.cars.length) buildBoard();
+      if (longer) barBox.build();
       label();
       paint(undefined, false);
     },
@@ -484,6 +503,8 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
       seen?.disconnect();
       doc.removeEventListener("visibilitychange", hidden);
       if (typeof media?.removeEventListener === "function") media.removeEventListener("change", motionChanged);
+      bar.removeEventListener("keydown", onBarKey);
+      inner?.root.removeEventListener("keydown", onStageKey, true);
       turn?.destroy();
       turn = undefined;
       inner = undefined;
@@ -492,9 +513,17 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
     },
   };
 
-  play.addEventListener("click", () => api.toggle());
-  for (const b of speedButtons) b.addEventListener("click", () => api.setSpeed(Number(b.dataset.speed)));
-  range.addEventListener("input", () => api.seek(Number(range.value)));
+  // The keys are a game replay's: on the bar the arrows step by a lap, over a 3D view (whose arrows turn the view) comma and full stop do, Space plays and pauses, End goes to the end.
+  const keyActions = {
+    toggle: () => api.toggle(),
+    step: (direction: 1 | -1) => api.step(direction),
+    jump: (direction: 1 | -1) => api.seek(state.t + direction * 60),
+    start: () => api.seek(0),
+    end: () => api.seek(race.duration),
+  };
+  const onBarKey = (event: KeyboardEvent): void => void replayKey(event, "bar", keyActions);
+  const onStageKey = (event: KeyboardEvent): void => void replayKey(event, "stage", keyActions);
+  bar.addEventListener("keydown", onBarKey);
   // Scrolled out of sight, the clock holds (no frame is asked for) and goes on when it is back.
   let seen: IntersectionObserver | undefined;
   if (typeof IntersectionObserver === "function") {
@@ -513,13 +542,15 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
   const motionChanged = (): void => {
     state.motion = motionNow();
     if (state.motion === "step") api.pause();
-    label();
+    words();
   };
   if ((settings.motion === undefined || settings.motion === "auto") && typeof media?.addEventListener === "function") media.addEventListener("change", motionChanged);
 
   mountView();
+  // Over a 3D view the arrow keys turn the view, so the race's keys there are the stage keys (the view's own Space is the auto-turn's, and this goes first).
+  inner?.root.addEventListener("keydown", onStageKey, true);
   buildBoard();
-  label();
+  words();
   paint(undefined, false);
   if (settings.autoplay === true && state.motion === "smooth" && doc.visibilityState !== "hidden") api.play();
   return api;

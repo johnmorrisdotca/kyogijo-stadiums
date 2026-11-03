@@ -294,7 +294,7 @@ test.describe("the demo's game", () => {
     await expect(button).toHaveAttribute("aria-pressed", "true");
     // The auto-turn and the game together, round the end of the game ten times: nothing grows, and one frame is asked for a frame.
     await page.locator("#feature-stage .ky-turn-replay .ky-loop").click();
-    await page.locator("#feature-stage .ky-turn-replay .ky-speed").selectOption("4");
+    await page.locator("#feature-stage .ky-turn-replay .ky-speed[data-speed=\"4\"]").click();
     await page.locator('#feature-stage [data-act="play"]').click();
     await page.mouse.move(0, 0);
     const end = await page.locator("#feature-stage .ky-position").evaluate((el) => Number(el.max));
@@ -390,7 +390,7 @@ test.describe("the demo's game", () => {
     expect((await shows())[0]).toBe("1-0");
     // Playing at four times speed from 7 s: the clock is written about once a second (the period's clock runs several times faster than the replay's), a frame is not.
     await seek(7);
-    await page.locator("#feature-stage .ky-turn-replay .ky-speed").selectOption("4");
+    await page.locator("#feature-stage .ky-turn-replay .ky-speed[data-speed=\"4\"]").click();
     await page.evaluate(() => {
       const svg = document.querySelector('#feature-stage [data-part="centre-board-south"] > svg');
       window.__boardWrites = 0;

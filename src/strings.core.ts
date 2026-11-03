@@ -779,11 +779,15 @@ export interface KyogijoWords {
     group: string;
     play: string;
     pause: string;
+    /** Back to the start of the replay. */
+    start: string;
     back: string;
     forward: string;
     stepBack: string;
     stepForward: string;
     speed: string;
+    /** A speed as it is said ({speed}). */
+    speedValue: string;
     loop: string;
     position: string;
     /** The heads of the table of events. */

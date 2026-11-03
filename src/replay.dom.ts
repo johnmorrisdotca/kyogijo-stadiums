@@ -3,8 +3,9 @@
 // used by `mountKyogijo` (the `replay` method of a mount) and so by `<kyogijo-field>`.
 import { num } from "./format.ts";
 import { renderLayers } from "./layers.ts";
+import { BAR_STYLE, createReplayBar, replayKey, type ReplayBarSlots, type ReplayBarWords } from "./replay.bar.ts";
 import { REPLAY_SPEEDS, createReplay, type ReplayController } from "./replay.control.ts";
-import { FOLLOW_STYLE, flatFollow, followControls } from "./replay.follow.dom.ts";
+import { FOLLOW_STYLE, flatFollow, followControls, type FollowControls } from "./replay.follow.dom.ts";
 import { describeEvent, drawFrame, replayClock, replayGroups, replaySpoken, replayInfo, replayPlacer, replaySnapshot, type ReplayGroup } from "./replay.ts";
 import type { ReplayChange, ReplayLook, ReplaySettings, ReplayTimeline } from "./replay.types.ts";
 import { KYOGIJO_STRINGS, fill } from "./strings.core.ts";
@@ -18,28 +19,10 @@ let counter = 0;
 /** The controls' stylesheet: written once beside the controls, scoped to them, in the page's own colours. */
 export const REPLAY_STYLE = `
 .ky-replay{position:relative;display:block;color:inherit}
-.ky-replay .ky-stage:focus-visible,.ky-replay .ky-controls button:focus-visible,.ky-replay .ky-controls select:focus-visible,.ky-replay .ky-controls input:focus-visible{outline:2px solid currentColor;outline-offset:2px}
-.ky-replay .ky-controls{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin-top:.5rem;font:inherit}
-.ky-replay .ky-controls[hidden]{display:none}
-.ky-replay .ky-controls button,.ky-replay .ky-controls select{box-sizing:border-box;min-width:44px;min-height:44px;margin:0;padding:0 .6rem;border:1px solid currentColor;border-radius:8px;background:transparent;color:inherit;font:inherit;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
-.ky-replay .ky-controls button[hidden],.ky-replay .ky-controls select[hidden]{display:none}
-.ky-replay .ky-controls button[aria-pressed=true]{background:color-mix(in srgb,currentColor 22%,transparent)}
-.ky-replay .ky-controls svg{width:22px;height:22px;fill:currentColor;pointer-events:none}
-.ky-replay .ky-controls .ky-loop svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.ky-replay .ky-controls input[type=range]{flex:1 1 140px;min-width:120px;min-height:44px;margin:0;accent-color:currentColor}
-.ky-replay .ky-controls output{min-width:6.5ch;font-variant-numeric:tabular-nums;text-align:end}
+.ky-replay .ky-stage:focus-visible{outline:2px solid currentColor;outline-offset:2px}
 .ky-replay .ky-live,.ky-replay .ky-hint{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+${BAR_STYLE}
 `.trim();
-
-const ICONS = {
-  play: "M8 5v14l11-7z",
-  pause: "M6 5h4v14H6zM14 5h4v14h-4z",
-  back: "M6 5h2v14H6zM9.5 12L19 5v14z",
-  forward: "M16 5h2v14h-2zM14.5 12L5 5v14z",
-  loop: "M17 2l4 4-4 4M3 11V9a3 3 0 0 1 3-3h15M7 22l-4-4 4-4M21 13v2a3 3 0 0 1-3 3H3",
-};
-
-const icon = (d: string): string => `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="${d}"/></svg>`;
 
 /** A replay attached to a container: the controller, the stage the drawing goes in, and how to draw it again. */
 export interface ReplayView {
@@ -233,7 +216,7 @@ export interface DriverSource {
 export interface ReplayDriver {
   controller: ReplayController;
   /** The style, the key help, the bar and the live region, in that order, for the caller to put in the page. */
-  parts: { style: HTMLStyleElement; hint: HTMLElement; bar: HTMLElement; live: HTMLElement };
+  parts: { style: HTMLStyleElement; hint: HTMLElement; bar: HTMLElement; live: HTMLElement; slots: ReplayBarSlots };
   /** The words changed: the controls are made again. */
   setLanguage(language: Language): void;
   /** The play, pause or step the keys of a 3D view's stage ask for, by the names of the keys: the same moves as the bar's keys. */
@@ -256,91 +239,62 @@ export function replayDriver(doc: Document, timeline: ReplayTimeline, settings: 
   const hint = doc.createElement("p");
   hint.className = "ky-hint";
   hint.id = `${id}-keys`;
-  const bar = doc.createElement("div");
-  bar.className = "ky-controls";
-  bar.setAttribute("role", "group");
   const live = doc.createElement("div");
   live.className = "ky-live";
   live.setAttribute("role", "status");
   live.setAttribute("aria-live", "polite");
+
+  // The bar is the package's one replay bar (replay.bar.ts), the same as a race's: this says what its buttons do to this replay's clock.
+  const barWords = (): ReplayBarWords => {
+    const w = words();
+    const stepMode = controller.state().motion === "step";
+    return { group: w.group, play: w.play, pause: w.pause, start: w.start, back: stepMode ? w.stepBack : w.back, forward: stepMode ? w.stepForward : w.forward, speed: w.speed, loop: w.loop, position: w.position };
+  };
+  const barBox = createReplayBar({
+    doc,
+    speeds: REPLAY_SPEEDS,
+    speedName: (n) => `${words().speed} ${fill(words().speedValue, { speed: n })}`,
+    words: barWords,
+    state: () => controller.state(),
+    range: () => ({ max: info.duration, step: String(controller.state().motion === "step" ? (settings.stepSeconds ?? 1) : info.step > 0 ? Math.round(info.step * 1e6) / 1e6 : "any") }),
+    readout: () => {
+      const s = controller.state();
+      const w = words();
+      return {
+        value: s.t - info.start,
+        main: `${replayClock(s.t - info.start)} / ${replayClock(info.duration)}`,
+        line: "",
+        spoken: fill(w.positionValue, { t: replaySpoken(s.t - info.start, w), total: replaySpoken(info.duration, w) }),
+      };
+    },
+    seek: (value) => controller.seek(info.start + value),
+    toggle: () => controller.toggle(),
+    start: () => controller.seek(info.start),
+    step: (direction) => controller.step(direction),
+    setSpeed: (speed) => controller.setSpeed(speed),
+    setLoop: (loop) => controller.setLoop(loop),
+  });
+  const bar = barBox.el;
   if (settings.controls === false) bar.hidden = true;
 
   let sync: (change: ReplayChange | undefined) => void = () => {};
+  let follow: FollowControls;
   const buildBar = (): void => {
     const w = words();
-    const state = controller.state();
-    const stepMode = state.motion === "step";
-    const button = (cls: string, label: string, d: string, onClick: () => void): HTMLButtonElement => {
-      const b = doc.createElement("button");
-      b.type = "button";
-      b.className = cls;
-      b.setAttribute("aria-label", label);
-      b.title = label;
-      b.innerHTML = icon(d);
-      b.addEventListener("click", onClick);
-      return b;
-    };
-    bar.setAttribute("aria-label", w.group);
-    bar.replaceChildren();
-    const back = button("ky-back", stepMode ? w.stepBack : w.back, ICONS.back, () => controller.step(-1));
-    const play = button("ky-play", w.play, ICONS.play, () => controller.toggle());
-    const forward = button("ky-forward", stepMode ? w.stepForward : w.forward, ICONS.forward, () => controller.step(1));
-    const speed = doc.createElement("select");
-    speed.className = "ky-speed";
-    speed.setAttribute("aria-label", w.speed);
-    speed.title = w.speed;
-    for (const value of REPLAY_SPEEDS) {
-      const option = doc.createElement("option");
-      option.value = String(value);
-      option.textContent = `${value}×`;
-      speed.append(option);
-    }
-    speed.addEventListener("change", () => controller.setSpeed(Number(speed.value)));
-    const loop = button("ky-loop", w.loop, ICONS.loop, () => controller.setLoop(!controller.state().loop));
-    const range = doc.createElement("input");
-    range.type = "range";
-    range.className = "ky-position";
-    range.min = "0";
-    range.max = String(info.duration);
-    range.step = String(stepMode ? (settings.stepSeconds ?? 1) : info.step > 0 ? Math.round(info.step * 1e6) / 1e6 : "any");
-    range.disabled = info.duration === 0;
-    range.setAttribute("aria-label", w.position);
-    range.addEventListener("input", () => controller.seek(info.start + Number(range.value)));
-    const clock = doc.createElement("output");
-    clock.className = "ky-clock";
-    clock.setAttribute("aria-hidden", "true");
-    // Nothing plays by itself in step mode: its controls are the steps and the position.
-    play.hidden = stepMode;
-    speed.hidden = stepMode;
-    loop.hidden = stepMode;
-    const follow = followControls(doc, w, controller, timeline);
-    bar.append(back, play, forward, speed, loop, range, clock, ...follow.parts);
+    const stepMode = controller.state().motion === "step";
+    barBox.build();
+    // The follow camera's buttons go in the bar's follow slot (the bar's own buttons are the one bar's: replay.bar.ts).
+    follow = followControls(doc, w, controller, timeline);
+    barBox.slots.follow.replaceChildren(...follow.parts);
     hint.textContent = source.help === "turn" ? (stepMode ? w.keysTurnStep : w.keysTurn) : stepMode ? w.keysStep : w.keys;
     if (source.labelled !== undefined) {
       source.labelled.setAttribute("aria-label", w.region);
       source.labelled.setAttribute("aria-describedby", hint.id);
       source.labelled.setAttribute("aria-keyshortcuts", "Space ArrowLeft ArrowRight Shift+ArrowLeft Shift+ArrowRight Home End");
     }
-    let said = "";
     sync = () => {
       const s = controller.state();
-      const total = replayClock(info.duration);
-      const text = `${replayClock(s.t - info.start)} / ${total}`;
-      if (text !== said) {
-        said = text;
-        clock.textContent = text;
-        range.setAttribute("aria-valuetext", fill(w.positionValue, { t: replaySpoken(s.t - info.start, w), total: replaySpoken(info.duration, w) }));
-      }
-      const at = String(s.t - info.start);
-      if (range.value !== at) range.value = at;
-      const label = s.playing ? w.pause : w.play;
-      if (play.getAttribute("aria-label") !== label) {
-        play.setAttribute("aria-label", label);
-        play.title = label;
-        play.innerHTML = icon(s.playing ? ICONS.pause : ICONS.play);
-      }
-      if (speed.value !== String(s.speed)) speed.value = String(s.speed);
-      loop.setAttribute("aria-pressed", String(s.loop));
+      barBox.sync();
       source.holder.dataset.state = s.ended ? "ended" : s.playing ? "playing" : "paused";
       source.holder.dataset.motion = s.motion;
       follow.sync(s);
@@ -393,38 +347,14 @@ export function replayDriver(doc: Document, timeline: ReplayTimeline, settings: 
     seen.observe(source.seen);
   }
 
-  const act = (event: KeyboardEvent, scope: "stage" | "bar"): boolean => {
-    if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return false;
-    const tag = (event.target as HTMLElement | null)?.tagName ?? "";
-    if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") return false;
-    // Over a 3D view the arrows and Home are the view's: the stage's own keys are Space, comma, full stop and End.
-    const key = scope === "stage" ? (event.code === "Comma" ? "back" : event.code === "Period" ? "on" : event.key === " " || event.key === "Spacebar" ? "toggle" : event.key === "End" ? "end" : "") : event.key === " " || event.key === "Spacebar" ? "toggle" : event.key === "ArrowRight" ? "on" : event.key === "ArrowLeft" ? "back" : event.key === "Home" ? "home" : event.key === "End" ? "end" : "";
-    switch (key) {
-      case "toggle":
-        // A button takes the space itself.
-        if (tag === "BUTTON") return false;
-        controller.toggle();
-        break;
-      case "on":
-        if (event.shiftKey) controller.jump(5);
-        else controller.step(1);
-        break;
-      case "back":
-        if (event.shiftKey) controller.jump(-5);
-        else controller.step(-1);
-        break;
-      case "home":
-        controller.seek(info.start);
-        break;
-      case "end":
-        controller.seek(info.end);
-        break;
-      default:
-        return false;
-    }
-    event.preventDefault();
-    return true;
-  };
+  const act = (event: KeyboardEvent, scope: "stage" | "bar"): boolean =>
+    replayKey(event, scope, {
+      toggle: () => controller.toggle(),
+      step: (direction) => controller.step(direction),
+      jump: (direction) => controller.jump(direction * 5),
+      start: () => controller.seek(info.start),
+      end: () => controller.seek(info.end),
+    });
   const keys = (event: KeyboardEvent): void => void act(event, "bar");
   source.keysOn.addEventListener("keydown", keys);
   // A page that is hidden does no work: the clock stops, and the reader starts it again.
@@ -444,7 +374,7 @@ export function replayDriver(doc: Document, timeline: ReplayTimeline, settings: 
 
   return {
     controller,
-    parts: { style, hint, bar, live },
+    parts: { style, hint, bar, live, slots: barBox.slots },
     setLanguage(next) {
       if (next === language) return;
       language = next;

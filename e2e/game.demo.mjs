@@ -153,7 +153,7 @@ test.describe("Play a game on the real arenas", () => {
     expect((await framesOver(page, 600)).asked).toBe(0);
     // Playing with the auto-turn: one frame a frame.
     await page.locator(`${box} .ky-turn-replay .ky-loop`).click();
-    await page.locator(`${box} .ky-turn-replay .ky-speed`).selectOption("4");
+    await page.locator(`${box} .ky-turn-replay .ky-speed[data-speed="4"]`).click();
     await play(page, box);
     await page.locator(`${box} .ky-turn-controls [data-act="play"]`).first().click();
     await page.mouse.move(0, 0);

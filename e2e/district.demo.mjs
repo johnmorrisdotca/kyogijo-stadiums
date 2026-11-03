@@ -705,7 +705,7 @@ test.describe("Las Vegas: a race on the Strip", () => {
     if (testInfo.project.use.hasTouch === true) await locator.tap();
     else await locator.click();
   };
-  const clock = (page) => page.locator(`${STAGE} .ky-race-time`);
+  const clock = (page) => page.locator(`${STAGE} .ky-race .ky-clock`);
   const seconds = (text) => text.split(":").reduce((sum, part) => sum * 60 + Number(part), 0);
 
   test.beforeEach(async ({ page }) => {
@@ -738,10 +738,10 @@ test.describe("Las Vegas: a race on the Strip", () => {
     // Played at 60×, the dots and the clock move; paused, the moment is kept in the address.
     const leader = await page.locator(`${STAGE} .ky-race-board tbody tr`).first().getAttribute("data-car");
     const before = await page.locator(`${STAGE} .ky-ci-car[data-car="${leader}"]`).getAttribute("transform");
-    await press(page, page.locator(`${STAGE} .ky-race-bar button[data-speed="60"]`), testInfo);
-    await press(page, page.locator(`${STAGE} .ky-race-play`), testInfo);
+    await press(page, page.locator(`${STAGE} .ky-race .ky-speed[data-speed="60"]`), testInfo);
+    await press(page, page.locator(`${STAGE} .ky-race .ky-play`), testInfo);
     await expect.poll(async () => seconds(await clock(page).textContent())).toBeGreaterThan(20);
-    await press(page, page.locator(`${STAGE} .ky-race-play`), testInfo);
+    await press(page, page.locator(`${STAGE} .ky-race .ky-play`), testInfo);
     expect(await page.locator(`${STAGE} .ky-ci-car[data-car="${leader}"]`).getAttribute("transform")).not.toBe(before);
     const t = seconds(await clock(page).textContent());
     const url = new URL(page.url());
@@ -797,7 +797,7 @@ test.describe("Las Vegas: a race on the Strip", () => {
     // Playing: the discs move with the clock, and nothing is made.
     const first = discs.first();
     const before = await first.evaluate((el) => el.style.transform);
-    const play = page.locator(`${STAGE} .ky-race-play`);
+    const play = page.locator(`${STAGE} .ky-race .ky-play`);
     await press(page, play, testInfo);
     await expect.poll(() => first.evaluate((el) => el.style.transform)).not.toBe(before);
     await page.waitForTimeout(800);

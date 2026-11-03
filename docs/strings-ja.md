@@ -1262,11 +1262,13 @@ Made from `src/strings.en.ts`, `src/strings.ja.ts` and `demo/words.js` by `pnpm 
 | `replay.group` | Replay controls | リプレイの操作 |
 | `replay.play` | Play | 再生 |
 | `replay.pause` | Pause | 一時停止 |
+| `replay.start` | Back to the start | 最初に戻る |
 | `replay.back` | Previous frame | 前のコマ |
 | `replay.forward` | Next frame | 次のコマ |
 | `replay.stepBack` | Back | 前へ |
 | `replay.stepForward` | Forward | 次へ |
 | `replay.speed` | Speed | 再生速度 |
+| `replay.speedValue` | {speed}× | {speed}倍 |
 | `replay.loop` | Loop | 繰り返し |
 | `replay.position` | Position | 再生位置 |
 | `replay.time` | Time | 時間 |

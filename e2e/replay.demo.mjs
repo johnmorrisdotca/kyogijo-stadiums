@@ -40,9 +40,10 @@ test.describe("with reduced motion, which is how the suite runs", () => {
     const errors = await openReplay(page);
     await expect(page.locator(`${RINK} .ky-replay`)).toHaveAttribute("data-motion", "step");
     await expect(page.locator(`${RINK} .ky-replay`)).toHaveAttribute("data-state", "paused");
-    for (const hidden of [".ky-play", ".ky-speed", ".ky-loop"]) await expect(page.locator(`${RINK} ${hidden}`)).toBeHidden();
-    await expect(page.getByRole("button", { name: "Back" }).first()).toBeVisible();
-    await expect(page.getByRole("button", { name: "Forward" }).first()).toBeVisible();
+    for (const hidden of [".ky-play", ".ky-speeds", ".ky-loop"]) await expect(page.locator(`${RINK} ${hidden}`)).toBeHidden();
+    await expect(page.getByRole("button", { name: "Back", exact: true }).first()).toBeVisible();
+    await expect(page.getByRole("button", { name: "Forward", exact: true }).first()).toBeVisible();
+    await expect(page.getByRole("button", { name: "Back to the start", exact: true }).first()).toBeVisible();
     await page.waitForTimeout(400);
     expect(await position(page)).toBe(0);
     await page.locator(`${RINK} .ky-forward`).click();
@@ -126,8 +127,11 @@ test.describe("with motion", () => {
     const errors = await openReplay(page);
     await expect(page.locator(`${RINK} .ky-replay`)).toHaveAttribute("data-motion", "smooth");
     await expect(page.getByRole("group", { name: "Replay controls" }).first()).toBeVisible();
-    for (const name of ["Previous frame", "Play", "Next frame", "Loop"]) await expect(page.locator(RINK).getByRole("button", { name })).toBeVisible();
-    await expect(page.locator(RINK).getByRole("combobox", { name: "Speed" })).toBeVisible();
+    for (const name of ["Back to the start", "Previous frame", "Play", "Next frame", "Loop"]) await expect(page.locator(RINK).getByRole("button", { name, exact: true })).toBeVisible();
+    // The speeds are buttons in a group, the one in use pressed in; there is no dropdown.
+    await expect(page.locator(RINK).getByRole("group", { name: "Speed" }).getByRole("button")).toHaveCount(5);
+    await expect(page.locator(RINK).getByRole("button", { name: "Speed 1×" })).toHaveAttribute("aria-pressed", "true");
+    await expect(page.locator(RINK).getByRole("combobox")).toHaveCount(0);
     const slider = page.locator(RINK).getByRole("slider", { name: "Position" });
     await expect(slider).toHaveAttribute("aria-valuetext", "0:00 of 0:14");
     const keys = stage(page);
@@ -179,7 +183,7 @@ test.describe("with motion", () => {
         for (const m of list) if (!m.target.closest('[id*="-replay-"]') && !m.target.matches("g.ky-layers")) window.__outside.push(m.type + " " + (m.target.getAttribute?.("class") ?? m.target.nodeName));
       }).observe(svg, { attributes: true, childList: true, subtree: true, characterData: true });
     });
-    await page.locator(RINK).getByRole("combobox", { name: "Speed" }).selectOption("4");
+    await page.locator(RINK).getByRole("button", { name: "Speed 4×" }).click();
     await page.locator(RINK).getByRole("button", { name: "Play" }).click();
     await expect.poll(() => position(page)).toBeGreaterThan(2);
     await page.locator(RINK).getByRole("button", { name: "Pause" }).click();
@@ -223,7 +227,7 @@ test.describe("with motion", () => {
 
   test("goes at the speed it is told, and loops or stops at the end", async ({ page }) => {
     await openReplay(page);
-    const speed = page.locator(RINK).getByRole("combobox", { name: "Speed" });
+    const speed = { selectOption: (value) => page.locator(RINK).getByRole("button", { name: `Speed ${value}×` }).click() };
     const play = page.locator(RINK).getByRole("button", { name: "Play" });
     await speed.selectOption("0.25");
     await play.click();
@@ -328,11 +332,11 @@ test.describe("with motion", () => {
     await openReplay(page, "?lang=ja&help=off");
     expect(await page.locator("#replay-title").textContent()).toBe("リプレイ");
     await expect(stage(page)).toHaveAccessibleName("リプレイ");
-    for (const name of ["前のコマ", "再生", "次のコマ", "繰り返し"]) await expect(page.locator(RINK).getByRole("button", { name })).toBeVisible();
+    for (const name of ["最初に戻る", "前のコマ", "再生", "次のコマ", "繰り返し", "再生速度 1倍"]) await expect(page.locator(RINK).getByRole("button", { name, exact: true })).toBeVisible();
     await expect(page.locator(RINK).getByRole("slider", { name: "再生位置" })).toHaveAttribute("aria-valuetext", "14秒中0秒");
     expect(await page.locator(`${RINK} svg.kyogijo > desc`).textContent()).toContain("リプレイ（再生時間14秒）。");
     await seek(page, Math.floor((goal.t - 0.6) * 25) / 25);
-    await page.locator(RINK).getByRole("button", { name: "再生" }).click();
+    await page.locator(RINK).getByRole("button", { name: "再生", exact: true }).click();
     await expect.poll(() => live(page), { timeout: 5000 }).toMatch(/ホームのゴール、\d+秒/);
   });
 

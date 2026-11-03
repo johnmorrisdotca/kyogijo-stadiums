@@ -16,6 +16,8 @@ import {
   raceAt,
   raceBoard,
   raceClock,
+  raceLapMarks,
+  raceLapStep,
   raceLaps,
   racePoint,
   raceStage,
@@ -205,6 +207,23 @@ describe("the drawing, the clock and the board", () => {
     expect(table.match(/<tr data-car/g)).toHaveLength(10);
     expect(table).toContain("Leader");
     expect(raceBoard(raceAt(race, 400), "ja")).toContain("タイミングボード");
+  });
+
+  it("steps by laps: on to the next time the leader ends a lap, back to the start of this one, and the ends of the race", () => {
+    const marks = raceLapMarks(race);
+    expect(marks).toHaveLength(race.laps);
+    expect(marks.every((at, i) => i === 0 || at > marks[i - 1])).toBe(true);
+    // The marks are the first car home at each lap, and the last is the flag.
+    expect(marks[race.laps - 1]).toBe(race.flag);
+    expect(raceLapStep(race, 0, 1)).toBe(marks[0]);
+    expect(raceLapStep(race, marks[0], 1)).toBe(marks[1]);
+    expect(raceLapStep(race, marks[race.laps - 1], 1)).toBe(race.duration);
+    expect(raceLapStep(race, race.duration, -1)).toBe(marks[race.laps - 1]);
+    expect(raceLapStep(race, marks[2] + 30, -1)).toBe(marks[2]);
+    // Within a second of a mark, back goes to the one before: a second press moves.
+    expect(raceLapStep(race, marks[2] + 0.5, -1)).toBe(marks[1]);
+    expect(raceLapStep(race, 0, -1)).toBe(0);
+    expect(raceLapStep(race, marks[0] / 2, -1)).toBe(0);
   });
 
   it("has every word in both languages", () => {

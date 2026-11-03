@@ -191,3 +191,32 @@ export function raceAt(race: CircuitRace, time: number): RaceMoment {
   const lap = Math.min(race.laps, Math.max(1, (leader?.laps ?? 0) + 1));
   return { t, lap, laps: race.laps, flag: t >= race.flag, over: t >= race.duration, standings, ...(fastest === undefined ? {} : { fastest }) };
 }
+
+/** The times the leader of the race crosses the line to end each lap, and the last is the chequered flag: the first car to complete each lap. Worked out once for a race. */
+const MARKS = new WeakMap<CircuitRace, readonly number[]>();
+export function raceLapMarks(race: CircuitRace): readonly number[] {
+  let marks = MARKS.get(race);
+  if (marks === undefined) {
+    const found: number[] = [];
+    for (let k = 0; k < race.laps; k += 1) {
+      let first = Number.POSITIVE_INFINITY;
+      for (const crossed of race.crossings) if (crossed[k] !== undefined && crossed[k] < first) first = crossed[k];
+      if (Number.isFinite(first)) found.push(first);
+    }
+    marks = found;
+    MARKS.set(race, marks);
+  }
+  return marks;
+}
+
+/**
+ * Where one step of a race's bar goes from a time: on (1) to the next time the leader ends a lap, or the end of the race when none is left; back (-1) to the start of the lap in progress, or to the one before when the clock is
+ * within a second of it, or the start.
+ */
+export function raceLapStep(race: CircuitRace, t: number, direction: 1 | -1): number {
+  const marks = raceLapMarks(race);
+  if (direction > 0) return marks.find((at) => at > t + 1e-6) ?? race.duration;
+  let before = 0;
+  for (const at of marks) if (at < t - 1) before = at;
+  return before;
+}

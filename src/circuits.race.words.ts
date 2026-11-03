@@ -19,6 +19,13 @@ export interface RaceWords {
   play: string;
   pause: string;
   nextLap: string;
+  /** Back to the start, one lap back, and loop. */
+  start: string;
+  prevLap: string;
+  loop: string;
+  /** The keys, flat and over the 3D view (whose arrow keys turn the view). */
+  keys: string;
+  keysTurn: string;
   speed: string;
   speedValue: string;
   position: string;
@@ -48,6 +55,11 @@ export const RACE_WORDS: Readonly<Record<Language, RaceWords>> = Object.freeze({
     play: "Play the race",
     pause: "Pause the race",
     nextLap: "Next lap",
+    start: "Back to the start",
+    prevLap: "Previous lap",
+    loop: "Loop the race",
+    keys: "The race. Space plays or pauses, the left and right arrow keys go to the previous or next lap, Shift with an arrow key moves a minute, and Home and End go to the ends.",
+    keysTurn: "The race on the 3D view. Space plays or pauses; comma and full stop go to the previous or next lap, and with Shift move a minute; End goes to the end. The arrow keys still turn the view. On the race's controls the arrow keys go by laps, and Home and End go to the ends.",
     speed: "Speed",
     speedValue: "{speed}×",
     position: "Race time",
@@ -71,6 +83,11 @@ export const RACE_WORDS: Readonly<Record<Language, RaceWords>> = Object.freeze({
     play: "レースを再生",
     pause: "レースを一時停止",
     nextLap: "次の周へ",
+    start: "最初に戻る",
+    prevLap: "前の周へ",
+    loop: "繰り返し",
+    keys: "レースです。スペースキーで再生と一時停止、左右の矢印キーで前の周と次の周に移動、Shiftキーを押しながら矢印キーで1分ずつ移動、Homeキーで最初、Endキーで最後に移動します。",
+    keysTurn: "3Dビューでのレースです。スペースキーで再生と一時停止、カンマキーで前の周、ピリオドキーで次の周に移動します。Shiftキーを押しながらカンマキーかピリオドキーで1分ずつ移動し、Endキーで最後に移動します。矢印キーではこれまでどおりビューを回せます。レースの操作ボタンにフォーカスがあるときは、左右の矢印キーで周ごとに移動し、Homeキーで最初、Endキーで最後に移動します。",
     speed: "再生速度",
     speedValue: "{speed}倍",
     position: "レース経過時間",

@@ -7,6 +7,7 @@ import { simulateRace, type CircuitRace, type RaceOptions } from "./circuits.rac
 import { RACE_WORDS } from "./circuits.race.words.ts";
 import type { CircuitOptions } from "./circuits.types.ts";
 import { el, esc, num } from "./format.ts";
+import { BAR_STYLE } from "./replay.bar.ts";
 import { fill } from "./strings.core.ts";
 import type { Language } from "./types.ts";
 
@@ -149,16 +150,9 @@ export const RACE_STYLE = `
 .ky-circuit .ky-ci-car-dot,.ky-district .ky-ci-car-dot,.ky-turn .ky-ci-car-dot{stroke:var(--ky-ci-ground,#fff)}
 .ky-circuit .ky-ci-car-n,.ky-district .ky-ci-car-n,.ky-turn .ky-ci-car-n{font-family:var(--ky-font,system-ui,sans-serif);font-weight:800;text-anchor:middle;font-variant-numeric:tabular-nums}
 .ky-circuit .ky-ci-car[data-status=out],.ky-district .ky-ci-car[data-status=out]{opacity:.45}
-.ky-race{display:block;color:inherit}
-.ky-race .ky-race-bar{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin-top:.5rem}
-.ky-race .ky-race-bar button{box-sizing:border-box;min-width:44px;min-height:44px;margin:0;padding:0 .7rem;border:1px solid currentColor;border-radius:8px;background:transparent;color:inherit;font:inherit;font-weight:700;cursor:pointer}
-.ky-race .ky-race-bar button[aria-pressed=true]{background:color-mix(in srgb,currentColor 22%,transparent)}
-.ky-race .ky-race-bar button:focus-visible,.ky-race .ky-race-bar input:focus-visible{outline:2px solid currentColor;outline-offset:2px}
-.ky-race .ky-race-speeds{display:inline-flex;gap:.25rem}
-.ky-race .ky-race-bar input[type=range]{flex:1 1 160px;min-width:120px;min-height:44px;margin:0;accent-color:currentColor}
-.ky-race .ky-race-clock{display:flex;flex-wrap:wrap;align-items:baseline;gap:.25rem .75rem;margin-top:.5rem;font-variant-numeric:tabular-nums}
-.ky-race .ky-race-time{font-size:1.5rem;font-weight:800}
-.ky-race .ky-race-stage{font-weight:700}
+.ky-race{position:relative;display:block;color:inherit}
+${BAR_STYLE}
+.ky-race .ky-race-hint,.ky-race .ky-race-live{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 .ky-race .ky-race-note{margin:.25rem 0 0;font-size:.85rem;opacity:.8}
 .ky-race .ky-race-board-wrap{overflow-x:auto;margin-top:.5rem}
 .ky-race .ky-race-board{border-collapse:collapse;width:100%;font-size:.85rem;font-variant-numeric:tabular-nums}
@@ -169,6 +163,5 @@ export const RACE_STYLE = `
 .ky-race .ky-race-board td[data-fastest=true]{font-weight:800;text-decoration:underline}
 .ky-race .ky-race-swatch{display:inline-block;width:.7em;height:.7em;margin-inline-end:.35em;border-radius:50%;border:1px solid color-mix(in srgb,currentColor 40%,transparent);vertical-align:baseline}
 .ky-race .ky-race-code{font-weight:800}
-.ky-race .ky-race-live{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 @media (max-width:560px){.ky-race .ky-race-board [data-col=team],.ky-race .ky-race-board [data-col=best],.ky-race .ky-race-board [data-col=last],.ky-race .ky-race-board .ky-race-name{display:none}}
 `.trim();

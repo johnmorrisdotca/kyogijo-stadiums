@@ -24,7 +24,7 @@ const press = async (page, locator, testInfo) => {
   else await locator.click();
 };
 const dot = (page, id) => page.locator(`${STAGE} .ky-ci-car[data-car="${id}"]`);
-const clock = (page) => page.locator(`${STAGE} .ky-race-time`);
+const clock = (page) => page.locator(`${STAGE} .ky-race .ky-clock`);
 const seconds = (text) => text.split(":").reduce((sum, part) => sum * 60 + Number(part), 0);
 
 test.beforeEach(async ({ page }) => {
@@ -43,7 +43,7 @@ test("puts twenty made-up cars on the grid with the clock and the board, and say
   const errors = await open(page, "circuits.html?race=1");
   await expect(page.locator(`${STAGE} .ky-ci-car`)).toHaveCount(20);
   await expect(clock(page)).toHaveText("0:00");
-  await expect(page.locator(`${STAGE} .ky-race-stage`)).toHaveText("On the grid");
+  await expect(page.locator(`${STAGE} .ky-race .ky-clock-line`)).toHaveText("On the grid");
   await expect(page.locator(`${STAGE} .ky-race-board tbody tr`)).toHaveCount(20);
   await expect(page.locator(`${STAGE} .ky-race-note`)).toContainText("simulated race");
   await expect(page.locator('[data-testid="code"]')).toContainText("mountCircuitRace");
@@ -56,21 +56,21 @@ test("plays: the dots, the clock and the board move together, faster at 60×, an
   const errors = await open(page, "circuits.html?race=1");
   const leader = await page.locator(`${STAGE} .ky-race-board tbody tr`).first().getAttribute("data-car");
   const before = await dot(page, leader).getAttribute("transform");
-  await press(page, page.locator(`${STAGE} .ky-race-bar button[data-speed="60"]`), testInfo);
-  await press(page, page.locator(`${STAGE} .ky-race-play`), testInfo);
+  await press(page, page.locator(`${STAGE} .ky-race .ky-speed[data-speed="60"]`), testInfo);
+  await press(page, page.locator(`${STAGE} .ky-race .ky-play`), testInfo);
   await expect(page.locator(`${STAGE} .ky-race`)).toHaveAttribute("data-state", "playing");
   await page.waitForTimeout(1500);
   expect(seconds(await clock(page).textContent())).toBeGreaterThan(30);
   expect(await dot(page, leader).getAttribute("transform")).not.toBe(before);
   await expect(page.locator(`${STAGE} .ky-race-board tbody tr`).nth(1).locator('[data-col="gap"]')).toHaveText(/^\+\d/);
-  await press(page, page.locator(`${STAGE} .ky-race-play`), testInfo);
+  await press(page, page.locator(`${STAGE} .ky-race .ky-play`), testInfo);
   await expect(page.locator(`${STAGE} .ky-race`)).toHaveAttribute("data-state", "paused");
   // The slider: half way through the race, the lap and the board follow.
-  await page.locator(`${STAGE} .ky-race-position`).evaluate((range) => {
+  await page.locator(`${STAGE} .ky-race .ky-position`).evaluate((range) => {
     range.value = String(Math.round(Number(range.max) / 2));
     range.dispatchEvent(new Event("input", { bubbles: true }));
   });
-  await expect(page.locator(`${STAGE} .ky-race-stage`)).toHaveText(/^Lap 2[0-9] \/ 50$/);
+  await expect(page.locator(`${STAGE} .ky-race .ky-clock-line`)).toHaveText(/^Lap 2[0-9] \/ 50$/);
   await expect(page.locator(`${STAGE} .ky-race-board tbody tr`).first().locator('[data-col="gap"]')).toHaveText("Leader");
   await expect.poll(() => new URL(page.url()).searchParams.get("speed")).toBe("60");
   expect(Number(new URL(page.url()).searchParams.get("t"))).toBeGreaterThan(2000);
@@ -79,7 +79,7 @@ test("plays: the dots, the clock and the board move together, faster at 60×, an
 
 test("comes back to where it was left, in Japanese, and finishes with the chequered flag", async ({ page }) => {
   const errors = await open(page, "circuits.html?race=1&lang=ja&t=99999");
-  await expect(page.locator(`${STAGE} .ky-race-stage`)).toHaveText("チェッカーフラッグ");
+  await expect(page.locator(`${STAGE} .ky-race .ky-clock-line`)).toHaveText("チェッカーフラッグ");
   await expect(page.locator(`${STAGE} .ky-race-board caption`)).toHaveText("タイミングボード");
   await expect(page.locator(`${STAGE} .ky-race-board tbody tr`).first().locator('[data-col="gap"]')).toHaveText("トップ");
   await expect(page.locator(`${STAGE} .ky-race`)).toHaveAttribute("data-state", "paused");
@@ -94,7 +94,7 @@ test("in 3D the cars stand on the circuit as discs and move with the clock", asy
   await expect(discs).toHaveCount(20);
   const first = discs.first();
   const before = await first.evaluate((el) => el.style.transform);
-  await press(page, page.locator(`${STAGE} .ky-race-play`), testInfo);
+  await press(page, page.locator(`${STAGE} .ky-race .ky-play`), testInfo);
   await page.waitForTimeout(1200);
   expect(await first.evaluate((el) => el.style.transform)).not.toBe(before);
   expect(await page.locator(`${STAGE} .ky-up`).count()).toBeLessThanOrEqual(120);
@@ -104,10 +104,12 @@ test("in 3D the cars stand on the circuit as discs and move with the clock", asy
 test("with reduced motion nothing plays by itself: play goes to the leader's next lap", async ({ page }, testInfo) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await open(page, "circuits.html?race=1");
-  const play = page.locator(`${STAGE} .ky-race-play`);
-  await expect(play).toHaveAttribute("aria-label", "Next lap");
-  await press(page, play, testInfo);
-  await expect(page.locator(`${STAGE} .ky-race-stage`)).toHaveText("Lap 2 / 50");
+  // Nothing plays by itself: play, the speeds and loop are not shown, and the step on is the next lap.
+  for (const hidden of [".ky-play", ".ky-speeds", ".ky-loop"]) await expect(page.locator(`${STAGE} .ky-race ${hidden}`)).toBeHidden();
+  const next = page.locator(`${STAGE} .ky-race .ky-forward`);
+  await expect(next).toHaveAttribute("aria-label", "Next lap");
+  await press(page, next, testInfo);
+  await expect(page.locator(`${STAGE} .ky-race .ky-clock-line`)).toHaveText("Lap 2 / 50");
   await expect(page.locator(`${STAGE} .ky-race`)).toHaveAttribute("data-state", "paused");
   const frames = await page.evaluate(() => window.__frames);
   await page.waitForTimeout(500);
@@ -129,7 +131,7 @@ test.describe("the race's freeze and leak rules", () => {
       await page.waitForTimeout(800);
       expect((await frames()) - at, "frames while paused").toBe(0);
       const elements = await count();
-      const play = page.locator(`${STAGE} .ky-race-play`);
+      const play = page.locator(`${STAGE} .ky-race .ky-play`);
       await press(page, play, testInfo);
       await page.waitForTimeout(1000);
       expect(await count(), "elements made while it plays").toBe(elements);

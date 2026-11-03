@@ -171,7 +171,7 @@ test("with the race on, the district link takes the race along at its speed and 
   await page.locator('[data-testid="city"]').click();
   await page.waitForSelector('body[data-ready="true"]');
   await expect(page.locator(`${STAGE} .ky-race svg.ky-district .ky-ci-car`)).toHaveCount(20);
-  await expect(page.locator(`${STAGE} .ky-race-time`)).toHaveText("10:00");
-  await expect(page.locator(`${STAGE} .ky-race-bar button[data-speed="60"]`)).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator(`${STAGE} .ky-race .ky-clock`)).toHaveText("10:00");
+  await expect(page.locator(`${STAGE} .ky-race .ky-speed[data-speed="60"]`)).toHaveAttribute("aria-pressed", "true");
   expect(errors).toEqual([]);
 });

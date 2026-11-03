@@ -214,11 +214,12 @@ src/
 ├── charts.types.ts     the charts' types
 ├── charts-entry.ts     the charts' entry
 ├── replay.ts           a replay's frame and its pure functions: interpolate, trails, possession, events, drawFrame
+├── replay.bar.ts       the one bar of every replay and race (to the start, steps, play, speeds, loop, the position, the clock line, slots for the follow and sound buttons) and the keys
 ├── replay.board.ts     a replay's scoreboard at a time, pure: the score from the goals, the period and the game clock from the periods, stopped in the stoppages
 ├── replay.control.ts   the replay's clock as a state machine: play, seek, step, speed, loop, reduced motion
 ├── replay.deadtime.ts  dead time, pure and of no sport: the stoppages of a timeline, and addDeadTime that opens each into the dead puck, the walk to the line-up and the restart
 ├── replay.hockey.ts    hockey's rule set for dead time: the nine face-off spots, the spot after each kind of stoppage, the line-up, the speeds and the benches
-├── replay.dom.ts       the replay's painter (it moves only the marks that move), its driver (the clock on animation frames, the controls, the keys, the live region) and the flat replay made of them
+├── replay.dom.ts       the replay's painter (it moves only the marks that move), its driver (the clock on animation frames, the bar, the keys, the live region) and the flat replay made of them
 ├── replay.follow.ts    following the play, pure: the shot the play asks for (the action, the puck, a stoppage's faceoff dot), the camera that eases to it, and its runner on the replay's clock
 ├── replay.follow.dom.ts the follow camera's buttons in the replay's bar, and the flat replay's camera, which shows part of the drawing by its viewBox
 ├── replay.types.ts     the replay's types

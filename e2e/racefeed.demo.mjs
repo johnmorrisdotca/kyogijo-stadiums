@@ -67,7 +67,7 @@ test("plays a feed from an address the reader types, the names as text, and keep
   await page.locator('[data-testid="feed-url"]').fill(address);
   await press(page.locator('[data-testid="feed-load"]'), testInfo);
   await expect(page.locator('[data-testid="feed-status"]')).toHaveText("Playing 2 cars over 3 laps from the feed.");
-  await page.locator(`${STAGE} .ky-race-position`).evaluate((range) => {
+  await page.locator(`${STAGE} .ky-race .ky-position`).evaluate((range) => {
     range.value = range.max;
     range.dispatchEvent(new Event("input", { bubbles: true }));
   });
