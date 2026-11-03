@@ -119,7 +119,6 @@ export const NAV = [
       { slug: "sound", ja: "サウンド" },
       { slug: "sound-credits", ja: "サウンドのクレジット" },
       { slug: "feeds", ja: "フィード" },
-      { slug: "where-to-find-a-feed", ja: "フィードの入手先" },
       { slug: "renderers", ja: "レンダラー" },
     ],
   },

@@ -32,16 +32,31 @@ describe("the demo's sample feed and where to find a feed", () => {
 });
 
 describe("the Where to find a feed page", () => {
-  it("names every source of the data file, in English and Japanese", () => {
+  it("names every source of the data file, of every sport, in English and Japanese", () => {
     const data = JSON.parse(readFileSync("examples/feeds/where-to-find.json", "utf8"));
     const en = readFileSync("docs/where-to-find-a-feed.md", "utf8");
     const ja = readFileSync("docs/where-to-find-a-feed.ja.md", "utf8");
-    for (const entry of data.sports.racing) {
+    for (const entry of Object.values(data.sports).flat()) {
       expect(en, entry.id).toContain(entry.name.en);
       expect(ja, entry.id).toContain(entry.name.ja);
       expect(en, entry.id).toContain(entry.url);
+      expect(ja, entry.id).toContain(entry.url);
       expect(en, entry.id).toContain(entry.gives.en);
       expect(ja, entry.id).toContain(entry.gives.ja);
+    }
+  });
+
+  it("has a section for each sport of the data file, in the file's order", () => {
+    const data = JSON.parse(readFileSync("examples/feeds/where-to-find.json", "utf8"));
+    const headings = { racing: ["## Racing", "## レース"], nhl: ["## Ice hockey", "## アイスホッケー"] };
+    const en = readFileSync("docs/where-to-find-a-feed.md", "utf8");
+    const ja = readFileSync("docs/where-to-find-a-feed.ja.md", "utf8");
+    const sports = Object.keys(data.sports);
+    for (const sport of sports) expect(headings[sport], `a heading for ${sport}`).toBeDefined();
+    for (const [page, lang] of [[en, 0], [ja, 1]]) {
+      const at = sports.map((sport) => page.indexOf(`\n${headings[sport][lang]}\n`));
+      expect(at.every((i) => i > 0), `${lang === 0 ? "en" : "ja"}: ${at}`).toBe(true);
+      expect(at).toEqual([...at].sort((a, b) => a - b));
     }
   });
 });

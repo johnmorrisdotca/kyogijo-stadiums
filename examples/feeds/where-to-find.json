@@ -2,8 +2,8 @@
   "kind": "kyogijo-feed-sources",
   "version": 1,
   "note": {
-    "en": "Where to find a feed: known public sources, what each gives, a sample address and how to find a race's id. Your browser reads the address you choose; kyogijo runs no server and keeps nothing. You are responsible for following the terms of the source you use.",
-    "ja": "フィードの探し方：知られている公開の提供元、それぞれが提供するもの、サンプルのアドレス、レースのIDの見つけ方。選んだアドレスは、お使いのブラウザが直接読み込みます。kyogijoはサーバーを持たず、何も保存しません。使うフィードの提供元が定める利用条件を守る責任は、利用者にあります。"
+    "en": "Where to find a feed: known public sources, what each gives, a sample address and how to find a race's or a game's id. Your browser reads the address you choose; kyogijo runs no server and keeps nothing. You are responsible for following the terms of the source you use.",
+    "ja": "フィードの探し方：知られている公開の提供元、それぞれが提供するもの、サンプルのアドレス、レースや試合のIDの見つけ方。選んだアドレスは、お使いのブラウザが直接読み込みます。kyogijoはサーバーを持たず、何も保存しません。使うフィードの提供元が定める利用条件を守る責任は、利用者にあります。"
   },
   "sports": {
     "racing": [
@@ -39,6 +39,34 @@
         "docs": "https://github.com/jolpica/jolpica-f1",
         "terms": "https://github.com/jolpica/jolpica-f1",
         "licence": { "en": "Read the terms of use linked from its README", "ja": "READMEからリンクされている利用条件を確認してください" }
+      }
+    ],
+    "nhl": [
+      {
+        "id": "sample-canada-japan",
+        "name": { "en": "Sample feed (made up)", "ja": "サンプルフィード（架空）" },
+        "url": "examples/games/canada-japan.json",
+        "adapter": "kyogijo",
+        "browser": "yes",
+        "gives": { "en": "A whole made-up game in kyogijo's open timeline format: both sides, the players, the puck twice a second, the shots, goals and whistles, the stoppages and penalties, and the three periods.", "ja": "kyogijoのオープンなタイムライン形式で記述した、架空の1試合分です。両チーム、選手、0.5秒ごとのパックの位置、シュート、ゴール、笛、プレーの中断とペナルティ、3つのピリオドを含みます。" },
+        "id_help": { "en": "One game, at this address. It is served from this site, the same as any feed of your own would be.", "ja": "このアドレスにある1試合だけです。当サイトから配信していて、自分で用意したフィードと同じように読み込めます。" },
+        "docs": "docs/example-games.md",
+        "docs_name": { "en": "The example game", "ja": "サンプルの試合" },
+        "terms": "https://github.com/johnmorrisdotca/kyogijo-stadiums/blob/main/LICENSE",
+        "licence": { "en": "MIT, with the package", "ja": "パッケージと同じMITライセンス" }
+      },
+      {
+        "id": "nhl-play-by-play",
+        "name": { "en": "NHL play-by-play (public)", "ja": "NHLのプレーバイプレー（公開）" },
+        "url": "https://api-web.nhle.com/v1/gamecenter/2023020204/play-by-play",
+        "adapter": "nhl",
+        "browser": "maybe-not",
+        "gives": { "en": "Every play of an NHL game with its period, its time and, for most, its place on the ice (feet from centre ice); both teams, the rosters and the game's state (live or final). No tracking: the puck is moved between the plays.", "ja": "NHLの試合のすべてのプレーについて、ピリオド、時刻、そして多くのプレーではリンク上の位置（センターアイスからの距離、フィート単位）を含みます。両チーム、ロースター、試合の状態（試合中か終了か）もわかります。トラッキングデータはないため、パックはプレーとプレーの間を補間して動かします。" },
+        "id_help": { "en": "The game id is ten digits: the season's first year, 02 for the regular season or 03 for the playoffs, and the game's number (2023020204 is regular-season game 204 of 2023-24). The schedule of a day, api-web.nhle.com/v1/schedule/<yyyy-mm-dd>, lists each game with its id.", "ja": "試合IDは10桁の数字で、シーズン開始年、レギュラーシーズンなら02・プレーオフなら03、試合番号の順に並びます（2023020204は2023-24シーズンのレギュラーシーズン第204試合）。api-web.nhle.com/v1/schedule/<yyyy-mm-dd> でその日の日程を取得すると、各試合のIDがわかります。" },
+        "docs": "https://github.com/Zmalski/NHL-API-Reference",
+        "docs_name": { "en": "Community reference (unofficial)", "ja": "有志による非公式リファレンス" },
+        "terms": "https://www.nhl.com/info/terms-of-service",
+        "licence": { "en": "NHL.com terms of service", "ja": "NHL.comの利用規約" }
       }
     ]
   }

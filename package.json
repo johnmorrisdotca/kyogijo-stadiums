@@ -361,7 +361,6 @@
     "screenshots:flythrough": "pnpm site && node scripts/readme-flythrough.mjs",
     "test:readme": "pnpm build && node scripts/check-readme-examples.mjs",
     "docs:make": "node scripts/docs.mjs",
-    "feeds:docs": "node scripts/feed-sources.mjs",
     "docs:site": "pnpm site",
     "docs:check": "pnpm build && node scripts/docs-check.mjs",
     "parks": "node scripts/build-parks.mjs",

@@ -2108,10 +2108,10 @@ Made from `src/strings.en.ts`, `src/strings.ja.ts` and `demo/words.js` by `pnpm 
 | `feedPaste` | Or paste a feed (JSON) | またはフィード（JSON）を貼り付け |
 | `feedPastePlay` | Play the pasted feed | 貼り付けたフィードを再生 |
 | `feedNote` | You are responsible for the terms of the source you enter. Your browser fetches it directly; we run no server or relay, and nothing is sent to us. | 入力した提供元の利用規約の遵守は、閲覧者の責任です。フィードは閲覧者のブラウザーが直接取得します。当サイトはサーバーも中継サーバーも運用せず、データが送信されることもありません。 |
-| `feedWhere` | Where to find a feed | フィードの入手先 |
+| `feedWhere` | Where to find a feed | フィードの探し方 |
 | `feedUse` | Use | 使う |
 | `feedMayRefuse` | May refuse a page of another site (CORS): if so, save the answer and choose it as a file, or paste it. | ほかのサイトのページからの読み取りを拒否される場合があります（CORS）。その場合は、取得した内容を保存してファイルとして選ぶか、貼り付けてください。 |
-| `feedGuide` | Where to find a feed: the full list | フィードの入手先の一覧 |
+| `feedGuide` | Where to find a feed: the full list | フィードの探し方（一覧） |
 | `feedDocs` | The feed format and the code | フィードの形式とコード |
 | `feedGameNote` | A feed you chose: the names and results are the source's. | 選択したフィードです。名前や結果は提供元のデータによるものです。 |
 | `feedReading` | Reading the feed… | フィードを読み込んでいます… |
@@ -2255,7 +2255,6 @@ Made from `src/strings.en.ts`, `src/strings.ja.ts` and `demo/words.js` by `pnpm 
 | page `sound` | Sound | サウンド |
 | page `sound-credits` | Sound credits | サウンドのクレジット |
 | page `feeds` | Feeds | フィード |
-| page `where-to-find-a-feed` | Where to find a feed | フィードの入手先 |
 | page `renderers` | Renderers | レンダラー |
 | group `gallery` | Gallery | ギャラリー |
 | page `gallery` | Gallery | ギャラリーの案内 |
