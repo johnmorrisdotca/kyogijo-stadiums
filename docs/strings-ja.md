@@ -1279,6 +1279,15 @@ Made from `src/strings.en.ts`, `src/strings.ja.ts` and `demo/words.js` by `pnpm 
 | `replay.keysTurn` | Replay of the play on the 3D view. Space plays or pauses; comma and full stop step back and on by a frame, and with Shift by 5 seconds; End goes to the end. The arrow keys still turn the view. On the replay's controls the arrow keys step, and Home and End go to the ends. | 3Dビューでのプレーのリプレイです。スペースキーで再生と一時停止、カンマキーで1コマ戻り、ピリオドキーで1コマ進みます。Shiftキーを押しながらカンマキーかピリオドキーで5秒ずつ移動し、Endキーで最後に移動します。矢印キーではこれまでどおりビューを回せます。リプレイの操作ボタンにフォーカスがあるときは、左右の矢印キーで1コマずつ前後に移動し、Homeキーで最初、Endキーで最後に移動します。 |
 | `replay.keysTurnStep` | Replay of the play on the 3D view, in steps. Space or full stop moves on, comma goes back, and End goes to the end. The arrow keys still turn the view. On the replay's controls the right arrow key moves on and the left goes back. | 3Dビューでのプレーのリプレイです。コマ送りで表示しています。スペースキーまたはピリオドキーで進み、カンマキーで戻り、Endキーで最後に移動します。矢印キーではこれまでどおりビューを回せます。リプレイの操作ボタンにフォーカスがあるときは、右矢印キーで進み、左矢印キーで戻ります。 |
 | `replay.region` | Replay | リプレイ |
+| `replay.follow` | Follow the play | プレーを追う |
+| `replay.followAction` | Action | プレー |
+| `replay.followActionLabel` | Follow the action: close in on the puck or ball and those nearest it | プレーを追う：パックやボールの近くの選手に寄って映す |
+| `replay.followPuck` | Puck | パック |
+| `replay.followPuckLabel` | Follow the puck | パックを追う |
+| `replay.followBall` | Ball | ボール |
+| `replay.followBallLabel` | Follow the ball | ボールを追う |
+| `replay.followResume` | Resume | 追う |
+| `replay.followResumeLabel` | Follow the action again | プレーをまた追う |
 | `turn.region` | 3D view | 3D表示 |
 | `turn.group` | Viewpoint | 視点 |
 | `turn.keys` | A 3D view you can turn. Drag, or use the arrow keys, to turn and tilt it; plus and minus zoom; 1 to 4 pick a viewpoint; 0 or Home puts it back; Space starts and stops the auto-turn. Pinch, or hold Ctrl and scroll, to zoom. | 回して見られる3D表示です。ドラッグするか矢印キーで回転と傾きを変え、プラスとマイナスのキーで拡大と縮小、1から4のキーで視点を選び、0キーまたはHomeキーで元に戻し、スペースキーで自動回転を始めたり止めたりします。ピンチ操作、またはCtrlキーを押しながらのスクロールでも拡大・縮小できます。 |

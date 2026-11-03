@@ -449,6 +449,7 @@ export const WORDS_EN: KyogijoWords = {
     keysTurn: "Replay of the play on the 3D view. Space plays or pauses; comma and full stop step back and on by a frame, and with Shift by 5 seconds; End goes to the end. The arrow keys still turn the view. On the replay's controls the arrow keys step, and Home and End go to the ends.",
     keysTurnStep: "Replay of the play on the 3D view, in steps. Space or full stop moves on, comma goes back, and End goes to the end. The arrow keys still turn the view. On the replay's controls the right arrow key moves on and the left goes back.",
     region: "Replay",
+    follow: "Follow the play", followAction: "Action", followActionLabel: "Follow the action: close in on the puck or ball and those nearest it", followPuck: "Puck", followPuckLabel: "Follow the puck", followBall: "Ball", followBallLabel: "Follow the ball", followResume: "Resume", followResumeLabel: "Follow the action again",
   },
   turn: {
     region: "3D view", group: "Viewpoint",

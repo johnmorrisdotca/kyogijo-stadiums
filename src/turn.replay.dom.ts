@@ -3,11 +3,12 @@
 // it plays. Nothing runs while the replay is paused, the page hidden or the view out of sight.
 import type { KyogijoReplay } from "./mount.ts";
 import { createReplayView, replayDriver, replayPainter } from "./replay.dom.ts";
-import { useTurnReplay } from "./turn.dom.ts";
+import { useTurnReplay, type Aim } from "./turn.dom.ts";
 import { drawFrameOf, replayPlacer, replaySnapshot } from "./replay.ts";
 import type { ReplaySettings, ReplayTimeline } from "./replay.types.ts";
 import type { TurnModel } from "./turn.model.ts";
 import { boardFollower } from "./turn.replay.board.ts";
+import { turnFollow } from "./turn.follow.ts";
 import { keepOnFloor, moveDisc, replayTurnModel, type TurnReplayLook, type TurnReplayModel } from "./turn.replay.ts";
 import type { Language } from "./types.ts";
 
@@ -22,6 +23,10 @@ export interface TurnInternals {
   setDecorate(decorate: ((model: TurnModel) => TurnModel) | undefined, after?: () => void): void;
   /** Paint the view as it is now: the planes whose place changed are written, the others are not touched. */
   repaint(): void;
+  /** Look at a point of the floor with a zoom on top of the view's (a camera following the play), at once or in a glide; `undefined` gives the view back. Painted at the next `repaint`. */
+  aim(next: Aim | undefined, glide?: boolean): void;
+  /** Be told when the reader turns, tips or zooms the view (`turn`) or presses a viewpoint or Reset (`preset`). */
+  onUser(listener: (kind: "preset" | "turn") => void): () => void;
   /** The view's own frame requests, which the auto-turn shares: one animation frame a frame, whatever runs. */
   requestFrame(callback: FrameRequestCallback): number;
   cancelFrame(id: number): void;
@@ -83,6 +88,8 @@ export function attachTurnReplay(view: TurnInternals, timeline: ReplayTimeline, 
     }
   };
 
+  // The camera that follows the play.
+  const camera = turnFollow(view, () => driver.controller, timeline, look, () => laid?.floorOptions);
   const wrap = doc.createElement("div");
   wrap.className = "ky-replay ky-turn-replay";
   const driver = replayDriver(doc, timeline, settings, {
@@ -90,6 +97,7 @@ export function attachTurnReplay(view: TurnInternals, timeline: ReplayTimeline, 
       painter.paint(t);
       place(t);
       if (look.board !== false) board.follow(t, view.model(), change);
+      if (change !== undefined) camera.paint(change);
       view.repaint();
     },
     language,
@@ -142,6 +150,8 @@ export function attachTurnReplay(view: TurnInternals, timeline: ReplayTimeline, 
     laid = replayTurnModel(model, timeline, driver.controller.state().t, look);
     return laid.model;
   }, after);
+  camera.paint({ state: driver.controller.state(), reason: "follow", crossed: [] });
+  view.repaint();
 
   if (settings.autoplay === true && driver.controller.state().motion === "smooth" && doc.visibilityState !== "hidden") driver.controller.play();
 
@@ -149,6 +159,7 @@ export function attachTurnReplay(view: TurnInternals, timeline: ReplayTimeline, 
     ...driver.controller,
     destroy() {
       driver.destroy();
+      camera.destroy();
       root.removeEventListener("keydown", onStageKey, true);
       if (described === null) stage.removeAttribute("aria-describedby");
       else stage.setAttribute("aria-describedby", described);

@@ -132,10 +132,10 @@ const turnedAway = (m: readonly number[], side: 1 | -1): boolean => side * (m[0]
  * which, so that a page need not write them at all; without it every plane is laid out, as a still picture needs. `raster` is the share of its size an element is made at (`rasterOf`): each element's matrix widens it back, so that the
  * picture is the same and the layers hold `raster` squared as many pixels.
  */
-export function layoutOf(model: TurnModel, view: TurnView, width: number, height: number, lens?: number, cull = false, raster: Raster = 1): Layout {
+export function layoutOf(model: TurnModel, view: TurnView, width: number, height: number, lens?: number, cull = false, raster: Raster = 1, focus?: readonly [number, number] | readonly [number, number, number]): Layout {
   const distance = eyeDistance(width, height, lens ?? model.lens);
   const at = fit(model.box, { ...view, zoom: 1 }, width, height, distance);
-  const camera = cameraMatrix(view, at, distance);
+  const camera = cameraMatrix(view, at, distance, focus);
   const s = model.scale;
   const centre = model.centre;
   const known = prepare(model);

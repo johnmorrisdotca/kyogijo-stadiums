@@ -62,9 +62,10 @@ describe("the custom element's options", () => {
     expect(replaySettingsFromAttributes(read({ loop: "false" }), { loop: true, hold: 5 })).toEqual({ loop: false, hold: 5 });
     expect(replaySettingsFromAttributes(read({ speed: "fast", trail: "-3" }), { speed: 1 })).toEqual({ speed: 1 });
     expect(replaySettingsFromAttributes(read({}))).toEqual({});
+    expect([read({ follow: "action" }), read({ follow: "puck" }), read({ follow: "off" }), read({ follow: "sideways" })].map((r) => replaySettingsFromAttributes(r).follow)).toEqual(["action", "puck", "off", "off"]);
   });
 
   it("list the replay's attributes among its own", () => {
-    for (const name of ["loop", "speed", "autoplay", "controls", "trail"]) expect(KYOGIJO_ATTRIBUTES).toContain(name);
+    for (const name of ["loop", "speed", "autoplay", "controls", "trail", "follow"]) expect(KYOGIJO_ATTRIBUTES).toContain(name);
   });
 });

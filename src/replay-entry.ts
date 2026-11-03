@@ -11,6 +11,8 @@ export { alongPool, distanceAt, progressOf, raceTimeline } from "./pool.replay.t
 export type { Progress, RaceReplayOptions } from "./pool.replay.ts";
 export { formatTime, parseTime } from "./pool.race.ts";
 export { REPLAY_SPEEDS, REPLAY_SPEED_RANGE, createReplay } from "./replay.control.ts";
+export { FOLLOW_LIMITS, FOLLOW_MODES, clampShot, followCamera, followMode, followShot, followStop, followWindow, frameOf, springStep, zoomFor } from "./replay.follow.ts";
+export type { FollowBox, FollowCamera, FollowInput, FollowLimits, FollowMode, FollowShot } from "./replay.follow.ts";
 export type { ReplayController } from "./replay.control.ts";
 export type {
   ActiveEvent,

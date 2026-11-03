@@ -97,6 +97,21 @@ export function turnSupported(win: { CSS?: { supports?: (property: string, value
 
 const KEYS: Record<string, true> = { " ": true, ArrowLeft: true, ArrowRight: true, ArrowUp: true, ArrowDown: true, "+": true, "=": true, "-": true, _: true, "0": true, Home: true, "1": true, "2": true, "3": true, "4": true };
 
+/** Where a camera that follows the play looks: a point of the floor, in the scene's pixels from its middle, and a zoom on top of the view's own. */
+export interface Aim {
+  focus: [number, number];
+  zoom: number;
+}
+
+/** The point an aim looks at, brought toward the middle of the view as it closes in: not at all at its zoom of 1, so that turning it on does not move the view. */
+const focusOf = (aim: Aim | undefined): [number, number, number] | undefined => (aim === undefined ? undefined : [aim.focus[0], aim.focus[1], 1 - 1 / Math.max(1, aim.zoom)]);
+
+/** An aim part of the way from one to another (none is the middle at a zoom of 1). */
+const aimBetween = (from: Aim | undefined, to: Aim | undefined, t: number): Aim => {
+  const [a, b] = [from ?? { focus: [0, 0], zoom: 1 }, to ?? { focus: [0, 0], zoom: 1 }];
+  return { focus: [a.focus[0] + (b.focus[0] - a.focus[0]) * t, a.focus[1] + (b.focus[1] - a.focus[1]) * t], zoom: a.zoom * Math.pow(b.zoom / a.zoom, t) };
+};
+
 /** The view part of the way from one to another, `t` from 0 to 1, the turn taken the short way round. */
 const between = (from: TurnView, to: TurnView, t: number): TurnView => ({ yaw: from.yaw + (nearest(from.yaw, to.yaw) - from.yaw) * t, pitch: from.pitch + (to.pitch - from.pitch) * t, zoom: from.zoom * Math.pow(to.zoom / from.zoom, t) });
 
@@ -243,7 +258,14 @@ export function mountTurn<O>(
   let view = model.view;
   let shown = view;
   let opening = model.view;
-  let flight: { from: TurnView; to: TurnView; start: number; ms: number; frame: number } | undefined;
+  let flight: { from: TurnView; to: TurnView; start: number; ms: number; frame: number; aim?: { from: Aim | undefined; to: Aim | undefined } } | undefined;
+  /** What a camera that follows the play looks at (a point of the floor, and a zoom on top of the view's), where it is going in a glide, and who is told when the reader takes the view over. */
+  let aim: Aim | undefined;
+  let aimTo: { to: Aim | undefined } | undefined;
+  const users = new Set<(kind: "preset" | "turn") => void>();
+  const took = (kind: "preset" | "turn"): void => {
+    for (const user of [...users]) user(kind);
+  };
   let spoken: ReturnType<typeof setTimeout> | undefined;
   // The auto-turn: whether it is on, the frame that will advance it, the time of the last one, and whether it has moved the view since the page was last told.
   let playing = false;
@@ -337,7 +359,7 @@ export function mountTurn<O>(
     model = decorate === undefined ? plain : decorate(plain);
     ceiling = ceilingFor(model, stage.clientWidth || 960, stage.clientHeight || 600, shown.zoom);
     raster = rasterFor(model);
-    const layout = layoutOf(model, shown, stage.clientWidth || 960, stage.clientHeight || 600, settings.lens, false, raster);
+    const layout = layoutOf(model, aim === undefined ? shown : { ...shown, zoom: shown.zoom * aim.zoom }, stage.clientWidth || 960, stage.clientHeight || 600, settings.lens, false, raster, focusOf(aim));
     const world = root.querySelector<HTMLElement>(".ky-turn-world")!;
     world.innerHTML = worldMarkup(model, layout, raster);
     // The look the floor is painted in (and the theme) are attributes of the world.
@@ -399,10 +421,11 @@ export function mountTurn<O>(
     settling = next === ceiling ? undefined : win.setTimeout(settleRaster, next > ceiling ? 160 : 1500);
   };
   /** Put a view on the screen. */
-  const paint = (now: TurnView): void => {
+  const paint = (asked: TurnView): void => {
     const width = stage.clientWidth || 960;
     const height = stage.clientHeight || 600;
-    const layout: Layout = layoutOf(model, now, width, height, settings.lens, true, raster);
+    const now = aim === undefined ? asked : { ...asked, zoom: asked.zoom * aim.zoom };
+    const layout: Layout = layoutOf(model, now, width, height, settings.lens, true, raster, focusOf(aim));
     outside?.zoom(now.zoom);
     const culled = layout.culled;
     elements.forEach((one, i) => {
@@ -441,11 +464,15 @@ export function mountTurn<O>(
   };
   /** Go to a view: by a glide of `ms` milliseconds, or at once. */
   const show = (to: TurnView, ms: number): void => {
+    // A camera that follows the play and is asked to let go glides back with the view (and goes on doing so when another glide takes over).
+    const aiming = aimTo !== undefined ? { from: aim, to: aimTo.to } : flight?.aim === undefined ? undefined : { from: aim, to: flight.aim.to };
+    aimTo = undefined;
     stop();
     view = to;
     label();
     if (ms <= 0 || calm() || win === null) {
       shown = to;
+      if (aiming !== undefined) aim = aiming.to;
       paint(shown);
       return;
     }
@@ -455,11 +482,12 @@ export function mountTurn<O>(
       const t = Math.min(1, (stamp - flight.start) / flight.ms);
       const eased = 1 - Math.pow(1 - t, 3);
       shown = t >= 1 ? flight.to : between(flight.from, flight.to, eased);
+      if (flight.aim !== undefined) aim = t >= 1 ? flight.aim.to : aimBetween(flight.aim.from, flight.aim.to, eased);
       paint(shown);
       if (t < 1) flight.frame = win.requestAnimationFrame(run);
       else flight = undefined;
     };
-    flight = { from, to, start: win.performance.now(), ms, frame: 0 };
+    flight = { from, to, start: win.performance.now(), ms, frame: 0, aim: aiming };
     flight.frame = win.requestAnimationFrame(run);
   };
 
@@ -581,6 +609,10 @@ export function mountTurn<O>(
     const target = (event.target as Element | null)?.closest<HTMLButtonElement>("button");
     if (target === null || target === undefined || !root.contains(target)) return;
     const name = target.dataset.preset as TurnPreset | undefined;
+    const act = target.dataset.act ?? "";
+    if (name !== undefined || act === "reset") took("preset");
+    // (The replay's own buttons are in the view too: only the view's turn it.)
+    else if (act !== "" && act !== "play" && act !== "reverse") took("turn");
     if (name !== undefined) return toPreset(name);
     const big = (event as MouseEvent).shiftKey === true;
     switch (target.dataset.act) {
@@ -606,6 +638,7 @@ export function mountTurn<O>(
     const yaw = big ? STEP.yawBig : STEP.yaw;
     const pitch = big ? STEP.pitchBig : STEP.pitch;
     event.preventDefault();
+    if (event.key !== " ") took(/^[0-4]$|^Home$/.test(event.key) ? "preset" : "turn");
     switch (event.key) {
       // A key takes the surface toward its side as a drag toward that side does: the side nearest the eye goes to the right on ArrowRight, and ArrowUp tips it as a drag up does.
       case "ArrowLeft": return go(nudge(view, "left", yaw), 120);
@@ -662,8 +695,12 @@ export function mountTurn<O>(
       view = clampView({ ...view, zoom: pinch.zoom * ((Math.hypot(a.x - b.x, a.y - b.y) || 1) / pinch.distance) });
     } else {
       view = drag(view, here.x - before.x, here.y - before.y, tilts(event.pointerType));
-      if (Math.abs(here.x - before.x) + Math.abs(here.y - before.y) > 0) moved = true;
+      if (Math.abs(here.x - before.x) + Math.abs(here.y - before.y) > 0 && !moved) {
+        moved = true;
+        took("turn");
+      }
     }
+    if (pinch !== undefined) took("turn");
     shown = view;
     paint(shown);
   };
@@ -684,7 +721,11 @@ export function mountTurn<O>(
   stage.addEventListener("pointermove", onMove);
   stage.addEventListener("pointerup", onUp);
   stage.addEventListener("pointercancel", onUp);
-  stage.addEventListener("dblclick", toOpening);
+  const onDouble = (): void => {
+    took("preset");
+    toOpening();
+  };
+  stage.addEventListener("dblclick", onDouble);
 
   // ---- The wheel over the view zooms it, as a map does; with the pointer anywhere else the page scrolls. Ctrl or Command and the wheel (a pinch on a trackpad) zoom too. Shift and the
   // wheel, or a sideways swipe, turn it. Tipping is a drag, the keys and the buttons. A wheel that starts while the zoom is already at its end that way goes on to scroll the page, so the page is
@@ -697,6 +738,7 @@ export function mountTurn<O>(
     if (!pinch && (event.shiftKey || Math.abs(event.deltaX) > Math.abs(event.deltaY))) {
       event.preventDefault();
       wheelTaken = now;
+      took("turn");
       grab();
       view = clampView({ ...view, yaw: view.yaw + (event.deltaX || event.deltaY) * 0.25 });
     } else {
@@ -707,6 +749,7 @@ export function mountTurn<O>(
       event.preventDefault();
       wheelTaken = now;
       if (next.zoom === view.zoom) return;
+      took("turn");
       grab();
       view = next;
     }
@@ -746,6 +789,20 @@ export function mountTurn<O>(
     },
     repaint: () => {
       if (alive) paint(shown);
+    },
+    aim(next, glide = false) {
+      if (!alive) return;
+      if (glide) {
+        aimTo = { to: next };
+        // (A glide of the view that is about to start carries it; otherwise it glides alone.)
+        show(view, 560);
+        return;
+      }
+      aim = next;
+    },
+    onUser(listener) {
+      users.add(listener);
+      return () => void users.delete(listener);
     },
     requestFrame,
     cancelFrame,
@@ -873,6 +930,7 @@ export function mountTurn<O>(
       probe?.stop();
       frames.clear();
       seen?.disconnect();
+      users.clear();
       doc.removeEventListener("visibilitychange", onVisible);
       clearTimeout(spoken);
       observer?.disconnect();

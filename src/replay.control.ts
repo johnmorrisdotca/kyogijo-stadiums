@@ -33,6 +33,10 @@ export interface ReplayController {
   setLoop(loop: boolean): void;
   /** `step` for a reader who prefers reduced motion: playing stops, and play steps. */
   setMotion(motion: "smooth" | "step"): void;
+  /** What the camera follows (`off`, `action`, `puck`); a change lets go of a hold. */
+  setFollow(mode: "off" | "action" | "puck"): void;
+  /** Hold the camera where it is (the reader turned or zoomed the view), or let it follow again (`false`). */
+  holdFollow(held: boolean): void;
   /** Tell the clock that seconds went by: while playing, the time moves by that many seconds times the speed. */
   advance(seconds: number): void;
   /** Be told of every change. Returns a function that stops it. */
@@ -69,6 +73,8 @@ export function createReplay(timeline: ReplayTimeline, settings: ReplaySettings 
     speed: isNum(settings.speed) ? clamp(settings.speed, REPLAY_SPEED_RANGE[0], REPLAY_SPEED_RANGE[1]) : 1,
     loop: settings.loop === true,
     motion: settings.motion === "step" ? "step" : "smooth",
+    follow: settings.follow === "action" || settings.follow === "puck" ? settings.follow : "off",
+    followHeld: false,
   };
   const listeners = new Set<(change: ReplayChange) => void>();
   const tell = (reason: ReplayReason, crossed: readonly ReplayEvent[] = []): void => {
@@ -160,6 +166,18 @@ export function createReplay(timeline: ReplayTimeline, settings: ReplaySettings 
       state.motion = motion;
       state.playing = false;
       tell("motion");
+    },
+    setFollow(mode) {
+      const next = mode === "action" || mode === "puck" ? mode : "off";
+      if (next === state.follow && !state.followHeld) return;
+      state.follow = next;
+      state.followHeld = false;
+      tell("follow");
+    },
+    holdFollow(held) {
+      if (state.followHeld === held || (held && state.follow === "off")) return;
+      state.followHeld = held;
+      tell("follow");
     },
     advance(seconds) {
       if (!state.playing || state.motion === "step" || !isNum(seconds) || seconds <= 0) return;

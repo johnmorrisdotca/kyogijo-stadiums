@@ -217,6 +217,8 @@ src/
 ├── replay.board.ts     a replay's scoreboard at a time, pure: the score from the goals, the period and the game clock from the periods
 ├── replay.control.ts   the replay's clock as a state machine: play, seek, step, speed, loop, reduced motion
 ├── replay.dom.ts       the replay's painter (it moves only the marks that move), its driver (the clock on animation frames, the controls, the keys, the live region) and the flat replay made of them
+├── replay.follow.ts    following the play, pure: the shot the play asks for (the action, the puck, a stoppage's faceoff dot), the camera that eases to it, and its runner on the replay's clock
+├── replay.follow.dom.ts the follow camera's buttons in the replay's bar, and the flat replay's camera, which shows part of the drawing by its viewBox
 ├── replay.types.ts     the replay's types
 ├── replay-entry.ts     the replay's entry
 ├── scene.ts            sceneOf and sceneFromSvg: the drawing as plain data, read from the markup that writes the SVG
@@ -415,6 +417,7 @@ src/
 ├── turn.replay.ts      a replay on the 3D view, as data: the floor at a time and the players standing up as discs that face the eye
 ├── turn.replay.board.ts the scoreboard hung over a 3D view following a replay: its faces drawn again with the score and the clock, written when they change
 ├── turn.replay.dom.ts  a replay on the 3D view in a page: its controls under the view's, the floor's marks and the discs moved each frame
+├── turn.follow.ts      following the play on a 3D view: the shot as a point of the floor to look at and a zoom on top of the view's; the reader's own turn holds it
 ├── quality.ts          how much a 3D view draws: the three tiers and what each leaves out, the pixel ratio a layer is made at, and the governor that steps a tier down and up by the frames the view makes
 ├── turn-entry.ts       the 3D view's entry
 ├── uprights.ts         what stands on a surface: read from the options as the drawing is, with its heights and its sentence

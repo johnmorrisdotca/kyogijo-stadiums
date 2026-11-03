@@ -279,9 +279,10 @@ const translation = (x: number, y: number, z: number): number[] => [1, 0, 0, 0, 
 /**
  * The matrix that puts a point of the scene on the screen for a view in a placement: the scene (whose middle is the origin) is scaled, turned about the vertical,
  * tipped back, shifted to where the fit puts it, and seen with a perspective `distance` pixels deep. This is `project`'s arithmetic as one matrix, so that an
- * element can be given its whole place in one `matrix3d` and need no 3D context of the browser's: a browser that draws nested 3D layers flat still draws it right.
+ * element can be given its whole place in one `matrix3d` and need no 3D context of the browser's: a browser that draws nested 3D layers flat still draws it right. `focus`, a point of the floor
+ * in the scene's pixels from its middle, is put where the middle would be (and, by its third number from 0 to 1, that share of the way to the container's middle): the camera looks at it, and turns and tips about it.
  */
-export function cameraMatrix(view: TurnView, at: Placement, distance: number): number[] {
+export function cameraMatrix(view: TurnView, at: Placement, distance: number, focus?: readonly [number, number] | readonly [number, number, number]): number[] {
   const k = at.k * view.zoom;
   const [yaw, pitch] = [view.yaw * RAD, view.pitch * RAD];
   const [cy, sy, cp, sp] = [Math.cos(yaw), Math.sin(yaw), Math.cos(pitch), Math.sin(pitch)];
@@ -289,10 +290,14 @@ export function cameraMatrix(view: TurnView, at: Placement, distance: number): n
   const rotateZ = [cy, sy, 0, 0, -sy, cy, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
   const rotateX = [1, 0, 0, 0, 0, cp, sp, 0, 0, -sp, cp, 0, 0, 0, 0, 1];
   const eye = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, -1 / distance, 0, 0, 0, 1];
-  let m = multiply(eye, translation(at.tx, at.ty, 0));
+  // A focus is brought toward the middle of the container by its share (the fit puts the scene's middle where its whole box is centred, which a tall scoreboard moves).
+  const centring = 1 - Math.min(1, Math.max(0, focus?.[2] ?? 0));
+  let m = multiply(eye, translation(at.tx * centring, at.ty * centring, 0));
   m = multiply(m, rotateX);
   m = multiply(m, rotateZ);
-  return multiply(m, scale);
+  m = multiply(m, scale);
+  // A point of the floor to look at (a camera following the play), in the scene's pixels from its middle: it takes the place the middle had.
+  return focus === undefined || (focus[0] === 0 && focus[1] === 0) ? m : multiply(m, translation(-focus[0], -focus[1], 0));
 }
 
 /**

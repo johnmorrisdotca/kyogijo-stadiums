@@ -125,6 +125,8 @@ export interface ReplaySettings extends ReplayLook {
   stepSeconds?: number;
   /** The time to begin at, in seconds from the first frame. 0 by default. */
   start?: number;
+  /** The camera follows the play: `action` (the players near the puck or ball), `puck` (the puck or ball), or `off` (the default). See `followShot`. */
+  follow?: "off" | "action" | "puck";
 }
 
 /** A tracked object at a moment, and the trail behind it. */
@@ -166,10 +168,13 @@ export interface ReplayState {
   loop: boolean;
   /** `step` for a reader who prefers reduced motion: play moves a step, never by itself. */
   motion: "smooth" | "step";
+  /** What the camera follows, and whether the reader's own turn or zoom of a 3D view holds it until it is resumed. */
+  follow: "off" | "action" | "puck";
+  followHeld: boolean;
 }
 
 /** Why the controller told its listeners. */
-export type ReplayReason = "play" | "pause" | "seek" | "step" | "tick" | "speed" | "loop" | "motion";
+export type ReplayReason = "play" | "pause" | "seek" | "step" | "tick" | "speed" | "loop" | "motion" | "follow";
 
 /** What a listener of the controller is told. */
 export interface ReplayChange {

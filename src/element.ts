@@ -19,12 +19,12 @@ export const KYOGIJO_ATTRIBUTES = [
   "pitch", "pitch-type", "half", "range", "range-end", "goals", "stripe-pattern", "corner-flags", "look", "line-width", "line-dash", "line-opacity", "landmarks", "walls", "quirks",
   "home", "away", "home-abbr", "away-abbr", "home-score", "away-score", "home-penalties", "away-penalties", "score", "home-logo", "away-logo", "home-flag", "away-flag", "home-color", "away-color",
   "status", "competition", "date", "label", "winner", "home-side", "pageant", "description", "options",
-  "loop", "speed", "autoplay", "controls", "trail",
+  "loop", "speed", "autoplay", "controls", "trail", "follow",
   "turn", "turn-view", "turn-controls", "turn-uprights", "turn-score", "turn-touch", "turn-venue", "turn-roof", "turn-autoplay", "turn-speed", "turn-direction",
 ] as const;
 
 /** The attributes that are about a replay and not about the drawing. */
-const REPLAY_ATTRIBUTES: readonly string[] = ["loop", "speed", "autoplay", "controls", "trail"];
+const REPLAY_ATTRIBUTES: readonly string[] = ["loop", "speed", "autoplay", "controls", "trail", "follow"];
 
 /** The settings of a 3D view an element's attributes make: `turn-view` names the viewpoint it opens on, `turn-controls="false"` and `turn-uprights="false"` leave the buttons and what stands on the surface out, `turn-score="floor"` leaves the score panel on the floor, `turn-touch="turn"` keeps every touch for the view, `turn-venue="false"` leaves out the stands and the room (they are raised for a drawing with a crowd and for a dojo), `turn-roof` puts a roof or canopy over the stands, `turn-autoplay` starts the auto-turn (`force` even for a reader who prefers reduced motion) and `turn-speed` is its degrees a second. */
 export function turnSettingsFromAttributes(read: (name: string) => string | null, base: TurnSettings = {}): TurnSettings {
@@ -52,7 +52,7 @@ export function turnSettingsFromAttributes(read: (name: string) => string | null
 /** Whether an element's `turn` attribute asks for the 3D view: present, and not `false`. */
 export const turnWanted = (read: (name: string) => string | null): boolean => read("turn") !== null && read("turn") !== "false";
 
-/** The settings of a replay an element's attributes make: `loop`, `autoplay` and `controls="false"` are switches, `speed` and `trail` numbers. */
+/** The settings of a replay an element's attributes make: `loop`, `autoplay` and `controls="false"` are switches, `speed` and `trail` numbers, `follow` what the camera follows (`action`, `puck` or `off`). */
 export function replaySettingsFromAttributes(read: (name: string) => string | null, base: ReplaySettings = {}): ReplaySettings {
   const out: ReplaySettings = { ...base };
   const on = (name: string): boolean | undefined => (read(name) === null ? undefined : read(name) !== "false");
@@ -70,6 +70,8 @@ export function replaySettingsFromAttributes(read: (name: string) => string | nu
   if (speed !== undefined) out.speed = speed;
   const trail = number("trail");
   if (trail !== undefined) out.trail = trail;
+  const follow = read("follow");
+  if (follow !== null) out.follow = follow === "action" || follow === "puck" ? follow : "off";
   return out;
 }
 
@@ -293,11 +295,12 @@ export class KyogijoField extends Base {
       if (view !== null && (TURN_PRESET_NAMES as readonly string[]).includes(view)) this.#turn.preset(view as TurnPreset);
       return;
     }
-    if (REPLAY_ATTRIBUTES.includes(name) && this.#replay !== undefined) this.#attach(name !== "speed" && name !== "loop");
+    if (name === "follow" && this.#replay !== undefined) this.#replay.setFollow(replaySettingsFromAttributes((key) => this.getAttribute(key)).follow ?? "off");
+    else if (REPLAY_ATTRIBUTES.includes(name) && this.#replay !== undefined) this.#attach(name !== "speed" && name !== "loop");
     else this.#draw();
   }
 
-  /** Put the replay on the mount: new when the timeline is new or `again` says its look changed (it goes on from where it was), else only the speed and the loop are changed. */
+  /** Put the replay on the mount: new when the timeline is new or `again` says its look changed (it goes on from where it was), else only the speed and the loop are changed (and what the camera follows, by its own attribute). */
   #attach(again: boolean): void {
     const on = this.#turn ?? this.#mount;
     if (on === undefined || this.#timeline === undefined) return;
@@ -310,7 +313,7 @@ export class KyogijoField extends Base {
     const from = this.#replay === undefined || this.#replayOf !== this.#timeline ? undefined : this.#replay.state();
     this.#replay?.destroy();
     this.#replayOf = this.#timeline;
-    this.#replay = on.replay(this.#timeline, from === undefined ? settings : { ...settings, start: from.t - from.start });
+    this.#replay = on.replay(this.#timeline, from === undefined ? settings : { ...settings, start: from.t - from.start, follow: from.follow });
   }
 
   #draw(): void {

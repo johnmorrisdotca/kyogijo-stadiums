@@ -804,6 +804,16 @@ export interface KyogijoWords {
     keysTurn: string;
     keysTurnStep: string;
     region: string;
+    /** The camera that follows the play: the name of its buttons, each button's word and what it does, and the button that lets it follow again after the reader turned the view. */
+    follow: string;
+    followAction: string;
+    followActionLabel: string;
+    followPuck: string;
+    followPuckLabel: string;
+    followBall: string;
+    followBallLabel: string;
+    followResume: string;
+    followResumeLabel: string;
   };
   /** The words of the 3D view: its name, the keys, the viewpoints, the controls, what is announced, and the names of what stands on the surface. */
   turn: {

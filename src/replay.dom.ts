@@ -4,6 +4,7 @@
 import { num } from "./format.ts";
 import { renderLayers } from "./layers.ts";
 import { REPLAY_SPEEDS, createReplay, type ReplayController } from "./replay.control.ts";
+import { FOLLOW_STYLE, flatFollow, followControls } from "./replay.follow.dom.ts";
 import { describeEvent, drawFrame, replayClock, replayGroups, replaySpoken, replayInfo, replayPlacer, replaySnapshot, type ReplayGroup } from "./replay.ts";
 import type { ReplayChange, ReplayLook, ReplaySettings, ReplayTimeline } from "./replay.types.ts";
 import { KYOGIJO_STRINGS, fill } from "./strings.core.ts";
@@ -251,7 +252,7 @@ export function replayDriver(doc: Document, timeline: ReplayTimeline, settings: 
   const words = (): (typeof KYOGIJO_STRINGS)["en"]["replay"] => KYOGIJO_STRINGS[language].replay;
 
   const style = doc.createElement("style");
-  style.textContent = REPLAY_STYLE;
+  style.textContent = REPLAY_STYLE + FOLLOW_STYLE;
   const hint = doc.createElement("p");
   hint.className = "ky-hint";
   hint.id = `${id}-keys`;
@@ -312,7 +313,8 @@ export function replayDriver(doc: Document, timeline: ReplayTimeline, settings: 
     play.hidden = stepMode;
     speed.hidden = stepMode;
     loop.hidden = stepMode;
-    bar.append(back, play, forward, speed, loop, range, clock);
+    const follow = followControls(doc, w, controller, timeline);
+    bar.append(back, play, forward, speed, loop, range, clock, ...follow.parts);
     hint.textContent = source.help === "turn" ? (stepMode ? w.keysTurnStep : w.keysTurn) : stepMode ? w.keysStep : w.keys;
     if (source.labelled !== undefined) {
       source.labelled.setAttribute("aria-label", w.region);
@@ -341,6 +343,7 @@ export function replayDriver(doc: Document, timeline: ReplayTimeline, settings: 
       loop.setAttribute("aria-pressed", String(s.loop));
       source.holder.dataset.state = s.ended ? "ended" : s.playing ? "playing" : "paused";
       source.holder.dataset.motion = s.motion;
+      follow.sync(s);
     };
     sync(undefined);
   };
@@ -492,14 +495,27 @@ export function createReplayView(host: HTMLElement, timeline: ReplayTimeline, se
   function drawStage(t: number): void {
     stage.innerHTML = drawFrame(options, timeline, t, settings);
     svg = stage.querySelector<SVGSVGElement>("svg.kyogijo");
+    // (A drawing written again is shown at the camera's shot.)
+    camera.again();
   }
-  const driver = replayDriver(doc, timeline, settings, { paint: (t) => painter.paint(t), language, keysOn: root, holder: root, labelled: stage });
+  const camera = flatFollow({ svg: () => svg, options: () => options, timeline, look: settings, now: () => performance.now() });
+  const driver = replayDriver(doc, timeline, settings, {
+    paint: (t, change) => {
+      painter.paint(t);
+      if (change !== undefined) camera.paint(change);
+    },
+    language,
+    keysOn: root,
+    holder: root,
+    labelled: stage,
+  });
   const { style, hint, bar, live } = driver.parts;
   root.append(style, stage, hint, bar, live);
   host.replaceChildren(root);
 
   drawStage(driver.controller.state().t);
   painter.bind(driver.controller.state().t);
+  camera.paint({ state: driver.controller.state(), reason: "follow", crossed: [] });
   if (settings.autoplay === true && driver.controller.state().motion === "smooth" && doc.visibilityState !== "hidden") driver.controller.play();
 
   return {

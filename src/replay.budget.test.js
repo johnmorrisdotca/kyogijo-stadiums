@@ -33,3 +33,18 @@ describe("the replay on the 3D view's code", () => {
     expect(files.reduce((sum, [, text]) => sum + text.length, 0)).toBeLessThan(24_000);
   });
 });
+
+describe("the follow camera's code", () => {
+  const files = ["src/replay.follow.ts", "src/replay.follow.dom.ts", "src/turn.follow.ts"].map((file) => [file, readFileSync(file, "utf8")]);
+
+  it("fetches nothing, sets no timer and asks for no frame of its own: it moves only when the replay's clock does", () => {
+    for (const [file, text] of files) {
+      expect(text, file).not.toMatch(/\bfetch\s*\(|XMLHttpRequest|WebSocket|EventSource|sendBeacon|\bimport\s*\(/);
+      expect(text, file).not.toMatch(/\bsetInterval\s*\(|\bsetTimeout\s*\(|\brequestAnimationFrame\s*\(/);
+    }
+  });
+
+  it("is small: under 32 kB of source, comments and all", () => {
+    expect(files.reduce((sum, [, text]) => sum + text.length, 0)).toBeLessThan(32_000);
+  });
+});
