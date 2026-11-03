@@ -7,6 +7,8 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.64.0] - 2026-11-03
+
 ### Added
 
 - **The camera follows the race leader, and Auto-follow beside Auto-turn (KYOGIJO-STADIUMS-53)** ([the camera follows the leader](./docs/circuits.md#a-race), [Auto-follow](./docs/replay.md#following-the-play)): a race on a circuit can be watched with a camera that zooms slowly into the leader, moves with them, pans out, and always keeps the leader in view (`follow: "leader" | "pack"`, `setFollow`, `holdFollow`, `follow=leader|pack` in the demo's address). It is the game camera of 0.60.0 (KYOGIJO-STADIUMS-46) with the leader as the puck: the same critically damped spring, dead zone and leash, closer limits for a circuit (up to six times), flat by the drawing's `viewBox` and in 3D by the view's aim, held by the reader's own turn until **Resume**, steps with reduced motion, and the map's credit kept as text over the view while the drawing's own is out of frame. The bar's follow slot has **Leader**, **Pack** and **Resume**; the 3D view's buttons have an **Auto-follow** toggle right after **Auto-turn**, made like it, on a race and on a game's replay alike (hockey's follow camera too, `follow=action|puck`), and both can be on at once: that is the docs' moving picture. Its freeze and leak budgets hold in the race's tests (flat and 3D, the leader and the pack), and the leader is in the frame at every sampled moment of whole races at 60 and 600 times. On a district's ground (`mountDistrictRace`) the camera frames the circuit where the district lays it. The camera's parts that know no replay are in files of their own (`turn.aim.ts`, `replay.events.ts`), so a race's page loads none of a replay's drawing.
