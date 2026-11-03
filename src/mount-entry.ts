@@ -4,3 +4,5 @@ import "./full.ts";
 import "./venues.all.ts";
 export { containerAspect, kyogijoElement, mountKyogijo } from "./mount.ts";
 export type { KyogijoMount, KyogijoReplay, MountSettings } from "./mount.ts";
+// A feed from an address the reader gives: `mount.replay.fromUrl`, once the `/feeds` entry is loaded.
+export type { FeedReplay, FeedReplayOptions, ReplayCall } from "./replay.feed.ts";

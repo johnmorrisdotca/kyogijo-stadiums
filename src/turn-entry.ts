@@ -9,6 +9,8 @@ export type { TurnReplayLook, TurnReplayModel } from "./turn.replay.ts";
 // The replay on the view (`view.replay`): loaded with this entry, and not with a page that only turns a view.
 export type { TurnReplaySettings } from "./turn.replay.dom.ts";
 import "./turn.replay.dom.ts";
+// A feed from an address the reader gives: `view.replay.fromUrl`, once the `/feeds` entry is loaded.
+export type { FeedReplay, FeedReplayOptions, ReplayCall } from "./replay.feed.ts";
 export { buildTurn, floorOptions, openingView } from "./turn.model.ts";
 export { turnDirection } from "./turn.camera.ts";
 export type { TurnDirection } from "./turn.camera.ts";

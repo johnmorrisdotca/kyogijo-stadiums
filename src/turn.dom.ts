@@ -16,6 +16,7 @@ import { attachOutside3d, type OutsideLayer } from "./outside.dom.ts";
 import { TIER_PROFILES, createGovernor, handheld, layerBudget, qualityOf, rasterOf, rasterShares, tierOf, viewShare, FLOOR_SHARE, type Governor, type Quality, type QualityTier } from "./quality.ts";
 import { size } from "./turn.kit.ts";
 import type { OutsideLevel } from "./outside.paint.ts";
+import { withFeeds, type ReplayCall } from "./replay.feed.ts";
 import type { ReplaySettings, ReplayTimeline } from "./replay.types.ts";
 import type { KyogijoReplay } from "./mount.ts";
 import type { TurnInternals } from "./turn.replay.dom.ts";
@@ -82,8 +83,9 @@ export interface KyogijoTurn<O = SurfaceOptions | ScoreOptions> {
    * Play tracking data on the view: the players stand up on the surface as discs that face the eye (home circles, away squares, numbers), the ball or the puck runs on the floor with its trail, and the passes, shots and
    * goals are drawn on the floor as in the flat replay. The replay's controls go under the view's; the view still turns, tips and zooms while it plays. Space on the view plays and pauses, comma and full stop step; the
    * arrow keys still turn the view. `destroy` on what it gives takes the replay away and leaves the view. A tournament layout has no replay. Where the browser cannot draw the 3D view, the flat replay plays instead.
+   * `replay.fromUrl(url, options)` plays a feed from an address the reader gives,, once the `/feeds` entry is loaded (see `docs/feeds.md`).
    */
-  replay(timeline: ReplayTimeline, settings?: ReplaySettings): KyogijoReplay;
+  replay: ReplayCall;
   /** Stop listening and empty the container. */
   destroy(): void;
 }
@@ -224,7 +226,7 @@ export function mountTurn<O>(
       },
       svg: () => (alive ? host.querySelector<SVGSVGElement>("svg.kyogijo") : null),
       // The flat replay, where the 3D view cannot be drawn.
-      replay(timeline, replaySettings = {}) {
+      replay: withFeeds((timeline: ReplayTimeline, replaySettings: ReplaySettings = {}): KyogijoReplay => {
         if (!replayable) throw new Error("a replay plays on one surface, not on a layout");
         flatReplay?.view.destroy();
         const view = kitOf().flat(host, timeline, replaySettings, floorOptions(current as SurfaceOptions | ScoreOptions));
@@ -239,7 +241,7 @@ export function mountTurn<O>(
             flat(current);
           },
         };
-      },
+      }),
       destroy: () => {
         alive = false;
         flatReplay?.view.destroy();
@@ -901,7 +903,7 @@ export function mountTurn<O>(
       return last === undefined ? undefined : { ms: last.ms, people: last.stats.people, mode: last.stats.mode, pixels: last.pixels };
     },
     svg: () => (alive ? root.querySelector<SVGSVGElement>(".ky-turn-floor svg.kyogijo") : null),
-    replay(timeline, replaySettings = {}) {
+    replay: withFeeds((timeline: ReplayTimeline, replaySettings: ReplaySettings = {}): KyogijoReplay => {
       if (!alive) throw new Error("this view was destroyed");
       if (!replayable) throw new Error("a replay plays on one surface, not on a layout");
       replaying?.destroy();
@@ -915,7 +917,7 @@ export function mountTurn<O>(
           mine.destroy();
         },
       };
-    },
+    }),
     destroy() {
       if (!alive) return;
       alive = false;

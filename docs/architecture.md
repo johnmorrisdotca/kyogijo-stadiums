@@ -225,6 +225,9 @@ src/
 ├── feeds.core.ts       a feed's shared parts: the formats, the game a feed is read into, the error that says why one could not be read, the limits
 ├── feeds.ts            a feed read into a replay: kyogijo's open timeline or a game file, checked, and the format told apart
 ├── feeds.nhl.ts        an adapter: an NHL-style play-by-play read into a replay (the puck between the plays, the shots, goals and whistles, the periods and the clock)
+├── feeds.fetch.ts      a feed fetched by the reader's browser from an address they gave
+├── feeds.dom.ts        a feed played on a mount or a 3D view: replay.fromUrl
+├── replay.feed.ts      the replay of a mount and of a 3D view, with fromUrl on it
 ├── feeds-entry.ts      the feeds' entry
 ├── replay-entry.ts     the replay's entry
 ├── sound.sets.ts       the index of sound sets: a crowd bed for each kind of venue (its room, its layers, its levels) and each sport's set (its bed and the voices of each kind of moment)

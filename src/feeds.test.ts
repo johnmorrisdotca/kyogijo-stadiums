@@ -1,10 +1,15 @@
-// Feeds read into a replay: kyogijo's open timeline and an NHL-style play-by-play, every value checked. Every answer here is made up: no test makes a request.
-import { describe, expect, it } from "vitest";
+// Feeds read into a replay: kyogijo's open timeline and an NHL-style play-by-play, every value checked; the fetch by the reader's browser and a live follow. Every answer here is made up: no test makes a request.
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { FEED_LIMITS, FeedError } from "./feeds.core.ts";
+import { feedAddress, fetchFeedText, loadFeed } from "./feeds.fetch.ts";
 import { NHL_OVERTIME, NHL_PERIOD, nhlPlayByPlay } from "./feeds.nhl.ts";
 import { feedFormatOf, kyogijoFeed, readFeed, readFeedText } from "./feeds.ts";
+import "./feeds.dom.ts";
+import { withFeeds } from "./replay.feed.ts";
 import { replayBoard } from "./replay.board.ts";
+import type { KyogijoReplay } from "./mount.ts";
+import type { ReplaySettings, ReplayTimeline } from "./replay.types.ts";
 
 /** A made-up NHL-style play-by-play: two invented sides, a few plays of each period. */
 function stubPlayByPlay(over: Record<string, unknown> = {}) {
@@ -135,5 +140,57 @@ describe("an NHL-style play-by-play", () => {
   it("is an error with no play that has a place, and for an answer of another shape", () => {
     expect(() => nhlPlayByPlay(stubPlayByPlay({ plays: [] }))).toThrow(FeedError);
     expect(() => nhlPlayByPlay({ games: [] })).toThrow(/no list of plays/);
+  });
+});
+
+/** A made-up answer. */
+const answer = (body: string, status = 200, headers: Record<string, string> = {}) => new Response(body, { status, headers });
+
+describe("a feed fetched by the reader's browser", () => {
+  it("asks with no cookie, no referrer and no cache, and reads the answer", async () => {
+    const asked: [string, RequestInit | undefined][] = [];
+    const game = await loadFeed("https://feeds.example/game.json", { fetch: async (url, init) => (asked.push([url, init]), answer(JSON.stringify(stubPlayByPlay()))) });
+    expect(game.format).toBe("nhl");
+    expect(asked[0][0]).toBe("https://feeds.example/game.json");
+    expect(asked[0][1]).toMatchObject({ credentials: "omit", cache: "no-store", referrerPolicy: "no-referrer", mode: "cors" });
+  });
+
+  it("reads only http and https addresses, a relative one against the page's, and never one with a login", () => {
+    expect(feedAddress("examples/games/canada-japan.json", "https://site.example/kyogijo/").href).toBe("https://site.example/kyogijo/examples/games/canada-japan.json");
+    for (const bad of ["javascript:alert(1)", "file:///etc/passwd", "data:application/json,{}", "https://user:secret@feeds.example/x", "not an address"]) expect(() => feedAddress(bad, bad === "not an address" ? undefined : "https://site.example/"), bad).toThrow(FeedError);
+  });
+
+  it("says why it could not: a refusal of the browser (CORS), a status, an answer too large", async () => {
+    const reason = (fetcher: () => Promise<Response>, most?: number) => fetchFeedText("https://feeds.example/x", { fetch: fetcher, most }).then(() => "read", (error: FeedError) => `${error.kind} ${error.status ?? ""}`.trim());
+    expect(await reason(async () => Promise.reject(new TypeError("Failed to fetch")))).toBe("cors");
+    expect(await reason(async () => answer("", 429))).toBe("http 429");
+    expect(await reason(async () => answer("", 404))).toBe("http 404");
+    expect(await reason(async () => answer("12345", 200, { "content-length": "999999" }), 1000)).toBe("too-large");
+    expect(await reason(async () => answer("123456789", 200), 4)).toBe("too-large");
+    expect(await reason(async () => answer("{}"))).toBe("read");
+  });
+});
+
+describe("a replay's fromUrl", () => {
+  afterEach(() => vi.useRealTimers());
+  /** A replay that only remembers what it was given. */
+  const fakePlay = () => {
+    const made: { timeline: ReplayTimeline; settings: ReplaySettings | undefined; destroyed: boolean }[] = [];
+    const play = (timeline: ReplayTimeline, settings?: ReplaySettings): KyogijoReplay => {
+      const one = { timeline, settings, destroyed: false };
+      made.push(one);
+      const end = timeline.frames.at(-1)!.t;
+      return { state: () => ({ t: end, start: 0, end, playing: false, ended: false, speed: 1, loop: false, motion: "smooth" }), destroy: () => void (one.destroyed = true) } as unknown as KyogijoReplay;
+    };
+    return { made, replay: withFeeds(play) };
+  };
+
+  it("plays a feed from an address, with the game it was read into", async () => {
+    const { made, replay } = fakePlay();
+    const played = await replay.fromUrl("https://feeds.example/pbp", { fetch: async () => answer(JSON.stringify(stubPlayByPlay())), settings: { speed: 2 } });
+    expect(played.feed.format).toBe("nhl");
+    expect(made).toHaveLength(1);
+    expect(made[0].settings).toEqual({ speed: 2 });
+    await expect(replay.fromUrl("ftp://feeds.example/x")).rejects.toThrow(FeedError);
   });
 });

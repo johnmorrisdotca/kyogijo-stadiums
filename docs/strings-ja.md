@@ -2240,6 +2240,7 @@ Made from `src/strings.en.ts`, `src/strings.ja.ts` and `demo/words.js` by `pnpm 
 | page `sound` | Sound | サウンド |
 | page `sound-credits` | Sound credits | サウンドのクレジット |
 | page `feeds` | Feeds | フィード |
+| page `where-to-find-a-feed` | Where to find a feed | フィードの入手先 |
 | page `renderers` | Renderers | レンダラー |
 | group `gallery` | Gallery | ギャラリー |
 | page `gallery` | Gallery | ギャラリーの案内 |

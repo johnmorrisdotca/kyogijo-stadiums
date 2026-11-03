@@ -2,14 +2,14 @@
 
 [日本語](feeds.ja.md) · English
 
-A feed is a game as data: the places of the players and the ball over time, and what happened (the shots, the goals, the whistles), with the sides and the periods. The [replay](./replay.md) plays it flat or [in 3D](./replay.md#in-3d), with the arena's scoreboard showing its score, period and clock. We host no feed and keep no league's data: the feed is yours. It comes from a file you pick or from text you paste.
+A feed is a game as data: the places of the players and the ball over time, and what happened (the shots, the goals, the whistles), with the sides and the periods. The [replay](./replay.md) plays it flat or [in 3D](./replay.md#in-3d), with the arena's scoreboard showing its score, period and clock. We host no feed and keep no league's data: the feed is yours. It comes from a file you pick, from text you paste, or from an address you give, which **your browser** fetches. [Where to find a feed](./where-to-find-a-feed.md) lists the feeds known for each sport, our own made-up sample first.
 
 ## The rules we keep
 
-- **No server or proxy of ours.** Nothing goes anywhere.
+- **No server or proxy of ours.** An address is fetched by the reader's browser, with no cookie and no referrer, and nothing goes anywhere else.
 - **Nothing is kept.** No cache beyond the open page, no storage, nothing copied into the repository.
 - **Names come from the feed, at run time.** The package ships no league's or team's names, logos or marks; whatever the feed names is shown as text while the page is open.
-- **The terms are the source's.** You are responsible for following the terms of the source of a feed you play.
+- **The terms are the source's.** A note beside the address field says so: you are responsible for following the terms of the source you enter.
 - **Tests use answers we made up**, never a real request.
 
 ## The open timeline
@@ -70,6 +70,29 @@ An adapter is a pure function from a feed's own shape to the open timeline, test
 A play-by-play has events and no tracking, so `nhlPlayByPlay` moves the puck between the places of the plays in a straight line (modelled between the known places), marks each shot, goal and whistle where it was, puts every play on the game's own clock (twenty minutes a period, an overtime of five in the regular season and twenty in the playoffs; the shoot-out is left out, and its goals are not the score's), and names the sides by their `abbrev` and the players by their names, at run time. `ended` is true once `gameState` is `OFF` or `FINAL`.
 
 
+## From an address
+
+Load the `/feeds` entry once, and every mount's and 3D view's `replay` has `fromUrl`: it fetches the address by the reader's browser (no cookie, no referrer, no cache), reads it and plays it. `loadFeed(url)` does the first two without playing.
+
+```ts no-run
+import "@johnmorrisdotca/kyogijo-stadiums/feeds";
+import { mountKyogijoTurn } from "@johnmorrisdotca/kyogijo-stadiums/turn";
+
+declare const address: string;
+const view = mountKyogijoTurn(document.querySelector("#rink")!, { sport: "nhl", crowd: { boards: true } }, { preset: "broadcast" });
+try {
+  const replay = await view.replay.fromUrl(address, { format: "auto" });
+  console.log(replay.feed.teams);
+  replay.play();
+} catch (error) {
+  // A FeedError: error.kind is "cors", "http" (with error.status), "format", "address", "too-large", "network" or "empty".
+}
+```
+
+Only an `http` or `https` address is read (a relative one against the page's), never one with a login in it, and an answer is at most 20 MB.
+
+**When the browser cannot read it.** Many servers do not let a page of another site read them: they send no `Access-Control-Allow-Origin`, and the browser refuses the answer (CORS). A page cannot tell that from a server that is down, so the error says both (`cors`). Then the reader can save the answer and pick it as a file or paste it, or point at a relay of their own that adds the header. We run no relay, and the package never asks for one.
+
 ## In the demo
 
-[Bring your own feed](https://johnmorrisdotca.github.io/kyogijo-stadiums/#feed), in the game section of the demo, plays a feed from a file or a paste.
+[Bring your own feed](https://johnmorrisdotca.github.io/kyogijo-stadiums/#feed), in the game section of the demo, takes an address, a file or a paste, and lists [where to find a feed](./where-to-find-a-feed.md) beside the field, our made-up sample first; **Use** fills the field.

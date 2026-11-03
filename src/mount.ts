@@ -3,6 +3,7 @@ import { resolveHomeSide } from "./homeside.ts";
 import { chooseLeague } from "./leagues.ts";
 import type { ReplayController } from "./replay.control.ts";
 import { createReplayView, type ReplayView } from "./replay.dom.ts";
+import { withFeeds, type ReplayCall } from "./replay.feed.ts";
 import type { ReplaySettings, ReplayTimeline } from "./replay.types.ts";
 import type { ScoreOptions, SurfaceOptions } from "./types.ts";
 
@@ -20,9 +21,10 @@ export interface KyogijoMount {
   /**
    * Play tracking data on the surface: the players, the ball and the events of a timeline, with controls under the drawing (play, pause, step,
    * speed, loop, position), the keyboard (space, the arrow keys, Home and End) and a live region for goals and shots. Only the marks that move are
-   * moved, on animation frames. A reader who prefers reduced motion gets steps, and nothing plays by itself; a hidden page pauses. `update` keeps the replay.
+   * moved, on animation frames. A reader who prefers reduced motion gets steps, and nothing plays by itself; a hidden page pauses. `update` keeps the replay. `replay.fromUrl(url, options)` plays a feed from an
+   * address the reader gives,, once the `/feeds` entry is loaded (see `docs/feeds.md`).
    */
-  replay(timeline: ReplayTimeline, settings?: ReplaySettings): KyogijoReplay;
+  replay: ReplayCall;
   /** Stop watching the container and empty it. */
   destroy(): void;
 }
@@ -144,7 +146,7 @@ export function mountKyogijo(host: HTMLElement, options: SurfaceOptions | ScoreO
       render();
       if (settings.highlight !== false) highlightScores(host, before, next);
     },
-    replay(timeline, replaySettings = {}) {
+    replay: withFeeds((timeline: ReplayTimeline, replaySettings: ReplaySettings = {}): KyogijoReplay => {
       if (!alive) throw new Error("this mount was destroyed");
       view?.destroy();
       const mine = createReplayView(host, timeline, replaySettings, resolved());
@@ -158,7 +160,7 @@ export function mountKyogijo(host: HTMLElement, options: SurfaceOptions | ScoreO
           render();
         },
       };
-    },
+    }),
     svg: () => (alive ? host.querySelector<SVGSVGElement>("svg.kyogijo") : null),
     orientation: () => (portrait ? "portrait" : "landscape"),
     destroy() {

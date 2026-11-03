@@ -67,7 +67,7 @@ export function mountJudgingBroadcast(host: HTMLElement, options: JudgingOptions
     direction: () => turn.direction(),
     setDirection: (direction) => turn.setDirection(direction),
     togglePlay: () => turn.togglePlay(),
-    replay: (timeline, replaySettings) => turn.replay(timeline, replaySettings),
+    replay: turn.replay,
     get quality() {
       return turn.quality;
     },

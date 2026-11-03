@@ -1,9 +1,14 @@
-// Bring your own feed: a game from a file the reader picks or text they paste, played in the game section by the package's own replay. The package's feeds code (`dist/feeds-entry.js`) is loaded only when the
-// reader first uses one of these; nothing is sent anywhere or kept.
+// Bring your own feed: a game from a file the reader picks, text they paste, or an address they give, played in the game section by the package's own replay. The package's feeds code (`dist/feeds-entry.js`) is loaded
+// only when the reader first uses one of these; the reader's browser fetches the address, and nothing is sent anywhere else or kept. The list of where to find a feed is `examples/feed-sources.json`, our own made-up
+// sample first; picking one fills the field.
 
 let feeds;
 /** The package's feeds code, loaded once, when first wanted. */
 const feedsCode = () => (feeds ??= import("./dist/feeds-entry.js"));
+
+let sources;
+/** Where to find a feed: the data file beside the page, read once. */
+const sourcesData = () => (sources ??= fetch("examples/feed-sources.json").then((answer) => (answer.ok ? answer.json() : { sports: [] })));
 
 /**
  * Wire the feed controls of the game section.
@@ -61,8 +66,63 @@ export function mountFeedControls(page) {
     }
   });
 
+  // ---- An address. ----
+  $("feed-load").addEventListener("click", async () => {
+    const url = $("feed-url").value.trim();
+    if (url === "") {
+      tell("feedNoUrl");
+      return;
+    }
+    tell("feedReading");
+    try {
+      const { loadFeed } = await feedsCode();
+      played(await loadFeed(url));
+    } catch (error) {
+      failed(error);
+    }
+  });
+  $("feed-url").addEventListener("keydown", (event) => {
+    if (event.key === "Enter") $("feed-load").click();
+  });
+
+  // ---- Where to find a feed: the sport's sources, our sample first; Use fills the field. ----
+  const list = $("feed-sources");
+  const paint = async () => {
+    const data = await sourcesData();
+    const lang = page.lang();
+    const sport = data.sports.find((s) => s.sport === page.sport()) ?? data.sports[0];
+    list.replaceChildren(
+      ...(sport?.sources ?? []).map((s) => {
+        const item = document.createElement("li");
+        item.className = "feed-source";
+        item.dataset.source = s.id;
+        const use = Object.assign(document.createElement("button"), { type: "button", className: "fam-button", textContent: page.say("feedUse") });
+        use.dataset.testid = `feed-use-${s.id}`;
+        use.setAttribute("aria-label", `${page.say("feedUse")}: ${s.name[lang]}`);
+        use.addEventListener("click", () => {
+          $("feed-url").value = s.url;
+          $("feed-url").focus();
+        });
+        const name = Object.assign(document.createElement("strong"), { textContent: s.name[lang] });
+        const gives = Object.assign(document.createElement("span"), { className: "feed-gives", textContent: s.gives[lang] });
+        const links = document.createElement("span");
+        links.className = "feed-links";
+        for (const link of [...s.docs, s.terms]) {
+          const a = Object.assign(document.createElement("a"), { href: link.url, textContent: link.label[lang] });
+          if (/^https?:/.test(link.url)) a.rel = "noopener noreferrer";
+          links.append(a);
+        }
+        if (s.browser !== "yes") links.append(Object.assign(document.createElement("em"), { textContent: page.say("feedMayRefuse") }));
+        const body = document.createElement("div");
+        body.className = "feed-body";
+        body.append(name, gives, links);
+        item.append(use, body);
+        return item;
+      }),
+    );
+  };
   return {
-    /** The section came near the screen, or the language changed: nothing to write yet. */
-    paint: () => undefined,
+    /** The section came near the screen, or the language changed: write the list. */
+    paint: () => void paint(),
   };
 }

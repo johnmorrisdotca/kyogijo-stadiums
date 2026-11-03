@@ -665,13 +665,19 @@ const page = `<!doctype html>
           <h3 data-say="feedTitle"></h3>
           <p data-say="feedText"></p>
           <div class="feed-row">
+            <label class="feed-url"><span data-say="feedUrl"></span><input type="url" id="feed-url" data-testid="feed-url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://"></label>
+            <button type="button" class="fam-button" id="feed-load" data-testid="feed-load" data-primary="true" data-say="feedLoad"></button>
+          </div>
+          <div class="feed-row">
             <button type="button" class="fam-button" id="feed-file-pick" data-testid="feed-file-pick" data-say="feedFile"></button><input type="file" id="feed-file" data-testid="feed-file" accept="application/json,.json" hidden>
           </div>
           <label class="feed-paste"><span data-say="feedPaste"></span><textarea id="feed-paste" data-testid="feed-paste" rows="3" spellcheck="false"></textarea></label>
           <div class="feed-row"><button type="button" class="fam-button" id="feed-paste-play" data-testid="feed-paste-play" data-say="feedPastePlay"></button></div>
           <p class="feed-status" id="feed-status" data-testid="feed-status" role="status"></p>
           <p class="feed-note" data-testid="feed-note" data-say="feedNote"></p>
-          <p><a href="docs/feeds.html" data-say="feedDocs"></a></p>
+          <h4 data-say="feedWhere"></h4>
+          <ul class="feed-sources" id="feed-sources" data-testid="feed-sources"></ul>
+          <p><a href="docs/where-to-find-a-feed.html" data-say="feedGuide"></a> · <a href="docs/feeds.html" data-say="feedDocs"></a></p>
         </div>
         <p><a href="examples/games/canada-japan.json" data-testid="game-file" data-say="gameFile"></a> · <a href="docs/example-games.html" data-say="gameDocs"></a></p>
       </section>
