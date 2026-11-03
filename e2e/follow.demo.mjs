@@ -78,7 +78,8 @@ test.describe("the follow camera", () => {
       await page.evaluate(() => window.__replay.setFollow("off"));
       const back = await page.evaluate(() => window.__track(3500));
       expect(largestStep(back)).toBeLessThan(kind === "flat" ? 40 : 30);
-      if (kind === "flat") expect(await page.locator("#rink svg.kyogijo").getAttribute("viewBox")).toBe("-8 -8 216 101");
+      // From a stoppage (the example game has a whistle at 19 s) the camera comes back from the face-off dot, farther than from the play: it is waited for, and must still land exactly on the whole surface.
+      if (kind === "flat") await expect.poll(() => page.locator("#rink svg.kyogijo").getAttribute("viewBox"), { timeout: 6000 }).toBe("-8 -8 216 101");
       else expect(Math.abs(back.at(-1).size - whole[0].size)).toBeLessThan(1);
     });
   }

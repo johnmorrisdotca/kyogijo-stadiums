@@ -187,11 +187,11 @@ test.describe("the game's sound", () => {
     // Paused: the game's sound waits.
     await expect.poll(() => audio(page).then((a) => a.contexts)).toBe(1);
     expect((await audio(page)).state).not.toBe("running");
-    // A seek past the first goal (84.76 s) calls no cue.
-    await page.locator(`${at("game-stage")} .ky-position`).fill("90");
+    // A seek past the first goal (122.54 s: the game clock stops at a stoppage, so the replay's clock runs past it) calls no cue.
+    await page.locator(`${at("game-stage")} .ky-position`).fill("128");
     expect(await bar.getAttribute("data-cues")).toBeNull();
     // Just before it, played: the horn (three low saws and one a little apart) and the crowd's swell.
-    await page.locator(`${at("game-stage")} .ky-position`).fill("83.5");
+    await page.locator(`${at("game-stage")} .ky-position`).fill("121.5");
     await play.click();
     await expect.poll(() => audio(page).then((a) => a.state)).toBe("running");
     await expect.poll(() => bar.getAttribute("data-cue"), { timeout: 10_000 }).toBe("swell");

@@ -5,8 +5,8 @@
     "dataKB": 1200
   },
   "venues": {
-    "totalKB": 3245,
-    "totalGzipKB": 935,
+    "totalKB": 3260,
+    "totalGzipKB": 940,
     "dataKB": 610
   },
   "district:pair": {
@@ -50,7 +50,7 @@
     "dataKB": 130
   },
   "district:kodokan": {
-    "totalKB": 2310,
+    "totalKB": 2315,
     "totalGzipKB": 735,
     "dataKB": 70
   },
@@ -60,18 +60,18 @@
     "dataKB": 190
   },
   "stadiums": {
-    "totalKB": 3200,
-    "totalGzipKB": 920,
+    "totalKB": 3220,
+    "totalGzipKB": 925,
     "dataKB": 610
   },
   "halls": {
-    "totalKB": 3290,
-    "totalGzipKB": 950,
+    "totalKB": 3310,
+    "totalGzipKB": 955,
     "dataKB": 645
   },
   "boards": {
-    "totalKB": 3305,
-    "totalGzipKB": 940,
+    "totalKB": 3320,
+    "totalGzipKB": 945,
     "dataKB": 725
   },
   "flythrough": {
@@ -80,8 +80,8 @@
     "dataKB": 610
   },
   "judging": {
-    "totalKB": 3200,
-    "totalGzipKB": 925,
+    "totalKB": 3220,
+    "totalGzipKB": 930,
     "dataKB": 610
   },
   "circuits": {
