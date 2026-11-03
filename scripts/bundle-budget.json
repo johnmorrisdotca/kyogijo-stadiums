@@ -1,12 +1,12 @@
 {
   "home": {
-    "totalKB": 5490,
-    "totalGzipKB": 1685,
+    "totalKB": 5500,
+    "totalGzipKB": 1690,
     "dataKB": 1200
   },
   "venues": {
-    "totalKB": 3265,
-    "totalGzipKB": 940,
+    "totalKB": 3275,
+    "totalGzipKB": 945,
     "dataKB": 610
   },
   "district:pair": {
@@ -55,22 +55,22 @@
     "dataKB": 70
   },
   "district:lasvegas": {
-    "totalKB": 2565,
-    "totalGzipKB": 810,
+    "totalKB": 2605,
+    "totalGzipKB": 820,
     "dataKB": 190
   },
   "stadiums": {
-    "totalKB": 3220,
-    "totalGzipKB": 925,
+    "totalKB": 3230,
+    "totalGzipKB": 930,
     "dataKB": 610
   },
   "halls": {
-    "totalKB": 3310,
-    "totalGzipKB": 955,
+    "totalKB": 3320,
+    "totalGzipKB": 960,
     "dataKB": 645
   },
   "boards": {
-    "totalKB": 3320,
+    "totalKB": 3330,
     "totalGzipKB": 945,
     "dataKB": 725
   },
@@ -80,13 +80,13 @@
     "dataKB": 610
   },
   "judging": {
-    "totalKB": 3220,
-    "totalGzipKB": 930,
+    "totalKB": 3230,
+    "totalGzipKB": 935,
     "dataKB": 610
   },
   "circuits": {
-    "totalKB": 2355,
-    "totalGzipKB": 745,
+    "totalKB": 2435,
+    "totalGzipKB": 770,
     "dataKB": 70
   }
 }
