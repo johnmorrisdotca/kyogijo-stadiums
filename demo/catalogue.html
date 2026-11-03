@@ -147,7 +147,7 @@
           coverage: "drawn in its building", coverageMore: "{surface} as a field only · {notYet} not yet", season: "{season} season",
           keyOutline: "Drawn in its building", keySurface: "Field only", keyWorking: "Working on", keyWanted: "Wanted",
           badgeOutline: "In its building", badgeSurface: "Field only", badgeBuilding: "Building wanted", badgeWorking: "Working on", badgeWanted: "Wanted", badgeCircuit: "Needs its track's data first", badgeDrawnCircuit: "Drawn as a circuit", past: " (past)",
-          found: "{n} venues · {from} to {to} shown", foundNone: "No venue matches.", page: "Page {n} of {all}", prev: "Previous", next: "Next",
+          found: "{n} venues · {from} to {to} shown", foundOne: "1 venue", foundNone: "No venue matches.", page: "Page {n} of {all}", prev: "Previous", next: "Next",
           seats: "{n} seats", see: "See the drawing", wikidata: "Wikidata", ticket: "Ticket {ticket}", mapLabel: "A world map with a pin on each venue shown",
           json: "The catalogue as JSON", docs: "The catalogue page of the docs", stadiums: "The real stadiums",
           credit: "Names, places, countries and seats: Wikidata (CC0) and the package's own data. Map: Natural Earth (public domain), drawn by chizu. Flags: Hata.",
@@ -161,7 +161,7 @@
           coverage: "会場が建物ごと描画済み", coverageMore: "競技面のみ{surface}会場、未対応{notYet}会場", season: "{season}シーズン",
           keyOutline: "建物ごと描画", keySurface: "競技面のみ", keyWorking: "制作中", keyWanted: "追加したい",
           badgeOutline: "建物ごと", badgeSurface: "競技面のみ", badgeBuilding: "建物を追加したい", badgeWorking: "制作中", badgeWanted: "追加したい", badgeCircuit: "先にコースのデータが必要", badgeDrawnCircuit: "サーキットとして描画", past: "（過去）",
-          found: "{n}会場（{from}〜{to}件目を表示）", foundNone: "当てはまる会場はありません。", page: "{all}ページ中{n}ページ目", prev: "前へ", next: "次へ",
+          found: "{n}会場（{from}〜{to}件目を表示）", foundOne: "1会場", foundNone: "当てはまる会場はありません。", page: "{all}ページ中{n}ページ目", prev: "前へ", next: "次へ",
           seats: "{n}席", see: "図を見る", wikidata: "Wikidata", ticket: "チケット {ticket}", mapLabel: "表示中の会場に印を付けた世界地図",
           json: "カタログの JSON", docs: "ドキュメントの会場カタログのページ", stadiums: "実在のスタジアム",
           credit: "名前・場所・国・座席数：Wikidata（CC0）とこのパッケージのデータ。地図：Natural Earth（パブリックドメイン）、chizu で描画。国旗：Hata。",
@@ -312,7 +312,7 @@
         $("groups").hidden = state.tab === "working-on";
         chipRow($("groups"), ["all", ...groups.map((group) => group.id)], state.group, (value) => (value === "all" ? t.all : groupName(CATALOGUE_GROUPS.find((group) => group.id === value))), (value) => (value === "all" ? inTab.length : inTab.filter((entry) => entry.groups.includes(value)).length), (value) => { state.group = value; });
         $("grid").innerHTML = page.length === 0 ? `<p class="empty">${t.foundNone}</p>` : page.map(card).join("");
-        $("found").textContent = list.length === 0 ? t.foundNone : fill(t.found, { n: num(list.length), from: num(from + 1), to: num(from + page.length) });
+        $("found").textContent = list.length === 0 ? t.foundNone : list.length === 1 ? t.foundOne : fill(t.found, { n: num(list.length), from: num(from + 1), to: num(from + page.length) });
         $("page").textContent = fill(t.page, { n: num(state.page), all: num(pages) });
         $("prev").disabled = state.page <= 1;
         $("next").disabled = state.page >= pages;
