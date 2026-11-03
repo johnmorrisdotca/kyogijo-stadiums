@@ -62,7 +62,7 @@ console.log(cuesOf({ kind: "goal" }, "nhl").join(), cuesOf({ kind: "goal" }, "so
 // horn,swell swell undefined
 ```
 
-`SOUND_BEDS`, `SOUND_SETS` and `SOUND_OF_SPORT` are the index; every surface the package draws has a set, and a test holds it.
+`SOUND_BEDS`, `SOUND_SETS` and `SOUND_OF_SPORT` are the index; every surface the package draws, the circuits excepted, has a set, and a test holds it.
 
 ## The room and the crowd
 
