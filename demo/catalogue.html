@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Kyogijo Stadiums: the catalogue of venues</title>
+    <meta name="description" content="Every venue Kyogijo Stadiums draws today, the ones being built and the ones wanted: every NBA, MLB, NFL, CFL and NHL venue of the season, world soccer, cricket, rugby, the Olympics, Formula One and more, on a map and as cards." />
+    <style>
+      :root { color-scheme: light dark; --bg: #f6f4ee; --ink: #10151b; --muted: #434b54; --card: #fff; --line: #b9b3a3; --accent: #1f5fa8; --tab: #10151b; --tab-ink: #fff; --ok: #1d6b3a; --part: #8a5a00; --todo: #8f2437; --work: #1f5fa8; --track: #e3ded2; }
+      @media (prefers-color-scheme: dark) { :root { --bg: #0d1218; --ink: #f6f3ea; --muted: #bcc3cb; --card: #18212a; --line: #475463; --accent: #7fb2ee; --tab: #f6f3ea; --tab-ink: #0d1218; --ok: #6fd393; --part: #f2bd55; --todo: #ff8a9c; --work: #7fb2ee; --track: #2a3540; } }
+      :root[data-theme="light"] { color-scheme: light; --bg: #f6f4ee; --ink: #10151b; --muted: #434b54; --card: #fff; --line: #b9b3a3; --accent: #1f5fa8; --tab: #10151b; --tab-ink: #fff; --ok: #1d6b3a; --part: #8a5a00; --todo: #8f2437; --work: #1f5fa8; --track: #e3ded2; }
+      :root[data-theme="dark"] { color-scheme: dark; --bg: #0d1218; --ink: #f6f3ea; --muted: #bcc3cb; --card: #18212a; --line: #475463; --accent: #7fb2ee; --tab: #f6f3ea; --tab-ink: #0d1218; --ok: #6fd393; --part: #f2bd55; --todo: #ff8a9c; --work: #7fb2ee; --track: #2a3540; }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.45 system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif; }
+      main { max-width: 1280px; margin: 0 auto; padding: 12px 16px 24px; }
+      h1 { font-size: 1.6rem; margin: 0 0 2px; }
+      p.lede { margin: 0 0 12px; color: var(--muted); max-width: 70ch; }
+      .back { margin: 0 0 6px; }
+      a { color: var(--accent); }
+      [hidden] { display: none !important; }
+      :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+      :root { --hit: 48px; }
+      .top { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: end; justify-content: space-between; }
+      .settings { display: flex; gap: 8px; flex-wrap: wrap; }
+      label.pick { display: grid; gap: 2px; font-size: .85rem; color: var(--muted); }
+      select { font: inherit; color: var(--ink); background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; min-height: 44px; }
+      /* The leagues' coverage: a card each, with a bar of what is drawn in its building, as a field only and not yet. */
+      .coverage { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr)); gap: 10px; margin: 12px 0; }
+      .cov { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
+      .cov b { font-size: 1.05rem; }
+      .cov .big { font-size: 1.5rem; font-weight: 800; }
+      .cov p { margin: 2px 0; color: var(--muted); font-size: .85rem; }
+      .bar { display: flex; height: 10px; border-radius: 999px; overflow: hidden; background: var(--track); margin: 6px 0 4px; }
+      .bar span { display: block; height: 100%; }
+      .bar .b-outline { background: var(--ok); }
+      .bar .b-surface { background: var(--part); }
+      .key { display: flex; gap: 10px; flex-wrap: wrap; font-size: .8rem; color: var(--muted); margin: 0 0 8px; }
+      .key i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 4px; vertical-align: -1px; }
+      /* The sections are tabs, the sports and groups rows of chips: one screen, nothing folds open. */
+      .tabs { display: inline-flex; flex-wrap: wrap; gap: 4px; padding: 3px; background: var(--card); border: 1px solid var(--line); border-radius: 999px; margin: 6px 0 10px; max-width: 100%; }
+      .tabs button { font: inherit; font-size: .95rem; font-weight: 700; min-height: var(--hit); padding: 0 18px; border-radius: 999px; border: 0; background: transparent; color: var(--ink); cursor: pointer; }
+      .tabs button:hover:not([aria-selected="true"]) { background: color-mix(in srgb, var(--ink) 8%, transparent); }
+      .tabs button[aria-selected="true"] { background: var(--tab); color: var(--tab-ink); }
+      .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 8px; }
+      .chips button { font: inherit; font-size: .85rem; font-weight: 700; min-height: 40px; padding: 0 12px; border-radius: 999px; border: 2px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer; }
+      .chips button[aria-pressed="true"] { border-color: var(--tab); background: var(--tab); color: var(--tab-ink); }
+      .chips button:hover:not([aria-pressed="true"]) { border-color: var(--tab); }
+      .chips button .n { font-weight: 500; opacity: .8; margin-left: 4px; }
+      .search { display: flex; gap: 8px; align-items: center; margin: 0 0 10px; }
+      .search input { flex: 1; min-width: 0; font: inherit; color: var(--ink); background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 10px 16px; min-height: 44px; }
+      .found { color: var(--muted); font-size: .9rem; margin: 0 0 8px; }
+      /* The map: chizu's world with a pin on every venue shown. */
+      .map { position: relative; margin: 0; min-height: 120px; }
+      .map .cat-overlay { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+      .map .czm-says { display: none; }
+      .map .czm-controls, .map .czm-zoom { z-index: 2; }
+      .pin { stroke: var(--card); stroke-width: 1.2px; vector-effect: non-scaling-stroke; }
+      .pin.p-outline { fill: var(--ok); } .pin.p-surface { fill: var(--part); } .pin.p-working-on { fill: var(--work); } .pin.p-wanted { fill: var(--todo); }
+      .tip { position: absolute; z-index: 3; background: var(--tab); color: var(--tab-ink); font-size: .8rem; padding: 3px 8px; border-radius: 6px; pointer-events: none; white-space: nowrap; }
+      /* On a wide screen the map stands beside the cards and stays in sight as they are paged. */
+      .browse { display: grid; gap: 12px; grid-template-columns: minmax(0, 1fr); }
+      .map-col, .list-col { min-width: 0; }
+      @media (min-width: 1000px) { .browse { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: start; } .map-col { position: sticky; top: 8px; } }
+      /* The cards. */
+      .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(250px, 100%), 1fr)); gap: 10px; }
+      .card { position: relative; background: var(--card); border: 1px solid var(--line); border-left: 6px solid var(--sport, var(--line)); border-radius: 12px; padding: 10px 12px 10px 12px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+      .card h3 { margin: 0; font-size: 1.05rem; line-height: 1.25; overflow-wrap: anywhere; }
+      .card p { margin: 0; font-size: .88rem; color: var(--muted); overflow-wrap: anywhere; }
+      .card .head { display: flex; align-items: center; gap: 8px; font-size: .82rem; color: var(--muted); }
+      .card .flag { width: 22px; height: 22px; flex: none; }
+      .badge { margin-left: auto; font-size: .75rem; font-weight: 800; padding: 2px 8px; border-radius: 999px; border: 1.5px solid currentColor; white-space: nowrap; }
+      .badge.s-outline { color: var(--ok); } .badge.s-surface { color: var(--part); } .badge.s-working-on { color: var(--work); } .badge.s-wanted { color: var(--todo); }
+      .tags { display: flex; flex-wrap: wrap; gap: 4px; }
+      .tag { font-size: .75rem; padding: 1px 8px; border-radius: 999px; background: color-mix(in srgb, var(--sport, var(--line)) 18%, transparent); color: var(--ink); }
+      .card .links { margin-top: auto; padding-top: 4px; display: flex; gap: 12px; flex-wrap: wrap; font-size: .88rem; }
+      .card .links a { min-height: 32px; display: inline-flex; align-items: center; }
+      .pager { display: flex; gap: 8px; align-items: center; justify-content: center; margin: 12px 0; flex-wrap: wrap; }
+      .pager button { font: inherit; font-weight: 700; min-height: var(--hit); padding: 0 18px; border-radius: 999px; border: 2px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer; }
+      .pager button:disabled { opacity: .4; cursor: default; }
+      .note { color: var(--muted); font-size: .9rem; margin: 8px 0; }
+      .empty { color: var(--muted); padding: 24px 0; text-align: center; }
+      [data-sport="baseball"] { --sport: #b8470d; } [data-sport="soccer"] { --sport: #0b6e8a; } [data-sport="hockey"] { --sport: #4b3fb0; } [data-sport="basketball"] { --sport: #c2571a; }
+      [data-sport="budo"] { --sport: #8f2437; } [data-sport="american-football"] { --sport: #6b4423; } [data-sport="canadian-football"] { --sport: #b3122e; } [data-sport="cricket"] { --sport: #2f7d32; }
+      [data-sport="rugby"] { --sport: #3d6b1f; } [data-sport="australian-football"] { --sport: #b07d12; } [data-sport="gaelic-games"] { --sport: #1d7f5f; } [data-sport="tennis"] { --sport: #6a9b1a; }
+      [data-sport="athletics"] { --sport: #c0392b; } [data-sport="swimming"] { --sport: #1f78b4; } [data-sport="skating"] { --sport: #5d8aa8; } [data-sport="volleyball"] { --sport: #d18b00; }
+      [data-sport="badminton"] { --sport: #7a5195; } [data-sport="handball"] { --sport: #9c4f2e; } [data-sport="boxing"] { --sport: #a31621; } [data-sport="curling"] { --sport: #4f6d7a; } [data-sport="motor-racing"] { --sport: #555c66; }
+      @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) [data-sport] { --sport-dark: 1; } }
+      @media (max-width: 600px) {
+        .coverage { display: flex; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
+        .cov { flex: 0 0 172px; padding: 8px 10px; }
+        .cov .big { font-size: 1.25rem; }
+        .tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-radius: 14px; width: 100%; }
+        .tabs button { padding: 0 4px; font-size: .86rem; border-radius: 11px; }
+        .chips { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
+        .chips button { flex: none; white-space: nowrap; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="back"><a href="./" id="back" data-testid="back"></a></p>
+      <div class="top">
+        <div>
+          <h1 id="title"></h1>
+          <p class="lede" id="lede"></p>
+        </div>
+        <div class="settings">
+          <label class="pick"><span id="l-language"></span><select id="language" data-testid="language"><option value="en">English</option><option value="ja">日本語</option></select></label>
+          <label class="pick"><span id="l-theme"></span><select id="theme"><option value="auto"></option><option value="light"></option><option value="dark"></option></select></label>
+        </div>
+      </div>
+      <div class="coverage" id="coverage" data-testid="coverage"></div>
+      <p class="key" id="key"></p>
+      <div class="tabs" role="tablist" id="tabs" data-testid="tabs"></div>
+      <div class="chips" id="sports" role="group" data-testid="sports"></div>
+      <div class="chips" id="groups" role="group" data-testid="groups"></div>
+      <div class="search"><input id="q" type="search" data-testid="search" autocomplete="off" /></div>
+      <div class="browse">
+        <div class="map-col"><div class="map" id="map" data-testid="map"></div></div>
+        <div class="list-col">
+          <p class="found" id="found" data-testid="found" aria-live="polite"></p>
+          <div class="grid" id="grid" data-testid="grid"></div>
+          <nav class="pager" id="pager" data-testid="pager">
+            <button type="button" id="prev" data-testid="prev"></button>
+            <span id="page" data-testid="page"></span>
+            <button type="button" id="next" data-testid="next"></button>
+          </nav>
+        </div>
+      </div>
+      <p class="note" id="credit"></p>
+      <p class="note"><a href="./catalogue.json" id="json" data-testid="json"></a> · <a href="./docs/catalogue.html" id="docs"></a> · <a href="./stadiums.html" id="stadiums"></a></p>
+    </main>
+    <script type="module">
+      // The catalogue: every venue the package draws today, the ones being built and the ones wanted, as tabs, sport and group chips, a search, a map of pins and a grid of cards a page at a time.
+      // The page reads the package's own `catalogue` entry (the same data as catalogue.json) and the flags of its countries (Hata's, loaded when the demo was built). What is chosen lives in the
+      // address; nothing is sent anywhere and nothing is stored.
+      import { CATALOGUE, CATALOGUE_COUNTRIES, CATALOGUE_GROUPS, CATALOGUE_SPORTS, catalogueByStatus, catalogueCoverage, catalogueWanted } from "./dist/catalogue-entry.js";
+      import { replaceAddress } from "./address.js";
+
+      const WORDS = {
+        en: {
+          title: "The catalogue of venues", pageTitle: "Kyogijo Stadiums: the catalogue of venues",
+          pageDescription: "Every venue Kyogijo Stadiums draws today, the ones being built and the ones wanted: every NBA, MLB, NFL, CFL and NHL venue of the season, world soccer, cricket, rugby, the Olympics, Formula One and more, on a map and as cards.",
+          lede: "Every venue the package draws today, the ones being built and the ones we want, with every venue of five leagues' seasons. Each has an id, its names in English and Japanese and its Wikidata item, and the same list is a JSON file.",
+          back: "Back to the Kyogijo Stadiums demo", language: "Language", theme: "Theme", auto: "Follow the device", light: "Light", dark: "Dark",
+          supported: "Supported", "working-on": "Working on", wanted: "Wanted", sections: "Sections", sportsLabel: "Sports", groupsLabel: "Groups", all: "All", search: "Search by name, city, country or team",
+          coverage: "drawn in its building", coverageMore: "{surface} as a field only · {notYet} not yet", season: "{season} season",
+          keyOutline: "Drawn in its building", keySurface: "Field only", keyWorking: "Working on", keyWanted: "Wanted",
+          badgeOutline: "In its building", badgeSurface: "Field only", badgeBuilding: "Building wanted", badgeWorking: "Working on", badgeWanted: "Wanted", badgeCircuit: "Needs a circuit surface first", past: " (past)",
+          found: "{n} venues · {from} to {to} shown", foundNone: "No venue matches.", page: "Page {n} of {all}", prev: "Previous", next: "Next",
+          seats: "{n} seats", see: "See the drawing", wikidata: "Wikidata", ticket: "Ticket {ticket}", mapLabel: "A world map with a pin on each venue shown",
+          json: "The catalogue as JSON", docs: "The catalogue page of the docs", stadiums: "The real stadiums",
+          credit: "Names, places, countries and seats: Wikidata (CC0) and the package's own data. Map: Natural Earth (public domain), drawn by chizu. Flags: Hata.",
+        },
+        ja: {
+          title: "会場カタログ", pageTitle: "競技場 Kyogijo Stadiums：会場カタログ",
+          pageDescription: "競技場 Kyogijo Stadiums が今描ける会場、制作中の会場、今後追加したい会場の一覧です。今シーズンの NBA、MLB、NFL、CFL、NHL の全会場、世界のサッカー、クリケット、ラグビー、オリンピック、F1 などを、地図とカードで見られます。",
+          lede: "このパッケージが今描ける会場、制作中の会場、今後追加したい会場の一覧です。北米の五つのリーグについては、今シーズンの会場をすべて載せています。各会場に ID、英語と日本語の名前、Wikidata の項目があり、同じ一覧を JSON ファイルでも公開しています。",
+          back: "競技場 Kyogijo Stadiums のデモに戻る", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク",
+          supported: "対応済み", "working-on": "制作中", wanted: "追加したい", sections: "区分", sportsLabel: "競技", groupsLabel: "グループ", all: "すべて", search: "名前・都市・国・チームで検索",
+          coverage: "会場が建物ごと描画済み", coverageMore: "競技面のみ{surface}会場、未対応{notYet}会場", season: "{season}シーズン",
+          keyOutline: "建物ごと描画", keySurface: "競技面のみ", keyWorking: "制作中", keyWanted: "追加したい",
+          badgeOutline: "建物ごと", badgeSurface: "競技面のみ", badgeBuilding: "建物を追加したい", badgeWorking: "制作中", badgeWanted: "追加したい", badgeCircuit: "先にサーキットの描画が必要", past: "（過去）",
+          found: "{n}会場（{from}〜{to}件目を表示）", foundNone: "当てはまる会場はありません。", page: "{all}ページ中{n}ページ目", prev: "前へ", next: "次へ",
+          seats: "{n}席", see: "図を見る", wikidata: "Wikidata", ticket: "チケット {ticket}", mapLabel: "表示中の会場に印を付けた世界地図",
+          json: "カタログの JSON", docs: "ドキュメントの会場カタログのページ", stadiums: "実在のスタジアム",
+          credit: "名前・場所・国・座席数：Wikidata（CC0）とこのパッケージのデータ。地図：Natural Earth（パブリックドメイン）、chizu で描画。国旗：Hata。",
+        },
+      };
+      const PER_PAGE = 24;
+      /** The flags, as pictures (each its own document, so that their ids never meet), loaded after the first cards are drawn. */
+      let FLAGS = {};
+      const TABS = ["supported", "working-on", "wanted"];
+      const $ = (id) => document.getElementById(id);
+      const params = new URLSearchParams(location.search);
+      const lang = () => $("language").value;
+      const w = () => WORDS[lang()];
+      const fill = (text, values) => text.replace(/\{(\w+)\}/g, (_, key) => String(values[key]));
+      const num = (n) => n.toLocaleString(lang() === "ja" ? "ja-JP" : "en-US");
+      const escape = (text) => String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+      const plain = (text) => String(text ?? "").normalize("NFKC").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+
+      /** Each tab's venues: the wanted tab has the new venues and the buildings wanted of venues drawn as a field only. */
+      // The supported tab shows the venues drawn in their buildings first: they are the package's showpieces.
+      // The wanted tab, by group: the NFL's and the CFL's venues not drawn yet, the world's great venues, the circuits, then the NBA's and MLB's buildings wanted; each group in its own order.
+      const WANTED_ORDER = ["nfl", "cfl", ...CATALOGUE_GROUPS.filter((group) => group.kind === "collection").map((group) => group.id), "nba", "mlb", "nhl"];
+      const placeInWanted = new Map();
+      // In a league, the venues not drawn at all come before the buildings wanted of venues drawn as a field.
+      const isNew = new Set(catalogueByStatus("wanted").map((entry) => entry.id));
+      for (const id of WANTED_ORDER) {
+        const ids = CATALOGUE_GROUPS.find((group) => group.id === id)?.ids ?? [];
+        for (const venue of [...ids.filter((one) => isNew.has(one)), ...ids.filter((one) => !isNew.has(one))]) if (!placeInWanted.has(venue)) placeInWanted.set(venue, placeInWanted.size);
+      }
+      const LISTS = { supported: [...catalogueByStatus("supported")].sort((a, b) => (a.drawn === b.drawn ? 0 : a.drawn === "outline" ? -1 : 1)), "working-on": catalogueByStatus("working-on"), wanted: catalogueWanted().sort((a, b) => (placeInWanted.get(a.id) ?? 1e6) - (placeInWanted.get(b.id) ?? 1e6)) };
+      const groupName = (group) => group[lang()];
+      const state = {
+        tab: TABS.includes(params.get("tab")) ? params.get("tab") : "supported",
+        sport: params.get("sport") ?? "all",
+        group: params.get("group") ?? "all",
+        q: params.get("q") ?? "",
+        page: Math.max(1, Number.parseInt(params.get("page") ?? "1", 10) || 1),
+      };
+      if (["en", "ja"].includes(params.get("lang"))) $("language").value = params.get("lang");
+      if (["light", "dark"].includes(params.get("theme"))) $("theme").value = params.get("theme");
+      $("q").value = state.q;
+
+      const name = (entry) => (lang() === "ja" ? entry.nameJa ?? entry.name : entry.name);
+      const city = (entry) => (lang() === "ja" ? entry.cityJa ?? entry.city : entry.city);
+      const country = (code) => (code === undefined ? "" : CATALOGUE_COUNTRIES[code]?.[lang()] ?? CATALOGUE_COUNTRIES[code]?.en ?? code);
+      const sportName = (sport) => CATALOGUE_SPORTS[sport][lang()];
+      const haystack = new Map(CATALOGUE.map((entry) => [entry.id, plain([entry.id, entry.name, entry.nameJa, entry.city, entry.cityJa, entry.country, CATALOGUE_COUNTRIES[entry.country]?.en, CATALOGUE_COUNTRIES[entry.country]?.ja, ...(entry.teams ?? []).flatMap((team) => [team.name, team.nameJa])].filter(Boolean).join(" "))]));
+
+      /** The venues the tab, the sport, the group and the search leave. */
+      function shown() {
+        const words = plain(state.q).split(/\s+/).filter(Boolean);
+        const groupIds = state.group === "all" ? null : new Set(CATALOGUE_GROUPS.find((group) => group.id === state.group)?.ids ?? []);
+        return LISTS[state.tab].filter((entry) => (state.sport === "all" || entry.sports.includes(state.sport)) && (groupIds === null || groupIds.has(entry.id)) && words.every((word) => haystack.get(entry.id).includes(word)));
+      }
+      const statusOf = (entry) => (entry.status === "supported" ? (entry.drawn === "outline" ? "outline" : "surface") : entry.status);
+
+      function badge(entry) {
+        const t = w();
+        if (entry.status === "working-on") return `<span class="badge s-working-on">${t.badgeWorking}</span>`;
+        if (entry.status === "wanted") return `<span class="badge s-wanted">${entry.needs === "circuit-surface" ? t.badgeCircuit : t.badgeWanted}</span>`;
+        if (entry.drawn === "outline") return `<span class="badge s-outline">${t.badgeOutline}</span>`;
+        return `<span class="badge s-surface">${state.tab === "wanted" && entry.want === "outline" ? t.badgeBuilding : t.badgeSurface}${entry.era === "past" ? t.past : ""}</span>`;
+      }
+      function card(entry) {
+        const t = w();
+        const flag = entry.country !== undefined && FLAGS[entry.country] !== undefined ? `<img class="flag" alt="" src="${FLAGS[entry.country]}" width="22" height="22" />` : "";
+        // The country is in the card's head, with its flag: the line under the name is the city.
+        const where = city(entry) ?? "";
+        const teams = (entry.teams ?? []).map((team) => (lang() === "ja" ? team.nameJa ?? team.name : team.name));
+        const links = [
+          entry.demo !== undefined ? `<a href="./${escape(entry.demo)}" data-testid="see">${t.see}</a>` : "",
+          `<a href="https://www.wikidata.org/wiki/${escape(entry.wikidata)}">${t.wikidata}</a>`,
+        ].filter(Boolean).join("");
+        return `<article class="card" data-sport="${escape(entry.sports[0])}" data-id="${escape(entry.id)}" data-testid="card">
+          <div class="head">${flag}<span>${escape(country(entry.country))}</span>${badge(entry)}</div>
+          <h3>${escape(name(entry))}</h3>
+          <p>${escape(where)}</p>
+          <div class="tags">${entry.sports.map((sport) => `<span class="tag" data-sport="${escape(sport)}">${escape(sportName(sport))}</span>`).join("")}</div>
+          ${teams.length > 0 ? `<p>${escape(teams.join(lang() === "ja" ? "、" : ", "))}</p>` : ""}
+          ${entry.capacity !== undefined ? `<p>${fill(t.seats, { n: num(entry.capacity) })}</p>` : ""}
+          ${entry.ticket !== undefined ? `<p>${fill(t.ticket, { ticket: escape(entry.ticket) })}</p>` : ""}
+          <p class="links">${links}</p>
+        </article>`;
+      }
+
+      function chipRow(host, values, current, labelOf, countOf, set) {
+        host.replaceChildren(...values.map((value) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.dataset.value = value;
+          button.setAttribute("aria-pressed", String(value === current));
+          button.innerHTML = `${escape(labelOf(value))}<span class="n">${num(countOf(value))}</span>`;
+          button.addEventListener("click", () => { set(value); state.page = 1; render(); });
+          return button;
+        }));
+      }
+
+      function renderCoverage() {
+        const t = w();
+        $("coverage").replaceChildren(...["nba", "mlb", "nfl", "cfl", "nhl"].map((league) => {
+          const c = catalogueCoverage(league);
+          const group = CATALOGUE_GROUPS.find((one) => one.id === league);
+          const box = document.createElement("button");
+          box.type = "button";
+          box.className = "cov";
+          box.dataset.league = league;
+          box.style.textAlign = "start";
+          box.style.font = "inherit";
+          box.style.color = "inherit";
+          box.style.cursor = "pointer";
+          const share = (n) => `${(100 * n) / c.venues}%`;
+          box.innerHTML = `<b>${escape(groupName(group))}</b> <p>${fill(t.season, { season: group.season })}</p>
+            <div class="bar" aria-hidden="true"><span class="b-outline" style="width:${share(c.outline)}"></span><span class="b-surface" style="width:${share(c.surface)}"></span></div>
+            <p><span class="big">${num(c.outline)}</span> / ${num(c.venues)} ${t.coverage}</p>
+            <p>${fill(t.coverageMore, { surface: num(c.surface), notYet: num(c.notYet) })}</p>`;
+          box.addEventListener("click", () => { state.tab = c.notYet + c.surface > 0 ? "wanted" : "supported"; state.group = league; state.sport = "all"; state.page = 1; render(); });
+          return box;
+        }));
+        $("key").innerHTML = [["var(--ok)", t.keyOutline], ["var(--part)", t.keySurface], ["var(--work)", t.keyWorking], ["var(--todo)", t.keyWanted]].map(([colour, text]) => `<span><i style="background:${colour}"></i>${escape(text)}</span>`).join("");
+      }
+
+      let mapApi = null;
+      function render() {
+        const t = w();
+        const list = shown();
+        const pages = Math.max(1, Math.ceil(list.length / PER_PAGE));
+        state.page = Math.min(state.page, pages);
+        const from = (state.page - 1) * PER_PAGE;
+        const page = list.slice(from, from + PER_PAGE);
+        $("tabs").replaceChildren(...TABS.map((tab) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.role = "tab";
+          button.dataset.tab = tab;
+          button.setAttribute("aria-selected", String(tab === state.tab));
+          button.textContent = `${t[tab]} ${num(LISTS[tab].length)}`;
+          button.addEventListener("click", () => { state.tab = tab; state.sport = "all"; state.group = "all"; state.page = 1; render(); });
+          return button;
+        }));
+        const inTab = LISTS[state.tab];
+        const sports = Object.keys(CATALOGUE_SPORTS).filter((sport) => inTab.some((entry) => entry.sports.includes(sport)));
+        if (state.sport !== "all" && !sports.includes(state.sport)) state.sport = "all";
+        chipRow($("sports"), ["all", ...sports], state.sport, (value) => (value === "all" ? t.all : sportName(value)), (value) => (value === "all" ? inTab.length : inTab.filter((entry) => entry.sports.includes(value)).length), (value) => { state.sport = value; });
+        const groups = CATALOGUE_GROUPS.filter((group) => group.ids.some((id) => inTab.some((entry) => entry.id === id)));
+        if (state.group !== "all" && !groups.some((group) => group.id === state.group)) state.group = "all";
+        $("groups").hidden = state.tab === "working-on";
+        chipRow($("groups"), ["all", ...groups.map((group) => group.id)], state.group, (value) => (value === "all" ? t.all : groupName(CATALOGUE_GROUPS.find((group) => group.id === value))), (value) => (value === "all" ? inTab.length : inTab.filter((entry) => entry.groups.includes(value)).length), (value) => { state.group = value; });
+        $("grid").innerHTML = page.length === 0 ? `<p class="empty">${t.foundNone}</p>` : page.map(card).join("");
+        $("found").textContent = list.length === 0 ? t.foundNone : fill(t.found, { n: num(list.length), from: num(from + 1), to: num(from + page.length) });
+        $("page").textContent = fill(t.page, { n: num(state.page), all: num(pages) });
+        $("prev").disabled = state.page <= 1;
+        $("next").disabled = state.page >= pages;
+        $("pager").hidden = pages <= 1;
+        mapApi?.show(list);
+        const address = new URLSearchParams();
+        if (state.tab !== "supported") address.set("tab", state.tab);
+        if (state.sport !== "all") address.set("sport", state.sport);
+        if (state.group !== "all") address.set("group", state.group);
+        if (state.q !== "") address.set("q", state.q);
+        if (state.page > 1) address.set("page", String(state.page));
+        if (lang() !== "en") address.set("lang", lang());
+        if ($("theme").value !== "auto") address.set("theme", $("theme").value);
+        const query = address.toString();
+        replaceAddress(`${location.pathname}${query === "" ? "" : `?${query}`}`);
+      }
+
+      function label() {
+        const t = w();
+        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["back", "back"], ["l-language", "language"], ["l-theme", "theme"], ["credit", "credit"], ["json", "json"], ["docs", "docs"], ["stadiums", "stadiums"], ["prev", "prev"], ["next", "next"]]) $(id).textContent = t[key];
+        for (const option of $("theme").options) option.textContent = t[option.value];
+        $("q").placeholder = t.search;
+        $("q").setAttribute("aria-label", t.search);
+        $("tabs").setAttribute("aria-label", t.sections);
+        $("sports").setAttribute("aria-label", t.sportsLabel);
+        $("groups").setAttribute("aria-label", t.groupsLabel);
+        $("map").setAttribute("aria-label", t.mapLabel);
+        document.documentElement.lang = lang();
+        document.title = t.pageTitle;
+        document.querySelector('meta[name="description"]').setAttribute("content", t.pageDescription);
+        const theme = $("theme").value;
+        if (theme === "auto") delete document.documentElement.dataset.theme;
+        else document.documentElement.dataset.theme = theme;
+        renderCoverage();
+      }
+
+      $("language").addEventListener("change", () => { label(); render(); mapApi?.relabel(); });
+      $("theme").addEventListener("change", () => { label(); render(); });
+      $("q").addEventListener("input", () => { state.q = $("q").value; state.page = 1; render(); });
+      $("prev").addEventListener("click", () => { state.page -= 1; render(); $("found").scrollIntoView({ block: "nearest" }); });
+      $("next").addEventListener("click", () => { state.page += 1; render(); $("found").scrollIntoView({ block: "nearest" }); });
+      label();
+      render();
+      document.body.dataset.ready = "true";
+      import("./catalogue-flags.data.js").then(({ FLAGS: svgs }) => {
+        FLAGS = Object.fromEntries(Object.entries(svgs).map(([code, svg]) => [code, `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`]));
+        render();
+        document.body.dataset.flags = "true";
+      }, () => undefined);
+
+      // ----- The map: chizu's world (loaded after the cards, so that they come first), a pin on each venue the choices leave, the venue's name over the pointer, and a press that finds it.
+      async function mountMap() {
+        const host = $("map");
+        const [{ default: WORLD }, { mountChizu }, { projectPoint, wrapOffsets }] = await Promise.all([import("./chizu/world-entry.js"), import("./chizu/mount-entry.js"), import("./chizu/index.js")]);
+        const mount = mountChizu(host, { map: WORLD, language: lang(), selectable: false });
+        const stage = host.querySelector(".czm-stage");
+        const overlay = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        overlay.setAttribute("class", "cat-overlay");
+        overlay.setAttribute("preserveAspectRatio", "none");
+        overlay.setAttribute("aria-hidden", "true");
+        const tip = document.createElement("div");
+        tip.className = "tip";
+        tip.hidden = true;
+        host.append(tip);
+        const at = new Map();
+        for (const entry of CATALOGUE) {
+          if (entry.lat === undefined) continue;
+          const xy = projectPoint(WORLD, entry.lon, entry.lat);
+          if (xy !== null) at.set(entry.id, xy);
+        }
+        let list = [];
+        let box = { x: 0, y: 0, width: WORLD.width, height: WORLD.height };
+        const sync = () => {
+          const svg = stage.querySelector("svg:not(.cat-overlay)");
+          if (svg === null) return;
+          if (overlay.parentNode !== stage) stage.append(overlay);
+          const view = svg.viewBox.baseVal;
+          box = { x: view.x, y: view.y, width: view.width, height: view.height };
+          overlay.setAttribute("viewBox", `${box.x} ${box.y} ${box.width} ${box.height}`);
+          const unit = box.width / (stage.clientWidth || 640);
+          const r = 4.5 * unit;
+          const marks = [];
+          for (const entry of list) {
+            const xy = at.get(entry.id);
+            if (xy === undefined) continue;
+            for (const offset of wrapOffsets(box, WORLD.width)) marks.push(`<circle class="pin p-${statusOf(entry)}" cx="${(xy[0] + offset).toFixed(2)}" cy="${xy[1].toFixed(2)}" r="${r.toFixed(3)}"/>`);
+          }
+          overlay.innerHTML = marks.join("");
+          observer.takeRecords();
+        };
+        const observer = new MutationObserver((records) => {
+          if (records.every((record) => overlay.contains(record.target) || record.target === overlay)) return;
+          sync();
+        });
+        observer.observe(stage, { childList: true, subtree: true, attributes: true, attributeFilter: ["viewBox"] });
+        new ResizeObserver(() => sync()).observe(stage);
+        const nearest = (clientX, clientY) => {
+          const rect = stage.getBoundingClientRect();
+          let best = null;
+          let distance = matchMedia("(pointer: coarse)").matches ? 22 : 12;
+          for (const entry of list) {
+            const xy = at.get(entry.id);
+            if (xy === undefined) continue;
+            for (const offset of wrapOffsets(box, WORLD.width)) {
+              const d = Math.hypot(((xy[0] + offset - box.x) / box.width) * rect.width + rect.left - clientX, ((xy[1] - box.y) / box.height) * rect.height + rect.top - clientY);
+              if (d < distance) { best = entry; distance = d; }
+            }
+          }
+          return best;
+        };
+        let down = null;
+        stage.addEventListener("pointerdown", (event) => { down = { x: event.clientX, y: event.clientY }; }, true);
+        stage.addEventListener("click", (event) => {
+          if (event.target.closest(".czm-controls")) return;
+          if (down !== null && Math.abs(event.clientX - down.x) + Math.abs(event.clientY - down.y) > 8) return;
+          const entry = nearest(event.clientX, event.clientY);
+          if (entry === null) return;
+          state.q = name(entry);
+          $("q").value = state.q;
+          state.page = 1;
+          render();
+        });
+        stage.addEventListener("pointermove", (event) => {
+          const entry = event.pointerType === "mouse" ? nearest(event.clientX, event.clientY) : null;
+          stage.style.cursor = entry === null ? "" : "pointer";
+          if (entry === null) { tip.hidden = true; return; }
+          const rect = host.getBoundingClientRect();
+          tip.textContent = name(entry);
+          tip.hidden = false;
+          tip.style.left = `${Math.max(4, Math.min(event.clientX - rect.left + 12, rect.width - tip.offsetWidth - 4))}px`;
+          tip.style.top = `${Math.max(event.clientY - rect.top - 30, 4)}px`;
+        });
+        stage.addEventListener("pointerleave", () => { tip.hidden = true; });
+        host.dataset.ready = "true";
+        return { show(next) { list = next; sync(); }, relabel() { mount.setLanguage?.(lang()); } };
+      }
+      mountMap().then((api) => { mapApi = api; mapApi.show(shown()); }, () => { $("map").hidden = true; });
+    </script>
+  </body>
+</html>

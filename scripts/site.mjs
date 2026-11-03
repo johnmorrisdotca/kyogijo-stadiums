@@ -1,7 +1,7 @@
 // Builds the static demo for GitHub Pages into ./site: the page, written here from the family's shared header and
 // footer, with the family's stylesheet, Kyogijo's own, the page's scripts, the embeddable frame, the API reference and
 // the compiled library beside them.
-import { cpSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
 import process from "node:process";
@@ -65,6 +65,13 @@ const { FLAG_CODES } = await import(pathToFileURL(join(process.cwd(), "demo/nati
 const framing = { round: "round", square: "1:1", rect: "flag" };
 const loaded = Object.fromEntries(await Promise.all(Object.entries(framing).map(async ([shape, as]) => [shape, Object.fromEntries(await Promise.all(FLAG_CODES.map(async (code) => [code, await flag(code, { shape: as })])))])));
 writeFileSync("site/flags.data.js", `// The flags of the demo's countries, loaded from Hata (@johnmorrisdotca/hata) when the demo was built: by shape, then by code.\nexport const FLAGS = ${JSON.stringify(loaded)};\n`);
+// The catalogue's page: the catalogue as JSON at the site's root (its published address), and the round flag of each of its countries, in a file of its own so that no other page carries them.
+cpSync("catalogue.json", "site/catalogue.json");
+{
+  const { countries } = JSON.parse(readFileSync("catalogue.json", "utf8"));
+  const round = Object.fromEntries((await Promise.all(Object.keys(countries).map(async (code) => [code, await flag(code, { shape: "round" }).catch(() => undefined)]))).filter(([, svg]) => typeof svg === "string"));
+  writeFileSync("site/catalogue-flags.data.js", `// The round flags of the catalogue's countries, loaded from Hata (@johnmorrisdotca/hata) when the demo was built, by code.\nexport const FLAGS = ${JSON.stringify(round)};\n`);
+}
 mkdirSync("site/hata", { recursive: true });
 for (const name of ["LICENSE", "NOTICE.md"]) cpSync(join(hata, name), join("site/hata", name));
 
@@ -227,7 +234,7 @@ const page = `<!doctype html>
   </head>
   <body>
     <main>
-      ${familyHeader({ id, links: [{ href: "docs/", say: "pageDocs" }, { href: "api.html", say: "pageApi" }, { href: "halls.html", say: "pageHalls" }] })}
+      ${familyHeader({ id, links: [{ href: "docs/", say: "pageDocs" }, { href: "api.html", say: "pageApi" }, { href: "halls.html", say: "pageHalls" }, { href: "catalogue.html", say: "pageCatalogue" }] })}
 
       <section class="feature" id="feature" aria-labelledby="feature-title">
         <div class="try-head">
