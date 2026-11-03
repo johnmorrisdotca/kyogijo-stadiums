@@ -159,7 +159,7 @@ Real buildings drawn in the outline OpenStreetMap maps for them, each with a pla
 <td align="center" valign="top">
 <picture>
 <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/replay-game-3d-desk-dark.webp">
-<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/replay-game-3d-desk-light.webp" alt="A made-up game of Canada and Japan replayed on the rink in 3D from the main camera: the players standing up as discs with their numbers, red circles and blue squares, the score hung over centre ice, and a shot's arrow and a whistle's cross on the ice." width="250">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/replay-game-3d-desk-light.webp" alt="A made-up game of Canada and Japan replayed on the rink in 3D from the main camera: the players standing up as discs with their numbers, red circles and blue squares, the score hung over centre ice, and a goal's arrow into the net." width="250">
 </picture>
 <br><em>A made-up game, replayed in 3D</em>
 </td>
@@ -182,7 +182,7 @@ Real buildings drawn in the outline OpenStreetMap maps for them, each with a pla
 
 A camera can follow the play, flat or in 3D: it closes in where the action is and pulls back as the players spread, or moves with the puck, while the view goes on turning ([following the play](./docs/replay.md#following-the-play)).
 
-The scoreboard hung over an arena's ice follows the replay: its score, period and game clock come from the same timeline and clock as the controls ([the scoreboard over the arena](./docs/replay.md#the-scoreboard-over-the-arena-follows-the-game)).
+The scoreboard hung over an arena's ice follows the replay: its score, period and game clock come from the same timeline and clock as the controls ([the scoreboard over the arena](./docs/replay.md#the-scoreboard-over-the-arena-follows-the-game)). In a stoppage its clock stands still while the players glide to the face-off's line-up and the dead puck is out of sight, and it runs again at the drop ([stoppages](./docs/replay.md#stoppages-the-clock-stops-the-players-line-up)).
 
 **Surfaces** ([the surfaces](./docs/surfaces.md), [score and layout](./docs/score.md))
 

@@ -47,13 +47,14 @@ const timeline = {
 | `frames[].t` | Seconds. The frames run forward in time (they are sorted when they do not). A gap of 0.04 s is 25 frames a second; the gaps need not be equal. |
 | `frames[].objects[]` | `id` (the same in every frame the object is in), `team` (`home`, `away`, `ball`, `puck` or `official`), `x` and `y` in the timeline's frame, and optionally `label` (the tooltip) and `number` (written on a player). |
 | `frames[].possession` | Who has the ball or puck, when the data says: an object's `id`, or `home` or `away`; `null` for nobody. It holds until a later frame says otherwise. |
-| `events[]` | `t`, `kind` (`pass`, `shot`, `goal`, `whistle`, or a word of your own), `team`, where it was (`x`, `y`, or the object `by`, else the ball's place), where it ended (`x2`, `y2`, or the object `to` at `until`), `until` and `label`. |
+| `events[]` | `t`, `kind` (`pass`, `shot`, `goal`, `whistle`, `faceoff`, or a word of your own), `team`, where it was (`x`, `y`, or the object `by`, else the ball's place), where it ended (`x2`, `y2`, or the object `to` at `until`), `until` and `label`. |
 | `from`, `units`, `attacking`, `surfaceSize`, `anchors` | As for a [layer](./layers.md#what-a-layer-takes): the frame, the unit and the rest that put the numbers on the surface. |
 | `periods`, `clock` | The periods of the game and which way its clock counts: what the [scoreboard over the arena](#the-scoreboard-over-the-arena-follows-the-game) shows. |
+| `stoppages` | When play was dead: the game clock stands still from each one's `start` to its `end` (the drop of the puck) while the replay plays on through it. [Stoppages](#stoppages-the-clock-stops-the-players-line-up). |
 
 An object in two neighbouring frames moves between them; one only in the earlier frame stays where it was until the next; one only in the later frame appears when its frame comes. Objects without a place are left out. A timeline is read once and kept: make a new one rather than changing one that has been used.
 
-What is drawn: the home team as circles and the away team as squares (so that the teams are never told by colour alone), with their numbers; the ball or the puck, smaller and on top, with a trail of the last two seconds; officials as triangles; a pass or a shot as an arrow from where it began to where it ended, dashed for a shot; a goal as a star; a whistle as a cross. An event stays on the surface for three seconds after it. `look` (the fourth argument, and in the settings below) changes `trail` (seconds, 0 for none), `trailOf` (whose trail), `hold` (seconds an event stays), `numbers`, `scale` and `smooth`.
+What is drawn: the home team as circles and the away team as squares (so that the teams are never told by colour alone), with their numbers; the ball or the puck, smaller and on top, with a trail of the last two seconds; officials as triangles; a pass or a shot as an arrow from where it began to where it ended, dashed for a shot; a goal as a star; a whistle as a cross; a face-off has no mark of its own (the puck on the dot is the mark), and is said. An event stays on the surface for three seconds after it. `look` (the fourth argument, and in the settings below) changes `trail` (seconds, 0 for none), `trailOf` (whose trail), `hold` (seconds an event stays), `numbers`, `scale` and `smooth`.
 
 ## The functions
 
@@ -93,6 +94,10 @@ console.log(activeEvents(timeline, 2.5).map((a) => `${a.event.kind} at ${a.x}`).
 | `replaySummary`, `replayTable` | The sentence a replay adds to the description, and an HTML table of its events for a reader who cannot see the drawing. |
 | `replayInfo`, `replayTimes`, `replayEvents`, `replayClock` | The length, the frame times, the events and `0:12` for 12 seconds. |
 | `replayBoard(timeline, t)` | The scoreboard at `t`: the score, the period and the game clock, from the goals and the periods. |
+| `replayGameClock(timeline, t)` | The game clock at `t`: the period, the seconds of it played and left, and whether it is running (not in a stoppage). |
+| `replayStoppages`, `stoppageAt`, `restartsBetween` | The [stoppages](#stoppages-the-clock-stops-the-players-line-up), the one a time is in, and the restarts (the drops of the puck) a move of the clock went by. |
+| `addDeadTime(timeline, stops, rules)` | A timeline with each stoppage opened into its dead time, by a sport's rules (`HOCKEY_RULES`). |
+| `hockeyFaceoffDot`, `hockeyFormation`, `hockeyStopOf` | Hockey's rules: the face-off spot after a stoppage, the line-up at a spot, and the NHL's words for a stoppage as the rules'. |
 
 ## Playing it in a page
 
@@ -291,6 +296,93 @@ console.log(shots[0], "|", shots[29], "|", shots[179]);
 | `clampShot`, `frameOf`, `springStep`, `zoomFor`, `FOLLOW_LIMITS` | A shot held to the surface and the limits, the frame a shot shows, one step of the spring, the zoom of a view with room round the surface, and the limits (`maxZoom` 2.5, `puckZoom` 2, `near` 5, `pad` 0.06, `dead` 0.08, `omega` 3.2, `leash` 0.06). |
 
 What it costs: nothing of its own. The camera moves inside the replay's own animation frame (on a 3D view, the one frame the view and the replay share), from the replay's frame at that time; nothing runs while the replay is paused, while the page is hidden or while the view is out of sight, and off and at rest it does nothing at all. A browser test holds that it eases (no jump between two frames), that the reader's drag holds it until Resume, that it asks for no frame while paused, hidden or out of sight and one a frame with the auto-turn running, that the elements and listeners are the same after ten times round a looping game with it on, and that `destroy` gives the view back as it was.
+
+## Stoppages: the clock stops, the players line up
+
+A replay keeps two clocks. **The replay's own clock** is the slider's: it moves on all the time the replay plays. **The game clock** is the scoreboard's: it runs only while play is on. When play stops (a goal, a save the goaltender holds, icing, offside, a penalty, any whistle, the end of a period), the game clock stands still; the puck is dead, so it stays where play stopped (in the net after a goal) and is then out of sight, as a linesman picks it up; the players glide to their places for the face-off at the spot the rules give; and the clock runs again when the puck is dropped. A timeline says when play was dead in `stoppages`, and everything that reads the clock follows them: `replayGameClock` and `replayBoard` stand still in a stoppage, the board over the arena shows the same time from the goal to the drop, and the live region says the drop (`Face-off, 6:39`).
+
+![The third goal of the example game from the broadcast camera, with the scoreboard over the ice: the scorers by the net, the clock stopped at 14:44 of the second period](./pictures/stoppage-goal-3d-desk-light.webp)
+![Five seconds later: the players gliding to the line-up at centre ice, the puck out of sight, the clock still at 14:44](./pictures/stoppage-line-up-3d-desk-light.webp)
+![The drop: the two centres on the dot, the wingers and the defence in their places, the goaltenders in their creases; the clock runs again from 14:44](./pictures/stoppage-drop-3d-desk-light.webp)
+
+```ts
+import { HOCKEY_RULES, addDeadTime, hockeyFaceoffDot, interpolate, replayBoard, replayStoppages } from "@johnmorrisdotca/kyogijo-stadiums/replay";
+
+// A goal at 30 s, the puck in the net; at 30.04 the centres are lined up on the spot the rules give, and play goes on to 60 s.
+const at = (t: number, h: number[], a: number[], puck: number[]) => ({
+  t,
+  objects: [
+    { id: "h9", team: "home" as const, x: h[0], y: h[1] },
+    { id: "a4", team: "away" as const, x: a[0], y: a[1] },
+    { id: "puck", team: "puck" as const, x: puck[0], y: puck[1] },
+  ],
+});
+const dot = hockeyFaceoffDot({ reason: "goal", x: 89, y: 1 });
+const game = {
+  from: "nhl-api",
+  frames: [at(0, [0, 0], [5, 0], [0, 0]), at(30, [80, 4], [75, -2], [90, 1]), at(30.04, [-2.5, 0], [2.5, 0], [...dot]), at(60, [40, 0], [45, 0], [50, 0])],
+  events: [{ t: 29.6, kind: "goal", team: "home" as const }, { t: 30.04, kind: "faceoff", x: dot[0], y: dot[1] }],
+  periods: [{ start: 0, end: 60, length: 1200 }],
+};
+const played = addDeadTime(game, [{ t: 30, reason: "goal", x: dot[0], y: dot[1] }], HOCKEY_RULES);
+const stop = replayStoppages(played)[0];
+const puck = (t: number) => interpolate(played, t).find((o) => o.id === "puck");
+console.log(dot.join(), stop.start, stop.end, played.events?.at(-1)?.t);
+console.log(replayBoard(played, 30).clock, replayBoard(played, 36).clock, replayBoard(played, stop.end).clock, replayBoard(played, stop.end + 10).clock);
+console.log(puck(31)?.x, puck(36), puck(stop.end)?.x);
+// 0,0 30 38.09 38.09
+// 10:00 10:00 10:00 6:40
+// 90 undefined 0
+```
+
+`addDeadTime(timeline, stops, rules)` takes a timeline with each stoppage as an instant (the play up to `t`, then at `until`, 0.04 seconds later by default, the players in the line-up and the puck on the dot) and opens each into the dead time of the rules: the puck stays where it stopped for a moment, then is out of sight; the players stand a moment (a goal is celebrated), then all glide to their places together, the farthest at the rules' speed and the rest slower; a player who goes off goes to his side's bench and the one who comes on comes from it; they stand in the line-up a moment, and the puck is dropped. Everything after is moved on by as much (the frames, the events, the periods and the stoppages already there), and each period keeps its length on the game clock. It is pure, and the same for any data: the example game is made with it, and a play-by-play feed (the puck's places from the plays) can be given its dead time the same way.
+
+### Hockey's rules
+
+`replay.hockey.ts` is the rule set, in the `nhl-api` frame (feet from centre ice, the goal lines at ±89, the blue lines at ±25, the players' benches on the side of negative y). Where play starts again is the NHL's (the nine spots of Rule 1.9; Rule 76 for the spot after a stoppage, Rule 81 for icing and Rule 83 for offside); the speeds and the seconds are ours, so that a stoppage reads in a replay that plays a period in a few minutes.
+
+| Why play stopped (`reason`) | Where the face-off is (`hockeyFaceoffDot`) |
+| --- | --- |
+| `goal` | Centre ice. |
+| `period-start` | Centre ice: the players are lined up and the clock reads the period's full time until the drop (1.5 seconds). |
+| `save`, `frozen` (the goaltender or a player holds the puck) | The end-zone spot of that end, on the side of the rink the shot came from or the puck was. |
+| `icing` | An end-zone spot in the end of the side that iced it (`defends`), wherever the puck went. |
+| `penalty` | An end-zone spot in the end of the side that took the penalty. |
+| `offside` | The neutral-zone spot just outside the zone the offending side attacked. |
+| `whistle` (the puck out of play, a high stick, a time-out, anything else) | The nearest spot in the zone where play stopped: an end-zone spot in an end, a neutral-zone spot between the blue lines, never centre ice. |
+| `period-end` | None: the horn, the players stand a moment, and the next period starts at centre. |
+
+After icing and a penalty the side not at fault chooses the side of the rink, and after offside the spot is on the side the puck crossed the line: the rules take the side the puck was on, and a caller who knows better gives it as `y`.
+
+| The line-up (`hockeyFormation(dot, attacks)`, Rule 76) | Where |
+| --- | --- |
+| Centre | On the dot, a step back on his own side. |
+| Wingers | On their own side of the circle, outside it: on the hash marks at an end-zone spot, wide of the circle at centre and in the neutral zone. |
+| Defence | At the blue line when the spot is in the end their side attacks; in front of their own net when it is in their own end; a stride back from the wingers at centre and in the neutral zone. |
+| Goaltender | In his crease, square to the puck. |
+
+| The dead time (`HOCKEY_DEAD_TIME`) | Seconds or feet a second |
+| --- | --- |
+| Before anyone heads for the face-off | 2.5 after a goal (it is celebrated), 0.6 after a whistle |
+| The dead puck seen where it stopped | 2.5 after a goal, 1.2 after a whistle; then out of sight until the drop |
+| The fastest a player glides to his place | 18 feet a second (about 12 miles an hour: a glide, not a sprint) |
+| The least time to the line-up, and standing in it before the drop | 2, and 1 |
+| The benches' gates | (-36, -41) for the home side, (36, -41) for the away side |
+
+`hockeyStopOf(typeDescKey, reason)` reads the NHL's public play-by-play's words as the rules' (`goalie-stopped-after-sog` is a save, `puck-frozen` frozen, `icing`, `offside`, a `penalty`, any other stoppage a whistle; a delayed penalty is not a stoppage, since play goes on until the side it is against touches the puck).
+
+Tests hold the example game to the rules: in every stoppage the game clock does not move and the dead puck does not move (it stays, then is out of sight until the drop); every face-off is on one of the nine spots with the puck on it at the drop; after every goal the next face-off is at centre ice; at every drop the players are still in the line-up (a centre of each side on the dot, nobody else in the circle, the goaltenders in their crease); nobody glides faster than the rules' speed; and the board reads the game clock at every moment.
+
+### The other sports, next
+
+Only hockey has its rules today. The same model, a stoppage that stops (or does not stop) the game clock and a restart at a place the rules give, fits the others; what each would say:
+
+| Sport | The game clock in a stoppage | Where play starts again, and the line-up |
+| --- | --- | --- |
+| Soccer | Runs on (the clock counts up and the time lost is added at the end of the half), so a stoppage there would mark the dead ball without stopping the board. | A kick-off at the centre spot after a goal, each side in its own half and the other side 10 yards (9.15 m) from the ball; a throw-in where the ball crossed the touchline; a goal kick in the goal area; a corner kick at the corner arc; a free kick where the foul was, with the wall 10 yards off. |
+| Basketball | Stops at every whistle (fouls, the ball out of bounds, violations, time-outs), and in the NBA after a made basket in the last two minutes of the fourth quarter and of overtime; the shot clock resets. | A throw-in from the spot where the ball went out; free throws with the players on the lane's spaces; a jump ball at the centre circle to start the game. |
+| American football | The play clock runs between plays; the game clock stops on an incomplete pass, a score, a time-out, a penalty, and on going out of bounds late in a half. | The ball spotted at the line of scrimmage, the offence in its formation behind it, the defence across it; the clock runs again at the snap (or at the signal, by rule). A kick-off after a score. |
+| Rugby union | Runs on, except when the referee stops it (an injury, a review). | A scrum at the mark, a line-out where the ball went into touch, a kick-off from the halfway line after a score. |
 
 ## A swimming race
 

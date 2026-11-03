@@ -7,6 +7,10 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Fixed
+
+- **Stoppages play like hockey (KYOGIJO-STADIUMS-45)** ([stoppages](./docs/replay.md#stoppages-the-clock-stops-the-players-line-up)): after a goal the example game no longer moves the puck from the net to centre ice as if it were passed. A timeline has `stoppages` now: in each the game clock stands still (the board over the arena shows the same time from the goal to the drop) while the replay's own clock moves on, the puck is dead (it stays where play stopped, in the net after a goal, then is out of sight until the drop), and the players glide to the face-off's line-up at the spot the rules give, a line going off by its bench; the clock runs again at the drop. One rule set for hockey, in `/replay`: `hockeyFaceoffDot` (centre after a goal and at a period's start, the end-zone spot after a save or a frozen puck, the offending side's end after icing or a penalty, the neutral-zone spot after offside, the nearest spot in the zone otherwise), `hockeyFormation` (the line-up of Rule 76), `HOCKEY_DEAD_TIME` and `HOCKEY_RULES` (the speeds and seconds), `hockeyStopOf` (the NHL play-by-play's words), and, for any sport, `addDeadTime`, `replayGameClock`, `replayStoppages`, `stoppageAt` and `restartsBetween`. A `faceoff` event is said at each drop and draws no mark. A trail begins again after a frame its object is not in. `examples/games/canada-japan.json` is made again with the rules: 66 stoppages, about fifteen minutes, 1.1 MB (was 1.3 MB). The other sports' dead time is planned in the docs, not built.
+
 ## [0.61.0] - 2026-11-03
 
 ### Added

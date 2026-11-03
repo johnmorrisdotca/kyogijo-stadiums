@@ -1,8 +1,8 @@
 # Example games
 
-A whole game to replay, for trying the [replay](./replay.md) on something longer than a play: [`examples/games/canada-japan.json`](../examples/games/canada-japan.json), a made-up game of hockey between Canada and Japan, all three periods, about ten and a half minutes long.
+A whole game to replay, for trying the [replay](./replay.md) on something longer than a play: [`examples/games/canada-japan.json`](../examples/games/canada-japan.json), a made-up game of hockey between Canada and Japan, all three periods, about fifteen minutes long, nearly half of it the dead time of its stoppages.
 
-**A made-up game, shaped from a public NHL play-by-play; teams and players are invented.** The kinds of its events and, roughly, where on the ice and in what order they came are a real game's; nothing else is. The sides are national sides with their countries' names and colours only (no federation's or team's mark), every player's name and number is invented, the places are turned, mirrored across the rink and jittered, every gap is re-timed, an overtime is left out and the result is changed, so that the game it was shaped from cannot be read from it. The play-by-play has events only, so the five skaters and the goaltender of each side are moved between the events in a plausible shape round the puck, and the goaltenders stay in their crease.
+**A made-up game, shaped from a public NHL play-by-play; teams and players are invented.** The kinds of its events and, roughly, where on the ice and in what order they came are a real game's; nothing else is. The sides are national sides with their countries' names and colours only (no federation's or team's mark), every player's name and number is invented, the places are turned, mirrored across the rink and jittered, every gap is re-timed, an overtime is left out and the result is changed, so that the game it was shaped from cannot be read from it. The play-by-play has events only, so the five skaters and the goaltender of each side are moved between the events in a plausible shape round the puck, and the goaltenders stay in their crease. Its stoppages are hockey's ([stoppages](./replay.md#stoppages-the-clock-stops-the-players-line-up)): at every goal, whistle and period's end the game clock stops, the puck is dead, the players glide to the face-off's line-up at the spot the rules give (a line going off goes to its bench and the next comes on from it), and the clock runs again at the drop.
 
 ## What is in the file
 
@@ -15,9 +15,9 @@ A whole game to replay, for trying the [replay](./replay.md) on something longer
 | `rosters.home`, `rosters.away` | Every player: `id` (the id in the frames), `number`, `name` (`{ en, ja }`) and `position` (`G`, `F` or `D`). |
 | `score` | The final score, `home` and `away`, and `byPeriod`: `[home, away]` for each period. |
 | `periods` | Each period's `number` and its `start` and `end` on the timeline's clock, in seconds. |
-| `timeline` | A [replay timeline](./replay.md#the-timeline) in the `nhl-api` frame (feet from centre ice): key frames twice a second and at every event, each with the twelve players on the ice and the puck, and the events (`pass`, `shot`, `goal`, `whistle`). |
+| `timeline` | A [replay timeline](./replay.md#the-timeline) in the `nhl-api` frame (feet from centre ice): key frames twice a second while play is on, at every event and at each moment of a stoppage, each with the twelve players on the ice and the puck (out of sight while it is dead), the events (`pass`, `shot`, `goal`, `whistle`, `faceoff`) and the `stoppages` (each one's `start` and `end`, its `reason` and the face-off spot, `x` and `y`). |
 
-It is 1.3 MB as it is and about 120 kB compressed, as a web server sends it; the frames are key frames, and the replay moves everything between them. It is not in the npm package, whose size it would multiply for something only a demo needs: it is in the repository and on the demo's site, at `https://johnmorrisdotca.github.io/kyogijo-stadiums/examples/games/canada-japan.json`.
+It is 1.1 MB as it is and about 105 kB compressed, as a web server sends it; the frames are key frames, and the replay moves everything between them. It is not in the npm package, whose size it would multiply for something only a demo needs: it is in the repository and on the demo's site, at `https://johnmorrisdotca.github.io/kyogijo-stadiums/examples/games/canada-japan.json`.
 
 ## The index
 
@@ -84,7 +84,7 @@ const timeline = game.timeline;
 console.log(game.score.home, game.score.away, game.periods.length, Math.round(replayInfo(timeline).duration / 60));
 const svg = drawFrame({ sport: "nhl", home: { name: "Canada", score: 0 }, away: { name: "Japan", score: 0 } }, timeline, game.periods[1].start);
 console.log(svg.startsWith("<svg"), svg.includes("Shirt numbers"));
-// 6 5 3 11
+// 6 5 3 15
 // true true
 ```
 
@@ -92,4 +92,4 @@ The score at a time is the goals at or before it (`timeline.events`, `kind: "goa
 
 ## How it is made
 
-`scripts/game-fiction.mjs` makes it, pure and seeded, so that the same play-by-play gives the same game every time; `node scripts/make-game.mjs <play-by-play.json>` writes the file. The play-by-play is read from a file kept outside the repository and is never committed: only the made-up game is. Its test (`scripts/game-fiction.test.mjs`) runs on a few invented plays.
+`scripts/game-fiction.mjs` makes it, pure and seeded, so that the same play-by-play gives the same game every time; `node scripts/make-game.mjs <play-by-play.json>` writes the file. The play-by-play is read from a file kept outside the repository and is never committed: only the made-up game is. Its dead time is the package's own: the face-off spot after each stoppage is `hockeyFaceoffDot`, the line-up `hockeyFormation`, and `addDeadTime` with `HOCKEY_RULES` opens each stoppage into the walk to the line-up ([hockey's rules](./replay.md#hockeys-rules)). The play-by-play does not say where a side not at fault chose the spot's side after icing or a penalty, or where the puck crossed the line for an offside, so those sides are the source's face-off's; nothing else of its face-offs is kept. Its test (`scripts/game-fiction.test.mjs`) runs on a few invented plays, and `src/replay.stoppage.test.ts` holds the file to the rules.
