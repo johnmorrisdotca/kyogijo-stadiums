@@ -2,7 +2,7 @@
 
 [日本語](circuits.ja.md) · English
 
-A race track drawn as OpenStreetMap maps it: the lap as a ribbon of the track's width along the ways of the circuit, the pit lane and the circuit's ground with its pit building, the start line and the chequered finish across the track, arrows the way the lap runs, each turn's number beside its bend, a north arrow and a scale bar. The first is the **Las Vegas Strip Circuit**, a street circuit on the Las Vegas Strip, Koval Lane, Harmon Avenue and Sands Avenue. The [3D view](./turn.md) lays it on a floor that turns, with the pit building standing up and each turn's number on a post. Nothing of a race's, a series' or a team's is drawn: no logo, no sponsor, no mark.
+A race track drawn as OpenStreetMap maps it, and a simulated race on it ([a race](#a-race)): the lap as a ribbon of the track's width along the ways of the circuit, the pit lane and the circuit's ground with its pit building, the start line and the chequered finish across the track, arrows the way the lap runs, each turn's number beside its bend, a north arrow and a scale bar. The first is the **Las Vegas Strip Circuit**, a street circuit on the Las Vegas Strip, Koval Lane, Harmon Avenue and Sands Avenue. The [3D view](./turn.md) lays it on a floor that turns, with the pit building standing up and each turn's number on a post. Nothing of a race's, a series' or a team's is drawn: no logo, no sponsor, no mark.
 
 ![The Las Vegas Strip Circuit seen from above, lying along the page with north to the right: a dark ribbon with white edges round a long loop, the pit building in its ground at the bottom left, small yellow arrows along the track and a numbered badge at each of the 17 turns](./images/circuits-las-vegas-desk-light.webp)
 
@@ -95,6 +95,44 @@ The floor is the circuit's own drawing, with its name left to the page and its t
 
 **It does nothing by itself.** The view is every 3D view's (`mountTurn`): nothing moves until the reader turns it or presses Auto-turn, nothing is drawn while it is still, the auto-turn holds while the page is hidden or the view is scrolled out of sight, and the elements are made once and only moved, so nothing grows as it turns. The demo's test plays it and counts.
 
+## A race
+
+![The Las Vegas Strip Circuit half an hour into a simulated race: twenty coloured dots, each with the position it holds written on it, spread round the lap, a few close together in a train on the Strip; under the drawing the race clock reads 30:00 and Lap 18 / 50, then the play button and the slider over the whole race, the line that says it is a simulation, and the timing board with each car's position, driver, team, gap, interval, last and best laps and stops](./images/circuits-race-desk-light.webp)
+
+```ts
+import { raceAt, simulateRace } from "@johnmorrisdotca/kyogijo-stadiums/circuits";
+
+const race = simulateRace({ circuit: "las-vegas" });
+console.log(race.laps, race.cars.length, Math.round(race.flag / 60));
+// 50 20 82
+const now = raceAt(race, 1800);
+console.log(now.lap, now.standings[0].position, now.standings[1].gap! < 1);
+// 18 1 true
+```
+
+```ts no-run
+import { mountCircuitRace } from "@johnmorrisdotca/kyogijo-stadiums/circuits";
+
+const race = mountCircuitRace(document.querySelector("#race")!, { circuit: "las-vegas" }, { view: "3d", speed: 10 });
+race.play();
+```
+
+A circuit can hold a race: twenty cars as dots that start on the grid, run the laps along the drawn line and take the chequered flag, with a race clock (the time since the start, and the lap the leader is on) and a timing board (the position, the driver and team, the gap to the leader and to the car in front, the last and best laps, the stops) that move with it. **It is a simulation, and it says so**, on the page and in the drawing's description: the cars, drivers and teams are made up (`RACE_TEAMS`, `RACE_DRIVERS`: invented names, codes and colours, none of a real driver's, team's or series'; a car carries no number of its own, only the position it holds), and the race is worked out from a seed. No real race, time or result is in it.
+
+**A full race distance.** By default a race runs the fewest laps that make 305 km (`raceLaps`), as a Grand Prix's distance is set: 50 laps of Las Vegas, about an hour and twenty-two minutes to the flag. At 1× it plays in real time, so the clock and the board run the whole way; 10× and 60× (a minute of the race a second) and the slider go anywhere in it. `seed`, `laps` (1 to 200) and `cars` (2 to 20) make another race; the same options always give the same race.
+
+**How it is worked out.** `paceProfile` reads the drawn line every 5 metres and gives each place the fastest speed its bend allows: a bend's radius `r` and the grip across the car, which grows with speed as wings press it down, give `v² = r × (22 + 0.0036 v²)`, held to 94 m/s on a straight. A pass forward holds each speed to what the engine can add (17 m/s² from rest, falling to nothing at the top speed) and a pass backward to what the brakes can shed (34 m/s²), so the cars brake into a turn and pull out of it; a bend is measured over 32 metres either side, because a racing car does not follow the middle of the road. That laps Las Vegas in 1:35.6, from 338 km/h on the Strip down to 84 km/h in its tightest turn. `simulateRace` then runs every car a fifth of a second at a time. Each car runs those speeds a little slower by its team (a quarter of a percent a team), its fuel (2.4 percent with a full tank, falling to nothing at the flag), its tyres (more each lap they are used, faster past 24 laps) and the lap's own spread, now and then with a mistake in it. Within a second of the car in front it gains a tow on a straight and loses a little in a bend; closer than about four tenths of a second it is held behind unless it is on a straight and quicker there, so trains form and break up, and a car a lap or more down lets the leaders by anywhere. Each car stops once or twice in the pit lane, on laps its strategy draws, at 80 km/h with two or three seconds standing (now and then a slow stop), and each car has one chance in twenty of retiring (the default race has none). Each car's distance is kept at every second, and `raceAt` reads any moment from it.
+
+**Guided by public timing data, never shipped.** The model's figures (the top speed, the braking and the pull at each speed, the pit lane's time and the length of a stop, one to three stops in a race) were set by reading one race at Las Vegas from the OpenF1 API (openf1.org): a driver's laps, a lap of car data and the pit stops, fetched once, a request at a time, and kept on the maintainer's machine, outside the repository and the package. *Pace guided by OpenF1 data.* Nothing of that race (no driver, team, position, gap or time) is in the package, the demo or these pages.
+
+**In a page.** `mountCircuitRace(host, options, settings)` mounts the circuit flat (or with `view: "3d"`, its 3D view, the cars standing on it as discs that face the eye) with the clock, the controls (play, the speeds 1×, 10× and 60× as buttons, and a slider over the whole race) and the timing board under it; on a phone the board keeps the position, the driver's code, the gap and the interval. It gives back `play`, `pause`, `seek`, `nextLap`, `setSpeed`, `state`, `moment`, `update` (a new language or theme, the clock where it is) and `destroy`. A screen reader is told when the lead changes and who takes the flag. With reduced motion nothing plays by itself: play moves to the leader's next lap. `drawRace` is the drawing at a moment as one SVG string, and `raceBoard` the board as a table, for a server or a page of your own.
+
+**It does nothing it need not.** Nothing runs until the race is played, and nothing while it is paused, the page is hidden or it is scrolled out of sight. Each frame moves only the dots that moved and writes the board and the clock only where their words changed (the board at most four times a second); in 3D the race asks for its frames through the view, so the auto-turn and the race share one. No element is made while it plays, and `destroy` leaves nothing. `e2e/race.demo.mjs` holds each of these, flat and in 3D, over ten races.
+
+![The same race in 3D from the low corner, dark: the cars stand on the circuit as small round discs with their positions, some spread along the long straights and a group close together at the far end](./pictures/circuits-race-3d-desk-dark.webp)
+
+**It runs on any circuit.** Nothing of the race is Las Vegas's own: the speeds come from the line, the pit lane from the circuit's own, the grid from its start line and the laps from its length, and a test runs a race on every circuit the package draws and holds every dot on the road or in the pit lane.
+
 ## Adding the next circuit
 
 A circuit is mostly data: an entry in `scripts/circuits.data.json`, a fetch and a build. For Monaco, Spa-Francorchamps or Indianapolis:
@@ -116,4 +154,5 @@ A circuit is mostly data: an entry in `scripts/circuits.data.json`, a fetch and 
 
 - The lap is the middle of the carriageway OpenStreetMap maps, not a racing line; the track's width is one plausible figure along the whole lap, so where the real track is wider or narrower the ribbon is not.
 - The barriers, the grandstands, the bridges for pedestrians over the Strip and the hotels and the Sphere beside the lap are not drawn: only what the circuit's relation and its area map.
+- The race is a model: the dots run on the middle of the carriageway, not a racing line, so two cars side by side are one dot over another; there is no safety car, weather or named tyre, and nothing of a real race.
 - One circuit so far. Suzuka, with its crossing, is the next in mind, and the steps above say what it needs.

@@ -7,6 +7,8 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+- **A simulated race on a circuit (KYOGIJO-STADIUMS-32)** ([a race](./docs/circuits.md#a-race)): twenty made-up cars as dots from the grid to the chequered flag over a full race distance (50 laps of Las Vegas, about an hour and twenty-two minutes), with gaps, passes, trains, one or two pit stops each and now and then a retirement, all from a seed. `simulateRace` works it out (the lap's speeds from the bends, `paceProfile`), `raceAt` gives any moment (the order, the gaps to the leader and the car in front, the last and best laps, the stops), `drawRace` and `raceBoard` draw it, and `mountCircuitRace` plays it in a page, flat or in 3D (the cars standing as discs), with a race clock, play, 1×, 10× and 60×, a slider over the whole race and the timing board, in English and Japanese. It is labelled a simulation: every team, driver, code and colour is invented, and no real race is in it; the model's figures were guided by public timing data read once and kept outside the package. Nothing runs while it is paused, hidden or out of sight, the 3D view's auto-turn and the race share one frame, and destroy leaves nothing. The demo's circuits page has a **Race** button, kept in the address with the speed and the moment.
+
 ## [0.54.0] - 2026-11-03
 
 ### Added

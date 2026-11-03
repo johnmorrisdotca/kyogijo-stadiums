@@ -114,6 +114,13 @@ Real buildings drawn in the outline OpenStreetMap maps for them, each with a pla
 </picture>
 <br><em>The same lap in 3D</em>
 </td>
+<td align="center" valign="top">
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/circuits-race-desk-dark.webp">
+<img src="https://raw.githubusercontent.com/johnmorrisdotca/kyogijo-stadiums/main/docs/images/circuits-race-desk-light.webp" alt="A simulated race on the same circuit half an hour in: twenty coloured dots with their positions, the race clock at Lap 18 of 50 and the timing board under it." width="250">
+</picture>
+<br><em>A simulated race, with its clock and timing board</em>
+</td>
 </tr>
 </table>
 
@@ -247,7 +254,7 @@ console.log(svg.startsWith("<svg"), svg.includes("USA 3, Canada 2"));
 - **A catalogue of venues**: every venue drawn today, the ones being built and the ones wanted (every NBA, MLB, NFL, CFL and NHL venue of the season, world soccer, cricket, rugby, the Olympics, Formula One and more), with ids, names in English and Japanese and Wikidata items, as a [JSON file](https://johnmorrisdotca.github.io/kyogijo-stadiums/catalogue.json) and a typed entry. [The catalogue](./docs/catalogue.md).
 - **Real venues**: arenas and stadiums in the outline of their buildings, districts of several venues on one plan, the crowd in the stands and outside. [Ballparks](./docs/ballparks.md), [venues](./docs/venues.md), [districts](./docs/district.md).
 - **A 3D view** of any surface or venue that turns by mouse, touch or keys, with the roof and the walls to switch and a quality level for every device. [The 3D view](./docs/turn.md), [quality](./docs/quality.md).
-- **Circuits**: a famous race track as OpenStreetMap maps it, the Las Vegas Strip Circuit first, with its turns numbered and its pit building standing in 3D. [Circuits](./docs/circuits.md).
+- **Circuits**: a famous race track as OpenStreetMap maps it, the Las Vegas Strip Circuit first, with its turns numbered and its pit building standing in 3D, and a simulated race on it: twenty made-up cars over a full race distance, with a race clock, a timing board and 1×, 10× and 60×. [Circuits](./docs/circuits.md#a-race).
 - **Tournaments**: several surfaces on one floor, who judges where, boards laid over a surface. [Layouts](./docs/multi.md), [judging](./docs/judging.md), [boards](./docs/boards.md).
 - **Data on a surface**: points, heat maps, shot and pass charts, team shapes and a replay, flat or in 3D with the players standing on the ice, in 48 providers' coordinate frames. [Layers](./docs/layers.md), [frames](./docs/frames.md), [replay](./docs/replay.md), [an example game](./docs/example-games.md).
 - **Looks and flags**: eight named looks, a flag or crest on each half, trophies and crests from Dougu Sports, flags from Hata, light and dark. [Theming](./docs/theming.md), [the pageant](./docs/pageant.md).
@@ -262,7 +269,7 @@ console.log(svg.startsWith("<svg"), svg.includes("USA 3, Canada 2"));
 | `drawKyogijo`, `drawSurface`, `drawScore`, `drawBadge` | The drawing, as a string of SVG. |
 | `SPORTS`, `PARKS`, `COURT_THEMES`, `SOCCER_PITCHES`, `GROUNDS`, `EVENTS` | The forty-three sports, the 94 ballparks, the court looks, the pitches, the 64 grounds, the 18 special games. |
 | `./venues`, `./stadiums`, `./district`, `./turn` | Real arenas and stadiums in their buildings' outlines; districts on one plan; a surface as a 3D view that turns. |
-| `./circuits` | Race tracks as OpenStreetMap maps them, in 2D and 3D ([demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/circuits.html)). |
+| `./circuits` | Race tracks as OpenStreetMap maps them, in 2D and 3D, and a simulated race on them with its clock and timing board ([demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/circuits.html?race=1)). |
 | `./multi`, `./judging`, `./layouts` | Several surfaces for one event ([demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/halls.html)); who judges where; small multiples and backgrounds. |
 | `./layers`, `./charts`, `./frames`, `./zones`, `./pointer`, `./replay` | Data layers, charts, the providers' frames, zones by the rules, a click as a place, tracking data played on a surface. |
 | `./athletics`, `./budo`, `./skating` | The athletics stadium, the budō (areas, dohyō, the dojo builder) and the skating rinks. |
