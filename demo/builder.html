@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Kyogijo Stadiums: build a drawing and copy the code</title>
+    <meta name="description" content="Choose a sport, the teams, the score and a look on the demo's stage, then copy the code for it as a module, a custom element, a frame or a file of SVG." />
+    <style>
+      :root { color-scheme: light dark; --bg: #f6f4ee; --ink: #10151b; --muted: #434b54; --card: #fff; --line: #b9b3a3; --accent: #1f5fa8; --tab: #10151b; --tab-ink: #fff; }
+      @media (prefers-color-scheme: dark) { :root { --bg: #0d1218; --ink: #f6f3ea; --muted: #bcc3cb; --card: #18212a; --line: #475463; --accent: #7fb2ee; --tab: #f6f3ea; --tab-ink: #0d1218; } }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif; }
+      main { max-width: 960px; margin: 0 auto; padding: 12px 16px 32px; }
+      h1 { font-size: 1.6rem; margin: 0 0 4px; }
+      h2 { font-size: 1.1rem; margin: 18px 0 6px; }
+      p { margin: 0 0 10px; max-width: 70ch; }
+      .lede, .note { color: var(--muted); }
+      a { color: var(--accent); }
+      :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+      .top { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: end; justify-content: space-between; }
+      label.pick { display: grid; gap: 2px; font-size: .85rem; color: var(--muted); }
+      select { font: inherit; color: var(--ink); background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; min-height: 44px; }
+      /* The ways in are tabs: one screen, nothing folds open. */
+      .tabs { display: inline-flex; flex-wrap: wrap; gap: 4px; padding: 3px; background: var(--card); border: 1px solid var(--line); border-radius: 999px; margin: 6px 0 10px; max-width: 100%; }
+      .tabs button { font: inherit; font-size: .95rem; font-weight: 700; min-height: 44px; padding: 0 18px; border-radius: 999px; border: 0; background: transparent; color: var(--ink); cursor: pointer; }
+      .tabs button[aria-selected="true"] { background: var(--tab); color: var(--tab-ink); }
+      .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; }
+      .chips a { font-size: .9rem; font-weight: 700; min-height: 44px; padding: 0 14px; border-radius: 999px; border: 2px solid var(--line); background: var(--card); color: var(--ink); text-decoration: none; display: inline-flex; align-items: center; }
+      .chips a:hover { border-color: var(--tab); }
+      pre { margin: 0 0 10px; padding: 12px 14px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; overflow-x: auto; font-size: .85rem; }
+      .go { display: inline-flex; align-items: center; min-height: 48px; padding: 0 22px; border-radius: 999px; background: var(--tab); color: var(--tab-ink); font-weight: 800; text-decoration: none; }
+      [hidden] { display: none !important; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p><a href="./" id="back"></a></p>
+      <div class="top">
+        <div>
+          <h1 id="title"></h1>
+          <p class="lede" id="lede"></p>
+        </div>
+        <label class="pick"><span id="l-language"></span><select id="language" data-testid="language"><option value="en">English</option><option value="ja">日本語</option></select></label>
+      </div>
+      <p><a class="go" id="go" href="./?help=off#embed" data-testid="go"></a></p>
+      <h2 id="h-start"></h2>
+      <div class="chips" id="starts" role="group" data-testid="starts"></div>
+      <h2 id="h-ways"></h2>
+      <div class="tabs" role="tablist" id="tabs" data-testid="tabs"></div>
+      <pre><code id="sample" data-testid="sample"></code></pre>
+      <p class="note" id="note"></p>
+      <p class="note"><a href="./docs/guides-embed-in-a-page.html" id="guide"></a> · <a href="./docs/guides-getting-started.html" id="start-guide"></a> · <a href="./api.html" id="api"></a></p>
+    </main>
+    <script type="module">
+      // The builder: the demo's home page already has one, the "Embed" section under the stage, which writes the code for the sport, the teams, the score and the look on the stage as a module,
+      // a custom element, a frame or a file of SVG, with a copy button. This page is the way in to it: a start for each popular sport, and a sample of what each way writes. It reads the
+      // choice from the address and writes nothing anywhere.
+      const WORDS = {
+        en: {
+          pageTitle: "Kyogijo Stadiums: build a drawing and copy the code",
+          title: "Build a drawing, copy the code",
+          lede: "Choose a sport, the teams, the score and a look on the stage, and the Embed section under it writes the code for what you chose.",
+          back: "← The demo",
+          language: "Language",
+          go: "Open the stage and its Embed section",
+          start: "Start from a sport",
+          ways: "The four ways in",
+          note: "The Embed section writes each of these for the stage as it is, in English or Japanese, and copies it with one press.",
+          guide: "Embedding: the guide",
+          startGuide: "Getting started: the guide",
+          api: "API reference",
+          tabs: { module: "Module", element: "Element", frame: "Frame", svg: "SVG file" },
+          sports: { nhl: "Hockey rink", nba: "Basketball court", nfl: "Football field", mlb: "Baseball field", soccer: "Soccer pitch", curling: "Curling sheet", tennis: "Tennis court", volleyball: "Volleyball court" },
+        },
+        ja: {
+          pageTitle: "競技場 Kyogijo Stadiums：図を作ってコードをコピー",
+          title: "図を作って、コードをコピーする",
+          lede: "ステージで競技、チーム、スコア、見た目を選ぶと、その下の「埋め込み」の項目が、選んだ内容に合うコードを書き出します。",
+          back: "← デモへ",
+          language: "言語",
+          go: "ステージと「埋め込み」の項目を開く",
+          start: "競技から始める",
+          ways: "四つの使い方",
+          note: "「埋め込み」の項目は、今のステージに合わせてこれらを英語か日本語で書き出し、ボタン一つでコピーします。",
+          guide: "埋め込みのガイド（日本語）",
+          startGuide: "はじめにのガイド（日本語）",
+          api: "APIリファレンス（英語）",
+          tabs: { module: "モジュール", element: "要素", frame: "フレーム", svg: "SVGファイル" },
+          sports: { nhl: "アイスホッケーのリンク", nba: "バスケットボールコート", nfl: "フットボール場", mlb: "野球場", soccer: "サッカーのピッチ", curling: "カーリングのシート", tennis: "テニスコート", volleyball: "バレーボールコート" },
+        },
+      };
+      const SAMPLES = {
+        module: (sport) => `import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";\n\nconst svg = drawKyogijo({\n  sport: "${sport}",\n  away: { name: "USA", score: 3 },\n  home: { name: "Canada", score: 2 },\n  status: "final",\n});\ndocument.querySelector("#game").innerHTML = svg;`,
+        element: (sport) => `<script type="module" src="https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo-stadiums@0/dist/element-define.js"><\/script>\n\n<kyogijo-field sport="${sport}" orientation="auto"\n  away="USA" home="Canada" away-score="3" home-score="2" status="final"></kyogijo-field>`,
+        frame: (sport) => `<iframe\n  src="https://johnmorrisdotca.github.io/kyogijo-stadiums/embed.html?sport=${sport}&away=USA&home=Canada&ascore=3&hscore=2&status=final"\n  title="USA 3, Canada 2, Final" loading="lazy"\n  style="width:100%;aspect-ratio:2.3;border:0"></iframe>`,
+        svg: (sport) => `import { writeFileSync } from "node:fs";\nimport { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";\n\nwriteFileSync("${sport}.svg", drawKyogijo({ sport: "${sport}", theme: "dark" }));`,
+      };
+      const $ = (id) => document.getElementById(id);
+      const params = new URLSearchParams(location.search);
+      const state = { lang: params.get("lang") === "ja" ? "ja" : "en", sport: ["nhl", "nba", "nfl", "mlb", "soccer", "curling", "tennis", "volleyball"].includes(params.get("sport")) ? params.get("sport") : "nhl", way: "module" };
+      $("language").value = state.lang;
+
+      function render() {
+        const t = WORDS[state.lang];
+        document.documentElement.lang = state.lang;
+        document.title = t.pageTitle;
+        for (const [id, key] of [["title", "title"], ["lede", "lede"], ["back", "back"], ["l-language", "language"], ["go", "go"], ["h-start", "start"], ["h-ways", "ways"], ["note", "note"], ["guide", "guide"], ["start-guide", "startGuide"], ["api", "api"]]) $(id).textContent = t[key];
+        $("go").href = `./?sport=${state.sport}&lang=${state.lang}&help=off#embed`;
+        $("starts").setAttribute("aria-label", t.start);
+        $("starts").replaceChildren(...Object.entries(t.sports).map(([sport, name]) => {
+          const link = document.createElement("a");
+          link.href = `./?sport=${sport}&lang=${state.lang}&help=off#embed`;
+          link.textContent = name;
+          link.dataset.sport = sport;
+          link.addEventListener("mouseenter", () => { state.sport = sport; sample(); });
+          link.addEventListener("focus", () => { state.sport = sport; sample(); });
+          return link;
+        }));
+        $("tabs").setAttribute("aria-label", t.ways);
+        $("tabs").replaceChildren(...Object.entries(t.tabs).map(([way, name]) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.role = "tab";
+          button.textContent = name;
+          button.dataset.way = way;
+          button.setAttribute("aria-selected", String(way === state.way));
+          button.addEventListener("click", () => { state.way = way; render(); });
+          return button;
+        }));
+        sample();
+      }
+      function sample() {
+        $("sample").textContent = SAMPLES[state.way](state.sport);
+        $("go").href = `./?sport=${state.sport}&lang=${state.lang}&help=off#embed`;
+      }
+      $("language").addEventListener("change", () => { state.lang = $("language").value; render(); });
+      render();
+      document.body.dataset.ready = "true";
+    </script>
+  </body>
+</html>

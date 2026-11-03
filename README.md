@@ -269,6 +269,25 @@ console.log(svg.startsWith("<svg"), svg.includes("USA 3, Canada 2"));
 
 The full list of entry points is in [entry points](./docs/entry-points.md); every export is in the [API reference](https://johnmorrisdotca.github.io/kyogijo-stadiums/api.html).
 
+## Guides
+
+Twelve guides, each with a Japanese twin in [`docs/guides/ja/`](./docs/guides/ja/), written for someone using the package: every example is run against the built package by `pnpm test:readme`, and the guides are held with the rest of the documentation by `pnpm docs:check`.
+
+| Guide | What it is for |
+| --- | --- |
+| [Getting started: a results page](./docs/guides/getting-started.md) | A strip for every game in a list, one large drawing, and the same drawing tall for a phone. |
+| [A score on a surface](./docs/guides/score-and-layout.md) | The teams, the state of the game, which side the home team is on, the three sizes. |
+| [Looks, colours and dark mode](./docs/guides/looks-and-colours.md) | Eight named looks, colours from code, a court of your own, many drawings on one page. |
+| [Embedding](./docs/guides/embed-in-a-page.md) | A container that follows its box, the custom element, a frame for a page with no script. |
+| [React, Vue, Svelte and Angular](./docs/guides/frameworks.md) | The string or the element in each, and a server with no framework. |
+| [Ballparks, grounds, arenas and real venues](./docs/guides/real-venues.md) | From a park's fence to a district of buildings on one plan, and the catalogue of what exists. |
+| [Data on a surface](./docs/guides/data-on-a-surface.md) | Layers, coordinate frames, zones by the rules, a click as a place, charts. |
+| [The 3D view](./docs/guides/the-3d-view.md) | The floor that turns, what stands on it, stands and roof, quality on a phone. |
+| [Accessibility, English and Japanese](./docs/guides/accessibility-and-languages.md) | What a drawing says for itself, and what the page around it must say. |
+| [Architecture](./docs/guides/architecture.md) | The rules a drawing is made by, and the checks that keep them true. |
+| [Troubleshooting](./docs/guides/troubleshooting.md) | Nothing appears, a colour is wrong, a snapshot fails after an upgrade. |
+| [Upgrading](./docs/guides/upgrading.md) | What each breaking release asks of you, and how to make the next upgrade cheap. |
+
 ## Use it in your project
 
 ### Install
@@ -437,9 +456,124 @@ Tell Vue the tag is a custom element with `compilerOptions.isCustomElement: (tag
 <kyogijo-field sport="nhl" away="USA" home="Canada" away-score={away} home-score={home} />
 ```
 
-A page that moves (`mountKyogijo`), a file written on a server and a frame for a page with no script are in [getting started](./docs/getting-started.md).
+A page that moves (`mountKyogijo`), a file written on a server and a frame for a page with no script are in [getting started](./docs/getting-started.md), and every framework below has its own [guide](./docs/guides/frameworks.md).
 
-A page that moves (`mountKyogijo`), a file written on a server and a frame for a page with no script are in [getting started](./docs/getting-started.md).
+### In Angular
+
+```ts no-check
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+import "@johnmorrisdotca/kyogijo-stadiums/element/define";
+
+@Component({
+  selector: "app-game",
+  standalone: true,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  template: `<kyogijo-field sport="nhl" orientation="auto" away="USA" home="Canada" [attr.away-score]="away" [attr.home-score]="home"></kyogijo-field>`,
+})
+export class GameComponent {
+  away = 3;
+  home = 2;
+}
+```
+
+### From a CDN, as a module
+
+```html
+<div id="game"></div>
+<script type="module">
+  import { drawKyogijo } from "https://cdn.jsdelivr.net/npm/@johnmorrisdotca/kyogijo-stadiums@0/+esm";
+  document.querySelector("#game").innerHTML = drawKyogijo({ sport: "nba", away: { name: "Australia", score: 108 }, home: { name: "Japan", score: 112 }, status: "final" });
+</script>
+```
+
+### With a bundler and TypeScript
+
+```ts
+import { SPORTS, drawKyogijo, type ScoreOptions, type Sport } from "@johnmorrisdotca/kyogijo-stadiums";
+
+// The options are typed, so an editor lists the sports, the statuses and every option with its doc comment; a sport is one of SPORTS.
+const sport: Sport = "nhl";
+const game: ScoreOptions = { sport, home: { name: "Japan", score: 7 }, away: { name: "Canada", score: 5 }, status: "final" };
+console.log(SPORTS.includes(sport), drawKyogijo(game).includes("Canada 5, Japan 7"));
+// true true
+```
+
+A bundler (Vite, webpack, esbuild or Rollup) needs nothing set: each entry is its own file, so `import ... from "@johnmorrisdotca/kyogijo-stadiums/parks"` brings in the parks and nothing else.
+
+```ts no-check
+// vite.config.ts: nothing is needed for the package. Tell Vue the tag is a custom element, if you use it.
+import vue from "@vitejs/plugin-vue";
+
+export default { plugins: [vue({ template: { compilerOptions: { isCustomElement: (tag: string) => tag === "kyogijo-field" } } })] };
+```
+
+### In a frame, with no script of your own
+
+```html
+<iframe
+  src="https://johnmorrisdotca.github.io/kyogijo-stadiums/embed.html?sport=nhl&away=USA&home=Canada&ascore=3&hscore=2&status=final-ot"
+  title="USA 3, Canada 2, Final/OT"
+  loading="lazy"
+  style="width:100%;aspect-ratio:2.3;border:0"
+></iframe>
+```
+
+### On a server
+
+```js no-run
+import { createServer } from "node:http";
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
+
+// An image address: the same options give the same bytes, so a CDN can keep it.
+createServer((request, response) => {
+  const sport = new URL(request.url ?? "/", "http://localhost").searchParams.get("sport") === "nba" ? "nba" : "nhl";
+  response.writeHead(200, { "content-type": "image/svg+xml", "cache-control": "public, max-age=3600" });
+  response.end(drawKyogijo({ sport, away: { name: "USA", score: 3 }, home: { name: "Canada", score: 2 }, status: "final" }));
+}).listen(6900);
+```
+
+### Shots on the rink, in the provider's numbers
+
+```ts
+import { drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
+import { zoneAt } from "@johnmorrisdotca/kyogijo-stadiums/zones";
+
+// The NHL API's numbers are feet from centre ice: `from` puts them on the rink, and `zoneAt` says where one is by the rules.
+const shots = [{ x: 69, y: 22, team: "home", outcome: "goal" }, { x: -61, y: 12, team: "away", outcome: "blocked" }];
+const svg = drawKyogijo({ sport: "nhl", layers: [{ kind: "points", name: "shots", from: "nhl-api", data: shots }] });
+console.log(svg.includes("2 shots"), zoneAt("nhl", [69, 22], { frame: "nhl-api" }).subzone);
+// true faceoff-circle
+```
+
+### In Japanese
+
+```ts
+import { describe, drawKyogijo } from "@johnmorrisdotca/kyogijo-stadiums";
+
+const game = { sport: "nhl", away: { name: "USA", score: 3 }, home: { name: "Canada", score: 2 }, status: "final" } as const;
+console.log(describe({ ...game, language: "ja" }).title, drawKyogijo({ ...game, language: "ja" }).includes("試合終了"));
+// USA 3、Canada 2、試合終了 true
+```
+
+### As data, for d3, a canvas, GeoJSON or a PNG
+
+```ts
+import { sceneToGeoJSON } from "@johnmorrisdotca/kyogijo-stadiums/geojson";
+
+// The same drawing as features, in feet from the left end of the rink.
+const features = sceneToGeoJSON({ sport: "nhl", id: "rink" });
+console.log(features.type, features.features.length > 10);
+// FeatureCollection true
+```
+
+```js no-run
+import { writeFileSync } from "node:fs";
+import { toPNG } from "@johnmorrisdotca/kyogijo-stadiums/png";
+
+// Needs the optional package @resvg/resvg-js; without it the call says so (PNG_PEER_MISSING).
+writeFileSync("rink.png", await toPNG({ sport: "nhl", away: { name: "USA", score: 3 }, home: { name: "Canada", score: 2 }, status: "final" }, { width: 1200 }));
+```
+
 
 ## API
 

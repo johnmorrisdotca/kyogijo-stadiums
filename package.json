@@ -349,6 +349,8 @@
     "screenshots:flythrough": "pnpm site && node scripts/readme-flythrough.mjs",
     "test:readme": "pnpm build && node scripts/check-readme-examples.mjs",
     "docs:make": "node scripts/docs.mjs",
+    "docs:site": "pnpm site",
+    "docs:check": "pnpm build && node scripts/docs-check.mjs",
     "parks": "node scripts/build-parks.mjs",
     "arenas": "node scripts/build-arenas.mjs",
     "arenas:fetch": "node scripts/fetch-arenas.mjs",
