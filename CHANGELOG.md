@@ -7,6 +7,10 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+### Changed
+
+- **One replay bar for every sport and for races (KYOGIJO-STADIUMS-58)** ([the replay bar](./docs/replay.md#the-replay-bar)): a game's replay (`mount.replay`, `view.replay`, `<kyogijo-field>`) and a race on a circuit (`mountCircuitRace`) are now made from one bar (`src/replay.bar.ts`): back to the start, one step back, play or pause, one step on (a frame, or a lap for a race), the speeds as **buttons** (a game's 0.25 to 4, a race's 1×, 10×, 60×; the dropdown is gone), loop, the position slider and the clock line, with the same keys everywhere (Space, the arrows or comma and full stop over a 3D view, Shift for a bigger step, Home and End). The race gains loop (`loop: true`, `setLoop`, `loop=1` in the demo's address), back to the start, a lap back and on (`prevLap`, `step(±1)`) and the keys it lacked; the clock moved from above the bar into it, with the lap and the flag under it. The bar has three slots, follow, sound and extra, for the buttons other features add (`ReplayDriver.parts.slots`, `race.slots`). Class names: the speed `select.ky-speed` is now `.ky-speeds` holding a `button.ky-speed[data-speed]` for each speed, `.ky-start` is new, and the race's `.ky-race-play`, `.ky-race-bar`, `.ky-race-position`, `.ky-race-time` and `.ky-race-stage` are the bar's `.ky-play`, `.ky-controls`, `.ky-position`, `.ky-clock` and `.ky-clock-line`.
+
 ## [0.63.0] - 2026-11-03
 
 ### Added

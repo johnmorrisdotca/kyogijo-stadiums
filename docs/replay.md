@@ -117,7 +117,7 @@ replay.step(1);      // the next frame
 replay.destroy();    // takes the replay and its controls away; the surface stays
 ```
 
-`mount.replay(timeline, settings?)` puts the stage and the controls in the container and returns the controller. The controls are a button to play and pause, one to step back and one forward, the speed (0.25, 0.5, 1, 2, 4), a loop switch, a position slider and the time. `update()` keeps the replay, so a theme or a score can change under it. In React, call `mount.replay` from an effect on the container: the component of `/react` draws a still.
+`mount.replay(timeline, settings?)` puts the stage and the controls in the container and returns the controller. The controls are [the replay bar](#the-replay-bar): back to the start, one frame back and on, play and pause, the speed as buttons (0.25, 0.5, 1, 2, 4), a loop switch, a position slider and the clock. `update()` keeps the replay, so a theme or a score can change under it. In React, call `mount.replay` from an effect on the container: the component of `/react` draws a still.
 
 ```html
 <kyogijo-field id="rink" sport="nhl" loop speed="2"></kyogijo-field>
@@ -148,7 +148,22 @@ How it moves: the drawing is written once. Each animation frame moves only the m
 | Shift with an arrow | Five seconds back or on. |
 | Home and End | The first and the last moment. |
 
-The keys work with the focus on the drawing or on a button; the slider and the speed keep their own.
+The keys work with the focus on the drawing or on a button; the slider keeps its own.
+
+## The replay bar
+
+Every replay, a game's flat or on [the 3D view](./turn.md) and [a race on a circuit](./circuits.md#a-race), has the same bar, made once (`src/replay.bar.ts`): **back to the start**, **one step back**, **play or pause**, **one step on** (a frame, or a lap for a race), the **speeds as buttons** (each replay gives its own set: 0.25, 0.5, 1, 2 and 4 for a game, 1×, 10× and 60× for a race; the one in use is pressed in), **loop**, the **position slider** and the **clock line**: a game's time and length, a race's time since the start with the lap and the flag under it. It looks the same in light and dark and at phone width (the buttons wrap onto a second row), and the keys are the same everywhere: Space, the arrows (comma and full stop over a 3D view), Shift for a bigger step (5 seconds for a game, a minute for a race), Home and End.
+
+![The race's replay bar: back to the start, a lap back, play, a lap on, the speeds 1×, 10× and 60× with 10× pressed in, loop, the slider and the clock with the lap under it](./pictures/replay-bar-race-desk-light.webp)
+
+The bar has three places for the buttons other features add, so that nothing needs a bar of its own. Each is an empty element that shows only while it holds something, and what is in it stays when the words change:
+
+| Slot | For | Found as |
+| --- | --- | --- |
+| follow | the follow camera: Auto-follow, Action, Puck, Resume | `.ky-slot[data-slot="follow"]`; `race.slots.follow` for a race |
+| sound | the sound toggle, its volume and the crowd levels | `.ky-slot[data-slot="sound"]`; `race.slots.sound` |
+| extra | anything else | `.ky-slot[data-slot="extra"]`; `race.slots.extra` |
+
 
 ## In 3D
 
@@ -176,7 +191,7 @@ How it is drawn, and why:
 
 ![The same game playing on while the rink turns once round, slowly: the players skate after the puck, pass and shoot](./pictures/turning-game-desk-light.webp)
 
-The controls are the flat replay's, under the view's: play, pause, step, speed, loop, the position and the time. The keys do not fight the view's:
+The controls are the flat replay's [bar](#the-replay-bar), under the view's. The keys do not fight the view's:
 
 | Where the focus is | Space | Comma and full stop | The arrow keys | Home and End |
 | --- | --- | --- | --- | --- |
