@@ -73,6 +73,7 @@ export function mountSoundBar({ bar, host, lang, context, prefix = "", id = "sou
   let sound;
   let loading;
   let followed;
+  let moment;
   const words = () => SOUND_WORDS[lang()] ?? SOUND_WORDS.en;
   const levelNow = () => (choice.level === "auto" && !following ? "engaged" : choice.level);
   const has = () => Object.hasOwn(SOUND_OF_SPORT, context().sport);
@@ -93,6 +94,7 @@ export function mountSoundBar({ bar, host, lang, context, prefix = "", id = "sou
         },
       });
       if (followed !== undefined) followed.stop = sound.follow(followed.controller, followed.game);
+      if (moment !== undefined) sound.game(moment);
       return sound;
     });
     return loading;
@@ -227,6 +229,18 @@ export function mountSoundBar({ bar, host, lang, context, prefix = "", id = "sou
         sound?.setLevel(levelNow());
         render();
       };
+    },
+    /** A live game's state as it comes, for Follow the game (which it offers from then on): `undefined` for none. */
+    game(next) {
+      moment = next;
+      following = next !== undefined;
+      sound?.setLevel(levelNow());
+      sound?.game(next);
+      render();
+    },
+    /** A live event as it happens: its cues now (nothing while the sound has never been on). */
+    cue(event) {
+      sound?.cue(event);
     },
     destroy() {
       sound?.destroy();

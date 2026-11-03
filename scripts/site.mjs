@@ -627,6 +627,7 @@ const page = `<!doctype html>
             <button type="button" class="fam-button" id="live-play" data-testid="live-play" aria-pressed="false" data-say="livePlay"></button>
             <button type="button" class="fam-button" id="live-new" data-testid="live-new" data-say="liveNew"></button>
           </div>
+          <div class="game-row" id="live-sound" data-testid="live-sound"></div>
         </div>
       </section>
 

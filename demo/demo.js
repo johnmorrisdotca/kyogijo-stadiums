@@ -900,6 +900,17 @@ function buildBadges() {
 // ----- A live score: a made-up game that moves when asked, or by itself every few seconds while the page is in view.
 const PLAYS = [["away", 1], ["home", 1], ["home", 1], ["away", 1], ["away", 1], ["home", 1], ["away", 1], ["home", 1], ["home", 1]];
 const live = { step: 0, timer: undefined, mount: undefined };
+/** The live game's sound, pushed as the game goes: each goal's cues (the horn and the crowd's swell) and its state for Follow the game, three periods of three goals. */
+const liveSound = mountSoundBar({ bar: $("live-sound"), host: $("live-stage"), lang: () => language.lang, prefix: "l", id: "live-sound", context: () => ({ sport: "nhl", view: "2d" }) });
+const LIVE_PERIODS = [0, 1, 2].map((n) => ({ number: n + 1, start: n * 3, end: n * 3 + 3 }));
+/** Tell the sound what just happened: a goal by the side that scored, and the game's end after the last. */
+function liveHeard() {
+  const scores = { away: 0, home: 0 };
+  for (const [role, n] of PLAYS.slice(0, live.step)) scores[role] += n;
+  liveSound.game({ t: live.step - 0.5, start: 0, end: PLAYS.length, periods: LIVE_PERIODS, score: scores });
+  if (live.step > 0) liveSound.cue({ kind: "goal", team: PLAYS[live.step - 1][0] });
+  if (live.step >= PLAYS.length) liveSound.cue({ kind: "game-end" });
+}
 function liveOptions() {
   const done = live.step >= PLAYS.length;
   const scores = { away: 0, home: 0 };
@@ -922,8 +933,13 @@ function liveStop() {
   clearInterval(live.timer);
   live.timer = undefined;
 }
-$("live-step").addEventListener("click", () => { if (live.step < PLAYS.length) live.step += 1; drawLive(); });
-$("live-new").addEventListener("click", () => { liveStop(); live.step = 0; drawLive(); });
+$("live-step").addEventListener("click", () => {
+  if (live.step >= PLAYS.length) return;
+  live.step += 1;
+  drawLive();
+  liveHeard();
+});
+$("live-new").addEventListener("click", () => { liveStop(); live.step = 0; drawLive(); liveHeard(); });
 $("live-play").addEventListener("click", () => {
   if (live.timer !== undefined) liveStop();
   else {
@@ -934,6 +950,7 @@ $("live-play").addEventListener("click", () => {
       live.step += 1;
       if (live.step >= PLAYS.length) liveStop();
       drawLive();
+      liveHeard();
     }, 4000);
   }
   drawLive();
@@ -1234,6 +1251,7 @@ function onLanguage() {
   drawGame();
   heroSound.update();
   gameSound.update();
+  liveSound.update();
   for (const grid of grids) grid.relabel();
   fillParks();
   fillGrounds();

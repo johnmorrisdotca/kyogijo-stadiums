@@ -2,7 +2,7 @@
 
 [日本語](sound.ja.md) · English
 
-A surface can be heard: the crowd of its kind of venue at a level from quiet to a roar, in the room its venue makes, and the sounds of its sport's game (a goal horn and the crowd's swell at a goal, a whistle at a stoppage, a buzzer at the end of a period, a ring's bell) from a replay it follows. `@johnmorrisdotca/kyogijo-stadiums/sound` has it, with no dependency: everything is made in the browser with Web Audio, and a page may give recordings of its own for the voices it has files for. It is **off until the reader turns it on**, and nothing is fetched, made or decoded before that.
+A surface can be heard: the crowd of its kind of venue at a level from quiet to a roar, in the room its venue makes, and the sounds of its sport's game (a goal horn and the crowd's swell at a goal, a whistle at a stoppage, a buzzer at the end of a period, a ring's bell) from a replay it follows or from events a page pushes as they happen. `@johnmorrisdotca/kyogijo-stadiums/sound` has it, with no dependency: everything is made in the browser with Web Audio, and a page may give recordings of its own for the voices it has files for. It is **off until the reader turns it on**, and nothing is fetched, made or decoded before that.
 
 [The demo](https://johnmorrisdotca.github.io/kyogijo-stadiums/venues.html?sound=on) has a Sound button on the real arenas, under the surface in Try it, over the arena at the top of the page and in the game section.
 
@@ -106,6 +106,21 @@ replay.play();
 - **Auto follows the game** (`excitementAt`): a murmur before the start, between periods and after the end; engaged in play; loud in the last third of a close game (one goal or none between the sides); a roar for six seconds after a goal; back to a murmur when one side is three ahead late on.
 - **The end is heard out.** When the clock stops on a cue (the horn at the end of the game) the sound stays on for `SOUND_TAIL` seconds (5) and then goes quiet: one timer, once.
 - **The same voice twice in a fifth of a second plays once**, so a fast replay does not stack whistles.
+
+## Live events
+
+A game that is not a replay, a feed as it comes, pushes its events: `sound.cue({ kind, team })` plays the event's cues at once, and `sound.game(moment)` gives the game's state (`{ t, start, end, periods, score }`) for the level under `auto`. A goal lifts the level under `auto` to a roar for six seconds. The demo's [live score](https://johnmorrisdotca.github.io/kyogijo-stadiums/#live) pushes each goal this way.
+
+```ts no-run
+import { createKyogijoSound } from "@johnmorrisdotca/kyogijo-stadiums/sound";
+
+declare const rounds: { start: number; end: number }[];
+const sound = createKyogijoSound({ sport: "boxing", level: "auto" });
+await sound.enable();
+sound.cue({ kind: "round-start" });                      // the bell
+sound.game({ t: 50, start: 0, end: 540, periods: rounds, score: { home: 0, away: 0 } });
+sound.cue({ kind: "knockout", team: "home" });           // the crowd's swell, and a roar
+```
 
 ## What it costs
 

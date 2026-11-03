@@ -202,8 +202,29 @@ test.describe("the game's sound", () => {
   });
 });
 
+test.describe("live events", () => {
+  test("the live score: each goal pushed as it comes plays the horn and the swell, and Follow the game is offered", async ({ page }) => {
+    const { errors } = await open(page, "");
+    await page.locator("#live").scrollIntoViewIfNeeded();
+    const bar = page.locator(at("live-sound"));
+    await expect(page.locator(at("live-sound-level-auto"))).toHaveCount(0);
+    await page.locator(at("live-sound-toggle")).click();
+    await expect.poll(() => audio(page).then((a) => a.state)).toBe("running");
+    await page.locator(at("live-step")).click();
+    await expect(bar).toHaveAttribute("data-cue", "swell");
+    expect((await audio(page)).tones.filter((f) => f > 97 && f < 150).length).toBeGreaterThanOrEqual(4);
+    await expect(page.locator(at("live-sound-level-auto"))).toHaveAttribute("aria-pressed", "true");
+    // Turned off, a goal plays nothing.
+    await page.locator(at("live-sound-toggle")).click();
+    const cues = await bar.getAttribute("data-cues");
+    await page.locator(at("live-step")).click();
+    expect(await bar.getAttribute("data-cues")).toBe(cues);
+    expect(errors).toEqual([]);
+  });
+});
+
 test.describe("what is made", () => {
-  test("renders offline (no speaker): never silent, never clipped, and louder level by level", async ({ page, browserName }) => {
+  test("renders offline (no speaker): never silent, never clipped, louder level by level, and a goal over the crowd", async ({ page, browserName }) => {
     // An OfflineAudioContext renders the samples into memory and plays nothing; Chromium's is the one held here.
     test.skip(browserName !== "chromium", "rendered in Chromium");
     await serve(page);
@@ -211,13 +232,14 @@ test.describe("what is made", () => {
     const out = await page.evaluate(async () => {
       const { createKyogijoSound } = await import("./dist/sound-entry.js");
       const files = Object.fromEntries(["murmur", "applause", "water", "whistle", "bell", "ooh", "cheer"].map((n) => [n, `sounds/${n}.ogg`]));
-      const render = async (sport, level, withFiles = true) => {
+      const render = async (sport, level, cues = [], withFiles = true) => {
         const ctx = new window.OfflineAudioContext(2, 48000 * 3, 48000);
         ctx.resume = () => Promise.resolve();
         ctx.suspend = () => Promise.resolve();
         const sound = createKyogijoSound({ sport, level, volume: 1, files: withFiles ? files : {}, audio: () => ctx });
         await sound.enable();
         await new Promise((done) => setTimeout(done, 200));
+        for (const kind of cues) sound.cue({ kind });
         const samples = (await ctx.startRendering()).getChannelData(0);
         sound.destroy();
         let sum = 0;
@@ -232,9 +254,9 @@ test.describe("what is made", () => {
       };
       const levels = {};
       for (const level of ["quiet", "murmur", "engaged", "loud", "roar"]) levels[level] = await render("nhl", level);
-      return { levels, made: await render("soccer", "loud", false), pool: await render("swimming", "engaged"), ring: await render("boxing", "quiet") };
+      return { levels, goal: await render("nhl", "engaged", ["goal"]), made: await render("soccer", "loud", ["whistle"], false), pool: await render("swimming", "engaged", ["start"]), ring: await render("boxing", "quiet", ["round-start"]) };
     });
-    const all = [...Object.values(out.levels), out.made, out.pool, out.ring];
+    const all = [...Object.values(out.levels), out.goal, out.made, out.pool, out.ring];
     for (const r of all) {
       expect(r.bad).toBe(0);
       expect(r.rms).toBeGreaterThan(-45);
@@ -242,5 +264,6 @@ test.describe("what is made", () => {
     }
     const order = ["quiet", "murmur", "engaged", "loud", "roar"].map((l) => out.levels[l].rms);
     for (let i = 1; i < order.length; i++) expect(order[i], `level ${i}`).toBeGreaterThan(order[i - 1]);
+    expect(out.goal.rms).toBeGreaterThan(out.levels.engaged.rms + 3);
   });
 });

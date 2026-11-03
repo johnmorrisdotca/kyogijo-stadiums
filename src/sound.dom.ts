@@ -1,12 +1,14 @@
-// The sound of a surface in a page: a crowd bed at a level, the room it is heard in, and the cues of a game, from a replay it follows. Off until a page turns it on (a browser lets audio start only after a press anyway): nothing is fetched, made or decoded before that. One audio context serves every sound of a page, and it is
+// The sound of a surface in a page: a crowd bed at a level, the room it is heard in, and the cues of a game, from a replay it follows or from events a page pushes as they happen. Off until a
+// page turns it on (a browser lets audio start only after a press anyway): nothing is fetched, made or decoded before that. One audio context serves every sound of a page, and it is
 // suspended whenever none of them is heard: turned off, at no volume, the page hidden, the surface out of sight or its game paused. A bed's loops play only while it is heard.
-import { cueKindOf, cuesOfChange, excitementAt, levelFor, soundLevelsOf, soundMix, soundSetOf, soundVoicesOf } from "./sound.mix.ts";
+import { cueKindOf, cuesOf, cuesOfChange, excitementAt, levelFor, soundLevelsOf, soundMix, soundSetOf, soundVoicesOf } from "./sound.mix.ts";
 import type { GameMoment, SoundContext, SoundCue, SoundMix, SoundPeriod, SoundVenue } from "./sound.mix.ts";
 import { SOUND_BEDS } from "./sound.sets.ts";
 import type { SoundLayer, SoundLevel, SoundVoice } from "./sound.sets.ts";
 import { bufferOf, impulseSamples, layerBuffer, layerFilter, makeVoice, LAYER_SECONDS, noiseSamples } from "./sound.synth.ts";
 import type { VoiceBuffers } from "./sound.synth.ts";
 import type { ReplayController } from "./replay.control.ts";
+import type { ReplayEvent } from "./replay.types.ts";
 
 /** The recordings a page may give, by the layer or the voice they stand for; anything not given is made in the browser. */
 export type SoundFileName = SoundLayer | SoundVoice;
@@ -90,6 +92,10 @@ export interface KyogijoSound {
   setContext(context: Partial<SoundContext>): void;
   /** Follow a replay's controller: the cues of its events as they go by while it plays, quiet while it is paused, the level under `auto` from its game. Returns a function that stops it. */
   follow(controller: ReplayController, game?: SoundFollow): () => void;
+  /** A live event, pushed as it happens: its cues play now. A goal lifts the level under `auto` for a few seconds. */
+  cue(event: Pick<ReplayEvent, "kind" | "team">): void;
+  /** The live game's state for the level under `auto`, or `undefined` for none. */
+  game(moment: GameMoment | undefined): void;
   state(): SoundState;
   /** Stop and take everything away. */
   destroy(): void;
@@ -130,6 +136,8 @@ const SAME_VOICE = 0.2;
 /** How long the sound is held on after a game's clock stopped on a cue (its end), in seconds. */
 export const SOUND_TAIL = 5;
 const TAIL = SOUND_TAIL;
+/** How long a goal lifts the level under `auto`, in seconds. */
+const GOAL_LIFT = 6;
 
 interface Graph {
   master: GainNode;
@@ -171,6 +179,9 @@ export function createKyogijoSound(settings: SoundSettings): KyogijoSound {
   let paused = false;
   let following: { stop(): void } | undefined;
   let followMoment: GameMoment | undefined;
+  let liveMoment: GameMoment | undefined;
+  /** The context's time until which a live goal holds the level up. */
+  let liftUntil = -1;
   let graph: Graph | undefined;
   let destroyed = false;
   /** The level the bed was last glided to, and whether a setting changed since: the bed is glided only then, not on every frame of a game. */
@@ -212,7 +223,10 @@ export function createKyogijoSound(settings: SoundSettings): KyogijoSound {
   }
   function heard(): SoundLevel {
     if (level !== "auto") return levelFor(context.sport, level);
-    return levelFor(context.sport, followMoment === undefined ? "engaged" : excitementAt(followMoment));
+    const ctx = hub.context;
+    if (ctx !== undefined && ctx.currentTime < liftUntil) return levelFor(context.sport, "roar");
+    const moment = followMoment ?? liveMoment;
+    return levelFor(context.sport, moment === undefined ? "engaged" : excitementAt(moment));
   }
   const mixNow = (): SoundMix | undefined => soundMix(context, heard());
 
@@ -532,6 +546,21 @@ export function createKyogijoSound(settings: SoundSettings): KyogijoSound {
       following = handle;
       refresh();
       return () => handle.stop();
+    },
+    cue(event) {
+      const voices = cuesOf(event, context.sport);
+      const ctx = hub.context;
+      const kind = cueKindOf(event);
+      if (ctx !== undefined && (kind === "goal" || kind === "point") && voices.length > 0) liftUntil = ctx.currentTime + GOAL_LIFT;
+      dirty = true;
+      refresh();
+      if (kind === undefined) return;
+      const t = ctx?.currentTime ?? 0;
+      for (const voice of voices) play(event.team === undefined ? { voice, kind, t } : { voice, kind, t, team: event.team });
+    },
+    game(moment) {
+      liveMoment = moment;
+      refresh();
     },
     state() {
       const why = quiet();

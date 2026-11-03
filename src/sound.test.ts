@@ -368,6 +368,34 @@ describe("the engine", () => {
     expect(targets()).toBeGreaterThan(before);
   });
 
+  it("plays a live event's cue at once, and a goal lifts the level under auto", async () => {
+    const cues: string[] = [];
+    const { sound, audio } = make({ sport: "boxing", level: "auto", onCue: (cue) => cues.push(cue.voice) });
+    await sound.enable();
+    sound.cue({ kind: "round-start" });
+    expect(cues).toEqual(["bell"]);
+    expect(audio.tones().filter((f) => f === 830).length).toBe(3);
+    sound.game({ t: 50, start: 0, end: 540, periods: [{ start: 0, end: 180 }], score: { home: 0, away: 0 } });
+    expect(sound.state().heard).toBe("engaged");
+    sound.cue({ kind: "knockout", team: "home" });
+    expect(sound.state().heard).toBe("roar");
+    audio.context.currentTime = 7;
+    expect(sound.state().heard).toBe("engaged");
+    sound.cue({ kind: "pass" });
+    expect(cues).toEqual(["bell", "swell"]);
+  });
+
+  it("plays the same voice twice in a moment only once", async () => {
+    const cues: string[] = [];
+    const { sound, audio } = make({ onCue: (cue) => cues.push(cue.voice) });
+    await sound.enable();
+    sound.cue({ kind: "whistle" });
+    sound.cue({ kind: "whistle" });
+    audio.context.currentTime = 0.5;
+    sound.cue({ kind: "whistle" });
+    expect(cues).toEqual(["whistle", "whistle"]);
+  });
+
   it("changes its bed with its surface", async () => {
     const { sound, audio } = make();
     await sound.enable();
