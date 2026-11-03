@@ -283,6 +283,9 @@ export function mountTurn<O>(
   root.dataset.tier = tier;
   root.dataset.share = String(ceiling);
 
+  // ---- One frame request a frame: the auto-turn, a replay or a race on the view, and the quality's timing of the frames ask through this, and share one animation frame when they run together. ----
+  const frames = frameBatch(win);
+
   // ---- Quality: in `auto`, the frames the view makes while it turns decide the tier. ----
   let governor: Governor | undefined = quality === "auto" && win !== null && model.tiered === true ? createGovernor(tier, settings.qualityTuning) : undefined;
   let meterFrame: number | undefined;
@@ -299,7 +302,7 @@ export function mountTurn<O>(
     });
   };
   const stopMeter = (): void => {
-    if (meterFrame !== undefined) win?.cancelAnimationFrame(meterFrame);
+    if (meterFrame !== undefined) frames.cancel(meterFrame);
     meterFrame = undefined;
     lastStamp = undefined;
   };
@@ -317,13 +320,13 @@ export function mountTurn<O>(
     lastStamp = next === undefined ? stamp : undefined;
     // (A step draws the view again, which asks for the loop itself: only one is ever running.)
     if (next !== undefined) retier(next);
-    if (meterFrame === undefined) meterFrame = win.requestAnimationFrame(meterTick);
+    if (meterFrame === undefined) meterFrame = frames.request(meterTick);
   };
   /** The view was painted: the frames are timed from now until it is still. */
   const touched = (): void => {
     if (governor === undefined || win === null) return;
     lastPaint = win.performance.now();
-    if (meterFrame === undefined) meterFrame = win.requestAnimationFrame(meterTick);
+    if (meterFrame === undefined) meterFrame = frames.request(meterTick);
   };
   /** Draw the world again, from the model of the tier and the options now: the camera, the auto-turn and the pointer are not touched (the elements are the only thing replaced). */
   const renderWorld = (): void => {
@@ -491,8 +494,6 @@ export function mountTurn<O>(
     say(turnWords(model).reset);
   };
 
-  // ---- One frame request a frame: the auto-turn and a replay on the view ask through this, and share one animation frame when both run. ----
-  const frames = frameBatch(win);
   const requestFrame = (callback: FrameRequestCallback): number => frames.request(callback);
   const cancelFrame = (id: number): void => frames.cancel(id);
 
