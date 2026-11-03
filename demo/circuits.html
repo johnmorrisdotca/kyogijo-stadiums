@@ -200,12 +200,18 @@
         return `import { drawCircuit } from "@johnmorrisdotca/kyogijo-stadiums/circuits";\n\nconst svg = drawCircuit(${literal});\ndocument.querySelector("#lap").innerHTML = svg;`;
       }
 
-      /** The venues that stand beside each circuit on the district page (T-Mobile Arena by the Las Vegas Strip Circuit); a circuit with none is shown alone among its surroundings. */
+      /** The venues that stand beside each circuit on the district page (T-Mobile Arena by the Las Vegas Strip Circuit); a circuit with none is shown alone among its surroundings, and a race goes there with it. */
       const BESIDE = { "las-vegas": ["t-mobile-arena"] };
       function syncUrl() {
         const city = new URLSearchParams({ venues: (BESIDE[$("circuit").value] ?? []).join(","), circuit: $("circuit").value, labels: "1" });
         if ($("view").value === "3d") city.set("view", "3d");
         if ($("language").value === "ja") city.set("lang", "ja");
+        // The simulated race goes along, at its speed and its moment (a feed's race is this page's: the district plays the simulation).
+        if ($("race").checked && feedRace === undefined) {
+          city.set("race", "1");
+          if (raceSpeed !== 1) city.set("speed", String(raceSpeed));
+          if (Math.round(raceTime) > 0) city.set("t", String(Math.round(raceTime)));
+        }
         $("city").href = `./district.html?${city}`;
         const next = new URLSearchParams();
         if ($("circuit").value !== CIRCUITS[0].id) next.set("circuit", $("circuit").value);

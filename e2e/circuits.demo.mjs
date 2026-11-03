@@ -160,3 +160,18 @@ test("links each circuit to the district page, where it stands among its surroun
   await expect(page.locator(`${STAGE} g.ky-dist-circuit[data-circuit="las-vegas"]`)).toHaveCount(1);
   expect(errors).toEqual([]);
 });
+
+test("with the race on, the district link takes the race along at its speed and moment, and the district plays it on the Strip", async ({ page }) => {
+  const errors = await open(page, "circuits.html?race=1&speed=60&t=600");
+  await page.waitForSelector(`${STAGE} .ky-race`);
+  const href = new URL(await page.locator('[data-testid="city"]').getAttribute("href"), "http://kyogijo.test/");
+  expect(href.searchParams.get("race")).toBe("1");
+  expect(href.searchParams.get("speed")).toBe("60");
+  expect(href.searchParams.get("t")).toBe("600");
+  await page.locator('[data-testid="city"]').click();
+  await page.waitForSelector('body[data-ready="true"]');
+  await expect(page.locator(`${STAGE} .ky-race svg.ky-district .ky-ci-car`)).toHaveCount(20);
+  await expect(page.locator(`${STAGE} .ky-race-time`)).toHaveText("10:00");
+  await expect(page.locator(`${STAGE} .ky-race-bar button[data-speed="60"]`)).toHaveAttribute("aria-pressed", "true");
+  expect(errors).toEqual([]);
+});

@@ -144,11 +144,11 @@ export function raceBoard(moment: RaceMoment, language: Language = "en"): string
   return `<table class="ky-race-board"><caption>${esc(w.caption)}</caption>${head}<tbody>${rows.join("")}</tbody></table>`;
 }
 
-/** The rules of a race: the cars on the drawing, the clock, the controls and the board. Scoped to `.ky-race` and the drawing's cars, in the page's own colours. */
+/** The rules of a race: the cars on the drawing, the clock, the controls and the board. Scoped to `.ky-race` and the cars of a circuit's or a district's drawing, in the page's own colours. */
 export const RACE_STYLE = `
-.ky-circuit .ky-ci-car-dot,.ky-turn .ky-ci-car-dot{stroke:var(--ky-ci-ground,#fff)}
-.ky-circuit .ky-ci-car-n,.ky-turn .ky-ci-car-n{font-family:var(--ky-font,system-ui,sans-serif);font-weight:800;text-anchor:middle;font-variant-numeric:tabular-nums}
-.ky-circuit .ky-ci-car[data-status=out]{opacity:.45}
+.ky-circuit .ky-ci-car-dot,.ky-district .ky-ci-car-dot,.ky-turn .ky-ci-car-dot{stroke:var(--ky-ci-ground,#fff)}
+.ky-circuit .ky-ci-car-n,.ky-district .ky-ci-car-n,.ky-turn .ky-ci-car-n{font-family:var(--ky-font,system-ui,sans-serif);font-weight:800;text-anchor:middle;font-variant-numeric:tabular-nums}
+.ky-circuit .ky-ci-car[data-status=out],.ky-district .ky-ci-car[data-status=out]{opacity:.45}
 .ky-race{display:block;color:inherit}
 .ky-race .ky-race-bar{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin-top:.5rem}
 .ky-race .ky-race-bar button{box-sizing:border-box;min-width:44px;min-height:44px;margin:0;padding:0 .7rem;border:1px solid currentColor;border-radius:8px;background:transparent;color:inherit;font:inherit;font-weight:700;cursor:pointer}

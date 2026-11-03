@@ -698,3 +698,137 @@ test("Las Vegas in 3D: the Sphere a dome, the High Roller a wheel, the fountains
   await expect(page.locator(`${STAGE} [data-part="lm-caesars-palace-name"]`)).toHaveCount(1);
   expect(errors).toEqual([]);
 });
+
+test.describe("Las Vegas: a race on the Strip", () => {
+  const press = async (page, locator, testInfo) => {
+    await locator.scrollIntoViewIfNeeded();
+    if (testInfo.project.use.hasTouch === true) await locator.tap();
+    else await locator.click();
+  };
+  const clock = (page) => page.locator(`${STAGE} .ky-race-time`);
+  const seconds = (text) => text.split(":").reduce((sum, part) => sum * 60 + Number(part), 0);
+
+  test.beforeEach(async ({ page }) => {
+    // Count the animation frames the page asks for, from before it loads.
+    await page.addInitScript(() => {
+      const ask = window.requestAnimationFrame.bind(window);
+      window.__frames = 0;
+      window.requestAnimationFrame = (callback) => {
+        window.__frames += 1;
+        return ask(callback);
+      };
+    });
+  });
+
+  test("Race is offered only with a circuit: twenty made-up cars on the Strip Circuit among the venues, playing, kept in the address, in English and Japanese", async ({ page }, testInfo) => {
+    await page.emulateMedia({ reducedMotion: "no-preference" });
+    const { errors, outside } = await open(page);
+    await expect(page.locator("#race-row")).toBeHidden();
+    await page.locator('#tabs button[data-preset="lasvegas"]').click();
+    await expect(page.locator("#race-row")).toBeVisible();
+    await page.locator('[data-testid="race"]').check();
+    // The district is all there, with the race on it: the arena, the landmarks, the circuit, and a dot for each car.
+    await expect(page.locator(`${STAGE} .ky-race svg.ky-district [data-venue="t-mobile-arena"]`)).toHaveCount(1);
+    await expect(page.locator(`${STAGE} .ky-race svg.ky-district [data-landmark="sphere"]`)).toHaveCount(1);
+    await expect(page.locator(`${STAGE} .ky-race g.ky-dist-circuit[data-circuit="las-vegas"]`)).toHaveCount(1);
+    await expect(page.locator(`${STAGE} .ky-ci-car`)).toHaveCount(20);
+    await expect(page.locator(`${STAGE} .ky-race-board tbody tr`)).toHaveCount(20);
+    await expect(page.locator(`${STAGE} .ky-race-note`)).toContainText("simulated race");
+    expect(page.url()).toContain("race=1");
+    // Played at 60×, the dots and the clock move; paused, the moment is kept in the address.
+    const leader = await page.locator(`${STAGE} .ky-race-board tbody tr`).first().getAttribute("data-car");
+    const before = await page.locator(`${STAGE} .ky-ci-car[data-car="${leader}"]`).getAttribute("transform");
+    await press(page, page.locator(`${STAGE} .ky-race-bar button[data-speed="60"]`), testInfo);
+    await press(page, page.locator(`${STAGE} .ky-race-play`), testInfo);
+    await expect.poll(async () => seconds(await clock(page).textContent())).toBeGreaterThan(20);
+    await press(page, page.locator(`${STAGE} .ky-race-play`), testInfo);
+    expect(await page.locator(`${STAGE} .ky-ci-car[data-car="${leader}"]`).getAttribute("transform")).not.toBe(before);
+    const t = seconds(await clock(page).textContent());
+    const url = new URL(page.url());
+    expect(url.searchParams.get("speed")).toBe("60");
+    expect(Math.abs(Number(url.searchParams.get("t")) - t)).toBeLessThanOrEqual(1);
+    // Every car is on the circuit's ground, inside the district's frame.
+    const off = await page.evaluate((stage) => {
+      const svg = document.querySelector(`${stage} svg.ky-district`);
+      const [x, y, w, h] = svg.getAttribute("viewBox").split(" ").map(Number);
+      return [...svg.querySelectorAll(".ky-ci-car")].filter((car) => {
+        const [cx, cy] = car.getAttribute("transform").match(/[-\d.]+/g).map(Number);
+        return cx < x || cx > x + w || cy < y || cy > y + h;
+      }).length;
+    }, STAGE);
+    expect(off).toBe(0);
+    // The address alone opens it again where it was, and in Japanese the board and the names are Japanese.
+    await page.goto(`${page.url()}&lang=ja`);
+    await page.waitForSelector('body[data-ready="true"]');
+    await expect(page.locator(`${STAGE} .ky-ci-car`)).toHaveCount(20);
+    expect(Math.abs(seconds(await clock(page).textContent()) - t)).toBeLessThanOrEqual(1);
+    await expect(page.locator(`${STAGE} [data-name="sphere"]`)).toHaveText("スフィア");
+    await expect(page.locator("#l-race")).toHaveText("レース");
+    // Off again, the plain plan comes back; with the circuit taken away, Race goes with it.
+    await page.locator('[data-testid="race"]').uncheck();
+    await expect(page.locator(`${STAGE} .ky-race`)).toHaveCount(0);
+    await expect(page.locator(`${STAGE} g.ky-dist-circuit[data-circuit="las-vegas"]`)).toHaveCount(1);
+    expect(page.url()).not.toContain("race=1");
+    await page.locator('[data-testid="race"]').check();
+    await page.locator('input[data-circuit="las-vegas"]').uncheck();
+    await expect(page.locator("#race-row")).toBeHidden();
+    await expect(page.locator(`${STAGE} .ky-race`)).toHaveCount(0);
+    expect(errors).toEqual([]);
+    expect(outside).toEqual([]);
+    await noSidewaysScroll(page);
+  });
+
+  test("in 3D the cars stand among the Strip's buildings and landmarks; no frame while paused, hidden or gone, nothing made as it plays", async ({ page }, testInfo) => {
+    await page.emulateMedia({ reducedMotion: "no-preference" });
+    const { errors } = await open(page, "?venues=t-mobile-arena&circuit=las-vegas&labels=1&view=3d&quality=high&race=1&speed=60");
+    await page.waitForSelector(`${STAGE} .ky-race .ky-turn[data-mode="3d"]`);
+    const discs = page.locator(`${STAGE} .ky-up[data-part^="car-"]`);
+    await expect(discs).toHaveCount(20);
+    await expect(page.locator(`${STAGE} [data-part^="lm-sphere-d"]`)).toHaveCount(96);
+    await page.mouse.move(0, 0);
+    const count = () => page.evaluate((stage) => document.querySelector(stage).querySelectorAll("*").length, STAGE);
+    const frames = () => page.evaluate(() => window.__frames);
+    // Paused: nothing asked for.
+    await page.waitForTimeout(1500);
+    let at = await frames();
+    await page.waitForTimeout(800);
+    expect((await frames()) - at, "frames while paused").toBe(0);
+    const elements = await count();
+    // Playing: the discs move with the clock, and nothing is made.
+    const first = discs.first();
+    const before = await first.evaluate((el) => el.style.transform);
+    const play = page.locator(`${STAGE} .ky-race-play`);
+    await press(page, play, testInfo);
+    await expect.poll(() => first.evaluate((el) => el.style.transform)).not.toBe(before);
+    await page.waitForTimeout(800);
+    expect(await count(), "elements made while it plays").toBe(elements);
+    // Hidden: the race stops and asks for no frame.
+    await page.evaluate(() => {
+      Object.defineProperty(document, "hidden", { configurable: true, get: () => true });
+      Object.defineProperty(document, "visibilityState", { configurable: true, get: () => "hidden" });
+      document.dispatchEvent(new Event("visibilitychange"));
+    });
+    await expect(page.locator(`${STAGE} .ky-race`)).toHaveAttribute("data-state", "paused");
+    at = await frames();
+    await page.waitForTimeout(600);
+    expect((await frames()) - at, "frames while hidden").toBeLessThanOrEqual(1);
+    await page.evaluate(() => {
+      Object.defineProperty(document, "hidden", { configurable: true, get: () => false });
+      Object.defineProperty(document, "visibilityState", { configurable: true, get: () => "visible" });
+      document.dispatchEvent(new Event("visibilitychange"));
+    });
+    // Gone, playing: Race turned off leaves no disc and asks for no frame once the district's own view has settled.
+    await press(page, play, testInfo);
+    await expect(page.locator(`${STAGE} .ky-race`)).toHaveAttribute("data-state", "playing");
+    await page.locator('[data-testid="race"]').uncheck();
+    await expect(page.locator(`${STAGE} .ky-race`)).toHaveCount(0);
+    await expect(discs).toHaveCount(0);
+    await page.waitForSelector(`${STAGE} .ky-turn[data-mode="3d"]`);
+    await page.mouse.move(0, 0);
+    await page.waitForTimeout(2000);
+    at = await frames();
+    await page.waitForTimeout(800);
+    expect((await frames()) - at, "frames after it went").toBe(0);
+    expect(errors).toEqual([]);
+  });
+});

@@ -304,6 +304,36 @@ The demo's [district page](https://johnmorrisdotca.github.io/kyogijo-stadiums/di
 
 ![The plan of the Las Vegas Strip Circuit and T-Mobile Arena among the Strip: the lap with its numbered turns, the Sphere's round footprint, the High Roller's line, the lake of the Fountains of Bellagio, the hotels in four tones by height, and the names](./pictures/district-lasvegas-plan-desk-light.webp)
 
+### A race on the Strip
+
+**[Try it: district.html?…&circuit=las-vegas&race=1](https://johnmorrisdotca.github.io/kyogijo-stadiums/district.html?venues=t-mobile-arena&circuit=las-vegas&labels=1&view=3d&race=1&speed=10)**, live in the demo.
+
+The race of [the circuits](./circuits.md#a-race) runs on a district's ground too: the same twenty made-up cars over the same full race distance, their dots on the Strip Circuit where the district lays it, among T-Mobile Arena, the hotels, the Sphere, the High Roller and the Fountains of Bellagio, flat or in 3D, with the race clock, the speeds, the slider and the timing board.
+
+![The simulated race on the Strip Circuit in 3D, a quarter of an hour in, from the south-west: the leaders at Turns 1 to 3, a train of coloured dots on the straight south of the Bellagio, two by the fountains' jets, the Sphere, the High Roller and the hotels standing round them; under the view the race clock reads 15:00 and Lap 10 / 50, and the timing board lists the twenty made-up drivers](./pictures/district-lasvegas-race-3d-desk-light.webp)
+
+```ts
+import { drawDistrictRace } from "@johnmorrisdotca/kyogijo-stadiums/district";
+
+const svg = drawDistrictRace({ venues: ["t-mobile-arena"], circuit: "las-vegas", laps: 3, cars: 6, t: 120 });
+console.log(svg.match(/class="ky-ci-car"/g)!.length, svg.includes('data-venue="t-mobile-arena"'));
+// 6 true
+```
+
+```ts no-run
+import { mountDistrictRace } from "@johnmorrisdotca/kyogijo-stadiums/district";
+
+const race = mountDistrictRace(document.querySelector("#strip")!, { venues: ["t-mobile-arena"], circuit: "las-vegas", labels: true }, { view: "3d", speed: 10 });
+race.play();
+```
+
+- **The race is the circuit's own**, not another: `simulateRace` with the same `seed`, `laps` and `cars` gives the same cars at the same moment on both pages, and a race from a feed (`raceFromFeed`, [the race feed](./race-feed.md)) is given as the second argument of `drawDistrictRace`, or as `settings.race`. Each car's place on the lap is put on the district's ground with `circuitPointIn`; the dots are a thousandth of the district's longer side, so they read as large on the page as on the circuit's own.
+- **`drawDistrictRace(options, race?)`** is the district's plan at a moment (`t`, seconds from the start) with a dot for each car, and its description says the race is made up. **`mountDistrictRace(host, options, settings)`** plays it in a page as `mountCircuitRace` does: the district flat, or with `view: "3d"` its 3D view with the cars standing as discs among the buildings, its viewpoints, walls, roofs and quality in `settings.turn`. It gives back the same controls (`play`, `pause`, `seek`, `nextLap`, `setSpeed`, `update`, `replace`, `destroy`).
+- **It does nothing it need not**, as the circuit's race: nothing runs until it is played, or while it is paused, hidden or scrolled out of sight; in 3D the race, the auto-turn and the timing of the frames that chooses the quality share one animation frame; nothing is made as it plays; and destroy leaves no element, listener or frame. `e2e/race.demo.mjs` and `e2e/district.demo.mjs` hold it.
+- **The lean district** reads the race with the circuits (`await loadCircuits()`): a page of venues alone carries none of it.
+
+The demo's district page has **Race** beside the view when a circuit is chosen, kept in the address (`race=1`, `speed`, `t`) as the circuits page keeps it, and the circuits page's link to the district takes the race along.
+
 ## A page that carries only the venues it shows
 
 Every entry has every arena, park and ground there is data for (about 440 kilobytes of data before gzip, 58 after), the real venues of the NHL's arenas (79), the words in both languages (156) and the layers part of the drawing (about 300 kilobytes of code), because the drawing reads a venue's record from a table the full lists fill and the layers when the options ask for them. A page that shows one district needs a few of them. `@johnmorrisdotca/kyogijo-stadiums/district-lean` is the district with none of it: the same exports, a table that is empty, and `loadVenueDataFor(venues)`, which reads the file of each venue's record (`arenas/rogers-arena.data.js`, 0.9 kilobytes; for an arena of the NHL also its real venue's two files, `venues/rogers-arena.data.js` and `venues/rogers-arena.osm.data.js`, about 2 kilobytes together) with a dynamic `import()` and holds it for the drawing. Call it before the first `planDistrict`, `drawDistrict`, `mountDistrict` or `mountDistrictTurn` and again when the venues change (a record that is held is not read twice); it is what `loadAreasFor` is for the areas. `loadStrings(language)` does the same for the words of a language (below).

@@ -143,7 +143,7 @@ src/
 ├── circuits.style.ts   a circuit's colours and rules, light and dark, for the drawing and the markers of its 3D view
 ├── circuits.words.ts   the words of a circuit's drawing and 3D view in English and Japanese
 ├── circuits.index.ts   the circuits by key and name without their data, and `loadCircuits` for the lean district
-├── circuits.held.ts    every circuit held for a district: importing it fills `district.circuit.ts`'s table
+├── circuits.held.ts    every circuit, and the race on one, held for a district: importing it fills `district.circuit.ts`'s table
 ├── circuits.turn.ts    a circuit in 3D: its drawing as the floor, the pit building standing, each turn's number on a post, as a `TurnModel`; `mountCircuitTurn`
 ├── circuits.pace.ts    how fast a racing car can go round a lap: a speed every few metres from the bends' radii, held to the engine and the brakes (`paceProfile`, `RACE_PACE`)
 ├── circuits.race.field.ts the made-up field of a simulated race: ten invented teams and twenty invented drivers, with their colours
@@ -151,7 +151,7 @@ src/
 ├── circuits.race.moment.ts a moment of a race: where each car is on the drawing, the order, the gaps, the laps and the stops (`raceAt`)
 ├── circuits.race.draw.ts a race drawn: the dots on the circuit, the clock's words and the timing board as a table (`drawRace`, `raceBoard`)
 ├── circuits.race.words.ts the words of a race in English and Japanese
-├── circuits.race.dom.ts a race in a page: the circuit flat or in 3D with its dots, the clock, play, the speeds, the slider and the board, moving together (`mountCircuitRace`)
+├── circuits.race.dom.ts a race in a page: the circuit flat or in 3D with its dots, the clock, play, the speeds, the slider and the board, moving together (`mountCircuitRace`), or in another scene the circuit lies in (`mountRaceIn`, a `RaceScene`: a district's ground)
 ├── circuits.feed.ts    kyogijo's open race timeline read strictly, and a feed turned into a race that plays like a simulated one (`readRaceFeed`, `raceFromFeed`, `raceToFeed`)
 ├── circuits.feed.openf1.ts the adapter of OpenF1-style lap, pit, driver and location rows to the open race timeline (`openF1Feed`)
 ├── circuits.feed.fetch.ts a feed the user names: read from an address by the user's browser, from text or a file, and followed while a race is live (`loadRaceFeed`, `feedFromText`, `followRaceFeed`)
@@ -329,6 +329,7 @@ src/
 ├── stadiums-entry.ts   the stadiums' entry
 ├── district.ts         a district: several real venues placed on one plan at their real relative positions and orientations, tight (neighbours) or at the distances of a city, in 2D
 ├── district.circuit.ts the table of the circuits' code a district lays a circuit with, filled by `circuits.held.ts`
+├── district.race.ts    a race on a district's ground: the circuits' race (`mountRaceIn`, read from the held table) with its cars put on the district's circuit, flat (`drawDistrictRace`) or in a page (`mountDistrictRace`)
 ├── district.turn.ts    a district in 3D: each venue's planes turned and moved to its place, stacked building by building, a circuit's pit building and turns standing where it lies, and the landmarks
 ├── district.dom.ts     a district's 2D plan in a page, with the crowd outside over it
 ├── district-entry.ts   the district's entry

@@ -137,6 +137,8 @@ A circuit can hold a race: twenty cars as dots that start on the grid, run the l
 
 **It runs on any circuit.** Nothing of the race is Las Vegas's own: the speeds come from the line, the pit lane from the circuit's own, the grid from its start line and the laps from its length, and a test runs a race on every circuit the package draws and holds every dot on the road or in the pit lane.
 
+**On a district's ground too.** The same race runs among the venues and the city round its circuit: [the Las Vegas district](./district.md#a-race-on-the-strip) puts the dots on the Strip Circuit, laid on one plan with T-Mobile Arena, the Sphere and the hotels along the Strip, flat or in 3D (`drawDistrictRace`, `mountDistrictRace`), and the link from the demo's circuits page to its district page takes the race along.
+
 ## Adding the next circuit
 
 A circuit is mostly data: an entry in `scripts/circuits.data.json`, a fetch and a build. For Monaco, Spa-Francorchamps or Indianapolis:

@@ -7,6 +7,7 @@ import { raceAt, type RaceMoment } from "./circuits.race.moment.ts";
 import { simulateRace, type CircuitRace, type RaceOptions } from "./circuits.race.ts";
 import { RACE_WORDS } from "./circuits.race.words.ts";
 import type { CircuitOptions } from "./circuits.types.ts";
+import type { Pt } from "./crowd.ts";
 import { num } from "./format.ts";
 import { fill } from "./strings.core.ts";
 import { mountTurn, type KyogijoTurn } from "./turn.dom.ts";
@@ -53,12 +54,35 @@ export interface RaceState {
   motion: "smooth" | "step";
 }
 
-/** What `mountCircuitRace` gives back. */
-export interface KyogijoRace {
+/**
+ * Where a race is drawn: the circuit's own drawing and 3D view (`mountCircuitRace`), or another scene the circuit lies in, a district's ground among its venues (`mountDistrictRace`). The cars are placed in the circuit's own plan
+ * (`raceAt`); `point` says where such a point is in the scene.
+ */
+export interface RaceScene<O, V> {
+  /** The scene's flat drawing at a moment, its cars as the `.ky-ci-car` groups of `carMarkup`: the race given when it came from a feed, else the simulation the options make. */
+  flat(options: O, t: number, given: CircuitRace | undefined): string;
+  /** The options the 3D view is mounted and updated with. */
+  view(options: O): V;
+  /** The 3D view's model. */
+  build(options: V, settings: TurnSettings): TurnModel;
+  /** Where a point of the circuit's plan lies in the scene: the same point for the circuit's own drawing. */
+  point(options: O): (p: Pt) => Pt;
+}
+
+/** The circuit's own scene. */
+const CIRCUIT_SCENE: RaceScene<RaceViewOptions, CircuitOptions> = {
+  flat: (options, t, given) => raceDrawing({ ...options, t }, given).svg,
+  view: (options) => options,
+  build: buildCircuitTurn,
+  point: () => (p) => p,
+};
+
+/** What `mountCircuitRace` gives back (and `mountDistrictRace`, with a district's options and 3D view). */
+export interface KyogijoRace<O = RaceViewOptions, V = CircuitOptions> {
   /** The race it plays. */
   readonly race: CircuitRace;
   /** The 3D view, when the race is on one. */
-  readonly turn: KyogijoTurn<CircuitOptions> | undefined;
+  readonly turn: KyogijoTurn<V> | undefined;
   state(): RaceState;
   /** The race at the clock's time: the standings, the lap, the fastest lap. */
   moment(): RaceMoment;
@@ -71,7 +95,7 @@ export interface KyogijoRace {
   nextLap(): void;
   setSpeed(speed: number): void;
   /** Draw again with new options (the language, the theme): the clock and the race stay where they are. A new circuit, seed, laps or cars is a new race: mount it again. */
-  update(options: RaceViewOptions): void;
+  update(options: O): void;
   /** Play another race in the same view (a feed that came in again while a race is followed): the clock stays where it is, held to the new race's end, and stays playing or paused. */
   replace(race: CircuitRace): void;
   destroy(): void;
@@ -94,8 +118,14 @@ const carPlane = (id: string, x: number, y: number, d: number, svg: string): Pla
  * ```
  */
 export function mountCircuitRace(host: HTMLElement, initial: RaceViewOptions, settings: RaceViewSettings = {}): KyogijoRace {
+  return mountRaceIn(host, initial, CIRCUIT_SCENE, settings);
+}
+
+/** A race in a page, drawn in a scene: what `mountCircuitRace` does on the circuit's own drawing, and `mountDistrictRace` on a district's ground. */
+export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(host: HTMLElement, initial: O, scene: RaceScene<O, V>, settings: RaceViewSettings = {}): KyogijoRace<O, V> {
   const doc = host.ownerDocument;
-  let options: RaceViewOptions = { ...initial };
+  let options: O = { ...initial };
+  let place = scene.point(options);
   let language: Language = options.language === "ja" ? "ja" : "en";
   let race = settings.race ?? simulateRace(options);
   let fromFeed = settings.race !== undefined;
@@ -156,7 +186,7 @@ export function mountCircuitRace(host: HTMLElement, initial: RaceViewOptions, se
   host.replaceChildren(root);
 
   // ---- The drawing: flat, or the circuit's 3D view with the cars standing on it. ----
-  let turn: KyogijoTurn<CircuitOptions> | undefined;
+  let turn: KyogijoTurn<V> | undefined;
   let inner: TurnInternals | undefined;
   /** Each car's element (a group in the flat drawing, a plane's element in 3D), the text of its position, and what each was last given. */
   let cars = new Map<string, { el: Element | null; text: Element | null; r: number; at: string; position: number; status: string }>();
@@ -172,7 +202,7 @@ export function mountCircuitRace(host: HTMLElement, initial: RaceViewOptions, se
     }
   };
   const drawFlat = (): void => {
-    stage.innerHTML = raceDrawing({ ...options, t: state.t }, fromFeed ? race : undefined).svg;
+    stage.innerHTML = scene.flat(options, state.t, fromFeed ? race : undefined);
     bindFlat();
   };
   /** The model of the 3D view with a disc for each car at the clock's time. */
@@ -184,7 +214,8 @@ export function mountCircuitRace(host: HTMLElement, initial: RaceViewOptions, se
     planes.clear();
     for (const line of [...moment.standings].sort((a, b) => a.index - b.index)) {
       const svg = carMarkup({ ...line, at: [r, r] }, r * 0.9, language).replace(/ role="img"[^>]*?aria-label="[^"]*"/, "");
-      planes.set(line.car.id, carPlane(line.car.id, line.at[0], line.at[1], disc, svg));
+      const at = place(line.at);
+      planes.set(line.car.id, carPlane(line.car.id, at[0], at[1], disc, svg));
     }
     return { ...model, planes: [...model.planes, ...planes.values()] };
   };
@@ -200,7 +231,7 @@ export function mountCircuitRace(host: HTMLElement, initial: RaceViewOptions, se
     if (settings.view === "3d") {
       const holder = doc.createElement("div");
       stage.replaceChildren(holder);
-      turn = mountTurn(holder, options as CircuitOptions, settings.turn ?? {}, buildCircuitTurn, false, (lent) => {
+      turn = mountTurn(holder, scene.view(options), settings.turn ?? {}, scene.build, false, (lent) => {
         inner = lent;
       });
       if (inner !== undefined) {
@@ -272,14 +303,15 @@ export function mountCircuitRace(host: HTMLElement, initial: RaceViewOptions, se
     for (const line of moment.standings) {
       const car = cars.get(line.car.id);
       if (car === undefined) continue;
+      const p = place(line.at);
       if (inner !== undefined) {
         const plane = planes.get(line.car.id);
-        if (plane !== undefined && (plane.o[0] !== line.at[0] - disc / 2 || plane.o[1] !== line.at[1])) {
-          plane.o = [line.at[0] - disc / 2, line.at[1], disc];
+        if (plane !== undefined && (plane.o[0] !== p[0] - disc / 2 || plane.o[1] !== p[1])) {
+          plane.o = [p[0] - disc / 2, p[1], disc];
           moved = true;
         }
       } else {
-        const at = `translate(${num(line.at[0])} ${num(line.at[1])})`;
+        const at = `translate(${num(p[0])} ${num(p[1])})`;
         if (car.at !== at) {
           car.at = at;
           car.el?.setAttribute("transform", at);
@@ -368,7 +400,7 @@ export function mountCircuitRace(host: HTMLElement, initial: RaceViewOptions, se
     frameId = request(frame);
   }
 
-  const api: KyogijoRace = {
+  const api: KyogijoRace<O, V> = {
     get race() {
       return race;
     },
@@ -422,9 +454,10 @@ export function mountCircuitRace(host: HTMLElement, initial: RaceViewOptions, se
       tell();
     },
     update(next) {
-      options = { ...next, circuit: options.circuit, seed: options.seed, laps: options.laps, cars: options.cars } as RaceViewOptions;
+      options = { ...next, circuit: options.circuit, seed: options.seed, laps: options.laps, cars: options.cars };
       language = options.language === "ja" ? "ja" : "en";
-      if (turn !== undefined) turn.update(options as CircuitOptions);
+      place = scene.point(options);
+      if (turn !== undefined) turn.update(scene.view(options));
       else drawFlat();
       buildBoard();
       label();

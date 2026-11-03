@@ -261,28 +261,33 @@ const COUNTERS = () => {
   };
 };
 
-/** A page with nothing on it but the package and a box for the race. */
-async function bare(page) {
+/** A page with nothing on it but the package and a box for the race: on the circuit's own drawing, or on a district's ground (`mountDistrictRace`, the Strip Circuit beside T-Mobile Arena). */
+async function bare(page, ground = "circuit") {
   await page.addInitScript(COUNTERS);
   await serve(page);
   await page.route("http://kyogijo.test/bare.html", (route) => route.fulfill({ contentType: "text/html", body: '<!doctype html><meta charset="utf-8"><body style="margin:0"><div id="race" style="width:900px"></div></body>' }));
   await page.goto("http://kyogijo.test/bare.html");
-  await page.evaluate(async () => {
-    const { mountCircuitRace } = await import("./dist/circuits-entry.js");
+  await page.evaluate(async (on) => {
+    const race = { circuit: "las-vegas", laps: 3, cars: 8, seed: 4 };
+    const mount =
+      on === "district"
+        ? ((m) => (host, settings) => m.mountDistrictRace(host, { venues: ["t-mobile-arena"], labels: true, ...race }, settings))(await import("./dist/district-entry.js"))
+        : ((m) => (host, settings) => m.mountCircuitRace(host, race, settings))(await import("./dist/circuits-entry.js"));
     window.__mount = (settings = {}) => {
-      window.__race = mountCircuitRace(document.querySelector("#race"), { circuit: "las-vegas", laps: 3, cars: 8, seed: 4 }, { motion: "smooth", speed: 600, ...settings });
+      window.__race = mount(document.querySelector("#race"), { motion: "smooth", speed: 600, ...settings });
       return window.__race.state().duration;
     };
-  });
+  }, ground);
 }
 
 test.describe("the race on a bare page: its budgets", () => {
   test.use({ reducedMotion: "no-preference" });
 
-  for (const view of ["flat", "3d"]) {
-    test(`${view}: grows nothing over ten races, the same elements and the same listeners`, async ({ page, browserName }) => {
+  for (const [ground, view] of [["circuit", "flat"], ["circuit", "3d"], ["district", "flat"], ["district", "3d"]]) {
+    const on = ground === "district" ? "on a district's ground, " : "";
+    test(`${on}${view}: grows nothing over ten races, the same elements and the same listeners`, async ({ page, browserName }) => {
       test.setTimeout(120_000);
-      await bare(page);
+      await bare(page, ground);
       const cdp = browserName === "chromium" ? await page.context().newCDPSession(page) : undefined;
       const heap = async () => {
         if (cdp === undefined) return 0;
@@ -311,8 +316,8 @@ test.describe("the race on a bare page: its budgets", () => {
       if (cdp !== undefined) expect(after).toBeLessThan(before * 1.15 + 2_000_000);
     });
 
-    test(`${view}: asks for one frame a frame while it plays, with the 3D view's auto-turn too, and none once it is paused`, async ({ page }) => {
-      await bare(page);
+    test(`${on}${view}: asks for one frame a frame while it plays, with the 3D view's auto-turn too, and none once it is paused`, async ({ page }) => {
+      await bare(page, ground);
       await page.evaluate((v) => window.__mount({ view: v, speed: 1 }), view);
       if (view === "3d") await page.waitForSelector('#race .ky-turn[data-mode="3d"]');
       await page.waitForTimeout(1200);
@@ -333,8 +338,8 @@ test.describe("the race on a bare page: its budgets", () => {
       expect((await page.evaluate(() => window.__counts.asked)) - asked).toBe(0);
     });
 
-    test(`${view}: destroy takes everything away, playing or not`, async ({ page }) => {
-      await bare(page);
+    test(`${on}${view}: destroy takes everything away, playing or not`, async ({ page }) => {
+      await bare(page, ground);
       // (The test's own tool listens on the window once it first waits for an element: it does so before the count is taken.)
       await page.waitForSelector("#race", { state: "attached" });
       const empty = await page.evaluate(() => window.__listening());

@@ -7,6 +7,10 @@ export type { ContextArea } from "./context.ts";
 // A race circuit on the same ground (`circuit`: the district entry has every circuit, the lean district reads them with `loadCircuits`), and the famous landmarks an area of context has round it.
 export { CIRCUIT_INDEX, loadCircuits } from "./circuits.index.ts";
 export { circuitsHeld } from "./district.circuit.ts";
+// A race on that circuit, among the venues and the city (the circuits' race, made-up cars or a feed's): drawn at a moment, or played in a page flat or in 3D.
+export { drawDistrictRace, mountDistrictRace } from "./district.race.ts";
+export type { DistrictRaceDrawOptions, DistrictRaceOptions, DistrictRaceSettings } from "./district.race.ts";
+export type { KyogijoRace, RaceState } from "./circuits.race.dom.ts";
 export { LANDMARK_SHAPES } from "./landmarks.ts";
 export type { ContextLandmark, LandmarkShape, PlacedLandmark } from "./landmarks.ts";
 export { KODOKAN, KODOKAN_DOJO, KODOKAN_FLOOR_HEIGHT, KODOKAN_FLOOR_IDS, KODOKAN_FLOORS, KODOKAN_ROOM_HEIGHT, kodokanLevel, kodokanMember } from "./kodokan.ts";
