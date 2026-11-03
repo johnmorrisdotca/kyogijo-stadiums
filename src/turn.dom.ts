@@ -17,8 +17,24 @@ import { size } from "./turn.kit.ts";
 import type { OutsideLevel } from "./outside.paint.ts";
 import type { ReplaySettings, ReplayTimeline } from "./replay.types.ts";
 import type { KyogijoReplay } from "./mount.ts";
-import { attachTurnReplay, type TurnInternals } from "./turn.replay.dom.ts";
-import { createReplayView } from "./replay.dom.ts";
+import type { TurnInternals } from "./turn.replay.dom.ts";
+import type { ReplayView } from "./replay.dom.ts";
+
+/**
+ * The replay's own code, which `turn.replay.dom.ts` puts in when it is loaded (the `/turn` entry and the element load it): a page that only turns a view (a district, a tournament layout) carries none of the replay
+ * and its layers.
+ */
+let replayKit: { attach(view: TurnInternals, timeline: ReplayTimeline, settings: ReplaySettings): KyogijoReplay; flat(host: HTMLElement, timeline: ReplayTimeline, settings: ReplaySettings, options: SurfaceOptions | ScoreOptions): ReplayView } | undefined;
+
+/** Put the replay's code in: called once by `turn.replay.dom.ts`. */
+export function useTurnReplay(kit: NonNullable<typeof replayKit>): void {
+  replayKit = kit;
+}
+
+const kitOf = (): NonNullable<typeof replayKit> => {
+  if (replayKit === undefined) throw new Error("the replay is not loaded: import mountKyogijoTurn from @johnmorrisdotca/kyogijo-stadiums/turn");
+  return replayKit;
+};
 
 /** What `mountKyogijoTurn` gives back. `O` is what `update` takes: the options of a drawing, or (for `mountMultiTurn`) of a tournament layout. */
 export interface KyogijoTurn<O = SurfaceOptions | ScoreOptions> {
@@ -153,7 +169,7 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
 
   if (!supported) {
     // The flat drawing, with a sentence that says why it does not turn when the browser is the reason.
-    let flatReplay: { view: ReturnType<typeof createReplayView>; timeline: ReplayTimeline; settings: ReplaySettings } | undefined;
+    let flatReplay: { view: ReplayView; timeline: ReplayTimeline; settings: ReplaySettings } | undefined;
     const flat = (next: O): void => {
       if (flatReplay !== undefined) {
         flatReplay.view.draw(floorOptions(next as SurfaceOptions | ScoreOptions));
@@ -188,7 +204,7 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
       replay(timeline, replaySettings = {}) {
         if (!replayable) throw new Error("a replay plays on one surface, not on a layout");
         flatReplay?.view.destroy();
-        const view = createReplayView(host, timeline, replaySettings, floorOptions(current as SurfaceOptions | ScoreOptions));
+        const view = kitOf().flat(host, timeline, replaySettings, floorOptions(current as SurfaceOptions | ScoreOptions));
         const mine = { view, timeline, settings: replaySettings };
         flatReplay = mine;
         return {
@@ -845,7 +861,7 @@ export function mountTurn<O>(host: HTMLElement, options: O, settings: TurnSettin
         requestFrame,
         cancelFrame,
       };
-      const mine = attachTurnReplay(internals, timeline, replaySettings);
+      const mine = kitOf().attach(internals, timeline, replaySettings);
       replaying = mine;
       return {
         ...mine,

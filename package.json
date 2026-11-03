@@ -67,6 +67,7 @@
   "type": "module",
   "sideEffects": [
     "./dist/element-define.js",
+    "./dist/turn.replay.dom.js",
     "./dist/frames.providers.js",
     "./dist/full.js",
     "./dist/arenas.js",

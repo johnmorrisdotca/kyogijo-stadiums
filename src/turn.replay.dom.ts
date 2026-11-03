@@ -2,7 +2,8 @@
 // animation frame writing only what moved. The view is the mount's (`turn.dom.ts`); it hands this file what it needs through `TurnInternals`, and goes on turning, tipping and zooming as
 // it plays. Nothing runs while the replay is paused, the page hidden or the view out of sight.
 import type { KyogijoReplay } from "./mount.ts";
-import { replayDriver, replayPainter } from "./replay.dom.ts";
+import { createReplayView, replayDriver, replayPainter } from "./replay.dom.ts";
+import { useTurnReplay } from "./turn.dom.ts";
 import { drawFrameOf, replayPlacer, replaySnapshot } from "./replay.ts";
 import type { ReplaySettings, ReplayTimeline } from "./replay.types.ts";
 import type { TurnModel } from "./turn.model.ts";
@@ -155,3 +156,6 @@ export function attachTurnReplay(view: TurnInternals, timeline: ReplayTimeline, 
     },
   };
 }
+
+// The view's `replay` plays with this file's code once it is loaded.
+useTurnReplay({ attach: attachTurnReplay, flat: createReplayView });

@@ -4,6 +4,8 @@ import { parseRange } from "./ranges.names.ts";
 import { mountKyogijo, type KyogijoMount, type KyogijoReplay } from "./mount.ts";
 import { TURN_PRESET_NAMES, type TurnPreset } from "./turn.camera.ts";
 import { mountKyogijoTurn, type KyogijoTurn } from "./turn.dom.ts";
+// A timeline on the element's 3D view plays with the replay's code for the view.
+import "./turn.replay.dom.ts";
 import type { TurnSettings } from "./turn.model.ts";
 import type { ReplaySettings, ReplayTimeline } from "./replay.types.ts";
 import type { ScoreOptions, Side, Size, Sport, StatusWord, SurfaceOptions, Team } from "./types.ts";

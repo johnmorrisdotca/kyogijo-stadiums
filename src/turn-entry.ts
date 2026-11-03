@@ -6,7 +6,9 @@ export { mountKyogijoTurn, mountTurn, turnSupported } from "./turn.dom.ts";
 export type { KyogijoTurn } from "./turn.dom.ts";
 export { discSize, keepOnFloor, replayTurnModel } from "./turn.replay.ts";
 export type { TurnReplayLook, TurnReplayModel } from "./turn.replay.ts";
+// The replay on the view (`view.replay`): loaded with this entry, and not with a page that only turns a view.
 export type { TurnReplaySettings } from "./turn.replay.dom.ts";
+import "./turn.replay.dom.ts";
 export { buildTurn, floorOptions, openingView } from "./turn.model.ts";
 export { turnDirection } from "./turn.camera.ts";
 export type { TurnDirection } from "./turn.camera.ts";
