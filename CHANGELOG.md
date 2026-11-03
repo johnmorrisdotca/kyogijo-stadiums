@@ -7,7 +7,14 @@ All notable changes to this project are written here. The format follows
 
 ## [Unreleased]
 
+## [0.54.0] - 2026-11-03
+
+### Added
+
 - **Play a game wherever the rink is (KYOGIJO-STADIUMS-42)** ([example games](./docs/example-games.md#the-index)): the demo's **Play a game** toggle is on every view that can play an example game: the real arenas' page in 3D (after Labels; `game=1` in the address), the home page's Try it surface, flat with `mount.replay` and in 3D with `view.replay` (after Dark; `game=1`), and the home page's arena as before (`fgame=1`). Where it shows is the index's to say: `examples/games/index.json` lists each game with the surface it is played on, its file, its frame and its title in English and Japanese, so a new game is its file and one line, and no code. Off until pressed; the game is fetched on the first press only; pressing again gives back the empty surface, and on Try it the reader's own teams and score exactly as they were (the game's sides and live score are laid over them while it plays, and the module code shows the replay). A change of arena, of flat and 3D, of the crowd or of the theme keeps the game at the same moment; another surface, a badge or the flat arena stops it and leaves nothing behind. On an arena with its LED boards on, the scoreboard over the ice follows the game (the replay board of 0.53.0), on the arenas page as on the home page's arena. One controller, `demo/play-game.js`, serves the three, and `e2e/game.demo.mjs` holds the replay's freeze and leak budgets on these pages (no frame while paused, hidden or out of sight; one a frame with the auto-turn; the same elements and listeners after ten times round; nothing left after it stops) and the index's say with a fake index. The 3D views of the arenas page and of Try it no longer leave two listeners on their stage each time they are made again.
+
+### Changed
+
 - The demo's surface picker (KYOGIJO-STADIUMS-43): the Try it panel's Surface choice, 43 chips in one unordered block, is now a row of kinds (field, court, ice, pool, track, budō, mat and ring), then that kind's sports A to Z in the page's language (in Japanese by reading, in gojūon order), then for gridiron football its NFL, CFL and IFAF fields in a small row under it. Each row is a radio group (arrow keys, Home and End move, Space and Enter choose); the address still names the surface (`?sport=cfl`) and brings back its kind and sport; a surface with an example game in `examples/games/index.json` carries a small play mark. The logic is `demo/surface-kinds.js`, with `src/surface-kinds.test.js` and `e2e/surface.demo.mjs`.
 
 ## [0.53.0] - 2026-11-03
