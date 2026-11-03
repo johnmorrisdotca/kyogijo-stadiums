@@ -459,7 +459,7 @@ function realStadiumOf(o: SurfaceOptions, sport: Sport, real: boolean): { stadiu
 }
 
 /** The stands round a surface, laid out from its box (or, for a ballpark, from its fence). */
-function standsFor(o: SurfaceOptions, surface: Surface, crowd: Crowd): CrowdStands {
+function standsFor(o: SurfaceOptions, surface: Surface, crowd: Crowd, floor?: Floor): CrowdStands {
   const { sport } = chooseLeague(o);
   const awaySide: Side = resolveHomeSide({ ...o, sport }) === "left" ? "right" : "left";
   if (sport === "mlb") {
@@ -489,7 +489,20 @@ function standsFor(o: SurfaceOptions, surface: Surface, crowd: Crowd): CrowdStan
   // A dojo's crowd sits in its gallery, from the room's balcony data (in feet here); the arenas (the Budokan, the Kokugikan) keep their bowls.
   const hall = sport === "dojo" ? dojoGallery(o) : undefined;
   const gallery = hall === undefined ? undefined : { offset: hall.offset / 0.3048, depth: hall.depth / 0.3048, height: [hall.height[0] / 0.3048, hall.height[1] / 0.3048] as [number, number], rows: hall.rows, aisles: hall.aisles };
-  return crowdLayout({ sport, box, crowd, awaySide, ground: o.ground, arena: o.budo?.hall === "budokan", ...(gallery === undefined ? {} : { gallery }) });
+  return crowdLayout({ sport, box, crowd, awaySide, ground: o.ground, arena: o.budo?.hall === "budokan", ...(gallery === undefined ? {} : { gallery }), ...(floor === undefined ? {} : { floor }) });
+}
+
+type Floor = { box: Box; points?: readonly (readonly [number, number])[] };
+
+/** A surface's floor with no margin (its view, and its outline where it has one); none for a close-up. */
+function floorOf(probe: Surface): Floor | undefined {
+  if (probe.whole !== undefined) return undefined;
+  const view = wideView(probe);
+  if (probe.floor === undefined) return { box: view };
+  const xs = [view.x, view.x + view.w, ...probe.floor.map((p) => p[0])];
+  const ys = [view.y, view.y + view.h, ...probe.floor.map((p) => p[1])];
+  const [x0, y0] = [Math.min(...xs), Math.min(...ys)];
+  return { box: { x: x0, y: y0, w: Math.max(...xs) - x0, h: Math.max(...ys) - y0 }, points: probe.floor };
 }
 
 /** True when the drawing is asked to be small: `detail: "simple"` or a `width` under 480 pixels. */
@@ -518,17 +531,20 @@ function venueFrame(o: SurfaceOptions, crowd: Crowd, surface: Surface): boolean 
 /** A surface with the stands and the crowd round it: the ground is made as wide as the stands need, then the stands are laid on it under the surface. */
 function buildCrowded(o: SurfaceOptions, portrait: boolean, id: string, score: boolean, scored: boolean, extra: Extra, crowd: Crowd): Surface {
   let margin = extra.margin;
+  // The floor the stands' opening clears and is centred on.
+  const probe = buildWhole({ ...o, margin: 0 }, portrait, id, score, scored, { ...extra, margin: undefined });
+  const floor = floorOf(probe);
   if (!(typeof o.margin === "number" && Number.isFinite(o.margin) && o.margin >= 0)) {
     // How much ground the stands need beyond what the surface has with none, then the surface is made again with it.
-    const probe = buildWhole({ ...o, margin: 0 }, portrait, id, score, scored, { ...extra, margin: undefined });
-    const stands = standsFor(o, probe, crowd);
+    const stands = standsFor(o, probe, crowd, floor);
     const view = wideView(probe);
     const have = { left: stands.box.x - view.x, right: view.x + view.w - stands.box.x - stands.box.w, top: stands.box.y - view.y, bottom: view.y + view.h - stands.box.y - stands.box.h };
     const need = Math.max(stands.reach.left - have.left, stands.reach.right - have.right, stands.reach.top - have.top, stands.reach.bottom - have.bottom);
-    margin = Math.max(margin ?? 0, need + 6);
+    // (and the roof's shade, 9 feet beyond the upper tier)
+    margin = Math.max(margin ?? 0, need + (crowd.roof ? 10 : 6));
   }
   const surface = buildWhole(o, portrait, id, score, scored, { ...extra, margin });
-  const stands = standsFor(o, surface, crowd);
+  const stands = standsFor(o, surface, crowd, floor);
   const seats = stands.seats;
   const ground = heldGround(o.ground)?.capacity;
   const fine = crowd.detail === "fine" || (crowd.detail === "auto" && !smallDrawing(o));
@@ -1237,5 +1253,5 @@ export function crowdStands(o: SurfaceOptions): CrowdStands | undefined {
   const crowd = crowdOf(o);
   if (crowd === undefined) return undefined;
   const probe = buildWhole({ ...o, margin: 0 }, false, drawingId(o), false, false, { features: undefined });
-  return standsFor(o, probe, crowd);
+  return standsFor(o, probe, crowd, floorOf(probe));
 }

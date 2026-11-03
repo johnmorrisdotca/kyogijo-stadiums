@@ -55,6 +55,8 @@ export interface AthleticsPlan {
   box: MBox;
   /** Everything drawn: the box and what lies beyond it (the jump strip, the runways' ends, the straight). */
   extent: MBox;
+  /** What `extent` holds as points (the oval and what lies beyond it): what a crowd's stands clear. */
+  outline?: [number, number][];
   areas: Area[];
   shapes: Shape[];
   digits: Digits[];
@@ -279,10 +281,25 @@ export function athleticsPlan(o: Pick<SurfaceOptions, "sport" | "league" | "athl
   const box: MBox = { x0: -S / 2 - Rout, y0: -Rout, x1: S / 2 + Rout, y1: Rout };
   let extent = grow(box, 1);
   const edgeStraight = R + straight.lanes * straight.lane;
-  if (!indoor) extent = union([extent, { x0: straight.x0, y0: -Rout, x1: straight.x1, y1: edgeStraight }]);
-  if (events.includes("long-jump") || events.includes("triple-jump")) extent = union([extent, jumpStrip()]);
-  if (events.includes("javelin-throw")) extent = union([extent, ...inf.facilities.filter((f) => f.event === "javelin-throw").map((f) => f.box)].map((b) => ({ x0: Math.max(b.x0, -S / 2 - Rout - 6), y0: b.y0, x1: Math.min(b.x1, S / 2 + Rout + 6), y1: b.y1 })));
+  // What lies beyond the oval: the sprint straight, the jumps' strip, the javelin's runways.
+  const beyond: MBox[] = [];
+  if (!indoor) beyond.push({ x0: straight.x0, y0: -Rout, x1: straight.x1, y1: edgeStraight });
+  if (events.includes("long-jump") || events.includes("triple-jump")) beyond.push(jumpStrip());
+  extent = union([extent, ...beyond]);
+  if (events.includes("javelin-throw")) {
+    const runways = inf.facilities.filter((f) => f.event === "javelin-throw").map((f) => f.box);
+    const cut = (b: MBox): MBox => ({ x0: Math.max(b.x0, -S / 2 - Rout - 6), y0: b.y0, x1: Math.min(b.x1, S / 2 + Rout + 6), y1: b.y1 });
+    extent = union([extent, ...runways].map(cut));
+    beyond.push(...runways.map(cut));
+  }
   extent = grow(extent, 0);
+  const rim = Rout + 1;
+  const outline: [number, number][] = [];
+  for (let i = 0; i <= 32; i += 1) {
+    const a = -Math.PI / 2 + (Math.PI * i) / 32;
+    outline.push([S / 2 + rim * Math.cos(a), rim * Math.sin(a)], [-S / 2 - rim * Math.cos(a), rim * Math.sin(a)]);
+  }
+  for (const b of beyond) outline.push([b.x0, b.y0], [b.x1, b.y0], [b.x1, b.y1], [b.x0, b.y1]);
 
   const plan: AthleticsPlan = {
     sport: "athletics",
@@ -296,6 +313,7 @@ export function athleticsPlan(o: Pick<SurfaceOptions, "sport" | "league" | "athl
     infield,
     box,
     extent,
+    outline,
     areas: parts.areas,
     shapes: parts.shapes,
     digits: parts.digits,

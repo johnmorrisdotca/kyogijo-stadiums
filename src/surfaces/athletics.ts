@@ -105,6 +105,7 @@ export function athleticsSurface(o: BuildOptions, plan: AthleticsPlan, embedded:
     onColour: false,
   };
   surface.box = { x: 0, y: 0, w: W, h: H };
+  if (plan.outline !== undefined && sv === undefined) surface.floor = plan.outline.map(([x, y]) => [(x - ox) * K, (y - oy) * K] as const);
   surface.lineRef = { width: thick, feet: K };
   const ranges: Record<string, SurfaceRanges[string]> = {};
   for (const [name, r] of Object.entries(plan.ranges)) ranges[name] = rangeOf(r, ox, oy);

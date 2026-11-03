@@ -159,17 +159,17 @@ describe("the stands as data", () => {
     expect(crowdStands({ sport: "nba", crowd: true, host: { field: "nfl" } })).toBeUndefined();
   });
 
-  it("are laid round the surface's own box, with the side the benches are on given more ground", () => {
+  it("are laid round the surface's own box, the bench side's extra ground shared by the two sides so that the opening is centred", () => {
     const stands = crowdStands({ sport: "soccer", crowd: true });
     const lower = stands?.rings[0];
     if (lower?.hole?.kind !== "rrect" || stands === undefined) throw new Error("a bowl is a rounded rectangle");
     const { box } = stands;
     expect(box.w).toBeCloseTo(105 / 0.3048, 0);
-    // The run-off: about 8.5 metres behind the goal lines and 6 along the touchlines, with the bench side's 8 feet more.
+    // The run-off: about 8.5 metres behind the goal lines and 6 along the touchlines, with the bench side's 8 feet more shared by the two touchlines.
     expect(box.x - lower.hole.x0).toBeCloseTo(8.5 / 0.3048, 1);
     expect(lower.hole.x1 - (box.x + box.w)).toBeCloseTo(8.5 / 0.3048, 1);
-    expect(box.y - lower.hole.y0).toBeCloseTo(6 / 0.3048, 1);
-    expect(lower.hole.y1 - (box.y + box.h)).toBeCloseTo(6 / 0.3048 + 8, 1);
+    expect(box.y - lower.hole.y0).toBeCloseTo(6 / 0.3048 + 4, 1);
+    expect(lower.hole.y1 - (box.y + box.h)).toBeCloseTo(6 / 0.3048 + 4, 1);
     // The points of an outline are for a view that raises the stands.
     const points = outlinePoints(lower.region);
     expect(points.length).toBeGreaterThan(40);

@@ -106,6 +106,11 @@ export interface Surface {
   upright?: number;
   /** How wide the surface's ordinary line is drawn, in the units of the `lines` markup, and how many feet one of those units is: what `lineWidth` scales. */
   lineRef?: { width: number; feet: number };
+  /**
+   * For a surface whose floor is not the rectangle of its view (an athletics track, its sprint straight and runways): the outline of everything it draws round its playing area, as points in the wide frame
+   * in feet. The stands of a crowd clear it.
+   */
+  floor?: (readonly [number, number])[];
   /** For a surface with a crowd: the margin it was drawn with, which holds the stands. */
   crowdMargin?: number;
   /** A real stadium of more than one configuration laid out in the venue's own frame: where the middle of its field is in the surface's frame (the surface is shifted to lie there), and the ground, building, stands and crowd under it, in the venue's frame. */
@@ -230,6 +235,15 @@ export function quarterTurn(view: { x: number; y: number; w: number; h: number }
 
 /** A box from its edges: the left, the top, the right and the bottom. */
 export const edges = (x0: number, y0: number, x1: number, y1: number): Box => ({ x: Math.min(x0, x1), y: Math.min(y0, y1), w: Math.abs(x1 - x0), h: Math.abs(y1 - y0) });
+
+/** A rounded rectangle's outline as points (each corner in 12 steps), for a surface's `floor`. */
+export function roundedOutline(x: number, y: number, w: number, h: number, r: number): [number, number][] {
+  const rr = Math.max(0, Math.min(r, w / 2, h / 2));
+  const out: [number, number][] = [];
+  for (const [cx, cy, a0] of [[x + w - rr, y + rr, -90], [x + w - rr, y + h - rr, 0], [x + rr, y + h - rr, 90], [x + rr, y + rr, 180]] as const)
+    for (let i = 0; i <= 12; i += 1) out.push([cx + rr * Math.cos(((a0 + i * 7.5) * Math.PI) / 180), cy + rr * Math.sin(((a0 + i * 7.5) * Math.PI) / 180)]);
+  return out;
+}
 
 /** A range that has an end: its box at the left end and at the right, made by a function of the end. */
 export const atEnds = (box: (end: "left" | "right") => Box): { left: Box; right: Box } => ({ left: box("left"), right: box("right") });

@@ -2,7 +2,7 @@ import { el, num } from "../format.ts";
 import { rulesFor, type NhlRules } from "../eras.ts";
 import { NHL } from "../geometry.ts";
 import { NHL_RINK, type RinkSpec } from "../leagues/hockey.ts";
-import { atEnds, edges, ft, quarterTurn, roundedRect, type BuildOptions, type Mark, type Surface } from "./surface.ts";
+import { atEnds, edges, ft, quarterTurn, roundedOutline, roundedRect, type BuildOptions, type Mark, type Surface } from "./surface.ts";
 
 /** Where the boards' curve is at a distance x from the end: the y at which it meets a line across the rink. The corner's radius is the NHL's unless given. */
 export function boardsY(x: number, radius: number = NHL.cornerRadius): number {
@@ -129,6 +129,8 @@ export function hockey(o: BuildOptions, era?: NhlRules, rink: RinkSpec = NHL_RIN
   };
   surface.lineRef = { width: thin, feet: 1 };
   surface.box = { x: 0, y: 0, w: L, h: W };
+  // The floor the stands of a crowd clear: the boards round the rounded corners, not the apron's square corners.
+  surface.floor = roundedOutline(-bw, -bw, L + 2 * bw, W + 2 * bw, r + bw);
   surface.centreRadius = rink.circleRadius;
   surface.anchors = { kind: "hockey", length: L, width: W, blueLine, goalLine: g, cornerRadius: r, net: net_ };
   // The zones of the ice: from the end boards to a blue line, and between the blue lines.

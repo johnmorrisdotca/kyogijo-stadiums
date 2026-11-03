@@ -63,6 +63,11 @@ export interface CrowdStands {
   stadium?: "purpose" | "nfl" | "cfl";
   /** The playing surface, in the wide frame. */
   box: Box;
+  /**
+   * The floor round the playing surface, where the surface draws more than its box (a court's run-off, a track's sprint straight, runways and pits): its bounding box and its outline as points, in the wide frame.
+   * The first row of seats clears all of it by `FLOOR_CLEAR`, and the opening is centred on its box. Missing for a real venue's stands and a ballpark's, which are laid out from their own data.
+   */
+  floor?: { box: Box; points: Pt[] };
   rings: StandRing[];
   /** Boxes where the stands are left out (the open end of a horseshoe, the ends of two sides). */
   covers: [x0: number, y0: number, x1: number, y1: number][];
@@ -550,6 +555,11 @@ export interface LayoutInput {
   gallery?: { offset: number; depth: number; height: [number, number]; rows?: number; aisles?: readonly number[] };
   /** A real venue's stands in place of the sport's usual tiers (see `venueBowl`). */
   real?: RealBowl;
+  /**
+   * Everything the surface draws round its playing area, in the wide frame: the bounding box (the surface's own view with no margin) and, where the floor is not that rectangle (an athletics track, an oval
+   * ground), its outline as points. The opening of the stands is centred on it and clears it. Without it the floor is the box.
+   */
+  floor?: { box: Box; points?: readonly (readonly [number, number])[] };
   /** The ballpark's fence as points on the field, for a ballpark (see `parkLayout`). */
   fence?: readonly Pt[];
   /** The foul lines' length at the poles and the backstop's distance, for a ballpark. */
@@ -568,6 +578,60 @@ function offsets(p: Profile, box: Box, stadium: "purpose" | "nfl" | "cfl"): { le
   return { left: end, right: end, top: side, bottom: side + g.bench };
 }
 
+/** The room kept between the floor (everything the surface draws round its playing area) and the first row of seats, in feet. */
+export const FLOOR_CLEAR = 2;
+
+/** A point inside a rounded rectangle or an ellipse of half sizes `hx`, `hy` about the origin, with `clear` to spare. */
+function insideOpening(ax: number, ay: number, hx: number, hy: number, r: number, oval: boolean, clear: number): boolean {
+  const [w, h] = [hx - clear, hy - clear];
+  if (w <= 0 || h <= 0) return false;
+  if (oval) return sq(ax / w) + sq(ay / h) <= 1 + 1e-9;
+  const rr = Math.max(0, Math.min(r, hx, hy) - clear);
+  if (ax > w + 1e-9 || ay > h + 1e-9) return false;
+  const kx = ax - (w - rr);
+  const ky = ay - (h - rr);
+  return kx <= 0 || ky <= 0 || sq(kx) + sq(ky) <= sq(rr) + 1e-9;
+}
+
+/** The first row's opening round a floor, centred on it (the bench room shared by both sides): the sport's distances, or the floor's own shape where they do not clear it, grown alike until its whole outline clears by `FLOOR_CLEAR`. */
+function openingOf(input: { off: { left: number; right: number; top: number; bottom: number }; corner: number; oval: boolean; box: Box; floor?: LayoutInput["floor"] }): { off: { left: number; right: number; top: number; bottom: number }; cx: number; cy: number; floor: Box; points: Pt[] } {
+  const { off, corner, oval, box } = input;
+  const floor = input.floor?.box ?? box;
+  const cx = floor.x + floor.w / 2;
+  const cy = floor.y + floor.h / 2;
+  let hx = Math.max(cx - box.x, box.x + box.w - cx) + (off.left + off.right) / 2;
+  let hy = Math.max(cy - box.y, box.y + box.h - cy) + (off.top + off.bottom) / 2;
+  // A floor the sport's distances do not clear (table tennis): the floor's own shape.
+  if (Math.min(hx - floor.w / 2, hy - floor.h / 2) < FLOOR_CLEAR) {
+    hx = floor.w / 2 + FLOOR_CLEAR;
+    hy = floor.h / 2 + FLOOR_CLEAR;
+  }
+  const given = input.floor?.points;
+  const points: Pt[] =
+    given !== undefined && given.length > 0
+      ? given.map(([x, y]): Pt => [x, y])
+      : oval
+        ? Array.from({ length: 64 }, (_, i): Pt => [cx + (floor.w / 2) * Math.cos((i * Math.PI) / 32), cy + (floor.h / 2) * Math.sin((i * Math.PI) / 32)])
+        : [[floor.x, floor.y], [floor.x + floor.w, floor.y], [floor.x + floor.w, floor.y + floor.h], [floor.x, floor.y + floor.h]];
+  // A sampled curve: a little to spare.
+  const clear = FLOOR_CLEAR + (given !== undefined || oval ? 0.5 : 0);
+  const fits = (d: number): boolean => points.every(([x, y]) => insideOpening(Math.abs(x - cx), Math.abs(y - cy), hx + d, hy + d, corner, oval, clear));
+  if (!fits(0)) {
+    let lo = 0;
+    let hi = 4;
+    while (!fits(hi) && hi < 4096) hi *= 2;
+    for (let i = 0; i < 40; i += 1) {
+      const mid = (lo + hi) / 2;
+      if (fits(mid)) hi = mid;
+      else lo = mid;
+    }
+    hx += hi;
+    hy += hi;
+  }
+  const round = (v: number): number => Math.round(v * 1e6) / 1e6;
+  return { off: { left: round(box.x - (cx - hx)), right: round(cx + hx - box.x - box.w), top: round(box.y - (cy - hy)), bottom: round(cy + hy - box.y - box.h) }, cx, cy, floor, points };
+}
+
 /** The layout of a sport's stands round its surface: rings, covers, sectors and gaps. For a ballpark see `parkLayout`. */
 export function layoutOf(input: LayoutInput): CrowdStands {
   const { sport, box } = input;
@@ -580,14 +644,15 @@ export function layoutOf(input: LayoutInput): CrowdStands {
   const stadium: "purpose" | "nfl" | "cfl" | undefined = sport === "soccer" && input.real === undefined ? host ?? "purpose" : undefined;
   const p = stadium === "nfl" || stadium === "cfl" ? { ...PROFILES[stadium], shape: base.shape, away: base.away } : base;
   const shape = input.real !== undefined ? "bowl" : crowd.shape ?? p.shape;
-  const off = input.real?.off ?? offsets(base, box, stadium ?? "purpose");
-  const cx = box.x + box.w / 2;
-  const cy = box.y + box.h / 2;
+  const fit = input.real === undefined ? openingOf({ off: offsets(base, box, stadium ?? "purpose"), corner: p.corner, oval: base.oval === true, box, floor: input.floor }) : undefined;
+  const off = input.real?.off ?? fit?.off ?? offsets(base, box, stadium ?? "purpose");
+  const cx = fit?.cx ?? box.x + box.w / 2;
+  const cy = fit?.cy ?? box.y + box.h / 2;
   const rings: StandRing[] = input.real === undefined ? [] : input.real.rings.map((ring) => ({ ...ring }));
   const reachOf = input.real === undefined ? { left: 0, right: 0, top: 0, bottom: 0 } : { ...input.real.reach };
   for (const t of input.real === undefined ? p.tiers : []) {
     const at = (k: number): Outline => {
-      if (base.oval === true) return { kind: "ellipse", cx, cy, rx: box.w / 2 + (off.left + off.right) / 2 + k, ry: box.h / 2 + (off.top + off.bottom) / 2 + k };
+      if (base.oval === true) return { kind: "ellipse", cx, cy, rx: (box.w + off.left + off.right) / 2 + k, ry: (box.h + off.top + off.bottom) / 2 + k };
       return { kind: "rrect", x0: box.x - off.left - k, y0: box.y - off.top - k, x1: box.x + box.w + off.right + k, y1: box.y + box.h + off.bottom + k, r: p.corner + k };
     };
     const region = at(t.to);
@@ -616,14 +681,15 @@ export function layoutOf(input: LayoutInput): CrowdStands {
   const covers: CrowdStands["covers"] = [];
   const x0 = box.x - off.left;
   const x1 = box.x + box.w + off.right;
-  const yTop = last === undefined ? box.y : box.y - reachOf.top - 4;
-  const yBot = last === undefined ? box.y + box.h : box.y + box.h + reachOf.bottom + 4;
+  // The covers reach past the roof's shade (9 feet beyond the upper tier) too.
+  const yTop = last === undefined ? box.y : box.y - reachOf.top - 10;
+  const yBot = last === undefined ? box.y + box.h : box.y + box.h + reachOf.bottom + 10;
   if (shape === "horseshoe") {
     // The open end: everything beyond the surface's end line and the gap that is kept clear.
-    if (crowd.open === "left") covers.push([box.x - reachOf.left - 4, yTop, x0 + p.corner * 0.5, yBot]);
-    else covers.push([x1 - p.corner * 0.5, yTop, box.x + box.w + reachOf.right + 4, yBot]);
+    if (crowd.open === "left") covers.push([box.x - reachOf.left - 10, yTop, x0 + p.corner * 0.5, yBot]);
+    else covers.push([x1 - p.corner * 0.5, yTop, box.x + box.w + reachOf.right + 10, yBot]);
   } else if (shape === "sides") {
-    covers.push([box.x - reachOf.left - 4, yTop, x0 + p.corner * 0.5, yBot], [x1 - p.corner * 0.5, yTop, box.x + box.w + reachOf.right + 4, yBot]);
+    covers.push([box.x - reachOf.left - 10, yTop, x0 + p.corner * 0.5, yBot], [x1 - p.corner * 0.5, yTop, box.x + box.w + reachOf.right + 10, yBot]);
   }
   const concourses: CrowdStands["concourses"] = [];
   rings.forEach((ring, i) => {
@@ -631,6 +697,7 @@ export function layoutOf(input: LayoutInput): CrowdStands {
     if (before !== undefined && ring.hole !== null && ring.from > before.to) concourses.push({ region: ring.hole, hole: before.region });
   });
   const stands: CrowdStands = { sport, shape, box, rings, covers, concourses, sectors: [], gaps: [], reach: reachOf, seats: rings.reduce((n, r) => n + r.seats, 0) };
+  if (fit !== undefined) stands.floor = { box: fit.floor, points: fit.points };
   if (input.real !== undefined) stands.real = input.real.shell;
   if (input.real?.closedSectors !== undefined) stands.sectors.push(...input.real.closedSectors);
   if (stadium !== undefined) stands.stadium = stadium;
@@ -706,20 +773,29 @@ export function layoutOf(input: LayoutInput): CrowdStands {
       }
     }
     if (crowd.gaps && shape !== "grandstand") {
-      const bottom = box.y + box.h;
-      const mid = box.x + box.w / 2;
+      // Nothing on the floor: the benches stand between the floor and the first row.
+      const edge = box.y + box.h + off.bottom;
+      const floorEdge = Math.max(box.y + box.h, fit === undefined ? -Infinity : fit.floor.y + fit.floor.h);
+      const mid = cx;
       // A tunnel through the lower stands at the middle of the bench side, the camera platform above them, and the benches in the gap.
-      stands.gaps.push({ kind: "tunnel", box: [mid - 6, bottom + off.bottom - 1, mid + 6, bottom + off.bottom + lowerRing.to + 1] });
+      stands.gaps.push({ kind: "tunnel", box: [mid - 6, edge, mid + 6, edge + lowerRing.to + 1] });
       const media = rings[rings.length - 1];
-      if (media !== undefined && media.tier === "upper") stands.gaps.push({ kind: "camera", box: [mid - 22, bottom + off.bottom + media.from + 3, mid + 22, bottom + off.bottom + media.from + 13] });
-      if (off.bottom - off.top >= 4 || sport === "soccer" || sport === "nfl" || sport === "cfl" || sport === "ifaf" || sport === "rugby" || sport === "gaelic") {
+      if (media !== undefined && media.tier === "upper") stands.gaps.push({ kind: "camera", box: [mid - 22, edge + media.from + 3, mid + 22, edge + media.from + 13] });
+      if (base.bench >= 4 || sport === "soccer" || sport === "nfl" || sport === "cfl" || sport === "ifaf" || sport === "rugby" || sport === "gaelic") {
         const benchLen = Math.min(34, box.w * 0.12);
-        for (const s of [-1, 1]) {
-          const bx = mid + s * (box.w * 0.1 + benchLen / 2 + 4);
-          stands.gaps.push({ kind: "bench", box: [bx - benchLen / 2, bottom + 2.5, bx + benchLen / 2, bottom + 2.5 + Math.min(5, off.bottom * 0.3)] });
+        const depth = Math.min(5, off.bottom * 0.3);
+        if (floorEdge + 2.5 + depth <= edge - 1) {
+          for (const s of [-1, 1]) {
+            const bx = box.x + box.w / 2 + s * (box.w * 0.1 + benchLen / 2 + 4);
+            stands.gaps.push({ kind: "bench", box: [bx - benchLen / 2, floorEdge + 2.5, bx + benchLen / 2, floorEdge + 2.5 + depth] });
+          }
         }
       }
-      stands.gaps.push({ kind: "media", box: [mid - 55, bottom + off.bottom + 2, mid + 55, bottom + off.bottom + 6] });
+      // The media's desks: along the straight of that side only.
+      const hole = lowerRing.hole;
+      const straight = hole?.kind === "rrect" ? (hole.x1 - hole.x0) / 2 - Math.min(hole.r, (hole.x1 - hole.x0) / 2, (hole.y1 - hole.y0) / 2) : 55;
+      const half = Math.min(55, straight);
+      if (half >= 8) stands.gaps.push({ kind: "media", box: [mid - half, edge + 2, mid + half, edge + 6] });
     }
   }
   return stands;

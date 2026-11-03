@@ -66,7 +66,9 @@ export function artistic(o: BuildOptions, plan: ArtisticPlan, ctx: PoolCtx = {})
   }
   const top = -jy + 0.4;
   const bottom = sy + start.depth + 0.4 - W;
-  const view0 = { x: -m, y: -feet(top) - m * 0.4, w: feet(L) + 2 * m, h: feet(W) + feet(top + bottom) + m * 0.8 };
+  // The deck is narrower along the sides than at the ends; a margin that is asked for (the ground the stands of a crowd stand on) is the same all round.
+  const across = o.margin === undefined ? m * 0.4 : m;
+  const view0 = { x: -m, y: -feet(top) - across, w: feet(L) + 2 * m, h: feet(W) + feet(top + bottom) + 2 * across };
   base = (ctx.bare === true ? "" : deckMarkup(o, ids, plan.deck, view0.x, view0.y, view0.w, view0.h)) + base + deck;
   const Lf = feet(L);
   const Wf = feet(W);
