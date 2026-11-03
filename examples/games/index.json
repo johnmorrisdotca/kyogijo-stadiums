@@ -1,0 +1,13 @@
+{
+  "kind": "kyogijo-games",
+  "version": 1,
+  "games": [
+    {
+      "id": "canada-japan",
+      "sport": "nhl",
+      "file": "canada-japan.json",
+      "frame": "nhl-api",
+      "title": { "en": "Canada v Japan, a made-up game of hockey", "ja": "カナダ対日本（架空のアイスホッケーの試合）" }
+    }
+  ]
+}

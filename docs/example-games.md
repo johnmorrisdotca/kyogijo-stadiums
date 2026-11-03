@@ -19,6 +19,37 @@ A whole game to replay, for trying the [replay](./replay.md) on something longer
 
 It is 1.3 MB as it is and about 120 kB compressed, as a web server sends it; the frames are key frames, and the replay moves everything between them. It is not in the npm package, whose size it would multiply for something only a demo needs: it is in the repository and on the demo's site, at `https://johnmorrisdotca.github.io/kyogijo-stadiums/examples/games/canada-japan.json`.
 
+## The index
+
+`examples/games/index.json` lists the games, and says which surface each is played on. The demo reads it, and offers **Play a game** only on a surface that has a game in it: today the NHL rink, which has this one. A new game is its file in `examples/games/` and one line here, and no code: the button then shows on its surface, on the home page's surface picker, its 3D view and the arenas.
+
+```json
+{
+  "kind": "kyogijo-games",
+  "version": 1,
+  "games": [
+    {
+      "id": "canada-japan",
+      "sport": "nhl",
+      "file": "canada-japan.json",
+      "frame": "nhl-api",
+      "title": { "en": "Canada v Japan, a made-up game of hockey", "ja": "…" }
+    }
+  ]
+}
+```
+
+| Field | What it is |
+| --- | --- |
+| `kind`, `version` | `"kyogijo-games"` and `1`. |
+| `games[].id` | The game's own name, in kebab case, once in the index. |
+| `games[].sport` | The surface it is played on: a key of `SPORTS` (`"nhl"`), the same as the file's own `sport`. |
+| `games[].file` | The game's file, beside the index. |
+| `games[].frame` | The frame its timeline is in (`"nhl-api"`), a frame of that surface: the same as the file's `timeline.from`. |
+| `games[].title` | The game's name in English and Japanese (`{ en, ja }`). |
+
+An entry that lacks one of these is left out. A test (`src/example-games.test.js`) holds the index to the folder: every file in it is listed, and each line agrees with its file's surface and frame.
+
 ## Play it
 
 ![The made-up game on the ice of a real arena from a low corner, the players standing as discs in front of the crowd, with the replay's controls under the view](./images/hero-game-3d-desk-light.webp)
