@@ -103,6 +103,14 @@
    "mb": 13.0,
    "biggestMb": 6.9,
    "ratio": 2.0
+  },
+  "lasvegas": {
+   "planes": 2254,
+   "drawn": 1524,
+   "nodes": 8002,
+   "mb": 9.4,
+   "biggestMb": 6.7,
+   "ratio": 3.4
   }
  },
  "device-mid-phone": {
@@ -209,6 +217,14 @@
    "mb": 117.1,
    "biggestMb": 62.4,
    "ratio": 3.1
+  },
+  "lasvegas": {
+   "planes": 800,
+   "drawn": 612,
+   "nodes": 3452,
+   "mb": 9.4,
+   "biggestMb": 8.8,
+   "ratio": 2.5
   }
  },
  "device-slow-android": {
@@ -315,6 +331,14 @@
    "mb": 88.0,
    "biggestMb": 46.9,
    "ratio": 2.5
+  },
+  "lasvegas": {
+   "planes": 436,
+   "drawn": 412,
+   "nodes": 2361,
+   "mb": 4.5,
+   "biggestMb": 4.4,
+   "ratio": 6.0
   }
  }
 }

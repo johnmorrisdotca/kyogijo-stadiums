@@ -21,6 +21,7 @@ export const PRESETS = {
   newyork: "venues=madison-square-garden,barclays-center:nba,yankee-stadium:mlb,citi-field:mlb,metlife-stadium:nfl,ubs-arena&mode=city",
   montrealolympic: "venues=olympic-stadium-montreal:mlb",
   montreal: "venues=bell-centre,olympic-stadium-montreal:mlb&mode=city",
+  lasvegas: "venues=t-mobile-arena&circuit=las-vegas",
 };
 
 /** The venues page's 3D view of the busiest arena. */
