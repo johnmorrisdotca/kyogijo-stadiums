@@ -94,11 +94,12 @@ test.describe("the follow camera", () => {
     await expect(bar.getByRole("button", { name: "Follow the action: close in on the puck or ball and those nearest it" })).toHaveAttribute("aria-pressed", "true");
     await expect(bar.locator(".ky-follow-resume")).toBeHidden();
     await page.waitForTimeout(1500);
-    // Grabbed as turn.demo.mjs's drags are: the view scrolled into sight, a third of the way down (clear of the replay bar on a phone).
+    // The stage is 900 px wide, wider than a phone's window: the drag is grabbed inside the window (WebKit sends nothing for a pointer off it), a third of the way down, clear of the replay bar.
     const stage = page.locator("#rink .ky-turn-view");
     await stage.scrollIntoViewIfNeeded();
     const box = await stage.boundingBox();
-    const [x, y] = [box.x + box.width / 2, box.y + box.height / 3];
+    const width = page.viewportSize().width;
+    const [x, y] = [Math.min(box.x + box.width / 2, box.x + (width - box.x) / 2 - 30), box.y + box.height / 3];
     await page.mouse.move(x, y);
     await page.mouse.down();
     await page.mouse.move(x + 60, y, { steps: 8 });
