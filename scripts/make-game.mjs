@@ -13,13 +13,14 @@ if (source === undefined) {
 const { agreement, ...game } = fictionGame(JSON.parse(readFileSync(source, "utf8")));
 const { frames, events } = game.timeline;
 // One frame, one event a line: diffs stay readable, and the file stays small.
-const { stoppages } = game.timeline;
-const head = JSON.stringify({ ...game, timeline: { from: game.timeline.from, frames: [], events: [], stoppages: [] } }, null, 1);
+const { stoppages, penalties } = game.timeline;
+const head = JSON.stringify({ ...game, timeline: { from: game.timeline.from, frames: [], events: [], stoppages: [], penalties: [] } }, null, 1);
 const lines = (list) => list.map((item) => JSON.stringify(item)).join(",\n");
 const text = head
   .replace('"frames": []', `"frames": [\n${lines(frames)}\n ]`)
   .replace('"events": []', `"events": [\n${lines(events)}\n ]`)
-  .replace('"stoppages": []', `"stoppages": [\n${lines(stoppages)}\n ]`);
+  .replace('"stoppages": []', `"stoppages": [\n${lines(stoppages)}\n ]`)
+  .replace('"penalties": []', `"penalties": [\n${lines(penalties)}\n ]`);
 writeFileSync(out, `${text}\n`);
 const goals = events.filter((e) => e.kind === "goal");
-console.log(`${out}: ${(text.length / 1024).toFixed(0)} kB, ${frames.length} frames, ${events.length} events, ${goals.length} goals, ${game.score.home}-${game.score.away}, ${game.periods.at(-1).end.toFixed(0)} s, ${stoppages.length} stoppages; the rules' face-off spot was the source's at ${agreement.agreed} of ${agreement.compared} face-offs`);
+console.log(`${out}: ${(text.length / 1024).toFixed(0)} kB, ${frames.length} frames, ${events.length} events, ${goals.length} goals, ${game.score.home}-${game.score.away}, ${game.periods.at(-1).end.toFixed(0)} s, ${stoppages.length} stoppages, ${penalties.length} penalties; the rules' face-off spot was the source's at ${agreement.agreed} of ${agreement.compared} face-offs`);

@@ -10,7 +10,8 @@
 // coming off goes to its bench and the next comes on from it, and the clock runs again at the drop. The real game's face-off spots are only compared with the rules' (`agreement`), never kept.
 
 import { addDeadTime } from "../src/replay.deadtime.ts";
-import { HOCKEY_DEAD_TIME, HOCKEY_DOTS, HOCKEY_RULES, hockeyFaceoffDot, hockeyFormation, hockeyStopOf } from "../src/replay.hockey.ts";
+import { replayGameTime } from "../src/replay.board.ts";
+import { HOCKEY_DEAD_TIME, HOCKEY_DOTS, HOCKEY_PENALTY_MINUTES, HOCKEY_RULES, hockeyFaceoffDot, hockeyFormation, hockeyPenaltyBox, hockeyPenaltyEnds, hockeyPenaltyKind, hockeyStopOf } from "../src/replay.hockey.ts";
 
 /** A seeded generator of numbers from 0 to 1 (mulberry32). */
 export function seeded(seed) {
@@ -128,6 +129,11 @@ export function fictionGame(pbp, { seed = 5310, rate = 2 } = {}) {
     } else if (kind !== "whistle") continue;
     const beat = { period, real: secondsOf(play.timeInPeriod), kind, team, x, y };
     if (kind === "whistle") beat.reason = hockeyStopOf(play.typeDescKey, d.reason);
+    // A penalty: its kind and the side it is against; who serves it is chosen on the ice when it is called.
+    if (play.typeDescKey === "penalty") {
+      const penaltyKind = hockeyPenaltyKind(d.typeCode, d.duration);
+      if (penaltyKind !== undefined && team !== undefined) beat.penalty = { kind: penaltyKind, team };
+    }
     // A face-off's real spot is only compared with the rules' spot, then forgotten.
     if (kind === "faceoff" && typeof x === "number") beat.real = { at: beat.real, dot: nearestDot(x, y) };
     beats.push(beat);
@@ -145,6 +151,8 @@ export function fictionGame(pbp, { seed = 5310, rate = 2 } = {}) {
   const stoppages = [];
   const keys = [];
   const drops = [];
+  const calls = [];
+  const goalStops = [];
   let t = 0;
   let agreed = 0;
   let compared = 0;
@@ -225,6 +233,8 @@ export function fictionGame(pbp, { seed = 5310, rate = 2 } = {}) {
         [b.x, b.y] = dot;
         b.stop = { reason };
         stops.push({ t: stopT, until: b.t, reason, x: dot[0], y: dot[1], ...(team === undefined ? {} : { team }) });
+        for (const r of run) if (r.penalty !== undefined) calls.push({ ...r.penalty, t: stopT });
+        if (goal !== undefined && carrier(goal) !== undefined) goalStops.push({ team: carrier(goal), t: stopT });
         b.whistleAt = reason === "goal" ? undefined : { t: stopT, x: round1(px), y: round1(py) };
         if (b.realDot !== undefined) {
           compared += 1;
@@ -282,6 +292,51 @@ export function fictionGame(pbp, { seed = 5310, rate = 2 } = {}) {
   };
   const lines = { home: { f: 0, d: 0, since: 0 }, away: { f: 1, d: 1, since: 0 } };
 
+  // ---- The penalties, by the rules on the game clock: when each player leaves the box (his time run out, or a power-play goal), found on the game clock and put back on the replay's. ----
+  const clockOf = { frames: [{ t: 0, objects: [] }], periods, stoppages: [...stoppages, ...stops.map((s) => ({ start: s.t, end: s.until }))] };
+  const gameAt = (time) => replayGameTime(clockOf, time);
+  const last = round2(periods.at(-1).end + PERIOD_END_HOLD);
+  const timeOf = (game) => {
+    let [lo, hi] = [0, last];
+    if (gameAt(hi) < game - 1e-6) return last;
+    for (let i = 0; i < 60; i += 1) {
+      const mid = (lo + hi) / 2;
+      if (gameAt(mid) >= game - 1e-6) hi = mid;
+      else lo = mid;
+    }
+    return round2(hi);
+  };
+  const served = hockeyPenaltyEnds(
+    calls.map((c) => ({ team: c.team, kind: c.kind, at: gameAt(c.t) })),
+    goalStops.map((g) => ({ team: g.team, at: gameAt(g.t) })),
+  );
+  calls.forEach((c, i) => Object.assign(c, { end: Math.max(round2(c.t + 0.08), timeOf(served[i].to)), short: served[i].short, byGoal: served[i].byGoal }));
+  /** The players in the box, and the ones just out of it who play their place until their line changes. */
+  const boxOf = (side, time) => calls.filter((c) => c.team === side && c.by !== undefined && time > c.t && time <= c.end);
+  const returning = { home: new Map(), away: new Map() };
+  const rosterAll = { home: rosterOf("home"), away: rosterOf("away") };
+  /** Who plays each place of a side at a time: the line's, less a place for each penalty that makes it play short, a player back from the box in his own place, and a substitute for a player in the box. */
+  const onIce = (side, time) => {
+    const line = lineOf(side, lines[side].f, lines[side].d);
+    const box = boxOf(side, time);
+    const boxed = new Set(box.map((c) => c.by));
+    // A side one short plays without its right wing, two short without both wings: a centre and two defencemen, never fewer.
+    const dropped = new Set(["RW", "LW"].slice(0, Math.min(2, box.filter((one) => one.short).length)));
+    const out = {};
+    const used = new Set();
+    for (const role of ROLES) {
+      if (dropped.has(role)) continue;
+      let player = returning[side].get(role) ?? line[role];
+      if (boxed.has(player.id) || used.has(player.id)) {
+        const position = role.endsWith("D") ? "D" : "F";
+        player = rosterAll[side].find((p) => p.position === position && !boxed.has(p.id) && !used.has(p.id) && !Object.values(line).some((q) => q.id === p.id)) ?? player;
+      }
+      used.add(player.id);
+      out[role] = player;
+    }
+    return out;
+  };
+
   // ---- The frames: every key of the puck and a frame every 1/rate seconds while play is on; the skaters ease toward where they would stand, the goaltenders follow the puck across their crease;
   // at a drop everyone is in the line-up. ----
   const dropAt = new Map(drops.map((b) => [b.t, b]));
@@ -295,6 +350,7 @@ export function fictionGame(pbp, { seed = 5310, rate = 2 } = {}) {
   }
   for (const k of keys) times.add(k.t);
   for (const s of stops) times.add(s.t);
+  for (const c of calls) times.add(c.end);
   // Nothing is made between a stoppage and its drop: that is the dead time the rules make.
   const inStop = (time) => stops.some((s) => time > s.t && time < s.until) || stoppages.some((s) => s.reason === "period-start" && time > s.start && time < s.end);
   const ordered = [...times].filter((s) => s >= 0 && !inStop(s)).sort((a, b) => a - b);
@@ -332,6 +388,7 @@ export function fictionGame(pbp, { seed = 5310, rate = 2 } = {}) {
             lines[side].d = (lines[side].d + 1) % 3;
           }
           lines[side].since = time;
+          returning[side].clear();
         }
       }
     }
@@ -341,7 +398,27 @@ export function fictionGame(pbp, { seed = 5310, rate = 2 } = {}) {
     before = time;
     const objects = [];
     for (const side of ["home", "away"]) {
-      const on = lineOf(side, lines[side].f, lines[side].d);
+      // A player whose penalty is over comes out of the box into his own place; one just called goes to it from where he is.
+      for (const c of calls) {
+        if (c.team !== side || c.by === undefined || c.out || c.end >= time) continue;
+        c.out = true;
+        // He comes out into the wing his side was without (the last one it went short of), or, for a penalty that did not make it short, into his own place.
+        const shortBefore = calls.filter((o) => o.team === side && o.by !== undefined && o.short && o.t < time && (o.end >= time || o === c)).length;
+        const role = c.short ? ["RW", "LW"][Math.min(2, shortBefore) - 1] : c.role;
+        if (role !== undefined && !returning[side].has(role)) returning[side].set(role, rosterAll[side].find((p) => p.id === c.by));
+      }
+      const on = onIce(side, time);
+      for (const c of calls) {
+        if (c.team !== side || c.t !== time || c.by !== undefined) continue;
+        // Who serves it: the skater of that side nearest the puck when play stopped.
+        let best = Infinity;
+        for (const role of Object.keys(on)) {
+          const was = state.get(on[role].id) ?? [0, 0];
+          const far = Math.hypot(was[0] - px, was[1] - py);
+          if (far < best && !calls.some((o) => o.by === on[role].id && o.end > time)) [best, c.by, c.role] = [far, on[role].id, role];
+        }
+      }
+      const roles = ROLES.filter((role) => on[role] !== undefined);
       const dir = attacksOf(side, period.number);
       const lineUp = drop === undefined ? undefined : hockeyFormation([drop.x, drop.y], dir);
       const mine = poss === side;
@@ -349,25 +426,25 @@ export function fictionGame(pbp, { seed = 5310, rate = 2 } = {}) {
       let holder;
       if (mine) {
         let best = Infinity;
-        for (const role of ROLES) {
+        for (const role of roles) {
           const was = state.get(on[role].id);
           const dist = was === undefined ? Infinity : Math.hypot(was[0] - px, was[1] - py);
           if (dist < best) [best, holder] = [dist, role];
         }
-        holder ??= "C";
+        holder ??= roles[0];
         holders.set(time + side, on[holder].id);
       }
       // The nearest skater of the other side presses the puck.
       let presser;
       if (!mine) {
         let best = Infinity;
-        for (const role of ROLES) {
+        for (const role of roles) {
           const was = state.get(on[role].id);
           const dist = was === undefined ? Infinity : Math.hypot(was[0] - px, was[1] - py);
           if (dist < best) [best, presser] = [dist, role];
         }
       }
-      for (const role of ROLES) {
+      for (const role of roles) {
         const player = on[role];
         let x;
         let y;
@@ -388,8 +465,16 @@ export function fictionGame(pbp, { seed = 5310, rate = 2 } = {}) {
         state.set(player.id, [x, y]);
         objects.push({ id: player.id, team: side, number: player.number, x: round1(clamp(x, -96, 96)), y: round1(clamp(y, -40, 40)) });
       }
+      // The players in the box, side by side on its bench.
+      boxOf(side, time).forEach((c, k) => {
+        const [bx, by] = hockeyPenaltyBox(side);
+        const player = rosterAll[side].find((p) => p.id === c.by);
+        const seat = [bx + (k - 0.5) * 3 * Math.sign(bx || 1), by];
+        state.set(player.id, seat);
+        objects.push({ id: player.id, team: side, number: player.number, x: round1(seat[0]), y: round1(seat[1]) });
+      });
       // The goaltender in the crease, across it with the puck; square in the middle of it for a face-off.
-      const g = on.G;
+      const g = lineOf(side, 0, 0).G;
       const gx = -dir * 85;
       const gy = lineUp !== undefined ? 0 : clamp(py * 0.1, -3, 3);
       state.set(g.id, [gx, gy]);
@@ -432,7 +517,8 @@ export function fictionGame(pbp, { seed = 5310, rate = 2 } = {}) {
   events.sort((a, b) => a.t - b.t);
 
   // ---- The dead time: each stoppage opened into the rules' line-up, the clock stopped through it. ----
-  const live = { from: "nhl-api", frames, events, stoppages, periods };
+  const penalties = calls.filter((c) => c.by !== undefined).map((c) => ({ team: c.team, by: c.by, start: c.t, end: c.end, minutes: HOCKEY_PENALTY_MINUTES[c.kind], kind: c.kind, ...(c.short ? {} : { short: false }), ...(c.byGoal ? { endedBy: "goal" } : {}) }));
+  const live = { from: "nhl-api", frames, events, stoppages, periods, penalties };
   const played = addDeadTime(live, stops, HOCKEY_RULES);
 
   return {
@@ -447,7 +533,7 @@ export function fictionGame(pbp, { seed = 5310, rate = 2 } = {}) {
     rosters,
     score: { ...score, byPeriod: byPeriod.map((p) => [p.home, p.away]) },
     periods: played.periods.map((p) => ({ number: p.number, start: p.start, end: p.end })),
-    timeline: { from: "nhl-api", frames: played.frames, events: played.events, stoppages: played.stoppages },
+    timeline: { from: "nhl-api", frames: played.frames, events: played.events, stoppages: played.stoppages, penalties: played.penalties },
     agreement: { compared, agreed },
   };
 }
