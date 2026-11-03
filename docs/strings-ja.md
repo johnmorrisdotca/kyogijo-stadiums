@@ -2105,6 +2105,19 @@ Made from `src/strings.en.ts`, `src/strings.ja.ts` and `demo/words.js` by `pnpm 
 
 | Group or page | English | 日本語 |
 | --- | --- | --- |
+| group `guides` | Guides | ガイド |
+| page `guides/getting-started` | Getting started: a results page | はじめに：結果ページを作る |
+| page `guides/score-and-layout` | A score on a surface | 競技面にスコアを載せる |
+| page `guides/looks-and-colours` | Looks, colours and dark mode | 見た目・色・ダークモード |
+| page `guides/embed-in-a-page` | Embedding: a container, an element, a frame | 埋め込み：コンテナ、要素、フレーム |
+| page `guides/frameworks` | React, Vue, Svelte and Angular | React、Vue、Svelte、Angular での使い方 |
+| page `guides/real-venues` | Ballparks, grounds, arenas and real venues | 球場、スタジアム、アリーナ、実在の会場 |
+| page `guides/data-on-a-surface` | Data on a surface: layers, frames and zones | 競技面の上のデータ：レイヤー、座標系、ゾーン |
+| page `guides/the-3d-view` | The 3D view | 3D 表示 |
+| page `guides/accessibility-and-languages` | Accessibility, English and Japanese | アクセシビリティ、英語と日本語 |
+| page `guides/architecture` | Architecture: how a drawing is made | 設計：図はどう作られるか |
+| page `guides/troubleshooting` | Troubleshooting and questions | 困ったとき・よくある質問 |
+| page `guides/upgrading` | Upgrading | アップグレード |
 | group `start` | Start here | 最初に読む |
 | page `index` | Documentation | ドキュメントの概要 |
 | page `getting-started` | Getting started | はじめに |

@@ -2,13 +2,13 @@
 // source of this checkout (the package's name is the source's files here), and what it prints is compared with the comment lines that follow each
 // `console.log`: `// true true`, or the several lines of a longer output. A block flagged `no-run` (it needs a browser or a server) or `no-check` (an
 // excerpt) is left to `pnpm test:readme`, which type-checks it against the built package. Plain JavaScript, so that reading files needs no Node types.
-import { mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { format } from "node:util";
 import { afterAll, describe, expect, it, vi } from "vitest";
 
-import { blocksOf, matched } from "../scripts/docs-examples.mjs";
+import { blocksOf, markdownFiles, matched } from "../scripts/docs-examples.mjs";
 
 const pkg = JSON.parse(readFileSync("package.json", "utf8"));
 const work = resolve(".cache", "docs-examples");
@@ -21,7 +21,7 @@ const sources = Object.fromEntries(
   Object.entries(pkg.exports).filter(([, entry]) => typeof entry === "object").map(([key, entry]) => [key === "." ? pkg.name : `${pkg.name}/${key.slice(2)}`, resolve(entry.default.replace("./dist/", "src/").replace(/\.js$/, ".ts"))]),
 );
 
-const files = ["README.md", ...readdirSync("docs").filter((file) => file.endsWith(".md")).map((file) => `docs/${file}`)];
+const files = markdownFiles(".");
 let counter = 0;
 
 describe("the examples of the README and of every page of docs/", () => {

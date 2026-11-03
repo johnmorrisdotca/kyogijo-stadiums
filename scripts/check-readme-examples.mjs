@@ -1,4 +1,4 @@
-// Runs the examples of the README and of every page of docs/, and every export's `@example` (`pnpm test:readme`, after a build): every fenced `ts` and `js` block is written to its own file
+// Runs the examples of the README, of every page of docs/ and of every guide of docs/guides/ (and its Japanese twin), and every export's `@example` (`pnpm test:readme`, after a build): every fenced `ts` and `js` block is written to its own file
 // under .readme-examples/, which imports the package by its name exactly as a reader would (the package names itself through its
 // `exports`, so this is the built package in this checkout). TypeScript blocks are type-checked together with the compiler's
 // own strictness and then run; JavaScript blocks are run. Flags on the fence: `no-run` type-checks and does not run (the block
@@ -6,24 +6,23 @@
 // An `@example` that ends in comment lines (`// 50 4`) says what it prints: those lines are compared with what it printed; so are the
 // comment lines right after a `console.log` in a block of the README or of docs/ (scripts/docs-examples.mjs).
 import { spawnSync } from "node:child_process";
-import { mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 
 import { apiOf } from "./api.mjs";
-import { blocksOf, matched } from "./docs-examples.mjs";
+import { blocksOf, markdownFiles, matched } from "./docs-examples.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const pkg = JSON.parse(readFileSync(join(root, "package.json"), "utf8"));
-const readme = readFileSync(join(root, "README.md"), "utf8").replace(/\r\n/g, "\n");
 const work = join(root, ".readme-examples");
 rmSync(work, { recursive: true, force: true });
 mkdirSync(work, { recursive: true });
 
 const blocks = [];
 // The README's and every page of docs/'s blocks: each in a file of its own, named for its page and line.
-for (const [file, text] of [["README.md", readme], ...readdirSync(join(root, "docs")).filter((name) => name.endsWith(".md")).map((name) => [`docs/${name}`, readFileSync(join(root, "docs", name), "utf8").replace(/\r\n/g, "\n")])]) {
+for (const [file, text] of markdownFiles(root).map((name) => [name, readFileSync(join(root, name), "utf8").replace(/\r\n/g, "\n")])) {
   for (const block of blocksOf(text, { withNoRun: true })) {
     const typescript = block.language === "ts";
     // A block is a module, so that its `await`s and its names are its own, and each file has the same imports as the block says.

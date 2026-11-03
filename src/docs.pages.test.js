@@ -10,12 +10,12 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { cdnUrl, framesBlockHtml, framesFiles, framesItems, galleryData, galleryPageHtml, libraryFrom, literal, runSnippet } from "../scripts/docs-gallery.mjs";
 import { galleryIndexBlock, homeBlock } from "../scripts/docs-hub.mjs";
 import { PLACES, SPORTS } from "../scripts/docs-nav.mjs";
-import { NAV, PAGE_LIST, buildDocs, fileOf, headingsOf, readPages, resolveLink, slugOf } from "../scripts/docs-pages.mjs";
+import { GUIDE_TWINS, NAV, PAGE_LIST, buildDocs, fileOf, fileSlug, headingsOf, readPages, resolveLink, slugOf } from "../scripts/docs-pages.mjs";
 
 const MAIN = "@johnmorrisdotca/kyogijo-stadiums";
 const lib = await libraryFrom(resolve("src"), ".ts", (file) => import(/* @vite-ignore */ file));
 const style = lib[MAIN].KYOGIJO_STYLE;
-const known = { root: resolve("."), pages: new Set(PAGE_LIST.map((page) => page.slug)) };
+const known = { root: resolve("."), pages: new Set([...PAGE_LIST.map((page) => page.slug), ...GUIDE_TWINS.map((page) => page.slug)]) };
 const read = (path) => readFileSync(path, "utf8");
 
 /** Every link and image address in a Markdown text, by its tokens. */
@@ -38,7 +38,8 @@ function linksOf(markdown) {
 
 describe("the contents", () => {
   it("lists every Markdown page of docs/ once, and every page it lists is a file or is made by the build", () => {
-    const listed = PAGE_LIST.filter((page) => !page.site).map((page) => fileOf(page.slug).replace(/^docs\//, ""));
+    // The guides are in docs/guides/ (and their Japanese twins in docs/guides/ja/), which src/docs.guides.test.js holds to the contents.
+    const listed = PAGE_LIST.filter((page) => !page.site && !page.guide).map((page) => fileOf(page.slug).replace(/^docs\//, ""));
     const files = readdirSync("docs").filter((file) => file.endsWith(".md") && !file.endsWith(".ja.md"));
     expect(listed.sort()).toEqual(files.sort());
     expect(new Set(PAGE_LIST.map((page) => page.slug)).size).toBe(PAGE_LIST.length);
@@ -116,12 +117,12 @@ describe("the docs site built from the pages", () => {
   afterAll(() => rmSync(out, { recursive: true, force: true }));
 
   it("has a page for every page of the contents, and a search index with every title and heading", () => {
-    expect(readdirSync(out).filter((file) => file.endsWith(".html")).sort()).toEqual(PAGE_LIST.map((page) => `${page.slug}.html`).sort());
+    expect(readdirSync(out).filter((file) => file.endsWith(".html")).sort()).toEqual([...PAGE_LIST, ...GUIDE_TWINS].map((page) => `${fileSlug(page.slug)}.html`).sort());
     const index = read(join(out, "search-index.js"));
     const rows = JSON.parse(index.slice(index.indexOf("= ") + 2, index.indexOf(";\n")));
     expect(rows).toHaveLength(result.entries);
     for (const page of readPages()) {
-      for (const heading of page.headings) expect(rows.some((row) => row[1] === (heading.depth === 1 ? `${page.slug}.html` : `${page.slug}.html#${heading.id}`) && row[0] === heading.text), `${page.file}: ${heading.text}`).toBe(true);
+      for (const heading of page.headings) expect(rows.some((row) => row[1] === (heading.depth === 1 ? `${fileSlug(page.slug)}.html` : `${fileSlug(page.slug)}.html#${heading.id}`) && row[0] === heading.text), `${page.file}: ${heading.text}`).toBe(true);
     }
     for (const page of pages) for (const heading of page.headings.filter((one) => one.depth > 1)) expect(rows.some((row) => row[1] === `${page.slug}.html#${heading.id}`), `${page.slug}: ${heading.text}`).toBe(true);
   });

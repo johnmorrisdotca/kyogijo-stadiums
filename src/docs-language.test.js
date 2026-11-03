@@ -115,7 +115,7 @@ function proseOf(text, allowed) {
       comment = true;
     }
     line = line
-      .replace(/\[日本語\]\([^)]*\.ja\.md\)/g, "")
+      .replace(/\[日本語\]\([^)]*(?:\.ja\.md|ja\/[^)]*\.md)\)/g, "")
       .replace(/(``+)[^]*?\1/g, "")
       .replace(/`[^`]*`/g, "")
       .replace(/\]\([^)]*\)/g, "]")
@@ -128,7 +128,12 @@ function proseOf(text, allowed) {
 }
 
 const all = pages();
-const japanesePages = all.filter((file) => file.endsWith(".ja.md"));
+/** A Japanese page is `<name>.ja.md` beside its English twin, or, for a guide, `docs/guides/ja/<name>.md` beside `docs/guides/<name>.md`. */
+const isJapanese = (file) => file.endsWith(".ja.md") || file.startsWith("docs/guides/ja/");
+const twinOf = (file) => (file.startsWith("docs/guides/ja/") ? file.replace("docs/guides/ja/", "docs/guides/") : file.replace(/\.ja\.md$/, ".md"));
+/** What a page links its twin as, at its top: `ja/<name>.md` from the English guide, `../<name>.md` from the Japanese one, the other page's name for the rest. */
+const linkTo = (from, to) => (from.startsWith("docs/guides/ja/") ? `../${to.split("/").pop()}` : from.startsWith("docs/guides/") ? `ja/${to.split("/").pop()}` : to.split("/").pop());
+const japanesePages = all.filter(isJapanese);
 const allowedOf = (file) => ALLOWED.filter((entry) => entry.file === file);
 
 describe("the docs are single-language", () => {
@@ -139,7 +144,7 @@ describe("the docs are single-language", () => {
   it("have an English page with no Japanese outside code, except what ALLOWED names", () => {
     const found = [];
     for (const file of all) {
-      if (file.endsWith(".ja.md")) continue;
+      if (isJapanese(file)) continue;
       const allowed = allowedOf(file);
       if (allowed.some((entry) => entry.both)) continue;
       proseOf(readFileSync(file, "utf8"), allowed).forEach((line, index) => {
@@ -165,15 +170,16 @@ describe("the docs are single-language", () => {
   it("link the two pages of a pair to each other, at the top", () => {
     const found = [];
     for (const file of japanesePages) {
-      const twin = file.replace(/\.ja\.md$/, ".md");
+      const twin = twinOf(file);
       if (!existsSync(twin)) {
         found.push(`${file} has no English twin ${twin}`);
         continue;
       }
       const top = (path) => readFileSync(path, "utf8").split("\n").slice(0, 8).join("\n");
-      const base = (path) => path.split("/").pop();
-      if (!top(twin).includes(`(${base(file)})`) && !top(twin).includes(`(./${base(file)})`)) found.push(`${twin} does not link to ${base(file)} in its first lines`);
-      if (!top(file).includes(`(${base(twin)})`) && !top(file).includes(`(./${base(twin)})`)) found.push(`${file} does not link to ${base(twin)} in its first lines`);
+      const toJapanese = linkTo(twin, file);
+      const toEnglish = linkTo(file, twin);
+      if (!top(twin).includes(`(${toJapanese})`) && !top(twin).includes(`(./${toJapanese})`)) found.push(`${twin} does not link to ${toJapanese} in its first lines`);
+      if (!top(file).includes(`(${toEnglish})`) && !top(file).includes(`(./${toEnglish})`)) found.push(`${file} does not link to ${toEnglish} in its first lines`);
     }
     assert.deepEqual(found, []);
   });

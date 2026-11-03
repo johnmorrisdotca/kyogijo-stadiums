@@ -5,8 +5,33 @@
 // A page is the name of its file in docs/ (`index` is docs/README.md); `ja` is its title in Japanese (the contents, the search and the buttons of the site are in
 // Japanese when the reader chooses it; the pages' own words stay in English, one language to a page).
 
+/**
+ * The guides (docs/guides/<name>.md), each with its Japanese twin (docs/guides/ja/<name>.md): the guides are the path through the rest, written for a developer using the package.
+ * A guide's slug is `guides/<name>`, its twin's `guides/ja/<name>`; the page of either is a file of its own on the site (`guides-<name>.html`, `guides-ja-<name>.html`).
+ */
+export const GUIDES = [
+  { name: "getting-started", ja: "はじめに：結果ページを作る" },
+  { name: "score-and-layout", ja: "競技面にスコアを載せる" },
+  { name: "looks-and-colours", ja: "見た目・色・ダークモード" },
+  { name: "embed-in-a-page", ja: "埋め込み：コンテナ、要素、フレーム" },
+  { name: "frameworks", ja: "React、Vue、Svelte、Angular での使い方" },
+  { name: "real-venues", ja: "球場、スタジアム、アリーナ、実在の会場" },
+  { name: "data-on-a-surface", ja: "競技面の上のデータ：レイヤー、座標系、ゾーン" },
+  { name: "the-3d-view", ja: "3D 表示" },
+  { name: "accessibility-and-languages", ja: "アクセシビリティ、英語と日本語" },
+  { name: "architecture", ja: "設計：図はどう作られるか" },
+  { name: "troubleshooting", ja: "困ったとき・よくある質問" },
+  { name: "upgrading", ja: "アップグレード" },
+];
+
 /** The contents by task: groups of pages, in the order of the pager. */
 export const NAV = [
+  {
+    id: "guides",
+    en: "Guides",
+    ja: "ガイド",
+    pages: GUIDES.map((guide) => ({ slug: `guides/${guide.name}`, ja: guide.ja, guide: true })),
+  },
   {
     id: "start",
     en: "Start here",

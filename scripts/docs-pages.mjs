@@ -17,7 +17,7 @@ import process from "node:process";
 import { Marked } from "marked";
 
 import { DOCS_CSS, DOCS_JS } from "./docs-assets.mjs";
-import { NAV, NAV_WORDS, PLACES, SPORTS } from "./docs-nav.mjs";
+import { GUIDES, NAV, NAV_WORDS, PLACES, SPORTS } from "./docs-nav.mjs";
 import { FAMILY_SCRIPT, familyFooter, familyHead, familyHeader, familyUnreviewed } from "./family-template.mjs";
 import { iconLinks } from "./icon-links.mjs";
 import { RELEASE_PAGE, firstPaintHead, sayEnglish } from "./first-paint.mjs";
@@ -29,6 +29,12 @@ export { NAV };
 
 /** Every page of the contents, in order. */
 export const PAGE_LIST = NAV.flatMap((group) => group.pages.map((page) => ({ ...page, group: group.id })));
+
+/** The Japanese twins of the guides, built as pages of their own and not listed in the contents: `{ slug: "guides/ja/<name>", of: "guides/<name>", ja }`. */
+export const GUIDE_TWINS = GUIDES.map((guide) => ({ slug: `guides/ja/${guide.name}`, of: `guides/${guide.name}`, ja: guide.ja }));
+
+/** The file name of a page on the site, without its extension: a slug with a folder in it is flat (`guides/ja/upgrading` is `guides-ja-upgrading`). */
+export const fileSlug = (slug) => slug.replace(/\//g, "-");
 
 /** The Markdown file of a page, relative to the repository, or `null` for a page the build makes from code. */
 export const fileOf = (slug) => (PAGE_LIST.find((page) => page.slug === slug)?.site ? null : slug === "index" ? "docs/README.md" : `docs/${slug}.md`);
@@ -87,7 +93,7 @@ export function resolveLink(from, href, known) {
   if (href.startsWith(SITE_ORIGIN)) {
     const rest = path.slice(SITE_ORIGIN.length);
     const page = /^docs\/(.*)\.html$/.exec(rest);
-    if (page) return known.pages.has(page[1]) ? { kind: "page", url: `${page[1]}.html${hash}`, slug: page[1], anchor } : { kind: "error", error: `no page "${page[1]}" on the docs site` };
+    if (page) return known.pages.has(page[1]) ? { kind: "page", url: `${fileSlug(page[1])}.html${hash}`, slug: page[1], anchor } : { kind: "error", error: `no page "${page[1]}" on the docs site` };
     if (rest === "docs/") return { kind: "page", url: `index.html${hash}`, slug: "index", anchor };
     return { kind: "site", url: `../${rest}${hash}` };
   }
@@ -95,11 +101,11 @@ export function resolveLink(from, href, known) {
   const target = path === "" ? from : posix.normalize(posix.join(posix.dirname(from), path));
   if (target.startsWith("..")) return { kind: "error", error: `${href} leaves the repository` };
   if (target === "README.md") return { kind: "external", url: `${REPO}${hash}`, repo: true };
-  const page = /^docs\/([^/.]+)\.md$/.exec(target);
+  const page = /^docs\/((?:guides\/(?:ja\/)?)?[^/.]+)\.md$/.exec(target);
   if (page || target === "docs/README.md") {
     const slug = target === "docs/README.md" ? "index" : page[1];
     if (!known.pages.has(slug)) return { kind: "error", error: `${href} is not a page of the docs (${target})` };
-    return { kind: "page", url: `${slug}.html${hash}`, slug, anchor };
+    return { kind: "page", url: `${fileSlug(slug)}.html${hash}`, slug, anchor };
   }
   if (!existsSync(join(known.root, target))) return { kind: "error", error: `${href} (${target}) is not a file of the repository` };
   // A picture of the docs: beside the pages (`atlas-map.svg`), or in docs/images (the README's) or docs/pictures (the pages'), each served at the same relative path on the site.
@@ -259,20 +265,21 @@ export const DOCS_WORDS = {
   },
 };
 
-const pageUrl = (slug) => `${slug}.html`;
+const pageUrl = (slug) => `${fileSlug(slug)}.html`;
 
 /** The title of a page of the contents, in English: its own heading, or the contents' name for a page the build makes. */
 const titleIn = (slug, headingsByPage) => headingsByPage.get(slug)?.title ?? slug;
 
 /** The sidebar: its two views. By task, every group of pages (the one holding this page open), and under the page being read the h2 headings it holds. By sport, each sport with its guide and its pictures. */
 function sidebar(current, headingsByPage) {
-  const group = PAGE_LIST.find((page) => page.slug === current)?.group;
+  const twin = GUIDE_TWINS.find((one) => one.slug === current);
+  const group = PAGE_LIST.find((page) => page.slug === (twin?.of ?? current))?.group;
   const task = NAV.map((one) => {
     const items = one.pages
       .map((page) => {
         const title = titleIn(page.slug, headingsByPage);
-        const here = page.slug === current;
-        const subs = here ? (headingsByPage.get(page.slug)?.headings ?? []).filter((heading) => heading.depth === 2).slice(0, 40) : [];
+        const here = page.slug === current || page.slug === twin?.of;
+        const subs = page.slug === current ? (headingsByPage.get(page.slug)?.headings ?? []).filter((heading) => heading.depth === 2).slice(0, 40) : [];
         const nested = subs.length > 0 ? `<ul>${subs.map((heading) => `<li><a href="#${heading.id}">${escapeHtml(heading.text)}</a></li>`).join("")}</ul>` : "";
         return `<li><a href="${pageUrl(page.slug)}"${here ? ' aria-current="page"' : ""} data-ja="${escapeHtml(page.ja)}">${escapeHtml(title)}</a>${nested}</li>`;
       })
@@ -305,14 +312,15 @@ ${placesGroup}
 }
 
 /** One whole page of the docs site: the family's header and footer, the search box, the contents, the article and the pager. */
-export function docsPage({ id, name, icon, slug, title, description, article, headingsByPage, editFile }) {
+export function docsPage({ id, name, icon, slug, title, description, article, headingsByPage, editFile, lang = "en" }) {
   const order = PAGE_LIST.map((page) => page.slug);
   const at = order.indexOf(slug);
   const titleOfSlug = (s) => titleIn(s, headingsByPage);
   const jaOfSlug = (s) => PAGE_LIST.find((page) => page.slug === s)?.ja ?? "";
   const pager = (s, rel, say) => (s === undefined ? "" : `<a href="${pageUrl(s)}" rel="${rel}"><small data-say="${say}"></small><span data-ja="${escapeHtml(jaOfSlug(s))}">${escapeHtml(titleOfSlug(s))}</span></a>`);
-  const prev = order[at - 1];
-  const next = order[at + 1];
+  // A guide's Japanese twin is a page of its own, outside the contents' order: it has no pager.
+  const prev = at < 0 ? undefined : order[at - 1];
+  const next = at < 0 ? undefined : order[at + 1];
   const edit = editFile ? `<p class="docs-edit"><a href="${REPO}/edit/main/${editFile}" data-say="docsEdit" rel="noopener"></a></p>` : "";
   const drawings = /lazy-art|class="kyogijo/.test(article) ? `\n    <link rel="stylesheet" href="drawings.css" />` : "";
   return sayEnglish(`<!doctype html>
@@ -341,8 +349,8 @@ export function docsPage({ id, name, icon, slug, title, description, article, he
           ${sidebar(slug, headingsByPage)}
           </div>
         </div>
-        <article class="docs-article" data-testid="docs-article" data-page="${slug}">
-          <p class="docs-english" data-say="docsEnglishOnly"></p>
+        <article class="docs-article" data-testid="docs-article" data-page="${slug}"${lang === "en" ? "" : ` lang="${lang}"`}>
+          ${lang === "en" ? '<p class="docs-english" data-say="docsEnglishOnly"></p>' : ""}
 ${article}
           <div class="docs-pager">${pager(prev, "prev", "docsPrev")}${pager(next, "next", "docsNext")}</div>
           ${edit}
@@ -368,7 +376,7 @@ ${article}
  */
 export function buildDocs({ root = process.cwd(), outDir = "site/docs", id = "kyogijo-stadiums", name = "Kyogijo Stadiums", icon, extraPages = [], siteBlocks = {}, files = [], wordsExtra = {}, drawingsCss = "", drawingsBase = "", searchExtra = [] }) {
   const extra = new Map(extraPages.map((page) => [page.slug, page]));
-  const known = { root, pages: new Set(PAGE_LIST.map((page) => page.slug)) };
+  const known = { root, pages: new Set([...PAGE_LIST.map((page) => page.slug), ...GUIDE_TWINS.map((page) => page.slug)]) };
   mkdirSync(outDir, { recursive: true });
   const rendered = new Map();
   const headingsByPage = new Map();
@@ -385,10 +393,22 @@ export function buildDocs({ root = process.cwd(), outDir = "site/docs", id = "ky
     const made = markdownToHtml(markdown, file, known, siteBlocks);
     const title = titleOf(markdown);
     if (title === "") throw new Error(`${file} has no title (a # heading)`);
-    const firstParagraph = /\n\n([^#\n|`<\-*>][^\n]*)/.exec(markdown)?.[1] ?? title;
+    const firstParagraph = /\n\n(?!\[日本語\])([^#\n|`<\-*>][^\n]*)/.exec(markdown)?.[1] ?? title;
     const description = firstParagraph.replace(/\[([^\]]+)\]\([^)]*\)/g, "$1").replace(/[`*_]/g, "").slice(0, 280);
     rendered.set(page.slug, { html: made.html, headings: made.headings, description, file });
     headingsByPage.set(page.slug, { title, headings: made.headings });
+  }
+  // The Japanese twins of the guides: pages of their own, found from the English guide's first line, and searched by their Japanese title.
+  for (const twin of GUIDE_TWINS) {
+    const file = fileOf(twin.slug);
+    const markdown = read(join(root, file));
+    const made = markdownToHtml(markdown, file, known, siteBlocks);
+    const title = titleOf(markdown);
+    if (title === "") throw new Error(`${file} has no title (a # heading)`);
+    const firstParagraph = markdown.split("\n\n").map((part) => part.trim()).find((part) => part !== "" && !/^(#|日本語 ·|[|`<\-*>!])/.test(part)) ?? title;
+    const description = firstParagraph.replace(/\[([^\]]+)\]\([^)]*\)/g, "$1").replace(/[`*_]/g, "").slice(0, 140);
+    rendered.set(twin.slug, { html: made.html, headings: made.headings, description, file });
+    headingsByPage.set(twin.slug, { title, headings: made.headings });
   }
   for (const page of PAGE_LIST) {
     const one = rendered.get(page.slug);
@@ -398,12 +418,22 @@ export function buildDocs({ root = process.cwd(), outDir = "site/docs", id = "ky
       docsPage({ id, name, icon, slug: page.slug, title: info.title, description: one.description, article: one.html, headingsByPage, editFile: one.file }),
     );
   }
+  for (const twin of GUIDE_TWINS) {
+    const one = rendered.get(twin.slug);
+    const info = headingsByPage.get(twin.slug);
+    writeFileSync(join(outDir, pageUrl(twin.slug)), docsPage({ id, name, icon, slug: twin.slug, title: info.title, description: one.description, article: one.html, headingsByPage, editFile: one.file, lang: "ja" }));
+  }
   // The search index: each page's title, then each of its headings below the first, with the page they are on; then the sports and the places the home page names.
   const rows = [];
   for (const page of PAGE_LIST) {
     const info = headingsByPage.get(page.slug);
     rows.push([info.title, pageUrl(page.slug), info.title, page.ja, 0, page.ja]);
     for (const heading of info.headings) if (heading.depth > 1) rows.push([heading.text, `${pageUrl(page.slug)}#${heading.id}`, info.title, page.ja, heading.depth - 1, ""]);
+  }
+  for (const twin of GUIDE_TWINS) {
+    const info = headingsByPage.get(twin.slug);
+    rows.push([info.title, pageUrl(twin.slug), info.title, info.title, 0, info.title]);
+    for (const heading of info.headings) if (heading.depth > 1) rows.push([heading.text, `${pageUrl(twin.slug)}#${heading.id}`, info.title, info.title, heading.depth - 1, heading.text]);
   }
   for (const sport of SPORTS) rows.push([sport.en, `gallery.html#${sport.id}`, "Gallery", "ギャラリー", 1, sport.ja]);
   for (const place of PLACES) rows.push([place.en, `gallery.html#place-${place.id}`, "Gallery", "ギャラリー", 1, place.ja]);
@@ -431,7 +461,7 @@ export function buildDocs({ root = process.cwd(), outDir = "site/docs", id = "ky
 
 /** For a test: the pages as `{ slug, file, headings }`, read from the repository. */
 export function readPages(root = ".") {
-  return PAGE_LIST.filter((page) => !page.site).map((page) => {
+  return [...PAGE_LIST.filter((page) => !page.site), ...GUIDE_TWINS].map((page) => {
     const file = fileOf(page.slug);
     const markdown = read(join(root, file));
     return { slug: page.slug, file, markdown, headings: headingsOf(markdown) };

@@ -1,7 +1,20 @@
 // What an example in the README or a page of docs/ says it prints, and how to hold it to what it prints: shared by the test of the examples
 // (src/docs.examples.test.js, which runs them against the source) and by `pnpm test:readme` (scripts/check-readme-examples.mjs, which runs them
 // against the built package). A block says what it prints in comment lines right after each `console.log`: `// true true`.
+import { existsSync, readdirSync } from "node:fs";
+import { join } from "node:path";
+
 import { parts } from "./readme-lint.mjs";
+
+/** The Markdown files whose examples are held: the README, every page of docs/, and every guide of docs/guides/ and its Japanese twin in docs/guides/ja/ (as paths from the repository's root). */
+export function markdownFiles(root = ".") {
+  const files = ["README.md"];
+  for (const folder of ["docs", "docs/guides", "docs/guides/ja"]) {
+    if (!existsSync(join(root, folder))) continue;
+    for (const name of readdirSync(join(root, folder)).filter((one) => one.endsWith(".md")).sort()) files.push(`${folder}/${name}`);
+  }
+  return files;
+}
 
 /** The index of the line each `console.log(...)` statement of a block ends on. */
 function logEnds(lines) {
