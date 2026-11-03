@@ -299,3 +299,7 @@ kyogijo-field::part(plate) { filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .25)); 
 .sk-picker button[aria-checked="true"] .sk-game { color: inherit; }
 .sk-game svg { display: block; width: .7em; height: .7em; }
 @media (max-width: 600px) { .sk-picker .sk-variants { margin-left: 0; } }
+/* A game on the Try it surface: the replay's own controls keep their size whatever the drawing's shape (the stage sizes its drawing, tall or wide, and not their icons). */
+#stage .ky-replay .ky-controls svg { width: 22px; height: 22px; max-width: none; }
+/* In 3D the replay's controls are on the felt, under the view's: the felt's ink, as the flat replay's are. */
+#felt .ky-turn-replay .ky-controls { color: var(--felt-ink); }

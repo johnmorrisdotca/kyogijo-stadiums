@@ -64,6 +64,7 @@
         </div>
       </div>
       <div id="stage" data-testid="stage"></div>
+      <p class="note" id="game-note" data-testid="game-note" hidden></p>
       <details id="facts" open>
         <summary id="l-facts"></summary>
         <dl id="list" data-testid="facts"></dl>
@@ -90,6 +91,7 @@
           back: "Back to the Kyogijo Stadiums demo", docs: "The real venues page of the docs", stadiumsLink: "BC Place, a real stadium", districtLink: "BC Place beside Rogers Arena",
           factsTitle: "What the drawing is made from", theme: "Theme", language: "Language", auto: "Theme: follow the device", light: "Theme: light", dark: "Theme: dark",
           group: "What to show", view2d: "2D", view3d: "3D", p_stands: "Stands", p_walls: "Walls", p_roof: "Roof", p_boards: "LED boards", p_lighting: "Lighting", lighting_off: "Lighting: off", lighting_night: "Night", lighting_game: "Game", lighting_lightsDown: "Lights down", lighting_intro: "Intro", lighting_concert: "Concert", p_wash: "Surface light colour", wash_none: "Light colour: preset", wash_purple: "Purple light", wash_magenta: "Magenta light", wash_blue: "Blue light", wash_white: "White light", p_building: "Building", p_markings: "Markings", p_labels: "Labels",
+          gamePlay: "Play a game", gamePlayTip: "Play {title} on this surface. Press again to take it away.", gameGoal: "Goal, {team}: {name}",
           overhead: "Overhead", broadcast: "Broadcast", end: "End", corner: "Corner", formLabel: "How the venue is shown",
           arena: "Arena", city: "City", seats: "Seats for ice hockey", tiers: "Seating tiers", roofKind: "Roof", orientation: "How the rink lies", outline: "Building outline",
           documented: "a source says so", plausible: "ours, plausible", fixed: "fixed", saddle: "saddle-shaped", barrel: "barrel-vaulted",
@@ -108,6 +110,7 @@
           back: "競技場 Kyogijo Stadiums のデモに戻る", docs: "ドキュメントの「実在の会場」ページ", stadiumsLink: "実在のスタジアム BCプレイス", districtLink: "ロジャース・アリーナと並べたBCプレイス",
           factsTitle: "この図の元になった情報", theme: "テーマ", language: "言語", auto: "テーマ：端末に合わせる", light: "テーマ：ライト", dark: "テーマ：ダーク",
           group: "表示する要素", view2d: "2D", view3d: "3D", p_stands: "観客席", p_walls: "壁", p_roof: "屋根", p_boards: "LEDビジョン", p_lighting: "照明", lighting_off: "照明：なし", lighting_night: "夜間", lighting_game: "試合中", lighting_lightsDown: "場内暗転", lighting_intro: "選手紹介", lighting_concert: "コンサート", p_wash: "競技面の照明の色", wash_none: "照明の色：プリセットのまま", wash_purple: "紫の照明", wash_magenta: "マゼンタの照明", wash_blue: "青の照明", wash_white: "白の照明", p_building: "建物", p_markings: "ライン", p_labels: "ラベル",
+          gamePlay: "試合を再生", gamePlayTip: "「{title}」をこの競技面で再生します。もう一度押すと、元の表示に戻ります。", gameGoal: "{team}のゴール：{name}",
           overhead: "真上", broadcast: "中継", end: "エンド", corner: "コーナー", formLabel: "会場の見せ方",
           arena: "アリーナ", city: "都市", seats: "アイスホッケーの座席数", tiers: "観客席の層数", roofKind: "屋根", orientation: "リンクの向き", outline: "建物の輪郭",
           documented: "資料に記載あり", plausible: "推定", fixed: "固定屋根", saddle: "鞍形（サドル）屋根", barrel: "かまぼこ形（円筒ヴォールト）屋根",
@@ -249,6 +252,8 @@
         bar: $("bar"),
         venue: state.venue,
         page: () => ({ lang: $("language").value, words: words(), theme: $("theme").value === "auto" ? undefined : $("theme").value }),
+        // Play a game, in 3D: the examples' game of the rink on this arena's ice (the index of the games says the rink has one), its button after Labels.
+        game: { note: $("game-note"), say: (key) => words()[key] },
         onChange: after,
       });
       after();

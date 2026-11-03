@@ -2068,8 +2068,8 @@ Made from `src/strings.en.ts`, `src/strings.ja.ts` and `demo/words.js` by `pnpm 
 | `gameFile` | The game as a file (JSON) | 試合のファイル（JSON） |
 | `gameDocs` | How to load and play it | 読み込みと再生のしかた |
 | `gameCode` | The code for this view | この表示のコード |
-| `heroGame` | Play a game | 試合を再生 |
-| `heroGameTip` | Play a made-up game of Canada and Japan on this ice. Press again for the empty ice. | カナダ対日本の架空の試合をこの氷上で再生します。もう一度押すと、氷だけの表示に戻ります。 |
+| `gamePlay` | Play a game | 試合を再生 |
+| `gamePlayTip` | Play {title} on this surface. Press again to take it away. | 「{title}」をこの競技面で再生します。もう一度押すと、元の表示に戻ります。 |
 | `elementTitle` | As an element | 要素として |
 | `elementText` | Each of these is a <kyogijo-field> tag with attributes and no script of its own. | ここにあるのはどれも、属性だけを指定した <kyogijo-field> タグで、専用のスクリプトはありません。 |
 | `moreText` | Everything here is a call of one function. | ここにあるものは、すべて1つの関数の呼び出しです。 |

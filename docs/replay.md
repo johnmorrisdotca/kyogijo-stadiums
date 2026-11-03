@@ -231,7 +231,7 @@ console.log(JSON.stringify(laid.model) === JSON.stringify(replayTurnModel(model,
 // true
 ```
 
-The demo plays [a whole made-up game](./example-games.md) this way, and lets the hero's arena play it in front of its crowd.
+The demo plays [a whole made-up game](./example-games.md) this way, and **Play a game** plays it wherever the rink is shown: the arena at the top of the page in front of its crowd, the Try it surface, flat or in 3D, and the real arenas in 3D.
 
 ## A swimming race
 

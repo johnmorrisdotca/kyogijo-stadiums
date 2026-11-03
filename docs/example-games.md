@@ -21,7 +21,7 @@ It is 1.3 MB as it is and about 120 kB compressed, as a web server sends it; the
 
 ## The index
 
-`examples/games/index.json` lists the games, and says which surface each is played on. The demo reads it, and offers **Play a game** only on a surface that has a game in it: today the NHL rink, which has this one. A new game is its file in `examples/games/` and one line here, and no code: the button then shows on its surface, on the home page's surface picker, its 3D view and the arenas.
+`examples/games/index.json` lists the games, and says which surface each is played on. The demo reads it, and offers **Play a game** only on a surface that has a game in it: today the NHL rink, which has this one. A new game is its file in `examples/games/` and one line here, and no code: the button then shows wherever its surface is on show (on the Try it surface, flat or in 3D, and, for the rink, on the home page's arena and the real arenas in 3D), and the surface picker marks the surface.
 
 ```json
 {
@@ -88,7 +88,7 @@ console.log(svg.startsWith("<svg"), svg.includes("Shirt numbers"));
 // true true
 ```
 
-The score at a time is the goals at or before it (`timeline.events`, `kind: "goal"`, by `team`); the names in a language are the roster's (`name.en`, `name.ja`), which a page can put on the frames' objects as their `label` for the tooltip. A scoreboard hung over a real arena's ice follows the game too, with its period and clock, when the timeline is given its periods: `view.replay({ ...game.timeline, periods: game.periods.map((p) => ({ ...p, length: 1200 })) })` (a period of twenty minutes on the board's clock; [the scoreboard over the arena](./replay.md#the-scoreboard-over-the-arena-follows-the-game)). The demo does that and both of the above: [A game on the ice, in 3D](https://johnmorrisdotca.github.io/kyogijo-stadiums/#game), and the arena at the top of the page plays it in front of its crowd with **Play a game**.
+The score at a time is the goals at or before it (`timeline.events`, `kind: "goal"`, by `team`); the names in a language are the roster's (`name.en`, `name.ja`), which a page can put on the frames' objects as their `label` for the tooltip. A scoreboard hung over a real arena's ice follows the game too, with its period and clock, when the timeline is given its periods: `view.replay({ ...game.timeline, periods: game.periods.map((p) => ({ ...p, length: 1200 })) })` (a period of twenty minutes on the board's clock; [the scoreboard over the arena](./replay.md#the-scoreboard-over-the-arena-follows-the-game)). The demo does that and both of the above: [A game on the ice, in 3D](https://johnmorrisdotca.github.io/kyogijo-stadiums/#game), and **Play a game** plays it on the arena at the top of the page, in front of its crowd, on the Try it surface, flat or in 3D, and on [the real arenas](https://johnmorrisdotca.github.io/kyogijo-stadiums/venues.html?view=3d&game=1) in 3D.
 
 ## How it is made
 

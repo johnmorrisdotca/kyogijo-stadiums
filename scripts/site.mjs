@@ -277,7 +277,7 @@ const page = `<!doctype html>
           <p data-say="featureText"></p>
         </div>
         <div class="rv-bar" id="feature-bar" data-testid="feature-bar"></div>
-        <div class="rv-bar" id="feature-pick"><select class="fam-field" id="feature-venue" data-testid="feature-venue"></select><button type="button" class="fam-chip" id="feature-game" data-testid="feature-game" aria-pressed="false" data-say="heroGame"></button></div>
+        <div class="rv-bar" id="feature-pick"><select class="fam-field" id="feature-venue" data-testid="feature-venue"></select><button type="button" class="fam-chip" id="feature-game" data-testid="feature-game" aria-pressed="false" data-say="gamePlay"${GAME_SURFACES.includes("nhl") ? "" : " hidden"}></button></div>
         <div id="feature-stage" data-testid="feature-stage"></div>
         <p class="game-note" id="feature-game-note" data-testid="feature-game-note" hidden></p>
         <p class="feature-links"><a href="venues.html" data-say="featureVenues"></a> · <a href="halls.html?preset=tabletennis-4&amp;view=3d" data-say="featureHalls"></a> · <a href="judging.html?mat=1&amp;view=broadcast" data-say="featureJudging"></a> · <a href="circuits.html" data-say="featureCircuits"></a></p>
@@ -290,8 +290,9 @@ const page = `<!doctype html>
         </div>
         <div class="try-grid">
           <div class="try-stage">
-            <div class="rv-bar" id="stage-bar" data-testid="stage-bar" role="group"></div>
+            <div class="rv-bar" id="stage-bar" data-testid="stage-bar" role="group" data-game-surfaces="${GAME_SURFACES.join(" ")}"></div>
             <div class="fam-felt stage-felt" id="felt"><div id="stage" data-testid="stage" data-ready="false" data-orientation="landscape" data-sport="${first.sport}" data-size="${first.size}" style="--r:${shape(WIDE)[0]}">${WIDE}</div></div>
+            <p class="game-note" id="try-game-note" data-testid="try-game-note" hidden></p>
             <p class="hall-link" id="hall-link" hidden><a id="hall-link-a" data-testid="hall-link" href="halls.html" data-say="hallLink"></a></p>
             <template id="stage-tall">${TALL}</template>
           </div>

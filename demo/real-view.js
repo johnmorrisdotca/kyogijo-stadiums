@@ -10,6 +10,8 @@ import { hoverOf, keepCamera, wayOf, writeWay } from "./turn-way.js";
 import { LIGHTINGS, WASHES, lightingFor, lightingOfAddress } from "./lighting.js";
 import { replaceAddress } from "./address.js";
 import { fitView, installViewBar } from "./view-bar.js";
+import { gameColours } from "./game.js";
+import { playGame } from "./play-game.js";
 
 /** The parts a reader can switch, in the order of the bar, with what each is by default: the stands on, the walls, the roof, the LED boards and the night lighting off (the bowl is seen), the building, the markings and the labels on. */
 export const PARTS = ["stands", "walls", "roof", "boards", "building", "markings", "labels"];
@@ -46,8 +48,10 @@ export const REAL_VIEW_CSS = `
  * @param {boolean} [options.spin] whether the 3D view can be asked to turn by itself when it opens (`spin=on` in the address, which Auto-turn writes; a reader who prefers reduced motion gets it still): it waits still otherwise and turns while the pointer is over it
  * @param {boolean} [options.fit] whether the view is given the shape that leaves room for the bar and its buttons in the screen (`false` for a page whose stage is a box of its own height, as the home page's)
  * @param {(state: object) => void} [options.onChange] called after anything changed, with the state
+ * @param {false | { button?: HTMLButtonElement, note?: HTMLElement, say: (key: string) => string }} [options.game] Play a game (`play-game.js`): its button (one of the bar's own after Labels when
+ *   none is given), the note under the view, and the page's words; on in the address as `game=1` under the prefix. It plays in 3D only: the flat drawing hides it.
  */
-export function mountRealView({ stage, bar, venue, page, prefix = "", flat = true, spin = true, chipClass = "", fit = true, onChange = () => undefined }) {
+export function mountRealView({ stage, bar, venue, page, prefix = "", flat = true, spin = true, chipClass = "", fit = true, game: gameSettings = false, onChange = () => undefined }) {
   const key = (name) => `${prefix}${name}`;
   const params = new URLSearchParams(location.search);
   const flag = (name, normal) => (params.has(key(name)) ? params.get(key(name)) === "1" : normal);
@@ -59,6 +63,7 @@ export function mountRealView({ stage, bar, venue, page, prefix = "", flat = tru
     spin: spin && params.get(key("spin")) === "on",
     lighting: lightingOfAddress(params, prefix),
     wash: WASHES.includes(params.get(key("wash"))) ? params.get(key("wash")) : "none",
+    game: gameSettings !== false && params.get(key("game")) === "1",
   };
   // An old address's `roof=1` was the walls and the roof together.
   if (params.get(key("roof")) === "1" && !params.has(key("walls"))) state.walls = true;
@@ -102,6 +107,7 @@ export function mountRealView({ stage, bar, venue, page, prefix = "", flat = tru
     set("wash", state.wash === "none" || state.lighting === "off" ? null : state.wash);
     set("viewpoint", state.viewpoint === "corner" ? null : state.viewpoint);
     set("spin", spin && state.spin ? "on" : null);
+    if (gameSettings !== false) set("game", state.game ? "1" : null);
     writeWay(next);
     camera.write(next);
     replaceAddress(next.size === 0 ? location.pathname : `${location.pathname}?${next}${location.hash}`);
@@ -121,6 +127,8 @@ export function mountRealView({ stage, bar, venue, page, prefix = "", flat = tru
       button.hidden = only3d && !three;
       buttons.push(button);
     }
+    // Play a game, after the parts, when the page has not a button of its own for it: shown by `play-game.js` only while it can play.
+    if (gameButton !== undefined && gameSettings.button === undefined) buttons.push(gameButton);
     // The lighting, a preset to choose, and the colour of light on the surface over the preset's own, beside the toggles.
     const lighting = document.createElement("select");
     lighting.setAttribute("aria-label", words.p_lighting);
@@ -159,7 +167,7 @@ export function mountRealView({ stage, bar, venue, page, prefix = "", flat = tru
     stage.dataset.hide = hidden();
     if (state.view === "2d") {
       camera.carry(turn);
-      if (turn !== undefined) { turn.destroy(); turn = undefined; }
+      if (turn !== undefined) { turn.destroy(); turn = undefined; hover?.release?.(); hover = undefined; }
       stage.innerHTML = drawKyogijo(optionsNow());
       return;
     }
@@ -184,7 +192,10 @@ export function mountRealView({ stage, bar, venue, page, prefix = "", flat = tru
   }
 
   function apply() {
+    // A flat drawing cannot play the game: it stops before the 3D view goes.
+    game?.refresh();
     draw();
+    game?.refresh();
     sync();
     onChange(state);
     fitStage?.();
@@ -192,7 +203,7 @@ export function mountRealView({ stage, bar, venue, page, prefix = "", flat = tru
 
   bar.addEventListener("click", (event) => {
     const button = event.target.closest("button");
-    if (button === null) return;
+    if (button === null || button === gameButton) return;
     if (button.dataset.view !== undefined) {
       if (state.view === button.dataset.view) return;
       state.view = button.dataset.view;
@@ -215,7 +226,40 @@ export function mountRealView({ stage, bar, venue, page, prefix = "", flat = tru
     apply();
   });
 
+  /** Play a game: the page's own button, or one of the bar's. */
+  let gameButton;
+  let game;
+  if (gameSettings !== false) {
+    // The bar's own button waits hidden for the index of the games; a page's own is as the page drew it.
+    gameButton = gameSettings.button ?? Object.assign(chip("game", "", state.game, { "data-game": "" }), { hidden: true });
+  }
   renderBar();
+  if (gameSettings !== false) {
+    game = playGame({
+      button: gameButton,
+      note: gameSettings.note,
+      on: state.game,
+      lang: () => page().lang,
+      say: gameSettings.say,
+      host: {
+        sport: () => optionsNow().sport,
+        can: () => state.view === "3d",
+        view: () => turn,
+        // The game's colours on the discs and the marks; the arena has no sides of its own to change, so a goal draws nothing.
+        follow: (played) => {
+          const next = played === undefined ? {} : { colors: gameColours(played) };
+          if (JSON.stringify(next) === JSON.stringify(extra)) return;
+          extra = next;
+          draw();
+        },
+      },
+      onChange: (on) => {
+        state.game = on;
+        sync();
+        onChange(state);
+      },
+    });
+  }
   const fitStage = fit ? fitView(stage) : undefined;
   apply();
   return {
@@ -227,15 +271,21 @@ export function mountRealView({ stage, bar, venue, page, prefix = "", flat = tru
       state.venue = id;
       apply();
     },
-    /** Lay options of the page's over the view's (`{}` takes them off): drawn again, and a 3D view goes on turning. */
-    setExtra(next) {
-      extra = next;
-      draw();
-    },
+    /** Play a game, when the page asked for it: its controller (`play-game.js`). */
+    game: () => game,
     /** The page's language or theme changed: draw again, and write the words of the buttons again. */
     refresh() {
       renderBar();
       draw();
+      game?.relabel();
+    },
+    /** Take the view away, with its game, and leave the stage empty. */
+    destroy() {
+      game?.destroy();
+      turn?.destroy();
+      turn = undefined;
+      hover?.release?.();
+      stage.replaceChildren();
     },
   };
 }

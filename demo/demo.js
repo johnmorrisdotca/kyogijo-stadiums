@@ -19,7 +19,8 @@ import { gameOf as gameFor, teamOf } from "./games.js";
 import { nbaZones, passMap, shotHeat, shotMap, sprayChart, sprayDensity, touchZones } from "./layers-data.js";
 import { mlbBalls, nbaShots, nflPasses, nhlShots, soccerShots } from "./charts-data.js";
 import { replayPlay } from "./replay-data.js";
-import { gameColours, gameOptions, gameTimeline, loadGame as loadExampleGame, periodAt, scoreAt } from "./game.js";
+import { playGame } from "./play-game.js";
+import { gameOptions, gameTimeline, loadGame as loadExampleGame, periodAt, scoreAt } from "./game.js";
 import { poolRace, shortRace } from "./pool-data.js";
 import { raceTimeline } from "./dist/replay-entry.js";
 import { nation } from "./nations.js";
@@ -382,18 +383,36 @@ const stage = $("stage");
 let mount;
 /** The 3D view, while the playground is on it: it takes the stage over from the flat drawing, and gives it back. */
 let turn;
+let stageHover;
+/** Play a game on the Try it surface (`play-game.js`), and the game's sides laid over the reader's own while it plays: the reader's teams and score are never changed, so they come back when it stops. */
+let tryGame;
+let gameSides;
+/** Whether `render` is running: the game's changes then wait for it, and the drawing is made once. */
+let rendering = false;
+const withGame = (o) => (gameSides === undefined ? o : { ...o, ...gameSides });
+/** The drawing again with the game's score, and nothing else of the page: a goal or a new period. */
+function drawGameSides() {
+  const o = withGame({ ...optionsFor(state), style: "none" });
+  if (turn !== undefined) turn.update(o, { venue: { roof: state.venueRoof } });
+  else mount?.update(o);
+}
 function render() {
-  const o = optionsFor(state);
+  rendering = true;
+  // Another surface, or a badge, cannot play the game on show: it stops, and the reader's own sides are drawn.
+  tryGame?.refresh();
+  const o = withGame(optionsFor(state));
   o.style = "none";
   stage.dataset.view = state.view;
   if (state.view === "3d") {
     if (turn === undefined) {
+      // The game keeps its moment, and plays on in 3D from it.
+      tryGame?.hold();
       mount?.destroy();
       mount = undefined;
       stage.replaceChildren();
       // The page's own light or dark is the stylesheet's to follow; the turn's own rules are written once into the page, like the drawing's.
       turn = mountKyogijoTurn(stage, o, { preset: state.viewpoint, ...wayOf(syncUrl), venue: { roof: state.venueRoof }, onChange: (_, preset) => { if (preset !== undefined) state.viewpoint = preset; syncUrl(); } });
-      hoverOf(stage, turn);
+      stageHover = hoverOf(stage, turn);
     } else turn.update(o, { venue: { roof: state.venueRoof } });
     stage.dataset.orientation = "landscape";
     stage.dataset.sport = state.sport;
@@ -402,7 +421,11 @@ function render() {
     stage.removeAttribute("data-pending");
   } else {
     if (turn !== undefined) {
+      tryGame?.hold();
       turn.destroy();
+      // The stage outlives the view: what the hover put on it goes with the view.
+      stageHover?.release?.();
+      stageHover = undefined;
       turn = undefined;
       mount = undefined;
     }
@@ -431,6 +454,9 @@ function render() {
   $("sit-ballon-out").textContent = String(state.sitBallOn);
   $("crowd-density").value = String(state.crowdDensity);
   $("crowd-density-out").textContent = `${state.crowdDensity}%`;
+  rendering = false;
+  // The game on the view just drawn: put back where it was, or started when it was asked for.
+  tryGame?.refresh();
   updateEmbed();
   updateHallLink();
   paintStageBar();
@@ -445,6 +471,8 @@ const STAGE_BAR = [
   { id: "bar-crowd", label: () => say("crowd"), on: () => state.crowd, press: () => $("crowd").click() },
   { id: "bar-roof", label: () => say("venueRoof"), on: () => state.venueRoof, shown: () => state.view === "3d" && state.crowd, press: () => $("venue-roof").click() },
   { id: "bar-dark", label: () => say("theme_dark"), on: () => state.theme === "dark", press: () => $("theme").querySelector(`[data-value="${state.theme === "dark" ? "light" : "dark"}"]`).click() },
+  // Play a game: its button is `play-game.js`'s to write and to answer.
+  { id: "bar-game", own: true },
 ];
 for (const item of STAGE_BAR) {
   const button = document.createElement("button");
@@ -452,19 +480,53 @@ for (const item of STAGE_BAR) {
   button.className = "fam-chip";
   button.dataset.testid = item.id;
   button.dataset.bar = item.id;
+  // Play a game waits for the index of the games; until then the surfaces the build read in it say whether it is shown, so that the row does not jump.
+  if (item.own === true) button.hidden = !(stageBar.dataset.gameSurfaces ?? "").split(" ").includes(state.sport) || state.size === "badge";
   stageBar.append(button);
 }
-stageBar.addEventListener("click", (event) => STAGE_BAR.find((item) => item.id === event.target.closest("button")?.dataset.bar)?.press());
+stageBar.addEventListener("click", (event) => STAGE_BAR.find((item) => item.id === event.target.closest("button")?.dataset.bar)?.press?.());
 function paintStageBar() {
   stageBar.hidden = false;
   stageBar.setAttribute("aria-label", say("stageBar"));
   for (const [i, item] of STAGE_BAR.entries()) {
     const button = stageBar.children[i];
+    if (item.own === true) continue;
     const text = item.label();
     if (button.textContent !== text) button.textContent = text;
     button.setAttribute("aria-pressed", String(item.on()));
     button.hidden = item.shown !== undefined && !item.shown();
   }
+}
+
+// Play a game on the Try it surface: shown while the surface on show has a game in the index (and is not a badge, which has no surface), flat or in 3D. Flat it is `mount.replay`, in 3D
+// `view.replay`; changing the view, the crowd or the theme keeps its moment, and the game's sides and score are laid over the reader's own while it plays.
+tryGame = playGame({
+  button: stageBar.querySelector('[data-bar="bar-game"]'),
+  note: $("try-game-note"),
+  on: state.game,
+  lang: () => language.lang,
+  say,
+  host: {
+    sport: () => state.sport,
+    can: () => state.size !== "badge",
+    view: () => turn ?? mount,
+    follow: (game, t) => {
+      const was = gameSides;
+      gameSides = game === undefined ? undefined : sidesOf(gameOptions(game, language.lang, scoreAt(game, t), periodAt(game, t)));
+      if (rendering) return;
+      drawGameSides();
+      // The code is the game's while it plays.
+      if ((was === undefined) !== (gameSides === undefined)) updateEmbed();
+    },
+  },
+  onChange: (on) => {
+    state.game = on;
+    if (!rendering) render();
+  },
+});
+/** What a game lays over the reader's drawing: the two sides with the score, the state of play, and the end each side defends. */
+function sidesOf(o) {
+  return { home: o.home, away: o.away, status: o.status, homeSide: o.homeSide };
 }
 
 /** The sports that have a tournament layout, each with its first preset, read once from the layouts entry. */
@@ -508,6 +570,15 @@ const tidy = (value) => JSON.stringify(value, null, 2);
 
 function code(kind) {
   const o = optionsFor(state, true);
+  // While a game plays, the module's code is the game's: the file fetched, its sides (at 0 and 0, as it begins) in the options, and the replay on the mount or the 3D view. The other tabs stay the drawing's.
+  const playing = kind === "module" && gameSides !== undefined ? tryGame.entry() : undefined;
+  if (playing !== undefined) {
+    const sides = { ...o, home: { ...gameSides.home, score: 0 }, away: { ...gameSides.away, score: 0 }, status: "live" };
+    delete sides.homeSide;
+    const fetchLine = `const game = await (await fetch("${CANON}examples/games/${playing.file}")).json();`;
+    if (state.view === "3d") return `import { mountKyogijoTurn } from "${CDN}/dist/turn-entry.js";\n// or, from npm: import { mountKyogijoTurn } from "@johnmorrisdotca/kyogijo-stadiums/turn";\n\n${fetchLine}\nconst view = mountKyogijoTurn(document.querySelector("#game"), ${tidy(sides)}, { preset: "${state.viewpoint}"${state.venueRoof && state.crowd ? ", venue: { roof: true }" : ""} });\nconst replay = view.replay(game.timeline);\nreplay.play();`;
+    return `import { mountKyogijo } from "${CDN}/dist/mount-entry.js";\n// or, from npm: import { mountKyogijo } from "@johnmorrisdotca/kyogijo-stadiums/mount";\n\n${fetchLine}\nconst mount = mountKyogijo(document.querySelector("#game"), ${tidy(sides)});\nconst replay = mount.replay(game.timeline);\nreplay.play();`;
+  }
   if (kind === "module" && state.view === "3d") {
     return `import { mountKyogijoTurn } from "${CDN}/dist/turn-entry.js";\n// or, from npm: import { mountKyogijoTurn } from "@johnmorrisdotca/kyogijo-stadiums/turn";\n\nmountKyogijoTurn(document.querySelector("#game"), ${tidy(o)}, { preset: "${state.viewpoint}"${state.venueRoof && state.crowd ? ", venue: { roof: true }" : ""} });`;
   }
@@ -1116,8 +1187,6 @@ function onLanguage() {
   atlas.relabel();
   fillFeatured();
   featured.refresh();
-  paintHeroGame();
-  if (heroGame.handle !== undefined) heroPlay();
   drawGame();
   for (const grid of grids) grid.relabel();
   fillParks();
@@ -1137,6 +1206,7 @@ function onLanguage() {
   drawLive();
   drawReplays();
   render();
+  tryGame.relabel();
 }
 
 // ----- Click to place: with the toggle on, a click on the drawing drops a point there and the readout follows the pointer, in the surface's own feet (from its top left, as drawn wide).
@@ -1174,6 +1244,8 @@ const featured = mountRealView({
   flat: false,
   chipClass: "fam-chip",
   fit: false,
+  // Play a game: the examples' game of the rink, in front of the arena's crowd, by the same `view.replay` as the game section and the Try it surface (`play-game.js`). Its button is the hero's own.
+  game: { button: $("feature-game"), note: $("feature-game-note"), say },
   page: () => ({ lang: language.lang, words: { ...WORDS[language.lang], group: say("featureGroup") }, theme: state.theme === "light" || state.theme === "dark" ? state.theme : undefined }),
   onChange: (own) => {
     const next = new URLSearchParams(location.search);
@@ -1190,45 +1262,6 @@ function fillFeatured() {
 }
 $("feature-venue").addEventListener("input", (event) => featured.setVenue(event.target.value));
 fillFeatured();
-
-// ----- The hero's Play a game: the examples' made-up game on the featured arena's ice, in front of its crowd, by the same `view.replay` as the game section. Off when the page opens; the game is
-// loaded the first time it is pressed, and pressing again takes it away and leaves the empty ice.
-const heroGame = { on: false, handle: undefined, game: undefined };
-function paintHeroGame() {
-  const button = $("feature-game");
-  button.textContent = say("heroGame");
-  button.title = say("heroGameTip");
-  button.setAttribute("aria-pressed", String(heroGame.on));
-  $("feature-game-note").hidden = !heroGame.on;
-  $("feature-game-note").textContent = say("gameNote");
-}
-function heroPlay() {
-  const view = featured.turn();
-  if (!heroGame.on || heroGame.game === undefined || view === undefined) return;
-  const at = heroGame.handle?.state();
-  heroGame.handle?.destroy();
-  featured.setExtra({ colors: gameColours(heroGame.game) });
-  heroGame.handle = view.replay(gameTimeline(heroGame.game, language.lang, goalWords), at === undefined ? {} : { start: at.t - at.start, speed: at.speed, loop: at.loop });
-  if (at === undefined) heroGame.handle.play();
-}
-$("feature-game").addEventListener("click", () => {
-  heroGame.on = !heroGame.on;
-  paintHeroGame();
-  if (!heroGame.on) {
-    heroGame.handle?.destroy();
-    heroGame.handle = undefined;
-    featured.setExtra({});
-    return;
-  }
-  loadExampleGame().then((game) => {
-    heroGame.game = game;
-    heroPlay();
-  }, () => {
-    heroGame.on = false;
-    paintHeroGame();
-  });
-});
-paintHeroGame();
 
 // ----- Start.
 applyTheme();

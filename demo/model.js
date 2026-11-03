@@ -96,6 +96,8 @@ export function makeState(params, kept = null) {
     // How the surface is looked at: the flat drawing, or the 3D view that turns, and the viewpoint it is on.
     view: pick(params.get("view"), VIEWS, "flat"),
     viewpoint: pick(params.get("viewpoint"), VIEWPOINTS, "corner"),
+    // An example game playing on the surface (`game=1`): only where the index of the games has one for the surface on show, which the page decides once it has read the index.
+    game: params.get("game") === "1",
     away: {},
     home: {},
     status: "final",
@@ -667,6 +669,7 @@ export function urlPairs(s, lang) {
   // The looks of a surface, the stands, the lineup and the points.
   for (const [key, value, start] of [["court", s.court, "default"], ["pattern", s.pattern, "bands"], ["goals", s.goals, "box"], ["half", s.half, "none"], ["flags", s.flags ? "1" : "0", "1"], ["baseline", s.baseline ? "1" : "0", "0"], ["hardwood", s.hardwood ? "1" : "0", "0"], ["crowd", s.crowd ? "1" : "0", "0"], ["crowddensity", s.crowdDensity, 85], ["crowdtifo", s.crowdTifo ? "1" : "0", "0"], ["roof", s.venueRoof ? "1" : "0", "0"], ["lineup", s.lineup, "off"], ["drop", s.place ? "1" : "0", "0"], ["code", s.embed, "module"]]) put(key, value, start);
   out.push(["shots", s.place && s.shots.length > 0 ? shotsParam(s.shots) : null]);
+  out.push(["game", s.game === true ? "1" : null]);
   // The game: only what differs from the made-up one.
   for (const role of ["away", "home"]) {
     const letter = ROLE_LETTER[role];

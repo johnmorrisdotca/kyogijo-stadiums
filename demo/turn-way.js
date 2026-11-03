@@ -88,12 +88,19 @@ export function hoverOf(host, control) {
     chosen = true;
     hover.on = false;
   };
-  host.addEventListener("click", (event) => {
+  const onClick = (event) => {
     if (event.target instanceof Element && event.target.closest('button[data-act="play"]') !== null) own();
-  });
-  host.addEventListener("keydown", (event) => {
+  };
+  const onKey = (event) => {
     if (event.key === " ") own();
-  });
+  };
+  host.addEventListener("click", onClick);
+  host.addEventListener("keydown", onKey);
+  /** Take the listeners off the host, which outlives the view: call it when the view is destroyed. */
+  hover.release = () => {
+    host.removeEventListener("click", onClick);
+    host.removeEventListener("keydown", onKey);
+  };
   return hover;
 }
 
