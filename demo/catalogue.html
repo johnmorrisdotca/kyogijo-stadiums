@@ -146,7 +146,7 @@
           supported: "Supported", "working-on": "Working on", wanted: "Wanted", sections: "Sections", sportsLabel: "Sports", groupsLabel: "Groups", all: "All", search: "Search by name, city, country or team",
           coverage: "drawn in its building", coverageMore: "{surface} as a field only · {notYet} not yet", season: "{season} season",
           keyOutline: "Drawn in its building", keySurface: "Field only", keyWorking: "Working on", keyWanted: "Wanted",
-          badgeOutline: "In its building", badgeSurface: "Field only", badgeBuilding: "Building wanted", badgeWorking: "Working on", badgeWanted: "Wanted", badgeCircuit: "Needs a circuit surface first", past: " (past)",
+          badgeOutline: "In its building", badgeSurface: "Field only", badgeBuilding: "Building wanted", badgeWorking: "Working on", badgeWanted: "Wanted", badgeCircuit: "Needs its track's data first", badgeDrawnCircuit: "Drawn as a circuit", past: " (past)",
           found: "{n} venues · {from} to {to} shown", foundNone: "No venue matches.", page: "Page {n} of {all}", prev: "Previous", next: "Next",
           seats: "{n} seats", see: "See the drawing", wikidata: "Wikidata", ticket: "Ticket {ticket}", mapLabel: "A world map with a pin on each venue shown",
           json: "The catalogue as JSON", docs: "The catalogue page of the docs", stadiums: "The real stadiums",
@@ -160,7 +160,7 @@
           supported: "対応済み", "working-on": "制作中", wanted: "追加したい", sections: "区分", sportsLabel: "競技", groupsLabel: "グループ", all: "すべて", search: "名前・都市・国・チームで検索",
           coverage: "会場が建物ごと描画済み", coverageMore: "競技面のみ{surface}会場、未対応{notYet}会場", season: "{season}シーズン",
           keyOutline: "建物ごと描画", keySurface: "競技面のみ", keyWorking: "制作中", keyWanted: "追加したい",
-          badgeOutline: "建物ごと", badgeSurface: "競技面のみ", badgeBuilding: "建物を追加したい", badgeWorking: "制作中", badgeWanted: "追加したい", badgeCircuit: "先にサーキットの描画が必要", past: "（過去）",
+          badgeOutline: "建物ごと", badgeSurface: "競技面のみ", badgeBuilding: "建物を追加したい", badgeWorking: "制作中", badgeWanted: "追加したい", badgeCircuit: "先にコースのデータが必要", badgeDrawnCircuit: "サーキットとして描画", past: "（過去）",
           found: "{n}会場（{from}〜{to}件目を表示）", foundNone: "当てはまる会場はありません。", page: "{all}ページ中{n}ページ目", prev: "前へ", next: "次へ",
           seats: "{n}席", see: "図を見る", wikidata: "Wikidata", ticket: "チケット {ticket}", mapLabel: "表示中の会場に印を付けた世界地図",
           json: "カタログの JSON", docs: "ドキュメントの会場カタログのページ", stadiums: "実在のスタジアム",
@@ -181,7 +181,8 @@
       const plain = (text) => String(text ?? "").normalize("NFKC").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
 
       /** Each tab's venues: the wanted tab has the new venues and the buildings wanted of venues drawn as a field only. */
-      // The supported tab shows the venues drawn in their buildings first: they are the package's showpieces.
+      // The supported tab shows the venues drawn in their buildings first, and the circuits after them: they are the package's showpieces.
+      const SHOWN_FIRST = { outline: 0, circuit: 1, surface: 2 };
       // The wanted tab, by group: the NFL's and the CFL's venues not drawn yet, the world's great venues, the circuits, then the NBA's and MLB's buildings wanted; each group in its own order.
       const WANTED_ORDER = ["nfl", "cfl", ...CATALOGUE_GROUPS.filter((group) => group.kind === "collection").map((group) => group.id), "nba", "mlb", "nhl"];
       const placeInWanted = new Map();
@@ -191,7 +192,7 @@
         const ids = CATALOGUE_GROUPS.find((group) => group.id === id)?.ids ?? [];
         for (const venue of [...ids.filter((one) => isNew.has(one)), ...ids.filter((one) => !isNew.has(one))]) if (!placeInWanted.has(venue)) placeInWanted.set(venue, placeInWanted.size);
       }
-      const LISTS = { supported: [...catalogueByStatus("supported")].sort((a, b) => (a.drawn === b.drawn ? 0 : a.drawn === "outline" ? -1 : 1)), "working-on": catalogueByStatus("working-on"), wanted: catalogueWanted().sort((a, b) => (placeInWanted.get(a.id) ?? 1e6) - (placeInWanted.get(b.id) ?? 1e6)) };
+      const LISTS = { supported: [...catalogueByStatus("supported")].sort((a, b) => SHOWN_FIRST[a.drawn] - SHOWN_FIRST[b.drawn]), "working-on": catalogueByStatus("working-on"), wanted: catalogueWanted().sort((a, b) => (placeInWanted.get(a.id) ?? 1e6) - (placeInWanted.get(b.id) ?? 1e6)) };
       const groupName = (group) => group[lang()];
       const state = {
         tab: TABS.includes(params.get("tab")) ? params.get("tab") : "supported",
@@ -216,13 +217,14 @@
         const groupIds = state.group === "all" ? null : new Set(CATALOGUE_GROUPS.find((group) => group.id === state.group)?.ids ?? []);
         return LISTS[state.tab].filter((entry) => (state.sport === "all" || entry.sports.includes(state.sport)) && (groupIds === null || groupIds.has(entry.id)) && words.every((word) => haystack.get(entry.id).includes(word)));
       }
-      const statusOf = (entry) => (entry.status === "supported" ? (entry.drawn === "outline" ? "outline" : "surface") : entry.status);
+      const statusOf = (entry) => (entry.status === "supported" ? (entry.drawn === "surface" ? "surface" : "outline") : entry.status);
 
       function badge(entry) {
         const t = w();
         if (entry.status === "working-on") return `<span class="badge s-working-on">${t.badgeWorking}</span>`;
         if (entry.status === "wanted") return `<span class="badge s-wanted">${entry.needs === "circuit-surface" ? t.badgeCircuit : t.badgeWanted}</span>`;
         if (entry.drawn === "outline") return `<span class="badge s-outline">${t.badgeOutline}</span>`;
+        if (entry.drawn === "circuit") return `<span class="badge s-outline">${t.badgeDrawnCircuit}</span>`;
         return `<span class="badge s-surface">${state.tab === "wanted" && entry.want === "outline" ? t.badgeBuilding : t.badgeSurface}${entry.era === "past" ? t.past : ""}</span>`;
       }
       function card(entry) {

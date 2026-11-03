@@ -35,7 +35,7 @@ test("the tabs, the chips and the search narrow the cards and the pins together"
   await page.waitForSelector(`${at("map")}[data-ready="true"] .cat-overlay circle`);
   await tap(page, `${at("sports")} button[data-value="motor-racing"]`, testInfo);
   const cards = page.locator(at("card"));
-  await expect(cards.first().locator(".badge")).toHaveText("Needs a circuit surface first");
+  await expect(cards.first().locator(".badge")).toHaveText("Needs its track's data first");
   await expect(page).toHaveURL(/sport=motor-racing/);
   await page.locator(at("search")).fill("suzuka");
   await expect(cards).toHaveCount(1);

@@ -120,6 +120,7 @@ const dist = (name) => here(`../dist/${name}`).href;
 const { PLACES, surfaceOf } = await import(dist("atlas-entry.js"));
 const { STADIUMS, STADIUM_IDS, stadiumConfigs, stadiumNames } = await import(dist("stadiums-entry.js"));
 const { VENUES, VENUE_IDS } = await import(dist("venues-entry.js"));
+const { circuitById } = await import(dist("circuits-entry.js"));
 const SITE = "https://johnmorrisdotca.github.io/kyogijo-stadiums/";
 const TENANT = Object.fromEntries(data.leagues.map((league) => [league.tenant, league.id]));
 const LEAGUE_SPORT = Object.fromEntries(data.leagues.map((league) => [league.id, league.sport]));
@@ -232,6 +233,31 @@ for (const venue of data.venues) {
   }
   if (placed?.group.id === "f1" && !listed(SEASON_ARTICLE.f1, item.title, "circuits")) fail(`${venue.id}: ${item.title} is not a circuit of the calendar of ${SEASON_ARTICLE.f1}`);
   if (venue.motogp === true && !listed(SEASON_ARTICLE.motogp, item.title)) fail(`${venue.id}: ${item.title} is not on the calendar of ${SEASON_ARTICLE.motogp}`);
+  // A circuit the package draws (`CIRCUITS`): supported, drawn as a circuit with no stands; its names and country are the package's, its place and coordinates Wikidata's.
+  if (venue.package === "circuits") {
+    const circuit = circuitById(venue.id);
+    if (circuit === undefined) fail(`${venue.id} is not a key of CIRCUITS`);
+    if (circuit.wikidata !== item.wikidata) fail(`${venue.id}: CIRCUITS says ${circuit.wikidata}, the article ${item.wikidata}`);
+    add({
+      id: circuit.id,
+      status: "supported",
+      drawn: "circuit",
+      kind: "circuit",
+      name: circuit.names.en,
+      nameJa: circuit.names.ja,
+      nameJaFrom: "package",
+      ...(city === undefined ? {} : { city: city.city, ...((CITY_JA[city.city] ?? city.cityJa) === undefined ? {} : { cityJa: CITY_JA[city.city] ?? city.cityJa }) }),
+      country: circuit.country,
+      ...coordinates,
+      sports: venue.sports,
+      wikidata: circuit.wikidata,
+      era: "current",
+      groups: [],
+      demo: `circuits.html?circuit=${circuit.id}`,
+      ...(Object.keys(missing).length === 0 ? {} : { missing }),
+    });
+    continue;
+  }
   const status = placed?.group.status ?? "wanted";
   add({
     id: venue.id,
@@ -309,6 +335,7 @@ const counts = {
   supported: CATALOGUE.filter((entry) => entry.status === "supported").length,
   outline: CATALOGUE.filter((entry) => entry.drawn === "outline").length,
   surface: CATALOGUE.filter((entry) => entry.drawn === "surface").length,
+  circuit: CATALOGUE.filter((entry) => entry.drawn === "circuit").length,
   workingOn: CATALOGUE.filter((entry) => entry.status === "working-on").length,
   wanted: CATALOGUE.filter((entry) => entry.status === "wanted").length,
   outlineWanted: CATALOGUE.filter((entry) => entry.want === "outline").length,
@@ -336,6 +363,6 @@ for (const [file, language] of [["../docs/catalogue.md", "en"], ["../docs/catalo
   const text = readFileSync(here(file), "utf8");
   writeFileSync(here(file), replaceBlocks(text, catalogueTables(json, language)));
 }
-console.log(`catalogue: ${CATALOGUE.length} venues: ${counts.supported} supported (${counts.outline} in their buildings, ${counts.surface} as a surface), ${counts.workingOn} working on, ${counts.wanted} wanted; ${counts.outlineWanted} outlines wanted`);
+console.log(`catalogue: ${CATALOGUE.length} venues: ${counts.supported} supported (${counts.outline} in their buildings, ${counts.surface} as a surface, ${counts.circuit} as a circuit), ${counts.workingOn} working on, ${counts.wanted} wanted; ${counts.outlineWanted} outlines wanted`);
 for (const group of groups) console.log(`  ${group.id}: ${group.ids.length}`);
 if (gaps.length > 0) console.log(`left blank (${gaps.length}):\n  ${gaps.join("\n  ")}`);

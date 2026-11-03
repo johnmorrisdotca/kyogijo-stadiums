@@ -3,16 +3,16 @@
 
 const WORDS = {
   en: {
-    section: "Section", venues: "Venues", supported: "Supported", outline: "drawn in its building", surface: "drawn as a field, court or floor only", workingOn: "Working on", wanted: "Wanted", outlineWanted: "of them, the building's outline is wanted",
+    section: "Section", venues: "Venues", supported: "Supported", outline: "drawn in its building", surface: "drawn as a field, court or floor only", circuit: "drawn as a circuit", workingOn: "Working on", wanted: "Wanted", outlineWanted: "of them, the building's outline is wanted",
     league: "League", season: "Season", inBuilding: "In its building", fieldOnly: "As a field only", notYet: "Not drawn yet", coverage: "{drawn} of {all} drawn in its building",
     key: "Key", venue: "Venue", city: "City", drawn: "Drawn", item: "Wikidata", ticket: "Ticket", rank: "#", want: "Wanted", capacity: "Capacity", teams: "Teams", sport: "Sport",
-    drawnOutline: "in its building", drawnSurface: "field only", wantOutline: "the building's outline", wantVenue: "the venue", needsCircuit: "the venue (a circuit surface first)", past: "past",
+    drawnOutline: "in its building", drawnSurface: "field only", drawnCircuit: "as a circuit, no stands", wantOutline: "the building's outline", wantVenue: "the venue", needsCircuit: "the venue (its track's data first)", past: "past",
   },
   ja: {
-    section: "区分", venues: "会場数", supported: "対応済み", outline: "建物ごと描ける", surface: "競技面のみ描ける", workingOn: "制作中", wanted: "今後追加したい会場", outlineWanted: "うち、建物の輪郭を追加したいもの",
+    section: "区分", venues: "会場数", supported: "対応済み", outline: "建物ごと描ける", surface: "競技面のみ描ける", circuit: "サーキットとして描ける", workingOn: "制作中", wanted: "今後追加したい会場", outlineWanted: "うち、建物の輪郭を追加したいもの",
     league: "リーグ", season: "シーズン", inBuilding: "建物ごと", fieldOnly: "競技面のみ", notYet: "未対応", coverage: "{all}会場中{drawn}会場を建物ごと描画",
     key: "キー", venue: "会場", city: "都市", drawn: "描き方", item: "Wikidata", ticket: "チケット", rank: "番号", want: "追加したいもの", capacity: "収容人数", teams: "チーム", sport: "競技",
-    drawnOutline: "建物ごと", drawnSurface: "競技面のみ", wantOutline: "建物の輪郭", wantVenue: "会場", needsCircuit: "会場（先にサーキットの描画が必要）", past: "過去の会場",
+    drawnOutline: "建物ごと", drawnSurface: "競技面のみ", drawnCircuit: "サーキットのみ（観客席なし）", wantOutline: "建物の輪郭", wantVenue: "会場", needsCircuit: "会場（先にコースのデータが必要）", past: "過去の会場",
   },
 };
 
@@ -34,8 +34,9 @@ export function catalogueTables(catalogue, language) {
   const sportName = (sport) => catalogue.sports[sport][language];
   const groupName = (group) => group[language];
   const item = (venue) => `[${venue.wikidata}](https://www.wikidata.org/wiki/${venue.wikidata})`;
-  const drawn = (venue) => (venue.drawn === "outline" ? w.drawnOutline : `${w.drawnSurface}${venue.era === "past" ? bracket(w.past) : ""}`);
-  const want = (venue) => (venue.want === "outline" ? w.wantOutline : venue.needs === "circuit-surface" ? w.needsCircuit : w.wantVenue);
+  const drawn = (venue) => (venue.drawn === "outline" ? w.drawnOutline : venue.drawn === "circuit" ? w.drawnCircuit : `${w.drawnSurface}${venue.era === "past" ? bracket(w.past) : ""}`);
+  // A venue of a group that is drawn already (a circuit) says how it is drawn.
+  const want = (venue) => (venue.want === undefined ? drawn(venue) : venue.want === "outline" ? w.wantOutline : venue.needs === "circuit-surface" ? w.needsCircuit : w.wantVenue);
   const table = (head, rows) => [`| ${head.join(" | ")} |`, `| ${head.map(() => "---").join(" | ")} |`, ...rows.map((row) => `| ${row.map(cell).join(" | ")} |`)].join("\n");
   const blocks = {};
 
@@ -46,6 +47,7 @@ export function catalogueTables(catalogue, language) {
       [w.supported, number(catalogue.counts.supported, language)],
       [`${w.supported}${p.colon}${w.outline}`, number(catalogue.counts.outline, language)],
       [`${w.supported}${p.colon}${w.surface}`, number(catalogue.counts.surface, language)],
+      [`${w.supported}${p.colon}${w.circuit}`, number(catalogue.counts.circuit, language)],
       [`${w.supported}${p.colon}${w.outlineWanted}`, number(all.filter((venue) => venue.status === "supported" && venue.want === "outline").length, language)],
       [w.workingOn, number(catalogue.counts.workingOn, language)],
       [w.wanted, number(catalogue.counts.wanted, language)],

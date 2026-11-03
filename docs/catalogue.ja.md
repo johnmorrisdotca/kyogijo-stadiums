@@ -6,19 +6,20 @@
 
 - **対応済み**：このパッケージが描ける実在の会場すべてです。パッケージ自身のデータから作っていて、書き写してはいません。実在のスタジアム（`STADIUMS`）と NHL の実在の会場（`VENUES`）は、OpenStreetMap の建物の輪郭の中に、観客席とあわせて**建物ごと**描きます。`PARKS`、`GROUNDS`、`ARENAS`、`HALLS` のそれ以外のキーは、**競技面のみ**（フィールド、コート、リンク、球場、床）を、データにあればその会場の大きさで描きます。
 - **制作中**：チケット KYOGIJO-STADIUMS-22 のテニスの主要コート10面です。外部の協力者が作ることもできます。
-- **今後追加したい会場**：今シーズンの NFL と CFL の会場のうち、まだ描けないものすべてと、このパッケージが描ける競技の世界の名だたる会場です（サッカー、クリケット、ラグビー、ゲーリックフットボールとオーストラリアンフットボール、相撲と武道、陸上競技、カレッジフットボール、野球、スケートと水泳、屋内競技）。それぞれ有名な順に並べています。F1 の2026年カレンダーのサーキットと、ほかの名サーキットも載せていますが、サーキットを描く機能がまだないため、その対応待ちです。リーグやグループに入っている会場で、今は競技面だけを描けるものは、建物の輪郭を追加したい会場として載せ、重複しては載せていません。
+- **今後追加したい会場**：今シーズンの NFL と CFL の会場のうち、まだ描けないものすべてと、このパッケージが描ける競技の世界の名だたる会場です（サッカー、クリケット、ラグビー、ゲーリックフットボールとオーストラリアンフットボール、相撲と武道、陸上競技、カレッジフットボール、野球、スケートと水泳、屋内競技）。それぞれ有名な順に並べています。F1 の2026年カレンダーのサーキットと、ほかの名サーキットも載せています。どれも、そのコースのデータを待っています（ラスベガス・ストリップ・サーキットはすでに描けるので、対応済みの会場に入っています）。リーグやグループに入っている会場で、今は競技面だけを描けるものは、建物の輪郭を追加したい会場として載せ、重複しては載せていません。
 
 ![デモの会場カタログのページで「追加したい」のタブを選んだところ。リーグごとの対応状況を示す5枚のカード（建物ごと描ける会場と競技面のみの会場の割合を示す棒グラフつき）、競技とグループの絞り込みボタン、検索欄、会場に印を付けた世界地図、国旗・都市・競技・状態を示した会場のカード](./pictures/catalogue-ja-desk-light.webp)
 
 <!-- catalogue-counts -->
 | 区分 | 会場数 |
 | --- | --- |
-| 対応済み | 331 |
+| 対応済み | 332 |
 | 対応済み：建物ごと描ける | 43 |
 | 対応済み：競技面のみ描ける | 288 |
+| 対応済み：サーキットとして描ける | 1 |
 | 対応済み：うち、建物の輪郭を追加したいもの | 69 |
 | 制作中 | 10 |
-| 今後追加したい会場 | 133 |
+| 今後追加したい会場 | 132 |
 <!-- /catalogue-counts -->
 
 ## 使い方
@@ -583,6 +584,12 @@ console.log(lambeau.status, lambeau.nameJa);
 | キー | 会場 | 都市 | 描き方 | Wikidata |
 | --- | --- | --- | --- | --- |
 | `korakuen-hall` | 後楽園ホール | 東京、日本 | 建物ごと | [Q4389857](https://www.wikidata.org/wiki/Q4389857) |
+
+### モータースポーツ（1）
+
+| キー | 会場 | 都市 | 描き方 | Wikidata |
+| --- | --- | --- | --- | --- |
+| `las-vegas` | ラスベガス・ストリップ・サーキット | パラダイス、アメリカ合衆国 | サーキットのみ（観客席なし） | [Q113112116](https://www.wikidata.org/wiki/Q113112116) |
 <!-- /catalogue-supported -->
 
 ## 制作中
@@ -732,68 +739,68 @@ console.log(lambeau.status, lambeau.nameJa);
 
 | 番号 | キー | 会場 | 都市 | 競技 | 追加したいもの | 収容人数 | Wikidata |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | `albert-park-circuit` | アルバート・パーク・サーキット | メルボルン、オーストラリア | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q171288](https://www.wikidata.org/wiki/Q171288) |
-| 2 | `shanghai-international-circuit` | 上海インターナショナルサーキット | 上海、中華人民共和国 | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q171358](https://www.wikidata.org/wiki/Q171358) |
-| 3 | `suzuka-circuit` | 鈴鹿サーキット | 鈴鹿、日本 | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q174170](https://www.wikidata.org/wiki/Q174170) |
-| 4 | `miami-international-autodrome` | マイアミ・インターナショナル・オートドローム | マイアミ・ガーデンズ、アメリカ合衆国 | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q106544792](https://www.wikidata.org/wiki/Q106544792) |
-| 5 | `circuit-gilles-villeneuve` | ジル・ヴィルヌーヴ・サーキット | モントリオール、カナダ | モータースポーツ | 会場（先にサーキットの描画が必要） | 100,000 | [Q172860](https://www.wikidata.org/wiki/Q172860) |
-| 6 | `circuit-de-monaco` | モンテカルロ市街地コース | モナコ、モナコ | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q171400](https://www.wikidata.org/wiki/Q171400) |
-| 7 | `circuit-de-barcelona-catalunya` | カタロニア・サーキット | モンメロ、スペイン王国 | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q171404](https://www.wikidata.org/wiki/Q171404) |
-| 8 | `red-bull-ring` | レッドブル・リンク | シュピールベルク、オーストリア | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q171566](https://www.wikidata.org/wiki/Q171566) |
-| 9 | `silverstone-circuit` | シルバーストン・サーキット | シルバーストーン、イギリス | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q171402](https://www.wikidata.org/wiki/Q171402) |
-| 10 | `circuit-de-spa-francorchamps` | スパ・フランコルシャン | スタブロ、ベルギー | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q172851](https://www.wikidata.org/wiki/Q172851) |
-| 11 | `hungaroring` | ハンガロリンク | モギョロード、ハンガリー | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q171356](https://www.wikidata.org/wiki/Q171356) |
-| 12 | `circuit-zandvoort` | ザントフォールト・サーキット | ザントフォールト、オランダ王国 | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q173083](https://www.wikidata.org/wiki/Q173083) |
-| 13 | `monza-circuit` | モンツァ・サーキット | モンツァ、イタリア | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q171417](https://www.wikidata.org/wiki/Q171417) |
-| 14 | `madring` | マドリンク | マドリード、スペイン王国 | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q126193406](https://www.wikidata.org/wiki/Q126193406) |
-| 15 | `baku-city-circuit` | バクー市街地コース | バクー、アゼルバイジャン | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q17004958](https://www.wikidata.org/wiki/Q17004958) |
-| 16 | `sepang-international-circuit` | セパン・インターナショナル・サーキット | セパン、マレーシア | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q172738](https://www.wikidata.org/wiki/Q172738) |
-| 17 | `marina-bay-street-circuit` | シンガポール市街地コース | シンガポール、シンガポール | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q171390](https://www.wikidata.org/wiki/Q171390) |
-| 18 | `circuit-of-the-americas` | サーキット・オブ・ジ・アメリカズ | オースティン、アメリカ合衆国 | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q59626](https://www.wikidata.org/wiki/Q59626) |
-| 19 | `autodromo-hermanos-rodriguez` | エルマノス・ロドリゲス・サーキット | メキシコシティ、メキシコ | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q173099](https://www.wikidata.org/wiki/Q173099) |
-| 20 | `interlagos-circuit` | インテルラゴス・サーキット | サンパウロ、ブラジル | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q171387](https://www.wikidata.org/wiki/Q171387) |
-| 21 | `las-vegas-strip-circuit` | ラスベガス・ストリップ・サーキット | パラダイス、アメリカ合衆国 | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q113112116](https://www.wikidata.org/wiki/Q113112116) |
-| 22 | `lusail-international-circuit` | ルサイル・インターナショナル・サーキット | ルサイル、カタール | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q547535](https://www.wikidata.org/wiki/Q547535) |
-| 23 | `yas-marina-circuit` | ヤス・マリーナ・サーキット | アブダビ、アラブ首長国連邦 | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q172869](https://www.wikidata.org/wiki/Q172869) |
+| 1 | `albert-park-circuit` | アルバート・パーク・サーキット | メルボルン、オーストラリア | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q171288](https://www.wikidata.org/wiki/Q171288) |
+| 2 | `shanghai-international-circuit` | 上海インターナショナルサーキット | 上海、中華人民共和国 | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q171358](https://www.wikidata.org/wiki/Q171358) |
+| 3 | `suzuka-circuit` | 鈴鹿サーキット | 鈴鹿、日本 | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q174170](https://www.wikidata.org/wiki/Q174170) |
+| 4 | `miami-international-autodrome` | マイアミ・インターナショナル・オートドローム | マイアミ・ガーデンズ、アメリカ合衆国 | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q106544792](https://www.wikidata.org/wiki/Q106544792) |
+| 5 | `circuit-gilles-villeneuve` | ジル・ヴィルヌーヴ・サーキット | モントリオール、カナダ | モータースポーツ | 会場（先にコースのデータが必要） | 100,000 | [Q172860](https://www.wikidata.org/wiki/Q172860) |
+| 6 | `circuit-de-monaco` | モンテカルロ市街地コース | モナコ、モナコ | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q171400](https://www.wikidata.org/wiki/Q171400) |
+| 7 | `circuit-de-barcelona-catalunya` | カタロニア・サーキット | モンメロ、スペイン王国 | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q171404](https://www.wikidata.org/wiki/Q171404) |
+| 8 | `red-bull-ring` | レッドブル・リンク | シュピールベルク、オーストリア | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q171566](https://www.wikidata.org/wiki/Q171566) |
+| 9 | `silverstone-circuit` | シルバーストン・サーキット | シルバーストーン、イギリス | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q171402](https://www.wikidata.org/wiki/Q171402) |
+| 10 | `circuit-de-spa-francorchamps` | スパ・フランコルシャン | スタブロ、ベルギー | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q172851](https://www.wikidata.org/wiki/Q172851) |
+| 11 | `hungaroring` | ハンガロリンク | モギョロード、ハンガリー | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q171356](https://www.wikidata.org/wiki/Q171356) |
+| 12 | `circuit-zandvoort` | ザントフォールト・サーキット | ザントフォールト、オランダ王国 | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q173083](https://www.wikidata.org/wiki/Q173083) |
+| 13 | `monza-circuit` | モンツァ・サーキット | モンツァ、イタリア | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q171417](https://www.wikidata.org/wiki/Q171417) |
+| 14 | `madring` | マドリンク | マドリード、スペイン王国 | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q126193406](https://www.wikidata.org/wiki/Q126193406) |
+| 15 | `baku-city-circuit` | バクー市街地コース | バクー、アゼルバイジャン | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q17004958](https://www.wikidata.org/wiki/Q17004958) |
+| 16 | `sepang-international-circuit` | セパン・インターナショナル・サーキット | セパン、マレーシア | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q172738](https://www.wikidata.org/wiki/Q172738) |
+| 17 | `marina-bay-street-circuit` | シンガポール市街地コース | シンガポール、シンガポール | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q171390](https://www.wikidata.org/wiki/Q171390) |
+| 18 | `circuit-of-the-americas` | サーキット・オブ・ジ・アメリカズ | オースティン、アメリカ合衆国 | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q59626](https://www.wikidata.org/wiki/Q59626) |
+| 19 | `autodromo-hermanos-rodriguez` | エルマノス・ロドリゲス・サーキット | メキシコシティ、メキシコ | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q173099](https://www.wikidata.org/wiki/Q173099) |
+| 20 | `interlagos-circuit` | インテルラゴス・サーキット | サンパウロ、ブラジル | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q171387](https://www.wikidata.org/wiki/Q171387) |
+| 21 | `las-vegas` | ラスベガス・ストリップ・サーキット | パラダイス、アメリカ合衆国 | モータースポーツ | サーキットのみ（観客席なし） |  | [Q113112116](https://www.wikidata.org/wiki/Q113112116) |
+| 22 | `lusail-international-circuit` | ルサイル・インターナショナル・サーキット | ルサイル、カタール | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q547535](https://www.wikidata.org/wiki/Q547535) |
+| 23 | `yas-marina-circuit` | ヤス・マリーナ・サーキット | アブダビ、アラブ首長国連邦 | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q172869](https://www.wikidata.org/wiki/Q172869) |
 
 ### ほかの名サーキット（29）
 
 | 番号 | キー | 会場 | 都市 | 競技 | 追加したいもの | 収容人数 | Wikidata |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | `indianapolis-motor-speedway` | インディアナポリス・モーター・スピードウェイ | スピードウェイ、アメリカ合衆国 | モータースポーツ | 会場（先にサーキットの描画が必要） | 257,325 | [Q172732](https://www.wikidata.org/wiki/Q172732) |
-| 2 | `circuit-de-la-sarthe` | サルト・サーキット | ル・マン、フランス | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q174090](https://www.wikidata.org/wiki/Q174090) |
-| 3 | `daytona-international-speedway` | デイトナ・インターナショナル・スピードウェイ | デイトナビーチ、アメリカ合衆国 | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q1179250](https://www.wikidata.org/wiki/Q1179250) |
-| 4 | `nurburgring` | ニュルブルクリンク | ドイツ | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q152207](https://www.wikidata.org/wiki/Q152207) |
-| 5 | `mount-panorama-circuit` | マウント・パノラマ・サーキット | オーストラリア | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q1950645](https://www.wikidata.org/wiki/Q1950645) |
-| 6 | `talladega-superspeedway` | タラデガ・スーパースピードウェイ | アメリカ合衆国 | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q1547320](https://www.wikidata.org/wiki/Q1547320) |
-| 7 | `bristol-motor-speedway` | ブリストル・モーター・スピードウェイ | ブリストル、アメリカ合衆国 | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q383490](https://www.wikidata.org/wiki/Q383490) |
-| 8 | `charlotte-motor-speedway` | シャーロット・モーター・スピードウェイ | アメリカ合衆国 | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q1067286](https://www.wikidata.org/wiki/Q1067286) |
-| 9 | `darlington-raceway` | ダーリントン・レースウェイ | アメリカ合衆国 | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q1166378](https://www.wikidata.org/wiki/Q1166378) |
-| 10 | `fuji-speedway` | 富士スピードウェイ | 小山町、日本 | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q171399](https://www.wikidata.org/wiki/Q171399) |
-| 11 | `sebring-international-raceway` | セブリング・インターナショナル・レースウェイ | アメリカ合衆国 | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q172883](https://www.wikidata.org/wiki/Q172883) |
-| 12 | `bahrain-international-circuit` | バーレーン・インターナショナル・サーキット | サヒール、バーレーン | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q171332](https://www.wikidata.org/wiki/Q171332) |
-| 13 | `jeddah-corniche-circuit` | ジェッダ・コーニッシュ・サーキット | サウジアラビア | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q102141307](https://www.wikidata.org/wiki/Q102141307) |
-| 14 | `imola-circuit` | イモラ・サーキット | イモラ、イタリア | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q171313](https://www.wikidata.org/wiki/Q171313) |
-| 15 | `mugello-circuit` | ムジェロ・サーキット | スカルペリーア・エ・サン・ピエロ、イタリア | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q782455](https://www.wikidata.org/wiki/Q782455) |
-| 16 | `misano-world-circuit` | ミサノ・ワールド・サーキット | ミサノ・アドリアーティコ、イタリア | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q1347804](https://www.wikidata.org/wiki/Q1347804) |
-| 17 | `phillip-island-grand-prix-circuit` | フィリップ・アイランド・サーキット | フィリップ島、オーストラリア | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q571271](https://www.wikidata.org/wiki/Q571271) |
-| 18 | `tt-circuit-assen` | TTサーキット・アッセン | アッセン、オランダ王国 | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q843925](https://www.wikidata.org/wiki/Q843925) |
-| 19 | `sachsenring` | ザクセンリンク | ホーエンシュタイン＝エルンストタール、ドイツ | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q567770](https://www.wikidata.org/wiki/Q567770) |
-| 20 | `motegi-circuit` | モビリティリゾートもてぎ | 茂木町、日本 | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q1420895](https://www.wikidata.org/wiki/Q1420895) |
-| 21 | `circuito-de-jerez` | ヘレス・サーキット | ヘレス・デ・ラ・フロンテーラ、スペイン王国 | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q172884](https://www.wikidata.org/wiki/Q172884) |
-| 22 | `buriram-international-circuit` | ブリーラム・インターナショナル・サーキット | ブリーラム、タイ王国 | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q16307503](https://www.wikidata.org/wiki/Q16307503) |
-| 23 | `circuit-ricardo-tormo` | リカルド・トルモ・サーキット | チェステ、スペイン王国 | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q786577](https://www.wikidata.org/wiki/Q786577) |
-| 24 | `motorland-aragon` | モーターランド・アラゴン | アルカニス、スペイン王国 | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q1321650](https://www.wikidata.org/wiki/Q1321650) |
-| 25 | `mandalika-international-street-circuit` | マンダリカ・インターナショナル・ストリート・サーキット | インドネシア | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q105061873](https://www.wikidata.org/wiki/Q105061873) |
-| 26 | `autodromo-internacional-do-algarve` | アルガルヴェ・インターナショナル・サーキット | ポルティマン、ポルトガル | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q789427](https://www.wikidata.org/wiki/Q789427) |
-| 27 | `balaton-park-circuit` | バラトン・パーク・サーキット | バラトンフェーカヤール、ハンガリー | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q118511681](https://www.wikidata.org/wiki/Q118511681) |
-| 28 | `brno-circuit` | ブルノ・サーキット | ブルノ、チェコ共和国 | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q222686](https://www.wikidata.org/wiki/Q222686) |
-| 29 | `autodromo-internacional-ayrton-senna-goiania` | アウトドローモ・インテルナシオナル・アイルトン・セナ | ゴイアニア、ブラジル | モータースポーツ | 会場（先にサーキットの描画が必要） |  | [Q789407](https://www.wikidata.org/wiki/Q789407) |
+| 1 | `indianapolis-motor-speedway` | インディアナポリス・モーター・スピードウェイ | スピードウェイ、アメリカ合衆国 | モータースポーツ | 会場（先にコースのデータが必要） | 257,325 | [Q172732](https://www.wikidata.org/wiki/Q172732) |
+| 2 | `circuit-de-la-sarthe` | サルト・サーキット | ル・マン、フランス | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q174090](https://www.wikidata.org/wiki/Q174090) |
+| 3 | `daytona-international-speedway` | デイトナ・インターナショナル・スピードウェイ | デイトナビーチ、アメリカ合衆国 | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q1179250](https://www.wikidata.org/wiki/Q1179250) |
+| 4 | `nurburgring` | ニュルブルクリンク | ドイツ | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q152207](https://www.wikidata.org/wiki/Q152207) |
+| 5 | `mount-panorama-circuit` | マウント・パノラマ・サーキット | オーストラリア | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q1950645](https://www.wikidata.org/wiki/Q1950645) |
+| 6 | `talladega-superspeedway` | タラデガ・スーパースピードウェイ | アメリカ合衆国 | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q1547320](https://www.wikidata.org/wiki/Q1547320) |
+| 7 | `bristol-motor-speedway` | ブリストル・モーター・スピードウェイ | ブリストル、アメリカ合衆国 | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q383490](https://www.wikidata.org/wiki/Q383490) |
+| 8 | `charlotte-motor-speedway` | シャーロット・モーター・スピードウェイ | アメリカ合衆国 | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q1067286](https://www.wikidata.org/wiki/Q1067286) |
+| 9 | `darlington-raceway` | ダーリントン・レースウェイ | アメリカ合衆国 | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q1166378](https://www.wikidata.org/wiki/Q1166378) |
+| 10 | `fuji-speedway` | 富士スピードウェイ | 小山町、日本 | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q171399](https://www.wikidata.org/wiki/Q171399) |
+| 11 | `sebring-international-raceway` | セブリング・インターナショナル・レースウェイ | アメリカ合衆国 | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q172883](https://www.wikidata.org/wiki/Q172883) |
+| 12 | `bahrain-international-circuit` | バーレーン・インターナショナル・サーキット | サヒール、バーレーン | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q171332](https://www.wikidata.org/wiki/Q171332) |
+| 13 | `jeddah-corniche-circuit` | ジェッダ・コーニッシュ・サーキット | サウジアラビア | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q102141307](https://www.wikidata.org/wiki/Q102141307) |
+| 14 | `imola-circuit` | イモラ・サーキット | イモラ、イタリア | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q171313](https://www.wikidata.org/wiki/Q171313) |
+| 15 | `mugello-circuit` | ムジェロ・サーキット | スカルペリーア・エ・サン・ピエロ、イタリア | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q782455](https://www.wikidata.org/wiki/Q782455) |
+| 16 | `misano-world-circuit` | ミサノ・ワールド・サーキット | ミサノ・アドリアーティコ、イタリア | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q1347804](https://www.wikidata.org/wiki/Q1347804) |
+| 17 | `phillip-island-grand-prix-circuit` | フィリップ・アイランド・サーキット | フィリップ島、オーストラリア | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q571271](https://www.wikidata.org/wiki/Q571271) |
+| 18 | `tt-circuit-assen` | TTサーキット・アッセン | アッセン、オランダ王国 | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q843925](https://www.wikidata.org/wiki/Q843925) |
+| 19 | `sachsenring` | ザクセンリンク | ホーエンシュタイン＝エルンストタール、ドイツ | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q567770](https://www.wikidata.org/wiki/Q567770) |
+| 20 | `motegi-circuit` | モビリティリゾートもてぎ | 茂木町、日本 | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q1420895](https://www.wikidata.org/wiki/Q1420895) |
+| 21 | `circuito-de-jerez` | ヘレス・サーキット | ヘレス・デ・ラ・フロンテーラ、スペイン王国 | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q172884](https://www.wikidata.org/wiki/Q172884) |
+| 22 | `buriram-international-circuit` | ブリーラム・インターナショナル・サーキット | ブリーラム、タイ王国 | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q16307503](https://www.wikidata.org/wiki/Q16307503) |
+| 23 | `circuit-ricardo-tormo` | リカルド・トルモ・サーキット | チェステ、スペイン王国 | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q786577](https://www.wikidata.org/wiki/Q786577) |
+| 24 | `motorland-aragon` | モーターランド・アラゴン | アルカニス、スペイン王国 | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q1321650](https://www.wikidata.org/wiki/Q1321650) |
+| 25 | `mandalika-international-street-circuit` | マンダリカ・インターナショナル・ストリート・サーキット | インドネシア | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q105061873](https://www.wikidata.org/wiki/Q105061873) |
+| 26 | `autodromo-internacional-do-algarve` | アルガルヴェ・インターナショナル・サーキット | ポルティマン、ポルトガル | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q789427](https://www.wikidata.org/wiki/Q789427) |
+| 27 | `balaton-park-circuit` | バラトン・パーク・サーキット | バラトンフェーカヤール、ハンガリー | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q118511681](https://www.wikidata.org/wiki/Q118511681) |
+| 28 | `brno-circuit` | ブルノ・サーキット | ブルノ、チェコ共和国 | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q222686](https://www.wikidata.org/wiki/Q222686) |
+| 29 | `autodromo-internacional-ayrton-senna-goiania` | アウトドローモ・インテルナシオナル・アイルトン・セナ | ゴイアニア、ブラジル | モータースポーツ | 会場（先にコースのデータが必要） |  | [Q789407](https://www.wikidata.org/wiki/Q789407) |
 <!-- /catalogue-wanted -->
 
 ## サーキットに必要なもの
 
-このパッケージはまだサーキットを描けないため、サーキットはすべて待ちの状態です（`needs: "circuit-surface"`）。サーキットを描くには、OpenStreetMap に記録されたコース（`highway=raceway`、サーキットのリレーションのウェイ）と、記録されていればピットレーン、スタートライン、セクターが必要です。これは ODbL の地理データなので、実在の会場の輪郭（`src/venues.osm.data.ts`）と同じように、クレジットを付けてほかのファイルとは分けて保存し、一度取得したら日付付きで `data-sources/` に残します。全長とコーナーは、サーキットの記事が公表している値と照らし合わせます。
+`circuits` エントリポイントは、OpenStreetMap に記録されたとおりにサーキットを描きます（コース幅で描いた周回路とピットレーン。観客席はありません）。最初のサーキットはラスベガス・ストリップ・サーキットで、対応済みとして載せています（`drawn: "circuit"`。ID と名前は `CIRCUITS` 自身のものです。`drawCircuit({ circuit: "las-vegas" })` で描けます。[サーキット](./circuits.ja.md)を参照してください）。ほかのサーキットは、それぞれのコースのデータを待っています（`needs: "circuit-surface"`）。必要なのは、OpenStreetMap のサーキットのリレーション（周回路、ピットレーン、スタートとフィニッシュ、記録されていればコーナー番号）です。これは ODbL の地理データなので、クレジットを付けてほかのファイルとは分けて保存し、一度取得したら日付付きで `data-sources/circuits/` に残します。全長とコーナー数は、サーキットの記事が公表している値と照らし合わせます。手順は[次のサーキットを加えるには](./circuits.ja.md#次のサーキットを加えるには)にあります。
 
 ## 出典とライセンス
 

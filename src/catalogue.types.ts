@@ -6,9 +6,10 @@ export type CatalogueStatus = "supported" | "working-on" | "wanted";
 
 /**
  * How a supported venue is drawn: `outline`, inside the outline of its real building with a bowl of its seats (`STADIUMS` and the NHL's `VENUES`), or `surface`, its field, court, rink, park or
- * floor only, at the venue's own size where the data gives one (a key of `PARKS`, `GROUNDS`, `ARENAS` or `HALLS`).
+ * floor only, at the venue's own size where the data gives one (a key of `PARKS`, `GROUNDS`, `ARENAS` or `HALLS`), or `circuit`, the lap as OpenStreetMap maps it with its pit lane and no stands
+ * (a key of `CIRCUITS`, drawn by `drawCircuit` of the `circuits` entry).
  */
-export type CatalogueDrawn = "outline" | "surface";
+export type CatalogueDrawn = "outline" | "surface" | "circuit";
 
 /** What is wanted of a venue: its building's `outline` (a venue drawn today as a surface only), or the `venue` itself (one the package does not draw at all). */
 export type CatalogueWant = "outline" | "venue";
@@ -65,7 +66,7 @@ export interface CatalogueEntry {
   /** What must be built first. */
   needs?: CatalogueNeed;
   /** Which of the package's lists a supported venue comes from: a real stadium or NHL venue (`stadium`, `venue`), or a `park`, `ground`, `arena` or `hall`. */
-  kind?: "stadium" | "venue" | "park" | "ground" | "arena" | "hall";
+  kind?: "stadium" | "venue" | "park" | "ground" | "arena" | "hall" | "circuit";
   /** The everyday name in English. */
   name: string;
   /** The name in Japanese; absent where no source gives one (`missing.nameJa` says so). */
@@ -93,7 +94,7 @@ export interface CatalogueEntry {
   groups: string[];
   /** The ticket of a venue being built. */
   ticket?: string;
-  /** The options that draw a supported venue. */
+  /** The options that draw a supported venue with `drawKyogijo` (a circuit has none: `drawCircuit({ circuit: id })` of the `circuits` entry draws it). */
   draw?: CatalogueDraw;
   /** The demo page that shows a supported venue, relative to the demo's address (`CATALOGUE_SITE`). */
   demo?: string;
@@ -129,7 +130,7 @@ export interface CatalogueData {
   site: string;
   licence: string;
   source: { read: string; rawAnswers: string; articles: Record<string, number> };
-  counts: { supported: number; outline: number; surface: number; workingOn: number; wanted: number; outlineWanted: number };
+  counts: { supported: number; outline: number; surface: number; circuit: number; workingOn: number; wanted: number; outlineWanted: number };
   sports: Record<CatalogueSport, { en: string; ja: string; surface: string | null }>;
   groups: CatalogueGroup[];
   countries: Record<string, { en: string; ja?: string }>;

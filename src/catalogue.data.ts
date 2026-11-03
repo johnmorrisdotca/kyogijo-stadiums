@@ -23,11 +23,12 @@ export const CATALOGUE_DATA: CatalogueData = {
   }
  },
  "counts": {
-  "supported": 331,
+  "supported": 332,
   "outline": 43,
   "surface": 288,
+  "circuit": 1,
   "workingOn": 10,
-  "wanted": 133,
+  "wanted": 132,
   "outlineWanted": 69
  },
  "sports": {
@@ -512,7 +513,7 @@ export const CATALOGUE_DATA: CatalogueData = {
     "circuit-of-the-americas",
     "autodromo-hermanos-rodriguez",
     "interlagos-circuit",
-    "las-vegas-strip-circuit",
+    "las-vegas",
     "lusail-international-circuit",
     "yas-marina-circuit"
    ],
@@ -1064,6 +1065,7 @@ export const CATALOGUE_DATA: CatalogueData = {
   {"id":"verdun-auditorium","status":"supported","drawn":"surface","kind":"arena","name":"Verdun Auditorium","nameJa":"ヴェルダン・オーディトリアム","nameJaFrom":"package","city":"Montreal","cityJa":"モントリオール","country":"CA","lat":45.4625,"lon":-73.56167,"sports":["hockey"],"wikidata":"Q2870805","era":"past","groups":[],"draw":{"sport":"nhl","arena":"verdun-auditorium"},"demo":"?place=verdun-auditorium#atlas"},
   {"id":"rhode-island-auditorium","status":"supported","drawn":"surface","kind":"arena","name":"Rhode Island Auditorium","nameJa":"ロードアイランド・オーディトリアム","nameJaFrom":"package","city":"Providence","cityJa":"プロビデンス","country":"US","lat":41.8507,"lon":-71.4018,"sports":["basketball"],"wikidata":"Q7320897","era":"past","groups":[],"draw":{"sport":"nba","arena":"rhode-island-auditorium"},"demo":"?place=rhode-island-auditorium#atlas"},
   {"id":"korakuen-hall","status":"supported","drawn":"outline","kind":"stadium","name":"Korakuen Hall","nameJa":"後楽園ホール","nameJaFrom":"package","city":"Tokyo","cityJa":"東京","country":"JP","lat":35.70432,"lon":139.75194,"sports":["boxing"],"wikidata":"Q4389857","era":"current","groups":[],"draw":{"sport":"boxing","stadium":"korakuen-hall","crowd":{"real":true}},"demo":"stadiums.html?stadium=korakuen-hall"},
+  {"id":"las-vegas","status":"supported","drawn":"circuit","kind":"circuit","name":"Las Vegas Strip Circuit","nameJa":"ラスベガス・ストリップ・サーキット","nameJaFrom":"package","city":"Paradise","cityJa":"パラダイス","country":"US","lat":36.11003,"lon":-115.16181,"sports":["motor-racing"],"wikidata":"Q113112116","era":"current","groups":["f1"],"demo":"circuits.html?circuit=las-vegas"},
   {"id":"arthur-ashe-stadium","status":"working-on","want":"venue","name":"Arthur Ashe Stadium","nameJa":"アーサー・アッシュ・スタジアム","nameJaFrom":"wikidata","city":"New York City","cityJa":"ニューヨーク","country":"US","lat":40.74989,"lon":-73.84703,"sports":["tennis"],"wikidata":"Q609551","capacity":22547,"groups":["tennis"],"ticket":"KYOGIJO-STADIUMS-22"},
   {"id":"louis-armstrong-stadium","status":"working-on","want":"venue","name":"Louis Armstrong Stadium","nameJa":"ルイ・アームストロング・スタジアム","nameJaFrom":"wikidata","city":"New York City","cityJa":"ニューヨーク","country":"US","lat":40.75094,"lon":-73.8455,"sports":["tennis"],"wikidata":"Q47487977","capacity":14053,"groups":["tennis"],"ticket":"KYOGIJO-STADIUMS-22"},
   {"id":"rod-laver-arena","status":"working-on","want":"venue","name":"Rod Laver Arena","nameJa":"ロッド・レーバー・アリーナ","nameJaFrom":"wikidata","city":"Melbourne","cityJa":"メルボルン","country":"AU","lat":-37.82157,"lon":144.97852,"sports":["tennis"],"wikidata":"Q222878","capacity":14820,"groups":["tennis"],"ticket":"KYOGIJO-STADIUMS-22"},
@@ -1176,7 +1178,6 @@ export const CATALOGUE_DATA: CatalogueData = {
   {"id":"circuit-of-the-americas","status":"wanted","want":"venue","needs":"circuit-surface","name":"Circuit of the Americas","nameJa":"サーキット・オブ・ジ・アメリカズ","nameJaFrom":"wikidata","city":"Austin","cityJa":"オースティン","country":"US","lat":30.1328,"lon":-97.6411,"sports":["motor-racing"],"wikidata":"Q59626","groups":["f1"]},
   {"id":"autodromo-hermanos-rodriguez","status":"wanted","want":"venue","needs":"circuit-surface","name":"Autódromo Hermanos Rodríguez","nameJa":"エルマノス・ロドリゲス・サーキット","nameJaFrom":"wikidata","city":"Mexico City","cityJa":"メキシコシティ","country":"MX","lat":19.4042,"lon":-99.08875,"sports":["motor-racing"],"wikidata":"Q173099","groups":["f1"]},
   {"id":"interlagos-circuit","status":"wanted","want":"venue","needs":"circuit-surface","name":"Interlagos Circuit","nameJa":"インテルラゴス・サーキット","nameJaFrom":"wikidata","city":"São Paulo","cityJa":"サンパウロ","country":"BR","lat":-23.70111,"lon":-46.69722,"sports":["motor-racing"],"wikidata":"Q171387","groups":["f1"]},
-  {"id":"las-vegas-strip-circuit","status":"wanted","want":"venue","needs":"circuit-surface","name":"Las Vegas Strip Circuit","nameJa":"ラスベガス・ストリップ・サーキット","nameJaFrom":"wikidata","city":"Paradise","cityJa":"パラダイス","country":"US","lat":36.11003,"lon":-115.16181,"sports":["motor-racing"],"wikidata":"Q113112116","groups":["f1"]},
   {"id":"lusail-international-circuit","status":"wanted","want":"venue","needs":"circuit-surface","name":"Lusail International Circuit","nameJa":"ルサイル・インターナショナル・サーキット","nameJaFrom":"wikidata","city":"Lusail","cityJa":"ルサイル","country":"QA","lat":25.49,"lon":51.45417,"sports":["motor-racing"],"wikidata":"Q547535","groups":["f1"]},
   {"id":"sepang-international-circuit","status":"wanted","want":"venue","needs":"circuit-surface","name":"Sepang International Circuit","nameJa":"セパン・インターナショナル・サーキット","nameJaFrom":"wikidata","city":"Sepang","cityJa":"セパン","country":"MY","lat":2.76056,"lon":101.7375,"sports":["motor-racing"],"wikidata":"Q172738","groups":["f1"]},
   {"id":"yas-marina-circuit","status":"wanted","want":"venue","needs":"circuit-surface","name":"Yas Marina Circuit","nameJa":"ヤス・マリーナ・サーキット","nameJaFrom":"wikidata","city":"Abu Dhabi","cityJa":"アブダビ","country":"AE","lat":24.47024,"lon":54.60608,"sports":["motor-racing"],"wikidata":"Q172869","groups":["f1"]},

@@ -1,5 +1,5 @@
 {
- "about": "The source of the catalogue (pnpm catalogue). The supported venues are not here: they are made from the package's own data (PLACES of the atlas, STADIUMS, VENUES). Here are the venues the package does not draw yet (status wanted or working-on), each named by its English Wikipedia title, and the groups the Wanted section is ordered by. Every fact that is not a title, a city, a sport or a team is read from the raw answers kept in data-sources/catalogue/<date>/ (pnpm catalogue:fetch). A name in Japanese written here (nameJa) is used only where Wikidata has no Japanese label and the Japanese Wikipedia has no article, and was checked by a reviewer.",
+ "about": "The source of the catalogue (pnpm catalogue). The supported venues are not here: they are made from the package's own data (PLACES of the atlas, STADIUMS, VENUES). Here are the venues the package does not draw yet (status wanted or working-on), and the circuits it draws (`package: \"circuits\"`: the id is the key of `CIRCUITS`, whose names and country the build reads), each named by its English Wikipedia title, and the groups the Wanted section is ordered by. Every fact that is not a title, a city, a sport or a team is read from the raw answers kept in data-sources/catalogue/<date>/ (pnpm catalogue:fetch). A name in Japanese written here (nameJa) is used only where Wikidata has no Japanese label and the Japanese Wikipedia has no article, and was checked by a reviewer.",
  "read": "2026-11-03",
  "workingOnTicket": "KYOGIJO-STADIUMS-22",
  "leagues": [
@@ -206,7 +206,7 @@
     "circuit-of-the-americas",
     "autodromo-hermanos-rodriguez",
     "interlagos-circuit",
-    "las-vegas-strip-circuit",
+    "las-vegas",
     "lusail-international-circuit",
     "yas-marina-circuit"
    ]
@@ -1284,12 +1284,13 @@
    ]
   },
   {
-   "id": "las-vegas-strip-circuit",
+   "id": "las-vegas",
    "enwiki": "Las Vegas Strip Circuit",
    "city": "Paradise",
    "sports": [
     "motor-racing"
-   ]
+   ],
+   "package": "circuits"
   },
   {
    "id": "lusail-international-circuit",

@@ -6,6 +6,7 @@ import { catalogueTables } from "../scripts/catalogue-docs.mjs";
 import { placeById } from "./atlas.ts";
 import { CATALOGUE, CATALOGUE_GROUPS, CATALOGUE_SPORTS, catalogueByGroup, catalogueById, catalogueBySport, catalogueByStatus, catalogueCoverage, catalogueWanted } from "./catalogue.ts";
 import { CATALOGUE_DATA } from "./catalogue.data.ts";
+import { CIRCUIT_IDS, circuitById } from "./circuits.ts";
 import { drawKyogijo } from "./draw.ts";
 import { STADIUMS, STADIUM_IDS, stadiumNames } from "./stadiums.ts";
 import { VENUES, VENUE_IDS } from "./venues.ts";
@@ -30,6 +31,11 @@ describe("the catalogue", () => {
     const supported = catalogueByStatus("supported");
     for (const entry of supported) {
       const place = placeById(entry.id);
+      const circuit = circuitById(entry.id);
+      if (circuit !== undefined) {
+        expect([entry.wikidata, entry.name, entry.nameJa, entry.country, entry.drawn], entry.id).toEqual([circuit.wikidata, circuit.names.en, circuit.names.ja, circuit.country, "circuit"]);
+        continue;
+      }
       const stadium = STADIUM_IDS.includes(entry.id) ? STADIUMS[entry.id] : undefined;
       const venue = VENUE_IDS.includes(entry.id) ? VENUES[entry.id] : undefined;
       expect(place !== undefined || stadium !== undefined, entry.id).toBe(true);
@@ -39,7 +45,7 @@ describe("the catalogue", () => {
     }
     // Every real stadium and NHL venue, and every place of the atlas, is there.
     for (const id of [...STADIUM_IDS, ...VENUE_IDS]) expect(catalogueById(id)?.drawn, id).toBe("outline");
-    expect(supported.length).toBe(new Set([...STADIUM_IDS, ...VENUE_IDS, ...CATALOGUE.filter((entry) => placeById(entry.id) !== undefined).map((entry) => entry.id)]).size);
+    expect(supported.length).toBe(new Set([...STADIUM_IDS, ...VENUE_IDS, ...CIRCUIT_IDS, ...CATALOGUE.filter((entry) => placeById(entry.id) !== undefined).map((entry) => entry.id)]).size);
   });
 
   it("draws every supported venue it gives the options of, and links each to a page of the demo", () => {
@@ -48,7 +54,7 @@ describe("the catalogue", () => {
       const entry = catalogueById(id);
       expect(drawKyogijo({ ...entry.draw, style: "none" }).startsWith("<svg"), id).toBe(true);
     }
-    for (const entry of catalogueByStatus("supported")) expect(entry.demo, entry.id).toMatch(/^(stadiums\.html\?stadium=|venues\.html\?venue=|\?place=)[a-z0-9-]+(#atlas)?$/);
+    for (const entry of catalogueByStatus("supported")) expect(entry.demo, entry.id).toMatch(/^(stadiums\.html\?stadium=|venues\.html\?venue=|circuits\.html\?circuit=|\?place=)[a-z0-9-]+(#atlas)?$/);
   });
 
   it("never invents an item: every Wikidata item is in the raw answers kept for it, and a new venue's coordinates, country and capacity are the item's", () => {
@@ -93,7 +99,9 @@ describe("the catalogue", () => {
     for (const group of CATALOGUE_GROUPS) expect(catalogueByGroup(group.id).length, group.id).toBe(group.ids.length);
     // The working-on courts are the ticket's ten, and a circuit waits for its surface.
     expect(catalogueByStatus("working-on").map((entry) => entry.id)).toEqual(source.groups.find((group) => group.id === "tennis").ids);
-    for (const entry of catalogueBySport("motor-racing")) expect(entry.needs, entry.id).toBe("circuit-surface");
+    // A circuit the package draws is supported, drawn as a circuit; every other circuit waits for its track's data.
+    for (const entry of catalogueBySport("motor-racing")) expect(entry.status === "supported" ? entry.drawn : entry.needs, entry.id).toBe(entry.status === "supported" ? "circuit" : "circuit-surface");
+    expect(CIRCUIT_IDS.map((id) => catalogueById(id)?.drawn)).toEqual(CIRCUIT_IDS.map(() => "circuit"));
     for (const entry of catalogueWanted()) expect(entry.status === "wanted" || (entry.status === "supported" && entry.drawn === "surface" && entry.want === "outline"), entry.id).toBe(true);
   });
 });

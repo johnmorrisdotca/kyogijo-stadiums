@@ -6,19 +6,20 @@ Every venue the package draws today, the ones being built and the ones we want, 
 
 - **Supported**: every real venue the package draws, made from its own data and never typed again: the real stadiums (`STADIUMS`) and the NHL's real venues (`VENUES`) are drawn **in their buildings**, inside the outline OpenStreetMap maps with a bowl of their seats; every other key of `PARKS`, `GROUNDS`, `ARENAS` and `HALLS` is drawn **as a field, court, rink, park or floor only**, at the venue's own size where the data gives one.
 - **Working on**: the ten tennis show courts of ticket KYOGIJO-STADIUMS-22, open to an outside contributor.
-- **Wanted**: every venue of the NFL and the CFL this season that is not drawn yet, and groups of world-class venues of sports the package draws (soccer, cricket, rugby, Gaelic and Australian football, sumo and the budō, athletics, college football, baseball, skating and swimming, indoor sports), each in order of how famous it is; and the circuits of Formula One's 2026 calendar and other great circuits, which wait for a circuit surface. A venue the package draws as a field only that a league or a group lists is wanted for its building's outline, and is not listed twice.
+- **Wanted**: every venue of the NFL and the CFL this season that is not drawn yet, and groups of world-class venues of sports the package draws (soccer, cricket, rugby, Gaelic and Australian football, sumo and the budō, athletics, college football, baseball, skating and swimming, indoor sports), each in order of how famous it is; and the circuits of Formula One's 2026 calendar and other great circuits, each of which waits for its track's data (the Las Vegas Strip Circuit is drawn already, and is supported). A venue the package draws as a field only that a league or a group lists is wanted for its building's outline, and is not listed twice.
 
 ![The demo's catalogue page with the Wanted tab chosen: five cards of the leagues' coverage, each with a bar of what is drawn in its building and as a field only, rows of chips for the sports and the groups, a search box, a world map with a pin on each venue and the first cards, each with its country's flag, its city, its sport and a Wanted badge](./pictures/catalogue-desk-light.webp)
 
 <!-- catalogue-counts -->
 | Section | Venues |
 | --- | --- |
-| Supported | 331 |
+| Supported | 332 |
 | Supported: drawn in its building | 43 |
 | Supported: drawn as a field, court or floor only | 288 |
+| Supported: drawn as a circuit | 1 |
 | Supported: of them, the building's outline is wanted | 69 |
 | Working on | 10 |
-| Wanted | 133 |
+| Wanted | 132 |
 <!-- /catalogue-counts -->
 
 ## Using it
@@ -48,8 +49,8 @@ console.log(lambeau.status, lambeau.nameJa, lambeau.teams?.map((team) => team.na
 const fenway = catalogueById("fenway-park")!;
 console.log(fenway.drawn, fenway.want, drawKyogijo({ ...fenway.draw!, style: "none" }).startsWith("<svg"));
 // surface outline true
-console.log(catalogueBySport("motor-racing").every((venue) => venue.needs === "circuit-surface"));
-// true
+console.log(catalogueBySport("motor-racing").filter((venue) => venue.status === "supported").map((venue) => `${venue.id} ${venue.drawn}`).join());
+// las-vegas circuit
 ```
 
 A venue (`CatalogueEntry`) has:
@@ -58,8 +59,8 @@ A venue (`CatalogueEntry`) has:
 | --- | --- |
 | `id` | Kebab case and unique. A supported venue's is the package's own key (`fenway-park`, `bc-place`); a renamed venue keeps its key. A new venue's is made from its name. |
 | `status` | `supported`, `working-on` or `wanted`. |
-| `drawn` | For a supported venue: `outline` (in its building) or `surface` (its field, court, rink, park or floor only). |
-| `want`, `needs` | What is wanted: `outline` (the building of a venue drawn as a surface today) or `venue`; `needs: "circuit-surface"` for a circuit, which waits for a surface the package does not have. |
+| `drawn` | For a supported venue: `outline` (in its building), `surface` (its field, court, rink, park or floor only) or `circuit` (a circuit of `CIRCUITS`, with no stands). |
+| `want`, `needs` | What is wanted: `outline` (the building of a venue drawn as a surface today) or `venue`; `needs: "circuit-surface"` for a circuit that waits for its track's data (see [what a circuit needs](#what-a-circuit-needs)). |
 | `name`, `nameJa`, `nameJaFrom` | The everyday name in English (the package's, or the title of the English Wikipedia's article) and in Japanese, and where the Japanese was read: the package, Wikidata's label, the Japanese Wikipedia's title, or a name a reviewer checked. |
 | `city`, `cityJa`, `country` | The city, in both languages, and the ISO 3166-1 alpha-2 code of the country. |
 | `lat`, `lon` | Wikidata's coordinates (P625). |
@@ -609,6 +610,12 @@ By the first sport each venue is drawn for. A venue of the past is drawn as it w
 | Key | Venue | City | Drawn | Wikidata |
 | --- | --- | --- | --- | --- |
 | `korakuen-hall` | Korakuen Hall | Tokyo, Japan | in its building | [Q4389857](https://www.wikidata.org/wiki/Q4389857) |
+
+### Motor racing (1)
+
+| Key | Venue | City | Drawn | Wikidata |
+| --- | --- | --- | --- | --- |
+| `las-vegas` | Las Vegas Strip Circuit | Paradise, United States | as a circuit, no stands | [Q113112116](https://www.wikidata.org/wiki/Q113112116) |
 <!-- /catalogue-supported -->
 
 ## Working on
@@ -758,68 +765,68 @@ By group, in order of how famous each venue is. "The building's outline" is a ve
 
 | # | Key | Venue | City | Sport | Wanted | Capacity | Wikidata |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | `albert-park-circuit` | Albert Park Circuit | Melbourne, Australia | Motor racing | the venue (a circuit surface first) |  | [Q171288](https://www.wikidata.org/wiki/Q171288) |
-| 2 | `shanghai-international-circuit` | Shanghai International Circuit | Shanghai, People's Republic of China | Motor racing | the venue (a circuit surface first) |  | [Q171358](https://www.wikidata.org/wiki/Q171358) |
-| 3 | `suzuka-circuit` | Suzuka Circuit | Suzuka, Japan | Motor racing | the venue (a circuit surface first) |  | [Q174170](https://www.wikidata.org/wiki/Q174170) |
-| 4 | `miami-international-autodrome` | Miami International Autodrome | Miami Gardens, United States | Motor racing | the venue (a circuit surface first) |  | [Q106544792](https://www.wikidata.org/wiki/Q106544792) |
-| 5 | `circuit-gilles-villeneuve` | Circuit Gilles Villeneuve | Montreal, Canada | Motor racing | the venue (a circuit surface first) | 100,000 | [Q172860](https://www.wikidata.org/wiki/Q172860) |
-| 6 | `circuit-de-monaco` | Circuit de Monaco | Monaco, Monaco | Motor racing | the venue (a circuit surface first) |  | [Q171400](https://www.wikidata.org/wiki/Q171400) |
-| 7 | `circuit-de-barcelona-catalunya` | Circuit de Barcelona-Catalunya | Montmeló, Spain | Motor racing | the venue (a circuit surface first) |  | [Q171404](https://www.wikidata.org/wiki/Q171404) |
-| 8 | `red-bull-ring` | Red Bull Ring | Spielberg, Austria | Motor racing | the venue (a circuit surface first) |  | [Q171566](https://www.wikidata.org/wiki/Q171566) |
-| 9 | `silverstone-circuit` | Silverstone Circuit | Silverstone, United Kingdom | Motor racing | the venue (a circuit surface first) |  | [Q171402](https://www.wikidata.org/wiki/Q171402) |
-| 10 | `circuit-de-spa-francorchamps` | Circuit de Spa-Francorchamps | Stavelot, Belgium | Motor racing | the venue (a circuit surface first) |  | [Q172851](https://www.wikidata.org/wiki/Q172851) |
-| 11 | `hungaroring` | Hungaroring | Mogyoród, Hungary | Motor racing | the venue (a circuit surface first) |  | [Q171356](https://www.wikidata.org/wiki/Q171356) |
-| 12 | `circuit-zandvoort` | Circuit Zandvoort | Zandvoort, Kingdom of the Netherlands | Motor racing | the venue (a circuit surface first) |  | [Q173083](https://www.wikidata.org/wiki/Q173083) |
-| 13 | `monza-circuit` | Monza Circuit | Monza, Italy | Motor racing | the venue (a circuit surface first) |  | [Q171417](https://www.wikidata.org/wiki/Q171417) |
-| 14 | `madring` | Madring | Madrid, Spain | Motor racing | the venue (a circuit surface first) |  | [Q126193406](https://www.wikidata.org/wiki/Q126193406) |
-| 15 | `baku-city-circuit` | Baku City Circuit | Baku, Azerbaijan | Motor racing | the venue (a circuit surface first) |  | [Q17004958](https://www.wikidata.org/wiki/Q17004958) |
-| 16 | `sepang-international-circuit` | Sepang International Circuit | Sepang, Malaysia | Motor racing | the venue (a circuit surface first) |  | [Q172738](https://www.wikidata.org/wiki/Q172738) |
-| 17 | `marina-bay-street-circuit` | Marina Bay Street Circuit | Singapore, Singapore | Motor racing | the venue (a circuit surface first) |  | [Q171390](https://www.wikidata.org/wiki/Q171390) |
-| 18 | `circuit-of-the-americas` | Circuit of the Americas | Austin, United States | Motor racing | the venue (a circuit surface first) |  | [Q59626](https://www.wikidata.org/wiki/Q59626) |
-| 19 | `autodromo-hermanos-rodriguez` | Autódromo Hermanos Rodríguez | Mexico City, Mexico | Motor racing | the venue (a circuit surface first) |  | [Q173099](https://www.wikidata.org/wiki/Q173099) |
-| 20 | `interlagos-circuit` | Interlagos Circuit | São Paulo, Brazil | Motor racing | the venue (a circuit surface first) |  | [Q171387](https://www.wikidata.org/wiki/Q171387) |
-| 21 | `las-vegas-strip-circuit` | Las Vegas Strip Circuit | Paradise, United States | Motor racing | the venue (a circuit surface first) |  | [Q113112116](https://www.wikidata.org/wiki/Q113112116) |
-| 22 | `lusail-international-circuit` | Lusail International Circuit | Lusail, Qatar | Motor racing | the venue (a circuit surface first) |  | [Q547535](https://www.wikidata.org/wiki/Q547535) |
-| 23 | `yas-marina-circuit` | Yas Marina Circuit | Abu Dhabi, United Arab Emirates | Motor racing | the venue (a circuit surface first) |  | [Q172869](https://www.wikidata.org/wiki/Q172869) |
+| 1 | `albert-park-circuit` | Albert Park Circuit | Melbourne, Australia | Motor racing | the venue (its track's data first) |  | [Q171288](https://www.wikidata.org/wiki/Q171288) |
+| 2 | `shanghai-international-circuit` | Shanghai International Circuit | Shanghai, People's Republic of China | Motor racing | the venue (its track's data first) |  | [Q171358](https://www.wikidata.org/wiki/Q171358) |
+| 3 | `suzuka-circuit` | Suzuka Circuit | Suzuka, Japan | Motor racing | the venue (its track's data first) |  | [Q174170](https://www.wikidata.org/wiki/Q174170) |
+| 4 | `miami-international-autodrome` | Miami International Autodrome | Miami Gardens, United States | Motor racing | the venue (its track's data first) |  | [Q106544792](https://www.wikidata.org/wiki/Q106544792) |
+| 5 | `circuit-gilles-villeneuve` | Circuit Gilles Villeneuve | Montreal, Canada | Motor racing | the venue (its track's data first) | 100,000 | [Q172860](https://www.wikidata.org/wiki/Q172860) |
+| 6 | `circuit-de-monaco` | Circuit de Monaco | Monaco, Monaco | Motor racing | the venue (its track's data first) |  | [Q171400](https://www.wikidata.org/wiki/Q171400) |
+| 7 | `circuit-de-barcelona-catalunya` | Circuit de Barcelona-Catalunya | Montmeló, Spain | Motor racing | the venue (its track's data first) |  | [Q171404](https://www.wikidata.org/wiki/Q171404) |
+| 8 | `red-bull-ring` | Red Bull Ring | Spielberg, Austria | Motor racing | the venue (its track's data first) |  | [Q171566](https://www.wikidata.org/wiki/Q171566) |
+| 9 | `silverstone-circuit` | Silverstone Circuit | Silverstone, United Kingdom | Motor racing | the venue (its track's data first) |  | [Q171402](https://www.wikidata.org/wiki/Q171402) |
+| 10 | `circuit-de-spa-francorchamps` | Circuit de Spa-Francorchamps | Stavelot, Belgium | Motor racing | the venue (its track's data first) |  | [Q172851](https://www.wikidata.org/wiki/Q172851) |
+| 11 | `hungaroring` | Hungaroring | Mogyoród, Hungary | Motor racing | the venue (its track's data first) |  | [Q171356](https://www.wikidata.org/wiki/Q171356) |
+| 12 | `circuit-zandvoort` | Circuit Zandvoort | Zandvoort, Kingdom of the Netherlands | Motor racing | the venue (its track's data first) |  | [Q173083](https://www.wikidata.org/wiki/Q173083) |
+| 13 | `monza-circuit` | Monza Circuit | Monza, Italy | Motor racing | the venue (its track's data first) |  | [Q171417](https://www.wikidata.org/wiki/Q171417) |
+| 14 | `madring` | Madring | Madrid, Spain | Motor racing | the venue (its track's data first) |  | [Q126193406](https://www.wikidata.org/wiki/Q126193406) |
+| 15 | `baku-city-circuit` | Baku City Circuit | Baku, Azerbaijan | Motor racing | the venue (its track's data first) |  | [Q17004958](https://www.wikidata.org/wiki/Q17004958) |
+| 16 | `sepang-international-circuit` | Sepang International Circuit | Sepang, Malaysia | Motor racing | the venue (its track's data first) |  | [Q172738](https://www.wikidata.org/wiki/Q172738) |
+| 17 | `marina-bay-street-circuit` | Marina Bay Street Circuit | Singapore, Singapore | Motor racing | the venue (its track's data first) |  | [Q171390](https://www.wikidata.org/wiki/Q171390) |
+| 18 | `circuit-of-the-americas` | Circuit of the Americas | Austin, United States | Motor racing | the venue (its track's data first) |  | [Q59626](https://www.wikidata.org/wiki/Q59626) |
+| 19 | `autodromo-hermanos-rodriguez` | Autódromo Hermanos Rodríguez | Mexico City, Mexico | Motor racing | the venue (its track's data first) |  | [Q173099](https://www.wikidata.org/wiki/Q173099) |
+| 20 | `interlagos-circuit` | Interlagos Circuit | São Paulo, Brazil | Motor racing | the venue (its track's data first) |  | [Q171387](https://www.wikidata.org/wiki/Q171387) |
+| 21 | `las-vegas` | Las Vegas Strip Circuit | Paradise, United States | Motor racing | as a circuit, no stands |  | [Q113112116](https://www.wikidata.org/wiki/Q113112116) |
+| 22 | `lusail-international-circuit` | Lusail International Circuit | Lusail, Qatar | Motor racing | the venue (its track's data first) |  | [Q547535](https://www.wikidata.org/wiki/Q547535) |
+| 23 | `yas-marina-circuit` | Yas Marina Circuit | Abu Dhabi, United Arab Emirates | Motor racing | the venue (its track's data first) |  | [Q172869](https://www.wikidata.org/wiki/Q172869) |
 
 ### More great circuits (29)
 
 | # | Key | Venue | City | Sport | Wanted | Capacity | Wikidata |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | `indianapolis-motor-speedway` | Indianapolis Motor Speedway | Speedway, United States | Motor racing | the venue (a circuit surface first) | 257,325 | [Q172732](https://www.wikidata.org/wiki/Q172732) |
-| 2 | `circuit-de-la-sarthe` | Circuit de la Sarthe | Le Mans, France | Motor racing | the venue (a circuit surface first) |  | [Q174090](https://www.wikidata.org/wiki/Q174090) |
-| 3 | `daytona-international-speedway` | Daytona International Speedway | Daytona Beach, United States | Motor racing | the venue (a circuit surface first) |  | [Q1179250](https://www.wikidata.org/wiki/Q1179250) |
-| 4 | `nurburgring` | Nürburgring | Germany | Motor racing | the venue (a circuit surface first) |  | [Q152207](https://www.wikidata.org/wiki/Q152207) |
-| 5 | `mount-panorama-circuit` | Mount Panorama Circuit | Australia | Motor racing | the venue (a circuit surface first) |  | [Q1950645](https://www.wikidata.org/wiki/Q1950645) |
-| 6 | `talladega-superspeedway` | Talladega Superspeedway | United States | Motor racing | the venue (a circuit surface first) |  | [Q1547320](https://www.wikidata.org/wiki/Q1547320) |
-| 7 | `bristol-motor-speedway` | Bristol Motor Speedway | Bristol, United States | Motor racing | the venue (a circuit surface first) |  | [Q383490](https://www.wikidata.org/wiki/Q383490) |
-| 8 | `charlotte-motor-speedway` | Charlotte Motor Speedway | United States | Motor racing | the venue (a circuit surface first) |  | [Q1067286](https://www.wikidata.org/wiki/Q1067286) |
-| 9 | `darlington-raceway` | Darlington Raceway | United States | Motor racing | the venue (a circuit surface first) |  | [Q1166378](https://www.wikidata.org/wiki/Q1166378) |
-| 10 | `fuji-speedway` | Fuji Speedway | Oyama, Japan | Motor racing | the venue (a circuit surface first) |  | [Q171399](https://www.wikidata.org/wiki/Q171399) |
-| 11 | `sebring-international-raceway` | Sebring International Raceway | United States | Motor racing | the venue (a circuit surface first) |  | [Q172883](https://www.wikidata.org/wiki/Q172883) |
-| 12 | `bahrain-international-circuit` | Bahrain International Circuit | Sakhir, Bahrain | Motor racing | the venue (a circuit surface first) |  | [Q171332](https://www.wikidata.org/wiki/Q171332) |
-| 13 | `jeddah-corniche-circuit` | Jeddah Corniche Circuit | Saudi Arabia | Motor racing | the venue (a circuit surface first) |  | [Q102141307](https://www.wikidata.org/wiki/Q102141307) |
-| 14 | `imola-circuit` | Imola Circuit | Imola, Italy | Motor racing | the venue (a circuit surface first) |  | [Q171313](https://www.wikidata.org/wiki/Q171313) |
-| 15 | `mugello-circuit` | Mugello Circuit | Scarperia e San Piero, Italy | Motor racing | the venue (a circuit surface first) |  | [Q782455](https://www.wikidata.org/wiki/Q782455) |
-| 16 | `misano-world-circuit` | Misano World Circuit | Misano Adriatico, Italy | Motor racing | the venue (a circuit surface first) |  | [Q1347804](https://www.wikidata.org/wiki/Q1347804) |
-| 17 | `phillip-island-grand-prix-circuit` | Phillip Island Grand Prix Circuit | Phillip Island, Australia | Motor racing | the venue (a circuit surface first) |  | [Q571271](https://www.wikidata.org/wiki/Q571271) |
-| 18 | `tt-circuit-assen` | TT Circuit Assen | Assen, Kingdom of the Netherlands | Motor racing | the venue (a circuit surface first) |  | [Q843925](https://www.wikidata.org/wiki/Q843925) |
-| 19 | `sachsenring` | Sachsenring | Hohenstein-Ernstthal, Germany | Motor racing | the venue (a circuit surface first) |  | [Q567770](https://www.wikidata.org/wiki/Q567770) |
-| 20 | `motegi-circuit` | Motegi Circuit | Motegi, Japan | Motor racing | the venue (a circuit surface first) |  | [Q1420895](https://www.wikidata.org/wiki/Q1420895) |
-| 21 | `circuito-de-jerez` | Circuito de Jerez | Jerez de la Frontera, Spain | Motor racing | the venue (a circuit surface first) |  | [Q172884](https://www.wikidata.org/wiki/Q172884) |
-| 22 | `buriram-international-circuit` | Buriram International Circuit | Buriram, Thailand | Motor racing | the venue (a circuit surface first) |  | [Q16307503](https://www.wikidata.org/wiki/Q16307503) |
-| 23 | `circuit-ricardo-tormo` | Circuit Ricardo Tormo | Cheste, Spain | Motor racing | the venue (a circuit surface first) |  | [Q786577](https://www.wikidata.org/wiki/Q786577) |
-| 24 | `motorland-aragon` | MotorLand Aragón | Alcañiz, Spain | Motor racing | the venue (a circuit surface first) |  | [Q1321650](https://www.wikidata.org/wiki/Q1321650) |
-| 25 | `mandalika-international-street-circuit` | Mandalika International Street Circuit | Indonesia | Motor racing | the venue (a circuit surface first) |  | [Q105061873](https://www.wikidata.org/wiki/Q105061873) |
-| 26 | `autodromo-internacional-do-algarve` | Algarve International Circuit | Portimão, Portugal | Motor racing | the venue (a circuit surface first) |  | [Q789427](https://www.wikidata.org/wiki/Q789427) |
-| 27 | `balaton-park-circuit` | Balaton Park Circuit | Balatonfőkajár, Hungary | Motor racing | the venue (a circuit surface first) |  | [Q118511681](https://www.wikidata.org/wiki/Q118511681) |
-| 28 | `brno-circuit` | Brno Circuit | Brno, Czech Republic | Motor racing | the venue (a circuit surface first) |  | [Q222686](https://www.wikidata.org/wiki/Q222686) |
-| 29 | `autodromo-internacional-ayrton-senna-goiania` | Autódromo Internacional Ayrton Senna | Goiânia, Brazil | Motor racing | the venue (a circuit surface first) |  | [Q789407](https://www.wikidata.org/wiki/Q789407) |
+| 1 | `indianapolis-motor-speedway` | Indianapolis Motor Speedway | Speedway, United States | Motor racing | the venue (its track's data first) | 257,325 | [Q172732](https://www.wikidata.org/wiki/Q172732) |
+| 2 | `circuit-de-la-sarthe` | Circuit de la Sarthe | Le Mans, France | Motor racing | the venue (its track's data first) |  | [Q174090](https://www.wikidata.org/wiki/Q174090) |
+| 3 | `daytona-international-speedway` | Daytona International Speedway | Daytona Beach, United States | Motor racing | the venue (its track's data first) |  | [Q1179250](https://www.wikidata.org/wiki/Q1179250) |
+| 4 | `nurburgring` | Nürburgring | Germany | Motor racing | the venue (its track's data first) |  | [Q152207](https://www.wikidata.org/wiki/Q152207) |
+| 5 | `mount-panorama-circuit` | Mount Panorama Circuit | Australia | Motor racing | the venue (its track's data first) |  | [Q1950645](https://www.wikidata.org/wiki/Q1950645) |
+| 6 | `talladega-superspeedway` | Talladega Superspeedway | United States | Motor racing | the venue (its track's data first) |  | [Q1547320](https://www.wikidata.org/wiki/Q1547320) |
+| 7 | `bristol-motor-speedway` | Bristol Motor Speedway | Bristol, United States | Motor racing | the venue (its track's data first) |  | [Q383490](https://www.wikidata.org/wiki/Q383490) |
+| 8 | `charlotte-motor-speedway` | Charlotte Motor Speedway | United States | Motor racing | the venue (its track's data first) |  | [Q1067286](https://www.wikidata.org/wiki/Q1067286) |
+| 9 | `darlington-raceway` | Darlington Raceway | United States | Motor racing | the venue (its track's data first) |  | [Q1166378](https://www.wikidata.org/wiki/Q1166378) |
+| 10 | `fuji-speedway` | Fuji Speedway | Oyama, Japan | Motor racing | the venue (its track's data first) |  | [Q171399](https://www.wikidata.org/wiki/Q171399) |
+| 11 | `sebring-international-raceway` | Sebring International Raceway | United States | Motor racing | the venue (its track's data first) |  | [Q172883](https://www.wikidata.org/wiki/Q172883) |
+| 12 | `bahrain-international-circuit` | Bahrain International Circuit | Sakhir, Bahrain | Motor racing | the venue (its track's data first) |  | [Q171332](https://www.wikidata.org/wiki/Q171332) |
+| 13 | `jeddah-corniche-circuit` | Jeddah Corniche Circuit | Saudi Arabia | Motor racing | the venue (its track's data first) |  | [Q102141307](https://www.wikidata.org/wiki/Q102141307) |
+| 14 | `imola-circuit` | Imola Circuit | Imola, Italy | Motor racing | the venue (its track's data first) |  | [Q171313](https://www.wikidata.org/wiki/Q171313) |
+| 15 | `mugello-circuit` | Mugello Circuit | Scarperia e San Piero, Italy | Motor racing | the venue (its track's data first) |  | [Q782455](https://www.wikidata.org/wiki/Q782455) |
+| 16 | `misano-world-circuit` | Misano World Circuit | Misano Adriatico, Italy | Motor racing | the venue (its track's data first) |  | [Q1347804](https://www.wikidata.org/wiki/Q1347804) |
+| 17 | `phillip-island-grand-prix-circuit` | Phillip Island Grand Prix Circuit | Phillip Island, Australia | Motor racing | the venue (its track's data first) |  | [Q571271](https://www.wikidata.org/wiki/Q571271) |
+| 18 | `tt-circuit-assen` | TT Circuit Assen | Assen, Kingdom of the Netherlands | Motor racing | the venue (its track's data first) |  | [Q843925](https://www.wikidata.org/wiki/Q843925) |
+| 19 | `sachsenring` | Sachsenring | Hohenstein-Ernstthal, Germany | Motor racing | the venue (its track's data first) |  | [Q567770](https://www.wikidata.org/wiki/Q567770) |
+| 20 | `motegi-circuit` | Motegi Circuit | Motegi, Japan | Motor racing | the venue (its track's data first) |  | [Q1420895](https://www.wikidata.org/wiki/Q1420895) |
+| 21 | `circuito-de-jerez` | Circuito de Jerez | Jerez de la Frontera, Spain | Motor racing | the venue (its track's data first) |  | [Q172884](https://www.wikidata.org/wiki/Q172884) |
+| 22 | `buriram-international-circuit` | Buriram International Circuit | Buriram, Thailand | Motor racing | the venue (its track's data first) |  | [Q16307503](https://www.wikidata.org/wiki/Q16307503) |
+| 23 | `circuit-ricardo-tormo` | Circuit Ricardo Tormo | Cheste, Spain | Motor racing | the venue (its track's data first) |  | [Q786577](https://www.wikidata.org/wiki/Q786577) |
+| 24 | `motorland-aragon` | MotorLand Aragón | Alcañiz, Spain | Motor racing | the venue (its track's data first) |  | [Q1321650](https://www.wikidata.org/wiki/Q1321650) |
+| 25 | `mandalika-international-street-circuit` | Mandalika International Street Circuit | Indonesia | Motor racing | the venue (its track's data first) |  | [Q105061873](https://www.wikidata.org/wiki/Q105061873) |
+| 26 | `autodromo-internacional-do-algarve` | Algarve International Circuit | Portimão, Portugal | Motor racing | the venue (its track's data first) |  | [Q789427](https://www.wikidata.org/wiki/Q789427) |
+| 27 | `balaton-park-circuit` | Balaton Park Circuit | Balatonfőkajár, Hungary | Motor racing | the venue (its track's data first) |  | [Q118511681](https://www.wikidata.org/wiki/Q118511681) |
+| 28 | `brno-circuit` | Brno Circuit | Brno, Czech Republic | Motor racing | the venue (its track's data first) |  | [Q222686](https://www.wikidata.org/wiki/Q222686) |
+| 29 | `autodromo-internacional-ayrton-senna-goiania` | Autódromo Internacional Ayrton Senna | Goiânia, Brazil | Motor racing | the venue (its track's data first) |  | [Q789407](https://www.wikidata.org/wiki/Q789407) |
 <!-- /catalogue-wanted -->
 
 ## What a circuit needs
 
-The package draws no circuit, so every circuit waits (`needs: "circuit-surface"`). A circuit surface would be the track as OpenStreetMap maps it (`highway=raceway`, the ways of the circuit's relation), with its pit lane, start line and sectors where they are mapped: geometry under the ODbL, kept apart from every other file with its credit, as the real venues' outlines are (`src/venues.osm.data.ts`), fetched once and kept dated in `data-sources/`. Its length and its corners would be checked against what the circuit's article publishes.
+The `circuits` entry draws a circuit as OpenStreetMap maps it, the lap at the track's width with its pit lane and no stands: the Las Vegas Strip Circuit is the first, so it is supported (`drawn: "circuit"`, the id and the names `CIRCUITS`'s own; `drawCircuit({ circuit: "las-vegas" })` draws it, [circuits](./circuits.md)). Every other circuit waits for its own data (`needs: "circuit-surface"`): the circuit's relation in OpenStreetMap (its lap, pit lane, start and finish and, where they are mapped, its turns' numbers), geometry under the ODbL that is kept apart from every other file with its credit, fetched once and kept dated in `data-sources/circuits/`, and its length and corners checked against what the circuit's article publishes. [Adding the next circuit](./circuits.md#adding-the-next-circuit) says how.
 
 ## Sources and licences
 
