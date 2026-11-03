@@ -86,6 +86,8 @@ export const NAV = [
       { slug: "stadiums", ja: "実在のスタジアム" },
       { slug: "district", ja: "会場の地区" },
       { slug: "circuits", ja: "サーキット" },
+      { slug: "race-feed", ja: "レースフィードの形式" },
+      { slug: "where-to-find-a-feed", ja: "フィードの探し方" },
       { slug: "outside", ja: "会場の外の人出" },
       { slug: "gates", ja: "会場のゲート" },
       { slug: "flythrough", ja: "フライスルー" },

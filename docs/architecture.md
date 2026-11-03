@@ -133,7 +133,7 @@ src/
 ├── multi.turn.ts       a layout in 3D: each surface as it stands on its own page, moved to its cell, with the table tops, the surrounds, the chairs and score tables, the scoreboards and the stands of the stadium, as a `TurnModel` for the 3D view; `mountMultiTurn`
 ├── multi.style.ts      the layout's rules, light and dark: the floors' colours, the barriers, the boards, the empty places and the colour of a layout that does not fit
 ├── multi.words.ts      the words of a layout in English and Japanese
-├── circuits-entry.ts   the circuits entry (`@johnmorrisdotca/kyogijo-stadiums/circuits`): `drawCircuit`, `circuitTable`, `mountCircuitTurn`, `circuitTurnMarkup`, `CIRCUITS`, `circuitById`, the simulated race (`simulateRace`, `raceAt`, `drawRace`, `raceBoard`, `mountCircuitRace`), the words and the types
+├── circuits-entry.ts   the circuits entry (`@johnmorrisdotca/kyogijo-stadiums/circuits`): `drawCircuit`, `circuitTable`, `mountCircuitTurn`, `circuitTurnMarkup`, `CIRCUITS`, `circuitById`, the simulated race (`simulateRace`, `raceAt`, `drawRace`, `raceBoard`, `mountCircuitRace`), a race from a feed (`raceFromFeed`, `loadRaceFeed`, `followRaceFeed`), the words and the types
 ├── circuits.types.ts   what a circuit is: its facts with their bases, what OpenStreetMap maps of it, and the options of a drawing
 ├── circuits.data.ts    the circuits' facts (length, turns, direction, opening day, widths), each with its source and basis, made by `pnpm circuits`
 ├── circuits.osm.data.ts the circuits' lap, pit lane, ground, pit building, turns, start and finish from OpenStreetMap (ODbL 1.0, apart), made by `pnpm circuits`
@@ -150,6 +150,9 @@ src/
 ├── circuits.race.draw.ts a race drawn: the dots on the circuit, the clock's words and the timing board as a table (`drawRace`, `raceBoard`)
 ├── circuits.race.words.ts the words of a race in English and Japanese
 ├── circuits.race.dom.ts a race in a page: the circuit flat or in 3D with its dots, the clock, play, the speeds, the slider and the board, moving together (`mountCircuitRace`)
+├── circuits.feed.ts    kyogijo's open race timeline read strictly, and a feed turned into a race that plays like a simulated one (`readRaceFeed`, `raceFromFeed`, `raceToFeed`)
+├── circuits.feed.openf1.ts the adapter of OpenF1-style lap, pit, driver and location rows to the open race timeline (`openF1Feed`)
+├── circuits.feed.fetch.ts a feed the user names: read from an address by the user's browser, from text or a file, and followed while a race is live (`loadRaceFeed`, `feedFromText`, `followRaceFeed`)
 ├── judging-entry.ts    the judging assignments entry (`@johnmorrisdotca/kyogijo-stadiums/judging`): `drawJudging`, `judgingChart`, `judgingTable`, `judgingBoard`, `mountJudgingTurn`, `mountJudgingBroadcast`, `judgingPrint`, the seats and the words
 ├── judging.types.ts    what an assignment, a mat, an official and a seat are
 ├── judging.data.ts     the seats of each style (a kata area's five judges, the central one in the middle) and the sources they are read from

@@ -26,3 +26,10 @@ export { RACE_CARS_MAX, RACE_DRIVERS, RACE_TEAMS } from "./circuits.race.field.t
 export type { RaceDriver, RaceTeam } from "./circuits.race.field.ts";
 export { RACE_WORDS } from "./circuits.race.words.ts";
 export type { RaceWords } from "./circuits.race.words.ts";
+// A race from a feed: the open race timeline, an adapter for OpenF1-style rows, and reading a feed the user names (a URL, pasted text, a file), once or while a race goes on.
+export { FEED_LIMITS, raceFromFeed, raceToFeed, readRaceFeed } from "./circuits.feed.ts";
+export type { FeedResult, RaceFeed, RaceFeedCar } from "./circuits.feed.ts";
+export { looksLikeOpenF1Laps, openF1Feed } from "./circuits.feed.openf1.ts";
+export type { OpenF1Driver, OpenF1Lap, OpenF1Location, OpenF1Pit, OpenF1Rows } from "./circuits.feed.openf1.ts";
+export { FEED_MAX_BYTES, FOLLOW_EVERY, RaceFeedError, feedAddress, feedFromText, followRaceFeed, loadRaceFeed, openF1Siblings } from "./circuits.feed.fetch.ts";
+export type { FeedFollower, FeedProblemKind } from "./circuits.feed.fetch.ts";

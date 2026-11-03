@@ -37,6 +37,8 @@ export interface RaceViewSettings {
   motion?: "auto" | "smooth" | "step";
   /** The timing board under the controls: on by default. */
   board?: boolean;
+  /** A race already worked out to play instead of a simulation: one from a feed (`raceFromFeed`). */
+  race?: CircuitRace;
   /** Told when the reader plays, pauses, seeks or changes speed, and when the race ends: not at every frame. */
   onChange?: (state: RaceState) => void;
 }
@@ -53,6 +55,7 @@ export interface RaceState {
 
 /** What `mountCircuitRace` gives back. */
 export interface KyogijoRace {
+  /** The race it plays. */
   readonly race: CircuitRace;
   /** The 3D view, when the race is on one. */
   readonly turn: KyogijoTurn<CircuitOptions> | undefined;
@@ -69,6 +72,8 @@ export interface KyogijoRace {
   setSpeed(speed: number): void;
   /** Draw again with new options (the language, the theme): the clock and the race stay where they are. A new circuit, seed, laps or cars is a new race: mount it again. */
   update(options: RaceViewOptions): void;
+  /** Play another race in the same view (a feed that came in again while a race is followed): the clock stays where it is, held to the new race's end, and stays playing or paused. */
+  replace(race: CircuitRace): void;
   destroy(): void;
 }
 
@@ -92,7 +97,8 @@ export function mountCircuitRace(host: HTMLElement, initial: RaceViewOptions, se
   const doc = host.ownerDocument;
   let options: RaceViewOptions = { ...initial };
   let language: Language = options.language === "ja" ? "ja" : "en";
-  const race = simulateRace(options);
+  let race = settings.race ?? simulateRace(options);
+  let fromFeed = settings.race !== undefined;
   const media = typeof matchMedia === "function" ? matchMedia("(prefers-reduced-motion: reduce)") : undefined;
   const motionNow = (): "smooth" | "step" => (settings.motion === "smooth" ? "smooth" : settings.motion === "step" ? "step" : media?.matches === true ? "step" : "smooth");
   const clampSpeed = (n: number): number => Math.min(600, Math.max(1, n));
@@ -166,7 +172,7 @@ export function mountCircuitRace(host: HTMLElement, initial: RaceViewOptions, se
     }
   };
   const drawFlat = (): void => {
-    stage.innerHTML = raceDrawing({ ...options, t: state.t }).svg;
+    stage.innerHTML = raceDrawing({ ...options, t: state.t }, fromFeed ? race : undefined).svg;
     bindFlat();
   };
   /** The model of the 3D view with a disc for each car at the clock's time. */
@@ -324,7 +330,7 @@ export function mountCircuitRace(host: HTMLElement, initial: RaceViewOptions, se
       b.setAttribute("aria-pressed", String(n === state.speed));
     }
     range.setAttribute("aria-label", w.position);
-    setText(note, w.simulated);
+    setText(note, fromFeed ? w.feedNote : w.simulated);
     root.dataset.state = state.ended ? "ended" : state.playing ? "playing" : "paused";
     root.dataset.motion = state.motion;
   };
@@ -363,7 +369,9 @@ export function mountCircuitRace(host: HTMLElement, initial: RaceViewOptions, se
   }
 
   const api: KyogijoRace = {
-    race,
+    get race() {
+      return race;
+    },
     get turn() {
       return turn;
     },
@@ -419,6 +427,21 @@ export function mountCircuitRace(host: HTMLElement, initial: RaceViewOptions, se
       if (turn !== undefined) turn.update(options as CircuitOptions);
       else drawFlat();
       buildBoard();
+      label();
+      paint(undefined, false);
+    },
+    replace(next) {
+      const cars = race.cars.length;
+      race = next;
+      fromFeed = true;
+      state.duration = race.duration;
+      range.max = String(race.duration);
+      if (state.t > race.duration) state.t = race.duration;
+      state.ended = !state.playing && state.t >= race.duration;
+      moment = raceAt(race, state.t);
+      if (inner !== undefined) inner.setDecorate(withCars, bindTurn);
+      else drawFlat();
+      if (cars !== race.cars.length || boardRows.length !== race.cars.length) buildBoard();
       label();
       paint(undefined, false);
     },

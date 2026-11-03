@@ -2170,6 +2170,8 @@ Made from `src/strings.en.ts`, `src/strings.ja.ts` and `demo/words.js` by `pnpm 
 | page `stadiums` | The real stadiums | 実在のスタジアム |
 | page `district` | A district of venues | 会場の地区 |
 | page `circuits` | Circuits | サーキット |
+| page `race-feed` | The race feed | レースフィードの形式 |
+| page `where-to-find-a-feed` | Where to find a feed | フィードの探し方 |
 | page `outside` | The crowd outside the venue | 会場の外の人出 |
 | page `gates` | The gates of a venue | 会場のゲート |
 | page `flythrough` | The fly-through | フライスルー |

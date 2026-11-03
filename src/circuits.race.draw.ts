@@ -82,14 +82,14 @@ export interface RaceDrawing extends CircuitDrawing {
   moment: RaceMoment;
 }
 
-/** The race, the drawing of its circuit and the moment, with the cars on it. */
-export function raceDrawing(options: RaceDrawOptions): RaceDrawing {
+/** The race, the drawing of its circuit and the moment, with the cars on it: the race the options make, or one given (from a feed). */
+export function raceDrawing(options: RaceDrawOptions, given?: CircuitRace): RaceDrawing {
   const language: Language = options.language === "ja" ? "ja" : "en";
-  const race = simulateRace(options);
+  const race = given ?? simulateRace(options);
   const moment = raceAt(race, options.t ?? 0);
   const drawn = circuitDrawing(options);
   const w = RACE_WORDS[language];
-  const extra = ` ${fill(w.description, { cars: race.cars.length, laps: race.laps })}`;
+  const extra = ` ${fill(given === undefined ? w.description : w.fromFeed, { cars: race.cars.length, laps: race.laps })}`;
   const description = `${drawn.description}${language === "ja" ? extra.trim() : extra}`;
   const svg = drawn.svg.replace(/<desc id="([^"]+)">[^<]*<\/desc>/, (_, id: string) => `<desc id="${id}">${esc(description)}</desc>`).replace(/<\/svg>$/, `${carsMarkup(moment, carRadius(drawn.k), language)}</svg>`);
   return { ...drawn, svg, description, race, moment };

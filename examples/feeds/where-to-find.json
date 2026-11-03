@@ -1,0 +1,45 @@
+{
+  "kind": "kyogijo-feed-sources",
+  "version": 1,
+  "note": {
+    "en": "Where to find a feed: known public sources, what each gives, a sample address and how to find a race's id. Your browser reads the address you choose; kyogijo runs no server and keeps nothing. You are responsible for following the terms of the source you use.",
+    "ja": "フィードの探し方：知られている公開の提供元、それぞれが提供するもの、サンプルのアドレス、レースのIDの見つけ方。選んだアドレスは、お使いのブラウザが直接読み込みます。kyogijoはサーバーを持たず、何も保存しません。使うフィードの提供元が定める利用条件を守る責任は、利用者にあります。"
+  },
+  "sports": {
+    "racing": [
+      {
+        "id": "sample",
+        "name": { "en": "Sample feed (made up)", "ja": "サンプルフィード（架空）" },
+        "url": "examples/races/las-vegas-sample.json",
+        "adapter": "kyogijo-race",
+        "gives": { "en": "The package's own simulated race in kyogijo's open race timeline: 20 invented cars over 50 laps of the Las Vegas Strip Circuit, with lap times, pit stops and the flag. No real race, driver or team.", "ja": "このパッケージ自身のシミュレーションレースを、kyogijoのオープンなレースタイムライン形式にしたものです。ラスベガス・ストリップ・サーキットを50周する架空の20台について、各周のタイム、ピットストップ、チェッカーフラッグを収めています。実在のレース、ドライバー、チームとは関係ありません。" },
+        "id_help": { "en": "None needed: the address is the file.", "ja": "不要です。アドレスがそのままファイルです。" },
+        "docs": "docs/race-feed.md",
+        "terms": null,
+        "licence": { "en": "MIT, with the package", "ja": "パッケージと同じMITライセンス" }
+      },
+      {
+        "id": "openf1",
+        "name": { "en": "OpenF1", "ja": "OpenF1" },
+        "url": "https://api.openf1.org/v1/laps?session_key=9644",
+        "adapter": "openf1",
+        "gives": { "en": "An unofficial, community-run API of Formula 1 timing for sessions since 2023: every car's laps (start and duration), and from the same session its pit stops and drivers, which kyogijo also asks for. Historical sessions are free; live timing needs an account of theirs.", "ja": "2023年以降のセッションのF1タイミングデータを公開している、非公式でコミュニティ運営のAPIです。全マシンの周回（開始時刻と所要時間）のほか、同じセッションのピットストップとドライバーの一覧も得られます（kyogijoはこれらも読み込みます）。過去のセッションは無料で、ライブタイミングには提供元のアカウントが必要です。" },
+        "id_help": { "en": "A session_key: list a weekend's sessions at https://api.openf1.org/v1/sessions?year=2024&circuit_short_name=Las%20Vegas and take the Race's session_key, then ask https://api.openf1.org/v1/laps?session_key=<it>.", "ja": "session_keyを使います。https://api.openf1.org/v1/sessions?year=2024&circuit_short_name=Las%20Vegas でその週末のセッション一覧を表示し、Raceのセッションのsession_keyを確認して、https://api.openf1.org/v1/laps?session_key=<その値> を読み込みます。" },
+        "docs": "https://openf1.org/",
+        "terms": "https://openf1.org/",
+        "licence": { "en": "CC BY-NC-SA 4.0, for educational, research and non-commercial fan use (their FAQ); not associated with Formula 1", "ja": "CC BY-NC-SA 4.0。教育、研究、非営利のファン活動向け（提供元のFAQ）。Formula 1とは無関係です" }
+      },
+      {
+        "id": "jolpica",
+        "name": { "en": "Jolpica F1 (the Ergast API's successor)", "ja": "Jolpica F1（Ergast APIの後継）" },
+        "url": "https://api.jolpi.ca/ergast/f1/2024/22/laps.json?limit=100",
+        "adapter": null,
+        "gives": { "en": "Results, and each car's position and time on every lap, for Formula 1 races over many seasons. kyogijo has no adapter for its shape yet: save its answer and turn it into the open race timeline (each lap's time added up gives the times the cars crossed the line).", "ja": "多くのシーズンにわたるF1レースの結果と、各周ごとの各マシンの順位とタイムを提供します。kyogijoにはまだこの応答の形式に対応するアダプターがありません。応答を保存し、オープンなレースタイムラインに変換してください（各周のタイムを累計すると、各マシンがラインを通過した時刻になります）。" },
+        "id_help": { "en": "A season and a round: https://api.jolpi.ca/ergast/f1/2024.json lists the season's races and their round numbers.", "ja": "シーズンとラウンド番号を使います。https://api.jolpi.ca/ergast/f1/2024.json でそのシーズンのレースとラウンド番号の一覧が確認できます。" },
+        "docs": "https://github.com/jolpica/jolpica-f1",
+        "terms": "https://github.com/jolpica/jolpica-f1",
+        "licence": { "en": "Read the terms of use linked from its README", "ja": "READMEからリンクされている利用条件を確認してください" }
+      }
+    ]
+  }
+}

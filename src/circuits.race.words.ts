@@ -5,6 +5,8 @@ import type { Language } from "./types.ts";
 export interface RaceWords {
   /** The line that says what this is: a model, not a real race. */
   simulated: string;
+  /** The same line for a race from a feed the reader chose. */
+  feedNote: string;
   /** The race clock: the lap the leader is on, and the line under it once the flag has fallen. */
   lap: string;
   finalLap: string;
@@ -28,13 +30,15 @@ export interface RaceWords {
   /** What is said aloud as the race goes. */
   leads: string;
   wins: string;
-  /** The drawing's description, added to the circuit's. */
+  /** The drawing's description, added to the circuit's: a simulation's, and a race from a feed's. */
   description: string;
+  fromFeed: string;
 }
 
 export const RACE_WORDS: Readonly<Record<Language, RaceWords>> = Object.freeze({
   en: {
     simulated: "A simulated race: made-up cars and drivers, worked out from a seed. No real race, driver or team.",
+    feedNote: "A race from a feed you chose: its names, times and results are the feed's, shown in this page only. Between the times it gives, each car runs at the lap's own speeds.",
     lap: "Lap {lap} / {laps}",
     finalLap: "Final lap",
     flag: "Chequered flag",
@@ -53,9 +57,11 @@ export const RACE_WORDS: Readonly<Record<Language, RaceWords>> = Object.freeze({
     leads: "{name} leads, lap {lap}.",
     wins: "Chequered flag: {name} wins.",
     description: "{cars} made-up cars race {laps} laps from the grid to the chequered flag: a simulation, not a real race.",
+    fromFeed: "{cars} cars race {laps} laps, from a feed the reader chose: where each car is between the times it gives is worked out at the lap's own speeds.",
   },
   ja: {
     simulated: "シミュレーションによるレースです。架空のマシンとドライバーで、シード値から計算しています。実在のレース・ドライバー・チームとは関係ありません。",
+    feedNote: "選んだフィードのレースです。名前、タイム、結果はフィードのもので、このページの中だけに表示します。フィードが示す時刻の間は、各マシンがそのコースの速度で走るものとして計算しています。",
     lap: "{lap} / {laps}周",
     finalLap: "ファイナルラップ",
     flag: "チェッカーフラッグ",
@@ -74,5 +80,6 @@ export const RACE_WORDS: Readonly<Record<Language, RaceWords>> = Object.freeze({
     leads: "{lap}周目、{name}がトップ。",
     wins: "チェッカーフラッグ：{name}が優勝。",
     description: "架空のマシン{cars}台が、グリッドからチェッカーフラッグまで{laps}周を走ります。実際のレースではなく、シミュレーションです。",
+    fromFeed: "選んだフィードから、{cars}台のマシンが{laps}周を走ります。フィードが示す時刻の間の各マシンの位置は、そのコースの速度から計算しています。",
   },
 });
