@@ -18,12 +18,14 @@ export { RACE_DISTANCE, raceLaps, simulateRace } from "./circuits.race.ts";
 export type { CircuitRace, RaceCar, RaceOptions, RaceStop } from "./circuits.race.ts";
 export { LEADER_CLEAR, carAt, raceAt, raceLapMarks, raceLapStep, raceLeaderMark, racePoint } from "./circuits.race.moment.ts";
 export type { RaceMoment, RaceStanding, RaceStatus } from "./circuits.race.moment.ts";
-export { RACE_STYLE, drawRace, gapText, lapTime, leaderMarkup, raceBoard, raceClock, raceDrawing, raceStage } from "./circuits.race.draw.ts";
+export { RACE_STYLE, drawRace, gapText, lapTime, leaderMarkup, raceBoard, raceClock, raceDrawing, raceStage, standingGap } from "./circuits.race.draw.ts";
 export type { RaceDrawOptions, RaceDrawing } from "./circuits.race.draw.ts";
 export { RACE_SPEEDS, mountCircuitRace } from "./circuits.race.dom.ts";
 export type { KyogijoRace, RaceState, RaceViewOptions, RaceViewSettings } from "./circuits.race.dom.ts";
 export { RACE_CARS_MAX, RACE_DRIVERS, RACE_TEAMS } from "./circuits.race.field.ts";
 export type { RaceDriver, RaceTeam } from "./circuits.race.field.ts";
+export { TOWER_ROWS, TOWER_STYLE, TOWER_W, bindTower, podiumData, raceTimeText, towerData, towerFrame, towerHeight, towerMarkup, towerPlace, writeTower } from "./circuits.race.tower.ts";
+export type { PodiumData, PodiumLine, TowerData, TowerRow, TowerView } from "./circuits.race.tower.ts";
 export { RACE_WORDS } from "./circuits.race.words.ts";
 export type { RaceWords } from "./circuits.race.words.ts";
 // A race from a feed: the open race timeline, an adapter for OpenF1-style rows, and reading a feed the user names (a URL, pasted text, a file), once or while a race goes on.

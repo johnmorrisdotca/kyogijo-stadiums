@@ -2,8 +2,9 @@
 // together. Each animation frame moves only the dots that moved and writes the board and the clock only where their words changed (the board at most four times a second); no element is made while it plays.
 // Nothing runs until the reader plays it, and nothing runs while it is paused, the page is hidden or the race is out of sight. With reduced motion nothing plays by itself: play moves to the leader's next lap.
 import { CIRCUIT_MARKER, buildCircuitTurn } from "./circuits.turn.ts";
-import { RACE_STYLE, carMarkup, carRadius, lapTime, raceBoard, raceClock, raceDrawing, raceStage, standingGap } from "./circuits.race.draw.ts";
+import { RACE_STYLE, carMarkup, carRadius, chequerSquares, lapTime, raceBoard, raceClock, raceDrawing, raceStage, standingGap } from "./circuits.race.draw.ts";
 import { raceAt, raceLapStep, raceLeaderMark, type RaceMoment } from "./circuits.race.moment.ts";
+import { TOWER_W, TOWER_ROWS, bindTower, podiumData, towerData, towerFrame, towerHeight, towerMarkup, writeTower, type TowerView } from "./circuits.race.tower.ts";
 import { createReplayBar, replayKey, type ReplayBarSlots } from "./replay.bar.ts";
 import { simulateRace, type CircuitRace, type RaceOptions } from "./circuits.race.ts";
 import { RACE_WORDS } from "./circuits.race.words.ts";
@@ -12,7 +13,7 @@ import type { Pt } from "./crowd.ts";
 import { num } from "./format.ts";
 import { fill } from "./strings.core.ts";
 import { mountTurn, type KyogijoTurn } from "./turn.dom.ts";
-import type { Plane } from "./turn.kit.ts";
+import { pole, type Plane } from "./turn.kit.ts";
 import type { TurnModel, TurnSettings } from "./turn.model.ts";
 import type { TurnInternals } from "./turn.replay.dom.ts";
 import type { Language } from "./types.ts";
@@ -37,6 +38,10 @@ export interface RaceViewSettings {
   markers?: boolean;
   /** The position numbers on the cars' dots: on by default; `setLabels` changes it. The leader's mark stays either way. */
   labels?: boolean;
+  /** The timing tower standing beside the start and finish straight, in the plan view and in 3D: on by default; `setTower` changes it. */
+  tower?: boolean;
+  /** The broadcast-style tower over the left of the view: off by default; `setOverlay` changes it. */
+  overlay?: boolean;
   /** Go round again from the start when the race ends, as a game's replay does: off by default. */
   loop?: boolean;
   /** Seconds from the start to begin at: 0 (the grid) by default. */
@@ -63,6 +68,8 @@ export interface RaceState {
   loop: boolean;
   markers: boolean;
   labels: boolean;
+  tower: boolean;
+  overlay: boolean;
   motion: "smooth" | "step";
 }
 
@@ -79,6 +86,8 @@ export interface RaceScene<O, V> {
   build(options: V, settings: TurnSettings): TurnModel;
   /** Where a point of the circuit's plan lies in the scene: the same point for the circuit's own drawing. */
   point(options: O): (p: Pt) => Pt;
+  /** Whether the timing tower stands in the scene (`flat` draws it when its options say `tower: true`, and the 3D view stands it): the circuit's own scene does; another has the tower over the view alone. */
+  tower?: boolean;
 }
 
 /** The circuit's own scene. */
@@ -87,6 +96,7 @@ const CIRCUIT_SCENE: RaceScene<RaceViewOptions, CircuitOptions> = {
   view: (options) => options,
   build: buildCircuitTurn,
   point: () => (p) => p,
+  tower: true,
 };
 
 /** What `mountCircuitRace` gives back (and `mountDistrictRace`, with a district's options and 3D view). */
@@ -116,6 +126,12 @@ export interface KyogijoRace<O = RaceViewOptions, V = CircuitOptions> {
   setMarkers(markers: boolean): void;
   /** Show or hide the position numbers on the cars' dots. The leader's mark (a ring and a P1 tag) is always there. */
   setLabels(labels: boolean): void;
+  /** Show or hide the timing tower in the scene. */
+  setTower(tower: boolean): void;
+  /** Show or hide the tower over the view. */
+  setOverlay(overlay: boolean): void;
+  /** Show or hide the podium card (it comes by itself at the chequered flag; closing it keeps it away until the race is taken back before the flag). */
+  setPodium(shown: boolean): void;
   setSpeed(speed: number): void;
   /** Draw again with new options (the language, the theme): the clock and the race stay where they are. A new circuit, seed, laps or cars is a new race: mount it again. */
   update(options: O): void;
@@ -155,7 +171,7 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
   const media = typeof matchMedia === "function" ? matchMedia("(prefers-reduced-motion: reduce)") : undefined;
   const motionNow = (): "smooth" | "step" => (settings.motion === "smooth" ? "smooth" : settings.motion === "step" ? "step" : media?.matches === true ? "step" : "smooth");
   const clampSpeed = (n: number): number => Math.min(600, Math.max(1, n));
-  const state: RaceState = { t: Math.min(Math.max(settings.start ?? 0, 0), race.duration), duration: race.duration, playing: false, ended: false, speed: clampSpeed(Number.isFinite(settings.speed) ? (settings.speed as number) : 1), loop: settings.loop === true, markers: settings.markers === true, labels: settings.labels !== false, motion: motionNow() };
+  const state: RaceState = { t: Math.min(Math.max(settings.start ?? 0, 0), race.duration), duration: race.duration, playing: false, ended: false, speed: clampSpeed(Number.isFinite(settings.speed) ? (settings.speed as number) : 1), loop: settings.loop === true, markers: settings.markers === true, labels: settings.labels !== false, tower: settings.tower !== false, overlay: settings.overlay === true, motion: motionNow() };
   const tell = (): void => settings.onChange?.({ ...state });
 
   // ---- The parts: the stage, the clock, the controls, the note, the live region and the board. ----
@@ -165,8 +181,19 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
   root.dataset.markers = state.markers ? "on" : "off";
   const style = doc.createElement("style");
   style.textContent = RACE_STYLE;
+  const view = doc.createElement("div");
+  view.className = "ky-race-frame";
   const stage = doc.createElement("div");
   stage.className = "ky-race-view";
+  /** The tower over the left of the view, and the podium card over its middle: both made once, and only written into after. */
+  const overlay = doc.createElement("div");
+  overlay.className = "ky-race-overlay";
+  overlay.hidden = !state.overlay;
+  const podium = doc.createElement("div");
+  podium.className = "ky-race-podium";
+  podium.setAttribute("role", "group");
+  podium.hidden = true;
+  view.append(stage, overlay, podium);
   const hint = doc.createElement("p");
   hint.className = "ky-race-hint";
   hint.id = `ky-race-keys-${++counter}`;
@@ -179,7 +206,7 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
   const boardWrap = doc.createElement("div");
   boardWrap.className = "ky-race-board-wrap";
   boardWrap.hidden = settings.board === false;
-  root.append(style, stage, hint, note, live, boardWrap);
+  root.append(style, view, hint, note, live, boardWrap);
   host.replaceChildren(root);
 
   // ---- The drawing: flat, or the circuit's 3D view with the cars standing on it. ----
@@ -193,6 +220,13 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
   const leadPlanes: { ring?: Plane; tag?: Plane } = {};
   /** The car that wears the mark now: it is handed on only when the first is clear of it (`raceLeaderMark`). */
   let marked: string | undefined;
+  /** The timing tower where it is in the page (the plan view's group, the 3D view's plane, the overlay), the tag of the leader's mark in 3D, and the podium card's state. */
+  let flatTower: TowerView | undefined;
+  let turnTower: TowerView | undefined;
+  let overlayTower: TowerView | undefined;
+  let leadTag: Element | null = null;
+  let podiumDismissed = false;
+  let podiumKey = "";
   let disc = 0;
   // The leader's mark in 3D, in the disc's own size: a ring round it (1.4 discs across, its lower edge a little under the floor) and a tag of 1.0 by 0.5 discs over the ring.
   const ringSize = (): number => 1.4 * disc;
@@ -204,7 +238,7 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
     const c = ringSize() / 2;
     return `<circle class="ky-ci-lead-halo" cx="${num(c)}" cy="${num(c)}" r="${num(0.58 * disc)}" stroke-width="${num(0.15 * disc)}"/><circle class="ky-ci-lead-ring" cx="${num(c)}" cy="${num(c)}" r="${num(0.58 * disc)}" stroke-width="${num(0.09 * disc)}"/>`;
   };
-  const tagSvg = (): string => `<rect class="ky-ci-lead-tag" x="${num(0.03 * disc)}" y="${num(0.03 * disc)}" width="${num(0.94 * disc)}" height="${num(0.44 * disc)}" rx="${num(0.12 * disc)}" stroke-width="${num(0.04 * disc)}"/><text class="ky-ci-lead-p" x="${num(0.5 * disc)}" y="${num(0.34 * disc)}" font-size="${num(0.32 * disc)}">P1</text>`;
+  const tagSvg = (): string => `<rect class="ky-ci-lead-tag" x="${num(0.03 * disc)}" y="${num(0.03 * disc)}" width="${num(0.94 * disc)}" height="${num(0.44 * disc)}" rx="${num(0.12 * disc)}" stroke-width="${num(0.04 * disc)}"/><text class="ky-ci-lead-p" x="${num(0.5 * disc)}" y="${num(0.34 * disc)}" font-size="${num(0.32 * disc)}">P1</text><g class="ky-ci-lead-chq">${chequerSquares(0.2 * disc, 0.14 * disc, 0.12 * disc, 5)}</g>`;
   let moment = raceAt(race, state.t);
 
   // ---- The bar: the package's one replay bar, told what each button does to this race. ----
@@ -236,7 +270,7 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
     setLoop: (loop) => api.setLoop(loop),
   });
   const bar = barBox.el;
-  stage.after(bar);
+  view.after(bar);
 
   /** The circuit as it is drawn now: the turn numbers stand only while Markers is on. */
   const shown = (): O => ({ ...options, turns: state.markers });
@@ -248,9 +282,11 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
       cars.set(id, { el, text: el.querySelector("text"), r: Number(el.querySelector("circle")?.getAttribute("r") ?? 0), at: el.getAttribute("transform") ?? "", position: Number(el.querySelector("text")?.textContent ?? 0), status: el.getAttribute("data-status") ?? "" });
     }
     lead = { el: stage.querySelector(".ky-ci-lead"), at: stage.querySelector(".ky-ci-lead")?.getAttribute("transform") ?? "", car: stage.querySelector(".ky-ci-lead")?.getAttribute("data-car") ?? "" };
+    const tower = stage.querySelector(".ky-ci-tower");
+    flatTower = tower === null ? undefined : bindTower(tower);
   };
   const drawFlat = (): void => {
-    stage.innerHTML = scene.flat(shown(), state.t, fromFeed ? race : undefined);
+    stage.innerHTML = scene.flat({ ...shown(), tower: state.tower }, state.t, fromFeed ? race : undefined);
     bindFlat();
   };
   /** The model of the 3D view with a disc for each car at the clock's time. */
@@ -279,6 +315,15 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
       leadPlanes.tag = tag;
       extra.push(ring, tag);
     }
+    // The timing tower stands on a post beside the start and finish straight, a screen that turns to face the eye.
+    if (state.tower && scene.tower === true) {
+      const t = towerFrame(race.plan, k, race.cars.length);
+      const post = 0.3 * t.h;
+      const at = place(t.at);
+      const svg = `<g transform="scale(${num(t.s)})">${towerMarkup(towerData(race, moment, language), t.rows, language)}</g>`;
+      extra.push({ ...markPlane("tower", at[0], at[1], t.w, t.h, post + t.h, svg), kind: "screen" });
+      extra.push(...pole("tower-post", "pole", at[0], at[1], 0, post, Math.max(model.uprights.thin * 3, 2 * k), "u-pole"));
+    }
     return { ...model, planes: [...model.planes, ...planes.values(), ...extra] };
   };
   const bindTurn = (): void => {
@@ -288,6 +333,9 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
       const el = inner.root.querySelector(`.ky-up[data-part="car-${line.car.id}"]`);
       cars.set(line.car.id, { el, text: el?.querySelector("text") ?? null, r: (disc / 2) * 0.9, at: "", position: line.position, status: line.status });
     }
+    leadTag = inner.root.querySelector('.ky-up[data-part="lead-tag"]');
+    const tower = inner.root.querySelector('.ky-up[data-part="tower"] svg');
+    turnTower = tower === null ? undefined : bindTower(tower);
   };
   const mountView = (): void => {
     if (settings.view === "3d") {
@@ -330,6 +378,14 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
   const writeBoard = (): void => {
     const w = RACE_WORDS[language];
     barBox.sync();
+    // The towers are written with the board, at most four times a second: what they say is the board's.
+    if (flatTower !== undefined || turnTower !== undefined || (state.overlay && overlayTower !== undefined)) {
+      const data = towerData(race, moment, language);
+      if (flatTower !== undefined) writeTower(flatTower, data);
+      if (turnTower !== undefined) writeTower(turnTower, data);
+      if (state.overlay && overlayTower !== undefined) writeTower(overlayTower, data);
+    }
+    writePodium();
     moment.standings.forEach((line, i) => {
       const r = boardRows[i];
       if (r === undefined) return;
@@ -413,6 +469,13 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
       }
     }
     if (moved) inner?.repaint();
+    // At the flag the leader's tag turns into the chequered flag, the podium card comes (unless it was closed), and its button is there.
+    const flag = String(moment.flag);
+    if (inner !== undefined) setAttr(leadTag, "data-flag", flag);
+    else setAttr(lead.el, "data-flag", flag);
+    if (!moment.flag) podiumDismissed = false;
+    podiumButton.hidden = !moment.flag;
+    showPodium(moment.flag && !podiumDismissed);
     // What is said aloud: a new leader, and the flag, only as the race plays forward.
     if (crossed) {
       const first = moment.standings[0];
@@ -427,6 +490,60 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
     }
   };
 
+  // ---- The tower over the view and the podium card: made once (and again for a new language or field), and only written into after. ----
+  const buildOverlay = (): void => {
+    const rows = Math.min(TOWER_ROWS, race.cars.length);
+    overlay.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${TOWER_W} ${towerHeight(rows)}" aria-hidden="true" focusable="false">${towerMarkup(towerData(race, moment, language), rows, language)}</svg>`;
+    const svg = overlay.querySelector("svg");
+    overlayTower = svg === null ? undefined : bindTower(svg);
+  };
+  const podiumButton = doc.createElement("button");
+  podiumButton.type = "button";
+  podiumButton.className = "ky-race-podium-button";
+  podiumButton.hidden = true;
+  barBox.slots.extra.append(podiumButton);
+  /** The podium card's elements: a line for each of the first three, the fastest lap. */
+  let podiumParts: { lines: { li: HTMLElement; swatch: HTMLElement; name: Element | null; team: Element | null; time: Element | null }[]; fast: HTMLElement } | undefined;
+  const buildPodium = (): void => {
+    const w = RACE_WORDS[language].podium;
+    podium.setAttribute("aria-label", w.label);
+    podium.innerHTML = `<div class="ky-podium-head"><strong class="ky-podium-title">${w.title}</strong><button type="button" class="ky-podium-close" aria-label="${w.close}" title="${w.close}">×</button></div><ol class="ky-podium-list">${[1, 2, 3].map((i) => `<li data-pos="${i}"><span class="ky-podium-pos">${i}</span><span class="ky-podium-swatch"></span><span class="ky-podium-who"><b></b><small></small></span><span class="ky-podium-time"></span></li>`).join("")}</ol><p class="ky-podium-fast"></p>`;
+    podiumParts = {
+      lines: [...podium.querySelectorAll<HTMLElement>("li")].map((li) => ({ li, swatch: li.querySelector<HTMLElement>(".ky-podium-swatch")!, name: li.querySelector("b"), team: li.querySelector("small"), time: li.querySelector(".ky-podium-time") })),
+      fast: podium.querySelector<HTMLElement>(".ky-podium-fast")!,
+    };
+    podium.querySelector(".ky-podium-close")?.addEventListener("click", () => api.setPodium(false));
+    podiumButton.textContent = w.show;
+    podiumButton.setAttribute("aria-label", w.show);
+    podiumKey = "";
+  };
+  const writePodium = (): void => {
+    if (podium.hidden || podiumParts === undefined) return;
+    const data = podiumData(race, moment, language);
+    const key = JSON.stringify(data);
+    if (key === podiumKey) return;
+    podiumKey = key;
+    podiumParts.lines.forEach((part, i) => {
+      const line = data.lines[i];
+      part.li.hidden = line === undefined;
+      if (line === undefined) return;
+      setText(part.name, line.name);
+      setText(part.team, line.team);
+      setText(part.time, line.time);
+      if (part.swatch.style.background !== line.colour) part.swatch.style.background = line.colour;
+      part.li.dataset.finished = String(line.finished);
+    });
+    setText(podiumParts.fast, data.fastest);
+    podium.dataset.final = String(data.final);
+  };
+  /** The card shows from the flag on, unless it was closed; closing it keeps it away until the race is taken back from before the flag. */
+  const showPodium = (on: boolean): void => {
+    if (podium.hidden === !on) return;
+    podium.hidden = !on;
+    podiumButton.setAttribute("aria-pressed", String(on));
+    if (on) writePodium();
+  };
+
   // ---- The bar and the note: made again when the words or the motion change, and shown the state as it moves. ----
   const label = (): void => {
     barBox.sync();
@@ -437,6 +554,8 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
   const words = (): void => {
     barBox.build();
     hint.textContent = inner !== undefined ? RACE_WORDS[language].keysTurn : RACE_WORDS[language].keys;
+    buildOverlay();
+    buildPodium();
     label();
   };
 
@@ -555,6 +674,27 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
       root.dataset.labels = labels ? "on" : "off";
       tell();
     },
+    setTower(tower) {
+      if (state.tower === tower) return;
+      state.tower = tower;
+      // The tower is in the drawing (plan) or stands in the view (3D): drawn again, the clock and the cars where they are.
+      if (turn !== undefined) turn.update(scene.view(shown()));
+      else drawFlat();
+      paint(undefined, false);
+      tell();
+    },
+    setOverlay(on) {
+      if (state.overlay === on) return;
+      state.overlay = on;
+      overlay.hidden = !on;
+      if (overlayTower !== undefined) overlayTower.last = "";
+      if (on) writeBoard();
+      tell();
+    },
+    setPodium(on) {
+      podiumDismissed = !on;
+      showPodium(on && moment.flag);
+    },
     setSpeed(speed) {
       if (!Number.isFinite(speed)) return;
       const next = clampSpeed(speed);
@@ -584,7 +724,10 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
       moment = raceAt(race, state.t);
       if (inner !== undefined) inner.setDecorate(withCars, bindTurn);
       else drawFlat();
-      if (cars !== race.cars.length || boardRows.length !== race.cars.length) buildBoard();
+      if (cars !== race.cars.length || boardRows.length !== race.cars.length) {
+        buildBoard();
+        buildOverlay();
+      }
       if (longer) barBox.build();
       label();
       paint(undefined, false);
@@ -616,6 +759,7 @@ export function mountRaceIn<O extends RaceOptions & { language?: Language }, V>(
   const onBarKey = (event: KeyboardEvent): void => void replayKey(event, "bar", keyActions);
   const onStageKey = (event: KeyboardEvent): void => void replayKey(event, "stage", keyActions);
   bar.addEventListener("keydown", onBarKey);
+  podiumButton.addEventListener("click", () => api.setPodium(podium.hidden));
   // Scrolled out of sight, the clock holds (no frame is asked for) and goes on when it is back.
   let seen: IntersectionObserver | undefined;
   if (typeof IntersectionObserver === "function") {

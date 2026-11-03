@@ -23,6 +23,9 @@ export interface RaceWords {
   start: string;
   prevLap: string;
   loop: string;
+  /** The timing tower in the scene and over the view, and the podium card at the flag. */
+  tower: { caption: string; fastest: string; fastShort: string; lapShort: string; pit: string };
+  podium: { title: string; label: string; close: string; show: string; fastest: string; pending: string; final: string };
   /** The keys, flat and over the 3D view (whose arrow keys turn the view). */
   keys: string;
   keysTurn: string;
@@ -55,6 +58,8 @@ export const RACE_WORDS: Readonly<Record<Language, RaceWords>> = Object.freeze({
     play: "Play the race",
     pause: "Pause the race",
     nextLap: "Next lap",
+    tower: { caption: "Timing tower", fastest: "Fastest lap", fastShort: "FL", lapShort: "L{lap}", pit: "PIT" },
+    podium: { title: "Chequered flag", label: "The podium", close: "Close the podium", show: "Podium", fastest: "Fastest lap: {code} {name}, {time}, lap {lap}", pending: "still racing", final: "Final classification" },
     start: "Back to the start",
     prevLap: "Previous lap",
     loop: "Loop the race",
@@ -83,6 +88,8 @@ export const RACE_WORDS: Readonly<Record<Language, RaceWords>> = Object.freeze({
     play: "レースを再生",
     pause: "レースを一時停止",
     nextLap: "次の周へ",
+    tower: { caption: "タイミングタワー", fastest: "ファステストラップ", fastShort: "FL", lapShort: "{lap}周", pit: "ピット" },
+    podium: { title: "チェッカーフラッグ", label: "表彰台", close: "表彰台を閉じる", show: "表彰台", fastest: "ファステストラップ：{code} {name}、{time}（{lap}周目）", pending: "走行中", final: "最終順位" },
     start: "最初に戻る",
     prevLap: "前の周へ",
     loop: "繰り返し",

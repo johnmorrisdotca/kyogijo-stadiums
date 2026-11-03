@@ -196,7 +196,7 @@ test("the leader's mark: one ring and a P1 tag on the first car, moving with it,
   }
   expect(leaders.size).toBeGreaterThan(1);
   // The ring and the tag are drawn (a ring, a halo, a tag and its word) and are not hidden by the other cars: nothing is drawn after the mark.
-  expect(await mark.locator("circle, rect, text").count()).toBe(4);
+  expect(await mark.locator(".ky-ci-lead-halo, .ky-ci-lead-ring, .ky-ci-lead-tag, .ky-ci-lead-p").count()).toBe(4);
   expect(await page.locator(`${STAGE} svg.kyogijo > g:last-child`).evaluate((el) => el.classList.contains("ky-ci-lead"))).toBe(true);
 });
 
@@ -214,6 +214,152 @@ test("the leader's mark in 3D: a ring and a tag stand with the first car's disc 
   expect(await ring.evaluate((el) => el.style.transform)).not.toBe(before);
   expect(await tag.evaluate((el) => el.style.transform)).not.toBe("");
   await expect(tag.locator("text")).toHaveText("P1");
+});
+
+/** Move the race's slider to a share of the race (a seek: everything is written at once). */
+const seekTo = (page, fraction) =>
+  page.locator(`${STAGE} .ky-race .ky-position`).evaluate((range, f) => {
+    range.value = String(Math.round(Number(range.max) * f));
+    range.dispatchEvent(new Event("input", { bubbles: true }));
+  }, fraction);
+const boardRows = (page) => page.locator(`${STAGE} .ky-race-board tbody tr`);
+const towerRows = (page, scope) => page.locator(`${scope} .ky-tw-row:not([display="none"])`);
+
+test.describe("the racing scoreboard", () => {
+  test("the timing tower beside the straight says what the timing board says, at every moment sampled", async ({ page }) => {
+    await open(page, "circuits.html?race=1&overlay=1");
+    await expect(page.locator(`${STAGE} .ky-ci-tower`)).toHaveCount(1);
+    await expect(page.locator(`${STAGE} .ky-race-overlay .ky-tw`)).toBeVisible();
+    for (const fraction of [0, 0.03, 0.1, 0.25, 0.4, 0.55, 0.7, 0.85, 0.97]) {
+      await seekTo(page, fraction);
+      const board = await boardRows(page).evaluateAll((rows) => rows.slice(0, 10).map((r) => ({ id: r.dataset.car, code: r.querySelector(".ky-race-code").textContent, gap: r.querySelector('[data-col="gap"]').textContent, status: r.dataset.status })));
+      for (const scope of [`${STAGE} .ky-ci-tower`, `${STAGE} .ky-race-overlay`]) {
+        const rows = await towerRows(page, scope).evaluateAll((els) => els.map((r) => ({ pos: r.querySelector('[data-t="pos"]').textContent, code: r.querySelector('[data-t="code"]').textContent, gap: r.querySelector('[data-t="gap"]').textContent })));
+        expect(rows.map((r) => r.code), `${scope} at ${fraction}`).toEqual(board.map((b) => b.code));
+        expect(rows.map((r) => r.pos)).toEqual(board.map((_, i) => String(i + 1)));
+        // The gap is the board's, but for the pit lane (PIT) and for the winner once it has the flag (its race time).
+        rows.forEach((r, i) => {
+          if (board[i].status === "pit") expect(r.gap).toBe("PIT");
+          else if (i === 0 && board[i].status === "finished") expect(r.gap).toMatch(/^\d+:\d\d(:\d\d)?\.\d{3}$/);
+          else expect(r.gap).toBe(board[i].gap);
+        });
+      }
+    }
+    await expect(page.locator(`${STAGE} .ky-ci-tower .ky-tw-stage`)).toHaveText(/^Lap \d+ \/ 50/);
+  });
+
+  test("the tower has its flag and its fastest lap, and the winner's tag turns into the chequered flag at the flag", async ({ page }) => {
+    await open(page, "circuits.html?race=1");
+    await seekTo(page, 0);
+    await expect(page.locator(`${STAGE} .ky-ci-tower .ky-tw`)).toHaveAttribute("data-flag", "grid");
+    await expect(page.locator(`${STAGE} .ky-ci-lead`)).toHaveAttribute("data-flag", "false");
+    await seekTo(page, 0.4);
+    await expect(page.locator(`${STAGE} .ky-ci-tower .ky-tw`)).toHaveAttribute("data-flag", "green");
+    await expect(page.locator(`${STAGE} .ky-ci-tower .ky-tw-fast`)).toHaveText(/^FL [A-Z]{3} \d:\d\d\.\d{3} L\d+$/);
+    await expect(page.locator(`${STAGE} .ky-ci-lead-p`)).toBeVisible();
+    await expect(page.locator(`${STAGE} .ky-ci-lead-chq`)).toBeHidden();
+    await seekTo(page, 1);
+    await expect(page.locator(`${STAGE} .ky-ci-tower .ky-tw`)).toHaveAttribute("data-flag", "chequered");
+    await expect(page.locator(`${STAGE} .ky-ci-tower .ky-tw-stage`)).toHaveText("Chequered flag");
+    await expect(page.locator(`${STAGE} .ky-ci-lead`)).toHaveAttribute("data-flag", "true");
+    await expect(page.locator(`${STAGE} .ky-ci-lead-chq`)).toBeVisible();
+    await expect(page.locator(`${STAGE} .ky-ci-lead-p`)).toBeHidden();
+  });
+
+  test("the overlay is off until asked, comes back from its button and the address, and the scene's tower can be left out", async ({ page }, testInfo) => {
+    await open(page, "circuits.html?race=1");
+    await expect(page.locator(`${STAGE} .ky-race-overlay`)).toBeHidden();
+    await expect(page.locator('[data-testid="overlay"]')).not.toBeChecked();
+    expect(new URL(page.url()).searchParams.get("overlay")).toBeNull();
+    await press(page, page.locator('[data-testid="overlay"]').locator(".."), testInfo);
+    await expect(page.locator(`${STAGE} .ky-race-overlay .ky-tw`)).toBeVisible();
+    await expect.poll(() => new URL(page.url()).searchParams.get("overlay")).toBe("1");
+    await open(page, "circuits.html?race=1&overlay=1");
+    await expect(page.locator(`${STAGE} .ky-race-overlay`)).toBeVisible();
+    await expect(page.locator('[data-testid="overlay"]')).toBeChecked();
+  });
+
+  test("the podium comes at the flag with the first three in the finishing order and the fastest lap, closes, comes back from its button, and is taken back with the race", async ({ page }, testInfo) => {
+    await open(page, "circuits.html?race=1");
+    const card = page.locator(`${STAGE} .ky-race-podium`);
+    const button = page.locator(`${STAGE} .ky-race-podium-button`);
+    await seekTo(page, 0.5);
+    await expect(card).toBeHidden();
+    await expect(button).toBeHidden();
+    await seekTo(page, 1);
+    await expect(card).toBeVisible();
+    await expect(button).toBeVisible();
+    // Exactly the board's first three, in order: the names and teams, the winner's time and the gaps.
+    const board = await boardRows(page).evaluateAll((rows) => rows.slice(0, 3).map((r) => ({ name: r.querySelector(".ky-race-name").textContent, team: r.querySelector('[data-col="team"]').textContent, gap: r.querySelector('[data-col="gap"]').textContent })));
+    const lines = await card.locator("li").evaluateAll((els) => els.map((li) => ({ name: li.querySelector("b").textContent, team: li.querySelector("small").textContent, time: li.querySelector(".ky-podium-time").textContent })));
+    expect(lines.map((l) => l.name)).toEqual(board.map((b) => b.name));
+    expect(lines.map((l) => l.team)).toEqual(board.map((b) => b.team));
+    expect(lines[0].time).toMatch(/^\d:\d\d:\d\d\.\d{3}$/);
+    expect(lines[1].time).toBe(board[1].gap);
+    expect(lines[2].time).toBe(board[2].gap);
+    await expect(card.locator(".ky-podium-fast")).toHaveText(/^Fastest lap: [A-Z]{3} \S+, \d:\d\d\.\d{3}, lap \d+$/);
+    await expect(card).toHaveAttribute("data-final", "true");
+    // Closed, it stays away while the race goes round after the flag; the button brings it back.
+    await press(page, card.locator(".ky-podium-close"), testInfo);
+    await expect(card).toBeHidden();
+    await seekTo(page, 0.999);
+    await expect(card).toBeHidden();
+    await press(page, button, testInfo);
+    await expect(card).toBeVisible();
+    await expect(button).toHaveAttribute("aria-pressed", "true");
+    // Taken back before the flag it goes, and the button with it; at the flag again it comes by itself, closed or not.
+    await press(page, card.locator(".ky-podium-close"), testInfo);
+    await seekTo(page, 0.5);
+    await expect(button).toBeHidden();
+    await seekTo(page, 1);
+    await expect(card).toBeVisible();
+  });
+
+  test("the podium is in Japanese too, and the tower says its words", async ({ page }) => {
+    await open(page, "circuits.html?race=1&lang=ja&t=99999");
+    await expect(page.locator(`${STAGE} .ky-race-podium .ky-podium-title`)).toHaveText("チェッカーフラッグ");
+    await expect(page.locator(`${STAGE} .ky-race-podium-button`)).toHaveText("表彰台");
+    await expect(page.locator(`${STAGE} .ky-race-podium .ky-podium-fast`)).toContainText("ファステストラップ");
+    await expect(page.locator(`${STAGE} .ky-ci-tower .ky-tw-stage`)).toHaveText("チェッカーフラッグ");
+  });
+
+  test("in 3D the tower stands on a post by the straight, and its words and flag follow the race", async ({ page }) => {
+    await open(page, "circuits.html?race=1&view=3d&overlay=1&t=99999");
+    await page.waitForSelector(`${STAGE} .ky-turn[data-mode="3d"]`);
+    const tower = page.locator(`${STAGE} .ky-up[data-part="tower"]`);
+    await expect(tower).toHaveCount(1);
+    await expect(page.locator(`${STAGE} .ky-up[data-part="tower-post"], ${STAGE} .ky-up[data-part^="tower-post"]`).first()).toBeAttached();
+    await expect(tower.locator(".ky-tw")).toHaveAttribute("data-flag", "chequered");
+    await expect(tower.locator(".ky-tw-stage")).toHaveText("Chequered flag");
+    await expect(page.locator(`${STAGE} .ky-up[data-part="lead-tag"]`)).toHaveAttribute("data-flag", "true");
+    await seekTo(page, 0.4);
+    await expect(tower.locator(".ky-tw")).toHaveAttribute("data-flag", "green");
+    await expect(tower.locator(".ky-tw-stage")).toHaveText(/^Lap \d+ \/ 50$/);
+    await expect(page.locator(`${STAGE} .ky-race-podium`)).toBeHidden();
+  });
+
+  test("the tower writes nothing while the race is paused and only a few times a second while it plays", async ({ page }, testInfo) => {
+    await page.emulateMedia({ reducedMotion: "no-preference" });
+    await open(page, "circuits.html?race=1&overlay=1&speed=60");
+    await page.evaluate(() => {
+      window.__writes = 0;
+      const watch = new MutationObserver((records) => { window.__writes += records.length; });
+      for (const root of document.querySelectorAll(".ky-ci-tower, .ky-race-overlay")) watch.observe(root, { subtree: true, characterData: true, childList: true, attributes: true });
+    });
+    await page.waitForTimeout(800);
+    expect(await page.evaluate(() => window.__writes), "writes while paused").toBe(0);
+    await press(page, page.locator(`${STAGE} .ky-race .ky-play`), testInfo);
+    await page.evaluate(() => { window.__writes = 0; });
+    await page.waitForTimeout(2000);
+    const playing = await page.evaluate(() => window.__writes);
+    expect(playing, "the tower is written while it plays").toBeGreaterThan(0);
+    // Two towers (the scene's and the overlay), each at most four times a second, each write a handful of changed texts: far fewer than a frame at a time.
+    expect(playing).toBeLessThan(2 * 4 * 2 * 24);
+    await press(page, page.locator(`${STAGE} .ky-race .ky-play`), testInfo);
+    await page.evaluate(() => { window.__writes = 0; });
+    await page.waitForTimeout(600);
+    expect(await page.evaluate(() => window.__writes), "writes after it paused").toBe(0);
+  });
 });
 
 test.describe("the race's freeze and leak rules", () => {

@@ -4,6 +4,8 @@ import { circuitDrawing } from "./circuits.draw.ts";
 import type { CircuitDrawing } from "./circuits.draw.ts";
 import { raceAt, type RaceMoment, type RaceStanding } from "./circuits.race.moment.ts";
 import { simulateRace, type CircuitRace, type RaceOptions } from "./circuits.race.ts";
+import { TOWER_STYLE, towerData, towerFrame, towerMarkup } from "./circuits.race.tower.ts";
+import { standingGap, lapTime } from "./circuits.race.text.ts";
 import { RACE_WORDS } from "./circuits.race.words.ts";
 import type { CircuitOptions } from "./circuits.types.ts";
 import { el, esc, num } from "./format.ts";
@@ -11,46 +13,7 @@ import { BAR_STYLE } from "./replay.bar.ts";
 import { fill } from "./strings.core.ts";
 import type { Language } from "./types.ts";
 
-/** A race clock: `23:45` or `1:23:45`. */
-export function raceClock(seconds: number): string {
-  const whole = Math.max(0, Math.floor(Number.isFinite(seconds) ? seconds : 0));
-  const s = String(whole % 60).padStart(2, "0");
-  const m = Math.floor(whole / 60);
-  return m < 60 ? `${m}:${s}` : `${Math.floor(m / 60)}:${String(m % 60).padStart(2, "0")}:${s}`;
-}
-
-/** A lap's time: `1:36.512`. */
-export function lapTime(seconds: number): string {
-  const thousandths = Math.round(Math.max(0, seconds) * 1000);
-  const m = Math.floor(thousandths / 60000);
-  const rest = thousandths - m * 60000;
-  return `${m}:${String(Math.floor(rest / 1000)).padStart(2, "0")}.${String(rest % 1000).padStart(3, "0")}`;
-}
-
-/** A gap: `+1.234`, `+1:02.345` past a minute, or the laps down in the words of the language. */
-export function gapText(seconds: number | undefined, laps: number, language: Language): string {
-  const w = RACE_WORDS[language].board;
-  if (laps >= 1) return laps === 1 ? w.lapDown : fill(w.lapsDown, { n: laps });
-  if (seconds === undefined) return "";
-  return seconds >= 60 ? `+${lapTime(seconds)}` : `+${seconds.toFixed(3)}`;
-}
-
-/** The race clock's line at a moment: the lap, the final lap, the flag or the grid. */
-export function raceStage(moment: RaceMoment, language: Language): string {
-  const w = RACE_WORDS[language];
-  if (moment.flag) return w.flag;
-  if (moment.t <= 0) return w.grid;
-  if (moment.lap === moment.laps && moment.laps > 1) return `${fill(w.lap, { lap: moment.lap, laps: moment.laps })} · ${w.finalLap}`;
-  return fill(w.lap, { lap: moment.lap, laps: moment.laps });
-}
-
-/** What a line of the board shows in its gap column: the leader, a gap, laps down, the pit lane or out. */
-export function standingGap(line: RaceStanding, language: Language, of: "gap" | "interval" = "gap"): string {
-  const w = RACE_WORDS[language].board;
-  if (line.status === "out") return w.out;
-  if (line.position === 1) return of === "gap" ? w.leader : "";
-  return of === "gap" ? gapText(line.gap, line.lapsDown, language) : gapText(line.interval, line.intervalLaps, language);
-}
+export { gapText, lapTime, raceClock, raceStage, standingGap } from "./circuits.race.text.ts";
 
 /** The size of a car's dot on a drawing whose type and marks are sized by `k` (a thousandth of its longer side). */
 export const carRadius = (k: number): number => 11 * k;
@@ -65,31 +28,41 @@ export function carMarkup(line: RaceStanding, r: number, language: Language): st
   return el("g", { class: "ky-ci-car", "data-car": line.car.id, "data-status": line.status, transform: `translate(${num(line.at[0])} ${num(line.at[1])})`, role: "img", "aria-label": label }, inner);
 }
 
+/** A chequered strip of two rows of `cols` squares, `s` each, from (x, y): the flag the winner gets in place of its P1 tag. */
+export function chequerSquares(x: number, y: number, s: number, cols: number): string {
+  let out = "";
+  for (let r = 0; r < 2; r += 1) for (let c = 0; c < cols; c += 1) out += el("rect", { class: (r + c) % 2 === 0 ? "ky-ci-lead-dark" : "ky-ci-lead-light", x: num(x + c * s), y: num(y + r * s), width: num(s), height: num(s) });
+  return out;
+}
+
 /**
  * The leader's mark: a ring round the car's dot in a contrasting colour (amber, edged dark, so that it reads on a light or a dark ground) and a small "P1" tag above it, laid at the car's place. It is its own group,
  * drawn after every car so that no dot lies over it, and it stays whatever the page does with the turn markers and the cars' numbers.
  */
-export function leaderMarkup(line: RaceStanding, r: number): string {
+export function leaderMarkup(line: RaceStanding, r: number, flag = false): string {
   const ring = 1.55 * r;
   const inner =
     el("circle", { class: "ky-ci-lead-halo", r: num(ring), "stroke-width": num(0.55 * r) }) +
     el("circle", { class: "ky-ci-lead-ring", r: num(ring), "stroke-width": num(0.3 * r) }) +
     el("rect", { class: "ky-ci-lead-tag", x: num(-1.15 * r), y: num(-3.45 * r), width: num(2.3 * r), height: num(1.35 * r), rx: num(0.4 * r), "stroke-width": num(0.14 * r) }) +
-    el("text", { class: "ky-ci-lead-p", y: num(-2.45 * r), "font-size": num(1.0 * r) }, "P1");
-  return el("g", { class: "ky-ci-lead", "data-car": line.car.id, transform: `translate(${num(line.at[0])} ${num(line.at[1])})`, "aria-hidden": "true" }, inner);
+    el("text", { class: "ky-ci-lead-p", y: num(-2.45 * r), "font-size": num(1.0 * r) }, "P1") +
+    el("g", { class: "ky-ci-lead-chq" }, chequerSquares(-0.9 * r, -3.075 * r, 0.3 * r, 6));
+  return el("g", { class: "ky-ci-lead", "data-flag": flag ? "true" : "false", "data-car": line.car.id, transform: `translate(${num(line.at[0])} ${num(line.at[1])})`, "aria-hidden": "true" }, inner);
 }
 
 /** The cars of a moment as one group, the last car drawn first so that the leader lies on top. */
 export function carsMarkup(moment: RaceMoment, r: number, language: Language): string {
   const lines = [...moment.standings].sort((a, b) => a.index - b.index);
   const first = moment.standings[0];
-  return el("g", { class: "ky-ci-cars" }, lines.map((line) => carMarkup(line, r, language)).join("")) + (first === undefined ? "" : leaderMarkup(first, r));
+  return el("g", { class: "ky-ci-cars" }, lines.map((line) => carMarkup(line, r, language)).join("")) + (first === undefined ? "" : leaderMarkup(first, r, moment.flag));
 }
 
 /** What a race's drawing is made from: the circuit's options, the race's, and the moment. */
 export interface RaceDrawOptions extends CircuitOptions, Omit<RaceOptions, "circuit"> {
   /** Seconds from the start: 0 (the grid) by default. */
   t?: number;
+  /** The timing tower standing beside the start and finish straight: `true` (the default) or `false`. */
+  tower?: boolean;
 }
 
 /** A race's drawing at a moment, and what it was made from. */
@@ -107,7 +80,13 @@ export function raceDrawing(options: RaceDrawOptions, given?: CircuitRace): Race
   const w = RACE_WORDS[language];
   const extra = ` ${fill(given === undefined ? w.description : w.fromFeed, { cars: race.cars.length, laps: race.laps })}`;
   const description = `${drawn.description}${language === "ja" ? extra.trim() : extra}`;
-  const svg = drawn.svg.replace(/<desc id="([^"]+)">[^<]*<\/desc>/, (_, id: string) => `<desc id="${id}">${esc(description)}</desc>`).replace(/<\/svg>$/, `${carsMarkup(moment, carRadius(drawn.k), language)}</svg>`);
+  // The timing tower stands beside the start and finish straight, under the cars.
+  let tower = "";
+  if (options.tower !== false) {
+    const t = towerFrame(drawn.plan, drawn.k, race.cars.length);
+    tower = el("g", { class: "ky-ci-tower", transform: `translate(${num(t.at[0] - t.w / 2)} ${num(t.at[1] - t.h / 2)}) scale(${num(t.s)})`, "aria-hidden": "true" }, towerMarkup(towerData(race, moment, language), t.rows, language));
+  }
+  const svg = drawn.svg.replace(/<desc id="([^"]+)">[^<]*<\/desc>/, (_, id: string) => `<desc id="${id}">${esc(description)}</desc>`).replace(/<\/svg>$/, `${tower}${carsMarkup(moment, carRadius(drawn.k), language)}</svg>`);
   return { ...drawn, svg, description, race, moment };
 }
 
@@ -162,6 +141,7 @@ export function raceBoard(moment: RaceMoment, language: Language = "en"): string
 
 /** The rules of a race: the cars on the drawing, the clock, the controls and the board. Scoped to `.ky-race` and the cars of a circuit's or a district's drawing, in the page's own colours. */
 export const RACE_STYLE = `
+${TOWER_STYLE}
 .ky-circuit .ky-ci-car-dot,.ky-district .ky-ci-car-dot,.ky-turn .ky-ci-car-dot{stroke:var(--ky-ci-ground,#fff)}
 .ky-circuit .ky-ci-car-n,.ky-district .ky-ci-car-n,.ky-turn .ky-ci-car-n{font-family:var(--ky-font,system-ui,sans-serif);font-weight:800;text-anchor:middle;font-variant-numeric:tabular-nums}
 .ky-circuit .ky-ci-car[data-status=out],.ky-district .ky-ci-car[data-status=out]{opacity:.45}
@@ -169,11 +149,35 @@ export const RACE_STYLE = `
 .ky-circuit .ky-ci-lead-ring,.ky-district .ky-ci-lead-ring,.ky-turn .ky-ci-lead-ring{fill:none;stroke:var(--ky-ci-lead,#f5b50a)}
 .ky-circuit .ky-ci-lead-tag,.ky-district .ky-ci-lead-tag,.ky-turn .ky-ci-lead-tag{fill:var(--ky-ci-lead,#f5b50a);stroke:var(--ky-ci-lead-edge,#14181d)}
 .ky-circuit .ky-ci-lead-p,.ky-district .ky-ci-lead-p,.ky-turn .ky-ci-lead-p{fill:#14181d;font-family:var(--ky-font,system-ui,sans-serif);font-weight:800;text-anchor:middle}
+.ky-circuit .ky-ci-lead-chq,.ky-district .ky-ci-lead-chq,.ky-turn .ky-ci-lead-chq{display:none}
+.ky-circuit .ky-ci-lead[data-flag=true] .ky-ci-lead-chq,.ky-district .ky-ci-lead[data-flag=true] .ky-ci-lead-chq,.ky-turn .ky-up[data-flag=true] .ky-ci-lead-chq{display:inline}
+.ky-circuit .ky-ci-lead[data-flag=true] .ky-ci-lead-p,.ky-district .ky-ci-lead[data-flag=true] .ky-ci-lead-p,.ky-turn .ky-up[data-flag=true] .ky-ci-lead-p{display:none}
+.ky-circuit .ky-ci-lead-dark,.ky-district .ky-ci-lead-dark,.ky-turn .ky-ci-lead-dark{fill:#14181d}
+.ky-circuit .ky-ci-lead-light,.ky-district .ky-ci-lead-light,.ky-turn .ky-ci-lead-light{fill:#fff}
 .ky-race[data-labels=off] .ky-ci-car-n{display:none}
 .ky-race .ky-race-board tbody tr:first-child{background:color-mix(in srgb,var(--ky-ci-lead,#f5b50a) 22%,transparent)}
 .ky-race{position:relative;display:block;color:inherit}
 ${BAR_STYLE}
 .ky-race .ky-race-hint,.ky-race .ky-race-live{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.ky-race .ky-race-frame{position:relative}
+.ky-race .ky-race-overlay{position:absolute;left:8px;top:8px;width:clamp(120px,22%,190px);pointer-events:none;z-index:2}
+.ky-race .ky-race-overlay[hidden],.ky-race .ky-race-podium[hidden],.ky-race .ky-podium-list li[hidden]{display:none}
+.ky-race .ky-race-overlay svg{display:block;width:100%;height:auto}
+.ky-race .ky-race-podium{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);width:min(92%,420px);box-sizing:border-box;padding:.7rem .9rem;border-radius:12px;background:#12161bf2;color:#f1f3f5;box-shadow:0 6px 24px #0008;z-index:3;font-size:.9rem;font-variant-numeric:tabular-nums}
+.ky-race .ky-podium-head{display:flex;justify-content:space-between;align-items:center;gap:.5rem}
+.ky-race .ky-podium-title{font-size:1.05rem}
+.ky-race .ky-podium-close{box-sizing:border-box;min-width:44px;min-height:44px;margin:0;border:1px solid currentColor;border-radius:8px;background:transparent;color:inherit;font:inherit;font-size:1.3rem;cursor:pointer}
+.ky-race .ky-podium-close:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+.ky-race .ky-podium-list{list-style:none;margin:.4rem 0;padding:0;display:grid;gap:.3rem}
+.ky-race .ky-podium-list li{display:grid;grid-template-columns:1.6rem .9rem 1fr auto;align-items:center;gap:.5rem}
+.ky-race .ky-podium-pos{font-weight:800;text-align:center}
+.ky-race .ky-podium-list li:first-child .ky-podium-pos{color:#f5b50a}
+.ky-race .ky-podium-swatch{width:.8rem;height:.8rem;border-radius:50%;border:1px solid #fff6}
+.ky-race .ky-podium-who{display:flex;flex-direction:column;line-height:1.15}
+.ky-race .ky-podium-who small{opacity:.75}
+.ky-race .ky-podium-time{font-weight:700}
+.ky-race .ky-podium-list li[data-finished=false] .ky-podium-time{opacity:.65;font-weight:500}
+.ky-race .ky-podium-fast{margin:0;color:#c9a6ff;font-size:.85rem}
 .ky-race .ky-race-note{margin:.25rem 0 0;font-size:.85rem;opacity:.8}
 .ky-race .ky-race-board-wrap{overflow-x:auto;margin-top:.5rem}
 .ky-race .ky-race-board{border-collapse:collapse;width:100%;font-size:.85rem;font-variant-numeric:tabular-nums}
@@ -184,5 +188,6 @@ ${BAR_STYLE}
 .ky-race .ky-race-board td[data-fastest=true]{font-weight:800;text-decoration:underline}
 .ky-race .ky-race-swatch{display:inline-block;width:.7em;height:.7em;margin-inline-end:.35em;border-radius:50%;border:1px solid color-mix(in srgb,currentColor 40%,transparent);vertical-align:baseline}
 .ky-race .ky-race-code{font-weight:800}
+@media (max-width:560px){.ky-race .ky-race-podium{position:static;transform:none;width:auto;margin-top:.5rem}}
 @media (max-width:560px){.ky-race .ky-race-board [data-col=team],.ky-race .ky-race-board [data-col=best],.ky-race .ky-race-board [data-col=last],.ky-race .ky-race-board .ky-race-name{display:none}}
 `.trim();

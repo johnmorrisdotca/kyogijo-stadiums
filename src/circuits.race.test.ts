@@ -198,7 +198,7 @@ describe("the drawing, the clock and the board", () => {
       expect(svg.match(/class="ky-ci-lead"/g)).toHaveLength(1);
       expect(svg.indexOf('class="ky-ci-lead"')).toBeGreaterThan(svg.lastIndexOf('class="ky-ci-car"'));
       const first = raceAt(race, t).standings[0];
-      expect(svg).toContain(`class="ky-ci-lead" data-car="${first.car.id}"`);
+      expect(svg).toMatch(new RegExp(`class="ky-ci-lead" data-flag="(true|false)" data-car="${first.car.id}"`));
     }
     expect(at(300)).toContain(">P1<");
     expect(leaderMarkup(raceAt(race, 300).standings[0], 10)).toContain("ky-ci-lead-ring");

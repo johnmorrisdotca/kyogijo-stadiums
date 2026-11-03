@@ -150,6 +150,8 @@ src/
 ├── circuits.race.ts    a simulated race worked out from a seed: the grid, the laps, the gaps, the passes, the pit stops and the flag (`simulateRace`)
 ├── circuits.race.moment.ts a moment of a race: where each car is on the drawing, the order, the gaps, the laps and the stops (`raceAt`)
 ├── circuits.race.draw.ts a race drawn: the dots on the circuit, the clock's words and the timing board as a table (`drawRace`, `raceBoard`)
+├── circuits.race.text.ts the race's number words the drawing, the board and the tower share: the clock, a lap's time, a gap, the clock's line
+├── circuits.race.tower.ts the racing scoreboard: the timing tower (what it shows, its markup, where it stands, writing only what changed) and the podium's data
 ├── circuits.race.words.ts the words of a race in English and Japanese
 ├── circuits.race.dom.ts a race in a page: the circuit flat or in 3D with its dots, the clock, play, the speeds, the slider and the board, moving together (`mountCircuitRace`), or in another scene the circuit lies in (`mountRaceIn`, a `RaceScene`: a district's ground)
 ├── circuits.feed.ts    kyogijo's open race timeline read strictly, and a feed turned into a race that plays like a simulated one (`readRaceFeed`, `raceFromFeed`, `raceToFeed`)
