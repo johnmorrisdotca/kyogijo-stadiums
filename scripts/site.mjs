@@ -237,7 +237,7 @@ const page = `<!doctype html>
         <div class="rv-bar" id="feature-bar" data-testid="feature-bar"></div>
         <div class="rv-bar" id="feature-pick"><select class="fam-field" id="feature-venue" data-testid="feature-venue"></select></div>
         <div id="feature-stage" data-testid="feature-stage"></div>
-        <p class="feature-links"><a href="venues.html" data-say="featureVenues"></a> · <a href="halls.html?preset=tabletennis-4&amp;view=3d" data-say="featureHalls"></a> · <a href="judging.html?mat=1&amp;view=broadcast" data-say="featureJudging"></a></p>
+        <p class="feature-links"><a href="venues.html" data-say="featureVenues"></a> · <a href="halls.html?preset=tabletennis-4&amp;view=3d" data-say="featureHalls"></a> · <a href="judging.html?mat=1&amp;view=broadcast" data-say="featureJudging"></a> · <a href="circuits.html" data-say="featureCircuits"></a></p>
       </section>
 
       <section class="try" id="try" aria-labelledby="try-title">

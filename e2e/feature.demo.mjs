@@ -118,7 +118,7 @@ test("has its buttons on the view, and a button pressed while it turns neither s
   await expect(page.locator(at("feature-venue"))).toHaveValue("united-center");
 });
 
-test("has the view and its buttons in sight at a laptop's size, and the links to the venues, the tournament layouts and the judging page", async ({ page }) => {
+test("has the view and its buttons in sight at a laptop's size, and the links to the venues, the tournament layouts, the judging page and the circuits", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
   await open(page);
   for (const target of [page.locator(at("feature-bar")), page.locator(`${STAGE} .ky-turn-view`)]) {
@@ -126,7 +126,7 @@ test("has the view and its buttons in sight at a laptop's size, and the links to
     expect(box.y + box.height).toBeLessThanOrEqual(800);
   }
   const hrefs = await page.locator(".feature-links a").evaluateAll((all) => all.map((a) => a.getAttribute("href")));
-  expect(hrefs).toEqual(["venues.html", "halls.html?preset=tabletennis-4&view=3d", "judging.html?mat=1&view=broadcast"]);
+  expect(hrefs).toEqual(["venues.html", "halls.html?preset=tabletennis-4&view=3d", "judging.html?mat=1&view=broadcast", "circuits.html"]);
 });
 
 test("is in Japanese on request: the title, the buttons and the arena's names", async ({ page }) => {

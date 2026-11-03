@@ -30,6 +30,7 @@ export const PAGES = [
   { name: "boards", path: "boards.html" },
   { name: "flythrough", path: "flythrough.html" },
   { name: "judging", path: "judging.html" },
+  { name: "circuits", path: "circuits.html?view=3d" },
 ];
 
 /** A file of data (a table the page draws from) and not a script: named `*.data.js`, `*-data.js` or `*.json`. */

@@ -60,6 +60,7 @@ export const NAV = [
       { slug: "roof-photos-needed", ja: "屋根の写真が必要な会場" },
       { slug: "stadiums", ja: "実在のスタジアム" },
       { slug: "district", ja: "会場の地区" },
+      { slug: "circuits", ja: "サーキット" },
       { slug: "outside", ja: "会場の外の人出" },
       { slug: "gates", ja: "会場のゲート" },
       { slug: "flythrough", ja: "フライスルー" },
@@ -294,6 +295,11 @@ export const PLACES = [
     id: "tokyo", en: "Tokyo and the Kodokan", ja: "東京と講道館", picture: "pictures/district-kodokan-3d-desk", page: "district", at: "tokyo-dome-city-a-ballpark-and-a-hall",
     demo: "district.html?venues=tokyo-dome,korakuen-hall&view=3d&viewpoint=corner&roof=1", demoEn: "Tokyo Dome City in the demo",
     blurb: "Tokyo Dome, Korakuen Hall and the Kodokan's great dojo in the air on its real floor, among PLATEAU's buildings.",
+  },
+  {
+    id: "las-vegas", en: "The Las Vegas Strip Circuit", ja: "ラスベガス・ストリップ・サーキット", picture: "images/circuits-las-vegas-3d-desk", page: "circuits", at: "the-las-vegas-strip-circuit",
+    demo: "circuits.html?view=3d&viewpoint=corner", demoEn: "The circuit in the demo",
+    blurb: "A race track as OpenStreetMap maps it: the lap at the track's width, the pit lane and the pit building, the start and the finish, the 17 turns numbered, in 2D and 3D.",
   },
   {
     id: "halls", en: "Tournament halls", ja: "大会会場のレイアウト", picture: "images/multi-tabletennis-3d-desk", page: "multi", at: "",

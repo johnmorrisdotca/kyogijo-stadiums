@@ -1513,6 +1513,7 @@ Made from `src/strings.en.ts`, `src/strings.ja.ts` and `demo/words.js` by `pnpm 
 | `featureVenues` | All the real arenas, by division, with their facts | 実在のアリーナの一覧（ディビジョン別・情報つき） |
 | `featureHalls` | Tournament layouts in 3D | 3Dで見る大会向けレイアウト |
 | `featureJudging` | Who judges where: the broadcast view | 審判の配置：中継ビュー |
+| `featureCircuits` | A race track: the Las Vegas Strip Circuit | レーストラック：ラスベガス・ストリップ・サーキット |
 | `featureGroup` | What to show | 表示する要素 |
 | `stageBar` | On the view: flat or 3D, the crowd, its roof and light or dark | 表示の切り替え：平面と3D、観客、屋根、ダークモード |
 | `p_stands` | Stands | 観客席 |
@@ -2123,6 +2124,7 @@ Made from `src/strings.en.ts`, `src/strings.ja.ts` and `demo/words.js` by `pnpm 
 | page `roof-photos-needed` | Roofs we still need photos for | 屋根の写真が必要な会場 |
 | page `stadiums` | The real stadiums | 実在のスタジアム |
 | page `district` | A district of venues | 会場の地区 |
+| page `circuits` | Circuits | サーキット |
 | page `outside` | The crowd outside the venue | 会場の外の人出 |
 | page `gates` | The gates of a venue | 会場のゲート |
 | page `flythrough` | The fly-through | フライスルー |

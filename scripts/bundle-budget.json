@@ -78,5 +78,10 @@
     "totalKB": 3155,
     "totalGzipKB": 905,
     "dataKB": 610
+  },
+  "circuits": {
+    "totalKB": 2290,
+    "totalGzipKB": 725,
+    "dataKB": 70
   }
 }
