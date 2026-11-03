@@ -1517,6 +1517,7 @@ Made from `src/strings.en.ts`, `src/strings.ja.ts` and `demo/words.js` by `pnpm 
 | `featureHalls` | Tournament layouts in 3D | 3Dで見る大会向けレイアウト |
 | `featureJudging` | Who judges where: the broadcast view | 審判の配置：中継ビュー |
 | `featureCircuits` | A race track: the Las Vegas Strip Circuit | レーストラック：ラスベガス・ストリップ・サーキット |
+| `featureRace` | A simulated race on it, with a race clock and timing board | そのコースでのシミュレーションレース（レース時計とタイミングボード付き） |
 | `featureGroup` | What to show | 表示する要素 |
 | `stageBar` | On the view: flat or 3D, the crowd, its roof and light or dark | 表示の切り替え：平面と3D、観客、屋根、ダークモード |
 | `p_stands` | Stands | 観客席 |

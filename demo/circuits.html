@@ -20,7 +20,7 @@
       [hidden] { display: none !important; }
       :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
       #stage { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 8px; }
-      #stage > svg.kyogijo { display: block; width: 100%; height: auto; max-height: calc(100vh - 150px); }
+      #stage > svg.kyogijo, #stage .ky-race-view > svg.kyogijo { display: block; width: 100%; height: auto; max-height: calc(100vh - 150px); }
       label { display: grid; gap: 4px; min-width: 0; font-size: .9rem; color: var(--muted); }
       select { font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px; min-height: 44px; }
       details { margin-top: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 8px 12px; }
@@ -48,6 +48,7 @@
       <div hidden>
         <label><span id="l-view"></span><select id="view"><option value="flat">2D</option><option value="3d">3D</option></select></label>
         <label><span id="l-circuit"></span><select id="circuit"></select></label>
+        <label class="check" id="race-row"><input id="race" type="checkbox" data-testid="race" /><span id="l-race"></span></label>
         <label><span id="l-language"></span><select id="language"><option value="en">English</option><option value="ja">日本語</option></select></label>
         <label><span id="l-theme"></span><select id="theme"><option value="auto"></option><option value="light"></option><option value="dark"></option></select></label>
       </div>
@@ -66,7 +67,7 @@
     <script type="module">
       // A famous race track drawn from OpenStreetMap, in 2D and in 3D: choose the view, the language and the theme, read the facts and where each comes from, and copy the code that draws what is shown. Everything is
       // in this page and its address: nothing is sent anywhere and nothing is stored.
-      import { CIRCUITS, CIRCUIT_ATTRIBUTION, circuitTable, drawCircuit, mountCircuitTurn } from "./dist/circuits-entry.js";
+      import { CIRCUITS, CIRCUIT_ATTRIBUTION, RACE_SPEEDS, circuitTable, drawCircuit, mountCircuitRace, mountCircuitTurn } from "./dist/circuits-entry.js";
       import { replaceAddress } from "./address.js";
       import { hoverOf, wayOf, writeWay } from "./turn-way.js";
       import { quietTitles } from "./quiet.js";
@@ -77,17 +78,17 @@
         en: {
           title: "Circuits", pageTitle: "Kyogijo Stadiums: circuits",
           pageDescription: "A famous race track drawn from OpenStreetMap: the lap as a ribbon of the track's width, the pit lane, the start and finish, each turn's number, in 2D and 3D, light and dark, English and Japanese.",
-          lede: "A race track as OpenStreetMap maps it: the lap at the track's width, the pit lane and the pit building, the start and the finish, and each turn's number. Turn it in 3D.",
+          lede: "A race track as OpenStreetMap maps it: the lap at the track's width, the pit lane and the pit building, the start and the finish, and each turn's number. Turn it in 3D, or turn on Race to watch a simulated race of made-up cars, with its clock and timing board.",
           back: "Back to the Kyogijo Stadiums demo", docs: "The circuits page of the docs", view: "View", circuit: "Circuit", language: "Language", theme: "Theme", auto: "As the device", light: "Light", dark: "Dark",
-          code: "Code", table: "Facts", copy: "Copy the code", copied: "Copied.",
+          code: "Code", table: "Facts", copy: "Copy the code", copied: "Copied.", race: "Race",
           credit: `Map data: ${CIRCUIT_ATTRIBUTION}. Length, turns and opening day: Wikidata (CC0) and the English and Japanese Wikipedia articles, in our own words. The track's width is ours: no source gives it. Nothing of a race's, a series' or a team's marks is drawn.`,
         },
         ja: {
           title: "サーキット", pageTitle: "競技場 Kyogijo Stadiums：サーキット",
           pageDescription: "OpenStreetMapのデータから描いた有名なレーストラック。コース幅で描いた周回路、ピットレーン、スタートとフィニッシュ、各コーナーの番号を、2Dと3D、ライトとダーク、英語と日本語で表示します。",
-          lede: "OpenStreetMapに登録されたレーストラックを描きます。コース幅で描いた周回路、ピットレーンとピットビル、スタートとフィニッシュ、各コーナーの番号を表示し、3Dで回転させて見られます。",
+          lede: "OpenStreetMapに登録されたレーストラックを描きます。コース幅で描いた周回路、ピットレーンとピットビル、スタートとフィニッシュ、各コーナーの番号を表示し、3Dで回転させて見られます。「レース」をオンにすると、架空のマシンによるシミュレーションレースを、レース時計とタイミングボード付きで見られます。",
           back: "競技場 Kyogijo Stadiums のデモに戻る", docs: "ドキュメントの「サーキット」ページ", view: "表示", circuit: "サーキット", language: "言語", theme: "テーマ", auto: "端末に合わせる", light: "ライト", dark: "ダーク",
-          code: "コード", table: "データ", copy: "コードをコピー", copied: "コピーしました。",
+          code: "コード", table: "データ", copy: "コードをコピー", copied: "コピーしました。", race: "レース",
           credit: `地図データ：${CIRCUIT_ATTRIBUTION}。全長・コーナー数・開業日：Wikidata（CC0）と、英語版・日本語版ウィキペディアの記事（内容は独自の言葉でまとめ直しています）。コース幅は独自の値で、出典はありません。レース、シリーズ、チームのマークは一切描いていません。`,
         },
       };
@@ -98,6 +99,12 @@
       if (params.get("view") === "3d") $("view").value = "3d";
       if (params.get("lang") === "ja") $("language").value = "ja";
       if (["light", "dark"].includes(params.get("theme"))) $("theme").value = params.get("theme");
+      // The race: on or off, its speed and the moment it was left at (written when it is paused or moved, never while it plays).
+      if (params.get("race") === "1") $("race").checked = true;
+      let raceSpeed = RACE_SPEEDS.includes(Number(params.get("speed"))) ? Number(params.get("speed")) : 1;
+      let raceTime = Number.isFinite(Number(params.get("t"))) ? Math.max(0, Number(params.get("t"))) : 0;
+      let race;
+      let raceKey = "";
       let viewpoint = ["overhead", "broadcast", "end", "corner"].includes(params.get("viewpoint")) ? params.get("viewpoint") : "broadcast";
       let turn;
       let turnKey = "";
@@ -110,7 +117,7 @@
         document.title = w.pageTitle;
         document.querySelector('meta[name="description"]').content = w.pageDescription;
         for (const key of ["title", "lede", "back", "docs", "credit"]) $(key).textContent = w[key];
-        for (const key of ["view", "circuit", "language", "theme", "code", "table"]) $(`l-${key}`).textContent = w[key];
+        for (const key of ["view", "circuit", "language", "theme", "code", "table", "race"]) $(`l-${key}`).textContent = w[key];
         $("copy").textContent = w.copy;
         for (const option of $("theme").options) option.textContent = w[option.value];
         for (const option of $("circuit").options) option.textContent = CIRCUITS.find((c) => c.id === option.value).names[language];
@@ -124,6 +131,12 @@
       /** The code that draws what is shown: the same options, as a reader would write them. */
       function code(o) {
         const literal = `{ ${Object.entries(o).map(([key, value]) => `${key}: ${JSON.stringify(value)}`).join(", ")} }`;
+        if ($("race").checked) {
+          const view = $("view").value === "3d" ? [`view: "3d"`, `turn: { preset: ${JSON.stringify(viewpoint)} }`] : [];
+          const speed = raceSpeed === 1 ? [] : [`speed: ${raceSpeed}`];
+          const rest = [...view, ...speed];
+          return `import { mountCircuitRace } from "@johnmorrisdotca/kyogijo-stadiums/circuits";\n\nconst race = mountCircuitRace(document.querySelector("#race"), ${literal}${rest.length === 0 ? "" : `, { ${rest.join(", ")} }`});\nrace.play();`;
+        }
         if ($("view").value === "3d") {
           return `import { mountCircuitTurn } from "@johnmorrisdotca/kyogijo-stadiums/circuits";\n\nconst view = mountCircuitTurn(document.querySelector("#lap"), ${literal}, { preset: ${JSON.stringify(viewpoint)} });`;
         }
@@ -139,6 +152,11 @@
         }
         if ($("language").value === "ja") next.set("lang", "ja");
         if ($("theme").value !== "auto") next.set("theme", $("theme").value);
+        if ($("race").checked) {
+          next.set("race", "1");
+          if (raceSpeed !== 1) next.set("speed", String(raceSpeed));
+          if (Math.round(raceTime) > 0) next.set("t", String(Math.round(raceTime)));
+        }
         writeWay(next);
         replaceAddress(next.size === 0 ? location.pathname : `?${next}`);
       }
@@ -151,7 +169,31 @@
         const stage = $("stage");
         $("error").hidden = true;
         try {
-          if ($("view").value === "3d") {
+          if ($("race").checked) {
+            // The race: mounted again for a new circuit or view, drawn again in place for a new language or theme, so that the clock stays where it is.
+            if (turn !== undefined) { turn.destroy(); turn = undefined; }
+            const key = `${o.circuit}|${$("view").value}`;
+            if (race !== undefined && raceKey !== key) { raceTime = race.state().t; race.destroy(); race = undefined; }
+            if (race === undefined) {
+              stage.innerHTML = '<div id="race-view" data-testid="race-view"></div>';
+              raceKey = key;
+              const turnSettings = { preset: viewpoint, ...wayOf(syncUrl), onChange: (_, preset) => { if (preset !== undefined) viewpoint = preset; syncUrl(); $("code").textContent = code(options()); } };
+              race = mountCircuitRace($("race-view"), o, {
+                view: $("view").value,
+                turn: turnSettings,
+                speed: raceSpeed,
+                start: raceTime,
+                onChange: (state) => {
+                  raceSpeed = state.speed;
+                  if (!state.playing) raceTime = state.t;
+                  syncUrl();
+                  $("code").textContent = code(options());
+                },
+              });
+              if (race.turn !== undefined) hoverOf($("race-view"), race.turn);
+            } else race.update(o);
+          } else if ($("view").value === "3d") {
+            if (race !== undefined) { race.destroy(); race = undefined; raceKey = ""; }
             const key = o.circuit;
             if (turn !== undefined && turnKey !== key) { turn.destroy(); turn = undefined; }
             if (turn === undefined) {
@@ -161,6 +203,7 @@
               hoverOf($("three"), turn);
             } else turn.update(o);
           } else {
+            if (race !== undefined) { race.destroy(); race = undefined; raceKey = ""; }
             if (turn !== undefined) { turn.destroy(); turn = undefined; }
             stage.innerHTML = drawCircuit(o);
           }
@@ -172,6 +215,7 @@
         $("code").textContent = code(o);
         syncUrl();
         stage.classList.toggle("rv-fit", $("view").value === "3d");
+        stage.classList.toggle("racing", $("race").checked);
         fitStage();
         const back = new URLSearchParams();
         if ($("language").value === "ja") back.set("lang", "ja");
@@ -200,8 +244,8 @@
         setTimeout(() => { $("copied").textContent = ""; }, 2400);
       });
       $("language").addEventListener("change", () => { labelPage(); draw(); });
-      for (const id of ["view", "circuit", "theme"]) $(id).addEventListener("change", draw);
-      moveToBar($("bar"), ["view", ["circuit", { quiet: true }], "language", "theme"]);
+      for (const id of ["view", "circuit", "theme", "race"]) $(id).addEventListener("change", draw);
+      moveToBar($("bar"), ["view", ["circuit", { quiet: true }], "race", "language", "theme"]);
       labelPage();
       quietTitles();
       panesToTabs();

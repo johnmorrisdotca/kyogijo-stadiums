@@ -280,7 +280,7 @@ const page = `<!doctype html>
         <div class="rv-bar" id="feature-pick"><select class="fam-field" id="feature-venue" data-testid="feature-venue"></select><button type="button" class="fam-chip" id="feature-game" data-testid="feature-game" aria-pressed="false" data-say="gamePlay"${GAME_SURFACES.includes("nhl") ? "" : " hidden"}></button></div>
         <div id="feature-stage" data-testid="feature-stage"></div>
         <p class="game-note" id="feature-game-note" data-testid="feature-game-note" hidden></p>
-        <p class="feature-links"><a href="venues.html" data-say="featureVenues"></a> · <a href="halls.html?preset=tabletennis-4&amp;view=3d" data-say="featureHalls"></a> · <a href="judging.html?mat=1&amp;view=broadcast" data-say="featureJudging"></a> · <a href="circuits.html" data-say="featureCircuits"></a></p>
+        <p class="feature-links"><a href="venues.html" data-say="featureVenues"></a> · <a href="halls.html?preset=tabletennis-4&amp;view=3d" data-say="featureHalls"></a> · <a href="judging.html?mat=1&amp;view=broadcast" data-say="featureJudging"></a> · <a href="circuits.html" data-say="featureCircuits"></a> · <a href="circuits.html?race=1" data-say="featureRace"></a></p>
       </section>
 
       <section class="try" id="try" aria-labelledby="try-title">
