@@ -100,7 +100,7 @@ It answers `null` where there is nothing to ask: a drawing made without `pointer
 
 ## 6. Charts, heat and replay
 
-The `charts` entry has ready-made charts (an NBA shot chart, an NHL shot map, an MLB spray chart, an NFL pass chart, a soccer shot map, curling stones, swimming splits). `heat` layers count marks into cells, hexagons, named zones or a density, and `network`, `voronoi` and `hull` read where a team stood. A `replay` plays tracking data frame by frame and moves only when told to. Its game clock stops in a stoppage while the replay plays on: in hockey the puck is dead, the players glide to the face-off's line-up at the spot the rules give, and the clock runs again at the drop ([stoppages](../replay.md#stoppages-the-clock-stops-the-players-line-up)).
+The `charts` entry has ready-made charts (an NBA shot chart, an NHL shot map, an MLB spray chart, an NFL pass chart, a soccer shot map, curling stones, swimming splits). `heat` layers count marks into cells, hexagons, named zones or a density, and `network`, `voronoi` and `hull` read where a team stood. A `replay` plays tracking data frame by frame and moves only when told to. Its game clock stops in a stoppage while the replay plays on: in hockey the puck is dead, the players glide to the face-off's line-up at the spot the rules give, and the clock runs again at the drop ([stoppages](../replay.md#stoppages-the-clock-stops-the-players-line-up)). A penalized player sits in his side's penalty box for his time on the game clock while his side plays a skater short, and the board shows the power play and each penalty's clock ([penalties](../replay.md#penalties-and-the-power-play)).
 
 ```ts
 import { nbaShotChart } from "@johnmorrisdotca/kyogijo-stadiums/charts";

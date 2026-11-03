@@ -182,7 +182,7 @@ Real buildings drawn in the outline OpenStreetMap maps for them, each with a pla
 
 A camera can follow the play, flat or in 3D: it closes in where the action is and pulls back as the players spread, or moves with the puck, while the view goes on turning ([following the play](./docs/replay.md#following-the-play)).
 
-The scoreboard hung over an arena's ice follows the replay: its score, period and game clock come from the same timeline and clock as the controls ([the scoreboard over the arena](./docs/replay.md#the-scoreboard-over-the-arena-follows-the-game)). In a stoppage its clock stands still while the players glide to the face-off's line-up and the dead puck is out of sight, and it runs again at the drop ([stoppages](./docs/replay.md#stoppages-the-clock-stops-the-players-line-up)).
+The scoreboard hung over an arena's ice follows the replay: its score, period and game clock come from the same timeline and clock as the controls ([the scoreboard over the arena](./docs/replay.md#the-scoreboard-over-the-arena-follows-the-game)). In a stoppage its clock stands still while the players glide to the face-off's line-up and the dead puck is out of sight, and it runs again at the drop ([stoppages](./docs/replay.md#stoppages-the-clock-stops-the-players-line-up)). A penalized player sits in his box for his time while his side plays short, and the board shows the power play and each penalty's clock ([penalties](./docs/replay.md#penalties-and-the-power-play)).
 
 **Surfaces** ([the surfaces](./docs/surfaces.md), [score and layout](./docs/score.md))
 

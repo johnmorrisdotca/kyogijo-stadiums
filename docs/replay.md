@@ -50,6 +50,7 @@ const timeline = {
 | `events[]` | `t`, `kind` (`pass`, `shot`, `goal`, `whistle`, `faceoff`, or a word of your own), `team`, where it was (`x`, `y`, or the object `by`, else the ball's place), where it ended (`x2`, `y2`, or the object `to` at `until`), `until` and `label`. |
 | `from`, `units`, `attacking`, `surfaceSize`, `anchors` | As for a [layer](./layers.md#what-a-layer-takes): the frame, the unit and the rest that put the numbers on the surface. |
 | `periods`, `clock` | The periods of the game and which way its clock counts: what the [scoreboard over the arena](#the-scoreboard-over-the-arena-follows-the-game) shows. |
+| `penalties` | Who sat in the box and for how long: each one's `team`, `by` (the player), `start` (the call) and `end` (when he left), `minutes` on the game clock, `kind`, `short: false` for one that does not make his side play short, and `endedBy: "goal"` for a minor a power-play goal ended. [Penalties](#penalties-and-the-power-play). |
 | `stoppages` | When play was dead: the game clock stands still from each one's `start` to its `end` (the drop of the puck) while the replay plays on through it. [Stoppages](#stoppages-the-clock-stops-the-players-line-up). |
 
 An object in two neighbouring frames moves between them; one only in the earlier frame stays where it was until the next; one only in the later frame appears when its frame comes. Objects without a place are left out. A timeline is read once and kept: make a new one rather than changing one that has been used.
@@ -98,6 +99,8 @@ console.log(activeEvents(timeline, 2.5).map((a) => `${a.event.kind} at ${a.x}`).
 | `replayStoppages`, `stoppageAt`, `restartsBetween` | The [stoppages](#stoppages-the-clock-stops-the-players-line-up), the one a time is in, and the restarts (the drops of the puck) a move of the clock went by. |
 | `addDeadTime(timeline, stops, rules)` | A timeline with each stoppage opened into its dead time, by a sport's rules (`HOCKEY_RULES`). |
 | `hockeyFaceoffDot`, `hockeyFormation`, `hockeyStopOf` | Hockey's rules: the face-off spot after a stoppage, the line-up at a spot, and the NHL's words for a stoppage as the rules'. |
+| `penaltiesAt(timeline, t)`, `replayGameTime` | The [penalties](#penalties-and-the-power-play) being served at `t` with their game seconds left, and each side's skaters; the game seconds played since the start. |
+| `hockeyPenaltyEnds`, `hockeyPenaltyKind`, `hockeyPenaltyBox` | Hockey's penalties: when each is served on the game clock (power-play goals, coincidental penalties, never fewer than three skaters), the NHL's kinds, and where each side's box is. |
 
 ## Playing it in a page
 
@@ -372,6 +375,46 @@ After icing and a penalty the side not at fault chooses the side of the rink, an
 `hockeyStopOf(typeDescKey, reason)` reads the NHL's public play-by-play's words as the rules' (`goalie-stopped-after-sog` is a save, `puck-frozen` frozen, `icing`, `offside`, a `penalty`, any other stoppage a whistle; a delayed penalty is not a stoppage, since play goes on until the side it is against touches the puck).
 
 Tests hold the example game to the rules: in every stoppage the game clock does not move and the dead puck does not move (it stays, then is out of sight until the drop); every face-off is on one of the nine spots with the puck on it at the drop; after every goal the next face-off is at centre ice; at every drop the players are still in the line-up (a centre of each side on the dot, nobody else in the circle, the goaltenders in their crease); nobody glides faster than the rules' speed; and the board reads the game clock at every moment.
+
+### Penalties and the power play
+
+![A power play in the first period of the example game: the away side's penalized player in his box across the ice from the benches, four of its skaters against five, and the board over the ice with PP in the home side's block and 1:32 of the penalty left in the away side's](./pictures/power-play-3d-desk-light.webp)
+
+A penalty is a stoppage too: play stops at the call, the face-off is in the end of the side that took it, and its player skates to his side's penalty box, across the ice from the benches, and sits there for the penalty's time on the game clock (which stands still in every stoppage, so two minutes are two minutes of play). His side plays a skater short meanwhile; when his time is up (or a power-play goal ends his minor) he leaves the box and comes back into the play. A timeline says so in `penalties`, and the board over the arena shows each side's strength (`data-strength="5-4"`) and each penalty's clock counting down: in a block of colour, the time left of the side that is short, and PP for the side with more skaters.
+
+```ts
+import { hockeyPenaltyEnds, penaltiesAt, replayBoard } from "@johnmorrisdotca/kyogijo-stadiums/replay";
+
+// On the game clock: the away side takes a minor at 100 s and the home side scores on the power play at 160 s; the home side takes a major at 400 s, and a goal against it does not end it.
+const calls = [{ team: "away" as const, kind: "minor" as const, at: 100 }, { team: "home" as const, kind: "major" as const, at: 400 }];
+const goals = [{ team: "home" as const, at: 160 }, { team: "away" as const, at: 500 }];
+console.log(hockeyPenaltyEnds(calls, goals).map((s) => `${s.from}-${s.to}${s.byGoal ? " by a goal" : ""}`).join(", "));
+// A minor on a replay: called at 10 s (play stops till 12 s), over at 18 s; the period's 60 s of play are its twenty minutes.
+const timeline = {
+  frames: [{ t: 0, objects: [] }, { t: 62, objects: [] }],
+  periods: [{ start: 0, end: 62, length: 1200 }],
+  stoppages: [{ start: 10, end: 12, reason: "penalty" }],
+  penalties: [{ team: "away" as const, by: "a4", start: 10, end: 18, minutes: 2 }],
+};
+console.log(penaltiesAt(timeline, 11).strength, replayBoard(timeline, 11).penalties, replayBoard(timeline, 15).penalties);
+console.log(penaltiesAt(timeline, 18).strength);
+// 100-160 by a goal, 400-700
+// [ 5, 4 ] [ { team: 'away', left: '2:00', short: true } ] [ { team: 'away', left: '1:00', short: true } ]
+// [ 5, 5 ]
+```
+
+| Hockey's penalties (NHL Rules 16 to 21) | What the rule set does |
+| --- | --- |
+| Minor, bench minor | 2 minutes; the side plays one short; a power-play goal (by the side with more skaters) ends it. A bench minor is served by a player of the side. |
+| Double minor | 4 minutes, two minors back to back: a power-play goal ends the one it is in. |
+| Major | 5 minutes short, served in full whatever is scored. |
+| Misconduct | 10 minutes in the box; a substitute takes his place, so the side is not short. |
+| Coincidental penalties | Called on both sides at once, as many each: the players sit their time, and substitutes keep the strength even. |
+| Three or more against one side | Never fewer than three skaters: the third penalty's time waits for one of the first two to end. |
+| On the ice | One short, the side plays without its right wing; two short, without both wings: a centre and two defencemen. The player whose time is up comes back into the wing his side was without. |
+| The box (`hockeyPenaltyBox`) | Across the ice from the players' benches, one each side of centre, the home side's on the left, behind the boards: (-14, 45) and (14, 45) in the `nhl-api` frame. A stand-in for the rink's own benches and boxes; when they are in the package, it reads them. |
+
+The players on the bench are not drawn: a player is drawn on the ice, in the box, or on his way between them and the bench's gate.
 
 ### The other sports, next
 
