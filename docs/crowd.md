@@ -55,12 +55,20 @@ console.log(svg.includes("--ky-cr-home:#1d4f91"), svg.includes("--ky-cr-away:#b5
 
 ## The venues
 
-Each sport has a plain profile in feet: how far its first row is from the surface along a side and at an end (more on the bench side, where the benches and the cameras are), the corner's radius, and its tiers, each with its depth, its height above the surface and so its rake. A ground's seats are about the capacity of a real venue of its kind.
+Each sport has a plain profile in feet: how far its first row is from the surface along a side and at an end (with room for the benches and the cameras, which the two sides share so that the opening is centred), the corner's radius, and its tiers, each with its depth, its height above the surface and so its rake. A ground's seats are about the capacity of a real venue of its kind.
+
+The first row clears the whole floor, not only the playing surface: a court's run-off, a rink's boards, an athletics track's sprint straight, its jumps' runways and pits and its javelin runways, the corners included, with 2 feet to spare. The opening is centred on that floor, and the bowl in the drawing. Where a floor is bigger than the sport's distances allow (a table tennis area round its small table), the opening takes the floor's own shape, the same distance out on every side (2 feet, and more where the rounded corners need it), so a long floor has a long opening; the tiers keep their depths round it. Nothing of the stands is drawn on the floor: the tunnel, the camera platform and the media's desks stand in the seats, and the benches stand between the floor and the first row, only where that gap holds them. `crowdStands(...).floor` gives the floor's box and outline the stands were fitted to.
+
+![A volleyball court in its run-off, the rounded opening of the bowl clear of the run-off's corners, with the benches between the floor and the first row](./pictures/crowd-volleyball-desk-light.webp)
+![An athletics stadium: the oval bowl's opening clears the track, the sprint straight on one side and the jumps' runways and pits on the other](./pictures/crowd-athletics-desk-light.webp)
+![An ice rink: the first row follows the boards round the rounded corners](./pictures/crowd-nhl-desk-light.webp)
+![A boxing ring in the middle of an arena's bowl, centred in the opening](./pictures/crowd-boxing-desk-light.webp)
+![A table tennis area: a long opening the shape of the long area, the same gap on every side](./pictures/crowd-tabletennis-desk-light.webp)
 
 | Sport | Shape | Tiers | First row from the surface |
 | --- | --- | --- | --- |
 | `nfl`, `cfl`, `ifaf` | bowl | lower, upper | 40 feet at the sides, 26 at the ends (the CFL's 42 and 28) |
-| `soccer` | bowl | lower, upper | the run-off a stadium regulation recommends, taken as about 6 metres (19.7 feet) along the touchlines (27.7 on the bench side) and 8.5 metres (27.9 feet) behind the goal lines |
+| `soccer` | bowl | lower, upper | the run-off a stadium regulation recommends, taken as about 6 metres (19.7 feet) along the touchlines with the bench side's 8 feet shared by the two (23.7 each) and 8.5 metres (27.9 feet) behind the goal lines |
 | `rugby`, `gaelic`, `lacrosse`, `fieldhockey` | bowl | lower, upper | a little less for the smaller sports, a little more for rugby and Gaelic games |
 | `afl`, `cricket` | oval, round the oval ground | lower, upper | 30 feet all round |
 | `nhl` | bowl | lower, upper | 8 feet |
@@ -76,7 +84,7 @@ const arena = crowdStands({ sport: "nba", crowd: true });
 console.log(arena?.rings.map((ring) => `${ring.id} ${ring.from}-${ring.to} ft, ${ring.height[0]}-${ring.height[1]} ft up, ${ring.rake} deg`).join("; "));
 // courtside 0-7 ft, 1-4 ft up, 23.2 deg; lower 13-70 ft, 3-32 ft up, 27 deg; upper 77-131 ft, 42-80 ft up, 35.1 deg
 console.log(arena?.seats, crowdStands({ sport: "nhl", crowd: true })?.seats);
-// 19003 23719
+// 19096 23719
 ```
 
 ## A ballpark
@@ -97,7 +105,7 @@ console.log(crowdStands({ sport: "mlb", park: "fenway-park", crowd: { shape: "gr
 
 Many grounds that stage soccer are the home of a football club (the grounds of the NFL's and the CFL's clubs in the package's list: `GRIDIRON_GROUNDS`). Their stands are where a football field's stands are, round a field of 120 yards with its end zones by 160 feet, not where a soccer ground's are round a pitch. For such a ground (`ground: "metlife-stadium"`, or `stadium: "nfl"` or `"cfl"` for any pitch) the stands keep the football field's footprint and the pitch stands in the middle of it, and the footprint is drawn faintly over the pitch, with its end zones, its five-yard lines and a dashed outline, so that the gap is seen.
 
-It is to scale, and it is not the gap one might expect. The pitch is 68 metres wide, 223 feet, and the field is 160 feet, so the touchlines are 8.5 feet from the front rows on both sides, against 19.7 and 27.7 in a ground built for soccer, and the ends are 33.8 feet, wider than a purpose-built ground's 27.9 (the pitch is 344 feet long and the field 360, with the stands set back from its end zones). A soccer pitch in a gridiron stadium has stands close to its touchlines and a wider apron behind its goals.
+It is to scale, and it is not the gap one might expect. The pitch is 68 metres wide, 223 feet, and the field is 160 feet, so the touchlines are 8.5 feet from the front rows on both sides, against 23.7 in a ground built for soccer, and the ends are 33.8 feet, wider than a purpose-built ground's 27.9 (the pitch is 344 feet long and the field 360, with the stands set back from its end zones). A soccer pitch in a gridiron stadium has stands close to its touchlines and a wider apron behind its goals.
 
 ```ts
 import { crowdStands } from "@johnmorrisdotca/kyogijo-stadiums";
@@ -112,7 +120,7 @@ const gaps = (id: string) => {
 console.log(gaps("metlife-stadium"));
 // nfl: 8.5 ft at the side, 8.5 at the bench side, 33.8 at the end
 console.log(gaps("wembley"));
-// purpose: 19.7 ft at the side, 27.7 at the bench side, 27.9 at the end
+// purpose: 23.7 ft at the side, 23.7 at the bench side, 27.9 at the end
 console.log(crowdStands({ sport: "soccer", ground: "bc-place", crowd: true })?.footprint?.field.w);
 // 450
 ```
@@ -161,7 +169,7 @@ A page that draws with `style: "none"` and supplies the stylesheet itself gets t
 
 ## The stands as data
 
-`crowdStands(options)` gives the stands as data, in feet in the surface's wide frame, without drawing them: the `rings` (each with `region` and `hole` outlines, `from` and `to` its distance from the surface, `height` of its first and last row, `rake` in degrees, `fill`, `seats` and its `aisles`), the `concourses`, `covers`, the `sectors` of visitors and of the card display, the `gaps`, the gridiron `footprint`, the `reach` the stands need beyond the surface on each side, and the `seats` the model holds. `outlinePath` and `outlinePoints` turn an outline into a path or a polygon. This is what the [3D view](./turn.md#the-venue) raises: every ring a strip of raked planes with the crowd's pattern on them, the walks between the tiers, and, with `venue: { roof: true }`, a roof or canopy.
+`crowdStands(options)` gives the stands as data, in feet in the surface's wide frame, without drawing them: the `rings` (each with `region` and `hole` outlines, `from` and `to` its distance from the surface, `height` of its first and last row, `rake` in degrees, `fill`, `seats` and its `aisles`), the `concourses`, `covers`, the `sectors` of visitors and of the card display, the `gaps`, the gridiron `footprint`, the `floor` the opening was fitted to (its box and outline), the `reach` the stands need beyond the surface on each side, and the `seats` the model holds. `outlinePath` and `outlinePoints` turn an outline into a path or a polygon. This is what the [3D view](./turn.md#the-venue) raises: every ring a strip of raked planes with the crowd's pattern on them, the walks between the tiers, and, with `venue: { roof: true }`, a roof or canopy.
 
 ## What is not drawn
 
