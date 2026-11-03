@@ -112,7 +112,7 @@ export const RACE_WORDS: Readonly<Record<Language, RaceWords>> = Object.freeze({
       resume: "再び追う",
       resumeLabel: "カメラでもう一度追う",
       auto: "自動で追う",
-      autoLabel: "トップを追う：カメラがトップに合わせて動き、もう一度押すと全体に戻ります",
+      autoLabel: "トップを追う：カメラがトップに合わせて動き、もう一度押すとコース全体に戻ります",
     },
     start: "最初に戻る",
     prevLap: "前の周へ",
